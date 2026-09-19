@@ -1,0 +1,4313 @@
+From 817b23e9fba6375ca39817142333addc2567c872 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 22:58:27 -0400
+Subject: [PATCH 03359/11362] [conductor] PHASE A2 (ARC NORTH STAR; operator
+ MANDATORY; THE GENERATION FIX) -- use the oracle-distinct cross-game
+ DiscriminativeVerifier (LOO-AUROC 0.674) as a FRONTIER-EXPANSION priority in
+ best-first search so the WINNING candidate is GENERATED, not just re-ranked.
+ This attacks the .421 A6 root cause (ordering_gain=0 because the winner was
+ never in the fixed pool). Measure generic_transfer + expanded- states-to-goal
+ WITH vs WITHOUT on held-out variants, vs a random-priority positive control;
+ bounded expansion (Scaling-Flaws guard). verifier_is_oracle: false.
+ retire_if_same_verdict.
+
+Automated research step by research conductor.
+Task ID: exp4569-a2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../agentic/arc_discriminative_router.py      |   70 +
+ python/carnot/agentic/arc_graph_explore.py    |   13 +-
+ ...periment_4569_verifier_guided_expansion.py |  752 +++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...riment_4569_verifier_guided_expansion.json | 2950 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...periment_4569_verifier_guided_expansion.py |  267 ++
+ 14 files changed, 4072 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/experiment_4569_verifier_guided_expansion.py
+ create mode 100644 results/experiment_4569_verifier_guided_expansion.json
+ create mode 100644 tests/python/test_experiment_4569_verifier_guided_expansion.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index d6aad2a399..49a6664d90 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -198,3 +198,6 @@
+ - REQ-CAPSTONE-4567: The .421 to .422 transition workflow must write `results/experiment_4567_archive_421_activate_422.json` as a record-only artifact, must not modify `scripts/research_conductor.py`, must use `inference_substrate=aggregation_from_upstream_artifacts`, and must confirm the active roadmap is milestone `2026.06.422`. If `research-roadmap-next.yaml` has already been consumed by conductor-level activation, the workflow shall treat `research-roadmap.yaml` being parseable and active at `2026.06.422` as the no-op activation state while recording the missing literal next-roadmap probe in `preconditions_checked`; it shall not fabricate a replacement next roadmap. The workflow must verify offline arcade, assert the smart-subset pre-test gate is green, read `results/experiment_4566_capstone_v421.json`, `results/experiment_4556_verifier_router_generic_transfer.json`, `results/experiment_4560_integration_8game_gate.json`, `results/experiment_4561_primitive_persist_transfer.json`, and `ops/arc_solve_registry.yaml`, carry forward the true .421 close-state, and write a terminal-prefixed `honest_verdict`.
+ - SCENARIO-CAPSTONE-4567: The transition artifact must emit top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `transition`, `close_state_421`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, and `reproducibility_checksum`; it must record A1 verifier-router nulled with `generic_transfer_delta=0.0`, `random_router_control_passed=false`, and flagged/excluded status; A2 positive-control failure and `reinduction_retired=true`; A3 `m0r0` L2 already-banked with `0` new levels; A4 `0` banked; A5 `DURATION_TOO_SHORT` flagged/excluded; A6 transfer null with root cause `winner-not-in-pool` and `ordering_gain=0`; B1 `generic_transfer_rate_over_variants=0.04` with CI `[0.0, 0.1]`; `core_efficiency=2.0074` for four milestones; registry `reproducible_total_levels=52`; `.421` `efficiency_moved=false`; and `.421` `generic_transfer_moved=false`.
+ - SCENARIO-CAPSTONE-4567-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `close_state_421` = "the honest .421 numbers (verifier-router null + failed control; re-induction RETIRED; A6 winner-not-in-pool root cause; core_efficiency 2.0074 x4; generic_transfer 0.04; reproducible_total_levels=52) carried forward so the record does not drift."
++- REQ-CAPSTONE-4569: The verifier-guided expansion workflow must re-mechanize the Exp 4545 cross-game `DiscriminativeVerifier` as a bounded best-first frontier-expansion priority, not as a final candidate re-ranker. The graph/generic solver SHALL use the learned verifier score to choose which frontier node to expand next, SHALL keep the bare best-first/BFS ordering as the no-regression fallback when the checkpoint or scorer is unavailable, SHALL bound expansion by `max_expansions`, and SHALL measure the verifier-expansion arm against the same no-expansion-priority baseline and a deterministic random-priority positive control on the same manufactured public-game variants.
++- SCENARIO-CAPSTONE-4569: The artifact `results/experiment_4569_verifier_guided_expansion.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `generic_transfer_rate_with_expansion`, `generic_transfer_rate_baseline`, `transfer_delta`, `transfer_ci`, `expanded_states_to_goal_with_vs_without`, `winner_generated`, `expansions_used`, `random_priority_control_passed`, `false_negative_risk_checked`, `null_delta_methodology_note`, `solve_rate_preserved`, `chosen_submitted_config`, `missing_verifier_gaps`, `offline_reproduced`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`. It must reuse `measure_generic_transfer_over_variants`, report median expanded-states-to-goal and actions-to-goal for solved variants, count any newly solved variant only when the offline reproduction gate passes, emit the generation-gap diagnostic when no winner is generated, and recommend enabling verifier-guided expansion only when transfer strictly exceeds the `0.04` baseline with CI support or solved-variant expansions strictly improve without dropping solve-rate.
++- SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: verifier_guided_expansion_generic_transfer_<n>_above_0.04 OR complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- the verifier scores offline frontier candidates, no LLM load (1s floor)."; `verifier_is_oracle` = "MUST be false -- the DiscriminativeVerifier guides search by a LEARNED cross-game signal, oracle-DISTINCT from the executable win-check."; `generic_transfer_rate_with_expansion` = "the HEADLINE -- held-out variant transfer WITH verifier-guided expansion; > 0.04 with CI-excl-baseline is the non-circular live-value evidence."; `generic_transfer_rate_baseline` = "0.04 -- the .420/.421 B1 bare-solver baseline, measured the SAME way."; `transfer_delta` = "with_expansion - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."; `transfer_ci` = "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude the baseline."; `expanded_states_to_goal_with_vs_without` = "the search-efficiency evidence -- did verifier-guided expansion reach the goal in fewer expanded states."; `winner_generated` = "did the search GENERATE the winning candidate at all."; `expansions_used` = "the bounded expansion budget consumed -- proves the Scaling-Flaws guard held and bounds wall-clock."; `random_priority_control_passed` = "the POSITIVE CONTROL -- verifier-expansion must beat random-priority on the SAME variants."; `false_negative_risk_checked` = "a no-value null is valid only if the random-priority control passed."; `null_delta_methodology_note` = "present when transfer_delta==0.0 -- states the equality is an honest no-value null, not a measurement bug."; `solve_rate_preserved` = "HARD gate -- expansion must NOT drop solve-rate."; `chosen_submitted_config` = "enable verifier-guided expansion on a live win; unchanged on null."; `missing_verifier_gaps` = "if no value, the residual generation gap."; `offline_reproduced` = "any newly-solved variant must offline-reproduce to count."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent verifier/corpus drift on replay."; `preconditions_checked` = "records resources verified (offline arcade, DiscriminativeVerifier loadable); pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0056f80920..6b12fad7b8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3586,
++  "experiments_checked": 3587,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_discriminative_router.py b/python/carnot/agentic/arc_discriminative_router.py
+index 0235b52185..352bf3db7e 100644
+--- a/python/carnot/agentic/arc_discriminative_router.py
++++ b/python/carnot/agentic/arc_discriminative_router.py
+@@ -116,6 +116,59 @@ class RandomCandidateRouter:
+         return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
+ 
+ 
++class CrossGameDiscriminativeExpansionPriority:
++    """REQ-CAPSTONE-4569: score frontier nodes for verifier-guided expansion.
++
++    The graph and stepwise solvers expect lower energies to expand first, while
++    the discriminative verifier emits higher P(on winning path). This adapter
++    converts the learned probability into a non-oracle energy without inspecting
++    executable win checks.
++    """
++
++    verifier_is_oracle = False
++
++    def __init__(
++        self,
++        verifier: Any,
++        *,
++        featurize: Any = cross_game_features_v3,
++        neutral_proba: float = 0.5,
++    ) -> None:
++        self.verifier = verifier
++        self.featurize = featurize
++        self.neutral_proba = float(neutral_proba)
++
++    def proba(self, frame: Any) -> float:
++        try:
++            features = self.featurize(frame)
++            return float(self.verifier.proba_features(features))
++        except Exception:
++            return self.neutral_proba
++
++    def __call__(self, frame: Any) -> float:
++        return 1.0 - self.proba(frame)
++
++
++class RandomExpansionPriority:
++    """Deterministic random frontier-priority positive control for REQ-CAPSTONE-4569."""
++
++    verifier_is_oracle = False
++
++    def __init__(self, seed: int = 4569) -> None:
++        self.seed = int(seed)
++
++    def __call__(self, frame: Any) -> float:
++        payload = json.dumps(
++            {
++                "seed": self.seed,
++                "frame": _frame_digest(frame),
++            },
++            sort_keys=True,
++            separators=(",", ":"),
++        ).encode("utf-8")
++        return int(hashlib.sha256(payload).hexdigest()[:16], 16) / float(16**16 - 1)
++
++
+ def load_cross_game_discriminative_router(
+     *,
+     root: Path | str = REPO_ROOT,
+@@ -137,6 +190,23 @@ def load_cross_game_discriminative_router(
+     )
+ 
+ 
++def load_cross_game_discriminative_expansion_priority(
++    *,
++    root: Path | str = REPO_ROOT,
++    checkpoint: Path | str | None = None,
++) -> CrossGameDiscriminativeExpansionPriority | None:
++    """Load the Exp 4545 v3 checkpoint as a frontier-expansion priority."""
++
++    path = Path(checkpoint) if checkpoint is not None else DEFAULT_CHECKPOINT_RELATIVE_PATH
++    if not path.is_absolute():
++        path = Path(root) / path
++    try:
++        verifier = DiscriminativeVerifier.load(path, cross_game_features_v3)
++    except Exception:
++        return None
++    return CrossGameDiscriminativeExpansionPriority(verifier)
++
++
+ def dominant_feature_family_from_weights(weights: Sequence[float]) -> str:
+     """Return the v3 feature slice with the largest absolute logistic mass."""
+ 
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index 6eada56229..3dbfde61cf 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -233,6 +233,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
+                            prefix: Optional[list] = None,
+                            mask_hud: bool = False,
+                            heuristic=None, heuristic_weight: float = 1.0,
++                           expansion_priority=None,
+                            candidate_router=None,
+                            stats: Optional[dict] = None
+                            ) -> tuple[Optional[list], int]:
+@@ -259,6 +260,11 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
+     This is the plug-in slot for an LLM-written / captured gap-fill heuristic
+     (scripts/arc_gap_fill.py, python/carnot/agentic/gap_fills/). When None, the search
+     is byte-for-byte the original pure-BFS (no regression to the proven solves).
++
++    `expansion_priority` is the generic REQ-CAPSTONE-4569 hook: a learned frontier-node
++    scorer (lower = expand earlier). It uses the same bounded best-first queue as
++    `heuristic`, but is named for the verifier-guided expansion use case to keep it
++    distinct from action candidate re-ranking.
+     """
+     from collections import deque
+     from arcengine import GameAction
+@@ -302,9 +308,12 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
+         if stats is not None:
+             stats["expansions"] = expansions
+             stats["states"] = len(states)
++            stats["max_expansions"] = int(max_expansions)
+         return traj, lvl
+ 
+-    if heuristic is None:
++    priority_scorer = expansion_priority if expansion_priority is not None else heuristic
++
++    if priority_scorer is None:
+         # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
+         frontier = deque([h0])          # BFS order ⇒ shortest path first
+         while frontier and expansions < max_expansions:
+@@ -343,7 +352,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
+ 
+     def _h(frame) -> float:
+         try:
+-            return heuristic_weight * float(heuristic(frame))
++            return heuristic_weight * float(priority_scorer(frame))
+         except Exception:
+             return 1e9                   # a broken heuristic must never crash the search
+ 
+diff --git a/python/carnot/experiment_4569_verifier_guided_expansion.py b/python/carnot/experiment_4569_verifier_guided_expansion.py
+new file mode 100644
+index 0000000000..34b7d547f7
+--- /dev/null
++++ b/python/carnot/experiment_4569_verifier_guided_expansion.py
+@@ -0,0 +1,752 @@
++"""Experiment 4569: verifier-guided frontier expansion.
++
++Spec refs: REQ-CAPSTONE-4569, SCENARIO-CAPSTONE-4569,
++SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import random
++import statistics
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from carnot import experiment_4550_honest_sprint_metric as exp4550
++from carnot import experiment_4556_verifier_router_generic_transfer as exp4556
++from carnot.agentic.arc_discriminative_router import (
++    DEFAULT_CHECKPOINT_RELATIVE_PATH,
++    RandomExpansionPriority,
++    checkpoint_sha256,
++    dominant_feature_family_from_checkpoint,
++    load_cross_game_discriminative_expansion_priority,
++)
++
++
++JsonDict = dict[str, Any]
++VariantRunner = Callable[[str, Mapping[str, Any], int], Mapping[str, Any]]
++VariantRunnerFactory = Callable[[str], VariantRunner]
++
++RESULT_RELATIVE_PATH = "results/experiment_4569_verifier_guided_expansion.json"
++EXPERIMENT_ID = "experiment_4569_verifier_guided_expansion"
++SCHEMA = "carnot.exp4569.verifier_guided_expansion.v1"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++RANDOM_SEED = 4569
++BASELINE_REFERENCE_RATE = 0.04
++DEFAULT_VARIANT_IDS = (1,)
++DEFAULT_BUDGET = 200
++DEFAULT_BOOTSTRAPS = 1000
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "generic_transfer_rate_with_expansion",
++    "generic_transfer_rate_baseline",
++    "transfer_delta",
++    "transfer_ci",
++    "expanded_states_to_goal_with_vs_without",
++    "winner_generated",
++    "expansions_used",
++    "random_priority_control_passed",
++    "false_negative_risk_checked",
++    "null_delta_methodology_note",
++    "solve_rate_preserved",
++    "chosen_submitted_config",
++    "missing_verifier_gaps",
++    "offline_reproduced",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: verifier_guided_expansion_generic_transfer_<n>_above_0.04 "
++            "OR complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates -- the verifier scores offline frontier "
++            "candidates, no LLM load (1s floor)."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false -- the DiscriminativeVerifier guides search by a LEARNED cross-game "
++            "signal, oracle-DISTINCT from the executable win-check."
++        )
++    },
++    "generic_transfer_rate_with_expansion": {
++        "principle": (
++            "the HEADLINE -- held-out variant transfer WITH verifier-guided expansion; > 0.04 "
++            "with CI-excl-baseline is the non-circular live-value evidence."
++        )
++    },
++    "generic_transfer_rate_baseline": {
++        "principle": "0.04 -- the .420/.421 B1 bare-solver baseline, measured the SAME way."
++    },
++    "transfer_delta": {
++        "principle": (
++            "with_expansion - baseline, emitted explicitly so a null (0.0) is annotated, "
++            "not a control==best TAUTOLOGY false-positive."
++        )
++    },
++    "transfer_ci": {
++        "principle": (
++            "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude "
++            "the baseline."
++        )
++    },
++    "expanded_states_to_goal_with_vs_without": {
++        "principle": (
++            "the search-efficiency evidence -- did verifier-guided expansion reach the goal in "
++            "fewer expanded states."
++        )
++    },
++    "winner_generated": {"principle": "did the search GENERATE the winning candidate at all."},
++    "expansions_used": {
++        "principle": (
++            "the bounded expansion budget consumed -- proves the Scaling-Flaws guard held and "
++            "bounds wall-clock."
++        )
++    },
++    "random_priority_control_passed": {
++        "principle": (
++            "the POSITIVE CONTROL -- verifier-expansion must beat random-priority on the SAME variants."
++        )
++    },
++    "false_negative_risk_checked": {
++        "principle": "a no-value null is valid only if the random-priority control passed."
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "present when transfer_delta==0.0 -- states the equality is an honest no-value null, "
++            "not a measurement bug."
++        )
++    },
++    "solve_rate_preserved": {"principle": "HARD gate -- expansion must NOT drop solve-rate."},
++    "chosen_submitted_config": {
++        "principle": "enable verifier-guided expansion on a live win; unchanged on null."
++    },
++    "missing_verifier_gaps": {
++        "principle": "if no value, the residual generation gap."
++    },
++    "offline_reproduced": {
++        "principle": "any newly-solved variant must offline-reproduce to count."
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent verifier/corpus drift on replay."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (offline arcade, DiscriminativeVerifier loadable); "
++            "pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++
++def _attempt_solved(attempt: Mapping[str, Any]) -> bool:
++    return attempt.get("attempted") is True and attempt.get("solved") is True
++
++
++def _first_precondition_miss(preconditions: Mapping[str, Any]) -> str | None:
++    if preconditions.get("offline_arcade") is not True:
++        return "offline_arcade"
++    if preconditions.get("arc_value_learner_discriminative_import") is not True:
++        return "discriminative_verifier_import"
++    if preconditions.get("trained_verifier_loadable") is not True:
++        return "trained_verifier"
++    if preconditions.get("cross_game_corpus_loadable") is not True:
++        return "cross_game_corpus"
++    if preconditions.get("leaderboard_submission") is True:
++        return "leaderboard_submission"
++    return None
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - live boundary
++    checks = dict(exp4556.check_preconditions(root))
++    checkpoint = Path(root) / DEFAULT_CHECKPOINT_RELATIVE_PATH
++    checks["trained_verifier_sha256"] = checkpoint_sha256(checkpoint)
++    return checks
++
++
++def _mode_priority(mode: str, *, root: Path) -> Any | None:  # pragma: no cover - live boundary
++    if mode == "verifier_expansion":
++        return load_cross_game_discriminative_expansion_priority(root=root)
++    if mode == "random_priority":
++        return RandomExpansionPriority(seed=RANDOM_SEED)
++    return None
++
++
++def make_variant_runner(  # pragma: no cover - ARC runtime boundary
++    mode: str, *, root: Path | str = REPO_ROOT
++) -> VariantRunner:
++    """Run a manufactured variant with optional frontier-expansion priority."""
++
++    root_path = Path(root)
++    priority = _mode_priority(mode, root=root_path)
++
++    def run(game: str, spec: Mapping[str, Any], budget: int) -> JsonDict:
++        from arcengine import GameAction
++        from carnot import experiment_4472_variant_generic_transfer_benchmark_v4 as v4
++        from carnot.agentic import arc_solver_kit as kit
++        from carnot.agentic.arc_competition_agent import CarnotAgentPolicy, _level_of
++        from carnot.agentic.arc_variant_generator import VariantEnv
++
++        arc = kit.offline_arcade()
++        env = arc.make(game, scorecard_id=arc.open_scorecard())
++        env = VariantEnv(env, game, int(spec["variant"]), reflect=spec.get("reflect"))
++        policy = CarnotAgentPolicy(
++            game,
++            {},
++            force_explore=True,
++            value_head=priority,
++            value_weight=1.0 if priority is not None else 0.0,
++            search_mode="best_first",
++        )
++        frames: list[Any] = []
++        latest = None
++        labels: list[str] = []
++        actions = 0
++        start_level: int | None = None
++        reached = 0
++        for _index in range(int(budget)):
++            if policy.is_done(frames, latest):
++                break
++            kind, data = policy.next_move(frames, latest)
++            if kind == "RESET":
++                latest = env.reset()
++                if labels:
++                    labels.append("RESET")
++            elif kind is None:
++                break
++            else:
++                real_data = v4._remap_reflected_data(data, spec.get("reflect"))
++                latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
++                labels.append(v4._action_label(int(kind), real_data))
++                actions += 1
++            if start_level is None:
++                start_level = _level_of(latest)
++            frames.append(latest)
++            reached = _level_of(latest)
++            if start_level is not None and reached > start_level:
++                break
++            if latest is None:
++                break
++        claimed = reached if start_level is not None and reached > start_level else 0
++        gate: JsonDict = {
++            "game": game,
++            "reached_level": 0,
++            "claimed_level": claimed,
++            "reproduced": False,
++            "mode": "offline_reproduction_gate_no_solution",
++        }
++        if claimed > 0 and labels:
++            gate = dict(kit.reproduce(game, labels, v4._apply_action_label, claimed_level=claimed))
++        solved = bool(gate.get("reproduced")) and int(gate.get("reached_level") or 0) >= claimed >= 1
++        graph_size = len(getattr(getattr(policy, "explorer", None), "graph", {}) or {})
++        return {
++            "game": game,
++            "variant_signature": spec["variant_signature"],
++            "variant": int(spec["variant"]),
++            "kind": spec["kind"],
++            "reflect": spec.get("reflect"),
++            "attempted": True,
++            "solved": solved,
++            "winner_generated": solved,
++            "reached_level": int(gate.get("reached_level") or reached) if solved else reached,
++            "actions": actions,
++            "expanded_states_to_goal": graph_size if solved else None,
++            "expansions_used": graph_size,
++            "max_expansions": int(budget),
++            "solution_labels": labels if solved else [],
++            "reproduction_gate": gate,
++            "blocked_reason": "",
++            "expansion_priority_mode": mode,
++        }
++
++    return run
++
++
++def default_variant_runner_factory(mode: str) -> VariantRunner:  # pragma: no cover - live boundary
++    return make_variant_runner(mode, root=REPO_ROOT)
++
++
++def _solved_by_signature(attempts: Sequence[Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(attempt.get("variant_signature")): attempt
++        for attempt in attempts
++        if attempt.get("attempted") is True
++    }
++
++
++def _median(values: Sequence[float]) -> float | None:
++    if not values:
++        return None
++    return float(statistics.median(values))
++
++
++def _median_attempt_field(attempts: Sequence[Mapping[str, Any]], field: str) -> float | None:
++    values = [
++        float(attempt.get(field))
++        for attempt in attempts
++        if _attempt_solved(attempt) and attempt.get(field) is not None
++    ]
++    return _median(values)
++
++
++def _paired_bootstrap_delta_ci(
++    baseline_attempts: Sequence[Mapping[str, Any]],
++    verifier_attempts: Sequence[Mapping[str, Any]],
++    *,
++    random_seed: int,
++    n_bootstrap: int,
++) -> list[float]:
++    baseline = _solved_by_signature(baseline_attempts)
++    verifier = _solved_by_signature(verifier_attempts)
++    keys = sorted(set(baseline) & set(verifier))
++    if not keys:
++        return [0.0, 0.0]
++    deltas = [
++        (1.0 if _attempt_solved(verifier[key]) else 0.0)
++        - (1.0 if _attempt_solved(baseline[key]) else 0.0)
++        for key in keys
++    ]
++    if n_bootstrap <= 0:
++        mean = sum(deltas) / len(deltas)
++        return [round(mean, 10), round(mean, 10)]
++    rng = random.Random(random_seed)
++    samples = []
++    n = len(deltas)
++    for _index in range(int(n_bootstrap)):
++        total = 0.0
++        for _sample in range(n):
++            total += deltas[rng.randrange(n)]
++        samples.append(total / n)
++    samples.sort()
++    lo = samples[int(0.025 * (len(samples) - 1))]
++    hi = samples[int(0.975 * (len(samples) - 1))]
++    return [round(float(lo), 10), round(float(hi), 10)]
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(blob).hexdigest()
++
++
++def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "generic_transfer_rate_with_expansion": artifact.get(
++            "generic_transfer_rate_with_expansion"
++        ),
++        "generic_transfer_rate_baseline": artifact.get("generic_transfer_rate_baseline"),
++        "transfer_delta": artifact.get("transfer_delta"),
++        "transfer_ci": artifact.get("transfer_ci"),
++        "expanded_states_to_goal_with_vs_without": artifact.get(
++            "expanded_states_to_goal_with_vs_without"
++        ),
++        "winner_generated": artifact.get("winner_generated"),
++        "expansions_used": artifact.get("expansions_used"),
++        "variant_plan": artifact.get("variant_plan"),
++        "preconditions_checked": artifact.get("preconditions_checked"),
++    }
++
++
++def _measurement(
++    *,
++    public_games: Sequence[str],
++    variant_ids: Sequence[int],
++    budget: int,
++    runner: VariantRunner,
++) -> JsonDict:
++    measured = exp4550.measure_generic_transfer_over_variants(
++        public_games=public_games,
++        variant_ids=variant_ids,
++        budget=budget,
++        variant_runner=runner,
++    )
++    attempts = measured["variant_attempts"]
++    measured["median_expanded_states_to_goal"] = _median_attempt_field(
++        attempts, "expanded_states_to_goal"
++    )
++    measured["median_actions_to_goal"] = _median_attempt_field(attempts, "actions")
++    measured["max_expansions_used"] = max(
++        [int(attempt.get("expansions_used") or 0) for attempt in attempts] or [0]
++    )
++    return measured
++
++
++def _blocked_artifact(
++    *,
++    resource: str,
++    preconditions: Mapping[str, Any],
++    public_games: Sequence[str],
++    variant_ids: Sequence[int],
++    budget: int,
++    dominant_weight_family: str,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4569",
++            "SCENARIO-CAPSTONE-4569",
++            "SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"complete: blocked_{resource}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "verifier_is_oracle": False,
++        "generic_transfer_rate_with_expansion": 0.0,
++        "generic_transfer_rate_baseline": BASELINE_REFERENCE_RATE,
++        "generic_transfer_baseline_reference": BASELINE_REFERENCE_RATE,
++        "transfer_delta": 0.0,
++        "transfer_ci": [0.0, 0.0],
++        "expanded_states_to_goal_with_vs_without": {},
++        "winner_generated": {"with_expansion": False, "generated_count": 0},
++        "expansions_used": {"max_expansions": int(budget), "with_expansion": 0},
++        "random_priority_control_passed": False,
++        "false_negative_risk_checked": False,
++        "null_delta_methodology_note": (
++            "blocked before measurement; no verifier-guided expansion delta was fabricated."
++        ),
++        "solve_rate_preserved": False,
++        "chosen_submitted_config": "unchanged",
++        "missing_verifier_gaps": [
++            f"blocked_{resource}; strongest_weight_family={dominant_weight_family}"
++        ],
++        "offline_reproduced": False,
++        "preconditions_checked": dict(preconditions),
++        "variant_plan": {
++            "public_games": sorted(str(game) for game in public_games),
++            "public_game_count": len(public_games),
++            "variant_ids": [int(item) for item in variant_ids],
++            "variants_per_game": len(variant_ids),
++            "max_expansions": int(budget),
++        },
++        "baseline_measurement": {},
++        "verifier_expansion_measurement": {},
++        "random_priority_measurement": {},
++        "random_seed": RANDOM_SEED,
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def _newly_solved_reproduced(
++    baseline_attempts: Sequence[Mapping[str, Any]],
++    verifier_attempts: Sequence[Mapping[str, Any]],
++) -> tuple[list[str], bool]:
++    baseline_by_sig = _solved_by_signature(baseline_attempts)
++    newly_solved = []
++    newly_reproduced = []
++    for attempt in verifier_attempts:
++        signature = str(attempt.get("variant_signature"))
++        if _attempt_solved(attempt) and not _attempt_solved(baseline_by_sig.get(signature, {})):
++            newly_solved.append(signature)
++            gate = attempt.get("reproduction_gate")
++            newly_reproduced.append(isinstance(gate, Mapping) and gate.get("reproduced") is True)
++    return sorted(newly_solved), (all(newly_reproduced) if newly_reproduced else True)
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    public_games: Sequence[str] | None = None,
++    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
++    budget: int = DEFAULT_BUDGET,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    variant_runner_factory: VariantRunnerFactory = default_variant_runner_factory,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++    dominant_weight_family: str | None = None,
++) -> JsonDict:
++    started = time.monotonic()
++    root_path = Path(root)
++    preconditions = dict(preconditions_checked or check_preconditions(root_path))
++    games = list(public_games or preconditions.get("offline_env_public_games") or [])
++    checkpoint = root_path / DEFAULT_CHECKPOINT_RELATIVE_PATH
++    if dominant_weight_family is None:
++        try:
++            dominant_weight_family = dominant_feature_family_from_checkpoint(checkpoint)
++        except Exception:
++            dominant_weight_family = "unknown"
++
++    miss = _first_precondition_miss(preconditions)
++    if miss:
++        return _blocked_artifact(
++            resource=miss,
++            preconditions=preconditions,
++            public_games=games,
++            variant_ids=variant_ids,
++            budget=budget,
++            dominant_weight_family=dominant_weight_family,
++        )
++
++    baseline = _measurement(
++        public_games=games,
++        variant_ids=variant_ids,
++        budget=budget,
++        runner=variant_runner_factory("baseline"),
++    )
++    verifier = _measurement(
++        public_games=games,
++        variant_ids=variant_ids,
++        budget=budget,
++        runner=variant_runner_factory("verifier_expansion"),
++    )
++    random_control = _measurement(
++        public_games=games,
++        variant_ids=variant_ids,
++        budget=budget,
++        runner=variant_runner_factory("random_priority"),
++    )
++
++    baseline_rate = float(baseline["generic_transfer_rate_over_variants"])
++    verifier_rate = float(verifier["generic_transfer_rate_over_variants"])
++    random_rate = float(random_control["generic_transfer_rate_over_variants"])
++    delta = round(verifier_rate - baseline_rate, 10)
++    delta_ci = _paired_bootstrap_delta_ci(
++        baseline["variant_attempts"],
++        verifier["variant_attempts"],
++        random_seed=RANDOM_SEED,
++        n_bootstrap=n_bootstrap,
++    )
++    solve_rate_preserved = verifier_rate >= baseline_rate
++    verifier_expanded = verifier["median_expanded_states_to_goal"]
++    baseline_expanded = baseline["median_expanded_states_to_goal"]
++    random_expanded = random_control["median_expanded_states_to_goal"]
++    strictly_lower = (
++        verifier_expanded is not None
++        and baseline_expanded is not None
++        and float(verifier_expanded) < float(baseline_expanded)
++    )
++    beats_random_by_rate = verifier_rate > random_rate
++    beats_random_by_expansions = (
++        verifier_rate >= random_rate
++        and verifier_expanded is not None
++        and random_expanded is not None
++        and float(verifier_expanded) < float(random_expanded)
++    )
++    random_priority_control_passed = bool(beats_random_by_rate or beats_random_by_expansions)
++
++    newly_solved, offline_reproduced = _newly_solved_reproduced(
++        baseline["variant_attempts"],
++        verifier["variant_attempts"],
++    )
++    attempted = int(verifier["variant_attempts_count"])
++    solved_count = int(verifier["variant_solved_count"])
++    winner_generated = {
++        "with_expansion": solved_count > 0,
++        "without_expansion": int(baseline["variant_solved_count"]) > 0,
++        "random_priority": int(random_control["variant_solved_count"]) > 0,
++        "generated_count": solved_count,
++        "attempted_count": attempted,
++        "not_generated_count": max(0, attempted - solved_count),
++        "newly_solved_variants": newly_solved,
++    }
++    expansion_summary = {
++        "with_expansion_median": verifier_expanded,
++        "without_expansion_median": baseline_expanded,
++        "random_priority_median": random_expanded,
++        "actions_to_goal_with_expansion_median": verifier["median_actions_to_goal"],
++        "actions_to_goal_without_expansion_median": baseline["median_actions_to_goal"],
++        "actions_to_goal_random_priority_median": random_control["median_actions_to_goal"],
++        "strictly_lower_than_without": bool(strictly_lower),
++    }
++    transfer_win = (
++        verifier_rate > BASELINE_REFERENCE_RATE
++        and solve_rate_preserved
++        and random_priority_control_passed
++        and offline_reproduced
++        and delta_ci[0] > 0.0
++    )
++    efficiency_win = (
++        solve_rate_preserved
++        and random_priority_control_passed
++        and offline_reproduced
++        and strictly_lower
++    )
++    wins = bool(transfer_win or efficiency_win)
++    unresolved = max(0, attempted - solved_count)
++    null_note = (
++        "transfer_delta==0.0 is an honest no-value null under the paired same-variant "
++        "measurement, not a control==best tautology."
++        if delta == 0.0
++        else ""
++    )
++    missing_gaps = (
++        []
++        if wins
++        else [
++            (
++                "verifier_guided_expansion_no_value_added; "
++                f"winner_not_generated_for={unresolved}; "
++                f"strongest_weight_family={dominant_weight_family}"
++            )
++        ]
++    )
++    if transfer_win:
++        verdict = f"success: verifier_guided_expansion_generic_transfer_{verifier_rate:.3f}_above_0.04"
++    elif efficiency_win:
++        verdict = "success: verifier_guided_expansion_expanded_states_lower_solve_rate_preserved"
++    else:
++        verdict = "complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened"
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4569",
++            "SCENARIO-CAPSTONE-4569",
++            "SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "verifier_is_oracle": False,
++        "generic_transfer_rate_with_expansion": verifier_rate,
++        "generic_transfer_rate_baseline": baseline_rate,
++        "generic_transfer_baseline_reference": BASELINE_REFERENCE_RATE,
++        "transfer_delta": delta,
++        "transfer_ci": delta_ci,
++        "expanded_states_to_goal_with_vs_without": expansion_summary,
++        "winner_generated": winner_generated,
++        "expansions_used": {
++            "max_expansions": int(budget),
++            "with_expansion_max": int(verifier["max_expansions_used"]),
++            "without_expansion_max": int(baseline["max_expansions_used"]),
++            "random_priority_max": int(random_control["max_expansions_used"]),
++        },
++        "random_priority_transfer_rate": random_rate,
++        "random_priority_control_passed": random_priority_control_passed,
++        "false_negative_risk_checked": random_priority_control_passed,
++        "null_delta_methodology_note": null_note,
++        "solve_rate_preserved": solve_rate_preserved,
++        "chosen_submitted_config": "enable_verifier_guided_expansion" if wins else "unchanged",
++        "missing_verifier_gaps": missing_gaps,
++        "dominant_verifier_weight_family": dominant_weight_family,
++        "offline_reproduced": offline_reproduced,
++        "preconditions_checked": preconditions,
++        "variant_plan": {
++            "public_games": sorted(str(game) for game in games),
++            "public_game_count": len(games),
++            "variant_ids": [int(item) for item in variant_ids],
++            "variants_per_game": len(variant_ids),
++            "max_expansions": int(budget),
++            "runner": "generic_solver_offline_variant_env",
++            "arms": ["baseline", "verifier_expansion", "random_priority"],
++        },
++        "baseline_measurement": baseline,
++        "verifier_expansion_measurement": verifier,
++        "random_priority_measurement": random_control,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.monotonic() - started, 6),
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    for field in (
++        "generic_transfer_rate_with_expansion",
++        "generic_transfer_rate_baseline",
++        "transfer_delta",
++    ):
++        if not isinstance(artifact.get(field), float):
++            errors.append(f"{field} must be a bare float")
++    for field in (
++        "random_priority_control_passed",
++        "false_negative_risk_checked",
++        "solve_rate_preserved",
++        "offline_reproduced",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be a bare bool")
++    ci = artifact.get("transfer_ci")
++    if (
++        not isinstance(ci, list)
++        or len(ci) != 2
++        or not all(isinstance(value, float) for value in ci)
++    ):
++        errors.append("transfer_ci must be [float, float]")
++    if artifact.get("transfer_delta") == 0.0 and not artifact.get(
++        "null_delta_methodology_note"
++    ):
++        errors.append("null_delta_methodology_note required for zero delta")
++    for field in ("expanded_states_to_goal_with_vs_without", "winner_generated", "expansions_used"):
++        if not isinstance(artifact.get(field), Mapping):
++            errors.append(f"{field} must be a mapping")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"missing field principle for {field}")
++    return errors
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifact: Mapping[str, Any] | None = None,
++) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++) -> JsonDict:
++    artifact = build_artifact(root)
++    if write:
++        write_artifact(root, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b41b3c4ba6..1d44bf49c6 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-21T20:10:18.561838Z",
+-  "duration_s": 0.021382808685302734,
++  "run_date": "2026-06-22T02:56:46.170663Z",
++  "duration_s": 0.02719569206237793,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "31fc7966081b29f989926da30cee242812feb41c4a981d9c9a2b8e955e6d27d3",
++  "reproducibility_checksum": "ed0c202810e32bb053f1c675fa455def22b8815abd6484d2433e763fde6643a0",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "fe3349b331c0e55630acc48632ab4e9d58fd8750"
++    "adversarial_verify_version": "c6774bdd98f2969d961c20bbbd54fa1f97bae47c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e1c9dedf85..020bb1a275 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-21T20:10:18.592750Z",
+-  "duration_s": 0.024331331253051758,
++  "run_date": "2026-06-22T02:56:46.203325Z",
++  "duration_s": 0.02679300308227539,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "7423936e8b3c4ea07079bf512624eb245e3b243f472e7d22595ce916a8ead26b",
++  "reproducibility_checksum": "966af7e5cd94d0ca8758118d99cbd1e1a2725d58ab14920611f9abcbc1e9d9aa",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "fe3349b331c0e55630acc48632ab4e9d58fd8750"
++    "adversarial_verify_version": "c6774bdd98f2969d961c20bbbd54fa1f97bae47c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1f1ab3e578..09f6a3f8c2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.149343490600586,
++  "efficiency_gains_ms": 2.143383026123047,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2df9713ee6..c4f2df0229 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.7111032977700233e-05,
++  "duration_s": 2.7291011065244675e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4569_verifier_guided_expansion.json b/results/experiment_4569_verifier_guided_expansion.json
+new file mode 100644
+index 0000000000..fc5189d864
+--- /dev/null
++++ b/results/experiment_4569_verifier_guided_expansion.json
+@@ -0,0 +1,2950 @@
++{
++  "baseline_measurement": {
++    "generic_transfer_ci": [
++      0.0,
++      0.12
++    ],
++    "generic_transfer_rate_over_variants": 0.04,
++    "max_expansions_used": 63,
++    "median_actions_to_goal": 99.0,
++    "median_expanded_states_to_goal": 11.0,
++    "variant_attempts": [
++      {
++        "actions": 156,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 24,
++        "game": "ar25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ar25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ar25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 116,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 20,
++        "game": "bp35",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "bp35",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "bp35~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 140,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 22,
++        "game": "cd82",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cd82",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cd82~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 35,
++        "game": "cn04",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cn04",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cn04~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 19,
++        "game": "dc22",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "dc22",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "dc22~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 173,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 23,
++        "game": "ft09",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ft09",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ft09~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 156,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 29,
++        "game": "g50t",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "g50t",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "g50t~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 138,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 30,
++        "game": "ka59",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ka59",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ka59~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 115,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 5,
++        "game": "lf52",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lf52",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lf52~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 186,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 9,
++        "game": "lp85",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lp85~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 29,
++        "game": "ls20",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ls20",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ls20~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 142,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 20,
++        "game": "m0r0",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "m0r0",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "m0r0~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 122,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 63,
++        "game": "r11l",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "r11l",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "r11l~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 141,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 50,
++        "game": "re86",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "re86~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 125,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 13,
++        "game": "s5i5",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "s5i5",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "s5i5~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 163,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 23,
++        "game": "sb26",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sb26",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sb26~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 156,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 29,
++        "game": "sc25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sc25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sc25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 189,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 12,
++        "game": "sk48",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sk48",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sk48~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 18,
++        "game": "sp80",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sp80~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 13,
++        "game": "su15",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "su15",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "su15~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 118,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 9,
++        "game": "tn36",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tn36",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tn36~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 43,
++        "game": "tr87",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tr87",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tr87~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 151,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 21,
++        "game": "tu93",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tu93",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tu93~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 99,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": 11,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 11,
++        "game": "vc33",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 1,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 1,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solution_labels": [
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":57,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":48,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":57,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":48,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":45,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":59,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":52,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":54,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":49,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":55,\"y\":47}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":44,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":46,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":53,\"y\":47}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":30,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":40,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}"
++        ],
++        "solved": true,
++        "variant": 1,
++        "variant_signature": "vc33~color01",
++        "winner_generated": true
++      },
++      {
++        "actions": 142,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "baseline",
++        "expansions_used": 46,
++        "game": "wa30",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "wa30",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "wa30~color01",
++        "winner_generated": false
++      }
++    ],
++    "variant_attempts_count": 25,
++    "variant_solved_count": 1,
++    "variant_specs": [
++      {
++        "game": "ar25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "game": "bp35",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "game": "cd82",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "game": "cn04",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "game": "dc22",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "game": "ft09",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "game": "g50t",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "game": "ka59",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "game": "lf52",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "game": "lp85",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "game": "ls20",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "game": "m0r0",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "game": "r11l",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "game": "re86",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "game": "s5i5",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "game": "sb26",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "game": "sc25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "game": "sk48",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "game": "sp80",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "game": "su15",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "game": "tn36",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "game": "tr87",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "game": "tu93",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "game": "vc33",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "game": "wa30",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ]
++  },
++  "chosen_submitted_config": "unchanged",
++  "dominant_verifier_weight_family": "v2",
++  "duration_s": 28.508866,
++  "expanded_states_to_goal_with_vs_without": {
++    "actions_to_goal_random_priority_median": 100.0,
++    "actions_to_goal_with_expansion_median": null,
++    "actions_to_goal_without_expansion_median": 99.0,
++    "random_priority_median": 11.0,
++    "strictly_lower_than_without": false,
++    "with_expansion_median": null,
++    "without_expansion_median": 11.0
++  },
++  "expansions_used": {
++    "max_expansions": 200,
++    "random_priority_max": 57,
++    "with_expansion_max": 57,
++    "without_expansion_max": 63
++  },
++  "experiment": "experiment_4569_verifier_guided_expansion",
++  "false_negative_risk_checked": false,
++  "field_principles": {
++    "chosen_submitted_config": {
++      "principle": "enable verifier-guided expansion on a live win; unchanged on null."
++    },
++    "expanded_states_to_goal_with_vs_without": {
++      "principle": "the search-efficiency evidence -- did verifier-guided expansion reach the goal in fewer expanded states."
++    },
++    "expansions_used": {
++      "principle": "the bounded expansion budget consumed -- proves the Scaling-Flaws guard held and bounds wall-clock."
++    },
++    "false_negative_risk_checked": {
++      "principle": "a no-value null is valid only if the random-priority control passed."
++    },
++    "generic_transfer_rate_baseline": {
++      "principle": "0.04 -- the .420/.421 B1 bare-solver baseline, measured the SAME way."
++    },
++    "generic_transfer_rate_with_expansion": {
++      "principle": "the HEADLINE -- held-out variant transfer WITH verifier-guided expansion; > 0.04 with CI-excl-baseline is the non-circular live-value evidence."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: verifier_guided_expansion_generic_transfer_<n>_above_0.04 OR complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- the verifier scores offline frontier candidates, no LLM load (1s floor)."
++    },
++    "missing_verifier_gaps": {
++      "principle": "if no value, the residual generation gap."
++    },
++    "null_delta_methodology_note": {
++      "principle": "present when transfer_delta==0.0 -- states the equality is an honest no-value null, not a measurement bug."
++    },
++    "offline_reproduced": {
++      "principle": "any newly-solved variant must offline-reproduce to count."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (offline arcade, DiscriminativeVerifier loadable); pre-empts missing-resource fabrication."
++    },
++    "random_priority_control_passed": {
++      "principle": "the POSITIVE CONTROL -- verifier-expansion must beat random-priority on the SAME variants."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent verifier/corpus drift on replay."
++    },
++    "solve_rate_preserved": {
++      "principle": "HARD gate -- expansion must NOT drop solve-rate."
++    },
++    "transfer_ci": {
++      "principle": "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude the baseline."
++    },
++    "transfer_delta": {
++      "principle": "with_expansion - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false -- the DiscriminativeVerifier guides search by a LEARNED cross-game signal, oracle-DISTINCT from the executable win-check."
++    },
++    "winner_generated": {
++      "principle": "did the search GENERATE the winning candidate at all."
++    }
++  },
++  "generic_transfer_baseline_reference": 0.04,
++  "generic_transfer_rate_baseline": 0.04,
++  "generic_transfer_rate_with_expansion": 0.0,
++  "honest_verdict": "complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "missing_verifier_gaps": [
++    "verifier_guided_expansion_no_value_added; winner_not_generated_for=25; strongest_weight_family=v2"
++  ],
++  "null_delta_methodology_note": "",
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "arc_value_learner_discriminative_import": true,
++    "cross_game_candidate_rows": 679,
++    "cross_game_corpus_loadable": true,
++    "cross_game_corpus_summary": "results/arc_discriminative_verifier_v3.json",
++    "exp4545_artifact_present": true,
++    "leaderboard_submission": false,
++    "offline_arcade": true,
++    "offline_env_public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "ok": true,
++    "trained_verifier_checkpoint": "models/arc_discriminative_verifier_v3.json",
++    "trained_verifier_loadable": true,
++    "trained_verifier_sha256": "sha256:ece00e37d8210b237a6f547c07281d074451a3584b24194604a1ad21867f08cc"
++  },
++  "random_priority_control_passed": false,
++  "random_priority_measurement": {
++    "generic_transfer_ci": [
++      0.0,
++      0.12
++    ],
++    "generic_transfer_rate_over_variants": 0.04,
++    "max_expansions_used": 57,
++    "median_actions_to_goal": 100.0,
++    "median_expanded_states_to_goal": 11.0,
++    "variant_attempts": [
++      {
++        "actions": 156,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 24,
++        "game": "ar25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ar25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ar25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 116,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 21,
++        "game": "bp35",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "bp35",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "bp35~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 139,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 23,
++        "game": "cd82",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cd82",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cd82~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 34,
++        "game": "cn04",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cn04",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cn04~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 18,
++        "game": "dc22",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "dc22",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "dc22~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 173,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 23,
++        "game": "ft09",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ft09",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ft09~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 157,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 28,
++        "game": "g50t",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "g50t",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "g50t~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 140,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 31,
++        "game": "ka59",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ka59",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ka59~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 116,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 6,
++        "game": "lf52",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lf52",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lf52~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 187,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 9,
++        "game": "lp85",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lp85~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 29,
++        "game": "ls20",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ls20",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ls20~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 141,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 20,
++        "game": "m0r0",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "m0r0",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "m0r0~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 122,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 57,
++        "game": "r11l",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "r11l",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "r11l~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 141,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 47,
++        "game": "re86",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "re86~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 125,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 14,
++        "game": "s5i5",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "s5i5",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "s5i5~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 162,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 24,
++        "game": "sb26",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sb26",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sb26~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 155,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 28,
++        "game": "sc25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sc25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sc25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 189,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 10,
++        "game": "sk48",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sk48",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sk48~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 18,
++        "game": "sp80",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sp80~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 12,
++        "game": "su15",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "su15",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "su15~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 117,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 9,
++        "game": "tn36",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tn36",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tn36~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 45,
++        "game": "tr87",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tr87",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tr87~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 151,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 21,
++        "game": "tu93",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tu93",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tu93~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 100,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": 11,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 11,
++        "game": "vc33",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 1,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 1,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solution_labels": [
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":57,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":48,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":49,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":55,\"y\":47}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":44,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":46,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":45,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":59,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":52,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":54,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":57,\"y\":48}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":31,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":48,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":47,\"y\":13}}",
++          "{\"action\":6,\"data\":{\"x\":63,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":13}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":53,\"y\":47}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":51,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":28,\"y\":29}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":30,\"y\":0}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":40,\"y\":46}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
++          "RESET",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++          "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}"
++        ],
++        "solved": true,
++        "variant": 1,
++        "variant_signature": "vc33~color01",
++        "winner_generated": true
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "random_priority",
++        "expansions_used": 37,
++        "game": "wa30",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "wa30",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "wa30~color01",
++        "winner_generated": false
++      }
++    ],
++    "variant_attempts_count": 25,
++    "variant_solved_count": 1,
++    "variant_specs": [
++      {
++        "game": "ar25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "game": "bp35",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "game": "cd82",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "game": "cn04",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "game": "dc22",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "game": "ft09",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "game": "g50t",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "game": "ka59",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "game": "lf52",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "game": "lp85",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "game": "ls20",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "game": "m0r0",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "game": "r11l",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "game": "re86",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "game": "s5i5",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "game": "sb26",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "game": "sc25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "game": "sk48",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "game": "sp80",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "game": "su15",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "game": "tn36",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "game": "tr87",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "game": "tu93",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "game": "vc33",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "game": "wa30",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ]
++  },
++  "random_priority_transfer_rate": 0.04,
++  "random_seed": 4569,
++  "reproducibility_checksum": "sha256:049be7ce0bac54c274608a2558deb198068b5a72acfee347e13ab45ba5e65977",
++  "result_path": "results/experiment_4569_verifier_guided_expansion.json",
++  "schema": "carnot.exp4569.verifier_guided_expansion.v1",
++  "solve_rate_preserved": false,
++  "spec_refs": [
++    "REQ-CAPSTONE-4569",
++    "SCENARIO-CAPSTONE-4569",
++    "SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES"
++  ],
++  "transfer_ci": [
++    -0.12,
++    0.0
++  ],
++  "transfer_delta": -0.04,
++  "variant_plan": {
++    "arms": [
++      "baseline",
++      "verifier_expansion",
++      "random_priority"
++    ],
++    "max_expansions": 200,
++    "public_game_count": 25,
++    "public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "runner": "generic_solver_offline_variant_env",
++    "variant_ids": [
++      1
++    ],
++    "variants_per_game": 1
++  },
++  "verifier_expansion_measurement": {
++    "generic_transfer_ci": [
++      0.0,
++      0.0
++    ],
++    "generic_transfer_rate_over_variants": 0.0,
++    "max_expansions_used": 57,
++    "median_actions_to_goal": null,
++    "median_expanded_states_to_goal": null,
++    "variant_attempts": [
++      {
++        "actions": 156,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 24,
++        "game": "ar25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ar25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ar25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 116,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 21,
++        "game": "bp35",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "bp35",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "bp35~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 139,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 23,
++        "game": "cd82",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cd82",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cd82~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 39,
++        "game": "cn04",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cn04",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cn04~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 130,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 19,
++        "game": "dc22",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "dc22",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "dc22~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 173,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 23,
++        "game": "ft09",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ft09",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ft09~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 158,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 29,
++        "game": "g50t",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "g50t",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "g50t~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 139,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 30,
++        "game": "ka59",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ka59",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ka59~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 116,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 6,
++        "game": "lf52",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lf52",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lf52~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 186,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 9,
++        "game": "lp85",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lp85~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 29,
++        "game": "ls20",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ls20",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ls20~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 142,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 21,
++        "game": "m0r0",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "m0r0",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "m0r0~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 122,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 57,
++        "game": "r11l",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "r11l",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "r11l~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 141,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 48,
++        "game": "re86",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "re86~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 125,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 14,
++        "game": "s5i5",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "s5i5",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "s5i5~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 162,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 24,
++        "game": "sb26",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sb26",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sb26~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 157,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 30,
++        "game": "sc25",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sc25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sc25~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 189,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 12,
++        "game": "sk48",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sk48",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sk48~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 18,
++        "game": "sp80",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sp80~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 129,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 13,
++        "game": "su15",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "su15",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "su15~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 117,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 9,
++        "game": "tn36",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tn36",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tn36~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 45,
++        "game": "tr87",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tr87",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tr87~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 152,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 21,
++        "game": "tu93",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tu93",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tu93~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 136,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 13,
++        "game": "vc33",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "vc33~color01",
++        "winner_generated": false
++      },
++      {
++        "actions": 144,
++        "attempted": true,
++        "blocked_reason": "",
++        "expanded_states_to_goal": null,
++        "expansion_priority_mode": "verifier_expansion",
++        "expansions_used": 32,
++        "game": "wa30",
++        "kind": "color",
++        "max_expansions": 200,
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "wa30",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "wa30~color01",
++        "winner_generated": false
++      }
++    ],
++    "variant_attempts_count": 25,
++    "variant_solved_count": 0,
++    "variant_specs": [
++      {
++        "game": "ar25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "game": "bp35",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "game": "cd82",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "game": "cn04",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "game": "dc22",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "game": "ft09",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "game": "g50t",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "game": "ka59",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "game": "lf52",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "game": "lp85",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "game": "ls20",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "game": "m0r0",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "game": "r11l",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "game": "re86",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "game": "s5i5",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "game": "sb26",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "game": "sc25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "game": "sk48",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "game": "sp80",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "game": "su15",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "game": "tn36",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "game": "tr87",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "game": "tu93",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "game": "vc33",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "game": "wa30",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ]
++  },
++  "verifier_is_oracle": false,
++  "winner_generated": {
++    "attempted_count": 25,
++    "generated_count": 0,
++    "newly_solved_variants": [],
++    "not_generated_count": 25,
++    "random_priority": true,
++    "with_expansion": false,
++    "without_expansion": true
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3bb6f390a8..43b9ac5777 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T01:02:54Z",
+-  "finished_at": "2026-06-22T01:02:54Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-22T02:56:36Z",
++  "finished_at": "2026-06-22T02:56:36Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1e4a5bac70..3eb92a622f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T01:02:54Z",
+-  "finished_at": "2026-06-22T01:02:54Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-22T02:56:36Z",
++  "finished_at": "2026-06-22T02:56:36Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 267dfab17e..3aaf9dd712 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T01:02:54Z",
+-  "finished_at": "2026-06-22T01:02:54Z",
++  "started_at": "2026-06-22T02:56:36Z",
++  "finished_at": "2026-06-22T02:56:36Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4569_verifier_guided_expansion.py b/tests/python/test_experiment_4569_verifier_guided_expansion.py
+new file mode 100644
+index 0000000000..0a5da02a07
+--- /dev/null
++++ b/tests/python/test_experiment_4569_verifier_guided_expansion.py
+@@ -0,0 +1,267 @@
++"""Tests for Exp 4569 verifier-guided frontier expansion.
++
++Spec refs: REQ-CAPSTONE-4569, SCENARIO-CAPSTONE-4569,
++SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4569_verifier_guided_expansion as mod
++from carnot.agentic.arc_discriminative_router import (
++    CrossGameDiscriminativeExpansionPriority,
++    RandomExpansionPriority,
++)
++from carnot.agentic.arc_graph_explore import graph_explore_solve_v2
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _preconditions(games: tuple[str, ...]) -> dict[str, Any]:
++    return {
++        "ok": True,
++        "offline_arcade": True,
++        "arc_value_learner_discriminative_import": True,
++        "trained_verifier_loadable": True,
++        "cross_game_corpus_loadable": True,
++        "offline_env_public_games": list(games),
++        "leaderboard_submission": False,
++    }
++
++
++def _runner_factory(
++    solved_by_mode: Mapping[str, set[str]],
++    expansions_by_mode: Mapping[str, Mapping[str, int]] | None = None,
++):
++    expansions_by_mode = expansions_by_mode or {}
++
++    def _runner(mode: str):
++        def run(game: str, spec: Mapping[str, Any], _budget: int) -> dict[str, Any]:
++            signature = str(spec["variant_signature"])
++            solved = signature in solved_by_mode.get(mode, set())
++            reached = 1 if solved else 0
++            expansions = int(expansions_by_mode.get(mode, {}).get(signature, 12))
++            return {
++                "game": game,
++                "variant_signature": signature,
++                "variant": int(spec["variant"]),
++                "kind": spec["kind"],
++                "reflect": spec.get("reflect"),
++                "attempted": True,
++                "solved": solved,
++                "winner_generated": solved,
++                "reached_level": reached,
++                "actions": 5 if solved else 9,
++                "expanded_states_to_goal": expansions if solved else None,
++                "expansions_used": expansions,
++                "max_expansions": 32,
++                "solution_labels": ["ACTION1"] if solved else [],
++                "reproduction_gate": {
++                    "game": game,
++                    "claimed_level": reached,
++                    "reached_level": reached,
++                    "reproduced": solved,
++                },
++                "blocked_reason": "",
++                "expansion_priority_mode": mode,
++            }
++
++        return run
++
++    return _runner
++
++
++def test_req_capstone_4569_spec_declares_expansion_contract() -> None:
++    """REQ-CAPSTONE-4569: OpenSpec declares the verifier-guided expansion schema."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4569" in spec
++    assert "SCENARIO-CAPSTONE-4569" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_req_capstone_4569_discriminative_priority_scores_frontier_frames() -> None:
++    """REQ-CAPSTONE-4569: the verifier priority scores nodes, not action order."""
++
++    class FakeVerifier:
++        def proba_features(self, features: list[float]) -> float:
++            return 0.9 if features[0] == pytest.approx(3.0) else 0.2
++
++    near = SimpleNamespace(frame=[[3]], levels_completed=0, available_actions=[1])
++    far = SimpleNamespace(frame=[[1]], levels_completed=0, available_actions=[1])
++    priority = CrossGameDiscriminativeExpansionPriority(
++        FakeVerifier(),
++        featurize=lambda frame: [float(frame.frame[0][0])],
++    )
++
++    assert priority.verifier_is_oracle is False
++    assert priority(near) < priority(far)
++    assert priority.proba(near) > priority.proba(far)
++    assert RandomExpansionPriority(seed=4569)(near) == RandomExpansionPriority(seed=4569)(near)
++
++
++class _ToyEnv:
++    def __init__(self) -> None:
++        self.state = "root"
++
++    def reset(self) -> Any:
++        self.state = "root"
++        return self._frame()
++
++    def _frame(self) -> Any:
++        values = {"root": 0, "bad": 1, "near": 2, "bad2": 3, "win": 9}
++        level = 1 if self.state == "win" else 0
++        return SimpleNamespace(
++            frame=[[values[self.state]]],
++            levels_completed=level,
++            available_actions=[] if self.state == "win" else [1, 2],
++            state="",
++        )
++
++    @staticmethod
++    def _action_id(action: Any) -> int:
++        if hasattr(action, "value"):
++            return int(action.value)
++        text = str(action)
++        if "ACTION" in text:
++            return int(text.rsplit("ACTION", 1)[-1])
++        return int(action)
++
++    def step(self, action: Any, data: Any = None, reasoning: Any = None) -> Any:
++        aid = self._action_id(action)
++        transitions = {
++            ("root", 1): "bad",
++            ("root", 2): "near",
++            ("bad", 1): "bad2",
++            ("bad", 2): "bad2",
++            ("near", 1): "win",
++            ("near", 2): "win",
++            ("bad2", 1): "bad2",
++            ("bad2", 2): "bad2",
++        }
++        self.state = transitions[(self.state, aid)]
++        return self._frame()
++
++
++def test_req_capstone_4569_graph_explore_uses_expansion_priority_for_generation() -> None:
++    """REQ-CAPSTONE-4569: the priority changes which generated frontier node expands."""
++
++    baseline_stats: dict[str, Any] = {}
++    baseline, baseline_level = graph_explore_solve_v2(
++        _ToyEnv(),
++        0,
++        max_expansions=3,
++        max_depth=4,
++        stats=baseline_stats,
++    )
++    priority_stats: dict[str, Any] = {}
++    guided, guided_level = graph_explore_solve_v2(
++        _ToyEnv(),
++        0,
++        max_expansions=3,
++        max_depth=4,
++        expansion_priority=lambda frame: 0.0 if frame.frame == [[2]] else 10.0,
++        stats=priority_stats,
++    )
++
++    assert baseline is None
++    assert baseline_level == 0
++    assert guided_level == 1
++    assert guided == [{"action": 2, "data": None}, {"action": 1, "data": None}]
++    assert priority_stats["expansions"] == 3
++    assert priority_stats["max_expansions"] == 3
++
++
++def test_scenario_capstone_4569_artifact_reports_success_delta_and_controls(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4569: verifier expansion beats baseline and random priority."""
++
++    games = ("g1", "g2", "g3", "g4")
++    baseline = {"g1~color01"}
++    verifier = {"g1~color01", "g2~color01", "g3~color01", "g4~color01"}
++    random = {"g1~color01"}
++    expansions = {
++        "baseline": {"g1~color01": 9},
++        "verifier_expansion": {
++            "g1~color01": 4,
++            "g2~color01": 5,
++            "g3~color01": 6,
++            "g4~color01": 7,
++        },
++        "random_priority": {"g1~color01": 11},
++    }
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {"baseline": baseline, "verifier_expansion": verifier, "random_priority": random},
++            expansions,
++        ),
++        n_bootstrap=80,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "success: verifier_guided_expansion_generic_transfer_1.000_above_0.04"
++    )
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["generic_transfer_rate_baseline"] == pytest.approx(0.25)
++    assert artifact["generic_transfer_rate_with_expansion"] == pytest.approx(1.0)
++    assert artifact["transfer_delta"] == pytest.approx(0.75)
++    assert artifact["solve_rate_preserved"] is True
++    assert artifact["random_priority_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["offline_reproduced"] is True
++    assert artifact["winner_generated"]["with_expansion"] is True
++    assert artifact["expanded_states_to_goal_with_vs_without"]["strictly_lower_than_without"] is True
++    assert artifact["chosen_submitted_config"] == "enable_verifier_guided_expansion"
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4569_honest_null_keeps_generation_gap(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4569-FIELD-PRINCIPLES: zero delta is an explicit null."""
++
++    games = ("g1", "g2")
++    solved = {"g1~color01"}
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {
++                "baseline": solved,
++                "verifier_expansion": solved,
++                "random_priority": set(),
++            }
++        ),
++        n_bootstrap=40,
++        dominant_weight_family="predicate_distance",
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened"
++    )
++    assert artifact["transfer_delta"] == 0.0
++    assert "honest no-value null" in artifact["null_delta_methodology_note"]
++    assert artifact["random_priority_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["chosen_submitted_config"] == "unchanged"
++    assert artifact["missing_verifier_gaps"] == [
++        "verifier_guided_expansion_no_value_added; winner_not_generated_for=1; strongest_weight_family=predicate_distance"
++    ]
++    assert mod.validate_artifact(artifact) == []
+-- 
+2.55.0
+

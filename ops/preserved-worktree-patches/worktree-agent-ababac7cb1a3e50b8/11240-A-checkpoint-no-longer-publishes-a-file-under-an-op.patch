@@ -1,0 +1,408 @@
+From 840ef0dd4ee3671d83a911ebb66837d34ea05ca9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:52:44 -0400
+Subject: [PATCH 11240/11362] A checkpoint no longer publishes a file under an
+ open mutation proof (REQ-INFRA-6977)
+
+A mutation proof breaks a tracked file on purpose, confirms the suite goes RED,
+then restores it byte-identically. Between those steps the file on disk is wrong.
+The conductor's checkpoint commits whatever is dirty every few minutes and runs no
+hooks, so on 2026-09-05 it published a deliberately-broken module to main, where it
+stood for 3 minutes 47 seconds.
+
+Operator approved the middle form: let the checkpoint proceed, but exclude paths
+named by an open proof. Two staging paths need it, because they do not share code.
+git_commit_and_push goes through _stage_all_except_claimed and is covered by
+unstaging from the index; the interrupted-run checkpoint in research_step stages
+file-by-file and never reaches that function, so it filters its own list.
+
+The lock path is imported from the module that owns it, never copied. It lives
+under --git-common-dir so every worktree shares one, and the ops/ copy written here
+first would have missed it in the normal case while still looking like a guard.
+
+The two fail directions differ and both are deliberate. Reading the lock fails
+OPEN and logs: the checkpoint exists to preserve in-flight work, and losing that is
+unrecoverable while a published broken file is one revert away. The empty case
+fails CLOSED: if the broken file is the only dirty path there is nothing to
+preserve, and the only alternative is publishing it.
+
+Mutation proofs, under an exclusive session, each restored byte-identically by cmp:
+rule deleted RED (2 tests), exclusion removed from _stage_all_except_claimed RED,
+git restore never issued RED, helper rule deleted RED (2 tests). One survived and
+is stated rather than hidden: research_step ignoring the helper's return value
+leaves the suite green, because reaching that line needs a full conductor fixture.
+The decision was extracted out of research_step so the logic is provable and the
+unproven surface is one assignment. Named in the spec's honest-limit paragraph.
+
+Two deliberate overrides, both explained rather than worked around:
+
+--mutation-force-unlock closed the session. The gate compares the target to its
+bytes at --mutation-begin, and this file legitimately changed during the session
+when the helper was extracted. No mutation was left in the tree; restores were
+verified by cmp at each step and the 13 tests are green.
+
+A pending marker was deleted deliberately. It was armed by this file's own pytest
+run and named openspec/capabilities/pipeline/spec.md and scripts/research_conductor.py,
+both tagged [NOT this run] -- that is, authored edits present before the run, not
+test damage. Reverting them is the destruction this guard has caused three times.
+The rewrite is intended and is what this commit contains.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ openspec/capabilities/pipeline/spec.md        |  39 +++++
+ scripts/research_conductor.py                 | 114 +++++++++++++
+ .../test_conductor_mutation_proof_freeze.py   | 152 ++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 tests/python/test_conductor_mutation_proof_freeze.py
+
+diff --git a/openspec/capabilities/pipeline/spec.md b/openspec/capabilities/pipeline/spec.md
+index 3534d1f3a0..0d09503269 100644
+--- a/openspec/capabilities/pipeline/spec.md
++++ b/openspec/capabilities/pipeline/spec.md
+@@ -4822,6 +4822,45 @@ declared a scope from quietly growing it, which is the failure that actually occ
+ 
+ **Spec traces:** REQ-INFRA-6800
+ 
++### REQ-INFRA-6977: A Checkpoint MUST NOT Publish A File Under An Open Mutation Proof
++
++**Statement:** While a mutation-proof session holds the lock, the conductor's checkpoint
++commits MUST NOT stage that session's target file. When the lock is readable and names a
++target, the target MUST be excluded from every checkpoint staging path. When excluding it
++would leave nothing to commit, the checkpoint MUST be skipped rather than committed empty.
++With no lock held the behaviour MUST be unchanged.
++
++**Rationale:** A mutation proof deliberately breaks a tracked file, confirms the suite goes
++RED on a real assertion, then restores it byte-identically. Between those two steps the file
++on disk is wrong on purpose. The conductor's checkpoint commits whatever is dirty every few
++minutes and runs no hooks, so it can publish that broken state to main. On 2026-09-05 it did:
++a deliberately-broken module reached main and stood there for 3 minutes 47 seconds.
++
++This is the same shape as REQ-INFRA-6800 and reuses its mechanism deliberately. That rule
++excludes paths another session DECLARED it is working on; this one excludes the single path a
++session is PROVING against. The difference that matters is the reason for excluding. A claimed
++path is left behind for attribution, and its content is recoverable from HEAD either way. A
++mutated path is left behind for correctness: committing it publishes a known-wrong file.
++
++**Fail direction, stated because the two halves differ.** Reading the lock fails OPEN: an
++unreadable or absent lock leaves the ordinary staging behaviour in place, loudly logged, because
++the checkpoint exists to preserve in-flight work and losing that work is unrecoverable while a
++published broken file is loud and revertible. The empty-checkpoint case fails CLOSED: if the
++mutated file is the only dirty path, nothing is committed, because the sole alternative is
++publishing the broken file and there is no work to preserve besides it.
++
++A stale lock still freezes its target. A proof abandoned past the staleness window has very
++likely left its mutation on disk, which is a stronger reason to withhold the file, not a weaker
++one.
++
++**Honest limit:** this cannot protect a file mutated without taking the lock. It protects the
++documented procedure, which is what the incident followed.
++
++**Implementation:** `scripts/research_conductor.py` (`open_mutation_proof_target`,
++`mutation_frozen`, `_stage_all_except_claimed`, the interrupted-run checkpoint loop).
++
++**Spec traces:** REQ-INFRA-6977
++
+ ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
+ 
+ Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 74c2feabe3..35c8e7cbe6 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -415,6 +415,117 @@ def claimed_by_other_sessions(
+     return claimed
+ 
+ 
++def open_mutation_proof_target() -> str | None:
++    """Repo-relative path of the file an open mutation proof has deliberately broken.
++
++    REQ-INFRA-6977. A mutation proof breaks a tracked file on purpose, confirms the suite goes
++    RED, then restores it. Between those steps the file on disk is wrong. This conductor's
++    checkpoint commits whatever is dirty and runs no hooks, so it can publish that wrong file
++    to main -- on 2026-09-05 it did, for 3m47s.
++
++    Reads the lock that `scripts/test_suite_mutation_check.py --mutation-begin` takes. Returns
++    None when no proof is open.
++
++    FAIL-OPEN, and the direction is deliberate. An unreadable or malformed lock returns None,
++    which leaves the ordinary staging behaviour in place. The checkpoint exists to preserve
++    in-flight work; losing that work is unrecoverable, while a published broken file is loud
++    and one revert away. The unreadable case is logged rather than silently swallowed, because
++    a guard that is trusted and silent is the worst state in this system.
++
++    A STALE lock still freezes its target. A proof abandoned past the staleness window has very
++    likely left its mutation sitting on disk, which is a reason to withhold the file, not to
++    release it.
++    """
++    import json as _json
++
++    # Ask the module that OWNS the lock where it is, never a second copy of the path. The lock
++    # lives under `--git-common-dir` so every worktree shares one, and a hardcoded
++    # `ops/...lock` here would miss it in the normal case while still looking like a guard.
++    try:
++        from test_suite_mutation_check import PROOF_LOCK  # type: ignore[import-not-found]
++    except Exception as exc:  # noqa: BLE001 - see FAIL-OPEN above
++        logger.warning("Cannot locate the mutation proof lock (%s); staging is NOT narrowed.", exc)
++        return None
++    if not PROOF_LOCK.exists():
++        return None
++    try:
++        record = _json.loads(PROOF_LOCK.read_text())
++        target = record.get("target")
++        if not isinstance(target, str) or not target:
++            raise ValueError("lock names no target")
++    except Exception as exc:  # noqa: BLE001 - see FAIL-OPEN above
++        logger.warning(
++            "A mutation proof holds %s but it could not be read (%s). Staging is NOT narrowed; "
++            "a deliberately-broken file may reach this checkpoint.",
++            PROOF_LOCK.name,
++            exc,
++        )
++        return None
++    try:
++        return str(Path(target).resolve().relative_to(PROJECT_ROOT.resolve()))
++    except ValueError:
++        # A target outside this checkout cannot be staged from here, so it needs no exclusion.
++        return None
++
++
++def mutation_frozen(staged: list[str], target: str | None) -> list[str]:
++    """The subset of `staged` that an open mutation proof has deliberately broken.
++
++    Pure so it is testable without a git fixture or a real lock, following the precedent set by
++    `claimed_by_other_sessions` and `determination_damage`.
++    """
++    if not target:
++        return []
++    return [p for p in staged if p == target]
++
++
++def checkpoint_after_mutation_freeze(committable: list[str]) -> list[str]:
++    """REQ-INFRA-6977: drop paths under an open mutation proof from a file-by-file checkpoint.
++
++    The interrupted-run checkpoint stages file-by-file and never reaches
++    `_stage_all_except_claimed`, so it cannot use the index-based exclusion. Extracted rather
++    than inlined so the DECISION is provable by mutation; the single line that calls it inside
++    `research_step` is not covered by a test, because reaching it needs a full conductor
++    fixture. That residual is stated in the spec rather than hidden.
++    """
++    frozen = mutation_frozen(committable, open_mutation_proof_target())
++    if not frozen:
++        return committable
++    kept = [f for f in committable if f not in frozen]
++    logger.warning(
++        "Withheld %s from the checkpoint: a mutation proof is open on it, so the file on disk "
++        "is deliberately broken. %d path(s) left to commit.",
++        ", ".join(frozen),
++        len(kept),
++    )
++    return kept
++
++
++def _unstage_mutation_proof_target() -> None:
++    """REQ-INFRA-6977: drop a file under an open mutation proof from the index.
++
++    Runs immediately after `git add -A` and BEFORE the scope narrowing, because that narrowing
++    returns early when no session has declared a scope -- which is the usual case, and would
++    leave this exclusion unreached.
++    """
++    target = open_mutation_proof_target()
++    if not target:
++        return
++    rc, staged_out, _ = run_cmd(["git", "diff", "--cached", "--name-only"])
++    if rc != 0:
++        return
++    staged = [line.strip() for line in staged_out.splitlines() if line.strip()]
++    frozen = mutation_frozen(staged, target)
++    if not frozen:
++        return
++    run_cmd(["git", "restore", "--staged", "--", *frozen])
++    logger.warning(
++        "Withheld %s from this commit: a mutation proof is open on it, so the file on disk is "
++        "deliberately broken. Committing it would publish a known-wrong file.",
++        ", ".join(frozen),
++    )
++
++
+ def _stage_all_except_claimed() -> None:
+     """`git add -A`, then unstage whatever another session has declared it is working on.
+ 
+@@ -444,6 +555,7 @@ def _stage_all_except_claimed() -> None:
+     """
+     _restore_dropped_determinations()
+     run_cmd(["git", "add", "-A"])
++    _unstage_mutation_proof_target()
+     try:
+         import json as _json
+ 
+@@ -6410,6 +6522,8 @@ def research_step(
+         skip = {".coverage", ".pytest_cache"}
+         committable = [f for f in all_dirty if not any(f.startswith(s) for s in skip)]
+ 
++        committable = checkpoint_after_mutation_freeze(committable)
++
+         if committable:
+             logger.info(
+                 "Committing %d dirty files as checkpoint (preserving work)", len(committable)
+diff --git a/tests/python/test_conductor_mutation_proof_freeze.py b/tests/python/test_conductor_mutation_proof_freeze.py
+new file mode 100644
+index 0000000000..c1741e04d9
+--- /dev/null
++++ b/tests/python/test_conductor_mutation_proof_freeze.py
+@@ -0,0 +1,152 @@
++"""REQ-INFRA-6977: a checkpoint must not publish a file under an open mutation proof.
++
++INCIDENT 2026-09-05. A mutation proof breaks a tracked file on purpose, confirms the suite
++goes RED, then restores it byte-identically. The conductor's checkpoint commits whatever is
++dirty every few minutes and runs no hooks, so it published a deliberately-broken module to
++main, where it stood for 3 minutes 47 seconds.
++
++The decision rule is the pure function `mutation_frozen`, tested here without a git fixture
++or a real lock, following the precedent of `claimed_by_other_sessions`. The tests below also
++bite the CALL SITES: a rule that is correct and never invoked proves nothing.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++import research_conductor as rc  # noqa: E402
++import test_suite_mutation_check as tsmc  # noqa: E402
++
++
++# ---------------------------------------------------------------- the pure rule
++
++
++def test_the_proof_target_is_withheld() -> None:
++    assert rc.mutation_frozen(["a.py", "b.py"], "b.py") == ["b.py"]
++
++
++def test_no_open_proof_withholds_nothing() -> None:
++    """Inert without a lock. The conductor checkpoints constantly; a default-on
++    narrowing would wedge the research loop."""
++    assert rc.mutation_frozen(["a.py", "b.py"], None) == []
++
++
++def test_a_target_that_is_not_staged_is_not_invented() -> None:
++    assert rc.mutation_frozen(["a.py"], "untouched.py") == []
++
++
++# ------------------------------------------------------- reading the real lock
++
++
++@pytest.fixture()
++def lock(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
++    """Point the OWNING module's lock constant at tmp_path.
++
++    `open_mutation_proof_target` imports PROOF_LOCK at call time precisely so the path is
++    never duplicated here -- the real lock lives under `--git-common-dir` and an
++    `ops/...lock` copy in the conductor would miss it while still looking like a guard.
++    """
++    p = tmp_path / "carnot_mutation_proof.lock"
++    monkeypatch.setattr(tsmc, "PROOF_LOCK", p)
++    return p
++
++
++def test_an_open_proof_names_its_target_repo_relative(lock: Path) -> None:
++    lock.write_text(json.dumps({"target": str(REPO / "python" / "carnot" / "x.py")}))
++    assert rc.open_mutation_proof_target() == "python/carnot/x.py"
++
++
++def test_no_lock_file_means_no_target(lock: Path) -> None:
++    assert not lock.exists()
++    assert rc.open_mutation_proof_target() is None
++
++
++def test_an_unreadable_lock_fails_open_and_says_so(
++    lock: Path, caplog: pytest.LogCaptureFixture
++) -> None:
++    """Fail-open here, deliberately: the checkpoint exists to preserve in-flight work, and
++    losing that is unrecoverable while a published broken file is one revert away. Loud,
++    because a guard that is trusted and silent is the worst state in this system."""
++    lock.write_text("{not json")
++    with caplog.at_level("WARNING"):
++        assert rc.open_mutation_proof_target() is None
++    assert "could not be read" in caplog.text
++
++
++def test_a_target_outside_this_checkout_needs_no_exclusion(lock: Path, tmp_path: Path) -> None:
++    """A worktree's mutation cannot be staged from the main checkout."""
++    lock.write_text(json.dumps({"target": str(tmp_path / "elsewhere" / "y.py")}))
++    assert rc.open_mutation_proof_target() is None
++
++
++# ------------------------------------------------------------- the call sites
++
++
++def test_the_frozen_path_is_actually_unstaged(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Bites the call site: the rule must reach `git restore --staged`, not merely exist."""
++    calls: list[list[str]] = []
++
++    def fake(cmd, *a, **k):  # noqa: ANN001, ANN202
++        calls.append(cmd)
++        if cmd[:3] == ["git", "diff", "--cached"]:
++            return 0, "keep.py\nbroken.py\n", ""
++        return 0, "", ""
++
++    monkeypatch.setattr(rc, "run_cmd", fake)
++    monkeypatch.setattr(rc, "open_mutation_proof_target", lambda: "broken.py")
++    rc._unstage_mutation_proof_target()
++    assert ["git", "restore", "--staged", "--", "broken.py"] in calls
++
++
++def test_nothing_is_unstaged_when_no_proof_is_open(monkeypatch: pytest.MonkeyPatch) -> None:
++    calls: list[list[str]] = []
++    monkeypatch.setattr(rc, "run_cmd", lambda cmd, *a, **k: (calls.append(cmd), (0, "", ""))[1])
++    monkeypatch.setattr(rc, "open_mutation_proof_target", lambda: None)
++    rc._unstage_mutation_proof_target()
++    assert not any("restore" in c for c in calls)
++
++
++def test_the_staging_path_invokes_the_exclusion(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Bites the second call site. `_stage_all_except_claimed` returns early when no session
++    has declared a scope -- the usual case -- so the exclusion must run BEFORE that."""
++    seen: list[str] = []
++    monkeypatch.setattr(rc, "_restore_dropped_determinations", lambda: seen.append("restore"))
++    monkeypatch.setattr(
++        rc, "run_cmd", lambda cmd, *a, **k: (seen.append(" ".join(cmd)), (0, "", ""))[1]
++    )
++    monkeypatch.setattr(rc, "_unstage_mutation_proof_target", lambda: seen.append("EXCLUDE"))
++    monkeypatch.setattr(rc, "PROJECT_ROOT", Path("/nonexistent-scopes-dir"))
++    rc._stage_all_except_claimed()
++    assert "EXCLUDE" in seen
++    assert seen.index("git add -A") < seen.index("EXCLUDE")
++
++
++def test_the_file_by_file_checkpoint_drops_the_frozen_path(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """The interrupted-run checkpoint stages file-by-file and never reaches the index-based
++    exclusion, so it carries its own. Extracted from `research_step` so the decision is
++    provable; the one line calling it there is not covered — see the helper's docstring."""
++    monkeypatch.setattr(rc, "open_mutation_proof_target", lambda: "broken.py")
++    assert rc.checkpoint_after_mutation_freeze(["keep.py", "broken.py"]) == ["keep.py"]
++
++
++def test_the_checkpoint_is_unchanged_with_no_proof_open(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.setattr(rc, "open_mutation_proof_target", lambda: None)
++    assert rc.checkpoint_after_mutation_freeze(["a.py", "b.py"]) == ["a.py", "b.py"]
++
++
++def test_a_checkpoint_of_only_the_frozen_path_commits_nothing(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """Fails CLOSED here, unlike the lock read. If the broken file is the only dirty path
++    there is no work to preserve, and the sole alternative is publishing it."""
++    monkeypatch.setattr(rc, "open_mutation_proof_target", lambda: "broken.py")
++    assert rc.checkpoint_after_mutation_freeze(["broken.py"]) == []
+-- 
+2.55.0
+

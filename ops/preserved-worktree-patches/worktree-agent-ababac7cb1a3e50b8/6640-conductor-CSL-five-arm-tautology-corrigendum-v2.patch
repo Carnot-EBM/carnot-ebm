@@ -1,0 +1,2184 @@
+From 95059bde3c42deca9d25bd5a4f31059efbcf51a0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 19:40:46 -0400
+Subject: [PATCH 06640/11362] [conductor] CSL five-arm tautology corrigendum v2
+
+Automated research step by research conductor.
+Task ID: exp5557-csl-five-arm-tautology-corrigendum-v2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  82 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...7_csl_five_arm_tautology_corrigendum_v2.py | 723 +++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...csl_five_arm_tautology_corrigendum_v2.json | 822 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...7_csl_five_arm_tautology_corrigendum_v2.py | 284 ++++++
+ 18 files changed, 1937 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+ create mode 100644 results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+ create mode 100644 tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index fb451d109d..52e5c0703e 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -21645,3 +21645,85 @@ transfer claim SHALL be attributed only to external retrieval memory.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5544 | Planned (`python/carnot/experiment_5544_cross_model_sota_csl_transfer.py`, `results/experiment_5544_cross_model_sota_csl_transfer.json`) | Planned (`tests/python/test_experiment_5544_cross_model_sota_csl_transfer.py`) |
++
++## REQ-LEARN-5557: CSL Five-Arm Tautology Corrigendum v2
++
++The Exp5557 workflow SHALL write
++`results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json` as a
++deterministic no-LLM corrigendum for the Exp5543 five-arm CSL ablation
++TAUTOLOGY flag. The workflow SHALL load
++`results/experiment_5542_csl_residue_metric_independence_corrigendum.json` as
++the repaired event/topic independence source and
++`results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json` as the
++flagged upstream ablation. It SHALL NOT mutate model weights or call a live
++LLM.
++
++The corrigendum SHALL evaluate one shared held-out query set under
++best-constant, per-query-random, no-memory, shuffled-memory, and aligned-memory
++controls. Best-constant SHALL use one fixed answer for every query. Per-query
++random SHALL use deterministic query-keyed random memory that is not the same
++constant answer and is not aligned to the query's own memory row. No-memory,
++shuffled-memory, and aligned-memory SHALL reuse the Exp5542 independent
++event/topic label fixture so the scores are judged against independent outcome
++labels. A clean corrigendum SHALL fail closed when best-constant and
++per-query-random are equal within tolerance, or when aligned-memory does not
++beat shuffled-memory.
++
++The artifact SHALL include required fields
++`upstream_csl_residue_corrigendum`, `upstream_flagged_ablation`, `llm_invoked`,
++`no_model_specs_required`, `best_constant_score`, `per_query_random_score`,
++`no_memory_score`, `shuffled_memory_score`, `aligned_memory_score`,
++`aligned_delta_over_shuffled`, `equality_tolerance`,
++`duplicated_metric_pairs`, `tautology_resolved`, `csl_five_arm_clean`,
++`adversarial_clean`, `tests_added_or_reused`, `field_principles`,
++`inference_substrate`, and `honest_verdict`. It SHALL set
++`inference_substrate="deterministic_csl_ablation_no_llm"` and SHALL carry
++one-line principles for every required headline and gate field.
++
++### REQ-LEARN-5557 Sub-requirements
++
++- REQ-LEARN-5557-1: The workflow SHALL fail closed when Exp5542 is missing,
++  unreadable, or does not report `csl_residue_tautology_resolved=true`.
++- REQ-LEARN-5557-2: Every scored control SHALL use the same held-out query IDs
++  and independent outcome labels inherited from Exp5542.
++- REQ-LEARN-5557-3: `duplicated_metric_pairs` SHALL list every pair among
++  best-constant, per-query-random, no-memory, shuffled-memory, and
++  aligned-memory whose scores are equal within `equality_tolerance`.
++- REQ-LEARN-5557-4: `tautology_resolved` SHALL be true only when
++  best-constant and per-query-random are not duplicated and no headline score
++  pair is duplicated within tolerance.
++- REQ-LEARN-5557-5: `aligned_delta_over_shuffled` SHALL equal
++  `aligned_memory_score - shuffled_memory_score`, rounded deterministically.
++- REQ-LEARN-5557-6: `csl_five_arm_clean` and `adversarial_clean` SHALL be true
++  only when Exp5542 is clean, controls share the same query set,
++  `tautology_resolved=true`, aligned-memory beats shuffled-memory,
++  `llm_invoked=false`, and `no_model_specs_required=true`.
++
++### SCENARIO-LEARN-5557-BASELINES: Best-Constant And Random Controls Separate
++
++**Given** a non-degenerate held-out CSL fixture with multiple expected actions
++**When** best-constant and per-query-random controls are scored
++**Then** their scores SHALL differ by more than `equality_tolerance`
++**And** a fixture where those scores match SHALL be rejected as unresolved.
++
++### SCENARIO-LEARN-5557-CONTROLS: Aligned Memory Beats Shuffled Memory
++
++**Given** no-memory, shuffled-memory, and aligned-memory controls share the
++same Exp5542 independent outcome labels
++**When** the five-arm clean gate is computed
++**Then** `aligned_delta_over_shuffled` SHALL be positive before
++`csl_five_arm_clean` can be true.
++
++### SCENARIO-LEARN-5557-ARTIFACT: Corrigendum Receipt Is Conductor Visible
++
++**Given** Exp5542 is clean and Exp5543 is flagged for a five-arm tautology
++**When** Exp5557 writes its receipt
++**Then** the JSON SHALL include the upstream artifact paths, no-LLM substrate,
++separated baseline scores, duplicate-pair evidence, tests, field principles,
++and an honest terminal verdict.
++
++## Implementation Status (Exp 5557)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5557 | Planned (`python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`, `results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json`) | Planned (`tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 594bea1a9d..a2af83a136 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4509,
++  "experiments_checked": 4510,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py b/python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+new file mode 100644
+index 0000000000..901eb8d9ab
+--- /dev/null
++++ b/python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+@@ -0,0 +1,723 @@
++"""Exp5557 CSL five-arm tautology corrigendum v2.
++
++Spec refs: REQ-LEARN-5557,
++SCENARIO-LEARN-5557-BASELINES,
++SCENARIO-LEARN-5557-CONTROLS,
++SCENARIO-LEARN-5557-ARTIFACT.
++
++Exp5543 used semantically different best-constant and per-query-random
++controls, but the deterministic random draw self-matched one query and landed
++on the same 1/12 score as the constant baseline. This module keeps the
++repaired Exp5542 independent labels, adds the missing no-memory arm, and makes
++the random control sample non-self memory rows so a baseline tie becomes an
++explicit failure instead of a clean gate.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import hashlib
++import itertools
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5542_csl_residue_metric_independence_corrigendum as exp5542
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json"
++)
++UPSTREAM_CSL_RESIDUE_CORRIGENDUM = Path(
++    "results/experiment_5542_csl_residue_metric_independence_corrigendum.json"
++)
++UPSTREAM_FLAGGED_ABLATION = Path(
++    "results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py"
++)
++
++SCHEMA = "carnot.experiment_5557.csl_five_arm_tautology_corrigendum_v2"
++EXPERIMENT_ID = "experiment_5557_csl_five_arm_tautology_corrigendum_v2"
++TASK_ID = "exp5557-csl-five-arm-tautology-corrigendum-v2"
++MILESTONE = "2026.07.503"
++RUN_DATE = "2026-07-10"
++RANDOM_SEED = 5557
++EQUALITY_TOLERANCE = 1e-10
++INFERENCE_SUBSTRATE = "deterministic_csl_ablation_no_llm"
++
++BEST_CONSTANT_ARM = "best_constant"
++PER_QUERY_RANDOM_ARM = "per_query_random"
++NO_MEMORY_ARM = "no_memory"
++SHUFFLED_MEMORY_ARM = "shuffled_memory"
++ALIGNED_MEMORY_ARM = "aligned_memory"
++ARM_NAMES = (
++    BEST_CONSTANT_ARM,
++    PER_QUERY_RANDOM_ARM,
++    NO_MEMORY_ARM,
++    SHUFFLED_MEMORY_ARM,
++    ALIGNED_MEMORY_ARM,
++)
++ARM_SCORE_FIELDS = {
++    BEST_CONSTANT_ARM: "best_constant_score",
++    PER_QUERY_RANDOM_ARM: "per_query_random_score",
++    NO_MEMORY_ARM: "no_memory_score",
++    SHUFFLED_MEMORY_ARM: "shuffled_memory_score",
++    ALIGNED_MEMORY_ARM: "aligned_memory_score",
++}
++HEADLINE_SCORE_FIELDS = tuple(ARM_SCORE_FIELDS[arm] for arm in ARM_NAMES)
++SPEC_REFS = (
++    "REQ-LEARN-5557",
++    "SCENARIO-LEARN-5557-BASELINES",
++    "SCENARIO-LEARN-5557-CONTROLS",
++    "SCENARIO-LEARN-5557-ARTIFACT",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "upstream_csl_residue_corrigendum",
++    "upstream_flagged_ablation",
++    "llm_invoked",
++    "no_model_specs_required",
++    "best_constant_score",
++    "per_query_random_score",
++    "no_memory_score",
++    "shuffled_memory_score",
++    "aligned_memory_score",
++    "aligned_delta_over_shuffled",
++    "equality_tolerance",
++    "duplicated_metric_pairs",
++    "tautology_resolved",
++    "csl_five_arm_clean",
++    "adversarial_clean",
++    "tests_added_or_reused",
++    "field_principles",
++    "inference_substrate",
++    "honest_verdict",
++)
++DEFAULT_TESTS_ADDED_OR_REUSED = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-q --no-cov -n 0",
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-m pytest tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "--fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "upstream_csl_residue_corrigendum": "Binds the receipt to the repaired Exp5542 independent-label metric.",
++    "upstream_flagged_ablation": "Preserves the Exp5543 flagged artifact as the exact upstream failure.",
++    "llm_invoked": "Documents that no live model call can explain or fabricate the receipt.",
++    "no_model_specs_required": "Explains why model specs are absent for a deterministic no-LLM ablation.",
++    "best_constant_score": "Measures whether one fixed answer explains held-out performance.",
++    "per_query_random_score": "Measures chance retrieval with query-keyed non-self random memory.",
++    "no_memory_score": "Keeps retrieval benefit separate from the no-memory baseline.",
++    "shuffled_memory_score": "Detects whether arbitrary memory pairing explains the lift.",
++    "aligned_memory_score": "Measures query-aligned external memory against independent labels.",
++    "aligned_delta_over_shuffled": "Gate delta requiring aligned memory to beat shuffled memory.",
++    "equality_tolerance": "Makes duplicate-score detection deterministic and auditable.",
++    "duplicated_metric_pairs": "Lists score pairs whose equality would trigger a tautology concern.",
++    "tautology_resolved": "Fails when constant and random controls still collapse.",
++    "csl_five_arm_clean": "Bare gate for downstream CSL tasks after controls separate.",
++    "adversarial_clean": "Conductor-facing clean flag requiring no duplicate metric pairs.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "inference_substrate": "Declares deterministic CSL ablation with no LLM invocation.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++}
++
++
++def build_fixture() -> JsonDict:
++    """Return the Exp5542 held-out labels with five separated control states."""
++
++    upstream = exp5542.build_fixture()
++    queries = [query_record(row) for row in upstream["heldout_rows"]]
++    labels = {
++        row["label_id"]: {
++            "expected_action": row["expected_action"],
++            "label_source": exp5542.INDEPENDENT_LABEL_SOURCE,
++        }
++        for row in upstream["heldout_rows"]
++    }
++    aligned_entries = [
++        memory_entry("aligned", query, row["event_topic_action"])
++        for query, row in zip(queries, upstream["heldout_rows"], strict=True)
++    ]
++    random_entries = [
++        memory_entry(
++            "random",
++            query,
++            deterministic_nonself_random_action(query, aligned_entries),
++        )
++        for query in queries
++    ]
++    return {
++        "heldout_queries": queries,
++        "heldout_labels": labels,
++        "memory_states": {
++            BEST_CONSTANT_ARM: {
++                "arm": BEST_CONSTANT_ARM,
++                "constant_action": best_constant_action(labels),
++            },
++            PER_QUERY_RANDOM_ARM: {"arm": PER_QUERY_RANDOM_ARM, "entries": random_entries},
++            NO_MEMORY_ARM: {
++                "arm": NO_MEMORY_ARM,
++                "entries": [
++                    memory_entry("no-memory", query, row["no_memory_action"])
++                    for query, row in zip(queries, upstream["heldout_rows"], strict=True)
++                ],
++            },
++            SHUFFLED_MEMORY_ARM: {
++                "arm": SHUFFLED_MEMORY_ARM,
++                "entries": [
++                    memory_entry("shuffled", query, row["shuffled_memory_action"])
++                    for query, row in zip(queries, upstream["heldout_rows"], strict=True)
++                ],
++            },
++            ALIGNED_MEMORY_ARM: {"arm": ALIGNED_MEMORY_ARM, "entries": aligned_entries},
++        },
++    }
++
++
++def query_record(row: Mapping[str, Any]) -> JsonDict:
++    """Create one held-out query record without copying the answer label."""
++
++    payload = {
++        "task_id": row["task_id"],
++        "label_id": row["label_id"],
++        "query_family": row["query_family"],
++    }
++    return {
++        "query_id": row["task_id"],
++        "task_id": row["task_id"],
++        "label_id": row["label_id"],
++        "query_family": row["query_family"],
++        "query_key": "query:" + sha256_json(payload),
++    }
++
++
++def memory_entry(prefix: str, query: Mapping[str, Any], selected_action: str) -> JsonDict:
++    """Create one memory row keyed by query identity rather than label value."""
++
++    return {
++        "memory_id": f"{prefix}-{query['query_id']}",
++        "query_key": query["query_key"],
++        "selected_action": selected_action,
++    }
++
++
++def best_constant_action(labels: Mapping[str, Mapping[str, Any]]) -> str:
++    """Return the fixed answer with maximum support and deterministic ties."""
++
++    counts = Counter(label["expected_action"] for label in labels.values())
++    best_count = max(counts.values())
++    return sorted(action for action, count in counts.items() if count == best_count)[0]
++
++
++def deterministic_nonself_random_action(
++    query: Mapping[str, Any],
++    aligned_entries: Sequence[Mapping[str, Any]],
++) -> str:
++    """Pick a deterministic random memory action from rows not keyed to this query."""
++
++    candidates = [
++        entry for entry in aligned_entries if entry["query_key"] != query["query_key"]
++    ]
++    ranked = sorted(
++        candidates,
++        key=lambda entry: sha256_json(
++            {
++                "seed": RANDOM_SEED,
++                "query_id": query["query_id"],
++                "candidate_memory_id": entry["memory_id"],
++            }
++        ),
++    )
++    return str(ranked[0]["selected_action"])
++
++
++def evaluate_controls(fixture: Mapping[str, Any]) -> JsonDict:
++    """Score all controls and compute the duplicate-score evidence."""
++
++    arm_results = {arm: score_arm(fixture, arm) for arm in ARM_NAMES}
++    scores = {
++        ARM_SCORE_FIELDS[arm]: score_rows(rows) for arm, rows in arm_results.items()
++    }
++    duplicates = duplicated_metric_pairs(scores, EQUALITY_TOLERANCE)
++    aligned_delta = _round(
++        scores["aligned_memory_score"] - scores["shuffled_memory_score"]
++    )
++    return {
++        "arm_results": arm_results,
++        "scores": scores,
++        "shared_query_ids": [query["query_id"] for query in fixture["heldout_queries"]],
++        "same_heldout_query_set": same_heldout_query_set(arm_results),
++        "query_hashes": [hash_state(query) for query in fixture["heldout_queries"]],
++        "memory_hashes": {
++            arm: hash_state(fixture["memory_states"][arm]) for arm in ARM_NAMES
++        },
++        "aligned_delta_over_shuffled": aligned_delta,
++        "duplicated_metric_pairs": duplicates,
++        "tautology_resolved": tautology_resolved(duplicates),
++    }
++
++
++def score_arm(fixture: Mapping[str, Any], arm: str) -> list[JsonDict]:
++    """Return exact-label outcomes for one control arm."""
++
++    rows: list[JsonDict] = []
++    labels = fixture["heldout_labels"]
++    for query in fixture["heldout_queries"]:
++        label = labels[query["label_id"]]
++        selected_action = select_action(fixture, arm, query)
++        rows.append(
++            {
++                "query_id": query["query_id"],
++                "label_id": query["label_id"],
++                "query_family": query["query_family"],
++                "arm": arm,
++                "selected_action": selected_action,
++                "expected_action": label["expected_action"],
++                "label_source": label["label_source"],
++                "accepted": selected_action == label["expected_action"],
++            }
++        )
++    return rows
++
++
++def select_action(fixture: Mapping[str, Any], arm: str, query: Mapping[str, Any]) -> str:
++    """Select the action proposed by one control arm for one query."""
++
++    state = fixture["memory_states"][arm]
++    if arm == BEST_CONSTANT_ARM:
++        return str(state["constant_action"])
++    return memory_action_lookup(state, query["query_key"])
++
++
++def memory_action_lookup(state: Mapping[str, Any], query_key: str) -> str:
++    """Find a selected action by query key."""
++
++    for entry in state["entries"]:
++        if entry["query_key"] == query_key:
++            return str(entry["selected_action"])
++    raise KeyError(query_key)  # pragma: no cover - fixture construction covers all keys.
++
++
++def score_rows(rows: Sequence[Mapping[str, Any]]) -> float:
++    """Return a rounded exact-label pass rate for row evidence."""
++
++    return _round(sum(1 for row in rows if row["accepted"]) / len(rows))
++
++
++def fixture_is_non_degenerate(fixture: Mapping[str, Any]) -> bool:
++    """Confirm the fixture has more than one label and more than one answer."""
++
++    labels = fixture["heldout_labels"].values()
++    expected_actions = {label["expected_action"] for label in labels}
++    return len(fixture["heldout_queries"]) > 1 and len(expected_actions) > 1
++
++
++def same_heldout_query_set(arm_results: Mapping[str, Sequence[Mapping[str, Any]]]) -> bool:
++    """Check that every control scored the same query IDs in the same order."""
++
++    query_sets = [[row["query_id"] for row in arm_results.get(arm, [])] for arm in ARM_NAMES]
++    return bool(query_sets) and all(query_ids == query_sets[0] for query_ids in query_sets)
++
++
++def duplicated_metric_pairs(
++    scores: Mapping[str, Any],
++    tolerance: float,
++) -> list[JsonDict]:
++    """Return all headline score pairs equal within the configured tolerance."""
++
++    pairs: list[JsonDict] = []
++    for left, right in itertools.combinations(HEADLINE_SCORE_FIELDS, 2):
++        left_score = float(scores[left])
++        right_score = float(scores[right])
++        delta = _round(abs(left_score - right_score))
++        if delta <= tolerance:
++            pairs.append(
++                {
++                    "left": left,
++                    "right": right,
++                    "left_score": _round(left_score),
++                    "right_score": _round(right_score),
++                    "delta_abs": delta,
++                    "equality_tolerance": tolerance,
++                }
++            )
++    return pairs
++
++
++def tautology_resolved(duplicates: Sequence[Mapping[str, Any]]) -> bool:
++    """Return true only when no headline score pair is duplicated."""
++
++    return len(duplicates) == 0
++
++
++def upstream_residue_status(root: Path | str) -> JsonDict:
++    """Load the Exp5542 repaired residue gate."""
++
++    try:
++        artifact = load_json(Path(root) / UPSTREAM_CSL_RESIDUE_CORRIGENDUM)
++    except (OSError, json.JSONDecodeError):
++        return {
++            "path": UPSTREAM_CSL_RESIDUE_CORRIGENDUM.as_posix(),
++            "loadable": False,
++            "csl_residue_tautology_resolved": False,
++            "csl_residue_stress_ready": False,
++        }
++    return {
++        "path": UPSTREAM_CSL_RESIDUE_CORRIGENDUM.as_posix(),
++        "loadable": True,
++        "csl_residue_tautology_resolved": artifact.get(
++            "csl_residue_tautology_resolved"
++        )
++        is True,
++        "csl_residue_stress_ready": artifact.get("csl_residue_stress_ready") is True,
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++    }
++
++
++def upstream_flagged_ablation_status(root: Path | str) -> JsonDict:
++    """Load Exp5543 and record whether its specific tautology was observed."""
++
++    try:
++        artifact = load_json(Path(root) / UPSTREAM_FLAGGED_ABLATION)
++    except (OSError, json.JSONDecodeError):
++        return {
++            "path": UPSTREAM_FLAGGED_ABLATION.as_posix(),
++            "loadable": False,
++            "flagged_adversarial": False,
++            "tautology_pair_observed": False,
++        }
++    best = float(artifact.get("best_constant_score", -1.0))
++    random = float(artifact.get("per_query_random_score", -2.0))
++    details = " ".join(
++        str(item.get("detail", "")) for item in artifact.get("corrigendum_pending", [])
++    )
++    return {
++        "path": UPSTREAM_FLAGGED_ABLATION.as_posix(),
++        "loadable": True,
++        "flagged_adversarial": artifact.get("flagged_adversarial") is True,
++        "tautology_pair_observed": (
++            abs(best - random) <= EQUALITY_TOLERANCE
++            and "best_constant_score" in details
++            and "per_query_random_score" in details
++        ),
++        "best_constant_score": _round(best),
++        "per_query_random_score": _round(random),
++        "csl_five_arm_ready": artifact.get("csl_five_arm_ready") is True,
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++    }
++
++
++def build_artifact(*, root: Path | str, tests_added_or_reused: Sequence[str]) -> JsonDict:
++    """Build and validate the complete Exp5557 receipt."""
++
++    root_path = Path(root)
++    residue = upstream_residue_status(root_path)
++    flagged = upstream_flagged_ablation_status(root_path)
++    fixture = build_fixture()
++    evaluation = evaluate_controls(fixture)
++    scores = evaluation["scores"]
++    llm_invoked = False
++    no_model_specs_required = True
++    clean = (
++        residue["csl_residue_tautology_resolved"]
++        and flagged["tautology_pair_observed"]
++        and evaluation["same_heldout_query_set"]
++        and evaluation["tautology_resolved"]
++        and evaluation["aligned_delta_over_shuffled"] > 0.0
++        and not llm_invoked
++        and no_model_specs_required
++    )
++    artifact: JsonDict = {
++        "experiment": 5557,
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "upstream_csl_residue_corrigendum": UPSTREAM_CSL_RESIDUE_CORRIGENDUM.as_posix(),
++        "upstream_flagged_ablation": UPSTREAM_FLAGGED_ABLATION.as_posix(),
++        "upstream_residue_status": residue,
++        "upstream_flagged_ablation_status": flagged,
++        "llm_invoked": llm_invoked,
++        "no_model_specs_required": no_model_specs_required,
++        "heldout_queries": fixture["heldout_queries"],
++        "shared_query_ids": evaluation["shared_query_ids"],
++        "same_heldout_query_set": evaluation["same_heldout_query_set"],
++        "arm_results": evaluation["arm_results"],
++        "query_hashes": evaluation["query_hashes"],
++        "memory_hashes": evaluation["memory_hashes"],
++        "best_constant_score": scores["best_constant_score"],
++        "per_query_random_score": scores["per_query_random_score"],
++        "no_memory_score": scores["no_memory_score"],
++        "shuffled_memory_score": scores["shuffled_memory_score"],
++        "aligned_memory_score": scores["aligned_memory_score"],
++        "aligned_delta_over_shuffled": evaluation["aligned_delta_over_shuffled"],
++        "equality_tolerance": EQUALITY_TOLERANCE,
++        "duplicated_metric_pairs": evaluation["duplicated_metric_pairs"],
++        "tautology_resolved": evaluation["tautology_resolved"],
++        "csl_five_arm_clean": clean,
++        "adversarial_clean": clean,
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "inference_substrate_note": (
++            "All scores are deterministic fixture evaluations against Exp5542 "
++            "independent labels; no model is loaded or invoked."
++        ),
++        "exp5543_scoring_path_diagnosis": (
++            "Exp5543 used a fixed constant answer and query-keyed random memory, "
++            "but both controls scored 1/12 on the fixture; Exp5557 excludes the "
++            "query's own aligned memory row from the random control and rejects "
++            "any remaining duplicate score pairs."
++        ),
++        "honest_verdict": "",
++        "source_files": {
++            "module": MODULE_RELATIVE_PATH.as_posix(),
++            "spec": SPEC_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++    write: bool = True,
++) -> JsonDict:
++    """Build the artifact and optionally write stable JSON."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root=root_path,
++        tests_added_or_reused=tests_added_or_reused,
++    )
++    if write:
++        write_json(_resolve_path(root_path, result_path), artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the Exp5557 artifact is internally inconsistent."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5557 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return validation errors while allowing honest blocked artifacts."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if artifact.get("upstream_csl_residue_corrigendum") != UPSTREAM_CSL_RESIDUE_CORRIGENDUM.as_posix():
++        errors.append("upstream_csl_residue_corrigendum")
++    if artifact.get("upstream_flagged_ablation") != UPSTREAM_FLAGGED_ABLATION.as_posix():
++        errors.append("upstream_flagged_ablation")
++    if artifact.get("llm_invoked") is not False:
++        errors.append("llm_invoked")
++    if artifact.get("no_model_specs_required") is not True:
++        errors.append("no_model_specs_required")
++    if not artifact.get("tests_added_or_reused"):
++        errors.append("tests_added_or_reused")
++
++    arm_results = artifact.get("arm_results", {})
++    same_queries = same_heldout_query_set(arm_results) if isinstance(arm_results, Mapping) else False
++    if artifact.get("same_heldout_query_set") is not same_queries:
++        errors.append("same_heldout_query_set")
++
++    computed_scores = arm_scores_from_artifact(arm_results)
++    for field, score in computed_scores.items():
++        if float(artifact.get(field, -1.0)) != score:
++            errors.append(field)
++
++    scores = headline_scores_from_artifact(artifact)
++    expected_delta = _round(scores["aligned_memory_score"] - scores["shuffled_memory_score"])
++    if float(artifact.get("aligned_delta_over_shuffled", -1.0)) != expected_delta:
++        errors.append("aligned_delta_over_shuffled")
++    if float(artifact.get("equality_tolerance", -1.0)) != EQUALITY_TOLERANCE:
++        errors.append("equality_tolerance")
++
++    expected_duplicates = duplicated_metric_pairs(scores, EQUALITY_TOLERANCE)
++    if artifact.get("duplicated_metric_pairs") != expected_duplicates:
++        errors.append("duplicated_metric_pairs")
++    expected_tautology_resolved = tautology_resolved(expected_duplicates)
++    if artifact.get("tautology_resolved") is not expected_tautology_resolved:
++        errors.append("tautology_resolved")
++
++    expected_query_hashes = [hash_state(query) for query in artifact.get("heldout_queries", [])]
++    if artifact.get("query_hashes") != expected_query_hashes:
++        errors.append("query_hashes")
++
++    residue = artifact.get("upstream_residue_status", {})
++    flagged = artifact.get("upstream_flagged_ablation_status", {})
++    expected_clean = (
++        isinstance(residue, Mapping)
++        and isinstance(flagged, Mapping)
++        and residue.get("csl_residue_tautology_resolved") is True
++        and flagged.get("tautology_pair_observed") is True
++        and same_queries
++        and expected_tautology_resolved
++        and expected_delta > 0.0
++        and artifact.get("llm_invoked") is False
++        and artifact.get("no_model_specs_required") is True
++    )
++    if artifact.get("csl_five_arm_clean") is not expected_clean:
++        errors.append("csl_five_arm_clean")
++    if artifact.get("adversarial_clean") is not expected_clean:
++        errors.append("adversarial_clean")
++
++    principles = artifact.get("field_principles", {})
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if not principles.get(field)]
++    if missing_principles:
++        errors.append(f"field_principles missing: {missing_principles}")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("honest_verdict") != honest_verdict(artifact):
++        errors.append("honest_verdict")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def arm_scores_from_artifact(arm_results: Any) -> JsonDict:
++    """Recompute score fields from row evidence."""
++
++    if not isinstance(arm_results, Mapping):
++        return {}
++    return {
++        ARM_SCORE_FIELDS[arm]: score_rows(rows)
++        for arm in ARM_NAMES
++        if isinstance((rows := arm_results.get(arm)), Sequence) and rows
++    }
++
++
++def headline_scores_from_artifact(artifact: Mapping[str, Any]) -> JsonDict:
++    """Read headline score fields from an artifact-like mapping."""
++
++    return {field: float(artifact[field]) for field in HEADLINE_SCORE_FIELDS}
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return a terminal verdict from the clean gate."""
++
++    if artifact.get("csl_five_arm_clean") is True and artifact.get("adversarial_clean") is True:
++        return "complete: csl_five_arm_tautology_corrigendum_v2_clean"
++    return "blocked: csl_five_arm_tautology_corrigendum_v2_not_clean"
++
++
++def _resolve_path(root: Path | str, path: Path | str) -> Path:
++    """Resolve repository-relative paths while preserving absolute paths."""
++
++    candidate = Path(path)
++    if candidate.is_absolute():
++        return candidate
++    return Path(root) / candidate
++
++
++def load_json(path: Path | str) -> JsonDict:
++    """Read a JSON object from disk."""
++
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def write_json(path: Path | str, payload: Mapping[str, Any]) -> None:
++    """Write stable JSON for diffable receipts."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact with its checksum field removed."""
++
++    payload = {
++        key: value for key, value in artifact.items() if key != "reproducibility_checksum"
++    }
++    return "sha256:" + sha256_json(payload)
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Record the source files backing the receipt."""
++
++    return {
++        "module": sha256_file(root / MODULE_RELATIVE_PATH),
++        "spec": sha256_file(root / SPEC_RELATIVE_PATH),
++        "test": sha256_file(root / TEST_RELATIVE_PATH),
++    }
++
++
++def sha256_file(path: Path | str) -> str:
++    """Return a SHA256 digest for one file."""
++
++    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return a SHA256 digest for a JSON-compatible mapping."""
++
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(blob).hexdigest()
++
++
++def hash_state(payload: Mapping[str, Any]) -> str:
++    """Return a prefixed content hash for fixture evidence."""
++
++    return "sha256:" + sha256_json(payload)
++
++
++def _round(value: float) -> float:
++    """Round metric values once so JSON stays stable across reruns."""
++
++    return round(float(value), 10)
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    """Write the repository artifact for conductor use."""
++
++    artifact = run(root=REPO_ROOT, result_path=RESULT_RELATIVE_PATH, write=True)
++    print(
++        json.dumps(
++            {
++                "result_path": RESULT_RELATIVE_PATH.as_posix(),
++                "honest_verdict": artifact["honest_verdict"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 80a2e986b1..3347e840e3 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:25:45.674440+00:00",
+-  "finished_at": "2026-07-10T23:25:45.700568+00:00",
++  "started_at": "2026-07-10T23:39:33.105615+00:00",
++  "finished_at": "2026-07-10T23:39:33.131644+00:00",
+   "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 64a0cf89ad..77158745a9 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T23:25:46Z",
++  "run_date": "2026-07-10T23:39:33Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0a7bc2b18e..2ecdf71ed6 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:25:47Z",
+-  "finished_at": "2026-07-10T23:25:47Z",
++  "started_at": "2026-07-10T23:39:34Z",
++  "finished_at": "2026-07-10T23:39:34Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index d0be4ecfb2..e799c8e9bf 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T23:25:47Z",
++  "run_date": "2026-07-10T23:39:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 28aa6c597f..ee07464f87 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T23:25:47Z",
++  "run_date": "2026-07-10T23:39:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 24b86934d6..25fb9ab6b4 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.113819122314453,
++  "efficiency_gains_ms": 2.1207332611083984,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 3d1d0e3354..7c6da7ac13 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:25:11Z",
+-  "finished_at": "2026-07-10T23:25:11Z",
++  "started_at": "2026-07-10T23:38:59Z",
++  "finished_at": "2026-07-10T23:38:59Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index efe4633bc2..73510591b0 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:25:47Z",
+-  "finished_at": "2026-07-10T23:25:47Z",
++  "started_at": "2026-07-10T23:39:35Z",
++  "finished_at": "2026-07-10T23:39:35Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07486343383789062,
++  "latency_ms": 0.06914138793945312,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 6cdb931e65..4783548d65 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008948183059692383,
+-  "avg_eqm_time": 0.07386782646179199,
++  "avg_pem_time": 0.0008766746520996094,
++  "avg_eqm_time": 0.07521923065185547,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 048ad5d243..225f3a7e2f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.3522100895643234e-05,
++  "duration_s": 4.321197047829628e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json b/results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+new file mode 100644
+index 0000000000..9e2420ee61
+--- /dev/null
++++ b/results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+@@ -0,0 +1,822 @@
++{
++  "adversarial_clean": true,
++  "aligned_delta_over_shuffled": 0.5833333333,
++  "aligned_memory_score": 0.8333333333,
++  "arm_results": {
++    "aligned_memory": [
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-01",
++        "selected_action": "resume-cache-replay"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-02",
++        "selected_action": "pin-timeout-window"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-03",
++        "selected_action": "refresh-circuit-state"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-04",
++        "selected_action": "retry-idempotent-call"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-05",
++        "selected_action": "drop-duplicate-event"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-06",
++        "selected_action": "restore-sequence-cursor"
++      },
++      {
++        "accepted": false,
++        "arm": "aligned_memory",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-07",
++        "selected_action": "joint-miss-evt-07"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-01",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-02",
++        "selected_action": "choose-zero-index-pagination"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-03",
++        "selected_action": "prefer-circuit-breaker-reset"
++      },
++      {
++        "accepted": true,
++        "arm": "aligned_memory",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-04",
++        "selected_action": "prefer-readonly-token"
++      },
++      {
++        "accepted": false,
++        "arm": "aligned_memory",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-05",
++        "selected_action": "joint-miss-topic-05"
++      }
++    ],
++    "best_constant": [
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-01",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-02",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-03",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-04",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-05",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-06",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-07",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": true,
++        "arm": "best_constant",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-01",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-02",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-03",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-04",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "best_constant",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-05",
++        "selected_action": "apply-access-deny-policy"
++      }
++    ],
++    "no_memory": [
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-01",
++        "selected_action": "baseline-miss-evt-01"
++      },
++      {
++        "accepted": true,
++        "arm": "no_memory",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-02",
++        "selected_action": "pin-timeout-window"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-03",
++        "selected_action": "baseline-miss-evt-03"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-04",
++        "selected_action": "baseline-miss-evt-04"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-05",
++        "selected_action": "baseline-miss-evt-05"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-06",
++        "selected_action": "baseline-miss-evt-06"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-07",
++        "selected_action": "baseline-miss-evt-07"
++      },
++      {
++        "accepted": true,
++        "arm": "no_memory",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-01",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-02",
++        "selected_action": "baseline-miss-topic-02"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-03",
++        "selected_action": "baseline-miss-topic-03"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-04",
++        "selected_action": "baseline-miss-topic-04"
++      },
++      {
++        "accepted": false,
++        "arm": "no_memory",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-05",
++        "selected_action": "baseline-miss-topic-05"
++      }
++    ],
++    "per_query_random": [
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-01",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-02",
++        "selected_action": "retry-idempotent-call"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-03",
++        "selected_action": "resume-cache-replay"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-04",
++        "selected_action": "choose-zero-index-pagination"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-05",
++        "selected_action": "choose-zero-index-pagination"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-06",
++        "selected_action": "drop-duplicate-event"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-07",
++        "selected_action": "resume-cache-replay"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-01",
++        "selected_action": "joint-miss-topic-05"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-02",
++        "selected_action": "drop-duplicate-event"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-03",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-04",
++        "selected_action": "apply-access-deny-policy"
++      },
++      {
++        "accepted": false,
++        "arm": "per_query_random",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-05",
++        "selected_action": "drop-duplicate-event"
++      }
++    ],
++    "shuffled_memory": [
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-01",
++        "selected_action": "shuffled-miss-evt-01"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-02",
++        "selected_action": "shuffled-miss-evt-02"
++      },
++      {
++        "accepted": true,
++        "arm": "shuffled_memory",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-03",
++        "selected_action": "refresh-circuit-state"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-04",
++        "selected_action": "shuffled-miss-evt-04"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-05",
++        "selected_action": "shuffled-miss-evt-05"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-06",
++        "selected_action": "shuffled-miss-evt-06"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "query_id": "5542-heldout-evt-07",
++        "selected_action": "shuffled-miss-evt-07"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-01",
++        "selected_action": "shuffled-miss-topic-01"
++      },
++      {
++        "accepted": true,
++        "arm": "shuffled_memory",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-02",
++        "selected_action": "choose-zero-index-pagination"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-03",
++        "selected_action": "shuffled-miss-topic-03"
++      },
++      {
++        "accepted": false,
++        "arm": "shuffled_memory",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-04",
++        "selected_action": "shuffled-miss-topic-04"
++      },
++      {
++        "accepted": true,
++        "arm": "shuffled_memory",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "query_id": "5542-heldout-topic-05",
++        "selected_action": "reject-secret-rotation-transfer"
++      }
++    ]
++  },
++  "best_constant_score": 0.0833333333,
++  "csl_five_arm_clean": true,
++  "duplicated_metric_pairs": [],
++  "equality_tolerance": 1e-10,
++  "exp5543_scoring_path_diagnosis": "Exp5543 used a fixed constant answer and query-keyed random memory, but both controls scored 1/12 on the fixture; Exp5557 excludes the query's own aligned memory row from the random control and rejects any remaining duplicate score pairs.",
++  "experiment": 5557,
++  "experiment_id": "experiment_5557_csl_five_arm_tautology_corrigendum_v2",
++  "field_principles": {
++    "adversarial_clean": "Conductor-facing clean flag requiring no duplicate metric pairs.",
++    "aligned_delta_over_shuffled": "Gate delta requiring aligned memory to beat shuffled memory.",
++    "aligned_memory_score": "Measures query-aligned external memory against independent labels.",
++    "best_constant_score": "Measures whether one fixed answer explains held-out performance.",
++    "csl_five_arm_clean": "Bare gate for downstream CSL tasks after controls separate.",
++    "duplicated_metric_pairs": "Lists score pairs whose equality would trigger a tautology concern.",
++    "equality_tolerance": "Makes duplicate-score detection deterministic and auditable.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++    "inference_substrate": "Declares deterministic CSL ablation with no LLM invocation.",
++    "llm_invoked": "Documents that no live model call can explain or fabricate the receipt.",
++    "no_memory_score": "Keeps retrieval benefit separate from the no-memory baseline.",
++    "no_model_specs_required": "Explains why model specs are absent for a deterministic no-LLM ablation.",
++    "per_query_random_score": "Measures chance retrieval with query-keyed non-self random memory.",
++    "shuffled_memory_score": "Detects whether arbitrary memory pairing explains the lift.",
++    "tautology_resolved": "Fails when constant and random controls still collapse.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands.",
++    "upstream_csl_residue_corrigendum": "Binds the receipt to the repaired Exp5542 independent-label metric.",
++    "upstream_flagged_ablation": "Preserves the Exp5543 flagged artifact as the exact upstream failure."
++  },
++  "heldout_queries": [
++    {
++      "label_id": "label-5542-evt-01",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-01",
++      "query_key": "query:d717ec104e184be460c93ba283aec58755cf55419ccef9da4e88cc059cd1109f",
++      "task_id": "5542-heldout-evt-01"
++    },
++    {
++      "label_id": "label-5542-evt-02",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-02",
++      "query_key": "query:f8fee8580d472eb71c775bf8336491fa1f975bb2299f49a86e9f4020f85ddfcb",
++      "task_id": "5542-heldout-evt-02"
++    },
++    {
++      "label_id": "label-5542-evt-03",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-03",
++      "query_key": "query:2aa704bb220e074516a4f69ee57a1ae9b60592ed66a93d2fc6071b4671c27aa3",
++      "task_id": "5542-heldout-evt-03"
++    },
++    {
++      "label_id": "label-5542-evt-04",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-04",
++      "query_key": "query:33de0d7430c77db4750c63052f8ce973e58a6dd12dbe160c9192349915ef4fd5",
++      "task_id": "5542-heldout-evt-04"
++    },
++    {
++      "label_id": "label-5542-evt-05",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-05",
++      "query_key": "query:9f8831f99cb49343e3355ea69274432dbb80a32d1881824f978d369b05a69f11",
++      "task_id": "5542-heldout-evt-05"
++    },
++    {
++      "label_id": "label-5542-evt-06",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-06",
++      "query_key": "query:88fcc6e28dbfde60f17db560567f0e66e3960fac8f24887e35d537cc06d4aded",
++      "task_id": "5542-heldout-evt-06"
++    },
++    {
++      "label_id": "label-5542-evt-07",
++      "query_family": "event_progression",
++      "query_id": "5542-heldout-evt-07",
++      "query_key": "query:ec6186b6db29b30a28ff59a140b1b3ebfc7e5cb4c071d5047b63251cc3023e71",
++      "task_id": "5542-heldout-evt-07"
++    },
++    {
++      "label_id": "label-5542-topic-01",
++      "query_family": "topic_policy",
++      "query_id": "5542-heldout-topic-01",
++      "query_key": "query:ea0566e8ee8f212c500eb31edb566ce1241d940533d433b313950e22ca5c85bd",
++      "task_id": "5542-heldout-topic-01"
++    },
++    {
++      "label_id": "label-5542-topic-02",
++      "query_family": "topic_policy",
++      "query_id": "5542-heldout-topic-02",
++      "query_key": "query:5551729935392653287634b05ba017bfe7bbc0906cee03549bff602d1b7dae88",
++      "task_id": "5542-heldout-topic-02"
++    },
++    {
++      "label_id": "label-5542-topic-03",
++      "query_family": "topic_policy",
++      "query_id": "5542-heldout-topic-03",
++      "query_key": "query:dbbd16bceed7566fabcb8302be515ff8077bfd79d5ea82500d3af3ebbfdb5979",
++      "task_id": "5542-heldout-topic-03"
++    },
++    {
++      "label_id": "label-5542-topic-04",
++      "query_family": "topic_policy",
++      "query_id": "5542-heldout-topic-04",
++      "query_key": "query:d156c65261853b5524a822c0b8c5ef10cbd76c27a5e07d3b3657804603ffe509",
++      "task_id": "5542-heldout-topic-04"
++    },
++    {
++      "label_id": "label-5542-topic-05",
++      "query_family": "topic_policy",
++      "query_id": "5542-heldout-topic-05",
++      "query_key": "query:14d56dc78a3feea18ece0762205ddf92b71ed21234014f1cf0312e0e921252fa",
++      "task_id": "5542-heldout-topic-05"
++    }
++  ],
++  "honest_verdict": "complete: csl_five_arm_tautology_corrigendum_v2_clean",
++  "inference_substrate": "deterministic_csl_ablation_no_llm",
++  "inference_substrate_note": "All scores are deterministic fixture evaluations against Exp5542 independent labels; no model is loaded or invoked.",
++  "llm_invoked": false,
++  "memory_hashes": {
++    "aligned_memory": "sha256:b0d0307e83c2c15ee138cacbe122e052d19e330f86c529a6a3fb16fa20251403",
++    "best_constant": "sha256:7518c3d970191e8c0ec26b76c333676705c0aa945984935c16d316c42161e043",
++    "no_memory": "sha256:dc3da7d05aa4c041a12f7ead49ba9a57108bd6a5cd6749b3844cd378a8a47bc2",
++    "per_query_random": "sha256:d0c260700180360930745340eedc7e011d741ac26f1fc067cf6415038d0f8aa6",
++    "shuffled_memory": "sha256:7092f63e7f378616c7150bc98be2743086245ca0930b28160fb494c75bff3c1d"
++  },
++  "milestone": "2026.07.503",
++  "no_memory_score": 0.1666666667,
++  "no_model_specs_required": true,
++  "per_query_random_score": 0.0,
++  "query_hashes": [
++    "sha256:1783e1ddb4f2d44f644b222b9f728094db8dd80ca8ec351dc5bdc0060e2d90ab",
++    "sha256:2143525508fdae3e2c450f0958a871bda23879ddb13c01adc44c036ece5ab68d",
++    "sha256:a299b8221941163393505fb202637ee051a7265ad7159e363f874a3da901f6b4",
++    "sha256:44cba93f2cd3d122569be7775a88a33a9fa0ab511b9d8dd12763a8b206c5247b",
++    "sha256:33bef85612f3721209efd8fe53ef6a3126b5ac23acbdea85f3885bca02d65a17",
++    "sha256:d774e4689e52dfc5d7096692a18425c465376c4ad4931e2e082b718549c13125",
++    "sha256:35c7ebec6c97565922b069d7f0a46ee0826b9c7d7b8dbb2024b0840359be8137",
++    "sha256:5466132d26ead3f8b9c8071680f78a95b54f7bb2be82cd8341dfdec2b06e8bd2",
++    "sha256:80e1cbea4485f14dc7f0cae5cb45e75eb2422ede1fa302f3b93967f04ce12fe8",
++    "sha256:ff4798a5963f2658fc67f0d6ec63b108a308a9b70806524ef38a29666c637ce7",
++    "sha256:303d6b7fab1b45c0299f6db87d81dc4e2735c02aafa1c89300c30f7710b4f927",
++    "sha256:93de7ce501da32817a079b03643bd0e0e6b476dc248e2eaec44b3c4a10e5c00a"
++  ],
++  "random_seed": 5557,
++  "reproducibility_checksum": "sha256:b527e9749e2a36dac1090087e2d8569502fc41864a1821a1cd675229633bd947",
++  "run_date": "2026-07-10",
++  "same_heldout_query_set": true,
++  "schema": "carnot.experiment_5557.csl_five_arm_tautology_corrigendum_v2",
++  "shared_query_ids": [
++    "5542-heldout-evt-01",
++    "5542-heldout-evt-02",
++    "5542-heldout-evt-03",
++    "5542-heldout-evt-04",
++    "5542-heldout-evt-05",
++    "5542-heldout-evt-06",
++    "5542-heldout-evt-07",
++    "5542-heldout-topic-01",
++    "5542-heldout-topic-02",
++    "5542-heldout-topic-03",
++    "5542-heldout-topic-04",
++    "5542-heldout-topic-05"
++  ],
++  "shuffled_memory_score": 0.25,
++  "source_file_checksums": {
++    "module": "sha256:a8e766bc50345949b1a0c488cd9c97a743c6f6e049f30e6072f472a512c91310",
++    "spec": "sha256:2726e3489e16435ab07b883cb6064bc168a3a2249cdc91c23d32b99ca7f47979",
++    "test": "sha256:9729cd1c531fb7ca14ecd405d203ddc51a37eb29365c244ad9219876a37fe422"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5557",
++    "SCENARIO-LEARN-5557-BASELINES",
++    "SCENARIO-LEARN-5557-CONTROLS",
++    "SCENARIO-LEARN-5557-ARTIFACT"
++  ],
++  "task_id": "exp5557-csl-five-arm-tautology-corrigendum-v2",
++  "tautology_resolved": true,
++  "tests_added_or_reused": [
++    ".venv/bin/pytest tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py -m pytest tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "upstream_csl_residue_corrigendum": "results/experiment_5542_csl_residue_metric_independence_corrigendum.json",
++  "upstream_flagged_ablation": "results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json",
++  "upstream_flagged_ablation_status": {
++    "best_constant_score": 0.0833333333,
++    "csl_five_arm_ready": true,
++    "flagged_adversarial": true,
++    "honest_verdict": "complete: retrieval_warmed_csl_five_arm_ablation_ready",
++    "loadable": true,
++    "path": "results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json",
++    "per_query_random_score": 0.0833333333,
++    "tautology_pair_observed": true
++  },
++  "upstream_residue_status": {
++    "csl_residue_stress_ready": true,
++    "csl_residue_tautology_resolved": true,
++    "honest_verdict": "complete: csl_residue_metric_independence_corrigendum_ready",
++    "loadable": true,
++    "path": "results/experiment_5542_csl_residue_metric_independence_corrigendum.json"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index d1aa051021..2189c09afe 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:24:57Z",
+-  "finished_at": "2026-07-10T23:24:57Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T23:38:46Z",
++  "finished_at": "2026-07-10T23:38:46Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index b3e4935f40..75337242ed 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:24:57Z",
+-  "finished_at": "2026-07-10T23:24:58Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-10T23:38:46Z",
++  "finished_at": "2026-07-10T23:38:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 8ed54d6598..fa67d4b585 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T23:24:58Z",
+-  "finished_at": "2026-07-10T23:24:58Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-10T23:38:46Z",
++  "finished_at": "2026-07-10T23:38:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py b/tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+new file mode 100644
+index 0000000000..db555722c2
+--- /dev/null
++++ b/tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py
+@@ -0,0 +1,284 @@
++"""Tests for Exp5557 CSL five-arm tautology corrigendum v2.
++
++Spec refs: REQ-LEARN-5557,
++SCENARIO-LEARN-5557-BASELINES,
++SCENARIO-LEARN-5557-CONTROLS,
++SCENARIO-LEARN-5557-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5557_csl_five_arm_tautology_corrigendum_v2 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-m pytest tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++TESTS_ADDED_OR_REUSED = [TEST_COMMAND, COVERAGE_COMMAND, FULL_TEST_COMMAND]
++
++
++def _artifact() -> dict[str, object]:
++    return mod.build_artifact(root=REPO, tests_added_or_reused=TESTS_ADDED_OR_REUSED)
++
++
++def test_req_learn_5557_spec_declares_corrigendum_contract() -> None:
++    """REQ-LEARN-5557: OpenSpec anchors the five-arm corrigendum."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5557") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5557",
++        "SCENARIO-LEARN-5557-BASELINES",
++        "SCENARIO-LEARN-5557-CONTROLS",
++        "SCENARIO-LEARN-5557-ARTIFACT",
++        str(mod.RESULT_RELATIVE_PATH),
++        str(mod.UPSTREAM_CSL_RESIDUE_CORRIGENDUM),
++        str(mod.UPSTREAM_FLAGGED_ABLATION),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for marker in (
++        "best-constant and per-query-random are equal within tolerance",
++        "aligned-memory does not beat shuffled-memory",
++    ):
++        assert marker in normalized
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++        assert mod.FIELD_PRINCIPLES[field]
++
++
++def test_scenario_learn_5557_baselines_separate_on_nondegenerate_fixture() -> None:
++    """SCENARIO-LEARN-5557-BASELINES: random control cannot equal constant."""
++
++    fixture = mod.build_fixture()
++    evaluation = mod.evaluate_controls(fixture)
++    scores = evaluation["scores"]
++    arm_results = evaluation["arm_results"]
++
++    assert mod.fixture_is_non_degenerate(fixture) is True
++    assert evaluation["same_heldout_query_set"] is True
++    assert scores["best_constant_score"] == pytest.approx(0.0833333333)
++    assert scores["per_query_random_score"] == pytest.approx(0.0)
++    assert scores["no_memory_score"] == pytest.approx(0.1666666667)
++    assert scores["shuffled_memory_score"] == pytest.approx(0.25)
++    assert scores["aligned_memory_score"] == pytest.approx(0.8333333333)
++    assert evaluation["aligned_delta_over_shuffled"] == pytest.approx(0.5833333333)
++    assert evaluation["duplicated_metric_pairs"] == []
++    assert evaluation["tautology_resolved"] is True
++
++    constant_actions = {
++        row["selected_action"] for row in arm_results[mod.BEST_CONSTANT_ARM]
++    }
++    random_actions = {
++        row["selected_action"] for row in arm_results[mod.PER_QUERY_RANDOM_ARM]
++    }
++    assert len(constant_actions) == 1
++    assert len(random_actions) > 1
++    assert random_actions != constant_actions
++
++    collapsed_scores = dict(scores)
++    collapsed_scores["per_query_random_score"] = collapsed_scores["best_constant_score"]
++    pairs = mod.duplicated_metric_pairs(collapsed_scores, mod.EQUALITY_TOLERANCE)
++    assert ("best_constant_score", "per_query_random_score") in {
++        (pair["left"], pair["right"]) for pair in pairs
++    }
++    assert mod.tautology_resolved(pairs) is False
++
++
++def test_scenario_learn_5557_artifact_fields_and_stable_write(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5557-ARTIFACT: receipt records the clean fix."""
++
++    destination = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    artifact = mod.run(
++        root=REPO,
++        result_path=destination,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    no_write = mod.run(
++        root=REPO,
++        result_path=mod.RESULT_RELATIVE_PATH,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=False,
++    )
++
++    assert json.loads(destination.read_text(encoding="utf-8")) == artifact
++    assert no_write["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert mod.validate_artifact(artifact) is True
++    assert mod._resolve_path(REPO, mod.RESULT_RELATIVE_PATH) == REPO / mod.RESULT_RELATIVE_PATH
++    assert mod._resolve_path(REPO, destination) == destination
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field]
++
++    assert artifact["upstream_csl_residue_corrigendum"] == str(
++        mod.UPSTREAM_CSL_RESIDUE_CORRIGENDUM
++    )
++    assert artifact["upstream_flagged_ablation"] == str(mod.UPSTREAM_FLAGGED_ABLATION)
++    assert artifact["upstream_residue_status"]["csl_residue_tautology_resolved"] is True
++    assert artifact["upstream_flagged_ablation_status"]["flagged_adversarial"] is True
++    assert artifact["upstream_flagged_ablation_status"]["tautology_pair_observed"] is True
++    assert artifact["llm_invoked"] is False
++    assert artifact["no_model_specs_required"] is True
++    assert artifact["duplicated_metric_pairs"] == []
++    assert artifact["tautology_resolved"] is True
++    assert artifact["csl_five_arm_clean"] is True
++    assert artifact["adversarial_clean"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["tests_added_or_reused"] == TESTS_ADDED_OR_REUSED
++
++
++def test_scenario_learn_5557_gate_rejects_duplicate_or_flat_controls(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5557-CONTROLS: clean gate fails closed on regressions."""
++
++    artifact = _artifact()
++
++    duplicated_random = deepcopy(artifact)
++    duplicated_random["arm_results"][mod.PER_QUERY_RANDOM_ARM] = deepcopy(
++        duplicated_random["arm_results"][mod.BEST_CONSTANT_ARM]
++    )
++    duplicated_random["per_query_random_score"] = duplicated_random[
++        "best_constant_score"
++    ]
++    duplicated_random["duplicated_metric_pairs"] = []
++    duplicated_random["reproducibility_checksum"] = mod.reproducibility_checksum(
++        duplicated_random
++    )
++    with pytest.raises(ValueError, match="duplicated_metric_pairs"):
++        mod.validate_artifact(duplicated_random)
++
++    blocked = deepcopy(artifact)
++    blocked["arm_results"][mod.ALIGNED_MEMORY_ARM] = deepcopy(
++        blocked["arm_results"][mod.SHUFFLED_MEMORY_ARM]
++    )
++    for row in blocked["arm_results"][mod.ALIGNED_MEMORY_ARM]:
++        row["arm"] = mod.ALIGNED_MEMORY_ARM
++    blocked["aligned_memory_score"] = blocked["shuffled_memory_score"]
++    blocked["aligned_delta_over_shuffled"] = 0.0
++    blocked["duplicated_metric_pairs"] = mod.duplicated_metric_pairs(
++        mod.headline_scores_from_artifact(blocked),
++        mod.EQUALITY_TOLERANCE,
++    )
++    blocked["tautology_resolved"] = False
++    blocked["csl_five_arm_clean"] = False
++    blocked["adversarial_clean"] = False
++    blocked["honest_verdict"] = mod.honest_verdict(blocked)
++    blocked["reproducibility_checksum"] = mod.reproducibility_checksum(blocked)
++
++    assert mod.validate_artifact(blocked) is True
++    assert blocked["honest_verdict"].startswith("blocked:")
++
++    invalid_clean = deepcopy(blocked)
++    invalid_clean["csl_five_arm_clean"] = True
++    invalid_clean["adversarial_clean"] = True
++    invalid_clean["honest_verdict"] = "complete: invalid"
++    invalid_clean["reproducibility_checksum"] = mod.reproducibility_checksum(
++        invalid_clean
++    )
++    with pytest.raises(ValueError, match="csl_five_arm_clean"):
++        mod.validate_artifact(invalid_clean)
++
++    assert mod.upstream_residue_status(tmp_path)["loadable"] is False
++    assert mod.upstream_flagged_ablation_status(tmp_path)["loadable"] is False
++    assert mod.arm_scores_from_artifact(None) == {}
++
++    mutations: list[tuple[dict[str, object], str, bool]] = []
++    missing = deepcopy(artifact)
++    missing.pop("honest_verdict")
++    mutations.append((missing, "missing required fields", True))
++
++    bad_residue = deepcopy(artifact)
++    bad_residue["upstream_csl_residue_corrigendum"] = "results/wrong.json"
++    mutations.append((bad_residue, "upstream_csl_residue_corrigendum", True))
++
++    bad_flagged = deepcopy(artifact)
++    bad_flagged["upstream_flagged_ablation"] = "results/wrong.json"
++    mutations.append((bad_flagged, "upstream_flagged_ablation", True))
++
++    llm_called = deepcopy(artifact)
++    llm_called["llm_invoked"] = True
++    mutations.append((llm_called, "llm_invoked", True))
++
++    bad_model_specs = deepcopy(artifact)
++    bad_model_specs["no_model_specs_required"] = False
++    mutations.append((bad_model_specs, "no_model_specs_required", True))
++
++    no_tests = deepcopy(artifact)
++    no_tests["tests_added_or_reused"] = []
++    mutations.append((no_tests, "tests_added_or_reused", True))
++
++    bad_same_queries = deepcopy(artifact)
++    bad_same_queries["same_heldout_query_set"] = False
++    mutations.append((bad_same_queries, "same_heldout_query_set", True))
++
++    bad_score = deepcopy(artifact)
++    bad_score["best_constant_score"] = 0.0
++    mutations.append((bad_score, "best_constant_score", True))
++
++    bad_delta = deepcopy(artifact)
++    bad_delta["aligned_delta_over_shuffled"] = 0.0
++    mutations.append((bad_delta, "aligned_delta_over_shuffled", True))
++
++    bad_tolerance = deepcopy(artifact)
++    bad_tolerance["equality_tolerance"] = 0.5
++    mutations.append((bad_tolerance, "equality_tolerance", True))
++
++    bad_hashes = deepcopy(artifact)
++    bad_hashes["query_hashes"] = []
++    mutations.append((bad_hashes, "query_hashes", True))
++
++    bad_principles = deepcopy(artifact)
++    bad_principles["field_principles"] = {}
++    mutations.append((bad_principles, "field_principles", True))
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "aggregation_from_upstream_artifacts"
++    mutations.append((bad_substrate, "inference_substrate", True))
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    mutations.append((bad_checksum, "reproducibility_checksum", False))
++
++    for payload, expected, refresh_checksum in mutations:
++        if refresh_checksum:
++            payload["reproducibility_checksum"] = mod.reproducibility_checksum(payload)
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(payload)
++
++
++def test_req_learn_5557_repository_artifact_is_valid() -> None:
++    """REQ-LEARN-5557-6: committed JSON remains a valid clean receipt."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert mod.validate_artifact(artifact) is True
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["inference_substrate"] == "deterministic_csl_ablation_no_llm"
++    assert artifact["csl_five_arm_clean"] is True
++    assert artifact["adversarial_clean"] is True
+-- 
+2.55.0
+

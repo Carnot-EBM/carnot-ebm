@@ -1,0 +1,37 @@
+From 51657ca4432d2074f7fed8a0c18a2a198a22b5fe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 12:30:25 -0400
+Subject: [PATCH 06819/11362] [conductor] In-process docs for Matched CPU CUDA
+ sampler-quality benchmark and board continuity receipt
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/arc_solve_registry.yaml | 2 +-
+ ops/changelog.md            | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 53326b5d32..432e4461ee 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -2049,7 +2049,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 71
++reproducible_total_levels: 72
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 59353155db..595117da69 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11436,3 +11436,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-11: Causal SelfMem policy tournament on multi-session constraints (✅ Complete) — honest_verdict=complete: causal_memory_policy_tournament_policy_ready; results/experiment_5569_causal_memory_policy_tournament.json
+ - 2026-07-11: Spline-local KAN online energy adaptation with replay and rollback (✅ Complete) — honest_verdict=complete: active_spline_online_kan_exact_energy_ready; results/experiment_5570_spline_local_kan_online_energy.json
+ - 2026-07-11: Gated reset-free local SOTA continual harness (⚠️ Blocked) — honest_verdict=blocked_no_cuda_offload; results/experiment_5571_reset_free_sota_continual_harness.json
++- 2026-07-11: Matched CPU CUDA sampler-quality benchmark and board continuity receipt (✅ Complete) — honest_verdict=complete: matched CPU/CUDA sampler evidence recorded; successful_matched_pairs=6; board_speedup_claimed=false; results/experiment_5573_matched_sampler_hardware_continuity.json
+-- 
+2.55.0
+

@@ -1,0 +1,1503 @@
+From a982bacfc1f8f04063d8c9790093e3e92499e2f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 06:29:56 -0400
+Subject: [PATCH 05763/11362] [conductor] PHASE 3 hardware -- thermodynamic
+ sampler-cost boundary and board continuity
+
+Automated research step by research conductor.
+Task ID: exp5266-hardware-thermodynamic-schedule-boundary-v481
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  97 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...rch-thermodynamic-sampler-boundary-v481.md |  19 +
+ ...re_thermodynamic_schedule_boundary_v481.py | 640 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._thermodynamic_schedule_boundary_v481.json | 216 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...re_thermodynamic_schedule_boundary_v481.py | 323 +++++++++
+ 13 files changed, 1314 insertions(+), 19 deletions(-)
+ create mode 100644 ops/research-thermodynamic-sampler-boundary-v481.md
+ create mode 100644 python/carnot/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+ create mode 100644 results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
+ create mode 100644 tests/python/test_experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index f0468e282f..1203e89718 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -15391,6 +15391,103 @@ block-device precondition, and an honest verdict beginning with `complete:` or
+ 
+ ---
+ 
++### REQ-HW-5266
++
++**Title:** Hardware-continuity v481 MUST refresh SSH reachability and document thermodynamic sampler-cost/autocorrelation boundaries without any hardware speedup claim
++
++**Description:**
++Experiment 5266 MUST produce
++`results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json` as a
++v481 hardware-continuity artifact with
++`inference_substrate="hardware_probe_no_speedup_claim"` and bare
++`speedup_claimed=false`. It refreshes the smallest safe reachability receipts for
++KV260 and PolarFire, carries forward the GateMate physical/JTAG block when the
++physical setup has not changed, and writes a short ops/research note explaining
++that arXiv:2607.00170 and Extropic TSU/XTR-0 public pages create future
++sampler-cost and autocorrelation requirements rather than current local
++execution evidence.
++
++The artifact MUST record Step 0 preconditions before board probing: host CPU,
++host GPU visibility, network reachability assumptions, and available hardware
++credential/environment indicators. KV260 MUST NOT require or mention host
++`/dev/mmcblk*` storage. KV260 reachability MUST be checked only by the existing
++SSH-safe pattern `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` when the
++repo provides that safe command/config. PolarFire reachability MUST use the
++existing SSH-safe pattern
++`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` when available.
++Each probe attempt MUST record command, timeout, exit code, duration, and
++outcome. If a safe command is unavailable, the corresponding board status MUST
++be `blocked_safe_probe_missing` rather than inferred.
++
++GateMate MUST report `blocked_physical_jtag` unless the operator records a
++physical setup change. Exp 5266 MUST NOT invent a software workaround for the
++known physical/JTAG block.
++
++The thermodynamic boundary note MUST summarize that Scaling Up Thermodynamic AI
++Models relates inference cost, accuracy, and autocorrelation for Gibbs-sampled
++Ising inference schedules, while Extropic public pages describe TSUs/XTR-0 as
++programmable EBM samplers without giving Carnot a local SDK, device, or
++reproducible execution transcript. Future valid hardware claims MUST require
++local sampler-cost, autocorrelation, workload-hash, and wall-clock receipts.
++
++The artifact MUST include principle-wrapped required fields `honest_verdict`,
++`inference_substrate`, `preconditions_checked`, `kv260_status`,
++`polarfire_status`, `gatemate_status`, and `thermodynamic_boundary_updated`.
++It MUST also include bare `speedup_claimed=false`,
++`speedup_claimed_principle`, and `commands_run`. The `honest_verdict.value`
++MUST start with `complete:` or `blocked_`, MUST state KV260, PolarFire, and
++GateMate reachability/blocker statuses, and MUST state that no speedup is
++claimed.
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_5266_hardware_thermodynamic_schedule_boundary_v481 --date 20260705`
++  writes `results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json`.
++- The artifact includes
++  `experiment_id="exp5266-hardware-thermodynamic-schedule-boundary-v481"`,
++  `spec_refs` containing `REQ-HW-5266` and `SCENARIO-HW-5266`,
++  `random_seed=5266`, and a stable `reproducibility_checksum`.
++- `preconditions_checked.value` records host CPU/GPU, network assumptions, and
++  hardware credential/environment checks before board probes.
++- KV260 status is derived only from SSH reachability and no host block-device
++  names such as `/dev/mmcblk` appear in the artifact.
++- PolarFire status is derived from the bounded SSH reachability command or an
++  explicit safe-probe-missing blocker.
++- With `physical_setup_changed=false`, GateMate is carried forward as
++  `blocked_physical_jtag` and no physical/JTAG workaround command is recorded.
++- The thermodynamic boundary note exists and states future sampler-cost and
++  autocorrelation receipt requirements without claiming TSU, XTR-0, Kona, FPGA,
++  or other hardware acceleration.
++- `speedup_claimed=false`, `speedup_claimed_principle` explains why, and
++  `honest_verdict.value` states board statuses and no speedup claim.
++
++**Implementation status:** Pending (Exp 5266)
++
++---
++
++### SCENARIO-HW-5266
++
++**Scenario:** Exp 5266 refreshes bounded board reachability and writes the thermodynamic sampler-cost/autocorrelation boundary note without acceleration claims.
++
++**Given:** Exp 5255 showed no speedup-ready hardware path, V481 references added
++Scaling Up Thermodynamic AI Models and Extropic TSU/XTR-0 public context, and no
++local TSU SDK/device receipt exists.
++**When:** Experiment 5266 records preconditions, probes KV260 and PolarFire with
++existing SSH-safe commands when available, carries GateMate forward as
++`blocked_physical_jtag` absent a physical setup change, and writes the
++thermodynamic boundary note.
++**Then:** It writes
++`results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json`
++with all required principle-wrapped fields,
++`inference_substrate="hardware_probe_no_speedup_claim"`,
++`thermodynamic_boundary_updated.value=true`, bare `speedup_claimed=false`,
++`commands_run` receipts, no host block-device precondition, and an honest
++verdict beginning with `complete:` or `blocked_` that states KV260, PolarFire,
++GateMate, and no-speedup status.
++
++**Implementation status:** Pending (Exp 5266)
++
++---
++
+ ### SCENARIO-HW-4910
+ 
+ **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5c6ba535c3..88b4fcb11b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4238,
++  "experiments_checked": 4239,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/research-thermodynamic-sampler-boundary-v481.md b/ops/research-thermodynamic-sampler-boundary-v481.md
+new file mode 100644
+index 0000000000..28c4f592c2
+--- /dev/null
++++ b/ops/research-thermodynamic-sampler-boundary-v481.md
+@@ -0,0 +1,19 @@
++# Exp 5266 Thermodynamic Sampler Boundary
++
++Status: future requirements only. No speedup claim is allowed.
++
++Sources reviewed:
++- Scaling Up Thermodynamic AI Models, arXiv:2607.00170: https://arxiv.org/abs/2607.00170
++- Extropic TSU 101: https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware
++- Extropic X0/XTR-0: https://extropic.ai/writing/inside-x0-and-xtr-0
++- Extropic hardware overview: https://extropic.ai/hardware
++
++Boundary:
++- The V481 thermodynamic-model reference treats Gibbs-sampled Ising systems as inference substrates and links inference cost, accuracy, and autocorrelation. For Carnot, that becomes a future requirement to record sampler-cost and autocorrelation receipts before any thermodynamic speedup claim.
++- Extropic public pages describe TSUs and XTR-0 as programmable EBM/PGM sampling hardware, but this repo still has no local SDK or device, no authenticated TSU transcript, and no local XTR-0 execution.
++- KV260 and PolarFire reachability checks are board-continuity receipts only. GateMate remains a physical/JTAG blocker unless the operator changes the physical setup.
++
++Future requirement:
++- A valid acceleration claim must include workload hash, executable or bitstream hash, output hash, wall-clock timing, sample-quality/autocorrelation diagnostics, CPU/GPU baseline parity, and device identity from the same reproducible run.
++
++No speedup claim: Exp 5266 records reachability and boundary requirements only.
+diff --git a/python/carnot/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py b/python/carnot/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+new file mode 100644
+index 0000000000..f170ba223b
+--- /dev/null
++++ b/python/carnot/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+@@ -0,0 +1,640 @@
++#!/usr/bin/env python3
++"""Exp 5266: hardware reachability plus thermodynamic sampler boundary.
++
++Spec refs: REQ-HW-5266, SCENARIO-HW-5266.
++
++This module records what the local bench can prove without inflating public
++hardware literature into a local acceleration result. It checks host and
++credential preconditions, probes KV260 and PolarFire with bounded SSH
++reachability commands from the existing safe hardware-continuity pattern, keeps
++GateMate at the known physical/JTAG blocker unless the physical setup changes,
++and writes an ops note that turns thermodynamic sampler cost and
++autocorrelation into future receipt requirements.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++
++RUN_DATE = "20260705"
++EXPERIMENT_ID = "exp5266-hardware-thermodynamic-schedule-boundary-v481"
++EXPERIMENT_NAME = "experiment_5266_hardware_thermodynamic_schedule_boundary"
++MILESTONE = "2026.07.481"
++SCHEMA = "carnot.experiment_5266.hardware_thermodynamic_schedule_boundary.v481"
++SPEC_REFS = ("REQ-HW-5266", "SCENARIO-HW-5266")
++RANDOM_SEED = 5266
++INFERENCE_SUBSTRATE = "hardware_probe_no_speedup_claim"
++
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json"
++)
++BOUNDARY_NOTE_RELATIVE_PATH = Path(
++    "ops/research-thermodynamic-sampler-boundary-v481.md"
++)
++SAFE_PROBE_REFERENCE_PATH = Path(
++    "python/carnot/experiment_5255_hardware_continuity_pkit_boundary_v480.py"
++)
++
++HOST_CPU_COMMAND = ("lscpu",)
++HOST_GPU_COMMAND = ("nvidia-smi", "-L")
++HARDWARE_ENV_COMMAND = ("env",)
++KV260_SSH_COMMAND = ("ssh", "-o", "ConnectTimeout=5", "-o", "BatchMode=yes", "kria", "true")
++POLARFIRE_SSH_COMMAND = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    "polarfire",
++    "true",
++)
++
++PRECONDITION_TIMEOUT_S = 5.0
++BOARD_SSH_TIMEOUT_S = 10.0
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++BOARD_STATUSES = {
++    "reachable",
++    "blocked_kv260_ssh_unreachable",
++    "blocked_polarfire_ssh_unreachable",
++    "blocked_safe_probe_missing",
++}
++GATEMATE_STATUSES = {"blocked_physical_jtag", "not_checked_physical_setup_changed"}
++
++PUBLIC_SOURCE_URLS = {
++    "thermodynamic_ai_models": "https://arxiv.org/abs/2607.00170",
++    "extropic_tsu_101": (
++        "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware"
++    ),
++    "extropic_xtr0": "https://extropic.ai/writing/inside-x0-and-xtr-0",
++    "extropic_hardware": "https://extropic.ai/hardware",
++}
++
++HARDWARE_ENV_KEYS = (
++    "CARNOT_KV260_HOST",
++    "CARNOT_KV260_USER",
++    "CARNOT_POLARFIRE_HOST",
++    "CARNOT_POLARFIRE_USER",
++    "CARNOT_GATEMATE_SETUP_CHANGED",
++    "GATEMATE_PHYSICAL_SETUP_CHANGED",
++    "EXTROPIC_API_KEY",
++    "EXTROPIC_TOKEN",
++    "THRML_HOME",
++    "TSU_SDK",
++    "XTR0_SDK",
++)
++HARDWARE_ENV_PREFIXES = ("CARNOT_", "EXTROPIC_", "THRML_", "TSU_", "XTR0_", "GATEMATE_")
++
++HONEST_VERDICT_PRINCIPLE = (
++    "Value starts with complete: or blocked_ and states board reachability plus "
++    "no-speedup status."
++)
++SPEEDUP_CLAIMED_PRINCIPLE = (
++    "False because this task records reachability and literature boundaries only; "
++    "no local benchmark receipt compares hardware against CPU or GPU."
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "honest_verdict": HONEST_VERDICT_PRINCIPLE,
++    "inference_substrate": (
++        f"Must be {INFERENCE_SUBSTRATE}; this is reachability and boundary "
++        "evidence, not acceleration evidence."
++    ),
++    "preconditions_checked": (
++        "Records host CPU/GPU, network assumptions, and hardware credential or "
++        "environment indicators before any board probe."
++    ),
++    "kv260_status": "Derived only from the SSH-safe KV260 reachability command.",
++    "polarfire_status": "Derived only from the SSH-safe PolarFire reachability command.",
++    "gatemate_status": (
++        "Carry forward blocked_physical_jtag unless the operator changed the "
++        "physical JTAG setup."
++    ),
++    "thermodynamic_boundary_updated": (
++        "True only when the ops note records sampler-cost/autocorrelation as "
++        "future requirements rather than local execution."
++    ),
++    "thermodynamic_boundary_note_path": (
++        "Repository path to the ops note that documents future thermodynamic "
++        "sampler-cost and autocorrelation receipt requirements."
++    ),
++}
++REQUIRED_WRAPPED_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "kv260_status",
++    "polarfire_status",
++    "gatemate_status",
++    "thermodynamic_boundary_updated",
++)
++
++
++def require(condition: bool, message: str) -> None:
++    if not condition:
++        raise AssertionError(message)
++
++
++def command_to_string(command: Sequence[str]) -> str:
++    return " ".join(shlex.quote(str(part)) for part in command)
++
++
++def round_duration(duration_s: float) -> float:
++    return round(max(float(duration_s), 0.000001), 6)
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    """One bounded command receipt with stdout and stderr preserved separately."""
++
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str
++    stderr: str
++    duration_s: float
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++
++CommandRunner = Callable[[tuple[str, ...], float], CommandProbe]
++
++
++def run_command(command: tuple[str, ...], timeout_s: float = 60.0) -> CommandProbe:  # pragma: no cover
++    started = time.perf_counter()
++    try:
++        completed = subprocess.run(command, capture_output=True, text=True, timeout=timeout_s)
++        return CommandProbe(
++            tuple(command),
++            int(completed.returncode),
++            completed.stdout,
++            completed.stderr,
++            time.perf_counter() - started,
++        )
++    except subprocess.TimeoutExpired as exc:
++        return CommandProbe(
++            tuple(command),
++            124,
++            exc.stdout or "",
++            exc.stderr or f"command timed out after {timeout_s}s",
++            time.perf_counter() - started,
++        )
++    except OSError as exc:
++        return CommandProbe(
++            tuple(command),
++            127,
++            "",
++            f"{type(exc).__name__}: {exc}",
++            time.perf_counter() - started,
++        )
++
++
++def get_git_commit(repo_root: str | Path) -> str:  # pragma: no cover
++    try:
++        completed = subprocess.run(
++            ("git", "rev-parse", "HEAD"),
++            cwd=repo_root,
++            capture_output=True,
++            text=True,
++            timeout=5.0,
++        )
++    except (OSError, subprocess.TimeoutExpired):
++        return "unknown"
++    commit = completed.stdout.strip()
++    return commit if completed.returncode == 0 and commit else "unknown"
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def wrap_field(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def safe_probe_scripts_available(repo_root: str | Path) -> bool:
++    return (Path(repo_root) / SAFE_PROBE_REFERENCE_PATH).exists()
++
++
++def _field_from_lscpu(stdout: str, field: str) -> str | None:
++    prefix = f"{field}:"
++    for line in stdout.splitlines():
++        if line.startswith(prefix):
++            return line.split(":", 1)[1].strip() or None
++    return None
++
++
++def parse_host_cpu(probe: CommandProbe) -> JsonDict:
++    return {
++        "available": probe.exit_code == 0,
++        "model": _field_from_lscpu(probe.stdout, "Model name") or "unknown",
++        "architecture": _field_from_lscpu(probe.stdout, "Architecture") or "unknown",
++        "command": command_to_string(probe.command),
++    }
++
++
++def parse_host_gpu(probe: CommandProbe) -> JsonDict:
++    lines = [line.strip() for line in probe.stdout.splitlines() if line.strip()]
++    return {
++        "available": probe.exit_code == 0 and bool(lines),
++        "devices": lines,
++        "command": command_to_string(probe.command),
++        "error": "" if probe.exit_code == 0 else probe.combined_output.strip(),
++    }
++
++
++def _hardware_env_key_allowed(key: str) -> bool:
++    return key in HARDWARE_ENV_KEYS or key.startswith(HARDWARE_ENV_PREFIXES)
++
++
++def parse_hardware_environment(probe: CommandProbe) -> JsonDict:
++    present_keys: set[str] = set()
++    if probe.exit_code == 0:
++        for line in probe.stdout.splitlines():
++            key, separator, _value = line.partition("=")
++            if separator and _hardware_env_key_allowed(key):
++                present_keys.add(key)
++
++    parsed = {
++        key: {"present": key in present_keys, "value_recorded": False}
++        for key in HARDWARE_ENV_KEYS
++    }
++    for key in sorted(present_keys - set(HARDWARE_ENV_KEYS)):
++        parsed[key] = {"present": True, "value_recorded": False}
++    return parsed
++
++
++def sanitized_env_stdout(env_summary: Mapping[str, Mapping[str, Any]]) -> str:
++    present = [key for key, value in env_summary.items() if value.get("present") is True]
++    return "\n".join(sorted(present))
++
++
++def command_receipt(
++    *,
++    probe: CommandProbe,
++    timeout_s: float,
++    kind: str,
++    outcome: str,
++    stdout_override: str | None = None,
++) -> JsonDict:
++    return {
++        "kind": kind,
++        "command": command_to_string(probe.command),
++        "timeout_s": float(timeout_s),
++        "exit_code": int(probe.exit_code),
++        "duration_s": round_duration(probe.duration_s),
++        "stdout": probe.stdout if stdout_override is None else stdout_override,
++        "stderr": probe.stderr,
++        "outcome": outcome,
++    }
++
++
++def collect_preconditions(command_runner: CommandRunner) -> tuple[JsonDict, list[JsonDict]]:
++    cpu_probe = command_runner(HOST_CPU_COMMAND, PRECONDITION_TIMEOUT_S)
++    gpu_probe = command_runner(HOST_GPU_COMMAND, PRECONDITION_TIMEOUT_S)
++    env_probe = command_runner(HARDWARE_ENV_COMMAND, PRECONDITION_TIMEOUT_S)
++
++    env_summary = parse_hardware_environment(env_probe)
++    preconditions = {
++        "host_cpu": parse_host_cpu(cpu_probe),
++        "host_gpu": parse_host_gpu(gpu_probe),
++        "network_reachability_assumptions": {
++            "internet_required_for_board_probe": False,
++            "kv260_ssh_alias": "kria",
++            "polarfire_ssh_alias": "polarfire",
++            "ssh_config_or_dns_may_resolve_board_aliases": True,
++            "kv260_host_block_device_required": False,
++        },
++        "hardware_environment": env_summary,
++    }
++
++    commands = [
++        command_receipt(
++            probe=cpu_probe,
++            timeout_s=PRECONDITION_TIMEOUT_S,
++            kind="precondition_host_cpu",
++            outcome="recorded" if cpu_probe.exit_code == 0 else "blocked_cpu_probe_failed",
++        ),
++        command_receipt(
++            probe=gpu_probe,
++            timeout_s=PRECONDITION_TIMEOUT_S,
++            kind="precondition_host_gpu",
++            outcome="recorded" if gpu_probe.exit_code == 0 else "no_gpu_visible_or_tool_missing",
++        ),
++        command_receipt(
++            probe=env_probe,
++            timeout_s=PRECONDITION_TIMEOUT_S,
++            kind="precondition_hardware_environment",
++            outcome="recorded" if env_probe.exit_code == 0 else "blocked_env_probe_failed",
++            stdout_override=sanitized_env_stdout(env_summary),
++        ),
++    ]
++    return preconditions, commands
++
++
++def board_status_from_probe(board: str, probe: CommandProbe) -> str:
++    if probe.exit_code == 0:
++        return "reachable"
++    return f"blocked_{board}_ssh_unreachable"
++
++
++def build_honest_verdict(*, kv260_status: str, polarfire_status: str, gatemate_status: str) -> str:
++    if "blocked_safe_probe_missing" in {kv260_status, polarfire_status}:
++        prefix = "blocked_safe_probe_missing:"
++    elif kv260_status != "reachable" or polarfire_status != "reachable":
++        prefix = "blocked_board_reachability:"
++    else:
++        prefix = "complete:"
++    return (
++        f"{prefix} kv260={kv260_status} polarfire={polarfire_status} "
++        f"gatemate={gatemate_status} no_speedup_claim"
++    )
++
++
++def build_thermodynamic_boundary_note() -> str:
++    return f"""# Exp 5266 Thermodynamic Sampler Boundary
++
++Status: future requirements only. No speedup claim is allowed.
++
++Sources reviewed:
++- Scaling Up Thermodynamic AI Models, arXiv:2607.00170: {PUBLIC_SOURCE_URLS["thermodynamic_ai_models"]}
++- Extropic TSU 101: {PUBLIC_SOURCE_URLS["extropic_tsu_101"]}
++- Extropic X0/XTR-0: {PUBLIC_SOURCE_URLS["extropic_xtr0"]}
++- Extropic hardware overview: {PUBLIC_SOURCE_URLS["extropic_hardware"]}
++
++Boundary:
++- The V481 thermodynamic-model reference treats Gibbs-sampled Ising systems as inference substrates and links inference cost, accuracy, and autocorrelation. For Carnot, that becomes a future requirement to record sampler-cost and autocorrelation receipts before any thermodynamic speedup claim.
++- Extropic public pages describe TSUs and XTR-0 as programmable EBM/PGM sampling hardware, but this repo still has no local SDK or device, no authenticated TSU transcript, and no local XTR-0 execution.
++- KV260 and PolarFire reachability checks are board-continuity receipts only. GateMate remains a physical/JTAG blocker unless the operator changes the physical setup.
++
++Future requirement:
++- A valid acceleration claim must include workload hash, executable or bitstream hash, output hash, wall-clock timing, sample-quality/autocorrelation diagnostics, CPU/GPU baseline parity, and device identity from the same reproducible run.
++
++No speedup claim: Exp 5266 records reachability and boundary requirements only.
++"""
++
++
++def write_boundary_note(repo_root: str | Path) -> Path:
++    path = Path(repo_root) / BOUNDARY_NOTE_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(build_thermodynamic_boundary_note(), encoding="utf-8")
++    return path
++
++
++def build_artifact(
++    *,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    boundary_note_written: bool = True,
++    physical_setup_changed: bool = False,
++    safe_probe_scripts_present: bool = True,
++) -> JsonDict:
++    started = clock()
++    preconditions, commands_run = collect_preconditions(command_runner)
++    board_probe_notes: JsonDict = {}
++
++    if safe_probe_scripts_present:
++        kv260_probe = command_runner(KV260_SSH_COMMAND, BOARD_SSH_TIMEOUT_S)
++        kv260_status = board_status_from_probe("kv260", kv260_probe)
++        commands_run.append(
++            command_receipt(
++                probe=kv260_probe,
++                timeout_s=BOARD_SSH_TIMEOUT_S,
++                kind="kv260_ssh_reachability",
++                outcome=kv260_status,
++            )
++        )
++
++        polarfire_probe = command_runner(POLARFIRE_SSH_COMMAND, BOARD_SSH_TIMEOUT_S)
++        polarfire_status = board_status_from_probe("polarfire", polarfire_probe)
++        commands_run.append(
++            command_receipt(
++                probe=polarfire_probe,
++                timeout_s=BOARD_SSH_TIMEOUT_S,
++                kind="polarfire_ssh_reachability",
++                outcome=polarfire_status,
++            )
++        )
++        board_probe_notes["kv260"] = "ssh_only_safe_probe"
++        board_probe_notes["polarfire"] = "ssh_only_safe_probe"
++    else:
++        kv260_status = "blocked_safe_probe_missing"
++        polarfire_status = "blocked_safe_probe_missing"
++        board_probe_notes["kv260"] = "safe_probe_missing"
++        board_probe_notes["polarfire"] = "safe_probe_missing"
++
++    gatemate_status = (
++        "not_checked_physical_setup_changed" if physical_setup_changed else "blocked_physical_jtag"
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round_duration(clock() - started),
++        "commit": commit,
++        "honest_verdict": wrap_field(
++            "honest_verdict",
++            build_honest_verdict(
++                kv260_status=kv260_status,
++                polarfire_status=polarfire_status,
++                gatemate_status=gatemate_status,
++            ),
++        ),
++        "inference_substrate": wrap_field("inference_substrate", INFERENCE_SUBSTRATE),
++        "preconditions_checked": wrap_field("preconditions_checked", preconditions),
++        "kv260_status": wrap_field("kv260_status", kv260_status),
++        "polarfire_status": wrap_field("polarfire_status", polarfire_status),
++        "gatemate_status": wrap_field("gatemate_status", gatemate_status),
++        "thermodynamic_boundary_updated": wrap_field(
++            "thermodynamic_boundary_updated", bool(boundary_note_written)
++        ),
++        "thermodynamic_boundary_note_path": wrap_field(
++            "thermodynamic_boundary_note_path",
++            str(BOUNDARY_NOTE_RELATIVE_PATH) if boundary_note_written else None,
++        ),
++        "speedup_claimed": False,
++        "speedup_claimed_principle": SPEEDUP_CLAIMED_PRINCIPLE,
++        "commands_run": commands_run,
++        "board_probe_notes": board_probe_notes,
++        "safe_probe_reference_path": str(SAFE_PROBE_REFERENCE_PATH),
++        "safe_probe_scripts_present": bool(safe_probe_scripts_present),
++        "gatemate_carry_forward": {
++            "status": gatemate_status,
++            "physical_setup_changed": bool(physical_setup_changed),
++            "evidence": [
++                "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
++                "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
++                "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
++            ],
++            "rationale": (
++                "no operator cable, port, power, or board setup change was provided"
++                if not physical_setup_changed
++                else "operator recorded a physical setup change; this task still avoids inventing a software workaround"
++            ),
++        },
++        "thermodynamic_boundary_sources": dict(PUBLIC_SOURCE_URLS),
++        "reviewed_inputs": [
++            "AGENTS.md",
++            "CODEX.md",
++            "CLAUDE.md hardware continuity, preconditions, and artifact-field rules",
++            "research-hardware-wishlist.md active hardware tracks",
++            "research-references.md V481 Energy hardware, Ising, and certificates section",
++            "ops/status.md",
++            "ops/changelog.md",
++            "ops/exclusion_manifest.yaml",
++            "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
++        ],
++        "conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def no_host_storage_markers(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact, sort_keys=True, default=str).lower()
++    return "mmcblk" not in encoded and "/dev/disk" not in encoded
++
++
++def validate_wrapped_field(artifact: Mapping[str, Any], field: str) -> Any:
++    wrapped = artifact.get(field)
++    require(isinstance(wrapped, Mapping), f"{field} must be principle-wrapped")
++    require(wrapped.get("principle") == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++    require("value" in wrapped, f"{field} missing value")
++    return wrapped["value"]
++
++
++def validate_command_receipts(commands: Any) -> None:
++    require(isinstance(commands, list) and commands, "commands_run must be a non-empty list")
++    for index, command in enumerate(commands):
++        require(isinstance(command, Mapping), f"commands_run[{index}] must be a mapping")
++        for key in ("command", "outcome", "timeout_s", "exit_code", "duration_s"):
++            require(key in command, f"commands_run[{index}] missing {key}")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = set(REQUIRED_WRAPPED_FIELDS) - set(artifact)
++    require(not missing, f"missing required field: {sorted(missing)}")
++    require(artifact.get("schema") == SCHEMA, "schema mismatch")
++    require(artifact.get("experiment_id") == EXPERIMENT_ID, "experiment_id mismatch")
++    require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs mismatch")
++    require(artifact.get("random_seed") == RANDOM_SEED, "random_seed mismatch")
++
++    verdict = validate_wrapped_field(artifact, "honest_verdict")
++    require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "bad verdict")
++    for token in ("kv260=", "polarfire=", "gatemate=", "no_speedup"):
++        require(token in verdict, f"honest_verdict missing {token}")
++    require(
++        validate_wrapped_field(artifact, "inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate mismatch",
++    )
++    preconditions = validate_wrapped_field(artifact, "preconditions_checked")
++    require(isinstance(preconditions, Mapping), "preconditions_checked must be a mapping")
++    for key in ("host_cpu", "host_gpu", "network_reachability_assumptions", "hardware_environment"):
++        require(key in preconditions, f"preconditions_checked missing {key}")
++    require(validate_wrapped_field(artifact, "kv260_status") in BOARD_STATUSES, "bad kv260")
++    require(
++        validate_wrapped_field(artifact, "polarfire_status") in BOARD_STATUSES,
++        "bad polarfire",
++    )
++    require(
++        validate_wrapped_field(artifact, "gatemate_status") in GATEMATE_STATUSES,
++        "bad gatemate",
++    )
++    require(
++        isinstance(validate_wrapped_field(artifact, "thermodynamic_boundary_updated"), bool),
++        "thermodynamic_boundary_updated type mismatch",
++    )
++    note_path = validate_wrapped_field(artifact, "thermodynamic_boundary_note_path")
++    require(note_path is None or isinstance(note_path, str), "bad thermodynamic note path")
++    require(artifact.get("speedup_claimed") is False, "speedup_claimed must be false")
++    require(
++        artifact.get("speedup_claimed_principle") == SPEEDUP_CLAIMED_PRINCIPLE,
++        "speedup_claimed_principle mismatch",
++    )
++    validate_command_receipts(artifact.get("commands_run"))
++    require(no_host_storage_markers(artifact), "host storage marker present")
++    require(artifact.get("conductor_modified") is False, "conductor_modified mismatch")
++    require(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum mismatch",
++    )
++
++
++def write_artifact(repo_root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    validate_artifact(artifact)
++    out_path = Path(repo_root) / RESULT_RELATIVE_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str | None = None,
++    physical_setup_changed: bool = False,
++) -> Path:
++    note_path = write_boundary_note(repo_root)
++    artifact = build_artifact(
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit or get_git_commit(repo_root),
++        boundary_note_written=note_path.exists(),
++        physical_setup_changed=physical_setup_changed,
++        safe_probe_scripts_present=safe_probe_scripts_available(repo_root),
++    )
++    return write_artifact(repo_root, artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument(
++        "--physical-setup-changed",
++        action="store_true",
++        help="Record a changed GateMate setup while avoiding software workaround claims.",
++    )
++    args = parser.parse_args(argv)
++    print(
++        run_experiment(
++            repo_root=Path("."),
++            run_date=args.date,
++            physical_setup_changed=args.physical_setup_changed,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index e2cb00b0f4..dc57e2edbe 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-05T10:14:35.271804Z",
+-  "duration_s": 0.07003235816955566,
++  "run_date": "2026-07-05T10:29:00.526930Z",
++  "duration_s": 0.0575716495513916,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "698814cad54102805bcdebf92e93afdaf30815b33288989d6afe0d55adc172ae",
++  "reproducibility_checksum": "767ce247952f097d12663f8f8e32e4098b1733f3f8061047ad3eec129cf9cc49",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "fb92125cf8906ce8a9e58e471963aa08dde82bd8"
++    "adversarial_verify_version": "4c5fe5ea7285815cd7ebb03e51be363cf7acd785"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c3057fc3a8..99547ee55f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-05T10:14:35.389236Z",
+-  "duration_s": 0.10710024833679199,
++  "run_date": "2026-07-05T10:29:00.610974Z",
++  "duration_s": 0.07681751251220703,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "662b8ae7266982409a40ca6647255edd741a0fe2dd98aff550d734522f6f0520",
++  "reproducibility_checksum": "ef78ace68457910dde9a63a65c24f94e2d64524cefefbc5ca0669c471035b199",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "fb92125cf8906ce8a9e58e471963aa08dde82bd8"
++    "adversarial_verify_version": "4c5fe5ea7285815cd7ebb03e51be363cf7acd785"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 28d35bee5d..5152e86cb0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1200180053710938,
++  "efficiency_gains_ms": 2.126455307006836,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index fa25daa8f3..cca400aac7 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.2791012674570084e-05,
++  "duration_s": 4.002498462796211e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json b/results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
+new file mode 100644
+index 0000000000..bf27c5a4b1
+--- /dev/null
++++ b/results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
+@@ -0,0 +1,216 @@
++{
++  "board_probe_notes": {
++    "kv260": "ssh_only_safe_probe",
++    "polarfire": "ssh_only_safe_probe"
++  },
++  "commands_run": [
++    {
++      "command": "lscpu",
++      "duration_s": 0.006322,
++      "exit_code": 0,
++      "kind": "precondition_host_cpu",
++      "outcome": "recorded",
++      "stderr": "",
++      "stdout": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  24\nOn-line CPU(s) list:                     0-23\nVendor ID:                               AuthenticAMD\nModel name:                              AMD Ryzen AI 9 HX 370 w/ Radeon 890M\nCPU family:                              26\nModel:                                   36\nThread(s) per core:                      2\nCore(s) per socket:                      12\nSocket(s):                               1\nStepping:                                0\nMicrocode version:                       0xb204037\nFrequency boost:                         enabled\nCPU(s) scaling MHz:                      23%\nCPU max MHz:                             5157.8950\nCPU min MHz:                             605.2640\nBogoMIPS:                                3992.55\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpuid_fault cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk avx_vnni avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid bus_lock_detect movdiri movdir64b overflow_recov succor smca fsrm avx512_vp2intersect flush_l1d amd_lbr_pmc_freeze\nVirtualization:                          AMD-V\nL1d cache:                               576 KiB (12 instances)\nL1i cache:                               384 KiB (12 instances)\nL2 cache:                                12 MiB (12 instances)\nL3 cache:                                24 MiB (2 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-23\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; IBPB on VMEXIT only\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP always-on; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB on VMEXIT\n",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "nvidia-smi -L",
++      "duration_s": 0.026942,
++      "exit_code": 0,
++      "kind": "precondition_host_gpu",
++      "outcome": "recorded",
++      "stderr": "",
++      "stdout": "GPU 0: NVIDIA GeForce RTX 3090 (UUID: GPU-b52387a2-c625-de87-8d34-e6f64e684bab)\nGPU 1: NVIDIA GeForce RTX 3090 (UUID: GPU-7971baff-9583-eaa6-2292-393f930a28f9)\n",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "env",
++      "duration_s": 0.001106,
++      "exit_code": 0,
++      "kind": "precondition_hardware_environment",
++      "outcome": "recorded",
++      "stderr": "",
++      "stdout": "CARNOT_ARC_GENERATOR_CUDA_GPU\nCARNOT_FORCE_LIVE\nCARNOT_MODE",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 5.052643,
++      "exit_code": 255,
++      "kind": "kv260_ssh_reachability",
++      "outcome": "blocked_kv260_ssh_unreachable",
++      "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
++      "stdout": "",
++      "timeout_s": 10.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++      "duration_s": 5.025628,
++      "exit_code": 255,
++      "kind": "polarfire_ssh_reachability",
++      "outcome": "blocked_polarfire_ssh_unreachable",
++      "stderr": "ssh: Could not resolve hostname mpfs-disco-kit.local: Name or service not known\n",
++      "stdout": "",
++      "timeout_s": 10.0
++    }
++  ],
++  "commit": "4c5fe5ea7285815cd7ebb03e51be363cf7acd785",
++  "conductor_modified": false,
++  "duration_s": 10.112932,
++  "experiment": "experiment_5266_hardware_thermodynamic_schedule_boundary",
++  "experiment_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481",
++  "gatemate_carry_forward": {
++    "evidence": [
++      "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
++      "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
++      "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json"
++    ],
++    "physical_setup_changed": false,
++    "rationale": "no operator cable, port, power, or board setup change was provided",
++    "status": "blocked_physical_jtag"
++  },
++  "gatemate_status": {
++    "principle": "Carry forward blocked_physical_jtag unless the operator changed the physical JTAG setup.",
++    "value": "blocked_physical_jtag"
++  },
++  "honest_verdict": {
++    "principle": "Value starts with complete: or blocked_ and states board reachability plus no-speedup status.",
++    "value": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim"
++  },
++  "inference_substrate": {
++    "principle": "Must be hardware_probe_no_speedup_claim; this is reachability and boundary evidence, not acceleration evidence.",
++    "value": "hardware_probe_no_speedup_claim"
++  },
++  "kv260_status": {
++    "principle": "Derived only from the SSH-safe KV260 reachability command.",
++    "value": "blocked_kv260_ssh_unreachable"
++  },
++  "milestone": "2026.07.481",
++  "polarfire_status": {
++    "principle": "Derived only from the SSH-safe PolarFire reachability command.",
++    "value": "blocked_polarfire_ssh_unreachable"
++  },
++  "preconditions_checked": {
++    "principle": "Records host CPU/GPU, network assumptions, and hardware credential or environment indicators before any board probe.",
++    "value": {
++      "hardware_environment": {
++        "CARNOT_ARC_GENERATOR_CUDA_GPU": {
++          "present": true,
++          "value_recorded": false
++        },
++        "CARNOT_FORCE_LIVE": {
++          "present": true,
++          "value_recorded": false
++        },
++        "CARNOT_GATEMATE_SETUP_CHANGED": {
++          "present": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_HOST": {
++          "present": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_USER": {
++          "present": false,
++          "value_recorded": false
++        },
++        "CARNOT_MODE": {
++          "present": true,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_HOST": {
++          "present": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_USER": {
++          "present": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_API_KEY": {
++          "present": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_TOKEN": {
++          "present": false,
++          "value_recorded": false
++        },
++        "GATEMATE_PHYSICAL_SETUP_CHANGED": {
++          "present": false,
++          "value_recorded": false
++        },
++        "THRML_HOME": {
++          "present": false,
++          "value_recorded": false
++        },
++        "TSU_SDK": {
++          "present": false,
++          "value_recorded": false
++        },
++        "XTR0_SDK": {
++          "present": false,
++          "value_recorded": false
++        }
++      },
++      "host_cpu": {
++        "architecture": "x86_64",
++        "available": true,
++        "command": "lscpu",
++        "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
++      },
++      "host_gpu": {
++        "available": true,
++        "command": "nvidia-smi -L",
++        "devices": [
++          "GPU 0: NVIDIA GeForce RTX 3090 (UUID: GPU-b52387a2-c625-de87-8d34-e6f64e684bab)",
++          "GPU 1: NVIDIA GeForce RTX 3090 (UUID: GPU-7971baff-9583-eaa6-2292-393f930a28f9)"
++        ],
++        "error": ""
++      },
++      "network_reachability_assumptions": {
++        "internet_required_for_board_probe": false,
++        "kv260_host_block_device_required": false,
++        "kv260_ssh_alias": "kria",
++        "polarfire_ssh_alias": "polarfire",
++        "ssh_config_or_dns_may_resolve_board_aliases": true
++      }
++    }
++  },
++  "random_seed": 5266,
++  "reproducibility_checksum": "79941147e9279d616a86200404ffe09f88bcc5a7549c637cac794a192a7bff91",
++  "reviewed_inputs": [
++    "AGENTS.md",
++    "CODEX.md",
++    "CLAUDE.md hardware continuity, preconditions, and artifact-field rules",
++    "research-hardware-wishlist.md active hardware tracks",
++    "research-references.md V481 Energy hardware, Ising, and certificates section",
++    "ops/status.md",
++    "ops/changelog.md",
++    "ops/exclusion_manifest.yaml",
++    "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json"
++  ],
++  "run_date": "20260705",
++  "safe_probe_reference_path": "python/carnot/experiment_5255_hardware_continuity_pkit_boundary_v480.py",
++  "safe_probe_scripts_present": true,
++  "schema": "carnot.experiment_5266.hardware_thermodynamic_schedule_boundary.v481",
++  "spec_refs": [
++    "REQ-HW-5266",
++    "SCENARIO-HW-5266"
++  ],
++  "speedup_claimed": false,
++  "speedup_claimed_principle": "False because this task records reachability and literature boundaries only; no local benchmark receipt compares hardware against CPU or GPU.",
++  "thermodynamic_boundary_note_path": {
++    "principle": "Repository path to the ops note that documents future thermodynamic sampler-cost and autocorrelation receipt requirements.",
++    "value": "ops/research-thermodynamic-sampler-boundary-v481.md"
++  },
++  "thermodynamic_boundary_sources": {
++    "extropic_hardware": "https://extropic.ai/hardware",
++    "extropic_tsu_101": "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
++    "extropic_xtr0": "https://extropic.ai/writing/inside-x0-and-xtr-0",
++    "thermodynamic_ai_models": "https://arxiv.org/abs/2607.00170"
++  },
++  "thermodynamic_boundary_updated": {
++    "principle": "True only when the ops note records sampler-cost/autocorrelation as future requirements rather than local execution.",
++    "value": true
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3f843ae7d2..8697ad744b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:14:21Z",
+-  "finished_at": "2026-07-05T10:14:21Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-07-05T10:28:44Z",
++  "finished_at": "2026-07-05T10:28:44Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 8a0ba1d126..e0a5e0ab40 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:14:21Z",
+-  "finished_at": "2026-07-05T10:14:21Z",
++  "started_at": "2026-07-05T10:28:45Z",
++  "finished_at": "2026-07-05T10:28:45Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7d5bfe668e..5ea95dda2c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:14:21Z",
+-  "finished_at": "2026-07-05T10:14:21Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-05T10:28:45Z",
++  "finished_at": "2026-07-05T10:28:45Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py b/tests/python/test_experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+new file mode 100644
+index 0000000000..709d4487fa
+--- /dev/null
++++ b/tests/python/test_experiment_5266_hardware_thermodynamic_schedule_boundary_v481.py
+@@ -0,0 +1,323 @@
++"""Tests for Exp 5266 hardware thermodynamic schedule boundary.
++
++Spec refs: REQ-HW-5266, SCENARIO-HW-5266.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5266_hardware_thermodynamic_schedule_boundary_v481 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/fpga/spec.md"
++
++
++class RecordingRunner:
++    """SCENARIO-HW-5266 command runner with deterministic precondition receipts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for stable duration and checksum assertions."""
++
++    def __init__(self) -> None:
++        self.value = 5266.0
++
++    def __call__(self) -> float:
++        self.value += 0.25
++        return self.value
++
++
++def _value(artifact: dict[str, object], field: str) -> object:
++    wrapped = artifact[field]
++    assert isinstance(wrapped, dict)
++    return wrapped["value"]
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _runner(
++    *,
++    kv260_exit: int = 0,
++    kv260_stderr: str = "",
++    polarfire_exit: int = 0,
++    polarfire_stderr: str = "",
++    gpu_exit: int = 0,
++    cpu_stdout: str = "Architecture: x86_64\nModel name: Unit Test CPU\n",
++    env_stdout: str = "CARNOT_KV260_HOST=kria\nEXTROPIC_API_KEY=secret-token\n",
++) -> RecordingRunner:
++    probes: dict[tuple[str, ...], list[mod.CommandProbe]] = {
++        mod.HOST_CPU_COMMAND: [
++            _probe(
++                mod.HOST_CPU_COMMAND,
++                stdout=cpu_stdout,
++                duration_s=0.02,
++            )
++        ],
++        mod.HOST_GPU_COMMAND: [
++            _probe(
++                mod.HOST_GPU_COMMAND,
++                exit_code=gpu_exit,
++                stdout="GPU 0: Unit Test GPU\n" if gpu_exit == 0 else "",
++                stderr="" if gpu_exit == 0 else "nvidia-smi not available\n",
++                duration_s=0.03,
++            )
++        ],
++        mod.HARDWARE_ENV_COMMAND: [
++            _probe(mod.HARDWARE_ENV_COMMAND, stdout=env_stdout, duration_s=0.04)
++        ],
++        mod.KV260_SSH_COMMAND: [
++            _probe(
++                mod.KV260_SSH_COMMAND,
++                exit_code=kv260_exit,
++                stderr=kv260_stderr,
++                duration_s=0.2,
++            )
++        ],
++        mod.POLARFIRE_SSH_COMMAND: [
++            _probe(
++                mod.POLARFIRE_SSH_COMMAND,
++                exit_code=polarfire_exit,
++                stderr=polarfire_stderr,
++                duration_s=0.3,
++            )
++        ],
++    }
++    return RecordingRunner(probes)
++
++
++def test_req_hw_5266_spec_declares_required_artifact_contract() -> None:
++    """REQ-HW-5266: OpenSpec anchors the v481 artifact and no-speedup contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-HW-5266") : spec.index("### SCENARIO-HW-4910")]
++
++    for marker in (
++        "REQ-HW-5266",
++        "SCENARIO-HW-5266",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.INFERENCE_SUBSTRATE,
++        "preconditions_checked",
++        "thermodynamic_boundary_updated",
++        "speedup_claimed=false",
++        "commands_run",
++        "autocorrelation",
++        "blocked_physical_jtag",
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_WRAPPED_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_hw_5266_success_path_records_preconditions_and_ssh_only_boards() -> None:
++    """SCENARIO-HW-5266: reachable boards use preconditions then SSH reachability."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++    )
++
++    assert runner.commands == [
++        mod.HOST_CPU_COMMAND,
++        mod.HOST_GPU_COMMAND,
++        mod.HARDWARE_ENV_COMMAND,
++        mod.KV260_SSH_COMMAND,
++        mod.POLARFIRE_SSH_COMMAND,
++    ]
++    assert _value(artifact, "kv260_status") == "reachable"
++    assert _value(artifact, "polarfire_status") == "reachable"
++    assert _value(artifact, "gatemate_status") == "blocked_physical_jtag"
++    assert _value(artifact, "inference_substrate") == mod.INFERENCE_SUBSTRATE
++    assert _value(artifact, "thermodynamic_boundary_updated") is True
++    assert artifact["speedup_claimed"] is False
++    assert artifact["speedup_claimed_principle"] == mod.SPEEDUP_CLAIMED_PRINCIPLE
++    assert "no_speedup_claim" in _value(artifact, "honest_verdict")
++    assert _value(artifact, "honest_verdict").startswith("complete:")
++    preconditions = _value(artifact, "preconditions_checked")
++    assert isinstance(preconditions, dict)
++    assert preconditions["host_cpu"]["model"] == "Unit Test CPU"
++    assert preconditions["host_gpu"]["available"] is True
++    assert preconditions["hardware_environment"]["EXTROPIC_API_KEY"]["present"] is True
++    assert "secret-token" not in json.dumps(preconditions)
++    assert len(artifact["commands_run"]) == 5
++    assert artifact["commands_run"][-2]["command"] == mod.command_to_string(
++        mod.KV260_SSH_COMMAND
++    )
++    assert artifact["commands_run"][-2]["timeout_s"] == 10.0
++    assert artifact["commands_run"][-1]["outcome"] == "reachable"
++    assert "/dev/mmcblk" not in json.dumps(artifact).lower()
++    mod.validate_artifact(artifact)
++
++
++def test_precondition_fallbacks_record_gpu_error_and_custom_env_without_values() -> None:
++    """REQ-HW-5266: preconditions are honest even when host details are absent."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(
++            gpu_exit=127,
++            cpu_stdout="unexpected lscpu output\n",
++            env_stdout="CARNOT_CUSTOM_PROBE=enabled\nPRIVATE_KEY=do-not-record\n",
++        ),
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++    )
++    preconditions = _value(artifact, "preconditions_checked")
++    assert isinstance(preconditions, dict)
++
++    assert preconditions["host_cpu"]["model"] == "unknown"
++    assert preconditions["host_cpu"]["architecture"] == "unknown"
++    assert preconditions["host_gpu"]["available"] is False
++    assert "nvidia-smi not available" in preconditions["host_gpu"]["error"]
++    assert preconditions["hardware_environment"]["CARNOT_CUSTOM_PROBE"]["present"] is True
++    assert "enabled" not in json.dumps(preconditions)
++    assert "PRIVATE_KEY" not in json.dumps(preconditions)
++    mod.validate_artifact(artifact)
++
++
++def test_safe_probe_missing_blocks_boards_without_guessing_reachability() -> None:
++    """REQ-HW-5266: missing safe probe scripts produce explicit board blockers."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++        safe_probe_scripts_present=False,
++    )
++
++    assert runner.commands == [
++        mod.HOST_CPU_COMMAND,
++        mod.HOST_GPU_COMMAND,
++        mod.HARDWARE_ENV_COMMAND,
++    ]
++    assert _value(artifact, "kv260_status") == "blocked_safe_probe_missing"
++    assert _value(artifact, "polarfire_status") == "blocked_safe_probe_missing"
++    assert _value(artifact, "honest_verdict").startswith("blocked_safe_probe_missing:")
++    assert "safe_probe_missing" in artifact["board_probe_notes"]["kv260"]
++    assert artifact["speedup_claimed"] is False
++    mod.validate_artifact(artifact)
++
++
++def test_unreachable_ssh_records_command_timeout_and_error() -> None:
++    """REQ-HW-5266: board blockers preserve exact SSH command receipts."""
++
++    runner = _runner(
++        kv260_exit=255,
++        kv260_stderr="ssh: connect to host kria port 22: timeout\n",
++        polarfire_exit=255,
++        polarfire_stderr="ssh: connect to host polarfire port 22: No route to host\n",
++    )
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++    )
++
++    assert _value(artifact, "kv260_status") == "blocked_kv260_ssh_unreachable"
++    assert _value(artifact, "polarfire_status") == "blocked_polarfire_ssh_unreachable"
++    assert artifact["commands_run"][-2]["exit_code"] == 255
++    assert artifact["commands_run"][-2]["outcome"] == "blocked_kv260_ssh_unreachable"
++    assert "timeout" in artifact["commands_run"][-2]["stderr"]
++    assert artifact["commands_run"][-1]["command"] == mod.command_to_string(
++        mod.POLARFIRE_SSH_COMMAND
++    )
++    assert _value(artifact, "honest_verdict").startswith("blocked_board_reachability:")
++    mod.validate_artifact(artifact)
++
++
++def test_gatemate_setup_change_does_not_invent_software_workaround() -> None:
++    """SCENARIO-HW-5266: physical setup changes are recorded without JTAG workarounds."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++        physical_setup_changed=True,
++    )
++
++    assert _value(artifact, "gatemate_status") == "not_checked_physical_setup_changed"
++    assert artifact["gatemate_carry_forward"]["physical_setup_changed"] is True
++    assert "software workaround" not in json.dumps(artifact["commands_run"]).lower()
++    assert all("gatemate" not in item["command"].lower() for item in artifact["commands_run"])
++    mod.validate_artifact(artifact)
++
++
++def test_validate_artifact_rejects_speedup_claim_without_receipt() -> None:
++    """REQ-HW-5266: schema validation rejects any accidental speedup claim."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++        boundary_note_written=True,
++    )
++    artifact["speedup_claimed"] = True
++
++    with pytest.raises(AssertionError, match="speedup_claimed must be false"):
++        mod.validate_artifact(artifact)
++
++
++def test_run_experiment_writes_boundary_note_and_result(tmp_path: Path) -> None:
++    """SCENARIO-HW-5266: run_experiment writes the JSON and ops boundary note."""
++
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260705",
++        commit="abc123",
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    note_path = tmp_path / str(_value(artifact, "thermodynamic_boundary_note_path"))
++    note_text = note_path.read_text(encoding="utf-8")
++
++    assert out_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert "arXiv:2607.00170" in note_text
++    assert "autocorrelation" in note_text
++    assert "sampler-cost" in note_text
++    assert "Extropic" in note_text
++    assert "XTR-0" in note_text
++    assert "future requirement" in note_text
++    assert "no local SDK or device" in note_text
++    assert "No speedup claim" in note_text
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    mod.validate_artifact(artifact)
+-- 
+2.55.0
+

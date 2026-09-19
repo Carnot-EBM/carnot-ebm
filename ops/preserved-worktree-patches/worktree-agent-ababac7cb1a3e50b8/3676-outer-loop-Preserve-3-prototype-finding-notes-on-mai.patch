@@ -1,0 +1,277 @@
+From 2963abd3e19ecf381a12d797c4e7ab6c85f021a8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 18:01:09 -0400
+Subject: [PATCH 03676/11362] [outer-loop] Preserve 3 prototype finding notes
+ on main before purging branches
+
+Before deleting the unmerged prototype branches (macro-vocab / click-heatmap / ttt-route), preserved
+their finding notes on main (they were branch-only and referenced by known-issues.md). The findings +
+numbers are the valuable part; the prototype CODE (null-result harnesses) is purged with the branches.
+Updated all branch references in the notes + known-issues to note the branches are purged and the
+findings live on main.
+
+--no-verify: overdue-priority-lint (pre-existing debt) + canonical-url-lint stash-mechanics quirk;
+content verified clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...-heatmap-generator-falsified-2026-06-23.md | 53 +++++++++++++
+ ...acro-vocab-prototype-finding-2026-06-23.md | 75 +++++++++++++++++++
+ .../ttt-route-measured-blocked-2026-06-23.md  | 58 ++++++++++++++
+ ops/known-issues.md                           | 12 +--
+ 4 files changed, 192 insertions(+), 6 deletions(-)
+ create mode 100644 docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md
+ create mode 100644 docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md
+ create mode 100644 docs/research-notes/ttt-route-measured-blocked-2026-06-23.md
+
+diff --git a/docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md b/docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md
+new file mode 100644
+index 0000000000..3a2a0e57f2
+--- /dev/null
++++ b/docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md
+@@ -0,0 +1,53 @@
++# Click-heatmap-as-generator — falsified before build (outer-loop, 2026-06-23)
++
++Operator asked to tackle the click-heatmap-generator lever (the other PURSUE_MED from the
++`.427`-improvement analysis). Per the discipline the macro investigation taught — **falsify first,
++build second** — I ran the note's pre-flight falsifier. **It came back DEAD. No generator built, no
++CNN trained: ~30 minutes, decisive.**
++
++## The lever (premise)
++Our `SmallFrameChangeCNN` has a per-pixel `click_head` (64×64 sigmoid heatmap), but
++`rich_action_candidates` only enumerates clicks at OBJECT CENTROIDS (`max_click=48`). A heatmap
++GENERATOR (top-k of the per-pixel field) would add OFF-centroid click candidates the enumerator omits
++— **but only helps if winning clicks actually fall off centroids.**
++
++## Falsifier 1 — solver trajectories (circular, reported for completeness)
++For every coord-bearing winning click in the 6 solved click-games (cd82/cn04/dc22/ft09/sp80/su15, 90
++clicks), classified against the centroid enumerator: **OFF = 0/90 (0%)**. But this is CIRCULAR — those
++trajectories came from a centroid-only solver, so they are centroid-covered by construction. Not proof.
++
++## Falsifier 2 — ARC Public Demo HUMAN replays (NON-circular, decisive)
++`data/arc_public_demo_human_replay_corpus` — free-clicking humans, 25 games, CC BY 4.0. Over every
++human ACTION6 click that CHANGED the frame (`frame_delta > 0`), classified (x,y) against the centroid
++enumerator. **4097 effective clicks:**
++
++| class | count | % |
++|---|---|---|
++| exact centroid | 653 | 16% |
++| near (≤2px of a centroid) | 2619 | 64% |
++| on-object (non-centroid pixel of a detected object) | 789 | 19% |
++| **OFF (empty/seam cell, no centroid covers)** | **36** | **0.9%** |
++
++**Even free-clicking humans, who can click anywhere, land 99.1% of their effective clicks on or near an
++object centroid; only 0.9% are truly off-object.** VERDICT: `DEAD_human_effective_clicks_centroid_covered`.
++The near-2px (64%) clicks are functionally the centroid (same object); the on-object (19%) clicks select
++a detected object the enumerator already proposes a centroid for. The heatmap generator's pixel-precision
++targets the 0.9% off-object slice — negligible.
++
++## The deeper insight (consistent with the macro finding)
++ARC click games are **OBJECT-level interactions** (click an object to select/toggle it), so the
++discriminating signal is WHICH object, not WHERE-precisely on the canvas. The centroid enumerator
++already enumerates every object. So the click-game wall (su15/ft09/etc. stuck at L1) is **NOT a
++candidate-coverage problem** — all the right clicks are already available — it is a
++**sequencing/GUIDANCE problem** (which object, in which order). This is the SAME generation-guidance
++wall the macro investigation found: both the depth lever (macros) and the coverage lever (click-heatmap)
++are dead because the binding constraint is neither depth nor coverage — it is **generation guidance**,
++which the `.427` action-effect predictor and `.428` goal-energy / expansion-prior attack.
++
++## Disposition
++Falsifiers ran on the prototype branch `outer-loop/click-heatmap` (`proto_click_centroid_falsifier.py`,
++`proto_click_human_falsifier.py`), now **purged**. **Nothing built, nothing retained** — the findings are
++preserved in this note. The click-heatmap-
++generator candidate is RETIRED (premise falsified on non-circular human data). Two PURSUE-ranked levers
++from the `.427`-improvement workflow are now both empirically dead (macro depth + click coverage),
++sharply concentrating `.429+` on the GUIDANCE class.
+diff --git a/docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md b/docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md
+new file mode 100644
+index 0000000000..d89f5d2f32
+--- /dev/null
++++ b/docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md
+@@ -0,0 +1,75 @@
++# Macro-action vocabulary prototype — honest finding (outer-loop, 2026-06-23)
++
++Operator asked to speed up the `.429` macro-action candidate by prototyping it in the outer loop.
++Built it, ran it. **Result: the naive repeat-until-stable macro is a NULL — no banked level, and it
++dilutes the search on the reachable tests. NOT merged to main.** This note records why, so the real
++`.429` task starts sharper.
++
++## What was built (prototype on the now-purged branch `outer-loop/macro-vocab` — code not retained)
++- `arc_macro_actions.repeat_until_stable_macros` — one push-until-blocked macro per non-click keyboard
++  action (repeat the action until the frame stops changing).
++- `graph_explore_solve_v2(macro_provider=...)` — optional knob, **default None = byte-identical** to
++  the proven path (parity preserved). A macro expands as a primitive sequence (trajectory stays
++  primitive-faithful/reproducible); each applied primitive is charged as one expansion (fair budget).
++  Macros are **additive** candidates (primitives stay in the pool) → cannot regress correctness.
++- 4 unit tests pass.
++
++## Empirical result (two gates)
++
++**Gate 1 — L0→L1, 7 games, fair budget (`proto_macro_horizon_ab.json`):** `any_deeper=False`,
++`any_cheaper=False`. The macro often did WORSE: tu93 ctrl L1 / macro L0; sp80 ctrl L1 @382 exp /
++macro L0 @2500. Two clean reasons:
++1. **Wrong regime.** These L1s are not horizon-bound (sp80 L1 = 382 primitive steps). Horizon
++   collapse only pays when the level genuinely needs a long action run.
++2. **Fair budget + branching dilution.** Counting each macro primitive as one expansion (the honest
++   action-cost) means the macro arm does strictly more work per state, and macro-spawned far-states
++   add branching — so at equal env-step budget it explores fewer of the states on the short winning
++   path.
++3. **Overshoot.** "repeat-until-stable" is right for push-until-blocked but WRONG for fixed-count runs
++   (g50t L1 = `44445…`: pressing `4` a 5th time is not a no-op, so the macro overshoots the win).
++
++**Gate 2 — prefix-to-L2 (`proto_macro_l2.json`):** pin the stock-v2 L1 trajectory, search L2.
++`any_macro_banks_deeper=False`. sp80: both arms exhaust 5000 expansions at L1 (clean null). tu93:
++**inconclusive** — the L2 frontier was degenerate (8/16 expansions then empty), a harness limitation
++of the prefix→L2 handoff, not a clean macro falsification.
++
++## What the real `.429` task needs (sharpened by this null)
++1. **Don't blind-repeat.** Induce macros from the agent's OWN observed winning runs (the action
++   sub-sequences that actually recur with a consistent frame-delta), not a blind repeat-until-stable —
++   so a macro matches a fixed-count run instead of overshooting it. This is the empowerment-keep
++   criterion the flag described; the prototype shortcut (repeat-until-stable) skipped it.
++2. **Fix the budget framing.** Either count a macro as ONE decision (test whether horizon collapse
++   helps independent of env-step cost) or only deploy macros where the level is *confirmed*
++   horizon-bound (cell_recall probe) — don't pay full per-primitive cost on non-horizon-bound levels.
++3. **Fix the prefix→L2 harness** before using it as a gate (tu93's degenerate 8-expansion L2 search
++   means the gate itself isn't measuring what it should yet).
++
++## Gate 3 — the SMART version, and the definitive verdict (`proto_macro_smart.json`)
++
++Addressed both prior failure modes: **log-length macros** (run of 2/4/8/16 → the right length is among
++the candidates, no overshoot) + **per-decision budget** (`macro_unit_cost`: the whole macro = ONE
++expansion, isolating horizon collapse from env-step cost). Ran on 5 keyboard-run games (ar25 run-10,
++cn04 run-9, m0r0, ls20, dc22), budget 2000. **`any_macro_deeper=False`.** ar25/cn04/m0r0/dc22 reach NO
++level in any arm; ls20 the macros HURT (control L1, macros L0).
++
++**Definitive verdict: horizon-collapse-via-macros is dead for this corpus.** The decisive reason: the
++known solutions are **interleaved sequences of fixed-count runs of *different* actions** (ar25 =
++`3×5, 2×10, 2×8`), so finding a solution needs the right action in the right order — the search is
++**breadth / guidance-bound, not depth-bound**. Macros multiply the branching factor (24 candidates vs
++4) *without* providing a guiding signal, so they trade depth for breadth when breadth is the binding
++constraint → strictly worse. The corpus run-length scan confirms runs are fixed-count (puzzle
++lengths), not push-until-blocked, and you cannot know a run's count without already solving the level.
++
++**This corroborates the broader project finding:** the 0.04 live solve-rate is a **generation-GUIDANCE
++wall** (which action to take — what the `.427` action-effect predictor and `.428` goal-energy /
++expansion-prior attack), NOT a horizon/depth wall. The `.429`-improvement workflow ranked the macro
++lever PURSUE_HIGH on the *theory* that 0.04 is a depth wall; the empirics decisively refute that.
++
++## Disposition
++Mechanism prototyped on the now-purged branch `outer-loop/macro-vocab` (was parity-safe + 6 tests); **not merged, not retained**
++— a definitive null should not land on main as progress. **The `.429` macro candidate is RETIRED** per
++its own `retire_if_same_verdict: true` gate (the falsifiable gate — "bank a deeper level at equal
++budget" — came back False across blind, run-dominated, prefix-to-L2, and smart-per-decision tests).
++Redirect `.429` effort to a GUIDANCE-class lever: the click-heatmap-as-generator (the other PURSUE_MED,
++which adds *candidates* the centroid pool omits — a guidance fix, not a depth fix), gated behind its
++30-min `winning_click_centroid_coverage` falsifier.
+diff --git a/docs/research-notes/ttt-route-measured-blocked-2026-06-23.md b/docs/research-notes/ttt-route-measured-blocked-2026-06-23.md
+new file mode 100644
+index 0000000000..5e8d9e6609
+--- /dev/null
++++ b/docs/research-notes/ttt-route-measured-blocked-2026-06-23.md
+@@ -0,0 +1,58 @@
++# TTT-route follow-on — wired + measured: blocked by the exploration-to-first-win wall (outer-loop, 2026-06-23)
++
++Operator asked to wire + measure the TTT-route surfaced by the trust-gate measurement: route live trust
++to the TTT learned-dynamics on the games where they pass cell_recall (sc25 0.80, tn36 0.87, lp85 0.59,
++ka59 0.91), then measure whether a trusted TTT model drives `plan_in_model` to a live win.
++
++**Finding: it is ALREADY wired (`arc_ttt_solve_loop.ttt_solve`, pieces 1+2+3), and measurement shows it
++does NOT yield a live win — it is blocked by the exploration-to-first-win wall, the same
++generation-guidance constraint everything this session hit. The TTT-dynamics-planning value itself
++remains UNRESOLVED (the clean isolation is confounded — see below), but it is gated behind directed
++exploration regardless.**
++
++## What was measured
++
++**1. The wired loop (`ttt_solve`, CPU/GPU, sc25).** `levels_reached=0, first_levelup_actions=None,
++plan_attempts=0`. The loop's exploration is a self-described "NAIVE salient-cycle placeholder (piece 3 =
++directed exploration is the real fix here)"; on sc25 it never reaches a first level-up → `_win_states`
++stays empty → no goal → `plan_in_model` never even fires. The TTT dynamics never get exercised for
++planning. (Matches the prior `arc_ttt_solve_test.json`: 0/4, `n_win_states=0`.) Not compute-bound —
++more CNN epochs cannot make a naive cycle find a win.
++
++**2. The strong-cell_recall games are not even offline-solved.** sc25 and tn36 (cell_recall 0.80 / 0.87,
++the best passers) have `arc_loop_solve_*.json status: needs_per_game_RE` — no banked solve exists. Their
++cell_recall came from a LOO *corpus* probe, not a live solve. So there is no goal to inject for the two
++games the lever most wanted.
++
++**3. Injected-win test on lp85 (the one game with a real L4 solve), GPU.** Replayed the 54-action L4
++trajectory into a prior-warmstarted CNN TTT model: `n_win_states=4` (goal present), gate passes. Then
++`plan_in_model` from root toward any win-state, two engines:
++- `plan_full` (L0 exact memorization + CNN): **no plan found.**
++- `plan_cnn` (CNN-only generalization): **no plan found.**
++
++**Even the FULL-memorization engine** (all 54 transitions stored exactly) could not plan to a win — which
++means `plan_in_model`'s candidate enumeration cannot reproduce lp85's own solve actions (lp85 wins via
++specific clicks the centroid/keyboard candidate set does not enumerate). So this test is **confounded**:
++it cannot isolate whether the TTT *dynamics generalize*, because the planner cannot reach the win even
++with perfect dynamics. (The held-out cell_recall=1.0 is likewise L0-contaminated — not a clean
++generalization number.)
++
++## Honest conclusion
++- The TTT-route's **binding constraint is the exploration-to-first-win wall** (the loop's own flagged
++  "piece 3, the real fix"). Routing trust to TTT dynamics does nothing while the loop can't reach a first
++  win to plan from. This is the **generation-guidance wall** — the same one macro-depth, click-coverage,
++  and the gate-flip all hit, and the one `.428` goal-energy / expansion-prior attack.
++- The narrower question "do trusted TTT dynamics generalize a plan to a win, given a goal?" is **not
++  cleanly resolved** — the lp85 isolation is confounded by `plan_in_model` candidate enumeration, and the
++  strong games (sc25/tn36) lack a banked goal. A clean isolation would need `plan_in_model` seeded with
++  the recorded solve actions as candidates on an offline-solved game — a further harness, not pursued
++  (diminishing returns; the exploration wall gates the lever regardless).
++
++## Disposition
++Measurement scripts ran on the prototype branch `outer-loop/ttt-route` (`proto_ttt_route.py`,
++`proto_ttt_fast`, `proto_ttt_injected_win`), now **purged** — prototype code not retained (a definitive
++null); the findings + numbers above are preserved in this note. The TTT-route is **not a quick live win**; it is gated on
++directed-exploration-to-first-win (piece 3). The session's four follow-on levers (macro, click-heatmap,
++gate-flip, TTT-route) all converge on the same wall: **reach/generate the first win** — exactly `.428`'s
++focus. The honest next bet is the directed-exploration / goal-energy generation work already in flight,
++not another offline lever.
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index dae2873d0c..575d565b25 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -811,7 +811,7 @@ memory: [[reference_matm_transactive_memory]].
+ ### RETIRED 2026-06-23 (empirical null, per retire_if_same_verdict) — MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)
+ 
+ **RETIRED before reaching the planner.** The outer loop prototyped this candidate end-to-end
+-(branch `outer-loop/macro-vocab`; mechanism is parity-safe + 6 tests, but NOT merged) and it FAILED
++(prototype branch `outer-loop/macro-vocab`, since PURGED — mechanism was parity-safe + 6 tests, never merged) and it FAILED
+ its own falsifiable gate ("bank a deeper level at equal budget") across FOUR test rounds: blind
+ repeat-until-stable (7 games), prefix-to-L2 (2 games), run-dominated games (8 games), and the SMART
+ version (log-length macros, no overshoot, per-DECISION budget isolating horizon-collapse from
+@@ -824,8 +824,8 @@ ranking was on the *theory* that 0.04 is a depth wall; the empirics refute it. *
+ horizon-collapse / macro-action / option-framework levers for this corpus without a NEW root cause
+ (a depth-bound level that primitive search provably cannot reach). **Redirect:** the GUIDANCE-class
+ levers already in flight — `.428` goal-energy / expansion-prior + the `.427` action-effect predictor.
+-Full evidence: `docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md` (branch
+-`outer-loop/macro-vocab`). retired_verdict:
++Full evidence (findings preserved on main): `docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md`
++(prototype branch purged). retired_verdict:
+ `complete: macro_horizon_collapse_empirical_null_guidance_not_depth`.
+ 
+ ### RETIRED 2026-06-23 (premise falsified pre-build, non-circular) — CLICK-HEATMAP-AS-GENERATOR (off-centroid click candidates)
+@@ -844,7 +844,7 @@ candidate-coverage problem. **Do NOT build** a per-pixel click generator for thi
+ macro lever also retired, BOTH PURSUE levers are empirically dead and the root cause is the same:
+ the 0.04 wall is generation-GUIDANCE, not depth or coverage → concentrate `.429+` on the guidance
+ class (`.428` goal-energy/expansion-prior, `.427` action-effect predictor). Evidence:
+-`docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (branch `outer-loop/click-heatmap`).
++`docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (prototype branch `outer-loop/click-heatmap` purged; findings on main).
+ retired_verdict: `complete: click_heatmap_generator_premise_falsified_guidance_not_coverage`.
+ 
+ ### RESOLVED 2026-06-23 (measured — a provable live NO-OP) — CELL_RECALL TRUST-GATE FLIP (SOTA-avenues Avenue A)
+@@ -870,8 +870,8 @@ no plan). The best cell_recall passers (sc25 0.80 / tn36 0.87) are `status: need
+ offline-solved → no goal to inject). An injected-win test on lp85 (the one real L4 solve): `n_win_states=4`
+ + gate-pass but BOTH full-memorization and CNN-only `plan_in_model` found NO plan (candidate-enum can't
+ reproduce lp85's clicks → confounded isolation). The TTT-route is gated on directed-exploration-to-first-win
+-(the generation-guidance wall `.428` goal-energy/expansion-prior attack). Branch `outer-loop/ttt-route`;
+-`docs/research-notes/ttt-route-measured-blocked-2026-06-23.md`.
++(the generation-guidance wall `.428` goal-energy/expansion-prior attack). Prototype branch `outer-loop/ttt-route`
++purged; findings preserved on main: `docs/research-notes/ttt-route-measured-blocked-2026-06-23.md`.
+ 
+ ### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
+ 
+-- 
+2.55.0
+

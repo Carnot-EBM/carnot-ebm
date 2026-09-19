@@ -1,0 +1,377 @@
+From bd0bd90a4a98d58cebdaea1f880f9bf8c8f20ada Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 13:27:06 -0400
+Subject: [PATCH 08653/11362] [conductor] Exact terminal-boundary handoff from
+ V539 into V540
+
+Automated research step by research conductor.
+Task ID: exp6260-v540-terminal-transition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_6260_v540_terminal_transition.py |  11 +-
+ results/arc_e3/ka59/world_model.py            | 147 +++++++++++-------
+ ...eriment_6260_v540_terminal_transition.json |  32 ++--
+ .../experiment_6247_bounded_reinduction_ab.py |  21 ++-
+ ...xperiment_6260_v540_terminal_transition.py |  12 ++
+ 6 files changed, 139 insertions(+), 86 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5cff2db612..fad75920f3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4844,
++  "experiments_checked": 4845,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6260_v540_terminal_transition.py b/python/carnot/experiment_6260_v540_terminal_transition.py
+index f10a5e0717..b2e1de68fe 100644
+--- a/python/carnot/experiment_6260_v540_terminal_transition.py
++++ b/python/carnot/experiment_6260_v540_terminal_transition.py
+@@ -759,14 +759,15 @@ def build_report(
+ ) -> JsonDict:
+     started = time.perf_counter() if started_at is None else started_at
+     v540_data, v540_identity = load_v540_roadmap(root)
+-    before = dict(before_hashes or protected_hashes(root))
+-    status_before = list(git_status_before or git_status_lines(root))
++    before = dict(protected_hashes(root) if before_hashes is None else before_hashes)
++    status_before = list(git_status_lines(root) if git_status_before is None else git_status_before)
+     allowed = _allowed_reserved_paths(v540_data)
+     collision_before = dict(
+-        collision_receipt_before
+-        or scan_reserved_id_collisions(root, allowed_reserved_paths=allowed)
++        scan_reserved_id_collisions(root, allowed_reserved_paths=allowed)
++        if collision_receipt_before is None
++        else collision_receipt_before
+     )
+-    inputs_before = dict(input_hashes_before or input_hashes(root))
++    inputs_before = dict(input_hashes(root) if input_hashes_before is None else input_hashes_before)
+     capstone_payload, capstone_meta = read_json_mapping(root / V539_CAPSTONE_RELATIVE_PATH)
+     retro_payload, retro_meta = read_json_mapping(root / OPERATIONAL_RETRO_RELATIVE_PATH)
+     capstone_matrix = capstone_payload.get("exact_task_artifact_matrix")
+diff --git a/results/arc_e3/ka59/world_model.py b/results/arc_e3/ka59/world_model.py
+index 6002f9a38a..1968b2be98 100644
+--- a/results/arc_e3/ka59/world_model.py
++++ b/results/arc_e3/ka59/world_model.py
+@@ -1,72 +1,107 @@
+ import numpy as np
+ 
++import numpy as np
++
+ def engine(grid, action, data):
+     """
+     World model for ARC-AGI game 'ka59'.
+-    The grid is a 64x64 integer array.
+-    Actions move objects in rows 30-32 and update a progress bar on row 63.
++    The grid contains two moving frames (color 14) of size 3x3 with a hole in the center.
++    Action 3 moves them left by 3 pixels; Action 4 moves them right by 3 pixels.
++    Row 63 acts as a progress bar/timer, decreasing from right to left on most actions.
+     """
+-    new_grid = grid.copy()
+-    
+-    # Progress bar timer: Row 63 decreases from right to left each action.
+-    # We find the first non-zero cell from the right and set it to 0.
+-    for col in range(63, -1, -1):
+-        if new_grid[63, col] != 0:
+-            new_grid[63, col] = 0
+-            break
++    next_grid = grid.copy()
++    h, w = next_grid.shape
+ 
+-    # ACTION3 moves an object left by 3 units; ACTION4 moves it right by 3 units.
+-    # Based on observed transitions, this affects blocks in rows 30-32.
+-    # Specifically, it swaps 3-cell segments horizontally.
+-    if action == 3: # Move Left
+-        # Target block starts at c18 (observed)
+-        start_col = 18
+-        end_col = start_col + 3
+-        prev_col = start_col - 3
+-        if prev_col >= 0:
+-            for r in [30, 31, 32]:
+-                segment1 = new_grid[r, prev_col:start_col].copy()
+-                segment2 = new_grid[r, start_col:end_col].copy()
+-                new_grid[r, prev_col:start_col] = segment2
+-                new_grid[r, start_col:end_col] = segment1
++    # Identify all color 14 blocks (frames). A frame is a 3x3 block with a hole at its center.
++    # We look for the top-left corner of these 3x3 structures.
++    frames = []
++    visited = set()
++    for r in range(h - 2):
++        for c in range(w - 2):
++            if (r, c) not in visited:
++                # Check if it's a 3x3 frame of color 14
++                is_frame = True
++                for dr in range(3):
++                    for dc in range(3):
++                        if dr == 1 and dc == 1:
++                            continue # Hole in the middle
++                        if next_grid[r + dr, c + dc] != 14:
++                            is_frame = False
++                            break
++                    if not is_frame: break
+                 
+-    elif action == 4: # Move Right
+-        # The active block's position changes over time. We find the current color-14 block.
+-        # In row 30, we look for a sequence of three 14s.
+-        active_col = -1
+-        for col in range(9, 60):
+-            if np.all(new_grid[30, col:col+3] == 14):
+-                active_col = col
++                if is_frame:
++                    frames.append([r, c])
++                    for dr in range(3):
++                        for dc in range(3):
++                            visited.add((r + dr, c + dc))
++
++    # Movement logic based on Action 3 (Left) and Action 4 (Right)
++    move_dist = 0
++    if action == 3:
++        move_dist = -3
++    elif action == 4:
++        move_dist = 3
++
++    if move_dist != 0:
++        for fr, fc in frames:
++            # Clear current frame position
++            for dr in range(3):
++                for dc in range(3):
++                    if dr == 1 and dc == 1: continue
++                    next_grid[fr + dr, fc + dc] = grid[fr + dr, fc + dc] if grid[fr+dr, fc+dc] != 14 else 2 # Simplified clear
++            
++            # New position
++            nc = fc + move_dist
++            if 0 <= nc <= w - 3:
++                # Draw new frame
++                for dr in range(3):
++                    for dc in range(3):
++                        if dr == 1 and dc == 1: continue
++                        next_grid[fr + dr, nc + dc] = 14
++                # Restore the hole's original color at the new center
++                next_grid[fr + 1, nc + 1] = grid[fr + 1, fc + 1]
++            else:
++                # If it goes out of bounds, we just leave it (or handle as needed)
++                pass
++
++    # Progress bar logic on row 63
++    # The progress bar decreases from right to left. Find the rightmost cell that is still color 4.
++    if h > 63:
++        rightmost_4 = -1
++        for c in range(w - 1, -1, -1):
++            if next_grid[63, c] == 4:
++                rightmost_4 = c
+                 break
+         
+-        if active_col != -1:
+-            next_col = active_col + 3
+-            if next_col + 3 <= 64:
+-                for r in [30, 31, 32]:
+-                    segment1 = new_grid[r, active_col:next_col].copy()
+-                    segment2 = new_grid[r, next_col:next_col+3].copy()
+-                    new_grid[r, active_col:next_col] = segment2
+-                    new_grid[r, next_col:next_col+3] = segment1
++        # Most actions trigger a decrease in the progress bar.
++        # Based on observations, Action 2 doesn't always change r63, but others do.
++        if action != 2 and rightmost_4 != -1:
++            next_grid[63, rightmost_4] = 0
+ 
+-    # ACTION6 is a click that can toggle colors between specific cells.
+-    elif action == 6 and data is not None:
+-        px, py = data['x'], data['y']
+-        # Observed interaction at (31, 43) and (31, 28).
+-        if py == 31 and px == 43:
+-            val_a = new_grid[31, 43]
+-            val_b = new_grid[31, 28]
+-            new_grid[31, 43] = 0 if val_a != 0 else 4
+-            new_grid[31, 28] = 4 if val_b != 4 else 0
+-        elif py == 31 and px == 28:
+-            val_a = new_grid[31, 43]
+-            val_b = new_grid[31, 28]
+-            new_grid[31, 43] = 4 if val_a != 4 else 0
+-            new_grid[31, 28] = 0 if val_b != 0 else 4
++    return next_grid
+ 
+-    return new_grid
++def is_level_complete(grid):
++    """
++    The level is complete when the progress bar at row 63 is fully depleted (all zeros).
++    """
++    if grid.shape[0] <= 63:
++        return False
++    return np.all(grid[63, :] == 0)
++
++import numpy as np
+ 
+ def is_level_complete(grid):
+     """
+-    The level is complete when the progress bar on row 63 is fully depleted.
++    Determines if the grid for ARC-AGI-3 game 'ka59' is in a win state.
++    The general win condition for this completion task is that the grid 
++    is entirely filled with a single non-zero color.
+     """
+-    return np.all(grid[63, :] == 0)
+\ No newline at end of file
++    if grid.size == 0:
++        return False
++    
++    # Get the color of the first cell
++    first_color = grid[0, 0]
++    
++    # The level is complete if all cells match the first cell and the color is not the background (0)
++    return first_color != 0 and np.all(grid == first_color)
+diff --git a/results/experiment_6260_v540_terminal_transition.json b/results/experiment_6260_v540_terminal_transition.json
+index 618efbc5a7..cc994f3bfd 100644
+--- a/results/experiment_6260_v540_terminal_transition.json
++++ b/results/experiment_6260_v540_terminal_transition.json
+@@ -676,13 +676,13 @@
+         "unchanged": true
+       },
+       "ops/changelog.md": {
+-        "before_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
+-        "after_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
++        "before_sha256": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
++        "after_sha256": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
+         "unchanged": true
+       },
+       "ops/conductor-log.md": {
+-        "before_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
+-        "after_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
++        "before_sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
++        "after_sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
+         "unchanged": true
+       },
+       "ops/exclusion_manifest.yaml": {
+@@ -733,14 +733,12 @@
+     }
+   },
+   "preconditions_checked": {
+-    "git_status_before": [
+-      " M python/carnot/experiment_6260_v540_terminal_transition.py",
+-      " M results/arc_e3/ka59/world_model.py",
+-      " M tests/python/test_experiment_6260_v540_terminal_transition.py"
+-    ],
++    "git_status_before": [],
+     "git_status_after_tests": [
+       " M python/carnot/experiment_6260_v540_terminal_transition.py",
+       " M results/arc_e3/ka59/world_model.py",
++      " M results/experiment_6260_v540_terminal_transition.json",
++      " M scripts/experiments/experiment_6247_bounded_reinduction_ab.py",
+       " M tests/python/test_experiment_6260_v540_terminal_transition.py"
+     ],
+     "input_hashes_before": {
+@@ -790,7 +788,7 @@
+       },
+       "ops/conductor-log.md": {
+         "present": true,
+-        "sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb"
++        "sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984"
+       },
+       "ops/exclusion_manifest.yaml": {
+         "present": true,
+@@ -886,11 +884,11 @@
+       "research-roadmap.yaml": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
+       "research-roadmap-next.yaml": null,
+       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+-      "ops/changelog.md": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
++      "ops/changelog.md": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
+       "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+       "research-complete.yaml": "sha256:ebf66e039c57b6973dac4ab25dda3a71021685c716aa6c1e06e875a1153855a1",
+-      "ops/conductor-log.md": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
++      "ops/conductor-log.md": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
+       "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+       "results/experiment_6238_v539_adversarial_capstone.json": "sha256:8b512f477204a44906be914d81f560b072071802eb78d5b93fa4d7f400ccc57a",
+       "results/operational_retro_2026_08_539.json": "sha256:be96eceaf6cf6da422821a2b60fa970a0c9e4c232aa44606d6578cbb689faf19",
+@@ -1387,7 +1385,8 @@
+   },
+   "test_commands": [
+     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
+-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing",
+     ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
+     ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
+     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py",
+@@ -1403,7 +1402,8 @@
+   ],
+   "test_exit_codes": {
+     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
+-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing": 0,
+     ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
+     ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
+     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
+@@ -1417,7 +1417,7 @@
+     ".venv/bin/pytest tests/python -q": 2,
+     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6260_v540_terminal_transition.json": 0
+   },
+-  "duration_s": 0.13825846905820072,
+-  "reproducibility_checksum": "sha256:e947e4bdf8508488fefd4940821ea4ddad59c197b0e4bc321b3765d720f781be",
++  "duration_s": 560.0915555409156,
++  "reproducibility_checksum": "sha256:6ff2331abf61eac54914a6b3dc9f5c7d92e5d1dc1ac1ac9ce1e4c4cbd107bc32",
+   "honest_verdict": "blocked: one or more recorded validation commands failed or timed out"
+ }
+diff --git a/scripts/experiments/experiment_6247_bounded_reinduction_ab.py b/scripts/experiments/experiment_6247_bounded_reinduction_ab.py
+index 411ea96420..a6600ca9c0 100644
+--- a/scripts/experiments/experiment_6247_bounded_reinduction_ab.py
++++ b/scripts/experiments/experiment_6247_bounded_reinduction_ab.py
+@@ -125,14 +125,19 @@ def build_artifact() -> dict:
+             os.environ["CARNOT_ARC_BOUNDED_REINDUCTION"] = "1" if arm == "on" else "0"
+             row = None
+             for attempt in range(1, MAX_CELL_ATTEMPTS + 1):
+-                # Re-ensure the server IS healthy before every attempt -- the reaper can (and did,
+-                # in this run's first cell) kill it mid-episode, and nothing else in this loop would
+-                # notice before the NEXT cell tries to use it.
+-                if not proposer._inner._healthy():
+-                    print(
+-                        f"[exp6247] server unhealthy before {game}/{arm}, re-ensuring", flush=True
+-                    )
+-                    proposer._inner._ensure_server()
++                # `_ensure_server()` ALREADY does "if healthy: reuse; else: relaunch" internally
++                # (arc_executable_world_model.py:6156) -- calling it unconditionally before every
++                # attempt is a safe no-op when the server is fine and a real relaunch when it is
++                # not. A SEPARATE outer `_healthy()` pre-check here was tried first and REMOVED: it
++                # stacks a second call to the SAME bare-2-second-timeout probe `_ensure_server()`
++                # already uses internally (the exact flakiness the harness's own `forbid_spawn`
++                # docstring names -- a loaded box can fail a 2s probe on a server that is perfectly
++                # alive), and under load that produced two INDEPENDENT servers within the same
++                # minute, colliding (a self-inflicted server storm, observed directly: 4 server
++                # logs created within a 4-minute window here, several dying mid-model-load with no
++                # error at all -- consistent with a second spawn contending for the same port/VRAM
++                # while the first was still loading, not an external reaper).
++                proposer._inner._ensure_server()
+                 try:
+                     row = run_cell(
+                         game,
+diff --git a/tests/python/test_experiment_6260_v540_terminal_transition.py b/tests/python/test_experiment_6260_v540_terminal_transition.py
+index ab201b2741..36a8e277e3 100644
+--- a/tests/python/test_experiment_6260_v540_terminal_transition.py
++++ b/tests/python/test_experiment_6260_v540_terminal_transition.py
+@@ -228,6 +228,18 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
+     assert report["protected_files_unchanged"]["unchanged"] is True
+     assert report["preconditions_checked"]["git_status_after_tests"] == ["M after-test-fixture"]
+ 
++    clean_status_report = exp6260.build_report(
++        REPO,
++        date="20260809",
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++        before_hashes=before,
++        git_status_before=[],
++        git_status_after_tests=[],
++        started_at=0.0,
++    )
++    assert clean_status_report["preconditions_checked"]["git_status_before"] == []
++    assert clean_status_report["preconditions_checked"]["git_status_after_tests"] == []
++
+     blocked = exp6260.build_report(
+         REPO,
+         date="20260809",
+-- 
+2.55.0
+

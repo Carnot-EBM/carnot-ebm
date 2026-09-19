@@ -1,0 +1,117 @@
+From cd78f2c9a44ff6c8bd3b4d6f404d7c1670600c13 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 16:47:09 -0400
+Subject: [PATCH 10307/11362] [conductor] Pre-gate block: Environment-indexed
+ proof grammar runtime fixture
+
+1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.environment_grammar_targetable_rows (actual=21 >= expected=24)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ronment_indexed_proof_grammar_fixture.json | 64 +++++++++++++++++++
+ 4 files changed, 67 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 85ba720392..007b74c5fb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 42, "phase": "iteration_start", "last_beat": "2026-08-29T20:12:51Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-08-29T20:47:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 188be03193..6f27e0763a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16777,3 +16777,4 @@ The l |
+ | 2026-08-29 19:41 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1 |
+ | 2026-08-29 20:08 UTC | Plan milestone 2026.08.589 | OK | 13 tasks proposed |
+ | 2026-08-29 20:10 UTC | Milestone 2026.08.589 activated | OK | 13 tasks queued |
++| 2026-08-29 20:45 UTC | Lossless GGUF output boundary and 216-row reparse | OK | 106 passed, 1 warning in 237.95s (0:03:57) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6593f94e25..21878115f9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 42, "phase": "iteration_start", "started_at": "2026-08-29T20:12:51Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 43, "phase": "iteration_start", "started_at": "2026-08-29T20:47:08Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6756_environment_indexed_proof_grammar_fixture.json b/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+new file mode 100644
+index 0000000000..6a0d7a55cc
+--- /dev/null
++++ b/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+@@ -0,0 +1,64 @@
++{
++  "experiment": 6756,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-29",
++  "started_at": "2026-08-29T20:47:09.021333+00:00",
++  "finished_at": "2026-08-29T20:47:09.021333+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Environment-indexed proof grammar runtime fixture",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=21 >= expected=24",
++  "failed_upstream": "exp6755-lossless-gguf-output-reparse",
++  "failed_field": "environment_grammar_targetable_rows",
++  "failed_operator": ">=",
++  "failed_expected": 24,
++  "failed_expected_type": "int",
++  "failed_observed": 21,
++  "failed_observed_type": "int",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6755_lossless_gguf_output_reparse.json",
++  "failed_evidence_sha256": "sha256:6e556e3f90e7e5a71194cf4c4bd4b373ff1354d0cfa4b8b7f66c0459e471ad1d",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=21 >= expected=24",
++    "failed_upstream": "exp6755-lossless-gguf-output-reparse",
++    "failed_field": "environment_grammar_targetable_rows",
++    "failed_operator": ">=",
++    "failed_expected": 24,
++    "failed_expected_type": "int",
++    "failed_observed": 21,
++    "failed_observed_type": "int",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6755_lossless_gguf_output_reparse.json",
++    "failed_evidence_sha256": "sha256:6e556e3f90e7e5a71194cf4c4bd4b373ff1354d0cfa4b8b7f66c0459e471ad1d"
++  },
++  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.environment_grammar_targetable_rows (actual=21 >= expected=24)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6755-lossless-gguf-output-reparse",
++      "artifact_field": "transport_reparse_ready",
++      "op": "==",
++      "expected": true,
++      "expected_type": "bool",
++      "actual": true,
++      "actual_type": "bool",
++      "passed": true,
++      "reason": "actual=True == expected=True",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6755_lossless_gguf_output_reparse.json",
++      "artifact_sha256": "sha256:6e556e3f90e7e5a71194cf4c4bd4b373ff1354d0cfa4b8b7f66c0459e471ad1d"
++    },
++    {
++      "upstream": "exp6755-lossless-gguf-output-reparse",
++      "artifact_field": "environment_grammar_targetable_rows",
++      "op": ">=",
++      "expected": 24,
++      "expected_type": "int",
++      "actual": 21,
++      "actual_type": "int",
++      "passed": false,
++      "reason": "actual=21 >= expected=24",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6755_lossless_gguf_output_reparse.json",
++      "artifact_sha256": "sha256:6e556e3f90e7e5a71194cf4c4bd4b373ff1354d0cfa4b8b7f66c0459e471ad1d"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

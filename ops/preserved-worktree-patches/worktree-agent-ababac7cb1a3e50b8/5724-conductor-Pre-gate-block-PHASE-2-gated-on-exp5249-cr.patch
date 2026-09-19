@@ -1,0 +1,62 @@
+From 9ee981d8a0a3abde56907fa8e05c124924685439 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 21:26:04 -0400
+Subject: [PATCH 05724/11362] [conductor] Pre-gate block: PHASE 2 gated on
+ exp5249 cross_model_memory_eligible -- verifier-dose scheduler for memory,
+ cheap checks, and SOTA verification
+
+1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer-v480.cross_model_memory_eligible (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                              | 2 +-
+ ops/conductor-log.md                                      | 1 +
+ ops/conductor-state.json                                  | 2 +-
+ results/experiment_5250_verifier_dose_scheduler_v480.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d1d7e5fc52..516d2fa950 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 77, "phase": "iteration_start", "last_beat": "2026-07-05T01:24:02Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 78, "phase": "iteration_start", "last_beat": "2026-07-05T01:26:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dfe2c3a201..089da7c1c8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10313,3 +10313,4 @@ web search: |
+ | 2026-07-05 00:58 UTC | PHASE 1 gated on exp5247 artifact_normalizer_ready | OK | 91 passed, 1 warning in 11.19s |
+ | 2026-07-05 01:15 UTC | PHASE 2 Continuous Self-Learning -- cross-model ty | OK | 86 passed, 1 warning in 8.34s |
+ | 2026-07-05 01:22 UTC | PHASE 2 gated on exp5249 cross_model_memory_eligib | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer- |
++| 2026-07-05 01:24 UTC | PHASE 2 gated on exp5249 cross_model_memory_eligib | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c60b892940..7099963c85 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 77, "phase": "iteration_start", "started_at": "2026-07-05T01:24:02Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 78, "phase": "iteration_start", "started_at": "2026-07-05T01:26:04Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5250_verifier_dose_scheduler_v480.json b/results/experiment_5250_verifier_dose_scheduler_v480.json
+index bd860519e6..ad0f4b0bbb 100644
+--- a/results/experiment_5250_verifier_dose_scheduler_v480.json
++++ b/results/experiment_5250_verifier_dose_scheduler_v480.json
+@@ -2,8 +2,8 @@
+   "experiment": 5250,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-05",
+-  "started_at": "2026-07-05T01:24:02.332416+00:00",
+-  "finished_at": "2026-07-05T01:24:02.332416+00:00",
++  "started_at": "2026-07-05T01:26:04.460341+00:00",
++  "finished_at": "2026-07-05T01:26:04.460341+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE 2 gated on exp5249 cross_model_memory_eligible -- verifier-dose scheduler for memory, cheap checks, and SOTA verification",
+-- 
+2.55.0
+

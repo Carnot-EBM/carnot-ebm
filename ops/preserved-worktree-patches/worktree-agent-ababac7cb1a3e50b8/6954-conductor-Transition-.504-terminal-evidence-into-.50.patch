@@ -1,0 +1,2808 @@
+From 9063c7f5b7a01141d319b031177556ff27941b67 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 13 Jul 2026 20:21:47 -0400
+Subject: [PATCH 06954/11362] [conductor] Transition .504 terminal evidence
+ into .505 execution context
+
+Automated research step by research conductor.
+Task ID: exp5578-transition-v505
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  87 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5578_transition_v505.py | 840 ++++++++++++++++++
+ results/experiment_5578_transition_v505.json  | 599 +++++++++++++
+ results/experiment_5600_ptrm_loo_gate.json    | 786 ++++++++++++++++
+ .../test_experiment_5578_transition_v505.py   | 425 +++++++++
+ 6 files changed, 2738 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5578_transition_v505.py
+ create mode 100644 results/experiment_5578_transition_v505.json
+ create mode 100644 results/experiment_5600_ptrm_loo_gate.json
+ create mode 100644 tests/python/test_experiment_5578_transition_v505.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 29334998dc..517515478d 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -40563,3 +40563,90 @@ prefix.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5577 | Planned (`python/carnot/experiment_5577_capstone_v504.py`, `results/experiment_5577_capstone_v504.json`) | Planned (`tests/python/test_experiment_5577_capstone_v504.py`) |
++
++### REQ-REPORT-5578: V505 Transition Locks V504 Terminal Evidence Without Reinterpretation
++
++The Exp5578 workflow SHALL read all fourteen `.504` task deliverables from
++`results/experiment_5564_transition_v504.json` through
++`results/experiment_5577_capstone_v504.json`. It SHALL cite terminal evidence
++from those artifacts, not task titles, roadmap prose, or inferred intent. The
++workflow SHALL also read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
++`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
++`openspec/change-proposals/research-roadmap-vNEXT.md`,
++`ops/conductor-log.md`, and `scripts/research_conductor.py`. It SHALL NOT
++modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
++
++The transition SHALL preserve Exp5567's `parser_failure_count=648` as an
++instrumentation collapse rather than model solve or verification evidence.
++It SHALL preserve Exp5569's adversarial tautology flag, including the equal
++forward-transfer and backward-retention deltas, and SHALL NOT promote
++`policy_ready=true` from that flagged artifact. It SHALL preserve Exp5570 as a
++clean KAN online-energy result, Exp5571/Exp5572 as blocked or skipped
++reset-free/promotion evidence, Exp5574 PTRM as a separate development-proxy
++slot with no leave-one-game-out verdict and no ordinary ARC solve credit,
++Exp5575/Exp5576 SGE as retired or skipped ordinary ARC evidence, and the
++capstone's `arc_registry_delta=0`.
++
++The artifact SHALL record `previous_task_range=exp5564-exp5577` and
++`next_task_range=exp5578-exp5591`. It SHALL emit the `.505` gate map chains
++`parser->panel->exact extension`, `memory corrigendum->two-timescale->live->promotion`,
++and `EOM precheck->live ARC`, plus independent PTRM and hardware lanes. It
++SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"` and
++SHALL write `results/experiment_5578_transition_v505.json`.
++
++The artifact SHALL include the required fields `field_principles`,
++`artifacts_read`, `clean_lanes`, `blocked_or_flagged_lanes`,
++`parser_collapse_preserved`, `previous_task_range`, `next_task_range`,
++`ptrm_slot_separate`, `inference_substrate`, and `honest_verdict`.
++
++Required field principles:
++
++- `artifacts_read`: principle "transitions cite terminal evidence"
++- `clean_lanes`: principle "only unflagged completed findings are clean"
++- `blocked_or_flagged_lanes`: principle "boundaries remain binding"
++- `parser_collapse_preserved`: principle "instrumentation failure is not model evidence"
++- `previous_task_range`: principle "CalVer continuity is explicit"
++- `next_task_range`: principle "CalVer continuity is explicit"
++- `ptrm_slot_separate`: principle "PTRM cannot satisfy ordinary ARC"
++- `inference_substrate`: principle "no live inference occurred"
++- `honest_verdict`: principle "terminal status starts complete: or blocked:"
++
++#### SCENARIO-REPORT-5578: V505 Transition Preserves V504 Boundaries
++
++**Given** all fourteen `.504` task deliverables are readable through the
++Exp5577 capstone
++**And** Exp5567 has `parser_failure_count=648`
++**And** Exp5569 is adversarial-flagged as a tautology
++**And** Exp5570 is clean KAN evidence
++**When** the Exp5578 workflow runs
++**Then** it emits `results/experiment_5578_transition_v505.json`, records
++`previous_task_range=exp5564-exp5577`, records
++`next_task_range=exp5578-exp5591`, keeps parser collapse as instrumentation
++evidence, classifies only unflagged completed findings as clean, keeps blocked
++or flagged boundaries binding, keeps PTRM separate from ordinary ARC, declares
++`inference_substrate=aggregation_from_upstream_artifacts`, and uses a terminal
++`honest_verdict` prefix.
++
++#### SCENARIO-REPORT-5578-MISSING-INPUT: Missing V504 Evidence Fails Closed
++
++**Given** any required `.504` task deliverable is absent or unreadable
++**When** the Exp5578 workflow runs
++**Then** the missing path appears in the artifact metadata, the verdict uses a
++blocked terminal prefix, and parser, memory, PTRM, ordinary ARC, and hardware
++claims remain bounded or blocked rather than promoted.
++
++#### SCENARIO-REPORT-5578-FIELD-PRINCIPLES: Transition Fields Stay Annotated
++
++**Given** the Exp5578 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required field has the listed `field_principles` entry,
++`ptrm_slot_separate` is true, `inference_substrate` is
++`aggregation_from_upstream_artifacts`, `research-roadmap.yaml` and
++`scripts/research_conductor.py` remain unchanged, and `honest_verdict` starts
++with `complete:` or `blocked:`.
++
++## Implementation Status (REQ-REPORT-5578)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5578 | Planned (`python/carnot/experiment_5578_transition_v505.py`, `results/experiment_5578_transition_v505.json`) | Planned (`tests/python/test_experiment_5578_transition_v505.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 9dd13a94dd..dd9466772b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4528,
++  "experiments_checked": 4529,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5578_transition_v505.py b/python/carnot/experiment_5578_transition_v505.py
+new file mode 100644
+index 0000000000..9f57c51cac
+--- /dev/null
++++ b/python/carnot/experiment_5578_transition_v505.py
+@@ -0,0 +1,840 @@
++"""Exp5578 transition receipt from milestone .504 into .505.
++
++Spec refs: REQ-REPORT-5578, SCENARIO-REPORT-5578,
++SCENARIO-REPORT-5578-MISSING-INPUT, SCENARIO-REPORT-5578-FIELD-PRINCIPLES.
++
++This module does not rerun models, solvers, or hardware checks. It reads the
++terminal `.504` artifacts and writes down which facts are safe to carry into
++`.505`. The important distinction is that a parser collapse can be a useful
++instrumentation finding while still being unusable as solve or verify evidence.
++The same discipline keeps a flagged memory policy, an unadjudicated PTRM
++checkpoint, and a zero-delta ARC registry from becoming accidental promotion
++credit in the next milestone.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++from typing import Any
++
++from carnot.experiment_5415_transition_v493 import (
++    JsonDict,
++    JsonMap,
++    _modification_status,
++    extract_roadmap_tasks,
++    path_sha256,
++    payload_checksum,
++    read_yaml_mapping,
++    write_json,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5578_transition_v505.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++
++EXPERIMENT = "experiment_5578_transition_v505"
++EXPERIMENT_ID = "exp5578-transition-v505"
++MILESTONE = "2026.07.505"
++PREVIOUS_MILESTONE = "2026.07.504"
++PREVIOUS_TASK_RANGE = "exp5564-exp5577"
++NEXT_TASK_RANGE = "exp5578-exp5591"
++RUN_DATE = "2026-07-13"
++RANDOM_SEED = 5578
++SCHEMA = "carnot.experiment_5578.transition_v505.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SPEC_REFS = (
++    "REQ-REPORT-5578",
++    "SCENARIO-REPORT-5578",
++    "SCENARIO-REPORT-5578-MISSING-INPUT",
++    "SCENARIO-REPORT-5578-FIELD-PRINCIPLES",
++)
++
++EXPECTED_ARTIFACT_PATHS = (
++    Path("results/experiment_5564_transition_v504.json"),
++    Path("results/experiment_5565_v504_source_delta_ingestion.json"),
++    Path("results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"),
++    Path("results/experiment_5567_local_sota_solve_verify_asymmetry.json"),
++    Path("results/experiment_5568_verifier_coevolution_trigger.json"),
++    Path("results/experiment_5569_causal_memory_policy_tournament.json"),
++    Path("results/experiment_5570_spline_local_kan_online_energy.json"),
++    Path("results/experiment_5571_reset_free_sota_continual_harness.json"),
++    Path("results/experiment_5572_gated_delayed_regression_promotion.json"),
++    Path("results/experiment_5573_matched_sampler_hardware_continuity.json"),
++    Path("results/experiment_5574_ptrm_stochastic_generator_stage1.json"),
++    Path("results/experiment_5575_sge_anti_stagnation_live_precheck.json"),
++    Path("results/experiment_5576_gated_sge_live_levelup.json"),
++    Path("results/experiment_5577_capstone_v504.json"),
++)
++
++EXP5567_PANEL_PATH = Path("results/experiment_5567_local_sota_solve_verify_asymmetry.json")
++EXP5569_MEMORY_PATH = Path("results/experiment_5569_causal_memory_policy_tournament.json")
++EXP5570_KAN_PATH = Path("results/experiment_5570_spline_local_kan_online_energy.json")
++EXP5571_RESET_FREE_PATH = Path("results/experiment_5571_reset_free_sota_continual_harness.json")
++EXP5572_PROMOTION_PATH = Path("results/experiment_5572_gated_delayed_regression_promotion.json")
++EXP5573_HARDWARE_PATH = Path("results/experiment_5573_matched_sampler_hardware_continuity.json")
++EXP5574_PTRM_PATH = Path("results/experiment_5574_ptrm_stochastic_generator_stage1.json")
++EXP5575_SGE_PRECHECK_PATH = Path("results/experiment_5575_sge_anti_stagnation_live_precheck.json")
++EXP5576_SGE_LEVELUP_PATH = Path("results/experiment_5576_gated_sge_live_levelup.json")
++EXP5577_CAPSTONE_PATH = Path("results/experiment_5577_capstone_v504.json")
++
++SOURCE_CONTEXT_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    ROADMAP_RELATIVE_PATH,
++    ROADMAP_NEXT_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++)
++
++EXPECTED_TASK_IDS = [
++    "exp5578-transition-v505",
++    "exp5579-v505-source-delta-ingestion",
++    "exp5580-parser-forensics-positive-control",
++    "exp5581-clean-sota-solve-verify-remeasurement",
++    "exp5582-exact-counterexample-verifier-extension",
++    "exp5583-causal-memory-metric-corrigendum",
++    "exp5584-two-timescale-exact-self-learning",
++    "exp5585-reset-free-live-local-sota-sessions",
++    "exp5586-delayed-promotion-and-poisoning-gate",
++    "exp5587-reserved-ptrm-loo-adjudication",
++    "exp5588-epistemic-object-model-mcts-live-precheck",
++    "exp5589-gated-ordinary-arc-level-up",
++    "exp5590-matched-cpu-cuda-crossover-and-board-continuity",
++    "exp5591-v505-capstone-reconciliation",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "artifacts_read": "transitions cite terminal evidence",
++    "clean_lanes": "only unflagged completed findings are clean",
++    "blocked_or_flagged_lanes": "boundaries remain binding",
++    "parser_collapse_preserved": "instrumentation failure is not model evidence",
++    "previous_task_range": "CalVer continuity is explicit",
++    "next_task_range": "CalVer continuity is explicit",
++    "ptrm_slot_separate": "PTRM cannot satisfy ordinary ARC",
++    "inference_substrate": "no live inference occurred",
++    "honest_verdict": "terminal status starts complete: or blocked:",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "status",
++    "run_date",
++    "random_seed",
++    "spec_refs",
++    "result_path",
++    "artifact_metadata",
++    "artifacts_expected",
++    "missing_artifacts",
++    "source_context",
++    "source_context_missing",
++    "roadmap_task_ids",
++    "roadmap_task_count",
++    "roadmap_doc_task_range",
++    "conductor_activation",
++    "protected_file_checks",
++    "preconditions_checked",
++    "failed_preconditions",
++    "gate_map",
++    "tests_run",
++    "roadmap_yaml_unchanged",
++    "conductor_unchanged",
++    "field_principles",
++    "reproducibility_checksum",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++BOOL_FIELDS = ("ptrm_slot_separate", "roadmap_yaml_unchanged", "conductor_unchanged")
++LIST_FIELDS = (
++    "artifacts_read",
++    "clean_lanes",
++    "blocked_or_flagged_lanes",
++    "missing_artifacts",
++    "source_context",
++    "source_context_missing",
++    "roadmap_task_ids",
++    "protected_file_checks",
++    "failed_preconditions",
++    "tests_run",
++)
++
++DEFAULT_TESTS_RUN = (
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5578_transition_v505.py -q --no-cov",
++        "outcome": "not_run_in_default_artifact",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage run --include=python/carnot/"
++            "experiment_5578_transition_v505.py -m pytest "
++            "tests/python/test_experiment_5578_transition_v505.py -q --no-cov -n 0"
++        ),
++        "outcome": "not_run_in_default_artifact",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage report --include=python/carnot/"
++            "experiment_5578_transition_v505.py --fail-under=100"
++        ),
++        "outcome": "not_run_in_default_artifact",
++    },
++    {"command": ".venv/bin/pytest tests/python -q", "outcome": "not_run_in_default_artifact"},
++)
++
++
++def _read_text(root: Path, rel_path: Path) -> str:
++    path = root / rel_path
++    return path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
++
++
++def _task_range_from_text(text: str) -> str | None:
++    match = re.search(r"Exp\s*(\d+)\s*[-\u2013]\s*Exp?(\d+)", text, flags=re.IGNORECASE)
++    if match:
++        return f"exp{match.group(1)}-exp{match.group(2)}"
++    compact = re.search(r"exp(\d+)\s*[-\u2013]\s*exp?(\d+)", text, flags=re.IGNORECASE)
++    return f"exp{compact.group(1)}-exp{compact.group(2)}" if compact else None
++
++
++def _read_json_any(path: Path) -> tuple[Any, JsonDict]:
++    metadata: JsonDict = {
++        "exists": path.exists(),
++        "loadable": False,
++        "sha256": path_sha256(path),
++        "json_type": None,
++    }
++    if not path.exists():
++        metadata["error"] = "missing"
++        return {}, metadata
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        metadata.update({"error": "malformed_json", "line": exc.lineno, "column": exc.colno})
++        return {}, metadata
++    metadata.update({"loadable": True, "error": None, "json_type": type(payload).__name__})
++    if isinstance(payload, list):
++        metadata["length"] = len(payload)
++    return payload, metadata
++
++
++def _read_artifacts(root: Path) -> tuple[dict[str, Any], JsonDict, list[JsonDict], list[str]]:
++    artifacts: dict[str, Any] = {}
++    metadata: JsonDict = {}
++    read_records: list[JsonDict] = []
++    missing: list[str] = []
++    for rel_path in EXPECTED_ARTIFACT_PATHS:
++        payload, meta = _read_json_any(root / rel_path)
++        rel = rel_path.as_posix()
++        artifacts[rel] = payload
++        metadata[rel] = meta
++        if meta["exists"] and meta["loadable"]:
++            read_records.append(
++                {
++                    "path": rel,
++                    "sha256": meta.get("sha256"),
++                    "status": _status_label(payload if isinstance(payload, Mapping) else {}),
++                    "honest_verdict": payload.get("honest_verdict")
++                    if isinstance(payload, Mapping)
++                    else None,
++                }
++            )
++        else:
++            missing.append(rel)
++    return artifacts, metadata, read_records, missing
++
++
++def _read_source_context(root: Path) -> tuple[list[JsonDict], list[str]]:
++    records: list[JsonDict] = []
++    missing: list[str] = []
++    for rel_path in SOURCE_CONTEXT_PATHS:
++        path = root / rel_path
++        exists = path.exists()
++        records.append(
++            {
++                "path": rel_path.as_posix(),
++                "exists": exists,
++                "read_only": True,
++                "sha256": path_sha256(path),
++            }
++        )
++        if not exists:
++            missing.append(rel_path.as_posix())
++    return records, missing
++
++
++def _payload(artifacts: Mapping[str, Any], rel_path: Path) -> JsonMap:
++    value = artifacts.get(rel_path.as_posix(), {})
++    return value if isinstance(value, Mapping) else {}
++
++
++def _status_label(payload: JsonMap) -> str:
++    status = payload.get("status")
++    if status is not None:
++        return str(status).lower()
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    if verdict.startswith("blocked:") or verdict.startswith("blocked_"):
++        return "blocked"
++    if verdict.startswith("honest_null:") or "honest_null" in verdict:
++        return "honest_null"
++    if verdict.startswith("failed:"):
++        return "failed"
++    if verdict.startswith("complete:"):
++        return "complete"
++    return "unknown"
++
++
++def _int(payload: JsonMap, field: str) -> int:
++    value = payload.get(field)
++    if isinstance(value, bool):
++        return int(value)
++    if isinstance(value, int | float):
++        return int(value)
++    if isinstance(value, str) and value.lstrip("-").isdigit():
++        return int(value)
++    return 0
++
++
++def _float(payload: JsonMap, field: str) -> float:
++    value = payload.get(field)
++    if isinstance(value, int | float):
++        return float(value)
++    if isinstance(value, str):
++        try:
++            return float(value)
++        except ValueError:
++            return 0.0
++    return 0.0
++
++
++def _is_gate_skip(payload: JsonMap) -> bool:
++    verdict = str(payload.get("honest_verdict") or "")
++    blocked_at_layer = str(payload.get("blocked_at_layer") or "").lower()
++    return bool(
++        payload.get("schema") == "blocked_gate_check_v1"
++        or verdict.startswith("blocked_gate")
++        or ("gate" in blocked_at_layer and _status_label(payload) == "blocked")
++    )
++
++
++def _is_flagged(payload: JsonMap) -> bool:
++    return bool(payload.get("flagged_adversarial"))
++
++
++def _clean_for_claim(payload: JsonMap) -> bool:
++    return bool(
++        payload
++        and _status_label(payload) == "complete"
++        and not _is_flagged(payload)
++        and not _is_gate_skip(payload)
++    )
++
++
++def _lane(
++    lane: str,
++    classification: str,
++    source_artifacts: Sequence[Path],
++    claim_boundary: str,
++    evidence: JsonDict,
++) -> JsonDict:
++    return {
++        "lane": lane,
++        "classification": classification,
++        "source_artifacts": [path.as_posix() for path in source_artifacts],
++        "claim_boundary": claim_boundary,
++        "evidence": evidence,
++    }
++
++
++def _clean_lanes(artifacts: Mapping[str, Any]) -> list[JsonDict]:
++    exp5564 = _payload(artifacts, Path("results/experiment_5564_transition_v504.json"))
++    exp5565 = _payload(artifacts, Path("results/experiment_5565_v504_source_delta_ingestion.json"))
++    exp5566 = _payload(artifacts, Path("results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"))
++    exp5568 = _payload(artifacts, Path("results/experiment_5568_verifier_coevolution_trigger.json"))
++    exp5570 = _payload(artifacts, EXP5570_KAN_PATH)
++    exp5573 = _payload(artifacts, EXP5573_HARDWARE_PATH)
++    rows: list[JsonDict] = []
++    if _clean_for_claim(exp5564) and _clean_for_claim(exp5565):
++        rows.append(
++            _lane(
++                "transition_and_source_delta",
++                "clean",
++                (
++                    Path("results/experiment_5564_transition_v504.json"),
++                    Path("results/experiment_5565_v504_source_delta_ingestion.json"),
++                ),
++                "Transition and source delta are readable receipts; no closed scope is reopened.",
++                {"closed_scopes_reopened": bool(exp5565.get("closed_scopes_reopened"))},
++            )
++        )
++    if _clean_for_claim(exp5566) and exp5566.get("corpus_ready"):
++        rows.append(
++            _lane(
++                "exact_asp_fsm_near_miss_corpus",
++                "clean",
++                (Path("results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"),),
++                "Exact ASP/FSM corpus remains the deterministic verifier substrate.",
++                {
++                    "corpus_ready": True,
++                    "n_rows": _int(exp5566, "n_rows"),
++                    "duplicate_leakage_count": _int(exp5566, "duplicate_leakage_count"),
++                },
++            )
++        )
++    if _clean_for_claim(exp5568) and exp5568.get("verifier_coevolution_required"):
++        rows.append(
++            _lane(
++                "verifier_coevolution_trigger",
++                "clean",
++                (Path("results/experiment_5568_verifier_coevolution_trigger.json"),),
++                "Verifier co-evolution is a trigger only; Exp5582 must use clean residuals.",
++                {"triggered_by": exp5568.get("triggered_by", [])},
++            )
++        )
++    if _clean_for_claim(exp5570) and exp5570.get("kan_ready"):
++        rows.append(
++            _lane(
++                "spline_local_kan_online_energy",
++                "clean",
++                (EXP5570_KAN_PATH,),
++                "Active-spline KAN energy is clean bounded self-learning evidence.",
++                {
++                    "kan_ready": True,
++                    "forward_adaptation_delta": _float(exp5570, "forward_adaptation_delta"),
++                    "unsafe_false_accept_delta": _float(exp5570, "unsafe_false_accept_delta"),
++                    "rollback_checksum_match": bool(exp5570.get("rollback_checksum_match")),
++                },
++            )
++        )
++    if _clean_for_claim(exp5573):
++        rows.append(
++            _lane(
++                "matched_sampler_quality_continuity",
++                "clean_bounded",
++                (EXP5573_HARDWARE_PATH,),
++                "Matched sampler rows are clean quality evidence, not speedup evidence.",
++                {
++                    "successful_matched_pairs": _int(exp5573, "successful_matched_pairs"),
++                    "board_speedup_claimed": bool(exp5573.get("board_speedup_claimed")),
++                },
++            )
++        )
++    return rows
++
++
++def _parser_collapse(exp5567: JsonMap) -> JsonDict:
++    return {
++        "source_artifact": EXP5567_PANEL_PATH.as_posix(),
++        "parser_failure_count": _int(exp5567, "parser_failure_count"),
++        "n_candidate_labels": _int(exp5567, "n_candidate_labels"),
++        "panel_complete": bool(exp5567.get("panel_complete")),
++        "live_model_invoked": bool(exp5567.get("live_model_invoked")),
++        "gpu_offload_authenticated": bool(exp5567.get("gpu_offload_authenticated")),
++        "classification": "instrumentation_failure_not_model_evidence",
++        "solve_or_verify_result_imported": False,
++    }
++
++
++def _blocked_or_flagged_lanes(
++    artifacts: Mapping[str, Any],
++    parser_collapse_preserved: JsonMap,
++) -> list[JsonDict]:
++    exp5569 = _payload(artifacts, EXP5569_MEMORY_PATH)
++    exp5571 = _payload(artifacts, EXP5571_RESET_FREE_PATH)
++    exp5572 = _payload(artifacts, EXP5572_PROMOTION_PATH)
++    exp5573 = _payload(artifacts, EXP5573_HARDWARE_PATH)
++    exp5574 = _payload(artifacts, EXP5574_PTRM_PATH)
++    exp5575 = _payload(artifacts, EXP5575_SGE_PRECHECK_PATH)
++    exp5576 = _payload(artifacts, EXP5576_SGE_LEVELUP_PATH)
++    exp5577 = _payload(artifacts, EXP5577_CAPSTONE_PATH)
++    return [
++        _lane(
++            "parser_collapse_instrumentation",
++            "blocked",
++            (EXP5567_PANEL_PATH,),
++            "Parser collapse is preserved as instrumentation evidence only.",
++            dict(parser_collapse_preserved),
++        ),
++        _lane(
++            "memory_tautology_flag",
++            "flagged",
++            (EXP5569_MEMORY_PATH,),
++            "A flagged memory policy cannot gate `.505` learning until a corrigendum lands.",
++            {
++                "flagged_adversarial": bool(exp5569.get("flagged_adversarial")),
++                "policy_ready": bool(exp5569.get("policy_ready")),
++                "forward_transfer_delta": exp5569.get("forward_transfer_delta"),
++                "backward_retention_delta": exp5569.get("backward_retention_delta"),
++                "corrigendum_pending": exp5569.get("corrigendum_pending", []),
++            },
++        ),
++        _lane(
++            "reset_free_cuda_block",
++            "blocked",
++            (EXP5571_RESET_FREE_PATH,),
++            "Reset-free live learning is blocked without authenticated CUDA offload.",
++            {
++                "continual_harness_candidate": bool(exp5571.get("continual_harness_candidate")),
++                "live_model_invoked": bool(exp5571.get("live_model_invoked")),
++                "gpu_offload_authenticated": bool(exp5571.get("gpu_offload_authenticated")),
++                "honest_verdict": exp5571.get("honest_verdict"),
++            },
++        ),
++        _lane(
++            "delayed_promotion_gate_skip",
++            "blocked",
++            (EXP5572_PROMOTION_PATH,),
++            "Delayed regression promotion was skipped by the failed reset-free gate.",
++            {
++                "blocked_at_layer": exp5572.get("blocked_at_layer"),
++                "gate_check_summary": exp5572.get("gate_check_summary"),
++            },
++        ),
++        _lane(
++            "ptrm_loo_not_reached",
++            "blocked",
++            (EXP5574_PTRM_PATH,),
++            "PTRM Stage 1 lacks the leave-one-game-out adjudication required for `.505`.",
++            {
++                "stage1_training_complete": bool(exp5574.get("stage1_training_complete")),
++                "loo_verdict_reached": bool(exp5574.get("loo_verdict_reached")),
++                "no_level_solve_claim": bool(exp5574.get("no_level_solve_claim")),
++                "solve_provenance": exp5574.get("solve_provenance"),
++            },
++        ),
++        _lane(
++            "sge_retired_or_skipped",
++            "blocked",
++            (EXP5575_SGE_PRECHECK_PATH, EXP5576_SGE_LEVELUP_PATH),
++            "SGE remains retired after precheck block and live-level gate skip.",
++            {
++                "live_path_ready": bool(exp5575.get("live_path_ready")),
++                "target_unsolved": bool(exp5575.get("target_unsolved")),
++                "gate_skip": _is_gate_skip(exp5576),
++                "sge_retired": bool(exp5577.get("sge_retired")),
++            },
++        ),
++        _lane(
++            "ordinary_arc_registry_delta_zero",
++            "blocked",
++            (EXP5577_CAPSTONE_PATH,),
++            "Ordinary ARC credit requires a positive offline-reproduced registry delta.",
++            {
++                "ordinary_arc_floor_satisfied": bool(exp5577.get("ordinary_arc_floor_satisfied")),
++                "arc_registry_delta": _int(exp5577, "arc_registry_delta"),
++            },
++        ),
++        _lane(
++            "hardware_speedup_not_supported",
++            "blocked",
++            (EXP5573_HARDWARE_PATH, EXP5577_CAPSTONE_PATH),
++            "CUDA sampler quality rows landed, but CPU was faster and no speedup claim is allowed.",
++            {
++                "successful_matched_pairs": _int(exp5573, "successful_matched_pairs"),
++                "minimum_speedup": _minimum_speedup(exp5573),
++                "capstone_hardware_speedup_claim_allowed": bool(
++                    exp5577.get("hardware_speedup_claim_allowed")
++                ),
++            },
++        ),
++    ]
++
++
++def _minimum_speedup(payload: JsonMap) -> float | None:
++    rows = payload.get("speedup_by_pair")
++    if not isinstance(rows, list):
++        return None
++    speedups = [
++        float(row.get("speedup"))
++        for row in rows
++        if isinstance(row, Mapping) and isinstance(row.get("speedup"), int | float)
++    ]
++    return min(speedups) if speedups else None
++
++
++def _gate_map() -> JsonDict:
++    return {
++        "parser_panel_exact_extension": {
++            "chain": "parser->panel->exact extension",
++            "steps": [
++                "exp5580-parser-forensics-positive-control",
++                "exp5581-clean-sota-solve-verify-remeasurement",
++                "exp5582-exact-counterexample-verifier-extension",
++            ],
++            "entry_boundary": "Exp5567 parser collapse must be repaired before model evidence exists.",
++        },
++        "memory_two_timescale_live_promotion": {
++            "chain": "memory corrigendum->two-timescale->live->promotion",
++            "steps": [
++                "exp5583-causal-memory-metric-corrigendum",
++                "exp5584-two-timescale-exact-self-learning",
++                "exp5585-reset-free-live-local-sota-sessions",
++                "exp5586-delayed-promotion-and-poisoning-gate",
++            ],
++            "entry_boundary": "Exp5569 policy_ready is unusable until the tautology flag is cleared.",
++        },
++        "ordinary_arc_eom_live": {
++            "chain": "EOM precheck->live ARC",
++            "steps": [
++                "exp5588-epistemic-object-model-mcts-live-precheck",
++                "exp5589-gated-ordinary-arc-level-up",
++            ],
++            "entry_boundary": "SGE is retired; ordinary ARC must use the EOM-MCTS lane.",
++        },
++        "ptrm_independent_lane": {
++            "chain": "independent PTRM LOO",
++            "steps": ["exp5587-reserved-ptrm-loo-adjudication"],
++            "counts_as_ordinary_arc": False,
++        },
++        "hardware_independent_lane": {
++            "chain": "independent hardware crossover",
++            "steps": ["exp5590-matched-cpu-cuda-crossover-and-board-continuity"],
++            "speedup_claim_allowed": False,
++        },
++    }
++
++
++def _conductor_activation(root: Path) -> JsonDict:
++    text = _read_text(root, CONDUCTOR_LOG_RELATIVE_PATH)
++    matches = [
++        line.strip()
++        for line in text.splitlines()
++        if "Milestone 2026.07.505 activated" in line
++    ]
++    return {
++        "source_path": CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++        "activated": bool(matches),
++        "last_activation_line": matches[-1] if matches else None,
++    }
++
++
++def _protected_file_checks(
++    root: Path,
++    *,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[JsonDict]:
++    return [
++        {
++            "path": ROADMAP_RELATIVE_PATH.as_posix(),
++            "exists": (root / ROADMAP_RELATIVE_PATH).exists(),
++            "git_status_clean": not roadmap_modified,
++            "sha256": path_sha256(root / ROADMAP_RELATIVE_PATH),
++        },
++        {
++            "path": CONDUCTOR_RELATIVE_PATH.as_posix(),
++            "exists": (root / CONDUCTOR_RELATIVE_PATH).exists(),
++            "git_status_clean": not conductor_modified,
++            "sha256": path_sha256(root / CONDUCTOR_RELATIVE_PATH),
++        },
++    ]
++
++
++def _failed_preconditions(
++    missing_artifacts: Sequence[str],
++    *,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[str]:
++    failures = [f"missing_artifact:{path}" for path in missing_artifacts]
++    if roadmap_modified:
++        failures.append("research-roadmap.yaml_modified")
++    if conductor_modified:
++        failures.append("scripts/research_conductor.py_modified")
++    return failures
++
++
++def _honest_verdict(status: str, failures: Sequence[str], parser_count: int) -> str:
++    if status == "complete":
++        return (
++            "complete: archived .504 terminal evidence into .505 gate map; "
++            "previous_task_range=exp5564-exp5577; next_task_range=exp5578-exp5591; "
++            f"parser_failure_count={parser_count} preserved as instrumentation; "
++            "memory_tautology_flagged=True; kan_online_energy_promoted=True; "
++            "ptrm_slot_separate=True; ordinary_arc_registry_delta=0."
++        )
++    first = failures[0] if failures else "unknown"
++    return f"blocked: .505 transition receipt failed precondition {first}."
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    tests_run: Sequence[str | Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifacts, artifact_metadata, artifacts_read, missing = _read_artifacts(root)
++    source_context, source_missing = _read_source_context(root)
++    roadmap, _roadmap_meta = read_yaml_mapping(root / ROADMAP_RELATIVE_PATH)
++    roadmap_task_ids = extract_roadmap_tasks(roadmap)
++    vnext_text = _read_text(root, VNEXT_RELATIVE_PATH)
++    roadmap_doc_task_range = _task_range_from_text(vnext_text)
++    roadmap_modified = _modification_status(root, ROADMAP_RELATIVE_PATH, modification_overrides)
++    conductor_modified = _modification_status(root, CONDUCTOR_RELATIVE_PATH, modification_overrides)
++    failures = _failed_preconditions(
++        missing,
++        roadmap_modified=roadmap_modified,
++        conductor_modified=conductor_modified,
++    )
++    status = "complete" if not failures else "blocked"
++    exp5567 = _payload(artifacts, EXP5567_PANEL_PATH)
++    parser_collapse_preserved = _parser_collapse(exp5567)
++    tests = [dict(row) if isinstance(row, Mapping) else str(row) for row in tests_run]
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "status": status,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "artifact_metadata": artifact_metadata,
++        "artifacts_expected": [path.as_posix() for path in EXPECTED_ARTIFACT_PATHS],
++        "artifacts_read": artifacts_read,
++        "missing_artifacts": list(missing),
++        "source_context": source_context,
++        "source_context_missing": source_missing,
++        "roadmap_task_ids": roadmap_task_ids,
++        "roadmap_task_count": len(roadmap_task_ids),
++        "roadmap_doc_task_range": roadmap_doc_task_range,
++        "conductor_activation": _conductor_activation(root),
++        "protected_file_checks": _protected_file_checks(
++            root,
++            roadmap_modified=roadmap_modified,
++            conductor_modified=conductor_modified,
++        ),
++        "preconditions_checked": {
++            "expected_artifacts": len(EXPECTED_ARTIFACT_PATHS),
++            "artifacts_read": len(artifacts_read),
++            "roadmap_next_present": (root / ROADMAP_NEXT_RELATIVE_PATH).exists(),
++            "active_roadmap_milestone": roadmap.get("milestone"),
++            "active_roadmap_task_count": len(roadmap_task_ids),
++            "roadmap_doc_task_range": roadmap_doc_task_range,
++            "roadmap_yaml_unchanged": not roadmap_modified,
++            "conductor_unchanged": not conductor_modified,
++        },
++        "failed_preconditions": failures,
++        "gate_map": _gate_map(),
++        "tests_run": tests,
++        "roadmap_yaml_unchanged": not roadmap_modified,
++        "conductor_unchanged": not conductor_modified,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "clean_lanes": _clean_lanes(artifacts),
++        "blocked_or_flagged_lanes": _blocked_or_flagged_lanes(
++            artifacts,
++            parser_collapse_preserved,
++        ),
++        "parser_collapse_preserved": parser_collapse_preserved,
++        "previous_task_range": PREVIOUS_TASK_RANGE,
++        "next_task_range": NEXT_TASK_RANGE,
++        "ptrm_slot_separate": True,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(
++            status,
++            failures,
++            int(parser_collapse_preserved["parser_failure_count"]),
++        ),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(field)
++    for field in BOOL_FIELDS:
++        if field in payload and not isinstance(payload[field], bool):
++            errors.append(field)
++    for field in LIST_FIELDS:
++        if field in payload and not isinstance(payload[field], list):
++            errors.append(field)
++    principles = payload.get("field_principles")
++    if not isinstance(principles, Mapping) or set(REQUIRED_ARTIFACT_FIELDS) - set(principles):
++        errors.append("field_principles")
++    blocked_rows = payload.get("blocked_or_flagged_lanes")
++    if isinstance(blocked_rows, list):
++        blocked_names = {
++            str(row.get("lane"))
++            for row in blocked_rows
++            if isinstance(row, Mapping) and row.get("lane")
++        }
++        required = {
++            "parser_collapse_instrumentation",
++            "memory_tautology_flag",
++            "ptrm_loo_not_reached",
++            "ordinary_arc_registry_delta_zero",
++        }
++        if not required <= blocked_names:
++            errors.append("blocked_or_flagged_lanes")
++    parser = payload.get("parser_collapse_preserved")
++    missing = set(payload.get("missing_artifacts", [])) if isinstance(payload.get("missing_artifacts"), list) else set()
++    parser_missing = EXP5567_PANEL_PATH.as_posix() in missing
++    if not isinstance(parser, Mapping) or (
++        parser.get("classification") != "instrumentation_failure_not_model_evidence"
++        or parser.get("solve_or_verify_result_imported") is not False
++        or (not parser_missing and parser.get("parser_failure_count") != 648)
++    ):
++        errors.append("parser_collapse_preserved")
++    if payload.get("previous_task_range") != PREVIOUS_TASK_RANGE:
++        errors.append("previous_task_range")
++    if payload.get("next_task_range") != NEXT_TASK_RANGE:
++        errors.append("next_task_range")
++    if payload.get("ptrm_slot_separate") is not True:
++        errors.append("ptrm_slot_separate")
++    if payload.get("roadmap_yaml_unchanged") is not True:
++        errors.append("roadmap_yaml_unchanged")
++    if payload.get("conductor_unchanged") is not True:
++        errors.append("conductor_unchanged")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    honest_verdict = payload.get("honest_verdict")
++    if not isinstance(honest_verdict, str) or not honest_verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    return sorted(set(errors))
++
++
++def write_report(
++    root: Path = REPO_ROOT,
++    *,
++    tests_run: Sequence[str | Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifact = build_report(
++        root=root,
++        tests_run=tests_run,
++        modification_overrides=modification_overrides,
++    )
++    errors = validate_artifact(artifact)
++    if errors:  # pragma: no cover - validation errors are unit-tested directly
++        raise ValueError(f"invalid Exp5578 artifact fields: {', '.join(errors)}")
++    write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--write", action="store_true", help="write the Exp5578 artifact")
++    args = parser.parse_args(argv)
++    artifact = write_report() if args.write else build_report()
++    if not args.write:
++        write_json(Path("/dev/stdout"), artifact)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_5578_transition_v505.json b/results/experiment_5578_transition_v505.json
+new file mode 100644
+index 0000000000..66c25e31eb
+--- /dev/null
++++ b/results/experiment_5578_transition_v505.json
+@@ -0,0 +1,599 @@
++{
++  "artifact_metadata": {
++    "results/experiment_5564_transition_v504.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:ade0f23e9bbbdb8b596f4dc2e67398cf9c7d8ecef36aea9e65f6d200b2bfd173"
++    },
++    "results/experiment_5565_v504_source_delta_ingestion.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:c10899900614d1ed15a2786e3aaf1ec1c5ea9723d8925c58e5f36112201893f9"
++    },
++    "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:5a9a2f9d7ace916a1e5bdba417b8503bf9cd858398dfa71ee6f419a46cd3855e"
++    },
++    "results/experiment_5567_local_sota_solve_verify_asymmetry.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:d0b099bea5c5846747215c5e088d16145066c889d145fa8defd80a119699dff2"
++    },
++    "results/experiment_5568_verifier_coevolution_trigger.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:8cbba4dd6fbf0877628e46faa6e44dc535e0cc3a4cb7c9ca6b872c04507c9862"
++    },
++    "results/experiment_5569_causal_memory_policy_tournament.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:bde9f955bab82cf114e25b81810168ffb2806437286d1d4b998a50f713dbeace"
++    },
++    "results/experiment_5570_spline_local_kan_online_energy.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:8b518b45b53ce5cf8c4bd17d2d93f114e8c2f08a3ed11ff93a5218429b2fc053"
++    },
++    "results/experiment_5571_reset_free_sota_continual_harness.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:bff9853cafaaeb4707c93cf45adb4ff8d3354a991c528be275e7382fee18af83"
++    },
++    "results/experiment_5572_gated_delayed_regression_promotion.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:ed07d2598fc900f07a7f8940c8298d8ac478322ae224e8f6498b2ddb1f24e8e9"
++    },
++    "results/experiment_5573_matched_sampler_hardware_continuity.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
++    },
++    "results/experiment_5574_ptrm_stochastic_generator_stage1.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:c06e7a91c9e344307322ed15b8665ca0cff4642fe5298fe2635ab7ee36c59a84"
++    },
++    "results/experiment_5575_sge_anti_stagnation_live_precheck.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:3d9d916503839ee1d5da8fe95c61bb8fe5189b9535af01ffc346a2ee3d5ec860"
++    },
++    "results/experiment_5576_gated_sge_live_levelup.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:882b1bcf1ec50e7ed54574004b0c4c1eb538ed8603988d64a4c0c95414d0e24a"
++    },
++    "results/experiment_5577_capstone_v504.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:9ebd3dbd91606367e677b3690e7e47d0c4d441ab4c5ceaa00d0dc8bab834a2e5"
++    }
++  },
++  "artifacts_expected": [
++    "results/experiment_5564_transition_v504.json",
++    "results/experiment_5565_v504_source_delta_ingestion.json",
++    "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json",
++    "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
++    "results/experiment_5568_verifier_coevolution_trigger.json",
++    "results/experiment_5569_causal_memory_policy_tournament.json",
++    "results/experiment_5570_spline_local_kan_online_energy.json",
++    "results/experiment_5571_reset_free_sota_continual_harness.json",
++    "results/experiment_5572_gated_delayed_regression_promotion.json",
++    "results/experiment_5573_matched_sampler_hardware_continuity.json",
++    "results/experiment_5574_ptrm_stochastic_generator_stage1.json",
++    "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
++    "results/experiment_5576_gated_sge_live_levelup.json",
++    "results/experiment_5577_capstone_v504.json"
++  ],
++  "artifacts_read": [
++    {
++      "honest_verdict": "complete: archived .503 terminal evidence into .504 transition receipt; previous_task_range=exp5550-exp5563; next_task_range=exp5564-exp5577; clean evidence preserved for exact ASP/FSM fixture, bounded sparse repair, CSL tautology repair, and causal memory action impact; blocked or flagged boundaries preserved for grammar row completion, skipped hard/soft panel, cross-family CSL, unmatched hardware, and ARC registry_delta=0.",
++      "path": "results/experiment_5564_transition_v504.json",
++      "sha256": "sha256:ade0f23e9bbbdb8b596f4dc2e67398cf9c7d8ecef36aea9e65f6d200b2bfd173",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: accepted 1 non-duplicate actionable V504 source delta and kept closed scopes closed",
++      "path": "results/experiment_5565_v504_source_delta_ingestion.json",
++      "sha256": "sha256:c10899900614d1ed15a2786e3aaf1ec1c5ea9723d8925c58e5f36112201893f9",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: exact ASP/FSM near-miss corpus ready with deterministic oracle labels",
++      "path": "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json",
++      "sha256": "sha256:5a9a2f9d7ace916a1e5bdba417b8503bf9cd858398dfa71ee6f419a46cd3855e",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: authenticated paired local SOTA solve-versus-verify panel; no sub-percent effect claims",
++      "path": "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
++      "sha256": "sha256:d0b099bea5c5846747215c5e088d16145066c889d145fa8defd80a119699dff2",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: cached verifier residual audit triggers coevolution; no retraining performed",
++      "path": "results/experiment_5568_verifier_coevolution_trigger.json",
++      "sha256": "sha256:8cbba4dd6fbf0877628e46faa6e44dc535e0cc3a4cb7c9ca6b872c04507c9862",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: causal_memory_policy_tournament_policy_ready",
++      "path": "results/experiment_5569_causal_memory_policy_tournament.json",
++      "sha256": "sha256:bde9f955bab82cf114e25b81810168ffb2806437286d1d4b998a50f713dbeace",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: active_spline_online_kan_exact_energy_ready",
++      "path": "results/experiment_5570_spline_local_kan_online_energy.json",
++      "sha256": "sha256:8b518b45b53ce5cf8c4bd17d2d93f114e8c2f08a3ed11ff93a5218429b2fc053",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "blocked_no_cuda_offload",
++      "path": "results/experiment_5571_reset_free_sota_continual_harness.json",
++      "sha256": "sha256:bff9853cafaaeb4707c93cf45adb4ff8d3354a991c528be275e7382fee18af83",
++      "status": "blocked"
++    },
++    {
++      "honest_verdict": "blocked_gate_check_failed",
++      "path": "results/experiment_5572_gated_delayed_regression_promotion.json",
++      "sha256": "sha256:ed07d2598fc900f07a7f8940c8298d8ac478322ae224e8f6498b2ddb1f24e8e9",
++      "status": "blocked"
++    },
++    {
++      "honest_verdict": "complete: matched CPU/CUDA sampler evidence recorded; successful_matched_pairs=6; board_speedup_claimed=false",
++      "path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
++      "sha256": "sha256:e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "complete: stage1_ptrm_substrate_trained_remaining_loo_gate_preserved",
++      "path": "results/experiment_5574_ptrm_stochastic_generator_stage1.json",
++      "sha256": "sha256:c06e7a91c9e344307322ed15b8665ca0cff4642fe5298fe2635ab7ee36c59a84",
++      "status": "complete"
++    },
++    {
++      "honest_verdict": "blocked: full tests/python and global spec-coverage gates failed outside SGE path; anti-stagnation controller and registry precheck passed but live inference is not ready",
++      "path": "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
++      "sha256": "sha256:3d9d916503839ee1d5da8fe95c61bb8fe5189b9535af01ffc346a2ee3d5ec860",
++      "status": "blocked"
++    },
++    {
++      "honest_verdict": "blocked_gate_check_failed",
++      "path": "results/experiment_5576_gated_sge_live_levelup.json",
++      "sha256": "sha256:882b1bcf1ec50e7ed54574004b0c4c1eb538ed8603988d64a4c0c95414d0e24a",
++      "status": "blocked"
++    },
++    {
++      "honest_verdict": "complete: .504 capstone read 14/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped=2; promoted=4; solve_verify_asymmetry_supported=False; verifier_coevolution_required=True; memory_policy_promoted=False; kan_online_energy_promoted=True; continuous_self_learning_claim_allowed=False; hardware_speedup_claim_allowed=False; ordinary_arc_floor_satisfied=False; arc_registry_delta=0",
++      "path": "results/experiment_5577_capstone_v504.json",
++      "sha256": "sha256:9ebd3dbd91606367e677b3690e7e47d0c4d441ab4c5ceaa00d0dc8bab834a2e5",
++      "status": "complete"
++    }
++  ],
++  "blocked_or_flagged_lanes": [
++    {
++      "claim_boundary": "Parser collapse is preserved as instrumentation evidence only.",
++      "classification": "blocked",
++      "evidence": {
++        "classification": "instrumentation_failure_not_model_evidence",
++        "gpu_offload_authenticated": true,
++        "live_model_invoked": true,
++        "n_candidate_labels": 576,
++        "panel_complete": true,
++        "parser_failure_count": 648,
++        "solve_or_verify_result_imported": false,
++        "source_artifact": "results/experiment_5567_local_sota_solve_verify_asymmetry.json"
++      },
++      "lane": "parser_collapse_instrumentation",
++      "source_artifacts": [
++        "results/experiment_5567_local_sota_solve_verify_asymmetry.json"
++      ]
++    },
++    {
++      "claim_boundary": "A flagged memory policy cannot gate `.505` learning until a corrigendum lands.",
++      "classification": "flagged",
++      "evidence": {
++        "backward_retention_delta": 0.3333333334,
++        "corrigendum_pending": [
++          {
++            "detail": "backward_retention_delta=0.3333333334 and forward_transfer_delta=0.3333333334 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY",
++            "severity": "critical"
++          }
++        ],
++        "flagged_adversarial": true,
++        "forward_transfer_delta": 0.3333333334,
++        "policy_ready": true
++      },
++      "lane": "memory_tautology_flag",
++      "source_artifacts": [
++        "results/experiment_5569_causal_memory_policy_tournament.json"
++      ]
++    },
++    {
++      "claim_boundary": "Reset-free live learning is blocked without authenticated CUDA offload.",
++      "classification": "blocked",
++      "evidence": {
++        "continual_harness_candidate": false,
++        "gpu_offload_authenticated": false,
++        "honest_verdict": "blocked_no_cuda_offload",
++        "live_model_invoked": false
++      },
++      "lane": "reset_free_cuda_block",
++      "source_artifacts": [
++        "results/experiment_5571_reset_free_sota_continual_harness.json"
++      ]
++    },
++    {
++      "claim_boundary": "Delayed regression promotion was skipped by the failed reset-free gate.",
++      "classification": "blocked",
++      "evidence": {
++        "blocked_at_layer": "conductor_pre_gate",
++        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-harness.continual_harness_candidate (actual=False == expected=True)"
++      },
++      "lane": "delayed_promotion_gate_skip",
++      "source_artifacts": [
++        "results/experiment_5572_gated_delayed_regression_promotion.json"
++      ]
++    },
++    {
++      "claim_boundary": "PTRM Stage 1 lacks the leave-one-game-out adjudication required for `.505`.",
++      "classification": "blocked",
++      "evidence": {
++        "loo_verdict_reached": false,
++        "no_level_solve_claim": true,
++        "solve_provenance": "development_proxy",
++        "stage1_training_complete": true
++      },
++      "lane": "ptrm_loo_not_reached",
++      "source_artifacts": [
++        "results/experiment_5574_ptrm_stochastic_generator_stage1.json"
++      ]
++    },
++    {
++      "claim_boundary": "SGE remains retired after precheck block and live-level gate skip.",
++      "classification": "blocked",
++      "evidence": {
++        "gate_skip": true,
++        "live_path_ready": false,
++        "sge_retired": true,
++        "target_unsolved": true
++      },
++      "lane": "sge_retired_or_skipped",
++      "source_artifacts": [
++        "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
++        "results/experiment_5576_gated_sge_live_levelup.json"
++      ]
++    },
++    {
++      "claim_boundary": "Ordinary ARC credit requires a positive offline-reproduced registry delta.",
++      "classification": "blocked",
++      "evidence": {
++        "arc_registry_delta": 0,
++        "ordinary_arc_floor_satisfied": false
++      },
++      "lane": "ordinary_arc_registry_delta_zero",
++      "source_artifacts": [
++        "results/experiment_5577_capstone_v504.json"
++      ]
++    },
++    {
++      "claim_boundary": "CUDA sampler quality rows landed, but CPU was faster and no speedup claim is allowed.",
++      "classification": "blocked",
++      "evidence": {
++        "capstone_hardware_speedup_claim_allowed": false,
++        "minimum_speedup": 0.23272383,
++        "successful_matched_pairs": 6
++      },
++      "lane": "hardware_speedup_not_supported",
++      "source_artifacts": [
++        "results/experiment_5573_matched_sampler_hardware_continuity.json",
++        "results/experiment_5577_capstone_v504.json"
++      ]
++    }
++  ],
++  "clean_lanes": [
++    {
++      "claim_boundary": "Transition and source delta are readable receipts; no closed scope is reopened.",
++      "classification": "clean",
++      "evidence": {
++        "closed_scopes_reopened": false
++      },
++      "lane": "transition_and_source_delta",
++      "source_artifacts": [
++        "results/experiment_5564_transition_v504.json",
++        "results/experiment_5565_v504_source_delta_ingestion.json"
++      ]
++    },
++    {
++      "claim_boundary": "Exact ASP/FSM corpus remains the deterministic verifier substrate.",
++      "classification": "clean",
++      "evidence": {
++        "corpus_ready": true,
++        "duplicate_leakage_count": 0,
++        "n_rows": 120
++      },
++      "lane": "exact_asp_fsm_near_miss_corpus",
++      "source_artifacts": [
++        "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"
++      ]
++    },
++    {
++      "claim_boundary": "Verifier co-evolution is a trigger only; Exp5582 must use clean residuals.",
++      "classification": "clean",
++      "evidence": {
++        "triggered_by": [
++          "worst_family_false_accept_rate"
++        ]
++      },
++      "lane": "verifier_coevolution_trigger",
++      "source_artifacts": [
++        "results/experiment_5568_verifier_coevolution_trigger.json"
++      ]
++    },
++    {
++      "claim_boundary": "Active-spline KAN energy is clean bounded self-learning evidence.",
++      "classification": "clean",
++      "evidence": {
++        "forward_adaptation_delta": 0.425,
++        "kan_ready": true,
++        "rollback_checksum_match": true,
++        "unsafe_false_accept_delta": -0.85
++      },
++      "lane": "spline_local_kan_online_energy",
++      "source_artifacts": [
++        "results/experiment_5570_spline_local_kan_online_energy.json"
++      ]
++    },
++    {
++      "claim_boundary": "Matched sampler rows are clean quality evidence, not speedup evidence.",
++      "classification": "clean_bounded",
++      "evidence": {
++        "board_speedup_claimed": false,
++        "successful_matched_pairs": 6
++      },
++      "lane": "matched_sampler_quality_continuity",
++      "source_artifacts": [
++        "results/experiment_5573_matched_sampler_hardware_continuity.json"
++      ]
++    }
++  ],
++  "conductor_activation": {
++    "activated": true,
++    "last_activation_line": "| 2026-07-13 23:16 UTC | Milestone 2026.07.505 activated | OK | 8 tasks queued |",
++    "source_path": "ops/conductor-log.md"
++  },
++  "conductor_unchanged": true,
++  "experiment": "experiment_5578_transition_v505",
++  "experiment_id": "exp5578-transition-v505",
++  "failed_preconditions": [],
++  "field_principles": {
++    "artifacts_read": "transitions cite terminal evidence",
++    "blocked_or_flagged_lanes": "boundaries remain binding",
++    "clean_lanes": "only unflagged completed findings are clean",
++    "honest_verdict": "terminal status starts complete: or blocked:",
++    "inference_substrate": "no live inference occurred",
++    "next_task_range": "CalVer continuity is explicit",
++    "parser_collapse_preserved": "instrumentation failure is not model evidence",
++    "previous_task_range": "CalVer continuity is explicit",
++    "ptrm_slot_separate": "PTRM cannot satisfy ordinary ARC"
++  },
++  "gate_map": {
++    "hardware_independent_lane": {
++      "chain": "independent hardware crossover",
++      "speedup_claim_allowed": false,
++      "steps": [
++        "exp5590-matched-cpu-cuda-crossover-and-board-continuity"
++      ]
++    },
++    "memory_two_timescale_live_promotion": {
++      "chain": "memory corrigendum->two-timescale->live->promotion",
++      "entry_boundary": "Exp5569 policy_ready is unusable until the tautology flag is cleared.",
++      "steps": [
++        "exp5583-causal-memory-metric-corrigendum",
++        "exp5584-two-timescale-exact-self-learning",
++        "exp5585-reset-free-live-local-sota-sessions",
++        "exp5586-delayed-promotion-and-poisoning-gate"
++      ]
++    },
++    "ordinary_arc_eom_live": {
++      "chain": "EOM precheck->live ARC",
++      "entry_boundary": "SGE is retired; ordinary ARC must use the EOM-MCTS lane.",
++      "steps": [
++        "exp5588-epistemic-object-model-mcts-live-precheck",
++        "exp5589-gated-ordinary-arc-level-up"
++      ]
++    },
++    "parser_panel_exact_extension": {
++      "chain": "parser->panel->exact extension",
++      "entry_boundary": "Exp5567 parser collapse must be repaired before model evidence exists.",
++      "steps": [
++        "exp5580-parser-forensics-positive-control",
++        "exp5581-clean-sota-solve-verify-remeasurement",
++        "exp5582-exact-counterexample-verifier-extension"
++      ]
++    },
++    "ptrm_independent_lane": {
++      "chain": "independent PTRM LOO",
++      "counts_as_ordinary_arc": false,
++      "steps": [
++        "exp5587-reserved-ptrm-loo-adjudication"
++      ]
++    }
++  },
++  "honest_verdict": "complete: archived .504 terminal evidence into .505 gate map; previous_task_range=exp5564-exp5577; next_task_range=exp5578-exp5591; parser_failure_count=648 preserved as instrumentation; memory_tautology_flagged=True; kan_online_energy_promoted=True; ptrm_slot_separate=True; ordinary_arc_registry_delta=0.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "missing_artifacts": [],
++  "next_task_range": "exp5578-exp5591",
++  "parser_collapse_preserved": {
++    "classification": "instrumentation_failure_not_model_evidence",
++    "gpu_offload_authenticated": true,
++    "live_model_invoked": true,
++    "n_candidate_labels": 576,
++    "panel_complete": true,
++    "parser_failure_count": 648,
++    "solve_or_verify_result_imported": false,
++    "source_artifact": "results/experiment_5567_local_sota_solve_verify_asymmetry.json"
++  },
++  "preconditions_checked": {
++    "active_roadmap_milestone": "2026.07.505",
++    "active_roadmap_task_count": 8,
++    "artifacts_read": 14,
++    "conductor_unchanged": true,
++    "expected_artifacts": 14,
++    "roadmap_doc_task_range": "exp5578-exp5591",
++    "roadmap_next_present": false,
++    "roadmap_yaml_unchanged": true
++  },
++  "previous_task_range": "exp5564-exp5577",
++  "protected_file_checks": [
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:e85966eb3deb2659e17536baceae374938c49d441be519e0288f25a51a446b86"
++    },
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "scripts/research_conductor.py",
++      "sha256": "sha256:687de4f577fc252de24852f60de6f55f9a08495258659115753feb33c32f3ac6"
++    }
++  ],
++  "ptrm_slot_separate": true,
++  "random_seed": 5578,
++  "reproducibility_checksum": "sha256:2f6dda9f23501860f981d2660d15105b9dfaf801ba61430cb429731e46e361e5",
++  "result_path": "results/experiment_5578_transition_v505.json",
++  "roadmap_doc_task_range": "exp5578-exp5591",
++  "roadmap_task_count": 8,
++  "roadmap_task_ids": [
++    "exp5578-transition-v505",
++    "exp5579-v505-source-delta-ingestion",
++    "exp5580-parser-forensics-positive-control",
++    "exp5581-clean-sota-solve-verify-remeasurement",
++    "exp5582-exact-counterexample-verifier-extension",
++    "exp5583-causal-memory-metric-corrigendum",
++    "exp5584-two-timescale-exact-self-learning",
++    "exp5585-arc-levelup-attempt-v505"
++  ],
++  "roadmap_yaml_unchanged": true,
++  "run_date": "2026-07-13",
++  "schema": "carnot.experiment_5578.transition_v505.v1",
++  "source_context": [
++    {
++      "exists": true,
++      "path": "AGENTS.md",
++      "read_only": true,
++      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++    },
++    {
++      "exists": true,
++      "path": "CODEX.md",
++      "read_only": true,
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "path": "CLAUDE.md",
++      "read_only": true,
++      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
++    },
++    {
++      "exists": true,
++      "path": "research-roadmap.yaml",
++      "read_only": true,
++      "sha256": "sha256:e85966eb3deb2659e17536baceae374938c49d441be519e0288f25a51a446b86"
++    },
++    {
++      "exists": false,
++      "path": "research-roadmap-next.yaml",
++      "read_only": true,
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "read_only": true,
++      "sha256": "sha256:3987b115b5da7e12ad49754a71ad60c4d076dffb65746aed58e02a10df513c29"
++    },
++    {
++      "exists": true,
++      "path": "ops/conductor-log.md",
++      "read_only": true,
++      "sha256": "sha256:bb038ebe2756a10cfa0182b77f1dc78781e7c757e60bec149d581e3dce321e7c"
++    },
++    {
++      "exists": true,
++      "path": "scripts/research_conductor.py",
++      "read_only": true,
++      "sha256": "sha256:687de4f577fc252de24852f60de6f55f9a08495258659115753feb33c32f3ac6"
++    }
++  ],
++  "source_context_missing": [
++    "research-roadmap-next.yaml"
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5578",
++    "SCENARIO-REPORT-5578",
++    "SCENARIO-REPORT-5578-MISSING-INPUT",
++    "SCENARIO-REPORT-5578-FIELD-PRINCIPLES"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5578_transition_v505.py -q --no-cov",
++      "outcome": "passed: 5 passed"
++    },
++    {
++      "command": ".venv/bin/coverage erase && .venv/bin/coverage run --include=python/carnot/experiment_5578_transition_v505.py -m pytest tests/python/test_experiment_5578_transition_v505.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5578_transition_v505.py --fail-under=100",
++      "outcome": "passed: 5 passed; new module coverage 100% (259 statements, 0 missing)"
++    },
++    {
++      "command": ".venv/bin/ruff check python/carnot/experiment_5578_transition_v505.py tests/python/test_experiment_5578_transition_v505.py",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py",
++      "outcome": "failed: 1262 pre-existing tests lack REQ-/SCENARIO- traceability; new test file includes REQ-REPORT-5578 and SCENARIO-REPORT-5578 refs"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "failed: 246 failed, 39103 passed, 115 skipped, 1 xfailed, 274 warnings, 3 errors in 3008.71s; xdist worker crashes in unrelated Z3/JAX paths and MemoryError during failure rendering"
++    },
++    {
++      "command": "review ops/e2e-test-plan.md",
++      "outcome": "not_applicable: Exp5578 is aggregation_from_upstream_artifacts with no model, solver, sampler, or hardware execution path"
++    }
++  ]
++}
+diff --git a/results/experiment_5600_ptrm_loo_gate.json b/results/experiment_5600_ptrm_loo_gate.json
+new file mode 100644
+index 0000000000..43b0e075e5
+--- /dev/null
++++ b/results/experiment_5600_ptrm_loo_gate.json
+@@ -0,0 +1,786 @@
++{
++  "corpus_won_proxy_caveat": "Won-session filtering uses level_progress>=1.0 (inherited from exp5574 / build_stage1_dataset), which the v4 pilot found can mean 'reached this session's own highest recorded checkpoint,' not necessarily 'won the whole game.' Not fixed in this experiment's scope; disclosed per REQ-ARC-PTRM-5600-2.",
++  "duration_s": 144.677069,
++  "exp5574_artifact_mismatch_corrigendum": "results/experiment_5574_ptrm_stochastic_generator_stage1.json (committed in 70c857a69, an unrelated-titled commit) contains fields (exact_window_accuracy, per_action_accuracy, selection_eval, gpu_device_receipt.device_count, halting_distribution) that the _recursion_metrics/_gpu_device_receipt/build_stage1_artifact code committed in that same commit does not compute -- the artifact could not have been produced by the code it shipped with. adversarial_verify.py did not flag this (no artifact-schema-vs-source-code consistency check exists). The original artifact is preserved unmodified per never-prune discipline; its specific numbers should not be cited. This experiment (5600) supersedes it as the trustworthy, reproducible reference.",
++  "games_ptrm_beats_majority_baseline": [
++    "ft09",
++    "vc33",
++    "cd82"
++  ],
++  "games_ptrm_beats_non_recursive_significantly": [
++    "ft09"
++  ],
++  "gate_definition": "PTRM supported only if, in >= 3 of 5 held-out games, it both (i) beats the non-recursive control with paired Wilcoxon p < 0.05 across 10 seeds and (ii) has higher mean per-action accuracy than the majority-class baseline. Pre-registered before running, per REQ-ARC-PTRM-5600-2.",
++  "gpu_device_receipt": {
++    "devices": [
++      "NVIDIA GeForce RTX 3090",
++      "NVIDIA GeForce RTX 3090"
++    ],
++    "nvidia_smi_returncode": 0,
++    "nvidia_smi_stdout": "0, NVIDIA GeForce RTX 3090, 24576 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB",
++    "torch_cuda_available": true
++  },
++  "heldout_games": [
++    "ft09",
++    "m0r0",
++    "vc33",
++    "sk48",
++    "cd82"
++  ],
++  "heldout_generalization_signal": "loo_gate_failed_no_majority_significant_and_above_baseline",
++  "honest_verdict": "complete: ptrm_loo_gate_failed_no_majority_significant_and_above_baseline",
++  "inference_substrate": "trained_ptrm_offline_development_proxy",
++  "loo_verdict_reached": true,
++  "n_seeds": 10,
++  "no_level_solve_claim": true,
++  "per_game_results": {
++    "cd82": {
++      "majority_baseline_per_action_accuracy": 0.128906,
++      "n_seeds": 10,
++      "non_recursive_mean_per_action_accuracy": 0.144531,
++      "per_seed_rows": [
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.140625,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.138672,
++          "seed_index": 0
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.169922,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.1875,
++          "seed_index": 1
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.138672,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.15625,
++          "seed_index": 2
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.138672,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.136719,
++          "seed_index": 3
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.121094,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.167969,
++          "seed_index": 4
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.166016,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.130859,
++          "seed_index": 5
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.126953,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.179688,
++          "seed_index": 6
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.154297,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.177734,
++          "seed_index": 7
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.138672,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.173828,
++          "seed_index": 8
++        },
++        {
++          "game": "cd82",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.128906,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.150391,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.179688,
++          "seed_index": 9
++        }
++      ],
++      "ptrm_beats_majority_baseline": true,
++      "ptrm_beats_non_recursive_significantly": false,
++      "ptrm_exact_window_accuracy_mean": 0.0,
++      "ptrm_mean_per_action_accuracy": 0.162891,
++      "wilcoxon_ptrm_vs_non_recursive": {
++        "p_value": 0.097656,
++        "ptrm_losses": 3,
++        "ptrm_wins": 7,
++        "ties": 0
++      }
++    },
++    "ft09": {
++      "majority_baseline_per_action_accuracy": 0.136719,
++      "n_seeds": 10,
++      "non_recursive_mean_per_action_accuracy": 0.121875,
++      "per_seed_rows": [
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.130859,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.134766,
++          "seed_index": 0
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.121094,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.142578,
++          "seed_index": 1
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.113281,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.130859,
++          "seed_index": 2
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.144531,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.148438,
++          "seed_index": 3
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.126953,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.160156,
++          "seed_index": 4
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.097656,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.162109,
++          "seed_index": 5
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.109375,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.138672,
++          "seed_index": 6
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.140625,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.162109,
++          "seed_index": 7
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.125,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.132812,
++          "seed_index": 8
++        },
++        {
++          "game": "ft09",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.136719,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.109375,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.146484,
++          "seed_index": 9
++        }
++      ],
++      "ptrm_beats_majority_baseline": true,
++      "ptrm_beats_non_recursive_significantly": true,
++      "ptrm_exact_window_accuracy_mean": 0.0,
++      "ptrm_mean_per_action_accuracy": 0.145898,
++      "wilcoxon_ptrm_vs_non_recursive": {
++        "p_value": 0.001953,
++        "ptrm_losses": 0,
++        "ptrm_wins": 10,
++        "ties": 0
++      }
++    },
++    "m0r0": {
++      "majority_baseline_per_action_accuracy": 0.314453,
++      "n_seeds": 10,
++      "non_recursive_mean_per_action_accuracy": 0.195508,
++      "per_seed_rows": [
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.175781,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.210938,
++          "seed_index": 0
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.230469,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.21875,
++          "seed_index": 1
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.210938,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.203125,
++          "seed_index": 2
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.212891,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.171875,
++          "seed_index": 3
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.148438,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.230469,
++          "seed_index": 4
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.212891,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.193359,
++          "seed_index": 5
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.179688,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.216797,
++          "seed_index": 6
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.1875,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.166016,
++          "seed_index": 7
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.175781,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.197266,
++          "seed_index": 8
++        },
++        {
++          "game": "m0r0",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.314453,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.220703,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.232422,
++          "seed_index": 9
++        }
++      ],
++      "ptrm_beats_majority_baseline": false,
++      "ptrm_beats_non_recursive_significantly": false,
++      "ptrm_exact_window_accuracy_mean": 0.0,
++      "ptrm_mean_per_action_accuracy": 0.204102,
++      "wilcoxon_ptrm_vs_non_recursive": {
++        "p_value": 0.625,
++        "ptrm_losses": 5,
++        "ptrm_wins": 5,
++        "ties": 0
++      }
++    },
++    "sk48": {
++      "majority_baseline_per_action_accuracy": 0.408203,
++      "n_seeds": 10,
++      "non_recursive_mean_per_action_accuracy": 0.206445,
++      "per_seed_rows": [
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.208984,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.205078,
++          "seed_index": 0
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.292969,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.226562,
++          "seed_index": 1
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.240234,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.220703,
++          "seed_index": 2
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.28125,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.208984,
++          "seed_index": 3
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.117188,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.201172,
++          "seed_index": 4
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.160156,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.191406,
++          "seed_index": 5
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.265625,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.220703,
++          "seed_index": 6
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.126953,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.228516,
++          "seed_index": 7
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.193359,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.208984,
++          "seed_index": 8
++        },
++        {
++          "game": "sk48",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.408203,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.177734,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.193359,
++          "seed_index": 9
++        }
++      ],
++      "ptrm_beats_majority_baseline": false,
++      "ptrm_beats_non_recursive_significantly": false,
++      "ptrm_exact_window_accuracy_mean": 0.0,
++      "ptrm_mean_per_action_accuracy": 0.210547,
++      "wilcoxon_ptrm_vs_non_recursive": {
++        "p_value": 0.902344,
++        "ptrm_losses": 5,
++        "ptrm_wins": 5,
++        "ties": 0
++      }
++    },
++    "vc33": {
++      "majority_baseline_per_action_accuracy": 0.0,
++      "n_seeds": 10,
++      "non_recursive_mean_per_action_accuracy": 0.076758,
++      "per_seed_rows": [
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.078125,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.105469,
++          "seed_index": 0
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.060547,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.091797,
++          "seed_index": 1
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.013672,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.056641,
++          "seed_index": 2
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.044922,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.089844,
++          "seed_index": 3
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.115234,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.101562,
++          "seed_index": 4
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.154297,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.142578,
++          "seed_index": 5
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.09375,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.052734,
++          "seed_index": 6
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.177734,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.140625,
++          "seed_index": 7
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.015625,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.105469,
++          "seed_index": 8
++        },
++        {
++          "game": "vc33",
++          "leakage_count": 0,
++          "majority_baseline_exact_window_accuracy": 0.0,
++          "majority_baseline_per_action_accuracy": 0.0,
++          "n_heldout_examples": 64,
++          "n_train_examples": 256,
++          "non_recursive_exact_window_accuracy": 0.0,
++          "non_recursive_per_action_accuracy": 0.013672,
++          "ptrm_exact_window_accuracy": 0.0,
++          "ptrm_per_action_accuracy": 0.056641,
++          "seed_index": 9
++        }
++      ],
++      "ptrm_beats_majority_baseline": true,
++      "ptrm_beats_non_recursive_significantly": false,
++      "ptrm_exact_window_accuracy_mean": 0.0,
++      "ptrm_mean_per_action_accuracy": 0.094336,
++      "wilcoxon_ptrm_vs_non_recursive": {
++        "p_value": 0.185547,
++        "ptrm_losses": 4,
++        "ptrm_wins": 6,
++        "ties": 0
++      }
++    }
++  },
++  "preconditions": {
++    "corpus_manifest_present": true,
++    "cuda_available": true,
++    "cuda_detail": "torch_cuda_available=True",
++    "ok": true
++  },
++  "random_seed": 5600,
++  "reproducibility_checksum": "0c07994d0ecf4db953d6bc3f2d77f88b62a094a0ce546ed36fc357bdcec3d623",
++  "retire_trm_generator_line": true,
++  "solve_provenance": "development_proxy",
++  "track": "arc-trm-generator",
++  "verifier_is_oracle": false,
++  "wiring_fix_note": "generate_trajectories previously ignored the trained PTRMActionSequenceGenerator entirely, seeding every trajectory from the untrained _base_action_logits frequency heuristic. Fixed 2026-07-13: model logits (mean-pooled over the K-step horizon) now seed generation when a trained model is supplied. See openspec/capabilities/arc-trm-generator/spec.md REQ-ARC-PTRM-5600-1 and SCENARIO-ARC-PTRM-5600-WIRING-FIX."
++}
+diff --git a/tests/python/test_experiment_5578_transition_v505.py b/tests/python/test_experiment_5578_transition_v505.py
+new file mode 100644
+index 0000000000..28b6ca3b6f
+--- /dev/null
++++ b/tests/python/test_experiment_5578_transition_v505.py
+@@ -0,0 +1,425 @@
++"""Tests for the Exp5578 V505 transition receipt.
++
++Spec refs: REQ-REPORT-5578, SCENARIO-REPORT-5578,
++SCENARIO-REPORT-5578-MISSING-INPUT, SCENARIO-REPORT-5578-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot import experiment_5578_transition_v505 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _write_json(root: Path, rel_path: Path | str, payload: Any) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_text(root: Path, rel_path: Path | str, text: str = "context\n") -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _write_context(root: Path) -> None:
++    for rel_path in mod.SOURCE_CONTEXT_PATHS:
++        if rel_path == mod.ROADMAP_NEXT_RELATIVE_PATH:
++            continue
++        if rel_path == mod.ROADMAP_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                yaml.safe_dump(
++                    {
++                        "milestone": mod.MILESTONE,
++                        "tasks": [{"id": task_id} for task_id in mod.EXPECTED_TASK_IDS[:8]],
++                    },
++                    sort_keys=False,
++                ),
++            )
++        elif rel_path == mod.VNEXT_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                "\n".join(
++                    [
++                        "# Research Roadmap vNEXT - Milestone 2026.07.505",
++                        "**Task range:** Exp5578-Exp5591",
++                        "parser fixtures -> local SOTA panel -> exact verifier extension",
++                        "memory corrigendum -> two-timescale -> live -> promotion",
++                        "EOM-MCTS precheck -> gated ordinary ARC level-up",
++                        "reserved PTRM LOO and matched hardware crossover lanes",
++                    ]
++                )
++                + "\n",
++            )
++        elif rel_path == mod.CONDUCTOR_LOG_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                "| 2026-07-13 23:16 UTC | Milestone 2026.07.505 activated | OK | 8 tasks queued |\n",
++            )
++        else:
++            _write_text(root, rel_path)
++
++
++def _payloads() -> dict[Path, JsonDict]:
++    return {
++        Path("results/experiment_5564_transition_v504.json"): {
++            "honest_verdict": "complete: transition",
++            "milestone": "2026.07.504",
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++        },
++        Path("results/experiment_5565_v504_source_delta_ingestion.json"): {
++            "honest_verdict": "complete: accepted source delta",
++            "closed_scopes_reopened": False,
++            "inference_substrate": "web_and_repository_source_synthesis",
++        },
++        Path("results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"): {
++            "honest_verdict": "complete: exact corpus",
++            "corpus_ready": True,
++            "n_rows": 120,
++            "duplicate_leakage_count": 0,
++        },
++        Path("results/experiment_5567_local_sota_solve_verify_asymmetry.json"): {
++            "honest_verdict": "complete: authenticated paired panel",
++            "panel_complete": True,
++            "live_model_invoked": True,
++            "gpu_offload_authenticated": True,
++            "parser_failure_count": 648,
++            "n_candidate_labels": 576,
++            "error_taxonomy": {"parser_failure": 648},
++            "solve_accuracy_by_model": {
++                "qwen": {"accuracy": 0.0, "parser_failures": 36},
++                "gemma": {"accuracy": 0.0, "parser_failures": 36},
++            },
++        },
++        Path("results/experiment_5568_verifier_coevolution_trigger.json"): {
++            "honest_verdict": "complete: coevolution triggered",
++            "verifier_coevolution_required": True,
++            "triggered_by": ["worst_family_false_accept_rate"],
++        },
++        Path("results/experiment_5569_causal_memory_policy_tournament.json"): {
++            "honest_verdict": "complete: causal memory policy ready",
++            "flagged_adversarial": True,
++            "policy_ready": True,
++            "forward_transfer_delta": 0.3333333334,
++            "backward_retention_delta": 0.3333333334,
++            "rollback_success": True,
++            "corrigendum_pending": [{"kind": "TAUTOLOGY", "severity": "critical"}],
++        },
++        Path("results/experiment_5570_spline_local_kan_online_energy.json"): {
++            "honest_verdict": "complete: active_spline_online_kan_exact_energy_ready",
++            "kan_ready": True,
++            "forward_adaptation_delta": 0.425,
++            "paired_ci_active_vs_frozen": {"lower": 0.425},
++            "prior_family_regression": 0.0,
++            "unsafe_false_accept_delta": -0.85,
++            "rollback_checksum_match": True,
++            "exact_feedback_only": True,
++        },
++        Path("results/experiment_5571_reset_free_sota_continual_harness.json"): {
++            "honest_verdict": "blocked_no_cuda_offload",
++            "continual_harness_candidate": False,
++            "live_model_invoked": False,
++            "gpu_offload_authenticated": False,
++        },
++        Path("results/experiment_5572_gated_delayed_regression_promotion.json"): {
++            "schema": "blocked_gate_check_v1",
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "continual_harness_candidate failed",
++        },
++        Path("results/experiment_5573_matched_sampler_hardware_continuity.json"): {
++            "honest_verdict": "complete: matched CPU/CUDA sampler evidence recorded",
++            "successful_matched_pairs": 6,
++            "hardware_speedup_claim_allowed": True,
++            "board_speedup_claimed": False,
++            "speedup_by_pair": [{"speedup": 0.24}, {"speedup": 0.26}],
++        },
++        Path("results/experiment_5574_ptrm_stochastic_generator_stage1.json"): {
++            "honest_verdict": "complete: stage1_ptrm_substrate_trained_remaining_loo_gate_preserved",
++            "track": "arc-trm-generator",
++            "stage1_training_complete": True,
++            "loo_verdict_reached": False,
++            "no_level_solve_claim": True,
++            "solve_provenance": "development_proxy",
++            "retire_trm_generator_line": False,
++        },
++        Path("results/experiment_5575_sge_anti_stagnation_live_precheck.json"): {
++            "honest_verdict": "blocked: live path not ready",
++            "live_path_reachable": True,
++            "live_path_ready": False,
++            "target_unsolved": True,
++            "solve_provenance": "live_agent_self_discovery",
++        },
++        Path("results/experiment_5576_gated_sge_live_levelup.json"): {
++            "schema": "blocked_gate_check_v1",
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "live_path_ready failed",
++        },
++        Path("results/experiment_5577_capstone_v504.json"): {
++            "honest_verdict": (
++                "complete: .504 capstone read 14/14 expected artifacts; missing=0; "
++                "flagged=1; blocked=2; skipped=2; promoted=4; "
++                "solve_verify_asymmetry_supported=False; verifier_coevolution_required=True; "
++                "memory_policy_promoted=False; kan_online_energy_promoted=True; "
++                "continuous_self_learning_claim_allowed=False; "
++                "hardware_speedup_claim_allowed=False; ordinary_arc_floor_satisfied=False; "
++                "arc_registry_delta=0"
++            ),
++            "inference_substrate": "aggregation_from_all_v504_artifacts",
++            "expected_task_range": "exp5564-exp5577",
++            "upstream_artifacts_read": [
++                "results/experiment_5564_transition_v504.json",
++                "results/experiment_5565_v504_source_delta_ingestion.json",
++            ],
++            "missing_artifacts": [],
++            "solve_verify_asymmetry_supported": False,
++            "memory_policy_promoted": False,
++            "kan_online_energy_promoted": True,
++            "continuous_self_learning_claim_allowed": False,
++            "hardware_speedup_claim_allowed": False,
++            "ordinary_arc_floor_satisfied": False,
++            "arc_registry_delta": 0,
++            "sge_retired": True,
++            "ptrm_stage1_status": "complete_development_proxy_no_solve_claim",
++            "arc_solve_provenance": {
++                "ptrm": {"counts_as_ordinary_arc_slot": False},
++                "ordinary_arc": {"registry_delta_counted": 0},
++            },
++        },
++    }
++
++
++def _make_root(root: Path, *, omit: Path | None = None) -> None:
++    _write_context(root)
++    for rel_path, payload in _payloads().items():
++        if rel_path != omit:
++            _write_json(root, rel_path, payload)
++
++
++def _lane_names(rows: list[JsonDict]) -> set[str]:
++    return {str(row["lane"]) for row in rows}
++
++
++def test_req_report_5578_spec_declares_transition_contract() -> None:
++    """REQ-REPORT-5578: OpenSpec anchors the V505 transition receipt."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5578") :]
++
++    for ref in mod.SPEC_REFS:
++        assert ref in section
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5578_live_repo_locks_v504_evidence() -> None:
++    """SCENARIO-REPORT-5578: live V504 facts become a bounded V505 gate map."""
++
++    artifact = mod.build_report(
++        root=REPO,
++        tests_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["status"] == "complete"
++    assert artifact["previous_task_range"] == "exp5564-exp5577"
++    assert artifact["next_task_range"] == "exp5578-exp5591"
++    assert artifact["missing_artifacts"] == []
++    assert [row["path"] for row in artifact["artifacts_read"]] == [
++        path.as_posix() for path in mod.EXPECTED_ARTIFACT_PATHS
++    ]
++    assert artifact["parser_collapse_preserved"] == {
++        "source_artifact": "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
++        "parser_failure_count": 648,
++        "n_candidate_labels": 576,
++        "panel_complete": True,
++        "live_model_invoked": True,
++        "gpu_offload_authenticated": True,
++        "classification": "instrumentation_failure_not_model_evidence",
++        "solve_or_verify_result_imported": False,
++    }
++    assert {
++        "exact_asp_fsm_near_miss_corpus",
++        "verifier_coevolution_trigger",
++        "spline_local_kan_online_energy",
++    } <= _lane_names(artifact["clean_lanes"])
++    assert {
++        "parser_collapse_instrumentation",
++        "memory_tautology_flag",
++        "reset_free_cuda_block",
++        "delayed_promotion_gate_skip",
++        "ptrm_loo_not_reached",
++        "sge_retired_or_skipped",
++        "ordinary_arc_registry_delta_zero",
++        "hardware_speedup_not_supported",
++    } <= _lane_names(artifact["blocked_or_flagged_lanes"])
++    memory = {
++        row["lane"]: row for row in artifact["blocked_or_flagged_lanes"]
++    }["memory_tautology_flag"]
++    assert memory["evidence"]["policy_ready"] is True
++    assert memory["evidence"]["flagged_adversarial"] is True
++    assert memory["evidence"]["forward_transfer_delta"] == 0.3333333334
++    assert memory["evidence"]["backward_retention_delta"] == 0.3333333334
++    assert artifact["gate_map"]["parser_panel_exact_extension"]["steps"] == [
++        "exp5580-parser-forensics-positive-control",
++        "exp5581-clean-sota-solve-verify-remeasurement",
++        "exp5582-exact-counterexample-verifier-extension",
++    ]
++    assert artifact["gate_map"]["memory_two_timescale_live_promotion"]["steps"] == [
++        "exp5583-causal-memory-metric-corrigendum",
++        "exp5584-two-timescale-exact-self-learning",
++        "exp5585-reset-free-live-local-sota-sessions",
++        "exp5586-delayed-promotion-and-poisoning-gate",
++    ]
++    assert artifact["gate_map"]["ordinary_arc_eom_live"]["steps"] == [
++        "exp5588-epistemic-object-model-mcts-live-precheck",
++        "exp5589-gated-ordinary-arc-level-up",
++    ]
++    assert artifact["gate_map"]["ptrm_independent_lane"]["counts_as_ordinary_arc"] is False
++    assert artifact["gate_map"]["hardware_independent_lane"]["speedup_claim_allowed"] is False
++    assert artifact["ptrm_slot_separate"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["roadmap_yaml_unchanged"] is True
++    assert artifact["conductor_unchanged"] is True
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_5578_missing_upstream_fails_closed(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5578-MISSING-INPUT: missing V504 evidence blocks receipt."""
++
++    missing = Path("results/experiment_5570_spline_local_kan_online_energy.json")
++    _make_root(tmp_path, omit=missing)
++
++    artifact = mod.build_report(
++        root=tmp_path,
++        tests_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["status"] == "blocked"
++    assert artifact["missing_artifacts"] == [missing.as_posix()]
++    assert "spline_local_kan_online_energy" not in _lane_names(artifact["clean_lanes"])
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_5578_validation_rejects_schema_drift(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5578-FIELD-PRINCIPLES: malformed fields fail validation."""
++
++    _make_root(tmp_path)
++    artifact = mod.build_report(
++        root=tmp_path,
++        tests_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert mod.validate_artifact(artifact) == []
++    assert "schema" in mod.validate_artifact({k: v for k, v in artifact.items() if k != "schema"})
++    assert "field_principles" in mod.validate_artifact(
++        {**artifact, "field_principles": {"artifacts_read": mod.FIELD_PRINCIPLES["artifacts_read"]}}
++    )
++    assert "artifacts_read" in mod.validate_artifact({**artifact, "artifacts_read": "all"})
++    assert "clean_lanes" in mod.validate_artifact({**artifact, "clean_lanes": "clean"})
++    assert "blocked_or_flagged_lanes" in mod.validate_artifact(
++        {**artifact, "blocked_or_flagged_lanes": []}
++    )
++    assert "parser_collapse_preserved" in mod.validate_artifact(
++        {**artifact, "parser_collapse_preserved": {"parser_failure_count": 0}}
++    )
++    assert "previous_task_range" in mod.validate_artifact(
++        {**artifact, "previous_task_range": "exp5564-exp5576"}
++    )
++    assert "next_task_range" in mod.validate_artifact(
++        {**artifact, "next_task_range": "exp5578-exp5585"}
++    )
++    assert "ptrm_slot_separate" in mod.validate_artifact({**artifact, "ptrm_slot_separate": False})
++    assert "ptrm_slot_separate" in mod.validate_artifact(
++        {**artifact, "ptrm_slot_separate": "true"}
++    )
++    assert "roadmap_yaml_unchanged" in mod.validate_artifact(
++        {**artifact, "roadmap_yaml_unchanged": False}
++    )
++    assert "conductor_unchanged" in mod.validate_artifact(
++        {**artifact, "conductor_unchanged": False}
++    )
++    assert "inference_substrate" in mod.validate_artifact(
++        {**artifact, "inference_substrate": "live_local_sota"}
++    )
++    assert "honest_verdict" in mod.validate_artifact({**artifact, "honest_verdict": "maybe"})
++    assert "parser_collapse_preserved" in mod.validate_artifact(
++        {**artifact, "parser_collapse_preserved": "parser"}
++    )
++    assert mod._task_range_from_text("**Task range:** exp5578-exp5591") == "exp5578-exp5591"
++    assert mod._task_range_from_text("no range here") is None
++    assert mod._status_label({"honest_verdict": "complete: x"}) == "complete"
++    assert mod._status_label({"honest_verdict": "blocked_gate_check_failed"}) == "blocked"
++    assert mod._status_label({"honest_verdict": "honest_null: x"}) == "honest_null"
++    assert mod._status_label({"honest_verdict": "failed: x"}) == "failed"
++    assert mod._status_label({"honest_verdict": "unclear"}) == "unknown"
++    assert mod._int({"value": True}, "value") == 1
++    assert mod._int({"value": "7"}, "value") == 7
++    assert mod._int({"value": "bad"}, "value") == 0
++    assert mod._float({"value": "1.25"}, "value") == 1.25
++    assert mod._float({"value": "bad"}, "value") == 0.0
++    assert mod._float({"value": None}, "value") == 0.0
++    assert mod._minimum_speedup({}) is None
++    assert mod._failed_preconditions(
++        [],
++        roadmap_modified=True,
++        conductor_modified=True,
++    ) == ["research-roadmap.yaml_modified", "scripts/research_conductor.py_modified"]
++    assert mod._read_json_any(tmp_path / "missing.json")[1]["error"] == "missing"
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{", encoding="utf-8")
++    assert mod._read_json_any(malformed)[1]["error"] == "malformed_json"
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[1, 2]", encoding="utf-8")
++    assert mod._read_json_any(list_json)[1]["length"] == 2
++
++
++def test_scenario_report_5578_writer_emits_valid_artifact(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5578: writer persists the tested transition receipt."""
++
++    _make_root(tmp_path)
++
++    artifact = mod.write_report(
++        root=tmp_path,
++        tests_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert mod.validate_artifact(written) == []
+-- 
+2.55.0
+

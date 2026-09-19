@@ -1,0 +1,170 @@
+From f89bd8ec9cd046c443a4b70877259ee6f53a7ac7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 22:43:40 -0400
+Subject: [PATCH 10334/11362] Queue the three tool/supervisor capabilities
+ where the planner will read them
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+All three are shipped, default-off, and `unevaluated` in the flag ledger. None
+had any queued path to the evidence that would promote or retire it. The plans
+existed only in ops/status.md prose, and the planner reads ops/known-issues.md
+MANDATORY-NEXT-MILESTONE as its task source, not status.md — so the plans could
+not reach a roadmap.
+
+Queued as ONE entry because they are one dependency chain: tool use needs the
+actions-to-progress result to justify a kernel flip; the supervisor's fourth arm
+is gated on that same evidence; and tool-gap generation needs live runs with the
+loop ON to have anything to analyse.
+
+The cheapest unlock is the supervisor window. `_make_trajectory_supervisor`
+defaults CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW to 400, which IS the action
+budget, so a stagnation window essentially cannot complete before a run ends --
+the refinement tool needs 10 firings per arm, has 2, and will report INSUFFICIENT
+EVIDENCE forever at this setting. It costs nothing scored to fix: the supervisor
+runs in SHADOW mode on every run, so a lower window fills the ledger without
+changing scored behaviour.
+
+TWO CORRECTIONS OF MY OWN, recorded rather than quietly dropped:
+
+I claimed status.md's What's Next was "stale by 47 milestones". It was not. I read
+a historical block under a 2026-08-27 prior-update header as if it were current;
+the file is append-at-top with history preserved per never-prune, and its top
+block was accurate.
+
+I claimed zero supervisor redirects had ever fired. Also wrong: I scanned
+results/*.json and missed ops/arc_supervisor_refinement_ledger.json, which is what
+the refinement tool actually reads -- 9 receipts, 6 redirects, 2 fired / 1 helped
+per arm. Below an evidence floor is a different and better state than empty, and
+the distinction changes what the next step is.
+
+The entry ends with an instruction not to close any of the three by enabling a
+flag. Each is default-off deliberately; the point is to measure before trusting,
+not to ship on a gate that only proved the mechanism runs.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 52 +++++++++++++++++++++++++++++++++++++++++++++
+ ops/status.md       | 42 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 3e254afa95..7dba3d1e10 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7221,6 +7221,58 @@ tasks are not.
+ 
+ ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+ 
++### NEW 2026-08-30 (outer-loop) — THREE SHIPPED TOOL/SUPERVISOR CAPABILITIES HAVE NO PATH TO EVIDENCE
++
++All three are built, default-off, and registered `unevaluated` in `ops/arc_flag_ledger.yaml`.
++None can be promoted or retired, because nothing queued produces the measurement each needs.
++The plans exist in `ops/status.md` prose, which the planner does not read as a task source.
++
++**1. The trajectory supervisor cannot fire at its default window.** `_make_trajectory_supervisor`
++reads `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW` defaulting to **400**, which is the action budget
++— a stagnation window essentially cannot complete before a run ends. The refinement tool
++(REQ-ARC-WMTE-6720) needs **10 firings per arm** and has 2, so it correctly reports INSUFFICIENT
++EVIDENCE and will keep doing so forever at this setting.
++
++*Task:* run supervised ARC runs at `WINDOW=120` and re-run `scripts/arc_supervisor_refine.py`.
++Cheap, because the supervisor runs in SHADOW mode on every run (REQ-ARC-WMTE-6660) — lowering the
++window populates the ledger WITHOUT changing scored behaviour. This is the lowest-cost unlock of
++the three and it gates the other two's usefulness.
++
++**2. Tool-gap generation has no live rows.** REQ-ARC-WMTE-6770 landed 2026-08-29; the capture path
++is wired into the primary live induction, the candidate registry ships empty by design, and NO
++result artifact yet carries `tool_gap_events`. The mechanism was fixed after review found no env
++configuration let the agent both run the loop and record gaps — but "fixed" and "observed
++working" are different states, and this is the former.
++
++*Task:* one live ARC run with `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`, then confirm
++`tool_gap_events` reaches an artifact and `scripts/arc_tool_gap_refine.py` ingests it. Verifying
++the wiring fires end-to-end is the deliverable; finding an actual gap is a bonus.
++
++**3. The tool loop has no shipping evidence, and the holdout A/B cannot supply it.** The
++selfparse transport gate PASSED at ceiling (20/20 attempt, 20/20 parse-to-dispatch), proving the
++transport RUNS — never that it HELPS. `submission_kernel/main.py:225` correctly still pins
++`repair`. The resumed holdout A/B banked 38 of 39 tool-arm cells before the process was killed,
++but it scores holdout generalization and records NO level progress, and per the 2026-08-29
++operator directive run-time memorization is acceptable when levels are banked. So a holdout
++result cannot decide the kernel flip.
++
++*Task:* the actions-to-progress A/B scoped in
++`docs/research-notes/actions-to-progress-tool-loop-ab-scope-2026-08-30.md` — control (loop unset)
++versus treatment (`selfparse`), metric actions-to-level-up, memorization recorded as an
++observation not a penalty. NOTE THE TRAP recorded there: `apply_arm` saves and restores exactly
++three env vars and not `CARNOT_ARC_INDUCE_TOOL_LOOP`, so setting it outside that mechanism leaks
++into the control arm and compares a loop against a loop.
++
++**Why this is one entry and not three.** They are one dependency chain: tool use needs the
++actions-to-progress result to justify a kernel flip; the supervisor's fourth arm
++(`tool_loop_reinduction`, REQ-ARC-WMTE-6760) is gated on that same evidence; and tool-gap
++generation needs live runs with the loop ON to have anything to analyse. Item 1 is cheapest and
++unblocks the ledger the other two will be judged against.
++
++**Do NOT close any of these by enabling a flag.** Every one is default-off deliberately, and the
++point is to measure before trusting, not to ship on a gate that only proved the mechanism runs.
++
++
+ ### NEW 2026-07-27 — RUNNING THE FULL PYTHON TEST SUITE MUTATES 45 TRACKED ARTIFACTS AND STRIPS FABRICATION-GATE STAMPS (pre-existing; found, reported, NOT fixed)
+ 
+ **Symptom.** `pytest tests/python` rewrites tracked files under `results/` while it runs. Observed
+diff --git a/ops/status.md b/ops/status.md
+index 7bdfdb205c..9400e577e1 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,5 +1,47 @@
+ # Carnot — Operational Status
+ 
++**Last Updated:** 2026-08-30 (outer-loop: the three shipped tool/supervisor
++capabilities were audited for whether they can actually produce evidence. All
++three are built, default-off, and `unevaluated` in the flag ledger; none had a
++queued path to the measurement it needs. Queued as a single MANDATORY-NEXT-MILESTONE
++entry in `ops/known-issues.md` dated 2026-08-30, because the planner reads that
++file as a task source and does NOT read this one.
++
++**What is actually blocked, and why:**
++
++1. **Supervisor cannot fire at its default window.** `_make_trajectory_supervisor`
++   defaults `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW` to 400 — the action budget —
++   so a stagnation window cannot complete before a run ends. The refinement tool
++   needs 10 firings per arm and has 2, so INSUFFICIENT EVIDENCE is permanent at
++   this setting. Cheapest unlock of the three: the supervisor runs in SHADOW mode
++   on every run, so `WINDOW=120` fills the ledger without changing scored
++   behaviour.
++2. **Tool-gap generation has no live rows.** REQ-ARC-WMTE-6770 landed 2026-08-29
++   and no artifact yet carries `tool_gap_events`. The F2 review finding (no env
++   configuration let the agent both run the loop and record gaps) was fixed, but
++   fixed and observed-working are different states.
++3. **Tool use has no shipping evidence.** The selfparse gate proved the transport
++   RUNS (20/20 attempt, 20/20 parse-to-dispatch), not that it HELPS. The kernel
++   correctly still pins `repair`. The resumed holdout A/B banked 38/39 tool-arm
++   cells before being killed, but it scores holdout generalization with NO level
++   progress — and per the 2026-08-29 operator directive, run-time memorization is
++   acceptable when levels are banked, so a holdout result cannot decide the flip.
++
++**Corrections made while auditing this, both mine:** an earlier claim that this
++document's What's Next was "stale by 47 milestones" was WRONG — it read a
++historical block under a 2026-08-27 prior-update header as if current; the file is
++append-at-top with history preserved per never-prune. And an earlier claim that
++zero supervisor redirects had ever fired was WRONG — it scanned `results/*.json`
++and missed `ops/arc_supervisor_refinement_ledger.json`, which the refinement tool
++actually reads: 9 receipts, 6 redirects, 2 fired / 1 helped per arm. Below the
++evidence floor is a different and better state than empty.
++
++**A/B status:** `results/holdout_equalized_ab_selfparse_20260829` holds 38 of 39
++tool-arm cells (selfparse transport, GPU 1). The process died ~19:21 local with no
++identifiable killer — see REQ-INFRA-6830, which makes the next such death
++self-describing rather than naming a culprit we cannot evidence. The data is
++intact and usable; the control arm was never run.)
++
+ **Last Updated:** 2026-08-29 (REQ-CONDUCTOR-GATECASCADE-1: gate-cascade
+ settlement shipped from a worktree session after the evening GATE_BLOCK
+ cycling. Root confirmed: exp6756's gate read a FROZEN shortfall (21 < 24)
+-- 
+2.55.0
+

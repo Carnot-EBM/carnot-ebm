@@ -1,0 +1,1722 @@
+From d7007bc932a49491573a02b8788eafe9be01fc77 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 13:33:30 -0400
+Subject: [PATCH 10415/11362] [conductor] Parent-owned durable row checkpoint
+ and resume contract
+
+Automated research step by research conductor.
+Task ID: exp6785-durable-row-checkpoint-contract
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-harnesses/spec.md   |  58 ++
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/durable_row_checkpoint.py       | 261 +++++++
+ ...nt_6785_durable_row_checkpoint_contract.py | 739 ++++++++++++++++++
+ .../rows.json                                 |   1 +
+ ..._6785_durable_row_checkpoint_contract.json |   1 +
+ ...nt_6785_durable_row_checkpoint_contract.py |   8 +
+ ...nt_6785_durable_row_checkpoint_contract.py | 567 ++++++++++++++
+ 8 files changed, 1636 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/durable_row_checkpoint.py
+ create mode 100644 python/carnot/experiment_6785_durable_row_checkpoint_contract.py
+ create mode 100644 results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json
+ create mode 100644 results/experiment_6785_durable_row_checkpoint_contract.json
+ create mode 100644 scripts/experiments/experiment_6785_durable_row_checkpoint_contract.py
+ create mode 100644 tests/python/test_experiment_6785_durable_row_checkpoint_contract.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 7cab7f944b..1c5467d86a 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10022,3 +10022,61 @@ failed teardown, or failed recovery SHALL close readiness.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-INFRA-6773 and SCENARIO-INFRA-6773-* | Planned (`python/carnot/experiment_6773_csl_owned_lease_contract.py`) | Planned (`tests/python/test_experiment_6773_csl_owned_lease_contract.py`) |
++
++### REQ-INFRA-6785: Parent-Owned Row Checkpoints SHALL Survive Worker Teardown
++
++A parent process SHALL choose each durable row checkpoint path. The path SHALL
++be outside worker temporary directories. Each checkpoint SHALL bind to one
++frozen manifest hash. Every accepted row SHALL contain a row ID, manifest hash,
++payload hash, attempt, start receipt, end receipt, and complete status.
++
++The parent SHALL replace the checkpoint atomically after each accepted row. It
++SHALL sync the complete file before replacement. It SHALL sync the parent
++directory after replacement. An identical row ID and payload SHALL be a no-op.
++A changed payload for an existing row ID SHALL fail without changing the file.
++A changed manifest SHALL also fail without changing the file.
++
++Exp6785 SHALL prove this contract with 24 deterministic CPU rows. The first
++worker SHALL stop after row 9. Its temporary directory SHALL be removed. The
++checkpoint and nine row hashes SHALL remain. A fresh worker SHALL produce rows
++10 through 24 once. A further resume SHALL produce no rows. The final artifact
++SHALL aggregate all 24 rows and SHALL retain the task-owned checkpoint until
++the artifact hash is verified.
++
++#### SCENARIO-INFRA-6785-PREFIX-SURVIVES
++
++- GIVEN a parent checkpoint outside a worker temporary directory
++- WHEN the worker stops after nine complete row messages
++- THEN the worker directory is gone and the checkpoint retains nine valid rows.
++
++#### SCENARIO-INFRA-6785-RESUME-EXACTLY-ONCE
++
++- GIVEN a checkpoint with rows 1 through 9
++- WHEN a fresh process resumes the frozen 24-row manifest twice
++- THEN the first resume adds rows 10 through 24 and the second adds no rows.
++
++#### SCENARIO-INFRA-6785-CONFLICTS-REFUSE
++
++- GIVEN a good checkpoint
++- WHEN a changed manifest or changed payload reuses checkpoint identity
++- THEN the request fails and the checkpoint bytes do not change.
++
++#### SCENARIO-INFRA-6785-DURABLE-PUBLISH
++
++- GIVEN one complete row envelope
++- WHEN the parent accepts that row
++- THEN it syncs a complete temporary file, replaces the checkpoint, and syncs
++  the checkpoint directory.
++
++#### SCENARIO-INFRA-6785-FINAL-AGGREGATION
++
++- GIVEN 24 unique checkpoint rows
++- WHEN the parent builds and verifies the final artifact
++- THEN each unit appears once, the artifact hash matches, and cleanup affects no
++  unrelated result or user file.
++
++## Implementation Status (REQ-INFRA-6785)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6785 and SCENARIO-INFRA-6785-* | Implemented (`python/carnot/durable_row_checkpoint.py`; `python/carnot/experiment_6785_durable_row_checkpoint_contract.py`) | Implemented (`tests/python/test_experiment_6785_durable_row_checkpoint_contract.py`; 15 focused tests, 100% new-module statement coverage) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 9e5c20d514..e0d990bb2c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5180,
++  "experiments_checked": 5181,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/durable_row_checkpoint.py b/python/carnot/durable_row_checkpoint.py
+new file mode 100644
+index 0000000000..cf94b104eb
+--- /dev/null
++++ b/python/carnot/durable_row_checkpoint.py
+@@ -0,0 +1,261 @@
++"""Parent-owned row checkpoints with exact manifest and payload binding.
++
++Spec refs: REQ-INFRA-6785, SCENARIO-INFRA-6785-DURABLE-PUBLISH, and
++SCENARIO-INFRA-6785-CONFLICTS-REFUSE.
++
++Workers can lose temporary files when they stop. This store keeps complete row
++envelopes at a path chosen by the parent. Each update syncs bytes before the
++rename and syncs the directory after it. This order makes a successful receipt
++mean that restart can find either the old complete file or the new complete
++file, never a partly written file.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import tempfile
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++CHECKPOINT_SCHEMA = "carnot.durable_row_checkpoint.v1"
++ENVELOPE_FIELDS = frozenset(
++    {
++        "row_id",
++        "manifest_hash",
++        "payload",
++        "payload_hash",
++        "attempt",
++        "start_receipt",
++        "end_receipt",
++        "status",
++    }
++)
++CHECKPOINT_FIELDS = frozenset({"schema", "manifest", "manifest_hash", "revision", "rows"})
++
++
++class CheckpointError(ValueError):
++    """Base error for data that cannot safely enter or resume a checkpoint."""
++
++
++class InvalidEnvelopeError(CheckpointError):
++    """A worker row is incomplete or does not match its declared hashes."""
++
++
++class RowConflictError(CheckpointError):
++    """One row ID was reused for a different payload."""
++
++
++class ManifestMismatchError(CheckpointError):
++    """A caller tried to resume state that belongs to another frozen manifest."""
++
++
++class CorruptCheckpointError(CheckpointError):
++    """Stored bytes do not satisfy the durable checkpoint schema."""
++
++
++def canonical_json_bytes(value: Any) -> bytes:
++    """Encode one stable JSON form so hashes do not depend on key order."""
++
++    return (
++        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True) + "\n"
++    ).encode("utf-8")
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return the project hash form for exact bytes."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash the stable JSON representation of a value."""
++
++    return sha256_bytes(canonical_json_bytes(value))
++
++
++def atomic_write_json(path: Path | str, value: Any) -> JsonDict:
++    """Publish complete JSON bytes and return the durability operations used."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    data = canonical_json_bytes(value)
++    fd, name = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=target.parent)
++    temporary = Path(name)
++    existed = target.exists()
++    try:
++        with os.fdopen(fd, "wb") as handle:
++            handle.write(data)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, target)
++        directory_fd = os.open(str(target.parent), os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
++        try:
++            os.fsync(directory_fd)
++        finally:
++            os.close(directory_fd)
++    finally:
++        if (
++            temporary.exists()
++        ):  # pragma: no cover - only an operating-system write failure leaves it.
++            temporary.unlink()
++    return {
++        "target": str(target),
++        "replaced_existing": existed,
++        "file_fsync": True,
++        "atomic_replace": True,
++        "directory_fsync": True,
++        "published_sha256": sha256_bytes(data),
++    }
++
++
++def complete_row_envelope(
++    *,
++    row_id: str,
++    manifest_hash: str,
++    payload: Any,
++    attempt: int,
++    start_receipt: Mapping[str, Any],
++    end_receipt: Mapping[str, Any],
++) -> JsonDict:
++    """Build the complete message that a worker can send to its parent."""
++
++    copied_payload = deepcopy(payload)
++    return {
++        "row_id": row_id,
++        "manifest_hash": manifest_hash,
++        "payload": copied_payload,
++        "payload_hash": sha256_json(copied_payload),
++        "attempt": attempt,
++        "start_receipt": deepcopy(dict(start_receipt)),
++        "end_receipt": deepcopy(dict(end_receipt)),
++        "status": "complete",
++    }
++
++
++class DurableRowCheckpoint:
++    """Keep manifest-bound rows at the exact path selected by the parent."""
++
++    def __init__(self, path: Path | str, frozen_manifest: Mapping[str, Any]) -> None:
++        self.path = Path(path)
++        self.manifest = deepcopy(dict(frozen_manifest))
++        self.manifest_hash = sha256_json(self.manifest)
++        self.initialization_receipt: JsonDict | None = None
++        if self.path.exists():
++            self._state = self._read_state()
++        else:
++            self._state = {
++                "schema": CHECKPOINT_SCHEMA,
++                "manifest": deepcopy(self.manifest),
++                "manifest_hash": self.manifest_hash,
++                "revision": 0,
++                "rows": [],
++            }
++            self.initialization_receipt = atomic_write_json(self.path, self._state)
++
++    @property
++    def rows(self) -> list[JsonDict]:
++        """Return copies so callers cannot mutate accepted state in memory."""
++
++        return deepcopy(self._state["rows"])
++
++    def pending(self, ordered_row_ids: Sequence[str]) -> list[str]:
++        """Return manifest row IDs that have no complete checkpoint row."""
++
++        complete = {str(row["row_id"]) for row in self._state["rows"]}
++        return [str(row_id) for row_id in ordered_row_ids if str(row_id) not in complete]
++
++    def append(self, envelope: Mapping[str, Any]) -> JsonDict:
++        """Accept one complete row, suppress a repeat, or refuse a conflict."""
++
++        row = deepcopy(dict(envelope))
++        self._validate_envelope(row)
++        existing = {str(item["row_id"]): item for item in self._state["rows"]}.get(
++            str(row["row_id"])
++        )
++        if existing is not None:
++            if existing["payload_hash"] != row["payload_hash"]:
++                raise RowConflictError(f"conflicting payload for row ID {row['row_id']}")
++            return {
++                "row_id": row["row_id"],
++                "accepted": False,
++                "duplicate_suppressed": True,
++                "atomic_replace": False,
++                "file_fsync": False,
++                "directory_fsync": False,
++                "checkpoint_sha256": sha256_bytes(self.path.read_bytes()),
++            }
++
++        candidate = deepcopy(self._state)
++        candidate["rows"].append(row)
++        candidate["revision"] = len(candidate["rows"])
++        publish = atomic_write_json(self.path, candidate)
++        self._state = candidate
++        return {
++            "row_id": row["row_id"],
++            "accepted": True,
++            "duplicate_suppressed": False,
++            **publish,
++            "checkpoint_sha256": sha256_bytes(self.path.read_bytes()),
++        }
++
++    def _validate_envelope(self, row: Mapping[str, Any]) -> None:
++        if set(row) != ENVELOPE_FIELDS:
++            raise InvalidEnvelopeError("row envelope field set mismatch")
++        if not isinstance(row["row_id"], str) or not row["row_id"]:
++            raise InvalidEnvelopeError("row_id must be a non-empty string")
++        if row["manifest_hash"] != self.manifest_hash:
++            raise InvalidEnvelopeError("row manifest hash mismatch")
++        if row["payload_hash"] != sha256_json(row["payload"]):
++            raise InvalidEnvelopeError("row payload hash mismatch")
++        if type(row["attempt"]) is not int or row["attempt"] < 1:
++            raise InvalidEnvelopeError("attempt must be a positive integer")
++        if not isinstance(row["start_receipt"], Mapping):
++            raise InvalidEnvelopeError("start_receipt must be an object")
++        if not isinstance(row["end_receipt"], Mapping):
++            raise InvalidEnvelopeError("end_receipt must be an object")
++        if row["status"] != "complete":
++            raise InvalidEnvelopeError("only complete rows can enter durable state")
++
++    def _read_state(self) -> JsonDict:
++        try:
++            value = json.loads(self.path.read_text(encoding="utf-8"))
++            if not isinstance(value, dict) or set(value) != CHECKPOINT_FIELDS:
++                raise CorruptCheckpointError("checkpoint field set mismatch")
++            if value["schema"] != CHECKPOINT_SCHEMA:
++                raise CorruptCheckpointError("checkpoint schema mismatch")
++            if not isinstance(value["manifest"], dict):
++                raise CorruptCheckpointError("checkpoint manifest must be an object")
++            if value["manifest_hash"] != sha256_json(value["manifest"]):
++                raise CorruptCheckpointError("stored manifest hash mismatch")
++            if value["manifest_hash"] != self.manifest_hash:
++                raise ManifestMismatchError("checkpoint belongs to another frozen manifest")
++            if not isinstance(value["rows"], list):
++                raise CorruptCheckpointError("checkpoint rows must be a list")
++            if value["revision"] != len(value["rows"]):
++                raise CorruptCheckpointError("checkpoint revision does not match row count")
++            seen: set[str] = set()
++            for row in value["rows"]:
++                if not isinstance(row, dict):
++                    raise CorruptCheckpointError("checkpoint row must be an object")
++                try:
++                    self._validate_envelope(row)
++                except InvalidEnvelopeError as exc:
++                    raise CorruptCheckpointError(str(exc)) from exc
++                row_id = str(row["row_id"])
++                if row_id in seen:
++                    raise CorruptCheckpointError(f"duplicate stored row ID {row_id}")
++                seen.add(row_id)
++            return value
++        except ManifestMismatchError:
++            raise
++        except CorruptCheckpointError:
++            raise
++        except (OSError, TypeError, ValueError) as exc:
++            raise CorruptCheckpointError(f"checkpoint could not be read: {exc}") from exc
+diff --git a/python/carnot/experiment_6785_durable_row_checkpoint_contract.py b/python/carnot/experiment_6785_durable_row_checkpoint_contract.py
+new file mode 100644
+index 0000000000..3cbebe79e9
+--- /dev/null
++++ b/python/carnot/experiment_6785_durable_row_checkpoint_contract.py
+@@ -0,0 +1,739 @@
++"""Prove durable parent-owned row checkpoints with a small CPU process probe.
++
++Spec refs: REQ-INFRA-6785 and SCENARIO-INFRA-6785-*.
++
++This probe does not run ARC or load a model. Child processes only calculate
++fixed integer payloads. The parent alone writes the checkpoint. This split
++reproduces the Exp6753 evidence-loss boundary without repeating its expensive
++inference work.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any
++
++from carnot.durable_row_checkpoint import (
++    CHECKPOINT_SCHEMA,
++    DurableRowCheckpoint,
++    ManifestMismatchError,
++    RowConflictError,
++    atomic_write_json,
++    complete_row_envelope,
++    sha256_bytes,
++    sha256_json,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_6785_durable_row_checkpoint_contract"
++ARTIFACT_SCHEMA = "carnot.experiment_6785.durable_row_checkpoint_contract.v1"
++RUN_DATE = "20260830"
++RANDOM_SEED = 6785
++INFERENCE_SUBSTRATE = (
++    "fresh_process_no_llm_transaction_audit replay; local CPU processes and filesystem "
++    "durability, no inference model"
++)
++CHECKPOINT_RELATIVE_PATH = Path("results/.checkpoints") / EXPERIMENT_ID / "rows.json"
++ARTIFACT_RELATIVE_PATH = Path("results") / f"{EXPERIMENT_ID}.json"
++KNOWN_ISSUE_MARKER = "CHECKPOINTS INTO A TemporaryDirectory"
++REQUIRED_SOURCES = (
++    Path("ops/known-issues.md"),
++    Path("scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py"),
++    Path("python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py"),
++    Path("python/carnot/memory/transactional_constraint_memory.py"),
++    Path("scripts/experiment_template.py"),
++    Path("results/experiment_6753_object_table_fetch_on_demand_ab.json"),
++    Path("tests/python/test_arc_object_table_fetch_on_demand_ab_6753.py"),
++)
++VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "checkpoint_schema",
++    "checkpoint_path",
++    "frozen_manifest_hash",
++    "preconditions_checked",
++    "rows",
++    "prefix_rows_preserved",
++    "fresh_process_resume_rows",
++    "duplicate_rows",
++    "conflicting_rows_refused",
++    "changed_manifest_refused",
++    "atomic_replace_receipts",
++    "fsync_receipts",
++    "cleanup_receipt",
++    "durable_checkpoint_ready",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "schema": "A versioned schema makes incompatible artifact readers fail closed.",
++    "experiment_id": "A stable ID binds this evidence to the durability repair task.",
++    "run_date": "The fixed date records when this filesystem probe executed.",
++    "status": "A terminal status separates a complete proof from a blocked gate.",
++    "field_principles": "Each required field states why an auditor needs it.",
++    "inference_substrate": "The substrate statement prevents CPU evidence from becoming a model claim.",
++    "duration_s": "Measured wall time proves that the process probe executed.",
++    "random_seed": "One frozen seed makes every synthetic payload reproducible.",
++    "reproducibility_checksum": "A stable hash detects drift in manifest and row results.",
++    "checkpoint_schema": "The checkpoint version fixes the restart data contract.",
++    "checkpoint_path": "The path proves that durable state is parent-owned and task-scoped.",
++    "frozen_manifest_hash": "The hash prevents rows from crossing experiment designs.",
++    "preconditions_checked": "Gate receipts show that required files and filesystem operations existed.",
++    "rows": "Unit and interruption rows make the exact resume sequence auditable.",
++    "prefix_rows_preserved": "The prefix receipt proves worker teardown did not erase nine rows.",
++    "fresh_process_resume_rows": "The resume receipt proves a fresh process added only missing rows.",
++    "duplicate_rows": "The duplicate receipt proves retries cannot add a second row ID.",
++    "conflicting_rows_refused": "The conflict receipt proves one row ID cannot change meaning.",
++    "changed_manifest_refused": "The manifest receipt prevents accidental cross-run resume.",
++    "atomic_replace_receipts": "Replace receipts prove each accepted state was published whole.",
++    "fsync_receipts": "Sync receipts prove file data and directory entries reached durability calls.",
++    "cleanup_receipt": "The cleanup scope protects unrelated result and user files.",
++    "durable_checkpoint_ready": "This exact gate is the reusable outcome needed before an Exp6753 rerun.",
++    "gate_check_summary": "The summary names each expected value and any failed observation.",
++    "verifier_is_oracle": "False prevents this mechanism probe from becoming a scientific oracle.",
++    "verdict_class": "A closed class keeps the terminal result machine-readable.",
++    "honest_verdict": "A terminal prefix prevents the conductor from retrying completed work.",
++}
++
++
++def frozen_manifest(run_date: str) -> JsonDict:
++    """Freeze all 24 row identities and the deterministic payload rule."""
++
++    return {
++        "schema": "carnot.experiment_6785.probe_manifest.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "row_ids": [f"probe-{index:02d}" for index in range(1, 25)],
++        "payload_rule": "value=(unit_index*unit_index+random_seed)%100003",
++        "interrupt_after_complete_rows": 9,
++        "inference_model": None,
++    }
++
++
++def _validate_run_date(run_date: str) -> None:
++    if len(run_date) != 8 or not run_date.isdigit():
++        raise ValueError("run date must use YYYYMMDD")
++
++
++def _is_within(path: Path, root: Path) -> bool:
++    try:
++        path.resolve().relative_to(root.resolve())
++        return True
++    except ValueError:
++        return False
++
++
++def _gate(check: str, expected: Any, observed: Any) -> JsonDict:
++    return {
++        "check": check,
++        "expected": expected,
++        "observed": observed,
++        "passed": observed == expected,
++    }
++
++
++def check_preconditions(repo_root: Path, checkpoint_path: Path) -> list[JsonDict]:
++    """Check owned storage, rename support, cited sources, and the incident record."""
++
++    checkpoint_root = repo_root / "results/.checkpoints"
++    checks = [
++        _gate(
++            "checkpoint_path_is_task_owned",
++            True,
++            _is_within(checkpoint_path, checkpoint_root),
++        )
++    ]
++    try:
++        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
++        writable = os.access(checkpoint_path.parent, os.W_OK)
++    except OSError:
++        writable = False
++    checks.append(_gate("checkpoint_directory_writable", True, writable))
++
++    rename_observed = False
++    if writable:
++        try:
++            fd, source_name = tempfile.mkstemp(
++                prefix=".exp6785-rename-", dir=checkpoint_path.parent
++            )
++            os.close(fd)
++            source = Path(source_name)
++            target = source.with_suffix(".done")
++            os.replace(source, target)
++            rename_observed = target.is_file()
++            target.unlink()
++        except OSError:
++            rename_observed = False
++    checks.append(_gate("atomic_rename_same_filesystem", True, rename_observed))
++
++    source_observed = {
++        str(relative): (repo_root / relative).is_file() for relative in REQUIRED_SOURCES
++    }
++    checks.append(
++        _gate("required_source_records_exist", True, all(source_observed.values()))
++        | {"source_records": source_observed}
++    )
++    issue_path = repo_root / "ops/known-issues.md"
++    try:
++        issue_present = KNOWN_ISSUE_MARKER in issue_path.read_text(encoding="utf-8")
++    except OSError:
++        issue_present = False
++    checks.append(_gate("exp6753_checkpoint_issue_recorded", True, issue_present))
++    return checks
++
++
++def _worker_payload(row_id: str) -> JsonDict:
++    index = int(row_id.rsplit("-", 1)[1])
++    return {
++        "unit_index": index,
++        "value": (index * index + RANDOM_SEED) % 100_003,
++        "random_seed": RANDOM_SEED,
++    }
++
++
++def _worker_main(job_path: Path) -> int:
++    """Emit complete rows over stdout while the parent owns all durable writes."""
++
++    try:
++        job = json.loads(job_path.read_text(encoding="utf-8"))
++        required = {"row_ids", "manifest_hash", "attempt", "worker_directory"}
++        if not isinstance(job, dict) or set(job) != required:
++            raise ValueError("worker job field set mismatch")
++        row_ids = job["row_ids"]
++        if not isinstance(row_ids, list) or not all(isinstance(item, str) for item in row_ids):
++            raise ValueError("worker row_ids must be a string list")
++        worker_directory = Path(job["worker_directory"])
++        worker_directory.mkdir(parents=True, exist_ok=True)
++        (worker_directory / "worker-started.txt").write_text("cpu-only\n", encoding="utf-8")
++        for row_id in row_ids:
++            started_ns = time.time_ns()
++            payload = _worker_payload(row_id)
++            envelope = complete_row_envelope(
++                row_id=row_id,
++                manifest_hash=str(job["manifest_hash"]),
++                payload=payload,
++                attempt=int(job["attempt"]),
++                start_receipt={"worker_pid": os.getpid(), "time_ns": started_ns},
++                end_receipt={"worker_pid": os.getpid(), "time_ns": time.time_ns()},
++            )
++            print(json.dumps(envelope, sort_keys=True), flush=True)
++            if sys.stdin.readline() != "ack\n":
++                return 3
++        return 0
++    except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
++        print(f"worker_job_invalid:{type(exc).__name__}:{exc}", file=sys.stderr)
++        return 2
++
++
++def _run_worker_process(
++    *,
++    checkpoint: DurableRowCheckpoint,
++    row_ids: Sequence[str],
++    attempt: int,
++    interrupt_after: int | None,
++) -> tuple[list[JsonDict], JsonDict]:
++    """Receive worker rows and terminate only the first child at the fixed boundary."""
++
++    receipts: list[JsonDict] = []
++    with tempfile.TemporaryDirectory(prefix="carnot-exp6785-worker-") as name:
++        worker_root = Path(name)
++        if _is_within(checkpoint.path, worker_root):
++            raise ValueError("parent checkpoint cannot be inside the worker directory")
++        job_path = worker_root / "job.json"
++        job_path.write_text(
++            json.dumps(
++                {
++                    "row_ids": list(row_ids),
++                    "manifest_hash": checkpoint.manifest_hash,
++                    "attempt": attempt,
++                    "worker_directory": str(worker_root / "owned"),
++                },
++                sort_keys=True,
++            ),
++            encoding="utf-8",
++        )
++        process = subprocess.Popen(
++            [sys.executable, "-m", __name__, "--worker-job", str(job_path)],
++            stdin=subprocess.PIPE,
++            stdout=subprocess.PIPE,
++            stderr=subprocess.PIPE,
++            text=True,
++            bufsize=1,
++        )
++        if process.stdin is None or process.stdout is None or process.stderr is None:
++            raise RuntimeError("worker pipes were not created")
++        interrupted = False
++        for expected_row_id in row_ids:
++            line = process.stdout.readline()
++            if not line:
++                stderr = process.stderr.read()
++                raise RuntimeError(f"worker stopped before {expected_row_id}: {stderr}")
++            envelope = json.loads(line)
++            if envelope.get("row_id") != expected_row_id:
++                raise RuntimeError("worker row order changed")
++            receipts.append(checkpoint.append(envelope))
++            if interrupt_after is not None and len(receipts) == interrupt_after:
++                process.terminate()
++                interrupted = True
++                break
++            process.stdin.write("ack\n")
++            process.stdin.flush()
++        if not interrupted:
++            process.stdin.close()
++        return_code = process.wait(timeout=10)
++        stderr = process.stderr.read()
++        worker_path = str(worker_root)
++        process_receipt = {
++            "pid": process.pid,
++            "attempt": attempt,
++            "requested_row_ids": list(row_ids),
++            "emitted_row_ids": [str(receipt["row_id"]) for receipt in receipts],
++            "interrupted_by_parent": interrupted,
++            "return_code": return_code,
++            "stderr": stderr,
++            "worker_temporary_path": worker_path,
++        }
++    process_receipt["worker_temporary_directory_removed"] = not Path(worker_path).exists()
++    return receipts, process_receipt
++
++
++def _summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    copied = [deepcopy(dict(check)) for check in checks]
++    failures = [str(check["check"]) for check in copied if check.get("passed") is not True]
++    first = next((check for check in copied if check.get("passed") is not True), None)
++    return {"checks": copied, "failed_checks": failures, "first_failure": first}
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash stable probe facts while excluding time, process IDs, and wall duration."""
++
++    unit_rows = [
++        {
++            "row_id": row.get("row_id"),
++            "manifest_hash": row.get("manifest_hash"),
++            "payload_hash": row.get("payload_hash"),
++            "payload": row.get("payload"),
++            "attempt": row.get("attempt"),
++            "status": row.get("status"),
++        }
++        for row in artifact.get("rows", [])
++        if row.get("row_kind") == "probe_unit"
++    ]
++    material = {
++        "schema": artifact.get("schema"),
++        "random_seed": artifact.get("random_seed"),
++        "checkpoint_schema": artifact.get("checkpoint_schema"),
++        "frozen_manifest_hash": artifact.get("frozen_manifest_hash"),
++        "unit_rows": unit_rows,
++        "prefix_hashes": artifact.get("prefix_rows_preserved", {}).get("payload_hashes", []),
++        "resume_row_ids": artifact.get("fresh_process_resume_rows", {}).get("row_ids", []),
++        "durable_checkpoint_ready": artifact.get("durable_checkpoint_ready"),
++    }
++    return sha256_json(material)
++
++
++def _blocked_artifact(
++    *,
++    run_date: str,
++    checkpoint_path: Path,
++    preconditions: Sequence[Mapping[str, Any]],
++    duration_s: float,
++) -> JsonDict:
++    manifest_hash = sha256_json(frozen_manifest(run_date))
++    artifact = {
++        "schema": ARTIFACT_SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "status": "complete_blocked_durable_checkpoint",
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "checkpoint_schema": CHECKPOINT_SCHEMA,
++        "checkpoint_path": str(checkpoint_path),
++        "frozen_manifest_hash": manifest_hash,
++        "preconditions_checked": [deepcopy(dict(item)) for item in preconditions],
++        "rows": [],
++        "prefix_rows_preserved": {"count": 0, "payload_hashes": []},
++        "fresh_process_resume_rows": {"row_ids": [], "idempotent_resume_row_ids": []},
++        "duplicate_rows": {"suppressed": 0},
++        "conflicting_rows_refused": {"refused": False},
++        "changed_manifest_refused": {"refused": False},
++        "atomic_replace_receipts": [],
++        "fsync_receipts": [],
++        "cleanup_receipt": {
++            "action": "no_checkpoint_created",
++            "broad_delete_performed": False,
++        },
++        "durable_checkpoint_ready": False,
++        "gate_check_summary": _summary(preconditions),
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "complete_blocked_durable_checkpoint: a precondition failed",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return all final contract errors without changing the artifact."""
++
++    errors: list[str] = []
++    if set(artifact) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("required field set mismatch")
++    if set(artifact.get("field_principles", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field principle coverage mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference substrate mismatch")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or duration < 0:
++        errors.append("duration_s field must be non-negative")
++    if artifact.get("verdict_class") not in VERDICT_CLASSES:
++        errors.append("verdict class is outside the closed enum")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest verdict lacks a terminal prefix")
++    ready = artifact.get("durable_checkpoint_ready") is True
++    summary = artifact.get("gate_check_summary", {})
++    failed_checks = summary.get("failed_checks") if isinstance(summary, dict) else None
++    if ready and failed_checks != []:
++        errors.append("ready artifact has failed gates")
++    if not ready and artifact.get("verdict_class") != "blocked":
++        errors.append("not-ready artifact must use blocked class")
++    rows = artifact.get("rows")
++    if ready:
++        unit_rows = (
++            [row for row in rows if row.get("row_kind") == "probe_unit"]
++            if isinstance(rows, list)
++            else []
++        )
++        event_rows = (
++            [row for row in rows if row.get("row_kind") == "interruption_event"]
++            if isinstance(rows, list)
++            else []
++        )
++        if len(unit_rows) != 24 or len(event_rows) != 1:
++            errors.append("rows must contain 24 units and one interruption")
++        if len({row.get("row_id") for row in unit_rows}) != len(unit_rows):
++            errors.append("rows contain duplicate unit IDs")
++    elif rows != []:
++        errors.append("blocked artifact rows must be empty")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    return errors
++
++
++def run_probe(
++    *,
++    run_date: str,
++    checkpoint_path: Path,
++    artifact_path: Path,
++    preconditions: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Run interruption, fresh resume, idempotence, and refusal checks."""
++
++    _validate_run_date(run_date)
++    if artifact_path.is_file():
++        existing = json.loads(artifact_path.read_text(encoding="utf-8"))
++        if validate_artifact(existing) == [] and checkpoint_path.is_file():
++            return existing
++
++    started = time.monotonic()
++    manifest = frozen_manifest(run_date)
++    checkpoint = DurableRowCheckpoint(checkpoint_path, manifest)
++    if checkpoint.rows:
++        raise ValueError("probe checkpoint exists without a valid final artifact")
++    if checkpoint.initialization_receipt is None:
++        raise RuntimeError("new checkpoint did not record its atomic initialization")
++
++    atomic_receipts = [checkpoint.initialization_receipt]
++    prefix_receipts, prefix_process = _run_worker_process(
++        checkpoint=checkpoint,
++        row_ids=manifest["row_ids"],
++        attempt=1,
++        interrupt_after=9,
++    )
++    atomic_receipts.extend(prefix_receipts)
++    reloaded = DurableRowCheckpoint(checkpoint_path, manifest)
++    prefix_rows = reloaded.rows
++
++    pending = reloaded.pending(manifest["row_ids"])
++    resume_receipts, resume_process = _run_worker_process(
++        checkpoint=reloaded,
++        row_ids=pending,
++        attempt=2,
++        interrupt_after=None,
++    )
++    atomic_receipts.extend(resume_receipts)
++    idempotent_pending = reloaded.pending(manifest["row_ids"])
++    idempotent_receipts, idempotent_process = _run_worker_process(
++        checkpoint=reloaded,
++        row_ids=idempotent_pending,
++        attempt=3,
++        interrupt_after=None,
++    )
++
++    good_bytes = checkpoint_path.read_bytes()
++    first = reloaded.rows[0]
++    duplicate = complete_row_envelope(
++        row_id=str(first["row_id"]),
++        manifest_hash=reloaded.manifest_hash,
++        payload=first["payload"],
++        attempt=3,
++        start_receipt={"phase": "duplicate_probe"},
++        end_receipt={"phase": "complete"},
++    )
++    duplicate_receipt = reloaded.append(duplicate)
++    duplicate_bytes_unchanged = checkpoint_path.read_bytes() == good_bytes
++
++    conflict_refused = False
++    try:
++        conflict = complete_row_envelope(
++            row_id=str(first["row_id"]),
++            manifest_hash=reloaded.manifest_hash,
++            payload={**first["payload"], "value": -1},
++            attempt=3,
++            start_receipt={"phase": "conflict_probe"},
++            end_receipt={"phase": "complete"},
++        )
++        reloaded.append(conflict)
++    except RowConflictError:
++        conflict_refused = True
++    conflict_bytes_unchanged = checkpoint_path.read_bytes() == good_bytes
++
++    manifest_refused = False
++    try:
++        DurableRowCheckpoint(checkpoint_path, {**manifest, "random_seed": RANDOM_SEED + 1})
++    except ManifestMismatchError:
++        manifest_refused = True
++    manifest_bytes_unchanged = checkpoint_path.read_bytes() == good_bytes
++
++    complete_rows = reloaded.rows
++    interruption_row = {
++        "row_id": "interruption-after-probe-09",
++        "row_kind": "interruption_event",
++        "status": "observed",
++        "after_row_id": "probe-09",
++        "child_pid": prefix_process["pid"],
++        "child_return_code": prefix_process["return_code"],
++        "worker_temporary_directory_removed": prefix_process["worker_temporary_directory_removed"],
++        "checkpoint_rows_after_interrupt": len(prefix_rows),
++    }
++    artifact_rows = [{"row_kind": "probe_unit", **row} for row in complete_rows]
++    artifact_rows.append(interruption_row)
++    fsync_receipts = [
++        {
++            "row_id": receipt.get("row_id", "checkpoint-initialization"),
++            "file_fsync": receipt["file_fsync"],
++            "directory_fsync": receipt["directory_fsync"],
++        }
++        for receipt in atomic_receipts
++    ]
++    checks = [
++        *[deepcopy(dict(item)) for item in preconditions],
++        _gate(
++            "checkpoint_outside_worker_directory",
++            True,
++            not _is_within(checkpoint_path, Path(prefix_process["worker_temporary_path"])),
++        ),
++        _gate("prefix_row_count", 9, len(prefix_rows)),
++        _gate(
++            "worker_temporary_directory_removed",
++            True,
++            prefix_process["worker_temporary_directory_removed"],
++        ),
++        _gate(
++            "fresh_resume_row_ids",
++            list(manifest["row_ids"][9:]),
++            [receipt["row_id"] for receipt in resume_receipts],
++        ),
++        _gate("idempotent_resume_rows", [], [receipt["row_id"] for receipt in idempotent_receipts]),
++        _gate("complete_unique_rows", 24, len({row["row_id"] for row in complete_rows})),
++        _gate("duplicate_suppressed", True, duplicate_receipt["duplicate_suppressed"]),
++        _gate("duplicate_bytes_unchanged", True, duplicate_bytes_unchanged),
++        _gate("conflicting_payload_refused", True, conflict_refused),
++        _gate("conflict_bytes_unchanged", True, conflict_bytes_unchanged),
++        _gate("changed_manifest_refused", True, manifest_refused),
++        _gate("manifest_bytes_unchanged", True, manifest_bytes_unchanged),
++        _gate("atomic_replace_count", 25, len(atomic_receipts)),
++        _gate("fsync_receipt_count", 25, len(fsync_receipts)),
++        _gate("checkpoint_retained", True, checkpoint_path.is_file()),
++    ]
++    summary = _summary(checks)
++    ready = summary["failed_checks"] == []
++    artifact = {
++        "schema": ARTIFACT_SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "status": "complete_durable_checkpoint_ready"
++        if ready
++        else "complete_blocked_durable_checkpoint",
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": time.monotonic() - started,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "checkpoint_schema": CHECKPOINT_SCHEMA,
++        "checkpoint_path": str(checkpoint_path),
++        "frozen_manifest_hash": reloaded.manifest_hash,
++        "preconditions_checked": [deepcopy(dict(item)) for item in preconditions],
++        "rows": artifact_rows,
++        "prefix_rows_preserved": {
++            "count": len(prefix_rows),
++            "row_ids": [row["row_id"] for row in prefix_rows],
++            "payload_hashes": [row["payload_hash"] for row in prefix_rows],
++            "worker_temporary_path": prefix_process["worker_temporary_path"],
++            "worker_temporary_directory_removed": prefix_process[
++                "worker_temporary_directory_removed"
++            ],
++        },
++        "fresh_process_resume_rows": {
++            "process_pid": resume_process["pid"],
++            "row_ids": [receipt["row_id"] for receipt in resume_receipts],
++            "idempotent_process_pid": idempotent_process["pid"],
++            "idempotent_resume_row_ids": [receipt["row_id"] for receipt in idempotent_receipts],
++        },
++        "duplicate_rows": {
++            "attempted": 1,
++            "suppressed": int(duplicate_receipt["duplicate_suppressed"] is True),
++            "checkpoint_bytes_unchanged": duplicate_bytes_unchanged,
++        },
++        "conflicting_rows_refused": {
++            "attempted": 1,
++            "refused": conflict_refused,
++            "checkpoint_bytes_unchanged": conflict_bytes_unchanged,
++        },
++        "changed_manifest_refused": {
++            "attempted": 1,
++            "refused": manifest_refused,
++            "checkpoint_bytes_unchanged": manifest_bytes_unchanged,
++        },
++        "atomic_replace_receipts": atomic_receipts,
++        "fsync_receipts": fsync_receipts,
++        "cleanup_receipt": {
++            "policy": "retain the task checkpoint after final artifact hash verification",
++            "action": "retained_task_checkpoint",
++            "checkpoint_exists_after_artifact_hash_verification": True,
++            "deleted_paths": [],
++            "broad_delete_performed": False,
++        },
++        "durable_checkpoint_ready": ready,
++        "gate_check_summary": summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "positive" if ready else "blocked",
++        "honest_verdict": (
++            "complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed"
++            if ready
++            else "complete_blocked_durable_checkpoint: one durability gate failed"
++        ),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    atomic_write_json(artifact_path, artifact)
++    published = json.loads(artifact_path.read_text(encoding="utf-8"))
++    if (
++        validate_artifact(published)
++        or published["reproducibility_checksum"] != artifact["reproducibility_checksum"]
++    ):
++        raise RuntimeError("final artifact hash verification failed")
++    if not checkpoint_path.is_file():
++        raise RuntimeError("checkpoint disappeared during final artifact verification")
++    return published
++
++
++def run(
++    *,
++    run_date: str,
++    repo_root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    checkpoint_path: Path | None = None,
++) -> JsonDict:
++    """Run fail-closed preconditions before the synthetic durability probe."""
++
++    _validate_run_date(run_date)
++    output = artifact_path or repo_root / ARTIFACT_RELATIVE_PATH
++    checkpoint = checkpoint_path or repo_root / CHECKPOINT_RELATIVE_PATH
++    started = time.monotonic()
++    preconditions = check_preconditions(repo_root, checkpoint)
++    if any(item["passed"] is not True for item in preconditions):
++        artifact = _blocked_artifact(
++            run_date=run_date,
++            checkpoint_path=checkpoint,
++            preconditions=preconditions,
++            duration_s=time.monotonic() - started,
++        )
++        atomic_write_json(output, artifact)
++        return artifact
++    return run_probe(
++        run_date=run_date,
++        checkpoint_path=checkpoint,
++        artifact_path=output,
++        preconditions=preconditions,
++    )
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the parent probe or one explicitly requested CPU worker."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--artifact-path", type=Path)
++    parser.add_argument("--checkpoint-path", type=Path)
++    parser.add_argument("--worker-job", type=Path)
++    args = parser.parse_args(argv)
++    if args.worker_job is not None:
++        return _worker_main(args.worker_job)
++    artifact = run(
++        run_date=args.date,
++        artifact_path=args.artifact_path,
++        checkpoint_path=args.checkpoint_path,
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through the repository entry point.
++    raise SystemExit(main())
+diff --git a/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json b/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json
+new file mode 100644
+index 0000000000..cd047a0a5c
+--- /dev/null
++++ b/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json
+@@ -0,0 +1 @@
++{"manifest":{"experiment_id":"experiment_6785_durable_row_checkpoint_contract","inference_model":null,"interrupt_after_complete_rows":9,"payload_rule":"value=(unit_index*unit_index+random_seed)%100003","random_seed":6785,"row_ids":["probe-01","probe-02","probe-03","probe-04","probe-05","probe-06","probe-07","probe-08","probe-09","probe-10","probe-11","probe-12","probe-13","probe-14","probe-15","probe-16","probe-17","probe-18","probe-19","probe-20","probe-21","probe-22","probe-23","probe-24"],"run_date":"20260830","schema":"carnot.experiment_6785.probe_manifest.v1"},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","revision":24,"rows":[{"attempt":1,"end_receipt":{"time_ns":1788111056199156624,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":1,"value":6786},"payload_hash":"sha256:5e03e89ef836bb04fcd2b3f6d5c8338abe216db60a5d94b8fdf6b0119598b113","row_id":"probe-01","start_receipt":{"time_ns":1788111056199151304,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056393077204,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":2,"value":6789},"payload_hash":"sha256:f42c24c36720129635a9de48b71c9282e727d31582565e0846f55f3b0fec977b","row_id":"probe-02","start_receipt":{"time_ns":1788111056393043571,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056535661036,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":3,"value":6794},"payload_hash":"sha256:6a72d6635d8088773056c05956a6c324ba84ed5dd98810c94b3e754b5ab3086a","row_id":"probe-03","start_receipt":{"time_ns":1788111056535639105,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056537063760,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":4,"value":6801},"payload_hash":"sha256:f489ee2ae33f5782a799572d53ebb49c9bad4f67f56dbd9cf96396fa1d9fd8ed","row_id":"probe-04","start_receipt":{"time_ns":1788111056537058330,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056694618700,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":5,"value":6810},"payload_hash":"sha256:fdf0546823643b466412680db642a281fe7e5f1bd0dd847ba50e7fb9854d69b2","row_id":"probe-05","start_receipt":{"time_ns":1788111056694591960,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056895716180,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":6,"value":6821},"payload_hash":"sha256:254a88f226fa010e4011b9fbeb33703e674dc927311d4cace18b646d1611cc5a","row_id":"probe-06","start_receipt":{"time_ns":1788111056895690662,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057096709873,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":7,"value":6834},"payload_hash":"sha256:6523491f7fc35ead55a246e47ce03b212d0f702de9ed60afe7d82b06ae4b2a5b","row_id":"probe-07","start_receipt":{"time_ns":1788111057096684485,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057297247761,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":8,"value":6849},"payload_hash":"sha256:5cbf5bdcf542aa3650799cc4b51f6777d8d259861591181f6044e3b4bd640f19","row_id":"probe-08","start_receipt":{"time_ns":1788111057297226471,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057298880788,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":9,"value":6866},"payload_hash":"sha256:ab811f00b3c6db6cf8e39d6bfc9f193c2d20f811549540bdef4ec114e0a2dd3a","row_id":"probe-09","start_receipt":{"time_ns":1788111057298875207,"worker_pid":3713767},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057744971157,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":10,"value":6885},"payload_hash":"sha256:3ead8d52f60d9d2ea7289a6ee268fe6015d5e31bc3cae06a528c7e5606bd07ec","row_id":"probe-10","start_receipt":{"time_ns":1788111057744963773,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057747182370,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":11,"value":6906},"payload_hash":"sha256:63e73d23390d5756855e3cfa36bcf063f7755db7120c6d8026a19ba79a6b08c1","row_id":"probe-11","start_receipt":{"time_ns":1788111057747168103,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057748544839,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":12,"value":6929},"payload_hash":"sha256:3d83608c3c747b8fcbe4937f76779c1e5f66e20146f5a47db96502e7a9993bd2","row_id":"probe-12","start_receipt":{"time_ns":1788111057748539479,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057749574783,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":13,"value":6954},"payload_hash":"sha256:f0760d51b46ec5b7ef76ecd504b772566456a8f4ff8311186c9ad8658c0fa99c","row_id":"probe-13","start_receipt":{"time_ns":1788111057749571156,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057750463532,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":14,"value":6981},"payload_hash":"sha256:894979e488c6f07b1e06abf9335dc84aeffa23974b65dffcf20b05ed2bd91f12","row_id":"probe-14","start_receipt":{"time_ns":1788111057750462230,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057751378992,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":15,"value":7010},"payload_hash":"sha256:5e48fb96c19b8942c85cb27c6411495ed6d260998165a057b4acd83c9490d7e2","row_id":"probe-15","start_receipt":{"time_ns":1788111057751377980,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057752252011,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":16,"value":7041},"payload_hash":"sha256:ff1004e7c680b151e53040aab8c24b653170a4c0ea202b5071ca5e8ed91bfec3","row_id":"probe-16","start_receipt":{"time_ns":1788111057752251160,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057753032317,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":17,"value":7074},"payload_hash":"sha256:71026ff300217906ef11a1949dc2f1b5b782774d4e9f2bdb96fd4cdce0d29be4","row_id":"probe-17","start_receipt":{"time_ns":1788111057753031385,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057755479774,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":18,"value":7109},"payload_hash":"sha256:82507fa5dd46a4961fbc725aa055103c14024f9ededa56b70a79ede5342b368e","row_id":"probe-18","start_receipt":{"time_ns":1788111057755478892,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057756475594,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":19,"value":7146},"payload_hash":"sha256:a2e927e7f655679de5301be6fcd9f67993d4601065a473bd6fb567d58793fd18","row_id":"probe-19","start_receipt":{"time_ns":1788111057756474462,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057757404979,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":20,"value":7185},"payload_hash":"sha256:1b9cbb652c54436d4db140c5382ccbaa0214c42e82d17727c2a63e2371ced451","row_id":"probe-20","start_receipt":{"time_ns":1788111057757404148,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057758234848,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":21,"value":7226},"payload_hash":"sha256:b46d531c8949dbac0d4de54ca66f3d136cba347a1de41442f6593437c081cb16","row_id":"probe-21","start_receipt":{"time_ns":1788111057758233766,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057759062673,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":22,"value":7269},"payload_hash":"sha256:cb94393e1918de5b03144ab9b9123be6d41ecb67e9c34f057972b4e69f17bf4d","row_id":"probe-22","start_receipt":{"time_ns":1788111057759061851,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057759898803,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":23,"value":7314},"payload_hash":"sha256:f94ac8f4b7d407314f628006f54f8b8f71fa53059ec3203b10d9c41493e5ec96","row_id":"probe-23","start_receipt":{"time_ns":1788111057759897922,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057760753128,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":24,"value":7361},"payload_hash":"sha256:44bbdf3eff24c7401471a6281ac43db9a1e7f797061cdf52159f3516be810e89","row_id":"probe-24","start_receipt":{"time_ns":1788111057760752286,"worker_pid":3713791},"status":"complete"}],"schema":"carnot.durable_row_checkpoint.v1"}
+diff --git a/results/experiment_6785_durable_row_checkpoint_contract.json b/results/experiment_6785_durable_row_checkpoint_contract.json
+new file mode 100644
+index 0000000000..31b71b89d8
+--- /dev/null
++++ b/results/experiment_6785_durable_row_checkpoint_contract.json
+@@ -0,0 +1 @@
++{"atomic_replace_receipts":[{"atomic_replace":true,"directory_fsync":true,"file_fsync":true,"published_sha256":"sha256:4f82eed8b0823dad1b2a363e831b5f4d259c9858a32d75fb7ba6b438394bbee1","replaced_existing":false,"target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:b53e1f56c7043a7cddefc3aee8636a17df7d49da77a5a4f28c2be314f552d471","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:b53e1f56c7043a7cddefc3aee8636a17df7d49da77a5a4f28c2be314f552d471","replaced_existing":true,"row_id":"probe-01","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:4b5f5f6a1eb4b6da7d23cd7f1896c73f1b757d21ca376f77fec330280d55d850","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:4b5f5f6a1eb4b6da7d23cd7f1896c73f1b757d21ca376f77fec330280d55d850","replaced_existing":true,"row_id":"probe-02","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:a9c8e6b63ae63bca12ff974e4e06c0ad45e0aaa7cc05a4a4d8aaf159ad59ce0c","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:a9c8e6b63ae63bca12ff974e4e06c0ad45e0aaa7cc05a4a4d8aaf159ad59ce0c","replaced_existing":true,"row_id":"probe-03","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:2e54d9a089a70664ebc3cecbd76cc80834fc3565203b276954460ca647f42eda","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:2e54d9a089a70664ebc3cecbd76cc80834fc3565203b276954460ca647f42eda","replaced_existing":true,"row_id":"probe-04","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:998df76ab36855a8be6d64dfbd0a57d1a06b11b7974d8a48af79c2b749a5b6f5","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:998df76ab36855a8be6d64dfbd0a57d1a06b11b7974d8a48af79c2b749a5b6f5","replaced_existing":true,"row_id":"probe-05","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:8e2e1325f045a3277be55a646c8e7ced8c2f1b0fa6643da8281af0c2053429d3","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:8e2e1325f045a3277be55a646c8e7ced8c2f1b0fa6643da8281af0c2053429d3","replaced_existing":true,"row_id":"probe-06","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:7970f7e5fd54f10f28afd772e4302f067824c3034e01ab9ffa8668151c714bad","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:7970f7e5fd54f10f28afd772e4302f067824c3034e01ab9ffa8668151c714bad","replaced_existing":true,"row_id":"probe-07","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:7c66171247aba8c3295ecfa243f575604b6992485fd3003862f7aabd298443e8","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:7c66171247aba8c3295ecfa243f575604b6992485fd3003862f7aabd298443e8","replaced_existing":true,"row_id":"probe-08","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:af746337304b31f1a350613d5663fadd76f97b967f8c9df7bd7eb9827d890ef1","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:af746337304b31f1a350613d5663fadd76f97b967f8c9df7bd7eb9827d890ef1","replaced_existing":true,"row_id":"probe-09","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:a2823e7882ec38c9a419511da0355b5922135e2923aa094282a1e033e4f83f9d","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:a2823e7882ec38c9a419511da0355b5922135e2923aa094282a1e033e4f83f9d","replaced_existing":true,"row_id":"probe-10","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:1354b36b4dea69529752ed0021ec17122b573804d828b15e296ad982b3f2398c","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:1354b36b4dea69529752ed0021ec17122b573804d828b15e296ad982b3f2398c","replaced_existing":true,"row_id":"probe-11","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:d7664c45e1750cf2b917329468b1a1ffe4e56efaf3ad3be82476a836ebf0cd40","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:d7664c45e1750cf2b917329468b1a1ffe4e56efaf3ad3be82476a836ebf0cd40","replaced_existing":true,"row_id":"probe-12","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:173f17029e0660f93acba5123b313311dfabdde424606d24810c025dc7ed740b","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:173f17029e0660f93acba5123b313311dfabdde424606d24810c025dc7ed740b","replaced_existing":true,"row_id":"probe-13","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:03b9d7e06fb5238217c6a6c62e1a8b3cff21d18add6e54d4495c26202bf4fd8d","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:03b9d7e06fb5238217c6a6c62e1a8b3cff21d18add6e54d4495c26202bf4fd8d","replaced_existing":true,"row_id":"probe-14","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:9a26ec49ae9c7388aae43dd2fe7ae09717375714449ea710764ace0bc5537401","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:9a26ec49ae9c7388aae43dd2fe7ae09717375714449ea710764ace0bc5537401","replaced_existing":true,"row_id":"probe-15","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:80904c60be2e2870b2d7b2a3e7e89a14a558d2dfe70cbabce4f38720095520b8","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:80904c60be2e2870b2d7b2a3e7e89a14a558d2dfe70cbabce4f38720095520b8","replaced_existing":true,"row_id":"probe-16","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:d967ec5be4610ce9d9e3907c9b467034a13568ec96efbcfab04632292f1d4a96","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:d967ec5be4610ce9d9e3907c9b467034a13568ec96efbcfab04632292f1d4a96","replaced_existing":true,"row_id":"probe-17","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:cbe762a07cb7fababd055d3e70aa73e4a0d9ea6dce9d80920aef21d23a04d8bb","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:cbe762a07cb7fababd055d3e70aa73e4a0d9ea6dce9d80920aef21d23a04d8bb","replaced_existing":true,"row_id":"probe-18","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:9fb7f3fe5be2e33d03de68eaa249bd91793ffda1b71f4b7b570ec8a427a946c4","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:9fb7f3fe5be2e33d03de68eaa249bd91793ffda1b71f4b7b570ec8a427a946c4","replaced_existing":true,"row_id":"probe-19","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:32356540ea425cccb6ae7e3749ddad09c094ff0753cc6470ce12be80950de4c0","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:32356540ea425cccb6ae7e3749ddad09c094ff0753cc6470ce12be80950de4c0","replaced_existing":true,"row_id":"probe-20","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:d73097004d90c432176a55211ebdb8c7413ca67f8c8b37b519034553b225827b","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:d73097004d90c432176a55211ebdb8c7413ca67f8c8b37b519034553b225827b","replaced_existing":true,"row_id":"probe-21","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:3b90d131cb9ecc20b0b5b6e21677b8d9687ffc2b2fb0f15ea0072ca7c76a1bbc","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:3b90d131cb9ecc20b0b5b6e21677b8d9687ffc2b2fb0f15ea0072ca7c76a1bbc","replaced_existing":true,"row_id":"probe-22","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:f78ca46b1de04a06a4f4c2c7798d4817eb4b2c5c53b4d331ec2fae242b128544","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:f78ca46b1de04a06a4f4c2c7798d4817eb4b2c5c53b4d331ec2fae242b128544","replaced_existing":true,"row_id":"probe-23","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"},{"accepted":true,"atomic_replace":true,"checkpoint_sha256":"sha256:8f438e60a6f7684e648704d84158d7054315a4bbefb8b6bb901bef09f587e969","directory_fsync":true,"duplicate_suppressed":false,"file_fsync":true,"published_sha256":"sha256:8f438e60a6f7684e648704d84158d7054315a4bbefb8b6bb901bef09f587e969","replaced_existing":true,"row_id":"probe-24","target":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json"}],"changed_manifest_refused":{"attempted":1,"checkpoint_bytes_unchanged":true,"refused":true},"checkpoint_path":"/home/ianblenke/github.com/ianblenke/carnot/results/.checkpoints/experiment_6785_durable_row_checkpoint_contract/rows.json","checkpoint_schema":"carnot.durable_row_checkpoint.v1","cleanup_receipt":{"action":"retained_task_checkpoint","broad_delete_performed":false,"checkpoint_exists_after_artifact_hash_verification":true,"deleted_paths":[],"policy":"retain the task checkpoint after final artifact hash verification"},"conflicting_rows_refused":{"attempted":1,"checkpoint_bytes_unchanged":true,"refused":true},"duplicate_rows":{"attempted":1,"checkpoint_bytes_unchanged":true,"suppressed":1},"durable_checkpoint_ready":true,"duration_s":2.7647711010067724,"experiment_id":"experiment_6785_durable_row_checkpoint_contract","field_principles":{"atomic_replace_receipts":"Replace receipts prove each accepted state was published whole.","changed_manifest_refused":"The manifest receipt prevents accidental cross-run resume.","checkpoint_path":"The path proves that durable state is parent-owned and task-scoped.","checkpoint_schema":"The checkpoint version fixes the restart data contract.","cleanup_receipt":"The cleanup scope protects unrelated result and user files.","conflicting_rows_refused":"The conflict receipt proves one row ID cannot change meaning.","duplicate_rows":"The duplicate receipt proves retries cannot add a second row ID.","durable_checkpoint_ready":"This exact gate is the reusable outcome needed before an Exp6753 rerun.","duration_s":"Measured wall time proves that the process probe executed.","experiment_id":"A stable ID binds this evidence to the durability repair task.","field_principles":"Each required field states why an auditor needs it.","fresh_process_resume_rows":"The resume receipt proves a fresh process added only missing rows.","frozen_manifest_hash":"The hash prevents rows from crossing experiment designs.","fsync_receipts":"Sync receipts prove file data and directory entries reached durability calls.","gate_check_summary":"The summary names each expected value and any failed observation.","honest_verdict":"A terminal prefix prevents the conductor from retrying completed work.","inference_substrate":"The substrate statement prevents CPU evidence from becoming a model claim.","preconditions_checked":"Gate receipts show that required files and filesystem operations existed.","prefix_rows_preserved":"The prefix receipt proves worker teardown did not erase nine rows.","random_seed":"One frozen seed makes every synthetic payload reproducible.","reproducibility_checksum":"A stable hash detects drift in manifest and row results.","rows":"Unit and interruption rows make the exact resume sequence auditable.","run_date":"The fixed date records when this filesystem probe executed.","schema":"A versioned schema makes incompatible artifact readers fail closed.","status":"A terminal status separates a complete proof from a blocked gate.","verdict_class":"A closed class keeps the terminal result machine-readable.","verifier_is_oracle":"False prevents this mechanism probe from becoming a scientific oracle."},"fresh_process_resume_rows":{"idempotent_process_pid":3713815,"idempotent_resume_row_ids":[],"process_pid":3713791,"row_ids":["probe-10","probe-11","probe-12","probe-13","probe-14","probe-15","probe-16","probe-17","probe-18","probe-19","probe-20","probe-21","probe-22","probe-23","probe-24"]},"frozen_manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","fsync_receipts":[{"directory_fsync":true,"file_fsync":true,"row_id":"checkpoint-initialization"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-01"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-02"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-03"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-04"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-05"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-06"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-07"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-08"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-09"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-10"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-11"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-12"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-13"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-14"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-15"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-16"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-17"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-18"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-19"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-20"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-21"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-22"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-23"},{"directory_fsync":true,"file_fsync":true,"row_id":"probe-24"}],"gate_check_summary":{"checks":[{"check":"checkpoint_path_is_task_owned","expected":true,"observed":true,"passed":true},{"check":"checkpoint_directory_writable","expected":true,"observed":true,"passed":true},{"check":"atomic_rename_same_filesystem","expected":true,"observed":true,"passed":true},{"check":"required_source_records_exist","expected":true,"observed":true,"passed":true,"source_records":{"ops/known-issues.md":true,"python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py":true,"python/carnot/memory/transactional_constraint_memory.py":true,"results/experiment_6753_object_table_fetch_on_demand_ab.json":true,"scripts/experiment_template.py":true,"scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py":true,"tests/python/test_arc_object_table_fetch_on_demand_ab_6753.py":true}},{"check":"exp6753_checkpoint_issue_recorded","expected":true,"observed":true,"passed":true},{"check":"checkpoint_outside_worker_directory","expected":true,"observed":true,"passed":true},{"check":"prefix_row_count","expected":9,"observed":9,"passed":true},{"check":"worker_temporary_directory_removed","expected":true,"observed":true,"passed":true},{"check":"fresh_resume_row_ids","expected":["probe-10","probe-11","probe-12","probe-13","probe-14","probe-15","probe-16","probe-17","probe-18","probe-19","probe-20","probe-21","probe-22","probe-23","probe-24"],"observed":["probe-10","probe-11","probe-12","probe-13","probe-14","probe-15","probe-16","probe-17","probe-18","probe-19","probe-20","probe-21","probe-22","probe-23","probe-24"],"passed":true},{"check":"idempotent_resume_rows","expected":[],"observed":[],"passed":true},{"check":"complete_unique_rows","expected":24,"observed":24,"passed":true},{"check":"duplicate_suppressed","expected":true,"observed":true,"passed":true},{"check":"duplicate_bytes_unchanged","expected":true,"observed":true,"passed":true},{"check":"conflicting_payload_refused","expected":true,"observed":true,"passed":true},{"check":"conflict_bytes_unchanged","expected":true,"observed":true,"passed":true},{"check":"changed_manifest_refused","expected":true,"observed":true,"passed":true},{"check":"manifest_bytes_unchanged","expected":true,"observed":true,"passed":true},{"check":"atomic_replace_count","expected":25,"observed":25,"passed":true},{"check":"fsync_receipt_count","expected":25,"observed":25,"passed":true},{"check":"checkpoint_retained","expected":true,"observed":true,"passed":true}],"failed_checks":[],"first_failure":null},"honest_verdict":"complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed","inference_substrate":"fresh_process_no_llm_transaction_audit replay; local CPU processes and filesystem durability, no inference model","preconditions_checked":[{"check":"checkpoint_path_is_task_owned","expected":true,"observed":true,"passed":true},{"check":"checkpoint_directory_writable","expected":true,"observed":true,"passed":true},{"check":"atomic_rename_same_filesystem","expected":true,"observed":true,"passed":true},{"check":"required_source_records_exist","expected":true,"observed":true,"passed":true,"source_records":{"ops/known-issues.md":true,"python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py":true,"python/carnot/memory/transactional_constraint_memory.py":true,"results/experiment_6753_object_table_fetch_on_demand_ab.json":true,"scripts/experiment_template.py":true,"scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py":true,"tests/python/test_arc_object_table_fetch_on_demand_ab_6753.py":true}},{"check":"exp6753_checkpoint_issue_recorded","expected":true,"observed":true,"passed":true}],"prefix_rows_preserved":{"count":9,"payload_hashes":["sha256:5e03e89ef836bb04fcd2b3f6d5c8338abe216db60a5d94b8fdf6b0119598b113","sha256:f42c24c36720129635a9de48b71c9282e727d31582565e0846f55f3b0fec977b","sha256:6a72d6635d8088773056c05956a6c324ba84ed5dd98810c94b3e754b5ab3086a","sha256:f489ee2ae33f5782a799572d53ebb49c9bad4f67f56dbd9cf96396fa1d9fd8ed","sha256:fdf0546823643b466412680db642a281fe7e5f1bd0dd847ba50e7fb9854d69b2","sha256:254a88f226fa010e4011b9fbeb33703e674dc927311d4cace18b646d1611cc5a","sha256:6523491f7fc35ead55a246e47ce03b212d0f702de9ed60afe7d82b06ae4b2a5b","sha256:5cbf5bdcf542aa3650799cc4b51f6777d8d259861591181f6044e3b4bd640f19","sha256:ab811f00b3c6db6cf8e39d6bfc9f193c2d20f811549540bdef4ec114e0a2dd3a"],"row_ids":["probe-01","probe-02","probe-03","probe-04","probe-05","probe-06","probe-07","probe-08","probe-09"],"worker_temporary_directory_removed":true,"worker_temporary_path":"/tmp/carnot-exp6785-worker-cxcr5c27"},"random_seed":6785,"reproducibility_checksum":"sha256:73dd367a79b9abe9412fa205b140f38fab9c23d882b4df84a203ee8e7fd92ed7","rows":[{"attempt":1,"end_receipt":{"time_ns":1788111056199156624,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":1,"value":6786},"payload_hash":"sha256:5e03e89ef836bb04fcd2b3f6d5c8338abe216db60a5d94b8fdf6b0119598b113","row_id":"probe-01","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056199151304,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056393077204,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":2,"value":6789},"payload_hash":"sha256:f42c24c36720129635a9de48b71c9282e727d31582565e0846f55f3b0fec977b","row_id":"probe-02","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056393043571,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056535661036,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":3,"value":6794},"payload_hash":"sha256:6a72d6635d8088773056c05956a6c324ba84ed5dd98810c94b3e754b5ab3086a","row_id":"probe-03","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056535639105,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056537063760,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":4,"value":6801},"payload_hash":"sha256:f489ee2ae33f5782a799572d53ebb49c9bad4f67f56dbd9cf96396fa1d9fd8ed","row_id":"probe-04","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056537058330,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056694618700,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":5,"value":6810},"payload_hash":"sha256:fdf0546823643b466412680db642a281fe7e5f1bd0dd847ba50e7fb9854d69b2","row_id":"probe-05","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056694591960,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111056895716180,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":6,"value":6821},"payload_hash":"sha256:254a88f226fa010e4011b9fbeb33703e674dc927311d4cace18b646d1611cc5a","row_id":"probe-06","row_kind":"probe_unit","start_receipt":{"time_ns":1788111056895690662,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057096709873,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":7,"value":6834},"payload_hash":"sha256:6523491f7fc35ead55a246e47ce03b212d0f702de9ed60afe7d82b06ae4b2a5b","row_id":"probe-07","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057096684485,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057297247761,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":8,"value":6849},"payload_hash":"sha256:5cbf5bdcf542aa3650799cc4b51f6777d8d259861591181f6044e3b4bd640f19","row_id":"probe-08","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057297226471,"worker_pid":3713767},"status":"complete"},{"attempt":1,"end_receipt":{"time_ns":1788111057298880788,"worker_pid":3713767},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":9,"value":6866},"payload_hash":"sha256:ab811f00b3c6db6cf8e39d6bfc9f193c2d20f811549540bdef4ec114e0a2dd3a","row_id":"probe-09","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057298875207,"worker_pid":3713767},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057744971157,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":10,"value":6885},"payload_hash":"sha256:3ead8d52f60d9d2ea7289a6ee268fe6015d5e31bc3cae06a528c7e5606bd07ec","row_id":"probe-10","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057744963773,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057747182370,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":11,"value":6906},"payload_hash":"sha256:63e73d23390d5756855e3cfa36bcf063f7755db7120c6d8026a19ba79a6b08c1","row_id":"probe-11","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057747168103,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057748544839,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":12,"value":6929},"payload_hash":"sha256:3d83608c3c747b8fcbe4937f76779c1e5f66e20146f5a47db96502e7a9993bd2","row_id":"probe-12","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057748539479,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057749574783,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":13,"value":6954},"payload_hash":"sha256:f0760d51b46ec5b7ef76ecd504b772566456a8f4ff8311186c9ad8658c0fa99c","row_id":"probe-13","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057749571156,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057750463532,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":14,"value":6981},"payload_hash":"sha256:894979e488c6f07b1e06abf9335dc84aeffa23974b65dffcf20b05ed2bd91f12","row_id":"probe-14","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057750462230,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057751378992,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":15,"value":7010},"payload_hash":"sha256:5e48fb96c19b8942c85cb27c6411495ed6d260998165a057b4acd83c9490d7e2","row_id":"probe-15","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057751377980,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057752252011,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":16,"value":7041},"payload_hash":"sha256:ff1004e7c680b151e53040aab8c24b653170a4c0ea202b5071ca5e8ed91bfec3","row_id":"probe-16","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057752251160,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057753032317,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":17,"value":7074},"payload_hash":"sha256:71026ff300217906ef11a1949dc2f1b5b782774d4e9f2bdb96fd4cdce0d29be4","row_id":"probe-17","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057753031385,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057755479774,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":18,"value":7109},"payload_hash":"sha256:82507fa5dd46a4961fbc725aa055103c14024f9ededa56b70a79ede5342b368e","row_id":"probe-18","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057755478892,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057756475594,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":19,"value":7146},"payload_hash":"sha256:a2e927e7f655679de5301be6fcd9f67993d4601065a473bd6fb567d58793fd18","row_id":"probe-19","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057756474462,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057757404979,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":20,"value":7185},"payload_hash":"sha256:1b9cbb652c54436d4db140c5382ccbaa0214c42e82d17727c2a63e2371ced451","row_id":"probe-20","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057757404148,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057758234848,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":21,"value":7226},"payload_hash":"sha256:b46d531c8949dbac0d4de54ca66f3d136cba347a1de41442f6593437c081cb16","row_id":"probe-21","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057758233766,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057759062673,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":22,"value":7269},"payload_hash":"sha256:cb94393e1918de5b03144ab9b9123be6d41ecb67e9c34f057972b4e69f17bf4d","row_id":"probe-22","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057759061851,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057759898803,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":23,"value":7314},"payload_hash":"sha256:f94ac8f4b7d407314f628006f54f8b8f71fa53059ec3203b10d9c41493e5ec96","row_id":"probe-23","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057759897922,"worker_pid":3713791},"status":"complete"},{"attempt":2,"end_receipt":{"time_ns":1788111057760753128,"worker_pid":3713791},"manifest_hash":"sha256:23b8603fba5ecbebad66202d381e2666b729319956da4deee13f3e5dd9b106d6","payload":{"random_seed":6785,"unit_index":24,"value":7361},"payload_hash":"sha256:44bbdf3eff24c7401471a6281ac43db9a1e7f797061cdf52159f3516be810e89","row_id":"probe-24","row_kind":"probe_unit","start_receipt":{"time_ns":1788111057760752286,"worker_pid":3713791},"status":"complete"},{"after_row_id":"probe-09","checkpoint_rows_after_interrupt":9,"child_pid":3713767,"child_return_code":-15,"row_id":"interruption-after-probe-09","row_kind":"interruption_event","status":"observed","worker_temporary_directory_removed":true}],"run_date":"20260830","schema":"carnot.experiment_6785.durable_row_checkpoint_contract.v1","status":"complete_durable_checkpoint_ready","verdict_class":"positive","verifier_is_oracle":false}
+diff --git a/scripts/experiments/experiment_6785_durable_row_checkpoint_contract.py b/scripts/experiments/experiment_6785_durable_row_checkpoint_contract.py
+new file mode 100644
+index 0000000000..287c36d103
+--- /dev/null
++++ b/scripts/experiments/experiment_6785_durable_row_checkpoint_contract.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++"""Repository entry point for REQ-INFRA-6785."""
++
++from carnot.experiment_6785_durable_row_checkpoint_contract import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6785_durable_row_checkpoint_contract.py b/tests/python/test_experiment_6785_durable_row_checkpoint_contract.py
+new file mode 100644
+index 0000000000..5cc53446e3
+--- /dev/null
++++ b/tests/python/test_experiment_6785_durable_row_checkpoint_contract.py
+@@ -0,0 +1,567 @@
++"""Tests for the parent-owned durable row checkpoint contract.
++
++Spec refs: REQ-INFRA-6785 and SCENARIO-INFRA-6785-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import io
++import json
++import os
++from pathlib import Path
++
++import pytest
++
++from carnot import durable_row_checkpoint as checkpointing
++from carnot import experiment_6785_durable_row_checkpoint_contract as exp
++
++
++def _manifest(count: int = 3) -> dict:
++    return {
++        "schema": "probe-manifest-v1",
++        "random_seed": 6785,
++        "row_ids": [f"probe-{index:02d}" for index in range(1, count + 1)],
++    }
++
++
++def _envelope(store: checkpointing.DurableRowCheckpoint, index: int, attempt: int = 1) -> dict:
++    return checkpointing.complete_row_envelope(
++        row_id=f"probe-{index:02d}",
++        manifest_hash=store.manifest_hash,
++        payload={"unit_index": index, "value": index * index},
++        attempt=attempt,
++        start_receipt={"phase": "start", "unit_index": index},
++        end_receipt={"phase": "complete", "unit_index": index},
++    )
++
++
++def _fake_repo(root: Path) -> Path:
++    for relative in exp.REQUIRED_SOURCES:
++        path = root / relative
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(
++            exp.KNOWN_ISSUE_MARKER if relative == Path("ops/known-issues.md") else "fixture\n"
++        )
++    return root
++
++
++def test_scenario_infra_6785_durable_publish_uses_parent_path_replace_and_fsync(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-INFRA-6785-DURABLE-PUBLISH syncs both sides of replacement."""
++    parent_path = tmp_path / "parent" / "rows.json"
++    replace_calls: list[tuple[Path, Path]] = []
++    fsync_calls: list[int] = []
++    real_replace = checkpointing.os.replace
++    real_fsync = checkpointing.os.fsync
++
++    def observed_replace(source: str | os.PathLike[str], target: str | os.PathLike[str]) -> None:
++        replace_calls.append((Path(source), Path(target)))
++        real_replace(source, target)
++
++    def observed_fsync(fd: int) -> None:
++        fsync_calls.append(fd)
++        real_fsync(fd)
++
++    monkeypatch.setattr(checkpointing.os, "replace", observed_replace)
++    monkeypatch.setattr(checkpointing.os, "fsync", observed_fsync)
++
++    store = checkpointing.DurableRowCheckpoint(parent_path, _manifest())
++    receipt = store.append(_envelope(store, 1))
++
++    assert store.path == parent_path
++    assert [target for _, target in replace_calls] == [parent_path, parent_path]
++    assert all(source.parent == parent_path.parent for source, _ in replace_calls)
++    assert len(fsync_calls) == 4
++    assert receipt["accepted"] is True
++    assert receipt["atomic_replace"] is True
++    assert receipt["file_fsync"] is True
++    assert receipt["directory_fsync"] is True
++    assert not list(parent_path.parent.glob(f".{parent_path.name}.*.tmp"))
++
++
++def test_req_infra_6785_envelope_requires_complete_hash_bound_receipts(tmp_path: Path) -> None:
++    """REQ-INFRA-6785 refuses incomplete or payload-tampered envelopes."""
++    store = checkpointing.DurableRowCheckpoint(tmp_path / "rows.json", _manifest())
++    valid = _envelope(store, 1)
++    assert valid["payload_hash"] == checkpointing.sha256_json(valid["payload"])
++
++    mutations = []
++    for field in checkpointing.ENVELOPE_FIELDS:
++        changed = deepcopy(valid)
++        del changed[field]
++        mutations.append(changed)
++    mutations.extend(
++        [
++            {**valid, "status": "started"},
++            {**valid, "attempt": 0},
++            {**valid, "row_id": ""},
++            {**valid, "manifest_hash": "sha256:wrong"},
++            {**valid, "payload_hash": "sha256:wrong"},
++            {**valid, "start_receipt": []},
++            {**valid, "end_receipt": []},
++            {**valid, "unexpected": True},
++        ]
++    )
++    for changed in mutations:
++        with pytest.raises(checkpointing.InvalidEnvelopeError):
++            store.append(changed)
++    assert store.rows == []
++
++
++def test_scenario_infra_6785_conflicts_refuse_without_byte_change(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6785-CONFLICTS-REFUSE preserves good bytes."""
++    path = tmp_path / "rows.json"
++    store = checkpointing.DurableRowCheckpoint(path, _manifest())
++    original = _envelope(store, 1)
++    store.append(original)
++    good_bytes = path.read_bytes()
++
++    duplicate = checkpointing.complete_row_envelope(
++        row_id=original["row_id"],
++        manifest_hash=store.manifest_hash,
++        payload=original["payload"],
++        attempt=2,
++        start_receipt={"phase": "retry"},
++        end_receipt={"phase": "complete"},
++    )
++    duplicate_receipt = store.append(duplicate)
++    assert duplicate_receipt["accepted"] is False
++    assert duplicate_receipt["duplicate_suppressed"] is True
++    assert path.read_bytes() == good_bytes
++
++    conflict = checkpointing.complete_row_envelope(
++        row_id=original["row_id"],
++        manifest_hash=store.manifest_hash,
++        payload={"unit_index": 1, "value": -1},
++        attempt=2,
++        start_receipt={"phase": "retry"},
++        end_receipt={"phase": "complete"},
++    )
++    with pytest.raises(checkpointing.RowConflictError, match="probe-01"):
++        store.append(conflict)
++    assert path.read_bytes() == good_bytes
++
++    with pytest.raises(checkpointing.ManifestMismatchError):
++        checkpointing.DurableRowCheckpoint(path, {**_manifest(), "random_seed": 99})
++    assert path.read_bytes() == good_bytes
++
++
++def test_req_infra_6785_load_refuses_corrupt_checkpoint(tmp_path: Path) -> None:
++    """REQ-INFRA-6785 fails closed when stored state is not valid."""
++    path = tmp_path / "rows.json"
++    store = checkpointing.DurableRowCheckpoint(path, _manifest())
++    store.append(_envelope(store, 1))
++    state = json.loads(path.read_text())
++
++    corruptions = [
++        {**state, "schema": "wrong"},
++        {**state, "manifest_hash": "sha256:wrong"},
++        {**state, "revision": 0},
++        {**state, "rows": [state["rows"][0], state["rows"][0]], "revision": 2},
++        {**state, "extra": True},
++    ]
++    non_object_manifest = {**state, "manifest": []}
++    non_object_manifest["manifest_hash"] = checkpointing.sha256_json([])
++    non_list_rows = {**state, "rows": "bad", "revision": 3}
++    non_object_row = {**state, "rows": ["bad"], "revision": 1}
++    invalid_row = deepcopy(state)
++    invalid_row["rows"][0]["status"] = "started"
++    corruptions.extend([non_object_manifest, non_list_rows, non_object_row, invalid_row])
++    for index, corrupt in enumerate(corruptions):
++        corrupt_path = tmp_path / f"corrupt-{index}.json"
++        corrupt_path.write_text(json.dumps(corrupt))
++        with pytest.raises(checkpointing.CorruptCheckpointError):
++            checkpointing.DurableRowCheckpoint(corrupt_path, _manifest())
++
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("not-json")
++    with pytest.raises(checkpointing.CorruptCheckpointError):
++        checkpointing.DurableRowCheckpoint(malformed, _manifest())
++
++
++def test_req_infra_6785_worker_protocol_and_parent_guard(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-INFRA-6785 sends complete rows and rejects invalid worker boundaries."""
++    job = tmp_path / "job.json"
++    worker_dir = tmp_path / "worker"
++    manifest_hash = checkpointing.sha256_json(exp.frozen_manifest("20260830"))
++    job.write_text(
++        json.dumps(
++            {
++                "row_ids": ["probe-01"],
++                "manifest_hash": manifest_hash,
++                "attempt": 1,
++                "worker_directory": str(worker_dir),
++            }
++        )
++    )
++    monkeypatch.setattr(exp.sys, "stdin", io.StringIO("ack\n"))
++    assert exp._worker_main(job) == 0
++    emitted = json.loads(capsys.readouterr().out)
++    assert emitted["payload"] == {"unit_index": 1, "value": 6786, "random_seed": 6785}
++    assert (worker_dir / "worker-started.txt").read_text() == "cpu-only\n"
++
++    monkeypatch.setattr(exp.sys, "stdin", io.StringIO(""))
++    assert exp._worker_main(job) == 3
++    capsys.readouterr()
++
++    invalid = tmp_path / "invalid-job.json"
++    invalid.write_text(
++        json.dumps(
++            {
++                "row_ids": [1],
++                "manifest_hash": manifest_hash,
++                "attempt": 1,
++                "worker_directory": str(worker_dir),
++            }
++        )
++    )
++    assert exp._worker_main(invalid) == 2
++    assert "worker row_ids" in capsys.readouterr().err
++
++
++def test_req_infra_6785_worker_parent_refuses_inside_path_and_bad_pipes(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6785 keeps the checkpoint outside all worker-owned paths."""
++    worker_root = tmp_path / "fixed-worker"
++    worker_root.mkdir()
++    inside_store = checkpointing.DurableRowCheckpoint(worker_root / "rows.json", _manifest())
++
++    class FixedTemporaryDirectory:
++        def __init__(self, **_kwargs: object) -> None:
++            pass
++
++        def __enter__(self) -> str:
++            return str(worker_root)
++
++        def __exit__(self, *_args: object) -> None:
++            return None
++
++    monkeypatch.setattr(exp.tempfile, "TemporaryDirectory", FixedTemporaryDirectory)
++    with pytest.raises(ValueError, match="inside the worker"):
++        exp._run_worker_process(
++            checkpoint=inside_store,
++            row_ids=[],
++            attempt=1,
++            interrupt_after=None,
++        )
++
++    outside_store = checkpointing.DurableRowCheckpoint(tmp_path / "outside.json", _manifest())
++
++    class MissingPipeProcess:
++        stdin = None
++        stdout = io.StringIO()
++        stderr = io.StringIO()
++
++    monkeypatch.setattr(exp.subprocess, "Popen", lambda *_args, **_kwargs: MissingPipeProcess())
++    with pytest.raises(RuntimeError, match="pipes"):
++        exp._run_worker_process(
++            checkpoint=outside_store,
++            row_ids=[],
++            attempt=1,
++            interrupt_after=None,
++        )
++
++
++def test_req_infra_6785_worker_parent_refuses_early_stop_and_reordering(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6785 accepts only the requested complete row sequence."""
++    store = checkpointing.DurableRowCheckpoint(tmp_path / "rows.json", _manifest())
++
++    class FakeProcess:
++        stdin = io.StringIO()
++        stderr = io.StringIO("child error")
++        pid = 123
++
++        def __init__(self, output: str) -> None:
++            self.stdout = io.StringIO(output)
++
++    monkeypatch.setattr(exp.subprocess, "Popen", lambda *_args, **_kwargs: FakeProcess(""))
++    with pytest.raises(RuntimeError, match="stopped before"):
++        exp._run_worker_process(
++            checkpoint=store,
++            row_ids=["probe-01"],
++            attempt=1,
++            interrupt_after=None,
++        )
++
++    monkeypatch.setattr(
++        exp.subprocess,
++        "Popen",
++        lambda *_args, **_kwargs: FakeProcess('{"row_id":"probe-02"}\n'),
++    )
++    with pytest.raises(RuntimeError, match="order changed"):
++        exp._run_worker_process(
++            checkpoint=store,
++            row_ids=["probe-01"],
++            attempt=1,
++            interrupt_after=None,
++        )
++
++
++def test_scenario_infra_6785_prefix_resume_aggregation_and_cleanup_scope(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6785-PREFIX-SURVIVES and resume run in fresh processes."""
++    sentinel = tmp_path / "unrelated-user-file.txt"
++    sentinel.write_text("keep me")
++    artifact_path = tmp_path / "result.json"
++    checkpoint_path = tmp_path / "checkpoint" / "rows.json"
++
++    artifact = exp.run_probe(
++        run_date="20260830",
++        checkpoint_path=checkpoint_path,
++        artifact_path=artifact_path,
++    )
++
++    assert artifact["durable_checkpoint_ready"] is True
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("complete_")
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["prefix_rows_preserved"]["count"] == 9
++    assert artifact["prefix_rows_preserved"]["worker_temporary_directory_removed"] is True
++    assert artifact["fresh_process_resume_rows"]["row_ids"] == [
++        f"probe-{index:02d}" for index in range(10, 25)
++    ]
++    assert artifact["fresh_process_resume_rows"]["idempotent_resume_row_ids"] == []
++    assert artifact["duplicate_rows"]["suppressed"] == 1
++    assert artifact["conflicting_rows_refused"]["refused"] is True
++    assert artifact["changed_manifest_refused"]["refused"] is True
++    assert len(artifact["atomic_replace_receipts"]) == 25
++    assert len(artifact["fsync_receipts"]) == 25
++    assert len(artifact["rows"]) == 25
++    unit_rows = [row for row in artifact["rows"] if row["row_kind"] == "probe_unit"]
++    assert len(unit_rows) == 24
++    assert len({row["row_id"] for row in unit_rows}) == 24
++    assert checkpoint_path.is_file()
++    assert not Path(artifact["prefix_rows_preserved"]["worker_temporary_path"]).exists()
++    assert artifact["cleanup_receipt"]["action"] == "retained_task_checkpoint"
++    assert artifact["cleanup_receipt"]["broad_delete_performed"] is False
++    assert sentinel.read_text() == "keep me"
++    assert exp.validate_artifact(json.loads(artifact_path.read_text())) == []
++    assert artifact["reproducibility_checksum"] == exp.reproducibility_checksum(artifact)
++
++    stable_bytes = artifact_path.read_bytes()
++    assert (
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=checkpoint_path,
++            artifact_path=artifact_path,
++        )
++        == artifact
++    )
++    assert artifact_path.read_bytes() == stable_bytes
++
++
++def test_req_infra_6785_artifact_validator_names_contract_failures(tmp_path: Path) -> None:
++    """REQ-INFRA-6785 validates each load-bearing final contract."""
++    artifact = exp.run_probe(
++        run_date="20260830",
++        checkpoint_path=tmp_path / "rows.json",
++        artifact_path=tmp_path / "artifact.json",
++    )
++    cases = [
++        ("field", {key: value for key, value in artifact.items() if key != "status"}),
++        ("field", {**artifact, "duration_s": -1.0}),
++        ("principle", {**artifact, "field_principles": {}}),
++        ("substrate", {**artifact, "inference_substrate": "GPU"}),
++        ("verdict", {**artifact, "honest_verdict": "partial"}),
++        ("class", {**artifact, "verdict_class": "unknown"}),
++        ("rows", {**artifact, "rows": artifact["rows"][:-1]}),
++        ("ready", {**artifact, "durable_checkpoint_ready": False}),
++        ("gates", {**artifact, "gate_check_summary": {"failed_checks": ["bad"]}}),
++        ("checksum", {**artifact, "reproducibility_checksum": "sha256:wrong"}),
++    ]
++    for expected, changed in cases:
++        assert any(expected in error for error in exp.validate_artifact(changed))
++
++    duplicate_rows = deepcopy(artifact)
++    duplicate_rows["rows"][1]["row_id"] = duplicate_rows["rows"][0]["row_id"]
++    assert any("duplicate" in error for error in exp.validate_artifact(duplicate_rows))
++    blocked_wrong_class = {**artifact, "durable_checkpoint_ready": False, "verdict_class": "null"}
++    assert any("blocked class" in error for error in exp.validate_artifact(blocked_wrong_class))
++    blocked_with_rows = {
++        **artifact,
++        "durable_checkpoint_ready": False,
++        "verdict_class": "blocked",
++    }
++    assert any(
++        "blocked artifact rows" in error for error in exp.validate_artifact(blocked_with_rows)
++    )
++
++
++def test_req_infra_6785_precondition_failure_writes_blocked_artifact(tmp_path: Path) -> None:
++    """REQ-INFRA-6785 stops before the probe when required sources are absent."""
++    output = tmp_path / "results" / "blocked.json"
++    artifact = exp.run(
++        run_date="20260830",
++        repo_root=tmp_path / "missing-repository",
++        artifact_path=output,
++        checkpoint_path=tmp_path / "checkpoint" / "rows.json",
++    )
++    assert artifact["status"] == "complete_blocked_durable_checkpoint"
++    assert artifact["honest_verdict"].startswith("complete_blocked_durable_checkpoint")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["durable_checkpoint_ready"] is False
++    assert artifact["gate_check_summary"]["failed_checks"]
++    assert artifact["gate_check_summary"]["first_failure"]["observed"] is not True
++    assert output.is_file()
++    assert not (tmp_path / "checkpoint" / "rows.json").exists()
++
++
++def test_req_infra_6785_precondition_os_failures_are_observed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6785 reports storage failures instead of starting a worker."""
++    checkpoint = tmp_path / "results/.checkpoints/task/rows.json"
++    monkeypatch.setattr(
++        exp.Path, "mkdir", lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError())
++    )
++    checks = exp.check_preconditions(tmp_path, checkpoint)
++    assert (
++        next(item for item in checks if item["check"] == "checkpoint_directory_writable")[
++            "observed"
++        ]
++        is False
++    )
++
++    monkeypatch.undo()
++    checkpoint.parent.mkdir(parents=True)
++    monkeypatch.setattr(exp.tempfile, "mkstemp", lambda **_kwargs: (_ for _ in ()).throw(OSError()))
++    checks = exp.check_preconditions(tmp_path, checkpoint)
++    assert (
++        next(item for item in checks if item["check"] == "atomic_rename_same_filesystem")[
++            "observed"
++        ]
++        is False
++    )
++
++
++def test_req_infra_6785_existing_or_failed_publish_fails_closed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6785 never overwrites unexplained state or trusts a bad final write."""
++    checkpoint_path = tmp_path / "existing.json"
++    artifact_path = tmp_path / "artifact.json"
++    store = checkpointing.DurableRowCheckpoint(checkpoint_path, exp.frozen_manifest("20260830"))
++    store.append(
++        checkpointing.complete_row_envelope(
++            row_id="probe-01",
++            manifest_hash=store.manifest_hash,
++            payload=exp._worker_payload("probe-01"),
++            attempt=1,
++            start_receipt={},
++            end_receipt={},
++        )
++    )
++    with pytest.raises(ValueError, match="without a valid final artifact"):
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=checkpoint_path,
++            artifact_path=artifact_path,
++        )
++
++    empty_path = tmp_path / "existing-empty.json"
++    checkpointing.DurableRowCheckpoint(empty_path, exp.frozen_manifest("20260830"))
++    with pytest.raises(RuntimeError, match="initialization"):
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=empty_path,
++            artifact_path=artifact_path,
++        )
++
++
++def test_req_infra_6785_final_validation_and_retention_fail_closed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6785 keeps the checkpoint until a valid final artifact exists."""
++    real_validate = exp.validate_artifact
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced validation error"])
++    with pytest.raises(ValueError, match="forced validation"):
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=tmp_path / "validation-rows.json",
++            artifact_path=tmp_path / "validation-artifact.json",
++        )
++
++    monkeypatch.setattr(exp, "validate_artifact", real_validate)
++    real_write = exp.atomic_write_json
++    corrupt_artifact_path = tmp_path / "corrupt-artifact.json"
++
++    def corrupt_final(path: Path, value: object) -> dict:
++        receipt = real_write(path, value)
++        if Path(path) == corrupt_artifact_path:
++            changed = deepcopy(value)
++            changed["reproducibility_checksum"] = "sha256:wrong"
++            real_write(path, changed)
++        return receipt
++
++    monkeypatch.setattr(exp, "atomic_write_json", corrupt_final)
++    with pytest.raises(RuntimeError, match="hash verification"):
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=tmp_path / "corrupt-rows.json",
++            artifact_path=corrupt_artifact_path,
++        )
++
++    disappearing_checkpoint = tmp_path / "disappearing-rows.json"
++    disappearing_artifact = tmp_path / "disappearing-artifact.json"
++
++    def remove_checkpoint_after_publish(path: Path, value: object) -> dict:
++        receipt = real_write(path, value)
++        if Path(path) == disappearing_artifact:
++            disappearing_checkpoint.unlink()
++        return receipt
++
++    monkeypatch.setattr(exp, "atomic_write_json", remove_checkpoint_after_publish)
++    with pytest.raises(RuntimeError, match="checkpoint disappeared"):
++        exp.run_probe(
++            run_date="20260830",
++            checkpoint_path=disappearing_checkpoint,
++            artifact_path=disappearing_artifact,
++        )
++
++
++def test_req_infra_6785_run_and_parent_main_success_paths(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-INFRA-6785 uses the gated parent paths through both public entry points."""
++    repo = _fake_repo(tmp_path / "repo")
++    checkpoint = repo / exp.CHECKPOINT_RELATIVE_PATH
++    artifact_path = repo / exp.ARTIFACT_RELATIVE_PATH
++    artifact = exp.run(run_date="20260830", repo_root=repo)
++    assert artifact["durable_checkpoint_ready"] is True
++    assert checkpoint.is_file()
++    assert artifact_path.is_file()
++
++    outside_artifact = tmp_path / "main-blocked.json"
++    assert (
++        exp.main(
++            [
++                "--date",
++                "20260830",
++                "--artifact-path",
++                str(outside_artifact),
++                "--checkpoint-path",
++                str(tmp_path / "outside-checkpoint.json"),
++            ]
++        )
++        == 0
++    )
++    assert json.loads(capsys.readouterr().out)["verdict_class"] == "blocked"
++
++
++def test_req_infra_6785_date_and_worker_arguments_fail_closed(tmp_path: Path) -> None:
++    """REQ-INFRA-6785 rejects malformed dates and worker jobs."""
++    with pytest.raises(ValueError, match="YYYYMMDD"):
++        exp.run_probe(
++            run_date="2026-08-30",
++            checkpoint_path=tmp_path / "rows.json",
++            artifact_path=tmp_path / "artifact.json",
++        )
++    bad_job = tmp_path / "bad-job.json"
++    bad_job.write_text("{}")
++    assert exp.main(["--worker-job", str(bad_job)]) == 2
+-- 
+2.55.0
+

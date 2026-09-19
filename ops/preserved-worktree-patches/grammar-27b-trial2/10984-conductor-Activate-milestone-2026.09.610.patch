@@ -1,0 +1,1779 @@
+From f54df16eb6d7cd552f2215e0bdb3888fdc7aeacf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 01:00:38 -0400
+Subject: [PATCH 10984/11171] [conductor] Activate milestone 2026.09.610
+
+Archived previous milestone, activated 2026.09.610.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ research-complete.yaml |   54 ++
+ research-roadmap.yaml  | 1505 ++++++++++++++--------------------------
+ 2 files changed, 563 insertions(+), 996 deletions(-)
+
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 3b3b2c2bef..5dfe6473de 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -84822,3 +84822,57 @@ milestones:
+     title: V608 independent capstone and V609 handoff
+     deliverable: results/experiment_6952_v608_capstone.json
+     result: OK_DELIVERABLE_ONLY
++- id: 2026.09.609
++  title: Certified mapping, convex energy, and queue-regulated learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-09-04'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6953-v609-source-delta
++    title: V609 post-marker source delta and compatibility audit
++    deliverable: results/experiment_6953_v609_source_delta.json
++    result: OK
++  - id: exp6954-v609-contract-advisory
++    title: V609 advisory execution-contract and gate-cascade audit
++    deliverable: results/experiment_6954_v609_contract_advisory.json
++    result: OK
++  - id: exp6955-reformulation-fixture
++    title: Exact optimization-reformulation mapping fixture
++    deliverable: results/experiment_6955_reformulation_fixture.json
++    result: OK
++  - id: exp6956-three-family-reformulation-bank
++    title: Three-family SOTA reformulation mapping bank
++    deliverable: results/experiment_6956_three_family_reformulation_bank.json
++    result: OK
++  - id: exp6957-smt-mapping-certification
++    title: Independent SMT certification of SOTA mappings
++    deliverable: results/experiment_6957_smt_mapping_certification.json
++    result: OK
++  - id: exp6958-convex-factor-energy-canary
++    title: Convex compositional factor-energy canary
++    deliverable: results/experiment_6958_convex_factor_energy_canary.json
++    result: FLAGGED
++  - id: exp6959-certified-energy-selection
++    title: Causal certified-energy candidate selection
++    deliverable: results/experiment_6959_certified_energy_selection.json
++    result: OK
++  - id: exp6960-certified-selection-cold-audit
++    title: Fresh-process certified-selection audit
++    deliverable: results/experiment_6960_certified_selection_cold_audit.json
++    result: OK
++  - id: exp6961-certified-event-sequence
++    title: Sealed chronological outcome-certificate sequence
++    deliverable: results/experiment_6961_certified_event_sequence.json
++    result: OK
++  - id: exp6962-queue-regulated-self-learning
++    title: Queue-regulated continuous self-learning
++    deliverable: results/experiment_6962_queue_regulated_self_learning.json
++    result: OK
++  - id: exp6963-queue-memory-cold-audit
++    title: Fresh-process queue-memory safety audit
++    deliverable: results/experiment_6963_queue_memory_cold_audit.json
++    result: OK_DELIVERABLE_ONLY
++  - id: exp6964-v609-capstone
++    title: V609 independent capstone and V610 handoff
++    deliverable: results/experiment_6964_v609_capstone.json
++    result: OK
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index c4069c321f..f417ef0c92 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -1,89 +1,9 @@
+-milestone: 2026.09.609
+-milestone_title: Certified mapping, convex energy, and queue-regulated learning
++milestone: 2026.09.610
++milestone_title: Error-structured constraint compilation and dependency-fenced learning
+ milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+ tasks:
+-- id: exp6953-v609-source-delta
+-  title: V609 post-marker source delta and compatibility audit
+-  track: research
+-  priority: high
+-  agent_type: claude
+-  model: sonnet
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6953_v609_source_delta.json
+-  prompt: |
+-    CONTEXT:
+-    The V609 planner refresh added SOVER (arXiv:2609.00728), Convex
+-    Compositional Reasoning Models (2605.23395), Self-Reports Are Not
+-    Verification (2609.00652), FedQCL (2608.21539), and SFAD (2609.00796).
+-    This is the advisory execution-time SOTA slot. No science task gates on it.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-references.md
+-    - {project_root}/results/experiment_6941_v608_source_delta.json
+-    - {project_root}/research-roadmap.yaml
+-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/research-complete.yaml and {project_root}/ops/conductor-log.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Recheck the dated V609 source set after the V609 planner marker. Verify
+-    metadata, code state, local compatibility, citation edges, hardware access,
+-    and product state. Append only new facts to research-references.md. Do not
+-    change the locked milestone design.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the V609 planner marker, active roadmap, design
+-       document, network policy, and writable results path. On failure, write
+-       blocked_v609_source_delta with gate_check_summary.
+-    1. Freeze queries, domains, UTC timestamps, retry limits, and acceptance
+-       rules before network access.
+-    2. Search arXiv first for 2025-2026 work on EBM verification, neural
+-       constraints, Ising ML, hallucination mitigation, KANs, energy-guided
+-       decoding, sampling hardware, and continual constraint learning.
+-    3. Recheck OpenReview, Hugging Face Papers, Semantic Scholar citations to
+-       EBT 2507.02092 and ARM-EBM 2512.15605, official GitHub repositories,
+-       Extropic writing, and Logical Intelligence pages.
+-    4. Deep-check each V609 selected paper. Record title, version, date,
+-       evidence grade, code state, dataset state, and local compatibility.
+-       Keep explicit no-update, unavailable, and rate-limit rows.
+-    5. Append only facts newer than the V609 marker. Do not add a dependency
+-       from an announcement, private model, or unverified repository.
+-    6. Set v609_source_delta_complete_score=1 when every required source family
+-       has a terminal row. The score means coverage, not novelty or support.
+-    7. Add REQ-REPORT-6953 and focused deterministic ledger tests. Run Ruff,
+-       OpenSpec coverage, docs audit, artifact-convention audit,
+-       verdict-row consistency lint, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and v609_source_delta_complete_score;
+-       preconditions_checked; inference_substrate
+-       (bounded_primary_source_web_research_no_model_inference); duration_s;
+-       source_artifact_hashes; rows; query_rows; source_family_rows;
+-       paper_rows; citation_edge_rows; implementation_rows; compatibility_rows;
+-       hardware_rows; product_rows; ledger_append_rows; rate_limit_rows;
+-       random_seed; reproducibility_checksum; v609_source_delta_complete_score;
+-       gate_check_summary with failed check, expected value, and observed value
+-       for any blocked verdict; verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6953_v609_source_delta.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6941-v608-source-delta
+-      verdict: complete_null_v608_source_delta_no_post_marker_facts
+-      addressed_by: "This pass starts after a new V609 marker and checks five newly indexed papers plus fresh citation, product, code, and hardware state."
+-      retire_if_same_verdict: true
+-
+-- id: exp6954-v609-contract-advisory
+-  title: V609 advisory execution-contract and gate-cascade audit
++- id: exp6965-v610-contract-advisory
++  title: V610 advisory execution-contract and retirement audit
+   track: infrastructure
+   priority: critical
+   agent_type: claude
+@@ -92,13 +12,14 @@ tasks:
+   max_turns: 100
+   estimated_wall_time_min: 90
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6954_v609_contract_advisory.json
++  milestone: 2026.09.610
++  deliverable: results/experiment_6965_v610_contract_advisory.json
+   prompt: |
+     CONTEXT:
+-    V608's document and YAML matched, but its global preflight returned zero
+-    readiness and cascade-blocked every science branch. V609 still audits its
+-    contract. The audit is advisory, and no science task gates on its scores.
++    Milestone 2026.09.609 completed all 12 slots. Its advisory contract
++    conformed, but its science was null, blocked, or disqualified. V610 has 14
++    tasks, exp6965 through exp6978. This audit is advisory. No science task may
++    gate on its result.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+@@ -106,7 +27,8 @@ tasks:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+     - {project_root}/research-roadmap.yaml
+     - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/results/experiment_6942_v608_contract_preflight.json
++    - {project_root}/results/experiment_6954_v609_contract_advisory.json
++    - {project_root}/results/experiment_6964_v609_capstone.json
+     - {project_root}/scripts/roadmap_schema.py
+     - {project_root}/scripts/validate_prior_failures.py
+     - {project_root}/scripts/exclusion_manifest_lint.py
+@@ -117,753 +39,558 @@ tasks:
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Audit that the active V609 YAML and design document describe the same 12
+-    tasks in the same order. Validate gates, producer fields, model contracts,
+-    prior failures, prompt endings, and bounded scopes. Report every defect,
+-    but do not expose one global readiness field as a science gate.
++    Audit that the active V610 YAML and design document describe the same 14
++    tasks in the same order. Validate structured gates, producer fields, model
++    contracts, prior-failure entries, retired scopes, ARC solve rules, prompt
++    endings, and bounded execution. Report every defect without creating a
++    global science gate.
+ 
+     CONCRETE STEPS:
+     0. PRECONDITIONS: require both contract files, the roadmap schema, the full
+-       exclusion manifest, and all named lint commands. On failure, write
+-       blocked_v609_contract_advisory with gate_check_summary.
+-    1. Add REQ-REPORT-6954 and mutation tests first. Mutate count, ID order,
+-       title, deliverable, gate field, producer field, MODEL_SPECS,
+-       prior-failure subfields, and prompt ending. Require each mutation to fail.
+-    2. Parse both files independently. Require milestone 2026.09.609, exactly
+-       12 tasks, and IDs exp6953 through exp6964 in declared order.
+-    3. Compare every ID, title, deliverable, and structured gate. Require each
+-       gate producer in this roadmap and its field in that producer's own
++       exclusion manifest, and every named lint command. On failure, write
++       blocked_v610_contract_advisory with gate_check_summary.
++    1. Add REQ-REPORT-6965 and focused mutation tests before implementation.
++       Mutate count, ID order, title, deliverable, gate field, producer field,
++       model ID, prior-failure subfield, ARC solve claim, and prompt ending.
++    2. Parse the Markdown and YAML independently. Require milestone
++       2026.09.610, exactly 14 tasks, and IDs exp6965 through exp6978 in the
++       declared order.
++    3. Compare every ID, title, deliverable, order, and structured gate. Require
++       each upstream in this roadmap and each gate field in the producer's own
+        REQUIRED ARTIFACT FIELDS.
+-    4. Require CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, the
+-       run command, and both final prohibitions in every prompt.
+-    5. Require each local-model task to name a mandated GGUF. Reject legacy-only
+-       headline plans and AutoTokenizer calls on GGUF repository IDs.
++    4. Require CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, one
++       run command, and both final prohibitions in every task prompt.
++    5. Require every LLM task to name at least one mandated SOTA GGUF. Reject
++       legacy-only headline plans and AutoTokenizer use on GGUF repository IDs.
+     6. Run schema validation, prior-failure validation, exclusion-manifest lint,
+-       gate audit, and retired-upstream checks. Record raw command receipts and
+-       distinguish tool failure from a contract defect.
+-    7. Check per-unit rows, class-consistent verdict contracts, blocked
+-       gate_check_summary fields, task-owned GPU receipts, per-unit checkpoints,
+-       and an inclusive 720-minute scope cap.
+-    8. Set v609_contract_audit_complete_score=1 when all planned checks have
+-       terminal rows. Set v609_contract_conforms_score=1 only if all checks pass.
+-       A zero conforms score is an advisory complete null, not a science block.
+-    9. Run focused tests, Ruff, OpenSpec coverage, docs audit,
+-       artifact-convention audit, verdict-row consistency lint, and
+-       root-clutter checks.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and both v609_contract_audit_complete_score
+-        and v609_contract_conforms_score; preconditions_checked;
+-        inference_substrate (deterministic_advisory_contract_audit_no_llm);
+-        duration_s; source_artifact_hashes; rows; document_task_rows;
+-        yaml_task_rows; task_parity_rows; gate_contract_rows;
+-        producer_field_rows; prompt_contract_rows; model_contract_rows;
+-        prior_failure_rows; exclusion_manifest_rows; lint_command_rows;
+-        mutation_rows; bounded_scope_rows; cascade_risk_rows; random_seed;
+-        reproducibility_checksum; v609_contract_audit_complete_score;
+-        v609_contract_conforms_score; gate_check_summary with failed check,
+-        expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (true for contract conformance only); verdict_class
+-        (positive | circular_positive | null | blocked | disqualified | partial,
+-        with circular_positive required for a conforming contract);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6954_v609_contract_advisory.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6942-v608-contract-preflight
+-      verdict: blocked_v608_contract_preflight
+-      addressed_by: "The V609 audit uses separate completion and conformance scores, fixes the bounded-scope interpretation, and is not an upstream gate for any science task."
+-      retire_if_same_verdict: true
+-
+-- id: exp6955-reformulation-fixture
+-  title: Exact optimization-reformulation mapping fixture
+-  track: verification
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6955_reformulation_fixture.json
+-  prompt: |
+-    CONTEXT:
+-    SOVER, arXiv:2609.00728, separates LLM-written semantic mappings from exact
+-    certification. Carnot needs a small local fixture before any live model run.
+-    This task uses Z3 and bounded exact enumeration. It does not depend on the
+-    advisory V609 contract audit or on dReal.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-references.md
+-    - {project_root}/python/carnot/constraints
+-    - {project_root}/python/carnot/verification
+-    - {project_root}/python/carnot/verify
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/verification/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build a deterministic corpus of equivalent and hard non-equivalent bounded
+-    optimization formulations. Freeze a canonical mapping schema and exact
+-    witnesses for domain and objective-order preservation. Prove each row with
+-    both Z3 and a separate bounded enumerator.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Z3, exact rational arithmetic, deterministic seed
+-       control, current constraint interfaces, and writable checkpoints. On
+-       failure, write blocked_reformulation_fixture with gate_check_summary.
+-    1. Add REQ-VERIFY-6955 and tests first. Cover variable renaming, affine
+-       mapping, objective scale and sign, missing bounds, strictness changes,
+-       infeasible domains, duplicate variables, and deterministic replay.
+-    2. Generate exactly 120 pairs: 72 equivalent and 48 hard negatives across
+-       bounded integer linear, Boolean-cardinality, and bounded piecewise-linear
+-       families. Keep coefficients and domains small enough for enumeration.
+-    3. Define a versioned JSON mapping schema for variable correspondence,
+-       affine transforms, domain clauses, objective direction and scale, and
+-       claimed relation. Reject extra or missing variables deterministically.
+-    4. For each pair, store canonical mapping, source and target formulations,
+-       feasibility witnesses, counterexamples for negatives, objective-order
+-       witnesses, family, difficulty, and the single hard-negative edit.
+-    5. Prove each row independently with Z3 and exhaustive bounded enumeration.
+-       Require agreement. Quarantine unknown, timeout, or disagreement rows.
+-    6. Freeze train, calibration, held-out, and prospective-family splits by
+-       generator template. Prove no normalized or isomorphic pair crosses a
+-       split.
+-    7. Replay all 120 rows in a fresh process from serialized formulations.
+-       Recompute hashes, labels, witnesses, mappings, and split membership.
+-    8. Set reformulation_fixture_ready_score=1 only when all 120 rows, all three
+-       families, both labels, all splits, and both exact authorities agree.
+-    9. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, docs audit, and root-clutter checks.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and reformulation_fixture_ready_score;
+-        preconditions_checked; inference_substrate
+-        (deterministic_z3_and_bounded_enumeration_fixture_no_llm); duration_s;
+-        source_artifact_hashes; rows; pair_rows; formulation_rows; mapping_rows;
+-        family_rows; label_rows; hard_negative_rows; feasibility_witness_rows;
+-        objective_order_rows; z3_rows; enumeration_rows; authority_agreement_rows;
+-        split_rows; isomorphism_rows; fresh_process_replay_rows;
+-        corpus_checkpoint_path; random_seed; reproducibility_checksum;
+-        reformulation_fixture_ready_score; gate_check_summary with failed check,
+-        expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (true for fixture conformance only); verdict_class
+-        (positive | circular_positive | null | blocked | disqualified | partial,
+-        with circular_positive required when the fixture conforms);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
++       gate audit, retired-upstream checks, ARC live-path lint, and prompt
++       ending checks. Preserve raw command receipts.
++    7. Keep contract_conforms_score advisory. No prompt may reference it in a
++       gate. Treat missing science inputs as blocked, not partial.
++    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++       principle per required field and both v610_contract_audit_complete_score
++       and contract_conforms_score; preconditions_checked;
++       inference_substrate (deterministic_document_yaml_contract_audit);
++       duration_s; source_artifact_hashes; rows; task_contract_rows; gate_rows;
++       producer_field_rows; model_contract_rows; prior_failure_rows;
++       retired_scope_rows; arc_solve_rule_rows; prompt_ending_rows;
++       command_receipt_rows; v610_contract_audit_complete_score;
++       contract_conforms_score; random_seed; reproducibility_checksum;
++       gate_check_summary with failed check, expected value, and observed value
++       for any blocked verdict; verifier_is_oracle (true); verdict_class
++       (positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6955_reformulation_fixture.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6965_v610_contract_advisory.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6943-verifier-density-prefix-corpus
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "This exact fixture is an ungated SOVER-style reformulation corpus with task-local Z3 and enumeration authorities; it does not depend on the failed V608 global contract score."
++    - experiment_id: exp6954-v609-contract-advisory
++      verdict: complete_circular_positive_v609_contract_conforms
++      addressed_by: "This audit checks a new 14-task contract, three new gate branches, ARC non-solve rules, and V610 retirement metadata."
+       retire_if_same_verdict: true
+ 
+-- id: exp6956-three-family-reformulation-bank
+-  title: Three-family SOTA reformulation mapping bank
+-  track: generation
++- id: exp6966-gguf-load-envelope-canary
++  title: Three-family GGUF load-envelope and teardown canary
++  track: infrastructure
+   priority: critical
+   agent_type: claude
+-  model: sonnet
++  model: opus
+   requires_gpu: true
+-  max_turns: 50
+-  estimated_wall_time_min: 720
++  max_turns: 100
++  estimated_wall_time_min: 240
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6956_three_family_reformulation_bank.json
+-  gated_on:
+-    - upstream: exp6955-reformulation-fixture
+-      artifact_field: reformulation_fixture_ready_score
+-      op: '=='
+-      value: 1
++  milestone: 2026.09.610
++  deliverable: results/experiment_6966_gguf_load_envelope_canary.json
+   prompt: |
+     CONTEXT:
+-    Exp6955 supplies an exact SOVER-style mapping fixture. Earlier planning and
+-    relation proposal banks either gate-blocked or lacked a current complete
+-    runtime receipt. This task uses a new optimization-reformulation schema, a
+-    fixed 162-attempt budget, all three mandated GGUF families, and per-attempt
+-    checkpoints. Exact labels stay sealed until all raw outputs are durable.
++    Exp6962 never reached its learning arms because loading the cached
++    Qwen3.6-35B-A3B GGUF raised no_memory. Both RTX 3090 GPUs were visible and a
++    vocabulary probe passed. V610 needs a task-owned load, generation, teardown,
++    and VRAM-release receipt before any live prompt or learning task runs.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/results/experiment_6955_reformulation_fixture.json
+-    - {project_root}/results/experiment_6718_sota_planning_proposal_bank.json
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6962_queue_regulated_self_learning.json
++    - {project_root}/scripts/experiments/experiment_6962_queue_regulated_self_learning.py
+     - {project_root}/scripts/experiment_template.py
+-    - {project_root}/scripts/inference_sota_models.py
++    - {project_root}/python/carnot/inference/sota_models.py
++    - {project_root}/python/carnot/inference/gemma4_quantized.py
+     - {project_root}/python/carnot/task_runtime_receipts.py
+-    - {project_root}/openspec/capabilities/verification/spec.md
++    - {project_root}/scripts/run_stop_authority.py
++    - {project_root}/ops/gpu-lease.json and {project_root}/ops/known-issues.md
++    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Generate a frozen mapping-proposal bank for 18 held-out reformulation pairs.
+-    Run three independent candidates per pair on all three mandated local GGUF
+-    families. Preserve raw text, parse results, self-reports, tokens, and
+-    failures before any exact checker reads the candidates.
++    Reproduce the Qwen load failure, identify its exact memory and process
++    cause, and prove a bounded sequential runtime for all three mandated GGUF
++    families. Make the smallest safe loader or configuration fix outside
++    scripts/research_conductor.py when the failure is reproducible.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require reformulation_fixture_ready_score=1, the fixture
+-       checkpoint, all three cached GGUF files, successful llama.cpp vocab_only
+-       probes, authenticated CUDA offload, disk space, and atomic per-attempt
+-       recovery. On failure, write blocked_three_family_reformulation_bank with
+-       gate_check_summary.
+-    1. Add REQ-VERIFY-6956 and tests first. Cover resume without duplication,
+-       malformed JSON, timeout, tokenizer mismatch, leaked labels, copied
+-       candidates, process teardown, model hash drift, and aggregate mismatch.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
++    0. PRECONDITIONS: require both NVIDIA devices, no foreign lease owner, all
++       three cached GGUF files, llama.cpp bindings, and a writable checkpoint
++       path. On failure, write blocked_gguf_load_envelope_canary with
++       gate_check_summary. Do not download a replacement quant.
++    1. Add REQ-INFRA-6966 and tests for configuration resolution, subprocess
++       ownership, teardown, and bare gate fields before changing runtime code.
++    2. Declare MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)). Require
++       exact hub IDs unsloth/Qwen3.6-35B-A3B-GGUF,
+        unsloth/gemma-4-31B-it-GGUF, and
+-       unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair or the current GGUF
+-       resolver. Never call AutoTokenizer on a GGUF repository ID. Legacy small
+-       models may run CPU smoke tests only and cannot enter headline rows.
+-    3. Freeze the same 18 held-out pair IDs, K=3 prompt variants, seeds,
+-       decoding settings, token caps, mapping schema, and prompt hashes. The
+-       headline budget is exactly 162 attempted outputs.
+-    4. Ask only for mapping JSON plus an optional confidence and short rationale.
+-       Do not expose pair labels, canonical mappings, witnesses, solver output,
+-       other candidates, or any later memory.
+-    5. Load one model at a time. After each call, atomically checkpoint raw text,
+-       token IDs, parse state, runtime receipt, latency, and failure reason.
+-       Close the model and CUDA context before loading the next family.
+-    6. Parse only after the raw row is durable. Record schema validity without
+-       repairing the candidate. Do not run Z3 or enumeration in this task.
+-    7. Keep every malformed, timed-out, duplicated, or empty output in the
+-       denominator. Report parse rate, candidate diversity, confidence, and
+-       candidate-group completeness by family and prompt variant.
+-    8. Set reformulation_bank_complete_score=1 only when all 162 attempt keys
+-       have terminal rows and all model lifecycle receipts close. Completion
+-       does not require correct mappings or selectable headroom.
+-    9. Run focused tests, Ruff, OpenSpec coverage, applicable live-model checks,
+-       artifact-convention audit, verdict-row consistency lint, docs audit, and
+-       root-clutter checks.
++       unsloth/gemma-4-26B-A4B-it-GGUF. Legacy models are smoke-only and cannot
++       set gguf_runtime_ready_score.
++    3. Record baseline GPU memory, processes, model paths, file hashes, GGUF
++       metadata, embedded-tokenizer probe, and the exact Exp6962 load config.
++    4. Reproduce the failing Qwen load once in an owned subprocess. Record the
++       exact exception, allocation request, n_ctx, layer split, mmap/mlock
++       settings, visible devices, and process tree.
++    5. Test a preregistered small configuration ladder. Change one factor at a
++       time. Keep n_ctx at least 16384 for the promoted configuration. Do not
++       use CPU-only execution as the promoted result.
++    6. Load one family at a time. Run one fixed 128-token live generation for
++       each model. Record GPU utilization, offload layers, tokens per second,
++       output hash, and live duration.
++    7. Close the model, end the owned subprocess, run garbage collection, and
++       prove both device memory readings return within 512 MiB of the baseline
++       before loading the next family. Do not kill an unowned process.
++    8. Checkpoint after every model. Set gguf_load_canary_complete_score=1 when
++       all three model rows are terminal. Set gguf_runtime_ready_score=1 only
++       when all three promoted rows used live CUDA, generated nonempty output,
++       exited cleanly, and released memory.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
+     10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and reformulation_bank_complete_score;
+-        preconditions_checked; inference_substrate
+-        (task_owned_local_gguf_reformulation_mapping_generation); duration_s;
+-        source_artifact_hashes; rows; model_specs; model_rows; pair_rows;
+-        attempt_rows; prompt_variant_rows; candidate_group_rows; raw_output_rows;
+-        parse_rows; schema_rows; confidence_rows; rationale_rows; diversity_rows;
+-        hidden_label_isolation_rows; checkpoint_rows; model_lifecycle_rows;
+-        task_runtime_receipt; random_seed; reproducibility_checksum;
+-        reformulation_bank_complete_score; gate_check_summary with failed check,
++        principle per required field and both gguf_load_canary_complete_score
++        and gguf_runtime_ready_score; preconditions_checked;
++        inference_substrate (live_local_llama_cpp_three_family_dual_cuda);
++        duration_s; live_duration_s; source_artifact_hashes; MODEL_SPECS;
++        models_used; model_file_hashes; gpu_topology; baseline_gpu_memory_rows;
++        reproduction_rows; load_config_rows; vocab_probe_rows;
++        live_generation_rows; gpu_runtime_rows; process_ownership_rows;
++        teardown_rows; vram_release_rows; checkpoint_rows;
++        gguf_load_canary_complete_score; gguf_runtime_ready_score; random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
+         expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class (positive |
+-        circular_positive | null | blocked | disqualified | partial);
++        verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6956_three_family_reformulation_bank.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6966_gguf_load_envelope_canary.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6718-sota-planning-proposal-bank
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "This bank has a fresh exact reformulation fixture, no retired planning-corpus dependency, a fixed 162-attempt cap, all three current GGUF families, and atomic per-attempt recovery."
++    - experiment_id: exp6962-queue-regulated-self-learning
++      verdict: blocked_queue_regulated_self_learning
++      addressed_by: "This task isolates the no_memory failure, loads one family per owned subprocess, measures the memory ladder, and proves teardown before any learning work."
+       retire_if_same_verdict: true
+ 
+-- id: exp6957-smt-mapping-certification
+-  title: Independent SMT certification of SOTA mappings
++- id: exp6967-certified-error-headroom-fixture
++  title: Certified mapping-error and headroom fixture
+   track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 240
++  max_turns: 50
++  estimated_wall_time_min: 180
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6957_smt_mapping_certification.json
+-  gated_on:
+-    - upstream: exp6956-three-family-reformulation-bank
+-      artifact_field: reformulation_bank_complete_score
+-      op: '=='
+-      value: 1
++  milestone: 2026.09.610
++  deliverable: results/experiment_6967_certified_error_headroom_fixture.json
+   prompt: |
+     CONTEXT:
+-    SOVER gives authority to formal certification, not to the LLM that writes a
+-    mapping. Exp6956 froze 162 proposals without exact feedback. This task now
+-    checks each proposal with Z3 and a separate bounded enumerator. Model
+-    confidence and rationale remain untrusted comparison signals.
++    Exp6957 certified only 10 of 162 mappings. It found 79 parse failures and 37
++    schema failures. Exp6959 then found zero candidate headroom in all 54 groups.
++    ESPO requires complete error diagnosis and split isolation before prompt
++    selection. V610 must use unused exact pairs and must not fabricate headroom.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+     - {project_root}/results/experiment_6955_reformulation_fixture.json
+     - {project_root}/results/experiment_6956_three_family_reformulation_bank.json
+-    - {project_root}/python/carnot/constraints
+-    - {project_root}/python/carnot/verification
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/verification/spec.md
++    - {project_root}/results/experiment_6957_smt_mapping_certification.json
++    - {project_root}/results/experiment_6959_certified_energy_selection.json
++    - {project_root}/python/carnot/experiment_6955_reformulation_fixture.py
++    - {project_root}/python/carnot/experiment_6957_smt_mapping_certification.py
++    - {project_root}/python/carnot/experiment_6959_certified_energy_selection.py
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Certify every frozen SOTA mapping proposal. Check schema completeness,
+-    forward and reverse domain feasibility, variable coverage, objective
+-    direction, and global objective-order preservation. Measure exact mapping
+-    quality and test whether confidence or rationale predicts it.
++    Recompute and cluster every V609 mapping failure. Freeze disjoint,
++    balanced calibration, held-out, and chronological slices from exact pairs
++    that no V609 model prompt used. Produce exact witnesses and split hashes for
++    later prompt, energy, and continuous-learning tasks.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require reformulation_bank_complete_score=1, all 162 raw
+-       attempt rows, the exact fixture, source hashes, Z3, and bounded enumerator
+-       support. On failure, write blocked_smt_mapping_certification with
++    0. PRECONDITIONS: require loadable Exp6955, Exp6956, Exp6957, and Exp6959
++       artifacts, raw proposal rows, exact witnesses, and unique pair IDs. On
++       failure, write blocked_certified_error_headroom_fixture with
+        gate_check_summary.
+-    1. Add REQ-VERIFY-6957 and tests first. Cover malformed candidates, missing
+-       variables, non-bijections, invalid affine transforms, infeasible maps,
+-       objective reversal, timeout, unknown, enumerator disagreement, and ties.
+-    2. Freeze parse and certificate rules before reading exact pair labels.
+-       Never repair or complete a model mapping.
+-    3. For each proposal, run schema checks, forward and reverse cross-feasibility,
+-       objective-direction checks, and objective-order preservation. Preserve
+-       exact witnesses or counterexamples.
+-    4. Run bounded exact enumeration as an independent authority. Quarantine
+-       any Z3/enumerator disagreement and keep it in the denominator.
+-    5. Compare proposal certification with the pair's canonical relation.
+-       Report exact mapping accuracy, relation classification, parse failure,
+-       false acceptance, false rejection, timeout, and unknown by model, family,
+-       prompt variant, and difficulty.
+-    6. Evaluate confidence and rationale-presence as monitoring signals only.
+-       Report calibration, discrimination, and top-confidence error rates. Do
+-       not promote them as authority.
+-    7. Set smt_certification_run_complete_score=1 when all 162 proposals have
+-       terminal Z3, enumeration, and agreement rows. Set sota_mapping_positive_score=1
+-       only if each of at least two model families beats a frozen syntax-only
+-       baseline on paired exact mapping accuracy with CI95 above zero and the
+-       pooled false-acceptance rate stays below 1%.
+-    8. Replay certificates and headline metrics from serialized rows in a fresh
+-       process. Run focused tests, Ruff, OpenSpec coverage,
+-       artifact-convention audit, verdict-row consistency lint, adversarial
+-       verification, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and both smt_certification_run_complete_score and
+-       sota_mapping_positive_score; preconditions_checked;
+-       inference_substrate (frozen_sota_proposals_z3_and_exact_enumeration);
+-       duration_s; source_artifact_hashes; rows; proposal_rows; parse_rows;
+-       schema_rows; cross_feasibility_rows; variable_coverage_rows;
+-       objective_direction_rows; objective_order_rows; z3_rows;
+-       enumeration_rows; authority_agreement_rows; witness_rows;
+-       counterexample_rows; model_rows; family_rows; difficulty_rows;
+-       confidence_rows; rationale_rows; calibration_rows; baseline_rows;
+-       paired_metric_rows; confidence_interval_rows; fresh_process_replay_rows;
+-       random_seed; reproducibility_checksum;
+-       smt_certification_run_complete_score; sota_mapping_positive_score;
+-       gate_check_summary with failed check, expected value, and observed value
+-       for any blocked verdict; verifier_is_oracle (false; SMT and enumeration
+-       are external label authorities, not the evaluated mapping method);
+-       verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict with a terminal prefix
+-       consistent with verdict_class.
++    1. Add REQ-VERIFY-6967 and tests for recomputation, exclusion of used IDs,
++       deterministic clustering, family balance, split disjointness, and bare
++       gate fields before implementation.
++    2. Reparse all 162 raw outputs with the frozen parser. Recompute parse,
++       schema, domain-correspondence, objective-direction, objective-order,
++       timeout, and unknown outcomes with Z3 and bounded enumeration.
++    3. Cluster every failed row into mutually auditable error groups. Keep
++       examples, counts, model family, formulation family, and exact witnesses.
++       Confidence and self-report may be descriptive fields only.
++    4. Hash all pair IDs used by Exp6956. Exclude them from every new slice.
++    5. From unused Exp6955 pairs, freeze exactly 18 calibration pairs, 18
++       held-out pairs, and 24 chronological events. Balance all three
++       formulation families and preserve equivalent and hard-negative coverage.
++    6. Seal labels and witnesses separately from model-visible prompt records.
++       Freeze event order before any later outcome exists. Preserve dependency
++       IDs and source certificate hashes for the chronological stream.
++    7. Record opportunity rows for parse repair, schema repair, and semantic
++       repair. Do not set a model headroom claim before live candidates exist.
++    8. Set error_fixture_ready_score=1 only when all 162 error rows recompute,
++       every new slice is disjoint, and exact labels agree across both solvers.
++       Set chronological_event_stream_ready_score=1 only when all 24 ordered
++       events have immutable predecessor and dependency records.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both error_fixture_ready_score and
++        chronological_event_stream_ready_score; preconditions_checked;
++        inference_substrate (deterministic_z3_and_bounded_enumeration_reducer);
++        duration_s; source_artifact_hashes; rows; recomputed_proposal_rows;
++        error_cluster_rows; cluster_example_rows; used_pair_exclusion_rows;
++        calibration_rows; heldout_rows; chronological_event_rows;
++        family_balance_rows; exact_witness_rows; solver_agreement_rows;
++        split_disjointness_rows; prompt_visible_rows; sealed_label_hashes;
++        split_hashes; headroom_opportunity_rows; error_fixture_ready_score;
++        chronological_event_stream_ready_score; random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6957_smt_mapping_certification.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6967_certified_error_headroom_fixture.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6380-three-family-canonical-factor-transport-canary
+-      verdict: "complete_null: live calls ran but three-family canonical transport gates did not all pass"
+-      addressed_by: "This task certifies already frozen reformulation mappings with two exact authorities and no factor-transport or live-generation gate."
++    - experiment_id: exp6957-smt-mapping-certification
++      verdict: complete_null_sota_mapping_certification
++      addressed_by: "This task does not retry direct mapping; it diagnoses every failure and freezes unused calibration, held-out, and chronological exact pairs."
++      retire_if_same_verdict: true
++    - experiment_id: exp6959-certified-energy-selection
++      verdict: complete_null_certified_energy_selection
++      addressed_by: "This fixture records opportunity classes and disjoint future slices; it does not claim headroom before new live candidates exist."
+       retire_if_same_verdict: true
+ 
+-- id: exp6958-convex-factor-energy-canary
+-  title: Convex compositional factor-energy canary
+-  track: energy
+-  priority: critical
++- id: exp6968-arc-post-refit-induction-audit
++  title: ARC post-refit induction held-out quality audit
++  track: arc
++  priority: high
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 50
+-  estimated_wall_time_min: 360
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6958_convex_factor_energy_canary.json
+-  gated_on:
+-    - upstream: exp6955-reformulation-fixture
+-      artifact_field: reformulation_fixture_ready_score
+-      op: '=='
+-      value: 1
++  milestone: 2026.09.610
++  deliverable: results/experiment_6968_arc_post_refit_induction_audit.json
+   prompt: |
+     CONTEXT:
+-    Convex Compositional Reasoning Models, arXiv:2605.23395, argues that
+-    non-convex factor geometry causes spurious minima. Carnot has not tested an
+-    input-convex mapping energy. This bounded canary adapts the method shape to
+-    the Exp6955 mapping schema. It does not claim paper reproduction.
++    V609 had no ARC task. A separate live r11l run used the repaired
++    n_ctx=98304 path and emitted a complete 170-line engine. The engine appears
++    to copy shown delta rows, but it has no rigorous held-out score. This task
++    audits the frozen live artifact. It does not generate a replacement engine
++    and does not claim a game or level solve.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-references.md
+-    - {project_root}/results/experiment_6955_reformulation_fixture.json
+-    - {project_root}/python/carnot/energy
+-    - {project_root}/python/carnot/constraints
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/energy-models/spec.md
+-    - {project_root}/openspec/capabilities/verification/spec.md
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/ops/status.md sections for the 2026-09-04 post-refit run
++    - {project_root}/scripts/arc_e3_induced_model_quality.py
++    - {project_root}/scripts/arc_induction_quality.py
++    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
++    - {project_root}/results/arc_e3/r11l/attempts/
++    - {project_root}/ops/arc_solve_registry.yaml
++    - {project_root}/results/experiment_5594_think_mode_induction_quality_ab.json
++    - {project_root}/results/experiment_5714_think_mode_rescoped_ab.json
++    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+ 
+     TASK:
+-    Implement and test a small input-convex factor energy over structured
+-    mapping variables. Compare it with a parameter-matched unconstrained MLP, a
+-    linear score, exact hand penalties, and shuffled labels. Measure convexity,
+-    deterministic optimization, exact ordering, and size transfer.
++    Locate the completed post-refit live run and its exact emitted engine. Score
++    shown-prefix and held-out transition quality in a fresh process. Compare
++    against identity, constant-delta, and memorization controls. State whether
++    the context repair produced a generalizing engine without making any solve
++    claim.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require reformulation_fixture_ready_score=1, complete
+-       mapping and witness rows, fixed splits, PyTorch CPU support, and writable
+-       checkpoints. On failure, write blocked_convex_factor_energy_canary with
+-       gate_check_summary.
+-    1. Add REQ-ENERGY-6958 and tests first. Cover nonnegative convex weights,
+-       projection, finite differences, Jensen checks, factor permutation,
+-       padding masks, tie handling, split leakage, and deterministic replay.
+-    2. Encode mapping candidates as compact factor variables for variable
+-       coverage, domain correspondence, affine consistency, objective direction,
+-       and order witnesses. Exclude final exact labels and solver status.
+-    3. Generate matched valid and corrupted mapping candidates from train and
+-       calibration fixture rows. Freeze corruptions before fitting.
+-    4. Train five matched-budget arms: input-convex factor sum, unconstrained
+-       MLP factor sum, linear score, exact hand penalties, and shuffled-label
+-       convex energy. Match examples, parameters where applicable, epochs,
+-       optimizer calls, starts, and seeds.
+-    5. Test empirical Jensen inequalities, gradient monotonicity, projected
+-       optimizer convergence, energy ordering, calibration, latency, and
+-       transfer from smaller to larger factor counts on held-out templates.
+-    6. Keep exact hand penalties as a transparent non-learned control, not as
+-       the learned-energy headline. Report all starts and failures.
+-    7. Set convex_factor_run_complete_score=1 when every arm, seed, split, and
+-       size band has terminal rows. Set convex_factor_positive_score=1 only when
+-       the convex learned energy passes all convexity checks and beats both the
+-       unconstrained MLP and linear learned controls on held-out exact ordering
+-       with paired CI95 above zero. Exact hand penalties remain an upper control.
+-    8. Save checkpoints and replay metrics in a fresh process. Run focused
+-       tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and
++    0. PRECONDITIONS: require a completed live r11l run with
++       CARNOT_ARC_INDUCE_N_CTX=98304, one emitted engine hash, immutable source
++       transitions, and the existing scorer. If the run or rows are absent,
++       write blocked_arc_post_refit_induction_audit with gate_check_summary.
++       Do not declare partial for an externally absent run.
++    1. Add REQ-ARC-WMTE-6968 and tests for run selection, provenance, split
++       purity, transition scoring, memorization detection, and no-solve fields.
++    2. Select the run by recorded environment and timestamps, not by the best
++       score. Record run, engine, prompt, transition, and scorer hashes.
++    3. Rebuild the exact prefix and held-out split used by the live induction
++       attempt. Fail closed if any held-out row entered the prompt or repair
++       feedback.
++    4. Execute the frozen engine in a fresh restricted process. Score exact
++       cells, changed-cell recall and precision, changing-transition accuracy,
++       no-op accuracy, and exceptions for every transition.
++    5. Score identity, constant-delta, nearest-shown-delta, and row-table
++       memorization controls on the same held-out rows.
++    6. Report prefix-to-heldout gaps and cluster uncertainty by transition.
++       A high prefix score cannot establish generalization.
++    7. Set arc_induction_audit_complete_score=1 when every source and control
++       row is terminal. Set arc_induction_generalization_positive_score=1 only
++       if held-out changing accuracy beats the strongest control with a
++       preregistered paired interval above zero and no leakage.
++    8. Emit solve_claimed=false, level_claimed=false, registry_updated=false,
++       and submitted_to_leaderboard=false. Do not solve, re-solve, or calibrate
++       a game with outer-loop ground truth.
++    9. Run focused tests, Ruff, OpenSpec coverage, ARC live-path lint, artifact
++       validation, adversarial verification, row-consistency lint, and
+        root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and both convex_factor_run_complete_score and
+-       convex_factor_positive_score; preconditions_checked;
+-       inference_substrate (small_cpu_input_convex_factor_energy_training);
+-       duration_s; source_artifact_hashes; rows; feature_rows;
+-       corruption_rows; split_rows; arm_rows; seed_rows; training_rows;
+-       convex_weight_rows; jensen_rows; finite_difference_rows; projection_rows;
+-       optimizer_rows; ordering_rows; calibration_rows; size_transfer_rows;
+-       latency_rows; baseline_rows; shuffled_label_rows; paired_metric_rows;
+-       confidence_interval_rows; label_isolation_rows;
+-       fresh_process_replay_rows; checkpoint_paths; random_seed;
+-       reproducibility_checksum; convex_factor_run_complete_score;
+-       convex_factor_positive_score; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive |
+-       circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both arc_induction_audit_complete_score
++        and arc_induction_generalization_positive_score;
++        preconditions_checked; inference_substrate
++        (fresh_process_replay_of_frozen_live_agent_engine); duration_s;
++        source_artifact_hashes; selected_run_provenance; engine_hash;
++        prompt_hash; transition_hash; scorer_hash; rows; per_transition_rows;
++        split_rows; purity_rows; engine_execution_rows; control_rows;
++        prefix_exact_accuracy; heldout_exact_accuracy;
++        heldout_changing_accuracy; heldout_noop_accuracy; generalization_gap;
++        paired_control_delta_rows; memorization_signature_rows;
++        arc_induction_audit_complete_score;
++        arc_induction_generalization_positive_score; solve_claimed (false);
++        level_claimed (false); registry_updated (false);
++        submitted_to_leaderboard (false); random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6958_convex_factor_energy_canary.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6968_arc_post_refit_induction_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6380-three-family-canonical-factor-transport-canary
+-      verdict: "complete_null: live calls ran but three-family canonical transport gates did not all pass"
+-      addressed_by: "This canary replaces canonical cross-family factor transport with a task-local input-convex mapping energy, exact synthetic corruptions, and matched non-convex controls."
++    - experiment_id: exp5594-think-mode-induction-quality-ab
++      verdict: "complete: think_mode_ab_equal_success_no_think_higher_accuracy"
++      addressed_by: "This audit scores a new live n_ctx=98304 engine with exact held-out changing transitions and explicit memorization controls; it does not retry the think toggle."
++      retire_if_same_verdict: true
++    - experiment_id: exp5714-think-mode-rescoped-ab
++      verdict: "complete: think_toggle_inert_under_codeonly_but_genuine_reasoning_no_winrecognition_delta"
++      addressed_by: "The new scope audits post-refit engine generalization in a fresh process and makes no reasoning-mode or game-solve claim."
+       retire_if_same_verdict: true
+ 
+-- id: exp6959-certified-energy-selection
+-  title: Causal certified-energy candidate selection
+-  track: verification
++- id: exp6969-error-structured-prompt-bank
++  title: Three-family error-structured prompt candidate bank
++  track: inference
+   priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
++  agent_type: claude
++  model: sonnet
++  requires_gpu: true
+   max_turns: 50
+-  estimated_wall_time_min: 240
++  estimated_wall_time_min: 720
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6959_certified_energy_selection.json
++  milestone: 2026.09.610
++  deliverable: results/experiment_6969_error_structured_prompt_bank.json
+   gated_on:
+-    - upstream: exp6957-smt-mapping-certification
+-      artifact_field: smt_certification_run_complete_score
++    - upstream: exp6966-gguf-load-envelope-canary
++      artifact_field: gguf_runtime_ready_score
+       op: '=='
+       value: 1
+-    - upstream: exp6958-convex-factor-energy-canary
+-      artifact_field: convex_factor_run_complete_score
++    - upstream: exp6967-certified-error-headroom-fixture
++      artifact_field: error_fixture_ready_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6957 supplies exact labels for a frozen three-family proposal bank.
+-    Exp6958 supplies a convex factor energy and matched learned controls. A
+-    decodable score matters only if it changes candidate selection and beats
+-    strong non-oracle baselines on the same groups. This task performs that
+-    causal decision test without feeding exact labels into a selector.
++    Exp6957 found only 10 exact mappings among 162 direct-prompt outputs. V610
++    applies ESPO's diversification stage after Exp6967 diagnoses every error.
++    This task builds calibration outputs only. It does not inspect the sealed
++    held-out labels and does not select a policy.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6966_gguf_load_envelope_canary.json
++    - {project_root}/results/experiment_6967_certified_error_headroom_fixture.json
+     - {project_root}/results/experiment_6956_three_family_reformulation_bank.json
+     - {project_root}/results/experiment_6957_smt_mapping_certification.json
+-    - {project_root}/results/experiment_6958_convex_factor_energy_canary.json
+-    - {project_root}/python/carnot/energy
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/verification/spec.md
++    - {project_root}/scripts/experiment_template.py
++    - {project_root}/python/carnot/inference/sota_models.py
++    - {project_root}/python/carnot/experiment_6956_three_family_reformulation_bank.py
++    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+ 
+     TASK:
+-    Rank each frozen candidate group with label-blind selectors. Compare convex
+-    factor energy with unconstrained energy, likelihood, syntax, confidence,
+-    shuffled energy, and fixed order. Use exact certification only to evaluate
+-    the chosen candidate and to compute an oracle upper bound.
++    Freeze four independently biased error-structured mapping prompts and the
++    V609 direct baseline. Run all five policies on the 18 calibration pairs
++    with all three mandated local GGUF families. Preserve 270 raw outputs before
++    parsing and create a complete candidate bank for bootstrap selection.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require smt_certification_run_complete_score=1,
+-       convex_factor_run_complete_score=1, all proposal rows, exact certificate
+-       rows, compatible checkpoints, fixed group IDs, and sealed evaluation
+-       labels. On failure, write blocked_certified_energy_selection with
++    0. PRECONDITIONS: require gguf_runtime_ready_score=1,
++       error_fixture_ready_score=1, 18 calibration prompt rows, sealed held-out
++       labels, all model files, two CUDA devices, and a writable checkpoint. On
++       failure, write blocked_error_structured_prompt_bank with
+        gate_check_summary.
+-    1. Add REQ-VERIFY-6959 and tests first. Cover label leakage, candidate-order
+-       leakage, missing scores, score direction, ties, duplicate candidates,
+-       no-headroom groups, family imbalance, and aggregate-row mismatch.
+-    2. Freeze selection arms and tie policy before opening certificate labels.
+-       Score candidates from their mapping structure and generation metadata
+-       only. Exclude solver status, witnesses, counterexamples, and exact label.
+-    3. Run convex energy, unconstrained energy, linear energy, likelihood when
+-       available, syntax validity, model confidence, shuffled-energy, and fixed
+-       order on identical candidate groups. Keep unavailable likelihood rows.
+-    4. Evaluate selected exact correctness, false acceptance, top-1 accuracy,
+-       oracle@K, headroom captured, calibration, latency, and abstention by
+-       model family, formulation family, difficulty, and candidate diversity.
+-    5. Compute paired differences against the strongest non-oracle baseline.
+-       Bootstrap by pair ID, not candidate row. Report exact ties and groups
+-       with no correct candidate.
+-    6. Set certified_selection_run_complete_score=1 when every eligible group
+-       and arm has a terminal row. Set certified_energy_positive_score=1 only
+-       when convex energy beats the strongest non-oracle baseline on paired
+-       top-1 accuracy with CI95 above zero, captures at least 20% of available
+-       oracle headroom, and passes all leak, tie, and control checks.
+-    7. Treat high AUROC with no top-1 gain as null. Never use the exact oracle as
+-       the deployed selector or count its result as an energy win.
+-    8. Replay headline metrics from rows in a fresh process. Run focused tests,
+-       Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and
+-       root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and both certified_selection_run_complete_score and
+-       certified_energy_positive_score; preconditions_checked;
+-       inference_substrate (frozen_candidate_label_blind_energy_selection);
+-       duration_s; source_artifact_hashes; rows; candidate_group_rows;
+-       candidate_rows; split_rows; arm_rows; convex_energy_rows;
+-       unconstrained_energy_rows; linear_energy_rows; likelihood_rows;
+-       syntax_rows; confidence_rows; shuffled_energy_rows; fixed_order_rows;
+-       oracle_upper_bound_rows; selection_rows; abstention_rows; headroom_rows;
+-       family_rows; difficulty_rows; latency_rows; paired_metric_rows;
+-       confidence_interval_rows; leakage_rows; tie_rows;
+-       fresh_process_replay_rows; random_seed; reproducibility_checksum;
+-       certified_selection_run_complete_score; certified_energy_positive_score;
+-       gate_check_summary with failed check, expected value, and observed value
+-       for any blocked verdict; verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    1. Add REQ-INF-6969 and tests for prompt hashes, attempt count, model
++       identity, split isolation, raw-before-parse durability, and gate fields.
++    2. Declare MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)). Require
++       unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and
++       unsloth/gemma-4-26B-A4B-it-GGUF. A legacy model may run a labeled CPU
++       smoke only. It cannot enter the 270 headline rows.
++    3. Freeze five policies before generation: the V609 direct baseline; a
++       domain-first decomposition; a hard-negative witness check; a JSON
++       skeleton plus field checklist; and a parse-then-semantic self-check.
++       Each of the four new policies must target a distinct Exp6967 cluster.
++    4. Fix model order, pair order, seeds, temperature, top-p, token budget,
++       stop rules, retries, and batching before the first live call. Use one
++       promoted candidate per model, pair, and policy.
++    5. Run exactly 18 pairs x 5 policies x 3 models = 270 live attempts. Use
++       task-owned sequential family processes and batch questions inside each
++       family. Checkpoint after each model and pair block.
++    6. Make raw prompt and output durable before parsing. Do not put labels,
++       solver feedback, exact witnesses, future events, or another policy's
++       outcome into a model prompt.
++    7. Parse only after durable capture. Keep malformed and empty outputs.
++       Record parse and schema diagnostics, but do not certify semantics or
++       select a prompt in this task.
++    8. Set prompt_candidate_bank_complete_score=1 only when all 270 rows are
++       terminal, all three models used live CUDA, all prompt hashes match, and
++       no held-out label was read.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and prompt_candidate_bank_complete_score;
++        preconditions_checked; inference_substrate
++        (live_local_llama_cpp_three_family_dual_cuda_batched);
++        duration_s; live_duration_s; source_artifact_hashes; MODEL_SPECS;
++        models_used; model_file_hashes; gpu_runtime_rows; batch_rows;
++        policy_rows; policy_cluster_mapping_rows; prompt_hashes; rows;
++        per_attempt_rows; raw_output_rows; parser_diagnostic_rows;
++        checkpoint_rows; split_isolation_rows; expected_attempt_count (270);
++        observed_attempt_count; prompt_candidate_bank_complete_score;
++        random_seed; reproducibility_checksum; gate_check_summary with failed
++        check, expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6959_certified_energy_selection.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6969_error_structured_prompt_bank.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp1006-energy-selection-ssd
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "This selection task has complete producers in the same roadmap, uses frozen exact-certified reformulation groups, and compares a new convex factor energy against matched non-oracle controls."
++    - experiment_id: exp6956-three-family-reformulation-bank
++      verdict: complete_reformulation_proposal_bank_frozen
++      addressed_by: "This bank uses unused calibration pairs and four error-specific prompt mechanisms instead of repeating the direct V609 prompt."
++      retire_if_same_verdict: true
++    - experiment_id: exp6957-smt-mapping-certification
++      verdict: complete_null_sota_mapping_certification
++      addressed_by: "The new prompt policies directly target the measured parse, schema, domain, and objective error clusters before any held-out claim."
+       retire_if_same_verdict: true
+ 
+-- id: exp6960-certified-selection-cold-audit
+-  title: Fresh-process certified-selection audit
++- id: exp6970-bootstrap-prompt-policy-selection
++  title: Bootstrap-stable prompt policy selection
+   track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 30
++  max_turns: 50
+   estimated_wall_time_min: 180
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6960_certified_selection_cold_audit.json
++  milestone: 2026.09.610
++  deliverable: results/experiment_6970_bootstrap_prompt_policy_selection.json
+   gated_on:
+-    - upstream: exp6959-certified-energy-selection
+-      artifact_field: certified_selection_run_complete_score
++    - upstream: exp6969-error-structured-prompt-bank
++      artifact_field: prompt_candidate_bank_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6959 gates this task on run completion, not on a positive result. Past
+-    artifacts have carried aggregate claims that their rows contradicted. This
+-    task starts with no inherited Python state, reloads the frozen candidates,
+-    certificates, and factor checkpoints, and recomputes the selection claim.
++    ESPO reports that diversity without stable selection can hurt. Exp6969
++    contains only calibration candidates. This task may use calibration exact
++    labels to select one policy. Its result is circular calibration evidence,
++    not a held-out science claim.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6956_three_family_reformulation_bank.json
+-    - {project_root}/results/experiment_6957_smt_mapping_certification.json
+-    - {project_root}/results/experiment_6958_convex_factor_energy_canary.json
+-    - {project_root}/results/experiment_6959_certified_energy_selection.json
+-    - {project_root}/scripts/adversarial_verify.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/verification/spec.md
+-
+-    TASK:
+-    Independently replay the certified candidate-selection experiment from raw
+-    rows and checkpoints. Verify exact certificate authority, label isolation,
+-    arm parity, tie policy, candidate order, proposal budget, and paired
+-    confidence intervals. Never upgrade the upstream verdict.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require certified_selection_run_complete_score=1, complete
+-       raw proposal and certificate rows, factor checkpoints, source hashes, and
+-       a fresh-process entry point. On failure, write
+-       blocked_certified_selection_cold_audit with gate_check_summary.
+-    1. Add REQ-VERIFY-6960 and tests first. Cover missing rows, modified raw
+-       text, stale checkpoints, reordered candidates, label-bearing features,
+-       score inversion, unequal groups, tie drift, and aggregate contradiction.
+-    2. Start in a fresh process. Verify source and checkpoint hashes before
+-       reading any upstream headline or honest_verdict.
+-    3. Recompute proposal groups and exact certificate labels from serialized
+-       rows. Sample certificate cases and rerun both Z3 and enumeration.
+-    4. Reload every selector. Recompute scores, ties, selected IDs, correctness,
+-       false acceptance, headroom, abstention, latency, and family effects.
+-    5. Prove that all non-oracle arms used the same groups and no exact field.
+-       Recompute the strongest baseline, paired bootstrap, CI95, and 20%
+-       headroom threshold directly from per-unit rows.
+-    6. Set certified_selection_audit_complete_score=1 when every check has a
+-       terminal row. Set audited_certified_energy_positive_score=1 only when
+-       raw rows independently satisfy every Exp6959 positive gate.
+-    7. If upstream and replay disagree, set verdict_class=disqualified and list
+-       each contradiction. A null or disqualified upstream cannot be upgraded.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and
+-       root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and both certified_selection_audit_complete_score and
+-       audited_certified_energy_positive_score; preconditions_checked;
+-       inference_substrate (fresh_process_exact_candidate_selection_replay);
+-       duration_s; source_artifact_hashes; rows; audit_rows; hash_rows;
+-       certificate_replay_rows; checkpoint_reload_rows; arm_recompute_rows;
+-       candidate_order_rows; proposal_budget_rows; label_isolation_rows;
+-       tie_policy_rows; selection_rows; headroom_rows; family_rows;
+-       paired_metric_rows; confidence_interval_rows;
+-       aggregate_consistency_rows; contradiction_report_rows; random_seed;
+-       reproducibility_checksum; certified_selection_audit_complete_score;
+-       audited_certified_energy_positive_score; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive |
+-       circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6960_certified_selection_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6356-live-certified-learning-safety-audit
+-      verdict: "complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence"
+-      addressed_by: "This audit has a completed task-local selection producer and replays immutable raw proposals, exact certificates, and energy checkpoints without a live-learning dependency."
+-      retire_if_same_verdict: true
+-
+-- id: exp6961-certified-event-sequence
+-  title: Sealed chronological outcome-certificate sequence
+-  track: self_learning
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6961_certified_event_sequence.json
+-  gated_on:
+-    - upstream: exp6957-smt-mapping-certification
+-      artifact_field: smt_certification_run_complete_score
+-      op: '=='
+-      value: 1
+-  prompt: |
+-    CONTEXT:
+-    Exp6957 supplies exact outcome certificates for frozen mapping proposals.
+-    Self-Reports Are Not Verification requires those environment outcomes, not
+-    confidence or rationale, to govern memory. This task creates a sealed
+-    prospective sequence with related but non-identical reformulations. It
+-    freezes opportunity and order before any learning arm runs.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/results/experiment_6955_reformulation_fixture.json
+-    - {project_root}/results/experiment_6957_smt_mapping_certification.json
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/results/experiment_5920_prospective_event_stream_admission.json
++    - {project_root}/results/experiment_6969_error_structured_prompt_bank.json
++    - {project_root}/results/experiment_6967_certified_error_headroom_fixture.json
++    - {project_root}/python/carnot/experiment_6957_smt_mapping_certification.py
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/learning/spec.md
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Build and seal a chronological certificate sequence for prospective memory
+-    evaluation. Earlier exact-success mappings may be retrieved for later
+-    related events, but no current or future outcome may enter its own prompt.
+-    Measure real memory opportunity, interference risk, and family separation.
++    Certify the 270 calibration candidates. Compare all five policies by model
++    and formulation family. Use a preregistered cluster bootstrap to select one
++    non-baseline policy only when its gain is stable. Seal the selected policy
++    hash for the held-out experiment.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require smt_certification_run_complete_score=1, exact
+-       certificate and fixture rows, enough certified successes, deterministic
+-       generators, and writable sealed checkpoints. On failure, write
+-       blocked_certified_event_sequence with gate_check_summary.
+-    1. Add REQ-LEARN-6961 and tests first. Cover time reversal, future-label
+-       leakage, isomorphic answer leakage, duplicate events, family collision,
+-       no-op retrieval, zero headroom, copied certificates, and hash drift.
+-    2. Select only prior exact-success certificates as seed material. Never use
+-       confidence, rationale, or a learned score as admission authority.
+-    3. Generate related but non-identical later formulations by changing names,
+-       bounds, coefficients, objective direction, and irrelevant surface form
+-       while preserving or deliberately breaking a reusable mapping pattern.
+-    4. Freeze at least 24 chronological events per headline model family, six
+-       seed events, event order, family IDs, retrieval keys, token budgets,
+-       exact outcomes, and train/evaluation boundaries before model inference.
+-    5. For every event, record eligible prior certificate IDs, prohibited
+-       future IDs, similarity, exact reusable factors, conflict class, and
+-       whether a correct proposal is possible without copying the answer.
+-    6. Compute matched opportunity for no-memory, FIFO, and queue arms without
+-       running them. Require positive headroom, relevant retrieval, irrelevant
+-       distractors, contradictions, delayed corrections, and retention probes.
+-    7. Seal the sequence and replay hashes in a fresh process. Set
+-       certified_event_sequence_ready_score=1 only when all planned events and
+-       safety cases exist, no future or answer leakage occurs, and at least 12
+-       later events per family have genuine memory opportunity. Insufficient
+-       opportunity is a complete null, not fabricated data.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
+-       per required field and certified_event_sequence_ready_score;
+-       preconditions_checked; inference_substrate
+-       (deterministic_sealed_exact_certificate_sequence_no_llm); duration_s;
+-       source_artifact_hashes; rows; seed_certificate_rows; event_rows;
+-       chronology_rows; family_rows; transformation_rows; retrieval_key_rows;
+-       eligible_prior_rows; prohibited_future_rows; similarity_rows;
+-       reusable_factor_rows; conflict_rows; distractor_rows; correction_rows;
+-       retention_probe_rows; opportunity_rows; headroom_rows; leakage_rows;
+-       split_rows; sealed_checkpoint_path; fresh_process_replay_rows;
+-       random_seed; reproducibility_checksum;
+-       certified_event_sequence_ready_score; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true for sequence conformance only); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial,
+-       with circular_positive required when the sequence conforms);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    0. PRECONDITIONS: require prompt_candidate_bank_complete_score=1, exactly
++       270 raw rows, the 18 calibration labels, solver witnesses, and no access
++       to held-out labels. On failure, write
++       blocked_bootstrap_prompt_policy_selection with gate_check_summary.
++    1. Add REQ-VERIFY-6970 and tests for exact certification, bootstrap seed
++       stability, model-family clustering, tie rules, held-out isolation, and
++       bare gate fields.
++    2. Reparse every raw output. Certify domain cross-feasibility, objective
++       direction, and objective-order preservation with Z3 and bounded
++       enumeration. Keep all malformed, timeout, and unknown rows.
++    3. Compute parse, schema, and exact rates per policy, model, formulation
++       family, and pair. Keep one row for every model, pair, and policy.
++    4. Freeze 2,000 bootstrap resamples clustered by pair and stratified by
++       model and formulation family. Record every resample winner and delta.
++    5. Select a non-baseline policy only if its pooled exact rate exceeds the
++       direct baseline and it wins at least 80% of resamples. Resolve ties by
++       shorter prompt length, then frozen policy ID. Do not tune thresholds.
++    6. Set stable_prompt_policy_ready_score=1 only when a non-baseline policy
++       meets both criteria and all family-specific deltas are reported. Set it
++       to zero for an unstable, tied, or baseline-only result.
++    7. Seal the selected policy text, ID, hash, parser version, bootstrap seed,
++       and calibration source hashes. Do not read or score held-out rows.
++    8. Classify a successful selection as circular_positive because the exact
++       calibration authority selected it. A stable policy still needs Exp6971.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and stable_prompt_policy_ready_score;
++        preconditions_checked; inference_substrate
++        (deterministic_exact_calibration_and_cluster_bootstrap);
++        duration_s; source_artifact_hashes; rows; per_candidate_rows;
++        exact_certificate_rows; policy_metric_rows; model_family_rows;
++        formulation_family_rows; bootstrap_rows; bootstrap_winner_rows;
++        calibration_headroom_rows; calibration_delta_over_baseline;
++        selected_policy_id; selected_policy_hash; selected_policy_text_hash;
++        selected_policy_bootstrap_frequency; heldout_isolation_rows;
++        stable_prompt_policy_ready_score; random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6961_certified_event_sequence.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6970_bootstrap_prompt_policy_selection.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6277-chronological-certified-csl-ab
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "This task only seals a deterministic outcome-certificate sequence from a completed mapping-certification producer; it does not depend on the retired V541 certificate chain or run learning."
++    - experiment_id: exp6959-certified-energy-selection
++      verdict: complete_null_certified_energy_selection
++      addressed_by: "This task selects among new error-structured prompts on disjoint calibration rows with cluster bootstrap stability; it makes no held-out energy claim."
+       retire_if_same_verdict: true
+ 
+-- id: exp6962-queue-regulated-self-learning
+-  title: Queue-regulated continuous self-learning
+-  track: self_learning
++- id: exp6971-heldout-prompt-policy-ab
++  title: Three-family held-out prompt-policy causal A/B
++  track: inference
+   priority: critical
+   agent_type: claude
+   model: sonnet
+@@ -871,321 +598,107 @@ tasks:
+   max_turns: 50
+   estimated_wall_time_min: 720
+   per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6962_queue_regulated_self_learning.json
++  milestone: 2026.09.610
++  deliverable: results/experiment_6971_heldout_prompt_policy_ab.json
+   gated_on:
+-    - upstream: exp6961-certified-event-sequence
+-      artifact_field: certified_event_sequence_ready_score
++    - upstream: exp6966-gguf-load-envelope-canary
++      artifact_field: gguf_runtime_ready_score
+       op: '=='
+       value: 1
+-  prompt: |
+-    CONTEXT:
+-    Exp6856 found harmful writes and weak abstention. Exp6873 did not show
+-    sealed prospective utility. Exp6961 supplies a new exact-certified sequence.
+-    Self-Reports Are Not Verification keeps model confidence and rationale out
+-    of write authority. FedQCL contributes only the drift-plus-penalty virtual
+-    debt mechanism. This is V609's continuous self-learning experiment.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-references.md
+-    - {project_root}/results/experiment_6961_certified_event_sequence.json
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/scripts/experiment_template.py
+-    - {project_root}/scripts/inference_sota_models.py
+-    - {project_root}/python/carnot/task_runtime_receipts.py
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-
+-    TASK:
+-    Run a prospective three-arm comparison on the sealed certificate sequence:
+-    no memory, fixed-capacity exact-certified FIFO memory, and exact-certified
+-    memory regulated by a drift-plus-penalty debt queue. Write only after the
+-    external exact outcome. Keep model weights frozen and processes isolated.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require certified_event_sequence_ready_score=1, the sealed
+-       event checkpoint, both cached GGUF files, successful llama.cpp vocab_only
+-       probes, authenticated CUDA offload, transactional stores, hard-reset
+-       support, exact certifier access, and per-event recovery. On failure,
+-       write blocked_queue_regulated_self_learning with gate_check_summary.
+-    1. Add REQ-LEARN-6962 and tests first. Cover arm isolation, future-label
+-       leakage, write-before-outcome, forged certificate, confidence-based
+-       admission, queue underflow, duplicate debt, poison, contradiction,
+-       restart, tombstone, rollback, model hash drift, and aggregate mismatch.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF and
+-       unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair or the current GGUF
+-       resolver. Never call AutoTokenizer on a GGUF repository ID. Legacy small
+-       models may run CPU smoke tests only and cannot enter headline rows.
+-    3. Freeze the no-memory, FIFO, and debt-queue policies before inference.
+-       Match event order, prompt budget, retrieval count, capacity, decoding,
+-       seeds, and total attempted calls. Freeze debt arrival, service,
+-       threshold, and drift-plus-penalty coefficient.
+-    4. Run each model and arm in a separate fresh process. At an event, retrieval
+-       may use only earlier exact-success certificates. The current exact
+-       outcome becomes visible only after raw output is durable.
+-    5. For FIFO, admit each exact-success certificate and evict by fixed age.
+-       For the queue arm, use only past queue state and certified metadata for
+-       admission and retrieval. Never use confidence or rationale as authority.
+-    6. Charge debt when a retrieved certificate contributes to an exact failure,
+-       contradiction, stale use, or retention regression. Apply service only
+-       under the frozen rule. Record arrivals, service, balance, decision, and
+-       causal source certificate for every event.
+-    7. Atomically checkpoint raw output, retrieved IDs, prompt hash, exact
+-       outcome, write decision, queue state, store hash, tokens, latency, and
+-       runtime receipt after each event. Resume at the next missing key.
+-    8. After the chronological stream, run irrelevant retrieval, delayed-copy
+-       poison, contradiction, old-family retention, restart, tombstone, and
+-       rollback cases without changing thresholds.
+-    9. Set queue_learning_run_complete_score=1 when all model, arm, event, and
+-       safety rows finish. Set queue_learning_positive_score=1 only when the
+-       queue arm beats both no-memory and FIFO on paired later-event exact
+-       accuracy with CI95 above zero, does not reduce retention, admits no
+-       forged or future certificate, and passes restart and rollback.
+-    10. Record continuous_self_learning_task=true, learning_tier=2,
+-        no_model_weight_mutation=true, and model hashes before and after. Treat
+-        lower debt without accuracy gain as null.
+-    11. Run focused tests, Ruff, OpenSpec coverage, applicable live-model checks,
+-        artifact-convention audit, verdict-row consistency lint, adversarial
+-        verification, docs audit, and root-clutter checks.
+-    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and both queue_learning_run_complete_score
+-        and queue_learning_positive_score; preconditions_checked;
+-        inference_substrate
+-        (prospective_local_gguf_exact_certificate_debt_queue_memory); duration_s;
+-        source_artifact_hashes; rows; model_specs; model_rows; arm_rows;
+-        event_rows; chronology_rows; prompt_rows; raw_output_rows;
+-        exact_outcome_rows; retrieval_rows; write_rows; admission_rows;
+-        fifo_rows; debt_arrival_rows; debt_service_rows; debt_balance_rows;
+-        memory_hash_rows; token_budget_rows; latency_rows; poison_rows;
+-        contradiction_rows; retention_rows; restart_rows; tombstone_rows;
+-        rollback_rows; future_label_isolation_rows; paired_metric_rows;
+-        confidence_interval_rows; checkpoint_rows; model_lifecycle_rows;
+-        task_runtime_receipt; continuous_self_learning_task (true);
+-        learning_tier (2); no_model_weight_mutation (true);
+-        model_hashes_before; model_hashes_after; random_seed;
+-        reproducibility_checksum; queue_learning_run_complete_score;
+-        queue_learning_positive_score; gate_check_summary with failed check,
+-        expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class (positive |
+-        circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6962_queue_regulated_self_learning.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6856-sealed-risk-sensitive-learning-audit
+-      verdict: complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention
+-      addressed_by: "This attempt admits only external exact-success certificates, removes learned abstention, regulates retrieval with explicit past debt, and compares no-memory and FIFO controls under hard resets."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+-      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: "This attempt uses a new SOVER-style mapping stream with proven memory opportunity, two mandated current GGUF families, frozen DPP rules, per-event checkpoints, and an independent cold audit."
+-      retire_if_same_verdict: true
+-
+-- id: exp6963-queue-memory-cold-audit
+-  title: Fresh-process queue-memory safety audit
+-  track: self_learning
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 240
+-  per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6963_queue_memory_cold_audit.json
+-  gated_on:
+-    - upstream: exp6962-queue-regulated-self-learning
+-      artifact_field: queue_learning_run_complete_score
++    - upstream: exp6970-bootstrap-prompt-policy-selection
++      artifact_field: stable_prompt_policy_ready_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6962 gates this task on run completion, not on a positive effect. The
+-    prior sealed audit found harmful writes, and the V607 cold memory audit
+-    never ran because its producer retired. This task has a complete producer
+-    in the same roadmap and replays its stores with no inherited process state.
++    Exp6970 sealed one calibration-selected error-structured prompt. This is the
++    single held-out causal prompt test. It compares the direct V609 prompt, a
++    cheap instruction-duplication control, and the selected policy on the same
++    unseen exact pairs and all three mandated GGUF families.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6961_certified_event_sequence.json
+-    - {project_root}/results/experiment_6962_queue_regulated_self_learning.json
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/scripts/adversarial_verify.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-
+-    TASK:
+-    Audit Exp6962 from raw event rows, exact certificates, queue logs, and saved
+-    stores in a fresh process. Recompute utility and every safety property.
+-    Verify chronology, debt math, write authority, matched arms, retention,
+-    poison resistance, restart, tombstones, rollback, and model immutability.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require queue_learning_run_complete_score=1, raw rows,
+-       exact certificate rows, saved stores, queue logs, source hashes, and a
+-       fresh-process entry point. On failure, write
+-       blocked_queue_memory_cold_audit with gate_check_summary.
+-    1. Add REQ-LEARN-6963 and tests first. Cover missing or duplicate events,
+-       reordered chronology, forged certificates, future labels, write-before-
+-       outcome, queue arithmetic drift, arm contamination, stale tombstones,
+-       failed rollback, changed model hashes, and aggregate contradiction.
+-    2. Start with empty process and environment state. Verify all hashes before
+-       reading any upstream headline, positive score, or honest_verdict.
+-    3. Recompute arm completeness, exact outcomes, paired later-event accuracy,
+-       bootstrap CI95, tokens, latency, writes, retrievals, retention, and
+-       safety rates directly from rows.
+-    4. Replay every debt arrival, service, and balance from the frozen rule.
+-       Prove decisions used only past queue state and certified metadata.
+-    5. Prove all arms used identical events and budgets. Prove no current or
+-       future label entered its own prompt and no model confidence or rationale
+-       authorized a write.
+-    6. Reload saved stores and replay poison, contradiction, restart, tombstone,
+-       retention, and rollback cases. Verify model hashes did not change.
+-    7. Set queue_memory_audit_complete_score=1 when every check has a terminal
+-       row. Set audited_queue_learning_positive_score=1 only when raw evidence
+-       independently satisfies every Exp6962 positive gate.
+-    8. If upstream and replay disagree, set verdict_class=disqualified and list
+-       each contradiction. Never upgrade a null, blocked, or disqualified result.
+-    9. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and
+-       root-clutter checks.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and both queue_memory_audit_complete_score
+-        and audited_queue_learning_positive_score; preconditions_checked;
+-        inference_substrate (fresh_process_exact_queue_memory_audit_no_llm);
+-        duration_s; source_artifact_hashes; rows; audit_rows; hash_rows;
+-        arm_recompute_rows; chronology_rows; certificate_authority_rows;
+-        future_label_isolation_rows; write_order_rows; retrieval_rows;
+-        debt_recompute_rows; debt_decision_rows; token_budget_rows;
+-        poison_rows; contradiction_rows; retention_rows; restart_rows;
+-        tombstone_rows; rollback_rows; model_immutability_rows;
+-        paired_metric_rows; confidence_interval_rows;
+-        aggregate_consistency_rows; contradiction_report_rows; random_seed;
+-        reproducibility_checksum; queue_memory_audit_complete_score;
+-        audited_queue_learning_positive_score; gate_check_summary with failed
+-        check, expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class (positive |
+-        circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6963_queue_memory_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+-      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: "This cold audit consumes a complete task-local queue-learning producer, recomputes debt and prospective utility from per-event rows, and reloads exact-certified stores in a fresh process."
+-      retire_if_same_verdict: true
+-
+-- id: exp6964-v609-capstone
+-  title: V609 independent capstone and V610 handoff
+-  track: infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.609
+-  deliverable: results/experiment_6964_v609_capstone.json
+-  prompt: |
+-    CONTEXT:
+-    V609 has a SOVER-style mapping branch, a CCEM-inspired causal energy branch,
+-    and an exact-certified queue-learning branch. The source and contract audits
+-    are advisory. This capstone stays ungated so it can classify every missing,
+-    blocked, null, circular, partial, disqualified, flagged, or positive result.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-roadmap.yaml
+-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - all available V609 artifacts in {project_root}/results
+-    - {project_root}/results/experiment_6952_v608_capstone.json
+-    - {project_root}/scripts/adversarial_verify.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/ops/exclusion_manifest.yaml
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
++    - {project_root}/results/experiment_6966_gguf_load_envelope_canary.json
++    - {project_root}/results/experiment_6967_certified_error_headroom_fixture.json
++    - {project_root}/results/experiment_6970_bootstrap_prompt_policy_selection.json
++    - {project_root}/results/experiment_6957_smt_mapping_certification.json
++    - {project_root}/scripts/experiment_template.py
++    - {project_root}/python/carnot/inference/sota_models.py
++    - {project_root}/python/carnot/experiment_6957_smt_mapping_certification.py
++    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+ 
+     TASK:
+-    Independently reconcile all available V609 evidence and create the V610
+-    handoff. Recompute document/YAML parity, gate reachability, exact mapping
+-    quality, energy selection, cold audits, queue-learning utility and safety,
+-    runtime provenance, and exclusion implications. Do not rerun missing science.
++    Run a preregistered 162-attempt held-out comparison across three prompt
++    arms, 18 exact pairs, and three mandated local GGUF families. Capture raw
++    output before certification. Measure whether the selected error-structured
++    policy improves exact mappings and whether the candidate groups expose real
++    headroom for the later energy-selection task.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the active V609 roadmap and design document. The
+-       capstone remains runnable when science artifacts are missing or blocked.
+-       On a missing core contract file, write blocked_v609_capstone with
+-       gate_check_summary.
+-    1. Add REQ-REPORT-6964 and tests first. Cover missing artifacts, blocked
+-       gates, circular positives, flagged evidence, row-headline conflicts,
+-       verdict-prefix/class conflicts, and document/YAML mismatch.
+-    2. Parse the document and YAML independently. Require exactly 12 tasks,
+-       IDs exp6953 through exp6964, matching order, titles, deliverables, and
+-       structured gates.
+-    3. Classify each task from raw status, honest_verdict, verdict_class, gate
+-       fields, and adversarial verification. Do not trust conductor OK alone.
+-       Keep missing and bootstrap-only artifacts explicit.
+-    4. Recompute every comparative headline from per-unit rows. Check model
+-       coverage, exact authority, proposal budgets, strongest baselines,
+-       shuffled controls, confidence intervals, label isolation, and cold-audit
+-       agreement.
+-    5. Report sota_mapping_positive_score, convex_factor_positive_score,
+-       certified_energy_positive_score, audited_certified_energy_positive_score,
+-       queue_learning_positive_score, and audited_queue_learning_positive_score
+-       only from their authoritative artifacts. Do not synthesize a positive
+-       score from incomplete evidence.
+-    6. Verify exact certificates, not model self-reports, authorized all memory
+-       writes. Verify prospective order, debt math, hard resets, retention,
+-       rollback, continuous_self_learning_task=true, learning_tier=2, and
+-       unchanged model hashes.
+-    7. Verify that no V609 task made an ARC solve, hardware speed, power, TSU
+-       access, or default-on production claim.
+-    8. Record exclusion-manifest candidates only when the same prior verdict
+-       recurred under retire_if_same_verdict=true. Do not edit the manifest.
+-    9. Produce a three-gap V610 handoff from evidence that ran. Do not turn an
+-       advisory contract defect into a science result or invent missing work.
+-    10. Set v609_capstone_complete_score=1 when every roadmap task has a
+-        terminal classification row and the contract replay completes. If
+-        science is incomplete but classification is complete, use
+-        complete_null or complete_disqualified as evidence warrants; never pair
+-        a complete_ prefix with verdict_class=partial.
+-    11. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-        verdict-row consistency lint, adversarial verification, docs audit, and
+-        root-clutter checks.
+-    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and v609_capstone_complete_score;
++    0. PRECONDITIONS: require gguf_runtime_ready_score=1,
++       stable_prompt_policy_ready_score=1, a sealed policy hash, 18 untouched
++       held-out pairs, all model files, and two CUDA devices. On failure, write
++       blocked_heldout_prompt_policy_ab with gate_check_summary.
++    1. Add REQ-INF-6971 and tests for attempt count, arm isolation, prompt
++       hashes, model identity, raw-before-certification durability, paired
++       metrics, headroom count, and bare gate fields.
++    2. Declare MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)). Require
++       unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and
++       unsloth/gemma-4-26B-A4B-it-GGUF. Legacy rows are smoke-only.
++    3. Freeze three arms: the exact V609 direct prompt; the same prompt with one
++       trailing procedural-instruction duplicate; and the sealed Exp6970
++       policy. Freeze prompt text, order, seeds, and all generation parameters.
++    4. Run exactly 18 pairs x 3 arms x 3 models = 162 live attempts. Use the
++       same token and wall budgets for every arm. Use task-owned sequential
++       family processes and checkpoint after every model and pair block.
++    5. Make every raw output durable before parsing. Do not expose labels,
++       solver messages, calibration outcomes, future rows, or another arm's
++       output to the model.
++    6. Reparse and certify each output with Z3 and bounded enumeration. Keep
++       malformed, timeout, unknown, and exact-negative rows.
++    7. Report parse, schema, exact mapping, prompt length, output length, and
++       premature-commitment metrics by pair, arm, model, and formulation.
++    8. Define each model/pair as one candidate group. Set
++       heldout_headroom_group_count to the number of groups where at least one
++       arm is exact and at least one arm is not exact. Do not manufacture or
++       impute headroom.
++    9. Set prompt_ab_run_complete_score=1 when all 162 rows are terminal. Set
++       prompt_policy_positive_score=1 only when the selected policy beats the
++       strongest control on paired exact mapping with CI95 above zero, does not
++       reduce any model family by more than one pair, and has no label leakage.
++    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++        adversarial verification, row-consistency lint, and root-clutter
++        checks.
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and prompt_ab_run_complete_score,
++        prompt_policy_positive_score, and heldout_headroom_group_count;
+         preconditions_checked; inference_substrate
+-        (independent_artifact_replay_and_contract_reconciliation_no_llm);
+-        duration_s; source_artifact_hashes; rows; task_contract_rows;
+-        task_state_rows; gate_replay_rows; verdict_class_rows;
+-        adversarial_verify_rows; aggregate_recompute_rows; model_coverage_rows;
+-        mapping_rows; certificate_rows; convex_factor_rows; selection_rows;
+-        selection_audit_rows; event_sequence_rows; queue_learning_rows;
+-        queue_audit_rows; safety_rows; exclusion_candidate_rows;
+-        hardware_provenance_rows; v610_gap_rows; random_seed;
+-        reproducibility_checksum; v609_capstone_complete_score;
++        (live_local_llama_cpp_three_family_dual_cuda_batched);
++        duration_s; live_duration_s; source_artifact_hashes; MODEL_SPECS;
++        models_used; model_file_hashes; gpu_runtime_rows; batch_rows; arm_rows;
++        prompt_hashes; rows; per_attempt_rows; raw_output_rows;
++        exact_certificate_rows; pair_metric_rows; model_family_rows;
++        formulation_family_rows; paired_delta_rows; prompt_length_rows;
++        output_length_rows; premature_commitment_rows; split_isolation_rows;
++        expected_attempt_count (162); observed_attempt_count;
++        heldout_headroom_group_count; prompt_ab_run_complete_score;
++        prompt_policy_positive_score; random_seed; reproducibility_checksum;
+         gate_check_summary with failed check, expected value, and observed value
+         for any blocked verdict; verifier_is_oracle (false); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6964_v609_capstone.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6971_heldout_prompt_policy_ab.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6952-v608-capstone
+-      verdict: partial_v608_capstone_contract_audited_science_incomplete
+-      addressed_by: "The V609 capstone is ungated, requires exact 12-task parity and per-unit recomputation, and explicitly forbids pairing a complete_ prefix with verdict_class partial."
++    - experiment_id: exp6957-smt-mapping-certification
++      verdict: complete_null_sota_mapping_certification
++      addressed_by: "This held-out run tests a calibration-selected error-structured prompt and a duplication control on unused exact pairs across all three model families."
++      retire_if_same_verdict: true
++    - experiment_id: exp6959-certified-energy-selection
++      verdict: complete_null_certified_energy_selection
++      addressed_by: "This task first measures real model-pair candidate headroom; no later energy-selection task can run unless at least six groups differ."
+       retire_if_same_verdict: true
+-- 
+2.55.0
+

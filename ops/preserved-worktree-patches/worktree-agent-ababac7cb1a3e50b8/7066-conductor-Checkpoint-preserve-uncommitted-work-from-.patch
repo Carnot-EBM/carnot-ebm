@@ -1,0 +1,322 @@
+From d2e9b1d4466bcd84c8ff029ac980ca33ea241777 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 09:30:56 -0400
+Subject: [PATCH 07066/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  80 ++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ...5704_dynamics_gate_relaxed_threshold_ab.py | 179 ++++++++++++++++++
+ 5 files changed, 262 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_experiment_5704_dynamics_gate_relaxed_threshold_ab.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 21d2882125..e0d16827cb 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -3738,6 +3738,86 @@ Then the resulting `pass_rate_at_live_threshold` reflects only genuine
+ real-world attempts at the live pipeline's actual configured threshold, with
+ a full audit trail (`cited_upstream_artifacts`) back to the source artifacts
+ 
++### REQ-ARC-WMTE-5593-5: Live A/B -- Does Relaxing `min_heldout_accuracy` Unlock Usable Plans?
++
++REQ-ARC-WMTE-5593-4 raised, but did not resolve, a calibration question: does
++a graduated-trust tier let the pipeline safely use a "good but imperfect"
++induced model instead of discarding it outright at `1.0`?
++`python/carnot/experiment_5704_dynamics_gate_relaxed_threshold_ab.py` SHALL
++test this directly and LIVE: collect real transitions on a game with an
++observed real level-up, then make N independent fresh real induction
++attempts (`execute_bounded_llm_reinduction`, `max_rounds=1`, a fresh
++proposer per attempt, `min_heldout_accuracy=0.0` so every attempt's real
++`heldout_accuracy` is observed regardless of outcome) against the SAME real
++transitions. For each attempt, record whether the STRICT threshold (`1.0`)
++and a RELAXED threshold (`0.7`) would each accept it, and -- for any attempt
++the relaxed threshold accepts but the strict one rejects -- whether the
++resulting plan actually reaches the goal under in-model verification
++(`plan_reaches_goal`).
++
++This experiment does NOT presuppose relaxing the threshold helps. It SHALL
++report one of three DISTINCT, non-interchangeable outcomes: (a) relaxing
++unlocks one or more genuinely good plans the strict gate discards, (b)
++relaxing accepts attempts but none produce a good plan (the strict gate is
++correctly protective), or (c) no attempt lands in the relaxed-only band at
++all (inconclusive -- the small live sample did not happen to sample the
++interesting middle ground).
++
++**RESOLUTION (2026-07-14).** Collected real transitions on `lp85`
++(47 collected, 1 real level-up), then ran 3 independent fresh real
++induction attempts (real GPU-backed `Qwen3.5-9B-MTP`,
++`duration_s` per attempt: 794.3s / 94.2s / 89.8s -- the first attempt's
++outlier duration is consistent with GPU/model cold-start overhead, not a
++hang). **All 3 attempts scored `heldout_accuracy=0.0`** -- a complete
++dynamics-check failure on every single real attempt, landing NONE in the
++`[0.7, 1.0)` relaxed-only band this experiment was built to characterize.
++`n_relaxed_only_accepts=0`, honest verdict
++`complete: inconclusive_no_attempt_in_relaxed_only_band`.
++
++**Honest conclusion: inconclusive by construction, and this null result is
++itself consistent with REQ-ARC-WMTE-5593-4's corpus survey** -- `0.0` was
++found to be the single most common real-world outcome there
++(`exact_zero_rate=0.4737`, 47.4% of the historical corpus), so a 3-attempt
++live sample landing entirely in that bucket, missing the much narrower
++`[0.7, 1.0)` band (historically ~6.3 percentage points of the corpus:
++`threshold_sweep["0.7"]=0.189` minus `pass_rate_at_live_threshold=0.1263`),
++is unsurprising rather than anomalous. This experiment does not resolve the
++graduated-trust calibration question either way; a larger N (costly -- each
++real attempt is a genuine GPU-backed induction call, ~90-800s observed) or
++a game/corpus selection biased toward the interesting band would be needed
++for a conclusive answer, and is not pursued further in this task's scope.
++
++**Separately-disclosed, orthogonal observation (not a resolution of the
++threshold question).** Despite `heldout_accuracy=0.0` on every attempt,
++`planned=True` and `plan_reaches_goal=True` on all 3 -- because this
++experiment sets `min_heldout_accuracy=0.0` to observe the raw held-out
++score without letting the gate block downstream steps, the induced engine
++still produced a plan verified, IN-MODEL, to reach the goal. This is worth
++noting as a possible sign the held-out dynamics check and downstream
++planning usefulness are not perfectly aligned metrics, but `plan_reaches_
++goal` is verified against the induced engine's OWN simulation, not real
++environment ground truth (the same caveat REQ-ARC-WMTE-5593-3's live
++integration disclosed for its own `plan_reaches_goal` field) -- so this is
++flagged as an open question for a future task, not evidence that the
++strict gate is miscalibrated.
++
++Required field principles:
++
++- `n_relaxed_only_accepts`: principle "count of real attempts that would be accepted under the relaxed bar but rejected under the strict bar -- the direct evidence for whether the strict threshold discards recoverable attempts."
++- `relaxed_only_accepts_with_good_plan`: principle "of the relaxed-only accepts, how many produced a plan that ALSO passed plan_reaches_goal (in-model verification) -- an accepted-but-useless model would not support loosening the gate."
++
++#### SCENARIO-ARC-WMTE-5593-5-RELAXED-THRESHOLD-AB
++
++Given N independent fresh real induction attempts against the SAME real
++transitions, with the dynamics gate bypassed so every attempt's real
++`heldout_accuracy` is observed
++When the strict (1.0) and relaxed (0.7) thresholds are each applied to the
++same attempts
++Then the artifact reports exactly one of "relaxing unlocks a good plan",
++"relaxing accepts but no good plan resulted", or "inconclusive -- no
++attempt in the relaxed-only band", never conflating the three, and never
++presupposing which outcome will occur before the real attempts run
++
+ ### REQ-ARC-WMTE-5593: Goal-Predicate Consistency Against Real Observed Level-Progress
+ 
+ `ops/known-issues.md`'s 2026-07-11 task 11 entry (hallucination-consistency
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d00851117e..94e83d817d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 153, "phase": "iteration_start", "last_beat": "2026-07-14T13:13:58Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 154, "phase": "iteration_start", "last_beat": "2026-07-14T13:30:52Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9146586d68..51310b5bed 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11735,3 +11735,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 12:03 UTC | V507 capstone, promotion-retirement ledger, and sp | OK | 87 passed, 1 warning in 10.04s |
+ | 2026-07-14 13:09 UTC | Plan milestone 2026.07.508 | OK | 11 tasks proposed |
+ | 2026-07-14 13:11 UTC | Milestone 2026.07.508 activated | OK | 11 tasks queued |
++| 2026-07-14 13:28 UTC | Transition .507 terminal evidence into the .508 de | OK | 87 passed, 1 warning in 11.93s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 959a6824cf..2a38ffb0df 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 153, "phase": "iteration_start", "started_at": "2026-07-14T13:13:58Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 154, "phase": "iteration_start", "started_at": "2026-07-14T13:30:52Z"}
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_5704_dynamics_gate_relaxed_threshold_ab.py b/tests/python/test_experiment_5704_dynamics_gate_relaxed_threshold_ab.py
+new file mode 100644
+index 0000000000..20bc6bdf45
+--- /dev/null
++++ b/tests/python/test_experiment_5704_dynamics_gate_relaxed_threshold_ab.py
+@@ -0,0 +1,179 @@
++"""Tests for Exp 5704: live A/B testing whether the min_heldout_accuracy=1.0
++dynamics gate is too strict to be useful (task 13 completion).
++
++Spec refs: REQ-ARC-WMTE-5593-5 (extends REQ-ARC-WMTE-5593-4's calibration question).
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5704_dynamics_gate_relaxed_threshold_ab as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_arc_wmte_5593_5_spec_declares_relaxed_threshold_ab() -> None:
++    """REQ-ARC-WMTE-5593-5: OpenSpec declares the live A/B, including the honest
++    inconclusive outcome (no attempt landed in the relaxed-only band)."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-WMTE-5593-5") :]
++
++    for marker in (
++        "SCENARIO-ARC-WMTE-5593-5",
++        "inconclusive_no_attempt_in_relaxed_only_band",
++        "does NOT presuppose",
++    ):
++        assert marker in section
++
++
++def test_first_precondition_miss_reports_failing_key() -> None:
++    assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
++    assert mod._first_precondition_miss({"ok": True}) is None
++
++
++def _ok_preconds(root=mod.REPO_ROOT):
++    return {"gguf_cached": True, "e3_policy_import": True, "ok": True}
++
++
++def test_build_artifact_blocked_when_precondition_missing(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(
++        mod,
++        "preconditions",
++        lambda root=mod.REPO_ROOT: {"gguf_cached": False, "ok": False},
++    )
++
++    def _fail_if_called(**_kwargs):
++        raise AssertionError("run_prototype must not run when a precondition is missing")
++
++    monkeypatch.setattr(mod, "run_prototype", _fail_if_called)
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["honest_verdict"] == "complete: blocked_gguf_cached"
++    assert artifact["attempts"] == []
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++    assert len(artifact["reproducibility_checksum"]) == 64
++
++
++def test_build_artifact_inconclusive_when_no_real_levelup(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++    monkeypatch.setattr(
++        mod,
++        "run_prototype",
++        lambda **_kwargs: {
++            "transitions_collected": 10,
++            "real_levelups_in_collected_transitions": 0,
++            "attempts": [],
++            "run_ok": False,
++        },
++    )
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["honest_verdict"] == "complete: inconclusive_no_real_levelup_collected"
++
++
++def _attempt(heldout_accuracy, planned=True, plan_reaches_goal=True):
++    return {
++        "attempt_index": 0,
++        "duration_s": 10.0,
++        "heldout_accuracy": heldout_accuracy,
++        "accepted_by_strict": heldout_accuracy >= mod.STRICT_THRESHOLD,
++        "accepted_by_relaxed": heldout_accuracy >= mod.RELAXED_THRESHOLD,
++        "planned": planned,
++        "goal_predicate_satisfiable": True,
++        "plan_reaches_goal": plan_reaches_goal,
++        "skipped": "",
++    }
++
++
++def test_build_artifact_inconclusive_when_all_attempts_outside_relaxed_band(
++    monkeypatch, tmp_path
++) -> None:
++    """Mirrors the real checked-in result: every attempt scores 0.0, so nothing lands
++    in the [relaxed, strict) band -- must report inconclusive, not force a conclusion."""
++
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++    monkeypatch.setattr(
++        mod,
++        "run_prototype",
++        lambda **_kwargs: {
++            "transitions_collected": 47,
++            "real_levelups_in_collected_transitions": 1,
++            "attempts": [_attempt(0.0), _attempt(0.0), _attempt(0.0)],
++            "run_ok": True,
++        },
++    )
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["n_relaxed_only_accepts"] == 0
++    assert artifact["honest_verdict"] == "complete: inconclusive_no_attempt_in_relaxed_only_band"
++
++
++def test_build_artifact_relaxed_unlocks_a_good_plan(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++    monkeypatch.setattr(
++        mod,
++        "run_prototype",
++        lambda **_kwargs: {
++            "transitions_collected": 40,
++            "real_levelups_in_collected_transitions": 1,
++            "attempts": [_attempt(0.85, plan_reaches_goal=True), _attempt(0.0)],
++            "run_ok": True,
++        },
++    )
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["n_relaxed_only_accepts"] == 1
++    assert artifact["relaxed_only_accepts_with_good_plan"] == 1
++    assert "relaxed_threshold_unlocks_1_of_1_good_plans" in artifact["honest_verdict"]
++
++
++def test_build_artifact_relaxed_accepts_but_no_good_plan(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++    monkeypatch.setattr(
++        mod,
++        "run_prototype",
++        lambda **_kwargs: {
++            "transitions_collected": 40,
++            "real_levelups_in_collected_transitions": 1,
++            "attempts": [_attempt(0.85, plan_reaches_goal=False)],
++            "run_ok": True,
++        },
++    )
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["n_relaxed_only_accepts"] == 1
++    assert artifact["relaxed_only_accepts_with_good_plan"] == 0
++    assert "strict_gate_correctly_protective" in artifact["honest_verdict"]
++
++
++def test_req_arc_wmte_5593_5_repository_artifact_is_a_real_measured_result() -> None:
++    """The checked-in real run collected real transitions on lp85 (1 real level-up)
++    and made 3 fresh real induction attempts, all landing at heldout_accuracy=0.0 --
++    an honest inconclusive result for the relaxed-threshold question, not a forced
++    conclusion in either direction. Adversarially clean."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert result["honest_verdict"] == "complete: inconclusive_no_attempt_in_relaxed_only_band"
++    assert result["inference_substrate"] == "live_llm_inference"
++    assert result["target_game"] == "lp85"
++    assert result["real_levelups_in_collected_transitions"] >= 1
++    assert result["n_attempts"] == len(result["attempts"])
++    assert result["n_relaxed_only_accepts"] == 0
++    for attempt in result["attempts"]:
++        assert attempt["heldout_accuracy"] < mod.RELAXED_THRESHOLD
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in result
++    assert len(result["reproducibility_checksum"]) == 64
+-- 
+2.55.0
+

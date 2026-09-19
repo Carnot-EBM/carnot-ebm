@@ -1,0 +1,60 @@
+From 829eae4f6da8442b2ba5b3bbc119df216319c5d4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 02:32:53 -0400
+Subject: [PATCH 02480/11362] [outer-loop] induction arm: --proposer flag for
+ E3 (test a stronger world-model proposer)
+
+The value-net arm proved cross-game value transfer is the wall (LOGO 0.514 ~ chance), redirecting to
+world-model INDUCTION (game-specific, no cross-game transfer needed). E3 with gemma-4-12B closed 0/6
+gap-1 games -- the lever is a STRONGER proposer. Added --proposer <repo_substr> to the eval (one
+LocalGGUFProposer loaded + reused across games); launched E3 + Qwen3.6-35B-A3B (flagship MoE, both it
+and gemma-4-31B cached) on the 6 gap-1 games to test whether a 3x-bigger proposer induces winning
+world-models where the 12B could not. Runs on the iGPU (no 3090 contention). Result pending.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/arc_leaderboard_eval.py | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index 42907e9f6f..fb3588e858 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -34,6 +34,8 @@ from carnot.agentic.arc_competition_agent import (
+ )
+ 
+ _VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
++_PROPOSER = None        # E3: a stronger world-model proposer (a bigger GGUF), loaded once + reused
++_PROPOSER_REPO = ""     # repo substr for the E3 proposer (e.g. "Qwen3.6-35B-A3B"); "" = E3 default 12B
+ _VALUE_WEIGHT = 0.0     # A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
+                         # weight 5 REGRESSED the live explorer (6/32 vs 8/32) -- the value head misroutes
+                         # the depth-first-ride structure. Set via --value-weight for sweeps.
+@@ -54,7 +56,13 @@ def _build_policy(kind: str, game: str):
+     (the unseen-game simulation). 'explorer' = tier-1 graph_explore only; 'e3' = the FULL competition
+     cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
+     if kind == "e3":
+-        return E3AgentPolicy(game)
++        # INDUCTION ARM: optionally use a STRONGER world-model proposer (a bigger GGUF) -- the lever
++        # where gemma-4-12B closed 0/6. One proposer instance is loaded + reused across games.
++        global _PROPOSER
++        if _PROPOSER_REPO and _PROPOSER is None:
++            from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++            _PROPOSER = LocalGGUFProposer(repo_substr=_PROPOSER_REPO)
++        return E3AgentPolicy(game, proposer=_PROPOSER)
+     if kind in ("explorer_vh", "explorer_bf"):              # BRIDGE: value-head-routed explorer
+         global _VALUE_HEAD
+         if _VALUE_HEAD is None:
+@@ -130,8 +138,9 @@ def main() -> int:
+     games_mode = _arg(argv, "--games", "claimed")
+     policy_kind = _arg(argv, "--policy", "explorer")
+     budget = int(_arg(argv, "--budget", "20000"))
+-    global _VALUE_WEIGHT
++    global _VALUE_WEIGHT, _PROPOSER_REPO
+     _VALUE_WEIGHT = float(_arg(argv, "--value-weight", "0"))   # explorer_vh A* blend weight (0 = neutral)
++    _PROPOSER_REPO = _arg(argv, "--proposer", "")             # e3 stronger proposer repo substr ("" = 12B)
+     oracle = _oracle_levels()
+     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
+     only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
+-- 
+2.55.0
+

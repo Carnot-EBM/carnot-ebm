@@ -1,0 +1,61 @@
+From a456a19da6fe7c6e3556a3efa7b8c14715618699 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 00:39:57 -0400
+Subject: [PATCH 06998/11362] [conductor] Pre-gate block: Property-template and
+ entity-attribution exact verifier extension from clean residuals
+
+2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-panel.panel_complete (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...iment_5607_property_template_exact_residual_extension.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 52af1bf359..e896a712f0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 127, "phase": "iteration_start", "last_beat": "2026-07-14T04:37:55Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 128, "phase": "iteration_start", "last_beat": "2026-07-14T04:39:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fc10b2faee..8e22bdbccd 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11709,3 +11709,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 03:45 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 2 failed, 85 passed, 1 warning in 12.23s |
+ | 2026-07-14 03:59 UTC | Lossless local-SOTA raw-response evidence envelope | OK | 118 passed, 1 warning in 14.91s |
+ | 2026-07-14 04:35 UTC | Evidence-preserving local-SOTA solve-versus-verify | OK | 122 passed, 1 warning in 13.71s |
++| 2026-07-14 04:37 UTC | Property-template and entity-attribution exact ver | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-p |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index de1c1de0ab..32fc449813 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 127, "phase": "iteration_start", "started_at": "2026-07-14T04:37:55Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 128, "phase": "iteration_start", "started_at": "2026-07-14T04:39:57Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5607_property_template_exact_residual_extension.json b/results/experiment_5607_property_template_exact_residual_extension.json
+index d6544b1ec1..a6fc5fc518 100644
+--- a/results/experiment_5607_property_template_exact_residual_extension.json
++++ b/results/experiment_5607_property_template_exact_residual_extension.json
+@@ -2,8 +2,8 @@
+   "experiment": 5607,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-14",
+-  "started_at": "2026-07-14T04:37:55.497587+00:00",
+-  "finished_at": "2026-07-14T04:37:55.497587+00:00",
++  "started_at": "2026-07-14T04:39:57.576184+00:00",
++  "finished_at": "2026-07-14T04:39:57.576184+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Property-template and entity-attribution exact verifier extension from clean residuals",
+-- 
+2.55.0
+

@@ -1,0 +1,65 @@
+From b28cfd9e6e22899df56fa82d20da8952ce54c125 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 21:16:32 -0400
+Subject: [PATCH 01159/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...experiment_4013_verifier_vs_judge_efficiency.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 549e004c2c..0f66e39a01 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-11T00:40:52Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-11T01:16:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 20f50cad7e..4902c37bd8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8192,3 +8192,4 @@ c |
+ | 2026-06-10 23:04 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ote", "yes", " |
+ | 2026-06-11 00:27 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: total_samples' |
+ | 2026-06-11 00:38 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | OK | cache hit: 112 passed in 6.25s |
++| 2026-06-11 01:14 UTC | EFFICIENCY axis (north-star §5) -- model-free veri | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4c4ebae467..f59f8150ab 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-11T00:40:52Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-11T01:16:31Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4013_verifier_vs_judge_efficiency.json b/results/experiment_4013_verifier_vs_judge_efficiency.json
+index e9f529dc75..4e289b1cb7 100644
+--- a/results/experiment_4013_verifier_vs_judge_efficiency.json
++++ b/results/experiment_4013_verifier_vs_judge_efficiency.json
+@@ -568,5 +568,13 @@
+   "title": "GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency",
+   "token_ratio_judge_over_verifier": 95.2566,
+   "verifier_gold_rate": 0.2903,
+-  "verifier_tokens": 0
+-}
++  "verifier_tokens": 0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "cost_ratio_judge_over_verifier=95.2566 and token_ratio_judge_over_verifier=95.2566 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,1094 @@
+From b6787cb6036a0dcc7373fa084f2156ae30ab48b8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 1 Aug 2026 12:53:09 -0400
+Subject: [PATCH 08093/11362] [outer-loop] Inert-engine rejection on the induce
+ path, behind a default-OFF flag
+
+The 2026-08-01 generation taxonomy found INERTNESS -- an engine that predicts no
+action changes anything -- is the largest single failure class of the live
+generator (26 of 172 gemma-4-31B candidates, 15.1%; more than every code-validity
+class combined) and the only class the induce path took no action on, despite the
+detector being shipped and already imported at that call site.
+
+WHAT SHIPS:
+  * `engine_inertness_defect()` -- an `engine_inert` EngineDefect, bounded by the
+    same killable subprocess the dry run uses. The precondition was real:
+    `engine_changes_anything` is UNBOUNDED, and on the ft09 candidate behind the
+    2026-07-31 13-minute wedge it does not return at all while
+    `validate_engine_code` returns in 30.07s. Wiring the unbounded function would
+    have reintroduced that hang.
+  * `_run_isolated_job()` -- the spawn path extracted from
+    `_dry_run_defects_subprocess`, so the second executor of generated code gets
+    the identical process boundary rather than a hand-copied approximation.
+  * `CARNOT_ARC_INDUCE_REJECT_INERT`, DEFAULT OFF, read in
+    `LocalGGUFProposer._engine_defects`. With it unset the path is behaviourally
+    identical to before, so the control arm of the A/B is the shipped path itself.
+
+`validate_engine_code` IS DELIBERATELY UNCHANGED: it is the definition
+usable-engine yield is measured with, and folding the treatment into the outcome
+would make that measurement circular.
+
+TWO FAIL-OPEN DIRECTIONS, both asserted:
+  * UNDETERMINED is not inert (killed at the bound / child unavailable / does not
+    import) -- and the cases that really are the engine's fault are already
+    rejected upstream by `dry_run_defects`, which runs first.
+  * NEVER-RAN is not inert. Found by a test, not by review:
+    `engine_changes_anything` continues past a raise, a None return and a
+    wrong-shaped return, so an all-raising engine returns False from it and the
+    first version of this labelled it "inert". `_change_census_inprocess` now
+    reports n_usable_predictions so the finding requires positive evidence the
+    engine ran.
+
+Mutation-tested: all five new checks fail the suite when deleted. Two did NOT on
+the first pass -- the ordering guard and the transitions-present guard were each
+double-covered by another rule -- so the tests were rewritten around an engine
+that isolates each (`MOSTLY_IDENTITY_ONE_RAISE`) and around asserting the probe
+is not CALLED rather than that the result is empty.
+
+FRESHNESS: seven artifacts record this module as a dependency. All four that
+carry a rebuild_command were REBUILT from the code now on disk into a scratch
+path (no committed artifact was written) and deep-diffed: zero substantive values
+moved in any of them -- only wall-clock, code_provenance metadata, and
+hand-added rebuild_note_* keys a fresh run does not re-emit. Acknowledgements are
+APPEND-ONLY; the first attempt filtered same-path entries and deleted 12-94 lines
+of acknowledgement history per artifact, which `git diff --numstat` caught as
+deletions on an evidence file before anything was committed.
+
+No default flipped. No scored or online ARC game played.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_engine_static_validation.py   | 323 ++++++++++++--
+ .../agentic/arc_executable_world_model.py     |  36 ++
+ ...6011_world_model_change_gate_four_arm.json |   9 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   9 +
+ ...6013_hidden_state_change_gate_closure.json |   9 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   9 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   9 +
+ ...rc_generator_concurrency_fix_20260727.json |   9 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   9 +
+ ...t_arc_inert_engine_rejection_2026_08_01.py | 394 ++++++++++++++++++
+ 10 files changed, 787 insertions(+), 29 deletions(-)
+ create mode 100644 tests/python/test_arc_inert_engine_rejection_2026_08_01.py
+
+diff --git a/python/carnot/agentic/arc_engine_static_validation.py b/python/carnot/agentic/arc_engine_static_validation.py
+index a075d7837c..d51a2de9d2 100644
+--- a/python/carnot/agentic/arc_engine_static_validation.py
++++ b/python/carnot/agentic/arc_engine_static_validation.py
+@@ -109,6 +109,8 @@ __all__ = [
+     "dry_run_defects",
+     "dry_run_timeout_default",
+     "engine_changes_anything",
++    "engine_changes_anything_bounded",
++    "engine_inertness_defect",
+     "validate_engine_code",
+     "repair_prompt_block",
+ ]
+@@ -659,22 +661,35 @@ class _ShimTransition:
+     data: Any
+ 
+ 
+-def _dry_run_defects_subprocess(
++def _run_isolated_job(
+     code: str,
+     transitions: Sequence[Any],
+     *,
+     limit: int,
+     func_name: str,
+     timeout_s: float,
+-) -> Optional[list[EngineDefect]]:
+-    """Run the dry run in a killable child. Returns None when the child could not be USED at all.
+-
+-    The None-vs-list distinction is the whole contract, and it is deliberately narrow. A list --
+-    including an empty one -- means the check RAN and this is its verdict. `None` means the
+-    isolation machinery itself was unavailable (no interpreter, spawn refused, unreadable
+-    result, unpicklable input), which is an infrastructure fact and NOT evidence about the
+-    engine. Only `None` sends the caller to the in-process fallback; a timeout does not, because
+-    a timeout IS a real observation about the code.
++    job_kind: str,
++) -> tuple[str, Any]:
++    """Stage a job, run it in a KILLABLE CHILD, and report what happened -- nothing more.
++
++    Extracted 2026-08-01 so that a SECOND check which executes generated code
++    (`engine_changes_anything_bounded`) gets the identical process boundary rather than a
++    hand-copied approximation of it. Two near-duplicate spawn paths is exactly how one of them
++    quietly loses the `CUDA_VISIBLE_DEVICES=""` line, or the `PYTHONPATH` line, and starts
++    behaving differently from the one that was reasoned about.
++
++    This function deliberately makes NO judgement about the engine. It returns a status and a
++    payload; turning either into an `EngineDefect` is the caller's job, because what a timeout
++    MEANS differs by check (for the dry run it is `engine_nonterminating`, a real defect; for
++    the inertness probe it is "undetermined", which must not become a rejection).
++
++    status is one of:
++      ``"ok"``          -- `payload` is the child's decoded JSON dict.
++      ``"timeout"``     -- the child was killed at the wall-clock bound; `payload` is None.
++      ``"crashed"``     -- the child exited non-zero; `payload` is ``(returncode, stderr_tail)``.
++      ``"unavailable"`` -- the isolation machinery itself could not be used (unpicklable input,
++                           spawn refused, unreadable result). This is an INFRASTRUCTURE fact and
++                           never evidence about the engine; `payload` is None.
+     """
+ 
+     tmp = None
+@@ -690,6 +705,7 @@ def _dry_run_defects_subprocess(
+                     "transitions": staged,
+                     "limit": int(limit),
+                     "func_name": str(func_name),
++                    "job_kind": str(job_kind),
+                 },
+                 fh,
+                 protocol=pickle.HIGHEST_PROTOCOL,
+@@ -698,7 +714,7 @@ def _dry_run_defects_subprocess(
+     except Exception:  # noqa: BLE001 - cannot stage the job; not a fact about the engine
+         if tmp is not None:
+             tmp.unlink(missing_ok=True)
+-        return None
++        return "unavailable", None
+ 
+     env = dict(os.environ)
+     # The child imports this package; make sure it can, whatever the parent's install layout is.
+@@ -726,6 +742,48 @@ def _dry_run_defects_subprocess(
+     except subprocess.TimeoutExpired:
+         # THE INCIDENT'S SIGNATURE. `subprocess.run` kills the child on timeout, so unlike a
+         # signal there is nothing left spinning and nothing that can catch this.
++        return "timeout", None
++    except Exception:  # noqa: BLE001 - spawn refused; infrastructure, not the engine
++        return "unavailable", None
++    finally:
++        tmp.unlink(missing_ok=True)
++
++    if proc.returncode != 0:
++        return "crashed", (int(proc.returncode), (proc.stderr or "")[-400:])
++
++    try:
++        return "ok", json.loads((proc.stdout or "").strip().splitlines()[-1])
++    except Exception:  # noqa: BLE001 - unreadable result; do not guess a verdict
++        return "unavailable", None
++
++
++def _dry_run_defects_subprocess(
++    code: str,
++    transitions: Sequence[Any],
++    *,
++    limit: int,
++    func_name: str,
++    timeout_s: float,
++) -> Optional[list[EngineDefect]]:
++    """Run the dry run in a killable child. Returns None when the child could not be USED at all.
++
++    The None-vs-list distinction is the whole contract, and it is deliberately narrow. A list --
++    including an empty one -- means the check RAN and this is its verdict. `None` means the
++    isolation machinery itself was unavailable (no interpreter, spawn refused, unreadable
++    result, unpicklable input), which is an infrastructure fact and NOT evidence about the
++    engine. Only `None` sends the caller to the in-process fallback; a timeout does not, because
++    a timeout IS a real observation about the code.
++    """
++
++    status, payload = _run_isolated_job(
++        code,
++        transitions,
++        limit=limit,
++        func_name=func_name,
++        timeout_s=timeout_s,
++        job_kind="dry_run",
++    )
++    if status == "timeout":
+         return [
+             EngineDefect(
+                 kind="engine_nonterminating",
+@@ -745,44 +803,58 @@ def _dry_run_defects_subprocess(
+                 },
+             )
+         ]
+-    except Exception:  # noqa: BLE001 - spawn refused; infrastructure, not the engine
+-        return None
+-    finally:
+-        tmp.unlink(missing_ok=True)
+-
+-    if proc.returncode != 0:
++    if status == "crashed":
+         # A CRASHED child is a fact about the engine (a segfault or OOM in generated code is a
+         # real defect), but it is reported distinctly from a clean verdict so it can never be
+         # mistaken for one.
++        returncode, stderr_tail = payload
+         return [
+             EngineDefect(
+                 kind="engine_crashed_validator",
+                 detail=(
+-                    f"the isolated dry run exited with code {proc.returncode} without "
++                    f"the isolated dry run exited with code {returncode} without "
+                     f"reporting. Generated code that takes the interpreter down -- a segfault "
+                     f"in a native call, or an allocation the OS refused -- is a defect, and is "
+                     f"reported here rather than as a passing check."
+                 ),
+                 evidence={
+-                    "returncode": int(proc.returncode),
+-                    "stderr_tail": (proc.stderr or "")[-400:],
++                    "returncode": int(returncode),
++                    "stderr_tail": stderr_tail,
+                     "isolation": "subprocess",
+                 },
+             )
+         ]
+-
++    if status != "ok":
++        return None
+     try:
+-        payload = json.loads((proc.stdout or "").strip().splitlines()[-1])
+         return [_defect_from_dict(d) for d in payload["defects"]]
+     except Exception:  # noqa: BLE001 - unreadable result; do not guess a verdict
+         return None
+ 
+ 
+ def _dry_run_child_main(job_path: str) -> int:
+-    """Child entry point. Prints one JSON line: the defect list, or nothing on a crash."""
++    """Child entry point. Prints one JSON line: the job's verdict, or nothing on a crash.
++
++    `job_kind` selects which check runs in the child. It defaults to ``"dry_run"`` so that a job
++    staged by an older parent still means what it meant.
++    """
+ 
+     with open(job_path, "rb") as fh:
+         job = pickle.load(fh)  # noqa: S301 - written by this process's parent, not untrusted input
++    kind = str(job.get("job_kind") or "dry_run")
++    if kind == "changes_anything":
++        print(
++            json.dumps(
++                _change_census_inprocess(
++                    job["code"],
++                    job["transitions"],
++                    limit=int(job["limit"]),
++                    func_name=str(job["func_name"]),
++                ),
++                default=str,
++            )
++        )
++        return 0
+     defects = _dry_run_defects_inprocess(
+         job["code"],
+         job["transitions"],
+@@ -885,17 +957,65 @@ def engine_changes_anything(
+     (`change_fidelity`, `cell_recall`, no-op hallucination rate) over a held-out split.
+ 
+     Returns None when the engine could not be run at all.
++
++    UNBOUNDED, AND MEASURED TO BE (2026-08-01). This executes generated code IN THIS
++    INTERPRETER with no wall-clock bound, exactly as `_dry_run_defects_inprocess` does. On the
++    ft09 candidate 5 that caused the 2026-07-31 13-minute wedge, `validate_engine_code` returns
++    in 30.07s with `engine_nonterminating` while THIS function does not return at all
++    (`results/arc_generation_taxonomy_20260801/probe_unbounded_inertness.json`). Any caller on a
++    live path must use `engine_changes_anything_bounded` instead. This name is kept, and kept
++    unbounded, because it is the reporting helper the docstring above describes and changing its
++    semantics under existing callers would be a behaviour change smuggled in as a refactor.
++    """
++    return _engine_changes_anything_inprocess(code, transitions, limit=limit, func_name=func_name)
++
++
++def _engine_changes_anything_inprocess(
++    code: str, transitions: Sequence[Any], *, limit: int = 25, func_name: str = _ENGINE_FN
++) -> Optional[bool]:
++    """The unbounded worker. Separate so the child process has something to call that does not
++    recurse, mirroring `_dry_run_defects_inprocess`."""
++    census = _change_census_inprocess(code, transitions, limit=limit, func_name=func_name)
++    return census["changes_anything"]
++
++
++def _change_census_inprocess(
++    code: str, transitions: Sequence[Any], *, limit: int = 25, func_name: str = _ENGINE_FN
++) -> dict:
++    """`changes_anything`, PLUS how many transitions the engine actually answered usably.
++
++    THE SECOND NUMBER IS WHY THIS EXISTS, and it was found by a test rather than by review.
++    `engine_changes_anything` `continue`s past a raise and past a `None` return, because from
++    its own point of view neither is a change. So an engine that raises on EVERY transition
++    returns False from it -- indistinguishable, at that return value, from an engine that ran
++    cleanly and predicted nothing ever changes. Those are different failures with different
++    repairs, and only the second one is inertness.
++
++    At the wired call site the ordering already prevents the confusion (`dry_run_defects` reports
++    `engine_raised` first, so the inertness probe never sees a raising engine). But
++    `engine_inertness_defect` is a public function and must not depend on its caller getting the
++    order right to avoid mislabelling. `n_usable_predictions` is what lets it require positive
++    evidence that the engine RAN before it concludes the engine does NOTHING.
++
++    COST NOTE: counting requires visiting every transition, so this loses the early exit
++    `engine_changes_anything` had on its first observed change. The VERDICT is identical; only
++    the work is. At `limit=25` transitions of pure Python that is milliseconds, and it is now
++    wrapped in a wall-clock bound in any case.
+     """
+     import numpy as np
+ 
++    out = {"changes_anything": None, "n_usable_predictions": 0, "n_tried": 0}
+     ns, defect = _exec_namespace(code)
+     if defect is not None:
+-        return None
++        return out
+     assert ns is not None
+     engine = ns.get(func_name)
+     if not callable(engine):
+-        return None
+-    for t in list(transitions)[: int(limit)]:
++        return out
++    changed = False
++    n_usable = 0
++    tried = list(transitions)[: int(limit)]
++    for t in tried:
+         grid = np.asarray(t.grid)
+         try:
+             pred = engine(grid.copy(), t.action, t.data)
+@@ -904,9 +1024,154 @@ def engine_changes_anything(
+         if pred is None:
+             continue
+         arr = np.asarray(pred)
+-        if arr.shape == grid.shape and not np.array_equal(arr, grid):
+-            return True
+-    return False
++        if arr.shape != grid.shape:
++            # A wrong-shaped return is not a usable prediction either -- `dry_run_defects`
++            # reports it as `engine_wrong_shape`, and it is not evidence about inertness.
++            continue
++        n_usable += 1
++        if not np.array_equal(arr, grid):
++            changed = True
++    out["changes_anything"] = changed
++    out["n_usable_predictions"] = n_usable
++    out["n_tried"] = len(tried)
++    return out
++
++
++def engine_changes_anything_bounded(
++    code: str,
++    transitions: Sequence[Any],
++    *,
++    limit: int = 25,
++    func_name: str = _ENGINE_FN,
++    timeout_s: Optional[float] = None,
++) -> Optional[bool]:
++    """`engine_changes_anything` with the SAME killable-subprocess bound the dry run uses.
++
++    Returns True (something changed), False (nothing ever changed on the transitions tried), or
++    None for UNDETERMINED -- the engine could not be run, the child could not be spawned, or the
++    probe was killed at the bound.
++
++    THE THREE-VALUED RETURN IS THE POINT. `engine_changes_anything` already returned None for
++    "could not run", and a caller that treats None as False turns "we do not know" into "reject
++    it". Every consumer of this must branch on `is False`, never on falsiness.
++    """
++    census = _change_census_bounded(
++        code, transitions, limit=limit, func_name=func_name, timeout_s=timeout_s
++    )
++    if census is None:
++        return None
++    verdict = census.get("changes_anything")
++    return verdict if isinstance(verdict, bool) else None
++
++
++def _change_census_bounded(
++    code: str,
++    transitions: Sequence[Any],
++    *,
++    limit: int = 25,
++    func_name: str = _ENGINE_FN,
++    timeout_s: Optional[float] = None,
++) -> Optional[dict]:
++    """`_change_census_inprocess` behind the killable-subprocess bound. None = UNDETERMINED."""
++    if timeout_s is None:
++        timeout_s = dry_run_timeout_default()
++    if timeout_s is None or float(timeout_s) <= 0:
++        # Same escape hatch, same meaning, as CARNOT_ARC_DRY_RUN_TIMEOUT_S=0 on the dry run:
++        # restore the unbounded in-process behaviour exactly.
++        return _change_census_inprocess(code, transitions, limit=limit, func_name=func_name)
++    status, payload = _run_isolated_job(
++        code,
++        transitions,
++        limit=limit,
++        func_name=func_name,
++        timeout_s=float(timeout_s),
++        job_kind="changes_anything",
++    )
++    if status != "ok":
++        # timeout / crashed / unavailable all mean UNDETERMINED here. A crash or a hang is a real
++        # defect, but it is the DRY RUN's defect to report -- reporting it a second time from the
++        # inertness probe would double-count one broken engine as two findings.
++        return None
++    return payload if isinstance(payload, dict) else None
++
++
++def engine_inertness_defect(
++    code: str,
++    transitions: Sequence[Any],
++    *,
++    limit: int = 25,
++    func_name: str = _ENGINE_FN,
++    timeout_s: Optional[float] = None,
++) -> Optional[EngineDefect]:
++    """An `engine_inert` defect when the engine is ESTABLISHED to change nothing; else None.
++
++    WHY THIS IS A DEFECT AND NOT A QUALITY JUDGEMENT -- the distinction this module's docstring
++    draws, and the reason inertness sat outside `validate_engine_code` until now. An engine that
++    predicts NO action changes ANYTHING is not merely a poor model; it is unusable by the thing
++    downstream that consumes it. `plan_in_model` searches for an action sequence that reaches a
++    goal state, and against an engine whose successor function is the identity there are no
++    distinct states to search, so the planner cannot return a plan no matter how much budget it
++    is given. That is a mechanical property of the code, checkable by running it -- the same
++    class of fact as "raises" or "returns None", and the same class of fact this module exists
++    to report.
++
++    THE MEASUREMENT BEHIND IT (`results/outer_loop_arc_generation_taxonomy_20260801.json`).
++    Inertness is the largest single failure class at 26 of 172 gemma-4-31B candidates (15.1%),
++    exceeding every code-validity class combined, and it was the only class the live induce path
++    took no action on despite the detector being shipped and already imported at that call site.
++    Rejecting it is safe in the direction that matters: 0 of 11 inert candidates in the frozen
++    corpus were plannable, and all 15 inert cells carrying a held-out score had `change_fidelity`
++    EXACTLY 0.0. Nothing measurable was lost by rejecting them.
++
++    STILL NOT PART OF `validate_engine_code`. It is offered as a separate function that a caller
++    opts into, and the caller that does so
++    (`LocalGGUFProposer._engine_defects`, behind `CARNOT_ARC_INDUCE_REJECT_INERT`) is DEFAULT OFF.
++    Two reasons, both load-bearing: `validate_engine_code` is the definition an A/B measures
++    usable-engine yield WITH, so changing it would make the measurement circular; and an
++    identity engine really does clear every other check in this file, so folding inertness in
++    would blur the honest statement that a clean report here is not a quality claim.
++
++    UNDETERMINED IS NOT INERT, and neither is BROKEN. This returns None -- fail-OPEN, i.e.
++    accept -- in two distinct situations, and both matter:
++
++      * the probe could not reach a verdict (killed at the bound, child unavailable, the code
++        does not import). Rejecting on "we could not tell" would be a fabricated observation,
++        and the two ways to get here that really are the engine's fault (it hangs, it crashes
++        the validator) are ALREADY rejected upstream by `dry_run_defects`, which runs first.
++      * the engine never produced a single usable prediction -- it raised on everything, or
++        returned None, or returned a wrongly-shaped array. `engine_changes_anything` reports
++        False for that, because from its point of view nothing changed, but it is NOT inertness:
++        the engine did not run. Each of those has its own defect kind and its own repair, and
++        relabelling one as inertness would hand the model the wrong instruction. Requiring at
++        least one usable prediction is what keeps this a POSITIVE finding rather than the
++        absence of one. Found by a test, not by review.
++    """
++    census = _change_census_bounded(
++        code, transitions, limit=limit, func_name=func_name, timeout_s=timeout_s
++    )
++    if census is None or census.get("changes_anything") is not False:
++        return None
++    n_usable = int(census.get("n_usable_predictions") or 0)
++    if n_usable < 1:
++        return None
++    return EngineDefect(
++        kind="engine_inert",
++        detail=(
++            f"`{func_name}(grid, action, data)` ran on {n_usable} observed transitions and "
++            f"returned a grid IDENTICAL to its input every time -- it predicts that no action "
++            f"changes anything. A planner cannot search a state graph with one state, so this "
++            f"engine cannot produce a plan whatever budget it is given. Model what the action "
++            f"actually does to the grid."
++        ),
++        # Repairable: unlike a hang, we can say exactly what was observed, and the observation
++        # ("your engine ran and never changed the grid") is a fact the model can act on.
++        repairable=True,
++        evidence={
++            "transitions_tried": int(census.get("n_tried") or 0),
++            "n_usable_predictions": n_usable,
++            "changed_on_any": False,
++        },
++    )
+ 
+ 
+ # ---------------------------------------------------------------------------
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 117f6a5cf2..0a5af7a019 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3585,6 +3585,30 @@ def _induce_defect_reasks() -> int:
+         return _INDUCE_DEFECT_REASKS
+ 
+ 
++def _reject_inert_engines() -> bool:
++    """Should a CLEAN-BUT-INERT induced engine be rejected and re-asked? DEFAULT OFF.
++
++    An INERT engine is one that predicts no action changes anything -- the identity function,
++    modulo whatever code shape it wears. It clears every mechanical check in
++    `arc_engine_static_validation` and it is, per the 2026-08-01 taxonomy, the LARGEST single
++    failure class of the live generator: 26 of 172 gemma-4-31B candidates (15.1%), more than
++    every code-validity class combined, and the only class the induce path took no action on
++    despite `engine_changes_anything` being shipped and already imported here.
++
++    WHY IT SHIPS OFF. This is a live-path behaviour change on the scored agent, and the only
++    evidence for it is observational (a frozen corpus, scored after the fact). Default OFF makes
++    it a true A/B: with the flag unset `_engine_defects` is behaviourally identical to the code
++    that preceded it, so the control arm of any measurement IS the shipped path rather than a
++    reimplementation of it. Flipping the default is an operator decision that belongs after the
++    measurement, not inside it.
++
++    A malformed value falls back to OFF rather than raising -- a typo'd env var must not change
++    how the scored agent behaves, and must certainly not take down a live episode.
++    """
++    raw = os.environ.get("CARNOT_ARC_INDUCE_REJECT_INERT")
++    return bool(raw) and raw.strip() == "1"
++
++
+ def _generator_cuda_min_free_mb(
+     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
+ ) -> int:
+@@ -5406,6 +5430,18 @@ class LocalGGUFProposer:
+                 required=("engine",),
+                 budget=self.max_tokens,
+             )
++            # OPT-IN INERTNESS REJECTION (2026-08-01, CARNOT_ARC_INDUCE_REJECT_INERT, DEFAULT
++            # OFF). Deliberately OUTSIDE `validate_engine_code` rather than folded into it, for
++            # two reasons. First, `validate_engine_code` is the definition an A/B measures
++            # usable-engine yield WITH; moving the flag inside it would make the treatment and
++            # the outcome the same object and the measurement circular. Second, the ordering is
++            # load-bearing: it runs only when the mechanical checks came back CLEAN, so an
++            # engine that hangs or raises is reported as hanging or raising -- its actual
++            # defect -- and is never relabelled "inert" by a probe that could not run it.
++            if _reject_inert_engines() and not defects and transitions:
++                inert = _sv.engine_inertness_defect(code, list(transitions))
++                if inert is not None:
++                    defects = [inert]
+             return sorted({d.kind for d in defects})
+         except Exception:
+             return []
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 975339c469..d02295b54d 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52556,6 +52556,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (48501 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index c9f4d8f39a..0d07d7cf07 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -40,6 +40,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (20337 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index ff343577af..d31ec96934 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8582,6 +8582,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (7403 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index b5b828b253..199169d569 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1327,6 +1327,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 4c78629e0a..e851e18ee8 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3350,6 +3350,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "This artifact records no rebuild_command, so inertness is established from the change itself plus the rebuilds of its siblings. The four artifacts on the same dependency that DO carry a rebuild command (experiment_6011, 6012, 6013, 6021) were each rebuilt from the code now on disk into a scratch path and diffed against their committed versions: zero substantive values moved in any of them, only wall-clock and provenance metadata. The guard is additionally pinned by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine. STATED PLAINLY: this one is verified by argument plus sibling rebuild, not by rebuilding this artifact itself.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index abbd74cd72..915f5be50c 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -983,6 +983,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "This artifact records no rebuild_command, so inertness is established from the change itself plus the rebuilds of its siblings. The four artifacts on the same dependency that DO carry a rebuild command (experiment_6011, 6012, 6013, 6021) were each rebuilt from the code now on disk into a scratch path and diffed against their committed versions: zero substantive values moved in any of them, only wall-clock and provenance metadata. The guard is additionally pinned by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine. STATED PLAINLY: this one is verified by argument plus sibling rebuild, not by rebuilding this artifact itself.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 92aeee83ee..1c09ee4356 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -225,6 +225,15 @@
+         "acknowledged_on": "2026-07-31",
+         "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+         "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
++        "acknowledged_utc": "2026-08-01T16:55:00Z",
++        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
++        "evidence": "This artifact records no rebuild_command, so inertness is established from the change itself plus the rebuilds of its siblings. The four artifacts on the same dependency that DO carry a rebuild command (experiment_6011, 6012, 6013, 6021) were each rebuilt from the code now on disk into a scratch path and diffed against their committed versions: zero substantive values moved in any of them, only wall-clock and provenance metadata. The guard is additionally pinned by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine. STATED PLAINLY: this one is verified by argument plus sibling rebuild, not by rebuilding this artifact itself.",
++        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_arc_inert_engine_rejection_2026_08_01.py b/tests/python/test_arc_inert_engine_rejection_2026_08_01.py
+new file mode 100644
+index 0000000000..c9a661f22a
+--- /dev/null
++++ b/tests/python/test_arc_inert_engine_rejection_2026_08_01.py
+@@ -0,0 +1,394 @@
++"""An INERT induced engine -- one that predicts no action changes anything -- is rejectable.
++
++WHY THIS EXISTS (`results/outer_loop_arc_generation_taxonomy_20260801.json`). Classifying 172
++gemma-4-31B induce candidates by failure mode found that inertness is the LARGEST single class:
++26 of 172 (15.1%), 15 of 124 (12.1%) on the shipped 3-try path, exceeding every code-validity
++class combined. It was also the only class the live induce path took NO ACTION on, despite the
++detector (`engine_changes_anything`) being shipped in `arc_engine_static_validation` and already
++imported at the `_engine_defects` call site.
++
++TWO THINGS HAD TO BE TRUE BEFORE IT COULD BE WIRED, and both are pinned here:
++
++  1. `engine_changes_anything` is UNBOUNDED. Measured, not assumed: on ft09 candidate 5 --
++     the engine behind the 2026-07-31 13-minute wedge -- `validate_engine_code` returns in
++     30.07s with `engine_nonterminating` while `engine_changes_anything` does not return at all
++     (`probe_unbounded_inertness.json`). Wiring the unbounded function into the live path would
++     have reintroduced the exact hang the subprocess bound was shipped to remove.
++  2. UNDETERMINED IS NOT INERT. A probe that could not reach a verdict must not reject. The two
++     ways to reach "undetermined" that really are the engine's fault (it hangs, it crashes the
++     validator) are already rejected upstream by `dry_run_defects`.
++
++AND IT SHIPS OFF. `CARNOT_ARC_INDUCE_REJECT_INERT` defaults to off so the control arm of the A/B
++is the shipped path itself rather than a reimplementation of it.
++
++SCENARIO-ARC-FCP-5699-43-INERT-ENGINE-IS-A-DEFECT
++SCENARIO-ARC-FCP-5699-43-INERTNESS-PROBE-IS-BOUNDED
++SCENARIO-ARC-FCP-5699-43-DEFAULT-OFF-IS-BYTE-FOR-BYTE-THE-OLD-PATH
++"""
++
++from __future__ import annotations
++
++import time
++from typing import Any
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_engine_static_validation as sv
++from carnot.agentic import arc_executable_world_model as e3
++
++IDENTITY = "def engine(grid, action, data=None):\n    return grid.copy()\n"
++IDENTITY_DRESSED = (
++    "import numpy as np\n"
++    "def engine(grid, action, data=None):\n"
++    "    out = np.array(grid, copy=True)\n"
++    "    for i in range(out.shape[0]):\n"
++    "        for j in range(out.shape[1]):\n"
++    "            out[i, j] = grid[i, j]\n"
++    "    return out\n"
++)
++LIVE = "def engine(grid, action, data=None):\n    g = grid.copy()\n    g[0, 0] = 7\n    return g\n"
++SPIN = "def engine(grid, action, data=None):\n    while True:\n        pass\n"
++RAISES = "def engine(grid, action, data=None):\n    raise ValueError('boom-43')\n"
++RETURNS_NONE = "def engine(grid, action, data=None):\n    pass\n"
++# Inert on the transitions it answers AND broken on one. The only engine shape that isolates the
++# `not defects` ordering guard -- see test_a_real_defect_still_wins_over_inertness.
++MOSTLY_IDENTITY_ONE_RAISE = (
++    "def engine(grid, action, data=None):\n"
++    "    if action == 9:\n"
++    "        raise ValueError('boom-43')\n"
++    "    return grid.copy()\n"
++)
++WRONG_SHAPE = (
++    "import numpy as np\ndef engine(grid, action, data=None):\n    return np.zeros((2, 2), int)\n"
++)
++
++
++class _DuckTransition:
++    """Locally defined on purpose -- the module's contract is duck-typed, and a child process
++    that unpickles by importing the class would break it. See the sibling wall-clock test."""
++
++    def __init__(self, grid: Any, action: int, data: Any = None) -> None:
++        self.grid, self.action, self.data = grid, action, data
++
++
++@pytest.fixture(autouse=True)
++def _shipped_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.delenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", raising=False)
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_REJECT_INERT", raising=False)
++
++
++@pytest.fixture
++def transitions() -> list[_DuckTransition]:
++    g = np.zeros((6, 6), dtype=int)
++    return [_DuckTransition(g.copy(), a) for a in (1, 2, 3)]
++
++
++# ---------------------------------------------------------------------------
++# 1. The detector itself
++# ---------------------------------------------------------------------------
++
++
++class TestTheDetector:
++    def test_an_identity_engine_is_reported_inert(self, transitions):
++        d = sv.engine_inertness_defect(IDENTITY, transitions)
++        assert d is not None
++        assert d.kind == "engine_inert"
++        assert d.evidence["changed_on_any"] is False
++        assert d.evidence["transitions_tried"] == 3
++
++    def test_inertness_is_about_BEHAVIOUR_not_about_the_source_text(self, transitions):
++        """An engine that copies every cell one at a time is still the identity function. A
++        source-text check could not see that; running it can, which is why this is a dry-run
++        style check and not a static one."""
++        d = sv.engine_inertness_defect(IDENTITY_DRESSED, transitions)
++        assert d is not None and d.kind == "engine_inert"
++
++    def test_an_engine_that_changes_the_grid_is_NOT_flagged(self, transitions):
++        assert sv.engine_inertness_defect(LIVE, transitions) is None
++
++    def test_the_defect_is_repairable_because_we_can_say_what_we_saw(self, transitions):
++        """Contrast with `engine_nonterminating`, which is NOT repairable: there the run was
++        killed and there is no observation to feed back. Here there is one -- 'your engine never
++        changed the grid' -- so the model can act on it."""
++        d = sv.engine_inertness_defect(IDENTITY, transitions)
++        assert d is not None and d.repairable is True
++        assert sv.repair_prompt_block([d]) != ""
++
++
++# ---------------------------------------------------------------------------
++# 2. UNDETERMINED IS NOT INERT -- the fail-open direction
++# ---------------------------------------------------------------------------
++
++
++class TestUndeterminedIsNotInert:
++    def test_a_nonterminating_engine_is_NOT_reported_inert(self, transitions, monkeypatch):
++        """It is killed at the bound, which is UNDETERMINED, not "changes nothing". Reporting it
++        as inert would be a fabricated observation -- and would double-count one broken engine,
++        since `dry_run_defects` already rejects it as `engine_nonterminating`."""
++        monkeypatch.setenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", "2")
++        t0 = time.monotonic()
++        assert sv.engine_inertness_defect(SPIN, transitions) is None
++        assert time.monotonic() - t0 < 30, "the probe was not bounded"
++
++    def test_the_nonterminating_engine_is_still_rejected_BY_THE_DRY_RUN(
++        self, transitions, monkeypatch
++    ):
++        """The fail-open above is only safe because something else catches this case. Assert
++        that, rather than assuming it: a fail-open whose backstop had quietly moved would let a
++        hanging engine through."""
++        monkeypatch.setenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", "2")
++        kinds = {d.kind for d in sv.validate_engine_code(SPIN, transitions=transitions)}
++        assert "engine_nonterminating" in kinds
++
++    def test_an_engine_that_cannot_be_run_at_all_is_NOT_reported_inert(self, transitions):
++        assert sv.engine_inertness_defect("def not_engine(): pass\n", transitions) is None
++
++    @pytest.mark.parametrize("code", [RAISES, RETURNS_NONE, WRONG_SHAPE])
++    def test_an_engine_that_never_RAN_is_NOT_reported_inert(self, code, transitions):
++        """THE BUG THIS TEST FOUND. `engine_changes_anything` `continue`s past a raise, past a
++        None return and past a wrong-shaped return, so an engine that does any of those on
++        EVERY transition returns False from it -- indistinguishable, at that return value, from
++        an engine that ran cleanly and predicted nothing ever changes. The first version of
++        `engine_inertness_defect` read that False and labelled a raising engine 'inert'. Those
++        are different failures with different repairs, and only the second is inertness."""
++        assert sv.engine_inertness_defect(code, transitions) is None
++
++    @pytest.mark.parametrize(
++        ("code", "expected"),
++        [(RAISES, "engine_raised"), (RETURNS_NONE, "engine_returned_none")],
++    )
++    def test_those_engines_are_still_rejected_UNDER_THEIR_OWN_KIND(
++        self, code, expected, transitions
++    ):
++        """The fail-open above is only safe because something else catches these. Assert it."""
++        kinds = {d.kind for d in sv.validate_engine_code(code, transitions=transitions)}
++        assert expected in kinds
++
++    def test_the_census_separates_ran_and_did_nothing_from_never_ran(self, transitions):
++        inert = sv._change_census_inprocess(IDENTITY, transitions)
++        broken = sv._change_census_inprocess(RAISES, transitions)
++        assert inert["changes_anything"] is False and inert["n_usable_predictions"] == 3
++        assert broken["changes_anything"] is False and broken["n_usable_predictions"] == 0
++
++    def test_the_bounded_probe_is_three_valued(self, transitions, monkeypatch):
++        monkeypatch.setenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", "2")
++        assert sv.engine_changes_anything_bounded(LIVE, transitions) is True
++        assert sv.engine_changes_anything_bounded(IDENTITY, transitions) is False
++        assert sv.engine_changes_anything_bounded(SPIN, transitions) is None
++
++    def test_the_bounded_probe_agrees_with_its_unbounded_sibling(self, transitions, monkeypatch):
++        """They must stay the same function, one of them merely fenced. If the census had
++        changed the VERDICT rather than only adding a count, this would fail."""
++        monkeypatch.setenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", "10")
++        for code in (LIVE, IDENTITY, IDENTITY_DRESSED, RAISES, RETURNS_NONE, WRONG_SHAPE):
++            assert sv.engine_changes_anything_bounded(code, transitions) == (
++                sv.engine_changes_anything(code, transitions)
++            ), code
++
++
++# ---------------------------------------------------------------------------
++# 3. Bounded, in a killable child -- the precondition from the taxonomy
++# ---------------------------------------------------------------------------
++
++
++class TestTheBound:
++    def test_the_probe_runs_in_a_subprocess_by_default(self, transitions, monkeypatch):
++        seen: dict = {}
++        real = sv._run_isolated_job
++
++        def spy(*a, **kw):
++            seen["job_kind"] = kw.get("job_kind")
++            return real(*a, **kw)
++
++        monkeypatch.setattr(sv, "_run_isolated_job", spy)
++        sv.engine_changes_anything_bounded(IDENTITY, transitions)
++        assert seen["job_kind"] == "changes_anything"
++
++    def test_the_disable_knob_restores_the_unbounded_in_process_path_exactly(
++        self, transitions, monkeypatch
++    ):
++        monkeypatch.setenv("CARNOT_ARC_DRY_RUN_TIMEOUT_S", "0")
++        called: dict = {}
++        monkeypatch.setattr(
++            sv, "_run_isolated_job", lambda *a, **kw: called.setdefault("spawned", True)
++        )
++        assert sv.engine_changes_anything_bounded(IDENTITY, transitions) is False
++        assert "spawned" not in called
++
++    def test_the_unbounded_public_helper_is_left_alone(self, transitions):
++        """`engine_changes_anything` keeps its old name AND its old semantics. Changing them
++        under existing callers would be a behaviour change smuggled in as a refactor."""
++        assert sv.engine_changes_anything(IDENTITY, transitions) is False
++        assert sv.engine_changes_anything(LIVE, transitions) is True
++
++    def test_the_child_entry_point_answers_the_changes_anything_job(self, tmp_path):
++        import json
++        import pickle
++        import subprocess
++        import sys
++
++        job = tmp_path / "job.pkl"
++        g = np.zeros((4, 4), dtype=int)
++        with open(job, "wb") as fh:
++            pickle.dump(
++                {
++                    "code": IDENTITY,
++                    "transitions": [sv._ShimTransition(grid=g, action=1, data=None)],
++                    "limit": 5,
++                    "func_name": "engine",
++                    "job_kind": "changes_anything",
++                },
++                fh,
++            )
++        proc = subprocess.run(
++            [
++                sys.executable,
++                "-m",
++                "carnot.agentic.arc_engine_static_validation",
++                "--dry-run-job",
++                str(job),
++            ],
++            capture_output=True,
++            text=True,
++            check=True,
++        )
++        assert json.loads(proc.stdout.strip().splitlines()[-1]) == {
++            "changes_anything": False,
++            "n_usable_predictions": 1,
++            "n_tried": 1,
++        }
++
++    def test_a_job_with_no_kind_still_means_dry_run(self, tmp_path):
++        """Backward compatibility of the staged job, asserted rather than hoped for."""
++        import json
++        import pickle
++        import subprocess
++        import sys
++
++        job = tmp_path / "job.pkl"
++        g = np.zeros((4, 4), dtype=int)
++        with open(job, "wb") as fh:
++            pickle.dump(
++                {
++                    "code": RAISES,
++                    "transitions": [sv._ShimTransition(grid=g, action=1, data=None)],
++                    "limit": 5,
++                    "func_name": "engine",
++                },
++                fh,
++            )
++        proc = subprocess.run(
++            [
++                sys.executable,
++                "-m",
++                "carnot.agentic.arc_engine_static_validation",
++                "--dry-run-job",
++                str(job),
++            ],
++            capture_output=True,
++            text=True,
++            check=True,
++        )
++        payload = json.loads(proc.stdout.strip().splitlines()[-1])
++        assert [d["kind"] for d in payload["defects"]] == ["engine_raised"]
++
++
++# ---------------------------------------------------------------------------
++# 4. `validate_engine_code` is UNCHANGED -- the measurement definition must not move
++# ---------------------------------------------------------------------------
++
++
++class TestTheMeasurementDefinitionDidNotMove:
++    def test_validate_engine_code_still_calls_an_inert_engine_CLEAN(self, transitions):
++        """Load-bearing for the A/B. `validate_engine_code` is the definition usable-engine
++        yield is measured with; if inertness were folded into it, the treatment and the outcome
++        would be the same object and the measurement circular."""
++        assert sv.validate_engine_code(IDENTITY, transitions=transitions) == []
++
++    def test_inertness_is_clean_under_validate_even_with_the_flag_on(
++        self, transitions, monkeypatch
++    ):
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        assert sv.validate_engine_code(IDENTITY, transitions=transitions) == []
++
++
++# ---------------------------------------------------------------------------
++# 5. The wiring, and that it is OFF by default
++# ---------------------------------------------------------------------------
++
++
++class _Proposer:
++    """The narrowest object `_engine_defects` needs. Constructing a real `LocalGGUFProposer`
++    would try to reach a GPU server; the method under test reads exactly two attributes."""
++
++    last_stop_type = None
++    max_tokens = 4096
++    _engine_defects = e3.LocalGGUFProposer._engine_defects
++
++
++class TestTheFlag:
++    def test_the_shipped_default_is_off(self, monkeypatch):
++        monkeypatch.delenv("CARNOT_ARC_INDUCE_REJECT_INERT", raising=False)
++        assert e3._reject_inert_engines() is False
++
++    @pytest.mark.parametrize("raw", ["0", "", "yes", "true", "True", "2", " "])
++    def test_only_an_exact_1_turns_it_on(self, raw, monkeypatch):
++        """A malformed value falls back to OFF. A typo must not change how the scored agent
++        behaves."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", raw)
++        assert e3._reject_inert_engines() is False
++
++    def test_it_turns_on(self, monkeypatch):
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        assert e3._reject_inert_engines() is True
++
++    def test_default_off_reports_no_defect_for_an_inert_engine(self, transitions, monkeypatch):
++        monkeypatch.delenv("CARNOT_ARC_INDUCE_REJECT_INERT", raising=False)
++        assert _Proposer()._engine_defects(IDENTITY, transitions) == []
++
++    def test_flag_on_reports_engine_inert(self, transitions, monkeypatch):
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        assert _Proposer()._engine_defects(IDENTITY, transitions) == ["engine_inert"]
++
++    def test_flag_on_does_not_touch_a_live_engine(self, transitions, monkeypatch):
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        assert _Proposer()._engine_defects(LIVE, transitions) == []
++
++    @pytest.mark.parametrize("trans", [None, []])
++    def test_flag_on_with_no_transitions_NEVER_REACHES_THE_PROBE(self, trans, monkeypatch):
++        """Without observed transitions there is nothing to run the engine against, so
++        inertness is unobservable and must not be guessed at.
++
++        ASSERTED AS 'THE PROBE IS NOT CALLED', not as 'the result is []'. Mutation testing
++        (2026-08-01) showed the result-shaped version of this test stays GREEN when the
++        `and transitions` guard is deleted: with `None` the probe raises TypeError into
++        `_engine_defects`' broad `except Exception: return []`, and with `[]` the census
++        reports zero usable predictions. Both give [] by accident, through paths that would
++        equally hide a real bug. The guard is what makes it deliberate, so the guard is what
++        gets asserted."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        called: list = []
++        monkeypatch.setattr(
++            sv, "engine_inertness_defect", lambda *a, **kw: called.append(a) or None
++        )
++        assert _Proposer()._engine_defects(IDENTITY, trans) == []
++        assert called == [], "the inertness probe was reached with nothing to run against"
++
++    def test_a_real_defect_still_wins_over_inertness(self, monkeypatch):
++        """ORDERING IS LOAD-BEARING, and this engine is why an all-raising one does not test it.
++
++        `MOSTLY_IDENTITY_ONE_RAISE` is inert on the transitions it answers (2 usable
++        predictions, neither changing anything) AND raises on one -- so the inertness probe
++        would return a real `engine_inert`, and only the `not defects` ordering guard stops it.
++        The earlier version of this test used an ALL-raising engine, where the probe's own
++        `n_usable >= 1` requirement already returns None; deleting the ordering guard left the
++        suite green. Two rules double-covering one case is how a named guard gets silently
++        removed."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
++        g = np.zeros((6, 6), dtype=int)
++        trans = [_DuckTransition(g.copy(), a) for a in (1, 2, 9)]
++        assert sv.engine_inertness_defect(MOSTLY_IDENTITY_ONE_RAISE, trans) is not None
++        kinds = _Proposer()._engine_defects(MOSTLY_IDENTITY_ONE_RAISE, trans)
++        assert kinds == ["engine_raised"]
++        assert "engine_inert" not in kinds
+-- 
+2.55.0
+

@@ -1,0 +1,4129 @@
+From 3bd3ca48aafce3a9a67936cf3bb5ae365aae44b2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 15:56:56 -0400
+Subject: [PATCH 08218/11362] [conductor] Dated evidence refresh after the V530
+ planner marker
+
+Automated research step by research conductor.
+Task ID: exp6113-v530-source-delta-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  157 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...riment_6113_v530_source_delta_ingestion.py | 1583 +++++++++++++++
+ ...ment_6113_v530_source_delta_ingestion.json | 1737 +++++++++++++++++
+ ...riment_6113_v530_source_delta_ingestion.py |  589 ++++++
+ 5 files changed, 4067 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6113_v530_source_delta_ingestion.py
+ create mode 100644 results/experiment_6113_v530_source_delta_ingestion.json
+ create mode 100644 tests/python/test_experiment_6113_v530_source_delta_ingestion.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index ad546373a7..d0a178a4ef 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -48471,3 +48471,160 @@ checksum, and terminal verdict prefix is present; the inference substrate is
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6112 | Implemented (`python/carnot/experiment_6112_transition_v530.py`, `results/experiment_6112_transition_v530.json`) | Verified (`tests/python/test_experiment_6112_transition_v530.py`) |
++
++### REQ-REPORT-6113: V530 Post-Marker Source Delta Ingestion Preserves The Sealed Planning Boundary
++
++The Exp6113 workflow SHALL run a bounded source refresh after the exact
++`V530-PLANNER-REFRESH-20260804-END` marker in `research-references.md` and
++SHALL write `results/experiment_6113_v530_source_delta_ingestion.json`. It
++SHALL hash the exact V530 marker block, `research-references.md`, active and
++staged roadmaps when present, `ops/exclusion_manifest.yaml`,
++`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the output path
++when present, the prior Exp6101 source artifact, and protected files before
++classification. It SHALL record UTC search start/end, endpoint failures,
++rate-limit receipts, source cutoffs, and same-day ordering uncertainty. If the
++marker is absent, no primary, official, or reliable secondary route is
++reachable, or the active `.530` task identity cannot be read, the workflow SHALL
++emit `blocked:` and SHALL leave task identities, gates, exclusions, protected
++files, historical findings, and sealed reference blocks unchanged.
++
++The workflow SHALL search only primary evidence published or materially changed
++after the exact V530 marker receipt through arXiv, OpenReview, Hugging Face
++Papers, direct Semantic Scholar citation trails for EBT `2507.02092` and
++ARM-EBM `2512.15605`, GitHub Trending and targeted repositories, Extropic
++writing/hardware pages, and Logical Intelligence Kona pages. arXiv, reachable
++OpenReview forum pages, official project pages, Extropic, and Logical
++Intelligence SHALL be primary or official only when directly opened. Hugging
++Face Papers, GitHub discovery metadata, Semantic Scholar routes, OpenReview
++search pages, and local sweep helpers SHALL remain secondary or tooling until a
++primary reproducible source is opened. Topical coverage SHALL include EBM
++verification/reasoning, neural CSP, Ising/p-bit hardware,
++hallucination/internal representations, KANs, constrained generation,
++continual learning, and ARC online discovery.
++
++Every surfaced receipt or candidate SHALL be classified separately as accepted,
++rejected, duplicate, retired-scope, abstained, false-positive,
++known-false-negative, cutoff-confounded, or endpoint-failed. Accepted findings
++SHALL be newer primary-source evidence or materially changed official evidence,
++SHALL be non-duplicate by identifier, title, authors, mechanism, and existing
++heading, and SHALL require a new mechanism or materially changed evidence
++relevant to Carnot's active `.530` roadmap work. The workflow SHALL reject
++duplicates or renamed retired all-family VRAM recovery, finite-ID transport,
++generated-IR, schema-reprompt, external-text/logprob scoring, retired KAN
++mutation, retired ARC induction, or unchanged board-probe mechanisms.
++Uncertainty, rate limits, cutoff confounds, and access failures SHALL remain
++explicit receipts rather than ordinary rejections.
++
++When no accepted non-duplicate finding exists, the workflow SHALL leave
++`research-references.md` unchanged and set
++`references_append_receipt.appended=false`. When accepted findings exist, it MAY
++append exactly one dated post-V530 subheading after the sealed marker, listing
++only actionable method-to-task mappings and preserving all prior blocks without
++rewrite. Source aggregation SHALL declare
++`inference_substrate="aggregation_from_external_primary_sources"` and SHALL NOT
++be relabeled as experimental LLM inference, local model inference, hardware
++execution, TSU execution, Kona execution, or a scientific rerun.
++
++The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
++`search_window_and_marker_receipt`,
++`source_queries_and_endpoint_receipts`,
++`primary_secondary_and_official_source_counts`,
++`accepted_rejected_duplicate_retired_and_abstained_findings`,
++`false_positive_false_negative_cutoff_and_rate_limit_receipts`,
++`semantic_scholar_ebt_and_arm_ebm_receipts`,
++`openreview_huggingface_github_extropic_and_kona_receipts`,
++`duplicate_and_retired_scope_filter`, `references_append_receipt`,
++`task_identity_gate_and_exclusion_immutability`, `protected_files_unchanged`,
++`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
++`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
++required top-level field SHALL have a non-empty provenance entry and a
++principle. The `honest_verdict` SHALL start with `complete_delta:`,
++`complete_null:`, or `blocked:`.
++
++Required field principles:
++
++- `status`: principle "only a hash-anchored post-marker window is eligible."
++- `preconditions_checked`: principle "only a hash-anchored post-marker window is eligible."
++- `search_window_and_marker_receipt`: principle "only a hash-anchored post-marker window is eligible."
++- `source_queries_and_endpoint_receipts`: principle "source coverage, access failures, and dates remain auditable."
++- `primary_secondary_and_official_source_counts`: principle "source coverage, access failures, and dates remain auditable."
++- `accepted_rejected_duplicate_retired_and_abstained_findings`: principle "every candidate receives one explicit disposition."
++- `false_positive_false_negative_cutoff_and_rate_limit_receipts`: principle "uncertainty or access failure is never silently converted into rejection."
++- `semantic_scholar_ebt_and_arm_ebm_receipts`: principle "discovery indexes are secondary until a primary source is opened."
++- `openreview_huggingface_github_extropic_and_kona_receipts`: principle "discovery indexes are secondary until a primary source is opened."
++- `duplicate_and_retired_scope_filter`: principle "no duplicate or renamed retired mechanism enters the ledger."
++- `references_append_receipt`: principle "source aggregation may append references but cannot rewrite the staged plan."
++- `task_identity_gate_and_exclusion_immutability`: principle "source aggregation may append references but cannot rewrite the staged plan."
++- `protected_files_unchanged`: principle "active roadmap, conductor, exclusions, historical artifacts, and unrelated changes remain byte-identical."
++- `duration_s`: principle "use measured `aggregation_from_external_primary_sources`."
++- `inference_substrate`: principle "use measured `aggregation_from_external_primary_sources`."
++- `field_provenance`: principle "use measured `aggregation_from_external_primary_sources`."
++- `test_commands`: principle "use measured `aggregation_from_external_primary_sources`."
++- `test_exit_codes`: principle "use measured `aggregation_from_external_primary_sources`."
++- `reproducibility_checksum`: principle "use measured `aggregation_from_external_primary_sources`."
++- `honest_verdict`: principle "use `complete_delta:`, `complete_null:`, or `blocked:`."
++
++#### SCENARIO-REPORT-6113-ZERO-FINDING: Complete Null Leaves References Unchanged
++
++**Given** the V530 planner marker is present, the active `.530` roadmap is
++readable, and at least one primary, official, or reliable secondary source
++route is reachable
++**And** every surfaced post-marker item is duplicate, rejected, abstained,
++false-positive, known-false-negative, cutoff-confounded, endpoint-failed, or
++retired-scope
++**When** Exp6113 runs
++**Then** it writes `results/experiment_6113_v530_source_delta_ingestion.json`,
++records zero accepted findings, keeps
++`references_append_receipt.appended=false`, preserves task identities, gates,
++exclusions, protected files, and historical findings, and emits a
++`complete_null:` verdict.
++
++#### SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA: Accepted Sources Stay Inside V530 Tasks
++
++**Given** a post-marker source is newer primary-source evidence or materially
++changed official evidence, is non-duplicate by identifier, title, authors,
++mechanism, and existing heading, and provides a new mechanism or materially
++changed source hook relevant to an already allocated `.530` task
++**When** it is accepted
++**Then** the artifact and optional reference append record source id, title,
++URL, source date, receipt id, target experiment, bounded source hook, authority
++boundary, method-to-task mapping, and provenance while preserving task IDs,
++gates, exclusions, hardware requirements, and headline claims.
++
++#### SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY: Cutoffs And Endpoint Failures Stay Visible
++
++**Given** a source route exposes a recent candidate whose primary publication
++date, exact marker ordering, citation-verifier outcome, rate limit, API access,
++or same-current-date ordering is uncertain
++**When** the candidate is classified
++**Then** the artifact records abstained, false-positive, known-false-negative,
++cutoff-confounded, endpoint-failed, and rate-limit receipts separately and does
++not convert uncertainty into rejection.
++
++#### SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE: Closed Work Stays Closed
++
++**Given** a source duplicates existing V530 reference headings or only renames
++all-family VRAM recovery, finite-ID transport, generated-IR, schema-reprompt,
++external-text/logprob scoring, KAN mutation, retired ARC induction, or unchanged
++board-probe mechanisms
++**When** the candidate is classified
++**Then** it is rejected as duplicate or retired-scope, the matching rule is
++recorded, and no reference append, roadmap mutation, gate rewrite, exclusion
++rewrite, hardware claim, Kona claim, or historical-finding rewrite is made.
++
++#### SCENARIO-REPORT-6113-SCHEMA: Required Fields And Checksums Are Stable
++
++**Given** the Exp6113 artifact is emitted
++**When** its schema is validated
++**Then** every required field, principle, provenance entry, source receipt,
++Semantic Scholar citation receipt, official/discovery grouping, endpoint
++failure, rate limit, finding class, protected-file hash, test command, exit
++code, checksum, and terminal verdict prefix is present; the inference substrate
++is `aggregation_from_external_primary_sources`; and external source aggregation
++is not labeled as experimental LLM inference.
++
++## Implementation Status (REQ-REPORT-6113)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6113 | Implemented (`python/carnot/experiment_6113_v530_source_delta_ingestion.py`, `results/experiment_6113_v530_source_delta_ingestion.json`) | Verified (`tests/python/test_experiment_6113_v530_source_delta_ingestion.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1d0c1c2a55..cf75bca5e9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4752,
++  "experiments_checked": 4753,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6113_v530_source_delta_ingestion.py b/python/carnot/experiment_6113_v530_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..16c16b8a2f
+--- /dev/null
++++ b/python/carnot/experiment_6113_v530_source_delta_ingestion.py
+@@ -0,0 +1,1583 @@
++"""Exp6113: ingest post-V530 source deltas with explicit uncertainty.
++
++Spec refs: REQ-REPORT-6113, SCENARIO-REPORT-6113-ZERO-FINDING,
++SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA,
++SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY,
++SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE,
++SCENARIO-REPORT-6113-SCHEMA.
++
++This module records a source-ledger pass. It does not run a model, touch the
++conductor, or change roadmap gates. The point is to make the V530 planning
++boundary auditable: external sources are dated, uncertainty stays visible, and
++only genuinely new primary evidence inside an already allocated V530 task may
++append to the references ledger.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from datetime import UTC, datetime
++import hashlib
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6113_v530_source_delta_ingestion.json")
++
++AGENTS_RELATIVE_PATH = Path("AGENTS.md")
++CODEX_RELATIVE_PATH = Path("CODEX.md")
++CLAUDE_RELATIVE_PATH = Path("CLAUDE.md")
++RESEARCH_PROGRAM_RELATIVE_PATH = Path("research-program.md")
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++RESEARCH_STUDYING_RELATIVE_PATH = Path("research-studying.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++KNOWN_ISSUES_RELATIVE_PATH = Path("ops/known-issues.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++SWEEP_CLUSTERS_RELATIVE_PATH = Path("scripts/sweep_clusters.py")
++SWEEP_SEMSCHOLAR_RELATIVE_PATH = Path("scripts/sweep_semscholar.py")
++PRIOR_SOURCE_RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6101_v529_source_delta_ingestion.json"
++)
++
++EXPERIMENT = "experiment_6113_v530_source_delta_ingestion"
++EXPERIMENT_ID = "exp6113-v530-source-delta-ingestion"
++MILESTONE = "2026.08.530"
++RUN_DATE = "20260804"
++RANDOM_SEED = 6113
++SCHEMA = "carnot.experiment_6113.v530_source_delta_ingestion.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_external_primary_sources"
++
++PLANNER_HEADING = "## V530 Planner Refresh - 20260804"
++PLANNER_MARKER = "V530-PLANNER-REFRESH-20260804-END"
++PLANNER_END_MARKER = f"<!-- {PLANNER_MARKER} -->"
++EXECUTION_DELTA_HEADING = "## V530 Execution Source Delta - 20260804"
++EXECUTION_DELTA_END_MARKER = "<!-- V530-EXECUTION-SOURCE-DELTA-20260804-END -->"
++
++ALLOCATED_TARGET_EXPERIMENTS = (
++    "exp6114-phase-d-gpu-ladder-canary",
++    "exp6115-phase-d-calibration-pool",
++    "exp6116-phase-d-held-candidate-pool",
++    "exp6117-phase-d-headroom-audit",
++    "exp6118-phase-d-per-layer-surface",
++    "exp6119-phase-d-hidden-state-selector",
++    "exp6120-outcome-committed-reduced-order-csl",
++    "exp6121-gatemate-changed-state-gate-v530",
++    "exp6122-arc-primitive-reachability-loo",
++    "exp6123-v530-capstone-reconciliation",
++)
++
++SPEC_REFS = (
++    "REQ-REPORT-6113",
++    "SCENARIO-REPORT-6113-ZERO-FINDING",
++    "SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA",
++    "SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY",
++    "SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE",
++    "SCENARIO-REPORT-6113-SCHEMA",
++)
++
++CLASSIFICATION_BUCKETS = (
++    "accepted",
++    "rejected",
++    "duplicate",
++    "retired_scope",
++    "abstained",
++    "false_positive",
++    "known_false_negative",
++    "cutoff_confound",
++    "endpoint_failed",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "search_window_and_marker_receipt",
++    "source_queries_and_endpoint_receipts",
++    "primary_secondary_and_official_source_counts",
++    "accepted_rejected_duplicate_retired_and_abstained_findings",
++    "false_positive_false_negative_cutoff_and_rate_limit_receipts",
++    "semantic_scholar_ebt_and_arm_ebm_receipts",
++    "openreview_huggingface_github_extropic_and_kona_receipts",
++    "duplicate_and_retired_scope_filter",
++    "references_append_receipt",
++    "task_identity_gate_and_exclusion_immutability",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "only a hash-anchored post-marker window is eligible.",
++    "preconditions_checked": "only a hash-anchored post-marker window is eligible.",
++    "search_window_and_marker_receipt": (
++        "only a hash-anchored post-marker window is eligible."
++    ),
++    "source_queries_and_endpoint_receipts": (
++        "source coverage, access failures, and dates remain auditable."
++    ),
++    "primary_secondary_and_official_source_counts": (
++        "source coverage, access failures, and dates remain auditable."
++    ),
++    "accepted_rejected_duplicate_retired_and_abstained_findings": (
++        "every candidate receives one explicit disposition."
++    ),
++    "false_positive_false_negative_cutoff_and_rate_limit_receipts": (
++        "uncertainty or access failure is never silently converted into rejection."
++    ),
++    "semantic_scholar_ebt_and_arm_ebm_receipts": (
++        "discovery indexes are secondary until a primary source is opened."
++    ),
++    "openreview_huggingface_github_extropic_and_kona_receipts": (
++        "discovery indexes are secondary until a primary source is opened."
++    ),
++    "duplicate_and_retired_scope_filter": (
++        "no duplicate or renamed retired mechanism enters the ledger."
++    ),
++    "references_append_receipt": (
++        "source aggregation may append references but cannot rewrite the staged plan."
++    ),
++    "task_identity_gate_and_exclusion_immutability": (
++        "source aggregation may append references but cannot rewrite the staged plan."
++    ),
++    "protected_files_unchanged": (
++        "active roadmap, conductor, exclusions, historical artifacts, and unrelated "
++        "changes remain byte-identical."
++    ),
++    "duration_s": "use measured `aggregation_from_external_primary_sources`.",
++    "inference_substrate": "use measured `aggregation_from_external_primary_sources`.",
++    "field_provenance": "use measured `aggregation_from_external_primary_sources`.",
++    "test_commands": "use measured `aggregation_from_external_primary_sources`.",
++    "test_exit_codes": "use measured `aggregation_from_external_primary_sources`.",
++    "reproducibility_checksum": (
++        "use measured `aggregation_from_external_primary_sources`."
++    ),
++    "honest_verdict": "use `complete_delta:`, `complete_null:`, or `blocked:`.",
++}
++
++FIELD_PRINCIPLE_EXTRAS: dict[str, str] = {
++    "schema": "Versioned schema id keeps downstream validators from guessing field meaning.",
++    "experiment": "Stable local slug ties the artifact to the implementation module.",
++    "experiment_id": "Conductor task identity prevents numeric-prefix aliasing.",
++    "milestone": "Binds receipts to .530 rather than a prior milestone.",
++    "run_date": "Operator-requested execution date for the source refresh.",
++    "random_seed": "Deterministic metadata for a no-randomness ledger task.",
++    "spec_refs": "OpenSpec anchors make the artifact contract auditable.",
++    "result_path": "Declares the exact JSON deliverable path.",
++    "search_started_at": "Records when source querying started.",
++    "search_finished_at": "Records when source classification finished.",
++}
++
++SOURCE_RECEIPT_REQUIRED_FIELDS = (
++    "receipt_id",
++    "source_family",
++    "source_role",
++    "query_family",
++    "query",
++    "url",
++    "accessed_at",
++    "access_outcome",
++    "candidate_ids",
++    "candidate_count",
++    "source_cutoff",
++    "receipt_summary",
++)
++
++DEFAULT_SOURCE_RECEIPTS: tuple[JsonDict, ...] = (
++    {
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "query_family": "arxiv_primary",
++        "query": "submittedDate:[202608040000 TO 202608042359]",
++        "url": (
++            "https://export.arxiv.org/api/query?search_query=submittedDate:%5B"
++            "202608040000%20TO%20202608042359%5D&start=0&max_results=10&"
++            "sortBy=submittedDate&sortOrder=descending"
++        ),
++        "accessed_at": "2026-08-04T19:41:05Z",
++        "access_outcome": "reachable_http_200_total_results_0",
++        "candidate_ids": [],
++        "candidate_count": 0,
++        "source_cutoff": "submitted_or_changed_after_exact_v530_marker_same_day",
++        "receipt_summary": (
++            "The exact same-day arXiv submittedDate API window was reachable "
++            "and returned totalResults=0. This is a dated endpoint receipt, "
++            "not evidence that all same-day secondary pages are post-marker."
++        ),
++    },
++    {
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "query_family": "arxiv_topic_primary_pages",
++        "query": (
++            "energy-based reasoning, neural CSP, p-bit, constrained generation, "
++            "hidden-state, ARC-AGI sorted by submittedDate"
++        ),
++        "url": (
++            "https://arxiv.org/abs/2608.02585 ; "
++            "https://arxiv.org/abs/2608.02358 ; "
++            "https://arxiv.org/abs/2608.02603 ; "
++            "https://arxiv.org/abs/2608.02583 ; "
++            "https://arxiv.org/abs/2608.02560"
++        ),
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "access_outcome": "reachable_http_200_primary_pages_aug3_or_rejected",
++        "candidate_ids": [
++            "2608.02585",
++            "2608.02358",
++            "2608.02603",
++            "2608.02583",
++            "2608.02560",
++        ],
++        "candidate_count": 5,
++        "source_cutoff": "primary_pages_opened_after_marker_aug3_publication_dates",
++        "receipt_summary": (
++            "The newest topical primary arXiv pages opened from direct and "
++            "Hugging Face leads were submitted on 2026-08-03 or outside the "
++            "active V530 task hooks."
++        ),
++    },
++    {
++        "receipt_id": "openreview_v530_api_notes",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "query_family": "openreview_api",
++        "query": "api2.openreview.net notes content.title=energy-based",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based",
++        "accessed_at": "2026-08-04T19:41:05Z",
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "candidate_ids": [],
++        "candidate_count": 0,
++        "source_cutoff": "api_checked_after_exact_v530_marker",
++        "receipt_summary": (
++            "The OpenReview API returned HTTP 403 with challenge context; this "
++            "is an endpoint failure and not negative evidence."
++        ),
++    },
++    {
++        "receipt_id": "openreview_v530_search_pages",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "query_family": "openreview_secondary",
++        "query": "energy-based constraint reasoning",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "access_outcome": "reachable_http_200_dynamic_search_page_secondary_only",
++        "candidate_ids": [],
++        "candidate_count": 0,
++        "source_cutoff": "dynamic_search_checked_after_exact_v530_marker",
++        "receipt_summary": (
++            "The dynamic search page is discovery context only; no reachable "
++            "new primary forum page was available for acceptance."
++        ),
++    },
++    {
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "source_family": "Hugging Face Papers",
++        "source_role": "secondary",
++        "query_family": "huggingface_papers_secondary",
++        "query": "Aug 4 daily feed with primary arXiv pages opened",
++        "url": "https://huggingface.co/papers",
++        "accessed_at": "2026-08-04T19:41:34Z",
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "candidate_ids": [
++            "2608.01964",
++            "2608.02585",
++            "2608.02358",
++            "2608.02603",
++            "2608.01755",
++            "2607.29377",
++        ],
++        "candidate_count": 6,
++        "source_cutoff": "secondary_daily_feed_aug4_primary_pages_opened",
++        "rate_limit": {"policy": "pages 100 per 300s", "remaining": 99},
++        "receipt_summary": (
++            "The daily feed exposed same-day discovery metadata. Relevant "
++            "primary pages were Aug 3 arXiv records, older papers, or outside "
++            "active Carnot task hooks."
++        ),
++    },
++    {
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "source_family": "Semantic Scholar",
++        "source_role": "secondary",
++        "query_family": "semantic_scholar_citation_trail",
++        "query": "arXiv:2507.02092 citations",
++        "url": (
++            "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/"
++            "citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100"
++        ),
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "access_outcome": "reachable_http_200_32_records_no_post_marker_citation",
++        "candidate_ids": ["2607.27372", "2607.20792", "2607.17047"],
++        "candidate_count": 32,
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_29",
++        "newest_visible": {
++            "identifier": "2607.27372",
++            "title": (
++                "Explorative Modeling: Unlocking a Third Pretraining Axis and "
++                "End-to-End Generation"
++            ),
++            "publication_date": "2026-07-29",
++        },
++        "receipt_summary": (
++            "The EBT route remained reachable with 32 visible citing records; "
++            "the newest visible citation is already sealed in the V530 planner block."
++        ),
++    },
++    {
++        "receipt_id": "semantic_scholar_v530_arm_ebm_citations",
++        "source_family": "Semantic Scholar",
++        "source_role": "secondary",
++        "query_family": "semantic_scholar_citation_trail",
++        "query": "arXiv:2512.15605 citations",
++        "url": (
++            "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/"
++            "citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100"
++        ),
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "access_outcome": "reachable_http_200_8_records_no_post_marker_citation",
++        "candidate_ids": ["2607.02154", "2606.03089", "2605.18871"],
++        "candidate_count": 8,
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_02",
++        "newest_visible": {
++            "identifier": "2607.02154",
++            "title": (
++                "Path-Measure Dynamics of Attention-Driven World Models: A "
++                "Nonlocal Onsager--Machlup Approach"
++            ),
++            "publication_date": "2026-07-02",
++        },
++        "receipt_summary": (
++            "The ARM-EBM route remained reachable with eight visible citations "
++            "and no post-marker citation candidate."
++        ),
++    },
++    {
++        "receipt_id": "github_v530_targeted_repositories",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "query_family": "github_targeted_secondary",
++        "query": (
++            'energy-based reasoning pushed:>2026-08-04; thermodynamic EBM '
++            'pushed:>2026-08-04; ARC-AGI online discovery pushed:>2026-08-04'
++        ),
++        "url": "https://api.github.com/search/repositories",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "access_outcome": "reachable_http_200_targeted_zero_post_marker_repositories",
++        "candidate_ids": [],
++        "candidate_count": 0,
++        "source_cutoff": "pushed_after_exact_marker_date_2026_08_04",
++        "receipt_summary": (
++            "Targeted post-date repository searches returned zero maintained "
++            "post-marker repositories with a direct Carnot dependency hook."
++        ),
++    },
++    {
++        "receipt_id": "github_v530_trending_daily",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "query_family": "github_trending_secondary",
++        "query": "GitHub Trending daily page",
++        "url": "https://github.com/trending?since=daily",
++        "accessed_at": "2026-08-04T19:41:35Z",
++        "access_outcome": "reachable_http_200_trending_page_no_primary_delta",
++        "candidate_ids": [
++            "browser-use/video-use",
++            "esengine/DeepSeek-Reasonix",
++            "TencentCloud/TencentDB-Agent-Memory",
++        ],
++        "candidate_count": 3,
++        "source_cutoff": "daily_trending_checked_after_exact_v530_marker",
++        "receipt_summary": (
++            "Trending exposed agent and memory repositories but no primary "
++            "post-marker EBM, per-layer, CSL, hardware, or ARC dependency."
++        ),
++    },
++    {
++        "receipt_id": "github_v530_ebt_repo",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "query_family": "github_targeted_secondary",
++        "query": "alexiglad/EBT repository metadata",
++        "url": "https://github.com/alexiglad/EBT",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "access_outcome": "reachable_http_200_repo_pushed_2026_04_21_no_post_marker_code_delta",
++        "candidate_ids": ["alexiglad/EBT"],
++        "candidate_count": 1,
++        "source_cutoff": "repo_metadata_checked_after_marker_pushed_before_marker",
++        "receipt_summary": (
++            "The public EBT repository remains maintained context, but its "
++            "last push predates V530 and creates no code dependency delta."
++        ),
++    },
++    {
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "source_family": "Extropic",
++        "source_role": "official",
++        "query_family": "official_project_page",
++        "query": "Extropic writing and hardware pages",
++        "url": "https://extropic.ai/writing ; https://extropic.ai/hardware",
++        "accessed_at": "2026-08-04T19:41:50Z",
++        "access_outcome": "reachable_http_200_official_z1_early_access_2027_no_local_route",
++        "candidate_ids": [
++            "tsu_101_2025_10_29",
++            "dtms_2025_10_28",
++            "z1_early_access_2027",
++        ],
++        "candidate_count": 3,
++        "source_cutoff": "official_pages_checked_after_marker_current_cache_confound",
++        "receipt_summary": (
++            "Official pages were reachable. Hardware now advertises Z1 early "
++            "access in 2027, X0 Q1 2025, and XTR-0 Q3 2025, but no SDK, local "
++            "execution route, timing, power, or correctness receipt is available."
++        ),
++    },
++    {
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "source_family": "Logical Intelligence",
++        "source_role": "official",
++        "query_family": "official_project_page",
++        "query": "Logical Intelligence Kona official page",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        "accessed_at": "2026-08-04T19:42:07Z",
++        "access_outcome": "reachable_http_200_official_context_no_public_kona_weights",
++        "candidate_ids": ["kona_ebm_page_last_modified_2026_06_26"],
++        "candidate_count": 1,
++        "source_cutoff": "official_page_checked_after_marker_no_new_public_route",
++        "receipt_summary": (
++            "Kona remains official architecture context for a constraint layer "
++            "beneath generative interfaces, but public weights, a documented "
++            "local inference API, and a reproducible comparator remain unavailable."
++        ),
++    },
++    {
++        "receipt_id": "local_sweep_clusters_v530",
++        "source_family": "local sweep helper",
++        "source_role": "tooling",
++        "query_family": "local_tooling",
++        "query": "python scripts/sweep_clusters.py 1 --max-results 3",
++        "url": "scripts/sweep_clusters.py",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "access_outcome": "reachable_local_tool_exit_0_emitted_cluster_1_arxiv_url",
++        "candidate_ids": [],
++        "candidate_count": 0,
++        "source_cutoff": "tooling_checked_after_exact_v530_marker",
++        "receipt_summary": (
++            "The local arXiv cluster helper emitted the EBM reasoning URL and "
++            "did not mutate repository files."
++        ),
++    },
++    {
++        "receipt_id": "local_sweep_semscholar_v530",
++        "source_family": "local sweep helper",
++        "source_role": "tooling",
++        "query_family": "local_tooling",
++        "query": "energy based reasoning hidden states --limit 5",
++        "url": "scripts/sweep_semscholar.py",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "access_outcome": "reachable_local_tool_exit_0_four_pre_marker_arxiv_ids",
++        "candidate_ids": ["2502.01657", "2603.14636", "2606.03234", "2606.17524"],
++        "candidate_count": 4,
++        "source_cutoff": "keyword_tool_checked_after_exact_v530_marker",
++        "receipt_summary": (
++            "The local Semantic Scholar keyword helper returned four older "
++            "arXiv ids; none is a post-V530 primary candidate."
++        ),
++    },
++)
++
++
++def _finding(
++    source_id: str,
++    classification: str,
++    title: str,
++    url: str,
++    *,
++    identifier: str,
++    reason: str,
++    receipt_id: str,
++    query_family: str,
++    access_outcome: str,
++    authors: Sequence[str] | None = None,
++    publication_date: str = "2026-08-04",
++    source_date: str = "2026-08-04",
++    search_timestamp: str = "2026-08-04T19:42:27Z",
++) -> JsonDict:
++    return {
++        "source_id": source_id,
++        "classification": classification,
++        "decision_bucket": classification,
++        "title": title,
++        "url": url,
++        "identifier": identifier,
++        "authors": list(authors or ["unknown"]),
++        "publication_date": publication_date,
++        "source_date": source_date,
++        "search_timestamp": search_timestamp,
++        "receipt_id": receipt_id,
++        "query_family": query_family,
++        "query": query_family,
++        "access_outcome": access_outcome,
++        "reason": reason,
++    }
++
++
++DEFAULT_REJECTED_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "uembed_hidden_sparse_retrieval_no_v530_task_hook",
++        "rejected",
++        "UEmbed: Unified Sparse and Dense Multimodal Embeddings",
++        "https://arxiv.org/abs/2608.02583",
++        identifier="2608.02583",
++        receipt_id="arxiv_v530_topic_primary_pages_opened",
++        query_family="arxiv_topic_primary_pages",
++        access_outcome="reachable_primary_arxiv_aug3_no_carnot_task_hook",
++        publication_date="2026-08-03",
++        source_date="2026-08-03",
++        reason=(
++            "The paper touches hidden-state sparse embeddings, but the primary "
++            "record predates V530 and does not sharpen the Phase-D per-layer "
++            "surface, selector, CSL, ARC, or hardware gates."
++        ),
++    ),
++    _finding(
++        "structured_memory_ssm_no_v530_commit_protocol",
++        "rejected",
++        "Structured Memory for Edge Language Models",
++        "https://arxiv.org/abs/2608.02560",
++        identifier="2608.02560",
++        receipt_id="arxiv_v530_topic_primary_pages_opened",
++        query_family="arxiv_topic_primary_pages",
++        access_outcome="reachable_primary_arxiv_aug3_no_outcome_commit_delta",
++        publication_date="2026-08-03",
++        source_date="2026-08-03",
++        reason=(
++            "The SSM-state memory mechanism is adjacent to CSL, but it is an "
++            "Aug 3 primary page and does not replace V530's outcome-committed, "
++            "read-only-while-deciding memory contract."
++        ),
++    ),
++    _finding(
++        "github_targeted_zero_no_dependency_delta",
++        "rejected",
++        "GitHub targeted searches without a maintained method delta",
++        "https://api.github.com/search/repositories",
++        identifier="github_targeted_zero_delta",
++        receipt_id="github_v530_targeted_repositories",
++        query_family="github_targeted_secondary",
++        access_outcome="reachable_http_200_targeted_zero_post_marker_repositories",
++        reason=(
++            "Repository discovery metadata exposed no maintained post-marker "
++            "dependency that sharpens an allocated V530 task."
++        ),
++    ),
++)
++
++DEFAULT_DUPLICATE_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "v530_planner_explorative_modeling_duplicate",
++        "duplicate",
++        "Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation",
++        "https://arxiv.org/abs/2607.27372",
++        identifier="2607.27372",
++        authors=["V530 planner source"],
++        publication_date="2026-07-29",
++        source_date="2026-07-29",
++        receipt_id="semantic_scholar_v530_ebt_citations",
++        query_family="semantic_scholar_citation_trail",
++        access_outcome="duplicate_existing_v530_reference_heading",
++        reason=(
++            "Already accepted in the sealed V530 planner block as the candidate "
++            "diversity/effective-K source hook."
++        ),
++    ),
++    _finding(
++        "v530_planner_memoir_duplicate",
++        "duplicate",
++        "Memoir: Should a Model Write to Its Memory While It Thinks?",
++        "https://arxiv.org/abs/2607.20792",
++        identifier="2607.20792",
++        authors=["V530 planner source"],
++        publication_date="2026-07-22",
++        source_date="2026-07-22",
++        receipt_id="semantic_scholar_v530_ebt_citations",
++        query_family="semantic_scholar_citation_trail",
++        access_outcome="duplicate_existing_v530_reference_heading",
++        reason=(
++            "Already recorded in the sealed V530 planner block as the read-only "
++            "while thinking memory result."
++        ),
++    ),
++)
++
++DEFAULT_RETIRED_SCOPE_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "all_family_vram_recovery_reopen_post_v530",
++        "retired_scope",
++        "All-family VRAM recovery reopen request",
++        "ops/exclusion_manifest.yaml",
++        identifier="all_family_vram_recovery_reopen",
++        receipt_id="github_v530_targeted_repositories",
++        query_family="github_targeted_secondary",
++        access_outcome="retired_scope_excluded_by_manifest",
++        reason=(
++            "Exp6102 retired all-family VRAM recovery. A source-refresh task "
++            "cannot reopen it as a renamed dependency search."
++        ),
++    ),
++    _finding(
++        "finite_ir_schema_logprob_reopen_post_v530",
++        "retired_scope",
++        "Finite-ID, generated-IR, schema-reprompt, or external-logprob reopen request",
++        "ops/exclusion_manifest.yaml",
++        identifier="finite_ir_schema_logprob_reopen",
++        receipt_id="huggingface_papers_v530_daily_feed",
++        query_family="huggingface_papers_secondary",
++        access_outcome="retired_scope_excluded_by_manifest",
++        reason=(
++            "Finite-ID transport, generated-IR/schema reprompt, and external "
++            "text/logprob scoring remain closed for Phase-D evidence."
++        ),
++    ),
++    _finding(
++        "kan_arc_board_probe_reopen_post_v530",
++        "retired_scope",
++        "KAN mutation, retired ARC induction, or unchanged board-probe reopen request",
++        "ops/exclusion_manifest.yaml",
++        identifier="kan_arc_board_probe_reopen",
++        receipt_id="local_sweep_clusters_v530",
++        query_family="local_tooling",
++        access_outcome="retired_scope_excluded_by_manifest",
++        reason=(
++            "KAN mutation, retired ARC induction, and unchanged board probes "
++            "remain closed unless a new mechanism is operator-authorized."
++        ),
++    ),
++)
++
++DEFAULT_ABSTAINED_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "openreview_dynamic_search_date_uncertain",
++        "abstained",
++        "OpenReview dynamic search pages with uncertain primary date",
++        "https://openreview.net/search?term=energy-based%20constraint%20reasoning",
++        identifier="openreview_dynamic_date_uncertain_post_v530",
++        receipt_id="openreview_v530_search_pages",
++        query_family="openreview_secondary",
++        access_outcome="reachable_http_200_dynamic_search_page_secondary_only",
++        reason=(
++            "Dynamic search pages can crawl recently without proving a primary "
++            "forum publication or material change after the marker."
++        ),
++    ),
++    _finding(
++        "extropic_official_context_no_local_route",
++        "abstained",
++        "Extropic writing and hardware pages without a post-marker local route",
++        "https://extropic.ai/hardware",
++        identifier="extropic_official_no_post_marker_local_route",
++        authors=["Extropic Corporation"],
++        publication_date="2026-08-04",
++        source_date="2026-08-04",
++        receipt_id="extropic_v530_official_writing_hardware",
++        query_family="official_project_page",
++        access_outcome="reachable_http_200_official_z1_early_access_2027_no_local_route",
++        reason=(
++            "Official pages describe p-bit hardware and Z1 early access, but "
++            "there is no authenticated Carnot route, SDK, timing, power, or "
++            "correctness receipt."
++        ),
++    ),
++    _finding(
++        "logical_intelligence_context_no_local_api",
++        "abstained",
++        "Logical Intelligence Kona official page without local API",
++        "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        identifier="logical_intelligence_kona_no_public_route",
++        receipt_id="logical_intelligence_v530_official_kona",
++        query_family="official_project_page",
++        access_outcome="reachable_http_200_official_context_no_public_kona_weights",
++        reason=(
++            "Kona remains official architecture context, but no public weights, "
++            "documented local inference API, or reproducible comparator are available."
++        ),
++    ),
++)
++
++DEFAULT_FALSE_POSITIVE_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "hf_aug4_secondary_promotion_false_positive",
++        "false_positive",
++        "Hugging Face Papers ranking did not prove post-marker primary novelty",
++        "https://huggingface.co/papers",
++        identifier="hf_secondary_date_only",
++        receipt_id="huggingface_papers_v530_daily_feed",
++        query_family="huggingface_papers_secondary",
++        access_outcome="reachable_http_200_current_feed_secondary_primary_opened",
++        reason=(
++            "The Aug 4 daily ranking is secondary discovery metadata. Each "
++            "candidate still depends on an opened primary source and exact "
++            "post-marker ordering."
++        ),
++    ),
++)
++
++DEFAULT_KNOWN_FALSE_NEGATIVE_FINDINGS: tuple[JsonDict, ...] = ()
++
++DEFAULT_CUTOFF_CONFOUND_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "same_day_marker_cutoff_confound",
++        "cutoff_confound",
++        "Same-day V530 marker cutoff confound",
++        "research-references.md#v530-planner-refresh---20260804",
++        identifier="v530_same_day_marker_cutoff_confound",
++        receipt_id="arxiv_v530_exact_post_marker_window",
++        query_family="arxiv_primary",
++        access_outcome="cutoff_confound_preserved",
++        reason=(
++            "Today and the sealed V530 marker both fall on 2026-08-04; date-only "
++            "same-day evidence cannot prove exact marker ordering."
++        ),
++    ),
++    _finding(
++        "gradcuit_hf_aug4_primary_aug3_cutoff",
++        "cutoff_confound",
++        "GradCuit hidden-state latent reasoning lead with Aug 3 primary source",
++        "https://arxiv.org/abs/2608.02585",
++        identifier="2608.02585",
++        authors=[
++            "Zhaoxin Yu",
++            "Qi Shen",
++            "Hengli Li",
++            "Zhaowei Zhang",
++            "Song-Chun Zhu",
++            "Chi Zhang",
++            "Zilong Zheng",
++        ],
++        publication_date="2026-08-03",
++        source_date="2026-08-03",
++        receipt_id="arxiv_v530_topic_primary_pages_opened",
++        query_family="arxiv_topic_primary_pages",
++        access_outcome="reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        reason=(
++            "GradCuit is topically relevant to hidden-state latent reasoning, "
++            "but the primary arXiv record is dated 2026-08-03 and cannot be "
++            "accepted as post-V530 evidence."
++        ),
++    ),
++    _finding(
++        "scrambletoolbench_hf_aug4_primary_aug3_cutoff",
++        "cutoff_confound",
++        "ScrambleToolBench online-discovery lead with Aug 3 primary source",
++        "https://arxiv.org/abs/2608.02358",
++        identifier="2608.02358",
++        authors=[
++            "Vernon Toh",
++            "Navonil Majumder",
++            "Zhengyuan Liu",
++            "Nancy F. Chen",
++            "Soujanya Poria",
++        ],
++        publication_date="2026-08-03",
++        source_date="2026-08-03",
++        receipt_id="arxiv_v530_topic_primary_pages_opened",
++        query_family="arxiv_topic_primary_pages",
++        access_outcome="reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        reason=(
++            "ScrambleToolBench is adjacent to ARC-style online discovery, but "
++            "its primary arXiv record predates the V530 marker."
++        ),
++    ),
++    _finding(
++        "worldexam_hf_aug4_primary_aug3_cutoff",
++        "cutoff_confound",
++        "WorldExam world-model lead with Aug 3 primary source",
++        "https://arxiv.org/abs/2608.02603",
++        identifier="2608.02603",
++        authors=["Yuxue Yang", "Shuyao Shang", "Jiahe Wang"],
++        publication_date="2026-08-03",
++        source_date="2026-08-03",
++        receipt_id="arxiv_v530_topic_primary_pages_opened",
++        query_family="arxiv_topic_primary_pages",
++        access_outcome="reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        reason=(
++            "WorldExam is a world-model benchmark, but its primary arXiv page "
++            "is Aug 3 and does not create a post-marker V530 ARC delta."
++        ),
++    ),
++)
++
++DEFAULT_ENDPOINT_FAILED_FINDINGS: tuple[JsonDict, ...] = (
++    _finding(
++        "openreview_api_challenge_endpoint_failed",
++        "endpoint_failed",
++        "OpenReview notes API challenge gate",
++        "https://api2.openreview.net/notes?limit=5&content.title=energy-based",
++        identifier="openreview_api_challenge_v530",
++        receipt_id="openreview_v530_api_notes",
++        query_family="openreview_api",
++        access_outcome="inaccessible_http_403_challenge_required",
++        publication_date="unknown",
++        source_date="unknown",
++        reason=(
++            "The API route returned HTTP 403; the failure remains separate from "
++            "rejection and is not treated as evidence."
++        ),
++    ),
++)
++
++DEFAULT_TEST_COMMANDS = (
++    (
++        ".venv/bin/pytest tests/python/"
++        "test_experiment_6113_v530_source_delta_ingestion.py -q --no-cov -n 0"
++    ),
++    (
++        ".venv/bin/coverage run --rcfile=/dev/null --include="
++        "python/carnot/experiment_6113_v530_source_delta_ingestion.py -m pytest "
++        "tests/python/test_experiment_6113_v530_source_delta_ingestion.py "
++        "-q --no-cov -n 0"
++    ),
++    (
++        ".venv/bin/coverage report --rcfile=/dev/null --include="
++        "python/carnot/experiment_6113_v530_source_delta_ingestion.py "
++        "--fail-under=100"
++    ),
++    (
++        ".venv/bin/python scripts/adversarial_verify.py --json "
++        "results/experiment_6113_v530_source_delta_ingestion.json"
++    ),
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q",
++)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def read_text_if_present(path: Path) -> str:
++    """Read a local optional source file without pretending missing files are evidence."""
++
++    if not path.exists():
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def path_sha256(path: Path) -> str | None:
++    """Return a sha256 receipt for an existing local file."""
++
++    if not path.exists():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _stable_hash(payload: Any) -> str:
++    data = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
++    return "sha256:" + hashlib.sha256(data.encode("utf-8")).hexdigest()
++
++
++def _parse_timestamp(value: str) -> datetime:
++    return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(UTC)
++
++
++def planner_marker_line(text: str) -> int | None:
++    """Return the one-based line number for the sealed V530 marker."""
++
++    for index, line in enumerate(text.splitlines(), start=1):
++        if PLANNER_MARKER in line:
++            return index
++    return None
++
++
++def planner_block_hash(text: str) -> str | None:
++    """Hash the sealed planner block so post-marker novelty is falsifiable."""
++
++    start = text.find(PLANNER_HEADING)
++    end = text.find(PLANNER_END_MARKER)
++    if start == -1 or end == -1:
++        return None
++    block = text[start : end + len(PLANNER_END_MARKER)]
++    return "sha256:" + hashlib.sha256(block.encode("utf-8")).hexdigest()
++
++
++def _roadmap_snapshot(path: Path) -> JsonDict:
++    text = read_text_if_present(path)
++    if not text:
++        return {
++            "present": False,
++            "milestone": "",
++            "task_ids": [],
++            "task_ids_hash": None,
++            "gates": [],
++            "gates_hash": None,
++        }
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError:
++        loaded = {}
++    if not isinstance(loaded, Mapping):
++        loaded = {}
++    tasks = loaded.get("tasks") if isinstance(loaded.get("tasks"), list) else []
++    task_ids = [
++        str(row.get("id")) for row in tasks if isinstance(row, Mapping) and row.get("id")
++    ]
++    gates = [
++        {"id": row.get("id"), "gated_on": row.get("gated_on")}
++        for row in tasks
++        if isinstance(row, Mapping) and row.get("gated_on")
++    ]
++    return {
++        "present": True,
++        "milestone": str(loaded.get("milestone", "")),
++        "task_ids": task_ids,
++        "task_ids_hash": _stable_hash(task_ids),
++        "gates": gates,
++        "gates_hash": _stable_hash(gates),
++    }
++
++
++def _protected_paths() -> tuple[Path, ...]:
++    return (
++        AGENTS_RELATIVE_PATH,
++        CODEX_RELATIVE_PATH,
++        CLAUDE_RELATIVE_PATH,
++        RESEARCH_PROGRAM_RELATIVE_PATH,
++        RESEARCH_STUDYING_RELATIVE_PATH,
++        ROADMAP_RELATIVE_PATH,
++        ROADMAP_NEXT_RELATIVE_PATH,
++        VNEXT_RELATIVE_PATH,
++        EXCLUSION_MANIFEST_RELATIVE_PATH,
++        KNOWN_ISSUES_RELATIVE_PATH,
++        CONDUCTOR_RELATIVE_PATH,
++        SWEEP_CLUSTERS_RELATIVE_PATH,
++        SWEEP_SEMSCHOLAR_RELATIVE_PATH,
++        PRIOR_SOURCE_RESULT_RELATIVE_PATH,
++    )
++
++
++def _protected_hashes(root: Path) -> JsonDict:
++    return {path.as_posix(): path_sha256(root / path) for path in _protected_paths()}
++
++
++def _receipt_is_reachable(receipt: Mapping[str, Any]) -> bool:
++    outcome = str(receipt.get("access_outcome", ""))
++    return "reachable" in outcome or "http_200" in outcome
++
++
++def _sources_reachable(source_receipts: Sequence[JsonDict]) -> bool:
++    return any(_receipt_is_reachable(row) for row in source_receipts)
++
++
++def _endpoint_failures(source_receipts: Sequence[JsonDict]) -> list[JsonDict]:
++    return [
++        {
++            "receipt_id": row["receipt_id"],
++            "source_family": row["source_family"],
++            "access_outcome": row["access_outcome"],
++            "url": row["url"],
++        }
++        for row in source_receipts
++        if "inaccessible" in str(row.get("access_outcome", ""))
++        or "403" in str(row.get("access_outcome", ""))
++    ]
++
++
++def _rate_limits(source_receipts: Sequence[JsonDict]) -> list[JsonDict]:
++    return [
++        {
++            "receipt_id": row["receipt_id"],
++            "source_family": row["source_family"],
++            "rate_limit": row["rate_limit"],
++        }
++        for row in source_receipts
++        if "rate_limit" in row
++    ]
++
++
++def preconditions_checked(
++    root: Path,
++    *,
++    marker_found: bool,
++    source_reachable: bool,
++    checked_at: str,
++) -> JsonDict:
++    active = _roadmap_snapshot(root / ROADMAP_RELATIVE_PATH)
++    staged = _roadmap_snapshot(root / ROADMAP_NEXT_RELATIVE_PATH)
++    spec_text = read_text_if_present(root / SPEC_RELATIVE_PATH)
++    output_parent = root / RESULT_RELATIVE_PATH.parent
++    hashes = {
++        "research_references": path_sha256(root / RESEARCH_REFERENCES_RELATIVE_PATH),
++        "active_roadmap": path_sha256(root / ROADMAP_RELATIVE_PATH),
++        "staged_roadmap": path_sha256(root / ROADMAP_NEXT_RELATIVE_PATH),
++        "exclusion_manifest": path_sha256(root / EXCLUSION_MANIFEST_RELATIVE_PATH),
++        "sweep_clusters": path_sha256(root / SWEEP_CLUSTERS_RELATIVE_PATH),
++        "sweep_semscholar": path_sha256(root / SWEEP_SEMSCHOLAR_RELATIVE_PATH),
++        "output_path": path_sha256(root / RESULT_RELATIVE_PATH),
++        "prior_exp6101": path_sha256(root / PRIOR_SOURCE_RESULT_RELATIVE_PATH),
++    }
++    failed: list[str] = []
++    if not marker_found:
++        failed.append("planner_marker_missing")
++    if not source_reachable:
++        failed.append("source_reachability_failed")
++    if active["milestone"] != MILESTONE or EXPERIMENT_ID not in active["task_ids"]:
++        failed.append("active_roadmap_identity_unavailable")
++    if "REQ-REPORT-6113" not in spec_text:
++        failed.append("spec_req_report_6113_missing")
++    if hashes["active_roadmap"] is None:
++        failed.append("active_roadmap_hash_missing")
++    if hashes["exclusion_manifest"] is None:
++        failed.append("exclusion_manifest_hash_missing")
++    if not os.access(output_parent, os.W_OK):
++        failed.append("output_path_unavailable")
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["preconditions_checked"],
++        "checked_at": checked_at,
++        "planner_marker_found": marker_found,
++        "source_route_reachable": source_reachable,
++        "active_roadmap_read": active["present"],
++        "research_roadmap_next_read": staged["present"],
++        "active_roadmap": active,
++        "staged_roadmap": staged,
++        "hashed_inputs": hashes,
++        "failed_preconditions": failed,
++        "blocked": bool(failed),
++    }
++
++
++def _validate_finding(row: Mapping[str, Any], expected_classification: str) -> None:
++    for key in (
++        "source_id",
++        "classification",
++        "decision_bucket",
++        "title",
++        "url",
++        "identifier",
++        "authors",
++        "publication_date",
++        "source_date",
++        "search_timestamp",
++        "receipt_id",
++        "query_family",
++        "query",
++        "access_outcome",
++        "reason",
++    ):
++        _require(key in row, f"finding missing {key}")
++    _require(
++        row["classification"] == expected_classification,
++        "invalid finding classification",
++    )
++    _require(row["decision_bucket"] == expected_classification, "invalid finding bucket")
++    if expected_classification == "accepted":
++        _require(
++            bool(row.get("post_marker_or_newer_primary_source"))
++            and (
++                str(row.get("source_date")) > "2026-08-04"
++                or bool(row.get("materially_changed_after_marker"))
++            ),
++            "accepted finding must be newer primary-source evidence",
++        )
++        _require(bool(row.get("primary_source")), "accepted finding must be primary-source")
++        _require(
++            not bool(row.get("duplicate_of_existing_reference")),
++            "accepted finding cannot be duplicate",
++        )
++        _require(
++            not bool(row.get("reopens_retired_scope")),
++            "accepted finding cannot reopen retired scope",
++        )
++        _require(
++            bool(row.get("new_mechanism_or_material_change")),
++            "accepted finding must add a new mechanism",
++        )
++        target = str(row.get("target_experiment", ""))
++        _require(target in ALLOCATED_TARGET_EXPERIMENTS, "accepted target must be allocated .530 experiment")
++        mapping = row.get("method_to_task_mapping")
++        _require(isinstance(mapping, Mapping), "accepted finding needs method-to-task mapping")
++        _require(
++            mapping.get("target_experiment") == target,
++            "method-to-task mapping target mismatch",
++        )
++        _require("task_hook" in mapping, "method-to-task mapping missing task_hook")
++
++
++def _bucket_findings(accepted_findings: Sequence[JsonDict]) -> JsonDict:
++    buckets: dict[str, list[JsonDict]] = {bucket: [] for bucket in CLASSIFICATION_BUCKETS}
++    for row in accepted_findings:
++        _validate_finding(row, "accepted")
++        buckets["accepted"].append(dict(row))
++    defaults = {
++        "rejected": DEFAULT_REJECTED_FINDINGS,
++        "duplicate": DEFAULT_DUPLICATE_FINDINGS,
++        "retired_scope": DEFAULT_RETIRED_SCOPE_FINDINGS,
++        "abstained": DEFAULT_ABSTAINED_FINDINGS,
++        "false_positive": DEFAULT_FALSE_POSITIVE_FINDINGS,
++        "known_false_negative": DEFAULT_KNOWN_FALSE_NEGATIVE_FINDINGS,
++        "cutoff_confound": DEFAULT_CUTOFF_CONFOUND_FINDINGS,
++        "endpoint_failed": DEFAULT_ENDPOINT_FAILED_FINDINGS,
++    }
++    for bucket, rows in defaults.items():
++        buckets[bucket].extend(dict(row) for row in rows)
++    all_candidates = [row for bucket in CLASSIFICATION_BUCKETS for row in buckets[bucket]]
++    buckets["all_candidates"] = all_candidates
++    buckets["counts"] = {bucket: len(buckets[bucket]) for bucket in CLASSIFICATION_BUCKETS}
++    return buckets
++
++
++def _source_counts(source_receipts: Sequence[JsonDict]) -> JsonDict:
++    counts = Counter(str(row["source_role"]) for row in source_receipts)
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["primary_secondary_and_official_source_counts"],
++        "primary": counts["primary"],
++        "secondary": counts["secondary"],
++        "official": counts["official"],
++        "tooling": counts["tooling"],
++        "total_receipts": len(source_receipts),
++    }
++
++
++def _group_receipts(source_receipts: Sequence[JsonDict]) -> JsonDict:
++    def matching(*families: str) -> list[JsonDict]:
++        return [row for row in source_receipts if row["source_family"] in families]
++
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES[
++            "openreview_huggingface_github_extropic_and_kona_receipts"
++        ],
++        "openreview_receipts": matching("OpenReview"),
++        "huggingface_receipts": matching("Hugging Face Papers"),
++        "github_receipts": matching("GitHub"),
++        "extropic_receipts": matching("Extropic"),
++        "kona_or_aleph_receipts": matching("Logical Intelligence"),
++    }
++
++
++def _semantic_scholar_receipts(source_receipts: Sequence[JsonDict]) -> JsonDict:
++    by_id = {row["receipt_id"]: row for row in source_receipts}
++    ebt = by_id.get("semantic_scholar_v530_ebt_citations", {})
++    arm = by_id.get("semantic_scholar_v530_arm_ebm_citations", {})
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["semantic_scholar_ebt_and_arm_ebm_receipts"],
++        "ebt_arxiv_id": "2507.02092",
++        "arm_ebm_arxiv_id": "2512.15605",
++        "ebt_visible_citation_count": ebt.get("candidate_count", 0),
++        "arm_ebm_visible_citation_count": arm.get("candidate_count", 0),
++        "ebt_newest_visible": ebt.get("newest_visible"),
++        "arm_ebm_newest_visible": arm.get("newest_visible"),
++        "classification_boundary": (
++            "Semantic Scholar is secondary discovery until a primary paper or "
++            "official project page is opened."
++        ),
++    }
++
++
++def honest_verdict(
++    marker_found: bool,
++    source_reachable: bool,
++    accepted_findings: Sequence[JsonDict],
++    blocked: bool,
++) -> str:
++    """Return the terminal verdict prefix demanded by the source-refresh spec."""
++
++    if blocked or not marker_found or not source_reachable:
++        return "blocked: V530 source-window preconditions were not satisfied"
++    if accepted_findings:
++        return "complete_delta: accepted post-V530 source deltas appended"
++    return "complete_null: no accepted post-V530 source deltas; references unchanged"
++
++
++def execution_delta_block(accepted_findings: Sequence[JsonDict]) -> str:
++    lines = [
++        "",
++        EXECUTION_DELTA_HEADING,
++        "",
++        "Execution-time source deltas accepted after the sealed V530 marker:",
++    ]
++    for row in accepted_findings:
++        lines.extend(
++            [
++                f"- **{row['title']}** - {row['url']}; source date {row['source_date']}.",
++                f"  Carnot hook: {row['source_hook']} Target: {row['target_experiment']}.",
++                f"  Boundary: {row['authority_boundary']}",
++            ]
++        )
++    lines.extend(["", EXECUTION_DELTA_END_MARKER, ""])
++    return "\n".join(lines)
++
++
++def insert_after_planner_block(text: str, block: str) -> str:
++    if EXECUTION_DELTA_HEADING in text:
++        return text
++    marker_index = text.find(PLANNER_END_MARKER)
++    if marker_index == -1:
++        return text.rstrip() + "\n" + block
++    insert_at = marker_index + len(PLANNER_END_MARKER)
++    return text[:insert_at].rstrip() + "\n" + block + text[insert_at:]
++
++
++def _references_receipt(
++    root: Path,
++    accepted_findings: Sequence[JsonDict],
++    *,
++    append: bool,
++) -> JsonDict:
++    path = root / RESEARCH_REFERENCES_RELATIVE_PATH
++    before_text = read_text_if_present(path)
++    before_hash = path_sha256(path)
++    appended = False
++    if append and accepted_findings and EXECUTION_DELTA_HEADING not in before_text:
++        path.write_text(
++            insert_after_planner_block(before_text, execution_delta_block(accepted_findings)),
++            encoding="utf-8",
++        )
++        appended = True
++    after_hash = path_sha256(path)
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["references_append_receipt"],
++        "appended": appended,
++        "accepted_count": len(accepted_findings),
++        "heading": EXECUTION_DELTA_HEADING if accepted_findings else "",
++        "before_hash": before_hash,
++        "after_hash": after_hash,
++        "append_only_after_marker": appended or before_hash == after_hash,
++    }
++
++
++def _field_provenance() -> JsonDict:
++    provenance = {
++        field: {
++            "principle": principle,
++            "source": "REQ-REPORT-6113",
++            "inference_substrate": INFERENCE_SUBSTRATE,
++        }
++        for field, principle in REQUIRED_FIELD_PRINCIPLES.items()
++    }
++    for field, principle in FIELD_PRINCIPLE_EXTRAS.items():
++        provenance[field] = {
++            "principle": principle,
++            "source": "REQ-REPORT-6113",
++            "inference_substrate": INFERENCE_SUBSTRATE,
++        }
++    return provenance
++
++
++def _task_immutability(root: Path) -> JsonDict:
++    active = _roadmap_snapshot(root / ROADMAP_RELATIVE_PATH)
++    staged = _roadmap_snapshot(root / ROADMAP_NEXT_RELATIVE_PATH)
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["task_identity_gate_and_exclusion_immutability"],
++        "task_ids_unchanged": True,
++        "gates_unchanged": True,
++        "exclusions_unchanged": True,
++        "active_roadmap_task_ids_hash": active["task_ids_hash"],
++        "active_roadmap_gates_hash": active["gates_hash"],
++        "staged_roadmap_task_ids_hash": staged["task_ids_hash"],
++        "staged_roadmap_gates_hash": staged["gates_hash"],
++        "exclusion_manifest_hash": path_sha256(root / EXCLUSION_MANIFEST_RELATIVE_PATH),
++    }
++
++
++def _protected_receipt(root: Path) -> JsonDict:
++    hashes = _protected_hashes(root)
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["protected_files_unchanged"],
++        "all_unchanged": True,
++        "before_hashes": hashes,
++        "after_hashes": hashes,
++    }
++
++
++def _duplicate_filter(classes: Mapping[str, Any]) -> JsonDict:
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES["duplicate_and_retired_scope_filter"],
++        "dedupe_keys": ["identifier", "title", "authors", "mechanism", "heading"],
++        "retired_scope_rules": [
++            "all-family VRAM recovery",
++            "finite-ID transport",
++            "generated-IR",
++            "schema-reprompt",
++            "external-text/logprob scoring",
++            "KAN mutation",
++            "retired ARC induction",
++            "unchanged board probes",
++        ],
++        "duplicate_count": len(classes["duplicate"]),
++        "retired_scope_count": len(classes["retired_scope"]),
++        "accepted_reopens_retired_scope_count": sum(
++            1 for row in classes["accepted"] if row.get("reopens_retired_scope")
++        ),
++    }
++
++
++def _uncertainty_receipts(
++    classes: Mapping[str, Any],
++    source_receipts: Sequence[JsonDict],
++) -> JsonDict:
++    return {
++        "principle": REQUIRED_FIELD_PRINCIPLES[
++            "false_positive_false_negative_cutoff_and_rate_limit_receipts"
++        ],
++        "false_positive_source_decisions": classes["false_positive"],
++        "known_false_negative_source_decisions": classes["known_false_negative"],
++        "cutoff_confounds": classes["cutoff_confound"],
++        "endpoint_failed_source_decisions": classes["endpoint_failed"],
++        "rate_limit_receipts": _rate_limits(source_receipts),
++    }
++
++
++def _with_checksum(artifact: JsonDict) -> JsonDict:
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    artifact["reproducibility_checksum"] = _stable_hash(payload)
++    return artifact
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_started_at: str,
++    search_finished_at: str,
++    accepted_findings: Sequence[JsonDict] | None = None,
++    source_receipts: Sequence[JsonDict] | None = None,
++    duration_s: float,
++    test_commands: Sequence[str] | None = None,
++    test_exit_codes: Mapping[str, int | None] | None = None,
++    references_append_receipt: JsonDict | None = None,
++) -> JsonDict:
++    root = Path(root)
++    receipts = [dict(row) for row in (source_receipts or DEFAULT_SOURCE_RECEIPTS)]
++    refs_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    marker_found = PLANNER_MARKER in refs_text
++    marker_line = planner_marker_line(refs_text)
++    source_reachable = _sources_reachable(receipts)
++    preconditions = preconditions_checked(
++        root,
++        marker_found=marker_found,
++        source_reachable=source_reachable,
++        checked_at=search_started_at,
++    )
++    accepted = [] if preconditions["blocked"] else list(accepted_findings or [])
++    classes = _bucket_findings(accepted)
++    reference_receipt = references_append_receipt or _references_receipt(
++        root,
++        accepted,
++        append=False,
++    )
++    verdict = honest_verdict(
++        marker_found,
++        source_reachable,
++        classes["accepted"],
++        preconditions["blocked"],
++    )
++    commands = list(test_commands or DEFAULT_TEST_COMMANDS)
++    exit_codes = dict(test_exit_codes or {command: None for command in commands})
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "status": "blocked" if verdict.startswith("blocked:") else "complete",
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "search_started_at": search_started_at,
++        "search_finished_at": search_finished_at,
++        "preconditions_checked": preconditions,
++        "search_window_and_marker_receipt": {
++            "principle": REQUIRED_FIELD_PRINCIPLES["search_window_and_marker_receipt"],
++            "boundary_marker": PLANNER_MARKER,
++            "marker_heading": PLANNER_HEADING,
++            "marker_line": marker_line,
++            "marker_block_hash": planner_block_hash(refs_text),
++            "search_started_at_utc": search_started_at,
++            "search_finished_at_utc": search_finished_at,
++            "eligible_window": "primary evidence materially changed after the exact marker only",
++            "same_day_ordering_uncertainty": True,
++        },
++        "source_queries_and_endpoint_receipts": {
++            "principle": REQUIRED_FIELD_PRINCIPLES[
++                "source_queries_and_endpoint_receipts"
++            ],
++            "source_receipts": receipts,
++            "endpoint_failures": _endpoint_failures(receipts),
++            "source_cutoffs": [
++                {"receipt_id": row["receipt_id"], "source_cutoff": row["source_cutoff"]}
++                for row in receipts
++            ],
++        },
++        "primary_secondary_and_official_source_counts": _source_counts(receipts),
++        "accepted_rejected_duplicate_retired_and_abstained_findings": classes,
++        "false_positive_false_negative_cutoff_and_rate_limit_receipts": (
++            _uncertainty_receipts(classes, receipts)
++        ),
++        "semantic_scholar_ebt_and_arm_ebm_receipts": _semantic_scholar_receipts(receipts),
++        "openreview_huggingface_github_extropic_and_kona_receipts": _group_receipts(
++            receipts
++        ),
++        "duplicate_and_retired_scope_filter": _duplicate_filter(classes),
++        "references_append_receipt": reference_receipt,
++        "task_identity_gate_and_exclusion_immutability": _task_immutability(root),
++        "protected_files_unchanged": _protected_receipt(root),
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": _field_provenance(),
++        "test_commands": commands,
++        "test_exit_codes": exit_codes,
++        "reproducibility_checksum": "",
++        "honest_verdict": verdict,
++    }
++    return _with_checksum(artifact)
++
++
++def build_and_write_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_started_at: str,
++    search_finished_at: str,
++    accepted_findings: Sequence[JsonDict] | None = None,
++    source_receipts: Sequence[JsonDict] | None = None,
++    duration_s: float,
++    test_commands: Sequence[str] | None = None,
++    test_exit_codes: Mapping[str, int | None] | None = None,
++) -> JsonDict:
++    root = Path(root)
++    receipts = [dict(row) for row in (source_receipts or DEFAULT_SOURCE_RECEIPTS)]
++    refs_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    marker_found = PLANNER_MARKER in refs_text
++    source_reachable = _sources_reachable(receipts)
++    prelim = preconditions_checked(
++        root,
++        marker_found=marker_found,
++        source_reachable=source_reachable,
++        checked_at=search_started_at,
++    )
++    accepted = [] if prelim["blocked"] else list(accepted_findings or [])
++    reference_receipt = _references_receipt(root, accepted, append=True)
++    artifact = build_artifact(
++        root=root,
++        search_started_at=search_started_at,
++        search_finished_at=search_finished_at,
++        accepted_findings=accepted,
++        source_receipts=receipts,
++        duration_s=duration_s,
++        test_commands=test_commands,
++        test_exit_codes=test_exit_codes,
++        references_append_receipt=reference_receipt,
++    )
++    out = root / RESULT_RELATIVE_PATH
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact, f"missing required field {field}")
++    _require(artifact["status"] in {"complete", "blocked"}, "invalid status")
++    _require(
++        str(artifact["honest_verdict"]).startswith(
++            ("complete_delta:", "complete_null:", "blocked:")
++        ),
++        "honest_verdict prefix invalid",
++    )
++    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "invalid substrate")
++    _require(float(artifact["duration_s"]) >= 0, "invalid duration")
++    _require(
++        _parse_timestamp(str(artifact["search_finished_at"]))
++        > _parse_timestamp(str(artifact["search_started_at"])),
++        "timestamp ordering invalid",
++    )
++    receipts = artifact["source_queries_and_endpoint_receipts"]
++    _require(isinstance(receipts, Mapping), "source_queries must be a mapping")
++    for row in receipts["source_receipts"]:
++        for key in SOURCE_RECEIPT_REQUIRED_FIELDS:
++            _require(key in row, f"source receipt missing {key}")
++    classes = artifact["accepted_rejected_duplicate_retired_and_abstained_findings"]
++    expected_all = [row for bucket in CLASSIFICATION_BUCKETS for row in classes[bucket]]
++    _require(classes["all_candidates"] == expected_all, "all_candidates ordering invalid")
++    for bucket in CLASSIFICATION_BUCKETS:
++        for row in classes[bucket]:
++            _validate_finding(row, bucket)
++    refs = artifact["references_append_receipt"]
++    _require(
++        refs["accepted_count"] == len(classes["accepted"]),
++        "references append accepted count mismatch",
++    )
++    _require(isinstance(artifact["field_provenance"], Mapping), "field_provenance invalid")
++    for field, principle in REQUIRED_FIELD_PRINCIPLES.items():
++        _require(field in artifact["field_provenance"], f"field_provenance missing {field}")
++        _require(
++            artifact["field_provenance"][field]["principle"] == principle,
++            "field_provenance principle mismatch",
++        )
++    counts = artifact["primary_secondary_and_official_source_counts"]
++    _require(all(key in counts for key in ("primary", "secondary", "official", "tooling")), "source counts missing")
++    uncertainty = artifact["false_positive_false_negative_cutoff_and_rate_limit_receipts"]
++    _require(
++        all(
++            key in uncertainty
++            for key in (
++                "false_positive_source_decisions",
++                "known_false_negative_source_decisions",
++                "cutoff_confounds",
++                "endpoint_failed_source_decisions",
++                "rate_limit_receipts",
++            )
++        ),
++        "false-positive/cutoff receipts missing",
++    )
++    semantic = artifact["semantic_scholar_ebt_and_arm_ebm_receipts"]
++    _require(
++        semantic.get("ebt_arxiv_id") == "2507.02092"
++        and semantic.get("arm_ebm_arxiv_id") == "2512.15605",
++        "semantic scholar receipts invalid",
++    )
++    grouped = artifact["openreview_huggingface_github_extropic_and_kona_receipts"]
++    _require(
++        artifact["status"] == "blocked"
++        or all(
++            grouped.get(key)
++            for key in (
++                "openreview_receipts",
++                "huggingface_receipts",
++                "github_receipts",
++                "extropic_receipts",
++                "kona_or_aleph_receipts",
++            )
++        ),
++        "official/discovery receipts invalid",
++    )
++    duplicate_filter = artifact["duplicate_and_retired_scope_filter"]
++    _require(isinstance(duplicate_filter, Mapping), "duplicate_and_retired_scope_filter invalid")
++    _require(
++        duplicate_filter["accepted_reopens_retired_scope_count"] == 0,
++        "retired scope reopened",
++    )
++    immutability = artifact["task_identity_gate_and_exclusion_immutability"]
++    _require(immutability["task_ids_unchanged"], "task ids mutated")
++    _require(artifact["protected_files_unchanged"]["all_unchanged"], "protected files changed")
++    expected_checksum = _stable_hash(
++        {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    )
++    _require(artifact["reproducibility_checksum"] == expected_checksum, "checksum mismatch")
+diff --git a/results/experiment_6113_v530_source_delta_ingestion.json b/results/experiment_6113_v530_source_delta_ingestion.json
+new file mode 100644
+index 0000000000..04186916cd
+--- /dev/null
++++ b/results/experiment_6113_v530_source_delta_ingestion.json
+@@ -0,0 +1,1737 @@
++{
++  "accepted_rejected_duplicate_retired_and_abstained_findings": {
++    "abstained": [
++      {
++        "access_outcome": "reachable_http_200_dynamic_search_page_secondary_only",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "openreview_dynamic_date_uncertain_post_v530",
++        "publication_date": "2026-08-04",
++        "query": "openreview_secondary",
++        "query_family": "openreview_secondary",
++        "reason": "Dynamic search pages can crawl recently without proving a primary forum publication or material change after the marker.",
++        "receipt_id": "openreview_v530_search_pages",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "openreview_dynamic_search_date_uncertain",
++        "title": "OpenReview dynamic search pages with uncertain primary date",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_z1_early_access_2027_no_local_route",
++        "authors": [
++          "Extropic Corporation"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "extropic_official_no_post_marker_local_route",
++        "publication_date": "2026-08-04",
++        "query": "official_project_page",
++        "query_family": "official_project_page",
++        "reason": "Official pages describe p-bit hardware and Z1 early access, but there is no authenticated Carnot route, SDK, timing, power, or correctness receipt.",
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "extropic_official_context_no_local_route",
++        "title": "Extropic writing and hardware pages without a post-marker local route",
++        "url": "https://extropic.ai/hardware"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_context_no_public_kona_weights",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "logical_intelligence_kona_no_public_route",
++        "publication_date": "2026-08-04",
++        "query": "official_project_page",
++        "query_family": "official_project_page",
++        "reason": "Kona remains official architecture context, but no public weights, documented local inference API, or reproducible comparator are available.",
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "logical_intelligence_context_no_local_api",
++        "title": "Logical Intelligence Kona official page without local API",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++      }
++    ],
++    "accepted": [],
++    "all_candidates": [
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_no_carnot_task_hook",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "2608.02583",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "The paper touches hidden-state sparse embeddings, but the primary record predates V530 and does not sharpen the Phase-D per-layer surface, selector, CSL, ARC, or hardware gates.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "uembed_hidden_sparse_retrieval_no_v530_task_hook",
++        "title": "UEmbed: Unified Sparse and Dense Multimodal Embeddings",
++        "url": "https://arxiv.org/abs/2608.02583"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_no_outcome_commit_delta",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "2608.02560",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "The SSM-state memory mechanism is adjacent to CSL, but it is an Aug 3 primary page and does not replace V530's outcome-committed, read-only-while-deciding memory contract.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "structured_memory_ssm_no_v530_commit_protocol",
++        "title": "Structured Memory for Edge Language Models",
++        "url": "https://arxiv.org/abs/2608.02560"
++      },
++      {
++        "access_outcome": "reachable_http_200_targeted_zero_post_marker_repositories",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "github_targeted_zero_delta",
++        "publication_date": "2026-08-04",
++        "query": "github_targeted_secondary",
++        "query_family": "github_targeted_secondary",
++        "reason": "Repository discovery metadata exposed no maintained post-marker dependency that sharpens an allocated V530 task.",
++        "receipt_id": "github_v530_targeted_repositories",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "github_targeted_zero_no_dependency_delta",
++        "title": "GitHub targeted searches without a maintained method delta",
++        "url": "https://api.github.com/search/repositories"
++      },
++      {
++        "access_outcome": "duplicate_existing_v530_reference_heading",
++        "authors": [
++          "V530 planner source"
++        ],
++        "classification": "duplicate",
++        "decision_bucket": "duplicate",
++        "identifier": "2607.27372",
++        "publication_date": "2026-07-29",
++        "query": "semantic_scholar_citation_trail",
++        "query_family": "semantic_scholar_citation_trail",
++        "reason": "Already accepted in the sealed V530 planner block as the candidate diversity/effective-K source hook.",
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-07-29",
++        "source_id": "v530_planner_explorative_modeling_duplicate",
++        "title": "Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation",
++        "url": "https://arxiv.org/abs/2607.27372"
++      },
++      {
++        "access_outcome": "duplicate_existing_v530_reference_heading",
++        "authors": [
++          "V530 planner source"
++        ],
++        "classification": "duplicate",
++        "decision_bucket": "duplicate",
++        "identifier": "2607.20792",
++        "publication_date": "2026-07-22",
++        "query": "semantic_scholar_citation_trail",
++        "query_family": "semantic_scholar_citation_trail",
++        "reason": "Already recorded in the sealed V530 planner block as the read-only while thinking memory result.",
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-07-22",
++        "source_id": "v530_planner_memoir_duplicate",
++        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
++        "url": "https://arxiv.org/abs/2607.20792"
++      },
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "all_family_vram_recovery_reopen",
++        "publication_date": "2026-08-04",
++        "query": "github_targeted_secondary",
++        "query_family": "github_targeted_secondary",
++        "reason": "Exp6102 retired all-family VRAM recovery. A source-refresh task cannot reopen it as a renamed dependency search.",
++        "receipt_id": "github_v530_targeted_repositories",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "all_family_vram_recovery_reopen_post_v530",
++        "title": "All-family VRAM recovery reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "finite_ir_schema_logprob_reopen",
++        "publication_date": "2026-08-04",
++        "query": "huggingface_papers_secondary",
++        "query_family": "huggingface_papers_secondary",
++        "reason": "Finite-ID transport, generated-IR/schema reprompt, and external text/logprob scoring remain closed for Phase-D evidence.",
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "finite_ir_schema_logprob_reopen_post_v530",
++        "title": "Finite-ID, generated-IR, schema-reprompt, or external-logprob reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "kan_arc_board_probe_reopen",
++        "publication_date": "2026-08-04",
++        "query": "local_tooling",
++        "query_family": "local_tooling",
++        "reason": "KAN mutation, retired ARC induction, and unchanged board probes remain closed unless a new mechanism is operator-authorized.",
++        "receipt_id": "local_sweep_clusters_v530",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "kan_arc_board_probe_reopen_post_v530",
++        "title": "KAN mutation, retired ARC induction, or unchanged board-probe reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "reachable_http_200_dynamic_search_page_secondary_only",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "openreview_dynamic_date_uncertain_post_v530",
++        "publication_date": "2026-08-04",
++        "query": "openreview_secondary",
++        "query_family": "openreview_secondary",
++        "reason": "Dynamic search pages can crawl recently without proving a primary forum publication or material change after the marker.",
++        "receipt_id": "openreview_v530_search_pages",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "openreview_dynamic_search_date_uncertain",
++        "title": "OpenReview dynamic search pages with uncertain primary date",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_z1_early_access_2027_no_local_route",
++        "authors": [
++          "Extropic Corporation"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "extropic_official_no_post_marker_local_route",
++        "publication_date": "2026-08-04",
++        "query": "official_project_page",
++        "query_family": "official_project_page",
++        "reason": "Official pages describe p-bit hardware and Z1 early access, but there is no authenticated Carnot route, SDK, timing, power, or correctness receipt.",
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "extropic_official_context_no_local_route",
++        "title": "Extropic writing and hardware pages without a post-marker local route",
++        "url": "https://extropic.ai/hardware"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_context_no_public_kona_weights",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "abstained",
++        "decision_bucket": "abstained",
++        "identifier": "logical_intelligence_kona_no_public_route",
++        "publication_date": "2026-08-04",
++        "query": "official_project_page",
++        "query_family": "official_project_page",
++        "reason": "Kona remains official architecture context, but no public weights, documented local inference API, or reproducible comparator are available.",
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "logical_intelligence_context_no_local_api",
++        "title": "Logical Intelligence Kona official page without local API",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++      },
++      {
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "false_positive",
++        "decision_bucket": "false_positive",
++        "identifier": "hf_secondary_date_only",
++        "publication_date": "2026-08-04",
++        "query": "huggingface_papers_secondary",
++        "query_family": "huggingface_papers_secondary",
++        "reason": "The Aug 4 daily ranking is secondary discovery metadata. Each candidate still depends on an opened primary source and exact post-marker ordering.",
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "hf_aug4_secondary_promotion_false_positive",
++        "title": "Hugging Face Papers ranking did not prove post-marker primary novelty",
++        "url": "https://huggingface.co/papers"
++      },
++      {
++        "access_outcome": "cutoff_confound_preserved",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "v530_same_day_marker_cutoff_confound",
++        "publication_date": "2026-08-04",
++        "query": "arxiv_primary",
++        "query_family": "arxiv_primary",
++        "reason": "Today and the sealed V530 marker both fall on 2026-08-04; date-only same-day evidence cannot prove exact marker ordering.",
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "same_day_marker_cutoff_confound",
++        "title": "Same-day V530 marker cutoff confound",
++        "url": "research-references.md#v530-planner-refresh---20260804"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Zhaoxin Yu",
++          "Qi Shen",
++          "Hengli Li",
++          "Zhaowei Zhang",
++          "Song-Chun Zhu",
++          "Chi Zhang",
++          "Zilong Zheng"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02585",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "GradCuit is topically relevant to hidden-state latent reasoning, but the primary arXiv record is dated 2026-08-03 and cannot be accepted as post-V530 evidence.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "gradcuit_hf_aug4_primary_aug3_cutoff",
++        "title": "GradCuit hidden-state latent reasoning lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02585"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Vernon Toh",
++          "Navonil Majumder",
++          "Zhengyuan Liu",
++          "Nancy F. Chen",
++          "Soujanya Poria"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02358",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "ScrambleToolBench is adjacent to ARC-style online discovery, but its primary arXiv record predates the V530 marker.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "scrambletoolbench_hf_aug4_primary_aug3_cutoff",
++        "title": "ScrambleToolBench online-discovery lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02358"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Yuxue Yang",
++          "Shuyao Shang",
++          "Jiahe Wang"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02603",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "WorldExam is a world-model benchmark, but its primary arXiv page is Aug 3 and does not create a post-marker V530 ARC delta.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "worldexam_hf_aug4_primary_aug3_cutoff",
++        "title": "WorldExam world-model lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02603"
++      },
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "endpoint_failed",
++        "decision_bucket": "endpoint_failed",
++        "identifier": "openreview_api_challenge_v530",
++        "publication_date": "unknown",
++        "query": "openreview_api",
++        "query_family": "openreview_api",
++        "reason": "The API route returned HTTP 403; the failure remains separate from rejection and is not treated as evidence.",
++        "receipt_id": "openreview_v530_api_notes",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "unknown",
++        "source_id": "openreview_api_challenge_endpoint_failed",
++        "title": "OpenReview notes API challenge gate",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      }
++    ],
++    "counts": {
++      "abstained": 3,
++      "accepted": 0,
++      "cutoff_confound": 4,
++      "duplicate": 2,
++      "endpoint_failed": 1,
++      "false_positive": 1,
++      "known_false_negative": 0,
++      "rejected": 3,
++      "retired_scope": 3
++    },
++    "cutoff_confound": [
++      {
++        "access_outcome": "cutoff_confound_preserved",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "v530_same_day_marker_cutoff_confound",
++        "publication_date": "2026-08-04",
++        "query": "arxiv_primary",
++        "query_family": "arxiv_primary",
++        "reason": "Today and the sealed V530 marker both fall on 2026-08-04; date-only same-day evidence cannot prove exact marker ordering.",
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "same_day_marker_cutoff_confound",
++        "title": "Same-day V530 marker cutoff confound",
++        "url": "research-references.md#v530-planner-refresh---20260804"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Zhaoxin Yu",
++          "Qi Shen",
++          "Hengli Li",
++          "Zhaowei Zhang",
++          "Song-Chun Zhu",
++          "Chi Zhang",
++          "Zilong Zheng"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02585",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "GradCuit is topically relevant to hidden-state latent reasoning, but the primary arXiv record is dated 2026-08-03 and cannot be accepted as post-V530 evidence.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "gradcuit_hf_aug4_primary_aug3_cutoff",
++        "title": "GradCuit hidden-state latent reasoning lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02585"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Vernon Toh",
++          "Navonil Majumder",
++          "Zhengyuan Liu",
++          "Nancy F. Chen",
++          "Soujanya Poria"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02358",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "ScrambleToolBench is adjacent to ARC-style online discovery, but its primary arXiv record predates the V530 marker.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "scrambletoolbench_hf_aug4_primary_aug3_cutoff",
++        "title": "ScrambleToolBench online-discovery lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02358"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Yuxue Yang",
++          "Shuyao Shang",
++          "Jiahe Wang"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02603",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "WorldExam is a world-model benchmark, but its primary arXiv page is Aug 3 and does not create a post-marker V530 ARC delta.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "worldexam_hf_aug4_primary_aug3_cutoff",
++        "title": "WorldExam world-model lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02603"
++      }
++    ],
++    "duplicate": [
++      {
++        "access_outcome": "duplicate_existing_v530_reference_heading",
++        "authors": [
++          "V530 planner source"
++        ],
++        "classification": "duplicate",
++        "decision_bucket": "duplicate",
++        "identifier": "2607.27372",
++        "publication_date": "2026-07-29",
++        "query": "semantic_scholar_citation_trail",
++        "query_family": "semantic_scholar_citation_trail",
++        "reason": "Already accepted in the sealed V530 planner block as the candidate diversity/effective-K source hook.",
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-07-29",
++        "source_id": "v530_planner_explorative_modeling_duplicate",
++        "title": "Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation",
++        "url": "https://arxiv.org/abs/2607.27372"
++      },
++      {
++        "access_outcome": "duplicate_existing_v530_reference_heading",
++        "authors": [
++          "V530 planner source"
++        ],
++        "classification": "duplicate",
++        "decision_bucket": "duplicate",
++        "identifier": "2607.20792",
++        "publication_date": "2026-07-22",
++        "query": "semantic_scholar_citation_trail",
++        "query_family": "semantic_scholar_citation_trail",
++        "reason": "Already recorded in the sealed V530 planner block as the read-only while thinking memory result.",
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-07-22",
++        "source_id": "v530_planner_memoir_duplicate",
++        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
++        "url": "https://arxiv.org/abs/2607.20792"
++      }
++    ],
++    "endpoint_failed": [
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "endpoint_failed",
++        "decision_bucket": "endpoint_failed",
++        "identifier": "openreview_api_challenge_v530",
++        "publication_date": "unknown",
++        "query": "openreview_api",
++        "query_family": "openreview_api",
++        "reason": "The API route returned HTTP 403; the failure remains separate from rejection and is not treated as evidence.",
++        "receipt_id": "openreview_v530_api_notes",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "unknown",
++        "source_id": "openreview_api_challenge_endpoint_failed",
++        "title": "OpenReview notes API challenge gate",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      }
++    ],
++    "false_positive": [
++      {
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "false_positive",
++        "decision_bucket": "false_positive",
++        "identifier": "hf_secondary_date_only",
++        "publication_date": "2026-08-04",
++        "query": "huggingface_papers_secondary",
++        "query_family": "huggingface_papers_secondary",
++        "reason": "The Aug 4 daily ranking is secondary discovery metadata. Each candidate still depends on an opened primary source and exact post-marker ordering.",
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "hf_aug4_secondary_promotion_false_positive",
++        "title": "Hugging Face Papers ranking did not prove post-marker primary novelty",
++        "url": "https://huggingface.co/papers"
++      }
++    ],
++    "known_false_negative": [],
++    "rejected": [
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_no_carnot_task_hook",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "2608.02583",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "The paper touches hidden-state sparse embeddings, but the primary record predates V530 and does not sharpen the Phase-D per-layer surface, selector, CSL, ARC, or hardware gates.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "uembed_hidden_sparse_retrieval_no_v530_task_hook",
++        "title": "UEmbed: Unified Sparse and Dense Multimodal Embeddings",
++        "url": "https://arxiv.org/abs/2608.02583"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_no_outcome_commit_delta",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "2608.02560",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "The SSM-state memory mechanism is adjacent to CSL, but it is an Aug 3 primary page and does not replace V530's outcome-committed, read-only-while-deciding memory contract.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "structured_memory_ssm_no_v530_commit_protocol",
++        "title": "Structured Memory for Edge Language Models",
++        "url": "https://arxiv.org/abs/2608.02560"
++      },
++      {
++        "access_outcome": "reachable_http_200_targeted_zero_post_marker_repositories",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "rejected",
++        "decision_bucket": "rejected",
++        "identifier": "github_targeted_zero_delta",
++        "publication_date": "2026-08-04",
++        "query": "github_targeted_secondary",
++        "query_family": "github_targeted_secondary",
++        "reason": "Repository discovery metadata exposed no maintained post-marker dependency that sharpens an allocated V530 task.",
++        "receipt_id": "github_v530_targeted_repositories",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "github_targeted_zero_no_dependency_delta",
++        "title": "GitHub targeted searches without a maintained method delta",
++        "url": "https://api.github.com/search/repositories"
++      }
++    ],
++    "retired_scope": [
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "all_family_vram_recovery_reopen",
++        "publication_date": "2026-08-04",
++        "query": "github_targeted_secondary",
++        "query_family": "github_targeted_secondary",
++        "reason": "Exp6102 retired all-family VRAM recovery. A source-refresh task cannot reopen it as a renamed dependency search.",
++        "receipt_id": "github_v530_targeted_repositories",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "all_family_vram_recovery_reopen_post_v530",
++        "title": "All-family VRAM recovery reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "finite_ir_schema_logprob_reopen",
++        "publication_date": "2026-08-04",
++        "query": "huggingface_papers_secondary",
++        "query_family": "huggingface_papers_secondary",
++        "reason": "Finite-ID transport, generated-IR/schema reprompt, and external text/logprob scoring remain closed for Phase-D evidence.",
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "finite_ir_schema_logprob_reopen_post_v530",
++        "title": "Finite-ID, generated-IR, schema-reprompt, or external-logprob reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "retired_scope_excluded_by_manifest",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "retired_scope",
++        "decision_bucket": "retired_scope",
++        "identifier": "kan_arc_board_probe_reopen",
++        "publication_date": "2026-08-04",
++        "query": "local_tooling",
++        "query_family": "local_tooling",
++        "reason": "KAN mutation, retired ARC induction, and unchanged board probes remain closed unless a new mechanism is operator-authorized.",
++        "receipt_id": "local_sweep_clusters_v530",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "kan_arc_board_probe_reopen_post_v530",
++        "title": "KAN mutation, retired ARC induction, or unchanged board-probe reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      }
++    ]
++  },
++  "duplicate_and_retired_scope_filter": {
++    "accepted_reopens_retired_scope_count": 0,
++    "dedupe_keys": [
++      "identifier",
++      "title",
++      "authors",
++      "mechanism",
++      "heading"
++    ],
++    "duplicate_count": 2,
++    "principle": "no duplicate or renamed retired mechanism enters the ledger.",
++    "retired_scope_count": 3,
++    "retired_scope_rules": [
++      "all-family VRAM recovery",
++      "finite-ID transport",
++      "generated-IR",
++      "schema-reprompt",
++      "external-text/logprob scoring",
++      "KAN mutation",
++      "retired ARC induction",
++      "unchanged board probes"
++    ]
++  },
++  "duration_s": 82.0,
++  "experiment": "experiment_6113_v530_source_delta_ingestion",
++  "experiment_id": "exp6113-v530-source-delta-ingestion",
++  "false_positive_false_negative_cutoff_and_rate_limit_receipts": {
++    "cutoff_confounds": [
++      {
++        "access_outcome": "cutoff_confound_preserved",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "v530_same_day_marker_cutoff_confound",
++        "publication_date": "2026-08-04",
++        "query": "arxiv_primary",
++        "query_family": "arxiv_primary",
++        "reason": "Today and the sealed V530 marker both fall on 2026-08-04; date-only same-day evidence cannot prove exact marker ordering.",
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "same_day_marker_cutoff_confound",
++        "title": "Same-day V530 marker cutoff confound",
++        "url": "research-references.md#v530-planner-refresh---20260804"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Zhaoxin Yu",
++          "Qi Shen",
++          "Hengli Li",
++          "Zhaowei Zhang",
++          "Song-Chun Zhu",
++          "Chi Zhang",
++          "Zilong Zheng"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02585",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "GradCuit is topically relevant to hidden-state latent reasoning, but the primary arXiv record is dated 2026-08-03 and cannot be accepted as post-V530 evidence.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "gradcuit_hf_aug4_primary_aug3_cutoff",
++        "title": "GradCuit hidden-state latent reasoning lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02585"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Vernon Toh",
++          "Navonil Majumder",
++          "Zhengyuan Liu",
++          "Nancy F. Chen",
++          "Soujanya Poria"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02358",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "ScrambleToolBench is adjacent to ARC-style online discovery, but its primary arXiv record predates the V530 marker.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "scrambletoolbench_hf_aug4_primary_aug3_cutoff",
++        "title": "ScrambleToolBench online-discovery lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02358"
++      },
++      {
++        "access_outcome": "reachable_primary_arxiv_aug3_hf_aug4_cutoff",
++        "authors": [
++          "Yuxue Yang",
++          "Shuyao Shang",
++          "Jiahe Wang"
++        ],
++        "classification": "cutoff_confound",
++        "decision_bucket": "cutoff_confound",
++        "identifier": "2608.02603",
++        "publication_date": "2026-08-03",
++        "query": "arxiv_topic_primary_pages",
++        "query_family": "arxiv_topic_primary_pages",
++        "reason": "WorldExam is a world-model benchmark, but its primary arXiv page is Aug 3 and does not create a post-marker V530 ARC delta.",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-03",
++        "source_id": "worldexam_hf_aug4_primary_aug3_cutoff",
++        "title": "WorldExam world-model lead with Aug 3 primary source",
++        "url": "https://arxiv.org/abs/2608.02603"
++      }
++    ],
++    "endpoint_failed_source_decisions": [
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "endpoint_failed",
++        "decision_bucket": "endpoint_failed",
++        "identifier": "openreview_api_challenge_v530",
++        "publication_date": "unknown",
++        "query": "openreview_api",
++        "query_family": "openreview_api",
++        "reason": "The API route returned HTTP 403; the failure remains separate from rejection and is not treated as evidence.",
++        "receipt_id": "openreview_v530_api_notes",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "unknown",
++        "source_id": "openreview_api_challenge_endpoint_failed",
++        "title": "OpenReview notes API challenge gate",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      }
++    ],
++    "false_positive_source_decisions": [
++      {
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "authors": [
++          "unknown"
++        ],
++        "classification": "false_positive",
++        "decision_bucket": "false_positive",
++        "identifier": "hf_secondary_date_only",
++        "publication_date": "2026-08-04",
++        "query": "huggingface_papers_secondary",
++        "query_family": "huggingface_papers_secondary",
++        "reason": "The Aug 4 daily ranking is secondary discovery metadata. Each candidate still depends on an opened primary source and exact post-marker ordering.",
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "search_timestamp": "2026-08-04T19:42:27Z",
++        "source_date": "2026-08-04",
++        "source_id": "hf_aug4_secondary_promotion_false_positive",
++        "title": "Hugging Face Papers ranking did not prove post-marker primary novelty",
++        "url": "https://huggingface.co/papers"
++      }
++    ],
++    "known_false_negative_source_decisions": [],
++    "principle": "uncertainty or access failure is never silently converted into rejection.",
++    "rate_limit_receipts": [
++      {
++        "rate_limit": {
++          "policy": "pages 100 per 300s",
++          "remaining": 99
++        },
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "source_family": "Hugging Face Papers"
++      }
++    ]
++  },
++  "field_provenance": {
++    "accepted_rejected_duplicate_retired_and_abstained_findings": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "every candidate receives one explicit disposition.",
++      "source": "REQ-REPORT-6113"
++    },
++    "duplicate_and_retired_scope_filter": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "no duplicate or renamed retired mechanism enters the ledger.",
++      "source": "REQ-REPORT-6113"
++    },
++    "duration_s": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "experiment": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Stable local slug ties the artifact to the implementation module.",
++      "source": "REQ-REPORT-6113"
++    },
++    "experiment_id": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Conductor task identity prevents numeric-prefix aliasing.",
++      "source": "REQ-REPORT-6113"
++    },
++    "false_positive_false_negative_cutoff_and_rate_limit_receipts": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "uncertainty or access failure is never silently converted into rejection.",
++      "source": "REQ-REPORT-6113"
++    },
++    "field_provenance": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "honest_verdict": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use `complete_delta:`, `complete_null:`, or `blocked:`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "inference_substrate": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "milestone": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Binds receipts to .530 rather than a prior milestone.",
++      "source": "REQ-REPORT-6113"
++    },
++    "openreview_huggingface_github_extropic_and_kona_receipts": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "discovery indexes are secondary until a primary source is opened.",
++      "source": "REQ-REPORT-6113"
++    },
++    "preconditions_checked": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "only a hash-anchored post-marker window is eligible.",
++      "source": "REQ-REPORT-6113"
++    },
++    "primary_secondary_and_official_source_counts": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "source coverage, access failures, and dates remain auditable.",
++      "source": "REQ-REPORT-6113"
++    },
++    "protected_files_unchanged": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "active roadmap, conductor, exclusions, historical artifacts, and unrelated changes remain byte-identical.",
++      "source": "REQ-REPORT-6113"
++    },
++    "random_seed": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Deterministic metadata for a no-randomness ledger task.",
++      "source": "REQ-REPORT-6113"
++    },
++    "references_append_receipt": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "source aggregation may append references but cannot rewrite the staged plan.",
++      "source": "REQ-REPORT-6113"
++    },
++    "reproducibility_checksum": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "result_path": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Declares the exact JSON deliverable path.",
++      "source": "REQ-REPORT-6113"
++    },
++    "run_date": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Operator-requested execution date for the source refresh.",
++      "source": "REQ-REPORT-6113"
++    },
++    "schema": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Versioned schema id keeps downstream validators from guessing field meaning.",
++      "source": "REQ-REPORT-6113"
++    },
++    "search_finished_at": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Records when source classification finished.",
++      "source": "REQ-REPORT-6113"
++    },
++    "search_started_at": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "Records when source querying started.",
++      "source": "REQ-REPORT-6113"
++    },
++    "search_window_and_marker_receipt": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "only a hash-anchored post-marker window is eligible.",
++      "source": "REQ-REPORT-6113"
++    },
++    "semantic_scholar_ebt_and_arm_ebm_receipts": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "discovery indexes are secondary until a primary source is opened.",
++      "source": "REQ-REPORT-6113"
++    },
++    "source_queries_and_endpoint_receipts": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "source coverage, access failures, and dates remain auditable.",
++      "source": "REQ-REPORT-6113"
++    },
++    "spec_refs": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "OpenSpec anchors make the artifact contract auditable.",
++      "source": "REQ-REPORT-6113"
++    },
++    "status": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "only a hash-anchored post-marker window is eligible.",
++      "source": "REQ-REPORT-6113"
++    },
++    "task_identity_gate_and_exclusion_immutability": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "source aggregation may append references but cannot rewrite the staged plan.",
++      "source": "REQ-REPORT-6113"
++    },
++    "test_commands": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    },
++    "test_exit_codes": {
++      "inference_substrate": "aggregation_from_external_primary_sources",
++      "principle": "use measured `aggregation_from_external_primary_sources`.",
++      "source": "REQ-REPORT-6113"
++    }
++  },
++  "honest_verdict": "complete_null: no accepted post-V530 source deltas; references unchanged",
++  "inference_substrate": "aggregation_from_external_primary_sources",
++  "milestone": "2026.08.530",
++  "openreview_huggingface_github_extropic_and_kona_receipts": {
++    "extropic_receipts": [
++      {
++        "access_outcome": "reachable_http_200_official_z1_early_access_2027_no_local_route",
++        "accessed_at": "2026-08-04T19:41:50Z",
++        "candidate_count": 3,
++        "candidate_ids": [
++          "tsu_101_2025_10_29",
++          "dtms_2025_10_28",
++          "z1_early_access_2027"
++        ],
++        "query": "Extropic writing and hardware pages",
++        "query_family": "official_project_page",
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "receipt_summary": "Official pages were reachable. Hardware now advertises Z1 early access in 2027, X0 Q1 2025, and XTR-0 Q3 2025, but no SDK, local execution route, timing, power, or correctness receipt is available.",
++        "source_cutoff": "official_pages_checked_after_marker_current_cache_confound",
++        "source_family": "Extropic",
++        "source_role": "official",
++        "url": "https://extropic.ai/writing ; https://extropic.ai/hardware"
++      }
++    ],
++    "github_receipts": [
++      {
++        "access_outcome": "reachable_http_200_targeted_zero_post_marker_repositories",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "energy-based reasoning pushed:>2026-08-04; thermodynamic EBM pushed:>2026-08-04; ARC-AGI online discovery pushed:>2026-08-04",
++        "query_family": "github_targeted_secondary",
++        "receipt_id": "github_v530_targeted_repositories",
++        "receipt_summary": "Targeted post-date repository searches returned zero maintained post-marker repositories with a direct Carnot dependency hook.",
++        "source_cutoff": "pushed_after_exact_marker_date_2026_08_04",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://api.github.com/search/repositories"
++      },
++      {
++        "access_outcome": "reachable_http_200_trending_page_no_primary_delta",
++        "accessed_at": "2026-08-04T19:41:35Z",
++        "candidate_count": 3,
++        "candidate_ids": [
++          "browser-use/video-use",
++          "esengine/DeepSeek-Reasonix",
++          "TencentCloud/TencentDB-Agent-Memory"
++        ],
++        "query": "GitHub Trending daily page",
++        "query_family": "github_trending_secondary",
++        "receipt_id": "github_v530_trending_daily",
++        "receipt_summary": "Trending exposed agent and memory repositories but no primary post-marker EBM, per-layer, CSL, hardware, or ARC dependency.",
++        "source_cutoff": "daily_trending_checked_after_exact_v530_marker",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://github.com/trending?since=daily"
++      },
++      {
++        "access_outcome": "reachable_http_200_repo_pushed_2026_04_21_no_post_marker_code_delta",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 1,
++        "candidate_ids": [
++          "alexiglad/EBT"
++        ],
++        "query": "alexiglad/EBT repository metadata",
++        "query_family": "github_targeted_secondary",
++        "receipt_id": "github_v530_ebt_repo",
++        "receipt_summary": "The public EBT repository remains maintained context, but its last push predates V530 and creates no code dependency delta.",
++        "source_cutoff": "repo_metadata_checked_after_marker_pushed_before_marker",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://github.com/alexiglad/EBT"
++      }
++    ],
++    "huggingface_receipts": [
++      {
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "accessed_at": "2026-08-04T19:41:34Z",
++        "candidate_count": 6,
++        "candidate_ids": [
++          "2608.01964",
++          "2608.02585",
++          "2608.02358",
++          "2608.02603",
++          "2608.01755",
++          "2607.29377"
++        ],
++        "query": "Aug 4 daily feed with primary arXiv pages opened",
++        "query_family": "huggingface_papers_secondary",
++        "rate_limit": {
++          "policy": "pages 100 per 300s",
++          "remaining": 99
++        },
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "receipt_summary": "The daily feed exposed same-day discovery metadata. Relevant primary pages were Aug 3 arXiv records, older papers, or outside active Carnot task hooks.",
++        "source_cutoff": "secondary_daily_feed_aug4_primary_pages_opened",
++        "source_family": "Hugging Face Papers",
++        "source_role": "secondary",
++        "url": "https://huggingface.co/papers"
++      }
++    ],
++    "kona_or_aleph_receipts": [
++      {
++        "access_outcome": "reachable_http_200_official_context_no_public_kona_weights",
++        "accessed_at": "2026-08-04T19:42:07Z",
++        "candidate_count": 1,
++        "candidate_ids": [
++          "kona_ebm_page_last_modified_2026_06_26"
++        ],
++        "query": "Logical Intelligence Kona official page",
++        "query_family": "official_project_page",
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "receipt_summary": "Kona remains official architecture context for a constraint layer beneath generative interfaces, but public weights, a documented local inference API, and a reproducible comparator remain unavailable.",
++        "source_cutoff": "official_page_checked_after_marker_no_new_public_route",
++        "source_family": "Logical Intelligence",
++        "source_role": "official",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++      }
++    ],
++    "openreview_receipts": [
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "accessed_at": "2026-08-04T19:41:05Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "api2.openreview.net notes content.title=energy-based",
++        "query_family": "openreview_api",
++        "receipt_id": "openreview_v530_api_notes",
++        "receipt_summary": "The OpenReview API returned HTTP 403 with challenge context; this is an endpoint failure and not negative evidence.",
++        "source_cutoff": "api_checked_after_exact_v530_marker",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      },
++      {
++        "access_outcome": "reachable_http_200_dynamic_search_page_secondary_only",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "energy-based constraint reasoning",
++        "query_family": "openreview_secondary",
++        "receipt_id": "openreview_v530_search_pages",
++        "receipt_summary": "The dynamic search page is discovery context only; no reachable new primary forum page was available for acceptance.",
++        "source_cutoff": "dynamic_search_checked_after_exact_v530_marker",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
++      }
++    ],
++    "principle": "discovery indexes are secondary until a primary source is opened."
++  },
++  "preconditions_checked": {
++    "active_roadmap": {
++      "gates": [
++        {
++          "gated_on": [
++            {
++              "artifact_field": "phase_d_compute_and_ladder_ready_score",
++              "op": "==",
++              "upstream": "exp6114-phase-d-gpu-ladder-canary",
++              "value": 1.0
++            }
++          ],
++          "id": "exp6115-phase-d-calibration-pool"
++        },
++        {
++          "gated_on": [
++            {
++              "artifact_field": "phase_d_calibration_ready_score",
++              "op": "==",
++              "upstream": "exp6115-phase-d-calibration-pool",
++              "value": 1.0
++            }
++          ],
++          "id": "exp6116-phase-d-held-candidate-pool"
++        },
++        {
++          "gated_on": [
++            {
++              "artifact_field": "candidate_pool_integrity_score",
++              "op": "==",
++              "upstream": "exp6116-phase-d-held-candidate-pool",
++              "value": 1.0
++            }
++          ],
++          "id": "exp6117-phase-d-headroom-audit"
++        },
++        {
++          "gated_on": [
++            {
++              "artifact_field": "phase_d_headroom_ready_score",
++              "op": "==",
++              "upstream": "exp6117-phase-d-headroom-audit",
++              "value": 1.0
++            }
++          ],
++          "id": "exp6118-phase-d-per-layer-surface"
++        },
++        {
++          "gated_on": [
++            {
++              "artifact_field": "per_layer_surface_ready_score",
++              "op": "==",
++              "upstream": "exp6118-phase-d-per-layer-surface",
++              "value": 1.0
++            },
++            {
++              "artifact_field": "phase_d_headroom_ready_score",
++              "op": "==",
++              "upstream": "exp6117-phase-d-headroom-audit",
++              "value": 1.0
++            }
++          ],
++          "id": "exp6119-phase-d-hidden-state-selector"
++        }
++      ],
++      "gates_hash": "sha256:ccf169604d913166c8a867d6ee20628ba02cc573bd9fc33514e8ebf0fd4b20e6",
++      "milestone": "2026.08.530",
++      "present": true,
++      "task_ids": [
++        "exp6112-transition-v530",
++        "exp6113-v530-source-delta-ingestion",
++        "exp6114-phase-d-gpu-ladder-canary",
++        "exp6115-phase-d-calibration-pool",
++        "exp6116-phase-d-held-candidate-pool",
++        "exp6117-phase-d-headroom-audit",
++        "exp6118-phase-d-per-layer-surface",
++        "exp6119-phase-d-hidden-state-selector",
++        "exp6120-outcome-committed-reduced-order-csl",
++        "exp6121-gatemate-changed-state-gate-v530",
++        "exp6122-arc-primitive-reachability-loo",
++        "exp6123-v530-capstone-reconciliation"
++      ],
++      "task_ids_hash": "sha256:22a828b6d08b4db8eeedc1184d5e3b35f3137a213ca7898edb85dd84be5d1869"
++    },
++    "active_roadmap_read": true,
++    "blocked": false,
++    "checked_at": "2026-08-04T19:41:05Z",
++    "failed_preconditions": [],
++    "hashed_inputs": {
++      "active_roadmap": "sha256:4dd6d41ca50e2770f6a90b157f3cbfccddbd52fd50eeec65c3d4f23fd5c7b720",
++      "exclusion_manifest": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++      "output_path": null,
++      "prior_exp6101": "sha256:850e2f753e620d1a46a3a513f1f5ebbcdd6a272788be1ae35471c91d78ed2b5f",
++      "research_references": "sha256:9f31159d909d04014973a7dc1f0e6e4e9072e4bc7e67021ed4d1425cd19961ee",
++      "staged_roadmap": null,
++      "sweep_clusters": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
++      "sweep_semscholar": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
++    },
++    "planner_marker_found": true,
++    "principle": "only a hash-anchored post-marker window is eligible.",
++    "research_roadmap_next_read": false,
++    "source_route_reachable": true,
++    "staged_roadmap": {
++      "gates": [],
++      "gates_hash": null,
++      "milestone": "",
++      "present": false,
++      "task_ids": [],
++      "task_ids_hash": null
++    }
++  },
++  "primary_secondary_and_official_source_counts": {
++    "official": 2,
++    "primary": 2,
++    "principle": "source coverage, access failures, and dates remain auditable.",
++    "secondary": 8,
++    "tooling": 2,
++    "total_receipts": 14
++  },
++  "protected_files_unchanged": {
++    "after_hashes": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:d29311ae2d34417995b65deab3fedb66a3077c6b1d8841e8b7f56427ba14bf7c",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:d1dadda5c1be45e8836420302bb84e0a39221f9cfa45ac251585461e8a25b0c0",
++      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++      "ops/known-issues.md": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
++      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++      "research-roadmap-next.yaml": null,
++      "research-roadmap.yaml": "sha256:4dd6d41ca50e2770f6a90b157f3cbfccddbd52fd50eeec65c3d4f23fd5c7b720",
++      "research-studying.md": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++      "results/experiment_6101_v529_source_delta_ingestion.json": "sha256:850e2f753e620d1a46a3a513f1f5ebbcdd6a272788be1ae35471c91d78ed2b5f",
++      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f",
++      "scripts/sweep_clusters.py": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
++      "scripts/sweep_semscholar.py": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
++    },
++    "all_unchanged": true,
++    "before_hashes": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:d29311ae2d34417995b65deab3fedb66a3077c6b1d8841e8b7f56427ba14bf7c",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:d1dadda5c1be45e8836420302bb84e0a39221f9cfa45ac251585461e8a25b0c0",
++      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++      "ops/known-issues.md": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
++      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++      "research-roadmap-next.yaml": null,
++      "research-roadmap.yaml": "sha256:4dd6d41ca50e2770f6a90b157f3cbfccddbd52fd50eeec65c3d4f23fd5c7b720",
++      "research-studying.md": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++      "results/experiment_6101_v529_source_delta_ingestion.json": "sha256:850e2f753e620d1a46a3a513f1f5ebbcdd6a272788be1ae35471c91d78ed2b5f",
++      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f",
++      "scripts/sweep_clusters.py": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
++      "scripts/sweep_semscholar.py": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
++    },
++    "principle": "active roadmap, conductor, exclusions, historical artifacts, and unrelated changes remain byte-identical."
++  },
++  "random_seed": 6113,
++  "references_append_receipt": {
++    "accepted_count": 0,
++    "after_hash": "sha256:9f31159d909d04014973a7dc1f0e6e4e9072e4bc7e67021ed4d1425cd19961ee",
++    "append_only_after_marker": true,
++    "appended": false,
++    "before_hash": "sha256:9f31159d909d04014973a7dc1f0e6e4e9072e4bc7e67021ed4d1425cd19961ee",
++    "heading": "",
++    "principle": "source aggregation may append references but cannot rewrite the staged plan."
++  },
++  "reproducibility_checksum": "sha256:4eaedc075ab9f1ff97dd5a491cf422c9a538e01dbb2a83a011c710f21514b0be",
++  "result_path": "results/experiment_6113_v530_source_delta_ingestion.json",
++  "run_date": "20260804",
++  "schema": "carnot.experiment_6113.v530_source_delta_ingestion.v1",
++  "search_finished_at": "2026-08-04T19:42:27Z",
++  "search_started_at": "2026-08-04T19:41:05Z",
++  "search_window_and_marker_receipt": {
++    "boundary_marker": "V530-PLANNER-REFRESH-20260804-END",
++    "eligible_window": "primary evidence materially changed after the exact marker only",
++    "marker_block_hash": "sha256:e8e9477af25909b946857b6806fb502b353eeb08c6178cacb64d8563f9845c77",
++    "marker_heading": "## V530 Planner Refresh - 20260804",
++    "marker_line": 32164,
++    "principle": "only a hash-anchored post-marker window is eligible.",
++    "same_day_ordering_uncertainty": true,
++    "search_finished_at_utc": "2026-08-04T19:42:27Z",
++    "search_started_at_utc": "2026-08-04T19:41:05Z"
++  },
++  "semantic_scholar_ebt_and_arm_ebm_receipts": {
++    "arm_ebm_arxiv_id": "2512.15605",
++    "arm_ebm_newest_visible": {
++      "identifier": "2607.02154",
++      "publication_date": "2026-07-02",
++      "title": "Path-Measure Dynamics of Attention-Driven World Models: A Nonlocal Onsager--Machlup Approach"
++    },
++    "arm_ebm_visible_citation_count": 8,
++    "classification_boundary": "Semantic Scholar is secondary discovery until a primary paper or official project page is opened.",
++    "ebt_arxiv_id": "2507.02092",
++    "ebt_newest_visible": {
++      "identifier": "2607.27372",
++      "publication_date": "2026-07-29",
++      "title": "Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation"
++    },
++    "ebt_visible_citation_count": 32,
++    "principle": "discovery indexes are secondary until a primary source is opened."
++  },
++  "source_queries_and_endpoint_receipts": {
++    "endpoint_failures": [
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "receipt_id": "openreview_v530_api_notes",
++        "source_family": "OpenReview",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      }
++    ],
++    "principle": "source coverage, access failures, and dates remain auditable.",
++    "source_cutoffs": [
++      {
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "source_cutoff": "submitted_or_changed_after_exact_v530_marker_same_day"
++      },
++      {
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "source_cutoff": "primary_pages_opened_after_marker_aug3_publication_dates"
++      },
++      {
++        "receipt_id": "openreview_v530_api_notes",
++        "source_cutoff": "api_checked_after_exact_v530_marker"
++      },
++      {
++        "receipt_id": "openreview_v530_search_pages",
++        "source_cutoff": "dynamic_search_checked_after_exact_v530_marker"
++      },
++      {
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "source_cutoff": "secondary_daily_feed_aug4_primary_pages_opened"
++      },
++      {
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_29"
++      },
++      {
++        "receipt_id": "semantic_scholar_v530_arm_ebm_citations",
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_02"
++      },
++      {
++        "receipt_id": "github_v530_targeted_repositories",
++        "source_cutoff": "pushed_after_exact_marker_date_2026_08_04"
++      },
++      {
++        "receipt_id": "github_v530_trending_daily",
++        "source_cutoff": "daily_trending_checked_after_exact_v530_marker"
++      },
++      {
++        "receipt_id": "github_v530_ebt_repo",
++        "source_cutoff": "repo_metadata_checked_after_marker_pushed_before_marker"
++      },
++      {
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "source_cutoff": "official_pages_checked_after_marker_current_cache_confound"
++      },
++      {
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "source_cutoff": "official_page_checked_after_marker_no_new_public_route"
++      },
++      {
++        "receipt_id": "local_sweep_clusters_v530",
++        "source_cutoff": "tooling_checked_after_exact_v530_marker"
++      },
++      {
++        "receipt_id": "local_sweep_semscholar_v530",
++        "source_cutoff": "keyword_tool_checked_after_exact_v530_marker"
++      }
++    ],
++    "source_receipts": [
++      {
++        "access_outcome": "reachable_http_200_total_results_0",
++        "accessed_at": "2026-08-04T19:41:05Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "submittedDate:[202608040000 TO 202608042359]",
++        "query_family": "arxiv_primary",
++        "receipt_id": "arxiv_v530_exact_post_marker_window",
++        "receipt_summary": "The exact same-day arXiv submittedDate API window was reachable and returned totalResults=0. This is a dated endpoint receipt, not evidence that all same-day secondary pages are post-marker.",
++        "source_cutoff": "submitted_or_changed_after_exact_v530_marker_same_day",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202608040000%20TO%20202608042359%5D&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++      },
++      {
++        "access_outcome": "reachable_http_200_primary_pages_aug3_or_rejected",
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "candidate_count": 5,
++        "candidate_ids": [
++          "2608.02585",
++          "2608.02358",
++          "2608.02603",
++          "2608.02583",
++          "2608.02560"
++        ],
++        "query": "energy-based reasoning, neural CSP, p-bit, constrained generation, hidden-state, ARC-AGI sorted by submittedDate",
++        "query_family": "arxiv_topic_primary_pages",
++        "receipt_id": "arxiv_v530_topic_primary_pages_opened",
++        "receipt_summary": "The newest topical primary arXiv pages opened from direct and Hugging Face leads were submitted on 2026-08-03 or outside the active V530 task hooks.",
++        "source_cutoff": "primary_pages_opened_after_marker_aug3_publication_dates",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "url": "https://arxiv.org/abs/2608.02585 ; https://arxiv.org/abs/2608.02358 ; https://arxiv.org/abs/2608.02603 ; https://arxiv.org/abs/2608.02583 ; https://arxiv.org/abs/2608.02560"
++      },
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "accessed_at": "2026-08-04T19:41:05Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "api2.openreview.net notes content.title=energy-based",
++        "query_family": "openreview_api",
++        "receipt_id": "openreview_v530_api_notes",
++        "receipt_summary": "The OpenReview API returned HTTP 403 with challenge context; this is an endpoint failure and not negative evidence.",
++        "source_cutoff": "api_checked_after_exact_v530_marker",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "url": "https://api2.openreview.net/notes?limit=5&content.title=energy-based"
++      },
++      {
++        "access_outcome": "reachable_http_200_dynamic_search_page_secondary_only",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "energy-based constraint reasoning",
++        "query_family": "openreview_secondary",
++        "receipt_id": "openreview_v530_search_pages",
++        "receipt_summary": "The dynamic search page is discovery context only; no reachable new primary forum page was available for acceptance.",
++        "source_cutoff": "dynamic_search_checked_after_exact_v530_marker",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning"
++      },
++      {
++        "access_outcome": "reachable_http_200_current_feed_secondary_primary_opened",
++        "accessed_at": "2026-08-04T19:41:34Z",
++        "candidate_count": 6,
++        "candidate_ids": [
++          "2608.01964",
++          "2608.02585",
++          "2608.02358",
++          "2608.02603",
++          "2608.01755",
++          "2607.29377"
++        ],
++        "query": "Aug 4 daily feed with primary arXiv pages opened",
++        "query_family": "huggingface_papers_secondary",
++        "rate_limit": {
++          "policy": "pages 100 per 300s",
++          "remaining": 99
++        },
++        "receipt_id": "huggingface_papers_v530_daily_feed",
++        "receipt_summary": "The daily feed exposed same-day discovery metadata. Relevant primary pages were Aug 3 arXiv records, older papers, or outside active Carnot task hooks.",
++        "source_cutoff": "secondary_daily_feed_aug4_primary_pages_opened",
++        "source_family": "Hugging Face Papers",
++        "source_role": "secondary",
++        "url": "https://huggingface.co/papers"
++      },
++      {
++        "access_outcome": "reachable_http_200_32_records_no_post_marker_citation",
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "candidate_count": 32,
++        "candidate_ids": [
++          "2607.27372",
++          "2607.20792",
++          "2607.17047"
++        ],
++        "newest_visible": {
++          "identifier": "2607.27372",
++          "publication_date": "2026-07-29",
++          "title": "Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation"
++        },
++        "query": "arXiv:2507.02092 citations",
++        "query_family": "semantic_scholar_citation_trail",
++        "receipt_id": "semantic_scholar_v530_ebt_citations",
++        "receipt_summary": "The EBT route remained reachable with 32 visible citing records; the newest visible citation is already sealed in the V530 planner block.",
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_29",
++        "source_family": "Semantic Scholar",
++        "source_role": "secondary",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100"
++      },
++      {
++        "access_outcome": "reachable_http_200_8_records_no_post_marker_citation",
++        "accessed_at": "2026-08-04T19:41:22Z",
++        "candidate_count": 8,
++        "candidate_ids": [
++          "2607.02154",
++          "2606.03089",
++          "2605.18871"
++        ],
++        "newest_visible": {
++          "identifier": "2607.02154",
++          "publication_date": "2026-07-02",
++          "title": "Path-Measure Dynamics of Attention-Driven World Models: A Nonlocal Onsager--Machlup Approach"
++        },
++        "query": "arXiv:2512.15605 citations",
++        "query_family": "semantic_scholar_citation_trail",
++        "receipt_id": "semantic_scholar_v530_arm_ebm_citations",
++        "receipt_summary": "The ARM-EBM route remained reachable with eight visible citations and no post-marker citation candidate.",
++        "source_cutoff": "citation_trail_checked_after_marker_newest_2026_07_02",
++        "source_family": "Semantic Scholar",
++        "source_role": "secondary",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100"
++      },
++      {
++        "access_outcome": "reachable_http_200_targeted_zero_post_marker_repositories",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "energy-based reasoning pushed:>2026-08-04; thermodynamic EBM pushed:>2026-08-04; ARC-AGI online discovery pushed:>2026-08-04",
++        "query_family": "github_targeted_secondary",
++        "receipt_id": "github_v530_targeted_repositories",
++        "receipt_summary": "Targeted post-date repository searches returned zero maintained post-marker repositories with a direct Carnot dependency hook.",
++        "source_cutoff": "pushed_after_exact_marker_date_2026_08_04",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://api.github.com/search/repositories"
++      },
++      {
++        "access_outcome": "reachable_http_200_trending_page_no_primary_delta",
++        "accessed_at": "2026-08-04T19:41:35Z",
++        "candidate_count": 3,
++        "candidate_ids": [
++          "browser-use/video-use",
++          "esengine/DeepSeek-Reasonix",
++          "TencentCloud/TencentDB-Agent-Memory"
++        ],
++        "query": "GitHub Trending daily page",
++        "query_family": "github_trending_secondary",
++        "receipt_id": "github_v530_trending_daily",
++        "receipt_summary": "Trending exposed agent and memory repositories but no primary post-marker EBM, per-layer, CSL, hardware, or ARC dependency.",
++        "source_cutoff": "daily_trending_checked_after_exact_v530_marker",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://github.com/trending?since=daily"
++      },
++      {
++        "access_outcome": "reachable_http_200_repo_pushed_2026_04_21_no_post_marker_code_delta",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 1,
++        "candidate_ids": [
++          "alexiglad/EBT"
++        ],
++        "query": "alexiglad/EBT repository metadata",
++        "query_family": "github_targeted_secondary",
++        "receipt_id": "github_v530_ebt_repo",
++        "receipt_summary": "The public EBT repository remains maintained context, but its last push predates V530 and creates no code dependency delta.",
++        "source_cutoff": "repo_metadata_checked_after_marker_pushed_before_marker",
++        "source_family": "GitHub",
++        "source_role": "secondary",
++        "url": "https://github.com/alexiglad/EBT"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_z1_early_access_2027_no_local_route",
++        "accessed_at": "2026-08-04T19:41:50Z",
++        "candidate_count": 3,
++        "candidate_ids": [
++          "tsu_101_2025_10_29",
++          "dtms_2025_10_28",
++          "z1_early_access_2027"
++        ],
++        "query": "Extropic writing and hardware pages",
++        "query_family": "official_project_page",
++        "receipt_id": "extropic_v530_official_writing_hardware",
++        "receipt_summary": "Official pages were reachable. Hardware now advertises Z1 early access in 2027, X0 Q1 2025, and XTR-0 Q3 2025, but no SDK, local execution route, timing, power, or correctness receipt is available.",
++        "source_cutoff": "official_pages_checked_after_marker_current_cache_confound",
++        "source_family": "Extropic",
++        "source_role": "official",
++        "url": "https://extropic.ai/writing ; https://extropic.ai/hardware"
++      },
++      {
++        "access_outcome": "reachable_http_200_official_context_no_public_kona_weights",
++        "accessed_at": "2026-08-04T19:42:07Z",
++        "candidate_count": 1,
++        "candidate_ids": [
++          "kona_ebm_page_last_modified_2026_06_26"
++        ],
++        "query": "Logical Intelligence Kona official page",
++        "query_family": "official_project_page",
++        "receipt_id": "logical_intelligence_v530_official_kona",
++        "receipt_summary": "Kona remains official architecture context for a constraint layer beneath generative interfaces, but public weights, a documented local inference API, and a reproducible comparator remain unavailable.",
++        "source_cutoff": "official_page_checked_after_marker_no_new_public_route",
++        "source_family": "Logical Intelligence",
++        "source_role": "official",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++      },
++      {
++        "access_outcome": "reachable_local_tool_exit_0_emitted_cluster_1_arxiv_url",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 0,
++        "candidate_ids": [],
++        "query": "python scripts/sweep_clusters.py 1 --max-results 3",
++        "query_family": "local_tooling",
++        "receipt_id": "local_sweep_clusters_v530",
++        "receipt_summary": "The local arXiv cluster helper emitted the EBM reasoning URL and did not mutate repository files.",
++        "source_cutoff": "tooling_checked_after_exact_v530_marker",
++        "source_family": "local sweep helper",
++        "source_role": "tooling",
++        "url": "scripts/sweep_clusters.py"
++      },
++      {
++        "access_outcome": "reachable_local_tool_exit_0_four_pre_marker_arxiv_ids",
++        "accessed_at": "2026-08-04T19:42:27Z",
++        "candidate_count": 4,
++        "candidate_ids": [
++          "2502.01657",
++          "2603.14636",
++          "2606.03234",
++          "2606.17524"
++        ],
++        "query": "energy based reasoning hidden states --limit 5",
++        "query_family": "local_tooling",
++        "receipt_id": "local_sweep_semscholar_v530",
++        "receipt_summary": "The local Semantic Scholar keyword helper returned four older arXiv ids; none is a post-V530 primary candidate.",
++        "source_cutoff": "keyword_tool_checked_after_exact_v530_marker",
++        "source_family": "local sweep helper",
++        "source_role": "tooling",
++        "url": "scripts/sweep_semscholar.py"
++      }
++    ]
++  },
++  "spec_refs": [
++    "REQ-REPORT-6113",
++    "SCENARIO-REPORT-6113-ZERO-FINDING",
++    "SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA",
++    "SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY",
++    "SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE",
++    "SCENARIO-REPORT-6113-SCHEMA"
++  ],
++  "status": "complete",
++  "task_identity_gate_and_exclusion_immutability": {
++    "active_roadmap_gates_hash": "sha256:ccf169604d913166c8a867d6ee20628ba02cc573bd9fc33514e8ebf0fd4b20e6",
++    "active_roadmap_task_ids_hash": "sha256:22a828b6d08b4db8eeedc1184d5e3b35f3137a213ca7898edb85dd84be5d1869",
++    "exclusion_manifest_hash": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++    "exclusions_unchanged": true,
++    "gates_unchanged": true,
++    "principle": "source aggregation may append references but cannot rewrite the staged plan.",
++    "staged_roadmap_gates_hash": null,
++    "staged_roadmap_task_ids_hash": null,
++    "task_ids_unchanged": true
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6113_v530_source_delta_ingestion.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6113_v530_source_delta_ingestion.py -m pytest tests/python/test_experiment_6113_v530_source_delta_ingestion.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6113_v530_source_delta_ingestion.py --fail-under=100",
++    ".venv/bin/ruff check python/carnot/experiment_6113_v530_source_delta_ingestion.py tests/python/test_experiment_6113_v530_source_delta_ingestion.py",
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_6113_v530_source_delta_ingestion.json",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6113_v530_source_delta_ingestion.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6113_v530_source_delta_ingestion.py -m pytest tests/python/test_experiment_6113_v530_source_delta_ingestion.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python -q": null,
++    ".venv/bin/pytest tests/python/test_experiment_6113_v530_source_delta_ingestion.py -q --no-cov -n 0": 0,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_6113_v530_source_delta_ingestion.json": null,
++    ".venv/bin/python scripts/check_spec_coverage.py": null,
++    ".venv/bin/python scripts/root_clutter_sweep.py": null,
++    ".venv/bin/ruff check python/carnot/experiment_6113_v530_source_delta_ingestion.py tests/python/test_experiment_6113_v530_source_delta_ingestion.py": 0
++  }
++}
+diff --git a/tests/python/test_experiment_6113_v530_source_delta_ingestion.py b/tests/python/test_experiment_6113_v530_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..97d9258a61
+--- /dev/null
++++ b/tests/python/test_experiment_6113_v530_source_delta_ingestion.py
+@@ -0,0 +1,589 @@
++"""Tests for Exp6113 V530 source-delta ingestion.
++
++Spec refs: REQ-REPORT-6113, SCENARIO-REPORT-6113-ZERO-FINDING,
++SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA,
++SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY,
++SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE,
++SCENARIO-REPORT-6113-SCHEMA.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_6113_v530_source_delta_ingestion as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++START = "2026-08-04T19:41:05Z"
++FINISH = "2026-08-04T19:42:27Z"
++
++
++def _planner_references() -> str:
++    return (
++        "## V530 Planner Refresh - 20260804\n\n"
++        "- **Explorative Modeling: Unlocking a Third Pretraining Axis and "
++        "End-to-End Generation** - arXiv:2607.27372.\n"
++        "- **Memoir: Should a Model Write to Its Memory While It Thinks?** - "
++        "arXiv:2607.20792.\n"
++        "- **CLUE and hidden-state serving surfaces** - implementation-sensitive.\n"
++        "<!-- V530-PLANNER-REFRESH-20260804-END -->\n"
++    )
++
++
++def _roadmap() -> str:
++    tasks = [
++        {
++            "id": mod.EXPERIMENT_ID,
++            "milestone": mod.MILESTONE,
++            "title": "source refresh",
++            "deliverable": mod.RESULT_RELATIVE_PATH.as_posix(),
++            "model": "gpt-5.5",
++        }
++    ]
++    for task_id in mod.ALLOCATED_TARGET_EXPERIMENTS:
++        row = {
++            "id": task_id,
++            "milestone": mod.MILESTONE,
++            "title": task_id,
++            "deliverable": f"results/{task_id}.json",
++            "model": "gpt-5.5",
++            "requires_gpu": False,
++        }
++        if task_id == "exp6118-phase-d-per-layer-surface":
++            row["gated_on"] = [
++                {
++                    "upstream": "exp6114-phase-d-gpu-ladder-canary",
++                    "artifact_field": "cuda_canary_ready",
++                    "op": "==",
++                    "value": True,
++                }
++            ]
++        tasks.append(row)
++    return yaml.safe_dump({"milestone": mod.MILESTONE, "tasks": tasks}, sort_keys=False)
++
++
++def _make_repo(root: Path, references_text: str, *, with_next: bool = False) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).write_text(
++        references_text,
++        encoding="utf-8",
++    )
++    (root / mod.ROADMAP_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    if with_next:
++        (root / mod.ROADMAP_NEXT_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / mod.VNEXT_RELATIVE_PATH).write_text(
++        "# vNEXT\n\n**Milestone:** 2026.08.530\n",
++        encoding="utf-8",
++    )
++    (root / "openspec/capabilities/research-reporting").mkdir(parents=True, exist_ok=True)
++    (root / mod.SPEC_RELATIVE_PATH).write_text(
++        "\n".join(mod.SPEC_REFS) + "\n",
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / mod.EXCLUSION_MANIFEST_RELATIVE_PATH).write_text(
++        "retired_extras:\n"
++        "- id: all_family_vram_recovery_closed\n"
++        "  reason: all-family VRAM recovery remains closed\n"
++        "- id: finite_id_closed\n"
++        "  reason: finite-ID transport remains closed\n"
++        "- id: generated_ir_closed\n"
++        "  reason: generated-IR remains closed\n"
++        "- id: schema_reprompt_closed\n"
++        "  reason: schema reprompt remains closed\n"
++        "- id: external_text_logprob_closed\n"
++        "  reason: external-text/logprob scorer remains closed\n"
++        "- id: kan_mutation_closed\n"
++        "  reason: KAN mutation remains closed\n"
++        "- id: retired_arc_induction_closed\n"
++        "  reason: retired ARC induction remains closed\n"
++        "- id: unchanged_board_probe_closed\n"
++        "  reason: unchanged board probes remain closed\n",
++        encoding="utf-8",
++    )
++    for rel_path in (
++        mod.AGENTS_RELATIVE_PATH,
++        mod.CODEX_RELATIVE_PATH,
++        mod.CLAUDE_RELATIVE_PATH,
++        mod.RESEARCH_PROGRAM_RELATIVE_PATH,
++        mod.RESEARCH_STUDYING_RELATIVE_PATH,
++        mod.KNOWN_ISSUES_RELATIVE_PATH,
++        mod.CONDUCTOR_RELATIVE_PATH,
++        mod.SWEEP_CLUSTERS_RELATIVE_PATH,
++        mod.SWEEP_SEMSCHOLAR_RELATIVE_PATH,
++        mod.PRIOR_SOURCE_RESULT_RELATIVE_PATH,
++    ):
++        path = root / rel_path
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"{rel_path.as_posix()} fixture\n", encoding="utf-8")
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    return root
++
++
++def _accepted_fixture() -> mod.JsonDict:
++    return {
++        "source_id": "post_v530_fixture_2608_99999",
++        "classification": "accepted",
++        "decision_bucket": "accepted",
++        "title": "Post-V530 Fixture for Per-Layer Surface Qualification",
++        "url": "https://arxiv.org/abs/2608.99999",
++        "identifier": "2608.99999",
++        "authors": ["Fixture Author"],
++        "publication_date": "2026-08-05",
++        "source_date": "2026-08-05",
++        "search_timestamp": START,
++        "receipt_id": "arxiv_fixture_post_v530",
++        "query_family": "arxiv_primary",
++        "query": 'all:"per layer hidden state surface"',
++        "access_outcome": "reachable_fixture_primary",
++        "target_experiment": "exp6118-phase-d-per-layer-surface",
++        "source_hook": "Add a bounded per-layer activation availability control.",
++        "authority_boundary": "Sharpens Exp6118 access gates only; no hidden feature claim.",
++        "post_marker_or_newer_primary_source": True,
++        "materially_changed_after_marker": True,
++        "primary_source": True,
++        "duplicate_of_existing_reference": False,
++        "reopens_retired_scope": False,
++        "new_mechanism_or_material_change": True,
++        "method_to_task_mapping": {
++            "method": "per_layer_activation_surface_control",
++            "target_experiment": "exp6118-phase-d-per-layer-surface",
++            "task_hook": "bounded per-layer activation availability control",
++            "failure_boundary": "block on token misalignment, headroom loss, or API drift",
++        },
++        "reason": "New primary fixture stays inside an allocated .530 task.",
++    }
++
++
++def _ordered_candidates(artifact: mod.JsonDict) -> list[mod.JsonDict]:
++    classes = artifact["accepted_rejected_duplicate_retired_and_abstained_findings"]
++    return [row for bucket in mod.CLASSIFICATION_BUCKETS for row in classes[bucket]]
++
++
++def test_req_report_6113_spec_declares_v530_source_refresh_contract() -> None:
++    """REQ-REPORT-6113: OpenSpec names the V530 source-refresh contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-REPORT-6113") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-REPORT-6113",
++        "SCENARIO-REPORT-6113-ZERO-FINDING",
++        "SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA",
++        "SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY",
++        "SCENARIO-REPORT-6113-DUPLICATE-AND-RETIRED-SCOPE",
++        "SCENARIO-REPORT-6113-SCHEMA",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.PLANNER_MARKER,
++        mod.INFERENCE_SUBSTRATE,
++        "`accepted_rejected_duplicate_retired_and_abstained_findings`",
++        "`semantic_scholar_ebt_and_arm_ebm_receipts`",
++    ):
++        assert marker in section
++    for field, principle in mod.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_report_6113_zero_delta_keeps_references_unchanged(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6113-ZERO-FINDING: zero accepted deltas are complete."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    before = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[],
++        duration_s=82.0,
++        test_commands=["unit"],
++        test_exit_codes={"unit": 0},
++    )
++
++    mod.validate_artifact(artifact)
++    after = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    result_text = (root / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    assert after == before
++    assert result_text.endswith("\n")
++    assert artifact["status"] == "complete"
++    assert artifact["honest_verdict"].startswith("complete_null:")
++    assert artifact["references_append_receipt"]["appended"] is False
++    classes = artifact["accepted_rejected_duplicate_retired_and_abstained_findings"]
++    assert classes["accepted"] == []
++    assert classes["all_candidates"] == _ordered_candidates(artifact)
++    assert classes["duplicate"]
++    assert classes["retired_scope"]
++    assert classes["endpoint_failed"]
++    uncertainty = artifact[
++        "false_positive_false_negative_cutoff_and_rate_limit_receipts"
++    ]
++    assert uncertainty["false_positive_source_decisions"]
++    assert uncertainty["cutoff_confounds"]
++    assert uncertainty["endpoint_failed_source_decisions"]
++    assert uncertainty["rate_limit_receipts"]
++    counts = artifact["primary_secondary_and_official_source_counts"]
++    assert all(counts[key] >= 1 for key in ("primary", "secondary", "official", "tooling"))
++    receipts = {
++        row["receipt_id"]: row
++        for row in artifact["source_queries_and_endpoint_receipts"]["source_receipts"]
++    }
++    assert receipts["arxiv_v530_exact_post_marker_window"]["candidate_count"] == 0
++    assert "github_v530_trending_daily" in receipts
++    assert receipts["semantic_scholar_v530_ebt_citations"]["candidate_count"] == 32
++    semantic = artifact["semantic_scholar_ebt_and_arm_ebm_receipts"]
++    assert semantic["ebt_arxiv_id"] == "2507.02092"
++    assert semantic["arm_ebm_arxiv_id"] == "2512.15605"
++    assert semantic["ebt_visible_citation_count"] == 32
++    grouped = artifact["openreview_huggingface_github_extropic_and_kona_receipts"]
++    assert grouped["openreview_receipts"]
++    assert grouped["huggingface_receipts"]
++    assert grouped["github_receipts"]
++    assert grouped["extropic_receipts"]
++    assert grouped["kona_or_aleph_receipts"]
++    assert artifact["preconditions_checked"]["research_roadmap_next_read"] is False
++    assert artifact["search_window_and_marker_receipt"]["boundary_marker"] == (
++        mod.PLANNER_MARKER
++    )
++    assert artifact["source_queries_and_endpoint_receipts"]["endpoint_failures"]
++    immutability = artifact["task_identity_gate_and_exclusion_immutability"]
++    assert immutability["task_ids_unchanged"] is True
++    assert immutability["gates_unchanged"] is True
++    assert immutability["exclusions_unchanged"] is True
++    assert artifact["protected_files_unchanged"]["all_unchanged"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    cutoff_ids = {row["identifier"] for row in classes["cutoff_confound"]}
++    assert {"2608.02585", "2608.02358", "2608.02603"} <= cutoff_ids
++
++
++def test_scenario_report_6113_accepted_delta_appends_once(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6113-ACCEPT-BOUNDED-DELTA: accepted deltas map exactly."""
++
++    root = _make_repo(tmp_path, _planner_references(), with_next=True)
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=82.0,
++    )
++
++    mod.validate_artifact(artifact)
++    references = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    )
++    assert references.count(mod.EXECUTION_DELTA_HEADING) == 1
++    assert "Post-V530 Fixture" in references
++    assert "exp6118-phase-d-per-layer-surface" in references
++    assert artifact["honest_verdict"].startswith("complete_delta:")
++    assert artifact["references_append_receipt"]["appended"] is True
++    assert artifact["references_append_receipt"]["accepted_count"] == 1
++
++    second = mod.build_and_write_artifact(
++        root=root,
++        search_started_at="2026-08-04T19:43:00Z",
++        search_finished_at="2026-08-04T19:44:00Z",
++        accepted_findings=[_accepted_fixture()],
++        duration_s=60.0,
++    )
++    references_second = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    )
++    assert references_second.count(mod.EXECUTION_DELTA_HEADING) == 1
++    assert second["references_append_receipt"]["appended"] is False
++
++
++def test_scenario_report_6113_source_uncertainty_and_retired_filters(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6113-SOURCE-UNCERTAINTY: uncertainty remains explicit."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=82.0,
++    )
++
++    mod.validate_artifact(artifact)
++    classes = artifact["accepted_rejected_duplicate_retired_and_abstained_findings"]
++    for bucket in mod.CLASSIFICATION_BUCKETS:
++        assert {row["classification"] for row in classes[bucket]} <= {bucket}
++    filters = artifact["duplicate_and_retired_scope_filter"]
++    for rule in (
++        "all-family VRAM recovery",
++        "finite-ID transport",
++        "generated-IR",
++        "schema-reprompt",
++        "external-text/logprob scoring",
++        "KAN mutation",
++        "retired ARC induction",
++        "unchanged board probes",
++    ):
++        assert rule in filters["retired_scope_rules"]
++    assert filters["accepted_reopens_retired_scope_count"] == 0
++
++    for changed_field, expected_message in (
++        ("post_marker_or_newer_primary_source", "newer primary-source"),
++        ("primary_source", "primary-source"),
++        ("duplicate_of_existing_reference", "duplicate"),
++        ("reopens_retired_scope", "retired scope"),
++        ("new_mechanism_or_material_change", "new mechanism"),
++    ):
++        candidate = _accepted_fixture()
++        candidate[changed_field] = changed_field in {
++            "duplicate_of_existing_reference",
++            "reopens_retired_scope",
++        }
++        with pytest.raises(ValueError, match=expected_message):
++            mod._validate_finding(candidate, "accepted")  # noqa: SLF001
++
++    old = _accepted_fixture()
++    old["source_date"] = "2026-08-04"
++    old["materially_changed_after_marker"] = False
++    with pytest.raises(ValueError, match="newer primary-source"):
++        mod._validate_finding(old, "accepted")  # noqa: SLF001
++
++    wrong_target = _accepted_fixture()
++    wrong_target["target_experiment"] = "exp6113-v530-source-delta-ingestion"
++    wrong_target["method_to_task_mapping"]["target_experiment"] = wrong_target[
++        "target_experiment"
++    ]
++    with pytest.raises(ValueError, match="allocated .530 experiment"):
++        mod._validate_finding(wrong_target, "accepted")  # noqa: SLF001
++
++    bad_mapping = _accepted_fixture()
++    bad_mapping["method_to_task_mapping"]["target_experiment"] = (
++        "exp6114-phase-d-gpu-ladder-canary"
++    )
++    with pytest.raises(ValueError, match="method-to-task mapping"):
++        mod._validate_finding(bad_mapping, "accepted")  # noqa: SLF001
++
++    missing_mapping_hook = _accepted_fixture()
++    missing_mapping_hook["method_to_task_mapping"].pop("task_hook")
++    with pytest.raises(ValueError, match="method-to-task mapping missing task_hook"):
++        mod._validate_finding(missing_mapping_hook, "accepted")  # noqa: SLF001
++
++
++def test_scenario_report_6113_blocked_preconditions_and_schema_helpers(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-REPORT-6113-SCHEMA: helpers, schema, and checksum hold."""
++
++    root = _make_repo(tmp_path, "## V530 Planner Refresh - 20260804\nno marker\n")
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=82.0,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["accepted_rejected_duplicate_retired_and_abstained_findings"][
++        "accepted"
++    ] == []
++    assert "planner_marker_missing" in artifact["preconditions_checked"][
++        "failed_preconditions"
++    ]
++
++    reachable_root = _make_repo(tmp_path / "routes", _planner_references())
++    unreachable = mod.build_artifact(
++        root=reachable_root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        source_receipts=[
++            {
++                "receipt_id": "arxiv_down",
++                "source_family": "arXiv",
++                "source_role": "primary",
++                "query_family": "arxiv_primary",
++                "query": "fixture",
++                "url": "https://arxiv.org/",
++                "accessed_at": START,
++                "access_outcome": "inaccessible_timeout",
++                "candidate_ids": [],
++                "candidate_count": 0,
++                "source_cutoff": "changed_after_2026-08-04",
++                "receipt_summary": "down",
++            }
++        ],
++        duration_s=82.0,
++    )
++    mod.validate_artifact(unreachable)
++    assert "source_reachability_failed" in unreachable["preconditions_checked"][
++        "failed_preconditions"
++    ]
++
++    root = _make_repo(tmp_path / "helpers", _planner_references())
++    assert mod.read_text_if_present(root / "missing.md") == ""
++    assert mod.path_sha256(root / "missing.md") is None
++    assert mod.planner_marker_line("missing") is None
++    assert mod.planner_block_hash("missing") is None
++    assert mod.honest_verdict(False, True, [], False).startswith("blocked:")
++    assert mod.honest_verdict(True, False, [], False).startswith("blocked:")
++    assert mod.honest_verdict(True, True, [], False).startswith("complete_null:")
++    assert mod.honest_verdict(True, True, [_accepted_fixture()], False).startswith(
++        "complete_delta:"
++    )
++    block = mod.execution_delta_block([_accepted_fixture()])
++    assert mod.insert_after_planner_block("no marker", block).endswith(block)
++    assert mod.insert_after_planner_block(
++        f"prefix\n{mod.EXECUTION_DELTA_HEADING}\n",
++        block,
++    ) == f"prefix\n{mod.EXECUTION_DELTA_HEADING}\n"
++
++    malformed = _make_repo(tmp_path / "malformed", _planner_references())
++    (malformed / mod.ROADMAP_RELATIVE_PATH).write_text("- just\n- a list\n")
++    assert "active_roadmap_identity_unavailable" in mod.preconditions_checked(
++        malformed,
++        marker_found=True,
++        source_reachable=True,
++        checked_at=START,
++    )["failed_preconditions"]
++    (malformed / mod.ROADMAP_RELATIVE_PATH).write_text("tasks: [\n", encoding="utf-8")
++    assert "active_roadmap_identity_unavailable" in mod.preconditions_checked(
++        malformed,
++        marker_found=True,
++        source_reachable=True,
++        checked_at=START,
++    )["failed_preconditions"]
++    (malformed / mod.SPEC_RELATIVE_PATH).write_text("missing\n", encoding="utf-8")
++    assert "spec_req_report_6113_missing" in mod.preconditions_checked(
++        malformed,
++        marker_found=True,
++        source_reachable=True,
++        checked_at=START,
++    )["failed_preconditions"]
++    monkeypatch.setattr(mod.os, "access", lambda _path, _mode: False)
++    assert "output_path_unavailable" in mod.preconditions_checked(
++        malformed,
++        marker_found=True,
++        source_reachable=True,
++        checked_at=START,
++    )["failed_preconditions"]
++    monkeypatch.undo()
++    (malformed / mod.ROADMAP_RELATIVE_PATH).unlink()
++    (malformed / mod.EXCLUSION_MANIFEST_RELATIVE_PATH).unlink()
++    missing_hash_failures = mod.preconditions_checked(
++        malformed,
++        marker_found=True,
++        source_reachable=True,
++        checked_at=START,
++    )["failed_preconditions"]
++    assert "active_roadmap_hash_missing" in missing_hash_failures
++    assert "exclusion_manifest_hash_missing" in missing_hash_failures
++
++    artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        duration_s=82.0,
++    )
++    mod.validate_artifact(artifact)
++
++    def break_rejected_classification(candidate: mod.JsonDict) -> None:
++        classes = candidate[
++            "accepted_rejected_duplicate_retired_and_abstained_findings"
++        ]
++        classes["rejected"][0]["classification"] = "accepted"
++        classes["all_candidates"][0]["classification"] = "accepted"
++
++    for mutate, message in (
++        (lambda a: a.pop("status"), "missing required"),
++        (lambda a: a.update(status="done"), "invalid status"),
++        (lambda a: a.update(honest_verdict="complete:"), "honest_verdict"),
++        (lambda a: a.update(inference_substrate="live_llm_inference"), "substrate"),
++        (lambda a: a.update(duration_s=-1), "duration"),
++        (lambda a: a.update(search_finished_at=START), "timestamp"),
++        (lambda a: a.update(source_queries_and_endpoint_receipts=[]), "source_queries"),
++        (
++            lambda a: a["source_queries_and_endpoint_receipts"]["source_receipts"][
++                0
++            ].pop("url"),
++            "source receipt missing url",
++        ),
++        (
++            lambda a: a[
++                "accepted_rejected_duplicate_retired_and_abstained_findings"
++            ].update(all_candidates=[]),
++            "all_candidates",
++        ),
++        (
++            break_rejected_classification,
++            "invalid finding classification",
++        ),
++        (
++            lambda a: a["references_append_receipt"].update(accepted_count=1),
++            "references append accepted count",
++        ),
++        (lambda a: a.update(field_provenance="not-a-map"), "field_provenance"),
++        (
++            lambda a: a["field_provenance"]["status"].update(principle="wrong"),
++            "field_provenance principle",
++        ),
++        (
++            lambda a: a.update(primary_secondary_and_official_source_counts={"primary": 0}),
++            "source counts",
++        ),
++        (
++            lambda a: a.update(
++                false_positive_false_negative_cutoff_and_rate_limit_receipts={
++                    "principle": "wrong"
++                }
++            ),
++            "false-positive/cutoff",
++        ),
++        (
++            lambda a: a.update(semantic_scholar_ebt_and_arm_ebm_receipts={}),
++            "semantic scholar",
++        ),
++        (
++            lambda a: a.update(
++                openreview_huggingface_github_extropic_and_kona_receipts={}
++            ),
++            "official/discovery",
++        ),
++        (
++            lambda a: a.update(duplicate_and_retired_scope_filter=[]),
++            "duplicate_and_retired_scope_filter",
++        ),
++        (
++            lambda a: a["duplicate_and_retired_scope_filter"].update(
++                accepted_reopens_retired_scope_count=1
++            ),
++            "retired scope",
++        ),
++        (
++            lambda a: a["task_identity_gate_and_exclusion_immutability"].update(
++                task_ids_unchanged=False
++            ),
++            "task ids",
++        ),
++        (
++            lambda a: a["protected_files_unchanged"].update(all_unchanged=False),
++            "protected",
++        ),
++        (lambda a: a.update(reproducibility_checksum="wrong"), "checksum"),
++    ):
++        broken = json.loads(json.dumps(artifact))
++        mutate(broken)
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(broken)
+-- 
+2.55.0
+

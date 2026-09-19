@@ -1,0 +1,462 @@
+From 695722fd06f0003ca4963e095af866dea47cdb8e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 23:53:35 -0400
+Subject: [PATCH 09491/11362] Harness deny-hook for forbidden commands +
+ submission-verb WARN (REQ-CONDUCTOR-DENYHOOK-1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Conversion 3 of docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md.
+Two prose prohibitions become boundaries that cannot be forgotten.
+
+Layer 1: scripts/deny_forbidden_bash_commands.py runs as a PreToolUse
+Bash hook (.claude/settings.json). It denies, with the rule and the
+sanctioned alternative in the message: a working-tree stash (Never-Stash
+rule; safe-pull.sh / commit-first), --no-verify on a git command
+(standing no-skip-hooks feedback), and the operator-only publication
+commands (arXiv submit/upload, openreview, gh release create, twine
+upload). Fail-open on malformed input, deliberately: a targeted boundary
+on six command shapes must not block every Bash call on a harness
+glitch. Known accepted FP mode: a command ABOUT a forbidden command is
+denied too — observed live minutes after the hook shipped, when it
+denied this session's own spec-writing heredoc; the fix is to rephrase
+or route through a non-Bash tool, and the boundary held exactly as
+designed.
+
+Layer 2: _submission_verb_warnings in research_conductor.py scans task
+prompts at activation and logs WARNINGs, never blocks — the honest
+phrasing "do NOT run <submission command>" would trip a hard text scan
+(negation blindness). operator_override (>=10 chars) clears it. Wired
+in the live _activate_next_roadmap next to the exclusion-manifest call.
+
+Evidence: 8 tests; mutations: stash rule neutered -> RED (2 tests),
+override skip removed -> RED; restored GREEN. FP counts: live
+research-roadmap.yaml (4 tasks) draws 0 warnings; benign command set
+(git status, commit-first, safe-pull.sh, pytest, gh release list,
+gh pr create, pip install twine) all pass the hook.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .claude/settings.json                         |  10 ++
+ .../capabilities/research-harnesses/spec.md   |  69 ++++++++++
+ scripts/deny_forbidden_bash_commands.py       | 106 ++++++++++++++++
+ scripts/research_conductor.py                 |  55 ++++++++
+ .../test_deny_forbidden_bash_commands.py      | 120 ++++++++++++++++++
+ 5 files changed, 360 insertions(+)
+ create mode 100644 scripts/deny_forbidden_bash_commands.py
+ create mode 100644 tests/python/test_deny_forbidden_bash_commands.py
+
+diff --git a/.claude/settings.json b/.claude/settings.json
+index c16786701b..94e9fc0f3e 100644
+--- a/.claude/settings.json
++++ b/.claude/settings.json
+@@ -10,6 +10,16 @@
+             "description": "Block code generation if spec file doesn't exist for the capability being modified"
+           }
+         ]
++      },
++      {
++        "matcher": "Bash",
++        "hooks": [
++          {
++            "type": "command",
++            "command": "python3 scripts/deny_forbidden_bash_commands.py",
++            "description": "Deny git stash / git --no-verify / arxiv submit / openreview / gh release create / twine upload (Never-Stash + Operator-Only External Publication, REQ-CONDUCTOR-DENYHOOK-1)"
++          }
++        ]
+       }
+     ],
+     "PostToolUse": [
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 059af8f6e1..79c0bc88b6 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -8049,3 +8049,72 @@ return `⚠️ Research Finding`, not `✅ Complete`, even when a
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-CONDUCTOR-VERDICT-2 | Implemented (`scripts/research_conductor.py:_verdict_is_untrustworthy` enum-first branch; `scripts/in_process_doc_reconcile.py:classify_artifact` enum-first mapping) | Implemented (`tests/python/test_verdict_class_enum_first.py`; mutations: conductor enum branch removed -> RED, circular_positive mapped to Complete -> RED) |
++
++## REQ-CONDUCTOR-DENYHOOK-1: Forbidden Commands SHALL Be Denied At The Harness Layer, With A WARN-Only Prompt Scan Behind Them
++
++Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
++(Conversion 3). Two prose prohibitions become real boundaries:
++CLAUDE.md "Never Stash — Always Commit-First" and "Operator-Only
++External Publication", plus the standing no-`--no-verify` feedback.
++
++**Layer 1 (hard boundary).** `scripts/deny_forbidden_bash_commands.py`
++runs as a `PreToolUse` hook with a `Bash` matcher in
++`.claude/settings.json`. It SHALL deny (exit 2) a Bash tool call whose
++command matches any of:
++
++| Pattern | Rule | Sanctioned alternative |
++|---|---|---|
++| `git stash` (except `list`/`show`) | Never-Stash | `scripts/safe-pull.sh` / commit-first |
++| `git ... --no-verify` | no-skip-hooks feedback | fix the failing hook, retry |
++| `arxiv submit\|upload` | Operator-Only Publication | package + operator checklist |
++| `openreview` | Operator-Only Publication | package + operator checklist |
++| `gh release create` | Operator-Only Publication | package + operator checklist |
++| `twine upload` | PyPI ships via CI trusted publishing | tag a release |
++
++The denial message SHALL name the rule and the sanctioned alternative.
++The hook fails OPEN on unparseable input, deliberately: it is a
++targeted boundary on six command shapes, and failing closed would
++block every Bash call on a harness glitch. Accepted false-positive
++mode: a command ABOUT a forbidden command (a grep for the stash
++pattern, or this very section written via a shell heredoc — observed
++live on 2026-08-21, minutes after the hook shipped) is denied; the
++agent rephrases or routes through a non-Bash tool.
++
++**Layer 2 (WARN-only prompt scan).**
++`scripts/research_conductor.py:_submission_verb_warnings` SHALL scan
++each task's title/prompt/description at roadmap activation and log a
++WARNING per task containing a submission verb (`arxiv submit|upload`,
++`openreview ... submit/upload`, `gh release create`, `twine upload`).
++It SHALL NOT block activation — the honest phrasing "do NOT run arxiv
++submit" would trip a hard block (the QA-Layer rule's
++negation-blindness class). A task with an `operator_override` (>=10
++chars) is skipped.
++
++#### SCENARIO-CONDUCTOR-DENYHOOK-1
++
++Given a Bash tool call invoking a working-tree stash, the hook SHALL
++exit 2 and the message SHALL name `scripts/safe-pull.sh`; given the
++read-only `list` form, it SHALL exit 0.
++
++#### SCENARIO-CONDUCTOR-DENYHOOK-2
++
++Given `git commit --no-verify -m x`, the hook SHALL exit 2; given
++`git commit -m x`, it SHALL exit 0.
++
++#### SCENARIO-CONDUCTOR-DENYHOOK-3
++
++Given each of an arXiv submit command, a command containing
++`openreview`, `gh release create v1.0`, and `twine upload dist/*`,
++the hook SHALL exit 2.
++
++#### SCENARIO-CONDUCTOR-DENYHOOK-4
++
++Given a roadmap task whose prompt contains an arXiv submit step,
++`_submission_verb_warnings` SHALL return one warning naming the task;
++given the same task with an `operator_override`, it SHALL return none.
++
++## Implementation Status (REQ-CONDUCTOR-DENYHOOK-1)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-DENYHOOK-1 | Implemented (`scripts/deny_forbidden_bash_commands.py`; `.claude/settings.json` PreToolUse Bash hook; `scripts/research_conductor.py:_submission_verb_warnings` wired in the live `_activate_next_roadmap`) | Implemented (`tests/python/test_deny_forbidden_bash_commands.py`; mutations: stash rule removed -> RED, override skip removed -> RED) |
+diff --git a/scripts/deny_forbidden_bash_commands.py b/scripts/deny_forbidden_bash_commands.py
+new file mode 100644
+index 0000000000..454ab215a9
+--- /dev/null
++++ b/scripts/deny_forbidden_bash_commands.py
+@@ -0,0 +1,106 @@
++#!/usr/bin/env python3
++"""PreToolUse deny-hook: forbidden Bash commands become a harness boundary.
++
++REQ-CONDUCTOR-DENYHOOK-1 (Conversion 3 of
++docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md).
++Two prose rules become boundaries that cannot be forgotten:
++
++  - CLAUDE.md "Never Stash — Always Commit-First": `git stash` reverts
++    the working tree while conductor subprocesses may hold open file
++    handles. The sanctioned path is `scripts/safe-pull.sh` (commit-first).
++  - CLAUDE.md "Operator-Only External Publication": `arxiv submit`,
++    OpenReview calls, `gh release create`, and `twine upload` create
++    publicly-citable artifacts. Capability does not imply authorization.
++  - Standing feedback: `--no-verify` on git commands skips the guard
++    stack; fix the failing hook and retry instead.
++
++Wired in `.claude/settings.json` as a PreToolUse hook with a `Bash`
++matcher. Protocol: tool-call JSON on stdin; exit 2 denies the call and
++feeds stderr back to the agent; exit 0 allows.
++
++Known false-positive mode, accepted deliberately: a command ABOUT a
++forbidden command (`grep 'git stash' CLAUDE.md`) is denied too. The
++denial message names the rule, so an honest agent rephrases the search
++(`grep 'git.stash'`). Simplicity beats pattern cleverness here — this
++is a boundary for honest agents, not an adversarial sandbox.
++
++Fail direction: OPEN, deliberately. Unparseable stdin allows the call
++(exit 0) with a stderr note. This hook is a targeted boundary on six
++command shapes; failing closed would block every Bash call on any
++harness glitch, which trains bypassing the hook.
++"""
++
++from __future__ import annotations
++
++import json
++import re
++import sys
++
++# Ordered (pattern, message) rules. First match wins.
++_RULES: tuple[tuple[re.Pattern[str], str], ...] = (
++    (
++        # `git stash list` / `git stash show` are read-only and stay allowed.
++        re.compile(r"\bgit\s+stash\b(?!\s+(?:list|show)\b)"),
++        "git stash is forbidden (CLAUDE.md 'Never Stash — Always Commit-First'): "
++        "a stash reverts the working tree under live conductor subprocesses. "
++        "Use scripts/safe-pull.sh, or commit-first: "
++        "git add -A && git commit -m '[outer-loop] preserve transient state'.",
++    ),
++    (
++        # --no-verify on a git command (commit/push). The [^|;&]* guard keeps
++        # the match inside one shell command, so `git log | tool --no-verify`
++        # does not trip on the git half.
++        re.compile(r"\bgit\s+[^|;&]*--no-verify\b"),
++        "--no-verify is forbidden without explicit operator authorization "
++        "(standing feedback: never skip pre-commit hooks). Fix the failing "
++        "hook and retry the commit instead.",
++    ),
++    (
++        re.compile(r"\barxiv\s+(?:submit|upload)\b", re.IGNORECASE),
++        "arXiv submission is OPERATOR-ONLY (CLAUDE.md 'Operator-Only External "
++        "Publication'). Prepare the package and checklist; the operator submits.",
++    ),
++    (
++        re.compile(r"\bopenreview\b", re.IGNORECASE),
++        "OpenReview calls are OPERATOR-ONLY (CLAUDE.md 'Operator-Only External "
++        "Publication'). Prepare the package and checklist; the operator submits.",
++    ),
++    (
++        re.compile(r"\bgh\s+release\s+create\b"),
++        "gh release create is OPERATOR-ONLY (CLAUDE.md 'Operator-Only External "
++        "Publication'): a release is a publicly-citable artifact.",
++    ),
++    (
++        re.compile(r"\btwine\s+upload\b"),
++        "twine upload is OPERATOR-ONLY. PyPI publishing ships via CI trusted "
++        "publishing on a tagged release (see feedback_pypi_publish_via_ci), "
++        "never from a local twine call.",
++    ),
++)
++
++
++def forbidden(command: str) -> str | None:
++    """The denial message for a forbidden command, or None to allow."""
++    for pattern, message in _RULES:
++        if pattern.search(command):
++            return message
++    return None
++
++
++def main() -> int:
++    try:
++        payload = json.load(sys.stdin)
++        command = str((payload.get("tool_input") or {}).get("command", ""))
++    except Exception as exc:
++        # Fail-open on a malformed payload — see the module docstring.
++        print(f"deny-hook: could not parse hook input ({exc}); allowing", file=sys.stderr)
++        return 0
++    message = forbidden(command)
++    if message is not None:
++        print(f"DENIED: {message}", file=sys.stderr)
++        return 2
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 362e49eb1c..323e218cb9 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -4055,6 +4055,49 @@ def _archive_current_milestone(push: bool = True) -> bool:
+     return True
+ 
+ 
++# Submission verbs that may not appear as imperative steps in a task
++# prompt: external publication is OPERATOR-ONLY (CLAUDE.md). Each entry is
++# (label, pattern). `openreview` alone is enough in a prompt scan only
++# when paired with a submit/upload verb nearby — the bare name appears
++# legitimately in literature discussion.
++_SUBMISSION_VERB_PATTERNS: tuple[tuple[str, "re.Pattern[str]"], ...] = (
++    ("arxiv submit/upload", re.compile(r"\barxiv\s+(?:submit|upload)\b", re.IGNORECASE)),
++    (
++        "openreview submission",
++        re.compile(r"\bopenreview\b[\s\S]{0,80}?\b(?:submi\w*|upload\w*)\b", re.IGNORECASE),
++    ),
++    ("gh release create", re.compile(r"\bgh\s+release\s+create\b")),
++    ("twine upload", re.compile(r"\btwine\s+upload\b")),
++)
++
++
++def _submission_verb_warnings(roadmap: dict) -> list[str]:
++    """WARN-only scan for submission verbs in task prompts (REQ-CONDUCTOR-DENYHOOK-1).
++
++    Layer 2 of the Operator-Only External Publication enforcement. WARN,
++    never HARD: the honest phrasing "do NOT run arxiv submit" trips a
++    text scan (negation blindness), so the hard boundary lives in the
++    harness deny-hook, not here. A task carrying an `operator_override`
++    (>=10 chars, the exclusion-lint convention) is skipped.
++    """
++    out: list[str] = []
++    for task in roadmap.get("tasks") or []:
++        if not isinstance(task, dict):
++            continue
++        override = task.get("operator_override")
++        if isinstance(override, str) and len(override.strip()) >= 10:
++            continue
++        text = " ".join(str(task.get(k, "") or "") for k in ("title", "prompt", "description"))
++        hits = [label for label, pattern in _SUBMISSION_VERB_PATTERNS if pattern.search(text)]
++        if hits:
++            out.append(
++                f"{task.get('id', '?')}: prompt contains submission verb(s) "
++                f"{hits} — external publication is OPERATOR-ONLY (CLAUDE.md); "
++                "the task must end at package + operator checklist"
++            )
++    return out
++
++
+ def _activate_next_roadmap(push: bool = True) -> bool:
+     """Swap research-roadmap-next.yaml into research-roadmap.yaml.
+ 
+@@ -4267,6 +4310,18 @@ def _activate_next_roadmap(push: bool = True) -> bool:
+                 _e,
+             )
+ 
++        # Operator-Only External Publication pre-emit WARN (2026-08-21,
++        # REQ-CONDUCTOR-DENYHOOK-1 layer 2). WARN, never HARD: the honest
++        # phrasing "do NOT run arxiv submit" would trip a hard block — the
++        # QA-Layer rule's negation-blindness class. The hard boundary is
++        # the harness deny-hook (scripts/deny_forbidden_bash_commands.py).
++        try:
++            _rd = yaml.safe_load(NEXT_ROADMAP_FILE.read_text()) or {}
++            for _w in _submission_verb_warnings(_rd):
++                logger.warning("Submission-verb WARN: %s", _w)
++        except Exception as _e:
++            logger.warning("Submission-verb scan skipped (%s)", _e)
++
+         # ARC-AGI-3 standing-floor pre-emit lint (2026-07-08 operator directive:
+         # "wire the mechanical enforcement too, since it already failed once").
+         # CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" mandates >=1
+diff --git a/tests/python/test_deny_forbidden_bash_commands.py b/tests/python/test_deny_forbidden_bash_commands.py
+new file mode 100644
+index 0000000000..98ba2fa62b
+--- /dev/null
++++ b/tests/python/test_deny_forbidden_bash_commands.py
+@@ -0,0 +1,120 @@
++"""Tests for the forbidden-command deny-hook and the submission-verb WARN scan.
++
++REQ: REQ-CONDUCTOR-DENYHOOK-1 (openspec/capabilities/research-harnesses/spec.md).
++SCENARIOs: SCENARIO-CONDUCTOR-DENYHOOK-1,
++SCENARIO-CONDUCTOR-DENYHOOK-2,
++SCENARIO-CONDUCTOR-DENYHOOK-3,
++SCENARIO-CONDUCTOR-DENYHOOK-4.
++
++Layer 1 is the PreToolUse Bash hook (deny at the harness); Layer 2 is
++the WARN-only prompt scan at roadmap activation. The forbidden strings
++below appear as test DATA only. No test writes tracked state.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "scripts"))
++
++import deny_forbidden_bash_commands as deny  # noqa: E402
++import research_conductor as rc  # noqa: E402
++
++HOOK = REPO_ROOT / "scripts" / "deny_forbidden_bash_commands.py"
++
++
++def _run_hook(payload: object) -> subprocess.CompletedProcess:
++    raw = payload if isinstance(payload, str) else json.dumps(payload)
++    return subprocess.run(
++        [sys.executable, str(HOOK)],
++        input=raw,
++        capture_output=True,
++        text=True,
++        timeout=30,
++    )
++
++
++def test_stash_denied_and_readonly_forms_allowed() -> None:
++    # SCENARIO-CONDUCTOR-DENYHOOK-1
++    msg = deny.forbidden("git stash")
++    assert msg is not None and "safe-pull.sh" in msg
++    assert deny.forbidden("git stash pop") is not None
++    assert deny.forbidden("git stash list") is None
++    assert deny.forbidden("git stash show -p") is None
++
++
++def test_no_verify_denied_only_on_git_commands() -> None:
++    # SCENARIO-CONDUCTOR-DENYHOOK-2
++    assert deny.forbidden("git commit --no-verify -m x") is not None
++    assert deny.forbidden("git push --no-verify") is not None
++    assert deny.forbidden("git commit -m x") is None
++    # A non-git tool's --no-verify flag is not this rule's business, and
++    # the single-command guard keeps a pipe from leaking the match.
++    assert deny.forbidden("sometool --no-verify") is None
++    assert deny.forbidden("git log | sometool --no-verify") is None
++
++
++def test_publication_commands_denied() -> None:
++    # SCENARIO-CONDUCTOR-DENYHOOK-3
++    for cmd in (
++        "arxiv submit paper.tar.gz",
++        "python -m openreview.api upload",
++        "gh release create v1.0 --notes x",
++        "twine upload dist/*",
++    ):
++        assert deny.forbidden(cmd) is not None, cmd
++
++
++def test_benign_commands_allowed() -> None:
++    # REQ-CONDUCTOR-DENYHOOK-1: the boundary is six command shapes, not
++    # a general gate — ordinary work must pass untouched.
++    for cmd in (
++        "git status --short",
++        "git add -A && git commit -m '[outer-loop] preserve transient state'",
++        "scripts/safe-pull.sh",
++        ".venv/bin/pytest tests/python --no-cov -q",
++        "gh release list",
++        "gh pr create --title x",
++        "pip install twine",
++    ):
++        assert deny.forbidden(cmd) is None, cmd
++
++
++def test_hook_end_to_end_denies_with_exit_2() -> None:
++    # SCENARIO-CONDUCTOR-DENYHOOK-1 at the process boundary: exit 2 +
++    # the rule named on stderr is the harness deny contract.
++    proc = _run_hook({"tool_name": "Bash", "tool_input": {"command": "git stash"}})
++    assert proc.returncode == 2
++    assert "DENIED" in proc.stderr and "safe-pull.sh" in proc.stderr
++    ok = _run_hook({"tool_name": "Bash", "tool_input": {"command": "git status"}})
++    assert ok.returncode == 0
++
++
++def test_hook_fails_open_on_malformed_input() -> None:
++    # REQ-CONDUCTOR-DENYHOOK-1: deliberate fail-open — a harness glitch
++    # must not block every Bash call (that trains bypassing the hook).
++    proc = _run_hook("this is not json {")
++    assert proc.returncode == 0
++    assert "allowing" in proc.stderr
++
++
++def test_submission_verb_warning_fires_and_override_clears() -> None:
++    # SCENARIO-CONDUCTOR-DENYHOOK-4
++    task = {"id": "exp-x", "prompt": "step 7: run arxiv submit on the package"}
++    warns = rc._submission_verb_warnings({"tasks": [task]})
++    assert len(warns) == 1 and "exp-x" in warns[0]
++    task_overridden = dict(task, operator_override="2026-08-21 operator authorized")
++    assert rc._submission_verb_warnings({"tasks": [task_overridden]}) == []
++
++
++def test_submission_scan_ignores_bare_openreview_mention() -> None:
++    # Layer 2 keys openreview on a nearby submit/upload verb: the bare
++    # name appears legitimately in literature-discussion prompts.
++    clean = {"id": "exp-lit", "prompt": "read the OpenReview discussion of paper X"}
++    assert rc._submission_verb_warnings({"tasks": [clean]}) == []
++    hot = {"id": "exp-sub", "prompt": "use openreview API to submit the draft"}
++    assert len(rc._submission_verb_warnings({"tasks": [hot]})) == 1
+-- 
+2.55.0
+

@@ -1,0 +1,285 @@
+From 352332af4b61d074e67d18364348df6ca0cf4c1e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 19:13:40 -0400
+Subject: [PATCH 03695/11362] [outer-loop][prototype] Tier-schedule graft +
+ A/B: NULL (candidate ordering is not just-explore's edge)
+
+Grafted just-explore's verbatim 5-tier salience schedule (T0 salient+medium-width first ... T4 status-bar)
+into rich_action_candidates behind CARNOT_ARC_TIER_SCHEDULE=1 (default off = byte-identical flat path;
+smoke confirms it front-loads a salient button over a big dull blob). A/B vs the flat area*rarity sort on
+the 5 head-to-head win-games + 7 regression games: tier NEVER beats flat (budget 1000 AND 4000), zero
+regression. VERDICT TIER_NULL_no_win. Fair-budget (4000) retest decomposes the h2h gap: ft09/r11l solve
+with the FLAT order at 4x budget (they were the offline replay-overhead budget artifact, not schedule;
+the LIVE agent is stateful so doesn't share it); bp35/m0r0 stay 0 even at 4x = a REAL gap the tier
+schedule does NOT close (just-explore's edge there is a deeper frontier/navigation mechanism). Graft is
+parity-safe; NOT merged (null). Branch only.
+---
+ python/carnot/agentic/arc_graph_explore.py | 73 ++++++++++++++++---
+ results/proto_tier_ab.json                 | 83 ++++++++++++++++++++++
+ scripts/experiments/proto_tier_ab.py       | 71 ++++++++++++++++++
+ 3 files changed, 217 insertions(+), 10 deletions(-)
+ create mode 100644 results/proto_tier_ab.json
+ create mode 100644 scripts/experiments/proto_tier_ab.py
+
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index c30381c795..d1dac7bb90 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -54,6 +54,45 @@ def _components_detailed(grid) -> list:
+     return comps
+ 
+ 
++# just-explore's 5-tier salience schedule (heuristic_agent.py:frame_segments_to_action_groups,
++# arXiv:2512.24156). The 2026-06-23 offline head-to-head showed this SCHEDULE reaches first-wins our
++# flat area*rarity sort misses on 5 games (bp35/ft09/m0r0/r11l/vc33). It front-loads BUTTON-LIKE objects
++# (salient colour AND medium bounding-box) and defers very-large / dull / status-bar segments, where our
++# flat sort up-ranks the largest area first. Constants are just-explore's verbatim.
++_TIER_SALIENT_COLORS = frozenset(range(6, 16))  # {6..15} (non-salient = {0..5})
++_TIER_STATUS_BAR_COLOR = 16
++_TIER_MIN_WIDTH = 2
++_TIER_MAX_WIDTH = 32
++
++
++def _tier_ordered_click_points(grid) -> list:
++    """Object-click (x, y) points ordered by just-explore's 5 salience tiers (T0 first):
++    T0 salient AND medium-width, T1 medium-width, T2 salient, T3 other, T4 status-bar. Stable
++    secondary sort by descending area. x = centroid[0], y = centroid[1] (matching the flat path)."""
++    from carnot.agentic.arc_solver_kit import object_centric_digest
++
++    def _tier(comp) -> int:
++        bb = comp["bbox"]  # [min_row, min_col, max_row, max_col]
++        h = bb[2] - bb[0] + 1
++        w = bb[3] - bb[1] + 1
++        color = int(comp["color"])
++        salient = color in _TIER_SALIENT_COLORS
++        medium = _TIER_MIN_WIDTH <= w <= _TIER_MAX_WIDTH and _TIER_MIN_WIDTH <= h <= _TIER_MAX_WIDTH
++        if color == _TIER_STATUS_BAR_COLOR:
++            return 4
++        if salient and medium:
++            return 0
++        if medium:
++            return 1
++        if salient:
++            return 2
++        return 3
++
++    comps = object_centric_digest(grid)["components"]
++    comps_sorted = sorted(comps, key=lambda c: (_tier(c), -int(c["area"])))
++    return [(int(c["centroid"][0]), int(c["centroid"][1])) for c in comps_sorted]
++
++
+ def rich_action_candidates(
+     frame: Any,
+     max_click: int = 48,
+@@ -95,17 +134,31 @@ def rich_action_candidates(
+     ids = _available_action_ids(frame)
+     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
+     if 6 in ids:
++        import os
++
+         grid = grid_of(frame)
+-        comps = _components_detailed(grid)
+-        if by_salience and comps:
+-            from collections import Counter
+-
+-            color_cells = Counter(int(v) for v in grid.flatten().tolist())
+-            # salience: big segments + globally-rare colors score highest
+-            comps.sort(
+-                key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
+-            )
+-        pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
++        # CARNOT_ARC_TIER_SCHEDULE=1 orders object-clicks by just-explore's 5 salience tiers (button-like
++        # medium-width salient objects first) instead of the flat area*rarity sort. Default off -> the
++        # path below is byte-identical to the proven order (parity preserved; the SUBMITTED agent unchanged
++        # until the A/B greenlights it). A scoring failure falls back to the flat order (no-regression).
++        if os.environ.get("CARNOT_ARC_TIER_SCHEDULE") == "1":
++            try:
++                pts = _tier_ordered_click_points(grid) or None  # None -> fall back to the flat order
++            except Exception:
++                pts = None
++        else:
++            pts = None
++        if pts is None:
++            comps = _components_detailed(grid)
++            if by_salience and comps:
++                from collections import Counter
++
++                color_cells = Counter(int(v) for v in grid.flatten().tolist())
++                # salience: big segments + globally-rare colors score highest
++                comps.sort(
++                    key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
++                )
++            pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
+         if not pts:
+             h, w = grid.shape
+             pts = [(w // 2, h // 2)]
+diff --git a/results/proto_tier_ab.json b/results/proto_tier_ab.json
+new file mode 100644
+index 0000000000..2f29e80fda
+--- /dev/null
++++ b/results/proto_tier_ab.json
+@@ -0,0 +1,83 @@
++{
++  "budget": 1000,
++  "win_games": {
++    "bp35": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 20.4
++    },
++    "ft09": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 4.3
++    },
++    "m0r0": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 4.1
++    },
++    "r11l": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 3.5
++    },
++    "vc33": {
++      "flat": 1,
++      "tier": 1,
++      "delta": 0,
++      "wall_s": 0.3
++    }
++  },
++  "regression": {
++    "lp85": {
++      "flat": 1,
++      "tier": 1,
++      "delta": 0,
++      "wall_s": 1.3
++    },
++    "sp80": {
++      "flat": 1,
++      "tier": 1,
++      "delta": 0,
++      "wall_s": 1.1
++    },
++    "su15": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 5.1
++    },
++    "sc25": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 7.1
++    },
++    "cd82": {
++      "flat": 1,
++      "tier": 1,
++      "delta": 0,
++      "wall_s": 2.8
++    },
++    "ar25": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 4.1
++    },
++    "cn04": {
++      "flat": 0,
++      "tier": 0,
++      "delta": 0,
++      "wall_s": 2.8
++    }
++  },
++  "tier_deeper_win_games": [],
++  "regressions": [],
++  "bp35_first_contact": false,
++  "VERDICT": "TIER_NULL_no_win"
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/proto_tier_ab.py b/scripts/experiments/proto_tier_ab.py
+new file mode 100644
+index 0000000000..03e2289403
+--- /dev/null
++++ b/scripts/experiments/proto_tier_ab.py
+@@ -0,0 +1,71 @@
++"""A/B: graft just-explore's 5-tier salience schedule into rich_action_candidates and test whether OUR
++graph explorer reaches first-wins its flat area*rarity sort misses -- on the 5 games the 2026-06-23
++head-to-head showed just-explore winning (bp35[UNSOLVED]/ft09/m0r0/r11l/vc33), plus a regression set.
++
++Same env, same budget, graph_explore_solve_v2; the ONLY difference is CARNOT_ARC_TIER_SCHEDULE
++(off = flat order, on = tier order). Gate: tier reaches a STRICTLY deeper level than flat on >=2 of the
++5 win-games, with ZERO regression (tier >= flat) on every game. bp35 is the prize (we don't solve it).
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import sys
++import time
++
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_graph_explore import graph_explore_solve_v2
++
++WIN_GAMES = ["bp35", "ft09", "m0r0", "r11l", "vc33"]   # just-explore beat our flat explorer here
++REGRESSION = ["lp85", "sp80", "su15", "sc25", "cd82", "ar25", "cn04"]  # must not regress
++
++
++def _gid(arc, short):
++    for e in arc.get_environments():
++        g = getattr(e, "game_id", "")
++        if g.split("-")[0] == short:
++            return str(g)
++    raise RuntimeError(f"{short} unavailable")
++
++
++def _run(arc, gid, budget, tier: bool) -> int:
++    if tier:
++        os.environ["CARNOT_ARC_TIER_SCHEDULE"] = "1"
++    else:
++        os.environ.pop("CARNOT_ARC_TIER_SCHEDULE", None)
++    env = arc.make(gid, scorecard_id=arc.open_scorecard())
++    _traj, lvl = graph_explore_solve_v2(env, start_level=0, max_expansions=budget,
++                                        warmup=True, max_depth=60)
++    return int(lvl)
++
++
++def main() -> int:
++    budget = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
++    arc = kit.offline_arcade()
++    out = {"budget": budget, "win_games": {}, "regression": {}}
++    for label, games in (("win_games", WIN_GAMES), ("regression", REGRESSION)):
++        for short in games:
++            gid = _gid(arc, short)
++            t0 = time.time()
++            flat = _run(arc, gid, budget, tier=False)
++            tier = _run(arc, gid, budget, tier=True)
++            out[label][short] = {"flat": flat, "tier": tier, "delta": tier - flat,
++                                 "wall_s": round(time.time() - t0, 1)}
++            print(f"  {label[:3]} {short:6} flat={flat} tier={tier} delta={tier-flat:+d}  ({round(time.time()-t0,1)}s)", flush=True)
++    win_deltas = {g: v["delta"] for g, v in out["win_games"].items()}
++    reg_deltas = {g: v["delta"] for g, v in out["regression"].items()}
++    out["tier_deeper_win_games"] = sorted(g for g, d in win_deltas.items() if d > 0)
++    out["regressions"] = sorted(g for g, d in {**win_deltas, **reg_deltas}.items() if d < 0)
++    out["bp35_first_contact"] = out["win_games"].get("bp35", {}).get("tier", 0) > out["win_games"].get("bp35", {}).get("flat", 0)
++    gate = len(out["tier_deeper_win_games"]) >= 2 and not out["regressions"]
++    out["VERDICT"] = "TIER_SCHEDULE_WINS_extract" if gate else (
++        "TIER_REGRESSES" if out["regressions"] else "TIER_NULL_no_win")
++    json.dump(out, open("results/proto_tier_ab.json", "w"), indent=2)
++    print(f"\ntier_deeper_win_games={out['tier_deeper_win_games']}  regressions={out['regressions']}  "
++          f"bp35_first_contact={out['bp35_first_contact']}  VERDICT={out['VERDICT']}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

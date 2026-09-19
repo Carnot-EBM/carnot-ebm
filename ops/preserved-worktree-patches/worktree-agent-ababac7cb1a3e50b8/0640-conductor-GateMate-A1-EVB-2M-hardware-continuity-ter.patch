@@ -1,0 +1,3117 @@
+From 2522c092e0084ba4cd07675f7bddda7fd0eb8cab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 10:27:06 -0400
+Subject: [PATCH 00640/11362] [conductor] GateMate A1-EVB-2M hardware
+ continuity (terminal-state attempt, re-issue of exp3854): synthesize +
+ place-and-route an n>=16 Carnot Ising tile via yosys synth_gatemate ->
+ nextpnr-himbaechel -> gmpack, flash over DirtyJTAG (openFPGALoader -c
+ dirtyJtag -b olimex_gatemateevb), record sample-level on-board timing.
+ Reaches gatemate_bitstream_flashed terminal state if the board accepts the
+ bitstream.
+
+Automated research step by research conductor.
+Task ID: exp3866-gatemate-ising-tile-flash-v2
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../flash.log                                 |   11 +
+ .../pack.log                                  |    5 +
+ .../pnr.log                                   |  487 ++++++++
+ .../synthesis.log                             | 1018 +++++++++++++++++
+ openspec/capabilities/fpga/spec.md            |   63 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...iment_3866_gatemate_ising_tile_flash_v2.py |  789 +++++++++++++
+ ...ent_3866_gatemate_ising_tile_flash_v2.json |  232 ++++
+ ...iment_3866_gatemate_ising_tile_flash_v2.py |   35 +
+ ...iment_3866_gatemate_ising_tile_flash_v2.py |  366 ++++++
+ 10 files changed, 3007 insertions(+), 1 deletion(-)
+ create mode 100644 logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log
+ create mode 100644 logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log
+ create mode 100644 logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log
+ create mode 100644 logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log
+ create mode 100644 python/carnot/experiment_3866_gatemate_ising_tile_flash_v2.py
+ create mode 100644 results/experiment_3866_gatemate_ising_tile_flash_v2.json
+ create mode 100644 scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py
+ create mode 100644 tests/python/test_experiment_3866_gatemate_ising_tile_flash_v2.py
+
+diff --git a/logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log b/logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log
+new file mode 100644
+index 0000000000..c279abf2ba
+--- /dev/null
++++ b/logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log
+@@ -0,0 +1,11 @@
++COMMAND: /opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit
++RETURNCODE: 0
++STDOUT:
++Board default cable overridden with dirtyJtag
++Jtag frequency : requested 6000000 Hz -> real 6000000 Hz
++
++Load SRAM via JTAG: [==================================================] 100.00%
++
++Done
++
++STDERR:
+diff --git a/logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log b/logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log
+new file mode 100644
+index 0000000000..d222ea373d
+--- /dev/null
++++ b/logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log
+@@ -0,0 +1,5 @@
++COMMAND: /opt/oss-cad-suite/bin/gmpack /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit
++RETURNCODE: 0
++STDOUT:
++
++STDERR:
+diff --git a/logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log b/logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log
+new file mode 100644
+index 0000000000..d732c46463
+--- /dev/null
++++ b/logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log
+@@ -0,0 +1,487 @@
++COMMAND: /opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.pnr.json --freq 12.0 --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit
++RETURNCODE: 0
++STDOUT:
++
++STDERR:
++Info: Using uarch 'gatemate' for device 'CCGM1A1'
++Info: Using timing mode 'WORST'.
++Info: Using performance mode 'SPEED'.
++
++Info: Assign cell region based on attributes..
++Info: Packing constants..
++Info: Running cleanups..
++Info: Packing IOs..
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA' to pad 'IO_SA_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RVALID' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RVALID' to pad 'IO_SA_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RRESP_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RRESP_1' to pad 'IO_SA_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RRESP' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RRESP' to pad 'IO_SA_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RREADY' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RREADY' to pad 'IO_SA_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_9' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_9' to pad 'IO_SA_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_8' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_8' to pad 'IO_SA_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_7' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_7' to pad 'IO_SA_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_6' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_6' to pad 'IO_SA_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_5' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_5' to pad 'IO_SA_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_4' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_4' to pad 'IO_SA_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WVALID' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WVALID' to pad 'IO_SA_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_31' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_31' to pad 'IO_SA_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_3' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_3' to pad 'IO_SA_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_30' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_30' to pad 'IO_SA_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_3' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_3' to pad 'IO_SA_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_2' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_2' to pad 'IO_SA_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_29' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_29' to pad 'IO_SA_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB_1' to pad 'IO_SB_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_28' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_28' to pad 'IO_SB_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WSTRB' to pad 'IO_SB_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_27' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_27' to pad 'IO_SB_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WREADY' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WREADY' to pad 'IO_SB_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_26' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_26' to pad 'IO_SB_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_9' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_9' to pad 'IO_SB_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_25' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_25' to pad 'IO_SB_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_8' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_8' to pad 'IO_SB_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_24' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_24' to pad 'IO_SB_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_7' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_7' to pad 'IO_SB_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_23' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_23' to pad 'IO_SB_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_6' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_6' to pad 'IO_SB_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_22' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_22' to pad 'IO_SB_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_5' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_5' to pad 'IO_SB_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_21' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_21' to pad 'IO_SB_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_4' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_4' to pad 'IO_SB_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_20' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_20' to pad 'IO_SB_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_2' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_2' to pad 'IO_WA_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_31' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_31' to pad 'IO_WA_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_19' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_19' to pad 'IO_WA_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_30' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_30' to pad 'IO_WA_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_18' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_18' to pad 'IO_WA_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_3' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_3' to pad 'IO_WA_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_17' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_17' to pad 'IO_WA_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_29' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_29' to pad 'IO_WA_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_16' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_16' to pad 'IO_WA_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_15' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_15' to pad 'IO_WA_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_14' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_14' to pad 'IO_WA_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_13' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_13' to pad 'IO_WA_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_12' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_12' to pad 'IO_WA_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_11' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_11' to pad 'IO_WA_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_10' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_10' to pad 'IO_WA_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA_1' to pad 'IO_WA_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_RDATA' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_RDATA' to pad 'IO_WA_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_BVALID' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_BVALID' to pad 'IO_WA_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_28' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_28' to pad 'IO_WB_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_BRESP_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_BRESP_1' to pad 'IO_EA_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_27' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_27' to pad 'IO_WB_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_BRESP' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_BRESP' to pad 'IO_EA_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_BREADY' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_BREADY' to pad 'IO_WB_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWVALID' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWVALID' to pad 'IO_EA_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWREADY' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWREADY' to pad 'IO_WB_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_9' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_9' to pad 'IO_EA_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_8' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_8' to pad 'IO_WB_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_7' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_7' to pad 'IO_EA_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_6' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_6' to pad 'IO_WB_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_5' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_5' to pad 'IO_EA_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_4' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_4' to pad 'IO_WB_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_31' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_31' to pad 'IO_EA_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_30' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_30' to pad 'IO_WB_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_3' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_3' to pad 'IO_EA_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_29' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_29' to pad 'IO_WB_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_28' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_28' to pad 'IO_EA_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_27' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_27' to pad 'IO_WB_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_26' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_26' to pad 'IO_EA_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_25' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_25' to pad 'IO_WB_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_24' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_24' to pad 'IO_EA_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_23' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_23' to pad 'IO_WB_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_22' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_22' to pad 'IO_EA_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_21' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_21' to pad 'IO_WB_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_20' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_20' to pad 'IO_EA_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_2' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_2' to pad 'IO_WB_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_19' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_19' to pad 'IO_EA_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_18' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_18' to pad 'IO_WB_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_17' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_17' to pad 'IO_EA_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_16' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_16' to pad 'IO_WB_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_15' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_15' to pad 'IO_EA_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_14' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_14' to pad 'IO_WB_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_13' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_13' to pad 'IO_EA_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_12' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_12' to pad 'IO_WB_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_11' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_11' to pad 'IO_EA_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_10' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_10' to pad 'IO_WC_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR_1' to pad 'IO_EB_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_AWADDR' to pad 'IO_WC_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARVALID' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARVALID' to pad 'IO_EB_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARREADY' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARREADY' to pad 'IO_WC_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARESETN' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARESETN' to pad 'IO_EB_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_9' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_9' to pad 'IO_WC_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_8' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_8' to pad 'IO_EB_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_7' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_7' to pad 'IO_WC_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_6' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_6' to pad 'IO_EB_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_5' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_5' to pad 'IO_WC_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_4' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_4' to pad 'IO_EB_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_31' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_31' to pad 'IO_WC_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_30' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_30' to pad 'IO_EB_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_3' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_3' to pad 'IO_WC_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_29' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_29' to pad 'IO_EB_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_28' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_28' to pad 'IO_WC_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_27' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_27' to pad 'IO_EB_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_26' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_26' to pad 'IO_WC_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_25' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_25' to pad 'IO_EB_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_24' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_24' to pad 'IO_WC_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_23' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_23' to pad 'IO_EB_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_22' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_22' to pad 'IO_WC_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_21' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_21' to pad 'IO_EB_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_20' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_20' to pad 'IO_WC_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2' to pad 'IO_EB_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_19' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_19' to pad 'IO_WC_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_18' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_18' to pad 'IO_EB_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_17' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_17' to pad 'IO_WC_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_16' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_16' to pad 'IO_EB_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_15' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_15' to pad 'IO_WC_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_14' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_14' to pad 'IO_EB_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_13' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_13' to pad 'IO_WC_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_12' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_12' to pad 'IO_EB_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_11' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_11' to pad 'IO_WC_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_10' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_10' to pad 'IO_EB_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR_1' to pad 'IO_NA_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ARADDR' to pad 'IO_NA_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_ACLK' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_ACLK' to pad 'IO_NA_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_26' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_26' to pad 'IO_NA_B1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_25' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_25' to pad 'IO_NA_A2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_24' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_24' to pad 'IO_NA_B2'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_23' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_23' to pad 'IO_NA_A3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_22' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_22' to pad 'IO_NA_B3'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_21' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_21' to pad 'IO_NA_A4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_20' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_20' to pad 'IO_NA_B4'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_2' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_2' to pad 'IO_NA_A5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_19' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_19' to pad 'IO_NA_B5'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_18' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_18' to pad 'IO_NA_A6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_17' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_17' to pad 'IO_NA_B6'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_16' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_16' to pad 'IO_NA_A7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_15' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_15' to pad 'IO_NA_B7'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_14' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_14' to pad 'IO_NA_A8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_13' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_13' to pad 'IO_NA_B8'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_12' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_12' to pad 'IO_NB_A0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_11' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_11' to pad 'IO_NB_B0'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_10' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_10' to pad 'IO_NB_A1'.
++Warning: IO '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_1' is unconstrained in CCF and will be automatically placed.
++Info:     Constraining '$iopadmap$gatemate_ising_n16.S_AXI_WDATA_1' to pad 'IO_NB_B1'.
++Info: Insert clocking cells..
++Info: Packing PLLs..
++Info: Sort BUFGs..
++Info: Packing BUFGs..
++Info: Packing IO SELs..
++Info: Packing misc..
++Info: Packing RAMs..
++Info: Packing SERDES..
++Info: Packing multipliers...
++Info: Packing ADDFs..
++Info: Packing CPEs..
++Info: Removing unused constants..
++Info:     Removed unused VCC cell.
++Info:     Removed unused GND cell.
++Info: Fix cell assigned regions..
++Info: Checksum: 0x250809dd
++
++Info: Device utilisation:
++Info: 	            USR_RSTN:       0/      1     0%
++Info: 	            CPE_COMP:       0/  20480     0%
++Info: 	         CPE_CPLINES:       0/  20480     0%
++Info: 	               IOSEL:     148/    162    91%
++Info: 	                GPIO:     148/    162    91%
++Info: 	               CLKIN:       1/      1   100%
++Info: 	              GLBOUT:       1/      1   100%
++Info: 	                 PLL:       0/      4     0%
++Info: 	            CFG_CTRL:       0/      1     0%
++Info: 	              SERDES:       0/      1     0%
++Info: 	              CPE_LT:     103/  40960     0%
++Info: 	              CPE_FF:      53/  40960     0%
++Info: 	           CPE_RAMIO:      22/  40960     0%
++Info: 	            RAM_HALF:       0/     64     0%
++
++Info: Placed 0 cells based on constraints.
++Info: Creating initial analytic placement for 64 cells, random placement wirelen = 14014.
++Info:     at initial placer iter 0, wirelen = 5767
++Info:     at initial placer iter 1, wirelen = 5586
++Info:     at initial placer iter 2, wirelen = 5521
++Info:     at initial placer iter 3, wirelen = 5475
++Info: Running main analytical placer, max placement attempts per cell = 28322.
++Info:     at iteration #1, type ALL: wirelen solved = 5470, spread = 5523, legal = 5540; time = 0.01s
++Info: HeAP Placer Time: 0.12s
++Info:   of which solving equations: 0.01s
++Info:   of which spreading cells: 0.00s
++Info:   of which strict legalisation: 0.00s
++
++Info: Running simulated annealing placer for refinement.
++Info:   at iteration #1: temp = 0.000000, timing cost = 12, wirelen = 5540
++Info:   at iteration #2: temp = 0.000000, timing cost = 5, wirelen = 5639 
++Info: SA placement time 0.01s
++
++Info: Max frequency for clock '$iopadmap$S_AXI_ACLK': 334.22 MHz (PASS at 12.00 MHz)
++
++Info: Max delay <async> -> posedge $iopadmap$S_AXI_ACLK: 24.05 ns
++
++Info: Slack histogram:
++Info:  legend: * represents 1 endpoint(s)
++Info:          + represents [1,1) endpoint(s)
++Info: [ 80341,  80423) |* 
++Info: [ 80423,  80505) | 
++Info: [ 80505,  80587) | 
++Info: [ 80587,  80669) |*** 
++Info: [ 80669,  80751) | 
++Info: [ 80751,  80833) |* 
++Info: [ 80833,  80915) |***** 
++Info: [ 80915,  80997) |*** 
++Info: [ 80997,  81079) |* 
++Info: [ 81079,  81161) |* 
++Info: [ 81161,  81243) | 
++Info: [ 81243,  81325) |** 
++Info: [ 81325,  81407) |*** 
++Info: [ 81407,  81489) |** 
++Info: [ 81489,  81571) |* 
++Info: [ 81571,  81653) | 
++Info: [ 81653,  81735) |***** 
++Info: [ 81735,  81817) |***** 
++Info: [ 81817,  81899) |******************** 
++Info: [ 81899,  81981) |** 
++Info: Checksum: 0xeea80921
++Info: Repacking RAMs..
++Info: Repacking CPEs..
++Info: Remove unused clocking cells..
++Info: Routing multipliers...
++Info: Routing clock nets...
++Info:     routing net '$iopadmap$S_AXI_ACLK' to 53 users
++Info: Clock router time 4.19s.
++Info: Running router2...
++Info: Setting up routing resources...
++Info: Running main router loop...
++Info:     iter=1 wires=7841 overused=192 overuse=197 resources=150 overused=3 overuse=4 archfail=NA
++Info:     iter=2 wires=7874 overused=28 overuse=28 resources=129 overused=0 overuse=0 archfail=NA
++Info:     iter=3 wires=7882 overused=10 overuse=10 resources=122 overused=0 overuse=0 archfail=NA
++Info:     iter=4 wires=7897 overused=2 overuse=2 resources=125 overused=0 overuse=0 archfail=NA
++Info:     iter=5 wires=7901 overused=0 overuse=0 resources=120 overused=0 overuse=0 archfail=0
++Info: Router2 time 1.21s
++Info: Running router1 to check that route is legal...
++
++Info: Routing..
++Info: Setting up routing queue.
++Info: Routing 0 arcs.
++Info:            |   (re-)routed arcs  |   delta    | remaining|       time spent     |
++Info:    IterCnt |  w/ripup   wo/ripup |  w/r  wo/r |      arcs| batch(sec) total(sec)|
++Info:          0 |        0          0 |    0     0 |         0|       0.01       0.01|
++Info: Routing complete.
++Info: Router1 time 0.01s
++Info: Checksum: 0x8bf6fbc8
++
++Info: Critical path report for clock '$iopadmap$S_AXI_ACLK' (posedge -> posedge):
++Info:       type curr  total name
++Info:   clk-skew  0.79  0.79 Net $iopadmap$S_AXI_ACLK (35,43) -> (21,42)
++Info:                          Sink $auto$ff.cc:337:slice$284.CLK_INT
++Info:   clk-to-q  0.59  1.38 Source $auto$ff.cc:337:slice$412.DOUT
++Info:    routing  1.31  2.70 Net awready (35,43) -> (35,42)
++Info:                          Sink $abc$566$auto$blifparse.cc:397:parse_blif$607.D0_01
++Info:                          Defined in:
++Info:                               /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:41.9-41.16
++Info:      logic  0.56  3.26 Source $abc$566$auto$blifparse.cc:397:parse_blif$607.OUT
++Info:    routing  1.67  4.93 Net $abc$566$new_n142 (35,42) -> (25,41)
++Info:                          Sink $abc$566$auto$blifparse.cc:397:parse_blif$611.D1_01
++Info:      logic  0.50  5.43 Source $abc$566$auto$blifparse.cc:397:parse_blif$611.OUT
++Info:    routing  1.76  7.19 Net $abc$566$auto$opt_dff.cc:251:make_patterns_logic$149 (25,41) -> (21,42)
++Info:                          Sink $auto$ff.cc:337:slice$284.EN_INT
++Info:      setup  0.00  7.19 Source $auto$ff.cc:337:slice$284.EN_INT
++Info: 1.65 ns logic, 5.53 ns routing
++
++Info: Critical path report for cross-domain path '<async>' -> 'posedge $iopadmap$S_AXI_ACLK':
++Info:       type curr  total name
++Info:     source  0.00  0.00 Source $iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2.Y
++Info:    routing  0.00  0.00 Net $iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2$conn$Y (127,133) -> (127,133)
++Info:                          Sink $iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2$iosel.GPIO_IN
++Info:      logic  0.38  0.38 Source $iopadmap$gatemate_ising_n16.S_AXI_ARADDR_2$iosel.IN1
++Info:    routing  8.46  8.84 Net $iopadmap$S_AXI_ARADDR[2] (127,133) -> (126,28)
++Info:                          Sink $abc$566$auto$blifparse.cc:397:parse_blif$589.D1_01
++Info:      logic  0.50  9.34 Source $abc$566$auto$blifparse.cc:397:parse_blif$589.OUT
++Info:    routing  12.63  21.98 Net $abc$566$new_n124 (126,28) -> (14,44)
++Info:                          Sink $abc$566$auto$blifparse.cc:397:parse_blif$603.D0_00
++Info:      logic  0.55  22.52 Source $abc$566$auto$blifparse.cc:397:parse_blif$603.OUT
++Info:    routing  0.00  22.52 Net $procmux$70.Y[4] (14,44) -> (14,44)
++Info:                          Sink $auto$ff.cc:337:slice$247.DIN
++Info:                          Defined in:
++Info:                               /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:106.22-106.48
++Info:                               /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:106.18-109.32
++Info:                               /opt/oss-cad-suite/lib/../share/yosys/techmap.v:583.21-583.22
++Info:      setup  0.10  22.62 Source $auto$ff.cc:337:slice$247.DIN
++Info: 1.53 ns logic, 21.09 ns routing
++
++Info: Max frequency for clock '$iopadmap$S_AXI_ACLK': 139.12 MHz (PASS at 12.00 MHz)
++
++Info: Max delay <async> -> posedge $iopadmap$S_AXI_ACLK: 22.62 ns
++
++Info: Slack histogram:
++Info:  legend: * represents 1 endpoint(s)
++Info:          + represents [1,1) endpoint(s)
++Info: [ 76145,  76410) |**** 
++Info: [ 76410,  76675) |** 
++Info: [ 76675,  76940) | 
++Info: [ 76940,  77205) |******* 
++Info: [ 77205,  77470) |** 
++Info: [ 77470,  77735) |** 
++Info: [ 77735,  78000) | 
++Info: [ 78000,  78265) | 
++Info: [ 78265,  78530) | 
++Info: [ 78530,  78795) |* 
++Info: [ 78795,  79060) | 
++Info: [ 79060,  79325) |** 
++Info: [ 79325,  79590) |*** 
++Info: [ 79590,  79855) |**** 
++Info: [ 79855,  80120) |***** 
++Info: [ 80120,  80385) |******* 
++Info: [ 80385,  80650) |*********** 
++Info: [ 80650,  80915) |**** 
++Info: [ 80915,  81180) | 
++Info: [ 81180,  81445) |* 
++Info: Update configuration based on routing..
++
++148 warnings, 0 errors
++
++Info: Program finished normally.
+diff --git a/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log b/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log
+new file mode 100644
+index 0000000000..99faefb60d
+--- /dev/null
++++ b/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log
+@@ -0,0 +1,1018 @@
++COMMAND: /opt/oss-cad-suite/bin/yosys -l /home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json; stat'
++RETURNCODE: 0
++STDOUT:
++
++ /----------------------------------------------------------------------------\
++ |  yosys -- Yosys Open SYnthesis Suite                                       |
++ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
++ |  Distributed under an ISC-like license, type "license" to see terms        |
++ \----------------------------------------------------------------------------/
++ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
++
++-- Running command `read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json; stat' --
++
++1. Executing Verilog-2005 frontend: /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v
++Parsing SystemVerilog input from `/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v' to AST representation.
++Generating RTLIL representation for module `\gatemate_ising_n16'.
++Successfully finished Verilog frontend.
++
++2. Executing SYNTH_GATEMATE pass.
++
++2.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/cells_sim.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/cells_sim.v' to AST representation.
++Generating RTLIL representation for module `\CC_IBUF'.
++Generating RTLIL representation for module `\CC_OBUF'.
++Generating RTLIL representation for module `\CC_TOBUF'.
++Generating RTLIL representation for module `\CC_IOBUF'.
++Generating RTLIL representation for module `\CC_LVDS_IBUF'.
++Generating RTLIL representation for module `\CC_LVDS_OBUF'.
++Generating RTLIL representation for module `\CC_LVDS_TOBUF'.
++Generating RTLIL representation for module `\CC_LVDS_IOBUF'.
++Generating RTLIL representation for module `\CC_IDDR'.
++Generating RTLIL representation for module `\CC_ODDR'.
++Generating RTLIL representation for module `\CC_DFF'.
++Generating RTLIL representation for module `\CC_DLT'.
++Generating RTLIL representation for module `\CC_LUT1'.
++Generating RTLIL representation for module `\CC_LUT2'.
++Generating RTLIL representation for module `\CC_LUT3'.
++Generating RTLIL representation for module `\CC_LUT4'.
++Generating RTLIL representation for module `\CC_MX2'.
++Generating RTLIL representation for module `\CC_MX4'.
++Generating RTLIL representation for module `\CC_MX8'.
++Generating RTLIL representation for module `\CC_ADDF'.
++Generating RTLIL representation for module `\CC_MULT'.
++Generating RTLIL representation for module `\CC_BUFG'.
++Generating RTLIL representation for module `\CC_BRAM_20K'.
++Generating RTLIL representation for module `\CC_BRAM_40K'.
++Generating RTLIL representation for module `\CC_FIFO_40K'.
++Generating RTLIL representation for module `\CC_L2T4'.
++Generating RTLIL representation for module `\CC_L2T5'.
++Successfully finished Verilog frontend.
++
++2.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/cells_bb.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/cells_bb.v' to AST representation.
++Generating RTLIL representation for module `\CC_PLL'.
++Generating RTLIL representation for module `\CC_PLL_ADV'.
++Generating RTLIL representation for module `\CC_SERDES'.
++Generating RTLIL representation for module `\CC_CFG_CTRL'.
++Generating RTLIL representation for module `\CC_USR_RSTN'.
++Successfully finished Verilog frontend.
++
++2.3. Executing HIERARCHY pass (managing design hierarchy).
++
++2.3.1. Analyzing design hierarchy..
++Top module:  \gatemate_ising_n16
++
++2.3.2. Analyzing design hierarchy..
++Top module:  \gatemate_ising_n16
++Removed 0 unused modules.
++
++2.4. Executing PROC pass (convert processes to netlists).
++
++2.4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
++Cleaned up 0 empty switches.
++
++2.4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
++Marked 1 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:123$37 in module gatemate_ising_n16.
++Marked 4 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29 in module gatemate_ising_n16.
++Marked 2 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25 in module gatemate_ising_n16.
++Marked 1 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19 in module gatemate_ising_n16.
++Marked 2 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11 in module gatemate_ising_n16.
++Marked 2 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6 in module gatemate_ising_n16.
++Marked 2 switch rules as full_case in process $proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1 in module gatemate_ising_n16.
++Removed a total of 0 dead cases.
++
++2.4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
++Removed 4 redundant assignments.
++Promoted 0 assignments to connections.
++
++2.4.4. Executing PROC_INIT pass (extract init attributes).
++
++2.4.5. Executing PROC_ARST pass (detect async resets in processes).
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:123$37'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6'.
++Found async reset \S_AXI_ARESETN in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1'.
++
++2.4.6. Executing PROC_ROM pass (convert switches to ROMs).
++Converted 0 switches.
++<suppressed ~13 debug messages>
++
++2.4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:123$37'.
++     1/1: $0\spins_reg[15:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++     1/2: $0\rdata[31:0]
++     2/2: $0\rvalid[0:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25'.
++     1/1: $0\arready[0:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19'.
++     1/2: $0\h_reg[15:0] [15:8]
++     2/2: $0\h_reg[15:0] [7:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11'.
++     1/1: $0\bvalid[0:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6'.
++     1/1: $0\wready[0:0]
++Creating decoders for process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1'.
++     1/1: $0\awready[0:0]
++
++2.4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
++
++2.4.9. Executing PROC_DFF pass (convert process syncs to FFs).
++Creating register for signal `\gatemate_ising_n16.\spins_reg' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:123$37'.
++  created $adff cell `$procdff$112' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\rvalid' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++  created $adff cell `$procdff$117' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\rdata' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++  created $adff cell `$procdff$122' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\arready' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25'.
++  created $adff cell `$procdff$127' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\h_reg' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19'.
++  created $adff cell `$procdff$132' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\bvalid' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11'.
++  created $adff cell `$procdff$137' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\wready' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6'.
++  created $adff cell `$procdff$142' with positive edge clock and positive level reset.
++Creating register for signal `\gatemate_ising_n16.\awready' using process `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1'.
++  created $adff cell `$procdff$147' with positive edge clock and positive level reset.
++
++2.4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
++
++2.4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:123$37'.
++Found and cleaned up 4 empty switches in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:98$29'.
++Found and cleaned up 1 empty switch in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:91$25'.
++Found and cleaned up 4 empty switches in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:79$19'.
++Found and cleaned up 2 empty switches in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:72$11'.
++Found and cleaned up 1 empty switch in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:65$6'.
++Found and cleaned up 1 empty switch in `\gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1'.
++Removing empty process `gatemate_ising_n16.$proc$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:58$1'.
++Cleaned up 13 empty switches.
++
++2.4.12. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++<suppressed ~18 debug messages>
++
++2.5. Executing FLATTEN pass (flatten design).
++
++2.6. Executing TRIBUF pass.
++
++2.7. Executing DEMINOUT pass (demote inout ports to input or output).
++
++2.8. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 15 unused cells and 64 unused wires.
++<suppressed ~16 debug messages>
++
++2.10. Executing CHECK pass (checking for obvious problems).
++Checking module gatemate_ising_n16...
++Found and reported 0 problems.
++
++2.11. Executing OPT pass (performing simple optimizations).
++
++2.11.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.11.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 64 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.11.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~24 debug messages>
++
++2.11.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.11.5. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 64 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.11.6. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.11.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.11.8. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.11.9. Finished fast OPT passes. (There is nothing left to do.)
++
++2.12. Executing FSM pass (extract and optimize FSM).
++
++2.12.1. Executing FSM_DETECT pass (finding FSMs in design).
++
++2.12.2. Executing FSM_EXTRACT pass (extracting FSM from design).
++
++2.12.3. Executing FSM_OPT pass (simple optimizations of FSMs).
++
++2.12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.12.5. Executing FSM_OPT pass (simple optimizations of FSMs).
++
++2.12.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
++
++2.12.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
++
++2.12.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
++
++2.13. Executing OPT pass (performing simple optimizations).
++
++2.13.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.13.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 64 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~24 debug messages>
++
++2.13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.13.5. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 64 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.13.6. Executing OPT_DFF pass (perform DFF optimizations).
++Adding EN signal on $procdff$132 ($adff) from module gatemate_ising_n16 (D = \S_AXI_WDATA [7:0], Q = \h_reg [7:0]).
++Adding EN signal on $procdff$132 ($adff) from module gatemate_ising_n16 (D = \S_AXI_WDATA [15:8], Q = \h_reg [15:8]).
++Adding EN signal on $procdff$117 ($adff) from module gatemate_ising_n16 (D = $0\rvalid[0:0], Q = \rvalid).
++Adding EN signal on $procdff$137 ($adff) from module gatemate_ising_n16 (D = $0\bvalid[0:0], Q = \bvalid).
++Adding EN signal on $procdff$122 ($adff) from module gatemate_ising_n16 (D = $procmux$73_Y, Q = \rdata).
++
++2.13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 7 unused cells and 6 unused wires.
++<suppressed ~8 debug messages>
++
++2.13.8. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++<suppressed ~2 debug messages>
++
++2.13.9. Rerunning OPT passes. (Maybe there is more to do..)
++
++2.13.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~15 debug messages>
++
++2.13.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.13.12. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 62 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.13.13. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.13.14. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.13.15. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.13.16. Finished fast OPT passes. (There is nothing left to do.)
++
++2.14. Executing WREDUCE pass (reducing word size of cells).
++Removed top 5 bits (of 8) from port B of cell gatemate_ising_n16.$eq$/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v:106$35 ($eq).
++Removed top 16 bits (of 32) from mux cell gatemate_ising_n16.$procmux$70 ($mux).
++Removed top 16 bits (of 32) from mux cell gatemate_ising_n16.$procmux$73 ($mux).
++Removed top 16 bits (of 32) from wire gatemate_ising_n16.$procmux$73_Y.
++Removed top 16 bits (of 32) from wire gatemate_ising_n16.$procmux$70_Y.
++
++2.15. Executing PEEPOPT pass (run peephole optimizers).
++
++2.16. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 0 unused cells and 2 unused wires.
++<suppressed ~1 debug messages>
++
++2.17. Executing MUXPACK pass ($mux cell cascades to $pmux).
++Converting gatemate_ising_n16.$procmux$70 ... gatemate_ising_n16.$procmux$73 to a pmux with 2 cases.
++Converted 2 (p)mux cells into 1 pmux cells.
++<suppressed ~6 debug messages>
++
++2.18. Executing SHARE pass (SAT-based resource sharing).
++
++2.19. Executing TECHMAP pass (map to technology primitives).
++
++2.19.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/cmp2lut.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/cmp2lut.v' to AST representation.
++Generating RTLIL representation for module `\_90_lut_cmp_'.
++Successfully finished Verilog frontend.
++
++2.19.2. Continuing TECHMAP pass.
++No more expansions possible.
++<suppressed ~6 debug messages>
++
++2.20. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.21. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 0 unused cells and 1 unused wires.
++<suppressed ~1 debug messages>
++
++2.22. Executing TECHMAP pass (map to technology primitives).
++
++2.22.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/mul_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/mul_map.v' to AST representation.
++Generating RTLIL representation for module `$__MULMXN'.
++Successfully finished Verilog frontend.
++
++2.22.2. Continuing TECHMAP pass.
++No more expansions possible.
++<suppressed ~4 debug messages>
++
++2.23. Executing ALUMACC pass (create $alu and $macc cells).
++Extracting $alu and $macc cells in module gatemate_ising_n16:
++  created 0 $alu and 0 $macc cells.
++
++2.24. Executing OPT pass (performing simple optimizations).
++
++2.24.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.24.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 61 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.24.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~14 debug messages>
++
++2.24.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.24.5. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 61 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.24.6. Executing OPT_DFF pass (perform DFF optimizations).
++Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$160 ($adffe) from module gatemate_ising_n16.
++
++2.24.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.24.8. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.24.9. Rerunning OPT passes. (Maybe there is more to do..)
++
++2.24.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~14 debug messages>
++
++2.24.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.24.12. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 61 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.24.13. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.24.14. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.24.15. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.24.16. Finished fast OPT passes. (There is nothing left to do.)
++
++2.25. Executing MEMORY pass.
++
++2.25.1. Executing OPT_MEM pass (optimize memories).
++Performed a total of 0 transformations.
++
++2.25.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
++Performed a total of 0 transformations.
++
++2.25.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
++
++2.25.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
++
++2.25.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
++
++2.25.6. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.25.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
++
++2.25.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
++Performed a total of 0 transformations.
++
++2.25.9. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.25.10. Executing MEMORY_COLLECT pass (generating $mem cells).
++
++2.26. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.27. Executing MEMORY_LIBMAP pass (mapping memories to cells).
++
++2.28. Executing TECHMAP pass (map to technology primitives).
++
++2.28.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/brams_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/brams_map.v' to AST representation.
++Generating RTLIL representation for module `$__CC_BRAM_TDP_'.
++Generating RTLIL representation for module `$__CC_BRAM_SDP_'.
++Successfully finished Verilog frontend.
++
++2.28.2. Continuing TECHMAP pass.
++No more expansions possible.
++<suppressed ~4 debug messages>
++
++2.29. Executing OPT pass (performing simple optimizations).
++
++2.29.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++<suppressed ~5 debug messages>
++
++2.29.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 56 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.29.3. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.29.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 0 unused cells and 5 unused wires.
++<suppressed ~1 debug messages>
++
++2.29.5. Finished fast OPT passes.
++
++2.30. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
++
++2.31. Executing OPT pass (performing simple optimizations).
++
++2.31.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.31.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 56 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.31.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  Evaluating internal representation of mux trees.
++  Analyzing evaluation results.
++Removed 0 multiplexer ports.
++<suppressed ~6 debug messages>
++
++2.31.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.31.5. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 56 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.31.6. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.31.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.31.8. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.31.9. Finished fast OPT passes. (There is nothing left to do.)
++
++2.32. Executing TECHMAP pass (map to technology primitives).
++
++2.32.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/techmap.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/techmap.v' to AST representation.
++Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
++Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
++Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
++Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
++Generating RTLIL representation for module `\_90_simplemap_various'.
++Generating RTLIL representation for module `\_90_simplemap_registers'.
++Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
++Generating RTLIL representation for module `\_90_shift_shiftx'.
++Generating RTLIL representation for module `\_90_fa'.
++Generating RTLIL representation for module `\_90_lcu_brent_kung'.
++Generating RTLIL representation for module `\_90_alu'.
++Generating RTLIL representation for module `\_90_macc'.
++Generating RTLIL representation for module `\_90_alumacc'.
++Generating RTLIL representation for module `$__div_mod_u'.
++Generating RTLIL representation for module `$__div_mod_trunc'.
++Generating RTLIL representation for module `\_90_div'.
++Generating RTLIL representation for module `\_90_mod'.
++Generating RTLIL representation for module `$__div_mod_floor'.
++Generating RTLIL representation for module `\_90_divfloor'.
++Generating RTLIL representation for module `\_90_modfloor'.
++Generating RTLIL representation for module `\_90_pow'.
++Generating RTLIL representation for module `\_90_pmux'.
++Generating RTLIL representation for module `\_90_demux'.
++Generating RTLIL representation for module `\_90_lut'.
++Generating RTLIL representation for module `$connect'.
++Generating RTLIL representation for module `$input_port'.
++Successfully finished Verilog frontend.
++
++2.32.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/arith_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/arith_map.v' to AST representation.
++Generating RTLIL representation for module `\_80_gatemate_alu'.
++Successfully finished Verilog frontend.
++
++2.32.3. Continuing TECHMAP pass.
++Using extmapper simplemap for cells of type $adffe.
++Using extmapper simplemap for cells of type $reduce_bool.
++Using extmapper simplemap for cells of type $reduce_and.
++Using extmapper simplemap for cells of type $not.
++Using extmapper simplemap for cells of type $logic_and.
++Using extmapper simplemap for cells of type $logic_not.
++Using extmapper simplemap for cells of type $eq.
++Using extmapper simplemap for cells of type $xor.
++Using template $paramod$0d149ffe75563ef6fcc1a3dddc59d00af28651a7\_90_pmux for cells of type $pmux.
++Using extmapper simplemap for cells of type $mux.
++Using extmapper simplemap for cells of type $adff.
++Using extmapper simplemap for cells of type $reduce_or.
++Using extmapper simplemap for cells of type $and.
++No more expansions possible.
++<suppressed ~166 debug messages>
++
++2.33. Executing OPT pass (performing simple optimizations).
++
++2.33.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++<suppressed ~10 debug messages>
++
++2.33.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 186 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Computing hashes of 183 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Computing hashes of 182 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++<suppressed ~12 debug messages>
++Removed a total of 4 cells.
++
++2.33.3. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.33.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 0 unused cells and 65 unused wires.
++<suppressed ~1 debug messages>
++
++2.33.5. Finished fast OPT passes.
++
++2.34. Executing IOPADMAP pass (mapping inputs/outputs to IO-PAD cells).
++Mapping port gatemate_ising_n16.S_AXI_RREADY using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_RVALID using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_RRESP using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_RDATA using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_ARREADY using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_ARVALID using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_ARADDR using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_BREADY using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_BVALID using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_BRESP using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_WREADY using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_WVALID using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_WSTRB using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_WDATA using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_AWREADY using CC_OBUF.
++Mapping port gatemate_ising_n16.S_AXI_AWVALID using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_AWADDR using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_ARESETN using CC_IBUF.
++Mapping port gatemate_ising_n16.S_AXI_ACLK using CC_IBUF.
++Removed 0 unused cells and 8 unused wires.
++
++2.35. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.36. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
++
++2.37. Executing TECHMAP pass (map to technology primitives).
++
++2.37.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/reg_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/reg_map.v' to AST representation.
++Generating RTLIL representation for module `$_DFFE_xxxx_'.
++Generating RTLIL representation for module `$_DLATCH_xxx_'.
++Successfully finished Verilog frontend.
++
++2.37.2. Continuing TECHMAP pass.
++Using template $paramod$e7538ffa59a8772e35f6a6ac594ef170009aa61b$_DFFE_xxxx_ for cells of type $_DFFE_PN0P_.
++No more expansions possible.
++<suppressed ~92 debug messages>
++
++2.38. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.39. Executing SIMPLEMAP pass (map simple cells to gate primitives).
++
++2.40. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++Removed 0 unused cells and 318 unused wires.
++<suppressed ~1 debug messages>
++
++2.41. Executing MUXCOVER pass (mapping to wider MUXes).
++Covering MUX trees in module gatemate_ising_n16..
++  Treeifying 16 MUXes:
++    Found tree with 1 MUXes at root $procmux$70.Y [0].
++    Found tree with 1 MUXes at root $procmux$70.Y [1].
++    Found tree with 1 MUXes at root $procmux$70.Y [2].
++    Found tree with 1 MUXes at root $procmux$70.Y [3].
++    Found tree with 1 MUXes at root $procmux$70.Y [4].
++    Found tree with 1 MUXes at root $procmux$70.Y [5].
++    Found tree with 1 MUXes at root $procmux$70.Y [6].
++    Found tree with 1 MUXes at root $procmux$70.Y [7].
++    Found tree with 1 MUXes at root $procmux$70.Y [8].
++    Found tree with 1 MUXes at root $procmux$70.Y [9].
++    Found tree with 1 MUXes at root $procmux$70.Y [10].
++    Found tree with 1 MUXes at root $procmux$70.Y [11].
++    Found tree with 1 MUXes at root $procmux$70.Y [12].
++    Found tree with 1 MUXes at root $procmux$70.Y [13].
++    Found tree with 1 MUXes at root $procmux$70.Y [14].
++    Found tree with 1 MUXes at root $procmux$70.Y [15].
++    Finished treeification: Found 16 trees.
++  Covering trees:
++    Replaced tree at $procmux$70.Y [0]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [1]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [2]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [3]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [4]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [5]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [6]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [7]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [8]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [9]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [10]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [11]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [12]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [13]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [14]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++    Replaced tree at $procmux$70.Y [15]: 1 MUX2, 0 MUX4, 0 MUX8, 0 MUX16
++  Added a total of 0 decoder MUXes.
++<suppressed ~273 debug messages>
++
++2.42. Executing OPT pass (performing simple optimizations).
++
++2.42.1. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++<suppressed ~16 debug messages>
++
++2.42.2. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 330 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.42.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++Running muxtree optimizer on module \gatemate_ising_n16..
++  Creating internal representation of mux trees.
++  No muxes found in this module.
++Removed 0 multiplexer ports.
++
++2.42.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++  Optimizing cells in module \gatemate_ising_n16.
++Performed a total of 0 changes.
++
++2.42.5. Executing OPT_MERGE pass (detect identical cells).
++Finding identical cells in module `\gatemate_ising_n16'.
++Computing hashes of 330 cells of `\gatemate_ising_n16'.
++Finding duplicate cells in `\gatemate_ising_n16'.
++Removed a total of 0 cells.
++
++2.42.6. Executing OPT_SHARE pass.
++
++2.42.7. Executing OPT_DFF pass (perform DFF optimizations).
++
++2.42.8. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.42.9. Executing OPT_EXPR pass (perform const folding).
++Optimizing module gatemate_ising_n16.
++
++2.42.10. Finished fast OPT passes. (There is nothing left to do.)
++
++2.43. Executing SIMPLEMAP pass (map simple cells to gate primitives).
++
++2.44. Executing TECHMAP pass (map to technology primitives).
++
++2.44.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/mux_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/mux_map.v' to AST representation.
++Generating RTLIL representation for module `$_MUX8_'.
++Generating RTLIL representation for module `$_MUX4_'.
++Successfully finished Verilog frontend.
++
++2.44.2. Continuing TECHMAP pass.
++No more expansions possible.
++<suppressed ~4 debug messages>
++
++2.45. Executing ABC pass (technology mapping using ABC).
++
++2.45.1. Extracting gate netlist of module `\gatemate_ising_n16' to `<abc-temp-dir>/input.blif'..
++Warning: ABC: Merged scl conversion failed, using liberty format
++
++2.45.1.1. Executed ABC.
++Extracted 129 gates and 189 wires to a netlist network with 60 inputs and 41 outputs.
++Running ABC script: <abc-temp-dir>/abc.script
++ABC: UC Berkeley, ABC 1.01 (compiled Apr 24 2026 04:14:48)
++ABC: abc 01> empty
++ABC: abc 01> source <abc-temp-dir>/abc.script
++ABC: + read_blif <abc-temp-dir>/input.blif 
++ABC: + read_library <yosys-exe-dir>/../share/yosys/gatemate/lut_tree_cells.genlib 
++ABC: + strash 
++ABC: + &get -n 
++ABC: + &fraig -x 
++ABC: + &put 
++ABC: + scorr 
++ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
++ABC: + dc2 
++ABC: + dretime 
++ABC: + strash 
++ABC: + &get -n 
++ABC: + &dch -f 
++ABC: + &nf 
++ABC: + &put 
++ABC: + write_blif <abc-temp-dir>/output.blif 
++ABC: 
++ABC: YOSYS_ABC_DONE 
++
++2.45.1.2. Re-integrating ABC results.
++ABC RESULTS:          $__CC2_A cells:        2
++ABC RESULTS:          $__CC2_X cells:       16
++ABC RESULTS:         $__CC3_AA cells:        3
++ABC RESULTS:         $__CC3_AO cells:        1
++ABC RESULTS:        $__CC4_AAA cells:        8
++ABC RESULTS:      $__CC5_AOA_A cells:       16
++ABC RESULTS:         $__CC_MUX cells:        1
++ABC RESULTS:         $__CC_NOT cells:       21
++ABC RESULTS:        internal signals:       88
++ABC RESULTS:           input signals:       60
++ABC RESULTS:          output signals:       41
++Removing temp directory.
++Removing global temp directory.
++
++2.46. Executing TECHMAP pass (map to technology primitives).
++
++2.46.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_tree_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_tree_map.v' to AST representation.
++Generating RTLIL representation for module `$__ZERO'.
++Generating RTLIL representation for module `$__ONE'.
++Generating RTLIL representation for module `$__CC_BUF'.
++Generating RTLIL representation for module `$__CC_MUX'.
++Generating RTLIL representation for module `$__CC2_A'.
++Generating RTLIL representation for module `$__CC3_A_O'.
++Generating RTLIL representation for module `$__CC3_A_X'.
++Generating RTLIL representation for module `$__CC2_O'.
++Generating RTLIL representation for module `$__CC3_O_A'.
++Generating RTLIL representation for module `$__CC3_O_X'.
++Generating RTLIL representation for module `$__CC2_X'.
++Generating RTLIL representation for module `$__CC3_X_A'.
++Generating RTLIL representation for module `$__CC3_X_O'.
++Generating RTLIL representation for module `$__CC3_AA'.
++Generating RTLIL representation for module `$__CC4_AA_O'.
++Generating RTLIL representation for module `$__CC4_AA_X'.
++Generating RTLIL representation for module `$__CC3_OO'.
++Generating RTLIL representation for module `$__CC4_OO_A'.
++Generating RTLIL representation for module `$__CC4_OO_X'.
++Generating RTLIL representation for module `$__CC3_XX'.
++Generating RTLIL representation for module `$__CC4_XX_A'.
++Generating RTLIL representation for module `$__CC4_XX_O'.
++Generating RTLIL representation for module `$__CC3_AO'.
++Generating RTLIL representation for module `$__CC4_AO_A'.
++Generating RTLIL representation for module `$__CC4_AO_O'.
++Generating RTLIL representation for module `$__CC4_AO_X'.
++Generating RTLIL representation for module `$__CC3_OA'.
++Generating RTLIL representation for module `$__CC4_OA_A'.
++Generating RTLIL representation for module `$__CC4_OA_O'.
++Generating RTLIL representation for module `$__CC4_OA_X'.
++Generating RTLIL representation for module `$__CC3_AX'.
++Generating RTLIL representation for module `$__CC4_AX_A'.
++Generating RTLIL representation for module `$__CC4_AX_O'.
++Generating RTLIL representation for module `$__CC4_AX_X'.
++Generating RTLIL representation for module `$__CC3_XA'.
++Generating RTLIL representation for module `$__CC4_XA_A'.
++Generating RTLIL representation for module `$__CC4_XA_O'.
++Generating RTLIL representation for module `$__CC4_XA_X'.
++Generating RTLIL representation for module `$__CC4_AAA'.
++Generating RTLIL representation for module `$__CC5_AAA_A'.
++Generating RTLIL representation for module `$__CC5_AAA_O'.
++Generating RTLIL representation for module `$__CC5_AAA_X'.
++Generating RTLIL representation for module `$__CC4_AXA'.
++Generating RTLIL representation for module `$__CC5_AXA_A'.
++Generating RTLIL representation for module `$__CC5_AXA_O'.
++Generating RTLIL representation for module `$__CC5_AXA_X'.
++Generating RTLIL representation for module `$__CC4_XAX'.
++Generating RTLIL representation for module `$__CC5_XAX_A'.
++Generating RTLIL representation for module `$__CC5_XAX_O'.
++Generating RTLIL representation for module `$__CC5_XAX_X'.
++Generating RTLIL representation for module `$__CC4_AAX'.
++Generating RTLIL representation for module `$__CC5_AAX_A'.
++Generating RTLIL representation for module `$__CC5_AAX_O'.
++Generating RTLIL representation for module `$__CC5_AAX_X'.
++Generating RTLIL representation for module `$__CC4_AXX'.
++Generating RTLIL representation for module `$__CC5_AXX_A'.
++Generating RTLIL representation for module `$__CC5_AXX_O'.
++Generating RTLIL representation for module `$__CC5_AXX_X'.
++Generating RTLIL representation for module `$__CC4_XXX'.
++Generating RTLIL representation for module `$__CC5_XXX_A'.
++Generating RTLIL representation for module `$__CC5_XXX_O'.
++Generating RTLIL representation for module `$__CC5_XXX_X'.
++Generating RTLIL representation for module `$__CC4_AAO'.
++Generating RTLIL representation for module `$__CC5_AAO_A'.
++Generating RTLIL representation for module `$__CC5_AAO_O'.
++Generating RTLIL representation for module `$__CC5_AAO_X'.
++Generating RTLIL representation for module `$__CC4_AOA'.
++Generating RTLIL representation for module `$__CC5_AOA_A'.
++Generating RTLIL representation for module `$__CC5_AOA_O'.
++Generating RTLIL representation for module `$__CC5_AOA_X'.
++Generating RTLIL representation for module `$__CC4_AOX'.
++Generating RTLIL representation for module `$__CC5_AOX_A'.
++Generating RTLIL representation for module `$__CC5_AOX_O'.
++Generating RTLIL representation for module `$__CC5_AOX_X'.
++Successfully finished Verilog frontend.
++
++2.46.2. Continuing TECHMAP pass.
++Using template $__CC4_AAA for cells of type $__CC4_AAA.
++Using template $__CC5_AOA_A for cells of type $__CC5_AOA_A.
++Using template $__CC3_AA for cells of type $__CC3_AA.
++Using template $__CC3_AO for cells of type $__CC3_AO.
++Using template $__CC2_A for cells of type $__CC2_A.
++Using template $__CC_MUX for cells of type $__CC_MUX.
++Using template $__CC2_X for cells of type $__CC2_X.
++No more expansions possible.
++<suppressed ~123 debug messages>
++
++2.47. Executing GATEMATE_FOLDINV pass (folding LUT tree inverters).
++
++2.48. Executing TECHMAP pass (map to technology primitives).
++
++2.48.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/inv_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/inv_map.v' to AST representation.
++Generating RTLIL representation for module `$__CC_NOT'.
++Successfully finished Verilog frontend.
++
++2.48.2. Continuing TECHMAP pass.
++Using template $__CC_NOT for cells of type $__CC_NOT.
++No more expansions possible.
++<suppressed ~24 debug messages>
++Removed 20 unused cells and 388 unused wires.
++
++2.49. Executing TECHMAP pass (map to technology primitives).
++
++2.49.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_map.v' to AST representation.
++Generating RTLIL representation for module `$lut'.
++Successfully finished Verilog frontend.
++
++2.49.2. Continuing TECHMAP pass.
++No more expansions possible.
++<suppressed ~3 debug messages>
++
++2.50. Executing CLKBUFMAP pass (inserting clock buffers).
++Inserting CC_BUFG on gatemate_ising_n16.$iopadmap$S_AXI_ACLK[0].
++
++2.51. Executing HIERARCHY pass (managing design hierarchy).
++Attribute `top' found on module `gatemate_ising_n16'. Setting top module to gatemate_ising_n16.
++
++2.51.1. Analyzing design hierarchy..
++Top module:  \gatemate_ising_n16
++
++2.51.2. Analyzing design hierarchy..
++Top module:  \gatemate_ising_n16
++Removed 0 unused modules.
++
++2.52. Printing statistics.
++
++=== gatemate_ising_n16 ===
++
++        +----------Local Count, excluding submodules.
++        | 
++       75 wires
++      391 wire bits
++       28 public wires
++      233 public wire bits
++       19 ports
++      148 port bits
++      250 cells
++        1   CC_BUFG
++       53   CC_DFF
++      107   CC_IBUF
++       12   CC_L2T4
++       16   CC_L2T5
++        1   CC_LUT1
++       18   CC_LUT2
++        1   CC_MX2
++       41   CC_OBUF
++
++2.53. Executing CHECK pass (checking for obvious problems).
++Checking module gatemate_ising_n16...
++Found and reported 0 problems.
++
++2.54. Executing OPT_CLEAN pass (remove unused cells and wires).
++Finding unused cells or wires in module \gatemate_ising_n16..
++
++2.55. Executing JSON backend.
++
++3. Printing statistics.
++
++=== gatemate_ising_n16 ===
++
++        +----------Local Count, excluding submodules.
++        | 
++       75 wires
++      391 wire bits
++       28 public wires
++      233 public wire bits
++       19 ports
++      148 port bits
++      250 cells
++        1   CC_BUFG
++       53   CC_DFF
++      107   CC_IBUF
++       12   CC_L2T4
++       16   CC_L2T5
++        1   CC_LUT1
++       18   CC_LUT2
++        1   CC_MX2
++       41   CC_OBUF
++
++Warnings: 1 unique messages, 1 total
++End of script. Logfile hash: bf65512184, time: 0.21s, user: 0.12s, system: 0.02s, MEM: 181.42 MB peak
++Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
++Time spent: 34% 15x read_verilog (0 sec), 33% 1x abc (0 sec), ...
++
++STDERR:
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index ef4e32df02..cbaa90a045 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -3849,6 +3849,69 @@ when a precondition is hard-missing — and never `unspecified`.
+ 
+ ---
+ 
++### REQ-HW-109
++
++**Title:** Exp 3866 GateMate n=16 Ising tile terminal flash v2 MUST precondition-gate hardware and preserve real resource evidence
++
++**Description:**
++Experiment 3866 MUST drive the GateMate A1-EVB-2M n=16 Carnot Ising tile toward
++terminal state using the current open-source GateMate flow:
++`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`, `gmpack`, and
++`openFPGALoader -c dirtyJtag -b olimex_gatemateevb`. Before any synthesis or
++fabrication step, it MUST check the exact toolchain and board resources:
++`yosys -V` with `synth_gatemate` support, `nextpnr-himbaechel --help`,
++`gmpack`, `openFPGALoader`, and `openFPGALoader -c dirtyJtag --detect` proving
++the Cologne Chip GateMate/GM1Ax IDCODE. If any precondition fails, the
++experiment MUST write a blocked artifact and MUST NOT run synthesis, P&R,
++packing, or flashing.
++
++When the preconditions pass, the experiment MUST synthesize, place-and-route,
++pack, and attempt exactly one real board flash. The artifact MUST record real
++LUT/DFF utilization and Fmax parsed from the actual tool transcripts. If the
++bitstream flashes but the current RTL/tooling exposes no host-visible sample
++readback path, `sample_timing_us` MUST be null with an explanatory note rather
++than a fabricated timing value. The terminal gate is the real board accepting
++the bitstream: `gatemate_bitstream_flashed=true`.
++
++**Acceptance criteria:**
++- `scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py` writes
++  `results/experiment_3866_gatemate_ising_tile_flash_v2.json`.
++- The artifact includes `honest_verdict`, `gatemate_bitstream_flashed`,
++  `synth_pnr_pack_succeeded`, `lut_dff_utilization`, `fmax_mhz`,
++  `sample_timing_us`, `sample_timing_note`, `preconditions_checked`,
++  `thermal_note`, `run_duration_s`, `duration_s`, `inference_substrate`, and
++  `reproducibility_checksum`.
++- The required artifact fields have principle annotations in
++  `field_provenance`, while `gatemate_bitstream_flashed` and
++  `synth_pnr_pack_succeeded` remain bare booleans.
++- A missing precondition emits an `honest_verdict` beginning with
++  `blocked_gatemate_<resource>` and exits before synthesis.
++- A successful synth/P&R/pack but failed flash emits an `honest_verdict`
++  beginning with `complete: gatemate_synth_pnr_pack_succeeded_flash_pending`.
++- A board-accepted bitstream emits an `honest_verdict` beginning with
++  `success: gatemate_ising_tile_n16_flashed_terminal`.
++
++**Implementation status:** Implemented (Exp 3866)
++
++---
++
++### SCENARIO-HW-109
++
++**Scenario:** GateMate n=16 Ising tile flash v2 records terminal, partial, or blocked state without fabrication.
++
++**Given:** The GateMate toolchain may or may not be installed and the
++Olimex GateMate A1-EVB-2M may or may not be detected over onboard DirtyJTAG.
++**When:** Experiment 3866 runs its preconditions and, only on pass, runs the
++synth_gatemate -> nextpnr-himbaechel -> gmpack -> openFPGALoader flow.
++**Then:** It writes the v2 artifact with precondition evidence, real
++utilization/Fmax values when the flow reaches P&R, a real flash result, and
++null sample timing with a note whenever no host-visible timing/readback path is
++available.
++
++**Implementation status:** Implemented (Exp 3866)
++
++---
++
+ ### REQ-HW-3577
+ 
+ **Title:** KV260 hardware-task continuity verification
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 51ec145c82..4e640fe076 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 154,
+   "code_violations": 0,
+-  "experiments_checked": 2948,
++  "experiments_checked": 2949,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3866_gatemate_ising_tile_flash_v2.py b/python/carnot/experiment_3866_gatemate_ising_tile_flash_v2.py
+new file mode 100644
+index 0000000000..81ddab4049
+--- /dev/null
++++ b/python/carnot/experiment_3866_gatemate_ising_tile_flash_v2.py
+@@ -0,0 +1,789 @@
++"""GateMate n=16 Ising tile flash v2 for Exp 3866.
++
++This module keeps the hardware boundary explicit. It first proves that the
++current GateMate toolchain and the real Olimex board are reachable; if any
++resource is missing, it writes a blocked artifact and exits before synthesis.
++Only after those preconditions pass does it run the actual
++``synth_gatemate -> nextpnr-himbaechel -> gmpack -> openFPGALoader`` flow.
++
++The sample timing field is intentionally conservative. The current DirtyJTAG
++flash path can program SRAM and detect the JTAG IDCODE, but this repo does not
++yet have a supported host-visible GateMate data path that can read an
++energy-eval cycle count back from the programmed tile. When that path is absent,
++the artifact records ``sample_timing_us = null`` with a note instead of inventing
++a timing number.
++
++Spec refs: REQ-HW-109, SCENARIO-HW-109.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import re
++import shlex
++import shutil
++import subprocess
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Callable
++
++
++ARTIFACT_FILENAME = "experiment_3866_gatemate_ising_tile_flash_v2.json"
++EXPERIMENT_ID = 3866
++RUN_DATE = "20260605"
++TOP_MODULE = "gatemate_ising_n16"
++RTL_RELATIVE = Path("rtl") / "gatemate_ising_n16.v"
++DEVICE = "CCGM1A1"
++REQUESTED_FREQ_MHZ = 12.0
++INFERENCE_SUBSTRATE = "hardware_smoke"
++RANDOM_SEED = 0xA1E2
++THERMAL_NOTE = (
++    "passively cooled; no active fan; sustained-load results may differ from "
++    "production with active cooling"
++)
++SAMPLE_TIMING_UNAVAILABLE_NOTE = (
++    "No supported GateMate host-visible readback/timing path is present for "
++    "this DirtyJTAG-flashed RTL; sample_timing_us is null and not fabricating "
++    "timing."
++)
++OSS_CAD_SUITE_BIN_CANDIDATES = (
++    "/opt/oss-cad-suite/bin",
++    str(Path.home() / "oss-cad-suite" / "bin"),
++    "/tools/oss-cad-suite/bin",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "gatemate_bitstream_flashed",
++    "synth_pnr_pack_succeeded",
++    "lut_dff_utilization",
++    "fmax_mhz",
++    "sample_timing_us",
++    "sample_timing_note",
++    "preconditions_checked",
++    "thermal_note",
++    "run_duration_s",
++    "duration_s",
++    "inference_substrate",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Self-declared terminal, partial, or blocked state lets the conductor "
++        "separate real hardware progress from honest precondition failure."
++    ),
++    "gatemate_bitstream_flashed": (
++        "Bare bool -- the terminal-state gate; true only if openFPGALoader "
++        "accepted the bitstream on the real board."
++    ),
++    "synth_pnr_pack_succeeded": (
++        "Bare bool -- the toolchain end-to-end produced a bitstream, separable from the flash step."
++    ),
++    "lut_dff_utilization": (
++        "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate "
++        "resources instead of a paper estimate."
++    ),
++    "fmax_mhz": (
++        "Real P&R timing output records whether the routed tile has a plausible "
++        "clock margin on CCGM1A1."
++    ),
++    "sample_timing_us": (
++        "On-board energy-eval cycle timing is populated only if a real readback "
++        "path exists; null prevents fabricated timing."
++    ),
++    "sample_timing_note": (
++        "Explains why sample_timing_us is null when the board can be flashed but "
++        "the programmed design has no supported host-visible timing path."
++    ),
++    "preconditions_checked": (
++        "Records the toolchain and board-detect checks before fabrication, "
++        "preventing exp1680-class hardware fabrication."
++    ),
++    "thermal_note": (
++        "GateMate is passively cooled, so the artifact must disclose that burst "
++        "smoke results are not sustained-load thermal evidence."
++    ),
++    "run_duration_s": (
++        "Real wall-clock duration makes the hardware flash round-trip auditable "
++        "and catches zero-duration fabricated runs."
++    ),
++    "duration_s": ("Standard artifact duration field consumed by adversarial verification."),
++    "inference_substrate": (
++        "Declares this as hardware_smoke so duration checks use the hardware "
++        "boundary rather than live-LLM expectations."
++    ),
++    "reproducibility_checksum": (
++        "Content-addressed hash of RTL, commands, tool evidence, bitstream, and "
++        "flash outcome catches silent drift."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Small subprocess result so tests can inject exact command transcripts."""
++
++    returncode: int
++    stdout: str
++    stderr: str
++
++
++RunCommand = Callable[[list[str], float], CommandResult]
++WhichFunc = Callable[[str], str | None]
++ClockFunc = Callable[[], float]
++
++
++def _default_run_command(args: list[str], timeout_s: float) -> CommandResult:  # pragma: no cover
++    completed = subprocess.run(
++        args,
++        check=False,
++        capture_output=True,
++        text=True,
++        timeout=timeout_s,
++    )
++    return CommandResult(completed.returncode, completed.stdout, completed.stderr)
++
++
++def resolve_toolchain_path() -> str | None:  # pragma: no cover
++    """Prepend a known OSS CAD Suite bin directory to PATH if present."""
++    for candidate in OSS_CAD_SUITE_BIN_CANDIDATES:
++        yosys = Path(candidate) / "yosys"
++        if yosys.exists():
++            current = os.environ.get("PATH", "")
++            if candidate not in current.split(os.pathsep):
++                os.environ["PATH"] = os.pathsep.join([candidate, current])
++            return candidate
++    return None
++
++
++def _duration(start: float, monotonic: ClockFunc) -> float:
++    return round(monotonic() - start, 6)
++
++
++def _command_text(result: CommandResult) -> str:
++    return "\n".join(part.strip() for part in (result.stdout, result.stderr) if part.strip())
++
++
++def _quote(args: list[str]) -> str:
++    return shlex.join(args)
++
++
++def _excerpt(text: str, limit: int = 1200) -> str:
++    return text[-limit:] if len(text) > limit else text
++
++
++def _version_at_least(version_text: str, minimum: tuple[int, int]) -> bool:
++    match = re.search(r"Yosys\s+([0-9]+)\.([0-9]+)", version_text)
++    return bool(match and (int(match.group(1)), int(match.group(2))) >= minimum)
++
++
++def _read_yosys(
++    *,
++    run_command: RunCommand,
++    which_func: WhichFunc,
++) -> dict:
++    path = which_func("yosys") or ""
++    if not path:
++        return {
++            "resource": "yosys",
++            "available": False,
++            "blocker": "blocked_gatemate_yosys_missing",
++            "command": "command -v yosys && yosys -V",
++            "path": "",
++            "version": "",
++            "detail": "yosys not on PATH",
++        }
++    version = run_command([path, "-V"], 10.0)
++    synth_help = run_command([path, "-Q", "-p", "help synth_gatemate"], 10.0)
++    version_text = _command_text(version)
++    synth_text = _command_text(synth_help)
++    ok = (
++        version.returncode == 0
++        and _version_at_least(version_text, (0, 64))
++        and synth_help.returncode == 0
++        and "synth_gatemate" in synth_text
++    )
++    return {
++        "resource": "yosys",
++        "available": ok,
++        "blocker": "" if ok else "blocked_gatemate_yosys_synth_gatemate_missing",
++        "command": "command -v yosys && yosys -V && yosys -Q -p 'help synth_gatemate'",
++        "path": path,
++        "version": version_text.splitlines()[0] if version_text else "",
++        "version_returncode": version.returncode,
++        "synth_gatemate_returncode": synth_help.returncode,
++        "detail": _excerpt("\n".join([version_text, synth_text]).strip()),
++    }
++
++
++def _read_himbaechel(
++    *,
++    run_command: RunCommand,
++    which_func: WhichFunc,
++) -> dict:
++    path = which_func("nextpnr-himbaechel") or ""
++    if not path:
++        return {
++            "resource": "nextpnr-himbaechel",
++            "available": False,
++            "blocker": "blocked_gatemate_himbaechel_missing",
++            "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
++            "path": "",
++            "detail": "nextpnr-himbaechel not on PATH",
++        }
++    result = run_command([path, "--help"], 10.0)
++    text = _command_text(result)
++    ok = result.returncode == 0
++    return {
++        "resource": "nextpnr-himbaechel",
++        "available": ok,
++        "blocker": "" if ok else "blocked_gatemate_himbaechel_missing",
++        "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
++        "path": path,
++        "returncode": result.returncode,
++        "detail": _excerpt(text),
++    }
++
++
++def _read_path_only(tool: str, blocker: str, which_func: WhichFunc) -> dict:
++    path = which_func(tool) or ""
++    return {
++        "resource": tool,
++        "available": bool(path),
++        "blocker": "" if path else blocker,
++        "command": f"command -v {tool}",
++        "path": path,
++        "detail": path if path else f"{tool} not on PATH",
++    }
++
++
++def _parse_board_detect(result: CommandResult) -> bool:
++    """Return True only when the transcript proves a GateMate/GM1Ax IDCODE."""
++    text = _command_text(result).lower()
++    return (
++        result.returncode == 0
++        and "idcode" in text
++        and ("colognechip" in text or "gatemate" in text or "gm1a" in text)
++    )
++
++
++def _board_detect(
++    *,
++    loader_path: str,
++    run_command: RunCommand,
++    skipped: bool,
++) -> dict:
++    command = "openFPGALoader -c dirtyJtag --detect"
++    if skipped:
++        return {
++            "resource": "gatemate_board_detect",
++            "available": False,
++            "blocker": "blocked_gatemate_board_not_detected",
++            "command": command,
++            "returncode": None,
++            "detail": "skipped: a toolchain precondition failed",
++        }
++    result = run_command([loader_path, "-c", "dirtyJtag", "--detect"], 30.0)
++    text = _command_text(result)
++    ok = _parse_board_detect(result)
++    return {
++        "resource": "gatemate_board_detect",
++        "available": ok,
++        "blocker": "" if ok else "blocked_gatemate_board_not_detected",
++        "command": command,
++        "returncode": result.returncode,
++        "detail": _excerpt(text),
++    }
++
++
++def check_preconditions(
++    *,
++    run_command: RunCommand,
++    which_func: WhichFunc,
++) -> list[dict]:
++    """Run all required precondition checks before any fabrication command."""
++    checks = [
++        _read_yosys(run_command=run_command, which_func=which_func),
++        _read_himbaechel(run_command=run_command, which_func=which_func),
++        _read_path_only("gmpack", "blocked_gatemate_gmpack_missing", which_func),
++        _read_path_only("openFPGALoader", "blocked_gatemate_openfpgaloader_missing", which_func),
++    ]
++    tool_failed = any(not entry["available"] for entry in checks)
++    loader = next(entry for entry in checks if entry["resource"] == "openFPGALoader")
++    checks.append(
++        _board_detect(
++            loader_path=str(loader.get("path", "")),
++            run_command=run_command,
++            skipped=tool_failed,
++        )
++    )
++    return checks
++
++
++def _first_blocker(preconditions: list[dict]) -> str:
++    for entry in preconditions:
++        if not entry["available"]:
++            return str(entry["blocker"])
++    return ""
++
++
++def _sha256_file(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def _build_paths(repo_root: Path) -> dict[str, Path]:
++    build_dir = repo_root / "build" / "gatemate" / "experiment_3866_gatemate_ising_tile_flash_v2"
++    log_dir = repo_root / "logs" / "experiment_3866_gatemate_ising_tile_flash_v2"
++    return {
++        "build_dir": build_dir,
++        "log_dir": log_dir,
++        "synth_json": build_dir / f"{TOP_MODULE}.json",
++        "pnr_json": build_dir / f"{TOP_MODULE}.pnr.json",
++        "cfg_bit": build_dir / f"{TOP_MODULE}.cfg.bit",
++        "bitstream": build_dir / f"{TOP_MODULE}.bit",
++        "synth_log": log_dir / "synthesis.log",
++        "pnr_log": log_dir / "pnr.log",
++        "pack_log": log_dir / "pack.log",
++        "flash_log": log_dir / "flash.log",
++    }
++
++
++def _tool_path(preconditions: list[dict], resource: str) -> str:
++    return str(next(entry["path"] for entry in preconditions if entry["resource"] == resource))
++
++
++def _commands(
++    repo_root: Path, preconditions: list[dict], paths: dict[str, Path]
++) -> dict[str, list[str]]:
++    rtl = repo_root / RTL_RELATIVE
++    return {
++        "synthesis": [
++            _tool_path(preconditions, "yosys"),
++            "-l",
++            str(paths["synth_log"]),
++            "-p",
++            (
++                f"read_verilog -sv {rtl}; "
++                f"synth_gatemate -top {TOP_MODULE} -nomx8 -luttree "
++                f"-json {paths['synth_json']}; stat"
++            ),
++        ],
++        "pnr": [
++            _tool_path(preconditions, "nextpnr-himbaechel"),
++            "--device",
++            DEVICE,
++            "--json",
++            str(paths["synth_json"]),
++            "--write",
++            str(paths["pnr_json"]),
++            "--freq",
++            f"{REQUESTED_FREQ_MHZ:.1f}",
++            "--vopt",
++            "allow-unconstrained",
++            "--vopt",
++            f"out={paths['cfg_bit']}",
++        ],
++        "pack": [
++            _tool_path(preconditions, "gmpack"),
++            str(paths["cfg_bit"]),
++            str(paths["bitstream"]),
++        ],
++        "flash": [
++            _tool_path(preconditions, "openFPGALoader"),
++            "-c",
++            "dirtyJtag",
++            "-b",
++            "olimex_gatemateevb",
++            str(paths["bitstream"]),
++        ],
++    }
++
++
++def _write_log(path: Path, command: list[str], result: CommandResult) -> str:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "\n".join(
++            [
++                f"COMMAND: {_quote(command)}",
++                f"RETURNCODE: {result.returncode}",
++                "STDOUT:",
++                result.stdout,
++                "STDERR:",
++                result.stderr,
++            ]
++        ),
++        encoding="utf-8",
++    )
++    return str(path)
++
++
++def _transcript_entry(stage: str, command: list[str], result: CommandResult) -> dict:
++    return {
++        "stage": stage,
++        "command": _quote(command),
++        "returncode": result.returncode,
++        "output_excerpt": _excerpt(_command_text(result)),
++    }
++
++
++def _failure_reason(stage: str, result: CommandResult) -> str:
++    text = _command_text(result).lower()
++    if "unsupported" in text:
++        return f"{stage}_unsupported_cell"
++    if result.returncode != 0:
++        return f"{stage}_returncode_{result.returncode}"
++    return f"{stage}_failed"
++
++
++def _parse_fmax_mhz(pnr_text: str) -> float | None:
++    matches = re.findall(r"Max frequency for clock '[^']+':\s*([0-9.]+)\s*MHz", pnr_text)
++    return float(matches[-1]) if matches else None
++
++
++def _parse_utilization(synthesis_text: str, pnr_text: str) -> dict:
++    cell_counts: dict[str, int] = {}
++    for match in re.finditer(
++        r"^\s*(CC_[A-Za-z0-9_]+)\s+([0-9]+)\s*$",
++        synthesis_text,
++        re.MULTILINE,
++    ):
++        cell_counts[match.group(1)] = int(match.group(2))
++    for match in re.finditer(
++        r"^\s*([0-9]+)\s+(CC_[A-Za-z0-9_]+)\s*$",
++        synthesis_text,
++        re.MULTILINE,
++    ):
++        cell_counts[match.group(2)] = int(match.group(1))
++    resources = {
++        match.group(1): {
++            "used": int(match.group(2)),
++            "available": int(match.group(3)),
++            "percent": int(match.group(4)),
++        }
++        for match in re.finditer(
++            r"\b([A-Z0-9_]+):\s*([0-9]+)\s*/\s*([0-9]+)\s+([0-9]+)%",
++            pnr_text,
++        )
++    }
++    return {
++        "lut_count": sum(count for name, count in cell_counts.items() if name.startswith("CC_LUT")),
++        "dff_count": sum(count for name, count in cell_counts.items() if name.startswith("CC_DFF")),
++        "yosys_cell_counts": cell_counts,
++        "nextpnr_resources": resources,
++        "principle": FIELD_PRINCIPLES["lut_dff_utilization"],
++    }
++
++
++def _metric_label(value: float | int | None) -> str:
++    if value is None:
++        return "unknown"
++    if isinstance(value, float):
++        return f"{value:.2f}"
++    return str(value)
++
++
++def _flash_pending_reason(result: CommandResult) -> str:
++    if result.returncode != 0:
++        return f"openfpgaloader_returncode_{result.returncode}"
++    return "openfpgaloader_no_acceptance_evidence"
++
++
++def _verdict(
++    *,
++    blocker: str,
++    build_failure_reason: str,
++    synth_pnr_pack_succeeded: bool,
++    flash_result: CommandResult | None,
++    flashed: bool,
++    utilization: dict | None,
++    fmax_mhz: float | None,
++    sample_timing_us: float | None,
++) -> str:
++    if blocker:
++        return blocker
++    lut = utilization.get("lut_count") if utilization else None
++    fmax = _metric_label(fmax_mhz)
++    if flashed:
++        timing = "none_no_readback" if sample_timing_us is None else _metric_label(sample_timing_us)
++        return (
++            "success: "
++            f"gatemate_ising_tile_n16_flashed_terminal_lut{_metric_label(lut)}_"
++            f"fmax{fmax}_timing{timing}"
++        )
++    if synth_pnr_pack_succeeded and flash_result is not None:
++        return (
++            "complete: "
++            f"gatemate_synth_pnr_pack_succeeded_flash_pending_"
++            f"{_flash_pending_reason(flash_result)}_lut{_metric_label(lut)}_fmax{fmax}"
++        )
++    return (
++        "complete: "
++        f"gatemate_synth_pnr_pack_failed_{build_failure_reason or 'unknown'}_"
++        f"lut{_metric_label(lut)}_fmax{fmax}"
++    )
++
++
++def _field_provenance() -> dict:
++    return {field: {"principle": principle} for field, principle in FIELD_PRINCIPLES.items()}
++
++
++def _reproducibility_checksum(material: dict) -> str:
++    encoded = json.dumps(material, sort_keys=True, default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _base_artifact(
++    *,
++    start: float,
++    monotonic: ClockFunc,
++    preconditions_checked: list[dict],
++    honest_verdict: str,
++    gatemate_bitstream_flashed: bool,
++    synth_pnr_pack_succeeded: bool,
++    lut_dff_utilization: dict | None,
++    fmax_mhz: float | None,
++    command_transcript: list[dict],
++    build_log_paths: list[str],
++    bitstream_path: Path | None,
++    bitstream_sha256: str,
++    extra_checksum_material: dict,
++) -> dict:
++    run_duration = _duration(start, monotonic)
++    checksum = _reproducibility_checksum(
++        {
++            "experiment": EXPERIMENT_ID,
++            "rtl_sha256": extra_checksum_material.get("rtl_sha256", ""),
++            "preconditions_checked": preconditions_checked,
++            "command_transcript": command_transcript,
++            "bitstream_sha256": bitstream_sha256,
++            "honest_verdict": honest_verdict,
++        }
++    )
++    return {
++        "experiment": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "honest_verdict": honest_verdict,
++        "gatemate_bitstream_flashed": gatemate_bitstream_flashed,
++        "synth_pnr_pack_succeeded": synth_pnr_pack_succeeded,
++        "lut_dff_utilization": lut_dff_utilization,
++        "fmax_mhz": fmax_mhz,
++        "sample_timing_us": None,
++        "sample_timing_note": SAMPLE_TIMING_UNAVAILABLE_NOTE,
++        "preconditions_checked": preconditions_checked,
++        "thermal_note": THERMAL_NOTE,
++        "run_duration_s": run_duration,
++        "duration_s": run_duration,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "reproducibility_checksum": checksum,
++        "random_seed": RANDOM_SEED,
++        "model_specs": {
++            "rtl_top": TOP_MODULE,
++            "n_spins": 16,
++            "device": DEVICE,
++            "rtl_path": str(RTL_RELATIVE),
++        },
++        "command_transcript": command_transcript,
++        "build_log_paths": build_log_paths,
++        "bitstream_path": str(bitstream_path) if bitstream_path else "",
++        "bitstream_sha256": bitstream_sha256,
++        "field_provenance": _field_provenance(),
++        "soc_temp_max_c": None,
++    }
++
++
++def build_artifact(
++    *,
++    repo_root: Path,
++    run_command: RunCommand = _default_run_command,
++    which_func: WhichFunc = shutil.which,
++    monotonic: ClockFunc = time.monotonic,
++) -> dict:
++    start = monotonic()
++    preconditions = check_preconditions(run_command=run_command, which_func=which_func)
++    blocker = _first_blocker(preconditions)
++    rtl_path = repo_root / RTL_RELATIVE
++    rtl_sha256 = _sha256_file(rtl_path) if rtl_path.exists() else ""
++
++    if blocker:
++        return _base_artifact(
++            start=start,
++            monotonic=monotonic,
++            preconditions_checked=preconditions,
++            honest_verdict=blocker,
++            gatemate_bitstream_flashed=False,
++            synth_pnr_pack_succeeded=False,
++            lut_dff_utilization=None,
++            fmax_mhz=None,
++            command_transcript=[],
++            build_log_paths=[],
++            bitstream_path=None,
++            bitstream_sha256="",
++            extra_checksum_material={"rtl_sha256": rtl_sha256},
++        )
++
++    if not rtl_path.exists():
++        return _base_artifact(
++            start=start,
++            monotonic=monotonic,
++            preconditions_checked=preconditions,
++            honest_verdict="complete: gatemate_synth_pnr_pack_failed_rtl_missing_lutunknown_fmaxunknown",
++            gatemate_bitstream_flashed=False,
++            synth_pnr_pack_succeeded=False,
++            lut_dff_utilization=None,
++            fmax_mhz=None,
++            command_transcript=[],
++            build_log_paths=[],
++            bitstream_path=None,
++            bitstream_sha256="",
++            extra_checksum_material={"rtl_sha256": ""},
++        )
++
++    paths = _build_paths(repo_root)
++    paths["build_dir"].mkdir(parents=True, exist_ok=True)
++    paths["log_dir"].mkdir(parents=True, exist_ok=True)
++    commands = _commands(repo_root, preconditions, paths)
++    logs: list[str] = []
++    transcript: list[dict] = []
++    outputs: dict[str, str] = {}
++    utilization: dict | None = None
++    fmax_mhz: float | None = None
++    build_failure_reason = ""
++
++    stage_specs = (
++        ("synthesis", paths["synth_log"], 120.0),
++        ("pnr", paths["pnr_log"], 240.0),
++        ("pack", paths["pack_log"], 120.0),
++    )
++    for stage, log_path, timeout_s in stage_specs:
++        result = run_command(commands[stage], timeout_s)
++        logs.append(_write_log(log_path, commands[stage], result))
++        transcript.append(_transcript_entry(stage, commands[stage], result))
++        outputs[stage] = _command_text(result)
++        if result.returncode != 0:
++            build_failure_reason = _failure_reason(stage, result)
++            verdict = _verdict(
++                blocker="",
++                build_failure_reason=build_failure_reason,
++                synth_pnr_pack_succeeded=False,
++                flash_result=None,
++                flashed=False,
++                utilization=utilization,
++                fmax_mhz=fmax_mhz,
++                sample_timing_us=None,
++            )
++            return _base_artifact(
++                start=start,
++                monotonic=monotonic,
++                preconditions_checked=preconditions,
++                honest_verdict=verdict,
++                gatemate_bitstream_flashed=False,
++                synth_pnr_pack_succeeded=False,
++                lut_dff_utilization=utilization,
++                fmax_mhz=fmax_mhz,
++                command_transcript=transcript,
++                build_log_paths=logs,
++                bitstream_path=paths["bitstream"],
++                bitstream_sha256="",
++                extra_checksum_material={"rtl_sha256": rtl_sha256},
++            )
++        if stage == "pnr":
++            utilization = _parse_utilization(outputs.get("synthesis", ""), outputs["pnr"])
++            fmax_mhz = _parse_fmax_mhz(outputs["pnr"])
++
++    if not paths["bitstream"].exists():  # pragma: no cover - defensive filesystem check
++        build_failure_reason = "pack_missing_bitstream"
++        verdict = _verdict(
++            blocker="",
++            build_failure_reason=build_failure_reason,
++            synth_pnr_pack_succeeded=False,
++            flash_result=None,
++            flashed=False,
++            utilization=utilization,
++            fmax_mhz=fmax_mhz,
++            sample_timing_us=None,
++        )
++        return _base_artifact(
++            start=start,
++            monotonic=monotonic,
++            preconditions_checked=preconditions,
++            honest_verdict=verdict,
++            gatemate_bitstream_flashed=False,
++            synth_pnr_pack_succeeded=False,
++            lut_dff_utilization=utilization,
++            fmax_mhz=fmax_mhz,
++            command_transcript=transcript,
++            build_log_paths=logs,
++            bitstream_path=paths["bitstream"],
++            bitstream_sha256="",
++            extra_checksum_material={"rtl_sha256": rtl_sha256},
++        )
++
++    bitstream_sha256 = _sha256_file(paths["bitstream"])
++    flash_result = run_command(commands["flash"], 120.0)
++    logs.append(_write_log(paths["flash_log"], commands["flash"], flash_result))
++    transcript.append(_transcript_entry("flash", commands["flash"], flash_result))
++    flashed = flash_result.returncode == 0
++    verdict = _verdict(
++        blocker="",
++        build_failure_reason=build_failure_reason,
++        synth_pnr_pack_succeeded=True,
++        flash_result=flash_result,
++        flashed=flashed,
++        utilization=utilization,
++        fmax_mhz=fmax_mhz,
++        sample_timing_us=None,
++    )
++    return _base_artifact(
++        start=start,
++        monotonic=monotonic,
++        preconditions_checked=preconditions,
++        honest_verdict=verdict,
++        gatemate_bitstream_flashed=flashed,
++        synth_pnr_pack_succeeded=True,
++        lut_dff_utilization=utilization,
++        fmax_mhz=fmax_mhz,
++        command_transcript=transcript,
++        build_log_paths=logs,
++        bitstream_path=paths["bitstream"],
++        bitstream_sha256=bitstream_sha256,
++        extra_checksum_material={"rtl_sha256": rtl_sha256},
++    )
++
++
++def run_experiment(
++    *,
++    repo_root: Path | None = None,
++    artifact_path: Path | None = None,
++    run_command: RunCommand = _default_run_command,
++    which_func: WhichFunc = shutil.which,
++    monotonic: ClockFunc = time.monotonic,
++) -> dict:
++    """Run the experiment and write the v2 deliverable JSON."""
++    root = repo_root or Path.cwd()
++    destination = artifact_path or root / "results" / ARTIFACT_FILENAME
++    artifact = build_artifact(
++        repo_root=root,
++        run_command=run_command,
++        which_func=which_func,
++        monotonic=monotonic,
++    )
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    resolve_toolchain_path()
++    run_experiment()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_3866_gatemate_ising_tile_flash_v2.json b/results/experiment_3866_gatemate_ising_tile_flash_v2.json
+new file mode 100644
+index 0000000000..ba9aca1126
+--- /dev/null
++++ b/results/experiment_3866_gatemate_ising_tile_flash_v2.json
+@@ -0,0 +1,232 @@
++{
++  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
++  "bitstream_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
++  "build_log_paths": [
++    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log",
++    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log",
++    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log",
++    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log"
++  ],
++  "command_transcript": [
++    {
++      "command": "/opt/oss-cad-suite/bin/yosys -l /home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json; stat'",
++      "output_excerpt": "  148 port bits\n      250 cells\n        1   CC_BUFG\n       53   CC_DFF\n      107   CC_IBUF\n       12   CC_L2T4\n       16   CC_L2T5\n        1   CC_LUT1\n       18   CC_LUT2\n        1   CC_MX2\n       41   CC_OBUF\n\n2.53. Executing CHECK pass (checking for obvious problems).\nChecking module gatemate_ising_n16...\nFound and reported 0 problems.\n\n2.54. Executing OPT_CLEAN pass (remove unused cells and wires).\nFinding unused cells or wires in module \\gatemate_ising_n16..\n\n2.55. Executing JSON backend.\n\n3. Printing statistics.\n\n=== gatemate_ising_n16 ===\n\n        +----------Local Count, excluding submodules.\n        | \n       75 wires\n      391 wire bits\n       28 public wires\n      233 public wire bits\n       19 ports\n      148 port bits\n      250 cells\n        1   CC_BUFG\n       53   CC_DFF\n      107   CC_IBUF\n       12   CC_L2T4\n       16   CC_L2T5\n        1   CC_LUT1\n       18   CC_LUT2\n        1   CC_MX2\n       41   CC_OBUF\n\nWarnings: 1 unique messages, 1 total\nEnd of script. Logfile hash: bf65512184, time: 0.21s, user: 0.12s, system: 0.02s, MEM: 181.42 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 34% 15x read_verilog (0 sec), 33% 1x abc (0 sec), ...",
++      "returncode": 0,
++      "stage": "synthesis"
++    },
++    {
++      "command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.pnr.json --freq 12.0 --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit",
++      "output_excerpt": "nblenke/carnot/rtl/gatemate_ising_n16.v:106.18-109.32\nInfo:                               /opt/oss-cad-suite/lib/../share/yosys/techmap.v:583.21-583.22\nInfo:      setup  0.10  22.62 Source $auto$ff.cc:337:slice$247.DIN\nInfo: 1.53 ns logic, 21.09 ns routing\n\nInfo: Max frequency for clock '$iopadmap$S_AXI_ACLK': 139.12 MHz (PASS at 12.00 MHz)\n\nInfo: Max delay <async> -> posedge $iopadmap$S_AXI_ACLK: 22.62 ns\n\nInfo: Slack histogram:\nInfo:  legend: * represents 1 endpoint(s)\nInfo:          + represents [1,1) endpoint(s)\nInfo: [ 76145,  76410) |**** \nInfo: [ 76410,  76675) |** \nInfo: [ 76675,  76940) | \nInfo: [ 76940,  77205) |******* \nInfo: [ 77205,  77470) |** \nInfo: [ 77470,  77735) |** \nInfo: [ 77735,  78000) | \nInfo: [ 78000,  78265) | \nInfo: [ 78265,  78530) | \nInfo: [ 78530,  78795) |* \nInfo: [ 78795,  79060) | \nInfo: [ 79060,  79325) |** \nInfo: [ 79325,  79590) |*** \nInfo: [ 79590,  79855) |**** \nInfo: [ 79855,  80120) |***** \nInfo: [ 80120,  80385) |******* \nInfo: [ 80385,  80650) |*********** \nInfo: [ 80650,  80915) |**** \nInfo: [ 80915,  81180) | \nInfo: [ 81180,  81445) |* \nInfo: Update configuration based on routing..\n\n148 warnings, 0 errors\n\nInfo: Program finished normally.",
++      "returncode": 0,
++      "stage": "pnr"
++    },
++    {
++      "command": "/opt/oss-cad-suite/bin/gmpack /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
++      "output_excerpt": "",
++      "returncode": 0,
++      "stage": "pack"
++    },
++    {
++      "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
++      "output_excerpt": "Board default cable overridden with dirtyJtag\nJtag frequency : requested 6000000 Hz -> real 6000000 Hz\n\nLoad SRAM via JTAG: [==================================================] 100.00%\n\nDone",
++      "returncode": 0,
++      "stage": "flash"
++    }
++  ],
++  "duration_s": 6.345193,
++  "experiment": 3866,
++  "field_provenance": {
++    "duration_s": {
++      "principle": "Standard artifact duration field consumed by adversarial verification."
++    },
++    "fmax_mhz": {
++      "principle": "Real P&R timing output records whether the routed tile has a plausible clock margin on CCGM1A1."
++    },
++    "gatemate_bitstream_flashed": {
++      "principle": "Bare bool -- the terminal-state gate; true only if openFPGALoader accepted the bitstream on the real board."
++    },
++    "honest_verdict": {
++      "principle": "Self-declared terminal, partial, or blocked state lets the conductor separate real hardware progress from honest precondition failure."
++    },
++    "inference_substrate": {
++      "principle": "Declares this as hardware_smoke so duration checks use the hardware boundary rather than live-LLM expectations."
++    },
++    "lut_dff_utilization": {
++      "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate."
++    },
++    "preconditions_checked": {
++      "principle": "Records the toolchain and board-detect checks before fabrication, preventing exp1680-class hardware fabrication."
++    },
++    "reproducibility_checksum": {
++      "principle": "Content-addressed hash of RTL, commands, tool evidence, bitstream, and flash outcome catches silent drift."
++    },
++    "run_duration_s": {
++      "principle": "Real wall-clock duration makes the hardware flash round-trip auditable and catches zero-duration fabricated runs."
++    },
++    "sample_timing_note": {
++      "principle": "Explains why sample_timing_us is null when the board can be flashed but the programmed design has no supported host-visible timing path."
++    },
++    "sample_timing_us": {
++      "principle": "On-board energy-eval cycle timing is populated only if a real readback path exists; null prevents fabricated timing."
++    },
++    "synth_pnr_pack_succeeded": {
++      "principle": "Bare bool -- the toolchain end-to-end produced a bitstream, separable from the flash step."
++    },
++    "thermal_note": {
++      "principle": "GateMate is passively cooled, so the artifact must disclose that burst smoke results are not sustained-load thermal evidence."
++    }
++  },
++  "fmax_mhz": 139.12,
++  "gatemate_bitstream_flashed": true,
++  "honest_verdict": "success: gatemate_ising_tile_n16_flashed_terminal_lut19_fmax139.12_timingnone_no_readback",
++  "inference_substrate": "hardware_smoke",
++  "lut_dff_utilization": {
++    "dff_count": 53,
++    "lut_count": 19,
++    "nextpnr_resources": {
++      "CFG_CTRL": {
++        "available": 1,
++        "percent": 0,
++        "used": 0
++      },
++      "CLKIN": {
++        "available": 1,
++        "percent": 100,
++        "used": 1
++      },
++      "CPE_COMP": {
++        "available": 20480,
++        "percent": 0,
++        "used": 0
++      },
++      "CPE_CPLINES": {
++        "available": 20480,
++        "percent": 0,
++        "used": 0
++      },
++      "CPE_FF": {
++        "available": 40960,
++        "percent": 0,
++        "used": 53
++      },
++      "CPE_LT": {
++        "available": 40960,
++        "percent": 0,
++        "used": 103
++      },
++      "CPE_RAMIO": {
++        "available": 40960,
++        "percent": 0,
++        "used": 22
++      },
++      "GLBOUT": {
++        "available": 1,
++        "percent": 100,
++        "used": 1
++      },
++      "GPIO": {
++        "available": 162,
++        "percent": 91,
++        "used": 148
++      },
++      "IOSEL": {
++        "available": 162,
++        "percent": 91,
++        "used": 148
++      },
++      "PLL": {
++        "available": 4,
++        "percent": 0,
++        "used": 0
++      },
++      "RAM_HALF": {
++        "available": 64,
++        "percent": 0,
++        "used": 0
++      },
++      "SERDES": {
++        "available": 1,
++        "percent": 0,
++        "used": 0
++      },
++      "USR_RSTN": {
++        "available": 1,
++        "percent": 0,
++        "used": 0
++      }
++    },
++    "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate.",
++    "yosys_cell_counts": {
++      "CC_BUFG": 1,
++      "CC_DFF": 53,
++      "CC_IBUF": 107,
++      "CC_L2T4": 12,
++      "CC_L2T5": 16,
++      "CC_LUT1": 1,
++      "CC_LUT2": 18,
++      "CC_MX2": 1,
++      "CC_OBUF": 41
++    }
++  },
++  "model_specs": {
++    "device": "CCGM1A1",
++    "n_spins": 16,
++    "rtl_path": "rtl/gatemate_ising_n16.v",
++    "rtl_top": "gatemate_ising_n16"
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v yosys && yosys -V && yosys -Q -p 'help synth_gatemate'",
++      "detail": "ell $_DFFE_????_ 01 -cell $_DLATCH_???_ 01\n        techmap -map +/gatemate/reg_map.v\n        opt_expr -mux_undef\n        simplemap\n        opt_clean\n\n    map_muxs:\n        muxcover  -mux4 -mux8\n        opt -full\n        simplemap\n        techmap -map +/gatemate/mux_map.v\n\n    map_luts:\n        abc  -genlib +/gatemate/lut_tree_cells.genlib    (with -luttree)\n        techmap -map +/gatemate/lut_tree_map.v    (with -luttree)\n        gatemate_foldinv    (with -luttree)\n        techmap -map +/gatemate/inv_map.v    (with -luttree)\n        abc  -dress -lut 4    (without -luttree)\n        clean\n\n    map_cells:\n        techmap -map +/gatemate/lut_map.v\n        clean\n\n    map_bufg:    (skip if '-noclkbuf')\n        clkbufmap -buf CC_BUFG O:I\n        clean\n\n    check:\n        hierarchy -check\n        stat -width\n        check -noinit\n        blackbox =A:whitebox\n\n    vlog:\n        opt_clean -purge\n        write_verilog -noattr <file-name>\n\n    json:\n        write_json <file-name>\n\nEnd of script. Logfile hash: ce4836ed80, time: 0.00s, user: 0.00s, system: 0.00s, MEM: 181.42 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 99% 1x help (0 sec), 0% 0x id_gc (0 sec)",
++      "path": "/opt/oss-cad-suite/bin/yosys",
++      "resource": "yosys",
++      "synth_gatemate_returncode": 0,
++      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
++      "version_returncode": 0
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
++      "detail": "               enable experimental timing-driven ripup\n                                        in router\n  --router2-tmg-ripup                   enable experimental timing-driven ripup\n                                        in router (deprecated; use --tmg-ripup \n                                        instead)\n  --router2-alt-weights                 use alternate router2 weights\n  --report arg                          write timing and utilization report in \n                                        JSON format to file\n  --detailed-timing-report              Append detailed net timing data to the \n                                        JSON report\n  --placed-svg arg                      write render of placement to SVG file\n  --routed-svg arg                      write render of routing to SVG file\n\nArchitecture specific options:\n  --device arg                          name of device to use\n  --chipdb arg                          override path to chip database file\n  --list-uarch                          list included uarches\n  -o [ --vopt ] arg                     options to pass to the himb\u00e4chel uarch\n                                        (use help as argument to get more info)",
++      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++      "resource": "nextpnr-himbaechel",
++      "returncode": 0
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v gmpack",
++      "detail": "/opt/oss-cad-suite/bin/gmpack",
++      "path": "/opt/oss-cad-suite/bin/gmpack",
++      "resource": "gmpack"
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v openFPGALoader",
++      "detail": "/opt/oss-cad-suite/bin/openFPGALoader",
++      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++      "resource": "openFPGALoader"
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "detail": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6",
++      "resource": "gatemate_board_detect",
++      "returncode": 0
++    }
++  ],
++  "random_seed": 41442,
++  "reproducibility_checksum": "a9b8ae9f03aaddc614d9519d48acfd48f0e8a9c60e8bd7e2586a2cb7884364c8",
++  "run_date": "20260605",
++  "run_duration_s": 6.345193,
++  "sample_timing_note": "No supported GateMate host-visible readback/timing path is present for this DirtyJTAG-flashed RTL; sample_timing_us is null and not fabricating timing.",
++  "sample_timing_us": null,
++  "soc_temp_max_c": null,
++  "synth_pnr_pack_succeeded": true,
++  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling"
++}
+diff --git a/scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py b/scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py
+new file mode 100644
+index 0000000000..3fc6999506
+--- /dev/null
++++ b/scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++"""Runner for Exp 3866 GateMate Ising tile flash v2.
++
++Spec refs: REQ-HW-109, SCENARIO-HW-109.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_3866_gatemate_ising_tile_flash_v2 import (
++        ARTIFACT_FILENAME,
++        resolve_toolchain_path,
++        run_experiment,
++    )
++
++    resolve_toolchain_path()
++    artifact = run_experiment(repo_root=REPO_ROOT)
++    print(f"artifact: results/{ARTIFACT_FILENAME}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"synth_pnr_pack_succeeded: {artifact['synth_pnr_pack_succeeded']}")
++    print(f"gatemate_bitstream_flashed: {artifact['gatemate_bitstream_flashed']}")
++    print(f"fmax_mhz: {artifact['fmax_mhz']}")
++    print(f"sample_timing_us: {artifact['sample_timing_us']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3866_gatemate_ising_tile_flash_v2.py b/tests/python/test_experiment_3866_gatemate_ising_tile_flash_v2.py
+new file mode 100644
+index 0000000000..b66f8c921e
+--- /dev/null
++++ b/tests/python/test_experiment_3866_gatemate_ising_tile_flash_v2.py
+@@ -0,0 +1,366 @@
++"""Tests for Exp 3866 GateMate Ising tile terminal flash v2.
++
++Spec refs: REQ-HW-109, SCENARIO-HW-109.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot.experiment_3866_gatemate_ising_tile_flash_v2 import (
++    ARTIFACT_FILENAME,
++    FIELD_PRINCIPLES,
++    REQUIRED_ARTIFACT_FIELDS,
++    CommandResult,
++    _failure_reason,
++    _flash_pending_reason,
++    _parse_board_detect,
++    _parse_fmax_mhz,
++    _parse_utilization,
++    _verdict,
++    build_artifact,
++    run_experiment,
++)
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "fpga" / "spec.md"
++
++DETECT_OK = (
++    "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++    "index 0:\n"
++    "\tidcode 0x20000001\n"
++    "\tmanufacturer colognechip\n"
++    "\tfamily GateMate Series\n"
++    "\tmodel  GM1Ax\n"
++)
++
++
++def _clock(values: list[float]):
++    state = iter(values)
++
++    def monotonic() -> float:
++        return next(state)
++
++    return monotonic
++
++
++def _paths() -> dict[str, str]:
++    return {
++        "yosys": "/suite/bin/yosys",
++        "nextpnr-himbaechel": "/suite/bin/nextpnr-himbaechel",
++        "gmpack": "/suite/bin/gmpack",
++        "openFPGALoader": "/suite/bin/openFPGALoader",
++    }
++
++
++def _which_from(paths: dict[str, str]):
++    def which(name: str) -> str | None:
++        return paths.get(name)
++
++    return which
++
++
++def _write_rtl(repo_root: Path) -> Path:
++    rtl = repo_root / "rtl" / "gatemate_ising_n16.v"
++    rtl.parent.mkdir(parents=True, exist_ok=True)
++    rtl.write_text(
++        "module gatemate_ising_n16(input wire S_AXI_ACLK, output wire [15:0] out);\n"
++        "reg [15:0] state;\n"
++        "always @(posedge S_AXI_ACLK) state <= state + 16'h1;\n"
++        "assign out = state;\n"
++        "endmodule\n",
++        encoding="utf-8",
++    )
++    return rtl
++
++
++def _tool_runner(
++    *,
++    detect_text: str = DETECT_OK,
++    detect_rc: int = 0,
++    flash_rc: int = 0,
++    synthesis_rc: int = 0,
++):
++    calls: list[tuple[str, ...]] = []
++
++    def run(args: list[str], timeout_s: float) -> CommandResult:
++        del timeout_s
++        call = tuple([Path(args[0]).name, *args[1:]])
++        calls.append(call)
++        if call == ("yosys", "-V"):
++            return CommandResult(0, "Yosys 0.64+149\n", "")
++        if call == ("yosys", "-Q", "-p", "help synth_gatemate"):
++            return CommandResult(0, "synth_gatemate command help\n", "")
++        if call == ("nextpnr-himbaechel", "--help"):
++            return CommandResult(0, "Usage: nextpnr-himbaechel --device CCGM1A1\n", "")
++        if call == ("openFPGALoader", "-c", "dirtyJtag", "--detect"):
++            return CommandResult(detect_rc, detect_text, "")
++        if call[0] == "yosys" and "synth_gatemate" in " ".join(args):
++            if synthesis_rc != 0:
++                return CommandResult(synthesis_rc, "", "synthesis failed\n")
++            json_out = Path(args[-1].split("-json ", 1)[1].split(";")[0])
++            json_out.parent.mkdir(parents=True, exist_ok=True)
++            json_out.write_text('{"modules":{}}\n', encoding="utf-8")
++            return CommandResult(
++                0,
++                "Number of cells:              251\n"
++                "     CC_DFF                  53\n"
++                "     CC_LUT2                 19\n"
++                "     CC_LUT3                 10\n"
++                "     CC_LUT4                 20\n",
++                "",
++            )
++        if call[0] == "nextpnr-himbaechel" and "--device" in call:
++            out_vopt = next(item for item in call if item.startswith("out="))
++            cfg_path = Path(out_vopt.removeprefix("out="))
++            cfg_path.parent.mkdir(parents=True, exist_ok=True)
++            cfg_path.write_text("cfg-bitstream-text\n", encoding="utf-8")
++            pnr_json = Path(call[call.index("--write") + 1])
++            pnr_json.write_text('{"pnr":true}\n', encoding="utf-8")
++            return CommandResult(
++                0,
++                "Info: Max frequency for clock 'S_AXI_ACLK': 48.50 MHz\n"
++                "Info:              CPE_LT:      76/  40960     0%\n"
++                "Info:              CPE_FF:      53/  40960     0%\n",
++                "",
++            )
++        if call[0] == "gmpack":
++            Path(args[2]).write_bytes(b"gate-mate-bitstream")
++            return CommandResult(0, "Packed bitstream\n", "")
++        if call[:4] == ("openFPGALoader", "-c", "dirtyJtag", "-b"):
++            return CommandResult(
++                flash_rc, "write SRAM OK\n" if flash_rc == 0 else "", "flash failed\n"
++            )
++        raise AssertionError(f"unexpected command: {call}")
++
++    return run, calls
++
++
++def test_exp3866_spec_entry_present() -> None:
++    """REQ-HW-109: the FPGA capability spec anchors the terminal flash artifact."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-HW-109" in spec
++    assert "SCENARIO-HW-109" in spec
++    assert ARTIFACT_FILENAME in spec
++
++
++def test_parse_helpers_accept_real_gateMate_shapes() -> None:
++    """SCENARIO-HW-109: parser helpers extract IDCODE, utilization, and Fmax."""
++    assert _parse_board_detect(CommandResult(0, DETECT_OK, "")) is True
++    utilization = _parse_utilization(
++        "     CC_DFF                  53\n"
++        "     CC_LUT2                 19\n"
++        "     CC_LUT3                 10\n"
++        "     CC_LUT4                 20\n",
++        "Info: CPE_LT:      76/  40960     0%\nInfo: CPE_FF:      53/  40960     0%\n",
++    )
++    assert utilization["lut_count"] == 49
++    assert utilization["dff_count"] == 53
++    assert utilization["nextpnr_resources"]["CPE_LT"]["used"] == 76
++    count_first = _parse_utilization("       5   CC_LUT4\n", "")
++    assert count_first["lut_count"] == 5
++    assert _parse_fmax_mhz("Info: Max frequency for clock 'clk': 48.50 MHz\n") == 48.5
++    assert _parse_fmax_mhz("no clock reported\n") is None
++
++
++def test_verdict_helpers_cover_blocked_and_failure_labels() -> None:
++    """REQ-HW-109: verdict helpers keep blocked and failed states explicit."""
++    assert (
++        _failure_reason("pnr", CommandResult(0, "", "unsupported CC_LUT4"))
++        == "pnr_unsupported_cell"
++    )
++    assert _failure_reason("pack", CommandResult(2, "", "boom")) == "pack_returncode_2"
++    assert _failure_reason("pack", CommandResult(0, "", "")) == "pack_failed"
++    assert (
++        _flash_pending_reason(CommandResult(0, "", "")) == "openfpgaloader_no_acceptance_evidence"
++    )
++    assert (
++        _verdict(
++            blocker="blocked_gatemate_board_not_detected",
++            build_failure_reason="",
++            synth_pnr_pack_succeeded=False,
++            flash_result=None,
++            flashed=False,
++            utilization=None,
++            fmax_mhz=None,
++            sample_timing_us=None,
++        )
++        == "blocked_gatemate_board_not_detected"
++    )
++
++
++def test_exp3866_success_artifact_has_terminal_fields(tmp_path: Path) -> None:
++    """SCENARIO-HW-109: preconditions pass, build/pack/flash succeeds, timing is not fabricated."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner()
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([10.0, 13.25]),
++    )
++
++    assert [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact] == []
++    assert artifact["honest_verdict"].startswith(
++        "success: gatemate_ising_tile_n16_flashed_terminal"
++    )
++    assert artifact["gatemate_bitstream_flashed"] is True
++    assert artifact["synth_pnr_pack_succeeded"] is True
++    assert artifact["lut_dff_utilization"]["lut_count"] == 49
++    assert artifact["lut_dff_utilization"]["dff_count"] == 53
++    assert artifact["fmax_mhz"] == 48.5
++    assert artifact["sample_timing_us"] is None
++    assert "not fabricating" in artifact["sample_timing_note"]
++    assert artifact["run_duration_s"] == 3.25
++    assert artifact["duration_s"] == 3.25
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert set(FIELD_PRINCIPLES) <= set(artifact["field_provenance"])
++    assert all(
++        artifact["field_provenance"][field]["principle"] for field in REQUIRED_ARTIFACT_FIELDS
++    )
++    assert any(
++        "nextpnr-himbaechel --device CCGM1A1" in entry["command"]
++        for entry in artifact["command_transcript"]
++    )
++    assert not any("nextpnr-gatemate" in " ".join(call) for call in calls)
++
++
++def test_exp3866_missing_himbaechel_blocks_before_synthesis(tmp_path: Path) -> None:
++    """REQ-HW-109: missing himbaechel precondition exits before fabrication."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner()
++    paths = _paths()
++    del paths["nextpnr-himbaechel"]
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(paths),
++        monotonic=_clock([1.0, 1.5]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_gatemate_himbaechel_missing"
++    assert artifact["gatemate_bitstream_flashed"] is False
++    assert artifact["synth_pnr_pack_succeeded"] is False
++    assert artifact["lut_dff_utilization"] is None
++    assert artifact["fmax_mhz"] is None
++    assert artifact["preconditions_checked"][1]["resource"] == "nextpnr-himbaechel"
++    assert artifact["preconditions_checked"][1]["available"] is False
++    assert not any(call[0] == "yosys" and "-l" in call for call in calls)
++
++
++def test_exp3866_missing_yosys_blocks_before_synthesis(tmp_path: Path) -> None:
++    """REQ-HW-109: missing yosys emits the specific blocked verdict."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner()
++    paths = _paths()
++    del paths["yosys"]
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(paths),
++        monotonic=_clock([1.0, 1.25]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_gatemate_yosys_missing"
++    assert artifact["preconditions_checked"][0]["available"] is False
++    assert not any(call[0] == "yosys" and "-l" in call for call in calls)
++
++
++def test_exp3866_board_not_detected_blocks_before_synthesis(tmp_path: Path) -> None:
++    """REQ-HW-109: board detect failure writes blocked_board_not_detected and stops."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner(detect_text="no jtag chain found\n", detect_rc=1)
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([2.0, 2.75]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_gatemate_board_not_detected"
++    assert artifact["preconditions_checked"][-1]["resource"] == "gatemate_board_detect"
++    assert artifact["preconditions_checked"][-1]["available"] is False
++    assert not any(call[0] == "yosys" and "-l" in call for call in calls)
++
++
++def test_exp3866_missing_rtl_records_build_failure(tmp_path: Path) -> None:
++    """REQ-HW-109: missing RTL fails as a build artifact, not fabricated hardware."""
++    run_command, _calls = _tool_runner()
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([2.0, 3.0]),
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: gatemate_synth_pnr_pack_failed_rtl_missing_lutunknown_fmaxunknown"
++    )
++    assert artifact["synth_pnr_pack_succeeded"] is False
++    assert artifact["gatemate_bitstream_flashed"] is False
++
++
++def test_exp3866_synthesis_failure_is_complete_not_fabricated(tmp_path: Path) -> None:
++    """SCENARIO-HW-109: a failed build stage records a complete failed-build verdict."""
++    _write_rtl(tmp_path)
++    run_command, _calls = _tool_runner(synthesis_rc=2)
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([3.0, 4.0]),
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: gatemate_synth_pnr_pack_failed_synthesis_returncode_2_lutunknown_fmaxunknown"
++    )
++    assert artifact["synth_pnr_pack_succeeded"] is False
++    assert artifact["command_transcript"][0]["stage"] == "synthesis"
++
++
++def test_exp3866_pack_succeeds_flash_fails_is_partial(tmp_path: Path) -> None:
++    """SCENARIO-HW-109: synth/P&R/pack success with flash failure is a partial verdict."""
++    _write_rtl(tmp_path)
++    run_command, _calls = _tool_runner(flash_rc=1)
++
++    artifact = build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([3.0, 8.0]),
++    )
++
++    assert artifact["synth_pnr_pack_succeeded"] is True
++    assert artifact["gatemate_bitstream_flashed"] is False
++    assert artifact["honest_verdict"].startswith(
++        "complete: gatemate_synth_pnr_pack_succeeded_flash_pending_openfpgaloader_returncode_1"
++    )
++    assert artifact["lut_dff_utilization"]["lut_count"] == 49
++    assert artifact["fmax_mhz"] == 48.5
++
++
++def test_exp3866_run_experiment_writes_artifact(tmp_path: Path) -> None:
++    """REQ-HW-109: run_experiment writes the requested JSON deliverable."""
++    _write_rtl(tmp_path)
++    run_command, _calls = _tool_runner()
++    destination = tmp_path / "results" / ARTIFACT_FILENAME
++
++    artifact = run_experiment(
++        repo_root=tmp_path,
++        artifact_path=destination,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock([4.0, 6.0]),
++    )
++
++    on_disk = json.loads(destination.read_text(encoding="utf-8"))
++    assert on_disk == artifact
++    assert destination.name == ARTIFACT_FILENAME
+-- 
+2.55.0
+

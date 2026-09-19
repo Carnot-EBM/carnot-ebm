@@ -1,0 +1,114 @@
+From b302744a16528c66b33cdbcd9d9a23d7f9c4f582 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 09:21:19 -0400
+Subject: [PATCH 07510/11362] [conductor] Pre-gate block: Gated on Exp5792
+ selector benefit: measure selected-world-model influence on held-out live E3
+
+5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.selector_ready_score (upstream artifact not found for task id 'exp5792-arc-calibration-only-selector')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ ...periment_5793_arc_live_world_model_ab.json | 60 +++++++++++++++++++
+ 4 files changed, 64 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5793_arc_live_world_model_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 41f06da4d4..4e07065696 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 232, "phase": "iteration_start", "last_beat": "2026-07-22T12:50:07Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 233, "phase": "iteration_start", "last_beat": "2026-07-22T13:21:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0c33e93482..8d56753c9b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14099,3 +14099,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 11:36 UTC | Pivotal-dynamics accreditation contract for immuta | OK | 87 passed, 1 warning in 11.18s |
+ | 2026-07-22 12:22 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
+ | 2026-07-22 12:48 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
++| 2026-07-22 13:19 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
++| 2026-07-22 13:21 UTC | Frozen calibration chooser over immutable simulato | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5791-arc-sota-independent-hypothesis-pane |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d690e9d8fc..94511e7b67 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 232, "phase": "iteration_start", "started_at": "2026-07-22T12:50:07Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 233, "phase": "iteration_start", "started_at": "2026-07-22T13:21:18Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5793_arc_live_world_model_ab.json b/results/experiment_5793_arc_live_world_model_ab.json
+new file mode 100644
+index 0000000000..4d99eeb539
+--- /dev/null
++++ b/results/experiment_5793_arc_live_world_model_ab.json
+@@ -0,0 +1,60 @@
++{
++  "experiment": 5793,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-22",
++  "started_at": "2026-07-22T13:21:18.919554+00:00",
++  "finished_at": "2026-07-22T13:21:18.919554+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5792 selector benefit: measure selected-world-model influence on held-out live E3",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.selector_ready_score (upstream artifact not found for task id 'exp5792-arc-calibration-only-selector')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5792-arc-calibration-only-selector",
++      "artifact_field": "selector_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp5792-arc-calibration-only-selector'"
++    },
++    {
++      "upstream": "exp5792-arc-calibration-only-selector",
++      "artifact_field": "selector_delta_lcb",
++      "op": ">",
++      "expected": 0.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp5792-arc-calibration-only-selector'"
++    },
++    {
++      "upstream": "exp5792-arc-calibration-only-selector",
++      "artifact_field": "selected_model_admissible_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp5792-arc-calibration-only-selector'"
++    },
++    {
++      "upstream": "exp5792-arc-calibration-only-selector",
++      "artifact_field": "selected_pivotal_coverage_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp5792-arc-calibration-only-selector'"
++    },
++    {
++      "upstream": "exp5792-arc-calibration-only-selector",
++      "artifact_field": "source_leak_count",
++      "op": "==",
++      "expected": 0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp5792-arc-calibration-only-selector'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

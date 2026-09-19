@@ -1,0 +1,1028 @@
+From 509b3ed0e8a2e26904d1d036fb08ece3fe62746b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 3 Aug 2026 11:09:03 -0400
+Subject: [PATCH 08144/11362] [outer-loop] FIX round-0: the 6.33x was an
+ incommensurable subtraction, guarded at the arithmetic
+
+exp5766 reported pooled_delta_cegis_best_minus_singleshot -0.318658 with a bootstrap CI
+excluding 0, under "does CEGIS refinement improve on gemma's OWN 0.378 single-shot
+baseline". Both operands are named heldout_accuracy. They are different quantities.
+
+VERIFIED HERE, NOT TAKEN ON REPORT. Re-derived from the two committed shards by parsing
+JSON top-level keys: exp5764 0.378487 (12/13 nonzero) vs exp5766 round 0 0.059829 (2/13),
+ratio 6.3261, paired sign test p = 0.0386. All 13 per-game cells and the pooled -0.318658
+reconstruct bit-for-bit. exp5764's one errored cell (vc33/0, load_engine FileNotFoundError,
+null score) is EXCLUDED, not zeroed -- zeroing it gives 0.352846 and would have reproduced
+the artifact for the wrong reason.
+
+At source: exp5764 (exp5726.run_reason_cell_budget, reused verbatim) prompts on the WHOLE
+window and grades on the WHOLE window -- in-sample fit. exp5766 round 0 reaches induce via
+execute_bounded_llm_reinduction, whose run_cegis_cell never passes proposal_transitions, so
+it falls back to _proposal_prefix (first 2/3), and is graded by select_trusted_world_model
+on _split_prefix_heldout's last 1/3 -- disjoint. Verified the two cuts land on the same
+index for n in {3,4,5,9,12,25}. Scored like-for-like against prefix_accuracy -- recorded
+beside heldout_accuracy on every round record, never read -- 0.378487 vs 0.319444, p = 1.0.
+
+ONE CORRECTION TO THE CONFIRMATION. It proposed keying the guard on the ROW SET. Done
+literally that refuses the CORRECT like-for-like comparison it itself identified, because
+whole_window and prompt_overlapping_prefix are different row sets. The guard keys on the
+RELATION to the prompt (in_sample / out_of_sample), so the valid comparison is permitted and
+only the in-sample-vs-out-of-sample subtraction is refused. Mutation 3 proves this is
+load-bearing rather than decorative.
+
+SHIPPED. python/carnot/agentic/arc_metric_scope.py behind CARNOT_ARC_METRIC_SCOPE_GUARD,
+DEFAULT OFF. OFF returns exactly treatment - baseline for every known scope pair including
+incommensurable ones -- the shipped arithmetic, bug intact, so exp5766 stays re-derivable.
+ON raises MetricScopeMismatch naming both scopes and both relations.
+
+Regression test is the real incident, not a fixture: the shards are re-parsed every run and
+checked against the recorded artifact block. Both directions pinned; trajectory invariance
+for OFF over all 9 ordered scope pairs; env asserted unmutated. 44 tests, mypy clean.
+
+7 of 7 mutations turn the suite RED and name the expected test (refusal, OFF passthrough,
+relation keying, unknown-scope validation, default constant, scope_for, missing-is-not-zero),
+restored byte-identically. The partition assertion was proved separately by swapping both
+functions IN MEMORY -- 4 of 4 caught -- because the conductor is importing those live modules
+right now and they were not to be edited on disk.
+
+Corrigenda APPENDED to exp5766 and exp5764. Append-only proven three ways against HEAD:
+byte-prefix identity, deep-equality of every pre-existing key, +1 key each. Nothing removed;
+-0.318658 and its CI are retained verbatim (never-prune).
+
+HONEST LIMITS, in the artifact. The guard has ZERO shipped call sites -- the only site that
+made this mistake is a completed experiment; this is a library plus a scope registry, not a
+guard currently firing on a live path, and no delivery is claimed. The residual like-for-like
+gap is 1.18-1.29x and is NOT claimed to be zero -- it is below this harness's own ~40%
+cell-level nondeterminism floor and 13 games cannot resolve it.
+
+NOT FIXED HERE, recorded in the corrigendum: 4 of 13 games have a held-out tail whose only
+row is the level-up row that score() excludes, so n_correct/max(1,n) returns 0.0 for every
+possible engine (fixing it changes what min_heldout_accuracy admits on the LIVE trust gate);
+and tails carry 0-3 gradeable rows so delta_heldout moves in steps of 1/n while the
+pre-registration is written in units of 0.15/0.05. exp5766's retire_if_same_verdict is
+conditioned on HONEST-NEGATIVE and the run landed partial_inconclusive, so its precondition
+was never met -- RECORDED, not acted on. The refactor-collapse and purity-leak defects were
+not touched. openspec/capabilities/research-reporting/spec.md is uncommitted under another
+writer and was deliberately left alone.
+
+CONCURRENCY, all three recorded in the artifact. (1) A foreign git add -A swallowed the index
+between staging and commit -- 64 files / 4878 insertions, including two other agents' in-flight
+test files and ~40 test-rewritten results; caught by the mandated volume check, fixed with
+git reset (index only, no working tree touched). (2) REAL RECORD DAMAGE FOUND AND REPAIRED:
+results/experiment_3408_kona_global_opt.json had measured values silently rewritten by another
+agent's test run (time_to_solution 35.060176849365234 -> 26.657497882843018,
+autoregressive_time_to_solution 525.9026527404785 -> 399.86246824264526, no keys added --
+the canonical main()-under-collection signature); restored from git per the discipline, and
+its mutation marker then retired itself. (3) TWO MUTATION MARKERS DELETED DELIBERATELY as
+proven false positives, which is the escape the tool documents: marker 49689a5f named six
+paths that are ALL absent from HEAD (new agent-authored source, so no record existed to
+damage, verified with git cat-file -e), and marker 589a5022 -- armed by my own pytest -- named
+only the live conductor's ops/conductor-{heartbeat,state}.json while the test that armed it
+contains ZERO write calls (grep for write_text/write_bytes/open-for-write/json.dump/shutil/
+os.remove/mkdir returns 0). Every path in both was printed [NOT this run] by the guard itself.
+No marker naming real damage was deleted.
+
+Spec: REQ-ARC-WMTE-6090
+SCENARIO-ARC-WMTE-6090-METRIC-SCOPE-GUARD
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ python/carnot/agentic/arc_metric_scope.py     | 282 ++++++++++++++
+ ...5764_gemma31b_singleshot_induction_ab.json |  13 +-
+ ...ent_5766_gemma31b_cegis_refinement_ab.json |  65 ++++
+ ..._loop_arc_metric_scope_guard_20260803.json | 169 +++++++++
+ .../test_arc_metric_scope_guard_2026_08_03.py | 359 ++++++++++++++++++
+ 5 files changed, 887 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/agentic/arc_metric_scope.py
+ create mode 100644 results/outer_loop_arc_metric_scope_guard_20260803.json
+ create mode 100644 tests/python/test_arc_metric_scope_guard_2026_08_03.py
+
+diff --git a/python/carnot/agentic/arc_metric_scope.py b/python/carnot/agentic/arc_metric_scope.py
+new file mode 100644
+index 0000000000..2257c0bb84
+--- /dev/null
++++ b/python/carnot/agentic/arc_metric_scope.py
+@@ -0,0 +1,282 @@
++"""REQ-ARC-WMTE-6090: make an incommensurable metric subtraction unrepresentable.
++
++THE INCIDENT (2026-08-03). `results/experiment_5766_gemma31b_cegis_refinement_ab.json`
++reported `pooled_delta_cegis_best_minus_singleshot: -0.318658` with a bootstrap CI that
++`excludes_0`, under the heading "does CEGIS refinement improve on gemma's OWN 0.378
++single-shot baseline". Read as written, that number says the refinement loop is 6.33x worse
++than the single-shot control it was built to extend. It was the headline of the run that
++carries `retire_if_same_verdict`.
++
++The subtraction is invalid. Both operands are called `heldout_accuracy`, and they are
++computed by two different functions over two different row sets, standing in two different
++relations to the evidence the model was actually shown:
++
++  * exp5764 (via `exp5726.run_reason_cell_budget`, reused VERBATIM) prompts on the WHOLE
++    progress window -- `_induce_no_fence(prop, game, list(window), cell)` -- and then grades
++    on the WHOLE progress window -- `WorldModelVerifier(list(window)).score(engine).accuracy`.
++    Prompt set and grading set are THE SAME ROWS. That is an in-sample fit score. It is not a
++    held-out quantity at all, whatever the field is named.
++
++  * exp5766 round 0 reaches induction through `execute_bounded_llm_reinduction`, which -- when
++    the caller passes no `proposal_transitions`, and `run_cegis_cell` never does -- falls back
++    to `_proposal_prefix(transitions)`, the FIRST two thirds. It is then graded by
++    `select_trusted_world_model` -> `_score_accuracy(heldout, ...)` on the LAST third from
++    `_split_prefix_heldout`. Prompt set and grading set are DISJOINT BY CONSTRUCTION. That is
++    an out-of-sample generalisation score.
++
++Subtracting an out-of-sample score from an in-sample score and reporting the difference as a
++treatment effect measures the split, not the treatment. Reproduced exactly, 2026-08-03, by
++re-deriving every per-game cell and the pooled value from the two committed shards:
++
++    reported     (whole_window vs disjoint_tail) 0.378487 vs 0.059829  ratio 6.3261  p = 0.0386
++    like-for-like(whole_window vs prompt-overlapping prefix) 0.378487 vs 0.319444  p = 1.0
++
++Both quantities were on disk the whole time. `prefix_accuracy` sits beside `heldout_accuracy`
++in EVERY exp5766 round record, computed by the same function on the same engine, and
++`_proposal_prefix` and `_split_prefix_heldout` cut at the same index -- so `prefix_accuracy`
++grades precisely the pool the prompt was drawn from. Nobody read it. Nothing in the code could
++have told them to: a float is a float, and the scope lived only in the reader's head.
++
++WHY A GUARD AT THE SUBTRACTION, AND NOT A LINT OVER ARTIFACTS. An artifact lint only ever sees
++what reached disk, and this comparison is computed IN PROCESS at artifact-build time -- the
++number is already fabricated by the time a linter could look at it, and the linter would have
++to re-derive the scopes it cannot see. That is the same structural blind spot
++`operator_curated_docs_lint.py` has, and it is why this guard sits at the arithmetic instead.
++
++WHAT THIS MODULE IS NOT. It is not a claim that the two arms are equal. It is a refusal to
++produce a number that cannot mean what its label says. The residual like-for-like gap is
++1.18-1.29x, which is smaller than this harness's own documented cell-level nondeterminism
++(`LocalGGUFProposer.sampling_seed` returns None absent `CARNOT_ARC_GENERATOR_SEED`, so
++llama-server draws a fresh sampler seed per call at temperature 0.2), and 13 games cannot
++resolve an effect that size either way.
++
++DEFAULT OFF. `compare_scoped` with the guard off returns exactly `treatment - baseline` --
++the shipped arithmetic, bug included -- so every measurement taken before this module existed
++stays interpretable and re-derivable. `CARNOT_ARC_METRIC_SCOPE_GUARD=1` turns the refusal on.
++
++Cross-references:
++  * results/experiment_5766_round0_regression_reproduction.json -- the reproduction
++  * results/experiment_5766_gemma31b_cegis_refinement_ab.json -- the voided comparison block
++  * python/carnot/agentic/arc_world_model_trust_energy.py:_split_prefix_heldout -- the tail
++  * python/carnot/agentic/arc_llm_reinduction.py:_proposal_prefix -- the matching prefix
++  * CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor" -- the sibling rule that
++    catches fabricated numbers; this one catches numbers that are real but incommensurable.
++"""
++
++from __future__ import annotations
++
++import os
++from typing import Final
++
++__all__ = [
++    "DISJOINT_TAIL",
++    "HELDOUT_METRIC_SCOPES",
++    "IN_SAMPLE",
++    "KNOWN_SCOPES",
++    "METRIC_SCOPE_GUARD_ENV",
++    "OUT_OF_SAMPLE",
++    "PROMPT_OVERLAPPING_PREFIX",
++    "SCOPE_RELATION",
++    "WHOLE_WINDOW",
++    "MetricScopeMismatch",
++    "compare_scoped",
++    "metric_scope_guard_enabled",
++    "relation_of",
++    "scope_for",
++]
++
++
++# --------------------------------------------------------------------------------------
++# The vocabulary. Each name answers ONE question: what is this score's grading set, relative
++# to the rows the model was shown? That RELATION -- not the row count, not the field name --
++# is what decides whether two scores may be subtracted.
++# --------------------------------------------------------------------------------------
++
++WHOLE_WINDOW: Final = "whole_window"
++"""Graded on the ENTIRE window, which is also the entire prompt evidence. The model is being
++asked to reproduce rows it was shown, with the answers. Produced by
++`WorldModelVerifier(list(window)).score(engine).accuracy` in `exp5726.run_reason_cell_budget`,
++which exp5764 reuses verbatim."""
++
++DISJOINT_TAIL: Final = "disjoint_tail"
++"""Graded on the last third, which was deliberately withheld from the prompt. Produced by
++`select_trusted_world_model` via `_split_prefix_heldout` + `_score_accuracy`, and recorded as
++`heldout_accuracy` on every exp5766 round record."""
++
++PROMPT_OVERLAPPING_PREFIX: Final = "prompt_overlapping_prefix"
++"""Graded on the first two thirds -- exactly the rows `_proposal_prefix` put in the prompt.
++Recorded as `prefix_accuracy` beside `heldout_accuracy` on every exp5766 round record."""
++
++KNOWN_SCOPES: Final[frozenset[str]] = frozenset(
++    {WHOLE_WINDOW, DISJOINT_TAIL, PROMPT_OVERLAPPING_PREFIX}
++)
++
++
++# --------------------------------------------------------------------------------------
++# THE RELATION IS THE COMPARABILITY KEY, NOT THE ROW SET. This distinction is the whole
++# design, and getting it wrong in either direction breaks something real:
++#
++#   * keying on the row-set NAME would refuse `whole_window` vs `prompt_overlapping_prefix` --
++#     which is the CORRECT like-for-like comparison (0.378487 vs 0.319444, p = 1.0) that the
++#     2026-08-03 reproduction identified. A guard that blocks the right answer is worse than
++#     no guard, because it teaches people to switch it off.
++#   * keying on nothing at all is the shipped bug.
++#
++# Two scores are commensurable when they stand in the SAME relation to their prompt evidence.
++# Both `whole_window` and `prompt_overlapping_prefix` grade exactly the rows their model was
++# shown, so both are fit scores and their difference is a treatment effect. `disjoint_tail`
++# grades rows the model never saw, so subtracting it from either measures the split.
++#
++# HONEST LIMIT, deliberately NOT enforced here: equal relation does not imply equal evidence
++# QUANTITY. exp5764 fits on 3/3 of the window and exp5766 round 0 on 2/3, so even the
++# like-for-like comparison carries a one-third evidence handicap whose sign matches the
++# residual 1.18-1.29x. Refusing that too would leave no admissible comparison at all; it is a
++# caveat to state in the artifact, not a subtraction to block.
++# --------------------------------------------------------------------------------------
++
++IN_SAMPLE: Final = "in_sample"
++OUT_OF_SAMPLE: Final = "out_of_sample"
++
++SCOPE_RELATION: Final[dict[str, str]] = {
++    WHOLE_WINDOW: IN_SAMPLE,
++    PROMPT_OVERLAPPING_PREFIX: IN_SAMPLE,
++    DISJOINT_TAIL: OUT_OF_SAMPLE,
++}
++
++
++def relation_of(scope: str) -> str:
++    """The prompt-relation a scope stands in: `IN_SAMPLE` or `OUT_OF_SAMPLE`."""
++
++    try:
++        return SCOPE_RELATION[scope]
++    except KeyError:
++        raise ValueError(
++            f"unknown metric scope {scope!r}; known scopes are {sorted(KNOWN_SCOPES)}"
++        ) from None
++
++
++# --------------------------------------------------------------------------------------
++# The registry. A future comparator should not have to re-derive, from two experiment scripts
++# and a call chain three modules deep, what a recorded field's grading set was -- that
++# re-derivation is precisely the step that did not happen in exp5766. Keys are
++# (producer, recorded field path).
++# --------------------------------------------------------------------------------------
++
++HELDOUT_METRIC_SCOPES: Final[dict[tuple[str, str], str]] = {
++    # exp5726 is the origin of the whole-window pattern; exp5764 reuses its cell VERBATIM, so
++    # both shards carry a fit score under the name `heldout_accuracy`.
++    ("exp5726", "heldout_accuracy"): WHOLE_WINDOW,
++    ("exp5764", "heldout_accuracy"): WHOLE_WINDOW,
++    # exp5766 records BOTH relations on every round, from the same engine. The tail is the one
++    # that was read; the prefix is the one that was comparable to exp5764 and was not.
++    ("exp5766", "rounds[].heldout_accuracy"): DISJOINT_TAIL,
++    ("exp5766", "rounds[].prefix_accuracy"): PROMPT_OVERLAPPING_PREFIX,
++    ("exp5766", "round0_heldout"): DISJOINT_TAIL,
++    # The live producer, named so a future caller can tag a fresh measurement without going
++    # back through the experiment scripts.
++    ("select_trusted_world_model", "heldout_accuracy"): DISJOINT_TAIL,
++    ("select_trusted_world_model", "prefix_accuracy"): PROMPT_OVERLAPPING_PREFIX,
++}
++
++
++def scope_for(producer: str, field: str) -> str:
++    """Look up the grading scope of a recorded metric field.
++
++    Raises rather than returning a default. A silent fallback would reintroduce the exact
++    failure this module exists to stop: an unknown provenance rendered as a confident tag, and
++    then subtracted from something.
++    """
++
++    try:
++        return HELDOUT_METRIC_SCOPES[(producer, field)]
++    except KeyError:
++        raise KeyError(
++            f"no recorded metric scope for producer={producer!r} field={field!r}; "
++            f"add it to HELDOUT_METRIC_SCOPES after reading the code that produces it "
++            f"(what rows does it grade, and were those rows in the prompt?)"
++        ) from None
++
++
++# --------------------------------------------------------------------------------------
++# The flag. Default OFF, fail-closed on anything unrecognised, following
++# `_supply_win_transition_enabled` -- a typo'd export must never silently arm a refusal in a
++# harness that is mid-run.
++# --------------------------------------------------------------------------------------
++
++METRIC_SCOPE_GUARD_ENV: Final = "CARNOT_ARC_METRIC_SCOPE_GUARD"
++_METRIC_SCOPE_GUARD_DEFAULT: Final = "0"
++
++
++def metric_scope_guard_enabled() -> bool:
++    """True when the cross-scope refusal is armed. Shipped default is False."""
++
++    raw = os.environ.get(METRIC_SCOPE_GUARD_ENV)
++    if raw is None:
++        raw = _METRIC_SCOPE_GUARD_DEFAULT
++    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
++
++
++class MetricScopeMismatch(ValueError):
++    """Raised when two metrics graded on differently-related row sets would be subtracted.
++
++    Carries both scopes so the message names the actual defect rather than "invalid input" --
++    the operator reading a stack trace needs to know WHICH two relations were mixed.
++    """
++
++    def __init__(self, treatment_scope: str, baseline_scope: str, label: str = "") -> None:
++        self.treatment_scope = treatment_scope
++        self.baseline_scope = baseline_scope
++        self.treatment_relation = relation_of(treatment_scope)
++        self.baseline_relation = relation_of(baseline_scope)
++        self.label = label
++        where = f" ({label})" if label else ""
++        super().__init__(
++            f"refusing to subtract metrics graded in different relations to their prompt"
++            f"{where}: treatment {treatment_scope!r} is {self.treatment_relation}, "
++            f"baseline {baseline_scope!r} is {self.baseline_relation}. Their difference "
++            f"measures the split rather than the treatment (REQ-ARC-WMTE-6090; see exp5766's "
++            f"voided comparison_to_gemma31b_singleshot_baseline, which read -0.318658 with a "
++            f"CI excluding 0 for exactly this reason). Compare like with like -- for a "
++            f"{WHOLE_WINDOW!r} baseline the commensurable counterpart is "
++            f"{PROMPT_OVERLAPPING_PREFIX!r}, not {DISJOINT_TAIL!r}."
++        )
++
++
++def compare_scoped(
++    treatment: float,
++    treatment_scope: str,
++    baseline: float,
++    baseline_scope: str,
++    *,
++    label: str = "",
++    enabled: bool | None = None,
++) -> float:
++    """Return `treatment - baseline`, refusing when the two grade in different prompt relations.
++
++    With the guard OFF (the shipped default) this is a strict passthrough: it returns exactly
++    the float the bare subtraction returned, for every pair of known scopes including
++    incommensurable ones. That is deliberate and load-bearing -- every number measured before
++    this module existed must stay re-derivable through it, or the historical record becomes
++    uninterpretable in a second, different way.
++
++    With the guard ON it refuses only a RELATION mismatch. `whole_window` minus
++    `prompt_overlapping_prefix` is permitted, because both grade the rows their model was
++    shown; that is the comparison the 2026-08-03 reproduction found to be the correct one. Note
++    that permitted is not the same as unconfounded -- see the module's honest limit on evidence
++    quantity.
++
++    `enabled` overrides the env for a single call, so an A/B harness can assert that the arm it
++    asked for is the arm it got instead of trusting process-wide state.
++
++    Unknown scope NAMES are refused in both directions. That is not a behaviour change to any
++    historical path -- no pre-existing call site passes a scope at all -- and it stops the
++    guard being defeated by a typo, which would make its pattern list narrower than the concept
++    it protects.
++    """
++
++    treatment_relation = relation_of(treatment_scope)
++    baseline_relation = relation_of(baseline_scope)
++    on = metric_scope_guard_enabled() if enabled is None else bool(enabled)
++    if on and treatment_relation != baseline_relation:
++        raise MetricScopeMismatch(treatment_scope, baseline_scope, label)
++    return float(treatment) - float(baseline)
+diff --git a/results/experiment_5764_gemma31b_singleshot_induction_ab.json b/results/experiment_5764_gemma31b_singleshot_induction_ab.json
+index 6c4a30afd3..6617002ddf 100644
+--- a/results/experiment_5764_gemma31b_singleshot_induction_ab.json
++++ b/results/experiment_5764_gemma31b_singleshot_induction_ab.json
+@@ -307,5 +307,16 @@
+   "submitted_to_leaderboard": false,
+   "trials_per_game": 3,
+   "used_env_source": true,
+-  "verifier_is_oracle": false
++  "verifier_is_oracle": false,
++  "corrigendum_2026_08_03_heldout_accuracy_is_an_in_sample_fit_score": {
++    "date": "2026-08-03",
++    "req": "REQ-ARC-WMTE-6090",
++    "author": "outer-loop (Claude), operator-directed round-0 regression fix",
++    "status": "no number in this artifact is retracted; this records what the field MEANS so it is not subtracted from something incommensurable again",
++    "finding": "This experiment's heldout_accuracy is NOT a held-out quantity. It reuses exp5726.run_reason_cell_budget VERBATIM, which prompts on the WHOLE progress window via _induce_no_fence(prop, game, list(window), cell) and then grades on the WHOLE progress window via WorldModelVerifier(list(window)).score(engine).accuracy. Prompt set and grading set are the same rows, so it is an IN-SAMPLE FIT score.",
++    "why_it_matters": "experiment_5766_gemma31b_cegis_refinement_ab.json subtracted this field's pooled value (0.378487) from exp5766's disjoint-tail score (0.059829) and reported -0.318658 with a CI excluding 0, as though it were a treatment effect. See that artifact's corrigendum_2026_08_03_cross_experiment_comparison_voided.",
++    "commensurable_counterparts": "Compare this field only with another in-sample fit score -- for example exp5766's per-round prefix_accuracy, which grades exactly the rows _proposal_prefix put in its prompt. Do NOT compare it with any score computed by select_trusted_world_model's _split_prefix_heldout tail.",
++    "recorded_scope_tag": "whole_window (in_sample) -- registered in python/carnot/agentic/arc_metric_scope.py:HELDOUT_METRIC_SCOPES",
++    "errored_cell_note": "vc33 trial 0 recorded heldout_accuracy null with error 'load_engine: FileNotFoundError'. It must be EXCLUDED from vc33's mean, not counted as 0.0: excluding it gives vc33 1.0 and a pooled 0.378487, zeroing it gives 0.666667 and a pooled 0.352846. Missing is not zero."
++  }
+ }
+diff --git a/results/experiment_5766_gemma31b_cegis_refinement_ab.json b/results/experiment_5766_gemma31b_cegis_refinement_ab.json
+index 961f6a7382..5b6736d663 100644
+--- a/results/experiment_5766_gemma31b_cegis_refinement_ab.json
++++ b/results/experiment_5766_gemma31b_cegis_refinement_ab.json
+@@ -292,5 +292,70 @@
+     "rate_after_refinement": 0.5385,
+     "rate_before_refinement": 0.7949,
+     "rate_drop": 0.2564
++  },
++  "corrigendum_2026_08_03_cross_experiment_comparison_voided": {
++    "date": "2026-08-03",
++    "req": "REQ-ARC-WMTE-6090",
++    "author": "outer-loop (Claude), operator-directed round-0 regression fix",
++    "status": "the numbers below are NOT deleted (never-prune); they are marked NOT INTERPRETABLE as a treatment effect",
++    "what_is_voided": [
++      "comparison_to_gemma31b_singleshot_baseline.pooled_delta_cegis_best_minus_singleshot (-0.318658)",
++      "comparison_to_gemma31b_singleshot_baseline.pooled_delta_bootstrap_95ci (excludes_0: true)",
++      "comparison_to_gemma31b_singleshot_baseline.per_game[*].cegis_best_minus_singleshot",
++      "comparison_to_gemma31b_singleshot_baseline.n_games_cegis_beats_singleshot / n_games_cegis_below_singleshot",
++      "the '-0.318658' clause inside recommendation and honest_verdict"
++    ],
++    "why": "The subtraction mixes two quantities that share a field name and nothing else. Both are called heldout_accuracy; they are computed by different functions over different row sets standing in DIFFERENT RELATIONS to the evidence the model was shown, so their difference measures the split rather than the treatment.",
++    "the_two_operands": {
++      "baseline_exp5764": {
++        "prompt_rows": "the WHOLE progress window -- exp5726.run_reason_cell_budget, reused VERBATIM, calls _induce_no_fence(prop, game, list(window), cell)",
++        "graded_rows": "the WHOLE progress window -- WorldModelVerifier(list(window)).score(engine).accuracy",
++        "relation": "in_sample (prompt set == grading set); a FIT score, not a held-out score, whatever the field is named",
++        "pooled_value": 0.378487
++      },
++      "treatment_exp5766_round0": {
++        "prompt_rows": "the FIRST TWO THIRDS -- run_cegis_cell never passes proposal_transitions, so execute_bounded_llm_reinduction falls back to _proposal_prefix(transitions) (REQ-ARC-WMTE-4557, deliberate)",
++        "graded_rows": "the LAST THIRD -- select_trusted_world_model -> _split_prefix_heldout -> _score_accuracy(heldout, ...)",
++        "relation": "out_of_sample (prompt set and grading set are disjoint by construction)",
++        "pooled_value": 0.059829
++      }
++    },
++    "reproduction_2026_08_03": {
++      "method": "every per-game cell and the pooled value re-derived from the two committed shards by parsing JSON top-level keys; the errored exp5764 cell (vc33 trial 0, load_engine: FileNotFoundError, heldout_accuracy null) is EXCLUDED, not counted as zero",
++      "as_reported_whole_window_vs_disjoint_tail": {
++        "baseline": 0.378487,
++        "treatment": 0.059829,
++        "ratio": 6.3261,
++        "games_nonzero": "12/13 vs 2/13",
++        "paired_sign_test_p": 0.0386
++      },
++      "like_for_like_both_in_sample": {
++        "baseline_exp5764_whole_window": 0.378487,
++        "treatment_exp5766_round0_prefix_accuracy": 0.319444,
++        "ratio": 1.1848,
++        "paired_sign_test": "6 games favour exp5766's prefix, 5 favour exp5764, 2 ties",
++        "paired_sign_test_p": 1.0
++      },
++      "all_13_per_game_cells_and_the_pooled_-0.318658_reproduce_exactly": true
++    },
++    "what_is_NOT_voided": {
++      "delta_heldout": "exp5766's PRIMARY within-loop metric is internally consistent -- both of its terms are the same disjoint-tail score from the same split -- so the mismatch corrupts this cross-experiment block, NOT delta_heldout. See however the resolution limit below.",
++      "the_shard_data": "every recorded per-cell number is real and re-derivable; only the subtraction is invalid"
++    },
++    "correct_comparator_going_forward": "prefix_accuracy is recorded beside heldout_accuracy on EVERY exp5766 round record, from the same engine, and _proposal_prefix and _split_prefix_heldout cut at the same index -- so prefix_accuracy grades exactly the pool the prompt was drawn from and is the commensurable counterpart to exp5764's whole-window score. It was on disk the whole time and was never read.",
++    "residual_effect_not_claimed_to_be_zero": "The like-for-like gap is 1.18-1.29x, NOT asserted to be nil. It is smaller than this harness's own documented cell-level nondeterminism (LocalGGUFProposer.sampling_seed returns None absent CARNOT_ARC_GENERATOR_SEED, so llama-server draws a fresh sampler seed per call at temperature 0.2), its sign is what the one-third evidence handicap predicts, and 13 games cannot resolve an effect that size in either direction.",
++    "two_further_defects_recorded_here_but_NOT_fixed_by_this_change": {
++      "unfalsifiable_zeros": "On 4 of 13 games (sp80, r11l, vc33, ft09) the held-out tail's only row IS the level-up row, which WorldModelVerifier.score excludes; n_correct / max(1, n) then returns 0.0 for EVERY possible engine. Those cells are not measurements. Owned separately -- the fix changes what min_heldout_accuracy admits on the LIVE trust gate and is out of scope for this change.",
++      "gate_band_not_expressible_by_the_metric": "Held-out tails carry 0-3 gradeable rows, so a per-cell delta_heldout moves in steps of 1/n (0.333 at best) while the pre-registration's branches are written in units of 0.15 and 0.05. No engine change can move a 3-row tail by 0.05. Any 'refinement adds nothing' reading of this harness is substantially a statement about metric resolution. Needs an operator design decision (enlarge the window, or restate the gate in units of 1/n)."
++    },
++    "consequence_for_the_retirement_clause": "preregistration.retire_if_same_verdict reads 'on HONEST-NEGATIVE, do NOT re-propose more induction-refinement variants'. This run landed gate_branch 'partial_inconclusive', not honest_negative, so the clause's own stated precondition was never met -- and the pooled cross-baseline number its recommendation leans on is voided above. RECORDED, NOT ACTED ON: the retirement also rests on two defects owned by other work (the refactor write-path collapse and the refinement purity leak), and the conductor's consumption path for this field has not been traced here. Nothing about the retirement is deleted or reinterpreted by this corrigendum.",
++    "mechanical_guard_shipped": {
++      "module": "python/carnot/agentic/arc_metric_scope.py",
++      "env_flag": "CARNOT_ARC_METRIC_SCOPE_GUARD",
++      "default": "OFF -- compare_scoped reproduces this exact subtraction, bug included, so this artifact stays re-derivable",
++      "when_on": "refuses to subtract scores standing in different relations to their prompt evidence; permits the valid like-for-like comparison",
++      "test": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
++      "honest_limit": "zero shipped call sites today -- the only site that made this mistake is a completed experiment. This is a library plus a scope registry for future comparators, NOT a guard that is currently firing on a live path."
++    }
+   }
+ }
+diff --git a/results/outer_loop_arc_metric_scope_guard_20260803.json b/results/outer_loop_arc_metric_scope_guard_20260803.json
+new file mode 100644
+index 0000000000..d77efb602b
+--- /dev/null
++++ b/results/outer_loop_arc_metric_scope_guard_20260803.json
+@@ -0,0 +1,169 @@
++{
++  "experiment": "outer_loop_arc_metric_scope_guard_20260803",
++  "req": "REQ-ARC-WMTE-6090",
++  "title": "Round-0 regression fix: make an incommensurable metric subtraction unrepresentable",
++  "run_date": "2026-08-03",
++  "schema": "carnot.outer_loop_fix.v1",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "solve_provenance": "development_proxy",
++  "random_seed": 6090,
++  "reproducibility_checksum": "sha256:aba47a3125639b6b43c3afc05a9c224b548cd9d823dc8b2bed76d3d75b5c5e82",
++  "duration_s": 3821.0,
++  "verifier_is_oracle": false,
++  "read_game_source": false,
++  "used_env_source": false,
++  "submitted_to_leaderboard": false,
++  "honest_verdict": "complete_metric_scope_guard_shipped_default_off_corrigendum_appended_7_of_7_mutations_red",
++
++  "question": "exp5766's CEGIS round 0 scored 6.33x below its own matched single-shot control (exp5764). Is the induction mechanism regressed, and what is the fix?",
++
++  "answer": "The mechanism is not regressed and the 6.33x is not a mechanism measurement. exp5764 prompts on the WHOLE window and grades on the WHOLE window (in-sample fit); exp5766 round 0 prompts on the first two thirds and grades on the disjoint last third (out-of-sample). Both record the value under the field name heldout_accuracy, and exp5766 subtracted one from the other. Scored like-for-like the arms are not distinguishable. The fix is a guard at the subtraction plus an append-only corrigendum voiding the comparison; the underlying per-cell data is real and is retained.",
++
++  "independent_verification_performed": {
++    "note": "The confirmation was not taken on report. Every load-bearing claim below was re-derived in this session before any code was written.",
++    "pooled_values_reproduced_from_shards": {
++      "method": "parsed both JSONL shards as JSON, read top-level keys and rounds[].* -- no grep",
++      "exp5764_pooled_heldout": 0.378487,
++      "exp5766_round0_pooled_heldout": 0.059829,
++      "ratio": 6.3261,
++      "paired_sign_test_p": 0.0386,
++      "games_nonzero": "12/13 vs 2/13"
++    },
++    "missing_is_not_zero": {
++      "finding": "counting exp5764's one errored cell (vc33 trial 0, load_engine: FileNotFoundError, heldout_accuracy null) as 0.0 yields pooled 0.352846, not 0.378487",
++      "resolution": "excluded with its reason recorded; this is what makes the reproduction exact"
++    },
++    "artifact_comparison_block_reconstructed_bit_for_bit": {
++      "per_game_cells_matched": 13,
++      "of": 13,
++      "pooled_delta_matched": -0.318658
++    },
++    "source_level_checks": {
++      "exp5764_prompt_rows": "exp5726.run_reason_cell_budget:333 _induce_no_fence(prop, game, list(window), cell) -- whole window",
++      "exp5764_graded_rows": "exp5726.run_reason_cell_budget:355 WorldModelVerifier(list(window)).score(engine) -- whole window",
++      "exp5766_prompt_rows": "run_cegis_cell source does NOT contain 'proposal_transitions', so execute_bounded_llm_reinduction falls back to _proposal_prefix -- first two thirds",
++      "exp5766_graded_rows": "select_trusted_world_model:595 _split_prefix_heldout then :669 _score_accuracy(heldout, ...) -- last third",
++      "the_two_cuts_are_at_the_same_index": "verified by execution for n in {3,4,5,9,12,25}; prefix + tail == rows, prefix disjoint from tail"
++    }
++  },
++
++  "correction_to_the_confirmation": {
++    "what_i_changed": "The confirmation proposed keying the guard on the metric's ROW SET (whole_window / disjoint_tail / prompt_overlapping_prefix) and refusing when the tags differ. Implemented literally, that guard refuses the CORRECT like-for-like comparison it itself identified -- exp5764's whole_window (0.378487) against exp5766's prompt_overlapping_prefix (0.319444) -- because those are two different row sets.",
++    "the_fix": "The guard keys on the RELATION each score stands in to its prompt evidence (in_sample / out_of_sample). whole_window and prompt_overlapping_prefix are both in_sample, so their comparison is permitted; disjoint_tail is out_of_sample, so subtracting it from either is refused.",
++    "why_it_matters": "A guard that blocks the right answer along with the wrong one teaches people to switch it off. This is pinned by test_on_permits_the_correct_like_for_like_comparison and proven non-decorative by mutation 3.",
++    "second_minor_correction": "The confirmation reports the like-for-like split as '6 wins / 5 losses / 2 ties'. Recomputed, 6 games favour exp5766's prefix and 5 favour exp5764 with 2 ties -- the same numbers, listed treatment-first. Not a discrepancy; noted so a future reader does not chase one."
++  },
++
++  "changes_shipped": {
++    "new_module": "python/carnot/agentic/arc_metric_scope.py",
++    "new_test": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
++    "env_flag": "CARNOT_ARC_METRIC_SCOPE_GUARD",
++    "default": "OFF",
++    "off_behaviour": "compare_scoped returns exactly treatment - baseline for every known scope pair, including incommensurable ones -- the shipped arithmetic with the bug intact, so exp5766 stays re-derivable",
++    "on_behaviour": "raises MetricScopeMismatch naming both scopes and both relations, on a relation mismatch only",
++    "corrigenda_appended": [
++      "results/experiment_5766_gemma31b_cegis_refinement_ab.json :: corrigendum_2026_08_03_cross_experiment_comparison_voided",
++      "results/experiment_5764_gemma31b_singleshot_induction_ab.json :: corrigendum_2026_08_03_heldout_accuracy_is_an_in_sample_fit_score"
++    ],
++    "append_only_proof": "byte-prefix identity + deep-equality of every pre-existing key against git HEAD + key-count delta of exactly +1 per file; 0 keys removed, 0 existing values changed, the voided -0.318658 and its CI RETAINED verbatim (never-prune)"
++  },
++
++  "tests": {
++    "suite": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
++    "count": 44,
++    "result": "44 passed",
++    "checksum": "sha256:23bd7436daa5ecaacf519f710d9e48e38dc21aed0d56b213fc84042f352f7418",
++    "the_regression_test_is_the_real_incident": "the per-game and pooled values are re-derived from the two committed shards on every run and checked against the recorded artifact block -- not a synthetic fixture",
++    "both_directions": {
++      "off": "test_off_reproduces_the_shipped_comparison_bit_for_bit -- all 13 per-game deltas and the pooled -0.318658 reproduce exactly through compare_scoped",
++      "on": "test_on_refuses_the_exact_invalid_comparison -- same rebuild, guard armed, raises MetricScopeMismatch(disjoint_tail/out_of_sample vs whole_window/in_sample)"
++    },
++    "trajectory_invariance_off": "TestOffIsAStrictPassthrough -- all 9 ordered scope pairs x 24 value pairs return exactly treatment - baseline and never raise; os.environ unchanged across a call; enabled=False overrides a set env"
++  },
++
++  "mutation_proof": {
++    "protocol": "each pattern deleted or inverted one at a time, suite re-run, file restored and sha256 byte-identity verified",
++    "files_mutated": "only the two new files added by this change -- the concurrently-running conductor imports neither",
++    "results": [
++      {"pattern": "the relation-mismatch refusal itself", "outcome": "RED", "test": "test_on_refuses_the_exact_invalid_comparison"},
++      {"pattern": "the OFF passthrough (refusal made unconditional)", "outcome": "RED", "test": "test_off_reproduces_the_shipped_comparison_bit_for_bit"},
++      {"pattern": "relation keying (prefix re-keyed to its row set)", "outcome": "RED", "test": "test_on_permits_the_correct_like_for_like_comparison"},
++      {"pattern": "unknown-scope validation in relation_of", "outcome": "RED", "test": "test_an_unknown_scope_name_is_refused_in_both_directions"},
++      {"pattern": "the default-OFF constant", "outcome": "RED", "test": "test_flag_defaults_off"},
++      {"pattern": "scope_for refusing an unregistered field", "outcome": "RED", "test": "test_an_unregistered_field_refuses_rather_than_defaulting"},
++      {"pattern": "missing-is-not-zero (errored cell counted as 0.0)", "outcome": "RED", "test": "test_the_errored_cell_is_excluded_not_zeroed"}
++    ],
++    "n_red": 7,
++    "n_total": 7,
++    "partition_assertion_proved_separately": {
++      "why": "it asserts a property of two LIVE modules the conductor is importing right now, so they were not edited on disk",
++      "method": "both functions swapped in memory, assertion body re-run",
++      "mutations_caught": 4,
++      "of": 4,
++      "cases": ["_proposal_prefix returns the whole window", "_split_prefix_heldout returns the first third as the tail", "the two cut at different indices", "the tail is empty"]
++    }
++  },
++
++  "honest_limits": {
++    "availability_is_not_delivery": "The guard has ZERO shipped call sites. The only site that made this mistake is a completed experiment, and re-running it is not on the table. This is a library plus a scope registry for future comparators -- it is NOT currently firing on any live path, and no claim is made that it is.",
++    "residual_effect_not_zero": "The like-for-like gap is 1.18-1.29x. It is NOT claimed to be nil -- only that this data cannot distinguish the arms. It is smaller than the harness's own documented cell-level nondeterminism (sampling_seed returns None absent CARNOT_ARC_GENERATOR_SEED; fresh sampler seed per call at temperature 0.2), and its sign is what the one-third evidence handicap predicts.",
++    "not_fixed_here_and_owned_elsewhere": [
++      "unfalsifiable zeros: 4 of 13 games have a held-out tail whose only row is the level-up row, which WorldModelVerifier.score excludes, so n_correct / max(1, n) returns 0.0 for every possible engine. Fixing it changes what min_heldout_accuracy admits on the LIVE trust gate -- out of scope for a round-0 metric fix.",
++      "gate band not expressible: tails carry 0-3 gradeable rows so delta_heldout moves in steps of 1/n while the pre-registration is written in units of 0.15 and 0.05. Needs an operator design decision (enlarge the window, or restate the gate in units of 1/n).",
++      "the refactor write-path collapse and the refinement purity leak are owned by other work and were not touched."
++    ],
++    "retirement_not_acted_on": "exp5766's retire_if_same_verdict is conditioned on HONEST-NEGATIVE and the run landed partial_inconclusive, so its stated precondition was never met. This is RECORDED in the corrigendum, not acted on: the retirement also rests on two defects owned elsewhere, and the conductor's consumption path for that field was not traced here.",
++    "offline_is_not_behavioural": "Nothing here measures plans, actions or levels. It concerns how two recorded scalars may be compared."
++  },
++
++  "preconditions_checked": [
++    {"resource": "results/exp5764_gemma31b_singleshot_shard.jsonl", "available": true},
++    {"resource": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl", "available": true},
++    {"resource": "results/experiment_5766_gemma31b_cegis_refinement_ab.json", "available": true},
++    {"resource": "carnot venv python", "available": true}
++  ],
++
++  "field_principles": {
++    "inference_substrate": "aggregation_from_upstream_artifacts -- this change loads no model and runs no game; it re-derives numbers from two committed shards and ships a library plus tests. Declaring live inference would invite a duration floor calibrated for GPU work this never did.",
++    "honest_verdict": "terminal-prefixed so the conductor's reconciler classifies it as terminal rather than retrying a completed fix.",
++    "reproducibility_checksum": "sha256 of the shipped module, so a third party can tell whether the code they are reading is the code these mutation results describe.",
++    "solve_provenance": "development_proxy -- no live agent, no hidden game, no solve claimed."
++  },
++
++  "concurrency_incidents_observed_and_handled": {
++    "note": "Three other writers were active in this tree throughout (carnot-conductor.service plus at least two agent workflows). Recorded because each of these is the exact class of damage the Test-Run Record Integrity Discipline exists to catch, and two of them nearly landed.",
++    "1_foreign_git_add_A_swallowed_the_index": {
++      "what": "After staging exactly 5 explicit paths, a re-check of git diff --cached showed 64 files / 4878 insertions / 197 deletions staged -- another writer had run git add -A between the stage and the commit.",
++      "would_have_published": "two other agents' in-flight test files (863 and 886 lines), ~40 test-suite-rewritten results artifacts, and the determination-field losses on experiment_4162 / experiment_4170 / experiment_696 that determination_preservation_lint was flagging",
++      "action": "git reset (index only, working tree untouched so no other writer lost work), then re-added the same 5 explicit paths and re-verified the volume",
++      "detected_by": "the mandated git diff --cached --stat volume check, not by any hook"
++    },
++    "2_record_damage_found_and_REPAIRED": {
++      "file": "results/experiment_3408_kona_global_opt.json",
++      "what": "a test run (pytest tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py) silently rewrote MEASURED values in a historical artifact: time_to_solution 35.060176849365234 -> 26.657497882843018 and autoregressive_time_to_solution 525.9026527404785 -> 399.86246824264526",
++      "classification": "genuine record damage, not authored work -- no key was added or removed, only measured floats changed, which is the canonical signature of an experiment module's main() running under test collection",
++      "action": "restored from git per the discipline (restore, do not re-derive); the mutation marker then retired itself",
++      "not_mine": "this was another agent's test run; it is repaired and recorded here rather than left for a later git add -A to publish"
++    },
++    "3_two_mutation_markers_retired_as_proven_false_positives": {
++      "why_not_reverted": "the mutation gate's file list is a superset -- it diffs a shared working tree and cannot attribute a write. Every path in both markers was printed [NOT this run], i.e. the guard did NOT observe the arming run writing it.",
++      "marker_49689a5f": {
++        "named": 6,
++        "proof": "every one of the six paths is absent from git HEAD -- they are new agent-authored source files (mine plus another agent's), so there is no prior record for a test to have damaged",
++        "verified_by": "git cat-file -e HEAD:<path> returned non-zero for all six"
++      },
++      "marker_589a5022_mine": {
++        "named": ["ops/conductor-heartbeat.json", "ops/conductor-state.json"],
++        "proof": "these are the live conductor's own state files (carnot-conductor.service is active), and the test that armed the marker contains ZERO write calls -- it opens three JSON files read-only and asserts on them",
++        "verified_by": "grep for write_text/write_bytes/open(...,'w')/json.dump/shutil/os.remove/mkdir in the test returned 0 matches"
++      },
++      "action": "both deleted deliberately and explained in the commit message, which is the escape the tool itself documents; the marker naming real damage was NOT deleted -- it was resolved by repairing the file"
++    }
++  },
++
++  "evidence_trees_untouched": {
++    "results/arc_e3": "read-only, not written",
++    "results/arc_logo_snapshot": "read-only, not written",
++    "results/arc_e3_origin_fixtures": "read-only, not written"
++  }
++}
+diff --git a/tests/python/test_arc_metric_scope_guard_2026_08_03.py b/tests/python/test_arc_metric_scope_guard_2026_08_03.py
+new file mode 100644
+index 0000000000..fb8b13c600
+--- /dev/null
++++ b/tests/python/test_arc_metric_scope_guard_2026_08_03.py
+@@ -0,0 +1,359 @@
++"""REQ-ARC-WMTE-6090: the cross-scope subtraction guard, tested on the real incident.
++
++WHAT IS PINNED HERE, AND WHY IT IS NOT A SYNTHETIC CASE. The numbers in these tests are not
++fixtures invented to exercise the code. They are re-derived, every run, from the two committed
++shards that produced the defect:
++
++    results/exp5764_gemma31b_singleshot_shard.jsonl
++    results/exp5766_gemma31b_cegis_refinement_shard.jsonl
++
++and checked against the block those shards were rendered into:
++
++    results/experiment_5766_gemma31b_cegis_refinement_ab.json
++        comparison_to_gemma31b_singleshot_baseline
++
++`test_off_reproduces_the_shipped_comparison_bit_for_bit` rebuilds all thirteen per-game deltas
++and the pooled `-0.318658` by routing every subtraction through `compare_scoped` with the guard
++OFF, and asserts they equal the recorded values exactly. That is the both-directions contract's
++OFF half: the shipped arithmetic, bug included, so the historical record stays interpretable.
++`test_on_refuses_the_exact_invalid_comparison` runs the identical rebuild with the guard ON and
++asserts it refuses.
++
++ONE SUBTLETY THAT DECIDES THE WHOLE DESIGN, pinned by
++`test_on_permits_the_correct_like_for_like_comparison`. The guard keys on the RELATION a score
++stands in to its prompt evidence, not on the row set. exp5764 grades the whole window it was
++prompted on; exp5766 round 0's `prefix_accuracy` grades the two-thirds prefix it was prompted
++on. Different row sets, same relation -- both are fit scores -- and their comparison
++(0.378487 vs 0.319444, sign test p = 1.0) is the CORRECT one. A guard keyed on the row-set name
++would have refused it, which would have blocked the right answer along with the wrong one.
++
++MISSING IS NOT ZERO. exp5764's vc33 trial 0 errored (`load_engine: FileNotFoundError`) and
++recorded `heldout_accuracy: null`. It is EXCLUDED from vc33's mean, not counted as 0.0 --
++which is what makes vc33's baseline 1.0 rather than 0.667, and what makes the pooled baseline
++0.378487 rather than 0.352846. The exclusion is asserted explicitly rather than left implicit,
++because silently counting it as zero reproduces the artifact's number for the wrong reason.
++
++SCENARIO-ARC-WMTE-6090-METRIC-SCOPE-GUARD
++"""
++
++from __future__ import annotations
++
++import collections
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.agentic.arc_metric_scope import (
++    DISJOINT_TAIL,
++    HELDOUT_METRIC_SCOPES,
++    IN_SAMPLE,
++    OUT_OF_SAMPLE,
++    PROMPT_OVERLAPPING_PREFIX,
++    WHOLE_WINDOW,
++    MetricScopeMismatch,
++    compare_scoped,
++    metric_scope_guard_enabled,
++    relation_of,
++    scope_for,
++)
++from carnot.agentic.arc_metric_scope import (
++    _METRIC_SCOPE_GUARD_DEFAULT,  # noqa: PLC2701 -- pinned deliberately, see below
++)
++
++_ALL_SCOPES = sorted([WHOLE_WINDOW, DISJOINT_TAIL, PROMPT_OVERLAPPING_PREFIX])
++
++REPO = Path(__file__).resolve().parents[2]
++SHARD_5764 = REPO / "results" / "exp5764_gemma31b_singleshot_shard.jsonl"
++SHARD_5766 = REPO / "results" / "exp5766_gemma31b_cegis_refinement_shard.jsonl"
++ARTIFACT_5766 = REPO / "results" / "experiment_5766_gemma31b_cegis_refinement_ab.json"
++
++
++@pytest.fixture(autouse=True)
++def _shipped_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Start from the SHIPPED environment so a stray export in the operator's shell cannot make
++    a default-OFF assertion pass for the wrong reason."""
++
++    monkeypatch.delenv("CARNOT_ARC_METRIC_SCOPE_GUARD", raising=False)
++
++
++def _load_jsonl(path: Path) -> list[dict[str, Any]]:
++    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
++
++
++def _mean(values: list[float]) -> float:
++    return sum(values) / len(values)
++
++
++def _singleshot_means_5764() -> dict[str, float]:
++    """exp5764's per-game baseline, EXCLUDING the errored null cell (missing is not zero)."""
++
++    by_game: dict[str, list[float]] = collections.defaultdict(list)
++    for row in _load_jsonl(SHARD_5764):
++        value = row.get("heldout_accuracy")
++        if value is None:
++            continue
++        by_game[row["game"]].append(float(value))
++    return {game: round(_mean(vals), 6) for game, vals in by_game.items()}
++
++
++def _cegis_best_means_5766() -> dict[str, float]:
++    """exp5766's per-game best-achieved heldout across round 0 and every refactor round."""
++
++    by_game: dict[str, list[float]] = collections.defaultdict(list)
++    for row in _load_jsonl(SHARD_5766):
++        scored = [
++            float(rd["heldout_accuracy"])
++            for rd in row["rounds"]
++            if rd.get("heldout_accuracy") is not None
++        ]
++        by_game[row["game"]].append(max(scored) if scored else 0.0)
++    return {game: round(_mean(vals), 6) for game, vals in by_game.items()}
++
++
++def _round0_prefix_means_5766() -> dict[str, float]:
++    """exp5766 round 0's `prefix_accuracy` -- the field that was on disk and never read."""
++
++    by_game: dict[str, list[float]] = collections.defaultdict(list)
++    for row in _load_jsonl(SHARD_5766):
++        for rd in row["rounds"]:
++            if rd["round"] == 1 and rd["action"] == "induce":
++                by_game[row["game"]].append(float(rd["prefix_accuracy"] or 0.0))
++    return {game: round(_mean(vals), 6) for game, vals in by_game.items()}
++
++
++def _recorded_comparison() -> dict[str, Any]:
++    return json.loads(ARTIFACT_5766.read_text())["comparison_to_gemma31b_singleshot_baseline"]
++
++
++class TestTheDefaultIsOff:
++    def test_flag_defaults_off(self) -> None:
++        assert metric_scope_guard_enabled() is False
++
++    def test_the_module_constant_is_off(self) -> None:
++        """Pinned separately from the resolver: reading the env correctly while defaulting the
++        constant to "1" would still ship an armed refusal."""
++
++        assert _METRIC_SCOPE_GUARD_DEFAULT == "0"
++
++    @pytest.mark.parametrize("raw", ["1", "true", "TRUE", "yes", "on", " 1 "])
++    def test_truthy_values_enable(self, raw: str, monkeypatch: pytest.MonkeyPatch) -> None:
++        monkeypatch.setenv("CARNOT_ARC_METRIC_SCOPE_GUARD", raw)
++        assert metric_scope_guard_enabled() is True
++
++    @pytest.mark.parametrize("raw", ["0", "false", "no", "off", "", "banana"])
++    def test_anything_else_stays_off(self, raw: str, monkeypatch: pytest.MonkeyPatch) -> None:
++        """Fail-closed on garbage: a typo'd export must not arm a refusal mid-run."""
++
++        monkeypatch.setenv("CARNOT_ARC_METRIC_SCOPE_GUARD", raw)
++        assert metric_scope_guard_enabled() is False
++
++
++class TestTheExactIncident:
++    """The 2026-08-03 reproduction, rebuilt from the shards on every run."""
++
++    def test_the_shards_reproduce_the_reported_pooled_values(self) -> None:
++        """Guards the guard's own premise. If the shards ever stop reproducing 0.378487 /
++        0.059829 the tests below would still pass while measuring something else entirely."""
++
++        recorded = _recorded_comparison()
++        singleshot = _singleshot_means_5764()
++        best = _cegis_best_means_5766()
++        assert round(_mean(list(singleshot.values())), 6) == pytest.approx(
++            recorded["gemma31b_singleshot_5764_pooled_heldout"]
++        )
++        assert round(_mean(list(best.values())), 6) == pytest.approx(
++            recorded["cegis_best_achieved_pooled_heldout"]
++        )
++
++    def test_the_errored_cell_is_excluded_not_zeroed(self) -> None:
++        """MISSING IS NOT ZERO. vc33 trial 0 errored with a null score; counting it as 0.0 would
++        put vc33's baseline at 0.666667 and the pooled baseline at 0.352846 -- close enough to
++        look right, wrong for a reason no reader would see."""
++
++        rows = _load_jsonl(SHARD_5764)
++        errored = [r for r in rows if r.get("heldout_accuracy") is None]
++        assert [(r["game"], r["trial"]) for r in errored] == [("vc33", 0)]
++        assert errored[0]["error"].startswith("load_engine: FileNotFoundError")
++        assert _singleshot_means_5764()["vc33"] == 1.0
++
++    def test_off_reproduces_the_shipped_comparison_bit_for_bit(self) -> None:
++        """OFF HALF OF THE CONTRACT. Every per-game delta and the pooled -0.318658, rebuilt
++        through `compare_scoped`, must equal what the artifact recorded -- exactly, not
++        approximately. The subtraction is incommensurable and the guard reproduces it anyway,
++        because that is what keeps the historical record re-derivable."""
++
++        recorded = _recorded_comparison()
++        singleshot = _singleshot_means_5764()
++        best = _cegis_best_means_5766()
++
++        deltas: dict[str, float] = {}
++        for game in sorted(recorded["per_game"]):
++            deltas[game] = round(
++                compare_scoped(
++                    best[game],
++                    scope_for("exp5766", "rounds[].heldout_accuracy"),
++                    singleshot[game],
++                    scope_for("exp5764", "heldout_accuracy"),
++                    label=f"cegis_best_minus_singleshot[{game}]",
++                ),
++                6,
++            )
++
++        expected = {
++            game: cell["cegis_best_minus_singleshot"] for game, cell in recorded["per_game"].items()
++        }
++        assert deltas == expected
++        assert (
++            round(_mean(list(deltas.values())), 6)
++            == (recorded["pooled_delta_cegis_best_minus_singleshot"])
++        )
++        assert recorded["pooled_delta_cegis_best_minus_singleshot"] == -0.318658
++
++    def test_on_refuses_the_exact_invalid_comparison(self) -> None:
++        """ON HALF OF THE CONTRACT. The same rebuild, guard armed, refuses -- and the message
++        names both relations, so a reader hitting it learns what was actually mixed."""
++
++        singleshot = _singleshot_means_5764()
++        best = _cegis_best_means_5766()
++        with pytest.raises(MetricScopeMismatch) as excinfo:
++            for game in sorted(best):
++                compare_scoped(
++                    best[game],
++                    scope_for("exp5766", "rounds[].heldout_accuracy"),
++                    singleshot[game],
++                    scope_for("exp5764", "heldout_accuracy"),
++                    label=f"cegis_best_minus_singleshot[{game}]",
++                    enabled=True,
++                )
++        assert excinfo.value.treatment_scope == DISJOINT_TAIL
++        assert excinfo.value.baseline_scope == WHOLE_WINDOW
++        assert excinfo.value.treatment_relation == OUT_OF_SAMPLE
++        assert excinfo.value.baseline_relation == IN_SAMPLE
++
++    def test_on_permits_the_correct_like_for_like_comparison(self) -> None:
++        """THE GUARD MUST NOT BE A SLEDGEHAMMER. exp5764's whole-window fit and exp5766 round
++        0's prefix fit grade DIFFERENT row sets in the SAME relation to their prompts, so their
++        comparison is the valid one -- 0.378487 vs 0.319444. Armed, the guard permits it. A
++        guard keyed on the row-set name instead of the relation would refuse here and would
++        have suppressed the correct answer along with the wrong one."""
++
++        singleshot = _singleshot_means_5764()
++        prefix = _round0_prefix_means_5766()
++        assert round(_mean(list(singleshot.values())), 6) == 0.378487
++        assert round(_mean(list(prefix.values())), 6) == 0.319444
++
++        deltas = [
++            compare_scoped(
++                prefix[game],
++                scope_for("exp5766", "rounds[].prefix_accuracy"),
++                singleshot[game],
++                scope_for("exp5764", "heldout_accuracy"),
++                label=f"like_for_like[{game}]",
++                enabled=True,
++            )
++            for game in sorted(singleshot)
++        ]
++        # The like-for-like gap is real but small, and points the way the one-third evidence
++        # handicap predicts. It is NOT asserted to be zero.
++        assert round(_mean(deltas), 6) == round(0.319444 - 0.378487, 6)
++
++
++class TestOffIsAStrictPassthrough:
++    """Trajectory invariance for the OFF arm: with the guard off the function must be
++    indistinguishable from the bare subtraction it replaced, for every input it accepts."""
++
++    @pytest.mark.parametrize("treatment_scope", _ALL_SCOPES)
++    @pytest.mark.parametrize("baseline_scope", _ALL_SCOPES)
++    def test_off_never_raises_and_equals_bare_subtraction(
++        self, treatment_scope: str, baseline_scope: str
++    ) -> None:
++        for treatment in (0.0, 0.059829, 0.319444, 0.378487, 1.0, -0.5):
++            for baseline in (0.0, 0.148133, 0.378487, 1.0):
++                assert (
++                    compare_scoped(treatment, treatment_scope, baseline, baseline_scope)
++                    == treatment - baseline
++                )
++
++    def test_off_leaves_the_environment_untouched(self, monkeypatch: pytest.MonkeyPatch) -> None:
++        """A guard that mutated process state to remember it had fired would change the
++        trajectory of anything downstream that reads the same state."""
++
++        import os
++
++        before = dict(os.environ)
++        compare_scoped(0.5, DISJOINT_TAIL, 0.25, WHOLE_WINDOW)
++        assert dict(os.environ) == before
++
++    def test_the_explicit_enabled_false_override_also_passes_through(self) -> None:
++        """`enabled=False` must be the OFF arm even when the env says otherwise, or an A/B
++        harness cannot pin its control arm against a process-wide export."""
++
++        assert (
++            compare_scoped(0.059829, DISJOINT_TAIL, 0.378487, WHOLE_WINDOW, enabled=False)
++            == 0.059829 - 0.378487
++        )
++
++
++class TestTheTagsDescribeTheCode:
++    """A scope tag is a claim about what the code does. These assertions run the real functions
++    so the claim cannot drift away from the implementation silently."""
++
++    @pytest.mark.parametrize("n_rows", [3, 4, 5, 9, 12, 25])
++    def test_the_prefix_and_the_tail_partition_the_window_at_the_same_index(
++        self, n_rows: int
++    ) -> None:
++        """`disjoint_tail` and `prompt_overlapping_prefix` are only honest names if
++        `_proposal_prefix` (what goes in the prompt) and `_split_prefix_heldout` (what gets
++        graded) cut at the SAME place. They are written independently, in two modules, with two
++        different arithmetic spellings of one third."""
++
++        from carnot.agentic.arc_llm_reinduction import _proposal_prefix
++        from carnot.agentic.arc_world_model_trust_energy import _split_prefix_heldout
++
++        rows = list(range(n_rows))
++        prompt_rows = _proposal_prefix(rows)
++        graded_prefix, graded_tail = _split_prefix_heldout(rows)
++
++        assert prompt_rows == graded_prefix, "the prompt prefix is the graded prefix"
++        assert set(prompt_rows).isdisjoint(graded_tail), "the tail is out of sample"
++        assert prompt_rows + graded_tail == rows, "and together they are the whole window"
++        assert graded_tail, "a non-empty tail, or `disjoint_tail` grades nothing"
++
++    def test_relations_are_assigned_by_prompt_overlap_not_by_row_count(self) -> None:
++        assert relation_of(WHOLE_WINDOW) == IN_SAMPLE
++        assert relation_of(PROMPT_OVERLAPPING_PREFIX) == IN_SAMPLE
++        assert relation_of(DISJOINT_TAIL) == OUT_OF_SAMPLE
++
++    def test_every_registered_scope_is_a_known_scope(self) -> None:
++        """A registry entry naming a scope the guard cannot resolve would raise at the
++        subtraction, in a harness, rather than here."""
++
++        for key, scope in HELDOUT_METRIC_SCOPES.items():
++            assert relation_of(scope) in {IN_SAMPLE, OUT_OF_SAMPLE}, key
++
++    def test_the_two_exp5766_round_fields_are_registered_as_opposites(self) -> None:
++        """The whole incident is that these two sat side by side on the same round record,
++        computed from the same engine, and were treated as interchangeable."""
++
++        assert scope_for("exp5766", "rounds[].heldout_accuracy") == DISJOINT_TAIL
++        assert scope_for("exp5766", "rounds[].prefix_accuracy") == PROMPT_OVERLAPPING_PREFIX
++        assert relation_of(scope_for("exp5766", "rounds[].heldout_accuracy")) != relation_of(
++            scope_for("exp5766", "rounds[].prefix_accuracy")
++        )
++
++    def test_an_unregistered_field_refuses_rather_than_defaulting(self) -> None:
++        with pytest.raises(KeyError, match="no recorded metric scope"):
++            scope_for("exp9999", "heldout_accuracy")
++
++    @pytest.mark.parametrize("bad", ["held_out", "tail", "", "WHOLE_WINDOW"])
++    def test_an_unknown_scope_name_is_refused_in_both_directions(self, bad: str) -> None:
++        """Fail-closed on a typo'd tag whether the guard is on or off. A tag the guard cannot
++        resolve is a pattern list narrower than the concept it protects."""
++
++        for enabled in (False, True):
++            with pytest.raises(ValueError, match="unknown metric scope"):
++                compare_scoped(0.5, bad, 0.25, WHOLE_WINDOW, enabled=enabled)
++            with pytest.raises(ValueError, match="unknown metric scope"):
++                compare_scoped(0.5, WHOLE_WINDOW, 0.25, bad, enabled=enabled)
+-- 
+2.55.0
+

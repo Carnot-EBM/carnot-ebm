@@ -1,0 +1,1920 @@
+From 6649a9187b9835298f387d71d9033b8a6929b726 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 12:24:48 -0400
+Subject: [PATCH 05669/11362] [conductor] PHASE 4 capstone -- reconcile .478
+ evidence, exclusions, specs, memory, and ops docs
+
+Automated research step by research conductor.
+Task ID: exp5232-capstone-v478
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |  10 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5232_capstone_v478.py   | 815 ++++++++++++++++++
+ results/experiment_5232_capstone_v478.json    | 528 ++++++++++++
+ .../test_experiment_5232_capstone_v478.py     | 504 +++++++++++
+ 5 files changed, 1858 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5232_capstone_v478.py
+ create mode 100644 results/experiment_5232_capstone_v478.json
+ create mode 100644 tests/python/test_experiment_5232_capstone_v478.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 6ee83eb783..3f9583944a 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -866,3 +866,13 @@
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CAPSTONE-5219 | Implemented (`python/carnot/experiment_5219_capstone_v477.py`, `scripts/experiment_5219_capstone_v477.py`, `results/experiment_5219_capstone_v477.json`) | Implemented (`tests/python/test_experiment_5219_capstone_v477.py`) |
++
++- REQ-CAPSTONE-5232: The `.478` milestone-close capstone aggregator `exp5232-capstone-v478` in `python/carnot/experiment_5232_capstone_v478.py` SHALL write `results/experiment_5232_capstone_v478.json` without modifying `scripts/research_conductor.py`, without modifying `ops/status.md`, without modifying `ops/changelog.md`, without modifying `_bmad/traceability.md`, and without laundering flagged, blocked, or gated-out artifacts into headline claims. It SHALL read every `.478` result artifact from Exp5220 through Exp5231, including `results/experiment_5220_archive_477_activate_478.json` and `results/experiment_5221_sota_ingestion_v478.json` through `results/experiment_5231_hardware_continuity_pbit_boundary_v478.json`. It SHALL also record the relevant roadmap, conductor-log, reference, verifier-gap, ARC registry, exclusion-manifest, status, changelog, and traceability context as read-only provenance. It SHALL reconcile GAP-1 as `blocked` when Exp5222 blocks registry promotion by subset instability, reconcile GAP-4 as `blocked` unless a clean non-flagged Exp5225 artifact survives adversarial checks, reconcile VerIbmc solver feedback as `blocked` when Exp5226 is adversarially flagged, treat typed multi-head memory as satisfying continuous self-learning only when Exp5227 writes consumer-ready typed memory with promotion/rollback and retention checks, compute ARC level deltas only from clean reproduction-gated artifacts, record the KAN certificate as `produced` only from clean Exp5230 evidence, preserve hardware as reachability/boundary-planning evidence with no speedup claim, set `docs_reconciled=false` when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation, and confirm `scripts/research_conductor.py` stayed untouched.
++- SCENARIO-CAPSTONE-5232: The artifact `results/experiment_5232_capstone_v478.json` must emit top-level fields `per_task_summary`, `gap1_final_status`, `gap4_final_status`, `solver_feedback_status`, `continuous_self_learning_satisfied`, `arc_new_levels_banked`, `arc_reproducible_total_levels_delta`, `kan_certificate_status`, `hardware_status`, `flagged_artifacts_excluded`, `docs_reconciled`, `validation_commands_run`, `research_conductor_py_untouched_confirmed`, `inference_substrate`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `milestone`, `run_date`, `spec_refs`, `result_path`, `field_principles`, `duration_s`, `source_artifacts`, `source_context`, `missing_artifacts`, `excluded_from_headline_task_ids`, `headline_eligible_task_ids`, `status_decisions`, `preconditions_checked`, `random_seed`, `reproducibility_checksum`, and `flagged_adversarial`. The default `.478` read must summarize Exp5220 as `.478` activated, Exp5221 as a no-new-actionable SOTA refresh with Semantic Scholar rate limits, Exp5222 as GAP-1 registry promotion blocked by subset instability, Exp5223 as a flagged GAP-4 pool-authenticity audit that quarantined Exp5211/Exp5212, Exp5224 as a flagged canonical-pool builder whose usable-pool claim is excluded from headlines, Exp5225 as a flagged clean-null validation whose metrics are excluded from headlines, Exp5226 as a flagged VerIbmc solver-feedback null excluded from headline status, Exp5227 as typed multi-head memory with four heads, promotions, rollbacks, retention, and consumer output, Exp5228 as a usable ARC rubric with no patch available, Exp5229 as a conductor pre-gate block, Exp5230 as a tiny KAN/PWA/MILP certificate produced for bounded properties only, and Exp5231 as KV260/PolarFire reachable with GateMate physical/JTAG blocked and no speedup claim. The terminal verdict must start with `complete:` or `complete_` and must state the true `.478` outcome without turning flagged, blocked, gated, or bounded artifacts into stronger claims.
++- SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES: The required field principles are: `per_task_summary` = "map from task id to artifact path/status/verdict/headline eligibility, including flagged, blocked, gated, and bounded evidence without importing excluded metrics into headline claims", `gap1_final_status` = "one of promoted | blocked | unchanged; promoted only when a clean registry promotion artifact registers the verifier", `gap4_final_status` = "one of clean_positive | clean_null | blocked | unchanged; clean_* only when the validation artifact is not flagged and passes adversarial checks", `solver_feedback_status` = "one of positive | null | blocked | not_run; positive/null only when the VerIbmc artifact survives adversarial checks", `continuous_self_learning_satisfied` = "true only when typed memory, retention, promotion/rollback, and a consumer-ready handoff are present", `arc_new_levels_banked` = "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated", `arc_reproducible_total_levels_delta` = "integer delta from clean reproduction-gated ARC evidence only", `kan_certificate_status` = "one of produced | blocked | not_run; produced only for the bounded tiny KAEM certificate supported by Exp5230", `hardware_status` = "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline", `flagged_artifacts_excluded` = "true when every flagged, critical-corrigendum, or gate-blocked artifact is excluded from headline aggregation", `docs_reconciled` = "false when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation to a later step", `validation_commands_run` = "list of commands and pass/fail/block status used to validate the capstone and changed surfaces", `research_conductor_py_untouched_confirmed` = "hard constraint that scripts/research_conductor.py stayed untouched", `inference_substrate` = "aggregation_from_milestone_artifacts", and `honest_verdict` = "terminal-prefix single sentence that states the true .478 outcome without laundering flagged or gated artifacts."
++
++## Implementation Status (REQ-CAPSTONE-5232)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAPSTONE-5232 | Planned (`python/carnot/experiment_5232_capstone_v478.py`, `results/experiment_5232_capstone_v478.json`) | Planned (`tests/python/test_experiment_5232_capstone_v478.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 279badc677..433e20107f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 210,
+   "code_violations": 0,
+-  "experiments_checked": 4206,
++  "experiments_checked": 4207,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5232_capstone_v478.py b/python/carnot/experiment_5232_capstone_v478.py
+new file mode 100644
+index 0000000000..2eae875407
+--- /dev/null
++++ b/python/carnot/experiment_5232_capstone_v478.py
+@@ -0,0 +1,815 @@
++"""Exp 5232: V478 milestone-close capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5232, SCENARIO-CAPSTONE-5232,
++SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES.
++
++This module closes the milestone by aggregating existing artifacts. The
++important behavior is conservative: a flagged, gate-blocked, or bounded
++artifact is still recorded as evidence, but it cannot become a headline claim.
++That distinction matters because several V478 artifacts contain useful audit
++facts while also carrying adversarial or gate blocks.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results") / "experiment_5232_capstone_v478.json"
++EXPERIMENT = "experiment_5232_capstone_v478"
++EXPERIMENT_ID = "exp5232-capstone-v478"
++MILESTONE = "2026.07.478"
++SCHEMA = "carnot.experiment_5232_capstone_v478.v1"
++RANDOM_SEED = 5232
++INFERENCE_SUBSTRATE = "aggregation_from_milestone_artifacts"
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++
++TYPED_MEMORY_HEADS = ("constraints", "provenance", "failures", "skills_rubrics")
++ARC_RUBRIC_FIELDS = (
++    "skill_selection",
++    "skill_following",
++    "skill_composition",
++    "reflection_retry_quality",
++    "provenance_validity",
++)
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-5232",
++    "SCENARIO-CAPSTONE-5232",
++    "SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "per_task_summary": (
++        "map from task id to artifact path/status/verdict/headline eligibility, "
++        "including flagged, blocked, gated, and bounded evidence without importing "
++        "excluded metrics into headline claims"
++    ),
++    "gap1_final_status": (
++        "one of promoted | blocked | unchanged; promoted only when a clean registry "
++        "promotion artifact registers the verifier"
++    ),
++    "gap4_final_status": (
++        "one of clean_positive | clean_null | blocked | unchanged; clean_* only when "
++        "the validation artifact is not flagged and passes adversarial checks"
++    ),
++    "solver_feedback_status": (
++        "one of positive | null | blocked | not_run; positive/null only when the "
++        "VerIbmc artifact survives adversarial checks"
++    ),
++    "continuous_self_learning_satisfied": (
++        "true only when typed memory, retention, promotion/rollback, and a "
++        "consumer-ready handoff are present"
++    ),
++    "arc_new_levels_banked": (
++        "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated"
++    ),
++    "arc_reproducible_total_levels_delta": (
++        "integer delta from clean reproduction-gated ARC evidence only"
++    ),
++    "kan_certificate_status": (
++        "one of produced | blocked | not_run; produced only for the bounded tiny "
++        "KAEM certificate supported by Exp5230"
++    ),
++    "hardware_status": (
++        "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline"
++    ),
++    "flagged_artifacts_excluded": (
++        "true when every flagged, critical-corrigendum, or gate-blocked artifact is "
++        "excluded from headline aggregation"
++    ),
++    "docs_reconciled": (
++        "false when the operator stop rule delegates ops/status/changelog/"
++        "traceability/reference reconciliation to a later step"
++    ),
++    "validation_commands_run": (
++        "list of commands and pass/fail/block status used to validate the capstone "
++        "and changed surfaces"
++    ),
++    "research_conductor_py_untouched_confirmed": (
++        "hard constraint that scripts/research_conductor.py stayed untouched"
++    ),
++    "inference_substrate": INFERENCE_SUBSTRATE,
++    "honest_verdict": (
++        "terminal-prefix single sentence that states the true .478 outcome without "
++        "laundering flagged or gated artifacts"
++    ),
++}
++
++PRINCIPLE_WRAPPED_FIELDS = (
++    "per_task_summary",
++    "gap1_final_status",
++    "gap4_final_status",
++    "solver_feedback_status",
++    "continuous_self_learning_satisfied",
++    "arc_new_levels_banked",
++    "arc_reproducible_total_levels_delta",
++    "kan_certificate_status",
++    "hardware_status",
++    "flagged_artifacts_excluded",
++    "docs_reconciled",
++    "validation_commands_run",
++    "research_conductor_py_untouched_confirmed",
++)
++
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "duration_s",
++    "source_artifacts",
++    "source_context",
++    "missing_artifacts",
++    "excluded_from_headline_task_ids",
++    "headline_eligible_task_ids",
++    "status_decisions",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "flagged_adversarial",
++    "inference_substrate",
++    "honest_verdict",
++    *PRINCIPLE_WRAPPED_FIELDS,
++)
++
++DEFAULT_VALIDATION_COMMANDS = [
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5232_capstone_v478.py -q --no-cov -o addopts=''",
++        "status": "PENDING",
++        "notes": "filled by the final run after implementation",
++    }
++]
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One expected V478 task deliverable."""
++
++    experiment_number: int
++    task_id: str
++    relative_path: Path
++
++
++UPSTREAM_SOURCES: tuple[UpstreamSource, ...] = (
++    UpstreamSource(
++        5220,
++        "exp5220-archive-477-activate-478",
++        Path("results/experiment_5220_archive_477_activate_478.json"),
++    ),
++    UpstreamSource(
++        5221,
++        "exp5221-sota-ingestion-v478",
++        Path("results/experiment_5221_sota_ingestion_v478.json"),
++    ),
++    UpstreamSource(
++        5222,
++        "exp5222-gap1-gate-field-and-registry-promotion-v478",
++        Path("results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"),
++    ),
++    UpstreamSource(
++        5223,
++        "exp5223-gap4-flagged-pool-authenticity-audit-v478",
++        Path("results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json"),
++    ),
++    UpstreamSource(
++        5224,
++        "exp5224-gap4-canonical-pool-builder-v478",
++        Path("results/experiment_5224_gap4_canonical_pool_builder_v478.json"),
++    ),
++    UpstreamSource(
++        5225,
++        "exp5225-gap4-clean-scale-validation-gated-v478",
++        Path("results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"),
++    ),
++    UpstreamSource(
++        5226,
++        "exp5226-veribmc-local-solver-feedback-pilot-v478",
++        Path("results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json"),
++    ),
++    UpstreamSource(
++        5227,
++        "exp5227-continuous-self-learning-multihead-memory-v478",
++        Path("results/experiment_5227_continuous_self_learning_multihead_memory_v478.json"),
++    ),
++    UpstreamSource(
++        5228,
++        "exp5228-arc-provenance-skill-rubric-gate-v478",
++        Path("results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json"),
++    ),
++    UpstreamSource(
++        5229,
++        "exp5229-arc-gated-live-levelup-from-rubric-v478",
++        Path("results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json"),
++    ),
++    UpstreamSource(
++        5230,
++        "exp5230-kan-milp-verifier-certificate-v478",
++        Path("results/experiment_5230_kan_milp_verifier_certificate_v478.json"),
++    ),
++    UpstreamSource(
++        5231,
++        "exp5231-hardware-continuity-pbit-boundary-v478",
++        Path("results/experiment_5231_hardware_continuity_pbit_boundary_v478.json"),
++    ),
++)
++
++SOURCE_CONTEXT_PATHS = (
++    Path("research-roadmap.yaml"),
++    Path("openspec/change-proposals/research-roadmap-vNEXT.md"),
++    Path("ops/conductor-log.md"),
++    Path("research-references.md"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("ops/verifier_gaps.md"),
++    Path("ops/arc_solve_registry.yaml"),
++    Path("ops/exclusion_manifest.yaml"),
++    Path("_bmad/traceability.md"),
++)
++
++
++def source_by_number(experiment_number: int) -> UpstreamSource:
++    for source in UPSTREAM_SOURCES:
++        if source.experiment_number == experiment_number:
++            return source
++    raise KeyError(experiment_number)
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def honest_verdict_text(value: Any) -> str:
++    raw = value_of(value)
++    return raw if isinstance(raw, str) else ""
++
++
++def as_bool(value: Any) -> bool:
++    return value_of(value) is True
++
++
++def as_number(value: Any) -> float | None:
++    raw = value_of(value)
++    if isinstance(raw, bool) or raw is None:
++        return None
++    try:
++        return float(raw)
++    except (TypeError, ValueError):
++        return None
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def file_sha256(path: Path) -> str | None:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return {}, {"exists": True, "loadable": False, "error": "malformed_json"}
++    if not isinstance(parsed, dict):
++        return {}, {"exists": True, "loadable": False, "error": "not_json_object"}
++    return parsed, {
++        "exists": True,
++        "loadable": True,
++        "error": None,
++        "sha256": file_sha256(path),
++    }
++
++
++def research_conductor_untouched(root: Path) -> bool:  # pragma: no cover - git integration.
++    diff = subprocess.run(
++        ["git", "diff", "--quiet", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++        stdout=subprocess.DEVNULL,
++        stderr=subprocess.DEVNULL,
++    )
++    status = subprocess.run(
++        ["git", "status", "--short", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return diff.returncode == 0 and status.stdout.strip() == ""
++
++
++def has_critical_corrigendum(data: JsonMap) -> bool:
++    pending = value_of(data.get("corrigendum_pending"))
++    if not isinstance(pending, list):
++        return False
++    for finding in pending:
++        if not isinstance(finding, Mapping):
++            continue
++        severity = finding.get("severity")
++        if severity == 2 or (isinstance(severity, str) and severity.lower() == "critical"):
++            return True
++    return False
++
++
++def is_gate_blocked(data: JsonMap) -> bool:
++    verdict = honest_verdict_text(data.get("honest_verdict"))
++    return bool(
++        data.get("status") == "blocked"
++        or data.get("blocked_at_layer") == "conductor_pre_gate"
++        or verdict.startswith("blocked")
++    )
++
++
++def exclusion_reasons(data: JsonMap) -> list[str]:
++    reasons: list[str] = []
++    if data.get("flagged_adversarial") is True:
++        reasons.append("flagged_adversarial")
++    if has_critical_corrigendum(data):
++        reasons.append("critical_corrigendum_pending")
++    if value_of(data.get("adversarial_verify_passed")) is False:
++        reasons.append("adversarial_verify_failed")
++    if is_gate_blocked(data):
++        reasons.append("gate_blocked")
++    return reasons
++
++
++def is_excluded(data: JsonMap) -> bool:
++    return bool(exclusion_reasons(data))
++
++
++def load_upstreams(root: Path) -> tuple[dict[int, JsonDict], list[JsonDict], list[str]]:
++    artifacts: dict[int, JsonDict] = {}
++    source_rows: list[JsonDict] = []
++    missing: list[str] = []
++    for source in UPSTREAM_SOURCES:
++        path = root / source.relative_path
++        data, meta = read_json_mapping(path)
++        row = {
++            "experiment_number": source.experiment_number,
++            "task_id": source.task_id,
++            "relative_path": str(source.relative_path),
++            "exists": meta.get("exists") is True,
++            "loadable": meta.get("loadable") is True,
++            "sha256": meta.get("sha256"),
++            "error": meta.get("error"),
++        }
++        if not meta.get("loadable"):
++            missing.append(source.task_id)
++            source_rows.append(row)
++            continue
++        artifacts[source.experiment_number] = data
++        reasons = exclusion_reasons(data)
++        source_rows.append(
++            row
++            | {
++                "honest_verdict": honest_verdict_text(data.get("honest_verdict")),
++                "flagged_adversarial": data.get("flagged_adversarial") is True,
++                "critical_corrigendum": has_critical_corrigendum(data),
++                "gate_blocked": is_gate_blocked(data),
++                "excluded_from_headline": bool(reasons),
++                "exclusion_reasons": reasons,
++            }
++        )
++    return artifacts, source_rows, missing
++
++
++def load_source_context(root: Path) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for relative_path in SOURCE_CONTEXT_PATHS:
++        path = root / relative_path
++        rows.append(
++            {
++                "relative_path": str(relative_path),
++                "exists": path.exists(),
++                "sha256": file_sha256(path),
++                "read_only": True,
++            }
++        )
++    return rows
++
++
++def _status_for(data: JsonMap) -> str:
++    if not data:
++        return "missing"
++    if is_gate_blocked(data):
++        return "gate_blocked"
++    if is_excluded(data):
++        return "excluded"
++    return "complete"
++
++
++def per_task_summary(artifacts: Mapping[int, JsonMap]) -> JsonDict:
++    summary: JsonDict = {}
++    for source in UPSTREAM_SOURCES:
++        data = artifacts.get(source.experiment_number, {})
++        reasons = exclusion_reasons(data) if data else []
++        summary[source.task_id] = {
++            "artifact_path": str(source.relative_path),
++            "status": _status_for(data),
++            "verdict": honest_verdict_text(data.get("honest_verdict"))
++            if data
++            else "missing_artifact",
++            "headline_eligible": bool(data and not reasons),
++            "exclusion_reasons": reasons,
++            "flagged_adversarial": data.get("flagged_adversarial") is True if data else False,
++            "critical_corrigendum": has_critical_corrigendum(data) if data else False,
++            "gate_blocked": is_gate_blocked(data) if data else False,
++        }
++    return summary
++
++
++def headline_eligible_task_ids(summary: JsonMap) -> list[str]:
++    return [task_id for task_id, row in summary.items() if row.get("headline_eligible") is True]
++
++
++def excluded_task_ids(summary: JsonMap) -> list[str]:
++    return [
++        task_id
++        for task_id, row in summary.items()
++        if row.get("status") in {"excluded", "gate_blocked"}
++    ]
++
++
++def eligible_numbers(artifacts: Mapping[int, JsonMap]) -> set[int]:
++    return {number for number, data in artifacts.items() if not is_excluded(data)}
++
++
++def excluded_numbers(artifacts: Mapping[int, JsonMap]) -> set[int]:
++    return {number for number, data in artifacts.items() if is_excluded(data)}
++
++
++def gap1_final_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5222, {})
++    if not data:
++        return "unchanged", "Exp5222 GAP-1 registry decision artifact is missing"
++    if 5222 not in eligible:
++        return "blocked", "Exp5222 exists but is flagged or gate-blocked"
++    if as_bool(data.get("gap1_registry_promoted")):
++        return "promoted", "Exp5222 promoted the GAP-1 registry verifier"
++    decision = value_of(data.get("gap1_registry_decision"))
++    if isinstance(decision, str) and decision.startswith("blocked"):
++        return "blocked", f"Exp5222 blocked registry promotion: {decision}"
++    return "unchanged", "Exp5222 did not promote or explicitly block GAP-1"
++
++
++def gap4_final_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5225, {})
++    if not data:
++        return "unchanged", "Exp5225 GAP-4 validation artifact is missing"
++    if 5225 not in eligible:
++        return "blocked", "Exp5225 metrics are excluded because the artifact is flagged or gated"
++    effect = value_of(data.get("effect_direction"))
++    if effect == "positive":
++        return "clean_positive", "Exp5225 reported a clean positive validation"
++    if effect == "null":
++        return "clean_null", "Exp5225 reported a clean null validation"
++    return "blocked", f"Exp5225 did not provide a clean positive/null decision: {effect}"
++
++
++def solver_feedback_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5226, {})
++    if not data:
++        return "not_run", "Exp5226 VerIbmc solver-feedback artifact is missing"
++    if 5226 not in eligible:
++        return (
++            "blocked",
++            "Exp5226 solver-feedback outcome is excluded because the artifact is flagged",
++        )
++    uplift = as_number(data.get("solver_feedback_uplift")) or 0.0
++    if uplift > 0.0:
++        return "positive", f"Exp5226 solver feedback uplift is positive: {uplift}"
++    return "null", "Exp5226 solver feedback completed with no uplift over baselines"
++
++
++def continuous_self_learning_satisfied(
++    root: Path, artifacts: Mapping[int, JsonMap], eligible: set[int]
++) -> tuple[bool, str]:
++    data = artifacts.get(5227, {})
++    if not data or 5227 not in eligible:
++        return False, "Exp5227 typed-memory artifact missing or excluded"
++    heads = value_of(data.get("typed_memory_heads"))
++    consumer_rel = value_of(data.get("consumer_ready_path"))
++    memory_rel = value_of(data.get("memory_artifact_path"))
++    if not isinstance(consumer_rel, str) or not isinstance(memory_rel, str):
++        return False, "Exp5227 did not record typed-memory and consumer paths"
++    memory, memory_meta = read_json_mapping(root / memory_rel)
++    consumer, consumer_meta = read_json_mapping(root / consumer_rel)
++    memory_heads = memory.get("heads") if isinstance(memory.get("heads"), list) else []
++    passed = bool(
++        as_bool(data.get("continuous_self_learning_task"))
++        and list(heads or []) == list(TYPED_MEMORY_HEADS)
++        and memory_meta.get("loadable") is True
++        and consumer_meta.get("loadable") is True
++        and list(memory_heads) == list(TYPED_MEMORY_HEADS)
++        and as_bool(data.get("retention_check_passed"))
++        and as_bool(consumer.get("consumer_ready"))
++        and not as_bool(data.get("broad_self_distillation_used"))
++        and int(as_number(data.get("memory_entries_written")) or 0) >= 1
++        and int(as_number(data.get("promotions")) or 0) >= 1
++        and int(as_number(data.get("rollbacks")) or 0) >= 1
++    )
++    if passed:
++        return (
++            True,
++            "Exp5227 wrote typed memory, retention passed, and Exp5228 consumer file is ready",
++        )
++    return False, "Exp5227 typed-memory, retention, or consumer-readiness checks did not pass"
++
++
++def arc_status(artifacts: Mapping[int, JsonMap]) -> tuple[list[Any], int, str]:
++    levelup = artifacts.get(5229, {})
++    if levelup and not is_gate_blocked(levelup):
++        levels = value_of(levelup.get("new_levels_banked"))
++        banked = levels if isinstance(levels, list) else []
++        delta = as_number(levelup.get("reproducible_total_levels_delta"))
++        return banked, int(delta) if delta is not None else len(banked), "Exp5229 ran"
++    rubric = artifacts.get(5228, {})
++    known_nulls = rubric.get("known_arc_nulls_retained")
++    if isinstance(known_nulls, Mapping):
++        levels = known_nulls.get("new_levels_banked")
++        banked = levels if isinstance(levels, list) else []
++        delta = as_number(known_nulls.get("reproducible_total_levels_delta"))
++        return (
++            banked,
++            int(delta) if delta is not None else len(banked),
++            "Exp5228 retained zero-delta ARC memory and Exp5229 was gate-blocked",
++        )
++    return [], 0, "no ARC level-up artifact or rubric null evidence"
++
++
++def kan_certificate_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5230, {})
++    if not data:
++        return "not_run", "Exp5230 KAN certificate artifact is missing"
++    if 5230 not in eligible:
++        return "blocked", "Exp5230 KAN certificate artifact is excluded"
++    if as_bool(data.get("kan_certificate_produced")):
++        return "produced", "Exp5230 produced the bounded tiny KAEM PWA/MILP certificate"
++    return "blocked", "Exp5230 did not produce a certificate"
++
++
++def hardware_status(
++    artifacts: Mapping[int, JsonMap], excluded_numbers: set[int] | None = None
++) -> str:
++    if excluded_numbers and 5231 in excluded_numbers:
++        return "hardware evidence excluded because Exp5231 is flagged or gate-blocked"
++    data = artifacts.get(5231, {})
++    if not data:
++        return "hardware evidence missing"
++    kv260 = "reachable" if as_bool(data.get("kv260_reachable")) else "unreachable"
++    polarfire = "reachable" if as_bool(data.get("polarfire_reachable")) else "unreachable"
++    speedup = "speedup claimed" if as_bool(data.get("speedup_claimed")) else "no speedup claim"
++    return (
++        f"KV260={kv260} via {value_of(data.get('kv260_check_method'))}; "
++        f"PolarFire={polarfire}; "
++        f"GateMate={value_of(data.get('gatemate_status'))} "
++        f"IDCODE={value_of(data.get('gatemate_idcode_raw'))}; "
++        f"p-bit plan={value_of(data.get('pbit_boundary_plan_path'))}; {speedup}"
++    )
++
++
++def build_honest_verdict(
++    gap1: str,
++    gap4: str,
++    solver: str,
++    self_learning: bool,
++    arc_delta: int,
++    kan: str,
++) -> str:
++    self_text = "typed memory satisfied" if self_learning else "typed memory not satisfied"
++    return (
++        "complete: v478 reconciled with "
++        f"GAP-1 {gap1}, GAP-4 {gap4}, VerIbmc solver-feedback {solver}, "
++        f"{self_text}, ARC delta {arc_delta}, KAN certificate {kan}, "
++        "hardware continuity/no-speedup recorded, and flagged/gated artifacts excluded."
++    )
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    conductor_untouched: bool | None = None,
++    docs_reconciled: bool = False,
++) -> JsonDict:
++    start = time.perf_counter()
++    artifacts, sources, missing = load_upstreams(root)
++    context = load_source_context(root)
++    summary = per_task_summary(artifacts)
++    eligible = eligible_numbers(artifacts)
++    excluded = excluded_numbers(artifacts)
++    eligible_ids = headline_eligible_task_ids(summary)
++    excluded_ids = excluded_task_ids(summary)
++    gap1_value, gap1_reason = gap1_final_status(artifacts, eligible)
++    gap4_value, gap4_reason = gap4_final_status(artifacts, eligible)
++    solver_value, solver_reason = solver_feedback_status(artifacts, eligible)
++    self_learning_value, self_learning_reason = continuous_self_learning_satisfied(
++        root, artifacts, eligible
++    )
++    arc_levels, arc_delta, arc_reason = arc_status(artifacts)
++    kan_value, kan_reason = kan_certificate_status(artifacts, eligible)
++    hardware_value = hardware_status(artifacts, excluded)
++    conductor_clean = (
++        research_conductor_untouched(root) if conductor_untouched is None else conductor_untouched
++    )
++    flagged_clean = not (set(excluded_ids) & set(eligible_ids))
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
++        ),
++        "source_artifacts": sources,
++        "source_context": context,
++        "missing_artifacts": missing,
++        "excluded_from_headline_task_ids": excluded_ids,
++        "headline_eligible_task_ids": eligible_ids,
++        "status_decisions": {
++            "gap1": gap1_reason,
++            "gap4": gap4_reason,
++            "solver_feedback": solver_reason,
++            "continuous_self_learning": self_learning_reason,
++            "arc": arc_reason,
++            "kan": kan_reason,
++            "hardware": hardware_value,
++            "docs": (
++                "docs reconciled in this capstone"
++                if docs_reconciled
++                else "ops/status, ops/changelog, _bmad/traceability, and research-references deferred by stop rule"
++            ),
++            "excluded_from_headline_task_ids": excluded_ids,
++        },
++        "preconditions_checked": {
++            "expected_deliverable_artifacts": len(UPSTREAM_SOURCES),
++            "loadable_deliverable_artifacts": len(artifacts),
++            "source_context_files_checked": len(context),
++            "docs_reconciliation_deferred_by_stop_rule": not docs_reconciled,
++            "research_conductor_py_untouched": conductor_clean,
++        },
++        "per_task_summary": _principled("per_task_summary", summary),
++        "gap1_final_status": _principled("gap1_final_status", gap1_value),
++        "gap4_final_status": _principled("gap4_final_status", gap4_value),
++        "solver_feedback_status": _principled("solver_feedback_status", solver_value),
++        "continuous_self_learning_satisfied": _principled(
++            "continuous_self_learning_satisfied", self_learning_value
++        ),
++        "arc_new_levels_banked": _principled("arc_new_levels_banked", arc_levels),
++        "arc_reproducible_total_levels_delta": _principled(
++            "arc_reproducible_total_levels_delta", arc_delta
++        ),
++        "kan_certificate_status": _principled("kan_certificate_status", kan_value),
++        "hardware_status": _principled("hardware_status", hardware_value),
++        "flagged_artifacts_excluded": _principled("flagged_artifacts_excluded", flagged_clean),
++        "docs_reconciled": _principled("docs_reconciled", docs_reconciled),
++        "validation_commands_run": _principled(
++            "validation_commands_run",
++            list(validation_commands_run or DEFAULT_VALIDATION_COMMANDS),
++        ),
++        "research_conductor_py_untouched_confirmed": _principled(
++            "research_conductor_py_untouched_confirmed", conductor_clean
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": build_honest_verdict(
++            gap1_value, gap4_value, solver_value, self_learning_value, arc_delta, kan_value
++        ),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "flagged_adversarial": False,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = honest_verdict_text(payload.get("honest_verdict"))
++    if not verdict.startswith(TERMINAL_PREFIXES) or "\n" in verdict:
++        raise ValueError("honest_verdict must be a single terminal-prefix sentence")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must declare V478 milestone aggregation")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field principle mismatch")
++    if payload.get("flagged_adversarial") is not False:
++        raise ValueError("flagged_adversarial must be false for the capstone itself")
++    for field in PRINCIPLE_WRAPPED_FIELDS:
++        wrapped = payload[field]
++        if not isinstance(wrapped, Mapping) or wrapped.get("principle") != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} field principle mismatch")
++    if value_of(payload["research_conductor_py_untouched_confirmed"]) is not True:
++        raise ValueError("research_conductor_py_untouched_confirmed must be true")
++    if value_of(payload["gap1_final_status"]) not in {"promoted", "blocked", "unchanged"}:
++        raise ValueError("gap1_final_status has invalid value")
++    if value_of(payload["gap4_final_status"]) not in {
++        "clean_positive",
++        "clean_null",
++        "blocked",
++        "unchanged",
++    }:
++        raise ValueError("gap4_final_status has invalid value")
++    if value_of(payload["solver_feedback_status"]) not in {
++        "positive",
++        "null",
++        "blocked",
++        "not_run",
++    }:
++        raise ValueError("solver_feedback_status has invalid value")
++    if value_of(payload["kan_certificate_status"]) not in {"produced", "blocked", "not_run"}:
++        raise ValueError("kan_certificate_status has invalid value")
++    if value_of(payload["flagged_artifacts_excluded"]) is not True:
++        raise ValueError("flagged_artifacts_excluded must be true")
++    summary = value_of(payload["per_task_summary"])
++    if not isinstance(summary, Mapping):
++        raise ValueError("per_task_summary must be a map")
++    eligible = set(payload["headline_eligible_task_ids"])
++    excluded = {
++        task_id
++        for task_id, row in summary.items()
++        if isinstance(row, Mapping) and row.get("status") in {"excluded", "gate_blocked"}
++    }
++    if excluded & eligible:
++        raise ValueError("flagged or gate-blocked artifacts cannot be headline eligible")
++    levels = value_of(payload["arc_new_levels_banked"])
++    delta = value_of(payload["arc_reproducible_total_levels_delta"])
++    if not isinstance(levels, list) or not isinstance(delta, int) or delta != len(levels):
++        raise ValueError("arc_reproducible_total_levels_delta must match banked levels")
++    docs_value = value_of(payload["docs_reconciled"])
++    if not isinstance(docs_value, bool):
++        raise ValueError("docs_reconciled must be boolean")
++    if not value_of(payload["validation_commands_run"]):
++        raise ValueError("validation_commands_run must record verification commands")
++    if not isinstance(value_of(payload["continuous_self_learning_satisfied"]), bool):
++        raise ValueError("continuous_self_learning_satisfied must be boolean")
++    if not isinstance(value_of(payload["hardware_status"]), str):
++        raise ValueError("hardware_status must be a one-line string")
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    conductor_untouched: bool | None = None,
++    docs_reconciled: bool = False,
++) -> Path:
++    payload = build_artifact(
++        root=root,
++        run_date=run_date,
++        duration_s=duration_s,
++        validation_commands_run=validation_commands_run,
++        conductor_untouched=conductor_untouched,
++        docs_reconciled=docs_reconciled,
++    )
++    out_path = root / RESULT_RELATIVE_PATH
++    write_json(out_path, payload)
++    return out_path
++
++
++if __name__ == "__main__":  # pragma: no cover - direct module execution.
++    run()
+diff --git a/results/experiment_5232_capstone_v478.json b/results/experiment_5232_capstone_v478.json
+new file mode 100644
+index 0000000000..f7554eeb9b
+--- /dev/null
++++ b/results/experiment_5232_capstone_v478.json
+@@ -0,0 +1,528 @@
++{
++  "arc_new_levels_banked": {
++    "principle": "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated",
++    "value": []
++  },
++  "arc_reproducible_total_levels_delta": {
++    "principle": "integer delta from clean reproduction-gated ARC evidence only",
++    "value": 0
++  },
++  "continuous_self_learning_satisfied": {
++    "principle": "true only when typed memory, retention, promotion/rollback, and a consumer-ready handoff are present",
++    "value": true
++  },
++  "docs_reconciled": {
++    "principle": "false when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation to a later step",
++    "value": false
++  },
++  "duration_s": 0.02103,
++  "excluded_from_headline_task_ids": [
++    "exp5223-gap4-flagged-pool-authenticity-audit-v478",
++    "exp5224-gap4-canonical-pool-builder-v478",
++    "exp5225-gap4-clean-scale-validation-gated-v478",
++    "exp5226-veribmc-local-solver-feedback-pilot-v478",
++    "exp5229-arc-gated-live-levelup-from-rubric-v478"
++  ],
++  "experiment": "experiment_5232_capstone_v478",
++  "experiment_id": "exp5232-capstone-v478",
++  "field_principles": {
++    "arc_new_levels_banked": "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated",
++    "arc_reproducible_total_levels_delta": "integer delta from clean reproduction-gated ARC evidence only",
++    "continuous_self_learning_satisfied": "true only when typed memory, retention, promotion/rollback, and a consumer-ready handoff are present",
++    "docs_reconciled": "false when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation to a later step",
++    "flagged_artifacts_excluded": "true when every flagged, critical-corrigendum, or gate-blocked artifact is excluded from headline aggregation",
++    "gap1_final_status": "one of promoted | blocked | unchanged; promoted only when a clean registry promotion artifact registers the verifier",
++    "gap4_final_status": "one of clean_positive | clean_null | blocked | unchanged; clean_* only when the validation artifact is not flagged and passes adversarial checks",
++    "hardware_status": "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline",
++    "honest_verdict": "terminal-prefix single sentence that states the true .478 outcome without laundering flagged or gated artifacts",
++    "inference_substrate": "aggregation_from_milestone_artifacts",
++    "kan_certificate_status": "one of produced | blocked | not_run; produced only for the bounded tiny KAEM certificate supported by Exp5230",
++    "per_task_summary": "map from task id to artifact path/status/verdict/headline eligibility, including flagged, blocked, gated, and bounded evidence without importing excluded metrics into headline claims",
++    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "solver_feedback_status": "one of positive | null | blocked | not_run; positive/null only when the VerIbmc artifact survives adversarial checks",
++    "validation_commands_run": "list of commands and pass/fail/block status used to validate the capstone and changed surfaces"
++  },
++  "flagged_adversarial": false,
++  "flagged_artifacts_excluded": {
++    "principle": "true when every flagged, critical-corrigendum, or gate-blocked artifact is excluded from headline aggregation",
++    "value": true
++  },
++  "gap1_final_status": {
++    "principle": "one of promoted | blocked | unchanged; promoted only when a clean registry promotion artifact registers the verifier",
++    "value": "blocked"
++  },
++  "gap4_final_status": {
++    "principle": "one of clean_positive | clean_null | blocked | unchanged; clean_* only when the validation artifact is not flagged and passes adversarial checks",
++    "value": "blocked"
++  },
++  "hardware_status": {
++    "principle": "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline",
++    "value": "KV260=reachable via ssh_only; PolarFire=reachable; GateMate=blocked_physical_jtag IDCODE=0xffffffff; p-bit plan=docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md; no speedup claim"
++  },
++  "headline_eligible_task_ids": [
++    "exp5220-archive-477-activate-478",
++    "exp5221-sota-ingestion-v478",
++    "exp5222-gap1-gate-field-and-registry-promotion-v478",
++    "exp5227-continuous-self-learning-multihead-memory-v478",
++    "exp5228-arc-provenance-skill-rubric-gate-v478",
++    "exp5230-kan-milp-verifier-certificate-v478",
++    "exp5231-hardware-continuity-pbit-boundary-v478"
++  ],
++  "honest_verdict": "complete: v478 reconciled with GAP-1 blocked, GAP-4 blocked, VerIbmc solver-feedback blocked, typed memory satisfied, ARC delta 0, KAN certificate produced, hardware continuity/no-speedup recorded, and flagged/gated artifacts excluded.",
++  "inference_substrate": "aggregation_from_milestone_artifacts",
++  "kan_certificate_status": {
++    "principle": "one of produced | blocked | not_run; produced only for the bounded tiny KAEM certificate supported by Exp5230",
++    "value": "produced"
++  },
++  "milestone": "2026.07.478",
++  "missing_artifacts": [],
++  "per_task_summary": {
++    "principle": "map from task id to artifact path/status/verdict/headline eligibility, including flagged, blocked, gated, and bounded evidence without importing excluded metrics into headline claims",
++    "value": {
++      "exp5220-archive-477-activate-478": {
++        "artifact_path": "results/experiment_5220_archive_477_activate_478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, self-learning memory written, ARC zero-delta, hardware reachability, and verifier-authenticity registry flags."
++      },
++      "exp5221-sota-ingestion-v478": {
++        "artifact_path": "results/experiment_5221_sota_ingestion_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: V478 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
++      },
++      "exp5222-gap1-gate-field-and-registry-promotion-v478": {
++        "artifact_path": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone."
++      },
++      "exp5223-gap4-flagged-pool-authenticity-audit-v478": {
++        "artifact_path": "results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json",
++        "critical_corrigendum": true,
++        "exclusion_reasons": [
++          "flagged_adversarial",
++          "critical_corrigendum_pending"
++        ],
++        "flagged_adversarial": true,
++        "gate_blocked": false,
++        "headline_eligible": false,
++        "status": "excluded",
++        "verdict": "complete: old GAP-4 pool must be regenerated or rebuilt by a canonical-pool builder; exp5211/exp5212 are quarantined from headline evidence"
++      },
++      "exp5224-gap4-canonical-pool-builder-v478": {
++        "artifact_path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
++        "critical_corrigendum": true,
++        "exclusion_reasons": [
++          "flagged_adversarial",
++          "critical_corrigendum_pending"
++        ],
++        "flagged_adversarial": true,
++        "gate_blocked": false,
++        "headline_eligible": false,
++        "status": "excluded",
++        "verdict": "success: canonical GAP-4 pool usable for validation with n=120; no scale-validation claim run"
++      },
++      "exp5225-gap4-clean-scale-validation-gated-v478": {
++        "artifact_path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
++        "critical_corrigendum": true,
++        "exclusion_reasons": [
++          "flagged_adversarial",
++          "critical_corrigendum_pending"
++        ],
++        "flagged_adversarial": true,
++        "gate_blocked": false,
++        "headline_eligible": false,
++        "status": "excluded",
++        "verdict": "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, ties=120; min-six rule not crossed"
++      },
++      "exp5226-veribmc-local-solver-feedback-pilot-v478": {
++        "artifact_path": "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json",
++        "critical_corrigendum": true,
++        "exclusion_reasons": [
++          "flagged_adversarial",
++          "critical_corrigendum_pending"
++        ],
++        "flagged_adversarial": true,
++        "gate_blocked": false,
++        "headline_eligible": false,
++        "status": "excluded",
++        "verdict": "complete: clean null; solver feedback did not improve over baselines"
++      },
++      "exp5227-continuous-self-learning-multihead-memory-v478": {
++        "artifact_path": "results/experiment_5227_continuous_self_learning_multihead_memory_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training"
++      },
++      "exp5228-arc-provenance-skill-rubric-gate-v478": {
++        "artifact_path": "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: ARC skill rubric usable; no exp5229 live patch is currently gated."
++      },
++      "exp5229-arc-gated-live-levelup-from-rubric-v478": {
++        "artifact_path": "results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [
++          "gate_blocked"
++        ],
++        "flagged_adversarial": false,
++        "gate_blocked": true,
++        "headline_eligible": false,
++        "status": "gate_blocked",
++        "verdict": "blocked_gate_check_failed"
++      },
++      "exp5230-kan-milp-verifier-certificate-v478": {
++        "artifact_path": "results/experiment_5230_kan_milp_verifier_certificate_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision"
++      },
++      "exp5231-hardware-continuity-pbit-boundary-v478": {
++        "artifact_path": "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
++        "critical_corrigendum": false,
++        "exclusion_reasons": [],
++        "flagged_adversarial": false,
++        "gate_blocked": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup"
++      }
++    }
++  },
++  "preconditions_checked": {
++    "docs_reconciliation_deferred_by_stop_rule": true,
++    "expected_deliverable_artifacts": 12,
++    "loadable_deliverable_artifacts": 12,
++    "research_conductor_py_untouched": true,
++    "source_context_files_checked": 10
++  },
++  "random_seed": 5232,
++  "reproducibility_checksum": "sha256:b7600a3a4c3b020cfe55a8b8217afc234fdec7b85db9697ab4606defc8308d1c",
++  "research_conductor_py_untouched_confirmed": {
++    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "value": true
++  },
++  "result_path": "results/experiment_5232_capstone_v478.json",
++  "run_date": "20260704",
++  "schema": "carnot.experiment_5232_capstone_v478.v1",
++  "solver_feedback_status": {
++    "principle": "one of positive | null | blocked | not_run; positive/null only when the VerIbmc artifact survives adversarial checks",
++    "value": "blocked"
++  },
++  "source_artifacts": [
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5220,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, self-learning memory written, ARC zero-delta, hardware reachability, and verifier-authenticity registry flags.",
++      "loadable": true,
++      "relative_path": "results/experiment_5220_archive_477_activate_478.json",
++      "sha256": "sha256:1ad2f089bd64fbcd4cb6dbbbdb3d7426b5fca90a9c5cc5c3022cb9e21cb9c42b",
++      "task_id": "exp5220-archive-477-activate-478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5221,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: V478 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred.",
++      "loadable": true,
++      "relative_path": "results/experiment_5221_sota_ingestion_v478.json",
++      "sha256": "sha256:5aae57d3769a3af387f977ea7c2fb80cf05b6cabab7e54b30fe833444a21b8b1",
++      "task_id": "exp5221-sota-ingestion-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5222,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone.",
++      "loadable": true,
++      "relative_path": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
++      "sha256": "sha256:58428f0c4c140eb35b7f1ebae4a5e577ed749b4ee827b5b6472040c44a57ae47",
++      "task_id": "exp5222-gap1-gate-field-and-registry-promotion-v478"
++    },
++    {
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "exists": true,
++      "experiment_number": 5223,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: old GAP-4 pool must be regenerated or rebuilt by a canonical-pool builder; exp5211/exp5212 are quarantined from headline evidence",
++      "loadable": true,
++      "relative_path": "results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json",
++      "sha256": "sha256:f7c7a36a4195334297f0be9b96edfeda0bcaa09464aa3ee08eedf112600409a9",
++      "task_id": "exp5223-gap4-flagged-pool-authenticity-audit-v478"
++    },
++    {
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "exists": true,
++      "experiment_number": 5224,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "success: canonical GAP-4 pool usable for validation with n=120; no scale-validation claim run",
++      "loadable": true,
++      "relative_path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
++      "sha256": "sha256:283dfdfc616053d0d00e487aa4e6722b049ac2d0bbd8e058e4a2a560865be9d9",
++      "task_id": "exp5224-gap4-canonical-pool-builder-v478"
++    },
++    {
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "exists": true,
++      "experiment_number": 5225,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, ties=120; min-six rule not crossed",
++      "loadable": true,
++      "relative_path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
++      "sha256": "sha256:d45ef78163cda3b34b2f00191e14bb7566795371f53f4dd6408f0c783754dc9e",
++      "task_id": "exp5225-gap4-clean-scale-validation-gated-v478"
++    },
++    {
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "exists": true,
++      "experiment_number": 5226,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: clean null; solver feedback did not improve over baselines",
++      "loadable": true,
++      "relative_path": "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json",
++      "sha256": "sha256:24a12d7a435831c5cd1dfc539989b2262d10294f232ee2657d4aaa7c4f6efe3b",
++      "task_id": "exp5226-veribmc-local-solver-feedback-pilot-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5227,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training",
++      "loadable": true,
++      "relative_path": "results/experiment_5227_continuous_self_learning_multihead_memory_v478.json",
++      "sha256": "sha256:55fe756a38e70e70a425d109e99ec29654fc0ae7bd55f524d7b755a9f9191a5f",
++      "task_id": "exp5227-continuous-self-learning-multihead-memory-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5228,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: ARC skill rubric usable; no exp5229 live patch is currently gated.",
++      "loadable": true,
++      "relative_path": "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
++      "sha256": "sha256:2e8930384971a20a9b96a24ed9ee0856c70545bf36058f80af703394fbcd9225",
++      "task_id": "exp5228-arc-provenance-skill-rubric-gate-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "gate_blocked"
++      ],
++      "exists": true,
++      "experiment_number": 5229,
++      "flagged_adversarial": false,
++      "gate_blocked": true,
++      "honest_verdict": "blocked_gate_check_failed",
++      "loadable": true,
++      "relative_path": "results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json",
++      "sha256": "sha256:a7c5af1d31dbfe5baf052977ad8b207606b5389da96509c134e50eae5082108e",
++      "task_id": "exp5229-arc-gated-live-levelup-from-rubric-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5230,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision",
++      "loadable": true,
++      "relative_path": "results/experiment_5230_kan_milp_verifier_certificate_v478.json",
++      "sha256": "sha256:2aad99bc43afae17ff8df3599f126d3425ccbe5d6f4c7ee59105b577e26754ce",
++      "task_id": "exp5230-kan-milp-verifier-certificate-v478"
++    },
++    {
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5231,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup",
++      "loadable": true,
++      "relative_path": "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
++      "sha256": "sha256:e968b892259bf8d149388cfcbf7a2651201c690feb215596593d7ad6b4cf3d9e",
++      "task_id": "exp5231-hardware-continuity-pbit-boundary-v478"
++    }
++  ],
++  "source_context": [
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-roadmap.yaml",
++      "sha256": "sha256:dbcf1d6a574a5b1f1234047a0fe63525185edd45337b98ece04801c0881ddd92"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:92784c88d4238fd32f64da50e2b12ecb3ee24172c208053ce9c050996a9182c5"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/conductor-log.md",
++      "sha256": "sha256:07e72c877150838c6111be9a627315109cbb3ffd10b025de4d3b4d1d7e0a600b"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-references.md",
++      "sha256": "sha256:4208cb88d5c78ace1ff2ce2ddde860016c8d593350d0b94400be9323582540e9"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/status.md",
++      "sha256": "sha256:1bff1853f5c8125ed29e91933a58e4aeeb5b2072b77550f3c240a07739b54d7c"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/changelog.md",
++      "sha256": "sha256:84481870f20470a04b761fb9fb6ac18a8e16caf45294319390be3789e18ac00c"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/verifier_gaps.md",
++      "sha256": "sha256:400d1015bc05bf22c22bcd410aca367f5cfee2a46150ef503570acb3184e2511"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/arc_solve_registry.yaml",
++      "sha256": "sha256:57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "_bmad/traceability.md",
++      "sha256": "sha256:b4e5e3f5983a14d7d0e37c82883addf1548b6eb59b3c361cde66f1b0a1f8f099"
++    }
++  ],
++  "spec_refs": [
++    "REQ-CAPSTONE-5232",
++    "SCENARIO-CAPSTONE-5232",
++    "SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES"
++  ],
++  "status_decisions": {
++    "arc": "Exp5228 retained zero-delta ARC memory and Exp5229 was gate-blocked",
++    "continuous_self_learning": "Exp5227 wrote typed memory, retention passed, and Exp5228 consumer file is ready",
++    "docs": "ops/status, ops/changelog, _bmad/traceability, and research-references deferred by stop rule",
++    "excluded_from_headline_task_ids": [
++      "exp5223-gap4-flagged-pool-authenticity-audit-v478",
++      "exp5224-gap4-canonical-pool-builder-v478",
++      "exp5225-gap4-clean-scale-validation-gated-v478",
++      "exp5226-veribmc-local-solver-feedback-pilot-v478",
++      "exp5229-arc-gated-live-levelup-from-rubric-v478"
++    ],
++    "gap1": "Exp5222 blocked registry promotion: blocked_instability",
++    "gap4": "Exp5225 metrics are excluded because the artifact is flagged or gated",
++    "hardware": "KV260=reachable via ssh_only; PolarFire=reachable; GateMate=blocked_physical_jtag IDCODE=0xffffffff; p-bit plan=docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md; no speedup claim",
++    "kan": "Exp5230 produced the bounded tiny KAEM PWA/MILP certificate",
++    "solver_feedback": "Exp5226 solver-feedback outcome is excluded because the artifact is flagged"
++  },
++  "validation_commands_run": {
++    "principle": "list of commands and pass/fail/block status used to validate the capstone and changed surfaces",
++    "value": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5232_capstone_v478.py -q --no-cov -o addopts=''",
++        "notes": "filled by the final run after implementation",
++        "status": "PENDING"
++      }
++    ]
++  }
++}
+diff --git a/tests/python/test_experiment_5232_capstone_v478.py b/tests/python/test_experiment_5232_capstone_v478.py
+new file mode 100644
+index 0000000000..99057b7dd8
+--- /dev/null
++++ b/tests/python/test_experiment_5232_capstone_v478.py
+@@ -0,0 +1,504 @@
++"""Tests for Exp 5232 V478 capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5232, SCENARIO-CAPSTONE-5232,
++SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import carnot.experiment_5232_capstone_v478 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _base(experiment: str | int, verdict: str, *, flagged: bool | None = None) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment": experiment,
++        "honest_verdict": verdict,
++        "duration_s": 1.0,
++        "inference_substrate": "fixture",
++    }
++    if flagged is not None:
++        payload["flagged_adversarial"] = flagged
++    return payload
++
++
++def _payloads() -> dict[int, dict[str, Any]]:
++    return {
++        5220: {
++            **_base(
++                "experiment_5220_archive_477_activate_478",
++                "complete: .477 archived and .478 activated.",
++            ),
++            "research_roadmap_yaml_activated": _wrap(True),
++        },
++        5221: _base(
++            "experiment_5221_sota_ingestion_v478",
++            "complete: V478 SOTA refresh found no new actionable findings.",
++        ),
++        5222: {
++            **_base(
++                "experiment_5222_gap1_gate_field_registry_promotion_v478",
++                "complete: GAP-1 registry promotion blocked_instability.",
++            ),
++            "gap1_registry_promoted": _wrap(False),
++            "gap1_registry_decision": _wrap("blocked_instability"),
++            "exp5209_gate_parsed_from_value": _wrap(True),
++            "promoted_registry_path": _wrap(None),
++            "frozen_subset": _wrap(None),
++        },
++        5223: {
++            **_base(
++                "experiment_5223_gap4_flagged_pool_authenticity_audit_v478",
++                "complete: old GAP-4 pool must be regenerated.",
++                flagged=True,
++            ),
++            "gap4_pool_repairable": False,
++            "validated_pool_n": 0,
++            "protocol_fields_complete": False,
++            "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++        },
++        5224: {
++            **_base(
++                "experiment_5224_gap4_canonical_pool_builder_v478",
++                "success: canonical GAP-4 pool usable for validation.",
++                flagged=True,
++            ),
++            "gap4_canonical_pool_usable": True,
++            "canonical_pool_n": 120,
++            "protocol_fields_complete": True,
++            "adversarial_verify_passed": True,
++            "corrigendum_pending": [{"kind": "TAUTOLOGY", "severity": "critical"}],
++        },
++        5225: {
++            **_base(
++                "experiment_5225_gap4_clean_scale_validation_gated_v478",
++                "complete: clean GAP-4 validation null decision.",
++                flagged=True,
++            ),
++            "gap4_clean_validation_complete": True,
++            "n_scored": 120,
++            "wins": 0,
++            "losses": 0,
++            "ties": 120,
++            "exact_test_passes_min6_rule": False,
++            "effect_direction": "null",
++            "adversarial_verify_passed": True,
++            "corrigendum_pending": [{"kind": "TAUTOLOGY", "severity": "critical"}],
++        },
++        5226: {
++            **_base(
++                "experiment_5226_veribmc_local_solver_feedback_pilot_v478",
++                "complete: clean null; solver feedback did not improve over baselines.",
++                flagged=True,
++            ),
++            "solver_feedback_pilot_complete": _wrap(True),
++            "solver_only_solved": _wrap(1),
++            "llm_only_solved": _wrap(1),
++            "llm_solver_feedback_solved": _wrap(1),
++            "solver_feedback_uplift": _wrap(0.0),
++            "checker_substrate": _wrap("z3"),
++            "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++        },
++        5227: {
++            **_base(
++                "experiment_5227_continuous_self_learning_multihead_memory_v478",
++                "complete: typed memory consumer-ready for exp5228.",
++            ),
++            "continuous_self_learning_task": _wrap(True),
++            "typed_memory_heads": _wrap(list(mod.TYPED_MEMORY_HEADS)),
++            "memory_entries_written": _wrap(6),
++            "promotions": _wrap(2),
++            "rollbacks": _wrap(4),
++            "retention_check_passed": _wrap(True),
++            "consumer_ready_path": _wrap("results/arc_rubric_setup_from_typed_memory_v478.json"),
++            "memory_artifact_path": _wrap("results/typed_multihead_verifier_memory_v478.json"),
++            "broad_self_distillation_used": _wrap(False),
++        },
++        5228: {
++            **_base(
++                "experiment_5228_arc_provenance_skill_rubric_gate_v478",
++                "complete: ARC skill rubric usable; no exp5229 live patch is currently gated.",
++            ),
++            "arc_skill_rubric_usable": True,
++            "recommended_live_patch_available": False,
++            "known_arc_nulls_retained": {
++                "new_levels_banked": [],
++                "reproducible_total_levels_delta": 0,
++                "no_arc_solve_claim": True,
++            },
++            "registry_summary": {"present": True, "reproducible_total_levels": 69},
++        },
++        5229: {
++            "experiment": 5229,
++            "schema": "blocked_gate_check_v1",
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "recommended_live_patch_available actual=False expected=True",
++            "duration_s": 0.0,
++        },
++        5230: {
++            **_base(
++                "experiment_5230_kan_milp_verifier_certificate_v478",
++                "success: tiny KAEM PWA/MILP certificate produced.",
++            ),
++            "kan_certificate_produced": _wrap(True),
++            "certificate_path": _wrap(
++                "results/experiment_5230_kan_milp_verifier_certificate_v478.json"
++            ),
++            "solver_status": "optimal",
++        },
++        5231: {
++            **_base(
++                "experiment_5231_hardware_continuity_pbit_boundary",
++                "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup",
++            ),
++            "kv260_reachable": True,
++            "kv260_check_method": "ssh_only",
++            "polarfire_reachable": True,
++            "gatemate_status": "blocked_physical_jtag",
++            "gatemate_idcode_raw": "0xffffffff",
++            "pbit_boundary_plan_path": (
++                "docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md"
++            ),
++            "speedup_claimed": False,
++        },
++    }
++
++
++def _make_repo(root: Path, *, omit: set[int] | None = None) -> None:
++    omit = omit or set()
++    payloads = _payloads()
++    for source in mod.UPSTREAM_SOURCES:
++        if source.experiment_number not in omit:
++            _write_json(root / source.relative_path, payloads[source.experiment_number])
++    _write_json(
++        root / "results/typed_multihead_verifier_memory_v478.json",
++        {"heads": list(mod.TYPED_MEMORY_HEADS), "entries": [{"promotion_state": "promoted"}]},
++    )
++    _write_json(
++        root / "results/arc_rubric_setup_from_typed_memory_v478.json",
++        {"consumer_ready": True, "rubric_fields": list(mod.ARC_RUBRIC_FIELDS)},
++    )
++
++
++def _validation() -> list[dict[str, str]]:
++    return [{"command": "focused pytest", "status": "PASS", "notes": "fixture"}]
++
++
++def _field(field: str, value: Any) -> dict[str, Any]:
++    return _wrap(value, mod.FIELD_PRINCIPLES[field])
++
++
++def test_req_capstone_5232_spec_declares_v478_contract() -> None:
++    """REQ-CAPSTONE-5232: OpenSpec declares the V478 capstone contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-CAPSTONE-5232") :]
++
++    for marker in (
++        "REQ-CAPSTONE-5232",
++        "SCENARIO-CAPSTONE-5232",
++        "SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES",
++        mod.EXPERIMENT_ID,
++        str(mod.RESULT_RELATIVE_PATH),
++        "gap1_final_status",
++        "solver_feedback_status",
++        "docs_reconciled=false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_capstone_5232_excludes_flagged_and_gated_artifacts(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-5232: flagged and gated artifacts cannot become headlines."""
++
++    _make_repo(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=1.25,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["gap1_final_status"]["value"] == "blocked"
++    assert artifact["gap4_final_status"]["value"] == "blocked"
++    assert artifact["solver_feedback_status"]["value"] == "blocked"
++    assert artifact["continuous_self_learning_satisfied"]["value"] is True
++    assert artifact["arc_new_levels_banked"]["value"] == []
++    assert artifact["arc_reproducible_total_levels_delta"]["value"] == 0
++    assert artifact["kan_certificate_status"]["value"] == "produced"
++    assert artifact["flagged_artifacts_excluded"]["value"] is True
++    assert artifact["docs_reconciled"]["value"] is False
++    assert artifact["research_conductor_py_untouched_confirmed"]["value"] is True
++    assert artifact["flagged_adversarial"] is False
++    assert "KV260=reachable" in artifact["hardware_status"]["value"]
++    assert "GateMate=blocked_physical_jtag" in artifact["hardware_status"]["value"]
++    assert "no speedup claim" in artifact["hardware_status"]["value"]
++
++    summary = artifact["per_task_summary"]["value"]
++    assert len(summary) == 12
++    assert summary["exp5225-gap4-clean-scale-validation-gated-v478"]["status"] == "excluded"
++    assert summary["exp5226-veribmc-local-solver-feedback-pilot-v478"]["status"] == "excluded"
++    assert summary["exp5229-arc-gated-live-levelup-from-rubric-v478"]["status"] == "gate_blocked"
++    assert summary["exp5230-kan-milp-verifier-certificate-v478"]["headline_eligible"] is True
++    assert (
++        "exp5225-gap4-clean-scale-validation-gated-v478"
++        in artifact["excluded_from_headline_task_ids"]
++    )
++    assert (
++        "exp5229-arc-gated-live-levelup-from-rubric-v478"
++        in artifact["excluded_from_headline_task_ids"]
++    )
++    assert "exp5230-kan-milp-verifier-certificate-v478" in artifact["headline_eligible_task_ids"]
++    assert "flagged/gated artifacts excluded" in artifact["honest_verdict"]
++
++
++def test_req_capstone_5232_validation_and_status_edges(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-5232: validation rejects overclaims and helper edges are explicit."""
++
++    _make_repo(tmp_path, omit={5231})
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.0,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++
++    assert artifact["missing_artifacts"] == ["exp5231-hardware-continuity-pbit-boundary-v478"]
++    assert artifact["hardware_status"]["value"] == "hardware evidence missing"
++    mod.validate_artifact(artifact)
++
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        mod.validate_artifact(
++            {key: value for key, value in artifact.items() if key != "duration_s"}
++        )
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(artifact | {"honest_verdict": "done"})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(artifact | {"inference_substrate": "live_llm_inference"})
++    with pytest.raises(ValueError, match="field principle mismatch"):
++        mod.validate_artifact(
++            artifact | {"field_principles": artifact["field_principles"] | {"hardware_status": "x"}}
++        )
++    with pytest.raises(ValueError, match="gap1_final_status field principle mismatch"):
++        mod.validate_artifact(artifact | {"gap1_final_status": _wrap("blocked")})
++    with pytest.raises(ValueError, match="flagged_adversarial"):
++        mod.validate_artifact(artifact | {"flagged_adversarial": True})
++    with pytest.raises(ValueError, match="research_conductor"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "research_conductor_py_untouched_confirmed": _field(
++                    "research_conductor_py_untouched_confirmed", False
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="gap1_final_status"):
++        mod.validate_artifact(artifact | {"gap1_final_status": _field("gap1_final_status", "open")})
++    with pytest.raises(ValueError, match="gap4_final_status"):
++        mod.validate_artifact(artifact | {"gap4_final_status": _field("gap4_final_status", "open")})
++    with pytest.raises(ValueError, match="solver_feedback_status"):
++        mod.validate_artifact(
++            artifact | {"solver_feedback_status": _field("solver_feedback_status", "bad")}
++        )
++    with pytest.raises(ValueError, match="kan_certificate_status"):
++        mod.validate_artifact(
++            artifact | {"kan_certificate_status": _field("kan_certificate_status", "bad")}
++        )
++    with pytest.raises(ValueError, match="flagged_artifacts_excluded"):
++        mod.validate_artifact(
++            artifact | {"flagged_artifacts_excluded": _field("flagged_artifacts_excluded", False)}
++        )
++    with pytest.raises(ValueError, match="headline eligible"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "headline_eligible_task_ids": [
++                    *artifact["headline_eligible_task_ids"],
++                    "exp5225-gap4-clean-scale-validation-gated-v478",
++                ]
++            }
++        )
++    with pytest.raises(ValueError, match="arc_reproducible_total_levels_delta"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "arc_new_levels_banked": _field("arc_new_levels_banked", ["L"]),
++                "arc_reproducible_total_levels_delta": _field(
++                    "arc_reproducible_total_levels_delta", 0
++                ),
++            }
++        )
++    with pytest.raises(ValueError, match="per_task_summary"):
++        mod.validate_artifact(artifact | {"per_task_summary": _field("per_task_summary", [])})
++    with pytest.raises(ValueError, match="docs_reconciled"):
++        mod.validate_artifact(artifact | {"docs_reconciled": _field("docs_reconciled", "no")})
++    with pytest.raises(ValueError, match="validation_commands_run"):
++        mod.validate_artifact(
++            artifact | {"validation_commands_run": _field("validation_commands_run", [])}
++        )
++    with pytest.raises(ValueError, match="continuous_self_learning_satisfied"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "continuous_self_learning_satisfied": _field(
++                    "continuous_self_learning_satisfied", "yes"
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="hardware_status"):
++        mod.validate_artifact(artifact | {"hardware_status": _field("hardware_status", [])})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(artifact | {"reproducibility_checksum": "stale"})
++
++    assert mod.source_by_number(5220).task_id == "exp5220-archive-477-activate-478"
++    assert mod.value_of(_wrap("x")) == "x"
++    assert mod.value_of("x") == "x"
++    assert mod.honest_verdict_text({"value": "complete_wrapped"}) == "complete_wrapped"
++    assert mod.honest_verdict_text(None) == ""
++    assert mod.as_bool(_wrap(True)) is True
++    assert mod.as_bool(False) is False
++    assert mod.as_number("3.5") == 3.5
++    assert mod.as_number("bad") is None
++    assert mod.as_number(True) is None
++    assert mod.has_critical_corrigendum({"corrigendum_pending": [{"severity": "critical"}]}) is True
++    assert mod.has_critical_corrigendum({"corrigendum_pending": [3, {"severity": "warn"}]}) is (
++        False
++    )
++    assert mod.has_critical_corrigendum({"corrigendum_pending": [{"severity": "warn"}]}) is False
++    assert mod.exclusion_reasons({"adversarial_verify_passed": False}) == [
++        "adversarial_verify_failed"
++    ]
++    assert (
++        mod.is_gate_blocked({"status": "blocked", "blocked_at_layer": "conductor_pre_gate"}) is True
++    )
++    assert mod.is_gate_blocked({"honest_verdict": "blocked_gate_check_failed"}) is True
++    assert mod.is_gate_blocked({"status": "complete"}) is False
++    with pytest.raises(KeyError):
++        mod.source_by_number(9999)
++
++    assert mod.gap1_final_status({}, set())[0] == "unchanged"
++    assert mod.gap1_final_status({5222: {"gap1_registry_promoted": True}}, {5222})[0] == "promoted"
++    assert (
++        mod.gap1_final_status({5222: {"gap1_registry_decision": "blocked_leakage"}}, {5222})[0]
++        == "blocked"
++    )
++    assert mod.gap1_final_status({5222: {"gap1_registry_decision": "promoted"}}, set())[0] == (
++        "blocked"
++    )
++    assert mod.gap1_final_status({5222: {"gap1_registry_decision": "other"}}, {5222})[0] == (
++        "unchanged"
++    )
++
++    assert mod.gap4_final_status({}, set())[0] == "unchanged"
++    assert mod.gap4_final_status({5225: {"effect_direction": "positive"}}, {5225})[0] == (
++        "clean_positive"
++    )
++    assert mod.gap4_final_status({5225: {"effect_direction": "null"}}, {5225})[0] == "clean_null"
++    assert mod.gap4_final_status({5225: {"effect_direction": "blocked"}}, {5225})[0] == "blocked"
++    assert mod.gap4_final_status({5225: {"effect_direction": "null"}}, set())[0] == "blocked"
++
++    assert mod.solver_feedback_status({}, set())[0] == "not_run"
++    assert (
++        mod.solver_feedback_status({5226: {"solver_feedback_uplift": 0.25}}, {5226})[0]
++        == "positive"
++    )
++    assert mod.solver_feedback_status({5226: {"solver_feedback_uplift": 0.0}}, {5226})[0] == "null"
++    assert (
++        mod.solver_feedback_status({5226: {"solver_feedback_uplift": 0.0}}, set())[0] == "blocked"
++    )
++
++    assert mod.continuous_self_learning_satisfied(tmp_path, {}, set())[0] is False
++    assert (
++        mod.continuous_self_learning_satisfied(
++            tmp_path, {5227: {"consumer_ready_path": 3, "memory_artifact_path": 4}}, {5227}
++        )[0]
++        is False
++    )
++    bad_self = _payloads()[5227] | {"broad_self_distillation_used": _wrap(True)}
++    assert mod.continuous_self_learning_satisfied(tmp_path, {5227: bad_self}, {5227})[0] is False
++    assert mod.arc_status({}) == ([], 0, "no ARC level-up artifact or rubric null evidence")
++    assert mod.arc_status(
++        {5229: {"new_levels_banked": ["L"], "reproducible_total_levels_delta": 1}}
++    )[:2] == (["L"], 1)
++    assert mod.kan_certificate_status({}, set())[0] == "not_run"
++    assert mod.kan_certificate_status({5230: {"kan_certificate_produced": False}}, {5230})[0] == (
++        "blocked"
++    )
++    assert mod.kan_certificate_status({5230: {"kan_certificate_produced": True}}, set())[0] == (
++        "blocked"
++    )
++    assert mod.hardware_status({}) == "hardware evidence missing"
++    assert mod.hardware_status({5231: {"kv260_reachable": False}}, excluded_numbers={5231}) == (
++        "hardware evidence excluded because Exp5231 is flagged or gate-blocked"
++    )
++
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
++    not_mapping = tmp_path / "array.json"
++    not_mapping.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(not_mapping)[1]["error"] == "not_json_object"
++
++    out_path = mod.run(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.5,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++    assert saved["duration_s"] == 2.5
++    assert saved["validation_commands_run"]["value"] == _validation()
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++
++
++def test_req_capstone_5232_repository_artifact_matches_schema() -> None:
++    """REQ-CAPSTONE-5232: checked-in artifact is the stable deliverable."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["gap1_final_status"]["value"] == "blocked"
++    assert artifact["gap4_final_status"]["value"] == "blocked"
++    assert artifact["solver_feedback_status"]["value"] == "blocked"
++    assert artifact["continuous_self_learning_satisfied"]["value"] is True
++    assert artifact["arc_new_levels_banked"]["value"] == []
++    assert artifact["arc_reproducible_total_levels_delta"]["value"] == 0
++    assert artifact["kan_certificate_status"]["value"] == "produced"
++    assert artifact["flagged_artifacts_excluded"]["value"] is True
++    assert artifact["docs_reconciled"]["value"] is False
++    assert artifact["research_conductor_py_untouched_confirmed"]["value"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
+-- 
+2.55.0
+

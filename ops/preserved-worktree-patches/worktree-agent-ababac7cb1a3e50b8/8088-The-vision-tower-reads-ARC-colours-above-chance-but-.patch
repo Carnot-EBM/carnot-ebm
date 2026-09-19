@@ -1,0 +1,3625 @@
+From c77ddc967438b53aa4570b8794988b65ac1d366d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 1 Aug 2026 07:26:20 -0400
+Subject: [PATCH 08088/11362] The vision tower reads ARC colours above chance
+ but far below exact-match, and the parser that measured it was scooping row
+ numbers as colours
+
+gemma-4-31B-it is multimodal and unsloth ships an mmproj, but the ARC induce
+prompt has always serialised 64x64 grids as run-length-encoded ASCII. This gate
+asks whether the vision tower could carry the grid instead. It cannot.
+
+Best scheme is a 1024x1024 PNG at 16px/cell: 0.461 exact-match against the RLE
+text control's 0.352, on 128 paired probes over a deliberately charitable grid
+(8x8-cell solid blocks, 16 maximally-separated nameable colours). The 0.90 bar
+that exact-match induction needs is not close, and the charitable grid is an
+upper bound, so a real frame settles it a fortiori. At 8px and 1px the schemes
+are not distinguishable from the 6.25% chance rate once batching is accounted
+for. The tower does NOT reproduce to_ascii()'s 4/14 and 5/15 last-digit
+collapse -- 12 such confusions across 512 probes, no worse than unrelated pairs
+-- which is a clean negative on the hypothesis that motivated the gate.
+
+Liveness is proven four ways, the decisive one differential: four byte-identical
+text prompts paired with four different solid-colour images returned four
+distinct correct colour names, which no silent text-only fallback can do.
+
+An adversarial review then found six defects in the first artifact, all verified
+here against the run's own recorded predictions before being applied:
+
+- The parser's positional fallback matched every bare 1-2 digit number in a
+  prose reply and took the first eight in 0..15 as answers, so row and column
+  indices were scored as colours (54 of 128 probes have a row or column below
+  16). Confirmed in the data: wrong predictions match an EARLIER probe's truth
+  in the same batch far more often than a later one -- text_rle 27/23/16 at
+  k=+1/+2/+3 against 5/5/4 at k=-1/-2/-3 -- and those hits sit almost entirely
+  in the batches that scored <=2/8 (4.64/batch) rather than >=6/8 (0.00/batch).
+  So the striking 8/8-vs-0/8 bimodality is substantially the parser losing
+  alignment, and the previous artifact published that as a finding about the
+  model's spatial indexing. Retracted. Every exact_match is now labelled a lower
+  bound; the run cannot be re-scored because only parsed predictions were saved.
+  Parser fixed, raw replies now persisted.
+- Two of five McNemar p-values were hardcoded 0.0, impossible for an exact test
+  (true values 4.59e-07 and 4.00e-08). All five now computed from the data with
+  their min-reachable p. The discordant counts were correct.
+- sample_size_justification claimed 128 probes on a real ka59 frame. No
+  real-frame arm was ever measured and the staged grid was lp85, not ka59.
+- The escalation was described as deliberately not run; the run log shows it was
+  launched and killed mid-arm. The reasoning for stopping it stands.
+- Probe-level Wilson CIs and McNemar assumed 128 independent probes, but they
+  were asked in 16 batches (design effect 3.3-7.0, effective n 18-38). px16's
+  interval is [0.21, 0.71], not [0.38, 0.55]. Cluster-robust stats added.
+- can_supplement_text rode on a 0.25 bar that exists only in the builder, written
+  after the numbers. Re-anchored on the pre-registered 6.25% chance rate tested
+  against the cluster-robust lower bound -- a strictly harder test it still passes.
+
+Net effect on the headline: images may SUPPLEMENT the exact text, never replace
+it. The earlier "statistically indistinguishable from the text prompt" claim is
+withdrawn -- p=0.103 cannot establish equivalence, and the two arms carry
+different amounts of parser bias (excess forward-shift 49 for text vs 26 for
+px16), so under correction text would plausibly gain more than px16 does.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_artifact_live_allowlist.txt           |  11 +
+ .../build_artifact.py                         | 911 ++++++++++++++++
+ .../common.py                                 | 174 +++
+ .../escalate.py                               | 143 +++
+ ...ment_arc_multimodal_fidelity_20260801.json | 776 ++++++++++++++
+ .../fidelity.py                               | 364 +++++++
+ .../raw_per_scheme_measurements.json          | 997 ++++++++++++++++++
+ .../rendered_px1.png                          | Bin 0 -> 498 bytes
+ .../rendered_px16.png                         | Bin 0 -> 5744 bytes
+ .../rendered_px8.png                          | Bin 0 -> 2235 bytes
+ .../vision_tower_liveness_proof.json          |  45 +
+ 11 files changed, 3421 insertions(+)
+ create mode 100644 results/arc_multimodal_fidelity_20260801/build_artifact.py
+ create mode 100644 results/arc_multimodal_fidelity_20260801/common.py
+ create mode 100644 results/arc_multimodal_fidelity_20260801/escalate.py
+ create mode 100644 results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
+ create mode 100644 results/arc_multimodal_fidelity_20260801/fidelity.py
+ create mode 100644 results/arc_multimodal_fidelity_20260801/raw_per_scheme_measurements.json
+ create mode 100644 results/arc_multimodal_fidelity_20260801/rendered_px1.png
+ create mode 100644 results/arc_multimodal_fidelity_20260801/rendered_px16.png
+ create mode 100644 results/arc_multimodal_fidelity_20260801/rendered_px8.png
+ create mode 100644 results/arc_multimodal_fidelity_20260801/vision_tower_liveness_proof.json
+
+diff --git a/ops/arc_artifact_live_allowlist.txt b/ops/arc_artifact_live_allowlist.txt
+index f2f5bd4f8c..aabfd59041 100644
+--- a/ops/arc_artifact_live_allowlist.txt
++++ b/ops/arc_artifact_live_allowlist.txt
+@@ -1,2 +1,13 @@
+ # Explicit ARC solve/scoring artifacts that legitimately declare live_llm_inference.
+ # Keep one repository-relative or absolute artifact path per line.
++
++# 2026-08-01, ARC multimodal fidelity gate. Declares live_llm_inference because it
++# really did run one: a llama-server process held the 18.3 GB gemma-4-31B-it Q4_K_M
++# GGUF plus the 1.14 GiB mmproj-F16 vision projector resident on GPU 1 and served full
++# autoregressive generation for 512 probes over 4.2 hours. The liveness claim is not
++# taken on trust -- the artifact carries a four-layer server_proof whose decisive layer
++# is a DIFFERENTIAL test (four byte-identical text prompts paired with four different
++# solid-colour images returned four distinct correct colour names, which no text-only
++# fallback path can do). No ARC level was solved, attempted or claimed and no game was
++# played scored or online; solve_provenance is development_proxy.
++results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
+diff --git a/results/arc_multimodal_fidelity_20260801/build_artifact.py b/results/arc_multimodal_fidelity_20260801/build_artifact.py
+new file mode 100644
+index 0000000000..5d7b17d89d
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/build_artifact.py
+@@ -0,0 +1,911 @@
++"""Assemble the scored artifact for the ARC multimodal fidelity gate.
++
++Reads the raw outputs produced by this run (tower_proof.json, fidelity_raw.json,
++escalate_raw.json), DERIVES the verdict from the numbers rather than asserting one,
++and writes results/arc_multimodal_fidelity_20260801/.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++import os
++import statistics
++import time
++from pathlib import Path
++
++import numpy as np
++
++SD = Path(
++    "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/mmgate"
++)
++REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
++OUTDIR = REPO / "results" / "arc_multimodal_fidelity_20260801"
++
++_HUB = "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots"
++BASE_GGUF = f"{_HUB}/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++MMPROJ = f"{_HUB}/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf"
++MMPROJ_SHA = "6edcca228213c28d3567a35d22f849eea52d8360875093851959adf5d2f270eb"
++SEED = 20260801
++BATCH = 8  # probes per request -- the CLUSTER unit, see cluster_stats()
++
++# BARS. Provenance matters and is recorded in the artifact, because one of these was
++# fixed in advance and one was not.
++#   REPLACE_BAR is PRE-REGISTERED: fidelity.py design decision 3 fixes it as the
++#     escalation rule ("only if the charitable case clears 0.90...") and decision 1
++#     names ">=90%" as the usable-for-exact-match-induction threshold, both written
++#     before the run.
++#   SUPPLEMENT_BAR is POST-HOC. It appears only in this file, which was written after
++#     the numbers existed. It is retained for continuity but it is NO LONGER what
++#     decides `can_supplement_text` -- that now rests on the pre-registered chance
++#     rate instead. See supplement_basis in build().
++REPLACE_BAR = 0.90
++SUPPLEMENT_BAR = 0.25
++SUPPLEMENT_BAR_IS_POST_HOC = True
++CHANCE = 0.0625
++
++
++# ---------------------------------------------------------------------------------
++# Reconstruct the exact grid and probe list the run used, from the recorded seed.
++# This is not a convenience: the raw file stores predictions POSITIONALLY, so every
++# derived statistic below needs the ground truth in the same order. Reconstructing it
++# and checking it against the recorded sha256s also proves the raw file and this
++# builder are talking about the same experiment.
++def _rebuild_probes(meta: dict):
++    rng = np.random.default_rng(SEED)
++    order = np.repeat(np.arange(16), 4)
++    rng.shuffle(order)
++    grid = np.repeat(np.repeat(order.reshape(8, 8), 8, axis=0), 8, axis=1).astype(np.uint8)
++    probes = []
++    for v in range(16):
++        rs, cs = np.where(grid == v)
++        for i in rng.choice(len(rs), size=8, replace=False):
++            probes.append((int(rs[i]), int(cs[i]), int(v)))
++    rng.shuffle(probes)
++    if hashlib.sha256(grid.tobytes()).hexdigest() != meta["grid_sha256"]:
++        raise SystemExit("REFUSING TO BUILD: reconstructed grid does not match meta.grid_sha256")
++    if hashlib.sha256(json.dumps(probes).encode()).hexdigest() != meta["probes_sha256"]:
++        raise SystemExit("REFUSING TO BUILD: reconstructed probes do not match meta.probes_sha256")
++    return grid, probes
++
++
++def mcnemar_exact(pred_a, pred_b, truth) -> dict:
++    """Exact two-sided McNemar (a sign test on the discordant pairs).
++
++    COMPUTED, NOT ASSERTED. The previous version of this file carried all five
++    p-values as hardcoded literals, and two of them were written `0.0` -- a value an
++    exact test can never return. The true values are 4.59e-07 and 4.00e-08. Nothing on
++    disk computed them, so nothing could catch them.
++
++    `min_reachable_p` is reported next to each: with b+c discordant pairs the smallest
++    p the test can produce is 2/2^(b+c). Quoting it stops a reader treating a small p
++    as more resolution than the design can deliver.
++    """
++    b = sum(1 for t, x, y in zip(truth, pred_a, pred_b, strict=True) if x == t and y != t)
++    c = sum(1 for t, x, y in zip(truth, pred_a, pred_b, strict=True) if x != t and y == t)
++    n = b + c
++    if n == 0:
++        return {"a_only_correct": 0, "b_only_correct": 0, "p_value": 1.0, "min_reachable_p": 1.0}
++    # two-sided exact binomial at p=0.5
++    k = min(b, c)
++    tail = sum(math.comb(n, i) for i in range(k + 1)) / (2**n)
++    p = min(1.0, 2 * tail)
++    return {
++        "a_only_correct": b,
++        "b_only_correct": c,
++        "n_discordant": n,
++        "p_value": float(f"{p:.6g}"),
++        "min_reachable_p": float(f"{2 / (2**n):.3g}"),
++        "significant_at_0.05": bool(p < 0.05),
++    }
++
++
++def cluster_stats(pred, truth) -> dict:
++    """Batch-level (cluster-robust) summary.
++
++    WHY THE PROBE-LEVEL INTERVALS IN THE FIRST DRAFT WERE TOO NARROW. The 128 probes
++    were NOT asked independently: they went out in 16 requests of 8, and each request
++    is answered by one chain-of-thought that either locates the grid correctly for the
++    whole batch or does not. The measured per-batch counts are wildly bimodal (px16:
++    8,7,2,0,8,8,0,0,1,8,1,1,0,8,0,7), so the effective sample size is nearer 16
++    clusters than 128 probes. Treating probes as independent understates every interval
++    and overstates every p-value's confidence.
++
++    Reports the design effect (observed variance of the per-batch count over the
++    binomial expectation) and a cluster-robust t-interval over the 16 batch means.
++    """
++    n_b = len(pred) // BATCH
++    counts = [
++        sum(1 for i in range(b * BATCH, (b + 1) * BATCH) if pred[i] == truth[i]) for b in range(n_b)
++    ]
++    phat = sum(counts) / len(pred)
++    var_obs = statistics.variance(counts) if n_b > 1 else 0.0
++    var_bin = BATCH * phat * (1 - phat)
++    deff = (var_obs / var_bin) if var_bin > 0 else None
++    means = [c / BATCH for c in counts]
++    se = (statistics.stdev(means) / math.sqrt(n_b)) if n_b > 1 else 0.0
++    t95 = 2.131  # t(0.975, df=15)
++    return {
++        "per_batch_correct_out_of_8": counts,
++        "n_clusters": n_b,
++        "design_effect": round(deff, 2) if deff else None,
++        "effective_n": round(len(pred) / deff, 1) if deff else None,
++        "exact_match_ci95_cluster_robust": [
++            round(max(0.0, phat - t95 * se), 4),
++            round(min(1.0, phat + t95 * se), 4),
++        ],
++    }
++
++
++def shift_contamination(pred, truth) -> dict:
++    """Quantify how far the retired positional-fallback parser shifted this run.
++
++    A wrong prediction that equals the truth of an EARLIER probe in the same batch is
++    the signature of a misaligned parse; the same comparison against LATER probes is
++    the null, since nothing can shift answers backwards. The excess of forward over
++    backward hits therefore bounds how many probes were scored against the wrong
++    question -- all of which were counted WRONG, which is why every exact_match here is
++    a lower bound rather than an overstatement.
++    """
++    fwd = bwd = 0
++    for i, p in enumerate(pred):
++        if p is None:
++            continue
++        lo, hi = (i // BATCH) * BATCH, (i // BATCH + 1) * BATCH
++        for k in (1, 2, 3):
++            if i - k >= lo and truth[i - k] == p and p != truth[i]:
++                fwd += 1
++            if i + k < hi and truth[i + k] == p and p != truth[i]:
++                bwd += 1
++    n_ok = sum(1 for t, p in zip(truth, pred, strict=True) if p == t)
++    excess = max(0, fwd - bwd)
++    return {
++        "forward_shift_hits_k1_3": fwd,
++        "backward_shift_hits_k1_3_null": bwd,
++        "excess_over_null": excess,
++        "exact_match_lower_bound": round(n_ok / len(pred), 4),
++        "exact_match_optimistic_ceiling_if_every_shifted_probe_was_really_correct": round(
++            min(1.0, (n_ok + excess) / len(pred)), 4
++        ),
++    }
++
++
++def wilson(k: int, n: int) -> list[float]:
++    """95% Wilson score interval -- correct near 0 and 1, where the normal approx is not."""
++    if n == 0:
++        return [0.0, 0.0]
++    z = 1.959963985
++    p = k / n
++    den = 1 + z * z / n
++    c = (p + z * z / (2 * n)) / den
++    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
++    return [round(max(0.0, c - h), 4), round(min(1.0, c + h), 4)]
++
++
++def confusion_note(conf: dict) -> dict:
++    """Surface the index pairs this gate was specifically commissioned to look for.
++
++    4/14 and 5/15 are the pairs `to_ascii()` already merges today (it keeps only the
++    last decimal digit), so a vision tower reproducing the SAME collapse would be a
++    second, independent instance of the same bug class.
++    """
++
++    def g(a, b):
++        return conf.get(f"{a}->{b}", 0) + conf.get(f"{b}->{a}", 0)
++
++    return {
++        "pair_4_14_confusions": g(4, 14),
++        "pair_5_15_confusions": g(5, 15),
++        "pair_1_11_confusions": g(1, 11),
++        "pair_0_10_confusions": g(0, 10),
++        "last_digit_collapse_pairs_total": g(4, 14) + g(5, 15) + g(1, 11) + g(0, 10),
++        "all_confusions_sorted": conf,
++    }
++
++
++def _assert_real_measurement(src: dict, name: str) -> None:
++    """Refuse to build an artifact out of anything that is not a real measurement.
++
++    WHY THIS GUARD EXISTS, stated plainly because it is embarrassing and instructive:
++    while this run was still in flight, placeholder raw files were written to these
++    exact paths in order to dry-run the artifact pipeline. They were deleted straight
++    away, but for a few minutes the canonical input paths held FABRICATED numbers, and
++    nothing in this script could have told the difference. Publishing a scored artifact
++    built from those would have been precisely the fabrication class the project's
++    adversarial-verify layer exists to catch -- and it would have been self-inflicted,
++    not caught, because the numbers were plausible by construction.
++
++    So the guard is structural rather than a promise to be careful: a real run records
++    a per-probe `predictions` list and a non-trivial wall-clock, and the placeholder
++    could not have either. Fail CLOSED -- raise, never warn-and-continue.
++    """
++    for r in src.get("results", []):
++        preds = r.get("predictions")
++        if not isinstance(preds, list) or len(preds) != r.get("cells_probed"):
++            raise SystemExit(
++                f"REFUSING TO BUILD: {name} scheme {r.get('scheme')!r} has no per-probe "
++                f"predictions list matching cells_probed. This does not look like a real "
++                f"measurement. Re-run the harness; do not hand-edit the raw file."
++            )
++        if not r.get("duration_s", 0) > 0:
++            raise SystemExit(
++                f"REFUSING TO BUILD: {name} scheme {r.get('scheme')!r} has no duration."
++            )
++
++
++def build():
++    proof = json.loads((SD / "tower_proof.json").read_text())
++    fid = json.loads((SD / "fidelity_raw.json").read_text())
++    _assert_real_measurement(fid, "fidelity_raw.json")
++    esc_p = SD / "escalate_raw.json"
++    esc = json.loads(esc_p.read_text()) if esc_p.exists() else None
++    if esc is not None:
++        _assert_real_measurement(esc, "escalate_raw.json")
++
++    _, probes = _rebuild_probes(fid["meta"])
++    truth = [t for _, _, t in probes]
++    preds = {r["scheme"]: r["predictions"] for r in fid["results"]}
++
++    renderings = []
++    # TAG CORRECTED ka59 -> lp85. The escalation grid is lp85's reset frame; escalate.py
++    # sets GAME = "lp85" and documents rejecting ka59 (whose frame has a single cell each
++    # of colours 0 and 5). ka59 was read during candidate selection only.
++    for src, tag in [(fid, "synthetic_blocks"), (esc, "real_lp85_frame")]:
++        if src is None:
++            continue
++        ctrl = next((r for r in src["results"] if "text" in r["scheme"]), None)
++        for r in src["results"]:
++            is_ctrl = "text" in r["scheme"]
++            row = {
++                "scheme": f"{tag}:{r['scheme']}",
++                "grid_kind": tag,
++                "is_negative_control": is_ctrl,
++                "px_per_cell": r.get("px_per_cell"),
++                "image_pixels": r.get("image_pixels"),
++                "image_bytes": r.get("image_bytes"),
++                "cells_probed": r["cells_probed"],
++                "n_correct": r["n_correct"],
++                "exact_match": r["exact_match"],
++                "exact_match_is_a_lower_bound": True,
++                "exact_match_lower_bound_reason": (
++                    "the harness that produced this number used a positional-fallback parser "
++                    "that ingested row and column indices as colour predictions; a misparsed "
++                    "probe is scored WRONG, so the true value is >= this one. See "
++                    "shift_contamination_by_scheme and post_review_corrections."
++                ),
++                "exact_match_ci95_wilson": wilson(r["n_correct"], r["cells_probed"]),
++                "exact_match_ci95_wilson_note": (
++                    "PROBE-LEVEL and therefore TOO NARROW -- it assumes 128 independent probes, "
++                    "but they were asked in 16 batched requests. Use "
++                    "exact_match_ci95_cluster_robust."
++                ),
++                # Cluster-robust stats need the ground truth in probe order, which is
++                # reconstructed only for the synthetic arm (the real-frame arm has its
++                # own grid and never produced a measurement).
++                **(cluster_stats(preds[r["scheme"]], truth) if tag == "synthetic_blocks" else {}),
++                "exact_match_over_parsed": r["exact_match_over_parsed"],
++                "n_unparseable": r["n_unparseable"],
++                "n_batches_truncated_after_retry": r["n_batches_truncated_after_retry"],
++                "text_control_exact_match": ctrl["exact_match"] if ctrl else None,
++                "text_control_scheme": ctrl["scheme"] if ctrl else None,
++                "vision_minus_text_control": (
++                    None
++                    if (is_ctrl or not ctrl)
++                    else round(r["exact_match"] - ctrl["exact_match"], 4)
++                ),
++                "confusions": confusion_note(r["confusions"]),
++                "duration_s": r["duration_s"],
++            }
++            renderings.append(row)
++
++    imgs = [r for r in renderings if not r["is_negative_control"]]
++    ctrls = [r for r in renderings if r["is_negative_control"]]
++    real_imgs = [r for r in imgs if r["grid_kind"] == "real_lp85_frame"]
++    real_ctrl = [r for r in ctrls if r["grid_kind"] == "real_lp85_frame"]
++
++    best_txt = max((r["exact_match"] for r in ctrls), default=0.0)
++    real_best_img = max((r["exact_match"] for r in real_imgs), default=None)
++    real_best_txt = max((r["exact_match"] for r in real_ctrl), default=None)
++
++    # ---- THE GATE, derived from the numbers ----
++    # can_replace_text: images stand IN PLACE OF the exact RLE text. The bar is
++    #   absolute (>=0.90) because the induced engine is graded by EXACT match and
++    #   writes Python comparing specific cells to specific integers.
++    # can_supplement_text: images are added ALONGSIDE the text. Needs only that the
++    #   vision path carry real signal, well clear of the 1/16 = 6.25% chance rate.
++    #
++    # WHICH GRID DECIDES `can_replace`, AND WHY THE MISSING REAL-FRAME ARM DOES NOT
++    # LEAVE THIS UNDECIDED. The synthetic blocks grid is the CHARITABLE case by
++    # construction: 8x8-cell solid blocks in 16 maximally-separated nameable colours,
++    # both far easier than a real ARC frame. So its score is an UPPER BOUND on the real
++    # frame. When that upper bound is itself below the bar, `can_replace` is settled a
++    # fortiori -- a harder grid cannot rescue it -- and that is exactly the
++    # pre-registered escalation rule in fidelity.py: escalate only if the charitable
++    # case PASSES. A failure needs no escalation. If the charitable case HAD passed,
++    # real-frame evidence would be REQUIRED, and its absence would force can_replace to
++    # False rather than allow a pass on charitable evidence alone.
++    charitable_best = max(
++        (r["exact_match"] for r in imgs if r["grid_kind"] == "synthetic_blocks"), default=0.0
++    )
++    if charitable_best < REPLACE_BAR:
++        can_replace = False  # settled by the upper bound; no real-frame arm needed
++        replace_basis = (
++            f"charitable synthetic upper bound {charitable_best:.3f} < {REPLACE_BAR} bar, so a "
++            "real ARC frame (strictly harder) cannot clear it either"
++        )
++    else:
++        can_replace = bool(real_best_img is not None and real_best_img >= REPLACE_BAR)
++        replace_basis = (
++            "charitable case cleared the bar, so the decision rests on the real-frame arm"
++            + ("" if real_best_img is not None else " -- which was NOT run, so replace is refused")
++        )
++    # can_supplement, RE-ANCHORED after review. It previously tested `best_img >= 0.25`,
++    # a bar that exists only in this file and was written after the numbers were in --
++    # so both of the artifact's positive conclusions rested on a threshold chosen with
++    # the answer visible. The replacement uses only pre-registered quantities: the
++    # 6.25% chance rate (design decision 1), tested against the CLUSTER-ROBUST lower
++    # confidence bound rather than the point estimate, so it also survives the
++    # batch-clustering correction. This is a strictly harder test than the retired one
++    # and it does not depend on any number chosen after the fact.
++    best_img_row = max(imgs, key=lambda r: r["exact_match"]) if imgs else None
++    img_lcb = (best_img_row or {}).get("exact_match_ci95_cluster_robust", [0.0, 0.0])[0]
++    txt_row = ctrls[0] if ctrls else None
++    txt_lcb = (txt_row or {}).get("exact_match_ci95_cluster_robust", [0.0, 0.0])[0]
++    can_supplement = bool(img_lcb > CHANCE)
++    supplement_basis = (
++        f"the best image scheme's cluster-robust 95% lower bound is {img_lcb:.3f}, above the "
++        f"pre-registered {CHANCE} chance rate, so the vision path carries real information. "
++        "This does NOT license replacing the text, and it is not a claim that images help "
++        "induction -- only that the channel is not noise. Anchored on the pre-registered "
++        f"chance rate; the {SUPPLEMENT_BAR} supplement_bar in this file is POST-HOC and no "
++        "longer decides anything. The measured value is also a LOWER bound (parser defect), "
++        "so this conclusion can only strengthen under correction."
++    )
++
++    # THE NEGATIVE CONTROL'S VETO. If the text arm also collapses, the question format
++    # is what failed and NO conclusion about vision is licensed either way. Same
++    # re-anchoring: pre-registered chance rate, cluster-robust bound.
++    control_informative = bool(txt_lcb > CHANCE)
++
++    total_probe_s = sum(r["duration_s"] for r in renderings)
++
++    art = {
++        "experiment": "arc_multimodal_fidelity_gate_20260801",
++        "experiment_id": "arc_multimodal_fidelity_20260801",
++        "title": "Can gemma-4-31B-it's vision tower read ARC colour indices back exactly?",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "schema": "carnot.arc_multimodal_fidelity_gate.v1",
++        "milestone": "outer-loop 2026-08-01",
++        "inference_substrate": "live_llm_inference",
++        "inference_substrate_note": (
++            "A real llama.cpp llama-server process loaded the 18.3 GB gemma-4-31B-it Q4_K_M GGUF "
++            "plus the 1.14 GiB mmproj-F16 vision projector onto RTX 3090 index 1 (about 22 GB "
++            "resident, confirmed by nvidia-smi against the launched PID) and served full "
++            "autoregressive generation for every probe. This is neither a cached-candidate "
++            "rescoring nor an aggregation of upstream artifacts."
++        ),
++        "random_seed": SEED,
++        "duration_s": round(total_probe_s, 2),
++        "model_specs": {
++            "generator": "unsloth/gemma-4-31B-it-GGUF",
++            "weights_file": BASE_GGUF,
++            "weights_bytes": os.path.getsize(BASE_GGUF),
++            "vision_projector_file": MMPROJ,
++            "vision_projector_bytes": os.path.getsize(MMPROJ),
++            "vision_projector_sha256": MMPROJ_SHA,
++            "server_build": "llama.cpp b9606-9b4dae81f (CUDA build)",
++            "gpu": (
++                "RTX 3090 index 1 via CUDA_VISIBLE_DEVICES=1; "
++                "GPU 0 left untouched (conductor-owned)"
++            ),
++            "n_ctx": 16384,
++            "parallel_slots": 1,
++            "kv_cache": "q8_0",
++            "temperature": 0.0,
++            "port": 18831,
++        },
++        "preconditions_checked": [
++            {
++                "resource": "gpu1_free_before_launch",
++                "available": True,
++                "evidence": "nvidia-smi before launch: GPU1 2 MiB used, no compute processes",
++            },
++            {"resource": "base_gguf_cached", "available": True, "evidence": BASE_GGUF},
++            {
++                "resource": "mmproj_f16_downloaded",
++                "available": True,
++                "evidence": f"{MMPROJ} sha256={MMPROJ_SHA} bytes={os.path.getsize(MMPROJ)}",
++            },
++            {
++                "resource": "llama_server_supports_mmproj",
++                "available": True,
++                "evidence": "llama-server --help lists -mm/--mmproj (build b9606-9b4dae81f)",
++            },
++            {
++                "resource": "vision_tower_loaded_and_actually_used",
++                "available": True,
++                "evidence": "four-layer server_proof below",
++            },
++        ],
++        # ---------------- THE MANDATORY PROOF THE TOWER WAS USED ----------------
++        "mmproj_loaded": True,
++        "server_proof": {
++            "layer1_server_log": (
++                "srv load_model: loaded multimodal model, '.../mmproj-F16.gguf' ; "
++                "srv load_model: [mtmd] estimated worst-case memory usage of mmproj is 1290.66 MiB"
++            ),
++            "layer2_props_endpoint": {
++                "modalities": {"vision": True, "video": True, "audio": False},
++                "total_slots": 1,
++            },
++            "layer3_gpu_residency": (
++                "nvidia-smi --query-compute-apps showed the launched server PID holding ~22 GB on "
++                "GPU 1 while GPU 0 stayed at 2 MiB"
++            ),
++            "layer4_differential_test": {
++                "why_this_is_the_decisive_layer": (
++                    "llama.cpp will happily serve a request whose image it ignored, so a load-time "
++                    "log line and a /props capability flag cannot rule out a silent text-only "
++                    "fallback. Under such a fallback every fidelity number below would really be "
++                    "measuring 'guess a colour index with no information' while being reported as "
++                    "a vision result. So four BYTE-IDENTICAL text prompts were sent, each paired "
++                    "with a DIFFERENT solid-colour image. No text-only model can separate them."
++                ),
++                "cases": proof["cases"],
++                "no_image_answer": proof["no_image_answer"],
++                "n_correct": proof["n_correct"],
++                "n_distinct_answers": proof["n_distinct_answers"],
++                "conclusion": (
++                    f"{proof['n_correct']}/4 correct with {proof['n_distinct_answers']} distinct "
++                    "answers to identical prompts, so the image is the only channel carrying the "
++                    "difference. The same prompt with NO image answered "
++                    f"{proof['no_image_answer']!r} "
++                    "-- a guess, which confirms the text alone is uninformative."
++                ),
++                "vision_path_proven_live": proof["vision_path_proven_live"],
++            },
++        },
++        # ---------------- RESULTS ----------------
++        "renderings": renderings,
++        # FOUR DISTINCT SCOPED MEASUREMENTS -- deliberately NOT accompanied by any
++        # "best over everything" aggregate. An earlier draft also emitted
++        # headline_best_image_exact_match / headline_best_text_control_exact_match as
++        # maxima over all scopes, and a structural pre-check caught the consequence:
++        # whenever the real-frame arm happened to BE the maximum, the aggregate and the
++        # scoped field held byte-identical floats, which adversarial_verify correctly
++        # flagged as a CRITICAL TAUTOLOGY. It was right to. Two top-level "metrics" that
++        # are the same measurement under two names is a reporting bug, so the duplicate
++        # aggregates were removed rather than exempted.
++        "synthetic_best_image_exact_match": max(
++            (r["exact_match"] for r in imgs if r["grid_kind"] == "synthetic_blocks"), default=None
++        ),
++        "synthetic_text_control_exact_match": next(
++            (r["exact_match"] for r in ctrls if r["grid_kind"] == "synthetic_blocks"), None
++        ),
++        "real_frame_best_image_exact_match": real_best_img,
++        "real_frame_text_control_exact_match": real_best_txt,
++        "chance_rate_16_way": CHANCE,
++        "replace_bar": REPLACE_BAR,
++        "replace_bar_provenance": "PRE-REGISTERED in fidelity.py design decisions 1 and 3",
++        "supplement_bar": SUPPLEMENT_BAR,
++        "supplement_bar_is_post_hoc": SUPPLEMENT_BAR_IS_POST_HOC,
++        "supplement_bar_provenance": (
++            "POST-HOC. Defined only in build_artifact.py, which was written after the raw "
++            "numbers existed. RETIRED as a decision rule: can_supplement_text is now decided "
++            "by the pre-registered chance rate instead. Retained only so the earlier basis "
++            "stays on the record."
++        ),
++        "can_replace_text": can_replace,
++        "can_replace_text_basis": replace_basis,
++        "can_supplement_text": can_supplement,
++        "can_supplement_text_basis": supplement_basis,
++        "negative_control_informative": control_informative,
++        "negative_control_basis": (
++            f"the shipped RLE text arm scored {best_txt:.3f} on the identical paired probes "
++            f"(cluster-robust 95% lower bound {txt_lcb:.3f}), above the {CHANCE} chance rate, so "
++            "'read the cell at (row, col)' is a demonstrably answerable question format. A low "
++            "vision score therefore cannot be dismissed as a question-format artifact -- the "
++            "confound the control exists to rule out is ruled out."
++        ),
++        # PAIRED SIGNIFICANCE. The probes are the same cells in the same order across
++        # schemes, so the correct test is McNemar on the discordant pairs, NOT a
++        # comparison of the two Wilson intervals -- overlapping CIs on PAIRED data
++        # routinely hide a real difference, and non-overlapping ones can overstate it.
++        #
++        # ALL FIVE ARE NOW COMPUTED FROM `predictions`. They were previously hardcoded
++        # literals, and two of them read `p_value: 0.0` -- impossible for an exact test.
++        # The true values are 4.59e-07 and 4.00e-08.
++        #
++        # TWO CAVEATS TRAVEL WITH EVERY p HERE, and the px16-vs-text one cannot be read
++        # without them:
++        #   (1) PROBE-LEVEL, so anticonservative. The probes are clustered in batches of
++        #       8 (measured design effect 3.3-7.0), so the effective sample is nearer 16
++        #       clusters than 128 probes and these p-values are optimistic.
++        #   (2) THE TWO ARMS ARE DIFFERENTIALLY BIASED by the retired parser. Forward
++        #       shift-hits, which index how much each arm lost to misalignment, are
++        #       HIGHER in the text control (66 against a null of 14) than in px16 (41
++        #       against 13). Correcting the parser would therefore be expected to raise
++        #       the text arm MORE than px16 -- so this contrast is not merely
++        #       underpowered, its point estimate is biased in an unknown net direction.
++        # Consequently the honest reading of px16-vs-text is NOT ESTABLISHED EITHER WAY,
++        # not "statistically indistinguishable". Claiming equivalence from p=0.103 would
++        # be accepting a null from a non-significant test on two biased measurements.
++        "paired_significance_tests_mcnemar_exact": {
++            "image_px16_vs_text_rle": {
++                **mcnemar_exact(preds["image_px16"], preds["text_rle"], truth),
++                "a_is": "image_px16",
++                "b_is": "text_rle",
++                "reading": (
++                    "NOT ESTABLISHED EITHER WAY. Do NOT claim images beat the RLE text "
++                    "encoding, and do NOT claim they are equivalent to it: this p is "
++                    "probe-level (anticonservative under batch clustering) and the two arms "
++                    "carry different amounts of parser-shift bias."
++                ),
++            },
++            "image_px16_vs_image_px8": {
++                **mcnemar_exact(preds["image_px16"], preds["image_px8"], truth),
++                "a_is": "image_px16",
++                "b_is": "image_px8",
++            },
++            "image_px16_vs_image_px1": {
++                **mcnemar_exact(preds["image_px16"], preds["image_px1"], truth),
++                "a_is": "image_px16",
++                "b_is": "image_px1",
++            },
++            "text_rle_vs_image_px1": {
++                **mcnemar_exact(preds["text_rle"], preds["image_px1"], truth),
++                "a_is": "text_rle",
++                "b_is": "image_px1",
++            },
++            "text_rle_vs_image_px8": {
++                **mcnemar_exact(preds["text_rle"], preds["image_px8"], truth),
++                "a_is": "text_rle",
++                "b_is": "image_px8",
++            },
++            "_caveats": [
++                "probe-level: anticonservative under the measured batch clustering",
++                "arms are differentially biased by the retired positional-fallback parser",
++            ],
++        },
++        # THE PARSER-SHIFT DIAGNOSTIC. This is what demotes every exact_match to a lower
++        # bound and what makes the px16-vs-text contrast unsafe.
++        "shift_contamination_by_scheme": {
++            sch: shift_contamination(preds[sch], truth) for sch in preds
++        },
++        "images_beat_text_claim_supported": False,
++        "images_equal_text_claim_supported": False,
++        "last_digit_collapse_hypothesis_supported": False,
++        "last_digit_collapse_hypothesis_note": (
++            "The gate was commissioned partly to see whether the vision tower would reproduce the "
++            "SAME collapse that arc_executable_world_model.to_ascii() already has -- it renders "
++            "each cell as str(int(v))[-1], merging 4/14, 5/15, 1/11 and 0/10. It does NOT. Summed "
++            "over all four schemes and 512 probes, those four pairs account for 12 confusions "
++            "total, no more than unrelated pairs such as 4->6 or 12->15, and the single largest "
++            "confusion in every scheme is a non-collapse pair. So the tower's errors are ordinary "
++            "perceptual confusions, not a digit-truncation artifact. This is a clean negative on "
++            "the striking-result hypothesis and should be reported as such rather than quietly "
++            "dropped."
++        ),
++        # ---------------- DISCIPLINE FIELDS ----------------
++        # ---- FALSE-NEGATIVE-RISK CONTROLS ----
++        # A null result here ("the tower cannot read ARC colour indices") is a real
++        # possible outcome of this gate, and a null claim is only worth anything if the
++        # apparatus was demonstrably capable of producing a positive. Two independent
++        # positive controls were run for exactly that reason, and both are recorded
++        # rather than asserted:
++        #   (a) the differential tower proof -- four solid-colour images read back
++        #       correctly and distinctly through the same server, same projector, same
++        #       prompt path. So a null on fine grids cannot be "the vision path was
++        #       dead" or "the harness never sent the image".
++        #   (b) the RLE text control -- the identical questions over the shipped text
++        #       encoding, which bounds how much of any failure belongs to the question
++        #       format rather than to the modality.
++        # THIRD CONTROL: the RENDERER is not the lossy component. Each emitted PNG was
++        # read back, nearest-neighbour-subsampled at its own px_per_cell, mapped
++        # through the palette, and hashed: all three reproduce the source grid's
++        # sha256 EXACTLY (d05eec86...). So the images genuinely contain every colour
++        # index, and any read-back failure is attributable to the vision tower rather
++        # than to smoothing, resampling or palette drift on our side. Without this a
++        # low score would have an innocent alternative explanation.
++        "render_losslessness_verified": True,
++        "render_losslessness_evidence": (
++            "rendered_px1.png / rendered_px8.png / rendered_px16.png each decode back to the "
++            "source grid sha256 recorded in raw_per_scheme_measurements.json meta.grid_sha256"
++        ),
++        "positive_control_passed": bool(proof["vision_path_proven_live"]),
++        "positive_control_description": (
++            "Differential vision proof: 4 byte-identical prompts with 4 different solid-colour "
++            "images returned 4 distinct correct colour names through the same server and prompt "
++            "path used for every measurement below. The apparatus can demonstrably produce a "
++            "positive, so a null on fine grids is a capability limit, not a dead code path."
++        ),
++        "false_negative_risk_checked": True,
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_note": (
++            "Not a verifier-value, moat or efficiency claim. This measures a model's vision "
++            "encoder against a known ground-truth grid; no verifier is credited and no gate is "
++            "flipped by this artifact."
++        ),
++        "solve_provenance": "development_proxy",
++        "solve_provenance_note": (
++            "No ARC level was solved, attempted, or claimed, and no game was played scored or "
++            "online. The only use of the arcade was OFFLINE, reading reset frames out of the "
++            "local environment_files/ as ground-truth grid data: ka59 and lp85 were both read "
++            "while choosing an escalation grid, lp85 was selected, and in the event no probe "
++            "was run against either -- every number in this artifact comes from the synthetic "
++            "grid."
++        ),
++        "sample_size_justification": (
++            "128 paired probe cells per scheme on the synthetic grid (8 per colour, all 16 "
++            "indices represented). NO REAL-FRAME ARM WAS MEASURED -- an earlier version of this "
++            "sentence also claimed '128 on the real ka59 frame (stratified over the 7 colours "
++            "that frame actually contains)', which was doubly wrong: no real-frame probe ever "
++            "completed, and the staged escalation grid was lp85 with 11 colours, not ka59 with "
++            "7. Nothing downstream consumed that sentence -- real_frame_best_image_exact_match "
++            "is null and every rendering row is synthetic -- but it was a number quoted in an "
++            "artifact that no measurement backed, which is the exact failure this project's "
++            "fabrication gate exists to catch, so it is corrected here and recorded in "
++            "post_review_corrections rather than quietly deleted. For the synthetic arm: "
++            "worst-case 95% Wilson half-width is about 9 percentage points at p=0.5 -- but see "
++            "exact_match_ci95_cluster_robust, which is the interval to use, since the probes "
++            "are clustered in 16 batched requests (design effect 3.3-7.0, effective n 18-38). "
++            "Even cluster-robust, the sample separates the 1/16 = 6.25% chance rate from the "
++            "0.90 usable rate, which is the only distinction this gate must resolve; it is NOT "
++            "enough to resolve a few-point difference between two schemes, and no such claim is "
++            "made. The precision floor and the rendering parameters were fixed before any "
++            "result was inspected; the 0.25 supplement bar was NOT, and no longer decides "
++            "anything."
++        ),
++        "methodology_note": (
++            "Probes are PAIRED: the identical (row, col) list in the same order is used for every "
++            "scheme including the text control, so schemes differ only in how the grid was "
++            "presented. Temperature 0, fixed seed. gemma-4 emits a mandatory chain-of-thought, so "
++            "a reply truncated at the token cap (finish_reason=length) returns an EMPTY answer "
++            "that is indistinguishable from a wrong one; each such batch is retried once at an "
++            "11k-token budget and any residual truncation is reported as n_unparseable. Both a "
++            "strict exact_match over all probes and a diagnostic exact_match_over_parsed are "
++            "given so 'misread the colour' stays distinguishable from 'never finished thinking'. "
++            "TWO earlier attempts at this run were DISCARDED rather than reported, and neither "
++            "contributed a single number to this artifact. (1) Two copies of the harness were "
++            "accidentally launched at once and their concurrent requests shared one server KV "
++            "pool; the run was killed and the server relaunched with --parallel 1. (2) The "
++            "restarted run was found to be paying a 7000-token dead attempt plus an "
++            "11000-token retry on most text batches -- about 530s of decode each against ~120s "
++            "when the first attempt succeeds -- so the first-attempt budget was raised to 9000 "
++            "and the run restarted again. That change is uniform across all schemes and can "
++            "only affect whether an answer is REACHED, never whether it is correct. Every "
++            "number here comes from the single final sequential run."
++        ),
++        "limitations": [
++            "The index-to-RGB palette is ours, not ARC's. The environment_files define colour "
++            "INDICES only and never RGB, so no official palette was recoverable. We chose 16 "
++            "maximally-separated, individually-nameable colours and put the legend in the "
++            "prompt, which makes every number here an UPPER BOUND: a real ARC palette with "
++            "closer shades can only do worse.",
++            "The synthetic grid is 8x8-cell solid blocks -- far coarser than a real ARC frame -- "
++            "so every score here is a charitable UPPER bound, not an estimate of real-frame "
++            "performance.",
++            "A real-ARC-frame escalation WAS built and staged (lp85's reset frame, chosen over "
++            "ka59 because ka59's frame has only one cell each of colours 0 and 5; lp85 carries 11 "
++            "colours with >=32 cells each and still contains both 4/14 and 5/15). It was LAUNCHED "
++            "AND THEN TERMINATED BEFORE ANY BATCH COMPLETED -- run_all.sh invokes escalate.py "
++            "unconditionally and run_all.log ends with its lp85 metadata block and the line "
++            "'--- TEXT CONTROL (shipped RLE encoding), REAL frame ---' with no batch lines after "
++            "it and no ALL_DONE. An earlier version of this limitation said 'DELIBERATELY NOT "
++            "RUN', which the run log contradicts; corrected here. NO real-frame probe produced an "
++            "answer, so no real-frame number exists. The reasoning for stopping it is unchanged "
++            "and still sound: at the measured ~200s/batch it needed roughly 2.5 more hours and "
++            "could not change the gate, because the charitable arm already scored 0.461, far "
++            "under the 0.90 bar, and a harder grid can only score lower. It WOULD be required "
++            "before any future claim that images can carry ARC grids. Concretely it remains "
++            "unmeasured how px16 and the text control compare on a real frame, whose fine "
++            "structure plausibly hurts vision more than it hurts the run-length text -- and note "
++            "that even HERE, on the grid that most favours vision, the two are NOT ESTABLISHED "
++            "either way (McNemar p=0.103, probe-level and differentially parser-biased).",
++            "One generator, one quantisation (Q4_K_M), one projector (F16). A different quant or "
++            "the F32 projector could differ.",
++            "Read-back fidelity is necessary for image-fed induction but not sufficient: this "
++            "gate does not measure whether images improve induced-engine heldout accuracy.",
++            "Read-back is a single-cell query. It does not establish that the tower preserves "
++            "whole-grid structure well enough to predict a next grid exactly.",
++            "The px=8 strict score is dominated by NON-ANSWERS, not misreads: 10 of its 16 "
++            "batches exhausted even the retry budget mid-chain-of-thought, leaving only 48 of 128 "
++            "probes with any answer. Its strict 0.156 and its parsed-only 0.417 therefore differ "
++            "by a lot, and the honest reading is that at 512x512 the model frequently fails to "
++            "TERMINATE rather than that it misreads the colour. Both numbers are reported; "
++            "neither alone characterises that scheme.",
++            "Scores are per-batch bimodal in every arm (px16: 8,7,2,0,8,8,0,0,1,8,1,1,0,8,0,7). "
++            "AN EARLIER VERSION OF THIS LIMITATION ATTRIBUTED THAT TO THE MODEL'S SPATIAL "
++            "INDEXING. That attribution was wrong, and wrong in the worst direction -- it "
++            "published a harness bug as a model-capability finding. The bimodality is "
++            "substantially the retired positional-fallback parser losing alignment: forward "
++            "shift-hits (a wrong prediction equal to an earlier probe's truth in the same batch, "
++            "the misparse signature) run 3.44-4.64 per batch in the batches scoring <=2/8 and "
++            "0.00-0.14 per batch in those scoring >=6/8. In the text arm 11 of 16 batches "
++            "returned a full 8 parsed answers of which <=2 were correct -- the positional-scoop "
++            "signature exactly. Whether the model ALSO has a spatial-indexing weakness is "
++            "genuinely unresolved and needs the corrected parser to answer; this experiment "
++            "cannot separate parser misalignment, spatial indexing and colour discrimination.",
++            "The 128 probes are NOT independent: they were asked in 16 requests of 8, and each "
++            "request is answered by one chain-of-thought. Measured design effects are 3.3-7.0, "
++            "so effective n is 18-38, not 128. Cluster-robust intervals are reported per "
++            "rendering; the probe-level Wilson intervals are retained but are too narrow. The "
++            "McNemar p-values are probe-level and correspondingly anticonservative.",
++            "EVERY exact_match in this artifact is a LOWER BOUND, not a point estimate. The "
++            "harness parsed replies with a positional fallback that scooped row and column "
++            "numbers as colour predictions whenever the model answered in prose; a misparsed "
++            "probe scores WRONG, so the true values are >= those reported. The bound is NOT "
++            "uniform across arms -- excess forward shift-hits are 52 for text_rle against 28 for "
++            "px16 -- so the arms cannot be safely compared even though each is individually "
++            "conservative. The run CANNOT be re-scored: it persisted only the parsed predictions "
++            "and not the model's replies, and the server log does not contain them either. "
++            "Correcting the numbers requires a fresh run at roughly 4 GPU-hours. The parser is "
++            "fixed and raw replies are now persisted, so this is not repeatable.",
++        ],
++        "prior_context": (
++            "arc_executable_world_model.to_ascii() already collapses 4/14 and 5/15 today by "
++            "rendering each cell as str(int(v))[-1], the last decimal digit only. This gate "
++            "exists so a lossy image encoder is not stacked on top of that same bug class "
++            "undetected."
++        ),
++        "cited_upstream_artifacts": [],
++        # ---------------- CORRIGENDA ----------------
++        # Six defects found by an adversarial review of the first published version of
++        # this artifact, all VERIFIED against the run's own recorded data before being
++        # applied. Recorded rather than silently patched, per the project's never-prune
++        # rule: the prior claims are stated here alongside what replaced them, so a
++        # reader who saw v1 can tell exactly what moved and why.
++        "post_review_corrections": [
++            {
++                "id": "F1",
++                "severity": "blocker",
++                "was": "exact_match reported as a point estimate; limitations attributed the "
++                "per-batch bimodality to the model's spatial indexing.",
++                "defect": "parse()'s positional fallback matched every bare 1-2 digit number in "
++                "a prose reply and took the first 8 in 0..15 as the answers, so row "
++                "and column indices were scored as colour predictions. 54 of 128 "
++                "probes have a row or column below 16.",
++                "verified_by": "Running the shipped parser on a prose reply returns the row and "
++                "column as colours. In the run's own predictions, wrong answers "
++                "match an EARLIER probe's truth in the same batch far more often "
++                "than a later one -- fixed-shift k=+1/+2/+3 vs k=-1/-2/-3: "
++                "text_rle 27/23/16 vs 5/5/4, px16 18/15/8 vs 6/4/3. Those hits "
++                "sit almost entirely in the batches that scored <=2/8.",
++                "now": "All exact_match values labelled lower bounds; shift_contamination_by_"
++                "scheme added; the spatial-indexing attribution retracted; parser fixed "
++                "and raw replies now persisted in fidelity.py.",
++                "unresolved": "The completed run cannot be re-scored -- only parsed predictions "
++                "were saved. Corrected numbers need a fresh ~4 GPU-hour run.",
++            },
++            {
++                "id": "F2",
++                "severity": "blocker",
++                "was": "five hardcoded McNemar p-values, two of them literally 0.0.",
++                "defect": "an exact test cannot return 0, and no code on disk computed any of "
++                "them, so nothing could catch the error.",
++                "verified_by": "recomputed from `predictions`: the discordant counts (39/25, "
++                "50/11, 46/7, 36/11, 34/9) were all correct, but the two 0.0 "
++                "values should be 4.5888e-07 and 4.0032e-08.",
++                "now": "all five computed from the data at build time, each with its "
++                "min_reachable_p.",
++            },
++            {
++                "id": "F3",
++                "severity": "blocker",
++                "was": "sample_size_justification claimed '128 on the real ka59 frame "
++                "(stratified over the 7 colours that frame actually contains)'.",
++                "defect": "no real-frame arm was ever measured, and the staged grid was lp85 "
++                "with 11 colours, not ka59 with 7. A quoted number with no "
++                "measurement behind it.",
++                "verified_by": "renderings holds 4 rows, all synthetic_blocks; real_frame_* are "
++                "null; escalate.py sets GAME='lp85' and documents rejecting ka59.",
++                "now": "clause deleted; solve_provenance_note and the grid_kind tag corrected "
++                "to lp85.",
++            },
++            {
++                "id": "F4",
++                "severity": "major",
++                "was": "the escalation was 'DELIBERATELY NOT RUN'.",
++                "defect": "contradicted by the run log -- it was launched and killed.",
++                "verified_by": "run_all.sh invokes escalate.py unconditionally; run_all.log ends "
++                "with escalate.py's lp85 meta block and its TEXT CONTROL header, "
++                "then stops with no batch lines and no ALL_DONE.",
++                "now": "restated as launched-and-terminated-before-any-batch; the reasoning for "
++                "stopping it is retained and unchanged.",
++            },
++            {
++                "id": "F5",
++                "severity": "major",
++                "was": "probe-level Wilson CIs and probe-level McNemar, assuming 128 "
++                "independent probes.",
++                "defect": "probes were asked in 16 batched requests; the artifact even noted the "
++                "resulting bimodality and still published probe-level statistics.",
++                "verified_by": "design effects computed from per-batch counts: text_rle 5.57, "
++                "px16 6.96, px8 5.75, px1 3.35. px16's effective n is 18.4, not "
++                "128; its cluster-robust CI is about [0.21, 0.71] against the "
++                "published Wilson [0.377, 0.547].",
++                "now": "cluster-robust intervals and design effects reported per rendering; the "
++                "p-values carry an explicit anticonservative caveat.",
++            },
++            {
++                "id": "F6",
++                "severity": "major",
++                "was": "can_supplement_text and negative_control_informative both decided by "
++                "SUPPLEMENT_BAR = 0.25.",
++                "defect": "that bar exists only in build_artifact.py, written after the numbers "
++                "were in. Both positive conclusions rested on a threshold chosen with "
++                "the answer visible, while sample_size_justification claimed the "
++                "precision floor was fixed before any result was inspected.",
++                "verified_by": "fidelity.py's pre-registration block (mtime 02:36, run finished "
++                "06:47) registers only the 0.90 rule and the 6.25% chance rate; "
++                "SUPPLEMENT_BAR appears only in build_artifact.py, mtime 06:51.",
++                "now": "bar marked post-hoc and retired as a decision rule. Both conclusions "
++                "re-anchored on the pre-registered 6.25% chance rate, tested against the "
++                "cluster-robust lower bound -- a strictly harder test that also survives "
++                "F5, and one the F1 lower-bound direction can only strengthen.",
++            },
++        ],
++    }
++    return art
++
++
++def verdict_for(art: dict) -> str:
++    """Terminal-prefixed verdict, derived from the measured numbers.
++
++    Deliberately NOT prefixed `success:` -- that literal is one of
++    adversarial_verify's _PERCEPTION_WIN_MARKERS, and this artifact makes no
++    perception WIN claim at all. `complete_` is the correct terminal prefix here.
++
++    ORDER MATTERS, AND AN EARLIER DRAFT OF THIS FUNCTION GOT IT WRONG. The draft
++    checked the negative control FIRST and returned "question-format confound"
++    whenever the text arm scored low -- which, on a dry run, labelled a 0.95-vision /
++    0.19-text outcome a confound. That is backwards. The control's veto exists for one
++    specific situation named in the gate's own design: if the text arm ALSO collapses,
++    then "read the cell at (r,c)" is simply an unanswerable question format and NO
++    conclusion about vision is licensed. But if the VISION arm answers it well, the
++    format is demonstrably answerable, and a weak text arm is then a FINDING (vision
++    beats the shipped text encoding), not a confound. So the veto is only consulted on
++    the branch where vision has already failed.
++    """
++    if art["can_replace_text"]:
++        return "complete_vision_tower_reads_arc_colour_indices_exactly_may_replace_text"
++    if art["can_supplement_text"]:
++        return (
++            "complete_vision_tower_carries_real_signal_but_below_exact_match_bar_"
++            "supplement_only_never_replace"
++        )
++    # Vision failed. Only now does the control decide whether that failure is
++    # attributable to vision at all.
++    if not art["negative_control_informative"]:
++        return "complete_gate_inconclusive_both_arms_collapsed_question_format_confound_not_vision"
++    return "complete_vision_tower_cannot_read_arc_colour_indices_null_result_text_only"
++
++
++def main():
++    art = build()
++    art["honest_verdict"] = verdict_for(art)
++    art["acceptance_gate_can_replace_text_passed"] = art["can_replace_text"]
++    art["acceptance_gate_can_supplement_text_passed"] = art["can_supplement_text"]
++
++    OUTDIR.mkdir(parents=True, exist_ok=True)
++    # Checksum over the content, computed before the checksum field itself exists.
++    art["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(art, sort_keys=True).encode()
++    ).hexdigest()
++
++    p = OUTDIR / "experiment_arc_multimodal_fidelity_20260801.json"
++    p.write_text(json.dumps(art, indent=2))
++    print("wrote", p)
++    print("verdict:", art["honest_verdict"])
++    for r in art["renderings"]:
++        print(
++            f"  {r['scheme']:34s} exact={r['exact_match']:.3f} ci={r['exact_match_ci95_wilson']} "
++            f"unparsed={r['n_unparseable']:3d} 4/14={r['confusions']['pair_4_14_confusions']} "
++            f"5/15={r['confusions']['pair_5_15_confusions']}"
++        )
++    return art
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/results/arc_multimodal_fidelity_20260801/common.py b/results/arc_multimodal_fidelity_20260801/common.py
+new file mode 100644
+index 0000000000..ea4c1d9974
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/common.py
+@@ -0,0 +1,174 @@
++"""Shared helpers for the ARC multimodal fidelity gate.
++
++WHY THIS FILE EXISTS (verbose, for an engineer who is not an EBM/ARC specialist).
++The ARC induce prompt hands the generator a 64x64 grid of small integers ("colour
++indices", 0..15) serialised as run-length-encoded ASCII text. The shipped generator
++gemma-4-31B-it is a MULTIMODAL model and the same repo publishes a vision projector,
++so in principle we could hand it the grid as an IMAGE instead -- which is what the
++grid natively is. Before doing any of that we have to answer one question, because
++everything downstream depends on it:
++
++    CAN THE VISION TOWER READ AN ARC COLOUR INDEX BACK EXACTLY?
++
++ARC needs EXACT discrete values -- the induced engine is graded by exact-match on the
++next grid, and it writes Python that indexes specific cells and compares to specific
++integers. A vision encoder is lossy by construction. If it cannot tell colour index 4
++from colour index 14, images would poison induction in a way that is invisible
++downstream (you would see a slightly worse heldout accuracy, not a decode error).
++
++That failure mode is NOT hypothetical in this codebase: `arc_executable_world_model
++.to_ascii()` already collapses 4/14 and 5/15 today, because it renders each cell as
++`str(int(v))[-1]` -- the last decimal digit only.
++"""
++
++from __future__ import annotations
++
++import base64
++import io
++import json
++import urllib.request
++
++import numpy as np
++
++PORT = 18831
++BASE = f"http://127.0.0.1:{PORT}"
++
++# ---------------------------------------------------------------------------------
++# THE PALETTE.
++#
++# The ARC-AGI-3 game environments in `environment_files/` work in colour INDICES only
++# -- they never define RGB; the web UI does that. So this experiment must choose an
++# index->RGB map, and that choice is load-bearing for how the result should be read.
++#
++# We deliberately choose a MAXIMALLY-SEPARATED, individually-nameable 16-colour
++# palette. This makes the test CHARITABLE to the vision tower: these colours are far
++# easier to tell apart than any real ARC palette, where several indices are close
++# shades. Therefore the measured accuracy here is an UPPER BOUND on what the tower
++# could achieve on the real palette. If it fails here, it fails a fortiori there --
++# which is a sound one-directional argument and the reason this design is safe even
++# though we could not recover the official RGB values.
++#
++# Every colour is given an unambiguous English name, and the name->index legend is
++# put in the prompt. Without a legend the model cannot possibly answer, since nothing
++# in an image says "this particular red means 14".
++PALETTE: list[tuple[str, tuple[int, int, int]]] = [
++    ("black", (0, 0, 0)),
++    ("white", (255, 255, 255)),
++    ("red", (230, 25, 75)),
++    ("green", (60, 180, 75)),
++    ("blue", (0, 90, 220)),
++    ("yellow", (255, 225, 25)),
++    ("orange", (245, 130, 48)),
++    ("purple", (145, 30, 180)),
++    ("cyan", (70, 240, 240)),
++    ("magenta", (240, 50, 230)),
++    ("lime", (190, 255, 0)),
++    ("pink", (250, 190, 212)),
++    ("teal", (0, 128, 128)),
++    ("brown", (140, 70, 20)),
++    ("navy", (0, 0, 128)),
++    ("grey", (128, 128, 128)),
++]
++assert len(PALETTE) == 16
++N_COLORS = 16
++
++LEGEND = "\n".join(f"  {i} = {name}" for i, (name, _) in enumerate(PALETTE))
++
++
++def render_png(grid: np.ndarray, px: int) -> bytes:
++    """Render a colour-index grid to a PNG at `px` pixels per cell, nearest-neighbour.
++
++    Nearest-neighbour (np.repeat) not interpolation: an ARC cell is a discrete symbol,
++    so any smoothing at cell borders would invent colours that are not in the palette
++    and would be OUR bug, not the tower's.
++    """
++    from PIL import Image
++
++    g = np.asarray(grid)
++    lut = np.array([rgb for _, rgb in PALETTE], dtype=np.uint8)
++    rgb = lut[g]  # (h, w, 3)
++    if px > 1:
++        rgb = np.repeat(np.repeat(rgb, px, axis=0), px, axis=1)
++    buf = io.BytesIO()
++    Image.fromarray(rgb, mode="RGB").save(buf, format="PNG")
++    return buf.getvalue()
++
++
++def data_uri(png: bytes) -> str:
++    return "data:image/png;base64," + base64.b64encode(png).decode()
++
++
++def rle_grid(g: np.ndarray) -> str:
++    """EXACTLY the shipped `_rle_grid` format from arc_executable_world_model.py.
++
++    Copied verbatim (not imported) on purpose: that module is being edited by a
++    concurrent session, and the negative control has to be pinned to a known-stable
++    string format for the whole run. Format is
++    'r<row>:<v0>x<n0>,<v1>x<n1>,...' with the column position IMPLICIT (running sum
++    of prior run counts in that row).
++    """
++    g = np.asarray(g)
++    h, w = g.shape
++    lines = []
++    for r in range(h):
++        c = 0
++        runs = []
++        while c < w:
++            v = g[r, c]
++            c0 = c
++            while c < w and g[r, c] == v:
++                c += 1
++            runs.append(f"{int(v)}x{c - c0}")
++        lines.append(f"r{r}:" + ",".join(runs))
++    return "\n".join(lines)
++
++
++def chat(content_parts, max_tokens=3000, temperature=0.0, seed=20260801, timeout=2400):
++    """One /v1/chat/completions call. temperature=0 so the measurement is deterministic.
++
++    MAX_TOKENS MUST BE GENEROUS -- this is not a tuning knob, it is a correctness
++    requirement, and getting it wrong silently returns "" for every question.
++    gemma-4-31B-it is a THINKING model: llama.cpp routes its chain-of-thought into
++    `reasoning_content` and only the post-CoT answer into `content`. With a small
++    max_tokens the generation is cut off DURING the CoT, so `content` is "" and
++    `finish_reason` is "length" -- which looks exactly like "the model had nothing to
++    say about the image". The first run of this gate hit precisely that and produced
++    0/4 on the liveness proof before the cause was found.
++
++    Note there is NO `/no_think` escape here. That is a Qwen3 hybrid-thinking control
++    token; the shipped code says so explicitly (`arc_executable_world_model.py`:
++    `ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on
++    gemma-4`) and it was re-confirmed empirically here -- appending it made the CoT
++    LONGER (189 tokens vs 46), not shorter. So the only fix is headroom.
++
++    Returns (content, finish_reason, n_completion_tokens) so a caller can tell a real
++    empty answer apart from a truncated one instead of scoring the truncation.
++    """
++    body = {
++        "messages": [{"role": "user", "content": content_parts}],
++        "max_tokens": max_tokens,
++        "temperature": temperature,
++        "seed": seed,
++        "cache_prompt": True,
++    }
++    req = urllib.request.Request(
++        BASE + "/v1/chat/completions",
++        data=json.dumps(body).encode(),
++        headers={"Content-Type": "application/json"},
++    )
++    with urllib.request.urlopen(req, timeout=timeout) as r:
++        d = json.loads(r.read())
++    ch = d["choices"][0]
++    return (
++        ch["message"].get("content") or "",
++        ch.get("finish_reason", "?"),
++        d.get("usage", {}).get("completion_tokens", -1),
++    )
++
++
++def text_part(s: str) -> dict:
++    return {"type": "text", "text": s}
++
++
++def image_part(png: bytes) -> dict:
++    return {"type": "image_url", "image_url": {"url": data_uri(png)}}
+diff --git a/results/arc_multimodal_fidelity_20260801/escalate.py b/results/arc_multimodal_fidelity_20260801/escalate.py
+new file mode 100644
+index 0000000000..15ee75ef3b
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/escalate.py
+@@ -0,0 +1,143 @@
++"""ESCALATION: the same gate, on a REAL ARC frame instead of a synthetic block grid.
++
++WHY THIS EXISTS. `fidelity.py` measures the CHARITABLE case by construction: an 8x8
++arrangement of solid 8x8-cell blocks, in a maximally-separated nameable palette. That
++design was chosen so a FAILURE would be conclusive (fail there, fail everywhere). It
++is the wrong instrument for a PASS -- a real ARC frame is much finer-grained, so a
++good score on solid blocks does not license "images can carry ARC grids".
++
++The pre-registered escalation rule in `fidelity.py` (design decision 3) therefore
++requires this run before any positive claim.
++
++THE GRID IS NOT SYNTHETIC. It is the actual reset frame of lp85, pulled from the
++OFFLINE arcade over the local `environment_files/` (zero quota, no network, no scored
++play). Its real palette natively contains 4 AND 14, and 5 AND 15 -- the exact index
++pairs that `arc_executable_world_model.to_ascii()` already collapses today by keeping
++only the last decimal digit. So the confusion matrix here is measured on real
++co-occurring colours, not on a synthetic pairing we invented to be hard.
++
++WHY lp85 AND NOT ka59. ka59 was the first candidate and was rejected on inspection of
++its actual cell counts, BEFORE any probe was run against it: its reset frame contains
++exactly ONE cell of colour 0 and ONE of colour 5, and only 16 of colour 14. A
++stratified probe set over that frame tops out near n=90 and would rest the entire
++4<->14 / 5<->15 confusion question on a handful of cells -- too thin to say anything.
++lp85's reset frame carries 11 distinct colours with a minimum of 32 cells each and
++still contains both critical pairs, so it supports the full n=128 with real coverage
++of the pairs of interest. This is a sampling-adequacy decision made on cell counts
++alone, not a search for a frame that scores better.
++
++Everything else -- palette, prompt, batching, probe count, scoring, the strict/parsed
++split, the truncation retry -- is IDENTICAL to `fidelity.py`, so the two runs are
++directly comparable and the only thing that changed is the grid.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++
++import numpy as np
++
++SD = (
++    "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/"
++    "87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/mmgate"
++)
++sys.path.insert(0, SD)
++
++import fidelity as F  # noqa: E402, N812
++from common import PALETTE, image_part, render_png, rle_grid, text_part  # noqa: E402
++
++GAME = "lp85"
++
++
++def main():
++    grid = np.load(f"{SD}/real_{GAME}.npy").astype(np.uint8)
++    present = sorted(int(v) for v in np.unique(grid))
++    rng = np.random.default_rng(F.SEED)
++
++    # TWO-STAGE STRATIFIED SAMPLE, without replacement.
++    #   Stage 1 guarantees COVERAGE: min(per, available) cells of every colour the
++    #     frame actually contains, so a rare-but-present colour cannot be missed and
++    #     the 4<->14 / 5<->15 confusions have cells to be measured on.
++    #   Stage 2 restores POWER: top up to the full N_PROBES by sampling uniformly from
++    #     the cells not already chosen. Without this the probe count would be pinned to
++    #     (n_colours * per) and the run would silently lose precision relative to the
++    #     synthetic arm, breaking the comparison between them.
++    # We do not invent or duplicate cells to balance the classes -- the frame is the
++    # frame, and stage 2 samples the frame's own natural colour distribution.
++    per = max(1, F.N_PROBES // len(present))
++    chosen: set[tuple[int, int]] = set()
++    probes: list[tuple[int, int, int]] = []
++    for v in present:
++        rs, cs = np.where(grid == v)
++        k = min(per, len(rs))
++        for i in rng.choice(len(rs), size=k, replace=False):
++            probes.append((int(rs[i]), int(cs[i]), int(v)))
++            chosen.add((int(rs[i]), int(cs[i])))
++    all_cells = [(r, c) for r in range(grid.shape[0]) for c in range(grid.shape[1])]
++    remaining = [rc for rc in all_cells if rc not in chosen]
++    need = F.N_PROBES - len(probes)
++    if need > 0 and remaining:
++        for i in rng.choice(len(remaining), size=min(need, len(remaining)), replace=False):
++            r, c = remaining[i]
++            probes.append((r, c, int(grid[r, c])))
++    rng.shuffle(probes)
++    probes = probes[: (len(probes) // F.BATCH) * F.BATCH]  # whole batches only
++
++    rle = rle_grid(grid)
++    meta = {
++        "grid_source": f"REAL {GAME} reset frame from the OFFLINE arcade over environment_files/",
++        "game": GAME,
++        "grid_shape": list(grid.shape),
++        "colours_present": present,
++        "contains_4_and_14": bool(4 in present and 14 in present),
++        "contains_5_and_15": bool(5 in present and 15 in present),
++        "grid_sha256": hashlib.sha256(grid.tobytes()).hexdigest(),
++        "probes_sha256": hashlib.sha256(json.dumps(probes).encode()).hexdigest(),
++        "n_probes": len(probes),
++        "palette": [{"index": i, "name": n, "rgb": list(c)} for i, (n, c) in enumerate(PALETTE)],
++        "rle_chars": len(rle),
++    }
++    print(json.dumps({k: v for k, v in meta.items() if k != "palette"}, indent=1))
++
++    results = []
++    t_all = time.time()
++    print("  --- TEXT CONTROL (shipped RLE encoding), REAL frame ---", flush=True)
++    txt = (
++        "Here is the grid, run-length encoded. Each line is `r<row>:<value>x<count>,...` "
++        "covering that row's columns left to right with no gaps."
++        f"\n{rle}\n\n"
++    )
++    results.append(F.run_scheme("real_text_rle", lambda: [text_part(txt)], probes, grid))
++
++    for px in F.PX_SCHEMES:
++        png = render_png(grid, px)
++        print(
++            f"  --- REAL IMAGE px_per_cell={px} "
++            f"({grid.shape[0] * px}x{grid.shape[1] * px}px, {len(png)}B) ---",
++            flush=True,
++        )
++        r = F.run_scheme(f"real_image_px{px}", lambda p=png: [image_part(p)], probes, grid)
++        r["px_per_cell"] = px
++        r["image_pixels"] = [grid.shape[0] * px, grid.shape[1] * px]
++        r["image_bytes"] = len(png)
++        results.append(r)
++        with open(f"{SD}/real_{GAME}_px{px}.png", "wb") as f:
++            f.write(png)
++
++    out = {"meta": meta, "results": results, "duration_s": round(time.time() - t_all, 2)}
++    with open(f"{SD}/escalate_raw.json", "w") as f:
++        json.dump(out, f, indent=2)
++    print("\n=== ESCALATION SUMMARY (real lp85 frame) ===")
++    for r in results:
++        print(
++            f"  {r['scheme']:18s} exact={r['exact_match']:.3f} "
++            f"({r['n_correct']}/{r['cells_probed']}) unparsed={r['n_unparseable']} "
++            f"top_conf={list(r['confusions'].items())[:5]}"
++        )
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json b/results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
+new file mode 100644
+index 0000000000..ba3b4f1529
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
+@@ -0,0 +1,776 @@
++{
++  "experiment": "arc_multimodal_fidelity_gate_20260801",
++  "experiment_id": "arc_multimodal_fidelity_20260801",
++  "title": "Can gemma-4-31B-it's vision tower read ARC colour indices back exactly?",
++  "run_date": "2026-08-01T11:25:01Z",
++  "schema": "carnot.arc_multimodal_fidelity_gate.v1",
++  "milestone": "outer-loop 2026-08-01",
++  "inference_substrate": "live_llm_inference",
++  "inference_substrate_note": "A real llama.cpp llama-server process loaded the 18.3 GB gemma-4-31B-it Q4_K_M GGUF plus the 1.14 GiB mmproj-F16 vision projector onto RTX 3090 index 1 (about 22 GB resident, confirmed by nvidia-smi against the launched PID) and served full autoregressive generation for every probe. This is neither a cached-candidate rescoring nor an aggregation of upstream artifacts.",
++  "random_seed": 20260801,
++  "duration_s": 15000.42,
++  "model_specs": {
++    "generator": "unsloth/gemma-4-31B-it-GGUF",
++    "weights_file": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++    "weights_bytes": 18323731456,
++    "vision_projector_file": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
++    "vision_projector_bytes": 1198957024,
++    "vision_projector_sha256": "6edcca228213c28d3567a35d22f849eea52d8360875093851959adf5d2f270eb",
++    "server_build": "llama.cpp b9606-9b4dae81f (CUDA build)",
++    "gpu": "RTX 3090 index 1 via CUDA_VISIBLE_DEVICES=1; GPU 0 left untouched (conductor-owned)",
++    "n_ctx": 16384,
++    "parallel_slots": 1,
++    "kv_cache": "q8_0",
++    "temperature": 0.0,
++    "port": 18831
++  },
++  "preconditions_checked": [
++    {
++      "resource": "gpu1_free_before_launch",
++      "available": true,
++      "evidence": "nvidia-smi before launch: GPU1 2 MiB used, no compute processes"
++    },
++    {
++      "resource": "base_gguf_cached",
++      "available": true,
++      "evidence": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++    },
++    {
++      "resource": "mmproj_f16_downloaded",
++      "available": true,
++      "evidence": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf sha256=6edcca228213c28d3567a35d22f849eea52d8360875093851959adf5d2f270eb bytes=1198957024"
++    },
++    {
++      "resource": "llama_server_supports_mmproj",
++      "available": true,
++      "evidence": "llama-server --help lists -mm/--mmproj (build b9606-9b4dae81f)"
++    },
++    {
++      "resource": "vision_tower_loaded_and_actually_used",
++      "available": true,
++      "evidence": "four-layer server_proof below"
++    }
++  ],
++  "mmproj_loaded": true,
++  "server_proof": {
++    "layer1_server_log": "srv load_model: loaded multimodal model, '.../mmproj-F16.gguf' ; srv load_model: [mtmd] estimated worst-case memory usage of mmproj is 1290.66 MiB",
++    "layer2_props_endpoint": {
++      "modalities": {
++        "vision": true,
++        "video": true,
++        "audio": false
++      },
++      "total_slots": 1
++    },
++    "layer3_gpu_residency": "nvidia-smi --query-compute-apps showed the launched server PID holding ~22 GB on GPU 1 while GPU 0 stayed at 2 MiB",
++    "layer4_differential_test": {
++      "why_this_is_the_decisive_layer": "llama.cpp will happily serve a request whose image it ignored, so a load-time log line and a /props capability flag cannot rule out a silent text-only fallback. Under such a fallback every fidelity number below would really be measuring 'guess a colour index with no information' while being reported as a vision result. So four BYTE-IDENTICAL text prompts were sent, each paired with a DIFFERENT solid-colour image. No text-only model can separate them.",
++      "cases": [
++        {
++          "expected_color_name": "red",
++          "palette_index": 2,
++          "image_bytes": 762,
++          "answer": "red",
++          "finish_reason": "stop",
++          "completion_tokens": 157,
++          "correct": true
++        },
++        {
++          "expected_color_name": "blue",
++          "palette_index": 4,
++          "image_bytes": 760,
++          "answer": "blue",
++          "finish_reason": "stop",
++          "completion_tokens": 106,
++          "correct": true
++        },
++        {
++          "expected_color_name": "yellow",
++          "palette_index": 5,
++          "image_bytes": 761,
++          "answer": "yellow",
++          "finish_reason": "stop",
++          "completion_tokens": 82,
++          "correct": true
++        },
++        {
++          "expected_color_name": "purple",
++          "palette_index": 7,
++          "image_bytes": 761,
++          "answer": "purple",
++          "finish_reason": "stop",
++          "completion_tokens": 135,
++          "correct": true
++        }
++      ],
++      "no_image_answer": "blue",
++      "n_correct": 4,
++      "n_distinct_answers": 4,
++      "conclusion": "4/4 correct with 4 distinct answers to identical prompts, so the image is the only channel carrying the difference. The same prompt with NO image answered 'blue' -- a guess, which confirms the text alone is uninformative.",
++      "vision_path_proven_live": true
++    }
++  },
++  "renderings": [
++    {
++      "scheme": "synthetic_blocks:text_rle",
++      "grid_kind": "synthetic_blocks",
++      "is_negative_control": true,
++      "px_per_cell": null,
++      "image_pixels": null,
++      "image_bytes": null,
++      "cells_probed": 128,
++      "n_correct": 45,
++      "exact_match": 0.3516,
++      "exact_match_is_a_lower_bound": true,
++      "exact_match_lower_bound_reason": "the harness that produced this number used a positional-fallback parser that ingested row and column indices as colour predictions; a misparsed probe is scored WRONG, so the true value is >= this one. See shift_contamination_by_scheme and post_review_corrections.",
++      "exact_match_ci95_wilson": [
++        0.2743,
++        0.4375
++      ],
++      "exact_match_ci95_wilson_note": "PROBE-LEVEL and therefore TOO NARROW -- it assumes 128 independent probes, but they were asked in 16 batched requests. Use exact_match_ci95_cluster_robust.",
++      "per_batch_correct_out_of_8": [
++        3,
++        0,
++        2,
++        0,
++        1,
++        1,
++        1,
++        0,
++        8,
++        2,
++        1,
++        8,
++        1,
++        1,
++        8,
++        8
++      ],
++      "n_clusters": 16,
++      "design_effect": 5.57,
++      "effective_n": 23.0,
++      "exact_match_ci95_cluster_robust": [
++        0.1393,
++        0.5639
++      ],
++      "exact_match_over_parsed": 0.3516,
++      "n_unparseable": 0,
++      "n_batches_truncated_after_retry": 0,
++      "text_control_exact_match": 0.3516,
++      "text_control_scheme": "text_rle",
++      "vision_minus_text_control": null,
++      "confusions": {
++        "pair_4_14_confusions": 1,
++        "pair_5_15_confusions": 1,
++        "pair_1_11_confusions": 0,
++        "pair_0_10_confusions": 1,
++        "last_digit_collapse_pairs_total": 3,
++        "all_confusions_sorted": {
++          "6->5": 2,
++          "8->14": 2,
++          "4->12": 2,
++          "0->1": 2,
++          "14->4": 1,
++          "1->14": 1,
++          "0->10": 1,
++          "14->0": 1,
++          "14->1": 1,
++          "11->2": 1,
++          "3->11": 1,
++          "10->3": 1,
++          "2->12": 1,
++          "5->10": 1,
++          "0->2": 1,
++          "7->13": 1,
++          "13->9": 1,
++          "9->13": 1,
++          "10->1": 1,
++          "10->9": 1,
++          "3->10": 1,
++          "1->10": 1,
++          "3->8": 1,
++          "12->3": 1,
++          "7->12": 1,
++          "12->7": 1,
++          "15->5": 1,
++          "5->4": 1,
++          "13->11": 1,
++          "11->13": 1,
++          "14->13": 1,
++          "1->5": 1,
++          "8->11": 1,
++          "2->5": 1,
++          "15->10": 1,
++          "0->11": 1,
++          "8->0": 1,
++          "9->2": 1,
++          "13->8": 1,
++          "6->3": 1,
++          "8->9": 1,
++          "2->13": 1,
++          "13->7": 1,
++          "5->13": 1,
++          "7->9": 1,
++          "12->5": 1,
++          "6->7": 1,
++          "15->2": 1,
++          "13->12": 1,
++          "15->12": 1,
++          "3->15": 1,
++          "8->3": 1,
++          "2->1": 1,
++          "4->6": 1,
++          "15->8": 1,
++          "6->2": 1,
++          "11->4": 1,
++          "12->14": 1,
++          "9->4": 1,
++          "1->12": 1,
++          "11->9": 1,
++          "7->2": 1,
++          "9->7": 1,
++          "1->15": 1,
++          "2->9": 1,
++          "14->2": 1,
++          "2->0": 1,
++          "7->1": 1,
++          "11->7": 1,
++          "12->11": 1,
++          "14->12": 1,
++          "6->0": 1,
++          "5->14": 1,
++          "7->8": 1,
++          "2->7": 1,
++          "4->2": 1,
++          "12->4": 1,
++          "11->12": 1,
++          "9->11": 1
++        }
++      },
++      "duration_s": 1924.92
++    },
++    {
++      "scheme": "synthetic_blocks:image_px1",
++      "grid_kind": "synthetic_blocks",
++      "is_negative_control": false,
++      "px_per_cell": 1,
++      "image_pixels": [
++        64,
++        64
++      ],
++      "image_bytes": 498,
++      "cells_probed": 128,
++      "n_correct": 20,
++      "exact_match": 0.1562,
++      "exact_match_is_a_lower_bound": true,
++      "exact_match_lower_bound_reason": "the harness that produced this number used a positional-fallback parser that ingested row and column indices as colour predictions; a misparsed probe is scored WRONG, so the true value is >= this one. See shift_contamination_by_scheme and post_review_corrections.",
++      "exact_match_ci95_wilson": [
++        0.1035,
++        0.229
++      ],
++      "exact_match_ci95_wilson_note": "PROBE-LEVEL and therefore TOO NARROW -- it assumes 128 independent probes, but they were asked in 16 batched requests. Use exact_match_ci95_cluster_robust.",
++      "per_batch_correct_out_of_8": [
++        5,
++        0,
++        0,
++        0,
++        5,
++        1,
++        3,
++        0,
++        0,
++        1,
++        0,
++        4,
++        0,
++        0,
++        0,
++        1
++      ],
++      "n_clusters": 16,
++      "design_effect": 3.35,
++      "effective_n": 38.2,
++      "exact_match_ci95_cluster_robust": [
++        0.0311,
++        0.2814
++      ],
++      "exact_match_over_parsed": 0.1786,
++      "n_unparseable": 16,
++      "n_batches_truncated_after_retry": 2,
++      "text_control_exact_match": 0.3516,
++      "text_control_scheme": "text_rle",
++      "vision_minus_text_control": -0.1954,
++      "confusions": {
++        "pair_4_14_confusions": 1,
++        "pair_5_15_confusions": 1,
++        "pair_1_11_confusions": 1,
++        "pair_0_10_confusions": 3,
++        "last_digit_collapse_pairs_total": 6,
++        "all_confusions_sorted": {
++          "4->6": 4,
++          "5->10": 3,
++          "11->2": 2,
++          "0->10": 2,
++          "6->5": 2,
++          "12->14": 2,
++          "5->6": 2,
++          "12->8": 2,
++          "6->9": 2,
++          "0->9": 2,
++          "8->11": 2,
++          "15->0": 1,
++          "1->13": 1,
++          "14->10": 1,
++          "3->9": 1,
++          "10->4": 1,
++          "2->12": 1,
++          "7->13": 1,
++          "8->14": 1,
++          "3->8": 1,
++          "7->6": 1,
++          "12->9": 1,
++          "15->5": 1,
++          "13->6": 1,
++          "11->1": 1,
++          "2->5": 1,
++          "0->11": 1,
++          "8->1": 1,
++          "9->2": 1,
++          "13->8": 1,
++          "6->3": 1,
++          "8->9": 1,
++          "2->13": 1,
++          "3->15": 1,
++          "13->1": 1,
++          "15->12": 1,
++          "3->0": 1,
++          "8->12": 1,
++          "2->1": 1,
++          "15->7": 1,
++          "6->4": 1,
++          "0->8": 1,
++          "13->5": 1,
++          "10->6": 1,
++          "12->15": 1,
++          "10->0": 1,
++          "15->9": 1,
++          "4->10": 1,
++          "9->6": 1,
++          "1->12": 1,
++          "11->5": 1,
++          "0->6": 1,
++          "7->2": 1,
++          "9->4": 1,
++          "9->1": 1,
++          "1->15": 1,
++          "2->11": 1,
++          "14->5": 1,
++          "2->0": 1,
++          "1->8": 1,
++          "2->6": 1,
++          "11->9": 1,
++          "7->1": 1,
++          "11->4": 1,
++          "12->4": 1,
++          "14->8": 1,
++          "6->0": 1,
++          "5->4": 1,
++          "13->4": 1,
++          "14->4": 1,
++          "10->1": 1,
++          "3->7": 1,
++          "9->5": 1,
++          "3->1": 1,
++          "7->5": 1,
++          "5->3": 1,
++          "10->9": 1,
++          "1->5": 1
++        }
++      },
++      "duration_s": 3378.29
++    },
++    {
++      "scheme": "synthetic_blocks:image_px8",
++      "grid_kind": "synthetic_blocks",
++      "is_negative_control": false,
++      "px_per_cell": 8,
++      "image_pixels": [
++        512,
++        512
++      ],
++      "image_bytes": 2235,
++      "cells_probed": 128,
++      "n_correct": 20,
++      "exact_match": 0.1562,
++      "exact_match_is_a_lower_bound": true,
++      "exact_match_lower_bound_reason": "the harness that produced this number used a positional-fallback parser that ingested row and column indices as colour predictions; a misparsed probe is scored WRONG, so the true value is >= this one. See shift_contamination_by_scheme and post_review_corrections.",
++      "exact_match_ci95_wilson": [
++        0.1035,
++        0.229
++      ],
++      "exact_match_ci95_wilson_note": "PROBE-LEVEL and therefore TOO NARROW -- it assumes 128 independent probes, but they were asked in 16 batched requests. Use exact_match_ci95_cluster_robust.",
++      "per_batch_correct_out_of_8": [
++        7,
++        0,
++        0,
++        4,
++        1,
++        0,
++        0,
++        0,
++        0,
++        1,
++        0,
++        0,
++        0,
++        0,
++        7,
++        0
++      ],
++      "n_clusters": 16,
++      "design_effect": 5.75,
++      "effective_n": 22.3,
++      "exact_match_ci95_cluster_robust": [
++        0.0,
++        0.3203
++      ],
++      "exact_match_over_parsed": 0.4167,
++      "n_unparseable": 80,
++      "n_batches_truncated_after_retry": 10,
++      "text_control_exact_match": 0.3516,
++      "text_control_scheme": "text_rle",
++      "vision_minus_text_control": -0.1954,
++      "confusions": {
++        "pair_4_14_confusions": 0,
++        "pair_5_15_confusions": 0,
++        "pair_1_11_confusions": 0,
++        "pair_0_10_confusions": 0,
++        "last_digit_collapse_pairs_total": 0,
++        "all_confusions_sorted": {
++          "12->15": 3,
++          "15->10": 2,
++          "1->13": 1,
++          "11->2": 1,
++          "3->11": 1,
++          "10->3": 1,
++          "2->12": 1,
++          "5->10": 1,
++          "0->2": 1,
++          "7->13": 1,
++          "6->5": 1,
++          "4->15": 1,
++          "13->11": 1,
++          "11->13": 1,
++          "14->13": 1,
++          "1->5": 1,
++          "8->11": 1,
++          "2->5": 1,
++          "4->6": 1,
++          "12->14": 1,
++          "4->12": 1,
++          "9->6": 1,
++          "1->12": 1,
++          "11->9": 1,
++          "0->1": 1
++        }
++      },
++      "duration_s": 7109.5
++    },
++    {
++      "scheme": "synthetic_blocks:image_px16",
++      "grid_kind": "synthetic_blocks",
++      "is_negative_control": false,
++      "px_per_cell": 16,
++      "image_pixels": [
++        1024,
++        1024
++      ],
++      "image_bytes": 5744,
++      "cells_probed": 128,
++      "n_correct": 59,
++      "exact_match": 0.4609,
++      "exact_match_is_a_lower_bound": true,
++      "exact_match_lower_bound_reason": "the harness that produced this number used a positional-fallback parser that ingested row and column indices as colour predictions; a misparsed probe is scored WRONG, so the true value is >= this one. See shift_contamination_by_scheme and post_review_corrections.",
++      "exact_match_ci95_wilson": [
++        0.377,
++        0.5472
++      ],
++      "exact_match_ci95_wilson_note": "PROBE-LEVEL and therefore TOO NARROW -- it assumes 128 independent probes, but they were asked in 16 batched requests. Use exact_match_ci95_cluster_robust.",
++      "per_batch_correct_out_of_8": [
++        8,
++        7,
++        2,
++        0,
++        8,
++        8,
++        0,
++        0,
++        1,
++        8,
++        1,
++        1,
++        0,
++        8,
++        0,
++        7
++      ],
++      "n_clusters": 16,
++      "design_effect": 6.96,
++      "effective_n": 18.4,
++      "exact_match_ci95_cluster_robust": [
++        0.2133,
++        0.7086
++      ],
++      "exact_match_over_parsed": 0.5268,
++      "n_unparseable": 16,
++      "n_batches_truncated_after_retry": 2,
++      "text_control_exact_match": 0.3516,
++      "text_control_scheme": "text_rle",
++      "vision_minus_text_control": 0.1093,
++      "confusions": {
++        "pair_4_14_confusions": 1,
++        "pair_5_15_confusions": 1,
++        "pair_1_11_confusions": 0,
++        "pair_0_10_confusions": 1,
++        "last_digit_collapse_pairs_total": 3,
++        "all_confusions_sorted": {
++          "3->5": 2,
++          "9->13": 2,
++          "1->10": 2,
++          "13->5": 2,
++          "10->13": 2,
++          "2->9": 2,
++          "13->9": 1,
++          "10->1": 1,
++          "10->6": 1,
++          "3->10": 1,
++          "8->14": 1,
++          "3->8": 1,
++          "12->3": 1,
++          "7->12": 1,
++          "12->7": 1,
++          "4->12": 1,
++          "15->5": 1,
++          "5->4": 1,
++          "15->12": 1,
++          "3->15": 1,
++          "8->3": 1,
++          "2->1": 1,
++          "4->6": 1,
++          "15->8": 1,
++          "6->2": 1,
++          "11->4": 1,
++          "4->10": 1,
++          "12->4": 1,
++          "10->0": 1,
++          "0->12": 1,
++          "15->9": 1,
++          "7->2": 1,
++          "9->7": 1,
++          "1->15": 1,
++          "0->1": 1,
++          "14->2": 1,
++          "2->0": 1,
++          "5->1": 1,
++          "7->5": 1,
++          "11->5": 1,
++          "14->7": 1,
++          "0->9": 1,
++          "5->0": 1,
++          "14->4": 1,
++          "3->14": 1,
++          "8->11": 1,
++          "12->10": 1
++        }
++      },
++      "duration_s": 2587.71
++    }
++  ],
++  "synthetic_best_image_exact_match": 0.4609,
++  "synthetic_text_control_exact_match": 0.3516,
++  "real_frame_best_image_exact_match": null,
++  "real_frame_text_control_exact_match": null,
++  "chance_rate_16_way": 0.0625,
++  "replace_bar": 0.9,
++  "replace_bar_provenance": "PRE-REGISTERED in fidelity.py design decisions 1 and 3",
++  "supplement_bar": 0.25,
++  "supplement_bar_is_post_hoc": true,
++  "supplement_bar_provenance": "POST-HOC. Defined only in build_artifact.py, which was written after the raw numbers existed. RETIRED as a decision rule: can_supplement_text is now decided by the pre-registered chance rate instead. Retained only so the earlier basis stays on the record.",
++  "can_replace_text": false,
++  "can_replace_text_basis": "charitable synthetic upper bound 0.461 < 0.9 bar, so a real ARC frame (strictly harder) cannot clear it either",
++  "can_supplement_text": true,
++  "can_supplement_text_basis": "the best image scheme's cluster-robust 95% lower bound is 0.213, above the pre-registered 0.0625 chance rate, so the vision path carries real information. This does NOT license replacing the text, and it is not a claim that images help induction -- only that the channel is not noise. Anchored on the pre-registered chance rate; the 0.25 supplement_bar in this file is POST-HOC and no longer decides anything. The measured value is also a LOWER bound (parser defect), so this conclusion can only strengthen under correction.",
++  "negative_control_informative": true,
++  "negative_control_basis": "the shipped RLE text arm scored 0.352 on the identical paired probes (cluster-robust 95% lower bound 0.139), above the 0.0625 chance rate, so 'read the cell at (row, col)' is a demonstrably answerable question format. A low vision score therefore cannot be dismissed as a question-format artifact -- the confound the control exists to rule out is ruled out.",
++  "paired_significance_tests_mcnemar_exact": {
++    "image_px16_vs_text_rle": {
++      "a_only_correct": 39,
++      "b_only_correct": 25,
++      "n_discordant": 64,
++      "p_value": 0.103422,
++      "min_reachable_p": 1.08e-19,
++      "significant_at_0.05": false,
++      "a_is": "image_px16",
++      "b_is": "text_rle",
++      "reading": "NOT ESTABLISHED EITHER WAY. Do NOT claim images beat the RLE text encoding, and do NOT claim they are equivalent to it: this p is probe-level (anticonservative under batch clustering) and the two arms carry different amounts of parser-shift bias."
++    },
++    "image_px16_vs_image_px8": {
++      "a_only_correct": 50,
++      "b_only_correct": 11,
++      "n_discordant": 61,
++      "p_value": 4.58883e-07,
++      "min_reachable_p": 8.67e-19,
++      "significant_at_0.05": true,
++      "a_is": "image_px16",
++      "b_is": "image_px8"
++    },
++    "image_px16_vs_image_px1": {
++      "a_only_correct": 46,
++      "b_only_correct": 7,
++      "n_discordant": 53,
++      "p_value": 4.0032e-08,
++      "min_reachable_p": 2.22e-16,
++      "significant_at_0.05": true,
++      "a_is": "image_px16",
++      "b_is": "image_px1"
++    },
++    "text_rle_vs_image_px1": {
++      "a_only_correct": 36,
++      "b_only_correct": 11,
++      "n_discordant": 47,
++      "p_value": 0.000346001,
++      "min_reachable_p": 1.42e-14,
++      "significant_at_0.05": true,
++      "a_is": "text_rle",
++      "b_is": "image_px1"
++    },
++    "text_rle_vs_image_px8": {
++      "a_only_correct": 34,
++      "b_only_correct": 9,
++      "n_discordant": 43,
++      "p_value": 0.000170155,
++      "min_reachable_p": 2.27e-13,
++      "significant_at_0.05": true,
++      "a_is": "text_rle",
++      "b_is": "image_px8"
++    },
++    "_caveats": [
++      "probe-level: anticonservative under the measured batch clustering",
++      "arms are differentially biased by the retired positional-fallback parser"
++    ]
++  },
++  "shift_contamination_by_scheme": {
++    "text_rle": {
++      "forward_shift_hits_k1_3": 60,
++      "backward_shift_hits_k1_3_null": 11,
++      "excess_over_null": 49,
++      "exact_match_lower_bound": 0.3516,
++      "exact_match_optimistic_ceiling_if_every_shifted_probe_was_really_correct": 0.7344
++    },
++    "image_px1": {
++      "forward_shift_hits_k1_3": 16,
++      "backward_shift_hits_k1_3_null": 11,
++      "excess_over_null": 5,
++      "exact_match_lower_bound": 0.1562,
++      "exact_match_optimistic_ceiling_if_every_shifted_probe_was_really_correct": 0.1953
++    },
++    "image_px8": {
++      "forward_shift_hits_k1_3": 12,
++      "backward_shift_hits_k1_3_null": 4,
++      "excess_over_null": 8,
++      "exact_match_lower_bound": 0.1562,
++      "exact_match_optimistic_ceiling_if_every_shifted_probe_was_really_correct": 0.2188
++    },
++    "image_px16": {
++      "forward_shift_hits_k1_3": 36,
++      "backward_shift_hits_k1_3_null": 10,
++      "excess_over_null": 26,
++      "exact_match_lower_bound": 0.4609,
++      "exact_match_optimistic_ceiling_if_every_shifted_probe_was_really_correct": 0.6641
++    }
++  },
++  "images_beat_text_claim_supported": false,
++  "images_equal_text_claim_supported": false,
++  "last_digit_collapse_hypothesis_supported": false,
++  "last_digit_collapse_hypothesis_note": "The gate was commissioned partly to see whether the vision tower would reproduce the SAME collapse that arc_executable_world_model.to_ascii() already has -- it renders each cell as str(int(v))[-1], merging 4/14, 5/15, 1/11 and 0/10. It does NOT. Summed over all four schemes and 512 probes, those four pairs account for 12 confusions total, no more than unrelated pairs such as 4->6 or 12->15, and the single largest confusion in every scheme is a non-collapse pair. So the tower's errors are ordinary perceptual confusions, not a digit-truncation artifact. This is a clean negative on the striking-result hypothesis and should be reported as such rather than quietly dropped.",
++  "render_losslessness_verified": true,
++  "render_losslessness_evidence": "rendered_px1.png / rendered_px8.png / rendered_px16.png each decode back to the source grid sha256 recorded in raw_per_scheme_measurements.json meta.grid_sha256",
++  "positive_control_passed": true,
++  "positive_control_description": "Differential vision proof: 4 byte-identical prompts with 4 different solid-colour images returned 4 distinct correct colour names through the same server and prompt path used for every measurement below. The apparatus can demonstrably produce a positive, so a null on fine grids is a capability limit, not a dead code path.",
++  "false_negative_risk_checked": true,
++  "verifier_is_oracle": false,
++  "verifier_is_oracle_note": "Not a verifier-value, moat or efficiency claim. This measures a model's vision encoder against a known ground-truth grid; no verifier is credited and no gate is flipped by this artifact.",
++  "solve_provenance": "development_proxy",
++  "solve_provenance_note": "No ARC level was solved, attempted, or claimed, and no game was played scored or online. The only use of the arcade was OFFLINE, reading reset frames out of the local environment_files/ as ground-truth grid data: ka59 and lp85 were both read while choosing an escalation grid, lp85 was selected, and in the event no probe was run against either -- every number in this artifact comes from the synthetic grid.",
++  "sample_size_justification": "128 paired probe cells per scheme on the synthetic grid (8 per colour, all 16 indices represented). NO REAL-FRAME ARM WAS MEASURED -- an earlier version of this sentence also claimed '128 on the real ka59 frame (stratified over the 7 colours that frame actually contains)', which was doubly wrong: no real-frame probe ever completed, and the staged escalation grid was lp85 with 11 colours, not ka59 with 7. Nothing downstream consumed that sentence -- real_frame_best_image_exact_match is null and every rendering row is synthetic -- but it was a number quoted in an artifact that no measurement backed, which is the exact failure this project's fabrication gate exists to catch, so it is corrected here and recorded in post_review_corrections rather than quietly deleted. For the synthetic arm: worst-case 95% Wilson half-width is about 9 percentage points at p=0.5 -- but see exact_match_ci95_cluster_robust, which is the interval to use, since the probes are clustered in 16 batched requests (design effect 3.3-7.0, effective n 18-38). Even cluster-robust, the sample separates the 1/16 = 6.25% chance rate from the 0.90 usable rate, which is the only distinction this gate must resolve; it is NOT enough to resolve a few-point difference between two schemes, and no such claim is made. The precision floor and the rendering parameters were fixed before any result was inspected; the 0.25 supplement bar was NOT, and no longer decides anything.",
++  "methodology_note": "Probes are PAIRED: the identical (row, col) list in the same order is used for every scheme including the text control, so schemes differ only in how the grid was presented. Temperature 0, fixed seed. gemma-4 emits a mandatory chain-of-thought, so a reply truncated at the token cap (finish_reason=length) returns an EMPTY answer that is indistinguishable from a wrong one; each such batch is retried once at an 11k-token budget and any residual truncation is reported as n_unparseable. Both a strict exact_match over all probes and a diagnostic exact_match_over_parsed are given so 'misread the colour' stays distinguishable from 'never finished thinking'. TWO earlier attempts at this run were DISCARDED rather than reported, and neither contributed a single number to this artifact. (1) Two copies of the harness were accidentally launched at once and their concurrent requests shared one server KV pool; the run was killed and the server relaunched with --parallel 1. (2) The restarted run was found to be paying a 7000-token dead attempt plus an 11000-token retry on most text batches -- about 530s of decode each against ~120s when the first attempt succeeds -- so the first-attempt budget was raised to 9000 and the run restarted again. That change is uniform across all schemes and can only affect whether an answer is REACHED, never whether it is correct. Every number here comes from the single final sequential run.",
++  "limitations": [
++    "The index-to-RGB palette is ours, not ARC's. The environment_files define colour INDICES only and never RGB, so no official palette was recoverable. We chose 16 maximally-separated, individually-nameable colours and put the legend in the prompt, which makes every number here an UPPER BOUND: a real ARC palette with closer shades can only do worse.",
++    "The synthetic grid is 8x8-cell solid blocks -- far coarser than a real ARC frame -- so every score here is a charitable UPPER bound, not an estimate of real-frame performance.",
++    "A real-ARC-frame escalation WAS built and staged (lp85's reset frame, chosen over ka59 because ka59's frame has only one cell each of colours 0 and 5; lp85 carries 11 colours with >=32 cells each and still contains both 4/14 and 5/15). It was LAUNCHED AND THEN TERMINATED BEFORE ANY BATCH COMPLETED -- run_all.sh invokes escalate.py unconditionally and run_all.log ends with its lp85 metadata block and the line '--- TEXT CONTROL (shipped RLE encoding), REAL frame ---' with no batch lines after it and no ALL_DONE. An earlier version of this limitation said 'DELIBERATELY NOT RUN', which the run log contradicts; corrected here. NO real-frame probe produced an answer, so no real-frame number exists. The reasoning for stopping it is unchanged and still sound: at the measured ~200s/batch it needed roughly 2.5 more hours and could not change the gate, because the charitable arm already scored 0.461, far under the 0.90 bar, and a harder grid can only score lower. It WOULD be required before any future claim that images can carry ARC grids. Concretely it remains unmeasured how px16 and the text control compare on a real frame, whose fine structure plausibly hurts vision more than it hurts the run-length text -- and note that even HERE, on the grid that most favours vision, the two are NOT ESTABLISHED either way (McNemar p=0.103, probe-level and differentially parser-biased).",
++    "One generator, one quantisation (Q4_K_M), one projector (F16). A different quant or the F32 projector could differ.",
++    "Read-back fidelity is necessary for image-fed induction but not sufficient: this gate does not measure whether images improve induced-engine heldout accuracy.",
++    "Read-back is a single-cell query. It does not establish that the tower preserves whole-grid structure well enough to predict a next grid exactly.",
++    "The px=8 strict score is dominated by NON-ANSWERS, not misreads: 10 of its 16 batches exhausted even the retry budget mid-chain-of-thought, leaving only 48 of 128 probes with any answer. Its strict 0.156 and its parsed-only 0.417 therefore differ by a lot, and the honest reading is that at 512x512 the model frequently fails to TERMINATE rather than that it misreads the colour. Both numbers are reported; neither alone characterises that scheme.",
++    "Scores are per-batch bimodal in every arm (px16: 8,7,2,0,8,8,0,0,1,8,1,1,0,8,0,7). AN EARLIER VERSION OF THIS LIMITATION ATTRIBUTED THAT TO THE MODEL'S SPATIAL INDEXING. That attribution was wrong, and wrong in the worst direction -- it published a harness bug as a model-capability finding. The bimodality is substantially the retired positional-fallback parser losing alignment: forward shift-hits (a wrong prediction equal to an earlier probe's truth in the same batch, the misparse signature) run 3.44-4.64 per batch in the batches scoring <=2/8 and 0.00-0.14 per batch in those scoring >=6/8. In the text arm 11 of 16 batches returned a full 8 parsed answers of which <=2 were correct -- the positional-scoop signature exactly. Whether the model ALSO has a spatial-indexing weakness is genuinely unresolved and needs the corrected parser to answer; this experiment cannot separate parser misalignment, spatial indexing and colour discrimination.",
++    "The 128 probes are NOT independent: they were asked in 16 requests of 8, and each request is answered by one chain-of-thought. Measured design effects are 3.3-7.0, so effective n is 18-38, not 128. Cluster-robust intervals are reported per rendering; the probe-level Wilson intervals are retained but are too narrow. The McNemar p-values are probe-level and correspondingly anticonservative.",
++    "EVERY exact_match in this artifact is a LOWER BOUND, not a point estimate. The harness parsed replies with a positional fallback that scooped row and column numbers as colour predictions whenever the model answered in prose; a misparsed probe scores WRONG, so the true values are >= those reported. The bound is NOT uniform across arms -- excess forward shift-hits are 52 for text_rle against 28 for px16 -- so the arms cannot be safely compared even though each is individually conservative. The run CANNOT be re-scored: it persisted only the parsed predictions and not the model's replies, and the server log does not contain them either. Correcting the numbers requires a fresh run at roughly 4 GPU-hours. The parser is fixed and raw replies are now persisted, so this is not repeatable."
++  ],
++  "prior_context": "arc_executable_world_model.to_ascii() already collapses 4/14 and 5/15 today by rendering each cell as str(int(v))[-1], the last decimal digit only. This gate exists so a lossy image encoder is not stacked on top of that same bug class undetected.",
++  "cited_upstream_artifacts": [],
++  "post_review_corrections": [
++    {
++      "id": "F1",
++      "severity": "blocker",
++      "was": "exact_match reported as a point estimate; limitations attributed the per-batch bimodality to the model's spatial indexing.",
++      "defect": "parse()'s positional fallback matched every bare 1-2 digit number in a prose reply and took the first 8 in 0..15 as the answers, so row and column indices were scored as colour predictions. 54 of 128 probes have a row or column below 16.",
++      "verified_by": "Running the shipped parser on a prose reply returns the row and column as colours. In the run's own predictions, wrong answers match an EARLIER probe's truth in the same batch far more often than a later one -- fixed-shift k=+1/+2/+3 vs k=-1/-2/-3: text_rle 27/23/16 vs 5/5/4, px16 18/15/8 vs 6/4/3. Those hits sit almost entirely in the batches that scored <=2/8.",
++      "now": "All exact_match values labelled lower bounds; shift_contamination_by_scheme added; the spatial-indexing attribution retracted; parser fixed and raw replies now persisted in fidelity.py.",
++      "unresolved": "The completed run cannot be re-scored -- only parsed predictions were saved. Corrected numbers need a fresh ~4 GPU-hour run."
++    },
++    {
++      "id": "F2",
++      "severity": "blocker",
++      "was": "five hardcoded McNemar p-values, two of them literally 0.0.",
++      "defect": "an exact test cannot return 0, and no code on disk computed any of them, so nothing could catch the error.",
++      "verified_by": "recomputed from `predictions`: the discordant counts (39/25, 50/11, 46/7, 36/11, 34/9) were all correct, but the two 0.0 values should be 4.5888e-07 and 4.0032e-08.",
++      "now": "all five computed from the data at build time, each with its min_reachable_p."
++    },
++    {
++      "id": "F3",
++      "severity": "blocker",
++      "was": "sample_size_justification claimed '128 on the real ka59 frame (stratified over the 7 colours that frame actually contains)'.",
++      "defect": "no real-frame arm was ever measured, and the staged grid was lp85 with 11 colours, not ka59 with 7. A quoted number with no measurement behind it.",
++      "verified_by": "renderings holds 4 rows, all synthetic_blocks; real_frame_* are null; escalate.py sets GAME='lp85' and documents rejecting ka59.",
++      "now": "clause deleted; solve_provenance_note and the grid_kind tag corrected to lp85."
++    },
++    {
++      "id": "F4",
++      "severity": "major",
++      "was": "the escalation was 'DELIBERATELY NOT RUN'.",
++      "defect": "contradicted by the run log -- it was launched and killed.",
++      "verified_by": "run_all.sh invokes escalate.py unconditionally; run_all.log ends with escalate.py's lp85 meta block and its TEXT CONTROL header, then stops with no batch lines and no ALL_DONE.",
++      "now": "restated as launched-and-terminated-before-any-batch; the reasoning for stopping it is retained and unchanged."
++    },
++    {
++      "id": "F5",
++      "severity": "major",
++      "was": "probe-level Wilson CIs and probe-level McNemar, assuming 128 independent probes.",
++      "defect": "probes were asked in 16 batched requests; the artifact even noted the resulting bimodality and still published probe-level statistics.",
++      "verified_by": "design effects computed from per-batch counts: text_rle 5.57, px16 6.96, px8 5.75, px1 3.35. px16's effective n is 18.4, not 128; its cluster-robust CI is about [0.21, 0.71] against the published Wilson [0.377, 0.547].",
++      "now": "cluster-robust intervals and design effects reported per rendering; the p-values carry an explicit anticonservative caveat."
++    },
++    {
++      "id": "F6",
++      "severity": "major",
++      "was": "can_supplement_text and negative_control_informative both decided by SUPPLEMENT_BAR = 0.25.",
++      "defect": "that bar exists only in build_artifact.py, written after the numbers were in. Both positive conclusions rested on a threshold chosen with the answer visible, while sample_size_justification claimed the precision floor was fixed before any result was inspected.",
++      "verified_by": "fidelity.py's pre-registration block (mtime 02:36, run finished 06:47) registers only the 0.90 rule and the 6.25% chance rate; SUPPLEMENT_BAR appears only in build_artifact.py, mtime 06:51.",
++      "now": "bar marked post-hoc and retired as a decision rule. Both conclusions re-anchored on the pre-registered 6.25% chance rate, tested against the cluster-robust lower bound -- a strictly harder test that also survives F5, and one the F1 lower-bound direction can only strengthen."
++    }
++  ],
++  "honest_verdict": "complete_vision_tower_carries_real_signal_but_below_exact_match_bar_supplement_only_never_replace",
++  "acceptance_gate_can_replace_text_passed": false,
++  "acceptance_gate_can_supplement_text_passed": true,
++  "reproducibility_checksum": "02d2ea726bfbf230d7ae2900935e91ac85d8fca8c527ce6c5aeda159215f1367"
++}
+\ No newline at end of file
+diff --git a/results/arc_multimodal_fidelity_20260801/fidelity.py b/results/arc_multimodal_fidelity_20260801/fidelity.py
+new file mode 100644
+index 0000000000..0f3e8f034c
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/fidelity.py
+@@ -0,0 +1,364 @@
++"""STEP 3+4: the fidelity measurement and its mandatory text negative control.
++
++THE QUESTION. Given a 64x64 ARC colour-index grid, can gemma-4-31B-it's vision tower
++read back the exact integer at a named (row, col)? ARC grades induced engines by
++EXACT match, and the engine's Python indexes specific cells against specific integer
++values, so "approximately the right colour" is worth nothing here.
++
++PRE-REGISTERED DESIGN DECISIONS (fixed before any result was seen):
++
++1. SAMPLE SIZE AND PRECISION. n = 128 probe cells per scheme, stratified so each of
++   the 16 colour indices is the ground truth for exactly 8 probes. Worst-case 95%
++   binomial CI half-width is 1.96*sqrt(0.25/128) = 8.7 percentage points. Chance for a
++   16-way choice is 6.25%. So this n cannot resolve a 3pp difference, but it CAN
++   decisively separate "at chance" from "usable for exact-match induction (>=90%)",
++   which is the only distinction the gate needs to make.
++
++2. PAIRED PROBES. The SAME 128 (row, col) cells, in the same order, are used for every
++   scheme including the text control. Cell difficulty is therefore held constant and
++   the schemes differ only in how the grid was presented.
++
++3. THE GRID IS DELIBERATELY THE EASY CASE. It is an 8x8 arrangement of solid 8x8-cell
++   blocks -- 64 blocks, each of the 16 colours used exactly 4 times. Real ARC frames
++   are finer-grained than this. Combined with a maximally-separated nameable palette
++   (see common.PALETTE), this makes the measurement a CHARITABLE UPPER BOUND: if the
++   tower cannot read indices off THIS, it cannot read them off a real frame either.
++   The escalation rule was fixed in advance: only if the charitable case PASSES does a
++   harder, per-cell-dense grid need to be run. A failure here needs no escalation.
++
++4. THE NEGATIVE CONTROL IS NOT OPTIONAL. The identical 128 questions are also asked
++   over the shipped run-length TEXT encoding (`_rle_grid`'s exact format). If the text
++   arm also scores near zero, then the failure is in the QUESTION FORMAT -- "read cell
++   (r,c)" is just a hard thing to ask -- and NO conclusion about vision would be
++   licensed. Both arms are always reported.
++
++5. NO TUNING TO PASS. Each scheme is reported at whatever it scores. Rendering
++   parameters are fixed up front (1, 8, 16 pixels per cell) and are not adjusted in
++   response to results.
++
++POST-HOC AMENDMENT, 2026-08-01, MARKED AS SUCH (it is NOT pre-registered).
++An adversarial review after the run found that `parse()`'s positional fallback was
++ingesting row and column numbers as colour predictions. The fix is in `parse()` below,
++with the evidence. It is FORWARD-ONLY: the completed run cannot be re-scored, because
++that run persisted only the parsed predictions and not the model's replies. Every
++exact_match figure published from that run is therefore a LOWER BOUND, and the artifact
++says so. Raw replies are now persisted (`transcript`) precisely so this can never again
++be uncorrectable. Note also that `SUPPLEMENT_BAR = 0.25` in build_artifact.py was
++introduced AFTER the numbers were seen and is not part of the pre-registration above;
++the only bars fixed in advance are the 0.90 replace/escalation rule (decision 3) and
++the 6.25% chance rate (decision 1).
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import sys
++import time
++
++import numpy as np
++
++sys.path.insert(
++    0,
++    "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/mmgate",
++)
++from common import (  # noqa: E402
++    LEGEND,
++    N_COLORS,
++    PALETTE,
++    chat,
++    image_part,
++    render_png,
++    rle_grid,
++    text_part,
++)
++
++SD = (
++    "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/"
++    "87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/mmgate"
++)
++SEED = 20260801
++GRID_H = GRID_W = 64
++BLOCK = 8
++N_PROBES = 128
++BATCH = 8
++PX_SCHEMES = [1, 8, 16]
++
++
++def build_grid(rng: np.random.Generator) -> np.ndarray:
++    """8x8 blocks of 8x8 cells; each of the 16 colours used exactly 4 times."""
++    order = np.repeat(np.arange(N_COLORS), 4)
++    rng.shuffle(order)
++    blocks = order.reshape(GRID_H // BLOCK, GRID_W // BLOCK)
++    return np.repeat(np.repeat(blocks, BLOCK, axis=0), BLOCK, axis=1).astype(np.uint8)
++
++
++def build_probes(grid: np.ndarray, rng: np.random.Generator) -> list[tuple[int, int, int]]:
++    """128 (row, col, true_value), exactly 8 per colour index."""
++    probes = []
++    for v in range(N_COLORS):
++        rs, cs = np.where(grid == v)
++        pick = rng.choice(len(rs), size=N_PROBES // N_COLORS, replace=False)
++        for i in pick:
++            probes.append((int(rs[i]), int(cs[i]), int(v)))
++    rng.shuffle(probes)
++    return probes
++
++
++INSTR = f"""This is a {GRID_H}x{GRID_W} grid of coloured cells.
++Rows are numbered 0 to {GRID_H - 1} from TOP to BOTTOM.
++Columns are numbered 0 to {GRID_W - 1} from LEFT to RIGHT.
++
++Each cell is one of these 16 colours. This legend maps each colour to its integer index:
++{LEGEND}
++
++Report the INTEGER INDEX of the cell at each requested (row, column).
++Answer with one line per request, in the exact format `row,col=index`, and nothing else.
++Requests:
++"""
++
++
++def ask(parts_prefix, batch, max_tokens=9000):
++    """One batched request.
++
++    MAX_TOKENS IS A CORRECTNESS PARAMETER, NOT A PERFORMANCE ONE. gemma-4 always emits
++    a chain-of-thought before its answer, and on the HARD schemes (a 64x64-pixel image
++    where each ARC cell is a single pixel) that CoT runs long -- calibration measured
++    4000 tokens exhausted mid-CoT, returning content="" with finish_reason="length".
++    Scoring that as "the vision tower got the colour wrong" would be a fabricated
++    negative: the model never reached the answer at all. So the budget is set well
++    above the observed worst case, and any residual truncation is counted and reported
++    SEPARATELY rather than silently folded into the error rate.
++
++    RAISED 7000 -> 9000 AFTER A MEASURED PATHOLOGY, and the reason matters because it
++    is easy to mistake for tuning. It is not: a larger budget cannot make a wrong
++    colour right, it only decides whether the model reaches an answer at all, and it
++    is applied identically to every scheme including the text control. At 7000 the RLE
++    text arm truncated on most batches, so nearly every batch paid a full 7000-token
++    dead attempt AND THEN an 11000-token retry -- about 530s of decode at the measured
++    34 tok/s, against roughly 120s when the first attempt succeeds. That double-pay,
++    not the model and not the GPU, is what made the run infeasible; the decode rate
++    itself never degraded. Sizing the first attempt above the observed CoT length
++    removes the wasted attempt and, as a side effect, REDUCES the number of probes
++    that end up unparseable -- i.e. it makes the measurement more complete, not more
++    flattering.
++    """
++    q = INSTR + "\n".join(f"row {r}, column {c}" for r, c, _ in batch)
++    raw, finish, ntok = chat(parts_prefix + [text_part(q)], max_tokens=max_tokens)
++    return raw, finish, ntok
++
++
++# A whole LINE that is nothing but an answer. Anchored at both ends on purpose --
++# see the CORRECTED note in parse(). Accepts `3,7=5`, `= 5`, `- 5`, `5`.
++_ANSWER_LINE = re.compile(r"^\s*(?:[-*]\s*)?(?:\d+\s*,\s*\d+\s*)?=?\s*(\d{1,2})\s*[.,;]?\s*$")
++
++
++def parse(raw: str, batch) -> tuple[list[int | None], str]:
++    """Pull `r,c=v` answers out of the reply.
++
++    CORRECTED 2026-08-01 AFTER AN ADVERSARIAL REVIEW, and the original defect is worth
++    stating plainly because it silently biased every number this harness has ever
++    produced.
++
++    THE BUG. The previous fallback was
++    `re.findall(r"(?<![\\d,])(\\d{1,2})(?![\\d])", raw)` filtered to 0..15, taking the
++    first len(batch) hits POSITIONALLY. When gemma-4 answers in prose instead of the
++    requested `row,col=index` form -- "The cell at row 3, column 7 is yellow, which is
++    index 5." -- that regex scoops the ROW and the COLUMN as if they were colour
++    predictions. Run on exactly that reply the old parser returned [3, 7, 5, 9, ...]
++    against a truth of [5, 9, ...]: the row and column were scored as colours and every
++    real answer was shifted down the list. 54 of this run's 128 probe cells have a row
++    or column index below 16, so the contamination was available on 42% of probes.
++
++    IT WAS NOT HYPOTHETICAL. Measured on the run's own recorded predictions, a wrong
++    prediction equals the TRUTH OF AN EARLIER PROBE IN THE SAME BATCH far more often
++    than it equals the truth of a later one -- the exact signature of a shifted
++    alignment. Fixed-shift totals, k=+1/+2/+3 (earlier) against k=-1/-2/-3 (later):
++    text_rle 27/23/16 against 5/5/4; image_px16 18/15/8 against 6/4/3. Those shift-hits
++    are also concentrated almost entirely in the batches that scored 0-2 out of 8
++    (4.64/batch for text_rle) and essentially absent from the batches that scored 6+
++    (0.00/batch) -- so the striking 8/8-versus-0/8 bimodality this experiment reported
++    is substantially THIS PARSER losing alignment, not the model mislocating a whole
++    batch's rows and columns.
++
++    DIRECTION OF THE BIAS. A misaligned prediction is scored WRONG, so every
++    exact_match this harness has emitted is a LOWER BOUND. That is the safe direction
++    for the gate's headline conclusion (the tower is below the exact-match bar a
++    fortiori), but it is NOT safe for comparing two arms, because the bias is bigger in
++    the text control than in px16.
++
++    THE FIX. Coordinate echoes only, or a fallback restricted to lines that are
++    NOTHING BUT an answer -- a prose sentence containing an integer no longer
++    qualifies. The fallback additionally demands EXACTLY len(batch) answer lines, so a
++    reply that dropped or doubled one answer is recorded as unparseable rather than
++    silently shifted. An unanswered probe is scored as a non-answer, which the strict /
++    parsed-only pair of metrics already reports honestly.
++
++    Returns (predictions, parse_mode) so the mode is auditable per batch.
++    """
++    found = {}
++    for m in re.finditer(r"(\d+)\s*,\s*(\d+)\s*=\s*(\d+)", raw):
++        found[(int(m.group(1)), int(m.group(2)))] = int(m.group(3))
++    out: list[int | None] = []
++    if found:
++        for r, c, _ in batch:
++            v = found.get((r, c))
++            out.append(v if (v is not None and 0 <= v < N_COLORS) else None)
++        if sum(x is not None for x in out) >= len(batch) // 2:
++            return out, "coord_echo"
++    # RESTRICTED fallback: the model answered in order, one answer per line, without
++    # echoing coordinates. Whole-line match only, and the count must be exact.
++    lines = [m.group(1) for ln in raw.splitlines() if (m := _ANSWER_LINE.match(ln))]
++    cand = [int(x) for x in lines]
++    if len(cand) == len(batch) and all(0 <= n < N_COLORS for n in cand):
++        return cand, "answer_lines"
++    return (out if out else [None] * len(batch)), "unparseable"
++
++
++def run_scheme(name: str, parts_prefix_fn, probes, grid) -> dict:
++    t0 = time.time()
++    preds: list[int | None] = []
++    truncated = 0
++    # RAW REPLIES ARE PERSISTED (added 2026-08-01 after an adversarial review).
++    # The first run of this harness saved only the parsed `predictions`, so when the
++    # parser was later found to be scooping row/column numbers as colours there was no
++    # way to re-score the run -- correcting it would have cost a fresh ~4 GPU-hours.
++    # Scoring must stay auditable and re-derivable from the model's actual words, so
++    # every reply is kept verbatim alongside the parse mode that consumed it.
++    transcript: list[dict] = []
++    for i in range(0, len(probes), BATCH):
++        batch = probes[i : i + BATCH]
++        raw, finish, ntok = ask(parts_prefix_fn(), batch)
++        if finish == "length":
++            # ONE retry with a much larger budget before conceding. A truncated CoT is
++            # a harness limit, not a measurement, so we spend the tokens rather than
++            # record a negative we cannot attribute to the vision path.
++            # 11000, not more: the largest prompt in this run is the px=16 image at
++            # ~4200 tokens, and the server is launched with `--parallel 1 -c 16384` so
++            # one slot owns the whole 16384-token pool. 4200 + 11000 leaves headroom;
++            # asking for 13000 would exceed the pool and turn a retry into a 500.
++            raw2, finish2, ntok2 = ask(parts_prefix_fn(), batch, max_tokens=11000)
++            if finish2 != "length" or len(raw2) > len(raw):
++                raw, finish, ntok = raw2, finish2, ntok2
++            if finish == "length":
++                truncated += 1
++        got, mode = parse(raw, batch)
++        preds.extend(got)
++        ok = sum(1 for (_, _, t), p in zip(batch, got, strict=True) if p == t)
++        transcript.append(
++            {
++                "batch_index": i // BATCH,
++                "probes": [[r, c, t] for r, c, t in batch],
++                "raw": raw,
++                "finish_reason": finish,
++                "completion_tokens": ntok,
++                "parse_mode": mode,
++                "parsed": got,
++                "n_correct": ok,
++            }
++        )
++        print(
++            f"    [{name}] batch {i // BATCH + 1:2d}/{len(probes) // BATCH}: "
++            f"{ok}/{len(batch)} ({finish}, {ntok}tok, {mode})",
++            flush=True,
++        )
++    truth = [t for _, _, t in probes]
++    n_ok = sum(1 for t, p in zip(truth, preds, strict=True) if p == t)
++    n_parsed = sum(1 for p in preds if p is not None)
++    conf: dict[str, int] = {}
++    for t, p in zip(truth, preds, strict=True):
++        if p is not None and p != t:
++            conf[f"{t}->{p}"] = conf.get(f"{t}->{p}", 0) + 1
++    return {
++        "scheme": name,
++        "cells_probed": len(probes),
++        "n_correct": n_ok,
++        # HEADLINE metric: strict. Every probe is in the denominator; an unanswered
++        # probe counts against the scheme, because an induction pipeline that cannot
++        # get an answer out of the model is no better off than one that gets a wrong
++        # answer.
++        "exact_match": round(n_ok / len(probes), 4),
++        # DIAGNOSTIC companion: accuracy over probes that produced a parseable answer
++        # at all. Reported alongside so a reader can tell "the tower misread the
++        # colour" apart from "the model never finished thinking". These two being far
++        # apart is itself the finding for that scheme.
++        "exact_match_over_parsed": round(n_ok / n_parsed, 4) if n_parsed else None,
++        "n_parsed": n_parsed,
++        "n_unparseable": len(probes) - n_parsed,
++        "n_batches_truncated_after_retry": truncated,
++        "confusions": dict(sorted(conf.items(), key=lambda kv: -kv[1])),
++        "predictions": preds,
++        "parse_modes": [t["parse_mode"] for t in transcript],
++        "transcript": transcript,
++        "duration_s": round(time.time() - t0, 2),
++    }
++
++
++def main():
++    rng = np.random.default_rng(SEED)
++    grid = build_grid(rng)
++    probes = build_probes(grid, rng)
++    rle = rle_grid(grid)
++
++    meta = {
++        "grid_shape": [GRID_H, GRID_W],
++        "block_cells": BLOCK,
++        "palette": [{"index": i, "name": n, "rgb": list(c)} for i, (n, c) in enumerate(PALETTE)],
++        "grid_sha256": hashlib.sha256(grid.tobytes()).hexdigest(),
++        "probes_sha256": hashlib.sha256(json.dumps(probes).encode()).hexdigest(),
++        "rle_chars": len(rle),
++        "colours_present": sorted(int(v) for v in np.unique(grid)),
++    }
++    print(json.dumps(meta, indent=1)[:900])
++
++    results = []
++    # NEGATIVE CONTROL FIRST, deliberately: it is the arm that can invalidate the whole
++    # experiment, so it should not be something we get to look at only after the
++    # vision numbers are in.
++    print("  --- TEXT CONTROL (shipped RLE encoding) ---", flush=True)
++    txt_prefix = (
++        "Here is the grid, run-length encoded. Each line is `r<row>:<value>x<count>,...` "
++        "covering that row's columns left to right with no gaps."
++        f"\n{rle}\n\n"
++    )
++    results.append(run_scheme("text_rle", lambda: [text_part(txt_prefix)], probes, grid))
++
++    for px in PX_SCHEMES:
++        png = render_png(grid, px)
++        print(
++            f"  --- IMAGE px_per_cell={px} ({GRID_H * px}x{GRID_W * px}px, {len(png)}B) ---",
++            flush=True,
++        )
++        r = run_scheme(f"image_px{px}", lambda p=png: [image_part(p)], probes, grid)
++        r["px_per_cell"] = px
++        r["image_pixels"] = [GRID_H * px, GRID_W * px]
++        r["image_bytes"] = len(png)
++        results.append(r)
++        with open(f"{SD}/rendered_px{px}.png", "wb") as f:
++            f.write(png)
++
++    out = {"meta": meta, "results": results}
++    with open(f"{SD}/fidelity_raw.json", "w") as f:
++        json.dump(out, f, indent=2)
++    print("\n=== SUMMARY ===")
++    for r in results:
++        print(
++            f"  {r['scheme']:12s} exact={r['exact_match']:.3f} "
++            f"({r['n_correct']}/{r['cells_probed']}) unparsed={r['n_unparseable']} "
++            f"top_conf={list(r['confusions'].items())[:4]}"
++        )
++
++    # PRE-REGISTERED ESCALATION (design decision 3). The blocks grid is the charitable
++    # case. If any image scheme clears 0.90 on it, the charitable result is NOT
++    # sufficient to license "vision can replace the exact text" -- a real ARC frame is
++    # far finer-grained -- so the harder dense grid must be run before any such claim.
++    if any(r["exact_match"] >= 0.90 for r in results if r["scheme"].startswith("image_")):
++        print(
++            "\n  charitable case PASSED -> escalation to the dense grid is "
++            "REQUIRED (see escalate.py)"
++        )
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/results/arc_multimodal_fidelity_20260801/raw_per_scheme_measurements.json b/results/arc_multimodal_fidelity_20260801/raw_per_scheme_measurements.json
+new file mode 100644
+index 0000000000..3dc884e00e
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/raw_per_scheme_measurements.json
+@@ -0,0 +1,997 @@
++{
++  "meta": {
++    "grid_shape": [
++      64,
++      64
++    ],
++    "block_cells": 8,
++    "palette": [
++      {
++        "index": 0,
++        "name": "black",
++        "rgb": [
++          0,
++          0,
++          0
++        ]
++      },
++      {
++        "index": 1,
++        "name": "white",
++        "rgb": [
++          255,
++          255,
++          255
++        ]
++      },
++      {
++        "index": 2,
++        "name": "red",
++        "rgb": [
++          230,
++          25,
++          75
++        ]
++      },
++      {
++        "index": 3,
++        "name": "green",
++        "rgb": [
++          60,
++          180,
++          75
++        ]
++      },
++      {
++        "index": 4,
++        "name": "blue",
++        "rgb": [
++          0,
++          90,
++          220
++        ]
++      },
++      {
++        "index": 5,
++        "name": "yellow",
++        "rgb": [
++          255,
++          225,
++          25
++        ]
++      },
++      {
++        "index": 6,
++        "name": "orange",
++        "rgb": [
++          245,
++          130,
++          48
++        ]
++      },
++      {
++        "index": 7,
++        "name": "purple",
++        "rgb": [
++          145,
++          30,
++          180
++        ]
++      },
++      {
++        "index": 8,
++        "name": "cyan",
++        "rgb": [
++          70,
++          240,
++          240
++        ]
++      },
++      {
++        "index": 9,
++        "name": "magenta",
++        "rgb": [
++          240,
++          50,
++          230
++        ]
++      },
++      {
++        "index": 10,
++        "name": "lime",
++        "rgb": [
++          190,
++          255,
++          0
++        ]
++      },
++      {
++        "index": 11,
++        "name": "pink",
++        "rgb": [
++          250,
++          190,
++          212
++        ]
++      },
++      {
++        "index": 12,
++        "name": "teal",
++        "rgb": [
++          0,
++          128,
++          128
++        ]
++      },
++      {
++        "index": 13,
++        "name": "brown",
++        "rgb": [
++          140,
++          70,
++          20
++        ]
++      },
++      {
++        "index": 14,
++        "name": "navy",
++        "rgb": [
++          0,
++          0,
++          128
++        ]
++      },
++      {
++        "index": 15,
++        "name": "grey",
++        "rgb": [
++          128,
++          128,
++          128
++        ]
++      }
++    ],
++    "grid_sha256": "d05eec860c7d3d2707ef86f3670d39b9fab8438b07c8baf2193a88a5a6bc1bb2",
++    "probes_sha256": "9f644aa8ac3aec438c27f83082407851aff17ddca703d8a6c13387015c05ff3e",
++    "rle_chars": 2381,
++    "colours_present": [
++      0,
++      1,
++      2,
++      3,
++      4,
++      5,
++      6,
++      7,
++      8,
++      9,
++      10,
++      11,
++      12,
++      13,
++      14,
++      15
++    ]
++  },
++  "results": [
++    {
++      "scheme": "text_rle",
++      "cells_probed": 128,
++      "n_correct": 45,
++      "exact_match": 0.3516,
++      "exact_match_over_parsed": 0.3516,
++      "n_parsed": 128,
++      "n_unparseable": 0,
++      "n_batches_truncated_after_retry": 0,
++      "confusions": {
++        "6->5": 2,
++        "8->14": 2,
++        "4->12": 2,
++        "0->1": 2,
++        "14->4": 1,
++        "1->14": 1,
++        "0->10": 1,
++        "14->0": 1,
++        "14->1": 1,
++        "11->2": 1,
++        "3->11": 1,
++        "10->3": 1,
++        "2->12": 1,
++        "5->10": 1,
++        "0->2": 1,
++        "7->13": 1,
++        "13->9": 1,
++        "9->13": 1,
++        "10->1": 1,
++        "10->9": 1,
++        "3->10": 1,
++        "1->10": 1,
++        "3->8": 1,
++        "12->3": 1,
++        "7->12": 1,
++        "12->7": 1,
++        "15->5": 1,
++        "5->4": 1,
++        "13->11": 1,
++        "11->13": 1,
++        "14->13": 1,
++        "1->5": 1,
++        "8->11": 1,
++        "2->5": 1,
++        "15->10": 1,
++        "0->11": 1,
++        "8->0": 1,
++        "9->2": 1,
++        "13->8": 1,
++        "6->3": 1,
++        "8->9": 1,
++        "2->13": 1,
++        "13->7": 1,
++        "5->13": 1,
++        "7->9": 1,
++        "12->5": 1,
++        "6->7": 1,
++        "15->2": 1,
++        "13->12": 1,
++        "15->12": 1,
++        "3->15": 1,
++        "8->3": 1,
++        "2->1": 1,
++        "4->6": 1,
++        "15->8": 1,
++        "6->2": 1,
++        "11->4": 1,
++        "12->14": 1,
++        "9->4": 1,
++        "1->12": 1,
++        "11->9": 1,
++        "7->2": 1,
++        "9->7": 1,
++        "1->15": 1,
++        "2->9": 1,
++        "14->2": 1,
++        "2->0": 1,
++        "7->1": 1,
++        "11->7": 1,
++        "12->11": 1,
++        "14->12": 1,
++        "6->0": 1,
++        "5->14": 1,
++        "7->8": 1,
++        "2->7": 1,
++        "4->2": 1,
++        "12->4": 1,
++        "11->12": 1,
++        "9->11": 1
++      },
++      "predictions": [
++        15,
++        4,
++        10,
++        14,
++        10,
++        1,
++        0,
++        1,
++        2,
++        11,
++        3,
++        12,
++        10,
++        2,
++        13,
++        5,
++        4,
++        6,
++        9,
++        13,
++        1,
++        9,
++        10,
++        10,
++        14,
++        8,
++        3,
++        12,
++        7,
++        12,
++        5,
++        4,
++        15,
++        11,
++        13,
++        13,
++        5,
++        11,
++        5,
++        10,
++        4,
++        11,
++        0,
++        2,
++        8,
++        3,
++        9,
++        13,
++        3,
++        7,
++        13,
++        9,
++        5,
++        7,
++        2,
++        12,
++        12,
++        15,
++        3,
++        1,
++        6,
++        8,
++        2,
++        4,
++        0,
++        13,
++        10,
++        4,
++        12,
++        10,
++        0,
++        15,
++        4,
++        14,
++        12,
++        4,
++        12,
++        9,
++        1,
++        13,
++        2,
++        7,
++        9,
++        15,
++        9,
++        1,
++        2,
++        0,
++        1,
++        9,
++        5,
++        7,
++        2,
++        8,
++        11,
++        14,
++        1,
++        7,
++        11,
++        5,
++        12,
++        0,
++        6,
++        14,
++        11,
++        14,
++        8,
++        7,
++        2,
++        4,
++        12,
++        11,
++        0,
++        5,
++        13,
++        14,
++        10,
++        3,
++        8,
++        12,
++        5,
++        9,
++        3,
++        7,
++        3,
++        5,
++        10,
++        1
++      ],
++      "duration_s": 1924.92
++    },
++    {
++      "scheme": "image_px1",
++      "cells_probed": 128,
++      "n_correct": 20,
++      "exact_match": 0.1562,
++      "exact_match_over_parsed": 0.1786,
++      "n_parsed": 112,
++      "n_unparseable": 16,
++      "n_batches_truncated_after_retry": 2,
++      "confusions": {
++        "4->6": 4,
++        "5->10": 3,
++        "11->2": 2,
++        "0->10": 2,
++        "6->5": 2,
++        "12->14": 2,
++        "5->6": 2,
++        "12->8": 2,
++        "6->9": 2,
++        "0->9": 2,
++        "8->11": 2,
++        "15->0": 1,
++        "1->13": 1,
++        "14->10": 1,
++        "3->9": 1,
++        "10->4": 1,
++        "2->12": 1,
++        "7->13": 1,
++        "8->14": 1,
++        "3->8": 1,
++        "7->6": 1,
++        "12->9": 1,
++        "15->5": 1,
++        "13->6": 1,
++        "11->1": 1,
++        "2->5": 1,
++        "0->11": 1,
++        "8->1": 1,
++        "9->2": 1,
++        "13->8": 1,
++        "6->3": 1,
++        "8->9": 1,
++        "2->13": 1,
++        "3->15": 1,
++        "13->1": 1,
++        "15->12": 1,
++        "3->0": 1,
++        "8->12": 1,
++        "2->1": 1,
++        "15->7": 1,
++        "6->4": 1,
++        "0->8": 1,
++        "13->5": 1,
++        "10->6": 1,
++        "12->15": 1,
++        "10->0": 1,
++        "15->9": 1,
++        "4->10": 1,
++        "9->6": 1,
++        "1->12": 1,
++        "11->5": 1,
++        "0->6": 1,
++        "7->2": 1,
++        "9->4": 1,
++        "9->1": 1,
++        "1->15": 1,
++        "2->11": 1,
++        "14->5": 1,
++        "2->0": 1,
++        "1->8": 1,
++        "2->6": 1,
++        "11->9": 1,
++        "7->1": 1,
++        "11->4": 1,
++        "12->4": 1,
++        "14->8": 1,
++        "6->0": 1,
++        "5->4": 1,
++        "13->4": 1,
++        "14->4": 1,
++        "10->1": 1,
++        "3->7": 1,
++        "9->5": 1,
++        "3->1": 1,
++        "7->5": 1,
++        "5->3": 1,
++        "10->9": 1,
++        "1->5": 1
++      },
++      "predictions": [
++        0,
++        14,
++        10,
++        1,
++        0,
++        13,
++        10,
++        14,
++        2,
++        9,
++        4,
++        12,
++        10,
++        10,
++        13,
++        5,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        14,
++        8,
++        14,
++        6,
++        9,
++        6,
++        5,
++        6,
++        15,
++        6,
++        1,
++        14,
++        1,
++        8,
++        5,
++        15,
++        4,
++        11,
++        1,
++        2,
++        8,
++        3,
++        9,
++        13,
++        15,
++        1,
++        6,
++        7,
++        8,
++        9,
++        15,
++        13,
++        12,
++        0,
++        12,
++        1,
++        6,
++        7,
++        4,
++        2,
++        8,
++        5,
++        6,
++        6,
++        15,
++        0,
++        9,
++        9,
++        6,
++        14,
++        10,
++        6,
++        12,
++        5,
++        6,
++        13,
++        2,
++        4,
++        1,
++        15,
++        11,
++        10,
++        5,
++        0,
++        8,
++        9,
++        5,
++        7,
++        6,
++        11,
++        9,
++        14,
++        1,
++        4,
++        4,
++        5,
++        8,
++        0,
++        9,
++        10,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        9,
++        4,
++        4,
++        4,
++        1,
++        7,
++        11,
++        8,
++        10,
++        5,
++        1,
++        5,
++        3,
++        3,
++        9,
++        5
++      ],
++      "duration_s": 3378.29,
++      "px_per_cell": 1,
++      "image_pixels": [
++        64,
++        64
++      ],
++      "image_bytes": 498
++    },
++    {
++      "scheme": "image_px8",
++      "cells_probed": 128,
++      "n_correct": 20,
++      "exact_match": 0.1562,
++      "exact_match_over_parsed": 0.4167,
++      "n_parsed": 48,
++      "n_unparseable": 80,
++      "n_batches_truncated_after_retry": 10,
++      "confusions": {
++        "12->15": 3,
++        "15->10": 2,
++        "1->13": 1,
++        "11->2": 1,
++        "3->11": 1,
++        "10->3": 1,
++        "2->12": 1,
++        "5->10": 1,
++        "0->2": 1,
++        "7->13": 1,
++        "6->5": 1,
++        "4->15": 1,
++        "13->11": 1,
++        "11->13": 1,
++        "14->13": 1,
++        "1->5": 1,
++        "8->11": 1,
++        "2->5": 1,
++        "4->6": 1,
++        "12->14": 1,
++        "4->12": 1,
++        "9->6": 1,
++        "1->12": 1,
++        "11->9": 1,
++        "0->1": 1
++      },
++      "predictions": [
++        15,
++        14,
++        10,
++        1,
++        0,
++        13,
++        14,
++        14,
++        2,
++        11,
++        3,
++        12,
++        10,
++        2,
++        13,
++        5,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        8,
++        3,
++        15,
++        7,
++        15,
++        15,
++        10,
++        5,
++        15,
++        11,
++        13,
++        13,
++        5,
++        11,
++        5,
++        10,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        6,
++        14,
++        12,
++        6,
++        12,
++        9,
++        1,
++        13,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        0,
++        5,
++        13,
++        14,
++        10,
++        3,
++        8,
++        15,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null
++      ],
++      "duration_s": 7109.5,
++      "px_per_cell": 8,
++      "image_pixels": [
++        512,
++        512
++      ],
++      "image_bytes": 2235
++    },
++    {
++      "scheme": "image_px16",
++      "cells_probed": 128,
++      "n_correct": 59,
++      "exact_match": 0.4609,
++      "exact_match_over_parsed": 0.5268,
++      "n_parsed": 112,
++      "n_unparseable": 16,
++      "n_batches_truncated_after_retry": 2,
++      "confusions": {
++        "3->5": 2,
++        "9->13": 2,
++        "1->10": 2,
++        "13->5": 2,
++        "10->13": 2,
++        "2->9": 2,
++        "13->9": 1,
++        "10->1": 1,
++        "10->6": 1,
++        "3->10": 1,
++        "8->14": 1,
++        "3->8": 1,
++        "12->3": 1,
++        "7->12": 1,
++        "12->7": 1,
++        "4->12": 1,
++        "15->5": 1,
++        "5->4": 1,
++        "15->12": 1,
++        "3->15": 1,
++        "8->3": 1,
++        "2->1": 1,
++        "4->6": 1,
++        "15->8": 1,
++        "6->2": 1,
++        "11->4": 1,
++        "4->10": 1,
++        "12->4": 1,
++        "10->0": 1,
++        "0->12": 1,
++        "15->9": 1,
++        "7->2": 1,
++        "9->7": 1,
++        "1->15": 1,
++        "0->1": 1,
++        "14->2": 1,
++        "2->0": 1,
++        "5->1": 1,
++        "7->5": 1,
++        "11->5": 1,
++        "14->7": 1,
++        "0->9": 1,
++        "5->0": 1,
++        "14->4": 1,
++        "3->14": 1,
++        "8->11": 1,
++        "12->10": 1
++      },
++      "predictions": [
++        15,
++        14,
++        10,
++        1,
++        0,
++        1,
++        14,
++        14,
++        11,
++        5,
++        10,
++        2,
++        5,
++        0,
++        7,
++        6,
++        4,
++        6,
++        9,
++        13,
++        1,
++        6,
++        10,
++        10,
++        14,
++        8,
++        3,
++        12,
++        7,
++        12,
++        5,
++        4,
++        15,
++        13,
++        11,
++        14,
++        1,
++        8,
++        2,
++        15,
++        4,
++        0,
++        8,
++        9,
++        13,
++        6,
++        8,
++        2,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        12,
++        15,
++        3,
++        1,
++        6,
++        8,
++        2,
++        4,
++        0,
++        5,
++        13,
++        10,
++        4,
++        0,
++        12,
++        9,
++        4,
++        12,
++        4,
++        9,
++        1,
++        11,
++        0,
++        13,
++        2,
++        7,
++        9,
++        15,
++        9,
++        1,
++        2,
++        0,
++        10,
++        13,
++        1,
++        5,
++        9,
++        8,
++        5,
++        7,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        11,
++        8,
++        7,
++        2,
++        4,
++        12,
++        11,
++        9,
++        9,
++        0,
++        5,
++        4,
++        13,
++        14,
++        11,
++        10,
++        5,
++        9,
++        5,
++        7,
++        3,
++        5,
++        10,
++        1
++      ],
++      "duration_s": 2587.71,
++      "px_per_cell": 16,
++      "image_pixels": [
++        1024,
++        1024
++      ],
++      "image_bytes": 5744
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/arc_multimodal_fidelity_20260801/rendered_px1.png b/results/arc_multimodal_fidelity_20260801/rendered_px1.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..53110001960001c3d1c62c5367b6b4fe0116cc82
+GIT binary patch
+literal 498
+zcmeAS@N?(olHy`uVBq!ia0y~yU~m9o4kiW$23787oeT_&J3U<-Ln`LHy|q!hC6VFy
+z$NRru>+q->&S`8+Nu03BBGIC?@#rd^938gV-@SCE7*E)>sbF$YQo@8CyxR?aFz*Oz
+z+bp5;T>i)2!>JFxKQpeI|8DQ{c~$S`J=Z%Cq7|Sgy*>5()~~1cnUwcOh4?*BT|ZlD
+z`rd~>BgziRB=#A&&rm)i_>7~tbMvKcnH8(oosvu0Z2I=~&u4KrC#(P7l+G`fvOaIg
+z<DE<`mT>i~vuCDRUMT;l_d7%2R9)!RT9XU;GPQh}Q~thwr8!UA0cvE6<)IjXt^4cr
+z%&&e~@Wk2c+uDs{H^sx(rN-~S_}$)lb)rpp1Kj?Woe3XuocKi4&nw3*`u;fUh;7iX
+znoY|%MY%0)177qz=Ms3vQ4Dp%^c@;|Pc^>msGi+<Z_yj;w}SJfcU#^6Hs#BK!1gmY
+z*Zu!|;JypY4LcQH&HI;<9`WthP4mAC%KrY&vn*Awe%<l!o_v|?E4k~U3SjSpP1c(@
+z^Wt}1`F`e2&p&5xnjT!e$$t7*%Y}DVsZV)x?fK*n|LYgmi$KHd<978A!S_$;MNZGr
+T7Foo=z`)??>gTe~DWM4fgR1Xy
+
+literal 0
+HcmV?d00001
+
+diff --git a/results/arc_multimodal_fidelity_20260801/rendered_px16.png b/results/arc_multimodal_fidelity_20260801/rendered_px16.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..4d285cb2d26445f9fef5786df12a1afc7894086f
+GIT binary patch
+literal 5744
+zcmeAS@N?(olHy`uVBq!ia0y~yU||4Z4kiW$h7a|7t}rl&nR~i8hE&XXdsDGnzC`Bu
+z$G=a*OztQe-)Z9RODuF`=@yQ)IH;Skk*jTOrs0iu^$JlUdstm1BA#73nDFM17~jS0
+zSEAzY7<Vuq{IFdj>|FXo^F8tF)j$0HkegrEz4q!Wo?^M&n#X^d%i?R!{$;QIbTR*(
+z|Fu{DdS7y8rr)nFuX4Ioe7yRy@TGY(<ro+k{?vmU*uufUz`!BMz`!7&#K6Fy;KIPb
+z;LyRqz|bJT$iTp$2y(sCsKU|Up;e-ou$A4t-Y?(7x_Xzbtzz!R&BnHhxuyS)eQDWp
+z`?;RKzen``?|;9vY?&*c=jZQX{rA(UFD)kaqv>@tmky4yNoU_JEAzdIZ?Cr3`}=$B
+z-W35#r52_CJ;TKppMRdaHteUgPt}%<5C1jKld~!N?^ril%8u48gQG@`w6U$Q*{k^W
+zzW@CB^B9t^)!#4q>lnZPbJK7BUq3d_zf*rf-2VN}{|n5wPk(2Bf}eqbVYIa{ntKO9
+z?(H_0i<y0ILRm#^eU;OlqAG`5FJFH9(y~SS_x0uK2WA}Jy?dSg%XhBd<)5%KFfa^`
+z%r@G@9@!m>30vFU{g;_9*}Ff=*WY7z+0TM1r(0{ee_s~9wQsK6g>R>|-7gE@s;kMY
+za=dkJ>C@3h?r2wZ@N~d+wuP;J$(#8-Z?CDX;@g}2|7Xpcux&>{ah21plh4*)7QS?D
+z|6Xfb#oWr5=f1RTdHSWnVzh@gvWvSxG<viqx3-|L%K4Uk{T@48#kb$yo?ouMWNuEK
+zxvk>cA1U>qH2m`=Ywl}(`<e45Y_qvHd)|a+qwR*#QNh7c0U68wXUvmK6fdo{Tgkw{
+Oz~JfX=d#Wzp$Pzl0gm?o
+
+literal 0
+HcmV?d00001
+
+diff --git a/results/arc_multimodal_fidelity_20260801/rendered_px8.png b/results/arc_multimodal_fidelity_20260801/rendered_px8.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..04c3d24987f5980ff3fcfd5a749751c4067f12ff
+GIT binary patch
+literal 2235
+zcmeAS@N?(olHy`uVBq!ia0y~yU}6Aa4iHr><-C@GfuqUO#WAE}&fDvTtHnxW+8+Lw
+z-gRX`3$N9a2_D{jf?HCi9Ok^VaN4y6j@zT8ZrM0p37Wv?s<36sWQ7hsD~~DBPbW3Y
+zE3__nn44K(S=)2C|MxDtgPZT#%%1zU%(v|O2lMPrr}g)3Q~Uj7@%``BPPe{2`)PXf
+z;P-p6lWo7h_%-Xz%)fFB2mT2#G-xm~bO;SQ%BtY?!T9V=&DG-9Q)YWlzm{@)_Vep0
+z;r(->Cd=;n_;=QuOZ?*3QmW(U#Z9hcU<hPl5KtYK)a><TeQQp}?fray)|)eF<-TS4
+z`QQE-&o;evu57p3?&=>OX1#g2w>{g4pFzQkfngELaHO(6f4O(q^k)5hyZ!ftFY)~?
+zEb;yJ)mneeNxOe<o}1nj-yah{d2eN5x$iSZ1{Y2Shbauhk;=WdqqNMo?Ejs&rnleC
+z%E^EKXx5uAZ;OB1D!%=<^>p@@Z1rm?a>Ld0oD2?E8m;-|)}Oq0Kks@<y8qqy$+4Do
+z)xF=|O1-@vF1O}lT~(%U*~=&IW}RUkj^!b=gunGBXM6T0>F|3|lWl)Lyq~@4>__hG
+zP3rFT(UWDXe}9^l^ZiMG_NKe0v)PAhfyl%lP@3?(SvY%B{r{R;-?Fc-o`V8lfAnPA
+zs-kM&Z%=MWy}fX{|9Z;q{&nk5+6=pj5t<N$7#gmAu@^WHD{i&vv>F2g1B0ilpUXO@
+GgeCyW`uz$3
+
+literal 0
+HcmV?d00001
+
+diff --git a/results/arc_multimodal_fidelity_20260801/vision_tower_liveness_proof.json b/results/arc_multimodal_fidelity_20260801/vision_tower_liveness_proof.json
+new file mode 100644
+index 0000000000..b51b57423d
+--- /dev/null
++++ b/results/arc_multimodal_fidelity_20260801/vision_tower_liveness_proof.json
+@@ -0,0 +1,45 @@
++{
++  "cases": [
++    {
++      "expected_color_name": "red",
++      "palette_index": 2,
++      "image_bytes": 762,
++      "answer": "red",
++      "finish_reason": "stop",
++      "completion_tokens": 157,
++      "correct": true
++    },
++    {
++      "expected_color_name": "blue",
++      "palette_index": 4,
++      "image_bytes": 760,
++      "answer": "blue",
++      "finish_reason": "stop",
++      "completion_tokens": 106,
++      "correct": true
++    },
++    {
++      "expected_color_name": "yellow",
++      "palette_index": 5,
++      "image_bytes": 761,
++      "answer": "yellow",
++      "finish_reason": "stop",
++      "completion_tokens": 82,
++      "correct": true
++    },
++    {
++      "expected_color_name": "purple",
++      "palette_index": 7,
++      "image_bytes": 761,
++      "answer": "purple",
++      "finish_reason": "stop",
++      "completion_tokens": 135,
++      "correct": true
++    }
++  ],
++  "no_image_answer": "blue",
++  "n_cases": 4,
++  "n_correct": 4,
++  "n_distinct_answers": 4,
++  "vision_path_proven_live": true
++}
+\ No newline at end of file
+-- 
+2.55.0
+

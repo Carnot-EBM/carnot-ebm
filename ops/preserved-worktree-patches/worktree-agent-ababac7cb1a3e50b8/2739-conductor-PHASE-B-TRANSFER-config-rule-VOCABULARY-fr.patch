@@ -1,0 +1,1250 @@
+From a8cf5ba82a90192c510c6a079ce23c63e44c6545 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 04:36:59 -0400
+Subject: [PATCH 02739/11362] [conductor] PHASE B (TRANSFER) -- config-rule
+ VOCABULARY from solved games raises the grounding rate on HELD-OUT config
+ games (the operator's 'derive config-rules from previously-seen games'),
+ verifier_is_oracle=false.
+
+Automated research step by research conductor.
+Task ID: exp4425-config-rule-vocabulary-transfer
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  58 +++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...nt_4425_config_rule_vocabulary_transfer.py | 476 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1861_equivalence.json      |   7 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._4425_config_rule_vocabulary_transfer.json | 173 +++++++
+ ...nt_4425_config_rule_vocabulary_transfer.py |  26 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...nt_4425_config_rule_vocabulary_transfer.py | 262 ++++++++++
+ 16 files changed, 1030 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_4425_config_rule_vocabulary_transfer.py
+ create mode 100644 results/experiment_4425_config_rule_vocabulary_transfer.json
+ create mode 100644 results/experiment_4425_config_rule_vocabulary_transfer.py
+ create mode 100644 tests/python/test_experiment_4425_config_rule_vocabulary_transfer.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 87d93f6156..c815eae3a2 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -14577,3 +14577,61 @@ grounding-rate delta is positive and its CI95 excludes zero.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4418 | Planned (`python/carnot/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.json`) | Planned (`tests/python/test_experiment_4418_config_rule_vocabulary_transfer.py`) |
++
++---
++
++## REQ-LEARN-4425: Qwen Config-Rule Vocabulary Transfer Retest
++
++**Given** solved ARC config games with grounded win-rule predicates or
++reproduced registry entries
++**And** the Qwen3.5-9B-MTP local iGPU `/no_think` Layer-B repeat-bench output
++is available for cold-start comparison
++**When** Exp 4425 builds a reusable vocabulary of relational win-rule
++primitives and seeds the scaffolded inducer prompt with that vocabulary
++**Then** it SHALL write
++`results/experiment_4425_config_rule_vocabulary_transfer.json` with
++`config_rule_vocabulary`, `vocabulary_seeded_prompt`, `transfer_learning_curve`,
++`config_rule_vocabulary_transfers`, `verifier_is_oracle=false`,
++`random_seed`, `honest_verdict`, `logged_gaps`, `model_specs`, and
++`reproducibility_checksum`
++**And** `config_rule_vocabulary_transfers` SHALL be a bare boolean that is true
++only when the held-out vocabulary-seeded grounding-rate lift over cold-start is
++positive and the 95% confidence interval excludes zero.
++
++### REQ-LEARN-4425 Sub-requirements
++
++- REQ-LEARN-4425-1: The vocabulary SHALL include reusable relational
++  primitives such as editable/reference count equality, match-reference,
++  progress-fill, glyph-rewrite, marker-coverage, and shape-pattern match when
++  those primitives are present in solved config-game sources.
++- REQ-LEARN-4425-2: The seeded prompt SHALL include the vocabulary before the
++  scaffolded inducer task text, and the generator metadata SHALL declare
++  Qwen3.5-9B-MTP on iGPU with `/no_think`, MTP enabled, and four seeds.
++- REQ-LEARN-4425-3: The transfer curve SHALL report cold-start and
++  vocabulary-seeded grounded counts, grounding rates, lift, and CI95 for each
++  held-out game and overall.
++- REQ-LEARN-4425-4: If the vocabulary-seeded arm cannot be measured, Exp 4425
++  SHALL still write a terminal artifact, set
++  `config_rule_vocabulary_transfers=false`, and log the null measurement as a
++  gap instead of gating or fabricating a lift.
++- REQ-LEARN-4425-5: `verifier_is_oracle` SHALL be false because the verifier
++  grounds proposed predicates but does not define correctness for the transfer
++  claim.
++
++### SCENARIO-LEARN-4425: Seeded Prompt And Transfer Artifact Are Stable
++
++**Given** grounded source rules and four-seed cold/seeded arm observations
++**When** Exp 4425 builds the vocabulary-seeded prompt and transfer artifact
++**Then** the prompt SHALL name the relational primitives and the artifact SHALL
++validate the required fields
++**And** `config_rule_vocabulary_transfers=true` only when the held-out
++grounding-rate lift CI95 excludes zero.
++
++### SCENARIO-LEARN-4425-NULL: Missing Seeded Arm Logs A Gap
++
++**Given** the four-seed Qwen cold-start repeat-bench is available
++**And** no vocabulary-seeded repeat-bench artifact is available
++**When** Exp 4425 runs
++**Then** it SHALL write a terminal `complete:` verdict, set
++`config_rule_vocabulary_transfers=false`, keep `verifier_is_oracle=false`, and
++record the missing seeded-arm measurement in `logged_gaps`.
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 97af5fe3b5..04f6498992 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -506,3 +506,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4421_config_rule_solve_unseen.json
++
++## experiment_4425_config_rule_vocabulary_transfer.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4425_config_rule_vocabulary_transfer.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0359db5b3c..b9dea36bad 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 181,
+   "code_violations": 0,
+-  "experiments_checked": 3443,
++  "experiments_checked": 3444,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4425_config_rule_vocabulary_transfer.py b/python/carnot/experiment_4425_config_rule_vocabulary_transfer.py
+new file mode 100644
+index 0000000000..1a5e301675
+--- /dev/null
++++ b/python/carnot/experiment_4425_config_rule_vocabulary_transfer.py
+@@ -0,0 +1,476 @@
++"""Exp 4425: Qwen config-rule vocabulary transfer retest.
++
++Spec refs: REQ-LEARN-4425, SCENARIO-LEARN-4425,
++SCENARIO-LEARN-4425-NULL.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import random
++import time
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4425_config_rule_vocabulary_transfer.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++EXP4414_RELATIVE_PATH = "results/experiment_4414_config_rule_induction_solve.json"
++EXP4421_RELATIVE_PATH = "results/experiment_4421_config_rule_solve_unseen.json"
++COLD_REPEAT_BENCH_RELATIVE_PATH = "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_mtp.json"
++SEEDED_REPEAT_BENCH_RELATIVE_PATH = (
++    "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_vocabseed_mtp.json"
++)
++RANDOM_SEED = 4425
++BOOTSTRAP_RESAMPLES = 2000
++SEED_COUNT = 4
++
++DEFAULT_SCAFFOLDED_TASK = (
++    "You are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle. "
++    "Use the extracted editable region, non-wins, and reference digest to "
++    "write a relational Python is_win(grid) predicate."
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "config_rule_vocabulary_transfers",
++    "config_rule_vocabulary",
++    "vocabulary_seeded_prompt",
++    "transfer_learning_curve",
++    "verifier_is_oracle",
++    "random_seed",
++    "logged_gaps",
++    "model_specs",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES = {
++    "config_rule_vocabulary_transfers": (
++        "BARE bool := held-out grounding-rate lift CI-excl-0; principle: a "
++        "transferable vocabulary is the self-learning compounding signal."
++    ),
++    "verifier_is_oracle": (
++        "false; the verifier grounds proposed predicates, it does not define "
++        "correctness for the transfer claim."
++    ),
++    "random_seed": "Bare integer; fixes split order and bootstrap reproducibility.",
++    "honest_verdict": "Terminal-prefixed honest outcome.",
++}
++
++PRIMITIVE_SPECS = (
++    {
++        "name": "editable_count==reference_count",
++        "description": "Editable colour/object count must equal a reference count.",
++        "prompt_hint": "Look for count equality between editable cells and reference features.",
++        "cues": ("editable count", "reference count", "count_4_equals_reference", "count equals"),
++    },
++    {
++        "name": "match-reference",
++        "description": "Editable state directly matches a reference value, object, or relation.",
++        "prompt_hint": "Use the reference digest as the source of constants and relations.",
++        "cues": ("match reference", "equals reference", "reference region", "reference"),
++    },
++    {
++        "name": "progress-fill",
++        "description": "A controlled marker/region advances until it reaches a target extent.",
++        "prompt_hint": "Detect monotone progress toward a target marker, edge, or fill boundary.",
++        "cues": ("progress fill", "extend", "extends", "fill", "controlled marker"),
++    },
++    {
++        "name": "glyph-rewrite",
++        "description": "Editable glyphs or sequences are rewritten through an LHS/RHS map.",
++        "prompt_hint": "Infer symbolic glyph rewrites instead of literal editable arrays.",
++        "cues": ("glyph", "rewrite", "lhs", "rhs", "sequence"),
++    },
++    {
++        "name": "marker-coverage",
++        "description": "A win fires when controlled markers cover all target markers.",
++        "prompt_hint": "Check target marker coverage, not incidental path length.",
++        "cues": ("marker coverage", "target marker", "controlled marker", "occupied by controlled"),
++    },
++    {
++        "name": "shape-pattern-match",
++        "description": "Editable shape, cross, or cast-grid pattern must match a reference pattern.",
++        "prompt_hint": "Compare shape topology and small pattern layout.",
++        "cues": ("shape pattern", "3x3", "cross", "cast grid", "cast-grid", "alignment"),
++    },
++    {
++        "name": "symmetry",
++        "description": "Mirror or rotational symmetry constrains the winning editable region.",
++        "prompt_hint": "Check reflection/rotation invariants before literal constants.",
++        "cues": ("symmetry", "mirror", "reflect", "rotation"),
++    },
++    {
++        "name": "program-command-map",
++        "description": "Program commands or action labels map objects to target attributes.",
++        "prompt_hint": "Ground command semantics against target object attributes.",
++        "cues": ("program", "command", "action label", "scale rotation", "property"),
++    },
++)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _sha256(value: Any) -> str:
++    return hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _load_json(path: Path) -> dict[str, Any]:
++    if not path.exists():
++        return {}
++    data = json.loads(path.read_text(encoding="utf-8"))
++    return data if isinstance(data, dict) else {}
++
++
++def _load_registry(root: Path) -> dict[str, Any]:
++    path = root / REGISTRY_RELATIVE_PATH
++    if not path.exists():
++        return {"games": []}
++    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    return data if isinstance(data, dict) else {"games": []}
++
++
++def _source_record(game: str, source: str, rule_text: str) -> dict[str, str]:
++    return {"game": game, "source": source, "rule_text": rule_text}
++
++
++def extract_grounded_rule_sources(root: Path) -> list[dict[str, str]]:
++    registry = _load_registry(root)
++    sources: list[dict[str, str]] = []
++    for entry in registry.get("games", []) if isinstance(registry.get("games"), list) else []:
++        if not isinstance(entry, Mapping):  # pragma: no cover - malformed registry guard
++            continue
++        reproduced = entry.get("reproducibility") == "reproduced" or int(
++            entry.get("levels_reproduced") or 0
++        ) > 0
++        if not reproduced:
++            continue
++        text = " ".join(
++            str(entry.get(key) or "") for key in ("win_condition", "solver", "reproduce", "action_model")
++        ).strip()
++        if text:
++            sources.append(_source_record(str(entry.get("game") or "unknown"), REGISTRY_RELATIVE_PATH, text))
++
++    exp4414 = _load_json(root / EXP4414_RELATIVE_PATH)
++    for rule in exp4414.get("config_win_rules_grounded", []):
++        if not isinstance(rule, Mapping):  # pragma: no cover - malformed artifact guard
++            continue
++        false_positive_rate = rule.get("false_positive_rate")
++        grounded = (
++            int(rule.get("tier") or 0) >= 1
++            and false_positive_rate is not None
++            and float(false_positive_rate) == 0.0
++        )
++        if grounded:
++            sources.append(
++                _source_record(
++                    str(rule.get("game") or "unknown"),
++                    EXP4414_RELATIVE_PATH,
++                    str(rule.get("predicate") or ""),
++                )
++            )
++
++    exp4421 = _load_json(root / EXP4421_RELATIVE_PATH)
++    grounded_win = exp4421.get("grounded_win_condition")
++    if exp4421.get("offline_reproduced") is True and isinstance(grounded_win, Mapping):
++        sources.append(
++            _source_record(
++                str(exp4421.get("target_game") or "unknown"),
++                EXP4421_RELATIVE_PATH,
++                str(grounded_win.get("predicate") or ""),
++            )
++        )
++    return sources
++
++
++def _primitive_matches(spec: Mapping[str, Any], source: Mapping[str, Any]) -> bool:
++    text = f"{source.get('game', '')} {source.get('rule_text', '')}".lower().replace("_", " ")
++    return any(str(cue).lower() in text for cue in spec["cues"])
++
++
++def build_rule_vocabulary(rule_sources: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
++    vocabulary: list[dict[str, Any]] = []
++    for spec in PRIMITIVE_SPECS:
++        matching_sources = [source for source in rule_sources if _primitive_matches(spec, source)]
++        if matching_sources:
++            vocabulary.append(
++                {
++                    "name": spec["name"],
++                    "description": spec["description"],
++                    "prompt_hint": spec["prompt_hint"],
++                    "source_games": sorted({str(source.get("game")) for source in matching_sources}),
++                    "source_count": len(matching_sources),
++                }
++            )
++    return vocabulary
++
++
++def build_vocabulary_seeded_prompt(
++    vocabulary: Sequence[Mapping[str, Any]],
++    base_prompt: str = DEFAULT_SCAFFOLDED_TASK,
++) -> str:
++    lines = [
++        "/no_think",
++        "RELATIONAL WIN-RULE VOCABULARY",
++        "Generator: Qwen3.5-9B-MTP, iGPU, /no_think, MTP, four seeds",
++    ]
++    for primitive in vocabulary:
++        games = ", ".join(str(game) for game in primitive.get("source_games", []))
++        lines.append(
++            f"- {primitive['name']}: {primitive['description']} "
++            f"Hint: {primitive['prompt_hint']} Source games: {games or 'unknown'}."
++        )
++    lines.extend(["", base_prompt])
++    return "\n".join(lines)
++
++
++def _repeat_observations(payload: Mapping[str, Any]) -> dict[str, list[bool]]:
++    observations: dict[str, list[bool]] = {}
++    per_game = payload.get("per_game")
++    if not isinstance(per_game, Mapping):
++        return observations
++    for game, row in per_game.items():
++        if not isinstance(row, Mapping):  # pragma: no cover - malformed repeat-bench guard
++            continue
++        runs = row.get("runs")
++        if not isinstance(runs, list):  # pragma: no cover - malformed repeat-bench guard
++            continue
++        observations[str(game)] = [bool(run.get("grounded")) for run in runs if isinstance(run, Mapping)]
++    return observations
++
++
++def _rate(values: Sequence[bool]) -> float:
++    return round(sum(1 for value in values if value) / len(values), 6)
++
++
++def _bootstrap_ci95(
++    values: Sequence[float],
++    *,
++    seed: int,
++    resamples: int = BOOTSTRAP_RESAMPLES,
++) -> list[float]:
++    if not values:
++        return [0.0, 0.0]
++    if len(set(values)) == 1:
++        only = round(float(values[0]), 6)
++        return [only, only]
++    rng = random.Random(seed)
++    n = len(values)
++    means = []
++    for _ in range(resamples):
++        sample = [values[rng.randrange(n)] for _ in range(n)]
++        means.append(sum(sample) / n)
++    means.sort()
++    lo = means[int(0.025 * (resamples - 1))]
++    hi = means[int(0.975 * (resamples - 1))]
++    return [round(lo, 6), round(hi, 6)]
++
++
++def _transfer_curve(
++    cold_observations: Mapping[str, Sequence[bool]],
++    seeded_observations: Mapping[str, Sequence[bool]],
++    *,
++    random_seed: int,
++) -> tuple[list[dict[str, Any]], float | None, list[float] | None, bool, list[str]]:
++    rows: list[dict[str, Any]] = []
++    paired_lifts: list[float] = []
++    logged_gaps: list[str] = []
++    for index, game in enumerate(sorted(set(cold_observations) | set(seeded_observations))):
++        cold = list(cold_observations.get(game, ()))
++        seeded = list(seeded_observations.get(game, ()))
++        if not cold:
++            logged_gaps.append(f"missing_cold_start_observations:{game}")
++            continue
++        if not seeded:
++            logged_gaps.append(f"missing_vocabulary_seeded_observations:{game}")
++            rows.append(
++                {
++                    "held_out_game": game,
++                    "seed_count": len(cold),
++                    "cold_grounded_count": sum(1 for value in cold if value),
++                    "seeded_grounded_count": None,
++                    "cold_start_grounding_rate": _rate(cold),
++                    "seeded_grounding_rate": None,
++                    "lift": None,
++                    "lift_ci95": None,
++                }
++            )
++            continue
++        n = min(len(cold), len(seeded))
++        lifts = [float(seeded[i]) - float(cold[i]) for i in range(n)]
++        paired_lifts.extend(lifts)
++        lift = round(_rate(seeded[:n]) - _rate(cold[:n]), 6)
++        rows.append(
++            {
++                "held_out_game": game,
++                "seed_count": n,
++                "cold_grounded_count": sum(1 for value in cold[:n] if value),
++                "seeded_grounded_count": sum(1 for value in seeded[:n] if value),
++                "cold_start_grounding_rate": _rate(cold[:n]),
++                "seeded_grounding_rate": _rate(seeded[:n]),
++                "lift": lift,
++                "lift_ci95": _bootstrap_ci95(lifts, seed=random_seed + index),
++            }
++        )
++    if not paired_lifts:
++        return rows, None, None, False, logged_gaps
++    overall_lift = round(sum(paired_lifts) / len(paired_lifts), 6)
++    overall_ci = _bootstrap_ci95(paired_lifts, seed=random_seed)
++    transfers = overall_lift > 0.0 and overall_ci[0] > 0.0
++    return rows, overall_lift, overall_ci, transfers, logged_gaps
++
++
++def _honest_verdict(transfers: bool, seeded_available: bool, overall_lift: float | None) -> str:
++    if transfers:
++        return "complete: config_rule_vocabulary_transfer_grounding_lift_ci_excludes_zero"
++    if not seeded_available:
++        return "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing"
++    if overall_lift is None:
++        return "complete: null_config_rule_vocabulary_transfer_no_paired_heldout"
++    return "complete: null_config_rule_vocabulary_transfer_lift_ci_includes_zero"
++
++
++def build_artifact(
++    *,
++    root: Path,
++    cold_repeat_bench: Mapping[str, Any],
++    seeded_repeat_bench: Mapping[str, Any] | None,
++    started_at: float,
++    ended_at: float,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    rule_sources = extract_grounded_rule_sources(root)
++    vocabulary = build_rule_vocabulary(rule_sources)
++    seeded_available = bool(seeded_repeat_bench)
++    cold_observations = _repeat_observations(cold_repeat_bench)
++    seeded_observations = _repeat_observations(seeded_repeat_bench or {})
++    curve, overall_lift, overall_ci, transfers, curve_gaps = _transfer_curve(
++        cold_observations,
++        seeded_observations,
++        random_seed=random_seed,
++    )
++    logged_gaps = list(curve_gaps)
++    if not seeded_available:
++        logged_gaps.append("missing_vocabulary_seeded_repeat_bench")
++    if not vocabulary:
++        logged_gaps.append("missing_config_rule_vocabulary")
++    checksum_payload = {
++        "vocabulary": vocabulary,
++        "curve": curve,
++        "overall_lift": overall_lift,
++        "overall_ci": overall_ci,
++        "logged_gaps": logged_gaps,
++        "random_seed": random_seed,
++    }
++    return {
++        "experiment": "experiment_4425_config_rule_vocabulary_transfer",
++        "schema": "carnot.exp4425.config_rule_vocabulary_transfer.v1",
++        "honest_verdict": _honest_verdict(transfers, seeded_available, overall_lift),
++        "config_rule_vocabulary_transfers": bool(transfers),
++        "config_rule_vocabulary": vocabulary,
++        "vocabulary_seeded_prompt": build_vocabulary_seeded_prompt(vocabulary),
++        "transfer_learning_curve": curve,
++        "overall_grounding_rate_lift": overall_lift,
++        "overall_lift_ci95": overall_ci,
++        "verifier_is_oracle": False,
++        "random_seed": random_seed,
++        "logged_gaps": logged_gaps,
++        "preconditions_checked": {
++            "grounded_rule_source_count": len(rule_sources),
++            "grounded_rule_source_games": sorted({source["game"] for source in rule_sources}),
++            "cold_repeat_bench_available": bool(cold_repeat_bench),
++            "seeded_repeat_bench_available": seeded_available,
++        },
++        "model_specs": {
++            "generator": "Qwen3.5-9B-MTP",
++            "device": "iGPU",
++            "no_think": True,
++            "mtp": True,
++            "seed_count": SEED_COUNT,
++            "repeat_bench": "arc3_layerb_repeat_bench.py",
++            "cold_repeat_bench": COLD_REPEAT_BENCH_RELATIVE_PATH,
++            "seeded_repeat_bench": SEEDED_REPEAT_BENCH_RELATIVE_PATH,
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "reproducibility_checksum": _sha256(checksum_payload),
++        "duration_s": max(0.001, round(float(ended_at - started_at), 6)),
++        "spec_refs": ["REQ-LEARN-4425", "SCENARIO-LEARN-4425"],
++    }
++
++
++def _terminal_prefixed(value: Any) -> bool:
++    return isinstance(value, str) and value.startswith(("complete:", "blocked:", "success:"))
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    if not _terminal_prefixed(artifact.get("honest_verdict")):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if not isinstance(artifact.get("config_rule_vocabulary_transfers"), bool):
++        errors.append("config_rule_vocabulary_transfers must be bare bool")
++    if not isinstance(artifact.get("config_rule_vocabulary"), list):
++        errors.append("config_rule_vocabulary must be list")
++    if not isinstance(artifact.get("vocabulary_seeded_prompt"), str):
++        errors.append("vocabulary_seeded_prompt must be str")
++    if not isinstance(artifact.get("transfer_learning_curve"), list):
++        errors.append("transfer_learning_curve must be list")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if not isinstance(artifact.get("random_seed"), int):
++        errors.append("random_seed must be bare int")
++    if not isinstance(artifact.get("logged_gaps"), list):
++        errors.append("logged_gaps must be list")
++    if not isinstance(artifact.get("model_specs"), Mapping):
++        errors.append("model_specs must be dict")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        errors.append("reproducibility_checksum must be 64-char sha256 hex")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    now: Any = time.perf_counter,
++) -> Path:
++    started_at = now()
++    cold_repeat_bench = _load_json(root / COLD_REPEAT_BENCH_RELATIVE_PATH)
++    seeded_path = root / SEEDED_REPEAT_BENCH_RELATIVE_PATH
++    seeded_repeat_bench = _load_json(seeded_path) if seeded_path.exists() else None
++    artifact = build_artifact(
++        root=root,
++        cold_repeat_bench=cold_repeat_bench,
++        seeded_repeat_bench=seeded_repeat_bench,
++        started_at=started_at,
++        ended_at=now(),
++    )
++    return write_artifact(root, artifact)
++
++
++def main() -> int:  # pragma: no cover - exercised through results wrapper
++    path = run(REPO_ROOT)
++    print(path)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 1a1b83d462..2cbfb57a1a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T07:03:25.120011Z",
+-  "duration_s": 0.018387794494628906,
++  "run_date": "2026-06-19T08:36:38.368423Z",
++  "duration_s": 0.01909160614013672,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1df947a30a1edd134ee448e79b52dc4e29e66398e35fc17e36316dddf293feae",
++  "reproducibility_checksum": "ad18eb09db9c6b279e1cff0ef4fdafa822dc38179622a3d5799ba6dc78177ebc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7b420256533f1083e32cecf6da1acd1c5f46e1b9"
++    "adversarial_verify_version": "fc8a63d22c79eb38fe96ac881aa7a900c6ddd1f7"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6c85edbf0a..eefb6688a3 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T07:03:25.143162Z",
+-  "duration_s": 0.019678354263305664,
++  "run_date": "2026-06-19T08:36:38.400092Z",
++  "duration_s": 0.02784252166748047,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "5ea6667481e33cd4e3ead6047a2f4ecbf338ed0aaabc5f4c82128cc93f206dd7",
++  "reproducibility_checksum": "d8a35359f20a0afdc486d5914cb75d19a6b6cf2b56e34e0c27126bf265168aa1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7b420256533f1083e32cecf6da1acd1c5f46e1b9"
++    "adversarial_verify_version": "fc8a63d22c79eb38fe96ac881aa7a900c6ddd1f7"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1861_equivalence.json b/results/experiment_1861_equivalence.json
+index 85975bbc35..305db0f7fc 100644
+--- a/results/experiment_1861_equivalence.json
++++ b/results/experiment_1861_equivalence.json
+@@ -3,5 +3,10 @@
+   "honest_verdict": "equivalence_verified",
+   "py_loss": 0.22222222222222232,
+   "rs_loss": 0.22222222222222232,
+-  "scores_match": true
++  "scores_match": true,
++  "corrigendum_2026_05_187_audit": {
++    "classification": "TAUTOLOGY",
++    "rationale": "py_loss and rs_loss agree to >5 sig figs.",
++    "follow_up_action": "Fix loss computation."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 43fef5a7f7..2b4617a9a1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.14385986328125,
++  "efficiency_gains_ms": 2.112865447998047,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f4b36201ea..ab4ab60f81 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.316299989819527e-05,
++  "duration_s": 3.0267052352428436e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4425_config_rule_vocabulary_transfer.json b/results/experiment_4425_config_rule_vocabulary_transfer.json
+new file mode 100644
+index 0000000000..9531844714
+--- /dev/null
++++ b/results/experiment_4425_config_rule_vocabulary_transfer.json
+@@ -0,0 +1,173 @@
++{
++  "config_rule_vocabulary": [
++    {
++      "description": "Editable colour/object count must equal a reference count.",
++      "name": "editable_count==reference_count",
++      "prompt_hint": "Look for count equality between editable cells and reference features.",
++      "source_count": 1,
++      "source_games": [
++        "ka59"
++      ]
++    },
++    {
++      "description": "Editable state directly matches a reference value, object, or relation.",
++      "name": "match-reference",
++      "prompt_hint": "Use the reference digest as the source of constants and relations.",
++      "source_count": 2,
++      "source_games": [
++        "ka59",
++        "tr87"
++      ]
++    },
++    {
++      "description": "A controlled marker/region advances until it reaches a target extent.",
++      "name": "progress-fill",
++      "prompt_hint": "Detect monotone progress toward a target marker, edge, or fill boundary.",
++      "source_count": 3,
++      "source_games": [
++        "lp85",
++        "s5i5"
++      ]
++    },
++    {
++      "description": "Editable glyphs or sequences are rewritten through an LHS/RHS map.",
++      "name": "glyph-rewrite",
++      "prompt_hint": "Infer symbolic glyph rewrites instead of literal editable arrays.",
++      "source_count": 8,
++      "source_games": [
++        "cd82",
++        "cn04",
++        "ls20",
++        "m0r0",
++        "sk48",
++        "tn36",
++        "tr87",
++        "wa30"
++      ]
++    },
++    {
++      "description": "A win fires when controlled markers cover all target markers.",
++      "name": "marker-coverage",
++      "prompt_hint": "Check target marker coverage, not incidental path length.",
++      "source_count": 2,
++      "source_games": [
++        "s5i5"
++      ]
++    },
++    {
++      "description": "Editable shape, cross, or cast-grid pattern must match a reference pattern.",
++      "name": "shape-pattern-match",
++      "prompt_hint": "Compare shape topology and small pattern layout.",
++      "source_count": 4,
++      "source_games": [
++        "ar25",
++        "ka59",
++        "sc25",
++        "tn36"
++      ]
++    },
++    {
++      "description": "Mirror or rotational symmetry constrains the winning editable region.",
++      "name": "symmetry",
++      "prompt_hint": "Check reflection/rotation invariants before literal constants.",
++      "source_count": 3,
++      "source_games": [
++        "ar25",
++        "lp85",
++        "tn36"
++      ]
++    },
++    {
++      "description": "Program commands or action labels map objects to target attributes.",
++      "name": "program-command-map",
++      "prompt_hint": "Ground command semantics against target object attributes.",
++      "source_count": 1,
++      "source_games": [
++        "tn36"
++      ]
++    }
++  ],
++  "config_rule_vocabulary_transfers": false,
++  "duration_s": 0.001,
++  "experiment": "experiment_4425_config_rule_vocabulary_transfer",
++  "field_principles": {
++    "config_rule_vocabulary_transfers": "BARE bool := held-out grounding-rate lift CI-excl-0; principle: a transferable vocabulary is the self-learning compounding signal.",
++    "honest_verdict": "Terminal-prefixed honest outcome.",
++    "random_seed": "Bare integer; fixes split order and bootstrap reproducibility.",
++    "verifier_is_oracle": "false; the verifier grounds proposed predicates, it does not define correctness for the transfer claim."
++  },
++  "honest_verdict": "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing",
++  "logged_gaps": [
++    "missing_vocabulary_seeded_observations:ka59",
++    "missing_vocabulary_seeded_observations:tn36",
++    "missing_vocabulary_seeded_repeat_bench"
++  ],
++  "model_specs": {
++    "cold_repeat_bench": "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_mtp.json",
++    "device": "iGPU",
++    "generator": "Qwen3.5-9B-MTP",
++    "mtp": true,
++    "no_think": true,
++    "repeat_bench": "arc3_layerb_repeat_bench.py",
++    "seed_count": 4,
++    "seeded_repeat_bench": "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_vocabseed_mtp.json"
++  },
++  "overall_grounding_rate_lift": null,
++  "overall_lift_ci95": null,
++  "preconditions_checked": {
++    "cold_repeat_bench_available": true,
++    "grounded_rule_source_count": 20,
++    "grounded_rule_source_games": [
++      "ar25",
++      "cd82",
++      "cn04",
++      "ft09",
++      "ka59",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "s5i5",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "wa30"
++    ],
++    "seeded_repeat_bench_available": false
++  },
++  "random_seed": 4425,
++  "reproducibility_checksum": "cb2e084037ca9edcd986884649545065d589988f1ef5cc6e6025453be829e0c1",
++  "schema": "carnot.exp4425.config_rule_vocabulary_transfer.v1",
++  "spec_refs": [
++    "REQ-LEARN-4425",
++    "SCENARIO-LEARN-4425"
++  ],
++  "transfer_learning_curve": [
++    {
++      "cold_grounded_count": 3,
++      "cold_start_grounding_rate": 0.75,
++      "held_out_game": "ka59",
++      "lift": null,
++      "lift_ci95": null,
++      "seed_count": 4,
++      "seeded_grounded_count": null,
++      "seeded_grounding_rate": null
++    },
++    {
++      "cold_grounded_count": 2,
++      "cold_start_grounding_rate": 0.5,
++      "held_out_game": "tn36",
++      "lift": null,
++      "lift_ci95": null,
++      "seed_count": 4,
++      "seeded_grounded_count": null,
++      "seeded_grounding_rate": null
++    }
++  ],
++  "verifier_is_oracle": false,
++  "vocabulary_seeded_prompt": "/no_think\nRELATIONAL WIN-RULE VOCABULARY\nGenerator: Qwen3.5-9B-MTP, iGPU, /no_think, MTP, four seeds\n- editable_count==reference_count: Editable colour/object count must equal a reference count. Hint: Look for count equality between editable cells and reference features. Source games: ka59.\n- match-reference: Editable state directly matches a reference value, object, or relation. Hint: Use the reference digest as the source of constants and relations. Source games: ka59, tr87.\n- progress-fill: A controlled marker/region advances until it reaches a target extent. Hint: Detect monotone progress toward a target marker, edge, or fill boundary. Source games: lp85, s5i5.\n- glyph-rewrite: Editable glyphs or sequences are rewritten through an LHS/RHS map. Hint: Infer symbolic glyph rewrites instead of literal editable arrays. Source games: cd82, cn04, ls20, m0r0, sk48, tn36, tr87, wa30.\n- marker-coverage: A win fires when controlled markers cover all target markers. Hint: Check target marker coverage, not incidental path length. Source games: s5i5.\n- shape-pattern-match: Editable shape, cross, or cast-grid pattern must match a reference pattern. Hint: Compare shape topology and small pattern layout. Source games: ar25, ka59, sc25, tn36.\n- symmetry: Mirror or rotational symmetry constrains the winning editable region. Hint: Check reflection/rotation invariants before literal constants. Source games: ar25, lp85, tn36.\n- program-command-map: Program commands or action labels map objects to target attributes. Hint: Ground command semantics against target object attributes. Source games: tn36.\n\nYou are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle. Use the extracted editable region, non-wins, and reference digest to write a relational Python is_win(grid) predicate."
++}
+diff --git a/results/experiment_4425_config_rule_vocabulary_transfer.py b/results/experiment_4425_config_rule_vocabulary_transfer.py
+new file mode 100644
+index 0000000000..19414e3469
+--- /dev/null
++++ b/results/experiment_4425_config_rule_vocabulary_transfer.py
+@@ -0,0 +1,26 @@
++"""Runnable script for Exp 4425 config-rule vocabulary transfer."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++SCRIPT_REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = SCRIPT_REPO_ROOT / "python"
++for path in (SCRIPT_REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.experiment_4425_config_rule_vocabulary_transfer import REPO_ROOT, run  # noqa: E402
++
++
++def main(root: Path = REPO_ROOT) -> int:
++    """Run the Exp 4425 workflow from the repository root."""
++
++    output_path = run(root)
++    print(output_path)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5e378444b7..b12451adf4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:00:12Z",
+-  "finished_at": "2026-06-19T08:00:12Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-19T08:36:28Z",
++  "finished_at": "2026-06-19T08:36:28Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cc6a395fdd..38bc6a67f1 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:00:12Z",
+-  "finished_at": "2026-06-19T08:00:12Z",
++  "started_at": "2026-06-19T08:36:28Z",
++  "finished_at": "2026-06-19T08:36:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index fea81d35fe..87fa354660 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:00:12Z",
+-  "finished_at": "2026-06-19T08:00:13Z",
++  "started_at": "2026-06-19T08:36:28Z",
++  "finished_at": "2026-06-19T08:36:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4425_config_rule_vocabulary_transfer.py b/tests/python/test_experiment_4425_config_rule_vocabulary_transfer.py
+new file mode 100644
+index 0000000000..c39e28eb7e
+--- /dev/null
++++ b/tests/python/test_experiment_4425_config_rule_vocabulary_transfer.py
+@@ -0,0 +1,262 @@
++"""Tests for Exp 4425 Qwen config-rule vocabulary transfer.
++
++Spec refs: REQ-LEARN-4425, SCENARIO-LEARN-4425,
++SCENARIO-LEARN-4425-NULL.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++import sys
++from pathlib import Path
++
++from carnot import experiment_4425_config_rule_vocabulary_transfer as mod
++
++
++def _seed_rule_sources(root: Path) -> None:
++    (root / "ops").mkdir(parents=True)
++    (root / "results").mkdir(parents=True)
++    (root / "ops" / "arc_solve_registry.yaml").write_text(
++        "schema_version: 1\n"
++        "games:\n"
++        "  - game: ka59\n"
++        "    reproducibility: reproduced\n"
++        "    levels_reproduced: 1\n"
++        "    win_condition: 'editable count equals reference count; match reference count'\n"
++        "  - game: tr87\n"
++        "    reproducibility: reproduced\n"
++        "    levels_reproduced: 1\n"
++        "    win_condition: 'glyph rewrite sequence follows LHS RHS map rules'\n"
++        "  - game: sc25\n"
++        "    reproducibility: reproduced\n"
++        "    levels_reproduced: 1\n"
++        "    win_condition: 'cast grid 3x3 cross shape pattern match'\n"
++        "  - game: s5i5\n"
++        "    reproducibility: reproduced\n"
++        "    levels_reproduced: 1\n"
++        "    win_condition: 'progress fill extends controlled markers until target marker coverage'\n"
++        "  - game: blocked\n"
++        "    reproducibility: unsolved\n",
++        encoding="utf-8",
++    )
++    (root / "results" / "experiment_4414_config_rule_induction_solve.json").write_text(
++        json.dumps(
++            {
++                "config_win_rules_grounded": [
++                    {
++                        "game": "ka59",
++                        "tier": 2,
++                        "predicate": "editable_count_4_equals_reference_count_4_32",
++                        "false_positive_rate": 0.0,
++                    },
++                    {
++                        "game": "ignored",
++                        "tier": 0,
++                        "predicate": "ungrounded",
++                        "false_positive_rate": 1.0,
++                    },
++                ]
++            }
++        ),
++        encoding="utf-8",
++    )
++    (root / "results" / "experiment_4421_config_rule_solve_unseen.json").write_text(
++        json.dumps(
++            {
++                "target_game": "s5i5",
++                "offline_reproduced": True,
++                "grounded_win_condition": {
++                    "predicate": (
++                        "all target marker coordinates are occupied by controlled marker "
++                        "coordinates"
++                    )
++                },
++            }
++        ),
++        encoding="utf-8",
++    )
++
++
++def _repeat_payload(per_game_runs: dict[str, list[bool]]) -> dict[str, object]:
++    return {
++        "experiment": "arc3_layerb_repeat_bench",
++        "model_key": "qwen3.5-9b-mtp",
++        "mtp": True,
++        "repeat": 4,
++        "n_predict": 2560,
++        "per_game": {
++            game: {
++                "runs": [
++                    {"seed": seed, "grounded": grounded, "tokens": 100 + seed}
++                    for seed, grounded in enumerate(runs)
++                ]
++            }
++            for game, runs in per_game_runs.items()
++        },
++    }
++
++
++def test_scenario_learn_4425_prompt_vocabulary_and_positive_transfer(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4425: seeded grounding lift with CI excluding zero is true."""
++
++    _seed_rule_sources(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        cold_repeat_bench=_repeat_payload(
++            {"bp35": [False, False, False, False], "dc22": [False, False, False, False]}
++        ),
++        seeded_repeat_bench=_repeat_payload(
++            {"bp35": [True, True, True, True], "dc22": [True, True, True, True]}
++        ),
++        started_at=1.0,
++        ended_at=2.25,
++    )
++
++    names = [primitive["name"] for primitive in artifact["config_rule_vocabulary"]]
++    sources = mod.extract_grounded_rule_sources(tmp_path)
++
++    assert any(source["source"] == mod.EXP4414_RELATIVE_PATH for source in sources)
++    assert "editable_count==reference_count" in names
++    assert "match-reference" in names
++    assert "progress-fill" in names
++    assert "glyph-rewrite" in names
++    assert "marker-coverage" in names
++    assert artifact["vocabulary_seeded_prompt"].index("RELATIONAL WIN-RULE VOCABULARY") < (
++        artifact["vocabulary_seeded_prompt"].index("You are inducing")
++    )
++    assert "Generator: Qwen3.5-9B-MTP, iGPU, /no_think, MTP, four seeds" in (
++        artifact["vocabulary_seeded_prompt"]
++    )
++    assert artifact["config_rule_vocabulary_transfers"] is True
++    assert artifact["overall_grounding_rate_lift"] == 1.0
++    assert artifact["overall_lift_ci95"] == [1.0, 1.0]
++    assert {row["held_out_game"] for row in artifact["transfer_learning_curve"]} == {
++        "bp35",
++        "dc22",
++    }
++    assert all(row["seed_count"] == 4 for row in artifact["transfer_learning_curve"])
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["model_specs"]["generator"] == "Qwen3.5-9B-MTP"
++    assert artifact["model_specs"]["no_think"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4425_null_seeded_arm_logs_gap(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4425-NULL: missing seeded arm is logged, not gated."""
++
++    _seed_rule_sources(tmp_path)
++    cold_path = tmp_path / mod.COLD_REPEAT_BENCH_RELATIVE_PATH
++    cold_path.parent.mkdir(parents=True, exist_ok=True)
++    cold_path.write_text(
++        json.dumps(
++            _repeat_payload(
++                {"ka59": [True, True, False, True], "tn36": [False, True, True, False]}
++            )
++        ),
++        encoding="utf-8",
++    )
++
++    output_path = mod.run(tmp_path, now=lambda: 10.0)
++    artifact = json.loads(output_path.read_text(encoding="utf-8"))
++
++    assert artifact["honest_verdict"] == (
++        "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing"
++    )
++    assert artifact["config_rule_vocabulary_transfers"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert "missing_vocabulary_seeded_repeat_bench" in artifact["logged_gaps"]
++    assert artifact["transfer_learning_curve"][0]["seeded_grounding_rate"] is None
++    assert artifact["transfer_learning_curve"][0]["lift"] is None
++    assert artifact["model_specs"]["repeat_bench"] == "arc3_layerb_repeat_bench.py"
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_learn_4425_schema_validation_and_runner(tmp_path: Path) -> None:
++    """REQ-LEARN-4425: schema validation rejects non-bare and non-terminal fields."""
++
++    artifact = {
++        "honest_verdict": "null",
++        "config_rule_vocabulary_transfers": "false",
++        "config_rule_vocabulary": [],
++        "vocabulary_seeded_prompt": 1,
++        "transfer_learning_curve": {},
++        "verifier_is_oracle": True,
++        "random_seed": "4425",
++        "logged_gaps": "gap",
++        "model_specs": [],
++        "reproducibility_checksum": "bad",
++    }
++
++    errors = mod.artifact_schema_errors(artifact)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "config_rule_vocabulary_transfers must be bare bool" in errors
++    assert "vocabulary_seeded_prompt must be str" in errors
++    assert "transfer_learning_curve must be list" in errors
++    assert "verifier_is_oracle must be false" in errors
++    assert "random_seed must be bare int" in errors
++    assert "logged_gaps must be list" in errors
++    assert "model_specs must be dict" in errors
++    assert "reproducibility_checksum must be 64-char sha256 hex" in errors
++
++    _seed_rule_sources(tmp_path)
++    cold_path = tmp_path / mod.COLD_REPEAT_BENCH_RELATIVE_PATH
++    cold_path.parent.mkdir(parents=True, exist_ok=True)
++    cold_path.write_text(json.dumps(_repeat_payload({"ka59": [True, False, True, False]})))
++
++    runner_path = Path(__file__).resolve().parents[2] / "results" / (
++        "experiment_4425_config_rule_vocabulary_transfer.py"
++    )
++    spec = importlib.util.spec_from_file_location("exp4425_runner", runner_path)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    sys.modules["exp4425_runner"] = module
++    spec.loader.exec_module(module)
++
++    assert module.main(tmp_path) == 0
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++
++def test_req_learn_4425_defensive_helpers(tmp_path: Path) -> None:
++    """REQ-LEARN-4425: defensive helpers keep null artifacts reproducible."""
++
++    assert mod._load_json(tmp_path / "missing.json") == {}
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("[1, 2, 3]", encoding="utf-8")
++    assert mod._load_json(bad_json) == {}
++    assert mod._load_registry(tmp_path) == {"games": []}
++    assert mod._bootstrap_ci95([], seed=mod.RANDOM_SEED) == [0.0, 0.0]
++    assert mod._bootstrap_ci95([0.25, 0.25], seed=mod.RANDOM_SEED) == [0.25, 0.25]
++    varied = mod._bootstrap_ci95([0.0, 1.0], seed=mod.RANDOM_SEED, resamples=20)
++    assert len(varied) == 2
++
++    source = {"game": "custom", "rule_text": "mirror symmetry command object"}
++    names = [primitive["name"] for primitive in mod.build_rule_vocabulary([source])]
++    assert names == ["symmetry", "program-command-map"]
++    assert mod._honest_verdict(False, True, 0.0) == (
++        "complete: null_config_rule_vocabulary_transfer_lift_ci_includes_zero"
++    )
++
++    no_pair_artifact = mod.build_artifact(
++        root=tmp_path,
++        cold_repeat_bench={"per_game": {}},
++        seeded_repeat_bench=_repeat_payload({"newgame": [True, True, True, True]}),
++        started_at=0.0,
++        ended_at=0.1,
++    )
++    assert no_pair_artifact["honest_verdict"] == (
++        "complete: null_config_rule_vocabulary_transfer_no_paired_heldout"
++    )
++    assert "missing_cold_start_observations:newgame" in no_pair_artifact["logged_gaps"]
++    assert "missing_config_rule_vocabulary" in no_pair_artifact["logged_gaps"]
++
++    try:
++        mod.write_artifact(tmp_path, {})
++    except ValueError as exc:
++        assert "missing honest_verdict" in str(exc)
++    else:  # pragma: no cover
++        raise AssertionError("write_artifact should reject invalid artifacts")
+-- 
+2.55.0
+

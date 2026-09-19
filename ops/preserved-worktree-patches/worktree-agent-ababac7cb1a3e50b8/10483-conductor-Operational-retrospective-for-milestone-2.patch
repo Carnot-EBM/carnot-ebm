@@ -1,0 +1,124 @@
+From 3e2af61c2d15eca310355f94ee6950cc4d4ad6db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 00:01:24 -0400
+Subject: [PATCH 10483/11362] [conductor] Operational retrospective for
+ milestone 2026.08.593
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 12 +++++
+ results/operational_retro_2026_08_593.json | 59 ++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_593.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 1c6aa961f8..a071aa3c63 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6472,3 +6472,10 @@ The critical path for milestone .250:
+ - theme: fast synthesis-only execution exposed the causal limits of modification-time reconstruction
+ - key result: honest operational negative — 12 synthesis-only experiments completed in 1.2 minutes; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.593
++
++- exp_range: no data available this milestone
++- theme: a compute-heavy execution tail exposed missing phase and accelerator attribution
++- key result: honest operational negative — accelerator activity was present, but the data cannot explain the longest compute run or establish a parallel multi-model runner miss
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c90a2039ea..b1d9b2b132 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18334,6 +18334,7 @@ task phases. The next tooling priorities are task-owned monotonic phase
+ telemetry, dependency-aware parallel synthesis dispatch, and a task-scoped
+ launch receipt. Estimated time savings is 0% because the supplied data does
+ not quantify a causal reduction.
++
+ - 2026-08-31: Fail-closed agent-model dispatch requalification (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_requalification; results/experiment_6796_agent_model_dispatch_requalification.json
+ - 2026-08-31: Canonical transaction-byte replay fixture (⚠️ Research Finding) — honest_verdict=complete_transaction_byte_snapshot_fixture_ready: 3,189 commits retain verified canonical parent and new state bytes; results/experiment_6797_canonical_transaction_byte_replay.json
+ - 2026-08-31: Byte-grounded CSL causal and safety cold audit (✅ Complete) — independently replayed 3,189 canonical transaction snapshots and 4,800 actions, matched every Exp6791 headline, credited 116 factors, rejected eight attacks with zero admitted or influential poison, and preserved restart/rollback identity; honest_verdict=complete_positive: byte replay verified causal route and utility witnesses with zero admitted or influential poison; results/experiment_6798_csl_causal_safety_byte_audit.json
+@@ -18341,3 +18342,14 @@ not quantify a causal reduction.
+ - 2026-08-31: Formally calibrated model-output constraint probes (✅ Complete) — honest_verdict=complete: frozen authentic outputs produced exact paired formal probes; results/experiment_6799_model_output_formal_constraint_probes.json
+ - 2026-08-31: Frozen grouped fixed point versus flat control on real outputs (⚠️ Research Finding) — honest_verdict=complete: frozen real-output comparison finished without the preregistered positive effect; results/experiment_6800_real_output_fixed_point_transfer_ab.json
+ - 2026-08-31: Cold real-output fixed-point authority and shortcut audit (⚠️ Research Finding) — honest_verdict=complete_disqualified: authority or shortcut checks failed; results/experiment_6801_real_output_fixed_point_cold_audit.json
++
++## 2026-08-31 — Milestone 2026.08.593 operational retrospective
++
++The milestone completed 6 experiments in 4.7 minutes. Two were compute-bound.
++Frozen grouped fixed point versus flat control on real outputs took 4.04
++minutes, but the fallback timing does not show why. The GPU evidence records no
++compute-bound idle defect. It also does not establish a parallel multi-model
++run or a missed DualGPURunner launch. Add task-phase timing and task-window GPU
++receipts. Add 8-16 question batching when one model serves multiple prompts.
++The estimated milestone savings remains 0% because the evidence does not show
++how much of the slow run can use batching.
+diff --git a/results/operational_retro_2026_08_593.json b/results/operational_retro_2026_08_593.json
+new file mode 100644
+index 0000000000..43b3fced46
+--- /dev/null
++++ b/results/operational_retro_2026_08_593.json
+@@ -0,0 +1,59 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.593",
++  "generated_at": "2026-08-31T03:55:52Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 4.7,
++  "experiments_completed": 6,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "Frozen grouped fixed point versus flat control on real outputs",
++      "duration_minutes": 4.04,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Canonical transaction-byte replay fixture",
++      "duration_minutes": 0.32,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Independent byte-grounded CSL causal and safety audit",
++      "duration_minutes": 0.1,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Formally calibrated model-output constraint probes",
++      "duration_minutes": 0.1,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Cold real-output fixed-point authority and shortcut audit",
++      "duration_minutes": 0.1,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 6 experiments in 4.7 minutes, including 2 compute-bound runs. Frozen grouped fixed point versus flat control on real outputs was the longest at 4.04 minutes, and the supplied evidence records no compute-bound GPU-idle defect.",
++  "bottlenecks_identified": [
++    "Frozen grouped fixed point versus flat control on real outputs dominated the measured wall time at 4.04 minutes, but the supplied data does not identify the responsible phase.",
++    "Disk-mtime reconstruction provides no queue, model-load, inference, verification, or artifact-write timing, so it cannot explain the compute tail.",
++    "The point-in-time GPU report does not link accelerator activity or batching opportunities to task phases."
++  ],
++  "improvements_suggested": [
++    "Add task-scoped monotonic timers for queue, model load, inference, verification, and artifact write phases.",
++    "Emit a compute launch receipt with task identity, model count, selected GPU, and utilization samples from the task window.",
++    "Batch 8-16 questions per forward pass when one model serves multiple prompts, then measure the realized speedup.",
++    "Schedule independent single-model runs across both GPUs when two ready tasks exist; keep a single-model task on one GPU.",
++    "Record DualGPURunner eligibility and selection only when a task loads 2 or more models in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Instrument task phases and task-window GPU use with one compute launch receipt.",
++    "Add configurable 8-16 question batching to the single-model inference path.",
++    "Dispatch two ready single-model compute tasks to separate GPUs without forcing DualGPURunner."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The main lesson is an observability gap, not a GPU-idle defect. The next retrospective needs task-owned phase and accelerator receipts before it can attribute the compute tail or quantify savings."
++}
+-- 
+2.55.0
+

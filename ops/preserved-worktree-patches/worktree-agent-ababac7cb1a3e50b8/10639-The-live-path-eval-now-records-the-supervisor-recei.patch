@@ -1,0 +1,192 @@
+From 1ee174ffc52039db167982bc22849d22f0f4cea8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 10:40:27 -0400
+Subject: [PATCH 10639/11362] The live-path eval now records the supervisor
+ receipt (REQ-ARC-WMTE-6640)
+
+No runnable path produced applied trajectory-supervisor receipts on the live
+generator, which is why the refinement ledger never moved and why exp6844 and
+exp6845 both report effect_eligible_score 0.
+
+trajectory_supervisor_diagnostics() had three callers and not one could serve a live
+applied run:
+
+- scripts/arc_scored_path_lever_harness.py collects the receipt but is FROZEN
+  pre-2026-07-28 and pins the retired Qwen3.5-9B-MTP. Its own guard refuses to start
+  against the live Qwen3.8-27B pin, correctly, with the message that a run there
+  measures the retired model while the prose claims the live path. It stopped me
+  today.
+- experiment_6776 collects the receipt but is hardcoded SUPERVISOR_MODE = "shadow",
+  and a shadow receipt is explicitly not redirect evidence.
+- experiment_6558 only reduces receipts others produce; it never replays a game.
+
+Meanwhile arc_leaderboard_eval.py, arc_loop_solve.py, arc_sge_live_path_ab.py and
+arc_action_provenance_worker.py all run the live path and call the diagnostics zero
+times. So the 13.8-hour run that finished today returned two rows with the field
+absent, both confirmed llm_reached true and both zero levels.
+
+This adds supervisor_row_field() to the live-path eval and emits
+"trajectory_supervisor" on every row. The shape is copied deliberately from the
+lever harness, including its failure handling: a raising call becomes an error
+marker rather than taking the row down, and a non-dict value becomes an error marker
+too, because an absent field reads as zero to a flat consumer -- the ambiguity that
+cost a full day of wrong A/B reporting on 2026-08-21.
+
+6 tests, 3 of 3 mutations RED. One mutation removes the row wiring and leaves the
+helper intact, because a helper nothing calls is precisely what this incident was:
+the function existed for months while live rows carried nothing. The call-site
+assertion is what catches that.
+
+A supervised run on cd82 and r11l is now live under this change. Those two games are
+chosen because they have demonstrated adapter-free level-ups, and a redirect is only
+credited by a level-up -- the constraint identified from exp6681 and exp6844 earlier
+today.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/arc_leaderboard_eval.py               | 28 ++++++
+ .../test_arc_eval_supervisor_receipt.py       | 85 +++++++++++++++++++
+ 2 files changed, 113 insertions(+)
+ create mode 100644 tests/python/test_arc_eval_supervisor_receipt.py
+
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index 7f02b88fb4..b2e8c06b69 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -581,6 +581,31 @@ def _read_gateway_card(arc, game: str) -> dict:
+         return {"gateway_card_read_error": f"{type(exc).__name__}: {str(exc)[:120]}"}
+ 
+ 
++def supervisor_row_field(policy) -> dict[str, Any]:
++    """The row's `trajectory_supervisor` value. Never absent, never None.
++
++    WHY THIS EXISTS HERE (2026-09-01). This eval is the live-path harness, and it collected NO
++    supervisor evidence at all: `trajectory_supervisor_diagnostics()` had exactly three callers,
++    and every one of them was unusable for a live applied run. The lever harness is frozen on a
++    RETIRED generator and refuses to start; exp6776 is hardcoded to shadow mode, and a shadow
++    receipt is not redirect evidence; exp6558 only reduces receipts others produce. So a 13.8-hour
++    live run on 2026-09-01 produced two rows with no supervisor field, and the refinement ledger
++    could not move however long the loop ran.
++
++    The shape is copied deliberately from `arc_scored_path_lever_harness.supervisor_row_field`,
++    including its failure handling: a raising diagnostics call becomes an error marker rather than
++    taking the row down, because an absent field reads as zero to a flat consumer and that
++    ambiguity cost a full day of wrong A/B reporting on 2026-08-21.
++    """
++    try:
++        d = policy.trajectory_supervisor_diagnostics()
++    except Exception as exc:  # instrumentation must never mask the run itself
++        return {"error": f"{type(exc).__name__}:{exc}"}
++    if not isinstance(d, dict):
++        return {"error": f"non_dict_diagnostics:{type(d).__name__}"}
++    return d
++
++
+ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
+     arc = kit.offline_arcade()
+     env = arc.make(game, scorecard_id=arc.open_scorecard())
+@@ -933,6 +958,9 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None)
+         "generator_provenance": _gen_prov,
+         "completions_consumed": _consumed,
+         "llm_reached": bool(_consumed.get("completions", 0) > 0),
++        # REQ-ARC-WMTE-6640 rule 5: emitted on EVERY row, both paths, so a consumer can tell
++        # "supervisor off" from "supervisor absent". See supervisor_row_field above.
++        "trajectory_supervisor": supervisor_row_field(policy),
+         "levels": levels,
+         "reached": reached,
+         "actions": actions,
+diff --git a/tests/python/test_arc_eval_supervisor_receipt.py b/tests/python/test_arc_eval_supervisor_receipt.py
+new file mode 100644
+index 0000000000..676ec1bb88
+--- /dev/null
++++ b/tests/python/test_arc_eval_supervisor_receipt.py
+@@ -0,0 +1,85 @@
++"""Spec: REQ-ARC-WMTE-6640, SCENARIO-ARC-WMTE-6640-EVAL-ROW
++
++The live-path eval emits a trajectory-supervisor receipt on every row.
++
++INCIDENT 2026-09-01. `scripts/arc_leaderboard_eval.py` is the live-path harness and collected NO
++supervisor evidence. `trajectory_supervisor_diagnostics()` had three callers and none could serve
++a live applied run: `arc_scored_path_lever_harness.py` is frozen on the RETIRED Qwen3.5-9B-MTP pin
++and refuses to start against the live Qwen3.8-27B; `experiment_6776` is hardcoded to shadow mode,
++and a shadow receipt is not redirect evidence; `experiment_6558` only reduces receipts others
++produce. A 13.8-hour live run that day returned two rows with `trajectory_supervisor` absent, and
++exp6844's outcome-credit audit reported `supervisor_effect_eligible_score: 0`.
++
++The field must be present on EVERY row, both paths. An absent field reads as zero to a flat
++consumer, which cost a full day of wrong A/B reporting on 2026-08-21.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++from typing import Any
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++import arc_leaderboard_eval as ale  # noqa: E402
++
++
++class _Policy:
++    def __init__(self, payload: Any = None, raises: BaseException | None = None) -> None:
++        self._payload = payload
++        self._raises = raises
++
++    def trajectory_supervisor_diagnostics(self) -> Any:
++        if self._raises is not None:
++            raise self._raises
++        return self._payload
++
++
++def test_an_applied_receipt_is_passed_through_unchanged() -> None:
++    receipt = {
++        "enabled": True,
++        "mode": "applied",
++        "arm_outcomes": {"reinduce": {"fired": 3, "helped": 1}},
++        "stagnations_unredirected": 2,
++    }
++    assert ale.supervisor_row_field(_Policy(receipt)) == receipt
++
++
++def test_a_disabled_supervisor_still_produces_a_field() -> None:
++    """`{"enabled": False}` must be distinguishable from "the harness never looked"."""
++    assert ale.supervisor_row_field(_Policy({"enabled": False})) == {"enabled": False}
++
++
++def test_a_raising_diagnostics_call_becomes_an_error_marker() -> None:
++    """Instrumentation must never take the row down; a 13-hour run must not die reporting itself."""
++    out = ale.supervisor_row_field(_Policy(raises=RuntimeError("ledger exploded")))
++    assert out == {"error": "RuntimeError:ledger exploded"}
++
++
++def test_a_non_dict_diagnostics_value_becomes_an_error_marker() -> None:
++    """A bare None would silently read as 'no firings' rather than 'instrumentation broke'."""
++    assert ale.supervisor_row_field(_Policy(None)) == {"error": "non_dict_diagnostics:NoneType"}
++
++
++def test_the_field_is_never_absent_for_any_policy_state() -> None:
++    """The property that matters: every path yields a dict, so a consumer can always tell."""
++    for policy in (
++        _Policy({"enabled": True, "mode": "applied"}),
++        _Policy({"enabled": False}),
++        _Policy(raises=ValueError("x")),
++        _Policy(None),
++        _Policy([1, 2, 3]),
++    ):
++        assert isinstance(ale.supervisor_row_field(policy), dict)
++
++
++def test_the_eval_row_carries_the_receipt() -> None:
++    """The call-site test. A helper that nothing calls is the defect this incident WAS.
++
++    The receipt was absent from live rows for months while the function existed, so proving the
++    helper works is not enough -- the row itself must carry the key.
++    """
++    src = (REPO / "scripts" / "arc_leaderboard_eval.py").read_text()
++    assert '"trajectory_supervisor": supervisor_row_field(policy),' in src
+-- 
+2.55.0
+

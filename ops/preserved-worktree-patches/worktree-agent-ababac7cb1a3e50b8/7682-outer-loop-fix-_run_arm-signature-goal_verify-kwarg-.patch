@@ -1,0 +1,33 @@
+From 483add43ed9d52c6c9582178c7f666ee6d013b38 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 16:19:53 -0400
+Subject: [PATCH 07682/11362] [outer-loop] fix _run_arm signature (goal_verify
+ kwarg) -- v4 crashed on the missing param
+
+Prior driver patch added goal_verify to the _run_arm CALLS but ruff
+had reflowed the signature to multi-line so the string-replace missed
+it; the v4 run crashed immediately (TypeError) before writing, so no
+data lost. Signature now accepts goal_verify.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/arc_winner_greedy_direct_ab.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/arc_winner_greedy_direct_ab.py b/scripts/arc_winner_greedy_direct_ab.py
+index 408c35613b..724e9244c0 100644
+--- a/scripts/arc_winner_greedy_direct_ab.py
++++ b/scripts/arc_winner_greedy_direct_ab.py
+@@ -47,7 +47,7 @@ def _oracle_levels() -> dict:
+ 
+ 
+ def _run_arm(
+-    label: str, proposer, games, *, budget, max_turns, max_seq, perception, reflect_iv
++    label: str, proposer, games, *, budget, max_turns, max_seq, perception, reflect_iv, goal_verify
+ ) -> list[dict]:
+     from carnot.agentic.arc_greedy_direct_agent import run_greedy_direct
+ 
+-- 
+2.55.0
+

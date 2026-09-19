@@ -1,0 +1,57 @@
+From 318bc6c54e1a0efee824a0d4b04996c3737f595b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 20:14:06 -0400
+Subject: [PATCH 10047/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index c7d56e3e45..110304b41f 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -11,5 +11,5 @@
+  "last_scan_notes": [
+   "pid 689528 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json: out file missing, run unsupervisable this cycle"
+  ],
+- "last_scan_utc": "2026-08-27T00:08:48Z"
++ "last_scan_utc": "2026-08-27T00:14:03Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 744ec9f8d3..a1f3a91b4b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-08-26T23:48:05Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-08-27T00:14:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 11190a4aea..aa507e3a6a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16592,3 +16592,5 @@ code |
+ | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on run_stop_aut |
+ | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on in_pro |
+ | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 0: OPEN 1 days |
++| 2026-08-27 00:12 UTC | Prospective experiential repair evolution | OK | 101 passed, 1 warning in 15.73s |
++| 2026-08-27 00:14 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 78422ae05a..5c21bbe4ed 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 52, "phase": "iteration_start", "started_at": "2026-08-26T23:48:05Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 53, "phase": "iteration_start", "started_at": "2026-08-27T00:14:02Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

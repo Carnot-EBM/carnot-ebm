@@ -1,0 +1,46 @@
+From 42d0a0ba6a8ca17680696a293c5478d2840c21ec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 15:41:27 -0400
+Subject: [PATCH 10121/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 94278f6e4b..9744f7adc0 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T19:38:07Z"
++ "last_scan_utc": "2026-08-27T19:41:23Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d9923f1c46..c24dd5516f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1396460, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-08-27T19:38:07Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-08-27T19:41:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5ee59473ba..0c0ae0bb95 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1396460, "iteration": 1, "phase": "iteration_start", "started_at": "2026-08-27T19:38:07Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 1, "phase": "iteration_start", "started_at": "2026-08-27T19:41:22Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 31f33ffa6ed869114060b490a604661a92782745 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 11:13:10 -0400
+Subject: [PATCH 11271/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9d8229cd8b..aa09bfc1ae 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-09-05T14:42:36Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-09-05T15:13:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 81478d98cb..e18f0915dc 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17346,3 +17346,4 @@ code |
+ | 2026-09-05 13:39 UTC | Immutable ARC chronological belief-stream fixture | OK | 98 passed, 1 warning in 11.60s |
+ | 2026-09-05 14:10 UTC | Counterexample-updated ARC belief ledger | OK | 100 passed, 1 warning in 16.52s |
+ | 2026-09-05 14:40 UTC | Prospective held-future belief utility comparison | OK | 96 passed, 1 warning in 15.34s |
++| 2026-09-05 15:11 UTC | Fresh-process belief isolation, retention, and poi | OK | 134 passed, 1 warning in 16.50s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index df17b810c0..ec25c11424 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 5, "phase": "iteration_start", "started_at": "2026-09-05T14:42:36Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 6, "phase": "iteration_start", "started_at": "2026-09-05T15:13:01Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,166 @@
+From 934ce011f004a01bcddbbbd91668c8c57d04d948 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 13:34:14 -0400
+Subject: [PATCH 03994/11362] [outer-loop] Measure L2 fix stack on lp85: does
+ NOT bank L2; wall is upstream (L2 reinduction reliability), not goal quality
+
+Focused reproduction-gated lp85 probe (single game/arm, budget 400) with default-ON truncation +
+goal-repair active. Result: max_depth=1, l2_reproduced=False. But the failure mode REFUTES the
+"loose goal won't reproduce" prediction: the L2 level-up reinduction proposer_FAILED (no valid code
+after 3 retries on the REAL lp85 L2 prompt), so the goal-repair never engaged (it is downstream of
+induction success). The agent DOES pass the exemplar and _call_induce routes through the code-only
+induce (no wiring gap); the online induction succeeded (wrote a real "no cell==3" predicate); and
+the code-only path is 3/3 reliable on the SYNTHETIC prompt -- but the real lp85 L2 reinduction prompt
+fails code-gen. Bisected wall, in order: (1) real-L2-prompt code-gen reliability [immediate];
+(2) goal quality / structural-alignment goal [downstream]. n=1 caveat: next step is to capture the
+real L2 prompt + raw output and measure valid-rate to separate prompt-specific failure from variance.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../l2-fixstack-measurement-2026-06-25.md     | 76 +++++++++++++++++++
+ results/proto_l2_measure_fixstack.json        | 49 ++++++++++++
+ 2 files changed, 125 insertions(+)
+ create mode 100644 docs/research-notes/l2-fixstack-measurement-2026-06-25.md
+ create mode 100644 results/proto_l2_measure_fixstack.json
+
+diff --git a/docs/research-notes/l2-fixstack-measurement-2026-06-25.md b/docs/research-notes/l2-fixstack-measurement-2026-06-25.md
+new file mode 100644
+index 0000000000..9e341f0de9
+--- /dev/null
++++ b/docs/research-notes/l2-fixstack-measurement-2026-06-25.md
+@@ -0,0 +1,76 @@
++# Measuring the L2 fix stack: it does NOT bank lp85 L2 — and the wall is upstream of goal quality
++
++**Date:** 2026-06-25 · **Author:** outer-loop (operator: "run the measurement").
++**Artifact:** `results/proto_l2_measure_fixstack.json`. **Probe:** `scripts/experiments/proto_l2_measure_fixstack.py`.
++
++## What was measured
++
++After shipping the default-ON truncation fix + the goal-repair loop (commits c25e11211, b4c865d42),
++the open question was: do they actually let lp85 bank a REPRODUCED L2? A focused single-game,
++single-arm, reproduction-gated probe (lp85 binary, budget 400, warm Qwen :8920) — NOT the 4-arm A/B
++that hung on sc25.
++
++**Prediction (going in):** the fixes unblock planning (satisfiable goal via repair) but lp85 L2 still
++won't reproduce, because the loose nonzero-count fallback isn't lp85's real win (shape-alignment) →
++the wall is goal QUALITY.
++
++## Result — lp85 L2 did NOT bank, but the failure mode REFUTES the prediction
++
++`max_depth_reached=1`, `l2_offline_reproduced=False`, `goal_predicate_satisfiable_any=False`,
++`goal_repair_fired=False`. Induction summary:
++
++```
++induction[0]: goal_level=1  skipped=proposer_failed_or_missing_root  (the online/L1 path)
++induction[1]: goal_level=2  skipped=proposer_failed  exemplar_injected=True  (the L2 level-up reinduction)
++```
++
++The L2 level-up reinduction **`proposer_failed`** — the LLM induction produced no valid parseable
++`engine`+`is_level_complete` after its 3 internal retries. Because that is UPSTREAM of the goal
++satisfiability check, the goal-repair loop never engaged (it only fires after a successful induction
++whose goal is degenerate). So the predicted "loose goal doesn't reproduce" mechanism was never
++reached — the wall this run is **L2 reinduction reliability**, not goal quality.
++
++## Why this is surprising — and what it bisects
++
++- The agent DOES pass the exemplar (`arc_competition_agent.py:2415`) and `_call_induce` routes
++  through `proposer.induce` → the code-only path IS applied to the L2 reinduction. No wiring gap.
++- The online (non-level-up) induction SUCCEEDED this run — `results/arc_e3/lp85/world_model.py` was
++  written at 13:23 mid-run with a REAL general predicate (`is_level_complete: no cell == 3 → True`),
++  not a degenerate `return False`. So the model CAN write code on lp85.
++- The code-only induce is **3/3 reliable on the SYNTHETIC lp85 L2 prompt** (re-tested this session).
++- Yet the **REAL lp85 L2 reinduction prompt failed code-gen** (proposer_failed, 3 retries).
++
++So the truncation fix transfers to the synthetic prompt but NOT (this run) to the real lp85 L2
++reinduction prompt. The bisected wall, in order:
++
++1. **L2 reinduction reliability (the immediate blocker):** the real lp85 L2 reinduction prompt
++   reliably fails to yield valid code. The synthetic prompt does not. The difference is prompt
++   content — real click-action transitions (x/y data), larger/real grids, and the real win exemplar.
++   Hypotheses to check by CAPTURING the real prompt + the model's raw output: (a) prose leakage
++   despite the directive; (b) the `stop=["```"]` cutting a long hardcoded win grid mid-code; (c) an
++   oversized prompt degrading code adherence; (d) is_level_complete missing / syntax error.
++2. **Goal quality (the structural-alignment lever):** only reachable once (1) is fixed and the
++   induction reliably emits code + a satisfiable goal. The pre-staged perception-grounded
++   structural-alignment L2 goal (`ops/known-issues.md` MANDATORY-NEXT-MILESTONE) remains the lever
++   for the goal-quality half — but it is downstream of fixing reinduction reliability.
++
++## Honest caveats
++
++- **n=1 run.** "3/3 fail on the real prompt" is the single live run's internal retries, not a
++  controlled repeat. The next diagnostic must CAPTURE the real lp85 L2 reinduction prompt and the
++  model's raw completion (the same method used for the original truncation investigation) and test
++  the valid-rate over several samples to distinguish a real prompt-specific failure from variance.
++- The goal-repair loop is still correct and tested; it simply was not exercised because induction
++  failed first. The default-ON truncation fix is still a strict improvement on the prompts where it
++  applies (synthetic 3/3; the online induction succeeded).
++- `inference_substrate=live_llm_inference`; `solve_provenance=development_proxy`;
++  `verifier_is_oracle=false`. No submission; no landing-page edits.
++
++## Recommendation
++
++Before the goal-quality lever, fix L2 reinduction reliability: capture the real lp85 L2 reinduction
++prompt + raw output, find why code-gen fails on it (vs the synthetic prompt), and harden the
++code-only path for the real prompt (likely a stop-sequence / prose-leakage robustness fix). Then the
++structural-alignment goal addresses the goal-quality half. The measurement was worth running: it
++moved the diagnosis from a guessed "goal quality" wall to a concrete, upstream "real-L2-prompt
++code-gen reliability" wall, with a clear next diagnostic.
+diff --git a/results/proto_l2_measure_fixstack.json b/results/proto_l2_measure_fixstack.json
+new file mode 100644
+index 0000000000..cd11e231e0
+--- /dev/null
++++ b/results/proto_l2_measure_fixstack.json
+@@ -0,0 +1,49 @@
++{
++  "experiment_id": "proto_l2_measure_fixstack",
++  "honest_verdict": "complete_no_change_still_L1_goal_unsatisfiable",
++  "verdict_summary": "lp85 stayed L1, goal_satisfiable_any=False -- the repair did NOT fire or the induction still failed. Needs investigation.",
++  "game": "lp85",
++  "budget": 400,
++  "max_depth_reached": 1,
++  "l2_offline_reproduced": false,
++  "goal_predicate_satisfiable_any": false,
++  "exemplar_present_on_any_induction": false,
++  "n_induction_attempts": 2,
++  "goal_repair_fired_inferred": false,
++  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    h, w = grid.shape\n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == 3:\n                return False\n    return True",
++  "induction_summary": [
++    {
++      "reason": "stall",
++      "goal_level": 1,
++      "skipped": "proposer_failed_or_missing_root",
++      "planned": false,
++      "goal_predicate_satisfiable": false,
++      "plan_reaches_goal": false,
++      "win_state_exemplar_injected": false,
++      "heldout_accuracy": null,
++      "refinement_rounds_used": null,
++      "n_goal_candidates": 0
++    },
++    {
++      "reason": "level_up_reinduction",
++      "goal_level": 2,
++      "skipped": "proposer_failed",
++      "planned": false,
++      "goal_predicate_satisfiable": false,
++      "plan_reaches_goal": false,
++      "win_state_exemplar_injected": true,
++      "heldout_accuracy": null,
++      "refinement_rounds_used": 2,
++      "n_goal_candidates": 1
++    }
++  ],
++  "arm_wall_s": 967.3,
++  "pre_fix_baseline": "maxL=1, n_induce=2, goal_satisfiable=False (degenerate goal) -- the live binary arm before the truncation + goal-repair fixes",
++  "inference_substrate": "live_llm_inference",
++  "solve_provenance": "development_proxy",
++  "verifier_is_oracle": false,
++  "random_seed": 4729,
++  "duration_s": 971.68,
++  "model_port": 8920,
++  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

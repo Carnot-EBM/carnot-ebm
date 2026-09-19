@@ -1,0 +1,1034 @@
+From b93dfb0694275c0201958198c5b59c1fcc5216e1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 20:47:56 -0400
+Subject: [PATCH 03505/11362] [outer-loop] tu93 L3 SOLVED: hazard interception
+ zone calibrated against the BFS path
+
+Operator: "calibrate the static interception zone against the BFS path." Done -- the escalation loop now
+auto-deepens tu93 L1 -> L2 -> L3. 4th adversarial review: SURVIVES (independently verified). Write-up
+docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md.
+
+- scripts/experiments/experiment_hazard_l3_calibration.py (committed, reproducible): position-keyed real-env
+  BFS over L3 -> a 19-action winning path + 88 (state,action,died/safe) labels (5 deaths). Per-death
+  killer-charger attribution: every death is the avatar's destination EXACTLY aligned with the killer (row OR
+  col offset 0) at distance 6, ON THE SIDE THE CHARGER FACES.
+- The charger's FACING is read from the grid: its centre-marker (least-common hazard colour, tu93's 15) is
+  offset within the block in the facing direction (3 chargers, 3 facings matching the kills).
+- Calibrated lethal_mode='omni' (arc_nav_world_model.py): lethal iff the destination is on a charger's
+  FACING line, on the side it faces (signed, from the marker offset), at distance 1..reach -- COLLISION-EXEMPT
+  (landing on a charger is safe). Removed 3 wrong earlier assumptions (perpendicular-step-on lethal;
+  facing-agnostic; collision lethal). Reproducible: FN=0, FP=0, win-path-unpruned over 88 labels.
+- RESULT: the loop auto-deepens tu93 to L3 on 3/3 seeds (chain L1(nav) -> L2(hazard[toward]) ->
+  L3(hazard[omni])), reproduced L3 on a fresh env. 8 unit tests pass.
+- Review SURVIVES: 12 pristine-env replays all reach level 3 (parity-robust); no hardcoding (facing
+  data-read; no layout literals); no leak (env's own _levels_completed). Honesty fixes it forced (done):
+  scoped ROBUST-BUT-SINGLE-LAYOUT (tu93 L3 byte-identical across seeds; 3 seeds = 1 layout x3; ONE level of
+  ONE game, NOT a general hazard solver), and the FN=0 claim is now backed by the committed calibration script.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../hazard-aware-L3-calibrated-2026-06-22.md  |  82 ++++++
+ ops/changelog.md                              |  24 ++
+ ops/known-issues.md                           |  17 ++
+ python/carnot/agentic/arc_nav_world_model.py  |  85 ++++--
+ results/experiment_hazard_l3_calibration.json |  24 ++
+ .../experiment_reinduction_hazard_loop.json   | 274 ++++++------------
+ .../experiment_hazard_l3_calibration.py       | 163 +++++++++++
+ .../experiment_reinduction_hazard_loop.py     |  54 ++--
+ tests/python/test_arc_nav_world_model.py      |  62 +++-
+ 9 files changed, 543 insertions(+), 242 deletions(-)
+ create mode 100644 docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md
+ create mode 100644 results/experiment_hazard_l3_calibration.json
+ create mode 100644 scripts/experiments/experiment_hazard_l3_calibration.py
+
+diff --git a/docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md b/docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md
+new file mode 100644
+index 0000000000..fe39b0d668
+--- /dev/null
++++ b/docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md
+@@ -0,0 +1,82 @@
++# tu93 L3 SOLVED — the hazard interception zone, calibrated against the BFS path
++
++Date: 2026-06-22 · Outer-loop (interactive, ultracode) · OFFLINE, zero quota · `verifier_is_oracle: false`
++
++Closes the open problem from `hazard-aware-L3-next-rung-2026-06-22.md`, which (after an adversarial review
++retracted a "needs dynamic modelling" over-claim) established that tu93 L3 is **statically solvable** and the
++next step was a **correctly-calibrated** static interception lethal-zone. This note does that calibration —
++against the real-env BFS ground truth — and the escalation loop now auto-deepens **tu93 L1 → L2 → L3**.
++
++## How the lethal-zone was calibrated (reproducible)
++
++`scripts/experiments/experiment_hazard_l3_calibration.py` (committed; backs every number here):
++
++1. Reach L3 (nav → hazard[toward]); run a **position-keyed real-env BFS** over L3 (sound because the
++   chargers are static-until-triggered, i.e. position-deterministic). It finds a **19-action winning path**
++   and labels every explored `(state, action)` as died/safe — **88 moves, 5 real deaths**.
++2. Identify, per death, the **killer charger** (the one that *moved/charged* in the death frame) and its
++   geometry. The result is unambiguous: every death is the avatar's destination ending **exactly aligned**
++   with the killer (row OR col offset 0) at distance **6** (one charge step) **on the side the charger
++   faces** — deaths 1,2 on a down-facing charger's column; deaths 3,4,5 on right-facing chargers' rows.
++3. The charger's **facing is readable from the grid**: its centre-marker (the least-common hazard colour,
++   tu93's colour-15) is **offset within the block in the direction it faces** — verified: `(25,25)`→+col→
++   faces right, `(25,31)`→+row→faces down, `(37,13)`→+col→faces right, all matching the killer directions.
++
++## The calibrated rule (`lethal_mode='omni'`)
++
++`python/carnot/agentic/arc_nav_world_model.py:HazardAwareNavWorldModel`. A move is lethal iff, for some
++charger, the avatar's **destination** is on the charger's **facing line** (aligned on the perpendicular
++axis), **on the side it faces** (signed facing from the centre-marker offset), at distance **1..reach** —
++**collision-exempt** (landing exactly on a charger is *not* a kill; it is defeated/passed). The facing
++direction (not just axis) is what stops the over-pruning: a charger does not kill what is behind it.
++
++This was reached by removing three earlier wrong assumptions, each caught by the BFS labels: the `enter`
++rung's "perpendicular step-on is lethal" (backwards — approach direction is irrelevant; *alignment* is what
++matters), the facing-agnostic "any aligned charger kills" (over-prunes — only the *facing* charger kills),
++and "collision is lethal" (the 3 final win-path FPs were all collisions, which are safe).
++
++Calibration result (reproducible, `experiment_hazard_l3_calibration.json`): **FN=0, FP=0,
++win_path_pruned=0** over the 88 labelled moves. Clean.
++
++## Result — the loop auto-deepens tu93 to L3
++
++`results/experiment_reinduction_hazard_loop.json` (ladder nav → hazard[toward] → hazard[omni]):
++
++```
++seeds 7, 20260622, 3:  deepest L3, reproduced L3   |   L1(nav) -> L2(hazard_aware[toward]) -> L3(hazard_aware[omni])
++```
++
++L2's single horizontal charger cracks on `toward`; L3's three facing-charger configuration cracks on `omni`.
++**Reproduced on a fresh env** at level 3 every seed.
++
++## Adversarial review — SURVIVES (with the scope it forced)
++
++A hostile reviewer independently replayed the banked 47-action sequence on **12 pristine envs — all reached
++level 3** (parity-robust; no gotcha-#7 toggle). No hardcoding (facing is data-read; no layout literals in
++`is_lethal`), no leak (`_levels_completed` is the env's own counter). Two honesty fixes it forced, now done:
++- **Scope: robust-but-single-layout.** tu93 L3's charger layout is **byte-identical across seeds** (the seed
++  only perturbs re-induction sampling), so 3 seeds = **one layout × 3** — deterministic-robust reproduction,
++  not cross-configuration generalization. This is validated on **one level of one game**, NOT a general
++  hazard solver.
++- **The FN=0 claim is now backed** by the committed `experiment_hazard_l3_calibration.py` (was an inline
++  throwaway before).
++
++## Scope / honesty
++
++Not a first solve (tu93 was already reproduced to L4+ via Manhattan routing). The contribution: the
++induced-world-model imagination path now deepens through a hazard level, with the interception lethal-zone
++**calibrated against real-env ground truth** rather than assumed — and the per-charger **facing read from the
++grid** is a general mechanic, even though it is validated here on tu93 L3's single static layout.
++
++## Forward
++
++- Test the facing-aware `omni` rung on a SECOND charger game/level to convert "single-layout" into general
++  evidence.
++- Push to L4+ (a new mechanic surfaces a new rung), and/or drop the loop into the standing solver.
++
++## Artifacts
++
++- `python/carnot/agentic/arc_nav_world_model.py` — `lethal_mode='omni'` (facing-directional, calibrated) + `_charger_facing`
++- `scripts/experiments/experiment_hazard_l3_calibration.py` + `results/experiment_hazard_l3_calibration.json` — the reproducible calibration (FN=0, FP=0)
++- `scripts/experiments/experiment_reinduction_hazard_loop.py` + `results/experiment_reinduction_hazard_loop.json` — the loop deepening tu93 to L3
++- `tests/python/test_arc_nav_world_model.py` — 8 tests incl. `test_omni_mode_is_facing_directional`
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8aa58e9af8..531a58290a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,29 @@
+ # Carnot — Changelog
+ 
++## 2026-06-22 (tu93 L3 SOLVED: hazard interception zone CALIBRATED against the BFS path — outer-loop, ultracode)
++
++Operator: "calibrate the static interception zone against the BFS path." Done — the escalation loop now
++auto-deepens tu93 L1 → L2 → L3. Adversarial review (4th): SURVIVES (independently verified). Write-up
++`docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md`.
++
++- Built `scripts/experiments/experiment_hazard_l3_calibration.py` (committed, reproducible): position-keyed
++  real-env BFS over L3 → a 19-action winning path + 88 (state,action,died/safe) labels (5 deaths). Per-death
++  killer-charger attribution showed every death is the avatar's destination EXACTLY aligned with the killer
++  (row OR col offset 0) at distance 6, ON THE SIDE THE CHARGER FACES.
++- The charger's FACING is readable from the grid: its centre-marker (least-common hazard colour, tu93's 15)
++  is offset within the block in the facing direction (verified: 3 chargers, 3 facings matching the kills).
++- Calibrated `lethal_mode='omni'` (`arc_nav_world_model.py`): lethal iff the destination is on a charger's
++  FACING line, on the side it faces (signed, from the marker offset), at distance 1..reach — COLLISION-EXEMPT
++  (landing on a charger is safe). Removed 3 wrong earlier assumptions (perpendicular-step-on lethal;
++  facing-agnostic; collision lethal). Reproducible result: FN=0, FP=0, win-path-unpruned over 88 labels.
++- RESULT (`experiment_reinduction_hazard_loop.py`): the loop auto-deepens tu93 to L3 on 3/3 seeds, chain
++  L1(nav) → L2(hazard[toward]) → L3(hazard[omni]), reproduced L3 on a fresh env. 8 unit tests pass.
++- Adversarial review SURVIVES: 12 pristine-env replays all reach L3 (parity-robust); no hardcoding (facing
++  data-read); no leak (env's own counter). Honesty fixes it forced (now done): scoped as ROBUST-BUT-SINGLE-
++  LAYOUT (tu93 L3 is byte-identical across seeds; 3 seeds = 1 layout x3; one level of one game, NOT a general
++  hazard solver), and the FN=0 claim is now backed by the committed calibration script. Conductor left
++  STOPPED. Committed `[outer-loop]`.
++
+ ## 2026-06-22 (Hazard-aware L3 rung: robustness fixes + escalation rung; L3 over-claim RETRACTED — outer-loop, ultracode)
+ 
+ Operator: "add the next escalation rung for L3." Added the rung + robustness fixes; an adversarial review
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 642d64b05d..df23a53af8 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1003,6 +1003,23 @@ operator: "add the next escalation rung for L3").** Write-up
+   over-prunes ~6 safe moves). Next step = a CALIBRATED static interception zone (mark only the exact
+   interception cells), or fall back to position-keyed real-env search per level. NOT dynamic.
+ 
++**tu93 L3 SOLVED — interception zone CALIBRATED against the BFS path (2026-06-22, outer-loop, ultracode —
++operator: "calibrate the static interception zone against the BFS path").** DONE. Adversarial review (4th):
++SURVIVES. Write-up `docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md`.
++- `experiment_hazard_l3_calibration.py` (committed, reproducible): position-keyed real-env BFS over L3 → a
++  19-action win path + 88 labelled moves (5 deaths). Per-death killer-charger attribution: every death is the
++  destination EXACTLY aligned with the killer at distance 6, ON THE SIDE IT FACES.
++- Charger FACING is read from the grid (centre-marker offset within the block, signed direction). Calibrated
++  `lethal_mode='omni'`: lethal iff destination on a charger's FACING line, facing side, dist 1..reach,
++  COLLISION-EXEMPT. Reproducible: FN=0, FP=0, win-path-unpruned.
++- RESULT: the loop auto-deepens tu93 L1→L2→L3 on 3/3 seeds (chain nav→hazard[toward]→hazard[omni]), reproduced
++  L3. 8 unit tests pass. Review SURVIVES (12 pristine-env replays reach L3; no hardcoding; no leak).
++- SCOPE (honest): ROBUST-BUT-SINGLE-LAYOUT — tu93 L3 is byte-identical across seeds (3 seeds = 1 layout x3);
++  validated on ONE level of ONE game, NOT a general hazard solver. The facing mechanic is general; test on a
++  2nd charger game to generalize.
++- **Next**: test facing-aware omni on a 2nd charger level (generalize); push to L4+; drop the loop into the
++  standing solver.
++
+ ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
+ 
+ **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
+diff --git a/python/carnot/agentic/arc_nav_world_model.py b/python/carnot/agentic/arc_nav_world_model.py
+index 8b0ecd0886..17bacdc09c 100644
+--- a/python/carnot/agentic/arc_nav_world_model.py
++++ b/python/carnot/agentic/arc_nav_world_model.py
+@@ -330,11 +330,15 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+     hazard_colors: frozenset = frozenset()
+     hazard_axis: Optional[str] = None       # 'row' (horizontal charger) or 'col' (vertical charger)
+     charge_range: int = 0                   # max post-move along-line distance at which the charge intercepts
++    hazard_center_color: Optional[int] = None  # the charger's centre-marker colour; its OFFSET within the
++    #                                            block gives the per-charger FACING (used by 'omni')
+     align_tol: int = 2                      # how close to the hazard's line counts as "on the line"
+-    lethal_mode: str = "toward"             # 'toward' (charge only on along-axis approach; tu93 L2 horizontal
+-    #                                         charger) or 'enter' (ALSO on a perpendicular step ONTO the line;
+-    #                                         tu93 L3 vertical chargers). An escalation rung tries 'toward'
+-    #                                         first and falls back to 'enter' when a toward-plan still dies.
++    lethal_mode: str = "toward"             # escalation rungs (the loop tries them in order, first that
++    #   'toward' : charge on a TOWARD move along the single learned axis (tu93 L2's horizontal charger).
++    #   'omni'   : OMNIDIRECTIONAL -- charge on a toward move along EITHER axis (row or col) + a collision
++    #              (ending on the charger). Calibrated against tu93 L3's BFS ground truth: its 3 chargers
++    #              kill on row-approach, col-approach, AND collision; a perpendicular step-ONTO the line is
++    #              SAFE (so 'enter'/step_onto was wrong and is removed).
+     hazard_fit: dict = field(default_factory=dict)
+ 
+     @classmethod
+@@ -415,18 +419,48 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         # charge), whereas a slight over-estimate only routes a little wider.
+         step = max((abs(dy) + abs(dx) for (dy, dx) in base.displacement.values()), default=0)
+         charge_range = max(int(round(max(post_dists))) if post_dists else 0, step if post_dists else 0)
++        # The charger's CENTRE marker (the least-common hazard colour, e.g. tu93's colour-15 inside the
++        # colour-8 ring) is OFFSET within the block in the direction the charger FACES -- so per-charger
++        # facing is readable from the grid (calibrated vs tu93 L3: 15 offset in col => faces horizontal /
++        # charges along its row; offset in row => faces vertical / charges along its column).
++        hazard_center_color = None
++        if hazard_colors and deaths:
++            cnt = Counter()
++            for g0, _a, _g1 in deaths:
++                for c in hazard_colors:
++                    cnt[c] += int((g0 == c).sum())
++            hazard_center_color = min(cnt, key=cnt.get) if cnt else None
+         hazard_fit = {"n_death_transitions": len(deaths), "hazard_colors": sorted(hazard_colors),
+                       "hazard_axis": hazard_axis, "charge_range": charge_range, "move_step": step,
++                      "hazard_center_color": hazard_center_color,
+                       "axis_votes": dict(axis_votes), "post_move_distances_at_death": sorted(post_dists)}
+         return cls(displacement=base.displacement, avatar_colors=base.avatar_colors, bg_color=base.bg_color,
+                    floor_color=base.floor_color, wall_colors=base.wall_colors, goal_color=base.goal_color,
+                    door_color=base.door_color, fit_quality=base.fit_quality, hazard_colors=hazard_colors,
+                    hazard_axis=hazard_axis, charge_range=charge_range, lethal_mode=lethal_mode,
+-                   hazard_fit=hazard_fit)
++                   hazard_center_color=hazard_center_color, hazard_fit=hazard_fit)
+ 
+     def _hazard_blobs(self, grid):
+         return _blobs(_color_cells(grid, self.hazard_colors)) if self.hazard_colors else []
+ 
++    def _charger_facing(self, grid, hy, hx):
++        """The charger's FACING DIRECTION as a unit (fdy, fdx), read from its centre-marker offset within the
++        block: the marker is offset in the direction the charger faces (and charges). e.g. tu93 a marker
++        offset +column => faces right (charges along its row, to the right); +row => faces down. Returns None
++        if no marker found (then 'omni' falls back to all directions for that charger)."""
++        if self.hazard_center_color is None:
++            return None
++        g = np.asarray(grid)
++        ys, xs = np.where(g == self.hazard_center_color)
++        near = [(int(y), int(x)) for y, x in zip(ys, xs) if abs(y - hy) <= 4 and abs(x - hx) <= 4]
++        if not near:
++            return None
++        my, mx = near[0]
++        ody, odx = my - hy, mx - hx
++        if abs(odx) >= abs(ody):
++            return (0, 1 if odx > 0 else -1)   # faces along the row (horizontal charger)
++        return (1 if ody > 0 else -1, 0)       # faces along the column (vertical charger)
++
+     def is_lethal(self, grid, action):
+         """A nav move is lethal if it leaves the avatar ON a hazard's charge line (perpendicular offset within
+         align_tol of the hazard's row/col) AND within charge_range along that line -> the charger intercepts
+@@ -445,21 +479,36 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2   # avatar centre BEFORE the move
+         acy, acx = bcy + dy, bcx + dx                         # avatar centre AFTER the move
+         g = np.asarray(grid)
++        tol, rng = self.align_tol, self.charge_range
+         for (hy, hx, _sz) in self._hazard_blobs(grid):
+-            if self.hazard_axis == "row":
+-                on_line = abs(acy - hy) <= self.align_tol     # avatar ends on the hazard's row
+-                toward = (hx - bcx) * dx > 0                  # moving along the row toward the charger
+-                step_onto = abs(bcy - hy) > self.align_tol    # was OFF the row before (a perpendicular step-on)
+-                dist = abs(acx - hx)
++            on_row = abs(acy - hy) <= tol          # avatar ends ALIGNED on the charger's row
++            on_col = abs(acx - hx) <= tol          # avatar ends ALIGNED on the charger's column
++            if self.lethal_mode == "omni":
++                # FACING-AWARE (calibrated vs tu93 L3's BFS ground truth): each charger kills only when the
++                # avatar's DESTINATION is on the charger's facing line (aligned on the perpendicular axis),
++                # on the SIDE it faces, within reach -- regardless of the avatar's own approach direction (a
++                # perpendicular step ONTO the line is just as lethal; collision is the zero-distance case).
++                # The facing DIRECTION (not just axis) is read from the centre-marker offset; using the
++                # signed direction (a charger does not kill what is behind it) is what stops the over-pruning
++                # that forbade the BFS win path.
++                # NB: landing exactly ON a charger (distance 0) is NOT lethal in tu93 L3 (it defeats/passes
++                # the charger) -- every observed death is a charge INTERCEPTION at distance 1..reach on the
++                # charger's facing side, so the lethal zone is strictly 0 < dist <= reach.
++                f = self._charger_facing(grid, hy, hx)
++                if f is None:
++                    lethal = (on_row and 0 < abs(acx - hx) <= rng) or (on_col and 0 < abs(acy - hy) <= rng)
++                elif f[0] == 0:                                   # horizontal charger (faces left/right)
++                    lethal = on_row and 0 < (acx - hx) * f[1] <= rng
++                else:                                             # vertical charger (faces up/down)
++                    lethal = on_col and 0 < (acy - hy) * f[0] <= rng
+             else:
+-                on_line = abs(acx - hx) <= self.align_tol     # avatar ends on the hazard's column
+-                toward = (hy - bcy) * dy > 0                  # moving along the column toward the charger
+-                step_onto = abs(bcx - hx) > self.align_tol    # was OFF the column before
+-                dist = abs(acy - hy)
+-            # 'toward': charge only on along-axis approach (tu93 L2 horizontal charger tolerates perpendicular
+-            # step-ons). 'enter': ALSO charge on a perpendicular step ONTO the line (tu93 L3 vertical chargers).
+-            trig = toward or (self.lethal_mode == "enter" and step_onto)
+-            if on_line and trig and dist <= self.charge_range and self._charge_unobstructed(g, hy, hx, acy, acx):
++                # 'toward' (single learned axis): charge only on an along-axis approach (tu93 L2's horizontal
++                # charger tolerates the perpendicular step-on / on-line-not-approaching cases).
++                if self.hazard_axis == "row":
++                    lethal = on_row and (hx - bcx) * dx > 0 and abs(acx - hx) <= rng
++                else:
++                    lethal = on_col and (hy - bcy) * dy > 0 and abs(acy - hy) <= rng
++            if lethal and self._charge_unobstructed(g, hy, hx, acy, acx):
+                 return True
+         return False
+ 
+diff --git a/results/experiment_hazard_l3_calibration.json b/results/experiment_hazard_l3_calibration.json
+new file mode 100644
+index 0000000000..8514bcb08f
+--- /dev/null
++++ b/results/experiment_hazard_l3_calibration.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": "experiment_hazard_l3_calibration",
++  "game": "tu93",
++  "honest_verdict": "success: omni_lethal_zone_CALIBRATED_clean_FN0_winpath_unpruned_on_tu93_L3_single_layout",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seed": 7,
++  "n_bfs_nodes": 22,
++  "n_labelled_moves": 88,
++  "n_real_deaths": 5,
++  "win_path_len": 19,
++  "omni_FN_missed_deaths": 0,
++  "omni_FP_over_prune": 0,
++  "omni_win_path_moves_pruned": 0,
++  "calibration_clean": true,
++  "hazard_center_color": 15,
++  "charge_range": 6,
++  "distinct_charger_facings_observed": {
++    "('row', (0, 1))": 128,
++    "('col', (1, 0))": 56
++  },
++  "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
++  "duration_s": 5.0
++}
+\ No newline at end of file
+diff --git a/results/experiment_reinduction_hazard_loop.json b/results/experiment_reinduction_hazard_loop.json
+index 769715f7e9..410e0ba90a 100644
+--- a/results/experiment_reinduction_hazard_loop.json
++++ b/results/experiment_reinduction_hazard_loop.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "experiment_reinduction_hazard_loop",
+   "game": "tu93",
+-  "honest_verdict": "success: escalation_ladder_nav_toward_enter_deepens_tu93_to_L2_on_every_seed_but_both_current_static_rungs_MIS_PARAMETERISED_at_L3_under_and_over_prune_a_statically_solvable_level_next_step_is_a_calibrated_static_interception_zone_not_dynamic_modelling",
++  "honest_verdict": "success: reinduction_loop_AUTO_ESCALATES_nav_toward_omni_at_the_trigger_and_deepens_tu93_to_L3_reproduced_on_every_seed_via_the_omni_rung_CALIBRATED_vs_the_L3_BFS_path_single_static_layout",
+   "verifier_is_oracle": false,
+   "inference_substrate": "offline_arc_search_plus_induced_world_model",
+   "random_seeds": [
+@@ -10,14 +10,14 @@
+     3
+   ],
+   "target_level": 3,
+-  "n_seeds_reach_L2": 3,
+-  "n_seeds_L3_rungs_exhausted": 3,
++  "min_reproduced_level": 3,
++  "deepest_level": 3,
+   "rows": [
+     {
+       "seed": 7,
+       "reached_L1": true,
+-      "deepest_level": 2,
+-      "reproduced_level": 2,
++      "deepest_level": 3,
++      "reproduced_level": 3,
+       "per_level": [
+         {
+           "level_reached": 1,
+@@ -37,6 +37,7 @@
+             "hazard_axis": "row",
+             "charge_range": 6,
+             "move_step": 6,
++            "hazard_center_color": 15,
+             "axis_votes": {
+               "row": 6
+             },
+@@ -52,69 +53,40 @@
+           "plan_len": 10
+         },
+         {
+-          "level_stalled": 2,
+-          "model_class": "hazard_aware",
++          "level_reached": 3,
++          "model_class": "hazard_aware[omni]",
+           "escalated_from": "nav_avatar_removed",
+-          "rungs_tried": [
+-            {
+-              "lethal_mode": "toward",
+-              "hazard_fit": {
+-                "n_death_transitions": 4,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 4
+-                },
+-                "post_move_distances_at_death": [
+-                  1.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "game_over_avatar_removed",
+-              "plan_len": 9
++          "hazard_fit": {
++            "n_death_transitions": 4,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "col",
++            "charge_range": 6,
++            "move_step": 6,
++            "hazard_center_color": 15,
++            "axis_votes": {
++              "col": 4
+             },
+-            {
+-              "lethal_mode": "enter",
+-              "hazard_fit": {
+-                "n_death_transitions": 4,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 4
+-                },
+-                "post_move_distances_at_death": [
+-                  1.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "no_plan_in_model",
+-              "plan_len": null
+-            }
+-          ]
++            "post_move_distances_at_death": [
++              1.0,
++              5.0,
++              5.0,
++              5.0
++            ]
++          },
++          "plan_len": 19
+         }
+       ],
+-      "n_banked_actions": 28,
++      "n_banked_actions": 47,
+       "escalated_to_hazard_aware": true
+     },
+     {
+       "seed": 20260622,
+       "reached_L1": true,
+-      "deepest_level": 2,
+-      "reproduced_level": 2,
++      "deepest_level": 3,
++      "reproduced_level": 3,
+       "per_level": [
+         {
+           "level_reached": 1,
+@@ -134,6 +106,7 @@
+             "hazard_axis": "row",
+             "charge_range": 6,
+             "move_step": 6,
++            "hazard_center_color": 15,
+             "axis_votes": {
+               "row": 5
+             },
+@@ -148,79 +121,45 @@
+           "plan_len": 10
+         },
+         {
+-          "level_stalled": 2,
+-          "model_class": "hazard_aware",
++          "level_reached": 3,
++          "model_class": "hazard_aware[omni]",
+           "escalated_from": "nav_avatar_removed",
+-          "rungs_tried": [
+-            {
+-              "lethal_mode": "toward",
+-              "hazard_fit": {
+-                "n_death_transitions": 9,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 9
+-                },
+-                "post_move_distances_at_death": [
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "game_over_avatar_removed",
+-              "plan_len": 9
++          "hazard_fit": {
++            "n_death_transitions": 9,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "col",
++            "charge_range": 6,
++            "move_step": 6,
++            "hazard_center_color": 15,
++            "axis_votes": {
++              "col": 9
+             },
+-            {
+-              "lethal_mode": "enter",
+-              "hazard_fit": {
+-                "n_death_transitions": 9,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 9
+-                },
+-                "post_move_distances_at_death": [
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "no_plan_in_model",
+-              "plan_len": null
+-            }
+-          ]
++            "post_move_distances_at_death": [
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0
++            ]
++          },
++          "plan_len": 19
+         }
+       ],
+-      "n_banked_actions": 28,
++      "n_banked_actions": 47,
+       "escalated_to_hazard_aware": true
+     },
+     {
+       "seed": 3,
+       "reached_L1": true,
+-      "deepest_level": 2,
+-      "reproduced_level": 2,
++      "deepest_level": 3,
++      "reproduced_level": 3,
+       "per_level": [
+         {
+           "level_reached": 1,
+@@ -240,6 +179,7 @@
+             "hazard_axis": "row",
+             "charge_range": 6,
+             "move_step": 6,
++            "hazard_center_color": 15,
+             "axis_votes": {
+               "row": 3
+             },
+@@ -252,71 +192,39 @@
+           "plan_len": 10
+         },
+         {
+-          "level_stalled": 2,
+-          "model_class": "hazard_aware",
++          "level_reached": 3,
++          "model_class": "hazard_aware[omni]",
+           "escalated_from": "nav_avatar_removed",
+-          "rungs_tried": [
+-            {
+-              "lethal_mode": "toward",
+-              "hazard_fit": {
+-                "n_death_transitions": 7,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 7
+-                },
+-                "post_move_distances_at_death": [
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "game_over_avatar_removed",
+-              "plan_len": 9
++          "hazard_fit": {
++            "n_death_transitions": 7,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "col",
++            "charge_range": 6,
++            "move_step": 6,
++            "hazard_center_color": 15,
++            "axis_votes": {
++              "col": 7
+             },
+-            {
+-              "lethal_mode": "enter",
+-              "hazard_fit": {
+-                "n_death_transitions": 7,
+-                "hazard_colors": [
+-                  8,
+-                  15
+-                ],
+-                "hazard_axis": "col",
+-                "charge_range": 6,
+-                "move_step": 6,
+-                "axis_votes": {
+-                  "col": 7
+-                },
+-                "post_move_distances_at_death": [
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0,
+-                  5.0
+-                ]
+-              },
+-              "stop": "no_plan_in_model",
+-              "plan_len": null
+-            }
+-          ]
++            "post_move_distances_at_death": [
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0,
++              5.0
++            ]
++          },
++          "plan_len": 19
+         }
+       ],
+-      "n_banked_actions": 28,
++      "n_banked_actions": 47,
+       "escalated_to_hazard_aware": true
+     }
+   ],
+-  "methodology_note": "One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[enter] and re-plan the same level; take the first rung that deepens; else stop. No hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 horizontal charger) cracks on the toward rung. tu93 L3 (3 VERTICAL chargers) exhausts both CURRENT static rungs (toward UNDER-prunes -> dies; enter OVER-prunes -> no path). Per adversarial review, L3 is STATICALLY solvable (chargers static-until-triggered; a position-keyed real-env BFS finds a verified 19-action path) -- the next step is a correctly-CALIBRATED static interception lethal-zone, NOT dynamic modelling.",
+-  "duration_s": 11.0
++  "methodology_note": "One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[omni] and re-plan the same level; take the first rung that deepens; else stop. No hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 horizontal charger) cracks on the 'toward' rung. tu93 L3 (3 chargers with PER-CHARGER FACINGS) cracks on the 'omni' rung, whose interception lethal-zone was CALIBRATED against L3's position-keyed real-env BFS ground truth (the verified 19-action path): each charger kills only when the avatar's destination is on its facing line, on the side it faces (read from the centre-marker offset), at distance 1..reach -- collision-exempt. The calibration is reproducibly clean (FN=0, FP=0, win-path-unpruned over 88 BFS-labelled moves; see experiment_hazard_l3_calibration.py). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant -- 3 seeds = 1 layout x3); this is validated on that one level, NOT a general hazard solver. Static, not dynamic.",
++  "duration_s": 12.6
+ }
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_hazard_l3_calibration.py b/scripts/experiments/experiment_hazard_l3_calibration.py
+new file mode 100644
+index 0000000000..ad1c70410b
+--- /dev/null
++++ b/scripts/experiments/experiment_hazard_l3_calibration.py
+@@ -0,0 +1,163 @@
++#!/usr/bin/env python3
++"""Calibrate (and VALIDATE, reproducibly) the hazard 'omni' lethal-zone against tu93 L3's real-env BFS path.
++
++This is the committed, reproducible backing for the calibration claim in
++docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md. It:
++
++  1. reaches tu93 L3 (nav -> hazard[toward]),
++  2. runs a POSITION-KEYED real-env BFS over L3 -> finds a winning action path AND labels every explored
++     (state, action) as died / safe (the ground truth; the chargers are static-until-triggered, so a
++     position key is sound),
++  3. fits HazardAwareNavWorldModel(lethal_mode='omni') and scores its is_lethal predicate against the labels:
++     FN (missed real deaths -- MUST be 0, else the planner walks into a charge) and FP (safe moves wrongly
++     pruned, of which the load-bearing subset is those ON the win path -- MUST be 0, else the planner cannot
++     route the verified path).
++
++A clean calibration is FN==0 AND win_path_pruned==0. verifier_is_oracle: false. OFFLINE, zero quota.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import time
++from collections import Counter, deque
++from pathlib import Path
++
++import numpy as np
++from arcengine import GameAction
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_agi3_world_model import grid_of
++from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed, _game_over
++from carnot.agentic.arc_graph_explore import _warm
++from carnot.agentic.arc_executable_world_model import to_logical
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel, HazardAwareNavWorldModel, _bbox, _color_cells
++
++import importlib.util
++_here = Path(__file__).resolve().parent
++def _load(n, f):
++    s = importlib.util.spec_from_file_location(n, str(_here / f)); m = importlib.util.module_from_spec(s)
++    s.loader.exec_module(m); return m
++_ri = _load("exp_reind", "experiment_reinduction.py")
++_ha = _load("exp_haz", "experiment_hazard_aware.py")
++_loop = _load("exp_loop", "experiment_reinduction_hazard_loop.py")
++
++REPO = _here.parents[1]
++OUT = REPO / "results" / "experiment_hazard_l3_calibration.json"
++
++
++def _ok(f):
++    try:
++        return np.asarray(grid_of(f)).ndim == 2
++    except Exception:
++        return False
++
++
++def _avatar_pos(g, av_colors):
++    b = _bbox(_color_cells(g, av_colors))
++    return None if b is None else (b[0], b[1])
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--seed", type=int, default=7)
++    ap.add_argument("--max-nodes", type=int, default=80)
++    args = ap.parse_args()
++    t0 = time.time()
++    game, seed = "tu93", args.seed
++
++    # --- reach L3: L1 (nav) -> L2 (hazard toward); bank the L1->L2 action prefix -----------------------
++    m0, pre, cell, _ = _ri.reach_level_one(game, 120000, 80, seed=seed)
++    goal = m0.goal_color
++    tr2, _ = _ri.collect_at_level(game, pre, 150, seed=seed + 1)
++    nav = InducedNavWorldModel.fit(tr2); nav.goal_color = goal
++    nd = _ha.nav_death_transitions(nav, game, pre, cell, 120000, 80)
++    haz2 = HazardAwareNavWorldModel.fit(list(tr2) + nd, goal_color=goal, lethal_mode="toward")
++    l1l2 = _loop.execute_from(game, pre, cell, haz2, 120000, 80)["banked"]
++    av_colors = nav.avatar_colors
++
++    def run(actions):
++        arc = kit.offline_arcade(); env = arc.make(game, scorecard_id=arc.open_scorecard()); f = _warm(env, False)
++        for a in list(l1l2) + list(actions):
++            f = env.step(_game_action(GameAction, int(a if not isinstance(a, dict) else a["action"])), data=None)
++            if f is None or _game_over(f):
++                return f, None
++        return f, (to_logical(grid_of(f), cell) if _ok(f) else None)
++
++    f0, g0 = run([])
++    start_lvl = _levels_completed(f0)
++    start = _avatar_pos(g0, av_colors)
++
++    # --- position-keyed real-env BFS over L3: win path + (state, action, died) labels ------------------
++    seen = {start}; q = deque([([], start)]); labels = []; winpath = None; nodes = 0
++    while q and nodes < args.max_nodes and winpath is None:
++        path, _pos = q.popleft(); nodes += 1
++        for a in (1, 2, 3, 4):
++            f, g = run(path + [a])
++            died = f is None or _game_over(f)
++            lvl = _levels_completed(f) if f is not None else -1
++            labels.append((path + [a], a, bool(died)))
++            if died:
++                continue
++            if lvl > start_lvl:
++                winpath = path + [a]; break
++            p = _avatar_pos(g, av_colors) if g is not None else None
++            if p and p not in seen:
++                seen.add(p); q.append((path + [a], p))
++
++    # --- score the calibrated 'omni' is_lethal against the labels --------------------------------------
++    tr3, _ = _ri.collect_at_level(game, l1l2, 200, seed=99)
++    nav3 = InducedNavWorldModel.fit(tr3); nav3.goal_color = goal
++    nd3 = _ha.nav_death_transitions(nav3, game, l1l2, cell, 120000, 80)
++    omni = HazardAwareNavWorldModel.fit(list(tr3) + nd3, goal_color=goal, lethal_mode="omni")
++    winset = {tuple(winpath[:i + 1]) for i in range(len(winpath))} if winpath else set()
++
++    fn = fp = wpp = 0
++    facings = Counter()
++    for path, a, died in labels:
++        f, _g = run(path[:-1])
++        if f is None or not _ok(f):
++            continue
++        g = np.asarray(to_logical(grid_of(f), cell))
++        pred = omni.is_lethal(g, a)
++        for hy, hx, _s in omni._hazard_blobs(g):
++            fc = omni._charger_facing(g, hy, hx)
++            if fc is not None:
++                facings[("row" if fc[0] == 0 else "col", fc)] += 1
++        if died and not pred:
++            fn += 1
++        if (not died) and pred:
++            fp += 1
++            if tuple(path) in winset:
++                wpp += 1
++
++    n_deaths = sum(1 for _p, _a, d in labels if d)
++    clean = (fn == 0 and wpp == 0 and winpath is not None)
++    verdict = ("success: omni_lethal_zone_CALIBRATED_clean_FN0_winpath_unpruned_on_tu93_L3_single_layout"
++               if clean else f"complete: calibration_not_clean_FN{fn}_winpathpruned{wpp}_inspect")
++
++    art = {"experiment": "experiment_hazard_l3_calibration", "game": game, "honest_verdict": verdict,
++           "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
++           "random_seed": seed, "n_bfs_nodes": nodes, "n_labelled_moves": len(labels),
++           "n_real_deaths": n_deaths, "win_path_len": len(winpath) if winpath else None,
++           "omni_FN_missed_deaths": fn, "omni_FP_over_prune": fp, "omni_win_path_moves_pruned": wpp,
++           "calibration_clean": bool(clean),
++           "hazard_center_color": omni.hazard_center_color, "charge_range": omni.charge_range,
++           "distinct_charger_facings_observed": {str(k): v for k, v in facings.items()},
++           "methodology_note": ("Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + "
++                                "per-move died/safe labels (the chargers are static-until-triggered, so a "
++                                "position key is sound). The 'omni' is_lethal rule (per-charger facing read "
++                                "from the centre-marker offset; directional; collision-exempt; dist 1..reach) "
++                                "is scored against those labels. CLEAN = FN==0 (no real death missed) AND "
++                                "win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is "
++                                "a SINGLE static layout (seed-invariant); this validates the calibration on "
++                                "that one level, not a general hazard solver."),
++           "duration_s": round(time.time() - t0, 1)}
++    OUT.write_text(json.dumps(art, indent=2))
++    print(f"VERDICT: {verdict}")
++    print(f"  BFS nodes={nodes} labels={len(labels)} deaths={n_deaths} win_path_len={art['win_path_len']}")
++    print(f"  omni: FN={fn} FP={fp} win_path_pruned={wpp} | facings={dict(facings)} -> {OUT}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/experiments/experiment_reinduction_hazard_loop.py b/scripts/experiments/experiment_reinduction_hazard_loop.py
+index c6a1039fc4..97085c1e94 100644
+--- a/scripts/experiments/experiment_reinduction_hazard_loop.py
++++ b/scripts/experiments/experiment_reinduction_hazard_loop.py
+@@ -123,7 +123,7 @@ def escalating_deepen(game, target_level, n_reinduce, max_plan, max_depth, seed)
+             nav_deaths = _ha.nav_death_transitions(nav, game, banked, cell, max_plan, max_depth)
+             escalated = False
+             attempts = []
+-            for mode in ("toward", "enter"):
++            for mode in ("toward", "omni"):
+                 haz = HazardAwareNavWorldModel.fit(list(tr) + nav_deaths, goal_color=goal_color,
+                                                    lethal_mode=mode)
+                 resh = execute_from(game, banked, cell, haz, max_plan, max_depth)
+@@ -173,40 +173,42 @@ def main() -> int:
+ 
+     rows = [{"seed": s, **escalating_deepen(args.game, args.target_level, args.n_reinduce, args.max_plan,
+                                             args.max_depth, s)} for s in seeds]
+-    # The escalation ladder is nav -> hazard[toward] -> hazard[enter]. The clean, reproduced win is reaching
+-    # L2 (the toward rung cracks tu93 L2's horizontal charger). L3 (3 VERTICAL chargers) exhausts BOTH current
+-    # static rungs -- toward plans-but-dies (UNDER-prunes: misses perpendicular step-on kills), enter
+-    # no-plans (OVER-prunes safe moves). NOTE (adversarial review 2026-06-22): L3 IS statically solvable (the
+-    # chargers are static-until-triggered; a position-keyed real-env BFS finds a verified 19-action path), so
+-    # the next step is a CORRECTLY-CALIBRATED static interception lethal-zone, NOT dynamic modelling.
+-    l2_wins = [r for r in rows if r.get("escalated_to_hazard_aware") and r.get("reproduced_level", 0) >= 2]
+-    l3_rung_exhausted = [r for r in rows if any("rungs_tried" in p for p in r.get("per_level", []))]
+-    if len(l2_wins) == len(seeds) and seeds and args.target_level >= 3 and l3_rung_exhausted:
+-        verdict = ("success: escalation_ladder_nav_toward_enter_deepens_tu93_to_L2_on_every_seed_but_both_"
+-                   "current_static_rungs_MIS_PARAMETERISED_at_L3_under_and_over_prune_a_statically_solvable_"
+-                   "level_next_step_is_a_calibrated_static_interception_zone_not_dynamic_modelling")
+-    elif len(l2_wins) == len(seeds) and seeds:
+-        verdict = ("success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_"
+-                   f"trigger_and_deepens_{args.game}_to_L2_reproduced_on_every_seed")
+-    elif l2_wins:
+-        verdict = (f"success: reinduction_loop_escalates_and_deepens_reproduced_on_{len(l2_wins)}_of_{len(seeds)}_seeds")
++    # The escalation ladder is nav -> hazard[toward] -> hazard[omni]. L2's single HORIZONTAL charger cracks
++    # on the toward rung; L3's THREE per-charger-facing chargers crack on the omni rung, whose lethal-zone
++    # was CALIBRATED against L3's position-keyed real-env BFS ground truth (per-charger facing read from the
++    # centre-marker offset; directional; collision-exempt; FN=0 on the 88-move labelled set).
++    min_repro = min((r.get("reproduced_level", 0) for r in rows), default=0)
++    deepest = min((r.get("deepest_level", 0) for r in rows), default=0)
++    used_omni = any("omni" in str(p.get("model_class", "")) for r in rows for p in r.get("per_level", []))
++    if seeds and min_repro >= args.target_level and all(r.get("escalated_to_hazard_aware") for r in rows):
++        omni_tag = ("_via_the_omni_rung_CALIBRATED_vs_the_L3_BFS_path_single_static_layout" if used_omni else "")
++        verdict = ("success: reinduction_loop_AUTO_ESCALATES_nav_toward_omni_at_the_trigger_and_deepens_"
++                   f"{args.game}_to_L{min_repro}_reproduced_on_every_seed{omni_tag}")
++    elif seeds and min_repro >= 2:
++        verdict = (f"success: reinduction_loop_escalates_and_deepens_{args.game}_to_L{min_repro}_reproduced_on_every_seed")
++    elif any(r.get("reproduced_level", 0) >= 2 for r in rows):
++        verdict = "success: reinduction_loop_escalates_and_deepens_reproduced_on_some_seeds_inspect_rows"
+     else:
+         verdict = "complete: escalating_loop_did_not_cleanly_deepen_inspect_rows"
+ 
+     art = {"experiment": "experiment_reinduction_hazard_loop", "game": args.game, "honest_verdict": verdict,
+            "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
+            "random_seeds": seeds, "target_level": args.target_level,
+-           "n_seeds_reach_L2": len(l2_wins), "n_seeds_L3_rungs_exhausted": len(l3_rung_exhausted), "rows": rows,
++           "min_reproduced_level": min_repro, "deepest_level": deepest, "rows": rows,
+            "methodology_note": ("One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER "
+-                                "escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[enter] and "
++                                "escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[omni] and "
+                                 "re-plan the same level; take the first rung that deepens; else stop. No "
+                                 "hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 "
+-                                "horizontal charger) cracks on the toward rung. tu93 L3 (3 VERTICAL chargers) "
+-                                "exhausts both CURRENT static rungs (toward UNDER-prunes -> dies; enter "
+-                                "OVER-prunes -> no path). Per adversarial review, L3 is STATICALLY solvable "
+-                                "(chargers static-until-triggered; a position-keyed real-env BFS finds a "
+-                                "verified 19-action path) -- the next step is a correctly-CALIBRATED static "
+-                                "interception lethal-zone, NOT dynamic modelling."),
++                                "horizontal charger) cracks on the 'toward' rung. tu93 L3 (3 chargers with "
++                                "PER-CHARGER FACINGS) cracks on the 'omni' rung, whose interception lethal-zone "
++                                "was CALIBRATED against L3's position-keyed real-env BFS ground truth (the "
++                                "verified 19-action path): each charger kills only when the avatar's "
++                                "destination is on its facing line, on the side it faces (read from the "
++                                "centre-marker offset), at distance 1..reach -- collision-exempt. The "
++                                "calibration is reproducibly clean (FN=0, FP=0, win-path-unpruned over 88 "
++                                "BFS-labelled moves; see experiment_hazard_l3_calibration.py). SCOPE: tu93 L3 "
++                                "is a SINGLE static layout (seed-invariant -- 3 seeds = 1 layout x3); this is "
++                                "validated on that one level, NOT a general hazard solver. Static, not dynamic."),
+            "duration_s": round(time.time() - t0, 1)}
+     OUT.write_text(json.dumps(art, indent=2))
+     print(f"\nVERDICT: {verdict}")
+diff --git a/tests/python/test_arc_nav_world_model.py b/tests/python/test_arc_nav_world_model.py
+index c21f533287..4d723b94df 100644
+--- a/tests/python/test_arc_nav_world_model.py
++++ b/tests/python/test_arc_nav_world_model.py
+@@ -166,19 +166,51 @@ def test_hazard_fit_excludes_the_door_colour():
+     assert DOOR not in h.hazard_colors     # the door is excluded from hazard candidates
+ 
+ 
+-def test_enter_mode_catches_perpendicular_step_on_that_toward_misses():
+-    """REQ: lethal_mode='enter' flags a perpendicular step ONTO the charge line (tu93 L3 vertical chargers),
+-    which lethal_mode='toward' (along-axis approach only) does not."""
++HAZ_CTR = 15  # the charger's centre-marker colour (its offset within the block encodes facing)
++
++
++def _haz_transitions_facing():
++    """Like _haz_transitions but the charger carries a colour-15 centre marker OFFSET to the LEFT of its
++    block centre -> it faces LEFT (charges horizontally, to the left)."""
++    tr = list(_transitions())
++    g0 = np.full((7, 9), WALL, dtype=int)
++    g0[3, 1] = AV
++    g0[3, 4:7] = HAZ; g0[2, 5] = HAZ; g0[4, 5] = HAZ  # noqa: E702  3x3 charger centred (3,5)
++    g0[3, 4] = HAZ_CTR                                  # marker offset LEFT of centre -> faces left
++    g1 = np.full((7, 9), WALL, dtype=int)              # avatar REMOVED (death)
++    g1[3, 2:5] = HAZ; g1[2, 3] = HAZ; g1[4, 3] = HAZ  # noqa: E702  charger charged left to ~(3,3)
++    g1[3, 2] = HAZ_CTR
++    for _ in range(3):
++        tr.append((g0, 4, g1, 0, 0))
++    return tr
++
++
++def _omni_model():
++    """A HazardAwareNavWorldModel with explicit params (the tiny test fixtures are below the fit's blob
++    thresholds for the centre marker, so we exercise the is_lethal facing logic directly)."""
+     from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+-    base = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)  # axis=row, range>0
+-    # avatar 3 rows BELOW the charger's row (genuinely OFF the row: 3 > align_tol 2), same column band; an UP
+-    # move (step 2) steps perpendicularly ONTO the charger's row band -> 'enter' lethal, 'toward' safe.
+-    g = np.full((7, 9), WALL, dtype=int)
+-    g[5, 5] = AV                            # row 5, charger centred row 2 -> 3 rows off-line before the move
+-    g[1, 5] = HAZ; g[2, 4] = HAZ; g[2, 5] = HAZ  # noqa: E702
+-    g[2, 6] = HAZ; g[3, 5] = HAZ  # noqa: E702  charger blob centred ~(2,5)
+-    toward = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="toward")
+-    enter = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="enter")
+-    # action 1 = up = perpendicular step onto the charger's row band
+-    assert toward.is_lethal(g, 1) is False
+-    assert enter.is_lethal(g, 1) is True
++    return HazardAwareNavWorldModel(
++        displacement={1: (-6, 0), 2: (6, 0), 3: (0, -6), 4: (0, 6)},
++        avatar_colors=frozenset({AV}), bg_color=WALL, floor_color=FLOOR, wall_colors=frozenset({WALL}),
++        goal_color=GOAL, hazard_colors=frozenset({HAZ, HAZ_CTR}), hazard_center_color=HAZ_CTR,
++        hazard_axis="row", charge_range=6, lethal_mode="omni")
++
++
++def test_omni_mode_is_facing_directional():
++    """REQ: lethal_mode='omni' (calibrated vs tu93 L3) kills only when the avatar's destination is on a
++    charger's FACING line, on the side it faces, within range -- a perpendicular step ONTO that side is
++    lethal, landing BEHIND the charger (the side it does not face) is safe, and landing exactly ON the
++    charger (collision) is NOT lethal."""
++    m = _omni_model()
++    # charger 3x3 centred (10,20) with its colour-15 marker offset LEFT -> faces left (charges left).
++    def grid_with_avatar(ar, ac):
++        g = np.full((25, 40), FLOOR, dtype=int)      # open floor background (no walls to block the charge)
++        g[9:12, 19:22] = HAZ; g[10, 19] = HAZ_CTR  # noqa: E702  marker left of centre -> faces left
++        g[ar, ac] = AV
++        return g
++    # avatar to the charger's LEFT, off-row, an UP move ends it ON the charger's row, on the facing side, in range
++    assert m.is_lethal(grid_with_avatar(16, 14), 1) is True
++    # avatar BEHIND the charger (to its RIGHT, the side it does NOT face), aligned in range -> SAFE
++    assert m.is_lethal(grid_with_avatar(16, 26), 1) is False
++    # landing exactly ON the charger (collision) -> NOT lethal (it is defeated/passed, not a kill)
++    assert m.is_lethal(grid_with_avatar(16, 20), 1) is False
+-- 
+2.55.0
+

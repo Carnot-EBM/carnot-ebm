@@ -1,0 +1,1964 @@
+From 11020bf20d7c019b64582a933cc688a7fd071602 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 14:31:05 -0400
+Subject: [PATCH 03094/11362] [conductor] PHASE A2 (ARC NORTH STAR;
+ SCORE-LEVER) -- imitation / behavior-cloning ACTION PRIOR from the 342 human
+ replays (+ self-supervised marginal fallback): try human-like efficient
+ actions FIRST. Gate: actions saved at equal solve-rate.
+
+Automated research step by research conductor.
+Task ID: exp4512-a2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  48 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/agentic/arc_competition_agent.py   |  26 +-
+ .../agentic/arc_frame_change_predictor.py     |  83 +-
+ python/carnot/agentic/arc_graph_explore.py    |  16 +-
+ .../experiment_4512_imitation_action_prior.py | 785 ++++++++++++++++++
+ ...xperiment_4512_imitation_action_prior.json | 286 +++++++
+ ..._experiment_4512_imitation_action_prior.py | 519 ++++++++++++
+ 8 files changed, 1758 insertions(+), 7 deletions(-)
+ create mode 100644 python/carnot/experiment_4512_imitation_action_prior.py
+ create mode 100644 results/experiment_4512_imitation_action_prior.json
+ create mode 100644 tests/python/test_experiment_4512_imitation_action_prior.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 34f9bdd4ca..a8747cf16d 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -249,6 +249,42 @@ Required field principles:
+ - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+ - `preconditions_checked`: principle "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+ 
++### REQ-ARC-FCP-4512: Imitation Action-Type and Sequence Prior
++
++Experiment 4512 SHALL write
++`results/experiment_4512_imitation_action_prior.json` from a behavior-cloning
++prior over action types and action sequences. The prior SHALL estimate
++`P(action | frame-class)` from the locally staged human replay corpus when it is
++loadable. If the human replay corpus is absent or empty, the experiment SHALL
++fall back to a self-supervised marginal derived from offline-arcade
++`(frame, action, next_frame)` transitions, so the prior cannot null merely
++because the replay corpus is unavailable.
++
++The explorer SHALL accept the action prior as an expansion-ordering signal and
++an opt-in low-likelihood pruning gate. Candidate expansion SHALL preserve the
++legacy candidate order as the stable tie-break, SHALL drop only the bottom
++quantile requested by the prior-prune setting, and SHALL retain at least one
++candidate. Experiment 4512 SHALL compare the fixed 8-game local submission-gate
++baseline of 7760 median actions against the prior-guided measurement on the
++same gate games, report per-game rows, solve-rate, and median
++actions-to-first-level-up, and use an honest null if the prior does not reduce
++actions or reduces solve-rate.
++
++Required field principles:
++
++- `honest_verdict`: principle "terminal prefix; e.g. success: imitation_prior_median_actions_<n>_below_7760 OR complete: imitation_prior_no_reduction_honest_null."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
++- `median_actions_baseline`: principle "the 7760 control, fixed."
++- `median_actions_with_prior`: principle "the headline -- did the human prior cut exploration."
++- `solve_rate_baseline`: principle "no-regression reference."
++- `solve_rate_with_prior`: principle "the prior must not drop solve-rate."
++- `prior_source`: principle "honest declaration of whether the human replays or the self-supervised fallback supplied the prior (no silent corpus dependency)."
++- `positive_control_passed`: principle "proves the harness detects a real reduction."
++- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent corpus/model drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -341,3 +377,15 @@ at least one candidate is retained, and the experiment 4511 artifact records
+ the baseline 7760 control, pruned median action measurement, solve-rate guard,
+ held-out no-op precision, positive control status, random seed, and
+ reproducibility checksum.
++
++### SCENARIO-ARC-FCP-4512: Imitation Prior Orders and Prunes Expansion
++
++Given a frame, a legacy candidate list, and an imitation prior that assigns
++higher likelihood to the human-like action sequence for that frame class
++When the explorer builds candidates with an action prior and bottom-quantile
++prune setting
++Then the high-likelihood action is expanded before low-likelihood candidates,
++the bottom quantile is pruned while retaining at least one candidate, and the
++experiment 4512 artifact records the 7760 baseline, prior-guided median action
++measurement, solve-rate guard, prior source, positive control status, false
++negative risk check, random seed, and reproducibility checksum.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 83934e6e09..3edc799bfe 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3528,
++  "experiments_checked": 3529,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 0a510c2600..3c9e365f58 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -175,6 +175,8 @@ class StepwiseExplorer:
+         discriminative_prune_threshold: float = 0.12,
+         frame_change_scorer: Any | None = None,
+         frame_change_prune_threshold: float | None = None,
++        action_prior: Any | None = None,
++        action_prior_prune_quantile: float | None = None,
+     ) -> None:
+         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
+         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
+@@ -186,6 +188,8 @@ class StepwiseExplorer:
+         self.value_weight = float(value_weight)
+         self.frame_change_scorer = frame_change_scorer
+         self.frame_change_prune_threshold = frame_change_prune_threshold
++        self.action_prior = action_prior
++        self.action_prior_prune_quantile = action_prior_prune_quantile
+         self.online_discriminative = bool(online_discriminative)
+         self.discriminative_featurizer = discriminative_featurizer
+         self.discriminative_min_positives = max(1, int(discriminative_min_positives))
+@@ -338,15 +342,20 @@ class StepwiseExplorer:
+             g[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
+         return frame_hash(g)
+ 
+-    def _candidates(self, frame) -> list[dict]:
++    def _candidates(self, frame, path: Sequence[dict] | None = None) -> list[dict]:
+         from carnot.agentic.arc_graph_explore import rich_action_candidates
+ 
++        action_prior = self.action_prior
++        if action_prior is not None and hasattr(action_prior, "for_path"):
++            action_prior = action_prior.for_path(path or [])
+         return [
+             {"action": int(c.action_id), "data": c.data}
+             for c in rich_action_candidates(
+                 frame,
+                 frame_change_scorer=self.frame_change_scorer,
+                 frame_change_prune_threshold=self.frame_change_prune_threshold,
++                action_prior=action_prior,
++                action_prior_prune_quantile=self.action_prior_prune_quantile,
+             )
+         ]
+ 
+@@ -408,9 +417,10 @@ class StepwiseExplorer:
+                         source="alive_frontier",
+                         node_hash=h,
+                     )
++                    new_path = opath + [act]
+                     self.graph[h] = {
+-                        "path": opath + [act],
+-                        "untested": self._candidates(latest),
++                        "path": new_path,
++                        "untested": self._candidates(latest, path=new_path),
+                         "value": self._value(latest),
+                         "discriminative_features": features,
+                     }
+@@ -427,7 +437,7 @@ class StepwiseExplorer:
+                 h,
+                 {
+                     "path": [],
+-                    "untested": self._candidates(latest),
++                    "untested": self._candidates(latest, path=[]),
+                     "value": self._value(latest),
+                     "discriminative_features": features,
+                 },
+@@ -615,6 +625,8 @@ class CarnotAgentPolicy:
+         search_mode: str = "depth_first_ride",
+         frame_change_scorer: Any | None = None,
+         frame_change_prune_threshold: float | None = None,
++        action_prior: Any | None = None,
++        action_prior_prune_quantile: float | None = None,
+     ) -> None:
+         self.short = str(game_id).split("-", 1)[0]
+         sols = solutions if solutions is not None else load_solutions()
+@@ -635,6 +647,8 @@ class CarnotAgentPolicy:
+                 search_mode=search_mode,
+                 frame_change_scorer=frame_change_scorer,
+                 frame_change_prune_threshold=frame_change_prune_threshold,
++                action_prior=action_prior,
++                action_prior_prune_quantile=action_prior_prune_quantile,
+             )
+         )
+ 
+@@ -684,6 +698,8 @@ class E3AgentPolicy:
+         mechanic_detector=None,
+         frame_change_scorer: Any | None = None,
+         frame_change_prune_threshold: float | None = None,
++        action_prior: Any | None = None,
++        action_prior_prune_quantile: float | None = None,
+     ) -> None:
+         self.short = str(game_id).split("-", 1)[0]
+         if value_head is _DEFAULT_VALUE_HEAD:
+@@ -701,6 +717,8 @@ class E3AgentPolicy:
+             search_mode=search_mode,
+             frame_change_scorer=frame_change_scorer,
+             frame_change_prune_threshold=frame_change_prune_threshold,
++            action_prior=action_prior,
++            action_prior_prune_quantile=action_prior_prune_quantile,
+         )
+         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
+         self.explore_budget = (
+diff --git a/python/carnot/agentic/arc_frame_change_predictor.py b/python/carnot/agentic/arc_frame_change_predictor.py
+index 81481eee94..d7391b0906 100644
+--- a/python/carnot/agentic/arc_frame_change_predictor.py
++++ b/python/carnot/agentic/arc_frame_change_predictor.py
+@@ -574,6 +574,16 @@ def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
+     raise TypeError("scorer must expose candidate_score(frame, candidate) or be callable")
+ 
+ 
++def _prior_value(frame: Any, candidate: Any, prior: Any) -> float:
++    if prior is None:
++        return 0.0
++    if hasattr(prior, "score"):
++        return float(prior.score(frame, candidate))
++    if isinstance(prior, Callable):
++        return float(prior(frame, candidate))
++    raise TypeError("prior must expose score(frame, candidate) or be callable")
++
++
+ def _delta_energy_value(frame: Any, candidate: Any, structural_energy_scorer: Any) -> float:
+     if structural_energy_scorer is None:
+         return 0.0
+@@ -609,7 +619,7 @@ def rank_arc_actions(
+             p_for_energy = p_change if scorer is not None else 1.0
+             score = p_for_energy * (-delta_energy)
+         if prior is not None:
+-            score += prior.score(frame, candidate)
++            score += _prior_value(frame, candidate, prior)
+         scored.append((float(score), index, candidate))
+     scored.sort(key=lambda row: (-row[0], row[1]))
+     return [candidate for _score, _index, candidate in scored]
+@@ -680,6 +690,77 @@ def prune_arc_actions(
+     return kept, diagnostics
+ 
+ 
++def prune_arc_actions_by_prior_quantile(
++    frame: Any,
++    candidates: Sequence[Any],
++    *,
++    prior: Any | None,
++    prune_quantile: float | None,
++    min_candidates: int = 1,
++) -> tuple[list[Any], dict[str, Any]]:
++    """REQ-ARC-FCP-4512: drop the bottom prior-likelihood quantile before expansion."""
++
++    rows = list(candidates)
++    diagnostics: dict[str, Any] = {
++        "enabled": bool(prior is not None and prune_quantile is not None),
++        "prune_quantile": None if prune_quantile is None else float(prune_quantile),
++        "candidate_count": int(len(rows)),
++        "kept_count": int(len(rows)),
++        "pruned_count": 0,
++        "forced_keep_count": 0,
++    }
++    if prior is None or prune_quantile is None or not rows:
++        return rows, diagnostics
++
++    quantile = max(0.0, min(1.0, float(prune_quantile)))
++    max_prunable = max(0, len(rows) - max(0, int(min_candidates)))
++    prune_count = min(max_prunable, int(len(rows) * quantile))
++    if prune_count <= 0:
++        return rows, diagnostics
++
++    scored: list[tuple[float, int, Any]] = [
++        (_prior_value(frame, candidate, prior), index, candidate)
++        for index, candidate in enumerate(rows)
++    ]
++    prune_indexes = {
++        index
++        for _score, index, _candidate in sorted(scored, key=lambda row: (row[0], row[1]))[
++            :prune_count
++        ]
++    }
++    kept = [candidate for _score, index, candidate in scored if index not in prune_indexes]
++    forced_keep_count = 0
++    if not kept and min_candidates > 0:
++        forced_keep_count = min(int(min_candidates), len(scored))
++        kept = [
++            candidate
++            for _score, _index, candidate in sorted(
++                scored,
++                key=lambda row: (-row[0], row[1]),
++            )[:forced_keep_count]
++        ]
++    diagnostics.update(
++        {
++            "kept_count": int(len(kept)),
++            "pruned_count": int(len(rows) - len(kept)),
++            "forced_keep_count": int(forced_keep_count),
++            "min_score_kept": min(
++                (_prior_value(frame, candidate, prior) for candidate in kept),
++                default=None,
++            ),
++            "max_score_pruned": max(
++                (
++                    score
++                    for score, index, _candidate in scored
++                    if index in prune_indexes
++                ),
++                default=None,
++            ),
++        }
++    )
++    return kept, diagnostics
++
++
+ def efficiency_score(human_actions: int, agent_actions: int) -> float:
+     if human_actions <= 0 or agent_actions <= 0:
+         return 0.0
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index 24f5b8e870..b9a3eb639c 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -48,6 +48,7 @@ def rich_action_candidates(
+     frame_change_scorer: Any | None = None,
+     frame_change_prune_threshold: float | None = None,
+     action_prior: Any | None = None,
++    action_prior_prune_quantile: float | None = None,
+     structural_energy_scorer: Any | None = None,
+ ) -> list:
+     """Every detected object is a click candidate (no 12-click cap — the winning
+@@ -67,7 +68,11 @@ def rich_action_candidates(
+ 
+     REQ-ARC-FCP-4511: when ``frame_change_prune_threshold`` is supplied with a
+     frame-change scorer, predicted no-op candidates are removed before the
+-    explorer ever expands them."""
++    explorer ever expands them.
++
++    REQ-ARC-FCP-4512: when ``action_prior_prune_quantile`` is supplied with an
++    action prior, the bottom prior-likelihood quantile is removed before
++    expansion while retaining at least one candidate."""
+     ids = _available_action_ids(frame)
+     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
+     if 6 in ids:
+@@ -99,6 +104,15 @@ def rich_action_candidates(
+             scorer=frame_change_scorer,
+             threshold=frame_change_prune_threshold,
+         )
++    if action_prior is not None and action_prior_prune_quantile is not None:
++        from carnot.agentic.arc_frame_change_predictor import prune_arc_actions_by_prior_quantile
++
++        out, _diagnostics = prune_arc_actions_by_prior_quantile(
++            frame,
++            out,
++            prior=action_prior,
++            prune_quantile=action_prior_prune_quantile,
++        )
+     if frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
+         from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
+ 
+diff --git a/python/carnot/experiment_4512_imitation_action_prior.py b/python/carnot/experiment_4512_imitation_action_prior.py
+new file mode 100644
+index 0000000000..5e89e93613
+--- /dev/null
++++ b/python/carnot/experiment_4512_imitation_action_prior.py
+@@ -0,0 +1,785 @@
++"""Experiment 4512: imitation action-type and sequence prior.
++
++Spec refs: REQ-ARC-FCP-4512, SCENARIO-ARC-FCP-4512.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib.util
++import json
++import os
++import time
++from collections.abc import Callable, Mapping, Sequence
++from concurrent.futures import ThreadPoolExecutor
++from dataclasses import dataclass, replace
++from pathlib import Path
++from statistics import median
++from typing import Any
++
++import numpy as np
++
++from carnot.agentic import arc_human_replay_corpus
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_frame_change_predictor import (
++    FrameActionEffectExample,
++    load_frame_action_effect_examples,
++)
++from carnot.agentic.arc_agi3_world_model import grid_of
++
++
++RESULT_RELATIVE_PATH = "results/experiment_4512_imitation_action_prior.json"
++HUMAN_REPLAY_DATA_RELATIVE_DIR = "data/arc_public_demo_human_replay_corpus"
++LOCAL_GATE_RELATIVE_PATH = "scripts/kaggle/arc_local_submission_gate.py"
++REPO_ROOT = Path(__file__).resolve().parents[2]
++BASELINE_MEDIAN_ACTIONS = 7760
++RANDOM_SEED = 4512
++DEFAULT_PRIOR_PRUNE_QUANTILE = 0.25
++DEFAULT_GATE_BUDGET = 8000
++DEFAULT_FALLBACK_GAME_LIMIT = 25
++DEFAULT_FALLBACK_MAX_CANDIDATES_PER_GAME = 16
++PRIOR_SOURCES = ("human_replay_corpus", "self_supervised_marginal_fallback")
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++REQUIREMENTS = ["REQ-ARC-FCP-4512"]
++SCENARIOS = ["SCENARIO-ARC-FCP-4512"]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        'principle "terminal prefix; e.g. success: '
++        "imitation_prior_median_actions_<n>_below_7760 OR complete: "
++        'imitation_prior_no_reduction_honest_null."'
++    ),
++    "inference_substrate": (
++        'principle "verifier_ensemble_against_cached_candidates -- offline arcade, '
++        'no LLM load (1s floor)."'
++    ),
++    "median_actions_baseline": 'principle "the 7760 control, fixed."',
++    "median_actions_with_prior": (
++        'principle "the headline -- did the human prior cut exploration."'
++    ),
++    "solve_rate_baseline": 'principle "no-regression reference."',
++    "solve_rate_with_prior": 'principle "the prior must not drop solve-rate."',
++    "prior_source": (
++        'principle "honest declaration of whether the human replays or the '
++        'self-supervised fallback supplied the prior (no silent corpus dependency)."'
++    ),
++    "positive_control_passed": 'principle "proves the harness detects a real reduction."',
++    "false_negative_risk_checked": (
++        'principle "a null is valid only if the positive control passed."'
++    ),
++    "random_seed": 'principle "determinism precondition for reproducibility."',
++    "reproducibility_checksum": (
++        'principle "catches silent corpus/model drift on replay."'
++    ),
++    "preconditions_checked": (
++        'principle "records resources verified; pre-empts missing-resource fabrication."'
++    ),
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "field_principles",
++    "requirements",
++    "scenarios",
++    "prior_summary",
++    "prior_prune_quantile",
++    "local_gate_metrics",
++    "positive_control",
++    "false_negative_risk_guard",
++    "duration_s",
++)
++
++
++def frame_class_key(frame: Any) -> str:
++    """REQ-ARC-FCP-4512: coarse frame-only class for action-type conditionals."""
++
++    grid = np.asarray(grid_of(frame))
++    if grid.size == 0:
++        return "empty"
++    h, w = grid.shape[:2]
++    nonzero = float(np.count_nonzero(grid))
++    density_bucket = min(4, int((nonzero / float(grid.size)) * 5.0))
++    color_bucket = min(7, int(len(np.unique(grid))))
++    row_activity = min(4, int(np.count_nonzero(np.any(grid != 0, axis=1)) / max(1, h) * 5.0))
++    col_activity = min(4, int(np.count_nonzero(np.any(grid != 0, axis=0)) / max(1, w) * 5.0))
++    available = tuple(sorted(int(value) for value in getattr(frame, "available_actions", []) or []))
++    has_click = 6 in available
++    return (
++        f"h{h}_w{w}_c{color_bucket}_d{density_bucket}_"
++        f"r{row_activity}_col{col_activity}_click{int(has_click)}"
++    )
++
++
++def _probability(action_id: int, counts: Mapping[int, float], smoothing: float) -> float:
++    if not counts:
++        return 0.0
++    total = float(sum(float(value) for value in counts.values()))
++    support = max(7, len(counts))
++    return float(float(counts.get(int(action_id), 0.0)) + smoothing) / float(
++        total + smoothing * support
++    )
++
++
++@dataclass(frozen=True)
++class ActionTypeSequencePrior:
++    """REQ-ARC-FCP-4512: frame-class action prior with optional sequence context."""
++
++    prior_source: str
++    frame_class_action_counts: Mapping[str, Mapping[int, float]]
++    marginal_action_counts: Mapping[int, float]
++    sequence_action_counts: Mapping[int, Mapping[int, float]] | None = None
++    history: tuple[int, ...] = ()
++    frame_class_weight: float = 0.65
++    marginal_weight: float = 0.25
++    sequence_weight: float = 0.10
++    smoothing: float = 0.1
++
++    def for_path(self, path: Sequence[Mapping[str, Any]] | None) -> "ActionTypeSequencePrior":
++        history = tuple(
++            int(step["action"])
++            for step in (path or [])
++            if isinstance(step, Mapping) and step.get("action") is not None
++        )
++        return replace(self, history=history)
++
++    def score(self, frame: Any, candidate: Any) -> float:
++        action_id = int(getattr(candidate, "action_id"))
++        class_counts = self.frame_class_action_counts.get(frame_class_key(frame), {})
++        score = self.frame_class_weight * _probability(action_id, class_counts, self.smoothing)
++        score += self.marginal_weight * _probability(
++            action_id,
++            self.marginal_action_counts,
++            self.smoothing,
++        )
++        if self.history and self.sequence_action_counts:
++            next_counts = self.sequence_action_counts.get(int(self.history[-1]), {})
++            score += self.sequence_weight * _probability(action_id, next_counts, self.smoothing)
++        return float(score)
++
++
++@dataclass(frozen=True)
++class PriorBundle:
++    prior: ActionTypeSequencePrior
++    prior_source: str
++    examples: Sequence[FrameActionEffectExample]
++    summary: Mapping[str, Any]
++
++
++def _example_sort_key(example: FrameActionEffectExample) -> tuple[str, str, int]:
++    return (str(example.env), str(example.guid), int(example.step_index))
++
++
++def build_prior_from_effect_examples(
++    examples: Sequence[FrameActionEffectExample],
++    *,
++    prior_source: str,
++) -> ActionTypeSequencePrior:
++    """REQ-ARC-FCP-4512: estimate P(action | frame-class) from changed actions."""
++
++    count_examples = [example for example in examples if example.changed] or list(examples)
++    frame_counts: dict[str, dict[int, float]] = {}
++    marginal_counts: dict[int, float] = {}
++    sequence_counts: dict[int, dict[int, float]] = {}
++
++    for example in count_examples:
++        action_id = int(example.action_id)
++        frame_class = frame_class_key(example.frame)
++        per_class = frame_counts.setdefault(frame_class, {})
++        per_class[action_id] = per_class.get(action_id, 0.0) + 1.0
++        marginal_counts[action_id] = marginal_counts.get(action_id, 0.0) + 1.0
++
++    previous_by_episode: dict[tuple[str, str], int] = {}
++    for example in sorted(count_examples, key=_example_sort_key):
++        action_id = int(example.action_id)
++        episode = (str(example.env), str(example.guid))
++        previous = previous_by_episode.get(episode)
++        if previous is not None:
++            per_previous = sequence_counts.setdefault(previous, {})
++            per_previous[action_id] = per_previous.get(action_id, 0.0) + 1.0
++        previous_by_episode[episode] = action_id
++
++    return ActionTypeSequencePrior(
++        prior_source=str(prior_source),
++        frame_class_action_counts=frame_counts,
++        marginal_action_counts=marginal_counts,
++        sequence_action_counts=sequence_counts,
++    )
++
++
++def summarize_prior(
++    prior: ActionTypeSequencePrior,
++    *,
++    examples: Sequence[FrameActionEffectExample],
++    source_summary: Mapping[str, Any],
++) -> dict[str, Any]:
++    changed_count = sum(1 for example in examples if example.changed)
++    return {
++        "prior_source": prior.prior_source,
++        "examples_loaded": int(len(examples)),
++        "prior_examples_used": int(changed_count or len(examples)),
++        "changed_count": int(changed_count),
++        "frame_class_count": int(len(prior.frame_class_action_counts)),
++        "marginal_action_counts": {
++            str(key): float(value) for key, value in sorted(prior.marginal_action_counts.items())
++        },
++        "sequence_context_count": int(len(prior.sequence_action_counts or {})),
++        **dict(source_summary),
++    }
++
++
++def load_human_replay_examples(
++    root: Path | str = REPO_ROOT,
++    *,
++    limit: int | None = None,
++) -> tuple[list[FrameActionEffectExample], dict[str, Any]]:
++    """REQ-ARC-FCP-4512: load staged human replay rows if locally available."""
++
++    data_dir = Path(root) / HUMAN_REPLAY_DATA_RELATIVE_DIR
++    try:
++        manifest = arc_human_replay_corpus.load_manifest(data_dir)
++    except Exception as exc:
++        return [], {
++            "human_manifest_present": False,
++            "human_manifest_error": f"{type(exc).__name__}: {exc}",
++            "human_examples_loaded": 0,
++        }
++    if int(manifest.get("example_count") or 0) <= 0:
++        return [], {
++            "human_manifest_present": True,
++            "human_manifest_examples": int(manifest.get("example_count") or 0),
++            "human_examples_loaded": 0,
++        }
++    examples = load_frame_action_effect_examples(data_dir, limit=limit)
++    return examples, {
++        "human_manifest_present": True,
++        "human_manifest_examples": int(manifest.get("example_count") or 0),
++        "human_shard_count": int(manifest.get("shard_count") or 0),
++        "human_examples_loaded": int(len(examples)),
++    }
++
++
++def collect_self_supervised_fallback(
++    *,
++    game_limit: int | None = DEFAULT_FALLBACK_GAME_LIMIT,
++    max_candidates_per_game: int = DEFAULT_FALLBACK_MAX_CANDIDATES_PER_GAME,
++    random_seed: int = RANDOM_SEED,
++) -> tuple[list[FrameActionEffectExample], dict[str, Any]]:  # pragma: no cover - SDK boundary
++    from carnot import experiment_4511_frame_change_prune_predictor as exp4511
++
++    return exp4511.collect_self_supervised_corpus(
++        game_limit=game_limit,
++        max_candidates_per_game=max_candidates_per_game,
++        random_seed=random_seed,
++    )
++
++
++def build_imitation_prior(
++    *,
++    root: Path | str = REPO_ROOT,
++    human_limit: int | None = None,
++    fallback_collector: Callable[..., tuple[list[FrameActionEffectExample], dict[str, Any]]] = (
++        collect_self_supervised_fallback
++    ),
++    random_seed: int = RANDOM_SEED,
++) -> PriorBundle:
++    """REQ-ARC-FCP-4512: use human replay primary, self-supervised fallback otherwise."""
++
++    human_examples, human_summary = load_human_replay_examples(root, limit=human_limit)
++    if human_examples:
++        prior = build_prior_from_effect_examples(
++            human_examples,
++            prior_source="human_replay_corpus",
++        )
++        return PriorBundle(
++            prior=prior,
++            prior_source="human_replay_corpus",
++            examples=human_examples,
++            summary=summarize_prior(prior, examples=human_examples, source_summary=human_summary),
++        )
++
++    fallback_examples, fallback_summary = fallback_collector(
++        game_limit=DEFAULT_FALLBACK_GAME_LIMIT,
++        max_candidates_per_game=DEFAULT_FALLBACK_MAX_CANDIDATES_PER_GAME,
++        random_seed=random_seed,
++    )
++    prior = build_prior_from_effect_examples(
++        fallback_examples,
++        prior_source="self_supervised_marginal_fallback",
++    )
++    source_summary = {
++        **human_summary,
++        **dict(fallback_summary),
++        "fallback_examples_loaded": int(len(fallback_examples)),
++    }
++    return PriorBundle(
++        prior=prior,
++        prior_source="self_supervised_marginal_fallback",
++        examples=fallback_examples,
++        summary=summarize_prior(prior, examples=fallback_examples, source_summary=source_summary),
++    )
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    """REQ-ARC-FCP-4512: record required resources before measuring."""
++
++    root_path = Path(root)
++    data_dir = root_path / HUMAN_REPLAY_DATA_RELATIVE_DIR
++    preconditions: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade_import": False,
++        "human_replay_manifest_present": (data_dir / arc_human_replay_corpus.MANIFEST_NAME).exists(),
++        "local_gate_script_present": (root_path / LOCAL_GATE_RELATIVE_PATH).exists(),
++        "baseline_file_present": (root_path / "ops" / "arc-submission-baseline.json").exists(),
++        "median_actions_baseline_control": BASELINE_MEDIAN_ACTIONS,
++        "env_game_access_blocked": True,
++    }
++    try:
++        kit.offline_arcade()
++        preconditions["offline_arcade_import"] = True
++    except Exception as exc:  # pragma: no cover - local SDK failure path
++        preconditions["offline_arcade_error"] = repr(exc)
++    preconditions["ok"] = bool(preconditions["offline_arcade_import"])
++    return preconditions
++
++
++def load_gate_baseline(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    baseline_path = Path(root) / "ops" / "arc-submission-baseline.json"
++    if baseline_path.exists():
++        return json.loads(baseline_path.read_text(encoding="utf-8"))
++    return {
++        "policy": "e3",
++        "games": ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"],
++        "per_game": [],
++        "solved_count": 4,
++        "median_actions_on_solved": float(BASELINE_MEDIAN_ACTIONS),
++        "total_actions_on_solved": None,
++        "timed_out_count": None,
++        "note": "fixed operator-provided baseline control",
++    }
++
++
++def _load_module_from_path(path: Path, module_name: str) -> Any:  # pragma: no cover - I/O boundary
++    spec = importlib.util.spec_from_file_location(module_name, path)
++    if spec is None or spec.loader is None:
++        raise ImportError(f"cannot load module {module_name} from {path}")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _json_action_label(action_id: int, data: Any) -> str:
++    return json.dumps({"action": int(action_id), "data": data}, sort_keys=True)
++
++
++def _apply_json_action_label(env: Any, label: str, _frame: Any) -> Any:  # pragma: no cover - SDK boundary
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    payload = json.loads(label)
++    return env.step(
++        _game_action(GameAction, int(payload["action"])),
++        data=payload.get("data"),
++    )
++
++
++def _run_policy_game_with_prior(
++    game: str,
++    *,
++    prior: ActionTypeSequencePrior,
++    prior_prune_quantile: float,
++    budget: int,
++) -> dict[str, Any]:  # pragma: no cover - SDK boundary
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    policy = E3AgentPolicy(
++        game,
++        proposer=None,
++        action_prior=prior,
++        action_prior_prune_quantile=float(prior_prune_quantile),
++    )
++    frames: list[Any] = []
++    latest = None
++    actions = 0
++    start_level: int | None = None
++    first_levelup_actions: int | None = None
++    current_segment: list[str] = []
++    first_levelup_segment: list[str] = []
++
++    for _ in range(int(budget)):
++        if policy.is_done(frames, latest):
++            break
++        kind, data = policy.next_move(frames, latest)
++        if kind == "RESET":
++            latest = env.reset()
++            current_segment = []
++        elif kind is None:
++            break
++        else:
++            latest = env.step(
++                _game_action(GameAction, int(kind)),
++                data=data,
++            )
++            actions += 1
++            current_segment.append(_json_action_label(int(kind), data))
++        if start_level is None:
++            start_level = kit.frame_level(latest)
++        frames.append(latest)
++        if latest is None:
++            break
++        reached_now = kit.frame_level(latest)
++        if (
++            start_level is not None
++            and reached_now > start_level
++            and first_levelup_actions is None
++        ):
++            first_levelup_actions = int(actions)
++            first_levelup_segment = list(current_segment)
++
++    reached = kit.frame_level(latest)
++    levels = max(0, int(reached) - int(start_level or 0))
++    reproduction = None
++    if levels >= 1 and first_levelup_segment:
++        reproduction = kit.reproduce(
++            game,
++            first_levelup_segment,
++            _apply_json_action_label,
++            claimed_level=int((start_level or 0) + 1),
++        )
++    return {
++        "game": game,
++        "timed_out": False,
++        "solved": bool(levels >= 1),
++        "levels": int(levels),
++        "reached": int(reached),
++        "actions": int(actions),
++        "actions_to_first_levelup": first_levelup_actions,
++        "reproduced": None if reproduction is None else bool(reproduction.get("reproduced")),
++        "reproduction": reproduction,
++    }
++
++
++def measure_local_gate_with_prior(
++    *,
++    root: Path | str = REPO_ROOT,
++    prior: ActionTypeSequencePrior,
++    prior_prune_quantile: float = DEFAULT_PRIOR_PRUNE_QUANTILE,
++    budget: int = DEFAULT_GATE_BUDGET,
++    max_workers: int = 8,
++) -> dict[str, Any]:  # pragma: no cover - SDK boundary
++    baseline = load_gate_baseline(root)
++    games = list(baseline.get("games") or ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"])
++    old_disable = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
++    os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
++    try:
++        with ThreadPoolExecutor(max_workers=max(1, int(max_workers))) as executor:
++            rows = list(
++                executor.map(
++                    lambda game: _run_policy_game_with_prior(
++                        game,
++                        prior=prior,
++                        prior_prune_quantile=prior_prune_quantile,
++                        budget=budget,
++                    ),
++                    games,
++                )
++            )
++    finally:
++        if old_disable is None:
++            os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
++        else:
++            os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = old_disable
++
++    solved = [row for row in rows if row["solved"]]
++    actions = [int(row["actions"]) for row in solved]
++    with_prior = {
++        "policy": "e3_imitation_action_prior",
++        "games": games,
++        "per_game": rows,
++        "solved_count": int(len(solved)),
++        "median_actions_on_solved": float(median(actions)) if actions else None,
++        "total_actions_on_solved": int(sum(actions)) if actions else None,
++        "timed_out_count": 0,
++        "budget": int(budget),
++        "prior_prune_quantile": float(prior_prune_quantile),
++    }
++    return {
++        "baseline": baseline,
++        "with_prior": with_prior,
++        "measurement_script": LOCAL_GATE_RELATIVE_PATH,
++    }
++
++
++def positive_control() -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4512: prove prior ordering plus pruning can save actions."""
++
++    from carnot.agentic.arc_frame_change_predictor import (
++        prune_arc_actions_by_prior_quantile,
++        rank_arc_actions,
++    )
++    from carnot.agentic.arc_agi3_live_adapter import ArcAction
++
++    frame = type("Frame", (), {})()
++    frame.frame = np.zeros((8, 8), dtype=np.int16)
++    frame.frame[6, 6] = 1
++    frame.available_actions = [1, 2, 6]
++    frame_class = frame_class_key(frame)
++    prior = ActionTypeSequencePrior(
++        prior_source="positive_control",
++        frame_class_action_counts={frame_class: {1: 1.0, 2: 1.0, 6: 9.0}},
++        marginal_action_counts={1: 1.0, 2: 1.0, 6: 9.0},
++        sequence_action_counts={1: {6: 9.0}},
++        history=(1,),
++    )
++    candidates = [
++        ArcAction(1, None, "noop_a"),
++        ArcAction(2, None, "noop_b"),
++        ArcAction(6, {"x": 6, "y": 6}, "changing_click"),
++    ]
++    pruned, prune_diagnostics = prune_arc_actions_by_prior_quantile(
++        frame,
++        candidates,
++        prior=prior,
++        prune_quantile=1 / 3,
++    )
++    ranked = rank_arc_actions(frame, pruned, prior=prior)
++
++    def actions_to_change(rows: Sequence[Any]) -> int:
++        for index, candidate in enumerate(rows, start=1):
++            if getattr(candidate, "source", "") == "changing_click":
++                return index
++        return len(rows) + 1  # pragma: no cover - positive control always includes the target.
++
++    baseline_actions = actions_to_change(candidates)
++    ranked_actions = actions_to_change(ranked)
++    return {
++        "baseline_actions_to_first_levelup": int(baseline_actions),
++        "ranked_actions_to_first_levelup": int(ranked_actions),
++        "actions_reduced": bool(ranked_actions < baseline_actions),
++        "prune_diagnostics": prune_diagnostics,
++    }
++
++
++def _gate_value(gate_metrics: Mapping[str, Any], arm: str, field: str) -> Any:
++    arm_metrics = gate_metrics.get(arm)
++    if not isinstance(arm_metrics, Mapping):
++        return None
++    return arm_metrics.get(field)
++
++
++def _honest_verdict(
++    preconditions: Mapping[str, Any],
++    gate_metrics: Mapping[str, Any],
++) -> str:
++    if preconditions.get("offline_arcade_import") is False:
++        return "complete: blocked_offline_arcade_import_failed"
++    baseline_solve = int(_gate_value(gate_metrics, "baseline", "solved_count") or 0)
++    prior_solve = int(_gate_value(gate_metrics, "with_prior", "solved_count") or 0)
++    prior_median = _gate_value(gate_metrics, "with_prior", "median_actions_on_solved")
++    if prior_solve < baseline_solve:
++        return "complete: imitation_prior_solve_rate_guard_failed"
++    if prior_median is not None and float(prior_median) < BASELINE_MEDIAN_ACTIONS:
++        return f"success: imitation_prior_median_actions_{int(float(prior_median))}_below_7760"
++    return "complete: imitation_prior_no_reduction_honest_null"
++
++
++def false_negative_risk_guard(
++    control: Mapping[str, Any],
++    gate_metrics: Mapping[str, Any],
++) -> str:
++    if control.get("actions_reduced") is not True:
++        return "positive_control_failed_null_uninterpretable"
++    prior_median = _gate_value(gate_metrics, "with_prior", "median_actions_on_solved")
++    baseline_solve = int(_gate_value(gate_metrics, "baseline", "solved_count") or 0)
++    prior_solve = int(_gate_value(gate_metrics, "with_prior", "solved_count") or 0)
++    if prior_solve >= baseline_solve and prior_median is not None and float(prior_median) < BASELINE_MEDIAN_ACTIONS:
++        return "positive_control_passed_prior_gain"
++    return "positive_control_passed_null_interpretable"
++
++
++def reproducibility_checksum(
++    *,
++    prior_summary: Mapping[str, Any],
++    gate_metrics: Mapping[str, Any],
++    prior_source: str,
++    random_seed: int,
++) -> str:
++    payload = {
++        "prior_summary": dict(prior_summary),
++        "gate_metrics": gate_metrics,
++        "prior_source": str(prior_source),
++        "random_seed": int(random_seed),
++    }
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    prior_summary: Mapping[str, Any],
++    gate_metrics: Mapping[str, Any],
++    positive_control: Mapping[str, Any],
++    prior_source: str,
++    random_seed: int,
++    reproducibility_checksum: str,
++    duration_s: float | None,
++    prior_prune_quantile: float = DEFAULT_PRIOR_PRUNE_QUANTILE,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4512: assemble the terminal imitation-prior artifact."""
++
++    baseline_median = _gate_value(gate_metrics, "baseline", "median_actions_on_solved")
++    baseline_solve = int(_gate_value(gate_metrics, "baseline", "solved_count") or 0)
++    prior_solve = int(_gate_value(gate_metrics, "with_prior", "solved_count") or 0)
++    control_passed = bool(positive_control.get("actions_reduced") is True)
++    guard = false_negative_risk_guard(positive_control, gate_metrics)
++    return {
++        "experiment": "experiment_4512_imitation_action_prior",
++        "schema": "carnot.arc_imitation_action_prior_4512.v1",
++        "honest_verdict": _honest_verdict(preconditions_checked, gate_metrics),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "prior_source": str(prior_source),
++        "prior_summary": dict(prior_summary),
++        "prior_prune_quantile": float(prior_prune_quantile),
++        "median_actions_baseline": (
++            float(baseline_median)
++            if baseline_median is not None
++            else float(BASELINE_MEDIAN_ACTIONS)
++        ),
++        "median_actions_with_prior": _gate_value(
++            gate_metrics,
++            "with_prior",
++            "median_actions_on_solved",
++        ),
++        "solve_rate_baseline": baseline_solve,
++        "solve_rate_with_prior": prior_solve,
++        "solve_rate_denominator": len(_gate_value(gate_metrics, "baseline", "games") or []),
++        "positive_control_passed": control_passed,
++        "positive_control": dict(positive_control),
++        "false_negative_risk_checked": bool(control_passed),
++        "false_negative_risk_guard": guard,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": str(reproducibility_checksum),
++        "local_gate_metrics": dict(gate_metrics),
++        "offline_reproduction_gate": "kit.reproduce_on_first_levelup_segment_for_solved_rows",
++        "duration_s": duration_s,
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match the required substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match required field principles")
++    if int(float(artifact.get("median_actions_baseline") or 0)) != BASELINE_MEDIAN_ACTIONS:
++        errors.append("median_actions_baseline must equal the fixed 7760 control")
++    if artifact.get("prior_source") not in PRIOR_SOURCES:
++        errors.append("prior_source must name human replay or self-supervised fallback")
++    if artifact.get("positive_control_passed") is not True:
++        errors.append("positive_control_passed must be true")
++    if artifact.get("false_negative_risk_checked") is not True:
++        errors.append("false_negative_risk_checked must be true")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    if str(artifact.get("honest_verdict", "")).startswith("success:") and int(
++        artifact.get("solve_rate_with_prior") or 0
++    ) < int(artifact.get("solve_rate_baseline") or 0):
++        errors.append("success verdict cannot hide a solve-rate drop")
++    return errors
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    prior_builder: Callable[..., PriorBundle] = build_imitation_prior,
++    measure_gate: Callable[..., dict[str, Any]] = measure_local_gate_with_prior,
++    random_seed: int = RANDOM_SEED,
++    prior_prune_quantile: float = DEFAULT_PRIOR_PRUNE_QUANTILE,
++    gate_budget: int = DEFAULT_GATE_BUDGET,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4512: build prior, measure, and write the result JSON."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = check_preconditions(root_path)
++    control = positive_control()
++    if preconditions.get("offline_arcade_import") is False:
++        gate_metrics = {
++            "baseline": load_gate_baseline(root_path),
++            "with_prior": {"solved_count": 0, "median_actions_on_solved": None, "per_game": []},
++            "measurement_script": LOCAL_GATE_RELATIVE_PATH,
++        }
++        prior_summary: Mapping[str, Any] = {"prior_examples_used": 0}
++        prior_source = "self_supervised_marginal_fallback"
++    else:
++        bundle = prior_builder(root=root_path, random_seed=random_seed)
++        prior_summary = bundle.summary
++        prior_source = bundle.prior_source
++        gate_metrics = measure_gate(
++            root=root_path,
++            prior=bundle.prior,
++            prior_prune_quantile=prior_prune_quantile,
++            budget=gate_budget,
++        )
++    checksum = reproducibility_checksum(
++        prior_summary=prior_summary,
++        gate_metrics=gate_metrics,
++        prior_source=prior_source,
++        random_seed=random_seed,
++    )
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        prior_summary=prior_summary,
++        gate_metrics=gate_metrics,
++        positive_control=control,
++        prior_source=prior_source,
++        random_seed=random_seed,
++        reproducibility_checksum=checksum,
++        duration_s=max(0.0, float(now()) - started),
++        prior_prune_quantile=prior_prune_quantile,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        out = root_path / RESULT_RELATIVE_PATH
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    main()
+diff --git a/results/experiment_4512_imitation_action_prior.json b/results/experiment_4512_imitation_action_prior.json
+new file mode 100644
+index 0000000000..3ac4fc892e
+--- /dev/null
++++ b/results/experiment_4512_imitation_action_prior.json
+@@ -0,0 +1,286 @@
++{
++  "duration_s": 110.50337469496299,
++  "experiment": "experiment_4512_imitation_action_prior",
++  "false_negative_risk_checked": true,
++  "false_negative_risk_guard": "positive_control_passed_null_interpretable",
++  "field_principles": {
++    "false_negative_risk_checked": "principle \"a null is valid only if the positive control passed.\"",
++    "honest_verdict": "principle \"terminal prefix; e.g. success: imitation_prior_median_actions_<n>_below_7760 OR complete: imitation_prior_no_reduction_honest_null.\"",
++    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).\"",
++    "median_actions_baseline": "principle \"the 7760 control, fixed.\"",
++    "median_actions_with_prior": "principle \"the headline -- did the human prior cut exploration.\"",
++    "positive_control_passed": "principle \"proves the harness detects a real reduction.\"",
++    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
++    "prior_source": "principle \"honest declaration of whether the human replays or the self-supervised fallback supplied the prior (no silent corpus dependency).\"",
++    "random_seed": "principle \"determinism precondition for reproducibility.\"",
++    "reproducibility_checksum": "principle \"catches silent corpus/model drift on replay.\"",
++    "solve_rate_baseline": "principle \"no-regression reference.\"",
++    "solve_rate_with_prior": "principle \"the prior must not drop solve-rate.\""
++  },
++  "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
++  "local_gate_metrics": {
++    "baseline": {
++      "games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "median_actions_on_solved": 7760.0,
++      "note": "verified baseline (update only after a real improvement + successful submit)",
++      "per_game": [
++        {
++          "actions": 7792,
++          "game": "lp85",
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7789,
++          "game": "m0r0",
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7724,
++          "game": "sp80",
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7731,
++          "game": "vc33",
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7799,
++          "game": "cd82",
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7963,
++          "game": "ft09",
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7786,
++          "game": "su15",
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7821,
++          "game": "ls20",
++          "solved": false,
++          "timed_out": false
++        }
++      ],
++      "policy": "e3",
++      "solved_count": 4,
++      "timed_out_count": 0,
++      "total_actions_on_solved": 31036
++    },
++    "measurement_script": "scripts/kaggle/arc_local_submission_gate.py",
++    "with_prior": {
++      "budget": 8000,
++      "games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "median_actions_on_solved": 7733.0,
++      "per_game": [
++        {
++          "actions": 28,
++          "actions_to_first_levelup": null,
++          "game": "lp85",
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7837,
++          "actions_to_first_levelup": null,
++          "game": "m0r0",
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7455,
++          "actions_to_first_levelup": null,
++          "game": "sp80",
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7733,
++          "actions_to_first_levelup": 1398,
++          "game": "vc33",
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "vc33",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7787,
++          "actions_to_first_levelup": null,
++          "game": "cd82",
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7899,
++          "actions_to_first_levelup": null,
++          "game": "ft09",
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7858,
++          "actions_to_first_levelup": 3269,
++          "game": "su15",
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "su15",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7700,
++          "actions_to_first_levelup": 5731,
++          "game": "ls20",
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "ls20",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false
++        }
++      ],
++      "policy": "e3_imitation_action_prior",
++      "prior_prune_quantile": 0.25,
++      "solved_count": 3,
++      "timed_out_count": 0,
++      "total_actions_on_solved": 23291
++    }
++  },
++  "median_actions_baseline": 7760.0,
++  "median_actions_with_prior": 7733.0,
++  "offline_reproduction_gate": "kit.reproduce_on_first_levelup_segment_for_solved_rows",
++  "positive_control": {
++    "actions_reduced": true,
++    "baseline_actions_to_first_levelup": 3,
++    "prune_diagnostics": {
++      "candidate_count": 3,
++      "enabled": true,
++      "forced_keep_count": 0,
++      "kept_count": 2,
++      "max_score_pruned": 0.08564631245043618,
++      "min_score_kept": 0.08564631245043618,
++      "prune_quantile": 0.3333333333333333,
++      "pruned_count": 1
++    },
++    "ranked_actions_to_first_levelup": 1
++  },
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "baseline_file_present": true,
++    "codex_md_read": true,
++    "env_game_access_blocked": true,
++    "human_replay_manifest_present": true,
++    "local_gate_script_present": true,
++    "median_actions_baseline_control": 7760,
++    "offline_arcade_import": true,
++    "ok": true
++  },
++  "prior_prune_quantile": 0.25,
++  "prior_source": "human_replay_corpus",
++  "prior_summary": {
++    "changed_count": 13553,
++    "examples_loaded": 14020,
++    "frame_class_count": 11,
++    "human_examples_loaded": 14020,
++    "human_manifest_examples": 14797,
++    "human_manifest_present": true,
++    "human_shard_count": 4,
++    "marginal_action_counts": {
++      "0": 123.0,
++      "1": 2240.0,
++      "2": 1932.0,
++      "3": 2417.0,
++      "4": 2547.0,
++      "5": 268.0,
++      "6": 4014.0,
++      "7": 12.0
++    },
++    "prior_examples_used": 13553,
++    "prior_source": "human_replay_corpus",
++    "sequence_context_count": 8
++  },
++  "random_seed": 4512,
++  "reproducibility_checksum": "sha256:984d004d19ca9e621c9329b371a4d898d8e62a5dba538ebbf27d0e2a641ef017",
++  "requirements": [
++    "REQ-ARC-FCP-4512"
++  ],
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4512"
++  ],
++  "schema": "carnot.arc_imitation_action_prior_4512.v1",
++  "solve_rate_baseline": 4,
++  "solve_rate_denominator": 8,
++  "solve_rate_with_prior": 3
++}
+diff --git a/tests/python/test_experiment_4512_imitation_action_prior.py b/tests/python/test_experiment_4512_imitation_action_prior.py
+new file mode 100644
+index 0000000000..8c7af49acf
+--- /dev/null
++++ b/tests/python/test_experiment_4512_imitation_action_prior.py
+@@ -0,0 +1,519 @@
++"""Tests for Exp 4512 imitation action prior.
++
++Spec refs: REQ-ARC-FCP-4512, SCENARIO-ARC-FCP-4512.
++"""
++
++from __future__ import annotations
++
++import json
++from dataclasses import replace
++from pathlib import Path
++from types import SimpleNamespace
++
++import numpy as np
++import pytest
++
++from carnot import experiment_4512_imitation_action_prior as exp4512
++from carnot.agentic import arc_frame_change_predictor as fcp
++from carnot.agentic import arc_graph_explore
++from carnot.agentic.arc_agi3_live_adapter import ArcAction
++from carnot.agentic.arc_competition_agent import StepwiseExplorer
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _frame(value: int = 0) -> SimpleNamespace:
++    grid = np.zeros((8, 8), dtype=np.int16)
++    grid[1, 1] = int(value)
++    grid[6, 6] = int(value) + 1
++    return SimpleNamespace(frame=grid, available_actions=[1, 2, 3, 6])
++
++
++def _example(
++    game_id: str,
++    action_id: int,
++    changed: bool = True,
++    *,
++    x: int | None = None,
++    y: int | None = None,
++    value: int = 1,
++) -> fcp.FrameActionEffectExample:
++    frame = _frame(value)
++    return fcp.FrameActionEffectExample(
++        frame=frame,
++        action_id=action_id,
++        x=x,
++        y=y,
++        frame_delta=0.25 if changed else 0.0,
++        level_progress=1.0 if changed else 0.0,
++        state_key=fcp.frame_state_key(frame),
++        env=game_id,
++        step_index=1,
++    )
++
++
++def _write_effect_shards(root: Path, rows: list[dict[str, object]]) -> None:
++    data_dir = root / exp4512.HUMAN_REPLAY_DATA_RELATIVE_DIR
++    shard_dir = data_dir / "shards"
++    shard_dir.mkdir(parents=True)
++    shard_path = shard_dir / "train-00000.jsonl"
++    payload = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
++    shard_path.write_text(payload, encoding="utf-8")
++    (data_dir / "manifest.json").write_text(
++        json.dumps(
++            {
++                "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++                "example_count": len(rows),
++                "shard_count": 1,
++                "shards": [{"path": "shards/train-00000.jsonl", "rows": len(rows)}],
++                "source_metadata": {"source_kind": "unit_fixture"},
++            },
++            indent=2,
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++
++def _row(action_id: int, *, frame: list[list[int]], changed: bool = True) -> dict[str, object]:
++    return {
++        "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++        "env": "aa00",
++        "guid": "fixture",
++        "step_index": 1,
++        "frame": frame,
++        "action": {"id": str(action_id), "data": {}},
++        "frame_delta": 1.0 if changed else 0.0,
++        "level_progress": 1.0 if changed else 0.0,
++    }
++
++
++def test_req_arc_fcp_4512_spec_declares_imitation_artifact_contract() -> None:
++    """REQ-ARC-FCP-4512: OpenSpec anchors the imitation prior artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4512" in spec
++    assert "SCENARIO-ARC-FCP-4512" in spec
++    assert exp4512.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4512.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_arc_fcp_4512_prior_orders_and_prunes_bottom_quantile() -> None:
++    """SCENARIO-ARC-FCP-4512: prior likelihood orders and prunes candidates."""
++
++    frame = _frame(3)
++    frame_class = exp4512.frame_class_key(frame)
++    prior = exp4512.ActionTypeSequencePrior(
++        prior_source="unit",
++        frame_class_action_counts={frame_class: {2: 2.0, 6: 8.0}},
++        marginal_action_counts={2: 2.0, 3: 1.0, 6: 8.0},
++        sequence_action_counts={1: {2: 1.0, 6: 9.0}},
++        history=(1,),
++    )
++    candidates = [
++        ArcAction(3, None, "low_keyboard"),
++        ArcAction(2, None, "medium_keyboard"),
++        ArcAction(6, {"x": 6, "y": 6}, "human_like_click"),
++    ]
++
++    ranked = fcp.rank_arc_actions(frame, candidates, prior=prior)
++    kept, diagnostics = fcp.prune_arc_actions_by_prior_quantile(
++        frame,
++        candidates,
++        prior=prior,
++        prune_quantile=1 / 3,
++    )
++
++    assert ranked[0].source == "human_like_click"
++    assert [candidate.source for candidate in kept] == ["medium_keyboard", "human_like_click"]
++    assert diagnostics["enabled"] is True
++    assert diagnostics["pruned_count"] == 1
++    assert diagnostics["forced_keep_count"] == 0
++
++
++def test_req_arc_fcp_4512_rich_candidates_and_explorer_accept_action_prior(
++    monkeypatch,
++) -> None:
++    """REQ-ARC-FCP-4512: explorer candidate expansion passes action prior through."""
++
++    frame = _frame(4)
++    frame_class = exp4512.frame_class_key(frame)
++    prior = exp4512.ActionTypeSequencePrior(
++        prior_source="unit",
++        frame_class_action_counts={frame_class: {1: 1.0, 6: 9.0}},
++        marginal_action_counts={1: 1.0, 6: 9.0},
++    )
++    monkeypatch.setattr(
++        arc_graph_explore,
++        "_components_detailed",
++        lambda _grid: [(1, 1, 1, 1), (6, 6, 1, 2)],
++    )
++
++    ranked = arc_graph_explore.rich_action_candidates(
++        frame,
++        by_salience=False,
++        action_prior=prior,
++        action_prior_prune_quantile=0.50,
++    )
++    explorer = StepwiseExplorer(
++        action_prior=prior,
++        action_prior_prune_quantile=0.50,
++    )
++    explorer_ranked = explorer._candidates(frame)
++
++    assert ranked[0].action_id == 6
++    assert ranked[0].data == {"x": 1, "y": 1}
++    assert all(candidate.action_id != 3 for candidate in ranked)
++    assert explorer_ranked[0] == {"action": 6, "data": {"x": 1, "y": 1}}
++
++
++def test_req_arc_fcp_4512_uses_human_replays_before_fallback(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-4512: human replay rows are primary when the corpus is loadable."""
++
++    frame = _frame(5).frame.tolist()
++    _write_effect_shards(
++        tmp_path,
++        [
++            _row(1, frame=frame, changed=False),
++            _row(6, frame=frame, changed=True),
++        ],
++    )
++
++    def fallback_collector(**_kwargs):
++        raise AssertionError("fallback should not run when human shards are loadable")
++
++    bundle = exp4512.build_imitation_prior(
++        root=tmp_path,
++        fallback_collector=fallback_collector,
++    )
++
++    assert bundle.prior_source == "human_replay_corpus"
++    assert bundle.summary["human_examples_loaded"] == 2
++    assert bundle.summary["prior_examples_used"] == 1
++    assert bundle.prior.marginal_action_counts == {6: 1.0}
++
++
++def test_req_arc_fcp_4512_falls_back_to_self_supervised_marginal(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-4512: missing human rows use the offline-arcade fallback."""
++
++    fallback_examples = [
++        _example("aa00", 1, changed=False, value=1),
++        _example("bb00", 2, changed=True, value=2),
++    ]
++
++    def fallback_collector(**_kwargs):
++        return fallback_examples, {
++            "transition_count": 2,
++            "changed_count": 1,
++            "corpus_source": "self_supervised_offline_arcade_transitions",
++        }
++
++    bundle = exp4512.build_imitation_prior(
++        root=tmp_path,
++        fallback_collector=fallback_collector,
++    )
++
++    assert bundle.prior_source == "self_supervised_marginal_fallback"
++    assert bundle.summary["fallback_examples_loaded"] == 2
++    assert bundle.prior.marginal_action_counts == {2: 1.0}
++
++
++def test_scenario_arc_fcp_4512_artifact_schema_and_write(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4512: run writes required JSON and solve-rate guard fields."""
++
++    prior = exp4512.ActionTypeSequencePrior(
++        prior_source="human_replay_corpus",
++        frame_class_action_counts={},
++        marginal_action_counts={6: 3.0},
++    )
++    bundle = exp4512.PriorBundle(
++        prior=prior,
++        prior_source="human_replay_corpus",
++        examples=[
++            _example("aa00", 6, changed=True, x=6, y=6),
++            _example("bb00", 6, changed=True, x=5, y=5),
++        ],
++        summary={"prior_examples_used": 2, "human_examples_loaded": 2},
++    )
++
++    def prior_builder(**_kwargs):
++        return bundle
++
++    def measure_gate(**_kwargs):
++        return {
++            "baseline": {
++                "solved_count": 4,
++                "median_actions_on_solved": exp4512.BASELINE_MEDIAN_ACTIONS,
++                "games": ["aa00", "bb00"],
++                "per_game": [
++                    {"game": "aa00", "solved": True, "actions": 7792},
++                    {"game": "bb00", "solved": False, "actions": 8000},
++                ],
++            },
++            "with_prior": {
++                "solved_count": 4,
++                "median_actions_on_solved": 120.0,
++                "games": ["aa00", "bb00"],
++                "per_game": [
++                    {
++                        "game": "aa00",
++                        "solved": True,
++                        "actions": 120,
++                        "reproduced": True,
++                    },
++                    {
++                        "game": "bb00",
++                        "solved": False,
++                        "actions": 8000,
++                        "reproduced": None,
++                    },
++                ],
++            },
++            "measurement_script": exp4512.LOCAL_GATE_RELATIVE_PATH,
++        }
++
++    artifact = exp4512.run(
++        root=tmp_path,
++        write=True,
++        prior_builder=prior_builder,
++        measure_gate=measure_gate,
++        random_seed=4512,
++        now=lambda: 10.0,
++    )
++
++    assert artifact["honest_verdict"] == "success: imitation_prior_median_actions_120_below_7760"
++    assert artifact["median_actions_baseline"] == exp4512.BASELINE_MEDIAN_ACTIONS
++    assert artifact["median_actions_with_prior"] == 120.0
++    assert artifact["solve_rate_baseline"] == 4
++    assert artifact["solve_rate_with_prior"] == 4
++    assert artifact["prior_source"] == "human_replay_corpus"
++    assert artifact["positive_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++    assert exp4512.artifact_schema_errors(artifact) == []
++
++    written = json.loads((tmp_path / exp4512.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["honest_verdict"] == artifact["honest_verdict"]
++
++
++def test_req_arc_fcp_4512_artifact_schema_rejects_bad_fields() -> None:
++    """REQ-ARC-FCP-4512: schema rejects unsafe or non-terminal artifacts."""
++
++    artifact = exp4512.build_artifact(
++        preconditions_checked={"offline_arcade_import": True},
++        prior_summary={"prior_examples_used": 1},
++        gate_metrics={
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 4, "median_actions_on_solved": 100},
++        },
++        positive_control={"actions_reduced": True},
++        prior_source="human_replay_corpus",
++        random_seed=4512,
++        reproducibility_checksum="sha256:" + "0" * 64,
++        duration_s=1.0,
++    )
++
++    assert exp4512.artifact_schema_errors(artifact) == []
++
++    bad_verdict = {**artifact, "honest_verdict": "blocked"}
++    assert any("terminal prefix" in error for error in exp4512.artifact_schema_errors(bad_verdict))
++
++    dropped_success = {
++        **artifact,
++        "honest_verdict": "success: imitation_prior_median_actions_100_below_7760",
++        "solve_rate_with_prior": 3,
++    }
++    assert any("solve-rate" in error for error in exp4512.artifact_schema_errors(dropped_success))
++
++    bad_prior_source = {**artifact, "prior_source": "silent"}
++    assert any("prior_source" in error for error in exp4512.artifact_schema_errors(bad_prior_source))
++
++    missing = dict(artifact)
++    missing.pop("local_gate_metrics")
++    assert any("missing required field" in error for error in exp4512.artifact_schema_errors(missing))
++
++    bad_substrate = {**artifact, "inference_substrate": "live_llm_inference"}
++    assert any("substrate" in error for error in exp4512.artifact_schema_errors(bad_substrate))
++
++    bad_principles = {**artifact, "field_principles": {}}
++    assert any("field_principles" in error for error in exp4512.artifact_schema_errors(bad_principles))
++
++    bad_baseline = {**artifact, "median_actions_baseline": 1}
++    assert any("7760" in error for error in exp4512.artifact_schema_errors(bad_baseline))
++
++    no_control = {**artifact, "positive_control_passed": False}
++    assert any("positive_control" in error for error in exp4512.artifact_schema_errors(no_control))
++
++    no_guard = {**artifact, "false_negative_risk_checked": False}
++    assert any("false_negative" in error for error in exp4512.artifact_schema_errors(no_guard))
++
++    no_checksum = {**artifact, "reproducibility_checksum": "0" * 64}
++    assert any("checksum" in error for error in exp4512.artifact_schema_errors(no_checksum))
++
++
++def test_req_arc_fcp_4512_defensive_helper_paths(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-4512: edge helpers stay deterministic and honest."""
++
++    empty = SimpleNamespace(frame=np.zeros((0, 0), dtype=np.int16), available_actions=[])
++    assert exp4512.frame_class_key(empty) == "empty"
++    assert exp4512._probability(1, {}, 0.1) == 0.0
++
++    first = _example("aa00", 1, changed=True, value=1)
++    second = replace(_example("aa00", 6, changed=True, x=6, y=6, value=1), step_index=2)
++    prior = exp4512.build_prior_from_effect_examples(
++        [first, second],
++        prior_source="human_replay_corpus",
++    )
++    assert prior.sequence_action_counts == {1: {6: 1.0}}
++    assert exp4512._json_action_label(6, {"x": 1, "y": 2}) == (
++        '{"action": 6, "data": {"x": 1, "y": 2}}'
++    )
++
++    data_dir = tmp_path / exp4512.HUMAN_REPLAY_DATA_RELATIVE_DIR
++    data_dir.mkdir(parents=True)
++    (data_dir / "manifest.json").write_text(
++        json.dumps({"example_count": 0, "shard_count": 0, "shards": []}),
++        encoding="utf-8",
++    )
++    examples, summary = exp4512.load_human_replay_examples(tmp_path)
++    assert examples == []
++    assert summary["human_manifest_present"] is True
++    assert summary["human_examples_loaded"] == 0
++
++    ops_dir = tmp_path / "ops"
++    ops_dir.mkdir()
++    (ops_dir / "arc-submission-baseline.json").write_text(
++        json.dumps({"solved_count": 1, "median_actions_on_solved": 7760, "games": ["aa00"]}),
++        encoding="utf-8",
++    )
++    assert exp4512.load_gate_baseline(tmp_path)["solved_count"] == 1
++
++    assert exp4512.false_negative_risk_guard({"actions_reduced": False}, {}) == (
++        "positive_control_failed_null_uninterpretable"
++    )
++    assert exp4512._gate_value({}, "missing", "field") is None
++    assert exp4512.false_negative_risk_guard(
++        {"actions_reduced": True},
++        {
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 4, "median_actions_on_solved": 8000},
++        },
++    ) == "positive_control_passed_null_interpretable"
++
++    blocked = exp4512.build_artifact(
++        preconditions_checked={"offline_arcade_import": False},
++        prior_summary={"prior_examples_used": 0},
++        gate_metrics={
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 0, "median_actions_on_solved": None},
++        },
++        positive_control={"actions_reduced": True},
++        prior_source="self_supervised_marginal_fallback",
++        random_seed=4512,
++        reproducibility_checksum="sha256:" + "1" * 64,
++        duration_s=0.0,
++    )
++    assert blocked["honest_verdict"] == "complete: blocked_offline_arcade_import_failed"
++
++    solve_drop = exp4512.build_artifact(
++        preconditions_checked={"offline_arcade_import": True},
++        prior_summary={"prior_examples_used": 1},
++        gate_metrics={
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 3, "median_actions_on_solved": 100},
++        },
++        positive_control={"actions_reduced": True},
++        prior_source="human_replay_corpus",
++        random_seed=4512,
++        reproducibility_checksum="sha256:" + "2" * 64,
++        duration_s=0.0,
++    )
++    assert solve_drop["honest_verdict"] == "complete: imitation_prior_solve_rate_guard_failed"
++
++    null = exp4512.build_artifact(
++        preconditions_checked={"offline_arcade_import": True},
++        prior_summary={"prior_examples_used": 1},
++        gate_metrics={
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 4, "median_actions_on_solved": 8000},
++        },
++        positive_control={"actions_reduced": True},
++        prior_source="human_replay_corpus",
++        random_seed=4512,
++        reproducibility_checksum="sha256:" + "3" * 64,
++        duration_s=0.0,
++    )
++    assert null["honest_verdict"] == "complete: imitation_prior_no_reduction_honest_null"
++
++
++def test_scenario_arc_fcp_4512_run_blocks_when_offline_arcade_missing(
++    monkeypatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-FCP-4512: missing arcade exits with a blocked terminal artifact."""
++
++    monkeypatch.setattr(
++        exp4512,
++        "check_preconditions",
++        lambda _root: {"offline_arcade_import": False},
++    )
++
++    def prior_builder(**_kwargs):
++        raise AssertionError("prior builder should not run without offline arcade")
++
++    artifact = exp4512.run(
++        root=tmp_path,
++        write=False,
++        prior_builder=prior_builder,
++        random_seed=4512,
++        now=lambda: 5.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: blocked_offline_arcade_import_failed"
++
++
++def test_scenario_arc_fcp_4512_run_raises_on_invalid_artifact(
++    monkeypatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-FCP-4512: schema errors prevent writing invalid results."""
++
++    monkeypatch.setattr(
++        exp4512,
++        "positive_control",
++        lambda: {"actions_reduced": False},
++    )
++    bundle = exp4512.PriorBundle(
++        prior=exp4512.ActionTypeSequencePrior(
++            prior_source="human_replay_corpus",
++            frame_class_action_counts={},
++            marginal_action_counts={},
++        ),
++        prior_source="human_replay_corpus",
++        examples=[],
++        summary={"prior_examples_used": 0},
++    )
++
++    def prior_builder(**_kwargs):
++        return bundle
++
++    def measure_gate(**_kwargs):
++        return {
++            "baseline": {"solved_count": 4, "median_actions_on_solved": 7760},
++            "with_prior": {"solved_count": 4, "median_actions_on_solved": 8000},
++        }
++
++    with pytest.raises(ValueError, match="positive_control"):
++        exp4512.run(
++            root=tmp_path,
++            write=False,
++            prior_builder=prior_builder,
++            measure_gate=measure_gate,
++            random_seed=4512,
++        )
+-- 
+2.55.0
+

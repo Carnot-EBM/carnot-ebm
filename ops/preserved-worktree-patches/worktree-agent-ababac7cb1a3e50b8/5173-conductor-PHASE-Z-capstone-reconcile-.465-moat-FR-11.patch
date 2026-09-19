@@ -1,0 +1,1858 @@
+From 7ff0e611e7ee322cbbda1d1257c265f6e6991d89 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 00:57:46 -0400
+Subject: [PATCH 05173/11362] [conductor] PHASE Z capstone -- reconcile .465
+ moat, FR-11, hardware, SOTA, and ARC outcomes and choose the .466 route.
+
+Automated research step by research conductor.
+Task ID: exp5068-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5068_capstone_v465.py   | 709 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_5067_arc_live_path_self_discovery.json |  12 +-
+ results/experiment_5068_capstone_v465.json    | 504 +++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_5068_capstone_v465.py     | 383 ++++++++++
+ 17 files changed, 1630 insertions(+), 22 deletions(-)
+ create mode 100644 python/carnot/experiment_5068_capstone_v465.py
+ create mode 100644 results/experiment_5068_capstone_v465.json
+ create mode 100644 tests/python/test_experiment_5068_capstone_v465.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index e791e1518a..662bddf3b3 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -814,3 +814,6 @@
+ - SCENARIO-CAPSTONE-5028: The artifact `results/experiment_5028_archive_462_activate_463.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `phase_d_third_execution_attempt`, `prior_milestone_root_causes`, `reusable_b1_baseline`, and `reproducible_total_levels`; it must also include `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `archived_milestone`, `activated_milestone`, `preconditions_checked`, `pretest_gate`, `transition`, `transition_performed`, `poison_test_resolved`, `close_state_462`, `diffusiongemma_gate_status`, `phase_d_majority_lever`, `arc_locked`, `leaderboard_submission`, `cited_upstream_artifacts`, `field_principles`, `duration_s`, `random_seed`, and `reproducibility_checksum`. A complete artifact must terminal-prefix `honest_verdict` as `complete_462_archived_463_activated_phase_d_third_attempt`, record `.463` active or already active, run the own-file `--no-cov` pre-test gate, record the `.462` capstone as `EXECUTION-INCOMPLETE` with `moat_realized=false` and `moat_retired_bounded=false`, record the next pointer as `rerun_unexecuted_arm` with the route-off-Codex warning, record the two `.462` infra root causes as D1's nonexistent `Qwen/Qwen3.5-1.7B` Hugging Face repository and B2's 379s zero-row logprob cache, record D2 and D3 as cascaded blocks, record D1/D2/D6/D4 as flagged-adversarial skipped execution failures, reuse B1's genuine tuned-SC baseline (`0.585`), `oracle_at_k=0.865`, `headroom_present=true`, and degeneracy guard from `python/carnot/moat_benchmark_harness.py`, record DiffusionGemma as `STILL-PENDING` and not autonomously flipped, keep `reproducible_total_levels=69`, state that PHASE D remains the `.463` majority lever, and keep energy-as-ARC plus verifier-as-reward out of the queue.
+ - SCENARIO-CAPSTONE-5028-BLOCKED-PRECONDITION: If neither roadmap file parses, offline arcade is unavailable, the registry is missing or not loadable, or the `.462` capstone is missing or unloadable, the workflow must still write `results/experiment_5028_archive_462_activate_463.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.transition_performed=false`, a skipped `pretest_gate`, no fabricated activation, and the available `.462` close-state preserved.
+ - SCENARIO-CAPSTONE-5028-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; clean transition is complete_462_archived_463_activated_phase_d_third_attempt.", `inference_substrate` = "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).", `phase_d_third_execution_attempt` = "true -- .463 is the THIRD PHASE D milestone; the first two both went EXECUTION-INCOMPLETE on infra.", `prior_milestone_root_causes` = "the two .462 infra root causes .463 fixes (D1 404 base `Qwen/Qwen3.5-1.7B`, B2 0-rows generator).", `reusable_b1_baseline` = "the .462 B1 genuine tuned-SC 0.585 / oracle@K 0.865 / degeneracy guard (moat_benchmark_harness.py) -- reused, not rebuilt.", and `reproducible_total_levels` = "the authoritative ARC progress metric carried from the registry (69; ARC LOCKED + opportunistic)."
++- REQ-CAPSTONE-5068: The `.465` capstone scorecard in `python/carnot/experiment_5068_capstone_v465.py` SHALL write `results/experiment_5068_capstone_v465.json` without modifying `scripts/research_conductor.py`. It SHALL aggregate Exp5063 through Exp5067 plus Exp5055 when present, cite each upstream with source metadata and sha256 when present, list missing upstream artifacts explicitly, import Exp5063 `moat_state` and Exp5064 promotion/no-promote state as authority rather than recomputing loose verdicts, summarize hardware/SOTA/ARC with local-claim boundaries, and choose the `.466` route from the roadmap state table.
++- SCENARIO-CAPSTONE-5068: The artifact `results/experiment_5068_capstone_v465.json` must emit top-level fields `honest_verdict`, `capstone_ready`, `moat_state`, `best_verifier_evidence`, `fr11_self_learning_result`, `hardware_result`, `sota_result`, `arc_result`, `cited_upstream_artifacts`, `next_milestone_pointer`, and `docs_update_required`. A default `.465` read must preserve Exp5063 `moat_state=execution_incomplete`, preserve Exp5064 as no credible positive FR-11 evidence when `promoted=false` or no-promote gates fire, keep Exp5065 board evidence scoped to transcript-backed local KV260 parity/timing only, mark missing Exp5066 as missing rather than fabricating SOTA ingestion, preserve Exp5067 no-bank ARC state, set `capstone_ready=false` when any required upstream artifact is missing, and still write a terminal-prefix honest verdict.
++- SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete_capstone_v465_<realized_moat|scoped_positive|bounded_retirement|execution_incomplete>_<fr11_state>[_missing_<source>].", `moat_state` = "the blunt `.465` verdict imported from Exp5063, constrained to realized, scoped positive, bounded-retired, or execution-incomplete.", `best_verifier_evidence` = "the best Exp5063 verifier row and gate fields, with headline_countable=false unless Exp5063's authoritative moat_state permits it.", `fr11_self_learning_result` = "the Exp5064 audited skill-graph promotion/no-promote result; credible positive evidence requires the authoritative promotion gate to promote.", `hardware_result` = "the Exp5065 KV260 result scoped to local SSH transcript-backed parity/timing, never a general FPGA speedup claim.", `sota_result` = "the Exp5066 ingestion state, or an explicit missing-artifact state with no fabricated references.", `arc_result` = "the Exp5067 live-path ARC result, including no-bank, duplicate-depth, and provenance boundaries.", `cited_upstream_artifacts` = "one row per expected upstream with source, path, experiment_id, present, fields_imported, and sha256 when present.", `next_milestone_pointer` = "the `.466` route selected from the roadmap state table for realized, scoped-positive, bounded-retired, or execution-incomplete moat states, annotated when SOTA ingestion is missing.", and `docs_update_required` = "records required post-run reconciliation for ops/status/changelog/traceability while honoring conductor stop rules that may defer those edits."
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1472080a1b..cd71794674 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 45, "phase": "iteration_start", "last_beat": "2026-07-01T04:25:17Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 46, "phase": "iteration_start", "last_beat": "2026-07-01T04:44:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 535f883177..56609e6f17 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9700,3 +9700,4 @@ The contro |
+ | 2026-07-01 04:19 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+ | 2026-07-01 04:21 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+ | 2026-07-01 04:23 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
++| 2026-07-01 04:42 UTC | PHASE R2 ARC live-path self-discovery -- registry- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 15c927c9e5..2153233c82 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 45, "phase": "iteration_start", "started_at": "2026-07-01T04:25:17Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 46, "phase": "iteration_start", "started_at": "2026-07-01T04:44:38Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 93de7a893d..790a352720 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4073,
++  "experiments_checked": 4074,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5068_capstone_v465.py b/python/carnot/experiment_5068_capstone_v465.py
+new file mode 100644
+index 0000000000..c235b29e26
+--- /dev/null
++++ b/python/carnot/experiment_5068_capstone_v465.py
+@@ -0,0 +1,709 @@
++#!/usr/bin/env python3
++"""Exp 5068: .465 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-5068, SCENARIO-CAPSTONE-5068,
++SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES.
++
++This module is intentionally an aggregation step. It does not retry the moat,
++FR-11, hardware, SOTA, or ARC work; instead it reads the upstream artifacts and
++keeps their boundaries intact so a missing or scoped result cannot drift into a
++stronger claim during milestone closeout.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5068_capstone_v465"
++EXPERIMENT_ID = 5068
++SCHEMA = "carnot.experiment_5068_capstone_v465.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5068_capstone_v465.json"
++MILESTONE = "2026.06.465"
++RANDOM_SEED = 5068
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = [
++    "REQ-CAPSTONE-5068",
++    "SCENARIO-CAPSTONE-5068",
++    "SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES",
++]
++
++VALID_MOAT_STATES = {
++    "moat_realized",
++    "musr_scoped_positive",
++    "second_corpus_scoped_positive",
++    "retired_bounded",
++    "execution_incomplete",
++}
++MOAT_VERDICT_LABELS = {
++    "moat_realized": "realized_moat",
++    "musr_scoped_positive": "scoped_positive",
++    "second_corpus_scoped_positive": "scoped_positive",
++    "retired_bounded": "bounded_retirement",
++    "execution_incomplete": "execution_incomplete",
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; complete_capstone_v465_"
++            "<realized_moat|scoped_positive|bounded_retirement|execution_incomplete>_"
++            "<fr11_state>[_missing_<source>]."
++        )
++    },
++    "moat_state": {
++        "principle": (
++            "the blunt `.465` verdict imported from Exp5063, constrained to realized, "
++            "scoped positive, bounded-retired, or execution-incomplete."
++        )
++    },
++    "best_verifier_evidence": {
++        "principle": (
++            "the best Exp5063 verifier row and gate fields, with headline_countable=false "
++            "unless Exp5063's authoritative moat_state permits it."
++        )
++    },
++    "fr11_self_learning_result": {
++        "principle": (
++            "the Exp5064 audited skill-graph promotion/no-promote result; credible positive "
++            "evidence requires the authoritative promotion gate to promote."
++        )
++    },
++    "hardware_result": {
++        "principle": (
++            "the Exp5065 KV260 result scoped to local SSH transcript-backed parity/timing, "
++            "never a general FPGA speedup claim."
++        )
++    },
++    "sota_result": {
++        "principle": (
++            "the Exp5066 ingestion state, or an explicit missing-artifact state with no "
++            "fabricated references."
++        )
++    },
++    "arc_result": {
++        "principle": (
++            "the Exp5067 live-path ARC result, including no-bank, duplicate-depth, and "
++            "provenance boundaries."
++        )
++    },
++    "cited_upstream_artifacts": {
++        "principle": (
++            "one row per expected upstream with source, path, experiment_id, present, "
++            "fields_imported, and sha256 when present."
++        )
++    },
++    "next_milestone_pointer": {
++        "principle": (
++            "the `.466` route selected from the roadmap state table for realized, "
++            "scoped-positive, bounded-retired, or execution-incomplete moat states, annotated "
++            "when SOTA ingestion is missing."
++        )
++    },
++    "docs_update_required": {
++        "principle": (
++            "records required post-run reconciliation for ops/status/changelog/traceability "
++            "while honoring conductor stop rules that may defer those edits."
++        )
++    },
++}
++
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """Expected input artifact and the fields this capstone is allowed to import."""
++
++    experiment_id: int
++    relative_path: str
++    imported_fields: tuple[str, ...]
++
++
++UPSTREAMS: dict[str, UpstreamSource] = {
++    "moat_gate": UpstreamSource(
++        5063,
++        "results/experiment_5063_moat_gate_resolution_v465.json",
++        (
++            "honest_verdict",
++            "moat_state",
++            "best_arm",
++            "best_arm_delta",
++            "best_arm_ci",
++            "second_corpus_confirmed",
++            "second_corpus_audit_clean",
++            "cascade_efficiency_win",
++            "guided_decoding_frontier_state",
++            "bounded_retirement_ok",
++            "execution_incomplete_reasons",
++            "per_arm_table",
++            "blocked_upstream_artifacts",
++            "flagged_upstream_artifacts",
++            "missing_upstream_artifacts",
++        ),
++    ),
++    "fr11_self_learning": UpstreamSource(
++        5064,
++        "results/experiment_5064_audited_skillgraph_self_learning.json",
++        (
++            "honest_verdict",
++            "continuous_self_learning_task",
++            "self_learning_loop_executed",
++            "candidate_skill_count",
++            "verified_skill_count",
++            "promoted",
++            "promoted_skill_ids",
++            "promotion_decision",
++            "no_promote_reason",
++            "pre_update_accuracy",
++            "post_update_accuracy",
++            "heldout_delta",
++            "nonforgetting_delta",
++            "contamination_guard_passed",
++            "external_verifier_audit_receipts",
++            "skill_graph_path",
++            "skill_graph_sha256",
++            "legacy_models_smoke_only",
++        ),
++    ),
++    "hardware": UpstreamSource(
++        5065,
++        "results/experiment_5065_kv260_testbench_timing_packet.json",
++        (
++            "honest_verdict",
++            "kv260_ssh_reachable",
++            "overlay_loaded",
++            "loaded_overlay",
++            "timing_ratio_packet_built",
++            "cpu_reference_ok",
++            "kv260_result_ok",
++            "board_transcript_path",
++            "transcript_sha256",
++            "structured_testbench_evidence",
++            "local_claim_scope",
++            "timing_ratio_packet",
++            "optional_board_prechecks",
++        ),
++    ),
++    "sota": UpstreamSource(
++        5066,
++        "results/experiment_5066_sota_ingestion_v466.json",
++        (
++            "honest_verdict",
++            "research_references_updated",
++            "n_sources_checked",
++            "selected_sources",
++            "duplicate_filter",
++            "next_milestone_candidates",
++            "preconditions_checked",
++        ),
++    ),
++    "arc": UpstreamSource(
++        5067,
++        "results/experiment_5067_arc_live_path_self_discovery.json",
++        (
++            "honest_verdict",
++            "target_game",
++            "target_level",
++            "prior_reproduced_level",
++            "new_levels_banked",
++            "offline_reproduced",
++            "duplicate_solve_avoided",
++            "registry_precheck_passed",
++            "reproducible_total_levels_before",
++            "reproducible_total_levels_after",
++            "solve_claim",
++            "solve_provenance",
++            "provenance_evidence",
++            "live_agent_attempts",
++        ),
++    ),
++    "prior_capstone": UpstreamSource(
++        5055,
++        "results/experiment_5055_capstone_v464.json",
++        (
++            "honest_verdict",
++            "capstone_ready",
++            "moat_state",
++            "fr11_self_learning_result",
++            "next_milestone_pointer",
++        ),
++    ),
++}
++
++ROUTE_TABLE: dict[str, JsonDict] = {
++    "moat_realized": {
++        "experiment_class": "scale_realized_verifier",
++        "concrete_next": (
++            "Scale the realized oracle-distinct verifier/cascade with locked controls, "
++            "audited second-corpus evidence, and operator-gated activation."
++        ),
++    },
++    "musr_scoped_positive": {
++        "experiment_class": "confirm_scoped_musr_positive",
++        "concrete_next": (
++            "Treat the MuSR signal as scoped progress only; run clean D4 or D6 confirmation "
++            "before any PRD-level moat claim."
++        ),
++    },
++    "second_corpus_scoped_positive": {
++        "experiment_class": "repair_musr_or_cascade_for_second_corpus_positive",
++        "concrete_next": (
++            "Treat the second-corpus result as a transfer clue only; repair MuSR D1 or D6 "
++            "before making it a headline verifier-moat claim."
++        ),
++    },
++    "retired_bounded": {
++        "experiment_class": "pivot_to_new_verifier_direction",
++        "concrete_next": (
++            "Bound-retire the tested D1/D4/D6 shape and choose a differentiated .466 "
++            "verifier direction from current SOTA ingestion."
++        ),
++    },
++    "execution_incomplete": {
++        "experiment_class": "execution_repair_before_claim_or_retirement",
++        "concrete_next": (
++            "Repair flagged, unclean, or statistically incomplete Phase D evidence before "
++            "claiming a moat or treating the shape as a clean null."
++        ),
++    },
++}
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_object(path: Path) -> JsonDict:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, Mapping):
++        raise ValueError("top-level JSON value is not an object")
++    return dict(payload)
++
++
++def file_sha256(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _mapping(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _list(value: Any) -> list[Any]:
++    return list(value) if isinstance(value, list) else []
++
++
++def _number(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def _int(value: Any) -> int:
++    number = _number(value)
++    return int(number) if number is not None else 0
++
++
++def _moat_state(payload: JsonMap) -> str:
++    state = str(payload.get("moat_state") or "execution_incomplete")
++    return state if state in VALID_MOAT_STATES else "execution_incomplete"
++
++
++def _imported_fields(source: str, payload: JsonMap) -> list[str]:
++    return [field for field in UPSTREAMS[source].imported_fields if field in payload]
++
++
++def _citation(
++    *,
++    source: str,
++    config: UpstreamSource,
++    status: str,
++    path: Path,
++    payload: JsonMap | None = None,
++    parse_error: str = "",
++) -> JsonDict:
++    row: JsonDict = {
++        "source": source,
++        "experiment_id": config.experiment_id,
++        "path": config.relative_path,
++        "present": status == "present",
++        "status": status,
++        "fields_imported": _imported_fields(source, payload or {}),
++        "sha256": file_sha256(path) if path.exists() else None,
++        "honest_verdict": str((payload or {}).get("honest_verdict") or ""),
++    }
++    if parse_error:
++        row["parse_error"] = parse_error
++    return row
++
++
++def load_upstream_artifacts(root: Path = REPO_ROOT) -> JsonDict:
++    root = Path(root)
++    artifacts: dict[str, JsonDict] = {}
++    citations: list[JsonDict] = []
++    missing: list[JsonDict] = []
++    malformed: list[JsonDict] = []
++    for source, config in UPSTREAMS.items():
++        path = root / config.relative_path
++        if not path.exists():
++            citation = _citation(source=source, config=config, status="missing", path=path)
++            citations.append(citation)
++            missing.append(
++                {"source": source, "experiment_id": config.experiment_id, "path": config.relative_path}
++            )
++            continue
++        try:
++            payload = read_json_object(path)
++        except (OSError, ValueError, json.JSONDecodeError) as exc:
++            citation = _citation(
++                source=source,
++                config=config,
++                status="malformed",
++                path=path,
++                parse_error=str(exc),
++            )
++            citations.append(citation)
++            malformed.append(
++                {
++                    "source": source,
++                    "experiment_id": config.experiment_id,
++                    "path": config.relative_path,
++                    "parse_error": str(exc),
++                }
++            )
++            continue
++        artifacts[source] = payload
++        citations.append(_citation(source=source, config=config, status="present", path=path, payload=payload))
++    return {
++        "artifacts": artifacts,
++        "cited_upstream_artifacts": citations,
++        "missing_upstream_artifacts": missing,
++        "malformed_upstream_artifacts": malformed,
++    }
++
++
++def _best_source_row(moat_gate: JsonMap) -> JsonDict:
++    best_arm = str(moat_gate.get("best_arm") or "")
++    for row in _list(moat_gate.get("per_arm_table")):
++        if not isinstance(row, Mapping):
++            continue
++        row_id = str(row.get("artifact_id") or row.get("arm_id") or "")
++        if row_id == best_arm:
++            return dict(row)
++    return {}
++
++
++def _best_verifier_evidence(moat_gate: JsonMap, state: str) -> JsonDict:
++    return {
++        "source_experiment_id": 5063,
++        "source_honest_verdict": str(moat_gate.get("honest_verdict") or ""),
++        "moat_state": state,
++        "best_arm": moat_gate.get("best_arm"),
++        "best_arm_delta": _number(moat_gate.get("best_arm_delta")),
++        "best_arm_ci": moat_gate.get("best_arm_ci")
++        if isinstance(moat_gate.get("best_arm_ci"), list)
++        else None,
++        "second_corpus_confirmed": moat_gate.get("second_corpus_confirmed") is True,
++        "second_corpus_audit_clean": moat_gate.get("second_corpus_audit_clean") is True,
++        "cascade_efficiency_win": moat_gate.get("cascade_efficiency_win") is True,
++        "guided_decoding_frontier_state": str(
++            moat_gate.get("guided_decoding_frontier_state") or "missing"
++        ),
++        "bounded_retirement_ok": moat_gate.get("bounded_retirement_ok") is True,
++        "execution_incomplete_reasons": [
++            str(reason) for reason in _list(moat_gate.get("execution_incomplete_reasons"))
++        ],
++        "headline_countable": state == "moat_realized",
++        "scoped_positive_evidence": state
++        in {"musr_scoped_positive", "second_corpus_scoped_positive"},
++        "source_row": _best_source_row(moat_gate),
++    }
++
++
++def _fr11_result(payload: JsonMap) -> JsonDict:
++    if not payload:
++        return {
++            "state": "missing",
++            "credible_positive_evidence": False,
++            "claim_boundary": "missing_artifact_no_fr11_claim",
++        }
++    decision = _mapping(payload.get("promotion_decision"))
++    promoted = payload.get("promoted") is True or decision.get("promoted") is True
++    heldout_delta = _number(payload.get("heldout_delta"))
++    nonforgetting_delta = _number(payload.get("nonforgetting_delta"))
++    guard_passed = payload.get("contamination_guard_passed") is True
++    credible = bool(
++        promoted
++        and guard_passed
++        and heldout_delta is not None
++        and heldout_delta > 0.0
++        and (nonforgetting_delta is None or nonforgetting_delta >= 0.0)
++    )
++    return {
++        "state": "credible_positive" if credible else "no_credible_positive_evidence",
++        "credible_positive_evidence": credible,
++        "claim_boundary": (
++            "audited_promoted_skill_graph_positive"
++            if credible
++            else "audited_no_promote_or_nonpositive_heldout_delta"
++        ),
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "continuous_self_learning_task": payload.get("continuous_self_learning_task") is True,
++        "self_learning_loop_executed": payload.get("self_learning_loop_executed") is True,
++        "candidate_skill_count": _int(payload.get("candidate_skill_count")),
++        "verified_skill_count": _int(payload.get("verified_skill_count")),
++        "promoted": promoted,
++        "promoted_skill_ids": [str(item) for item in _list(payload.get("promoted_skill_ids"))],
++        "no_promote_reason": str(payload.get("no_promote_reason") or decision.get("no_promote_reason") or ""),
++        "pre_update_accuracy": _number(payload.get("pre_update_accuracy")),
++        "post_update_accuracy": _number(payload.get("post_update_accuracy")),
++        "heldout_delta": heldout_delta,
++        "nonforgetting_delta": nonforgetting_delta,
++        "contamination_guard_passed": guard_passed,
++        "external_verifier_audit_receipts": _list(payload.get("external_verifier_audit_receipts")),
++        "skill_graph_path": payload.get("skill_graph_path"),
++        "skill_graph_sha256": payload.get("skill_graph_sha256"),
++        "legacy_models_smoke_only": payload.get("legacy_models_smoke_only") is True,
++    }
++
++
++def _hardware_result(payload: JsonMap) -> JsonDict:
++    if not payload:
++        return {"state": "missing", "claim_boundary": "missing_artifact_no_hardware_claim"}
++    packet_built = (
++        payload.get("timing_ratio_packet_built") is True
++        and payload.get("cpu_reference_ok") is True
++        and payload.get("kv260_result_ok") is True
++    )
++    claim_scope = str(payload.get("local_claim_scope") or "")
++    return {
++        "state": "packet_built" if packet_built else "blocked_or_not_built",
++        "claim_boundary": "local_kv260_transcript_backed_parity_timing_only",
++        "no_general_speedup_claim": "no_general_fpga_speedup_claim" in claim_scope,
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "kv260_ssh_reachable": payload.get("kv260_ssh_reachable") is True,
++        "overlay_loaded": payload.get("overlay_loaded") is True,
++        "loaded_overlay": payload.get("loaded_overlay"),
++        "timing_ratio_packet_built": packet_built,
++        "cpu_reference_ok": payload.get("cpu_reference_ok") is True,
++        "kv260_result_ok": payload.get("kv260_result_ok") is True,
++        "board_transcript_path": payload.get("board_transcript_path"),
++        "transcript_sha256": payload.get("transcript_sha256"),
++        "structured_testbench_evidence": _mapping(payload.get("structured_testbench_evidence")),
++        "timing_ratio_packet": _mapping(payload.get("timing_ratio_packet")),
++        "optional_board_prechecks": _mapping(payload.get("optional_board_prechecks")),
++        "local_claim_scope": claim_scope,
++    }
++
++
++def _sota_result(payload: JsonMap) -> JsonDict:
++    if not payload:
++        return {
++            "state": "missing",
++            "claim_boundary": "missing_artifact_no_sota_ingestion_claim",
++            "honest_verdict": "",
++            "research_references_updated": False,
++            "n_sources_checked": 0,
++            "selected_sources": [],
++            "duplicate_filter": {},
++            "next_milestone_candidates": [],
++        }
++    updated = payload.get("research_references_updated") is True
++    return {
++        "state": "references_updated" if updated else "no_new_sources_or_not_updated",
++        "claim_boundary": "local_research_reference_ingestion_only_no_external_result_claim",
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "research_references_updated": updated,
++        "n_sources_checked": _int(payload.get("n_sources_checked")),
++        "selected_sources": _list(payload.get("selected_sources")),
++        "duplicate_filter": _mapping(payload.get("duplicate_filter")),
++        "next_milestone_candidates": _list(payload.get("next_milestone_candidates")),
++        "preconditions_checked": _mapping(payload.get("preconditions_checked")),
++    }
++
++
++def _arc_result(payload: JsonMap) -> JsonDict:
++    if not payload:
++        return {"state": "missing", "claim_boundary": "missing_artifact_no_arc_claim"}
++    banked = _int(payload.get("new_levels_banked"))
++    reproduced = payload.get("offline_reproduced") is True
++    provenance = _mapping(payload.get("provenance_evidence"))
++    return {
++        "state": "banked_new_level" if banked > 0 and reproduced else "no_bank",
++        "claim_boundary": "opportunistic_live_path_reproduction_gated_no_duplicate_credit",
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "target_game": payload.get("target_game"),
++        "target_level": _int(payload.get("target_level")),
++        "prior_reproduced_level": _int(payload.get("prior_reproduced_level")),
++        "new_levels_banked": banked,
++        "offline_reproduced": reproduced,
++        "duplicate_solve_avoided": payload.get("duplicate_solve_avoided") is True,
++        "registry_precheck_passed": payload.get("registry_precheck_passed") is True,
++        "reproducible_total_levels_before": _int(payload.get("reproducible_total_levels_before")),
++        "reproducible_total_levels_after": _int(payload.get("reproducible_total_levels_after")),
++        "solve_claim": _mapping(payload.get("solve_claim")),
++        "solve_provenance": str(payload.get("solve_provenance") or ""),
++        "provenance_evidence": provenance,
++        "live_agent_attempts": _list(payload.get("live_agent_attempts")),
++        "no_offline_source_reading": provenance.get("offline_source_reading_used") is False,
++        "no_offline_ground_truth_bfs": provenance.get("offline_ground_truth_bfs_used") is False,
++        "no_hand_built_adapter": provenance.get("hand_built_adapter_used") is False,
++    }
++
++
++def _candidate_classes(sota: JsonMap) -> list[str]:
++    return [
++        str(row.get("candidate"))
++        for row in _list(sota.get("next_milestone_candidates"))
++        if isinstance(row, Mapping) and row.get("candidate")
++    ]
++
++
++def _next_milestone_pointer(state: str, sota: JsonMap, *, sota_missing: bool) -> JsonDict:
++    selected = dict(ROUTE_TABLE[state])
++    if sota_missing:
++        selected["blocked_dependency"] = "exp5066_sota_ingestion_missing"
++        selected["concrete_next"] += " Backfill the missing Exp5066 reserved SOTA ingestion before final .466 planning."
++    candidates = _candidate_classes(sota)
++    return {
++        "selected_state": state,
++        "selected": selected,
++        "by_moat_state": ROUTE_TABLE,
++        "candidate_classes": candidates,
++        "sota_ingestion_missing": sota_missing,
++        "route_basis": "openspec/change-proposals/research-roadmap-vNEXT.md section 6 falsifiable gates",
++    }
++
++
++def _docs_update_required() -> JsonDict:
++    return {
++        "openspec_capstone_spec": True,
++        "ops_status": True,
++        "ops_changelog": True,
++        "_bmad_traceability": True,
++        "updated_by_this_run": ["openspec/capabilities/capstone/spec.md"],
++        "deferred_by_stop_rule": True,
++        "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation",
++    }
++
++
++def _honest_verdict(state: str, fr11: JsonMap, missing: list[JsonDict]) -> str:
++    label = MOAT_VERDICT_LABELS[state]
++    fr11_label = (
++        "fr11_credible_positive"
++        if fr11.get("credible_positive_evidence") is True
++        else "fr11_no_credible_positive_evidence"
++    )
++    missing_suffix = "_".join(
++        f"missing_{str(item.get('source'))}" for item in missing if item.get("source") != "prior_capstone"
++    )
++    return f"complete_capstone_v465_{label}_{fr11_label}" + (
++        f"_{missing_suffix}" if missing_suffix else ""
++    )
++
++
++def build_artifact(loaded: JsonMap, duration_s: float) -> JsonDict:
++    artifacts = _mapping(loaded.get("artifacts"))
++    moat_gate = _mapping(artifacts.get("moat_gate"))
++    state = _moat_state(moat_gate)
++    fr11 = _fr11_result(_mapping(artifacts.get("fr11_self_learning")))
++    hardware = _hardware_result(_mapping(artifacts.get("hardware")))
++    sota_source = _mapping(artifacts.get("sota"))
++    sota = _sota_result(sota_source)
++    arc = _arc_result(_mapping(artifacts.get("arc")))
++    missing = [dict(row) for row in _list(loaded.get("missing_upstream_artifacts")) if isinstance(row, Mapping)]
++    malformed = [
++        dict(row) for row in _list(loaded.get("malformed_upstream_artifacts")) if isinstance(row, Mapping)
++    ]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "milestone": MILESTONE,
++        "honest_verdict": _honest_verdict(state, fr11, missing),
++        "capstone_ready": not missing and not malformed,
++        "moat_state": state,
++        "best_verifier_evidence": _best_verifier_evidence(moat_gate, state),
++        "fr11_self_learning_result": fr11,
++        "hardware_result": hardware,
++        "sota_result": sota,
++        "arc_result": arc,
++        "cited_upstream_artifacts": _list(loaded.get("cited_upstream_artifacts")),
++        "missing_upstream_artifacts": missing,
++        "malformed_upstream_artifacts": malformed,
++        "next_milestone_pointer": _next_milestone_pointer(
++            state,
++            sota,
++            sota_missing=any(row.get("source") == "sota" for row in missing),
++        ),
++        "docs_update_required": _docs_update_required(),
++        "field_principles": FIELD_PRINCIPLES,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(max(float(duration_s), 0.0001), 6),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith("complete_capstone_v465_"):
++        errors.append("honest_verdict")
++    if not isinstance(artifact.get("capstone_ready"), bool):
++        errors.append("capstone_ready")
++    if artifact.get("moat_state") not in VALID_MOAT_STATES:
++        errors.append("moat_state")
++    if not isinstance(artifact.get("fr11_self_learning_result"), Mapping):
++        errors.append("fr11_self_learning_result")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        errors.append("cited_upstream_artifacts")
++    if not isinstance(artifact.get("docs_update_required"), Mapping):
++        errors.append("docs_update_required")
++    return sorted(set(errors))
++
++
++def run(root: Path = REPO_ROOT, artifact_path: Path | None = None) -> JsonDict:
++    started = time.perf_counter()
++    loaded = load_upstream_artifacts(root)
++    artifact = build_artifact(loaded, duration_s=time.perf_counter() - started)
++    write_json(artifact_path or Path(root) / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(root: Path = REPO_ROOT, artifact_path: Path | None = None) -> int:
++    artifact = run(root=root, artifact_path=artifact_path)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - direct experiment entrypoint
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c1931297ff..bf2e16f1d9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-01T04:41:19.936879Z",
+-  "duration_s": 0.11774611473083496,
++  "run_date": "2026-07-01T04:56:04.112709Z",
++  "duration_s": 0.09428191184997559,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8be2e1daff153b431d3eb889500fe6244e37d13753cf31509171d057797b279c",
++  "reproducibility_checksum": "19dee535e3322ab045e369d83f35259ca726fcc980f5cb0a33fdf00975237add",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ae6b89104dc5c15722cf0ba734312c32796db7bd"
++    "adversarial_verify_version": "7192557a1d563744988bb4e84537fcb417495f22"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b1f0449487..2648973d7a 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-01T04:41:20.118923Z",
+-  "duration_s": 0.16285014152526855,
++  "run_date": "2026-07-01T04:56:04.246748Z",
++  "duration_s": 0.11895489692687988,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3422179c7897bf2661e0367c7d589a9ac649370dfc8be8092991544f3367579b",
++  "reproducibility_checksum": "778bf7cc00e08bb6d72a7122cbc50293f0dbd5d4a30d403a26d53b1299fa6d74",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ae6b89104dc5c15722cf0ba734312c32796db7bd"
++    "adversarial_verify_version": "7192557a1d563744988bb4e84537fcb417495f22"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b2531c88c2..cd8293e782 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.164602279663086,
++  "efficiency_gains_ms": 2.1181106567382812,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 173ebc5380..66d22972aa 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6811015605926514,
++  "duration_s": 0.5982208251953125,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 37ac7b4a91..b6206ae8e2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.151812754571438e-05,
++  "duration_s": 4.057586193084717e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5067_arc_live_path_self_discovery.json b/results/experiment_5067_arc_live_path_self_discovery.json
+index 804b27c748..1940eaec1b 100644
+--- a/results/experiment_5067_arc_live_path_self_discovery.json
++++ b/results/experiment_5067_arc_live_path_self_discovery.json
+@@ -380,5 +380,13 @@
+     "SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT"
+   ],
+   "target_game": "re86",
+-  "target_level": 3
+-}
++  "target_level": 3,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=1.9214331139810383 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_5068_capstone_v465.json b/results/experiment_5068_capstone_v465.json
+new file mode 100644
+index 0000000000..aef7952102
+--- /dev/null
++++ b/results/experiment_5068_capstone_v465.json
+@@ -0,0 +1,504 @@
++{
++  "arc_result": {
++    "claim_boundary": "opportunistic_live_path_reproduction_gated_no_duplicate_credit",
++    "duplicate_solve_avoided": true,
++    "honest_verdict": "complete_re86_no_new_level_residual_duplicate_depth",
++    "live_agent_attempts": [
++      {
++        "actions_taken": 35,
++        "attempt_id": "re86_live_go_explore_archive_budget_36",
++        "budget": 36,
++        "exceeded_registry_depth": false,
++        "hand_built_adapter_used": false,
++        "legacy_models_smoke_only": true,
++        "live_path_diagnostics": {
++          "injection_exercised": false,
++          "policy_observations": 35,
++          "policy_stored_cells": 1
++        },
++        "llm_reasoning_invoked": false,
++        "max_level_reached": 0,
++        "model_specs": {
++          "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++          "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "live_reasoning_invoked": false,
++          "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "reasoning_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++        },
++        "offline_ground_truth_bfs_used": false,
++        "offline_source_reading_used": false,
++        "per_game_bfs_used": false,
++        "policy": "E3AgentPolicy",
++        "prior_reproduced_level": 2,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_new_level_claim",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "root": "/home/ianblenke/github.com/ianblenke/carnot",
++        "runtime_self_discovery": true,
++        "self_discovery_lever": "bounded_e3_policy_no_archive_injection",
++        "solution_labels": [],
++        "target_game": "re86",
++        "target_level": 3
++      }
++    ],
++    "new_levels_banked": 0,
++    "no_hand_built_adapter": true,
++    "no_offline_ground_truth_bfs": true,
++    "no_offline_source_reading": true,
++    "offline_reproduced": false,
++    "prior_reproduced_level": 2,
++    "provenance_evidence": {
++      "attempted_path": "E3AgentPolicy/bounded_live_policy",
++      "hand_built_adapter_used": false,
++      "legacy_models_smoke_only": true,
++      "llm_reasoning_invoked": false,
++      "model_specs_obeyed": true,
++      "offline_ground_truth_bfs_used": false,
++      "offline_source_reading_used": false,
++      "policy": "E3AgentPolicy",
++      "runtime_self_discovery": true,
++      "self_discovery_lever": "bounded_e3_policy_no_archive_injection",
++      "solution_labels_from_live_run": false
++    },
++    "registry_precheck_passed": true,
++    "reproducible_total_levels_after": 69,
++    "reproducible_total_levels_before": 69,
++    "solve_claim": {
++      "attempted_path": "live_agent_self_discovery",
++      "claimed": false,
++      "provenance": "live_agent_self_discovery",
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "re86",
++        "mode": "offline_reproduction_gate_no_new_level_claim",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "residual": "duplicate_depth"
++    },
++    "solve_provenance": "live_agent_self_discovery",
++    "state": "no_bank",
++    "target_game": "re86",
++    "target_level": 3
++  },
++  "best_verifier_evidence": {
++    "best_arm": "D6",
++    "best_arm_ci": [
++      0.0,
++      0.165
++    ],
++    "best_arm_delta": 0.08,
++    "bounded_retirement_ok": false,
++    "cascade_efficiency_win": true,
++    "execution_incomplete_reasons": [
++      "D1 flagged: complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
++      "D4 audit not clean: second_corpus_audit_clean=false",
++      "D6 efficiency observed but accuracy CI does not exclude zero"
++    ],
++    "guided_decoding_frontier_state": "guided_gain_observed_plus_0p111",
++    "headline_countable": false,
++    "moat_state": "execution_incomplete",
++    "scoped_positive_evidence": false,
++    "second_corpus_audit_clean": false,
++    "second_corpus_confirmed": false,
++    "source_experiment_id": 5063,
++    "source_honest_verdict": "complete_moat_execution_incomplete_v465_blocked_flagged_or_unclean",
++    "source_row": {
++      "arm": "d6_tool_first_cascade",
++      "artifact_id": "D6",
++      "cascade_accuracy": 0.665,
++      "cascade_executed": true,
++      "ci95": [
++        0.0,
++        0.165
++      ],
++      "delta": 0.08,
++      "efficiency_win": true,
++      "experiment_id": 5061,
++      "flags": [],
++      "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
++      "judge_call_fraction": 0.0,
++      "judge_only_accuracy": 0.585,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5061_tool_first_cascade.json",
++      "sha256": "sha256:00dc9ce15db8e385f3e3cfd5ea6bda06d797555564e9a508c59947616f237f8d",
++      "status": "clean",
++      "verifier_is_oracle": false
++    }
++  },
++  "capstone_ready": false,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 5063,
++      "fields_imported": [
++        "honest_verdict",
++        "moat_state",
++        "best_arm",
++        "best_arm_delta",
++        "best_arm_ci",
++        "second_corpus_confirmed",
++        "second_corpus_audit_clean",
++        "cascade_efficiency_win",
++        "guided_decoding_frontier_state",
++        "bounded_retirement_ok",
++        "execution_incomplete_reasons",
++        "per_arm_table",
++        "blocked_upstream_artifacts",
++        "flagged_upstream_artifacts",
++        "missing_upstream_artifacts"
++      ],
++      "honest_verdict": "complete_moat_execution_incomplete_v465_blocked_flagged_or_unclean",
++      "path": "results/experiment_5063_moat_gate_resolution_v465.json",
++      "present": true,
++      "sha256": "sha256:ef21e066b26198091e1f0665af467c75fba844f75855b1e5634b38e270f9bde2",
++      "source": "moat_gate",
++      "status": "present"
++    },
++    {
++      "experiment_id": 5064,
++      "fields_imported": [
++        "honest_verdict",
++        "continuous_self_learning_task",
++        "self_learning_loop_executed",
++        "candidate_skill_count",
++        "verified_skill_count",
++        "promoted",
++        "promoted_skill_ids",
++        "promotion_decision",
++        "no_promote_reason",
++        "pre_update_accuracy",
++        "post_update_accuracy",
++        "heldout_delta",
++        "nonforgetting_delta",
++        "contamination_guard_passed",
++        "external_verifier_audit_receipts",
++        "skill_graph_path",
++        "skill_graph_sha256",
++        "legacy_models_smoke_only"
++      ],
++      "honest_verdict": "complete_guarded_no_promote_minus_0p050",
++      "path": "results/experiment_5064_audited_skillgraph_self_learning.json",
++      "present": true,
++      "sha256": "sha256:c2a192be047f45a6231086e0f4f13acfcd0670dd0d6febfd48028424b20895eb",
++      "source": "fr11_self_learning",
++      "status": "present"
++    },
++    {
++      "experiment_id": 5065,
++      "fields_imported": [
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "overlay_loaded",
++        "loaded_overlay",
++        "timing_ratio_packet_built",
++        "cpu_reference_ok",
++        "kv260_result_ok",
++        "board_transcript_path",
++        "transcript_sha256",
++        "structured_testbench_evidence",
++        "local_claim_scope",
++        "timing_ratio_packet",
++        "optional_board_prechecks"
++      ],
++      "honest_verdict": "success_kv260_testbench_timing_packet_built",
++      "path": "results/experiment_5065_kv260_testbench_timing_packet.json",
++      "present": true,
++      "sha256": "sha256:a70dacc40e9a16eb1764f3e0a76a265258f0aa99c074100d881f54bd024b6f9c",
++      "source": "hardware",
++      "status": "present"
++    },
++    {
++      "experiment_id": 5066,
++      "fields_imported": [],
++      "honest_verdict": "",
++      "path": "results/experiment_5066_sota_ingestion_v466.json",
++      "present": false,
++      "sha256": null,
++      "source": "sota",
++      "status": "missing"
++    },
++    {
++      "experiment_id": 5067,
++      "fields_imported": [
++        "honest_verdict",
++        "target_game",
++        "target_level",
++        "prior_reproduced_level",
++        "new_levels_banked",
++        "offline_reproduced",
++        "duplicate_solve_avoided",
++        "registry_precheck_passed",
++        "reproducible_total_levels_before",
++        "reproducible_total_levels_after",
++        "solve_claim",
++        "solve_provenance",
++        "provenance_evidence",
++        "live_agent_attempts"
++      ],
++      "honest_verdict": "complete_re86_no_new_level_residual_duplicate_depth",
++      "path": "results/experiment_5067_arc_live_path_self_discovery.json",
++      "present": true,
++      "sha256": "sha256:1625c6a36998772a4889d3b4dacfa8643781fefdc6ab6606dbe5687ccc41dc24",
++      "source": "arc",
++      "status": "present"
++    },
++    {
++      "experiment_id": 5055,
++      "fields_imported": [
++        "honest_verdict",
++        "capstone_ready",
++        "moat_state",
++        "fr11_self_learning_result",
++        "next_milestone_pointer"
++      ],
++      "honest_verdict": "complete_capstone_v464_execution_incomplete_fr11_no_credible_positive_evidence",
++      "path": "results/experiment_5055_capstone_v464.json",
++      "present": true,
++      "sha256": "sha256:db95d77794575bcc2d4e60e5b539aaa9e5587279c8fa3e5e1afc1f7152e77bbf",
++      "source": "prior_capstone",
++      "status": "present"
++    }
++  ],
++  "docs_update_required": {
++    "_bmad_traceability": true,
++    "deferred_by_stop_rule": true,
++    "openspec_capstone_spec": true,
++    "ops_changelog": true,
++    "ops_status": true,
++    "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation",
++    "updated_by_this_run": [
++      "openspec/capabilities/capstone/spec.md"
++    ]
++  },
++  "duration_s": 0.000556,
++  "experiment": "experiment_5068_capstone_v465",
++  "experiment_id": 5068,
++  "field_principles": {
++    "arc_result": {
++      "principle": "the Exp5067 live-path ARC result, including no-bank, duplicate-depth, and provenance boundaries."
++    },
++    "best_verifier_evidence": {
++      "principle": "the best Exp5063 verifier row and gate fields, with headline_countable=false unless Exp5063's authoritative moat_state permits it."
++    },
++    "cited_upstream_artifacts": {
++      "principle": "one row per expected upstream with source, path, experiment_id, present, fields_imported, and sha256 when present."
++    },
++    "docs_update_required": {
++      "principle": "records required post-run reconciliation for ops/status/changelog/traceability while honoring conductor stop rules that may defer those edits."
++    },
++    "fr11_self_learning_result": {
++      "principle": "the Exp5064 audited skill-graph promotion/no-promote result; credible positive evidence requires the authoritative promotion gate to promote."
++    },
++    "hardware_result": {
++      "principle": "the Exp5065 KV260 result scoped to local SSH transcript-backed parity/timing, never a general FPGA speedup claim."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; complete_capstone_v465_<realized_moat|scoped_positive|bounded_retirement|execution_incomplete>_<fr11_state>[_missing_<source>]."
++    },
++    "moat_state": {
++      "principle": "the blunt `.465` verdict imported from Exp5063, constrained to realized, scoped positive, bounded-retired, or execution-incomplete."
++    },
++    "next_milestone_pointer": {
++      "principle": "the `.466` route selected from the roadmap state table for realized, scoped-positive, bounded-retired, or execution-incomplete moat states, annotated when SOTA ingestion is missing."
++    },
++    "sota_result": {
++      "principle": "the Exp5066 ingestion state, or an explicit missing-artifact state with no fabricated references."
++    }
++  },
++  "fr11_self_learning_result": {
++    "candidate_skill_count": 2,
++    "claim_boundary": "audited_no_promote_or_nonpositive_heldout_delta",
++    "contamination_guard_passed": true,
++    "continuous_self_learning_task": true,
++    "credible_positive_evidence": false,
++    "external_verifier_audit_receipts": [
++      {
++        "failed_checks": [],
++        "passed": true,
++        "verifier": "deterministic_external_skill_audit_v1"
++      },
++      {
++        "failed_checks": [],
++        "passed": true,
++        "verifier": "deterministic_external_skill_audit_v1"
++      }
++    ],
++    "heldout_delta": -0.05,
++    "honest_verdict": "complete_guarded_no_promote_minus_0p050",
++    "legacy_models_smoke_only": true,
++    "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
++    "nonforgetting_delta": -0.142857,
++    "post_update_accuracy": 0.65,
++    "pre_update_accuracy": 0.7,
++    "promoted": false,
++    "promoted_skill_ids": [],
++    "self_learning_loop_executed": true,
++    "skill_graph_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5064_audited_skillgraph_self_learning_skill_graph.json",
++    "skill_graph_sha256": "sha256:18973184f0a3d08d78fd4d81117cd9df81b24ff012250d94392e3fafe057067e",
++    "state": "no_credible_positive_evidence",
++    "verified_skill_count": 2
++  },
++  "hardware_result": {
++    "board_transcript_path": "results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl",
++    "claim_boundary": "local_kv260_transcript_backed_parity_timing_only",
++    "cpu_reference_ok": true,
++    "honest_verdict": "success_kv260_testbench_timing_packet_built",
++    "kv260_result_ok": true,
++    "kv260_ssh_reachable": true,
++    "loaded_overlay": "carnot_ising_v2_n64",
++    "local_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++    "no_general_speedup_claim": true,
++    "optional_board_prechecks": {
++      "gatemate": {
++        "scope": "reachability_precheck_only_no_flash_no_latency_claim",
++        "status": "not_run_scope_guard"
++      },
++      "polarfire": {
++        "scope": "reachability_precheck_only_no_flash_no_latency_claim",
++        "status": "not_run_scope_guard"
++      }
++    },
++    "overlay_loaded": true,
++    "state": "packet_built",
++    "structured_testbench_evidence": {
++      "board_result": {
++        "duration_s": 0.057338259008247405,
++        "energy": -71,
++        "final_state_checksum": "43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897",
++        "flips": 3800,
++        "iterations": 128,
++        "n_variables": 64,
++        "workload_name": "bounded_sparse_pbit_parity_n64"
++      },
++      "claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++      "cpu_reference": {
++        "duration_s": 0.001893861219,
++        "energy": -71,
++        "final_state_checksum": "43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897",
++        "flips": 3800,
++        "iterations": 128,
++        "n_variables": 64,
++        "workload_name": "bounded_sparse_pbit_parity_n64"
++      },
++      "parity": {
++        "checked_fields": [
++          "workload_name",
++          "n_variables",
++          "iterations",
++          "flips",
++          "energy",
++          "final_state_checksum"
++        ],
++        "cpu_reference_ok": true,
++        "kv260_result_ok": true,
++        "mismatches": []
++      },
++      "schema": "carnot.kv260.structured_testbench_evidence.v1",
++      "spec_refs": [
++        "REQ-HW-5065",
++        "SCENARIO-HW-5065"
++      ],
++      "status": "packet_built",
++      "timing_ratio_packet": {
++        "cpu_to_kv260_board_workload_ratio": 0.03302962545,
++        "cpu_to_kv260_command_wall_ratio": 0.00286411335,
++        "cpu_wall_clock_s": 0.001893861219,
++        "flips": 3800,
++        "iterations": 128,
++        "kv260_board_reported_workload_s": 0.057338259008,
++        "kv260_command_wall_clock_s": 0.661238221917,
++        "n_variables": 64,
++        "parity_match": true,
++        "ratio_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++        "workload_name": "bounded_sparse_pbit_parity_n64"
++      },
++      "transcript": {
++        "path": "results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl",
++        "sha256": "0400a1f87e3feb949c08d3d65c6d58d4f5e2018df40cdb385c5c4dfbb43f2956"
++      },
++      "workload_name": "bounded_sparse_pbit_parity_n64"
++    },
++    "timing_ratio_packet": {
++      "cpu_to_kv260_board_workload_ratio": 0.03302962545,
++      "cpu_to_kv260_command_wall_ratio": 0.00286411335,
++      "cpu_wall_clock_s": 0.001893861219,
++      "flips": 3800,
++      "iterations": 128,
++      "kv260_board_reported_workload_s": 0.057338259008,
++      "kv260_command_wall_clock_s": 0.661238221917,
++      "n_variables": 64,
++      "parity_match": true,
++      "ratio_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++      "workload_name": "bounded_sparse_pbit_parity_n64"
++    },
++    "timing_ratio_packet_built": true,
++    "transcript_sha256": "0400a1f87e3feb949c08d3d65c6d58d4f5e2018df40cdb385c5c4dfbb43f2956"
++  },
++  "honest_verdict": "complete_capstone_v465_execution_incomplete_fr11_no_credible_positive_evidence_missing_sota",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "malformed_upstream_artifacts": [],
++  "milestone": "2026.06.465",
++  "missing_upstream_artifacts": [
++    {
++      "experiment_id": 5066,
++      "path": "results/experiment_5066_sota_ingestion_v466.json",
++      "source": "sota"
++    }
++  ],
++  "moat_state": "execution_incomplete",
++  "next_milestone_pointer": {
++    "by_moat_state": {
++      "execution_incomplete": {
++        "concrete_next": "Repair flagged, unclean, or statistically incomplete Phase D evidence before claiming a moat or treating the shape as a clean null.",
++        "experiment_class": "execution_repair_before_claim_or_retirement"
++      },
++      "moat_realized": {
++        "concrete_next": "Scale the realized oracle-distinct verifier/cascade with locked controls, audited second-corpus evidence, and operator-gated activation.",
++        "experiment_class": "scale_realized_verifier"
++      },
++      "musr_scoped_positive": {
++        "concrete_next": "Treat the MuSR signal as scoped progress only; run clean D4 or D6 confirmation before any PRD-level moat claim.",
++        "experiment_class": "confirm_scoped_musr_positive"
++      },
++      "retired_bounded": {
++        "concrete_next": "Bound-retire the tested D1/D4/D6 shape and choose a differentiated .466 verifier direction from current SOTA ingestion.",
++        "experiment_class": "pivot_to_new_verifier_direction"
++      },
++      "second_corpus_scoped_positive": {
++        "concrete_next": "Treat the second-corpus result as a transfer clue only; repair MuSR D1 or D6 before making it a headline verifier-moat claim.",
++        "experiment_class": "repair_musr_or_cascade_for_second_corpus_positive"
++      }
++    },
++    "candidate_classes": [],
++    "route_basis": "openspec/change-proposals/research-roadmap-vNEXT.md section 6 falsifiable gates",
++    "selected": {
++      "blocked_dependency": "exp5066_sota_ingestion_missing",
++      "concrete_next": "Repair flagged, unclean, or statistically incomplete Phase D evidence before claiming a moat or treating the shape as a clean null. Backfill the missing Exp5066 reserved SOTA ingestion before final .466 planning.",
++      "experiment_class": "execution_repair_before_claim_or_retirement"
++    },
++    "selected_state": "execution_incomplete",
++    "sota_ingestion_missing": true
++  },
++  "random_seed": 5068,
++  "reproducibility_checksum": "sha256:835d2e4daace6aa1e5508df0bbcfee96c6bf7fe5b8e31cf99e780bb531e18559",
++  "result_path": "results/experiment_5068_capstone_v465.json",
++  "schema": "carnot.experiment_5068_capstone_v465.v1",
++  "sota_result": {
++    "claim_boundary": "missing_artifact_no_sota_ingestion_claim",
++    "duplicate_filter": {},
++    "honest_verdict": "",
++    "n_sources_checked": 0,
++    "next_milestone_candidates": [],
++    "research_references_updated": false,
++    "selected_sources": [],
++    "state": "missing"
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-5068",
++    "SCENARIO-CAPSTONE-5068",
++    "SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 790a8be75e..db3030bb28 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:41:01Z",
+-  "finished_at": "2026-07-01T04:41:01Z",
++  "started_at": "2026-07-01T04:55:45Z",
++  "finished_at": "2026-07-01T04:55:46Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d7252d0bf3..9f57b1589a 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:41:01Z",
+-  "finished_at": "2026-07-01T04:41:01Z",
++  "started_at": "2026-07-01T04:55:46Z",
++  "finished_at": "2026-07-01T04:55:46Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index fcdb58d26c..d560b8a612 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:41:01Z",
+-  "finished_at": "2026-07-01T04:41:02Z",
++  "started_at": "2026-07-01T04:55:46Z",
++  "finished_at": "2026-07-01T04:55:46Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5068_capstone_v465.py b/tests/python/test_experiment_5068_capstone_v465.py
+new file mode 100644
+index 0000000000..7b131d132b
+--- /dev/null
++++ b/tests/python/test_experiment_5068_capstone_v465.py
+@@ -0,0 +1,383 @@
++"""Tests for Exp 5068 .465 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-5068, SCENARIO-CAPSTONE-5068,
++SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5068_capstone_v465 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _moat(state: str = "execution_incomplete") -> JsonDict:
++    return {
++        "experiment": "experiment_5063_moat_gate_resolution_v465",
++        "experiment_id": 5063,
++        "honest_verdict": "complete_moat_execution_incomplete_v465_blocked_flagged_or_unclean",
++        "moat_state": state,
++        "best_arm": "D6" if state == "execution_incomplete" else "D1",
++        "best_arm_delta": 0.08,
++        "best_arm_ci": [0.0, 0.165],
++        "second_corpus_confirmed": state == "moat_realized",
++        "second_corpus_audit_clean": state == "moat_realized",
++        "cascade_efficiency_win": state in {"moat_realized", "execution_incomplete"},
++        "guided_decoding_frontier_state": "guided_gain_observed_plus_0p111",
++        "bounded_retirement_ok": state == "retired_bounded",
++        "execution_incomplete_reasons": [
++            "D1 flagged: complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
++            "D4 audit not clean: second_corpus_audit_clean=false",
++            "D6 efficiency observed but accuracy CI does not exclude zero",
++        ]
++        if state == "execution_incomplete"
++        else [],
++        "per_arm_table": [
++            {
++                "artifact_id": "D1",
++                "arm": "d1_sota_refresh_audit",
++                "status": "flagged" if state == "execution_incomplete" else "clean",
++                "delta": 0.08,
++                "ci95": [0.0, 0.165],
++                "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
++                "verifier_is_oracle": False,
++            },
++            {
++                "artifact_id": "D6",
++                "arm": "d6_tool_first_cascade",
++                "status": "clean",
++                "delta": 0.08,
++                "ci95": [0.0, 0.165],
++                "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
++                "efficiency_win": True,
++                "verifier_is_oracle": False,
++            },
++        ],
++    }
++
++
++def _fr11(*, promoted: bool = False) -> JsonDict:
++    delta = 0.04 if promoted else -0.05
++    return {
++        "experiment": "experiment_5064_audited_skillgraph_self_learning",
++        "experiment_id": 5064,
++        "honest_verdict": "success_promoted_skill_graph_plus_0p040"
++        if promoted
++        else "complete_guarded_no_promote_minus_0p050",
++        "continuous_self_learning_task": True,
++        "self_learning_loop_executed": True,
++        "near_miss_count": 262,
++        "candidate_skill_count": 2,
++        "verified_skill_count": 2,
++        "promoted": promoted,
++        "promoted_skill_ids": ["skill_5064_positive_utility_promotion_gate"] if promoted else [],
++        "promotion_decision": {
++            "promoted": promoted,
++            "no_promote_reason": "" if promoted else "heldout_delta_nonpositive;nonforgetting_regressed",
++        },
++        "no_promote_reason": "" if promoted else "heldout_delta_nonpositive;nonforgetting_regressed",
++        "pre_update_accuracy": 0.7,
++        "post_update_accuracy": 0.74 if promoted else 0.65,
++        "heldout_delta": delta,
++        "nonforgetting_delta": 0.0 if promoted else -0.142857,
++        "contamination_guard_passed": True,
++        "external_verifier_audit_receipts": [
++            {"verifier": "deterministic_external_skill_audit_v1", "passed": True}
++        ],
++        "skill_graph_path": "results/replay_memory/experiment_5064_skill_graph.json",
++        "skill_graph_sha256": "sha256:" + "1" * 64,
++        "legacy_models_smoke_only": True,
++    }
++
++
++def _hardware() -> JsonDict:
++    return {
++        "experiment": 5065,
++        "honest_verdict": "success_kv260_testbench_timing_packet_built",
++        "kv260_ssh_reachable": True,
++        "overlay_loaded": True,
++        "loaded_overlay": "carnot_ising_v2_n64",
++        "timing_ratio_packet_built": True,
++        "cpu_reference_ok": True,
++        "kv260_result_ok": True,
++        "local_claim_scope": (
++            "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_"
++            "no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim"
++        ),
++        "board_transcript_path": "results/experiment_5065.transcript.jsonl",
++        "transcript_sha256": "0400a1f87e3feb949c08d3d65c6d58d4f5e2018df40cdb385c5c4dfbb43f2956",
++        "structured_testbench_evidence": {"status": "packet_built"},
++        "timing_ratio_packet": {
++            "parity_match": True,
++            "cpu_to_kv260_board_workload_ratio": 0.03302962545,
++        },
++        "optional_board_prechecks": {
++            "gatemate": {"status": "not_run_scope_guard"},
++            "polarfire": {"status": "not_run_scope_guard"},
++        },
++    }
++
++
++def _sota() -> JsonDict:
++    return {
++        "experiment": "experiment_5066_sota_ingestion_v466",
++        "experiment_id": 5066,
++        "honest_verdict": "success_sota_ingestion_v466_actionable_references_added",
++        "research_references_updated": True,
++        "n_sources_checked": 9,
++        "selected_sources": [{"source_id": "2606.00001", "hook": "fresh verifier route"}],
++        "duplicate_filter": {"deduplicated_against_exp5053": True},
++        "next_milestone_candidates": [
++            {"candidate": "Fresh verifier route", "source_ids": ["2606.00001"]}
++        ],
++        "preconditions_checked": {"research_references_present": True},
++    }
++
++
++def _arc() -> JsonDict:
++    return {
++        "experiment": "experiment_5067_arc_live_path_self_discovery",
++        "experiment_id": 5067,
++        "honest_verdict": "complete_re86_no_new_level_residual_duplicate_depth",
++        "target_game": "re86",
++        "target_level": 3,
++        "prior_reproduced_level": 2,
++        "new_levels_banked": 0,
++        "offline_reproduced": False,
++        "duplicate_solve_avoided": True,
++        "registry_precheck_passed": True,
++        "reproducible_total_levels_before": 69,
++        "reproducible_total_levels_after": 69,
++        "solve_claim": {
++            "claimed": False,
++            "provenance": "live_agent_self_discovery",
++            "reproduction_gate": {"reproduced": False, "reached_level": 0},
++        },
++        "solve_provenance": "live_agent_self_discovery",
++        "provenance_evidence": {
++            "runtime_self_discovery": True,
++            "offline_source_reading_used": False,
++            "offline_ground_truth_bfs_used": False,
++            "hand_built_adapter_used": False,
++            "llm_reasoning_invoked": False,
++        },
++        "live_agent_attempts": [{"target_game": "re86", "max_level_reached": 0}],
++    }
++
++
++def _prior_capstone() -> JsonDict:
++    return {
++        "experiment": "experiment_5055_capstone_v464",
++        "experiment_id": 5055,
++        "honest_verdict": "complete_capstone_v464_execution_incomplete_fr11_no_credible_positive_evidence",
++        "capstone_ready": True,
++        "moat_state": "execution_incomplete",
++    }
++
++
++def _write_all(
++    root: Path,
++    *,
++    moat_state: str = "execution_incomplete",
++    promoted: bool = False,
++    include_sota: bool = False,
++) -> None:
++    payloads = {
++        "moat_gate": _moat(moat_state),
++        "fr11_self_learning": _fr11(promoted=promoted),
++        "hardware": _hardware(),
++        "arc": _arc(),
++        "prior_capstone": _prior_capstone(),
++    }
++    if include_sota:
++        payloads["sota"] = _sota()
++    for source, payload in payloads.items():
++        _write_json(root / mod.UPSTREAMS[source].relative_path, payload)
++
++
++def test_req_capstone_5068_spec_declares_v465_capstone_contract() -> None:
++    """REQ-CAPSTONE-5068: OpenSpec anchors the .465 capstone artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-5068",
++        "SCENARIO-CAPSTONE-5068",
++        "SCENARIO-CAPSTONE-5068-FIELD-PRINCIPLES",
++        "experiment_5068_capstone_v465.py",
++        "results/experiment_5068_capstone_v465.json",
++        "fr11_self_learning_result",
++        "docs_update_required",
++        "missing Exp5066",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_5068_preserves_current_incomplete_and_missing_sota(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-5068: missing SOTA is explicit and not fabricated."""
++
++    _write_all(tmp_path, include_sota=False)
++
++    artifact = mod.run(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++
++    assert artifact["honest_verdict"] == (
++        "complete_capstone_v465_execution_incomplete_fr11_no_credible_positive_evidence_missing_sota"
++    )
++    assert artifact["capstone_ready"] is False
++    assert artifact["moat_state"] == "execution_incomplete"
++    assert artifact["best_verifier_evidence"]["best_arm"] == "D6"
++    assert artifact["best_verifier_evidence"]["headline_countable"] is False
++    assert artifact["best_verifier_evidence"]["source_row"]["artifact_id"] == "D6"
++    assert artifact["fr11_self_learning_result"]["credible_positive_evidence"] is False
++    assert artifact["fr11_self_learning_result"]["state"] == "no_credible_positive_evidence"
++    assert artifact["fr11_self_learning_result"]["no_promote_reason"] == (
++        "heldout_delta_nonpositive;nonforgetting_regressed"
++    )
++    assert artifact["hardware_result"]["state"] == "packet_built"
++    assert artifact["hardware_result"]["no_general_speedup_claim"] is True
++    assert artifact["sota_result"]["state"] == "missing"
++    assert artifact["sota_result"]["claim_boundary"] == "missing_artifact_no_sota_ingestion_claim"
++    assert artifact["arc_result"]["state"] == "no_bank"
++    assert artifact["arc_result"]["new_levels_banked"] == 0
++    assert artifact["next_milestone_pointer"]["selected"]["experiment_class"] == (
++        "execution_repair_before_claim_or_retirement"
++    )
++    assert artifact["next_milestone_pointer"]["sota_ingestion_missing"] is True
++    assert artifact["missing_upstream_artifacts"] == [
++        {
++            "source": "sota",
++            "experiment_id": 5066,
++            "path": "results/experiment_5066_sota_ingestion_v466.json",
++        }
++    ]
++    assert {row["source"] for row in artifact["cited_upstream_artifacts"]} == set(
++        mod.UPSTREAMS
++    )
++    sota_citation = [
++        row for row in artifact["cited_upstream_artifacts"] if row["source"] == "sota"
++    ][0]
++    assert sota_citation["status"] == "missing"
++    assert sota_citation["sha256"] is None
++    assert artifact["docs_update_required"]["deferred_by_stop_rule"] is True
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++@pytest.mark.parametrize(
++    ("state", "label", "experiment_class"),
++    [
++        ("moat_realized", "realized_moat", "scale_realized_verifier"),
++        ("musr_scoped_positive", "scoped_positive", "confirm_scoped_musr_positive"),
++        (
++            "second_corpus_scoped_positive",
++            "scoped_positive",
++            "repair_musr_or_cascade_for_second_corpus_positive",
++        ),
++        ("retired_bounded", "bounded_retirement", "pivot_to_new_verifier_direction"),
++        (
++            "execution_incomplete",
++            "execution_incomplete",
++            "execution_repair_before_claim_or_retirement",
++        ),
++    ],
++)
++def test_scenario_capstone_5068_routes_every_roadmap_moat_state(
++    tmp_path: Path,
++    state: str,
++    label: str,
++    experiment_class: str,
++) -> None:
++    """SCENARIO-CAPSTONE-5068: the .466 pointer follows the roadmap state table."""
++
++    _write_all(tmp_path, moat_state=state, promoted=True, include_sota=True)
++
++    artifact = mod.run(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++
++    assert artifact["honest_verdict"] == f"complete_capstone_v465_{label}_fr11_credible_positive"
++    assert artifact["capstone_ready"] is True
++    assert artifact["next_milestone_pointer"]["selected_state"] == state
++    assert artifact["next_milestone_pointer"]["selected"]["experiment_class"] == experiment_class
++    assert artifact["next_milestone_pointer"]["candidate_classes"] == ["Fresh verifier route"]
++    assert artifact["fr11_self_learning_result"]["credible_positive_evidence"] is True
++    assert artifact["sota_result"]["state"] == "references_updated"
++    assert artifact["missing_upstream_artifacts"] == []
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_5068_malformed_inputs_and_validation_edges(
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-CAPSTONE-5068: malformed inputs and schema failures are explicit."""
++
++    _write_all(tmp_path, include_sota=True)
++    malformed = tmp_path / mod.UPSTREAMS["moat_gate"].relative_path
++    malformed.write_text("{not-json", encoding="utf-8")
++
++    loaded = mod.load_upstream_artifacts(tmp_path)
++    artifact = mod.build_artifact(loaded, duration_s=0.0)
++
++    assert artifact["capstone_ready"] is False
++    assert artifact["moat_state"] == "execution_incomplete"
++    assert artifact["malformed_upstream_artifacts"][0]["source"] == "moat_gate"
++    assert artifact["duration_s"] == 0.0001
++    non_object_path = tmp_path / "list.json"
++    non_object_path.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="top-level JSON value"):
++        mod.read_json_object(non_object_path)
++    assert mod._best_source_row({"best_arm": "D1", "per_arm_table": ["bad", {"artifact_id": "D1"}]}) == {
++        "artifact_id": "D1"
++    }
++    assert mod._fr11_result({})["claim_boundary"] == "missing_artifact_no_fr11_claim"
++    assert mod._hardware_result({})["claim_boundary"] == "missing_artifact_no_hardware_claim"
++    assert mod._arc_result({})["claim_boundary"] == "missing_artifact_no_arc_claim"
++    assert mod._number(True) is None
++    assert mod._number("bad") is None
++    assert mod._list("bad") == []
++    assert mod._mapping([]) == {}
++    assert "honest_verdict" in mod.artifact_schema_errors({})
++
++    invalid = dict(artifact)
++    invalid["honest_verdict"] = "bad"
++    invalid["capstone_ready"] = "yes"
++    invalid["moat_state"] = "bad"
++    invalid["fr11_self_learning_result"] = []
++    invalid["cited_upstream_artifacts"] = "bad"
++    invalid["docs_update_required"] = []
++    errors = mod.artifact_schema_errors(invalid)
++    for field in (
++        "honest_verdict",
++        "capstone_ready",
++        "moat_state",
++        "fr11_self_learning_result",
++        "cited_upstream_artifacts",
++        "docs_update_required",
++    ):
++        assert field in errors
++
++    _write_all(tmp_path, include_sota=True)
++    exit_code = mod.main(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++    captured = capsys.readouterr()
++    printed = json.loads(captured.out)
++    assert exit_code == 0
++    assert printed["experiment"] == mod.EXPERIMENT
++    assert printed["reproducibility_checksum"] == mod.payload_checksum(printed)
+-- 
+2.55.0
+

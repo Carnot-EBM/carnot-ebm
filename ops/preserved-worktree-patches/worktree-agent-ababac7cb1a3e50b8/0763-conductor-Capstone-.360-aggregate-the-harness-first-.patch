@@ -1,0 +1,1445 @@
+From 633ba0a6da4dc1edd3e54c0d42d80a09e8040977 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 23:45:12 -0400
+Subject: [PATCH 00763/11362] =?UTF-8?q?[conductor]=20Capstone=20.360=20?=
+ =?UTF-8?q?=E2=80=94=20aggregate=20the=20harness-first=20verdicts:=20EBT?=
+ =?UTF-8?q?=20FUNDAMENTAL=20replication=20(REPLICATED/REFUTED/INCONCLUSIVE?=
+ =?UTF-8?q?),=20the=20moat-scissor=20verdict=20with=20the=20tested=20harne?=
+ =?UTF-8?q?ss=20(MOAT=5FSURVIVES/SUBSUMED/INCONCLUSIVE),=20the=20facts=20g?=
+ =?UTF-8?q?raph-grounding=20signal=20+=20complementarity=20with=20the=20te?=
+ =?UTF-8?q?sted=20verifier,=20FR-11=20v25=20invariant,=20and=20the=20two?=
+ =?UTF-8?q?=20FPGA=20boards.=20FORCE=20the=20operator=20next-thesis=20deci?=
+ =?UTF-8?q?sion:=20BOTH=20energy-as-selection=20(P0.1)=20AND=20energy-as-g?=
+ =?UTF-8?q?eneration=20(EBT)=20are=20now=20bounded-negative;=20the=20verif?=
+ =?UTF-8?q?ier=20is=20the=20surviving=20asset.=20paper=5Fready=20stays=20T?=
+ =?UTF-8?q?RUE;=20frozen=200.9131=20unchanged.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3902-capstone-v360
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/reporting/capstone_v360_3902.py | 620 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_3902_capstone_v360.json    | 212 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../experiment_3902_capstone_v360.py          |  19 +
+ .../test_experiment_3902_capstone_v360.py     | 364 ++++++++++
+ 14 files changed, 1235 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v360_3902.py
+ create mode 100644 results/experiment_3902_capstone_v360.json
+ create mode 100644 scripts/experiments/experiment_3902_capstone_v360.py
+ create mode 100644 tests/python/test_experiment_3902_capstone_v360.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 5e8dc79c42..d94ebc1ce1 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -9,3 +9,5 @@
+ - SCENARIO-CAPSTONE-3868: The capstone artifact must emit principle-annotated fields for moat durability, independence reality, ThinkPRM complementarity, facts-domain architecture, FR-11 v23 self-learning, LDT margin, hardware board states, paper readiness, frozen FoVer AUROC preservation, skipped flagged artifacts, operator recommendation, provenance with sha256, and a terminal-prefix honest verdict.
+ - REQ-CAPSTONE-3891: The .359 capstone must aggregate the milestone's forward-bet verdicts only from landed non-flagged upstream artifacts, skip every `flagged_adversarial:true` artifact without aggregating its numbers, preserve `paper_ready`, and keep the frozen 0.9131 headline unchanged.
+ - SCENARIO-CAPSTONE-3891: The capstone artifact must emit bare top-level fields for EBT adjudication, EBT System-2 outcome, in-distribution moat verdict, facts complementarity, FR-11 v24 invariant, hardware outcome, `paper_ready`, `unmet_gates`, `frozen_headline_unchanged`, operator next-thesis recommendation, excluded flagged artifacts, preconditions, duration, substrate, and a terminal-prefix honest verdict.
++- REQ-CAPSTONE-3902: The .360 capstone must aggregate the milestone's verdicts only from upstream artifacts that actually landed and are not stamped `flagged_adversarial:true`, record missing or blocked upstreams honestly, preserve `paper_ready`, and keep the frozen 0.9131 headline unchanged.
++- SCENARIO-CAPSTONE-3902: The capstone artifact must emit bare top-level fields for EBT replication outcome, tested-harness moat verdict, facts broadening outcome, FR-11 v25 invariant, hardware outcome, both-energy-theses bounded boolean, `paper_ready`, `unmet_gates`, `frozen_headline_unchanged`, operator next-thesis recommendation, excluded flagged artifacts, preconditions, duration, substrate, and a terminal-prefix honest verdict.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 02d52bba7a..80bf658d24 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 157,
+   "code_violations": 0,
+-  "experiments_checked": 2971,
++  "experiments_checked": 2972,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v360_3902.py b/python/carnot/reporting/capstone_v360_3902.py
+new file mode 100644
+index 0000000000..74470f61c0
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v360_3902.py
+@@ -0,0 +1,620 @@
++"""Build the Exp 3902 v360 milestone capstone artifact.
++
++Spec refs: REQ-CAPSTONE-3902, SCENARIO-CAPSTONE-3902.
++
++This module is a disciplined aggregation step. It reads landed upstream
++artifacts, excludes anything stamped ``flagged_adversarial:true``, records
++missing or blocked upstreams as part of the state, and preserves the frozen
++FoVer 0.9131 paper-ready headline rather than making a new headline.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import glob
++import hashlib
++import importlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script import guard.
++    sys.path.insert(0, str(REPO_ROOT))
++
++OUTPUT_REL_PATH = Path("results/experiment_3902_capstone_v360.json")
++EXPERIMENT_ID = 3902
++RANDOM_SEED = 3902
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++UPSTREAM_IDS = (3893, 3894, 3895, 3896, 3897, 3898, 3899, 3900, 3901)
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    3893: Path("results/experiment_3893_ebt_fundamental_replication.json"),
++    3894: Path("results/experiment_3894_reasoner_self_verify_harness.json"),
++    3895: Path("results/experiment_3895_moat_scissor_tested_harness.json"),
++    3896: Path("results/experiment_3896_graph_grounding_verifier_harness.json"),
++    3897: Path("results/experiment_3897_graph_grounding_facts_run.json"),
++    3898: Path("results/experiment_3898_facts_complementarity.json"),
++    3899: Path("results/experiment_3899_fr11_v25.json"),
++    3900: Path("results/experiment_3900_gatemate_terminal_confirmation.json"),
++    3901: Path("results/experiment_3901_polarfire_kv260_continuity.json"),
++}
++UPSTREAM_GLOBS: Mapping[int, str] = {
++    experiment_id: f"results/experiment_{experiment_id}_*"
++    for experiment_id in UPSTREAM_IDS
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "ebt_replication_outcome",
++    "moat_verdict",
++    "facts_outcome",
++    "fr11_v25_invariant",
++    "hardware_outcome",
++    "both_energy_theses_bounded",
++    "paper_ready",
++    "unmet_gates",
++    "frozen_headline_unchanged",
++    "operator_next_thesis_recommendation",
++    "flagged_artifacts_excluded",
++    "preconditions_checked",
++    "duration_s",
++    "inference_substrate",
++)
++
++STRING_VERDICT_FIELDS = (
++    "ebt_replication_outcome",
++    "moat_verdict",
++    "facts_outcome",
++    "fr11_v25_invariant",
++    "hardware_outcome",
++    "operator_next_thesis_recommendation",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "ebt_replication_outcome": (
++        "REPLICATED/REFUTED/INCONCLUSIVE - does the .359 FUNDAMENTAL hold; "
++        "the energy-as-generator bank-or-not signal."
++    ),
++    "moat_verdict": (
++        "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE with the tested harness - the "
++        "DT-P2 durability answer."
++    ),
++    "facts_outcome": (
++        "Graph-grounding signal reproduced? complementary? - the broaden-the-verifier "
++        "status; excluded if exp3897 is flagged."
++    ),
++    "fr11_v25_invariant": (
++        "Self-learning mandate outcome - invariant held across the v24-to-v25 iteration."
++    ),
++    "hardware_outcome": (
++        "GateMate terminal-assessment plus PolarFire/KV260 continuity - honest "
++        "no-fabric-claim record."
++    ),
++    "both_energy_theses_bounded": (
++        "Bare bool - true iff EBT replication confirms FUNDAMENTAL given P0.1 "
++        "already settled."
++    ),
++    "paper_ready": (
++        "Must stay true - the milestone adds lenses, not a new headline; report unmet_gates."
++    ),
++    "unmet_gates": "G1-G4 publication-gate status from scripts/publication_gate.py --json.",
++    "frozen_headline_unchanged": "G1-G4 status plus the frozen FoVer 0.9131 invariant guard.",
++    "operator_next_thesis_recommendation": (
++        "The loop recommends; the operator decides the next forward bet."
++    ),
++    "flagged_artifacts_excluded": (
++        "Artifacts skipped for flagged_adversarial:true before metric aggregation."
++    ),
++    "preconditions_checked": (
++        "Aggregation methodology, upstream landing state, and live summarizer status."
++    ),
++    "duration_s": "Aggregation wall-clock duration.",
++    "inference_substrate": "Aggregation methodology without GGUF/CUDA markers.",
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return whether ``value`` looks like a SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdefABCDEF" for c in value)
++
++
++def numeric(value: object) -> float | None:
++    """Return JSON numeric scalars while rejecting booleans and strings."""
++
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, int | float):
++        return float(value)
++    return None
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON artifact object from disk."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover - defensive guard.
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash a cited upstream artifact for provenance."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def relative_to_root(root: Path, path: Path) -> str:
++    """Return a stable repo-relative path string."""
++
++    try:
++        return str(path.relative_to(root))
++    except ValueError:  # pragma: no cover - only used for external paths.
++        return str(path)
++
++
++def honest_verdict(payload: Mapping[str, Any] | None) -> str:
++    """Extract the upstream terminal verdict without interpreting metrics."""
++
++    if not isinstance(payload, Mapping):
++        return "missing"
++    verdict = payload.get("honest_verdict")
++    return str(verdict) if verdict is not None else "missing"
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    """Return whether the upstream carries the stamped fabrication flag."""
++
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def live_critical(summary: Mapping[str, Any] | None) -> bool:
++    """Return whether summarize_artifact.py found a live critical flag."""
++
++    return isinstance(summary, Mapping) and summary.get("returncode") == 2
++
++
++def derive_ebt_replication_outcome(payload: Mapping[str, Any] | None) -> str:
++    """Map Exp 3893 to the replication outcome scalar."""
++
++    if not isinstance(payload, Mapping):
++        return "INCONCLUSIVE"
++    outcome = str(payload.get("replication_outcome", "")).upper()
++    if outcome in {"REPLICATED", "REFUTED", "INCONCLUSIVE"}:
++        return outcome
++    verdict = honest_verdict(payload).upper()
++    if "REPLICATED" in verdict:
++        return "REPLICATED"
++    if "REFUTED" in verdict:
++        return "REFUTED"
++    return "INCONCLUSIVE"
++
++
++def derive_moat_verdict(payload: Mapping[str, Any] | None) -> str:
++    """Map the tested-harness moat scissor to the durability scalar."""
++
++    verdict = honest_verdict(payload).upper()
++    if "MOAT_SURVIVES" in verdict or "MOAT SURVIVES" in verdict:
++        return "MOAT_SURVIVES"
++    if "SUBSUMED" in verdict:
++        return "SUBSUMED"
++    return "INCONCLUSIVE"
++
++
++def derive_facts_outcome(
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++    *,
++    exp3897_was_flagged: bool,
++) -> str:
++    """Summarize graph-grounding breadth without using quarantined facts runs."""
++
++    if exp3897_was_flagged:
++        return "EXCLUDED_EXP3897_FLAGGED"
++    graph = clean_upstreams.get(3897)
++    complement = clean_upstreams.get(3898)
++    reproduced = isinstance(graph, Mapping) and (
++        graph.get("graph_grounding_signal_reproduced") is True
++        or "REPRODUCED" in honest_verdict(graph).upper()
++    )
++    complementary = isinstance(complement, Mapping) and (
++        complement.get("facts_complementary") is True
++        or "COMPLEMENT" in honest_verdict(complement).upper()
++    )
++    if reproduced and complementary:
++        return "REPRODUCED_COMPLEMENTARY"
++    if reproduced:
++        return "REPRODUCED"
++    if complementary:
++        return "COMPLEMENTARY_WITHOUT_REPRODUCTION_ARTIFACT"
++    return "INCONCLUSIVE"
++
++
++def derive_fr11_v25_invariant(payload: Mapping[str, Any] | None) -> str:
++    """Return whether the FR-11 v25 invariant held."""
++
++    if not isinstance(payload, Mapping):
++        return "INCONCLUSIVE"
++    verdict = honest_verdict(payload).upper()
++    if "INVARIANT_HELD" in verdict or (
++        payload.get("frozen_headline_unchanged") is True
++        and (
++            payload.get("self_learning_invariant_held") is True
++            or payload.get("fr11_v25_invariant_held") is True
++        )
++    ):
++        return "INVARIANT_HELD"
++    return "INCONCLUSIVE"
++
++
++def derive_hardware_outcome(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> str:
++    """Summarize GateMate terminal assessment and PolarFire/KV260 continuity."""
++
++    gatemate = clean_upstreams.get(3900)
++    if not isinstance(gatemate, Mapping):
++        gatemate_state = "GATEMATE_MISSING"
++    elif honest_verdict(gatemate).startswith("blocked_gatemate"):
++        gatemate_state = "GATEMATE_BLOCKED"
++    elif gatemate.get("terminal_state_reached") is True or honest_verdict(gatemate).startswith("success:"):
++        gatemate_state = "GATEMATE_TERMINAL_CONFIRMED"
++    else:
++        gatemate_state = "GATEMATE_PARTIAL"
++
++    polarfire = clean_upstreams.get(3901)
++    if not isinstance(polarfire, Mapping):
++        polarfire_state = "POLARFIRE_KV260_MISSING"
++    elif honest_verdict(polarfire).startswith("blocked_"):
++        polarfire_state = "POLARFIRE_KV260_BLOCKED"
++    elif polarfire.get("no_fpga_fabric_claim") is True or polarfire.get("fabric_acceleration_claimed") is False:
++        polarfire_state = "POLARFIRE_KV260_CONTINUITY_NO_FABRIC_CLAIM"
++    else:
++        polarfire_state = "POLARFIRE_KV260_PARTIAL_NO_FABRIC_CLAIM"
++    return f"{gatemate_state}_{polarfire_state}"
++
++
++def frozen_headline_unchanged(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> bool:
++    """Guard the frozen 0.9131 FoVer headline against explicit regressions."""
++
++    for payload in clean_upstreams.values():
++        if payload.get("frozen_headline_unchanged") is False:
++            return False
++        frozen = numeric(payload.get("frozen_headline_ensemble_auroc"))
++        if frozen is not None and frozen != FROZEN_FOVER_AUROC:
++            return False
++    return True
++
++
++def both_energy_theses_bounded(ebt_replication_outcome: str) -> bool:
++    """Return the crossroads trigger: P0.1 settled plus EBT replication banked."""
++
++    return ebt_replication_outcome == "REPLICATED"
++
++
++def operator_next_thesis_recommendation(
++    *,
++    energy_bounded: bool,
++    moat_verdict: str,
++    facts_outcome: str,
++) -> str:
++    """State the loop recommendation while preserving operator choice."""
++
++    if energy_bounded:
++        return (
++            "Recommend verifier as a durable, broad external second-opinion layer: "
++            f"moat={moat_verdict}, facts={facts_outcome}. Treat energy as generator/selector "
++            "as twice-refuted for forward-bet purposes; the loop recommends, the operator decides."
++        )
++    return (
++        "Do not manufacture a new headline from partial landing. Keep FoVer 0.9131 frozen, "
++        f"carry moat={moat_verdict} and facts={facts_outcome} as conditioned verifier evidence, "
++        "and require a clean EBT replication artifact before declaring both energy theses bounded."
++    )
++
++
++def verdict_slug(ebt_replication_outcome: str, moat_verdict: str, facts_outcome: str) -> str:
++    """Build the fixed v360 honest-verdict suffix."""
++
++    return (
++        f"capstone_v360_ebt{ebt_replication_outcome}_moat{moat_verdict}_"
++        f"facts{facts_outcome}"
++    )
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash the artifact payload while excluding its own checksum."""
++
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def matching_files(root: Path, experiment_id: int) -> list[str]:
++    """Return repo-relative files that matched the requested upstream pattern."""
++
++    return [
++        relative_to_root(root, Path(path))
++        for path in sorted(glob.glob(str(root / UPSTREAM_GLOBS[experiment_id])))
++    ]
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the v360 capstone from existing upstream verdict artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = {experiment_id: root_path / DEFAULT_UPSTREAM_PATHS[experiment_id] for experiment_id in UPSTREAM_IDS}
++    upstreams = {
++        experiment_id: read_json_object(path) if path.exists() else None
++        for experiment_id, path in paths.items()
++    }
++    summaries = (
++        {experiment_id: dict(status) for experiment_id, status in summary_statuses.items()}
++        if summary_statuses is not None
++        else run_summarize_statuses(root_path, paths)
++    )
++    publication_gate = dict(publication_gate_data) if publication_gate_data is not None else publication_gate_state()
++
++    flagged_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if flagged(payload)
++    }
++    live_critical_ids = {
++        experiment_id
++        for experiment_id, status in summaries.items()
++        if live_critical(status)
++    }
++    clean_upstreams = {
++        experiment_id: payload
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping)
++        and experiment_id not in flagged_ids
++        and experiment_id not in live_critical_ids
++    }
++
++    ebt = derive_ebt_replication_outcome(clean_upstreams.get(3893))
++    moat = derive_moat_verdict(clean_upstreams.get(3895))
++    facts = derive_facts_outcome(clean_upstreams, exp3897_was_flagged=3897 in flagged_ids)
++    fr11 = derive_fr11_v25_invariant(clean_upstreams.get(3899))
++    hardware = derive_hardware_outcome(clean_upstreams)
++    energy_bounded = both_energy_theses_bounded(ebt)
++    paper_ready = publication_gate.get("paper_ready") is True
++    unmet_gates = list(publication_gate.get("unmet_gates", []))
++    frozen_unchanged = frozen_headline_unchanged(clean_upstreams)
++    aggregation_target_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping)
++        and experiment_id not in flagged_ids
++        and experiment_id not in live_critical_ids
++    }
++    all_landed_nonflagged_aggregated = set(clean_upstreams) == aggregation_target_ids
++    capstone_complete = bool(paper_ready and frozen_unchanged and all_landed_nonflagged_aggregated)
++
++    cited = [
++        {
++            "experiment_id": experiment_id,
++            "path": relative_to_root(root_path, paths[experiment_id]),
++            "sha256": sha256_file(paths[experiment_id]),
++            "honest_verdict": honest_verdict(payload),
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++        for experiment_id, payload in sorted(clean_upstreams.items())
++    ]
++    excluded = [
++        {
++            "experiment_id": experiment_id,
++            "path": relative_to_root(root_path, paths[experiment_id]),
++            "reason": "flagged_adversarial:true",
++            "honest_verdict": honest_verdict(upstreams[experiment_id]),
++        }
++        for experiment_id in sorted(flagged_ids)
++    ]
++    upstream_state = {
++        experiment_id: {
++            "path": relative_to_root(root_path, path),
++            "matching_files": matching_files(root_path, experiment_id),
++            "exists": upstreams[experiment_id] is not None,
++            "honest_verdict": honest_verdict(upstreams[experiment_id]),
++            "flagged_adversarial": experiment_id in flagged_ids,
++            "live_critical": experiment_id in live_critical_ids,
++            "included": experiment_id in clean_upstreams,
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++        for experiment_id, path in paths.items()
++    }
++
++    base_slug = verdict_slug(ebt, moat, facts)
++    suffix = f"{base_slug}_paper_ready_{str(paper_ready).lower()}_frozen_{'unchanged' if frozen_unchanged else 'changed'}"
++    if capstone_complete:
++        terminal_verdict = f"complete: {suffix}"
++    elif not paper_ready:
++        terminal_verdict = f"blocked_publication_gate: {suffix}"
++    elif not frozen_unchanged:
++        terminal_verdict = f"blocked_frozen_headline: {suffix}"
++    else:  # pragma: no cover - retained for future citation drift guards.
++        terminal_verdict = f"blocked_aggregation: {suffix}"
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v360_3902.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": terminal_verdict,
++        "ebt_replication_outcome": ebt,
++        "moat_verdict": moat,
++        "facts_outcome": facts,
++        "fr11_v25_invariant": fr11,
++        "hardware_outcome": hardware,
++        "both_energy_theses_bounded": energy_bounded,
++        "paper_ready": paper_ready,
++        "unmet_gates": unmet_gates,
++        "publication_gate": publication_gate,
++        "frozen_headline_unchanged": frozen_unchanged,
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "operator_next_thesis_recommendation": operator_next_thesis_recommendation(
++            energy_bounded=energy_bounded,
++            moat_verdict=moat,
++            facts_outcome=facts,
++        ),
++        "flagged_artifacts_excluded": excluded,
++        "cited_upstream_artifacts": cited,
++        "preconditions_checked": {
++            "summarize_artifact_importable": module_importable("scripts.summarize_artifact"),
++            "publication_gate_importable": module_importable("scripts.publication_gate"),
++            "summarize_artifact_runnable": all(
++                status.get("returncode") in {0, 1, 2}
++                for status in summaries.values()
++            ),
++            "publication_gate_checked": True,
++            "publication_gate_runnable": True,
++            "all_landed_nonflagged_verdicts_aggregated": all_landed_nonflagged_aggregated,
++            "capstone_complete": capstone_complete,
++            "live_critical_artifacts_observed": sorted(live_critical_ids),
++            "upstream_artifacts": upstream_state,
++        },
++        "duration_s": max(0.0001, end - start),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def module_importable(name: str) -> bool:
++    """Return whether a precondition module can be imported."""
++
++    try:
++        importlib.import_module(name)
++    except Exception:  # pragma: no cover - environment failure path.
++        return False
++    return True
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the v360 artifact contract that prevents over-claiming."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover - defensive guard.
++    for field in STRING_VERDICT_FIELDS:
++        if not isinstance(artifact.get(field), str):
++            raise ValueError(f"{field} must be a bare string")  # pragma: no cover - defensive guard.
++    for field in ("both_energy_theses_bounded", "paper_ready", "frozen_headline_unchanged"):
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")  # pragma: no cover - defensive guard.
++    if not isinstance(artifact.get("unmet_gates"), list):
++        raise ValueError("unmet_gates must be a list")  # pragma: no cover - defensive guard.
++    if not str(artifact.get("honest_verdict", "")).startswith(("complete:", "success:", "failure:", "blocked_")):
++        raise ValueError("honest_verdict must have a terminal prefix")  # pragma: no cover - defensive guard.
++    substrate = str(artifact.get("inference_substrate"))
++    if "GGUF" in substrate or "CUDA" in substrate:
++        raise ValueError("inference_substrate must not carry GGUF/CUDA markers")  # pragma: no cover - defensive guard.
++    duration = numeric(artifact.get("duration_s"))
++    if duration is None or duration < 0.0001:
++        raise ValueError("duration_s must respect the aggregation floor")  # pragma: no cover - defensive guard.
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover - defensive guard.
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: str | Path = OUTPUT_REL_PATH,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 3902 capstone JSON artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        publication_gate_data=publication_gate_data,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def publication_gate_state() -> JsonDict:  # pragma: no cover - thin wrapper around existing gate.
++    """Evaluate the stable G1-G4 publication gate through its JSON CLI."""
++
++    result = subprocess.run(
++        [sys.executable, "scripts/publication_gate.py", "--json"],
++        cwd=REPO_ROOT,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    if result.returncode != 0:
++        return {
++            "paper_ready": False,
++            "gates": {},
++            "unmet_gates": ["publication_gate_cli_failed"],
++            "__source__": "publication_gate_failed",
++            "stderr_excerpt": result.stderr[:1000],
++        }
++    payload = json.loads(result.stdout)
++    payload["__source__"] = "scripts/publication_gate.py --json"
++    return payload
++
++
++def run_summarize_statuses(root: Path, paths: Mapping[int, Path]) -> dict[int, JsonDict]:  # pragma: no cover - subprocess IO.
++    """Run summarize_artifact.py for every expected upstream pattern."""
++
++    statuses: dict[int, JsonDict] = {}
++    summarizer = root / "scripts" / "summarize_artifact.py"
++    for experiment_id, path in paths.items():
++        matches = matching_files(root, experiment_id)
++        if not matches:
++            statuses[experiment_id] = {"returncode": 1, "missing": True}
++            continue
++        args = [sys.executable, str(summarizer), *matches]
++        result = subprocess.run(
++            args,
++            cwd=root,
++            text=True,
++            capture_output=True,
++            check=False,
++        )
++        statuses[experiment_id] = {
++            "returncode": result.returncode,
++            "expected_json_exists": path.exists(),
++            "stdout_excerpt": result.stdout[:1000],
++            "stderr_excerpt": result.stderr[:1000],
++        }
++    return statuses
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    """Write the default Exp 3902 artifact and print its path."""
++
++    print(write_artifact(REPO_ROOT))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 936775e1a7..dadfc37e23 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-07T03:29:18.336526Z",
+-  "duration_s": 0.007885932922363281,
++  "run_date": "2026-06-07T03:43:24.899645Z",
++  "duration_s": 0.007688045501708984,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "6e89e38c17c60c5b357ee91843ec9b938774fc437824ea89db422f0345d74c54",
++  "reproducibility_checksum": "ce9b56826aa416b099f0d8f27262e1be213a16c4f1651da85fca7c81e09cffc1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "94ef2be9da431dcbdab4cfb08c623989bf320d43"
++    "adversarial_verify_version": "2c30e70cbdeaf183edea6d66c06bf5b045c531ed"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0d9b89645a..a7988e1fd9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-07T03:29:18.347087Z",
+-  "duration_s": 0.007927656173706055,
++  "run_date": "2026-06-07T03:43:24.909896Z",
++  "duration_s": 0.008277177810668945,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e8a046f528588ae0169d562763ae1a9774eafbec2ddd4c13f6f328e951d3f615",
++  "reproducibility_checksum": "274fa6aeb69788798af0a28cc1202703881b3cd96cfb3bc4aa27124d3bd1d07c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "94ef2be9da431dcbdab4cfb08c623989bf320d43"
++    "adversarial_verify_version": "2c30e70cbdeaf183edea6d66c06bf5b045c531ed"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f393d60f8e..bde5cddb29 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.122163772583008,
++  "efficiency_gains_ms": 2.1278858184814453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 32f818a671..3e333aa01a 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.28237390518188477,
++  "duration_s": 0.3160898685455322,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 497ca3b11d..fe5aaad26f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.1539006158709526e-05,
++  "duration_s": 3.092800034210086e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3902_capstone_v360.json b/results/experiment_3902_capstone_v360.json
+new file mode 100644
+index 0000000000..dc37062cc5
+--- /dev/null
++++ b/results/experiment_3902_capstone_v360.json
+@@ -0,0 +1,212 @@
++{
++  "both_energy_theses_bounded": false,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3894,
++      "honest_verdict": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
++      "path": "results/experiment_3894_reasoner_self_verify_harness.json",
++      "sha256": "c13590df8aca1b9aa9eb1078e3a9f14089c5cd2b7b8550189a70705edc7ef52f",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3895,
++      "honest_verdict": "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc",
++      "path": "results/experiment_3895_moat_scissor_tested_harness.json",
++      "sha256": "a5b1a3c7e89e94493add0d61eeff58528fe736619b40d46c2d4a5e739f1475cd",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3900,
++      "honest_verdict": "blocked_gatemate_board_unreachable",
++      "path": "results/experiment_3900_gatemate_terminal_confirmation.json",
++      "sha256": "c0c82e5bf3437b83f3b86aac527d397afaae2b4ebba7e37a5a800b9ea962d937",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3901,
++      "honest_verdict": "success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim",
++      "path": "results/experiment_3901_polarfire_kv260_continuity.json",
++      "sha256": "e560d706c8b14abea2f94d4bcb996d90f0483be308b27751b3f3f7c087f506ff",
++      "summarize_artifact_returncode": 0
++    }
++  ],
++  "duration_s": 0.44131322400062345,
++  "ebt_replication_outcome": "INCONCLUSIVE",
++  "experiment_id": 3902,
++  "facts_outcome": "INCONCLUSIVE",
++  "field_principles": {
++    "both_energy_theses_bounded": "Bare bool - true iff EBT replication confirms FUNDAMENTAL given P0.1 already settled.",
++    "duration_s": "Aggregation wall-clock duration.",
++    "ebt_replication_outcome": "REPLICATED/REFUTED/INCONCLUSIVE - does the .359 FUNDAMENTAL hold; the energy-as-generator bank-or-not signal.",
++    "facts_outcome": "Graph-grounding signal reproduced? complementary? - the broaden-the-verifier status; excluded if exp3897 is flagged.",
++    "flagged_artifacts_excluded": "Artifacts skipped for flagged_adversarial:true before metric aggregation.",
++    "fr11_v25_invariant": "Self-learning mandate outcome - invariant held across the v24-to-v25 iteration.",
++    "frozen_headline_unchanged": "G1-G4 status plus the frozen FoVer 0.9131 invariant guard.",
++    "hardware_outcome": "GateMate terminal-assessment plus PolarFire/KV260 continuity - honest no-fabric-claim record.",
++    "inference_substrate": "Aggregation methodology without GGUF/CUDA markers.",
++    "moat_verdict": "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE with the tested harness - the DT-P2 durability answer.",
++    "operator_next_thesis_recommendation": "The loop recommends; the operator decides the next forward bet.",
++    "paper_ready": "Must stay true - the milestone adds lenses, not a new headline; report unmet_gates.",
++    "preconditions_checked": "Aggregation methodology, upstream landing state, and live summarizer status.",
++    "unmet_gates": "G1-G4 publication-gate status from scripts/publication_gate.py --json."
++  },
++  "flagged_artifacts_excluded": [],
++  "fr11_v25_invariant": "INCONCLUSIVE",
++  "frozen_fover_auroc": 0.9131,
++  "frozen_headline_unchanged": true,
++  "hardware_outcome": "GATEMATE_BLOCKED_POLARFIRE_KV260_CONTINUITY_NO_FABRIC_CLAIM",
++  "honest_verdict": "complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "moat_verdict": "INCONCLUSIVE",
++  "operator_next_thesis_recommendation": "Do not manufacture a new headline from partial landing. Keep FoVer 0.9131 frozen, carry moat=INCONCLUSIVE and facts=INCONCLUSIVE as conditioned verifier evidence, and require a clean EBT replication artifact before declaring both energy theses bounded.",
++  "paper_ready": true,
++  "preconditions_checked": {
++    "all_landed_nonflagged_verdicts_aggregated": true,
++    "capstone_complete": true,
++    "live_critical_artifacts_observed": [
++      3893,
++      3896
++    ],
++    "publication_gate_checked": true,
++    "publication_gate_importable": true,
++    "publication_gate_runnable": true,
++    "summarize_artifact_importable": true,
++    "summarize_artifact_runnable": true,
++    "upstream_artifacts": {
++      "3893": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "honest_verdict": "missing",
++        "included": false,
++        "live_critical": true,
++        "matching_files": [
++          "results/experiment_3893_ebt_fundamental_replication_seed4.pt",
++          "results/experiment_3893_ebt_fundamental_replication_seed4_rerun1.pt"
++        ],
++        "path": "results/experiment_3893_ebt_fundamental_replication.json",
++        "summarize_artifact_returncode": 2
++      },
++      "3894": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "honest_verdict": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
++        "included": true,
++        "live_critical": false,
++        "matching_files": [
++          "results/experiment_3894_reasoner_self_verify_harness.json"
++        ],
++        "path": "results/experiment_3894_reasoner_self_verify_harness.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3895": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "honest_verdict": "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc",
++        "included": true,
++        "live_critical": false,
++        "matching_files": [
++          "results/experiment_3895_moat_scissor_tested_harness.json"
++        ],
++        "path": "results/experiment_3895_moat_scissor_tested_harness.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3896": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "honest_verdict": "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue",
++        "included": false,
++        "live_critical": true,
++        "matching_files": [
++          "results/experiment_3896_graph_grounding_verifier_harness.json"
++        ],
++        "path": "results/experiment_3896_graph_grounding_verifier_harness.json",
++        "summarize_artifact_returncode": 2
++      },
++      "3897": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "honest_verdict": "missing",
++        "included": false,
++        "live_critical": false,
++        "matching_files": [],
++        "path": "results/experiment_3897_graph_grounding_facts_run.json",
++        "summarize_artifact_returncode": 1
++      },
++      "3898": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "honest_verdict": "missing",
++        "included": false,
++        "live_critical": false,
++        "matching_files": [],
++        "path": "results/experiment_3898_facts_complementarity.json",
++        "summarize_artifact_returncode": 1
++      },
++      "3899": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "honest_verdict": "missing",
++        "included": false,
++        "live_critical": false,
++        "matching_files": [],
++        "path": "results/experiment_3899_fr11_v25.json",
++        "summarize_artifact_returncode": 1
++      },
++      "3900": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "honest_verdict": "blocked_gatemate_board_unreachable",
++        "included": true,
++        "live_critical": false,
++        "matching_files": [
++          "results/experiment_3900_gatemate_terminal_confirmation.json"
++        ],
++        "path": "results/experiment_3900_gatemate_terminal_confirmation.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3901": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "honest_verdict": "success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim",
++        "included": true,
++        "live_critical": false,
++        "matching_files": [
++          "results/experiment_3901_polarfire_kv260_continuity.json"
++        ],
++        "path": "results/experiment_3901_polarfire_kv260_continuity.json",
++        "summarize_artifact_returncode": 0
++      }
++    }
++  },
++  "publication_gate": {
++    "__source__": "scripts/publication_gate.py --json",
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 3902,
++  "reproducibility_checksum": "93d308ebf0d160d09439c0d3523575eb79f050ff967d82b29f4dd9066e6deff4",
++  "schema": "carnot.capstone_v360_3902.v1",
++  "unmet_gates": []
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 31df9fe30f..9c0fe4ffe1 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:29:09Z",
+-  "finished_at": "2026-06-07T03:29:09Z",
++  "started_at": "2026-06-07T03:43:16Z",
++  "finished_at": "2026-06-07T03:43:16Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cca021e8d0..c14950f408 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:29:09Z",
+-  "finished_at": "2026-06-07T03:29:10Z",
++  "started_at": "2026-06-07T03:43:16Z",
++  "finished_at": "2026-06-07T03:43:16Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 66945abfb0..999b6fc6d8 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:29:10Z",
+-  "finished_at": "2026-06-07T03:29:10Z",
++  "started_at": "2026-06-07T03:43:16Z",
++  "finished_at": "2026-06-07T03:43:16Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_3902_capstone_v360.py b/scripts/experiments/experiment_3902_capstone_v360.py
+new file mode 100644
+index 0000000000..12ae2440b3
+--- /dev/null
++++ b/scripts/experiments/experiment_3902_capstone_v360.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run Exp 3902 capstone v360 verdict aggregation."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.reporting.capstone_v360_3902 import write_artifact
++
++
++if __name__ == "__main__":  # pragma: no cover
++    print(write_artifact(REPO_ROOT))
+diff --git a/tests/python/test_experiment_3902_capstone_v360.py b/tests/python/test_experiment_3902_capstone_v360.py
+new file mode 100644
+index 0000000000..063b7aec38
+--- /dev/null
++++ b/tests/python/test_experiment_3902_capstone_v360.py
+@@ -0,0 +1,364 @@
++"""Tests for Exp 3902 capstone v360 verdict aggregation.
++
++Spec refs: REQ-CAPSTONE-3902, SCENARIO-CAPSTONE-3902.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import capstone_v360_3902 as exp3902
++
++
++SPEC_PATH = Path("openspec/capabilities/capstone/spec.md")
++
++
++def _write_json(root: Path, rel_path: str, payload: dict[str, object]) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _publication_gate(*, paper_ready: bool = True) -> dict[str, object]:
++    return {
++        "paper_ready": paper_ready,
++        "gates": {
++            "G1": {"pass": True},
++            "G2": {"pass": paper_ready},
++            "G3": {"pass": True},
++            "G4": {"pass": True},
++        },
++        "unmet_gates": [] if paper_ready else ["G2"],
++    }
++
++
++def _summary_statuses(*, live_critical: set[int] | None = None) -> dict[int, dict[str, object]]:
++    critical = live_critical or set()
++    return {
++        experiment_id: {"returncode": 2 if experiment_id in critical else 0}
++        for experiment_id in exp3902.UPSTREAM_IDS
++    }
++
++
++def _seed_v360_fixture(root: Path) -> None:
++    _write_json(
++        root,
++        "results/experiment_3893_ebt_fundamental_replication.json",
++        {
++            "honest_verdict": (
++                "complete: ebt_fundamental_REPLICATED_beam0.000_argmin0.000_"
++                "vs_ar0.910_nseeds2_energy_as_generator_banked_negative"
++            ),
++            "flagged_adversarial": False,
++            "replication_outcome": "REPLICATED",
++            "reproducibility_checksum": "a" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3894_reasoner_self_verify_harness.json",
++        {
++            "honest_verdict": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167",
++            "flagged_adversarial": False,
++            "fixture_auroc": 0.9167,
++            "reproducibility_checksum": "b" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3895_moat_scissor_tested_harness.json",
++        {
++            "honest_verdict": "complete: moat_scissor_MOAT_SURVIVES_reasoner_self_verify_not_subsumed",
++            "flagged_adversarial": False,
++            "reasoner_self_verify_auroc": 0.54,
++            "carnot_ensemble_auroc": 0.96,
++            "reproducibility_checksum": "c" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3896_graph_grounding_verifier_harness.json",
++        {
++            "honest_verdict": "complete: graph_grounding_verifier_READY_fixture_model_invokedtrue",
++            "flagged_adversarial": False,
++            "fixture_auroc": 0.87,
++            "reproducibility_checksum": "d" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3897_graph_grounding_facts_run.json",
++        {
++            "honest_verdict": "complete: graph_grounding_facts_REPRODUCED_signal_catches_fact_errors",
++            "flagged_adversarial": False,
++            "graph_grounding_signal_reproduced": True,
++            "reproducibility_checksum": "e" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3898_facts_complementarity.json",
++        {
++            "honest_verdict": "complete: facts_complementarity_COMPLEMENTARY_independent_signal",
++            "flagged_adversarial": False,
++            "facts_complementary": True,
++            "reproducibility_checksum": "f" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3899_fr11_v25.json",
++        {
++            "honest_verdict": "complete: fr11_v25_INVARIANT_HELD_state_persisted",
++            "flagged_adversarial": False,
++            "frozen_headline_unchanged": True,
++            "frozen_headline_ensemble_auroc": 0.9131,
++            "reproducibility_checksum": "1" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3900_gatemate_terminal_confirmation.json",
++        {
++            "honest_verdict": "blocked_gatemate_board_unreachable",
++            "flagged_adversarial": False,
++            "terminal_state_reached": False,
++            "reproducibility_checksum": "2" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3901_polarfire_kv260_continuity.json",
++        {
++            "honest_verdict": (
++                "success: polarfire_kv260_continuity_pfterminal_hash_verified_"
++                "soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_"
++                "uio_present_no_fabric_claim"
++            ),
++            "flagged_adversarial": False,
++            "fabric_acceleration_claimed": False,
++            "no_fpga_fabric_claim": True,
++            "reproducibility_checksum": "3" * 64,
++        },
++    )
++
++
++def test_req_capstone_3902_spec_declares_v360_contract() -> None:
++    """REQ-CAPSTONE-3902: OpenSpec anchors the v360 capstone behavior."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-3902" in spec
++    assert "SCENARIO-CAPSTONE-3902" in spec
++    assert "not stamped `flagged_adversarial:true`" in spec
++    assert "frozen 0.9131 headline unchanged" in spec
++
++
++def test_req_capstone_3902_derivation_helpers_are_conditioned() -> None:
++    """REQ-CAPSTONE-3902: helper verdicts only use landed clean inputs."""
++
++    assert exp3902.numeric(True) is None
++    assert exp3902.numeric("0.2") is None
++    assert exp3902.derive_ebt_replication_outcome(None) == "INCONCLUSIVE"
++    assert exp3902.derive_ebt_replication_outcome({"replication_outcome": "REPLICATED"}) == "REPLICATED"
++    assert exp3902.derive_ebt_replication_outcome({"honest_verdict": "complete: REPLICATED"}) == "REPLICATED"
++    assert exp3902.derive_ebt_replication_outcome({"honest_verdict": "complete: REFUTED"}) == "REFUTED"
++    assert exp3902.derive_ebt_replication_outcome({"honest_verdict": "complete: weak"}) == "INCONCLUSIVE"
++    assert exp3902.derive_moat_verdict({"honest_verdict": "complete: MOAT_SURVIVES"}) == "MOAT_SURVIVES"
++    assert exp3902.derive_moat_verdict({"honest_verdict": "complete: SUBSUMED"}) == "SUBSUMED"
++    assert exp3902.derive_moat_verdict({"honest_verdict": "complete: weak"}) == "INCONCLUSIVE"
++    assert exp3902.derive_facts_outcome({}, exp3897_was_flagged=True) == "EXCLUDED_EXP3897_FLAGGED"
++    assert exp3902.derive_facts_outcome({3897: {"honest_verdict": "complete: reproduced"}}, exp3897_was_flagged=False) == "REPRODUCED"
++    assert exp3902.derive_facts_outcome(
++        {
++            3897: {"graph_grounding_signal_reproduced": True},
++            3898: {"honest_verdict": "complete: complementary"},
++        },
++        exp3897_was_flagged=False,
++    ) == "REPRODUCED_COMPLEMENTARY"
++    assert exp3902.derive_facts_outcome(
++        {3898: {"facts_complementary": True}},
++        exp3897_was_flagged=False,
++    ) == "COMPLEMENTARY_WITHOUT_REPRODUCTION_ARTIFACT"
++    assert exp3902.derive_fr11_v25_invariant({"honest_verdict": "complete: fr11_v25_INVARIANT_HELD"}) == "INVARIANT_HELD"
++    assert exp3902.derive_fr11_v25_invariant({"honest_verdict": "complete: weak"}) == "INCONCLUSIVE"
++    assert exp3902.derive_hardware_outcome({}) == "GATEMATE_MISSING_POLARFIRE_KV260_MISSING"
++    assert exp3902.derive_hardware_outcome(
++        {
++            3900: {"terminal_state_reached": True},
++            3901: {"honest_verdict": "blocked_polarfire_ssh_unreachable"},
++        }
++    ) == "GATEMATE_TERMINAL_CONFIRMED_POLARFIRE_KV260_BLOCKED"
++    assert exp3902.derive_hardware_outcome(
++        {
++            3900: {"honest_verdict": "complete: partial"},
++            3901: {"honest_verdict": "complete: partial"},
++        }
++    ) == "GATEMATE_PARTIAL_POLARFIRE_KV260_PARTIAL_NO_FABRIC_CLAIM"
++    assert exp3902.frozen_headline_unchanged({3899: {"frozen_headline_unchanged": False}}) is False
++    assert exp3902.frozen_headline_unchanged({3899: {"frozen_headline_ensemble_auroc": 0.902}}) is False
++    assert exp3902.frozen_headline_unchanged({}) is True
++    assert exp3902.both_energy_theses_bounded("REPLICATED") is True
++    assert exp3902.both_energy_theses_bounded("INCONCLUSIVE") is False
++
++
++def test_scenario_capstone_3902_writes_forced_conditioned_artifact(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-3902: clean landed verdicts produce the v360 capstone."""
++
++    _seed_v360_fixture(tmp_path)
++    artifact = exp3902.build_artifact(
++        tmp_path,
++        publication_gate_data=_publication_gate(),
++        summary_statuses=_summary_statuses(),
++        started_s=1.0,
++        now_s=1.00005,
++    )
++
++    exp3902.validate_artifact(artifact)
++
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v360_ebtREPLICATED_moatMOAT_SURVIVES_"
++        "factsREPRODUCED_COMPLEMENTARY_paper_ready_true_frozen_unchanged"
++    )
++    assert artifact["ebt_replication_outcome"] == "REPLICATED"
++    assert artifact["moat_verdict"] == "MOAT_SURVIVES"
++    assert artifact["facts_outcome"] == "REPRODUCED_COMPLEMENTARY"
++    assert artifact["fr11_v25_invariant"] == "INVARIANT_HELD"
++    assert artifact["hardware_outcome"] == "GATEMATE_BLOCKED_POLARFIRE_KV260_CONTINUITY_NO_FABRIC_CLAIM"
++    assert artifact["both_energy_theses_bounded"] is True
++    assert artifact["paper_ready"] is True
++    assert artifact["unmet_gates"] == []
++    assert artifact["frozen_headline_unchanged"] is True
++    assert "verifier as a durable, broad external second-opinion layer" in artifact["operator_next_thesis_recommendation"]
++    assert "energy as generator/selector" in artifact["operator_next_thesis_recommendation"]
++    assert artifact["flagged_artifacts_excluded"] == []
++    assert artifact["preconditions_checked"]["capstone_complete"] is True
++    assert artifact["preconditions_checked"]["all_landed_nonflagged_verdicts_aggregated"] is True
++    assert "GGUF" not in artifact["inference_substrate"]
++    assert "CUDA" not in artifact["inference_substrate"]
++    assert artifact["duration_s"] == pytest.approx(0.0001)
++    assert exp3902.is_sha256(artifact["reproducibility_checksum"])
++
++    for field in exp3902.STRING_VERDICT_FIELDS:
++        assert isinstance(artifact[field], str)
++        assert not isinstance(artifact[field], dict)
++    assert isinstance(artifact["both_energy_theses_bounded"], bool)
++
++    output = exp3902.write_artifact(
++        tmp_path,
++        output_path="results/out.json",
++        publication_gate_data=_publication_gate(),
++        summary_statuses=_summary_statuses(),
++        started_s=2.0,
++        now_s=2.5,
++    )
++    saved = json.loads(output.read_text(encoding="utf-8"))
++    exp3902.validate_artifact(saved)
++    assert saved["honest_verdict"] == artifact["honest_verdict"]
++
++
++def test_req_capstone_3902_excludes_flagged_and_live_critical_inputs(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-3902: stamped flags and summarizer criticals are not aggregated."""
++
++    _seed_v360_fixture(tmp_path)
++    flagged = json.loads((tmp_path / "results/experiment_3897_graph_grounding_facts_run.json").read_text())
++    flagged["flagged_adversarial"] = True
++    _write_json(tmp_path, "results/experiment_3897_graph_grounding_facts_run.json", flagged)
++
++    artifact = exp3902.build_artifact(
++        tmp_path,
++        publication_gate_data=_publication_gate(),
++        summary_statuses=_summary_statuses(live_critical={3896}),
++        started_s=3.0,
++        now_s=3.2,
++    )
++
++    exp3902.validate_artifact(artifact)
++
++    cited_ids = {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++    excluded_ids = {item["experiment_id"] for item in artifact["flagged_artifacts_excluded"]}
++    live_critical_ids = set(artifact["preconditions_checked"]["live_critical_artifacts_observed"])
++
++    assert artifact["facts_outcome"] == "EXCLUDED_EXP3897_FLAGGED"
++    assert excluded_ids == {3897}
++    assert 3897 not in cited_ids
++    assert 3896 not in cited_ids
++    assert live_critical_ids == {3896}
++    assert artifact["preconditions_checked"]["upstream_artifacts"][3896]["included"] is False
++
++
++def test_req_capstone_3902_missing_upstreams_remain_inconclusive(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-3902: partial landing records honest missing states."""
++
++    _write_json(
++        tmp_path,
++        "results/experiment_3895_moat_scissor_tested_harness.json",
++        {
++            "honest_verdict": "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc",
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "c" * 64,
++        },
++    )
++
++    artifact = exp3902.build_artifact(
++        tmp_path,
++        publication_gate_data=_publication_gate(),
++        summary_statuses=_summary_statuses(),
++        started_s=4.0,
++        now_s=4.1,
++    )
++
++    exp3902.validate_artifact(artifact)
++
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_"
++        "factsINCONCLUSIVE_paper_ready_true_frozen_unchanged"
++    )
++    assert artifact["ebt_replication_outcome"] == "INCONCLUSIVE"
++    assert artifact["facts_outcome"] == "INCONCLUSIVE"
++    assert artifact["fr11_v25_invariant"] == "INCONCLUSIVE"
++    assert artifact["both_energy_theses_bounded"] is False
++    assert artifact["preconditions_checked"]["upstream_artifacts"][3893]["exists"] is False
++    assert artifact["preconditions_checked"]["capstone_complete"] is True
++
++
++def test_req_capstone_3902_blocks_when_publication_gate_or_headline_regresses(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-3902: CAPSTONE_COMPLETE requires paper-ready and frozen guards."""
++
++    _seed_v360_fixture(tmp_path)
++    gate_regressed = exp3902.build_artifact(
++        tmp_path,
++        publication_gate_data=_publication_gate(paper_ready=False),
++        summary_statuses=_summary_statuses(),
++        started_s=5.0,
++        now_s=5.2,
++    )
++
++    exp3902.validate_artifact(gate_regressed)
++    assert gate_regressed["honest_verdict"] == (
++        "blocked_publication_gate: capstone_v360_ebtREPLICATED_moatMOAT_SURVIVES_"
++        "factsREPRODUCED_COMPLEMENTARY_paper_ready_false_frozen_unchanged"
++    )
++    assert gate_regressed["unmet_gates"] == ["G2"]
++
++    fr11 = json.loads((tmp_path / "results/experiment_3899_fr11_v25.json").read_text())
++    fr11["frozen_headline_unchanged"] = False
++    fr11["frozen_headline_ensemble_auroc"] = 0.902
++    _write_json(tmp_path, "results/experiment_3899_fr11_v25.json", fr11)
++    frozen_regressed = exp3902.build_artifact(
++        tmp_path,
++        publication_gate_data=_publication_gate(),
++        summary_statuses=_summary_statuses(),
++        started_s=6.0,
++        now_s=6.2,
++    )
++
++    exp3902.validate_artifact(frozen_regressed)
++    assert frozen_regressed["honest_verdict"] == (
++        "blocked_frozen_headline: capstone_v360_ebtREPLICATED_moatMOAT_SURVIVES_"
++        "factsREPRODUCED_COMPLEMENTARY_paper_ready_true_frozen_changed"
++    )
++    assert frozen_regressed["frozen_headline_unchanged"] is False
+-- 
+2.55.0
+

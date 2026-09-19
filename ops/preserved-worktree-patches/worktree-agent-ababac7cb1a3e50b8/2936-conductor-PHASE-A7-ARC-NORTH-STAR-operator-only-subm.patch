@@ -1,0 +1,3219 @@
+From 0ac8210a15791f250f0f5884eb15acc5ff4b56b7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 21:36:14 -0400
+Subject: [PATCH 02936/11362] [conductor] PHASE A7 (ARC NORTH STAR;
+ operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate +
+ refresh the env-matched offline-reproduced REPLAY package after the .413 new
+ levels bank (target > 39 >> the 13-level prior submitted baseline) so the
+ operator can submit to beat it. submission_package_ready: bool; does NOT
+ submit.
+
+Automated research step by research conductor.
+Task ID: exp4473-submission-package-prep-refresh
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...3-submission-package-4473-operator-note.md |   40 +
+ .../capabilities/research-reporting/spec.md   |   59 +
+ ops/.pretest-poison-counter.json              |    4 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...nt_4473_submission_package_prep_refresh.py |  432 ++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ..._4473_submission_package_prep_refresh.json | 2185 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...nt_4473_submission_package_prep_refresh.py |  281 +++
+ 14 files changed, 3016 insertions(+), 21 deletions(-)
+ create mode 100644 docs/research-notes/arc3-submission-package-4473-operator-note.md
+ create mode 100644 python/carnot/experiment_4473_submission_package_prep_refresh.py
+ create mode 100644 results/experiment_4473_submission_package_prep_refresh.json
+ create mode 100644 tests/python/test_experiment_4473_submission_package_prep_refresh.py
+
+diff --git a/docs/research-notes/arc3-submission-package-4473-operator-note.md b/docs/research-notes/arc3-submission-package-4473-operator-note.md
+new file mode 100644
+index 0000000000..5f0ef8a7a7
+--- /dev/null
++++ b/docs/research-notes/arc3-submission-package-4473-operator-note.md
+@@ -0,0 +1,40 @@
++# ARC-AGI-3 Operator Submission Package Refresh (Exp 4473)
++
++- Artifact: `results/experiment_4473_submission_package_prep_refresh.json`
++- Ready for operator submission: `True`
++- Revalidated package levels: `45`
++- Grew vs Exp 4460/.412: `True`
++- Prior submitted baseline: `13`
++- Submitted by this task: `False`
++
++Operator checklist:
++- Review this refreshed JSON artifact and the package_manifest rows before submitting.
++- Confirm total_reproduced_levels_in_package=45 is greater than prior baseline 13.
++- Confirm grew_vs_412 reflects whether total_reproduced_levels_in_package>39.
++- Run scripts/arc3_live_submit.py only as the operator; this prep task did not submit.
++- Package contains 22 replayable games with cached action sequences.
++- After any operator live validation, record the resulting scorecard separately.
++
++Package manifest:
++- r11l: L1, actions=4, env_match_basis=prior_live_submission_confirmed, source=results/experiment_4296_arc_incremental_progress_new_game.json
++- ls20: L1, actions=13, env_match_basis=prior_live_submission_confirmed, source=results/experiment_4285_arc_incremental_progress_new_game.json
++- wa30: L1, actions=33, env_match_basis=prior_live_submission_confirmed, source=results/experiment_4275_arc_incremental_progress_new_game.json
++- s5i5: L1, actions=13, env_match_basis=offline_env_file_present, source=results/experiment_4421_config_rule_solve_unseen.json
++- lp85: L5, actions=52, env_match_basis=prior_live_submission_confirmed, source=results/experiment_4372_e3_deeper_high_headroom_games.json
++- sc25: L5, actions=102, env_match_basis=offline_env_file_present, source=results/experiment_4468_bank_sc25_provisional_levels.json
++- cd82: L1, actions=5, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_cd82.json
++- sp80: L1, actions=4, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_sp80.json
++- su15: L1, actions=7, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_su15.json
++- tu93: L5, actions=93, env_match_basis=prior_live_submission_confirmed, source=results/experiment_4361_e3_deeper_high_headroom_games.json+TU93_L5_SUFFIX_ACTIONS
++- tn36: L7, actions=102, env_match_basis=offline_env_file_present, source=results/experiment_4372_e3_deeper_high_headroom_games.json
++- cn04: L1, actions=13, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_cn04.json
++- m0r0: L1, actions=15, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_m0r0.json
++- sk48: L1, actions=14, env_match_basis=prior_live_submission_confirmed, source=results/arc_explore_trajectory_sk48.json
++- ar25: L1, actions=15, env_match_basis=offline_env_file_present, source=python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py
++- ka59: L1, actions=11, env_match_basis=offline_env_file_present, source=python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py
++- ft09: L1, actions=4, env_match_basis=offline_env_file_present, source=results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json
++- tr87: L6, actions=127, env_match_basis=offline_env_file_present, source=results/arc_loop_solve_tr87.json
++- vc33: L1, actions=3, env_match_basis=offline_env_file_present, source=results/experiment_4446_drive_generic_first_contact_bank.json
++- g50t: L1, actions=17, env_match_basis=offline_env_file_present, source=results/experiment_4443_bank_g50t_example_conditioned_win.json
++- dc22: L1, actions=20, env_match_basis=offline_env_file_present, source=results/experiment_4467_solve_dc22_cegis_nocov.json
++- sb26: L1, actions=9, env_match_basis=offline_env_file_present, source=results/experiment_4470_color_match_slot_operator_solve_sb26.json
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 1797b05be4..c62f91b475 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -26134,6 +26134,65 @@ and a terminal-prefixed honest verdict with residual gaps preserved.
+ |---|---|---|
+ | REQ-REPORT-4472 | Planned (`python/carnot/experiment_4472_variant_generic_transfer_benchmark_v4.py`, `results/experiment_4472_variant_generic_transfer_benchmark_v4.json`) | Planned (`tests/python/test_experiment_4472_variant_generic_transfer_benchmark_v4.py`) |
+ 
++### REQ-REPORT-4473: Refreshed Operator-Only ARC Submission Package Revalidates .413 Replays
++
++The Exp 4473 workflow SHALL refresh the operator-only ARC-AGI-3 replay package
++without submitting it. It SHALL read `ops/arc_solve_registry.yaml`, the prior
++live submission record `results/arc3_live_submit.json`, and the Exp 4460 package
++baseline, then re-run every registry row with `reproducibility: reproduced` and
++`levels_reproduced > 0` through `arc_solver_kit.reproduce()` against the local
++OFFLINE ARC environment. The refresh SHALL include .413 additions and deepening
++rows such as dc22, sc25 L5, sb26, and any other reproduced A4/A5 banks present
++in the registry. Games whose banked action sequence does not replay to the
++claimed reproduced level SHALL be quarantined and SHALL NOT contribute to the
++package count.
++
++Before replay validation, the workflow SHALL check that local offline
++environment files are present and that `carnot.agentic.arc_solver_kit` imports.
++It SHALL NOT require network access, open or close a live scorecard, call a
++leaderboard, invoke the submit path of `scripts/arc3_live_submit.py`, or use
++3090 inference. Operator-only external publication discipline SHALL be
++represented by `submitted_to_leaderboard=false`, an operator checklist, and a
++docs operator-action note rather than any autonomous submission action.
++
++The workflow SHALL write
++`results/experiment_4473_submission_package_prep_refresh.json` with required
++top-level fields `honest_verdict`, `inference_substrate`,
++`submission_package_ready`, `total_reproduced_levels_in_package`,
++`grew_vs_412`, `prior_submitted_baseline_levels`, `beats_prior_baseline`,
++`per_game_replay_validation`, `submitted_to_leaderboard`,
++`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`.
++`inference_substrate` SHALL equal
++`verifier_ensemble_against_cached_candidates -- re-validates cached reproduce
++sequences against the offline env (1s floor); never None, never
++live_llm_inference`. `grew_vs_412` SHALL be a bare boolean defined as
++`total_reproduced_levels_in_package > 39`. The falsifiable ready gate SHALL pass
++only when every packaged row replays successfully, `submitted_to_leaderboard` is
++false, `total_reproduced_levels_in_package > 13`, and the operator package is
++ready for the operator, not the agent, to submit.
++
++#### SCENARIO-REPORT-4473: Refresh Counts Only Env-Matched Offline-Replayed .413 Rows
++
++**Given** the ARC solve registry contains reproduced games, including .413 banks
++that extend the Exp 4460 package, the prior live submission artifact records the
++13-level submitted baseline, the Exp 4460 package records 39 reproduced levels,
++local offline environment files are present, and `arc_solver_kit` imports
++**When** Exp 4473 prepares the refreshed operator package
++**Then** it replays each reproduced registry row through
++`arc_solver_kit.reproduce()`, excludes any row whose replay fails, records the
++env-match status for each game, writes the operator checklist and package
++manifest with action sequences, reports bare integer
++`total_reproduced_levels_in_package`, reports `beats_prior_baseline=true` only
++when that total is greater than `13`, reports `grew_vs_412=true` only when that
++total is greater than `39`, keeps `submitted_to_leaderboard=false`, keeps
++`verifier_is_oracle=true`, and emits a terminal-prefixed honest verdict.
++
++## Implementation Status (REQ-REPORT-4473)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4473 | Planned (`python/carnot/experiment_4473_submission_package_prep_refresh.py`, `results/experiment_4473_submission_package_prep_refresh.json`) | Planned (`tests/python/test_experiment_4473_submission_package_prep_refresh.py`) |
++
+ ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
+ 
+ The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 968c8df1bc..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_3494.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 10044dc56c..4bd2049412 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3491,
++  "experiments_checked": 3492,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4473_submission_package_prep_refresh.py b/python/carnot/experiment_4473_submission_package_prep_refresh.py
+new file mode 100644
+index 0000000000..9216bb1288
+--- /dev/null
++++ b/python/carnot/experiment_4473_submission_package_prep_refresh.py
+@@ -0,0 +1,432 @@
++"""Exp 4473: refresh the operator-only ARC replay submission package.
++
++Spec refs: REQ-REPORT-4473, SCENARIO-REPORT-4473.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import time
++from typing import Any, Callable, Mapping, Sequence
++
++from carnot import experiment_4460_submission_package_prep as base
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4473_submission_package_prep_refresh.json"
++OPERATOR_NOTE_RELATIVE_PATH = "docs/research-notes/arc3-submission-package-4473-operator-note.md"
++REGISTRY_RELATIVE_PATH = base.REGISTRY_RELATIVE_PATH
++PRIOR_SUBMISSION_RELATIVE_PATH = base.PRIOR_SUBMISSION_RELATIVE_PATH
++PRIOR_PACKAGE_412_RELATIVE_PATH = base.RESULT_RELATIVE_PATH
++PRIOR_PACKAGE_412_LEVELS = 39
++PRIOR_SUBMITTED_BASELINE_LEVELS = 13
++RANDOM_SEED = 4473
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- re-validates cached reproduce "
++    "sequences against the offline env (1s floor); never None, never live_llm_inference"
++)
++BLOCKED_INFERENCE_SUBSTRATE = base.BLOCKED_INFERENCE_SUBSTRATE
++TERMINAL_PREFIXES = base.TERMINAL_PREFIXES
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "submission_package_ready",
++    "total_reproduced_levels_in_package",
++    "grew_vs_412",
++    "prior_submitted_baseline_levels",
++    "beats_prior_baseline",
++    "per_game_replay_validation",
++    "submitted_to_leaderboard",
++    "verifier_is_oracle",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {"principle": "terminal-prefixed"},
++    "inference_substrate": {"principle": INFERENCE_SUBSTRATE},
++    "submission_package_ready": {
++        "principle": (
++            "bare bool: TRUE if the package is ready for the OPERATOR to submit; "
++            "the task itself NEVER submits (Operator-Only External Publication)"
++        )
++    },
++    "total_reproduced_levels_in_package": {
++        "principle": (
++            "bare int: env-match-validated reproduced levels in the package "
++            "(target > 39 after the .413 banks)"
++        )
++    },
++    "grew_vs_412": {
++        "principle": "bare bool: total > 39 -- the .413 package added levels over .412"
++    },
++    "prior_submitted_baseline_levels": {
++        "principle": "bare int = 13; the baseline the package must beat"
++    },
++    "beats_prior_baseline": {
++        "principle": "bare bool: total_reproduced_levels_in_package > 13"
++    },
++    "per_game_replay_validation": {
++        "principle": (
++            "list of {game, replays_ok, reproduced_levels, env_matched} -- the "
++            "audit trail; quarantined games excluded from the count"
++        )
++    },
++    "submitted_to_leaderboard": {
++        "principle": "bare bool MUST be false -- the task never submits"
++    },
++    "verifier_is_oracle": {
++        "principle": "true: execution-grounded reproduction re-validation"
++    },
++    "random_seed": {"principle": "determinism"},
++    "reproducibility_checksum": {
++        "principle": "content hash of the package manifest"
++    },
++}
++
++ReproduceEntryFn = base.ReproduceEntryFn
++
++
++def _prior_package_412_levels(root: Path) -> int:
++    artifact = base._load_json(root / PRIOR_PACKAGE_412_RELATIVE_PATH)
++    return base._as_int(artifact.get("total_reproduced_levels_in_package")) or PRIOR_PACKAGE_412_LEVELS
++
++
++def _honest_verdict(*, ready: bool, total: int, baseline: int, grew: bool, quarantined_count: int) -> str:
++    if ready:
++        growth = "grew_vs_412" if grew else "not_grown_vs_412"
++        return f"success: submission_package_ready_{total}_levels_beats_{baseline}_{growth}_quarantined_{quarantined_count}"
++    return f"complete: submission_package_not_ready_{total}_levels_vs_{baseline}_quarantined_{quarantined_count}"
++
++
++def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> base.ReplayPlan:  # pragma: no cover
++    """SCENARIO-REPORT-4473: find current-depth cached labels for .413 rows."""
++
++    game = str(entry.get("game") or "")
++    claimed = base._as_int(entry.get("levels_reproduced"))
++    if game == "sc25":
++        from carnot import experiment_4468_bank_sc25_provisional_levels as exp4468
++
++        level = claimed if claimed in exp4468.SC25_PLANS_BY_LEVEL else max(exp4468.SC25_PLANS_BY_LEVEL)
++        return base.ReplayPlan(
++            game,
++            [str(label) for label in exp4468.SC25_PLANS_BY_LEVEL[level]],
++            exp4468.RESULT_RELATIVE_PATH,
++            exp4468.apply_sc25_label,
++            warmup_label="warmup",
++        )
++    if game == "dc22":
++        from carnot import experiment_4467_solve_dc22_cegis_nocov as exp4467
++
++        return base.ReplayPlan(
++            game,
++            [str(label) for label in exp4467.DC22_L1_SOLUTION],
++            exp4467.RESULT_RELATIVE_PATH,
++            exp4467.apply_dc22_label,
++        )
++    if game == "sb26":
++        from carnot import experiment_4470_color_match_slot_operator_solve_sb26 as exp4470
++
++        artifact = base._load_json(root / exp4470.RESULT_RELATIVE_PATH)
++        labels = artifact.get("solution_labels") if isinstance(artifact.get("solution_labels"), list) else []
++        return base.ReplayPlan(
++            game,
++            [str(label) for label in labels],
++            exp4470.RESULT_RELATIVE_PATH,
++            exp4470.apply_sb26_label,
++        )
++    return base.resolve_replay_plan(entry, root)
++
++
++def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
++    from carnot.agentic import arc_solver_kit
++
++    game = str(entry.get("game") or "")
++    claimed = base._as_int(entry.get("levels_reproduced"))
++    plan = resolve_replay_plan(entry, root)
++    if not plan.labels:
++        return {
++            "game": game,
++            "claimed_level": claimed,
++            "reached_level": 0,
++            "reproduced": False,
++            "source": plan.source,
++            "action_sequence": [],
++            "action_count": 0,
++            "gate": "missing_cached_replay_plan",
++        }
++    result = dict(
++        arc_solver_kit.reproduce(
++            game,
++            plan.labels,
++            plan.apply_fn,
++            warmup_label=plan.warmup_label,
++            claimed_level=claimed,
++        )
++    )
++    result["source"] = plan.source
++    result["action_sequence"] = list(plan.labels)
++    result["action_count"] = len(plan.labels)
++    result["gate"] = "arc_solver_kit.reproduce"
++    if plan.warmup_label is not None:
++        result["warmup_label"] = plan.warmup_label
++    return result
++
++
++def compute_reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    return base._sha256(
++        {
++            "package_manifest": artifact.get("package_manifest", []),
++            "total_reproduced_levels_in_package": artifact.get("total_reproduced_levels_in_package"),
++            "grew_vs_412": artifact.get("grew_vs_412"),
++            "prior_submitted_baseline_levels": artifact.get("prior_submitted_baseline_levels"),
++            "submitted_to_leaderboard": artifact.get("submitted_to_leaderboard"),
++            "random_seed": artifact.get("random_seed"),
++        }
++    )
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    registry: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    started_at: float,
++    ended_at: float,
++    prior_package_412_levels: int,
++) -> dict[str, Any]:
++    baseline = base._as_int(registry.get("prior_submitted_baseline_levels")) or PRIOR_SUBMITTED_BASELINE_LEVELS
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4473_submission_package_prep_refresh",
++        "schema": "carnot.exp4473.submission_package_prep_refresh.v1",
++        "honest_verdict": f"complete: blocked_{reason}",
++        "inference_substrate": BLOCKED_INFERENCE_SUBSTRATE,
++        "submission_package_ready": False,
++        "total_reproduced_levels_in_package": 0,
++        "prior_package_412_levels": prior_package_412_levels,
++        "grew_vs_412": False,
++        "prior_submitted_baseline_levels": baseline,
++        "beats_prior_baseline": False,
++        "per_game_replay_validation": [],
++        "package_manifest": [],
++        "quarantined_games": [],
++        "operator_checklist": [],
++        "operator_note_path": OPERATOR_NOTE_RELATIVE_PATH,
++        "submitted_to_leaderboard": False,
++        "verifier_is_oracle": True,
++        "random_seed": RANDOM_SEED,
++        "duration_s": base._duration(started_at, ended_at),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-REPORT-4473", "SCENARIO-REPORT-4473"],
++        "no_3090_inference": True,
++        "result_path": RESULT_RELATIVE_PATH,
++    }
++    artifact["reproducibility_checksum"] = compute_reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    registry: Mapping[str, Any],
++    validation_rows: Sequence[Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    started_at: float,
++    ended_at: float,
++    prior_package_412_levels: int,
++) -> dict[str, Any]:
++    manifest = base._package_manifest(validation_rows)
++    total = sum(base._as_int(row.get("levels")) for row in manifest)
++    baseline = base._as_int(registry.get("prior_submitted_baseline_levels")) or PRIOR_SUBMITTED_BASELINE_LEVELS
++    beats_baseline = total > baseline
++    grew = total > prior_package_412_levels
++    quarantined = [str(row.get("game")) for row in validation_rows if row.get("quarantined")]
++    ready = bool(beats_baseline and manifest)
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4473_submission_package_prep_refresh",
++        "schema": "carnot.exp4473.submission_package_prep_refresh.v1",
++        "honest_verdict": _honest_verdict(
++            ready=ready,
++            total=total,
++            baseline=baseline,
++            grew=grew,
++            quarantined_count=len(quarantined),
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "submission_package_ready": ready,
++        "total_reproduced_levels_in_package": total,
++        "prior_package_412_levels": prior_package_412_levels,
++        "grew_vs_412": grew,
++        "prior_submitted_baseline_levels": baseline,
++        "beats_prior_baseline": beats_baseline,
++        "per_game_replay_validation": [dict(row) for row in validation_rows],
++        "package_manifest": manifest,
++        "quarantined_games": quarantined,
++        "operator_checklist": _operator_checklist(total=total, baseline=baseline, manifest=manifest),
++        "operator_note_path": OPERATOR_NOTE_RELATIVE_PATH,
++        "submitted_to_leaderboard": False,
++        "verifier_is_oracle": True,
++        "random_seed": RANDOM_SEED,
++        "duration_s": base._duration(started_at, ended_at),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-REPORT-4473", "SCENARIO-REPORT-4473"],
++        "no_3090_inference": True,
++        "result_path": RESULT_RELATIVE_PATH,
++    }
++    artifact["reproducibility_checksum"] = compute_reproducibility_checksum(artifact)
++    return artifact
++
++
++def _operator_checklist(*, total: int, baseline: int, manifest: Sequence[Mapping[str, Any]]) -> list[str]:
++    return [
++        "Review this refreshed JSON artifact and the package_manifest rows before submitting.",
++        f"Confirm total_reproduced_levels_in_package={total} is greater than prior baseline {baseline}.",
++        f"Confirm grew_vs_412 reflects whether total_reproduced_levels_in_package>{PRIOR_PACKAGE_412_LEVELS}.",
++        "Run scripts/arc3_live_submit.py only as the operator; this prep task did not submit.",
++        f"Package contains {len(manifest)} replayable games with cached action sequences.",
++        "After any operator live validation, record the resulting scorecard separately.",
++    ]
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    if not base._terminal_prefixed(artifact.get("honest_verdict")):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE and artifact.get("inference_substrate") != BLOCKED_INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must equal refresh substrate")
++    if type(artifact.get("submission_package_ready")) is not bool:
++        errors.append("submission_package_ready must be bare bool")
++    if type(artifact.get("total_reproduced_levels_in_package")) is not int:
++        errors.append("total_reproduced_levels_in_package must be bare int")
++    if type(artifact.get("grew_vs_412")) is not bool:
++        errors.append("grew_vs_412 must be bare bool")
++    if type(artifact.get("prior_submitted_baseline_levels")) is not int:
++        errors.append("prior_submitted_baseline_levels must be bare int")
++    if type(artifact.get("beats_prior_baseline")) is not bool:
++        errors.append("beats_prior_baseline must be bare bool")
++    if not isinstance(artifact.get("per_game_replay_validation"), list):
++        errors.append("per_game_replay_validation must be list")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard must be false")
++    if artifact.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle must be true")
++    if type(artifact.get("random_seed")) is not int:
++        errors.append("random_seed must be bare int")
++    if not base._checksum_is_hex(artifact.get("reproducibility_checksum")):
++        errors.append("reproducibility_checksum must be sha256 hex")
++    total = artifact.get("total_reproduced_levels_in_package")
++    if type(total) is int and type(artifact.get("grew_vs_412")) is bool:
++        expected_growth = total > base._as_int(artifact.get("prior_package_412_levels")) if "prior_package_412_levels" in artifact else total > PRIOR_PACKAGE_412_LEVELS
++        if artifact.get("grew_vs_412") is not expected_growth:
++            errors.append("grew_vs_412 inconsistent with total and .412 baseline")
++    if artifact.get("submission_package_ready") is True:
++        if artifact.get("beats_prior_baseline") is not True:
++            errors.append("ready package must beat prior baseline")
++        if not artifact.get("package_manifest"):
++            errors.append("ready package must include package_manifest rows")
++        if artifact.get("submitted_to_leaderboard") is not False:
++            errors.append("ready package must not submit")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def write_operator_note(root: Path, artifact: Mapping[str, Any]) -> Path:
++    path = root / OPERATOR_NOTE_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    manifest = artifact.get("package_manifest") if isinstance(artifact.get("package_manifest"), list) else []
++    lines = [
++        "# ARC-AGI-3 Operator Submission Package Refresh (Exp 4473)",
++        "",
++        f"- Artifact: `{RESULT_RELATIVE_PATH}`",
++        f"- Ready for operator submission: `{artifact.get('submission_package_ready')}`",
++        f"- Revalidated package levels: `{artifact.get('total_reproduced_levels_in_package')}`",
++        f"- Grew vs Exp 4460/.412: `{artifact.get('grew_vs_412')}`",
++        f"- Prior submitted baseline: `{artifact.get('prior_submitted_baseline_levels')}`",
++        f"- Submitted by this task: `{artifact.get('submitted_to_leaderboard')}`",
++        "",
++        "Operator checklist:",
++    ]
++    for item in artifact.get("operator_checklist", []):
++        lines.append(f"- {item}")
++    lines.extend(["", "Package manifest:"])
++    for row in manifest:
++        lines.append(
++            f"- {row.get('game')}: L{row.get('levels')}, actions={row.get('action_count')}, "
++            f"env_match_basis={row.get('env_match_basis')}, source={row.get('source')}"
++        )
++    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    reproduce_entry_fn: ReproduceEntryFn = reproduce_registry_entry,
++    now: Callable[[], float] = time.perf_counter,
++    sleep_fn: Callable[[float], None] = time.sleep,
++) -> dict[str, Any]:
++    """SCENARIO-REPORT-4473: validate cached .413 replays and write the refreshed package."""
++
++    started = now()
++    registry = base.load_registry(root)
++    prior_package_412_levels = _prior_package_412_levels(root)
++    checked = dict(preconditions_checked or base.precondition_probe(root))
++    miss = base.first_precondition_miss(checked)
++    if miss is not None:
++        artifact = _blocked_artifact(
++            reason=miss,
++            registry=registry,
++            preconditions_checked=checked,
++            started_at=started,
++            ended_at=now(),
++            prior_package_412_levels=prior_package_412_levels,
++        )
++        write_artifact(root, artifact)
++        write_operator_note(root, artifact)
++        return artifact
++
++    validation_rows = base.validate_registry_replays(
++        root,
++        registry=registry,
++        reproduce_entry_fn=reproduce_entry_fn,
++    )
++    ended = base._floor_end_time(started_at=started, now=now, sleep_fn=sleep_fn)
++    artifact = build_artifact(
++        registry=registry,
++        validation_rows=validation_rows,
++        preconditions_checked=checked,
++        started_at=started,
++        ended_at=ended,
++        prior_package_412_levels=prior_package_412_levels,
++    )
++    write_artifact(root, artifact)
++    write_operator_note(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run(REPO_ROOT)
++    print(REPO_ROOT / RESULT_RELATIVE_PATH)
++    print(artifact["honest_verdict"])
++    print(f"submitted_to_leaderboard={artifact['submitted_to_leaderboard']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index e56b375042..1b6567e130 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T23:46:01.109808Z",
+-  "duration_s": 0.02535414695739746,
++  "run_date": "2026-06-20T01:24:08.776455Z",
++  "duration_s": 0.026871681213378906,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "2ea6a6d92108456fce323a5bf4722ac41bf088ccd802a0f759e37583f4134e8c",
++  "reproducibility_checksum": "3e82e579aa7f300cb8e910284a5e5563629ffabba13569dd1c34648096822ece",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "f0018a9869e6c638c0c316f3000919e9bdf53d5e"
++    "adversarial_verify_version": "84ca6d166fa7afed8d15b164d132e6b15b699058"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c8f433293d..d5bb744f89 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T23:46:01.135853Z",
+-  "duration_s": 0.020235300064086914,
++  "run_date": "2026-06-20T01:24:08.812447Z",
++  "duration_s": 0.029955148696899414,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "dbec275b9a24e922fb4abb4b5e64c1b5d2e30836247ccc554f79046ad9163625",
++  "reproducibility_checksum": "25b57053982408d9b65708623df8723ffd6de05084f43d84f5a35bdb08ccdaae",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "f0018a9869e6c638c0c316f3000919e9bdf53d5e"
++    "adversarial_verify_version": "84ca6d166fa7afed8d15b164d132e6b15b699058"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 523d2010f1..a4b4b266f0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1371841430664062,
++  "efficiency_gains_ms": 2.154827117919922,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 6d676ba7fd..70ea354caf 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.184005618095398e-05,
++  "duration_s": 3.22909327223897e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4473_submission_package_prep_refresh.json b/results/experiment_4473_submission_package_prep_refresh.json
+new file mode 100644
+index 0000000000..5f298b8b91
+--- /dev/null
++++ b/results/experiment_4473_submission_package_prep_refresh.json
+@@ -0,0 +1,2185 @@
++{
++  "beats_prior_baseline": true,
++  "duration_s": 1.496831,
++  "experiment": "experiment_4473_submission_package_prep_refresh",
++  "field_principles": {
++    "beats_prior_baseline": {
++      "principle": "bare bool: total_reproduced_levels_in_package > 13"
++    },
++    "grew_vs_412": {
++      "principle": "bare bool: total > 39 -- the .413 package added levels over .412"
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefixed"
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- re-validates cached reproduce sequences against the offline env (1s floor); never None, never live_llm_inference"
++    },
++    "per_game_replay_validation": {
++      "principle": "list of {game, replays_ok, reproduced_levels, env_matched} -- the audit trail; quarantined games excluded from the count"
++    },
++    "prior_submitted_baseline_levels": {
++      "principle": "bare int = 13; the baseline the package must beat"
++    },
++    "random_seed": {
++      "principle": "determinism"
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of the package manifest"
++    },
++    "submission_package_ready": {
++      "principle": "bare bool: TRUE if the package is ready for the OPERATOR to submit; the task itself NEVER submits (Operator-Only External Publication)"
++    },
++    "submitted_to_leaderboard": {
++      "principle": "bare bool MUST be false -- the task never submits"
++    },
++    "total_reproduced_levels_in_package": {
++      "principle": "bare int: env-match-validated reproduced levels in the package (target > 39 after the .413 banks)"
++    },
++    "verifier_is_oracle": {
++      "principle": "true: execution-grounded reproduction re-validation"
++    }
++  },
++  "grew_vs_412": true,
++  "honest_verdict": "success: submission_package_ready_45_levels_beats_13_grew_vs_412_quarantined_0",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- re-validates cached reproduce sequences against the offline env (1s floor); never None, never live_llm_inference",
++  "no_3090_inference": true,
++  "operator_checklist": [
++    "Review this refreshed JSON artifact and the package_manifest rows before submitting.",
++    "Confirm total_reproduced_levels_in_package=45 is greater than prior baseline 13.",
++    "Confirm grew_vs_412 reflects whether total_reproduced_levels_in_package>39.",
++    "Run scripts/arc3_live_submit.py only as the operator; this prep task did not submit.",
++    "Package contains 22 replayable games with cached action sequences.",
++    "After any operator live validation, record the resulting scorecard separately."
++  ],
++  "operator_note_path": "docs/research-notes/arc3-submission-package-4473-operator-note.md",
++  "package_manifest": [
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 7, \"y\": 36}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 20}}",
++        "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 59}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 20}}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "r11l",
++      "levels": 1,
++      "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "ls20",
++      "levels": 1,
++      "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 33,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 5}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 5}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 5}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 5}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 5}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 5}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "wa30",
++      "levels": 1,
++      "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "s5i5",
++      "levels": 1,
++      "source": "results/experiment_4421_config_rule_solve_unseen.json"
++    },
++    {
++      "action_count": 52,
++      "action_sequence": [
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 14, \"y\": 5}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 35, \"y\": 35}",
++        "{\"x\": 35, \"y\": 35}",
++        "{\"x\": 7, \"y\": 5}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 7, \"y\": 5}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 49, \"y\": 5}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "lp85",
++      "levels": 5,
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "action_count": 102,
++      "action_sequence": [
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move1",
++        "move1",
++        "move4",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move3",
++        "move3",
++        "move3",
++        "move2",
++        "move3",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move2",
++        "move2",
++        "move3",
++        "click4,12",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "click1,12",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move1",
++        "click4,23",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move3",
++        "click4,23",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "click1,12",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move1",
++        "move1",
++        "move1",
++        "move1",
++        "move1",
++        "move1"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "sc25",
++      "levels": 5,
++      "source": "results/experiment_4468_bank_sc25_provisional_levels.json"
++    },
++    {
++      "action_count": 5,
++      "action_sequence": [
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 5}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "cd82",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_cd82.json"
++    },
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 5}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "sp80",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_sp80.json"
++    },
++    {
++      "action_count": 7,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 10, \"y\": 53}}",
++        "{\"action\": 6, \"data\": {\"x\": 16, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 22, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 28, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 29}}",
++        "{\"action\": 6, \"data\": {\"x\": 40, \"y\": 23}}",
++        "{\"action\": 6, \"data\": {\"x\": 44, \"y\": 19}}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "su15",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_su15.json"
++    },
++    {
++      "action_count": 93,
++      "action_sequence": [
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 3}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "tu93",
++      "levels": 5,
++      "source": "results/experiment_4361_e3_deeper_high_headroom_games.json+TU93_L5_SUFFIX_ACTIONS"
++    },
++    {
++      "action_count": 102,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "tn36",
++      "levels": 7,
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 6, \"data\": {\"x\": 44, \"y\": 30}}",
++        "{\"action\": 3}",
++        "{\"action\": 5}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "cn04",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_cn04.json"
++    },
++    {
++      "action_count": 15,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "m0r0",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_m0r0.json"
++    },
++    {
++      "action_count": 14,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 4}"
++      ],
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "sk48",
++      "levels": 1,
++      "source": "results/arc_explore_trajectory_sk48.json"
++    },
++    {
++      "action_count": 15,
++      "action_sequence": [
++        "3",
++        "3",
++        "3",
++        "3",
++        "3",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ar25",
++      "levels": 1,
++      "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
++    },
++    {
++      "action_count": 11,
++      "action_sequence": [
++        "4",
++        "4",
++        "4",
++        "3",
++        "2",
++        "3",
++        "3",
++        "3",
++        "C:1",
++        "1",
++        "4"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ka59",
++      "levels": 1,
++      "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
++    },
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 52}}"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ft09",
++      "levels": 1,
++      "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
++    },
++    {
++      "action_count": 127,
++      "action_sequence": [
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "tr87",
++      "levels": 6,
++      "source": "results/arc_loop_solve_tr87.json"
++    },
++    {
++      "action_count": 3,
++      "action_sequence": [
++        "lower_click",
++        "lower_click",
++        "lower_click"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "vc33",
++      "levels": 1,
++      "source": "results/experiment_4446_drive_generic_first_contact_bank.json"
++    },
++    {
++      "action_count": 17,
++      "action_sequence": [
++        "4",
++        "4",
++        "4",
++        "4",
++        "5",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "4",
++        "4",
++        "4",
++        "4",
++        "4"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "g50t",
++      "levels": 1,
++      "source": "results/experiment_4443_bank_g50t_example_conditioned_win.json"
++    },
++    {
++      "action_count": 20,
++      "action_sequence": [
++        "{\"action\":1}",
++        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++        "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":4}",
++        "{\"action\":4}"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "dc22",
++      "levels": 1,
++      "source": "results/experiment_4467_solve_dc22_cegis_nocov.json"
++    },
++    {
++      "action_count": 9,
++      "action_sequence": [
++        "click:36,59",
++        "click:23,30",
++        "click:20,59",
++        "click:29,30",
++        "click:44,59",
++        "click:35,30",
++        "click:28,59",
++        "click:41,30",
++        "validate"
++      ],
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "sb26",
++      "levels": 1,
++      "source": "results/experiment_4470_color_match_slot_operator_solve_sb26.json"
++    }
++  ],
++  "per_game_replay_validation": [
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 7, \"y\": 36}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 20}}",
++        "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 59}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 20}}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "r11l",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 4,
++        "claimed_level": 1,
++        "game": "r11l",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
++      },
++      "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "ls20",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 13,
++        "claimed_level": 1,
++        "game": "ls20",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
++      },
++      "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 33,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 5}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 5}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 5}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 5}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 5}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 5}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "wa30",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 33,
++        "claimed_level": 1,
++        "game": "wa30",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
++      },
++      "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "h_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend",
++        "v_extend"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "s5i5",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 13,
++        "claimed_level": 1,
++        "game": "s5i5",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4421_config_rule_solve_unseen.json"
++      },
++      "source": "results/experiment_4421_config_rule_solve_unseen.json"
++    },
++    {
++      "action_count": 52,
++      "action_sequence": [
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 2, \"y\": 30}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 38, \"y\": 16}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 47, \"y\": 34}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 22, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 34, \"y\": 40}",
++        "{\"x\": 14, \"y\": 5}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 24, \"y\": 14}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 14, \"y\": 24}",
++        "{\"x\": 35, \"y\": 35}",
++        "{\"x\": 35, \"y\": 35}",
++        "{\"x\": 7, \"y\": 5}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 7, \"y\": 5}",
++        "{\"x\": 9, \"y\": 35}",
++        "{\"x\": 49, \"y\": 5}"
++      ],
++      "claimed_levels": 5,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "lp85",
++      "quarantined": false,
++      "reached_level": 5,
++      "replays_ok": true,
++      "reproduced_levels": 5,
++      "reproduction_result": {
++        "action_count": 52,
++        "claimed_level": 5,
++        "game": "lp85",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 5,
++        "reproduced": true,
++        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++      },
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "action_count": 102,
++      "action_sequence": [
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move1",
++        "move1",
++        "move4",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move3",
++        "move3",
++        "move3",
++        "move2",
++        "move3",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move2",
++        "move2",
++        "move3",
++        "click4,12",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "move4",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "click1,12",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move3",
++        "move1",
++        "click4,23",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "move2",
++        "move2",
++        "move2",
++        "move3",
++        "click4,23",
++        "cell0,1",
++        "cell1,1",
++        "cell2,1",
++        "click1,1",
++        "cell0,1",
++        "cell1,0",
++        "cell1,2",
++        "cell2,1",
++        "click1,12",
++        "cell0,0",
++        "cell0,1",
++        "cell1,1",
++        "move1",
++        "move1",
++        "move1",
++        "move1",
++        "move1",
++        "move1"
++      ],
++      "claimed_levels": 5,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "sc25",
++      "quarantined": false,
++      "reached_level": 5,
++      "replays_ok": true,
++      "reproduced_levels": 5,
++      "reproduction_result": {
++        "action_count": 102,
++        "claimed_level": 5,
++        "game": "sc25",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 5,
++        "reproduced": true,
++        "source": "results/experiment_4468_bank_sc25_provisional_levels.json",
++        "warmup_label": "warmup"
++      },
++      "source": "results/experiment_4468_bank_sc25_provisional_levels.json"
++    },
++    {
++      "action_count": 5,
++      "action_sequence": [
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 5}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "cd82",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 5,
++        "claimed_level": 1,
++        "game": "cd82",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_cd82.json"
++      },
++      "source": "results/arc_explore_trajectory_cd82.json"
++    },
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 5}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "sp80",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 4,
++        "claimed_level": 1,
++        "game": "sp80",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_sp80.json"
++      },
++      "source": "results/arc_explore_trajectory_sp80.json"
++    },
++    {
++      "action_count": 7,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 10, \"y\": 53}}",
++        "{\"action\": 6, \"data\": {\"x\": 16, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 22, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 28, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 29}}",
++        "{\"action\": 6, \"data\": {\"x\": 40, \"y\": 23}}",
++        "{\"action\": 6, \"data\": {\"x\": 44, \"y\": 19}}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "su15",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 7,
++        "claimed_level": 1,
++        "game": "su15",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_su15.json"
++      },
++      "source": "results/arc_explore_trajectory_su15.json"
++    },
++    {
++      "action_count": 93,
++      "action_sequence": [
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 3}"
++      ],
++      "claimed_levels": 5,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "tu93",
++      "quarantined": false,
++      "reached_level": 5,
++      "replays_ok": true,
++      "reproduced_levels": 5,
++      "reproduction_result": {
++        "action_count": 93,
++        "claimed_level": 5,
++        "game": "tu93",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 5,
++        "reproduced": true,
++        "source": "results/experiment_4361_e3_deeper_high_headroom_games.json+TU93_L5_SUFFIX_ACTIONS"
++      },
++      "source": "results/experiment_4361_e3_deeper_high_headroom_games.json+TU93_L5_SUFFIX_ACTIONS"
++    },
++    {
++      "action_count": 102,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
++      ],
++      "claimed_levels": 7,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "tn36",
++      "quarantined": false,
++      "reached_level": 7,
++      "replays_ok": true,
++      "reproduced_levels": 7,
++      "reproduction_result": {
++        "action_count": 102,
++        "claimed_level": 7,
++        "game": "tn36",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 7,
++        "reproduced": true,
++        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++      },
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "action_count": 13,
++      "action_sequence": [
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 6, \"data\": {\"x\": 44, \"y\": 30}}",
++        "{\"action\": 3}",
++        "{\"action\": 5}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "cn04",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 13,
++        "claimed_level": 1,
++        "game": "cn04",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_cn04.json"
++      },
++      "source": "results/arc_explore_trajectory_cn04.json"
++    },
++    {
++      "action_count": 15,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "m0r0",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 15,
++        "claimed_level": 1,
++        "game": "m0r0",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_m0r0.json"
++      },
++      "source": "results/arc_explore_trajectory_m0r0.json"
++    },
++    {
++      "action_count": 14,
++      "action_sequence": [
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 4}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 4}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "prior_live_submission_confirmed",
++      "env_matched": true,
++      "game": "sk48",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 14,
++        "claimed_level": 1,
++        "game": "sk48",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_sk48.json"
++      },
++      "source": "results/arc_explore_trajectory_sk48.json"
++    },
++    {
++      "action_count": 15,
++      "action_sequence": [
++        "3",
++        "3",
++        "3",
++        "3",
++        "3",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ar25",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 15,
++        "claimed_level": 1,
++        "game": "ar25",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
++      },
++      "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
++    },
++    {
++      "action_count": 11,
++      "action_sequence": [
++        "4",
++        "4",
++        "4",
++        "3",
++        "2",
++        "3",
++        "3",
++        "3",
++        "C:1",
++        "1",
++        "4"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ka59",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 11,
++        "claimed_level": 1,
++        "game": "ka59",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
++      },
++      "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
++    },
++    {
++      "action_count": 4,
++      "action_sequence": [
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 52}}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "ft09",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 4,
++        "claimed_level": 1,
++        "game": "ft09",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
++      },
++      "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
++    },
++    {
++      "action_count": 127,
++      "action_sequence": [
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 1}",
++        "{\"action\": 3}",
++        "{\"action\": 2}",
++        "{\"action\": 2}"
++      ],
++      "claimed_levels": 6,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "tr87",
++      "quarantined": false,
++      "reached_level": 6,
++      "replays_ok": true,
++      "reproduced_levels": 6,
++      "reproduction_result": {
++        "action_count": 127,
++        "claimed_level": 6,
++        "game": "tr87",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 6,
++        "reproduced": true,
++        "source": "results/arc_loop_solve_tr87.json"
++      },
++      "source": "results/arc_loop_solve_tr87.json"
++    },
++    {
++      "action_count": 3,
++      "action_sequence": [
++        "lower_click",
++        "lower_click",
++        "lower_click"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "vc33",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 3,
++        "claimed_level": 1,
++        "game": "vc33",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4446_drive_generic_first_contact_bank.json"
++      },
++      "source": "results/experiment_4446_drive_generic_first_contact_bank.json"
++    },
++    {
++      "action_count": 17,
++      "action_sequence": [
++        "4",
++        "4",
++        "4",
++        "4",
++        "5",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "4",
++        "4",
++        "4",
++        "4",
++        "4"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "g50t",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 17,
++        "claimed_level": 1,
++        "game": "g50t",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4443_bank_g50t_example_conditioned_win.json"
++      },
++      "source": "results/experiment_4443_bank_g50t_example_conditioned_win.json"
++    },
++    {
++      "action_count": 20,
++      "action_sequence": [
++        "{\"action\":1}",
++        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":4}",
++        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++        "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":1}",
++        "{\"action\":4}",
++        "{\"action\":4}"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "dc22",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 20,
++        "claimed_level": 1,
++        "game": "dc22",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4467_solve_dc22_cegis_nocov.json"
++      },
++      "source": "results/experiment_4467_solve_dc22_cegis_nocov.json"
++    },
++    {
++      "action_count": 9,
++      "action_sequence": [
++        "click:36,59",
++        "click:23,30",
++        "click:20,59",
++        "click:29,30",
++        "click:44,59",
++        "click:35,30",
++        "click:28,59",
++        "click:41,30",
++        "validate"
++      ],
++      "claimed_levels": 1,
++      "env_match_basis": "offline_env_file_present",
++      "env_matched": true,
++      "game": "sb26",
++      "quarantined": false,
++      "reached_level": 1,
++      "replays_ok": true,
++      "reproduced_levels": 1,
++      "reproduction_result": {
++        "action_count": 9,
++        "claimed_level": 1,
++        "game": "sb26",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4470_color_match_slot_operator_solve_sb26.json"
++      },
++      "source": "results/experiment_4470_color_match_slot_operator_solve_sb26.json"
++    }
++  ],
++  "preconditions_checked": {
++    "arc_solver_kit_import": true,
++    "leaderboard_submission": false,
++    "network_required": false,
++    "no_3090_inference": true,
++    "offline_env_files_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files",
++    "offline_env_files_present": true,
++    "ok": true
++  },
++  "prior_package_412_levels": 39,
++  "prior_submitted_baseline_levels": 13,
++  "quarantined_games": [],
++  "random_seed": 4473,
++  "reproducibility_checksum": "ec0d019f968a577e478e928979bf06b0ab46af64ec7aae7bce3b627815beb324",
++  "result_path": "results/experiment_4473_submission_package_prep_refresh.json",
++  "schema": "carnot.exp4473.submission_package_prep_refresh.v1",
++  "spec_refs": [
++    "REQ-REPORT-4473",
++    "SCENARIO-REPORT-4473"
++  ],
++  "submission_package_ready": true,
++  "submitted_to_leaderboard": false,
++  "total_reproduced_levels_in_package": 45,
++  "verifier_is_oracle": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6bc90cff76..ee0d727be2 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T00:10:59Z",
+-  "finished_at": "2026-06-20T00:10:59Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-20T01:23:59Z",
++  "finished_at": "2026-06-20T01:23:59Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index bc50bf3850..af991a326e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T00:10:59Z",
+-  "finished_at": "2026-06-20T00:10:59Z",
++  "started_at": "2026-06-20T01:23:59Z",
++  "finished_at": "2026-06-20T01:23:59Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 5e189226d6..e5fa9281f0 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T00:10:59Z",
+-  "finished_at": "2026-06-20T00:10:59Z",
++  "started_at": "2026-06-20T01:23:59Z",
++  "finished_at": "2026-06-20T01:23:59Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4473_submission_package_prep_refresh.py b/tests/python/test_experiment_4473_submission_package_prep_refresh.py
+new file mode 100644
+index 0000000000..7e215db12a
+--- /dev/null
++++ b/tests/python/test_experiment_4473_submission_package_prep_refresh.py
+@@ -0,0 +1,281 @@
++"""Tests for Exp 4473 refreshed ARC operator submission package prep.
++
++Spec refs: REQ-REPORT-4473, SCENARIO-REPORT-4473.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import yaml
++
++from carnot import experiment_4473_submission_package_prep_refresh as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_fixture_repo(root: Path) -> None:
++    for game in ("alpha", "beta", "dc22", "sc25", "sb26"):
++        (root / "environment_files" / game / "fixture").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / mod.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(
++            {
++                "schema_version": 1,
++                "prior_submitted_baseline_levels": 13,
++                "games": [
++                    {"game": "alpha", "reproducibility": "reproduced", "levels_reproduced": 34},
++                    {"game": "sc25", "reproducibility": "reproduced", "levels_reproduced": 5},
++                    {"game": "dc22", "reproducibility": "reproduced", "levels_reproduced": 1},
++                    {"game": "sb26", "reproducibility": "reproduced", "levels_reproduced": 1},
++                    {"game": "beta", "reproducibility": "reproduced", "levels_reproduced": 3},
++                    {"game": "ignored", "reproducibility": "unsolved", "levels_reproduced": 9},
++                ],
++            },
++            sort_keys=False,
++        ),
++        encoding="utf-8",
++    )
++    _write_json(
++        root / mod.PRIOR_SUBMISSION_RELATIVE_PATH,
++        {
++            "live_total_levels": 13,
++            "leaderboard_submitted": True,
++            "per_game": [
++                {"game": "alpha", "claimed": 34, "live_level": 34, "env_match": True},
++                {"game": "beta", "claimed": 3, "live_level": 1, "env_match": False},
++            ],
++        },
++    )
++    _write_json(
++        root / mod.PRIOR_PACKAGE_412_RELATIVE_PATH,
++        {"total_reproduced_levels_in_package": mod.PRIOR_PACKAGE_412_LEVELS},
++    )
++
++
++def _fake_reproduce(entry: Mapping[str, Any], _root: Path) -> dict[str, Any]:
++    game = str(entry["game"])
++    claimed = int(entry["levels_reproduced"])
++    if game == "beta":
++        return {
++            "game": game,
++            "claimed_level": claimed,
++            "reached_level": 1,
++            "reproduced": False,
++            "source": "fixtures/beta.json",
++            "action_sequence": ["b1"],
++            "action_count": 1,
++        }
++    return {
++        "game": game,
++        "claimed_level": claimed,
++        "reached_level": claimed,
++        "reproduced": True,
++        "source": f"fixtures/{game}.json",
++        "action_sequence": [f"{game}-a1", f"{game}-a2"],
++        "action_count": 2,
++    }
++
++
++def test_req_report_4473_spec_declares_refresh_contract() -> None:
++    """REQ-REPORT-4473: OpenSpec names the refresh artifact and growth field."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4473" in spec
++    assert "SCENARIO-REPORT-4473" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    assert "grew_vs_412" in spec
++    assert "scripts/arc3_live_submit.py" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_report_4473_refresh_counts_only_replayed_growth_rows(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4473: .413 replay rows must validate before package count growth."""
++
++    _write_fixture_repo(tmp_path)
++    clock = {"t": 100.0}
++
++    def now() -> float:
++        return clock["t"]
++
++    def sleep(seconds: float) -> None:
++        clock["t"] += seconds
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checked={
++            "offline_env_files_present": True,
++            "arc_solver_kit_import": True,
++            "ok": True,
++        },
++        reproduce_entry_fn=_fake_reproduce,
++        now=now,
++        sleep_fn=sleep,
++    )
++
++    assert artifact["honest_verdict"] == "success: submission_package_ready_41_levels_beats_13_grew_vs_412_quarantined_1"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["duration_s"] >= 1.0
++    assert artifact["submission_package_ready"] is True
++    assert artifact["total_reproduced_levels_in_package"] == 41
++    assert artifact["prior_package_412_levels"] == 39
++    assert artifact["grew_vs_412"] is True
++    assert artifact["beats_prior_baseline"] is True
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["verifier_is_oracle"] is True
++
++    validations = {row["game"]: row for row in artifact["per_game_replay_validation"]}
++    assert validations["alpha"]["env_match_basis"] == "prior_live_submission_confirmed"
++    assert validations["sc25"]["replays_ok"] is True
++    assert validations["dc22"]["env_matched"] is True
++    assert validations["sb26"]["reproduced_levels"] == 1
++    assert validations["beta"]["quarantined"] is True
++    assert [row["game"] for row in artifact["package_manifest"]] == ["alpha", "sc25", "dc22", "sb26"]
++    assert artifact["quarantined_games"] == ["beta"]
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert mod.artifact_schema_errors(artifact) == []
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["grew_vs_412"] is True
++    note = (tmp_path / mod.OPERATOR_NOTE_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "Exp 4473" in note
++    assert "Submitted by this task: `False`" in note
++
++
++def test_req_report_4473_blocks_precondition_miss_without_replay(tmp_path: Path) -> None:
++    """REQ-REPORT-4473: missing offline env files stop as blocked artifacts."""
++
++    (tmp_path / "ops").mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump({"prior_submitted_baseline_levels": 13, "games": []}),
++        encoding="utf-8",
++    )
++    called = {"reproduce": False}
++
++    def reproduce(_entry: Mapping[str, Any], _root: Path) -> dict[str, Any]:
++        called["reproduce"] = True
++        return {}
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checked={
++            "offline_env_files_present": False,
++            "arc_solver_kit_import": True,
++            "ok": False,
++        },
++        reproduce_entry_fn=reproduce,
++        now=lambda: 1.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert called["reproduce"] is False
++    assert artifact["honest_verdict"] == "complete: blocked_offline_env_files"
++    assert artifact["submission_package_ready"] is False
++    assert artifact["total_reproduced_levels_in_package"] == 0
++    assert artifact["grew_vs_412"] is False
++    assert artifact["beats_prior_baseline"] is False
++    assert artifact["submitted_to_leaderboard"] is False
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_report_4473_schema_rejects_inconsistent_or_submitted_artifacts() -> None:
++    """REQ-REPORT-4473: required fields are bare and no leaderboard submission is allowed."""
++
++    artifact = {
++        "honest_verdict": "maybe",
++        "inference_substrate": "",
++        "submission_package_ready": "true",
++        "total_reproduced_levels_in_package": "41",
++        "grew_vs_412": "yes",
++        "prior_submitted_baseline_levels": 13,
++        "beats_prior_baseline": True,
++        "per_game_replay_validation": {},
++        "submitted_to_leaderboard": True,
++        "verifier_is_oracle": True,
++        "random_seed": 4473,
++        "reproducibility_checksum": "x",
++    }
++
++    errors = mod.artifact_schema_errors(artifact)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate must equal refresh substrate" in errors
++    assert "submission_package_ready must be bare bool" in errors
++    assert "total_reproduced_levels_in_package must be bare int" in errors
++    assert "grew_vs_412 must be bare bool" in errors
++    assert "per_game_replay_validation must be list" in errors
++    assert "submitted_to_leaderboard must be false" in errors
++    assert "reproducibility_checksum must be sha256 hex" in errors
++    assert "missing honest_verdict" in mod.artifact_schema_errors({})
++    assert mod._honest_verdict(
++        ready=False,
++        total=12,
++        baseline=13,
++        grew=False,
++        quarantined_count=2,
++    ) == "complete: submission_package_not_ready_12_levels_vs_13_quarantined_2"
++
++    ready_bad = {
++        "honest_verdict": "success: bad_ready",
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "submission_package_ready": True,
++        "total_reproduced_levels_in_package": 41,
++        "prior_package_412_levels": 39,
++        "grew_vs_412": True,
++        "prior_submitted_baseline_levels": "13",
++        "beats_prior_baseline": "no",
++        "per_game_replay_validation": [],
++        "package_manifest": [{"game": "alpha", "levels": 41}],
++        "submitted_to_leaderboard": True,
++        "verifier_is_oracle": False,
++        "random_seed": "4473",
++        "reproducibility_checksum": "0" * 64,
++    }
++    ready_errors = mod.artifact_schema_errors(ready_bad)
++    assert "prior_submitted_baseline_levels must be bare int" in ready_errors
++    assert "beats_prior_baseline must be bare bool" in ready_errors
++    assert "verifier_is_oracle must be true" in ready_errors
++    assert "random_seed must be bare int" in ready_errors
++    assert "ready package must beat prior baseline" in ready_errors
++    assert "ready package must not submit" in ready_errors
++    try:
++        mod.write_artifact(Path("/tmp"), artifact)
++    except ValueError as exc:
++        assert "submitted_to_leaderboard must be false" in str(exc)
++    else:  # pragma: no cover - write_artifact must reject invalid artifacts
++        raise AssertionError("invalid artifact unexpectedly wrote")
++
++
++def test_req_report_4473_schema_checks_growth_consistency() -> None:
++    """REQ-REPORT-4473: grew_vs_412 is derived from the refreshed package total."""
++
++    artifact = {
++        "honest_verdict": "success: bad_growth",
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "submission_package_ready": True,
++        "total_reproduced_levels_in_package": 39,
++        "grew_vs_412": True,
++        "prior_submitted_baseline_levels": 13,
++        "beats_prior_baseline": True,
++        "per_game_replay_validation": [],
++        "submitted_to_leaderboard": False,
++        "verifier_is_oracle": True,
++        "random_seed": 4473,
++        "reproducibility_checksum": "0" * 64,
++    }
++
++    errors = mod.artifact_schema_errors(artifact)
++
++    assert "grew_vs_412 inconsistent with total and .412 baseline" in errors
++    assert "ready package must include package_manifest rows" in errors
+-- 
+2.55.0
+

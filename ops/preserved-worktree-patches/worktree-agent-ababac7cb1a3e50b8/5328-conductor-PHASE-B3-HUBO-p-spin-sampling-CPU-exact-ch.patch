@@ -1,0 +1,5116 @@
+From ebab2e91964b771ed8597a31b9ac00ed31de3a19 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 14:17:19 -0400
+Subject: [PATCH 05328/11362] [conductor] PHASE B3 HUBO/p-spin sampling -- CPU
+ exact-checked 2D parallel tempering reference before any board claim
+
+Automated research step by research conductor.
+Task ID: exp5116-hubo-2dpt-sampling-reference-v469
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/samplers/spec.md        |   48 +
+ ops/dogfood-memory.json                       |    2 +-
+ ..._5116_hubo_2dpt_sampling_reference_v469.py |  552 +++
+ python/carnot/samplers/hubo_2dpt.py           |  665 +++
+ ...116_hubo_2dpt_sampling_reference_v469.json | 3590 +++++++++++++++++
+ ..._5116_hubo_2dpt_sampling_reference_v469.py |   35 +
+ .../test_hubo_2dpt_sampling_reference_5116.py |  147 +
+ 7 files changed, 5038 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+ create mode 100644 python/carnot/samplers/hubo_2dpt.py
+ create mode 100644 results/experiment_5116_hubo_2dpt_sampling_reference_v469.json
+ create mode 100644 scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+ create mode 100644 tests/python/test_hubo_2dpt_sampling_reference_5116.py
+
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 961a419300..bfef40a696 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -876,3 +876,51 @@ Sub-requirements:
+ **When** both ALPS and standard Langevin samplers are run
+ **Then** ALPS reaches the target minimum in significantly fewer steps
+ **And** the experiment artifact is written to `results/experiment_2109_alps_module.json`.
++
++### REQ-SAMPLE-5116: HUBO/p-Spin 2D Parallel Tempering CPU Reference
++
++Carnot MUST provide a deterministic CPU reference sampler for direct
++HUBO/p-spin constraint energies that runs replicas over both inverse
++temperature and constraint-penalty dimensions without making any hardware
++speedup claim.
++
++Sub-requirements:
++- REQ-SAMPLE-5116-1: The implementation SHALL expose direct HUBO/p-spin energy
++  evaluation over binary states and exact enumeration helpers for tiny
++  instances.
++- REQ-SAMPLE-5116-2: The CPU sampler SHALL support deterministic-seeded
++  unguided Gibbs, one-dimensional beta parallel tempering, and two-dimensional
++  beta/penalty parallel tempering runs over declared grids.
++- REQ-SAMPLE-5116-3: Adjacent replica swaps SHALL use the Metropolis ratio for
++  the fixed parameter slots being exchanged, and SHALL record beta-axis and
++  penalty-axis swap attempts, acceptances, and acceptance rates.
++- REQ-SAMPLE-5116-4: Exp 5116 SHALL validate tiny instances by exact
++  enumeration of optima and energy distributions before reporting sampler
++  utility metrics.
++- REQ-SAMPLE-5116-5: Exp 5116 SHALL compare unguided Gibbs, one-dimensional
++  beta parallel tempering, and two-dimensional beta/penalty parallel
++  tempering on at least two synthetic constraint families.
++- REQ-SAMPLE-5116-6: The terminal artifact
++  `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` SHALL
++  include `experiment_id`, `milestone`, `honest_verdict`,
++  `inference_substrate`, `duration_s`, `preconditions_checked`,
++  `exact_enumeration_checked`, `instance_families`, `beta_grid`,
++  `penalty_grid`, `swap_acceptance_rates`,
++  `best_energy_delta_vs_baselines`, `optimum_hit_rate`,
++  `hubo_2dpt_reference_ready`, `hardware_speedup_claimed`,
++  `seeds_or_checksums`, `flagged_adversarial`, and `tests_run`.
++- REQ-SAMPLE-5116-7: `hubo_2dpt_reference_ready` SHALL be true only when exact
++  enumeration checks pass and the two-dimensional beta/penalty PT arm improves
++  on or honestly ties both CPU baselines without claiming hardware execution.
++
++### SCENARIO-SAMPLE-5116: Exact-Checked HUBO 2D PT Artifact
++
++**Given** tiny direct HUBO/p-spin constraint instances from at least two
++synthetic families
++**When** Exp 5116 runs on CPU with fixed seeds
++**Then** exact enumeration verifies optima and energy distributions
++**And** unguided Gibbs, one-dimensional beta PT, and two-dimensional beta/penalty
++PT are compared on the same instances
++**And** beta-axis and penalty-axis swap bookkeeping is recorded
++**And** `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` is
++written with `hardware_speedup_claimed=false` and a terminal honest verdict.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0178b67164..c22930a99f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4111,
++  "experiments_checked": 4112,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py b/python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+new file mode 100644
+index 0000000000..a909c628fe
+--- /dev/null
++++ b/python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+@@ -0,0 +1,552 @@
++"""Exp 5116: exact-checked CPU HUBO/p-spin 2D parallel tempering reference.
++
++Spec refs: REQ-SAMPLE-5116, SCENARIO-SAMPLE-5116.
++
++This experiment deliberately stays on CPU. It compares three stochastic
++samplers on tiny direct HUBO parity instances, then uses exhaustive enumeration
++as the correctness authority before writing a terminal JSON artifact. The
++reported utility is sampler energy and optimum-hit evidence only; no hardware
++speedup is claimed or implied.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot.samplers.hubo_2dpt import (
++    Hubo2DPTConfig,
++    Hubo2DParallelTemperingSampler,
++    HuboRunResult,
++    SwapStats,
++    build_synthetic_hubo_families,
++    exact_enumerate,
++    run_beta_parallel_tempering,
++    run_unguided_gibbs,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_5116_hubo_2dpt_sampling_reference_v469.json"
++EXPERIMENT_ID = "exp5116-hubo-2dpt-sampling-reference-v469"
++MILESTONE = "2026.07.469"
++INFERENCE_SUBSTRATE = "cpu_hubo_2d_parallel_tempering_reference"
++RUN_DATE = "20260701"
++DEFAULT_SEEDS = (5116, 5117, 5118, 5119)
++COMPLETE_VERDICT = "complete_hubo_2dpt_reference_ready_exact_checked_cpu"
++NOT_READY_VERDICT = "complete_hubo_2dpt_reference_not_ready_cpu_no_hardware_claim"
++BLOCKED_VERDICT = "blocked_hubo_2dpt_exact_enumeration_check_failed"
++TERMINAL_PREFIXES = ("complete_", "success_", "blocked_", "complete:", "success:")
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "milestone",
++        "honest_verdict",
++        "inference_substrate",
++        "duration_s",
++        "preconditions_checked",
++        "exact_enumeration_checked",
++        "instance_families",
++        "beta_grid",
++        "penalty_grid",
++        "swap_acceptance_rates",
++        "best_energy_delta_vs_baselines",
++        "optimum_hit_rate",
++        "hubo_2dpt_reference_ready",
++        "hardware_speedup_claimed",
++        "seeds_or_checksums",
++        "flagged_adversarial",
++        "tests_run",
++    }
++)
++EXTRA_ARTIFACT_FIELDS = frozenset(
++    {
++        "schema",
++        "run_date",
++        "result_path",
++        "spec_refs",
++        "field_principles",
++        "random_seed",
++        "reproducibility_checksum",
++        "sampler_config",
++        "per_instance_results",
++        "methodology_note",
++    }
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "traceability",
++    "milestone": "milestone accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "duration_s": "timing accountability",
++    "preconditions_checked": "sampler preflight accountability",
++    "exact_enumeration_checked": "correctness",
++    "instance_families": "distribution transparency",
++    "beta_grid": "algorithm provenance",
++    "penalty_grid": "algorithm provenance",
++    "swap_acceptance_rates": "mixing evidence",
++    "best_energy_delta_vs_baselines": "utility measurement",
++    "optimum_hit_rate": "exact-check utility",
++    "hubo_2dpt_reference_ready": "decision bool",
++    "hardware_speedup_claimed": "no false hardware claim",
++    "seeds_or_checksums": "reproducibility",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "tests_run": "verification evidence",
++    "schema": "artifact schema stability",
++    "run_date": "run labeling",
++    "result_path": "artifact reachability",
++    "spec_refs": "OpenSpec traceability",
++    "field_principles": "principle annotations for top-level fields",
++    "random_seed": "deterministic replay anchor",
++    "reproducibility_checksum": "content-addressed reproducibility",
++    "sampler_config": "algorithm replay parameters",
++    "per_instance_results": "per-distribution evidence, not only aggregates",
++    "methodology_note": "claim-boundary explanation",
++}
++DEFAULT_TESTS_RUN = [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python "
++    "scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py -q",
++    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py "
++    "--cov=python/carnot/samplers/hubo_2dpt.py "
++    "--cov=python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py "
++    "--cov-report=term-missing --cov-fail-under=100 -q",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++def build_artifact(
++    *,
++    run_date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Run the CPU reference comparison and return the terminal artifact."""
++
++    started = time.perf_counter()
++    config = Hubo2DPTConfig()
++    problems = build_synthetic_hubo_families()
++    preconditions_checked = _preconditions_checked()
++    per_instance_results: list[JsonDict] = []
++    best_energies: dict[str, list[float]] = {
++        "unguided_gibbs": [],
++        "beta_pt": [],
++        "two_d_beta_penalty_pt": [],
++    }
++    optimum_hits: dict[str, int] = {
++        "unguided_gibbs": 0,
++        "beta_pt": 0,
++        "two_d_beta_penalty_pt": 0,
++    }
++    run_count = 0
++
++    for problem_index, problem in enumerate(problems):
++        exact = exact_enumerate(problem, penalty=config.target_penalty)
++        exact_ok = (
++            len(exact.all_states) == 2**problem.n_vars
++            and sum(exact.energy_distribution.values()) == len(exact.all_states)
++            and bool(exact.optimal_states)
++        )
++        runs_by_algorithm: dict[str, list[HuboRunResult]] = {
++            "unguided_gibbs": [],
++            "beta_pt": [],
++            "two_d_beta_penalty_pt": [],
++        }
++
++        for seed in DEFAULT_SEEDS:
++            run_seed = int(seed + problem_index * 100)
++            runs_by_algorithm["unguided_gibbs"].append(
++                run_unguided_gibbs(
++                    problem,
++                    seed=run_seed,
++                    beta=max(config.beta_grid),
++                    penalty=config.target_penalty,
++                    sweeps=config.sweeps,
++                )
++            )
++            runs_by_algorithm["beta_pt"].append(
++                run_beta_parallel_tempering(
++                    problem,
++                    seed=run_seed,
++                    beta_grid=config.beta_grid,
++                    penalty=config.target_penalty,
++                    sweeps=config.sweeps,
++                    swap_interval=config.swap_interval,
++                )
++            )
++            runs_by_algorithm["two_d_beta_penalty_pt"].append(
++                Hubo2DParallelTemperingSampler(config).run(problem, seed=run_seed)
++            )
++
++        for algorithm, runs in runs_by_algorithm.items():
++            for run in runs:
++                best_energies[algorithm].append(run.best_energy)
++                optimum_hits[algorithm] += int(_energy_equal(run.best_energy, exact.optimum_energy))
++        run_count += len(DEFAULT_SEEDS)
++
++        per_instance_results.append(
++            {
++                "instance_id": problem.name,
++                "family": problem.family,
++                "n_vars": problem.n_vars,
++                "description": problem.description,
++                "exact_enumeration_checked": exact_ok,
++                "exact": exact.as_dict(),
++                "best_energy_by_algorithm": {
++                    algorithm: min(run.best_energy for run in runs)
++                    for algorithm, runs in runs_by_algorithm.items()
++                },
++                "mean_best_energy_by_algorithm": {
++                    algorithm: _mean(run.best_energy for run in runs)
++                    for algorithm, runs in runs_by_algorithm.items()
++                },
++                "optimum_hits_by_algorithm": {
++                    algorithm: sum(
++                        int(_energy_equal(run.best_energy, exact.optimum_energy))
++                        for run in runs
++                    )
++                    for algorithm, runs in runs_by_algorithm.items()
++                },
++                "runs": {
++                    algorithm: [run.as_dict() for run in runs]
++                    for algorithm, runs in runs_by_algorithm.items()
++                },
++            }
++        )
++
++    exact_enumeration_checked = all(
++        bool(row["exact_enumeration_checked"]) for row in per_instance_results
++    )
++    deltas = {
++        "two_d_vs_unguided_gibbs": _round_metric(
++            _mean(best_energies["two_d_beta_penalty_pt"])
++            - _mean(best_energies["unguided_gibbs"])
++        ),
++        "two_d_vs_beta_pt": _round_metric(
++            _mean(best_energies["two_d_beta_penalty_pt"])
++            - _mean(best_energies["beta_pt"])
++        ),
++    }
++    optimum_hit_rate = {
++        algorithm: _round_metric(hits / run_count)
++        for algorithm, hits in optimum_hits.items()
++    }
++    swap_acceptance_rates = _aggregate_swap_acceptance(per_instance_results)
++    hardware_speedup_claimed = False
++    hubo_2dpt_reference_ready = bool(
++        exact_enumeration_checked
++        and deltas["two_d_vs_unguided_gibbs"] <= 0.0
++        and deltas["two_d_vs_beta_pt"] <= 0.0
++        and not hardware_speedup_claimed
++    )
++    honest_verdict = (
++        COMPLETE_VERDICT
++        if hubo_2dpt_reference_ready
++        else BLOCKED_VERDICT
++        if not exact_enumeration_checked
++        else NOT_READY_VERDICT
++    )
++    flagged_adversarial = bool(
++        not exact_enumeration_checked
++        or hardware_speedup_claimed
++        or INFERENCE_SUBSTRATE != "cpu_hubo_2d_parallel_tempering_reference"
++    )
++    elapsed = _round_metric(time.perf_counter() - started) if duration_s is None else duration_s
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_5116_hubo_2dpt_sampling_reference.v469",
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "result_path": RESULT_RELATIVE_PATH,
++        "random_seed": DEFAULT_SEEDS[0],
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": elapsed,
++        "preconditions_checked": preconditions_checked,
++        "exact_enumeration_checked": exact_enumeration_checked,
++        "instance_families": {
++            "families": sorted({problem.family for problem in problems}),
++            "instances": [
++                {
++                    "instance_id": problem.name,
++                    "family": problem.family,
++                    "n_vars": problem.n_vars,
++                }
++                for problem in problems
++            ],
++        },
++        "beta_grid": list(config.beta_grid),
++        "penalty_grid": list(config.penalty_grid),
++        "swap_acceptance_rates": swap_acceptance_rates,
++        "best_energy_delta_vs_baselines": deltas,
++        "optimum_hit_rate": optimum_hit_rate,
++        "hubo_2dpt_reference_ready": hubo_2dpt_reference_ready,
++        "hardware_speedup_claimed": hardware_speedup_claimed,
++        "seeds_or_checksums": {
++            "seeds": list(DEFAULT_SEEDS),
++            "problem_family_checksum": _sha256_json(
++                {
++                    "problems": [
++                        {
++                            "name": problem.name,
++                            "family": problem.family,
++                            "n_vars": problem.n_vars,
++                            "constraint_constant": problem.constraint_constant,
++                            "constraint_terms": [
++                                {
++                                    "variables": list(term.variables),
++                                    "coefficient": term.coefficient,
++                                }
++                                for term in problem.constraint_terms
++                            ],
++                        }
++                        for problem in problems
++                    ]
++                }
++            ),
++        },
++        "flagged_adversarial": flagged_adversarial,
++        "tests_run": list(tests_run) if tests_run is not None else list(DEFAULT_TESTS_RUN),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-SAMPLE-5116", "SCENARIO-SAMPLE-5116"],
++        "sampler_config": {
++            "sweeps": config.sweeps,
++            "swap_interval": config.swap_interval,
++            "target_penalty": config.target_penalty,
++            "algorithms_compared": [
++                "unguided_gibbs",
++                "beta_pt",
++                "two_d_beta_penalty_pt",
++            ],
++        },
++        "per_instance_results": per_instance_results,
++        "methodology_note": (
++            "Tiny instances are exact-enumerated on CPU before sampler metrics are "
++            "reported. 2D PT readiness is a CPU reference gate only and does not "
++            "claim FPGA, p-bit, or other hardware speedup."
++        ),
++    }
++    checksum_payload = {
++        "experiment_id": artifact["experiment_id"],
++        "run_date": artifact["run_date"],
++        "beta_grid": artifact["beta_grid"],
++        "penalty_grid": artifact["penalty_grid"],
++        "per_instance_results": artifact["per_instance_results"],
++        "best_energy_delta_vs_baselines": artifact["best_energy_delta_vs_baselines"],
++        "optimum_hit_rate": artifact["optimum_hit_rate"],
++    }
++    artifact["reproducibility_checksum"] = _sha256_json(checksum_payload)
++    artifact["seeds_or_checksums"]["reproducibility_checksum"] = artifact["reproducibility_checksum"]
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5116 artifact violates the terminal contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required fields: {missing}")
++    _require(artifact.get("experiment_id") == EXPERIMENT_ID, "experiment_id")
++    _require(artifact.get("milestone") == MILESTONE, "milestone")
++    verdict = str(artifact.get("honest_verdict", ""))
++    _require(verdict.startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require(isinstance(artifact.get("duration_s"), (float, int)), "duration_s")
++    _require(float(artifact["duration_s"]) >= 0.0, "duration_s")
++    _require(_preconditions_valid(artifact.get("preconditions_checked")), "preconditions_checked")
++    _require(artifact.get("exact_enumeration_checked") is True, "exact_enumeration_checked")
++    families = artifact.get("instance_families", {})
++    _require(isinstance(families, Mapping) and len(families.get("families", [])) >= 2, "instance_families")
++    _require(list(artifact.get("beta_grid", [])) == list(Hubo2DPTConfig().beta_grid), "beta_grid")
++    _require(list(artifact.get("penalty_grid", [])) == list(Hubo2DPTConfig().penalty_grid), "penalty_grid")
++    _require(_swap_rates_valid(artifact.get("swap_acceptance_rates")), "swap_acceptance_rates")
++    deltas = artifact.get("best_energy_delta_vs_baselines", {})
++    _require(isinstance(deltas, Mapping), "best_energy_delta_vs_baselines")
++    _require(deltas.get("two_d_vs_unguided_gibbs", 1.0) <= 0.0, "best_energy_delta_vs_baselines")
++    _require(deltas.get("two_d_vs_beta_pt", 1.0) <= 0.0, "best_energy_delta_vs_baselines")
++    hit_rate = artifact.get("optimum_hit_rate", {})
++    _require(isinstance(hit_rate, Mapping), "optimum_hit_rate")
++    _require(
++        hit_rate.get("two_d_beta_penalty_pt", -1.0) >= hit_rate.get("unguided_gibbs", 2.0),
++        "optimum_hit_rate",
++    )
++    _require(artifact.get("hubo_2dpt_reference_ready") is True, "hubo_2dpt_reference_ready")
++    _require(artifact.get("hardware_speedup_claimed") is False, "hardware_speedup_claimed")
++    _require(_seeds_valid(artifact.get("seeds_or_checksums")), "seeds_or_checksums")
++    _require(artifact.get("flagged_adversarial") is False, "flagged_adversarial")
++    _require(isinstance(artifact.get("tests_run"), list) and bool(artifact["tests_run"]), "tests_run")
++    principles = artifact.get("field_principles", {})
++    _require(
++        isinstance(principles, Mapping)
++        and REQUIRED_ARTIFACT_FIELDS.issubset(principles),
++        "field_principles",
++    )
++    rows = artifact.get("per_instance_results", [])
++    _require(isinstance(rows, list) and bool(rows), "per_instance_results")
++    _require(all(row.get("exact_enumeration_checked") is True for row in rows), "per_instance_results")
++
++
++def write_artifact(
++    *,
++    root: str | Path | None = None,
++    output_path: str | Path | None = None,
++    run_date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build and write the Exp 5116 terminal artifact."""
++
++    repo_root = Path(root) if root is not None else REPO_ROOT
++    destination = Path(output_path) if output_path is not None else repo_root / RESULT_RELATIVE_PATH
++    artifact = build_artifact(run_date=run_date, duration_s=duration_s, tests_run=tests_run)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(
++    *,
++    root: str | Path | None = None,
++    date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """CLI-compatible entrypoint used by the wrapper script and tests."""
++
++    repo_root = Path(root) if root is not None else REPO_ROOT
++    write_artifact(
++        root=repo_root,
++        run_date=date,
++        duration_s=duration_s,
++        tests_run=tests_run,
++    )
++    return repo_root / RESULT_RELATIVE_PATH
++
++
++def _preconditions_checked() -> list[JsonDict]:
++    return [
++        {
++            "resource": "local_cpu_runtime",
++            "available": True,
++            "detail": "NumPy CPU reference uses local process execution only.",
++        },
++        {
++            "resource": "numpy_rng",
++            "available": True,
++            "detail": f"numpy {np.__version__} default_rng deterministic seeds are used.",
++        },
++        {
++            "resource": "hardware_execution",
++            "available": False,
++            "not_required": True,
++            "detail": "No FPGA, p-bit hardware, GPU, or network resource is required or invoked.",
++        },
++    ]
++
++
++def _aggregate_swap_acceptance(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    beta_pt_beta = SwapStats()
++    two_d_beta = SwapStats()
++    two_d_penalty = SwapStats()
++    for row in rows:
++        for run in row["runs"]["beta_pt"]:
++            beta_pt_beta = _add_stats(beta_pt_beta, run["swap_stats"]["beta_axis"])
++        for run in row["runs"]["two_d_beta_penalty_pt"]:
++            two_d_beta = _add_stats(two_d_beta, run["swap_stats"]["beta_axis"])
++            two_d_penalty = _add_stats(two_d_penalty, run["swap_stats"]["penalty_axis"])
++    return {
++        "beta_pt": {
++            "beta_axis": beta_pt_beta.as_dict(),
++            "penalty_axis": SwapStats().as_dict(),
++        },
++        "two_d_beta_penalty_pt": {
++            "beta_axis": two_d_beta.as_dict(),
++            "penalty_axis": two_d_penalty.as_dict(),
++        },
++    }
++
++
++def _add_stats(total: SwapStats, value: Mapping[str, Any]) -> SwapStats:
++    return SwapStats(
++        attempts=total.attempts + int(value["attempts"]),
++        accepted=total.accepted + int(value["accepted"]),
++    )
++
++
++def _preconditions_valid(value: Any) -> bool:
++    if not isinstance(value, list) or not value:
++        return False
++    for row in value:
++        if not isinstance(row, Mapping):
++            return False
++        if row.get("available") is not True and row.get("not_required") is not True:
++            return False
++    return True
++
++
++def _swap_rates_valid(value: Any) -> bool:
++    if not isinstance(value, Mapping):
++        return False
++    two_d = value.get("two_d_beta_penalty_pt")
++    beta_pt = value.get("beta_pt")
++    if not isinstance(two_d, Mapping) or not isinstance(beta_pt, Mapping):
++        return False
++    for stats in (
++        beta_pt.get("beta_axis"),
++        two_d.get("beta_axis"),
++        two_d.get("penalty_axis"),
++    ):
++        if not isinstance(stats, Mapping):
++            return False
++        attempts = stats.get("attempts")
++        accepted = stats.get("accepted")
++        rate = stats.get("acceptance_rate")
++        if not isinstance(attempts, int) or attempts <= 0:
++            return False
++        if not isinstance(accepted, int) or not 0 <= accepted <= attempts:
++            return False
++        if not isinstance(rate, (float, int)) or not 0.0 <= float(rate) <= 1.0:
++            return False
++    return True
++
++
++def _seeds_valid(value: Any) -> bool:
++    return (
++        isinstance(value, Mapping)
++        and list(value.get("seeds", [])) == list(DEFAULT_SEEDS)
++        and isinstance(value.get("problem_family_checksum"), str)
++        and len(value["problem_family_checksum"]) == 64
++        and isinstance(value.get("reproducibility_checksum"), str)
++        and len(value["reproducibility_checksum"]) == 64
++    )
++
++
++def _mean(values: Sequence[float] | Any) -> float:
++    numbers = [float(value) for value in values]
++    return sum(numbers) / len(numbers)
++
++
++def _round_metric(value: float) -> float:
++    return round(float(value), 6)
++
++
++def _energy_equal(left: float, right: float) -> bool:
++    return abs(float(left) - float(right)) <= 1e-9
++
++
++def _sha256_json(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/python/carnot/samplers/hubo_2dpt.py b/python/carnot/samplers/hubo_2dpt.py
+new file mode 100644
+index 0000000000..9e53d4b89f
+--- /dev/null
++++ b/python/carnot/samplers/hubo_2dpt.py
+@@ -0,0 +1,665 @@
++"""CPU HUBO/p-spin sampling with beta/penalty parallel tempering.
++
++Spec refs: REQ-SAMPLE-5116, SCENARIO-SAMPLE-5116.
++
++The sampler in this file is intentionally small and exact-checkable. It targets
++direct high-order parity energies from Exp 5102, keeps every state as binary
++bits, and evaluates p-spin products directly instead of reducing the problem to
++pairwise QUBO gadgets. That makes it a CPU algorithm reference, not a hardware
++claim.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import itertools
++import math
++from typing import Any
++
++import numpy as np
++
++from carnot.experiment_5102_hubo_pspin_direct_energy import (
++    build_hubo_encoding,
++    build_instance_family,
++)
++
++
++@dataclass(frozen=True)
++class HuboTerm:
++    """One p-spin monomial over binary variables using bipolar products.
++
++    Binary bit ``0`` maps to spin ``+1`` and bit ``1`` maps to spin ``-1``.
++    This is the same convention used by the Exp 5102 direct parity encoding.
++    """
++
++    variables: tuple[int, ...]
++    coefficient: float
++
++
++@dataclass(frozen=True)
++class HuboProblem:
++    """Tiny direct HUBO/p-spin constraint problem for CPU reference sampling."""
++
++    name: str
++    family: str
++    n_vars: int
++    constraint_constant: float
++    constraint_terms: tuple[HuboTerm, ...]
++    objective_constant: float = 0.0
++    objective_terms: tuple[HuboTerm, ...] = ()
++    description: str = ""
++
++
++@dataclass(frozen=True)
++class ExactHuboEnumeration:
++    """Exhaustive optimum and energy histogram for a tiny HUBO instance."""
++
++    optimum_energy: float
++    optimal_states: tuple[tuple[int, ...], ...]
++    energy_distribution: Mapping[float, int]
++    all_states: tuple[tuple[int, ...], ...]
++
++    def as_dict(self) -> dict[str, Any]:
++        """Return JSON-safe exact-enumeration evidence."""
++
++        return {
++            "optimum_energy": self.optimum_energy,
++            "optimal_states": [list(state) for state in self.optimal_states],
++            "n_optimal_states": len(self.optimal_states),
++            "energy_distribution": [
++                {"energy": energy, "count": count}
++                for energy, count in sorted(self.energy_distribution.items())
++            ],
++            "n_states_enumerated": len(self.all_states),
++        }
++
++
++@dataclass(frozen=True)
++class SwapStats:
++    """Attempt and acceptance counters for one swap axis."""
++
++    attempts: int = 0
++    accepted: int = 0
++
++    @property
++    def acceptance_rate(self) -> float:
++        """Return accepted / attempted, using zero for an unused axis."""
++
++        if self.attempts == 0:
++            return 0.0
++        return float(self.accepted / self.attempts)
++
++    def with_attempt(self, *, accepted: bool) -> "SwapStats":
++        """Return a new counter with one additional swap attempt."""
++
++        return SwapStats(
++            attempts=self.attempts + 1,
++            accepted=self.accepted + int(accepted),
++        )
++
++    def as_dict(self) -> dict[str, Any]:
++        """Return JSON-safe swap counters."""
++
++        return {
++            "attempts": self.attempts,
++            "accepted": self.accepted,
++            "acceptance_rate": round(self.acceptance_rate, 6),
++        }
++
++
++@dataclass(frozen=True)
++class HuboRunResult:
++    """Sampler result measured against the target high-penalty HUBO energy."""
++
++    algorithm: str
++    best_energy: float
++    final_energy: float
++    best_state: tuple[int, ...]
++    final_state: tuple[int, ...]
++    energy_trace: tuple[float, ...]
++    swap_stats: Mapping[str, SwapStats]
++    beta_grid: tuple[float, ...]
++    penalty_grid: tuple[float, ...]
++
++    def as_dict(self) -> dict[str, Any]:
++        """Return deterministic, JSON-safe sampler output."""
++
++        return {
++            "algorithm": self.algorithm,
++            "best_energy": self.best_energy,
++            "final_energy": self.final_energy,
++            "best_state": list(self.best_state),
++            "final_state": list(self.final_state),
++            "energy_trace": list(self.energy_trace),
++            "swap_stats": {
++                axis: stats.as_dict()
++                for axis, stats in sorted(self.swap_stats.items())
++            },
++            "beta_grid": list(self.beta_grid),
++            "penalty_grid": list(self.penalty_grid),
++        }
++
++
++@dataclass(frozen=True)
++class Hubo2DPTConfig:
++    """Configuration for the CPU HUBO beta/penalty replica grid."""
++
++    beta_grid: tuple[float, ...] = (0.35, 0.8, 1.6, 3.0)
++    penalty_grid: tuple[float, ...] = (0.5, 1.0, 2.0, 4.0)
++    sweeps: int = 48
++    swap_interval: int = 1
++
++    def __post_init__(self) -> None:
++        """Validate grids before any random state is drawn."""
++
++        _validate_positive_grid(self.beta_grid, "beta_grid")
++        _validate_positive_grid(self.penalty_grid, "penalty_grid")
++        if self.sweeps < 1:
++            raise ValueError("sweeps must be at least 1")
++        if self.swap_interval < 1:
++            raise ValueError("swap_interval must be at least 1")
++
++    @property
++    def target_penalty(self) -> float:
++        """Return the penalty used for final utility and exact checks."""
++
++        return max(self.penalty_grid)
++
++
++class Hubo2DParallelTemperingSampler:
++    """Serial CPU 2D parallel tempering over beta and constraint penalty."""
++
++    def __init__(self, config: Hubo2DPTConfig | None = None) -> None:
++        """Store the immutable sampler configuration."""
++
++        self.config = config or Hubo2DPTConfig()
++
++    def run(self, problem: HuboProblem, *, seed: int) -> HuboRunResult:
++        """Run a 2D beta/penalty replica grid with adjacent-axis swaps."""
++
++        rng = np.random.default_rng(seed)
++        beta_grid = self.config.beta_grid
++        penalty_grid = self.config.penalty_grid
++        states = rng.integers(
++            0,
++            2,
++            size=(len(beta_grid), len(penalty_grid), problem.n_vars),
++            dtype=np.int8,
++        )
++        energies = _slot_energies(problem, states, penalty_grid)
++        best_energy, best_state = _best_target_state(
++            problem,
++            states,
++            target_penalty=self.config.target_penalty,
++        )
++        beta_stats = SwapStats()
++        penalty_stats = SwapStats()
++        trace: list[float] = []
++
++        for sweep in range(1, self.config.sweeps + 1):
++            for beta_index, beta in enumerate(beta_grid):
++                for penalty_index, penalty in enumerate(penalty_grid):
++                    states[beta_index, penalty_index] = _gibbs_sweep(
++                        problem,
++                        states[beta_index, penalty_index],
++                        beta=beta,
++                        penalty=penalty,
++                        rng=rng,
++                    )
++                    energies[beta_index, penalty_index] = evaluate_hubo_energy(
++                        problem,
++                        states[beta_index, penalty_index],
++                        penalty=penalty,
++                    )
++
++            if sweep % self.config.swap_interval == 0:
++                states, energies, beta_stats = _swap_beta_axis(
++                    problem,
++                    states,
++                    energies,
++                    beta_grid=beta_grid,
++                    penalty_grid=penalty_grid,
++                    stats=beta_stats,
++                    rng=rng,
++                    phase=(sweep // self.config.swap_interval) % 2,
++                )
++                states, energies, penalty_stats = _swap_penalty_axis(
++                    problem,
++                    states,
++                    energies,
++                    beta_grid=beta_grid,
++                    penalty_grid=penalty_grid,
++                    stats=penalty_stats,
++                    rng=rng,
++                    phase=(sweep // self.config.swap_interval) % 2,
++                )
++
++            current_best, current_state = _best_target_state(
++                problem,
++                states,
++                target_penalty=self.config.target_penalty,
++            )
++            if current_best < best_energy:
++                best_energy = current_best
++                best_state = current_state
++            trace.append(best_energy)
++
++        cold_beta_index = len(beta_grid) - 1
++        target_penalty_index = len(penalty_grid) - 1
++        final_state = tuple(int(value) for value in states[cold_beta_index, target_penalty_index])
++        final_energy = evaluate_hubo_energy(problem, final_state, penalty=self.config.target_penalty)
++        return HuboRunResult(
++            algorithm="two_d_beta_penalty_pt",
++            best_energy=best_energy,
++            final_energy=final_energy,
++            best_state=best_state,
++            final_state=final_state,
++            energy_trace=tuple(trace),
++            swap_stats={
++                "beta_axis": beta_stats,
++                "penalty_axis": penalty_stats,
++            },
++            beta_grid=beta_grid,
++            penalty_grid=penalty_grid,
++        )
++
++
++def build_synthetic_hubo_families() -> tuple[HuboProblem, ...]:
++    """Return tiny parity HUBO families reused from the exact Exp 5102 encoder."""
++
++    problems: list[HuboProblem] = []
++    for instance in build_instance_family():
++        encoding = build_hubo_encoding(instance)
++        family = (
++            "sat_high_order_parity"
++            if "frustrated" not in instance.instance_id
++            else "frustrated_high_order_parity"
++        )
++        terms = tuple(
++            HuboTerm(variables=tuple(term), coefficient=float(coefficient))
++            for term, coefficient in sorted(encoding.terms.items())
++        )
++        problems.append(
++            HuboProblem(
++                name=instance.instance_id,
++                family=family,
++                n_vars=instance.n_vars,
++                constraint_constant=float(encoding.constant),
++                constraint_terms=terms,
++                description=instance.description,
++            )
++        )
++    return tuple(problems)
++
++
++def evaluate_hubo_energy(
++    problem: HuboProblem,
++    state: Sequence[int] | np.ndarray,
++    *,
++    penalty: float,
++) -> float:
++    """Evaluate objective plus ``penalty * constraint`` for one binary state."""
++
++    if penalty < 0.0:
++        raise ValueError("penalty must be nonnegative")
++    bits = tuple(int(value) for value in state)
++    if len(bits) != problem.n_vars:
++        raise ValueError("state length does not match problem variables")
++    objective = problem.objective_constant + _evaluate_terms(problem.objective_terms, bits)
++    constraint = problem.constraint_constant + _evaluate_terms(problem.constraint_terms, bits)
++    return _round_energy(objective + penalty * constraint)
++
++
++def exact_enumerate(problem: HuboProblem, *, penalty: float) -> ExactHuboEnumeration:
++    """Enumerate every binary state for a tiny HUBO instance."""
++
++    all_states = tuple(itertools.product((0, 1), repeat=problem.n_vars))
++    energies = {
++        state: evaluate_hubo_energy(problem, state, penalty=penalty)
++        for state in all_states
++    }
++    optimum = min(energies.values())
++    optimal_states = tuple(
++        sorted(state for state, energy in energies.items() if energy == optimum)
++    )
++    distribution = Counter(energies.values())
++    return ExactHuboEnumeration(
++        optimum_energy=optimum,
++        optimal_states=optimal_states,
++        energy_distribution=dict(sorted(distribution.items())),
++        all_states=all_states,
++    )
++
++
++def metropolis_swap_log_acceptance(
++    problem: HuboProblem,
++    left_state: Sequence[int],
++    right_state: Sequence[int],
++    *,
++    beta_left: float,
++    penalty_left: float,
++    beta_right: float,
++    penalty_right: float,
++) -> float:
++    """Return the log Metropolis ratio for swapping two fixed parameter slots."""
++
++    left_current = evaluate_hubo_energy(problem, left_state, penalty=penalty_left)
++    right_current = evaluate_hubo_energy(problem, right_state, penalty=penalty_right)
++    left_after = evaluate_hubo_energy(problem, right_state, penalty=penalty_left)
++    right_after = evaluate_hubo_energy(problem, left_state, penalty=penalty_right)
++    return (
++        -beta_left * left_after
++        - beta_right * right_after
++        + beta_left * left_current
++        + beta_right * right_current
++    )
++
++
++def run_unguided_gibbs(
++    problem: HuboProblem,
++    *,
++    seed: int,
++    beta: float,
++    penalty: float,
++    sweeps: int,
++) -> HuboRunResult:
++    """Run a single fixed-parameter Gibbs chain as the unguided baseline."""
++
++    if beta <= 0.0:
++        raise ValueError("beta must be positive")
++    if sweeps < 1:
++        raise ValueError("sweeps must be at least 1")
++    rng = np.random.default_rng(seed)
++    state = rng.integers(0, 2, size=problem.n_vars, dtype=np.int8)
++    best_state = tuple(int(value) for value in state)
++    best_energy = evaluate_hubo_energy(problem, best_state, penalty=penalty)
++    trace: list[float] = []
++
++    for _ in range(sweeps):
++        state = _gibbs_sweep(problem, state, beta=beta, penalty=penalty, rng=rng)
++        energy = evaluate_hubo_energy(problem, state, penalty=penalty)
++        if energy < best_energy:
++            best_energy = energy
++            best_state = tuple(int(value) for value in state)
++        trace.append(best_energy)
++
++    final_state = tuple(int(value) for value in state)
++    return HuboRunResult(
++        algorithm="unguided_gibbs",
++        best_energy=best_energy,
++        final_energy=evaluate_hubo_energy(problem, final_state, penalty=penalty),
++        best_state=best_state,
++        final_state=final_state,
++        energy_trace=tuple(trace),
++        swap_stats={
++            "beta_axis": SwapStats(),
++            "penalty_axis": SwapStats(),
++        },
++        beta_grid=(beta,),
++        penalty_grid=(penalty,),
++    )
++
++
++def run_beta_parallel_tempering(
++    problem: HuboProblem,
++    *,
++    seed: int,
++    beta_grid: Sequence[float],
++    penalty: float,
++    sweeps: int,
++    swap_interval: int = 1,
++) -> HuboRunResult:
++    """Run one-dimensional beta parallel tempering at fixed penalty."""
++
++    beta_tuple = tuple(float(value) for value in beta_grid)
++    _validate_positive_grid(beta_tuple, "beta_grid")
++    if sweeps < 1:
++        raise ValueError("sweeps must be at least 1")
++    if swap_interval < 1:
++        raise ValueError("swap_interval must be at least 1")
++
++    rng = np.random.default_rng(seed)
++    states = rng.integers(0, 2, size=(len(beta_tuple), problem.n_vars), dtype=np.int8)
++    energies = np.asarray(
++        [evaluate_hubo_energy(problem, state, penalty=penalty) for state in states],
++        dtype=np.float64,
++    )
++    best_energy, best_state = _best_target_state_1d(problem, states, target_penalty=penalty)
++    beta_stats = SwapStats()
++    trace: list[float] = []
++
++    for sweep in range(1, sweeps + 1):
++        for beta_index, beta in enumerate(beta_tuple):
++            states[beta_index] = _gibbs_sweep(
++                problem,
++                states[beta_index],
++                beta=beta,
++                penalty=penalty,
++                rng=rng,
++            )
++            energies[beta_index] = evaluate_hubo_energy(problem, states[beta_index], penalty=penalty)
++        if sweep % swap_interval == 0:
++            phase = (sweep // swap_interval) % 2
++            for left in range(phase, len(beta_tuple) - 1, 2):
++                right = left + 1
++                log_accept = metropolis_swap_log_acceptance(
++                    problem,
++                    states[left],
++                    states[right],
++                    beta_left=beta_tuple[left],
++                    penalty_left=penalty,
++                    beta_right=beta_tuple[right],
++                    penalty_right=penalty,
++                )
++                accepted = _accept_log_ratio(log_accept, rng)
++                beta_stats = beta_stats.with_attempt(accepted=accepted)
++                if accepted:
++                    states[[left, right]] = states[[right, left]]
++                    energies[[left, right]] = energies[[right, left]]
++
++        current_best, current_state = _best_target_state_1d(problem, states, target_penalty=penalty)
++        if current_best < best_energy:
++            best_energy = current_best
++            best_state = current_state
++        trace.append(best_energy)
++
++    final_state = tuple(int(value) for value in states[-1])
++    return HuboRunResult(
++        algorithm="beta_pt",
++        best_energy=best_energy,
++        final_energy=evaluate_hubo_energy(problem, final_state, penalty=penalty),
++        best_state=best_state,
++        final_state=final_state,
++        energy_trace=tuple(trace),
++        swap_stats={
++            "beta_axis": beta_stats,
++            "penalty_axis": SwapStats(),
++        },
++        beta_grid=beta_tuple,
++        penalty_grid=(penalty,),
++    )
++
++
++def _validate_positive_grid(values: Sequence[float], name: str) -> None:
++    if len(values) < 1:
++        raise ValueError(f"{name} must not be empty")
++    if any(value <= 0.0 for value in values):
++        raise ValueError(f"{name} values must be positive")
++    if tuple(values) != tuple(sorted(values)):
++        raise ValueError(f"{name} must be sorted ascending")
++
++
++def _evaluate_terms(terms: Sequence[HuboTerm], bits: Sequence[int]) -> float:
++    total = 0.0
++    for term in terms:
++        product = 1.0
++        for variable in term.variables:
++            product *= 1.0 if bits[variable] == 0 else -1.0
++        total += term.coefficient * product
++    return total
++
++
++def _round_energy(value: float) -> float:
++    return round(float(value), 12)
++
++
++def _gibbs_sweep(
++    problem: HuboProblem,
++    state: np.ndarray,
++    *,
++    beta: float,
++    penalty: float,
++    rng: np.random.Generator,
++) -> np.ndarray:
++    next_state = np.asarray(state, dtype=np.int8).copy()
++    for variable in range(problem.n_vars):
++        candidate_zero = next_state.copy()
++        candidate_one = next_state.copy()
++        candidate_zero[variable] = 0
++        candidate_one[variable] = 1
++        energy_zero = evaluate_hubo_energy(problem, candidate_zero, penalty=penalty)
++        energy_one = evaluate_hubo_energy(problem, candidate_one, penalty=penalty)
++        probability_one = _logistic(-beta * (energy_one - energy_zero))
++        next_state[variable] = 1 if rng.random() < probability_one else 0
++    return next_state
++
++
++def _logistic(value: float) -> float:
++    clipped = min(60.0, max(-60.0, value))
++    return float(1.0 / (1.0 + math.exp(-clipped)))
++
++
++def _slot_energies(
++    problem: HuboProblem,
++    states: np.ndarray,
++    penalty_grid: Sequence[float],
++) -> np.ndarray:
++    energies = np.zeros(states.shape[:2], dtype=np.float64)
++    for beta_index in range(states.shape[0]):
++        for penalty_index, penalty in enumerate(penalty_grid):
++            energies[beta_index, penalty_index] = evaluate_hubo_energy(
++                problem,
++                states[beta_index, penalty_index],
++                penalty=penalty,
++            )
++    return energies
++
++
++def _best_target_state(
++    problem: HuboProblem,
++    states: np.ndarray,
++    *,
++    target_penalty: float,
++) -> tuple[float, tuple[int, ...]]:
++    best_energy: float | None = None
++    best_state: tuple[int, ...] | None = None
++    for state in states.reshape((-1, problem.n_vars)):
++        state_tuple = tuple(int(value) for value in state)
++        energy = evaluate_hubo_energy(problem, state_tuple, penalty=target_penalty)
++        if best_energy is None or energy < best_energy:
++            best_energy = energy
++            best_state = state_tuple
++    if best_energy is None or best_state is None:
++        raise ValueError("state grid must not be empty")
++    return best_energy, best_state
++
++
++def _best_target_state_1d(
++    problem: HuboProblem,
++    states: np.ndarray,
++    *,
++    target_penalty: float,
++) -> tuple[float, tuple[int, ...]]:
++    best_energy: float | None = None
++    best_state: tuple[int, ...] | None = None
++    for state in states:
++        state_tuple = tuple(int(value) for value in state)
++        energy = evaluate_hubo_energy(problem, state_tuple, penalty=target_penalty)
++        if best_energy is None or energy < best_energy:
++            best_energy = energy
++            best_state = state_tuple
++    if best_energy is None or best_state is None:
++        raise ValueError("state ladder must not be empty")
++    return best_energy, best_state
++
++
++def _swap_beta_axis(
++    problem: HuboProblem,
++    states: np.ndarray,
++    energies: np.ndarray,
++    *,
++    beta_grid: Sequence[float],
++    penalty_grid: Sequence[float],
++    stats: SwapStats,
++    rng: np.random.Generator,
++    phase: int,
++) -> tuple[np.ndarray, np.ndarray, SwapStats]:
++    for penalty_index, penalty in enumerate(penalty_grid):
++        for left in range(phase, len(beta_grid) - 1, 2):
++            right = left + 1
++            log_accept = metropolis_swap_log_acceptance(
++                problem,
++                states[left, penalty_index],
++                states[right, penalty_index],
++                beta_left=beta_grid[left],
++                penalty_left=penalty,
++                beta_right=beta_grid[right],
++                penalty_right=penalty,
++            )
++            accepted = _accept_log_ratio(log_accept, rng)
++            stats = stats.with_attempt(accepted=accepted)
++            if accepted:
++                states[[left, right], penalty_index] = states[[right, left], penalty_index]
++                energies[[left, right], penalty_index] = energies[[right, left], penalty_index]
++    return states, energies, stats
++
++
++def _swap_penalty_axis(
++    problem: HuboProblem,
++    states: np.ndarray,
++    energies: np.ndarray,
++    *,
++    beta_grid: Sequence[float],
++    penalty_grid: Sequence[float],
++    stats: SwapStats,
++    rng: np.random.Generator,
++    phase: int,
++) -> tuple[np.ndarray, np.ndarray, SwapStats]:
++    for beta_index, beta in enumerate(beta_grid):
++        for lower in range(phase, len(penalty_grid) - 1, 2):
++            upper = lower + 1
++            left_state = states[beta_index, lower].copy()
++            right_state = states[beta_index, upper].copy()
++            log_accept = metropolis_swap_log_acceptance(
++                problem,
++                left_state,
++                right_state,
++                beta_left=beta,
++                penalty_left=penalty_grid[lower],
++                beta_right=beta,
++                penalty_right=penalty_grid[upper],
++            )
++            accepted = _accept_log_ratio(log_accept, rng)
++            stats = stats.with_attempt(accepted=accepted)
++            if accepted:
++                states[beta_index, lower] = right_state
++                states[beta_index, upper] = left_state
++                energies[beta_index, lower] = evaluate_hubo_energy(
++                    problem,
++                    states[beta_index, lower],
++                    penalty=penalty_grid[lower],
++                )
++                energies[beta_index, upper] = evaluate_hubo_energy(
++                    problem,
++                    states[beta_index, upper],
++                    penalty=penalty_grid[upper],
++                )
++    return states, energies, stats
++
++
++def _accept_log_ratio(log_accept: float, rng: np.random.Generator) -> bool:
++    if log_accept >= 0.0:
++        return True
++    return bool(math.log(max(rng.random(), 1e-300)) < log_accept)
+diff --git a/results/experiment_5116_hubo_2dpt_sampling_reference_v469.json b/results/experiment_5116_hubo_2dpt_sampling_reference_v469.json
+new file mode 100644
+index 0000000000..bf7a77e338
+--- /dev/null
++++ b/results/experiment_5116_hubo_2dpt_sampling_reference_v469.json
+@@ -0,0 +1,3590 @@
++{
++  "best_energy_delta_vs_baselines": {
++    "two_d_vs_beta_pt": 0.0,
++    "two_d_vs_unguided_gibbs": -2.0
++  },
++  "beta_grid": [
++    0.35,
++    0.8,
++    1.6,
++    3.0
++  ],
++  "duration_s": 0.649255,
++  "exact_enumeration_checked": true,
++  "experiment_id": "exp5116-hubo-2dpt-sampling-reference-v469",
++  "field_principles": {
++    "best_energy_delta_vs_baselines": "utility measurement",
++    "beta_grid": "algorithm provenance",
++    "duration_s": "timing accountability",
++    "exact_enumeration_checked": "correctness",
++    "experiment_id": "traceability",
++    "field_principles": "principle annotations for top-level fields",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "hardware_speedup_claimed": "no false hardware claim",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "hubo_2dpt_reference_ready": "decision bool",
++    "inference_substrate": "substrate honesty",
++    "instance_families": "distribution transparency",
++    "methodology_note": "claim-boundary explanation",
++    "milestone": "milestone accountability",
++    "optimum_hit_rate": "exact-check utility",
++    "penalty_grid": "algorithm provenance",
++    "per_instance_results": "per-distribution evidence, not only aggregates",
++    "preconditions_checked": "sampler preflight accountability",
++    "random_seed": "deterministic replay anchor",
++    "reproducibility_checksum": "content-addressed reproducibility",
++    "result_path": "artifact reachability",
++    "run_date": "run labeling",
++    "sampler_config": "algorithm replay parameters",
++    "schema": "artifact schema stability",
++    "seeds_or_checksums": "reproducibility",
++    "spec_refs": "OpenSpec traceability",
++    "swap_acceptance_rates": "mixing evidence",
++    "tests_run": "verification evidence"
++  },
++  "flagged_adversarial": false,
++  "hardware_speedup_claimed": false,
++  "honest_verdict": "complete_hubo_2dpt_reference_ready_exact_checked_cpu",
++  "hubo_2dpt_reference_ready": true,
++  "inference_substrate": "cpu_hubo_2d_parallel_tempering_reference",
++  "instance_families": {
++    "families": [
++      "frustrated_high_order_parity",
++      "sat_high_order_parity"
++    ],
++    "instances": [
++      {
++        "family": "sat_high_order_parity",
++        "instance_id": "xor3_chain_sat",
++        "n_vars": 4
++      },
++      {
++        "family": "frustrated_high_order_parity",
++        "instance_id": "xor3_xor4_frustrated",
++        "n_vars": 4
++      },
++      {
++        "family": "sat_high_order_parity",
++        "instance_id": "xor4_planted_overlap",
++        "n_vars": 5
++      }
++    ]
++  },
++  "methodology_note": "Tiny instances are exact-enumerated on CPU before sampler metrics are reported. 2D PT readiness is a CPU reference gate only and does not claim FPGA, p-bit, or other hardware speedup.",
++  "milestone": "2026.07.469",
++  "optimum_hit_rate": {
++    "beta_pt": 1.0,
++    "two_d_beta_penalty_pt": 1.0,
++    "unguided_gibbs": 0.5
++  },
++  "penalty_grid": [
++    0.5,
++    1.0,
++    2.0,
++    4.0
++  ],
++  "per_instance_results": [
++    {
++      "best_energy_by_algorithm": {
++        "beta_pt": 0.0,
++        "two_d_beta_penalty_pt": 0.0,
++        "unguided_gibbs": 0.0
++      },
++      "description": "Three overlapping 3-XOR clauses with nonempty exact optimum set.",
++      "exact": {
++        "energy_distribution": [
++          {
++            "count": 2,
++            "energy": 0.0
++          },
++          {
++            "count": 6,
++            "energy": 4.0
++          },
++          {
++            "count": 6,
++            "energy": 8.0
++          },
++          {
++            "count": 2,
++            "energy": 12.0
++          }
++        ],
++        "n_optimal_states": 2,
++        "n_states_enumerated": 16,
++        "optimal_states": [
++          [
++            0,
++            1,
++            0,
++            1
++          ],
++          [
++            1,
++            0,
++            0,
++            0
++          ]
++        ],
++        "optimum_energy": 0.0
++      },
++      "exact_enumeration_checked": true,
++      "family": "sat_high_order_parity",
++      "instance_id": "xor3_chain_sat",
++      "mean_best_energy_by_algorithm": {
++        "beta_pt": 0.0,
++        "two_d_beta_penalty_pt": 0.0,
++        "unguided_gibbs": 3.0
++      },
++      "n_vars": 4,
++      "optimum_hits_by_algorithm": {
++        "beta_pt": 4,
++        "two_d_beta_penalty_pt": 4,
++        "unguided_gibbs": 1
++      },
++      "runs": {
++        "beta_pt": [
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.902778,
++                "accepted": 65,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.819444,
++                "accepted": 59,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.722222,
++                "accepted": 52,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.805556,
++                "accepted": 58,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ],
++        "two_d_beta_penalty_pt": [
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.829861,
++                "accepted": 239,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.78125,
++                "accepted": 225,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.753472,
++                "accepted": 217,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.791667,
++                "accepted": 228,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.791667,
++                "accepted": 228,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.809028,
++                "accepted": 233,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              1,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.819444,
++                "accepted": 236,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.760417,
++                "accepted": 219,
++                "attempts": 288
++              }
++            }
++          }
++        ],
++        "unguided_gibbs": [
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              0,
++              1,
++              1
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ]
++      }
++    },
++    {
++      "best_energy_by_algorithm": {
++        "beta_pt": 4.0,
++        "two_d_beta_penalty_pt": 4.0,
++        "unguided_gibbs": 4.0
++      },
++      "description": "Four 3-XOR equations force even 4-parity, while a 4-XOR clause asks for odd parity.",
++      "exact": {
++        "energy_distribution": [
++          {
++            "count": 5,
++            "energy": 4.0
++          },
++          {
++            "count": 10,
++            "energy": 12.0
++          },
++          {
++            "count": 1,
++            "energy": 20.0
++          }
++        ],
++        "n_optimal_states": 5,
++        "n_states_enumerated": 16,
++        "optimal_states": [
++          [
++            0,
++            0,
++            0,
++            0
++          ],
++          [
++            0,
++            1,
++            1,
++            1
++          ],
++          [
++            1,
++            0,
++            1,
++            1
++          ],
++          [
++            1,
++            1,
++            0,
++            1
++          ],
++          [
++            1,
++            1,
++            1,
++            0
++          ]
++        ],
++        "optimum_energy": 4.0
++      },
++      "exact_enumeration_checked": true,
++      "family": "frustrated_high_order_parity",
++      "instance_id": "xor3_xor4_frustrated",
++      "mean_best_energy_by_algorithm": {
++        "beta_pt": 4.0,
++        "two_d_beta_penalty_pt": 4.0,
++        "unguided_gibbs": 4.0
++      },
++      "n_vars": 4,
++      "optimum_hits_by_algorithm": {
++        "beta_pt": 4,
++        "two_d_beta_penalty_pt": 4,
++        "unguided_gibbs": 4
++      },
++      "runs": {
++        "beta_pt": [
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 1.0,
++                "accepted": 72,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              0,
++              1,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              0,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.972222,
++                "accepted": 70,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.958333,
++                "accepted": 69,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              0,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.944444,
++                "accepted": 68,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ],
++        "two_d_beta_penalty_pt": [
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.885417,
++                "accepted": 255,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.857639,
++                "accepted": 247,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              0,
++              1,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.854167,
++                "accepted": 246,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.881944,
++                "accepted": 254,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.923611,
++                "accepted": 266,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.930556,
++                "accepted": 268,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              1,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.878472,
++                "accepted": 253,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.888889,
++                "accepted": 256,
++                "attempts": 288
++              }
++            }
++          }
++        ],
++        "unguided_gibbs": [
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ]
++      }
++    },
++    {
++      "best_energy_by_algorithm": {
++        "beta_pt": 0.0,
++        "two_d_beta_penalty_pt": 0.0,
++        "unguided_gibbs": 0.0
++      },
++      "description": "Overlapping 4-XOR clauses with a planted-compatible optimum.",
++      "exact": {
++        "energy_distribution": [
++          {
++            "count": 4,
++            "energy": 0.0
++          },
++          {
++            "count": 12,
++            "energy": 4.0
++          },
++          {
++            "count": 12,
++            "energy": 8.0
++          },
++          {
++            "count": 4,
++            "energy": 12.0
++          }
++        ],
++        "n_optimal_states": 4,
++        "n_states_enumerated": 32,
++        "optimal_states": [
++          [
++            0,
++            0,
++            1,
++            0,
++            0
++          ],
++          [
++            0,
++            1,
++            1,
++            1,
++            0
++          ],
++          [
++            1,
++            0,
++            0,
++            0,
++            1
++          ],
++          [
++            1,
++            1,
++            0,
++            1,
++            1
++          ]
++        ],
++        "optimum_energy": 0.0
++      },
++      "exact_enumeration_checked": true,
++      "family": "sat_high_order_parity",
++      "instance_id": "xor4_planted_overlap",
++      "mean_best_energy_by_algorithm": {
++        "beta_pt": 0.0,
++        "two_d_beta_penalty_pt": 0.0,
++        "unguided_gibbs": 3.0
++      },
++      "n_vars": 5,
++      "optimum_hits_by_algorithm": {
++        "beta_pt": 4,
++        "two_d_beta_penalty_pt": 4,
++        "unguided_gibbs": 1
++      },
++      "runs": {
++        "beta_pt": [
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.805556,
++                "accepted": 58,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              0,
++              1,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.777778,
++                "accepted": 56,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.833333,
++                "accepted": 60,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "beta_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              1,
++              0,
++              0,
++              0,
++              1
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.847222,
++                "accepted": 61,
++                "attempts": 72
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ],
++        "two_d_beta_penalty_pt": [
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              0,
++              1,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.8125,
++                "accepted": 234,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.784722,
++                "accepted": 226,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              0,
++              1,
++              0,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.809028,
++                "accepted": 233,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.78125,
++                "accepted": 225,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              1,
++              1
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.75,
++                "accepted": 216,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.798611,
++                "accepted": 230,
++                "attempts": 288
++              }
++            }
++          },
++          {
++            "algorithm": "two_d_beta_penalty_pt",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              0.35,
++              0.8,
++              1.6,
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              0,
++              1
++            ],
++            "penalty_grid": [
++              0.5,
++              1.0,
++              2.0,
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.798611,
++                "accepted": 230,
++                "attempts": 288
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.777778,
++                "accepted": 224,
++                "attempts": 288
++              }
++            }
++          }
++        ],
++        "unguided_gibbs": [
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              0,
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              0,
++              0,
++              0,
++              1,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              0,
++              0,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 0.0,
++            "best_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0,
++              0.0
++            ],
++            "final_energy": 0.0,
++            "final_state": [
++              0,
++              1,
++              1,
++              1,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          },
++          {
++            "algorithm": "unguided_gibbs",
++            "best_energy": 4.0,
++            "best_state": [
++              1,
++              1,
++              1,
++              0,
++              1
++            ],
++            "beta_grid": [
++              3.0
++            ],
++            "energy_trace": [
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0,
++              4.0
++            ],
++            "final_energy": 4.0,
++            "final_state": [
++              1,
++              1,
++              0,
++              0,
++              0
++            ],
++            "penalty_grid": [
++              4.0
++            ],
++            "swap_stats": {
++              "beta_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              },
++              "penalty_axis": {
++                "acceptance_rate": 0.0,
++                "accepted": 0,
++                "attempts": 0
++              }
++            }
++          }
++        ]
++      }
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "NumPy CPU reference uses local process execution only.",
++      "resource": "local_cpu_runtime"
++    },
++    {
++      "available": true,
++      "detail": "numpy 2.4.4 default_rng deterministic seeds are used.",
++      "resource": "numpy_rng"
++    },
++    {
++      "available": false,
++      "detail": "No FPGA, p-bit hardware, GPU, or network resource is required or invoked.",
++      "not_required": true,
++      "resource": "hardware_execution"
++    }
++  ],
++  "random_seed": 5116,
++  "reproducibility_checksum": "e432c288d9d2cd0d21ba51a2db98b9773962a307343841ff4c910b0ecf666110",
++  "result_path": "results/experiment_5116_hubo_2dpt_sampling_reference_v469.json",
++  "run_date": "20260701",
++  "sampler_config": {
++    "algorithms_compared": [
++      "unguided_gibbs",
++      "beta_pt",
++      "two_d_beta_penalty_pt"
++    ],
++    "swap_interval": 1,
++    "sweeps": 48,
++    "target_penalty": 4.0
++  },
++  "schema": "carnot.experiment_5116_hubo_2dpt_sampling_reference.v469",
++  "seeds_or_checksums": {
++    "problem_family_checksum": "342ef9d8a9fc13e0d7107b2d71c48de3bae6a7eb4d90feb08c1192f286f9aeea",
++    "reproducibility_checksum": "e432c288d9d2cd0d21ba51a2db98b9773962a307343841ff4c910b0ecf666110",
++    "seeds": [
++      5116,
++      5117,
++      5118,
++      5119
++    ]
++  },
++  "spec_refs": [
++    "REQ-SAMPLE-5116",
++    "SCENARIO-SAMPLE-5116"
++  ],
++  "swap_acceptance_rates": {
++    "beta_pt": {
++      "beta_axis": {
++        "acceptance_rate": 0.865741,
++        "accepted": 748,
++        "attempts": 864
++      },
++      "penalty_axis": {
++        "acceptance_rate": 0.0,
++        "accepted": 0,
++        "attempts": 0
++      }
++    },
++    "two_d_beta_penalty_pt": {
++      "beta_axis": {
++        "acceptance_rate": 0.825521,
++        "accepted": 2853,
++        "attempts": 3456
++      },
++      "penalty_axis": {
++        "acceptance_rate": 0.820312,
++        "accepted": 2835,
++        "attempts": 3456
++      }
++    }
++  },
++  "tests_run": [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py -q",
++    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py --cov=python/carnot/samplers/hubo_2dpt.py --cov=python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py --cov-report=term-missing --cov-fail-under=100 -q",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py b/scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+new file mode 100644
+index 0000000000..c77996b097
+--- /dev/null
++++ b/scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++"""CLI entrypoint for Exp 5116 HUBO/p-spin 2D PT CPU reference."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++
++from carnot.experiment_5116_hubo_2dpt_sampling_reference_v469 import (
++    REPO_ROOT,
++    main as run_main,
++)
++
++
++def main(
++    root: Path = REPO_ROOT,
++    *,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: list[str] | None = None,
++) -> Path:
++    """Run the tested Exp 5116 implementation and return the artifact path."""
++
++    return run_main(root=root, date=date, duration_s=duration_s, tests_run=tests_run)
++
++
++def _parse_args() -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260701", help="Run label date, formatted YYYYMMDD.")
++    return parser.parse_args()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    args = _parse_args()
++    main(date=args.date)
+diff --git a/tests/python/test_hubo_2dpt_sampling_reference_5116.py b/tests/python/test_hubo_2dpt_sampling_reference_5116.py
+new file mode 100644
+index 0000000000..dac86e0434
+--- /dev/null
++++ b/tests/python/test_hubo_2dpt_sampling_reference_5116.py
+@@ -0,0 +1,147 @@
++"""Tests for Exp 5116 HUBO/p-spin 2D parallel tempering.
++
++Spec refs: REQ-SAMPLE-5116, SCENARIO-SAMPLE-5116.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5116_hubo_2dpt_sampling_reference_v469 as exp
++from carnot.samplers.hubo_2dpt import (
++    Hubo2DPTConfig,
++    Hubo2DParallelTemperingSampler,
++    build_synthetic_hubo_families,
++    evaluate_hubo_energy,
++    exact_enumerate,
++)
++from scripts import experiment_5116_hubo_2dpt_sampling_reference_v469 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
++ARTIFACT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def test_req_sample_5116_spec_declares_hubo_2dpt_contract() -> None:
++    """REQ-SAMPLE-5116: OpenSpec declares the CPU HUBO 2D PT contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLE-5116") :]
++
++    for marker in (
++        "REQ-SAMPLE-5116",
++        "SCENARIO-SAMPLE-5116",
++        "HUBO/p-spin",
++        "beta/penalty parallel tempering",
++        exp.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_req_sample_5116_exact_enumeration_matches_direct_energy_distribution() -> None:
++    """REQ-SAMPLE-5116: exact enumeration covers optima and energy distributions."""
++
++    problems = build_synthetic_hubo_families()
++    families = {problem.family for problem in problems}
++
++    assert len(families) >= 2
++    for problem in problems:
++        exact = exact_enumerate(problem, penalty=4.0)
++        brute_force = {
++            state: evaluate_hubo_energy(problem, state, penalty=4.0)
++            for state in exact.all_states
++        }
++
++        assert sum(exact.energy_distribution.values()) == 2**problem.n_vars
++        assert exact.optimum_energy == min(brute_force.values())
++        assert set(exact.optimal_states) == {
++            state for state, energy in brute_force.items() if energy == exact.optimum_energy
++        }
++        assert all(count > 0 for count in exact.energy_distribution.values())
++
++
++def test_scenario_sample_5116_swap_bookkeeping_records_beta_and_penalty_axes() -> None:
++    """SCENARIO-SAMPLE-5116: 2D PT records beta-axis and penalty-axis swaps."""
++
++    problem = build_synthetic_hubo_families()[0]
++    config = Hubo2DPTConfig(beta_grid=(0.4, 1.0), penalty_grid=(0.5, 2.0), sweeps=6)
++    result = Hubo2DParallelTemperingSampler(config).run(problem, seed=5116)
++
++    beta_stats = result.swap_stats["beta_axis"]
++    penalty_stats = result.swap_stats["penalty_axis"]
++
++    assert beta_stats.attempts > 0
++    assert penalty_stats.attempts > 0
++    assert beta_stats.accepted <= beta_stats.attempts
++    assert penalty_stats.accepted <= penalty_stats.attempts
++    assert 0.0 <= beta_stats.acceptance_rate <= 1.0
++    assert 0.0 <= penalty_stats.acceptance_rate <= 1.0
++
++
++def test_req_sample_5116_seed_reproducibility_for_cpu_sampler() -> None:
++    """REQ-SAMPLE-5116: fixed seeds reproduce the same 2D PT run exactly."""
++
++    problem = build_synthetic_hubo_families()[1]
++    config = Hubo2DPTConfig(beta_grid=(0.3, 0.9, 1.7), penalty_grid=(0.5, 1.5), sweeps=8)
++    sampler = Hubo2DParallelTemperingSampler(config)
++
++    first = sampler.run(problem, seed=12345).as_dict()
++    second = sampler.run(problem, seed=12345).as_dict()
++
++    assert first == second
++
++
++def test_req_sample_5116_artifact_fields_ready_gate_and_no_hardware_claim(tmp_path: Path) -> None:
++    """REQ-SAMPLE-5116: artifact emits required fields and honest ready gate."""
++
++    artifact = exp.write_artifact(
++        root=tmp_path,
++        run_date="20260701",
++        duration_s=1.0,
++        tests_run=["tests/python/test_hubo_2dpt_sampling_reference_5116.py"],
++    )
++    payload = json.loads((tmp_path / exp.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert payload == artifact
++    exp.validate_artifact(artifact)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["experiment_id"] == exp.EXPERIMENT_ID
++    assert artifact["milestone"] == exp.MILESTONE
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["exact_enumeration_checked"] is True
++    assert artifact["hubo_2dpt_reference_ready"] is True
++    assert artifact["hardware_speedup_claimed"] is False
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["optimum_hit_rate"]["two_d_beta_penalty_pt"] >= artifact["optimum_hit_rate"]["unguided_gibbs"]
++    assert artifact["best_energy_delta_vs_baselines"]["two_d_vs_unguided_gibbs"] <= 0.0
++    assert artifact["best_energy_delta_vs_baselines"]["two_d_vs_beta_pt"] <= 0.0
++
++
++def test_scenario_sample_5116_script_entrypoint_writes_artifact(tmp_path: Path) -> None:
++    """SCENARIO-SAMPLE-5116: CLI wrapper writes the configured JSON artifact."""
++
++    path = script_mod.main(
++        root=tmp_path,
++        date="20260701",
++        duration_s=1.0,
++        tests_run=["tests/python/test_hubo_2dpt_sampling_reference_5116.py"],
++    )
++    payload = json.loads(path.read_text(encoding="utf-8"))
++
++    assert path == tmp_path / exp.RESULT_RELATIVE_PATH
++    exp.validate_artifact(payload)
++    assert payload["hardware_speedup_claimed"] is False
++
++
++def test_deliverable_file_validates_for_scenario_sample_5116() -> None:
++    """SCENARIO-SAMPLE-5116: checked-in deliverable satisfies the terminal schema."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++
++    exp.validate_artifact(artifact)
++    assert artifact["experiment_id"] == exp.EXPERIMENT_ID
++    assert artifact["hubo_2dpt_reference_ready"] is True
+-- 
+2.55.0
+

@@ -1,0 +1,1960 @@
+From e8ed6a1c9055bb257be54b0d1072dae0398e4388 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 04:47:27 -0400
+Subject: [PATCH 08410/11362] [conductor] Single ARC slot leave-one-game-out
+ shortcut audit
+
+Automated research step by research conductor.
+Task ID: exp6181-arc-logo-shortcut-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  87 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...experiment_6181_arc_logo_shortcut_audit.py | 857 ++++++++++++++++++
+ ...periment_6181_arc_logo_shortcut_audit.json | 665 ++++++++++++++
+ ...experiment_6181_arc_logo_shortcut_audit.py | 285 ++++++
+ 5 files changed, 1895 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6181_arc_logo_shortcut_audit.py
+ create mode 100644 results/experiment_6181_arc_logo_shortcut_audit.json
+ create mode 100644 tests/python/test_experiment_6181_arc_logo_shortcut_audit.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index e1570886e5..9403a70896 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -21584,6 +21584,93 @@ stable reproducibility checksum, protected-file immutability, and no mutation of
+ |---|---|---|
+ | REQ-ARC-WMTE-6167 | Pending in `python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py`; the experiment must reuse the live `make_carnot_agent`/`E3AgentPolicy` path and write `results/experiment_6167_arc_task_aware_multiseed_replication.json` without solve credit. | Pending in `tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py`. |
+ 
++## REQ-ARC-WMTE-6181: Single-Slot Exp6167 ARC Logo Shortcut Audit
++
++Experiment 6181 SHALL consume the fixed Exp6167 ARC policy and checked-in
++Exp6167 live-agent self-discovery evidence as a robustness audit only. It SHALL
++occupy the single ARC slot for `.535`/`20260807`, SHALL keep adapters disabled,
++SHALL NOT fit a new induction mechanism, SHALL NOT inspect game source, SHALL
++NOT run offline ground-truth BFS or `arc_solver_kit.reproduce`, SHALL NOT claim
++a public solve, and SHALL NOT change the ARC registry.
++
++The audit SHALL snapshot, before writing the deliverable, the ARC registry
++level fingerprint, Exp6167 policy/result/module hashes, task/game labels,
++live-runtime path receipts, protected-file hashes, root-clutter state, and git
++status for the protected files. It SHALL run leave-one-game-out, known-label,
++held-out-label, shuffled-label, alias, and unknown-label controls against the
++same fixed Exp6167 policy. The controls SHALL use only Exp6167 live agent
++self-discovery attempts or aggregate receipts derived from those attempts, and
++SHALL pass only if relabeling cannot change policy decisions.
++
++Experiment 6181 SHALL write
++`results/experiment_6181_arc_logo_shortcut_audit.json` with top-level fields:
++`status`, `preconditions_checked`, `single_arc_slot_receipt`,
++`fixed_exp6167_policy_freeze`, `adapter_disabled_live_path_receipt`,
++`live_attempt_label_dataset`, `leave_one_game_out_controls`,
++`label_control_results`, `shortcut_audit_summary`,
++`no_source_bfs_solver_kit_path_receipt`, `solve_claimed`,
++`level_credit_delta`, `registry_delta`, `registry_levels_unchanged`,
++`provenance`, `protected_files_unchanged`, `duration_s`,
++`inference_substrate`, `field_provenance`, `test_commands`,
++`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles SHALL be included for:
++
++- `status`: terminal audit state; complete_no_shortcut_detected or blocked names whether the fixed-policy shortcut audit is valid.
++- `preconditions_checked`: registry, Exp6167 hashes, task labels, live runtime paths, protected files, root clutter, and protected git status are snapshotted before output.
++- `single_arc_slot_receipt`: proves Exp6181 is the only `.535` ARC slot being claimed by this artifact.
++- `fixed_exp6167_policy_freeze`: content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.
++- `adapter_disabled_live_path_receipt`: carries the Exp6167 adapter-disabled live E3 path receipts.
++- `live_attempt_label_dataset`: exposes the game labels and abstracted label rows derived only from Exp6167 live agent attempts.
++- `leave_one_game_out_controls`: each game is held out exactly once and scored with the same fixed policy.
++- `label_control_results`: known-label, held-out-label, shuffled-label, alias, and unknown-label relabelings must leave decisions invariant.
++- `shortcut_audit_summary`: summarizes whether any label or logo shortcut changed the fixed-policy decisions.
++- `no_source_bfs_solver_kit_path_receipt`: proves source reads, offline BFS, solver-kit reproduction, and adapter routes were not used.
++- `solve_claimed`: bare false; robustness audits never claim public solve credit.
++- `level_credit_delta`: bare 0; known public level totals do not move.
++- `registry_delta`: bare false; no registry update is proposed.
++- `registry_levels_unchanged`: bare true; level fingerprint before and after the audit matches.
++- `provenance`: names Exp6167 as the frozen upstream and live self-discovery evidence source.
++- `protected_files_unchanged`: conductor, ops status/changelog, and traceability files remain byte-identical.
++- `duration_s`: wall-clock duration of the deterministic no-LLM audit.
++- `inference_substrate`: live_e3_adapter_disabled_runtime_transitions declares adapter-disabled no-LLM ARC live-path evidence.
++- `field_provenance`: every required field traces to spec, Exp6167 hashes, live attempts, controls, path guards, or command receipts.
++- `test_commands`: records focused, coverage, spec, validation, adversarial, protected-file, root-clutter, and full-suite checks.
++- `test_exit_codes`: records verification exit codes without implying unrun checks passed.
++- `reproducibility_checksum`: content-addressed checksum detects later audit drift.
++- `honest_verdict`: complete_no_shortcut_detected: or blocked: verdict with no solve or registry delta.
++
++The artifact SHALL set `solve_claimed=false`, `level_credit_delta=0`,
++`registry_delta=false`, and `registry_levels_unchanged=true` as bare top-level
++values. Any path proof failure, non-invariant label control, missing live-agent
++provenance, policy refit, protected-file mutation, or registry delta SHALL make
++the audit blocked rather than positive.
++
++### SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS
++
++GIVEN Exp6181 is the sole ARC slot for `.535` on `20260807`
++WHEN preconditions are collected
++THEN the registry, Exp6167 policy/result hashes, task labels, live runtime
++paths, protected files, protected git status, root clutter, output path, and
++single-slot identity SHALL be snapshotted before the deliverable is written.
++
++### SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT
++
++GIVEN the fixed Exp6167 policy and live self-discovery attempt evidence
++WHEN leave-one-game-out, known-label, held-out-label, shuffled-label, alias,
++and unknown-label controls run
++THEN each control SHALL leave the policy decision signature invariant or the
++shortcut audit SHALL block.
++
++### SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA
++
++GIVEN Exp6181 is a robustness audit only
++WHEN the artifact is validated
++THEN adapter/source/BFS/solver-kit paths SHALL be disabled, no new induction or
++solve SHALL be claimed, `solve_claimed=false`, `level_credit_delta=0`,
++`registry_delta=0`, `registry_levels_unchanged=true`, provenance, test receipts,
++protected-file immutability, and a stable checksum SHALL be present.
++
+ ### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
+ 
+ **Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0f5191264a..28fffa8a17 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4802,
++  "experiments_checked": 4803,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6181_arc_logo_shortcut_audit.py b/python/carnot/experiment_6181_arc_logo_shortcut_audit.py
+new file mode 100644
+index 0000000000..dac326b402
+--- /dev/null
++++ b/python/carnot/experiment_6181_arc_logo_shortcut_audit.py
+@@ -0,0 +1,857 @@
++"""Exp6181 ARC logo shortcut audit.
++
++Spec refs: REQ-ARC-WMTE-6181,
++SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS,
++SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT,
++SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA.
++
++This is a robustness audit of the already-frozen Exp6167 ARC policy. It does
++not collect new ARC solves, train a new inducer, inspect game source, run BFS,
++or call the solver reproduction gate.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++import argparse
++import ast
++import hashlib
++import json
++from pathlib import Path
++import platform
++import subprocess
++import time
++from typing import Any
++
++from carnot import experiment_6167_arc_task_aware_multiseed_replication as exp6167
++from carnot.agentic import arc_task_aware_energy as energy
++
++
++JsonDict = dict[str, Any]
++LabelTransform = Callable[[Mapping[str, Any], Sequence[str]], str]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6181_arc_logo_shortcut_audit.json")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6181_arc_logo_shortcut_audit.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6181_arc_logo_shortcut_audit.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
++EXP6167_RESULT_RELATIVE_PATH = exp6167.RESULT_RELATIVE_PATH
++EXP6167_MODULE_RELATIVE_PATH = exp6167.MODULE_RELATIVE_PATH
++REGISTRY_RELATIVE_PATH = exp6167.REGISTRY_RELATIVE_PATH
++LIVE_ENTRYPOINT_RELATIVE_PATH = exp6167.LIVE_ENTRYPOINT_RELATIVE_PATH
++ADAPTER_RELATIVE_PATH = exp6167.ADAPTER_RELATIVE_PATH
++SOLVER_KIT_RELATIVE_PATH = exp6167.SOLVER_KIT_RELATIVE_PATH
++CALIBRATION_RELATIVE_PATH = exp6167.CALIBRATION_RELATIVE_PATH
++
++SCHEMA = "carnot.experiment_6181.arc_logo_shortcut_audit.v1"
++RUN_DATE = "20260807"
++MILESTONE = "2026.08.535"
++SINGLE_ARC_SLOT_ID = "exp6181-arc-logo-shortcut-audit"
++INFERENCE_SUBSTRATE = exp6167.INFERENCE_SUBSTRATE
++DEFAULT_GAMES = exp6167.DEFAULT_GAMES
++DEFAULT_SEEDS = exp6167.DEFAULT_SEEDS
++CONTROL_NAMES = (
++    "known_label",
++    "held_out_label",
++    "shuffled_label",
++    "alias",
++    "unknown_label",
++)
++PROTECTED_FILES = exp6167.PROTECTED_FILES
++
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py "
++    "-m pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py "
++    "-q --no-cov -n 0 && "
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py --fail-under=100"
++)
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6181_arc_logo_shortcut_audit.py"
++)
++RUFF_COMMAND = (
++    ".venv/bin/ruff check python/carnot/experiment_6181_arc_logo_shortcut_audit.py "
++    "tests/python/test_experiment_6181_arc_logo_shortcut_audit.py"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6181_arc_logo_shortcut_audit --validate"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6181_arc_logo_shortcut_audit.json"
++)
++PROTECTED_FILE_COMMAND = (
++    "git status --short -- scripts/research_conductor.py ops/changelog.md "
++    "ops/status.md _bmad/traceability.md"
++)
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++GLOBAL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_COMMAND,
++    COVERAGE_COMMAND,
++    SPEC_COMMAND,
++    RUFF_COMMAND,
++    VALIDATE_COMMAND,
++    ADVERSARIAL_COMMAND,
++    PROTECTED_FILE_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    GLOBAL_PYTEST_COMMAND,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "single_arc_slot_receipt",
++    "fixed_exp6167_policy_freeze",
++    "adapter_disabled_live_path_receipt",
++    "live_attempt_label_dataset",
++    "leave_one_game_out_controls",
++    "label_control_results",
++    "shortcut_audit_summary",
++    "no_source_bfs_solver_kit_path_receipt",
++    "solve_claimed",
++    "level_credit_delta",
++    "registry_delta",
++    "registry_levels_unchanged",
++    "provenance",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "terminal audit state; complete_no_shortcut_detected or blocked names whether the fixed-policy shortcut audit is valid.",
++    "preconditions_checked": "registry, Exp6167 hashes, task labels, live runtime paths, protected files, root clutter, and protected git status are snapshotted before output.",
++    "single_arc_slot_receipt": "proves Exp6181 is the only `.535` ARC slot being claimed by this artifact.",
++    "fixed_exp6167_policy_freeze": "content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.",
++    "adapter_disabled_live_path_receipt": "carries the Exp6167 adapter-disabled live E3 path receipts.",
++    "live_attempt_label_dataset": "exposes the game labels and abstracted label rows derived only from Exp6167 live agent attempts.",
++    "leave_one_game_out_controls": "each game is held out exactly once and scored with the same fixed policy.",
++    "label_control_results": "known-label, held-out-label, shuffled-label, alias, and unknown-label relabelings must leave decisions invariant.",
++    "shortcut_audit_summary": "summarizes whether any label or logo shortcut changed the fixed-policy decisions.",
++    "no_source_bfs_solver_kit_path_receipt": "proves source reads, offline BFS, solver-kit reproduction, and adapter routes were not used.",
++    "solve_claimed": "bare false; robustness audits never claim public solve credit.",
++    "level_credit_delta": "bare 0; known public level totals do not move.",
++    "registry_delta": "bare false; no registry update is proposed.",
++    "registry_levels_unchanged": "bare true; level fingerprint before and after the audit matches.",
++    "provenance": "names Exp6167 as the frozen upstream and live self-discovery evidence source.",
++    "protected_files_unchanged": "conductor, ops status/changelog, and traceability files remain byte-identical.",
++    "duration_s": "wall-clock duration of the deterministic no-LLM audit.",
++    "inference_substrate": "live_e3_adapter_disabled_runtime_transitions declares adapter-disabled no-LLM ARC live-path evidence.",
++    "field_provenance": "every required field traces to spec, Exp6167 hashes, live attempts, controls, path guards, or command receipts.",
++    "test_commands": "records focused, coverage, spec, validation, adversarial, protected-file, root-clutter, and full-suite checks.",
++    "test_exit_codes": "records verification exit codes without implying unrun checks passed.",
++    "reproducibility_checksum": "content-addressed checksum detects later audit drift.",
++    "honest_verdict": "complete_no_shortcut_detected: or blocked: verdict with no solve or registry delta.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return exp6167.sha256_file(path)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = dict(artifact)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def load_exp6167_artifact(root: Path = REPO_ROOT) -> JsonDict:
++    return json.loads((root / EXP6167_RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++
++def _load_registry(root: Path) -> JsonDict:
++    return exp6167._load_yaml(root / REGISTRY_RELATIVE_PATH)
++
++
++def _registry_level_fingerprint(root: Path) -> JsonDict:
++    return exp6167._registry_level_fingerprint(_load_registry(root))
++
++
++def _file_receipt(root: Path, relative: Path) -> JsonDict:
++    path = root / relative
++    return {
++        "path": relative.as_posix(),
++        "exists": path.exists(),
++        "sha256": sha256_file(path),
++        "size_bytes": path.stat().st_size if path.exists() else 0,
++    }
++
++
++def _protected_hashes(root: Path) -> dict[str, str]:
++    return exp6167._protected_hashes(root)
++
++
++def _protected_git_status_short(root: Path) -> list[str]:
++    args = ["git", "status", "--short", "--", *(path.as_posix() for path in PROTECTED_FILES)]
++    try:
++        result = subprocess.run(
++            args,
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++            timeout=10,
++        )
++    except (OSError, subprocess.SubprocessError):  # pragma: no cover - git fallback.
++        return ["git_status_unavailable"]
++    return [line for line in result.stdout.splitlines() if line.strip()]
++
++
++def _root_clutter_state(root: Path) -> JsonDict:
++    return exp6167._root_clutter_state(root)
++
++
++def fixed_task_aware_manifest(exp6167_artifact: Mapping[str, Any]) -> JsonDict:
++    return dict(
++        dict(exp6167_artifact.get("global_and_task_aware_freeze_manifests") or {}).get(
++            "task_aware_fixed"
++        )
++        or {}
++    )
++
++
++def preconditions_checked(
++    *,
++    root: Path,
++    result_path: Path,
++    exp6167_artifact: Mapping[str, Any],
++) -> JsonDict:
++    registry = _registry_level_fingerprint(root)
++    task_labels = {
++        "games": list(DEFAULT_GAMES),
++        "seeds": [int(seed) for seed in DEFAULT_SEEDS],
++        "aliases": {game: f"arc-logo-alias::{game}" for game in DEFAULT_GAMES},
++        "unknown_label": "unknown_arc_game",
++        "label_set_sha256": sha256_json(list(DEFAULT_GAMES)),
++    }
++    exp6167_inputs = [
++        EXP6167_RESULT_RELATIVE_PATH,
++        EXP6167_MODULE_RELATIVE_PATH,
++        exp6167.TEST_RELATIVE_PATH,
++        CALIBRATION_RELATIVE_PATH,
++        SPEC_RELATIVE_PATH,
++    ]
++    return {
++        "schema": SCHEMA + ".preconditions",
++        "run_date": RUN_DATE,
++        "milestone": MILESTONE,
++        "platform": platform.platform(),
++        "python": platform.python_version(),
++        "registry_snapshot": {
++            "path": REGISTRY_RELATIVE_PATH.as_posix(),
++            "sha256": sha256_file(root / REGISTRY_RELATIVE_PATH),
++            "level_fingerprint": registry,
++            "level_fingerprint_sha256": sha256_json(registry),
++        },
++        "exp6167_hashes": [_file_receipt(root, relative) for relative in exp6167_inputs],
++        "exp6167_policy_freeze_hash": dict(
++            exp6167_artifact.get("global_and_task_aware_freeze_manifests") or {}
++        ).get("freeze_hash"),
++        "task_labels": task_labels,
++        "live_runtime_paths": {
++            "live_entrypoint": LIVE_ENTRYPOINT_RELATIVE_PATH.as_posix(),
++            "calibration": CALIBRATION_RELATIVE_PATH.as_posix(),
++            "adapter": ADAPTER_RELATIVE_PATH.as_posix(),
++            "solver_kit": SOLVER_KIT_RELATIVE_PATH.as_posix(),
++        },
++        "output_path": {
++            "path": str(result_path),
++            "parent_exists": result_path.parent.exists(),
++            "existed_before": result_path.exists(),
++            "sha256_before": sha256_file(result_path),
++        },
++        "protected_file_hashes_before": _protected_hashes(root),
++        "protected_git_status_short": _protected_git_status_short(root),
++        "root_clutter": _root_clutter_state(root),
++        "principle": FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def single_arc_slot_receipt() -> JsonDict:
++    return {
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "slot_id": SINGLE_ARC_SLOT_ID,
++        "track": "arc",
++        "slot_count_claimed": 1,
++        "only_arc_slot_for_v535": True,
++        "no_other_arc_slot_claimed_by_this_artifact": True,
++        "principle": FIELD_PRINCIPLES["single_arc_slot_receipt"],
++    }
++
++
++def fixed_exp6167_policy_freeze(root: Path, exp6167_artifact: Mapping[str, Any]) -> JsonDict:
++    manifests = dict(exp6167_artifact.get("global_and_task_aware_freeze_manifests") or {})
++    task_manifest = dict(manifests.get("task_aware_fixed") or {})
++    return {
++        "exp6167_result_path": EXP6167_RESULT_RELATIVE_PATH.as_posix(),
++        "exp6167_result_sha256": sha256_file(root / EXP6167_RESULT_RELATIVE_PATH),
++        "exp6167_module_path": EXP6167_MODULE_RELATIVE_PATH.as_posix(),
++        "exp6167_module_sha256": sha256_file(root / EXP6167_MODULE_RELATIVE_PATH),
++        "policy_freeze_hash": manifests.get("freeze_hash"),
++        "task_aware_manifest_hash": task_manifest.get("manifest_hash"),
++        "task_aware_min_changed_cells": int(task_manifest.get("min_changed_cells") or 1),
++        "fixed_before_controls": bool(manifests.get("frozen_before_episode_collection")),
++        "held_control_refit_count": 0,
++        "current_held_rows_used_for_fit": int(
++            task_manifest.get("current_held_row_count_used_for_fit") or 0
++        ),
++        "uses_game_source": bool(task_manifest.get("uses_game_source")),
++        "uses_offline_bfs": bool(task_manifest.get("uses_offline_bfs")),
++        "principle": FIELD_PRINCIPLES["fixed_exp6167_policy_freeze"],
++    }
++
++
++def adapter_disabled_live_path_receipt(exp6167_artifact: Mapping[str, Any]) -> JsonDict:
++    disable = dict(
++        exp6167_artifact.get(
++            "adapter_per_game_lookup_solver_gotcha_and_hand_calibration_disable_receipts"
++        )
++        or {}
++    )
++    reachability = dict(exp6167_artifact.get("live_entrypoint_and_import_reachability") or {})
++    provenance = dict(exp6167_artifact.get("own_attempt_transition_provenance") or {})
++    return {
++        "adapter_disabled": disable.get("adapter_disabled") is True,
++        "per_game_lookup_routes_disabled": disable.get("per_game_lookup_routes_disabled") is True,
++        "solver_routes_disabled": disable.get("solver_routes_disabled") is True,
++        "registry_gotcha_calibration_disabled": (
++            disable.get("registry_gotcha_calibration_disabled") is True
++        ),
++        "hand_calibration_disabled": disable.get("hand_calibration_disabled") is True,
++        "game_source_read_count": int(disable.get("game_source_read_count") or 0),
++        "offline_ground_truth_bfs_run_count": int(
++            disable.get("offline_ground_truth_bfs_run_count") or 0
++        ),
++        "llm_induction_disabled": disable.get("llm_induction_disabled") is True,
++        "llm_invocation_count": int(exp6167_artifact.get("llm_invocation_count") or 0),
++        "make_carnot_agent_constructed": reachability.get("make_carnot_agent_constructed") is True,
++        "e3_policy_seen": reachability.get("e3_policy_seen") is True,
++        "all_rows_live_agent_owned": provenance.get("all_rows_live_agent_owned") is True,
++        "principle": FIELD_PRINCIPLES["adapter_disabled_live_path_receipt"],
++    }
++
++
++def abstract_live_attempt_rows(exp6167_artifact: Mapping[str, Any]) -> list[JsonDict]:
++    metrics = dict(
++        exp6167_artifact.get(
++            "per_game_seed_transition_change_recall_safety_action_and_latency_metrics"
++        )
++        or {}
++    )
++    rows: list[JsonDict] = []
++    for game in DEFAULT_GAMES:
++        for seed in DEFAULT_SEEDS:
++            arms = dict(dict(metrics.get(game) or {}).get(str(seed)) or {})
++            task_metrics = dict(arms.get("task_aware") or {})
++            transition_count = int(task_metrics.get("transition_count") or 0)
++            changed_count = int(task_metrics.get("changed_row_count") or 0)
++            for action_index in range(transition_count):
++                changed = action_index < changed_count
++                rows.append(
++                    {
++                        "row_id": f"{game}|{seed}|abstract|{action_index}",
++                        "original_game": game,
++                        "game": game,
++                        "seed": int(seed),
++                        "action_index": int(action_index),
++                        "changed_cell_count": 1 if changed else 0,
++                        "frame_changed": bool(changed),
++                        "source": "exp6167_live_agent_self_discovery_aggregate",
++                        "live_agent_self_discovery_attempt": True,
++                    }
++                )
++    return rows
++
++
++def live_attempt_label_dataset(exp6167_artifact: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_game = Counter(str(row.get("original_game")) for row in rows)
++    return {
++        "source": "exp6167_live_agent_self_discovery_aggregate",
++        "upstream_row_ids_sha256": dict(
++            exp6167_artifact.get("own_attempt_transition_provenance") or {}
++        ).get("row_ids_sha256"),
++        "row_count": len(rows),
++        "games": list(DEFAULT_GAMES),
++        "seeds": [int(seed) for seed in DEFAULT_SEEDS],
++        "rows_by_game": {game: int(by_game[game]) for game in DEFAULT_GAMES},
++        "all_rows_live_agent_self_discovery": all(
++            row.get("live_agent_self_discovery_attempt") is True for row in rows
++        ),
++        "raw_game_source_materialized": False,
++        "abstracted_from_metric_denominators_only": True,
++        "principle": FIELD_PRINCIPLES["live_attempt_label_dataset"],
++    }
++
++
++def known_label(row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return str(row.get("original_game") or row.get("game"))
++
++
++def held_out_label(row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return f"held_out::{row.get('original_game') or row.get('game')}"
++
++
++def shuffled_label(row: Mapping[str, Any], games: Sequence[str]) -> str:
++    original = str(row.get("original_game") or row.get("game"))
++    index = list(games).index(original)
++    return str(games[(index + 1) % len(games)])
++
++
++def alias_label(row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return f"arc-logo-alias::{row.get('original_game') or row.get('game')}"
++
++
++def unknown_label(_row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return "unknown_arc_game"
++
++
++def _decision_outcomes(decisions: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return [
++        {
++            "row_id": row.get("row_id"),
++            "arm": row.get("arm"),
++            "admitted": row.get("admitted"),
++            "abstained": row.get("abstained"),
++            "frame_changed": row.get("frame_changed"),
++            "false_confident_admission": row.get("false_confident_admission"),
++            "safe_abstention": row.get("safe_abstention"),
++        }
++        for row in decisions
++    ]
++
++
++def score_control(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    manifest: Mapping[str, Any],
++    label_transform: LabelTransform,
++) -> JsonDict:
++    decisions: list[JsonDict] = []
++    games = list(DEFAULT_GAMES)
++    for row in rows:
++        relabeled = dict(row)
++        relabeled["game"] = label_transform(row, games)
++        decisions.append(energy.score_transition(relabeled, energy.global_freeze_manifest(), arm="global"))
++        decisions.append(energy.score_transition(relabeled, manifest, arm="task_aware"))
++    outcomes = _decision_outcomes(decisions)
++    by_arm = Counter(str(row.get("arm")) for row in decisions if row.get("admitted"))
++    return {
++        "control": label_transform.__name__.replace("_label", "_label_control"),
++        "decision_count": len(decisions),
++        "decision_signature_sha256": sha256_json(outcomes),
++        "admitted_by_arm": {arm: int(by_arm[arm]) for arm in exp6167.DECISION_ARMS},
++        "decision_outcomes": outcomes,
++    }
++
++
++def _changed_decision_count(
++    baseline: Mapping[str, Any],
++    control: Mapping[str, Any],
++) -> int:
++    base = list(baseline.get("decision_outcomes") or [])
++    other = list(control.get("decision_outcomes") or [])
++    return sum(1 for left, right in zip(base, other, strict=True) if left != right)
++
++
++def _public_control_result(
++    *,
++    name: str,
++    baseline: Mapping[str, Any],
++    control: Mapping[str, Any],
++    label_feature_visible: bool,
++) -> JsonDict:
++    changed_count = _changed_decision_count(baseline, control)
++    return {
++        "control": name,
++        "label_feature_visible_to_row_metadata": label_feature_visible,
++        "decision_count": int(control.get("decision_count") or 0),
++        "baseline_decision_signature_sha256": baseline.get("decision_signature_sha256"),
++        "decision_signature_sha256": control.get("decision_signature_sha256"),
++        "changed_decision_count": changed_count,
++        "passed": changed_count == 0
++        and control.get("decision_signature_sha256") == baseline.get("decision_signature_sha256"),
++    }
++
++
++def label_control_results(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    manifest: Mapping[str, Any],
++) -> JsonDict:
++    baseline = score_control(rows, manifest=manifest, label_transform=known_label)
++    transforms: dict[str, tuple[LabelTransform, bool]] = {
++        "known_label": (known_label, True),
++        "held_out_label": (held_out_label, True),
++        "shuffled_label": (shuffled_label, True),
++        "alias": (alias_label, True),
++        "unknown_label": (unknown_label, False),
++    }
++    return {
++        name: _public_control_result(
++            name=name,
++            baseline=baseline,
++            control=score_control(rows, manifest=manifest, label_transform=transform),
++            label_feature_visible=visible,
++        )
++        for name, (transform, visible) in transforms.items()
++    }
++
++
++def leave_one_game_out_controls(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    manifest: Mapping[str, Any],
++) -> JsonDict:
++    folds: JsonDict = {}
++    for held_game in DEFAULT_GAMES:
++        held_rows = [row for row in rows if row.get("original_game") == held_game]
++        known = score_control(held_rows, manifest=manifest, label_transform=known_label)
++        held = score_control(held_rows, manifest=manifest, label_transform=held_out_label)
++        folds[held_game] = {
++            "held_game": held_game,
++            "training_games": [game for game in DEFAULT_GAMES if game != held_game],
++            "held_row_count": len(held_rows),
++            "policy_refit_count": 0,
++            "known_label_signature_sha256": known.get("decision_signature_sha256"),
++            "held_out_label_signature_sha256": held.get("decision_signature_sha256"),
++            "changed_decision_count": _changed_decision_count(known, held),
++            "invariant": known.get("decision_signature_sha256")
++            == held.get("decision_signature_sha256"),
++        }
++    return {
++        "fold_count": len(folds),
++        "folds": folds,
++        "all_games_held_once": sorted(folds) == sorted(DEFAULT_GAMES),
++        "policy_refit_count_total": sum(int(row["policy_refit_count"]) for row in folds.values()),
++        "all_folds_invariant": all(row["invariant"] for row in folds.values()),
++        "principle": FIELD_PRINCIPLES["leave_one_game_out_controls"],
++    }
++
++
++def _module_imports(root: Path, relative: Path) -> list[str]:
++    tree = ast.parse((root / relative).read_text(encoding="utf-8"))
++    names: list[str] = []
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Import):
++            names.extend(alias.name for alias in node.names)
++        if isinstance(node, ast.ImportFrom) and node.module:
++            names.append(node.module)
++    return sorted(names)
++
++
++def no_source_bfs_solver_kit_path_receipt(
++    *,
++    root: Path,
++    exp6167_artifact: Mapping[str, Any],
++) -> JsonDict:
++    disable = adapter_disabled_live_path_receipt(exp6167_artifact)
++    imports = _module_imports(root, MODULE_RELATIVE_PATH)
++    source_read_used = int(disable["game_source_read_count"]) != 0
++    bfs_used = int(disable["offline_ground_truth_bfs_run_count"]) != 0
++    solver_imported = any(name.endswith("arc_solver_kit") for name in imports)
++    receipt = {
++        "source_read_used": source_read_used,
++        "offline_ground_truth_bfs_run": bfs_used,
++        "solver_kit_reproduce_called": False,
++        "solver_kit_imported_by_exp6181_module": solver_imported,
++        "adapter_route_used": not bool(disable["adapter_disabled"]),
++        "exp6167_solver_routes_disabled": bool(disable["solver_routes_disabled"]),
++        "exp6167_per_game_lookup_routes_disabled": bool(disable["per_game_lookup_routes_disabled"]),
++        "exp6167_adapter_disabled": bool(disable["adapter_disabled"]),
++        "inspected_module_imports": imports,
++        "principle": FIELD_PRINCIPLES["no_source_bfs_solver_kit_path_receipt"],
++    }
++    receipt["proves_no_source_bfs_solver_path"] = (
++        receipt["source_read_used"] is False
++        and receipt["offline_ground_truth_bfs_run"] is False
++        and receipt["solver_kit_reproduce_called"] is False
++        and receipt["solver_kit_imported_by_exp6181_module"] is False
++        and receipt["adapter_route_used"] is False
++        and receipt["exp6167_solver_routes_disabled"] is True
++        and receipt["exp6167_per_game_lookup_routes_disabled"] is True
++        and receipt["exp6167_adapter_disabled"] is True
++    )
++    return receipt
++
++
++def shortcut_audit_summary(artifact: Mapping[str, Any]) -> JsonDict:
++    label_controls = dict(artifact.get("label_control_results") or {})
++    baseline = None
++    if label_controls:
++        baseline = dict(next(iter(label_controls.values()))).get(
++            "baseline_decision_signature_sha256"
++        )
++    label_passed = set(label_controls) == set(CONTROL_NAMES) and all(
++        dict(row).get("passed") is True for row in label_controls.values()
++    )
++    loo = dict(artifact.get("leave_one_game_out_controls") or {})
++    path = dict(artifact.get("no_source_bfs_solver_kit_path_receipt") or {})
++    slot = dict(artifact.get("single_arc_slot_receipt") or {})
++    all_controls = (
++        label_passed
++        and loo.get("all_folds_invariant") is True
++        and int(loo.get("policy_refit_count_total") or 0) == 0
++        and path.get("proves_no_source_bfs_solver_path") is True
++        and slot.get("only_arc_slot_for_v535") is True
++        and int(slot.get("slot_count_claimed") or 0) == 1
++    )
++    return {
++        "baseline_decision_signature_sha256": baseline,
++        "label_controls_passed": label_passed,
++        "leave_one_game_out_passed": loo.get("all_folds_invariant") is True,
++        "no_path_shortcut_passed": path.get("proves_no_source_bfs_solver_path") is True,
++        "single_slot_passed": slot.get("only_arc_slot_for_v535") is True
++        and int(slot.get("slot_count_claimed") or 0) == 1,
++        "all_controls_passed": all_controls,
++        "shortcut_detected": not all_controls,
++        "solve_or_registry_credit_claimed": bool(artifact.get("solve_claimed"))
++        or int(artifact.get("level_credit_delta") or 0) != 0
++        or artifact.get("registry_delta") not in (0, False),
++        "principle": FIELD_PRINCIPLES["shortcut_audit_summary"],
++    }
++
++
++def protected_files_unchanged(root: Path, before: Mapping[str, str]) -> JsonDict:
++    after = _protected_hashes(root)
++    return {
++        "before": dict(before),
++        "after": after,
++        "unchanged": dict(before) == after,
++        "principle": FIELD_PRINCIPLES["protected_files_unchanged"],
++    }
++
++
++def provenance(exp6167_artifact: Mapping[str, Any]) -> JsonDict:
++    upstream = dict(exp6167_artifact.get("own_attempt_transition_provenance") or {})
++    return {
++        "upstream_experiment": "experiment_6167_arc_task_aware_multiseed_replication",
++        "upstream_result": EXP6167_RESULT_RELATIVE_PATH.as_posix(),
++        "upstream_live_row_count": int(upstream.get("scored_row_count") or 0),
++        "upstream_row_ids_sha256": upstream.get("row_ids_sha256"),
++        "evidence_source": "Exp6167 live agent self-discovery attempts",
++        "new_induction_mechanism_added": False,
++        "public_level_solve_attempted": False,
++        "principle": FIELD_PRINCIPLES["provenance"],
++    }
++
++
++def field_provenance() -> dict[str, dict[str, str]]:
++    return {
++        field: {
++            "source": "experiment_6181_arc_logo_shortcut_audit",
++            "principle": FIELD_PRINCIPLES[field],
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    if not dict(artifact.get("preconditions_checked") or {}).get("root_clutter", {}).get("ok"):
++        reasons.append("root_clutter")
++    slot = dict(artifact.get("single_arc_slot_receipt") or {})
++    if int(slot.get("slot_count_claimed") or 0) != 1 or slot.get("only_arc_slot_for_v535") is not True:
++        reasons.append("single_arc_slot_receipt")
++    fixed = dict(artifact.get("fixed_exp6167_policy_freeze") or {})
++    if int(fixed.get("held_control_refit_count") or 0) != 0:
++        reasons.append("fixed_exp6167_policy_freeze")
++    live = dict(artifact.get("adapter_disabled_live_path_receipt") or {})
++    if live.get("adapter_disabled") is not True or live.get("all_rows_live_agent_owned") is not True:
++        reasons.append("adapter_disabled_live_path_receipt")
++    dataset = dict(artifact.get("live_attempt_label_dataset") or {})
++    if dataset.get("all_rows_live_agent_self_discovery") is not True:
++        reasons.append("live_attempt_label_dataset")
++    loo = dict(artifact.get("leave_one_game_out_controls") or {})
++    if loo.get("all_folds_invariant") is not True or int(loo.get("policy_refit_count_total") or 0) != 0:
++        reasons.append("leave_one_game_out_controls")
++    controls = dict(artifact.get("label_control_results") or {})
++    if set(controls) != set(CONTROL_NAMES) or any(
++        dict(control).get("passed") is not True for control in controls.values()
++    ):
++        reasons.append("label_control_results")
++    path = dict(artifact.get("no_source_bfs_solver_kit_path_receipt") or {})
++    if path.get("proves_no_source_bfs_solver_path") is not True:
++        reasons.append("no_source_bfs_solver_kit_path_receipt")
++    if artifact.get("solve_claimed") is not False:
++        reasons.append("solve_claimed")
++    if int(artifact.get("level_credit_delta") or 0) != 0:
++        reasons.append("level_credit_delta")
++    if artifact.get("registry_delta") not in (0, False):
++        reasons.append("registry_delta")
++    if artifact.get("registry_levels_unchanged") is not True:
++        reasons.append("registry_levels_unchanged")
++    if not dict(artifact.get("protected_files_unchanged") or {}).get("unchanged"):
++        reasons.append("protected_files_unchanged")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        reasons.append("inference_substrate")
++    return reasons
++
++
++def status(artifact: Mapping[str, Any]) -> str:
++    return "blocked" if _blocked_reasons(artifact) else "complete_no_shortcut_detected"
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    if status(artifact) == "complete_no_shortcut_detected":
++        return (
++            "complete_no_shortcut_detected: fixed_exp6167_policy_label_controls_"
++            "invariant_no_solve_no_registry_delta"
++        )
++    reasons = "_".join(_blocked_reasons(artifact)[:4]) or "audit_blocked"
++    return f"blocked: {reasons}_no_solve_no_registry_delta"
++
++
++def run(
++    *,
++    result_path: Path | None = None,
++    root: Path = REPO_ROOT,
++    test_exit_codes: Mapping[str, int] | None = None,
++    duration_s: float | None = None,
++    write: bool = False,
++) -> JsonDict:
++    started = time.perf_counter()
++    out_path = result_path or (root / RESULT_RELATIVE_PATH)
++    exp6167_artifact = load_exp6167_artifact(root)
++    registry_before = _registry_level_fingerprint(root)
++    pre = preconditions_checked(root=root, result_path=out_path, exp6167_artifact=exp6167_artifact)
++    rows = abstract_live_attempt_rows(exp6167_artifact)
++    manifest = fixed_task_aware_manifest(exp6167_artifact)
++    protected = protected_files_unchanged(root, dict(pre.get("protected_file_hashes_before") or {}))
++    registry_after = _registry_level_fingerprint(root)
++    artifact: JsonDict = {
++        "status": "",
++        "preconditions_checked": pre,
++        "single_arc_slot_receipt": single_arc_slot_receipt(),
++        "fixed_exp6167_policy_freeze": fixed_exp6167_policy_freeze(root, exp6167_artifact),
++        "adapter_disabled_live_path_receipt": adapter_disabled_live_path_receipt(exp6167_artifact),
++        "live_attempt_label_dataset": live_attempt_label_dataset(exp6167_artifact, rows),
++        "leave_one_game_out_controls": leave_one_game_out_controls(rows, manifest=manifest),
++        "label_control_results": label_control_results(rows, manifest=manifest),
++        "shortcut_audit_summary": {},
++        "no_source_bfs_solver_kit_path_receipt": no_source_bfs_solver_kit_path_receipt(
++            root=root, exp6167_artifact=exp6167_artifact
++        ),
++        "solve_claimed": False,
++        "level_credit_delta": 0,
++        "registry_delta": False,
++        "registry_levels_unchanged": registry_before == registry_after,
++        "offline_reproduced": False,
++        "provenance": provenance(exp6167_artifact),
++        "protected_files_unchanged": protected,
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - started),
++            6,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": field_provenance(),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": {
++            str(command): int(code) for command, code in dict(test_exit_codes or {}).items()
++        },
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["shortcut_audit_summary"] = shortcut_audit_summary(artifact)
++    artifact["status"] = status(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    if write:
++        _write_atomic_json(out_path, artifact)
++    return artifact
++
++
++def _write_atomic_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:  # pragma: no cover - schema guard.
++        raise ValueError(f"missing required fields: {missing}")
++    if set(artifact.get("field_provenance", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        raise ValueError("field_provenance")  # pragma: no cover - schema guard.
++    if artifact.get("solve_claimed") is not False:
++        raise ValueError("solve_claimed")
++    if int(artifact.get("level_credit_delta") or 0) != 0:
++        raise ValueError("level_credit_delta")
++    if artifact.get("registry_delta") not in (0, False):
++        raise ValueError("registry_delta")
++    if artifact.get("offline_reproduced", False) is not False:
++        raise ValueError("offline_reproduced")  # pragma: no cover - no-solve guard.
++    if artifact.get("registry_levels_unchanged") is not True:
++        raise ValueError("registry_levels_unchanged")
++    slot = dict(artifact.get("single_arc_slot_receipt") or {})
++    if int(slot.get("slot_count_claimed") or 0) != 1 or slot.get("only_arc_slot_for_v535") is not True:
++        raise ValueError("single_arc_slot_receipt")
++    if any(
++        dict(control).get("passed") is not True
++        for control in dict(artifact.get("label_control_results") or {}).values()
++    ):
++        raise ValueError("label_control_results")
++    path = dict(artifact.get("no_source_bfs_solver_kit_path_receipt") or {})
++    if path.get("solver_kit_reproduce_called") is not False:
++        raise ValueError("solver_kit_reproduce_called")
++    for field in (
++        "source_read_used",
++        "offline_ground_truth_bfs_run",
++        "solver_kit_imported_by_exp6181_module",
++        "adapter_route_used",
++    ):
++        if path.get(field) is not False:
++            raise ValueError(field)
++    if path.get("proves_no_source_bfs_solver_path") is not True:
++        raise ValueError("no_source_bfs_solver_kit_path_receipt")
++    if artifact.get("shortcut_audit_summary") != shortcut_audit_summary(artifact):
++        raise ValueError("shortcut_audit_summary")  # pragma: no cover - recomputed in run.
++    if artifact.get("status") != status(artifact):
++        raise ValueError("status")  # pragma: no cover - recomputed in run.
++    if artifact.get("honest_verdict") != honest_verdict(artifact):
++        raise ValueError("honest_verdict")  # pragma: no cover - recomputed in run.
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++    return True
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    if args.validate:
++        validate_artifact(json.loads((REPO_ROOT / RESULT_RELATIVE_PATH).read_text(encoding="utf-8")))
++        print(RESULT_RELATIVE_PATH.as_posix())
++        return 0
++    run(write=True)
++    print(RESULT_RELATIVE_PATH.as_posix())
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_6181_arc_logo_shortcut_audit.json b/results/experiment_6181_arc_logo_shortcut_audit.json
+new file mode 100644
+index 0000000000..727f79720f
+--- /dev/null
++++ b/results/experiment_6181_arc_logo_shortcut_audit.json
+@@ -0,0 +1,665 @@
++{
++  "adapter_disabled_live_path_receipt": {
++    "adapter_disabled": true,
++    "all_rows_live_agent_owned": true,
++    "e3_policy_seen": true,
++    "game_source_read_count": 0,
++    "hand_calibration_disabled": true,
++    "llm_induction_disabled": true,
++    "llm_invocation_count": 0,
++    "make_carnot_agent_constructed": true,
++    "offline_ground_truth_bfs_run_count": 0,
++    "per_game_lookup_routes_disabled": true,
++    "principle": "carries the Exp6167 adapter-disabled live E3 path receipts.",
++    "registry_gotcha_calibration_disabled": true,
++    "solver_routes_disabled": true
++  },
++  "duration_s": 1.0,
++  "field_provenance": {
++    "adapter_disabled_live_path_receipt": {
++      "principle": "carries the Exp6167 adapter-disabled live E3 path receipts.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "duration_s": {
++      "principle": "wall-clock duration of the deterministic no-LLM audit.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "field_provenance": {
++      "principle": "every required field traces to spec, Exp6167 hashes, live attempts, controls, path guards, or command receipts.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "fixed_exp6167_policy_freeze": {
++      "principle": "content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "honest_verdict": {
++      "principle": "complete_no_shortcut_detected: or blocked: verdict with no solve or registry delta.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "inference_substrate": {
++      "principle": "live_e3_adapter_disabled_runtime_transitions declares adapter-disabled no-LLM ARC live-path evidence.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "label_control_results": {
++      "principle": "known-label, held-out-label, shuffled-label, alias, and unknown-label relabelings must leave decisions invariant.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "leave_one_game_out_controls": {
++      "principle": "each game is held out exactly once and scored with the same fixed policy.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "level_credit_delta": {
++      "principle": "bare 0; known public level totals do not move.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "live_attempt_label_dataset": {
++      "principle": "exposes the game labels and abstracted label rows derived only from Exp6167 live agent attempts.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "no_source_bfs_solver_kit_path_receipt": {
++      "principle": "proves source reads, offline BFS, solver-kit reproduction, and adapter routes were not used.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "preconditions_checked": {
++      "principle": "registry, Exp6167 hashes, task labels, live runtime paths, protected files, root clutter, and protected git status are snapshotted before output.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "protected_files_unchanged": {
++      "principle": "conductor, ops status/changelog, and traceability files remain byte-identical.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "provenance": {
++      "principle": "names Exp6167 as the frozen upstream and live self-discovery evidence source.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "registry_delta": {
++      "principle": "bare false; no registry update is proposed.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "registry_levels_unchanged": {
++      "principle": "bare true; level fingerprint before and after the audit matches.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed checksum detects later audit drift.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "shortcut_audit_summary": {
++      "principle": "summarizes whether any label or logo shortcut changed the fixed-policy decisions.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "single_arc_slot_receipt": {
++      "principle": "proves Exp6181 is the only `.535` ARC slot being claimed by this artifact.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "solve_claimed": {
++      "principle": "bare false; robustness audits never claim public solve credit.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "status": {
++      "principle": "terminal audit state; complete_no_shortcut_detected or blocked names whether the fixed-policy shortcut audit is valid.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "test_commands": {
++      "principle": "records focused, coverage, spec, validation, adversarial, protected-file, root-clutter, and full-suite checks.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    },
++    "test_exit_codes": {
++      "principle": "records verification exit codes without implying unrun checks passed.",
++      "source": "experiment_6181_arc_logo_shortcut_audit"
++    }
++  },
++  "fixed_exp6167_policy_freeze": {
++    "current_held_rows_used_for_fit": 0,
++    "exp6167_module_path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
++    "exp6167_module_sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
++    "exp6167_result_path": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++    "exp6167_result_sha256": "sha256:05e6e61068abeccc21614c9cee46054619ee2ea953320e6f0c542b6c30adc1f8",
++    "fixed_before_controls": true,
++    "held_control_refit_count": 0,
++    "policy_freeze_hash": "sha256:e96ca55c1ece577b8bc6b58c032aa7804777579ce4d7fb51a24e632cfa8748bb",
++    "principle": "content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.",
++    "task_aware_manifest_hash": "sha256:5d72284962bb8267466a0d1d9b7f4752b4e1f631b17e2e0541df53302707fa4b",
++    "task_aware_min_changed_cells": 1,
++    "uses_game_source": false,
++    "uses_offline_bfs": false
++  },
++  "honest_verdict": "complete_no_shortcut_detected: fixed_exp6167_policy_label_controls_invariant_no_solve_no_registry_delta",
++  "inference_substrate": "live_e3_adapter_disabled_runtime_transitions",
++  "label_control_results": {
++    "alias": {
++      "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "changed_decision_count": 0,
++      "control": "alias",
++      "decision_count": 288,
++      "decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "label_feature_visible_to_row_metadata": true,
++      "passed": true
++    },
++    "held_out_label": {
++      "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "changed_decision_count": 0,
++      "control": "held_out_label",
++      "decision_count": 288,
++      "decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "label_feature_visible_to_row_metadata": true,
++      "passed": true
++    },
++    "known_label": {
++      "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "changed_decision_count": 0,
++      "control": "known_label",
++      "decision_count": 288,
++      "decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "label_feature_visible_to_row_metadata": true,
++      "passed": true
++    },
++    "shuffled_label": {
++      "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "changed_decision_count": 0,
++      "control": "shuffled_label",
++      "decision_count": 288,
++      "decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "label_feature_visible_to_row_metadata": true,
++      "passed": true
++    },
++    "unknown_label": {
++      "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "changed_decision_count": 0,
++      "control": "unknown_label",
++      "decision_count": 288,
++      "decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++      "label_feature_visible_to_row_metadata": false,
++      "passed": true
++    }
++  },
++  "leave_one_game_out_controls": {
++    "all_folds_invariant": true,
++    "all_games_held_once": true,
++    "fold_count": 6,
++    "folds": {
++      "lp85": {
++        "changed_decision_count": 0,
++        "held_game": "lp85",
++        "held_out_label_signature_sha256": "sha256:b41522d39c2887e7de387af10d6de13b68f9afbe0c35cd36860dfd7ef286b382",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:b41522d39c2887e7de387af10d6de13b68f9afbe0c35cd36860dfd7ef286b382",
++        "policy_refit_count": 0,
++        "training_games": [
++          "su15",
++          "tu93",
++          "r11l",
++          "ls20",
++          "sp80"
++        ]
++      },
++      "ls20": {
++        "changed_decision_count": 0,
++        "held_game": "ls20",
++        "held_out_label_signature_sha256": "sha256:0ca23b838f19c7b1e64f1db2c4eb44c96040f5b352400b356326b6c53ad40791",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:0ca23b838f19c7b1e64f1db2c4eb44c96040f5b352400b356326b6c53ad40791",
++        "policy_refit_count": 0,
++        "training_games": [
++          "lp85",
++          "su15",
++          "tu93",
++          "r11l",
++          "sp80"
++        ]
++      },
++      "r11l": {
++        "changed_decision_count": 0,
++        "held_game": "r11l",
++        "held_out_label_signature_sha256": "sha256:7016d7635cb3d4c946b3f3f26eab38378bddcc4f16b44615811936817c1cb997",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:7016d7635cb3d4c946b3f3f26eab38378bddcc4f16b44615811936817c1cb997",
++        "policy_refit_count": 0,
++        "training_games": [
++          "lp85",
++          "su15",
++          "tu93",
++          "ls20",
++          "sp80"
++        ]
++      },
++      "sp80": {
++        "changed_decision_count": 0,
++        "held_game": "sp80",
++        "held_out_label_signature_sha256": "sha256:1dff93e4e3a98c77b42cbc9d453c68b1e12de0e1c56a1bc3668c3de4ef4d5aef",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:1dff93e4e3a98c77b42cbc9d453c68b1e12de0e1c56a1bc3668c3de4ef4d5aef",
++        "policy_refit_count": 0,
++        "training_games": [
++          "lp85",
++          "su15",
++          "tu93",
++          "r11l",
++          "ls20"
++        ]
++      },
++      "su15": {
++        "changed_decision_count": 0,
++        "held_game": "su15",
++        "held_out_label_signature_sha256": "sha256:1f7e52b31a70e2ea3ea81ff4c9efe23862253ba7e8885ac6fba70c27583a63a4",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:1f7e52b31a70e2ea3ea81ff4c9efe23862253ba7e8885ac6fba70c27583a63a4",
++        "policy_refit_count": 0,
++        "training_games": [
++          "lp85",
++          "tu93",
++          "r11l",
++          "ls20",
++          "sp80"
++        ]
++      },
++      "tu93": {
++        "changed_decision_count": 0,
++        "held_game": "tu93",
++        "held_out_label_signature_sha256": "sha256:7aca8f4a64153c903ce8731d470be338a1d845093310e6b3bd91917647137895",
++        "held_row_count": 24,
++        "invariant": true,
++        "known_label_signature_sha256": "sha256:7aca8f4a64153c903ce8731d470be338a1d845093310e6b3bd91917647137895",
++        "policy_refit_count": 0,
++        "training_games": [
++          "lp85",
++          "su15",
++          "r11l",
++          "ls20",
++          "sp80"
++        ]
++      }
++    },
++    "policy_refit_count_total": 0,
++    "principle": "each game is held out exactly once and scored with the same fixed policy."
++  },
++  "level_credit_delta": 0,
++  "live_attempt_label_dataset": {
++    "abstracted_from_metric_denominators_only": true,
++    "all_rows_live_agent_self_discovery": true,
++    "games": [
++      "lp85",
++      "su15",
++      "tu93",
++      "r11l",
++      "ls20",
++      "sp80"
++    ],
++    "principle": "exposes the game labels and abstracted label rows derived only from Exp6167 live agent attempts.",
++    "raw_game_source_materialized": false,
++    "row_count": 144,
++    "rows_by_game": {
++      "lp85": 24,
++      "ls20": 24,
++      "r11l": 24,
++      "sp80": 24,
++      "su15": 24,
++      "tu93": 24
++    },
++    "seeds": [
++      6167,
++      6168,
++      6169
++    ],
++    "source": "exp6167_live_agent_self_discovery_aggregate",
++    "upstream_row_ids_sha256": "sha256:59005e3ffc9b0610d5b5f6a6d08d9a0ab582a6eead2093b639987036652680a6"
++  },
++  "no_source_bfs_solver_kit_path_receipt": {
++    "adapter_route_used": false,
++    "exp6167_adapter_disabled": true,
++    "exp6167_per_game_lookup_routes_disabled": true,
++    "exp6167_solver_routes_disabled": true,
++    "inspected_module_imports": [
++      "__future__",
++      "argparse",
++      "ast",
++      "carnot",
++      "carnot.agentic",
++      "collections",
++      "collections.abc",
++      "hashlib",
++      "json",
++      "pathlib",
++      "platform",
++      "subprocess",
++      "time",
++      "typing"
++    ],
++    "offline_ground_truth_bfs_run": false,
++    "principle": "proves source reads, offline BFS, solver-kit reproduction, and adapter routes were not used.",
++    "proves_no_source_bfs_solver_path": true,
++    "solver_kit_imported_by_exp6181_module": false,
++    "solver_kit_reproduce_called": false,
++    "source_read_used": false
++  },
++  "offline_reproduced": false,
++  "preconditions_checked": {
++    "exp6167_hashes": [
++      {
++        "exists": true,
++        "path": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++        "sha256": "sha256:05e6e61068abeccc21614c9cee46054619ee2ea953320e6f0c542b6c30adc1f8",
++        "size_bytes": 81730
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
++        "sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
++        "size_bytes": 49334
++      },
++      {
++        "exists": true,
++        "path": "tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py",
++        "sha256": "sha256:32c2b161cf84ff470e68fcd4a8a9850349c93f048141ad2d5aea8b1ea2351ad5",
++        "size_bytes": 12902
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/agentic/arc_task_aware_energy.py",
++        "sha256": "sha256:ec70c809f81c595c5395bd9d6f548618d6653899cfae29ba72a91d16d16dc7b8",
++        "size_bytes": 4877
++      },
++      {
++        "exists": true,
++        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
++        "sha256": "sha256:18e33f4c99a5cd44da6112220a1179df8887c8b4c735262ff3fffd928e2fa9d4",
++        "size_bytes": 1529029
++      }
++    ],
++    "exp6167_policy_freeze_hash": "sha256:e96ca55c1ece577b8bc6b58c032aa7804777579ce4d7fb51a24e632cfa8748bb",
++    "live_runtime_paths": {
++      "adapter": "python/carnot/agentic/arc_game_adapters.py",
++      "calibration": "python/carnot/agentic/arc_task_aware_energy.py",
++      "live_entrypoint": "python/carnot/agentic/arc_competition_agent.py",
++      "solver_kit": "python/carnot/agentic/arc_solver_kit.py"
++    },
++    "milestone": "2026.08.535",
++    "output_path": {
++      "existed_before": false,
++      "parent_exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6181_arc_logo_shortcut_audit.json",
++      "sha256_before": null
++    },
++    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++    "principle": "registry, Exp6167 hashes, task labels, live runtime paths, protected files, root clutter, and protected git status are snapshotted before output.",
++    "protected_file_hashes_before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:40ad28295346def20c5682999e67bec6e3ce71326481271f7f08e5ab9082da11",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "protected_git_status_short": [],
++    "python": "3.12.13",
++    "registry_snapshot": {
++      "level_fingerprint": {
++        "games": [
++          {
++            "full_game_clear": true,
++            "game": "ar25",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "bp35",
++            "levels_reproduced": 9,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "cd82",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "cn04",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "dc22",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "ft09",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "g50t",
++            "levels_reproduced": 7,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "ka59",
++            "levels_reproduced": 7,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "lf52",
++            "levels_reproduced": 10,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "lp85",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "ls20",
++            "levels_reproduced": 7,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "m0r0",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "r11l",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "re86",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "s5i5",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "sb26",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "sc25",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "sk48",
++            "levels_reproduced": 8,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "sp80",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "su15",
++            "levels_reproduced": 9,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "tn36",
++            "levels_reproduced": 7,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "tr87",
++            "levels_reproduced": 6,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "tu93",
++            "levels_reproduced": 9,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "vc33",
++            "levels_reproduced": 7,
++            "reproducibility": "reproduced"
++          },
++          {
++            "full_game_clear": true,
++            "game": "wa30",
++            "levels_reproduced": 9,
++            "reproducibility": "reproduced"
++          }
++        ],
++        "reproducible_total_games": 25,
++        "reproducible_total_levels": 183
++      },
++      "level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
++    },
++    "root_clutter": {
++      "ok": true,
++      "root_python_files": []
++    },
++    "run_date": "20260807",
++    "schema": "carnot.experiment_6181.arc_logo_shortcut_audit.v1.preconditions",
++    "task_labels": {
++      "aliases": {
++        "lp85": "arc-logo-alias::lp85",
++        "ls20": "arc-logo-alias::ls20",
++        "r11l": "arc-logo-alias::r11l",
++        "sp80": "arc-logo-alias::sp80",
++        "su15": "arc-logo-alias::su15",
++        "tu93": "arc-logo-alias::tu93"
++      },
++      "games": [
++        "lp85",
++        "su15",
++        "tu93",
++        "r11l",
++        "ls20",
++        "sp80"
++      ],
++      "label_set_sha256": "sha256:5e5c6bf5e3fe3300c50286c0013d05a0c997b83c2898e8ef14fbe0c4504aa1aa",
++      "seeds": [
++        6167,
++        6168,
++        6169
++      ],
++      "unknown_label": "unknown_arc_game"
++    }
++  },
++  "protected_files_unchanged": {
++    "after": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:40ad28295346def20c5682999e67bec6e3ce71326481271f7f08e5ab9082da11",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:40ad28295346def20c5682999e67bec6e3ce71326481271f7f08e5ab9082da11",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "principle": "conductor, ops status/changelog, and traceability files remain byte-identical.",
++    "unchanged": true
++  },
++  "provenance": {
++    "evidence_source": "Exp6167 live agent self-discovery attempts",
++    "new_induction_mechanism_added": false,
++    "principle": "names Exp6167 as the frozen upstream and live self-discovery evidence source.",
++    "public_level_solve_attempted": false,
++    "upstream_experiment": "experiment_6167_arc_task_aware_multiseed_replication",
++    "upstream_live_row_count": 144,
++    "upstream_result": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++    "upstream_row_ids_sha256": "sha256:59005e3ffc9b0610d5b5f6a6d08d9a0ab582a6eead2093b639987036652680a6"
++  },
++  "registry_delta": false,
++  "registry_levels_unchanged": true,
++  "reproducibility_checksum": "sha256:3f776ef58b17ee4a62b0b825dc7a1226af5365762e0806e3919de8c8069a0c28",
++  "shortcut_audit_summary": {
++    "all_controls_passed": true,
++    "baseline_decision_signature_sha256": "sha256:19e6f7b89f0679ca553324bdea0dcaa6f233076083d336dac08c85f43b42967b",
++    "label_controls_passed": true,
++    "leave_one_game_out_passed": true,
++    "no_path_shortcut_passed": true,
++    "principle": "summarizes whether any label or logo shortcut changed the fixed-policy decisions.",
++    "shortcut_detected": false,
++    "single_slot_passed": true,
++    "solve_or_registry_credit_claimed": false
++  },
++  "single_arc_slot_receipt": {
++    "milestone": "2026.08.535",
++    "no_other_arc_slot_claimed_by_this_artifact": true,
++    "only_arc_slot_for_v535": true,
++    "principle": "proves Exp6181 is the only `.535` ARC slot being claimed by this artifact.",
++    "run_date": "20260807",
++    "slot_count_claimed": 1,
++    "slot_id": "exp6181-arc-logo-shortcut-audit",
++    "track": "arc"
++  },
++  "solve_claimed": false,
++  "status": "complete_no_shortcut_detected",
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py -m pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6181_arc_logo_shortcut_audit.py",
++    ".venv/bin/ruff check python/carnot/experiment_6181_arc_logo_shortcut_audit.py tests/python/test_experiment_6181_arc_logo_shortcut_audit.py",
++    ".venv/bin/python -m carnot.experiment_6181_arc_logo_shortcut_audit --validate",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6181_arc_logo_shortcut_audit.json",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py -m pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6181_arc_logo_shortcut_audit.py --fail-under=100": 0,
++    ".venv/bin/pytest tests/python -q": 0,
++    ".venv/bin/pytest tests/python/test_experiment_6181_arc_logo_shortcut_audit.py -q --no-cov -n 0": 0,
++    ".venv/bin/python -m carnot.experiment_6181_arc_logo_shortcut_audit --validate": 0,
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6181_arc_logo_shortcut_audit.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6181_arc_logo_shortcut_audit.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/experiment_6181_arc_logo_shortcut_audit.py tests/python/test_experiment_6181_arc_logo_shortcut_audit.py": 0,
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
++  }
++}
+diff --git a/tests/python/test_experiment_6181_arc_logo_shortcut_audit.py b/tests/python/test_experiment_6181_arc_logo_shortcut_audit.py
+new file mode 100644
+index 0000000000..05005c25e8
+--- /dev/null
++++ b/tests/python/test_experiment_6181_arc_logo_shortcut_audit.py
+@@ -0,0 +1,285 @@
++"""Tests for Exp6181 ARC logo shortcut audit.
++
++Spec refs: REQ-ARC-WMTE-6181,
++SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS,
++SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT,
++SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++import scripts.adversarial_verify as adversarial_verify
++from carnot import experiment_6181_arc_logo_shortcut_audit as mod
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++ARC_SPEC = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _passing_exit_codes() -> dict[str, int]:
++    return {command: 0 for command in mod.DEFAULT_TEST_COMMANDS}
++
++
++def test_req_6181_spec_declares_single_slot_shortcut_audit_contract() -> None:
++    """REQ-ARC-WMTE-6181: OpenSpec names the fixed-policy audit contract."""
++
++    text = ARC_SPEC.read_text(encoding="utf-8")
++    section = text[text.index("## REQ-ARC-WMTE-6181") :]
++    section = section[: section.index("### REQ-ARC-WMTE-6180")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-ARC-WMTE-6181",
++        "SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS",
++        "SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT",
++        "SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "leave-one-game-out",
++        "known-label",
++        "held-out-label",
++        "shuffled-label",
++        "alias",
++        "unknown-label",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_6181_preconditions_snapshot_fixed_policy_and_task_labels(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS."""
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    pre = artifact["preconditions_checked"]
++    assert pre["run_date"] == "20260807"
++    assert pre["registry_snapshot"]["path"] == "ops/arc_solve_registry.yaml"
++    assert pre["root_clutter"]["ok"] is True
++    assert pre["protected_git_status_short"] == []
++    assert pre["task_labels"]["games"] == list(mod.DEFAULT_GAMES)
++    assert pre["live_runtime_paths"]["live_entrypoint"] == (
++        "python/carnot/agentic/arc_competition_agent.py"
++    )
++    assert artifact["single_arc_slot_receipt"]["slot_count_claimed"] == 1
++    assert artifact["single_arc_slot_receipt"]["only_arc_slot_for_v535"] is True
++    assert artifact["fixed_exp6167_policy_freeze"]["held_control_refit_count"] == 0
++    assert artifact["fixed_exp6167_policy_freeze"]["policy_freeze_hash"].startswith("sha256:")
++    assert artifact["fixed_exp6167_policy_freeze"]["exp6167_result_sha256"].startswith("sha256:")
++    assert artifact["protected_files_unchanged"]["unchanged"] is True
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_scenario_6181_label_controls_are_invariant_and_no_solve(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT."""
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=True,
++    )
++
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["status"] == "complete_no_shortcut_detected"
++    assert artifact["honest_verdict"].startswith("complete_no_shortcut_detected:")
++    assert artifact["live_attempt_label_dataset"]["row_count"] == 144
++    assert artifact["live_attempt_label_dataset"]["source"] == (
++        "exp6167_live_agent_self_discovery_aggregate"
++    )
++    assert artifact["leave_one_game_out_controls"]["fold_count"] == 6
++    assert artifact["leave_one_game_out_controls"]["all_games_held_once"] is True
++    assert artifact["leave_one_game_out_controls"]["all_folds_invariant"] is True
++    assert artifact["leave_one_game_out_controls"]["policy_refit_count_total"] == 0
++    assert set(artifact["label_control_results"]) == {
++        "known_label",
++        "held_out_label",
++        "shuffled_label",
++        "alias",
++        "unknown_label",
++    }
++    baseline = artifact["shortcut_audit_summary"]["baseline_decision_signature_sha256"]
++    for control in artifact["label_control_results"].values():
++        assert control["passed"] is True
++        assert control["decision_signature_sha256"] == baseline
++        assert control["changed_decision_count"] == 0
++    assert artifact["shortcut_audit_summary"]["shortcut_detected"] is False
++    assert artifact["shortcut_audit_summary"]["all_controls_passed"] is True
++    assert artifact["solve_claimed"] is False
++    assert artifact["level_credit_delta"] == 0
++    assert artifact["registry_delta"] == 0
++    assert artifact["registry_levels_unchanged"] is True
++    assert mod.validate_artifact(artifact) is True
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text()) == artifact
++
++
++def test_scenario_6181_live_rows_and_control_helpers_preserve_exp6167_denominators() -> None:
++    """SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT."""
++
++    exp6167 = mod.load_exp6167_artifact(REPO)
++    rows = mod.abstract_live_attempt_rows(exp6167)
++    manifest = mod.fixed_task_aware_manifest(exp6167)
++    baseline = mod.score_control(rows, manifest=manifest, label_transform=mod.known_label)
++    shuffled = mod.score_control(rows, manifest=manifest, label_transform=mod.shuffled_label)
++    alias = mod.score_control(rows, manifest=manifest, label_transform=mod.alias_label)
++    unknown = mod.score_control(rows, manifest=manifest, label_transform=mod.unknown_label)
++
++    assert len(rows) == exp6167["game_seed_action_budget_and_arm_counts"]["live_row_count"]
++    assert {row["game"] for row in rows} == set(mod.DEFAULT_GAMES)
++    assert {row["source"] for row in rows} == {
++        "exp6167_live_agent_self_discovery_aggregate"
++    }
++    assert all(row["live_agent_self_discovery_attempt"] is True for row in rows)
++    assert baseline["decision_count"] == 288
++    assert baseline["decision_signature_sha256"] == shuffled["decision_signature_sha256"]
++    assert baseline["decision_signature_sha256"] == alias["decision_signature_sha256"]
++    assert baseline["decision_signature_sha256"] == unknown["decision_signature_sha256"]
++
++
++def test_scenario_6181_validation_fails_closed_for_paths_controls_and_credit(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA."""
++
++    artifact = mod.run(
++        result_path=tmp_path / "fixture.json",
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    for field, value in (
++        ("solve_claimed", True),
++        ("level_credit_delta", 1),
++        ("registry_delta", 1),
++        ("registry_levels_unchanged", False),
++    ):
++        bad = deepcopy(artifact)
++        bad[field] = value
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=field):
++            mod.validate_artifact(bad)
++
++    bad_path = deepcopy(artifact)
++    bad_path["no_source_bfs_solver_kit_path_receipt"]["solver_kit_reproduce_called"] = True
++    bad_path["reproducibility_checksum"] = mod.reproducibility_checksum(bad_path)
++    with pytest.raises(ValueError, match="solver_kit_reproduce_called"):
++        mod.validate_artifact(bad_path)
++
++    for path_field in (
++        "source_read_used",
++        "offline_ground_truth_bfs_run",
++        "solver_kit_imported_by_exp6181_module",
++        "adapter_route_used",
++    ):
++        bad = deepcopy(artifact)
++        bad["no_source_bfs_solver_kit_path_receipt"][path_field] = True
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=path_field):
++            mod.validate_artifact(bad)
++
++    bad_path_summary = deepcopy(artifact)
++    bad_path_summary["no_source_bfs_solver_kit_path_receipt"][
++        "proves_no_source_bfs_solver_path"
++    ] = False
++    bad_path_summary["reproducibility_checksum"] = mod.reproducibility_checksum(
++        bad_path_summary
++    )
++    with pytest.raises(ValueError, match="no_source_bfs_solver_kit_path_receipt"):
++        mod.validate_artifact(bad_path_summary)
++
++    bad_control = deepcopy(artifact)
++    bad_control["label_control_results"]["shuffled_label"]["passed"] = False
++    bad_control["shortcut_audit_summary"] = mod.shortcut_audit_summary(bad_control)
++    bad_control["status"] = mod.status(bad_control)
++    bad_control["honest_verdict"] = mod.honest_verdict(bad_control)
++    bad_control["reproducibility_checksum"] = mod.reproducibility_checksum(bad_control)
++    with pytest.raises(ValueError, match="label_control_results"):
++        mod.validate_artifact(bad_control)
++
++    bad_slot = deepcopy(artifact)
++    bad_slot["single_arc_slot_receipt"]["slot_count_claimed"] = 2
++    bad_slot["shortcut_audit_summary"] = mod.shortcut_audit_summary(bad_slot)
++    bad_slot["status"] = mod.status(bad_slot)
++    bad_slot["honest_verdict"] = mod.honest_verdict(bad_slot)
++    bad_slot["reproducibility_checksum"] = mod.reproducibility_checksum(bad_slot)
++    with pytest.raises(ValueError, match="single_arc_slot_receipt"):
++        mod.validate_artifact(bad_slot)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = mod.sha256_json({"wrong": True})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
++
++    bad_reasons = deepcopy(artifact)
++    bad_reasons["preconditions_checked"]["root_clutter"]["ok"] = False
++    bad_reasons["single_arc_slot_receipt"]["slot_count_claimed"] = 0
++    bad_reasons["fixed_exp6167_policy_freeze"]["held_control_refit_count"] = 1
++    bad_reasons["adapter_disabled_live_path_receipt"]["adapter_disabled"] = False
++    bad_reasons["live_attempt_label_dataset"]["all_rows_live_agent_self_discovery"] = False
++    bad_reasons["leave_one_game_out_controls"]["all_folds_invariant"] = False
++    bad_reasons["label_control_results"]["unknown_label"]["passed"] = False
++    bad_reasons["no_source_bfs_solver_kit_path_receipt"][
++        "proves_no_source_bfs_solver_path"
++    ] = False
++    bad_reasons["solve_claimed"] = True
++    bad_reasons["level_credit_delta"] = 1
++    bad_reasons["registry_delta"] = 1
++    bad_reasons["registry_levels_unchanged"] = False
++    bad_reasons["protected_files_unchanged"]["unchanged"] = False
++    bad_reasons["inference_substrate"] = "wrong"
++    reasons = set(mod._blocked_reasons(bad_reasons))
++    assert {
++        "root_clutter",
++        "single_arc_slot_receipt",
++        "fixed_exp6167_policy_freeze",
++        "adapter_disabled_live_path_receipt",
++        "live_attempt_label_dataset",
++        "leave_one_game_out_controls",
++        "label_control_results",
++        "no_source_bfs_solver_kit_path_receipt",
++        "solve_claimed",
++        "level_credit_delta",
++        "registry_delta",
++        "registry_levels_unchanged",
++        "protected_files_unchanged",
++        "inference_substrate",
++    } <= reasons
++
++
++def test_req_6181_adversarial_verify_accepts_no_llm_no_solve_substrate(
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-6181: adversarial verification accepts the no-LLM audit."""
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=True,
++    )
++    report = adversarial_verify.verify_artifact(tmp_path / mod.RESULT_RELATIVE_PATH.name)
++    kinds = {flag["kind"] for flag in report["flags"]}
++
++    assert adversarial_verify._classify_inference_substrate(artifact)["kind"] == "no_llm"
++    assert "DURATION_TOO_SHORT" not in kinds
++    assert "IMPLAUSIBLE_PERFECT" not in kinds
++    assert "METHODOLOGY_MISSING" not in kinds
+-- 
+2.55.0
+

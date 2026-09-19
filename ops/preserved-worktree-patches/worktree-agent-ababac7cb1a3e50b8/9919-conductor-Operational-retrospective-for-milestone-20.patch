@@ -1,0 +1,114 @@
+From 098e00cccd5bc59ada30e39a2c8142f3a6679de1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 10:59:03 -0400
+Subject: [PATCH 09919/11362] [conductor] Operational retrospective for
+ milestone 2026.08.575
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_08_575.json | 57 ++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_575.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index b81a787580..76d2413516 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6346,3 +6346,10 @@ The critical path for milestone .250:
+ - theme: two bounded model streams formed the execution tail while the GPU snapshot showed capacity for cross-experiment scheduling
+ - key result: the supplied GPU evidence does not support a compute-idle defect, but no data available this milestone establishes parallel multi-model loading, a missed DualGPURunner engagement, or the phase-level cause of either long compute stream
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.575
++
++- exp_range: no data available this milestone
++- theme: short mixed execution exposed missing causal timing while one inference process made batching the clearest tooling opportunity
++- key result: 6 tasks finished in 0.2 minutes with compute-task GPU idle false; the records show neither a multi-model launch nor a case where the two-model runner can be assessed
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 67cdd7ca1b..8c176b1b2f 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17738,3 +17738,14 @@ a parallel multi-model launch or missed DualGPURunner engagement.
+ - 2026-08-25: CFR counterfactual and exact-authority audit (✅ Complete) — honest_verdict=complete: clean CFR replay and every applicable source, constraint, stage, family, tamper, leakage, and exact-authority attack behaved as preregistered; the CFR scientific effect remains null; results/experiment_6594_cfr_counterfactual_authority_audit.json
+ - 2026-08-25: Frozen world-model invariant-projection canary (✅ Complete) — honest_verdict=complete: learned invariant projection improved held conservative frozen local rollouts over no projection and norm-matched random constraints; random projection was harmful; damped controls selected no comparable invariant and showed null learned benefit; the exact arm is diagnostic only; results/experiment_6595_invariant_projection_world_model_canary.json
+ - 2026-08-25: Spectral k-block Ising sampler canary (✅ Complete) — honest_verdict=complete: charged CPU software exact-enumerable fixtures support every spectral k-block arm; no FPGA, TSU, PIMI, or general hardware claim; results/experiment_6597_spectral_k_block_ising_canary.json
++
++## 2026-08-25 — Milestone 2026.08.575 operational retrospective
++
++Across 0.2 minutes, 6 experiments finished and 2 carried compute-bound tags.
++Those compute entries occupied 0.1 and 0.02 minutes. No phase trace explains
++the difference. The compute-idle flag is false, and the active device reached
++97% utilization in the monitor snapshot. No launch is documented with 2 or
++more models, so there is no evidenced DualGPURunner eligibility case. For the
++next milestone, the tooling should group 8-16 questions per forward pass and
++write phase clocks, per-task accelerator samples, model count, and runner
++choice.
+diff --git a/results/operational_retro_2026_08_575.json b/results/operational_retro_2026_08_575.json
+new file mode 100644
+index 0000000000..c940b1cfec
+--- /dev/null
++++ b/results/operational_retro_2026_08_575.json
+@@ -0,0 +1,57 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.575",
++  "generated_at": "2026-08-25T14:53:56Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.2,
++  "experiments_completed": 6,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "V575 terminal intake and method lock",
++      "duration_minutes": 0.1,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Spectral k-block Ising sampler canary",
++      "duration_minutes": 0.04,
++      "compute_bound": false
++    },
++    {
++      "experiment": "CFR counterfactual and exact-authority audit",
++      "duration_minutes": 0.03,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Independent CFR row reducer, gated on Exp6592 readiness",
++      "duration_minutes": 0.02,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Frozen world-model invariant-projection canary",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 6 experiments in 0.2 minutes, including 2 compute-bound entries. V575 terminal intake and method lock was the longest compute-bound entry at 0.1 minutes; the available data does not identify the cause.",
++  "bottlenecks_identified": [
++    "Disk-mtime fallback timing with no live git-log commits prevents phase-level attribution; the data does not explain why the 0.1-minute compute-bound intake exceeded the 0.02-minute compute-bound reducer.",
++    "The GPU report records one Python inference process but no batch-size receipt, so the suggested batching opportunity cannot be audited from task-level evidence.",
++    "The record omits task-level model count and runner choice. DualGPURunner applicability is therefore undetermined."
++  ],
++  "improvements_suggested": [
++    "Batch 8-16 questions per forward pass and record the effective batch size; the GPU monitor projects a 4-8x throughput improvement.",
++    "Emit per-task phase timing, GPU utilization, model count, batch size, and runner-selection receipts instead of relying only on disk-mtime reconstruction.",
++    "Use model-count-aware scheduling: keep a single GGUF model on one GPU, and dispatch across both GPUs only when 2 or more models run concurrently."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add 8-16-question inference batching with measured batch-size and throughput receipts.",
++    "Capture task-scoped phase and GPU telemetry for every compute-bound experiment.",
++    "Record model count and runner choice, then route concurrent multi-model work across both GPUs."
++  ],
++  "estimated_time_savings_pct": 45,
++  "meta_reflection": "The locked GPU-idle field is false, and the active GPU reached 97% utilization, so the retrospective does not classify GPU idle as a compute-bound bottleneck. The 45% estimate applies the lower 4x batching projection to the 0.12 compute-bound minutes within 0.2 total minutes; it is conditional because the data does not identify the batchable share."
++}
+-- 
+2.55.0
+

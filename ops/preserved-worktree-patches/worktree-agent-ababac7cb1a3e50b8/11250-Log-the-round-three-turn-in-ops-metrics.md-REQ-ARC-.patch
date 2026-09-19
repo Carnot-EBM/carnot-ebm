@@ -1,0 +1,38 @@
+From 9bb624632d91b2d4419c0b88b2193e5d89d01cda Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 09:18:50 -0400
+Subject: [PATCH 11250/11362] Log the round-three turn in ops/metrics.md
+ (REQ-ARC-WMTE-7033)
+
+One turn-log row with the measured start and end times for the worktree
+agent that moved the exhaustion cell onto the per-level axis. No other file.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/metrics.md | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 3e38023271..6037dc8287 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3376,3 +3376,15 @@ split; measure before planning; prove every guard by deletion.
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-09-05T04:21:03Z | 2026-09-05T04:47:27Z | Measured the ledger (14 receipts, 31 redirects) and 14 eval artifacts (28 rows): new-arm trigger hid 4 of 5 exhausted cells; the shadow run reproduces 12 of 19 credits; the 7013 split has an empty population. REQ-ARC-WMTE-7030/7031/7032 spec, code, 21 tests, 12/12 mutations RED; ledger re-ingested; research note; adversarial review. | see session JSONL |
++
++## Session: 2026-09-05 worktree agent a385887 — round three, the exhaustion cell on the reset axis
++
++User instruction summary: read branch `worktree-agent-a83acaaa5293c1b8f`, fix the exhaustion
++cell's axis (arms reset per level; the cell pooled the run), measure what the corrected form
++emits on real data, decide whether the branch is mergeable; no GPU run; results are evidence.
++
++### Turn Log
++
++| Turn | Start | End | Description | Tokens (est) |
++|------|-------|-----|-------------|------|
++| 1 | 2026-09-05T12:44:04Z | 2026-09-05T13:18:25Z | Merged the branch (bd46ce7e65), confirmed the defect against `arc_trajectory_supervisor.py`, REQ-ARC-WMTE-7033 per-level cells + not-decidable list (cff7630c6a), 15/15 mutations RED with byte-identical restores, validated replay of 6 eval rows (level 0 exhausted in every applied run, 0 on deeper levels), ledger re-evaluated to 0 cells / 5 not decidable (6defbfb8d5), note section 7, status and changelog. Whole-tree collect-only 61,997 tests, 8 errors, none in touched files. | see session JSONL |
+-- 
+2.55.0
+

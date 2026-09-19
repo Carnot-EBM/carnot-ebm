@@ -1,0 +1,43 @@
+From 0be447443f21e5633fdbaffd2a0d30fb815fe1b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 23:26:02 -0400
+Subject: [PATCH 07953/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e47b64610a..2b5200db7c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-07-26T03:06:53Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-26T03:25:59Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index acc8ce18e6..2177b42fa2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14308,3 +14308,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-26 01:41 UTC | Gated on Exp5928 ready: adapter-disabled held stru | OK | 88 passed, 1 warning in 8.62s |
+ | 2026-07-26 03:04 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    )
+ +    live |
++| 2026-07-26 03:23 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | OK | 134 passed, 1 warning in 9.49s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8145f4bbc4..9685d79e9a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 6, "phase": "iteration_start", "started_at": "2026-07-26T03:06:53Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-26T03:25:59Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

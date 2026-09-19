@@ -1,0 +1,1030 @@
+From 3c7d04e06754f5f2e9527534cd2b81bf0f3d187d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 17:48:18 -0400
+Subject: [PATCH 00022/11362] =?UTF-8?q?[conductor]=20GateMate=20continuity?=
+ =?UTF-8?q?=20audit=20(documentation-only=20=E2=80=94=20openFPGALoader=20m?=
+ =?UTF-8?q?issing=20in=20.331-.335,=20per=20known-issues)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3676-gatemate-continuity-audit-v23
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/fpga/spec.md            |  63 +++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ment_3676_gatemate_continuity_audit_v23.py | 241 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ ...nt_3676_gatemate_continuity_audit_v23.json |  59 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ment_3676_gatemate_continuity_audit_v23.py |  15 ++
+ ...ment_3676_gatemate_continuity_audit_v23.py | 251 ++++++++++++++++++
+ 26 files changed, 666 insertions(+), 37 deletions(-)
+ create mode 100644 python/carnot/experiment_3676_gatemate_continuity_audit_v23.py
+ create mode 100644 results/experiment_3676_gatemate_continuity_audit_v23.json
+ create mode 100644 scripts/experiment_3676_gatemate_continuity_audit_v23.py
+ create mode 100644 tests/python/test_experiment_3676_gatemate_continuity_audit_v23.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 9dbbdaa81b..591f87acab 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -4246,6 +4246,69 @@ when reachable, field principles, deterministic seed, checksum, and duration.
+ **Implementation status:** Pending (Exp 3675)
+ 
+ 
++---
++
++### REQ-HW-3676
++
++**Title:** GateMate continuity audit v23 records openFPGALoader state without running flash smoke host IO
++
++**Description:**
++Experiment 3676 MUST perform the milestone GateMate visibility audit without
++running the known hanging flash/smoke host-IO path. The only permitted hardware
++probe is the JTAG detect precondition:
++
++1. Run `command -v openFPGALoader`.
++2. Only if that command succeeds, run
++   `timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect`.
++3. Stop after recording the installed/detect state and the known blocker.
++
++The artifact MUST NOT claim a flash or host-visible smoke pass. A successful
++GateMate IDCODE detect only proves JTAG visibility for the audit.
++
++**Acceptance criteria:**
++- `results/experiment_3676_gatemate_continuity_audit_v23.json` is generated.
++- The artifact includes `honest_verdict`, `inference_substrate`,
++  `openfpgaloader_installed`, `gatemate_idcode_detected`, `known_blocker`,
++  `random_seed`, `reproducibility_checksum`, and `duration_s`.
++- The artifact includes field-principle annotations for each required field,
++  documenting why the value exists and storing the actual artifact value
++  separately from the principle.
++- `honest_verdict` MUST be
++  `"complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker"`.
++- `inference_substrate` MUST be `"hardware_smoke"`.
++- `openfpgaloader_installed` MUST record whether `command -v openFPGALoader`
++  succeeded in the current environment.
++- If `command -v openFPGALoader` fails, `openfpgaloader_installed` MUST be
++  `false`, `gatemate_idcode_detected` MUST be `null`, and the detect command
++  MUST NOT run.
++- If the detect command runs and reports a GateMate IDCODE, the artifact MUST
++  set `gatemate_idcode_detected=true` while still preserving the
++  flash/smoke host-IO hang as a known blocker.
++- If the detect command runs and exits non-zero, times out, or does not report
++  a GateMate IDCODE, `gatemate_idcode_detected` MUST be `false` and the artifact
++  MUST name the missing-tool or detect blocker together with the flash/smoke
++  host-IO hang.
++- No implementation or test path may invoke GateMate flash programming or the
++  hanging host-IO smoke script.
++
++**Implementation status:** Pending (Exp 3676)
++
++---
++
++### SCENARIO-HW-3676
++
++**Scenario:** GateMate continuity v23 audits JTAG detect state and preserves the host-IO blocker.
++
++**Given:** A GateMate continuity audit is required for milestone 2026.06.336.
++**When:** Experiment 3676 checks for `openFPGALoader`, optionally runs the bounded
++DirtyJTAG detect command, and avoids all flash/smoke host-IO commands.
++**Then:** It writes `results/experiment_3676_gatemate_continuity_audit_v23.json`
++with the terminal verdict, openFPGALoader installed state, IDCODE detect result,
++known blocker, field principles, deterministic seed, checksum, and duration.
++
++**Implementation status:** Pending (Exp 3676)
++
++
+ ---
+ 
+ ### REQ-HW-3649
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a94ab526a5..63d114e98c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2801,
++  "experiments_checked": 2802,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3676_gatemate_continuity_audit_v23.py b/python/carnot/experiment_3676_gatemate_continuity_audit_v23.py
+new file mode 100644
+index 0000000000..ce9702c153
+--- /dev/null
++++ b/python/carnot/experiment_3676_gatemate_continuity_audit_v23.py
+@@ -0,0 +1,241 @@
++"""Build the Exp 3676 GateMate continuity audit v23 artifact.
++
++Spec refs: REQ-HW-3676, SCENARIO-HW-3676.
++
++This audit records what the host can honestly know without entering the
++GateMate flash/smoke path that is already known to hang. A positive JTAG detect
++means the board is visible to DirtyJTAG; it is not a host-visible smoke pass.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++
++EXPERIMENT_ID = "exp3676"
++TASK_ID = "exp3676-gatemate-continuity-audit-v23"
++SCHEMA = "carnot.gatemate_continuity_audit.v23"
++OUTPUT_REL_PATH = Path("results/experiment_3676_gatemate_continuity_audit_v23.json")
++RANDOM_SEED = 3676
++
++OPENFPGALOADER_WHICH_COMMAND = ("bash", "-lc", "command -v openFPGALoader")
++GATEMATE_DETECT_COMMAND = (
++    "timeout",
++    "--kill-after=2s",
++    "5s",
++    "openFPGALoader",
++    "-c",
++    "dirtyJtag",
++    "--detect",
++)
++
++TERMINAL_VERDICT = (
++    "complete: "
++    "gatemate_continuity_audit_recorded_openfpgaloader_state_"
++    "flash_smoke_host_io_hang_known_blocker"
++)
++HOST_IO_HANG_BLOCKER = "flash/smoke host-IO hang"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "openfpgaloader_installed",
++    "gatemate_idcode_detected",
++    "known_blocker",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "JTAG detect only; no flash.",
++    "openfpgaloader_installed": (
++        "Records the root blocker (tool missing) honestly so the audit trail is current."
++    ),
++    "gatemate_idcode_detected": (
++        "Honest detect result (bool or null) -- not a fabricated flash pass."
++    ),
++    "known_blocker": (
++        "Names the missing-tool / flash-smoke host-IO hang so the audit trail stays current."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str = ""
++    stderr: str = ""
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "command": command_to_string(self.command),
++            "exit_code": self.exit_code,
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "combined_output": self.combined_output,
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...]], CommandProbe]
++
++
++def command_to_string(command: tuple[str, ...]) -> str:
++    return shlex.join(command)
++
++
++def run_command(command: tuple[str, ...]) -> CommandProbe:
++    """Run one bounded probe and preserve the output that explains the verdict."""
++    try:
++        completed = subprocess.run(
++            list(command),
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++    except OSError as exc:
++        return CommandProbe(command=command, exit_code=127, stderr=str(exc))
++    return CommandProbe(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def sha256_payload(payload: dict[str, object]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _detect_reports_gatemate_idcode(probe: CommandProbe) -> bool:
++    text = probe.combined_output.lower()
++    has_idcode = "idcode" in text
++    names_gatemate = "gatemate" in text or "gm1a" in text or "colognechip" in text
++    return probe.exit_code == 0 and has_idcode and names_gatemate
++
++
++def _known_blocker(openfpgaloader_installed: bool, detect_probe: CommandProbe | None) -> str:
++    if not openfpgaloader_installed:
++        return f"openFPGALoader not found on PATH; {HOST_IO_HANG_BLOCKER}"
++    if detect_probe is not None and detect_probe.exit_code == 124:
++        return f"openFPGALoader detect timed out; {HOST_IO_HANG_BLOCKER}"
++    if detect_probe is not None and detect_probe.exit_code != 0:
++        return (
++            f"openFPGALoader detect failed exit_code={detect_probe.exit_code}; "
++            f"{HOST_IO_HANG_BLOCKER}"
++        )
++    if detect_probe is not None and not _detect_reports_gatemate_idcode(detect_probe):
++        return f"openFPGALoader detect did not report a GateMate IDCODE; {HOST_IO_HANG_BLOCKER}"
++    return HOST_IO_HANG_BLOCKER
++
++
++def _preconditions_checked(
++    which_probe: CommandProbe,
++    detect_probe: CommandProbe | None,
++) -> list[dict[str, object]]:
++    entries: list[dict[str, object]] = [
++        {
++            "resource": "openFPGALoader",
++            "command": "command -v openFPGALoader",
++            "available": which_probe.exit_code == 0,
++            "exit_code": which_probe.exit_code,
++            "path": which_probe.stdout.strip() or None,
++        }
++    ]
++    if detect_probe is not None:
++        entries.append(
++            {
++                "resource": "gatemate_jtag_detect",
++                "command": command_to_string(GATEMATE_DETECT_COMMAND),
++                "available": _detect_reports_gatemate_idcode(detect_probe),
++                "exit_code": detect_probe.exit_code,
++            }
++        )
++    return entries
++
++
++def build_artifact(
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, object]:
++    """Build the audit artifact from tool discovery and bounded JTAG detect only."""
++    started = time.perf_counter()
++    which_probe = command_runner(OPENFPGALOADER_WHICH_COMMAND)
++    openfpgaloader_installed = which_probe.exit_code == 0
++
++    detect_probe = (
++        command_runner(GATEMATE_DETECT_COMMAND) if openfpgaloader_installed else None
++    )
++    gatemate_idcode_detected = (
++        _detect_reports_gatemate_idcode(detect_probe) if detect_probe is not None else None
++    )
++    elapsed = duration_s if duration_s is not None else max(time.perf_counter() - started, 0.0001)
++
++    payload: dict[str, object] = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": "hardware_smoke",
++        "preconditions_checked": _preconditions_checked(which_probe, detect_probe),
++        "openfpgaloader_installed": openfpgaloader_installed,
++        "openfpgaloader_path": which_probe.stdout.strip() or None,
++        "gatemate_idcode_detected": gatemate_idcode_detected,
++        "known_blocker": _known_blocker(openfpgaloader_installed, detect_probe),
++        "continuity_history": {
++            "current_milestone": "2026.06.336",
++            "scope": "JTAG detect only; flash/smoke host-IO path intentionally not run.",
++        },
++        "command_probes": {
++            "openfpgaloader_which": which_probe.as_dict(),
++            "gatemate_jtag_detect": detect_probe.as_dict() if detect_probe is not None else None,
++        },
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(float(elapsed), 4),
++    }
++    payload["reproducibility_checksum"] = sha256_payload(payload)
++    return payload
++
++
++def write_artifact(repo_root: str | Path, payload: dict[str, object]) -> Path:
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return out_path
++
++
++def run_experiment(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    payload = build_artifact(command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, payload)
++
++
++def main() -> None:  # pragma: no cover
++    run_experiment(Path("."))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index d2397068cd..709337b817 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:19:27.272621+00:00",
+-  "finished_at": "2026-06-01T21:19:27.297094+00:00",
++  "started_at": "2026-06-01T21:47:37.478060+00:00",
++  "finished_at": "2026-06-01T21:47:37.502105+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 22683c8ad6..bd3247b60d 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:19:27Z",
++  "run_date": "2026-06-01T21:47:37Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 5b4eb118a1..facb7df8d4 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:19:28Z",
+-  "finished_at": "2026-06-01T21:19:28Z",
++  "started_at": "2026-06-01T21:47:38Z",
++  "finished_at": "2026-06-01T21:47:38Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 60fc199393..a367e6d508 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:19:28Z",
++  "run_date": "2026-06-01T21:47:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 3c2f54c98e..80fdb4fd5e 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:19:28Z",
++  "run_date": "2026-06-01T21:47:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 57e69d388b..610393e543 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-01T21:17:43.830422Z",
+-  "duration_s": 0.008359432220458984,
++  "run_date": "2026-06-01T21:45:58.015557Z",
++  "duration_s": 0.007889032363891602,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "da286bd50ff891ae8e472a2d406d9ddcd3d119177468d82bec3174442695c11a",
++  "reproducibility_checksum": "308205d0ba2abbb4bddd69df89d531debe3d7e60b7c7efa89303066a77a3068c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bed284333145c6d2508a90b9a05f9d888cf773d7"
++    "adversarial_verify_version": "d316b430b2e17aa40732642802a8017d158276ee"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 75fc4bc94b..fede8c398e 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-01T21:19:49.808612Z",
+-  "duration_s": 21.315918684005737,
++  "run_date": "2026-06-01T21:48:01.599602Z",
++  "duration_s": 20.89806866645813,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 2504dbd75f..5444167d0f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-01T21:17:43.840408Z",
+-  "duration_s": 0.007289886474609375,
++  "run_date": "2026-06-01T21:45:58.025469Z",
++  "duration_s": 0.007341623306274414,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "24089a9c566a8d8fbb0e000ece8259a1f5ebed127a14525cac67371545daece8",
++  "reproducibility_checksum": "432fdf476031724cd00d8f8c6051e909aedc12333563a27a66897da777a3167f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bed284333145c6d2508a90b9a05f9d888cf773d7"
++    "adversarial_verify_version": "d316b430b2e17aa40732642802a8017d158276ee"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 4276277777..0c1696fd26 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.117633819580078,
++  "efficiency_gains_ms": 2.1104812622070312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 42caba3b8e..50e59ba4e7 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.285045862197876,
++  "duration_s": 0.2535970211029053,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index ed50fca27c..36e3564eef 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.001211404800415039,
++  "duration_s": 0.0009624958038330078,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 32a1cd3477..70ad6d5270 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.078801091760397e-05,
++  "duration_s": 2.8203008696436882e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 11f3750f48..cf257f6f1b 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 4.409812390804291e-07,
++  "duration_s": 3.6100391298532486e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 57418a4e41..2e98739533 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.269050598144531e-05,
++  "duration_s": 3.9577484130859375e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 35a6fbd8a3..cecccdfcbe 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 18.190747261047363, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 15.887922048568726, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 0a645d9fe6..e44ccdb248 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.01160181425511837,
++  "nonforgetting_metric_random": 0.010501617178320885,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 74214ebd40..d117a072da 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:19:33Z",
+-  "finished_at": "2026-06-01T21:19:33Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-01T21:47:44Z",
++  "finished_at": "2026-06-01T21:47:44Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3676_gatemate_continuity_audit_v23.json b/results/experiment_3676_gatemate_continuity_audit_v23.json
+new file mode 100644
+index 0000000000..3a7bc5fbec
+--- /dev/null
++++ b/results/experiment_3676_gatemate_continuity_audit_v23.json
+@@ -0,0 +1,59 @@
++{
++  "command_probes": {
++    "gatemate_jtag_detect": {
++      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6\n",
++      "command": "timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6\n"
++    },
++    "openfpgaloader_which": {
++      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
++      "command": "bash -lc 'command -v openFPGALoader'",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
++    }
++  },
++  "continuity_history": {
++    "current_milestone": "2026.06.336",
++    "scope": "JTAG detect only; flash/smoke host-IO path intentionally not run."
++  },
++  "duration_s": 0.0245,
++  "experiment_id": "exp3676",
++  "field_principles": {
++    "duration_s": "Plausibility floor.",
++    "gatemate_idcode_detected": "Honest detect result (bool or null) -- not a fabricated flash pass.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "JTAG detect only; no flash.",
++    "known_blocker": "Names the missing-tool / flash-smoke host-IO hang so the audit trail stays current.",
++    "openfpgaloader_installed": "Records the root blocker (tool missing) honestly so the audit trail is current.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "gatemate_idcode_detected": true,
++  "honest_verdict": "complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker",
++  "inference_substrate": "hardware_smoke",
++  "known_blocker": "flash/smoke host-IO hang",
++  "openfpgaloader_installed": true,
++  "openfpgaloader_path": "/opt/oss-cad-suite/bin/openFPGALoader",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "command -v openFPGALoader",
++      "exit_code": 0,
++      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++      "resource": "openFPGALoader"
++    },
++    {
++      "available": true,
++      "command": "timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect",
++      "exit_code": 0,
++      "resource": "gatemate_jtag_detect"
++    }
++  ],
++  "random_seed": 3676,
++  "reproducibility_checksum": "57e79deb3d9560c6dcb04ab9de4228fd9154cc0209f3bbf64cae951e89103310",
++  "schema": "carnot.gatemate_continuity_audit.v23",
++  "task_id": "exp3676-gatemate-continuity-audit-v23"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 073785580c..97ed60b1e8 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:34:04Z",
+-  "finished_at": "2026-06-01T21:34:05Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-01T21:47:50Z",
++  "finished_at": "2026-06-01T21:47:50Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2740086f67..27ec034b08 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:34:05Z",
+-  "finished_at": "2026-06-01T21:34:05Z",
++  "started_at": "2026-06-01T21:47:50Z",
++  "finished_at": "2026-06-01T21:47:50Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d5744ae6b4..9ba4dce3f2 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:34:05Z",
+-  "finished_at": "2026-06-01T21:34:05Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-01T21:47:50Z",
++  "finished_at": "2026-06-01T21:47:50Z",
++  "duration_s": 0.006,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3676_gatemate_continuity_audit_v23.py b/scripts/experiment_3676_gatemate_continuity_audit_v23.py
+new file mode 100644
+index 0000000000..a49a09d03a
+--- /dev/null
++++ b/scripts/experiment_3676_gatemate_continuity_audit_v23.py
+@@ -0,0 +1,15 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 3676 GateMate continuity audit v23."""
++
++from __future__ import annotations
++
++import os
++import sys
++
++sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../python")))
++
++from carnot.experiment_3676_gatemate_continuity_audit_v23 import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3676_gatemate_continuity_audit_v23.py b/tests/python/test_experiment_3676_gatemate_continuity_audit_v23.py
+new file mode 100644
+index 0000000000..5c29693390
+--- /dev/null
++++ b/tests/python/test_experiment_3676_gatemate_continuity_audit_v23.py
+@@ -0,0 +1,251 @@
++"""Tests for Exp 3676 GateMate continuity audit v23.
++
++Spec refs: REQ-HW-3676, SCENARIO-HW-3676.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++from carnot import experiment_3676_gatemate_continuity_audit_v23 as mod
++
++
++class RecordingRunner:
++    """Deterministic command runner so tests can audit JTAG reachability only."""
++
++    def __init__(self, probes: dict[tuple[str, ...], mod.CommandProbe]) -> None:
++        self.probes = probes
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...]) -> mod.CommandProbe:
++        self.commands.append(command)
++        if command not in self.probes:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command]
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int,
++    stdout: str = "",
++    stderr: str = "",
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command=command, exit_code=exit_code, stdout=stdout, stderr=stderr)
++
++
++def _assert_required_fields_and_principles(payload: dict[str, object]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++        assert field in payload["field_principles"]
++    assert (
++        payload["field_principles"]["openfpgaloader_installed"]
++        == "Records the root blocker (tool missing) honestly so the audit trail is current."
++    )
++    assert (
++        payload["field_principles"]["gatemate_idcode_detected"]
++        == "Honest detect result (bool or null) -- not a fabricated flash pass."
++    )
++    assert (
++        payload["field_principles"]["known_blocker"]
++        == "Names the missing-tool / flash-smoke host-IO hang so the audit trail stays current."
++    )
++
++
++def test_req_hw_3676_spec_anchor_declares_gatemate_audit_contract() -> None:
++    """REQ-HW-3676: OpenSpec declares the GateMate v23 continuity audit."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++    assert "REQ-HW-3676" in spec
++    assert "SCENARIO-HW-3676" in spec
++    assert "experiment_3676_gatemate_continuity_audit_v23.json" in spec
++    assert "command -v openFPGALoader" in spec
++    assert "timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect" in spec
++    assert mod.TERMINAL_VERDICT in spec
++
++
++def test_scenario_hw_3676_missing_openfpgaloader_stops_before_detect() -> None:
++    """SCENARIO-HW-3676: missing openFPGALoader records null detect and stops."""
++    runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                1,
++                stderr="not found\n",
++            )
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=0.7)
++
++    assert runner.commands == [mod.OPENFPGALOADER_WHICH_COMMAND]
++    assert payload["honest_verdict"] == mod.TERMINAL_VERDICT
++    assert payload["inference_substrate"] == "hardware_smoke"
++    assert payload["openfpgaloader_installed"] is False
++    assert payload["gatemate_idcode_detected"] is None
++    assert payload["known_blocker"] == "openFPGALoader not found on PATH; flash/smoke host-IO hang"
++    assert payload["command_probes"]["gatemate_jtag_detect"] is None
++    _assert_required_fields_and_principles(payload)
++
++
++def test_scenario_hw_3676_detect_success_records_idcode_without_flash() -> None:
++    """SCENARIO-HW-3676: successful JTAG detect is recorded without flash smoke."""
++    detect_stdout = (
++        "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++        "index 0:\n"
++        "\tidcode 0x20000001\n"
++        "\tmanufacturer colognechip\n"
++        "\tfamily GateMate Series\n"
++        "\tmodel  GM1Ax\n"
++    )
++    runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                0,
++                stdout="/opt/oss-cad-suite/bin/openFPGALoader\n",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                0,
++                stdout=detect_stdout,
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=1.2)
++
++    assert runner.commands == [mod.OPENFPGALOADER_WHICH_COMMAND, mod.GATEMATE_DETECT_COMMAND]
++    assert all("flash" not in " ".join(command).lower() for command in runner.commands)
++    assert payload["openfpgaloader_installed"] is True
++    assert payload["openfpgaloader_path"] == "/opt/oss-cad-suite/bin/openFPGALoader"
++    assert payload["gatemate_idcode_detected"] is True
++    assert payload["known_blocker"] == "flash/smoke host-IO hang"
++    detect_probe = payload["command_probes"]["gatemate_jtag_detect"]
++    assert detect_probe["stdout"] == detect_stdout
++    _assert_required_fields_and_principles(payload)
++
++
++def test_req_hw_3676_detect_failure_records_false_and_blocker() -> None:
++    """REQ-HW-3676: failed JTAG detect is a blocked value, not a fabricated pass."""
++    runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                0,
++                stdout="/usr/bin/openFPGALoader\n",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                1,
++                stderr="fails to open device\n",
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=1.5)
++
++    assert payload["openfpgaloader_installed"] is True
++    assert payload["gatemate_idcode_detected"] is False
++    assert payload["known_blocker"] == (
++        "openFPGALoader detect failed exit_code=1; flash/smoke host-IO hang"
++    )
++    assert payload["command_probes"]["gatemate_jtag_detect"]["stderr"] == "fails to open device\n"
++
++
++def test_req_hw_3676_detect_timeout_and_no_idcode_are_honest_failures() -> None:
++    """REQ-HW-3676: timeout and non-IDCODE output remain honest failed detects."""
++    timeout_runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                0,
++                stdout="/usr/bin/openFPGALoader\n",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                124,
++                stderr="timed out\n",
++            ),
++        }
++    )
++    timeout_payload = mod.build_artifact(command_runner=timeout_runner, duration_s=1.6)
++    assert timeout_payload["gatemate_idcode_detected"] is False
++    assert timeout_payload["known_blocker"] == (
++        "openFPGALoader detect timed out; flash/smoke host-IO hang"
++    )
++
++    odd_runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                0,
++                stdout="/usr/bin/openFPGALoader\n",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                0,
++                stdout="JTAG chain found but no model text\n",
++            ),
++        }
++    )
++    odd_payload = mod.build_artifact(command_runner=odd_runner, duration_s=1.7)
++    assert odd_payload["gatemate_idcode_detected"] is False
++    assert odd_payload["known_blocker"] == (
++        "openFPGALoader detect did not report a GateMate IDCODE; flash/smoke host-IO hang"
++    )
++
++
++def test_req_hw_3676_write_artifact_preserves_schema_and_checksum(tmp_path: Path) -> None:
++    """REQ-HW-3676: result JSON has required fields, principles, and checksum."""
++    runner = RecordingRunner(
++        {
++            mod.OPENFPGALOADER_WHICH_COMMAND: _probe(
++                mod.OPENFPGALOADER_WHICH_COMMAND,
++                0,
++                stdout="/opt/oss-cad-suite/bin/openFPGALoader\n",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                0,
++                stdout="idcode 0x20000001\nfamily GateMate Series\n",
++            ),
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner, duration_s=2.0)
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment_id"] == "exp3676"
++    assert payload["random_seed"] == mod.RANDOM_SEED
++    assert payload["duration_s"] == 2.0
++    checksum_payload = dict(payload)
++    checksum_payload.pop("reproducibility_checksum")
++    assert payload["reproducibility_checksum"] == mod.sha256_payload(checksum_payload)
++    _assert_required_fields_and_principles(payload)
++
++
++def test_req_hw_3676_run_command_captures_output_and_exec_errors() -> None:
++    """REQ-HW-3676: command probes preserve command, output, and failed execs."""
++    ok_probe = mod.run_command(
++        (sys.executable, "-c", "import sys; print('OK'); sys.stderr.write('ERR\\n')")
++    )
++    assert ok_probe.exit_code == 0
++    assert ok_probe.stdout == "OK\n"
++    assert ok_probe.stderr == "ERR\n"
++    assert ok_probe.combined_output == "OK\nERR\n"
++    assert sys.executable in ok_probe.as_dict()["command"]
++
++    missing_probe = mod.run_command(("/definitely/missing/openfpgaloader-for-req-hw-3676",))
++    assert missing_probe.exit_code == 127
++    assert "No such file" in missing_probe.stderr
++
++
++def test_scenario_hw_3676_script_wrapper_exists() -> None:
++    """SCENARIO-HW-3676: conductor entrypoint delegates to the module main."""
++    script = Path("scripts/experiment_3676_gatemate_continuity_audit_v23.py")
++    text = script.read_text(encoding="utf-8")
++    assert "experiment_3676_gatemate_continuity_audit_v23" in text
++    assert "main" in text
+-- 
+2.55.0
+

@@ -1,0 +1,117 @@
+From 110a7419c73c58c0342a0faef857bbd2042d9ea9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 15:59:27 -0400
+Subject: [PATCH 09945/11362] [conductor] Pre-gate block: Two-level local GGUF
+ constrained decoding, gated on Exp6608 headroom
+
+1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...t_6609_two_level_constrained_decoding.json | 51 +++++++++++++++++++
+ 5 files changed, 55 insertions(+), 3 deletions(-)
+ create mode 100644 results/experiment_6609_two_level_constrained_decoding.json
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 9499699e97..338ad6f120 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -8,5 +8,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T19:37:35Z"
++ "last_scan_utc": "2026-08-25T19:59:26Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f3aba8e91a..2bc365e012 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-25T19:37:34Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-25T19:59:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 11fe39accf..7efd8f9f6c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16474,3 +16474,4 @@ code |
+ | 2026-08-25 19:19 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+ | 2026-08-25 19:21 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+ | 2026-08-25 19:35 UTC | Gemma 4 26B-A4B direct baseline headroom qualifica | OK | 102 passed, 1 warning in 16.24s |
++| 2026-08-25 19:57 UTC | Independent three-family headroom reducer | OK | 117 passed, 1 warning in 14.03s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e85212b37a..bd984eacfa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-25T19:37:34Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-25T19:59:26Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6609_two_level_constrained_decoding.json b/results/experiment_6609_two_level_constrained_decoding.json
+new file mode 100644
+index 0000000000..16a07935ef
+--- /dev/null
++++ b/results/experiment_6609_two_level_constrained_decoding.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6609,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-25",
++  "started_at": "2026-08-25T19:59:27.194847+00:00",
++  "finished_at": "2026-08-25T19:59:27.194847+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Two-level local GGUF constrained decoding, gated on Exp6608 headroom",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0.0 == expected=1.0",
++  "failed_upstream": "exp6608-family-headroom-reducer",
++  "failed_field": "headroom_benchmark_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1.0,
++  "failed_expected_type": "float",
++  "failed_observed": 0.0,
++  "failed_observed_type": "float",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6608_family_headroom_reducer.json",
++  "failed_evidence_sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0.0 == expected=1.0",
++    "failed_upstream": "exp6608-family-headroom-reducer",
++    "failed_field": "headroom_benchmark_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1.0,
++    "failed_expected_type": "float",
++    "failed_observed": 0.0,
++    "failed_observed_type": "float",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6608_family_headroom_reducer.json",
++    "failed_evidence_sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6608-family-headroom-reducer",
++      "artifact_field": "headroom_benchmark_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "expected_type": "float",
++      "actual": 0.0,
++      "actual_type": "float",
++      "passed": false,
++      "reason": "actual=0.0 == expected=1.0",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6608_family_headroom_reducer.json",
++      "artifact_sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

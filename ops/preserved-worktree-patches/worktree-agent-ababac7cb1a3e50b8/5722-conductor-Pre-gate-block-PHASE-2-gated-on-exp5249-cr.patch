@@ -1,0 +1,48 @@
+From eb1d7493f78858bf1f4ec002695ed7b17ac34927 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 21:22:00 -0400
+Subject: [PATCH 05722/11362] [conductor] Pre-gate block: PHASE 2 gated on
+ exp5249 cross_model_memory_eligible -- verifier-dose scheduler for memory,
+ cheap checks, and SOTA verification
+
+1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer-v480.cross_model_memory_eligible (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...ent_5250_verifier_dose_scheduler_v480.json | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 results/experiment_5250_verifier_dose_scheduler_v480.json
+
+diff --git a/results/experiment_5250_verifier_dose_scheduler_v480.json b/results/experiment_5250_verifier_dose_scheduler_v480.json
+new file mode 100644
+index 0000000000..fecc962e64
+--- /dev/null
++++ b/results/experiment_5250_verifier_dose_scheduler_v480.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5250,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-05",
++  "started_at": "2026-07-05T01:22:00.492955+00:00",
++  "finished_at": "2026-07-05T01:22:00.492955+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE 2 gated on exp5249 cross_model_memory_eligible -- verifier-dose scheduler for memory, cheap checks, and SOTA verification",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer-v480.cross_model_memory_eligible (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5249-cross-model-typed-memory-transfer-v480",
++      "artifact_field": "cross_model_memory_eligible",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

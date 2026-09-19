@@ -1,0 +1,116 @@
+From bb9c47992176642f4c8cacad1e2cde9e24464fe3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 23:54:27 -0400
+Subject: [PATCH 10982/11171] [conductor] Operational retrospective for
+ milestone 2026.09.609
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 ++++
+ results/operational_retro_2026_09_609.json | 59 ++++++++++++++++++++++
+ 3 files changed, 77 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_609.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 35c7467cb4..9b24922a1d 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6577,3 +6577,10 @@ The critical path for milestone .250:
+ - theme: a synthesis-heavy source-delta audit dominated a short mixed-execution milestone
+ - key result: honest operational negative — the 5.0-minute synthesis audit dominated the 5.2-minute window; the compute-task idle indicator remained false, but phase costs and parallel-model runner applicability were not observed
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.609
++
++- exp_range: no data available this milestone
++- theme: concentrated compute time and underfilled inference batches shaped operational throughput
++- key result: accelerator activity was present, while single-process inference made question batching the clearest measured improvement
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 397f039d13..3440da2323 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18765,3 +18765,14 @@ model-concurrency and runner-selection launch receipt. Estimated savings remain
+ - 2026-09-04: Sealed chronological outcome-certificate sequence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_certified_event_sequence_conforms; results/experiment_6961_certified_event_sequence.json
+ - 2026-09-04: Queue-regulated continuous self-learning (⚠️ Blocked) — honest_verdict=blocked_queue_regulated_self_learning; results/experiment_6962_queue_regulated_self_learning.json
+ - 2026-09-04: V609 independent capstone and V610 handoff (⚠️ Research Finding) — honest_verdict=complete_disqualified_v609_capstone_flagged_or_conflicting_evidence; results/experiment_6964_v609_capstone.json
++
++## 2026-09-04 — Milestone 2026.09.609 operational retrospective
++
++The milestone completed 12 experiments in 24.7 minutes. Three were compute-bound.
++The compute-bound mapping-bank task set the critical path at 17.21 minutes.
++The GPU snapshot showed active, moderate utilization, so compute-bound GPU idle
++was false. The monitor identified single-process question batching as the clearest
++throughput change. No supplied record shows two or more models loaded in parallel,
++so no missed DualGPURunner dispatch is established. The 75% savings estimate is
++the conservative inference-time reduction implied by the monitor's 4x lower-bound
++throughput estimate; it is not a milestone-wide estimate.
+diff --git a/results/operational_retro_2026_09_609.json b/results/operational_retro_2026_09_609.json
+new file mode 100644
+index 0000000000..403ecc3ac2
+--- /dev/null
++++ b/results/operational_retro_2026_09_609.json
+@@ -0,0 +1,59 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.609",
++  "generated_at": "2026-09-04T03:47:41Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 24.7,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Three-family SOTA reformulation mapping bank",
++      "duration_minutes": 17.21,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V609 post-marker source delta and compatibility audit",
++      "duration_minutes": 6.22,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Queue-regulated continuous self-learning",
++      "duration_minutes": 0.63,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V609 advisory execution-contract and gate-cascade audit",
++      "duration_minutes": 0.24,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Sealed chronological outcome-certificate sequence",
++      "duration_minutes": 0.12,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 12 experiments in 24.7 minutes, including 3 compute-bound experiments. The 17.21-minute compute-bound mapping-bank task set the critical path, while the locked GPU-idle indicator remained false.",
++  "bottlenecks_identified": [
++    "Three-family SOTA reformulation mapping bank consumed 17.21 minutes, but the available data does not identify which internal phase caused the delay.",
++    "V609 post-marker source delta and compatibility audit consumed 6.22 minutes. It was synthesis-only, so GPU use was not applicable and is not a GPU bottleneck.",
++    "The GPU monitor found a single Python inference process and recommended multi-question batching. This indicates unused throughput capacity even though the compute-bound path was not idle.",
++    "Timing came from disk-mtime reconstruction because the live git-log path found no commits. This limits phase-level diagnosis."
++  ],
++  "improvements_suggested": [
++    "Batch 8-16 questions per forward pass in single-process inference workflows; the GPU monitor estimates a 4-8x throughput improvement.",
++    "Record phase timings and task-window GPU utilization for each compute-bound experiment so the mapping-bank critical path has a measurable cause.",
++    "Write task-owned timing receipts that do not depend on git commits, which avoids disk-mtime reconstruction.",
++    "Record model count and runner choice at launch so DualGPURunner eligibility can be audited directly."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add configurable 8-16 question batching to the single-process inference path.",
++    "Capture per-phase duration and task-window GPU utilization for compute-bound experiments.",
++    "Emit direct timing, model-count, and runner-selection receipts for every launch."
++  ],
++  "estimated_time_savings_pct": 75,
++  "meta_reflection": "The data supports accelerator engagement, not full-task GPU efficiency, because one snapshot cannot characterize all compute-bound work. It contains no evidence of two or more models loaded in parallel, so a missed DualGPURunner dispatch cannot be claimed."
++}
+-- 
+2.55.0
+

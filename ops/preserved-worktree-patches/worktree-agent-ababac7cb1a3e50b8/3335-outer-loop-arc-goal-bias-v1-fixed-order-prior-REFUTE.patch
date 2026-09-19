@@ -1,0 +1,398 @@
+From c8e715e474c9039c1dd3ee77d50754aed22f5d9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 19:48:46 -0400
+Subject: [PATCH 03335/11362] [outer-loop] arc: goal-bias v1 (fixed
+ order-prior) REFUTED -- 1/11 no lift, crashed the working game
+
+Built GoalBiasValueHead (zero-shot distance-to-win prior over the arc_agi3_goal_induction hypothesis
+classes: object-count+color-count+1-coverage) wired as explorer_goalbias (best-first A* frontier).
+Same harness/games/budget as the 1/11 undirected baseline: goal-bias reaches first-win on 1/11 (NO
+lift) AND crashed the one working game (lp85 20->437 actions, eff 2.0069->0.0042) by detouring
+best-first toward 'more ordered' states -- lp85's win is not a consolidation. Refuted as a design: a
+FIXED directional bias cannot work (games reward different directions: clear/build/toggle); the
+no-lift result is weight-robust. The lever requires ONLINE direction-induction: stay direction-
+agnostic until the env levels_completed signal reveals the rewarded hypothesis, then commit. The
+fixed prior is preserved as the refuted seed; online-confirmation explorer is the next iteration.
+Gate decision unchanged: NOT gate-ready. (Default explorer behavior unchanged -- opt-in policy variant.)
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...arc-gate-readiness-prior-ttt-2026-06-21.md |  21 ++++
+ python/carnot/agentic/arc_goal_bias.py        | 119 ++++++++++++++++++
+ results/arc_compete_sim.json                  |  82 ++++++------
+ scripts/arc_leaderboard_eval.py               |   8 ++
+ 4 files changed, 189 insertions(+), 41 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_goal_bias.py
+
+diff --git a/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md b/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
+index 48d5cbc1de..f4c110a4af 100644
+--- a/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
++++ b/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
+@@ -47,6 +47,27 @@
+ > the baseline the goal-biased online explorer must beat: re-run this harness with the goal-bias and the
+ > offline signal that would justify spending a shot is a material lift in first-win games (e.g. 1/11 → N/11)
+ > at comparable or better action-efficiency.
++>
++> ### Goal-bias prototype v1 (fixed order-prior) — REFUTED, 1/11 (no lift), `python/carnot/agentic/arc_goal_bias.py`
++>
++> Built `GoalBiasValueHead` — a zero-shot distance-to-win prior over the `arc_agi3_goal_induction`
++> hypothesis classes (object-count + color-count + 1−coverage; lower = more ordered = closer), plugged into
++> the explorer A* frontier as `explorer_goalbias` (best-first, value_weight 3.0). Same harness/games/budget:
++>
++> | | first-wins | lp85 |
++> |---|---|---|
++> | undirected baseline | 1/11 | 20 actions (eff 2.0069) |
++> | fixed order-prior goal-bias | **1/11 (no lift)** | 437 actions (eff 0.0042 — crashed) |
++>
++> The fixed order-prior unlocked NO new games and badly degraded the one that worked (best-first toward
++> "more ordered" detoured 20→437 actions to lp85's win, which is not a consolidation). **Refuted as a
++> design:** a FIXED directional bias cannot work because different games reward different directions
++> (clear / build / toggle); committing to a guessed direction misroutes as often as it helps. The no-lift
++> result is weight-robust — order does not point at the win-mechanic on the 10 failing games at any weight.
++> **The lever requires ONLINE direction-induction:** stay direction-agnostic (novelty/coverage) until the
++> env `levels_completed` reveals which hypothesis the game rewards, then commit that direction. That
++> online-confirmation explorer is the next iteration; the fixed prior is preserved as the refuted seed.
++> Gate decision unchanged: NOT gate-ready; do not spend a shot.
+ 
+ 
+ **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
+diff --git a/python/carnot/agentic/arc_goal_bias.py b/python/carnot/agentic/arc_goal_bias.py
+new file mode 100644
+index 0000000000..7fdf0e24de
+--- /dev/null
++++ b/python/carnot/agentic/arc_goal_bias.py
+@@ -0,0 +1,119 @@
++"""Goal-biased exploration heuristic for first-contact ARC-AGI-3 solving (2026-06-21).
++
++THE PROBLEM (measured, results/arc_compete_sim.json): the undirected explorer reaches a first level-up on
++only 1/11 unseen games -- on the rest it burns ~2000 actions and never triggers the sparse terminal
++level-completed bit. That exploration-to-first-win wall IS the 0.08 hidden-game score wall. The explorer
++treats all reachable states as equal; it has no dense signal pointing at the latent win-mechanic.
++
++THE METHOD (pure PROCESS, no trained weights -- per the operator's value-is-process directive): turn the
++sparse terminal bit into a DENSE frontier heuristic by scoring each state with a PRIOR over what ARC win-
++states tend to look like -- the same hypothesis classes the offline arc_agi3_goal_induction.py sketches
++(object-count reduction, color-count reduction, color disappearance, coverage/completion). A plausibly-
++winning state is more ORDERED (fewer distinct objects, fewer colors, higher single-color coverage). We
++emit this as an estimated DISTANCE-TO-WIN (lower = more ordered = closer), which plugs straight into the
++explorer's A* frontier (priority = depth + value_weight * value, a min-heap: lower value -> expanded
++first), exactly where the learned cross-game value head plugs in (load_cross_game_value_head).
++
++This is a SEED prior, applied to games never seen, with NO win example -- the zero-shot first-contact
++bias. The online-confirmation refinement (prune/up-weight whichever hypothesis the env's levels_completed
++signal actually rewards, once a level-up is observed) is the next layer; this module is the seed it starts
++from. It transfers to the hidden eval by construction because it assumes nothing game-specific.
++
++HONEST LIMITATION: the order prior assumes winning = consolidation/completion. Games where winning means
++BUILDING (increasing structure) are mis-pointed by it; for those the online-confirmation layer must flip
++the sign once a real level-up reveals the true direction. The value of THIS prototype is the measured
++lift over the 1/11 undirected baseline -- if a fixed order-prior already lifts first-win count, the
++hypothesis holds and the online layer is the amplifier; if not, we learn the prior needs the env-confirmed
++direction from step one.
++"""
++from __future__ import annotations
++
++from typing import Any
++
++import numpy as np
++
++
++def _grid(frame: Any) -> np.ndarray | None:
++    """Best-effort logical grid from an arcengine frame (never raise into the A* seam)."""
++    try:
++        from carnot.agentic.arc_agi3_world_model import grid_of
++        g = np.asarray(grid_of(frame))
++        return g if g.ndim == 2 else None
++    except Exception:
++        return None
++
++
++def disorder(grid: np.ndarray) -> float:
++    """Estimated distance-to-win = a multi-hypothesis DISORDER score (lower = more ordered = closer to a
++    plausible win). Combines the arc_agi3_goal_induction hypothesis classes into one scalar:
++
++      - object-count: number of 4-connected non-background components (fewer = more consolidated)
++      - color-count: number of distinct non-background colors (fewer = simpler)
++      - coverage: fraction of cells that are NOT the dominant color (lower = more complete/uniform)
++
++    All three are minimized at a clean/complete/uniform state, the shape most ARC win-states take. Scales
++    are normalized so no single term dominates and the combined value sits on a small bounded range that a
++    moderate value_weight can trade against search depth."""
++    g = np.asarray(grid)
++    if g.ndim != 2 or g.size == 0:
++        return 0.0
++    h, w = g.shape
++    # color-count: distinct non-zero colors
++    colors = np.unique(g)
++    n_colors = int((colors != 0).sum())
++    # coverage: fraction of cells NOT equal to the most common color (0 => fully uniform)
++    vals, counts = np.unique(g, return_counts=True)
++    dominant = int(counts.max())
++    not_dominant_frac = 1.0 - dominant / float(g.size)
++    # object-count: 4-connected non-background components (capped so a noisy frame can't dominate)
++    n_objects = _component_count(g)
++    n_objects_norm = min(n_objects, 64) / 8.0
++    return float(n_objects_norm + n_colors + 4.0 * not_dominant_frac)
++
++
++def _component_count(g: np.ndarray) -> int:
++    """4-connected non-background component count (scipy if present, else a small BFS fallback)."""
++    mask = g != 0
++    if not mask.any():
++        return 0
++    try:
++        from scipy import ndimage
++        _, n = ndimage.label(mask)
++        return int(n)
++    except Exception:
++        seen = np.zeros_like(mask, dtype=bool)
++        h, w = mask.shape
++        n = 0
++        from collections import deque
++        for i in range(h):
++            for j in range(w):
++                if mask[i, j] and not seen[i, j]:
++                    n += 1
++                    q = deque([(i, j)])
++                    seen[i, j] = True
++                    while q:
++                        y, x = q.popleft()
++                        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                            ny, nx = y + dy, x + dx
++                            if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
++                                seen[ny, nx] = True
++                                q.append((ny, nx))
++        return n
++
++
++class GoalBiasValueHead:
++    """Frame -> estimated distance-to-win, for the explorer's A* frontier (priority = depth +
++    value_weight*value; min-heap, so lower value is expanded first). A zero-shot ORDER prior over the
++    arc_agi3_goal_induction hypothesis classes -- no trained weights, no win example, no game-specific
++    state. Matches the load_cross_game_value_head callable contract (``value_head(frame) -> float``) so it
++    drops into CarnotAgentPolicy(value_head=..., value_weight>0, search_mode="best_first") unchanged."""
++
++    def __init__(self) -> None:
++        self._evals = 0
++
++    def __call__(self, frame: Any) -> float:
++        self._evals += 1
++        g = _grid(frame)
++        if g is None:
++            return 0.0
++        return disorder(g)
+diff --git a/results/arc_compete_sim.json b/results/arc_compete_sim.json
+index 8b219228ad..cd8aacc717 100644
+--- a/results/arc_compete_sim.json
++++ b/results/arc_compete_sim.json
+@@ -1,147 +1,147 @@
+ {
+   "experiment": "arc_compete_sim",
+-  "honest_verdict": "complete_compete_sim_explorer_score_eff_2.0069_levels_1",
+-  "policy": "explorer",
++  "honest_verdict": "complete_compete_sim_explorer_goalbias_score_eff_0.0042_levels_1",
++  "policy": "explorer_goalbias",
+   "total_budget": 50000,
+-  "leaderboard_efficiency_sum": 2.0069,
++  "leaderboard_efficiency_sum": 0.0042,
+   "total_levels": 1,
+   "games_reached_progress": 1,
+   "games_total": 11,
+-  "total_steps_used": 19595,
+-  "budget_utilization": 0.3919,
+-  "budget_unused_banked": 30405,
++  "total_steps_used": 17241,
++  "budget_utilization": 0.3448,
++  "budget_unused_banked": 32759,
+   "per_game": [
+     {
+       "game": "r11l",
+       "allocated_cap": 2000,
+-      "actions_used": 1956,
+-      "banked_saved": 44,
++      "actions_used": 1488,
++      "banked_saved": 512,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 48044
++      "budget_remaining_after": 48512
+     },
+     {
+       "game": "lp85",
+       "allocated_cap": 2000,
+-      "actions_used": 20,
+-      "banked_saved": 1980,
++      "actions_used": 437,
++      "banked_saved": 1563,
+       "levels": 1,
+       "reached": 1,
+-      "efficiency": 2.0069,
++      "efficiency": 0.0042,
+       "gave_up_no_progress": false,
+-      "actions_to_first_levelup": 20,
+-      "budget_remaining_after": 48024
++      "actions_to_first_levelup": 437,
++      "budget_remaining_after": 48075
+     },
+     {
+       "game": "ls20",
+       "allocated_cap": 2000,
+-      "actions_used": 1956,
+-      "banked_saved": 44,
++      "actions_used": 1727,
++      "banked_saved": 273,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 46068
++      "budget_remaining_after": 46348
+     },
+     {
+       "game": "wa30",
+       "allocated_cap": 2000,
+-      "actions_used": 1955,
+-      "banked_saved": 45,
++      "actions_used": 1668,
++      "banked_saved": 332,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 44113
++      "budget_remaining_after": 44680
+     },
+     {
+       "game": "cd82",
+       "allocated_cap": 2000,
+-      "actions_used": 1968,
+-      "banked_saved": 32,
++      "actions_used": 1648,
++      "banked_saved": 352,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 42145
++      "budget_remaining_after": 43032
+     },
+     {
+       "game": "sp80",
+       "allocated_cap": 2000,
+-      "actions_used": 1934,
+-      "banked_saved": 66,
++      "actions_used": 1609,
++      "banked_saved": 391,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 40211
++      "budget_remaining_after": 41423
+     },
+     {
+       "game": "su15",
+       "allocated_cap": 2000,
+-      "actions_used": 1953,
+-      "banked_saved": 47,
++      "actions_used": 1642,
++      "banked_saved": 358,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 38258
++      "budget_remaining_after": 39781
+     },
+     {
+       "game": "tu93",
+       "allocated_cap": 2000,
+-      "actions_used": 1952,
+-      "banked_saved": 48,
++      "actions_used": 1773,
++      "banked_saved": 227,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 36306
++      "budget_remaining_after": 38008
+     },
+     {
+       "game": "cn04",
+       "allocated_cap": 2000,
+-      "actions_used": 1968,
+-      "banked_saved": 32,
++      "actions_used": 1595,
++      "banked_saved": 405,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 34338
++      "budget_remaining_after": 36413
+     },
+     {
+       "game": "m0r0",
+       "allocated_cap": 2000,
+-      "actions_used": 1958,
+-      "banked_saved": 42,
++      "actions_used": 1735,
++      "banked_saved": 265,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 32380
++      "budget_remaining_after": 34678
+     },
+     {
+       "game": "sk48",
+       "allocated_cap": 2000,
+-      "actions_used": 1975,
+-      "banked_saved": 25,
++      "actions_used": 1919,
++      "banked_saved": 81,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 30405
++      "budget_remaining_after": 32759
+     }
+   ],
+   "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade multi-game scored run under a global step budget; no live LLM unless policy=e3",
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index b2d5b62fdc..4cebefadf9 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -78,6 +78,14 @@ def _build_policy(kind: str, game: str):
+         mode = "best_first" if kind == "explorer_bf" else "depth_first_ride"
+         return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
+                                  value_weight=_VALUE_WEIGHT, search_mode=mode)
++    if kind in ("explorer_goalbias", "goalbias"):           # zero-shot order-prior goal-biased explorer
++        from carnot.agentic.arc_goal_bias import GoalBiasValueHead
++        # best_first A* frontier nudged toward more-ordered (plausibly-winning) states by a hand-crafted
++        # distance-to-win prior (NO trained weights). value_weight defaults to 3.0 here (the global
++        # --value-weight default is 0, which would disable the nudge); override with --value-weight.
++        _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
++        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=GoalBiasValueHead(),
++                                 value_weight=_w, search_mode="best_first")
+     if kind in ("explorer_dv", "verifier_router"):
+         global _DISC_ROUTER
+         if _DISC_ROUTER is None:
+-- 
+2.55.0
+

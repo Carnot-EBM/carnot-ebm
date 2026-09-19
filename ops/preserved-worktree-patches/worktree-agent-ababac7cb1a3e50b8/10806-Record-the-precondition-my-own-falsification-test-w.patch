@@ -1,0 +1,65 @@
+From 6acb1a8739a77563016d4c919272b54e52e58c6f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 17:26:51 -0400
+Subject: [PATCH 10806/11362] Record the precondition my own falsification test
+ was missing
+
+The .605 test I filed an hour ago -- document rewritten with a matching contract
+closes the regression, skipped again means my instruction was not the cause -- is
+invalid unless the conductor is restarted first.
+
+The corrected instruction is committed but not loaded. The conductor is a long-lived
+--loop process started at 15:06Z and reads research_conductor.py only at startup; the
+both-files-required fix landed at 21:15Z. If .605 plans on the current process and
+skips the document, that shows the old instruction is still in memory, not that my
+change was innocent.
+
+The failure mode is silent and self-flattering, which is why it is written down:
+forget the restart, watch .605 skip the document, and clear my own change on the
+strength of a test that never ran it.
+
+A restart was deferred at 21:30Z because a codex child was 41 minutes into a task and
+a restart kills the in-flight child. Milestone .605 cannot plan until .604's seven
+tasks finish, so there is room; the restart must land in a gap between tasks and
+before .605 plans.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index b600d00c6b..4c5e2d654c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -159,6 +159,26 @@ requirement itself is unchanged. Takes effect on the conductor's next restart.
+ matches the YAML, both the original defect and this regression are closed. If it is skipped again,
+ my instruction is not the cause and the planner's file-writing step needs looking at directly.
+ 
++
++**PRECONDITION ON THAT TEST — it is invalid unless the conductor has been RESTARTED first
++(noted 2026-09-02 21:30Z).** The corrected instruction is committed but NOT loaded: the conductor
++runs as a long-lived `--loop` process (pid 1301127, started 15:06Z) and reads
++`scripts/research_conductor.py` only at startup. The both-files-required fix landed at 21:15Z,
++after that.
++
++So if .605 plans on the current process and skips the document again, that is NOT evidence my
++instruction was innocent — it is evidence the old instruction is still in memory. Drawing the
++stated conclusion from an unrestarted run would clear my change on the strength of a test that
++never ran it. The test above requires: restart the conductor, THEN observe the next planning run.
++
++A restart was deliberately deferred at 21:30Z because a codex child was 41 minutes into a task and
++a restart kills the in-flight child. The next planning run is milestone .605, which cannot begin
++until .604's seven tasks finish, so there is time. The restart must happen in a gap between tasks
++and BEFORE .605 plans.
++
++Recorded because the failure mode is silent and self-flattering: forget the restart, watch .605
++skip the document, and conclude the regression was never mine.
++
+ ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
+ 
+ `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
+-- 
+2.55.0
+

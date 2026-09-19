@@ -1,0 +1,656 @@
+From 0fa60a745dd02ccd4d5289c553008bfa72fa8b85 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 03:21:23 -0400
+Subject: [PATCH 01898/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v392.md | 229 ++++++++++++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      | 179 ++++----------
+ research-references.md                        |  68 ++++++
+ results/experiment_1861_equivalence.json      |  11 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ 10 files changed, 386 insertions(+), 140 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v392.md
+
+diff --git a/openspec/change-proposals/research-roadmap-v392.md b/openspec/change-proposals/research-roadmap-v392.md
+new file mode 100644
+index 0000000000..8bd2578392
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v392.md
+@@ -0,0 +1,229 @@
++# Research Roadmap — Milestone 2026.06.392
++
++**STRENGTHEN THE ORACLE-DISTINCT VERIFIER — the .391 beats-vote gate RAN and TIED vote; diagnose the null, fix all three causes, and re-test with power.**
++
++- **Status:** proposed (planner: Claude Opus 4.8, outer-loop, 2026-06-15)
++- **Prior milestone:** 2026.06.391 (oracle-distinct verifier TIES vote on n=14; verifier-as-reward HARNESS-DEFERRED; ARC at 17 levels)
++- **Milestone doc (this file):** `openspec/change-proposals/research-roadmap-v392.md`
++- **YAML:** `research-roadmap-next.yaml`
++- **Tasks:** 12 (exp4230–exp4241)
++- **North star:** solve ARC-AGI-3 accurately and efficiently; the verifier is the existential value-add (`ops/north-star.md` §0/§5)
++
++---
++
++## 0. One-paragraph thesis
++
++`.391 did the right thing: it finally RAN the oracle-distinct beats-vote gate (the P0 directive of
++2026-06-14), with the `.390 infra blockers fixed. The honest read is a clean **TIES-VOTE-NULL**: on a
++held-out ARC split, a LEARNED oracle-distinct verifier (`verifier_is_oracle=false`) scored
++`verifier@1 − vote@1 = −0.0714`, bootstrap CI95 `[−0.214, 0.0]` — it did not beat vote (it slightly lost).
++But this is **not a settled refutation** of the oracle-distinct thesis; it is an *under-powered, weakly-
++built* first read with three separable, diagnosable causes: **(1)** the verifier was a per-candidate
++**logistic regression that scored each candidate in ISOLATION** — blind to the competing candidate set,
++the vote basin, and cross-candidate agreement; **(2)** it trained on **14 ACCEPTED / 1782 REJECTED rows**
++(base-rate 0.008) — an extreme imbalance that collapses a binary discriminator (off-fold AUROC only
++0.779); **(3)** the held-out gate was **n=14 tasks**, below the CLT floor. `.392 attacks all three with
++the SOTA the `.391 ingestion flagged: a **cross-candidate set-encoder aggregator** (Set-Encoder
++2404.06912 / MSV 2603.03417 / AggLM 2509.06870) + a **calibrated imbalance-aware loss** (2509.19681) on a
++**grown labeled pool** (target ≥30 held-out), with a **margin-triggered ARBITER override** (2606.04323),
++on **ARC** AND a higher-power, less-imbalanced **CODE** replication (learned pass-predictor, no test
++execution at inference → still oracle-distinct) to disambiguate "ARC data-sparsity" from "the selection
++thesis is bounded." We also FINISH the owed verifier-as-reward — re-scoped to FIT the conductor window
++with a harness-first smoke that asserts REAL training (so it cannot short-circuit to a fake-short
++artifact) and a hard auto-retire — keep ARC monotonic (+1 → 18), and probe live-env solve accuracy.
++
++---
++
++## 1. What .391 produced (the inputs to this plan)
++
++| Result | Artifact | Read |
++|---|---|---|
++| **Oracle-distinct verifier TIES vote on ARC** (the HEADLINE gate, CLEAN/un-flagged) | exp4221 | `verifier@1 − vote@1 = −0.0714`, CI95 `[−0.214, 0.0]`; `oracle@K=1.0` (headroom EXISTS); ARBITER override degenerated to keep-vote (0.643=0.643); matched control = verifier (0.5714). **n=14 held-out tasks.** `verifier_is_oracle=false`. |
++| **The learned ARC verifier was weak + imbalanced** | exp4220 (flagged TAUTOLOGY, false-positive) | plain per-candidate **logistic regression**, **14 accepted / 1782 rejected** (base-rate 0.008), off-fold AUROC **0.779**, `wrong_majority_n=5`. |
++| **Detector ≫ Selector divergence** (carried from exp4208) | exp4229 capstone | detection AUROC ≈ 1.0 on math/sudoku/code, 0.90 on ARC; **selection headroom only on ARC (0.129) and code (0.18)**; math/sudoku headroom ≈ 0 (SC near-ceiling). |
++| **Verifier-as-reward: 4th/5th infra failure** | exp4222 (smoke, 14s), exp4223 (3-arm, 36.7s) — both DURATION_TOO_SHORT-flagged | the live LoRA training **short-circuited to a fake-short "progress" artifact** instead of training; operating point (Phase-0 0.956, Youden-J 0.414) + N-matched corpora (A=776/B=776/C=742) intact. **Accumulate-floor reached.** |
++| **ARC monotonic +1** | exp4224 | sc25 advanced to L3; `total_levels_solved=17`, `total_games_solved=13`, real-env-confirmed. |
++| **Live solver: efficient, 0 levels** | exp4225 | beats the random/greedy floor on EFFICIENCY; `levels_completed=0` on the live env (no ACCURACY win yet). |
++| **SOTA flagged for .392** | exp4226 | **AggLM-style review-and-reconcile cross-candidate aggregator** — "train an ARC aggregator that recovers minority-correct answers instead of only assigning independent candidate scores." |
++| **DiffusionGemma gate** | — | **STILL-PENDING** — activates only on an oracle-distinct win with a matched control (`verifier_is_oracle=false`, CI95-excl-0). |
++
++**The one-line lesson:** the gate ran and the verifier tied vote, but the verifier was the *weakest
++possible build* (isolated logistic regression on 14 positives) tested at the *lowest possible power*
++(n=14). Before concluding "oracle-distinct selection can't beat vote on ARC," we owe it the strongest
++build (cross-candidate aggregator + imbalance-aware loss) at adequate power — and a cross-domain (code)
++control. That is depth, not churn (north-star §1): the technique and corpus change to address the named
++root cause.
++
++---
++
++## 2. Why these three gaps, and why now
++
++**Gap 1 — The oracle-distinct moat is the existential, still-UNPROVEN claim, and the `.391 null is
++diagnosably premature.** Per `ops/north-star.md` §5, with the generator commodity, the VERIFIER is
++Carnot's entire value-add, and its oracle-distinct value is unproven. `.391 produced the first clean read
++(TIES) but with a build/power so weak that the null carries little information. The disciplined next move
++is the strongest build the literature offers, at power, on the two domains where headroom exists (ARC +
++code). **This is Phase A — the headline.**
++
++**Gap 2 — The verifier-as-reward (self-learning / FR-11) is a TOP-PRIORITY operator directive that is
++owed but infra-cursed.** Four/five consecutive INFRA failures (background-process death → gate-block →
++PEFT attach → two duration-flag short-circuits), now at the operator's own accumulate-floor. The honest
++move is ONE re-scoped attempt that is *guaranteed to either produce a real training run in-window or fail
++loudly* — harness-first with a real-training assertion — and a hard retire mechanic so a fifth no-usable
++window auto-retires the live-LoRA path (a clean signal to take it off the conductor). **This is Phase B —
++the owed self-learning experiment.**
++
++**Gap 3 — ARC-AGI-3 live-solve ACCURACY is still 0.** The solver is efficient but completes 0 live
++levels; the north star's primary axis (accuracy) is unmet on the real env. Keep the offline solved-level
++count monotonic (+1 → 18) and apply the margin-triggered override to goal-predicate induction to try to
++complete a live level. **This is Phase C — the north star.**
++
++---
++
++## 3. Architecture (what executes)
++
++```
++                       ┌──────────────────────────────────────────────────────────┐
++                       │  PHASE A — ORACLE-DISTINCT AGGREGATOR (the headline)       │
++                       │                                                            │
++ grown labeled ARC ───▶│  A1 cross-candidate SET-ENCODER aggregator                 │
++ pool (load_arc_rows,  │      + calibrated imbalance-aware loss (2509.19681)        │
++ ≥30 held-out tasks)   │      + cross-candidate features (MSV/AggLM/Set-Encoder)    │
++                       │      out-of-fold; verifier_is_oracle=false                 │
++                       │            │ aggregator_trained (bare bool)                │
++                       │            ▼                                               │
++                       │  A2 ARC beats-vote gate (gated_on A1):                     │
++                       │      aggregator@1 vs vote@1 vs matched control vs          │
++                       │      MARGIN-TRIGGERED override (2606.04323) vs oracle@K    │
++                       │      task-level bootstrap CI95-excl-0  ← THE HEADLINE      │
++                       │                                                            │
++                       │  A3 CODE oracle-distinct replication (independent):        │
++                       │      learned pass-predictor (NO execution) — higher-power, │
++                       │      less-imbalanced disambiguation of the ARC null        │
++                       └──────────────────────────────────────────────────────────┘
++                       ┌──────────────────────────────────────────────────────────┐
++                       │  PHASE B — VERIFIER-AS-REWARD (owed; self-learning/FR-11)  │
++                       │  B1 harness-first smoke: REAL-training assertion           │
++                       │      (duration floor + loss-moved) → harness_smoke_passed  │
++                       │            │ (bare bool)                                   │
++                       │            ▼                                               │
++                       │  B2 de-confounded 3-arm A-vs-B (gated_on B1), window-      │
++                       │      boxed, retire_if_same_verdict; verifier_is_oracle=true│
++                       └──────────────────────────────────────────────────────────┘
++                       ┌──────────────────────────────────────────────────────────┐
++                       │  PHASE C — ARC NORTH STAR                                  │
++                       │  C1 incremental +1 (total_levels ≥ 18)                     │
++                       │  C2 live-env accuracy probe (margin-triggered override)    │
++                       └──────────────────────────────────────────────────────────┘
++                       ┌──────────────────────────────────────────────────────────┐
++                       │  PHASE D — RESERVED + CLOSE                                │
++                       │  D1 SOTA-ingestion  D2 registry/gaps  D3 hardware  D4 cap  │
++                       └──────────────────────────────────────────────────────────┘
++```
++
++---
++
++## 4. Phases & tasks (12 tasks, exp4230–exp4241)
++
++| # | id | phase | what | gate / override |
++|---|---|---|---|---|
++| 0 | exp4230 | infra | archive .391 → activate .392; record close-state (TIES-VOTE-NULL n=14; reward harness-deferred; ARC 17) | operator_override (class 1) |
++| 1 | exp4231 | A1 | BUILD the cross-candidate set-encoder aggregator on a GROWN ARC pool + calibrated imbalance-aware loss; out-of-fold AUROC; `aggregator_trained` | prior_failures exp4220 + override |
++| 2 | exp4232 | A2 | ARC beats-vote gate: aggregator vs vote vs matched control vs margin-triggered override vs oracle@K; CI95-excl-0 — **THE HEADLINE** | gated_on A1; prior_failures exp4221 + override |
++| 3 | exp4233 | A3 | CODE oracle-distinct beats-vote (learned pass-predictor, NO execution) — higher-power, less-imbalanced disambiguation | operator_override (class 3) |
++| 4 | exp4234 | B1 | verifier-as-reward LoRA harness-first smoke: REAL-training assertion (duration + loss-moved); `harness_smoke_passed` | prior_failures exp4222 |
++| 5 | exp4235 | B2 | verifier-as-reward 3-arm A-vs-B, window-boxed, retire mechanic | gated_on B1; prior_failures exp4223/exp4211 |
++| 6 | exp4236 | C1 | ARC incremental +1 (total_levels ≥ 18) | operator_override (class 3) |
++| 7 | exp4237 | C2 | ARC live-env solver accuracy (margin-triggered override on goal-predicate induction); no submission | prior_failures exp4225 + override |
++| 8 | exp4238 | D1 | SOTA-ingestion slot (.392 sweep → .393) | operator_override (class 1) |
++| 9 | exp4239 | D2 | verifier registry + gaps hygiene (GAP-4 regression guard + record .392 outcomes; declare methodology) | operator_override (class 1) |
++| 10 | exp4240 | D3 | hardware continuity (GateMate + PolarFire drive-toward-terminal; KV260 opportunistic) | operator_override (class 2) |
++| 11 | exp4241 | D4 | capstone .392 (UNGATED) | operator_override (class 1) |
++
++The single load-bearing question: **does the STRONGER oracle-distinct verifier (cross-candidate
++aggregator + imbalance-aware loss, at power) beat vote on ARC and/or code (`verifier_is_oracle=false`,
++matched control, CI95-excl-0)?** A clean win closes GAP-3-ties-vote and makes the DiffusionGemma gate
++resolvable; a clean ties-with-headroom-at-power is a much stronger (and decision-grade) null than `.391's
++underpowered one.
++
++---
++
++## 5. Dependency graph
++
++```
++exp4230 (archive/activate) ──▶ everything
++
++PHASE A:  exp4231 (A1 build) ──aggregator_trained──▶ exp4232 (A2 ARC gate, gated)
++          exp4233 (A3 code replication) — independent of A1 (different domain/pool)
++
++PHASE B:  exp4234 (B1 smoke) ──harness_smoke_passed──▶ exp4235 (B2 3-arm, gated)
++
++PHASE C:  exp4236 (C1 +1), exp4237 (C2 live) — independent
++
++PHASE D:  exp4238 (SOTA), exp4239 (registry), exp4240 (hardware) — independent
++          exp4241 (capstone) — UNGATED; reads all upstream, skips flagged artifacts
++```
++
++Two structured gates (`gated_on`) let A2/B2 skip their Sonnet call when the prerequisite verdict fails:
++- exp4232 `gated_on` exp4231 `aggregator_trained == true`
++- exp4235 `gated_on` exp4234 `harness_smoke_passed == true`
++
++---
++
++## 6. Hardware & model requirements
++
++- **Phase A** is CPU-sufficient (cached candidate pools + a small set-encoder/aggregator; no GGUF/GPU
++  inference). `inference_substrate: verifier_ensemble_against_cached_candidates`.
++- **Phase B** needs a single RTX 3090 (CUDA) + a NON-Qwen SOTA base. Default **`unsloth/gemma-4-12B-it`**
++  (the lightweight SOTA per CLAUDE.md — fast iteration / higher batch throughput on one 3090, the right
++  pick when an experiment makes many LLM calls). Qwen is FORBIDDEN as the trained base (Spurious-Rewards
++  confound); a Qwen GGUF as an off-policy teacher/certifier reference is fine. `inference_substrate:
++  live_llm_inference`. PRECONDITIONS gate CUDA + the cached base BEFORE training; cache the 12B model in a
++  PRECONDITIONS step (newly released 2026-06-05 — do not assume it is already cached).
++- **Phase C** is offline/air-gapped for C1; C2 uses the live ARC SDK anonymous key (no leaderboard
++  submission — operator-only).
++- **Hardware continuity (D3):** GateMate (`openFPGALoader -c dirtyJtag --detect`) + PolarFire
++  (`ssh polarfire`) drive-toward-terminal; KV260 (`ssh kria`) opportunistic. SSH/USB-detect preconditions
++  ONLY (KV260 SSH-Not-SD-Card Discipline).
++- **The TRM Sudoku checkpoint is DONE (val 0.8227, SIGTERM'd) and the conductor stays stood-down.** NO
++  task may launch TRM training, `pkill`/`kill` against `train.py`, or WRITE
++  `results/trm_runs/sudoku_extreme_baseline/`.
++
++---
++
++## 7. What this milestone is NOT
++
++- **NOT a re-run of the `.391 null.** Every Phase-A task changes the TECHNIQUE (cross-candidate aggregator,
++  not isolated logistic regression), the LOSS (calibrated imbalance-aware), the CORPUS (grown ≥30 held-out
++  / cross-domain code), or the OVERRIDE (margin-triggered). This is the Failed-Experiment Rerun
++  Discipline's "address the root cause," not churn.
++- **NOT a circular execution win.** The CODE replication (A3) uses a LEARNED pass-predictor that does NOT
++  execute tests at inference (`verifier_is_oracle=false`); `adversarial_verify.py:check_circular_moat_overclaim`
++  must stay clean. The verifier-as-reward (B) declares `verifier_is_oracle=true` honestly (the reward is
++  the execution oracle — an RLVR reward axis, NOT a moat claim).
++- **NOT a 5th identical doomed verifier-as-reward run.** B is re-scoped to fit the window with a
++  real-training assertion + hard auto-retire; a fifth no-usable window retires the live-LoRA path.
++- **NOT an off-ARC-significance SELECTOR re-grind** (the operator de-prioritized that 2026-06-11).
++- **NOT a leaderboard submission** (C2 submits no scorecard; external publication is operator-only).
++- **NOT a flip of the DiffusionGemma gate** unless an oracle-distinct win lands with a matched control.
++
++---
++
++## 8. Acceptance — the decision-grade questions
++
++1. **Does the stronger oracle-distinct verifier beat vote on ARC?** (exp4232) `aggregator@1 − vote@1`,
++   CI95-excl-0, headroom present, `verifier_is_oracle=false`, matched control reported. WIN / TIES-AT-POWER /
++   NO-HEADROOM-UNINFORMATIVE.
++2. **Does it beat vote on CODE (less-imbalanced, higher-power)?** (exp4233) — disambiguates whether the
++   `.391 ARC null was data-sparsity (code wins) or a thesis limit (code also ties).
++3. **Does the verifier's LABEL carry training signal?** (exp4235, gated on a REAL B1 smoke) A-vs-B (certified
++   vs same-generator random-label) CI95-excl-0, with the gold-control + truncation guards passing — or an
++   honest harness-deferred / auto-retired verdict.
++4. **Is the ARC solved-level count monotonic?** (exp4236) `total_arc_levels_solved ≥ 18`.
++5. **Can the live solver complete a level?** (exp4237) `solver_completes_level`, vs the `.391 efficiency-only
++   floor; no submission.
++6. **Is the DiffusionGemma gate now resolvable?** (exp4241) true ONLY on an oracle-distinct win with a
++   matched control; otherwise STILL-PENDING.
++
++The capstone (exp4241) emits a single `headline_outcome` from the enumerated set and decides the standing
++of the oracle-distinct frontier + the verifier-as-reward pivot after `.392.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 37216c1b33..f98e6273ed 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-06-15T06:33:10Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-06-15T07:21:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 715510b6a1..126aa2472a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8522,3 +8522,5 @@ c |
+ | 2026-06-15 06:01 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | OK | 90 passed, 1 warning in 7.19s |
+ | 2026-06-15 06:13 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 5.85s |
+ | 2026-06-15 06:31 UTC | PHASE D4 -- Capstone .391 (UNGATED): headline ques | OK | 85 passed, 1 warning in 5.83s |
++| 2026-06-15 07:17 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-15 07:19 UTC | Milestone 2026.06.392 activated | OK | 12 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d261d20c70..8b5fb18fba 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 22, "phase": "iteration_start", "started_at": "2026-06-15T06:33:10Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 24, "phase": "iteration_start", "started_at": "2026-06-15T07:21:21Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 7d9dc64ff4..a88ba0d5e3 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,157 +1,68 @@
+-<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-14 -->
++<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-15 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-The on-disk file matches what I was given. Here is my hostile stranger review.
+-
+-```
+-# docs_audit_report — 2026-06-14
++# docs_audit_report — 2026-06-15
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is genuinely good — I understand what Carnot does in one sentence and
+-how to install it. But I'd start bouncing the moment I scroll into "Evidence":
+-twelve cards of unexplained acronyms (FoVer, SVAMP, VeriCoT, CCTU, CRANE,
+-HalluGuard, PRM-BiasBench, "k=5") with several suspiciously perfect numbers and
+-one baseline (0.125 AUC) that's literally worse than a coin flip. The page earns
+-trust in the first screen and then spends it on insider noise.
++The hero earns the click — clean design, one clear sentence ("checks whether an answer is internally consistent and suggests a fix"), a visible `pip install carnot-ebm`, Apache 2.0. But the moment I scroll to the evidence — the exact place a technical stranger goes to decide whether to trust this — I hit a wall of unexplained acronyms (FoVer, PREM, CCTU, VeriCoT, CRANE, HalluGuard v3), numbers that contradict each other (FoVer is simultaneously Carnot's 0.9131 headline AND a 0.125 "baseline" it beats), and a cluster of suspiciously perfect scores (1.0, 60/60, 99.3%) sitting under a defensive "some of these are synthetic" disclaimer. Net: I'd skim, get confused, smell something off, and close the tab.
+ 
+ ## TOP 3 PROBLEMS
+-1. The "Evidence / What we measured" results grid is a 12-card jargon wall a
+-   stranger cannot parse — every card assumes I know a benchmark or method name.
+-2. Credibility-damaging numbers: a 0.125 AUC "baseline" (below random),
+-   multiple perfect scores (1.0 TP rate, 60/60, "identical losses") with no
+-   sample sizes, and a null result ("0.0pp delta") painted with a 95.6% green
+-   success bar.
+-3. The hero leads with vanity/insider metrics (3,540 runs, 382 milestones,
+-   30,658 tests) and jams a changelog-style card ("Repinned from v2 0.9857 …
+-   architecture-only 0.8947 … 5-seed dual-condition") into the stat row.
++1. **FoVer means two opposite things on the same page** — headline result (0.9131 AUROC) in the hero/Recent-progress card, but a 0.125 "baseline" Carnot beats in the Results grid. A stranger can't tell if FoVer is the project's win or its punching bag. Most trust-damaging item on the page.
++2. **The Results section is jargon soup** — "EstimationVerifier SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "k=5 ensemble", "HalluGuard v3", "CCTU", "CRANE", "publication gate". Twelve cards, almost none parseable without insider context.
++3. **Perfect-score smell with no sample anchor** — "TP rate 0.5 → 1.0", "catches 60/60 attacks", "99.3% of wrong code flagged", "2.0× speedup, identical losses", against a below-random "0.125 baseline" — reads as fabrication/cherry-picking, not rigor, and the defensive provenance disclaimer above it makes it worse.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- Nav bar — 12 text links + 2 buttons (Get Started, Tutorial, Concepts, API,
+-  Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap)
+-  — cap at ~5-6. A stranger reads none of 12; it signals "we couldn't decide
+-  what matters."
+-- Results grid — 12 cards in one section — suggest ≤6 headline cards. The
+-  rubric's "skim none of them" effect kicks in well before 20 when every card
+-  needs decoding.
+-- "Recent progress" card (hero stats) — ~60 words crammed into the stat row,
+-  doing the job of a changelog — cut to one sentence or move out of the hero.
+-- Results section intro paragraph — ~60 words of defensive methodology
+-  ("synthetic-pilot … labeled by provenance … not model-generation headline
+-  claims") — reads like internal disclaimer, not landing copy; trim to one line.
+-- Total card load across page: ~4 how-it-works + 7 capabilities + 12 results +
+-  7 blog = 30 cards. Cumulatively exhausting even though no single section
+-  exceeds its cap.
++- Results-grid — 12 result cards — under the 20-card cap on *count*, but the density of distinct micro-benchmarks (HumanEval, HumanEval-50, SVAMP, GSM8K, CCTU, KV260, prompt-injection…) means a stranger skims none of them. Suggest curating to the 4–5 strongest, clearly-labeled rows.
++- Results section intro (`section-desc`) — ~50 words of provenance hedging ("Synthetic pilots are included only when the card says so; they are not model-generation headline claims") — this is defensive insider copy that *plants* doubt rather than building trust. Cut or move to the report.
++- Hero stats bar — 4 "headline numbers" but 3 of them (3,552 experiment runs, 382 completed milestones, 30,658 automated tests) are internal activity/vanity metrics, not value to a user. "382 completed milestones" is a project-management concept a stranger has zero context for.
+ 
+ ### Internal jargon
+-- Results card "Math reasoning" — "EstimationVerifier SVAMP AUC", "0.125 FoVer
+-  baseline" — a stranger knows none of EstimationVerifier, SVAMP, or FoVer, and
+-  can't tell if FoVer is a benchmark, a baseline, or a competitor.
+-- Results card "Math extraction" — "VeriCoT equation-style CoT fix", "GSM8K
+-  extraction TP rate" — VeriCoT, GSM8K, "TP rate", "CoT" all unexplained.
+-- Results card "Adversarial audit" — "PRM-BiasBench-style attacks", "k=5
+-  ensemble" — PRM, BiasBench, and "k=5" mean nothing to an outsider.
+-- Results card "Cascade routing — HalluGuard v3" — "HalluGuard v3" is an
+-  internal component name with a version number.
+-- Results cards "Ising-guided fuzzing", "CRANE vs rigid grammar", "CCTU
+-  constrained micro-benchmark" — Ising, CRANE, CCTU all undefined.
+-- Results card "Safety" — "0.91 AUROC (publication gate)" — "publication gate"
+-  is internal process vocabulary.
+-- Hero stats card — "5-seed dual-condition", "architecture-only 0.8947",
+-  "Repinned from v2 0.9857" — pure internal methodology/version chatter.
+-- Capabilities "Multi-step reasoning" — "AND-composed" — jargon.
+-- Capabilities "Test-Time Compute (TTC) & PREM" — "Process-Reward Energy Model
+-  (PREM) variance … intrinsic motivation for continuous self-learning" — the
+-  most opaque + hype-laden card on the page; an outsider gets nothing concrete.
+-- Capabilities "APIs & portable memory" — "VerdictRecord", "SessionMemory" are
+-  code identifiers leaked into prose.
+-- Blog teaser "Five FATAL Findings …" — "Deep Think Rounds" is insider naming
+-  (acceptable-ish in a blog title, but still unexplained).
++- Hero stat label — "FoVer math step-errors (5-seed)" — "FoVer" undefined; "5-seed" is methodology insider-speak.
++- Recent-progress card — "5-seed dual-condition; architecture-only 0.8947", "Repinned from v2 0.9857 after pre-submission adversarial audit" — "dual-condition", "architecture-only", "repinned", "v2" all read like a changelog, not landing copy.
++- Capabilities → "Test-Time Compute (TTC) & PREM" card — "Process-Reward Energy Model (PREM) variance", "intrinsic motivation for continuous self-learning" — the single most opaque card on the page; means nothing to a stranger.
++- Results cards — "EstimationVerifier", "SVAMP", "VeriCoT", "CoT", "GSM8K", "TP rate", "PRM-BiasBench", "k=5 ensemble", "HalluGuard v3", "CCTU", "CRANE", "publication gate" — roughly a dozen undefined terms in one section.
++- Preprint section — "paper-v6" in the title, "non-operator environment", "operator-initiated upload" — "operator" is the project's internal word for the maintainer; a stranger doesn't know it.
++- Blog cards — "NTK" (and "arXiv:2601.18753 NTK"), "Deep Think rounds" — undefined, though more forgivable in a blog teaser.
+ 
+-### Per-milestone narrative
+-- No raw "exp1234" or ".148"-style milestone tokens remain in prose — this has
+-  been cleaned up and is a real improvement.
+-- Residual narrative flavor: hero card "Repinned from v2 0.9857 after
+-  pre-submission adversarial audit" reads like a changelog entry, and the
+-  "382 Completed milestones" stat surfaces the internal milestone concept as a
+-  vanity number.
++### Per-milestone / internal-status narrative
++- Recent-progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a retro entry, not a public claim.
++- Preprint — "The arXiv submission is prepared but pending operator-initiated upload" is internal workflow status surfaced to strangers.
++- Hero stats — "382 Completed milestones" exposes the internal milestone cadence as if it were a product metric.
+ 
+ ### Inconsistencies
+-- "FoVer" is used two incompatible ways: the hero headline calls 0.9131 the
+-  AUROC *on* FoVer (FoVer = the benchmark), while the Math-reasoning result
+-  card calls 0.125 the "FoVer baseline" (FoVer = a competing method). Same word,
+-  two meanings, on the same page.
+-- "Seven capabilities … What you can check" but 3 of the 7 cards are not things
+-  you check: "Research operations" (the dev loop), "APIs & portable memory"
+-  (integration surfaces), and "Test-Time Compute & PREM" (a budget controller).
+-  The section header over-promises a taxonomy the cards don't deliver.
+-- "Why Energy-Based?" says the math "is why Carnot can scale beyond conventional
+-  CPUs" (definitive), but the only hardware evidence card is a "KV260 FPGA
+-  prototype" — prototype ≠ scales-beyond-CPUs.
+-- Results disclaimer says synthetic pilots are "included only when the card says
+-  so," yet no result card visibly carries a synthetic-pilot label — the
+-  promised labeling is absent.
+-- Two different "0.91" AUROCs (FoVer math-step vs prompt-injection safety) sit
+-  in different cards with no cue that they measure different things — easy to
+-  read as one number repeated.
+-- Typed-constraints numbers (+4.9 pts, 4%→12%) appear in BOTH the capabilities
+-  bento and as two separate results cards — duplicated.
++- **FoVer 0.9131 (Carnot's headline) vs FoVer 0.125 (a "baseline" Carnot beats with 0.90 AUC)** — same name, opposite roles, no disambiguation. (Also: AUROC vs AUC used interchangeably across these cards.)
++- **Three different HumanEval code-repair deltas**: "+3.0 points" (Code capability + Results), "66% → 84% (+18pp)" (Ising-guided fuzzing, HumanEval-50), "70% → 85% (+15pp)" (CRANE, HumanEval-50). A stranger can't tell which represents Carnot's actual code improvement.
++- **Two near-identical "0.91" AUROCs for different tasks** — prompt-injection "0.91 AUROC (publication gate)" vs FoVer "0.9131" — easy to conflate while skimming.
++- **The 47+28 example renders three ways** — intro says the wrong answer is "76" and (via quickstart) the correct answer is "75", but the "One-word-at-a-time" card shows "47 + 28 = 7". The "= 7" looks like a typo unless the reader infers it's mid-generation; pedagogically muddled.
+ 
+ ### Missing essentials
+-- "Why should I trust the numbers?" is undercut, not supported: the defensive
+-  provenance paragraph plus jargon makes the evidence harder to trust, not
+-  easier. No link from a result card to its underlying artifact.
+-- Maintainer/credibility signal is thin: footer shows a single name ("© 2026
+-  Ian Blenke"). A stranger may read this as a solo side-project; no team,
+-  affiliation, or "used by" anchor.
+-- The result-card meter bars have no legend and don't map to their numbers
+-  (e.g. "+3.0 points" → 14.6% bar; "+4.9 points" → 66.7% bar). They look
+-  quantitative but are arbitrary, which erodes rather than builds trust.
++- **Who maintains it / credibility of the team** — footer is just "© 2026 Ian Blenke". No team, institution, or affiliation. Combined with "382 milestones" of autonomous-loop output, a stranger may read this as a solo auto-generated project and discount the numbers.
++- **Why trust the numbers** — the provenance disclaimer actively *undercuts* this by admitting some rows are synthetic without clearly tagging which cards those are.
++- (What it does / install / license are all present and clear — see What's Working.)
+ 
+ ### Fabrication signals
+-- "GSM8K extraction TP rate: 0.5 → 1.0" — a perfect 1.0 with no sample size or
+-  anchor.
+-- "k=5 ensemble catches 60/60 attacks" — 100% on a small, unstated N.
+-- "Two-GPU parallel retrain — 2.0× speedup, identical losses" — exact 2.0× and
+-  "identical" read as too clean.
+-- "0.90 AUC (vs 0.125 FoVer baseline)" — a 0.125 AUC baseline is *below* random
+-  (0.5); to a stranger who knows AUC this looks like a typo or a baseline
+-  cherry-picked to inflate the delta. This is the single most credibility-
+-  damaging number on the page.
+-- "0.0pp accuracy delta with 4.4% cost savings" rendered with a 95.6%-wide
+-  green bar — a null result visually dressed as a near-100% win.
++- "GSM8K extraction TP rate: 0.5 → 1.0" — a perfect 1.0 with no N.
++- "k=5 ensemble catches 60/60 attacks" — 100%, tiny sample.
++- "99.3% of wrong code flagged" (Code card) — suspiciously precise high number.
++- "2.0× speedup, identical losses" — "identical" is a red-flag word.
++- "0.90 AUC (vs 0.125 FoVer baseline)" — a 0.125 AUC is *below random* (0.5); an unexplained below-chance baseline reads as either a bug or a rigged comparison.
++- None of the above carries a sample-size or confidence-interval anchor on the card itself — only the FoVer 0.9131 number has a "5-seed / CI" story (and that's buried in jargon).
+ 
+ ## WHAT'S WORKING
+-- The hero is excellent: one-sentence "what it does," a concrete 47+28=76
+-  example, `pip install carnot-ebm`, Apache-2.0, and HuggingFace mirror all in
+-  the first screen. A stranger gets the pitch immediately.
+-- "How it works" (Extract → Check → Repair) is clear, jargon-light, and uses
+-  the same running example — strong narrative spine.
+-- The page is visibly cleaner than past states: no raw experiment IDs or
+-  milestone numbers in prose.
++- **Hero is genuinely strong**: one-sentence value prop, the 47+28 worked example, `pip install carnot-ebm`, Apache 2.0 badge — a stranger understands what this is in 10 seconds.
++- **Quickstart section**: the Python example (`verify` → `False` → violations → `verify_and_repair`) is concrete, copy-pasteable, and the single most convincing thing on the page. Leave it alone.
++- **Visual design / structure** is clean and professional; the "Extract → Check → Repair" framing is clear and jargon-light.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Rebuild the Results section: cut to ~6 cards, and rewrite each tag in plain
+-   English (e.g. "Math word problems (SVAMP)" → "Catching wrong steps in math
+-   reasoning"). Every card must be legible to someone who's never heard the
+-   benchmark name.
+-2. Fix or remove the 0.125-AUC card and every perfect-score card, or add a
+-   sample-size/credibility anchor inline (N, seeds, link to artifact). A
+-   below-random baseline on a public page is a self-inflicted credibility wound.
+-3. Remove or recolor the misleading meter bars — either make widths map to the
+-   stated number, or drop the bars entirely.
+-4. Move the "Recent progress" changelog card out of the hero stat row; reduce
+-   the hero stats to outcome metrics (keep the 0.9131 AUROC, drop or de-emphasize
+-   "experiment runs / milestones / automated tests").
+-5. Reconcile the "Seven capabilities / What you can check" section so the header
+-   matches the cards (split verification capabilities from infra/API/dev-loop
+-   cards), and rewrite the PREM/TTC card in plain language or cut it.
+-6. Disambiguate "FoVer" (benchmark vs baseline) wherever it appears; define
+-   AUROC/AUC once in plain terms.
+-7. Trim the nav to ~5-6 links; fold the rest into the footer.
+-8. Add a credibility/maintainer anchor (team, affiliation, or adopters) if one
+-   exists.
+-```
+-
+-This is advisory only — I did not edit `docs/index.html`, and per the project's public-documentation discipline the operator owns this page.
+\ No newline at end of file
++1. **Fix the FoVer collision first.** Either rename the "0.125 FoVer baseline" card to name the actual baseline method, or drop that card. Never let one term be both your headline and your punching bag.
++2. **De-jargon the Results grid.** For each card, lead with the plain-English claim and demote the codename (e.g., "Catches injected math errors a solver would miss — 0.90 vs 0.13 for the prior method"). Cut SVAMP/VeriCoT/CCTU/CRANE/HalluGuard/PRM-BiasBench from card faces; keep them in the technical report.
++3. **Curate to ~5 evidence cards** and put a sample size or CI on each. Remove or footnote the perfect-score cards (1.0, 60/60, 99.3%) unless you can show N and an interval — they currently read as fabrication, not strength.
++4. **Reconcile the HumanEval numbers.** Pick the one headline code-repair delta; relegate the HumanEval-50 fuzzing/CRANE variants to the report with explicit "50-problem subset" labels.
++5. **Replace the vanity stats.** Swap "experiment runs / milestones / automated tests" for outcome numbers a user cares about; keep the AUROC but gloss it ("0.91 — how reliably it separates correct from flawed math steps").
++6. **Strip internal vocabulary** from public copy: "operator", "paper-v6", "publication gate", "repinned from v2", "dual-condition". Rewrite the preprint blurb to drop "pending operator-initiated upload".
++7. **Delete or rewrite the TTC/PREM card** — it's the least comprehensible item and adds nothing for a stranger.
++8. **Add a one-line credibility/maintainer anchor** near the footer or hero (who's behind it, any external reproduction) to offset the solo-autonomous-project impression.
++9. **Fix the "= 7" example** so the worked number is consistent (75 correct / 76 wrong) throughout.
++10. Minor: the "Recent progress" `r-card` is nested inside the `stats-bar` flex container — verify it renders as intended and isn't colliding with the stat columns.
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 8d52b2ddfc..81a89a7f57 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -1,3 +1,71 @@
++## 2026-06-15 .392 planning sweep — STRENGTHEN the oracle-distinct verifier (the .391 beats-vote gate RAN and TIED vote; diagnose the null, fix all three causes)
++
++Added by the `.392 planning sweep (Claude Opus 4.8, outer-loop). `.391 finally RAN the oracle-distinct
++beats-vote gate (the `.390 infra blockers were fixed): on a held-out ARC split, the LEARNED
++oracle-distinct verifier (verifier_is_oracle=false) **TIED majority vote** — `verifier@1 − vote@1 =
++−0.0714, bootstrap CI95 [−0.214, 0.0]` (exp4221, clean / not flagged), `oracle@K = 1.0` (headroom EXISTS),
++the ARBITER conservative-override degenerated to "keep vote" (0.643 = 0.643, never overrode), and the
++matched no-verifier control exactly tied the verifier (both 0.5714). The build (exp4220) trained a
++**plain per-candidate logistic regression on 14 ACCEPTED / 1782 REJECTED rows** (base-rate 0.008,
++off-fold AUROC 0.779), and the held-out gate was **n=14 tasks** (below the CLT floor). So the `.391 null
++has THREE diagnosable, separable causes — NOT a settled refutation of the oracle-distinct thesis:
++(1) **isolated per-candidate scoring** (the verifier scored each candidate alone, with no view of the
++competing candidate set / vote basin); (2) **extreme class imbalance** (14 positives collapsed the
++discriminator); (3) **underpowered held-out** (n=14). The detector-vs-selector divergence (exp4208,
++carried) shows detection AUROC ≈ 1.0 on math/sudoku/code but SELECTION headroom only on ARC (0.129) and
++code (0.18) — so ARC and code are the only two domains where a beats-vote win is even possible. The
++verifier-as-reward (Phase B) failed a **4th/5th** time on infra (exp4222 harness smoke 14s / exp4223
++3-arm 36.7s — both DURATION_TOO_SHORT-flagged: the live LoRA training short-circuited to a fake-short
++"progress" artifact instead of training), reaching the operator's own accumulate-floor (3 no-usable
++windows).
++
++**New methods (verified via WebSearch 2026-06-15; real arXiv IDs) — each fixes a NAMED `.391 cause:**
++
++- **Set-Encoder — "Permutation-Invariant Inter-Passage Attention for Listwise Re-Ranking"
++  (arXiv:2404.06912).** A cross-encoder that attends ACROSS the whole candidate set (permutation-
++  invariant inter-candidate attention) instead of scoring each item in isolation. FIXES `.391 cause (1):
++  the A2 verifier must consume the FULL per-task candidate set (vote basin, competing transformation
++  families, cross-candidate agreement), not one row at a time. MAP: the `.392 ARC aggregator is a
++  set-encoder over the per-task candidate set, emitting a calibrated per-candidate score conditioned on
++  its competitors.
++- **Calibrated Reasoning — "An Explanatory Verifier for Dynamic and Efficient Problem-Solving"
++  (arXiv:2509.19681).** Trains the verifier to emit a continuous 0–10 calibrated rating with a
++  BCE-variant reward that resists the score-collapse class imbalance induces (a binary MSE verifier on a
++  near-degenerate class ratio collapses to one value — exactly the `.391 14/1782 failure). FIXES `.391
++  cause (2). MAP: train the `.392 aggregator with an imbalance-aware / calibrated objective (class-
++  weighted or focal loss + isotonic/temperature calibration) and stratified-balanced minibatches so the
++  14-positive slice does not wash out.
++- **Margin-Triggered Question Re-Arbitration (arXiv:2606.04323, CVPR-2026-VidLLMs).** Answer
++  self-consistency with a MARGIN-TRIGGERED re-arbitration: only override the self-consistent answer when
++  a confidence-margin threshold fires. FIXES the `.391 ARBITER-override degeneracy (it kept vote on every
++  task because no principled margin trigger fired). MAP: the `.392 override fires on a pre-registered
++  learned-margin threshold tuned on the A1 fold, recovering wrong-majority answers ONLY where the
++  aggregator is confident — beating vote where a flat rerank loses.
++- **SCOPE — "Beyond Majority Voting: Fine-grained and More Reliable Reward Signal for TTRL"
++  (arXiv:2512.15146).** Step/region-level reward beats coarse outcome vote; fine-grained signal recovers
++  reliability where vote tallies are context-free. MAP: per-region grid-evidence features for the ARC
++  aggregator (where two candidate grids diverge), the localized-evidence frame AgentAuditor (2602.09341)
++  also argues.
++- **Adaptive Test-Time Compute Allocation over Categorical Structure (arXiv:2602.03975).** Best-of-N with
++  an aggregated verifier score that MARGINALIZES across candidates sharing a final answer (set-aware
++  aggregation), plus learned compute routing. MAP: the aggregator should marginalize over same-grid
++  candidates (vote-basin-aware) rather than treat duplicates as independent rows; corroborates the
++  efficiency/routing frame for Phase C.
++
++**Bottom line for the `.392 roadmap.** HEADLINE (Phase A) = STRENGTHEN, do not merely re-run: build a
++CROSS-CANDIDATE set-encoder aggregator (2404.06912 / MSV 2603.03417 / AggLM 2509.06870) with a
++CALIBRATED imbalance-aware loss (2509.19681) on a GROWN labeled ARC pool (target ≥30 held-out tasks),
++then the gated beats-vote gate with a MARGIN-TRIGGERED override (2606.04323) + matched control +
++CI95-excl-0 — AND a higher-power, less-imbalanced CODE replication (learned pass-predictor, NO execution
++at inference → still verifier_is_oracle=false) to disambiguate "the `.391 null was ARC data-sparsity"
++from "the oracle-distinct selection thesis is bounded." OWED (Phase B) = the verifier-as-reward, RE-SCOPED
++to FIT THE WINDOW (small SOTA base, bounded deterministic step budget, a harness-first smoke that asserts
++REAL training — duration floor + loss-moved — so it CANNOT short-circuit to a fake-short progress
++artifact) + a hard retire-if-same-verdict (5th no-usable window → auto-retire the live-LoRA path).
++NORTH STAR (Phase C) = monotonic ARC +1 (→18) + the live-env accuracy probe with the margin-triggered
++override applied to goal-predicate induction. Strongest single method flagged for `.392: the AggLM/
++Set-Encoder CROSS-CANDIDATE AGGREGATOR — the architecture the `.391 isolated logistic reranker lacked.
++
+ ## 2026-06-15 .391 planning sweep — the de-risked ORACLE-DISTINCT retry (learned aggregator/selector beats vote) + the harness-first verifier-as-reward fix
+ 
+ Added by the `.391 planning sweep (Claude Opus 4.8, outer-loop). `.390 ran the oracle-distinct headline
+diff --git a/results/experiment_1861_equivalence.json b/results/experiment_1861_equivalence.json
+index 305db0f7fc..c2c8c2fda4 100644
+--- a/results/experiment_1861_equivalence.json
++++ b/results/experiment_1861_equivalence.json
+@@ -8,5 +8,14 @@
+     "classification": "TAUTOLOGY",
+     "rationale": "py_loss and rs_loss agree to >5 sig figs.",
+     "follow_up_action": "Fix loss computation."
+-  }
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "py_loss=0.22222222222222232 and rs_loss=0.22222222222222232 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..69d52690ec 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 589b2e530f..6bdd645754 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,14 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.010196924209594727
++  "duration_s": 0.010196924209594727,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

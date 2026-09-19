@@ -1,0 +1,23 @@
+From 24ec7b3ef7c80fbb393feae281aa38e28bf7caf5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 18:36:03 -0400
+Subject: [PATCH 11331/11362] [conductor] In-process docs for Repaired
+ provenance-complete live belief shadow trace
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index a5bbce9c07..2859d822c9 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -19393,3 +19393,4 @@ distinct names and asked what the project should do about the vocabulary.
+ - 2026-09-05: ARC GGUF snapshot-to-blob model identity bridge (✅ Complete) — honest_verdict=complete_positive_arc_model_identity_bridge_ready; results/experiment_7030_arc_gguf_model_identity_bridge.json
+ - 2026-09-05: Fresh-process ARC model identity cold audit (✅ Complete) — direct regular snapshot GGUFs remain valid only on an exact canonical-path match; ambiguous hard links and malformed identity/path evidence fail closed; both touched modules have 100% scoped statement coverage (`794/794`) — honest_verdict=complete_positive_arc_model_identity_cold_audit_ready; results/experiment_7031_arc_model_identity_cold_audit.json
+ - 2026-09-05: Fresh-process ARC model identity and alias-confusion audit (✅ Complete) — honest_verdict=complete_positive_arc_model_identity_cold_audit_ready; results/experiment_7031_arc_model_identity_cold_audit.json
++- 2026-09-05: Repaired provenance-complete live belief shadow trace (⚠️ Blocked) — honest_verdict=blocked_belief_shadow_live_trace:live_trace_execution; results/experiment_7032_repaired_belief_shadow_live_trace.json
+-- 
+2.55.0
+

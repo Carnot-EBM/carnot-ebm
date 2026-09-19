@@ -1,0 +1,1566 @@
+From 81b17b352a48a8c6c46a051aa5fa114ea0004f9e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 02:27:48 -0400
+Subject: [PATCH 04404/11362] [conductor] PHASE B1 (INFRA slot 1; ADVERSARIAL
+ CHECK) -- VERIFY the A1 generation-coverage diagnostic is HONEST -- the
+ proposer was BLIND to the banked winning prefix (no tautology of feeding the
+ offline solver answer back in), measured on REAL games, the positive control
+ genuinely came out COVERED, and the per-game buckets MATCH the
+ dominant-bucket claim.
+
+Automated research step by research conductor.
+Task ID: exp4855-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                         |  13 +-
+ .../arc-world-model-trust-energy/spec.md      |  57 ++
+ ops/arc_null_silent_bug_audit.md              |  17 +
+ ops/changelog.md                              |  11 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/status.md                                 |  17 +-
+ ...riment_4855_generation_diagnostic_audit.py | 725 ++++++++++++++++++
+ ...ment_4855_generation_diagnostic_audit.json | 127 +++
+ ...riment_4855_generation_diagnostic_audit.py | 480 ++++++++++++
+ 9 files changed, 1446 insertions(+), 3 deletions(-)
+ create mode 100644 python/carnot/experiment_4855_generation_diagnostic_audit.py
+ create mode 100644 results/experiment_4855_generation_diagnostic_audit.json
+ create mode 100644 tests/python/test_experiment_4855_generation_diagnostic_audit.py
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index dbe11ba303..f27ee691b5 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1,5 +1,16 @@
+ # Carnot — Traceability Matrix
+ 
++**Operational Note:** 2026-06-27 Exp 4855 A1 generation-diagnostic audit
++regression fix hardened `run()` for missing source inputs under
++`REQ-ARC-WMTE-4855`. The audit now rechecks the Exp 4851 source artifact and
++script before reading them, even when a caller-provided precondition result says
++ok, preserving the documented `blocked_a1_artifact_missing` fail-closed path.
++Focused tests:
++`tests/python/test_experiment_4855_generation_diagnostic_audit.py`
++(`7 passed`); scoped Coverage.py for the Exp 4855 module is 100% (`293`
++statements, `0` missing); focused Ruff check/format passed. The full
++spec-coverage audit is still blocked by pre-existing unreferenced legacy tests.
++
+ **Operational Note:** 2026-06-27 Exp 4851 generation-coverage diagnostic
+ regression fix hardened `artifact_schema_errors()` for malformed
+ `per_game_coverage` rows under `REQ-ARC-WMTE-4851`. The validator now reports
+@@ -27,7 +38,7 @@ and the `scripts/__init__.py` package hook, without modifying
+ The full spec-coverage audit is still blocked by pre-existing unreferenced
+ legacy tests.
+ 
+-**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix; REQ-ARC-WMTE-4851 implementation/test traceability reconciled)
++**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix; REQ-ARC-WMTE-4855 implementation/test traceability reconciled)
+ 
+ **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
+ 
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index b36b8b7de8..198bde4ea0 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -10785,6 +10785,63 @@ Then it writes
+ `blocked_*` verdict, empty or partial coverage fields, and explicit
+ `preconditions_checked` details.
+ 
++### REQ-ARC-WMTE-4855: Hostile A1 Generation-Coverage Diagnostic Audit
++
++Experiment 4855 SHALL adversarially audit the Exp 4851 A1 generation-coverage
++diagnostic before any capstone trusts the dominant-bucket finding. The audit
++SHALL read `results/experiment_4851_generation_coverage_diagnostic.json`,
++`python/carnot/experiment_4851_generation_coverage_diagnostic.py`,
++`scripts/summarize_artifact.py`, and `scripts/adversarial_verify.py`.
++
++The audit SHALL verify four load-bearing gates: the held-out proposer was blind
++to the banked winning answer and used banked prefixes only after proposal
++enumeration for classification; the positive control is a real adaptered game
++and is covered; the per-game coverage buckets support the claimed
++`dominant_bucket` over at least three measured games; and the live path remains
++reachable while `solve_provenance=development_proxy`. If any gate fails,
++`a1_genuinely_diagnostic` SHALL be false and the dominant-bucket finding SHALL
++be labeled untrustworthy/non-test. A missing A1 artifact or script SHALL write a
++terminal `blocked_a1_artifact_missing` artifact.
++
++Experiment 4855 SHALL run the disciplined artifact summarizer, run
++`scripts/adversarial_verify.py` against the A1 artifact, run
++`scripts/arc_orphan_solver_lint.py`, write
++`results/experiment_4855_generation_diagnostic_audit.json`, and append a stable
++section to `ops/arc_null_silent_bug_audit.md`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_generation_diagnostic_audited."
++- `a1_genuinely_diagnostic`: principle "the load-bearing check -- proposer-blind AND positive-control-covered AND buckets-match-claim AND live-path-reachable; else A1 is a tautology/harness non-test and its dominant-bucket finding is void."
++- `proposer_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed the proposer (the tautology trap)."
++- `positive_control_confirmed`: principle "true iff the positive control really came out COVERED on a real adaptered game."
++- `buckets_match_claim`: principle "true iff the per-game buckets support the claimed dominant_bucket."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
++
++#### SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT
++
++Given the Exp 4851 generation-coverage diagnostic artifact and script are
++present
++When Experiment 4855 audits the proposal path, positive control, bucket
++distribution, live lint result, solve provenance, summarizer result, and
++adversarial verifier result
++Then it writes `results/experiment_4855_generation_diagnostic_audit.json`,
++appends a stable section to `ops/arc_null_silent_bug_audit.md`, records
++`inference_substrate=aggregation_from_upstream_artifacts`, and sets
++`a1_genuinely_diagnostic=true` only when all four gates pass.
++
++#### SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION
++
++Given an Exp 4851-like artifact or script that injects the banked answer into
++the proposer, lacks a covered adaptered positive control, has per-game buckets
++that contradict the claimed dominant bucket, measures fewer than three games,
++has an unreachable live path, or declares any provenance other than
++`development_proxy`
++When Experiment 4855 audits it
++Then the audit records the corresponding failed check, emits a terminal
++`complete_a1_generation_diagnostic_non_test_*` verdict, and sets
++`a1_genuinely_diagnostic=false`.
++
+ ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
+ 
+ Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
+diff --git a/ops/arc_null_silent_bug_audit.md b/ops/arc_null_silent_bug_audit.md
+index 57b030ff87..130fb84ee3 100644
+--- a/ops/arc_null_silent_bug_audit.md
++++ b/ops/arc_null_silent_bug_audit.md
+@@ -193,3 +193,20 @@
+ 
+ - Per-game deltas: `{'lp85': 0.04985, 'r11l': 0.192308, 'tu93': 0.06639}`
+ - Source checksum: `sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313`
++## Experiment 4855 .447 A1 Generation Diagnostic Audit
++
++- Verdict: `complete_a1_generation_diagnostic_audited`
++- a1_genuinely_diagnostic: `True`
++- Non-diagnostic reasons: `-`
++- Inference substrate: `aggregation_from_upstream_artifacts`
++
++| Check | Passed | Detail |
++|---|---:|---|
++| `proposer_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_game_coverage": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
++| `positive_control` | `True` | `{"adaptered": true, "artifact_positive_control_covered": true, "coverage_bucket": "COVERED", "matched_winning_prefix_len": 18, "positive_control_game": "tu93", "reached_l1_win": true, "winning_prefix_len": 18}` |
++| `bucket_distribution` | `True` | `{"bucket_counts": {"COVERED": 1, "NEVER_ENUMERATED": 9}, "claimed_dominant_bucket": "NEVER_ENUMERATED", "computed_dominant_bucket": "NEVER_ENUMERATED", "honest_verdict": "complete_generation_wall_never_enumerated_dominant", "invalid_games": [], "n_games_measured": 10, "per_game_count": 10}` |
++| `live_path_and_provenance` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "development_proxy": true, "solve_provenance": "development_proxy"}` |
++| `summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
++
++- Source artifact checksum: `sha256:a49c15b54ff935ac736d4a580fdf4639ac019377b251da04cb2cc7501f5cbaff`
++- Source script checksum: `sha256:0af6642f1fa0a6e9aa2b4554df30fa3f35e61b76946de647d37e6c8a8fd8cb72`
+diff --git a/ops/changelog.md b/ops/changelog.md
+index de54577bc3..40f4c8cd08 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,16 @@
+ # Carnot — Changelog
+ 
++## 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed test fix — codex)
++
++- Fixed the failing Exp 4855 audit test without reverting prior changes and without modifying
++  `scripts/research_conductor.py`. `run()` now rechecks the Exp 4851 source artifact and script
++  before reading them, so missing inputs fail closed with `blocked_a1_artifact_missing` even if a
++  caller-provided precondition result is stale or overbroad.
++- Validation: `pytest tests/python/test_experiment_4855_generation_diagnostic_audit.py -q -o addopts=''`
++  passed (`7 passed`); direct Coverage.py scoped to the Exp 4855 module reported 100%
++  (`293` statements, `0` missing); focused Ruff check/format passed. Repo-wide spec coverage remains
++  blocked by pre-existing unreferenced legacy tests (`1124 test(s) missing spec traceability`).
++
+ ## 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation test fix — codex)
+ 
+ - Fixed the failing Exp 4851 diagnostic test without reverting prior changes and without modifying
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 27fe7da37a..211eda6e10 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 200,
+   "code_violations": 0,
+-  "experiments_checked": 3862,
++  "experiments_checked": 3863,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/status.md b/ops/status.md
+index 72c5a32dba..1b1a26b3be 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,21 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix)
++**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix)
++
++## Session 2026-06-27 — Exp 4855 A1 Generation-Diagnostic Audit Test Fix
++
++Fixed the Exp 4855 audit regression without modifying
++`scripts/research_conductor.py`. `run()` now independently verifies the source
++A1 artifact and script still exist before reading them, even if a caller or test
++double reports preconditions as ok, so missing inputs produce the documented
++`blocked_a1_artifact_missing` artifact instead of raising `FileNotFoundError`.
++
++Validation for this fix: Exp 4855 focused tests pass (`7 passed`), scoped
++Coverage.py report for the Exp 4855 module is 100% (`293` statements, `0`
++missing), and focused Ruff check/format pass on the touched Python files. The
++repo-wide `scripts/check_spec_coverage.py` check remains blocked by
++pre-existing unreferenced legacy tests (`1124 test(s) missing spec
++traceability`).
+ 
+ ## Session 2026-06-27 — Exp 4851 Generation-Coverage Diagnostic Test Fix
+ 
+diff --git a/python/carnot/experiment_4855_generation_diagnostic_audit.py b/python/carnot/experiment_4855_generation_diagnostic_audit.py
+new file mode 100644
+index 0000000000..52791354b4
+--- /dev/null
++++ b/python/carnot/experiment_4855_generation_diagnostic_audit.py
+@@ -0,0 +1,725 @@
++"""Experiment 4855: hostile audit of the A1 generation-coverage diagnostic.
++
++Spec refs: REQ-ARC-WMTE-4855,
++SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT,
++SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION.
++"""
++
++from __future__ import annotations
++
++import ast
++from collections import Counter
++from contextlib import redirect_stdout
++import hashlib
++import io
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any, Callable, Mapping
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for import_root in (REPO_ROOT, PYTHON_ROOT):  # pragma: no cover - direct script guard.
++    if str(import_root) not in sys.path:
++        sys.path.insert(0, str(import_root))
++
++EXPERIMENT = "experiment_4855_generation_diagnostic_audit"
++EXPERIMENT_ID = 4855
++SCHEMA = "carnot.arc.a1_generation_diagnostic_audit_4855.v1"
++SOURCE_ARTIFACT_RELATIVE_PATH = "results/experiment_4851_generation_coverage_diagnostic.json"
++SOURCE_SCRIPT_RELATIVE_PATH = "python/carnot/experiment_4851_generation_coverage_diagnostic.py"
++RESULT_RELATIVE_PATH = "results/experiment_4855_generation_diagnostic_audit.json"
++AUDIT_REPORT_RELATIVE_PATH = "ops/arc_null_silent_bug_audit.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DURATION_FLOOR_S = 0.0001
++RANDOM_SEED = 4855
++TERMINAL_PREFIXES = ("complete_", "blocked_", "success_")
++BUCKET_ORDER = ("COVERED", "ENUMERATED_BUT_LOST", "NEVER_ENUMERATED")
++
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4855",
++    "SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT",
++    "SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; audit complete is complete_a1_generation_diagnostic_audited."
++        )
++    },
++    "a1_genuinely_diagnostic": {
++        "principle": (
++            "the load-bearing check -- proposer-blind AND positive-control-covered AND "
++            "buckets-match-claim AND live-path-reachable; else A1 is a "
++            "tautology/harness non-test and its dominant-bucket finding is void."
++        )
++    },
++    "proposer_blind_confirmed": {
++        "principle": (
++            "true iff the banked winner was used only to classify, never to seed the "
++            "proposer (the tautology trap)."
++        )
++    },
++    "positive_control_confirmed": {
++        "principle": (
++            "true iff the positive control really came out COVERED on a real adaptered game."
++        )
++    },
++    "buckets_match_claim": {
++        "principle": "true iff the per-game buckets support the claimed dominant_bucket."
++    },
++    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts (0.0001s floor)."},
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "source_artifact_path",
++    "source_script_path",
++    "source_artifact_checksum",
++    "source_script_checksum",
++    "source_honest_verdict",
++    "source_dominant_bucket",
++    "live_path_reachable_confirmed",
++    "solve_provenance_confirmed",
++    "checks",
++    "non_diagnostic_reasons",
++    "summarizer_result",
++    "adversarial_result",
++    "live_lint_result",
++    "preconditions_checked",
++    "audit_report_path",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++JsonDict = dict[str, Any]
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _finite_float(value: Any) -> float | None:
++    if isinstance(value, bool) or not isinstance(value, int | float):
++        return None
++    number = float(value)
++    if number != number or number in (float("inf"), float("-inf")):
++        return None
++    return number
++
++
++def _safe_suffix(reasons: list[str]) -> str:
++    if not reasons:
++        return "audited"
++    joined = "_".join(reasons[:3])
++    return re.sub(r"[^a-z0-9_]+", "_", joined.lower()).strip("_") or "failed_checks"
++
++
++def _read_json(path: Path) -> JsonDict:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def file_checksum(path: Path) -> str:
++    digest = hashlib.sha256()
++    digest.update(path.read_bytes())
++    return "sha256:" + digest.hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    clean = dict(payload)
++    clean["reproducibility_checksum"] = ""
++    encoded = json.dumps(clean, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def run_summarizer(path: Path) -> JsonDict:
++    from scripts import summarize_artifact
++
++    buffer = io.StringIO()
++    with redirect_stdout(buffer):
++        returncode = summarize_artifact.summarize(path)
++    return {"returncode": int(returncode), "stdout": buffer.getvalue(), "stderr": ""}
++
++
++def run_adversarial_verify(path: Path) -> JsonDict:
++    from scripts import adversarial_verify
++
++    return dict(adversarial_verify.verify_artifact(path))
++
++
++def run_arc_orphan_solver_lint(root: Path) -> JsonDict:
++    command = [sys.executable, str(root / "scripts" / "arc_orphan_solver_lint.py")]
++    proc = subprocess.run(
++        command,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        timeout=90,
++        check=False,
++    )
++    return {
++        "command": " ".join(command),
++        "returncode": int(proc.returncode),
++        "passed": proc.returncode == 0,
++        "stdout_tail": proc.stdout[-2000:],
++        "stderr_tail": proc.stderr[-2000:],
++    }
++
++
++def _call_name(callable_node: ast.AST) -> str:
++    if isinstance(callable_node, ast.Name):
++        return callable_node.id
++    if isinstance(callable_node, ast.Attribute):
++        return callable_node.attr
++    return ""
++
++
++def _attach_ast_parents(node: ast.AST) -> None:
++    for parent in ast.walk(node):
++        for child in ast.iter_child_nodes(parent):
++            child.__dict__["_parent"] = parent
++
++
++def _find_function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
++    for node in ast.walk(tree):
++        if isinstance(node, ast.FunctionDef) and node.name == name:
++            return node
++    return None
++
++
++def _first_parent_call(node: ast.AST) -> ast.Call | None:
++    parent = getattr(node, "_parent", None)
++    while parent is not None:
++        if isinstance(parent, ast.Call):
++            return parent
++        parent = getattr(parent, "_parent", None)
++    return None
++
++
++def _proposer_blind_check(
++    artifact: Mapping[str, Any],
++    source_text: str,
++) -> tuple[JsonDict, list[str]]:
++    reasons: list[str] = []
++    if artifact.get("proposer_blind_to_banked_answer") is not True:
++        reasons.append("artifact_proposer_blind_flag_false")
++    try:
++        tree = ast.parse(source_text)
++    except SyntaxError as exc:
++        return (
++            {
++                "passed": False,
++                "artifact_flag": artifact.get("proposer_blind_to_banked_answer"),
++                "parse_error": str(exc),
++                "winning_prefix_refs": 0,
++                "disallowed_refs": [],
++            },
++            reasons + ["a1_source_not_parseable"],
++        )
++
++    _attach_ast_parents(tree)
++    function = _find_function(tree, "measure_game_with_stepwise_explorer")
++    if function is None:
++        return (
++            {
++                "passed": False,
++                "artifact_flag": artifact.get("proposer_blind_to_banked_answer"),
++                "function_present": False,
++                "winning_prefix_refs": 0,
++                "disallowed_refs": [],
++            },
++            reasons + ["measure_game_with_stepwise_explorer_missing"],
++        )
++
++    refs: list[JsonDict] = []
++    disallowed: list[JsonDict] = []
++    for statement in function.body:
++        for node in ast.walk(statement):
++            if isinstance(node, ast.Name) and node.id == "winning_prefix":
++                call = _first_parent_call(node)
++                call_name = _call_name(call.func) if call is not None else ""
++                record = {"line": int(getattr(node, "lineno", 0)), "call": call_name or None}
++                refs.append(record)
++                if call_name != "classify_game_coverage":
++                    disallowed.append(record)
++
++    if not refs:
++        reasons.append("winning_prefix_not_used_for_classification")
++    if disallowed:
++        reasons.append("banked_answer_used_before_classification")
++
++    return (
++        {
++            "passed": not reasons,
++            "artifact_flag": artifact.get("proposer_blind_to_banked_answer"),
++            "function_present": True,
++            "winning_prefix_refs": len(refs),
++            "disallowed_refs": disallowed,
++            "allowed_only_in_classify_game_coverage": not disallowed and bool(refs),
++        },
++        reasons,
++    )
++
++
++def _positive_control_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    coverage = _mapping(artifact.get("positive_control_coverage"))
++    reasons: list[str] = []
++    if artifact.get("positive_control_covered") is not True or coverage.get("bucket") != "COVERED":
++        reasons.append("positive_control_not_covered")
++    if coverage.get("adaptered") is not True:
++        reasons.append("positive_control_not_adaptered")
++    if str(coverage.get("game") or artifact.get("positive_control_game") or "") != str(
++        artifact.get("positive_control_game") or ""
++    ):
++        reasons.append("positive_control_game_mismatch")
++    if coverage.get("reached_l1_win") is not True:
++        reasons.append("positive_control_did_not_reach_l1_win")
++    return (
++        {
++            "passed": not reasons,
++            "positive_control_game": artifact.get("positive_control_game"),
++            "artifact_positive_control_covered": artifact.get("positive_control_covered"),
++            "coverage_bucket": coverage.get("bucket"),
++            "adaptered": coverage.get("adaptered"),
++            "reached_l1_win": coverage.get("reached_l1_win"),
++            "winning_prefix_len": coverage.get("winning_prefix_len"),
++            "matched_winning_prefix_len": coverage.get("matched_winning_prefix_len"),
++        },
++        reasons,
++    )
++
++
++def _bucket_counts(per_game_coverage: Mapping[str, Any]) -> dict[str, int]:
++    counts = Counter(
++        str(_mapping(row).get("bucket"))
++        for row in per_game_coverage.values()
++        if _mapping(row).get("bucket") in BUCKET_ORDER
++    )
++    return dict(counts)
++
++
++def _computed_dominant_bucket(per_game_coverage: Mapping[str, Any]) -> str | None:
++    counts = _bucket_counts(per_game_coverage)
++    if not counts:
++        return None
++    return sorted(counts.items(), key=lambda item: (-item[1], BUCKET_ORDER.index(item[0])))[0][0]
++
++
++def _bucket_distribution_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    per_game = _mapping(artifact.get("per_game_coverage"))
++    counts = _bucket_counts(per_game)
++    computed = _computed_dominant_bucket(per_game)
++    reasons: list[str] = []
++    invalid_games = [
++        str(game)
++        for game, row in per_game.items()
++        if _mapping(row).get("bucket") not in BUCKET_ORDER
++    ]
++    if invalid_games:
++        reasons.append("invalid_per_game_bucket")
++    try:
++        n_games = int(artifact.get("n_games_measured"))
++    except (TypeError, ValueError):
++        n_games = -1
++        reasons.append("n_games_measured_not_integer")
++    if n_games != len(per_game):
++        reasons.append("n_games_measured_mismatch")
++    if n_games < 3 or len(per_game) < 3:
++        reasons.append("n_games_measured_below_3")
++    if computed is None:
++        reasons.append("dominant_bucket_missing")
++    elif artifact.get("dominant_bucket") != computed:
++        reasons.append("dominant_bucket_mismatch")
++    expected_fragment = f"complete_generation_wall_{str(computed).lower()}_dominant"
++    if computed is not None and artifact.get("honest_verdict") != expected_fragment:
++        reasons.append("dominant_bucket_verdict_mismatch")
++    return (
++        {
++            "passed": not reasons,
++            "bucket_counts": counts,
++            "computed_dominant_bucket": computed,
++            "claimed_dominant_bucket": artifact.get("dominant_bucket"),
++            "honest_verdict": artifact.get("honest_verdict"),
++            "n_games_measured": artifact.get("n_games_measured"),
++            "per_game_count": len(per_game),
++            "invalid_games": invalid_games,
++        },
++        reasons,
++    )
++
++
++def _live_path_and_provenance_check(
++    artifact: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++) -> tuple[JsonDict, list[str], bool, bool]:
++    lint_passed = live_lint_result.get("passed") is True
++    artifact_live = artifact.get("live_path_reachable") is True
++    provenance = artifact.get("solve_provenance")
++    live_confirmed = lint_passed and artifact_live
++    provenance_confirmed = provenance == "development_proxy"
++    reasons: list[str] = []
++    if not live_confirmed:
++        reasons.append("live_path_unreachable")
++    if not provenance_confirmed:
++        reasons.append("solve_provenance_not_development_proxy")
++    return (
++        {
++            "passed": not reasons,
++            "arc_orphan_solver_lint_passed": lint_passed,
++            "artifact_live_path_reachable": artifact_live,
++            "solve_provenance": provenance,
++            "development_proxy": provenance_confirmed,
++        },
++        reasons,
++        live_confirmed,
++        provenance_confirmed,
++    )
++
++
++def _tool_cleanliness_check(
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++) -> JsonDict:
++    summarizer_clean = summarizer_result.get("returncode") == 0
++    adversarial_clean = (
++        adversarial_result.get("loaded") is not False and adversarial_result.get("flag_count") == 0
++    )
++    return {
++        "passed": summarizer_clean and adversarial_clean,
++        "summarizer_returncode": summarizer_result.get("returncode"),
++        "adversarial_flag_count": adversarial_result.get("flag_count"),
++        "adversarial_loaded": adversarial_result.get("loaded"),
++    }
++
++
++def audit_a1_artifact(
++    artifact: Mapping[str, Any],
++    *,
++    source_text: str,
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++) -> JsonDict:
++    proposer_check, proposer_reasons = _proposer_blind_check(artifact, source_text)
++    positive_check, positive_reasons = _positive_control_check(artifact)
++    bucket_check, bucket_reasons = _bucket_distribution_check(artifact)
++    live_check, live_reasons, live_confirmed, provenance_confirmed = (
++        _live_path_and_provenance_check(artifact, live_lint_result)
++    )
++    tool_check = _tool_cleanliness_check(summarizer_result, adversarial_result)
++
++    reasons = proposer_reasons + positive_reasons + bucket_reasons + live_reasons
++    genuinely_diagnostic = not reasons
++    return {
++        "honest_verdict": (
++            "complete_a1_generation_diagnostic_audited"
++            if genuinely_diagnostic
++            else f"complete_a1_generation_diagnostic_non_test_{_safe_suffix(reasons)}"
++        ),
++        "a1_genuinely_diagnostic": genuinely_diagnostic,
++        "proposer_blind_confirmed": not proposer_reasons,
++        "positive_control_confirmed": not positive_reasons,
++        "buckets_match_claim": not bucket_reasons,
++        "live_path_reachable_confirmed": live_confirmed,
++        "solve_provenance_confirmed": provenance_confirmed,
++        "non_diagnostic_reasons": reasons,
++        "checks": {
++            "proposer_blind_to_banked_answer": proposer_check,
++            "positive_control": positive_check,
++            "bucket_distribution": bucket_check,
++            "live_path_and_provenance": live_check,
++            "summarizer_and_adversarial_verify": tool_check,
++        },
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    repo = Path(root)
++    source = repo / SOURCE_ARTIFACT_RELATIVE_PATH
++    script = repo / SOURCE_SCRIPT_RELATIVE_PATH
++    spec = repo / SPEC_RELATIVE_PATH
++    spec_text = spec.read_text(encoding="utf-8") if spec.exists() else ""
++    return {
++        "ok": (
++            source.exists()
++            and script.exists()
++            and "REQ-ARC-WMTE-4855" in spec_text
++            and (repo / "scripts/summarize_artifact.py").exists()
++            and (repo / "scripts/adversarial_verify.py").exists()
++            and (repo / "scripts/arc_orphan_solver_lint.py").exists()
++        ),
++        "source_artifact_present": source.exists(),
++        "source_script_present": script.exists(),
++        "spec_has_req_4855": "REQ-ARC-WMTE-4855" in spec_text,
++        "summarizer_script_present": (repo / "scripts/summarize_artifact.py").exists(),
++        "adversarial_verify_script_present": (repo / "scripts/adversarial_verify.py").exists(),
++        "arc_orphan_solver_lint_present": (repo / "scripts/arc_orphan_solver_lint.py").exists(),
++    }
++
++
++def _blocked_artifact(checks: Mapping[str, Any]) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "source_artifact_path": SOURCE_ARTIFACT_RELATIVE_PATH,
++        "source_script_path": SOURCE_SCRIPT_RELATIVE_PATH,
++        "source_artifact_checksum": None,
++        "source_script_checksum": None,
++        "source_honest_verdict": None,
++        "source_dominant_bucket": None,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": "blocked_a1_artifact_missing",
++        "a1_genuinely_diagnostic": False,
++        "proposer_blind_confirmed": False,
++        "positive_control_confirmed": False,
++        "buckets_match_claim": False,
++        "live_path_reachable_confirmed": False,
++        "solve_provenance_confirmed": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": {},
++        "non_diagnostic_reasons": ["missing_a1_artifact_or_script"],
++        "summarizer_result": {},
++        "adversarial_result": {},
++        "live_lint_result": {},
++        "preconditions_checked": dict(checks),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": DURATION_FLOOR_S,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    source_path: Path,
++    source_script_path: Path,
++    source_artifact: Mapping[str, Any],
++    audit: Mapping[str, Any],
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "source_artifact_path": SOURCE_ARTIFACT_RELATIVE_PATH,
++        "source_script_path": SOURCE_SCRIPT_RELATIVE_PATH,
++        "source_artifact_checksum": file_checksum(source_path),
++        "source_script_checksum": file_checksum(source_script_path),
++        "source_honest_verdict": source_artifact.get("honest_verdict"),
++        "source_dominant_bucket": source_artifact.get("dominant_bucket"),
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": audit.get("honest_verdict"),
++        "a1_genuinely_diagnostic": audit.get("a1_genuinely_diagnostic"),
++        "proposer_blind_confirmed": audit.get("proposer_blind_confirmed"),
++        "positive_control_confirmed": audit.get("positive_control_confirmed"),
++        "buckets_match_claim": audit.get("buckets_match_claim"),
++        "live_path_reachable_confirmed": audit.get("live_path_reachable_confirmed"),
++        "solve_provenance_confirmed": audit.get("solve_provenance_confirmed"),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": dict(_mapping(audit.get("checks"))),
++        "non_diagnostic_reasons": list(audit.get("non_diagnostic_reasons") or []),
++        "summarizer_result": dict(summarizer_result),
++        "adversarial_result": dict(adversarial_result),
++        "live_lint_result": dict(live_lint_result),
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles_mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    for field in (
++        "a1_genuinely_diagnostic",
++        "proposer_blind_confirmed",
++        "positive_control_confirmed",
++        "buckets_match_claim",
++        "live_path_reachable_confirmed",
++        "solve_provenance_confirmed",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field}_must_be_bool")
++    if not isinstance(artifact.get("checks"), dict):
++        errors.append("checks_must_be_dict")
++    if not isinstance(artifact.get("non_diagnostic_reasons"), list):
++        errors.append("non_diagnostic_reasons_must_be_list")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed_mismatch")
++    duration = _finite_float(artifact.get("duration_s"))
++    if duration is None or duration < DURATION_FLOOR_S:
++        errors.append("duration_below_aggregation_floor")
++    expected = "sha256:" + payload_checksum(artifact)
++    if artifact.get("reproducibility_checksum") != expected:
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def render_markdown_section(artifact: Mapping[str, Any]) -> str:
++    checks = _mapping(artifact.get("checks"))
++    rows = [
++        "",
++        "## Experiment 4855 .447 A1 Generation Diagnostic Audit",
++        "",
++        f"- Verdict: `{artifact.get('honest_verdict')}`",
++        f"- a1_genuinely_diagnostic: `{artifact.get('a1_genuinely_diagnostic')}`",
++        f"- Non-diagnostic reasons: `{', '.join(artifact.get('non_diagnostic_reasons') or []) or '-'}`",
++        f"- Inference substrate: `{artifact.get('inference_substrate')}`",
++        "",
++        "| Check | Passed | Detail |",
++        "|---|---:|---|",
++    ]
++    for name, check in checks.items():
++        if not isinstance(check, Mapping):
++            continue
++        detail = {key: value for key, value in check.items() if key != "passed"}
++        rows.append(
++            f"| `{name}` | `{check.get('passed')}` | `{json.dumps(detail, sort_keys=True)}` |"
++        )
++    rows.extend(
++        [
++            "",
++            f"- Source artifact checksum: `{artifact.get('source_artifact_checksum')}`",
++            f"- Source script checksum: `{artifact.get('source_script_checksum')}`",
++            "",
++        ]
++    )
++    return "\n".join(rows)
++
++
++def append_markdown_report(
++    artifact: Mapping[str, Any],
++    *,
++    root: Path | str = REPO_ROOT,
++) -> Path:
++    report_path = Path(root) / AUDIT_REPORT_RELATIVE_PATH
++    marker = "## Experiment 4855 .447 A1 Generation Diagnostic Audit"
++    if report_path.exists():
++        current = report_path.read_text(encoding="utf-8")
++        if marker in current:
++            return report_path
++    else:
++        report_path.parent.mkdir(parents=True, exist_ok=True)
++        current = "# ARC Null Silent-Bug Audit\n"
++    report_path.write_text(current.rstrip() + render_markdown_section(artifact), encoding="utf-8")
++    return report_path
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    now: Callable[[], float] | None = None,
++) -> JsonDict:
++    repo = Path(root)
++    clock = now or time.monotonic
++    start = clock()
++    checks = check_preconditions(repo)
++    source_path = repo / SOURCE_ARTIFACT_RELATIVE_PATH
++    source_script_path = repo / SOURCE_SCRIPT_RELATIVE_PATH
++    if not checks["ok"] or not source_path.exists() or not source_script_path.exists():
++        checks = dict(checks)
++        checks["ok"] = False
++        checks["source_artifact_present"] = source_path.exists()
++        checks["source_script_present"] = source_script_path.exists()
++        artifact = _blocked_artifact(checks)
++        if write:
++            write_artifact(artifact, root=repo)
++            append_markdown_report(artifact, root=repo)
++        return artifact
++
++    source_artifact = _read_json(source_path)
++    source_text = source_script_path.read_text(encoding="utf-8")
++    summarizer_result = run_summarizer(source_path)
++    adversarial_result = run_adversarial_verify(source_path)
++    live_lint_result = run_arc_orphan_solver_lint(repo)
++    audit = audit_a1_artifact(
++        source_artifact,
++        source_text=source_text,
++        summarizer_result=summarizer_result,
++        adversarial_result=adversarial_result,
++        live_lint_result=live_lint_result,
++    )
++    artifact = build_artifact(
++        source_path=source_path,
++        source_script_path=source_script_path,
++        source_artifact=source_artifact,
++        audit=audit,
++        summarizer_result=summarizer_result,
++        adversarial_result=adversarial_result,
++        live_lint_result=live_lint_result,
++        preconditions_checked=checks,
++        duration_s=clock() - start,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(artifact, root=repo)
++        append_markdown_report(artifact, root=repo)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": artifact["honest_verdict"],
++                "a1_genuinely_diagnostic": artifact["a1_genuinely_diagnostic"],
++                "result": RESULT_RELATIVE_PATH,
++            },
++            indent=2,
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_4855_generation_diagnostic_audit.json b/results/experiment_4855_generation_diagnostic_audit.json
+new file mode 100644
+index 0000000000..dfc85ef228
+--- /dev/null
++++ b/results/experiment_4855_generation_diagnostic_audit.json
+@@ -0,0 +1,127 @@
++{
++  "a1_genuinely_diagnostic": true,
++  "adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4851_generation_coverage_diagnostic.json",
++    "exp_id": 4851,
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete_generation_wall_never_enumerated_dominant",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
++  "buckets_match_claim": true,
++  "checks": {
++    "bucket_distribution": {
++      "bucket_counts": {
++        "COVERED": 1,
++        "NEVER_ENUMERATED": 9
++      },
++      "claimed_dominant_bucket": "NEVER_ENUMERATED",
++      "computed_dominant_bucket": "NEVER_ENUMERATED",
++      "honest_verdict": "complete_generation_wall_never_enumerated_dominant",
++      "invalid_games": [],
++      "n_games_measured": 10,
++      "passed": true,
++      "per_game_count": 10
++    },
++    "live_path_and_provenance": {
++      "arc_orphan_solver_lint_passed": true,
++      "artifact_live_path_reachable": true,
++      "development_proxy": true,
++      "passed": true,
++      "solve_provenance": "development_proxy"
++    },
++    "positive_control": {
++      "adaptered": true,
++      "artifact_positive_control_covered": true,
++      "coverage_bucket": "COVERED",
++      "matched_winning_prefix_len": 18,
++      "passed": true,
++      "positive_control_game": "tu93",
++      "reached_l1_win": true,
++      "winning_prefix_len": 18
++    },
++    "proposer_blind_to_banked_answer": {
++      "allowed_only_in_classify_game_coverage": true,
++      "artifact_flag": true,
++      "disallowed_refs": [],
++      "function_present": true,
++      "passed": true,
++      "winning_prefix_refs": 1
++    },
++    "summarizer_and_adversarial_verify": {
++      "adversarial_flag_count": 0,
++      "adversarial_loaded": true,
++      "passed": true,
++      "summarizer_returncode": 0
++    }
++  },
++  "duration_s": 0.582314,
++  "experiment": "experiment_4855_generation_diagnostic_audit",
++  "experiment_id": 4855,
++  "field_principles": {
++    "a1_genuinely_diagnostic": {
++      "principle": "the load-bearing check -- proposer-blind AND positive-control-covered AND buckets-match-claim AND live-path-reachable; else A1 is a tautology/harness non-test and its dominant-bucket finding is void."
++    },
++    "buckets_match_claim": {
++      "principle": "true iff the per-game buckets support the claimed dominant_bucket."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; audit complete is complete_a1_generation_diagnostic_audited."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    },
++    "positive_control_confirmed": {
++      "principle": "true iff the positive control really came out COVERED on a real adaptered game."
++    },
++    "proposer_blind_confirmed": {
++      "principle": "true iff the banked winner was used only to classify, never to seed the proposer (the tautology trap)."
++    }
++  },
++  "honest_verdict": "complete_a1_generation_diagnostic_audited",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "live_lint_result": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).\n"
++  },
++  "live_path_reachable_confirmed": true,
++  "non_diagnostic_reasons": [],
++  "positive_control_confirmed": true,
++  "preconditions_checked": {
++    "adversarial_verify_script_present": true,
++    "arc_orphan_solver_lint_present": true,
++    "ok": true,
++    "source_artifact_present": true,
++    "source_script_present": true,
++    "spec_has_req_4855": true,
++    "summarizer_script_present": true
++  },
++  "proposer_blind_confirmed": true,
++  "random_seed": 4855,
++  "reproducibility_checksum": "sha256:221b808d734dbe2fec5f0ec06eb2531504938d23bfc7fc86f840c1a91da6f76b",
++  "result_path": "results/experiment_4855_generation_diagnostic_audit.json",
++  "schema": "carnot.arc.a1_generation_diagnostic_audit_4855.v1",
++  "solve_provenance_confirmed": true,
++  "source_artifact_checksum": "sha256:a49c15b54ff935ac736d4a580fdf4639ac019377b251da04cb2cc7501f5cbaff",
++  "source_artifact_path": "results/experiment_4851_generation_coverage_diagnostic.json",
++  "source_dominant_bucket": "NEVER_ENUMERATED",
++  "source_honest_verdict": "complete_generation_wall_never_enumerated_dominant",
++  "source_script_checksum": "sha256:0af6642f1fa0a6e9aa2b4554df30fa3f35e61b76946de647d37e6c8a8fd8cb72",
++  "source_script_path": "python/carnot/experiment_4851_generation_coverage_diagnostic.py",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4855",
++    "SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT",
++    "SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION"
++  ],
++  "summarizer_result": {
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "==============================================================================\nARTIFACT  experiment_4851_generation_coverage_diagnostic.json\n------------------------------------------------------------------------------\n  verdict          : complete_generation_wall_never_enumerated_dominant\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 14.209228754043579   substrate: verifier_ensemble_against_cached_candidates\n  duration floor   : verifier_ensemble_against_cached_candidates >=1.0s (verifier_scoring)\n  adversarial flags: none\n"
++  }
++}
+diff --git a/tests/python/test_experiment_4855_generation_diagnostic_audit.py b/tests/python/test_experiment_4855_generation_diagnostic_audit.py
+new file mode 100644
+index 0000000000..5844b2a2d3
+--- /dev/null
++++ b/tests/python/test_experiment_4855_generation_diagnostic_audit.py
+@@ -0,0 +1,480 @@
++"""Tests for Exp 4855 hostile A1 generation-diagnostic audit.
++
++Spec refs: REQ-ARC-WMTE-4855,
++SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT,
++SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION.
++"""
++
++from __future__ import annotations
++
++import ast
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4855_generation_diagnostic_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _good_a1_artifact() -> dict[str, Any]:
++    return {
++        "experiment_id": 4851,
++        "honest_verdict": "complete_generation_wall_never_enumerated_dominant",
++        "proposer_blind_to_banked_answer": True,
++        "positive_control_game": "tu93",
++        "positive_control_covered": True,
++        "positive_control_coverage": {
++            "game": "tu93",
++            "adaptered": True,
++            "bucket": "COVERED",
++            "reached_l1_win": True,
++            "winning_prefix_len": 18,
++            "matched_winning_prefix_len": 18,
++        },
++        "dominant_bucket": "NEVER_ENUMERATED",
++        "n_games_measured": 3,
++        "per_game_coverage": {
++            "aa00": {"bucket": "NEVER_ENUMERATED"},
++            "bb00": {"bucket": "NEVER_ENUMERATED"},
++            "cc00": {"bucket": "COVERED"},
++        },
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++    }
++
++
++def _good_a1_source() -> str:
++    return """
++def measure_game_with_stepwise_explorer(game, winning_prefix, action_budget):
++    explorer = RecordingStepwiseExplorer()
++    row = classify_game_coverage(
++        game,
++        winning_prefix,
++        explorer.proposal_records,
++        reached_l1_win=False,
++        budget_actions=action_budget,
++    )
++    return row
++
++def measure_adapter_positive_control(game="tu93", winning_prefix=None):
++    adaptered = True
++    return {"game": game, "adaptered": adaptered, "bucket": "COVERED"}
++"""
++
++
++def _clean_auxiliary_results() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
++    return (
++        {"returncode": 0, "stdout": "LIVE re-check: clean", "stderr": ""},
++        {"loaded": True, "flag_count": 0, "flags": []},
++        {"passed": True, "returncode": 0, "stdout_tail": "OK", "stderr_tail": ""},
++    )
++
++
++def test_req_arc_wmte_4855_spec_declares_audit_contract() -> None:
++    """REQ-ARC-WMTE-4855: OpenSpec anchors the hostile audit artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4855",
++        "SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT",
++        "SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION",
++        mod.RESULT_RELATIVE_PATH,
++        mod.AUDIT_REPORT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4855_good_a1_is_genuinely_diagnostic() -> None:
++    """SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT: all four hostile gates pass."""
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text=_good_a1_source(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++
++    assert audit["honest_verdict"] == "complete_a1_generation_diagnostic_audited"
++    assert audit["a1_genuinely_diagnostic"] is True
++    assert audit["non_diagnostic_reasons"] == []
++    assert audit["proposer_blind_confirmed"] is True
++    assert audit["positive_control_confirmed"] is True
++    assert audit["buckets_match_claim"] is True
++    assert audit["live_path_reachable_confirmed"] is True
++    assert audit["solve_provenance_confirmed"] is True
++    assert audit["checks"]["bucket_distribution"]["bucket_counts"] == {
++        "COVERED": 1,
++        "NEVER_ENUMERATED": 2,
++    }
++    assert audit["checks"]["bucket_distribution"]["computed_dominant_bucket"] == (
++        "NEVER_ENUMERATED"
++    )
++
++
++def test_scenario_arc_wmte_4855_non_test_variants_fail_closed() -> None:
++    """SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION: each hostile gate can fail."""
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++    injected_source = """
++def measure_game_with_stepwise_explorer(game, winning_prefix, action_budget):
++    explorer = RecordingStepwiseExplorer(seed_prefix=winning_prefix)
++    return classify_game_coverage(game, winning_prefix, explorer.proposal_records)
++"""
++
++    control_failed = _good_a1_artifact()
++    control_failed["positive_control_covered"] = False
++    control_failed["positive_control_coverage"] = {"adaptered": True, "bucket": "NEVER_ENUMERATED"}
++
++    bucket_mismatch = _good_a1_artifact()
++    bucket_mismatch["dominant_bucket"] = "COVERED"
++
++    too_few_games = _good_a1_artifact()
++    too_few_games["n_games_measured"] = 2
++    too_few_games["per_game_coverage"] = {
++        "aa00": {"bucket": "NEVER_ENUMERATED"},
++        "bb00": {"bucket": "COVERED"},
++    }
++
++    dishonest = _good_a1_artifact()
++    dishonest["live_path_reachable"] = False
++    dishonest["solve_provenance"] = "live_agent_self_discovery"
++    bad_lint = {"passed": False, "returncode": 1, "stdout_tail": "", "stderr_tail": "boom"}
++
++    flagged_blind = _good_a1_artifact()
++    flagged_blind["proposer_blind_to_banked_answer"] = False
++
++    cases = [
++        (_good_a1_artifact(), injected_source, lint, "banked_answer_used_before_classification"),
++        (control_failed, _good_a1_source(), lint, "positive_control_not_covered"),
++        (bucket_mismatch, _good_a1_source(), lint, "dominant_bucket_mismatch"),
++        (too_few_games, _good_a1_source(), lint, "n_games_measured_below_3"),
++        (dishonest, _good_a1_source(), bad_lint, "live_path_unreachable"),
++        (dishonest, _good_a1_source(), lint, "solve_provenance_not_development_proxy"),
++        (flagged_blind, _good_a1_source(), lint, "artifact_proposer_blind_flag_false"),
++    ]
++
++    for artifact, source_text, lint_result, reason in cases:
++        audit = mod.audit_a1_artifact(
++            artifact,
++            source_text=source_text,
++            summarizer_result=summary,
++            adversarial_result=adversarial,
++            live_lint_result=lint_result,
++        )
++        assert audit["a1_genuinely_diagnostic"] is False
++        assert reason in audit["non_diagnostic_reasons"]
++        assert audit["honest_verdict"].startswith("complete_a1_generation_diagnostic_non_test_")
++
++
++def test_req_arc_wmte_4855_build_schema_and_report_write(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4855: artifact and markdown writes are checksum-stable."""
++
++    source = tmp_path / mod.SOURCE_ARTIFACT_RELATIVE_PATH
++    script = tmp_path / mod.SOURCE_SCRIPT_RELATIVE_PATH
++    source.parent.mkdir(parents=True)
++    script.parent.mkdir(parents=True)
++    source.write_text(json.dumps(_good_a1_artifact()), encoding="utf-8")
++    script.write_text(_good_a1_source(), encoding="utf-8")
++    summary, adversarial, lint = _clean_auxiliary_results()
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text=_good_a1_source(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++
++    artifact = mod.build_artifact(
++        source_path=source,
++        source_script_path=script,
++        source_artifact=_good_a1_artifact(),
++        audit=audit,
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++        preconditions_checked={"ok": True, "source_artifact_present": True},
++        duration_s=0.0,
++    )
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["duration_s"] == mod.DURATION_FLOOR_S
++    assert artifact["source_artifact_checksum"] == mod.file_checksum(source)
++    assert artifact["source_script_checksum"] == mod.file_checksum(script)
++
++    result_path = mod.write_artifact(artifact, root=tmp_path)
++    report_path = mod.append_markdown_report(artifact, root=tmp_path)
++    mod.append_markdown_report(artifact, root=tmp_path)
++
++    loaded = json.loads(result_path.read_text(encoding="utf-8"))
++    report_text = report_path.read_text(encoding="utf-8")
++    assert loaded == artifact
++    assert report_text.count("## Experiment 4855 .447 A1 Generation Diagnostic Audit") == 1
++    assert "a1_genuinely_diagnostic" in report_text
++
++    broken = dict(artifact)
++    broken.update(
++        {
++            "a1_genuinely_diagnostic": "yes",
++            "proposer_blind_confirmed": "yes",
++            "positive_control_confirmed": "yes",
++            "buckets_match_claim": "yes",
++            "field_principles": {},
++            "inference_substrate": "live_llm_inference",
++            "duration_s": 0.0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "a1_genuinely_diagnostic_must_be_bool",
++        "proposer_blind_confirmed_must_be_bool",
++        "positive_control_confirmed_must_be_bool",
++        "buckets_match_claim_must_be_bool",
++        "field_principles_mismatch",
++        "inference_substrate_mismatch",
++        "duration_below_aggregation_floor",
++        "reproducibility_checksum_mismatch",
++    ):
++        assert expected in errors
++    with pytest.raises(ValueError, match="a1_genuinely_diagnostic_must_be_bool"):
++        mod.write_artifact(broken, root=tmp_path)
++
++
++def test_req_arc_wmte_4855_run_checked_in_a1_artifact() -> None:
++    """SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT: checked-in Exp 4851 passes audit."""
++
++    artifact = mod.run(root=REPO, write=False)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "complete_a1_generation_diagnostic_audited"
++    assert artifact["a1_genuinely_diagnostic"] is True
++    assert artifact["proposer_blind_confirmed"] is True
++    assert artifact["positive_control_confirmed"] is True
++    assert artifact["buckets_match_claim"] is True
++    assert artifact["live_path_reachable_confirmed"] is True
++    assert artifact["solve_provenance_confirmed"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["summarizer_result"]["returncode"] == 0
++    assert artifact["adversarial_result"]["flag_count"] == 0
++    assert artifact["live_lint_result"]["passed"] is True
++
++
++def test_scenario_arc_wmte_4855_blocked_preconditions_do_not_fabricate(
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-4855: missing A1 inputs produce blocked audit output."""
++
++    artifact = mod.run(root=tmp_path, write=True)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert artifact["a1_genuinely_diagnostic"] is False
++    assert artifact["checks"] == {}
++    assert "source_artifact_present" in artifact["preconditions_checked"]
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++    assert (tmp_path / mod.AUDIT_REPORT_RELATIVE_PATH).exists()
++
++
++def test_req_arc_wmte_4855_defensive_branch_coverage(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-ARC-WMTE-4855: malformed inputs fail closed without fabricated trust."""
++
++    assert mod._safe_suffix([]) == "audited"
++    assert mod._mapping([]) == {}
++    assert mod._finite_float(True) is None
++    assert mod._finite_float("0.5") is None
++    assert mod._finite_float(float("nan")) is None
++    assert mod._computed_dominant_bucket({}) is None
++    assert mod._bucket_counts({"bad": {"bucket": "MAYBE"}}) == {}
++    assert mod._call_name(ast.parse("obj.method()").body[0].value.func) == "method"
++    assert mod._call_name(ast.parse("(lambda: None)()").body[0].value.func) == ""
++    assert mod._first_parent_call(ast.Name(id="x", ctx=ast.Load())) is None
++
++    not_object = tmp_path / "list.json"
++    not_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod._read_json(not_object)
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++    malformed_source_audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text="def nope(:",
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    assert "a1_source_not_parseable" in malformed_source_audit["non_diagnostic_reasons"]
++
++    missing_function_audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text="def unrelated(): pass",
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    assert (
++        "measure_game_with_stepwise_explorer_missing"
++        in (missing_function_audit["non_diagnostic_reasons"])
++    )
++
++    no_classification_audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text="""
++def measure_game_with_stepwise_explorer(game, winning_prefix, action_budget):
++    explorer = RecordingStepwiseExplorer()
++    return {"records": explorer.proposal_records}
++""",
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    assert (
++        "winning_prefix_not_used_for_classification"
++        in (no_classification_audit["non_diagnostic_reasons"])
++    )
++
++    bad_control = _good_a1_artifact()
++    bad_control["positive_control_coverage"] = {
++        "game": "other",
++        "adaptered": False,
++        "bucket": "COVERED",
++        "reached_l1_win": False,
++    }
++    bad_control_audit = mod.audit_a1_artifact(
++        bad_control,
++        source_text=_good_a1_source(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    assert "positive_control_not_adaptered" in bad_control_audit["non_diagnostic_reasons"]
++    assert "positive_control_game_mismatch" in bad_control_audit["non_diagnostic_reasons"]
++    assert "positive_control_did_not_reach_l1_win" in (bad_control_audit["non_diagnostic_reasons"])
++
++    bad_buckets = _good_a1_artifact()
++    bad_buckets["n_games_measured"] = "many"
++    bad_buckets["per_game_coverage"] = {"aa00": {"bucket": "MAYBE"}}
++    bad_bucket_audit = mod.audit_a1_artifact(
++        bad_buckets,
++        source_text=_good_a1_source(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    for reason in (
++        "invalid_per_game_bucket",
++        "n_games_measured_not_integer",
++        "n_games_measured_mismatch",
++        "dominant_bucket_missing",
++    ):
++        assert reason in bad_bucket_audit["non_diagnostic_reasons"]
++
++    tool_failed = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text=_good_a1_source(),
++        summarizer_result={"returncode": 2},
++        adversarial_result={"loaded": True, "flag_count": 1},
++        live_lint_result=lint,
++    )
++    assert tool_failed["a1_genuinely_diagnostic"] is True
++    assert tool_failed["checks"]["summarizer_and_adversarial_verify"]["passed"] is False
++
++    source = tmp_path / mod.SOURCE_ARTIFACT_RELATIVE_PATH
++    script = tmp_path / mod.SOURCE_SCRIPT_RELATIVE_PATH
++    source.parent.mkdir(parents=True, exist_ok=True)
++    script.parent.mkdir(parents=True, exist_ok=True)
++    source.write_text(json.dumps(_good_a1_artifact()), encoding="utf-8")
++    script.write_text(_good_a1_source(), encoding="utf-8")
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        source_text=_good_a1_source(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    artifact = mod.build_artifact(
++        source_path=source,
++        source_script_path=script,
++        source_artifact=_good_a1_artifact(),
++        audit=audit,
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++        preconditions_checked={"ok": True},
++        duration_s=1.0,
++    )
++    broken = dict(artifact)
++    broken.update(
++        {
++            "honest_verdict": "bad",
++            "a1_genuinely_diagnostic": "yes",
++            "proposer_blind_confirmed": "yes",
++            "positive_control_confirmed": "yes",
++            "buckets_match_claim": "yes",
++            "field_principles": {},
++            "inference_substrate": "live_llm_inference",
++            "checks": [],
++            "non_diagnostic_reasons": "none",
++            "random_seed": 1,
++            "duration_s": 0.0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "honest_verdict_missing_terminal_prefix",
++        "a1_genuinely_diagnostic_must_be_bool",
++        "proposer_blind_confirmed_must_be_bool",
++        "positive_control_confirmed_must_be_bool",
++        "buckets_match_claim_must_be_bool",
++        "field_principles_mismatch",
++        "inference_substrate_mismatch",
++        "checks_must_be_dict",
++        "non_diagnostic_reasons_must_be_list",
++        "random_seed_mismatch",
++        "duration_below_aggregation_floor",
++        "reproducibility_checksum_mismatch",
++    ):
++        assert expected in errors
++    with pytest.raises(ValueError, match="honest_verdict_missing_terminal_prefix"):
++        mod.write_artifact(broken, root=tmp_path)
++
++    report_artifact = dict(artifact)
++    report_artifact["checks"] = dict(artifact["checks"], malformed=[])
++    assert "malformed" not in mod.render_markdown_section(report_artifact)
++
++    existing_root = tmp_path / "existing_report"
++    existing_report = existing_root / mod.AUDIT_REPORT_RELATIVE_PATH
++    existing_report.parent.mkdir(parents=True)
++    existing_report.write_text("# Prior Audit\n", encoding="utf-8")
++    mod.append_markdown_report(artifact, root=existing_root)
++    assert "Experiment 4855 .447 A1 Generation Diagnostic Audit" in existing_report.read_text(
++        encoding="utf-8"
++    )
++
++    monkeypatch.setattr(mod, "check_preconditions", lambda _root: {"ok": True})
++    monkeypatch.setattr(mod, "run_summarizer", lambda _path: summary)
++    monkeypatch.setattr(mod, "run_adversarial_verify", lambda _path: adversarial)
++    monkeypatch.setattr(mod, "run_arc_orphan_solver_lint", lambda _root: lint)
++    written = mod.run(root=tmp_path, write=True, now=iter([1.0, 1.25]).__next__)
++    assert written["duration_s"] == 0.25
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    blocked_no_write = mod.run(root=tmp_path / "missing_no_write", write=False)
++    assert blocked_no_write["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert not (tmp_path / "missing_no_write" / mod.RESULT_RELATIVE_PATH).exists()
++
++    monkeypatch.setattr(mod, "artifact_schema_errors", lambda _artifact: ["boom"])
++    with pytest.raises(ValueError, match="boom"):
++        mod.run(root=tmp_path, write=False, now=iter([2.0, 2.25]).__next__)
+-- 
+2.55.0
+

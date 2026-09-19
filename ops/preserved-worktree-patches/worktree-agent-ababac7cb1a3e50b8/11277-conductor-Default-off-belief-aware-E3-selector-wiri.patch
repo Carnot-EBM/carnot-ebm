@@ -1,0 +1,3012 @@
+From c81499bbc2ea07bf91623e5893a6183d478f15c8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 12:05:37 -0400
+Subject: [PATCH 11277/11362] [conductor] Default-off belief-aware E3 selector
+ wiring
+
+Automated research step by research conductor.
+Task ID: exp7024-belief-aware-e3-selector
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  106 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../agentic/arc_belief_aware_e3_selector.py   | 1246 +++++++++++++++++
+ .../carnot/agentic/arc_competition_agent.py   |   51 +
+ ...eriment_7024_belief_aware_e3_selector.json |  664 +++++++++
+ ...xperiment_7024_belief_aware_e3_selector.py |    8 +
+ ...xperiment_7024_belief_aware_e3_selector.py |  782 +++++++++++
+ 7 files changed, 2858 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/agentic/arc_belief_aware_e3_selector.py
+ create mode 100644 results/experiment_7024_belief_aware_e3_selector.json
+ create mode 100644 scripts/experiments/experiment_7024_belief_aware_e3_selector.py
+ create mode 100644 tests/python/test_experiment_7024_belief_aware_e3_selector.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index fed5e3f501..feaa23b629 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -29763,6 +29763,112 @@ Implementation status: implemented 2026-09-05 in
+ `tests/python/test_experiment_7023_belief_query_api.py`. The conductor owns later documentation
+ and traceability reconciliation.
+ 
++### REQ-ARC-WMTE-7024: Default-Off Belief-Aware E3 Candidate Selection
++
++The scored `make_carnot_agent` factory SHALL pass a caller-supplied REQ-ARC-WMTE-7020 belief
++ledger into `E3AgentPolicy`. The policy SHALL expose one default-off environment flag named
++`CARNOT_ARC_BELIEF_AWARE_E3_SELECTOR`. Only the exact value `1` SHALL enable the environment
++path. An explicit Boolean constructor value SHALL override the environment. The submitted agent
++configuration SHALL declare the feature disabled. The submission kernel SHALL not enable it.
++
++When disabled, the factory and policy SHALL not construct or call the selector. A deterministic
++action trace with the flag absent SHALL match a frozen control byte for byte. When enabled, the
++selector SHALL call the REQ-ARC-WMTE-7023 bounded query before candidate selection. It SHALL use
++only a typed mechanic signature, predicted outcome hash, observation-time index, and candidate
++scores available before the selected action. It SHALL not read game source, adapters, solve
++registries, current outcomes, future outcomes, or hidden labels.
++
++The selector SHALL retain every base legal candidate exactly once. It MAY reorder candidates but
++SHALL not add or remove one. Each decision SHALL record the base score, simulation contribution,
++belief contribution, final score, and selected action for every candidate. The simulation and
++belief contributions SHALL remain separate fields. The selector SHALL record whether any query
++fired and whether belief changed the base candidate ranking.
++
++Any missing ledger, missing candidate evidence, malformed evidence, query exception, low support,
++conflict, stale result, or truncated result SHALL cause one decision-level abstention. Abstention
++SHALL return the base ranking unchanged. Belief SHALL never remove all legal candidates. The
++selector SHALL retain the exact REQ-ARC-WMTE-7023 evidence hashes that influenced a decision.
++
++When action provenance is armed, each E3 action row SHALL state whether the belief query fired,
++the evidence hashes, the belief influence, the abstention reason, whether ranking changed, and
++the final emitted action. A disabled selector SHALL emit no selector work and SHALL not change the
++existing action-provenance contract. A deterministic factory fixture SHALL prove that the shipped
++factory reaches the enabled selector and passes the same ledger object into `E3AgentPolicy`.
++
++Experiment 7024 SHALL require Exp7023 `belief_query_api_ready_score=1`, the exact Exp7023 artifact
++hash, importable belief-query and live-policy modules, the action and evaluation provenance
++contracts, the live-runner binding module, and writable code, test, wrapper, and result paths. A
++failed precondition SHALL write `honest_verdict=blocked_belief_aware_e3_selector` with
++`verdict_class=blocked`. Its `gate_check_summary` SHALL name the first failed check, expected
++value, and observed value.
++
++Experiment 7024 SHALL use deterministic live-policy wiring fixtures and no LLM. It SHALL set
++`belief_selector_live_path_ready_score` to one only when an accepted enabled fixture fires the
++query, at least one fixture changes ranking, every rejection fixture abstains without changing
++the base ranking, the live factory reaches the selector, action provenance is complete, no source
++or adapter access occurs, and the disabled action trace equals its frozen control.
++
++The required artifact fields are `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `cited_upstream_artifacts`, `source_artifact_hashes`, `rows`,
++`factory_wiring_rows`, `constructor_wiring_rows`, `flag_rows`, `flag_off_equivalence_rows`,
++`query_firing_rows`, `candidate_score_rows`, `ranking_influence_rows`, `abstention_rows`,
++`malformed_evidence_rows`, `action_provenance_rows`, `live_path_reachability_rows`,
++`shipped_default_unchanged`, `belief_selector_live_path_ready_score`, `random_seed`,
++`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. `field_principles` SHALL contain one scientific principle for every required
++field. `inference_substrate` SHALL equal
++`deterministic_live_policy_wiring_fixtures_no_llm`. `verifier_is_oracle` SHALL be false. The
++verdict class SHALL be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
++or `partial`. The honest-verdict prefix SHALL agree with its class.
++
++#### SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING
++
++- GIVEN the flag is absent or differs from the exact value `1`
++- WHEN the factory constructs `E3AgentPolicy`
++- THEN the same caller ledger reaches the policy but no selector is active
++- AND the action trace matches the frozen disabled control byte for byte.
++
++#### SCENARIO-ARC-WMTE-7024-QUERY-INFLUENCE
++
++- GIVEN supported prior evidence and two legal candidates with pre-action mechanic and outcome
++  hashes
++- WHEN the enabled selector queries and scores the candidates
++- THEN the candidate set is unchanged and the supported outcome can change their order
++- AND each row keeps separate base, simulation, and belief contributions.
++
++#### SCENARIO-ARC-WMTE-7024-SAFE-ABSTENTION
++
++- GIVEN missing, malformed, low-support, conflicting, stale, or truncated evidence
++- WHEN the enabled selector evaluates the legal candidates
++- THEN it records one exact abstention reason and returns the base ranking unchanged
++- AND at least one legal candidate remains.
++
++#### SCENARIO-ARC-WMTE-7024-ACTION-PROVENANCE
++
++- GIVEN action provenance and the belief selector are both armed
++- WHEN the policy emits an action
++- THEN its row records query firing, evidence hashes, influence, abstention, ranking change, and
++  final action
++- AND those fields agree with the candidate-score rows.
++
++#### SCENARIO-ARC-WMTE-7024-NO-HIDDEN-ACCESS
++
++- GIVEN sentinels for game source, adapters, solve registries, current outcomes, and future labels
++- WHEN accepted and rejected selector fixtures run
++- THEN every sentinel access count remains zero
++- AND only the bounded query receives ledger evidence.
++
++#### SCENARIO-ARC-WMTE-7024-READINESS-GATE
++
++- GIVEN all wiring, flag, equivalence, query, score, influence, abstention, malformed-evidence,
++  provenance, and live-path rows
++- WHEN any accepted fixture does not fire or any rejection fixture changes the base ranking
++- THEN `belief_selector_live_path_ready_score` equals zero
++- AND no positive verdict is emitted.
++
++Implementation status: specified 2026-09-05. The conductor owns later documentation and
++traceability reconciliation.
++
+ ### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
+ 
+ An independent audit SHALL replay the REQ-ARC-WMTE-6993 producer contract in a fresh
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6510139302..f7f164c04f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5341,
++  "experiments_checked": 5342,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_belief_aware_e3_selector.py b/python/carnot/agentic/arc_belief_aware_e3_selector.py
+new file mode 100644
+index 0000000000..7f3dec06a1
+--- /dev/null
++++ b/python/carnot/agentic/arc_belief_aware_e3_selector.py
+@@ -0,0 +1,1246 @@
++"""Use the bounded belief query as an optional E3 candidate ranker.
++
++The selector reads only fields that exist before an action. It never reads a
++game source, adapter, registry, or outcome label. Unsafe evidence causes one
++decision-level abstention and preserves the incoming candidate order.
++
++Spec refs: REQ-ARC-WMTE-7024 and SCENARIO-ARC-WMTE-7024-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import importlib
++import json
++import math
++import os
++from pathlib import Path
++import tempfile
++import time
++from typing import Any
++
++from carnot.agentic import arc_belief_ledger as ledger_mod
++from carnot.agentic import arc_belief_query as query_mod
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 7024
++SCHEMA = "carnot.exp7024.belief_aware_e3_selector.v1"
++RUN_DATE = "20260905"
++RANDOM_SEED = 70_242_026_090_5
++INFERENCE_SUBSTRATE = "deterministic_live_policy_wiring_fixtures_no_llm"
++BELIEF_SELECTOR_ENV_FLAG = "CARNOT_ARC_BELIEF_AWARE_E3_SELECTOR"
++SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED = False
++DEFAULT_BELIEF_WEIGHT = 0.25
++FROZEN_OFF_TRACE_SHA256 = "sha256:0d91eb1c095d103ceedba01caa26905812d872907a723f49fa4c523611d98820"
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_PATH = Path("results/experiment_7024_belief_aware_e3_selector.json")
++WRAPPER_PATH = Path("scripts/experiments/experiment_7024_belief_aware_e3_selector.py")
++TEST_PATH = Path("tests/python/test_experiment_7024_belief_aware_e3_selector.py")
++MODULE_PATH = Path("python/carnot/agentic/arc_belief_aware_e3_selector.py")
++EXP7023_PATH = Path("results/experiment_7023_belief_query_api.json")
++EXPECTED_EXP7023_HASH = "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d"
++
++SOURCE_PATHS = {
++    "exp7023": EXP7023_PATH,
++    "belief_query_module": Path("python/carnot/agentic/arc_belief_query.py"),
++    "belief_ledger_module": Path("python/carnot/agentic/arc_belief_ledger.py"),
++    "competition_policy_module": Path("python/carnot/agentic/arc_competition_agent.py"),
++    "action_provenance_module": Path("python/carnot/agentic/arc_action_provenance.py"),
++    "eval_provenance_module": Path("python/carnot/agentic/arc_eval_provenance.py"),
++    "live_runner_binding_module": Path(
++        "python/carnot/agentic/arc_live_runner_execution_binding.py"
++    ),
++    "selector_module": MODULE_PATH,
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "cited_upstream_artifacts",
++    "source_artifact_hashes",
++    "rows",
++    "factory_wiring_rows",
++    "constructor_wiring_rows",
++    "flag_rows",
++    "flag_off_equivalence_rows",
++    "query_firing_rows",
++    "candidate_score_rows",
++    "ranking_influence_rows",
++    "abstention_rows",
++    "malformed_evidence_rows",
++    "action_provenance_rows",
++    "live_path_reachability_rows",
++    "shipped_default_unchanged",
++    "belief_selector_live_path_ready_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++ROW_TABLES = (
++    "rows",
++    "factory_wiring_rows",
++    "constructor_wiring_rows",
++    "flag_rows",
++    "flag_off_equivalence_rows",
++    "query_firing_rows",
++    "candidate_score_rows",
++    "ranking_influence_rows",
++    "abstention_rows",
++    "malformed_evidence_rows",
++    "action_provenance_rows",
++    "live_path_reachability_rows",
++)
++ACCEPTANCE_ROW_TABLES = ROW_TABLES[1:]
++VERDICT_CLASSES = frozenset(
++    {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "A reason for each field makes the live selector claim reviewable.",
++    "preconditions_checked": "Exact gates stop changed upstream evidence before policy wiring runs.",
++    "inference_substrate": "The substrate separates deterministic policy fixtures from model inference.",
++    "duration_s": "Measured wall time proves that the wiring fixtures executed.",
++    "cited_upstream_artifacts": "Field citations identify the bounded query evidence used by this result.",
++    "source_artifact_hashes": "Content hashes bind the result to exact query and live-policy code.",
++    "rows": "Gate summaries keep each acceptance family independently falsifiable.",
++    "factory_wiring_rows": "Factory rows prove the submitted construction seam passes the ledger.",
++    "constructor_wiring_rows": "Constructor rows prove explicit overrides control one selector instance.",
++    "flag_rows": "Flag rows prove exact parsing and explicit-value precedence.",
++    "flag_off_equivalence_rows": "Frozen trace hashes detect any disabled-path action drift.",
++    "query_firing_rows": "Firing rows distinguish an enabled mechanism from a silent no-op.",
++    "candidate_score_rows": "Per-candidate terms expose every contribution to the final order.",
++    "ranking_influence_rows": "Influence rows state whether belief changed a candidate ranking.",
++    "abstention_rows": "Rejection rows prove uncertain evidence preserves the base order.",
++    "malformed_evidence_rows": "Malformed rows prove invalid inputs fail closed before influence.",
++    "action_provenance_rows": "Action rows bind query evidence and influence to the emitted action.",
++    "live_path_reachability_rows": "Reachability rows prove the scored factory can call the selector.",
++    "shipped_default_unchanged": "A true value requires both the disabled config and frozen trace match.",
++    "belief_selector_live_path_ready_score": "One requires accepted firing and every rejection to fail closed.",
++    "random_seed": "A fixed seed makes the action-trace fixture reproducible.",
++    "reproducibility_checksum": "A timing-free digest detects later artifact drift.",
++    "gate_check_summary": "The first exact failure makes a blocked or partial result actionable.",
++    "verifier_is_oracle": "False states that prior belief is evidence rather than correctness authority.",
++    "verdict_class": "A closed class separates readiness from blocked and partial execution.",
++    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
++}
++
++FORBIDDEN_ACCESS_COUNTS = {
++    "game_source_reads": 0,
++    "adapter_reads": 0,
++    "solve_registry_reads": 0,
++    "current_outcome_reads": 0,
++    "future_label_reads": 0,
++}
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Label the digest so callers cannot mistake it for another hash type."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def belief_selector_enabled(explicit: bool | None = None) -> bool:
++    """Resolve the explicit override before the exact default-off environment flag."""
++
++    if explicit is not None:
++        return bool(explicit)
++    return os.environ.get(BELIEF_SELECTOR_ENV_FLAG) == "1"
++
++
++def _action(candidate: Mapping[str, Any]) -> JsonDict:
++    action = candidate.get("action")
++    if isinstance(action, bool) or not isinstance(action, int):
++        raise ValueError("candidate action must be an integer")
++    data = candidate.get("data")
++    if data is not None and not isinstance(data, Mapping):
++        raise ValueError("candidate data must be a mapping or null")
++    return {"action": int(action), "data": deepcopy(dict(data)) if data is not None else None}
++
++
++def _score(candidate: Mapping[str, Any], field: str, default: float) -> float:
++    value = candidate.get(field, default)
++    if isinstance(value, bool) or not isinstance(value, int | float):
++        raise ValueError(f"{field} must be finite")
++    result = float(value)
++    if not math.isfinite(result):
++        raise ValueError(f"{field} must be finite")
++    return result
++
++
++def _candidate_evidence(candidate: Mapping[str, Any]) -> tuple[Any, str, int]:
++    required = (
++        "belief_mechanic_signature",
++        "belief_outcome_key",
++        "belief_observation_index",
++    )
++    if any(candidate.get(field) is None for field in required):
++        raise KeyError("missing_candidate_evidence")
++    signature = candidate.get("belief_mechanic_signature")
++    if isinstance(signature, ledger_mod.MechanicKey):
++        key = signature
++    elif isinstance(signature, Mapping):
++        key = ledger_mod.MechanicKey(**dict(signature))
++    else:
++        raise ValueError("belief mechanic signature must be typed")
++    outcome_key = candidate.get("belief_outcome_key")
++    if not ledger_mod._is_sha256(outcome_key):
++        raise ValueError("belief outcome key must be a SHA-256 digest")
++    observation_index = candidate.get("belief_observation_index")
++    if (
++        isinstance(observation_index, bool)
++        or not isinstance(observation_index, int)
++        or observation_index < 0
++    ):
++        raise ValueError("belief observation index must be nonnegative")
++    return key, str(outcome_key), int(observation_index)
++
++
++class BeliefAwareE3Selector:
++    """Rank one unchanged candidate set with safe bounded belief evidence."""
++
++    def __init__(
++        self,
++        ledger: ledger_mod.BeliefLedger | None,
++        *,
++        query_api: Any | None = None,
++        belief_weight: float = DEFAULT_BELIEF_WEIGHT,
++    ) -> None:
++        if isinstance(belief_weight, bool) or not isinstance(belief_weight, int | float):
++            raise ValueError("belief_weight must be a nonnegative finite number")
++        self.belief_weight = float(belief_weight)
++        if not math.isfinite(self.belief_weight) or self.belief_weight < 0.0:
++            raise ValueError("belief_weight must be a nonnegative finite number")
++        self.ledger = ledger
++        self.query_api = query_api or query_mod.BoundedBeliefQuery()
++        self.decisions: list[JsonDict] = []
++        self.last_decision: JsonDict = {}
++        self.forbidden_access_counts = dict(FORBIDDEN_ACCESS_COUNTS)
++
++    def _finish(
++        self,
++        candidates: Sequence[Mapping[str, Any]],
++        *,
++        query_fired: bool,
++        query_count: int,
++        evidence_hashes: Sequence[str],
++        abstention_reason: str | None,
++        parsed: Sequence[tuple[Any, str, int, float, float, JsonDict]] = (),
++        contributions: Sequence[float] = (),
++    ) -> list[Mapping[str, Any]]:
++        base = list(candidates)
++        ranked = base
++        if abstention_reason is None and base:
++            ranked = [
++                row
++                for _, row in sorted(
++                    enumerate(base),
++                    key=lambda item: (
++                        -(parsed[item[0]][3] + parsed[item[0]][4] + float(contributions[item[0]])),
++                        item[0],
++                    ),
++                )
++            ]
++
++        def safe_action(row: Mapping[str, Any]) -> JsonDict:
++            try:
++                return _action(row)
++            except (TypeError, ValueError):
++                return {"action": None, "data": None}
++
++        base_actions = [safe_action(row) for row in base]
++        ranked_actions = [safe_action(row) for row in ranked]
++        selected_action = ranked_actions[0] if ranked_actions else None
++        score_rows = []
++        for index, candidate in enumerate(base):
++            action = parsed[index][5] if index < len(parsed) else safe_action(candidate)
++            base_score = parsed[index][3] if index < len(parsed) else float(len(base) - index)
++            simulation = parsed[index][4] if index < len(parsed) else 0.0
++            belief = float(contributions[index]) if index < len(contributions) else 0.0
++            score_rows.append(
++                {
++                    "decision_index": len(self.decisions),
++                    "candidate_index": index,
++                    "candidate_action": action,
++                    "candidate_hash": sha256_bytes(ledger_mod.canonical_bytes(action)),
++                    "base_score": base_score,
++                    "simulation_contribution": simulation,
++                    "belief_contribution": belief,
++                    "final_score": base_score + simulation + belief,
++                    "selected": action == selected_action,
++                    "selected_action": deepcopy(selected_action),
++                    "query_fired": query_fired,
++                    "evidence_hashes": list(evidence_hashes),
++                    "terminal": True,
++                }
++            )
++        decision = {
++            "decision_index": len(self.decisions),
++            "candidate_count": len(base),
++            "base_actions": base_actions,
++            "ranked_actions": ranked_actions,
++            "selected_action": deepcopy(selected_action),
++            "query_fired": bool(query_fired),
++            "query_count": int(query_count),
++            "evidence_hashes": list(evidence_hashes),
++            "belief_influence": any(value != 0.0 for value in contributions),
++            "ranking_changed": ranked_actions != base_actions,
++            "abstained": abstention_reason is not None,
++            "abstention_reason": abstention_reason,
++            "candidate_score_rows": score_rows,
++            "base_candidate_set_preserved": len(ranked) == len(base)
++            and sorted(sha256_bytes(ledger_mod.canonical_bytes(row)) for row in ranked_actions)
++            == sorted(sha256_bytes(ledger_mod.canonical_bytes(row)) for row in base_actions),
++            "terminal": True,
++        }
++        self.decisions.append(decision)
++        self.last_decision = decision
++        return ranked
++
++    def rank_candidates(
++        self,
++        frame: Any,
++        candidates: Sequence[Mapping[str, Any]],
++    ) -> list[Mapping[str, Any]]:
++        """Return a reordered view or the exact base order after one safe abstention."""
++
++        del frame
++        base = list(candidates)
++        if not base:
++            return self._finish(
++                base,
++                query_fired=False,
++                query_count=0,
++                evidence_hashes=(),
++                abstention_reason="no_legal_candidates",
++            )
++        if self.ledger is None:
++            return self._finish(
++                base,
++                query_fired=False,
++                query_count=0,
++                evidence_hashes=(),
++                abstention_reason="missing_ledger",
++            )
++
++        parsed = []
++        try:
++            for index, candidate in enumerate(base):
++                key, outcome_key, observation_index = _candidate_evidence(candidate)
++                parsed.append(
++                    (
++                        key,
++                        outcome_key,
++                        observation_index,
++                        _score(candidate, "base_score", float(len(base) - index)),
++                        _score(candidate, "simulation_contribution", 0.0),
++                        _action(candidate),
++                    )
++                )
++        except KeyError:
++            return self._finish(
++                base,
++                query_fired=False,
++                query_count=0,
++                evidence_hashes=(),
++                abstention_reason="missing_candidate_evidence",
++            )
++        except (TypeError, ValueError):
++            return self._finish(
++                base,
++                query_fired=False,
++                query_count=0,
++                evidence_hashes=(),
++                abstention_reason="malformed_evidence",
++            )
++
++        evidence_hashes: set[str] = set()
++        contributions: list[float] = []
++        query_count = 0
++        for key, outcome_key, observation_index, *_ in parsed:
++            query_count += 1
++            try:
++                result = self.query_api.query(
++                    self.ledger,
++                    query_mod.BeliefQueryRequest(key, observation_index),
++                )
++                if not isinstance(result, query_mod.BeliefQueryResult):
++                    raise ValueError("bounded query returned a foreign result")
++                query_mod.canonical_prompt_bytes(result)
++            except Exception:
++                return self._finish(
++                    base,
++                    query_fired=True,
++                    query_count=query_count,
++                    evidence_hashes=sorted(evidence_hashes),
++                    abstention_reason="malformed_evidence",
++                    parsed=parsed,
++                )
++            evidence_hashes.update(result.source_event_hashes)
++            if result.abstained or result.truncated:
++                return self._finish(
++                    base,
++                    query_fired=True,
++                    query_count=query_count,
++                    evidence_hashes=sorted(evidence_hashes),
++                    abstention_reason=result.abstention_reason or "budget_truncated",
++                    parsed=parsed,
++                )
++            try:
++                rank = result.ranked_outcome_keys.index(outcome_key)
++            except ValueError:
++                contributions.append(0.0)
++            else:
++                contributions.append(self.belief_weight / float(rank + 1))
++        return self._finish(
++            base,
++            query_fired=True,
++            query_count=query_count,
++            evidence_hashes=sorted(evidence_hashes),
++            abstention_reason=None,
++            parsed=parsed,
++            contributions=contributions,
++        )
++
++
++def _terminal(row: Mapping[str, Any]) -> JsonDict:
++    return {**deepcopy(dict(row)), "terminal": True}
++
++
++def _gate(check: str, expected: Any, observed: Any, *, passed: bool | None = None) -> JsonDict:
++    return _terminal(
++        {
++            "check": check,
++            "expected_value": expected,
++            "observed_value": observed,
++            "passed": (expected == observed) if passed is None else bool(passed),
++        }
++    )
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    failed = next((row for row in checks if row.get("passed") is not True), None)
++    return {
++        "checks": [deepcopy(dict(row)) for row in checks],
++        "expected_value": "all checks pass" if failed is None else failed.get("expected_value"),
++        "failed_check": None if failed is None else failed.get("check"),
++        "observed_value": "all checks pass" if failed is None else failed.get("observed_value"),
++        "passed": failed is None,
++    }
++
++
++def _path_is_writable(path: Path) -> bool:
++    current = path if path.exists() and path.is_dir() else path.parent
++    while not current.exists() and current != current.parent:
++        current = current.parent
++    return current.is_dir() and os.access(current, os.W_OK)
++
++
++def _read_json(path: Path) -> JsonDict | None:
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++    return value if isinstance(value, dict) else None
++
++
++def collect_preconditions(
++    repo_root: Path | str,
++    output_path: Path | str,
++) -> tuple[list[JsonDict], JsonDict]:
++    """Check frozen evidence, import contracts, and every requested write target."""
++
++    root = Path(repo_root).resolve()
++    artifact = _read_json(root / EXP7023_PATH)
++    source_hashes = {
++        name: ledger_mod.sha256_path(root / relative) for name, relative in SOURCE_PATHS.items()
++    }
++    checks = [
++        _gate("exp7023_artifact_hash", EXPECTED_EXP7023_HASH, source_hashes["exp7023"]),
++        _gate(
++            "exp7023_belief_query_api_ready_score",
++            1,
++            None if artifact is None else artifact.get("belief_query_api_ready_score"),
++            passed=artifact is not None
++            and type(artifact.get("belief_query_api_ready_score")) is int
++            and artifact.get("belief_query_api_ready_score") == 1,
++        ),
++    ]
++    module_contracts = {
++        "query_module_importable": (
++            "carnot.agentic.arc_belief_query",
++            ("BoundedBeliefQuery", "BeliefQueryRequest", "BeliefQueryResult"),
++        ),
++        "live_policy_module_importable": (
++            "carnot.agentic.arc_competition_agent",
++            ("E3AgentPolicy", "make_carnot_agent", "SUBMITTED_AGENT_CONFIG"),
++        ),
++        "action_provenance_contract": (
++            "carnot.agentic.arc_action_provenance",
++            ("ActionProvenanceRecorder", "maybe_make_recorder"),
++        ),
++        "eval_provenance_contract": (
++            "carnot.agentic.arc_eval_provenance",
++            ("validate_arc_eval_provenance", "build_arc_eval_provenance_for_policy"),
++        ),
++        "live_runner_binding_contract": (
++            "carnot.agentic.arc_live_runner_execution_binding",
++            ("ProcessBindingContext", "preconditions_checked"),
++        ),
++    }
++    for check, (module_name, symbols) in module_contracts.items():
++        try:
++            module = importlib.import_module(module_name)
++            observed = all(hasattr(module, symbol) for symbol in symbols)
++        except Exception:
++            observed = False
++        checks.append(_gate(check, True, observed))
++    for label, path in (
++        ("module_path_writable", root / MODULE_PATH),
++        ("test_path_writable", root / TEST_PATH),
++        ("wrapper_path_writable", root / WRAPPER_PATH),
++        ("artifact_path_writable", Path(output_path)),
++    ):
++        checks.append(_gate(label, True, _path_is_writable(path)))
++    return checks, source_hashes
++
++
++def _event(stream_index: int, outcome: str, mechanic: str) -> JsonDict:
++    return ledger_mod._fixture_event(stream_index, mechanic=mechanic, outcome=outcome)
++
++
++def _known_ledger(root: Path, mechanic: str) -> tuple[ledger_mod.BeliefLedger, JsonDict]:
++    first = _event(0, "left", mechanic)
++    ledger = ledger_mod.BeliefLedger(root, capacity=16, min_support=2)
++    ledger.observe(first)
++    ledger.observe(_event(1, "left", mechanic))
++    return ledger, first
++
++
++def _candidate(
++    action: int,
++    event: Mapping[str, Any],
++    outcome: str,
++    observation_index: int,
++    base_score: float,
++    simulation: float,
++) -> JsonDict:
++    return {
++        "action": action,
++        "data": None,
++        "base_score": base_score,
++        "simulation_contribution": simulation,
++        "belief_mechanic_signature": ledger_mod.mechanic_key_from_event(event).to_dict(),
++        "belief_outcome_key": ledger_mod._sha256_json({"outcome": outcome}),
++        "belief_observation_index": observation_index,
++    }
++
++
++def _candidates(event: Mapping[str, Any], observation_index: int) -> list[JsonDict]:
++    return [
++        _candidate(1, event, "right", observation_index, 0.60, 0.05),
++        _candidate(2, event, "left", observation_index, 0.55, 0.00),
++    ]
++
++
++def _policy_kwargs() -> JsonDict:
++    return {
++        "proposer": None,
++        "explore_budget": 50,
++        "value_head": None,
++        "candidate_router": None,
++        "frame_change_scorer": None,
++        "action_effect_expansion_prior": False,
++        "goal_bias": None,
++        "goal_candidate_guidance": False,
++        "epistemic_ledger": False,
++        "structured_evidence_memory": False,
++    }
++
++
++def _with_isolated_loaders(module: Any, callback: Any) -> Any:
++    names = (
++        "load_cross_game_value_head",
++        "_load_submitted_candidate_router",
++        "_load_submitted_frame_change_scorer",
++        "_load_submitted_goal_energy_bias",
++    )
++    old = {name: getattr(module, name) for name in names}
++    old_disable = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
++    try:
++        module.load_cross_game_value_head = lambda: None
++        module._load_submitted_candidate_router = lambda game_id: None
++        module._load_submitted_frame_change_scorer = lambda: None
++        module._load_submitted_goal_energy_bias = lambda: None
++        os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
++        return callback()
++    finally:
++        for name, value in old.items():
++            setattr(module, name, value)
++        if old_disable is None:
++            os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
++        else:
++            os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = old_disable
++
++
++def _off_trace(policy_module: Any) -> bytes:
++    import numpy as np
++
++    class Frame:
++        def __init__(self, grid: Any) -> None:
++            self.frame = [grid.tolist()]
++            self.levels_completed = 0
++            self.state = "NOT_FINISHED"
++            self.score = 0
++            self.available_actions = [1, 2, 3, 4, 5, 6]
++
++    policy = policy_module.E3AgentPolicy(
++        "belief-fixture",
++        belief_aware_selector=False,
++        **_policy_kwargs(),
++    )
++    frames = []
++    latest = None
++    actions = []
++    for index in range(16):
++        action, data = policy.next_move(frames, latest)
++        actions.append({"action": action, "data": data})
++        if action is None:
++            break
++        grid = np.random.RandomState(index + 101).randint(0, 4, size=(6, 6)).astype(int)
++        latest = Frame(grid)
++        frames.append(latest)
++    return json.dumps(actions, sort_keys=True, separators=(",", ":")).encode()
++
++
++def _fixture_rows(root: Path) -> JsonDict:
++    policy_module = importlib.import_module("carnot.agentic.arc_competition_agent")
++    action_module = importlib.import_module("carnot.agentic.arc_action_provenance")
++    known, event = _known_ledger(root / "known", "known")
++    selector = BeliefAwareE3Selector(known)
++    base = _candidates(event, 1)
++    ranked = selector.rank_candidates(None, base)
++    decision = deepcopy(selector.last_decision)
++
++    constructor_rows: list[JsonDict] = []
++    factory_rows: list[JsonDict] = []
++    provenance_rows: list[JsonDict] = []
++    reachability_rows: list[JsonDict] = []
++
++    def wiring() -> None:
++        old_provenance = os.environ.get(action_module.PROVENANCE_ENV_FLAG)
++        os.environ[action_module.PROVENANCE_ENV_FLAG] = "1"
++        try:
++            off = policy_module.E3AgentPolicy(
++                "constructor-off",
++                belief_ledger=known,
++                belief_aware_selector=False,
++                **_policy_kwargs(),
++            )
++            on = policy_module.E3AgentPolicy(
++                "constructor-on",
++                belief_ledger=known,
++                belief_aware_selector=True,
++                **_policy_kwargs(),
++            )
++            constructor_rows.extend(
++                [
++                    _terminal(
++                        {
++                            "fixture": "explicit_off",
++                            "same_ledger": off.belief_ledger is known,
++                            "selector_active": off.belief_candidate_selector is not None,
++                            "passed": off.belief_ledger is known
++                            and off.belief_candidate_selector is None,
++                        }
++                    ),
++                    _terminal(
++                        {
++                            "fixture": "explicit_on",
++                            "same_ledger": on.belief_ledger is known,
++                            "selector_active": on.belief_candidate_selector is not None,
++                            "explorer_same_selector": on.explorer.belief_candidate_selector
++                            is on.belief_candidate_selector,
++                            "passed": on.belief_ledger is known
++                            and on.belief_candidate_selector is not None
++                            and on.explorer.belief_candidate_selector
++                            is on.belief_candidate_selector,
++                        }
++                    ),
++                ]
++            )
++            on.belief_candidate_selector.rank_candidates(None, _candidates(event, 1))
++            selected = on.belief_candidate_selector.last_decision["selected_action"]
++            move = (selected["action"], selected["data"])
++            on._prov_top = "explore.explorer"
++            row = on._provenance_post_state(
++                on._provenance_pre_state([], None), move, on.plan, [], None
++            )
++            provenance_passed = (
++                row.get("belief_query_fired") is True
++                and row.get("belief_evidence_hashes")
++                == on.belief_candidate_selector.last_decision["evidence_hashes"]
++                and row.get("belief_influence") is True
++                and row.get("belief_abstained") is False
++                and row.get("belief_ranking_changed") is True
++                and row.get("belief_final_action") == selected
++            )
++            provenance_rows.append(
++                _terminal(
++                    {
++                        "fixture": "enabled_action_row",
++                        "action_row": row,
++                        "passed": provenance_passed,
++                    }
++                )
++            )
++
++            class Base:
++                def __init__(self) -> None:
++                    self.game_id = "factory-fixture"
++
++            agent_type = policy_module.make_carnot_agent(
++                Base,
++                belief_ledger=known,
++                belief_aware_selector=True,
++            )
++            agent = agent_type()
++            factory_passed = (
++                isinstance(agent._policy, policy_module.E3AgentPolicy)
++                and agent._policy.belief_ledger is known
++                and agent._policy.belief_candidate_selector is not None
++                and agent._policy.belief_candidate_selector.ledger is known
++            )
++            factory_rows.append(
++                _terminal(
++                    {
++                        "fixture": "make_carnot_agent_enabled",
++                        "policy_type": type(agent._policy).__name__,
++                        "same_ledger": agent._policy.belief_ledger is known,
++                        "selector_active": agent._policy.belief_candidate_selector is not None,
++                        "passed": factory_passed,
++                    }
++                )
++            )
++            known_outcome = ledger_mod._sha256_json({"outcome": "left"})
++            other_outcome = ledger_mod._sha256_json({"outcome": "right"})
++            mechanic = ledger_mod.mechanic_key_from_event(event).to_dict()
++
++            class PriorEvidenceAnnotator:
++                def rank_candidates(
++                    self,
++                    _frame: Any,
++                    rows: Sequence[Mapping[str, Any]],
++                    **_kwargs: Any,
++                ) -> list[JsonDict]:
++                    return [
++                        {
++                            **dict(candidate),
++                            "base_score": (
++                                0.60 if index == 0 else (0.55 if index == 1 else -100.0)
++                            ),
++                            "simulation_contribution": 0.05 if index == 0 else 0.0,
++                            "belief_mechanic_signature": mechanic,
++                            "belief_outcome_key": (known_outcome if index == 1 else other_outcome),
++                            "belief_observation_index": 1,
++                        }
++                        for index, candidate in enumerate(rows)
++                    ]
++
++            class Frame:
++                def __init__(self) -> None:
++                    self.frame = [[[0] * 6 for _ in range(6)]]
++                    self.levels_completed = 0
++                    self.state = "NOT_FINISHED"
++                    self.score = 0
++                    self.available_actions = [1, 2, 3, 4, 5]
++
++            agent._policy.explorer.structured_evidence_memory = PriorEvidenceAnnotator()
++            live_candidates = agent._policy.explorer._candidates(Frame())
++            factory_decision = agent._policy.belief_candidate_selector.last_decision
++            reachability_rows.append(
++                _terminal(
++                    {
++                        "fixture": "factory_to_selector_query",
++                        "policy_candidate_seam": "StepwiseExplorer._candidates",
++                        "query_fired": factory_decision["query_fired"],
++                        "ranking_changed": factory_decision["ranking_changed"],
++                        "same_ledger": agent._policy.belief_ledger is known,
++                        "selected_action": factory_decision["selected_action"],
++                        "candidate_actions": [row["action"] for row in live_candidates],
++                        "passed": factory_decision["query_fired"] is True
++                        and factory_decision["ranking_changed"] is True
++                        and agent._policy.belief_ledger is known,
++                    }
++                )
++            )
++        finally:
++            if old_provenance is None:
++                os.environ.pop(action_module.PROVENANCE_ENV_FLAG, None)
++            else:
++                os.environ[action_module.PROVENANCE_ENV_FLAG] = old_provenance
++
++    _with_isolated_loaders(policy_module, wiring)
++
++    old_flag = os.environ.get(BELIEF_SELECTOR_ENV_FLAG)
++    flag_rows = []
++    try:
++        for raw, expected in (
++            (None, False),
++            ("", False),
++            ("0", False),
++            ("true", False),
++            ("1", True),
++        ):
++            if raw is None:
++                os.environ.pop(BELIEF_SELECTOR_ENV_FLAG, None)
++            else:
++                os.environ[BELIEF_SELECTOR_ENV_FLAG] = raw
++            observed = belief_selector_enabled()
++            flag_rows.append(
++                _terminal(
++                    {
++                        "raw": raw,
++                        "expected": expected,
++                        "observed": observed,
++                        "passed": observed is expected,
++                    }
++                )
++            )
++        os.environ[BELIEF_SELECTOR_ENV_FLAG] = "1"
++        override_off = belief_selector_enabled(False)
++        os.environ[BELIEF_SELECTOR_ENV_FLAG] = "0"
++        override_on = belief_selector_enabled(True)
++        flag_rows.append(
++            _terminal(
++                {
++                    "raw": "explicit_override",
++                    "expected": [False, True],
++                    "observed": [override_off, override_on],
++                    "passed": override_off is False and override_on is True,
++                }
++            )
++        )
++    finally:
++        if old_flag is None:
++            os.environ.pop(BELIEF_SELECTOR_ENV_FLAG, None)
++        else:
++            os.environ[BELIEF_SELECTOR_ENV_FLAG] = old_flag
++
++    trace = _with_isolated_loaders(policy_module, lambda: _off_trace(policy_module))
++    trace_hash = sha256_bytes(trace)
++    off_rows = [
++        _terminal(
++            {
++                "fixture": "frozen_disabled_trace",
++                "expected_trace_sha256": FROZEN_OFF_TRACE_SHA256,
++                "observed_trace_sha256": trace_hash,
++                "passed": trace_hash == FROZEN_OFF_TRACE_SHA256,
++            }
++        )
++    ]
++
++    query_rows = [
++        _terminal(
++            {
++                "fixture": "supported",
++                "query_fired": decision["query_fired"],
++                "query_count": decision["query_count"],
++                "evidence_hashes": decision["evidence_hashes"],
++                "passed": decision["query_fired"] is True
++                and decision["query_count"] == len(base)
++                and bool(decision["evidence_hashes"]),
++            }
++        )
++    ]
++    candidate_rows = [
++        _terminal(
++            {
++                "fixture": "supported",
++                **{key: value for key, value in row.items() if key != "terminal"},
++                "passed": all(
++                    key in row
++                    for key in (
++                        "base_score",
++                        "simulation_contribution",
++                        "belief_contribution",
++                        "final_score",
++                        "selected_action",
++                    )
++                ),
++            }
++        )
++        for row in decision["candidate_score_rows"]
++    ]
++    influence_rows = [
++        _terminal(
++            {
++                "fixture": "supported",
++                "base_actions": decision["base_actions"],
++                "ranked_actions": decision["ranked_actions"],
++                "ranking_changed": decision["ranking_changed"],
++                "base_candidate_set_preserved": decision["base_candidate_set_preserved"],
++                "passed": decision["ranking_changed"] is True
++                and decision["base_candidate_set_preserved"] is True
++                and ranked[0]["action"] == 2,
++            }
++        )
++    ]
++
++    abstention_rows = []
++    rejection_specs = []
++    weak_event = _event(0, "left", "low_support")
++    weak = ledger_mod.BeliefLedger(root / "low_support", capacity=16, min_support=2)
++    weak.observe(weak_event)
++    rejection_specs.append(("low_support", weak, weak_event, 0, "low_support"))
++    conflict, conflict_event = _known_ledger(root / "conflict", "conflict")
++    conflict.observe(_event(2, "right", "conflict"))
++    rejection_specs.append(("conflict", conflict, conflict_event, 2, "conflicting_evidence"))
++    stale, stale_event = _known_ledger(root / "stale", "stale")
++    rejection_specs.append(("stale", stale, stale_event, 40, "stale_evidence"))
++    trunc_event = _event(0, "left", "truncated")
++    truncated = ledger_mod.BeliefLedger(root / "truncated", capacity=16, min_support=2)
++    for index in range(9):
++        truncated.observe(_event(index, "left", "truncated"))
++    rejection_specs.append(("truncated", truncated, trunc_event, 8, "budget_truncated"))
++    rejection_specs.append(("missing_ledger", None, event, 1, "missing_ledger"))
++    for fixture, fixture_ledger, fixture_event, index, reason in rejection_specs:
++        fixture_candidates = _candidates(fixture_event, index)
++        fixture_selector = BeliefAwareE3Selector(fixture_ledger)
++        fixture_ranked = fixture_selector.rank_candidates(None, fixture_candidates)
++        fixture_decision = fixture_selector.last_decision
++        abstention_rows.append(
++            _terminal(
++                {
++                    "fixture": fixture,
++                    "query_fired": fixture_decision["query_fired"],
++                    "abstention_reason": fixture_decision["abstention_reason"],
++                    "ranking_changed": fixture_decision["ranking_changed"],
++                    "base_candidate_set_preserved": fixture_decision[
++                        "base_candidate_set_preserved"
++                    ],
++                    "legal_candidate_count": len(fixture_ranked),
++                    "passed": fixture_decision["abstained"] is True
++                    and fixture_decision["abstention_reason"] == reason
++                    and fixture_decision["ranking_changed"] is False
++                    and fixture_decision["base_candidate_set_preserved"] is True
++                    and len(fixture_ranked) == len(fixture_candidates) > 0,
++                }
++            )
++        )
++
++    malformed_rows = []
++    malformed_candidates = _candidates(event, 1)
++    malformed_candidates[0]["belief_outcome_key"] = "not-a-hash"
++    malformed = BeliefAwareE3Selector(known)
++    malformed_ranked = malformed.rank_candidates(None, malformed_candidates)
++    malformed_rows.append(
++        _terminal(
++            {
++                "fixture": "invalid_outcome_hash",
++                "query_fired": malformed.last_decision["query_fired"],
++                "abstention_reason": malformed.last_decision["abstention_reason"],
++                "ranking_changed": malformed.last_decision["ranking_changed"],
++                "passed": malformed.last_decision["abstention_reason"] == "malformed_evidence"
++                and malformed.last_decision["query_fired"] is False
++                and malformed_ranked == malformed_candidates,
++            }
++        )
++    )
++
++    class RaisingQuery:
++        def query(self, *_args: Any, **_kwargs: Any) -> Any:
++            raise RuntimeError("deterministic malformed query fixture")
++
++    raising = BeliefAwareE3Selector(known, query_api=RaisingQuery())
++    raising_candidates = _candidates(event, 1)
++    raising_ranked = raising.rank_candidates(None, raising_candidates)
++    malformed_rows.append(
++        _terminal(
++            {
++                "fixture": "query_exception",
++                "query_fired": raising.last_decision["query_fired"],
++                "abstention_reason": raising.last_decision["abstention_reason"],
++                "ranking_changed": raising.last_decision["ranking_changed"],
++                "passed": raising.last_decision["abstention_reason"] == "malformed_evidence"
++                and raising.last_decision["query_fired"] is True
++                and raising_ranked == raising_candidates,
++            }
++        )
++    )
++
++    no_access = selector.forbidden_access_counts
++    reachability_rows.append(
++        _terminal(
++            {
++                "fixture": "no_source_or_adapter_access",
++                "forbidden_access_counts": no_access,
++                "passed": no_access == FORBIDDEN_ACCESS_COUNTS,
++            }
++        )
++    )
++    return {
++        "factory_wiring_rows": factory_rows,
++        "constructor_wiring_rows": constructor_rows,
++        "flag_rows": flag_rows,
++        "flag_off_equivalence_rows": off_rows,
++        "query_firing_rows": query_rows,
++        "candidate_score_rows": candidate_rows,
++        "ranking_influence_rows": influence_rows,
++        "abstention_rows": abstention_rows,
++        "malformed_evidence_rows": malformed_rows,
++        "action_provenance_rows": provenance_rows,
++        "live_path_reachability_rows": reachability_rows,
++    }
++
++
++def _artifact_projection(artifact: Mapping[str, Any]) -> JsonDict:
++    projected = deepcopy(dict(artifact))
++    projected.pop("duration_s", None)
++    projected.pop("reproducibility_checksum", None)
++    return projected
++
++
++def artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash all deterministic fields without wall time or the self-hash."""
++
++    return sha256_bytes(ledger_mod.canonical_bytes(_artifact_projection(artifact)))
++
++
++def _empty_artifact(
++    run_date: str,
++    duration_s: float,
++    preconditions: Sequence[Mapping[str, Any]],
++    source_hashes: Mapping[str, Any],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "execution_date": run_date,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": [deepcopy(dict(row)) for row in preconditions],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "cited_upstream_artifacts": [],
++        "source_artifact_hashes": deepcopy(dict(source_hashes)),
++        **{field: [] for field in ROW_TABLES},
++        "shipped_default_unchanged": False,
++        "belief_selector_live_path_ready_score": 0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": _gate_summary(preconditions),
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_belief_aware_e3_selector",
++    }
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    repo_root: Path | str = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    output_path: Path | str | None = None,
++) -> JsonDict:
++    """Run deterministic constructor, factory, selector, and provenance fixtures."""
++
++    started = time.perf_counter()
++    root = Path(repo_root).resolve()
++    output = Path(output_path) if output_path is not None else root / OUTPUT_PATH
++    preconditions, source_hashes = collect_preconditions(root, output)
++    if not _gate_summary(preconditions)["passed"]:
++        return _empty_artifact(
++            run_date,
++            time.perf_counter() - started,
++            preconditions,
++            source_hashes,
++        )
++    with tempfile.TemporaryDirectory(prefix="exp7024-") as directory:
++        evidence = _fixture_rows(Path(directory))
++    shipped_default_unchanged = bool(
++        SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED is False
++        and importlib.import_module(
++            "carnot.agentic.arc_competition_agent"
++        ).SUBMITTED_AGENT_CONFIG.get("belief_aware_selector_enabled")
++        is False
++        and all(row.get("passed") is True for row in evidence["flag_off_equivalence_rows"])
++    )
++    table_checks = [
++        _gate(
++            field,
++            True,
++            bool(evidence[field]) and all(row.get("passed") is True for row in evidence[field]),
++        )
++        for field in ACCEPTANCE_ROW_TABLES
++    ]
++    checks = [
++        _gate("preconditions", True, True),
++        *table_checks,
++        _gate("shipped_default_unchanged", True, shipped_default_unchanged),
++    ]
++    gate_summary = _gate_summary(checks)
++    ready = int(gate_summary["passed"])
++    rows = [
++        _terminal(
++            {
++                "check": row["check"],
++                "row_count": len(evidence.get(str(row["check"]), [])),
++                "passed": row["passed"],
++            }
++        )
++        for row in table_checks
++    ]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "execution_date": run_date,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": time.perf_counter() - started,
++        "cited_upstream_artifacts": [
++            {
++                "experiment_id": 7023,
++                "fields_imported": [
++                    "belief_query_api_ready_score",
++                    "query_result_rows",
++                    "abstention_rows",
++                ],
++                "sha256": source_hashes["exp7023"],
++            }
++        ],
++        "source_artifact_hashes": source_hashes,
++        "rows": rows,
++        **evidence,
++        "shipped_default_unchanged": shipped_default_unchanged,
++        "belief_selector_live_path_ready_score": ready,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "positive" if ready else "partial",
++        "honest_verdict": (
++            "complete_positive_belief_aware_e3_selector_live_path_ready"
++            if ready
++            else "partial_belief_aware_e3_selector_fixture_failed"
++        ),
++    }
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Any) -> list[str]:
++    """Return every structural and row-consistency error without repairing data."""
++
++    if not isinstance(artifact, Mapping):
++        return ["artifact_object_required"]
++    errors = []
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        errors.append(f"required_fields_missing:{missing}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(principles) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_principles_mismatch")
++    score = artifact.get("belief_selector_live_path_ready_score")
++    if type(score) is not int or score not in {0, 1}:
++        errors.append("ready_score_not_bare_integer")
++    verdict_class = artifact.get("verdict_class")
++    if verdict_class not in VERDICT_CLASSES:
++        errors.append("verdict_class_invalid")
++    prefix = {
++        "positive": "complete_positive_",
++        "circular_positive": "complete_circular_positive_",
++        "null": "complete_null_",
++        "blocked": "blocked_",
++        "disqualified": "disqualified_",
++        "partial": "partial_",
++    }.get(verdict_class)
++    verdict = artifact.get("honest_verdict")
++    if prefix is None or not isinstance(verdict, str) or not verdict.startswith(prefix):
++        errors.append("verdict_prefix_mismatch")
++    for field in ROW_TABLES:
++        rows = artifact.get(field, [])
++        if not isinstance(rows, list):
++            errors.append(f"{field}_not_list")
++        elif any(not isinstance(row, Mapping) or row.get("terminal") is not True for row in rows):
++            errors.append(f"nonterminal_row:{field}")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_mismatch")
++    if artifact.get("reproducibility_checksum") != artifact_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    summary = artifact.get("gate_check_summary")
++    if not isinstance(summary, Mapping) or "failed_check" not in summary:
++        errors.append("gate_check_summary_invalid")
++    if score == 1:
++        if (
++            verdict_class != "positive"
++            or not isinstance(summary, Mapping)
++            or summary.get("passed") is not True
++            or artifact.get("shipped_default_unchanged") is not True
++        ):
++            errors.append("ready_gate_inconsistent")
++        for field in ACCEPTANCE_ROW_TABLES:
++            rows = artifact.get(field, [])
++            if not rows or any(row.get("passed") is not True for row in rows):
++                errors.append(f"ready_rows_failed:{field}")
++    return errors
++
++
++def write_artifact(path: Path | str, artifact: Mapping[str, Any]) -> None:
++    """Validate and atomically publish one complete result document."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("invalid Exp7024 artifact: " + ";".join(errors))
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    payload = json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n"
++    descriptor, name = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
++    temporary = Path(name)
++    try:
++        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
++            handle.write(payload)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, target)
++    finally:
++        if temporary.exists():
++            temporary.unlink()
++
++
++def _parser() -> argparse.ArgumentParser:
++    parser = argparse.ArgumentParser(description="Run deterministic Exp7024 policy fixtures")
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / OUTPUT_PATH)
++    return parser
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Build, validate, and write the required Exp7024 result artifact."""
++
++    args = _parser().parse_args(argv)
++    artifact = build_artifact(run_date=args.date, output_path=args.output)
++    write_artifact(args.output, artifact)
++    print(
++        f"wrote {args.output} belief_selector_live_path_ready_score="
++        f"{artifact['belief_selector_live_path_ready_score']}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 5ec58d0334..133324bf2b 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -84,6 +84,11 @@ from carnot.agentic.arc_inert_label_memory import (
+ from carnot.agentic.arc_hazard_pruner import coerce_hazard_move_pruner
+ from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
+ from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
++from carnot.agentic.arc_belief_aware_e3_selector import (
++    SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED,
++    BeliefAwareE3Selector,
++    belief_selector_enabled,
++)
+ from carnot.agentic.arc_component_sampling import (
+     component_partition as click_component_partition,
+     redraw_component_pixel as redraw_click_component_pixel,
+@@ -1604,6 +1609,7 @@ class StepwiseExplorer:
+         epistemic_ledger: Any | bool | None = None,
+         structured_evidence_memory: Any | bool | None = None,
+         two_sided_goal_contract: Any | bool | None = None,
++        belief_candidate_selector: Any | None = None,
+         # REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): default None (not the SUBMITTED_*/kit value)
+         # for the same reason as `hazard_move_pruner` above -- GATED, resolved through the
+         # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
+@@ -1880,6 +1886,9 @@ class StepwiseExplorer:
+         self.structured_evidence_memory = coerce_structured_evidence_memory(
+             structured_evidence_memory
+         )
++        # REQ-ARC-WMTE-7024: None keeps the pre-selector candidate path exact.
++        # The enabled object can only reorder the rows already produced above.
++        self.belief_candidate_selector = belief_candidate_selector
+         if isinstance(dense_curiosity, DenseCuriosityProgress):
+             self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
+         elif dense_curiosity:
+@@ -2994,6 +3003,13 @@ class StepwiseExplorer:
+                 )
+             except Exception:
+                 pass
++        if self.belief_candidate_selector is not None and rows:
++            try:
++                rows = self.belief_candidate_selector.rank_candidates(frame, rows)
++            except Exception:
++                # Candidate selection must remain available if the optional evidence
++                # path fails. The selector records normal evidence failures itself.
++                pass
+         # REQ-ARC-WMTE-5836: stamp the just-explore priority tier LAST, after every ranker has
+         # run. Deliberate ordering: the tier decides WHETHER a candidate is admitted yet, and the
+         # existing rankers keep deciding the order WITHIN an admitted tier -- so the barrier is
+@@ -5266,12 +5282,21 @@ class E3AgentPolicy:
+         active_reward_machine: Any | bool | None = None,
+         target_licensed_route_shadow: Any | bool | None = False,
+         invariant_projection_config: Any | None = None,
++        belief_ledger: Any | None = None,
++        belief_aware_selector: bool | None = None,
+     ) -> None:
+         import os
+ 
+         from carnot.agentic.arc_invariant_projector import InvariantProjectionConfig
+ 
+         self.short = str(game_id).split("-", 1)[0]
++        # REQ-ARC-WMTE-7024: preserve the caller's durable ledger object. The
++        # explicit Boolean overrides the exact `=1` environment opt-in.
++        self.belief_ledger = belief_ledger
++        self.belief_aware_selector_enabled = belief_selector_enabled(belief_aware_selector)
++        self.belief_candidate_selector = (
++            BeliefAwareE3Selector(belief_ledger) if self.belief_aware_selector_enabled else None
++        )
+         # REQ-ARC-WMTE-6611-LIVE: this proposal transform is explicit opt-in.
+         # It is resolved once at construction, never from an environment variable,
+         # so the shipped default cannot become active midway through an episode.
+@@ -5444,6 +5469,7 @@ class E3AgentPolicy:
+             epistemic_ledger=self.epistemic_ledger,
+             structured_evidence_memory=self.structured_evidence_memory,
+             two_sided_goal_contract=self.two_sided_goal_contract,
++            belief_candidate_selector=self.belief_candidate_selector,
+         )
+         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
+         self.explore_budget = (
+@@ -7223,6 +7249,24 @@ class E3AgentPolicy:
+             # for the node, not for the guard.
+             **self._provenance_explorer_state(explorer),
+         }
++        selector = getattr(self, "belief_candidate_selector", None)
++        if selector is not None:
++            decision = getattr(selector, "last_decision", {}) or {}
++            final_action = {
++                "action": "RESET" if kind == "RESET" else (int(kind) if kind is not None else None),
++                "data": dict(data) if isinstance(data, dict) else data,
++            }
++            row.update(
++                {
++                    "belief_query_fired": bool(decision.get("query_fired", False)),
++                    "belief_evidence_hashes": list(decision.get("evidence_hashes") or []),
++                    "belief_influence": bool(decision.get("belief_influence", False)),
++                    "belief_abstained": bool(decision.get("abstained", True)),
++                    "belief_abstention_reason": decision.get("abstention_reason"),
++                    "belief_ranking_changed": bool(decision.get("ranking_changed", False)),
++                    "belief_final_action": final_action,
++                }
++            )
+         return row
+ 
+     @staticmethod
+@@ -9344,6 +9388,9 @@ SUBMITTED_AGENT_CONFIG = {
+     "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
+     "epistemic_ledger_enabled": SUBMITTED_EPISTEMIC_LEDGER_ENABLED,
+     "epistemic_ledger_mode": SUBMITTED_EPISTEMIC_LEDGER_MODE,
++    # REQ-ARC-WMTE-7024: reachable through the factory, disabled in what ships.
++    "belief_aware_selector_enabled": SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED,
++    "belief_aware_selector_wired": True,
+     "structured_evidence_memory_enabled": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED,
+     "structured_evidence_memory_mode": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE,
+     "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
+@@ -9542,6 +9589,8 @@ def make_carnot_agent(
+     cascade: bool = True,
+     proposer=None,
+     invariant_projection_config=None,
++    belief_ledger=None,
++    belief_aware_selector: bool | None = None,
+ ):
+     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
+     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
+@@ -9584,6 +9633,8 @@ def make_carnot_agent(
+                     gid,
+                     proposer=proposer,
+                     invariant_projection_config=invariant_projection_config,
++                    belief_ledger=belief_ledger,
++                    belief_aware_selector=belief_aware_selector,
+                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
+                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
+                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
+diff --git a/results/experiment_7024_belief_aware_e3_selector.json b/results/experiment_7024_belief_aware_e3_selector.json
+new file mode 100644
+index 0000000000..94dcf4f047
+--- /dev/null
++++ b/results/experiment_7024_belief_aware_e3_selector.json
+@@ -0,0 +1,664 @@
++{
++  "abstention_rows": [
++    {
++      "abstention_reason": "low_support",
++      "base_candidate_set_preserved": true,
++      "fixture": "low_support",
++      "legal_candidate_count": 2,
++      "passed": true,
++      "query_fired": true,
++      "ranking_changed": false,
++      "terminal": true
++    },
++    {
++      "abstention_reason": "conflicting_evidence",
++      "base_candidate_set_preserved": true,
++      "fixture": "conflict",
++      "legal_candidate_count": 2,
++      "passed": true,
++      "query_fired": true,
++      "ranking_changed": false,
++      "terminal": true
++    },
++    {
++      "abstention_reason": "stale_evidence",
++      "base_candidate_set_preserved": true,
++      "fixture": "stale",
++      "legal_candidate_count": 2,
++      "passed": true,
++      "query_fired": true,
++      "ranking_changed": false,
++      "terminal": true
++    },
++    {
++      "abstention_reason": "budget_truncated",
++      "base_candidate_set_preserved": true,
++      "fixture": "truncated",
++      "legal_candidate_count": 2,
++      "passed": true,
++      "query_fired": true,
++      "ranking_changed": false,
++      "terminal": true
++    },
++    {
++      "abstention_reason": "missing_ledger",
++      "base_candidate_set_preserved": true,
++      "fixture": "missing_ledger",
++      "legal_candidate_count": 2,
++      "passed": true,
++      "query_fired": false,
++      "ranking_changed": false,
++      "terminal": true
++    }
++  ],
++  "action_provenance_rows": [
++    {
++      "action_row": {
++        "action": 2,
++        "belief_abstained": false,
++        "belief_abstention_reason": null,
++        "belief_evidence_hashes": [
++          "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a",
++          "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713"
++        ],
++        "belief_final_action": {
++          "action": 2,
++          "data": null
++        },
++        "belief_influence": true,
++        "belief_query_fired": true,
++        "belief_ranking_changed": true,
++        "binary_gate_pass": null,
++        "data": null,
++        "engine_source": null,
++        "execute_plan_from_current": false,
++        "explore_budget": 50,
++        "explorer_best_level": 0,
++        "explorer_branch": null,
++        "explorer_cur_depth": null,
++        "explorer_explored_out": false,
++        "explorer_graph_nodes": 0,
++        "explorer_max_depth": 45,
++        "explorer_pending_len": 0,
++        "explorer_search_mode": "depth_first_ride",
++        "explorer_serve_kind": null,
++        "explorer_untested_at_cur": null,
++        "frame_changed_since_last_action": null,
++        "frames_seen": 0,
++        "game": "constructor",
++        "heldout_accuracy": null,
++        "i": 0,
++        "induction_attempt_index": null,
++        "induction_attempts_n": 0,
++        "induction_planned": false,
++        "induction_ran_this_action": false,
++        "induction_reason": null,
++        "induction_skipped": null,
++        "level_after": null,
++        "level_before": null,
++        "phase_after": "explore",
++        "phase_before": "explore",
++        "plan_abandoned_this_action": false,
++        "plan_epoch": 0,
++        "plan_installed_by_attempt": null,
++        "plan_len": 0,
++        "plan_pi": 0,
++        "plan_present": false,
++        "plan_remaining": 0,
++        "plan_replaced_this_action": false,
++        "plan_termination_reason": null,
++        "top_branch": "explore.explorer",
++        "transitions_n": 0,
++        "trust_energy": null,
++        "trust_selection_present": false,
++        "trust_selection_trust_pass": null,
++        "verify_accuracy": null,
++        "verify_cell_recall": null
++      },
++      "fixture": "enabled_action_row",
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "belief_selector_live_path_ready_score": 1,
++  "candidate_score_rows": [
++    {
++      "base_score": 0.6,
++      "belief_contribution": 0.0,
++      "candidate_action": {
++        "action": 1,
++        "data": null
++      },
++      "candidate_hash": "sha256:fab6004d87a5b14bcf68a8845c7d9d0ecf01ee2ea72dd067793fafe94c286f54",
++      "candidate_index": 0,
++      "decision_index": 0,
++      "evidence_hashes": [
++        "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a",
++        "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713"
++      ],
++      "final_score": 0.65,
++      "fixture": "supported",
++      "passed": true,
++      "query_fired": true,
++      "selected": false,
++      "selected_action": {
++        "action": 2,
++        "data": null
++      },
++      "simulation_contribution": 0.05,
++      "terminal": true
++    },
++    {
++      "base_score": 0.55,
++      "belief_contribution": 0.25,
++      "candidate_action": {
++        "action": 2,
++        "data": null
++      },
++      "candidate_hash": "sha256:2f64536798ed5811cf052673373b7923c7f8d8b5e4df3bc9f3f7cfaba8ccbde3",
++      "candidate_index": 1,
++      "decision_index": 0,
++      "evidence_hashes": [
++        "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a",
++        "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713"
++      ],
++      "final_score": 0.8,
++      "fixture": "supported",
++      "passed": true,
++      "query_fired": true,
++      "selected": true,
++      "selected_action": {
++        "action": 2,
++        "data": null
++      },
++      "simulation_contribution": 0.0,
++      "terminal": true
++    }
++  ],
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 7023,
++      "fields_imported": [
++        "belief_query_api_ready_score",
++        "query_result_rows",
++        "abstention_rows"
++      ],
++      "sha256": "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d"
++    }
++  ],
++  "constructor_wiring_rows": [
++    {
++      "fixture": "explicit_off",
++      "passed": true,
++      "same_ledger": true,
++      "selector_active": false,
++      "terminal": true
++    },
++    {
++      "explorer_same_selector": true,
++      "fixture": "explicit_on",
++      "passed": true,
++      "same_ledger": true,
++      "selector_active": true,
++      "terminal": true
++    }
++  ],
++  "duration_s": 1.3453579819761217,
++  "execution_date": "20260905",
++  "experiment_id": 7024,
++  "factory_wiring_rows": [
++    {
++      "fixture": "make_carnot_agent_enabled",
++      "passed": true,
++      "policy_type": "E3AgentPolicy",
++      "same_ledger": true,
++      "selector_active": true,
++      "terminal": true
++    }
++  ],
++  "field_principles": {
++    "abstention_rows": "Rejection rows prove uncertain evidence preserves the base order.",
++    "action_provenance_rows": "Action rows bind query evidence and influence to the emitted action.",
++    "belief_selector_live_path_ready_score": "One requires accepted firing and every rejection to fail closed.",
++    "candidate_score_rows": "Per-candidate terms expose every contribution to the final order.",
++    "cited_upstream_artifacts": "Field citations identify the bounded query evidence used by this result.",
++    "constructor_wiring_rows": "Constructor rows prove explicit overrides control one selector instance.",
++    "duration_s": "Measured wall time proves that the wiring fixtures executed.",
++    "factory_wiring_rows": "Factory rows prove the submitted construction seam passes the ledger.",
++    "field_principles": "A reason for each field makes the live selector claim reviewable.",
++    "flag_off_equivalence_rows": "Frozen trace hashes detect any disabled-path action drift.",
++    "flag_rows": "Flag rows prove exact parsing and explicit-value precedence.",
++    "gate_check_summary": "The first exact failure makes a blocked or partial result actionable.",
++    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
++    "inference_substrate": "The substrate separates deterministic policy fixtures from model inference.",
++    "live_path_reachability_rows": "Reachability rows prove the scored factory can call the selector.",
++    "malformed_evidence_rows": "Malformed rows prove invalid inputs fail closed before influence.",
++    "preconditions_checked": "Exact gates stop changed upstream evidence before policy wiring runs.",
++    "query_firing_rows": "Firing rows distinguish an enabled mechanism from a silent no-op.",
++    "random_seed": "A fixed seed makes the action-trace fixture reproducible.",
++    "ranking_influence_rows": "Influence rows state whether belief changed a candidate ranking.",
++    "reproducibility_checksum": "A timing-free digest detects later artifact drift.",
++    "rows": "Gate summaries keep each acceptance family independently falsifiable.",
++    "shipped_default_unchanged": "A true value requires both the disabled config and frozen trace match.",
++    "source_artifact_hashes": "Content hashes bind the result to exact query and live-policy code.",
++    "verdict_class": "A closed class separates readiness from blocked and partial execution.",
++    "verifier_is_oracle": "False states that prior belief is evidence rather than correctness authority."
++  },
++  "flag_off_equivalence_rows": [
++    {
++      "expected_trace_sha256": "sha256:0d91eb1c095d103ceedba01caa26905812d872907a723f49fa4c523611d98820",
++      "fixture": "frozen_disabled_trace",
++      "observed_trace_sha256": "sha256:0d91eb1c095d103ceedba01caa26905812d872907a723f49fa4c523611d98820",
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "flag_rows": [
++    {
++      "expected": false,
++      "observed": false,
++      "passed": true,
++      "raw": null,
++      "terminal": true
++    },
++    {
++      "expected": false,
++      "observed": false,
++      "passed": true,
++      "raw": "",
++      "terminal": true
++    },
++    {
++      "expected": false,
++      "observed": false,
++      "passed": true,
++      "raw": "0",
++      "terminal": true
++    },
++    {
++      "expected": false,
++      "observed": false,
++      "passed": true,
++      "raw": "true",
++      "terminal": true
++    },
++    {
++      "expected": true,
++      "observed": true,
++      "passed": true,
++      "raw": "1",
++      "terminal": true
++    },
++    {
++      "expected": [
++        false,
++        true
++      ],
++      "observed": [
++        false,
++        true
++      ],
++      "passed": true,
++      "raw": "explicit_override",
++      "terminal": true
++    }
++  ],
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "preconditions",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "factory_wiring_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "constructor_wiring_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "flag_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "flag_off_equivalence_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "query_firing_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "candidate_score_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "ranking_influence_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "abstention_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "malformed_evidence_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "action_provenance_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "live_path_reachability_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "shipped_default_unchanged",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      }
++    ],
++    "expected_value": "all checks pass",
++    "failed_check": null,
++    "observed_value": "all checks pass",
++    "passed": true
++  },
++  "honest_verdict": "complete_positive_belief_aware_e3_selector_live_path_ready",
++  "inference_substrate": "deterministic_live_policy_wiring_fixtures_no_llm",
++  "live_path_reachability_rows": [
++    {
++      "candidate_actions": [
++        2,
++        1,
++        3,
++        4,
++        5
++      ],
++      "fixture": "factory_to_selector_query",
++      "passed": true,
++      "policy_candidate_seam": "StepwiseExplorer._candidates",
++      "query_fired": true,
++      "ranking_changed": true,
++      "same_ledger": true,
++      "selected_action": {
++        "action": 2,
++        "data": null
++      },
++      "terminal": true
++    },
++    {
++      "fixture": "no_source_or_adapter_access",
++      "forbidden_access_counts": {
++        "adapter_reads": 0,
++        "current_outcome_reads": 0,
++        "future_label_reads": 0,
++        "game_source_reads": 0,
++        "solve_registry_reads": 0
++      },
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "malformed_evidence_rows": [
++    {
++      "abstention_reason": "malformed_evidence",
++      "fixture": "invalid_outcome_hash",
++      "passed": true,
++      "query_fired": false,
++      "ranking_changed": false,
++      "terminal": true
++    },
++    {
++      "abstention_reason": "malformed_evidence",
++      "fixture": "query_exception",
++      "passed": true,
++      "query_fired": true,
++      "ranking_changed": false,
++      "terminal": true
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "check": "exp7023_artifact_hash",
++      "expected_value": "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d",
++      "observed_value": "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "exp7023_belief_query_api_ready_score",
++      "expected_value": 1,
++      "observed_value": 1,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "query_module_importable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "live_policy_module_importable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "action_provenance_contract",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "eval_provenance_contract",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "live_runner_binding_contract",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "module_path_writable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "test_path_writable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "wrapper_path_writable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "artifact_path_writable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "query_firing_rows": [
++    {
++      "evidence_hashes": [
++        "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a",
++        "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713"
++      ],
++      "fixture": "supported",
++      "passed": true,
++      "query_count": 2,
++      "query_fired": true,
++      "terminal": true
++    }
++  ],
++  "random_seed": 702420260905,
++  "ranking_influence_rows": [
++    {
++      "base_actions": [
++        {
++          "action": 1,
++          "data": null
++        },
++        {
++          "action": 2,
++          "data": null
++        }
++      ],
++      "base_candidate_set_preserved": true,
++      "fixture": "supported",
++      "passed": true,
++      "ranked_actions": [
++        {
++          "action": 2,
++          "data": null
++        },
++        {
++          "action": 1,
++          "data": null
++        }
++      ],
++      "ranking_changed": true,
++      "terminal": true
++    }
++  ],
++  "reproducibility_checksum": "sha256:088a254431894e9d6dd7ce850206c450049110bafb1f26d0b590acbfe129f18e",
++  "rows": [
++    {
++      "check": "factory_wiring_rows",
++      "passed": true,
++      "row_count": 1,
++      "terminal": true
++    },
++    {
++      "check": "constructor_wiring_rows",
++      "passed": true,
++      "row_count": 2,
++      "terminal": true
++    },
++    {
++      "check": "flag_rows",
++      "passed": true,
++      "row_count": 6,
++      "terminal": true
++    },
++    {
++      "check": "flag_off_equivalence_rows",
++      "passed": true,
++      "row_count": 1,
++      "terminal": true
++    },
++    {
++      "check": "query_firing_rows",
++      "passed": true,
++      "row_count": 1,
++      "terminal": true
++    },
++    {
++      "check": "candidate_score_rows",
++      "passed": true,
++      "row_count": 2,
++      "terminal": true
++    },
++    {
++      "check": "ranking_influence_rows",
++      "passed": true,
++      "row_count": 1,
++      "terminal": true
++    },
++    {
++      "check": "abstention_rows",
++      "passed": true,
++      "row_count": 5,
++      "terminal": true
++    },
++    {
++      "check": "malformed_evidence_rows",
++      "passed": true,
++      "row_count": 2,
++      "terminal": true
++    },
++    {
++      "check": "action_provenance_rows",
++      "passed": true,
++      "row_count": 1,
++      "terminal": true
++    },
++    {
++      "check": "live_path_reachability_rows",
++      "passed": true,
++      "row_count": 2,
++      "terminal": true
++    }
++  ],
++  "schema": "carnot.exp7024.belief_aware_e3_selector.v1",
++  "shipped_default_unchanged": true,
++  "source_artifact_hashes": {
++    "action_provenance_module": "sha256:44a92dbad3c5047de09f0c1d4b5653cb5dcc212c3d9bd7c5bdad76b9ca2c0010",
++    "belief_ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++    "belief_query_module": "sha256:dab710d94bec012f81c1e542e10fcb90274ea70fcf81ac1941322aba3afe63f3",
++    "competition_policy_module": "sha256:5d64725cab5b6f0a257f1cc55e06b52634af7db375a489997f280b39797fd247",
++    "eval_provenance_module": "sha256:e543e50cb74e914bf20005d45b8257950119aced1667f8848af811e44a11b5b2",
++    "exp7023": "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d",
++    "live_runner_binding_module": "sha256:78b6f8812d29f858ed569b77004015a3bab93547a1cd9c414a4456a238a882be",
++    "selector_module": "sha256:66945c3ed4a41ac243f16fc752b6242798a084056b51d4d2a26d6953855b3541"
++  },
++  "verdict_class": "positive",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_7024_belief_aware_e3_selector.py b/scripts/experiments/experiment_7024_belief_aware_e3_selector.py
+new file mode 100644
+index 0000000000..ec5956ab4f
+--- /dev/null
++++ b/scripts/experiments/experiment_7024_belief_aware_e3_selector.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++"""Run the deterministic belief-aware E3 selector wiring experiment."""
++
++from carnot.agentic.arc_belief_aware_e3_selector import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_7024_belief_aware_e3_selector.py b/tests/python/test_experiment_7024_belief_aware_e3_selector.py
+new file mode 100644
+index 0000000000..5ea612dee1
+--- /dev/null
++++ b/tests/python/test_experiment_7024_belief_aware_e3_selector.py
+@@ -0,0 +1,782 @@
++"""Deterministic tests for REQ-ARC-WMTE-7024 and its named scenarios."""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++import runpy
++import sys
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_action_provenance as action_provenance
++from carnot.agentic import arc_belief_aware_e3_selector as selector_mod
++from carnot.agentic import arc_belief_ledger as ledger_mod
++from carnot.agentic import arc_competition_agent as competition
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++FROZEN_OFF_TRACE_SHA256 = "sha256:0d91eb1c095d103ceedba01caa26905812d872907a723f49fa4c523611d98820"
++
++
++class _Frame:
++    """Give the policy only the visible frame fields used by the deterministic fixture."""
++
++    def __init__(self, grid: np.ndarray) -> None:
++        self.frame = [grid.tolist()]
++        self.levels_completed = 0
++        self.state = "NOT_FINISHED"
++        self.score = 0
++        self.available_actions = [1, 2, 3, 4, 5, 6]
++
++
++class _ForbiddenAccess(dict):
++    """Count any attempt to read a hidden source or adapter field."""
++
++    forbidden = {"game_source", "adapter", "solve_registry", "current_outcome", "future_label"}
++
++    def __init__(self, value: dict) -> None:
++        super().__init__(value)
++        self.forbidden_access_count = 0
++
++    def get(self, key, default=None):  # type: ignore[no-untyped-def]
++        if key in self.forbidden:
++            self.forbidden_access_count += 1
++            raise AssertionError(f"forbidden access: {key}")
++        return super().get(key, default)
++
++    def __getitem__(self, key):  # type: ignore[no-untyped-def]
++        if key in self.forbidden:
++            self.forbidden_access_count += 1
++            raise AssertionError(f"forbidden access: {key}")
++        return super().__getitem__(key)
++
++
++def _event(stream_index: int, outcome: str, *, mechanic: str = "selector") -> dict:
++    return ledger_mod._fixture_event(stream_index, mechanic=mechanic, outcome=outcome)
++
++
++def _known_ledger(
++    root: Path, *, mechanic: str = "selector"
++) -> tuple[ledger_mod.BeliefLedger, dict]:
++    first = _event(0, "left", mechanic=mechanic)
++    ledger = ledger_mod.BeliefLedger(root, capacity=16, min_support=2)
++    assert ledger.observe(first)["accepted"] is True
++    assert ledger.observe(_event(1, "left", mechanic=mechanic))["accepted"] is True
++    return ledger, first
++
++
++def _candidate(
++    action: int,
++    event: dict,
++    outcome: str,
++    *,
++    observation_index: int,
++    base_score: float,
++    simulation_contribution: float,
++) -> dict:
++    return {
++        "action": action,
++        "data": None,
++        "base_score": base_score,
++        "simulation_contribution": simulation_contribution,
++        "belief_mechanic_signature": ledger_mod.mechanic_key_from_event(event).to_dict(),
++        "belief_outcome_key": ledger_mod._sha256_json({"outcome": outcome}),
++        "belief_observation_index": observation_index,
++    }
++
++
++def _supported_candidates(event: dict, *, observation_index: int = 1) -> list[dict]:
++    return [
++        _candidate(
++            1,
++            event,
++            "right",
++            observation_index=observation_index,
++            base_score=0.60,
++            simulation_contribution=0.05,
++        ),
++        _candidate(
++            2,
++            event,
++            "left",
++            observation_index=observation_index,
++            base_score=0.55,
++            simulation_contribution=0.00,
++        ),
++    ]
++
++
++def _isolate_policy_loaders(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.setattr(competition, "load_cross_game_value_head", lambda: None)
++    monkeypatch.setattr(competition, "_load_submitted_candidate_router", lambda game_id: None)
++    monkeypatch.setattr(competition, "_load_submitted_frame_change_scorer", lambda: None)
++    monkeypatch.setattr(competition, "_load_submitted_goal_energy_bias", lambda: None)
++    monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "1")
++
++
++def _policy_kwargs() -> dict:
++    return {
++        "proposer": None,
++        "explore_budget": 50,
++        "value_head": None,
++        "candidate_router": None,
++        "frame_change_scorer": None,
++        "action_effect_expansion_prior": False,
++        "goal_bias": None,
++        "goal_candidate_guidance": False,
++        "epistemic_ledger": False,
++        "structured_evidence_memory": False,
++    }
++
++
++def _drive(policy: competition.E3AgentPolicy, count: int = 16) -> bytes:
++    frames: list[_Frame] = []
++    latest = None
++    actions = []
++    for index in range(count):
++        action, data = policy.next_move(frames, latest)
++        actions.append({"action": action, "data": data})
++        if action is None:
++            break
++        grid = np.random.RandomState(index + 101).randint(0, 4, size=(6, 6)).astype(int)
++        latest = _Frame(grid)
++        frames.append(latest)
++    return json.dumps(actions, sort_keys=True, separators=(",", ":")).encode()
++
++
++def test_req_7024_spec_exists_before_implementation() -> None:
++    """REQ-ARC-WMTE-7024 names all behavior tested below."""
++
++    spec = (REPO_ROOT / "openspec/capabilities/arc-world-model-trust-energy/spec.md").read_text()
++    assert "REQ-ARC-WMTE-7024" in spec
++    assert {
++        "SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING",
++        "SCENARIO-ARC-WMTE-7024-QUERY-INFLUENCE",
++        "SCENARIO-ARC-WMTE-7024-SAFE-ABSTENTION",
++        "SCENARIO-ARC-WMTE-7024-ACTION-PROVENANCE",
++        "SCENARIO-ARC-WMTE-7024-NO-HIDDEN-ACCESS",
++        "SCENARIO-ARC-WMTE-7024-READINESS-GATE",
++    } <= {line.removeprefix("#### ") for line in spec.splitlines()}
++
++
++def test_scenario_7024_flag_parsing_and_explicit_override(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING uses exact opt-in parsing."""
++
++    for raw, expected in ((None, False), ("", False), ("0", False), ("true", False), ("1", True)):
++        if raw is None:
++            monkeypatch.delenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, raising=False)
++        else:
++            monkeypatch.setenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, raw)
++        assert selector_mod.belief_selector_enabled() is expected
++    monkeypatch.setenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, "1")
++    assert selector_mod.belief_selector_enabled(False) is False
++    monkeypatch.setenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, "0")
++    assert selector_mod.belief_selector_enabled(True) is True
++
++
++def test_scenario_7024_supported_query_changes_ranking_and_keeps_candidate_set(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-QUERY-INFLUENCE records each score term."""
++
++    ledger, event = _known_ledger(tmp_path / "known")
++    candidates = _supported_candidates(event)
++    selector = selector_mod.BeliefAwareE3Selector(ledger, belief_weight=0.25)
++    ranked = selector.rank_candidates(None, candidates)
++    decision = selector.last_decision
++
++    assert [row["action"] for row in ranked] == [2, 1]
++    assert {id(row) for row in ranked} == {id(row) for row in candidates}
++    assert decision["query_fired"] is True
++    assert decision["query_count"] == 2
++    assert decision["ranking_changed"] is True
++    assert decision["abstained"] is False
++    assert decision["selected_action"] == {"action": 2, "data": None}
++    assert decision["evidence_hashes"]
++    rows = decision["candidate_score_rows"]
++    assert len(rows) == 2
++    assert rows[0]["base_score"] == pytest.approx(0.60)
++    assert rows[0]["simulation_contribution"] == pytest.approx(0.05)
++    assert rows[0]["belief_contribution"] == pytest.approx(0.0)
++    assert rows[1]["belief_contribution"] == pytest.approx(0.25)
++    assert sum(bool(row["selected"]) for row in rows) == 1
++    assert all(row["selected_action"] == {"action": 2, "data": None} for row in rows)
++
++
++@pytest.mark.parametrize(
++    ("fixture", "expected_reason"),
++    [
++        ("low_support", "low_support"),
++        ("conflict", "conflicting_evidence"),
++        ("stale", "stale_evidence"),
++        ("truncated", "budget_truncated"),
++    ],
++)
++def test_scenario_7024_query_rejections_abstain_without_reordering(
++    tmp_path: Path,
++    fixture: str,
++    expected_reason: str,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-SAFE-ABSTENTION fails closed for unsafe query results."""
++
++    root = tmp_path / fixture
++    if fixture == "low_support":
++        event = _event(0, "left", mechanic=fixture)
++        ledger = ledger_mod.BeliefLedger(root, capacity=16, min_support=2)
++        ledger.observe(event)
++        observation_index = 0
++    elif fixture == "conflict":
++        ledger, event = _known_ledger(root, mechanic=fixture)
++        ledger.observe(_event(2, "right", mechanic=fixture))
++        observation_index = 2
++    elif fixture == "stale":
++        ledger, event = _known_ledger(root, mechanic=fixture)
++        observation_index = 40
++    else:
++        event = _event(0, "left", mechanic=fixture)
++        ledger = ledger_mod.BeliefLedger(root, capacity=16, min_support=2)
++        for index in range(9):
++            ledger.observe(_event(index, "left", mechanic=fixture))
++        observation_index = 8
++    candidates = _supported_candidates(event, observation_index=observation_index)
++    selector = selector_mod.BeliefAwareE3Selector(ledger)
++
++    ranked = selector.rank_candidates(None, candidates)
++
++    assert ranked == candidates
++    assert [id(row) for row in ranked] == [id(row) for row in candidates]
++    assert selector.last_decision["query_fired"] is True
++    assert selector.last_decision["abstained"] is True
++    assert selector.last_decision["abstention_reason"] == expected_reason
++    assert selector.last_decision["ranking_changed"] is False
++    assert len(ranked) == len(candidates) > 0
++
++
++def test_scenario_7024_missing_ledger_and_malformed_evidence_fail_closed(
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-7024 records missing and malformed input without a query."""
++
++    ledger, event = _known_ledger(tmp_path / "known")
++    candidates = _supported_candidates(event)
++    missing = selector_mod.BeliefAwareE3Selector(None)
++    assert missing.rank_candidates(None, candidates) == candidates
++    assert missing.last_decision["abstention_reason"] == "missing_ledger"
++    assert missing.last_decision["query_fired"] is False
++
++    malformed_candidates = deepcopy(candidates)
++    malformed_candidates[0]["belief_outcome_key"] = "not-a-hash"
++    malformed = selector_mod.BeliefAwareE3Selector(ledger)
++    assert malformed.rank_candidates(None, malformed_candidates) == malformed_candidates
++    assert malformed.last_decision["abstention_reason"] == "malformed_evidence"
++    assert malformed.last_decision["query_fired"] is False
++
++    absent = selector_mod.BeliefAwareE3Selector(ledger)
++    assert absent.rank_candidates(None, [{"action": 1, "data": None}]) == [
++        {"action": 1, "data": None}
++    ]
++    assert absent.last_decision["abstention_reason"] == "missing_candidate_evidence"
++
++
++def test_req_7024_selector_rejects_every_malformed_candidate_shape(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-7024 validates scores, actions, signatures, indexes, and query results."""
++
++    ledger, event = _known_ledger(tmp_path / "known")
++    valid = _supported_candidates(event)
++    typed = deepcopy(valid)
++    typed[0]["belief_mechanic_signature"] = ledger_mod.mechanic_key_from_event(event)
++    assert selector_mod.BeliefAwareE3Selector(ledger).rank_candidates(None, typed)[0]["action"] == 2
++
++    for field, value in (
++        ("action", True),
++        ("data", []),
++        ("base_score", "bad"),
++        ("simulation_contribution", float("inf")),
++        ("belief_mechanic_signature", object()),
++        ("belief_observation_index", -1),
++    ):
++        malformed = deepcopy(valid)
++        malformed[0][field] = value
++        selector = selector_mod.BeliefAwareE3Selector(ledger)
++        assert selector.rank_candidates(None, malformed) == malformed
++        assert selector.last_decision["abstention_reason"] == "malformed_evidence"
++        assert selector.last_decision["ranking_changed"] is False
++
++    for weight in (True, "bad", -0.1, float("nan")):
++        with pytest.raises(ValueError, match="belief_weight"):
++            selector_mod.BeliefAwareE3Selector(ledger, belief_weight=weight)  # type: ignore[arg-type]
++
++    empty = selector_mod.BeliefAwareE3Selector(ledger)
++    assert empty.rank_candidates(None, []) == []
++    assert empty.last_decision["abstention_reason"] == "no_legal_candidates"
++
++    class _ForeignQuery:
++        def query(self, *_args, **_kwargs):  # type: ignore[no-untyped-def]
++            return {"abstained": False}
++
++    foreign = selector_mod.BeliefAwareE3Selector(ledger, query_api=_ForeignQuery())
++    assert foreign.rank_candidates(None, valid) == valid
++    assert foreign.last_decision["query_fired"] is True
++    assert foreign.last_decision["abstention_reason"] == "malformed_evidence"
++
++
++def test_scenario_7024_constructor_and_factory_pass_the_same_ledger(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING proves live factory propagation."""
++
++    _isolate_policy_loaders(monkeypatch)
++    ledger, _ = _known_ledger(tmp_path / "known")
++    off = competition.E3AgentPolicy(
++        "fixture",
++        belief_ledger=ledger,
++        belief_aware_selector=False,
++        **_policy_kwargs(),
++    )
++    assert off.belief_ledger is ledger
++    assert off.belief_aware_selector_enabled is False
++    assert off.belief_candidate_selector is None
++    assert off.explorer.belief_candidate_selector is None
++
++    on = competition.E3AgentPolicy(
++        "fixture",
++        belief_ledger=ledger,
++        belief_aware_selector=True,
++        **_policy_kwargs(),
++    )
++    assert on.belief_ledger is ledger
++    assert on.belief_candidate_selector.ledger is ledger
++    assert on.explorer.belief_candidate_selector is on.belief_candidate_selector
++
++    class _Base:
++        def __init__(self) -> None:
++            self.game_id = "factory-fixture"
++
++    agent_type = competition.make_carnot_agent(
++        _Base,
++        belief_ledger=ledger,
++        belief_aware_selector=True,
++    )
++    agent = agent_type()
++    assert isinstance(agent._policy, competition.E3AgentPolicy)
++    assert agent._policy.belief_ledger is ledger
++    assert agent._policy.belief_candidate_selector.ledger is ledger
++
++
++def test_scenario_7024_factory_reaches_query_through_candidate_seam(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-QUERY-INFLUENCE fires inside `_candidates`."""
++
++    _isolate_policy_loaders(monkeypatch)
++    ledger, event = _known_ledger(tmp_path / "known")
++
++    class _Base:
++        def __init__(self) -> None:
++            self.game_id = "factory-fixture"
++
++    known_outcome = ledger_mod._sha256_json({"outcome": "left"})
++    other_outcome = ledger_mod._sha256_json({"outcome": "right"})
++    mechanic = ledger_mod.mechanic_key_from_event(event).to_dict()
++
++    class _PriorEvidenceAnnotator:
++        def rank_candidates(self, _frame, rows, **_kwargs):  # type: ignore[no-untyped-def]
++            self.last_actions = [row["action"] for row in rows]
++            return [
++                {
++                    **row,
++                    "base_score": 0.60 if index == 0 else (0.55 if index == 1 else -100.0),
++                    "simulation_contribution": 0.05 if index == 0 else 0.0,
++                    "belief_mechanic_signature": mechanic,
++                    "belief_outcome_key": known_outcome if index == 1 else other_outcome,
++                    "belief_observation_index": 1,
++                }
++                for index, row in enumerate(rows)
++            ]
++
++    agent_type = competition.make_carnot_agent(
++        _Base,
++        belief_ledger=ledger,
++        belief_aware_selector=True,
++    )
++    agent = agent_type()
++    agent._policy.explorer.structured_evidence_memory = _PriorEvidenceAnnotator()
++
++    rows = agent._policy.explorer._candidates(_Frame(np.zeros((6, 6), dtype=int)))
++    decision = agent._policy.belief_candidate_selector.last_decision
++
++    assert [row["action"] for row in rows[:2]] == [2, 1]
++    assert decision["query_fired"] is True
++    assert decision["ranking_changed"] is True
++    assert decision["base_candidate_set_preserved"] is True
++
++    class _RaisingSelector:
++        def rank_candidates(self, *_args, **_kwargs):  # type: ignore[no-untyped-def]
++            raise RuntimeError("deterministic selector failure")
++
++    agent._policy.explorer.belief_candidate_selector = _RaisingSelector()
++    fallback = agent._policy.explorer._candidates(_Frame(np.zeros((6, 6), dtype=int)))
++    assert [row["action"] for row in fallback] == (
++        agent._policy.explorer.structured_evidence_memory.last_actions
++    )
++
++
++def test_scenario_7024_flag_off_action_trace_matches_frozen_control(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING pins disabled action bytes."""
++
++    _isolate_policy_loaders(monkeypatch)
++    monkeypatch.delenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, raising=False)
++    first = competition.E3AgentPolicy("belief-fixture", **_policy_kwargs())
++    second = competition.E3AgentPolicy(
++        "belief-fixture",
++        belief_aware_selector=False,
++        **_policy_kwargs(),
++    )
++    first_trace = _drive(first)
++    second_trace = _drive(second)
++
++    assert first.belief_candidate_selector is None
++    assert first_trace == second_trace
++    assert selector_mod.sha256_bytes(first_trace) == FROZEN_OFF_TRACE_SHA256
++
++
++def test_scenario_7024_action_provenance_records_selector_influence(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-ACTION-PROVENANCE joins the final action to evidence."""
++
++    _isolate_policy_loaders(monkeypatch)
++    monkeypatch.setenv(action_provenance.PROVENANCE_ENV_FLAG, "1")
++    ledger, event = _known_ledger(tmp_path / "known")
++    policy = competition.E3AgentPolicy(
++        "fixture",
++        belief_ledger=ledger,
++        belief_aware_selector=True,
++        **_policy_kwargs(),
++    )
++    selector = policy.belief_candidate_selector
++    ranked = selector.rank_candidates(None, _supported_candidates(event))
++    move = (ranked[0]["action"], ranked[0]["data"])
++    policy._prov_top = "explore.explorer"
++    pre = policy._provenance_pre_state([], None)
++    row = policy._provenance_post_state(pre, move, policy.plan, [], None)
++
++    assert row["belief_query_fired"] is True
++    assert row["belief_evidence_hashes"] == selector.last_decision["evidence_hashes"]
++    assert row["belief_influence"] is True
++    assert row["belief_abstained"] is False
++    assert row["belief_abstention_reason"] is None
++    assert row["belief_ranking_changed"] is True
++    assert row["belief_final_action"] == {"action": 2, "data": None}
++
++
++def test_scenario_7024_selector_does_not_read_source_or_adapter_fields(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-NO-HIDDEN-ACCESS reads only bounded candidate fields."""
++
++    ledger, event = _known_ledger(tmp_path / "known")
++    guarded = []
++    for candidate in _supported_candidates(event):
++        guarded.append(
++            _ForbiddenAccess(
++                {
++                    **candidate,
++                    "game_source": object(),
++                    "adapter": object(),
++                    "solve_registry": object(),
++                    "current_outcome": object(),
++                    "future_label": object(),
++                }
++            )
++        )
++    selector = selector_mod.BeliefAwareE3Selector(ledger)
++
++    ranked = selector.rank_candidates(object(), guarded)
++
++    assert len(ranked) == len(guarded)
++    assert sum(row.forbidden_access_count for row in guarded) == 0
++    assert selector.forbidden_access_counts == {
++        "game_source_reads": 0,
++        "adapter_reads": 0,
++        "solve_registry_reads": 0,
++        "current_outcome_reads": 0,
++        "future_label_reads": 0,
++    }
++
++
++def test_scenario_7024_artifact_is_complete_and_reproducible(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7024-READINESS-GATE derives readiness from every row."""
++
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        run_date="20260905",
++        output_path=tmp_path / "experiment_7024.json",
++    )
++
++    assert set(selector_mod.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert set(artifact["field_principles"]) == set(selector_mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["inference_substrate"] == ("deterministic_live_policy_wiring_fixtures_no_llm")
++    assert artifact["shipped_default_unchanged"] is True
++    assert artifact["belief_selector_live_path_ready_score"] == 1
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("complete_positive_")
++    live_row = next(
++        row
++        for row in artifact["live_path_reachability_rows"]
++        if row["fixture"] == "factory_to_selector_query"
++    )
++    assert live_row["policy_candidate_seam"] == "StepwiseExplorer._candidates"
++    assert live_row["query_fired"] is True
++    assert artifact["reproducibility_checksum"] == selector_mod.artifact_checksum(artifact)
++    assert selector_mod.validate_artifact(artifact) == []
++
++    rebuilt = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        run_date="20260905",
++        output_path=tmp_path / "experiment_7024_second.json",
++    )
++    assert artifact["reproducibility_checksum"] == rebuilt["reproducibility_checksum"]
++
++
++def test_req_7024_precondition_helpers_fail_closed(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-7024 treats unreadable inputs and import failures as blocked gates."""
++
++    assert selector_mod._path_is_writable(tmp_path / "missing" / "nested" / "result.json")
++    assert selector_mod._read_json(tmp_path / "missing.json") is None
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{", encoding="utf-8")
++    assert selector_mod._read_json(malformed) is None
++    array = tmp_path / "array.json"
++    array.write_text("[]", encoding="utf-8")
++    assert selector_mod._read_json(array) is None
++
++    real_import = selector_mod.importlib.import_module
++
++    def _raise_one(name: str):
++        if name == "carnot.agentic.arc_eval_provenance":
++            raise ImportError("fixture")
++        return real_import(name)
++
++    monkeypatch.setattr(selector_mod.importlib, "import_module", _raise_one)
++    checks, _ = selector_mod.collect_preconditions(REPO_ROOT, tmp_path / "result.json")
++    by_name = {row["check"]: row for row in checks}
++    assert by_name["eval_provenance_contract"]["passed"] is False
++
++
++def test_req_7024_fixture_restores_preexisting_environment(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-7024 fixtures do not leak their flags into later policy tests."""
++
++    monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "already-set")
++    monkeypatch.setenv(action_provenance.PROVENANCE_ENV_FLAG, "0")
++    monkeypatch.setenv(selector_mod.BELIEF_SELECTOR_ENV_FLAG, "previous")
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        output_path=tmp_path / "environment.json",
++    )
++    assert artifact["belief_selector_live_path_ready_score"] == 1
++    assert selector_mod.os.environ["CARNOT_ARC_DISABLE_INDUCTION"] == "already-set"
++    assert selector_mod.os.environ[action_provenance.PROVENANCE_ENV_FLAG] == "0"
++    assert selector_mod.os.environ[selector_mod.BELIEF_SELECTOR_ENV_FLAG] == "previous"
++
++
++def test_req_7024_off_trace_stops_on_terminal_policy_action() -> None:
++    """REQ-ARC-WMTE-7024 trace serialization keeps a terminal action in its bytes."""
++
++    class _TerminalPolicy:
++        def next_move(self, _frames, _latest):  # type: ignore[no-untyped-def]
++            return (None, None)
++
++    class _PolicyModule:
++        @staticmethod
++        def E3AgentPolicy(*_args, **_kwargs):  # type: ignore[no-untyped-def]
++            return _TerminalPolicy()
++
++    assert json.loads(selector_mod._off_trace(_PolicyModule())) == [{"action": None, "data": None}]
++
++
++def test_scenario_7024_blocked_precondition_names_exact_gate(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7024-READINESS-GATE writes an exact blocked verdict."""
++
++    monkeypatch.setattr(selector_mod, "EXPECTED_EXP7023_HASH", "sha256:" + "0" * 64)
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        output_path=tmp_path / "blocked.json",
++    )
++
++    assert artifact["belief_selector_live_path_ready_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_belief_aware_e3_selector"
++    assert artifact["gate_check_summary"]["failed_check"] == "exp7023_artifact_hash"
++    assert artifact["gate_check_summary"]["expected_value"] == "sha256:" + "0" * 64
++    assert artifact["gate_check_summary"]["observed_value"] == (
++        "sha256:f1890eb3dffba8caed3dfeccbbe3cff3219693755f1fd0d99d059b50f0612d9d"
++    )
++    assert selector_mod.validate_artifact(artifact) == []
++
++
++def test_req_7024_artifact_validator_rejects_inconsistent_ready_rows(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-7024 validation does not trust a self-reported ready score."""
++
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        output_path=tmp_path / "valid.json",
++    )
++    bad = deepcopy(artifact)
++    bad["query_firing_rows"][0]["passed"] = False
++    bad["reproducibility_checksum"] = selector_mod.artifact_checksum(bad)
++    assert "ready_rows_failed:query_firing_rows" in selector_mod.validate_artifact(bad)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["shipped_default_unchanged"] = False
++    assert "reproducibility_checksum_mismatch" in selector_mod.validate_artifact(bad_checksum)
++
++
++def test_req_7024_artifact_validator_rejection_matrix(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-7024 rejects every required structural contradiction."""
++
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        output_path=tmp_path / "valid.json",
++    )
++    assert selector_mod.validate_artifact(None) == ["artifact_object_required"]
++
++    def errors_for(change) -> list[str]:  # type: ignore[no-untyped-def]
++        candidate = deepcopy(artifact)
++        change(candidate)
++        candidate["reproducibility_checksum"] = selector_mod.artifact_checksum(candidate)
++        return selector_mod.validate_artifact(candidate)
++
++    assert any(
++        value.startswith("required_fields_missing:")
++        for value in errors_for(lambda row: row.pop("random_seed"))
++    )
++    assert "field_principles_mismatch" in errors_for(
++        lambda row: row.__setitem__("field_principles", {})
++    )
++    assert "ready_score_not_bare_integer" in errors_for(
++        lambda row: row.__setitem__("belief_selector_live_path_ready_score", True)
++    )
++    assert "verdict_class_invalid" in errors_for(
++        lambda row: row.__setitem__("verdict_class", "unknown")
++    )
++    assert "verdict_prefix_mismatch" in errors_for(
++        lambda row: row.__setitem__("honest_verdict", "blocked_wrong_prefix")
++    )
++    assert "factory_wiring_rows_not_list" in errors_for(
++        lambda row: row.__setitem__("factory_wiring_rows", {})
++    )
++    assert "nonterminal_row:factory_wiring_rows" in errors_for(
++        lambda row: row["factory_wiring_rows"][0].pop("terminal")
++    )
++    assert "inference_substrate_mismatch" in errors_for(
++        lambda row: row.__setitem__("inference_substrate", "wrong")
++    )
++    assert "verifier_is_oracle_mismatch" in errors_for(
++        lambda row: row.__setitem__("verifier_is_oracle", True)
++    )
++    assert "gate_check_summary_invalid" in errors_for(
++        lambda row: row.__setitem__("gate_check_summary", {})
++    )
++    assert "ready_gate_inconsistent" in errors_for(
++        lambda row: row.__setitem__("shipped_default_unchanged", False)
++    )
++
++
++def test_req_7024_writer_and_main_publish_only_valid_artifacts(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-ARC-WMTE-7024 validates before each atomic artifact publication."""
++
++    artifact = selector_mod.build_artifact(
++        repo_root=REPO_ROOT,
++        output_path=tmp_path / "source.json",
++    )
++    output = tmp_path / "written.json"
++    selector_mod.write_artifact(output, artifact)
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++
++    invalid = deepcopy(artifact)
++    invalid["verifier_is_oracle"] = True
++    with pytest.raises(ValueError, match="invalid Exp7024 artifact"):
++        selector_mod.write_artifact(tmp_path / "invalid.json", invalid)
++
++    def _replace_failure(_source, _target):  # type: ignore[no-untyped-def]
++        raise OSError("replace fixture")
++
++    monkeypatch.setattr(selector_mod.os, "replace", _replace_failure)
++    with pytest.raises(OSError, match="replace fixture"):
++        selector_mod.write_artifact(tmp_path / "replace-failure.json", artifact)
++    assert not list(tmp_path.glob(".replace-failure.json.*"))
++    monkeypatch.undo()
++
++    main_output = tmp_path / "main.json"
++    assert selector_mod.main(["--date", "20260905", "--output", str(main_output)]) == 0
++    assert (
++        json.loads(main_output.read_text(encoding="utf-8"))["belief_selector_live_path_ready_score"]
++        == 1
++    )
++    assert "belief_selector_live_path_ready_score=1" in capsys.readouterr().out
++
++
++def test_req_7024_module_entrypoint_runs_the_same_main(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-7024 keeps the direct module command executable."""
++
++    output = tmp_path / "module-main.json"
++    monkeypatch.setattr(
++        sys,
++        "argv",
++        [
++            "arc_belief_aware_e3_selector",
++            "--date",
++            "20260905",
++            "--output",
++            str(output),
++        ],
++    )
++    with pytest.raises(SystemExit) as stopped:
++        runpy.run_module(
++            "carnot.agentic.arc_belief_aware_e3_selector",
++            run_name="__main__",
++        )
++    assert stopped.value.code == 0
++    assert (
++        json.loads(output.read_text(encoding="utf-8"))["belief_selector_live_path_ready_score"] == 1
++    )
++
++
++def test_req_7024_wrapper_exists_and_does_not_enable_submission_default() -> None:
++    """REQ-ARC-WMTE-7024 keeps the experiment wrapper outside the submission kernel."""
++
++    wrapper = REPO_ROOT / "scripts/experiments/experiment_7024_belief_aware_e3_selector.py"
++    assert wrapper.is_file()
++    assert competition.SUBMITTED_AGENT_CONFIG["belief_aware_selector_enabled"] is False
++    kernel = REPO_ROOT / "submission_kernel/main.py"
++    if kernel.exists():
++        assert selector_mod.BELIEF_SELECTOR_ENV_FLAG not in kernel.read_text(encoding="utf-8")
+-- 
+2.55.0
+

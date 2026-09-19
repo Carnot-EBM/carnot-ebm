@@ -1,0 +1,104 @@
+From 5df715688881d5b61ce23d4c62fec35495a59ee5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 13:36:33 -0400
+Subject: [PATCH 10910/11362] [conductor] Pre-gate block: Verifier-density
+ prefix corpus with exact first-error labels
+
+1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execution_contract_ready_score (actual=0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...t_6943_verifier_density_prefix_corpus.json | 51 +++++++++++++++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6943_verifier_density_prefix_corpus.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4e3de04d7d..bb2d0787cb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 35, "phase": "iteration_start", "last_beat": "2026-09-03T17:00:19Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-09-03T17:36:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a134715959..1832ae808f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17156,3 +17156,4 @@ code |
+ | 2026-09-03 16:33 UTC | Plan milestone 2026.09.608 | OK | 12 tasks proposed |
+ | 2026-09-03 16:36 UTC | Milestone 2026.09.608 activated | OK | 12 tasks queued |
+ | 2026-09-03 16:58 UTC | V608 post-marker source delta and compatibility au | OK | 89 passed, 1 warning in 7.74s |
++| 2026-09-03 17:34 UTC | V608 executable contract and bounded-shard preflig | OK | 105 passed, 1 warning in 52.13s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4a02c67ae7..610611d5b7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 35, "phase": "iteration_start", "started_at": "2026-09-03T17:00:19Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 36, "phase": "iteration_start", "started_at": "2026-09-03T17:36:32Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6943_verifier_density_prefix_corpus.json b/results/experiment_6943_verifier_density_prefix_corpus.json
+new file mode 100644
+index 0000000000..5fb68822f4
+--- /dev/null
++++ b/results/experiment_6943_verifier_density_prefix_corpus.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6943,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-09-03",
++  "started_at": "2026-09-03T17:36:33.523127+00:00",
++  "finished_at": "2026-09-03T17:36:33.523127+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Verifier-density prefix corpus with exact first-error labels",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0 == expected=1",
++  "failed_upstream": "exp6942-v608-contract-preflight",
++  "failed_field": "v608_execution_contract_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1,
++  "failed_expected_type": "int",
++  "failed_observed": 0,
++  "failed_observed_type": "int",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
++  "failed_evidence_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0 == expected=1",
++    "failed_upstream": "exp6942-v608-contract-preflight",
++    "failed_field": "v608_execution_contract_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1,
++    "failed_expected_type": "int",
++    "failed_observed": 0,
++    "failed_observed_type": "int",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
++    "failed_evidence_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execution_contract_ready_score (actual=0 == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6942-v608-contract-preflight",
++      "artifact_field": "v608_execution_contract_ready_score",
++      "op": "==",
++      "expected": 1,
++      "expected_type": "int",
++      "actual": 0,
++      "actual_type": "int",
++      "passed": false,
++      "reason": "actual=0 == expected=1",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
++      "artifact_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

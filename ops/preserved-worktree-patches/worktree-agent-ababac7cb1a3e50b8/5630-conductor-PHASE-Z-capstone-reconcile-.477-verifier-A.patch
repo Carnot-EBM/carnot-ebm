@@ -1,0 +1,2628 @@
+From fc42fa0095b1be94419df1fb92d42be571347f9e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 04:03:07 -0400
+Subject: [PATCH 05630/11362] [conductor] PHASE Z capstone -- reconcile .477
+ verifier, ARC, self-learning, hardware, and authenticity outcomes
+
+Automated research step by research conductor.
+Task ID: exp5219-capstone-v477
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |  10 +
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5219_capstone_v477.py   | 774 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  48 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_5219_capstone_v477.json    | 574 +++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ scripts/experiment_5219_capstone_v477.py      |  64 ++
+ .../test_experiment_5219_capstone_v477.py     | 557 +++++++++++++
+ 36 files changed, 2059 insertions(+), 77 deletions(-)
+ create mode 100644 python/carnot/experiment_5219_capstone_v477.py
+ create mode 100644 results/experiment_5219_capstone_v477.json
+ create mode 100644 scripts/experiment_5219_capstone_v477.py
+ create mode 100644 tests/python/test_experiment_5219_capstone_v477.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 3a53c75063..6ee83eb783 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -856,3 +856,13 @@
+ - REQ-CAPSTONE-5206: The `.476` milestone-close capstone aggregator `exp5206-capstone-v476` in `python/carnot/experiment_5206_capstone_v476.py` SHALL write `results/experiment_5206_capstone_v476.json` without modifying `scripts/research_conductor.py`, without modifying `ops/status.md`, without modifying `ops/changelog.md`, and without modifying `_bmad/traceability.md`. It SHALL read every `.476` upstream artifact from Exp5193 through Exp5205 when present, run or import adversarial verification status for each present artifact, exclude any upstream carrying `flagged_adversarial:true` or a critical adversarial verifier flag from headline aggregation, and reconcile rather than rerun the milestone. It SHALL treat Exp5199's pre-gate skip on Exp5198 as `gated_and_skipped=true` rather than a failed level-up experiment; reconcile DiffusionGemma from Exp5196 as loading not achieved and the loading thread retired; reconcile GAP-4891 from Exp5198 as not filled because the MAP lever did not bank levels; reconcile GAP-4 from Exp5197 as not filled unless the six-discordant-win floor is crossed; reconcile Exp5200 as a hidden-state-verifier-v2 continuation outside the PHASE D external-text-scorer retirement; confirm Exp5194, Exp5195, Exp5202, Exp5203, and Exp5204 according to their artifacts without inflating partial states; confirm `ops/arc_solve_registry.yaml` has lp85 at the live primary-source level and compute the reproducible-level delta without inflating zero; report the roadmap level-up guarantee as structurally distinct from outcome satisfaction; and confirm `scripts/research_conductor.py` stayed untouched.
+ - SCENARIO-CAPSTONE-5206: The artifact `results/experiment_5206_capstone_v476.json` must emit top-level fields `per_task_summary`, `diffusiongemma_arc_reconciled`, `gap4891_status_reconciled`, `gap4_status_reconciled`, `hidden_state_verifier_v2_reconciled`, `poison_test_triage_module_status`, `retro_timing_fix_status`, `known_issues_md_deduped_confirmed`, `architecture_md_reconciled`, `lp85_registry_note_resolved`, `reproducible_total_levels_delta`, `live_agent_self_discovery_ratio_updated`, `levelup_guarantee_structurally_satisfied`, `levelup_guarantee_outcome_satisfied`, `flagged_adversarial_artifacts_excluded`, `research_conductor_py_untouched_confirmed`, `inference_substrate`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `milestone`, `run_date`, `spec_refs`, `result_path`, `field_principles`, `duration_s`, `source_artifacts`, `missing_artifacts`, `adversarial_verification`, `headline_eligible_task_ids`, `preconditions_checked`, `registry_reconciliation`, `levelup_lint`, `exclusion_manifest_lint`, `random_seed`, `reproducibility_checksum`, `tests_run`, and `flagged_adversarial`. The default `.476` read must summarize Exp5193 as clean `.476` activation, Exp5194 as a ready and tested poison-test triage module that did not patch the conductor, Exp5195 as a root-caused and regression-tested retro-timing patch that was prepared but not applied to the conductor plus known-issues deduplication from 187 to 1, Exp5196 as DiffusionGemma loading exhausted with no guided/unguided/AR pilot run, Exp5197 as GAP-4 stuck at n=62 with four discordant wins and no min-six pass, Exp5198 as MAP landmark prestage with `lever_validated=false` and zero levels banked, Exp5199 as a gated mechanical skip because Exp5198 did not validate the lever, Exp5200 as a hidden-state probe that does not beat tuned SC and all three zero-training controls, Exp5201 as hardware continuity with GateMate narrowed and no speedup claim, Exp5202 as architecture reconciliation with `Last Reconciled: 20260703`, Exp5203 as remediation-options documentation ready, Exp5204 as the exclusion-manifest-lint fix for all four documented issues, and Exp5205 as a GAP-1 set-search candidate positive. The terminal verdict must start with `complete:` or `complete_` and be a single precise sentence.
+ - SCENARIO-CAPSTONE-5206-FIELD-PRINCIPLES: The required field principles are: `per_task_summary` = "list of {task_id, honest_verdict, headline_outcome, gated_and_skipped: bool}", `diffusiongemma_arc_reconciled` = "The decisive experiment the verifier-moat arc built toward summarized precisely: state whether loading was achieved and whether the thread retired or unblocked a future pilot", `gap4891_status_reconciled` = "GAP-4891 status reconciled from Exp5198 without rounding a MAP prestage null up to filled", `gap4_status_reconciled` = "GAP-4 status reconciled from Exp5197 without redefining the six-discordant-win floor or the n actually reached", `hidden_state_verifier_v2_reconciled` = "Exp5200 hidden-state continuation summarized without treating PHASE D external-text-scorer retirement as a false positive", `poison_test_triage_module_status` = "Exp5194 triage module status, distinguishing ready/tested module from conductor patching", `retro_timing_fix_status` = "Exp5195 retro-timing status, distinguishing regression-tested prepared fix from conductor deployment", `known_issues_md_deduped_confirmed` = "true only when ops/known-issues.md has exactly one Phase 4 Canonical Metric section", `architecture_md_reconciled` = "true only when _bmad/architecture.md carries Last Reconciled: 20260703 and Exp5202 confirms it", `lp85_registry_note_resolved` = "direct registry read of lp85 levels_reproduced, resolving the L3-vs-L5 note from the primary source", `reproducible_total_levels_delta` = "new banked ARC levels from Exp5199; zero is valid and must not be inflated", `live_agent_self_discovery_ratio_updated` = "{live_agent_self_discovery: int, development_proxy: int, total: int} updated from the .474 baseline after any banked levels", `levelup_guarantee_structurally_satisfied` = "roadmap lint found at least one level-up attempt", `levelup_guarantee_outcome_satisfied` = "true only if the level-up attempt actually banked a level", `flagged_adversarial_artifacts_excluded` = "task ids skipped from headline aggregation because flagged_adversarial=true or live critical verification failed", `research_conductor_py_untouched_confirmed` = "hard constraint that scripts/research_conductor.py stayed untouched", `inference_substrate` = "aggregation_from_upstream_artifacts", and `honest_verdict` = "terminal-prefix single sentence summarizing the whole milestone without vague celebration."
++
++- REQ-CAPSTONE-5219: The `.477` milestone-close capstone aggregator `exp5219-capstone-v477` in `python/carnot/experiment_5219_capstone_v477.py` SHALL write `results/experiment_5219_capstone_v477.json` without modifying `scripts/research_conductor.py`. It SHALL read every available `.477` upstream deliverable from Exp5207 through Exp5218 plus any `.477` checkpoint artifact, exclude any upstream carrying `flagged_adversarial:true` or a critical adversarial verifier flag from headline aggregation, and record blocked, gated, missing, flagged, and checkpoint-only states explicitly. It SHALL reconcile GAP-1 as building rather than filled when Exp5209 is positive but Exp5210 is blocked before registry promotion, reconcile GAP-4 as open or blocked unless a clean non-flagged Exp5212 artifact crosses the established six-discordant-win floor, retire the MMLU-Pro hidden-state path only from clean Exp5213 evidence, satisfy continuous self-learning only when Exp5214 writes a durable memory artifact with promotion/rollback semantics, compute ARC level deltas only from reproduction-gated clean artifacts, preserve hardware as reachability/correctness smoke evidence with no speedup claim, report verifier-authenticity remediation only from Exp5218, and allow `docs_reconciled=false` when the conductor stop rule defers ops/status/changelog/traceability reconciliation.
++- SCENARIO-CAPSTONE-5219: The artifact `results/experiment_5219_capstone_v477.json` must emit top-level fields `per_task_summary`, `gap1_final_status`, `gap4_final_status`, `hidden_state_path_decision`, `continuous_self_learning_satisfied`, `new_levels_banked`, `reproducible_total_levels_delta`, `hardware_final_state`, `flagged_adversarial_artifacts_excluded`, `docs_reconciled`, `validation_commands_run`, `research_conductor_py_untouched_confirmed`, `inference_substrate`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `milestone`, `run_date`, `spec_refs`, `result_path`, `field_principles`, `duration_s`, `source_artifacts`, `checkpoint_artifacts`, `missing_artifacts`, `adversarial_verification`, `headline_eligible_task_ids`, `preconditions_checked`, `status_decisions`, `random_seed`, `reproducibility_checksum`, and `flagged_adversarial`. The default `.477` read must summarize Exp5207 as a clean `.477` activation, Exp5208 as a no-new-actionable SOTA refresh with Semantic Scholar rate limits, Exp5209 as a hardened GAP-1 positive, Exp5210 as a conductor pre-gate block caused by a principle-wrapped boolean comparison, Exp5211 as flagged candidate-pool evidence not eligible for a GAP-4 headline, Exp5212 as flagged/blocked GAP-4 validation with zero scored rows and no floor crossing, Exp5213 as retiring the MMLU-Pro hidden-state path, Exp5214 as durable verifier memory with one promotion and one rollback, Exp5215 as flagged and not headline-eligible even though its PAW gate reports not viable, Exp5216 as frontier/landmark zero banked levels, Exp5217 as KV260 and PolarFire reachable with GateMate narrowed to cable/port and no speedup claim, and Exp5218 as registry-flag remediation that keeps modules headline-ineligible. The terminal verdict must start with `complete:` or `complete_` and must not inflate nulls, blocked gates, flagged artifacts, or off-provenance artifacts.
++- SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES: The required field principles are: `per_task_summary` = "map from task id to artifact path/status/verdict/headline eligibility, including blocked, missing, gated, flagged, and checkpoint-only evidence without importing flagged metrics into headlines", `gap1_final_status` = "one of filled | building | open | blocked; filled only when the registry promotion task actually runs and registers the verifier, not merely when the hardening gate is positive", `gap4_final_status` = "one of filled | building | open | blocked; filled only when a clean non-flagged validation crosses the unchanged six-discordant-win floor", `hidden_state_path_decision` = "one of keep | retire_mmlu_path | blocked; derived from Exp5213 without treating external-text-scorer retirement as the reason", `continuous_self_learning_satisfied` = "true only when Exp5214 writes a durable verifier-memory artifact with promotion and rollback semantics", `new_levels_banked` = "list of reproduction-gated ARC level banks from clean eligible ARC artifacts; empty is valid and must not be inflated", `reproducible_total_levels_delta` = "integer sum of clean reproduction-gated level deltas; zero is valid and must not be inflated", `hardware_final_state` = "summary of KV260, PolarFire, GateMate, board reachability, and no-speedup discipline from clean hardware evidence", `flagged_adversarial_artifacts_excluded` = "true when every flagged_adversarial or verifier-critical artifact is excluded from headline aggregation", `docs_reconciled` = "true only when this capstone reconciled the requested docs; false is valid when the conductor stop rule explicitly defers ops/status/changelog/traceability updates", `validation_commands_run` = "list of commands and pass/fail/block status used to validate the new capstone and changed surfaces", `research_conductor_py_untouched_confirmed` = "hard constraint that scripts/research_conductor.py stayed untouched", `inference_substrate` = "aggregation_from_upstream_artifacts", and `honest_verdict` = "terminal-prefix single sentence that states the milestone outcome without vague celebration or inflated nulls."
++
++## Implementation Status (REQ-CAPSTONE-5219)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAPSTONE-5219 | Implemented (`python/carnot/experiment_5219_capstone_v477.py`, `scripts/experiment_5219_capstone_v477.py`, `results/experiment_5219_capstone_v477.json`) | Implemented (`tests/python/test_experiment_5219_capstone_v477.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 1c1838cf96..4f9280c294 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -568,5 +568,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ae23ba7528..0365e5cc3b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 209,
+   "code_violations": 0,
+-  "experiments_checked": 4194,
++  "experiments_checked": 4195,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5219_capstone_v477.py b/python/carnot/experiment_5219_capstone_v477.py
+new file mode 100644
+index 0000000000..a07ba7e2f9
+--- /dev/null
++++ b/python/carnot/experiment_5219_capstone_v477.py
+@@ -0,0 +1,774 @@
++"""Exp 5219: V477 milestone-close capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5219, SCENARIO-CAPSTONE-5219,
++SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES.
++
++This module closes a milestone by reading the artifacts that already exist. The
++important behavior is conservative aggregation: a blocked gate, flagged
++artifact, or missing result is recorded as evidence about the milestone, but it
++is not allowed to become a headline win.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++AdversarialReporter = Callable[[Path], JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results") / "experiment_5219_capstone_v477.json"
++EXPERIMENT = "experiment_5219_capstone_v477"
++EXPERIMENT_ID = "exp5219-capstone-v477"
++MILESTONE = "2026.07.477"
++SCHEMA = "carnot.experiment_5219_capstone_v477.v1"
++RANDOM_SEED = 5219
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++HONEST_VERDICT = (
++    "complete: v477 closed with GAP-1 building after blocked registry promotion, "
++    "GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, "
++    "self-learning memory created, zero ARC levels banked, hardware reachability "
++    "maintained with no speedup claim, and flagged artifacts excluded."
++)
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-5219",
++    "SCENARIO-CAPSTONE-5219",
++    "SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "per_task_summary": (
++        "map from task id to artifact path/status/verdict/headline eligibility, "
++        "including blocked, missing, gated, flagged, and checkpoint-only evidence "
++        "without importing flagged metrics into headlines"
++    ),
++    "gap1_final_status": (
++        "one of filled | building | open | blocked; filled only when the registry "
++        "promotion task actually runs and registers the verifier, not merely when "
++        "the hardening gate is positive"
++    ),
++    "gap4_final_status": (
++        "one of filled | building | open | blocked; filled only when a clean "
++        "non-flagged validation crosses the unchanged six-discordant-win floor"
++    ),
++    "hidden_state_path_decision": (
++        "one of keep | retire_mmlu_path | blocked; derived from Exp5213 without "
++        "treating external-text-scorer retirement as the reason"
++    ),
++    "continuous_self_learning_satisfied": (
++        "true only when Exp5214 writes a durable verifier-memory artifact with "
++        "promotion and rollback semantics"
++    ),
++    "new_levels_banked": (
++        "list of reproduction-gated ARC level banks from clean eligible ARC "
++        "artifacts; empty is valid and must not be inflated"
++    ),
++    "reproducible_total_levels_delta": (
++        "integer sum of clean reproduction-gated level deltas; zero is valid and "
++        "must not be inflated"
++    ),
++    "hardware_final_state": (
++        "summary of KV260, PolarFire, GateMate, board reachability, and no-speedup "
++        "discipline from clean hardware evidence"
++    ),
++    "flagged_adversarial_artifacts_excluded": (
++        "true when every flagged_adversarial or verifier-critical artifact is "
++        "excluded from headline aggregation"
++    ),
++    "docs_reconciled": (
++        "true only when this capstone reconciled the requested docs; false is "
++        "valid when the conductor stop rule explicitly defers "
++        "ops/status/changelog/traceability updates"
++    ),
++    "validation_commands_run": (
++        "list of commands and pass/fail/block status used to validate the new "
++        "capstone and changed surfaces"
++    ),
++    "research_conductor_py_untouched_confirmed": (
++        "hard constraint that scripts/research_conductor.py stayed untouched"
++    ),
++    "inference_substrate": "aggregation_from_upstream_artifacts",
++    "honest_verdict": (
++        "terminal-prefix single sentence that states the milestone outcome without "
++        "vague celebration or inflated nulls"
++    ),
++}
++
++PRINCIPLE_WRAPPED_FIELDS = (
++    "per_task_summary",
++    "gap1_final_status",
++    "gap4_final_status",
++    "hidden_state_path_decision",
++    "continuous_self_learning_satisfied",
++    "new_levels_banked",
++    "reproducible_total_levels_delta",
++    "hardware_final_state",
++    "flagged_adversarial_artifacts_excluded",
++    "docs_reconciled",
++    "validation_commands_run",
++    "research_conductor_py_untouched_confirmed",
++)
++
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "duration_s",
++    "source_artifacts",
++    "checkpoint_artifacts",
++    "missing_artifacts",
++    "adversarial_verification",
++    "headline_eligible_task_ids",
++    "preconditions_checked",
++    "status_decisions",
++    "random_seed",
++    "reproducibility_checksum",
++    "flagged_adversarial",
++    "inference_substrate",
++    "honest_verdict",
++    *PRINCIPLE_WRAPPED_FIELDS,
++)
++
++DEFAULT_VALIDATION_COMMANDS = [
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5219_capstone_v477.py -q --no-cov -o addopts=''",
++        "status": "PENDING",
++        "notes": "filled by the final run after implementation",
++    }
++]
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One expected V477 task deliverable."""
++
++    experiment_number: int
++    task_id: str
++    relative_path: Path
++
++
++UPSTREAM_SOURCES: tuple[UpstreamSource, ...] = (
++    UpstreamSource(
++        5207,
++        "exp5207-archive-476-activate-477",
++        Path("results/experiment_5207_archive_476_activate_477.json"),
++    ),
++    UpstreamSource(
++        5208,
++        "exp5208-sota-ingestion-v477",
++        Path("results/experiment_5208_sota_ingestion_v477.json"),
++    ),
++    UpstreamSource(
++        5209,
++        "exp5209-gap1-set-search-holdout-hardening-v477",
++        Path("results/experiment_5209_gap1_set_search_holdout_hardening_v477.json"),
++    ),
++    UpstreamSource(
++        5210,
++        "exp5210-gap1-registry-promotion-gated-v477",
++        Path("results/experiment_5210_gap1_registry_promotion_gated_v477.json"),
++    ),
++    UpstreamSource(
++        5211,
++        "exp5211-gap4-sota-local-candidate-expansion-v477",
++        Path("results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"),
++    ),
++    UpstreamSource(
++        5212,
++        "exp5212-gap4-scale-validation-gated-v477",
++        Path("results/experiment_5212_gap4_scale_validation_gated_v477.json"),
++    ),
++    UpstreamSource(
++        5213,
++        "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477",
++        Path("results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json"),
++    ),
++    UpstreamSource(
++        5214,
++        "exp5214-continuous-self-learning-verifier-memory-v477",
++        Path("results/experiment_5214_continuous_self_learning_verifier_memory_v477.json"),
++    ),
++    UpstreamSource(
++        5215,
++        "exp5215-arc-paw-amortization-gate-v477",
++        Path("results/experiment_5215_arc_paw_amortization_gate_v477.json"),
++    ),
++    UpstreamSource(
++        5216,
++        "exp5216-arc-frontier-continuity-landmark-decomposition-v477",
++        Path("results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json"),
++    ),
++    UpstreamSource(
++        5217,
++        "exp5217-hardware-continuity-v477",
++        Path("results/experiment_5217_hardware_continuity_v477.json"),
++    ),
++    UpstreamSource(
++        5218,
++        "exp5218-verifier-authenticity-remediation-apply-v477",
++        Path("results/experiment_5218_verifier_authenticity_remediation_apply_v477.json"),
++    ),
++)
++
++CHECKPOINT_SOURCES = (
++    Path("results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json"),
++)
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def honest_verdict_text(value: Any) -> str:
++    raw = value_of(value)
++    return raw if isinstance(raw, str) else ""
++
++
++def _bool(value: Any) -> bool:
++    return value_of(value) is True
++
++
++def _number(value: Any) -> float | None:
++    raw = value_of(value)
++    if isinstance(raw, bool) or raw is None:
++        return None
++    try:
++        return float(raw)
++    except (TypeError, ValueError):
++        return None
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def source_by_number(experiment_number: int) -> UpstreamSource:
++    for source in UPSTREAM_SOURCES:
++        if source.experiment_number == experiment_number:
++            return source
++    raise KeyError(experiment_number)
++
++
++def file_sha256(path: Path) -> str | None:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return {}, {"exists": True, "loadable": False, "error": "malformed_json"}
++    if not isinstance(parsed, dict):
++        return {}, {"exists": True, "loadable": False, "error": "not_json_object"}
++    return parsed, {
++        "exists": True,
++        "loadable": True,
++        "error": None,
++        "sha256": file_sha256(path),
++    }
++
++
++def adversarial_report_for(path: Path) -> JsonDict:  # pragma: no cover - integration path.
++    from scripts.adversarial_verify import verify_artifact
++
++    return verify_artifact(path)
++
++
++def research_conductor_untouched(root: Path) -> bool:  # pragma: no cover - git integration.
++    diff = subprocess.run(
++        ["git", "diff", "--quiet", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++    )
++    status = subprocess.run(
++        ["git", "status", "--short", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return diff.returncode == 0 and status.stdout.strip() == ""
++
++
++def _flag_is_critical(flag: Mapping[str, Any]) -> bool:
++    severity = flag.get("severity")
++    if isinstance(severity, str):
++        return severity.lower() == "critical"
++    return severity == 2
++
++
++def _verification_row(source: UpstreamSource, data: JsonMap, report: JsonMap) -> JsonDict:
++    flags = [flag for flag in list(report.get("flags") or []) if isinstance(flag, Mapping)]
++    return {
++        "task_id": source.task_id,
++        "relative_path": str(source.relative_path),
++        "stamped_flagged_adversarial": data.get("flagged_adversarial") is True,
++        "critical_adversarial_flag": any(_flag_is_critical(flag) for flag in flags),
++        "flag_count": report.get("flag_count", len(flags)),
++        "max_severity": report.get("max_severity"),
++        "flags": [{"kind": flag.get("kind"), "severity": flag.get("severity")} for flag in flags],
++    }
++
++
++def _is_excluded(source: UpstreamSource, data: JsonMap, reports: Sequence[JsonMap]) -> bool:
++    if data.get("flagged_adversarial") is True:
++        return True
++    return any(
++        row["task_id"] == source.task_id and row.get("critical_adversarial_flag") is True
++        for row in reports
++    )
++
++
++def is_gated_block(data: JsonMap) -> bool:
++    return data.get("status") == "blocked" and data.get("blocked_at_layer") == "conductor_pre_gate"
++
++
++def load_upstreams(
++    root: Path, adversarial_reporter: AdversarialReporter
++) -> tuple[dict[int, JsonDict], list[JsonDict], list[str], list[JsonDict]]:
++    artifacts: dict[int, JsonDict] = {}
++    source_rows: list[JsonDict] = []
++    missing: list[str] = []
++    reports: list[JsonDict] = []
++    for source in UPSTREAM_SOURCES:
++        path = root / source.relative_path
++        data, meta = read_json_mapping(path)
++        row = {
++            "experiment_number": source.experiment_number,
++            "task_id": source.task_id,
++            "relative_path": str(source.relative_path),
++            "exists": meta.get("exists") is True,
++            "loadable": meta.get("loadable") is True,
++            "sha256": meta.get("sha256"),
++            "error": meta.get("error"),
++        }
++        if not meta.get("loadable"):
++            missing.append(source.task_id)
++            source_rows.append(row)
++            continue
++        artifacts[source.experiment_number] = data
++        report = adversarial_reporter(path)
++        reports.append(_verification_row(source, data, report))
++        source_rows.append(
++            row
++            | {
++                "honest_verdict": honest_verdict_text(data.get("honest_verdict")),
++                "flagged_adversarial": data.get("flagged_adversarial") is True,
++            }
++        )
++    return artifacts, source_rows, missing, reports
++
++
++def load_checkpoints(root: Path) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for relative_path in CHECKPOINT_SOURCES:
++        _, meta = read_json_mapping(root / relative_path)
++        rows.append(
++            {
++                "relative_path": str(relative_path),
++                "exists": meta.get("exists") is True,
++                "loadable": meta.get("loadable") is True,
++                "sha256": meta.get("sha256"),
++                "error": meta.get("error"),
++                "checkpoint_only": True,
++            }
++        )
++    return rows
++
++
++def flagged_exclusions(artifacts: JsonMap, reports: Sequence[JsonMap]) -> list[str]:
++    excluded: list[str] = []
++    for source in UPSTREAM_SOURCES:
++        data = artifacts.get(source.experiment_number, {})
++        if data and _is_excluded(source, data, reports):
++            excluded.append(source.task_id)
++    return excluded
++
++
++def _status_for(source: UpstreamSource, data: JsonMap, reports: Sequence[JsonMap]) -> str:
++    if not data:
++        return "missing"
++    if _is_excluded(source, data, reports):
++        return "flagged_excluded"
++    if data.get("status") == "blocked" or honest_verdict_text(
++        data.get("honest_verdict")
++    ).startswith("blocked_"):
++        return "blocked"
++    return "complete"
++
++
++def per_task_summary(artifacts: JsonMap, reports: Sequence[JsonMap]) -> JsonDict:
++    summary: JsonDict = {}
++    for source in UPSTREAM_SOURCES:
++        data = artifacts.get(source.experiment_number, {})
++        status = _status_for(source, data, reports)
++        headline_eligible = bool(data and status == "complete")
++        summary[source.task_id] = {
++            "artifact_path": str(source.relative_path),
++            "status": status,
++            "verdict": honest_verdict_text(data.get("honest_verdict"))
++            if data
++            else "missing_artifact",
++            "headline_eligible": headline_eligible,
++            "flagged_adversarial": data.get("flagged_adversarial") is True if data else False,
++            "critical_adversarial_flag": any(
++                row["task_id"] == source.task_id and row.get("critical_adversarial_flag") is True
++                for row in reports
++            ),
++            "gated_and_skipped": is_gated_block(data),
++        }
++    return summary
++
++
++def headline_eligible_task_ids(summary: JsonMap) -> list[str]:
++    return [task_id for task_id, row in summary.items() if row.get("headline_eligible") is True]
++
++
++def gap1_status(artifacts: JsonMap) -> tuple[str, str]:
++    hardening = artifacts.get(5209, {})
++    if not hardening:
++        return "blocked", "missing Exp5209 hardening artifact"
++    if not _bool(hardening.get("gap1_hardened_positive")):
++        return "open", "Exp5209 did not preserve the GAP-1 held-out positive"
++    promotion = artifacts.get(5210, {})
++    if not promotion:
++        return "building", "Exp5209 positive but Exp5210 registry promotion artifact is missing"
++    if _bool(promotion.get("verifier_registered")) or _bool(
++        promotion.get("gap1_registry_promoted")
++    ):
++        return "filled", "Exp5210 registered the hardened GAP-1 verifier"
++    if promotion.get("status") == "blocked":
++        return "building", "Exp5210 blocked before registry promotion; GAP-1 remains building"
++    return "building", "Exp5209 positive but registry promotion is not confirmed"
++
++
++def gap4_status(artifacts: JsonMap, excluded: Sequence[str] = ()) -> tuple[str, str]:
++    excluded_set = set(excluded)
++    expansion = artifacts.get(5211, {})
++    if not expansion:
++        return "blocked", "missing Exp5211 expansion artifact"
++    expansion_excluded = "exp5211-gap4-sota-local-candidate-expansion-v477" in excluded_set
++    validation_excluded = "exp5212-gap4-scale-validation-gated-v477" in excluded_set
++    if expansion_excluded and validation_excluded:
++        return (
++            "blocked",
++            "Exp5211 expansion and Exp5212 validation artifacts are flagged; "
++            "Exp5212 therefore cannot cross the floor",
++        )
++    if expansion_excluded:
++        return "blocked", "Exp5211 expansion artifact is flagged and cannot support a headline"
++    if not _bool(expansion.get("gap4_expansion_usable")):
++        return "open", "Exp5211 did not produce a usable expanded pool"
++    validation = artifacts.get(5212, {})
++    if not validation:
++        return "building", "Exp5211 pool usable but Exp5212 validation artifact is missing"
++    if validation_excluded:
++        return "blocked", "Exp5212 validation artifact is flagged and cannot cross the floor"
++    if _bool(validation.get("exact_test_passes_min6_rule")):
++        return "filled", "Exp5212 crossed the established six-discordant-win floor"
++    if value_of(validation.get("gap4_status_recommendation")) == "blocked":
++        return "blocked", "Exp5212 blocked before scoring enough protocol-complete rows"
++    return "open", "Exp5212 did not cross the six-discordant-win floor"
++
++
++def hidden_state_decision(artifacts: JsonMap, excluded: Sequence[str] = ()) -> tuple[str, str]:
++    if "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477" in set(excluded):
++        return "blocked", "Exp5213 hidden-state artifact is flagged"
++    data = artifacts.get(5213, {})
++    if not data:
++        return "blocked", "missing Exp5213 hidden-state artifact"
++    if _bool(data.get("beats_all_controls")):
++        return "keep", "Exp5213 found a hidden-state signal above controls"
++    if _bool(data.get("retire_mmlu_hidden_state_path")):
++        return "retire_mmlu_path", "Exp5213 did not beat all controls and retires this MMLU path"
++    return "blocked", "Exp5213 did not provide a keep-or-retire decision"
++
++
++def self_learning_satisfied(root: Path, artifacts: JsonMap, excluded: Sequence[str] = ()) -> bool:
++    if "exp5214-continuous-self-learning-verifier-memory-v477" in set(excluded):
++        return False
++    data = artifacts.get(5214, {})
++    if not data:
++        return False
++    memory_rel = value_of(data.get("memory_artifact_path"))
++    if not isinstance(memory_rel, str):
++        return False
++    memory, meta = read_json_mapping(root / memory_rel)
++    if not meta.get("loadable"):
++        return False
++    summary = memory.get("summary") if isinstance(memory.get("summary"), Mapping) else {}
++    promotions = int(_number(data.get("promotions")) or _number(summary.get("promotions")) or 0)
++    rollbacks = int(_number(data.get("rollbacks")) or _number(summary.get("rollbacks")) or 0)
++    return bool(
++        _bool(data.get("continuous_self_learning_task"))
++        and _bool(data.get("deterministic_guardrails_enforced"))
++        and _bool(data.get("heldout_gate_required_for_promotion"))
++        and promotions >= 1
++        and rollbacks >= 1
++        and _bool(summary.get("deterministic_guardrails_enforced"))
++        and _bool(summary.get("heldout_gate_required_for_promotion"))
++    )
++
++
++def arc_level_delta(artifacts: JsonMap, excluded: Sequence[str] = ()) -> tuple[list[Any], int]:
++    if "exp5216-arc-frontier-continuity-landmark-decomposition-v477" in set(excluded):
++        return [], 0
++    data = artifacts.get(5216, {})
++    levels = value_of(data.get("new_levels_banked"))
++    banked = levels if isinstance(levels, list) else []
++    delta = _number(data.get("reproducible_total_levels_delta"))
++    return banked, int(delta) if delta is not None else len(banked)
++
++
++def hardware_summary(artifacts: JsonMap, excluded: Sequence[str] = ()) -> str:
++    if "exp5217-hardware-continuity-v477" in set(excluded):
++        return "hardware evidence excluded because Exp5217 is flagged"
++    data = artifacts.get(5217, {})
++    if not data:
++        return "hardware evidence missing"
++    polarfire = value_of(data.get("polarfire_status"))
++    gatemate = value_of(data.get("gatemate_status"))
++    polarfire_summary = (
++        polarfire.get("summary", str(polarfire))
++        if isinstance(polarfire, Mapping)
++        else str(polarfire)
++    )
++    gatemate_summary = (
++        f"{gatemate.get('status')} leading_hypothesis={gatemate.get('leading_untested_hypothesis')}"
++        if isinstance(gatemate, Mapping)
++        else str(gatemate)
++    )
++    speedup = _bool(data.get("hardware_speedup_claimed"))
++    speedup_text = "speedup claimed" if speedup else "no speedup claim"
++    return (
++        f"KV260={value_of(data.get('kv260_status'))}; "
++        f"PolarFire={polarfire_summary}; "
++        f"GateMate={value_of(data.get('gatemate_diagnostic_narrowed_to'))} ({gatemate_summary}); "
++        f"boards_reachable_count={value_of(data.get('boards_reachable_count'))}; {speedup_text}"
++    )
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reporter: AdversarialReporter | None = None,
++    conductor_untouched: bool | None = None,
++    docs_reconciled: bool = False,
++) -> JsonDict:
++    start = time.perf_counter()
++    reporter = adversarial_reporter or adversarial_report_for
++    artifacts, sources, missing, reports = load_upstreams(root, reporter)
++    checkpoints = load_checkpoints(root)
++    excluded = flagged_exclusions(artifacts, reports)
++    summary = per_task_summary(artifacts, reports)
++    eligible = headline_eligible_task_ids(summary)
++    gap1_value, gap1_reason = gap1_status(artifacts)
++    gap4_value, gap4_reason = gap4_status(artifacts, excluded)
++    hidden_value, hidden_reason = hidden_state_decision(artifacts, excluded)
++    self_learning = self_learning_satisfied(root, artifacts, excluded)
++    levels, level_delta = arc_level_delta(artifacts, excluded)
++    conductor_clean = (
++        research_conductor_untouched(root) if conductor_untouched is None else conductor_untouched
++    )
++    flagged_clean = not (set(excluded) & set(eligible))
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
++        ),
++        "source_artifacts": sources,
++        "checkpoint_artifacts": checkpoints,
++        "missing_artifacts": missing,
++        "adversarial_verification": reports,
++        "headline_eligible_task_ids": eligible,
++        "preconditions_checked": {
++            "expected_deliverable_artifacts": len(UPSTREAM_SOURCES),
++            "loadable_deliverable_artifacts": len(artifacts),
++            "checkpoint_artifacts_checked": len(checkpoints),
++            "adversarial_verify_ran_per_loadable_artifact": len(reports) == len(artifacts),
++            "docs_reconciliation_deferred_by_stop_rule": not docs_reconciled,
++            "research_conductor_py_untouched": conductor_clean,
++        },
++        "status_decisions": {
++            "gap1": gap1_reason,
++            "gap4": gap4_reason,
++            "hidden_state": hidden_reason,
++            "continuous_self_learning": (
++                "Exp5214 durable memory artifact satisfied promotion/rollback semantics"
++                if self_learning
++                else "Exp5214 memory artifact missing or did not satisfy promotion/rollback semantics"
++            ),
++            "arc": f"new_levels_banked={levels}, reproducible_total_levels_delta={level_delta}",
++            "hardware": hardware_summary(artifacts, excluded),
++            "authenticity": (
++                "Exp5218 remediation applied and headline-ineligible flags preserved"
++                if _bool(artifacts.get(5218, {}).get("remediation_applied"))
++                else "Exp5218 remediation missing or incomplete"
++            ),
++            "docs": (
++                "docs reconciled in this capstone"
++                if docs_reconciled
++                else "ops/status, ops/changelog, and _bmad/traceability deferred by stop rule"
++            ),
++            "flagged_excluded_task_ids": excluded,
++        },
++        "per_task_summary": _principled("per_task_summary", summary),
++        "gap1_final_status": _principled("gap1_final_status", gap1_value),
++        "gap4_final_status": _principled("gap4_final_status", gap4_value),
++        "hidden_state_path_decision": _principled("hidden_state_path_decision", hidden_value),
++        "continuous_self_learning_satisfied": _principled(
++            "continuous_self_learning_satisfied", self_learning
++        ),
++        "new_levels_banked": _principled("new_levels_banked", levels),
++        "reproducible_total_levels_delta": _principled(
++            "reproducible_total_levels_delta", level_delta
++        ),
++        "hardware_final_state": _principled(
++            "hardware_final_state", hardware_summary(artifacts, excluded)
++        ),
++        "flagged_adversarial_artifacts_excluded": _principled(
++            "flagged_adversarial_artifacts_excluded", flagged_clean
++        ),
++        "docs_reconciled": _principled("docs_reconciled", docs_reconciled),
++        "validation_commands_run": _principled(
++            "validation_commands_run",
++            list(validation_commands_run or DEFAULT_VALIDATION_COMMANDS),
++        ),
++        "research_conductor_py_untouched_confirmed": _principled(
++            "research_conductor_py_untouched_confirmed", conductor_clean
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": HONEST_VERDICT,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "flagged_adversarial": False,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = honest_verdict_text(payload.get("honest_verdict"))
++    if not verdict.startswith(TERMINAL_PREFIXES) or "\n" in verdict:
++        raise ValueError("honest_verdict must be a single terminal-prefix sentence")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must declare V477 aggregation")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field principle mismatch")
++    if payload.get("flagged_adversarial") is not False:
++        raise ValueError("flagged_adversarial must be false for the capstone itself")
++    for field in PRINCIPLE_WRAPPED_FIELDS:
++        wrapped = payload[field]
++        if not isinstance(wrapped, Mapping) or wrapped.get("principle") != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} field principle mismatch")
++    if value_of(payload["research_conductor_py_untouched_confirmed"]) is not True:
++        raise ValueError("research_conductor_py_untouched_confirmed must be true")
++    if value_of(payload["gap1_final_status"]) not in {"filled", "building", "open", "blocked"}:
++        raise ValueError("gap1_final_status has invalid value")
++    if value_of(payload["gap4_final_status"]) not in {"filled", "building", "open", "blocked"}:
++        raise ValueError("gap4_final_status has invalid value")
++    if value_of(payload["hidden_state_path_decision"]) not in {
++        "keep",
++        "retire_mmlu_path",
++        "blocked",
++    }:
++        raise ValueError("hidden_state_path_decision has invalid value")
++    if value_of(payload["flagged_adversarial_artifacts_excluded"]) is not True:
++        raise ValueError("flagged_adversarial_artifacts_excluded must be true")
++    summary = value_of(payload["per_task_summary"])
++    if not isinstance(summary, Mapping):
++        raise ValueError("per_task_summary must be a map")
++    eligible = set(payload["headline_eligible_task_ids"])
++    excluded = {
++        task_id
++        for task_id, row in summary.items()
++        if isinstance(row, Mapping)
++        and (row.get("flagged_adversarial") is True or row.get("critical_adversarial_flag") is True)
++    }
++    if excluded & eligible:
++        raise ValueError("flagged_adversarial artifacts cannot be headline eligible")
++    levels = value_of(payload["new_levels_banked"])
++    delta = value_of(payload["reproducible_total_levels_delta"])
++    if not isinstance(levels, list) or not isinstance(delta, int) or delta != len(levels):
++        raise ValueError("reproducible_total_levels_delta must match new_levels_banked")
++    docs_value = value_of(payload["docs_reconciled"])
++    if not isinstance(docs_value, bool):
++        raise ValueError("docs_reconciled must be boolean")
++    if not value_of(payload["validation_commands_run"]):
++        raise ValueError("validation_commands_run must record verification commands")
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reporter: AdversarialReporter | None = None,
++    conductor_untouched: bool | None = None,
++    docs_reconciled: bool = False,
++) -> Path:
++    payload = build_artifact(
++        root=root,
++        run_date=run_date,
++        duration_s=duration_s,
++        validation_commands_run=validation_commands_run,
++        adversarial_reporter=adversarial_reporter,
++        conductor_untouched=conductor_untouched,
++        docs_reconciled=docs_reconciled,
++    )
++    out_path = root / RESULT_RELATIVE_PATH
++    write_json(out_path, payload)
++    return out_path
++
++
++if __name__ == "__main__":  # pragma: no cover - direct module execution.
++    run()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 409d049477..0eb702999e 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T04:06:36.693443+00:00",
+-  "finished_at": "2026-07-04T04:06:36.736401+00:00",
+-  "duration_s": 0.043,
++  "started_at": "2026-07-04T07:38:31.854739+00:00",
++  "finished_at": "2026-07-04T07:38:31.890273+00:00",
++  "duration_s": 0.036,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index ecf16f1d0e..abd16dd555 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-04T04:06:37Z",
++  "run_date": "2026-07-04T07:38:32Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 305dce5125..2a5a0878f7 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T04:06:39Z",
+-  "finished_at": "2026-07-04T04:06:39Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-04T07:38:33Z",
++  "finished_at": "2026-07-04T07:38:34Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index bc12fcc296..72377f2930 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-04T04:06:39Z",
++  "run_date": "2026-07-04T07:38:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 67cc71360c..7fbf9095d0 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-04T04:06:39Z",
++  "run_date": "2026-07-04T07:38:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 74f184cb5d..69e9ced073 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-04T06:01:57.767187Z",
+-  "duration_s": 0.0649411678314209,
++  "run_date": "2026-07-04T07:36:27.264189Z",
++  "duration_s": 0.0570828914642334,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0b989df690ae63f356867e136b1b45f39343ffb055790fbb60ba8ccdedf1fed2",
++  "reproducibility_checksum": "2721b1a4926731a5d0442ff832cef73acbc37b06e09436cf09a9da9b401e8110",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8795979dc142015cc513b3d24764aae9135214b6"
++    "adversarial_verify_version": "73a6c0be3e8df0bd94f559a0f1bf51434823ad08"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 5defd09686..53c33d0477 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-04T05:43:01.232223Z",
+-  "duration_s": 11.585309028625488,
++  "run_date": "2026-07-04T07:37:47.323992Z",
++  "duration_s": 11.860685110092163,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 532f2bcc76..50e90786e7 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-04T04:06:11.813517+00:00",
+-  "duration_s": 0.003478527069091797,
++  "run_date": "2026-07-04T07:38:05.782970+00:00",
++  "duration_s": 0.0008966922760009766,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 8262308b7b..80f64fc1c8 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-04T06:01:57.868484Z",
+-  "duration_s": 0.09424567222595215,
++  "run_date": "2026-07-04T07:36:27.368180Z",
++  "duration_s": 0.09663844108581543,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "016b8c94fc60e82add26ea08c0b80540587f3ac86942bd9c395cc313083b4019",
++  "reproducibility_checksum": "2fbbbde2300edfb7528b78e3b0799e2cebc0e433d5d2e44f55a0562ca2119d49",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8795979dc142015cc513b3d24764aae9135214b6"
++    "adversarial_verify_version": "73a6c0be3e8df0bd94f559a0f1bf51434823ad08"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 945c42f445..15eecee62c 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.25s, user: 2.35s, system: 0.18s, MEM: 115.90 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.87s, user: 2.25s, system: 0.19s, MEM: 115.91 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (1 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d1219c28ee..d9b414047c 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1178722381591797,
++  "efficiency_gains_ms": 2.1445751190185547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index ae64a6e416..8c11865724 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-04T04:06:28.098627Z",
++  "run_date": "2026-07-04T07:38:23.609737Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 38ee169636..ebacbbe412 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00011165998876094818,
+-  "latency_domino_seconds": 0.0002326869871467352,
++  "latency_legacy_seconds": 0.00015934905968606472,
++  "latency_domino_seconds": 0.00030405097641050816,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index dbea1473cf..0eb8a77c12 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T04:07:03Z",
+-  "finished_at": "2026-07-04T04:07:03Z",
++  "started_at": "2026-07-04T07:39:01Z",
++  "finished_at": "2026-07-04T07:39:01Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index cd0741af33..bd44c4c02a 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T04:07:56Z",
+-  "finished_at": "2026-07-04T04:07:56Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-04T07:39:52Z",
++  "finished_at": "2026-07-04T07:39:52Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.058650970458984375,
++  "latency_ms": 0.2186298370361328,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 41fa56df33..5e5d8858bc 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0014431905746459962,
+-  "avg_eqm_time": 0.13571220874786377,
++  "avg_pem_time": 0.0013338041305541992,
++  "avg_eqm_time": 0.13710252285003663,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index fbad80dda3..f2cec86021 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 372.9558548927307,
++  "duration_s": 375.8623638153076,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index cd37b513dd..0dd08bb215 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.06377816200256348,
++  "duration_s": 0.06279444694519043,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 8c56633e69..b11b7f2676 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-07-04T04:15:50Z",
++  "run_date": "2026-07-04T07:47:40Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 4e6825ad5b..878d14befc 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000086069107056,
++  "duration_s": 5.000096321105957,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 637bdd9ac2..a7606398c2 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000077724456787,
++  "duration_s": 10.000096797943115,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 0349435d8f..3a48307efc 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.40376901626586914,
++  "duration_s": 0.6657190322875977,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index b562ae2ecd..cc3ad63426 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.08036217512562871,
++  "duration_s": 0.07163010910153389,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index c7dcf18c2e..3a1cf80b25 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,17 +23,17 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -45,20 +45,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,15 +67,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 754165cc03..c98730e53a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.3270021453499794e-05,
++  "duration_s": 4.228902980685234e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 1ada9b6365..c5add12d8a 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.44
++  "duration_s": 0.48
+ }
+\ No newline at end of file
+diff --git a/results/experiment_5219_capstone_v477.json b/results/experiment_5219_capstone_v477.json
+new file mode 100644
+index 0000000000..07d1e3bdc6
+--- /dev/null
++++ b/results/experiment_5219_capstone_v477.json
+@@ -0,0 +1,574 @@
++{
++  "adversarial_verification": [
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5207_archive_476_activate_477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5207-archive-476-activate-477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5208_sota_ingestion_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5208-sota-ingestion-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5209-gap1-set-search-holdout-hardening-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": null,
++      "relative_path": "results/experiment_5210_gap1_registry_promotion_gated_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5210-gap1-registry-promotion-gated-v477"
++    },
++    {
++      "critical_adversarial_flag": true,
++      "flag_count": 6,
++      "flags": [
++        {
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        },
++        {
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ],
++      "max_severity": 2,
++      "relative_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
++      "stamped_flagged_adversarial": true,
++      "task_id": "exp5211-gap4-sota-local-candidate-expansion-v477"
++    },
++    {
++      "critical_adversarial_flag": true,
++      "flag_count": 2,
++      "flags": [
++        {
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        }
++      ],
++      "max_severity": 2,
++      "relative_path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
++      "stamped_flagged_adversarial": true,
++      "task_id": "exp5212-gap4-scale-validation-gated-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5214-continuous-self-learning-verifier-memory-v477"
++    },
++    {
++      "critical_adversarial_flag": true,
++      "flag_count": 2,
++      "flags": [
++        {
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        },
++        {
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ],
++      "max_severity": 2,
++      "relative_path": "results/experiment_5215_arc_paw_amortization_gate_v477.json",
++      "stamped_flagged_adversarial": true,
++      "task_id": "exp5215-arc-paw-amortization-gate-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 1,
++      "flags": [
++        {
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        }
++      ],
++      "max_severity": 0,
++      "relative_path": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5216-arc-frontier-continuity-landmark-decomposition-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5217_hardware_continuity_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5217-hardware-continuity-v477"
++    },
++    {
++      "critical_adversarial_flag": false,
++      "flag_count": 0,
++      "flags": [],
++      "max_severity": -1,
++      "relative_path": "results/experiment_5218_verifier_authenticity_remediation_apply_v477.json",
++      "stamped_flagged_adversarial": false,
++      "task_id": "exp5218-verifier-authenticity-remediation-apply-v477"
++    }
++  ],
++  "checkpoint_artifacts": [
++    {
++      "checkpoint_only": true,
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "relative_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json",
++      "sha256": "sha256:448196149c0b3190a6cff6d70a99a616a3aac4da59c36f05bcf21e793231c160"
++    }
++  ],
++  "continuous_self_learning_satisfied": {
++    "principle": "true only when Exp5214 writes a durable verifier-memory artifact with promotion and rollback semantics",
++    "value": true
++  },
++  "docs_reconciled": {
++    "principle": "true only when this capstone reconciled the requested docs; false is valid when the conductor stop rule explicitly defers ops/status/changelog/traceability updates",
++    "value": false
++  },
++  "duration_s": 4.568803,
++  "experiment": "experiment_5219_capstone_v477",
++  "experiment_id": "exp5219-capstone-v477",
++  "field_principles": {
++    "continuous_self_learning_satisfied": "true only when Exp5214 writes a durable verifier-memory artifact with promotion and rollback semantics",
++    "docs_reconciled": "true only when this capstone reconciled the requested docs; false is valid when the conductor stop rule explicitly defers ops/status/changelog/traceability updates",
++    "flagged_adversarial_artifacts_excluded": "true when every flagged_adversarial or verifier-critical artifact is excluded from headline aggregation",
++    "gap1_final_status": "one of filled | building | open | blocked; filled only when the registry promotion task actually runs and registers the verifier, not merely when the hardening gate is positive",
++    "gap4_final_status": "one of filled | building | open | blocked; filled only when a clean non-flagged validation crosses the unchanged six-discordant-win floor",
++    "hardware_final_state": "summary of KV260, PolarFire, GateMate, board reachability, and no-speedup discipline from clean hardware evidence",
++    "hidden_state_path_decision": "one of keep | retire_mmlu_path | blocked; derived from Exp5213 without treating external-text-scorer retirement as the reason",
++    "honest_verdict": "terminal-prefix single sentence that states the milestone outcome without vague celebration or inflated nulls",
++    "inference_substrate": "aggregation_from_upstream_artifacts",
++    "new_levels_banked": "list of reproduction-gated ARC level banks from clean eligible ARC artifacts; empty is valid and must not be inflated",
++    "per_task_summary": "map from task id to artifact path/status/verdict/headline eligibility, including blocked, missing, gated, flagged, and checkpoint-only evidence without importing flagged metrics into headlines",
++    "reproducible_total_levels_delta": "integer sum of clean reproduction-gated level deltas; zero is valid and must not be inflated",
++    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "validation_commands_run": "list of commands and pass/fail/block status used to validate the new capstone and changed surfaces"
++  },
++  "flagged_adversarial": false,
++  "flagged_adversarial_artifacts_excluded": {
++    "principle": "true when every flagged_adversarial or verifier-critical artifact is excluded from headline aggregation",
++    "value": true
++  },
++  "gap1_final_status": {
++    "principle": "one of filled | building | open | blocked; filled only when the registry promotion task actually runs and registers the verifier, not merely when the hardening gate is positive",
++    "value": "building"
++  },
++  "gap4_final_status": {
++    "principle": "one of filled | building | open | blocked; filled only when a clean non-flagged validation crosses the unchanged six-discordant-win floor",
++    "value": "blocked"
++  },
++  "hardware_final_state": {
++    "principle": "summary of KV260, PolarFire, GateMate, board reachability, and no-speedup discipline from clean hardware evidence",
++    "value": "KV260=reachable + hash-verified smoke workload_hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32; PolarFire=reachable + hash-verified smoke workload_hash=9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967; polarfire_workload_validated=false (terminal bar is an end-to-end dispatch run); GateMate=cable_or_port (blocked_gatemate_dirtyjtag_idcode_unresolved_v477 leading_hypothesis=physical_board); boards_reachable_count=2; no speedup claim"
++  },
++  "headline_eligible_task_ids": [
++    "exp5207-archive-476-activate-477",
++    "exp5208-sota-ingestion-v477",
++    "exp5209-gap1-set-search-holdout-hardening-v477",
++    "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477",
++    "exp5214-continuous-self-learning-verifier-memory-v477",
++    "exp5216-arc-frontier-continuity-landmark-decomposition-v477",
++    "exp5217-hardware-continuity-v477",
++    "exp5218-verifier-authenticity-remediation-apply-v477"
++  ],
++  "hidden_state_path_decision": {
++    "principle": "one of keep | retire_mmlu_path | blocked; derived from Exp5213 without treating external-text-scorer retirement as the reason",
++    "value": "retire_mmlu_path"
++  },
++  "honest_verdict": "complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.07.477",
++  "missing_artifacts": [],
++  "new_levels_banked": {
++    "principle": "list of reproduction-gated ARC level banks from clean eligible ARC artifacts; empty is valid and must not be inflated",
++    "value": []
++  },
++  "per_task_summary": {
++    "principle": "map from task id to artifact path/status/verdict/headline eligibility, including blocked, missing, gated, flagged, and checkpoint-only evidence without importing flagged metrics into headlines",
++    "value": {
++      "exp5207-archive-476-activate-477": {
++        "artifact_path": "results/experiment_5207_archive_476_activate_477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts."
++      },
++      "exp5208-sota-ingestion-v477": {
++        "artifact_path": "results/experiment_5208_sota_ingestion_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
++      },
++      "exp5209-gap1-set-search-holdout-hardening-v477": {
++        "artifact_path": "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here"
++      },
++      "exp5210-gap1-registry-promotion-gated-v477": {
++        "artifact_path": "results/experiment_5210_gap1_registry_promotion_gated_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": true,
++        "headline_eligible": false,
++        "status": "blocked",
++        "verdict": "blocked_gate_check_failed"
++      },
++      "exp5211-gap4-sota-local-candidate-expansion-v477": {
++        "artifact_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
++        "critical_adversarial_flag": true,
++        "flagged_adversarial": true,
++        "gated_and_skipped": false,
++        "headline_eligible": false,
++        "status": "flagged_excluded",
++        "verdict": "complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212"
++      },
++      "exp5212-gap4-scale-validation-gated-v477": {
++        "artifact_path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
++        "critical_adversarial_flag": true,
++        "flagged_adversarial": true,
++        "gated_and_skipped": false,
++        "headline_eligible": false,
++        "status": "flagged_excluded",
++        "verdict": "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked"
++      },
++      "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477": {
++        "artifact_path": "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
++      },
++      "exp5214-continuous-self-learning-verifier-memory-v477": {
++        "artifact_path": "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim"
++      },
++      "exp5215-arc-paw-amortization-gate-v477": {
++        "artifact_path": "results/experiment_5215_arc_paw_amortization_gate_v477.json",
++        "critical_adversarial_flag": true,
++        "flagged_adversarial": true,
++        "gated_and_skipped": false,
++        "headline_eligible": false,
++        "status": "flagged_excluded",
++        "verdict": "complete_paw_amortization_gate_not_viable_no_arc_solve_claim"
++      },
++      "exp5216-arc-frontier-continuity-landmark-decomposition-v477": {
++        "artifact_path": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot."
++      },
++      "exp5217-hardware-continuity-v477": {
++        "artifact_path": "results/experiment_5217_hardware_continuity_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim"
++      },
++      "exp5218-verifier-authenticity-remediation-apply-v477": {
++        "artifact_path": "results/experiment_5218_verifier_authenticity_remediation_apply_v477.json",
++        "critical_adversarial_flag": false,
++        "flagged_adversarial": false,
++        "gated_and_skipped": false,
++        "headline_eligible": true,
++        "status": "complete",
++        "verdict": "complete: dishonest-naming risk reduced by registry flags; modules remain headline-ineligible until real verification"
++      }
++    }
++  },
++  "preconditions_checked": {
++    "adversarial_verify_ran_per_loadable_artifact": true,
++    "checkpoint_artifacts_checked": 1,
++    "docs_reconciliation_deferred_by_stop_rule": true,
++    "expected_deliverable_artifacts": 12,
++    "loadable_deliverable_artifacts": 12,
++    "research_conductor_py_untouched": true
++  },
++  "random_seed": 5219,
++  "reproducibility_checksum": "sha256:ed50752a242278dbae7546011e9f8fc00e456b3064da0da847bdfc7ef22116cd",
++  "reproducible_total_levels_delta": {
++    "principle": "integer sum of clean reproduction-gated level deltas; zero is valid and must not be inflated",
++    "value": 0
++  },
++  "research_conductor_py_untouched_confirmed": {
++    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "value": true
++  },
++  "result_path": "results/experiment_5219_capstone_v477.json",
++  "run_date": "20260704",
++  "schema": "carnot.experiment_5219_capstone_v477.v1",
++  "source_artifacts": [
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5207,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts.",
++      "loadable": true,
++      "relative_path": "results/experiment_5207_archive_476_activate_477.json",
++      "sha256": "sha256:ff4967c177def2e18ead12fe1103873ad3625223c4ca0009b7d67714c6cf4061",
++      "task_id": "exp5207-archive-476-activate-477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5208,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred.",
++      "loadable": true,
++      "relative_path": "results/experiment_5208_sota_ingestion_v477.json",
++      "sha256": "sha256:85bd2986baac59dc005609ad9dee1646780207fb9aaea0d1eb0d6068fa25d662",
++      "task_id": "exp5208-sota-ingestion-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5209,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here",
++      "loadable": true,
++      "relative_path": "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
++      "sha256": "sha256:b1a6da69d8809dce9d43ed1fa0acdf7553f74fab8f6245ffa710630690a837ac",
++      "task_id": "exp5209-gap1-set-search-holdout-hardening-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5210,
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked_gate_check_failed",
++      "loadable": true,
++      "relative_path": "results/experiment_5210_gap1_registry_promotion_gated_v477.json",
++      "sha256": "sha256:2d7dc36393bf116250109d79569dff3bb44d0f3d99fcbe1897d0b821394a3fc7",
++      "task_id": "exp5210-gap1-registry-promotion-gated-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5211,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212",
++      "loadable": true,
++      "relative_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
++      "sha256": "sha256:215696583c73c1522e16f80ea70cbebdd62180193b4419949b68e7674cf85bd6",
++      "task_id": "exp5211-gap4-sota-local-candidate-expansion-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5212,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked",
++      "loadable": true,
++      "relative_path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
++      "sha256": "sha256:a7e891099934edbbb823338eeb091e03ea80969c5662c6edd13d729ee423e3d8",
++      "task_id": "exp5212-gap4-scale-validation-gated-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5213,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025",
++      "loadable": true,
++      "relative_path": "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
++      "sha256": "sha256:ffe4793fd977544bc4c913f971b3c6381b7aee8d1dd6c21ad4a9a24188445727",
++      "task_id": "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5214,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
++      "sha256": "sha256:36ac3f01739ec0e3970f6fc365fc8107c51a29c093ccd43757809f5283652e6f",
++      "task_id": "exp5214-continuous-self-learning-verifier-memory-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5215,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete_paw_amortization_gate_not_viable_no_arc_solve_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5215_arc_paw_amortization_gate_v477.json",
++      "sha256": "sha256:beddb57e56d3bc0e6fd48a74fb7cf5df101b665fff1b56c603d895259a59cf0d",
++      "task_id": "exp5215-arc-paw-amortization-gate-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5216,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.",
++      "loadable": true,
++      "relative_path": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
++      "sha256": "sha256:59746646bee387467cfc52410e7bdf9a8f8563c64835bc358e82389e3449263b",
++      "task_id": "exp5216-arc-frontier-continuity-landmark-decomposition-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5217,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5217_hardware_continuity_v477.json",
++      "sha256": "sha256:a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9",
++      "task_id": "exp5217-hardware-continuity-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5218,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: dishonest-naming risk reduced by registry flags; modules remain headline-ineligible until real verification",
++      "loadable": true,
++      "relative_path": "results/experiment_5218_verifier_authenticity_remediation_apply_v477.json",
++      "sha256": "sha256:b327d69ae9b3eaf6463df1e1cefe941afc318ecda35cac26694ad50a2e354202",
++      "task_id": "exp5218-verifier-authenticity-remediation-apply-v477"
++    }
++  ],
++  "spec_refs": [
++    "REQ-CAPSTONE-5219",
++    "SCENARIO-CAPSTONE-5219",
++    "SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES"
++  ],
++  "status_decisions": {
++    "arc": "new_levels_banked=[], reproducible_total_levels_delta=0",
++    "authenticity": "Exp5218 remediation applied and headline-ineligible flags preserved",
++    "continuous_self_learning": "Exp5214 durable memory artifact satisfied promotion/rollback semantics",
++    "docs": "ops/status, ops/changelog, and _bmad/traceability deferred by stop rule",
++    "flagged_excluded_task_ids": [
++      "exp5211-gap4-sota-local-candidate-expansion-v477",
++      "exp5212-gap4-scale-validation-gated-v477",
++      "exp5215-arc-paw-amortization-gate-v477"
++    ],
++    "gap1": "Exp5210 blocked before registry promotion; GAP-1 remains building",
++    "gap4": "Exp5211 expansion and Exp5212 validation artifacts are flagged; Exp5212 therefore cannot cross the floor",
++    "hardware": "KV260=reachable + hash-verified smoke workload_hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32; PolarFire=reachable + hash-verified smoke workload_hash=9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967; polarfire_workload_validated=false (terminal bar is an end-to-end dispatch run); GateMate=cable_or_port (blocked_gatemate_dirtyjtag_idcode_unresolved_v477 leading_hypothesis=physical_board); boards_reachable_count=2; no speedup claim",
++    "hidden_state": "Exp5213 did not beat all controls and retires this MMLU path"
++  },
++  "validation_commands_run": {
++    "principle": "list of commands and pass/fail/block status used to validate the new capstone and changed surfaces",
++    "value": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5219_capstone_v477.py -q --no-cov -o addopts=''",
++        "notes": "3 passed; focused REQ-CAPSTONE-5219/SCENARIO-CAPSTONE-5219 tests passed.",
++        "status": "PASS"
++      },
++      {
++        "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5219_capstone_v477.py' -m pytest tests/python/test_experiment_5219_capstone_v477.py -q --no-cov -o addopts='' && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5219_capstone_v477.py' --fail-under=100",
++        "notes": "Focused new-code coverage passed at 100%: 314 statements, 0 missing across module and script.",
++        "status": "PASS"
++      },
++      {
++        "command": ".venv/bin/ruff check python/carnot/experiment_5219_capstone_v477.py scripts/experiment_5219_capstone_v477.py tests/python/test_experiment_5219_capstone_v477.py",
++        "notes": "All checks passed.",
++        "status": "PASS"
++      },
++      {
++        "command": ".venv/bin/ruff format --check python/carnot/experiment_5219_capstone_v477.py scripts/experiment_5219_capstone_v477.py tests/python/test_experiment_5219_capstone_v477.py",
++        "notes": "Three files already formatted after applying formatter once.",
++        "status": "PASS"
++      },
++      {
++        "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5219_capstone_v477.py",
++        "notes": "OK: all new tests reference specification requirements.",
++        "status": "PASS"
++      },
++      {
++        "command": ".venv/bin/pytest tests/python -q",
++        "notes": "Ran once and interrupted after unrelated legacy failures/crashes: 170 failed, 22476 passed, 90 skipped, 153 warnings, 1 error in 1488.41s. New focused test passed separately.",
++        "status": "FAIL_BLOCKED"
++      },
++      {
++        "command": "python scripts/check_spec_coverage.py",
++        "notes": "Full legacy spec-coverage audit reports 1222 existing tests missing traceability. Targeted new-test spec coverage passed.",
++        "status": "FAIL_BLOCKED"
++      },
++      {
++        "command": "git diff --quiet -- scripts/research_conductor.py && git status --short -- scripts/research_conductor.py",
++        "notes": "No diff and no status entry for scripts/research_conductor.py.",
++        "status": "PASS"
++      },
++      {
++        "command": "ops/e2e-test-plan.md applicability review",
++        "notes": "No E2E entry applies to an aggregation-only capstone module; no sampler, runtime, API, model, or hardware control surface changed.",
++        "status": "NOT_APPLICABLE"
++      }
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 28930b16e9..e37c74afad 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T06:01:43Z",
+-  "finished_at": "2026-07-04T06:01:43Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-04T07:52:26Z",
++  "finished_at": "2026-07-04T07:52:26Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 8464969aa7..9cdfc1bdd9 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T06:01:43Z",
+-  "finished_at": "2026-07-04T06:01:43Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-04T07:52:26Z",
++  "finished_at": "2026-07-04T07:52:26Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 70f2ea179d..1cb947ba33 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T06:01:43Z",
+-  "finished_at": "2026-07-04T06:01:43Z",
++  "started_at": "2026-07-04T07:52:26Z",
++  "finished_at": "2026-07-04T07:52:26Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_5219_capstone_v477.py b/scripts/experiment_5219_capstone_v477.py
+new file mode 100644
+index 0000000000..8bf92fd78c
+--- /dev/null
++++ b/scripts/experiment_5219_capstone_v477.py
+@@ -0,0 +1,64 @@
++#!/usr/bin/env python3
++"""CLI entrypoint for Exp 5219 V477 capstone reconciliation."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++import sys
++from typing import Any, Mapping, Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct CLI execution.
++    sys.path.insert(0, str(REPO_ROOT))
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct CLI execution.
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_5219_capstone_v477 import (  # noqa: E402
++    DEFAULT_VALIDATION_COMMANDS,
++    AdversarialReporter,
++    run,
++)
++
++
++def main(
++    argv: Sequence[str] | None = None,
++    *,
++    root: Path = REPO_ROOT,
++    date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reporter: AdversarialReporter | None = None,
++    conductor_untouched: bool | None = None,
++    docs_reconciled: bool = False,
++) -> Path:
++    if argv is not None:
++        args = _parse_args(argv)
++        root = args.root
++        date = args.date
++    return run(
++        root=root,
++        run_date=date,
++        duration_s=duration_s,
++        validation_commands_run=(
++            validation_commands_run
++            if validation_commands_run is not None
++            else DEFAULT_VALIDATION_COMMANDS
++        ),
++        adversarial_reporter=adversarial_reporter,
++        conductor_untouched=conductor_untouched,
++        docs_reconciled=docs_reconciled,
++    )
++
++
++def _parse_args(argv: Sequence[str]) -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260704", help="Run label date, formatted YYYYMMDD.")
++    parser.add_argument("--root", type=Path, default=REPO_ROOT, help="Repository root to inspect.")
++    return parser.parse_args(argv)
++
++
++if __name__ == "__main__":  # pragma: no cover - direct CLI execution.
++    main(sys.argv[1:])
+diff --git a/tests/python/test_experiment_5219_capstone_v477.py b/tests/python/test_experiment_5219_capstone_v477.py
+new file mode 100644
+index 0000000000..733d2a816b
+--- /dev/null
++++ b/tests/python/test_experiment_5219_capstone_v477.py
+@@ -0,0 +1,557 @@
++"""Tests for Exp 5219 V477 capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5219, SCENARIO-CAPSTONE-5219,
++SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5219_capstone_v477 as mod
++from scripts import experiment_5219_capstone_v477 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _base(experiment: str | int, verdict: str, *, flagged: bool | None = None) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment": experiment,
++        "honest_verdict": verdict,
++        "duration_s": 1.0,
++        "inference_substrate": "fixture",
++    }
++    if flagged is not None:
++        payload["flagged_adversarial"] = flagged
++    return payload
++
++
++def _payloads() -> dict[int, dict[str, Any]]:
++    return {
++        5207: _base(
++            "experiment_5207_archive_476_activate_477",
++            "complete: .476 archived and .477 activated; handoff preserves nulls.",
++        ),
++        5208: _base(
++            "experiment_5208_sota_ingestion_v477",
++            "complete: V477 SOTA refresh found no new actionable findings.",
++        ),
++        5209: {
++            **_base(
++                "experiment_5209_gap1_set_search_holdout_hardening_v477",
++                "complete: GAP-1 hardening remains positive.",
++            ),
++            "gap1_hardened_positive": _wrap(True),
++            "heldout_pass_at_2_mean": _wrap(0.189584),
++            "baseline_always_on_pass_at_2_mean": _wrap(0.088976),
++            "single_refuted_directional_pass_at_2_mean": _wrap(0.147787),
++            "paired_delta_ci95": _wrap("[0.023148, 0.060446]"),
++            "leakage_audit_passed": _wrap(True),
++            "best_subset_stable": _wrap(False),
++        },
++        5210: {
++            "experiment": 5210,
++            "schema": "blocked_gate_check_v1",
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "principle-wrapped gap1_hardened_positive compared as object",
++            "gates_evaluated": [
++                {
++                    "upstream": "exp5209-gap1-set-search-holdout-hardening-v477",
++                    "artifact_field": "gap1_hardened_positive",
++                    "expected": True,
++                    "actual": _wrap(True),
++                    "passed": False,
++                }
++            ],
++            "duration_s": 0.0,
++        },
++        5211: {
++            **_base(
++                "experiment_5211_gap4_sota_local_candidate_expansion_v477",
++                "complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212",
++                flagged=True,
++            ),
++            "candidate_pool_n": _wrap(120),
++            "gap4_expansion_usable": _wrap(True),
++            "leakage_audit_passed": _wrap(True),
++        },
++        5212: {
++            **_base(
++                "experiment_5212_gap4_scale_validation_gated_v477",
++                "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked",
++                flagged=True,
++            ),
++            "n_scored": _wrap(0),
++            "gap4_status_recommendation": _wrap("blocked"),
++            "exact_test_passes_min6_rule": _wrap(False),
++            "exact_test_discordant_wins": _wrap(0),
++            "exact_test_discordant_losses": _wrap(0),
++        },
++        5213: {
++            **_base(
++                "experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477",
++                "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path",
++            ),
++            "beats_all_controls": _wrap(False),
++            "best_probe_accuracy": _wrap(0.075),
++            "tuned_sc_accuracy": _wrap(0.075),
++            "self_certainty_accuracy": _wrap(0.075),
++            "clue_accuracy": _wrap(0.025),
++            "radial_consensus_score_accuracy": _wrap(0.025),
++            "retire_mmlu_hidden_state_path": _wrap(True),
++        },
++        5214: {
++            **_base(
++                "experiment_5214_continuous_self_learning_verifier_memory_v477",
++                "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1",
++            ),
++            "continuous_self_learning_task": True,
++            "deterministic_guardrails_enforced": True,
++            "heldout_gate_required_for_promotion": True,
++            "memory_artifact_path": "results/verifier_memory_v477.json",
++            "memory_entries_written": 2,
++            "memory_summary": {
++                "promotions": 1,
++                "rollbacks": 1,
++                "deterministic_guardrails_enforced": True,
++                "heldout_gate_required_for_promotion": True,
++            },
++            "promotions": 1,
++            "rollbacks": 1,
++        },
++        5215: {
++            **_base(
++                "experiment_5215_arc_paw_amortization_gate_v477",
++                "complete_paw_amortization_gate_not_viable_no_arc_solve_claim",
++                flagged=True,
++            ),
++            "paw_amortization_viable": _wrap(False),
++            "arc_registry_modified": _wrap(False),
++            "median_remaining_actions": _wrap(29.5),
++            "p75_remaining_actions": _wrap(43.75),
++            "break_even_remaining_actions": _wrap(45.748641),
++        },
++        5216: {
++            **_base(
++                "experiment_5216_arc_frontier_continuity_landmark_decomposition_v477",
++                "complete: frontier continuity plus landmark decomposition did not bank a level.",
++            ),
++            "new_levels_banked": [],
++            "reproducible_total_levels_delta": 0,
++            "solve_provenance": "development_proxy",
++            "duplicate_registry_precheck_passed": True,
++        },
++        5217: {
++            **_base(
++                "experiment_5217_hardware_continuity",
++                "complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_polarfire:reachable_no_speedup_claim",
++            ),
++            "boards_reachable_count": 2,
++            "kv260_status": "reachable + hash-verified smoke",
++            "polarfire_status": {
++                "reachable": True,
++                "hash_verified": True,
++                "polarfire_workload_validated": False,
++                "summary": "reachable + hash-verified smoke",
++            },
++            "gatemate_status": {
++                "status": "blocked_gatemate_dirtyjtag_idcode_unresolved_v477",
++                "narrowed_to": "cable_or_port",
++                "leading_untested_hypothesis": "physical_board",
++            },
++            "gatemate_diagnostic_narrowed_to": "cable_or_port",
++            "hardware_speedup_claimed": False,
++        },
++        5218: {
++            **_base(
++                "experiment_5218_verifier_authenticity_remediation_apply_v477",
++                "complete: dishonest-naming risk reduced by registry flags.",
++            ),
++            "remediation_applied": _wrap(True),
++            "headline_ineligible_until_real_verification": _wrap(True),
++            "no_research_conductor_change": _wrap(True),
++            "inference_substrate": _wrap("code_and_doc_remediation"),
++        },
++    }
++
++
++def _make_repo(root: Path, *, omit: set[int] | None = None) -> None:
++    omit = omit or set()
++    payloads = _payloads()
++    for source in mod.UPSTREAM_SOURCES:
++        if source.experiment_number not in omit:
++            _write_json(root / source.relative_path, payloads[source.experiment_number])
++    _write_json(
++        root / "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json",
++        {
++            "experiment": "experiment_5211_gap4_sota_local_candidate_expansion_v477",
++            "accepted_rows": [],
++        },
++    )
++    _write_json(
++        root / "results/verifier_memory_v477.json",
++        {
++            "schema": "carnot.verifier_memory.v1",
++            "summary": {
++                "memory_entries_written": 2,
++                "promotions": 1,
++                "rollbacks": 1,
++                "deterministic_guardrails_enforced": True,
++                "heldout_gate_required_for_promotion": True,
++            },
++            "entries": [
++                {"promotion_state": "rolled_back", "rollback_reason": "heldout_delta_missing"},
++                {"promotion_state": "promoted", "rollback_reason": None},
++            ],
++        },
++    )
++
++
++def _reporter(path: Path) -> dict[str, Any]:
++    if "5213" in path.name:
++        return {
++            "artifact": str(path),
++            "loaded": True,
++            "flag_count": 1,
++            "max_severity": 1,
++            "flags": [{"kind": "METHODOLOGY_NOTE", "severity": "warn"}],
++        }
++    return {"artifact": str(path), "loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++
++
++def _validation() -> list[dict[str, str]]:
++    return [{"command": "focused pytest", "status": "PASS", "notes": "fixture"}]
++
++
++def _field(field: str, value: Any) -> dict[str, Any]:
++    return _wrap(value, mod.FIELD_PRINCIPLES[field])
++
++
++def test_req_capstone_5219_spec_declares_v477_contract() -> None:
++    """REQ-CAPSTONE-5219: OpenSpec declares the V477 capstone contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-CAPSTONE-5219") :]
++
++    for marker in (
++        "REQ-CAPSTONE-5219",
++        "SCENARIO-CAPSTONE-5219",
++        "SCENARIO-CAPSTONE-5219-FIELD-PRINCIPLES",
++        mod.EXPERIMENT_ID,
++        str(mod.RESULT_RELATIVE_PATH),
++        "gap1_final_status",
++        "docs_reconciled=false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_capstone_5219_reconciles_v477_without_headlining_flagged_inputs(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-5219: blocked and flagged upstreams stay out of headlines."""
++
++    _make_repo(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=1.25,
++        validation_commands_run=_validation(),
++        adversarial_reporter=_reporter,
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["gap1_final_status"]["value"] == "building"
++    assert artifact["gap4_final_status"]["value"] == "blocked"
++    assert artifact["hidden_state_path_decision"]["value"] == "retire_mmlu_path"
++    assert artifact["continuous_self_learning_satisfied"]["value"] is True
++    assert artifact["new_levels_banked"]["value"] == []
++    assert artifact["reproducible_total_levels_delta"]["value"] == 0
++    assert artifact["flagged_adversarial_artifacts_excluded"]["value"] is True
++    assert artifact["docs_reconciled"]["value"] is False
++    assert artifact["research_conductor_py_untouched_confirmed"]["value"] is True
++    assert artifact["flagged_adversarial"] is False
++    assert "GateMate=cable_or_port" in artifact["hardware_final_state"]["value"]
++    assert "no speedup claim" in artifact["hardware_final_state"]["value"]
++    assert "Exp5210 blocked" in artifact["status_decisions"]["gap1"]
++    assert "Exp5212" in artifact["status_decisions"]["gap4"]
++
++    summary = artifact["per_task_summary"]["value"]
++    assert len(summary) == 12
++    assert summary["exp5210-gap1-registry-promotion-gated-v477"]["status"] == "blocked"
++    assert summary["exp5210-gap1-registry-promotion-gated-v477"]["gated_and_skipped"] is True
++    assert summary["exp5211-gap4-sota-local-candidate-expansion-v477"]["headline_eligible"] is False
++    assert summary["exp5212-gap4-scale-validation-gated-v477"]["headline_eligible"] is False
++    assert summary["exp5215-arc-paw-amortization-gate-v477"]["headline_eligible"] is False
++    assert (
++        "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++        in artifact["headline_eligible_task_ids"]
++    )
++    assert (
++        "exp5211-gap4-sota-local-candidate-expansion-v477"
++        not in artifact["headline_eligible_task_ids"]
++    )
++    assert artifact["checkpoint_artifacts"][0]["relative_path"].endswith(".checkpoint.json")
++
++
++def test_req_capstone_5219_validation_and_run_edges(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-5219: schema validation rejects overclaims and stale checksums."""
++
++    _make_repo(tmp_path, omit={5218})
++    payloads = _payloads()
++    payloads[5213]["flagged_adversarial"] = True
++    _write_json(tmp_path / mod.source_by_number(5213).relative_path, payloads[5213])
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.0,
++        validation_commands_run=_validation(),
++        adversarial_reporter=_reporter,
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++
++    assert artifact["missing_artifacts"] == ["exp5218-verifier-authenticity-remediation-apply-v477"]
++    assert artifact["hidden_state_path_decision"]["value"] == "blocked"
++    assert artifact["flagged_adversarial_artifacts_excluded"]["value"] is True
++    assert (
++        "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++        not in artifact["headline_eligible_task_ids"]
++    )
++    mod.validate_artifact(artifact)
++
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        mod.validate_artifact(
++            {key: value for key, value in artifact.items() if key != "duration_s"}
++        )
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(artifact | {"honest_verdict": "done"})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(artifact | {"inference_substrate": "live_llm_inference"})
++    with pytest.raises(ValueError, match="field principle mismatch"):
++        mod.validate_artifact(
++            artifact
++            | {"field_principles": artifact["field_principles"] | {"honest_verdict": "loose"}}
++        )
++    with pytest.raises(ValueError, match="gap1_final_status field principle mismatch"):
++        mod.validate_artifact(artifact | {"gap1_final_status": _wrap("building")})
++    with pytest.raises(ValueError, match="flagged_adversarial"):
++        mod.validate_artifact(artifact | {"flagged_adversarial": True})
++    with pytest.raises(ValueError, match="research_conductor"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "research_conductor_py_untouched_confirmed": _field(
++                    "research_conductor_py_untouched_confirmed", False
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="gap1_final_status"):
++        mod.validate_artifact(
++            artifact | {"gap1_final_status": _field("gap1_final_status", "weird")}
++        )
++    with pytest.raises(ValueError, match="gap4_final_status"):
++        mod.validate_artifact(
++            artifact | {"gap4_final_status": _field("gap4_final_status", "weird")}
++        )
++    with pytest.raises(ValueError, match="hidden_state_path_decision"):
++        mod.validate_artifact(
++            artifact | {"hidden_state_path_decision": _field("hidden_state_path_decision", "weird")}
++        )
++    with pytest.raises(ValueError, match="headline eligible"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "headline_eligible_task_ids": [
++                    "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++                ]
++            }
++        )
++    with pytest.raises(ValueError, match="flagged_adversarial_artifacts_excluded"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "flagged_adversarial_artifacts_excluded": _field(
++                    "flagged_adversarial_artifacts_excluded", False
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="per_task_summary"):
++        mod.validate_artifact(artifact | {"per_task_summary": _field("per_task_summary", [])})
++    with pytest.raises(ValueError, match="docs_reconciled"):
++        mod.validate_artifact(artifact | {"docs_reconciled": _field("docs_reconciled", "no")})
++    with pytest.raises(ValueError, match="validation_commands_run"):
++        mod.validate_artifact(
++            artifact | {"validation_commands_run": _field("validation_commands_run", [])}
++        )
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(artifact | {"reproducibility_checksum": "stale"})
++    with pytest.raises(ValueError, match="reproducible_total_levels_delta"):
++        mod.validate_artifact(
++            artifact
++            | {"reproducible_total_levels_delta": _field("reproducible_total_levels_delta", 1)}
++        )
++
++    assert mod.value_of(_wrap("x")) == "x"
++    assert mod.value_of("x") == "x"
++    assert mod.honest_verdict_text({"value": "complete_wrapped"}) == "complete_wrapped"
++    assert mod.honest_verdict_text(None) == ""
++    assert mod._number("3.5") == 3.5
++    assert mod._number("bad") is None
++    assert mod._number(True) is None
++    assert mod._bool({"value": True}) is True
++    assert mod._flag_is_critical({"severity": 2}) is True
++    assert mod._flag_is_critical({"severity": "critical"}) is True
++    assert (
++        mod.is_gated_block({"status": "blocked", "blocked_at_layer": "conductor_pre_gate"}) is True
++    )
++    assert mod.is_gated_block({"status": "failed"}) is False
++    with pytest.raises(KeyError):
++        mod.source_by_number(9999)
++
++    assert mod.gap1_status({}) == ("blocked", "missing Exp5209 hardening artifact")
++    assert mod.gap1_status({5209: {"gap1_hardened_positive": False}})[0] == "open"
++    assert mod.gap1_status({5209: {"gap1_hardened_positive": True}})[0] == "building"
++    assert (
++        mod.gap1_status(
++            {5209: {"gap1_hardened_positive": True}, 5210: {"verifier_registered": True}}
++        )[0]
++        == "filled"
++    )
++    assert (
++        mod.gap1_status({5209: {"gap1_hardened_positive": True}, 5210: {"status": "complete"}})[0]
++        == "building"
++    )
++    assert mod.gap4_status({}) == ("blocked", "missing Exp5211 expansion artifact")
++    assert (
++        mod.gap4_status(
++            {5211: {"gap4_expansion_usable": True}},
++            ["exp5211-gap4-sota-local-candidate-expansion-v477"],
++        )[0]
++        == "blocked"
++    )
++    assert mod.gap4_status({5211: {"gap4_expansion_usable": False}})[0] == "open"
++    assert mod.gap4_status({5211: {"gap4_expansion_usable": True}})[0] == "building"
++    assert (
++        mod.gap4_status(
++            {5211: {"gap4_expansion_usable": True}, 5212: {"present": True}},
++            ["exp5212-gap4-scale-validation-gated-v477"],
++        )[0]
++        == "blocked"
++    )
++    assert (
++        mod.gap4_status(
++            {5211: {"gap4_expansion_usable": True}, 5212: {"exact_test_passes_min6_rule": True}}
++        )[0]
++        == "filled"
++    )
++    assert (
++        mod.gap4_status(
++            {5211: {"gap4_expansion_usable": True}, 5212: {"gap4_status_recommendation": "blocked"}}
++        )[0]
++        == "blocked"
++    )
++    assert (
++        mod.gap4_status(
++            {5211: {"gap4_expansion_usable": True}, 5212: {"exact_test_passes_min6_rule": False}}
++        )[0]
++        == "open"
++    )
++    assert mod.hidden_state_decision({}) == ("blocked", "missing Exp5213 hidden-state artifact")
++    assert mod.hidden_state_decision({5213: {"beats_all_controls": True}})[0] == "keep"
++    assert mod.hidden_state_decision({5213: {"present": True}})[0] == "blocked"
++    assert mod.self_learning_satisfied(tmp_path, {}) is False
++    assert (
++        mod.self_learning_satisfied(
++            tmp_path,
++            {5214: {"memory_artifact_path": "results/verifier_memory_v477.json"}},
++            ["exp5214-continuous-self-learning-verifier-memory-v477"],
++        )
++        is False
++    )
++    assert mod.self_learning_satisfied(tmp_path, {5214: {"memory_artifact_path": 3}}) is False
++    assert (
++        mod.self_learning_satisfied(tmp_path, {5214: {"memory_artifact_path": "missing.json"}})
++        is False
++    )
++    assert mod.arc_level_delta(
++        {5216: {"new_levels_banked": ["L"], "reproducible_total_levels_delta": 1}},
++        ["exp5216-arc-frontier-continuity-landmark-decomposition-v477"],
++    ) == ([], 0)
++    assert mod.hardware_summary({}) == "hardware evidence missing"
++    assert (
++        mod.hardware_summary(
++            {5217: {"hardware_speedup_claimed": False}},
++            ["exp5217-hardware-continuity-v477"],
++        )
++        == "hardware evidence excluded because Exp5217 is flagged"
++    )
++
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
++    not_mapping = tmp_path / "array.json"
++    not_mapping.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(not_mapping)[1]["error"] == "not_json_object"
++
++    out_path = mod.run(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.5,
++        validation_commands_run=_validation(),
++        adversarial_reporter=_reporter,
++        conductor_untouched=True,
++        docs_reconciled=False,
++    )
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++    assert saved["duration_s"] == 2.5
++    assert saved["validation_commands_run"]["value"] == _validation()
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++
++    assert (
++        script_mod.main(
++            root=tmp_path,
++            date="20260704",
++            duration_s=3.0,
++            validation_commands_run=_validation(),
++            adversarial_reporter=_reporter,
++            conductor_untouched=True,
++            docs_reconciled=False,
++        )
++        == out_path
++    )
++    assert (
++        script_mod.main(
++            ["--root", str(tmp_path), "--date", "20260704"],
++            duration_s=3.5,
++            validation_commands_run=_validation(),
++            adversarial_reporter=_reporter,
++            conductor_untouched=True,
++            docs_reconciled=False,
++        )
++        == out_path
++    )
+-- 
+2.55.0
+

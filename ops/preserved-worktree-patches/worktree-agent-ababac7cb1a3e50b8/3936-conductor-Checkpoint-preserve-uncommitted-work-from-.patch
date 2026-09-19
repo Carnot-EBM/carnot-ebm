@@ -1,0 +1,43 @@
+From 5b630b5cdd2bb7d940d8f86c7128b34ff2899178 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 01:25:42 -0400
+Subject: [PATCH 03936/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e22cbd9747..7d8f7bc437 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 152, "phase": "iteration_start", "last_beat": "2026-06-25T04:46:00Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 153, "phase": "iteration_start", "last_beat": "2026-06-25T05:25:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dd01b177d8..0030d363e5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9232,3 +9232,4 @@ c |
+ | 2026-06-25 04:04 UTC | PHASE 0 (TRANSITION) -- archive .433 -> activate . | OK | 86 passed, 1 warning in 5.82s |
+ | 2026-06-25 04:26 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 106 passed, 1 warning in 8.68s |
+ | 2026-06-25 04:44 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the SURFACING l | OK | 106 passed, 1 warning in 8.17s |
++| 2026-06-25 05:23 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 117 passed, 1 warning in 7.36s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3e27d84e99..e4a0899818 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 152, "phase": "iteration_start", "started_at": "2026-06-25T04:46:00Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 153, "phase": "iteration_start", "started_at": "2026-06-25T05:25:40Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

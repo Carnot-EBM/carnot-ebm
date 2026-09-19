@@ -1,0 +1,785 @@
+From e3bd75894314542fc1a061cb010a734dd4bdb1eb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 15:28:45 -0400
+Subject: [PATCH 01304/11362] [conductor] SOTA-INGESTION SLOT (mandatory per
+ the standing 2026-06-11 discipline; .375 headline is a bleeding-edge track):
+ read research-references.md (the '2026-06-11 Post-.374 Planning Sweep'
+ section already filed) + research-studying.md filtered to .375's two
+ bleeding-edge tracks (un-saturated execution-verification corpora for the
+ off-ARC POWER measurement + verifier-guided online action-pruning for the
+ efficient harness), run a FOCUSED fresh sweep via scripts/sweep_clusters.py +
+ sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NEVER
+ /deep-research -- it rate-limited 4x/6M-tokens/zero-output 2026-06-11), and
+ emit a SOTA->experiment mapping artifact (strongest 3-5 methods per track,
+ implementation-over-current-stack, pitfalls). Flag the strongest method(s) as
+ candidate inputs for the .376 roadmap. Every method claim MUST cite a real
+ arXiv ID/URL (no-fabrication bar).
+
+Automated research step by research conductor.
+Task ID: exp4055-sota-ingestion-unsaturated-execverif-and-verifier-pruner
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...saturated-execverif-and-verifier-pruner.md | 262 ++++++++++++++++++
+ .../capabilities/research-reporting/spec.md   |  65 +++++
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/sota_ingestion_4055.py          | 118 ++++++++
+ research-studying.md                          |  30 +-
+ ...xperiment_4055_sota_ingestion_receipt.json |  49 ++++
+ .../test_sota_ingestion_receipt_4055.py       | 165 +++++++++++
+ 7 files changed, 689 insertions(+), 2 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md
+ create mode 100644 python/carnot/sota_ingestion_4055.py
+ create mode 100644 results/experiment_4055_sota_ingestion_receipt.json
+ create mode 100644 tests/python/test_sota_ingestion_receipt_4055.py
+
+diff --git a/docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md b/docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md
+new file mode 100644
+index 0000000000..8a33aad211
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md
+@@ -0,0 +1,262 @@
++# SOTA ingestion 2026-06-11: unsaturated execution verification + verifier pruner
++
++**Receipt fields**
++- honest_verdict: `complete: sota_ingestion_unsaturated_execverif_and_pruner_mapped`
++- methods_mapped_count: 10
++- inference_substrate: `aggregation_from_upstream_artifacts`
++- flagged_for_v376:
++  - `evalplus_hidden_rescore_fixed_pool`
++  - `saga_generated_tests_as_discriminator_arm`
++  - `gap4_online_pruner_for_explore_first_arc`
++  - `equivpruner_state_action_cache_for_arc`
++
++**Citations**
++- {arxiv_id_or_url: `https://arxiv.org/abs/2305.01210`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2403.07974`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2507.06920`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2604.21598`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2604.06485`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2604.03922`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2602.01070`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2602.03975`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2505.16312`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2603.28135`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2603.28376`}
++- {arxiv_id_or_url: `https://arxiv.org/abs/2510.06135`}
++
++**Fresh pass provenance**
++
++Read the seed corpus from `research-references.md` section
++"2026-06-11 Post-.374 Planning Sweep (Milestone 2026.06.375)" and filtered
++`research-studying.md` to the two `.375` tracks. Ran:
++
++- `python scripts/sweep_clusters.py 0 --max-results 8`
++- `python scripts/sweep_clusters.py 3 --max-results 8`
++- `python scripts/sweep_semscholar.py "EvalPlus HumanEval+ MBPP+ generated tests code verification LiveCodeBench SAGA DryRUN" --limit 8`
++- `python scripts/sweep_semscholar.py "online verification adaptive test-time compute action pruning verifier guided search deep research asymmetric verification" --limit 8`
++
++Semantic Scholar returned HTTP 429 for both focused queries, so this pass did
++not treat S2 as a discovery source. Direct arXiv API fetches of the two cluster
++URLs worked. Cluster 0 surfaced verifier / PRM / reward-hacking papers mostly
++outside the two concrete tracks; cluster 3 surfaced current world-model papers
++such as `2606.12072` and `2606.09457`, but they do not beat the direct
++verifier-pruning references below for `.376` planning. Low-concurrency
++WebSearch/WebFetch then verified the top seed papers plus the strongest fresh
++adjacent pruner papers: `2602.03975`, `2505.16312`, and `2603.28135`. The
++`/deep-research` skill was not invoked.
++
++---
++
++## UN-SATURATED execution-verification corpus
++
++**Current Carnot substrate:** Exp 4056/4057 should reuse the existing
++demo-fit code verifier, sandbox, and candidate-generation checkpoint. The core correction
++is to stop measuring on base HumanEval/MBPP, where the `.374` run showed every
++arm and oracle at 1.0 on the completed subset. Selection can still use visible
++examples; final scoring must use EvalPlus-style hidden tests so the visible
++tests under-determine the hidden semantics.
++
++### 1. EvalPlus hidden-test rescore as the default .375 corpus
++
++**Method:** EvalPlus extends HumanEval into HumanEval+ with roughly 80x more
++tests and provides MBPP+ as the MBPP analog. Its load-bearing claim for Carnot is
++not leaderboard rank; it is that base code benchmarks can miss wrong programs
++that stronger generated tests catch.
++
++**Implementation over Carnot stack:** Keep the fixed candidate pool and the
++same visible-example demo-fit selector. Add an EvalPlus evaluation adapter that
++normalizes task ids, candidate hashes, visible-test pass matrices, hidden
++EvalPlus outcomes, sandbox timeout/errors, and bootstrap seeds. Compare vote,
++demo-fit, symbolic/semantic baselines, and oracle headroom on the same pool.
++
++**Pitfalls / where it fails:** EvalPlus can still saturate if the local
++generator is too weak or the candidate pool has no diversity. The artifact must
++report oracle headroom first; if oracle hidden pass is also 1.0 or all arms tie,
++the result is another non-measurement, not evidence against demo-fit transfer.
++
++### 2. LiveCodeBench v6 as the contamination-free escalation corpus
++
++**Method:** LiveCodeBench continuously collects newer competitive-programming
++tasks and includes execution-facing scenarios beyond plain code generation. It
++is the escalation route if EvalPlus hidden tests no longer provide headroom.
++
++**Implementation over Carnot stack:** Treat LiveCodeBench as a second-stage
++adapter after EvalPlus lands. The sandbox must enforce the benchmark's runtime
++and memory limits, and the result schema must preserve task date/window so later
++analysis can separate contamination resistance from hardness.
++
++**Pitfalls / where it fails:** LiveCodeBench tasks are heavier than HumanEval+
++and MBPP+, so throughput can recreate the `.374` 22-task truncation problem.
++Start with EvalPlus for the powered measurement, then escalate only if headroom
++is absent or the checkpointed pool clears the minimum N.
++
++### 3. SAGA generated-test discrimination arm
++
++**Method:** SAGA reframes code verification as test generation: produce tests
++that expose candidates passing superficial visible checks while failing hidden
++semantics. This is the algorithmic analog of the Carnot demo-fit gap, but as an
++active generated-test arm.
++
++**Implementation over Carnot stack:** Add a bounded generated-test arm after
++the fixed visible-test matrix is saved. Generated inputs must be validated
++against the problem signature, executed in the same sandbox, stored separately
++from official hidden tests, and never leaked into the final EvalPlus score.
++Useful comparisons are demo-fit alone, SAGA tests alone, and demo-fit plus SAGA
++tie-break.
++
++**Pitfalls / where it fails:** Generated tests can be invalid, redundant, or
++biased toward common wrong submissions. If SAGA tests train on or imitate hidden
++EvalPlus distributions too closely, the measurement becomes a benchmark-specific
++test generator, not off-ARC transfer.
++
++### 4. DryRUN public-test-free simulation as the decentralization arm
++
++**Method:** DryRUN removes public tests by asking the model to construct valid
++inputs and mentally simulate executions for self-correction. The Carnot value is
++as a public-test-free discriminator, not as a replacement for sandboxed final
++scoring.
++
++**Implementation over Carnot stack:** Run DryRUN-style self-simulation only as
++metadata or a tie-break feature on candidate clusters. Keep the authoritative
++result path execution-based: sandbox visible tests for selection diagnostics,
++EvalPlus hidden tests for final score, and generated self-tests clearly marked
++`inference_time_generated`.
++
++**Pitfalls / where it fails:** Mental execution can hallucinate, and removing
++public tests also removes the cheap grounding signal that makes the current
++demo-fit verifier tractable. This is best for hard cases where visible tests are
++absent or misleading, not the primary .375 powered measurement.
++
++### 5. SEP / ACES as the stronger same-pool baseline
++
++**Method:** SEP partitions candidates by bounded functional equivalence, while
++ACES weights tests by leave-one-out consistency over the candidate-by-test pass
++matrix. Both are strong non-Carnot baselines that can explain whether demo-fit
++adds beyond execution consistency.
++
++**Implementation over Carnot stack:** Reuse the sandbox pass matrix from the
++EvalPlus adapter. Add ACES as the cheap Arm A++ baseline and SEP as a bounded
++semantic tie-break for simple Python signatures. The demo-fit verifier should
++be compared against these baselines before any claim of unique transfer.
++
++**Pitfalls / where it fails:** ACES depends on test quality and can reward
++correlated wrong candidates. SEP can blow up on loops, mutation, recursion,
++floating point, and library-heavy code. Both should be fail-closed diagnostics
++when the required program structure is unsupported.
++
++---
++
++## VERIFIER-GUIDED online action-pruning
++
++**Current Carnot substrate:** The banked G2 result retires vc33 verified-world-
++model planning, not ARC efficiency work. The forward stack is the proven
++explore-first solver plus the model-free GAP-4 verifier. The .376 question is
++whether GAP-4 can move from post-hoc confirmation into online pruning: score or
++reject actions before expensive environment execution while preserving solve
++coverage.
++
++### 6. Adaptive online verification / prune-expand control
++
++**Method:** `2602.01070` argues that verifier-guided online allocation beats
++uniform sampling and post-hoc reranking. The important abstraction is using a
++process verifier as a control signal inside generation/search, not just after a
++candidate is complete.
++
++**Implementation over Carnot stack:** Wrap the explore-first frontier in a
++`gap4_prune_score(state, action, trace)` call before expansion. Low-risk
++integration is soft pruning first: rank/skip only actions whose GAP-4 evidence
++is dominated by already-tested siblings, record every pruned action, and replay
++with pruning disabled on failure to estimate false-negative damage.
++
++**Pitfalls / where it fails:** A verifier that is accurate post-hoc can still
++be unsafe pre-execution if partial states lack evidence. The first experiment
++must report both efficiency and coverage: actions avoided, verifier calls,
++solves retained, and any solution path pruned by the gate.
++
++### 7. Verification-cost-limited selective calls
++
++**Method:** `2602.03975` studies verification as the scarce resource and
++allocates verifier calls across intermediate states using feasibility gating,
++pre-verification ranking, and uncertainty. This matches GAP-4 because the
++verifier is cheap relative to LLM judging but still not free when called at
++every branch.
++
++**Implementation over Carnot stack:** Add a two-stage ARC gate: deterministic
++feasibility filters first, then GAP-4 only for frontier nodes with uncertain
++progress or high duplicate risk. The result should include verifier-call budget,
++call sites, abstentions, and solve-preservation replay.
++
++**Pitfalls / where it fails:** The "learned state-distance" part may not exist
++for ARC-AGI-3 games yet. Start with deterministic features: repeated action
++patterns, no-op deltas, already-seen state hashes, and GAP-4 exactness when
++available. Do not train a new learned ranker before the logging schema proves
++which states need it.
++
++### 8. EquivPruner-style semantic-equivalent action cache
++
++**Method:** EquivPruner prunes semantically equivalent reasoning actions to
++reduce redundant search. ARC has a direct analog: many actions lead to identical
++or verifier-equivalent states under the current game abstraction.
++
++**Implementation over Carnot stack:** Add a canonical state/action signature
++cache beside the explore-first frontier. If two actions produce the same state
++hash or the same GAP-4-extracted program/effect signature, keep the cheaper or
++more promising representative and mark the rest as pruned-equivalent.
++
++**Pitfalls / where it fails:** Equivalence is game-local. Two states that look
++equivalent under a weak signature may diverge after future actions, so the first
++version should prune exact hashes and GAP-4-confirmed equivalence only. Approximate
++semantic pruning can come later.
++
++### 9. CoT2-Meta-style controller for expand / prune / repair / stop
++
++**Method:** CoT2-Meta provides a training-free controller over expansion,
++pruning, repair, stopping, and fallback. Carnot already has these pieces
++informally; the missing part is a logged controller state machine.
++
++**Implementation over Carnot stack:** Add an explicit controller record around
++explore-first: at each step choose expand, prune, repair/retry, stop, or fallback
++to unpruned search. Feed it GAP-4 scores, duplicate-state counts, action cost,
++and recent progress. This is mainly orchestration and telemetry, not a new
++solver.
++
++**Pitfalls / where it fails:** A controller can hide failure by abstaining or
++falling back too late. Acceptance must be paired: solve count with controller,
++solve count with pruning disabled, and action/call cost deltas at equal task
++sets.
++
++### 10. Marco DeepResearch / asymmetric verification budget split
++
++**Method:** Marco DeepResearch and asymmetric verification both argue that
++verification can be cheaper than generation/search and can unlock stronger
++test-time scaling when verification is deliberately budgeted. The relevant
++transfer is the budget split: spend a modest, explicit verifier budget to avoid
++much larger search/tool cost.
++
++**Implementation over Carnot stack:** Define a verifier-budget ledger for ARC:
++GAP-4 calls, sandbox/program checks, environment actions, LLM/tool calls if any,
++and wall time. The pruner only wins if it reduces expensive actions or search
++nodes without spending an unbounded verifier budget.
++
++**Pitfalls / where it fails:** "Verification is easier than solving" is task
++dependent. GAP-4 is reliable for exact execution/program checks, not for every
++latent ARC subgoal. If the verifier cannot decide, it must abstain and let
++explore-first continue rather than manufacturing confidence.
++
++---
++
++## Bottom line for the .376 roadmap
++
++1. **Strongest track-1 method:** `evalplus_hidden_rescore_fixed_pool`. Resume
++   the existing candidate-generation checkpoint, keep visible-example demo-fit
++   selection, and score against HumanEval+/MBPP+ hidden tests with oracle
++   headroom reported first. Add SAGA as a generated-test discriminator only
++   after the fixed-pool EvalPlus path is stable.
++2. **Strongest track-2 method:** `gap4_online_pruner_for_explore_first_arc`.
++   Start with soft pruning plus replay-with-pruning-disabled so efficiency gains
++   cannot mask coverage loss. Add exact state/action equivalence caching from
++   EquivPruner before any learned or approximate pruning.
++3. **Do not overclaim:** Track 1 must call another all-arms-1.0 result
++   saturated, even if the code ran cleanly. Track 2 must report solve
++   preservation separately from action reduction; a cheaper solver that prunes
++   the only solution path is a regression.
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8bc259e1c6..ed9ae54c9b 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -19358,3 +19358,68 @@ ops/status/traceability/conductor files unchanged.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-4054 | Implemented (`python/carnot/reporting/archive_v374_activate_v375_4054.py`, `scripts/experiments/exp4054_archive_v374_activate_v375.py`) | Implemented (`tests/python/test_experiment_4054_archive_v374_activate_v375.py`) |
++
++### REQ-REPORT-4055: SOTA Ingestion Mapping For Unsaturated Execution Verification And Online Verifier Pruning
++
++The Exp 4055 workflow SHALL emit an actionable SOTA-to-experiment mapping note
++for the two `.375` headline tracks: (1) an unsaturated execution-verification
++corpus for off-ARC verifier-transfer measurement, and (2) verifier-guided
++online action pruning for the efficient ARC harness. The markdown note SHALL be
++written to
++`docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`
++and the paired machine-checkable receipt SHALL be written to
++`results/experiment_4055_sota_ingestion_receipt.json`.
++
++Before writing the note, the workflow SHALL read the seed corpus in
++`research-references.md` section "2026-06-11 Post-.374 Planning Sweep
++(Milestone 2026.06.375)", filter `research-studying.md` to the same two
++tracks, run a focused fresh pass through `scripts/sweep_clusters.py` and/or
++`scripts/sweep_semscholar.py` for each track, and verify the strongest papers
++with low-concurrency WebSearch/WebFetch. The workflow SHALL NOT invoke the
++`/deep-research` skill and SHALL NOT modify `scripts/research_conductor.py`.
++
++For each track, the note SHALL map at least three cited methods to concrete
++implementation work over the current Carnot substrate. Track 1 mappings SHALL
++state what each method would require over the demo-fit code verifier, sandbox,
++and EvalPlus-style hidden-test evaluation path. Track 2 mappings SHALL state
++what each method would require over the explore-first ARC solver and GAP-4
++verifier. Each mapped method SHALL include pitfalls or failure modes so the
++roadmap can distinguish implementable experiments from unsupported literature
++claims.
++
++The workflow SHALL update `research-studying.md` to mark the seed candidates as
++ingested for Exp 4055 and SHALL add a "Bottom line for the .376 roadmap"
++section identifying the strongest follow-up methods. It SHALL NOT update
++`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
++`scripts/research_conductor.py`; those reconciliation files are handled by the
++separate conductor pass.
++
++The receipt SHALL contain exactly the bare top-level fields `honest_verdict`,
++`methods_mapped_count`, `citations`, `flagged_for_v376`, and
++`inference_substrate`. `honest_verdict` SHALL use a terminal prefix and, on the
++complete path, start with
++`complete: sota_ingestion_unsaturated_execverif_and_pruner_mapped`.
++`methods_mapped_count` SHALL be a positive integer no smaller than the number of
++mapped methods in the note. `citations` SHALL be a non-empty list of dicts with
++`arxiv_id_or_url`. `flagged_for_v376` SHALL be a non-empty list of concrete
++roadmap slugs. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts`.
++
++#### SCENARIO-REPORT-4055: Mapping Note Closes The Discover-To-Plan Loop
++
++**Given** the `.375` seed corpus names EvalPlus/HumanEval+/MBPP+,
++LiveCodeBench v6, SAGA, DryRUN, online verification, Marco DeepResearch, and
++asymmetric verification as candidate inputs
++**When** the Exp 4055 SOTA-ingestion workflow runs
++**Then** it writes the required markdown note and JSON receipt, maps nonzero
++cited methods for both `.375` tracks to Carnot implementation work and failure
++modes, updates `research-studying.md` with the ingested seed candidates, flags
++the strongest `.376` follow-ups, declares
++`aggregation_from_upstream_artifacts`, and leaves the conductor and
++reconciliation files untouched.
++
++## Implementation Status (REQ-REPORT-4055)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4055 | Implemented (`python/carnot/sota_ingestion_4055.py`, `docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`) | Implemented (`tests/python/test_sota_ingestion_receipt_4055.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b6f83a822c..62df290689 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3085,
++  "experiments_checked": 3086,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/sota_ingestion_4055.py b/python/carnot/sota_ingestion_4055.py
+new file mode 100644
+index 0000000000..1cd5f6af86
+--- /dev/null
++++ b/python/carnot/sota_ingestion_4055.py
+@@ -0,0 +1,118 @@
++"""Schema helpers for the Exp 4055 SOTA-ingestion receipt.
++
++Spec refs: REQ-REPORT-4055, SCENARIO-REPORT-4055.
++
++The markdown note carries the research judgment: which papers matter, how they
++map onto Carnot's current code verifier and ARC harness, and where they can
++fail.  This module only checks the compact machine-readable receipt that the
++outer-loop verifier can consume without parsing prose.  Keeping the validator
++small is intentional: a receipt with an uncited or zero-method "ingestion" is
++not an ingestion at all, while a valid receipt tells the next roadmap pass that
++there is actionable, cited work to plan from.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from typing import Any
++
++
++EXPECTED_INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++REQUIRED_RECEIPT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "methods_mapped_count",
++        "citations",
++        "flagged_for_v376",
++        "inference_substrate",
++    }
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++DEFAULT_HONEST_VERDICT = (
++    "complete: sota_ingestion_unsaturated_execverif_and_pruner_mapped"
++)
++
++
++def build_receipt(
++    *,
++    methods_mapped_count: int,
++    citations: Sequence[Mapping[str, str]],
++    flagged_for_v376: Sequence[str],
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build and validate the REQ-REPORT-4055 receipt payload."""
++
++    receipt: dict[str, object] = {
++        "honest_verdict": honest_verdict,
++        "methods_mapped_count": methods_mapped_count,
++        "citations": [dict(citation) for citation in citations],
++        "flagged_for_v376": list(flagged_for_v376),
++        "inference_substrate": EXPECTED_INFERENCE_SUBSTRATE,
++    }
++    validate_receipt(receipt)
++    return receipt
++
++
++def validate_receipt(receipt: Mapping[str, Any]) -> None:
++    """Validate the SCENARIO-REPORT-4055 receipt contract."""
++
++    missing = REQUIRED_RECEIPT_FIELDS.difference(receipt)
++    extra = set(receipt).difference(REQUIRED_RECEIPT_FIELDS)
++    if missing:
++        raise ValueError(f"receipt missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"receipt has unexpected fields: {sorted(extra)}")
++
++    verdict = receipt["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++
++    methods_mapped_count = receipt["methods_mapped_count"]
++    if (
++        not isinstance(methods_mapped_count, int)
++        or isinstance(methods_mapped_count, bool)
++        or methods_mapped_count < 6
++    ):
++        raise ValueError("methods_mapped_count must be an integer of at least six")
++
++    citations = receipt["citations"]
++    if not isinstance(citations, list) or not citations:
++        raise ValueError("citations must be a non-empty list")
++    if len(citations) < methods_mapped_count:
++        raise ValueError("citations must include at least methods_mapped_count entries")
++    for citation in citations:
++        if not isinstance(citation, dict) or not citation.get("arxiv_id_or_url"):
++            raise ValueError("each citation must include arxiv_id_or_url")
++
++    flagged_for_v376 = receipt["flagged_for_v376"]
++    if (
++        not isinstance(flagged_for_v376, list)
++        or not flagged_for_v376
++        or not all(isinstance(flag, str) and flag for flag in flagged_for_v376)
++    ):
++        raise ValueError("flagged_for_v376 must be a non-empty list of strings")
++
++    if receipt["inference_substrate"] != EXPECTED_INFERENCE_SUBSTRATE:
++        raise ValueError(
++            f"inference_substrate must be {EXPECTED_INFERENCE_SUBSTRATE!r}"
++        )
++
++
++def validate_markdown_note(markdown: str) -> None:
++    """Check that the paired note contains the required planning sections."""
++
++    required_phrases = (
++        "UN-SATURATED execution-verification corpus",
++        "VERIFIER-GUIDED online action-pruning",
++        "Implementation over Carnot stack",
++        "Pitfalls / where it fails",
++        "Bottom line for the .376 roadmap",
++        "demo-fit code verifier",
++        "sandbox",
++        "EvalPlus",
++        "explore-first solver",
++        "GAP-4 verifier",
++    )
++    missing = [phrase for phrase in required_phrases if phrase not in markdown]
++    if missing:
++        raise ValueError(f"markdown note missing required sections: {missing}")
+diff --git a/research-studying.md b/research-studying.md
+index 7babbac0e2..ad58b2d340 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -5,9 +5,37 @@ online sources, ranks them by potential impact on Carnot's current state,
+ and queues the most promising into the next roadmap milestone. Codex (inner
+ loop) executes the current experiments.
+ 
+-**Updated:** 2026-06-11 (Exp 4043 SOTA ingestion mapped .374 OFF-ARC power and closed-loop planning).
++**Updated:** 2026-06-11 (Exp 4055 SOTA ingestion mapped .375 unsaturated execution verification and verifier-pruner tracks).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-11 Exp 4055 - .375 SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`.
++
++**Filtered tracks:** UN-SATURATED execution-verification corpus for exp4056/4057 off-ARC
++demo-fit transfer measurement, and VERIFIER-GUIDED online action-pruning for the efficient
++ARC harness over explore-first + GAP-4.
++
++**Seed candidates marked ingested:**
++- EvalPlus / HumanEval+ / MBPP+, arXiv:2305.01210 - mapped as the default hidden-test rescore path that fixes the `.374` base HumanEval/MBPP saturation failure.
++- LiveCodeBench v6, arXiv:2403.07974 - mapped as the contamination-free escalation corpus if EvalPlus hidden tests lack headroom.
++- SAGA / Rethinking Verification for LLM Code Generation, arXiv:2507.06920 - mapped as the generated-test discrimination arm after the fixed-pool EvalPlus path is stable.
++- DryRUN / You Don't Need Public Tests to Generate Correct Code, arXiv:2604.21598 - mapped as the public-test-free self-simulation tie-break arm, not as authoritative final scoring.
++- What If We Allocate Test-Time Compute Adaptively?, arXiv:2602.01070 - mapped as the online verifier-guided prune/expand control rule for ARC frontier expansion.
++- Marco DeepResearch, arXiv:2603.28376 - mapped as the verification-centric budget-ledger precedent for agentic search.
++- Pushing Test-Time Scaling Limits of Deep Search with Asymmetric Verification, arXiv:2510.06135 - mapped as the cheap-verifier-vs-expensive-search budget split for GAP-4 pruning.
++
++**Fresh-pass confirmations marked ingested:**
++- Adaptive Test-Time Compute Allocation via Learned Heuristics over Categorical Structure, arXiv:2602.03975 - mapped as verifier-cost-limited selective GAP-4 calls over intermediate ARC states.
++- EquivPruner, arXiv:2505.16312 - mapped as exact state/action equivalence caching before approximate pruning.
++- CoT2-Meta, arXiv:2603.28135 - mapped as the explicit expand/prune/repair/stop/fallback controller shape for explore-first telemetry.
++- SEP, arXiv:2604.06485, and ACES, arXiv:2604.03922 - carried forward as same-pool baselines around the EvalPlus measurement, not as the headline fix.
++
++**Bottom line for the .376 roadmap:** prioritize `evalplus_hidden_rescore_fixed_pool`
++and `gap4_online_pruner_for_explore_first_arc`; add `saga_generated_tests_as_discriminator_arm`
++only after the fixed-pool EvalPlus adapter is stable, and add `equivpruner_state_action_cache_for_arc`
++before any learned/approximate pruning.
++
+ ## 2026-06-11 Exp 4043 - .374 SOTA ingestion ingested
+ 
+ **Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-offarc-power-and-closed-loop-planning.md`.
+diff --git a/results/experiment_4055_sota_ingestion_receipt.json b/results/experiment_4055_sota_ingestion_receipt.json
+new file mode 100644
+index 0000000000..ef1520f4f1
+--- /dev/null
++++ b/results/experiment_4055_sota_ingestion_receipt.json
+@@ -0,0 +1,49 @@
++{
++  "honest_verdict": "complete: sota_ingestion_unsaturated_execverif_and_pruner_mapped",
++  "methods_mapped_count": 10,
++  "citations": [
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2305.01210"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2403.07974"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2507.06920"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2604.21598"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2604.06485"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2604.03922"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2602.01070"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2602.03975"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2505.16312"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2603.28135"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2603.28376"
++    },
++    {
++      "arxiv_id_or_url": "https://arxiv.org/abs/2510.06135"
++    }
++  ],
++  "flagged_for_v376": [
++    "evalplus_hidden_rescore_fixed_pool",
++    "saga_generated_tests_as_discriminator_arm",
++    "gap4_online_pruner_for_explore_first_arc",
++    "equivpruner_state_action_cache_for_arc"
++  ],
++  "inference_substrate": "aggregation_from_upstream_artifacts"
++}
+diff --git a/tests/python/test_sota_ingestion_receipt_4055.py b/tests/python/test_sota_ingestion_receipt_4055.py
+new file mode 100644
+index 0000000000..13d2f2d372
+--- /dev/null
++++ b/tests/python/test_sota_ingestion_receipt_4055.py
+@@ -0,0 +1,165 @@
++"""Tests for REQ-REPORT-4055 / SCENARIO-REPORT-4055."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import sota_ingestion_4055 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++NOTE_PATH = Path(
++    "docs/research-notes/"
++    "sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md"
++)
++RECEIPT_PATH = Path("results/experiment_4055_sota_ingestion_receipt.json")
++STUDYING_PATH = Path("research-studying.md")
++
++
++def _valid_citations() -> list[dict[str, str]]:
++    return [
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2305.01210"},
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2403.07974"},
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2507.06920"},
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2604.21598"},
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2602.01070"},
++        {"arxiv_id_or_url": "https://arxiv.org/abs/2505.16312"},
++    ]
++
++
++def _valid_receipt() -> dict[str, object]:
++    return mod.build_receipt(
++        methods_mapped_count=6,
++        citations=_valid_citations(),
++        flagged_for_v376=[
++            "evalplus_hidden_rescore_fixed_pool",
++            "gap4_online_pruner_for_explore_first_arc",
++        ],
++    )
++
++
++def test_req_report_4055_spec_anchor_exists() -> None:
++    """REQ-REPORT-4055: OpenSpec declares the ingestion contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4055" in spec
++    assert "SCENARIO-REPORT-4055" in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert RECEIPT_PATH.as_posix() in spec
++    assert "flagged_for_v376" in spec
++
++
++def test_build_receipt_has_required_schema_fields_for_req_report_4055() -> None:
++    """REQ-REPORT-4055: Exp 4055 emits the exact receipt schema."""
++
++    receipt = _valid_receipt()
++
++    assert receipt == {
++        "honest_verdict": (
++            "complete: "
++            "sota_ingestion_unsaturated_execverif_and_pruner_mapped"
++        ),
++        "methods_mapped_count": 6,
++        "citations": _valid_citations(),
++        "flagged_for_v376": [
++            "evalplus_hidden_rescore_fixed_pool",
++            "gap4_online_pruner_for_explore_first_arc",
++        ],
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++    }
++
++
++@pytest.mark.parametrize(
++    ("bad_receipt", "message"),
++    [
++        (_valid_receipt() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (_valid_receipt() | {"methods_mapped_count": 0}, "at least six"),
++        (_valid_receipt() | {"methods_mapped_count": 5}, "at least six"),
++        (_valid_receipt() | {"citations": []}, "non-empty list"),
++        (
++            _valid_receipt() | {"citations": _valid_citations()[:5]},
++            "at least methods_mapped_count",
++        ),
++        (
++            _valid_receipt() | {"citations": [{"title": "missing source"}] * 6},
++            "arxiv_id_or_url",
++        ),
++        (_valid_receipt() | {"flagged_for_v376": []}, "flagged_for_v376"),
++        (
++            _valid_receipt() | {"inference_substrate": "manual_guess"},
++            "aggregation_from_upstream_artifacts",
++        ),
++    ],
++)
++def test_validate_receipt_rejects_schema_violations_for_scenario_report_4055(
++    bad_receipt: dict[str, object], message: str
++) -> None:
++    """SCENARIO-REPORT-4055: invalid receipts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_receipt(bad_receipt)
++
++
++def test_validate_receipt_rejects_missing_and_extra_fields() -> None:
++    """SCENARIO-REPORT-4055: receipt fields are bare and exact."""
++
++    missing_receipt = _valid_receipt()
++    missing_receipt.pop("citations")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_receipt(missing_receipt)
++
++    extra_receipt = _valid_receipt()
++    extra_receipt["uncited_method"] = "not allowed"
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_receipt(extra_receipt)
++
++
++def test_validate_markdown_note_checks_scenario_report_4055_sections() -> None:
++    """SCENARIO-REPORT-4055: paired note keeps both track mappings."""
++
++    note = """
++    # SOTA ingestion
++
++    ## UN-SATURATED execution-verification corpus
++    Implementation over Carnot stack: demo-fit code verifier, sandbox, EvalPlus.
++    Pitfalls / where it fails: hidden tests can still saturate.
++
++    ## VERIFIER-GUIDED online action-pruning
++    Implementation over Carnot stack: explore-first solver and GAP-4 verifier.
++    Pitfalls / where it fails: verifier false negatives can prune the solution.
++
++    ## Bottom line for the .376 roadmap
++    Flag EvalPlus rescore and GAP-4 online pruner.
++    """
++
++    mod.validate_markdown_note(note)
++
++
++def test_validate_markdown_note_rejects_missing_bottom_line() -> None:
++    """SCENARIO-REPORT-4055: note must close the discover-to-plan loop."""
++
++    with pytest.raises(ValueError, match="Bottom line"):
++        mod.validate_markdown_note(
++            "## UN-SATURATED execution-verification corpus\n"
++            "## VERIFIER-GUIDED online action-pruning\n"
++            "Implementation over Carnot stack\n"
++            "Pitfalls / where it fails\n"
++        )
++
++
++def test_deliverable_files_validate_against_req_report_4055() -> None:
++    """REQ-REPORT-4055: committed note and JSON receipt satisfy the contract."""
++
++    receipt = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
++    note = NOTE_PATH.read_text(encoding="utf-8")
++    studying = STUDYING_PATH.read_text(encoding="utf-8")
++
++    mod.validate_receipt(receipt)
++    mod.validate_markdown_note(note)
++    assert receipt["methods_mapped_count"] >= 6
++    assert "2026-06-11 Exp 4055 - .375 SOTA ingestion ingested" in studying
++    assert "Bottom line for the .376 roadmap" in studying
+-- 
+2.55.0
+

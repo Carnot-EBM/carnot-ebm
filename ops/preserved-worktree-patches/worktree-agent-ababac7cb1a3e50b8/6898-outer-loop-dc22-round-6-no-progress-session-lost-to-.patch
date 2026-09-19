@@ -1,0 +1,55 @@
+From 9ac5d60b31c221e9303fdccfdc0b28736a23a6be Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 11:30:22 -0400
+Subject: [PATCH 06898/11362] [outer-loop] dc22: round 6 no progress, session
+ lost to tooling churn
+
+Round-6 gpt-5.6-sol session confirmed the banked L5 prefix and
+re-scouted the same L6 starting state already documented by round 5
+(no new information), then spent nearly all its remaining wall-clock
+rewriting its own scratch REPL driver script rather than driving
+exploration actions. Killed by the 40-minute wall-clock timeout (exit
+124) before reaching a stopping point or writing a result artifact --
+no candidate action sequence was recoverable, unlike the sibling lf52
+round-6 session which had saved its state via a REPL 'save' command.
+No new level banked; frontier stays at level 5 (matches registry,
+no regression). Logged for round-tracking so a future attempt doesn't
+repeat the same L6 scouting or unbounded tooling iteration.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 58d6045365..b6d8d251f6 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3983,6 +3983,23 @@ games:
+     three lower shelves through positions/material states) but the
+     revealed 8 control stayed condition-gated -- no L6 win. Frontier stays
+     at level 5.'
++  - 'L6 attempt round 6, NO PROGRESS -- session lost to tooling churn
++    (2026-07-12, gpt-5.6-sol via codex, round-6 breadth campaign):
++    confirmed the banked 322-action L5-verified prefix reaches
++    frame.levels_completed=5, then re-scouted the same L6 starting state
++    already documented by round 5 (avatar on lower middle platform,
++    color-8 socket on the isolated lower-right platform, portal
++    checkers, large 6 control, B control, unexplored panel glyphs) --
++    no genuinely new information beyond round 5''s scouting. The session
++    then spent nearly all of its remaining wall-clock repeatedly
++    rewriting its own scratch REPL driver script rather than driving
++    exploration actions, and was killed by its 40-minute wall-clock
++    timeout (exit 124) before reaching a stopping point or writing a
++    result artifact. No candidate action sequence was recoverable (no
++    saved-state file, unlike the sibling lf52 round-6 session). No new
++    level banked; frontier stays at level 5. Next attempt should bound
++    scratch-tooling iteration explicitly and prioritize the still-
++    condition-gated 8 control from round 5''s scouting.'
+   dead_ends:
+   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
+   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
+-- 
+2.55.0
+

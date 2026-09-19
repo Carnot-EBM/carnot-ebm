@@ -1,0 +1,74 @@
+From 993181d8ecf7ad86230a7fb3828b36949fd77d12 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 23:06:52 -0400
+Subject: [PATCH 02702/11362] [outer-loop] Build from upstream llama.cpp
+ RELEASE tag b9714 (MTP is in master/release) -- not the diffusion PR
+
+Operator was right: MTP (--spec-type draft-mtp) is in UPSTREAM master/release now -- speculative.h maps
+{'draft-mtp', COMMON_SPECULATIVE_TYPE_DRAFT_MTP} + arg.cpp has the --spec-type CLI + download_mtp
+auto-detect. (My earlier 'not on master' was a shallow-fetch artifact; the value is behind the symbol, not
+the literal string.) Switched the build kernel from PR 24423 (diffusion branch) to a clean reproducible
+RELEASE TAG b9714 -- smaller, no diffusion-example baggage, the release the operator referenced. Self-verify
+MTP-symbol assert retained. Pushed v4.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/kaggle/build_verify_llamacpp_mtp.py | 10 ++++++----
+ scripts/kaggle/kernel/main.py               | 10 ++++++----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/scripts/kaggle/build_verify_llamacpp_mtp.py b/scripts/kaggle/build_verify_llamacpp_mtp.py
+index 7a07d50c0c..649a5537c2 100644
+--- a/scripts/kaggle/build_verify_llamacpp_mtp.py
++++ b/scripts/kaggle/build_verify_llamacpp_mtp.py
+@@ -38,15 +38,17 @@ def sh(cmd, **kw):
+ 
+ 
+ # %% CELL 1 — BUILD the CUDA llama-server with MTP (internet ON) ------------------------------------
+-PR = "24423"  # the validated branch our local build (9b4dae81f) is on; HAS --spec-type draft-mtp + diffusion
++# MTP (--spec-type draft-mtp) is in UPSTREAM master/release (speculative.h maps {"draft-mtp",
++# COMMON_SPECULATIVE_TYPE_DRAFT_MTP}; arg.cpp has the --spec-type CLI + download_mtp auto-detect). Pin a
++# RELEASE TAG (reproducible submission artifact), NOT the diffusion PR. Bump only after re-verifying the
++# MTP self-check below. (Latest release at authoring: b9714.)
++RELEASE_TAG = "b9714"
+ 
+ 
+ def build():
+     OUT.mkdir(parents=True, exist_ok=True)
+     if not SRC.exists():
+-        sh(f"git clone {LLAMA_REPO} {SRC}")
+-        # fetch + checkout the validated PR branch (plain master may lack the draft-mtp CLI value)
+-        sh(f"cd {SRC} && git fetch origin pull/{PR}/head && git checkout FETCH_HEAD")
++        sh(f"git clone --depth 1 --branch {RELEASE_TAG} {LLAMA_REPO} {SRC}")
+     # CUDA toolkit (nvcc) + cmake are present on Kaggle GPU images; install cmake if missing.
+     sh("cmake --version || pip install -q cmake", check=False)
+     # Kaggle/Colab CUDA quirk: FindCUDAToolkit cannot locate the driver stub libcuda.so, so the
+diff --git a/scripts/kaggle/kernel/main.py b/scripts/kaggle/kernel/main.py
+index e4d856ef8f..5eab7d7ebe 100644
+--- a/scripts/kaggle/kernel/main.py
++++ b/scripts/kaggle/kernel/main.py
+@@ -40,15 +40,17 @@ def sh(cmd, **kw):
+ 
+ 
+ # %% CELL 1 — BUILD the CUDA llama-server with MTP (internet ON) ------------------------------------
+-PR = "24423"  # the validated branch our local build (9b4dae81f) is on; HAS --spec-type draft-mtp + diffusion
++# MTP (--spec-type draft-mtp) is in UPSTREAM master/release (speculative.h maps {"draft-mtp",
++# COMMON_SPECULATIVE_TYPE_DRAFT_MTP}; arg.cpp has the --spec-type CLI + download_mtp auto-detect). Pin a
++# RELEASE TAG (reproducible submission artifact), NOT the diffusion PR. Bump only after re-verifying the
++# MTP self-check below. (Latest release at authoring: b9714.)
++RELEASE_TAG = "b9714"
+ 
+ 
+ def build():
+     OUT.mkdir(parents=True, exist_ok=True)
+     if not SRC.exists():
+-        sh(f"git clone {LLAMA_REPO} {SRC}")
+-        # fetch + checkout the validated PR branch (plain master may lack the draft-mtp CLI value)
+-        sh(f"cd {SRC} && git fetch origin pull/{PR}/head && git checkout FETCH_HEAD")
++        sh(f"git clone --depth 1 --branch {RELEASE_TAG} {LLAMA_REPO} {SRC}")
+     # CUDA toolkit (nvcc) + cmake are present on Kaggle GPU images; install cmake if missing.
+     sh("cmake --version || pip install -q cmake", check=False)
+     # Kaggle/Colab CUDA quirk: FindCUDAToolkit cannot locate the driver stub libcuda.so, so the
+-- 
+2.55.0
+

@@ -1,0 +1,69 @@
+From 2576a570e178418fcd8707bfabe59eb4dfd605a9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 16:02:26 -0400
+Subject: [PATCH 06478/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                      |  2 +-
+ ops/conductor-log.md                              |  1 +
+ ops/conductor-state.json                          |  2 +-
+ ...nt_5506_hardware_multiboard_receipts_v499.json | 15 ++++++++++++++-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8905e9d2ce..9ae3b37633 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 411, "phase": "iteration_start", "last_beat": "2026-07-09T19:13:25Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 412, "phase": "iteration_start", "last_beat": "2026-07-09T20:02:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 377cf817a7..646bc7be90 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10673,3 +10673,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-09 18:55 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
+ | 2026-07-09 18:57 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
+ | 2026-07-09 19:11 UTC | Gated active-constraint MILP/MaxSAT descriptor ext | OK | 87 passed, 1 warning in 8.17s |
++| 2026-07-09 20:00 UTC | Multi-board hardware receipt continuity without sp | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5af7e4eb9b..add7a7b380 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 411, "phase": "iteration_start", "started_at": "2026-07-09T19:13:25Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 412, "phase": "iteration_start", "started_at": "2026-07-09T20:02:24Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5506_hardware_multiboard_receipts_v499.json b/results/experiment_5506_hardware_multiboard_receipts_v499.json
+index c64d5c19b1..1673d10f47 100644
+--- a/results/experiment_5506_hardware_multiboard_receipts_v499.json
++++ b/results/experiment_5506_hardware_multiboard_receipts_v499.json
+@@ -302,5 +302,18 @@
+       "outcome": "not_applicable",
+       "summary": "Exp5506 records hardware_smoke descriptor hash receipts only; no training/sampling, PyO3, serialization, or speedup benchmark applies."
+     }
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=8.891696 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
+   ]
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

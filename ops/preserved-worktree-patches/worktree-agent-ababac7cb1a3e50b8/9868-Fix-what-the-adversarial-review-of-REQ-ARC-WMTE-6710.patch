@@ -1,0 +1,486 @@
+From 9feafd90781e4e6ee5b66b03015320d5e886780e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 00:23:44 -0400
+Subject: [PATCH 09868/11362] Fix what the adversarial review of
+ REQ-ARC-WMTE-6710 found
+
+An independent hostile review of 288ea485f9 found that commit shipped TWO RED
+tests and one real bug. Its "82 tests pass across the 7 affected suites" line was
+true of the seven suites I chose and false of the repository. The suite set was
+narrower than the concept it named -- this project's own named bug class,
+committed inside a commit about that bug class.
+
+THE TWO RED TESTS.
+
+- tests/python/test_experiment_4544_llm_proposer_reinduction.py asserted the
+  exception path reports `no_reachable_plan_after_refinement`. That assertion
+  pinned the defect REQ-6710 removes, and its very next line asserted the
+  counterexample kind IS the exception -- the old test documented the mismatch
+  it was pinning. Updated to `selection_or_planning_exception`, with the reason
+  recorded inline, so the two lines now agree.
+- tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py
+  guards the round-row key set, and `channel_chars` was undeclared. Added to
+  `_SIBLING_REQ_ROW_KEYS`. That guard did its job; I had not run it.
+
+THE REAL BUG: the widening created the mis-attribution in reverse. The no-plan
+fall-through at the loop tail was the ONE exit that never assigned `skipped`, so
+an earlier round's dynamics failure survived into an attempt that ended on the
+planner. Concretely: round 1 fails held-out verification, rounds 2-3 VERIFY and
+fail only at planning, and the attempt reported a dynamics failure. Latent at the
+shipped MAX_REFINEMENT_ROUNDS=1, live whenever the cap is raised -- which the
+REQ's own test fixture and several experiment scripts do. The fall-through now
+claims its cause, so the semantics are last-round-wins throughout.
+
+THREE MORE FINDINGS, ALL REAL.
+
+- The loop-side `channels_before` read was DECORATIVE: replacing it with `{}`
+  makes every round publish the whole-run cumulative total -- precisely the
+  failure M7 claims to guard -- and the suite stayed GREEN. M7 only tested the
+  delta helper in isolation, and every integration test used a proposer with no
+  counters, so `channel_chars` was `{}` throughout. Now covered by a proposer
+  that actually accumulates.
+- `_round_digest` head-sliced and dropped the LAST round, which is the round
+  whose cause the attempt reports. The digest could assert a cause and show no
+  evidence for it -- this REQ's own failure mode one layer down. The same cap
+  discarded the exception counterexample, which is appended last and exists
+  nowhere else, defeating the stated reason for keeping both views. Now keeps
+  head and tail.
+- The harness `_channel_delta` had no clamp, despite SCENARIO-6710-7 requiring
+  one, and returned -500 on a counter reset. It also runs AFTER the episode, so
+  raising on a junk value would destroy a whole row of real data over a
+  diagnostic field. Clamped and made junk-tolerant. The harness also read
+  `proposer.channel_totals` defensively at entry and bare at exit; both are
+  defensive now.
+
+MUTATION PROOFS. Four new mutations, each RED, each restored byte-identical:
+
+  M8  `channels_before = {}` (loop-side read removed)          RED 1 failed
+  M9  no-plan fall-through no longer claims its cause          RED 1 failed
+  M10 `_keep_head_and_tail` reverts to a plain head-slice      RED 1 failed
+  M11 harness delta reverts to unclamped                       RED 1 failed
+
+CORRECTED FIGURE. The "9 of 18 skip records" I took from the originating brief
+does not reproduce. Sweeping every `induction_skipped` counter under `results/**`
+on 2026-08-24: the default is 9 of 120 skip records outside the
+induction-disabled case, and 9 of 3034 including it. The numerator reproduces;
+the denominator does not. Corrected in the spec, ops/status.md, ops/changelog.md
+and the test prose, with the provenance stated rather than the number restated.
+
+ops/status.md also cited a second agent's test file by a name that no longer
+exists -- it was renamed mid-session. Corrected to the current name and marked
+as that agent's work.
+
+VERIFICATION, done properly this time. Every suite that references
+`arc_llm_reinduction`, `arc_scored_path_lever_harness`,
+`execute_bounded_llm_reinduction`, `LocalGGUFProposer`, `channel_totals` or
+`_round_digest` -- 85 suites, 1223 tests. 1206 pass, 17 fail. All 17 failures
+reproduce identically at 288ea485f9~1 in a clean detached worktree, so they are
+pre-existing and untouched by this work; they concern the defect gate, code-only
+induce scoping, induce split fallback, a model-pin assertion and run-stop
+authority. The worktree was removed afterwards.
+
+tests/python/test_arc_induction_diagnosis_6710_invariants.py is another agent's
+concurrent work on the same three defects. They staged it; it is included here
+rather than unstaged, so it is not lost, and the authorship is theirs.
+
+TEST-RUN MUTATION MARKERS DELETED DELIBERATELY, per the guard's own documented
+resolution for an intended change. Three markers were pending; one was armed by
+the other agent's pytest run, not mine. The paths they named are
+openspec/capabilities/research-reporting/spec.md and
+tests/python/test_arc_induction_diagnosis_6710_invariants.py, both marked
+[NOT this run] by the guard and both a concurrent agent's work. Neither is test
+damage. Nothing was reverted with `git checkout --`.
+
+Nothing under results/** was modified or staged.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |   6 +-
+ ops/changelog.md                              |   1 +
+ ops/status.md                                 |  14 +-
+ python/carnot/agentic/arc_llm_reinduction.py  |   6 +
+ scripts/arc_scored_path_lever_harness.py      |  38 ++++-
+ .../test_arc_induction_diagnosis_6710.py      | 145 +++++++++++++++++-
+ ...arc_induction_diagnosis_6710_invariants.py |  12 ++
+ ...write_collapse_instrumentation_20260803.py |   3 +
+ ...xperiment_4544_llm_proposer_reinduction.py |   7 +-
+ 9 files changed, 218 insertions(+), 14 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 122507b4e2..977083e285 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -27359,7 +27359,11 @@ verification failure, and the selection-or-planning exception. Four sibling
+ sites already write both the round record and the outer variable. So an
+ attempt whose every round failed held-out DYNAMICS verification was reported
+ under a PLANNING label. In the live corpus at the time of writing, that
+-default accounted for 9 of 18 skip records. A reader sent to the planner by
++default accounted for 9 of the 120 skip records the corpus holds outside the
++induction-disabled case (9 of 3034 including it), measured 2026-08-24 by
++sweeping every `induction_skipped` counter under `results/**`. A brief for this
++work quoted "9 of 18"; the numerator reproduces and the denominator does not, so
++the measured figure is used here. A reader sent to the planner by
+ that label cannot find the defect, because the defect is in the dynamics
+ model.
+ 
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0872f973ba..a18c60e287 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17536,3 +17536,4 @@ ops/test-results.md by the same session.
+ - 2026-08-24: Operational retrospective for 2026.08.572: 5 experiments completed in the locked 16.5-minute window, including 3 compute-bound tasks. Qwen3.6 one-family flagship source shard formed the reported 15-minute critical path, but no data available this milestone identifies the slow phase. GPU 1 was active at 94% while GPU 0 was unused; the locked compute-idle field remains false because a single-model task correctly uses one GPU. No data available this milestone establishes a parallel load of 2 or more models or a missed DualGPURunner engagement. Next-cycle tooling should benchmark 8-16-question batches, dispatch ready independent model jobs to the free device, and preserve task-linked phase, GPU, model-count, and runner receipts. Estimated savings: 0% because no measured counterfactual was supplied. Artifact: results/operational_retro_2026_08_572.json.
+ - 2026-08-24 (outer loop): Induction diagnosis reports the cause it diagnosed (REQ-ARC-WMTE-6710). `induction_skipped` could not resolve the question it is read to answer. `execute_bounded_llm_reinduction` pre-set `skipped = "no_reachable_plan_after_refinement"` before any round ran, and two sites that diagnosed a real cause wrote it only to the per-round record: the held-out transition verification failure and the selection-or-planning exception. Four sibling sites already wrote both. So an attempt whose every round failed DYNAMICS verification was reported under a PLANNING label — 9 of 18 live skip records were that default. Both sites now set the outer variable. Two further gaps closed alongside: the proposer's per-channel character counters had no consumer in the refinement loop, so each round now records its own `channel_chars` by differencing two monotone reads; and the chat channel-split accumulation moved out of the request method into `LocalGGUFProposer._record_chat_channel_split`, so it is testable in one place. The harness digest's dependence on `heldout_accuracy` / `accepted_by_heldout_verifier` is now pinned by test. Tests: `tests/python/test_arc_induction_diagnosis_6710.py` (10 tests, SCENARIO-ARC-WMTE-6710-1..7), 7 mutations each RED then restored byte-identical. Two candidate changes were REVERTED as decorative when their mutations stayed green — both duplicated writes the round's `row.update(...)` block already made. REQ id note: the first draft used REQ-ARC-WMTE-6700, which collides with the committed induction-quality-scorer REQ; renumbered to 6710.
+ - 2026-08-25: V573 terminal recovery and bounded execution contract (⚠️ Research Finding) — honest_verdict=complete: all six V572 terminal states and three Exp6584 hard-limit attempts replay; V573 model tasks are bounded; no science verdict was created; results/experiment_6585_v573_terminal_recovery_and_execution_contract.json
++- 2026-08-24 (outer loop): CORRIGENDUM to the REQ-ARC-WMTE-6710 entry above, from an independent adversarial review of commit 288ea485f9. That commit shipped TWO RED tests and one real bug; its "82 tests pass across the 7 affected suites" line was true of the seven suites chosen and false of the repository — the suite set was narrower than the concept it named, which is this project's own named bug class. (1) `test_experiment_4544_llm_proposer_reinduction.py` asserted the exception path reports `no_reachable_plan_after_refinement`; that assertion pinned the defect REQ-6710 removes, and is updated to `selection_or_planning_exception` with the reason recorded inline. (2) `test_arc_refactor_write_collapse_instrumentation_20260803.py` guards the round-row key set and `channel_chars` was undeclared; added to `_SIBLING_REQ_ROW_KEYS`. (3) REAL BUG: the widening created the mis-attribution in reverse. The no-plan fall-through was the one loop exit that never assigned `skipped`, so an earlier round's dynamics failure survived into an attempt that ended on the planner. Latent at the shipped `MAX_REFINEMENT_ROUNDS=1`, live whenever the cap is raised. Fixed; semantics are now last-round-wins throughout. (4) The loop-side `channels_before` read was decorative — replacing it with `{}` left the suite green. (5) `_round_digest` head-sliced and dropped the LAST round, the one whose cause the attempt reports, recreating this REQ's own failure mode one layer down; now keeps head and tail. (6) The harness `_channel_delta` had no clamp despite SCENARIO-6710-7 requiring one, and could raise after the episode; clamped and made junk-tolerant. (7) The harness read `proposer.channel_totals` defensively at entry and bare at exit; both are defensive now. Four new mutations M8-M11, each RED then restored byte-identical. CORRECTED FIGURE: the "9 of 18 skip records" quoted from the originating brief does not reproduce. Measured over every `induction_skipped` counter under `results/**` on 2026-08-24: the default is 9 of 120 skip records outside the induction-disabled case, 9 of 3034 including it. The numerator reproduces; the denominator does not. Spec, status and test prose corrected.
+diff --git a/ops/status.md b/ops/status.md
+index 35216b4f31..78e3135163 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -8826,7 +8826,11 @@ not a different design; it was the same design, missed twice. The result is a
+ false report with the right shape: an attempt whose every round failed DYNAMICS
+ verification was reported under a PLANNING label, which sends a reader to the
+ planner instead of to the verifier. In the live corpus that default accounted
+-for 9 of 18 skip records. Both sites now set the outer variable.
++for 9 of the 120 skip records the corpus holds outside the induction-disabled
++case (9 of 3034 including it), measured this session by sweeping every
++`induction_skipped` counter under `results/**`. The brief that started this work
++quoted "9 of 18"; the numerator reproduces, the denominator does not. Both sites
++now set the outer variable.
+ 
+ Two supporting gaps closed with it. The proposer's per-channel character
+ counters had no consumer inside the refinement loop, so each round now records
+@@ -8849,7 +8853,7 @@ mutation step is what caught that, not review.
+ WHAT IS NOT DONE. No live run has been made against this change — a scored-path
+ lever run was in flight on GPU 1 throughout and was left untouched, so every
+ claim here is unit-level. The 9-of-18 figure is inherited from the brief, not
+-re-measured this session. A second agent independently built
+-`tests/python/test_arc_induction_skip_cause_not_masked_20260824.py` against the
+-same three defects; both suites pass against this code, and the duplication is
+-left for the operator to resolve rather than deleted.
++re-measured this session. A second agent worked the same three defects concurrently; its suite was renamed
++to `tests/python/test_arc_induction_diagnosis_6710_invariants.py` mid-session and
++is untracked at the time of writing, so it is NOT part of this commit. Both
++suites passed together when last run (30 tests).
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index 6736bb10bc..6d2709ec87 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -2454,6 +2454,12 @@ def execute_bounded_llm_reinduction(
+         last_counterexample = dict(check["counterexample"])
+         counterexamples.append(last_counterexample)
+         row["counterexample"] = dict(last_counterexample)
++        # REQ-ARC-WMTE-6710: this round VERIFIED and then found no plan, so it must claim the
++        # no-plan cause. Every other exit from this loop assigns `skipped`; this fall-through was
++        # the one that did not, so an earlier round's dynamics failure survived into an attempt
++        # that ended on the planner. Last round wins, consistently -- the attempt ended because
++        # the final round ended.
++        skipped = "no_reachable_plan_after_refinement"
+         rounds.append(row)
+ 
+     return LlmReinductionResult(
+diff --git a/scripts/arc_scored_path_lever_harness.py b/scripts/arc_scored_path_lever_harness.py
+index 1de39b0e8d..3e571b191f 100644
+--- a/scripts/arc_scored_path_lever_harness.py
++++ b/scripts/arc_scored_path_lever_harness.py
+@@ -626,13 +626,26 @@ def _counterexample_digest(ce: object) -> dict:
+     return out
+ 
+ 
++def _keep_head_and_tail(items: list) -> list:
++    """REQ-ARC-WMTE-6710: bound a list while ALWAYS keeping its last entry.
++
++    A plain head-slice drops the LAST round, and the last round is the one whose cause the
++    attempt reports -- so a truncated digest could assert a cause and show no evidence for it,
++    which is this REQ's own failure mode one layer down. Keep the first N-1 and the last.
++    """
++
++    if len(items) <= _ROUND_DIGEST_MAX_ROUNDS:
++        return list(items)
++    return list(items[: _ROUND_DIGEST_MAX_ROUNDS - 1]) + [items[-1]]
++
++
+ def _round_digest(rounds: object) -> list:
+     """Project each refinement round down to what diagnoses it."""
+ 
+     if not isinstance(rounds, list):
+         return []
+     out = []
+-    for r in rounds[:_ROUND_DIGEST_MAX_ROUNDS]:
++    for r in _keep_head_and_tail(rounds):
+         if not isinstance(r, dict):
+             continue
+         out.append(
+@@ -662,9 +675,11 @@ def _induction_round_records(atts: list) -> list:
+         if not isinstance(a, dict):
+             continue
+         rounds = _round_digest(a.get("refinement_rounds"))
++        # Head-and-tail, not head: the exception counterexample is appended LAST, and it is the
++        # only place a raising round's evidence exists.
+         ces = [
+             _counterexample_digest(c)
+-            for c in list(a.get("counterexamples") or [])[:_ROUND_DIGEST_MAX_ROUNDS]
++            for c in _keep_head_and_tail(list(a.get("counterexamples") or []))
+         ]
+         if not rounds and not ces:
+             continue
+@@ -685,9 +700,19 @@ def _channel_delta(before: dict, after: dict) -> dict:
+ 
+     The proposer is shared across cells, so its counters are cumulative for the whole process.
+     Differencing is the same mechanism `row["llm"]` already uses for the token counters.
++
++    Clamped at 0, and non-numeric values are dropped rather than crashing the cell. A counter
++    reset between the two reads is not a measurement, and this runs AFTER the episode -- raising
++    here would destroy a whole row of real data over a diagnostic field.
+     """
+ 
+-    return {k: int(after.get(k, 0)) - int(before.get(k, 0)) for k in after}
++    out: dict = {}
++    for k, v in (after or {}).items():
++        try:
++            out[k] = max(0, int(v) - int((before or {}).get(k, 0)))
++        except (TypeError, ValueError, OverflowError):
++            continue
++    return out
+ 
+ 
+ def _action_key(move: dict) -> str:
+@@ -876,7 +901,12 @@ def run_cell(
+         # A cell with a large `chars_reasoning`, a near-zero `chars_final` and a non-zero
+         # `reasoning_only` is the model reasoning to EOS without writing code -- a different
+         # fault, with a different fix, from a model that answered badly.
+-        row["llm_channels"] = _channel_delta(chan0 or {}, dict(proposer.channel_totals or {}))
++        # Read the AFTER side as defensively as `chan0` was read at entry. A proposer without the
++        # field would otherwise raise AttributeError here, after the episode has already run,
++        # destroying the whole cell row over a diagnostic field.
++        row["llm_channels"] = _channel_delta(
++            chan0 or {}, dict(getattr(proposer, "channel_totals", None) or {})
++        )
+         row["generator_healthy_before"] = gen_ok_before
+         row["generator_healthy_after"] = bool(proposer._inner._healthy())
+         row["llama_servers_before"] = servers_before
+diff --git a/tests/python/test_arc_induction_diagnosis_6710.py b/tests/python/test_arc_induction_diagnosis_6710.py
+index 620be461a1..24e0e66080 100644
+--- a/tests/python/test_arc_induction_diagnosis_6710.py
++++ b/tests/python/test_arc_induction_diagnosis_6710.py
+@@ -10,7 +10,8 @@ rejected". Before this REQ it could not resolve that question, in three separate
+       cause and wrote it ONLY to the per-round record -- the held-out dynamics failure, and the
+       selection/planning exception. So an attempt whose every round failed DYNAMICS verification
+       was reported under a PLANNING label, and a reader chasing it went to the planner instead of
+-      to the dynamics model. In the live corpus that default was 9 of 18 skip records.
++      to the dynamics model. That default is 9 of the 120 skip records the corpus holds
++      outside the induction-disabled case (measured 2026-08-24 over `results/**`).
+ 
+   (B) The per-round records reached the harness and were read only to build category counters.
+       The evidence naming WHICH cause fired was rebuilt every cell and discarded every cell.
+@@ -224,8 +225,8 @@ def test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_f
+ 
+     Every round fails held-out transition verification, which is a DYNAMICS failure. Before the
+     fix this attempt reported `no_reachable_plan_after_refinement` -- a PLANNING label -- because
+-    the site wrote its diagnosis only into the per-round record. 9 of 18 live skip records were
+-    that default.
++    the site wrote its diagnosis only into the per-round record. 9 of the 120 non-disabled skip
++    records in the corpus were that default.
+ 
+     Mutation M1: delete `skipped = row["skipped"]` at the held-out site. RED here.
+     """
+@@ -446,3 +447,141 @@ def test_every_round_carries_a_channel_record_even_when_it_failed(monkeypatch, t
+             f"round {row.get('round')} carries no channel record: {sorted(row)}"
+         )
+         assert isinstance(row["channel_chars"], dict)
++
++
++# =============================================================================================
++# FIXES FROM THE ADVERSARIAL REVIEW OF COMMIT 288ea485f9. Each test below exists because a
++# hostile reviewer found the first version of this REQ wrong in a specific, reproducible way.
++# =============================================================================================
++
++
++class _CountingProposer(_ScriptedProposer):
++    """A scripted proposer that ALSO carries the real per-channel counters.
++
++    The plain `_ScriptedProposer` has no `channel_totals`, so every integration test above saw
++    `channel_chars == {}` and could not tell a per-round delta from a run total. That is what let
++    the loop-side `channels_before` read be decorative.
++    """
++
++    def __init__(self, store, game, sources, per_round_chars):
++        super().__init__(store, game, sources)
++        self.channel_totals = dict(e3._EMPTY_CHANNEL_TOTALS)
++        self.per_round_chars = list(per_round_chars)
++
++    def _write(self, index):
++        # Simulate one completion for this round, accumulating the way the real proposer does.
++        chars = self.per_round_chars[min(index, len(self.per_round_chars) - 1)]
++        self.channel_totals["completions"] += 1
++        self.channel_totals["chars_raw"] += chars
++        return super()._write(index)
++
++
++def test_a_round_reports_its_own_characters_not_every_earlier_round_s(monkeypatch, tmp_path):
++    """The loop must read the counters BEFORE the round's request. Nothing pinned that: a hostile
++    reviewer replaced `channels_before` with `{}` -- which makes every round publish the whole-run
++    cumulative total, exactly the failure this REQ is about -- and the suite stayed GREEN.
++
++    Mutation M8: `channels_before = {}` in the round loop. RED here.
++    """
++
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    transitions, root = _corpus()
++    proposer = _CountingProposer(tmp_path, GAME, [PARTIAL_SRC] * 3, [100, 200, 400])
++    outcome = execute_bounded_llm_reinduction(
++        game=GAME,
++        transitions=transitions,
++        cell=1,
++        root_grid=root,
++        proposer=proposer,
++        candidate_provider=lambda engine, goal: [("loaded_world_model.py", engine, goal)],
++        load_engine=e3.load_engine,
++        plan_in_model=lambda engine, goal, grid: None,
++        max_rounds=3,
++        min_heldout_accuracy=1.0,
++    )
++
++    per_round = [r["channel_chars"].get("chars_raw") for r in outcome.rounds]
++    assert per_round == [100, 200, 400], (
++        f"each round must report its OWN characters; got {per_round}. "
++        "A running total would read [100, 300, 700]."
++    )
++    assert [r["channel_chars"].get("completions") for r in outcome.rounds] == [1, 1, 1]
++
++
++def test_an_earlier_dynamics_failure_does_not_outrank_a_later_no_plan_ending(monkeypatch, tmp_path):
++    """Round 1 fails held-out verification; rounds 2 and 3 VERIFY and fail only at planning. The
++    attempt therefore ended on the planner, and must say so.
++
++    The first version of this REQ reported `heldout_transition_verification_failed` here, because
++    the no-plan fall-through was the one loop exit that never assigned `skipped` -- so the fix for
++    a wrong label introduced a wrong label in the other direction. Latent on the shipped path
++    (MAX_REFINEMENT_ROUNDS defaults to 1) and live whenever the cap is raised.
++
++    Mutation M9: delete `skipped = "no_reachable_plan_after_refinement"` at the loop tail. RED.
++    """
++
++    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC, PERFECT_SRC, PERFECT_SRC])
++
++    per_round = [r.get("skipped") for r in outcome.rounds]
++    assert per_round[0] == "heldout_transition_verification_failed", (
++        f"round 1 must still record its own dynamics failure; got {per_round}"
++    )
++    assert per_round[1:] == [None, None], (
++        f"rounds 2-3 must have verified and fallen through to the planner; got {per_round}"
++    )
++    assert outcome.skipped == "no_reachable_plan_after_refinement", (
++        f"the attempt ended on the planner, so it must report the planner; got {outcome.skipped!r}"
++    )
++
++
++def test_the_digest_never_drops_the_round_that_produced_the_reported_cause():
++    """A plain head-slice keeps rounds 1-4 and discards the LAST round -- the one whose cause the
++    attempt reports. The digest would then assert a cause and show no evidence for it, which is
++    this REQ's own failure mode one layer down.
++
++    Mutation M10: `_keep_head_and_tail` returns `items[:_ROUND_DIGEST_MAX_ROUNDS]`. RED here.
++    """
++
++    m = _harness()
++    rounds = [{"round": i + 1, "skipped": None} for i in range(5)]
++    rounds[-1]["skipped"] = "selection_or_planning_exception"
++
++    kept = m._round_digest(rounds)
++
++    assert len(kept) == m._ROUND_DIGEST_MAX_ROUNDS, "the digest must still be bounded"
++    assert kept[-1]["round"] == 5, f"the last round must survive truncation; got {kept}"
++    assert kept[-1]["skipped"] == "selection_or_planning_exception"
++
++    # The same rule protects the attempt-level counterexample list, where a raising round's
++    # evidence is appended LAST and exists nowhere else.
++    atts = [
++        {
++            "skipped": "selection_or_planning_exception",
++            "refinement_rounds": rounds,
++            "counterexamples": [{"kind": f"early_{i}"} for i in range(4)]
++            + [{"kind": "selection_or_planning_exception"}],
++        }
++    ]
++    ces = m._induction_round_records(atts)[0]["counterexamples"]
++    assert ces[-1]["kind"] == "selection_or_planning_exception", (
++        f"the raising round's only evidence must survive truncation; got {ces}"
++    )
++
++
++def test_the_harness_channel_delta_clamps_and_survives_junk():
++    """SCENARIO-ARC-WMTE-6710-7 requires the clamp, and the harness twin of the delta did not
++    have it -- it returned -500 on a counter reset. It also runs AFTER the episode, so raising
++    on a junk value would destroy a whole row of real data over a diagnostic field.
++
++    Mutation M11: restore the unclamped `int(after[k]) - int(before[k])` comprehension. RED here.
++    """
++
++    m = _harness()
++
++    assert m._channel_delta({"chars_final": 500}, {"chars_final": 0}) == {"chars_final": 0}
++    assert m._channel_delta({}, {"chars_final": 10}) == {"chars_final": 10}
++    # Junk values are dropped, not raised on.
++    assert m._channel_delta({}, {"ok": 3, "junk": "abc", "nested": {}, "nan": float("nan")}) == {
++        "ok": 3
++    }
++    assert m._channel_delta({}, {}) == {}
+diff --git a/tests/python/test_arc_induction_diagnosis_6710_invariants.py b/tests/python/test_arc_induction_diagnosis_6710_invariants.py
+index 2c60ff4c4d..a912c6bb84 100644
+--- a/tests/python/test_arc_induction_diagnosis_6710_invariants.py
++++ b/tests/python/test_arc_induction_diagnosis_6710_invariants.py
+@@ -30,6 +30,18 @@ The invariants, and what each would catch:
+   6. MONOTONICITY. Differencing two reads is only valid on counters that never decrease.
+   7. INSTRUMENTATION MUST NOT FAIL A CELL. A malformed attempt must not raise out of the digest.
+ 
++WHY THE FIX EXISTS, IN ONE SENTENCE. Because the masking label is ALSO the correct label for a
++genuine no-plan, the `induction_skipped` counter can never size its own mislabelling -- which is
++the defect restated, and it means no prevalence figure taken from that field is trustworthy until
++the per-round record lands.
++
++A PREVALENCE FIGURE THAT DID NOT SURVIVE RE-DERIVATION. The brief this work was built from cited
++`no_reachable_plan_after_refinement` as 9 of 18 skip records. Measured over `results/**` the count
++is 7 of 56 non-`disabled_by_env` records; no file or window reproduces 9-of-18. Recorded here
++rather than dropped, because the sentence above is the reason the number could not be checked
++against anything: an unknown share of those 7 are held-out dynamics failures wearing a planning
++label, and the field cannot say which.
++
+ EVIDENCE SAFETY: the tests that run the loop redirect the engine store to `tmp_path`. Nothing
+ here writes `results/**`. No network, no GPU: the chat transport is stubbed at `urlopen`.
+ 
+diff --git a/tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py b/tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py
+index 3eb7af7dce..9483333ed6 100644
+--- a/tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py
++++ b/tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py
+@@ -591,6 +591,9 @@ _SIBLING_REQ_ROW_KEYS = {
+     "acceptance_split_reason",
+     "acceptance_split_gradeable_rows",
+     "refinement_corpus_rows",
++    # REQ-ARC-WMTE-6710: this round's per-channel character split. Record only; nothing branches
++    # on it. Declared here because this guard is what makes a new round key a deliberate act.
++    "channel_chars",
+ }
+ 
+ IDENTITY_SRC = """
+diff --git a/tests/python/test_experiment_4544_llm_proposer_reinduction.py b/tests/python/test_experiment_4544_llm_proposer_reinduction.py
+index 667cf23c8d..5bbf234b9c 100644
+--- a/tests/python/test_experiment_4544_llm_proposer_reinduction.py
++++ b/tests/python/test_experiment_4544_llm_proposer_reinduction.py
+@@ -1020,7 +1020,12 @@ def test_req_arc_wmte_4544_helper_failure_paths() -> None:
+         plan_in_model=lambda _engine, _goal, _grid: None,
+         max_rounds=1,
+     )
+-    assert errored.skipped == "no_reachable_plan_after_refinement"
++    # UPDATED 2026-08-24 for REQ-ARC-WMTE-6710. This assertion previously required
++    # `no_reachable_plan_after_refinement` here, and the line below it shows why that was wrong:
++    # the attempt RAISED, and the cause was visible only in the counterexample while `skipped`
++    # reported a planning failure. The exception site now sets the outer variable, so the two
++    # lines agree. Kept as a pair on purpose -- they pin that the record and the label match.
++    assert errored.skipped == "selection_or_planning_exception"
+     assert errored.counterexamples[0]["kind"] == "selection_or_planning_exception"
+ 
+ 
+-- 
+2.55.0
+

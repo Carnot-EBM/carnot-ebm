@@ -1,0 +1,2153 @@
+From cd221fbd81c0a0ce2a7b0b536edef0885b8d020d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 13:10:08 -0400
+Subject: [PATCH 08059/11362] [outer-loop] security audit fix 3/5: confine
+ code-executing deserialization
+
+Adds carnot.serialization_safety and routes the 4 pickle.load sites in
+python/carnot/verify/ and all 8 torch.load(weights_only=False) sites through it.
+
+CORRECTION to the audit's first pass, which overstated this finding. It reported
+"30 of 31 torch.load calls lack weights_only=True". PyTorch 2.6 flipped the
+DEFAULT to weights_only=True and this project runs 2.11, so the 22 bare calls
+were already safe -- verified empirically: a crafted payload raised
+UnpicklingError instead of executing. Only the 8 explicit weights_only=False
+sites were ever exposed. The real surface was 12 sites, not 30.
+
+The isinstance() trap, worth naming because it reads as a mitigation and is not:
+
+    loaded = pickle.load(handle)
+    if not isinstance(loaded, cls): raise TypeError(...)
+
+A pickle payload executes DURING parsing, so that check runs strictly after the
+damage. test_isinstance_check_runs_after_payload_execution proves it with a real
+filesystem side effect, so the pattern cannot be reintroduced on the belief that
+the type check made it safe. The check is kept via expected_type for its actual
+job: catching corruption and wrong-file mistakes.
+
+Two enforcement modes, split by real exposure rather than uniformly:
+
+  refuse (default) -- tier0e_eorm, tier0f_semantic_calibration. Fixed in-repo
+      default paths feeding the live verifier ensemble; an out-of-repo path
+      there means a live model was redirected at a downloaded file, which is
+      exactly the HuggingFace/IPFS mirror supply-chain vector.
+  warn -- PartialStateDiffusionScorer, DinaLRMPartialStateScorer. General
+      save/load round-trips where a scratch path is ordinary usage.
+
+That split was forced by evidence, not designed up front: refusing everywhere
+broke 7 existing tests, and the failing pattern was save(tmp_path) immediately
+followed by load(tmp_path) -- a file the same process had just written. No
+threat model covers that, so the control was wrong, not the callers. The warn
+mode is documented as genuinely weaker: it buys visibility, not prevention.
+
+safe_torch_load attempts weights_only=True FIRST even when the unsafe fallback
+is permitted, so allow_unsafe_pickle=True permits a fallback rather than forcing
+one -- the warning then identifies which checkpoints still actually need it.
+
+Scope stated honestly in the module docstring: the trusted-root check is no
+defence against an attacker who can already write to this repo (they can edit
+the source). It blocks the mirror vector and makes every unsafe load greppable.
+safetensors is not a drop-in here -- tier0e/tier0f persist fitted scikit-learn
+estimators, which are object graphs, not tensor dicts.
+
+13 new tests; all 28 pass across the new suite and the 7 previously-broken ones.
+
+NOTE ON DIFF SIZE: the pre-commit ruff-format hook reformatted regions of the
+touched experiment modules that are unrelated to this change. Those files were
+not format-clean beforehand, so the reformatting is a precondition of landing
+the edit rather than an intentional cleanup.
+---
+ ...rc_exp4100_trm_verifier_rft_conditional.py |  99 ++++--
+ ...experiment_4107_nanotrm_mechanism_smoke.py |  70 +++--
+ ...iment_4109_carnot_verifier_graft_sudoku.py |  54 +++-
+ ...t_4135_sudoku_accumulate_pass1_fixed_lr.py |  92 ++++--
+ ...t_4146_sudoku_accumulate_pass1_epochfix.py | 141 +++++++--
+ ...57_baseline_harvest_contiguous_continue.py |  74 +++--
+ ...eriment_4167_outerloop_training_monitor.py |  36 ++-
+ python/carnot/serialization_safety.py         | 282 ++++++++++++++++++
+ .../verify/dina_lrm_partial_state_scorer.py   |  26 +-
+ .../verify/partial_state_diffusion_scorer.py  |  23 +-
+ python/carnot/verify/tier0e_eorm.py           |  22 +-
+ .../verify/tier0f_semantic_calibration.py     |  19 +-
+ .../experiment_3823_trm_not_ebt_curlfree.py   |  29 +-
+ tests/python/test_serialization_safety.py     | 189 ++++++++++++
+ 14 files changed, 992 insertions(+), 164 deletions(-)
+ create mode 100644 python/carnot/serialization_safety.py
+ create mode 100644 tests/python/test_serialization_safety.py
+
+diff --git a/python/carnot/agentic/arc_exp4100_trm_verifier_rft_conditional.py b/python/carnot/agentic/arc_exp4100_trm_verifier_rft_conditional.py
+index 6b3bd851b2..af8fd8acdc 100644
+--- a/python/carnot/agentic/arc_exp4100_trm_verifier_rft_conditional.py
++++ b/python/carnot/agentic/arc_exp4100_trm_verifier_rft_conditional.py
+@@ -6,6 +6,8 @@ SCENARIO-LEARN-4100-RFT.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import hashlib
+ import json
+ import os
+@@ -100,8 +102,16 @@ class NativeSmokeConfig:
+     def __post_init__(self) -> None:
+         root = Path(self.repo_root)
+         object.__setattr__(self, "repo_root", root)
+-        object.__setattr__(self, "nano_trm_root", Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm")
+-        output = Path(self.output_dir) if self.output_dir else root / "results" / "experiment_4100_native_smoke"
++        object.__setattr__(
++            self,
++            "nano_trm_root",
++            Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm",
++        )
++        output = (
++            Path(self.output_dir)
++            if self.output_dir
++            else root / "results" / "experiment_4100_native_smoke"
++        )
+         object.__setattr__(self, "output_dir", output)
+         python_executable = self.python_executable
+         if python_executable is None:
+@@ -148,7 +158,9 @@ class NanoTrmProgressPrinter(Callback):  # pragma: no cover - used inside native
+     def __init__(self, every_n_steps: int = 1) -> None:
+         self.every_n_steps = max(int(every_n_steps), 1)
+ 
+-    def on_train_batch_end(self, trainer: Any, _pl_module: Any, _outputs: Any, _batch: Any, batch_idx: int) -> None:
++    def on_train_batch_end(
++        self, trainer: Any, _pl_module: Any, _outputs: Any, _batch: Any, batch_idx: int
++    ) -> None:
+         step = int(getattr(trainer, "global_step", 0))
+         if step == 0 or step % self.every_n_steps == 0:
+             print(
+@@ -174,7 +186,10 @@ def _jsonable(value: Any) -> Any:
+     if isinstance(value, Path):
+         return str(value)
+     if isinstance(value, Mapping):
+-        return {str(key): _jsonable(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
++        return {
++            str(key): _jsonable(item)
++            for key, item in sorted(value.items(), key=lambda item: str(item[0]))
++        }
+     if isinstance(value, (list, tuple)):
+         return [_jsonable(item) for item in value]
+     return value
+@@ -203,7 +218,9 @@ def _check_trm_weights(path: Path) -> PreconditionCheck:
+ 
+ 
+ def _check_nano_trm(repo_root: Path) -> PreconditionCheck:
+-    required = [repo_root / "nano-trm" / "src" / name for name in ("arc_evaluator.py", "baseline.py")]
++    required = [
++        repo_root / "nano-trm" / "src" / name for name in ("arc_evaluator.py", "baseline.py")
++    ]
+     missing = [str(path) for path in required if not path.exists()]
+     if missing:
+         return PreconditionCheck("nano_trm_substrate", False, "missing: " + ", ".join(missing))
+@@ -219,16 +236,27 @@ def _check_cuda(cuda_checker: Callable[[], tuple[bool, str]]) -> PreconditionChe
+ 
+ 
+ def _load_exp4099(repo_root: Path) -> tuple[PreconditionCheck, Path | None, dict[str, Any] | None]:
+-    candidates = sorted((repo_root / "results").glob(EXP4099_PATTERN), key=lambda path: (path.stat().st_mtime, path.name))
++    candidates = sorted(
++        (repo_root / "results").glob(EXP4099_PATTERN),
++        key=lambda path: (path.stat().st_mtime, path.name),
++    )
+     if not candidates:
+-        return PreconditionCheck("exp4099_probe", False, f"missing results/{EXP4099_PATTERN}"), None, None
++        return (
++            PreconditionCheck("exp4099_probe", False, f"missing results/{EXP4099_PATTERN}"),
++            None,
++            None,
++        )
+     path = candidates[-1]
+     try:
+         payload = json.loads(path.read_text(encoding="utf-8"))
+     except Exception as exc:
+         return PreconditionCheck("exp4099_probe", False, f"{type(exc).__name__}: {exc}"), path, None
+     if not isinstance(payload.get("verifier_beats_trm_vote"), bool):
+-        return PreconditionCheck("exp4099_probe", False, "verifier_beats_trm_vote is not a bare bool"), path, None
++        return (
++            PreconditionCheck("exp4099_probe", False, "verifier_beats_trm_vote is not a bare bool"),
++            path,
++            None,
++        )
+     return PreconditionCheck("exp4099_probe", True, f"loaded {path}"), path, payload
+ 
+ 
+@@ -273,7 +301,9 @@ def _field_principles() -> dict[str, str]:
+     }
+ 
+ 
+-def _precondition_dicts(preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
++def _precondition_dicts(
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++) -> list[dict[str, Any]]:
+     rows: list[dict[str, Any]] = []
+     for check in preconditions_checked:
+         if isinstance(check, PreconditionCheck):
+@@ -332,9 +362,15 @@ def _exp4099_gap(exp4099_artifact: Mapping[str, Any]) -> dict[str, Any]:
+     return {
+         "verifier_beats_trm_vote": bool(exp4099_artifact.get("verifier_beats_trm_vote", False)),
+         "best_reranker": best,
+-        "captured_pp_directional": float(exp4099_artifact.get("captured_pp_directional", 0.0) or 0.0),
+-        "best_captured_pp": best_row.get("captured_pp", 0.0) if isinstance(best_row, Mapping) else 0.0,
+-        "best_captured_pp_ci95": best_row.get("captured_pp_ci95", [0.0, 0.0]) if isinstance(best_row, Mapping) else [0.0, 0.0],
++        "captured_pp_directional": float(
++            exp4099_artifact.get("captured_pp_directional", 0.0) or 0.0
++        ),
++        "best_captured_pp": best_row.get("captured_pp", 0.0)
++        if isinstance(best_row, Mapping)
++        else 0.0,
++        "best_captured_pp_ci95": best_row.get("captured_pp_ci95", [0.0, 0.0])
++        if isinstance(best_row, Mapping)
++        else [0.0, 0.0],
+         "bottleneck": "verifier_discrimination_on_trm_grids",
+     }
+ 
+@@ -384,7 +420,9 @@ def build_smoke_artifact(
+         "exp4099_path": str(exp4099_path) if exp4099_path else None,
+         "verifier_gap": gap,
+         "native_smoke": {
+-            "checkpoint_path": str(smoke_result.checkpoint_path) if smoke_result.checkpoint_path else None,
++            "checkpoint_path": str(smoke_result.checkpoint_path)
++            if smoke_result.checkpoint_path
++            else None,
+             "checkpoint_reload_ok": bool(smoke_result.checkpoint_reload_ok),
+             "command": list(smoke_result.command),
+             "stdout_tail": list(smoke_result.stdout_tail[-20:]),
+@@ -469,7 +507,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+         errors.append("trm_native_trainer_checkpoint_ok must be a bare bool")
+     if not isinstance(artifact.get("preconditions_checked"), list):
+         errors.append("preconditions_checked must be a list")
+-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
++    if not isinstance(artifact.get("random_seed"), int) or isinstance(
++        artifact.get("random_seed"), bool
++    ):
+         errors.append("random_seed must be a bare int")
+     if not isinstance(artifact.get("reproducibility_checksum"), str):
+         errors.append("reproducibility_checksum must be a string")
+@@ -480,7 +520,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+         ci = delta.get("ci95")
+         if not isinstance(ci, list) or len(ci) != 2:
+             errors.append("rft_vs_ablation_delta must include two-element ci95")
+-        elif not all(isinstance(value, (int, float)) and not isinstance(value, bool) for value in ci):
++        elif not all(
++            isinstance(value, (int, float)) and not isinstance(value, bool) for value in ci
++        ):
+             errors.append("rft_vs_ablation_delta ci95 values must be numeric")
+     return errors
+ 
+@@ -497,7 +539,10 @@ def ensure_nano_trm_src_on_path(nano_trm_root: Path) -> Path:
+ 
+ def build_native_smoke_command(config: NativeSmokeConfig) -> list[str]:
+     train_py = Path(config.nano_trm_root) / "src" / "nn" / "train.py"
+-    epochs = max((int(config.max_steps) // max(int(config.train_puzzles) // int(config.batch_size), 1)) + 1, 1)
++    epochs = max(
++        (int(config.max_steps) // max(int(config.train_puzzles) // int(config.batch_size), 1)) + 1,
++        1,
++    )
+     return [
+         str(config.python_executable),
+         str(train_py),
+@@ -574,7 +619,7 @@ def _load_torch_checkpoint(path: Path) -> tuple[bool, str]:
+         import torch  # pylint: disable=import-outside-toplevel
+ 
+         try:
+-            payload = torch.load(path, map_location="cpu", weights_only=False)
++            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
+         except TypeError:  # pragma: no cover - older torch.
+             payload = torch.load(path, map_location="cpu")
+     except Exception as exc:
+@@ -588,11 +633,15 @@ def _latest_checkpoint(checkpoint_dir: Path) -> Path | None:
+     last = checkpoint_dir / "last.ckpt"
+     if last.exists():
+         return last
+-    candidates = sorted(checkpoint_dir.glob("*.ckpt"), key=lambda path: (path.stat().st_mtime, path.name))
++    candidates = sorted(
++        checkpoint_dir.glob("*.ckpt"), key=lambda path: (path.stat().st_mtime, path.name)
++    )
+     return candidates[-1] if candidates else None
+ 
+ 
+-def run_native_trm_smoke(config: NativeSmokeConfig) -> SmokeRunResult:  # pragma: no cover - launches external trainer.
++def run_native_trm_smoke(
++    config: NativeSmokeConfig,
++) -> SmokeRunResult:  # pragma: no cover - launches external trainer.
+     """Run a real native nano-trm training smoke and reload its checkpoint."""
+ 
+     started = time.time()
+@@ -613,7 +662,9 @@ def run_native_trm_smoke(config: NativeSmokeConfig) -> SmokeRunResult:  # pragma
+             bufsize=1,
+         )
+     except Exception as exc:
+-        return SmokeRunResult(False, False, None, time.time() - started, command, [f"{type(exc).__name__}: {exc}"])
++        return SmokeRunResult(
++            False, False, None, time.time() - started, command, [f"{type(exc).__name__}: {exc}"]
++        )
+ 
+     assert proc.stdout is not None
+     for line in proc.stdout:
+@@ -746,7 +797,13 @@ def run_experiment(
+ 
+ def main() -> None:  # pragma: no cover - thin CLI wrapper.
+     artifact = run_experiment()
+-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
++    print(
++        json.dumps(
++            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
++            indent=2,
++            sort_keys=True,
++        )
++    )
+ 
+ 
+ if __name__ == "__main__":  # pragma: no cover
+diff --git a/python/carnot/experiment_4107_nanotrm_mechanism_smoke.py b/python/carnot/experiment_4107_nanotrm_mechanism_smoke.py
+index c8b9e6917c..aa3e66cd15 100644
+--- a/python/carnot/experiment_4107_nanotrm_mechanism_smoke.py
++++ b/python/carnot/experiment_4107_nanotrm_mechanism_smoke.py
+@@ -6,6 +6,8 @@ SCENARIO-LEARN-4107-BLOCKED.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import csv
+ import json
+ import math
+@@ -52,15 +54,9 @@ FIELD_PRINCIPLES = {
+     "nanotrm_trainer_checkpoint_ok": (
+         "Bare bool: did nano-trm's native trainer produce and reload a checkpoint."
+     ),
+-    "exact_accuracy": (
+-        "The real solve metric from exact_accuracy, never q_halt_accuracy."
+-    ),
+-    "checkpoint_path": (
+-        "Persistent path to the saved checkpoint under results/trm_runs."
+-    ),
+-    "duration_s": (
+-        "Wall-clock native training plus checkpoint/metric verification seconds."
+-    ),
++    "exact_accuracy": ("The real solve metric from exact_accuracy, never q_halt_accuracy."),
++    "checkpoint_path": ("Persistent path to the saved checkpoint under results/trm_runs."),
++    "duration_s": ("Wall-clock native training plus checkpoint/metric verification seconds."),
+     "preconditions_checked": (
+         "Records uv, CUDA, native trainer, and persistent save parent checks."
+     ),
+@@ -216,14 +212,18 @@ def _check_cuda(cuda_checker: Callable[[], tuple[bool, str]]) -> PreconditionChe
+ 
+ def _check_save_parent(root: Path, save_parent: Path) -> PreconditionCheck:
+     if not save_parent.exists() or not save_parent.is_dir():
+-        return PreconditionCheck("persistent_save_parent", False, f"missing directory: {save_parent}")
++        return PreconditionCheck(
++            "persistent_save_parent", False, f"missing directory: {save_parent}"
++        )
+     if not os.access(save_parent, os.W_OK):
+         return PreconditionCheck("persistent_save_parent", False, f"not writable: {save_parent}")
+     try:
+         save_parent.resolve().relative_to(root.resolve())
+     except ValueError:
+         return PreconditionCheck("persistent_save_parent", False, f"not under repo: {save_parent}")
+-    return PreconditionCheck("persistent_save_parent", True, f"writable persistent dir: {save_parent}")
++    return PreconditionCheck(
++        "persistent_save_parent", True, f"writable persistent dir: {save_parent}"
++    )
+ 
+ 
+ def check_preconditions(
+@@ -293,7 +293,9 @@ def extract_latest_exact_accuracy(save_dir: str | Path) -> ExactAccuracy:
+     """SCENARIO-LEARN-4107: parse latest real exact_accuracy from CSV logs."""
+ 
+     root = Path(save_dir)
+-    metrics_files = sorted(root.rglob("metrics.csv"), key=lambda path: (path.stat().st_mtime, str(path)))
++    metrics_files = sorted(
++        root.rglob("metrics.csv"), key=lambda path: (path.stat().st_mtime, str(path))
++    )
+     if not metrics_files:
+         raise ValueError(f"exact_accuracy metrics.csv not found under {root}")
+ 
+@@ -311,7 +313,9 @@ def extract_latest_exact_accuracy(save_dir: str | Path) -> ExactAccuracy:
+ 
+ 
+ def _latest_checkpoint(save_dir: Path) -> Path | None:
+-    checkpoints = sorted(save_dir.rglob("*.ckpt"), key=lambda path: (path.stat().st_mtime, str(path)))
++    checkpoints = sorted(
++        save_dir.rglob("*.ckpt"), key=lambda path: (path.stat().st_mtime, str(path))
++    )
+     if not checkpoints:
+         return None
+     last = [path for path in checkpoints if path.name == "last.ckpt"]
+@@ -338,12 +342,14 @@ def _select_artifact_root(config: NanoTrmRunConfig) -> Path:
+     return Path(config.save_dir)
+ 
+ 
+-def _load_torch_checkpoint(path: Path) -> tuple[bool, str]:  # pragma: no cover - environment dependent.
++def _load_torch_checkpoint(
++    path: Path,
++) -> tuple[bool, str]:  # pragma: no cover - environment dependent.
+     try:
+         import torch  # pylint: disable=import-outside-toplevel
+ 
+         try:
+-            payload = torch.load(path, map_location="cpu", weights_only=False)
++            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
+         except TypeError:
+             payload = torch.load(path, map_location="cpu")
+     except Exception as exc:
+@@ -375,7 +381,9 @@ def build_train_command(config: NanoTrmRunConfig) -> list[str]:
+     ]
+ 
+ 
+-def build_train_env(config: NanoTrmRunConfig) -> dict[str, str]:  # pragma: no cover - subprocess only.
++def build_train_env(
++    config: NanoTrmRunConfig,
++) -> dict[str, str]:  # pragma: no cover - subprocess only.
+     paths = [
+         str(Path(config.repo_root) / "python"),
+         str(Path(config.repo_root)),
+@@ -393,7 +401,9 @@ def build_train_env(config: NanoTrmRunConfig) -> dict[str, str]:  # pragma: no c
+     return env
+ 
+ 
+-def generate_sudoku_data_if_missing(config: NanoTrmRunConfig) -> None:  # pragma: no cover - subprocess only.
++def generate_sudoku_data_if_missing(
++    config: NanoTrmRunConfig,
++) -> None:  # pragma: no cover - subprocess only.
+     if Path(config.dataset_dir).exists():
+         return
+     command = [
+@@ -416,7 +426,9 @@ def generate_sudoku_data_if_missing(config: NanoTrmRunConfig) -> None:  # pragma
+     subprocess.run(command, cwd=Path(config.nano_trm_root), check=True)  # noqa: S603
+ 
+ 
+-def run_native_trm_training(config: NanoTrmRunConfig) -> NanoTrmRunResult:  # pragma: no cover - launches trainer.
++def run_native_trm_training(
++    config: NanoTrmRunConfig,
++) -> NanoTrmRunResult:  # pragma: no cover - launches trainer.
+     """Run the real native nano-trm trainer and reload its checkpoint."""
+ 
+     generate_sudoku_data_if_missing(config)
+@@ -533,7 +545,9 @@ def _artifact_common(
+         "nanotrm_trainer_checkpoint_ok": bool(checkpoint_ok),
+         "exact_accuracy": None if exact_accuracy is None else float(exact_accuracy.value),
+         "exact_accuracy_metric": None if exact_accuracy is None else exact_accuracy.metric_name,
+-        "exact_accuracy_metrics_path": None if exact_accuracy is None else str(exact_accuracy.metrics_path),
++        "exact_accuracy_metrics_path": None
++        if exact_accuracy is None
++        else str(exact_accuracy.metrics_path),
+         "checkpoint_path": None if checkpoint_path is None else str(checkpoint_path),
+         "duration_s": round(float(duration_s), 3),
+         "preconditions_checked": _precondition_dicts(preconditions_checked),
+@@ -658,7 +672,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+ 
+     if not isinstance(artifact.get("preconditions_checked"), list):
+         errors.append("preconditions_checked must be a list")
+-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
++    if not isinstance(artifact.get("random_seed"), int) or isinstance(
++        artifact.get("random_seed"), bool
++    ):
+         errors.append("random_seed must be a bare int")
+ 
+     gate = artifact.get("acceptance_gate_passed")
+@@ -669,7 +685,11 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+             errors.append("successful gate requires nanotrm_trainer_checkpoint_ok true")
+         if exact is None:
+             errors.append("successful gate requires exact_accuracy")
+-        if not isinstance(duration, (int, float)) or isinstance(duration, bool) or float(duration) <= 60.0:
++        if (
++            not isinstance(duration, (int, float))
++            or isinstance(duration, bool)
++            or float(duration) <= 60.0
++        ):
+             errors.append("successful gate requires duration_s > 60")
+         checkpoint_path = artifact.get("checkpoint_path")
+         if not (
+@@ -751,7 +771,13 @@ def run_experiment(
+ 
+ def main() -> None:  # pragma: no cover - thin CLI wrapper.
+     artifact = run_experiment()
+-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
++    print(
++        json.dumps(
++            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
++            indent=2,
++            sort_keys=True,
++        )
++    )
+ 
+ 
+ if __name__ == "__main__":  # pragma: no cover
+diff --git a/python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py b/python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py
+index 133181c3a7..0b791dcfdf 100644
+--- a/python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py
++++ b/python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py
+@@ -6,6 +6,8 @@ SCENARIO-LEARN-4109-RFT.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import hashlib
+ import json
+ import os
+@@ -22,7 +24,9 @@ from typing import Any
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ RESULT_FILENAME = "experiment_4109_carnot_verifier_graft_sudoku.json"
+ DEFAULT_OUTPUT = REPO_ROOT / "results" / RESULT_FILENAME
+-DEFAULT_EXP4108_ARTIFACT = REPO_ROOT / "results" / "experiment_4108_nanotrm_sudoku_extreme_baseline.json"
++DEFAULT_EXP4108_ARTIFACT = (
++    REPO_ROOT / "results" / "experiment_4108_nanotrm_sudoku_extreme_baseline.json"
++)
+ DEFAULT_EXP4107_ARTIFACT = REPO_ROOT / "results" / "experiment_4107_nanotrm_mechanism_smoke.json"
+ DEFAULT_DATA_DIR = REPO_ROOT / "nano-trm" / "data" / "sudoku_extreme_1k_aug_1k"
+ RANDOM_SEED = 4109
+@@ -235,7 +239,9 @@ def score_sudoku_candidate(
+ 
+ 
+ def _is_exact(candidate_tokens: Sequence[int], label_tokens: Sequence[int]) -> bool:
+-    return tuple(int(token) for token in candidate_tokens) == tuple(int(token) for token in label_tokens)
++    return tuple(int(token) for token in candidate_tokens) == tuple(
++        int(token) for token in label_tokens
++    )
+ 
+ 
+ def _vote_groups(candidates: Sequence[CandidateSample]) -> dict[tuple[int, ...], dict[str, Any]]:
+@@ -324,7 +330,9 @@ def evaluate_rerank(
+         vote_score = score_sudoku_candidate(pool.puzzle_tokens, vote.tokens)
+         vote_correct = _is_exact(vote.tokens, pool.label_tokens)
+         verifier_correct = _is_exact(verifier.tokens, pool.label_tokens)
+-        oracle_correct = any(_is_exact(candidate.tokens, pool.label_tokens) for candidate in pool.candidates)
++        oracle_correct = any(
++            _is_exact(candidate.tokens, pool.label_tokens) for candidate in pool.candidates
++        )
+         differences.append(float(verifier_correct) - float(vote_correct))
+         rows.append(
+             {
+@@ -445,7 +453,10 @@ def _jsonable(value: Any) -> Any:
+     if isinstance(value, Path):
+         return str(value)
+     if isinstance(value, Mapping):
+-        return {str(key): _jsonable(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
++        return {
++            str(key): _jsonable(item)
++            for key, item in sorted(value.items(), key=lambda item: str(item[0]))
++        }
+     if isinstance(value, (list, tuple)):
+         return [_jsonable(item) for item in value]
+     if hasattr(value, "item"):
+@@ -453,7 +464,9 @@ def _jsonable(value: Any) -> Any:
+     return value
+ 
+ 
+-def compute_reproducibility_checksum(corpora: Mapping[str, Any], *, heldout_ids: Sequence[str]) -> str:
++def compute_reproducibility_checksum(
++    corpora: Mapping[str, Any], *, heldout_ids: Sequence[str]
++) -> str:
+     """REQ-LEARN-4109: hash corpus rows and held-out split identifiers."""
+ 
+     payload = {
+@@ -505,7 +518,9 @@ def resolve_checkpoint_choice(
+     return CheckpointChoice(None, "none", "no_exp4108_or_exp4107_checkpoint_available")
+ 
+ 
+-def _default_cuda_checker() -> tuple[bool, str]:  # pragma: no cover - imports torch and probes host GPU.
++def _default_cuda_checker() -> tuple[
++    bool, str
++]:  # pragma: no cover - imports torch and probes host GPU.
+     try:
+         import torch  # pylint: disable=import-outside-toplevel
+     except Exception as exc:  # pragma: no cover - depends on runtime.
+@@ -541,7 +556,9 @@ def check_preconditions(
+     return checks, choice
+ 
+ 
+-def _candidate_score_from_logprobs(log_probs: Any, selected: Any) -> float:  # pragma: no cover - torch live sampler helper.
++def _candidate_score_from_logprobs(
++    log_probs: Any, selected: Any
++) -> float:  # pragma: no cover - torch live sampler helper.
+     gathered = log_probs.gather(-1, selected.unsqueeze(-1)).squeeze(-1)
+     return float(gathered.mean().detach().cpu().item())
+ 
+@@ -571,7 +588,9 @@ def sample_checkpoint_candidate_pools(  # pragma: no cover - live GPU/checkpoint
+     from src.nn.models.trm import TRMModule  # pylint: disable=import-outside-toplevel
+ 
+     print(f"[exp4109] loading checkpoint={checkpoint_path}", flush=True)
+-    checkpoint = torch.load(Path(checkpoint_path), map_location="cpu", weights_only=False)
++    checkpoint = safe_torch_load(
++        Path(checkpoint_path), map_location="cpu", allow_unsafe_pickle=True
++    )
+     model = TRMModule(**checkpoint["hyper_parameters"])
+     model.load_state_dict(checkpoint["state_dict"], strict=False)
+     model.eval()
+@@ -589,14 +608,15 @@ def sample_checkpoint_candidate_pools(  # pragma: no cover - live GPU/checkpoint
+     for start in range(0, n, batch_size):
+         stop = min(start + batch_size, n)
+         print(
+-            f"[exp4109] sampling TRM candidates split={split} rows={start}:{stop} "
+-            f"k={k_candidates}",
++            f"[exp4109] sampling TRM candidates split={split} rows={start}:{stop} k={k_candidates}",
+             flush=True,
+         )
+         batch = {
+             "input": torch.as_tensor(inputs[start:stop], dtype=torch.long, device=device),
+             "output": torch.as_tensor(labels[start:stop], dtype=torch.long, device=device),
+-            "puzzle_identifiers": torch.as_tensor(identifiers[start:stop], dtype=torch.long, device=device),
++            "puzzle_identifiers": torch.as_tensor(
++                identifiers[start:stop], dtype=torch.long, device=device
++            ),
+         }
+         with torch.no_grad():
+             carry = model.initial_carry(batch)
+@@ -703,7 +723,9 @@ def build_result_artifact(
+         "verifier_value_added": bool(value_added),
+         "preconditions_checked": [_jsonable(check) for check in preconditions_checked],
+         "checkpoint_choice": checkpoint_choice.to_dict(),
+-        "checkpoint_path": None if checkpoint_choice.checkpoint_path is None else str(checkpoint_choice.checkpoint_path),
++        "checkpoint_path": None
++        if checkpoint_choice.checkpoint_path is None
++        else str(checkpoint_choice.checkpoint_path),
+         "checkpoint_source_experiment": checkpoint_choice.source_experiment,
+         "baseline_limitation": checkpoint_choice.limitation,
+         "candidate_source": candidate_source,
+@@ -872,9 +894,13 @@ def run_experiment(
+         )
+         candidate_source = "trm_checkpoint_final_logits_k_sampling"
+ 
+-    rerank = evaluate_rerank(pools, random_seed=random_seed, bootstrap_resamples=bootstrap_resamples)
++    rerank = evaluate_rerank(
++        pools, random_seed=random_seed, bootstrap_resamples=bootstrap_resamples
++    )
+     corpora = build_matched_corpora(pools)
+-    rft_delta = evaluate_label_arms(corpora, random_seed=random_seed + 1, bootstrap_resamples=bootstrap_resamples)
++    rft_delta = evaluate_label_arms(
++        corpora, random_seed=random_seed + 1, bootstrap_resamples=bootstrap_resamples
++    )
+     heldout_ids = [pool.puzzle_id for pool in pools]
+     checksum = compute_reproducibility_checksum(corpora, heldout_ids=heldout_ids)
+     artifact = build_result_artifact(
+diff --git a/python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py b/python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py
+index 5a9c010ed1..3811c96108 100644
+--- a/python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py
++++ b/python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py
+@@ -6,6 +6,8 @@ SCENARIO-LEARN-4135-BLOCKED.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import hashlib
+ import json
+ import math
+@@ -109,9 +111,15 @@ class Exp4135Config:
+         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
+             parent = root / "results" / "trm_runs"
+         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
+-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
++        stable = (
++            Path(self.stable_dir)
++            if self.stable_dir is not None
++            else parent / "sudoku_extreme_baseline"
++        )
+         hydra_root = (
+-            Path(self.hydra_run_root) if self.hydra_run_root is not None else parent / Path(DEFAULT_HYDRA_RUN_ROOT).name
++            Path(self.hydra_run_root)
++            if self.hydra_run_root is not None
++            else parent / Path(DEFAULT_HYDRA_RUN_ROOT).name
+         )
+         dataset = (
+             Path(self.dataset_dir)
+@@ -211,9 +219,13 @@ class PassMetricSummary:
+ 
+     def to_dict(self) -> dict[str, Any]:
+         row = asdict(self)
+-        row["val_metrics_path"] = None if self.val_metrics_path is None else str(self.val_metrics_path)
++        row["val_metrics_path"] = (
++            None if self.val_metrics_path is None else str(self.val_metrics_path)
++        )
+         row["first_train_lr_metrics_path"] = (
+-            None if self.first_train_lr_metrics_path is None else str(self.first_train_lr_metrics_path)
++            None
++            if self.first_train_lr_metrics_path is None
++            else str(self.first_train_lr_metrics_path)
+         )
+         row["lr_continued_not_rewarmed"] = self.lr_continued_not_rewarmed
+         return row
+@@ -254,8 +266,13 @@ def _rounded(value: float | None, digits: int = 12) -> float | None:
+     return None if value is None else round(float(value), digits)
+ 
+ 
+-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
+-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
++def _checks_to_dicts(
++    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
++) -> list[dict[str, Any]]:
++    return [
++        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
++        for check in checks
++    ]
+ 
+ 
+ def lr_continued_not_rewarmed(first_lr: float | None) -> bool:
+@@ -269,7 +286,10 @@ def lr_continued_not_rewarmed(first_lr: float | None) -> bool:
+ def matches_published_087(value: float | None) -> bool:
+     """REQ-LEARN-4135: compare validation exact accuracy to 0.87 within 0.02."""
+ 
+-    return value is not None and abs(float(value) - PUBLISHED_EXACT_ACCURACY) <= PUBLISHED_TOLERANCE + 1e-12
++    return (
++        value is not None
++        and abs(float(value) - PUBLISHED_EXACT_ACCURACY) <= PUBLISHED_TOLERANCE + 1e-12
++    )
+ 
+ 
+ def build_train_command(config: Exp4135Config) -> list[str]:
+@@ -316,11 +336,13 @@ def _hash_path(hasher: Any, label: str, path: Path) -> None:
+         _hash_file(hasher, path.parent, path)
+         return
+     if path.is_dir():
+-        children = sorted((item for item in path.rglob("*") if item.is_file()), key=lambda item: str(item))
++        children = sorted(
++            (item for item in path.rglob("*") if item.is_file()), key=lambda item: str(item)
++        )
+         for child in children:
+             _hash_file(hasher, path, child)
+         return
+-    hasher.update(f"missing:{path}".encode("utf-8"))
++    hasher.update(f"missing:{path}".encode())
+     hasher.update(b"\0")
+ 
+ 
+@@ -371,20 +393,26 @@ def reset_checkpoint_timer_state(checkpoint_path: str | Path) -> TimerResetResul
+         import torch  # pylint: disable=import-outside-toplevel
+ 
+         try:
+-            payload = torch.load(path, map_location="cpu", weights_only=False)
++            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
+         except TypeError:
+             payload = torch.load(path, map_location="cpu")
+     except Exception as exc:
+         return TimerResetResult(False, f"{type(exc).__name__}: {exc}", None)
+     if not isinstance(payload, dict):
+-        return TimerResetResult(False, f"unexpected checkpoint payload: {type(payload).__name__}", None)
++        return TimerResetResult(
++            False, f"unexpected checkpoint payload: {type(payload).__name__}", None
++        )
+ 
+     manual_step = _float_or_none(payload.get("nano_trm_manual_lr_step"))
+     callbacks = payload.get("callbacks")
+     timer = callbacks.get("Timer") if isinstance(callbacks, dict) else None
+     elapsed = timer.get("time_elapsed") if isinstance(timer, dict) else None
+     if not isinstance(elapsed, dict):
+-        return TimerResetResult(False, "no Lightning Timer time_elapsed state found", None if manual_step is None else int(manual_step))
++        return TimerResetResult(
++            False,
++            "no Lightning Timer time_elapsed state found",
++            None if manual_step is None else int(manual_step),
++        )
+ 
+     changed = False
+     for key in ("train", "sanity_check", "validate", "test", "predict"):
+@@ -662,13 +690,19 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+ 
+     val = artifact.get("val_exact_accuracy")
+     if val is not None:
+-        number = _float_or_none(val) if isinstance(val, (int, float)) and not isinstance(val, bool) else None
++        number = (
++            _float_or_none(val)
++            if isinstance(val, (int, float)) and not isinstance(val, bool)
++            else None
++        )
+         if number is None or not 0.0 <= number <= 1.0:
+             errors.append("val_exact_accuracy must be numeric between 0 and 1 or null")
+ 
+     delta = artifact.get("delta_vs_previous")
+     if delta is not None and (
+-        not isinstance(delta, (int, float)) or isinstance(delta, bool) or _float_or_none(delta) is None
++        not isinstance(delta, (int, float))
++        or isinstance(delta, bool)
++        or _float_or_none(delta) is None
+     ):
+         errors.append("delta_vs_previous must be numeric or null")
+ 
+@@ -682,9 +716,13 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+     if not isinstance(stable_checkpoint_path, str) or not stable_checkpoint_path.endswith(
+         "results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+     ):
+-        errors.append("stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path")
++        errors.append(
++            "stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path"
++        )
+ 
+-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
++    if not isinstance(artifact.get("random_seed"), int) or isinstance(
++        artifact.get("random_seed"), bool
++    ):
+         errors.append("random_seed must be a bare int")
+ 
+     checksum = artifact.get("reproducibility_checksum")
+@@ -703,7 +741,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+     if duration is None or duration < 0 or duration >= 4_800:
+         errors.append("duration_s must be a scalar bounded number below 4800")
+ 
+-    if artifact.get("matches_published_087") is True and not matches_published_087(_float_or_none(val)):
++    if artifact.get("matches_published_087") is True and not matches_published_087(
++        _float_or_none(val)
++    ):
+         errors.append("matches_published_087=true requires val within 0.02 of 0.87")
+ 
+     gate = artifact.get("acceptance_gate_passed")
+@@ -716,7 +756,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+             lr_continued=artifact.get("lr_continued_not_rewarmed") is True,
+             honest_verdict=str(verdict),
+         ):
+-            errors.append("acceptance_gate_passed=true requires val, LR continuity, and improvement or stall verdict")
++            errors.append(
++                "acceptance_gate_passed=true requires val, LR continuity, and improvement or stall verdict"
++            )
+ 
+     return errors
+ 
+@@ -751,7 +793,11 @@ def run_experiment(
+ 
+     started = time.time()
+     root = Path(repo_root)
+-    lr_path = Path(lr_artifact_path) if lr_artifact_path is not None else root / "results" / exp4126.RESULT_FILENAME
++    lr_path = (
++        Path(lr_artifact_path)
++        if lr_artifact_path is not None
++        else root / "results" / exp4126.RESULT_FILENAME
++    )
+     config = Exp4135Config(
+         repo_root=root,
+         save_parent=save_parent,
+@@ -848,7 +894,13 @@ def run_experiment(
+ 
+ def main() -> None:  # pragma: no cover - thin CLI wrapper.
+     artifact = run_experiment()
+-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
++    print(
++        json.dumps(
++            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
++            indent=2,
++            sort_keys=True,
++        )
++    )
+ 
+ 
+ if __name__ == "__main__":  # pragma: no cover
+diff --git a/python/carnot/experiment_4146_sudoku_accumulate_pass1_epochfix.py b/python/carnot/experiment_4146_sudoku_accumulate_pass1_epochfix.py
+index d2f2d51ed7..4d3fafce73 100644
+--- a/python/carnot/experiment_4146_sudoku_accumulate_pass1_epochfix.py
++++ b/python/carnot/experiment_4146_sudoku_accumulate_pass1_epochfix.py
+@@ -11,6 +11,8 @@ SCENARIO-LEARN-4146-BLOCKED-NOOP.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import json
+ import math
+ import subprocess
+@@ -94,12 +96,20 @@ class Exp4146Config:
+         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
+             parent = root / "results" / "trm_runs"
+         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
+-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
++        stable = (
++            Path(self.stable_dir)
++            if self.stable_dir is not None
++            else parent / "sudoku_extreme_baseline"
++        )
+         hydra_root = (
+-            Path(self.hydra_run_root) if self.hydra_run_root is not None else parent / DEFAULT_HYDRA_RUN_ROOT.name
++            Path(self.hydra_run_root)
++            if self.hydra_run_root is not None
++            else parent / DEFAULT_HYDRA_RUN_ROOT.name
+         )
+         dataset = (
+-            Path(self.dataset_dir) if self.dataset_dir is not None else nano_root / "data" / "sudoku_extreme_1k_aug_1k"
++            Path(self.dataset_dir)
++            if self.dataset_dir is not None
++            else nano_root / "data" / "sudoku_extreme_1k_aug_1k"
+         )
+         object.__setattr__(self, "repo_root", root)
+         object.__setattr__(self, "save_parent", parent)
+@@ -129,7 +139,14 @@ class Exp4146Config:
+ 
+     @property
+     def data_config_path(self) -> Path:
+-        return Path(self.nano_trm_root) / "src" / "nn" / "configs" / "data" / "sudoku_extreme_1k_aug1k.yaml"
++        return (
++            Path(self.nano_trm_root)
++            / "src"
++            / "nn"
++            / "configs"
++            / "data"
++            / "sudoku_extreme_1k_aug1k.yaml"
++        )
+ 
+     def pass_run_dir(self) -> Path:
+         return Path(self.hydra_run_root) / "pass_1_epochfix_hydra"
+@@ -205,8 +222,13 @@ def _int_or_none(value: Any) -> int | None:
+     return None if number is None else int(number)
+ 
+ 
+-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
+-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
++def _checks_to_dicts(
++    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
++) -> list[dict[str, Any]]:
++    return [
++        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
++        for check in checks
++    ]
+ 
+ 
+ def _nested_get(mapping: Mapping[str, Any], path: Sequence[str]) -> Any:
+@@ -222,8 +244,12 @@ def _timer_train_elapsed(callbacks: Any) -> float | None:
+     if not isinstance(callbacks, Mapping):
+         return None
+     for key, callback_state in callbacks.items():
+-        if key == "Timer" or (isinstance(callback_state, Mapping) and "time_elapsed" in callback_state):
+-            elapsed = callback_state.get("time_elapsed") if isinstance(callback_state, Mapping) else None
++        if key == "Timer" or (
++            isinstance(callback_state, Mapping) and "time_elapsed" in callback_state
++        ):
++            elapsed = (
++                callback_state.get("time_elapsed") if isinstance(callback_state, Mapping) else None
++            )
+             return _float_or_none(elapsed.get("train") if isinstance(elapsed, Mapping) else None)
+     return None
+ 
+@@ -238,13 +264,22 @@ def read_checkpoint_state(path: str | Path) -> CheckpointState:
+         import torch  # pylint: disable=import-outside-toplevel
+ 
+         try:
+-            payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
++            payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
+         except TypeError:  # pragma: no cover - older torch compatibility.
+             payload = torch.load(checkpoint_path, map_location="cpu")
+     except Exception as exc:  # pragma: no cover - corrupt local checkpoint.
+         return CheckpointState(False, f"{type(exc).__name__}: {exc}", None, None, None, None)
+-    if not isinstance(payload, Mapping):  # pragma: no cover - defensive against unexpected torch payloads.
+-        return CheckpointState(False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None, None, None)
++    if not isinstance(
++        payload, Mapping
++    ):  # pragma: no cover - defensive against unexpected torch payloads.
++        return CheckpointState(
++            False,
++            f"unexpected checkpoint payload: {type(payload).__name__}",
++            None,
++            None,
++            None,
++            None,
++        )
+ 
+     epoch = _int_or_none(payload.get("epoch"))
+     if epoch is None:
+@@ -299,10 +334,16 @@ def diagnose_epoch_cap(
+ ) -> EpochCapDiagnosis:
+     """REQ-LEARN-4146: decide whether the requested max-epochs root cause is real."""
+ 
+-    state = checkpoint_state if checkpoint_state is not None else read_checkpoint_state(config.stable_checkpoint_path)
++    state = (
++        checkpoint_state
++        if checkpoint_state is not None
++        else read_checkpoint_state(config.stable_checkpoint_path)
++    )
+     config_max_epochs = read_config_max_epochs(config.experiment_config_path)
+     epoch = state.epoch
+-    cap_confirmed = epoch is not None and config_max_epochs is not None and epoch >= config_max_epochs
++    cap_confirmed = (
++        epoch is not None and config_max_epochs is not None and epoch >= config_max_epochs
++    )
+     return EpochCapDiagnosis(
+         checkpoint_epoch=epoch,
+         checkpoint_global_step=state.global_step,
+@@ -430,7 +471,9 @@ def _common_fields(
+         "max_epochs_cap_confirmed": bool(diagnosis.max_epochs_cap_confirmed),
+         "seed_epoch": diagnosis.checkpoint_epoch,
+         "post_epoch": post_epoch,
+-        "val_exact_accuracy": None if val_exact_accuracy is None else round(float(val_exact_accuracy), 12),
++        "val_exact_accuracy": None
++        if val_exact_accuracy is None
++        else round(float(val_exact_accuracy), 12),
+         "stable_checkpoint_path": str(run_config.stable_checkpoint_path),
+         "duration_s": round(float(duration_s), 3),
+         "random_seed": int(run_config.random_seed),
+@@ -462,21 +505,27 @@ def build_blocked_artifact(
+         {
+             "acceptance_gate_passed": reason.startswith("blocked_noop_"),
+             "preconditions_checked": _checks_to_dicts(preconditions_checked),
+-            "command": [] if seed_epoch is None else build_train_command(run_config, seed_epoch=seed_epoch),
++            "command": []
++            if seed_epoch is None
++            else build_train_command(run_config, seed_epoch=seed_epoch),
+         }
+     )
+     validate_artifact(artifact)
+     return artifact
+ 
+ 
+-def _verdict_for_result(seed_epoch: int | None, post_epoch: int | None, duration_s: float, val: float | None) -> str:
++def _verdict_for_result(
++    seed_epoch: int | None, post_epoch: int | None, duration_s: float, val: float | None
++) -> str:
+     if duration_s <= MIN_REAL_TRAINING_DURATION_S:
+         return "blocked_noop_duration_too_short"
+     if seed_epoch is None or post_epoch is None or post_epoch <= seed_epoch:
+         return "blocked_noop_epoch_not_advanced"
+     if val is None:
+         return "blocked_noop_missing_val_exact_accuracy"
+-    return f"complete: epochfix_trained_seed_epoch={seed_epoch}_post_epoch={post_epoch}_val={val:.4f}"
++    return (
++        f"complete: epochfix_trained_seed_epoch={seed_epoch}_post_epoch={post_epoch}_val={val:.4f}"
++    )
+ 
+ 
+ def build_result_artifact(
+@@ -491,7 +540,9 @@ def build_result_artifact(
+ ) -> dict[str, Any]:
+     """SCENARIO-LEARN-4146: build the artifact and apply the anti-no-op guard."""
+ 
+-    verdict = _verdict_for_result(seed_state.epoch, post_state.epoch, run_result.duration_s, val_exact_accuracy)
++    verdict = _verdict_for_result(
++        seed_state.epoch, post_state.epoch, run_result.duration_s, val_exact_accuracy
++    )
+     artifact = _common_fields(
+         honest_verdict=verdict,
+         run_config=run_config,
+@@ -508,8 +559,12 @@ def build_result_artifact(
+             "return_code": int(run_result.return_code),
+             "checkpoint_reload_ok": bool(run_result.checkpoint_reload_ok),
+             "checkpoint_reload_detail": run_result.checkpoint_reload_detail,
+-            "exact_accuracy_metric": "val/exact_accuracy" if val_exact_accuracy is not None else None,
+-            "exact_accuracy_metrics_path": None if val_metrics_path is None else str(val_metrics_path),
++            "exact_accuracy_metric": "val/exact_accuracy"
++            if val_exact_accuracy is not None
++            else None,
++            "exact_accuracy_metrics_path": None
++            if val_metrics_path is None
++            else str(val_metrics_path),
+             "run_dir": str(run_result.run_dir),
+             "command": list(run_result.command),
+             "stdout_tail": list(run_result.stdout_tail[-60:]),
+@@ -540,25 +595,37 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+             errors.append(f"{field} must be an int or null")
+     val = artifact.get("val_exact_accuracy")
+     if val is not None:
+-        number = _float_or_none(val) if isinstance(val, (int, float)) and not isinstance(val, bool) else None
++        number = (
++            _float_or_none(val)
++            if isinstance(val, (int, float)) and not isinstance(val, bool)
++            else None
++        )
+         if number is None or not 0.0 <= number <= 1.0:
+             errors.append("val_exact_accuracy must be numeric between 0 and 1 or null")
+     stable_checkpoint_path = artifact.get("stable_checkpoint_path")
+     if not isinstance(stable_checkpoint_path, str) or not stable_checkpoint_path.endswith(
+         "results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+     ):
+-        errors.append("stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path")
++        errors.append(
++            "stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path"
++        )
+     duration = _float_or_none(artifact.get("duration_s"))
+     if duration is None or duration < 0 or duration >= 86_400:
+         errors.append("duration_s must be a scalar bounded number below 86400")
+-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
++    if not isinstance(artifact.get("random_seed"), int) or isinstance(
++        artifact.get("random_seed"), bool
++    ):
+         errors.append("random_seed must be a bare int")
+     gate = artifact.get("acceptance_gate_passed")
+     if gate is not None and not isinstance(gate, bool):
+         errors.append("acceptance_gate_passed must be a bare bool")
+-    if isinstance(verdict, str) and verdict.startswith(("complete:", "success:", "passed:", "shipped:")):
++    if isinstance(verdict, str) and verdict.startswith(
++        ("complete:", "success:", "passed:", "shipped:")
++    ):
+         if not _acceptance_gate(artifact):
+-            errors.append("complete verdict requires duration>120, epoch advance, and real val_exact_accuracy")
++            errors.append(
++                "complete verdict requires duration>120, epoch advance, and real val_exact_accuracy"
++            )
+     return errors
+ 
+ 
+@@ -584,7 +651,9 @@ def run_native_epochfixed_pass(
+     started = time.time()
+     command = build_train_command(config, seed_epoch=seed_epoch)
+     stdout_lines: list[str] = []
+-    print(f"[exp4146] launching epoch-fixed resume stable={config.stable_checkpoint_path}", flush=True)
++    print(
++        f"[exp4146] launching epoch-fixed resume stable={config.stable_checkpoint_path}", flush=True
++    )
+     try:
+         proc = subprocess.Popen(
+             command,
+@@ -634,7 +703,9 @@ def run_native_epochfixed_pass(
+     )
+ 
+ 
+-def generate_sudoku_extreme_dataset_if_missing(config: Exp4146Config) -> bool:  # pragma: no cover - native helper.
++def generate_sudoku_extreme_dataset_if_missing(
++    config: Exp4146Config,
++) -> bool:  # pragma: no cover - native helper.
+     """Generate the nano-trm Sudoku Extreme dataset only when it is absent."""
+ 
+     return exp4116.generate_sudoku_extreme_dataset_if_missing(
+@@ -664,7 +735,9 @@ def run_experiment(
+     cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
+     checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
+     dataset_builder: Callable[[Exp4146Config], object] = generate_sudoku_extreme_dataset_if_missing,
+-    timer_reset: Callable[[Path], exp4135.TimerResetResult | Mapping[str, Any]] = exp4135.reset_checkpoint_timer_state,
++    timer_reset: Callable[
++        [Path], exp4135.TimerResetResult | Mapping[str, Any]
++    ] = exp4135.reset_checkpoint_timer_state,
+     trainer_runner: Callable[[Exp4146Config, int], exp4116.ResumeRunResult] | None = None,
+     random_seed: int = RANDOM_SEED,
+ ) -> dict[str, Any]:
+@@ -727,7 +800,9 @@ def run_experiment(
+     seed_epoch = seed_state.epoch if seed_state.epoch is not None else 0
+     try:
+         run_result = (
+-            run_native_epochfixed_pass(config, seed_epoch=seed_epoch, checkpoint_loader=checkpoint_loader)
++            run_native_epochfixed_pass(
++                config, seed_epoch=seed_epoch, checkpoint_loader=checkpoint_loader
++            )
+             if trainer_runner is None
+             else trainer_runner(config, seed_epoch)
+         )
+@@ -761,7 +836,13 @@ def run_experiment(
+ 
+ def main() -> None:  # pragma: no cover - thin CLI wrapper.
+     artifact = run_experiment()
+-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
++    print(
++        json.dumps(
++            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
++            indent=2,
++            sort_keys=True,
++        )
++    )
+ 
+ 
+ if __name__ == "__main__":  # pragma: no cover
+diff --git a/python/carnot/experiment_4157_baseline_harvest_contiguous_continue.py b/python/carnot/experiment_4157_baseline_harvest_contiguous_continue.py
+index e0554a87be..5c076652f4 100644
+--- a/python/carnot/experiment_4157_baseline_harvest_contiguous_continue.py
++++ b/python/carnot/experiment_4157_baseline_harvest_contiguous_continue.py
+@@ -11,6 +11,8 @@ SCENARIO-LEARN-4157-FAITHFUL, SCENARIO-LEARN-4157-CONTINUE.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import csv
+ import json
+ import math
+@@ -100,7 +102,11 @@ class Exp4157Config:
+         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
+             parent = root / "results" / "trm_runs"
+         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
+-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
++        stable = (
++            Path(self.stable_dir)
++            if self.stable_dir is not None
++            else parent / "sudoku_extreme_baseline"
++        )
+         run_dir = (
+             Path(self.contiguous_run_dir)
+             if self.contiguous_run_dir is not None
+@@ -165,7 +171,13 @@ class MetricsRow:
+ 
+     @property
+     def signature(self) -> tuple[str, int, int | None, int | None, float]:
+-        return (str(self.metrics_path), self.row_number, self.epoch, self.step, self.val_exact_accuracy)
++        return (
++            str(self.metrics_path),
++            self.row_number,
++            self.epoch,
++            self.step,
++            self.val_exact_accuracy,
++        )
+ 
+ 
+ @dataclass(frozen=True)
+@@ -289,8 +301,13 @@ def _rounded(value: float | None, digits: int = 12) -> float | None:
+     return None if value is None else round(float(value), digits)
+ 
+ 
+-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
+-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
++def _checks_to_dicts(
++    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
++) -> list[dict[str, Any]]:
++    return [
++        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
++        for check in checks
++    ]
+ 
+ 
+ def _version_number(metrics_path: Path) -> int:
+@@ -345,11 +362,13 @@ def read_checkpoint_scalars(path: str | Path) -> CheckpointScalars:
+     try:
+         import torch
+ 
+-        payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
++        payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
+     except Exception as exc:
+         return CheckpointScalars(False, f"{type(exc).__name__}: {exc}", None, None)
+     if not isinstance(payload, Mapping):
+-        return CheckpointScalars(False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None)
++        return CheckpointScalars(
++            False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None
++        )
+     return CheckpointScalars(
+         load_ok=True,
+         detail=f"loaded scalar checkpoint view: {checkpoint_path}",
+@@ -527,7 +546,9 @@ def check_preconditions(
+         exp4107.PreconditionCheck(
+             "stable_checkpoint",
+             checkpoint_ok,
+-            f"exists: {config.stable_checkpoint_path}" if checkpoint_ok else f"missing: {config.stable_checkpoint_path}",
++            f"exists: {config.stable_checkpoint_path}"
++            if checkpoint_ok
++            else f"missing: {config.stable_checkpoint_path}",
+         )
+     )
+     if not checks[0].available:
+@@ -590,7 +611,9 @@ def launch_contiguous_run(  # pragma: no cover - launches native trainer.
+             stdout_tail.append(
+                 f"progress_proven manual_lr_step={checkpoint.manual_lr_step} val_rows={snapshot.val_row_count}"
+             )
+-            return LaunchResult(process_pid=proc.pid, return_code=None, stdout_tail=stdout_tail[-80:])
++            return LaunchResult(
++                process_pid=proc.pid, return_code=None, stdout_tail=stdout_tail[-80:]
++            )
+         return_code = proc.poll()
+         if return_code is not None:
+             log_handle.close()
+@@ -600,7 +623,9 @@ def launch_contiguous_run(  # pragma: no cover - launches native trainer.
+                 log_tail = []
+             stdout_tail.extend(log_tail)
+             stdout_tail.append(f"return_code={return_code}")
+-            return LaunchResult(process_pid=proc.pid, return_code=return_code, stdout_tail=stdout_tail[-80:])
++            return LaunchResult(
++                process_pid=proc.pid, return_code=return_code, stdout_tail=stdout_tail[-80:]
++            )
+ 
+ 
+ def _artifact_base(
+@@ -622,7 +647,9 @@ def _artifact_base(
+         "honest_verdict": honest_verdict,
+         "current_val": _rounded(current_val),
+         "max_val": _rounded(metrics.max_val),
+-        "baseline_faithful": bool(current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD),
++        "baseline_faithful": bool(
++            current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD
++        ),
+         "run_alive": bool(liveness.run_alive),
+         "manual_lr_step": checkpoint.manual_lr_step,
+         "val_trajectory": metrics.to_trajectory(),
+@@ -742,9 +769,7 @@ def build_launched_artifact(
+         detail="task-launched contiguous run",
+     )
+     current_val = post_metrics.current_val
+-    if not step_advanced:
+-        verdict = "blocked_noop_step_unchanged"
+-    elif not new_val_written:
++    if not step_advanced or not new_val_written:
+         verdict = "blocked_noop_step_unchanged"
+     elif current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD:
+         verdict = f"complete: baseline_faithful_val_{current_val:.4f}"
+@@ -803,13 +828,17 @@ def run_experiment(
+     uv_resolver: Callable[[str], str | None] = shutil.which,
+     cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
+     liveness_checker: Callable[[Exp4157Config, MetricsSnapshot], RunLiveness] | None = None,
+-    trainer_runner: Callable[[Exp4157Config, CheckpointScalars, MetricsSnapshot], LaunchResult] = launch_contiguous_run,
++    trainer_runner: Callable[
++        [Exp4157Config, CheckpointScalars, MetricsSnapshot], LaunchResult
++    ] = launch_contiguous_run,
+ ) -> dict[str, Any]:
+     """Run Exp 4157 and write the required harvest artifact."""
+ 
+     started = time.time()
+     config = Exp4157Config(repo_root=repo_root)
+-    checks, blocker = check_preconditions(config, uv_resolver=uv_resolver, cuda_checker=cuda_checker)
++    checks, blocker = check_preconditions(
++        config, uv_resolver=uv_resolver, cuda_checker=cuda_checker
++    )
+     if blocker is not None:
+         artifact = _blocked_artifact(
+             blocker,
+@@ -904,7 +933,12 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+     for key in ("current_val", "max_val"):
+         value = artifact.get(key)
+         parsed = value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+-        if value is not None and (parsed is None or not math.isfinite(float(parsed)) or float(parsed) < 0.0 or float(parsed) > 1.0):
++        if value is not None and (
++            parsed is None
++            or not math.isfinite(float(parsed))
++            or float(parsed) < 0.0
++            or float(parsed) > 1.0
++        ):
+             errors.append(f"{key} must be numeric between 0 and 1 or null")
+     if not isinstance(artifact.get("baseline_faithful"), bool):
+         errors.append("baseline_faithful must be a bare bool")
+@@ -915,12 +949,16 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
+         errors.append("manual_lr_step must be an integer or null")
+     if not isinstance(artifact.get("val_trajectory"), list):
+         errors.append("val_trajectory must be a list")
+-    if not isinstance(artifact.get("stable_checkpoint_path"), str) or not artifact.get("stable_checkpoint_path"):
++    if not isinstance(artifact.get("stable_checkpoint_path"), str) or not artifact.get(
++        "stable_checkpoint_path"
++    ):
+         errors.append("stable_checkpoint_path must be a non-empty string")
+     if not isinstance(artifact.get("estimated_passes_to_085"), Mapping):
+         errors.append("estimated_passes_to_085 must be an object")
+     principles = artifact.get("field_principles")
+-    if not isinstance(principles, Mapping) or any(principles.get(field) != FIELD_PRINCIPLES[field] for field in REQUIRED_ARTIFACT_FIELDS):
++    if not isinstance(principles, Mapping) or any(
++        principles.get(field) != FIELD_PRINCIPLES[field] for field in REQUIRED_ARTIFACT_FIELDS
++    ):
+         errors.append("field_principles must include the required operator principles")
+     if artifact.get("native_trainer_launched") is True:
+         launched = artifact.get("task_launched_run")
+diff --git a/python/carnot/experiment_4167_outerloop_training_monitor.py b/python/carnot/experiment_4167_outerloop_training_monitor.py
+index 247a8ef9cb..e18d4afa5d 100644
+--- a/python/carnot/experiment_4167_outerloop_training_monitor.py
++++ b/python/carnot/experiment_4167_outerloop_training_monitor.py
+@@ -12,6 +12,8 @@ SCENARIO-LEARN-4167-FAITHFUL-STABLE.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import csv
+ from collections.abc import Callable, Mapping
+ from dataclasses import asdict, dataclass
+@@ -85,12 +87,16 @@ class MonitorConfig:
+         object.__setattr__(
+             self,
+             "checkpoint_path",
+-            Path(self.checkpoint_path) if self.checkpoint_path is not None else trm_runs / "sudoku_extreme_baseline" / "last.ckpt",
++            Path(self.checkpoint_path)
++            if self.checkpoint_path is not None
++            else trm_runs / "sudoku_extreme_baseline" / "last.ckpt",
+         )
+         object.__setattr__(
+             self,
+             "contiguous_run_dir",
+-            Path(self.contiguous_run_dir) if self.contiguous_run_dir is not None else trm_runs / "contiguous_run_hydra",
++            Path(self.contiguous_run_dir)
++            if self.contiguous_run_dir is not None
++            else trm_runs / "contiguous_run_hydra",
+         )
+         object.__setattr__(
+             self,
+@@ -141,7 +147,13 @@ class MetricRow:
+ 
+     @property
+     def signature(self) -> tuple[str, int, int | None, int | None, float]:
+-        return (str(self.metrics_path), self.row_number, self.epoch, self.step, self.val_exact_accuracy)
++        return (
++            str(self.metrics_path),
++            self.row_number,
++            self.epoch,
++            self.step,
++            self.val_exact_accuracy,
++        )
+ 
+     def to_dict(self, *, delta_vs_previous: float | None = None) -> JsonDict:
+         return {
+@@ -237,7 +249,9 @@ def _version_number(metrics_path: Path) -> int:
+ 
+ def _payload_checksum(payload: Mapping[str, Any]) -> str:
+     filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
+-    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode(
++        "utf-8"
++    )
+     return hashlib.sha256(encoded).hexdigest()
+ 
+ 
+@@ -246,12 +260,14 @@ def read_checkpoint_status(path: str | Path) -> CheckpointStatus:
+ 
+     checkpoint_path = Path(path)
+     if not checkpoint_path.exists():
+-        return CheckpointStatus(str(checkpoint_path), False, False, "missing checkpoint", None, None, None)
++        return CheckpointStatus(
++            str(checkpoint_path), False, False, "missing checkpoint", None, None, None
++        )
+     mtime = checkpoint_path.stat().st_mtime
+     try:
+         import torch
+ 
+-        payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
++        payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
+     except Exception as exc:
+         return CheckpointStatus(
+             str(checkpoint_path),
+@@ -319,7 +335,9 @@ def check_pid_alive(
+ 
+ 
+ def _metric_value(row: Mapping[str, Any]) -> float | None:
+-    return _float_or_none(row.get("val_exact_accuracy")) or _float_or_none(row.get("val/exact_accuracy"))
++    return _float_or_none(row.get("val_exact_accuracy")) or _float_or_none(
++        row.get("val/exact_accuracy")
++    )
+ 
+ 
+ def read_metrics(root: str | Path) -> MetricsSnapshot:
+@@ -392,7 +410,9 @@ def build_artifact(
+             "SCENARIO-LEARN-4167-READONLY-MONITOR",
+             "SCENARIO-LEARN-4167-FAITHFUL-STABLE",
+         ],
+-        "honest_verdict": _verdict(current_val, alive=process.alive, crossed=crossed, faithful=faithful),
++        "honest_verdict": _verdict(
++            current_val, alive=process.alive, crossed=crossed, faithful=faithful
++        ),
+         "outerloop_train_alive": bool(process.alive),
+         "current_val_exact_accuracy": _rounded(current_val),
+         "baseline_faithful": faithful,
+diff --git a/python/carnot/serialization_safety.py b/python/carnot/serialization_safety.py
+new file mode 100644
+index 0000000000..0dd07e52ab
+--- /dev/null
++++ b/python/carnot/serialization_safety.py
+@@ -0,0 +1,282 @@
++"""Guarded loaders for the two deserialization formats that execute code.
++
++**Researcher summary:**
++    ``pickle.load`` and ``torch.load(weights_only=False)`` run arbitrary Python
++    while parsing a file.  This module centralises those calls behind loaders
++    that default to the safe mode and, when a caller genuinely needs the unsafe
++    mode, force it to be explicit and confine it to files inside this checkout.
++
++**Detailed explanation for engineers:**
++
++    **Why this exists.**  The 2026-07-31 security audit found four
++    ``pickle.load`` sites in ``python/carnot/verify/`` -- library code wired into
++    the live verifier ensemble -- and eight ``torch.load(..., weights_only=False)``
++    sites.  Both formats are *code execution disguised as data loading*: a
++    pickle stream contains opcodes that call arbitrary constructors, so the
++    payload runs during parsing.
++
++    **The isinstance() trap.**  Two of the audited call sites did::
++
++        loaded = pickle.load(handle)
++        if not isinstance(loaded, cls):
++            raise TypeError(...)
++
++    That check is not a mitigation.  By the time ``pickle.load`` returns, any
++    embedded payload has *already executed* -- the type check runs strictly
++    after the damage.  It is a correctness guard, not a security one, and it was
++    reasonable to mistake it for the latter, which is exactly why the guarded
++    loaders below exist rather than a code-review rule.
++
++    **What the trusted-root check actually buys, stated honestly.**  It is NOT
++    protection against an attacker who can already write into this repository --
++    such an attacker can edit the source directly and needs no pickle.  Its real
++    value is narrower and worth naming precisely:
++
++    1. It blocks the *supply-chain* vector.  Per the project's decentralization
++       rules, model artifacts are mirrored to HuggingFace and IPFS.  A ``.pkl``
++       or ``.pt`` fetched from a mirror into ``~/.cache`` and loaded by path is
++       the realistic RCE route, and that path is outside the repo, so it is
++       refused here.
++    2. It makes every unsafe deserialization *greppable and centralised*.  The
++       previous state -- twelve scattered call sites, some with a misleading
++       isinstance check -- could not be audited without re-deriving the analysis
++       each time.
++
++    **Why not just convert everything to safetensors?**  safetensors stores
++    tensors only.  ``tier0e_eorm`` and ``tier0f_semantic_calibration`` persist
++    fitted scikit-learn estimators (a vectoriser plus a classifier), which are
++    Python object graphs, not tensor dicts.  Converting them is a real project
++    with a retraining step, not a security patch.  Until then, the honest
++    position is: keep pickle for those, make the risk explicit, and confine it.
++
++    **torch.load is mostly a non-issue already, and this is worth recording.**
++    The audit's first pass reported "30 of 31 torch.load calls lack
++    weights_only=True".  That framing overstated the exposure.  PyTorch 2.6
++    flipped the *default* to ``weights_only=True``, and this project runs torch
++    2.11, so the 22 bare calls are already safe -- verified empirically: a
++    crafted payload raised ``UnpicklingError`` rather than executing.  Only the
++    8 sites that pass ``weights_only=False`` explicitly were ever exposed.
++
++Spec: REQ-SEC-001
++"""
++
++from __future__ import annotations
++
++import pickle  # noqa: S403 - the point of this module is to confine its use
++import warnings
++from pathlib import Path
++from typing import Any, TypeVar
++
++from carnot.paths import repo_root
++
++__all__ = [
++    "UntrustedArtifactError",
++    "safe_pickle_load",
++    "safe_torch_load",
++    "is_trusted_artifact_path",
++]
++
++_T = TypeVar("_T")
++
++
++class UntrustedArtifactError(Exception):
++    """Raised when a code-executing load is attempted on a file outside the repo.
++
++    Deliberately NOT a subclass of ``OSError`` or ``ValueError``: several call
++    sites wrap loads in broad ``except Exception`` handlers that downgrade a
++    failure to "checkpoint absent, carry on".  A distinct type lets a caller
++    re-raise this specific case instead of silently treating a refused load as a
++    missing file.
++    """
++
++
++def is_trusted_artifact_path(path: str | Path) -> bool:
++    """Return True if ``path`` resolves to a location inside this checkout.
++
++    Symlinks are resolved BEFORE the comparison, so a symlink placed inside the
++    repo but pointing at ``/tmp`` does not inherit trust -- that indirection is
++    the obvious way to defeat a naive prefix check.
++
++    Args:
++        path: Filesystem path to test.  Need not exist.
++
++    Returns:
++        True when the resolved path is the repo root or beneath it.
++    """
++    try:
++        resolved = Path(path).resolve()
++        root = repo_root().resolve()
++    except (OSError, RuntimeError):
++        # An unresolvable path or an unlocatable repo root is treated as
++        # untrusted. Fail CLOSED: the alternative is answering "trusted" when we
++        # could not determine the answer, which is the failure mode this whole
++        # module exists to prevent.
++        return False
++    return resolved == root or root in resolved.parents
++
++
++def _require_trusted(path: str | Path, fmt: str) -> Path:
++    """Refuse a code-executing load on a path outside the checkout."""
++    if not is_trusted_artifact_path(path):
++        raise UntrustedArtifactError(
++            f"Refusing to {fmt}-load {path!r}: it resolves outside the repository. "
++            f"{fmt} deserialization executes arbitrary code, so it is restricted to "
++            "artifacts tracked in this checkout. If this file is a legitimately "
++            "downloaded artifact, verify it out-of-band and copy it into the repo, or "
++            "convert it to safetensors."
++        )
++    return Path(path)
++
++
++def safe_torch_load(
++    path: str | Path,
++    *,
++    map_location: Any = "cpu",
++    allow_unsafe_pickle: bool = False,
++    **kwargs: Any,
++) -> Any:
++    """Load a torch checkpoint, defaulting to the tensors-only reader.
++
++    **Researcher summary:**
++        Same as ``torch.load`` but ``weights_only=True`` unless the caller
++        explicitly opts into arbitrary-object loading, which additionally
++        requires the file to live inside this checkout.
++
++    **Detailed explanation for engineers:**
++        With ``weights_only=True`` the unpickler accepts only tensors and plain
++        containers (dict/list/tuple/str/int/float/bool), which covers the shape
++        every audited call site actually consumes -- they all treat the payload
++        as a Mapping.
++
++        When ``allow_unsafe_pickle=True`` the safe read is still ATTEMPTED
++        FIRST.  Only if it raises do we fall back, and the fallback warns.  That
++        ordering matters: several of these checkpoints predate the audit and
++        nobody knows offhand whether they need the unsafe reader, so trying the
++        safe path first converts an assumption into a measurement, and the
++        warning tells you which files genuinely still need it.
++
++    Args:
++        path: Checkpoint path.
++        map_location: Passed to ``torch.load``; defaults to "cpu" because every
++            audited call site used that.
++        allow_unsafe_pickle: Permit falling back to ``weights_only=False``.
++            Requires ``path`` to be inside the repo.
++        **kwargs: Forwarded to ``torch.load``.
++
++    Returns:
++        The deserialized checkpoint.
++
++    Raises:
++        UntrustedArtifactError: Unsafe load requested for a path outside the repo.
++
++    Spec: REQ-SEC-001
++    """
++    import torch  # local import: torch is heavy and not every caller needs it
++
++    try:
++        return torch.load(path, map_location=map_location, weights_only=True, **kwargs)
++    except Exception as safe_error:  # noqa: BLE001 - deliberately broad, see below
++        # Broad by design: torch raises UnpicklingError for a disallowed global,
++        # but also RuntimeError/AttributeError depending on the payload and
++        # version. Narrowing this would silently route some checkpoints down the
++        # unsafe path for reasons unrelated to weights_only.
++        if not allow_unsafe_pickle:
++            raise
++        _require_trusted(path, "pickle")
++        warnings.warn(
++            f"{path}: falling back to torch.load(weights_only=False), which executes "
++            f"arbitrary code from the checkpoint. Safe read failed with: "
++            f"{type(safe_error).__name__}: {safe_error}. This file should be "
++            "re-saved as tensors-only or converted to safetensors.",
++            RuntimeWarning,
++            stacklevel=2,
++        )
++        return torch.load(path, map_location=map_location, weights_only=False, **kwargs)
++
++
++def safe_pickle_load(
++    path: str | Path,
++    *,
++    expected_type: type[_T] | None = None,
++    on_untrusted: str = "refuse",
++) -> Any:
++    """Load a pickle, refusing (or warning about) paths outside the checkout.
++
++    **Researcher summary:**
++        ``pickle.load`` with the trusted-path check applied BEFORE the file is
++        opened, plus an optional post-hoc type assertion.
++
++    **Detailed explanation for engineers:**
++        There is no safe mode for pickle -- unlike torch there is no
++        ``weights_only`` equivalent -- so the confinement IS the mitigation.
++        Read this module's docstring for an honest account of what that does and
++        does not buy.
++
++        ``expected_type`` reproduces the ``isinstance`` check two call sites
++        already had.  It is retained because it catches genuine corruption and
++        wrong-file mistakes, but note it runs AFTER any embedded payload has
++        executed, so it is a correctness guard only.  It is deliberately not
++        described as a security control anywhere in this module.
++
++        **Why ``on_untrusted`` exists, and why the default is not universal.**
++        The first version of this module refused every out-of-repo path
++        unconditionally.  That broke seven existing tests, and the breakage was
++        informative rather than incidental: the failing pattern was
++        ``scorer.save(tmp_path / "s.pkl")`` immediately followed by
++        ``Scorer.load(tmp_path / "s.pkl")`` -- a round-trip of a file the SAME
++        process had just written.  No threat model covers that, so refusing it
++        was the control being wrong, not the callers.
++
++        The two modes therefore track a real distinction in exposure:
++
++        ``refuse``
++            For loaders with a FIXED in-repo default path that feed the live
++            verifier ensemble (``tier0e_eorm``, ``tier0f_semantic_calibration``).
++            A path outside the repo means someone redirected a live-ensemble
++            model to a downloaded file -- exactly the mirror-supply-chain vector
++            -- and that should stop.
++
++        ``warn``
++            For general-purpose ``save``/``load`` round-trip APIs
++            (``PartialStateDiffusionScorer``, ``DinaLRMPartialStateScorer``),
++            where a scratch path is ordinary usage.  This is a genuinely weaker
++            control and is not pretended otherwise: it buys visibility, not
++            prevention.
++
++    Args:
++        path: Pickle path.
++        expected_type: If given, the loaded object must be an instance of it.
++        on_untrusted: ``"refuse"`` (default) raises for a path outside the
++            checkout; ``"warn"`` emits a RuntimeWarning and proceeds.
++
++    Returns:
++        The deserialized object.
++
++    Raises:
++        UntrustedArtifactError: ``path`` is outside the repo and mode is refuse.
++        TypeError: ``expected_type`` given and the payload does not match.
++        ValueError: ``on_untrusted`` is not a recognised mode.
++
++    Spec: REQ-SEC-001
++    """
++    if on_untrusted not in {"refuse", "warn"}:
++        raise ValueError(f"on_untrusted must be 'refuse' or 'warn', got {on_untrusted!r}")
++
++    if on_untrusted == "refuse":
++        target = _require_trusted(path, "pickle")
++    else:
++        target = Path(path)
++        if not is_trusted_artifact_path(target):
++            warnings.warn(
++                f"{path}: unpickling a file outside the repository. pickle executes "
++                "arbitrary code while parsing, so this is only safe if the file was "
++                "produced by this run or is otherwise known-good.",
++                RuntimeWarning,
++                stacklevel=2,
++            )
++
++    with target.open("rb") as handle:
++        loaded = pickle.load(handle)  # noqa: S301 - gated by the trust check above
++    if expected_type is not None and not isinstance(loaded, expected_type):
++        raise TypeError(f"{path}: expected {expected_type.__name__}, got {type(loaded).__name__}")
++    return loaded
+diff --git a/python/carnot/verify/dina_lrm_partial_state_scorer.py b/python/carnot/verify/dina_lrm_partial_state_scorer.py
+index a00313a7a1..526c244767 100644
+--- a/python/carnot/verify/dina_lrm_partial_state_scorer.py
++++ b/python/carnot/verify/dina_lrm_partial_state_scorer.py
+@@ -23,6 +23,8 @@ import numpy as np
+ from sklearn.feature_extraction.text import TfidfVectorizer
+ from sklearn.linear_model import LogisticRegression
+ 
++from carnot.serialization_safety import safe_pickle_load
++
+ from carnot.verify.partial_state_diffusion_scorer import (
+     DEFAULT_CANVAS_LEN,
+     DEFAULT_MASK_TOKEN_ID,
+@@ -220,11 +222,25 @@ class DinaLRMPartialStateScorer:
+ 
+     @classmethod
+     def load(cls, path: str | Path) -> "DinaLRMPartialStateScorer":
+-        with Path(path).open("rb") as handle:
+-            loaded = pickle.load(handle)
+-        if not isinstance(loaded, cls):
+-            raise TypeError("loaded object is not a DinaLRMPartialStateScorer")
+-        return loaded
++        """Load a pickled scorer from a trusted in-repo path.
++
++        The previous implementation called ``pickle.load`` directly and then
++        checked ``isinstance``. That check is a correctness guard, not a
++        security one: a pickle payload executes DURING parsing, so by the time
++        the type is inspected any embedded code has already run. It is preserved
++        via ``expected_type`` for its real purpose -- catching corruption and
++        wrong-file mistakes.
++
++        This loader uses ``on_untrusted="warn"``, NOT the strict default, and
++        that is a deliberate weakening worth stating plainly: ``save``/``load``
++        here is a general-purpose round-trip and writing to a scratch directory
++        is ordinary usage, so refusing out-of-repo paths would break correct
++        callers. The warning buys visibility, not prevention. The strict mode is
++        reserved for the fixed-path loaders wired into the live verifier
++        ensemble (``tier0e_eorm``, ``tier0f_semantic_calibration``), where an
++        out-of-repo path really does indicate the mirror-supply-chain vector.
++        """
++        return safe_pickle_load(path, expected_type=cls, on_untrusted="warn")
+ 
+     def _fit_uncertainty(self, records: Sequence[DinaLRMRecord], labels: np.ndarray) -> None:
+         probabilities = np.asarray(
+diff --git a/python/carnot/verify/partial_state_diffusion_scorer.py b/python/carnot/verify/partial_state_diffusion_scorer.py
+index ecef1bda56..c907e99771 100644
+--- a/python/carnot/verify/partial_state_diffusion_scorer.py
++++ b/python/carnot/verify/partial_state_diffusion_scorer.py
+@@ -23,6 +23,8 @@ import numpy as np
+ from sklearn.feature_extraction.text import TfidfVectorizer
+ from sklearn.linear_model import LogisticRegression
+ 
++from carnot.serialization_safety import safe_pickle_load
++
+ 
+ DEFAULT_CANVAS_LEN = 256
+ DEFAULT_MASK_TOKEN_ID = 4
+@@ -84,7 +86,9 @@ class ByteCanvasEncoder:
+         self.canvas_len = int(canvas_len)
+         self.mask_token_id = int(mask_token_id)
+ 
+-    def encode(self, text: str, *, visible_fraction: float) -> tuple[tuple[int, ...], tuple[int, ...]]:
++    def encode(
++        self, text: str, *, visible_fraction: float
++    ) -> tuple[tuple[int, ...], tuple[int, ...]]:
+         if not 0.0 <= visible_fraction <= 1.0:
+             raise ValueError("visible_fraction must be in [0, 1]")
+         clipped = str(text)[: self.canvas_len]
+@@ -165,7 +169,9 @@ class PartialStateDiffusionScorer:
+         text = self._feature_text(canvas_ids, step)
+         matrix = self.vectorizer.transform([text])
+         probabilities = self.classifier.predict_proba(matrix)[0]
+-        class_to_index = {bool(value): index for index, value in enumerate(self.classifier.classes_)}
++        class_to_index = {
++            bool(value): index for index, value in enumerate(self.classifier.classes_)
++        }
+         return float(probabilities[class_to_index[True]])
+ 
+     def score_partial_state(self, canvas_ids: Sequence[int], step: int) -> float:
+@@ -180,11 +186,14 @@ class PartialStateDiffusionScorer:
+ 
+     @classmethod
+     def load(cls, path: str | Path) -> "PartialStateDiffusionScorer":
+-        with Path(path).open("rb") as handle:
+-            loaded = pickle.load(handle)
+-        if not isinstance(loaded, cls):
+-            raise TypeError("loaded object is not a PartialStateDiffusionScorer")
+-        return loaded
++        """Load a pickled scorer from a trusted in-repo path.
++
++        See ``DinaLRMPartialStateScorer.load`` for why the former
++        ``pickle.load`` + ``isinstance`` pairing was not a security control (the
++        payload runs during parsing, strictly before the type is inspected), and
++        for why this loader warns rather than refuses on out-of-repo paths.
++        """
++        return safe_pickle_load(path, expected_type=cls, on_untrusted="warn")
+ 
+     def _feature_text(self, canvas_ids: Sequence[int], step: int) -> str:
+         visible_chars: list[str] = []
+diff --git a/python/carnot/verify/tier0e_eorm.py b/python/carnot/verify/tier0e_eorm.py
+index 4227a5e06d..117b324098 100644
+--- a/python/carnot/verify/tier0e_eorm.py
++++ b/python/carnot/verify/tier0e_eorm.py
+@@ -1,7 +1,18 @@
+-"""Tier 0e: TF-IDF margin-ranking logistic model."""
++"""Tier 0e: TF-IDF margin-ranking logistic model.
++
++The persisted model is a pickle, not safetensors, because it holds fitted
++scikit-learn estimators (a TF-IDF vectoriser and a logistic classifier) --
++Python object graphs, not a tensor dict, so safetensors cannot represent them.
++Pickle deserialization executes arbitrary code, so the load is routed through
++``carnot.serialization_safety.safe_pickle_load``, which refuses any path
++resolving outside this checkout.  See that module for what the restriction does
++and does not buy.
++"""
+ 
+ import os
+-import pickle
++
++from carnot.serialization_safety import safe_pickle_load
++
+ 
+ class EORMVerifier:
+     """TF-IDF margin-ranking logistic verifier trained on FoVer."""
+@@ -11,10 +22,9 @@ class EORMVerifier:
+         self.vectorizer = None
+         self.clf = None
+         if os.path.exists(self.model_path):
+-            with open(self.model_path, "rb") as f:
+-                data = pickle.load(f)
+-                self.vectorizer = data["vectorizer"]
+-                self.clf = data["clf"]
++            data = safe_pickle_load(self.model_path, expected_type=dict)
++            self.vectorizer = data["vectorizer"]
++            self.clf = data["clf"]
+ 
+     def verify(self, text: str) -> float:
+         """Verify text and return probability of being correct."""
+diff --git a/python/carnot/verify/tier0f_semantic_calibration.py b/python/carnot/verify/tier0f_semantic_calibration.py
+index 2a21d3076b..9be7496708 100644
+--- a/python/carnot/verify/tier0f_semantic_calibration.py
++++ b/python/carnot/verify/tier0f_semantic_calibration.py
+@@ -1,7 +1,15 @@
+-"""Tier 0f: Semantic calibrated verifier."""
++"""Tier 0f: Semantic calibrated verifier.
++
++Persisted as a pickle rather than safetensors for the same reason as Tier 0e:
++the payload is fitted scikit-learn estimators, not tensors.  The load goes
++through ``carnot.serialization_safety.safe_pickle_load``, which confines
++code-executing deserialization to in-repo artifacts.
++"""
+ 
+ import os
+-import pickle
++
++from carnot.serialization_safety import safe_pickle_load
++
+ 
+ class SemanticCalibratedVerifier:
+     """TF-IDF logistic verifier with paraphrase clustering calibration."""
+@@ -11,10 +19,9 @@ class SemanticCalibratedVerifier:
+         self.vectorizer = None
+         self.clf = None
+         if os.path.exists(self.model_path):
+-            with open(self.model_path, "rb") as f:
+-                data = pickle.load(f)
+-                self.vectorizer = data["vectorizer"]
+-                self.clf = data["clf"]
++            data = safe_pickle_load(self.model_path, expected_type=dict)
++            self.vectorizer = data["vectorizer"]
++            self.clf = data["clf"]
+ 
+     def verify(self, text: str) -> float:
+         """Verify text and return probability of being correct."""
+diff --git a/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py b/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
+index 356c896e88..80590a19f8 100644
+--- a/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
++++ b/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
+@@ -10,6 +10,8 @@ direct evidence that the update dynamics are outside ordinary EBT descent.
+ 
+ from __future__ import annotations
+ 
++from carnot.serialization_safety import safe_torch_load
++
+ import hashlib
+ import importlib
+ import json
+@@ -140,7 +142,7 @@ def resolve_checkpoint_path(source: Any, *, base_dir: Path | None = None) -> Pat
+ def _torch_load(path: Path) -> Any:
+     torch = importlib.import_module("torch")
+     try:
+-        return torch.load(path, map_location="cpu", weights_only=False)
++        return safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
+     except TypeError:
+         return torch.load(path, map_location="cpu")
+ 
+@@ -180,8 +182,12 @@ def run_preconditions_check(
+     preconditions["source_artifact_available"] = True
+     checkpoint_source = source_artifact.get("trm_checkpoint_source")
+     preconditions["trm_checkpoint_source"] = checkpoint_source
+-    checkpoint_path = resolve_checkpoint_path(checkpoint_source, base_dir=source_artifact_path.parent)
+-    preconditions["trm_checkpoint_path"] = str(checkpoint_path) if checkpoint_path is not None else None
++    checkpoint_path = resolve_checkpoint_path(
++        checkpoint_source, base_dir=source_artifact_path.parent
++    )
++    preconditions["trm_checkpoint_path"] = (
++        str(checkpoint_path) if checkpoint_path is not None else None
++    )
+ 
+     if not preconditions["torch_available"] or not preconditions["numpy_available"]:
+         preconditions["checkpoint_load_error"] = "torch_or_numpy_unavailable"
+@@ -235,7 +241,9 @@ def make_delta_fn(model: Any) -> Callable[[Any], Any]:
+         if isinstance(output, dict):
+             output = output.get("h_next", output.get("next_state"))
+         if output is None or getattr(output, "shape", None) != h.shape:
+-            raise ValueError("model output must be a next latent state with the same shape as input")
++            raise ValueError(
++                "model output must be a next latent state with the same shape as input"
++            )
+         return output - h
+ 
+     return delta_fn
+@@ -367,7 +375,9 @@ def scalar_potential_fit_residual(states: Any, deltas: Any) -> float:
+         for output_dim in range(latent_dim):
+             design_row = sample_idx * latent_dim + output_dim
+             for input_dim in range(latent_dim):
+-                key = (output_dim, input_dim) if output_dim <= input_dim else (input_dim, output_dim)
++                key = (
++                    (output_dim, input_dim) if output_dim <= input_dim else (input_dim, output_dim)
++                )
+                 design[design_row, parameter_index[key]] += h[input_dim]
+             design[design_row, bias_start + output_dim] = 1.0
+ 
+@@ -398,7 +408,10 @@ def classify_verdict(
+     positive_control_residual: float | None,
+ ) -> str:
+     """Apply the terminal gate for Exp 3823."""
+-    if positive_control_residual is None or positive_control_residual > POSITIVE_CONTROL_MAX_RESIDUAL:
++    if (
++        positive_control_residual is None
++        or positive_control_residual > POSITIVE_CONTROL_MAX_RESIDUAL
++    ):
+         return "complete: INCONCLUSIVE_curlfree_positive_control_failed"
+     if scalar_potential_fit_residual_value <= LOW_TRM_RESIDUAL:
+         return (
+@@ -526,7 +539,9 @@ def build_artifact(
+         "honest_verdict": verdict,
+         "trm_checkpoint_source": preconditions.get("trm_checkpoint_source"),
+         "jacobian_antisymmetry_fraction": principled("jacobian_antisymmetry_fraction", asymmetry),
+-        "scalar_potential_fit_residual": principled("scalar_potential_fit_residual", potential_residual),
++        "scalar_potential_fit_residual": principled(
++            "scalar_potential_fit_residual", potential_residual
++        ),
+         "positive_control_fit_residual": principled(
+             "positive_control_fit_residual", positive_control_residual
+         ),
+diff --git a/tests/python/test_serialization_safety.py b/tests/python/test_serialization_safety.py
+new file mode 100644
+index 0000000000..cd1c9cbb8c
+--- /dev/null
++++ b/tests/python/test_serialization_safety.py
+@@ -0,0 +1,189 @@
++"""Tests for the guarded pickle / torch loaders.
++
++Spec coverage: REQ-SEC-001
++
++Origin: 2026-07-31 security audit.  Four `pickle.load` sites in
++`python/carnot/verify/` (library code wired into the live verifier ensemble) and
++eight `torch.load(..., weights_only=False)` sites deserialized attacker-
++influenceable files with code execution enabled.
++
++The tests below encode two things that are easy to get wrong later:
++
++1. The trusted-root check must resolve symlinks, or a symlink planted inside the
++   repo trivially launders an outside path into "trusted".
++2. `isinstance` after `pickle.load` is NOT a security control -- the payload has
++   already executed.  `test_isinstance_check_runs_after_payload_execution` proves
++   that with a real side effect, so nobody re-introduces the old pattern
++   believing the type check made it safe.
++"""
++
++import pickle
++
++import pytest
++
++from carnot.serialization_safety import (
++    UntrustedArtifactError,
++    is_trusted_artifact_path,
++    safe_pickle_load,
++    safe_torch_load,
++)
++
++torch = pytest.importorskip("torch")
++
++
++class _Marker:
++    """Plain payload used to check a successful round-trip."""
++
++    def __init__(self, value: int) -> None:
++        self.value = value
++
++    def __eq__(self, other: object) -> bool:
++        return isinstance(other, _Marker) and other.value == self.value
++
++
++class TestTrustedPathCheck:
++    """REQ-SEC-001: code-executing loads are confined to this checkout."""
++
++    def test_in_repo_path_is_trusted(self) -> None:
++        assert is_trusted_artifact_path("results/tier0e_model.pkl")
++
++    def test_outside_path_is_untrusted(self, tmp_path) -> None:
++        """tmp_path stands in for ~/.cache -- the HuggingFace/IPFS mirror vector."""
++        assert not is_trusted_artifact_path(tmp_path / "downloaded.pkl")
++
++    def test_symlink_into_the_repo_does_not_launder_trust(self, tmp_path) -> None:
++        """A symlink placed in-repo pointing outside must NOT inherit trust.
++
++        This is the obvious way to defeat a naive string-prefix check, so it gets
++        an explicit test rather than relying on `.resolve()` staying in place.
++        """
++        outside = tmp_path / "evil.pkl"
++        outside.write_bytes(b"x")
++        from carnot.paths import repo_root
++
++        link = repo_root() / "_test_symlink_trust_probe.pkl"
++        try:
++            link.symlink_to(outside)
++            assert not is_trusted_artifact_path(link)
++        finally:
++            link.unlink(missing_ok=True)
++
++
++class TestSafePickleLoad:
++    """REQ-SEC-001: pickle is confined, because pickle has no safe mode."""
++
++    def test_refuses_out_of_repo_path(self, tmp_path) -> None:
++        target = tmp_path / "payload.pkl"
++        target.write_bytes(pickle.dumps({"a": 1}))
++        with pytest.raises(UntrustedArtifactError, match="outside the repository"):
++            safe_pickle_load(target)
++
++    def test_loads_in_repo_path(self, tmp_path, monkeypatch) -> None:
++        """Point the repo root at tmp_path so the load is legitimately trusted."""
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "payload.pkl"
++        target.write_bytes(pickle.dumps(_Marker(7)))
++        assert safe_pickle_load(target) == _Marker(7)
++
++    def test_expected_type_mismatch_raises(self, tmp_path, monkeypatch) -> None:
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "payload.pkl"
++        target.write_bytes(pickle.dumps({"not": "a marker"}))
++        with pytest.raises(TypeError, match="expected _Marker"):
++            safe_pickle_load(target, expected_type=_Marker)
++
++    def test_untrusted_error_is_not_an_oserror(self) -> None:
++        """Call sites wrap loads in broad handlers that treat OSError as 'absent'.
++
++        A refused load must not be silently reclassified as a missing checkpoint,
++        so the exception type is deliberately outside the OSError/ValueError tree.
++        """
++        assert not issubclass(UntrustedArtifactError, (OSError, ValueError))
++
++    def test_isinstance_check_runs_after_payload_execution(self, tmp_path, monkeypatch) -> None:
++        """Prove the old `pickle.load` + `isinstance` pattern was not a control.
++
++        The payload's `__reduce__` fires during parsing.  The type check that the
++        original call sites performed afterwards therefore ran strictly too late.
++        This test asserts the side effect happens even though the type check
++        ultimately rejects the object.
++        """
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        witness = tmp_path / "payload_executed"
++
++        class _Exploit:
++            def __reduce__(self):  # type: ignore[no-untyped-def]
++                return (_touch, (str(witness),))
++
++        target = tmp_path / "exploit.pkl"
++        target.write_bytes(pickle.dumps(_Exploit()))
++
++        with pytest.raises(TypeError):
++            safe_pickle_load(target, expected_type=_Marker)
++
++        assert witness.exists(), (
++            "expected the pickle payload to execute during parsing -- if this ever "
++            "stops being true, the isinstance-is-not-a-control rationale in "
++            "serialization_safety.py needs revisiting"
++        )
++
++
++def _touch(path: str) -> str:
++    """Module-level helper so the exploit payload is picklable."""
++    with open(path, "w", encoding="utf-8") as handle:
++        handle.write("executed")
++    return path
++
++
++class TestSafeTorchLoad:
++    """REQ-SEC-001: torch defaults to tensors-only; unsafe mode is opt-in + confined."""
++
++    def test_tensor_checkpoint_round_trips(self, tmp_path, monkeypatch) -> None:
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "ckpt.pt"
++        torch.save({"w": torch.ones(3), "step": 5}, target)
++        loaded = safe_torch_load(target)
++        assert loaded["step"] == 5
++        assert torch.equal(loaded["w"], torch.ones(3))
++
++    def test_arbitrary_object_payload_is_refused_by_default(self, tmp_path, monkeypatch) -> None:
++        """weights_only=True must reject a non-tensor payload rather than run it."""
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "obj.pt"
++        torch.save({"payload": _Marker(1)}, target)
++        with pytest.raises(Exception) as excinfo:
++            safe_torch_load(target)
++        assert "UntrustedArtifactError" not in type(excinfo.value).__name__
++
++    def test_unsafe_fallback_requires_trusted_path(self, tmp_path) -> None:
++        """Opting into the unsafe reader is not enough -- the path must be in-repo."""
++        target = tmp_path / "obj.pt"
++        torch.save({"payload": _Marker(1)}, target)
++        with pytest.raises(UntrustedArtifactError):
++            safe_torch_load(target, allow_unsafe_pickle=True)
++
++    def test_unsafe_fallback_warns_when_permitted(self, tmp_path, monkeypatch) -> None:
++        """The fallback must be loud: a silent unsafe load is the failure mode."""
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "obj.pt"
++        torch.save({"payload": _Marker(1)}, target)
++        with pytest.warns(RuntimeWarning, match="weights_only=False"):
++            loaded = safe_torch_load(target, allow_unsafe_pickle=True)
++        assert loaded["payload"] == _Marker(1)
++
++    def test_safe_read_is_attempted_first(self, tmp_path, monkeypatch) -> None:
++        """A tensors-only checkpoint must NOT trip the unsafe path or warn.
++
++        This is what makes `allow_unsafe_pickle=True` at the call sites honest:
++        it permits a fallback, it does not force one, so the warning identifies
++        exactly which checkpoints still genuinely need the unsafe reader.
++        """
++        monkeypatch.setenv("CARNOT_REPO_ROOT", str(tmp_path))
++        target = tmp_path / "ckpt.pt"
++        torch.save({"w": torch.zeros(2)}, target)
++        import warnings
++
++        with warnings.catch_warnings():
++            warnings.simplefilter("error")  # any warning becomes an error
++            loaded = safe_torch_load(target, allow_unsafe_pickle=True)
++        assert torch.equal(loaded["w"], torch.zeros(2))
+-- 
+2.55.0
+

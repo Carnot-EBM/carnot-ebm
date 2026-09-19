@@ -1,0 +1,76 @@
+From 27dbd509c90336583ebf85095af5d9d6a0660b41 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 14:42:49 -0400
+Subject: [PATCH 06830/11362] [conductor] Operational retrospective for
+ milestone 2026.07.504
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_504.json | 29 ++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_504.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 59fad8ffa6..4edc7f5b99 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5895,3 +5895,9 @@ The critical path for milestone .250:
+ - theme: contradictory closeout evidence exposes a new timing-assembly failure
+ - key result: honest negative -- no data available this milestone; both reconstruction routes returned 0 experiment commits despite changelog evidence for the milestone, leaving compute-bound duration, GPU efficiency, and parallel-runner engagement unmeasured
+ - acceptance: 0/0 criteria met -- no authoritative milestone-scoped timing entries were available to score
++
++### Milestone 2026.07.504
++- exp_range: no data available this milestone
++- theme: empty post-activation timing evidence prevents operational efficiency assessment
++- key result: honest negative -- no data available this milestone; 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries provide no basis for runtime ranking, GPU-efficiency evaluation, or DualGPURunner assessment
++- acceptance: 0/0 criteria met -- no milestone-scoped timing entries were available for evaluation
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c50346e211..d6272fb717 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11457,3 +11457,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-11: Matched CPU CUDA sampler-quality benchmark and board continuity receipt (✅ Complete) — honest_verdict=complete: matched CPU/CUDA sampler evidence recorded; successful_matched_pairs=6; board_speedup_claimed=false; results/experiment_5573_matched_sampler_hardware_continuity.json
+ - 2026-07-11: SGE anti-stagnation diversity controller and live-path precheck (⚠️ Blocked) — honest_verdict=blocked: full tests/python and global spec-coverage gates failed outside SGE path; anti-stagnation controller and registry precheck passed but live inference is not ready; results/experiment_5575_sge_anti_stagnation_live_precheck.json
+ - 2026-07-11: Milestone .504 capstone evidence and operations reconciliation (⚠️ Blocked) — honest_verdict=complete: .504 capstone read 14/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped=2; promoted=4; solve_verify_asymmetry_supported=False; verifier_coevolution_required=True; memory_policy_promoted=False; kan_online_energy_promoted=True; continuous_self_learning_claim_allowed=False; hardware_speedup_claim_allowed=False; ordinary_arc_floor_satisfied=False; arc_registry_delta=0; results/experiment_5577_capstone_v504.json
++- 2026-07-11: Operational retrospective for milestone 2026.07.504 (Complete) -- no data available this milestone. The bounded timing record contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound rows, so slowest-run, GPU-efficiency, and DualGPURunner conclusions are unavailable; gpu_idle_on_compute_bound_tasks remains null. Recommended tooling change: write milestone-keyed timing receipts during execution and validate their assembly before closeout. estimated_time_savings_pct=0; results/operational_retro_2026_07_504.json
+diff --git a/results/operational_retro_2026_07_504.json b/results/operational_retro_2026_07_504.json
+new file mode 100644
+index 0000000000..7500cd787c
+--- /dev/null
++++ b/results/operational_retro_2026_07_504.json
+@@ -0,0 +1,29 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.504",
++  "generated_at": "2026-07-11T18:38:33Z",
++  "retro_type": "operational_in_progress",
++  "summary": "No data available this milestone: the authoritative timing window contains 0 completed experiments, 0 minutes of wall time, and 0 compute-bound entries. No slowest compute-bound run, GPU-utilization judgment, or DualGPURunner engagement result can be derived.",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "slowest_experiments": [],
++  "bottlenecks_identified": [
++    "Operational timing observability is unavailable because neither the live commit scan nor disk-mtime reconstruction produced a milestone-scoped experiment entry."
++  ],
++  "improvements_suggested": [
++    "Emit a milestone-keyed timing receipt at experiment start and completion so closeout does not depend solely on reconstruction.",
++    "Validate timing-receipt assembly before retrospective generation and surface an empty milestone window immediately.",
++    "Store compute-bound and parallel-model markers in every timing receipt so GPU and DualGPURunner checks can be evaluated directly."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Persist experiment start and completion timestamps under the active milestone key.",
++    "Add a closeout preflight that stops retrospective analysis when the assembled timing window is empty.",
++    "Capture compute-bound and model-parallelism metadata alongside each timing row."
++  ],
++  "compute_bound_experiments_count": 0,
++  "gpu_idle_on_compute_bound_tasks": null,
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "No efficiency estimate is supportable without milestone-scoped experiment entries. The defensible operational lesson is to make timing capture durable before the next retrospective.",
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": false
++}
+\ No newline at end of file
+-- 
+2.55.0
+

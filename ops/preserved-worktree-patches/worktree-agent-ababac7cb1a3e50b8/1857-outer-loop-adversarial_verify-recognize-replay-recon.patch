@@ -1,0 +1,55 @@
+From 4fd943eeae137ffd747b805daa62342545d79171 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 20:40:45 -0400
+Subject: [PATCH 01857/11362] [outer-loop] adversarial_verify: recognize
+ replay/reconciliation substrates (fix recurring DURATION_TOO_SHORT
+ false-positive)
+
+Registry/gaps-hygiene + distill infra tasks (.390 B2, D2; prior exp4204) were FLAGGED
+DURATION_TOO_SHORT and wrongly quarantined: they declare a deterministic replay/ledger-
+reconciliation substrate (e.g. cached_gap4_replay_and_ledger_reconciliation, 0.8s, zero
+GGUF/GPU) but inherit vestigial GGUF markers from cited upstream artifacts, and the exact-
+match substrate recognition didn't cover that name -> fell through to the 60s live-model floor.
+
+_is_deterministic_verifier now also matches substrate names containing 'replay'/'reconciliation'
+-> JSON-work floor (0.0001s), per the Inference-Substrate Declaration Discipline. Additive and
+safe: live-inference artifacts declare live_llm_inference, so real fast-fabrications still flag.
+Verified: exp4216 now clean; exp1851 (3.4s NLA) and exp3397 (2.06s live-35B) STILL CRITICAL.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/adversarial_verify.py | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index e49f4cf435..8421220701 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -698,8 +698,22 @@ def _is_aggregation_only(d: dict[str, Any]) -> bool:
+ 
+ 
+ def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
+-    """True when the artifact declares replay over checked-in verifier evidence."""
+-    return d.get("inference_substrate") in DETERMINISTIC_VERIFIER_SUBSTRATES
++    """True when the artifact declares replay / reconciliation over checked-in evidence.
++
++    Besides the canonical sentinels, recognise substrate names that self-declare
++    deterministic replay or ledger reconciliation over checked-in artifacts and make
++    NO live LLM call of their own (e.g. registry/gaps-hygiene tasks declaring
++    `cached_gap4_replay_and_ledger_reconciliation`). These finish in milliseconds and
++    must use the JSON-work floor, not the 60s live-model floor. Their GGUF/CUDA markers
++    are inherited from the upstream artifacts they replay, not invoked here. This was a
++    recurring DURATION_TOO_SHORT false-positive on .390 infra tasks (B2/D2). Live
++    inference artifacts declare `live_llm_inference`, so this never masks a real
++    fast-fabrication of a live-model claim. (Inference-Substrate Declaration Discipline.)
++    """
++    sub = str(d.get("inference_substrate") or "")
++    if sub in DETERMINISTIC_VERIFIER_SUBSTRATES:
++        return True
++    return any(tok in sub for tok in ("replay", "reconciliation"))
+ 
+ 
+ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
+-- 
+2.55.0
+

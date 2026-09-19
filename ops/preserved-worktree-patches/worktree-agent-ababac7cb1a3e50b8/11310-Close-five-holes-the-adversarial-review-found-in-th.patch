@@ -1,0 +1,649 @@
+From d1f84df74c1e62cb0a1ae1286f97315fa23f1cbc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 15:13:26 -0400
+Subject: [PATCH 11310/11362] Close five holes the adversarial review found in
+ the worktree-corpus fix (REQ-ARC-WMTE-6642)
+
+The first version of this fix (8eae2c3986) claimed two things that were
+false on the live repository. Both are corrected here, with the record
+appended rather than rewritten.
+
+HIGH 1. "An explicit --runs-dir that is missing or empty still fails" was
+false for empty. The tracked flat eval results/arc_leaderboard_eval.json
+counted as an artifact, so an empty runs directory reported 1 artifact(s)
+and passed. artifact_keys now returns the runs-directory count separately
+and the fail-closed check keys on it. The flat eval still joins when a run
+corpus exists. That wiring had no test before: deleting it left the suite
+GREEN. Two tests pin both halves.
+
+HIGH 2. python/carnot/agentic/ is both a consumer tree and the producer
+surface, so a consumer there satisfied the producer-source join with its own
+EVAL_RUN_FIELDS_READ literal. Measured: the same body failed at scripts/ and
+passed at python/carnot/agentic/. The mechanism predates this fix; skip mode
+made it the sole gate for a corpus-less checkout. A consumer's own file no
+longer vouches for itself (producer_literals_by_file, per-file exclusion).
+The one live consumer there, arc_supervisor_refinement.py, still passes.
+New scenario SCENARIO-ARC-WMTE-6642-SELF-VOUCH.
+
+Finding 4. git -C does not override GIT_DIR, and git sets GIT_DIR for
+worktree hooks, so main_checkout_root answered about whatever repository the
+environment named. A non-repository root with GIT_DIR pointing at this
+worktree attached this repository's corpus and turned a failure into a pass.
+The git subprocess now drops GIT_DIR, GIT_WORK_TREE, GIT_COMMON_DIR and
+GIT_INDEX_FILE. GIT_CEILING_DIRECTORIES stays: it can only shorten discovery.
+
+Finding 5. "Population counts are always printed" was false on two failure
+branches. The producer surface is now read before the runs directory is
+resolved, so every branch prints a true population line.
+
+Finding 3 is a record correction, not a code change. My 13-probe sweep
+pointed --confcutdir only at a checkout root, the one direction that cannot
+cut a conftest below it, and then I wrote "closed set". Measured after the
+review: --confcutdir deep inside the worktree, cwd in main, PYTHONPATH unset
+collects 10 tests with no conftest and carnot from main. The hole is the
+tests/ subdirectories with no conftest of their own (archive, fixtures,
+quarantine). Appended to the ledger row and ops/status.md.
+
+Proof: 19 mutations (the 13 from 8eae2c3986 plus six for these findings),
+19 RED, cmp byte-identical restores, final GREEN, unlocked. 26 tests.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  22 +++
+ ops/audit-findings-ledger.md                  |   2 +-
+ ops/changelog.md                              |  13 ++
+ ops/metrics.md                                |   1 +
+ ops/status.md                                 |  54 ++++++++
+ ops/test-results.md                           |  27 ++++
+ scripts/eval_run_consumer_field_lint.py       | 125 +++++++++++++++---
+ .../test_eval_run_consumer_field_lint.py      | 120 ++++++++++++++++-
+ 8 files changed, 339 insertions(+), 25 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index b0f0bc4bb6..8221537dfb 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -30404,12 +30404,34 @@ direction: a field observed in a real artifact but absent from producer source
+ fails without the corpus. Measured 2026-09-05 on the live checkout: 7
+ consumers, 20 declared fields pass on producer source alone, 0 fail.
+ 
++**CORRECTION 2026-09-05 (same day, after adversarial review; append-only).**
++The amendment above claimed "an explicit `--runs-dir` that is missing or empty
++fails". The empty half was false on the live repository: the tracked flat eval
++`results/arc_leaderboard_eval.json` counted as an artifact, so an empty runs
++directory reported `1 artifact(s)` and passed. The lint now fails closed on
++the count of readable files from the runs directory alone. The flat eval still
++joins when a run corpus exists. A second hole predates the amendment and the
++skip mode made it the sole gate: `python/carnot/agentic/` is both a consumer
++tree and producer surface, so a consumer there satisfied the producer-source
++join with its own `EVAL_RUN_FIELDS_READ` literal. Measured: the same body
++failed at `scripts/` and passed at `python/carnot/agentic/`. Both closed by the
++scenario below and by the tests named in the status table.
++
++### SCENARIO-ARC-WMTE-6642-SELF-VOUCH: A consumer's own file never vouches for its own fields
++
++- GIVEN a consumer whose file lies inside the producer surface
++- WHEN a declared field is joined against producer source
++- THEN every producer file EXCEPT the consumer's own SHALL count
++- AND a field found in no artifact and in no other producer file SHALL fail
++- AND a field emitted by a different producer file SHALL still pass.
++
+ ## Implementation Status (REQ-ARC-WMTE-6642)
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
+ | REQ-ARC-WMTE-6642 amendment 2026-09-05 (WORKTREE-CORPUS, CORPUS-ABSENT-SKIP) | `scripts/eval_run_consumer_field_lint.py`: `main_checkout_root`, `resolve_runs_dir`, `SKIP_MARKER`; `run_lint(runs_dir=None)` resolves; `main()` keys the OK line on the skip. Hook entry unchanged. | `tests/python/test_eval_run_consumer_field_lint.py`: `test_a_worktree_uses_the_main_checkouts_corpus` (real `git worktree add`), `test_main_checkout_root_is_none_outside_git_and_in_the_main_checkout`, `test_no_corpus_anywhere_skips_loudly_and_still_refuses_an_unwired_field`, `test_missing_corpus_never_admits_more`, `test_fails_closed_when_there_is_no_consumer_tree`, `test_fails_closed_when_the_producer_surface_is_empty`, `test_the_ok_line_says_skipped_when_the_corpus_was_absent`, `test_real_repo_passes_on_producer_source_alone` |
++| REQ-ARC-WMTE-6642 correction 2026-09-05 (FAIL-CLOSED on the runs-directory count; SELF-VOUCH) | `scripts/eval_run_consumer_field_lint.py`: `artifact_keys` returns the runs-directory count separately; `producer_literals_by_file`; `run_lint` excludes a consumer's own file from its producer-source join | `tests/python/test_eval_run_consumer_field_lint.py`: `test_an_explicit_empty_runs_dir_fails_even_with_the_flat_eval_present`, `test_the_flat_eval_counts_as_observed_when_a_run_corpus_exists`, `test_a_consumer_inside_the_producer_surface_cannot_vouch_for_itself`, `test_a_consumer_inside_the_producer_surface_still_passes_on_another_files_literal` |
+ 
+ ## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
+ 
+diff --git a/ops/audit-findings-ledger.md b/ops/audit-findings-ledger.md
+index 831f969ffb..26d14410f6 100644
+--- a/ops/audit-findings-ledger.md
++++ b/ops/audit-findings-ledger.md
+@@ -51,7 +51,7 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
+ | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verified_arithmetic_delta | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-28 | qa_layer_authenticity_audit | harness_integrity_lint.py | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-29 | experiment_claim_audit | experiment_6275_flagship_asp_constraint_verification_benchmark.json | CLAIM_REFUTED_BY_OWN_DATA | ACCEPTED | 2026-09-05 outer-loop triage. Finding correct, verified against the artifact. All 15 model-by-family semantic cells pair `energy_guided_repair` against `one_shot` at n=6. Nine cells report delta 0.0 with ci95 [0.0, 0.0]. The other six cross zero (best: gemma-4-31B non_monotonic_defaults +0.333, ci95 [-0.08, 0.75]). No cell excludes zero. `verifier_is_oracle: true` (principle: exact ASP solving is the correctness oracle), so a win would have been circular anyway. n=6 per cell is below the N>=30 floor CLAUDE.md sets for a percentage-point delta claim. What stands: an honest null on a tiny sample, plus real engineering receipts (three GGUF models live, 196 s, GPU offload receipts). What does not: any repair-adds-validity claim. The artifact also contradicts itself: `status: complete_ready` beside `honest_verdict: complete_partial: test_exit_codes`, with 1 of 6 `test_commands` carrying an exit code, and a `corrigendum_pending` NONTERMINAL_DECLARED_ARTIFACT critical preserved beside a 2026-08-29 `flagged_adversarial_cleared_note`. The live gate on a copy draws no flag today. CORRECT_THE_RECORD accepted as future work; artifact left unedited per never-prune. Prevention: a status-ready versus verdict-partial lint has exactly one hit in 7192 artifacts (this file), so it is not yet a class. Record and revisit if it recurs. CORRECTION 2026-09-05 (independent re-derivation after commit 81ed76b7cf): the note above says nine cells at ci95 [0.0, 0.0] and six crossing zero. Re-derived from `paired_intervals_and_sample_sizes`: TEN cells at [0.0, 0.0], FIVE crossing zero, and the best cell is a tie (gemma-4-31B non_monotonic_defaults and gemma-4-26B positive_negative_controls, both +0.333, ci95 [-0.08, 0.75]). Still no cell with a lower bound above zero, still n=6 everywhere. Conclusion and disposition unchanged; the counts were wrong. |
+-| 2026-08-29 | qa_layer_authenticity_audit | worktree_import_guard.py | SILENT_NON_FIRING | FIXED | 2026-09-05 outer-loop triage. Finding correct, and already fixed by commit 5d3f03326c (2026-09-05 00:15, REQ-WORKTREE-IMPORT-1): a root `tests/conftest.py` now wires the guard tree-wide, and `tests/python/test_worktree_guard_covers_tree_20260905.py` collects `tests/archive/test_weight_steering.py` against a foreign checkout and expects refusal. Verified against pytest's rules, not the report: a conftest loads only for its own directory and descendants, so `tests/python/conftest.py` never covered `tests/archive/`, and `pyproject.toml` addopts ignores that directory by default, which is why nothing noticed. Residual, recorded not fixed: the report's exact invocation (cwd inside checkout A, test path inside checkout B) still loads no conftest at all, because pytest ignores conftests outside its confcutdir. Closing that needs a plugin registered in addopts or a pytest11 entry point, not another conftest. Rare shape, and the collection header shows the wrong tree to a human. Leave unless it recurs. CORRECTION 2026-09-05 (worktree agent, measured with pytest 9.0.3 and `--collect-only -q --trace-config`): the residual as stated does not reproduce. In 13 cross-checkout configurations (cwd in the worktree with the test in main and the reverse; PYTHONPATH pinned and unset; `--rootdir`, `-c`, and `--confcutdir` each pointed at the OTHER checkout; an external non-nested copy of the checkout; `tests/archive/` files; `-o addopts=''`), pytest registered the TEST checkout's `tests/conftest.py` every time and the guard refused every foreign pairing. The confcutdir model is wrong: pytest's `_is_in_confcutdir` excludes only strict ancestors of confcutdir, and a sibling checkout's `tests/` directory is never an ancestor of the other checkout. The report's 08-29 counterexample (external worktree, `tests/archive/`, `-o addopts=''`) was real THEN, because no conftest sat above `tests/archive/`; on the current tree the same shape refuses (exit 4). The only no-conftest cases found are `--noconftest` and a checkout that predates 5d3f03326c. Real remaining gaps, none the stated residual: `--noconftest`; stale checkouts; 37 test files outside `tests/` under `python/` and `scripts/` that no conftest covers. Disposition FIXED stands. Probe table in ops/status.md 2026-09-05 18:50Z. |
++| 2026-08-29 | qa_layer_authenticity_audit | worktree_import_guard.py | SILENT_NON_FIRING | FIXED | 2026-09-05 outer-loop triage. Finding correct, and already fixed by commit 5d3f03326c (2026-09-05 00:15, REQ-WORKTREE-IMPORT-1): a root `tests/conftest.py` now wires the guard tree-wide, and `tests/python/test_worktree_guard_covers_tree_20260905.py` collects `tests/archive/test_weight_steering.py` against a foreign checkout and expects refusal. Verified against pytest's rules, not the report: a conftest loads only for its own directory and descendants, so `tests/python/conftest.py` never covered `tests/archive/`, and `pyproject.toml` addopts ignores that directory by default, which is why nothing noticed. Residual, recorded not fixed: the report's exact invocation (cwd inside checkout A, test path inside checkout B) still loads no conftest at all, because pytest ignores conftests outside its confcutdir. Closing that needs a plugin registered in addopts or a pytest11 entry point, not another conftest. Rare shape, and the collection header shows the wrong tree to a human. Leave unless it recurs. CORRECTION 2026-09-05 (worktree agent, measured with pytest 9.0.3 and `--collect-only -q --trace-config`): the residual as stated does not reproduce. In 13 cross-checkout configurations (cwd in the worktree with the test in main and the reverse; PYTHONPATH pinned and unset; `--rootdir`, `-c`, and `--confcutdir` each pointed at the OTHER checkout; an external non-nested copy of the checkout; `tests/archive/` files; `-o addopts=''`), pytest registered the TEST checkout's `tests/conftest.py` every time and the guard refused every foreign pairing. The confcutdir model is wrong: pytest's `_is_in_confcutdir` excludes only strict ancestors of confcutdir, and a sibling checkout's `tests/` directory is never an ancestor of the other checkout. The report's 08-29 counterexample (external worktree, `tests/archive/`, `-o addopts=''`) was real THEN, because no conftest sat above `tests/archive/`; on the current tree the same shape refuses (exit 4). The only no-conftest cases found are `--noconftest` and a checkout that predates 5d3f03326c. Real remaining gaps, none the stated residual: `--noconftest`; stale checkouts; 37 test files outside `tests/` under `python/` and `scripts/` that no conftest covers. Disposition FIXED stands. Probe table in ops/status.md 2026-09-05 18:50Z. SECOND CORRECTION 2026-09-05 19:20Z (same agent, after adversarial review): the sentence "The only no-conftest cases found are `--noconftest` and a checkout that predates 5d3f03326c" states a closed set and the set is not closed. My `--confcutdir` probe pointed at the checkout ROOT, the one direction that can never cut a conftest below it, so the sweep could not have found this. MEASURED: cwd in the main checkout, PYTHONPATH unset, a worktree test file, `--confcutdir=<worktree>/tests/python/verify` collects 10 tests with NO conftest registered and `carnot` resolving to the main checkout. A conftest AT the confcutdir still loads, so the hole is exactly the `tests/` subdirectories with no conftest of their own (`archive`, `fixtures`, `quarantine` at the time of writing; `tests/python/` and `tests/integration/` each carry their own guard call and are immune). Reachability is low: no file in either checkout passes `--confcutdir`. Disposition FIXED still stands for the ORIGINAL finding; this third case is recorded, not fixed. |
+ | 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | ACCEPTED | 2026-09-05 outer-loop triage. Verified live, not from the report: I wrote the report's counterexample to a scratch file and ran the lint. The guard-clause shape (`if ... == MILESTONE: return` followed by a sibling `raise`) exits 0. The inverted shape (`if ... != MILESTONE: raise`) exits 1. `_refuses_on_milestone` walks only the `If` subtree for a `Raise`, so a raise that follows the `If` is invisible. Real SILENT_NON_FIRING. The widening is NOT free, and the report missed this: the blessed git-recovery helper `_roadmap_payload_for_milestone` in `experiment_6615_v576_independent_capstone.py` (lines 265-269) and `experiment_6659_v580_capstone.py` has exactly this sibling-raise shape. Confirmed with the lint's own recognisers: reads_roadmap True, refuses_line None, body ends `If, Raise`. The lint's docstring says no exemption is needed because that helper raises at function level, not inside an `if`. That is this blind spot described as a design property. Any widening that catches the missed input also catches both blessed helpers, so the deleted exemption must return with it (exempt a function whose roadmap bytes come through `_replay_bytes` or git). Regression tests: one named for the sibling-raise fixture, one asserting exp6615's helper stays clean. Also accepted: `except (OSError, SyntaxError): continue` is fail-open and cheap to flip. Side finding for the operator: the default glob is NOT clean today. `experiment_6847_v598_independent_capstone.py` `load_planned_tasks()` line 267 trips the existing rule; it landed in conductor commit 89ed3aef60 (2026-09-01), a path that skips hooks. Not fixed here. CORRECTION 2026-09-05 (independent re-derivation after commit 81ed76b7cf): the note above cites lines 265-269; `_roadmap_payload_for_milestone` starts at line 258 and the sibling-raise shape is lines 267-269. Citation only; nothing else changes. |
+ | 2026-08-30 | qa_layer_authenticity_audit | exclusion_manifest_lint.py | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-30 | qa_layer_authenticity_audit | adversarial_verify.py::_is_timestamp_field | SILENT_NON_FIRING | OPEN | |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b39f3956a4..f7cd169f0c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -28,6 +28,19 @@
+   `ops/audit-findings-ledger.md`. No plugin was built. Details and the probe
+   table in `ops/status.md`.
+ - Agent-initiated: none. Every change traces to the brief.
++- CORRECTION, same day, after adversarial review (five findings, all re-derived
++  before the fix): (HIGH 1) an explicit EMPTY `--runs-dir` passed because the
++  tracked flat eval counted as an artifact; now the fail-closed check keys on
++  the runs-directory count. (HIGH 2) a consumer under `python/carnot/agentic/`
++  satisfied the producer-source join with its own declaration literal; now a
++  consumer's own file never vouches for itself
++  (SCENARIO-ARC-WMTE-6642-SELF-VOUCH). (3) my "closed set" of no-conftest
++  cases was wrong: `--confcutdir` pointed deep inside a checkout cuts every
++  conftest above it; recorded in the ledger row and `ops/status.md`, not
++  fixed. (4) `main_checkout_root` was steerable by `GIT_DIR`; the git
++  subprocess now drops the steering variables. (5) two failure branches
++  printed no population line; every branch prints one now. 6 mutations added
++  (19 total), 4 tests added (26 total).
+ 
+ ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
+ 
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 041ba11f6c..d614c9bdf8 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3391,3 +3391,4 @@ emits on real data, decide whether the branch is mergeable; no GPU run; results
+ | 1 | 2026-09-05T12:44:04Z | 2026-09-05T13:18:25Z | Merged the branch (bd46ce7e65), confirmed the defect against `arc_trajectory_supervisor.py`, REQ-ARC-WMTE-7033 per-level cells + not-decidable list (cff7630c6a), 15/15 mutations RED with byte-identical restores, validated replay of 6 eval rows (level 0 exhausted in every applied run, 0 on deeper levels), ledger re-evaluated to 0 cells / 5 not decidable (6defbfb8d5), note section 7, status and changelog. Whole-tree collect-only 61,997 tests, 8 errors, none in touched files. | see session JSONL |
+ | 2 | 2026-09-05T13:33:27Z | 2026-09-05T13:53:24Z | Round four on the adversarial review (nine findings, two blocking): the grouping key was the raw level while the spent set clears on a monotone increase; one producer edit writes `stretch_level` + `arms_enabled` on every row (1d34c4f23b), reader keyed by stretch, totals renamed, WINDOWS RECORDED section; 26/26 mutations RED (M14 and the two exp6921 pass-throughs now covered); emission unchanged 0 cells / 5 not decidable; spec rules 6-8 + scenarios E/F/G, note 7.4, status, changelog (64319e4691). Corrected the round-three report: the review had arrived. | see session JSONL |
+ | 5 | 2026-09-05T17:05:13Z | 2026-09-05T18:07:40Z | Worktree agent (branch `worktree-agent-ac986fe334205e8c2`): substrate vocabulary census and recommendation. Measured 6056 artifacts: 1036 distinct strings, 984 unknown to the gate, `hardware_smoke` unfloored 201/207, 1 of 30 allowlist widenings governed by the lint. Shipped `scripts/substrate_vocabulary_census.py` (REQ-SUBSTRATE-CENSUS-1), 8 tests, 7/7 call-site mutations RED then GREEN. Adversarial reviewer (independent agent, own script) found 2 HIGH (census dropped 169 dict-shaped declarations; one table mixed populations) plus count corrections; all appended in the note's sections 10/10b. Commits 2c1a1bd855, 31023cc2f3, 535051bd28. No results/ file written; no GPU. | see session-metrics.py |
++| 6 | 2026-09-05T18:23:11Z | 2026-09-05T19:13:00Z | Worktree agent (branch `worktree-agent-a3741d26a3e5591bd`): two worktree-workflow defects. Defect 1 reproduced (hook refused every scripts/*.py commit from a worktree, `runs directory missing`) and fixed: corpus resolves from the main checkout via `--git-common-dir`, loud SKIP when none, fail-closed kept for explicit/misconfigured inputs (REQ-ARC-WMTE-6642 amendment, commit 8eae2c3986). Defect 2 does NOT reproduce as described: 13 cross-checkout probes all loaded the test checkout's conftest; ledger row corrected (f217fac351). Adversarial reviewer (independent agent) found 5 holes: empty `--runs-dir` passed via the tracked flat eval, agentic consumers vouched for themselves, `GIT_DIR` steered the resolver, two branches printed no population line, and my "closed set" of no-conftest cases missed `--confcutdir` deep inside a checkout (my sweep varied it only toward the root). All fixed or recorded; 19/19 mutations RED unlocked with cmp restores; 26 tests. No results/ write; no GPU. | see session-metrics.py |
+diff --git a/ops/status.md b/ops/status.md
+index 0170f43f47..94c4be45da 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -122,6 +122,60 @@ not reproduce as described.
+ - `.venv` in a worktree is a symlink to the main venv, as every sibling worktree has it.
+   `.gitignore` line 28 covers the symlink form, verified with `git check-ignore`.
+ 
++### CORRECTION 2026-09-05 19:20Z (append-only) — the adversarial review found five holes in the entry above
++
++Reviewer: an independent agent with its own probes. Each finding below was re-derived from raw
++runs before the fix. The entry above is left as written; this section says what was wrong.
++
++**HIGH 1 — "an explicit `--runs-dir` that is missing or empty still fails" was FALSE for
++empty.** The tracked flat eval `results/arc_leaderboard_eval.json` counted as an artifact, so
++an empty runs directory reported `1 artifact(s)` and passed. I had measured exactly that output
++earlier in the session and did not connect it to my own claim. Fixed: `artifact_keys` now
++returns the runs-directory count separately and the fail-closed check keys on it. The flat
++eval still joins when a run corpus exists. Two tests pin both halves; the extra_files wiring
++had no test before (deleting it left the suite GREEN).
++
++**HIGH 2 — the join was vacuous for a consumer under `python/carnot/agentic/`.** That tree is
++both consumer tree and producer surface, so a consumer's own `EVAL_RUN_FIELDS_READ` literal
++satisfied the producer-source join. Measured: the same body FAILED at `scripts/` and PASSED at
++`python/carnot/agentic/`. The mechanism predates this session; the skip mode made it the sole
++gate for a corpus-less checkout, which is what promoted it. Fixed: a consumer's own file never
++vouches for itself (`producer_literals_by_file`, per-file exclusion). The one live consumer
++there, `arc_supervisor_refinement.py`, still passes with its own file excluded (MEASURED:
++`test_real_repo_passes_on_producer_source_alone` GREEN after the change).
++
++**Finding 3 — my "closed set" of no-conftest cases was not closed, and my sweep could not have
++found the third member.** Every `--confcutdir` probe above pointed at a checkout ROOT.
++`_is_in_confcutdir` excludes only strict ancestors of confcutdir, so the root direction can never
++cut anything below it. The sweep varied the one parameter in the one direction that cannot
++falsify the claim. Thirteen cells, none of which could have produced a counterexample. MEASURED
++after the review, cwd main, PYTHONPATH unset, worktree test file,
++`--confcutdir=<worktree>/tests/python/verify`: 10 collected, NO conftest registered, guard
++silent, `carnot` from the MAIN checkout. That is the exact state the guard exists to refuse. The
++hole is bounded: a directory holding its own conftest is immune (a conftest AT the confcutdir
++loads), so it is the `tests/` subdirectories with no conftest of their own. Reachability is low:
++nothing in either checkout passes `--confcutdir`. Recorded, not fixed; the ledger row carries the
++same correction. Lesson to carry: a sweep that cannot disconfirm is not evidence, however many
++cells it has.
++
++**Finding 4 — `main_checkout_root` was steerable by `GIT_DIR`.** `git -C <root>` changes
++directory but does not override `GIT_DIR`, and git sets `GIT_DIR` for worktree hooks. Measured
++by the reviewer: a non-repository root with `GIT_DIR` pointing at this worktree's gitdir attached
++this repository's 476-key corpus and turned a failure into a pass. Latent under the normal hook
++(the answers coincide), live with `--repo-root` elsewhere or inside a nested repository. Fixed:
++the git subprocess runs without `GIT_DIR`, `GIT_WORK_TREE`, `GIT_COMMON_DIR`, `GIT_INDEX_FILE`;
++`GIT_CEILING_DIRECTORIES` is kept because it can only shorten discovery (skip mode, the strict
++direction). Docstring corrected to say what the function does.
++
++**Finding 5 — "population counts are always printed" was FALSE on two branches.** The
++no-consumer-tree failure and the explicit-missing-runs-dir failure returned before the line.
++Fixed: the producer surface is read before the runs directory is resolved, so every branch
++prints a true population line, and the line now shows the runs-directory count separately.
++
++Proof after the corrections: 19 mutations (the 13 above plus HIGH 1 regression, flat-eval wiring
++deleted, self-vouch regression, GIT_DIR scrub deleted, and each early population line deleted).
++Result recorded in `ops/test-results.md` with the exact RED/GREEN table. Test count 24 → 26.
++
+ ## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
+ 
+ Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11
+diff --git a/ops/test-results.md b/ops/test-results.md
+index ccd4aa9bf9..e0b7bbb037 100644
+--- a/ops/test-results.md
++++ b/ops/test-results.md
+@@ -35,6 +35,33 @@ pytest 9.0.3, `--collect-only -q --trace-config`. 13 configurations; the probe t
+ `tests/conftest.py` loaded it and the guard fired on a foreign pairing. No-conftest only with
+ `--noconftest` or a checkout that predates 5d3f03326c.
+ 
++CORRECTION 19:20Z: the last sentence is wrong. A 14th probe, `--confcutdir=<worktree>/tests/python/verify`
++with cwd in main and PYTHONPATH unset, collected 10 tests with no conftest and `carnot` from main.
++My 13 probes had pointed `--confcutdir` only at a checkout root, which cannot cut anything below it.
++
++### Correction round after adversarial review (19:20Z)
++
++| Check | Result |
++|---|---|
++| `tests/python/test_eval_run_consumer_field_lint.py`, worktree, PYTHONPATH pinned | 26 passed |
++| default lint run from the worktree | OK; population `7 consumer(s), 15 artifact(s) (14 from the runs directory), 476 keys, 190 producer file(s)` |
++| explicit EMPTY `--runs-dir` (HIGH 1) | FAIL: `the flat eval alone is not a corpus; join cannot run` (was OK with `1 artifact(s)` before) |
++| explicit MISSING `--runs-dir` | FAIL, population line printed (finding 5) |
++| `--repo-root` with no consumer tree | FAIL, population line printed (finding 5) |
++| `GIT_DIR` pointed at this worktree's gitdir, `--repo-root` a non-repository (finding 4) | SKIPPED artifact half, corpus NOT attached, unwired field FAILS |
++| identical consumer body at `scripts/` and `python/carnot/agentic/` (HIGH 2) | FAIL at both (was OK at `python/carnot/agentic/` before) |
++| `pre-commit run eval-run-consumer-field-lint --all-files` from the worktree | Passed |
++
++Mutation proof, 19 mutations, unlocked, PYTHONPATH pinned, `cmp` byte-identical after each restore,
++final GREEN, survivors none: M1 fallback never consulted, M2 resolver never called, M3 skip notice
++deleted, M4 skip returns clean early, M5 no-consumer-tree check deleted, M6 empty-producer-surface
++check deleted, M7 OK line reworded, M8 explicit-missing check deleted, M9 zero-artifact failure in
++skip mode, M10 summary line deleted, M11 main==this check deleted, M12 local dir on `is_dir`, M13
++bare-repo check deleted, M14 flat eval counts as a corpus again, M15 flat-eval join deleted, M16
++own file vouches for itself, M17 `GIT_DIR` scrub deleted, M18 and M19 each early population line
++deleted. Each RED names the test that caught it; the table is in the session transcript and the
++harness is `<scratchpad>/a3741/mutate_lint.py`.
++
+ ## 2026-07-30 (outer-loop, review pass) — gate revert, dedup-key partition fix, branching-cut devaluation
+ 
+ **inference_mode: NO-LLM.** Every measurement here is CPU-side replay of already-induced engines
+diff --git a/scripts/eval_run_consumer_field_lint.py b/scripts/eval_run_consumer_field_lint.py
+index d8bdab9860..6ed312975b 100644
+--- a/scripts/eval_run_consumer_field_lint.py
++++ b/scripts/eval_run_consumer_field_lint.py
+@@ -33,7 +33,16 @@ to whole consumers.
+ FAIL DIRECTION (revised 2026-09-05, see the worktree incident below).
+ FAIL CLOSED on anything that means the lint could not look: no `scripts/` or
+ `python/` tree under the repo root, an empty producer surface, an unparseable
+-consumer, or an explicit `--runs-dir` that is missing or holds no artifact.
++consumer, or an explicit `--runs-dir` that is missing or holds no readable run
++artifact. The tracked flat eval (`results/arc_leaderboard_eval.json`) is in
++every clone and does not count toward "holds an artifact".
++
++A consumer's own source never vouches for its own declared fields. The
++`EVAL_RUN_FIELDS_READ` tuple is itself a string literal, and
++`python/carnot/agentic/` is both a consumer tree and producer surface, so a
++consumer there would otherwise pass by declaring the field. Both rules were
++found open by adversarial review on 2026-09-05, after the first version of
++this revision claimed them closed.
+ 
+ The artifact corpus is different. It is untracked evidence that exists once
+ per machine, in the main checkout. A git worktree or a fresh clone has none.
+@@ -68,6 +77,7 @@ from __future__ import annotations
+ import argparse
+ import ast
+ import json
++import os
+ import subprocess
+ import sys
+ from pathlib import Path
+@@ -143,10 +153,17 @@ def declared_fields(path: Path) -> list[str] | None:
+     return fields
+ 
+ 
+-def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[set[str], int]:
+-    """Every dict key, at any depth, across every artifact. Plus the file count."""
++def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[set[str], int, int]:
++    """Every dict key, at any depth, across every artifact.
++
++    Returns (keys, n_readable, n_readable_from_runs_dir). The third number decides
++    whether a corpus exists. `extra_files` is the tracked flat eval, present in
++    every clone, so counting it would let an empty runs directory pass as a
++    corpus of one (found by adversarial review, 2026-09-05).
++    """
+     keys: set[str] = set()
+-    n = 0
++    n_run = 0
++    n_extra = 0
+ 
+     def walk(value: object) -> None:
+         if isinstance(value, dict):
+@@ -157,14 +174,19 @@ def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[s
+             for v in value:
+                 walk(v)
+ 
+-    files = _artifact_files(runs_dir) + [p for p in extra_files if p.is_file()]
+-    for path in files:
++    def ingest(path: Path) -> bool:
+         try:
+             walk(json.loads(path.read_text(encoding="utf-8", errors="replace")))
+-            n += 1
+         except (OSError, json.JSONDecodeError):
+-            continue
+-    return keys, n
++            return False
++        return True
++
++    for path in _artifact_files(runs_dir):
++        n_run += int(ingest(path))
++    for path in extra_files:
++        if path.is_file():
++            n_extra += int(ingest(path))
++    return keys, n_run + n_extra, n_run
+ 
+ 
+ def _artifact_files(runs_dir: Path) -> list[Path]:
+@@ -178,14 +200,28 @@ def _artifact_files(runs_dir: Path) -> list[Path]:
+     return sorted(p for p in runs_dir.glob("*.json") if not p.name.endswith(".progress.json"))
+ 
+ 
++#: Environment variables that name a repository directly. Git sets GIT_DIR for a
++#: worktree hook, and `git -C` does NOT override it, so a question asked about
++#: `repo_root` was answered about whatever repository the caller's environment
++#: named (adversarial review, 2026-09-05). GIT_CEILING_DIRECTORIES is kept: it can
++#: only stop discovery early, which lands in skip mode, the strict direction.
++_GIT_STEERING_VARS = ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE")
++
++
++def _git_discovery_env() -> dict[str, str]:
++    """The caller's environment minus the variables that would steer git away from `repo_root`."""
++    return {k: v for k, v in os.environ.items() if k not in _GIT_STEERING_VARS}
++
++
+ def main_checkout_root(repo_root: Path) -> Path | None:
+-    """The main working tree of the repository that contains `repo_root`, or None.
++    """The main working tree of the repository found by discovery FROM `repo_root`, or None.
+ 
+     A git worktree shares one `.git` directory with the main checkout. Git calls
+     it the common dir, and its parent is the main working tree in the normal
+     layout. None when git cannot answer, when the layout is not the normal one
+     (a bare repository has no working tree), or when `repo_root` already is the
+-    main checkout.
++    main checkout. Discovery starts at `repo_root` and ignores GIT_DIR and its
++    siblings, so the answer is about `repo_root`, not about the caller's shell.
+     """
+     try:
+         proc = subprocess.run(
+@@ -194,6 +230,7 @@ def main_checkout_root(repo_root: Path) -> Path | None:
+             text=True,
+             timeout=30,
+             check=False,
++            env=_git_discovery_env(),
+         )
+     except (OSError, subprocess.SubprocessError):
+         return None
+@@ -237,24 +274,49 @@ def resolve_runs_dir(repo_root: Path) -> tuple[Path | None, str]:
+     return None, where
+ 
+ 
+-def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
+-    """Every string literal in the producer surface. Plus the file count."""
+-    literals: set[str] = set()
++def producer_literals_by_file(surface: tuple[Path, ...]) -> dict[Path, set[str]]:
++    """Every string literal in the producer surface, keyed by resolved file path.
++
++    Per file, not one union, so a consumer that lives INSIDE the surface can be
++    checked against every file but its own (see `run_lint`).
++    """
+     files: list[Path] = []
+     for entry in surface:
+         if entry.is_dir():
+             files.extend(sorted(entry.rglob("*.py")))
+         elif entry.is_file():
+             files.append(entry)
++    by_file: dict[Path, set[str]] = {}
+     for path in files:
++        literals: set[str] = set()
+         try:
+             tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
+         except (OSError, SyntaxError):
++            by_file[path.resolve()] = literals
+             continue
+         for node in ast.walk(tree):
+             if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                 literals.add(node.value)
+-    return literals, len(files)
++        by_file[path.resolve()] = literals
++    return by_file
++
++
++def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
++    """Every string literal in the producer surface. Plus the file count."""
++    by_file = producer_literals_by_file(surface)
++    return set().union(*by_file.values()) if by_file else set(), len(by_file)
++
++
++def _population(
++    n_consumers: int, n_artifacts: int, n_run_artifacts: int, n_keys: int, n_producer_files: int
++) -> str:
++    """The one line every run prints, on every branch, so "0 findings" is never
++    mistaken for "never looked". Two early failures skipped it before 2026-09-05."""
++    return (
++        f"population: {n_consumers} consumer(s), {n_artifacts} artifact(s) "
++        f"({n_run_artifacts} from the runs directory), "
++        f"{n_keys} distinct artifact keys, {n_producer_files} producer file(s)"
++    )
+ 
+ 
+ def run_lint(
+@@ -283,16 +345,23 @@ def run_lint(
+     # FAIL CLOSED: no consumer tree means nothing was scanned, which is not a pass.
+     # Without this, a wrong --repo-root would find zero consumers and print OK.
+     if not any((repo_root / base).is_dir() for base in ("scripts", "python")):
++        notices.append(_population(0, 0, 0, 0, 0))
+         failures.append(
+             f"neither {repo_root / 'scripts'} nor {repo_root / 'python'} exists; "
+             f"no consumer was scanned, which is not a pass"
+         )
+         return failures, notices
+     consumers = find_consumers(repo_root)
++    # The producer surface is read before the runs directory is resolved, so every
++    # branch below, including the early failures, can print a true population line.
++    by_file = producer_literals_by_file(producer_surface)
++    emitted_all: set[str] = set().union(*by_file.values()) if by_file else set()
++    n_producer_files = len(by_file)
+     if runs_dir is not None:
+         runs_dir = Path(runs_dir)
+         if not runs_dir.is_dir():
+             # FAIL CLOSED: the caller named a corpus that is not there.
++            notices.append(_population(len(consumers), 0, 0, 0, n_producer_files))
+             failures.append(f"runs directory missing, join cannot run: {runs_dir}")
+             return failures, notices
+         runs_source = "the --runs-dir argument"
+@@ -300,22 +369,20 @@ def run_lint(
+         runs_dir, runs_source = resolve_runs_dir(repo_root)
+     artifact_half = runs_dir is not None
+     if artifact_half:
+-        keys, n_artifacts = artifact_keys(runs_dir, (flat_eval,))
++        keys, n_artifacts, n_run_artifacts = artifact_keys(runs_dir, (flat_eval,))
+         notices.append(f"runs directory: {runs_dir} ({runs_source})")
+     else:
+         # SKIP, LOUDLY. Not fail-open: with no keys, every field must be wired in
+         # producer source, so nothing passes here that the full join would refuse.
+-        keys, n_artifacts = set(), 0
++        keys, n_artifacts, n_run_artifacts = set(), 0, 0
+         notices.append(
+             f"{SKIP_MARKER}: the runs directory is {runs_source}. Every declared "
+             f"field is checked against producer source only; a field the corpus "
+             f"would have shown as observed can only FAIL here, never pass. "
+             f"Pass --runs-dir to supply a corpus."
+         )
+-    emitted, n_producer_files = producer_literals(producer_surface)
+     notices.append(
+-        f"population: {len(consumers)} consumer(s), {n_artifacts} artifact(s), "
+-        f"{len(keys)} distinct artifact keys, {n_producer_files} producer file(s)"
++        _population(len(consumers), n_artifacts, n_run_artifacts, len(keys), n_producer_files)
+     )
+     # FAIL CLOSED: an empty producer surface means the lint looked in the wrong place.
+     if n_producer_files == 0:
+@@ -324,12 +391,26 @@ def run_lint(
+             f"producer surface empty ({surface}); the lint could not look, which is not a pass"
+         )
+         return failures, notices
+-    if artifact_half and n_artifacts == 0:
+-        failures.append(f"no readable artifacts under {runs_dir}; join cannot run")
++    # FAIL CLOSED on the RUNS-DIRECTORY count, not the total: the tracked flat eval
++    # is in every clone, so it alone is not a corpus.
++    if artifact_half and n_run_artifacts == 0:
++        failures.append(
++            f"no readable artifacts under {runs_dir}; the flat eval alone is not a "
++            f"corpus; join cannot run"
++        )
+         return failures, notices
+     wired_only = 0
+     for consumer in consumers:
+         rel = consumer.relative_to(repo_root).as_posix()
++        # A consumer's own file cannot vouch for itself. Its EVAL_RUN_FIELDS_READ
++        # tuple is a string literal, and python/carnot/agentic/ is both a consumer
++        # tree and producer surface, so without this a consumer there passed by
++        # declaring the field (found by adversarial review, 2026-09-05).
++        own = consumer.resolve()
++        if own in by_file:
++            emitted = set().union(*(v for f, v in by_file.items() if f != own))
++        else:
++            emitted = emitted_all
+         try:
+             fields = declared_fields(consumer)
+         except SyntaxError as exc:
+diff --git a/tests/python/test_eval_run_consumer_field_lint.py b/tests/python/test_eval_run_consumer_field_lint.py
+index 3f44d4a5d7..ef5e02a1d5 100644
+--- a/tests/python/test_eval_run_consumer_field_lint.py
++++ b/tests/python/test_eval_run_consumer_field_lint.py
+@@ -36,18 +36,28 @@ _SPEC.loader.exec_module(lint)
+ REPO = Path(__file__).resolve().parents[2]
+ 
+ 
+-def _fake_repo(tmp_path: Path, *, consumer_body: str, artifact: dict | None) -> Path:
++def _fake_repo(
++    tmp_path: Path,
++    *,
++    consumer_body: str,
++    artifact: dict | None,
++    consumer_rel: str = "scripts/consumer.py",
++    flat_eval: dict | None = None,
++) -> Path:
+     root = tmp_path / "repo"
+     (root / "scripts").mkdir(parents=True)
+     (root / "python" / "carnot" / "agentic").mkdir(parents=True)
+     runs = root / "results" / "arc_leaderboard_eval_runs"
+     runs.mkdir(parents=True)
+-    (root / "scripts" / "consumer.py").write_text(consumer_body)
++    (root / consumer_rel).write_text(consumer_body)
+     # The producer surface: the eval harness emits "wired_field" as a literal.
+     (root / "scripts" / "arc_leaderboard_eval.py").write_text('ROW = {"wired_field": 1}\n')
+     (root / "python" / "carnot" / "agentic" / "runtime.py").write_text("x = 1\n")
+     if artifact is not None:
+         (runs / "run.json").write_text(json.dumps(artifact))
++    if flat_eval is not None:
++        # The tracked flat eval, present in every clone of the live repository.
++        (root / "results" / "arc_leaderboard_eval.json").write_text(json.dumps(flat_eval))
+     return root
+ 
+ 
+@@ -353,6 +363,112 @@ def test_the_ok_line_says_skipped_when_the_corpus_was_absent(
+     assert "SKIPPED" in out.strip().splitlines()[-1]
+ 
+ 
++# --- Two holes the adversarial review opened on 2026-09-05, same day ---------------------------
++# HIGH 1: the tracked flat eval counted as an artifact, so an explicit EMPTY --runs-dir passed
++# with "1 artifact(s)" on the live repo. HIGH 2: python/carnot/agentic/ is both consumer tree
++# and producer surface, so a consumer there passed the join by declaring the field.
++
++
++def test_an_explicit_empty_runs_dir_fails_even_with_the_flat_eval_present(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: the flat eval alone is not a corpus.
++
++    The field is present ONLY in the flat eval, so a pass here would mean the flat eval
++    was allowed to stand in for the runs corpus. Before the fix this returned failures == [].
++    """
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("flat_only",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact=None, flat_eval={"flat_only": 1})
++    failures, notices = _run(root)
++    assert any("join cannot run" in f for f in failures), failures
++    assert any("0 from the runs directory" in n for n in notices), notices
++
++
++def test_the_flat_eval_counts_as_observed_when_a_run_corpus_exists(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-JOIN: with a real corpus present, the flat eval's keys join too.
++
++    Pins the extra_files wiring: deleting it left the suite GREEN before this test existed.
++    """
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("flat_only",)\n'
++    root = _fake_repo(
++        tmp_path, consumer_body=body, artifact={"per_game": []}, flat_eval={"flat_only": 1}
++    )
++    failures, _ = _run(root)
++    assert failures == [], failures
++
++
++def test_a_consumer_inside_the_producer_surface_cannot_vouch_for_itself(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-SELF-VOUCH: a consumer under python/carnot/agentic/ declaring a
++    field nobody emits must fail. Before the fix its own EVAL_RUN_FIELDS_READ literal satisfied
++    the producer-source join and it passed."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("ghost_field",)\n'
++    root = _fake_repo(
++        tmp_path,
++        consumer_body=body,
++        artifact={"per_game": []},
++        consumer_rel="python/carnot/agentic/consumer.py",
++    )
++    failures, _ = _run(root)
++    assert any("ghost_field" in f and "NO producer source" in f for f in failures), failures
++
++
++def test_a_consumer_inside_the_producer_surface_still_passes_on_another_files_literal(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6642-SELF-VOUCH: the exclusion is per file, not surface-wide.
++
++    `wired_field` is emitted by scripts/arc_leaderboard_eval.py, a different file, so it
++    still counts for a consumer that lives inside the surface.
++    """
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("wired_field",)\n'
++    root = _fake_repo(
++        tmp_path,
++        consumer_body=body,
++        artifact={"per_game": []},
++        consumer_rel="python/carnot/agentic/consumer.py",
++    )
++    failures, _ = _run(root)
++    assert failures == [], failures
++
++
++def test_the_population_line_prints_on_every_early_failure(tmp_path: Path, monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: counts print on EVERY run, including the two
++    failure branches that returned without them (adversarial review finding 5, 2026-09-05)."""
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    empty = tmp_path / "nothing"
++    empty.mkdir()
++    failures, notices = lint.run_lint(empty)
++    assert failures, "the no-consumer-tree branch must fail"
++    assert any(n.startswith("population:") for n in notices), notices
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("f",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact=None)
++    failures, notices = lint.run_lint(root, root / "results" / "no_such_dir")
++    assert any("runs directory missing" in f for f in failures), failures
++    assert any(n.startswith("population:") and "0 artifact(s)" in n for n in notices), notices
++
++
++def test_main_checkout_root_ignores_a_steering_git_dir(tmp_path: Path, monkeypatch) -> None:
++    """Git sets GIT_DIR for a worktree hook and `git -C` does not override it.
++
++    Before the fix, a root that is not a repository at all resolved to whatever repository
++    GIT_DIR named, and attached that repository's corpus to the join (adversarial review
++    finding 4, 2026-09-05). Discovery must start at `repo_root` and nowhere else.
++    """
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    main, _wt = _main_and_worktree(
++        tmp_path, body=_OBSERVED_ONLY, artifact={"per_game": [{"observed_field": 3}]}
++    )
++    nogit = tmp_path / "nogit"
++    nogit.mkdir()
++    monkeypatch.setenv("GIT_DIR", str(main / ".git"))
++    assert lint.main_checkout_root(nogit) is None
++
++
+ def test_real_repo_passes_on_producer_source_alone(monkeypatch) -> None:
+     """Skip mode on the live checkout: no declared field needs the corpus to pass.
+ 
+-- 
+2.55.0
+

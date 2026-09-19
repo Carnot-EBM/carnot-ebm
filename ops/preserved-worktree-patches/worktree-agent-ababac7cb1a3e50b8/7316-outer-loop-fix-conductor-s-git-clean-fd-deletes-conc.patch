@@ -1,0 +1,88 @@
+From 174b31b28efe0500928e2d6523e3b6afd6fc393d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 19 Jul 2026 22:02:21 -0400
+Subject: [PATCH 07316/11362] [outer-loop] fix: conductor's git clean -fd
+ deletes concurrent agents' work
+
+Root-caused a real data-loss incident reported live tonight by
+object-affordance-impl-agent: its untracked experiment script vanished
+mid-write, only the gitignored .pyc surviving. Traced to two failure-cleanup
+paths in research_step()/_run_operational_retrospective() that ran
+`git checkout .` + `git clean -fd --exclude=.coverage*` to discard a failed
+operation's OWN partial changes -- but `git clean -fd` deletes ALL untracked
+files repo-wide, not just ones the failed operation touched, including
+in-progress deliverables from any concurrently-running outer-loop agent.
+
+This is the exact bug class the existing checkpoint-commit block (a few
+hundred lines earlier in research_step, "Preserve any dirty state from
+previous interrupted runs by committing it") was already written to fix for
+a different call site -- that fix was never rolled out to these other two.
+Applies the same fix here: commit the dirty/untracked state via
+git_commit_and_push (git add -A + --no-verify, no stash-restore risk) instead
+of deleting it. Nothing is silently discarded anymore; a failed retro or
+self-heal attempt's partial state just becomes a checkpoint commit like any
+other interrupted run, which is exactly the semantic CLAUDE.md's
+Never-Stash-Commit-First discipline calls for project-wide.
+
+Requires a conductor process restart to take effect (long-lived process,
+Python caches the module on import -- see ops/known-issues.md's 2026-07-19
+stale-import entry for the same class of gotcha).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/research_conductor.py | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index eb1028dfc8..32ce37d6a0 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -3278,10 +3278,21 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+         return True
+     else:
+         logger.warning("Operational retrospective failed — continuing")
+-        # Clean up any partial changes
++        # Preserve any partial changes as a checkpoint instead of destroying them.
++        # `git checkout .` + `git clean -fd` used to be used here to discard the
++        # retro's own partial work, but `git clean -fd` deletes ALL untracked files
++        # repo-wide, not just ones the retro touched -- including in-progress
++        # deliverables from concurrently-running outer-loop agents (confirmed data
++        # loss 2026-07-19/20: an outer-loop agent's untracked experiment script was
++        # deleted mid-write by this exact call, recovered only because the agent
++        # still had the content in its own context). Same fix philosophy as the
++        # checkpoint-commit block above (see its comment) -- commit, never delete.
+         if git_has_changes():
+-            run_cmd(["git", "checkout", "."])
+-            run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
++            git_commit_and_push(
++                "[conductor] Checkpoint: preserve uncommitted work "
++                "(operational retrospective failed)",
++                push=push,
++            )
+         return False
+ 
+ 
+@@ -5018,10 +5029,16 @@ def research_step(
+                 )
+ 
+         if not healed:
+-            # Revert any partial self-heal changes and abort
++            # Preserve any partial self-heal changes as a checkpoint, then abort.
++            # See the matching fix + comment in _run_operational_retrospective's
++            # failure path -- `git clean -fd` here previously deleted ALL untracked
++            # files repo-wide (not just the self-heal's own edits), including
++            # concurrently-running outer-loop agents' in-progress deliverables.
+             if git_has_changes():
+-                run_cmd(["git", "checkout", "."])
+-                run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
++                git_commit_and_push(
++                    "[conductor] Checkpoint: preserve uncommitted work (self-heal failed)",
++                    push=push,
++                )
+             logger.error("Self-heal failed after %d attempts — aborting", MAX_HEAL_ATTEMPTS)
+             log_step(task["title"], "SKIP", f"Pre-tests failing, self-heal failed: {test_summary}")
+             return False
+-- 
+2.55.0
+

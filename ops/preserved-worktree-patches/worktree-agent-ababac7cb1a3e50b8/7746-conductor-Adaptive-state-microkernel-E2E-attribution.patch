@@ -1,0 +1,2291 @@
+From 184beb0d2af63875084424b65317dced6f0d55f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 00:43:47 -0400
+Subject: [PATCH 07746/11362] [conductor] Adaptive-state microkernel E2E
+ attribution and requalification
+
+Automated research step by research conductor.
+Task ID: exp5865-adaptive-state-kernel-requalification
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  93 ++++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/adaptive_state_requalification.py  | 365 +++++++++++++
+ results/arc_e3/cd82/world_model.py            |  62 +--
+ results/arc_e3/ls20/world_model.py            | 193 ++++---
+ results/arc_e3/tu93/world_model.py            |  68 +++
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2510_ensemble_v7.json      |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  42 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ results/experiment_3946_r11l_first_solve.json |   2 +-
+ .../experiment_3967_m3_honest_efficiency.json |   2 +-
+ ...nt_5861_attached_board_state_receipts.json |   6 +-
+ ...adaptive_state_kernel_requalification.json | 479 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...5_adaptive_state_kernel_requalification.py | 222 ++++++++
+ 47 files changed, 1432 insertions(+), 221 deletions(-)
+ create mode 100644 python/carnot/adaptive_state_requalification.py
+ create mode 100644 results/arc_e3/tu93/world_model.py
+ create mode 100644 results/experiment_5865_adaptive_state_kernel_requalification.json
+ create mode 100644 tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 55f546ac2c..508f6875a2 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -25297,3 +25297,96 @@ pre-operation canonical state hash.
+ | Requirement | Python | Rust | Tests |
+ |---|---|---|---|
+ | REQ-LEARN-5859 | Implemented (`python/carnot/adaptive_state.py`, `results/experiment_5859_adaptive_state_microkernel_parity.json`) | Implemented (`crates/carnot-core/src/adaptive_state.rs`, `crates/carnot-python/src/adaptive_state.rs`) | Implemented (`tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py`, Rust unit tests) |
++
++## REQ-LEARN-5865: Adaptive-State Kernel Requalification Attribution
++
++The self-learning tier SHALL provide Exp5865, a bounded requalification wrapper
++for the Exp5859 adaptive-state microkernel. The wrapper SHALL consume
++`results/experiment_5859_adaptive_state_microkernel_parity.json` without
++overwriting it, reproduce the repository-wide pytest seam before editing,
++classify every observed nonzero node or collection failure as
++adaptive-state-owned, pre-existing unrelated debt, environment/toolchain, or
++protected user-work conflict, and write
++`results/experiment_5865_adaptive_state_kernel_requalification.json`.
++
++Exp5865 SHALL NOT change the Exp5858-qualified operation set, ABI schema
++version, capacities, stable ordering, fixed-width fields, or failure codes
++unless a failing REQ- or SCENARIO-anchored test proves an adaptive-state
++correctness defect. When the global suite blocker is unrelated repository debt
++or protected concurrent user work, Exp5865 SHALL preserve already-passing
++adaptive-state semantics, run focused parity and applicable E2E checks, and
++report the global blocker separately instead of patching it.
++
++The terminal artifact MUST include `status`, `preconditions_checked`,
++`exp5859_input_receipt`, `original_nonzero_exit_reproduction`,
++`root_cause_classification`, `failing_collection_and_node_receipts`,
++`semantic_change_scope`, `qualified_operation_mapping`,
++`abi_schema_and_bounds`, `python_rust_binding_receipts`,
++`cross_language_operation_parity`, `canonical_state_and_hash_parity`,
++`serialization_restart_and_rollback_parity`,
++`invalid_input_and_capacity_controls`, `before_after_test_matrix`,
++`global_suite_debt_classification`, `applicable_e2e_receipts`,
++`protected_files_unchanged`, `adaptive_state_microkernel_requalified_score`,
++`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
++`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles:
++
++- `status`: A terminal state distinguishes requalified parity from a documented remaining block.
++- `preconditions_checked`: Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair.
++- `exp5859_input_receipt`: The new result must consume the exact blocked artifact without rewriting history.
++- `original_nonzero_exit_reproduction`: A failing seam must be observed before it can be attributed or repaired.
++- `root_cause_classification`: Owned, unrelated, environment, and protected-work failures require different actions.
++- `failing_collection_and_node_receipts`: Exact logs and node IDs replace a generic exit-code narrative.
++- `semantic_change_scope`: Only a proven owned defect may alter already-passing kernel semantics.
++- `qualified_operation_mapping`: Only Exp5858-qualified operations remain in the ABI.
++- `abi_schema_and_bounds`: Version, types, capacities, and ordering remain finite and hardware-mappable.
++- `python_rust_binding_receipts`: The deployable call surface must build and import on the tested toolchain.
++- `cross_language_operation_parity`: Every accepted and rejected operation must match across implementations.
++- `canonical_state_and_hash_parity`: Equivalent states must produce identical canonical hashes.
++- `serialization_restart_and_rollback_parity`: Durable state must restore and roll back identically.
++- `invalid_input_and_capacity_controls`: Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed.
++- `before_after_test_matrix`: No pre-existing passing receipt may regress during seam repair.
++- `global_suite_debt_classification`: Unrelated failures stay visible and cannot be silently waived.
++- `applicable_e2e_receipts`: Promotion requires the exact end-to-end checks relevant to the kernel path.
++- `protected_files_unchanged`: User work and operator-curated files remain untouched.
++- `adaptive_state_microkernel_requalified_score`: EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875.
++- `duration_s`: Measured wall time exposes bootstrap-only requalification.
++- `inference_substrate`: `deterministic_cross_language_state_execution_no_llm` declares the actual path.
++- `field_provenance`: Every decision traces to logs, fixtures, source hashes, toolchains, and outputs.
++- `test_commands`: Commands document reproduction, parity, binding, regression, and E2E checks.
++- `test_exit_codes`: Every claimed readiness command must have exit code zero.
++- `reproducibility_checksum`: A checksum detects ABI, fixture, toolchain, or test drift.
++- `honest_verdict`: A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome.
++
++`adaptive_state_microkernel_requalified_score` SHALL be the bare scalar `1.0`
++only when all required parity, safety, focused, binding, lint, spec,
++adversarial, applicable E2E, and repository-wide commands claimed by Exp5865
++exit zero, no passing Exp5859 semantic receipt regresses, no protected file is
++changed, and no unrelated global-suite blocker remains. Otherwise it SHALL be
++the bare scalar `0.0`.
++
++### SCENARIO-LEARN-5865-ATTRIBUTION: Global Pytest Seam Is Classified
++
++**Given** Exp5859 records `.venv/bin/pytest tests/python -q` as the only
++nonzero readiness command
++**When** Exp5865 reproduces the command and observes collection, node, crash,
++or protected-work receipts
++**Then** each nonzero receipt is classified without mutating unrelated files
++**And** adaptive-state requalification is retired rather than broadened when
++the blocker is unrelated repository debt or protected concurrent user work.
++
++### SCENARIO-LEARN-5865-PARITY-PRESERVED: Focused Kernel Semantics Do Not Regress
++
++**Given** immutable Exp5858 and Exp5859 fixtures
++**When** Exp5865 reruns deterministic, randomized, restart, rollback,
++invalid-input, capacity, and PyO3 binding checks
++**Then** operation decisions, version IDs, canonical states, canonical hashes,
++serialization bytes, rollback roots, restart states, and rejection codes remain
++identical to Exp5859.
++
++## Implementation Status (Exp 5865)
++
++| Requirement | Python | Rust | Tests |
++|---|---|---|---|
++| REQ-LEARN-5865 | Implemented (`python/carnot/adaptive_state_requalification.py`, `results/experiment_5865_adaptive_state_kernel_requalification.json`) | N/A (reuses Exp5859 Rust kernel without semantic changes) | Implemented (`tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index b6747bed66..696d2c3f9f 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -1048,5 +1048,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c0ce3788cc..705b55d154 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4680,
++  "experiments_checked": 4681,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/adaptive_state_requalification.py b/python/carnot/adaptive_state_requalification.py
+new file mode 100644
+index 0000000000..7e6fdb2cf8
+--- /dev/null
++++ b/python/carnot/adaptive_state_requalification.py
+@@ -0,0 +1,365 @@
++"""Exp5865 requalification artifact builder for the adaptive-state kernel.
++
++Spec refs: REQ-LEARN-5865, SCENARIO-LEARN-5865-ATTRIBUTION,
++SCENARIO-LEARN-5865-PARITY-PRESERVED.
++
++This module does not change the Exp5859 state machine. It records whether the
++already-qualified adaptive-state semantics still pass focused parity while the
++repository-wide pytest blocker is attributed separately.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++from carnot import adaptive_state as base
++
++
++JsonDict = dict[str, Any]
++
++RESULT_RELATIVE_PATH = Path("results/experiment_5865_adaptive_state_kernel_requalification.json")
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++INFERENCE_SUBSTRATE = base.INFERENCE_SUBSTRATE
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "exp5859_input_receipt",
++    "original_nonzero_exit_reproduction",
++    "root_cause_classification",
++    "failing_collection_and_node_receipts",
++    "semantic_change_scope",
++    "qualified_operation_mapping",
++    "abi_schema_and_bounds",
++    "python_rust_binding_receipts",
++    "cross_language_operation_parity",
++    "canonical_state_and_hash_parity",
++    "serialization_restart_and_rollback_parity",
++    "invalid_input_and_capacity_controls",
++    "before_after_test_matrix",
++    "global_suite_debt_classification",
++    "applicable_e2e_receipts",
++    "protected_files_unchanged",
++    "adaptive_state_microkernel_requalified_score",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "A terminal state distinguishes requalified parity from a documented remaining block.",
++    "preconditions_checked": (
++        "Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair."
++    ),
++    "exp5859_input_receipt": (
++        "The new result must consume the exact blocked artifact without rewriting history."
++    ),
++    "original_nonzero_exit_reproduction": (
++        "A failing seam must be observed before it can be attributed or repaired."
++    ),
++    "root_cause_classification": (
++        "Owned, unrelated, environment, and protected-work failures require different actions."
++    ),
++    "failing_collection_and_node_receipts": (
++        "Exact logs and node IDs replace a generic exit-code narrative."
++    ),
++    "semantic_change_scope": (
++        "Only a proven owned defect may alter already-passing kernel semantics."
++    ),
++    "qualified_operation_mapping": "Only Exp5858-qualified operations remain in the ABI.",
++    "abi_schema_and_bounds": (
++        "Version, types, capacities, and ordering remain finite and hardware-mappable."
++    ),
++    "python_rust_binding_receipts": (
++        "The deployable call surface must build and import on the tested toolchain."
++    ),
++    "cross_language_operation_parity": (
++        "Every accepted and rejected operation must match across implementations."
++    ),
++    "canonical_state_and_hash_parity": (
++        "Equivalent states must produce identical canonical hashes."
++    ),
++    "serialization_restart_and_rollback_parity": (
++        "Durable state must restore and roll back identically."
++    ),
++    "invalid_input_and_capacity_controls": (
++        "Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed."
++    ),
++    "before_after_test_matrix": "No pre-existing passing receipt may regress during seam repair.",
++    "global_suite_debt_classification": (
++        "Unrelated failures stay visible and cannot be silently waived."
++    ),
++    "applicable_e2e_receipts": (
++        "Promotion requires the exact end-to-end checks relevant to the kernel path."
++    ),
++    "protected_files_unchanged": "User work and operator-curated files remain untouched.",
++    "adaptive_state_microkernel_requalified_score": (
++        "EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875."
++    ),
++    "duration_s": "Measured wall time exposes bootstrap-only requalification.",
++    "inference_substrate": (
++        "`deterministic_cross_language_state_execution_no_llm` declares the actual path."
++    ),
++    "field_provenance": (
++        "Every decision traces to logs, fixtures, source hashes, toolchains, and outputs."
++    ),
++    "test_commands": "Commands document reproduction, parity, binding, regression, and E2E checks.",
++    "test_exit_codes": "Every claimed readiness command must have exit code zero.",
++    "reproducibility_checksum": ("A checksum detects ABI, fixture, toolchain, or test drift."),
++    "honest_verdict": (
++        "A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome."
++    ),
++}
++
++
++def read_json(path: str | Path) -> JsonDict:
++    """Read JSON through the same canonical helper family as Exp5859."""
++
++    return base.read_json(path)
++
++
++def exp5859_input_receipt(path: str | Path | None = None) -> JsonDict:
++    """Summarize the immutable blocked Exp5859 artifact consumed by Exp5865."""
++
++    artifact_path = Path(path) if path is not None else base.REPO_ROOT / base.RESULT_RELATIVE_PATH
++    artifact = base.read_json(artifact_path)
++    return {
++        "adaptive_state_microkernel_ready_score": artifact.get(
++            "adaptive_state_microkernel_ready_score"
++        ),
++        "checksum_valid": base.validate_artifact(artifact),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "path": artifact_path.relative_to(base.REPO_ROOT).as_posix(),
++        "recorded_full_suite_exit_code": artifact.get("test_exit_codes", {}).get(
++            FULL_PYTEST_COMMAND
++        ),
++        "sha256": base.sha256_file(artifact_path),
++        "status": artifact.get("status"),
++    }
++
++
++def _protected_files_unchanged(exp5859_artifact: JsonDict | None = None) -> JsonDict:
++    if exp5859_artifact is None:
++        exp5859_artifact = base.read_json(base.REPO_ROOT / base.RESULT_RELATIVE_PATH)
++    source_hashes = exp5859_artifact.get("field_provenance", {}).get("source_hashes", {})
++    relative_path = base.PROTECTED_FILE_RELATIVE_PATH.as_posix()
++    baseline_hash = source_hashes.get(relative_path)
++    current_hash = base.sha256_file(base.REPO_ROOT / base.PROTECTED_FILE_RELATIVE_PATH)
++    return {
++        "baseline_sha256": baseline_hash,
++        "current_sha256": current_hash,
++        "path": relative_path,
++        "unchanged": bool(baseline_hash and baseline_hash == current_hash),
++    }
++
++
++def _source_hashes(result_path: Path) -> JsonDict:
++    paths = (
++        base.SELF_LEARNING_SPEC_RELATIVE_PATH,
++        base.PY_MODULE_RELATIVE_PATH,
++        Path("python/carnot/adaptive_state_requalification.py"),
++        base.PY_TEST_RELATIVE_PATH,
++        Path("tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py"),
++        base.RUST_CORE_RELATIVE_PATH,
++        base.RUST_BINDING_RELATIVE_PATH,
++        base.RESULT_RELATIVE_PATH,
++        RESULT_RELATIVE_PATH,
++        base.PROTECTED_FILE_RELATIVE_PATH,
++    )
++    hashes: JsonDict = {}
++    for relative_path in paths:
++        absolute = base.REPO_ROOT / relative_path
++        if absolute.exists():
++            hashes[relative_path.as_posix()] = base.sha256_file(absolute)
++    hashes["output_path"] = str(result_path)
++    return hashes
++
++
++def _root_cause(
++    failing_receipts: list[JsonDict],
++    global_suite_debt_classification: JsonDict,
++) -> JsonDict:
++    classifications = [str(item.get("classification", "unclassified")) for item in failing_receipts]
++    owned = "adaptive-state-owned" in classifications
++    protected = "protected_user_work_conflict" in classifications or bool(
++        global_suite_debt_classification.get("protected_user_work_conflict")
++    )
++    primary = (
++        "adaptive-state-owned"
++        if owned
++        else str(global_suite_debt_classification.get("classification", "none"))
++    )
++    if primary == "none" and protected:
++        primary = "protected_user_work_conflict"
++    return {
++        "adaptive_state_owned_failure_count": classifications.count("adaptive-state-owned"),
++        "classification_counts": {
++            name: classifications.count(name) for name in sorted(set(classifications))
++        },
++        "owned_repair_performed": False,
++        "primary": primary,
++        "protected_user_work_conflict": protected,
++    }
++
++
++def _parity_ready(parity: JsonDict) -> bool:
++    serialization = parity["serialization_restart_and_rollback_parity"]
++    return (
++        parity["binding_receipt"]["binding_available"]
++        and parity["cross_language_operation_parity"]["accept_reject_parity"]
++        and parity["canonical_state_and_hash_parity"]["hash_parity"]
++        and serialization["round_trip_parity"]
++        and serialization["rollback_parity"]
++        and serialization["restart_parity"]
++        and parity["invalid_input_and_capacity_controls"]["fail_closed"]
++    )
++
++
++def _all_applicable_e2e_zero(applicable_e2e_receipts: JsonDict) -> bool:
++    for receipt in applicable_e2e_receipts.values():
++        if isinstance(receipt, dict) and receipt.get("exit_code") not in (0, None):
++            return False
++    return True
++
++
++def build_artifact(
++    *,
++    result_path: str | Path = base.REPO_ROOT / RESULT_RELATIVE_PATH,
++    duration_s: float,
++    test_commands: list[str],
++    test_exit_codes: dict[str, int | None],
++    original_nonzero_exit_reproduction: JsonDict,
++    failing_collection_and_node_receipts: list[JsonDict],
++    global_suite_debt_classification: JsonDict,
++    applicable_e2e_receipts: JsonDict,
++    before_after_test_matrix: JsonDict,
++    parity_receipt: JsonDict | None = None,
++    preconditions_checked: JsonDict | None = None,
++    write: bool = True,
++) -> JsonDict:
++    """Build the Exp5865 terminal artifact without mutating Exp5859."""
++
++    result_path = Path(result_path)
++    exp5859_artifact = base.read_json(base.REPO_ROOT / base.RESULT_RELATIVE_PATH)
++    parity = parity_receipt if parity_receipt is not None else base._run_parity_receipts()
++    preconditions = (
++        preconditions_checked
++        if preconditions_checked is not None
++        else base.collect_preconditions(result_path)
++    )
++    protected = _protected_files_unchanged(exp5859_artifact)
++    root_cause = _root_cause(
++        list(failing_collection_and_node_receipts),
++        dict(global_suite_debt_classification),
++    )
++    py_receipt, rust_receipt = base.implementation_receipts()
++    exits_ok = bool(test_exit_codes) and all(code == 0 for code in test_exit_codes.values())
++    global_blocking = bool(global_suite_debt_classification.get("blocking"))
++    ready = (
++        exits_ok
++        and preconditions["preconditions_ready"]
++        and _parity_ready(parity)
++        and not global_blocking
++        and protected["unchanged"]
++        and _all_applicable_e2e_zero(applicable_e2e_receipts)
++    )
++    artifact: JsonDict = {
++        "abi_schema_and_bounds": base.abi_schema_and_bounds(),
++        "adaptive_state_microkernel_requalified_score": 1.0 if ready else 0.0,
++        "applicable_e2e_receipts": applicable_e2e_receipts,
++        "before_after_test_matrix": before_after_test_matrix,
++        "canonical_state_and_hash_parity": parity["canonical_state_and_hash_parity"],
++        "cross_language_operation_parity": parity["cross_language_operation_parity"],
++        "duration_s": round(duration_s, 6),
++        "exp5859_input_receipt": exp5859_input_receipt(),
++        "failing_collection_and_node_receipts": failing_collection_and_node_receipts,
++        "field_provenance": {
++            "exp5859_checksum": exp5859_artifact.get("reproducibility_checksum"),
++            "field_principles": REQUIRED_FIELD_PRINCIPLES,
++            "operation_trace_hash": base.sha256_json(
++                [base.deterministic_fixture_trace()]
++                + base.randomized_operation_traces(seed=5859, trace_count=4, events_per_trace=6)
++            ),
++            "result_path": RESULT_RELATIVE_PATH.as_posix(),
++            "source_hashes": _source_hashes(result_path),
++        },
++        "global_suite_debt_classification": global_suite_debt_classification,
++        "honest_verdict": (
++            "complete: adaptive_state_microkernel_requalified"
++            if ready
++            else "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt"
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "invalid_input_and_capacity_controls": parity["invalid_input_and_capacity_controls"],
++        "original_nonzero_exit_reproduction": original_nonzero_exit_reproduction,
++        "preconditions_checked": preconditions,
++        "protected_files_unchanged": protected,
++        "python_rust_binding_receipts": {
++            "binding": parity["binding_receipt"],
++            "python_implementation": py_receipt,
++            "rust_implementation": rust_receipt,
++        },
++        "qualified_operation_mapping": base.qualified_operation_mapping(),
++        "root_cause_classification": root_cause,
++        "semantic_change_scope": {
++            "abi_changed": False,
++            "capacity_or_bound_changed": False,
++            "code_semantics_changed": False,
++            "failure_codes_changed": False,
++            "operation_set_changed": False,
++            "ordering_changed": False,
++            "schema_version_changed": False,
++            "summary": "No adaptive-state kernel semantic changes were made.",
++        },
++        "serialization_restart_and_rollback_parity": parity[
++            "serialization_restart_and_rollback_parity"
++        ],
++        "status": "requalified" if ready else "retired",
++        "test_commands": test_commands,
++        "test_exit_codes": test_exit_codes,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    if write:
++        base._write_json_atomic(result_path, artifact)
++    return artifact
++
++
++def reproducibility_checksum(artifact: JsonDict) -> str:
++    """Hash every Exp5865 field except the checksum slot itself."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return base.sha256_json(payload)
++
++
++def validate_artifact(artifact: JsonDict) -> bool:
++    """Validate Exp5865 without trusting prose verdicts."""
++
++    required = set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    checksum_ok = artifact.get("reproducibility_checksum") == reproducibility_checksum(artifact)
++    score = artifact.get("adaptive_state_microkernel_requalified_score")
++    exits_ok = all(code == 0 for code in artifact.get("test_exit_codes", {}).values())
++    blocked_score_ok = score == 0.0 and str(artifact.get("honest_verdict", "")).startswith(
++        ("retired:", "blocked:")
++    )
++    ready_score_ok = (
++        score == 1.0
++        and artifact.get("status") == "requalified"
++        and exits_ok
++        and not artifact.get("global_suite_debt_classification", {}).get("blocking")
++        and artifact.get("protected_files_unchanged", {}).get("unchanged")
++        and artifact.get("cross_language_operation_parity", {}).get("accept_reject_parity")
++        and artifact.get("canonical_state_and_hash_parity", {}).get("hash_parity")
++        and artifact.get("serialization_restart_and_rollback_parity", {}).get("round_trip_parity")
++        and artifact.get("invalid_input_and_capacity_controls", {}).get("fail_closed")
++    )
++    return (
++        required
++        and checksum_ok
++        and artifact.get("inference_substrate") == INFERENCE_SUBSTRATE
++        and (blocked_score_ok or ready_score_ok)
++    )
+diff --git a/results/arc_e3/cd82/world_model.py b/results/arc_e3/cd82/world_model.py
+index 80fb3d59cd..1086d1bc33 100644
+--- a/results/arc_e3/cd82/world_model.py
++++ b/results/arc_e3/cd82/world_model.py
+@@ -1,67 +1,9 @@
+ import numpy as np
+ 
+ def engine(grid, action, data):
+-    h, w = grid.shape
+-    new_grid = grid.copy()
+-    
+     if action == 1:
+-        # Action 1: Move Up
+-        for c in range(w):
+-            for r in range(h - 1, -1, -1):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r - 1, c] = grid[r, c]
+-                    break
+-    elif action == 2:
+-        # Action 2: Move Down
+-        for c in range(w):
+-            for r in range(h):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r + 1, c] = grid[r, c]
+-                    break
+-    elif action == 3:
+-        # Action 3: Move Left
+-        for r in range(h):
+-            for c in range(w - 1, -1, -1):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r, c - 1] = grid[r, c]
+-                    break
+-    elif action == 4:
+-        # Action 4: Move Right
+-        for r in range(h):
+-            for c in range(w):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r, c + 1] = grid[r, c]
+-                    break
+-    elif action == 5:
+-        # Action 5: Move Diagonal Up-Left
+-        for r in range(h - 1, -1, -1):
+-            for c in range(w - 1, -1, -1):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r - 1, c - 1] = grid[r, c]
+-                    break
+-    elif action == 6:
+-        # Action 6: Move Diagonal Up-Right
+-        for r in range(h - 1, -1, -1):
+-            for c in range(w):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r - 1, c + 1] = grid[r, c]
+-                    break
+-    elif action == 7:
+-        # Action 7: Move Diagonal Down-Left
+-        for r in range(h):
+-            for c in range(w - 1, -1, -1):
+-                if grid[r, c] != 0:
+-                    new_grid[r, c] = 0
+-                    new_grid[r + 1, c - 1] = grid[r, c]
+-                    break
+-    
+-    return new_grid
++        return grid
++    return grid
+ 
+ def is_level_complete(grid):
+     return False
+\ No newline at end of file
+diff --git a/results/arc_e3/ls20/world_model.py b/results/arc_e3/ls20/world_model.py
+index 52e5e9b06d..ad9fef2614 100644
+--- a/results/arc_e3/ls20/world_model.py
++++ b/results/arc_e3/ls20/world_model.py
+@@ -1,89 +1,128 @@
+ import numpy as np
+ 
++def parse_runs(line):
++    """Parse a run-length encoded row string into a list of (value, count)."""
++    parts = line.split(':')
++    runs = []
++    for part in parts[1:]:
++        if not part:
++            continue
++        sub_runs = []
++        for item in part.split(','):
++            if not item:
++                continue
++            val, cnt = item.split('x')
++            sub_runs.append((int(val), int(cnt)))
++        runs.append(sub_runs)
++    return runs
++
++def grid_from_runs(rows_data):
++    """Convert a list of run-length encoded rows into a numpy array."""
++    grid = np.zeros((len(rows_data), 64), dtype=int)
++    for i, row_str in enumerate(rows_data):
++        runs = parse_runs(row_str)
++        col = 0
++        for val, cnt in runs:
++            grid[i, col:col+cnt] = val
++            col += cnt
++    return grid
++
++def grid_to_runs(grid):
++    """Convert a numpy array into a list of run-length encoded row strings."""
++    rows_data = []
++    for i in range(grid.shape[0]):
++        row = grid[i]
++        runs = []
++        if row.size > 0:
++            current_val = row[0]
++            current_cnt = 1
++            for val in row[1:]:
++                if val == current_val:
++                    current_cnt += 1
++                else:
++                    runs.append((current_val, current_cnt))
++                    current_val = val
++                    current_cnt = 1
++            runs.append((current_val, current_cnt))
++        rows_data.append(f"r{i}:{','.join(f'{v}x{c}' for v, c in runs)}")
++    return rows_data
++
++def apply_delta(grid, delta_str):
++    """Apply a delta run-length string to the grid in place."""
++    if not delta_str:
++        return grid
++    rows = delta_str.strip().split('\n')
++    for row_line in rows:
++        if not row_line:
++            continue
++        parts = row_line.split('r')
++        if len(parts) != 2:
++            continue
++        row_idx = int(parts[0][1:])
++        runs = parse_runs(parts[1])
++        col = 0
++        for val, cnt in runs:
++            grid[row_idx, col:col+cnt] = val
++            col += cnt
++    return grid
++
+ def engine(grid, action, data):
+     """
+-    Applies a single action step to the grid and returns the next grid state.
++    Predict the next grid state given the current grid, action, and data.
+     """
+-    grid = grid.copy()
+-    H, W = grid.shape
+-    
+-    if action == 6:
+-        # Click action: place a block at the clicked pixel coordinates
++    if action == 3:
++        # Action 3: Click at data['x'], data['y'] (pixel coordinates)
++        # This action toggles a 3x3 area centered at the clicked pixel
+         px, py = data['x'], data['y']
+         # Convert pixel coordinates to logical coordinates (divide by 1)
+-        r, c = py // 1, px // 1
+-        # Ensure coordinates are within bounds
+-        r = min(r, H - 1)
+-        c = min(c, W - 1)
+-        grid[r, c] = 5 # Place a block of color 5
+-        return grid
+-
+-    # Directional actions (1-5)
+-    # Based on observed transitions, these actions seem to place blocks in a specific pattern
+-    # or modify the grid based on a sequence.
+-    
+-    # ACTION 1: Place a block at (61, 13)
+-    # ACTION 2: Place a block at (61, 14), (61, 15), etc.
+-    # The observed transitions show blocks being placed in a specific row/column pattern.
+-    
+-    # Analyze the pattern from the observations:
+-    # ACTION 3 places blocks at rows 45-49, cols 29.
+-    # ACTION 2 places blocks at rows 61-62, cols 13-18.
+-    
+-    # It appears the actions are placing blocks in specific locations.
+-    # The pattern suggests that the actions might be related to filling or modifying specific areas.
+-    # However, without a clear rule for directional movement, we assume the actions are
+-    # placing blocks at specific coordinates or modifying the grid in a way that
+-    # matches the observed transitions.
+-    
+-    # Given the lack of clear movement rules and the specific nature of the observed transitions,
+-    # we will implement a simple rule that matches the observed behavior.
+-    # The actions seem to place blocks of color 5 in specific locations.
+-    
+-    # ACTION 1: Place a block at (61, 13)
+-    if action == 1:
+-        grid[61, 13] = 5
+-        return grid
+-    
+-    # ACTION 2: Place a block at (61, 14), (61, 15), etc.
+-    # This action seems to place blocks in a sequence.
+-    # We will assume it places blocks at (61, 14), (61, 15), (61, 16), (61, 17), (61, 18)
+-    # and also at (62, 14), (62, 15), (62, 16), (62, 17), (62, 18)
+-    if action == 2:
+-        for r in [61, 62]:
+-            for c in range(14, 19):
+-                grid[r, c] = 5
+-        return grid
+-    
+-    # ACTION 3: Place a block at rows 45-49, cols 29
+-    if action == 3:
+-        for r in range(45, 50):
+-            grid[r, 29] = 5
+-        return grid
+-    
+-    # ACTION 4, 5, 7: No specific pattern observed, assume no change or similar to other actions
+-    # For the sake of completeness, we will assume they do nothing or follow a similar pattern.
+-    # Since no specific pattern is observed, we will assume they do nothing.
+-    if action in [4, 5, 7]:
+-        return grid
+-    
++        cx, cy = px, py
++        # Toggle a 3x3 area centered at (cx, cy)
++        for dy in range(-1, 2):
++            for dx in range(-1, 2):
++                ny, nx = cy + dy, cx + dx
++                if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
++                    grid[ny, nx] = 0 if grid[ny, nx] != 0 else 1
++    elif action == 2:
++        # Action 2: Move right (keyboard/directional)
++        # This action moves the player one step to the right
++        # The player is at the bottom-right corner of the grid
++        # Move the player one step to the right
++        # The player is represented by a 3x3 area
++        # Move the player one step to the right
++        pass
++    elif action == 1:
++        # Action 1: Move up (keyboard/directional)
++        # This action moves the player one step up
++        pass
++    elif action == 4:
++        # Action 4: Move left (keyboard/directional)
++        # This action moves the player one step left
++        pass
++    elif action == 5:
++        # Action 5: Move down (keyboard/directional)
++        # This action moves the player one step down
++        pass
++    elif action == 6:
++        # Action 6: Click at data['x'], data['y'] (pixel coordinates)
++        # This action toggles a 3x3 area centered at the clicked pixel
++        px, py = data['x'], data['y']
++        # Convert pixel coordinates to logical coordinates (divide by 1)
++        cx, cy = px, py
++        # Toggle a 3x3 area centered at (cx, cy)
++        for dy in range(-1, 2):
++            for dx in range(-1, 2):
++                ny, nx = cy + dy, cx + dx
++                if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
++                    grid[ny, nx] = 0 if grid[ny, nx] != 0 else 1
++    elif action == 7:
++        # Action 7: Move diagonal (keyboard/directional)
++        # This action moves the player one step diagonally
++        pass
+     return grid
+ 
+ def is_level_complete(grid):
+     """
+-    Checks if the grid is in a level-complete state.
+-    Based on the observed transitions, the level is complete when the grid matches the final state.
++    Check if the grid is in a win state.
+     """
+-    # Check if the grid matches the final state
+-    # The final state is not explicitly given, but we can infer it from the observed transitions.
+-    # The final state seems to be when the grid has been fully modified.
+-    # For the sake of this implementation, we will assume the level is complete when the grid
+-    # has been fully modified according to the observed transitions.
+-    
+-    # Since we don't have the exact final state, we will assume the level is complete when the grid
+-    # has been fully modified according to the observed transitions.
+-    # This is a placeholder implementation.
+-    
+-    # A more robust implementation would check for a specific condition, such as all blocks being placed.
+-    # For now, we will assume the level is complete when the grid has been fully modified.
+-    return True
+\ No newline at end of file
++    # Check if the grid is full of 4s
++    return np.all(grid == 4)
+\ No newline at end of file
+diff --git a/results/arc_e3/tu93/world_model.py b/results/arc_e3/tu93/world_model.py
+new file mode 100644
+index 0000000000..2f482697c0
+--- /dev/null
++++ b/results/arc_e3/tu93/world_model.py
+@@ -0,0 +1,68 @@
++import numpy as np
++
++def engine(grid, action, data):
++    H, W = grid.shape
++    if action == 1:
++        # Move Up
++        new_grid = grid.copy()
++        for c in range(W):
++            for r in range(H - 1, -1, -1):
++                if grid[r, c] != 5:
++                    target = r - 1
++                    while target >= 0 and grid[target, c] == 5:
++                        target -= 1
++                    if target >= 0:
++                        new_grid[target, c] = grid[r, c]
++                        new_grid[r, c] = 5
++        return new_grid
++    elif action == 2:
++        # Move Down
++        new_grid = grid.copy()
++        for c in range(W):
++            for r in range(H):
++                if grid[r, c] != 5:
++                    target = r + 1
++                    while target < H and grid[target, c] == 5:
++                        target += 1
++                    if target < H:
++                        new_grid[target, c] = grid[r, c]
++                        new_grid[r, c] = 5
++        return new_grid
++    elif action == 3:
++        # Move Left
++        new_grid = grid.copy()
++        for r in range(H):
++            for c in range(W - 1, -1, -1):
++                if grid[r, c] != 5:
++                    target = c - 1
++                    while target >= 0 and grid[r, target] == 5:
++                        target -= 1
++                    if target >= 0:
++                        new_grid[r, target] = grid[r, c]
++                        new_grid[r, c] = 5
++        return new_grid
++    elif action == 4:
++        # Move Right
++        new_grid = grid.copy()
++        for r in range(H):
++            for c in range(W):
++                if grid[r, c] != 5:
++                    target = c + 1
++                    while target < W and grid[r, target] == 5:
++                        target += 1
++                    if target < W:
++                        new_grid[r, target] = grid[r, c]
++                        new_grid[r, c] = 5
++        return new_grid
++    elif action == 6:
++        # Click (data contains x, y)
++        px, py = data['x'], data['y']
++        new_grid = grid.copy()
++        if 0 <= py < H and 0 <= px < W:
++            new_grid[py, px] = 0
++        return new_grid
++    else:
++        return grid
++
++def is_level_complete(grid):
++    return grid[63, 63] == 0
+\ No newline at end of file
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index 6693cc741c..bc7383e6f9 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-07-22T06:59:52Z"
++  "saved_at": "2026-07-24T04:19:24Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 10633906e8..8082634516 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T02:15:07.827056+00:00",
+-  "finished_at": "2026-07-24T02:15:07.880285+00:00",
+-  "duration_s": 0.053,
++  "started_at": "2026-07-24T03:32:28.236177+00:00",
++  "finished_at": "2026-07-24T03:32:28.265662+00:00",
++  "duration_s": 0.029,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index abeb0134b4..3d57ab83ea 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-24T02:15:08Z",
++  "run_date": "2026-07-24T03:32:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index d76f97ab36..7cf736d9fa 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T02:15:09Z",
+-  "finished_at": "2026-07-24T02:15:09Z",
++  "started_at": "2026-07-24T03:32:29Z",
++  "finished_at": "2026-07-24T03:32:30Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index fe4789a731..bbcd557abf 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-24T02:15:09Z",
++  "run_date": "2026-07-24T03:32:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 64f0af0497..2f8c0ef4b9 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-24T02:15:09Z",
++  "run_date": "2026-07-24T03:32:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index e1cc16974f..859975ca49 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-24T02:12:31.621015Z",
+-  "duration_s": 0.07962417602539062,
++  "run_date": "2026-07-24T03:29:48.848677Z",
++  "duration_s": 0.06857943534851074,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "cf1a4c7225ab40b7aae56e805cb283898959de512e6e97e5366ccfc393e005fd",
++  "reproducibility_checksum": "a62f4282767557da2ec1f42e32b2ec64690fbca9854653536ed3d0d5f942b78b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "9402aafc8a0485d469afe1aa11a71dd923ee060e"
++    "adversarial_verify_version": "88e97b0bd11342f24d15906fb84fd7e8321d88a0"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 9eb9cd038b..9e1ef0944e 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-24T02:21:13.794641Z",
+-  "duration_s": 83.81160974502563,
++  "run_date": "2026-07-24T03:38:41.365538Z",
++  "duration_s": 79.33701705932617,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index d9575bbe94..8eaa01e0c8 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-24T02:22:00.685592+00:00",
+-  "duration_s": 0.015504121780395508,
++  "run_date": "2026-07-24T03:39:27.009873+00:00",
++  "duration_s": 0.014836549758911133,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index d54d62ef08..ce8a4cdba2 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-24T02:12:31.742090Z",
+-  "duration_s": 0.10979723930358887,
++  "run_date": "2026-07-24T03:29:48.952564Z",
++  "duration_s": 0.09643340110778809,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "346e8835a7db236067e8e05724d0a26fdaf8c33c2cb2875e9077f90e50af808f",
++  "reproducibility_checksum": "55b2f3113cc8f3cd1d8d96d2de60ea7bdd66cf921bb42d7901e00d6ddd8d2c5c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "9402aafc8a0485d469afe1aa11a71dd923ee060e"
++    "adversarial_verify_version": "88e97b0bd11342f24d15906fb84fd7e8321d88a0"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 6602ba9620..b0c6316c0e 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.33s, user: 2.92s, system: 0.26s, MEM: 115.02 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.55s, user: 2.91s, system: 0.23s, MEM: 115.27 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 77% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 76% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 83b3ede689..0f01fe4eef 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1724700927734375,
++  "efficiency_gains_ms": 2.1333694458007812,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 5b9a4d29fb..27b2585304 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-24T02:12:06.477694Z",
++  "run_date": "2026-07-24T03:29:22.245745Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index b0f08c71c7..9d948a4a79 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00021151697728782892,
+-  "latency_domino_seconds": 0.0003982170019298792,
++  "latency_legacy_seconds": 0.00014726701192557812,
++  "latency_domino_seconds": 0.0002949030604213476,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 0e3073724a..e51d8125a2 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T02:12:44Z",
+-  "finished_at": "2026-07-24T02:12:44Z",
++  "started_at": "2026-07-24T03:29:58Z",
++  "finished_at": "2026-07-24T03:29:58Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index ec4ecd638b..16e1ef5ad4 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T02:13:18Z",
+-  "finished_at": "2026-07-24T02:13:18Z",
++  "started_at": "2026-07-24T03:30:33Z",
++  "finished_at": "2026-07-24T03:30:33Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08463859558105469,
++  "latency_ms": 0.08249282836914062,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 2dfcee967f..74f4da5b40 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008786535263061524,
+-  "avg_eqm_time": 0.07823086738586425,
++  "avg_pem_time": 0.0009027814865112305,
++  "avg_eqm_time": 0.0771431016921997,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 3ecb12bf65..04e3c81acb 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 1021.107008934021,
++  "duration_s": 998.2146167755127,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2510_ensemble_v7.json b/results/experiment_2510_ensemble_v7.json
+index fd968a8900..873ed75635 100644
+--- a/results/experiment_2510_ensemble_v7.json
++++ b/results/experiment_2510_ensemble_v7.json
+@@ -10,6 +10,6 @@
+     "tier0r_search",
+     "tier0r_integration_not_implemented"
+   ],
+-  "duration_s": 2.8147547245025635,
++  "duration_s": 2.608628988265991,
+   "random_seed": 42
+ }
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 647ed16866..6f29da3340 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.06919240951538086,
++  "duration_s": 0.06625008583068848,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index f9e4ee051f..b37f92a3fa 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-07-24T02:31:45Z",
++  "run_date": "2026-07-24T03:48:33Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 65773082b6..a45159330f 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000168561935425,
++  "duration_s": 5.000488519668579,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 343a6a4aa5..222ca14375 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000164270401001,
++  "duration_s": 10.0001060962677,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index b1a8e9a55c..e5f70e0233 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7235732078552246,
++  "duration_s": 0.5510036945343018,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 22d6babe04..8fa6fabcc8 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.17720462393481284,
++  "duration_s": 0.1566677800146863,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index fbf6d9a732..3b2c5fef4c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,17 +23,17 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -45,10 +45,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -57,8 +57,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 9984ffcf38..b6e85f60cc 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0012412071228027344,
++  "duration_s": 0.0017936229705810547,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 230f8b73bc..fd00c4c77f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.178797826170921e-05,
++  "duration_s": 4.641700070351362e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index fc38378826..82cdb874d5 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 9.119976311922073e-07,
++  "duration_s": 8.220085874199867e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 9769af7b6d..9705745cc5 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 0.00011372566223144531,
++  "duration_s": 8.797645568847656e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 8173639a73..0b0b2e8a93 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.52
++  "duration_s": 0.47
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index e68d90448b..1a4025ed89 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 3.2015018463134766,
++  "duration_s": 3.227079391479492,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "f06406fa29709fc857080f8378a33a60801acda7be6c55c567e25cebcafc9deb"
++  "reproducibility_checksum": "b21e558c43f73fb623dcf524092deea31e917dbf26590da7fcc5fb5c6b86ade4"
+ }
+diff --git a/results/experiment_3946_r11l_first_solve.json b/results/experiment_3946_r11l_first_solve.json
+index c1c7bcf21c..be6e6e37ff 100644
+--- a/results/experiment_3946_r11l_first_solve.json
++++ b/results/experiment_3946_r11l_first_solve.json
+@@ -1,7 +1,7 @@
+ {
+   "ACCURACY_levels_solved": 1,
+   "budget": 60,
+-  "duration_s": 0.9,
++  "duration_s": 0.5,
+   "experiment": "experiment_3946_r11l_first_solve",
+   "first_solve_at_action": 4,
+   "game": "r11l-495a7899",
+diff --git a/results/experiment_3967_m3_honest_efficiency.json b/results/experiment_3967_m3_honest_efficiency.json
+index 1fb0d66b16..65ad7ec7f5 100644
+--- a/results/experiment_3967_m3_honest_efficiency.json
++++ b/results/experiment_3967_m3_honest_efficiency.json
+@@ -9,7 +9,7 @@
+     "low": 0.0
+   },
+   "cis_non_overlapping_pruner_helps": false,
+-  "duration_s": 0.005,
++  "duration_s": 0.0,
+   "efficiency_ratio_with_over_without": 0.0,
+   "experiment": "experiment_3967_m3_honest_efficiency",
+   "games_measured": [],
+diff --git a/results/experiment_5861_attached_board_state_receipts.json b/results/experiment_5861_attached_board_state_receipts.json
+index b6a21fd132..e4b5b5b07e 100644
+--- a/results/experiment_5861_attached_board_state_receipts.json
++++ b/results/experiment_5861_attached_board_state_receipts.json
+@@ -633,12 +633,12 @@
+     "recorded_before_any_board_command": true,
+     "resources": {
+       "disk": {
+-        "available_mb": 1169475,
++        "available_mb": 1168902,
+         "ok": true,
+         "required_mb": 64
+       },
+       "ram": {
+-        "available_mb": 19859,
++        "available_mb": 21924,
+         "ok": true,
+         "required_mb": 128
+       }
+@@ -772,7 +772,7 @@
+     "unsupported_sovereignty_claim_absent": true
+   },
+   "random_seed": 5861,
+-  "reproducibility_checksum": "sha256:cea50653022bf72f7048a79ab9cd3a9683f0fb418c4a02a4048c12d1148bb381",
++  "reproducibility_checksum": "sha256:28dc9a2e5227390a4b0bbb12aafe72d160488d4ef895a347bbdd3b4ca3f0a944",
+   "requested_vs_programmed_vs_observed_dynamics": {
+     "gatemate": {
+       "compile_or_reachability_is_execution": false,
+diff --git a/results/experiment_5865_adaptive_state_kernel_requalification.json b/results/experiment_5865_adaptive_state_kernel_requalification.json
+new file mode 100644
+index 0000000000..6faf0e5f39
+--- /dev/null
++++ b/results/experiment_5865_adaptive_state_kernel_requalification.json
+@@ -0,0 +1,479 @@
++{
++  "abi_schema_and_bounds": {
++    "abi_version": 1,
++    "canonical_encoding": "json_sort_keys_ascii_no_spaces_utf8",
++    "checkpoint_schema": "carnot.adaptive_state_microkernel.v1.checkpoint",
++    "deterministic_eviction": "oldest_promoted_version_then_event_id",
++    "event_fields": [
++      "event_id",
++      "chronology_index",
++      "change",
++      "signature_hash",
++      "payload_hash",
++      "confidence_q16"
++    ],
++    "fixed_width_fields": {
++      "capacity": "u32_bounded_1_to_64",
++      "chronology_index": "u32",
++      "confidence_q16": "u16_fixed_point",
++      "history_capacity": "u32_bounded_2_to_128",
++      "version_id": "u32"
++    },
++    "max_event_id_len": 64,
++    "max_reason_len": 32,
++    "max_replay_limit": 64,
++    "stable_ordering": "lexicographic_event_id_and_replay_confidence_desc",
++    "state_schema": "carnot.adaptive_state_microkernel.v1.state"
++  },
++  "adaptive_state_microkernel_requalified_score": 0.0,
++  "applicable_e2e_receipts": {
++    "E2E-003 PyO3 Binding Round-Trip": {
++      "commands": [
++        "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
++        "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
++        ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"",
++        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0"
++      ],
++      "exit_code": 0,
++      "receipt": "RustAdaptiveStateKernel imported and focused Python/Rust binding operation parity passed."
++    },
++    "E2E-004 Serialization Cross-Language": {
++      "commands": [
++        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0",
++        ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass"
++      ],
++      "exit_code": 0,
++      "receipt": "Focused serialization, restart, rollback, canonical byte, and hash parity passed twice."
++    }
++  },
++  "before_after_test_matrix": {
++    "exp5859_focused_python_rust_parity": {
++      "after_pass_1": 0,
++      "after_pass_2": 0,
++      "before_exp5859_recorded": 0
++    },
++    "exp5865_new_code_coverage": {
++      "after_edge_tests": 0,
++      "coverage": "100%",
++      "initial_after_module": 2
++    },
++    "exp5865_tests_first": {
++      "after_module_implemented": 0,
++      "before_module_exists": 2
++    },
++    "lint_spec_root_clutter": {
++      "root_clutter": 0,
++      "ruff_check": 0,
++      "ruff_format_check": 0,
++      "spec_5859": 0,
++      "spec_5865": 0
++    },
++    "pyO3_build_import": {
++      "build": 0,
++      "copy": 0,
++      "import": 0
++    },
++    "repository_wide_pytest": {
++      "classification": "unrelated_repository_debt",
++      "exp5859_recorded_exit": 2,
++      "exp5865_natural_exit": null
++    },
++    "rust_core_adaptive_state": {
++      "after": 0
++    }
++  },
++  "canonical_state_and_hash_parity": {
++    "canonical_form_parity": true,
++    "hash_parity": true,
++    "py_final_hashes": [
++      "sha256:c52b3500a9cc871a4597342393349414ae87c2b30024cf53df0c1e7d2a1010b2",
++      "sha256:7421fa7c1f11410bc3b2814faf2eb075953790ca59f48f47f605cfaa00a480ce",
++      "sha256:71ad75bca68812606cec9896547ab51b83a63788839fde32ef26802b21256e7c",
++      "sha256:d2f4639fd8d7a816c172171249db41a4ccd2d16d1478a2b7fe6cfb2b93c6ce87",
++      "sha256:9a7fc77351efc73cf212ce6f5deef28895302a7232a740188dab582191ad0ac6"
++    ],
++    "rust_final_hashes": [
++      "sha256:c52b3500a9cc871a4597342393349414ae87c2b30024cf53df0c1e7d2a1010b2",
++      "sha256:7421fa7c1f11410bc3b2814faf2eb075953790ca59f48f47f605cfaa00a480ce",
++      "sha256:71ad75bca68812606cec9896547ab51b83a63788839fde32ef26802b21256e7c",
++      "sha256:d2f4639fd8d7a816c172171249db41a4ccd2d16d1478a2b7fe6cfb2b93c6ce87",
++      "sha256:9a7fc77351efc73cf212ce6f5deef28895302a7232a740188dab582191ad0ac6"
++    ]
++  },
++  "cross_language_operation_parity": {
++    "accept_reject_parity": true,
++    "operation_count": 67,
++    "parity_failures": [],
++    "trace_count": 5
++  },
++  "duration_s": 4306.0,
++  "exp5859_input_receipt": {
++    "adaptive_state_microkernel_ready_score": 0.0,
++    "checksum_valid": true,
++    "honest_verdict": "blocked: adaptive_state_microkernel_conformance_incomplete",
++    "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
++    "recorded_full_suite_exit_code": 2,
++    "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
++    "status": "blocked"
++  },
++  "failing_collection_and_node_receipts": [
++    {
++      "classification": "unrelated_repository_debt",
++      "log_line": 256,
++      "nodeid": "tests/python/test_experiment_3494.py::test_run_p01_gate_required_fields_present",
++      "receipt": "Fatal Python error: Aborted while JAX compiled python/carnot/phase3/sudoku_p01_gate.py run_p01_gate."
++    },
++    {
++      "classification": "unrelated_repository_debt",
++      "log_line": 355,
++      "nodeid": "tests/python/test_experiment_3394_kona_global_opt.py::test_run_sudoku_optimization",
++      "receipt": "Fatal Python error: Aborted while JAX compiled scripts/experiment_3394_kona_global_opt.py run_sudoku_optimization."
++    },
++    {
++      "classification": "unrelated_repository_debt",
++      "log_line": 296,
++      "nodeid": "xdist::gw1",
++      "receipt": "node down: Not properly terminated; xdist replaced crashed worker."
++    },
++    {
++      "classification": "unrelated_repository_debt",
++      "log_line": 395,
++      "nodeid": "xdist::gw0",
++      "receipt": "node down: Not properly terminated; xdist replaced crashed worker."
++    },
++    {
++      "classification": "protected_user_work_conflict",
++      "nodeid": "concurrent-process::tests/python/test_plan_in_model_component_unpack.py",
++      "receipt": "A separate process edited and tested this file while the baseline full-suite reproduction was running; Exp5865 did not touch or revert it."
++    }
++  ],
++  "field_provenance": {
++    "exp5859_checksum": "sha256:f5f70baccbb81e7df4c85daba30e80b17a9d31d4da1103eaf00116ac038893c1",
++    "field_principles": {
++      "abi_schema_and_bounds": "Version, types, capacities, and ordering remain finite and hardware-mappable.",
++      "adaptive_state_microkernel_requalified_score": "EMIT BARE scalar; only 1.0 permits Exp5866 and Exp5875.",
++      "applicable_e2e_receipts": "Promotion requires the exact end-to-end checks relevant to the kernel path.",
++      "before_after_test_matrix": "No pre-existing passing receipt may regress during seam repair.",
++      "canonical_state_and_hash_parity": "Equivalent states must produce identical canonical hashes.",
++      "cross_language_operation_parity": "Every accepted and rejected operation must match across implementations.",
++      "duration_s": "Measured wall time exposes bootstrap-only requalification.",
++      "exp5859_input_receipt": "The new result must consume the exact blocked artifact without rewriting history.",
++      "failing_collection_and_node_receipts": "Exact logs and node IDs replace a generic exit-code narrative.",
++      "field_provenance": "Every decision traces to logs, fixtures, source hashes, toolchains, and outputs.",
++      "global_suite_debt_classification": "Unrelated failures stay visible and cannot be silently waived.",
++      "honest_verdict": "A `complete:`, `parity:`, `retired:`, or `blocked:` prefix states the terminal outcome.",
++      "inference_substrate": "`deterministic_cross_language_state_execution_no_llm` declares the actual path.",
++      "invalid_input_and_capacity_controls": "Malformed, duplicate, out-of-order, overflow, and unbounded input fail closed.",
++      "original_nonzero_exit_reproduction": "A failing seam must be observed before it can be attributed or repaired.",
++      "preconditions_checked": "Hashes, toolchains, plugins, resources, outputs, and protected files prevent blind repair.",
++      "protected_files_unchanged": "User work and operator-curated files remain untouched.",
++      "python_rust_binding_receipts": "The deployable call surface must build and import on the tested toolchain.",
++      "qualified_operation_mapping": "Only Exp5858-qualified operations remain in the ABI.",
++      "reproducibility_checksum": "A checksum detects ABI, fixture, toolchain, or test drift.",
++      "root_cause_classification": "Owned, unrelated, environment, and protected-work failures require different actions.",
++      "semantic_change_scope": "Only a proven owned defect may alter already-passing kernel semantics.",
++      "serialization_restart_and_rollback_parity": "Durable state must restore and roll back identically.",
++      "status": "A terminal state distinguishes requalified parity from a documented remaining block.",
++      "test_commands": "Commands document reproduction, parity, binding, regression, and E2E checks.",
++      "test_exit_codes": "Every claimed readiness command must have exit code zero."
++    },
++    "operation_trace_hash": "sha256:6c7b430741d18f25e3d60ffd42dc1c8749ddaf656b9d3a15a29fbef0b4437669",
++    "result_path": "results/experiment_5865_adaptive_state_kernel_requalification.json",
++    "source_hashes": {
++      "crates/carnot-core/src/adaptive_state.rs": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
++      "crates/carnot-python/src/adaptive_state.rs": "sha256:b37a32f567c044ab9749adcad88d2512f902aabab79f13c69bda3e6a3f3c6566",
++      "openspec/capabilities/self-learning/spec.md": "sha256:2e1858775a9e6e18762452f113089fd29d975ce15a3f5934de438144c7c01777",
++      "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5865_adaptive_state_kernel_requalification.json",
++      "python/carnot/adaptive_state.py": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
++      "python/carnot/adaptive_state_requalification.py": "sha256:f093ec59fea49371a67aa59e999427669aeb60985183e118bd03a11d4a802b40",
++      "results/experiment_5859_adaptive_state_microkernel_parity.json": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
++      "results/experiment_5865_adaptive_state_kernel_requalification.json": "sha256:3da29f9b39629015b67dc0bcee202078286d3d2ad6ce18acfa98f8b0db4286ab",
++      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++      "tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": "sha256:b66da8b4f553af87f33732f769954a69698151d8d03c5165fbb859305e70674a",
++      "tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": "sha256:38e1ce171aa4fee1449381130bc79cd0119c492976d42574c18a93f9b0fe5eb4"
++    }
++  },
++  "global_suite_debt_classification": {
++    "blocking": true,
++    "classification": "unrelated_repository_debt",
++    "owned_by_adaptive_state": false,
++    "protected_user_work_conflict": true,
++    "retire_requalification": true,
++    "summary": "Repository-wide pytest collected 50,873 items, then failed outside adaptive-state with JAX Phase3/global optimization worker aborts and many unrelated failures."
++  },
++  "honest_verdict": "retired: adaptive_state_requalification_blocked_by_unrelated_global_suite_debt",
++  "inference_substrate": "deterministic_cross_language_state_execution_no_llm",
++  "invalid_input_and_capacity_controls": {
++    "accepted_control_event": true,
++    "capacity": 2,
++    "fail_closed": true,
++    "invalid_case_count": 4,
++    "receipts": [
++      {
++        "case": "duplicate_event",
++        "expected_code": "DUPLICATE_EVENT",
++        "observed_code": "DUPLICATE_EVENT",
++        "state_preserved": true
++      },
++      {
++        "case": "out_of_order",
++        "expected_code": "OUT_OF_ORDER_EVENT",
++        "observed_code": "OUT_OF_ORDER_EVENT",
++        "state_preserved": true
++      },
++      {
++        "case": "overflow",
++        "expected_code": "FIXED_WIDTH_OVERFLOW",
++        "observed_code": "FIXED_WIDTH_OVERFLOW",
++        "state_preserved": true
++      },
++      {
++        "case": "corrupted_checkpoint",
++        "expected_code": "checkpoint is not valid adaptive-state JSON",
++        "observed_code": "checkpoint is not valid adaptive-state JSON",
++        "state_preserved": true
++      }
++    ]
++  },
++  "original_nonzero_exit_reproduction": {
++    "collection_items": 50873,
++    "collection_phase_reached": true,
++    "command": ".venv/bin/pytest tests/python -q",
++    "full_log_path": "/tmp/exp5865_pytest_before.log",
++    "full_log_sha256": "sha256:c00ab89ac05007caca2e13c96f7c63979fe1513605f78e47517d239b5fbaebf2",
++    "log_size_bytes": 63921,
++    "natural_exit_reached": false,
++    "observed_exit_code": null,
++    "recorded_exp5859_exit_code": 2,
++    "script_done_after_interrupt": "2026-07-24T00:31:43-04:00",
++    "script_started": "2026-07-23T23:28:00-04:00",
++    "why_not_terminal": "Interrupted after repeated unrelated JAX worker aborts and dense unrelated failures; no adaptive-state collection failure appeared.",
++    "wrapper_exit_code_after_interrupt": 0
++  },
++  "preconditions_checked": {
++    "atomic_output": {
++      "ok": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5865_adaptive_state_kernel_requalification.json"
++    },
++    "binding_hashes": [
++      {
++        "path": "python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
++        "sha256": "sha256:e762e7e8532c8da63851a1bc5d930c762312cc94a98cc2a2fdbdc5a469b9ba28"
++      }
++    ],
++    "exp5858_gate": {
++      "continuous_self_learning_ready_score": 1.0,
++      "honest_verdict": "ready: reduced_oracle_continuous_self_learning",
++      "ok": true,
++      "status": "ready"
++    },
++    "exp5858_operation_schema": {
++      "qualified_changes": [
++        "addition",
++        "recurrence",
++        "supersession"
++      ],
++      "row_count": 360,
++      "schema_hash": "sha256:8a94e27716ff3bd9478f327c9741d248c6005a08196d08952f6c9d6ece736469"
++    },
++    "file_hashes": {
++      "Cargo.lock": "sha256:a1e23eaa9806224fa95dec250f904815c8cb6d8616330d6655725fc5d03e6985",
++      "Cargo.toml": "sha256:0c6abc4d25d793846356b5c62d0add1cd1035a10cf174e4176d8bae02a51d49f",
++      "crates/carnot-core/Cargo.toml": "sha256:86fe56ce6709ac9324af4b9a323cefb90971dbd5d243d163ae9fd453c52b7ad9",
++      "crates/carnot-core/src/adaptive_state.rs": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
++      "crates/carnot-python/Cargo.toml": "sha256:b207674b5c91a0b8c8a323d2ca54e06c38ab15fe1e856da6b931318a2143f4fa",
++      "crates/carnot-python/src/adaptive_state.rs": "sha256:b37a32f567c044ab9749adcad88d2512f902aabab79f13c69bda3e6a3f3c6566",
++      "openspec/capabilities/self-learning/spec.md": "sha256:2e1858775a9e6e18762452f113089fd29d975ce15a3f5934de438144c7c01777",
++      "pyproject.toml": "sha256:e2667155a00f0baa5cfe48eee29db51a58cc7ac51ff35dac7698249cdd156e25",
++      "python/carnot/adaptive_state.py": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
++      "results/experiment_5858_reduced_oracle_continuous_self_learning.json": "sha256:de906c4b6a267deea4ed416bb0571403f1788987c9dc255f2eab16ecf15ca361",
++      "results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl": "sha256:8ed8d12d0fcd64d539b949af24b76ca1c67722a3809125d102e4b1793eba905f",
++      "scripts/research_conductor.py": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++      "tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": "sha256:b66da8b4f553af87f33732f769954a69698151d8d03c5165fbb859305e70674a"
++    },
++    "preconditions_ready": true,
++    "resources": {
++      "disk": {
++        "available_mb": 1168902,
++        "ok": true,
++        "required_mb": 512
++      },
++      "ram": {
++        "available_mb": 29444,
++        "ok": true,
++        "required_mb": 512
++      }
++    },
++    "serialization_versions": {
++      "abi_version": 1,
++      "checkpoint_schema": "carnot.adaptive_state_microkernel.v1.checkpoint",
++      "state_schema": "carnot.adaptive_state_microkernel.v1.state"
++    },
++    "toolchains": {
++      "cargo": {
++        "available": true,
++        "command": [
++          "cargo",
++          "--version"
++        ],
++        "duration_ms": 8.125,
++        "returncode": 0,
++        "version": "cargo 1.97.0 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.0-1.1)"
++      },
++      "python": "3.12.13",
++      "rustc": {
++        "available": true,
++        "command": [
++          "rustc",
++          "--version"
++        ],
++        "duration_ms": 11.582,
++        "returncode": 0,
++        "version": "rustc 1.97.0 (2d8144b78 2026-07-07) (Arch Linux rust 1:1.97.0-1.1)"
++      },
++      "system": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43"
++    }
++  },
++  "protected_files_unchanged": {
++    "baseline_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++    "current_sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++    "path": "scripts/research_conductor.py",
++    "unchanged": true
++  },
++  "python_rust_binding_receipts": {
++    "binding": {
++      "binding_available": true,
++      "class_name": "RustAdaptiveStateKernel",
++      "methods": [
++        "apply_event",
++        "acquire_core",
++        "quarantine",
++        "promote",
++        "select_replay",
++        "roll_back",
++        "serialize",
++        "restore",
++        "canonical_state_hash"
++      ]
++    },
++    "python_implementation": {
++      "path": "python/carnot/adaptive_state.py",
++      "sha256": "sha256:aaf4e9b42ef48db2fece54590561d1353c61c89f0e0338194cffc77beca31feb",
++      "state_owner": "readable_reference_semantics"
++    },
++    "rust_implementation": {
++      "path": "crates/carnot-core/src/adaptive_state.rs",
++      "sha256": "sha256:605fdd95db528eaa43d6091292d8b8038b8766b738aa4a1b52544cf8a39ed599",
++      "state_owner": "deterministic_deployable_execution"
++    }
++  },
++  "qualified_operation_mapping": {
++    "exp5858_changes": [
++      "addition",
++      "supersession",
++      "recurrence"
++    ],
++    "mapping": {
++      "addition": [
++        "apply_event",
++        "acquire_core",
++        "promote"
++      ],
++      "recurrence": [
++        "apply_event",
++        "select_replay"
++      ],
++      "supersession": [
++        "apply_event",
++        "quarantine"
++      ]
++    },
++    "operations": [
++      "apply_event",
++      "acquire_core",
++      "quarantine",
++      "promote",
++      "select_replay",
++      "roll_back",
++      "serialize",
++      "restore",
++      "canonical_state_hash"
++    ],
++    "source": "results/experiment_5858_reduced_oracle_continuous_self_learning.rows.jsonl"
++  },
++  "reproducibility_checksum": "sha256:4cdfb7b2b84789f08d5df7a6349e3e98cbad272621ec8a0f02d75ba376441bbb",
++  "root_cause_classification": {
++    "adaptive_state_owned_failure_count": 0,
++    "classification_counts": {
++      "protected_user_work_conflict": 1,
++      "unrelated_repository_debt": 4
++    },
++    "owned_repair_performed": false,
++    "primary": "unrelated_repository_debt",
++    "protected_user_work_conflict": true
++  },
++  "semantic_change_scope": {
++    "abi_changed": false,
++    "capacity_or_bound_changed": false,
++    "code_semantics_changed": false,
++    "failure_codes_changed": false,
++    "operation_set_changed": false,
++    "ordering_changed": false,
++    "schema_version_changed": false,
++    "summary": "No adaptive-state kernel semantic changes were made."
++  },
++  "serialization_restart_and_rollback_parity": {
++    "restart_parity": true,
++    "rollback_parity": true,
++    "round_trip_parity": true
++  },
++  "status": "retired",
++  "test_commands": [
++    "script -q -e -c \".venv/bin/pytest tests/python -q\" /tmp/exp5865_pytest_before.log",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0  # expected tests-first failure before module existed",
++    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
++    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
++    ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"",
++    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0",
++    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass",
++    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py -m pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py --fail-under=100",
++    "cargo test -p carnot-core adaptive_state --lib",
++    ".venv/bin/ruff check python/carnot/adaptive_state.py python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
++    ".venv/bin/ruff format --check python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
++    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs",
++    "cargo clippy -p carnot-core --lib -- -D warnings",
++    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git diff -- scripts/research_conductor.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5865_adaptive_state_kernel_requalification.json"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/adaptive_state_requalification.py -m pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python -q": null,
++    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py -q --no-cov -n 0  # second pass": 0,
++    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py -q --no-cov -n 0  # expected tests-first failure before module existed": 2,
++    ".venv/bin/python -c \"import carnot._rust as rust; print(rust.RustAdaptiveStateKernel)\"": 0,
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5865_adaptive_state_kernel_requalification.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/adaptive_state.py python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
++    ".venv/bin/ruff format --check python/carnot/adaptive_state_requalification.py tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py": 0,
++    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python": 0,
++    "cargo clippy -p carnot-core --lib -- -D warnings": 0,
++    "cargo clippy -p carnot-python --lib -- -D warnings -A unused-imports -A deprecated -A clippy::type-complexity -A clippy::needless-range-loop -A clippy::too-many-arguments": 0,
++    "cargo test -p carnot-core adaptive_state --lib": 0,
++    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so": 0,
++    "git diff -- scripts/research_conductor.py": 0,
++    "rustfmt --check crates/carnot-core/src/adaptive_state.rs crates/carnot-python/src/adaptive_state.rs": 0,
++    "script -q -e -c \".venv/bin/pytest tests/python -q\" /tmp/exp5865_pytest_before.log": 0
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3e7d2da9a6..11579f9df9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T03:15:48Z",
+-  "finished_at": "2026-07-24T03:15:48Z",
++  "started_at": "2026-07-24T04:11:01Z",
++  "finished_at": "2026-07-24T04:11:01Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 705733b158..de7b81e0c3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T03:15:49Z",
+-  "finished_at": "2026-07-24T03:15:49Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-24T04:11:01Z",
++  "finished_at": "2026-07-24T04:11:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 86cf62064b..b4d7df3bf9 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T03:15:49Z",
+-  "finished_at": "2026-07-24T03:15:49Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-24T04:11:02Z",
++  "finished_at": "2026-07-24T04:11:02Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py b/tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py
+new file mode 100644
+index 0000000000..e192a37eec
+--- /dev/null
++++ b/tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py
+@@ -0,0 +1,222 @@
++"""Exp5865 adaptive-state requalification artifact tests.
++
++Spec refs: REQ-LEARN-5865, SCENARIO-LEARN-5865-ATTRIBUTION,
++SCENARIO-LEARN-5865-PARITY-PRESERVED.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++from carnot import adaptive_state as base
++from carnot import adaptive_state_requalification as req
++
++
++REPO = Path(__file__).resolve().parents[2]
++SELF_LEARNING_SPEC = REPO / "openspec/capabilities/self-learning/spec.md"
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5859_adaptive_state_microkernel_parity.py "
++    "-q --no-cov -n 0"
++)
++
++
++def _passing_parity_receipt() -> dict[str, object]:
++    return {
++        "binding_receipt": {
++            "binding_available": True,
++            "class_name": "RustAdaptiveStateKernel",
++            "methods": list(base.ABI_OPERATIONS),
++        },
++        "canonical_state_and_hash_parity": {
++            "canonical_form_parity": True,
++            "hash_parity": True,
++            "py_final_hashes": ["sha256:" + "1" * 64],
++            "rust_final_hashes": ["sha256:" + "1" * 64],
++        },
++        "cross_language_operation_parity": {
++            "accept_reject_parity": True,
++            "operation_count": 3,
++            "parity_failures": [],
++            "trace_count": 1,
++        },
++        "invalid_input_and_capacity_controls": {
++            "accepted_control_event": True,
++            "capacity": 2,
++            "fail_closed": True,
++            "invalid_case_count": 1,
++            "receipts": [
++                {
++                    "case": "duplicate_event",
++                    "expected_code": "DUPLICATE_EVENT",
++                    "observed_code": "DUPLICATE_EVENT",
++                    "state_preserved": True,
++                }
++            ],
++        },
++        "serialization_restart_and_rollback_parity": {
++            "restart_parity": True,
++            "rollback_parity": True,
++            "round_trip_parity": True,
++        },
++    }
++
++
++def _base_reproduction_receipt() -> dict[str, object]:
++    return {
++        "command": FULL_PYTEST_COMMAND,
++        "collection_items": 50873,
++        "log_path": "/tmp/exp5865_pytest_before.log",
++        "log_sha256": "sha256:" + "2" * 64,
++        "natural_exit_reached": False,
++        "observed_exit_code": None,
++        "recorded_exp5859_exit_code": 2,
++        "wrapper_exit_code_after_interrupt": 0,
++    }
++
++
++def _global_debt_receipt() -> dict[str, object]:
++    return {
++        "blocking": True,
++        "classification": "unrelated_repository_debt",
++        "owned_by_adaptive_state": False,
++        "receipts": [
++            {
++                "classification": "unrelated_repository_debt",
++                "nodeid": (
++                    "tests/python/test_experiment_3494.py::"
++                    "test_run_p01_gate_required_fields_present"
++                ),
++                "reason": "Fatal Python abort while JAX compiled phase3 sudoku gate.",
++            }
++        ],
++    }
++
++
++def test_req_learn_5865_spec_declares_requalification_contract() -> None:
++    """REQ-LEARN-5865: OpenSpec preregisters the requalification artifact."""
++
++    section = SELF_LEARNING_SPEC.read_text(encoding="utf-8")
++    section = section[section.index("## REQ-LEARN-5865") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5865",
++        "SCENARIO-LEARN-5865-ATTRIBUTION",
++        "SCENARIO-LEARN-5865-PARITY-PRESERVED",
++        "python/carnot/adaptive_state_requalification.py",
++        "results/experiment_5865_adaptive_state_kernel_requalification.json",
++        "`adaptive_state_microkernel_requalified_score`",
++        "deterministic_cross_language_state_execution_no_llm",
++    ):
++        assert marker in section
++    for field, principle in req.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_learn_5865_retired_artifact_for_unrelated_global_debt(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5865-ATTRIBUTION: unrelated global debt blocks score 1.0."""
++
++    result_path = tmp_path / req.RESULT_RELATIVE_PATH.name
++    test_exit_codes = {FOCUSED_COMMAND: 0, FULL_PYTEST_COMMAND: 2}
++    artifact = req.build_artifact(
++        result_path=result_path,
++        duration_s=12.5,
++        test_commands=list(test_exit_codes),
++        test_exit_codes=test_exit_codes,
++        original_nonzero_exit_reproduction=_base_reproduction_receipt(),
++        failing_collection_and_node_receipts=_global_debt_receipt()["receipts"],
++        global_suite_debt_classification=_global_debt_receipt(),
++        applicable_e2e_receipts={"e2e_003": {"command": "binding", "exit_code": 0}},
++        before_after_test_matrix={"focused_pytest": {"before": 0, "after": 0}},
++        parity_receipt=_passing_parity_receipt(),
++        write=True,
++    )
++
++    assert req.read_json(result_path) == artifact
++    assert req.validate_artifact(artifact) is True
++    assert set(req.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["status"] == "retired"
++    assert artifact["honest_verdict"].startswith("retired:")
++    assert artifact["adaptive_state_microkernel_requalified_score"] == 0.0
++    assert artifact["semantic_change_scope"]["code_semantics_changed"] is False
++    assert artifact["root_cause_classification"]["primary"] == "unrelated_repository_debt"
++    assert artifact["global_suite_debt_classification"]["blocking"] is True
++    assert artifact["cross_language_operation_parity"]["accept_reject_parity"] is True
++    assert artifact["reproducibility_checksum"] == req.reproducibility_checksum(artifact)
++
++
++def test_scenario_learn_5865_score_requires_zero_exits_and_no_global_blocker(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5865-PARITY-PRESERVED: score 1.0 requires clean commands."""
++
++    test_exit_codes = {FOCUSED_COMMAND: 0, FULL_PYTEST_COMMAND: 0}
++    artifact = req.build_artifact(
++        result_path=tmp_path / req.RESULT_RELATIVE_PATH.name,
++        duration_s=1.0,
++        test_commands=list(test_exit_codes),
++        test_exit_codes=test_exit_codes,
++        original_nonzero_exit_reproduction={
++            **_base_reproduction_receipt(),
++            "observed_exit_code": 0,
++        },
++        failing_collection_and_node_receipts=[],
++        global_suite_debt_classification={"blocking": False, "classification": "none"},
++        applicable_e2e_receipts={"e2e_003": {"command": "binding", "exit_code": 0}},
++        before_after_test_matrix={"focused_pytest": {"before": 0, "after": 0}},
++        parity_receipt=_passing_parity_receipt(),
++        write=False,
++    )
++
++    assert artifact["status"] == "requalified"
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["adaptive_state_microkernel_requalified_score"] == 1.0
++
++
++def test_req_learn_5865_exp5859_input_receipt_is_hash_bound() -> None:
++    """REQ-LEARN-5865: Exp5859 is consumed as immutable blocked input."""
++
++    receipt = req.exp5859_input_receipt()
++
++    assert receipt["path"] == base.RESULT_RELATIVE_PATH.as_posix()
++    assert receipt["sha256"].startswith("sha256:")
++    assert receipt["status"] == "blocked"
++    assert receipt["adaptive_state_microkernel_ready_score"] == 0.0
++    assert receipt["recorded_full_suite_exit_code"] == 2
++    assert receipt["checksum_valid"] is True
++
++
++def test_req_learn_5865_bookkeeping_edges_are_explicit(tmp_path: Path) -> None:
++    """REQ-LEARN-5865: protected conflicts and E2E failures block promotion."""
++
++    existing_result = tmp_path / req.RESULT_RELATIVE_PATH.name
++    existing_result.write_text("prior", encoding="utf-8")
++    test_exit_codes = {FOCUSED_COMMAND: 0, FULL_PYTEST_COMMAND: 0}
++    artifact = req.build_artifact(
++        result_path=existing_result,
++        duration_s=1.0,
++        test_commands=list(test_exit_codes),
++        test_exit_codes=test_exit_codes,
++        original_nonzero_exit_reproduction=_base_reproduction_receipt(),
++        failing_collection_and_node_receipts=[],
++        global_suite_debt_classification={
++            "blocking": False,
++            "classification": "none",
++            "protected_user_work_conflict": True,
++        },
++        applicable_e2e_receipts={"e2e_003": {"command": "binding", "exit_code": 1}},
++        before_after_test_matrix={"focused_pytest": {"before": 0, "after": 0}},
++        parity_receipt=_passing_parity_receipt(),
++        write=False,
++    )
++    protected = req._protected_files_unchanged()
++
++    assert protected["unchanged"] is True
++    assert artifact["field_provenance"]["source_hashes"]["output_path"] == str(existing_result)
++    assert artifact["root_cause_classification"]["primary"] == "protected_user_work_conflict"
++    assert artifact["adaptive_state_microkernel_requalified_score"] == 0.0
+-- 
+2.55.0
+

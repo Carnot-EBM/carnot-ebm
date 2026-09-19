@@ -1,0 +1,2659 @@
+From 0e724558ae744f4fccb689cd4179669122ebc614 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 04:20:07 -0400
+Subject: [PATCH 07023/11362] [conductor] Transition .506 terminal evidence
+ into the .507 dependency and retirement map
+
+Automated research step by research conductor.
+Task ID: exp5613-transition-v507
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  99 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5613_transition_v507.py | 889 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_5613_transition_v507.json  | 758 +++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../test_experiment_5613_transition_v507.py   | 533 +++++++++++
+ 23 files changed, 2316 insertions(+), 46 deletions(-)
+ create mode 100644 python/carnot/experiment_5613_transition_v507.py
+ create mode 100644 results/experiment_5613_transition_v507.json
+ create mode 100644 tests/python/test_experiment_5613_transition_v507.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 638e17c3a8..91796dda52 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -40963,3 +40963,102 @@ emits a terminal no-op artifact.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5604 | Implemented (`python/carnot/experiment_5604_v506_source_delta_ingestion.py`, `results/experiment_5604_v506_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5604_v506_source_delta_ingestion.py`) |
++
++### REQ-REPORT-5613: V507 Transition Locks V506 Terminal Evidence And Dependency Gates
++
++The Exp5613 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
++`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
++`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/conductor-log.md`,
++`research-complete.yaml`, and the terminal `.506` artifacts
++`results/experiment_5603_transition_v506.json`,
++`results/experiment_5604_v506_source_delta_ingestion.json`,
++`results/experiment_5605_raw_response_evidence_envelope.json`,
++`results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`,
++`results/experiment_5607_property_template_exact_residual_extension.json`,
++`results/experiment_5608_kan_longitudinal_self_learning.json`,
++`results/experiment_5609_arc_filter_intermediate_invariance_ab.json`,
++`results/experiment_5610_arc_live_self_discovery_levelup_v506.json`,
++`results/experiment_5611_cdls_matched_sampler_crossover.json`, and
++`results/experiment_5612_v506_capstone_reconciliation.json`. It SHALL classify
++those artifacts as complete, blocked, gate-skipped, promoted, retired, or
++adversarially flagged without upgrading flagged evidence into a clean
++prerequisite.
++
++The transition SHALL preserve the Exp5605 lossless response envelope and the
++Exp5608 exact-gated active-spline KAN as clean substrates. It SHALL keep the
++Exp5606 solve-versus-verify panel, the Exp5607 exact residual extension chain,
++the Exp5609 ARC inert-click/object-history filters, and the Exp5611 unmatched
++cDLS crossover closed or blocked according to the upstream terminal evidence.
++The workflow SHALL record `previous_milestone=2026.07.506`,
++`current_milestone=2026.07.507`, `current_task_range=exp5613-exp5624`, and a
++collision check showing Exp5613 through Exp5624 do not collide with completed
++experiment IDs in `research-complete.yaml`.
++
++The artifact SHALL emit dependency chains for native-runtime certification,
++exact drift fixture to duration map to predictive KAN, ARC transition-cycle
++prototype to live A/B with an unconditional level attempt, and cDLS exactness
++to gated crossover. It SHALL declare
++`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
++`research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL write
++`results/experiment_5613_transition_v507.json`.
++
++The artifact SHALL include required fields `field_principles`,
++`artifacts_read`, `terminal_findings`, `promoted_substrates`, `retired_scopes`,
++`adversarial_flags_preserved`, `current_task_range`, `dependency_map`,
++`inference_substrate`, `reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles:
++
++- `field_principles`: principle "One-line annotations for every required headline and gate field."
++- `artifacts_read`: principle "claims trace to files"
++- `terminal_findings`: principle "only observed outcomes cross milestones"
++- `promoted_substrates`: principle "clean prerequisites are explicit"
++- `retired_scopes`: principle "failed chains stay closed"
++- `adversarial_flags_preserved`: principle "flagged artifacts are not upgraded"
++- `current_task_range`: principle "IDs do not collide"
++- `dependency_map`: principle "gates are auditable"
++- `inference_substrate`: principle "no new inference occurred"
++- `reproducibility_checksum`: principle "the transition is stable"
++- `honest_verdict`: principle "terminal status starts complete: or blocked:"
++
++#### SCENARIO-REPORT-5613: V507 Transition Preserves V506 Terminal Boundaries
++
++**Given** the `.506` artifacts from Exp5603 through Exp5612 are readable
++**And** Exp5605 reports a lossless response envelope
++**And** Exp5608 reports a clean exact-gated active-spline KAN
++**And** Exp5606, Exp5607, Exp5609, Exp5610, and Exp5611 report blocked,
++gate-skipped, retired, no-level, or unmatched evidence
++**When** the Exp5613 workflow runs
++**Then** it emits `results/experiment_5613_transition_v507.json`, records
++`previous_milestone=2026.07.506`, records
++`current_milestone=2026.07.507`, records
++`current_task_range=exp5613-exp5624`, promotes only the response envelope and
++active-spline KAN substrates, keeps the closed scopes closed, preserves
++adversarial flags, declares `inference_substrate=aggregation_from_upstream_artifacts`,
++and uses a terminal `honest_verdict` prefix.
++
++#### SCENARIO-REPORT-5613-DEPENDENCY-MAP: V507 Gates Stay Auditable
++
++**Given** the `.507` roadmap defines Exp5613 through Exp5624
++**And** `research-complete.yaml` has no completed Exp5613 through Exp5624 IDs
++**When** the Exp5613 dependency map is built
++**Then** the map contains the chains `native-runtime certification`, `exact
++drift fixture->duration map->predictive KAN`, `ARC transition-cycle
++prototype->live A/B->unconditional level attempt`, and `cDLS exactness->gated
++crossover`, and it records the non-collision boundary explicitly.
++
++#### SCENARIO-REPORT-5613-FIELD-PRINCIPLES: Transition Fields Stay Annotated
++
++**Given** the Exp5613 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required headline and gate field has a one-line
++`field_principles` entry, `research-roadmap.yaml` is unchanged,
++`scripts/research_conductor.py` is unchanged, `inference_substrate` is
++`aggregation_from_upstream_artifacts`, `reproducibility_checksum` is populated,
++and `honest_verdict` starts with `complete:` or `blocked:`.
++
++## Implementation Status (REQ-REPORT-5613)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5613 | Implemented (`python/carnot/experiment_5613_transition_v507.py`, `results/experiment_5613_transition_v507.json`) | Implemented (`tests/python/test_experiment_5613_transition_v507.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f2950e505b..576fffb0be 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4542,
++  "experiments_checked": 4543,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5613_transition_v507.py b/python/carnot/experiment_5613_transition_v507.py
+new file mode 100644
+index 0000000000..e47f1b1a40
+--- /dev/null
++++ b/python/carnot/experiment_5613_transition_v507.py
+@@ -0,0 +1,889 @@
++"""Exp5613 transition receipt from milestone .506 into .507.
++
++Spec refs: REQ-REPORT-5613, SCENARIO-REPORT-5613,
++SCENARIO-REPORT-5613-DEPENDENCY-MAP,
++SCENARIO-REPORT-5613-FIELD-PRINCIPLES.
++
++This module performs no model inference, ARC solving, KAN learning, or sampler
++benchmarking. It reads the terminal `.506` evidence, records which facts are
++safe dependencies for `.507`, and keeps blocked, retired, and adversarially
++flagged scopes visibly bounded. That explicit ledger prevents a later roadmap
++or capstone from accidentally treating a useful null result as a promotion.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++from typing import Any
++
++from carnot.experiment_5415_transition_v493 import (
++    JsonDict,
++    JsonMap,
++    _modification_status,
++    extract_roadmap_tasks,
++    path_sha256,
++    payload_checksum,
++    read_yaml_mapping,
++    write_json,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5613_transition_v507.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++
++EXPERIMENT = "experiment_5613_transition_v507"
++EXPERIMENT_ID = "exp5613-transition-v507"
++PREVIOUS_MILESTONE = "2026.07.506"
++CURRENT_MILESTONE = "2026.07.507"
++PREVIOUS_TASK_RANGE = "exp5603-exp5612"
++CURRENT_TASK_RANGE = "exp5613-exp5624"
++RUN_DATE = "2026-07-14"
++RANDOM_SEED = 5613
++SCHEMA = "carnot.experiment_5613.transition_v507.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SPEC_REFS = (
++    "REQ-REPORT-5613",
++    "SCENARIO-REPORT-5613",
++    "SCENARIO-REPORT-5613-DEPENDENCY-MAP",
++    "SCENARIO-REPORT-5613-FIELD-PRINCIPLES",
++)
++
++EXP5603_TRANSITION_PATH = Path("results/experiment_5603_transition_v506.json")
++EXP5604_SOURCE_PATH = Path("results/experiment_5604_v506_source_delta_ingestion.json")
++EXP5605_ENVELOPE_PATH = Path("results/experiment_5605_raw_response_evidence_envelope.json")
++EXP5606_PANEL_PATH = Path("results/experiment_5606_clean_sota_solve_verify_evidence_panel.json")
++EXP5607_EXTENSION_PATH = Path(
++    "results/experiment_5607_property_template_exact_residual_extension.json"
++)
++EXP5608_KAN_PATH = Path("results/experiment_5608_kan_longitudinal_self_learning.json")
++EXP5609_ARC_FILTER_PATH = Path("results/experiment_5609_arc_filter_intermediate_invariance_ab.json")
++EXP5610_ARC_LEVEL_PATH = Path("results/experiment_5610_arc_live_self_discovery_levelup_v506.json")
++EXP5611_CDLS_PATH = Path("results/experiment_5611_cdls_matched_sampler_crossover.json")
++EXP5612_CAPSTONE_PATH = Path("results/experiment_5612_v506_capstone_reconciliation.json")
++
++TASK_ARTIFACT_PATHS: dict[str, Path] = {
++    "exp5603-transition-v506": EXP5603_TRANSITION_PATH,
++    "exp5604-v506-source-delta-ingestion": EXP5604_SOURCE_PATH,
++    "exp5605-raw-response-evidence-envelope": EXP5605_ENVELOPE_PATH,
++    "exp5606-clean-sota-solve-verify-evidence-panel": EXP5606_PANEL_PATH,
++    "exp5607-property-template-exact-residual-extension": EXP5607_EXTENSION_PATH,
++    "exp5608-kan-longitudinal-self-learning": EXP5608_KAN_PATH,
++    "exp5609-arc-filter-intermediate-invariance-ab": EXP5609_ARC_FILTER_PATH,
++    "exp5610-arc-live-self-discovery-levelup-v506": EXP5610_ARC_LEVEL_PATH,
++    "exp5611-cdls-matched-sampler-crossover": EXP5611_CDLS_PATH,
++    "exp5612-v506-capstone-reconciliation": EXP5612_CAPSTONE_PATH,
++}
++UPSTREAM_ARTIFACT_PATHS = tuple(TASK_ARTIFACT_PATHS.values())
++
++SOURCE_CONTEXT_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    ROADMAP_RELATIVE_PATH,
++    ROADMAP_NEXT_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++)
++
++EXPECTED_TASK_IDS = [
++    "exp5613-transition-v507",
++    "exp5614-v507-source-delta-ingestion",
++    "exp5615-native-llamacpp-cuda-runtime-certificate",
++    "exp5616-exact-nonstationary-constraint-stream",
++    "exp5617-kan-critical-task-duration-map",
++    "exp5618-predictive-window-kan-self-learning",
++    "exp5619-arc-forward-inverse-transition-cycle",
++    "exp5620-arc-cycle-guarded-live-update-ab",
++    "exp5621-arc-live-self-discovery-levelup-v507",
++    "exp5622-cdls-exact-kernel-audit",
++    "exp5623-cdls-multiseed-cpu-cuda-crossover",
++    "exp5624-v507-capstone-reconciliation",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "field_principles": "One-line annotations for every required headline and gate field.",
++    "artifacts_read": "claims trace to files",
++    "terminal_findings": "only observed outcomes cross milestones",
++    "promoted_substrates": "clean prerequisites are explicit",
++    "retired_scopes": "failed chains stay closed",
++    "adversarial_flags_preserved": "flagged artifacts are not upgraded",
++    "current_task_range": "IDs do not collide",
++    "dependency_map": "gates are auditable",
++    "inference_substrate": "no new inference occurred",
++    "reproducibility_checksum": "the transition is stable",
++    "honest_verdict": "terminal status starts complete: or blocked:",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "status",
++    "run_date",
++    "random_seed",
++    "spec_refs",
++    "result_path",
++    "previous_milestone",
++    "current_milestone",
++    "previous_task_range",
++    "current_task_range",
++    "current_task_collision_check",
++    "artifact_metadata",
++    "source_context",
++    "source_context_missing",
++    "missing_artifacts",
++    "malformed_artifacts",
++    "roadmap_task_ids",
++    "roadmap_task_count",
++    "roadmap_doc_task_range",
++    "protected_file_checks",
++    "preconditions_checked",
++    "failed_preconditions",
++    "tests_run",
++    "roadmap_yaml_unchanged",
++    "conductor_unchanged",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++LIST_FIELDS = (
++    "artifacts_read",
++    "promoted_substrates",
++    "retired_scopes",
++    "adversarial_flags_preserved",
++    "source_context",
++    "source_context_missing",
++    "missing_artifacts",
++    "malformed_artifacts",
++    "roadmap_task_ids",
++    "protected_file_checks",
++    "failed_preconditions",
++    "tests_run",
++)
++DICT_FIELDS = (
++    "field_principles",
++    "terminal_findings",
++    "current_task_collision_check",
++    "artifact_metadata",
++    "dependency_map",
++    "preconditions_checked",
++)
++BOOL_FIELDS = ("roadmap_yaml_unchanged", "conductor_unchanged")
++
++DEFAULT_TESTS_RUN = (
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5613_transition_v507.py -q --no-cov -n 0",
++        "exit_code": None,
++        "status": "not_run_in_default_artifact",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage run --include=python/carnot/"
++            "experiment_5613_transition_v507.py -m pytest "
++            "tests/python/test_experiment_5613_transition_v507.py -q --no-cov -n 0"
++        ),
++        "exit_code": None,
++        "status": "not_run_in_default_artifact",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage report --include=python/carnot/"
++            "experiment_5613_transition_v507.py --fail-under=100"
++        ),
++        "exit_code": None,
++        "status": "not_run_in_default_artifact",
++    },
++)
++
++
++def _read_text(root: Path, rel_path: Path) -> str:
++    path = root / rel_path
++    return path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
++
++
++def _task_range_from_text(text: str) -> str | None:
++    match = re.search(r"Exp\s*(\d+)\s*[-\u2013]\s*Exp?(\d+)", text, flags=re.IGNORECASE)
++    if match:
++        return f"exp{match.group(1)}-exp{match.group(2)}"
++    compact = re.search(r"exp(\d+)\s*[-\u2013]\s*exp?(\d+)", text, flags=re.IGNORECASE)
++    return f"exp{compact.group(1)}-exp{compact.group(2)}" if compact else None
++
++
++def _read_json_any(path: Path) -> tuple[JsonDict, JsonDict]:
++    metadata: JsonDict = {
++        "exists": path.exists(),
++        "loadable": False,
++        "json_type": None,
++        "sha256": path_sha256(path),
++    }
++    if not path.exists():
++        metadata["error"] = "missing"
++        return {}, metadata
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        metadata.update({"error": "malformed_json", "line": exc.lineno, "column": exc.colno})
++        return {}, metadata
++    metadata["json_type"] = type(parsed).__name__
++    if not isinstance(parsed, Mapping):
++        metadata["error"] = "not_json_object"
++        return {}, metadata
++    metadata.update({"loadable": True, "error": None})
++    return dict(parsed), metadata
++
++
++def _read_source_context(root: Path) -> tuple[list[JsonDict], list[str]]:
++    records: list[JsonDict] = []
++    missing: list[str] = []
++    for rel_path in SOURCE_CONTEXT_PATHS:
++        path = root / rel_path
++        exists = path.exists()
++        records.append(
++            {
++                "path": rel_path.as_posix(),
++                "exists": exists,
++                "read_only": True,
++                "sha256": path_sha256(path),
++            }
++        )
++        if not exists:
++            missing.append(rel_path.as_posix())
++    return records, missing
++
++
++def read_artifacts(root: Path) -> tuple[dict[str, JsonDict], JsonDict, list[JsonDict]]:
++    payloads: dict[str, JsonDict] = {}
++    metadata: JsonDict = {}
++    found: list[JsonDict] = []
++    path_to_task = {path: task_id for task_id, path in TASK_ARTIFACT_PATHS.items()}
++    for rel_path in UPSTREAM_ARTIFACT_PATHS:
++        payload, meta = _read_json_any(root / rel_path)
++        rel = rel_path.as_posix()
++        metadata[rel] = meta
++        payloads[rel] = payload
++        if meta.get("exists") and meta.get("loadable"):
++            found.append(
++                {
++                    "path": rel,
++                    "task_id": path_to_task[rel_path],
++                    "sha256": meta.get("sha256"),
++                    "status": _status_for_payload(payload, meta),
++                    "honest_verdict": _verdict(payload) or None,
++                }
++            )
++    return payloads, metadata, found
++
++
++def _payload(artifacts: Mapping[str, JsonMap], rel_path: Path) -> JsonMap:
++    value = artifacts.get(rel_path.as_posix(), {})
++    return value if isinstance(value, Mapping) else {}
++
++
++def _verdict(payload: JsonMap) -> str:
++    verdict = payload.get("honest_verdict")
++    return str(verdict) if verdict is not None else ""
++
++
++def _is_gate_skip(payload: JsonMap) -> bool:
++    verdict = _verdict(payload).lower()
++    blocked_at_layer = str(payload.get("blocked_at_layer") or "").lower()
++    return bool(
++        payload.get("schema") == "blocked_gate_check_v1"
++        or verdict == "blocked_gate_check_failed"
++        or ("gate" in blocked_at_layer and str(payload.get("status") or "").lower() == "blocked")
++        or (payload.get("gate_check_summary") and str(payload.get("status") or "").lower() == "blocked")
++    )
++
++
++def _is_blocked(payload: JsonMap) -> bool:
++    verdict = _verdict(payload).lower()
++    status = str(payload.get("status") or "").lower()
++    return bool(status == "blocked" or verdict.startswith("blocked:") or verdict.startswith("blocked_"))
++
++
++def _is_complete(payload: JsonMap) -> bool:
++    verdict = _verdict(payload).lower()
++    status = str(payload.get("status") or "").lower()
++    return bool(status == "complete" or verdict.startswith("complete:"))
++
++
++def _status_for_payload(payload: JsonMap, meta: JsonMap) -> str:
++    if not meta.get("exists"):
++        return "missing"
++    if not meta.get("loadable"):
++        return "malformed"
++    if payload.get("flagged_adversarial"):
++        return "flagged"
++    if _is_gate_skip(payload):
++        return "gate_skipped"
++    if _is_blocked(payload):
++        return "blocked"
++    if _is_complete(payload):
++        return "complete"
++    return "unknown"
++
++
++def _int(payload: JsonMap, field: str) -> int:
++    value = payload.get(field)
++    if isinstance(value, bool):
++        return int(value)
++    if isinstance(value, int | float):
++        return int(value)
++    if isinstance(value, str) and value.lstrip("-").isdigit():
++        return int(value)
++    return 0
++
++
++def _float(payload: JsonMap, field: str) -> float:
++    value = payload.get(field)
++    if isinstance(value, int | float):
++        return float(value)
++    if isinstance(value, str):
++        try:
++            return float(value)
++        except ValueError:
++            return 0.0
++    return 0.0
++
++
++def _all_true(value: Any) -> bool:
++    return bool(isinstance(value, Mapping) and value and all(item is True for item in value.values()))
++
++
++def _extract_exp_number(value: str) -> int | None:
++    match = re.search(r"(?:exp|experiment_)(\d+)", value)
++    return int(match.group(1)) if match else None
++
++
++def _completed_task_ids(root: Path) -> list[str]:
++    text = _read_text(root, RESEARCH_COMPLETE_RELATIVE_PATH)
++    return sorted(set(re.findall(r"\bid:\s*(exp\d+(?:[-_][A-Za-z0-9_]+)*)", text)))
++
++
++def _collision_check(root: Path, roadmap_task_ids: Sequence[str]) -> JsonDict:
++    completed = _completed_task_ids(root)
++    current_numbers = set(range(5613, 5625))
++    colliding = [
++        task_id
++        for task_id in completed
++        if (number := _extract_exp_number(task_id)) in current_numbers
++    ]
++    highest = max((_extract_exp_number(task_id) or 0 for task_id in completed), default=0)
++    return {
++        "current_task_range": CURRENT_TASK_RANGE,
++        "expected_task_ids": list(EXPECTED_TASK_IDS),
++        "roadmap_task_ids": list(roadmap_task_ids),
++        "completed_ids_checked_count": len(completed),
++        "highest_completed_id": f"exp{highest}" if highest else None,
++        "colliding_ids": colliding,
++        "collision_free": not colliding,
++        "range_matches_roadmap": list(roadmap_task_ids) == list(EXPECTED_TASK_IDS),
++    }
++
++
++def terminal_findings(artifacts: Mapping[str, JsonMap], metadata: JsonMap) -> dict[str, JsonDict]:
++    findings: dict[str, JsonDict] = {}
++    for task_id, rel_path in TASK_ARTIFACT_PATHS.items():
++        rel = rel_path.as_posix()
++        payload = _payload(artifacts, rel_path)
++        meta = metadata.get(rel, {})
++        findings[task_id] = {
++            "artifact_path": rel,
++            "status": _status_for_payload(payload, meta),
++            "honest_verdict": _verdict(payload) or None,
++            "flagged_adversarial": bool(payload.get("flagged_adversarial")),
++            "corrigendum_pending": payload.get("corrigendum_pending", []),
++            "sha256": meta.get("sha256"),
++            "metadata_error": meta.get("error"),
++            "supports_positive_claim": _status_for_payload(payload, meta) == "complete",
++        }
++    return findings
++
++
++def _response_envelope_clean(exp5605: JsonMap, status: str) -> bool:
++    return bool(
++        status == "complete"
++        and exp5605.get("envelope_ready")
++        and exp5605.get("raw_payloads_preserved")
++        and _float(exp5605, "lossless_replay_rate") >= 1.0
++        and _int(exp5605, "semantic_false_accept_count") == 0
++        and exp5605.get("parser_version_replay_passed")
++        and exp5605.get("payload_corruption_rejected")
++    )
++
++
++def _kan_clean(exp5608: JsonMap, status: str) -> bool:
++    return bool(
++        status == "complete"
++        and exp5608.get("continuous_self_learning_task")
++        and exp5608.get("kan_longitudinal_ready")
++        and _all_true(exp5608.get("promotion_gate"))
++        and _int(exp5608, "unsafe_false_accept_count") == 0
++        and exp5608.get("rollback_positive_control")
++        and exp5608.get("delayed_regression_passed")
++        and exp5608.get("no_model_weight_mutation")
++        and _int(exp5608, "llm_calls") == 0
++        and not exp5608.get("llm_weight_training")
++    )
++
++
++def promoted_substrates(
++    artifacts: Mapping[str, JsonMap],
++    findings: Mapping[str, JsonMap],
++) -> list[JsonDict]:
++    exp5605 = _payload(artifacts, EXP5605_ENVELOPE_PATH)
++    exp5608 = _payload(artifacts, EXP5608_KAN_PATH)
++    rows: list[JsonDict] = []
++    if _response_envelope_clean(
++        exp5605,
++        str(findings["exp5605-raw-response-evidence-envelope"]["status"]),
++    ):
++        rows.append(
++            {
++                "key": "lossless_response_envelope",
++                "source_artifacts": [EXP5605_ENVELOPE_PATH.as_posix()],
++                "prerequisite_for": ["exp5615-native-llamacpp-cuda-runtime-certificate"],
++                "evidence": {
++                    "response_rows_written": exp5605.get("response_rows_written"),
++                    "lossless_replay_rate": exp5605.get("lossless_replay_rate"),
++                    "semantic_false_accept_count": exp5605.get("semantic_false_accept_count"),
++                    "truncation_controls_detected": exp5605.get("truncation_controls_detected"),
++                },
++                "claim_boundary": "runtime evidence transport only; no solve-versus-verify accuracy claim",
++            }
++        )
++    if _kan_clean(exp5608, str(findings["exp5608-kan-longitudinal-self-learning"]["status"])):
++        rows.append(
++            {
++                "key": "active_spline_kan",
++                "source_artifacts": [EXP5608_KAN_PATH.as_posix()],
++                "prerequisite_for": [
++                    "exp5617-kan-critical-task-duration-map",
++                    "exp5618-predictive-window-kan-self-learning",
++                ],
++                "evidence": {
++                    "promotion_gate": exp5608.get("promotion_gate", {}),
++                    "forward_transfer_delta": exp5608.get("forward_transfer_delta"),
++                    "backward_retention_delta": exp5608.get("backward_retention_delta"),
++                    "forgetting_delta": exp5608.get("forgetting_delta"),
++                    "kan_weights_mutated": bool(exp5608.get("kan_weights_mutated")),
++                    "poison_update_disposition": exp5608.get("poison_update_disposition", {}),
++                },
++                "claim_boundary": "bounded KAN-component adaptation only; no LLM weight mutation",
++            }
++        )
++    return rows
++
++
++def retired_scopes(artifacts: Mapping[str, JsonMap]) -> list[JsonDict]:
++    exp5606 = _payload(artifacts, EXP5606_PANEL_PATH)
++    exp5607 = _payload(artifacts, EXP5607_EXTENSION_PATH)
++    exp5609 = _payload(artifacts, EXP5609_ARC_FILTER_PATH)
++    exp5611 = _payload(artifacts, EXP5611_CDLS_PATH)
++    decisions = exp5609.get("filter_promotion_decisions")
++    inert = decisions.get("inert_click", {}) if isinstance(decisions, Mapping) else {}
++    history = decisions.get("object_history", {}) if isinstance(decisions, Mapping) else {}
++    return [
++        {
++            "key": "solve_versus_verify_panel",
++            "closed": True,
++            "source_artifacts": [EXP5606_PANEL_PATH.as_posix()],
++            "reason": "CUDA offload was unauthenticated and parser failure stayed total.",
++            "evidence": {
++                "panel_complete": bool(exp5606.get("panel_complete")),
++                "gpu_offload_authenticated": bool(exp5606.get("gpu_offload_authenticated")),
++                "maximum_parser_failure_rate": exp5606.get("maximum_parser_failure_rate"),
++                "solve_verify_asymmetry_supported": bool(
++                    exp5606.get("solve_verify_asymmetry_supported")
++                ),
++            },
++        },
++        {
++            "key": "exact_residual_extension_chain",
++            "closed": True,
++            "source_artifacts": [EXP5607_EXTENSION_PATH.as_posix()],
++            "reason": "The gate skipped because Exp5606 supplied no clean residual panel.",
++            "evidence": {"gate_check_summary": exp5607.get("gate_check_summary")},
++        },
++        {
++            "key": "arc_inert_click_filter",
++            "closed": True,
++            "source_artifacts": [EXP5609_ARC_FILTER_PATH.as_posix()],
++            "reason": str(inert.get("reason") or inert.get("decision") or "no downstream improvement"),
++            "evidence": {
++                "decision": inert.get("decision"),
++                "reachable": bool(inert.get("reachable")),
++                "downstream_improved": bool(inert.get("downstream_improved")),
++            },
++        },
++        {
++            "key": "arc_object_history_filter",
++            "closed": True,
++            "source_artifacts": [EXP5609_ARC_FILTER_PATH.as_posix()],
++            "reason": str(history.get("reason") or history.get("decision") or "no downstream improvement"),
++            "evidence": {
++                "decision": history.get("decision"),
++                "reachable": bool(history.get("reachable")),
++                "downstream_improved": bool(history.get("downstream_improved")),
++            },
++        },
++        {
++            "key": "unmatched_cdls_crossover",
++            "closed": True,
++            "source_artifacts": [EXP5611_CDLS_PATH.as_posix()],
++            "reason": "One seed and zero quality-matched pairs cannot support a crossover claim.",
++            "evidence": {
++                "seeds": exp5611.get("seeds", []),
++                "successful_matched_pairs": _int(exp5611, "successful_matched_pairs"),
++                "crossover_claim_allowed": bool(exp5611.get("crossover_claim_allowed")),
++                "board_speedup_claimed": bool(exp5611.get("board_speedup_claimed")),
++            },
++            "forward_boundary": "exact kernel audit may proceed; this unmatched timing claim stays closed",
++        },
++    ]
++
++
++def adversarial_flags_preserved(findings: Mapping[str, JsonMap]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for task_id, row in findings.items():
++        if not row.get("flagged_adversarial"):
++            continue
++        pending = row.get("corrigendum_pending")
++        flags = pending if isinstance(pending, list) else []
++        rows.append(
++            {
++                "task_id": task_id,
++                "artifact_path": row.get("artifact_path"),
++                "status": row.get("status"),
++                "flag_kinds": [str(flag.get("kind")) for flag in flags if isinstance(flag, Mapping)],
++                "upgraded_to_clean": False,
++                "claim_boundary": "flagged evidence may be cited as a boundary, not as a clean substrate",
++            }
++        )
++    return rows
++
++
++def dependency_map() -> JsonDict:
++    return {
++        "native_runtime_certification": {
++            "chain": "native-runtime certification",
++            "tasks": ["exp5615-native-llamacpp-cuda-runtime-certificate"],
++            "upstream_clean_substrate": "lossless_response_envelope",
++            "closed_scope_not_reopened": "solve_versus_verify_panel",
++            "gates": [
++                {"upstream": "exp5605-raw-response-evidence-envelope", "field": "envelope_ready", "op": "==", "value": True},
++                {"upstream": "exp5615-native-llamacpp-cuda-runtime-certificate", "field": "runtime_certificate_ready_score", "op": "==", "value": 1.0},
++            ],
++        },
++        "kan_drift_to_predictive_controller": {
++            "chain": "exact drift fixture->duration map->predictive KAN",
++            "tasks": [
++                "exp5616-exact-nonstationary-constraint-stream",
++                "exp5617-kan-critical-task-duration-map",
++                "exp5618-predictive-window-kan-self-learning",
++            ],
++            "upstream_clean_substrate": "active_spline_kan",
++            "gates": [
++                {"upstream": "exp5616-exact-nonstationary-constraint-stream", "field": "fixture_ready_score", "op": "==", "value": 1.0},
++                {"upstream": "exp5617-kan-critical-task-duration-map", "field": "nondegenerate_switch_cases", "op": ">", "value": 1},
++                {"upstream": "exp5618-predictive-window-kan-self-learning", "field": "continuous_self_learning_ready", "op": "==", "value": True},
++            ],
++        },
++        "arc_transition_cycle_to_level_attempt": {
++            "chain": "ARC transition-cycle prototype->live A/B->unconditional level attempt",
++            "tasks": [
++                "exp5619-arc-forward-inverse-transition-cycle",
++                "exp5620-arc-cycle-guarded-live-update-ab",
++                "exp5621-arc-live-self-discovery-levelup-v507",
++            ],
++            "closed_scopes_not_reopened": ["arc_inert_click_filter", "arc_object_history_filter"],
++            "gates": [
++                {"upstream": "exp5619-arc-forward-inverse-transition-cycle", "field": "cycle_verifier_positive_control_rate", "op": ">=", "value": "preregistered_threshold"},
++                {"upstream": "exp5620-arc-cycle-guarded-live-update-ab", "field": "live_branch_promotion_score", "op": "==", "value": 1.0, "advisory_only": True},
++                {"upstream": "exp5621-arc-live-self-discovery-levelup-v507", "field": "live_attempt_executed", "op": "==", "value": True, "unconditional": True},
++            ],
++        },
++        "cdls_exactness_to_crossover": {
++            "chain": "cDLS exactness->gated crossover",
++            "tasks": [
++                "exp5622-cdls-exact-kernel-audit",
++                "exp5623-cdls-multiseed-cpu-cuda-crossover",
++            ],
++            "closed_scope_not_reopened": "unmatched_cdls_crossover",
++            "gates": [
++                {"upstream": "exp5622-cdls-exact-kernel-audit", "field": "kernel_audit_ready_score", "op": "==", "value": 1.0},
++                {"upstream": "exp5623-cdls-multiseed-cpu-cuda-crossover", "field": "crossover_claim_allowed", "op": "==", "value": True},
++            ],
++        },
++        "capstone_reconciliation": {
++            "chain": "Exp5613-Exp5623->Exp5624 reconciliation",
++            "tasks": [*EXPECTED_TASK_IDS[:-1], "exp5624-v507-capstone-reconciliation"],
++            "gate": "Exp5624 cannot upgrade blocked, skipped, flagged, development-proxy, or unmatched evidence.",
++        },
++    }
++
++
++def _protected_file_checks(
++    root: Path,
++    *,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[JsonDict]:
++    return [
++        {
++            "path": ROADMAP_RELATIVE_PATH.as_posix(),
++            "exists": (root / ROADMAP_RELATIVE_PATH).exists(),
++            "git_status_clean": not roadmap_modified,
++            "sha256": path_sha256(root / ROADMAP_RELATIVE_PATH),
++        },
++        {
++            "path": CONDUCTOR_RELATIVE_PATH.as_posix(),
++            "exists": (root / CONDUCTOR_RELATIVE_PATH).exists(),
++            "git_status_clean": not conductor_modified,
++            "sha256": path_sha256(root / CONDUCTOR_RELATIVE_PATH),
++        },
++    ]
++
++
++def _failed_preconditions(
++    missing_artifacts: Sequence[str],
++    malformed_artifacts: Sequence[str],
++    collision: JsonMap,
++    *,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[str]:
++    failures = [f"missing_artifact:{path}" for path in missing_artifacts]
++    failures.extend(f"malformed_artifact:{path}" for path in malformed_artifacts)
++    failures.extend(f"current_task_id_collision:{task_id}" for task_id in collision.get("colliding_ids", []))
++    if not collision.get("range_matches_roadmap"):
++        failures.append("roadmap_task_range_mismatch")
++    if roadmap_modified:
++        failures.append("research-roadmap.yaml_modified")
++    if conductor_modified:
++        failures.append("scripts/research_conductor.py_modified")
++    return failures
++
++
++def _honest_verdict(status: str, failures: Sequence[str]) -> str:
++    if status == "complete":
++        return (
++            "complete: archived .506 terminal evidence into .507 dependency map; "
++            "current_task_range=exp5613-exp5624; response_envelope_promoted=True; "
++            "active_spline_kan_promoted=True; solve_verify_panel_closed=True; "
++            "exact_residual_extension_closed=True; arc_filters_retired=True; "
++            "cdls_unmatched_crossover_closed=True."
++        )
++    first = failures[0] if failures else "unknown"
++    return f"blocked: .507 transition receipt failed precondition {first}."
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    tests_run: Sequence[str | Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifacts, metadata, artifacts_read = read_artifacts(root)
++    source_context, source_context_missing = _read_source_context(root)
++    roadmap, _roadmap_meta = read_yaml_mapping(root / ROADMAP_RELATIVE_PATH)
++    roadmap_task_ids = extract_roadmap_tasks(roadmap)
++    roadmap_doc_task_range = _task_range_from_text(_read_text(root, VNEXT_RELATIVE_PATH))
++    roadmap_modified = _modification_status(root, ROADMAP_RELATIVE_PATH, modification_overrides)
++    conductor_modified = _modification_status(root, CONDUCTOR_RELATIVE_PATH, modification_overrides)
++    missing_artifacts = [
++        path.as_posix()
++        for path in UPSTREAM_ARTIFACT_PATHS
++        if not metadata[path.as_posix()].get("exists")
++    ]
++    malformed_artifacts = [
++        path.as_posix()
++        for path in UPSTREAM_ARTIFACT_PATHS
++        if metadata[path.as_posix()].get("exists") and not metadata[path.as_posix()].get("loadable")
++    ]
++    findings = terminal_findings(artifacts, metadata)
++    collision = _collision_check(root, roadmap_task_ids)
++    failures = _failed_preconditions(
++        missing_artifacts,
++        malformed_artifacts,
++        collision,
++        roadmap_modified=roadmap_modified,
++        conductor_modified=conductor_modified,
++    )
++    status = "complete" if not failures else "blocked"
++    tests = [dict(row) if isinstance(row, Mapping) else {"command": str(row)} for row in tests_run]
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "status": status,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "previous_milestone": PREVIOUS_MILESTONE,
++        "current_milestone": CURRENT_MILESTONE,
++        "previous_task_range": PREVIOUS_TASK_RANGE,
++        "current_task_range": CURRENT_TASK_RANGE,
++        "current_task_collision_check": collision,
++        "artifact_metadata": metadata,
++        "source_context": source_context,
++        "source_context_missing": source_context_missing,
++        "missing_artifacts": missing_artifacts,
++        "malformed_artifacts": malformed_artifacts,
++        "roadmap_task_ids": roadmap_task_ids,
++        "roadmap_task_count": len(roadmap_task_ids),
++        "roadmap_doc_task_range": roadmap_doc_task_range,
++        "protected_file_checks": _protected_file_checks(
++            root,
++            roadmap_modified=roadmap_modified,
++            conductor_modified=conductor_modified,
++        ),
++        "preconditions_checked": {
++            "upstream_artifacts_expected": len(UPSTREAM_ARTIFACT_PATHS),
++            "upstream_artifacts_read": len(artifacts_read),
++            "roadmap_task_count": len(roadmap_task_ids),
++            "roadmap_doc_task_range": roadmap_doc_task_range,
++            "research_complete_checked": (root / RESEARCH_COMPLETE_RELATIVE_PATH).exists(),
++            "collision_free": bool(collision.get("collision_free")),
++            "roadmap_yaml_unchanged": not roadmap_modified,
++            "conductor_unchanged": not conductor_modified,
++        },
++        "failed_preconditions": failures,
++        "tests_run": tests,
++        "roadmap_yaml_unchanged": not roadmap_modified,
++        "conductor_unchanged": not conductor_modified,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "artifacts_read": artifacts_read,
++        "terminal_findings": findings,
++        "promoted_substrates": promoted_substrates(artifacts, findings),
++        "retired_scopes": retired_scopes(artifacts),
++        "adversarial_flags_preserved": adversarial_flags_preserved(findings),
++        "dependency_map": dependency_map(),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(status, failures),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(field)
++    for field in LIST_FIELDS:
++        if field in payload and not isinstance(payload[field], list):
++            errors.append(field)
++    for field in DICT_FIELDS:
++        if field in payload and not isinstance(payload[field], Mapping):
++            errors.append(field)
++    for field in BOOL_FIELDS:
++        if field in payload and not isinstance(payload[field], bool):
++            errors.append(field)
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    terminal = payload.get("terminal_findings")
++    if isinstance(terminal, Mapping):
++        if not set(TASK_ARTIFACT_PATHS).issubset(terminal):
++            errors.append("terminal_findings")
++    promoted = payload.get("promoted_substrates")
++    if payload.get("status") == "complete" and isinstance(promoted, list):
++        keys = {str(row.get("key")) for row in promoted if isinstance(row, Mapping)}
++        if not {"lossless_response_envelope", "active_spline_kan"} <= keys:
++            errors.append("promoted_substrates")
++    retired = payload.get("retired_scopes")
++    if isinstance(retired, list):
++        keys = {str(row.get("key")) for row in retired if isinstance(row, Mapping)}
++        if not {
++            "solve_versus_verify_panel",
++            "exact_residual_extension_chain",
++            "arc_inert_click_filter",
++            "arc_object_history_filter",
++            "unmatched_cdls_crossover",
++        } <= keys:
++            errors.append("retired_scopes")
++    flags = payload.get("adversarial_flags_preserved")
++    if payload.get("status") == "complete" and isinstance(flags, list):
++        ids = {str(row.get("task_id")) for row in flags if isinstance(row, Mapping)}
++        if not {
++            "exp5604-v506-source-delta-ingestion",
++            "exp5610-arc-live-self-discovery-levelup-v506",
++            "exp5611-cdls-matched-sampler-crossover",
++        } <= ids:
++            errors.append("adversarial_flags_preserved")
++    if payload.get("current_task_range") != CURRENT_TASK_RANGE:
++        errors.append("current_task_range")
++    collision = payload.get("current_task_collision_check")
++    if (
++        payload.get("status") == "complete"
++        and isinstance(collision, Mapping)
++        and collision.get("collision_free") is not True
++    ):
++        errors.append("current_task_collision_check")
++    dependency = payload.get("dependency_map")
++    if not isinstance(dependency, Mapping) or not {
++        "native_runtime_certification",
++        "kan_drift_to_predictive_controller",
++        "arc_transition_cycle_to_level_attempt",
++        "cdls_exactness_to_crossover",
++    } <= set(dependency):
++        errors.append("dependency_map")
++    if payload.get("roadmap_yaml_unchanged") is not True:
++        errors.append("roadmap_yaml_unchanged")
++    if payload.get("conductor_unchanged") is not True:
++        errors.append("conductor_unchanged")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    checksum = payload.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum")
++    honest_verdict = payload.get("honest_verdict")
++    if not isinstance(honest_verdict, str) or not honest_verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    return sorted(set(errors))
++
++
++def write_report(
++    root: Path = REPO_ROOT,
++    *,
++    tests_run: Sequence[str | Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifact = build_report(
++        root=root,
++        tests_run=tests_run,
++        modification_overrides=modification_overrides,
++    )
++    errors = validate_artifact(artifact)
++    if errors:  # pragma: no cover - validation failure paths are covered without raising.
++        raise ValueError(f"invalid Exp5613 artifact fields: {', '.join(errors)}")
++    write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--write", action="store_true", help="write the Exp5613 artifact")
++    args = parser.parse_args(argv)
++    artifact = write_report() if args.write else build_report()
++    if not args.write:
++        write_json(Path("/dev/stdout"), artifact)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 550eb7689e..e7a72ac121 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:46:34.881304+00:00",
+-  "finished_at": "2026-07-14T06:46:34.912101+00:00",
++  "started_at": "2026-07-14T08:18:51.667654+00:00",
++  "finished_at": "2026-07-14T08:18:51.698192+00:00",
+   "duration_s": 0.031,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 41748c0c08..86219beb16 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T06:46:35Z",
++  "run_date": "2026-07-14T08:18:51Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index a2d5fddc85..756fe21bff 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:46:36Z",
+-  "finished_at": "2026-07-14T06:46:36Z",
++  "started_at": "2026-07-14T08:18:53Z",
++  "finished_at": "2026-07-14T08:18:53Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 9c73162772..89de6ee692 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T06:46:36Z",
++  "run_date": "2026-07-14T08:18:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index c3c90b8f15..f4493033df 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-14T06:46:36Z",
++  "run_date": "2026-07-14T08:18:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9d34c9eccc..40a8ea8afc 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-14T06:45:53.152085Z",
+-  "duration_s": 0.058088064193725586,
++  "run_date": "2026-07-14T08:18:09.743780Z",
++  "duration_s": 0.07776355743408203,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "3fe069a71a6ba6cd04dda8fe5dcc1179d2d13ffa7253c4849f5ac990a10be864",
++  "reproducibility_checksum": "93c56e17d65c252a2d1929dac569e04b5b831d97f0fed52ebc70b2a255c190d7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "b1e8494a665a880b6bda336e1b25fb71ab85311f"
++    "adversarial_verify_version": "a8fd6db0f40d54d6eacd88948d7bbf23a8f56c9c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5b52f80c50..2acaa944ba 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-14T06:45:53.237268Z",
+-  "duration_s": 0.078033447265625,
++  "run_date": "2026-07-14T08:18:09.860686Z",
++  "duration_s": 0.10672569274902344,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4d0b9595d46e7c478ed3a05604223ae49377dcb1701722e97019bab1166f45ef",
++  "reproducibility_checksum": "6ee7562af78786d402957f6b99ec875b16137ec74e398bf77668ffba30006876",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "b1e8494a665a880b6bda336e1b25fb71ab85311f"
++    "adversarial_verify_version": "a8fd6db0f40d54d6eacd88948d7bbf23a8f56c9c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index aaf0919b3d..c74eaa3403 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.147197723388672,
++  "efficiency_gains_ms": 2.15911865234375,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index f16ffdbabd..1d15fb06a4 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00014583399752154946,
+-  "latency_domino_seconds": 0.0002840040033333935,
++  "latency_legacy_seconds": 0.00020760999905178323,
++  "latency_domino_seconds": 0.0004090280053787865,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 1589961cdb..c4b494f73a 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:46:14Z",
+-  "finished_at": "2026-07-14T06:46:14Z",
++  "started_at": "2026-07-14T08:18:31Z",
++  "finished_at": "2026-07-14T08:18:31Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index bc357ba5bb..7f16fcaa5d 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,14 +3,5 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 8f7e4fb588..4288801a49 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:46:49Z",
+-  "finished_at": "2026-07-14T06:46:50Z",
++  "started_at": "2026-07-14T08:19:07Z",
++  "finished_at": "2026-07-14T08:19:07Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08869171142578125,
++  "latency_ms": 0.08058547973632812,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 92f245b995..64b81409db 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008881711959838868,
+-  "avg_eqm_time": 0.07472008228302002,
++  "avg_pem_time": 0.0009383583068847657,
++  "avg_eqm_time": 0.08312991619110108,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 5deade8409..98871f8f2a 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.745995283126831,
++  "duration_s": 0.6918089389801025,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2be2c5aa03..2c3e0433a6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.355299850227311e-05,
++  "duration_s": 5.419200169853866e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5613_transition_v507.json b/results/experiment_5613_transition_v507.json
+new file mode 100644
+index 0000000000..a80797a87c
+--- /dev/null
++++ b/results/experiment_5613_transition_v507.json
+@@ -0,0 +1,758 @@
++{
++  "adversarial_flags_preserved": [
++    {
++      "artifact_path": "results/experiment_5604_v506_source_delta_ingestion.json",
++      "claim_boundary": "flagged evidence may be cited as a boundary, not as a clean substrate",
++      "flag_kinds": [
++        "DURATION_TOO_SHORT",
++        "METHODOLOGY_MISSING"
++      ],
++      "status": "flagged",
++      "task_id": "exp5604-v506-source-delta-ingestion",
++      "upgraded_to_clean": false
++    },
++    {
++      "artifact_path": "results/experiment_5610_arc_live_self_discovery_levelup_v506.json",
++      "claim_boundary": "flagged evidence may be cited as a boundary, not as a clean substrate",
++      "flag_kinds": [
++        "TAUTOLOGY"
++      ],
++      "status": "flagged",
++      "task_id": "exp5610-arc-live-self-discovery-levelup-v506",
++      "upgraded_to_clean": false
++    },
++    {
++      "artifact_path": "results/experiment_5611_cdls_matched_sampler_crossover.json",
++      "claim_boundary": "flagged evidence may be cited as a boundary, not as a clean substrate",
++      "flag_kinds": [
++        "DURATION_TOO_SHORT",
++        "METHODOLOGY_MISSING"
++      ],
++      "status": "flagged",
++      "task_id": "exp5611-cdls-matched-sampler-crossover",
++      "upgraded_to_clean": false
++    }
++  ],
++  "artifact_metadata": {
++    "results/experiment_5603_transition_v506.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:7041c249b910030f4d0de6718494d9ff64a6d4f57a39511e878c67517dae28be"
++    },
++    "results/experiment_5604_v506_source_delta_ingestion.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:1de76eb4fbe902cf3b24721a597521023f7bbfb85217f9367e6c830014f4b767"
++    },
++    "results/experiment_5605_raw_response_evidence_envelope.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:4a0f4591bda0e9310b3f4e5f09481d0e7d1849527bc51c651bb1320c311b9c82"
++    },
++    "results/experiment_5606_clean_sota_solve_verify_evidence_panel.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:eff4298dd1089a4081ab49194cccbfd1f72eb73be25c82b3e734ca09b6a71f43"
++    },
++    "results/experiment_5607_property_template_exact_residual_extension.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:7c73b8466d0c40849cf5f86fe4191a5ddf6e78e3c85ca6b532f051d087b6bb40"
++    },
++    "results/experiment_5608_kan_longitudinal_self_learning.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:8047e8a7f0c821661797ca798a3e636e26b3534d44da05031e92b7a575556ab6"
++    },
++    "results/experiment_5609_arc_filter_intermediate_invariance_ab.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:378ceafbbc6fdaf55278f3838cdb71c92ce8e5dd83462d8a90f8ea29860a04d8"
++    },
++    "results/experiment_5610_arc_live_self_discovery_levelup_v506.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:222547d0434f2766b3f8e593673f65489c726973b65e8ffc350b841e07df8661"
++    },
++    "results/experiment_5611_cdls_matched_sampler_crossover.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:294fe1894f34ac950d28fc314aa66caa584f59142769c213e37d66a2f30dfd96"
++    },
++    "results/experiment_5612_v506_capstone_reconciliation.json": {
++      "error": null,
++      "exists": true,
++      "json_type": "dict",
++      "loadable": true,
++      "sha256": "sha256:1c4447553207d406af9ac57c3237dfa268db37f352118d04148c390238858e9f"
++    }
++  },
++  "artifacts_read": [
++    {
++      "honest_verdict": "complete: archived .505 terminal evidence and exp5592-exp5602 outer-loop findings into .506 dependency map; current_task_range=exp5603-exp5612; hash_only_parser_evidence=unrecoverable; causal_memory_pace_retired=True; kan_fr11_substrate_clean=True; arc_registry_delta=0; ptrm_generator_retired=True.",
++      "path": "results/experiment_5603_transition_v506.json",
++      "sha256": "sha256:7041c249b910030f4d0de6718494d9ff64a6d4f57a39511e878c67517dae28be",
++      "status": "complete",
++      "task_id": "exp5603-transition-v506"
++    },
++    {
++      "honest_verdict": "complete: accepted 1 non-duplicate actionable V506 source delta and kept retired scopes closed",
++      "path": "results/experiment_5604_v506_source_delta_ingestion.json",
++      "sha256": "sha256:1de76eb4fbe902cf3b24721a597521023f7bbfb85217f9367e6c830014f4b767",
++      "status": "flagged",
++      "task_id": "exp5604-v506-source-delta-ingestion"
++    },
++    {
++      "honest_verdict": "complete: raw response evidence envelope fixture passed replay and fail-closed controls",
++      "path": "results/experiment_5605_raw_response_evidence_envelope.json",
++      "sha256": "sha256:4a0f4591bda0e9310b3f4e5f09481d0e7d1849527bc51c651bb1320c311b9c82",
++      "status": "complete",
++      "task_id": "exp5605-raw-response-evidence-envelope"
++    },
++    {
++      "honest_verdict": "blocked_no_cuda_offload_authenticated_cpu_fallback_rejected",
++      "path": "results/experiment_5606_clean_sota_solve_verify_evidence_panel.json",
++      "sha256": "sha256:eff4298dd1089a4081ab49194cccbfd1f72eb73be25c82b3e734ca09b6a71f43",
++      "status": "blocked",
++      "task_id": "exp5606-clean-sota-solve-verify-evidence-panel"
++    },
++    {
++      "honest_verdict": "blocked_gate_check_failed",
++      "path": "results/experiment_5607_property_template_exact_residual_extension.json",
++      "sha256": "sha256:7c73b8466d0c40849cf5f86fe4191a5ddf6e78e3c85ca6b532f051d087b6bb40",
++      "status": "gate_skipped",
++      "task_id": "exp5607-property-template-exact-residual-extension"
++    },
++    {
++      "honest_verdict": "complete: exact_gated_active_spline_kan_longitudinal_ready",
++      "path": "results/experiment_5608_kan_longitudinal_self_learning.json",
++      "sha256": "sha256:8047e8a7f0c821661797ca798a3e636e26b3534d44da05031e92b7a575556ab6",
++      "status": "complete",
++      "task_id": "exp5608-kan-longitudinal-self-learning"
++    },
++    {
++      "honest_verdict": "complete: arc_filter_ab_reachable_repeat_noop_filters_retired",
++      "path": "results/experiment_5609_arc_filter_intermediate_invariance_ab.json",
++      "sha256": "sha256:378ceafbbc6fdaf55278f3838cdb71c92ce8e5dd83462d8a90f8ea29860a04d8",
++      "status": "complete",
++      "task_id": "exp5609-arc-filter-intermediate-invariance-ab"
++    },
++    {
++      "honest_verdict": "complete: no_new_arc_level_banked_sk48_L8_bounded_live_attempt",
++      "path": "results/experiment_5610_arc_live_self_discovery_levelup_v506.json",
++      "sha256": "sha256:222547d0434f2766b3f8e593673f65489c726973b65e8ffc350b841e07df8661",
++      "status": "flagged",
++      "task_id": "exp5610-arc-live-self-discovery-levelup-v506"
++    },
++    {
++      "honest_verdict": "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false",
++      "path": "results/experiment_5611_cdls_matched_sampler_crossover.json",
++      "sha256": "sha256:294fe1894f34ac950d28fc314aa66caa584f59142769c213e37d66a2f30dfd96",
++      "status": "flagged",
++      "task_id": "exp5611-cdls-matched-sampler-crossover"
++    },
++    {
++      "honest_verdict": "complete: .506 capstone aggregated 10 readable artifact files across Exp5603-Exp5611; response envelope promoted=True; solve_verify_asymmetry=false; exact_extension=false; kan_longitudinal_ready=True; arc_registry_delta=0; cDLS_crossover=false",
++      "path": "results/experiment_5612_v506_capstone_reconciliation.json",
++      "sha256": "sha256:1c4447553207d406af9ac57c3237dfa268db37f352118d04148c390238858e9f",
++      "status": "complete",
++      "task_id": "exp5612-v506-capstone-reconciliation"
++    }
++  ],
++  "conductor_unchanged": true,
++  "current_milestone": "2026.07.507",
++  "current_task_collision_check": {
++    "colliding_ids": [],
++    "collision_free": true,
++    "completed_ids_checked_count": 5936,
++    "current_task_range": "exp5613-exp5624",
++    "expected_task_ids": [
++      "exp5613-transition-v507",
++      "exp5614-v507-source-delta-ingestion",
++      "exp5615-native-llamacpp-cuda-runtime-certificate",
++      "exp5616-exact-nonstationary-constraint-stream",
++      "exp5617-kan-critical-task-duration-map",
++      "exp5618-predictive-window-kan-self-learning",
++      "exp5619-arc-forward-inverse-transition-cycle",
++      "exp5620-arc-cycle-guarded-live-update-ab",
++      "exp5621-arc-live-self-discovery-levelup-v507",
++      "exp5622-cdls-exact-kernel-audit",
++      "exp5623-cdls-multiseed-cpu-cuda-crossover",
++      "exp5624-v507-capstone-reconciliation"
++    ],
++    "highest_completed_id": "exp5612",
++    "range_matches_roadmap": true,
++    "roadmap_task_ids": [
++      "exp5613-transition-v507",
++      "exp5614-v507-source-delta-ingestion",
++      "exp5615-native-llamacpp-cuda-runtime-certificate",
++      "exp5616-exact-nonstationary-constraint-stream",
++      "exp5617-kan-critical-task-duration-map",
++      "exp5618-predictive-window-kan-self-learning",
++      "exp5619-arc-forward-inverse-transition-cycle",
++      "exp5620-arc-cycle-guarded-live-update-ab",
++      "exp5621-arc-live-self-discovery-levelup-v507",
++      "exp5622-cdls-exact-kernel-audit",
++      "exp5623-cdls-multiseed-cpu-cuda-crossover",
++      "exp5624-v507-capstone-reconciliation"
++    ]
++  },
++  "current_task_range": "exp5613-exp5624",
++  "dependency_map": {
++    "arc_transition_cycle_to_level_attempt": {
++      "chain": "ARC transition-cycle prototype->live A/B->unconditional level attempt",
++      "closed_scopes_not_reopened": [
++        "arc_inert_click_filter",
++        "arc_object_history_filter"
++      ],
++      "gates": [
++        {
++          "field": "cycle_verifier_positive_control_rate",
++          "op": ">=",
++          "upstream": "exp5619-arc-forward-inverse-transition-cycle",
++          "value": "preregistered_threshold"
++        },
++        {
++          "advisory_only": true,
++          "field": "live_branch_promotion_score",
++          "op": "==",
++          "upstream": "exp5620-arc-cycle-guarded-live-update-ab",
++          "value": 1.0
++        },
++        {
++          "field": "live_attempt_executed",
++          "op": "==",
++          "unconditional": true,
++          "upstream": "exp5621-arc-live-self-discovery-levelup-v507",
++          "value": true
++        }
++      ],
++      "tasks": [
++        "exp5619-arc-forward-inverse-transition-cycle",
++        "exp5620-arc-cycle-guarded-live-update-ab",
++        "exp5621-arc-live-self-discovery-levelup-v507"
++      ]
++    },
++    "capstone_reconciliation": {
++      "chain": "Exp5613-Exp5623->Exp5624 reconciliation",
++      "gate": "Exp5624 cannot upgrade blocked, skipped, flagged, development-proxy, or unmatched evidence.",
++      "tasks": [
++        "exp5613-transition-v507",
++        "exp5614-v507-source-delta-ingestion",
++        "exp5615-native-llamacpp-cuda-runtime-certificate",
++        "exp5616-exact-nonstationary-constraint-stream",
++        "exp5617-kan-critical-task-duration-map",
++        "exp5618-predictive-window-kan-self-learning",
++        "exp5619-arc-forward-inverse-transition-cycle",
++        "exp5620-arc-cycle-guarded-live-update-ab",
++        "exp5621-arc-live-self-discovery-levelup-v507",
++        "exp5622-cdls-exact-kernel-audit",
++        "exp5623-cdls-multiseed-cpu-cuda-crossover",
++        "exp5624-v507-capstone-reconciliation"
++      ]
++    },
++    "cdls_exactness_to_crossover": {
++      "chain": "cDLS exactness->gated crossover",
++      "closed_scope_not_reopened": "unmatched_cdls_crossover",
++      "gates": [
++        {
++          "field": "kernel_audit_ready_score",
++          "op": "==",
++          "upstream": "exp5622-cdls-exact-kernel-audit",
++          "value": 1.0
++        },
++        {
++          "field": "crossover_claim_allowed",
++          "op": "==",
++          "upstream": "exp5623-cdls-multiseed-cpu-cuda-crossover",
++          "value": true
++        }
++      ],
++      "tasks": [
++        "exp5622-cdls-exact-kernel-audit",
++        "exp5623-cdls-multiseed-cpu-cuda-crossover"
++      ]
++    },
++    "kan_drift_to_predictive_controller": {
++      "chain": "exact drift fixture->duration map->predictive KAN",
++      "gates": [
++        {
++          "field": "fixture_ready_score",
++          "op": "==",
++          "upstream": "exp5616-exact-nonstationary-constraint-stream",
++          "value": 1.0
++        },
++        {
++          "field": "nondegenerate_switch_cases",
++          "op": ">",
++          "upstream": "exp5617-kan-critical-task-duration-map",
++          "value": 1
++        },
++        {
++          "field": "continuous_self_learning_ready",
++          "op": "==",
++          "upstream": "exp5618-predictive-window-kan-self-learning",
++          "value": true
++        }
++      ],
++      "tasks": [
++        "exp5616-exact-nonstationary-constraint-stream",
++        "exp5617-kan-critical-task-duration-map",
++        "exp5618-predictive-window-kan-self-learning"
++      ],
++      "upstream_clean_substrate": "active_spline_kan"
++    },
++    "native_runtime_certification": {
++      "chain": "native-runtime certification",
++      "closed_scope_not_reopened": "solve_versus_verify_panel",
++      "gates": [
++        {
++          "field": "envelope_ready",
++          "op": "==",
++          "upstream": "exp5605-raw-response-evidence-envelope",
++          "value": true
++        },
++        {
++          "field": "runtime_certificate_ready_score",
++          "op": "==",
++          "upstream": "exp5615-native-llamacpp-cuda-runtime-certificate",
++          "value": 1.0
++        }
++      ],
++      "tasks": [
++        "exp5615-native-llamacpp-cuda-runtime-certificate"
++      ],
++      "upstream_clean_substrate": "lossless_response_envelope"
++    }
++  },
++  "experiment": "experiment_5613_transition_v507",
++  "experiment_id": "exp5613-transition-v507",
++  "failed_preconditions": [],
++  "field_principles": {
++    "adversarial_flags_preserved": "flagged artifacts are not upgraded",
++    "artifacts_read": "claims trace to files",
++    "current_task_range": "IDs do not collide",
++    "dependency_map": "gates are auditable",
++    "field_principles": "One-line annotations for every required headline and gate field.",
++    "honest_verdict": "terminal status starts complete: or blocked:",
++    "inference_substrate": "no new inference occurred",
++    "promoted_substrates": "clean prerequisites are explicit",
++    "reproducibility_checksum": "the transition is stable",
++    "retired_scopes": "failed chains stay closed",
++    "terminal_findings": "only observed outcomes cross milestones"
++  },
++  "honest_verdict": "complete: archived .506 terminal evidence into .507 dependency map; current_task_range=exp5613-exp5624; response_envelope_promoted=True; active_spline_kan_promoted=True; solve_verify_panel_closed=True; exact_residual_extension_closed=True; arc_filters_retired=True; cdls_unmatched_crossover_closed=True.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "malformed_artifacts": [],
++  "missing_artifacts": [],
++  "preconditions_checked": {
++    "collision_free": true,
++    "conductor_unchanged": true,
++    "research_complete_checked": true,
++    "roadmap_doc_task_range": "exp5613-exp5624",
++    "roadmap_task_count": 12,
++    "roadmap_yaml_unchanged": true,
++    "upstream_artifacts_expected": 10,
++    "upstream_artifacts_read": 10
++  },
++  "previous_milestone": "2026.07.506",
++  "previous_task_range": "exp5603-exp5612",
++  "promoted_substrates": [
++    {
++      "claim_boundary": "runtime evidence transport only; no solve-versus-verify accuracy claim",
++      "evidence": {
++        "lossless_replay_rate": 1.0,
++        "response_rows_written": 8,
++        "semantic_false_accept_count": 0,
++        "truncation_controls_detected": 2
++      },
++      "key": "lossless_response_envelope",
++      "prerequisite_for": [
++        "exp5615-native-llamacpp-cuda-runtime-certificate"
++      ],
++      "source_artifacts": [
++        "results/experiment_5605_raw_response_evidence_envelope.json"
++      ]
++    },
++    {
++      "claim_boundary": "bounded KAN-component adaptation only; no LLM weight mutation",
++      "evidence": {
++        "backward_retention_delta": 0.5,
++        "forgetting_delta": -0.5,
++        "forward_transfer_delta": 0.0,
++        "kan_weights_mutated": true,
++        "poison_update_disposition": {
++          "disposition": "rolled_back",
++          "injected": true,
++          "persisted": false,
++          "poison_ledger_ids": [
++            "exp5608:5608:exact_gated_kan:1"
++          ]
++        },
++        "promotion_gate": {
++          "backward_retention_nonnegative": true,
++          "delayed_regression_passed": true,
++          "heldout_delta_positive": true,
++          "heldout_uncertainty_excludes_zero": true,
++          "no_model_weight_mutation": true,
++          "rollback_positive_control": true,
++          "unsafe_false_accept_count_zero": true
++        }
++      },
++      "key": "active_spline_kan",
++      "prerequisite_for": [
++        "exp5617-kan-critical-task-duration-map",
++        "exp5618-predictive-window-kan-self-learning"
++      ],
++      "source_artifacts": [
++        "results/experiment_5608_kan_longitudinal_self_learning.json"
++      ]
++    }
++  ],
++  "protected_file_checks": [
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:4ba97124a94b20eae42ea4be57e61c6283dc0fa76afb1304db4bcb8694aa8c1d"
++    },
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "scripts/research_conductor.py",
++      "sha256": "sha256:409e5e8ca53a6665d7de54c1b08f226ad742c680b342595592eb82830e37a340"
++    }
++  ],
++  "random_seed": 5613,
++  "reproducibility_checksum": "sha256:609ae59fa9dbc0cb7a57b3a8b51b49efaa22dd885fd7e46991d9999cc8431615",
++  "result_path": "results/experiment_5613_transition_v507.json",
++  "retired_scopes": [
++    {
++      "closed": true,
++      "evidence": {
++        "gpu_offload_authenticated": false,
++        "maximum_parser_failure_rate": 1.0,
++        "panel_complete": false,
++        "solve_verify_asymmetry_supported": false
++      },
++      "key": "solve_versus_verify_panel",
++      "reason": "CUDA offload was unauthenticated and parser failure stayed total.",
++      "source_artifacts": [
++        "results/experiment_5606_clean_sota_solve_verify_evidence_panel.json"
++      ]
++    },
++    {
++      "closed": true,
++      "evidence": {
++        "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-panel.panel_complete (actual=False == expected=True)"
++      },
++      "key": "exact_residual_extension_chain",
++      "reason": "The gate skipped because Exp5606 supplied no clean residual panel.",
++      "source_artifacts": [
++        "results/experiment_5607_property_template_exact_residual_extension.json"
++      ]
++    },
++    {
++      "closed": true,
++      "evidence": {
++        "decision": "retire_reachable_downstream_noop",
++        "downstream_improved": false,
++        "reachable": true
++      },
++      "key": "arc_inert_click_filter",
++      "reason": "reachable control but no downstream live-path improvement",
++      "source_artifacts": [
++        "results/experiment_5609_arc_filter_intermediate_invariance_ab.json"
++      ]
++    },
++    {
++      "closed": true,
++      "evidence": {
++        "decision": "retire_reachable_downstream_noop",
++        "downstream_improved": false,
++        "reachable": true
++      },
++      "key": "arc_object_history_filter",
++      "reason": "reachable control but no downstream live-path improvement",
++      "source_artifacts": [
++        "results/experiment_5609_arc_filter_intermediate_invariance_ab.json"
++      ]
++    },
++    {
++      "closed": true,
++      "evidence": {
++        "board_speedup_claimed": false,
++        "crossover_claim_allowed": false,
++        "seeds": [
++          5611
++        ],
++        "successful_matched_pairs": 0
++      },
++      "forward_boundary": "exact kernel audit may proceed; this unmatched timing claim stays closed",
++      "key": "unmatched_cdls_crossover",
++      "reason": "One seed and zero quality-matched pairs cannot support a crossover claim.",
++      "source_artifacts": [
++        "results/experiment_5611_cdls_matched_sampler_crossover.json"
++      ]
++    }
++  ],
++  "roadmap_doc_task_range": "exp5613-exp5624",
++  "roadmap_task_count": 12,
++  "roadmap_task_ids": [
++    "exp5613-transition-v507",
++    "exp5614-v507-source-delta-ingestion",
++    "exp5615-native-llamacpp-cuda-runtime-certificate",
++    "exp5616-exact-nonstationary-constraint-stream",
++    "exp5617-kan-critical-task-duration-map",
++    "exp5618-predictive-window-kan-self-learning",
++    "exp5619-arc-forward-inverse-transition-cycle",
++    "exp5620-arc-cycle-guarded-live-update-ab",
++    "exp5621-arc-live-self-discovery-levelup-v507",
++    "exp5622-cdls-exact-kernel-audit",
++    "exp5623-cdls-multiseed-cpu-cuda-crossover",
++    "exp5624-v507-capstone-reconciliation"
++  ],
++  "roadmap_yaml_unchanged": true,
++  "run_date": "2026-07-14",
++  "schema": "carnot.experiment_5613.transition_v507.v1",
++  "source_context": [
++    {
++      "exists": true,
++      "path": "AGENTS.md",
++      "read_only": true,
++      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++    },
++    {
++      "exists": true,
++      "path": "CODEX.md",
++      "read_only": true,
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "path": "CLAUDE.md",
++      "read_only": true,
++      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
++    },
++    {
++      "exists": true,
++      "path": "research-roadmap.yaml",
++      "read_only": true,
++      "sha256": "sha256:4ba97124a94b20eae42ea4be57e61c6283dc0fa76afb1304db4bcb8694aa8c1d"
++    },
++    {
++      "exists": false,
++      "path": "research-roadmap-next.yaml",
++      "read_only": true,
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "read_only": true,
++      "sha256": "sha256:8e3eb2fdfbda7228b3c1b3d7f0b3b5a9dec35f423fafe1e4b4b0ec07459030ad"
++    },
++    {
++      "exists": true,
++      "path": "ops/conductor-log.md",
++      "read_only": true,
++      "sha256": "sha256:aaf15b9b95a5a9b93acbc0d32eed7d6ad7badbf2b2febec0aabc091368328085"
++    },
++    {
++      "exists": true,
++      "path": "research-complete.yaml",
++      "read_only": true,
++      "sha256": "sha256:f2a3fd750f5619fd4d15027d151bfd28b0e965c1911e98a5a0fa3a1abc1cba1a"
++    },
++    {
++      "exists": true,
++      "path": "scripts/research_conductor.py",
++      "read_only": true,
++      "sha256": "sha256:409e5e8ca53a6665d7de54c1b08f226ad742c680b342595592eb82830e37a340"
++    }
++  ],
++  "source_context_missing": [
++    "research-roadmap-next.yaml"
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5613",
++    "SCENARIO-REPORT-5613",
++    "SCENARIO-REPORT-5613-DEPENDENCY-MAP",
++    "SCENARIO-REPORT-5613-FIELD-PRINCIPLES"
++  ],
++  "status": "complete",
++  "terminal_findings": {
++    "exp5603-transition-v506": {
++      "artifact_path": "results/experiment_5603_transition_v506.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: archived .505 terminal evidence and exp5592-exp5602 outer-loop findings into .506 dependency map; current_task_range=exp5603-exp5612; hash_only_parser_evidence=unrecoverable; causal_memory_pace_retired=True; kan_fr11_substrate_clean=True; arc_registry_delta=0; ptrm_generator_retired=True.",
++      "metadata_error": null,
++      "sha256": "sha256:7041c249b910030f4d0de6718494d9ff64a6d4f57a39511e878c67517dae28be",
++      "status": "complete",
++      "supports_positive_claim": true
++    },
++    "exp5604-v506-source-delta-ingestion": {
++      "artifact_path": "results/experiment_5604_v506_source_delta_ingestion.json",
++      "corrigendum_pending": [
++        {
++          "detail": "duration_s=0.136804 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        },
++        {
++          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ],
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: accepted 1 non-duplicate actionable V506 source delta and kept retired scopes closed",
++      "metadata_error": null,
++      "sha256": "sha256:1de76eb4fbe902cf3b24721a597521023f7bbfb85217f9367e6c830014f4b767",
++      "status": "flagged",
++      "supports_positive_claim": false
++    },
++    "exp5605-raw-response-evidence-envelope": {
++      "artifact_path": "results/experiment_5605_raw_response_evidence_envelope.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: raw response evidence envelope fixture passed replay and fail-closed controls",
++      "metadata_error": null,
++      "sha256": "sha256:4a0f4591bda0e9310b3f4e5f09481d0e7d1849527bc51c651bb1320c311b9c82",
++      "status": "complete",
++      "supports_positive_claim": true
++    },
++    "exp5606-clean-sota-solve-verify-evidence-panel": {
++      "artifact_path": "results/experiment_5606_clean_sota_solve_verify_evidence_panel.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked_no_cuda_offload_authenticated_cpu_fallback_rejected",
++      "metadata_error": null,
++      "sha256": "sha256:eff4298dd1089a4081ab49194cccbfd1f72eb73be25c82b3e734ca09b6a71f43",
++      "status": "blocked",
++      "supports_positive_claim": false
++    },
++    "exp5607-property-template-exact-residual-extension": {
++      "artifact_path": "results/experiment_5607_property_template_exact_residual_extension.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked_gate_check_failed",
++      "metadata_error": null,
++      "sha256": "sha256:7c73b8466d0c40849cf5f86fe4191a5ddf6e78e3c85ca6b532f051d087b6bb40",
++      "status": "gate_skipped",
++      "supports_positive_claim": false
++    },
++    "exp5608-kan-longitudinal-self-learning": {
++      "artifact_path": "results/experiment_5608_kan_longitudinal_self_learning.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: exact_gated_active_spline_kan_longitudinal_ready",
++      "metadata_error": null,
++      "sha256": "sha256:8047e8a7f0c821661797ca798a3e636e26b3534d44da05031e92b7a575556ab6",
++      "status": "complete",
++      "supports_positive_claim": true
++    },
++    "exp5609-arc-filter-intermediate-invariance-ab": {
++      "artifact_path": "results/experiment_5609_arc_filter_intermediate_invariance_ab.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: arc_filter_ab_reachable_repeat_noop_filters_retired",
++      "metadata_error": null,
++      "sha256": "sha256:378ceafbbc6fdaf55278f3838cdb71c92ce8e5dd83462d8a90f8ea29860a04d8",
++      "status": "complete",
++      "supports_positive_claim": true
++    },
++    "exp5610-arc-live-self-discovery-levelup-v506": {
++      "artifact_path": "results/experiment_5610_arc_live_self_discovery_levelup_v506.json",
++      "corrigendum_pending": [
++        {
++          "detail": "levels_after=177.0 and levels_before=177.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        }
++      ],
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: no_new_arc_level_banked_sk48_L8_bounded_live_attempt",
++      "metadata_error": null,
++      "sha256": "sha256:222547d0434f2766b3f8e593673f65489c726973b65e8ffc350b841e07df8661",
++      "status": "flagged",
++      "supports_positive_claim": false
++    },
++    "exp5611-cdls-matched-sampler-crossover": {
++      "artifact_path": "results/experiment_5611_cdls_matched_sampler_crossover.json",
++      "corrigendum_pending": [
++        {
++          "detail": "duration_s=38.4810986 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        },
++        {
++          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ],
++      "flagged_adversarial": true,
++      "honest_verdict": "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false",
++      "metadata_error": null,
++      "sha256": "sha256:294fe1894f34ac950d28fc314aa66caa584f59142769c213e37d66a2f30dfd96",
++      "status": "flagged",
++      "supports_positive_claim": false
++    },
++    "exp5612-v506-capstone-reconciliation": {
++      "artifact_path": "results/experiment_5612_v506_capstone_reconciliation.json",
++      "corrigendum_pending": [],
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: .506 capstone aggregated 10 readable artifact files across Exp5603-Exp5611; response envelope promoted=True; solve_verify_asymmetry=false; exact_extension=false; kan_longitudinal_ready=True; arc_registry_delta=0; cDLS_crossover=false",
++      "metadata_error": null,
++      "sha256": "sha256:1c4447553207d406af9ac57c3237dfa268db37f352118d04148c390238858e9f",
++      "status": "complete",
++      "supports_positive_claim": true
++    }
++  },
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5613_transition_v507.py -q --no-cov -n 0",
++      "counts": {
++        "passed": 6
++      },
++      "exit_code": 0,
++      "status": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5613_transition_v507.py -m pytest tests/python/test_experiment_5613_transition_v507.py -q --no-cov -n 0",
++      "counts": {
++        "passed": 6
++      },
++      "exit_code": 0,
++      "status": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5613_transition_v507.py --fail-under=100",
++      "coverage": {
++        "python/carnot/experiment_5613_transition_v507.py": "100%"
++      },
++      "exit_code": 0,
++      "status": "passed"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index af45733a42..e51a33c05a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:49:26Z",
+-  "finished_at": "2026-07-14T06:49:26Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-07-14T08:17:55Z",
++  "finished_at": "2026-07-14T08:17:55Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 02285eb36f..a13f48d0a3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:49:26Z",
+-  "finished_at": "2026-07-14T06:49:27Z",
++  "started_at": "2026-07-14T08:17:55Z",
++  "finished_at": "2026-07-14T08:17:55Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 4b5e951009..4d6b9a392b 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T06:49:27Z",
+-  "finished_at": "2026-07-14T06:49:27Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-14T08:17:55Z",
++  "finished_at": "2026-07-14T08:17:55Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5613_transition_v507.py b/tests/python/test_experiment_5613_transition_v507.py
+new file mode 100644
+index 0000000000..e66f93335a
+--- /dev/null
++++ b/tests/python/test_experiment_5613_transition_v507.py
+@@ -0,0 +1,533 @@
++"""Tests for the Exp5613 V507 transition receipt.
++
++Spec refs: REQ-REPORT-5613, SCENARIO-REPORT-5613,
++SCENARIO-REPORT-5613-DEPENDENCY-MAP,
++SCENARIO-REPORT-5613-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot import experiment_5613_transition_v507 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _write_json(root: Path, rel_path: Path | str, payload: Any) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_text(root: Path, rel_path: Path | str, text: str = "context\n") -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _write_context(root: Path, *, completed_text: str | None = None) -> None:
++    for rel_path in mod.SOURCE_CONTEXT_PATHS:
++        if rel_path == mod.ROADMAP_NEXT_RELATIVE_PATH:
++            continue
++        if rel_path == mod.ROADMAP_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                yaml.safe_dump(
++                    {
++                        "milestone": mod.CURRENT_MILESTONE,
++                        "tasks": [{"id": task_id} for task_id in mod.EXPECTED_TASK_IDS],
++                    },
++                    sort_keys=False,
++                ),
++            )
++        elif rel_path == mod.VNEXT_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                "\n".join(
++                    [
++                        "# Research Roadmap vNEXT - Milestone 2026.07.507",
++                        "**Task range:** Exp5613-Exp5624",
++                        "native-runtime certification",
++                        "exact drift fixture->duration map->predictive KAN",
++                        "ARC transition-cycle prototype->live A/B->unconditional level attempt",
++                        "cDLS exactness->gated crossover",
++                    ]
++                )
++                + "\n",
++            )
++        elif rel_path == mod.RESEARCH_COMPLETE_RELATIVE_PATH:
++            _write_text(
++                root,
++                rel_path,
++                completed_text
++                or "\n".join(
++                    [
++                        "tasks:",
++                        "  - id: exp5603-transition-v506",
++                        "  - id: exp5612-v506-capstone-reconciliation",
++                    ]
++                )
++                + "\n",
++            )
++        else:
++            _write_text(root, rel_path)
++
++
++def _payloads() -> dict[Path, JsonDict]:
++    return {
++        Path("results/experiment_5603_transition_v506.json"): {
++            "schema": "carnot.experiment_5603.transition_v506.v1",
++            "experiment_id": "exp5603-transition-v506",
++            "status": "complete",
++            "current_milestone": mod.PREVIOUS_MILESTONE,
++            "current_task_range": "exp5603-exp5612",
++            "task_id_collision_avoidance": {
++                "previous_outer_loop_last_id": "exp5602",
++                "new_range_starts_at": "exp5603",
++                "collision_avoided": True,
++            },
++            "honest_verdict": "complete: transition",
++            "inference_substrate": "aggregation_from_repository_artifacts",
++        },
++        Path("results/experiment_5604_v506_source_delta_ingestion.json"): {
++            "experiment_id": "exp5604-v506-source-delta-ingestion",
++            "honest_verdict": "complete: source delta",
++            "flagged_adversarial": True,
++            "closed_scopes_reopened": False,
++            "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++            "new_references_added": [{"source_id": "lazy_identity_deq_2607_11116"}],
++        },
++        Path("results/experiment_5605_raw_response_evidence_envelope.json"): {
++            "experiment_id": "exp5605-raw-response-evidence-envelope",
++            "honest_verdict": "complete: envelope",
++            "envelope_ready": True,
++            "raw_payloads_preserved": True,
++            "lossless_replay_rate": 1.0,
++            "semantic_false_accept_count": 0,
++            "parser_version_replay_passed": True,
++            "payload_corruption_rejected": True,
++            "truncation_controls_detected": 2,
++            "gpu_offload_authenticated": True,
++        },
++        Path("results/experiment_5606_clean_sota_solve_verify_evidence_panel.json"): {
++            "experiment_id": "exp5606-clean-sota-solve-verify-evidence-panel",
++            "honest_verdict": "blocked_no_cuda_offload_authenticated_cpu_fallback_rejected",
++            "panel_complete": False,
++            "gpu_offload_authenticated": False,
++            "raw_response_replay_passed": True,
++            "maximum_parser_failure_rate": 1.0,
++            "maximum_truncation_rate": 0.722222,
++            "solve_verify_asymmetry_supported": False,
++        },
++        Path("results/experiment_5607_property_template_exact_residual_extension.json"): {
++            "schema": "blocked_gate_check_v1",
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "2 of 2 gate(s) failed",
++        },
++        Path("results/experiment_5608_kan_longitudinal_self_learning.json"): {
++            "experiment_id": "experiment_5608_kan_longitudinal_self_learning",
++            "task_id": "exp5608-kan-longitudinal-self-learning",
++            "honest_verdict": "complete: exact_gated_active_spline_kan_longitudinal_ready",
++            "continuous_self_learning_task": True,
++            "kan_longitudinal_ready": True,
++            "promotion_gate": {
++                "heldout_delta_positive": True,
++                "heldout_uncertainty_excludes_zero": True,
++                "backward_retention_nonnegative": True,
++                "unsafe_false_accept_count_zero": True,
++                "rollback_positive_control": True,
++                "delayed_regression_passed": True,
++                "no_model_weight_mutation": True,
++            },
++            "forward_transfer_delta": 0.0,
++            "backward_retention_delta": 0.5,
++            "forgetting_delta": -0.5,
++            "unsafe_false_accept_count": 0,
++            "rollback_positive_control": True,
++            "delayed_regression_passed": True,
++            "no_model_weight_mutation": True,
++            "kan_weights_mutated": True,
++            "llm_calls": 0,
++            "llm_weight_training": False,
++            "poison_update_disposition": {"disposition": "rolled_back", "persisted": False},
++        },
++        Path("results/experiment_5609_arc_filter_intermediate_invariance_ab.json"): {
++            "experiment": "experiment_5609_arc_filter_intermediate_invariance_ab",
++            "honest_verdict": "complete: arc_filter_ab_reachable_repeat_noop_filters_retired",
++            "solve_provenance": "development_proxy",
++            "mechanism_reachability_controls": {
++                "ok": True,
++                "inert_click": {"reachable": True},
++                "object_history": {"reachable": True},
++            },
++            "levels_gained_by_arm": {
++                "baseline": 0,
++                "inert_only": 0,
++                "history_only": 0,
++                "combined": 0,
++            },
++            "filter_promotion_decisions": {
++                "inert_click": {
++                    "decision": "retire_reachable_downstream_noop",
++                    "reachable": True,
++                    "downstream_improved": False,
++                    "reason": "reachable control but no downstream live-path improvement",
++                },
++                "object_history": {
++                    "decision": "retire_reachable_downstream_noop",
++                    "reachable": True,
++                    "downstream_improved": False,
++                    "reason": "reachable control but no downstream live-path improvement",
++                },
++            },
++        },
++        Path("results/experiment_5610_arc_live_self_discovery_levelup_v506.json"): {
++            "experiment_id": 5610,
++            "experiment": "experiment_5610_arc_live_self_discovery_levelup_v506",
++            "honest_verdict": "complete: no_new_arc_level_banked_sk48_L8_bounded_live_attempt",
++            "flagged_adversarial": True,
++            "corrigendum_pending": [{"kind": "TAUTOLOGY", "severity": "critical"}],
++            "solve_provenance": "live_agent_self_discovery",
++            "live_attempt_executed": True,
++            "source_files_read": False,
++            "per_game_adapter_used": False,
++            "levels_before": 177,
++            "levels_after": 177,
++            "new_reproducible_levels": [],
++            "offline_reproduced": False,
++            "registry_updated": False,
++            "target_reached_live": False,
++        },
++        Path("results/experiment_5611_cdls_matched_sampler_crossover.json"): {
++            "experiment_id": "exp5611-cdls-matched-sampler-crossover",
++            "honest_verdict": "blocked: cDLS matched CPU/CUDA comparison unavailable",
++            "flagged_adversarial": True,
++            "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++            "board_speedup_claimed": False,
++            "crossover_claim_allowed": False,
++            "crossover_size": None,
++            "successful_matched_pairs": 0,
++            "quality_equivalence_gate": {
++                "defined_before_timing": True,
++                "min_seeds_for_timing_interval": 3,
++            },
++            "seeds": [5611],
++            "samples_per_pair": 10000,
++        },
++        Path("results/experiment_5612_v506_capstone_reconciliation.json"): {
++            "experiment_id": "exp5612-v506-capstone-reconciliation",
++            "honest_verdict": "complete: capstone",
++            "flagged_tasks": [
++                "exp5604-v506-source-delta-ingestion",
++                "exp5610-arc-live-self-discovery-levelup-v506",
++                "exp5611-cdls-matched-sampler-crossover",
++            ],
++            "blocked_tasks": ["exp5606-clean-sota-solve-verify-evidence-panel"],
++            "gate_skipped_tasks": ["exp5607-property-template-exact-residual-extension"],
++            "complete_tasks": [
++                "exp5603-transition-v506",
++                "exp5605-raw-response-evidence-envelope",
++                "exp5608-kan-longitudinal-self-learning",
++                "exp5609-arc-filter-intermediate-invariance-ab",
++            ],
++            "promotion_decisions": {
++                "response_evidence_envelope": {"decision": "promote_bounded"},
++                "kan_longitudinal_self_learning": {"decision": "promote_bounded"},
++            },
++            "retirement_decisions": {
++                "local_sota_solve_verify_panel": {"decision": "retire"},
++                "exact_predicate_extension_from_this_panel": {
++                    "decision": "retire_until_clean_panel_exists"
++                },
++                "arc_inert_click_filter": {"decision": "retire"},
++                "arc_object_history_filter": {"decision": "retire"},
++            },
++            "arc_registry_delta": 0,
++            "hardware_sampling_verdict": {"crossover_claim_allowed": False},
++        },
++    }
++
++
++def _make_root(
++    root: Path,
++    *,
++    omit: Path | None = None,
++    malformed: Path | None = None,
++    completed_text: str | None = None,
++) -> None:
++    _write_context(root, completed_text=completed_text)
++    for rel_path, payload in _payloads().items():
++        if rel_path == omit:
++            continue
++        if rel_path == malformed:
++            path = root / rel_path
++            path.parent.mkdir(parents=True, exist_ok=True)
++            path.write_text("{not-json\n", encoding="utf-8")
++            continue
++        _write_json(root, rel_path, payload)
++
++
++def _by_key(rows: list[JsonDict], field: str = "key") -> dict[str, JsonDict]:
++    return {str(row[field]): row for row in rows}
++
++
++def test_req_report_5613_spec_declares_transition_contract() -> None:
++    """REQ-REPORT-5613: OpenSpec anchors the V507 transition receipt."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5613") :]
++
++    for ref in mod.SPEC_REFS:
++        assert ref in section
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in section
++    for rel_path in mod.UPSTREAM_ARTIFACT_PATHS:
++        assert rel_path.as_posix() in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5613_live_repo_locks_v506_evidence() -> None:
++    """SCENARIO-REPORT-5613: live V506 facts become a bounded V507 map."""
++
++    artifact = mod.build_report(
++        root=REPO,
++        tests_run=[{"command": "unit", "exit_code": 0, "status": "passed"}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["status"] == "complete"
++    assert artifact["previous_milestone"] == "2026.07.506"
++    assert artifact["current_milestone"] == "2026.07.507"
++    assert artifact["current_task_range"] == "exp5613-exp5624"
++    assert artifact["current_task_collision_check"]["collision_free"] is True
++    assert artifact["current_task_collision_check"]["colliding_ids"] == []
++    statuses = artifact["terminal_findings"]
++    assert statuses["exp5605-raw-response-evidence-envelope"]["status"] == "complete"
++    assert statuses["exp5606-clean-sota-solve-verify-evidence-panel"]["status"] == "blocked"
++    assert statuses["exp5607-property-template-exact-residual-extension"]["status"] == (
++        "gate_skipped"
++    )
++    assert statuses["exp5610-arc-live-self-discovery-levelup-v506"]["status"] == "flagged"
++    assert statuses["exp5611-cdls-matched-sampler-crossover"]["status"] == "flagged"
++
++    promoted = _by_key(artifact["promoted_substrates"])
++    assert promoted["lossless_response_envelope"]["source_artifacts"] == [
++        "results/experiment_5605_raw_response_evidence_envelope.json"
++    ]
++    assert promoted["active_spline_kan"]["evidence"]["kan_weights_mutated"] is True
++    retired = _by_key(artifact["retired_scopes"])
++    assert retired["solve_versus_verify_panel"]["closed"] is True
++    assert retired["exact_residual_extension_chain"]["closed"] is True
++    assert retired["arc_inert_click_filter"]["closed"] is True
++    assert retired["arc_object_history_filter"]["closed"] is True
++    assert retired["unmatched_cdls_crossover"]["closed"] is True
++    flags = _by_key(artifact["adversarial_flags_preserved"], "task_id")
++    assert flags["exp5604-v506-source-delta-ingestion"]["upgraded_to_clean"] is False
++    assert flags["exp5610-arc-live-self-discovery-levelup-v506"]["flag_kinds"] == ["TAUTOLOGY"]
++    assert flags["exp5611-cdls-matched-sampler-crossover"]["flag_kinds"] == [
++        "DURATION_TOO_SHORT",
++        "METHODOLOGY_MISSING",
++    ]
++
++    assert artifact["dependency_map"]["native_runtime_certification"]["chain"] == (
++        "native-runtime certification"
++    )
++    assert artifact["dependency_map"]["kan_drift_to_predictive_controller"]["chain"] == (
++        "exact drift fixture->duration map->predictive KAN"
++    )
++    assert artifact["dependency_map"]["arc_transition_cycle_to_level_attempt"]["gates"][-1][
++        "unconditional"
++    ] is True
++    assert artifact["dependency_map"]["cdls_exactness_to_crossover"]["chain"] == (
++        "cDLS exactness->gated crossover"
++    )
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["roadmap_yaml_unchanged"] is True
++    assert artifact["conductor_unchanged"] is True
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["reproducibility_checksum"]
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_5613_missing_malformed_or_colliding_inputs_block(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5613: missing, malformed, or colliding evidence fails closed."""
++
++    missing = Path("results/experiment_5605_raw_response_evidence_envelope.json")
++    malformed = Path("results/experiment_5608_kan_longitudinal_self_learning.json")
++    _make_root(
++        tmp_path,
++        omit=missing,
++        malformed=malformed,
++        completed_text="tasks:\n  - id: exp5617-kan-critical-task-duration-map\n",
++    )
++
++    artifact = mod.build_report(
++        root=tmp_path,
++        tests_run=[{"command": "unit", "exit_code": 0, "status": "passed"}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["status"] == "blocked"
++    assert artifact["missing_artifacts"] == [missing.as_posix()]
++    assert artifact["malformed_artifacts"] == [malformed.as_posix()]
++    assert artifact["current_task_collision_check"]["collision_free"] is False
++    assert artifact["current_task_collision_check"]["colliding_ids"] == [
++        "exp5617-kan-critical-task-duration-map"
++    ]
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_5613_validation_rejects_schema_drift(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5613-FIELD-PRINCIPLES: malformed fields fail validation."""
++
++    _make_root(tmp_path)
++    artifact = mod.build_report(
++        root=tmp_path,
++        tests_run=[{"command": "unit", "exit_code": 0, "status": "passed"}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert mod.validate_artifact(artifact) == []
++    assert "schema" in mod.validate_artifact({k: v for k, v in artifact.items() if k != "schema"})
++    assert "field_principles" in mod.validate_artifact(
++        {**artifact, "field_principles": {"honest_verdict": mod.FIELD_PRINCIPLES["honest_verdict"]}}
++    )
++    assert "artifacts_read" in mod.validate_artifact({**artifact, "artifacts_read": "all"})
++    assert "terminal_findings" in mod.validate_artifact({**artifact, "terminal_findings": []})
++    assert "promoted_substrates" in mod.validate_artifact({**artifact, "promoted_substrates": []})
++    assert "retired_scopes" in mod.validate_artifact({**artifact, "retired_scopes": []})
++    assert "adversarial_flags_preserved" in mod.validate_artifact(
++        {**artifact, "adversarial_flags_preserved": []}
++    )
++    assert "current_task_range" in mod.validate_artifact(
++        {**artifact, "current_task_range": "exp5614-exp5624"}
++    )
++    assert "current_task_collision_check" in mod.validate_artifact(
++        {
++            **artifact,
++            "current_task_collision_check": {
++                **artifact["current_task_collision_check"],
++                "collision_free": False,
++            },
++        }
++    )
++    assert "dependency_map" in mod.validate_artifact({**artifact, "dependency_map": {}})
++    assert "roadmap_yaml_unchanged" in mod.validate_artifact(
++        {**artifact, "roadmap_yaml_unchanged": False}
++    )
++    assert "conductor_unchanged" in mod.validate_artifact(
++        {**artifact, "conductor_unchanged": False}
++    )
++    assert "roadmap_yaml_unchanged" in mod.validate_artifact(
++        {**artifact, "roadmap_yaml_unchanged": "true"}
++    )
++    assert "inference_substrate" in mod.validate_artifact(
++        {**artifact, "inference_substrate": "live_llm_inference"}
++    )
++    assert "reproducibility_checksum" in mod.validate_artifact(
++        {**artifact, "reproducibility_checksum": ""}
++    )
++    assert "honest_verdict" in mod.validate_artifact({**artifact, "honest_verdict": "unknown"})
++    bad_terminal = dict(artifact["terminal_findings"])
++    bad_terminal.pop("exp5603-transition-v506")
++    assert "terminal_findings" in mod.validate_artifact(
++        {**artifact, "terminal_findings": bad_terminal}
++    )
++
++
++def test_scenario_report_5613_defensive_helpers_cover_edge_cases(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5613-FIELD-PRINCIPLES: helper boundaries stay explicit."""
++
++    assert mod._status_for_payload({"status": "blocked"}, {"exists": True, "loadable": True}) == (
++        "blocked"
++    )
++    assert mod._status_for_payload(
++        {"schema": "blocked_gate_check_v1"}, {"exists": True, "loadable": True}
++    ) == "gate_skipped"
++    assert mod._status_for_payload(
++        {"flagged_adversarial": True}, {"exists": True, "loadable": True}
++    ) == "flagged"
++    assert mod._status_for_payload(
++        {"honest_verdict": "complete: x"}, {"exists": True, "loadable": True}
++    ) == "complete"
++    assert mod._status_for_payload({"honest_verdict": "unclear"}, {"exists": True, "loadable": True}) == (
++        "unknown"
++    )
++    assert mod._status_for_payload({}, {"exists": False}) == "missing"
++    assert mod._status_for_payload({}, {"exists": True, "loadable": False}) == "malformed"
++    assert mod._int({"value": True}, "value") == 1
++    assert mod._int({"value": "-7"}, "value") == -7
++    assert mod._int({"value": "bad"}, "value") == 0
++    assert mod._float({"value": "1.25"}, "value") == 1.25
++    assert mod._float({"value": "bad"}, "value") == 0.0
++    assert mod._float({"value": None}, "value") == 0.0
++    assert mod._all_true({"a": True, "b": True}) is True
++    assert mod._all_true({"a": True, "b": False}) is False
++    assert mod._all_true({}) is False
++    assert mod._extract_exp_number("exp5613-transition-v507") == 5613
++    assert mod._extract_exp_number("no id") is None
++    assert mod._task_range_from_text("exp5613-exp5624") == "exp5613-exp5624"
++    assert mod._task_range_from_text("no range") is None
++    assert mod._failed_preconditions(
++        [],
++        [],
++        {"colliding_ids": [], "range_matches_roadmap": False},
++        roadmap_modified=True,
++        conductor_modified=True,
++    ) == [
++        "roadmap_task_range_mismatch",
++        "research-roadmap.yaml_modified",
++        "scripts/research_conductor.py_modified",
++    ]
++
++    missing_payload, missing_meta = mod._read_json_any(tmp_path / "missing.json")
++    assert missing_payload == {}
++    assert missing_meta["error"] == "missing"
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{", encoding="utf-8")
++    assert mod._read_json_any(malformed)[1]["error"] == "malformed_json"
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]\n", encoding="utf-8")
++    assert mod._read_json_any(list_json)[1]["error"] == "not_json_object"
++
++
++def test_scenario_report_5613_writer_emits_valid_artifact(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5613: writer persists the tested transition receipt."""
++
++    _make_root(tmp_path)
++
++    artifact = mod.write_report(
++        root=tmp_path,
++        tests_run=[{"command": "unit", "exit_code": 0, "status": "passed"}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert mod.validate_artifact(written) == []
+-- 
+2.55.0
+

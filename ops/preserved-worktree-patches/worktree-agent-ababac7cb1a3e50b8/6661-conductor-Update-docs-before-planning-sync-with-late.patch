@@ -1,0 +1,50 @@
+From f64d29da99f785ca570733554a576e14cca9bc18 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 21:51:20 -0400
+Subject: [PATCH 06661/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index a015eb1065..c38e91ab9d 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1034,3 +1034,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_5550_transition_v503.json
++
++## experiment_5562_arc_fsm_live_levelup.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_5562_arc_fsm_live_levelup.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1862fd9348..3878ae4034 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1641795, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-07-11T01:40:31Z"}
+\ No newline at end of file
++{"pid": 1641795, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-07-11T01:47:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f7cd3c294b..482ff2a16e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1641795, "iteration": 2, "phase": "iteration_start", "started_at": "2026-07-11T01:40:31Z"}
+\ No newline at end of file
++{"pid": 1641795, "iteration": 3, "phase": "iteration_start", "started_at": "2026-07-11T01:47:08Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

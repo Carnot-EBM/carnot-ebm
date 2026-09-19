@@ -1,0 +1,123 @@
+From b32d68c3bd9b844e33bed7edc67dd7893c018bb6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 12:02:28 -0400
+Subject: [PATCH 04848/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                                                 | 2 +-
+ ops/conductor-heartbeat.json                                    | 2 +-
+ ops/conductor-log.md                                            | 1 +
+ ops/conductor-state.json                                        | 2 +-
+ .../distributional_energy_verifier_musr_checkpoints/q0151.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0152.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0153.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0154.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0155.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0156.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0157.json  | 1 +
+ 11 files changed, 11 insertions(+), 3 deletions(-)
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0151.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0152.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0153.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0154.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0155.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0156.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0157.json
+
+diff --git a/docs/index.html b/docs/index.html
+index 1f27b04b5b..2d8c85ed0e 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">4,356</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">4,367</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f08f0bbcd5..5e553eefbe 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 139, "phase": "iteration_start", "last_beat": "2026-06-29T15:48:01Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 140, "phase": "iteration_start", "last_beat": "2026-06-29T15:59:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e6bec166d7..38e9761580 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9587,3 +9587,4 @@ The contro |
+ | 2026-06-29 15:14 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 89 passed, 1 warning in 12.27s |
+ | 2026-06-29 15:30 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- maintai | OK | 85 passed, 1 warning in 15.51s |
+ | 2026-06-29 15:46 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | 86 passed, 1 warning in 15.55s |
++| 2026-06-29 15:57 UTC | PHASE E (CAPSTONE .458) -- aggregate the FINAL sub | OK | 86 passed, 1 warning in 13.01s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cdd82548ee..bdecbb12ac 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 139, "phase": "iteration_start", "started_at": "2026-06-29T15:48:01Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 140, "phase": "iteration_start", "started_at": "2026-06-29T15:59:42Z"}
+\ No newline at end of file
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0151.json b/results/distributional_energy_verifier_musr_checkpoints/q0151.json
+new file mode 100644
+index 0000000000..09cc15c36d
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0151.json
+@@ -0,0 +1 @@
++{"q": 151, "gold": "Norris", "n_choices": 2, "sc_answer": "Norris", "energy_answer": "Norris", "energy_pure_answer": "Norris", "judge_answer": "Norris", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Norris", "Norris", "Norris", "Bruce", "Norris", "Norris", "Bruce", "Norris"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0152.json b/results/distributional_energy_verifier_musr_checkpoints/q0152.json
+new file mode 100644
+index 0000000000..74f77834eb
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0152.json
+@@ -0,0 +1 @@
++{"q": 152, "gold": "Ivy", "n_choices": 2, "sc_answer": "Clarence", "energy_answer": "Clarence", "energy_pure_answer": "Ivy", "judge_answer": "Clarence", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 1, "judge_correct": 0, "n_valid_candidates": 6, "answers": ["Clarence", "Clarence", "Clarence", null, null, "Ivy", "Ivy", "Clarence"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0153.json b/results/distributional_energy_verifier_musr_checkpoints/q0153.json
+new file mode 100644
+index 0000000000..e01e0b409d
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0153.json
+@@ -0,0 +1 @@
++{"q": 153, "gold": "Clarence", "n_choices": 2, "sc_answer": "Clarence", "energy_answer": "Clarence", "energy_pure_answer": "Ivy", "judge_answer": "Clarence", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Clarence", "Ivy", "Ivy", "Clarence", "Clarence", "Clarence", "Clarence", "Clarence"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0154.json b/results/distributional_energy_verifier_musr_checkpoints/q0154.json
+new file mode 100644
+index 0000000000..38570ba453
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0154.json
+@@ -0,0 +1 @@
++{"q": 154, "gold": "Clayton", "n_choices": 2, "sc_answer": "Madelyn", "energy_answer": "Madelyn", "energy_pure_answer": "Madelyn", "judge_answer": "Clayton", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Madelyn", "Clayton", "Madelyn", "Madelyn", "Madelyn", "Madelyn", "Madelyn", "Clayton"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0155.json b/results/distributional_energy_verifier_musr_checkpoints/q0155.json
+new file mode 100644
+index 0000000000..76a5eb4a78
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0155.json
+@@ -0,0 +1 @@
++{"q": 155, "gold": "Madelyn", "n_choices": 2, "sc_answer": "Madelyn", "energy_answer": "Madelyn", "energy_pure_answer": "Madelyn", "judge_answer": "Madelyn", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Clayton", "Madelyn", "Madelyn", "Madelyn", "Clayton", "Madelyn", "Madelyn", "Madelyn"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0156.json b/results/distributional_energy_verifier_musr_checkpoints/q0156.json
+new file mode 100644
+index 0000000000..e9451661db
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0156.json
+@@ -0,0 +1 @@
++{"q": 156, "gold": "Stuart", "n_choices": 2, "sc_answer": "Alice", "energy_answer": "Alice", "energy_pure_answer": "Alice", "judge_answer": "Alice", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Alice", "Alice", "Alice", "Alice", "Alice", "Alice", "Stuart", "Alice"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0157.json b/results/distributional_energy_verifier_musr_checkpoints/q0157.json
+new file mode 100644
+index 0000000000..96c1e144bd
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0157.json
+@@ -0,0 +1 @@
++{"q": 157, "gold": "Alice", "n_choices": 2, "sc_answer": "Alice", "energy_answer": "Alice", "energy_pure_answer": "Alice", "judge_answer": "Alice", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Alice", "Alice", "Alice", "Alice", "Alice", "Alice", "Alice", "Alice"], "energy_abstained": true}
+-- 
+2.55.0
+

@@ -1,0 +1,224 @@
+From 468a2cc4945780b3b865500cf2d65da3b172a8c1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 17:32:25 -0400
+Subject: [PATCH 03316/11362] [outer-loop] arc: wire prior_state into the live
+ agent behind the trust gate
+
+Completes the capture->prior pipeline into the live solver. E3AgentPolicy._induce_and_plan now tries a
+per-game world model LEARNED from the played transitions FIRST -- warm-started from the cross-game CNN
+prior (models/arc_dynamics_prior.pt, transfers 5/5) -- GATED by the same >=0.5 held-out trust bar the LLM
+path uses. If it earns trust and plans a win it is used (zero-LLM, execution-grounded); otherwise it falls
+through to the existing LLM induction. Non-fatal try/except -- can never break the existing path.
+
+- arc_live_ttt.gated_engine_from_transitions(): loads the prior, warm-starts a LiveTTTWorldModel, fits on
+  a train split, and returns (engine, is_level_complete) ONLY if held-out exact-grid accuracy >=
+  trust_threshold (else None -> fallback preserved). Standalone, fully tested offline.
+- LiveTTTWorldModel: cnn_epochs=40 (LIGHT live fine-tuning -- 400 was too slow for per-induction use AND
+  tripped the test memory guard; warm-starting from the prior means few epochs suffice).
+- arc_competition_agent._induce_and_plan: the minimal gated TTT-first attempt (one localized block before
+  the LLM paths).
+
+Validated: 3 gate tests + 5 live-ttt tests green; make_carnot_agent imports/builds; SUBMITTED_AGENT_CONFIG
+parity test 10/10 (the 0.08-incident guard intact). The gate currently engages on games where the learned
+model reaches >=0.5 exact-match (e.g. the gravity-class) and falls back otherwise; it engages more as the
+representation improves (object-delta + TRM are the next levers).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../carnot/agentic/arc_competition_agent.py   | 20 ++++++
+ python/carnot/agentic/arc_live_ttt.py         | 59 +++++++++++++++-
+ tests/python/test_arc_live_ttt_gated.py       | 67 +++++++++++++++++++
+ 3 files changed, 144 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_arc_live_ttt_gated.py
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index cbfc1006a9..7e067bbd24 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -1375,6 +1375,26 @@ class E3AgentPolicy:
+             return
+ 
+         try:
++            # PRIOR-WARM-STARTED LEARNED ENGINE (2026-06-21): try the per-game world model LEARNED from the
++            # played transitions (warm-started from the cross-game CNN prior that transfers 5/5 to unseen
++            # games), GATED by the same >=0.5 held-out trust bar the LLM path uses. If it earns trust and
++            # plans a win, use it (zero-LLM, execution-grounded); otherwise fall through to the LLM
++            # induction. Non-fatal -- never breaks the existing path. The prior is models/arc_dynamics_prior.pt.
++            try:
++                from carnot.agentic.arc_live_ttt import gated_engine_from_transitions
++                _eng, _isdone, _diag = gated_engine_from_transitions(self.short, active_transitions)
++                attempt["ttt_prior_engine"] = _diag
++                if _eng is not None and self.root_grid is not None:
++                    self._install_goal_bias(_isdone)
++                    _plan = e3.plan_in_model(_eng, _isdone, self.root_grid)
++                    if _plan:
++                        self.plan = _plan
++                        attempt["planned"] = True
++                        attempt["plan_length"] = len(_plan)
++                        attempt["engine_source"] = "ttt_prior_warmstarted"
++                        return
++            except Exception as _ttt_e:
++                attempt["ttt_prior_engine_error"] = repr(_ttt_e)[:120]
+             if attempt["reason"] == "level_up_reinduction":
+                 self._fit_dsl_model()
+                 outcome = execute_bounded_llm_reinduction(
+diff --git a/python/carnot/agentic/arc_live_ttt.py b/python/carnot/agentic/arc_live_ttt.py
+index 9947bc8a2f..3701b93451 100644
+--- a/python/carnot/agentic/arc_live_ttt.py
++++ b/python/carnot/agentic/arc_live_ttt.py
+@@ -185,10 +185,13 @@ class LiveTTTWorldModel:
+     existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
+ 
+     def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16,
+-                 dynamics_backend: str = "dsl", prior_state: Any = None) -> None:
++                 dynamics_backend: str = "dsl", prior_state: Any = None, cnn_epochs: int = 40) -> None:
+         self.game = game
+         self.refit_every = int(refit_every)
+         self.min_transitions = int(min_transitions)
++        # live per-game CNN fine-tuning epochs -- LIGHT (the agent inducts on stalls; the offline prior
++        # pretrain uses its own higher epoch count). Warm-starting from the prior means few epochs suffice.
++        self.cnn_epochs = int(cnn_epochs)
+         # a pretrained cross-game CNN PRIOR state_dict (models/arc_dynamics_prior.pt); when set and the
+         # backend is 'cnn', the per-game learner warm-starts from it -> fewer real probes to converge.
+         self._prior_state = prior_state
+@@ -204,7 +207,8 @@ class LiveTTTWorldModel:
+         self._refits = 0
+ 
+     def _new_l1(self) -> Any:
+-        return CNNDynamics(self.game) if self.dynamics_backend == "cnn" else ObjectDeltaModel(self.game)
++        return (CNNDynamics(self.game, epochs=self.cnn_epochs) if self.dynamics_backend == "cnn"
++                else ObjectDeltaModel(self.game))
+ 
+     def _fit_l1(self, transitions):
+         l1 = self._new_l1()
+@@ -286,3 +290,54 @@ class LiveTTTWorldModel:
+             "n_win_states": len(self._win_states),
+             "verifier_is_oracle": False,
+         }
++
++
++def _load_prior(prior_path: str) -> Any:
++    """Load the pretrained cross-game CNN prior state_dict (models/arc_dynamics_prior.pt), or None."""
++    try:
++        import torch
++        from pathlib import Path
++        p = Path(prior_path)
++        if not p.is_absolute():
++            p = Path(__file__).resolve().parents[3] / prior_path
++        return torch.load(p) if p.exists() else None
++    except Exception:
++        return None
++
++
++def gated_engine_from_transitions(game: str, transitions: list, *,
++                                  prior_path: str = "models/arc_dynamics_prior.pt",
++                                  trust_threshold: float = 0.5, holdout_frac: float = 0.25,
++                                  dynamics_backend: str = "cnn"):
++    """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
++    cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
++    trust. Returns ``(engine, is_level_complete, diag)``.
++
++    engine/is_level_complete are None UNLESS the learned model reproduces a held-out split of the played
++    transitions at >= trust_threshold exact-grid accuracy -- the SAME bar the live agent's existing
++    WorldModelVerifier gate uses, so a weak learned model can never displace the fallback path. This is the
++    execution-grounded, zero-LLM alternative to e3.load_engine: the conductor's live agent tries it FIRST
++    and falls through to the LLM induction if the gate fails. diag carries the prior-loaded flag + the
++    held-out accuracy for telemetry. (Oracle-distinct learned dynamics; verifier_is_oracle False.)"""
++    diag: dict = {"backend": dynamics_backend, "n_transitions": len(transitions)}
++    if len(transitions) < 8:
++        diag["skip"] = "too_few_transitions"
++        return None, None, diag
++    prior_state = _load_prior(prior_path)
++    diag["prior_loaded"] = prior_state is not None
++    ttt = LiveTTTWorldModel(game, dynamics_backend=dynamics_backend, prior_state=prior_state)
++    k = max(2, int(len(transitions) * holdout_frac))
++    train, held = transitions[:-k], transitions[-k:]
++    for t in train:
++        ttt.observe_transition(t)
++    ttt.fit_now()
++    acc = ttt.trust(held)
++    diag.update(heldout_accuracy=round(acc, 4), trust_threshold=trust_threshold)
++    if acc < trust_threshold:
++        diag["gate"] = "FAIL"
++        return None, None, diag
++    for t in held:  # gate passed -> refit on ALL transitions for the final engine
++        ttt.observe_transition(t)
++    ttt.fit_now()
++    diag["gate"] = "PASS"
++    return ttt.engine, ttt.is_level_complete, diag
+diff --git a/tests/python/test_arc_live_ttt_gated.py b/tests/python/test_arc_live_ttt_gated.py
+new file mode 100644
+index 0000000000..e48370b462
+--- /dev/null
++++ b/tests/python/test_arc_live_ttt_gated.py
+@@ -0,0 +1,67 @@
++"""Tests for the prior-warm-started, trust-GATED live engine wired into the agent (2026-06-21).
++
++REQ: the live agent tries a per-game world model LEARNED from the played transitions (warm-started from
++the cross-game prior) BEFORE the LLM induction, but only USES it when it reproduces a held-out split at
++>= trust_threshold -- so a weak learned model can never displace the existing fallback path. The gate is
++what makes wiring prior_state into the live agent SAFE.
++
++SCENARIO-GATE-1: too few transitions -> the helper returns (None, None) and skips (no engine).
++SCENARIO-GATE-2: a learnable mechanic (gravity) -> the gate PASSES (held-out accuracy >= threshold) and a
++                 usable engine + is_level_complete are returned.
++SCENARIO-GATE-3: an impossibly high threshold -> the gate FAILS and returns None (the fallback is preserved).
++"""
++import numpy as np
++import torch  # noqa: F401  -- module-level so torch's ~600MB base alloc is charged to COLLECTION, not the
++#                test (the pytest memory-watchdog flags a >500MB per-test RSS delta; lazy-importing torch
++#                inside the gated helper would otherwise charge that base footprint to whichever test runs first)
++
++from carnot.agentic.arc_executable_world_model import Transition
++from carnot.agentic.arc_live_ttt import gated_engine_from_transitions
++
++
++def _gravity_transitions(n: int = 80):
++    rng = np.random.default_rng(0)
++
++    def step(g):
++        g2 = g.copy()
++        ys, xs = np.where(g > 0)
++        for y, x in zip(ys, xs):
++            if y + 1 < g.shape[0]:
++                g2[y, x] = 0
++                g2[y + 1, x] = g[y, x]
++        return g2
++
++    out = []
++    for _ in range(n):
++        g = np.zeros((6, 6), dtype=np.int16)
++        y, x = int(rng.integers(0, 5)), int(rng.integers(0, 6))
++        g[y, x] = int(rng.integers(1, 6))
++        out.append(Transition(grid=g, action=3, data=None, next_grid=step(g), level_before=0, level_after=0))
++    return out
++
++
++def test_scenario_gate_1_too_few_transitions_skips() -> None:
++    """SCENARIO-GATE-1: below the minimum, no engine is built (skip), preserving the fallback."""
++    eng, isdone, diag = gated_engine_from_transitions("x", [])
++    assert eng is None and isdone is None
++    assert diag.get("skip") == "too_few_transitions"
++
++
++def test_scenario_gate_2_learnable_mechanic_passes() -> None:
++    """SCENARIO-GATE-2: a learnable gravity rule passes the gate and yields a usable engine."""
++    eng, isdone, diag = gated_engine_from_transitions("grav", _gravity_transitions(), trust_threshold=0.5)
++    assert diag["gate"] == "PASS"
++    assert diag["heldout_accuracy"] >= 0.5
++    assert eng is not None and callable(eng) and callable(isdone)
++    # the returned engine actually predicts the gravity rule on a fresh grid
++    g = np.zeros((6, 6), dtype=np.int16)
++    g[1, 2] = 4
++    nxt = np.asarray(eng(g, 3, None))
++    assert nxt[2, 2] == 4 and nxt[1, 2] == 0
++
++
++def test_scenario_gate_3_unreachable_threshold_falls_back() -> None:
++    """SCENARIO-GATE-3: an impossible threshold makes the gate fail -> None (fallback preserved)."""
++    eng, isdone, diag = gated_engine_from_transitions("grav", _gravity_transitions(), trust_threshold=1.01)
++    assert eng is None and isdone is None
++    assert diag["gate"] == "FAIL"
+-- 
+2.55.0
+

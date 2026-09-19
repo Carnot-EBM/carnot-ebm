@@ -1,0 +1,43 @@
+From b634a4b6ca94d4da8d588e9610b2063b3ce5fa30 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 01:34:32 -0400
+Subject: [PATCH 00373/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2fe9387216..0c08edf861 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-04T05:19:07Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-04T05:34:30Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b22026258d..a194a31d95 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7732,3 +7732,4 @@ ERROR: {
+ | 2026-06-04 03:43 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
+ | 2026-06-04 05:00 UTC | FR-11 continuous self-learning v18 -- Tier-2 CONST | OK | 90 passed in 4.97s |
+ | 2026-06-04 05:17 UTC | BANK the verifier product: wire the .345 certified | OK | 159 passed, 1 skipped in 25.42s |
++| 2026-06-04 05:32 UTC | BUILD the P3 Anomaly-Escalation process upgrade (t | OK | 104 passed in 4.28s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 63dc3671d0..b2bfbff785 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-04T05:19:07Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-04T05:34:30Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

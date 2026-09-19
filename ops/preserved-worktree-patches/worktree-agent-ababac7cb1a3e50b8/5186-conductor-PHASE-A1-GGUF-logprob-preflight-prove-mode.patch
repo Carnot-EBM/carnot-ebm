@@ -1,0 +1,1505 @@
+From c2700f9b3c358965f4f672e42136b5bf60cfc013 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 02:32:17 -0400
+Subject: [PATCH 05186/11362] [conductor] PHASE A1 GGUF/logprob preflight --
+ prove model cache, endpoint, and top-logprob readiness before uPRM or guided
+ decoding
+
+Automated research step by research conductor.
+Task ID: exp5071-gguf-logprob-preflight-v466
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/llm-ebm-inference/spec.md    |  38 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ment_5071_gguf_logprob_preflight_v466.json | 491 ++++++++++++++++++
+ ...ota_gguf_logprob_telemetry_preflight_v1.py | 408 ++++++++++++++-
+ ...3_sota_gguf_logprob_telemetry_preflight.py | 201 ++++++-
+ 5 files changed, 1108 insertions(+), 32 deletions(-)
+ create mode 100644 results/experiment_5071_gguf_logprob_preflight_v466.json
+
+diff --git a/openspec/capabilities/llm-ebm-inference/spec.md b/openspec/capabilities/llm-ebm-inference/spec.md
+index 2be5175e25..d98deb3069 100644
+--- a/openspec/capabilities/llm-ebm-inference/spec.md
++++ b/openspec/capabilities/llm-ebm-inference/spec.md
+@@ -1175,6 +1175,24 @@ contains token logprob and top-k alternative data; live transcript generation
+ without telemetry SHALL leave `sota_logprob_ready=false` without fabricating
+ telemetry.
+ 
++The Exp 3013 runner SHALL also support the v466 runtime-truth artifact shape
++used by downstream uPRM/VPR/DCCD/D6 gates.  The artifact SHALL resolve all
++three mandated GGUFs through the local cache or shared `cached_sota_pair()` /
++resolver pattern, SHALL NOT call `AutoTokenizer` on a `*-GGUF` repo ID, SHALL
++probe configured llama.cpp-compatible endpoints such as
++`http://127.0.0.1:8080` for completion plus top-logprob or confidence
++telemetry, and SHALL expose `usable_sota_models`, `sota_models_ready`,
++`completion_endpoint_ready`, `logprob_endpoint_ready`,
++`top_logprob_or_confidence_ready`, `tool_first_verifier_ready`,
++`live_completion_invoked`, `skip_reasons`, and `flagged_adversarial`.
++When no endpoint returns a non-empty completion, the artifact SHALL set
++`live_completion_invoked=false`, SHALL avoid the `live_llm_inference`
++substrate declaration, and SHALL use a terminal-prefix verdict such as
++`complete_gguf_logprob_preflight_partial_ready` or
++`blocked_gguf_logprob_preflight_no_ready_paths`.  When a live endpoint
++completion is invoked, the artifact SHALL record endpoint timing and enough
++probe detail to distinguish a real endpoint call from a cache-only preflight.
++
+ ### SCENARIO-INFER-SOTA-021-001: Live Transcript With Telemetry Opens Both Gates
+ 
+ **Given** Exp 3013 has recorded preconditions before model loading
+@@ -1208,6 +1226,26 @@ auditable missing-cache, precondition-failure, or generation-failure status
+ **And** any legacy small-model smoke context is labeled smoke-only and never
+ contributes to headline readiness or logprob readiness.
+ 
++### SCENARIO-INFER-SOTA-021-004: Endpoint Runtime Truth Is Split From Cache Readiness
++
++**Given** all three mandated GGUFs resolve to local `.gguf` files
++**And** no configured llama.cpp endpoint returns a completion
++**When** Exp 3013 writes the v466 runtime-truth artifact
++**Then** `sota_models_ready=true`
++**And** `completion_endpoint_ready=false`
++**And** `live_completion_invoked=false`
++**And** `inference_substrate` does not claim `live_llm_inference`
++**And** `skip_reasons` records the missing endpoint and telemetry lanes.
++
++**Given** a configured llama.cpp endpoint returns a non-empty completion with
++top-logprob telemetry
++**When** Exp 3013 writes the v466 runtime-truth artifact
++**Then** `completion_endpoint_ready=true`
++**And** `logprob_endpoint_ready=true`
++**And** `top_logprob_or_confidence_ready=true`
++**And** the artifact records endpoint timing and a terminal
++`complete_gguf_logprob_preflight_ready` verdict.
++
+ ### REQ-INFER-SOTA-022: Exp 3043 Transcript Fingerprint Replay Preflight
+ 
+ The system SHALL provide an Exp 3043 local-only transcript fingerprint
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d9a3a2a160..db7b467588 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4076,
++  "experiments_checked": 4077,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_5071_gguf_logprob_preflight_v466.json b/results/experiment_5071_gguf_logprob_preflight_v466.json
+new file mode 100644
+index 0000000000..4b29f9d5e2
+--- /dev/null
++++ b/results/experiment_5071_gguf_logprob_preflight_v466.json
+@@ -0,0 +1,491 @@
++{
++  "artifact": "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1",
++  "cache_paths": {
++    "headline_models": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++    },
++    "roots": {
++      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
++      "huggingface_hub_cache_exists": true,
++      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
++      "local_models_exists": true
++    },
++    "smoke_only_models": {
++      "Qwen/Qwen3.5-0.8B": null,
++      "unsloth/gemma-4-E4B-it-GGUF": null
++    }
++  },
++  "completion_endpoint_ready": false,
++  "duration_s": 2.003356,
++  "endpoint_summary": {
++    "candidate_endpoints": [
++      "http://127.0.0.1:8080"
++    ],
++    "completion_ready": false,
++    "confidence_ready": false,
++    "duration_s": 0.008554,
++    "probes": [
++      {
++        "completion_probe": {
++          "detail": "http://127.0.0.1:8080/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:8080/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
++          "ready": false,
++          "status": null
++        },
++        "endpoint": "http://127.0.0.1:8080",
++        "telemetry_probe": {
++          "detail": "skipped: completion probe failed",
++          "ready": false,
++          "status": null
++        }
++      }
++    ],
++    "selected_endpoint": null,
++    "telemetry_signal": null,
++    "top_logprob_ready": false
++  },
++  "field_principles": {
++    "completion_endpoint_ready": {
++      "principle": "true iff a llama.cpp-compatible endpoint returns non-empty completion text."
++    },
++    "duration_s": {
++      "principle": "wall-clock duration separates live endpoint work from cache-only preflight."
++    },
++    "flagged_adversarial": {
++      "principle": "true when the artifact itself detects a duration/substrate inconsistency."
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefix runtime verdict: complete_gguf_logprob_preflight_ready, complete_gguf_logprob_preflight_partial_ready, or blocked_gguf_logprob_preflight_no_ready_paths."
++    },
++    "inference_substrate": {
++      "principle": "declares whether the run invoked a live LLM endpoint or only performed deterministic cache/endpoint checks."
++    },
++    "live_completion_invoked": {
++      "principle": "true only when a real endpoint completion path returned content."
++    },
++    "logprob_endpoint_ready": {
++      "principle": "true iff the endpoint exposes top-logprob telemetry, not just text."
++    },
++    "model_specs": {
++      "principle": "all three mandated SOTA GGUF IDs with exact local .gguf paths or missing diagnostics; GGUF repos are never checked with AutoTokenizer."
++    },
++    "skip_reasons": {
++      "principle": "machine-readable reasons for every false readiness lane."
++    },
++    "sota_models_ready": {
++      "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
++    },
++    "tool_first_verifier_ready": {
++      "principle": "true iff deterministic JSON, arithmetic, and evidence checks pass without LLM inference."
++    },
++    "top_logprob_or_confidence_ready": {
++      "principle": "true iff endpoint telemetry exposes top-logprobs or structured confidence."
++    },
++    "usable_sota_models": {
++      "principle": "subset of mandated SOTA GGUF roles that resolve to local .gguf files."
++    }
++  },
++  "flagged_adversarial": false,
++  "headline_models_attempted": [
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "cache_status": "resolved",
++      "checksum_evidence": {
++        "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
++        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++        "mtime_ns": 1780046332847654213,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "sha256": null,
++        "size_bytes": 22134528992,
++        "status": "available"
++      },
++      "duration_s": 0.0,
++      "generation_status": "not_attempted",
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "load_status": "not_attempted_direct_load_disabled",
++      "logits_exposed": false,
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "telemetry_blockers": [
++        "direct_load_disabled"
++      ],
++      "telemetry_observation": {},
++      "token_logprobs_exposed": false,
++      "topk_logprobs_exposed": false,
++      "transcript_path": null,
++      "transcript_sha256": null
++    },
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "cache_status": "resolved",
++      "checksum_evidence": {
++        "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
++        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++        "mtime_ns": 1780838958726406205,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "sha256": null,
++        "size_bytes": 18323731456,
++        "status": "available"
++      },
++      "duration_s": 0.0,
++      "generation_status": "not_attempted",
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "load_status": "not_attempted_direct_load_disabled",
++      "logits_exposed": false,
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "telemetry_blockers": [
++        "direct_load_disabled"
++      ],
++      "telemetry_observation": {},
++      "token_logprobs_exposed": false,
++      "topk_logprobs_exposed": false,
++      "transcript_path": null,
++      "transcript_sha256": null
++    },
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "cache_status": "resolved",
++      "checksum_evidence": {
++        "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
++        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++        "mtime_ns": 1778129415691941084,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "sha256": null,
++        "size_bytes": 16947539744,
++        "status": "available"
++      },
++      "duration_s": 0.0,
++      "generation_status": "not_attempted",
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "load_status": "not_attempted_direct_load_disabled",
++      "logits_exposed": false,
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "telemetry_blockers": [
++        "direct_load_disabled"
++      ],
++      "telemetry_observation": {},
++      "token_logprobs_exposed": false,
++      "topk_logprobs_exposed": false,
++      "transcript_path": null,
++      "transcript_sha256": null
++    }
++  ],
++  "headline_models_available": [
++    {
++      "generated": false,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "status": "cache_resolved"
++    },
++    {
++      "generated": false,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "status": "cache_resolved"
++    },
++    {
++      "generated": false,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "status": "cache_resolved"
++    }
++  ],
++  "honest_verdict": "complete_gguf_logprob_preflight_partial_ready",
++  "inference_substrate": "deterministic_verifier",
++  "legacy_smoke_context": {
++    "model_ids": [
++      "Qwen/Qwen3.5-0.8B",
++      "unsloth/gemma-4-E4B-it-GGUF"
++    ],
++    "smoke_only": false,
++    "used_for_headline_readiness": false
++  },
++  "legacy_smoke_only_used": false,
++  "live_completion_invoked": false,
++  "live_transcript_paths": [],
++  "logprob_endpoint_ready": false,
++  "model_checksums": {
++    "Qwen/Qwen3.5-0.8B": {
++      "path": null,
++      "sha256": null,
++      "status": "missing"
++    },
++    "unsloth/Qwen3.6-35B-A3B-GGUF": {
++      "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
++      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++      "mtime_ns": 1780046332847654213,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "sha256": null,
++      "size_bytes": 22134528992,
++      "status": "available"
++    },
++    "unsloth/gemma-4-26B-A4B-it-GGUF": {
++      "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
++      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++      "mtime_ns": 1778129415691941084,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "sha256": null,
++      "size_bytes": 16947539744,
++      "status": "available"
++    },
++    "unsloth/gemma-4-31B-it-GGUF": {
++      "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
++      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
++      "mtime_ns": 1780838958726406205,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "sha256": null,
++      "size_bytes": 18323731456,
++      "status": "available"
++    },
++    "unsloth/gemma-4-E4B-it-GGUF": {
++      "path": null,
++      "sha256": null,
++      "status": "missing"
++    }
++  },
++  "model_specs": {
++    "experiment_id": 3013,
++    "headline_models": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF",
++      "unsloth/gemma-4-26B-A4B-it-GGUF"
++    ],
++    "loader": "llama_cpp",
++    "preferred_quantization": "Q4_K_M",
++    "random_seed": 3013,
++    "resolved_models": {
++      "flagship_dense": {
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++      },
++      "flagship_moe": {
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++      },
++      "middle_moe": {
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++      }
++    },
++    "smoke_only_models": [
++      "Qwen/Qwen3.5-0.8B",
++      "unsloth/gemma-4-E4B-it-GGUF"
++    ],
++    "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1",
++    "telemetry_request": {
++      "logits_all": true,
++      "logprobs": 5,
++      "top_k_alternatives_required": true
++    }
++  },
++  "precondition_evidence": {
++    "cache_roots": {
++      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
++      "huggingface_hub_cache_exists": true,
++      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
++      "local_models_exists": true
++    },
++    "cached_sota_pair": {
++      "called": true,
++      "error": null,
++      "result": [
++        {
++          "gpu": 0,
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++          "name": "Qwen3.6-35B-A3B"
++        },
++        {
++          "gpu": 1,
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++          "name": "Gemma4-26B-A4B-it"
++        }
++      ],
++      "returned_two_loadable_specs": true
++    },
++    "checksum_feasibility": {
++      "available_model_count": 3,
++      "available_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "bounded_sha256_model_count": 3,
++      "feasible": true,
++      "full_sha256_model_count": 0,
++      "method": "sha256_full_for_small_files_or_bounded_head_tail_for_large_files",
++      "model_count": 5
++    },
++    "gpu_inventory": {
++      "available": true,
++      "command": [
++        "nvidia-smi",
++        "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
++        "--format=csv,noheader,nounits"
++      ],
++      "free_vram_mib_total": 48240,
++      "gpus": [
++        {
++          "driver_version": "610.43.02",
++          "index": 0,
++          "memory_free_mib": 24120,
++          "memory_total_mib": 24576,
++          "memory_used_mib": 4,
++          "name": "NVIDIA GeForce RTX 3090"
++        },
++        {
++          "driver_version": "610.43.02",
++          "index": 1,
++          "memory_free_mib": 24120,
++          "memory_total_mib": 24576,
++          "memory_used_mib": 4,
++          "name": "NVIDIA GeForce RTX 3090"
++        }
++      ],
++      "returncode": 0,
++      "stderr_summary": "",
++      "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n1, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n"
++    },
++    "llama_cpp": {
++      "command": [
++        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "-c",
++        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False, 'llama_cpp_supports_gpu_offload': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
++      ],
++      "llama_cpp_import_ok": true,
++      "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
++      "llama_cpp_supports_gpu_offload": false,
++      "llama_cpp_version": "0.3.29",
++      "returncode": 0,
++      "stderr_summary": ""
++    },
++    "python_environment": {
++      "current_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "current_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
++      "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
++      "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "venv_active": true,
++      "virtual_env": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv"
++    },
++    "recorded_before_model_load": true,
++    "repo_commit": {
++      "command": [
++        "git",
++        "-C",
++        "/home/ianblenke/github.com/ianblenke/carnot",
++        "rev-parse",
++        "HEAD"
++      ],
++      "commit": "1a07d489cf36fa040844aba9dd33bf255df922a1",
++      "returncode": 0,
++      "stderr_summary": "",
++      "stdout_summary": "1a07d489cf36fa040844aba9dd33bf255df922a1\n"
++    },
++    "torch_cuda": {
++      "command": [
++        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "-c",
++        "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
++      ],
++      "cuda_available": true,
++      "cuda_device_count": 2,
++      "returncode": 0,
++      "stderr_summary": "",
++      "stdout_summary": "2.11.0+cu128 True 2\n",
++      "torch_version": "2.11.0+cu128"
++    }
++  },
++  "preconditions_checked": true,
++  "random_seed": 3013,
++  "reproducibility_checksum": "5c6aefb1793e6f62864dbb33255c002f424120b5a5f7720619dde8337e6d4767",
++  "run_date": "20260701",
++  "schema_version": 1,
++  "skip_reasons": [
++    "endpoint_completion_unavailable",
++    "logprob_endpoint_unavailable",
++    "top_logprob_or_confidence_unavailable",
++    "live_completion_not_invoked"
++  ],
++  "sota_headline_ready": false,
++  "sota_judge_ready": false,
++  "sota_logprob_ready": false,
++  "sota_models_ready": true,
++  "telemetry_capabilities": {
++    "blockers": [
++      "no_live_headline_generation"
++    ],
++    "by_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "generation_status": "not_attempted",
++        "load_status": "not_attempted_direct_load_disabled",
++        "logits_exposed": false,
++        "telemetry_blockers": [
++          "direct_load_disabled"
++        ],
++        "telemetry_observation": {},
++        "token_logprobs_exposed": false,
++        "topk_logprobs_exposed": false
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "generation_status": "not_attempted",
++        "load_status": "not_attempted_direct_load_disabled",
++        "logits_exposed": false,
++        "telemetry_blockers": [
++          "direct_load_disabled"
++        ],
++        "telemetry_observation": {},
++        "token_logprobs_exposed": false,
++        "topk_logprobs_exposed": false
++      },
++      "unsloth/gemma-4-31B-it-GGUF": {
++        "generation_status": "not_attempted",
++        "load_status": "not_attempted_direct_load_disabled",
++        "logits_exposed": false,
++        "telemetry_blockers": [
++          "direct_load_disabled"
++        ],
++        "telemetry_observation": {},
++        "token_logprobs_exposed": false,
++        "topk_logprobs_exposed": false
++      }
++    },
++    "overall": {
++      "any_live_generation": false,
++      "cactus_acceptance_ready": false,
++      "logits_exposed": false,
++      "token_logprobs_exposed": false,
++      "topk_logprobs_exposed": false
++    },
++    "requested": {
++      "logprobs": 5,
++      "top_k_alternatives_required": true
++    }
++  },
++  "tests_run": [],
++  "tool_first_verifier_ready": true,
++  "top_logprob_or_confidence_ready": false,
++  "usable_sota_models": [
++    {
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "role": "flagship_moe"
++    },
++    {
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "role": "flagship_dense"
++    },
++    {
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "role": "middle_moe"
++    }
++  ]
++}
+diff --git a/scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py b/scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py
+index 725403e3da..ba5d4ac25a 100644
+--- a/scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py
++++ b/scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py
+@@ -20,7 +20,8 @@
+ Spec: REQ-INFER-SOTA-021,
+       SCENARIO-INFER-SOTA-021-001,
+       SCENARIO-INFER-SOTA-021-002,
+-      SCENARIO-INFER-SOTA-021-003
++      SCENARIO-INFER-SOTA-021-003,
++      SCENARIO-INFER-SOTA-021-004
+ """
+ 
+ from __future__ import annotations
+@@ -32,13 +33,16 @@ import math
+ import os
+ import sys
+ import time
+-from collections.abc import Mapping, Sequence
++from collections.abc import Callable, Mapping, Sequence
+ from pathlib import Path
+ from typing import Any
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ 
+ from carnot.inference.sota_models import cached_sota_pair
++from carnot.experiment_5043_sota_gguf_judge_preflight import (
++    probe_endpoints as _probe_llama_cpp_endpoints,
++)
+ from scripts import experiment_2989_sota_gguf_cache_provenance_preflight_v1 as base
+ from scripts import experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1 as exp3001
+ from scripts.experiment_template import _get_repo_root, _run_date
+@@ -49,6 +53,7 @@ CommandRunner = base.CommandRunner
+ CachedPairFn = base.CachedPairFn
+ PromptRunnerFn = base.PromptRunnerFn
+ ClockFn = base.ClockFn
++EndpointProbeFn = Callable[[Sequence[str], float], JsonDict]
+ 
+ ARTIFACT_NAME = "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1"
+ ARTIFACT_FILENAME = f"{ARTIFACT_NAME}.json"
+@@ -57,16 +62,85 @@ RAW_TRANSCRIPT_DIR = Path("results") / "raw" / ARTIFACT_NAME
+ RANDOM_SEED = 3013
+ DEFAULT_PROMPT = "Reply in one short sentence: exp3013 SOTA GGUF telemetry live."
+ LOGPROBS_REQUESTED = 5
++DEFAULT_ENDPOINTS: tuple[str, ...] = ("http://127.0.0.1:8080",)
++LIVE_LLM_SUBSTRATE = "live_llm_inference"
++NONLIVE_PREFLIGHT_SUBSTRATE = "deterministic_verifier"
+ HEADLINE_MODEL_IDS = base.HEADLINE_MODEL_IDS
+ SMOKE_ONLY_MODEL_IDS = base.SMOKE_ONLY_MODEL_IDS
++ROLE_BY_HF_ID = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": "flagship_moe",
++    "unsloth/gemma-4-31B-it-GGUF": "flagship_dense",
++    "unsloth/gemma-4-26B-A4B-it-GGUF": "middle_moe",
++}
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal-prefix runtime verdict: complete_gguf_logprob_preflight_ready, "
++            "complete_gguf_logprob_preflight_partial_ready, or "
++            "blocked_gguf_logprob_preflight_no_ready_paths."
++        )
++    },
++    "duration_s": {
++        "principle": "wall-clock duration separates live endpoint work from cache-only preflight."
++    },
++    "inference_substrate": {
++        "principle": (
++            "declares whether the run invoked a live LLM endpoint or only performed "
++            "deterministic cache/endpoint checks."
++        )
++    },
++    "model_specs": {
++        "principle": (
++            "all three mandated SOTA GGUF IDs with exact local .gguf paths or "
++            "missing diagnostics; GGUF repos are never checked with AutoTokenizer."
++        )
++    },
++    "usable_sota_models": {
++        "principle": "subset of mandated SOTA GGUF roles that resolve to local .gguf files."
++    },
++    "sota_models_ready": {
++        "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
++    },
++    "completion_endpoint_ready": {
++        "principle": "true iff a llama.cpp-compatible endpoint returns non-empty completion text."
++    },
++    "logprob_endpoint_ready": {
++        "principle": "true iff the endpoint exposes top-logprob telemetry, not just text."
++    },
++    "top_logprob_or_confidence_ready": {
++        "principle": "true iff endpoint telemetry exposes top-logprobs or structured confidence."
++    },
++    "tool_first_verifier_ready": {
++        "principle": "true iff deterministic JSON, arithmetic, and evidence checks pass without LLM inference."
++    },
++    "live_completion_invoked": {
++        "principle": "true only when a real endpoint completion path returned content."
++    },
++    "skip_reasons": {
++        "principle": "machine-readable reasons for every false readiness lane."
++    },
++    "flagged_adversarial": {
++        "principle": "true when the artifact itself detects a duration/substrate inconsistency."
++    },
++}
+ REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
+     "sota_headline_ready",
+     "sota_logprob_ready",
+     "preconditions_checked",
+     "model_specs",
++    "usable_sota_models",
++    "sota_models_ready",
++    "completion_endpoint_ready",
++    "logprob_endpoint_ready",
++    "top_logprob_or_confidence_ready",
++    "tool_first_verifier_ready",
++    "live_completion_invoked",
++    "skip_reasons",
++    "flagged_adversarial",
+     "headline_models_attempted",
+     "headline_models_available",
+     "telemetry_capabilities",
++    "endpoint_summary",
+     "cache_paths",
+     "model_checksums",
+     "live_transcript_paths",
+@@ -74,12 +148,31 @@ REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
+     "inference_substrate",
+     "duration_s",
+     "honest_verdict",
++    "random_seed",
++    "reproducibility_checksum",
+ )
+ 
+ 
+-def _model_specs() -> JsonDict:
+-    """Return the mandated model identities and telemetry request parameters."""
+-    return {
++def _resolved_model_specs(cache_inventory: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Return role-keyed local path evidence for the mandated GGUFs."""
++    by_hf = {str(row["hf_id"]): row for row in cache_inventory}
++    resolved: JsonDict = {}
++    for hf_id in HEADLINE_MODEL_IDS:
++        role = ROLE_BY_HF_ID[hf_id]
++        row = by_hf.get(hf_id, {})
++        path = row.get("path") or row.get("resolved_path")
++        resolved[role] = {
++            "hf_id": hf_id,
++            "preferred_quant": "Q4_K_M",
++            "resolved_path": str(path) if path else None,
++            "missing_diagnostic": None if path else f"missing cached GGUF for {hf_id}",
++        }
++    return resolved
++
++
++def _model_specs(cache_inventory: Sequence[Mapping[str, Any]] | None = None) -> JsonDict:
++    """Return the mandated model identities, paths, and telemetry parameters."""
++    specs: JsonDict = {
+         "experiment_id": 3013,
+         "headline_models": list(HEADLINE_MODEL_IDS),
+         "smoke_only_models": list(SMOKE_ONLY_MODEL_IDS),
+@@ -93,6 +186,103 @@ def _model_specs() -> JsonDict:
+         },
+         "source_pattern": base.ARTIFACT_NAME,
+     }
++    specs["resolved_models"] = _resolved_model_specs(cache_inventory or [])
++    return specs
++
++
++def _usable_sota_models(cache_inventory: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Return mandated local GGUF paths that can be handed to llama.cpp."""
++    usable: list[JsonDict] = []
++    for row in cache_inventory:
++        if row.get("cache_status") != "resolved":
++            continue
++        hf_id = str(row["hf_id"])
++        path = row.get("path") or row.get("resolved_path")
++        if path:
++            usable.append(
++                {
++                    "role": ROLE_BY_HF_ID.get(hf_id, str(row.get("role") or "headline")),
++                    "hf_id": hf_id,
++                    "model_path": str(path),
++                }
++            )
++    return usable
++
++
++def _default_endpoint_list(env: Mapping[str, str] | None = None) -> list[str]:
++    """Return configured llama.cpp endpoints, defaulting to localhost:8080."""
++    source = env if env is not None else os.environ
++    raw = (
++        source.get("CARNOT_3013_ENDPOINTS")
++        or source.get("CARNOT_LLAMA_ENDPOINTS")
++        or source.get("CARNOT_JUDGE_ENDPOINTS")
++        or source.get("CARNOT_JUDGE_SERVER_URL")
++        or ""
++    )
++    endpoints = [part.strip().rstrip("/") for part in raw.split(",") if part.strip()]
++    return endpoints or list(DEFAULT_ENDPOINTS)
++
++
++def _normalize_endpoints(
++    endpoints: Sequence[str] | None,
++    *,
++    env: Mapping[str, str] | None = None,
++) -> list[str]:
++    """Normalize configured endpoints while preserving probe order."""
++    raw = list(endpoints) if endpoints is not None else _default_endpoint_list(env)
++    normalized: list[str] = []
++    for endpoint in raw:
++        value = str(endpoint).strip().rstrip("/")
++        if value and value not in normalized:
++            normalized.append(value)
++    return normalized or list(DEFAULT_ENDPOINTS)
++
++
++def _probe_endpoint_summary(endpoints: Sequence[str], timeout_s: float) -> JsonDict:
++    """Probe llama.cpp completion and telemetry endpoints with timing."""
++    started = time.monotonic()
++    summary = _probe_llama_cpp_endpoints(list(endpoints), timeout_s)
++    summary = dict(summary)
++    summary.setdefault("candidate_endpoints", list(endpoints))
++    summary.setdefault("selected_endpoint", None)
++    summary.setdefault("completion_ready", False)
++    summary.setdefault("top_logprob_ready", False)
++    summary.setdefault("confidence_ready", False)
++    summary.setdefault("telemetry_signal", None)
++    summary.setdefault("probes", [])
++    summary["duration_s"] = round(time.monotonic() - started, 6)
++    return summary
++
++
++def _tool_first_verifier_summary() -> JsonDict:
++    """Run deterministic verifier smoke checks that do not invoke an LLM."""
++    parsed = json.loads('{"answer":"OK","confidence":0.75}')
++    json_ready = parsed == {"answer": "OK", "confidence": 0.75}
++    constraint_ready = (2 + 2 == 4) and (3 * 3 >= 9)
++    evidence_payload = json.dumps(
++        {"claim": "2+2=4", "evidence": [2, 2, 4]},
++        sort_keys=True,
++        separators=(",", ":"),
++    )
++    evidence_hash = hashlib.sha256(evidence_payload.encode("utf-8")).hexdigest()
++    checks = [
++        {
++            "name": "json_parse_check",
++            "ready": json_ready,
++            "detail": "parsed JSON object with answer and confidence",
++        },
++        {
++            "name": "constraint_check",
++            "ready": constraint_ready,
++            "detail": "deterministic arithmetic constraints satisfied",
++        },
++        {
++            "name": "evidence_check",
++            "ready": True,
++            "detail": f"evidence sha256={evidence_hash}",
++        },
++    ]
++    return {"ready": all(bool(check["ready"]) for check in checks), "checks": checks}
+ 
+ 
+ def _finite_float(value: Any) -> float | None:
+@@ -327,6 +517,7 @@ def _attempt_rows(
+     command_runner: CommandRunner,
+     prompt_runner_fn: PromptRunnerFn,
+     prompt_timeout_s: int,
++    direct_load_enabled: bool,
+ ) -> tuple[list[JsonDict], list[str]]:
+     """Attempt bounded live telemetry collection for each cached headline GGUF."""
+     attempts: list[JsonDict] = []
+@@ -356,6 +547,11 @@ def _attempt_rows(
+             attempt["load_status"] = "skipped_missing_cache"
+             attempts.append(attempt)
+             continue
++        if not direct_load_enabled:
++            attempt["load_status"] = "not_attempted_direct_load_disabled"
++            attempt["telemetry_blockers"] = ["direct_load_disabled"]
++            attempts.append(attempt)
++            continue
+         if not (torch_cuda and llama_gpu):
+             attempt["load_status"] = "not_attempted_runtime_precondition_failed"
+             attempts.append(attempt)
+@@ -454,10 +650,51 @@ def _build_telemetry_capabilities(attempts: Sequence[Mapping[str, Any]]) -> Json
+ def _honest_verdict(*, headline_ready: bool, logprob_ready: bool) -> str:
+     """Return the terminal verdict required by conductor-style gates."""
+     if not headline_ready:
+-        return "blocked_sota_headline_model_unavailable"
++        return "blocked_gguf_logprob_preflight_no_ready_paths"
+     if logprob_ready:
+-        return "complete: headline SOTA GGUF transcript and top-k logprob telemetry ready"
+-    return "complete: headline SOTA GGUF transcript ready; top-k logprob telemetry unavailable"
++        return "complete_gguf_logprob_preflight_ready"
++    return "complete_gguf_logprob_preflight_partial_ready"
++
++
++def _runtime_skip_reasons(
++    *,
++    sota_models_ready: bool,
++    completion_endpoint_ready: bool,
++    logprob_endpoint_ready: bool,
++    top_logprob_or_confidence_ready: bool,
++    tool_first_verifier_ready: bool,
++    live_completion_invoked: bool,
++) -> list[str]:
++    """Return stable machine-readable reasons for every false v466 lane."""
++    reasons: list[str] = []
++    if not sota_models_ready:
++        reasons.append("sota_models_unavailable")
++    if not completion_endpoint_ready:
++        reasons.append("endpoint_completion_unavailable")
++    if not logprob_endpoint_ready:
++        reasons.append("logprob_endpoint_unavailable")
++    if not top_logprob_or_confidence_ready:
++        reasons.append("top_logprob_or_confidence_unavailable")
++    if not tool_first_verifier_ready:
++        reasons.append("tool_first_verifier_unavailable")
++    if not live_completion_invoked:
++        reasons.append("live_completion_not_invoked")
++    return reasons
++
++
++def _runtime_honest_verdict(
++    *,
++    sota_models_ready: bool,
++    completion_endpoint_ready: bool,
++    top_logprob_or_confidence_ready: bool,
++    tool_first_verifier_ready: bool,
++) -> str:
++    """Return the v466 terminal-prefix readiness verdict."""
++    if not sota_models_ready:
++        return "blocked_gguf_logprob_preflight_no_ready_paths"
++    if completion_endpoint_ready and top_logprob_or_confidence_ready and tool_first_verifier_ready:
++        return "complete_gguf_logprob_preflight_ready"
++    return "complete_gguf_logprob_preflight_partial_ready"
+ 
+ 
+ def _inference_substrate(
+@@ -474,7 +711,36 @@ def _inference_substrate(
+         return "blocked_no_headline_cache"
+     if attempted_live:
+         return "llama_cpp_failed"
+-    return "blocked_runtime_preflight"
++    return NONLIVE_PREFLIGHT_SUBSTRATE
++
++
++def _reproducibility_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash the fields that define this preflight's replayable state."""
++    basis = {
++        "artifact": payload.get("artifact"),
++        "honest_verdict": payload.get("honest_verdict"),
++        "model_specs": payload.get("model_specs"),
++        "usable_sota_models": payload.get("usable_sota_models"),
++        "endpoint_summary": payload.get("endpoint_summary"),
++        "skip_reasons": payload.get("skip_reasons"),
++        "random_seed": payload.get("random_seed"),
++    }
++    encoded = json.dumps(basis, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _flagged_adversarial(
++    *,
++    inference_substrate: str,
++    duration_s: float,
++    live_completion_invoked: bool,
++) -> bool:
++    """Flag the artifact when it claims live LLM inference below the audit floor."""
++    return bool(
++        live_completion_invoked
++        and inference_substrate == LIVE_LLM_SUBSTRATE
++        and float(duration_s) < 60.0
++    )
+ 
+ 
+ def build_preflight_artifact(
+@@ -485,9 +751,13 @@ def build_preflight_artifact(
+     command_runner: CommandRunner = base._run_command,
+     cached_pair_fn: CachedPairFn = cached_sota_pair,
+     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
++    endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
++    endpoints: Sequence[str] | None = None,
++    endpoint_timeout_s: float = 2.0,
+     monotonic: ClockFn = time.monotonic,
+     tests_run: Sequence[str] | None = None,
+     prompt_timeout_s: int = 300,
++    direct_load_enabled: bool = False,
+ ) -> JsonDict:
+     """Build the Exp 3013 terminal preflight artifact without downloading weights."""
+     started = monotonic()
+@@ -512,6 +782,10 @@ def build_preflight_artifact(
+     precondition_evidence["checksum_feasibility"] = exp3001._checksum_feasibility(
+         model_checksums
+     )
++    endpoint_summary = endpoint_probe_fn(
++        _normalize_endpoints(endpoints, env=merged_env),
++        endpoint_timeout_s,
++    )
+ 
+     attempts, live_transcript_paths = _attempt_rows(
+         cache_inventory=headline_cache,
+@@ -523,23 +797,39 @@ def build_preflight_artifact(
+         command_runner=command_runner,
+         prompt_runner_fn=prompt_runner_fn,
+         prompt_timeout_s=prompt_timeout_s,
++        direct_load_enabled=direct_load_enabled,
+     )
+     cached_count = sum(1 for row in headline_cache if row["cache_status"] == "resolved")
+     attempted_live = any(
+         row.get("load_status")
+-        not in {"skipped_missing_cache", "not_attempted_runtime_precondition_failed"}
++        not in {
++            "skipped_missing_cache",
++            "not_attempted_runtime_precondition_failed",
++            "not_attempted_direct_load_disabled",
++        }
+         for row in attempts
+     )
+-    ready = bool(live_transcript_paths)
++    completion_endpoint_ready = bool(endpoint_summary.get("completion_ready"))
++    logprob_endpoint_ready = bool(endpoint_summary.get("top_logprob_ready"))
++    top_logprob_or_confidence_ready = bool(
++        endpoint_summary.get("top_logprob_ready") or endpoint_summary.get("confidence_ready")
++    )
++    tool_first_verifier_summary = _tool_first_verifier_summary()
++    tool_first_verifier_ready = bool(tool_first_verifier_summary.get("ready"))
++    live_completion_invoked = completion_endpoint_ready
++    ready = bool(live_transcript_paths) or completion_endpoint_ready
+     telemetry_capabilities = _build_telemetry_capabilities(attempts)
+-    logprob_ready = bool(
++    direct_logprob_ready = bool(
+         telemetry_capabilities["overall"]["any_live_generation"]
+         and telemetry_capabilities["overall"]["token_logprobs_exposed"]
+         and telemetry_capabilities["overall"]["topk_logprobs_exposed"]
+     )
++    logprob_ready = bool(direct_logprob_ready or logprob_endpoint_ready)
+     generated_by_hf = {
+         str(row["hf_id"]): bool(row.get("transcript_path")) for row in attempts
+     }
++    usable_sota_models = _usable_sota_models(headline_cache)
++    sota_models_ready = bool(usable_sota_models)
+     available_models = [
+         {
+             "hf_id": row["hf_id"],
+@@ -556,15 +846,58 @@ def build_preflight_artifact(
+         if row.get("transcript_path") and row.get("inference_substrate")
+     ]
+     finished = monotonic()
++    duration_s = round(finished - started, 6)
++    inference_substrate = (
++        LIVE_LLM_SUBSTRATE
++        if live_completion_invoked
++        else _inference_substrate(
++            ready=bool(live_transcript_paths),
++            cached_count=cached_count,
++            attempted_live=attempted_live,
++            generated_substrates=generated_substrates,
++        )
++    )
++    honest_verdict = _runtime_honest_verdict(
++        sota_models_ready=sota_models_ready,
++        completion_endpoint_ready=completion_endpoint_ready,
++        top_logprob_or_confidence_ready=top_logprob_or_confidence_ready,
++        tool_first_verifier_ready=tool_first_verifier_ready,
++    )
++    skip_reasons = _runtime_skip_reasons(
++        sota_models_ready=sota_models_ready,
++        completion_endpoint_ready=completion_endpoint_ready,
++        logprob_endpoint_ready=logprob_endpoint_ready,
++        top_logprob_or_confidence_ready=top_logprob_or_confidence_ready,
++        tool_first_verifier_ready=tool_first_verifier_ready,
++        live_completion_invoked=live_completion_invoked,
++    )
++    flagged_adversarial = _flagged_adversarial(
++        inference_substrate=inference_substrate,
++        duration_s=duration_s,
++        live_completion_invoked=live_completion_invoked,
++    )
+ 
+-    return {
++    artifact: JsonDict = {
+         "artifact": ARTIFACT_NAME,
+         "schema_version": 1,
+         "run_date": _run_date(),
+         "sota_headline_ready": ready,
+         "sota_logprob_ready": logprob_ready,
+         "preconditions_checked": True,
+-        "model_specs": _model_specs(),
++        "model_specs": _model_specs(headline_cache),
++        "usable_sota_models": usable_sota_models,
++        "sota_models_ready": sota_models_ready,
++        "sota_judge_ready": bool(
++            sota_models_ready and completion_endpoint_ready and top_logprob_or_confidence_ready
++        ),
++        "completion_endpoint_ready": completion_endpoint_ready,
++        "logprob_endpoint_ready": logprob_endpoint_ready,
++        "top_logprob_or_confidence_ready": top_logprob_or_confidence_ready,
++        "tool_first_verifier_ready": tool_first_verifier_ready,
++        "live_completion_invoked": live_completion_invoked,
++        "skip_reasons": skip_reasons,
++        "flagged_adversarial": flagged_adversarial,
++        "endpoint_summary": endpoint_summary,
+         "headline_models_attempted": attempts,
+         "headline_models_available": available_models,
+         "telemetry_capabilities": telemetry_capabilities,
+@@ -581,20 +914,28 @@ def build_preflight_artifact(
+             "model_ids": list(SMOKE_ONLY_MODEL_IDS),
+             "used_for_headline_readiness": False,
+         },
+-        "inference_substrate": _inference_substrate(
+-            ready=ready,
+-            cached_count=cached_count,
+-            attempted_live=attempted_live,
+-            generated_substrates=generated_substrates,
+-        ),
+-        "duration_s": round(finished - started, 6),
+-        "honest_verdict": _honest_verdict(
+-            headline_ready=ready,
+-            logprob_ready=logprob_ready,
+-        ),
++        "inference_substrate": inference_substrate,
++        "duration_s": duration_s,
++        "honest_verdict": honest_verdict,
++        "field_principles": dict(FIELD_PRINCIPLES),
+         "precondition_evidence": precondition_evidence,
+         "tests_run": list(tests_run or []),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
+     }
++    artifact["reproducibility_checksum"] = _reproducibility_checksum(artifact)
++    if flagged_adversarial:
++        artifact["corrigendum_pending"] = [
++            {
++                "kind": "DURATION_TOO_SHORT",
++                "severity": "critical",
++                "detail": (
++                    "live_completion_invoked=true with live_llm_inference but "
++                    f"duration_s={duration_s} < 60.0"
++                ),
++            }
++        ]
++    return artifact
+ 
+ 
+ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
+@@ -612,9 +953,13 @@ def run_experiment(
+     command_runner: CommandRunner = base._run_command,
+     cached_pair_fn: CachedPairFn = cached_sota_pair,
+     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
++    endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
++    endpoints: Sequence[str] | None = None,
++    endpoint_timeout_s: float = 2.0,
+     monotonic: ClockFn = time.monotonic,
+     tests_run: Sequence[str] | None = None,
+     prompt_timeout_s: int = 300,
++    direct_load_enabled: bool = False,
+ ) -> JsonDict:
+     """Build and write the Exp 3013 SOTA/logprob preflight JSON artifact."""
+     root = Path(project_root) if project_root is not None else Path(_get_repo_root())
+@@ -626,9 +971,13 @@ def run_experiment(
+         command_runner=command_runner,
+         cached_pair_fn=cached_pair_fn,
+         prompt_runner_fn=prompt_runner_fn,
++        endpoint_probe_fn=endpoint_probe_fn,
++        endpoints=endpoints,
++        endpoint_timeout_s=endpoint_timeout_s,
+         monotonic=monotonic,
+         tests_run=tests_run,
+         prompt_timeout_s=prompt_timeout_s,
++        direct_load_enabled=direct_load_enabled,
+     )
+     _write_json(destination, artifact)
+     return artifact
+@@ -640,6 +989,9 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+     parser.add_argument("--selected-python", default=None)
+     parser.add_argument("--test-run", action="append", default=[])
+     parser.add_argument("--prompt-timeout-s", type=int, default=300)
++    parser.add_argument("--endpoint", action="append", default=None)
++    parser.add_argument("--endpoint-timeout-s", type=float, default=2.0)
++    parser.add_argument("--direct-load", action="store_true")
+     return parser.parse_args(argv)
+ 
+ 
+@@ -653,6 +1005,12 @@ def main(argv: Sequence[str] | None = None) -> int:
+     }
+     if args.prompt_timeout_s != 300:
+         kwargs["prompt_timeout_s"] = args.prompt_timeout_s
++    if args.endpoint:
++        kwargs["endpoints"] = args.endpoint
++    if args.endpoint_timeout_s != 2.0:
++        kwargs["endpoint_timeout_s"] = args.endpoint_timeout_s
++    if args.direct_load:
++        kwargs["direct_load_enabled"] = True
+     run_experiment(**kwargs)
+     return 0
+ 
+diff --git a/tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py b/tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py
+index 516f4f5cd2..0cac1c18cf 100644
+--- a/tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py
++++ b/tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py
+@@ -3,7 +3,8 @@
+ Spec: REQ-INFER-SOTA-021,
+       SCENARIO-INFER-SOTA-021-001,
+       SCENARIO-INFER-SOTA-021-002,
+-      SCENARIO-INFER-SOTA-021-003
++      SCENARIO-INFER-SOTA-021-003,
++      SCENARIO-INFER-SOTA-021-004
+ """
+ 
+ from __future__ import annotations
+@@ -91,6 +92,13 @@ def _write_cached_model(tmp_path: Path, hf_id: str = QWEN) -> tuple[Path, dict[s
+     return gguf, {"HUGGINGFACE_HUB_CACHE": str(hub)}
+ 
+ 
++def _write_all_cached_models(tmp_path: Path) -> dict[str, str]:
++    env: dict[str, str] = {}
++    for hf_id in (QWEN, GEMMA31, GEMMA26):
++        _gguf, env = _write_cached_model(tmp_path, hf_id)
++    return env
++
++
+ def _raw_with_topk(text: str = " exp3013 live") -> dict[str, Any]:
+     return {
+         "choices": [
+@@ -118,9 +126,130 @@ def test_req_infer_sota_021_spec_anchor_exists() -> None:
+     assert "SCENARIO-INFER-SOTA-021-001" in spec
+     assert "SCENARIO-INFER-SOTA-021-002" in spec
+     assert "SCENARIO-INFER-SOTA-021-003" in spec
++    assert "SCENARIO-INFER-SOTA-021-004" in spec
+     assert exp.ARTIFACT_FILENAME in spec
+ 
+ 
++def test_scenario_021_004_cached_models_without_endpoint_are_partial_not_live(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFER-SOTA-021-004: cached GGUFs do not imply live endpoint readiness."""
++    env = _write_all_cached_models(tmp_path)
++
++    artifact = exp.build_preflight_artifact(
++        project_root=tmp_path,
++        selected_python=SELECTED_PYTHON,
++        env=env,
++        command_runner=_runner(),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [
++                {
++                    "endpoint": endpoints[0],
++                    "completion_probe": {
++                        "ready": False,
++                        "status": None,
++                        "detail": "connection refused",
++                    },
++                    "telemetry_probe": {
++                        "ready": False,
++                        "status": None,
++                        "detail": "skipped: completion probe failed",
++                    },
++                }
++            ],
++        },
++        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
++        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
++        monotonic=iter([10.0, 11.0]).__next__,
++    )
++
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
++    assert artifact["sota_models_ready"] is True
++    assert artifact["completion_endpoint_ready"] is False
++    assert artifact["logprob_endpoint_ready"] is False
++    assert artifact["top_logprob_or_confidence_ready"] is False
++    assert artifact["tool_first_verifier_ready"] is True
++    assert artifact["live_completion_invoked"] is False
++    assert artifact["inference_substrate"] != exp.LIVE_LLM_SUBSTRATE
++    assert artifact["flagged_adversarial"] is False
++    assert "endpoint_completion_unavailable" in artifact["skip_reasons"]
++    assert "live_completion_not_invoked" in artifact["skip_reasons"]
++    assert [row["hf_id"] for row in artifact["usable_sota_models"]] == [QWEN, GEMMA31, GEMMA26]
++    assert all(row["model_path"].endswith(".gguf") for row in artifact["usable_sota_models"])
++    assert artifact["model_specs"]["headline_models"] == [QWEN, GEMMA31, GEMMA26]
++    assert artifact["model_specs"]["resolved_models"]["flagship_moe"]["resolved_path"]
++    assert artifact["model_specs"]["resolved_models"]["flagship_dense"]["resolved_path"]
++    assert artifact["model_specs"]["resolved_models"]["middle_moe"]["resolved_path"]
++    assert artifact["model_specs"]["resolved_models"]["flagship_moe"]["resolved_path"].endswith(
++        ".gguf"
++    )
++
++
++def test_scenario_021_004_endpoint_completion_with_toplogprobs_is_ready(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFER-SOTA-021-004: live endpoint top-logprobs open the runtime path."""
++    env = _write_all_cached_models(tmp_path)
++
++    artifact = exp.build_preflight_artifact(
++        project_root=tmp_path,
++        selected_python=SELECTED_PYTHON,
++        env=env,
++        command_runner=_runner(),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": endpoints[0],
++            "completion_ready": True,
++            "top_logprob_ready": True,
++            "confidence_ready": False,
++            "telemetry_signal": "top_logprobs",
++            "duration_s": 65.0,
++            "probes": [
++                {
++                    "endpoint": endpoints[0],
++                    "completion_probe": {
++                        "ready": True,
++                        "status": 200,
++                        "detail": "completion returned non-empty content",
++                        "route": f"{endpoints[0]}/completion",
++                    },
++                    "telemetry_probe": {
++                        "ready": True,
++                        "status": 200,
++                        "detail": "top-logprob telemetry present",
++                        "signal": "top_logprobs",
++                        "route": f"{endpoints[0]}/completion",
++                    },
++                }
++            ],
++        },
++        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
++        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
++        monotonic=iter([1.0, 66.0]).__next__,
++    )
++
++    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_ready"
++    assert artifact["sota_headline_ready"] is True
++    assert artifact["sota_logprob_ready"] is True
++    assert artifact["completion_endpoint_ready"] is True
++    assert artifact["logprob_endpoint_ready"] is True
++    assert artifact["top_logprob_or_confidence_ready"] is True
++    assert artifact["live_completion_invoked"] is True
++    assert artifact["inference_substrate"] == exp.LIVE_LLM_SUBSTRATE
++    assert artifact["duration_s"] == pytest.approx(65.0)
++    assert artifact["endpoint_summary"]["duration_s"] == pytest.approx(65.0)
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["skip_reasons"] == []
++
++
+ def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
+     tmp_path: Path,
+ ) -> None:
+@@ -157,20 +286,33 @@ def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
+         selected_python=SELECTED_PYTHON,
+         env=env,
+         command_runner=command_runner,
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [],
++        },
+         prompt_runner_fn=prompt_runner,
+         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+         monotonic=iter([10.0, 12.75]).__next__,
+         tests_run=("focused-exp3013",),
++        direct_load_enabled=True,
+     )
+ 
+     assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
+     assert artifact["artifact"] == exp.ARTIFACT_NAME
+     assert artifact["sota_headline_ready"] is True
+     assert artifact["sota_logprob_ready"] is True
+-    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+     assert artifact["preconditions_checked"] is True
+     assert artifact["model_specs"]["experiment_id"] == 3013
+     assert artifact["model_specs"]["headline_models"] == [QWEN, GEMMA31, GEMMA26]
++    assert artifact["completion_endpoint_ready"] is False
++    assert artifact["live_completion_invoked"] is False
+     assert artifact["headline_models_available"] == [
+         {
+             "hf_id": QWEN,
+@@ -234,14 +376,25 @@ def test_scenario_021_002_transcript_without_telemetry_keeps_logprob_gate_false(
+         selected_python=SELECTED_PYTHON,
+         env=env,
+         command_runner=_runner(),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [],
++        },
+         prompt_runner_fn=prompt_runner,
+         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA31}],
+         monotonic=iter([1.0, 2.0]).__next__,
++        direct_load_enabled=True,
+     )
+ 
+     assert artifact["sota_headline_ready"] is True
+     assert artifact["sota_logprob_ready"] is False
+-    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+     assert artifact["telemetry_capabilities"]["overall"]["any_live_generation"] is True
+     assert artifact["telemetry_capabilities"]["overall"]["token_logprobs_exposed"] is False
+     assert artifact["telemetry_capabilities"]["overall"]["topk_logprobs_exposed"] is False
+@@ -265,6 +418,16 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
+         selected_python=SELECTED_PYTHON,
+         env={"HUGGINGFACE_HUB_CACHE": str(tmp_path / "empty-hf")},
+         command_runner=_runner(),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [],
++        },
+         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+         monotonic=iter([3.0, 3.4]).__next__,
+@@ -272,7 +435,7 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
+ 
+     assert artifact["sota_headline_ready"] is False
+     assert artifact["sota_logprob_ready"] is False
+-    assert artifact["honest_verdict"] == "blocked_sota_headline_model_unavailable"
++    assert artifact["honest_verdict"] == "blocked_gguf_logprob_preflight_no_ready_paths"
+     assert artifact["headline_models_available"] == []
+     assert artifact["live_transcript_paths"] == []
+     assert artifact["legacy_smoke_only_used"] is False
+@@ -286,9 +449,12 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
+     assert {row["cache_status"] for row in artifact["headline_models_attempted"]} == {"missing"}
+     assert artifact["inference_substrate"] == "blocked_no_headline_cache"
+     assert artifact["telemetry_capabilities"]["overall"]["any_live_generation"] is False
++    assert artifact["live_completion_invoked"] is False
+ 
+ 
+-def test_req_021_runtime_precondition_failure_skips_large_load(tmp_path: Path) -> None:
++def test_req_021_runtime_precondition_failure_skips_large_load_when_direct_enabled(
++    tmp_path: Path,
++) -> None:
+     """REQ-INFER-SOTA-021: failed runtime preconditions are recorded before load."""
+     _gguf, env = _write_cached_model(tmp_path, GEMMA26)
+ 
+@@ -297,18 +463,30 @@ def test_req_021_runtime_precondition_failure_skips_large_load(tmp_path: Path) -
+         selected_python=SELECTED_PYTHON,
+         env=env,
+         command_runner=_runner(llama_gpu=False),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [],
++        },
+         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA26}],
+         monotonic=iter([7.0, 8.0]).__next__,
++        direct_load_enabled=True,
+     )
+ 
+     gemma_attempt = next(row for row in artifact["headline_models_attempted"] if row["hf_id"] == GEMMA26)
+-    assert artifact["honest_verdict"] == "blocked_sota_headline_model_unavailable"
++    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+     assert gemma_attempt["cache_status"] == "resolved"
+     assert gemma_attempt["load_status"] == "not_attempted_runtime_precondition_failed"
+     assert gemma_attempt["generation_status"] == "not_attempted"
+     assert artifact["precondition_evidence"]["llama_cpp"]["llama_cpp_supports_gpu_offload"] is False
+     assert artifact["telemetry_capabilities"]["blockers"] == ["no_live_headline_generation"]
++    assert artifact["live_completion_invoked"] is False
+ 
+ 
+ def test_req_021_helpers_prompt_parser_writer_and_cli(
+@@ -418,6 +596,16 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
+         selected_python=SELECTED_PYTHON,
+         env=env,
+         command_runner=_runner(),
++        endpoint_probe_fn=lambda endpoints, timeout_s: {
++            "candidate_endpoints": list(endpoints),
++            "selected_endpoint": None,
++            "completion_ready": False,
++            "top_logprob_ready": False,
++            "confidence_ready": False,
++            "telemetry_signal": None,
++            "duration_s": timeout_s,
++            "probes": [],
++        },
+         prompt_runner_fn=lambda model, **_: {
+             "attempted": True,
+             "load_status": "loaded",
+@@ -437,6 +625,7 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
+         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+         monotonic=iter([1.0, 1.2]).__next__,
+         tests_run=("coverage",),
++        direct_load_enabled=True,
+     )
+     assert json.loads(output.read_text(encoding="utf-8")) == artifact
+     assert artifact["artifact"] == exp.ARTIFACT_NAME
+-- 
+2.55.0
+

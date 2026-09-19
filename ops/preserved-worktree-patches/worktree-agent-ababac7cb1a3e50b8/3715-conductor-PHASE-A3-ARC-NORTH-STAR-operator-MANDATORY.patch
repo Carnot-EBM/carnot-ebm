@@ -1,0 +1,1997 @@
+From b4ef6c086dcae1ab158e7d44a8566c9fa3ee9549 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 21:32:47 -0400
+Subject: [PATCH 03715/11362] [conductor] PHASE A3 (ARC NORTH STAR; operator
+ MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+ standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on
+ a CLEAN game NOT deepened in .424-.428 (PREFER a first-contact L1->L2 of
+ bp35/re86/sb26/vc33 [clean unsolved/shallow public games]; alternatives
+ r11l/g50t/lf52/s5i5 L1->L2 or m0r0/cn04 L2->L3; SKIP ft09 [just deepened
+ .428], ls20 [.427], sk48 [failed .426], dc22 [failed .425], ka59 [hidden
+ StepCounter], wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded
+ delta]) AND train+checkpoint the learned verifier on pos/neg traces. Gate:
+ offline_reproduced new level -> reproducible_total_levels 57 -> 58+.
+ verifier_is_oracle:false.
+
+Automated research step by research conductor.
+Task ID: exp4654-a3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ models/arc_verifier_vc33.json                 |  20 +-
+ .../arc-world-model-trust-energy/spec.md      |  56 +++
+ ops/arc_solve_registry.yaml                   |  84 ++--
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    | 107 ++++
+ .../experiment_4654_levelup_selfplay.py       | 458 ++++++++++++++++++
+ results/arc_loop_solve_cn04.json              | 102 +++-
+ results/arc_loop_solve_m0r0.json              | 118 ++++-
+ results/arc_loop_solve_vc33.json              | 315 +++++++++++-
+ results/experiment_4654_levelup_selfplay.json | 130 +++++
+ .../test_experiment_4654_levelup_selfplay.py  | 406 ++++++++++++++++
+ 11 files changed, 1732 insertions(+), 66 deletions(-)
+ create mode 100644 python/carnot/experiment_4654_levelup_selfplay.py
+ create mode 100644 results/experiment_4654_levelup_selfplay.json
+ create mode 100644 tests/python/test_experiment_4654_levelup_selfplay.py
+
+diff --git a/models/arc_verifier_vc33.json b/models/arc_verifier_vc33.json
+index f8fe700b4b..4636dda027 100644
+--- a/models/arc_verifier_vc33.json
++++ b/models/arc_verifier_vc33.json
+@@ -2,19 +2,17 @@
+   "schema": "carnot_arc_learned_verifier_v1",
+   "kind": "linear_value_head",
+   "weights": [
+-    0.050000000000000176,
+-    -5.882960906740296e-05,
+-    -0.03442372553430352,
+-    -8.40422986677332e-06
+-  ],
+-  "feature_names": [
+-    "nonzero",
+-    "colors",
+-    "cells"
++    0.10816531301107517,
++    2.040286905289762,
++    0.2988087537062467,
++    -0.2722222222222214,
++    0.6004088537901084,
++    0.04123906384204789
+   ],
++  "feature_names": "adapter_featurize",
+   "trained_games": [
+     "vc33"
+   ],
+-  "n_samples": 3,
+-  "provenance": "graph_explore first-solve vc33->L1"
++  "n_samples": 10,
++  "provenance": "arc_loop_solve vc33->L2"
+ }
+\ No newline at end of file
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 7b7713d9ac..58b2237d39 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -2655,6 +2655,62 @@ writes the required principle-annotated artifact with an explicit fallback excep
+ and reports `verifier_is_oracle=false` with
+ `solve_provenance=development_proxy`.
+ 
++### REQ-ARC-WMTE-4654: Rotated Clean Level-Up Self-Play Bank
++
++Experiment 4654 SHALL satisfy the ARC sprint level-up attempt guarantee by
++running the standing ARC self-play loop on a rotation target that was not
++deepened in attempts `.424` through `.428`, accepting a bank only when
++`arc_solver_kit.reproduce()` offline-reproduces a level above the target game's
++current `ops/arc_solve_registry.yaml` row and the run persists a learned-verifier
++checkpoint. The workflow SHALL verify `arc_solver_kit.offline_arcade()` before
++the solve, inspect registry dead-end evidence, skip `ft09`, `ls20`, `sk48`,
++`dc22`, `ka59`, `wa30`, and the no-grounded-L3-delta rows `cd82`, `sp80`, and
++`su15`, and record why the preferred hard L1 targets `bp35`, `re86`, and `sb26`
++were skipped for this milestone.
++
++For the clean bank, `vc33` L2 SHALL extend the support-clearance config adapter
++from the offline environment state. After the reproduced L1 prefix
++`lower_click * 3`, the adapter SHALL click the L2 support controls at display
++coordinate `(1,25)` twice and `(1,45)` five times, using the level camera
++display-to-grid transform, and SHALL replay the full path through
++`scripts/arc_loop_solve.py --game vc33 --target-level 2`. The standing loop
++SHALL run the reproduction gate and checkpoint `models/arc_verifier_vc33.json`
++from the positive steps-to-go trace plus the recorded off-path/dead-end evidence.
++
++Experiment 4654 SHALL write
++`results/experiment_4654_levelup_selfplay.json` with bare top-level fields for
++`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
++`solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`,
++`verifier_checkpoint_updated`, `registry_updated`, `random_seed`,
++`reproducibility_checksum`, and `preconditions_checked`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
++- `verifier_is_oracle`: principle "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
++- `solve_provenance`: principle "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
++- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
++- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
++- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30)."
++- `verifier_checkpoint_updated`: principle "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
++- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
++#### SCENARIO-ARC-WMTE-4654
++
++**Given** the offline ARC environment is importable, the registry records `vc33`
++as reproduced through L1, the preferred hard L1 targets lack a grounded
++next-level adapter for this milestone, and prohibited recent/dead-end targets
++remain skipped
++**When** experiment 4654 runs the standing loop on `vc33` with target level 2
++**Then** the loop reaches L2 through offline reproduction, updates
++`models/arc_verifier_vc33.json`, records the registry bank from total 57 to 58,
++writes the required principle-annotated artifact without using an oracle verifier,
++and reports `solve_provenance=development_proxy`.
++
+ #### SCENARIO-ARC-WMTE-4616-BLOCKED-PRECONDITION
+ 
+ **Given** the offline arcade or value-learner imports are unavailable
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 81b41d3390..b8e10e0174 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -1064,49 +1064,49 @@ games:
+       the current registry depth.
+ - game: vc33
+   reproducibility: reproduced
+-  levels_reproduced: 1
+-  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes
+-    first contact through a generic config-rule verifier.
+-  gotchas: []
+-  dead_ends:
+-  - gap_id: GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
+-    status: filled
+-    game: vc33
+-    failure_mode: needs_per_game_RE
+-    missing_discriminator: selectable verifier that distinguishes the target's winning
+-      delta from the explored non-winning states
+-    candidate_design: derive a selectable verifier from the routed solved-game delta
+-    routed_recipe:
+-      game: s5i5
+-      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
+-        + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
+-        it through arc_solver_kit.reproduce.
+-      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged
+-        0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi.
+-        L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].'
+-      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
+-        controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
+-        marker y by +3.
+-    loop_result_summary:
+-      offline_reproduced: false
+-      reproduced_levels: 0
+-      mode: standing_arc_loop_routing_only
+-    filled_by: experiment_4446_drive_generic_first_contact_bank
+-    filled_artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+-    filled_summary: config_rule_verifier support-clearance digest reproduced vc33
+-      L1 offline
++  levels_reproduced: 2
+   mechanic_class: config_support_clearance
+-  win_condition: 'L1 support-clearance config: lower click control shifts the paired
+-    supports until the active piece clears the blocking goal color; next_level fires
+-    on replay.'
+-  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated
+-    3 times.
+-  reproduce: arc_solver_kit.reproduce(vc33, ['lower_click']*3, apply_vc33_label, claimed_level=1)
+-  latest_exp4446_reproduce:
+-    artifact: results/experiment_4446_drive_generic_first_contact_bank.json
++  win_condition: >-
++    L1+L2 support-clearance config: controlled support clicks shift paired wall
++    segments until the active colored piece no longer has a blocking wall aligned
++    with its target-color sprite; the executable ielczunthe predicate then fires
++    next_level on replay.
++  action_model: >-
++    ACTION6 click-only on display coordinates derived from the camera transform.
++    L1 clicks lower_click (61,33) three times. L2 clicks the support controls at
++    (1,25) twice and (1,45) five times.
++  solver: >-
++    GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py +
++    scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2
++    gate.
++  reproduce: >-
++    Exp4654 results/experiment_4654_levelup_selfplay.json re-gated
++    results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2,
++    banked +1 over the current L1 registry row, checksum 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436.
++  learned_verifier_checkpoint: models/arc_verifier_vc33.json trained by scripts/arc_loop_solve.py
++    on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred
++    target dead-end notes.
++  gotchas:
++  - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls
++    at display y=25 and y=45 map to grid y=12 and y=22.
++  - The L2 delta is not symmetric with L1: only the middle-lower support twice
++    and the bottom support five times reaches the support-clearance predicate.
++  - The learned verifier is a routing/checkpoint artifact only; the executable
++    reproduction gate remains the oracle-distinct authority.
++  dead_ends:
++  - bp35, re86, and sb26 remain preferred hard targets but have no grounded
++    next-level adapter in this milestone.
++  - m0r0 and cn04 standing-loop L3 probes repeated their prior L2 gates.
++  - ft09, ls20, sk48, dc22, ka59, wa30, cd82, sp80, and su15 are skipped by the
++    operator's rotation exclusions or no-grounded-L3-delta rule.
++  latest_exp4654_levelup_selfplay:
++    artifact: results/experiment_4654_levelup_selfplay.json
++    loop_artifact: results/arc_loop_solve_vc33.json
+     offline_reproduced: true
+-    reproduced_levels: 1
+-    reproducibility_checksum: 9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361
++    reproduced_levels: 2
++    new_levels_banked: 1
++    verifier_checkpoint: models/arc_verifier_vc33.json
++    reproducibility_checksum: 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436
+ - game: g50t
+   reproducibility: reproduced
+   levels_reproduced: 1
+@@ -1288,7 +1288,7 @@ games:
+     reproduced_levels: 1
+     operator: bp35_goal_directed_navigation_solver
+     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
+-reproducible_total_levels: 57
++reproducible_total_levels: 58
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b1ab6e905d..db0d93ae54 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 185,
+   "code_violations": 0,
+-  "experiments_checked": 3670,
++  "experiments_checked": 3671,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index bab2deb5ae..4a341ce019 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -299,6 +299,22 @@ FT09_L3_TAIL_LABELS: tuple[str, ...] = (
+ 
+ FT09_L3_SOLUTION_LABELS: tuple[str, ...] = FT09_L2_SOLUTION_LABELS + FT09_L3_TAIL_LABELS
+ 
++VC33_L1_LABELS: tuple[str, ...] = tuple(
++    _json_action_label(6, {"x": 61, "y": 33}) for _ in range(3)
++)
++
++VC33_L2_TAIL_LABELS: tuple[str, ...] = (
++    _json_action_label(6, {"x": 1, "y": 25}),
++    _json_action_label(6, {"x": 1, "y": 25}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++)
++
++VC33_L2_SOLUTION_LABELS: tuple[str, ...] = VC33_L1_LABELS + VC33_L2_TAIL_LABELS
++
+ SK48_L1_LABELS: tuple[str, ...] = tuple(
+     _json_action_label(action) for action in (1, 1, 1, 4, 4, 4, 4, 3, 2, 2, 4, 3, 1, 4)
+ )
+@@ -1389,6 +1405,96 @@ def _ft09():
+     )
+ 
+ 
++def _vc33():
++    """vc33 -- support-clearance config puzzle, deepened from L1 to L2."""
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    def action_labels(env, frame=None, path=None):
++        del env
++        level = kit.frame_level(frame) if frame is not None else 0
++        extension_index = len(path or ())
++        if level == 0 and extension_index < len(VC33_L1_LABELS):
++            return [VC33_L1_LABELS[extension_index]]
++        if level == 1 and extension_index < len(VC33_L2_TAIL_LABELS):
++            return [VC33_L2_TAIL_LABELS[extension_index]]
++        return []
++
++    def apply(env, label, frame):
++        del frame
++        row = json.loads(label)
++        data = row.get("data") if isinstance(row.get("data"), dict) else None
++        return env.step(_game_action(GameAction, int(row["action"])), data=data)
++
++    def _sprite_rows(game, tag):
++        try:
++            sprites = game.current_level.get_sprites_by_tag(tag)
++        except Exception:
++            return ()
++        rows = []
++        for sprite in sprites:
++            rows.append(
++                (
++                    str(getattr(sprite, "name", "")),
++                    int(getattr(sprite, "x", 0)),
++                    int(getattr(sprite, "y", 0)),
++                    int(getattr(sprite, "width", 0)),
++                    int(getattr(sprite, "height", 0)),
++                    _sprite_color(sprite),
++                )
++            )
++        return tuple(sorted(rows))
++
++    def _support_distance(game):
++        # `ielczunthe` is the executable support-clearance predicate. The wall
++        # width residual gives the learned verifier a smooth route before it flips.
++        try:
++            if bool(game.ielczunthe()):
++                return 0.0
++        except Exception:
++            pass
++        walls = _sprite_rows(game, "0043nzrtobajqi")
++        width_residual = sum(max(0, int(row[3]) - 2) for row in walls)
++        return float(max(1, width_residual))
++
++    def state_key(game, frame=None):
++        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0))
++        return (
++            int(level),
++            _frame_grid_state_key(frame),
++            _sprite_rows(game, "0022jvmlspyigc"),
++            _sprite_rows(game, "0043nzrtobajqi"),
++            _sprite_rows(game, "0016uciqlhjlom"),
++            _sprite_rows(game, "0010gnulkywfpz"),
++        )
++
++    def featurize(game):
++        supports = _sprite_rows(game, "0022jvmlspyigc")
++        walls = _sprite_rows(game, "0043nzrtobajqi")
++        support_sum = sum(row[1] + row[2] for row in supports)
++        wall_area = sum(row[3] * row[4] for row in walls)
++        return [
++            float(getattr(game, "level_index", 0) or 0),
++            _support_distance(game),
++            float(len(supports)),
++            float(wall_area),
++            float(support_sum),
++        ]
++
++    return GameAdapter(
++        game="vc33",
++        action_labels=action_labels,
++        apply=apply,
++        state_key=state_key,
++        featurize=featurize,
++        hand_verifier=lambda game, _frame=None: _support_distance(game),
++        warmup_label=None,
++        depth_caps={1: len(VC33_L1_LABELS), 2: len(VC33_L2_TAIL_LABELS), 3: 2},
++        level_tails={1: VC33_L1_LABELS, 2: VC33_L2_TAIL_LABELS},
++        branch_mode="replay",
++    )
++
++
+ def _ls20():
+     """ls20 -- clean navigation plus visible shape/color/rotation target matching.
+ 
+@@ -1656,6 +1762,7 @@ _BUILDERS = {
+     "dc22": _dc22,
+     "cd82": _cd82,
+     "m0r0": _m0r0,
++    "vc33": _vc33,
+ }
+ 
+ 
+diff --git a/python/carnot/experiment_4654_levelup_selfplay.py b/python/carnot/experiment_4654_levelup_selfplay.py
+new file mode 100644
+index 0000000000..575ee94fb8
+--- /dev/null
++++ b/python/carnot/experiment_4654_levelup_selfplay.py
+@@ -0,0 +1,458 @@
++"""Experiment 4654: bank vc33 L2 through the standing ARC self-play loop.
++
++Spec refs: REQ-ARC-WMTE-4654, SCENARIO-ARC-WMTE-4654.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import re
++import subprocess
++import sys
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULTS = REPO / "results"
++MODELS = REPO / "models"
++REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
++ARTIFACT = RESULTS / "experiment_4654_levelup_selfplay.json"
++
++EXPERIMENT = "experiment_4654_levelup_selfplay"
++RESULT_RELATIVE_PATH = "results/experiment_4654_levelup_selfplay.json"
++LOOP_RESULT_RELATIVE_PATH = "results/arc_loop_solve_vc33.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++CHECKPOINT_RELATIVE_PATH = "models/arc_verifier_vc33.json"
++RANDOM_SEED = 4654
++SPEC_REFS = ["REQ-ARC-WMTE-4654", "SCENARIO-ARC-WMTE-4654"]
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++SOLVE_PROVENANCE = "development_proxy"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
++    "verifier_is_oracle": "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check.",
++    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
++    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
++    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
++    "target_game": "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30).",
++    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone).",
++    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++
++
++def _json_action_label(action: int, data: dict[str, int] | None = None) -> str:
++    payload: dict[str, Any] = {"action": int(action)}
++    if data is not None:
++        payload["data"] = {str(key): int(value) for key, value in data.items()}
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"))
++
++
++VC33_L1_LABELS: tuple[str, ...] = tuple(
++    _json_action_label(6, {"x": 61, "y": 33}) for _ in range(3)
++)
++VC33_L2_TAIL_LABELS: tuple[str, ...] = (
++    _json_action_label(6, {"x": 1, "y": 25}),
++    _json_action_label(6, {"x": 1, "y": 25}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++    _json_action_label(6, {"x": 1, "y": 45}),
++)
++VC33_L2_SOLUTION_LABELS: tuple[str, ...] = VC33_L1_LABELS + VC33_L2_TAIL_LABELS
++
++PREFERRED_DEAD_ENDS = (
++    ("bp35", "no_grounded_next_level_adapter"),
++    ("re86", "no_grounded_next_level_adapter"),
++    ("sb26", "no_grounded_next_level_adapter"),
++    ("m0r0", "standing_loop_repeated_prior_L2"),
++    ("cn04", "standing_loop_repeated_prior_L2"),
++)
++PROHIBITED_TARGETS = (
++    "ft09",
++    "ls20",
++    "sk48",
++    "dc22",
++    "ka59",
++    "wa30",
++    "cd82",
++    "sp80",
++    "su15",
++)
++
++
++def sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _registry_data(registry_path: Path = REGISTRY) -> dict[str, Any]:
++    return yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
++
++
++def _game_entry(registry: dict[str, Any], game: str) -> dict[str, Any]:
++    for entry in registry.get("games", []):
++        if entry.get("game") == game:
++            return entry
++    return {}
++
++
++def registry_level(game: str, registry_path: Path = REGISTRY) -> int:
++    entry = _game_entry(_registry_data(registry_path), game)
++    try:
++        return int(entry.get("levels_reproduced") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def registry_total_levels(registry_path: Path = REGISTRY) -> int:
++    try:
++        return int(_registry_data(registry_path).get("reproducible_total_levels") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def select_target(registry_path: Path = REGISTRY) -> tuple[str, dict[str, Any]]:
++    registry = _registry_data(registry_path)
++    vc33_level = registry_level("vc33", registry_path=registry_path)
++    if vc33_level != 1:
++        raise RuntimeError("vc33 target requires a reproduced L1 registry row")
++    skipped = [{"game": game, "reason": reason} for game, reason in PREFERRED_DEAD_ENDS]
++    return "vc33", {
++        "preferred_targets": ["bp35", "re86", "sb26", "vc33"],
++        "prohibited_targets": list(PROHIBITED_TARGETS),
++        "selected": "vc33",
++        "fallback_exception": False,
++        "selection_reason": (
++            "vc33 is an allowed clean L1 target with a grounded next-level "
++            "support-clearance delta; bp35/re86/sb26 have no grounded L2 adapter yet"
++        ),
++        "skipped": skipped,
++        "rotation_rule": "skip_ft09_ls20_sk48_dc22_ka59_wa30_and_no_grounded_L3_rows",
++        "registry_level_before": vc33_level,
++        "registry_game_count": len(registry.get("games", [])),
++    }
++
++
++def run_standing_loop(game: str, target_level: int) -> dict[str, Any]:
++    cmd = [
++        sys.executable,
++        "scripts/arc_loop_solve.py",
++        "--game",
++        game,
++        "--target-level",
++        str(target_level),
++        "--no-hazard-prune",
++    ]
++    proc = subprocess.run(
++        cmd,
++        cwd=REPO,
++        check=False,
++        text=True,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.STDOUT,
++    )
++    if proc.returncode != 0:
++        raise RuntimeError(proc.stdout)
++    result_path = RESULTS / f"arc_loop_solve_{game}.json"
++    out = json.loads(result_path.read_text(encoding="utf-8"))
++    out["_standing_loop_stdout"] = proc.stdout
++    return out
++
++
++def _stable_checksum(payload: dict[str, Any]) -> str:
++    checksum_payload = {
++        "target_game": payload.get("target_game"),
++        "prior_level": payload.get("prior_reproduced_level"),
++        "offline_reproduced": payload.get("offline_reproduced"),
++        "reproduced_levels": payload.get("reproduced_levels"),
++        "reproduction_gate": payload.get("reproduction_gate"),
++        "solution_labels": payload.get("solution_labels"),
++        "verifier_delta": payload.get("verifier_delta"),
++        "target_selection": payload.get("target_selection"),
++    }
++    raw = json.dumps(
++        checksum_payload,
++        sort_keys=True,
++        separators=(",", ":"),
++        default=str,
++    ).encode()
++    return hashlib.sha256(raw).hexdigest()
++
++
++def artifact_schema_errors(payload: dict[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in FIELD_PRINCIPLES:
++        if field not in payload:
++            errors.append(f"missing_field:{field}")
++        if FIELD_PRINCIPLES[field] != payload.get("field_principles", {}).get(field):
++            errors.append(f"missing_principle:{field}")
++    if not str(payload.get("honest_verdict", "")).startswith(("success:", "complete:")):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if payload.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++    if payload.get("solve_provenance") != SOLVE_PROVENANCE:
++        errors.append("solve_provenance_must_be_development_proxy")
++    if payload.get("offline_reproduced") and int(payload.get("reproduced_levels") or 0) < 1:
++        errors.append("offline_reproduced_without_new_level")
++    if payload.get("offline_reproduced") and not payload.get("registry_updated"):
++        errors.append("offline_reproduced_without_registry_update")
++    checksum = payload.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        errors.append("invalid_reproducibility_checksum")
++    return errors
++
++
++def build_artifact(
++    loop_result: dict[str, Any],
++    *,
++    prior_level: int,
++    prior_total_levels: int,
++    registry_updated: bool,
++    checkpoint_before_sha: str | None,
++    checkpoint_after_sha: str | None,
++    dead_ends_recorded: list[str],
++    preconditions_checked: list[str],
++    target_selection: dict[str, Any],
++) -> dict[str, Any]:
++    game = str(loop_result.get("game") or "")
++    gate = dict(loop_result.get("reproduction_gate") or {})
++    reached_level = int(gate.get("reached_level") or loop_result.get("reached_level") or 0)
++    gate_reproduced = bool(gate.get("reproduced", loop_result.get("offline_reproduced")))
++    checkpoint_path = loop_result.get("learned_verifier_checkpoint")
++    checkpoint_updated = bool(checkpoint_path and checkpoint_after_sha)
++    new_levels = max(0, reached_level - int(prior_level))
++    success = bool(gate_reproduced and new_levels >= 1 and checkpoint_updated and registry_updated)
++    verdict = (
++        f"success: {game}_L{reached_level}_offline_reproduced"
++        if success
++        else f"complete: {game}_delta_identified_no_bank"
++    )
++    artifact: dict[str, Any] = {
++        "experiment": EXPERIMENT,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "solve_provenance": loop_result.get("solve_provenance") or SOLVE_PROVENANCE,
++        "offline_reproduced": bool(success),
++        "reproduced_levels": int(new_levels if success else 0),
++        "target_game": game,
++        "verifier_checkpoint_updated": checkpoint_updated,
++        "registry_updated": bool(registry_updated),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "preconditions_checked": list(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "standing_loop_result_path": f"results/arc_loop_solve_{game}.json",
++        "reproduction_gate": gate,
++        "solution_labels": list(loop_result.get("solution_labels") or []),
++        "dead_ends_recorded": list(dead_ends_recorded),
++        "target_selection": dict(target_selection),
++        "prior_reproduced_level": int(prior_level),
++        "reached_level": reached_level,
++        "reproducible_total_levels_before": int(prior_total_levels),
++        "reproducible_total_levels_after": int(prior_total_levels + (new_levels if success else 0)),
++        "verifier_delta": {
++            "checkpoint_path": checkpoint_path,
++            "before_sha256": checkpoint_before_sha,
++            "after_sha256": checkpoint_after_sha,
++            "updated": checkpoint_updated,
++            "sha_changed": bool(
++                checkpoint_after_sha and checkpoint_after_sha != checkpoint_before_sha
++            ),
++            "positive_trace_steps": len(loop_result.get("solution_labels") or []),
++            "negative_trace_notes": list(dead_ends_recorded),
++        },
++        "states_expanded": loop_result.get("states_expanded"),
++    }
++    artifact["reproducibility_checksum"] = _stable_checksum(artifact)
++    artifact["schema_errors"] = artifact_schema_errors(artifact)
++    return artifact
++
++
++def _replace_game_block(text: str, game: str, replacement: str) -> str:
++    marker = f"- game: {game}"
++    start = text.index(marker)
++    candidates = [
++        index
++        for index in (
++            text.find("\n- game: ", start + len(marker)),
++            text.find("\nreproducible_total_levels:", start + len(marker)),
++        )
++        if index != -1
++    ]
++    end = min(candidates) if candidates else len(text)
++    return f"{text[:start]}{replacement}{text[end:]}"
++
++
++def _vc33_registry_block(checksum: str, checkpoint_path: str) -> str:
++    return f"""- game: vc33
++  reproducibility: reproduced
++  levels_reproduced: 2
++  mechanic_class: config_support_clearance
++  win_condition: >-
++    L1+L2 support-clearance config: controlled support clicks shift paired wall
++    segments until the active colored piece no longer has a blocking wall aligned
++    with its target-color sprite; the executable ielczunthe predicate then fires
++    next_level on replay.
++  action_model: >-
++    ACTION6 click-only on display coordinates derived from the camera transform.
++    L1 clicks lower_click (61,33) three times. L2 clicks the support controls at
++    (1,25) twice and (1,45) five times.
++  solver: >-
++    GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py +
++    scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2
++    gate.
++  reproduce: >-
++    Exp4654 results/experiment_4654_levelup_selfplay.json re-gated
++    results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2,
++    banked +1 over the current L1 registry row, checksum {checksum}.
++  learned_verifier_checkpoint: {checkpoint_path} trained by scripts/arc_loop_solve.py
++    on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred
++    target dead-end notes.
++  gotchas:
++  - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls
++    at display y=25 and y=45 map to grid y=12 and y=22.
++  - The L2 delta is not symmetric with L1: only the middle-lower support twice
++    and the bottom support five times reaches the support-clearance predicate.
++  - The learned verifier is a routing/checkpoint artifact only; the executable
++    reproduction gate remains the oracle-distinct authority.
++  dead_ends:
++  - bp35, re86, and sb26 remain preferred hard targets but have no grounded
++    next-level adapter in this milestone.
++  - m0r0 and cn04 standing-loop L3 probes repeated their prior L2 gates.
++  - ft09, ls20, sk48, dc22, ka59, wa30, cd82, sp80, and su15 are skipped by the
++    operator's rotation exclusions or no-grounded-L3-delta rule.
++  latest_exp4654_levelup_selfplay:
++    artifact: results/experiment_4654_levelup_selfplay.json
++    loop_artifact: results/arc_loop_solve_vc33.json
++    offline_reproduced: true
++    reproduced_levels: 2
++    new_levels_banked: 1
++    verifier_checkpoint: {checkpoint_path}
++    reproducibility_checksum: {checksum}"""
++
++
++def update_registry_for_success(
++    artifact: dict[str, Any],
++    registry_path: Path = REGISTRY,
++) -> bool:
++    game = artifact["target_game"]
++    checkpoint = artifact["verifier_delta"]["checkpoint_path"]
++    checksum = artifact["reproducibility_checksum"]
++    text = registry_path.read_text(encoding="utf-8")
++    old_text = text
++    text = _replace_game_block(text, game, _vc33_registry_block(checksum, checkpoint))
++    before_total = int(artifact["reproducible_total_levels_before"])
++    after_total = int(artifact["reproducible_total_levels_after"])
++    text = re.sub(
++        rf"(?m)^(reproducible_total_levels:\s*){before_total}\s*$",
++        rf"\g<1>{after_total}",
++        text,
++        count=1,
++    )
++    if text != old_text:
++        registry_path.write_text(text, encoding="utf-8")
++    return text != old_text
++
++
++def _write_artifact(payload: dict[str, Any], path: Path = ARTIFACT) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--game")
++    args = parser.parse_args(argv)
++
++    preconditions_checked = ["arc_solver_kit.offline_arcade()"]
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    if args.game:
++        game = args.game
++        target_selection = {"selected": game, "override": True}
++    else:
++        game, target_selection = select_target()
++
++    prior_level = registry_level(game)
++    prior_total = registry_total_levels()
++    checkpoint = MODELS / f"arc_verifier_{game}.json"
++    before_sha = sha256_file(checkpoint)
++    loop = run_standing_loop(game, prior_level + 1)
++    after_sha = sha256_file(checkpoint)
++    gate = dict(loop.get("reproduction_gate") or {})
++    reached_level = int(gate.get("reached_level") or loop.get("reached_level") or 0)
++    dead_ends = [
++        f"{item['game']}: {item['reason']}" for item in target_selection.get("skipped", [])
++    ]
++    if reached_level <= prior_level:
++        dead_ends.append(
++            f"{game} standing loop reached L{reached_level}, not beyond prior L{prior_level}"
++        )
++
++    success_ready = bool(
++        loop.get("offline_reproduced")
++        and gate.get("reproduced", True)
++        and reached_level > prior_level
++        and loop.get("learned_verifier_checkpoint")
++        and after_sha
++    )
++    draft = build_artifact(
++        loop,
++        prior_level=prior_level,
++        prior_total_levels=prior_total,
++        registry_updated=success_ready,
++        checkpoint_before_sha=before_sha,
++        checkpoint_after_sha=after_sha,
++        dead_ends_recorded=dead_ends,
++        preconditions_checked=preconditions_checked,
++        target_selection=target_selection,
++    )
++    _write_artifact(draft)
++    registry_updated = update_registry_for_success(draft) if success_ready else False
++    artifact = build_artifact(
++        loop,
++        prior_level=prior_level,
++        prior_total_levels=prior_total,
++        registry_updated=registry_updated,
++        checkpoint_before_sha=before_sha,
++        checkpoint_after_sha=after_sha,
++        dead_ends_recorded=dead_ends,
++        preconditions_checked=preconditions_checked,
++        target_selection=target_selection,
++    )
++    _write_artifact(artifact)
++    print(
++        json.dumps(
++            {
++                key: artifact[key]
++                for key in (
++                    "honest_verdict",
++                    "target_game",
++                    "offline_reproduced",
++                    "reproduced_levels",
++                    "verifier_checkpoint_updated",
++                    "registry_updated",
++                )
++            },
++            indent=2,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the experiment command.
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_cn04.json b/results/arc_loop_solve_cn04.json
+index 4266176d91..f5b3fc95a8 100644
+--- a/results/arc_loop_solve_cn04.json
++++ b/results/arc_loop_solve_cn04.json
+@@ -3,11 +3,44 @@
+   "reached_level": 2,
+   "moves": 43,
+   "states_expanded": 43,
+-  "verifier_src": "hand_verifier_cold_start",
++  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
++  "hazard_prune": false,
++  "hazard_pruner_stats": null,
+   "offline_reproduced": true,
+   "reproduced_levels": 2,
+   "learned_verifier_checkpoint": null,
+   "selected_generic_operators": [
++    {
++      "operator": "approach_dispatcher_operator",
++      "derived_from_games": [
++        "exp4592_generation_completeness_wiring"
++      ],
++      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
++      "selector_tags": [
++        "approach_dispatch",
++        "mechanic_router",
++        "candidate_generation",
++        "graph_explore",
++        "goal_distance",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "value_head_bridge_fix_operator",
++      "derived_from_games": [
++        "exp4616_offline_live_bridge_disambiguation"
++      ],
++      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
++      "selector_tags": [
++        "value_head",
++        "bridge_fix",
++        "decision_point",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "per_level_reinduction_operator",
+       "derived_from_games": [
+@@ -43,6 +76,22 @@
+         "transfer"
+       ]
+     },
++    {
++      "operator": "env_adaptive_resolve_operator",
++      "derived_from_games": [
++        "sc25",
++        "exp4580_live_submission_gap_close"
++      ],
++      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
++      "selector_tags": [
++        "env_adaptive",
++        "coordinate_discovery",
++        "drift_recovery",
++        "replay",
++        "click",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "verifier_router_candidate_ranking_operator",
+       "derived_from_games": [
+@@ -59,6 +108,57 @@
+         "transfer"
+       ]
+     },
++    {
++      "operator": "world_model_trust_energy_gate_operator",
++      "derived_from_games": [
++        "exp4604_world_model_trust_energy"
++      ],
++      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
++      "selector_tags": [
++        "world_model",
++        "trust_energy",
++        "hidden_state",
++        "candidate_ranking",
++        "verifier",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "persistent_action_effect_memory_operator",
++      "derived_from_games": [
++        "exp4568_clickability_action_effect_predictor",
++        "exp4629_graduate_action_effect_predictor_live"
++      ],
++      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
++      "selector_tags": [
++        "action_effect",
++        "clickability",
++        "frame_change",
++        "live_action_pruner",
++        "persistent_aem_plus_optional_cnn",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
++      "selector_tags": [
++        "goal_energy",
++        "graded_goal_satisfaction",
++        "search_heuristic",
++        "graph_explore",
++        "candidate_ranking",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "object_centric_digest",
+       "derived_from_games": [
+diff --git a/results/arc_loop_solve_m0r0.json b/results/arc_loop_solve_m0r0.json
+index 9c68ff8004..b4ca6c2a9a 100644
+--- a/results/arc_loop_solve_m0r0.json
++++ b/results/arc_loop_solve_m0r0.json
+@@ -3,11 +3,44 @@
+   "reached_level": 2,
+   "moves": 38,
+   "states_expanded": 1802,
+-  "verifier_src": "hand_verifier_cold_start",
++  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
++  "hazard_prune": false,
++  "hazard_pruner_stats": null,
+   "offline_reproduced": true,
+   "reproduced_levels": 2,
+   "learned_verifier_checkpoint": null,
+   "selected_generic_operators": [
++    {
++      "operator": "approach_dispatcher_operator",
++      "derived_from_games": [
++        "exp4592_generation_completeness_wiring"
++      ],
++      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
++      "selector_tags": [
++        "approach_dispatch",
++        "mechanic_router",
++        "candidate_generation",
++        "graph_explore",
++        "goal_distance",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "value_head_bridge_fix_operator",
++      "derived_from_games": [
++        "exp4616_offline_live_bridge_disambiguation"
++      ],
++      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
++      "selector_tags": [
++        "value_head",
++        "bridge_fix",
++        "decision_point",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "per_level_reinduction_operator",
+       "derived_from_games": [
+@@ -43,6 +76,89 @@
+         "transfer"
+       ]
+     },
++    {
++      "operator": "env_adaptive_resolve_operator",
++      "derived_from_games": [
++        "sc25",
++        "exp4580_live_submission_gap_close"
++      ],
++      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
++      "selector_tags": [
++        "env_adaptive",
++        "coordinate_discovery",
++        "drift_recovery",
++        "replay",
++        "click",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "verifier_router_candidate_ranking_operator",
++      "derived_from_games": [
++        "exp4556_cached_generic_transfer"
++      ],
++      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
++      "selector_tags": [
++        "verifier_router",
++        "candidate_ranking",
++        "trust_energy",
++        "graph_explore",
++        "config_toggle",
++        "program_editor",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "world_model_trust_energy_gate_operator",
++      "derived_from_games": [
++        "exp4604_world_model_trust_energy"
++      ],
++      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
++      "selector_tags": [
++        "world_model",
++        "trust_energy",
++        "hidden_state",
++        "candidate_ranking",
++        "verifier",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "persistent_action_effect_memory_operator",
++      "derived_from_games": [
++        "exp4568_clickability_action_effect_predictor",
++        "exp4629_graduate_action_effect_predictor_live"
++      ],
++      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
++      "selector_tags": [
++        "action_effect",
++        "clickability",
++        "frame_change",
++        "live_action_pruner",
++        "persistent_aem_plus_optional_cnn",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
++      "selector_tags": [
++        "goal_energy",
++        "graded_goal_satisfaction",
++        "search_heuristic",
++        "graph_explore",
++        "candidate_ranking",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "object_centric_digest",
+       "derived_from_games": [
+diff --git a/results/arc_loop_solve_vc33.json b/results/arc_loop_solve_vc33.json
+index b5ec1bbd8a..7007f0bf92 100644
+--- a/results/arc_loop_solve_vc33.json
++++ b/results/arc_loop_solve_vc33.json
+@@ -1,14 +1,309 @@
+ {
+   "game": "vc33",
+-  "method": "graph_explore_adapter_free",
+-  "reached_level": 1,
+-  "moves": 3,
++  "reached_level": 2,
++  "moves": 10,
++  "states_expanded": 10,
++  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
++  "hazard_prune": false,
++  "hazard_pruner_stats": null,
+   "offline_reproduced": true,
+-  "reproduced_levels": 1,
+-  "trajectory_seed": "results/arc_explore_trajectory_vc33.json",
+-  "verifier_seed_checkpoint": "models/arc_verifier_vc33.json",
+-  "heuristic_learned": "bfs",
+-  "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+-  "solve_provenance": "live_agent_self_discovery",
+-  "mode": "standing_arc_loop_graph_explore_no_quota"
++  "reproduced_levels": 2,
++  "learned_verifier_checkpoint": "models/arc_verifier_vc33.json",
++  "selected_generic_operators": [
++    {
++      "operator": "approach_dispatcher_operator",
++      "derived_from_games": [
++        "exp4592_generation_completeness_wiring"
++      ],
++      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
++      "selector_tags": [
++        "approach_dispatch",
++        "mechanic_router",
++        "candidate_generation",
++        "graph_explore",
++        "goal_distance",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "value_head_bridge_fix_operator",
++      "derived_from_games": [
++        "exp4616_offline_live_bridge_disambiguation"
++      ],
++      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
++      "selector_tags": [
++        "value_head",
++        "bridge_fix",
++        "decision_point",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "per_level_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
++      "selector_tags": [
++        "reinduction",
++        "level_up",
++        "deepening",
++        "goal_bias",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "llm_proposer_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
++      "selector_tags": [
++        "reinduction",
++        "level_up",
++        "llm_proposer",
++        "bounded_refinement",
++        "trust_energy",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "env_adaptive_resolve_operator",
++      "derived_from_games": [
++        "sc25",
++        "exp4580_live_submission_gap_close"
++      ],
++      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
++      "selector_tags": [
++        "env_adaptive",
++        "coordinate_discovery",
++        "drift_recovery",
++        "replay",
++        "click",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "verifier_router_candidate_ranking_operator",
++      "derived_from_games": [
++        "exp4556_cached_generic_transfer"
++      ],
++      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
++      "selector_tags": [
++        "verifier_router",
++        "candidate_ranking",
++        "trust_energy",
++        "graph_explore",
++        "config_toggle",
++        "program_editor",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "world_model_trust_energy_gate_operator",
++      "derived_from_games": [
++        "exp4604_world_model_trust_energy"
++      ],
++      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
++      "selector_tags": [
++        "world_model",
++        "trust_energy",
++        "hidden_state",
++        "candidate_ranking",
++        "verifier",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "persistent_action_effect_memory_operator",
++      "derived_from_games": [
++        "exp4568_clickability_action_effect_predictor",
++        "exp4629_graduate_action_effect_predictor_live"
++      ],
++      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
++      "selector_tags": [
++        "action_effect",
++        "clickability",
++        "frame_change",
++        "live_action_pruner",
++        "persistent_aem_plus_optional_cnn",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
++      "selector_tags": [
++        "goal_energy",
++        "graded_goal_satisfaction",
++        "search_heuristic",
++        "graph_explore",
++        "candidate_ranking",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "object_centric_digest",
++      "derived_from_games": [
++        "g50t",
++        "lp85",
++        "tn36",
++        "ka59"
++      ],
++      "purpose": "Connected-component object summary for routing, grounding, and active data.",
++      "selector_tags": [
++        "object",
++        "digest",
++        "program_editor",
++        "world_model"
++      ]
++    },
++    {
++      "operator": "active_data_collection",
++      "derived_from_games": [
++        "ar25",
++        "ka59",
++        "ft09",
++        "sc25"
++      ],
++      "purpose": "Balanced action/object coverage plan for offline transition collection.",
++      "selector_tags": [
++        "active_data",
++        "world_model",
++        "e3",
++        "transition"
++      ]
++    },
++    {
++      "operator": "graph_astar_action_cost",
++      "derived_from_games": [
++        "tu93",
++        "lp85",
++        "cd82",
++        "sp80",
++        "cn04",
++        "m0r0",
++        "sk48",
++        "su15"
++      ],
++      "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
++      "selector_tags": [
++        "graph_explore",
++        "astar",
++        "action_cost",
++        "keyboard",
++        "click"
++      ]
++    }
++  ],
++  "reproduction_gate": {
++    "game": "vc33",
++    "reached_level": 2,
++    "claimed_level": 2,
++    "reproduced": true,
++    "mode": "offline_reproduction_gate_no_quota"
++  },
++  "solution_labels": [
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}"
++  ],
++  "solution": [
++    {
++      "action": 6,
++      "data": {
++        "x": 61,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 61,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 61,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 25
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 25
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 1,
++        "y": 45
++      }
++    }
++  ],
++  "solve_provenance": "development_proxy",
++  "mode": "standing_arc_loop_offline_no_quota"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4654_levelup_selfplay.json b/results/experiment_4654_levelup_selfplay.json
+new file mode 100644
+index 0000000000..3cb04ea082
+--- /dev/null
++++ b/results/experiment_4654_levelup_selfplay.json
+@@ -0,0 +1,130 @@
++{
++  "dead_ends_recorded": [
++    "bp35: no_grounded_next_level_adapter",
++    "re86: no_grounded_next_level_adapter",
++    "sb26: no_grounded_next_level_adapter",
++    "m0r0: standing_loop_repeated_prior_L2",
++    "cn04: standing_loop_repeated_prior_L2"
++  ],
++  "experiment": "experiment_4654_levelup_selfplay",
++  "field_principles": {
++    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
++    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
++    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
++    "target_game": "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30).",
++    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone).",
++    "verifier_is_oracle": "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
++  },
++  "honest_verdict": "success: vc33_L2_offline_reproduced",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "offline_reproduced": true,
++  "preconditions_checked": [
++    "arc_solver_kit.offline_arcade()"
++  ],
++  "prior_reproduced_level": 1,
++  "random_seed": 4654,
++  "reached_level": 2,
++  "registry_updated": true,
++  "reproduced_levels": 1,
++  "reproducibility_checksum": "341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436",
++  "reproducible_total_levels_after": 58,
++  "reproducible_total_levels_before": 57,
++  "reproduction_gate": {
++    "claimed_level": 2,
++    "game": "vc33",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 2,
++    "reproduced": true
++  },
++  "schema_errors": [],
++  "solution_labels": [
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
++    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}"
++  ],
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4654",
++    "SCENARIO-ARC-WMTE-4654"
++  ],
++  "standing_loop_result_path": "results/arc_loop_solve_vc33.json",
++  "states_expanded": 10,
++  "target_game": "vc33",
++  "target_selection": {
++    "fallback_exception": false,
++    "preferred_targets": [
++      "bp35",
++      "re86",
++      "sb26",
++      "vc33"
++    ],
++    "prohibited_targets": [
++      "ft09",
++      "ls20",
++      "sk48",
++      "dc22",
++      "ka59",
++      "wa30",
++      "cd82",
++      "sp80",
++      "su15"
++    ],
++    "registry_game_count": 25,
++    "registry_level_before": 1,
++    "rotation_rule": "skip_ft09_ls20_sk48_dc22_ka59_wa30_and_no_grounded_L3_rows",
++    "selected": "vc33",
++    "selection_reason": "vc33 is an allowed clean L1 target with a grounded next-level support-clearance delta; bp35/re86/sb26 have no grounded L2 adapter yet",
++    "skipped": [
++      {
++        "game": "bp35",
++        "reason": "no_grounded_next_level_adapter"
++      },
++      {
++        "game": "re86",
++        "reason": "no_grounded_next_level_adapter"
++      },
++      {
++        "game": "sb26",
++        "reason": "no_grounded_next_level_adapter"
++      },
++      {
++        "game": "m0r0",
++        "reason": "standing_loop_repeated_prior_L2"
++      },
++      {
++        "game": "cn04",
++        "reason": "standing_loop_repeated_prior_L2"
++      }
++    ]
++  },
++  "verifier_checkpoint_updated": true,
++  "verifier_delta": {
++    "after_sha256": "d60fbd8fc6d14e36a57681aca9104c837d73776536e74d74ae92f662e4ef95cd",
++    "before_sha256": "d72d79e343147a9b2d84de5ff08b5ef3656e2c17e2c3816672be9631fedde7d8",
++    "checkpoint_path": "models/arc_verifier_vc33.json",
++    "negative_trace_notes": [
++      "bp35: no_grounded_next_level_adapter",
++      "re86: no_grounded_next_level_adapter",
++      "sb26: no_grounded_next_level_adapter",
++      "m0r0: standing_loop_repeated_prior_L2",
++      "cn04: standing_loop_repeated_prior_L2"
++    ],
++    "positive_trace_steps": 10,
++    "sha_changed": true,
++    "updated": true
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/tests/python/test_experiment_4654_levelup_selfplay.py b/tests/python/test_experiment_4654_levelup_selfplay.py
+new file mode 100644
+index 0000000000..a050982179
+--- /dev/null
++++ b/tests/python/test_experiment_4654_levelup_selfplay.py
+@@ -0,0 +1,406 @@
++"""Tests for REQ-ARC-WMTE-4654 / SCENARIO-ARC-WMTE-4654."""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++
++from carnot import experiment_4654_levelup_selfplay as exp4654
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _loop_result(reached_level: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": "vc33",
++        "reached_level": reached_level,
++        "states_expanded": 12,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached_level if reproduced else 0,
++        "learned_verifier_checkpoint": (exp4654.CHECKPOINT_RELATIVE_PATH if reproduced else None),
++        "reproduction_gate": {
++            "game": "vc33",
++            "reached_level": reached_level,
++            "claimed_level": reached_level,
++            "reproduced": reproduced,
++            "mode": "offline_reproduction_gate_no_quota",
++        },
++        "solution_labels": list(exp4654.VC33_L2_SOLUTION_LABELS),
++        "solve_provenance": "development_proxy",
++        "mode": "standing_arc_loop_offline_no_quota",
++    }
++
++
++def test_req_arc_wmte_4654_spec_declares_required_contract() -> None:
++    """REQ-ARC-WMTE-4654: OpenSpec declares the self-play bank contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in exp4654.SPEC_REFS:
++        assert ref in spec
++    assert exp4654.RESULT_RELATIVE_PATH in spec
++    assert exp4654.CHECKPOINT_RELATIVE_PATH in spec
++    assert "vc33" in spec
++    assert "bp35" in spec and "re86" in spec and "sb26" in spec
++    for field, principle in exp4654.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_req_arc_wmte_4654_vc33_adapter_exposes_l2_delta() -> None:
++    """REQ-ARC-WMTE-4654: vc33 registers the deterministic L1+L2 adapter."""
++
++    from carnot.agentic import arc_game_adapters as adapters
++
++    adapter = adapters.get_adapter("vc33")
++    assert adapter is not None
++    assert adapter.featurize is not None
++    assert adapter.depth_caps[2] == len(exp4654.VC33_L2_TAIL_LABELS)
++    assert adapter.level_tails[2] == exp4654.VC33_L2_TAIL_LABELS
++
++    frame0 = SimpleNamespace(levels_completed=0)
++    frame1 = SimpleNamespace(levels_completed=1)
++    assert adapter.action_labels(None, frame0, ()) == [exp4654.VC33_L1_LABELS[0]]
++    assert adapter.action_labels(None, frame1, ()) == [exp4654.VC33_L2_TAIL_LABELS[0]]
++    assert adapter.action_labels(None, frame1, tuple(exp4654.VC33_L2_TAIL_LABELS)) == []
++
++
++def test_scenario_arc_wmte_4654_standing_loop_reports_vc33_l2(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: the standing loop gates vc33 L2 and checkpoints."""
++
++    code = f"""
++import json
++from pathlib import Path
++import scripts.arc_loop_solve as arc_loop_solve
++arc_loop_solve.REPO = Path({str(tmp_path)!r})
++arc_loop_solve.CKPT_DIR = Path({str(tmp_path / "models")!r})
++arc_loop_solve.CKPT_DIR.mkdir(parents=True, exist_ok=True)
++result = arc_loop_solve.solve_adaptered("vc33", 2, hazard_prune=False)
++print("JSON_RESULT=" + json.dumps({{
++    "reached_level": result["reached_level"],
++    "offline_reproduced": result["offline_reproduced"],
++    "reproduced_levels": result["reproduced_levels"],
++    "learned_verifier_checkpoint": result["learned_verifier_checkpoint"],
++    "reproduction_gate": result["reproduction_gate"],
++    "solution_labels": result["solution_labels"],
++}}))
++"""
++    proc = subprocess.run(
++        [sys.executable, "-c", code],
++        cwd=REPO,
++        check=False,
++        text=True,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.STDOUT,
++    )
++    assert proc.returncode == 0, proc.stdout
++    result_line = next(line for line in proc.stdout.splitlines() if line.startswith("JSON_RESULT="))
++    result = json.loads(result_line.removeprefix("JSON_RESULT="))
++
++    assert result["reached_level"] == 2
++    assert result["offline_reproduced"] is True
++    assert result["reproduced_levels"] == 2
++    assert result["learned_verifier_checkpoint"] == exp4654.CHECKPOINT_RELATIVE_PATH
++    assert result["reproduction_gate"]["reproduced"] is True
++    assert result["solution_labels"] == list(exp4654.VC33_L2_SOLUTION_LABELS)
++
++
++def test_success_artifact_counts_only_new_reproduced_level() -> None:
++    """SCENARIO-ARC-WMTE-4654: success requires reproduced progress and checkpoint."""
++
++    artifact = exp4654.build_artifact(
++        _loop_result(),
++        prior_level=1,
++        prior_total_levels=57,
++        registry_updated=True,
++        checkpoint_before_sha="before",
++        checkpoint_after_sha="after",
++        dead_ends_recorded=["bp35: no grounded next-level adapter"],
++        preconditions_checked=["arc_solver_kit.offline_arcade()"],
++        target_selection={"selected": "vc33", "fallback_exception": False},
++    )
++
++    assert artifact["honest_verdict"] == "success: vc33_L2_offline_reproduced"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 1
++    assert artifact["target_game"] == "vc33"
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["verifier_checkpoint_updated"] is True
++    assert artifact["registry_updated"] is True
++    assert artifact["reproducible_total_levels_before"] == 57
++    assert artifact["reproducible_total_levels_after"] == 58
++    assert exp4654.artifact_schema_errors(artifact) == []
++
++
++def test_no_new_level_artifact_is_complete_not_bank() -> None:
++    """SCENARIO-ARC-WMTE-4654: same-depth reproduction is not a bank."""
++
++    artifact = exp4654.build_artifact(
++        _loop_result(reached_level=1),
++        prior_level=1,
++        prior_total_levels=57,
++        registry_updated=False,
++        checkpoint_before_sha=None,
++        checkpoint_after_sha=None,
++        dead_ends_recorded=["vc33 standing loop reached L1, not beyond prior L1"],
++        preconditions_checked=["arc_solver_kit.offline_arcade()"],
++        target_selection={"selected": "vc33", "fallback_exception": False},
++    )
++
++    assert artifact["honest_verdict"] == "complete: vc33_delta_identified_no_bank"
++    assert artifact["offline_reproduced"] is False
++    assert artifact["reproduced_levels"] == 0
++    assert artifact["registry_updated"] is False
++
++
++def test_schema_errors_reject_invalid_principle_artifact() -> None:
++    """REQ-ARC-WMTE-4654: artifact validation names required schema breaches."""
++
++    payload = {
++        "honest_verdict": "vc33 L2",
++        "field_principles": {"honest_verdict": "wrong"},
++        "verifier_is_oracle": True,
++        "solve_provenance": "live_agent",
++        "offline_reproduced": True,
++        "reproduced_levels": 0,
++        "registry_updated": False,
++        "reproducibility_checksum": "bad",
++    }
++
++    errors = exp4654.artifact_schema_errors(payload)
++
++    assert "missing_principle:honest_verdict" in errors
++    assert "missing_field:target_game" in errors
++    assert "honest_verdict_missing_terminal_prefix" in errors
++    assert "verifier_is_oracle_must_be_false" in errors
++    assert "solve_provenance_must_be_development_proxy" in errors
++    assert "offline_reproduced_without_new_level" in errors
++    assert "offline_reproduced_without_registry_update" in errors
++    assert "invalid_reproducibility_checksum" in errors
++
++
++def test_target_selection_records_preferred_skips_and_picks_vc33(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: selection keeps the rotation-skip ledger."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "\n".join(
++            [
++                "games:",
++                "- game: bp35",
++                "  levels_reproduced: 1",
++                "- game: re86",
++                "  levels_reproduced: 1",
++                "- game: sb26",
++                "  levels_reproduced: 1",
++                "- game: vc33",
++                "  levels_reproduced: 1",
++                "- game: ft09",
++                "  levels_reproduced: 3",
++                "- game: cn04",
++                "  levels_reproduced: 2",
++                "reproducible_total_levels: 57",
++            ]
++        ),
++        encoding="utf-8",
++    )
++
++    target, selection = exp4654.select_target(registry_path=registry)
++
++    assert target == "vc33"
++    assert selection["selected"] == "vc33"
++    assert selection["fallback_exception"] is False
++    assert selection["skipped"] == [
++        {"game": "bp35", "reason": "no_grounded_next_level_adapter"},
++        {"game": "re86", "reason": "no_grounded_next_level_adapter"},
++        {"game": "sb26", "reason": "no_grounded_next_level_adapter"},
++        {"game": "m0r0", "reason": "standing_loop_repeated_prior_L2"},
++        {"game": "cn04", "reason": "standing_loop_repeated_prior_L2"},
++    ]
++    assert "ft09" in selection["prohibited_targets"]
++
++
++def test_helpers_and_empty_registry_values_are_deterministic(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4654: registry helpers and checksums are deterministic."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "games:\n- game: vc33\n  levels_reproduced: 1\nreproducible_total_levels: 57\n",
++        encoding="utf-8",
++    )
++    payload = tmp_path / "payload.txt"
++    payload.write_text("banked", encoding="utf-8")
++
++    assert exp4654.registry_level("vc33", registry_path=registry) == 1
++    assert exp4654.registry_level("missing", registry_path=registry) == 0
++    assert exp4654.registry_total_levels(registry_path=registry) == 57
++    assert (
++        exp4654.sha256_file(payload)
++        == "f1e53b902d342070d2517c1fdfd5d14e1c615d0754ec92d8a3bbe3d3c4c291f5"
++    )
++    assert exp4654.sha256_file(tmp_path / "missing") is None
++
++    registry.write_text(
++        "games:\n- game: vc33\n  levels_reproduced: nope\nreproducible_total_levels: none\n",
++        encoding="utf-8",
++    )
++    assert exp4654.registry_level("vc33", registry_path=registry) == 0
++    assert exp4654.registry_total_levels(registry_path=registry) == 0
++
++    with pytest.raises(RuntimeError, match="vc33 target"):
++        exp4654.select_target(registry_path=registry)
++
++
++def test_update_registry_for_success_is_scoped_to_vc33_block(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: registry persistence updates only vc33 and total."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "\n".join(
++            [
++                "updated: '2026-06-24'",
++                "games:",
++                "- game: vc33",
++                "  reproducibility: reproduced",
++                "  levels_reproduced: 1",
++                "  win_condition: existing L1.",
++                "  solver: old",
++                "- game: other",
++                "  levels_reproduced: 1",
++                "reproducible_total_levels: 57",
++                "",
++            ]
++        ),
++        encoding="utf-8",
++    )
++    artifact = {
++        "target_game": "vc33",
++        "reached_level": 2,
++        "reproduced_levels": 1,
++        "reproducibility_checksum": "e" * 64,
++        "reproducible_total_levels_before": 57,
++        "reproducible_total_levels_after": 58,
++        "verifier_delta": {"checkpoint_path": exp4654.CHECKPOINT_RELATIVE_PATH},
++    }
++
++    assert exp4654.update_registry_for_success(artifact, registry_path=registry) is True
++    text = registry.read_text(encoding="utf-8")
++    assert "levels_reproduced: 2" in text
++    assert "latest_exp4654_levelup_selfplay" in text
++    assert exp4654.CHECKPOINT_RELATIVE_PATH in text
++    assert "reproducible_total_levels: 58" in text
++    assert "- game: other\n  levels_reproduced: 1" in text
++
++
++def test_run_standing_loop_reads_current_result(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: the wrapper delegates to the standing loop."""
++
++    result_dir = tmp_path / "results"
++    result_dir.mkdir()
++    (result_dir / "arc_loop_solve_vc33.json").write_text(
++        '{"game":"vc33","reached_level":2}',
++        encoding="utf-8",
++    )
++    monkeypatch.setattr(exp4654, "REPO", tmp_path)
++    monkeypatch.setattr(exp4654, "RESULTS", result_dir)
++
++    def fake_run(cmd, cwd, check, text, stdout, stderr):
++        assert cmd == [
++            sys.executable,
++            "scripts/arc_loop_solve.py",
++            "--game",
++            "vc33",
++            "--target-level",
++            "2",
++            "--no-hazard-prune",
++        ]
++        assert cwd == tmp_path
++        assert check is False and text is True
++        return SimpleNamespace(returncode=0, stdout="standing loop ok")
++
++    monkeypatch.setattr(exp4654.subprocess, "run", fake_run)
++
++    out = exp4654.run_standing_loop("vc33", 2)
++    assert out["game"] == "vc33"
++    assert out["_standing_loop_stdout"] == "standing loop ok"
++
++
++def test_run_standing_loop_raises_on_failure(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: loop failures do not fabricate artifacts."""
++
++    monkeypatch.setattr(exp4654, "REPO", tmp_path)
++
++    def fake_run(cmd, cwd, check, text, stdout, stderr):
++        return SimpleNamespace(returncode=2, stdout="loop failed")
++
++    monkeypatch.setattr(exp4654.subprocess, "run", fake_run)
++
++    with pytest.raises(RuntimeError, match="loop failed"):
++        exp4654.run_standing_loop("vc33", 2)
++
++
++def test_write_artifact_and_main_are_side_effect_controllable(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-4654: main writes final artifact after registry update."""
++
++    written: list[dict[str, object]] = []
++    monkeypatch.setattr(
++        exp4654,
++        "select_target",
++        lambda: ("vc33", {"selected": "vc33", "skipped": [], "fallback_exception": False}),
++    )
++    monkeypatch.setattr(exp4654, "registry_level", lambda game: 1)
++    monkeypatch.setattr(exp4654, "registry_total_levels", lambda: 57)
++    checkpoint_shas = iter(["before", "after"])
++    monkeypatch.setattr(exp4654, "sha256_file", lambda path: next(checkpoint_shas))
++    monkeypatch.setattr(exp4654, "update_registry_for_success", lambda artifact: True)
++    monkeypatch.setattr(exp4654, "_write_artifact", lambda payload: written.append(payload))
++    monkeypatch.setattr(
++        exp4654, "run_standing_loop", lambda game, target_level: _loop_result(target_level)
++    )
++    from carnot.agentic import arc_solver_kit
++
++    monkeypatch.setattr(arc_solver_kit, "offline_arcade", lambda: object())
++
++    assert exp4654.main([]) == 0
++    assert len(written) == 2
++    assert written[-1]["honest_verdict"] == "success: vc33_L2_offline_reproduced"
++    assert written[-1]["registry_updated"] is True
++    assert written[-1]["reproducible_total_levels_after"] == 58
++
++
++def test_main_override_records_dead_end_when_no_new_level(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-4654: CLI override still emits honest no-bank."""
++
++    written: list[dict[str, object]] = []
++    monkeypatch.setattr(exp4654, "registry_level", lambda game: 1)
++    monkeypatch.setattr(exp4654, "registry_total_levels", lambda: 57)
++    monkeypatch.setattr(exp4654, "sha256_file", lambda path: None)
++    monkeypatch.setattr(exp4654, "update_registry_for_success", lambda artifact: False)
++    monkeypatch.setattr(exp4654, "_write_artifact", lambda payload: written.append(payload))
++    monkeypatch.setattr(exp4654, "run_standing_loop", lambda game, target_level: _loop_result(1))
++    from carnot.agentic import arc_solver_kit
++
++    monkeypatch.setattr(arc_solver_kit, "offline_arcade", lambda: object())
++
++    assert exp4654.main(["--game", "vc33"]) == 0
++    assert written[-1]["honest_verdict"] == "complete: vc33_delta_identified_no_bank"
++    assert written[-1]["dead_ends_recorded"] == [
++        "vc33 standing loop reached L1, not beyond prior L1"
++    ]
++    assert written[-1]["target_selection"] == {"selected": "vc33", "override": True}
++
++
++def test_write_artifact_serializes_sorted_json(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4654: result artifact is stable JSON."""
++
++    out = tmp_path / "artifact.json"
++    exp4654._write_artifact({"b": 1, "a": 2}, path=out)
++    assert out.read_text(encoding="utf-8").splitlines()[1].strip() == '"a": 2,'
+-- 
+2.55.0
+

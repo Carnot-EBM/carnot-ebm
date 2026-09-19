@@ -1,0 +1,200 @@
+From e73cd0e72462ef4fda4dee44d9281443ce438f51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 08:37:56 -0400
+Subject: [PATCH 02784/11362] [outer-loop] #3 Free a 3090 for the ARC
+ generator: guarded opt-in CUDA toggle
+
+Operator-approved 2026-06-19 (the 3090s have sat idle since the TRM retirement, while LLM induction
+on the iGPU is ~4 tok/s). Adds an OPT-IN CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> toggle to
+LocalGGUFProposer: when set, the generator runs the local CUDA llama-server pinned to that 3090 via
+CUDA_VISIBLE_DEVICES -- but ONLY if the card has >=13GB free (the yield guard: it falls back to the
+iGPU rather than fight a conductor training job for the card). Default (no env) is UNCHANGED (iGPU
+HIP build). Server+env are resolved at LAUNCH time so the guard sees live GPU state. Validated:
+default->iGPU/env-None; toggle gpu0(free)->CUDA+CUDA_VISIBLE_DEVICES=0; bad/busy idx->guard falls back
+to iGPU. 605 tests pass; the 1 ka59 + 3 import failures are pre-existing (reference 0 of the touched
+symbols), not from this change.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ .../agentic/arc_executable_world_model.py     | 67 ++++++++++++++++++-
+ results/experiment_625_tier1_fr11_relay.json  |  6 +-
+ results/experiment_638_tier1_fr11_relay.json  |  4 +-
+ results/experiment_645_tier1_fr11_relay.json  |  6 +-
+ 7 files changed, 75 insertions(+), 13 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 14959a2e27..98b9613357 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 191, "phase": "iteration_start", "last_beat": "2026-06-19T12:18:45Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 192, "phase": "iteration_start", "last_beat": "2026-06-19T12:35:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e476c09205..e8c491a402 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8824,3 +8824,4 @@ c |
+ | 2026-06-19 11:30 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- F | OK | 100 passed, 1 warning in 6.33s |
+ | 2026-06-19 12:05 UTC | PHASE A5 (ARC NORTH STAR; MULTI-LEVEL) -- take an  | OK | 114 passed, 1 warning in 6.25s |
+ | 2026-06-19 12:16 UTC | PHASE B1 (RESERVED INFRA) -- ship an ARC-SOLVE tas | OK | 90 passed, 1 warning in 6.20s |
++| 2026-06-19 12:33 UTC | PHASE B2 (RESERVED INFRA) -- registry/gaps hygiene | OK | 87 passed, 1 warning in 5.81s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f85f3337e2..52733e7a79 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 191, "phase": "iteration_start", "started_at": "2026-06-19T12:18:45Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 192, "phase": "iteration_start", "started_at": "2026-06-19T12:35:18Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 13aa3c9784..91af2dc1a1 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -367,6 +367,61 @@ def _resolve_llama_server() -> Path:
+ 
+ LLAMA_SERVER = _resolve_llama_server()
+ 
++# Qwen3.5-9B-MTP loads ~11.5GB on a 3090 (weights + MTP self-draft + q8 KV, validated 2026-06-19).
++# Require headroom above that so the opt-in 3090 path NEVER binds a card a conductor training job is
++# using -- this is the "yield-if-the-conductor-needs-it" guard.
++_GENERATOR_CUDA_MIN_FREE_MB = 13000
++
++
++def _cuda_gpu_free_mb(idx: int) -> int:
++    """Free VRAM (MiB) on CUDA GPU `idx` via nvidia-smi; -1 if unavailable. The guard input for the
++    opt-in 3090 generator path."""
++    try:
++        out = subprocess.run(
++            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
++            capture_output=True,
++            text=True,
++            timeout=5,
++        )
++        lines = [ln.strip() for ln in out.stdout.splitlines() if ln.strip()]
++        return int(lines[idx]) if 0 <= idx < len(lines) else -1
++    except Exception:
++        return -1
++
++
++def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
++    """Resolve the llama-server binary + launch env for the generator, evaluated at LAUNCH time so the
++    3090 guard sees current GPU state.
++
++    Priority:
++      1. CARNOT_LLAMA_SERVER (Kaggle/live bundled CUDA binary) -- unchanged; inherits ambient env.
++      2. OPT-IN CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> the local CUDA build pinned to that 3090 via
++         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_GENERATOR_CUDA_MIN_FREE_MB free. This is the
++         operator-approved (2026-06-19) use of one idle 3090 for generator throughput now that the TRM
++         run is retired; the free-memory guard yields to any conductor job already on the card.
++      3. Default: the iGPU HIP build (no conductor contention), else the CUDA build.
++    Returns (server_path, env_or_None); env=None means inherit the ambient environment (legacy behavior).
++    """
++    import os
++
++    explicit = os.environ.get("CARNOT_LLAMA_SERVER")
++    if explicit:
++        return Path(explicit), None
++    base = Path.home() / ".cache" / "llama.cpp-master"
++    cuda = base / "build" / "bin" / "llama-server"
++    hip = base / "build-hip" / "bin" / "llama-server"
++    gpu = (os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU") or "").strip()
++    if gpu and cuda.exists():
++        try:
++            idx = int(gpu)
++        except ValueError:
++            idx = -1
++        if idx >= 0 and _cuda_gpu_free_mb(idx) >= _GENERATOR_CUDA_MIN_FREE_MB:
++            return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=str(idx))
++        # guard tripped (card busy / unavailable / bad idx) -> fall through to the iGPU path,
++        # never fight the conductor for the 3090.
++    return (hip if hip.exists() else cuda), None
++
+ 
+ @dataclass
+ class LocalGGUFProposer:
+@@ -419,10 +474,13 @@ class LocalGGUFProposer:
+         path = self.model_path or _resolve_gguf(
+             self.repo_substr
+         )  # explicit path (Kaggle bundle) else cache
+-        if not path or not LLAMA_SERVER.exists():
++        # Resolve the server + launch env at LAUNCH time so the opt-in 3090 guard sees current GPU state
++        # (CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> CUDA build pinned to that card iff it has headroom).
++        server, launch_env = _generator_server_and_env()
++        if not path or not server.exists():
+             return False  # GPU enforcement: no CPU fallback
+         args = [
+-            str(LLAMA_SERVER),
++            str(server),
+             "-m",
+             path,
+             "-ngl",
+@@ -438,7 +496,10 @@ class LocalGGUFProposer:
+             args += ["--spec-type", "draft-mtp", "--model-draft", path]
+         if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
+             args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
+-        self._proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
++        # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
++        self._proc = subprocess.Popen(
++            args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=launch_env
++        )
+         for _ in range(90):  # model load on GPU can take ~10-30s
+             if self._healthy():
+                 return True
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6ce631a222..e455be2b0b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T12:00:02Z",
+-  "finished_at": "2026-06-19T12:00:02Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T12:34:27Z",
++  "finished_at": "2026-06-19T12:34:28Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cc56534679..ad86d8d699 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T12:00:02Z",
+-  "finished_at": "2026-06-19T12:00:02Z",
++  "started_at": "2026-06-19T12:34:28Z",
++  "finished_at": "2026-06-19T12:34:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 4bbae31ee4..62ea765a8e 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T12:00:02Z",
+-  "finished_at": "2026-06-19T12:00:02Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T12:34:28Z",
++  "finished_at": "2026-06-19T12:34:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+-- 
+2.55.0
+

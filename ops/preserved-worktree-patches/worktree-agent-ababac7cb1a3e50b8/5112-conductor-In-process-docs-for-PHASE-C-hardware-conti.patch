@@ -1,0 +1,24 @@
+From a70e935cb379da05278d650ef0cc8875e3184a91 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 18:03:06 -0400
+Subject: [PATCH 05112/11362] [conductor] In-process docs for PHASE C hardware
+ continuity -- KV260 p-bit timing-ratio parity packet; no host SD-card work,
+ no scale claims beyond local evidence.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f46896a47e..75a81c0611 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10513,3 +10513,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-30: PHASE D4 second-corpus confirmation -- gated on Exp 5044 second_corpus_cache_built and Exp 5045 powered_scorer_available; confirm the best powered verifier off MuSR. (⚠️ Research Finding) — honest_verdict=success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370; results/experiment_5049_second_corpus_confirmation.json
+ - 2026-06-30: PHASE D5 gate resolution -- aggregate powered D1, repaired D2, D3 calibration, D6 cascade, and D4 second-corpus confirmation into realized / MuSR-scoped / bounded-retired / execution-incomplete. (⚠️ Blocked) — honest_verdict=complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d; results/experiment_5050_moat_gate_resolution_v464.json
+ - 2026-06-30: PHASE E1 continuous self-learning -- REVES/VSI-style verifier-trace learning from D1/D2/D3 near misses with contamination controls and held-out delta. (✅ Complete) — honest_verdict=complete_verifier_trace_self_learning_replay_memory_minus_0p050; results/experiment_5051_verifier_trace_self_learning.json
++- 2026-06-30: PHASE C hardware continuity -- KV260 p-bit timing-ratio parity packet; no host SD-card work, no scale claims beyond local evidence. (⚠️ Research Finding) — honest_verdict=success_kv260_pbit_timing_ratio_packet_built; results/experiment_5052_kv260_pbit_timing_ratio.json
+-- 
+2.55.0
+

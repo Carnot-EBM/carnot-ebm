@@ -1,0 +1,43 @@
+From 62a1a5441de3dbf53b23d2e0d59125e66d73407a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 16:59:07 -0400
+Subject: [PATCH 10682/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 51b549c8f8..042d6ac7ed 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 94, "phase": "iteration_start", "last_beat": "2026-09-01T20:56:21Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 95, "phase": "iteration_start", "last_beat": "2026-09-01T20:58:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c23bda2fd2..e29ae1aa5e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17022,3 +17022,4 @@ The l |
+ | 2026-09-01 19:51 UTC | Counterfactual memory-write credit and negative-tr | OK | 110 passed, 2 warnings in 37.17s |
+ | 2026-09-01 20:22 UTC | Sealed risk-sensitive self-learning durability and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-09-01 20:54 UTC | Dynamic provenance-qualified live ARC receipt rout | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-09-01 20:56 UTC | Supervisor counterfactual credit audit gated on Ex | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6857-dynamic-live-ar |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4d6afd9809..f0f0e2114e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 94, "phase": "iteration_start", "started_at": "2026-09-01T20:56:21Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 95, "phase": "iteration_start", "started_at": "2026-09-01T20:58:57Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

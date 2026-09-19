@@ -1,0 +1,37 @@
+From 13638f91ffd7ca9d2d4db5d426652a7c41167f7c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 13:13:59 -0400
+Subject: [PATCH 02581/11362] [outer-loop] fix full-pass scorecard
+ argument-order bug (explore_budget=150 -> proper budget)
+
+The first full pass reported a false 2/25 because run_game was called with the wrong argument order:
+run_game(game, explore_budget, max_exp, seed, curious) but the scorecard passed
+run_game(g, 150, explore_budget, seed, max_exp) -- so explore_budget=150 (a tiny 150-expansion budget,
+the literal I mistakenly passed thinking it was explore_n; run_game hard-codes n=150 internally and its
+2nd arg IS the budget). Every game failed except the 3-4-action solves reachable in 150 expansions
+(sp80, vc33). NOT a regression: with the correct budget, cn04@14, ar25@15, sp80@4 all solve (3/4 on the
+spot-check), consistent with the prior 5/10. Corrected to run_game(g, explore_budget, max_exp, seed).
+Re-running the full 25-game pass for the true accuracy scorecard.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/experiments/arc3_full_pass_scorecard.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/experiments/arc3_full_pass_scorecard.py b/scripts/experiments/arc3_full_pass_scorecard.py
+index bdbf203695..89b95ecd22 100644
+--- a/scripts/experiments/arc3_full_pass_scorecard.py
++++ b/scripts/experiments/arc3_full_pass_scorecard.py
+@@ -77,7 +77,8 @@ def main():
+     for g in games:
+         gt = time.time()
+         try:
+-            rec = P.run_game(g, 150, args.explore_budget, args.seed, args.max_exp)
++            # run_game(game, explore_budget, max_exp, seed, curious=True) -- pass in THAT order
++            rec = P.run_game(g, args.explore_budget, args.max_exp, args.seed)
+         except Exception as ex:
+             rec = {"game": g, "error": f"{type(ex).__name__}: {str(ex)[:120]}"}
+         cls, actions = ("ERROR", None) if "error" in rec else classify(rec)
+-- 
+2.55.0
+

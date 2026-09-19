@@ -1,0 +1,123 @@
+From 319a1a997db7316208c51d5a861116823c0cace0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 02:03:02 -0400
+Subject: [PATCH 01383/11362] [conductor] Pre-gate block: VERIFIER-AS-REWARD
+ RFT -- EVAL + GATE (THE PIVOT, part 3; the DE-CONFOUNDED gate): poll
+ exp4078's training; PER LADDER BASE, once its arms have usable checkpoints,
+ EVAL each on the HELD-OUT ARC-induction split (disjoint from train) and
+ report demo-perfect + true-gold induction rate for Arm A (RFT-correct), Arm B
+ (RFT-ablation), Arm C (gold-SFT), the BASE's OWN cold rate (measured), and
+ CODEX (~0.57 ceiling). THE LOAD-BEARING GATE is A vs B (the verifier-LABEL
+ test): does RFT-CORRECT beat RFT-ABLATION on held-out induction with
+ bootstrap CI95 excluding 0? If YES -> the verifier's LABEL carries training
+ signal (verifier-as-reward is REAL, not codex-distillation). If A~=B -> 'RFT
+ helps' is just codex-distillation; the verifier adds nothing (the honest null
+ -- report it plainly, do NOT dress it as a win). SECONDARY: A vs C (does the
+ label-free verifier signal match oracle labels -- A>=C?) and A vs cold base
+ (any lift at all). ROBUSTNESS: report all three contrasts PER base; the
+ headroom rung (Qwen3.5-0.8B) is PRIMARY; A>B holding ACROSS the ladder =
+ robust. CAPACITY-FLOOR GUARD: a base whose cold rate is 0 is dropped as
+ uninformative (NOT 'verifier fails'); if all bases floor, fall back to the
+ Sudoku control + a tractable ARC subset. NOTE: decentralization-MAGNITUDE
+ (close the gemma-4-12B 0.26->0.57 gap) is a .378 FOLLOW-ON. Honest null/small
+ gain is a COMPLETE verdict; if still accumulating, report progress (NOT a
+ retirement).
+
+1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.train_launched (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...4078_verifier_reward_rft_train_launch.json | 17 +++++++++++--
+ ...4079_verifier_reward_rft_eval_collect.json | 24 +++++++++++++++++++
+ 5 files changed, 42 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_4079_verifier_reward_rft_eval_collect.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 603e50cc58..d844494d27 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 120, "phase": "iteration_start", "last_beat": "2026-06-12T05:47:58Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 121, "phase": "iteration_start", "last_beat": "2026-06-12T06:03:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 434fc026f2..ecace85c59 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8306,3 +8306,4 @@ c |
+ | 2026-06-12 05:05 UTC | Milestone 2026.06.377 activated | OK | 10 tasks queued |
+ | 2026-06-12 05:23 UTC | Archive .376 -> activate .377; KEEP the hardened g | OK | 157 passed in 4.53s |
+ | 2026-06-12 05:45 UTC | VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-12 06:01 UTC | VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1781b5e801..f7ea3a9e60 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 120, "phase": "iteration_start", "started_at": "2026-06-12T05:47:58Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 121, "phase": "iteration_start", "started_at": "2026-06-12T06:03:02Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4078_verifier_reward_rft_train_launch.json b/results/experiment_4078_verifier_reward_rft_train_launch.json
+index 0f61f886ca..488cd986a2 100644
+--- a/results/experiment_4078_verifier_reward_rft_train_launch.json
++++ b/results/experiment_4078_verifier_reward_rft_train_launch.json
+@@ -72,5 +72,18 @@
+     "per_device_train_batch_size": 1,
+     "random_seed": 4078,
+     "save_strategy": "epoch"
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=5.117831268929876 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_4079_verifier_reward_rft_eval_collect.json b/results/experiment_4079_verifier_reward_rft_eval_collect.json
+new file mode 100644
+index 0000000000..e6126d3711
+--- /dev/null
++++ b/results/experiment_4079_verifier_reward_rft_eval_collect.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 4079,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-06-12",
++  "started_at": "2026-06-12T06:03:02.046278+00:00",
++  "finished_at": "2026-06-12T06:03:02.046278+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3; the DE-CONFOUNDED gate): poll exp4078's training; PER LADDER BASE, once its arms have usable checkpoints, EVAL each on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate for Arm A (RFT-correct), Arm B (RFT-ablation), Arm C (gold-SFT), the BASE's OWN cold rate (measured), and CODEX (~0.57 ceiling). THE LOAD-BEARING GATE is A vs B (the verifier-LABEL test): does RFT-CORRECT beat RFT-ABLATION on held-out induction with bootstrap CI95 excluding 0? If YES -> the verifier's LABEL carries training signal (verifier-as-reward is REAL, not codex-distillation). If A~=B -> 'RFT helps' is just codex-distillation; the verifier adds nothing (the honest null -- report it plainly, do NOT dress it as a win). SECONDARY: A vs C (does the label-free verifier signal match oracle labels -- A>=C?) and A vs cold base (any lift at all). ROBUSTNESS: report all three contrasts PER base; the headroom rung (Qwen3.5-0.8B) is PRIMARY; A>B holding ACROSS the ladder = robust. CAPACITY-FLOOR GUARD: a base whose cold rate is 0 is dropped as uninformative (NOT 'verifier fails'); if all bases floor, fall back to the Sudoku control + a tractable ARC subset. NOTE: decentralization-MAGNITUDE (close the gemma-4-12B 0.26->0.57 gap) is a .378 FOLLOW-ON. Honest null/small gain is a COMPLETE verdict; if still accumulating, report progress (NOT a retirement).",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.train_launched (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp4078-verifier-reward-rft-train-launch",
++      "artifact_field": "train_launched",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

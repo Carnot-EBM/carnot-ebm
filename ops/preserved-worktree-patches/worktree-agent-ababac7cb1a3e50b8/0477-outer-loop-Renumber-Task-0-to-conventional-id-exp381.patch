@@ -1,0 +1,36 @@
+From c08edffb87fcfe9703187f4dd6d05a1f15187053 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 12:27:21 -0400
+Subject: [PATCH 00477/11362] [outer-loop] Renumber Task 0 to conventional id
+ exp3819 (deliverable experiment_3819) for conductor pickup
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ research-roadmap-next.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 79f522f869..8e4702777d 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -8,7 +8,7 @@ milestone_title: "Recursive-refiner Task 0 — Latent-Symbol Bridge integration-
+ milestone_doc: docs/research-notes/phase3-recursive-refiner-thesis.md
+ 
+ tasks:
+-  - id: task0-latent-symbol-bridge
++  - id: exp3819-latent-symbol-bridge
+     operator_override: >
+       2026-06-04 operator directive (draft Task 0): NET-NEW $0 integration-feasibility probe,
+       NOT a generation-vs-AR rerun of Thesis-A/P0.1. Distinct question — can an external
+@@ -25,7 +25,7 @@ tasks:
+     requires_gpu: false     # off-the-shelf ~7M TRM runs on CPU in minutes; deliberately GPU-free to stay loop-safe (no kill_zombies contention)
+     estimated_wall_time_min: 60
+     inference_substrate: live_llm_inference   # loads + runs a real (tiny) TRM model; duration floor 60s easily met by N trajectories x steps x decode+verify
+-    deliverable: results/experiment_TASK0_latent_symbol_bridge.json
++    deliverable: results/experiment_3819_latent_symbol_bridge.json
+     prompt: |
+       CONTEXT. Deep Think (2026-06-04, P3, 99%) ruled that using Carnot's EXTERNAL discrete
+       verifier (SAT/Z3/AST/programmatic) as the RUNTIME internal Q-head of a recursive latent
+-- 
+2.55.0
+

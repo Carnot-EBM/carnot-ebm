@@ -1,0 +1,64 @@
+From 77368b81eb91bf6d3c7e62c571d3a15af5f76891 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 21:37:01 -0400
+Subject: [PATCH 10706/11171] Overnight substrate-list update: 24 of 24
+ self-served, rate slowing, second decline
+
+One addition since the 16:40Z count. 83d0941535 added "deterministic CPU
+independent reduction" alongside its own results/ artifact, verified with
+git show --name-only. Still self-served without exception: 24 of 24.
+
+The rate slowed -- 2 additions in six hours to 16:40Z, 1 in the nine hours since --
+but that is three intervals on a small sample and the entry says so rather than
+calling it a trend.
+
+More useful is the second counter-example. exp6862 declared "deterministic CPU
+dual-side exact checking", drew the SUBSTRATE_HAS_NO_DURATION_FLOOR warn, and did
+not add its string, exactly as exp6849 did yesterday. Two tasks have now taken the
+warn honestly instead of editing the guard.
+
+That shifts what a fix should look like. The honest route already exists and is
+used, so the remedy is closer to making it the default than to policing the other
+one. Still filed rather than built: it needs a blast-radius measurement and a
+grandfathering decision on the 24 existing entries.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 0d69783960..b855ec21b0 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -62,6 +62,26 @@ TRUNCATES long paths with a leading `...`, so the substring never appeared. Use
+ without actually looking.
+ 
+ 
++
++**OVERNIGHT 2026-09-02 01:35Z — 24 of 24, but the rate slowed and a SECOND task declined.**
++One addition since the 16:40Z count: `83d0941535` (independent compatibility shortcut and
++claim-authority audit) added `"deterministic CPU independent reduction"` alongside its own
++`results/` artifact. Still self-served without exception, now 24 of 24.
++
++Rate: 2 additions in the six hours to 16:40Z, then 1 in the nine hours to 01:35Z. Slowing, on a
++small sample — do not read a trend into three intervals.
++
++**Second counter-example.** exp6862 declared `deterministic CPU dual-side exact checking`, drew the
++`SUBSTRATE_HAS_NO_DURATION_FLOOR` warn, and did NOT add its string, exactly as exp6849 did
++yesterday. Two tasks have now taken the warn honestly rather than editing the guard.
++
++**What that changes.** The population needing a fix is smaller than "every task", and the honest
++path already exists and is used. So the remedy is closer to making the honest path the default than
++to policing the dishonest one — a lint that refuses a diff touching both a floor list and
++`results/` would push authors onto a route two tasks already take voluntarily. Still filed rather
++than built; it needs its own blast-radius measurement, and 24 existing entries would need a
++grandfathering decision.
++
+ **RATE UPDATE 2026-09-01 16:40Z (RESTORED 22:40Z — see the note at the end).** The list grew
+ 21 -> 23 in six hours, still 23 of 23 self-served:
+ 
+-- 
+2.55.0
+

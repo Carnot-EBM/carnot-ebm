@@ -1,0 +1,65 @@
+From 25e122b8006da5a2d424db77e53915f083198ebe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 11 Aug 2026 02:48:02 -0400
+Subject: [PATCH 08792/11362] [conductor] Universal activation bus over the
+ three mandated GGUF families
+
+Automated research step by research conductor.
+Task ID: exp6300-three-family-universal-activation-bus
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                                   | 2 +-
+ ...riment_6300_three_family_universal_activation_bus.json | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a48af11c7a..1c253520c8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4876,
++  "experiments_checked": 4877,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6300_three_family_universal_activation_bus.json b/results/experiment_6300_three_family_universal_activation_bus.json
+index a86eb9f2be..57a60d6dca 100644
+--- a/results/experiment_6300_three_family_universal_activation_bus.json
++++ b/results/experiment_6300_three_family_universal_activation_bus.json
+@@ -1403,12 +1403,12 @@
+       "unsloth/gemma-4-26B-A4B-it-GGUF"
+     ],
+     "memory": {
+-      "available_mb": 110652,
++      "available_mb": 110671,
+       "required_mb": 16384,
+       "ok": true
+     },
+     "disk": {
+-      "available_mb": 1137980,
++      "available_mb": 1137665,
+       "required_mb": 16384,
+       "ok": true
+     },
+@@ -2024,12 +2024,12 @@
+     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0
+   },
+-  "duration_s": 16.529748592991382,
++  "duration_s": 17.800716027151793,
+   "random_seeds": {
+     "fold_seed": 6300,
+     "adapter_seed": 6300,
+     "random_projection_seed": 6300
+   },
+-  "reproducibility_checksum": "sha256:2097e2da11a092fab1551bd78e143bf116e9d6ca959761ab75d258c58969b6ec",
++  "reproducibility_checksum": "sha256:b740d05f2463138f9ac0948ba6e25bbf97d8029272f3377a1f59ac3441c7ba06",
+   "honest_verdict": "blocked: adapter gates passed but full Python suite attempt exited nonzero"
+ }
+-- 
+2.55.0
+

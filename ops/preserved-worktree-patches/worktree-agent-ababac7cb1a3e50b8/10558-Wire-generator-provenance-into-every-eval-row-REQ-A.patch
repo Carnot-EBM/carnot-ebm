@@ -1,0 +1,470 @@
+From 4df1d90b23b451a52583ece6f1456a96c657392d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 18:52:33 -0400
+Subject: [PATCH 10558/11362] Wire generator provenance into every eval row
+ (REQ-ARC-WMTE-6790)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The helpers landed inert in 8b968753dd. This commit lands the deferred
+call site. `run_game` now snapshots the proposer's completion counters
+around the game loop and emits `generator_provenance`,
+`completions_consumed`, and `llm_reached` on every per-game row. A row
+with `completions_consumed == 0` now says plainly that no model was
+reached, which the 22-hour nine-game run of 2026-08-31 could not say.
+
+The self-failing placeholder test is replaced by
+`test_run_game_rows_carry_generator_provenance_fields`. It restores the
+five displaced assertions plus a sixth: mutation testing showed that
+substituting `_gen_prov = generator_provenance(policy)` with a constant
+left the suite green under the original five. With the sixth, all 8
+mutations (5 deletions, 3 constant substitutions) go RED.
+
+Three freshness-lint artifacts are rebuilt with their recorded rebuild
+commands; the deep diffs moved ONLY bookkeeping:
+- outer_loop_arc_gateway_rescore_20260726: 17 fields (dates, heads,
+  dep shas, duration, checksum, peer-artifact sha). Zero measurements.
+- outer_loop_arc_gateway_accurate_rescore_20260726: 13 fields, same
+  classes. Zero measurements.
+- outer_loop_arc_max_actions_answer_20260726: 7 fields, matching the
+  precedent rebuild. ANSWER unchanged (central=4000 conservative=2000).
+
+Two queued rebuilds were NOT committed, deliberately. The
+arc_gateway_card_ground_truth_20260727 rebuild is a live 48-cell re-run
+and it moves MEASURED values (23/48 cells reproduce July trajectories;
+model-wrong 17->19 of 44; REAL median optimism 0.018097->0.02481). An
+A/B control with the wiring reverted produced identical measured values,
+so the movement is prior arc_competition_agent.py drift, not this
+change. The per-level capture's own pure-addition proof reports 79
+number-bearing diffs for the same reason. Those corrections belong to
+the agent change stream with their own review. Full record appended to
+ops/known-issues.md (2026-08-31 entry).
+
+Rejected alternative: acknowledging the drift via
+freshness_acknowledgements instead of rebuilding — rebuilding proves
+inertness by construction where it is true, and surfaces the drift
+where it is not.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           | 59 +++++++++++++++++++
+ ...arc_gateway_accurate_rescore_20260726.json | 26 ++++----
+ ...ter_loop_arc_gateway_rescore_20260726.json | 36 +++++------
+ ..._loop_arc_max_actions_answer_20260726.json | 14 ++---
+ scripts/arc_leaderboard_eval.py               | 20 +++++++
+ .../python/test_eval_generator_provenance.py  | 58 ++++++++++--------
+ 6 files changed, 149 insertions(+), 64 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index adc4f8fd59..c08794f0a9 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7255,6 +7255,65 @@ because it is stated, queued, and self-announcing rather than assumed finished.
+ **Until it is wired, `arc_leaderboard_eval` rows still carry no generator provenance**, so any
+ multi-game run remains uninterpretable in the way the 2026-08-31 nine-game run was.
+ 
++**UPDATE 2026-08-31 (outer-loop, later same day) — THE WIRING IS LANDED. Two of the four queued
++rebuilds moved MEASURED values and were NOT committed; the cause is proven to be prior
++`arc_competition_agent.py` drift, not the wiring.** Append-only record of what happened:
++
++- The prepared 44-line diff applied clean, but its provenance snapshot was in the WRONG PLACE,
++  and an adversarial review caught it before commit. The diff took
++  `_gen_prov = generator_provenance(policy)` BEFORE the game loop; `E3AgentPolicy` builds its
++  proposer LAZILY on first use inside the loop, so on the default e3 arm every row would have
++  read `resolved: false / "no proposer"` while `llm_reached` could simultaneously read true —
++  the uninterpretability this feature exists to kill, re-emitted as a confident wrong answer.
++  Fixed before landing: the provenance snapshot now sits AFTER the loop, next to the
++  counters-after snapshot. The counter placement was already correct (before = {} for a
++  lazily-created proposer still yields the right delta).
++- `run_game` now snapshots `completion_counters(policy)` before and after the game loop, reads
++  provenance after it, and emits `generator_provenance`, `completions_consumed`, and
++  `llm_reached` on every per-game row.
++- The self-failing test was replaced by `test_run_game_rows_carry_generator_provenance_fields`.
++  These are SOURCE-STRING checks, stated as such — a behavioral test through the real
++  `run_game` costs a ~557MB import (the reason the helpers live in their own module). To narrow
++  that honestly-stated gap: every assertion is newline-anchored to its exact indentation (a
++  commented-out line goes RED), a sixth assertion names the `_gen_prov` assignment (a constant
++  substitution went GREEN without it), and two ORDER assertions pin counters-before ahead of
++  the loop and provenance after it. All 11 mutations go RED (5 deletions, 3 constant
++  substitutions, 1 comment-out, 2 placement moves), file restored byte-identical each time.
++- `outer_loop_arc_gateway_rescore_20260726`: rebuilt. 17 fields moved, ALL bookkeeping
++  (run_date, git heads, dependency sha/bytes/mtime, duration, checksum, and the recorded sha of
++  the peer artifact, which had itself moved in git since July). Zero measured values. Committed
++  together with this update.
++- `outer_loop_arc_gateway_accurate_rescore_20260726`: rebuilt. 13 fields moved, all bookkeeping.
++  Zero measured values. Its recorded sha for the cited gateway_rescore artifact points at the
++  version rebuilt in this same commit, so both land together. Committed together with this
++  update.
++- `outer_loop_arc_max_actions_answer_20260726`: re-drifted by this edit, rebuilt again. 7 fields
++  moved, all bookkeeping — same shape as the precedent rebuild. The answer line is unchanged
++  (`central=4000 conservative=2000 gates_passed=True`). Committed together with this update.
++- `arc_gateway_card_ground_truth_20260727`: its rebuild is a LIVE 48-cell re-run, and it MOVED
++  MEASURED VALUES. Only 23/48 cells reproduce the persisted July trajectories (gate_4 fails);
++  the headline moved (model wrong on 19/44 cells vs the committed 17/44; REAL median optimism
++  0.02481 vs 0.018097; negative-sign cells 5 vs 6, tu93@b2000 leaving and s5i5@b2000 entering).
++  An A/B control rebuild with the wiring REVERTED produced the IDENTICAL verdict and identical
++  measured values (56 diffs between the two rebuilds: 54 clocks/hashes, 2 rebuild-mechanics
++  fields, 0 measurements). So the movement is the accumulated `arc_competition_agent.py` drift —
++  this artifact was already stale at HEAD on that dependency, in the lint's BACKLOG bucket — and
++  NOT the wiring. The rebuild was restored from HEAD and NOT committed: that correction belongs
++  to whoever changed the agent, with its own review, not smuggled under a wiring commit.
++- `arc_per_level_reset_attribution_20260726`: same class. Its capture was run to a SCRATCH
++  output only; its own built-in pure-addition proof reports `pure_addition: false` with 79
++  number-bearing diffs over 18 matched cells (trajectory hashes and efficiencies moved). The
++  committed artifact was left untouched and NOT rebuilt in place, for the same reason as above.
++- Worktree gap found on the way: `environment_files/`, `data/arc_transition_corpus/`, and
++  `results/experiment_4629_live_frame_change_cnn.pt` are untracked and exist only in the main
++  checkout. A live-capture rebuild in a fresh worktree either fails outright (the offline arcade
++  scans zero games) or silently degrades (the frame-change scorer loads inert). Temporary
++  symlinks were used for the rebuilds and removed after.
++- Standing debt this leaves OPEN: the live-capture artifacts above (plus the ~10 other BACKLOG
++  entries the freshness lint lists) still need a rebuild-and-diff owned by the
++  `arc_competition_agent.py` change stream. Their July numbers describe July agent behavior; the
++  current agent demonstrably walks different trajectories on the same seeds.
++
+ 
+ ### NEW 2026-08-31 (outer-loop, MEASURED) — THE ADAPTER-FREE EVAL RECORDS NO PER-GAME GENERATOR PROVENANCE, SO A 9-GAME RUN IS UNINTERPRETABLE
+ 
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index e2948624e0..5ee36929fa 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -22,7 +22,7 @@
+  },
+  "experiment": "outer_loop_arc_gateway_accurate_rescore_20260726",
+  "title": "GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the published uncharged-RESET optimism was itself overstated",
+- "run_date": "2026-08-22T21:16:35Z",
++ "run_date": "2026-08-31T22:47:22Z",
+  "schema": "carnot.arc_gateway_accurate_rescore.v1",
+  "charge_model_settled_from_installed_source": {
+   "source_spans": {
+@@ -136,8 +136,8 @@
+    {
+     "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+     "exists": true,
+-    "sha256": "dd600385f013f194efcd456454d8fb0af9230dbe6201fc0c3580caa34c5b05c9",
+-    "bytes": 85218,
++    "sha256": "ceee2c4ac6cf6c3a12c1b6c721eb699e77a2d8407dd0f5b8f72040951a29b644",
++    "bytes": 85219,
+     "committed_at_time_of_writing": true,
+     "what_it_reported": "published the uncharged-RESET optimism as median 4.62% / max 16.80% over 44 live cells, computed under M1",
+     "NOT_MODIFIED": true
+@@ -3066,27 +3066,27 @@
+   "no historical artifact's recorded numbers rewritten; the M1 figures are published beside the M2 figures, not over them",
+   "no pre-existing field of scripts/arc_leaderboard_eval.py's row shape changed value; the 2026-07-27 Card-read instrumentation is PURE ADDITION and the fix history is recorded in CORRECTION_OWED.claim_3_a_CODE_correction_not_just_a_number"
+  ],
+- "git_head": "a89e31ab4bc86cf3f652cdf07f5265438aa20288",
++ "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
+  "provenance": {
+-  "git_head": "a89e31ab4bc86cf3f652cdf07f5265438aa20288",
++  "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
+   "code": [
+    {
+     "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
+     "sha256": "b6885ca6760d57fbec72e8cd76d83a0492b773586542aaaa88c31fc973c9df35",
+     "bytes": 102149,
+-    "mtime_utc": "2026-08-22T20:48:11Z"
++    "mtime_utc": "2026-08-31T22:13:35Z"
+    },
+    {
+     "path": "scripts/arc_gateway_rescore.py",
+     "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
+     "bytes": 21859,
+-    "mtime_utc": "2026-07-27T00:04:02Z"
++    "mtime_utc": "2026-08-31T22:13:35Z"
+    },
+    {
+     "path": "scripts/arc_leaderboard_eval.py",
+-    "sha256": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
+-    "bytes": 55286,
+-    "mtime_utc": "2026-08-19T18:16:08Z"
++    "sha256": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
++    "bytes": 56375,
++    "mtime_utc": "2026-08-31T22:47:00Z"
+    }
+   ],
+   "rows_sources": {
+@@ -3141,7 +3141,7 @@
+    "cited_artifacts": [
+     {
+      "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+-     "sha256": "dd600385f013f194efcd456454d8fb0af9230dbe6201fc0c3580caa34c5b05c9"
++     "sha256": "ceee2c4ac6cf6c3a12c1b6c721eb699e77a2d8407dd0f5b8f72040951a29b644"
+     },
+     {
+      "path": "results/arc_per_level_reset_attribution_20260726.json",
+@@ -3556,7 +3556,7 @@
+    }
+   ]
+  },
+- "duration_s": 12.781,
++ "duration_s": 10.117,
+  "measurement_wall_s": 9649.5,
+  "measurement_wall_s_basis": {
+   "per_part": {
+@@ -3569,5 +3569,5 @@
+  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock: each part publishes its own `measurement_wall_s`, summed from the upstream row FILES' own elapsed clocks. Conflating the two published an 8-second duration for a 2.54-hour measurement once already.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "this artifact steps no environment and loads no model. It re-reads persisted rows and re-drives the INSTALLED scorer. Declaring a live substrate here would borrow credibility the pass does not have.",
+- "reproducibility_checksum": "sha256:0eb8c04bbb583ddb29cf9a8bfc526712e9fd24d657894680bb646f6c2333253d"
++ "reproducibility_checksum": "sha256:1397268b0de95aaa2d09620f7b21749462ce4f29c0fe9dca8e9b37dee149e8a9"
+ }
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index fef6036900..3c65b72bb8 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1,7 +1,7 @@
+ {
+  "experiment": "outer_loop_arc_gateway_rescore_20260726",
+  "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
+- "run_date": "2026-07-29T14:36:02Z",
++ "run_date": "2026-08-31T22:47:20Z",
+  "schema": "carnot.arc_gateway_rescore.v1",
+  "defect_under_measurement": {
+   "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
+@@ -88,7 +88,7 @@
+  "independent_implementation_crosscheck": {
+   "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+   "available": true,
+-  "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
++  "peer_sha256": "1f467e4b2ecacf390c29df06d87b49c1474c3fbed7a8c048dc7756605aaf2e7c",
+   "field_by_field_peer_vs_mine": {
+    "n_rows_total": {
+     "peer": 1401,
+@@ -965,39 +965,39 @@
+    "available": true
+   }
+  ],
+- "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
++ "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
+  "provenance": {
+-  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
++  "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
+   "code": [
+    {
+     "path": "scripts/arc_gateway_rescore.py",
+     "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
+     "bytes": 21859,
+-    "mtime_utc": "2026-07-27T00:04:02Z"
++    "mtime_utc": "2026-08-31T22:13:35Z"
+    },
+    {
+     "path": "scripts/arc_gateway_exact_attribution.py",
+     "sha256": "b401b6367c794c47b1719bf360bed37150ddd30d1435034619bb881fc08a8348",
+     "bytes": 6977,
+-    "mtime_utc": "2026-07-26T23:28:49Z"
++    "mtime_utc": "2026-08-31T22:13:35Z"
+    },
+    {
+     "path": "scripts/analyze_arc_gateway_rescore.py",
+-    "sha256": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
+-    "bytes": 45412,
+-    "mtime_utc": "2026-07-27T00:04:02Z"
++    "sha256": "5a7291ed02ef74321c379f77331c0b755771d6599df055ff80fedc94deab83c3",
++    "bytes": 46129,
++    "mtime_utc": "2026-08-31T22:13:35Z"
+    },
+    {
+     "path": "scripts/arc_leaderboard_eval.py",
+-    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
+-    "bytes": 53382,
+-    "mtime_utc": "2026-07-27T05:03:34Z"
++    "sha256": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
++    "bytes": 56375,
++    "mtime_utc": "2026-08-31T22:47:00Z"
+    },
+    {
+     "path": "python/carnot/agentic/arc_competition_agent.py",
+-    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+-    "bytes": 376234,
+-    "mtime_utc": "2026-07-29T14:20:59Z"
++    "sha256": "1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf",
++    "bytes": 530038,
++    "mtime_utc": "2026-08-31T22:13:30Z"
+    }
+   ],
+   "rows_sources": {
+@@ -1281,9 +1281,9 @@
+    }
+   ]
+  },
+- "duration_s": 1.748,
++ "duration_s": 1.069,
+  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
+- "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
+-}
+\ No newline at end of file
++ "reproducibility_checksum": "048d3146ebab7565560b97b3f91f8cbd402a1e3e3d72788766102025e247a96c"
++}
+diff --git a/results/outer_loop_arc_max_actions_answer_20260726.json b/results/outer_loop_arc_max_actions_answer_20260726.json
+index 9605817f35..1284f6e1ae 100644
+--- a/results/outer_loop_arc_max_actions_answer_20260726.json
++++ b/results/outer_loop_arc_max_actions_answer_20260726.json
+@@ -61,7 +61,7 @@
+  "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
+  "run_date": "2026-07-26",
+  "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
+- "build_timestamp_utc": "2026-08-22T20:54:10Z",
++ "build_timestamp_utc": "2026-08-31T22:47:33Z",
+  "schema": "carnot.arc_max_actions_answer.v1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
+@@ -120,7 +120,7 @@
+   }
+  ],
+  "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
+- "duration_s": 0.715,
++ "duration_s": 0.502,
+  "random_seed": 20260724,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
+@@ -7653,7 +7653,7 @@
+   "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
+  },
+  "provenance": {
+-  "git_head": "b766697b0cee358a897d5b2ff31f18edf3abcc2d",
++  "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
+   "code": [
+    {
+     "path": "scripts/analyze_arc_max_actions_answer.py",
+@@ -7672,13 +7672,13 @@
+    },
+    {
+     "path": "scripts/arc_scored_path_lever_harness.py",
+-    "sha256": "ee5e787b3ebb42354403ba1587d6f73d8f752d8f0c2a98ecb6f9e6f1b82057b3",
+-    "bytes": 65419
++    "sha256": "e197c847903702b5a1fe71cb8f754c3713377d02cd2f270dec87330c12d4bbf2",
++    "bytes": 74559
+    },
+    {
+     "path": "scripts/arc_leaderboard_eval.py",
+-    "sha256": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
+-    "bytes": 55286
++    "sha256": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
++    "bytes": 56375
+    }
+   ],
+   "rows_sources": {
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index f665c4f0ec..6e538228ae 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -60,6 +60,10 @@ sys.path.insert(0, str(REPO / "python"))
+ 
+ from arcengine import GameAction
+ from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_eval_provenance import (
++    completion_counters,
++    generator_provenance,
++)
+ from carnot.agentic.arc_competition_agent import (
+     CLAIMED,
+     CarnotAgentPolicy,
+@@ -588,6 +592,7 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None)
+ 
+         env = VariantEnv(env, game, variant, reflect=reflect)
+     base = _baseline_actions(env, game)
++    _counters_before = completion_counters(policy)
+     frames, latest, actions = [], None, 0
+     start = None
+     best = None
+@@ -910,8 +915,23 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None)
+         except Exception as exc:
+             eff_card = None
+             eff_card_error = f"{type(exc).__name__}: {str(exc)[:120]}"
++    _counters_after = completion_counters(policy)
++    # Snapshot provenance AFTER the loop, never before it. E3AgentPolicy builds its proposer
++    # LAZILY on first use inside the loop, so a before-loop snapshot reads "no proposer" on
++    # every default-arm row even when the LLM was reached (adversarial review, 2026-08-31).
++    _gen_prov = generator_provenance(policy)
++    _consumed = {
++        k: _counters_after.get(k, 0) - _counters_before.get(k, 0)
++        for k in set(_counters_before) | set(_counters_after)
++    }
+     return {
+         "game": game,
++        # GENERATOR PROVENANCE (2026-08-31). Without these two fields a row cannot be read as an
++        # e3 result at all -- see `generator_provenance`. `completions_consumed == 0` means no
++        # model was reached for this game, whatever the levels say.
++        "generator_provenance": _gen_prov,
++        "completions_consumed": _consumed,
++        "llm_reached": bool(_consumed.get("completions", 0) > 0),
+         "levels": levels,
+         "reached": reached,
+         "actions": actions,
+diff --git a/tests/python/test_eval_generator_provenance.py b/tests/python/test_eval_generator_provenance.py
+index 4da119c7cc..115dd535fa 100644
+--- a/tests/python/test_eval_generator_provenance.py
++++ b/tests/python/test_eval_generator_provenance.py
+@@ -99,32 +99,38 @@ def test_a_policy_without_counters_yields_an_empty_snapshot() -> None:
+     assert completion_counters(_Policy(_Prop())) == {}
+ 
+ 
+-def test_the_call_site_assertion_is_deliberately_absent_until_the_wiring_lands() -> None:
+-    """THE CALL SITE IS NOT WIRED YET, ON PURPOSE, AND THIS RECORDS WHY.
+-
+-    Editing `scripts/arc_leaderboard_eval.py` makes 5 artifacts stale that cite it as
+-    provenance, and `artifact-freshness-lint` correctly refuses the commit until each is rebuilt
+-    and diffed. One was rebuilt already and moved ZERO measured values -- only build timestamp,
+-    git head, and the SHA/bytes of the edited file -- so the change is additive. The remaining
+-    four are queued.
+-
+-    So this module ships tested and INERT. That is the exact "implemented beside the call site"
+-    shape this session caught three times, and it is acceptable ONLY because it is stated here
+-    and queued in ops/known-issues.md rather than assumed to be finished.
+-
+-    WHEN THE WIRING LANDS, REPLACE THIS TEST with the assertions it displaced:
+-
+-        src = SCRIPT.read_text()
+-        assert '"generator_provenance": _gen_prov,' in src
+-        assert '"completions_consumed": _consumed,' in src
+-        assert '"llm_reached": bool(_consumed.get("completions", 0) > 0),' in src
+-        assert "_counters_before = completion_counters(policy)" in src
+-        assert "_counters_after = completion_counters(policy)" in src
+-
+-    The prepared diff is in the session scratchpad as `eval_wiring.patch`.
++def test_run_game_rows_carry_generator_provenance_fields() -> None:
++    """The call-site wiring for REQ-ARC-WMTE-6790, landed 2026-08-31.
++
++    These are SOURCE-STRING checks, not behavioral checks: importing the script costs ~557MB
++    (see the module docstring of `arc_eval_provenance`), so a fake-policy test through the real
++    `run_game` is not affordable here. That limit is real -- a rewrite that keeps these exact
++    lines but changes behavior around them passes. Each assertion is newline-anchored to its
++    exact indentation so commenting a line out goes RED, and two ORDER assertions pin the
++    placements that mutation review showed matter (see the ordering block below).
+     """
+ 
+     src = SCRIPT.read_text()
+-    assert "generator_provenance" not in src, (
+-        "the wiring has landed -- restore the call-site assertions in this test"
+-    )
++    # Newline + exact indentation: a commented-out copy of the line no longer matches.
++    assert '\n        "generator_provenance": _gen_prov,' in src
++    assert '\n        "completions_consumed": _consumed,' in src
++    assert '\n        "llm_reached": bool(_consumed.get("completions", 0) > 0),' in src
++    assert "\n    _counters_before = completion_counters(policy)" in src
++    assert "\n    _counters_after = completion_counters(policy)" in src
++    # Sixth assertion, beyond the five the placeholder displaced. Mutation testing showed
++    # replacing this call with a constant dict left the suite GREEN under the original five.
++    assert "\n    _gen_prov = generator_provenance(policy)" in src
++
++    # ORDER matters, and string presence alone cannot see it (adversarial review, 2026-08-31):
++    # 1. The before-counter snapshot must sit BEFORE the game loop starts, or every delta is 0
++    #    and llm_reached is permanently False.
++    # 2. The provenance snapshot must sit AFTER the loop: E3AgentPolicy builds its proposer
++    #    lazily on first use inside the loop, so a before-loop snapshot confidently reports
++    #    "no proposer" on rows where the LLM was reached.
++    i_before = src.index("_counters_before = completion_counters(policy)")
++    i_loop_start = src.index("frames, latest, actions = [], None, 0")
++    i_after = src.index("_counters_after = completion_counters(policy)")
++    i_prov = src.index("_gen_prov = generator_provenance(policy)")
++    assert i_before < i_loop_start, "counters-before must precede the game loop"
++    assert i_after > i_loop_start, "counters-after must follow the game loop"
++    assert i_prov > i_after, "provenance must be snapshotted after the loop (lazy proposer)"
+-- 
+2.55.0
+

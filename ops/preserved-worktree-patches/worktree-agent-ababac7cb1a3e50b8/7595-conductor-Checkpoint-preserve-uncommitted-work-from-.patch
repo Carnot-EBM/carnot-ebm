@@ -1,0 +1,43 @@
+From 0c4664039bb1f9c990ebc5bf1e5bc70a9cd3212a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 22:54:35 -0400
+Subject: [PATCH 07595/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 751434a52c..aa4335ab4c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 285, "phase": "iteration_start", "last_beat": "2026-07-23T02:20:42Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 286, "phase": "iteration_start", "last_beat": "2026-07-23T02:54:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cc38161e4a..4702788ef5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14158,3 +14158,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 01:34 UTC | Canonical certified-event and adaptive-memory pref | OK | 140 passed, 1 warning in 26.89s |
+ | 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |
+ | 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |
++| 2026-07-23 02:52 UTC | Gated on Exp5827 structural lift: future-validated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5828_future_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fa7d4abcee..1ff0cd5dfb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 285, "phase": "iteration_start", "started_at": "2026-07-23T02:20:42Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 286, "phase": "iteration_start", "started_at": "2026-07-23T02:54:31Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,701 @@
+From 79299a54f7781e46f109a666210d2335d13317b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 14:45:02 -0400
+Subject: [PATCH 08656/11362] Phase 4d: INFRASTRUCTURE-BLOCKED, zero valid
+ cells (REQ-ARC-WMTE-6247)
+
+Attempted the live-path A/B for CARNOT_ARC_BOUNDED_REINDUCTION (never
+measured since shipping 2026-08-08). Four launches, three real bugs found
+and fixed:
+
+1. REPO path resolved one directory short (parent.parent instead of
+   parents[2]), crashing the final artifact write.
+2. No detection for a reaper-corrupted cell -- checkpoint-resume would have
+   silently accepted an invalid (llm_on_row_valid=False) cell as done.
+   Fixed with validity-aware checkpoint filtering + a bounded per-cell
+   retry loop.
+3. The new retry loop's own health pre-check stacked with _ensure_server()'s
+   identical internal check, causing a self-inflicted server storm (4
+   servers spawned in 4 minutes). Fixed by calling _ensure_server()
+   unconditionally instead of gating it behind a redundant probe.
+
+After all three fixes, ka59/off still failed identically on all 3 retry
+attempts -- same action count, same reason, every time. The final attempt's
+own instrumentation: 4 internal LLM retries, 0 successful completions, over
+~27 minutes -- a reproducible, timeout-shaped failure distinct from the
+mid-generation-kill signature found earlier this session. A 4th,
+uncharacterized storm then appeared on the next cell. Stopped there rather
+than chasing a 4th infrastructure issue on a single lever measurement --
+the remaining problem implicates the shared, unsolved llama-server reaper,
+out of scope for this task.
+
+CARNOT_ARC_BOUNDED_REINDUCTION stays default OFF -- no evidence either way,
+the lever was never exercised under valid conditions. Reported as
+INFRASTRUCTURE_BLOCKED, not a negative result about the lever. Row marked
+llm_tier_operational=False (the lint's own sanctioned, counter-checked
+escape hatch -- honest here since responses=0) to pass
+arc-llm-on-liveness-lint's real-traffic check.
+
+New reaper evidence logged in ops/known-issues.md (the zero-response,
+timeout-shaped failure pattern is new information for that investigation).
+
+determination_preservation_lint, adversarial_verify, artifact_freshness_lint,
+arc-llm-on-liveness-lint all clean.
+---
+ ...-live-agent-improvement-plan-2026-08-08.md |  15 +
+ .../arc-world-model-trust-energy/spec.md      |  94 ++++
+ ...xperiment_6247_bounded_reinduction_ab.json | 511 ++++++++++++++++++
+ 3 files changed, 620 insertions(+)
+ create mode 100644 results/experiment_6247_bounded_reinduction_ab.json
+
+diff --git a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+index ba9073a2f6..8f578736b5 100644
+--- a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
++++ b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+@@ -419,6 +419,21 @@ for free on the next scored run. Run this A/B AFTER 2a settles think, because re
+ value depends on the per-attempt success rate think sets. *Gate: banked levels or admission
+ rate up under the flag; no action-budget regression on games that never stall.*
+ 
++**ATTEMPTED, INFRASTRUCTURE-BLOCKED (2026-08-09, REQ-ARC-WMTE-6247) — zero valid cells, not a
++lever result.** Four launches against ka59+re86 (budget 1500, real live-path episodes via
++`arc_scored_path_lever_harness.py`'s `run_cell`). Fixed 3 real bugs along the way (a `REPO` path
++bug crashing the final write; missing invalid-cell detection letting a reaper-corrupted cell be
++silently accepted as done; a self-inflicted server storm from a redundant health-check stacked on
++top of `_ensure_server()`'s own identical internal check). After fixing all three, ka59/off still
++failed identically on all 3 retry attempts (same action count, same failure reason each time) —
++the surviving attempt shows 4 internal LLM retries, 0 successful completions, over ~27 minutes.
++A 4th, uncharacterized storm-like failure then appeared moving to the next cell. Stopped there
++rather than chasing a 4th distinct infrastructure issue on a single lever measurement — the
++remaining problem implicates the shared, pre-existing, unsolved llama-server reaper, out of scope
++for this task. `CARNOT_ARC_BOUNDED_REINDUCTION` stays default OFF; no evidence either way. Full
++detail (including the reproducible ka59-specific failure pattern, useful for the standing reaper
++investigation) in REQ-ARC-WMTE-6247.
++
+ **4e. (Reserve bet) Real Python REPL sandbox on the 31B generator.**
+ The Duck's core architecture — arbitrary-Python sandbox with mid-program `action()` round-trips —
+ versus our five-function dispatch table (`arc_tool_loop_lookahead.py`), which its own docstring
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 5a91d57e69..0336e07964 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22982,6 +22982,100 @@ as mixed, not summarized as "close to passing."
+ |---|---|---|
+ | REQ-ARC-WMTE-6246 | `scripts/experiments/experiment_6246_induce_prompt_enrichment_heldout_ab.py` (measurement-only; no production default changed). | `results/experiment_6246_induce_prompt_enrichment_heldout_ab.json` (the artifact IS the check — real LLM induction on both arms, HUD-masked change fidelity, `hud_mask_enabled=True` forced explicitly; adversarial_verify and determination_preservation_lint both clean). |
+ 
++### REQ-ARC-WMTE-6247: Phase 4d's Live-Path A/B — INFRASTRUCTURE-BLOCKED, Not A Lever Result (Zero Valid Cells)
++
++**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4d.
++`CARNOT_ARC_BOUNDED_REINDUCTION` shipped 2026-08-08 (commit `e73efa7c85`) and was never measured.
++Unlike REQ-ARC-WMTE-6242/6246 (single induce calls, paired A/B), this lever only has a chance to
++fire if a FULL LIVE EPISODE genuinely stalls after its first induction attempt, keeps exploring,
++and accumulates 200+ more transitions without winning — a property of a whole multi-hundred-action
++run, so this reused `scripts/arc_scored_path_lever_harness.py`'s `run_cell` (the mature, already-
++instrumented scored-path harness) directly, toggling only `CARNOT_ARC_BOUNDED_REINDUCTION`.
++
++**RESULT: INFRASTRUCTURE-BLOCKED. Zero of the planned 4 cells (ka59 off/on, re86 off/on) produced
++a valid measurement.** This is explicitly NOT a negative result about the lever — it was never
++exercised under valid conditions. Four launches, three real bugs found and fixed, a fourth
++failure mode encountered and not chased further:
++
++1. **Run 1 — a `REPO` path bug.** `Path(__file__).resolve().parent.parent` resolved one directory
++   short of the true repo root (should have been `.parents[2]`), so the final `OUT.write_text()`
++   targeted a nonexistent `scripts/results/` directory. Crashed before any per-cell progress was
++   logged — likely on the empty `blocked_cuda_server_failed_to_start` short-circuit, so no real
++   compute was wasted. Fixed: `REPO = Path(__file__).resolve().parents[2]`, and the `sys.path`
++   insert corrected from the (accidentally-working-because-of-the-bug) bare `REPO` to
++   `REPO / "scripts"` explicitly.
++2. **Run 2 — no invalid-cell detection.** ka59/off ran a real 1481-action episode, but the reaper
++   crashed its ONE induction attempt mid-episode (`llm_on_row_valid=False`,
++   `generator_healthy_after=False`, `induction_skipped: {"proposer_failed_or_missing_root": 1}`).
++   The script had no logic to detect this and would have silently accepted the corrupted cell as
++   done, permanently losing the chance at a valid ka59/off reading via checkpoint-resume. Fixed:
++   checkpoint-resume now filters to `llm_on_row_valid is not False`, and a per-cell retry loop
++   (up to 3 attempts) was added.
++3. **Run 3 — a self-inflicted server storm.** The new retry loop's own `proposer._inner._healthy()`
++   pre-check (a bare 2-second `urllib` timeout — the same flakiness
++   `arc_scored_path_lever_harness.py`'s own `forbid_spawn` docstring names) stacked with
++   `_ensure_server()`'s IDENTICAL internal check. Under load this produced 4 independent server
++   processes within a 4-minute window, several dying mid-model-load with no error at all — a
++   collision from redundant health-checking, not an external reaper. Fixed: removed the outer
++   pre-check; `_ensure_server()` already does "reuse if healthy, else relaunch" internally, so
++   calling it unconditionally before every attempt is a safe no-op on a healthy server.
++4. **Run 4 — a real, highly reproducible reaper pattern, then an uncharacterized 4th failure,
++   not chased further.** With the storm fixed, ka59/off's 3 retry attempts failed IDENTICALLY —
++   same `actions_used=1481`, same `induction_reasons={"stall": 1}`, `llm_on_row_valid=False`
++   every time. The surviving (final) attempt's own `llm` counters: `generate_calls=4,
++   responses=0, llm_wall_s=1619.9s` (~27 minutes) — FOUR internal retry attempts inside one
++   `induce()` call, ZERO successful completions, across nearly half an hour. This is a DIFFERENT
++   signature from the reaper incidents found earlier this session (which killed a server
++   mid-generation, after real tokens had already decoded); here nothing was ever received at
++   all — consistent with either repeated near-timeout failures (`timeout=1500`) or the server
++   being unreachable for the entire window. Moving to ka59/on, a SECOND storm-like pattern
++   appeared (3 new server log files within a 2.5-minute window) with zero further driver output
++   for 15+ minutes. Killed at this point rather than attempting a 4th distinct infrastructure fix
++   in a row on a single measurement task.
++
++**Why stopped here, not pushed further.** Per this session's own standing judgment (explicitly
++invoked): continuing to patch a shared, already-mature harness's internals for a single lever
++measurement has diminishing returns once the failure modes stop being specific bugs in THIS
++script and start implicating the shared `_ensure_server()` machinery or the project's own
++pre-existing, unsolved reaper. The three bugs actually IN this task's own code are fixed and
++real improvements (any FUTURE live-path A/B reusing this pattern benefits from them). The fourth
++is the standing reaper problem, out of scope for a single lever's gate measurement.
++
++**CARNOT_ARC_BOUNDED_REINDUCTION stays default OFF.** No evidence either way — the lever was
++never exercised under measurable conditions.
++
++**Reproducible new evidence for the standing reaper investigation.** ka59's induction call under
++this exact configuration (budget=1500, `run_cell` harness, gemma-4-31B-it-qat, 1500s client
++timeout) failed 3/3 times with an IDENTICAL profile and, in its most detailed capture, zero
++successful completions across 4 internal retries over ~27 minutes — a specific, reproducible
++data point distinct from prior mid-generation-kill incidents. See
++`ops/known-issues.md`'s reaper entry.
++
++#### SCENARIO-ARC-WMTE-6247-INVALID-CELL-DETECTED-AND-RETRIED
++
++Given a cell whose `run_cell` result has `llm_on_row_valid=False` (the harness's own reaper-
++detection witness), the checkpoint-resume logic does not treat it as permanently done, and the
++per-cell retry loop attempts the whole cell again, up to a bounded maximum.
++
++#### SCENARIO-ARC-WMTE-6247-REDUNDANT-HEALTH-CHECK-REMOVED
++
++Given `_ensure_server()` already performs "reuse if healthy, else relaunch" internally, calling
++it unconditionally before each retry attempt (rather than gating it behind a separate, equally
++flaky `_healthy()` pre-check) does not produce a duplicate-server collision under load.
++
++#### SCENARIO-ARC-WMTE-6247-INFRASTRUCTURE-BLOCKED-IS-NOT-A-LEVER-VERDICT
++
++Given zero cells achieved a valid LLM-on measurement after three genuine infrastructure fixes
++and a fourth unresolved failure, the artifact's `honest_verdict` and `disposition` record
++INFRASTRUCTURE_BLOCKED explicitly, and no claim is made about whether
++`CARNOT_ARC_BOUNDED_REINDUCTION` helps, hurts, or is neutral.
++
++## Implementation Status (REQ-ARC-WMTE-6247)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6247 | `scripts/experiments/experiment_6247_bounded_reinduction_ab.py` (measurement attempt; 3 real infra bugs fixed within it; no production default changed). | `results/experiment_6247_bounded_reinduction_ab.json` (the artifact IS the check — records the full attempt history, zero valid cells, `disposition: INFRASTRUCTURE_BLOCKED`; determination_preservation_lint and adversarial_verify both clean). |
++
+ ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
+ 
+ **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
+diff --git a/results/experiment_6247_bounded_reinduction_ab.json b/results/experiment_6247_bounded_reinduction_ab.json
+new file mode 100644
+index 0000000000..30d53aee12
+--- /dev/null
++++ b/results/experiment_6247_bounded_reinduction_ab.json
+@@ -0,0 +1,511 @@
++{
++  "experiment": "experiment_6247_bounded_reinduction_ab",
++  "title": "Phase 4d gate: live-path A/B for CARNOT_ARC_BOUNDED_REINDUCTION -- INFRASTRUCTURE-BLOCKED",
++  "run_date": "2026-08-09T18:44:10Z",
++  "roster_planned": [
++    "ka59",
++    "re86"
++  ],
++  "budget": 1500,
++  "per_game_results": [
++    {
++      "arm": "off",
++      "game": "ka59",
++      "seed": 20260809,
++      "budget": 1500,
++      "llm_enabled": true,
++      "construct_s": 0.931,
++      "gated_flags": {
++        "tier_exhaustion_enabled": true,
++        "tier_uniform_random_enabled": true,
++        "tier_click_vocab_only": true,
++        "frontier_gradient_enabled": false,
++        "edge_bar_hud_mask_enabled": true,
++        "hud_mask_collapse_guard_enabled": true,
++        "hud_mask_stage2_confirm_enabled": true,
++        "hazard_move_pruner_enabled": false
++      },
++      "auto_hud_mask_enabled": true,
++      "explore_budget": 80,
++      "frame_retention_components": {
++        "goal_bias": true,
++        "dense_curiosity": false,
++        "action_effect_expansion_prior": true,
++        "qd_generator": false,
++        "controllable_novelty_policy": false,
++        "object_centric_proposal_policy": false,
++        "go_explore_archive": false,
++        "similarity_retrieval_enabled": false,
++        "click_pixel_sampling_enabled": false
++      },
++      "retains_node_frames": true,
++      "early_stop_grace": 1300,
++      "early_stop_grace_requested": null,
++      "early_stop_grace_applied": false,
++      "ran": true,
++      "wall_s": 1664.02,
++      "llm": {
++        "generate_calls": 4,
++        "complete_text_calls": 0,
++        "responses": 0,
++        "tokens_prompt": 0,
++        "tokens_predicted": 0,
++        "llm_wall_s": 1619.948,
++        "stop_type_limit": 0,
++        "prompt_truncated": 0,
++        "errors": 0
++      },
++      "generator_healthy_before": true,
++      "generator_healthy_after": false,
++      "llama_servers_before": 1,
++      "llama_servers_after": 0,
++      "server_storm_suspected": false,
++      "llm_on_row_valid": false,
++      "induction_attempts": 1,
++      "induction_reasons": {
++        "stall": 1
++      },
++      "induction_skipped": {
++        "proposer_failed_or_missing_root": 1
++      },
++      "induction_planned": 0,
++      "induction_engine_sources": {},
++      "induction_attempts_llm_reached": 1,
++      "induction_model_specs": {
++        "gemma-4-31B-it-qat": 1
++      },
++      "nodes_total": 490,
++      "nodes_with_frame": 490,
++      "nodes_with_previous_frame": 489,
++      "frontier_diagnostics": {
++        "tier_exhaustion_enabled": true,
++        "tier_uniform_random_enabled": true,
++        "tier_click_vocab_only": true,
++        "tier_click_vocab_seen": true,
++        "tier_active_effective": true,
++        "frontier_gradient_enabled": false,
++        "tier_count": 5,
++        "active_tier": 0,
++        "tier_advances": 0,
++        "tier_deferral_fallbacks": 0,
++        "tier_draw_top_k": null,
++        "gradient_targets_chosen": 0,
++        "gradient_misses": 0,
++        "gradient_pick_other_node": 0,
++        "gradient_pick_current_node": 0,
++        "gradient_cur_at_depth_cap_excluded": 0,
++        "max_depth": 45,
++        "reverse_edges": 894,
++        "click_pixel_sampling_enabled": false,
++        "click_pixel_samples_per_component": 1,
++        "click_pixel_redraw_budget": 3,
++        "click_pixel_rows_sampled": 0,
++        "click_pixel_rows_sampled_is_not_an_activity_counter": true,
++        "click_pixel_coordinates_changed": 0,
++        "click_pixel_generation_errors": 0,
++        "click_pixel_points_in": 0,
++        "click_pixel_points_out": 0,
++        "click_pixel_unresolved": 0,
++        "click_pixel_contested_centroid_points": 0,
++        "click_pixel_redraws": 0,
++        "click_pixel_redraws_declined_budget": 0,
++        "click_pixel_redraws_declined_unresolved": 0,
++        "click_pixel_redraws_declined_no_frame": 0,
++        "click_pixel_errors": 0
++      },
++      "hud_diagnostics": {
++        "auto_hud_mask_enabled": true,
++        "edge_bar_hud_mask_enabled": true,
++        "hud_mask_collapse_guard_enabled": true,
++        "hud_mask_stage2_confirm_enabled": true,
++        "hud_mask_safety_stages_explicitly_disabled": [],
++        "hud_mask_source": "status_bar_classifier_req5583_no_repair_added_cell",
++        "hud_mask_resolved": true,
++        "hud_mask_cell_count": 64,
++        "hud_mask_rows": [
++          63
++        ],
++        "hud_mask_cols": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9,
++          10,
++          11,
++          12,
++          13,
++          14,
++          15,
++          16,
++          17,
++          18,
++          19,
++          20,
++          21,
++          22,
++          23,
++          24,
++          25,
++          26,
++          27,
++          28,
++          29,
++          30,
++          31,
++          32,
++          33,
++          34,
++          35,
++          36,
++          37,
++          38,
++          39,
++          40,
++          41,
++          42,
++          43,
++          44,
++          45,
++          46,
++          47,
++          48,
++          49,
++          50,
++          51,
++          52,
++          53,
++          54,
++          55,
++          56,
++          57,
++          58,
++          59,
++          60,
++          61,
++          62,
++          63
++        ],
++        "hud_mask_digest": "a8f81cebbd21b3c3",
++        "hud_shipped_mask_cell_count": 64,
++        "hud_shipped_mask_digest": "a8f81cebbd21b3c3",
++        "graph_nodes": 490,
++        "unique_frames": 1227,
++        "node_inflation_vs_unique_frames": 0.3993,
++        "collapse_guard": {
++          "observations": 1480,
++          "distinct_keys": 1441,
++          "keys_with_multiple_successors": 0,
++          "collapse_violations": 0,
++          "collapse_refusals": 0,
++          "split_node_count": 0,
++          "non_deterministic_keys_excluded_by_control": 0,
++          "proven_collapses": 0,
++          "unproven_masked_branchings": 0,
++          "acted_on_unproven_branchings": false,
++          "restricted_action_to_repair_added_region": true,
++          "branchings_in_shipped_region_not_acted_on": 0,
++          "keys_with_repeated_unmasked_antecedent": 9,
++          "control_had_power_on_any_key": true,
++          "refusals_are_all_proven": true,
++          "uncontrolled_observations": 0,
++          "uncontrolled_branchings_declined": 0,
++          "controlled_keys": 1441,
++          "control_live": true,
++          "attribution": {
++            "branchings_differing_in_repair_added_region": 0,
++            "branchings_differing_in_already_shipped_region": 0,
++            "branchings_differing_outside_the_mask": 0,
++            "attribution_unavailable": 0,
++            "regions_supplied": true
++          },
++          "revocation_mode": "local_split_only",
++          "split_budget_exceeded": false,
++          "split_reporting_threshold": 3,
++          "globally_revoked": false,
++          "max_split_nodes": null
++        },
++        "collapse_guard_refusals": 0,
++        "stage2": {
++          "stage2_verdict": "no_added_region",
++          "stage2_reason": "repair_added_no_cell_so_the_shipped_mask_applies_unchanged",
++          "stage2_min_transitions": 16,
++          "candidate_cell_count": 64,
++          "repair_added_cell_count": 0,
++          "baseline_cell_count": 64,
++          "activated_after_transitions": null,
++          "buffered_frames": 0,
++          "evidence": {},
++          "identity_convention_while_pending": "shipped_mask_same_as_live_default"
++        }
++      },
++      "lever1_frontier_fire": {
++        "tier_advances": 0,
++        "tier_deferral_fallbacks": 0,
++        "tier_click_vocab_seen": true,
++        "tier_active_effective": true,
++        "active_tier": 0
++      },
++      "lever1_fired": false,
++      "lever2_hud_fire": {
++        "hud_mask_resolved": true,
++        "hud_mask_source": "status_bar_classifier_req5583_no_repair_added_cell",
++        "hud_mask_cell_count": 64,
++        "hud_mask_digest": "a8f81cebbd21b3c3",
++        "hud_shipped_mask_cell_count": 64,
++        "hud_shipped_mask_digest": "a8f81cebbd21b3c3",
++        "collapse_guard_refusals": 0,
++        "node_inflation_vs_unique_frames": 0.3993,
++        "stage2": {
++          "stage2_verdict": "no_added_region",
++          "stage2_reason": "repair_added_no_cell_so_the_shipped_mask_applies_unchanged",
++          "stage2_min_transitions": 16,
++          "candidate_cell_count": 64,
++          "repair_added_cell_count": 0,
++          "baseline_cell_count": 64,
++          "activated_after_transitions": null,
++          "buffered_frames": 0,
++          "evidence": {},
++          "identity_convention_while_pending": "shipped_mask_same_as_live_default"
++        }
++      },
++      "hud_mask_resolved": true,
++      "hud_mask_cell_count": 64,
++      "hud_mask_digest": "a8f81cebbd21b3c3",
++      "hud_mask_source": "status_bar_classifier_req5583_no_repair_added_cell",
++      "hud_mask_stage2_verdict": "no_added_region",
++      "hud_mask_stage2_reason": "repair_added_no_cell_so_the_shipped_mask_applies_unchanged",
++      "hud_mask_stage2_candidate_cells": 64,
++      "unique_frames": 1227,
++      "graph_nodes": 490,
++      "node_inflation_vs_unique_frames": 0.3993,
++      "collapse_guard_refusals": 0,
++      "hud_shipped_mask_cell_count": 64,
++      "hud_shipped_mask_digest": "a8f81cebbd21b3c3",
++      "hud_diagnostics_readable": true,
++      "hud_diagnostics_error": null,
++      "lever2_fired": false,
++      "lever2_fired_predicate": "2026-07-26.appearing-mask-counts-digest-compared",
++      "node_inflation": 0.3993,
++      "hazard_diagnostics": {
++        "enabled": false,
++        "flag_resolved": false,
++        "observe_calls": 0,
++        "observe_errors": 0,
++        "antecedent_from_last_grid": 0,
++        "rows_pruned": 0,
++        "prune_errors": 0,
++        "all_pruned_nodes": 0,
++        "observed_nav_transitions": 0,
++        "pruner_prune_calls_lethal": 0,
++        "clicks_skipped": 0,
++        "nav_actions_only": null,
++        "n_deaths": 0,
++        "lethal_mode": null,
++        "model_fitted": false
++      },
++      "lever3_hazard_fire": {
++        "enabled": false,
++        "observe_calls": 0,
++        "observed_nav_transitions": 0,
++        "clicks_skipped": 0,
++        "antecedent_from_last_grid": 0,
++        "n_deaths": 0,
++        "model_fitted": false,
++        "lethal_mode": null,
++        "rows_pruned": 0,
++        "all_pruned_nodes": 0,
++        "observe_errors": 0,
++        "prune_errors": 0
++      },
++      "lever3_verdict": "LEVER_OFF",
++      "lever3_fired": false,
++      "lever3_interpretable": true,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 1481,
++          "human_actions": 28,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 109,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 51,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 51,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 33,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 132,
++          "completed": false
++        },
++        {
++          "level": 6,
++          "agent_actions": 0,
++          "human_actions": 326,
++          "completed": false
++        }
++      ],
++      "level_up_actions": [],
++      "inter_levelup_gaps": [],
++      "actions_after_last_levelup": 1481,
++      "reached_any_level": false,
++      "early_stopped": false,
++      "n_resets": 19,
++      "n_frames": 1500,
++      "level_reset_attribution": {
++        "unit_definitions": {
++          "offline_actions": "this harness's `actions`; EXCLUDES resets",
++          "frames": "loop iterations; INCLUDES resets",
++          "gateway_charged": "offline_actions + resets; the unit the scorer bills"
++        },
++        "segments": [],
++        "tail": {
++          "offline_actions": 1481,
++          "resets": 19,
++          "frames": 1500,
++          "gateway_charged": 1500,
++          "level_completed": null
++        },
++        "n_segments": 0,
++        "segment_offline_actions": [],
++        "segment_resets": [],
++        "segment_frames": [],
++        "segment_gateway_charged": [],
++        "tail_offline_actions": 1481,
++        "tail_resets": 19,
++        "tail_frames": 1500,
++        "tail_gateway_charged": 1500,
++        "resets_in_completed_segments": 0,
++        "resets_in_tail": 19,
++        "run_total_offline_actions": 1481,
++        "run_total_resets": 19,
++        "run_total_gateway_charged": 1500,
++        "reconciles": true,
++        "discrepancies": [],
++        "channel2_frame_sequence_derived": {
++          "segments": [],
++          "tail": {
++            "offline_actions": 1481,
++            "resets": 19,
++            "frames": 1500,
++            "gateway_charged": 1500,
++            "level_completed": null
++          },
++          "n_segments": 0,
++          "resets_in_completed_segments": 0,
++          "resets_in_tail": 19
++        }
++      },
++      "segment_offline_actions": [],
++      "segment_resets": [],
++      "segment_frames": [],
++      "segment_gateway_charged": [],
++      "tail_offline_actions": 1481,
++      "tail_resets": 19,
++      "tail_frames": 1500,
++      "tail_gateway_charged": 1500,
++      "resets_in_completed_segments": 0,
++      "resets_in_tail": 19,
++      "level_reset_attribution_reconciles": true,
++      "efficiency_gateway_charged": 0.0,
++      "efficiency_gateway_charged_error": null,
++      "efficiency_optimism_vs_gateway": 0.0,
++      "level_up_charged": [],
++      "resets_before_levelups": [],
++      "navdiag_instrumented": true,
++      "navdiag_uninstrumented_reason": null,
++      "navdiag_attempts": 30,
++      "navdiag_reset_replay_fallbacks": 18,
++      "navdiag_exact_hits": 12,
++      "navdiag_partial_hits": 0,
++      "navdiag_similarity_hits": 0,
++      "navdiag_forward_walk_hits": 12,
++      "navdiag_forward_walk_hit_rate": 0.4,
++      "navdiag_forward_edges_recorded": 894,
++      "navdiag_forward_navigation_steps": 19,
++      "navdiag_reset_replay_steps": 20,
++      "levels": 0,
++      "reached": 0,
++      "actions": 1481,
++      "actions_to_first_levelup": null,
++      "efficiency": 0.0,
++      "states_expanded": 490,
++      "errors": 0,
++      "n_actions_counted": 1481,
++      "n_click_actions": 596,
++      "n_nav_actions": 885,
++      "nav_fraction": 0.5976,
++      "top_action": "3",
++      "top_action_count": 241,
++      "top_action_is_click": false,
++      "top5": [
++        {
++          "action": "3",
++          "count": 241
++        },
++        {
++          "action": "4",
++          "count": 221
++        },
++        {
++          "action": "2",
++          "count": 220
++        },
++        {
++          "action": "1",
++          "count": 203
++        },
++        {
++          "action": "6@35,31",
++          "count": 188
++        }
++      ],
++      "cell_attempts_used": 3,
++      "llm_tier_operational": false
++    }
++  ],
++  "attempt_history": {
++    "run1": "crashed at final write due to a REPO path resolution bug (parent.parent instead of parents[2]); zero cells completed, no data lost since the bug fired before any real work started (or on the empty blocked-server-startup short-circuit).",
++    "run2": "path bug fixed; ka59/off ran but the reaper crashed its one induction attempt mid-episode (llm_on_row_valid=False, generator_healthy_after=False); the script had no logic to detect/retry a corrupted cell, so it would have silently accepted invalid data as done.",
++    "run3": "added llm_on_row_valid-aware checkpoint filtering plus a per-cell retry loop (up to 3 attempts); ka59/off retried but hit a NEW bug: the retry loop's own outer proposer._inner._healthy() pre-check (bare 2s timeout) stacked with _ensure_server()'s IDENTICAL internal check, and under load this produced a self-inflicted server storm (4 independent server processes spawned within a 4-minute window, several dying mid-model-load with no error -- a collision from redundant health-checking, not an external reaper).",
++    "run4": "removed the redundant outer health check (call _ensure_server() unconditionally each attempt; it already does reuse-if-healthy internally). ka59/off then failed IDENTICALLY on all 3 retry attempts (actions_used=1481, induction_reasons={'stall':1}, llm_on_row_valid=False every time) -- a remarkably consistent, reproducible reaper pattern on this specific game. The surviving (final, attempt-3) row shows llm.generate_calls=4, llm.responses=0, llm.llm_wall_s=1619.9s (~27 minutes) with ZERO successful completions across four internal retry attempts inside a single induce() call -- a different signature from earlier session reaper incidents (which killed a server mid-generation, after SOME tokens decoded); here nothing was ever received at all, consistent with either repeated near-timeout failures (proposer timeout=1500s) or the server being unreachable/dead for the whole window. Then, starting ka59/on, a SECOND storm-like pattern appeared (3 new server log files within a 2.5-minute window) with the driver producing zero further log output for 15+ minutes -- either a recurrence of the storm despite the fix, or the driver stuck inside _ensure_server()'s own internal retry/relaunch logic. Killed at this point rather than continuing to patch a 4th distinct infrastructure failure mode in a row."
++  },
++  "disposition": "INFRASTRUCTURE_BLOCKED",
++  "disposition_reason": "Four distinct infrastructure failure modes encountered across four launches (a path bug, a missing invalid-cell-retry mechanism, a self-inflicted server storm from redundant health-checking, and a fourth still-uncharacterized storm/hang on the very next cell). Three were found, root-caused, and fixed in this session. The underlying external cause -- the project's pre-existing, long-standing, still-unsolved llama-server 'reaper' -- was not solved (that is explicitly out of scope for this task; see ops/known-issues.md's standing reaper investigation). Zero of the planned 4 cells (ka59 off/on, re86 off/on) produced a valid LLM-on measurement. This is NOT a negative result about CARNOT_ARC_BOUNDED_REINDUCTION -- the lever was never exercised under valid conditions -- it is a measurement-infrastructure failure, reported as such rather than as evidence about the lever.",
++  "n_valid_cells_obtained": 0,
++  "n_cells_planned": 4,
++  "solve_provenance": "development_proxy",
++  "arc_solve_claim": false,
++  "verifier_is_oracle": false,
++  "inference_substrate": "live_llm_inference",
++  "inference_substrate_principle": "the attempted cells did invoke the real gemma-4-31B-it-qat server; none produced a valid, reaper-free measurement, hence disposition=INFRASTRUCTURE_BLOCKED rather than a scored result.",
++  "random_seed": 20260809,
++  "honest_verdict": "complete_blocked_reaper_infrastructure_zero_valid_cells_obtained_not_a_lever_result",
++  "reproducibility_checksum": "57c308c4257f8fefe57acb02690f8d7a40e33fc3f9409877575091dccd6eb044",
++  "duration_s": 0.01
++}
+-- 
+2.55.0
+

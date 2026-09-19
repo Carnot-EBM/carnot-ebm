@@ -1,0 +1,35 @@
+From 98f1dee76c61fb62b618ce08d72ce9aeaacf448f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 02:38:49 -0400
+Subject: [PATCH 01709/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20A3=20(DECISIVE,=20gated=5Fon=20A1=20headroom>=3D0.?=
+ =?UTF-8?q?10)=20=E2=80=94=20the=20headroom-controlled=20verifier=20moat?=
+ =?UTF-8?q?=20test.=20On=20the=20headroom=5Fpresent=5Fdomain:=20executable?=
+ =?UTF-8?q?=20verifier=20ensemble=20+=20V-STaR=20selector=20(A2)=20vs=20SC?=
+ =?UTF-8?q?-vote=20vs=20oracle,=20with=20a=20MATCHED=20no-verifier=20contr?=
+ =?UTF-8?q?ol=20(same=20budget/candidates/steps,=20arXiv:2511.02886)=20and?=
+ =?UTF-8?q?=20accuracy=20AND=20cost=20(arXiv:2504.01005=20SC-crossover).?=
+ =?UTF-8?q?=20Decisive:=20does=20the=20verifier=20add=20value=20(CI95=20ex?=
+ =?UTF-8?q?cl=200)=20WHERE=20headroom=20exists=3F=20Resolves=20the=20moat?=
+ =?UTF-8?q?=20question=20+=20informs=20the=20DiffusionGemma=20gate.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 792c7886df..cc69489b3d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9083,3 +9083,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-14: Archive .386 -> activate .387; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .386 close-state (outer-loop TRM converged to val 0.8227; decisive graft FIRED but returned a HEADROOM-LIMITED null, verifier_value_added=false, oracle@k 0.8125 ≈ baseline; DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13). (✅ Complete) — honest_verdict=success: archived_v386_v387_active_outerloop_done_val_0.8227_graft_fired_headroom_limited_null_diffusiongemma_STILL_PENDING; results/experiment_4174_archive_v386_activate_v387.json
+ - 2026-06-14: PHASE A1 — Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run code/tests, parse math — NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format mismatch). Census {{code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}}. Emit max_selectable_headroom (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires. (✅ Complete) — honest_verdict=complete: headroom_present_domain_code_max_selectable_headroom_0.1800; results/experiment_4175_headroom_gate_executable_census.json
+ - 2026-06-14: PHASE A2 — V-STaR learned selector (arXiv:2402.06457). Train an oracle-free selector on ACCEPTED + REJECTED candidate traces (so it learns a correctness boundary, not just imitates winners), out-of-fold. The missing learned-selector verifier class. Deployable ranker consumed by A3. Prefer cached traces; if fresh traces needed, generate from a SOTA GGUF behind a PRECONDITIONS cache check. (✅ Complete) — honest_verdict=complete: vstar_selector_trained_delta_0.1800_auroc_0.9792; results/experiment_4176_vstar_learned_selector.json
++- 2026-06-14: PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) — the headroom-controlled verifier moat test. On the headroom_present_domain: executable verifier ensemble + V-STaR selector (A2) vs SC-vote vs oracle, with a MATCHED no-verifier control (same budget/candidates/steps, arXiv:2511.02886) and accuracy AND cost (arXiv:2504.01005 SC-crossover). Decisive: does the verifier add value (CI95 excl 0) WHERE headroom exists? Resolves the moat question + informs the DiffusionGemma gate. (✅ Complete) — honest_verdict=complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000; results/experiment_4177_decisive_headroom_controlled_moat_test.json
+-- 
+2.55.0
+

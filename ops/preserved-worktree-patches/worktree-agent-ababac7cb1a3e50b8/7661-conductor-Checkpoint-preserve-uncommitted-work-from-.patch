@@ -1,0 +1,43 @@
+From 40645e8f7a449d019b77c7c4cbfc9b79a4f9a045 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 13:14:08 -0400
+Subject: [PATCH 07661/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a828e72272..891f8f8018 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 312, "phase": "iteration_start", "last_beat": "2026-07-23T16:53:37Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 313, "phase": "iteration_start", "last_beat": "2026-07-23T17:14:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 38cc590162..bd53df059f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14188,3 +14188,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 16:32 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
+ | 2026-07-23 16:51 UTC | Clean-upstream selective replay with hard-case neg | OK | 87 passed, 1 warning in 16.61s |
+ | 2026-07-23 16:53 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
++| 2026-07-23 17:12 UTC | Reduced-oracle versioned constraint memory on seal | OK | 87 passed, 1 warning in 12.25s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2fa3c9e336..488286cab7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 312, "phase": "iteration_start", "started_at": "2026-07-23T16:53:37Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 313, "phase": "iteration_start", "started_at": "2026-07-23T17:14:05Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

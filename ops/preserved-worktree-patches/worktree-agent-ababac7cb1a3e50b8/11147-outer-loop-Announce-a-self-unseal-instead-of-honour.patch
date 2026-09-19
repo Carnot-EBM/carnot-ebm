@@ -1,0 +1,188 @@
+From fd327a0343e04fbbf39e05ca8c5af570bc06cf13 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 00:11:48 -0400
+Subject: [PATCH 11147/11362] [outer-loop] Announce a self-unseal instead of
+ honouring it silently (SCENARIO-HARNESS-INTEGRITY-1-B)
+
+Second of the three triaged audit findings, and the oldest at seven days.
+
+A path named in any active declaration's unsealed list is unsealed for that
+commit. That bypass is deliberate for ordinary harness files. Naming THIS file
+permits an uncommitted edit to the check that decides whether edits may land.
+
+My first fix refused the self-unseal outright, and the guard proved that wrong
+by refusing the commit carrying it. This file is sealed by the standing
+declaration, so a refusal makes it uneditable: the commit that would move the
+HEAD baseline is the one being refused, and the refusal text advertises an
+--unseal that would no longer work. A guard that cannot be repaired is not
+safer. Recorded rather than quietly replaced, because the failure is the
+instructive part.
+
+The finding is SILENT non-firing, and the cure for silence is noise rather than
+a wall. The self-unseal now proceeds and every run honouring it prints a NOTE
+naming the file and saying the check is disarmed against its own edit. Ordinary
+unseals stay quiet, so the line that matters is not buried; a mutation covers
+that distinction.
+
+7 tests, 3/3 mutations RED. This commit landed through the very path it
+governs: a declared scope naming the file, with the new NOTE firing.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/harness_integrity_lint.py             | 54 ++++++++++++--
+ ...st_harness_integrity_self_seal_20260905.py | 70 +++++++++++++++++++
+ 2 files changed, 119 insertions(+), 5 deletions(-)
+ create mode 100644 tests/python/test_harness_integrity_self_seal_20260905.py
+
+diff --git a/scripts/harness_integrity_lint.py b/scripts/harness_integrity_lint.py
+index 0d80c14f6f..1f29b3321d 100644
+--- a/scripts/harness_integrity_lint.py
++++ b/scripts/harness_integrity_lint.py
+@@ -207,6 +207,46 @@ def _scope_files() -> list[Path]:
+     return sorted(SCOPES.glob("*.scope.json"))
+ 
+ 
++SELF_UNSEAL_IS_LOUD = frozenset({"scripts/harness_integrity_lint.py"})
++"""Paths whose unsealing is announced rather than silently honoured.
++
++Exactly one entry: this file, the check itself. Deliberately not widened past what the evidence
++supports -- a sibling here needs its own written reason.
++"""
++
++
++def effective_unsealed(records: list[dict | None]) -> tuple[set[str], set[str]]:
++    """Paths the active declarations unseal, and which of those unseal this check itself.
++
++    Unsealing by explicit path is deliberate for ordinary harness files: a glob never unseals,
++    so the bypass costs a typed path name and leaves the intent in the record. Without it a
++    STANDING declaration deadlocks harness work, because the person fixing a sealed lint cannot
++    reach another declaration's seal.
++
++    SELF-UNSEALING IS PERMITTED AND ANNOUNCED (QA-layer SILENT_NON_FIRING, 2026-09-05). Naming
++    this file lets a declaration permit an uncommitted edit to the check that decides whether
++    edits may land. The audit's named input was a five-hour-old declaration carrying
++    `"unsealed": ["scripts/harness_integrity_lint.py"]` beside an uncommitted modification of
++    that same file.
++
++    The first attempt REFUSED it outright and that was wrong, discovered by the guard refusing
++    the very commit carrying the fix. This file is sealed by the standing declaration, so a
++    refusal makes it uneditable: the commit that would move the HEAD baseline is the commit being
++    refused, and the guard's own refusal text advertises an `--unseal` that would no longer work.
++    A guard that cannot be repaired is not safer.
++
++    The audit's complaint is SILENCE, not the bypass, and the bypass is already an accepted design
++    cost. So the self-unseal proceeds and every run that honours it says so. The caller prints the
++    second return value, which is the fact that was missing.
++    """
++
++    unsealed: set[str] = set()
++    for record in records:
++        if record:
++            unsealed.update(record.get("unsealed") or [])
++    return unsealed, unsealed & SELF_UNSEAL_IS_LOUD
++
++
+ def _load_scope(path: Path) -> dict | None:
+     """Read one declaration. None means unreadable, which the caller must treat as refusing."""
+     try:
+@@ -609,11 +649,15 @@ def check() -> int:
+     # This does let an agent bypass a standing seal by naming the path. That is deliberate and
+     # consistent with the rest of the design: a glob still never unseals, so the bypass costs
+     # a typed path name and leaves the intent in the record, which is the bar the seal sets.
+-    explicitly_unsealed: set[str] = set()
+-    for scope_path in scopes:
+-        record = _load_scope(scope_path)
+-        if record:
+-            explicitly_unsealed.update(record.get("unsealed") or [])
++    explicitly_unsealed, self_unsealed = effective_unsealed(
++        [_load_scope(scope_path) for scope_path in scopes]
++    )
++    for rel in sorted(self_unsealed):
++        print(
++            f"harness-integrity: NOTE -- {rel} is unsealed by a declaration. The check is "
++            "disarmed against its own edit for this commit.",
++            file=sys.stderr,
++        )
+ 
+     judged_at = datetime.now(UTC)
+     live_records = [
+diff --git a/tests/python/test_harness_integrity_self_seal_20260905.py b/tests/python/test_harness_integrity_self_seal_20260905.py
+new file mode 100644
+index 0000000000..030666a4e0
+--- /dev/null
++++ b/tests/python/test_harness_integrity_self_seal_20260905.py
+@@ -0,0 +1,70 @@
++"""Spec: REQ-HARNESS-INTEGRITY-1, SCENARIO-HARNESS-INTEGRITY-1-B
++
++Unsealing the integrity lint against its own edit is permitted and announced, never silent.
++
++QA-LAYER FINDING 2026-09-04, oldest of the open set at seven days, confirmed 2026-09-05. A path
++named in any active declaration's `unsealed` list is unsealed for that commit. That bypass is
++deliberate for ordinary harness files: a glob never unseals, so it costs a typed path and leaves
++intent in the record. Naming THIS file, though, permits an uncommitted edit to the check that
++decides whether edits may land.
++
++The first fix refused the self-unseal outright. That was wrong, and the guard proved it by
++refusing the commit that carried the fix: this file is sealed by the standing declaration, so a
++refusal makes it uneditable -- the commit that would move the HEAD baseline is the one being
++refused, and the guard's own refusal text advertises an `--unseal` that would no longer work.
++
++The finding is SILENT non-firing. The cure for silence is noise, not a wall. The self-unseal
++proceeds and every run that honours it says so.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++import harness_integrity_lint as lint  # noqa: E402
++
++SELF = "scripts/harness_integrity_lint.py"
++
++
++def test_a_declaration_naming_the_lint_still_unseals_it() -> None:
++    """Permitted: refusing it made the file unrepairable, which the guard demonstrated."""
++    unsealed, _ = lint.effective_unsealed([{"unsealed": [SELF]}])
++    assert SELF in unsealed
++
++
++def test_a_self_unseal_is_reported_back_to_the_caller() -> None:
++    """The missing fact. Without this the disarm happened and nothing said so."""
++    _, self_unsealed = lint.effective_unsealed([{"unsealed": [SELF, "scripts/other.py"]}])
++    assert self_unsealed == {SELF}
++
++
++def test_an_ordinary_harness_unseal_is_not_announced() -> None:
++    """Announcing every unseal would train a reader to skip the line that matters."""
++    unsealed, self_unsealed = lint.effective_unsealed([{"unsealed": ["scripts/other.py"]}])
++    assert unsealed == {"scripts/other.py"}
++    assert self_unsealed == set()
++
++
++def test_declarations_are_unioned_before_the_check() -> None:
++    records = [{"unsealed": ["scripts/a.py"]}, {"unsealed": [SELF]}, None]
++    unsealed, self_unsealed = lint.effective_unsealed(records)
++    assert unsealed == {"scripts/a.py", SELF}
++    assert self_unsealed == {SELF}
++
++
++def test_no_declarations_unseal_nothing_and_announce_nothing() -> None:
++    assert lint.effective_unsealed([None, {}]) == (set(), set())
++
++
++def test_the_announced_set_is_deliberately_narrow() -> None:
++    """A wider set needs its own written reason; drift into it should fail this test."""
++    assert lint.SELF_UNSEAL_IS_LOUD == frozenset({SELF})
++
++
++def test_the_announced_path_exists() -> None:
++    """An entry naming a moved or misspelled file announces nothing."""
++    assert (REPO / SELF).is_file()
+-- 
+2.55.0
+

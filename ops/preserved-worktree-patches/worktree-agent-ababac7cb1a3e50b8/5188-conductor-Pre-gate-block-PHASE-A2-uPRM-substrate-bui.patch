@@ -1,0 +1,92 @@
+From 735f3bbe37e959307d6977760a44b7c741b990a9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 02:34:21 -0400
+Subject: [PATCH 05188/11362] [conductor] Pre-gate block: PHASE A2 uPRM
+ substrate -- build token/step SOTA GGUF logprob cache for process-reward
+ scoring
+
+1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                    |  5 ++++
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...periment_5072_uprm_logprob_cache_v466.json | 24 +++++++++++++++++++
+ 5 files changed, 32 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5072_uprm_logprob_cache_v466.json
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index ca46cae258..cbdb80a820 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -777,3 +777,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_5059_d1_sota_refresh_audit.json
++
++## experiment_5070_sota_ingestion_backfill_v466.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_5070_sota_ingestion_backfill_v466.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d3b08b50ec..733d154502 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-07-01T06:19:10Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-07-01T06:34:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ce176a3de1..a781bbcc63 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9706,3 +9706,4 @@ The contro |
+ | 2026-07-01 05:39 UTC | Milestone 2026.07.466 activated | OK | 14 tasks queued |
+ | 2026-07-01 05:54 UTC | PHASE 0 transition -- archive .465 truth, activate | OK | 85 passed, 1 warning in 9.14s |
+ | 2026-07-01 06:17 UTC | PHASE R1 SOTA backfill -- replace failed Exp5066 G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-01 06:32 UTC | PHASE A1 GGUF/logprob preflight -- prove model cac | OK | 89 passed, 1 warning in 5.96s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 238a98eb39..dc58077720 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 51, "phase": "iteration_start", "started_at": "2026-07-01T06:19:10Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 52, "phase": "iteration_start", "started_at": "2026-07-01T06:34:21Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5072_uprm_logprob_cache_v466.json b/results/experiment_5072_uprm_logprob_cache_v466.json
+new file mode 100644
+index 0000000000..0cc50cb966
+--- /dev/null
++++ b/results/experiment_5072_uprm_logprob_cache_v466.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5072,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-01",
++  "started_at": "2026-07-01T06:34:21.719332+00:00",
++  "finished_at": "2026-07-01T06:34:21.719332+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE A2 uPRM substrate -- build token/step SOTA GGUF logprob cache for process-reward scoring",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5071-gguf-logprob-preflight-v466",
++      "artifact_field": "logprob_endpoint_ready",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

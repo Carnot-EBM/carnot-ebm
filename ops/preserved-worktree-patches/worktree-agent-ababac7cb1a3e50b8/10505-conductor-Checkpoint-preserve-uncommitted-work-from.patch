@@ -1,0 +1,43 @@
+From 225541e34600118d2efb6a66cbc949b630957250 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 05:27:56 -0400
+Subject: [PATCH 10505/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d6bad0e348..e44fb7c789 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-31T08:39:50Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-31T09:27:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c0722e87c1..63d8f6286c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16898,3 +16898,4 @@ The l |
+ +  |
+ | 2026-08-31 08:11 UTC | Owned-spec and execution-manifest recovery preflig | SKIP | Pre-tests failing, self-heal failed:  |
+ | 2026-08-31 08:37 UTC | Owned-spec and execution-manifest recovery preflig | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-31 09:25 UTC | Typed operational-obligation automaton v3 | OK | 123 passed, 1 warning in 15.42s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 51f23b9d18..9ea8009ff2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-31T08:39:50Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-31T09:27:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,57 @@
+From c3b7503fe15a922751bbe48278e1f96df201a672 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 10:37:15 -0400
+Subject: [PATCH 01959/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 4f9bb27f56..e8b7e65ee6 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -441,3 +441,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json
++
++## experiment_4247_verifier_reward_offline_harness_retire_livelora.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 334d59784c..35b7c135bd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 48, "phase": "iteration_start", "last_beat": "2026-06-15T14:35:10Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 49, "phase": "iteration_start", "last_beat": "2026-06-15T14:37:13Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e625b74b20..2fd1c4c09f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8548,3 +8548,4 @@ c |
+ | 2026-06-15 14:29 UTC | PHASE B1 (OWED pivot; RETIRE live-LoRA + OFFLINE h | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-15 14:31 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
+ | 2026-06-15 14:33 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
++| 2026-06-15 14:35 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cf7aa6ae90..2c5c870cac 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 48, "phase": "iteration_start", "started_at": "2026-06-15T14:35:10Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 49, "phase": "iteration_start", "started_at": "2026-06-15T14:37:13Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

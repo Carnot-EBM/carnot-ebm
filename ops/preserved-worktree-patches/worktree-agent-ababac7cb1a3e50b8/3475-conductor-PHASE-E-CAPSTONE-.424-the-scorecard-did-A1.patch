@@ -1,0 +1,2609 @@
+From 1ee188d6e56270511310da98a7bcc020022565c5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 14:43:55 -0400
+Subject: [PATCH 03475/11362] [conductor] PHASE E (CAPSTONE .424) -- the
+ scorecard: did A1 WIRING the toolkit into the generation harness raise
+ winner_generated_rate above 1/25 AND generic_transfer above 0.04 (the
+ generation wall)? Did the A3 goal-energy generation prior help the
+ wired-but-failing classes? Did A2 grow reproducible_total_levels (54->55+)?
+ Is the refreshed package still operator-resubmit-ready above 33 (A4)? Report
+ ALL co-headline metrics (reproducible_total_levels + live-submittable count +
+ generic_transfer w/ CI + action efficiency + winner_generated_rate [B1]).
+ Skip flagged_adversarial EXCEPT the annotated null-delta carve-out (now
+ mechanical via the .424 B2 guard); honor the .423 B2 offline-arc-METHODOLOGY
+ + .422 B2 learned-CNN + positive-control-failed guards.
+
+Automated research step by research conductor.
+Task ID: exp4602-e
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_4602_capstone_v424.py   | 1160 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ results/experiment_4602_capstone_v424.json    |  619 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ .../test_experiment_4602_capstone_v424.py     |  623 +++++++++
+ 12 files changed, 2423 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4602_capstone_v424.py
+ create mode 100644 results/experiment_4602_capstone_v424.json
+ create mode 100644 tests/python/test_experiment_4602_capstone_v424.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 420eb330a8..8f6fb173ef 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -255,3 +255,6 @@
+ - REQ-CAPSTONE-4599: The TAUTOLOGY null-delta guard workflow SHALL harden `scripts/adversarial_verify.py` so a two-equal-metrics TAUTOLOGY that would otherwise be CRITICAL is downgraded to an annotated WARN only when the artifact declares an explicit null-delta descriptor: a covering `*_delta`/`*_diff`/`*_change` field with value `0`, a non-empty `null_delta_methodology_note`, and a passing `positive_control_passed` or `*_control_passed` boolean. The workflow SHALL keep TAUTOLOGY CRITICAL for genuinely distinct bit-identical metrics with no declared null-delta descriptor, SHALL NOT modify `scripts/research_conductor.py`, and SHALL write `results/experiment_4599_tautology_null_delta_guard.json`.
+ - SCENARIO-CAPSTONE-4599: The artifact `results/experiment_4599_tautology_null_delta_guard.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `guard_mechanism`, `declared_null_delta_downgraded`, `undeclared_tautology_still_critical`, `tests_added_pass`, and `preconditions_checked`; it must also report the verifier fixture descriptors, spec refs, no solver behavior change, random seed, duration, and reproducibility checksum. The default run must verify that a declared-null-delta fixture with two equal metrics, a zero delta, a methodology note, and a passing positive control produces an annotated WARN with `declared_null_delta`, and that an undeclared equal-distinct-metrics fixture still produces a CRITICAL TAUTOLOGY.
+ - SCENARIO-CAPSTONE-4599-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; shipped: tautology_null_delta_guard_added OR complete: tautology_null_delta_guard_partial_<reason>."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."; `guard_mechanism` = "names the recognized declared-null-delta descriptor (a *_delta==0 + null_delta_methodology_note + passing control) + where it downgrades CRITICAL TAUTOLOGY to WARN -- the fix that stops honest nulls being quarantined."; `declared_null_delta_downgraded` = "a declared-null-delta fixture is downgraded from CRITICAL to annotated-WARN -- the recurring .423 A3/A4/A6 false-exclusion fix."; `undeclared_tautology_still_critical` = "a genuinely-distinct-metric bit-identity fixture with no declared null-delta IS still CRITICAL -- guards against weakening the real fabrication signal."; `tests_added_pass` = "Tests Must Run and Assert -- both the downgraded-on-declared-null-delta and still-CRITICAL-on-undeclared cases."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4602: The .424 capstone must aggregate the milestone artifacts Exp4592 through Exp4598 plus `ops/arc_solve_registry.yaml` and `results/arc3_live_submit.json` through the Reading-Results discipline. It SHALL run or use `scripts/summarize_artifact.py` live flags before importing any headline metric, skip every `flagged_adversarial:true` or live-critical upstream except the mechanical control==best explicit null-delta TAUTOLOGY carve-out for diagnosis-only context, honor the offline-ARC methodology and learned-CNN duration guards so fast offline artifacts are not excluded merely for duration or missing model specs, treat positive-control-failed or false-negative-risk-open nulls as broken-test signals rather than clean nulls, and treat failed acceptance gates as overriding celebratory verdicts. The capstone SHALL answer whether A1 wiring cleanly raised `winner_generated_rate` strictly above `1/25` and `generic_transfer_rate_over_variants` strictly above `0.04`, whether A3 goal energy helped the residual classes, whether A2 grew reproducible capability from 54 to at least 55, whether A4 is operator-resubmit-ready above the 33-level scorecard, and whether A6/B1 cleanly move any submitted metric. It SHALL write `results/experiment_4602_capstone_v424.json` and SHALL NOT submit to the leaderboard or modify `scripts/research_conductor.py`.
++- SCENARIO-CAPSTONE-4602: The artifact `results/experiment_4602_capstone_v424.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `winner_generated_moved`, `generic_transfer_moved`, `goal_energy_helped`, `reproducible_total_levels_delta`, `live_submittable_level_count`, `winner_generated_rate`, `action_efficiency_score`, `generic_transfer_rate_over_variants`, `verifier_is_oracle_distinct_levers`, `flagged_artifacts_handled`, `cited_upstream_artifacts`, `ready_for_operator_submit`, and `preconditions_checked`; it must also report `reproducible_total_levels`, `generic_transfer_ci`, `action_efficiency_ci`, co-headline metric provenance, the A5 primitive transfer result, the A6 integration headline status, no leaderboard submission, random seed, duration, spec refs, and reproducibility checksum. The default .424 read must quarantine Exp4592's stamped/live-critical positive generation numbers, mark Exp4594's null as false-negative-risk-open when the positive control is missing, count Exp4593's clean `ft09` bank from 54 to 55, count Exp4595's clean 55-level package as operator-resubmit-ready above 33, and report Exp4598/B1 winner-generated co-headline numbers only as quarantined context when that artifact is stamped/live-critical.
++- SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04 OR complete: generation_wall_persists_residual_logged_capability_grew."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `winner_generated_moved` = "the bottom line -- did A1 wiring raise winner_generated_rate STRICTLY above 1/25 with CI + a passing no-wiring control (the generation wall finally cracking)."; `generic_transfer_moved` = "did A1/A3 raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI (the seen->hidden solve-rate)."; `goal_energy_helped` = "did the A3 goal-energy generation prior raise winner_generated_rate on the wired-but-failing classes with a passing no-energy control."; `reproducible_total_levels_delta` = "did solve CAPABILITY grow this milestone (A2 bank, 54->55+)."; `live_submittable_level_count` = "the honest leaderboard score (A4/B1) reported alongside reproducible_total_levels + generic_transfer + action efficiency + winner_generated_rate."; `winner_generated_rate` = "the generation-vs-ranking gap co-headline (B1) -- can the system GENERATE the winner at all (1/25 baseline)."; `action_efficiency_score` = "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."; `generic_transfer_rate_over_variants` = "the held-out first-contact solve-rate reported WITH a CI -- a co-headline metric."; `verifier_is_oracle_distinct_levers` = "A1/A3 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."; `flagged_artifacts_handled` = "names any flagged_adversarial artifact excluded AND any null-delta-carve-out (mechanical via .424 B2) / offline-arc-methodology / positive-control-failed artifact handled -- fabrication-gate + false-negative-risk compliance."; `cited_upstream_artifacts` = "every headline number traces to a real upstream measurement (the audit trail)."; `ready_for_operator_submit` = "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index dd65cc1fe8..a8c851dabc 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3619,
++  "experiments_checked": 3620,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4602_capstone_v424.py b/python/carnot/experiment_4602_capstone_v424.py
+new file mode 100644
+index 0000000000..66f54a9ac8
+--- /dev/null
++++ b/python/carnot/experiment_4602_capstone_v424.py
+@@ -0,0 +1,1160 @@
++"""Experiment 4602: .424 capstone scorecard.
++
++Spec refs: REQ-CAPSTONE-4602, SCENARIO-CAPSTONE-4602,
++SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - script helper guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++try:  # pragma: no cover - exercised by default command, injectable in tests
++    import summarize_artifact as artifact_reader
++except Exception:  # pragma: no cover - defensive helper boundary
++    artifact_reader = None  # type: ignore[assignment]
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4602_capstone_v424"
++SCHEMA = "carnot.exp4602.capstone_v424.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4602_capstone_v424.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++RANDOM_SEED = 4602
++WINNER_GENERATED_BASELINE = 1.0 / 25.0
++GENERIC_TRANSFER_BASELINE = 0.04
++LIVE_SUBMITTABLE_BASELINE = 33
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++)
++
++
++@dataclass(frozen=True)
++class SourceSpec:
++    name: str
++    relative_path: str
++    role: str
++
++
++UPSTREAM_SOURCES: dict[str, SourceSpec] = {
++    "A1": SourceSpec(
++        "A1",
++        "results/experiment_4592_generation_completeness_wiring.json",
++        "generation_completeness_wiring",
++    ),
++    "A2": SourceSpec(
++        "A2",
++        "results/experiment_4593_levelup_selfplay.json",
++        "levelup_selfplay_bank",
++    ),
++    "A3": SourceSpec(
++        "A3",
++        "results/experiment_4594_goal_energy_generation_prior.json",
++        "goal_energy_generation_prior",
++    ),
++    "A4": SourceSpec(
++        "A4",
++        "results/experiment_4595_refresh_submission_package.json",
++        "refresh_submission_package",
++    ),
++    "A5": SourceSpec(
++        "A5",
++        "results/experiment_4596_primitive_persist_transfer.json",
++        "primitive_persist_transfer",
++    ),
++    "A6": SourceSpec(
++        "A6",
++        "results/experiment_4597_integration_gate.json",
++        "integration_gate",
++    ),
++    "B1": SourceSpec(
++        "B1",
++        "results/experiment_4598_winner_generated_rate_metric.json",
++        "winner_generated_rate_metric",
++    ),
++    "LIVE_BASELINE": SourceSpec(
++        "LIVE_BASELINE",
++        "results/arc3_live_submit.json",
++        "last_submitted_scorecard",
++    ),
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04 "
++            "OR complete: generation_wall_persists_residual_logged_capability_grew."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "winner_generated_moved": {
++        "principle": (
++            "the bottom line -- did A1 wiring raise winner_generated_rate STRICTLY above 1/25 "
++            "with CI + a passing no-wiring control (the generation wall finally cracking)."
++        )
++    },
++    "generic_transfer_moved": {
++        "principle": (
++            "did A1/A3 raise generic_transfer_rate_over_variants STRICTLY above 0.04 "
++            "with CI (the seen->hidden solve-rate)."
++        )
++    },
++    "goal_energy_helped": {
++        "principle": (
++            "did the A3 goal-energy generation prior raise winner_generated_rate on the "
++            "wired-but-failing classes with a passing no-energy control."
++        )
++    },
++    "reproducible_total_levels_delta": {
++        "principle": "did solve CAPABILITY grow this milestone (A2 bank, 54->55+)."
++    },
++    "live_submittable_level_count": {
++        "principle": (
++            "the honest leaderboard score (A4/B1) reported alongside "
++            "reproducible_total_levels + generic_transfer + action efficiency + winner_generated_rate."
++        )
++    },
++    "winner_generated_rate": {
++        "principle": (
++            "the generation-vs-ranking gap co-headline (B1) -- can the system GENERATE "
++            "the winner at all (1/25 baseline)."
++        )
++    },
++    "action_efficiency_score": {
++        "principle": "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."
++    },
++    "generic_transfer_rate_over_variants": {
++        "principle": "the held-out first-contact solve-rate reported WITH a CI -- a co-headline metric."
++    },
++    "verifier_is_oracle_distinct_levers": {
++        "principle": (
++            "A1/A3 value claims are verifier_is_oracle:false -- a circular win would not count "
++            "(Oracle-Distinctness)."
++        )
++    },
++    "flagged_artifacts_handled": {
++        "principle": (
++            "names any flagged_adversarial artifact excluded AND any null-delta-carve-out "
++            "(mechanical via .424 B2) / offline-arc-methodology / positive-control-failed "
++            "artifact handled -- fabrication-gate + false-negative-risk compliance."
++        )
++    },
++    "cited_upstream_artifacts": {
++        "principle": "every headline number traces to a real upstream measurement (the audit trail)."
++    },
++    "ready_for_operator_submit": {
++        "principle": (
++            "True only if the integrated config + refreshed package beat the last 33-level "
++            "submitted scorecard on a real metric worth a 1/day slot; never submits."
++        )
++    },
++    "preconditions_checked": {
++        "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "reproducible_total_levels",
++    "generic_transfer_ci",
++    "action_efficiency_ci",
++    "coheadline_metrics",
++    "scorecard",
++    "a5_transfer",
++    "a6_integration_headline",
++    "operator_submission_basis",
++    "live_submittable_count_baseline",
++    "leaderboard_submission",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _read_yaml(path: Path) -> JsonDict:
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _file_sha256(path: Path) -> str | None:
++    try:
++        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _float_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def _ci_or_none(value: Any) -> list[float] | None:
++    if (
++        isinstance(value, list)
++        and len(value) == 2
++        and all(isinstance(item, (int, float)) and not isinstance(item, bool) for item in value)
++    ):
++        return [float(value[0]), float(value[1])]
++    return None
++
++
++def _live_flags(path: Path) -> list[dict[str, Any]]:
++    if artifact_reader is None:
++        return []
++    try:
++        flags = artifact_reader._live_flags(path)  # type: ignore[attr-defined]
++    except Exception:
++        return []
++    return [dict(flag) for flag in flags if isinstance(flag, Mapping)]
++
++
++def _severity(flag: Mapping[str, Any]) -> str:
++    return str(flag.get("severity") or "").lower()
++
++
++def _critical_flags(flags: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
++    return [dict(flag) for flag in flags if _severity(flag) == "critical"]
++
++
++def _false_negative_risk_open(flags: Sequence[Mapping[str, Any]]) -> bool:
++    return any(
++        flag.get("kind") == "FALSE_NEGATIVE_RISK"
++        and "false_negative_risk_open" in str(flag.get("detail") or "")
++        for flag in flags
++    )
++
++
++def _null_delta_corrigendum(
++    artifact: Mapping[str, Any],
++    flags: Sequence[Mapping[str, Any]],
++) -> JsonDict | None:
++    if artifact_reader is None:
++        return None
++    try:
++        classification = artifact_reader.classify_known_false_positive_null_delta(  # type: ignore[attr-defined]
++            dict(artifact),
++            [dict(flag) for flag in flags],
++        )
++    except Exception:
++        return None
++    return dict(classification) if isinstance(classification, Mapping) else None
++
++
++def _acceptance_gate_failures(artifact: Mapping[str, Any]) -> list[str]:
++    failures: list[str] = []
++    for key, value in artifact.items():
++        lowered = key.lower()
++        is_gate = (
++            "acceptance_gate" in lowered
++            or lowered.startswith("gate_")
++            or lowered.endswith("_gate")
++        )
++        if is_gate and value is False:
++            failures.append(key)
++    return failures
++
++
++def _source_status(
++    *,
++    name: str,
++    source: SourceSpec,
++    root: Path,
++    artifact: Mapping[str, Any],
++    exists: bool,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> JsonDict:
++    path = root / source.relative_path
++    flags = (
++        [dict(flag) for flag in live_flags_by_name[name]]
++        if live_flags_by_name is not None and name in live_flags_by_name
++        else (_live_flags(path) if exists else [])
++    )
++    critical = _critical_flags(flags)
++    stamped = artifact.get("flagged_adversarial") is True
++    gate_failures = _acceptance_gate_failures(artifact)
++    false_negative = _false_negative_risk_open(flags)
++    corrigendum = _null_delta_corrigendum(artifact, flags)
++    flagged = bool(stamped or critical)
++    diagnosis_only = bool(flagged and corrigendum)
++    included = bool(exists and artifact and not flagged and not gate_failures and not false_negative)
++    reason = "included_clean"
++    if not exists:
++        reason = "missing"
++    elif gate_failures:
++        reason = "failed_acceptance_gate"
++    elif diagnosis_only:
++        reason = "flagged_null_delta_corrigendum_diagnosis_only"
++    elif flagged:
++        reason = "flagged_adversarial_excluded"
++    elif false_negative:
++        reason = "false_negative_risk_open"
++    return {
++        "name": name,
++        "artifact": source.relative_path,
++        "role": source.role,
++        "exists": exists,
++        "stamped_flagged_adversarial": stamped,
++        "live_critical": bool(critical),
++        "live_flags": flags,
++        "critical_flags": critical,
++        "false_negative_risk_open": false_negative,
++        "acceptance_gate_failures": gate_failures,
++        "null_delta_corrigendum": corrigendum,
++        "diagnosis_only": diagnosis_only,
++        "included_in_headline": included,
++        "reason": reason,
++        "sha256": _file_sha256(path) if path.exists() else _checksum(artifact),
++    }
++
++
++def _load_artifacts(
++    root: Path,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> tuple[dict[str, JsonDict], dict[str, JsonDict]]:
++    loaded: dict[str, JsonDict] = {}
++    statuses: dict[str, JsonDict] = {}
++    for name, source in UPSTREAM_SOURCES.items():
++        path = root / source.relative_path
++        if artifacts is not None and name in artifacts:
++            artifact = dict(artifacts[name])
++            exists = True
++        else:
++            artifact = _read_json(path)
++            exists = path.exists()
++        loaded[name] = artifact
++        statuses[name] = _source_status(
++            name=name,
++            source=source,
++            root=root,
++            artifact=artifact,
++            exists=exists,
++            live_flags_by_name=live_flags_by_name,
++        )
++    return loaded, statuses
++
++
++def check_preconditions(
++    root: Path | str = REPO_ROOT,
++    *,
++    statuses: Mapping[str, Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    registry = _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    source_exists = {
++        name: (
++            bool(statuses.get(name, {}).get("exists"))
++            if statuses is not None
++            else (root_path / source.relative_path).exists()
++        )
++        for name, source in UPSTREAM_SOURCES.items()
++    }
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4602": "REQ-CAPSTONE-4602" in spec_text,
++        "registry_yaml_loadable": bool(registry),
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "registry_reproducible_total_levels": _as_int(
++            registry.get("reproducible_total_levels")
++        ),
++        "upstream_artifacts_present": source_exists,
++        "missing_upstream_artifacts": [
++            UPSTREAM_SOURCES[name].relative_path
++            for name, exists in source_exists.items()
++            if not exists
++        ],
++        "summarize_artifact_py_used_for_live_flags": artifact_reader is not None,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++    checks["ok"] = bool(
++        checks["agents_md_read"]
++        and checks["codex_or_opencode_md_read"]
++        and checks["spec_has_req_4602"]
++        and checks["registry_yaml_loadable"]
++        and source_exists.get("LIVE_BASELINE")
++    )
++    return checks
++
++
++def _clean(statuses: Mapping[str, Mapping[str, Any]], name: str) -> bool:
++    return bool(statuses.get(name, {}).get("included_in_headline"))
++
++
++def _delta_ci_positive(ci: list[float] | None) -> bool:
++    return bool(ci and ci[0] > 0.0)
++
++
++def _a2_repro_delta(a2: Mapping[str, Any], included: bool) -> tuple[int, int, int]:
++    if not included:
++        return 0, 0, 0
++    update = a2.get("registry_update")
++    gate = a2.get("reproduction_gate")
++    if not isinstance(update, Mapping) or not isinstance(gate, Mapping):
++        return 0, 0, 0
++    before = _as_int(update.get("prior_total_declared") or update.get("prior_total_row_sum"))
++    after = _as_int(update.get("new_total_declared") or update.get("new_total_row_sum"))
++    delta = _as_int(update.get("reconciled_total_delta") or update.get("banked_levels"))
++    if delta == 0 and before and after:
++        delta = after - before
++    if (
++        a2.get("offline_reproduced") is True
++        and update.get("updated") is True
++        and gate.get("reproduced") is True
++    ):
++        return before, after, max(0, delta)
++    return before, after, 0
++
++
++def _winner_generated_moved(a1: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    baseline = _as_float(a1.get("winner_generated_rate_baseline"), WINNER_GENERATED_BASELINE)
++    rate = _as_float(a1.get("winner_generated_rate_with_wiring"))
++    delta = _as_float(a1.get("winner_generated_delta"), rate - baseline)
++    ci = _ci_or_none(a1.get("winner_generated_delta_ci") or a1.get("winner_generated_ci"))
++    if status.get("included_in_headline") is not True:
++        return {
++            "moved": False,
++            "baseline": baseline,
++            "rate_with_wiring": rate,
++            "winner_generated_delta": delta,
++            "winner_generated_ci": ci,
++            "no_wiring_control_passed": a1.get("no_wiring_control_passed") is True,
++            "raw_reported_strictly_above_baseline": rate > baseline,
++            "headline_numbers_aggregated": False,
++            "source": UPSTREAM_SOURCES["A1"].relative_path,
++            "reason": str(status.get("reason")),
++        }
++    moved = bool(
++        rate > baseline
++        and delta > 0.0
++        and _delta_ci_positive(ci)
++        and a1.get("no_wiring_control_passed") is True
++        and a1.get("solve_rate_preserved") is True
++        and a1.get("verifier_is_oracle") is False
++    )
++    return {
++        "moved": moved,
++        "baseline": baseline,
++        "rate_with_wiring": rate,
++        "winner_generated_delta": delta,
++        "winner_generated_ci": ci,
++        "no_wiring_control_passed": a1.get("no_wiring_control_passed") is True,
++        "raw_reported_strictly_above_baseline": rate > baseline,
++        "headline_numbers_aggregated": True,
++        "source": UPSTREAM_SOURCES["A1"].relative_path,
++        "reason": "a1_clean_ci_supported_move" if moved else "a1_clean_missing_strict_ci_supported_move",
++    }
++
++
++def _generic_transfer_moved(
++    a1: Mapping[str, Any],
++    a1_status: Mapping[str, Any],
++    a3: Mapping[str, Any],
++    a3_status: Mapping[str, Any],
++) -> JsonDict:
++    a1_rate = _as_float(a1.get("generic_transfer_rate_with_wiring"))
++    a1_delta = _as_float(a1.get("transfer_delta"), a1_rate - GENERIC_TRANSFER_BASELINE)
++    a1_ci = _ci_or_none(a1.get("transfer_ci"))
++    a1_clean_move = bool(
++        a1_status.get("included_in_headline") is True
++        and a1_rate > GENERIC_TRANSFER_BASELINE
++        and a1_delta > 0.0
++        and _delta_ci_positive(a1_ci)
++        and a1.get("no_wiring_control_passed") is True
++        and a1.get("solve_rate_preserved") is True
++    )
++    a3_rate = _as_float(a3.get("generic_transfer_rate_with_energy"))
++    a3_no_energy = _as_float(a3.get("generic_transfer_rate_no_energy"))
++    a3_delta = a3_rate - a3_no_energy
++    a3_ci = _ci_or_none(a3.get("generic_transfer_ci"))
++    a3_clean_move = bool(
++        a3_status.get("included_in_headline") is True
++        and a3_rate > GENERIC_TRANSFER_BASELINE
++        and a3_delta > 0.0
++        and (a3_ci is None or a3_ci[0] > GENERIC_TRANSFER_BASELINE)
++        and a3.get("no_energy_control_passed") is True
++        and a3.get("solve_rate_preserved") is True
++    )
++    return {
++        "moved": bool(a1_clean_move or a3_clean_move),
++        "baseline": GENERIC_TRANSFER_BASELINE,
++        "a1": {
++            "source": UPSTREAM_SOURCES["A1"].relative_path,
++            "rate": a1_rate,
++            "delta": a1_delta,
++            "ci": a1_ci,
++            "headline_numbers_aggregated": a1_status.get("included_in_headline") is True,
++            "reason": a1_status.get("reason"),
++        },
++        "a3": {
++            "source": UPSTREAM_SOURCES["A3"].relative_path,
++            "rate": a3_rate,
++            "no_energy_rate": a3_no_energy,
++            "delta": a3_delta,
++            "ci": a3_ci,
++            "headline_numbers_aggregated": a3_status.get("included_in_headline") is True,
++            "reason": a3_status.get("reason"),
++        },
++        "reason": (
++            "clean_ci_supported_transfer_move"
++            if (a1_clean_move or a3_clean_move)
++            else "no_clean_ci_supported_transfer_move"
++        ),
++    }
++
++
++def _goal_energy_helped(a3: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    with_energy = _as_float(a3.get("winner_generated_rate_with_energy"))
++    no_energy = _as_float(a3.get("winner_generated_rate_no_energy"))
++    delta = _as_float(a3.get("winner_generated_delta"), with_energy - no_energy)
++    included = status.get("included_in_headline") is True
++    helped = bool(
++        included
++        and delta > 0.0
++        and with_energy > no_energy
++        and a3.get("no_energy_control_passed") is True
++        and a3.get("solve_rate_preserved") is True
++        and a3.get("verifier_is_oracle") is False
++    )
++    reason = "a3_clean_goal_energy_helped" if helped else str(status.get("reason"))
++    if status.get("false_negative_risk_open") is True:
++        reason = "a3_false_negative_risk_open"
++    return {
++        "helped": helped,
++        "winner_generated_rate_with_energy": with_energy,
++        "winner_generated_rate_no_energy": no_energy,
++        "winner_generated_delta": delta,
++        "no_energy_control_passed": a3.get("no_energy_control_passed") is True,
++        "targeted_classes": list(a3.get("targeted_classes") or []),
++        "null_is_clean": bool(included and not helped),
++        "source": UPSTREAM_SOURCES["A3"].relative_path,
++        "reason": reason,
++    }
++
++
++def _metric_record(
++    *,
++    clean: bool,
++    artifact: Mapping[str, Any],
++    value_key: str,
++    source: str,
++    ci_key: str | None = None,
++) -> JsonDict:
++    value = _float_or_none(artifact.get(value_key))
++    ci = _ci_or_none(artifact.get(ci_key)) if ci_key else None
++    return {
++        "clean_value": value if clean else None,
++        "quarantined_value": None if clean else value,
++        "ci": ci,
++        "source": source,
++        "included_in_clean_headline": clean,
++    }
++
++
++def _flagged_artifacts_handled(statuses: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    excluded: list[str] = []
++    excluded_details: list[JsonDict] = []
++    carveouts: list[JsonDict] = []
++    positive_control_guard: list[str] = []
++    gate_failures: list[JsonDict] = []
++    for name, status in statuses.items():
++        if name == "LIVE_BASELINE":
++            continue
++        if status.get("diagnosis_only") is True:
++            carveouts.append(
++                {
++                    "artifact": status.get("artifact"),
++                    "corrigendum": status.get("null_delta_corrigendum"),
++                }
++            )
++        if status.get("included_in_headline") is False and (
++            status.get("stamped_flagged_adversarial") or status.get("live_critical")
++        ):
++            excluded.append(str(status.get("artifact")))
++            excluded_details.append(
++                {
++                    "name": name,
++                    "artifact": status.get("artifact"),
++                    "reason": status.get("reason"),
++                    "critical_flags": [
++                        {"kind": flag.get("kind"), "detail": flag.get("detail")}
++                        for flag in status.get("critical_flags", [])
++                    ],
++                }
++            )
++        if status.get("false_negative_risk_open") is True:
++            positive_control_guard.append(name)
++        if status.get("acceptance_gate_failures"):
++            gate_failures.append(
++                {
++                    "name": name,
++                    "artifact": status.get("artifact"),
++                    "failed_gates": status.get("acceptance_gate_failures"),
++                }
++            )
++    return {
++        "excluded_artifacts": excluded,
++        "excluded_details": excluded_details,
++        "null_delta_carveouts": carveouts,
++        "offline_arc_methodology_guard_honored": [
++            "A1/A2/A3/A4/A5/A6 offline ARC artifacts were evaluated by flags and gates, not by fast-runtime suspicion alone.",
++            "A2/A4/A5 clean fast offline artifacts remain admissible when reproduction/methodology fields are present.",
++        ],
++        "learned_cnn_duration_guard_honored": (
++            "No .424 artifact was excluded merely for fast offline duration or missing model_specs."
++        ),
++        "positive_control_failed_guard": positive_control_guard,
++        "positive_control_guard_note": (
++            "FALSE_NEGATIVE_RISK nulls are broken-test signals; their nulls are not clean results."
++        ),
++        "failed_acceptance_gate_overrides": gate_failures,
++    }
++
++
++def _verifier_oracle_distinct(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++) -> JsonDict:
++    rows: JsonDict = {}
++    for name in ("A1", "A3", "A4", "A6"):
++        rows[name] = {
++            "artifact": UPSTREAM_SOURCES[name].relative_path,
++            "verifier_is_oracle": artifacts.get(name, {}).get("verifier_is_oracle"),
++            "included_in_headline": statuses.get(name, {}).get("included_in_headline"),
++            "oracle_distinct": artifacts.get(name, {}).get("verifier_is_oracle") is False,
++        }
++    rows["all_included_value_claims_oracle_distinct"] = all(
++        row["oracle_distinct"]
++        for row in rows.values()
++        if isinstance(row, Mapping) and row.get("included_in_headline") is True
++    )
++    return rows
++
++
++def _a5_transfer(a5: Mapping[str, Any], included: bool) -> JsonDict:
++    values = a5.get("transfer_value_per_game")
++    value_games = [
++        str(game)
++        for game, row in (values.items() if isinstance(values, Mapping) else [])
++        if isinstance(row, Mapping) and row.get("value_added") is True
++    ]
++    return {
++        "included_in_headline": included,
++        "primitive_persisted": a5.get("primitive_persisted"),
++        "transfer_games": list(a5.get("transfer_games") or []),
++        "value_added_games": value_games,
++        "new_levels_banked": _as_int(
++            a5.get("new_levels_banked")
++            or (
++                a5.get("offline_reproduced", {}).get("new_levels_banked")
++                if isinstance(a5.get("offline_reproduced"), Mapping)
++                else 0
++            )
++        ),
++    }
++
++
++def _a6_integration(a6: Mapping[str, Any], included: bool, status: Mapping[str, Any]) -> JsonDict:
++    return {
++        "included_in_headline": included,
++        "submitted_config_raised_metric_clean": bool(
++            included
++            and (
++                _as_float(a6.get("winner_generated_rate_integrated")) > WINNER_GENERATED_BASELINE
++                or _as_float(a6.get("generic_transfer_rate_integrated")) > GENERIC_TRANSFER_BASELINE
++                or _as_int(a6.get("live_submittable_level_count_integrated"))
++                > LIVE_SUBMITTABLE_BASELINE
++            )
++        ),
++        "raw_honest_verdict": a6.get("honest_verdict"),
++        "levers_integrated": list(a6.get("levers_integrated") or []),
++        "reason": status.get("reason"),
++        "upstream_lever_audit": a6.get("upstream_lever_audit"),
++    }
++
++
++def _cited_upstream_artifacts(statuses: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    clean_imports = {
++        "A2": ["registry_update", "reproduction_gate", "offline_reproduced"],
++        "A4": [
++            "live_submittable_level_count",
++            "live_submittable_count_prev",
++            "count_delta",
++            "ready_for_operator_submit",
++        ],
++        "A5": ["primitive_persisted", "transfer_games", "transfer_value_per_game"],
++        "LIVE_BASELINE": ["live_total_levels"],
++    }
++    quarantined = {
++        "A1": [
++            "winner_generated_rate_with_wiring",
++            "generic_transfer_rate_with_wiring",
++            "transfer_ci",
++        ],
++        "A6": [
++            "winner_generated_rate_integrated",
++            "generic_transfer_rate_integrated",
++            "live_submittable_level_count_integrated",
++        ],
++        "B1": [
++            "winner_generated_rate",
++            "generic_transfer_rate_over_variants",
++            "action_efficiency_score",
++        ],
++    }
++    cited: JsonDict = {}
++    for name, status in statuses.items():
++        included = status.get("included_in_headline") is True
++        cited[name] = {
++            "artifact": status.get("artifact"),
++            "role": status.get("role"),
++            "exists": status.get("exists"),
++            "sha256": status.get("sha256"),
++            "included_in_headline": included,
++            "reason": status.get("reason"),
++            "imported_fields": clean_imports.get(name, []) if included or name == "LIVE_BASELINE" else [],
++            "quarantined_fields_reported": quarantined.get(name, []) if not included else [],
++        }
++    cited["REGISTRY"] = {
++        "artifact": REGISTRY_RELATIVE_PATH,
++        "role": "authoritative_reproducible_total_levels",
++        "exists": True,
++        "imported_fields": ["reproducible_total_levels"],
++    }
++    return cited
++
++
++def _scorecard(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++    *,
++    winner_moved: Mapping[str, Any],
++    transfer_moved: Mapping[str, Any],
++    goal_energy: Mapping[str, Any],
++    a2_before: int,
++    a2_after: int,
++    a2_delta: int,
++    a5_transfer: Mapping[str, Any],
++    a6_integration: Mapping[str, Any],
++) -> JsonDict:
++    return {
++        "A1": {
++            "artifact": UPSTREAM_SOURCES["A1"].relative_path,
++            "included_in_headline": statuses["A1"]["included_in_headline"],
++            "reason": statuses["A1"]["reason"],
++            "winner_generated_moved": winner_moved.get("moved"),
++            "generic_transfer_moved": transfer_moved.get("a1", {}).get("headline_numbers_aggregated")
++            and transfer_moved.get("moved"),
++        },
++        "A2": {
++            "artifact": UPSTREAM_SOURCES["A2"].relative_path,
++            "included_in_headline": statuses["A2"]["included_in_headline"],
++            "reproducible_total_before": a2_before,
++            "reproducible_total_after": a2_after,
++            "reproducible_total_delta": a2_delta,
++        },
++        "A3": {
++            "artifact": UPSTREAM_SOURCES["A3"].relative_path,
++            "included_in_headline": statuses["A3"]["included_in_headline"],
++            "reason": statuses["A3"]["reason"],
++            "goal_energy_helped": goal_energy.get("helped"),
++        },
++        "A4": {
++            "artifact": UPSTREAM_SOURCES["A4"].relative_path,
++            "included_in_headline": statuses["A4"]["included_in_headline"],
++            "live_submittable_level_count": _as_int(
++                artifacts["A4"].get("live_submittable_level_count")
++            ),
++            "count_delta": _as_int(artifacts["A4"].get("count_delta")),
++            "ready_for_operator_submit": artifacts["A4"].get("ready_for_operator_submit") is True,
++        },
++        "A5": dict(a5_transfer),
++        "A6": dict(a6_integration),
++        "B1": {
++            "artifact": UPSTREAM_SOURCES["B1"].relative_path,
++            "included_in_headline": statuses["B1"]["included_in_headline"],
++            "reason": statuses["B1"]["reason"],
++            "coheadline_numbers_quarantined": statuses["B1"]["included_in_headline"] is not True,
++        },
++    }
++
++
++def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "winner_generated_moved": artifact.get("winner_generated_moved"),
++        "generic_transfer_moved": artifact.get("generic_transfer_moved"),
++        "goal_energy_helped": artifact.get("goal_energy_helped"),
++        "reproducible_total_levels_delta": artifact.get("reproducible_total_levels_delta"),
++        "reproducible_total_levels": artifact.get("reproducible_total_levels"),
++        "live_submittable_level_count": artifact.get("live_submittable_level_count"),
++        "winner_generated_rate": artifact.get("winner_generated_rate"),
++        "generic_transfer_rate_over_variants": artifact.get("generic_transfer_rate_over_variants"),
++        "action_efficiency_score": artifact.get("action_efficiency_score"),
++        "ready_for_operator_submit": artifact.get("ready_for_operator_submit"),
++        "flagged_artifacts_handled": artifact.get("flagged_artifacts_handled"),
++        "cited_upstream_artifacts": artifact.get("cited_upstream_artifacts"),
++        "random_seed": artifact.get("random_seed"),
++    }
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None = None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    upstream, statuses = _load_artifacts(
++        root_path,
++        artifacts=artifacts,
++        live_flags_by_name=live_flags_by_name,
++    )
++    checks = dict(preconditions_checked or check_preconditions(root_path, statuses=statuses))
++    baseline = _as_int(upstream["LIVE_BASELINE"].get("live_total_levels"), LIVE_SUBMITTABLE_BASELINE)
++    a2_before, a2_after, a2_delta = _a2_repro_delta(upstream["A2"], _clean(statuses, "A2"))
++    registry_total = _as_int(checks.get("registry_reproducible_total_levels")) or a2_after
++    live_count = (
++        _as_int(upstream["A4"].get("live_submittable_level_count"))
++        if _clean(statuses, "A4")
++        else 0
++    )
++    winner_moved = _winner_generated_moved(upstream["A1"], statuses["A1"])
++    transfer_moved = _generic_transfer_moved(
++        upstream["A1"],
++        statuses["A1"],
++        upstream["A3"],
++        statuses["A3"],
++    )
++    goal_energy = _goal_energy_helped(upstream["A3"], statuses["A3"])
++    b1_clean = _clean(statuses, "B1")
++    winner_metric = _metric_record(
++        clean=b1_clean,
++        artifact=upstream["B1"],
++        value_key="winner_generated_rate",
++        source=UPSTREAM_SOURCES["B1"].relative_path,
++    )
++    generic_metric = _metric_record(
++        clean=b1_clean,
++        artifact=upstream["B1"],
++        value_key="generic_transfer_rate_over_variants",
++        source=UPSTREAM_SOURCES["B1"].relative_path,
++        ci_key="generic_transfer_ci",
++    )
++    action_metric = _metric_record(
++        clean=b1_clean,
++        artifact=upstream["B1"],
++        value_key="action_efficiency_score",
++        source=UPSTREAM_SOURCES["B1"].relative_path,
++        ci_key="action_efficiency_ci",
++    )
++    a5 = _a5_transfer(upstream["A5"], _clean(statuses, "A5"))
++    a6 = _a6_integration(upstream["A6"], _clean(statuses, "A6"), statuses["A6"])
++    ready = bool(
++        checks.get("ok", True)
++        and _clean(statuses, "A4")
++        and live_count > baseline
++        and upstream["A4"].get("ready_for_operator_submit") is True
++        and upstream["A4"].get("offline_reproduced") is True
++    )
++    generation_success = bool(winner_moved["moved"] or transfer_moved["moved"])
++    if generation_success:
++        verdict = "success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04"
++    elif a2_delta > 0:
++        verdict = "complete: generation_wall_persists_residual_logged_capability_grew"
++    else:
++        verdict = "complete: generation_wall_persists_residual_logged_no_capability_growth"
++    flagged = _flagged_artifacts_handled(statuses)
++    coheadline_metrics = {
++        "reproducible_total_levels": {
++            "clean_value": registry_total,
++            "source": REGISTRY_RELATIVE_PATH,
++            "included_in_clean_headline": True,
++        },
++        "live_submittable_level_count": {
++            "clean_value": live_count,
++            "source": UPSTREAM_SOURCES["A4"].relative_path,
++            "included_in_clean_headline": _clean(statuses, "A4"),
++        },
++        "winner_generated_rate": winner_metric,
++        "generic_transfer_rate_over_variants": generic_metric,
++        "action_efficiency_score": action_metric,
++    }
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4602",
++            "SCENARIO-CAPSTONE-4602",
++            "SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "winner_generated_moved": winner_moved,
++        "generic_transfer_moved": transfer_moved,
++        "goal_energy_helped": goal_energy,
++        "reproducible_total_levels_delta": a2_delta,
++        "reproducible_total_levels_before": a2_before,
++        "reproducible_total_levels": registry_total,
++        "live_submittable_count_baseline": baseline,
++        "live_submittable_level_count": live_count,
++        "winner_generated_rate": winner_metric,
++        "generic_transfer_rate_over_variants": generic_metric,
++        "generic_transfer_ci": generic_metric.get("ci"),
++        "action_efficiency_score": action_metric,
++        "action_efficiency_ci": action_metric.get("ci"),
++        "coheadline_metrics": coheadline_metrics,
++        "a5_transfer": a5,
++        "a6_integration_headline": a6,
++        "verifier_is_oracle_distinct_levers": _verifier_oracle_distinct(upstream, statuses),
++        "flagged_artifacts_handled": flagged,
++        "cited_upstream_artifacts": _cited_upstream_artifacts(statuses),
++        "scorecard": _scorecard(
++            upstream,
++            statuses,
++            winner_moved=winner_moved,
++            transfer_moved=transfer_moved,
++            goal_energy=goal_energy,
++            a2_before=a2_before,
++            a2_after=a2_after,
++            a2_delta=a2_delta,
++            a5_transfer=a5,
++            a6_integration=a6,
++        ),
++        "ready_for_operator_submit": ready,
++        "operator_submission_basis": {
++            "operator_only": True,
++            "leaderboard_submission": False,
++            "last_submitted_scorecard_levels": baseline,
++            "clean_a4_live_submittable_level_count": live_count if _clean(statuses, "A4") else None,
++            "a6_integration_headline_clean": _clean(statuses, "A6"),
++            "basis": "clean_a4_package_above_33" if ready else "not_ready_or_missing_clean_package",
++        },
++        "preconditions_checked": checks,
++        "leaderboard_submission": False,
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s if duration_s is not None else 0.0),
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def _is_bare_int(value: Any) -> bool:
++    return type(value) is int
++
++
++def _is_bare_bool(value: Any) -> bool:
++    return type(value) is bool
++
++
++def _metric_errors(artifact: Mapping[str, Any], field: str) -> list[str]:
++    errors: list[str] = []
++    metric = artifact.get(field)
++    if not isinstance(metric, Mapping):
++        return [f"{field} must be object"]
++    if "clean_value" not in metric:
++        errors.append(f"{field}.clean_value missing")
++    elif metric.get("clean_value") is not None and not isinstance(metric.get("clean_value"), float):
++        errors.append(f"{field}.clean_value must be float or null")
++    if "quarantined_value" in metric and metric.get("quarantined_value") is not None:
++        if not isinstance(metric.get("quarantined_value"), float):
++            errors.append(f"{field}.quarantined_value must be float or null")
++    if not isinstance(metric.get("source"), str):
++        errors.append(f"{field}.source must be string")
++    if not _is_bare_bool(metric.get("included_in_clean_headline")):
++        errors.append(f"{field}.included_in_clean_headline must be bare bool")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    for field, moved_key in (
++        ("winner_generated_moved", "moved"),
++        ("generic_transfer_moved", "moved"),
++        ("goal_energy_helped", "helped"),
++    ):
++        value = artifact.get(field)
++        if not isinstance(value, Mapping):
++            errors.append(f"{field} must be object")
++        elif not _is_bare_bool(value.get(moved_key)):
++            errors.append(f"{field}.{moved_key} must be bare bool")
++    for field in (
++        "reproducible_total_levels_delta",
++        "reproducible_total_levels",
++        "live_submittable_count_baseline",
++        "live_submittable_level_count",
++    ):
++        if not _is_bare_int(artifact.get(field)):
++            errors.append(f"{field} must be bare int")
++    for field in (
++        "winner_generated_rate",
++        "action_efficiency_score",
++        "generic_transfer_rate_over_variants",
++    ):
++        errors.extend(_metric_errors(artifact, field))
++    if not _is_bare_bool(artifact.get("ready_for_operator_submit")):
++        errors.append("ready_for_operator_submit must be bare bool")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    for field in (
++        "verifier_is_oracle_distinct_levers",
++        "flagged_artifacts_handled",
++        "cited_upstream_artifacts",
++        "preconditions_checked",
++        "scorecard",
++        "coheadline_metrics",
++        "operator_submission_basis",
++    ):
++        if not isinstance(artifact.get(field), Mapping):
++            errors.append(f"{field} must be object")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in FIELD_PRINCIPLES:
++            if field not in principles:
++                errors.append(f"missing field principle for {field}")
++    metrics = artifact.get("coheadline_metrics")
++    if isinstance(metrics, Mapping):
++        for field in (
++            "winner_generated_rate",
++            "generic_transfer_rate_over_variants",
++            "action_efficiency_score",
++        ):
++            if metrics.get(field) != artifact.get(field):
++                errors.append(f"coheadline_metrics.{field} must match top-level field")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != _checksum(_artifact_checksum_payload(artifact)):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifact: Mapping[str, Any] | None = None,
++) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    write: bool = True,
++    duration_s: float | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    elapsed = duration_s
++    if elapsed is None:
++        elapsed = max(time.perf_counter() - start, 0.0001)
++    artifact = build_artifact(root, live_flags_by_name=live_flags_by_name, duration_s=elapsed)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(root, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 72d7ebd1fc..0aa02a3fbb 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-22T18:10:48.334457Z",
+-  "duration_s": 0.03939676284790039,
++  "run_date": "2026-06-22T18:42:15.655169Z",
++  "duration_s": 0.02478933334350586,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "059295b1510758af294e4e28187203e359ed797dbb20ef0cf7fa97e1fdc584d7",
++  "reproducibility_checksum": "13baa5203eeeb604374a1f45d4099e54d47942c817a7a28ffb1d8218362d977a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bd6d12a1d30102e9f61ab9e32863521fced21807"
++    "adversarial_verify_version": "3e46538342f025acb87838defa9f545b5d60c26c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 79074b2a9d..59ef34ee4d 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-22T18:10:48.382446Z",
+-  "duration_s": 0.03924131393432617,
++  "run_date": "2026-06-22T18:42:15.689892Z",
++  "duration_s": 0.02918267250061035,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "959ee8dda2f761529ff5ea968be355b3dcf02beb3c3d1b4ae203ad68de29a97e",
++  "reproducibility_checksum": "1d1bece09a8e4d696d061a9888050914d32b5bb81ef3e262d08ae78934037df9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bd6d12a1d30102e9f61ab9e32863521fced21807"
++    "adversarial_verify_version": "3e46538342f025acb87838defa9f545b5d60c26c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d829dbaeba..24b86934d6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1572113037109375,
++  "efficiency_gains_ms": 2.113819122314453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index be2092b1aa..44f69d1078 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.6537996493279934e-05,
++  "duration_s": 3.4534954465925694e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4602_capstone_v424.json b/results/experiment_4602_capstone_v424.json
+new file mode 100644
+index 0000000000..7c33a1ecca
+--- /dev/null
++++ b/results/experiment_4602_capstone_v424.json
+@@ -0,0 +1,619 @@
++{
++  "a5_transfer": {
++    "included_in_headline": true,
++    "new_levels_banked": 0,
++    "primitive_persisted": {
++      "derived_from_artifacts": [
++        "results/experiment_4592_generation_completeness_wiring.json",
++        "results/experiment_4594_goal_energy_generation_prior.json"
++      ],
++      "operator": "approach_dispatcher_operator",
++      "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
++      "source": "A1_approach_dispatcher",
++      "source_tuning_games": [
++        "sp80"
++      ]
++    },
++    "transfer_games": [
++      "ar25",
++      "cn04",
++      "dc22"
++    ],
++    "value_added_games": [
++      "ar25",
++      "cn04",
++      "dc22"
++    ]
++  },
++  "a6_integration_headline": {
++    "included_in_headline": false,
++    "levers_integrated": [
++      "A2_ft09_L2_banked_package_refresh",
++      "A4_refreshed_live_submit_package"
++    ],
++    "raw_honest_verdict": "success: integrated_live_submittable_55_above_33",
++    "reason": "flagged_adversarial_excluded",
++    "submitted_config_raised_metric_clean": false,
++    "upstream_lever_audit": {
++      "A1": {
++        "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++        "flagged_adversarial": true,
++        "integrated": false,
++        "isolated_deltas": {},
++        "reason": "flagged_adversarial_not_allowed_for_aggregation"
++      },
++      "A2": {
++        "artifact": "results/experiment_4593_levelup_selfplay.json",
++        "integrated": true,
++        "live_submittable_delta": 1,
++        "reason": "ft09_L2_new_offline_reproduced_bank"
++      },
++      "A3": {
++        "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
++        "integrated": false,
++        "isolated_deltas": {},
++        "reason": "no_admissible_goal_energy_metric_gain"
++      },
++      "A4": {
++        "artifact": "results/experiment_4595_refresh_submission_package.json",
++        "integrated": true,
++        "live_submittable_delta": 2,
++        "reason": "refreshed_package_live_submittable_above_33"
++      }
++    }
++  },
++  "action_efficiency_ci": [
++    1.0,
++    1.0
++  ],
++  "action_efficiency_score": {
++    "ci": [
++      1.0,
++      1.0
++    ],
++    "clean_value": null,
++    "included_in_clean_headline": false,
++    "quarantined_value": 1.0,
++    "source": "results/experiment_4598_winner_generated_rate_metric.json"
++  },
++  "cited_upstream_artifacts": {
++    "A1": {
++      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "winner_generated_rate_with_wiring",
++        "generic_transfer_rate_with_wiring",
++        "transfer_ci"
++      ],
++      "reason": "flagged_adversarial_excluded",
++      "role": "generation_completeness_wiring",
++      "sha256": "sha256:962682b016fd711583552fc39f913fa1c8f81025b96bea7325f55fd16d32f3b6"
++    },
++    "A2": {
++      "artifact": "results/experiment_4593_levelup_selfplay.json",
++      "exists": true,
++      "imported_fields": [
++        "registry_update",
++        "reproduction_gate",
++        "offline_reproduced"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "levelup_selfplay_bank",
++      "sha256": "sha256:dbf1e4798c8b20355faff2ba5a2edbf27b90bb0b8ff868011418fd794cdacbdf"
++    },
++    "A3": {
++      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [],
++      "reason": "false_negative_risk_open",
++      "role": "goal_energy_generation_prior",
++      "sha256": "sha256:533d30a6be9c11f2f98c7c3d621622532dbe1847d25dab9dd37a52f8cbe9403e"
++    },
++    "A4": {
++      "artifact": "results/experiment_4595_refresh_submission_package.json",
++      "exists": true,
++      "imported_fields": [
++        "live_submittable_level_count",
++        "live_submittable_count_prev",
++        "count_delta",
++        "ready_for_operator_submit"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "refresh_submission_package",
++      "sha256": "sha256:98ee4e7a8d0f251ba1f1c06d45956d936cab226ce18965ef093ead6fa6ecf90c"
++    },
++    "A5": {
++      "artifact": "results/experiment_4596_primitive_persist_transfer.json",
++      "exists": true,
++      "imported_fields": [
++        "primitive_persisted",
++        "transfer_games",
++        "transfer_value_per_game"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "primitive_persist_transfer",
++      "sha256": "sha256:db99fab879df128f68f75166dcf641c7cbf7bad8f724a0e97b92fa2e9559df64"
++    },
++    "A6": {
++      "artifact": "results/experiment_4597_integration_gate.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "winner_generated_rate_integrated",
++        "generic_transfer_rate_integrated",
++        "live_submittable_level_count_integrated"
++      ],
++      "reason": "flagged_adversarial_excluded",
++      "role": "integration_gate",
++      "sha256": "sha256:12fe9aa89041feb3a701504d727da240a087d66d18b9b172a111e6986ef2af64"
++    },
++    "B1": {
++      "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "winner_generated_rate",
++        "generic_transfer_rate_over_variants",
++        "action_efficiency_score"
++      ],
++      "reason": "flagged_adversarial_excluded",
++      "role": "winner_generated_rate_metric",
++      "sha256": "sha256:6bd002b6f9f3461a79cb45abfea0f5b026032996f04423717d07ff62aba57d63"
++    },
++    "LIVE_BASELINE": {
++      "artifact": "results/arc3_live_submit.json",
++      "exists": true,
++      "imported_fields": [
++        "live_total_levels"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "last_submitted_scorecard",
++      "sha256": "sha256:f751acbc08caa117147e99b71edd953678c76e0d1e8543373ca45b5a7c25084f"
++    },
++    "REGISTRY": {
++      "artifact": "ops/arc_solve_registry.yaml",
++      "exists": true,
++      "imported_fields": [
++        "reproducible_total_levels"
++      ],
++      "role": "authoritative_reproducible_total_levels"
++    }
++  },
++  "coheadline_metrics": {
++    "action_efficiency_score": {
++      "ci": [
++        1.0,
++        1.0
++      ],
++      "clean_value": null,
++      "included_in_clean_headline": false,
++      "quarantined_value": 1.0,
++      "source": "results/experiment_4598_winner_generated_rate_metric.json"
++    },
++    "generic_transfer_rate_over_variants": {
++      "ci": [
++        0.0,
++        0.1
++      ],
++      "clean_value": null,
++      "included_in_clean_headline": false,
++      "quarantined_value": 0.04,
++      "source": "results/experiment_4598_winner_generated_rate_metric.json"
++    },
++    "live_submittable_level_count": {
++      "clean_value": 55,
++      "included_in_clean_headline": true,
++      "source": "results/experiment_4595_refresh_submission_package.json"
++    },
++    "reproducible_total_levels": {
++      "clean_value": 55,
++      "included_in_clean_headline": true,
++      "source": "ops/arc_solve_registry.yaml"
++    },
++    "winner_generated_rate": {
++      "ci": null,
++      "clean_value": null,
++      "included_in_clean_headline": false,
++      "quarantined_value": 0.04,
++      "source": "results/experiment_4598_winner_generated_rate_metric.json"
++    }
++  },
++  "duration_s": 0.0001,
++  "experiment": "experiment_4602_capstone_v424",
++  "field_principles": {
++    "action_efficiency_score": {
++      "principle": "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."
++    },
++    "cited_upstream_artifacts": {
++      "principle": "every headline number traces to a real upstream measurement (the audit trail)."
++    },
++    "flagged_artifacts_handled": {
++      "principle": "names any flagged_adversarial artifact excluded AND any null-delta-carve-out (mechanical via .424 B2) / offline-arc-methodology / positive-control-failed artifact handled -- fabrication-gate + false-negative-risk compliance."
++    },
++    "generic_transfer_moved": {
++      "principle": "did A1/A3 raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI (the seen->hidden solve-rate)."
++    },
++    "generic_transfer_rate_over_variants": {
++      "principle": "the held-out first-contact solve-rate reported WITH a CI -- a co-headline metric."
++    },
++    "goal_energy_helped": {
++      "principle": "did the A3 goal-energy generation prior raise winner_generated_rate on the wired-but-failing classes with a passing no-energy control."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04 OR complete: generation_wall_persists_residual_logged_capability_grew."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "live_submittable_level_count": {
++      "principle": "the honest leaderboard score (A4/B1) reported alongside reproducible_total_levels + generic_transfer + action efficiency + winner_generated_rate."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++    "ready_for_operator_submit": {
++      "principle": "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."
++    },
++    "reproducible_total_levels_delta": {
++      "principle": "did solve CAPABILITY grow this milestone (A2 bank, 54->55+)."
++    },
++    "verifier_is_oracle_distinct_levers": {
++      "principle": "A1/A3 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."
++    },
++    "winner_generated_moved": {
++      "principle": "the bottom line -- did A1 wiring raise winner_generated_rate STRICTLY above 1/25 with CI + a passing no-wiring control (the generation wall finally cracking)."
++    },
++    "winner_generated_rate": {
++      "principle": "the generation-vs-ranking gap co-headline (B1) -- can the system GENERATE the winner at all (1/25 baseline)."
++    }
++  },
++  "flagged_artifacts_handled": {
++    "excluded_artifacts": [
++      "results/experiment_4592_generation_completeness_wiring.json",
++      "results/experiment_4597_integration_gate.json",
++      "results/experiment_4598_winner_generated_rate_metric.json"
++    ],
++    "excluded_details": [
++      {
++        "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++        "critical_flags": [
++          {
++            "detail": "generic_transfer_rate_with_wiring=0.08 and winner_generated_rate_with_wiring=0.08 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          }
++        ],
++        "name": "A1",
++        "reason": "flagged_adversarial_excluded"
++      },
++      {
++        "artifact": "results/experiment_4597_integration_gate.json",
++        "critical_flags": [
++          {
++            "detail": "generic_transfer_rate_baseline=0.04 and generic_transfer_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "generic_transfer_rate_baseline=0.04 and held_out_solve_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "generic_transfer_rate_baseline=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "generic_transfer_rate_integrated=0.04 and held_out_solve_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "generic_transfer_rate_integrated=0.04 and winner_generated_rate_baseline=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "generic_transfer_rate_integrated=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "held_out_solve_rate=0.04 and winner_generated_rate_baseline=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "held_out_solve_rate=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          },
++          {
++            "detail": "winner_generated_rate_baseline=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          }
++        ],
++        "name": "A6",
++        "reason": "flagged_adversarial_excluded"
++      },
++      {
++        "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
++        "critical_flags": [
++          {
++            "detail": "generic_transfer_rate_over_variants=0.04 and winner_generated_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          }
++        ],
++        "name": "B1",
++        "reason": "flagged_adversarial_excluded"
++      }
++    ],
++    "failed_acceptance_gate_overrides": [],
++    "learned_cnn_duration_guard_honored": "No .424 artifact was excluded merely for fast offline duration or missing model_specs.",
++    "null_delta_carveouts": [],
++    "offline_arc_methodology_guard_honored": [
++      "A1/A2/A3/A4/A5/A6 offline ARC artifacts were evaluated by flags and gates, not by fast-runtime suspicion alone.",
++      "A2/A4/A5 clean fast offline artifacts remain admissible when reproduction/methodology fields are present."
++    ],
++    "positive_control_failed_guard": [
++      "A3",
++      "A6"
++    ],
++    "positive_control_guard_note": "FALSE_NEGATIVE_RISK nulls are broken-test signals; their nulls are not clean results."
++  },
++  "generic_transfer_ci": [
++    0.0,
++    0.1
++  ],
++  "generic_transfer_moved": {
++    "a1": {
++      "ci": [
++        0.0,
++        0.12
++      ],
++      "delta": 0.04,
++      "headline_numbers_aggregated": false,
++      "rate": 0.08,
++      "reason": "flagged_adversarial_excluded",
++      "source": "results/experiment_4592_generation_completeness_wiring.json"
++    },
++    "a3": {
++      "ci": null,
++      "delta": 0.0,
++      "headline_numbers_aggregated": false,
++      "no_energy_rate": 0.0,
++      "rate": 0.0,
++      "reason": "false_negative_risk_open",
++      "source": "results/experiment_4594_goal_energy_generation_prior.json"
++    },
++    "baseline": 0.04,
++    "moved": false,
++    "reason": "no_clean_ci_supported_transfer_move"
++  },
++  "generic_transfer_rate_over_variants": {
++    "ci": [
++      0.0,
++      0.1
++    ],
++    "clean_value": null,
++    "included_in_clean_headline": false,
++    "quarantined_value": 0.04,
++    "source": "results/experiment_4598_winner_generated_rate_metric.json"
++  },
++  "goal_energy_helped": {
++    "helped": false,
++    "no_energy_control_passed": true,
++    "null_is_clean": false,
++    "reason": "a3_false_negative_risk_open",
++    "source": "results/experiment_4594_goal_energy_generation_prior.json",
++    "targeted_classes": [
++      "keyboard_graph:systematic_bfs:variant_wired=True",
++      "click_graph:diversity_graph_explore:variant_wired=True",
++      "config_toggle:diversity_graph_explore:variant_wired=True"
++    ],
++    "winner_generated_delta": 0.0,
++    "winner_generated_rate_no_energy": 0.0,
++    "winner_generated_rate_with_energy": 0.0
++  },
++  "honest_verdict": "complete: generation_wall_persists_residual_logged_capability_grew",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
++  "leaderboard_submission": false,
++  "live_submittable_count_baseline": 33,
++  "live_submittable_level_count": 55,
++  "operator_submission_basis": {
++    "a6_integration_headline_clean": false,
++    "basis": "clean_a4_package_above_33",
++    "clean_a4_live_submittable_level_count": 55,
++    "last_submitted_scorecard_levels": 33,
++    "leaderboard_submission": false,
++    "operator_only": true
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "leaderboard_submission": false,
++    "missing_upstream_artifacts": [],
++    "network_required": false,
++    "ok": true,
++    "operator_only": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_reproducible_total_levels": 55,
++    "registry_yaml_loadable": true,
++    "research_conductor_modified": false,
++    "spec_has_req_4602": true,
++    "summarize_artifact_py_used_for_live_flags": true,
++    "upstream_artifacts_present": {
++      "A1": true,
++      "A2": true,
++      "A3": true,
++      "A4": true,
++      "A5": true,
++      "A6": true,
++      "B1": true,
++      "LIVE_BASELINE": true
++    }
++  },
++  "random_seed": 4602,
++  "ready_for_operator_submit": true,
++  "reproducibility_checksum": "sha256:0cf9e1d7a80de91e365154d7b3ba7437cb34b5e605c629ebeb45a06bc207101c",
++  "reproducible_total_levels": 55,
++  "reproducible_total_levels_before": 54,
++  "reproducible_total_levels_delta": 1,
++  "result_path": "results/experiment_4602_capstone_v424.json",
++  "schema": "carnot.exp4602.capstone_v424.v1",
++  "scorecard": {
++    "A1": {
++      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++      "generic_transfer_moved": false,
++      "included_in_headline": false,
++      "reason": "flagged_adversarial_excluded",
++      "winner_generated_moved": false
++    },
++    "A2": {
++      "artifact": "results/experiment_4593_levelup_selfplay.json",
++      "included_in_headline": true,
++      "reproducible_total_after": 55,
++      "reproducible_total_before": 54,
++      "reproducible_total_delta": 1
++    },
++    "A3": {
++      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
++      "goal_energy_helped": false,
++      "included_in_headline": false,
++      "reason": "false_negative_risk_open"
++    },
++    "A4": {
++      "artifact": "results/experiment_4595_refresh_submission_package.json",
++      "count_delta": 2,
++      "included_in_headline": true,
++      "live_submittable_level_count": 55,
++      "ready_for_operator_submit": true
++    },
++    "A5": {
++      "included_in_headline": true,
++      "new_levels_banked": 0,
++      "primitive_persisted": {
++        "derived_from_artifacts": [
++          "results/experiment_4592_generation_completeness_wiring.json",
++          "results/experiment_4594_goal_energy_generation_prior.json"
++        ],
++        "operator": "approach_dispatcher_operator",
++        "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
++        "source": "A1_approach_dispatcher",
++        "source_tuning_games": [
++          "sp80"
++        ]
++      },
++      "transfer_games": [
++        "ar25",
++        "cn04",
++        "dc22"
++      ],
++      "value_added_games": [
++        "ar25",
++        "cn04",
++        "dc22"
++      ]
++    },
++    "A6": {
++      "included_in_headline": false,
++      "levers_integrated": [
++        "A2_ft09_L2_banked_package_refresh",
++        "A4_refreshed_live_submit_package"
++      ],
++      "raw_honest_verdict": "success: integrated_live_submittable_55_above_33",
++      "reason": "flagged_adversarial_excluded",
++      "submitted_config_raised_metric_clean": false,
++      "upstream_lever_audit": {
++        "A1": {
++          "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++          "flagged_adversarial": true,
++          "integrated": false,
++          "isolated_deltas": {},
++          "reason": "flagged_adversarial_not_allowed_for_aggregation"
++        },
++        "A2": {
++          "artifact": "results/experiment_4593_levelup_selfplay.json",
++          "integrated": true,
++          "live_submittable_delta": 1,
++          "reason": "ft09_L2_new_offline_reproduced_bank"
++        },
++        "A3": {
++          "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
++          "integrated": false,
++          "isolated_deltas": {},
++          "reason": "no_admissible_goal_energy_metric_gain"
++        },
++        "A4": {
++          "artifact": "results/experiment_4595_refresh_submission_package.json",
++          "integrated": true,
++          "live_submittable_delta": 2,
++          "reason": "refreshed_package_live_submittable_above_33"
++        }
++      }
++    },
++    "B1": {
++      "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
++      "coheadline_numbers_quarantined": true,
++      "included_in_headline": false,
++      "reason": "flagged_adversarial_excluded"
++    }
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4602",
++    "SCENARIO-CAPSTONE-4602",
++    "SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES"
++  ],
++  "verifier_is_oracle_distinct_levers": {
++    "A1": {
++      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
++      "included_in_headline": false,
++      "oracle_distinct": true,
++      "verifier_is_oracle": false
++    },
++    "A3": {
++      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
++      "included_in_headline": false,
++      "oracle_distinct": true,
++      "verifier_is_oracle": false
++    },
++    "A4": {
++      "artifact": "results/experiment_4595_refresh_submission_package.json",
++      "included_in_headline": true,
++      "oracle_distinct": true,
++      "verifier_is_oracle": false
++    },
++    "A6": {
++      "artifact": "results/experiment_4597_integration_gate.json",
++      "included_in_headline": false,
++      "oracle_distinct": true,
++      "verifier_is_oracle": false
++    },
++    "all_included_value_claims_oracle_distinct": true
++  },
++  "winner_generated_moved": {
++    "baseline": 0.04,
++    "headline_numbers_aggregated": false,
++    "moved": false,
++    "no_wiring_control_passed": true,
++    "rate_with_wiring": 0.08,
++    "raw_reported_strictly_above_baseline": true,
++    "reason": "flagged_adversarial_excluded",
++    "source": "results/experiment_4592_generation_completeness_wiring.json",
++    "winner_generated_ci": null,
++    "winner_generated_delta": 0.04
++  },
++  "winner_generated_rate": {
++    "ci": null,
++    "clean_value": null,
++    "included_in_clean_headline": false,
++    "quarantined_value": 0.04,
++    "source": "results/experiment_4598_winner_generated_rate_metric.json"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5416d1dab0..80b56d2154 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T18:10:36Z",
+-  "finished_at": "2026-06-22T18:10:36Z",
++  "started_at": "2026-06-22T18:42:03Z",
++  "finished_at": "2026-06-22T18:42:04Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 4779a4f194..89f7771f64 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T18:10:36Z",
+-  "finished_at": "2026-06-22T18:10:36Z",
++  "started_at": "2026-06-22T18:42:04Z",
++  "finished_at": "2026-06-22T18:42:04Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index cfb334a55f..35025fbc98 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T18:10:36Z",
+-  "finished_at": "2026-06-22T18:10:36Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-22T18:42:04Z",
++  "finished_at": "2026-06-22T18:42:04Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4602_capstone_v424.py b/tests/python/test_experiment_4602_capstone_v424.py
+new file mode 100644
+index 0000000000..c86a834048
+--- /dev/null
++++ b/tests/python/test_experiment_4602_capstone_v424.py
+@@ -0,0 +1,623 @@
++"""Tests for Exp 4602 .424 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4602, SCENARIO-CAPSTONE-4602,
++SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4602_capstone_v424 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _a1_flagged_positive() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4592_generation_completeness_wiring",
++        "honest_verdict": "success: generation_completeness_winner_generated_2of25_above_1of25",
++        "flagged_adversarial": True,
++        "verifier_is_oracle": False,
++        "winner_generated_rate_with_wiring": 0.08,
++        "winner_generated_rate_baseline": 0.04,
++        "winner_generated_delta": 0.04,
++        "generic_transfer_rate_with_wiring": 0.08,
++        "generic_transfer_rate_baseline": 0.04,
++        "transfer_delta": 0.04,
++        "transfer_ci": [0.0, 0.12],
++        "no_wiring_control_passed": True,
++        "positive_control_passed": None,
++        "false_negative_risk_checked": True,
++        "solve_rate_preserved": True,
++        "chosen_submitted_config": "enable_wired_generation_dispatch",
++        "offline_reproduced": True,
++    }
++
++
++def _a2_bank() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4593_levelup_selfplay",
++        "honest_verdict": "success: ft09_L2_offline_reproduced",
++        "offline_reproduced": True,
++        "reproduced_levels": 1,
++        "target_game": "ft09",
++        "target_level": 2,
++        "registry_updated": True,
++        "registry_update": {
++            "updated": True,
++            "target_game": "ft09",
++            "banked_levels": 1,
++            "prior_game_levels": 1,
++            "new_game_levels": 2,
++            "prior_total_declared": 54,
++            "new_total_declared": 55,
++            "reconciled_total_delta": 1,
++        },
++        "reproduction_gate": {
++            "claimed_level": 2,
++            "reached_level": 2,
++            "reproduced": True,
++        },
++        "verifier_checkpoint_updated": True,
++    }
++
++
++def _a3_false_negative_null() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4594_goal_energy_generation_prior",
++        "honest_verdict": "complete: goal_energy_prior_no_value_honest_null_gap_sharpened",
++        "verifier_is_oracle": False,
++        "winner_generated_rate_with_energy": 0.0,
++        "winner_generated_rate_no_energy": 0.0,
++        "winner_generated_delta": 0.0,
++        "generic_transfer_rate_with_energy": 0.0,
++        "generic_transfer_rate_no_energy": 0.0,
++        "actions_delta": 0.0,
++        "no_energy_control_passed": True,
++        "positive_control_passed": None,
++        "false_negative_risk_checked": True,
++        "solve_rate_preserved": True,
++        "targeted_classes": [
++            "keyboard_graph:systematic_bfs:variant_wired=True",
++            "click_graph:diversity_graph_explore:variant_wired=True",
++            "config_toggle:diversity_graph_explore:variant_wired=True",
++        ],
++        "chosen_submitted_config": "unchanged",
++        "offline_reproduced": True,
++    }
++
++
++def _a4_package() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4595_refresh_submission_package",
++        "honest_verdict": "success: package_refreshed_live_submittable_55_above_33",
++        "verifier_is_oracle": False,
++        "live_submittable_level_count": 55,
++        "live_submittable_count_prev": 53,
++        "count_delta": 2,
++        "levels_folded_in": ["ar25", "ft09"],
++        "refreshed_package_path": "results/experiment_4595_submission_package_operator_resubmit.json",
++        "ready_for_operator_submit": True,
++        "offline_reproduced": True,
++    }
++
++
++def _a5_transfer() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4596_primitive_persist_transfer",
++        "honest_verdict": "success: primitive_persisted_transfer_ar25_value_added",
++        "primitive_persisted": {"operator": "approach_dispatcher_operator"},
++        "transfer_games": ["ar25", "cn04", "dc22"],
++        "transfer_value_per_game": {
++            "ar25": {"value_added": True, "winner_generated": True},
++            "cn04": {"value_added": True, "winner_generated": True},
++            "dc22": {"value_added": True, "winner_generated": True},
++        },
++        "new_levels_banked": 0,
++        "offline_reproduced": {"new_levels_banked": 0},
++    }
++
++
++def _a6_flagged_integration() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4597_integration_gate",
++        "honest_verdict": "success: integrated_live_submittable_55_above_33",
++        "flagged_adversarial": True,
++        "verifier_is_oracle": False,
++        "winner_generated_rate_integrated": 0.04,
++        "winner_generated_rate_baseline": 0.04,
++        "generic_transfer_rate_integrated": 0.04,
++        "generic_transfer_rate_baseline": 0.04,
++        "generic_transfer_ci_integrated": [0.0, 0.12],
++        "held_out_solve_rate": 0.04,
++        "live_submittable_level_count_integrated": 55,
++        "live_submittable_level_count_baseline": 33,
++        "levers_integrated": [
++            "A2_ft09_L2_banked_package_refresh",
++            "A4_refreshed_live_submit_package",
++        ],
++        "ready_for_operator_submit": True,
++        "positive_control_passed": None,
++        "false_negative_risk_checked": True,
++        "parity_green": True,
++        "core_solves_preserved": {"passed": True},
++        "upstream_lever_audit": {
++            "A1": {"integrated": False, "reason": "flagged_adversarial_not_allowed_for_aggregation"},
++            "A2": {"integrated": True, "reason": "ft09_L2_new_offline_reproduced_bank"},
++            "A3": {"integrated": False, "reason": "no_admissible_goal_energy_metric_gain"},
++            "A4": {"integrated": True, "reason": "refreshed_package_live_submittable_above_33"},
++        },
++    }
++
++
++def _b1_flagged_coheadline() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4598_winner_generated_rate_metric",
++        "honest_verdict": "shipped: winner_generated_rate_coheadline_wired",
++        "flagged_adversarial": True,
++        "winner_generated_rate": 0.04,
++        "winner_generated_count": 1,
++        "winner_generated_attempted_count": 25,
++        "winner_generated_not_selected_count": 0,
++        "generic_transfer_rate_over_variants": 0.04,
++        "generic_transfer_ci": [0.0, 0.1],
++        "generic_transfer_solved_count": 1,
++        "action_efficiency_score": 1.0,
++        "action_efficiency_ci": [1.0, 1.0],
++        "reproducible_total_levels": 55,
++        "live_submittable_level_count": 54,
++        "reproducible_vs_submittable_gap": 1,
++        "generation_vs_ranking_gap": 0.0,
++    }
++
++
++def _baseline() -> dict[str, Any]:
++    return {"experiment": "arc3_live_submit", "live_total_levels": 33, "leaderboard_submitted": True}
++
++
++def _artifacts() -> dict[str, dict[str, Any]]:
++    return {
++        "A1": _a1_flagged_positive(),
++        "A2": _a2_bank(),
++        "A3": _a3_false_negative_null(),
++        "A4": _a4_package(),
++        "A5": _a5_transfer(),
++        "A6": _a6_flagged_integration(),
++        "B1": _b1_flagged_coheadline(),
++        "LIVE_BASELINE": _baseline(),
++    }
++
++
++def _live_flags() -> dict[str, list[dict[str, Any]]]:
++    return {
++        "A1": [
++            {
++                "kind": "TAUTOLOGY",
++                "severity": "critical",
++                "detail": "generic_transfer_rate_with_wiring=0.08 and winner_generated_rate_with_wiring=0.08",
++            }
++        ],
++        "A3": [
++            {
++                "kind": "FALSE_NEGATIVE_RISK",
++                "severity": "warn",
++                "detail": "false_negative_risk_open: positive_control_passed=None",
++            }
++        ],
++        "A6": [
++            {
++                "kind": "TAUTOLOGY",
++                "severity": "critical",
++                "detail": "generic_transfer_rate_integrated=0.04 and held_out_solve_rate=0.04",
++            },
++            {
++                "kind": "FALSE_NEGATIVE_RISK",
++                "severity": "warn",
++                "detail": "false_negative_risk_open: positive_control_passed=None",
++            },
++        ],
++        "B1": [
++            {
++                "kind": "TAUTOLOGY",
++                "severity": "critical",
++                "detail": "generic_transfer_rate_over_variants=0.04 and winner_generated_rate=0.04",
++            }
++        ],
++    }
++
++
++def _preconditions() -> dict[str, Any]:
++    return {
++        "ok": True,
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4602": True,
++        "registry_yaml_loadable": True,
++        "registry_reproducible_total_levels": 55,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++
++
++def test_req_capstone_4602_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4602: OpenSpec declares the capstone fields before code."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4602",
++        "SCENARIO-CAPSTONE-4602",
++        "SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_req_capstone_4602_quarantines_flagged_generation_and_b1_metrics() -> None:
++    """REQ-CAPSTONE-4602: flagged A1/B1 numbers cannot become clean headline wins."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: generation_wall_persists_residual_logged_capability_grew"
++    )
++    assert artifact["winner_generated_moved"]["moved"] is False
++    assert artifact["winner_generated_moved"]["raw_reported_strictly_above_baseline"] is True
++    assert artifact["winner_generated_moved"]["headline_numbers_aggregated"] is False
++    assert artifact["generic_transfer_moved"]["moved"] is False
++    assert artifact["generic_transfer_moved"]["a1"]["headline_numbers_aggregated"] is False
++    assert artifact["winner_generated_rate"]["clean_value"] is None
++    assert artifact["winner_generated_rate"]["quarantined_value"] == pytest.approx(0.04)
++    assert artifact["generic_transfer_rate_over_variants"]["clean_value"] is None
++    assert artifact["action_efficiency_score"]["clean_value"] is None
++    assert set(artifact["flagged_artifacts_handled"]["excluded_artifacts"]) == {
++        "results/experiment_4592_generation_completeness_wiring.json",
++        "results/experiment_4597_integration_gate.json",
++        "results/experiment_4598_winner_generated_rate_metric.json",
++    }
++
++
++def test_scenario_capstone_4602_reports_capability_growth_and_submit_ready_package() -> None:
++    """SCENARIO-CAPSTONE-4602: clean A2/A4 evidence still reports capability and package wins."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["reproducible_total_levels_delta"] == 1
++    assert artifact["reproducible_total_levels"] == 55
++    assert artifact["scorecard"]["A2"]["reproducible_total_before"] == 54
++    assert artifact["scorecard"]["A2"]["reproducible_total_after"] == 55
++    assert artifact["live_submittable_level_count"] == 55
++    assert artifact["ready_for_operator_submit"] is True
++    assert artifact["operator_submission_basis"]["last_submitted_scorecard_levels"] == 33
++    assert artifact["operator_submission_basis"]["basis"] == "clean_a4_package_above_33"
++    assert artifact["scorecard"]["A5"]["value_added_games"] == ["ar25", "cn04", "dc22"]
++    assert artifact["scorecard"]["A6"]["submitted_config_raised_metric_clean"] is False
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_capstone_4602_false_negative_null_and_null_delta_carveout() -> None:
++    """REQ-CAPSTONE-4602: broken nulls stay open; B2 carve-out is diagnosis-only."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["goal_energy_helped"]["helped"] is False
++    assert artifact["goal_energy_helped"]["null_is_clean"] is False
++    assert artifact["goal_energy_helped"]["reason"] == "a3_false_negative_risk_open"
++    assert artifact["flagged_artifacts_handled"]["positive_control_failed_guard"] == ["A3", "A6"]
++
++    artifacts = _artifacts()
++    artifacts["A1"] = {
++        "flagged_adversarial": True,
++        "honest_verdict": "complete: explicit_control_best_null",
++        "efficiency_delta": 0.0,
++        "null_delta_methodology_note": "control==best null-delta is the expected diagnosis.",
++    }
++    flags = _live_flags()
++    flags["A1"] = [
++        {
++            "kind": "TAUTOLOGY",
++            "severity": "critical",
++            "detail": "routing_control=1.0 and routing_best=1.0",
++        }
++    ]
++    carveout = mod.build_artifact(
++        artifacts=artifacts,
++        live_flags_by_name=flags,
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    assert carveout["flagged_artifacts_handled"]["null_delta_carveouts"][0]["artifact"] == (
++        "results/experiment_4592_generation_completeness_wiring.json"
++    )
++    assert carveout["scorecard"]["A1"]["reason"] == (
++        "flagged_null_delta_corrigendum_diagnosis_only"
++    )
++
++
++def test_scenario_capstone_4602_run_writes_deliverable(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4602: run validates and writes the requested JSON."""
++
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec_path = tmp_path / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec_path.parent.mkdir(parents=True)
++    spec_path.write_text(SPEC_PATH.read_text(encoding="utf-8"), encoding="utf-8")
++    registry_path = tmp_path / "ops" / "arc_solve_registry.yaml"
++    registry_path.parent.mkdir(parents=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 55\n", encoding="utf-8")
++
++    for name, source in mod.UPSTREAM_SOURCES.items():
++        _write_json(tmp_path / source.relative_path, _artifacts()[name])
++
++    artifact = mod.run(
++        tmp_path,
++        live_flags_by_name=_live_flags(),
++        write=True,
++        duration_s=0.001,
++    )
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert written["leaderboard_submission"] is False
++    assert written["ready_for_operator_submit"] is True
++    assert mod.validate_artifact(written) == []
++
++
++def test_req_capstone_4602_validation_fails_closed() -> None:
++    """REQ-CAPSTONE-4602: malformed capstones cannot pass as final results."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    broken = dict(artifact)
++    broken.update(
++        {
++            "honest_verdict": "maybe",
++            "inference_substrate": "wrong",
++            "winner_generated_moved": {"moved": "yes"},
++            "generic_transfer_moved": [],
++            "goal_energy_helped": {"helped": "no"},
++            "reproducible_total_levels_delta": "1",
++            "live_submittable_level_count": "55",
++            "winner_generated_rate": 0.04,
++            "action_efficiency_score": {"clean_value": "1.0"},
++            "generic_transfer_rate_over_variants": {"quarantined_value": 0.04},
++            "ready_for_operator_submit": "true",
++            "leaderboard_submission": True,
++            "field_principles": {},
++            "coheadline_metrics": {},
++            "reproducibility_checksum": "bad",
++        }
++    )
++
++    errors = mod.validate_artifact(broken)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "winner_generated_moved.moved must be bare bool" in errors
++    assert "generic_transfer_moved must be object" in errors
++    assert "goal_energy_helped.helped must be bare bool" in errors
++    assert "reproducible_total_levels_delta must be bare int" in errors
++    assert "live_submittable_level_count must be bare int" in errors
++    assert "winner_generated_rate must be object" in errors
++    assert "action_efficiency_score.clean_value must be float or null" in errors
++    assert "generic_transfer_rate_over_variants.clean_value missing" in errors
++    assert "ready_for_operator_submit must be bare bool" in errors
++    assert "leaderboard_submission must be false" in errors
++    assert "missing field principle for honest_verdict" in errors
++    assert "coheadline_metrics.winner_generated_rate must match top-level field" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
++
++    with pytest.raises(ValueError):
++        mod.write_artifact(artifact=broken)
++
++
++def test_req_capstone_4602_defensive_helpers_and_alternate_paths(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4602: helper branches stay deterministic and explicit."""
++
++    assert mod._read_json(tmp_path / "missing.json") == {}
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert mod._read_json(bad_json) == {}
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert mod._read_json(list_json) == {}
++
++    assert mod._read_yaml(tmp_path / "missing.yaml") == {}
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("[", encoding="utf-8")
++    assert mod._read_yaml(bad_yaml) == {}
++    scalar_yaml = tmp_path / "scalar.yaml"
++    scalar_yaml.write_text("1\n", encoding="utf-8")
++    assert mod._read_yaml(scalar_yaml) == {}
++    assert mod._file_sha256(tmp_path / "missing.bin") is None
++    assert mod._as_int(True, 7) == 7
++    assert mod._as_int("x", 7) == 7
++    assert mod._as_float(True, 0.5) == pytest.approx(0.5)
++    assert mod._as_float("x", 0.5) == pytest.approx(0.5)
++    assert mod._float_or_none(True) is None
++    assert mod._float_or_none("x") is None
++
++    class GoodReader:
++        @staticmethod
++        def _live_flags(path: Path) -> list[object]:
++            return [{"kind": "OK"}, "skip"]
++
++        @staticmethod
++        def classify_known_false_positive_null_delta(
++            artifact: Mapping[str, Any],
++            flags: list[dict[str, Any]],
++        ) -> str:
++            return "not-a-mapping"
++
++    class BadReader:
++        @staticmethod
++        def _live_flags(path: Path) -> list[dict[str, Any]]:
++            raise RuntimeError(path)
++
++        @staticmethod
++        def classify_known_false_positive_null_delta(
++            artifact: Mapping[str, Any],
++            flags: list[dict[str, Any]],
++        ) -> None:
++            raise RuntimeError((artifact, flags))
++
++    monkeypatch.setattr(mod, "artifact_reader", None)
++    assert mod._live_flags(tmp_path / "x.json") == []
++    assert mod._null_delta_corrigendum({}, []) is None
++    monkeypatch.setattr(mod, "artifact_reader", GoodReader)
++    assert mod._live_flags(tmp_path / "x.json") == [{"kind": "OK"}]
++    assert mod._null_delta_corrigendum({}, []) is None
++    monkeypatch.setattr(mod, "artifact_reader", BadReader)
++    assert mod._live_flags(tmp_path / "x.json") == []
++    assert mod._null_delta_corrigendum({}, []) is None
++
++    source = mod.SourceSpec("X", "results/x.json", "fixture")
++    missing_status = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={},
++        exists=False,
++        live_flags_by_name={},
++    )
++    assert missing_status["reason"] == "missing"
++    gate_status = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={"gate_main": False},
++        exists=True,
++        live_flags_by_name={},
++    )
++    assert gate_status["reason"] == "failed_acceptance_gate"
++    handled = mod._flagged_artifacts_handled({"X": gate_status, "LIVE_BASELINE": missing_status})
++    assert handled["failed_acceptance_gate_overrides"] == [
++        {"name": "X", "artifact": "results/x.json", "failed_gates": ["gate_main"]}
++    ]
++
++    assert mod._a2_repro_delta({}, False) == (0, 0, 0)
++    assert mod._a2_repro_delta({}, True) == (0, 0, 0)
++    assert mod._a2_repro_delta(
++        {
++            "offline_reproduced": True,
++            "registry_update": {"prior_total_declared": 1, "new_total_declared": 3, "updated": True},
++            "reproduction_gate": {"reproduced": True},
++        },
++        True,
++    ) == (1, 3, 2)
++    assert mod._a2_repro_delta(
++        {
++            "offline_reproduced": False,
++            "registry_update": {"prior_total_declared": 1, "new_total_declared": 3, "updated": False},
++            "reproduction_gate": {"reproduced": False},
++        },
++        True,
++    ) == (1, 3, 0)
++
++    clean = _artifacts()
++    clean["A1"] = {
++        **_a1_flagged_positive(),
++        "flagged_adversarial": False,
++        "winner_generated_delta_ci": [0.01, 0.07],
++        "transfer_ci": [0.01, 0.07],
++    }
++    clean["B1"] = {**_b1_flagged_coheadline(), "flagged_adversarial": False}
++    success = mod.build_artifact(
++        artifacts=clean,
++        live_flags_by_name={},
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    assert success["honest_verdict"].startswith("success:")
++    assert success["winner_generated_moved"]["moved"] is True
++    assert success["generic_transfer_moved"]["moved"] is True
++    assert success["winner_generated_rate"]["clean_value"] == pytest.approx(0.04)
++
++    no_growth = _artifacts()
++    no_growth["A2"] = {
++        **_a2_bank(),
++        "offline_reproduced": False,
++        "registry_update": {**_a2_bank()["registry_update"], "updated": False, "reconciled_total_delta": 0},
++        "reproduction_gate": {"reproduced": False},
++    }
++    no_growth_artifact = mod.build_artifact(
++        artifacts=no_growth,
++        live_flags_by_name=_live_flags(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    assert no_growth_artifact["honest_verdict"] == (
++        "complete: generation_wall_persists_residual_logged_no_capability_growth"
++    )
++
++    broken_metric = dict(success)
++    broken_metric["action_efficiency_score"] = {
++        "clean_value": None,
++        "quarantined_value": "bad",
++        "source": None,
++        "included_in_clean_headline": "yes",
++    }
++    broken_metric["coheadline_metrics"] = {
++        **success["coheadline_metrics"],
++        "action_efficiency_score": broken_metric["action_efficiency_score"],
++    }
++    metric_errors = mod.validate_artifact(broken_metric)
++    assert "action_efficiency_score.quarantined_value must be float or null" in metric_errors
++    assert "action_efficiency_score.source must be string" in metric_errors
++    assert "action_efficiency_score.included_in_clean_headline must be bare bool" in metric_errors
++
++    malformed = dict(success)
++    malformed["preconditions_checked"] = []
++    malformed["field_principles"] = None
++    malformed["reproducibility_checksum"] = "sha256:bad"
++    malformed_errors = mod.validate_artifact(malformed)
++    assert "preconditions_checked must be object" in malformed_errors
++    assert "field_principles missing" in malformed_errors
++    assert "reproducibility_checksum mismatch" in malformed_errors
++
++    run_artifact = mod.run(tmp_path, live_flags_by_name={}, write=False)
++    assert run_artifact["duration_s"] >= 0.0001
++    bad_run = dict(success)
++    bad_run["winner_generated_moved"] = {"moved": "yes"}
++    monkeypatch.setattr(mod, "build_artifact", lambda *args, **kwargs: bad_run)
++    with pytest.raises(ValueError, match="winner_generated_moved.moved"):
++        mod.run(tmp_path, write=False)
+-- 
+2.55.0
+

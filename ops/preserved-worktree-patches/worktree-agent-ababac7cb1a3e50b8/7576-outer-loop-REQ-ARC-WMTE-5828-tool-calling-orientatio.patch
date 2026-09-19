@@ -1,0 +1,1035 @@
+From 05e50e392aef1901a1a5eeb7f3e51e42dc378172 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 21:09:22 -0400
+Subject: [PATCH 07576/11362] [outer-loop] REQ-ARC-WMTE-5828: tool-calling
+ orientation + multi-step lookahead
+
+Operator directive following GAP-ARC-REACTIVE-FILTER-MYOPIC: add real
+multi-step lookahead, and allow up to 12 tool-calling/REPL turns per
+decision, inspect history, reason, then commit one action.
+
+Reuses arc_solver_kit.OfflineSolver's best-first search with
+replay-from-reset backtracking (already built, tested across 25 games)
+rather than a new search algorithm -- this module only supplies its
+three pluggable hooks, backed by a bounded tool-calling loop over a
+small safe dispatch table (inspect_frame/inspect_cell/count_color/
+inspect_history/list_available_actions), a disclosed scope reduction
+from Duck Harness's full sandboxed REPL for a 9B model already shown
+to struggle with unconstrained structured output. The final commit
+turn requests a RANKED SET of candidates (not one action) so the
+reused search engine has real branching to backtrack into, not a
+straight-line greedy rollout.
+
+Two real bugs found via smoke test, not assumed: the model initially
+looped on the exact same tool query 5 times without ever committing
+(fixed via dedup + an urgency nudge as the turn budget runs low); and
+OfflineSolver's own internal warmup-replay bookkeeping polluted the
+model-facing history and confidence tracking -- the obvious fix
+(comparing action VALUES) was itself wrong, since a genuine model
+choice matching the warmup action got silently swallowed too, fixed
+with a sentinel label that can never collide with a real JSON-encoded
+candidate.
+
+22 unit tests (scripted proposer, no GPU). Real empirical A/B on the
+same 3 games as both prior mechanisms is running separately; results
+land in a follow-up commit regardless of outcome.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  70 +++
+ .../carnot/agentic/arc_tool_loop_lookahead.py | 455 ++++++++++++++++++
+ scripts/arc_tool_loop_lookahead_ab.py         | 217 +++++++++
+ tests/python/test_arc_tool_loop_lookahead.py  | 216 +++++++++
+ 4 files changed, 958 insertions(+)
+ create mode 100644 python/carnot/agentic/arc_tool_loop_lookahead.py
+ create mode 100644 scripts/arc_tool_loop_lookahead_ab.py
+ create mode 100644 tests/python/test_arc_tool_loop_lookahead.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 53bf5f7545..f8b7ac7031 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -16823,3 +16823,73 @@ intermediate reward a local filter can climb. This is a genuinely different fail
+ reactive loop's per-step correctness is real, but it lacks the multi-step lookahead the (failing)
+ induce-then-plan architecture was trying to provide. Neither architecture alone, as built, combines
+ reliable per-step signal with goal-directed multi-step search.
++
++### REQ-ARC-WMTE-5828: Tool-Calling Orientation + Multi-Step Lookahead Search
++
++**Origin:** 2026-07-23, operator directive following the `GAP-ARC-REACTIVE-FILTER-MYOPIC`
++diagnosis (REQ-ARC-WMTE-5827): "add real multi-step lookahead, and allow up to 12 tool-calling/REPL
++turns per decision, inspect history, reason, then commit one action." This directly targets the two
++things that diagnosis named as the actual missing capability -- neither induce-then-plan (a wrong
++symbolic model makes lookahead meaningless) nor the bare reactive filter (purely local, single-step
++signals, no lookahead at all) has BOTH a reliable per-step signal and goal-directed multi-step
++search at once.
++
++`carnot.agentic.arc_tool_loop_lookahead.run_tool_loop` SHALL give the generator up to 12 turns per
++decision point to call tools before committing. The tool surface SHALL be a small, SAFE, named-
++function dispatch table (`inspect_frame`, `inspect_cell`, `count_color`, `inspect_history`,
++`list_available_actions`) -- NOT arbitrary Python code execution. This is a disclosed scope
++reduction from Duck Harness's own full sandboxed-REPL mechanism, justified by this session's own
++prior finding that the frozen 9B generator already struggles with reliable structured output for a
++single JSON array; unconstrained free-form code from this model would be materially less reliable,
++and a full sandbox adds a security surface (`CARNOT_USE_SANDBOX`) this task does not need. The final
++commit turn SHALL request a RANKED SET of up to `MAX_CANDIDATES` (3) candidate actions with
++self-reported confidence, not a single action -- a single forced-greedy choice would make any reused
++search engine degenerate to a straight-line rollout with no real backtracking/lookahead.
++
++`carnot.agentic.arc_tool_loop_lookahead.ToolLoopLookaheadSession` SHALL supply
++`arc_solver_kit.OfflineSolver`'s three pluggable hooks (`action_labels`, `apply`, `verifier`, plus a
++`state_key` and a `move_pruner`) rather than a new search algorithm -- OfflineSolver's already-built,
++already-tested-across-25-games best-first search with replay-from-reset backtracking IS the
++multi-step lookahead mechanism; this module's only job is to make the tool-loop's ranked candidate
++set and self-reported confidence available at OfflineSolver's existing extension points.
++`verifier()` SHALL use `1.0 - confidence` (OfflineSolver's convention is LOWER=closer to the win) --
++the LLM's own self-reported confidence is a genuine, if noisy, goal-directed signal, standing in for
++the hand-authored `hand_verifier` that does not exist for un-adaptered games (the exact missing
++piece `GAP-ARC-REACTIVE-FILTER-MYOPIC` named). `move_pruner` SHALL reuse (not reimplement)
++REQ-ARC-WMTE-5827's exact-match dead-end filter.
++
++**A real, non-obvious bug SHALL be avoided, not assumed away:** `OfflineSolver`'s own `_replay()`
++re-applies `warmup_label` on every node visit and every sibling-restoration replay
++(`arc_solver_kit.py:5241`) -- if `apply()` recorded every call into the model-facing history, that
++history would be flooded with repeated fake warmup entries the model never actually chose. The
++naive fix (comparing the applied label's ACTION VALUE against the warmup action) is ALSO wrong,
++found directly via a real smoke test: when the model's own genuine search choice happens to be the
++same action as the warmup action, it gets silently swallowed as "just the warmup" too, corrupting
++the recorded history. `ToolLoopLookaheadSession.WARMUP_LABEL` SHALL be a sentinel string that is not
++valid JSON (unlike every genuine `_json_action_label()`-encoded candidate), so a label-STRING
++comparison in `apply()` can never collide with a genuine choice regardless of which action it is.
++
++### SCENARIO-ARC-WMTE-5828-TOOL-LOOP-COMMITS-WITHIN-BUDGET
++
++**Given** the generator emits a valid `ACTION: [...]` line at some turn within the 12-turn budget
++**When** `run_tool_loop` processes that turn
++**Then** it returns immediately with `ok=True` and the ranked candidate set, without consuming any
++further turns.
++
++### SCENARIO-ARC-WMTE-5828-DEDUP-PREVENTS-REPEAT-QUERY
++
++**Given** the generator calls the exact same tool with the exact same arguments twice in one
++decision's turn sequence (a real observed failure mode -- an early un-mitigated version looped on
++`inspect_cell 3 2` five times without ever committing)
++**When** the second identical call is processed
++**Then** it is short-circuited locally (no new LLM completion spent re-answering a question already
++answered) and a note is appended to the transcript, without ending the loop.
++
++### SCENARIO-ARC-WMTE-5828-WARMUP-SENTINEL-NEVER-COLLIDES-WITH-GENUINE-CHOICE
++
++**Given** `ToolLoopLookaheadSession.WARMUP_LABEL` and any genuine `_json_action_label()`-encoded
++candidate, for any action id
++**When** compared
++**Then** they are never equal -- the sentinel is deliberately not valid JSON, so `apply()`'s
++warmup-skip check can never misclassify a real model choice as internal search bookkeeping (the
++exact class of bug a value-based comparison, e.g. "is this action 1", would reintroduce).
+diff --git a/python/carnot/agentic/arc_tool_loop_lookahead.py b/python/carnot/agentic/arc_tool_loop_lookahead.py
+new file mode 100644
+index 0000000000..9a1ced1aca
+--- /dev/null
++++ b/python/carnot/agentic/arc_tool_loop_lookahead.py
+@@ -0,0 +1,455 @@
++"""Tool-calling orientation + multi-step lookahead search for ARC-AGI-3 (2026-07-23, operator
++follow-up to REQ-ARC-WMTE-5827).
++
++**Researcher summary:**
++    The verifier-filtered reactive loop (REQ-ARC-WMTE-5827) tested clean but null on the 3
++    worst live/oracle-gap games -- diagnosed (`ops/verifier_gaps.md` GAP-ARC-REACTIVE-FILTER-MYOPIC)
++    as MYOPIC: its two filter signals are purely local/single-step, with no direction toward a
++    distant goal, and these games need deep (13-33+ action) narrow winning sequences. This module
++    adds the two things that diagnosis named as missing, per operator directive: (1) up to 12
++    tool-calling/REPL-style turns per decision (inspect frame/history/actions, reason, THEN
++    propose), matching Duck Harness's actual per-decision orientation budget rather than a single
++    forced-terse completion; (2) real multi-step lookahead by REUSING `arc_solver_kit.OfflineSolver`
++    (the project's already-built, already-tested-across-25-games best-first search engine with
++    replay-from-reset backtracking) rather than writing a new search algorithm -- this module only
++    supplies OfflineSolver's three pluggable hooks (`action_labels`, `apply`, `verifier`) plus a
++    `move_pruner` wrapping REQ-ARC-WMTE-5827's dead-end filter.
++
++**Detailed explanation for engineers:**
++    The tool API is a small, SAFE, named-function dispatch table (inspect_frame, inspect_cell,
++    count_color, inspect_history, list_available_actions) -- NOT arbitrary Python code execution.
++    Duck Harness's own mechanism is a full sandboxed Python REPL; a constrained tool API is a
++    deliberate, disclosed scope reduction for a 9B model (which this session already found
++    struggles with reliable structured output even for a single JSON array -- arbitrary
++    free-form code from this model would be materially less reliable, and a real Python sandbox
++    adds a security surface this task does not need). The turn loop still gives the model
++    multiple ROUNDS of inspection before committing, which is the mechanism's actual claimed
++    value (orientation-time compute before commitment), just via a safer tool surface.
++
++    `verifier()` (OfflineSolver's best-first ordering heuristic, LOWER=closer to the win) is fed
++    by the LLM's OWN self-reported confidence from its final ACTION turn -- a genuine, if noisy,
++    goal-directed signal, which is exactly the missing piece GAP-ARC-REACTIVE-FILTER-MYOPIC named
++    (no per-game hand_verifier exists for un-adaptered games, so a hand-authored goal-distance
++    function is not available; an LLM-judged one generalizes without per-game authoring). Threaded
++    through a small mutable box (`_last_confidence`) rather than OfflineSolver's frame-only
++    verifier signature, since apply() and verifier() are called back-to-back on the same child
++    frame within one search-loop iteration (see class docstring for the exact ordering this
++    relies on).
++
++Spec: openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-5828
++"""
++
++from __future__ import annotations
++
++import json
++import re
++from dataclasses import dataclass, field
++from typing import Any, Optional
++
++import numpy as np
++
++MAX_TOOL_TURNS = 12
++MAX_CANDIDATES = 3
++_TOOL_TOKENS = 200
++
++_TOOL_RE = re.compile(r"TOOL:\s*(\w+)\s*(.*)", re.I)
++_ACTION_RE = re.compile(r"ACTION:\s*(\[.*\])", re.S)
++
++
++@dataclass
++class Candidate:
++    action_id: int
++    data: Optional[dict]
++    confidence: float
++
++
++@dataclass
++class ToolLoopOutcome:
++    """`candidates` is ranked highest-confidence first, length 1..MAX_CANDIDATES -- a RANKED SET,
++    not one action, so the caller (the OfflineSolver search wiring) has real branching to
++    backtrack into. A single, forced-greedy top choice would make the reused search engine
++    degenerate to a straight-line rollout with no actual lookahead (see module docstring)."""
++
++    candidates: list[Candidate]
++    turns_used: int
++    transcript: list[str] = field(default_factory=list)
++    ok: bool = True
++
++
++def _ascii_grid(grid: np.ndarray) -> str:
++    hexd = "0123456789abcdef"
++    g = np.clip(np.asarray(grid).astype(int), 0, 15)
++    return "\n".join("".join(hexd[v] for v in row) for row in g)
++
++
++class _ToolDispatch:
++    """The safe, named-function tool surface. No arbitrary code execution -- see module
++    docstring for why this scope reduction was chosen over a full Python REPL."""
++
++    def __init__(self, grid: np.ndarray, recent: list[str], avail: list[int]) -> None:
++        self.grid = grid
++        self.recent = recent
++        self.avail = avail
++
++    def call(self, name: str, args: str) -> str:
++        name = name.lower()
++        try:
++            if name == "inspect_frame":
++                return _ascii_grid(self.grid)
++            if name == "inspect_cell":
++                parts = [int(x) for x in re.findall(r"-?\d+", args)[:2]]
++                if len(parts) != 2:
++                    return "ERROR: inspect_cell needs row col"
++                row, col = parts
++                h, w = self.grid.shape
++                if not (0 <= row < h and 0 <= col < w):
++                    return f"ERROR: ({row},{col}) out of bounds for {h}x{w} grid"
++                return str(int(self.grid[row, col]))
++            if name == "count_color":
++                m = re.search(r"-?\d+", args)
++                if not m:
++                    return "ERROR: count_color needs a color id"
++                color = int(m.group(0))
++                return str(int(np.sum(self.grid == color)))
++            if name == "inspect_history":
++                if not self.recent:
++                    return "(no history yet)"
++                return "\n".join(self.recent[-8:])
++            if name == "list_available_actions":
++                return str(self.avail)
++        except Exception as exc:  # noqa: BLE001 - a tool error is a datum returned to the model
++            return f"ERROR: {exc!r}"[:200]
++        return f"ERROR: unknown tool {name!r}. Valid tools: inspect_frame, inspect_cell, count_color, inspect_history, list_available_actions"
++
++
++_SYSTEM_FRAME = (
++    "/no_think\n"
++    "You are inspecting an ARC puzzle to decide your next action. You may call a TOOL to learn "
++    "more before deciding, up to {max_turns} times total. Tools:\n"
++    "  TOOL: inspect_frame\n"
++    "  TOOL: inspect_cell <row> <col>\n"
++    "  TOOL: count_color <color>\n"
++    "  TOOL: inspect_history\n"
++    "  TOOL: list_available_actions\n"
++    "Never repeat a tool call you already made this turn sequence -- the transcript below shows "
++    "everything you already know; re-asking wastes a turn.\n"
++    "Respond with EXACTLY ONE LINE: either a NEW tool call, or your final decision -- up to "
++    f"{MAX_CANDIDATES} candidate actions ranked BEST FIRST, most confident first:\n"
++    '  ACTION: [{{"a":<action id>,"x":<x>,"y":<y>,"confidence":<0.0-1.0>}}, ...]\n'
++    '("x"/"y" only needed for action 6. confidence = how sure you are THIS action moves toward '
++    "winning the level -- 0.0 if it's a random guess, 1.0 if you're certain. Give multiple "
++    "candidates only if genuinely unsure between them; one candidate is fine if you are sure.)\n"
++    "{urgency}"
++    "Turns remaining: {remaining}\n\n"
++    "TRANSCRIPT SO FAR:\n{transcript}\n\n"
++    "Your response (ONE line, TOOL: ... or ACTION: [...]):\n"
++)
++_URGENCY_THRESHOLD = 3
++_URGENCY_NOTE = (
++    "URGENT: you have very few turns left. Respond with ACTION now using your best guess -- do "
++    "NOT call another tool.\n"
++)
++
++
++def _parse_turn(text: str) -> tuple[str, Any]:
++    """Returns ("tool", (name, args)) or ("action", list[dict]) or ("unparseable", None)."""
++    line = text.strip().splitlines()[0].strip() if text.strip() else ""
++    m = _ACTION_RE.search(line) or _ACTION_RE.search(text)
++    if m:
++        try:
++            parsed = json.loads(m.group(1))
++            return ("action", parsed) if isinstance(parsed, list) else ("unparseable", None)
++        except Exception:
++            return "unparseable", None
++    m = _TOOL_RE.match(line)
++    if m:
++        return "tool", (m.group(1), m.group(2).strip())
++    return "unparseable", None
++
++
++def _candidates_from_payload(payload: list) -> list[Candidate]:
++    out: list[Candidate] = []
++    for item in payload[:MAX_CANDIDATES]:
++        if not isinstance(item, dict) or item.get("a") is None:
++            continue
++        try:
++            aid = int(item["a"])
++        except Exception:
++            continue
++        data = None
++        if aid == 6 and "x" in item and "y" in item:
++            try:
++                data = {"x": int(item["x"]), "y": int(item["y"])}
++            except Exception:
++                data = None
++        try:
++            confidence = max(0.0, min(1.0, float(item.get("confidence", 0.5))))
++        except Exception:
++            confidence = 0.5
++        out.append(Candidate(action_id=aid, data=data, confidence=confidence))
++    return out
++
++
++def _completion(proposer: Any, prompt: str, *, max_tokens: int) -> tuple[bool, str]:
++    """Minimal free-text completion, same rationale as arc_reactive_verifier_filter._raw_llm_completion
++    (proposer.generate() is hardcoded for Python code synthesis, unusable for a free-text task)."""
++    if not proposer._ensure_server():
++        return False, "gpu llama-server failed to start"
++    import urllib.request
++
++    try:
++        req = urllib.request.Request(
++            proposer._url() + "/completion",
++            data=json.dumps(
++                {
++                    "prompt": prompt,
++                    "n_predict": int(max_tokens),
++                    "temperature": 0.2,
++                    "cache_prompt": True,
++                    "stop": ["\n"],
++                }
++            ).encode(),
++            headers={"Content-Type": "application/json"},
++        )
++        with urllib.request.urlopen(req, timeout=proposer.timeout) as r:
++            response = json.load(r)
++        return True, str(response.get("content") or "")
++    except Exception as exc:  # noqa: BLE001 - a completion failure is a datum, not a crash
++        return False, f"completion request failed: {exc!r}"[:200]
++
++
++def run_tool_loop(
++    grid: np.ndarray,
++    recent: list[str],
++    avail: list[int],
++    proposer: Any,
++    *,
++    max_turns: int = MAX_TOOL_TURNS,
++) -> ToolLoopOutcome:
++    """Give the model up to `max_turns` rounds to inspect the puzzle (via the safe tool
++    dispatch) before it must commit to one action + a self-assessed confidence. An unparseable
++    or tool-calling turn consumes budget but does not end the loop; running out of turns without
++    a committed action returns ok=False (the caller decides the fallback)."""
++    dispatch = _ToolDispatch(grid, recent, avail)
++    transcript_lines: list[str] = []
++    seen_tool_calls: set[tuple[str, str]] = set()
++    for turn in range(max_turns):
++        remaining = max_turns - turn
++        prompt = _SYSTEM_FRAME.format(
++            max_turns=max_turns,
++            remaining=remaining,
++            urgency=_URGENCY_NOTE if remaining <= _URGENCY_THRESHOLD else "",
++            transcript="\n".join(transcript_lines) or "(nothing yet)",
++        )
++        ok, text = _completion(proposer, prompt, max_tokens=_TOOL_TOKENS)
++        if not ok:
++            transcript_lines.append(f"[turn {turn}] completion failed: {text}")
++            continue
++        kind, payload = _parse_turn(text)
++        if kind == "action":
++            candidates = _candidates_from_payload(payload)
++            if not candidates:
++                transcript_lines.append(f"[turn {turn}] ACTION had no valid candidates, ignored")
++                continue
++            candidates.sort(key=lambda c: c.confidence, reverse=True)
++            transcript_lines.append(
++                f"[turn {turn}] ACTION committed: "
++                + ", ".join(f"a={c.action_id} conf={c.confidence}" for c in candidates)
++            )
++            return ToolLoopOutcome(
++                candidates=candidates,
++                turns_used=turn + 1,
++                transcript=transcript_lines,
++                ok=True,
++            )
++        if kind == "tool":
++            name, args = payload
++            call_key = (name.lower(), args)
++            if call_key in seen_tool_calls:
++                # A dead-cheap, deterministic fix for a real observed failure mode: this model
++                # re-asks a question it already has the answer to instead of committing. Rather
++                # than burn a real completion telling it so, short-circuit locally.
++                transcript_lines.append(
++                    f"[turn {turn}] TOOL {name} {args} -> (already asked -- see transcript above)"
++                )
++                continue
++            seen_tool_calls.add(call_key)
++            result = dispatch.call(name, args)
++            transcript_lines.append(f"[turn {turn}] TOOL {name} {args} -> {result}")
++            continue
++        transcript_lines.append(f"[turn {turn}] unparseable: {text[:120]!r}")
++    return ToolLoopOutcome(
++        candidates=[],
++        turns_used=max_turns,
++        transcript=transcript_lines,
++        ok=False,
++    )
++
++
++# ---------------------------------------------------------------------------
++# OfflineSolver wiring: real multi-step lookahead by reusing the project's own
++# best-first search engine (arc_solver_kit.OfflineSolver), not a new search algorithm.
++# ---------------------------------------------------------------------------
++
++
++class _DeadEndPruner:
++    """A move_pruner (OfflineSolver's should_prune/observe protocol) wrapping the exact
++    exact-match dead-end check from REQ-ARC-WMTE-5827's reactive filter -- reused, not
++    reimplemented. should_prune/observe take (frame, label)/(frame_before, label, frame_after,
++    leveled), OfflineSolver's own protocol; frame hashing reuses frame_state_key so the dead-end
++    key convention matches arc_reactive_verifier_filter's exactly."""
++
++    def __init__(self) -> None:
++        self._dead_end_keys: set[tuple] = set()
++
++    def _key(self, frame: Any, label: str) -> tuple:
++        from carnot.agentic.arc_frame_change_predictor import frame_state_key
++
++        from carnot.agentic.arc_reactive_verifier_filter import _dead_end_key
++
++        step = json.loads(label)
++        return _dead_end_key(frame_state_key(frame), step.get("action"), step.get("data"))
++
++    def should_prune(self, frame: Any, label: Any) -> bool:
++        try:
++            return self._key(frame, label) in self._dead_end_keys
++        except Exception:
++            return False
++
++    def observe(self, frame_before: Any, label: Any, frame_after: Any, leveled_up: bool) -> None:
++        if leveled_up:
++            return
++        try:
++            from carnot.agentic.arc_llm_guided_solve import _delta_desc
++            from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
++            from carnot.agentic.arc_agi3_world_model import grid_of
++
++            cell = detect_cell(grid_of(frame_before))
++            before = to_logical(grid_of(frame_before), cell)
++            after = to_logical(grid_of(frame_after), cell)
++            if _delta_desc(before, after) == "no change":
++                self._dead_end_keys.add(self._key(frame_before, label))
++        except Exception:
++            pass
++
++
++class ToolLoopLookaheadSession:
++    """Supplies OfflineSolver's three hooks, backed by the tool-calling loop above.
++
++    ONE call to `run_tool_loop` per EXPANDED search node (not per candidate) -- the tool loop
++    itself returns a ranked candidate SET, which becomes this node's children, so search
++    breadth comes from the model's own ranked alternatives rather than from re-running the
++    (expensive, up-to-12-turn) tool loop once per candidate.
++
++    `apply()` and `_priority()`/`verifier()` are called back-to-back on the same child frame
++    within a single OfflineSolver expansion-loop iteration (see arc_solver_kit.py
++    OfflineSolver.solve_level: `f2 = self.apply(...)` then, a few lines later in the SAME
++    iteration, `heapq.heappush(heap, (self._priority(env, child_path), ...))` which reads
++    `self.last_frame` -- OfflineSolver sets `self.last_frame = f2` itself right after apply()
++    returns). No other apply()/verifier() call interleaves between them, so a single mutable
++    `_pending_confidence` dict keyed by label is safe without extra synchronization.
++    """
++
++    # OfflineSolver's own _replay() re-applies warmup_label on EVERY node visit and every
++    # sibling-restoration replay (arc_solver_kit.py:5241) -- if apply() recorded every call into
++    # `recent`, the model-facing history would be flooded with repeated fake warmup entries the
++    # model never actually chose, not genuine search decisions. A real smoke test found the
++    # OBVIOUS fix (compare the label against the warmup ACTION, e.g. action 1) is wrong: if the
++    # model's genuine search choice happens to also BE action 1, it gets silently swallowed as
++    # "just the warmup" too (found directly -- an early attempt zeroed out `recent` entirely
++    # because every real candidate that run happened to be action 1). Fixed by using a SENTINEL
++    # label that can never collide with a genuine `_json_action_label()`-encoded candidate
++    # (those are always valid JSON starting with "{"; this sentinel deliberately is not).
++    WARMUP_LABEL = "__TOOL_LOOP_WARMUP_SENTINEL__"
++    _WARMUP_ACTION_ID = 1
++
++    def __init__(self, proposer: Any, *, max_turns: int = MAX_TOOL_TURNS) -> None:
++        self.proposer = proposer
++        self.max_turns = max_turns
++        self.recent: list[str] = []
++        self.pruner = _DeadEndPruner()
++        self._pending_confidence: dict[str, float] = {}
++        self._last_confidence: float = 0.5
++        self._tool_loop_calls: int = 0
++        self._transcripts: list[list[str]] = []
++        self._node_frame: Any = None
++
++    def action_labels(self, env: Any, frame: Any, path: tuple) -> list[str]:
++        del env, path
++        from carnot.agentic.arc_agi3_world_model import grid_of
++        from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
++        from carnot.agentic.arc_game_adapters import _json_action_label
++
++        if frame is None:
++            return []
++        try:
++            cell = detect_cell(grid_of(frame))
++            grid = to_logical(grid_of(frame), cell)
++        except Exception:
++            return []
++        avail = list(getattr(frame, "available_actions", []) or range(1, 7))
++        outcome = run_tool_loop(grid, self.recent, avail, self.proposer, max_turns=self.max_turns)
++        self._tool_loop_calls += 1
++        self._transcripts.append(outcome.transcript)
++        if not outcome.ok or not outcome.candidates:
++            return []
++        labels = []
++        for cand in outcome.candidates:
++            label = _json_action_label(cand.action_id, cand.data)
++            self._pending_confidence[label] = cand.confidence
++            labels.append(label)
++        # apply() (below) is called by OfflineSolver with frame=None during search expansion
++        # (arc_solver_kit.py:5275,5329 -- only _replay's own top-level call passes the real
++        # frame). action_labels() is the only hook that reliably receives the node's real
++        # PRE-expansion frame, so it is captured here for apply()'s delta-description bookkeeping.
++        self._node_frame = frame
++        return labels
++
++    def apply(self, env: Any, label: str, frame: Any) -> Any:
++        del (
++            frame
++        )  # see action_labels()'s comment -- OfflineSolver passes None here; use _node_frame
++        from arcengine import GameAction
++        from carnot.agentic.arc_agi3_live_adapter import _game_action
++        from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
++        from carnot.agentic.arc_agi3_world_model import grid_of
++        from carnot.agentic.arc_llm_guided_solve import _delta_desc
++
++        if label == self.WARMUP_LABEL:
++            # OfflineSolver's own _replay() re-issues this on every node visit and every
++            # sibling-restoration replay -- not a genuine search decision. Execute the warmup
++            # action directly (no JSON parse -- this sentinel is not JSON) without recording, so
++            # the model-facing history and verifier score aren't polluted by internal search
++            # bookkeeping. See the WARMUP_LABEL class attribute's comment for why this can't be
++            # done by comparing action VALUES instead of using a dedicated sentinel string.
++            return env.step(_game_action(GameAction, self._WARMUP_ACTION_ID), data=None)
++        step = json.loads(label)
++        aid, data = int(step["action"]), step.get("data")
++        nf = env.step(_game_action(GameAction, aid), data=data)
++        prev_frame = getattr(self, "_node_frame", None)
++        self._last_confidence = self._pending_confidence.pop(label, 0.5)
++        try:
++            if prev_frame is not None and nf is not None:
++                cell = detect_cell(grid_of(nf))
++                before = to_logical(grid_of(prev_frame), cell)
++                after = to_logical(grid_of(nf), cell)
++                delta = _delta_desc(before, after)
++            else:
++                delta = "unknown"
++            data_str = f"x={data['x']},y={data['y']}" if data else ""
++            self.recent.append(f"{aid} ({data_str}) -> {delta}")
++        except Exception:
++            pass
++        return nf
++
++    def verifier(self, game_obj: Any, frame: Any) -> float:
++        del game_obj, frame
++        # LOWER = closer to the win (OfflineSolver's own convention); confidence is
++        # HIGHER = more likely to help, so invert.
++        return 1.0 - self._last_confidence
++
++    def state_key(self, game_obj: Any, frame: Any) -> Any:
++        del game_obj
++        from carnot.agentic.arc_frame_change_predictor import frame_state_key
++
++        return frame_state_key(frame)
+diff --git a/scripts/arc_tool_loop_lookahead_ab.py b/scripts/arc_tool_loop_lookahead_ab.py
+new file mode 100644
+index 0000000000..5ecbf3c881
+--- /dev/null
++++ b/scripts/arc_tool_loop_lookahead_ab.py
+@@ -0,0 +1,217 @@
++#!/usr/bin/env python3
++"""REQ-ARC-WMTE-5828: real empirical test of the tool-calling + multi-step lookahead search vs
++the standing induce-then-plan and bare reactive-filter mechanisms, on the SAME 3 worst live/
++oracle-gap games (sc25, lf52, bp35).
++
++**Researcher summary:**
++    Operator directive following REQ-ARC-WMTE-5827's GAP-ARC-REACTIVE-FILTER-MYOPIC diagnosis: add
++    real multi-step lookahead, and allow up to 12 tool-calling/REPL turns per decision (inspect
++    history, reason, then commit). This script runs
++    `carnot.agentic.arc_tool_loop_lookahead.ToolLoopLookaheadSession` wired into
++    `arc_solver_kit.OfflineSolver`'s best-first search, for real, on the SAME three games as the
++    prior two mechanisms, and reports honestly against both prior baselines -- no need to re-run
++    either (Failed-Experiment Rerun Discipline).
++
++Spec: openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-5828
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import sys
++import time
++
++sys.path.insert(
++    0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python")
++)
++os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
++
++REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
++OUTPUT_PATH = os.path.join(REPO_ROOT, "results", "outer_loop_tool_loop_lookahead_ab_20260723.json")
++
++GAMES = ["sc25", "lf52", "bp35"]
++MAX_TURNS_PER_DECISION = 12  # per operator directive, verbatim
++MAX_SEARCH_NODES = 15  # bounded lookahead search per game (cost: up to 12 LLM turns/node)
++DEPTH_CAP = 15
++CUDA_PORT = 8947
++
++PRIOR_BASELINES = {
++    "sc25": {
++        "induce_then_plan": {
++            "levels_gained": 0,
++            "source": "outer_loop_holdout_generalization_probe_sc25_20260722.json",
++        },
++        "reactive_filter": {
++            "levels_gained": 0,
++            "source": "outer_loop_reactive_verifier_filter_ab_20260722.json",
++        },
++        "oracle_levels": 6,
++    },
++    "lf52": {
++        "induce_then_plan": {
++            "levels_gained": 0,
++            "source": "experiment_5727_arc_generalization_live_oracle_gap_v511.json",
++        },
++        "reactive_filter": {
++            "levels_gained": 0,
++            "source": "outer_loop_reactive_verifier_filter_ab_20260722.json",
++        },
++        "oracle_levels": 10,
++    },
++    "bp35": {
++        "induce_then_plan": {
++            "levels_gained": 0,
++            "source": "experiment_5727_arc_generalization_live_oracle_gap_v511.json",
++        },
++        "reactive_filter": {
++            "levels_gained": 0,
++            "source": "outer_loop_reactive_verifier_filter_ab_20260722.json",
++        },
++        "oracle_levels": 9,
++    },
++}
++
++
++def main() -> None:
++    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++    from carnot.agentic.arc_solver_kit import OfflineSolver, offline_arcade, frame_level
++    from carnot.agentic.arc_tool_loop_lookahead import ToolLoopLookaheadSession
++
++    t0 = time.monotonic()
++    print(f"Loading LocalGGUFProposer (Qwen3.5-9B-MTP) on CUDA GPU 1, port {CUDA_PORT}...")
++    prop = LocalGGUFProposer(
++        repo_substr="Qwen3.5-9B-MTP",
++        port=CUDA_PORT,
++        mtp=True,
++        kv_quant="q8_0",
++        no_think_prefix="",
++        max_tokens=512,
++    )
++
++    per_game = []
++    for game in GAMES:
++        print(f"\n=== {game} ===")
++        t_game0 = time.monotonic()
++        session = ToolLoopLookaheadSession(prop, max_turns=MAX_TURNS_PER_DECISION)
++        solver = OfflineSolver(
++            game,
++            action_labels=session.action_labels,
++            apply=session.apply,
++            state_key=session.state_key,
++            verifier=session.verifier,
++            warmup_label=session.WARMUP_LABEL,
++            max_nodes=MAX_SEARCH_NODES,
++            branch_mode="replay",
++            move_pruner=session.pruner,
++        )
++        error = None
++        path = None
++        states_expanded = 0
++        reached_level = 0
++        try:
++            arc = offline_arcade()
++            env = arc.make(game, scorecard_id=arc.open_scorecard())
++            path, states_expanded = solver.solve_level(
++                env, start_level=0, prefix=[], depth_cap=DEPTH_CAP
++            )
++            reached_level = frame_level(solver.last_frame) if solver.last_frame is not None else 0
++        except Exception as exc:  # noqa: BLE001 - a policy crash on a game is a datum
++            error = f"{type(exc).__name__}: {exc}"[:300]
++
++        game_duration_s = round(time.monotonic() - t_game0, 3)
++        row = {
++            "game": game,
++            "solved": path is not None,
++            "levels_gained": 1 if path is not None else 0,
++            "path_length": len(path) if path else 0,
++            "states_expanded": states_expanded,
++            "tool_loop_calls": session._tool_loop_calls,
++            "final_reached_level": reached_level,
++            "error": error,
++            "game_wall_s": game_duration_s,
++            "prior_baselines": PRIOR_BASELINES[game],
++        }
++        print(json.dumps(row, indent=2))
++        per_game.append(row)
++
++    duration_s = round(time.monotonic() - t0, 3)
++    any_new_level = any(r["levels_gained"] > 0 for r in per_game)
++    replay_errors = [r for r in per_game if r["error"] is not None]
++
++    if replay_errors:
++        verdict = "complete_ab_ran_with_errors_see_error_field"
++    elif any_new_level:
++        verdict = "complete_tool_loop_lookahead_reached_a_real_levelup_where_both_prior_mechanisms_did_not"
++    else:
++        verdict = (
++            "complete_tool_loop_lookahead_honest_negative_no_levelup_matches_both_prior_baselines"
++        )
++
++    checksum_input = json.dumps(
++        [{"game": r["game"], "levels_gained": r["levels_gained"]} for r in per_game], sort_keys=True
++    ).encode()
++    reproducibility_checksum = hashlib.sha256(checksum_input).hexdigest()
++
++    artifact = {
++        "experiment": "outer_loop_tool_loop_lookahead_ab_20260723",
++        "schema": "carnot.arc_tool_loop_lookahead_ab.v1",
++        "run_date": "2026-07-23",
++        "inference_substrate": "live_llm_inference",
++        "solve_provenance": "live_agent_self_discovery",
++        "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF",
++        "random_seed": None,
++        "random_seed_note": "OfflineSolver's best-first search is deterministic given the LLM's "
++        "responses; the LLM itself is sampled at temperature=0.2 (arc_tool_loop_lookahead._completion) "
++        "-- no separate seed control exists in this harness.",
++        "reproducibility_checksum": reproducibility_checksum,
++        "duration_s": duration_s,
++        "duration_note": f"Real, non-mocked run across {len(GAMES)} games, max_nodes={MAX_SEARCH_NODES}, "
++        f"up to {MAX_TURNS_PER_DECISION} tool-calling turns per search-node decision.",
++        "honest_verdict": verdict,
++        "narrative": (
++            "Operator directive following REQ-ARC-WMTE-5827's GAP-ARC-REACTIVE-FILTER-MYOPIC "
++            "diagnosis: add real multi-step lookahead (reusing arc_solver_kit.OfflineSolver's "
++            "best-first search, not a new algorithm) and up to 12 tool-calling/REPL turns per "
++            "decision (a constrained, safe tool API -- not arbitrary code execution, a disclosed "
++            "scope reduction from Duck Harness's own full sandboxed REPL). Tested on the SAME 3 "
++            "worst live/oracle-gap games as both prior mechanisms."
++        ),
++        "acceptance_gate": {
++            "condition": "any tested game reaches a real levelup that BOTH prior mechanisms "
++            "(induce-then-plan, bare reactive-filter) did not reach",
++            "principle": "Both prior mechanisms scored 0 new levels across every measurement on "
++            "these exact games -- ANY real levelup here is decisive, unambiguous evidence the "
++            "added lookahead+orientation closes a real gap, not a noisy delta.",
++            "passed": any_new_level,
++        },
++        "per_game": per_game,
++        "preconditions_checked": [
++            {"resource": "arc_tool_loop_lookahead_module_shipped", "available": True},
++            {
++                "resource": "cuda_gpu1_pinned",
++                "available": os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU") == "1",
++            },
++        ],
++        "field_provenance": {
++            "acceptance_gate": {
++                "principle": "A single real levelup where BOTH prior mechanisms scored exactly 0 "
++                "across multiple independent measurements is decisive evidence with real headroom "
++                "(oracle depths 6-10 levels, well above the live baseline of 0 for every mechanism "
++                "tried so far)."
++            }
++        },
++    }
++
++    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
++    with open(OUTPUT_PATH, "w") as f:
++        json.dump(artifact, f, indent=2, sort_keys=True)
++
++    print(f"\nWrote {OUTPUT_PATH}")
++    print(f"verdict: {verdict}")
++    print(f"any_new_level_found: {any_new_level}")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_arc_tool_loop_lookahead.py b/tests/python/test_arc_tool_loop_lookahead.py
+new file mode 100644
+index 0000000000..76e7c1f4f0
+--- /dev/null
++++ b/tests/python/test_arc_tool_loop_lookahead.py
+@@ -0,0 +1,216 @@
++"""Tests for the tool-calling orientation + multi-step lookahead search
++(operator directive, 2026-07-23, following up on REQ-ARC-WMTE-5827's GAP-ARC-REACTIVE-FILTER-MYOPIC
++diagnosis): up to 12 tool-calling turns per decision (inspect, reason, then propose a RANKED
++candidate set), real multi-step lookahead by reusing arc_solver_kit.OfflineSolver's best-first
++search rather than a new search algorithm.
++
++Spec: REQ-ARC-WMTE-5828, SCENARIO-ARC-WMTE-5828-TOOL-LOOP-COMMITS-WITHIN-BUDGET,
++SCENARIO-ARC-WMTE-5828-DEDUP-PREVENTS-REPEAT-QUERY,
++SCENARIO-ARC-WMTE-5828-WARMUP-SENTINEL-NEVER-COLLIDES-WITH-GENUINE-CHOICE
++(openspec/capabilities/arc-world-model-trust-energy/spec.md).
++"""
++
++from __future__ import annotations
++
++import numpy as np
++
++from carnot.agentic.arc_tool_loop_lookahead import (
++    MAX_CANDIDATES,
++    ToolLoopLookaheadSession,
++    _candidates_from_payload,
++    _parse_turn,
++    _ToolDispatch,
++    run_tool_loop,
++)
++
++
++class _FakeProposer:
++    """A scripted proposer: replays a fixed sequence of raw completion texts, one per call.
++    Mirrors the real _completion() request shape closely enough that run_tool_loop never
++    touches the network -- these tests need no GPU."""
++
++    def __init__(self, responses: list[str]) -> None:
++        self.responses = list(responses)
++        self.calls = 0
++        self.timeout = 30
++
++    def _ensure_server(self) -> bool:
++        return True
++
++    def _url(self) -> str:
++        return "http://fake"
++
++
++def _patch_completion(monkeypatch, proposer: _FakeProposer) -> None:
++    import carnot.agentic.arc_tool_loop_lookahead as mod
++
++    def fake_completion(p, prompt, *, max_tokens):
++        del p, prompt, max_tokens
++        idx = proposer.calls
++        proposer.calls += 1
++        if idx >= len(proposer.responses):
++            return False, "no more scripted responses"
++        return True, proposer.responses[idx]
++
++    monkeypatch.setattr(mod, "_completion", fake_completion)
++
++
++class TestParseTurn:
++    def test_parses_tool_call(self):
++        kind, payload = _parse_turn("TOOL: inspect_cell 3 4")
++        assert kind == "tool"
++        assert payload == ("inspect_cell", "3 4")
++
++    def test_parses_action_array(self):
++        kind, payload = _parse_turn('ACTION: [{"a":6,"x":1,"y":2,"confidence":0.8}]')
++        assert kind == "action"
++        assert payload == [{"a": 6, "x": 1, "y": 2, "confidence": 0.8}]
++
++    def test_rejects_action_object_not_array(self):
++        # the contract requires a JSON ARRAY (a ranked candidate set), even for one candidate
++        kind, _ = _parse_turn('ACTION: {"a":6,"x":1,"y":2,"confidence":0.8}')
++        assert kind == "unparseable"
++
++    def test_unparseable_garbage(self):
++        kind, _ = _parse_turn("<think>\nsome reasoning leaked through\n</think>")
++        assert kind == "unparseable"
++
++    def test_empty_text_is_unparseable(self):
++        kind, _ = _parse_turn("")
++        assert kind == "unparseable"
++
++
++class TestCandidatesFromPayload:
++    def test_parses_valid_candidates(self):
++        payload = [{"a": 6, "x": 1, "y": 2, "confidence": 0.9}, {"a": 1, "confidence": 0.3}]
++        cands = _candidates_from_payload(payload)
++        assert len(cands) == 2
++        assert cands[0].action_id == 6
++        assert cands[0].data == {"x": 1, "y": 2}
++        assert cands[1].action_id == 1
++        assert cands[1].data is None
++
++    def test_caps_at_max_candidates(self):
++        payload = [{"a": 1, "confidence": 0.5} for _ in range(MAX_CANDIDATES + 5)]
++        cands = _candidates_from_payload(payload)
++        assert len(cands) == MAX_CANDIDATES
++
++    def test_clamps_confidence_to_unit_range(self):
++        payload = [{"a": 1, "confidence": 5.0}, {"a": 2, "confidence": -3.0}]
++        cands = _candidates_from_payload(payload)
++        assert cands[0].confidence == 1.0
++        assert cands[1].confidence == 0.0
++
++    def test_skips_items_without_action_field(self):
++        payload = [{"confidence": 0.5}, {"a": 3, "confidence": 0.5}]
++        cands = _candidates_from_payload(payload)
++        assert len(cands) == 1
++        assert cands[0].action_id == 3
++
++    def test_action6_without_xy_has_no_data(self):
++        cands = _candidates_from_payload([{"a": 6, "confidence": 0.5}])
++        assert cands[0].data is None
++
++
++class TestToolDispatch:
++    def test_inspect_cell_reports_color(self):
++        grid = np.zeros((5, 5), dtype=int)
++        grid[2, 3] = 7
++        dispatch = _ToolDispatch(grid, [], [1, 6])
++        assert dispatch.call("inspect_cell", "2 3") == "7"
++
++    def test_inspect_cell_out_of_bounds(self):
++        grid = np.zeros((5, 5), dtype=int)
++        dispatch = _ToolDispatch(grid, [], [1])
++        assert "out of bounds" in dispatch.call("inspect_cell", "99 99")
++
++    def test_count_color(self):
++        grid = np.zeros((4, 4), dtype=int)
++        grid[0, 0] = grid[1, 1] = 3
++        dispatch = _ToolDispatch(grid, [], [1])
++        assert dispatch.call("count_color", "3") == "2"
++
++    def test_inspect_history_empty(self):
++        dispatch = _ToolDispatch(np.zeros((3, 3), dtype=int), [], [1])
++        assert dispatch.call("inspect_history", "") == "(no history yet)"
++
++    def test_unknown_tool_reports_error(self):
++        dispatch = _ToolDispatch(np.zeros((3, 3), dtype=int), [], [1])
++        assert "unknown tool" in dispatch.call("nonexistent_tool", "")
++
++
++class TestRunToolLoopScripted:
++    """Real control-flow tests using a scripted (non-network) proposer -- no GPU needed."""
++
++    def test_commits_immediately_when_model_answers_directly(self, monkeypatch):
++        proposer = _FakeProposer(['ACTION: [{"a":6,"x":1,"y":2,"confidence":0.9}]'])
++        _patch_completion(monkeypatch, proposer)
++        outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1, 6], proposer, max_turns=12)
++        assert outcome.ok is True
++        assert outcome.turns_used == 1
++        assert outcome.candidates[0].action_id == 6
++        assert outcome.candidates[0].confidence == 0.9
++
++    def test_tool_call_then_commit(self, monkeypatch):
++        proposer = _FakeProposer(
++            [
++                "TOOL: inspect_frame",
++                'ACTION: [{"a":1,"confidence":0.6}]',
++            ]
++        )
++        _patch_completion(monkeypatch, proposer)
++        outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=12)
++        assert outcome.ok is True
++        assert outcome.turns_used == 2
++        assert any("TOOL inspect_frame" in line for line in outcome.transcript)
++
++    def test_repeated_tool_call_is_short_circuited_without_a_new_completion(self, monkeypatch):
++        proposer = _FakeProposer(
++            [
++                "TOOL: inspect_cell 1 1",
++                "TOOL: inspect_cell 1 1",  # exact repeat -- should be short-circuited locally
++                'ACTION: [{"a":1,"confidence":0.5}]',
++            ]
++        )
++        _patch_completion(monkeypatch, proposer)
++        outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=12)
++        assert outcome.ok is True
++        assert any("already asked" in line for line in outcome.transcript)
++
++    def test_exhausts_budget_without_commit_returns_not_ok(self, monkeypatch):
++        proposer = _FakeProposer(["TOOL: inspect_frame"] * 3)
++        _patch_completion(monkeypatch, proposer)
++        outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1], proposer, max_turns=3)
++        assert outcome.ok is False
++        assert outcome.candidates == []
++        assert outcome.turns_used == 3
++
++    def test_unparseable_completion_consumes_a_turn_but_continues(self, monkeypatch):
++        proposer = _FakeProposer(
++            [
++                "<think>garbage that never resolves</think>",
++                'ACTION: [{"a":2,"confidence":0.4}]',
++            ]
++        )
++        _patch_completion(monkeypatch, proposer)
++        outcome = run_tool_loop(np.zeros((5, 5), dtype=int), [], [1, 2], proposer, max_turns=12)
++        assert outcome.ok is True
++        assert outcome.turns_used == 2
++
++
++class TestWarmupSentinel:
++    def test_warmup_label_is_not_valid_json(self):
++        import json
++
++        with __import__("pytest").raises(Exception):
++            json.loads(ToolLoopLookaheadSession.WARMUP_LABEL)
++
++    def test_warmup_label_cannot_collide_with_a_genuine_json_action_label(self):
++        from carnot.agentic.arc_game_adapters import _json_action_label
++
++        # every genuine candidate label is valid JSON; the sentinel deliberately is not,
++        # so a `label == WARMUP_LABEL` check in apply() can never misfire on a real choice
++        # (the exact bug this test guards -- see the class's own WARMUP_LABEL docstring).
++        for action_id in range(8):
++            assert _json_action_label(action_id) != ToolLoopLookaheadSession.WARMUP_LABEL
++        assert _json_action_label(1, {"x": 1, "y": 1}) != ToolLoopLookaheadSession.WARMUP_LABEL
+-- 
+2.55.0
+

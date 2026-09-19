@@ -1,0 +1,100 @@
+From 628be37b24e430d60be148d49408cfc7b9ff8745 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 19:41:29 -0400
+Subject: [PATCH 07709/11362] [outer-loop] ARC end-to-end gate = honest
+ NEGATIVE: detector perception does not yet recover 7/8 (REQ-ARC-WMTE-5834)
+
+Fed detector-produced perception to gemma's goal prompt (same rules as the 5832
+oracle ablation). Result: 0 correct, 2 partial, 6 wrong -- far below the oracle's 7/8.
+Root causes: (1) the model's own WRONG learned rules dominate the detector's weaker
+"ignore this band" note; (2) the detector names the player but not the target;
+(3) mover missed on 4/8. The 2 partials (ls20, cn04) are the mover-detected games,
+both producing the right shape "move the player to a target".
+
+Lesson: the oracle got 7/8 because it REPLACED the framing; the detector ADDS entities
+alongside the wrong rules. Fix must RE-AUTHOR: retract HUD-band rules, name the mover's
+target, improve mover recall. This is a sharper, earned target than "add a detector".
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...c-winner-recipe-reproduction-2026-07-23.md | 32 +++++++++++++++++++
+ .../arc-world-model-trust-energy/spec.md      | 25 +++++++++++++++
+ 2 files changed, 57 insertions(+)
+
+diff --git a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+index e2687e6ccf..d8be6d1e22 100644
+--- a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
++++ b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+@@ -183,3 +183,35 @@ which is the build this ablation justifies.
+ **Next build (evidence-backed):** the mover/entity detector + HUD-register detector on the live E3 path,
+ gated by re-running this goal-hypothesis measurement under *detector-produced* perception (not hand-authored)
+ to confirm it recovers the ~7/8 goal-correctness.
++
++## Detectors built (5833) and the end-to-end gate (5834): an honest negative that sharpens the fix
++
++**Detectors (REQ-ARC-WMTE-5833).** Built two detectors that run off the agent's own transitions: a
++HUD-register detector (edge band changing on near-every action + position-independent = a counter) and a
++mover detector (the color whose centroid translates with directional actions = the player). Real-frame gate
++(offline arcade, no LLM): HUD recovered on 3/3 confuser games (bp35 row63, lf52 row0, tu93 row63 -- the exact
++bars the model mistook for the goal), mover recovered on the navigate avatars (sc25/ls20 color-9). A key fix
++surfaced only by real frames: the first HUD statistic (monotone background-count) missed every real counter
++because ARC counters change cell VALUES, not fg/bg count -- replaced with change-fraction +
++position-independence.
++
++**End-to-end gate (REQ-ARC-WMTE-5834) -- honest NEGATIVE.** Fed the DETECTOR-produced perception to gemma's
++goal prompt (same rules as the 5832 oracle ablation; only the perception source changed). It did NOT recover
++the oracle's 7/8: **0 correct, 2 partial, 6 wrong.** The two partials (ls20, cn04) are the games where a
++mover was detected, and both produced the right SHAPE -- "move the player to a target" -- which is the
++encouraging signal. But the six wrong show why detector perception alone is insufficient:
++
++1. **The model's own WRONG learned rules dominate.** bp35's rule "action 6 changes (63,x) to 15" and lf52's
++   "actions change row 0" are exactly the HUD-fixation, and gemma follows the rule even when the detector
++   correctly flags that band as a counter to ignore. An "ignore this band" note is weaker than a rule the
++   model already believes.
++2. **The detector names the player but not the target.** It lists candidate objects; it cannot say which is
++   the exit. So even mover-games stay vague.
++3. **Mover recall gap** -- missed on 4/8 (tu93/bp35/lf52/r11l), leaving no player concept.
++
++**The lesson.** The oracle got 7/8 because it REPLACED the framing ("the bar is a lose-timer, NOT the
++objective" + named the exit). The detector ADDS entities alongside the wrong rules instead of correcting
++them. So the perception fix must RE-AUTHOR, not augment: (a) retract any learned rule that references a
++detected HUD band; (b) propose the mover's nearest distinct object as the candidate target; (c) improve mover
++recall. That is the concrete next iteration -- and it is a sharper, better-grounded target than "add a
++perception detector," which this negative result earned.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 4e44b0f859..5afdad2cfc 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -17187,3 +17187,28 @@ reads no source and gets no oracle -- so it is oracle-distinct and sovereignty-s
+ **When** `perceive_entities` runs
+ **Then** its text labels the player token, lists the non-HUD objects as candidate targets, and flags the
+ HUD band as a counter to ignore for the goal.
++
++### REQ-ARC-WMTE-5834: End-to-End Goal Gate + Re-Authoring Perception Requirement
++
++**Origin:** 2026-07-23, the gate closing REQ-ARC-WMTE-5831/5832/5833. It fed DETECTOR-produced perception
++(`perceive_entities` on real offline-arcade transitions) to gemma-4-31B's goal prompt, same learned rules as
++the 5832 oracle ablation, to test whether the detectors recover the oracle's 7/8 goal-correctness from frames
++alone. Result: an honest NEGATIVE (0 correct, 2 partial, 6 wrong) -- because the model's own wrong learned
++rules dominate the detector's weaker "ignore this band" note, and the detector cannot name which object is
++the target.
++
++The gate SHALL be reproducible via `scripts/arc_end_to_end_goal_gate.py` and record per-game the detector
++perception, the resulting goal hypothesis, and the true win condition. The finding SHALL drive the perception
++requirement: `perceive_entities` (or a wrapper) SHALL RE-AUTHOR the model's framing rather than augment it --
++(a) retract any learned rule that references a detected HUD band, (b) propose the mover's nearest distinct
++object as the candidate target, (c) improve mover recall on games where directional exploration does not
++surface the player. Until it does, wiring detector output alongside the model's own wrong rules does NOT flip
++goal induction; this is the measured gate result, not a hypothesis.
++
++### SCENARIO-ARC-WMTE-5834-DETECTOR-PERCEPTION-BELOW-ORACLE
++
++**Given** detector-produced perception fed to the goal prompt with the model's own wrong learned rules
++**When** the goal hypothesis is measured against the true win condition across the 8 games
++**Then** goal-correctness is materially below the hand-authored oracle's 7/8 (measured: 0 correct, 2 partial),
++because the wrong rules dominate the detector's ignore-note and targets are unnamed -- establishing the
++re-authoring requirement above.
+-- 
+2.55.0
+

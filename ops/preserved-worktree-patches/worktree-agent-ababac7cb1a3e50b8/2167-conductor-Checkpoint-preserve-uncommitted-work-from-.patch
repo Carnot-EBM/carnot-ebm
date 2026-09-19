@@ -1,0 +1,65 @@
+From c57e435d7dd1ea2c4c92271c1a6a0c43d768ec3f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 16 Jun 2026 19:31:29 -0400
+Subject: [PATCH 02167/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...iment_4307_arc_incremental_progress_new_game.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c99cd5dc8b..1dfc704e06 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 123, "phase": "iteration_start", "last_beat": "2026-06-16T23:13:13Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 124, "phase": "iteration_start", "last_beat": "2026-06-16T23:31:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d3092dcf7f..7a65f04045 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8623,3 +8623,4 @@ c |
+ | 2026-06-16 22:25 UTC | PHASE B1 (the §5 in-generation headline; fix the . | OK | 93 passed, 1 warning in 4.98s |
+ | 2026-06-16 22:50 UTC | PHASE C1 (BROADEN the selection moat to cross-DOMA | OK | 95 passed, 1 warning in 7.25s |
+ | 2026-06-16 23:11 UTC | PHASE D1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 104 passed, 1 warning in 10.60s |
++| 2026-06-16 23:29 UTC | PHASE E1 (ARC north star; accuracy) -- monotonic A | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8036f86c2e..3e205a646d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 123, "phase": "iteration_start", "started_at": "2026-06-16T23:13:13Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 124, "phase": "iteration_start", "started_at": "2026-06-16T23:31:27Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4307_arc_incremental_progress_new_game.json b/results/experiment_4307_arc_incremental_progress_new_game.json
+index 0ee812324d..e69aa9e6a2 100644
+--- a/results/experiment_4307_arc_incremental_progress_new_game.json
++++ b/results/experiment_4307_arc_incremental_progress_new_game.json
+@@ -169,5 +169,13 @@
+   "title": "arc3_incremental_progress_exp4307_new_game_offline",
+   "total_levels": 22,
+   "total_levels_solved": 22,
+-  "verifier_validated": false
+-}
++  "verifier_validated": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "GATE_PASSED_WITHOUT_DATA",
++      "severity": "critical",
++      "detail": "acceptance_gate_passed=true but these fields are null/zero: exploration_actions_used=0"
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

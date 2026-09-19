@@ -1,0 +1,3139 @@
+From 4296c973a52cca69c301da8069b774fbf701a6fb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 18:34:57 -0400
+Subject: [PATCH 08313/11362] [conductor] Gated on Exp6145 stream readiness:
+ typed Torx-compatible stochastic constraint IR
+
+Automated research step by research conductor.
+Task ID: exp6152-typed-stochastic-constraint-ir
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/samplers/spec.md        |  112 ++
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    2 +
+ ops/conductor-state.json                      |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...ent_6152_typed_stochastic_constraint_ir.py | 1544 +++++++++++++++++
+ ...t_6152_typed_stochastic_constraint_ir.json |  938 ++++++++++
+ ...ent_6152_typed_stochastic_constraint_ir.py |  451 +++++
+ 8 files changed, 3050 insertions(+), 3 deletions(-)
+ create mode 100644 python/carnot/experiment_6152_typed_stochastic_constraint_ir.py
+ create mode 100644 results/experiment_6152_typed_stochastic_constraint_ir.json
+ create mode 100644 tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py
+
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 07f2ac4dd8..e7f7818bad 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -3066,3 +3066,115 @@ Sub-requirements:
+ **And** sampler-feature guidance is abstained in the identified harmful regimes
+ **And** `results/experiment_5142_taco_harm_rootcause_scale_v471.json` is
+ written with `conductor_modified=false` and a terminal honest verdict.
++
++### REQ-SAMPLE-6152: Typed Stochastic Constraint IR For Exp6145
++
++Carnot MUST provide Exp6152 at
++`python/carnot/experiment_6152_typed_stochastic_constraint_ir.py` and write
++`results/experiment_6152_typed_stochastic_constraint_ir.json` without modifying
++`scripts/research_conductor.py`. The experiment SHALL represent one bounded
++Exp6145 finite-domain constraint workflow as a dependency-light typed
++Parametrized Stochastic Circuit / Directed Factor Graph style IR with explicit
++binary and categorical wires, local deterministic and stochastic kernels, exact
++finite semantics, stable serialization, and an optional adapter to the real
++pinned Torx package when it is importable.
++
++Sub-requirements:
++- REQ-SAMPLE-6152-1: The IR SHALL declare a schema version, binary and
++  categorical wire types, category order, batch shape contracts, parameter
++  schemas, factor/channel edges, and deterministic/stochastic local-kernel
++  kinds.
++- REQ-SAMPLE-6152-2: Graph validation SHALL reject unsupported cycles,
++  dangling wires, type mismatches, invalid or unnormalized probability mass,
++  duplicate wire or kernel identifiers, invalid category indexes, and ambiguous
++  seeds.
++- REQ-SAMPLE-6152-3: The Carnot executor SHALL compute exact support,
++  conditional probabilities, joint probabilities, normalization, marginals,
++  deterministic factors, impossible states, batch execution, and seed replay by
++  exhaustive finite enumeration rather than sampling.
++- REQ-SAMPLE-6152-4: The compiler SHALL map one bounded Exp6145 workflow into
++  the IR and compare it against an independent exact reference that would catch
++  wire-order and category-index bugs.
++- REQ-SAMPLE-6152-5: Serialization SHALL round trip through canonical JSON
++  without changing semantics, state order, checksums, or executable receipts.
++- REQ-SAMPLE-6152-6: The Torx adapter SHALL name the real package version,
++  import namespace, package metadata, pinned repository commit, and exercised
++  API when Torx is available. If Torx is absent or the API cannot be exercised,
++  compatibility evidence SHALL be blocked honestly and
++  `typed_stochastic_ir_ready_score` SHALL remain `0.0`.
++- REQ-SAMPLE-6152-7: The terminal artifact SHALL include `status`,
++  `preconditions_checked`, `structured_gate_receipt`,
++  `source_workflow_validator_sampler_and_exclusion_hashes`,
++  `torx_package_version_commit_import_and_api_receipts`,
++  `ir_schema_version_types_kernels_and_graph_contract`,
++  `compiler_executor_adapter_and_test_paths`,
++  `exact_enumeration_case_counts`,
++  `support_conditional_joint_normalization_and_marginal_deltas`,
++  `deterministic_impossible_batch_seed_and_serialization_controls`,
++  `wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls`,
++  `torx_compatibility_scope`, `deterministic_rebuild_checksum`,
++  `typed_stochastic_ir_ready_score`, `protected_files_unchanged`,
++  `duration_s`, `inference_substrate`, `verifier_is_oracle`,
++  `missing_verifier_gaps`, `field_provenance`, `test_commands`,
++  `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
++  `inference_substrate` SHALL be `jax_cpu_exact_stochastic_program` only when
++  the exact Carnot semantics and real pinned Torx compatibility are exercised;
++  otherwise it SHALL be `carnot_only_blocked_torx_compatibility`.
++
++Required field principles:
++
++- `status`: A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.
++- `preconditions_checked`: Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.
++- `structured_gate_receipt`: Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.
++- `source_workflow_validator_sampler_and_exclusion_hashes`: Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.
++- `torx_package_version_commit_import_and_api_receipts`: Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.
++- `ir_schema_version_types_kernels_and_graph_contract`: The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.
++- `compiler_executor_adapter_and_test_paths`: Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.
++- `exact_enumeration_case_counts`: Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.
++- `support_conditional_joint_normalization_and_marginal_deltas`: Exact enumeration, not sampling, is authoritative on bounded cases.
++- `deterministic_impossible_batch_seed_and_serialization_controls`: Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.
++- `wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls`: Negative controls prove validators and the independent reference catch subtle graph and indexing failures.
++- `torx_compatibility_scope`: Names the real exercised version/API; source resemblance is not compatibility.
++- `deterministic_rebuild_checksum`: A second construction must reproduce the same program and exact-semantics commitment.
++- `typed_stochastic_ir_ready_score`: Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.
++- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical during artifact construction.
++- `duration_s`: Measured deterministic construction time is reported without padding.
++- `inference_substrate`: Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.
++- `verifier_is_oracle`: The independent exact finite enumerator is the probability oracle for bounded cases.
++- `missing_verifier_gaps`: Any absent Torx or non-enumerated semantic evidence is explicit.
++- `field_provenance`: Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.
++- `test_commands`: Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.
++- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
++- `reproducibility_checksum`: The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.
++- `honest_verdict`: Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.
++
++### SCENARIO-SAMPLE-6152-VALIDATION: Typed Graphs Fail Closed
++
++**Given** an Exp6152 PSC/DFG payload with typed binary and categorical wires
++**When** validation inspects cycles, edges, wire types, category indexes,
++probability masses, and seeds
++**Then** valid acyclic graphs are accepted
++**And** unsupported cycles, dangling wires, type mismatches, invalid mass,
++category-index bugs, and ambiguous seeds are rejected deterministically.
++
++### SCENARIO-SAMPLE-6152-EXACT: Enumeration Owns Probabilities
++
++**Given** the bounded Exp6145 stochastic constraint workflow
++**When** the Carnot executor enumerates every finite state
++**Then** support, conditional and joint probabilities, normalization,
++marginals, deterministic factors, impossible states, batches, and seed replay
++match an independent exact reference at the preregistered tolerance.
++
++### SCENARIO-SAMPLE-6152-SERIALIZATION-TORX: Stable JSON And Real Adapter
++
++**Given** the validated Exp6152 IR and pinned Torx package metadata
++**When** the IR is serialized, deserialized, and passed through the Torx adapter
++**Then** serialization preserves exact semantics and checksums
++**And** the adapter reports a real exercised Torx version/API or blocks
++compatibility without claiming readiness.
++
++## Implementation Status (REQ-SAMPLE-6152)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLE-6152 | Planned (`python/carnot/experiment_6152_typed_stochastic_constraint_ir.py`, `results/experiment_6152_typed_stochastic_constraint_ir.json`) | Planned (`tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py`) |
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fee9584b6d..47e514965c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-08-05T22:11:12Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-08-05T22:13:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6ddb686637..1ef5a1b080 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15376,3 +15376,5 @@ No output thi |
+ | 2026-08-05 22:05 UTC | Gated on Exp6145 stream readiness: certified strat | OK | 92 passed, 1 warning in 31.21s |
+ | 2026-08-05 22:07 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
+ | 2026-08-05 22:09 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
++| 2026-08-05 22:11 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
++| 2026-08-05 22:13 UTC | Gated on Exp6150 positive utility: default-off tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6150-frozen-qwen-continuous-self-learning |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 87565cec66..268ca28df1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 21, "phase": "iteration_start", "started_at": "2026-08-05T22:11:12Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 22, "phase": "iteration_start", "started_at": "2026-08-05T22:13:15Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 55a67dc89f..7fb3b8f5c0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4774,
++  "experiments_checked": 4775,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6152_typed_stochastic_constraint_ir.py b/python/carnot/experiment_6152_typed_stochastic_constraint_ir.py
+new file mode 100644
+index 0000000000..aa9375ecc4
+--- /dev/null
++++ b/python/carnot/experiment_6152_typed_stochastic_constraint_ir.py
+@@ -0,0 +1,1544 @@
++"""Exp6152 typed stochastic constraint IR.
++
++Spec refs: REQ-SAMPLE-6152, SCENARIO-SAMPLE-6152-VALIDATION,
++SCENARIO-SAMPLE-6152-EXACT, SCENARIO-SAMPLE-6152-SERIALIZATION-TORX.
++
++The experiment keeps the stochastic program small enough to enumerate exactly.
++It models one Exp6145 access-control workflow: a candidate item is proposed,
++the deterministic Horn-style facts derive eligibility, and a stochastic
++strategy-clean bit gates final admission. The exact finite enumerator is the
++semantic oracle; the Torx path is a real pinned API smoke, not a replacement
++for Carnot's workflow executor.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, deque
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import importlib.metadata
++import json
++import math
++import os
++from pathlib import Path
++import platform
++import random
++import time
++from typing import Any
++
++from carnot import experiment_5896_typed_constraint_ir_fixture as exp5896
++from carnot import experiment_6145_constraint_shift_stream as exp6145
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6152_typed_stochastic_constraint_ir.json")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6152_typed_stochastic_constraint_ir.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py")
++SAMPLER_SPEC_RELATIVE_PATH = Path("openspec/capabilities/samplers/spec.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++IR_SCHEMA_VERSION = "carnot.typed_stochastic_constraint_ir.v1"
++ARTIFACT_SCHEMA_VERSION = "carnot.experiment_6152.typed_stochastic_constraint_ir.v1"
++EXPERIMENT_ID = "experiment_6152_typed_stochastic_constraint_ir"
++RUN_DATE = "20260805"
++EXACT_TOLERANCE = 1.0e-12
++TORX_PINNED_PACKAGE_VERSION = "0.0.1"
++TORX_PINNED_REPOSITORY = "https://github.com/extropic-ai/torx"
++TORX_PINNED_REPOSITORY_COMMIT = "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++TORX_PINNED_WHEEL_SHA256 = "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c"
++TORX_PINNED_SDIST_SHA256 = "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a"
++JAX_CPU_SUBSTRATE = "jax_cpu_exact_stochastic_program"
++CARNOT_ONLY_SUBSTRATE = "carnot_only_blocked_torx_compatibility"
++VERIFIER_IS_ORACLE = True
++
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++)
++HASHED_SOURCE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    Path("research-references.md"),
++    Path("research-hardware-wishlist.md"),
++    SAMPLER_SPEC_RELATIVE_PATH,
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++    Path("python/carnot/experiment_6145_constraint_shift_stream.py"),
++    Path("python/carnot/experiment_5896_typed_constraint_ir_fixture.py"),
++    Path("python/carnot/samplers/backend.py"),
++    Path("python/carnot/samplers/thrml_init.py"),
++    Path("python/carnot/samplers"),
++    Path("python/carnot/constraints"),
++    Path("crates/carnot-ising"),
++    Path("crates/carnot-gibbs"),
++    Path("results/experiment_6145_constraint_shift_stream.json"),
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++)
++
++FOCUSED_COMMAND = (
++    "JAX_PLATFORMS=cpu .venv/bin/pytest "
++    "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py "
++    "-m pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py "
++    "-q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py --fail-under=100"
++)
++GLOBAL_PYTEST_COMMAND = "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py"
++)
++RUFF_CHECK_COMMAND = (
++    ".venv/bin/ruff check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py "
++    "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py"
++)
++RUFF_FORMAT_COMMAND = (
++    ".venv/bin/ruff format --check "
++    "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py "
++    "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py"
++)
++E2E_SERIALIZATION_COMMAND = (
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6152_typed_stochastic_constraint_ir.json"
++)
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++PROTECTED_FILE_COMMAND = (
++    "git status --short -- scripts/research_conductor.py "
++    "ops/changelog.md ops/status.md _bmad/traceability.md"
++)
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_COMMAND,
++    COVERAGE_COMMAND,
++    SPEC_COMMAND,
++    RUFF_CHECK_COMMAND,
++    RUFF_FORMAT_COMMAND,
++    E2E_SERIALIZATION_COMMAND,
++    ADVERSARIAL_COMMAND,
++    PROTECTED_FILE_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    GLOBAL_PYTEST_COMMAND,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "structured_gate_receipt",
++    "source_workflow_validator_sampler_and_exclusion_hashes",
++    "torx_package_version_commit_import_and_api_receipts",
++    "ir_schema_version_types_kernels_and_graph_contract",
++    "compiler_executor_adapter_and_test_paths",
++    "exact_enumeration_case_counts",
++    "support_conditional_joint_normalization_and_marginal_deltas",
++    "deterministic_impossible_batch_seed_and_serialization_controls",
++    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls",
++    "torx_compatibility_scope",
++    "deterministic_rebuild_checksum",
++    "typed_stochastic_ir_ready_score",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "missing_verifier_gaps",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": (
++        "A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries."
++    ),
++    "preconditions_checked": (
++        "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, "
++        "exclusions, outputs, and protected files before construction."
++    ),
++    "structured_gate_receipt": (
++        "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled."
++    ),
++    "source_workflow_validator_sampler_and_exclusion_hashes": (
++        "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package "
++        "metadata or commit, exclusions, output paths, and protected files."
++    ),
++    "torx_package_version_commit_import_and_api_receipts": (
++        "Real importable Torx package/version/commit/API evidence is recorded; resemblance to "
++        "public docs is not compatibility."
++    ),
++    "ir_schema_version_types_kernels_and_graph_contract": (
++        "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, "
++        "and normalization gates."
++    ),
++    "compiler_executor_adapter_and_test_paths": (
++        "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary."
++    ),
++    "exact_enumeration_case_counts": (
++        "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence."
++    ),
++    "support_conditional_joint_normalization_and_marginal_deltas": (
++        "Exact enumeration, not sampling, is authoritative on bounded cases."
++    ),
++    "deterministic_impossible_batch_seed_and_serialization_controls": (
++        "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips "
++        "are checked together."
++    ),
++    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": (
++        "Negative controls prove validators and the independent reference catch subtle graph and "
++        "indexing failures."
++    ),
++    "torx_compatibility_scope": (
++        "Names the real exercised version/API; source resemblance is not compatibility."
++    ),
++    "deterministic_rebuild_checksum": (
++        "A second construction must reproduce the same program and exact-semantics commitment."
++    ),
++    "typed_stochastic_ir_ready_score": (
++        "Exactly one only when exact semantics, controls, serialization, protected files, tests, "
++        "and real Torx compatibility pass."
++    ),
++    "protected_files_unchanged": (
++        "Conductor and reconciler-owned files remain byte-identical during artifact construction."
++    ),
++    "duration_s": "Measured deterministic construction time is reported without padding.",
++    "inference_substrate": (
++        "Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly."
++    ),
++    "verifier_is_oracle": (
++        "The independent exact finite enumerator is the probability oracle for bounded cases."
++    ),
++    "missing_verifier_gaps": "Any absent Torx or non-enumerated semantic evidence is explicit.",
++    "field_provenance": (
++        "Every field traces to the prompt, spec, workflow, source, tests, command receipts, or "
++        "package metadata."
++    ),
++    "test_commands": (
++        "Commands document focused unit/spec coverage, structured gate, exact probability, "
++        "Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, "
++        "and root-clutter checks."
++    ),
++    "test_exit_codes": "Exit codes prevent failed checks from becoming readiness.",
++    "reproducibility_checksum": (
++        "The artifact hash detects source, schema, probability, adapter, test, or protected-file drift."
++    ),
++    "honest_verdict": (
++        "Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state "
++        "the exact compiler boundary."
++    ),
++}
++
++
++class TypedStochasticIRValidationError(ValueError):
++    """Raised when a stochastic IR payload has ambiguous or invalid semantics."""
++
++
++class TypedStochasticIRReplayError(ValueError):
++    """Raised when a written Exp6152 artifact no longer replays exactly."""
++
++
++@dataclass(frozen=True)
++class Wire:
++    identifier: str
++    kind: str
++    categories: tuple[str, ...] = ()
++
++
++@dataclass(frozen=True)
++class Kernel:
++    identifier: str
++    kind: str
++    inputs: tuple[str, ...]
++    output: str
++    params: Mapping[str, Any]
++
++
++@dataclass(frozen=True)
++class StochasticProgram:
++    schema_version: str
++    program_id: str
++    wires: tuple[Wire, ...]
++    kernels: tuple[Kernel, ...]
++    metadata: Mapping[str, Any]
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON evidence in stable ASCII byte order."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_text(value: str) -> str:
++    """Return a prefixed SHA-256 digest for text evidence."""
++
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Return a prefixed SHA-256 digest for canonical JSON evidence."""
++
++    return sha256_text(canonical_json(value))
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash one file by bytes, independent of path metadata."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _hash_path(path: Path, root: Path = REPO_ROOT) -> JsonDict:
++    target = root / path
++    if target.is_dir():
++        files = sorted(item for item in target.rglob("*") if item.is_file())
++        return {
++            "exists": True,
++            "kind": "directory",
++            "file_count": len(files),
++            "sha256": sha256_json(
++                [
++                    {"path": item.relative_to(root).as_posix(), "sha256": sha256_file(item)}
++                    for item in files
++                ]
++            ),
++        }
++    return {
++        "exists": target.exists(),
++        "kind": "file",
++        "sha256": sha256_file(target) if target.exists() else None,
++    }
++
++
++def _path_hashes(paths: Sequence[Path], root: Path = REPO_ROOT) -> JsonDict:
++    return {path.as_posix(): _hash_path(path, root) for path in paths}
++
++
++def compile_exp6145_bounded_workflow() -> StochasticProgram:
++    """Compile one bounded Exp6145 access-control workflow into PSC/DFG-style IR."""
++
++    config = exp6145.FAMILY_CONFIGS[0]
++    source_ir = exp6145._variant_ir(config, 0, "canonical")
++    certificate = exp5896.certify_ir(source_ir)
++    wires = (
++        Wire("candidate_item", "categorical", ("ac_e0_0", "ac_e0_1", "ac_e0_2")),
++        Wire("strategy_clean", "binary"),
++        Wire("member_group", "categorical", ("ac_g0_0", "ac_g0_1")),
++        Wire(
++            "clearance", "categorical", ("clearance_1", "clearance_2", "clearance_3", "clearance_4")
++        ),
++        Wire("gate_open", "binary"),
++        Wire("blocked", "binary"),
++        Wire("clearance_ok", "binary"),
++        Wire("eligible", "binary"),
++        Wire("accepted", "binary"),
++    )
++    kernels = (
++        Kernel(
++            "sample_candidate_item",
++            "categorical_prior",
++            (),
++            "candidate_item",
++            {"probabilities": [0.4, 0.5, 0.1], "seed_role": "candidate_item_root"},
++        ),
++        Kernel(
++            "sample_strategy_clean",
++            "bernoulli_prior",
++            (),
++            "strategy_clean",
++            {"p_true": 0.9, "seed_role": "strategy_clean_root"},
++        ),
++        Kernel(
++            "member_group_lookup",
++            "deterministic_lookup",
++            ("candidate_item",),
++            "member_group",
++            {"table": [0, 1, 0]},
++        ),
++        Kernel(
++            "clearance_lookup",
++            "deterministic_lookup",
++            ("candidate_item",),
++            "clearance",
++            {"table": [2, 3, 1]},
++        ),
++        Kernel(
++            "gate_open_lookup",
++            "deterministic_lookup",
++            ("member_group",),
++            "gate_open",
++            {"table": [1, 1]},
++        ),
++        Kernel(
++            "blocked_lookup",
++            "deterministic_lookup",
++            ("candidate_item",),
++            "blocked",
++            {"table": [0, 1, 0]},
++        ),
++        Kernel(
++            "clearance_ok_lookup",
++            "deterministic_lookup",
++            ("clearance",),
++            "clearance_ok",
++            {"table": [0, 1, 1, 1]},
++        ),
++        Kernel(
++            "eligible_truth_table",
++            "deterministic_truth_table",
++            ("gate_open", "blocked", "clearance_ok"),
++            "eligible",
++            {"table": [0, 0, 0, 0, 0, 1, 0, 0]},
++        ),
++        Kernel(
++            "accepted_truth_table",
++            "deterministic_truth_table",
++            ("eligible", "strategy_clean"),
++            "accepted",
++            {"table": [0, 0, 0, 1]},
++        ),
++    )
++    metadata = {
++        "source": "Exp6145 access_control canonical template t00 with stochastic strategy-clean gate",
++        "source_event_id": "exp6145-event-000000",
++        "source_base_template_id": "exp6145.access_control.t00",
++        "source_family": config.family,
++        "source_constraint_ir_hash": exp6145.sha256_json(source_ir),
++        "source_behavior_hash": certificate["python"].get("behavior_hash"),
++        "source_exact_answer": certificate["python"].get("query_bindings"),
++        "strategy_clean_probability": 0.9,
++        "candidate_item_probabilities": [0.4, 0.5, 0.1],
++    }
++    program = StochasticProgram(
++        IR_SCHEMA_VERSION,
++        "exp6145_access_control_t00_stochastic_admission",
++        wires,
++        kernels,
++        metadata,
++    )
++    validate_program(program)
++    return program
++
++
++def program_to_payload(program: StochasticProgram) -> JsonDict:
++    """Turn the dataclass representation into strict JSON-compatible payload."""
++
++    return {
++        "schema_version": program.schema_version,
++        "program_id": program.program_id,
++        "wires": [
++            {"id": wire.identifier, "kind": wire.kind, "categories": list(wire.categories)}
++            for wire in program.wires
++        ],
++        "kernels": [
++            {
++                "id": kernel.identifier,
++                "kind": kernel.kind,
++                "inputs": list(kernel.inputs),
++                "output": kernel.output,
++                "params": json.loads(canonical_json(kernel.params)),
++            }
++            for kernel in program.kernels
++        ],
++        "metadata": json.loads(canonical_json(program.metadata)),
++    }
++
++
++def program_from_payload(payload: Mapping[str, Any]) -> StochasticProgram:
++    """Parse and validate a JSON-compatible typed stochastic program."""
++
++    required = {"schema_version", "program_id", "wires", "kernels", "metadata"}
++    missing = sorted(required - set(payload))
++    if missing:
++        raise TypedStochasticIRValidationError(f"missing top-level fields: {missing}")
++    if payload["schema_version"] != IR_SCHEMA_VERSION:
++        raise TypedStochasticIRValidationError("unsupported schema_version")
++    wires = tuple(
++        Wire(
++            identifier=str(item["id"]),
++            kind=str(item["kind"]),
++            categories=tuple(str(value) for value in item.get("categories", ())),
++        )
++        for item in _require_list(payload["wires"], "wires")
++    )
++    kernels = tuple(
++        Kernel(
++            identifier=str(item["id"]),
++            kind=str(item["kind"]),
++            inputs=tuple(str(value) for value in item.get("inputs", ())),
++            output=str(item["output"]),
++            params=dict(item.get("params") or {}),
++        )
++        for item in _require_list(payload["kernels"], "kernels")
++    )
++    program = StochasticProgram(
++        schema_version=str(payload["schema_version"]),
++        program_id=str(payload["program_id"]),
++        wires=wires,
++        kernels=kernels,
++        metadata=dict(payload["metadata"]),
++    )
++    validate_program(program)
++    return program
++
++
++def _require_list(value: Any, context: str) -> list[Any]:
++    if not isinstance(value, list):
++        raise TypedStochasticIRValidationError(f"{context} must be a list")
++    return value
++
++
++def program_checksum(program: StochasticProgram) -> str:
++    """Hash the stable program payload."""
++
++    return sha256_json(program_to_payload(program))
++
++
++def wire_order(program: StochasticProgram) -> list[str]:
++    """Return the declared wire order used for state shape checks."""
++
++    return [wire.identifier for wire in program.wires]
++
++
++def validate_program(program: StochasticProgram) -> JsonDict:
++    """Validate typed wires, local kernels, graph edges, probabilities, and seeds."""
++
++    if program.schema_version != IR_SCHEMA_VERSION:
++        raise TypedStochasticIRValidationError("unsupported schema_version")
++    wires = _wire_map(program)
++    _validate_wires(program.wires)
++    _validate_kernels(program.kernels, wires)
++    order = _topological_kernel_order(program.kernels)
++    produced = {kernel.output for kernel in program.kernels}
++    dangling_wires = sorted(set(wires) - produced)
++    if dangling_wires:
++        raise TypedStochasticIRValidationError(f"dangling wires without producer: {dangling_wires}")
++    return {
++        "ok": True,
++        "schema_version": program.schema_version,
++        "wire_count": len(program.wires),
++        "kernel_count": len(program.kernels),
++        "wire_order": wire_order(program),
++        "wire_type_counts": dict(sorted(Counter(wire.kind for wire in program.wires).items())),
++        "topological_kernel_order": order,
++        "state_shape_contract": {
++            "rank": 1,
++            "wire_count": len(program.wires),
++            "batch_axis": "optional_leading_axis",
++        },
++    }
++
++
++def _wire_map(program: StochasticProgram) -> dict[str, Wire]:
++    return {wire.identifier: wire for wire in program.wires}
++
++
++def _validate_wires(wires: Sequence[Wire]) -> None:
++    seen: set[str] = set()
++    for wire in wires:
++        if not wire.identifier:
++            raise TypedStochasticIRValidationError("wire id must be non-empty")
++        if wire.identifier in seen:
++            raise TypedStochasticIRValidationError(f"duplicate wire: {wire.identifier}")
++        seen.add(wire.identifier)
++        if wire.kind == "binary":
++            if wire.categories:
++                raise TypedStochasticIRValidationError("binary wires may not declare categories")
++        elif wire.kind == "categorical":
++            if not wire.categories or len(set(wire.categories)) != len(wire.categories):
++                raise TypedStochasticIRValidationError("categorical wires need unique categories")
++        else:
++            raise TypedStochasticIRValidationError(f"unsupported wire kind: {wire.kind}")
++
++
++def _validate_kernels(kernels: Sequence[Kernel], wires: Mapping[str, Wire]) -> None:
++    seen: set[str] = set()
++    seed_roles: list[str] = []
++    for kernel in kernels:
++        if not kernel.identifier:
++            raise TypedStochasticIRValidationError("kernel id must be non-empty")
++        if kernel.identifier in seen:
++            raise TypedStochasticIRValidationError(f"duplicate kernel: {kernel.identifier}")
++        seen.add(kernel.identifier)
++        if kernel.output not in wires:
++            raise TypedStochasticIRValidationError(f"dangling wire output: {kernel.output}")
++        for wire_id in kernel.inputs:
++            if wire_id not in wires:
++                raise TypedStochasticIRValidationError(f"dangling wire input: {wire_id}")
++        if kernel.kind in {"categorical_prior", "bernoulli_prior"}:
++            role = kernel.params.get("seed_role")
++            if not isinstance(role, str) or not role:
++                raise TypedStochasticIRValidationError("ambiguous seed role for stochastic kernel")
++            seed_roles.append(role)
++        _validate_kernel_schema(kernel, wires)
++    if len(seed_roles) != len(set(seed_roles)):
++        raise TypedStochasticIRValidationError("ambiguous seed role reuse")
++
++
++def _validate_kernel_schema(kernel: Kernel, wires: Mapping[str, Wire]) -> None:
++    output = wires[kernel.output]
++    if kernel.kind == "categorical_prior":
++        if kernel.inputs or output.kind != "categorical":
++            raise TypedStochasticIRValidationError("type mismatch for categorical_prior")
++        _validate_probabilities(kernel.params.get("probabilities"), _cardinality(output))
++    elif kernel.kind == "bernoulli_prior":
++        if kernel.inputs or output.kind != "binary":
++            raise TypedStochasticIRValidationError("type mismatch for bernoulli_prior")
++        p_true = kernel.params.get("p_true")
++        if not isinstance(p_true, int | float) or not 0.0 <= float(p_true) <= 1.0:
++            raise TypedStochasticIRValidationError("probability mass for bernoulli_prior")
++    elif kernel.kind == "deterministic_lookup":
++        if len(kernel.inputs) != 1 or wires[kernel.inputs[0]].kind != "categorical":
++            raise TypedStochasticIRValidationError("type mismatch for deterministic_lookup")
++        _validate_table(
++            kernel.params.get("table"), _cardinality(wires[kernel.inputs[0]]), _cardinality(output)
++        )
++    elif kernel.kind == "deterministic_truth_table":
++        if not kernel.inputs or output.kind != "binary":
++            raise TypedStochasticIRValidationError("type mismatch for deterministic_truth_table")
++        if any(wires[wire_id].kind != "binary" for wire_id in kernel.inputs):
++            raise TypedStochasticIRValidationError("type mismatch for deterministic_truth_table")
++        table_size = math.prod(_cardinality(wires[wire_id]) for wire_id in kernel.inputs)
++        _validate_table(kernel.params.get("table"), table_size, 2)
++    else:
++        raise TypedStochasticIRValidationError(f"unsupported kernel kind: {kernel.kind}")
++
++
++def _validate_probabilities(raw: Any, expected_len: int) -> None:
++    if not isinstance(raw, list) or len(raw) != expected_len:
++        raise TypedStochasticIRValidationError("probability mass length mismatch")
++    values = [float(value) for value in raw]
++    if any(value < 0.0 for value in values) or abs(sum(values) - 1.0) > EXACT_TOLERANCE:
++        raise TypedStochasticIRValidationError("probability mass must be normalized")
++
++
++def _validate_table(raw: Any, expected_len: int, output_cardinality: int) -> None:
++    if not isinstance(raw, list) or len(raw) != expected_len:
++        raise TypedStochasticIRValidationError("deterministic table length mismatch")
++    if any(not isinstance(value, int) or value < 0 or value >= output_cardinality for value in raw):
++        raise TypedStochasticIRValidationError("category index outside output domain")
++
++
++def _cardinality(wire: Wire) -> int:
++    return 2 if wire.kind == "binary" else len(wire.categories)
++
++
++def _topological_kernel_order(kernels: Sequence[Kernel]) -> list[str]:
++    producer: dict[str, str] = {}
++    by_id: dict[str, Kernel] = {}
++    for kernel in kernels:
++        if kernel.output in producer:
++            raise TypedStochasticIRValidationError(f"duplicate producer for wire: {kernel.output}")
++        producer[kernel.output] = kernel.identifier
++        by_id[kernel.identifier] = kernel
++    deps = {
++        kernel.identifier: {
++            producer[input_id] for input_id in kernel.inputs if input_id in producer
++        }
++        for kernel in kernels
++    }
++    ready = deque(kernel.identifier for kernel in kernels if not deps[kernel.identifier])
++    order: list[str] = []
++    while ready:
++        current = ready.popleft()
++        order.append(current)
++        for kernel_id in by_id:
++            if current in deps[kernel_id]:
++                deps[kernel_id].remove(current)
++                if not deps[kernel_id]:
++                    ready.append(kernel_id)
++    if len(order) != len(kernels):
++        raise TypedStochasticIRValidationError("unsupported cycle in stochastic graph")
++    return order
++
++
++def execute_exact(program: StochasticProgram) -> JsonDict:
++    """Enumerate the full finite stochastic program exactly."""
++
++    receipt = validate_program(program)
++    wires = _wire_map(program)
++    kernels = {kernel.identifier: kernel for kernel in program.kernels}
++    assigned: list[str] = []
++    probabilities: dict[tuple[int, ...], float] = {(): 1.0}
++    for kernel_id in receipt["topological_kernel_order"]:
++        kernel = kernels[kernel_id]
++        next_probabilities: dict[tuple[int, ...], float] = {}
++        for state_tuple, state_probability in probabilities.items():
++            state = dict(zip(assigned, state_tuple, strict=True))
++            for output_value, output_probability in _kernel_outputs(kernel, wires, state):
++                next_state = (*state_tuple, output_value)
++                next_probabilities[next_state] = (
++                    next_probabilities.get(next_state, 0.0) + state_probability * output_probability
++                )
++        assigned.append(kernel.output)
++        probabilities = next_probabilities
++
++    support = []
++    joint_probabilities: dict[str, float] = {}
++    for state_tuple, probability in sorted(probabilities.items()):
++        if probability > EXACT_TOLERANCE:
++            labeled = _label_state(wires, assigned, state_tuple)
++            key = canonical_json(labeled)
++            joint_probabilities[key] = probability
++            support.append({"state": labeled, "probability": probability})
++    normalization = sum(joint_probabilities.values())
++    marginals = _marginals(wires, assigned, support)
++    state_space_size = math.prod(_cardinality(wires[wire_id]) for wire_id in assigned)
++    return {
++        "wire_order": assigned,
++        "state_space_size": state_space_size,
++        "support_count": len(support),
++        "impossible_state_count": state_space_size - len(support),
++        "normalization": normalization,
++        "normalization_error": abs(1.0 - normalization),
++        "support": support,
++        "joint_probabilities": joint_probabilities,
++        "marginals": marginals,
++        "conditionals": _named_conditionals({"support": support}),
++    }
++
++
++def _kernel_outputs(
++    kernel: Kernel,
++    wires: Mapping[str, Wire],
++    state: Mapping[str, int],
++) -> list[tuple[int, float]]:
++    if kernel.kind == "categorical_prior":
++        return [(index, float(prob)) for index, prob in enumerate(kernel.params["probabilities"])]
++    if kernel.kind == "bernoulli_prior":
++        p_true = float(kernel.params["p_true"])
++        return [(0, 1.0 - p_true), (1, p_true)]
++    if kernel.kind == "deterministic_lookup":
++        input_value = state[kernel.inputs[0]]
++        return [(int(kernel.params["table"][input_value]), 1.0)]
++    table_index = 0
++    for input_id in kernel.inputs:
++        table_index = table_index * _cardinality(wires[input_id]) + state[input_id]
++    return [(int(kernel.params["table"][table_index]), 1.0)]
++
++
++def _label_state(
++    wires: Mapping[str, Wire],
++    order: Sequence[str],
++    values: Sequence[int],
++) -> JsonDict:
++    return {
++        wire_id: _label_value(wires[wire_id], value)
++        for wire_id, value in zip(order, values, strict=True)
++    }
++
++
++def _label_value(wire: Wire, value: int) -> str | int:
++    return value if wire.kind == "binary" else wire.categories[value]
++
++
++def _marginals(
++    wires: Mapping[str, Wire],
++    order: Sequence[str],
++    support: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    result: JsonDict = {}
++    for wire_id in order:
++        labels = ["0", "1"] if wires[wire_id].kind == "binary" else list(wires[wire_id].categories)
++        result[wire_id] = {label: 0.0 for label in labels}
++    for row in support:
++        state = row["state"]
++        probability = float(row["probability"])
++        for wire_id in order:
++            result[wire_id][str(state[wire_id])] += probability
++    return result
++
++
++def independent_reference_distribution() -> JsonDict:
++    """Compute the same workflow without using the IR or kernel executor."""
++
++    item_probabilities = {"ac_e0_0": 0.4, "ac_e0_1": 0.5, "ac_e0_2": 0.1}
++    clean_probabilities = {0: 1.0 - 0.9, 1: 0.9}
++    group = {"ac_e0_0": "ac_g0_0", "ac_e0_1": "ac_g0_1", "ac_e0_2": "ac_g0_0"}
++    clearance = {"ac_e0_0": "clearance_3", "ac_e0_1": "clearance_4", "ac_e0_2": "clearance_2"}
++    blocked = {"ac_e0_0": 0, "ac_e0_1": 1, "ac_e0_2": 0}
++    support = []
++    for item, item_probability in item_probabilities.items():
++        for clean, clean_probability in clean_probabilities.items():
++            clearance_ok = int(clearance[item] in {"clearance_2", "clearance_3", "clearance_4"})
++            eligible = int(
++                group[item] in {"ac_g0_0", "ac_g0_1"} and clearance_ok and not blocked[item]
++            )
++            accepted = int(eligible and clean)
++            support.append(
++                {
++                    "state": {
++                        "candidate_item": item,
++                        "strategy_clean": clean,
++                        "member_group": group[item],
++                        "clearance": clearance[item],
++                        "gate_open": 1,
++                        "blocked": blocked[item],
++                        "clearance_ok": clearance_ok,
++                        "eligible": eligible,
++                        "accepted": accepted,
++                    },
++                    "probability": item_probability * clean_probability,
++                }
++            )
++    joint = {canonical_json(row["state"]): float(row["probability"]) for row in support}
++    wires = _wire_map(compile_exp6145_bounded_workflow())
++    order = wire_order(compile_exp6145_bounded_workflow())
++    return {
++        "wire_order": order,
++        "support": sorted(support, key=lambda row: canonical_json(row["state"])),
++        "support_count": len(support),
++        "joint_probabilities": dict(sorted(joint.items())),
++        "normalization": sum(joint.values()),
++        "marginals": _marginals(wires, order, support),
++        "conditionals": _named_conditionals({"support": support}),
++    }
++
++
++def probability_of(distribution: Mapping[str, Any], filters: Mapping[str, Any]) -> float:
++    """Return the exact probability of states matching all filter values."""
++
++    return sum(
++        float(row["probability"])
++        for row in distribution["support"]
++        if all(row["state"].get(wire_id) == expected for wire_id, expected in filters.items())
++    )
++
++
++def conditional_probability(
++    distribution: Mapping[str, Any],
++    event: Mapping[str, Any],
++    given: Mapping[str, Any],
++) -> float:
++    """Return P(event | given) from an exact finite distribution."""
++
++    denominator = probability_of(distribution, given)
++    numerator = probability_of(distribution, {**given, **event})
++    return numerator / denominator if denominator else 0.0
++
++
++def _named_conditionals(distribution: Mapping[str, Any]) -> JsonDict:
++    return {
++        "p_accepted": probability_of(distribution, {"accepted": 1}),
++        "p_eligible": probability_of(distribution, {"eligible": 1}),
++        "p_accepted_given_eligible": conditional_probability(
++            distribution, {"accepted": 1}, {"eligible": 1}
++        ),
++        "p_item2_given_accepted": conditional_probability(
++            distribution, {"candidate_item": "ac_e0_2"}, {"accepted": 1}
++        ),
++    }
++
++
++def compare_exact_semantics(program: StochasticProgram) -> JsonDict:
++    """Compare Carnot execution to the independent exact finite reference."""
++
++    exact = execute_exact(program)
++    reference = independent_reference_distribution()
++    joint_keys = set(exact["joint_probabilities"]) | set(reference["joint_probabilities"])
++    marginal_deltas = [
++        abs(
++            float(exact["marginals"][wire_id].get(label, 0.0))
++            - float(reference["marginals"][wire_id].get(label, 0.0))
++        )
++        for wire_id in exact["marginals"]
++        for label in set(exact["marginals"][wire_id]) | set(reference["marginals"][wire_id])
++    ]
++    conditional_deltas = [
++        abs(float(exact["conditionals"][name]) - float(reference["conditionals"][name]))
++        for name in exact["conditionals"]
++    ]
++    joint_deltas = [
++        abs(
++            float(exact["joint_probabilities"].get(key, 0.0))
++            - float(reference["joint_probabilities"].get(key, 0.0))
++        )
++        for key in joint_keys
++    ]
++    return {
++        "principle": FIELD_PRINCIPLES[
++            "support_conditional_joint_normalization_and_marginal_deltas"
++        ],
++        "support_match": set(exact["joint_probabilities"]) == set(reference["joint_probabilities"]),
++        "support_delta_count": len(
++            set(exact["joint_probabilities"]) ^ set(reference["joint_probabilities"])
++        ),
++        "max_joint_delta": max(joint_deltas) if joint_deltas else 0.0,
++        "max_conditional_delta": max(conditional_deltas) if conditional_deltas else 0.0,
++        "max_marginal_delta": max(marginal_deltas) if marginal_deltas else 0.0,
++        "normalization_delta": abs(
++            float(exact["normalization"]) - float(reference["normalization"])
++        ),
++        "tolerance": EXACT_TOLERANCE,
++        "exact_conditionals": exact["conditionals"],
++        "reference_conditionals": reference["conditionals"],
++    }
++
++
++def sample_batch(
++    program: StochasticProgram,
++    *,
++    batch_size: int,
++    seed: int | None,
++) -> list[JsonDict]:
++    """Draw replayable samples from local kernels for seed/batch controls only."""
++
++    if seed is None:
++        raise TypedStochasticIRValidationError("ambiguous seed")
++    if batch_size <= 0:
++        raise TypedStochasticIRValidationError("batch_size must be positive")
++    validate_program(program)
++    wires = _wire_map(program)
++    kernels = {kernel.identifier: kernel for kernel in program.kernels}
++    order = validate_program(program)["topological_kernel_order"]
++    rng = random.Random(seed)
++    rows: list[JsonDict] = []
++    for _ in range(batch_size):
++        state: dict[str, int] = {}
++        for kernel_id in order:
++            outputs = _kernel_outputs(kernels[kernel_id], wires, state)
++            state[kernels[kernel_id].output] = _draw(outputs, rng)
++        rows.append(
++            _label_state(wires, wire_order(program), [state[name] for name in wire_order(program)])
++        )
++    return rows
++
++
++def _draw(outputs: Sequence[tuple[int, float]], rng: random.Random) -> int:
++    threshold = rng.random()
++    cumulative = 0.0
++    for value, probability in outputs:
++        cumulative += probability
++        if threshold <= cumulative:
++            return value
++    return outputs[-1][0]
++
++
++def batch_shape_contract(
++    program: StochasticProgram, batch: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    """Check the simple state shape contract for sampled batches."""
++
++    order = wire_order(program)
++    return {
++        "batch_size": len(batch),
++        "wire_count": len(order),
++        "ok": all(list(row) == order for row in batch),
++    }
++
++
++def run_negative_controls(program: StochasticProgram) -> JsonDict:
++    """Run positive and negative controls that catch graph and indexing bugs."""
++
++    payload = program_to_payload(program)
++    wire_order_bug = deepcopy_json(payload)
++    wire_order_bug["kernels"][7]["inputs"] = ["blocked", "gate_open", "clearance_ok"]
++    wire_order_delta = compare_exact_semantics(program_from_payload(wire_order_bug))[
++        "max_joint_delta"
++    ]
++
++    category_bug = deepcopy_json(payload)
++    category_bug["kernels"][3]["params"]["table"] = [2, 3, 0]
++    category_delta = compare_exact_semantics(program_from_payload(category_bug))["max_joint_delta"]
++
++    controls = {
++        "wire_order_bug_detected": wire_order_delta > EXACT_TOLERANCE,
++        "wire_order_bug_max_joint_delta": wire_order_delta,
++        "category_index_bug_detected": category_delta > EXACT_TOLERANCE,
++        "category_index_bug_max_joint_delta": category_delta,
++        "invalid_category_index_rejected": _rejects_with(
++            payload, _invalid_category_payload, "category index"
++        ),
++        "type_mismatch_rejected": _rejects_with(payload, _type_mismatch_payload, "type mismatch"),
++        "cycle_rejected": _rejects_with(payload, _cycle_payload, "cycle"),
++        "dangling_wire_rejected": _rejects_with(payload, _dangling_payload, "dangling wire"),
++        "invalid_mass_rejected": _rejects_with(payload, _invalid_mass_payload, "probability mass"),
++        "ambiguous_seed_rejected": _rejects_with(
++            payload, _ambiguous_seed_payload, "ambiguous seed"
++        ),
++        "principle": FIELD_PRINCIPLES[
++            "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls"
++        ],
++    }
++    controls["all_negative_controls_passed"] = all(
++        value is True
++        for key, value in controls.items()
++        if key.endswith("_rejected") or key.endswith("_detected")
++    )
++    return controls
++
++
++def deepcopy_json(value: Any) -> Any:
++    return json.loads(canonical_json(value))
++
++
++def _rejects_with(payload: Mapping[str, Any], mutator: Any, expected: str) -> bool:
++    mutated = mutator(deepcopy_json(payload))
++    try:
++        program_from_payload(mutated)
++    except TypedStochasticIRValidationError as exc:
++        return expected in str(exc)
++    return False
++
++
++def _invalid_category_payload(payload: JsonDict) -> JsonDict:
++    payload["kernels"][2]["params"]["table"][0] = 99
++    return payload
++
++
++def _type_mismatch_payload(payload: JsonDict) -> JsonDict:
++    payload["kernels"][2]["inputs"] = ["strategy_clean"]
++    return payload
++
++
++def _cycle_payload(payload: JsonDict) -> JsonDict:
++    payload["kernels"][2]["inputs"] = ["member_group"]
++    payload["kernels"][2]["params"]["table"] = [0, 1]
++    return payload
++
++
++def _dangling_payload(payload: JsonDict) -> JsonDict:
++    payload["kernels"][2]["inputs"] = ["missing_wire"]
++    return payload
++
++
++def _invalid_mass_payload(payload: JsonDict) -> JsonDict:
++    payload["kernels"][0]["params"]["probabilities"] = [0.4, 0.4, 0.1]
++    return payload
++
++
++def _ambiguous_seed_payload(payload: JsonDict) -> JsonDict:
++    del payload["kernels"][0]["params"]["seed_role"]
++    return payload
++
++
++def deterministic_batch_seed_serialization_controls(program: StochasticProgram) -> JsonDict:
++    """Collect deterministic-factor, impossible-state, seed, batch, and JSON controls."""
++
++    exact = execute_exact(program)
++    payload = program_to_payload(program)
++    restored = program_from_payload(json.loads(canonical_json(payload)))
++    batch = sample_batch(program, batch_size=16, seed=6152)
++    replay = sample_batch(program, batch_size=16, seed=6152)
++    return {
++        "deterministic_factor_outputs": {
++            "item0_eligible": probability_of(exact, {"candidate_item": "ac_e0_0", "eligible": 1}),
++            "item1_eligible": probability_of(exact, {"candidate_item": "ac_e0_1", "eligible": 1}),
++            "item2_eligible": probability_of(exact, {"candidate_item": "ac_e0_2", "eligible": 1}),
++        },
++        "impossible_state_probability": probability_of(
++            exact, {"candidate_item": "ac_e0_0", "blocked": 1}
++        ),
++        "batch_shape_contract": batch_shape_contract(program, batch),
++        "seed_replay_equal": batch == replay,
++        "serialization_round_trip_checksum_equal": program_checksum(restored)
++        == program_checksum(program),
++        "serialization_round_trip_max_joint_delta": compare_exact_semantics(restored)[
++            "max_joint_delta"
++        ],
++        "principle": FIELD_PRINCIPLES[
++            "deterministic_impossible_batch_seed_and_serialization_controls"
++        ],
++    }
++
++
++def torx_adapter_receipt(program: StochasticProgram) -> JsonDict:
++    """Exercise the real pinned Torx PSC API when importable."""
++
++    base = {
++        "package_name": "extro-torx",
++        "import_namespace": "torx",
++        "pinned_repository": TORX_PINNED_REPOSITORY,
++        "pinned_repository_commit": TORX_PINNED_REPOSITORY_COMMIT,
++        "pinned_package_version": TORX_PINNED_PACKAGE_VERSION,
++        "pinned_wheel_sha256": TORX_PINNED_WHEEL_SHA256,
++        "pinned_sdist_sha256": TORX_PINNED_SDIST_SHA256,
++        "program_checksum": program_checksum(program),
++        "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
++        "principle": FIELD_PRINCIPLES["torx_package_version_commit_import_and_api_receipts"],
++    }
++    try:
++        import jax
++        import jax.numpy as jnp
++        from torx import psc
++    except Exception as exc:  # pragma: no cover - depends on optional Torx install.
++        return {
++            **base,
++            "importable": False,
++            "installed_version": None,
++            "api_exercised": False,
++            "compatibility_ready": False,
++            "blocked_reason": f"{type(exc).__name__}: {exc}",
++            "exercised_api": [],
++        }
++
++    version = importlib.metadata.version("extro-torx")
++    circuit = psc.DiscretePCircuit([psc.PNOT(0), psc.PditShift(1, dims=3)])
++    thetas = [jnp.array([math.log(0.2 / 0.8)]), jnp.array([0.0])]
++    simulator = psc.StateVectorSimulator()
++    compiled = simulator.build_circuit(circuit, thetas)
++    state = jnp.zeros((6,), dtype=jnp.float32).at[0].set(1.0)
++    density = simulator.density(compiled, state)
++    expected = [0.4, 0.4, 0.0, 0.1, 0.1, 0.0]
++    observed = [float(value) for value in density]
++    max_delta = max(abs(a - b) for a, b in zip(observed, expected, strict=True))
++    sum_delta = abs(float(jnp.sum(density)) - 1.0)
++    return {
++        **base,
++        "importable": True,
++        "installed_version": version,
++        "torx_version_attr": getattr(__import__("torx"), "__version__", None),
++        "api_exercised": True,
++        "compatibility_ready": version == TORX_PINNED_PACKAGE_VERSION and max_delta <= 1.0e-7,
++        "blocked_reason": None,
++        "exercised_api": ["DiscretePCircuit", "StateVectorSimulator", "PNOT", "PditShift"],
++        "psc_dims": list(circuit.dims),
++        "psc_density": observed,
++        "psc_expected_density": expected,
++        "psc_density_max_delta": max_delta,
++        "psc_density_sum_delta": sum_delta,
++        "jax_version": jax.__version__,
++        "jax_default_backend": jax.default_backend(),
++        "jax_devices": [str(device) for device in jax.devices()],
++    }
++
++
++def structured_gate_receipt(root: Path = REPO_ROOT) -> JsonDict:
++    """Replay the Exp6145 gate that makes this bounded compiler input valid."""
++
++    artifact_path = root / exp6145.RESULT_RELATIVE_PATH
++    row_path = root / exp6145.ROW_FILE_RELATIVE_PATH
++    split_path = root / exp6145.SPLIT_FILE_RELATIVE_PATH
++    outcome_path = root / exp6145.OUTCOME_FILE_RELATIVE_PATH
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    replay = exp6145.replay_sidecars(row_path, split_path, outcome_path)
++    return {
++        "exp6145_artifact": exp6145.RESULT_RELATIVE_PATH.as_posix(),
++        "exp6145_ready_score": artifact.get("constraint_shift_stream_ready_score"),
++        "exp6145_status": artifact.get("status"),
++        "exp6145_honest_verdict": artifact.get("honest_verdict"),
++        "sidecar_replay_ok": replay["ok"],
++        "row_sha256": replay["row_sha256"],
++        "split_sha256": replay["split_sha256"],
++        "outcome_sha256": replay["outcome_sha256"],
++        "gate_passed": artifact.get("constraint_shift_stream_ready_score") == 1.0
++        and replay["ok"] is True,
++        "principle": FIELD_PRINCIPLES["structured_gate_receipt"],
++    }
++
++
++def source_workflow_validator_sampler_and_exclusion_hashes(root: Path = REPO_ROOT) -> JsonDict:
++    """Hash workflow, validators, sampler APIs, exclusions, Torx metadata, and outputs."""
++
++    paths = _path_hashes(HASHED_SOURCE_PATHS, root)
++    return {
++        "paths": paths,
++        "source_workflow": exp6145.RESULT_RELATIVE_PATH.as_posix(),
++        "exact_validators": [
++            "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++            "python/carnot/experiment_6145_constraint_shift_stream.py",
++        ],
++        "sampler_api_paths": [
++            "python/carnot/samplers/backend.py",
++            "python/carnot/samplers",
++            "crates/carnot-ising",
++            "crates/carnot-gibbs",
++        ],
++        "torx_reference": {
++            "package": "extro-torx",
++            "version": TORX_PINNED_PACKAGE_VERSION,
++            "repository": TORX_PINNED_REPOSITORY,
++            "commit": TORX_PINNED_REPOSITORY_COMMIT,
++            "wheel_sha256": TORX_PINNED_WHEEL_SHA256,
++            "sdist_sha256": TORX_PINNED_SDIST_SHA256,
++        },
++        "output_paths": {"result": RESULT_RELATIVE_PATH.as_posix()},
++        "protected_files": [path.as_posix() for path in PROTECTED_FILES],
++        "principle": FIELD_PRINCIPLES["source_workflow_validator_sampler_and_exclusion_hashes"],
++    }
++
++
++def preconditions_checked(
++    *,
++    output_path: Path,
++    source_hashes: Mapping[str, Any],
++    torx_receipt: Mapping[str, Any],
++    gate: Mapping[str, Any],
++) -> JsonDict:
++    """Build the precondition receipt used by the terminal artifact."""
++
++    checks = {
++        "jax_platforms_cpu": os.environ.get("JAX_PLATFORMS") == "cpu",
++        "exp6145_structured_gate_passed": gate.get("gate_passed") is True,
++        "exp6145_workflow_present": (REPO_ROOT / exp6145.RESULT_RELATIVE_PATH).exists(),
++        "validator_callable": callable(exp5896.certify_ir),
++        "sampler_spec_has_req": "REQ-SAMPLE-6152"
++        in (REPO_ROOT / SAMPLER_SPEC_RELATIVE_PATH).read_text(encoding="utf-8"),
++        "torx_importable": torx_receipt.get("importable") is True,
++        "output_parent_writable": os.access(output_path.parent, os.W_OK),
++        "protected_files_present": all((REPO_ROOT / path).exists() for path in PROTECTED_FILES),
++    }
++    return {
++        "run_date": RUN_DATE,
++        "python": platform.python_version(),
++        "platform": platform.platform(),
++        "jax_platforms_env": os.environ.get("JAX_PLATFORMS"),
++        "checks": checks,
++        "preconditions_ready": all(checks.values()),
++        "source_hash_receipt_sha256": sha256_json(source_hashes),
++        "torx_receipt_sha256": sha256_json(torx_receipt),
++        "output_path": output_path.as_posix(),
++        "principle": FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def ir_schema_version_types_kernels_and_graph_contract(program: StochasticProgram) -> JsonDict:
++    """Describe the local IR schema and graph contract."""
++
++    validation = validate_program(program)
++    return {
++        "schema_version": IR_SCHEMA_VERSION,
++        "wire_types": {
++            wire.identifier: {
++                "kind": wire.kind,
++                "categories": list(wire.categories) if wire.kind == "categorical" else [0, 1],
++            }
++            for wire in program.wires
++        },
++        "kernel_kinds": sorted({kernel.kind for kernel in program.kernels}),
++        "kernels": [
++            {
++                "id": kernel.identifier,
++                "kind": kernel.kind,
++                "inputs": list(kernel.inputs),
++                "output": kernel.output,
++            }
++            for kernel in program.kernels
++        ],
++        "graph_validation": validation,
++        "normalization_tolerance": EXACT_TOLERANCE,
++        "dependency_policy": "torx_optional_carnot_exact_executor_required",
++        "principle": FIELD_PRINCIPLES["ir_schema_version_types_kernels_and_graph_contract"],
++    }
++
++
++def compiler_executor_adapter_and_test_paths() -> JsonDict:
++    """Record implementation paths for the compiler, executor, adapter, and tests."""
++
++    return {
++        "module": MODULE_RELATIVE_PATH.as_posix(),
++        "tests": TEST_RELATIVE_PATH.as_posix(),
++        "spec": SAMPLER_SPEC_RELATIVE_PATH.as_posix(),
++        "compiler": "compile_exp6145_bounded_workflow",
++        "exact_executor": "execute_exact",
++        "independent_reference": "independent_reference_distribution",
++        "torx_adapter": "torx_adapter_receipt",
++        "artifact": RESULT_RELATIVE_PATH.as_posix(),
++        "principle": FIELD_PRINCIPLES["compiler_executor_adapter_and_test_paths"],
++    }
++
++
++def exact_enumeration_case_counts(program: StochasticProgram) -> JsonDict:
++    """Summarize bounded exhaustive enumeration counts."""
++
++    exact = execute_exact(program)
++    return {
++        "wire_count": len(program.wires),
++        "kernel_count": len(program.kernels),
++        "state_space_size": exact["state_space_size"],
++        "support_count": exact["support_count"],
++        "impossible_state_count": exact["impossible_state_count"],
++        "conditional_count": len(exact["conditionals"]),
++        "marginal_wire_count": len(exact["marginals"]),
++        "principle": FIELD_PRINCIPLES["exact_enumeration_case_counts"],
++    }
++
++
++def deterministic_rebuild_receipt() -> JsonDict:
++    """Build the program twice and hash exact semantics for deterministic replay."""
++
++    first = compile_exp6145_bounded_workflow()
++    second = compile_exp6145_bounded_workflow()
++    first_checksum = sha256_json(
++        {"program": program_to_payload(first), "exact": execute_exact(first)}
++    )
++    second_checksum = sha256_json(
++        {"program": program_to_payload(second), "exact": execute_exact(second)}
++    )
++    return {
++        "checksum": first_checksum,
++        "second_checksum": second_checksum,
++        "matches": first_checksum == second_checksum,
++    }
++
++
++def write_typed_stochastic_ir_artifact(
++    *,
++    output_path: Path | None = None,
++    duration_s: float | None = None,
++    test_exit_codes: Mapping[str, int] | None = None,
++) -> JsonDict:
++    """Write the terminal Exp6152 artifact."""
++
++    started = time.monotonic()
++    output = output_path or REPO_ROOT / RESULT_RELATIVE_PATH
++    output.parent.mkdir(parents=True, exist_ok=True)
++    protected_before = _path_hashes(PROTECTED_FILES)
++    program = compile_exp6145_bounded_workflow()
++    torx_receipt = torx_adapter_receipt(program)
++    gate = structured_gate_receipt()
++    source_hashes = source_workflow_validator_sampler_and_exclusion_hashes()
++    preconditions = preconditions_checked(
++        output_path=output,
++        source_hashes=source_hashes,
++        torx_receipt=torx_receipt,
++        gate=gate,
++    )
++    protected = _unchanged_receipt(PROTECTED_FILES, protected_before)
++    elapsed = float(duration_s if duration_s is not None else time.monotonic() - started)
++    artifact = build_artifact(
++        program=program,
++        preconditions=preconditions,
++        gate=gate,
++        source_hashes=source_hashes,
++        torx_receipt=torx_receipt,
++        protected=protected,
++        duration_s=elapsed,
++        test_exit_codes=dict(test_exit_codes or {}),
++    )
++    validate_artifact(artifact)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def build_artifact(
++    *,
++    program: StochasticProgram,
++    preconditions: Mapping[str, Any],
++    gate: Mapping[str, Any],
++    source_hashes: Mapping[str, Any],
++    torx_receipt: Mapping[str, Any],
++    protected: Mapping[str, Any],
++    duration_s: float,
++    test_exit_codes: Mapping[str, int],
++) -> JsonDict:
++    """Assemble the terminal artifact before writing it."""
++
++    comparison = compare_exact_semantics(program)
++    controls = deterministic_batch_seed_serialization_controls(program)
++    negative_controls = run_negative_controls(program)
++    rebuild = deterministic_rebuild_receipt()
++    torx_scope = {
++        "package": torx_receipt["package_name"],
++        "installed_version": torx_receipt.get("installed_version"),
++        "pinned_repository_commit": torx_receipt["pinned_repository_commit"],
++        "adapter_boundary": torx_receipt["adapter_boundary"],
++        "exercised_api": list(torx_receipt.get("exercised_api") or []),
++        "compatibility_ready": torx_receipt.get("compatibility_ready") is True,
++        "principle": FIELD_PRINCIPLES["torx_compatibility_scope"],
++    }
++    artifact: JsonDict = {
++        "schema": ARTIFACT_SCHEMA_VERSION,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "status": "complete_null",
++        "preconditions_checked": dict(preconditions),
++        "structured_gate_receipt": dict(gate),
++        "source_workflow_validator_sampler_and_exclusion_hashes": dict(source_hashes),
++        "torx_package_version_commit_import_and_api_receipts": dict(torx_receipt),
++        "ir_schema_version_types_kernels_and_graph_contract": ir_schema_version_types_kernels_and_graph_contract(
++            program
++        ),
++        "compiler_executor_adapter_and_test_paths": compiler_executor_adapter_and_test_paths(),
++        "exact_enumeration_case_counts": exact_enumeration_case_counts(program),
++        "support_conditional_joint_normalization_and_marginal_deltas": comparison,
++        "deterministic_impossible_batch_seed_and_serialization_controls": controls,
++        "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": negative_controls,
++        "torx_compatibility_scope": torx_scope,
++        "deterministic_rebuild_checksum": rebuild["checksum"],
++        "typed_stochastic_ir_ready_score": 0.0,
++        "protected_files_unchanged": dict(protected),
++        "duration_s": round(duration_s, 6),
++        "inference_substrate": JAX_CPU_SUBSTRATE
++        if torx_scope["compatibility_ready"]
++        else CARNOT_ONLY_SUBSTRATE,
++        "verifier_is_oracle": VERIFIER_IS_ORACLE,
++        "missing_verifier_gaps": []
++        if torx_scope["compatibility_ready"]
++        else ["torx_compatibility"],
++        "field_provenance": field_provenance(),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": dict(test_exit_codes),
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["typed_stochastic_ir_ready_score"] = ready_score(artifact)
++    artifact["status"] = status(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _unchanged_receipt(paths: Sequence[Path], before: Mapping[str, Any]) -> JsonDict:
++    after = _path_hashes(paths)
++    return {
++        "before": dict(before),
++        "after": after,
++        "unchanged": dict(before) == after,
++        "principle": FIELD_PRINCIPLES["protected_files_unchanged"],
++    }
++
++
++def ready_score(artifact: Mapping[str, Any]) -> float:
++    """Return the strict readiness scalar."""
++
++    deltas = dict(artifact.get("support_conditional_joint_normalization_and_marginal_deltas") or {})
++    controls = dict(
++        artifact.get("deterministic_impossible_batch_seed_and_serialization_controls") or {}
++    )
++    negatives = dict(
++        artifact.get("wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls")
++        or {}
++    )
++    test_exit_codes = dict(artifact.get("test_exit_codes") or {})
++    missing_commands = [
++        command for command in DEFAULT_TEST_COMMANDS if command not in test_exit_codes
++    ]
++    nonzero_commands = [
++        command for command in DEFAULT_TEST_COMMANDS if test_exit_codes.get(command) != 0
++    ]
++    ready = (
++        dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True
++        and dict(artifact.get("structured_gate_receipt") or {}).get("gate_passed") is True
++        and deltas.get("support_match") is True
++        and float(deltas.get("max_joint_delta", 1.0)) <= EXACT_TOLERANCE
++        and float(deltas.get("max_conditional_delta", 1.0)) <= EXACT_TOLERANCE
++        and float(deltas.get("max_marginal_delta", 1.0)) <= EXACT_TOLERANCE
++        and float(deltas.get("normalization_delta", 1.0)) <= EXACT_TOLERANCE
++        and controls.get("seed_replay_equal") is True
++        and controls.get("serialization_round_trip_checksum_equal") is True
++        and controls.get("impossible_state_probability") == 0.0
++        and negatives.get("all_negative_controls_passed") is True
++        and dict(artifact.get("torx_compatibility_scope") or {}).get("compatibility_ready") is True
++        and artifact.get("deterministic_rebuild_checksum")
++        == deterministic_rebuild_receipt()["checksum"]
++        and dict(artifact.get("protected_files_unchanged") or {}).get("unchanged") is True
++        and artifact.get("inference_substrate") == JAX_CPU_SUBSTRATE
++        and artifact.get("verifier_is_oracle") is True
++        and not missing_commands
++        and not nonzero_commands
++    )
++    return 1.0 if ready else 0.0
++
++
++def status(artifact: Mapping[str, Any]) -> str:
++    """Return terminal artifact status from the evidence."""
++
++    if dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is not True:
++        return "blocked"
++    if ready_score(artifact) == 1.0:
++        return "complete_ready"
++    if dict(artifact.get("torx_compatibility_scope") or {}).get("compatibility_ready") is not True:
++        return "complete_carnot_only"
++    return "complete_null"
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return the required terminal-prefixed verdict."""
++
++    current = status(artifact)
++    if current == "complete_ready":
++        return "complete_ready: exact_carnot_semantics_and_pinned_torx_api_smoke"
++    if current == "complete_carnot_only":
++        return "complete_carnot_only: exact_semantics_passed_torx_compatibility_blocked"
++    if current == "blocked":
++        return "blocked: " + ",".join(blocked_reasons(artifact)[:8])
++    return "complete_null: " + ",".join(blocked_reasons(artifact)[:8])
++
++
++def blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
++    """Return compact blocker names for the honest verdict."""
++
++    reasons: list[str] = []
++    if dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is not True:
++        reasons.append("preconditions")
++    if dict(artifact.get("structured_gate_receipt") or {}).get("gate_passed") is not True:
++        reasons.append("structured_gate")
++    if dict(artifact.get("torx_compatibility_scope") or {}).get("compatibility_ready") is not True:
++        reasons.append("torx_compatibility")
++    if dict(artifact.get("protected_files_unchanged") or {}).get("unchanged") is not True:
++        reasons.append("protected_files")
++    missing = [
++        command
++        for command in DEFAULT_TEST_COMMANDS
++        if command not in dict(artifact.get("test_exit_codes") or {})
++    ]
++    if missing:
++        reasons.append("missing_test_commands")
++    return reasons or ["ready_score"]
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact while normalizing volatile fields."""
++
++    stable = json.loads(canonical_json(artifact))
++    stable["duration_s"] = 0.0
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def field_provenance() -> JsonDict:
++    """Map every required field to the evidence classes that produced it."""
++
++    sources = [
++        "task_prompt",
++        SAMPLER_SPEC_RELATIVE_PATH.as_posix(),
++        MODULE_RELATIVE_PATH.as_posix(),
++        TEST_RELATIVE_PATH.as_posix(),
++        exp6145.RESULT_RELATIVE_PATH.as_posix(),
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        TORX_PINNED_REPOSITORY + "@" + TORX_PINNED_REPOSITORY_COMMIT,
++    ]
++    return {
++        field: {"principle": FIELD_PRINCIPLES[field], "sources": list(sources)}
++        for field in FIELD_PRINCIPLES
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate the terminal artifact schema and readiness consistency."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact.get("verifier_is_oracle") is not True:
++        raise ValueError("verifier_is_oracle")
++    if artifact.get("typed_stochastic_ir_ready_score") != ready_score(artifact):
++        raise ValueError("ready_score")
++    if artifact.get("status") != status(artifact):
++        raise ValueError("status")
++    if artifact.get("honest_verdict") != honest_verdict(artifact):
++        raise ValueError("honest_verdict")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++    provenance = artifact.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        raise ValueError("field_provenance")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if dict(provenance.get(field) or {}).get("principle") != principle:
++            raise ValueError(f"field_provenance:{field}")
++    return True
+diff --git a/results/experiment_6152_typed_stochastic_constraint_ir.json b/results/experiment_6152_typed_stochastic_constraint_ir.json
+new file mode 100644
+index 0000000000..7c629a0592
+--- /dev/null
++++ b/results/experiment_6152_typed_stochastic_constraint_ir.json
+@@ -0,0 +1,938 @@
++{
++  "compiler_executor_adapter_and_test_paths": {
++    "artifact": "results/experiment_6152_typed_stochastic_constraint_ir.json",
++    "compiler": "compile_exp6145_bounded_workflow",
++    "exact_executor": "execute_exact",
++    "independent_reference": "independent_reference_distribution",
++    "module": "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++    "principle": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
++    "spec": "openspec/capabilities/samplers/spec.md",
++    "tests": "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++    "torx_adapter": "torx_adapter_receipt"
++  },
++  "deterministic_impossible_batch_seed_and_serialization_controls": {
++    "batch_shape_contract": {
++      "batch_size": 16,
++      "ok": true,
++      "wire_count": 9
++    },
++    "deterministic_factor_outputs": {
++      "item0_eligible": 0.4,
++      "item1_eligible": 0,
++      "item2_eligible": 0.1
++    },
++    "impossible_state_probability": 0,
++    "principle": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
++    "seed_replay_equal": true,
++    "serialization_round_trip_checksum_equal": true,
++    "serialization_round_trip_max_joint_delta": 0.0
++  },
++  "deterministic_rebuild_checksum": "sha256:825fe999289a1206302f3c96fdb8cf447b956e23926bd7fc6592577a9ca7df67",
++  "duration_s": 0.0,
++  "exact_enumeration_case_counts": {
++    "conditional_count": 4,
++    "impossible_state_count": 1530,
++    "kernel_count": 9,
++    "marginal_wire_count": 9,
++    "principle": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
++    "state_space_size": 1536,
++    "support_count": 6,
++    "wire_count": 9
++  },
++  "experiment_id": "experiment_6152_typed_stochastic_constraint_ir",
++  "field_principles": {
++    "compiler_executor_adapter_and_test_paths": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
++    "deterministic_impossible_batch_seed_and_serialization_controls": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
++    "deterministic_rebuild_checksum": "A second construction must reproduce the same program and exact-semantics commitment.",
++    "duration_s": "Measured deterministic construction time is reported without padding.",
++    "exact_enumeration_case_counts": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
++    "field_provenance": "Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.",
++    "honest_verdict": "Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.",
++    "inference_substrate": "Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.",
++    "ir_schema_version_types_kernels_and_graph_contract": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
++    "missing_verifier_gaps": "Any absent Torx or non-enumerated semantic evidence is explicit.",
++    "preconditions_checked": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
++    "protected_files_unchanged": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
++    "reproducibility_checksum": "The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.",
++    "source_workflow_validator_sampler_and_exclusion_hashes": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
++    "status": "A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.",
++    "structured_gate_receipt": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
++    "support_conditional_joint_normalization_and_marginal_deltas": "Exact enumeration, not sampling, is authoritative on bounded cases.",
++    "test_commands": "Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.",
++    "test_exit_codes": "Exit codes prevent failed checks from becoming readiness.",
++    "torx_compatibility_scope": "Names the real exercised version/API; source resemblance is not compatibility.",
++    "torx_package_version_commit_import_and_api_receipts": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
++    "typed_stochastic_ir_ready_score": "Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.",
++    "verifier_is_oracle": "The independent exact finite enumerator is the probability oracle for bounded cases.",
++    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures."
++  },
++  "field_provenance": {
++    "compiler_executor_adapter_and_test_paths": {
++      "principle": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "deterministic_impossible_batch_seed_and_serialization_controls": {
++      "principle": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "deterministic_rebuild_checksum": {
++      "principle": "A second construction must reproduce the same program and exact-semantics commitment.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "duration_s": {
++      "principle": "Measured deterministic construction time is reported without padding.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "exact_enumeration_case_counts": {
++      "principle": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "ir_schema_version_types_kernels_and_graph_contract": {
++      "principle": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "missing_verifier_gaps": {
++      "principle": "Any absent Torx or non-enumerated semantic evidence is explicit.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "source_workflow_validator_sampler_and_exclusion_hashes": {
++      "principle": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "status": {
++      "principle": "A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "structured_gate_receipt": {
++      "principle": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "support_conditional_joint_normalization_and_marginal_deltas": {
++      "principle": "Exact enumeration, not sampling, is authoritative on bounded cases.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "test_commands": {
++      "principle": "Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes prevent failed checks from becoming readiness.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "torx_compatibility_scope": {
++      "principle": "Names the real exercised version/API; source resemblance is not compatibility.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "torx_package_version_commit_import_and_api_receipts": {
++      "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "typed_stochastic_ir_ready_score": {
++      "principle": "Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "The independent exact finite enumerator is the probability oracle for bounded cases.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    },
++    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": {
++      "principle": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/samplers/spec.md",
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++        "results/experiment_6145_constraint_shift_stream.json",
++        "python/carnot/experiment_6145_constraint_shift_stream.py",
++        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++        "pypi:extro-torx==0.0.1",
++        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
++      ]
++    }
++  },
++  "honest_verdict": "complete_ready: exact_carnot_semantics_and_pinned_torx_api_smoke",
++  "inference_substrate": "jax_cpu_exact_stochastic_program",
++  "ir_schema_version_types_kernels_and_graph_contract": {
++    "dependency_policy": "torx_optional_carnot_exact_executor_required",
++    "graph_validation": {
++      "kernel_count": 9,
++      "ok": true,
++      "schema_version": "carnot.typed_stochastic_constraint_ir.v1",
++      "state_shape_contract": {
++        "batch_axis": "optional_leading_axis",
++        "rank": 1,
++        "wire_count": 9
++      },
++      "topological_kernel_order": [
++        "sample_candidate_item",
++        "sample_strategy_clean",
++        "member_group_lookup",
++        "clearance_lookup",
++        "blocked_lookup",
++        "gate_open_lookup",
++        "clearance_ok_lookup",
++        "eligible_truth_table",
++        "accepted_truth_table"
++      ],
++      "wire_count": 9,
++      "wire_order": [
++        "candidate_item",
++        "strategy_clean",
++        "member_group",
++        "clearance",
++        "gate_open",
++        "blocked",
++        "clearance_ok",
++        "eligible",
++        "accepted"
++      ],
++      "wire_type_counts": {
++        "binary": 6,
++        "categorical": 3
++      }
++    },
++    "kernel_kinds": [
++      "bernoulli_prior",
++      "categorical_prior",
++      "deterministic_lookup",
++      "deterministic_truth_table"
++    ],
++    "kernels": [
++      {
++        "id": "sample_candidate_item",
++        "inputs": [],
++        "kind": "categorical_prior",
++        "output": "candidate_item"
++      },
++      {
++        "id": "sample_strategy_clean",
++        "inputs": [],
++        "kind": "bernoulli_prior",
++        "output": "strategy_clean"
++      },
++      {
++        "id": "member_group_lookup",
++        "inputs": [
++          "candidate_item"
++        ],
++        "kind": "deterministic_lookup",
++        "output": "member_group"
++      },
++      {
++        "id": "clearance_lookup",
++        "inputs": [
++          "candidate_item"
++        ],
++        "kind": "deterministic_lookup",
++        "output": "clearance"
++      },
++      {
++        "id": "gate_open_lookup",
++        "inputs": [
++          "member_group"
++        ],
++        "kind": "deterministic_lookup",
++        "output": "gate_open"
++      },
++      {
++        "id": "blocked_lookup",
++        "inputs": [
++          "candidate_item"
++        ],
++        "kind": "deterministic_lookup",
++        "output": "blocked"
++      },
++      {
++        "id": "clearance_ok_lookup",
++        "inputs": [
++          "clearance"
++        ],
++        "kind": "deterministic_lookup",
++        "output": "clearance_ok"
++      },
++      {
++        "id": "eligible_truth_table",
++        "inputs": [
++          "gate_open",
++          "blocked",
++          "clearance_ok"
++        ],
++        "kind": "deterministic_truth_table",
++        "output": "eligible"
++      },
++      {
++        "id": "accepted_truth_table",
++        "inputs": [
++          "eligible",
++          "strategy_clean"
++        ],
++        "kind": "deterministic_truth_table",
++        "output": "accepted"
++      }
++    ],
++    "normalization_tolerance": 1e-12,
++    "principle": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
++    "schema_version": "carnot.typed_stochastic_constraint_ir.v1",
++    "wire_types": {
++      "accepted": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      },
++      "blocked": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      },
++      "candidate_item": {
++        "categories": [
++          "ac_e0_0",
++          "ac_e0_1",
++          "ac_e0_2"
++        ],
++        "kind": "categorical"
++      },
++      "clearance": {
++        "categories": [
++          "clearance_1",
++          "clearance_2",
++          "clearance_3",
++          "clearance_4"
++        ],
++        "kind": "categorical"
++      },
++      "clearance_ok": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      },
++      "eligible": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      },
++      "gate_open": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      },
++      "member_group": {
++        "categories": [
++          "ac_g0_0",
++          "ac_g0_1"
++        ],
++        "kind": "categorical"
++      },
++      "strategy_clean": {
++        "categories": [
++          0,
++          1
++        ],
++        "kind": "binary"
++      }
++    }
++  },
++  "missing_verifier_gaps": [],
++  "preconditions_checked": {
++    "checks": {
++      "exp6145_structured_gate_passed": true,
++      "exp6145_workflow_present": true,
++      "jax_platforms_cpu": true,
++      "output_parent_writable": true,
++      "protected_files_present": true,
++      "sampler_spec_has_req": true,
++      "torx_importable": true,
++      "validator_callable": true
++    },
++    "jax_platforms_env": "cpu",
++    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6152_typed_stochastic_constraint_ir.json",
++    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++    "preconditions_ready": true,
++    "principle": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
++    "python": "3.12.13",
++    "run_date": "20260805",
++    "source_hash_receipt_sha256": "sha256:76e13995c203bbfd6cabe1fa4172859183123760c23b49008663537065e5bcca",
++    "torx_receipt_sha256": "sha256:6fe47448cbad9a4e03601f41851504f78b1486bd29a6e03c8354096c7e39deeb"
++  },
++  "protected_files_unchanged": {
++    "after": {
++      "_bmad/traceability.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
++      },
++      "ops/changelog.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:c961b93c43a91e152c1d34466d5916cc51e6f2a02c548087e92ad33c21cbcb6f"
++      },
++      "ops/status.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
++      },
++      "scripts/research_conductor.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++      }
++    },
++    "before": {
++      "_bmad/traceability.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
++      },
++      "ops/changelog.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:c961b93c43a91e152c1d34466d5916cc51e6f2a02c548087e92ad33c21cbcb6f"
++      },
++      "ops/status.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
++      },
++      "scripts/research_conductor.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++      }
++    },
++    "principle": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
++    "unchanged": true
++  },
++  "reproducibility_checksum": "sha256:9cddf7cc23db022f8276e8fbd5c887fb9404bed563cd7396447896785b78a87b",
++  "run_date": "20260805",
++  "schema": "carnot.experiment_6152.typed_stochastic_constraint_ir.v1",
++  "source_workflow_validator_sampler_and_exclusion_hashes": {
++    "exact_validators": [
++      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
++      "python/carnot/experiment_6145_constraint_shift_stream.py"
++    ],
++    "output_paths": {
++      "result": "results/experiment_6152_typed_stochastic_constraint_ir.json"
++    },
++    "paths": {
++      "AGENTS.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++      },
++      "CLAUDE.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
++      },
++      "CODEX.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++      },
++      "crates/carnot-gibbs": {
++        "exists": true,
++        "file_count": 2,
++        "kind": "directory",
++        "sha256": "sha256:3e4b6d2ead15e20d4e522c5fc6fc6c4e7cfd9c5bacc877e4b5095480f5aaf78b"
++      },
++      "crates/carnot-ising": {
++        "exists": true,
++        "file_count": 2,
++        "kind": "directory",
++        "sha256": "sha256:355f9e4483cbca36525816d6cb50a9e428fb975eb1ce1cdcd3cebaf2d471d899"
++      },
++      "openspec/capabilities/samplers/spec.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:50a7d30dbfd4d4cf4cdaf44d31c991299ab0382308f800ecd45a2df4024fb0ab"
++      },
++      "ops/exclusion_manifest.yaml": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
++      },
++      "python/carnot/constraints": {
++        "exists": false,
++        "kind": "file",
++        "sha256": null
++      },
++      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:e5f95bf908793140602626c5178283986d206d4c57df9dd13edbf25bcc877495"
++      },
++      "python/carnot/experiment_6145_constraint_shift_stream.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:03e3115226209f675cf51a99d81612edda0179807e32ac8603b1e463611f1935"
++      },
++      "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8"
++      },
++      "python/carnot/samplers": {
++        "exists": true,
++        "file_count": 160,
++        "kind": "directory",
++        "sha256": "sha256:217701bff8504050847d7d00d5de95f635252341e0475fcc42c292f65b17b551"
++      },
++      "python/carnot/samplers/backend.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:0223c46e71979cfc8f3d720dbfe03151e5f6258b7fee7291d2ce86f735b4e3e8"
++      },
++      "python/carnot/samplers/thrml_init.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:a9f042c0a5929f8aa6da6b31425088f67ea00490ca44b7b5e316f7085d9d2f79"
++      },
++      "research-hardware-wishlist.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
++      },
++      "research-references.md": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:88f3113d06d22db603bac5e6e176cba07a3bf391beb6f23fe7a06a1fb70f3a6f"
++      },
++      "results/experiment_6145_constraint_shift_stream.json": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64"
++      },
++      "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": {
++        "exists": true,
++        "kind": "file",
++        "sha256": "sha256:7ca26d403f30837792cf92a79fcbc153a3f355e4da2b131413796865beaaeb56"
++      }
++    },
++    "principle": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
++    "protected_files": [
++      "scripts/research_conductor.py",
++      "ops/changelog.md",
++      "ops/status.md",
++      "_bmad/traceability.md"
++    ],
++    "sampler_api_paths": [
++      "python/carnot/samplers/backend.py",
++      "python/carnot/samplers",
++      "crates/carnot-ising",
++      "crates/carnot-gibbs"
++    ],
++    "source_workflow": "results/experiment_6145_constraint_shift_stream.json",
++    "torx_reference": {
++      "commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
++      "package": "extro-torx",
++      "repository": "https://github.com/extropic-ai/torx",
++      "sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
++      "version": "0.0.1",
++      "wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c"
++    }
++  },
++  "status": "complete_ready",
++  "structured_gate_receipt": {
++    "exp6145_artifact": "results/experiment_6145_constraint_shift_stream.json",
++    "exp6145_honest_verdict": "complete_ready: exact_constraint_shift_stream_oracle_separated",
++    "exp6145_ready_score": 1.0,
++    "exp6145_status": "complete_ready",
++    "gate_passed": true,
++    "outcome_sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
++    "principle": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
++    "row_sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
++    "sidecar_replay_ok": true,
++    "split_sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
++  },
++  "support_conditional_joint_normalization_and_marginal_deltas": {
++    "exact_conditionals": {
++      "p_accepted": 0.45000000000000007,
++      "p_accepted_given_eligible": 0.9000000000000001,
++      "p_eligible": 0.5,
++      "p_item2_given_accepted": 0.19999999999999998
++    },
++    "max_conditional_delta": 0.0,
++    "max_joint_delta": 0.0,
++    "max_marginal_delta": 0.0,
++    "normalization_delta": 0.0,
++    "principle": "Exact enumeration, not sampling, is authoritative on bounded cases.",
++    "reference_conditionals": {
++      "p_accepted": 0.45000000000000007,
++      "p_accepted_given_eligible": 0.9000000000000001,
++      "p_eligible": 0.5,
++      "p_item2_given_accepted": 0.19999999999999998
++    },
++    "support_delta_count": 0,
++    "support_match": true,
++    "tolerance": 1e-12
++  },
++  "test_commands": [
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0",
++    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py -m pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++    ".venv/bin/ruff check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6152_typed_stochastic_constraint_ir.json",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6152_typed_stochastic_constraint_ir.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
++    ".venv/bin/ruff format --check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
++    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py -m pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py --fail-under=100": 0,
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q": 0,
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0": 0,
++    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0": 0,
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
++  },
++  "torx_compatibility_scope": {
++    "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
++    "compatibility_ready": true,
++    "exercised_api": [
++      "DiscretePCircuit",
++      "StateVectorSimulator",
++      "PNOT",
++      "PditShift"
++    ],
++    "installed_version": "0.0.1",
++    "package": "extro-torx",
++    "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
++    "principle": "Names the real exercised version/API; source resemblance is not compatibility."
++  },
++  "torx_package_version_commit_import_and_api_receipts": {
++    "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
++    "api_exercised": true,
++    "blocked_reason": null,
++    "compatibility_ready": true,
++    "exercised_api": [
++      "DiscretePCircuit",
++      "StateVectorSimulator",
++      "PNOT",
++      "PditShift"
++    ],
++    "import_namespace": "torx",
++    "importable": true,
++    "installed_version": "0.0.1",
++    "jax_default_backend": "cpu",
++    "jax_devices": [
++      "cpu:0"
++    ],
++    "jax_version": "0.10.1",
++    "package_name": "extro-torx",
++    "pinned_package_version": "0.0.1",
++    "pinned_repository": "https://github.com/extropic-ai/torx",
++    "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
++    "pinned_sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
++    "pinned_wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c",
++    "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
++    "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
++    "psc_density": [
++      0.4000000059604645,
++      0.4000000059604645,
++      0.0,
++      0.10000000149011612,
++      0.10000000149011612,
++      0.0
++    ],
++    "psc_density_max_delta": 5.960464455334602e-09,
++    "psc_density_sum_delta": 0.0,
++    "psc_dims": [
++      2,
++      3
++    ],
++    "psc_expected_density": [
++      0.4,
++      0.4,
++      0.0,
++      0.1,
++      0.1,
++      0.0
++    ],
++    "torx_version_attr": "0.0.1"
++  },
++  "typed_stochastic_ir_ready_score": 1.0,
++  "verifier_is_oracle": true,
++  "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": {
++    "all_negative_controls_passed": true,
++    "ambiguous_seed_rejected": true,
++    "category_index_bug_detected": true,
++    "category_index_bug_max_joint_delta": 0.09000000000000001,
++    "cycle_rejected": true,
++    "dangling_wire_rejected": true,
++    "invalid_category_index_rejected": true,
++    "invalid_mass_rejected": true,
++    "principle": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures.",
++    "type_mismatch_rejected": true,
++    "wire_order_bug_detected": true,
++    "wire_order_bug_max_joint_delta": 0.36000000000000004
++  }
++}
+diff --git a/tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py b/tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py
+new file mode 100644
+index 0000000000..678f30bd49
+--- /dev/null
++++ b/tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py
+@@ -0,0 +1,451 @@
++"""Tests for Exp6152 typed stochastic constraint IR.
++
++Spec refs: REQ-SAMPLE-6152, SCENARIO-SAMPLE-6152-VALIDATION,
++SCENARIO-SAMPLE-6152-EXACT, SCENARIO-SAMPLE-6152-SERIALIZATION-TORX.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import random
++
++import pytest
++
++from carnot import experiment_6152_typed_stochastic_constraint_ir as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SAMPLER_SPEC = REPO / "openspec/capabilities/samplers/spec.md"
++
++
++def _passing_exit_codes() -> dict[str, int]:
++    return {command: 0 for command in mod.DEFAULT_TEST_COMMANDS}
++
++
++def test_req_6152_spec_declares_typed_stochastic_ir_contract() -> None:
++    """REQ-SAMPLE-6152: OpenSpec anchors fields, scenarios, and paths."""
++
++    spec = SAMPLER_SPEC.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLE-6152") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-SAMPLE-6152-1",
++        "REQ-SAMPLE-6152-2",
++        "REQ-SAMPLE-6152-3",
++        "REQ-SAMPLE-6152-4",
++        "REQ-SAMPLE-6152-5",
++        "REQ-SAMPLE-6152-6",
++        "REQ-SAMPLE-6152-7",
++        "SCENARIO-SAMPLE-6152-VALIDATION",
++        "SCENARIO-SAMPLE-6152-EXACT",
++        "SCENARIO-SAMPLE-6152-SERIALIZATION-TORX",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.TEST_RELATIVE_PATH.as_posix(),
++        "jax_cpu_exact_stochastic_program",
++        "carnot_only_blocked_torx_compatibility",
++    ):
++        assert marker in section
++
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_6152_validation_rejects_graph_type_and_mass_bugs() -> None:
++    """SCENARIO-SAMPLE-6152-VALIDATION: typed graph validation fails closed."""
++
++    program = mod.compile_exp6145_bounded_workflow()
++    receipt = mod.validate_program(program)
++
++    assert receipt["ok"] is True
++    assert receipt["schema_version"] == mod.IR_SCHEMA_VERSION
++    assert receipt["wire_count"] == 9
++    assert receipt["kernel_count"] == 9
++    assert receipt["wire_type_counts"] == {"binary": 6, "categorical": 3}
++    assert receipt["topological_kernel_order"][0] == "sample_candidate_item"
++    assert "eligible_truth_table" in receipt["topological_kernel_order"]
++
++    payload = mod.program_to_payload(program)
++
++    duplicate_wire = deepcopy(payload)
++    duplicate_wire["wires"].append(deepcopy(duplicate_wire["wires"][0]))
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="duplicate wire"):
++        mod.program_from_payload(duplicate_wire)
++
++    invalid_mass = deepcopy(payload)
++    invalid_mass["kernels"][0]["params"]["probabilities"] = [0.4, 0.4, 0.1]
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="probability mass"):
++        mod.program_from_payload(invalid_mass)
++
++    dangling = deepcopy(payload)
++    dangling["kernels"][2]["inputs"] = ["missing_wire"]
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="dangling wire"):
++        mod.program_from_payload(dangling)
++
++    type_mismatch = deepcopy(payload)
++    type_mismatch["kernels"][2]["inputs"] = ["strategy_clean"]
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="type mismatch"):
++        mod.program_from_payload(type_mismatch)
++
++    bad_category = deepcopy(payload)
++    bad_category["kernels"][2]["params"]["table"][0] = 99
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="category index"):
++        mod.program_from_payload(bad_category)
++
++    cycle = deepcopy(payload)
++    cycle["kernels"][2]["inputs"] = ["member_group"]
++    cycle["kernels"][2]["params"]["table"] = [0, 1]
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="cycle"):
++        mod.program_from_payload(cycle)
++
++    ambiguous_seed = deepcopy(payload)
++    del ambiguous_seed["kernels"][0]["params"]["seed_role"]
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="ambiguous seed"):
++        mod.program_from_payload(ambiguous_seed)
++
++
++def test_req_6152_defensive_validator_branches() -> None:
++    """REQ-SAMPLE-6152-2: every validation guard has an executable rejection."""
++
++    program = mod.compile_exp6145_bounded_workflow()
++    payload = mod.program_to_payload(program)
++
++    def rejects(mutated: dict[str, object], message: str) -> None:
++        with pytest.raises(mod.TypedStochasticIRValidationError, match=message):
++            mod.program_from_payload(mutated)
++
++    rejects({}, "missing top-level")
++    bad_schema = deepcopy(payload)
++    bad_schema["schema_version"] = "wrong"
++    rejects(bad_schema, "unsupported schema")
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="unsupported schema"):
++        mod.validate_program(
++            mod.StochasticProgram(
++                "wrong",
++                program.program_id,
++                program.wires,
++                program.kernels,
++                program.metadata,
++            )
++        )
++
++    wires_not_list = deepcopy(payload)
++    wires_not_list["wires"] = {}
++    rejects(wires_not_list, "wires must be a list")
++
++    missing_producer = deepcopy(payload)
++    missing_producer["kernels"] = missing_producer["kernels"][:-1]
++    rejects(missing_producer, "dangling wires without producer")
++
++    bad_wire_id = deepcopy(payload)
++    bad_wire_id["wires"][0]["id"] = ""
++    rejects(bad_wire_id, "wire id")
++
++    binary_categories = deepcopy(payload)
++    binary_categories["wires"][1]["categories"] = ["bad"]
++    rejects(binary_categories, "binary wires")
++
++    empty_categories = deepcopy(payload)
++    empty_categories["wires"][0]["categories"] = []
++    rejects(empty_categories, "unique categories")
++
++    duplicate_categories = deepcopy(payload)
++    duplicate_categories["wires"][0]["categories"] = ["a", "a"]
++    rejects(duplicate_categories, "unique categories")
++
++    unsupported_wire = deepcopy(payload)
++    unsupported_wire["wires"][0]["kind"] = "pmode"
++    rejects(unsupported_wire, "unsupported wire")
++
++    empty_kernel = deepcopy(payload)
++    empty_kernel["kernels"][0]["id"] = ""
++    rejects(empty_kernel, "kernel id")
++
++    duplicate_kernel = deepcopy(payload)
++    duplicate_kernel["kernels"][1]["id"] = duplicate_kernel["kernels"][0]["id"]
++    rejects(duplicate_kernel, "duplicate kernel")
++
++    dangling_output = deepcopy(payload)
++    dangling_output["kernels"][2]["output"] = "missing_wire"
++    rejects(dangling_output, "dangling wire output")
++
++    duplicate_seed = deepcopy(payload)
++    duplicate_seed["kernels"][1]["params"]["seed_role"] = duplicate_seed["kernels"][0]["params"][
++        "seed_role"
++    ]
++    rejects(duplicate_seed, "ambiguous seed role reuse")
++
++    categorical_prior_type = deepcopy(payload)
++    categorical_prior_type["kernels"][0]["output"] = "strategy_clean"
++    rejects(categorical_prior_type, "type mismatch for categorical_prior")
++
++    bernoulli_prior_type = deepcopy(payload)
++    bernoulli_prior_type["kernels"][1]["output"] = "candidate_item"
++    rejects(bernoulli_prior_type, "type mismatch for bernoulli_prior")
++
++    bernoulli_mass = deepcopy(payload)
++    bernoulli_mass["kernels"][1]["params"]["p_true"] = 1.5
++    rejects(bernoulli_mass, "probability mass for bernoulli_prior")
++
++    truth_table_output = deepcopy(payload)
++    truth_table_output["kernels"][7]["output"] = "member_group"
++    rejects(truth_table_output, "type mismatch for deterministic_truth_table")
++
++    truth_table_input = deepcopy(payload)
++    truth_table_input["kernels"][7]["inputs"] = ["candidate_item"]
++    rejects(truth_table_input, "type mismatch for deterministic_truth_table")
++
++    unsupported_kernel = deepcopy(payload)
++    unsupported_kernel["kernels"][0]["kind"] = "mystery"
++    rejects(unsupported_kernel, "unsupported kernel")
++
++    probability_length = deepcopy(payload)
++    probability_length["kernels"][0]["params"]["probabilities"] = [1.0]
++    rejects(probability_length, "probability mass length")
++
++    table_length = deepcopy(payload)
++    table_length["kernels"][2]["params"]["table"] = [0]
++    rejects(table_length, "deterministic table length")
++
++    duplicate_producer = deepcopy(payload)
++    duplicate_producer["kernels"][3]["output"] = "member_group"
++    duplicate_producer["kernels"][3]["params"]["table"] = [0, 1, 0]
++    rejects(duplicate_producer, "duplicate producer")
++
++    assert mod._rejects_with(payload, lambda value: value, "not raised") is False
++    assert mod._draw([(3, 0.0)], random.Random(0)) == 3
++
++
++def test_scenario_6152_exact_enumeration_matches_independent_reference() -> None:
++    """SCENARIO-SAMPLE-6152-EXACT: exact enumeration owns probability evidence."""
++
++    program = mod.compile_exp6145_bounded_workflow()
++    exact = mod.execute_exact(program)
++    reference = mod.independent_reference_distribution()
++    comparison = mod.compare_exact_semantics(program)
++
++    assert exact["state_space_size"] == 1536
++    assert exact["support_count"] == 6
++    assert exact["impossible_state_count"] == 1530
++    assert exact["normalization"] == pytest.approx(1.0)
++    assert exact["marginals"] == reference["marginals"]
++    assert set(exact["joint_probabilities"]) == set(reference["joint_probabilities"])
++    assert comparison["support_match"] is True
++    assert comparison["max_joint_delta"] <= mod.EXACT_TOLERANCE
++    assert comparison["max_conditional_delta"] <= mod.EXACT_TOLERANCE
++    assert comparison["max_marginal_delta"] <= mod.EXACT_TOLERANCE
++    assert comparison["normalization_delta"] <= mod.EXACT_TOLERANCE
++
++    assert mod.probability_of(
++        exact,
++        {"candidate_item": "ac_e0_0", "strategy_clean": 1, "accepted": 1},
++    ) == pytest.approx(0.36)
++    assert mod.probability_of(
++        exact,
++        {"candidate_item": "ac_e0_1", "strategy_clean": 1, "accepted": 1},
++    ) == pytest.approx(0.0)
++    assert mod.probability_of(exact, {"eligible": 1}) == pytest.approx(0.5)
++    assert mod.conditional_probability(exact, {"accepted": 1}, {"eligible": 1}) == pytest.approx(
++        0.9
++    )
++    assert mod.conditional_probability(
++        exact, {"candidate_item": "ac_e0_2"}, {"accepted": 1}
++    ) == pytest.approx(0.2)
++
++
++def test_scenario_6152_seed_batch_serialization_and_negative_controls() -> None:
++    """SCENARIO-SAMPLE-6152-VALIDATION/EXACT: controls catch subtle bugs."""
++
++    program = mod.compile_exp6145_bounded_workflow()
++    payload = mod.program_to_payload(program)
++    canonical = mod.canonical_json(payload)
++    restored = mod.program_from_payload(json.loads(canonical))
++
++    assert mod.program_checksum(restored) == mod.program_checksum(program)
++    assert mod.compare_exact_semantics(restored)["max_joint_delta"] <= mod.EXACT_TOLERANCE
++
++    first = mod.sample_batch(program, batch_size=16, seed=6152)
++    replay = mod.sample_batch(program, batch_size=16, seed=6152)
++    assert first == replay
++    assert len(first) == 16
++    assert all(set(row) == set(mod.wire_order(program)) for row in first)
++    assert mod.batch_shape_contract(program, first) == {
++        "batch_size": 16,
++        "wire_count": 9,
++        "ok": True,
++    }
++
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="ambiguous seed"):
++        mod.sample_batch(program, batch_size=1, seed=None)
++    with pytest.raises(mod.TypedStochasticIRValidationError, match="batch_size"):
++        mod.sample_batch(program, batch_size=0, seed=6152)
++
++    controls = mod.run_negative_controls(program)
++    assert controls["wire_order_bug_detected"] is True
++    assert controls["category_index_bug_detected"] is True
++    assert controls["invalid_category_index_rejected"] is True
++    assert controls["type_mismatch_rejected"] is True
++    assert controls["cycle_rejected"] is True
++    assert controls["dangling_wire_rejected"] is True
++    assert controls["invalid_mass_rejected"] is True
++    assert controls["ambiguous_seed_rejected"] is True
++    assert controls["all_negative_controls_passed"] is True
++
++
++def test_scenario_6152_torx_adapter_exercises_real_import_when_available() -> None:
++    """SCENARIO-SAMPLE-6152-SERIALIZATION-TORX: Torx evidence is real or blocked."""
++
++    receipt = mod.torx_adapter_receipt(mod.compile_exp6145_bounded_workflow())
++
++    assert receipt["package_name"] == "extro-torx"
++    assert receipt["import_namespace"] == "torx"
++    assert receipt["pinned_repository_commit"] == mod.TORX_PINNED_REPOSITORY_COMMIT
++    if receipt["importable"]:
++        assert receipt["installed_version"] == "0.0.1"
++        assert receipt["api_exercised"] is True
++        assert receipt["compatibility_ready"] is True
++        assert {"DiscretePCircuit", "StateVectorSimulator", "PNOT", "PditShift"} <= set(
++            receipt["exercised_api"]
++        )
++        assert receipt["psc_density_sum_delta"] <= mod.EXACT_TOLERANCE
++    else:
++        assert receipt["api_exercised"] is False
++        assert receipt["compatibility_ready"] is False
++        assert receipt["blocked_reason"]
++
++
++def test_req_6152_artifact_schema_readiness_and_replay(tmp_path: Path) -> None:
++    """REQ-SAMPLE-6152: terminal artifact fields are complete and deterministic."""
++
++    artifact = mod.write_typed_stochastic_ir_artifact(
++        output_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        duration_s=0.0,
++        test_exit_codes=_passing_exit_codes(),
++    )
++    loaded = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8"))
++
++    assert loaded == artifact
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert mod.validate_artifact(artifact) is True
++    assert artifact["typed_stochastic_ir_ready_score"] == 1.0
++    assert artifact["status"] == "complete_ready"
++    assert artifact["honest_verdict"].startswith("complete_ready:")
++    assert artifact["inference_substrate"] == "jax_cpu_exact_stochastic_program"
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["missing_verifier_gaps"] == []
++    assert artifact["protected_files_unchanged"]["unchanged"] is True
++    assert artifact["structured_gate_receipt"]["exp6145_ready_score"] == 1.0
++    assert artifact["exact_enumeration_case_counts"]["support_count"] == 6
++    assert artifact["compiler_executor_adapter_and_test_paths"]["module"] == (
++        mod.MODULE_RELATIVE_PATH.as_posix()
++    )
++    assert artifact["torx_compatibility_scope"]["compatibility_ready"] is True
++
++    deltas = artifact["support_conditional_joint_normalization_and_marginal_deltas"]
++    assert deltas["principle"].startswith("Exact enumeration")
++    assert deltas["max_joint_delta"] <= mod.EXACT_TOLERANCE
++    assert deltas["max_conditional_delta"] <= mod.EXACT_TOLERANCE
++    assert deltas["max_marginal_delta"] <= mod.EXACT_TOLERANCE
++
++    second = mod.write_typed_stochastic_ir_artifact(
++        output_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        duration_s=0.0,
++        test_exit_codes=_passing_exit_codes(),
++    )
++    assert second["deterministic_rebuild_checksum"] == artifact["deterministic_rebuild_checksum"]
++    assert second["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++
++
++def test_req_6152_artifact_fail_closed_status_and_validation_paths(tmp_path: Path) -> None:
++    """REQ-SAMPLE-6152-7: artifact status and schema checks fail closed."""
++
++    artifact = mod.write_typed_stochastic_ir_artifact(
++        output_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        duration_s=0.0,
++        test_exit_codes=_passing_exit_codes(),
++    )
++
++    blocked = deepcopy(artifact)
++    blocked["preconditions_checked"]["preconditions_ready"] = False
++    blocked["typed_stochastic_ir_ready_score"] = mod.ready_score(blocked)
++    blocked["status"] = mod.status(blocked)
++    blocked["honest_verdict"] = mod.honest_verdict(blocked)
++    assert blocked["status"] == "blocked"
++    assert blocked["honest_verdict"].startswith("blocked:")
++    assert "preconditions" in mod.blocked_reasons(blocked)
++
++    carnot_only = deepcopy(artifact)
++    carnot_only["torx_compatibility_scope"]["compatibility_ready"] = False
++    carnot_only["inference_substrate"] = mod.CARNOT_ONLY_SUBSTRATE
++    carnot_only["missing_verifier_gaps"] = ["torx_compatibility"]
++    carnot_only["typed_stochastic_ir_ready_score"] = mod.ready_score(carnot_only)
++    carnot_only["status"] = mod.status(carnot_only)
++    carnot_only["honest_verdict"] = mod.honest_verdict(carnot_only)
++    assert carnot_only["status"] == "complete_carnot_only"
++    assert carnot_only["honest_verdict"].startswith("complete_carnot_only:")
++    assert "torx_compatibility" in mod.blocked_reasons(carnot_only)
++
++    complete_null = deepcopy(artifact)
++    complete_null["test_exit_codes"].pop(mod.DEFAULT_TEST_COMMANDS[0])
++    complete_null["typed_stochastic_ir_ready_score"] = mod.ready_score(complete_null)
++    complete_null["status"] = mod.status(complete_null)
++    complete_null["honest_verdict"] = mod.honest_verdict(complete_null)
++    assert complete_null["status"] == "complete_null"
++    assert complete_null["honest_verdict"].startswith("complete_null:")
++    assert "missing_test_commands" in mod.blocked_reasons(complete_null)
++
++    protected = deepcopy(artifact)
++    protected["protected_files_unchanged"]["unchanged"] = False
++    assert "protected_files" in mod.blocked_reasons(protected)
++
++    structured = deepcopy(artifact)
++    structured["structured_gate_receipt"]["gate_passed"] = False
++    assert "structured_gate" in mod.blocked_reasons(structured)
++
++    missing = deepcopy(artifact)
++    del missing["status"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    verifier = deepcopy(artifact)
++    verifier["verifier_is_oracle"] = False
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.validate_artifact(verifier)
++
++    score = deepcopy(artifact)
++    score["typed_stochastic_ir_ready_score"] = 0.0
++    with pytest.raises(ValueError, match="ready_score"):
++        mod.validate_artifact(score)
++
++    status = deepcopy(artifact)
++    status["status"] = "wrong"
++    with pytest.raises(ValueError, match="status"):
++        mod.validate_artifact(status)
++
++    verdict = deepcopy(artifact)
++    verdict["honest_verdict"] = "wrong"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(verdict)
++
++    checksum = deepcopy(artifact)
++    checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(checksum)
++
++    provenance_type = deepcopy(artifact)
++    provenance_type["field_provenance"] = []
++    provenance_type["reproducibility_checksum"] = mod.reproducibility_checksum(provenance_type)
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(provenance_type)
++
++    provenance_principle = deepcopy(artifact)
++    provenance_principle["field_provenance"]["status"]["principle"] = "wrong"
++    provenance_principle["reproducibility_checksum"] = mod.reproducibility_checksum(
++        provenance_principle
++    )
++    with pytest.raises(ValueError, match="field_provenance:status"):
++        mod.validate_artifact(provenance_principle)
+-- 
+2.55.0
+

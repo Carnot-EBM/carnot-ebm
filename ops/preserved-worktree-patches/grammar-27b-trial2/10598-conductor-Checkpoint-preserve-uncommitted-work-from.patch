@@ -1,0 +1,112 @@
+From 9f3378b94fb98b254efa6f0494638281bad24b85 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 04:39:29 -0400
+Subject: [PATCH 10598/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                       |  2 +-
+ ops/conductor-log.md                               |  2 ++
+ ops/conductor-state.json                           |  2 +-
+ results/experiment_1822_rtl_synth.log              |  4 ++--
+ ...837_three_family_output_free_compatibility.json | 14 +++++++-------
+ 5 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b1d823326e..0d3681a744 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 68, "phase": "iteration_start", "last_beat": "2026-09-01T07:17:06Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 69, "phase": "iteration_start", "last_beat": "2026-09-01T08:39:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a9f5199fd4..56ac5ace3a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16993,3 +16993,5 @@ The l |
+ | 2026-09-01 05:30 UTC | Typed obligation program and matched candidate fix | OK | 103 passed, 1 warning in 16.93s |
+ | 2026-09-01 06:53 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: esult-path", s |
+ | 2026-09-01 07:15 UTC | Three-family output-free obligation compatibility  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6837_three_f |
++| 2026-09-01 08:37 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ad-suite failu |
++| 2026-09-01 08:39 UTC | Independent obligation compatibility shortcut and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cb4e3867a3..e4d39d1e49 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 68, "phase": "iteration_start", "started_at": "2026-09-01T07:17:06Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 69, "phase": "iteration_start", "started_at": "2026-09-01T08:39:17Z"}
+\ No newline at end of file
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index ff46d3be41..97e138e523 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.60s, user: 3.08s, system: 0.30s, MEM: 114.05 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.12s, user: 2.75s, system: 0.26s, MEM: 116.44 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 67% 19x read_verilog (2 sec), 12% 1x synth_xilinx (0 sec), ...
++Time spent: 72% 19x read_verilog (2 sec), 10% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_6837_three_family_output_free_compatibility.json b/results/experiment_6837_three_family_output_free_compatibility.json
+index b5d95aa6b7..5012b6aa01 100644
+--- a/results/experiment_6837_three_family_output_free_compatibility.json
++++ b/results/experiment_6837_three_family_output_free_compatibility.json
+@@ -27,7 +27,7 @@
+     "rows": [],
+     "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1.checkpoint"
+   },
+-  "duration_s": 41.007367,
++  "duration_s": 41.091629,
+   "experiment_id": 6837,
+   "field_principles": {
+     "accelerator_samples": "Records CUDA device and lease observations.",
+@@ -374,7 +374,7 @@
+           "--query-gpu=index,uuid,name",
+           "--format=csv,noheader"
+         ],
+-        "duration_s": 0.032449,
++        "duration_s": 0.024973,
+         "ok": true,
+         "returncode": 0,
+         "stderr": "",
+@@ -391,9 +391,9 @@
+       "required_mb": 1024
+     },
+     "free_ports": [
+-      45063,
+-      34895,
+-      44017
++      55043,
++      49013,
++      34627
+     ],
+     "output_paths": {
+       "checkpoint_parent_writable": true,
+@@ -414,7 +414,7 @@
+     "unrelated_compute_processes_observed": [
+       {
+         "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+-        "pid": "565367",
++        "pid": "568681",
+         "used_memory_mb": "256"
+       },
+       {
+@@ -429,7 +429,7 @@
+       },
+       {
+         "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+-        "pid": "565367",
++        "pid": "568681",
+         "used_memory_mb": "256"
+       }
+     ]
+-- 
+2.55.0
+

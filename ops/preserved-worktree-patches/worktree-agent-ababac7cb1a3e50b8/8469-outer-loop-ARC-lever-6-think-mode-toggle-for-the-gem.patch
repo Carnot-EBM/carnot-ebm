@@ -1,0 +1,819 @@
+From 2a08fe0b13fff6a8efeb516512b667d34c4b30f8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 16:38:28 -0400
+Subject: [PATCH 08469/11362] [outer-loop] ARC lever #6: think-mode toggle for
+ the gemma-4-31B induction path (REQ-ARC-WMTE-6198)
+
+Operator directive 2026-08-07 ("we want /think with the 31B model"), amending
+the 2026-08-03 one-slot ruling. Gemma-4 has no Qwen /think-/no_think token;
+its reasoning is a native thought channel the bundled llama-server only
+splits into reasoning_content on /v1/chat/completions (exp5764,
+n_reason_engaged=39/39 under use_chat_template=True). The live path today
+ships the reasoning-suppressed raw+codeonly configuration instead -- which
+one wins on gemma is an open, un-A/B'd question.
+
+Adds induce_think_on() (env CARNOT_ARC_INDUCE_THINK, falls back to
+ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, both "0"/off -- no gemma think-mode
+A/B evidence exists yet, and this project ships live-path behavior changes
+only after a matched-budget offline A/B). When on and codeonly_eligible:
+generate() skips the codeonly directive + pre-opened fence and routes
+through the chat endpoint regardless of use_chat_template; induce()'s
+combined call omits its own caller-side pre-opened fence (exp5714: the fence
+alone suppresses reasoning). Resolved value recorded at
+SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]. Scoped to the
+induction path only -- complete_text()/SGE-reflect and the greedy-direct dev
+path are untouched (2026-07-23 smoke: chat endpoint returns empty on gemma
+for short action-decision calls, a different unmeasured failure mode).
+
+Every new/changed statement is gated behind induce_think_on(); with the flag
+off (shipped default) all three touch points reduce to their exact
+pre-change values by construction. tests/python/test_arc_induce_think_mode_20260807.py
+pins this mechanically (byte-identical off-arm request body matching
+test_codeonly_induce_scoping.py's own pins) plus the on-arm mechanism
+(no directive/fence, chat routing, codeonly_eligible-gated). 30/30 pass
+across that file + test_codeonly_induce_scoping.py + test_arc_live_generator_pin.py.
+2 pre-existing failures in test_arc_submitted_agent_parity.py
+(QAT repo-substring naming staleness) confirmed unrelated via git-stash
+isolation.
+
+NOT done here (forward work): the actual gemma think-mode A/B (new
+arc_actions_to_progress.py arms) needs GPU time unavailable this pass (GPU1
+busy with the exp6091 rerun, GPU0 conductor-owned); flipping either default
+is an operator/evidence decision. The empty-answer-channel /
+forced-continuation mitigations are deliberately NOT auto-armed, so a future
+A/B can measure "think alone" vs "think + mitigations" separately.
+
+Artifact-freshness: two rounds of acknowledgements (this commit's
+arc_executable_world_model.py/arc_competition_agent.py edits plus the
+resulting second-order cascade on outer_loop_arc_gateway_accurate_rescore),
+same uniform argument for every flagged artifact -- every changed statement
+is provably dead code with the flag off, verified both by construction and
+by the new test file. artifact-freshness-lint: OK.
+
+Mutation-marker resolution (two markers, same cause): deleted
+ops/.test_suite_mutation_runs/{918cc0819b484a719059fe59c0ea35e9,95b6033f41424d6eac24adf076c01eda}.pending.json.
+Both were armed by the conductor's concurrent
+test_experiment_6198_v537_post_marker_source_scope_audit.py run (unrelated
+milestone task) and flagged files "[NOT this run]" -- the guard's own
+documented caution that such paths are more likely a concurrent agent's
+in-flight work than test damage. Verified: every flagged file in THIS commit
+is my own deliberate edit from this session. One flagged path
+(results/exp6091_refine_engine_visible_shard.jsonl) was correctly excluded
+from this commit entirely -- it is the still-running background exp6091
+rerun's own legitimate output, a separate line of work (task #91).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  53 +++++
+ .../carnot/agentic/arc_competition_agent.py   |   7 +
+ .../agentic/arc_executable_world_model.py     |  75 +++++-
+ ...rc_gateway_card_ground_truth_20260727.json |   8 +
+ ..._per_level_reset_attribution_20260726.json |   8 +
+ ...6011_world_model_change_gate_four_arm.json |  16 ++
+ ...ent_6012_hidden_state_trust_gate_hole.json |  16 ++
+ ...6013_hidden_state_change_gate_closure.json |  16 ++
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   8 +
+ ...p_arc_early_stop_grace_sweep_20260726.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |  16 ++
+ ...arc_gateway_accurate_rescore_20260726.json |  16 ++
+ ...ter_loop_arc_gateway_rescore_20260726.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |  16 ++
+ ...rc_llm_on_wallclock_envelope_20260726.json |  16 ++
+ ...arc_reset_charge_attribution_20260726.json |   8 +
+ .../test_arc_induce_think_mode_20260807.py    | 223 ++++++++++++++++++
+ 17 files changed, 514 insertions(+), 4 deletions(-)
+ create mode 100644 tests/python/test_arc_induce_think_mode_20260807.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 633ef3bfd5..e5eb4e203f 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22075,3 +22075,56 @@ rows) dropped from ~2.03s (profiled) to 0.674s measured post-fix, roughly 3x.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-FCP-TRANSITION-ROWS-1 | `python/carnot/agentic/arc_frame_change_predictor.py:load_cached_transition_effect_rows`. | `tests/python/test_arc_transition_effect_rows_hoisted_actions.py`. |
++
++### REQ-ARC-WMTE-6198: Think-Mode Toggle For The Gemma-4-31B Induction Path
++
++**Origin:** 2026-08-07 operator directive ("we want /think with the 31B model"), lever #6 of the
++ARC six-lever push recorded at `ops/known-issues.md` (amending the 2026-08-03 one-slot ruling; the
++June `/no_think` freeze is lifted). Gemma-4 has no Qwen-style `/think`-`/no_think` soft-switch
++token -- its reasoning mechanism is a native thought channel that the bundled `llama-server` splits
++into `reasoning_content` only on the `/v1/chat/completions` endpoint (proof:
++`experiment_5764_gemma31b_singleshot_induction_ab.json`, `n_reason_engaged=39/39` under
++`use_chat_template=True`). The best gemma induction numbers on record (exp5764, pooled heldout
++0.3785) were taken in exactly that reasoning-engaged chat configuration; the live path today ships
++the reasoning-suppressed raw+codeonly configuration instead. Which one wins on gemma is an open,
++un-A/B'd question this REQ builds the capability to answer -- it does not itself answer it.
++
++**THE TOGGLE.** `induce_think_on()` resolves `CARNOT_ARC_INDUCE_THINK` (override) falling back to
++`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` (both `"0"`/off today -- no gemma think-mode A/B evidence
++exists yet; per the project's standing convention, a live-path behavior change ships only after a
++matched-budget offline A/B, so only the default-off capability lands here). When on and the call is
++`codeonly_eligible`: `generate()` skips the code-only directive and its pre-opened fence, routes the
++request through `_chat_complete_request` regardless of the instance's own `use_chat_template`
++setting (gemma's reasoning split only happens on the chat endpoint), and `induce()`'s combined call
++omits its own caller-side pre-opened fence (proven independently to suppress reasoning, per
++exp5714). The "Return ONLY one \`\`\`python code block" instruction is preserved either way. The
++resolved value is recorded at `SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]` so the
++readiness gates can pin whichever value is actually shipped. Scope is deliberately narrowed to the
++INDUCTION path (`codeonly_eligible` calls); `complete_text()`'s SGE/reflect path and the
++greedy-direct dev path are untouched, since the 2026-07-23 gemma smoke found the chat endpoint
++returns EMPTY for those short action-decision calls -- a different, unmeasured failure mode.
++
++**VERIFICATION.** Every new/changed statement is gated behind `induce_think_on()`
++(or its cached local `_think_on`) being `True`; with the flag off the codeonly branch, the
++chat-routing condition, and `induce()`'s appended suffix all reduce to their exact pre-change
++values by construction. `tests/python/test_arc_induce_think_mode_20260807.py` pins this mechanically
++(byte-identical off-arm request body, matching `test_codeonly_induce_scoping.py`'s own pins) and
++pins the on-arm behavior (no codeonly directive, no pre-opened fence, routed to
++`/v1/chat/completions`, gated on `codeonly_eligible`). 30/30 tests pass across that file plus
++`test_codeonly_induce_scoping.py` and `test_arc_live_generator_pin.py`.
++
++**NOT YET DONE (forward work, explicitly not silently dropped).** The actual gemma think-mode A/B
++(new arms in `arc_actions_to_progress.py`'s `ARM_CONFIGS`, run against the 2026-08-02
++generation-vs-selection harness or an equivalent) requires GPU time this pass did not have (GPU 1
++was occupied by the exp6091 rerun; GPU 0 is conductor-owned). Flipping either default to `"1"` is an
++operator/A-B-evidence decision, not part of this REQ. The empty-answer-channel and
++forced-continuation mitigations (`CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK`,
++`CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION`) are deliberately NOT auto-armed by this toggle, so a
++future A/B can measure "think alone" and "think + mitigations" as separate arms rather than a
++bundled default.
++
++## Implementation Status (REQ-ARC-WMTE-6198)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6198 | `python/carnot/agentic/arc_executable_world_model.py:induce_think_on`, wired in `LocalGGUFProposer.generate`/`induce`; `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]`. | `tests/python/test_arc_induce_think_mode_20260807.py`. |
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 8a9290e269..1c67c61d8d 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -190,6 +190,7 @@ from carnot.agentic.arc_executable_world_model import (  # noqa: E402
+     ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
+     ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
+     ARC_LIVE_GENERATOR_REPO_SUBSTR,
++    ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT,
+     _default_induce_timeout_s,
+ )
+ 
+@@ -7229,6 +7230,12 @@ SUBMITTED_AGENT_CONFIG = {
+         "mtp_head_path_env": "CARNOT_ARC_MTP_GGUF_PATH",
+         "kv_quant": "q8_0",
+         "no_think_prefix": "",  # /no_think is a Qwen3 control token; gemma-4 has no equivalent
++        # LEVER #6 (2026-08-07). Declared from the same constant induce_think_on() falls back to
++        # when CARNOT_ARC_INDUCE_THINK is unset, so the readiness gates can pin whichever value is
++        # actually shipped without a second, driftable copy. Both this and the constant default to
++        # False/"0" -- see ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT for why (no gemma think-mode A/B
++        # evidence exists yet).
++        "think_mode": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != "0",
+         "max_tokens": 2560,
+         "n_predict_min": 2048,
+         "port_strategy": "free_non_8919",
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 3c7ccff880..cc892add6f 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3413,6 +3413,47 @@ ARC_LIVE_GENERATOR_MTP_HEAD_REPO_SUBSTR = "gemma-4-31B-it-qat"
+ ARC_LIVE_GENERATOR_MTP_HEAD_ARCH = "gemma4-assistant"  # read from the head GGUF's own header
+ ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on gemma-4
+ 
++# THINK MODE (2026-08-07, operator directive: "we want /think with the 31B model" -- lever #6,
++# ops/known-issues.md, amending the 2026-08-03 one-slot ruling; the June /no_think freeze is
++# LIFTED). Gemma-4 has no Qwen-style /think-/no_think soft-switch token -- exp5764's own note
++# discloses this. Its mechanism is instead a NATIVE thought channel that the bundled llama-server
++# splits into `reasoning_content` on the /v1/chat/completions endpoint (proof:
++# experiment_5764_gemma31b_singleshot_induction_ab.json, n_reason_engaged=39/39 on
++# use_chat_template=True). The best gemma induction numbers on record (exp5764 pooled heldout
++# 0.3785) were ALREADY taken in that reasoning-engaged chat configuration; the LIVE path today
++# ships the reasoning-SUPPRESSED raw+codeonly configuration instead (the codeonly directive +
++# pre-opened fence exist specifically to suppress reasoning for a different failure mode -- see
++# _L2_CODEONLY_DIRECTIVE below). Both configurations are real and neither is a straw man; which
++# one wins on gemma is an open, UN-A/B'd question this flag exists to answer.
++#
++# DEFAULT OFF ON BOTH AXES, on purpose, mirroring the MTP local/scored split above. No think-mode
++# A/B evidence exists yet for gemma-4-31B (exp5714/exp5766 are Qwen-9B-only and an
++# instrument-defect case respectively -- neither is evidence about gemma's native thought
++# channel). This project's standing convention is that a live-path behavior change ships only
++# after a matched-budget offline A/B; building the (default-off) capability is the correct first
++# step, flipping either default is not, until that A/B exists.
++ARC_LIVE_GENERATOR_THINK_DEFAULT = "0"
++ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "0"
++
++
++def induce_think_on() -> bool:
++    """REQ-ARC-WMTE-6198 (lever #6) arm selector. CARNOT_ARC_INDUCE_THINK=1/0 overrides;
++    unset -> ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT (both currently "0", so this resolver is
++    itself inert until an operator flips one of the two knobs post-A/B). Mirrors `_flag_env`'s
++    override-then-shipped-default shape but keys off the SCORED constant, matching the MTP
++    resolver pattern above (`ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT`) -- there is no separate
++    local-default consulted at runtime here because, unlike MTP, think mode has no local-hardware
++    reason to differ from the scored intent; the local/scored split exists so the two answers CAN
++    diverge later without collapsing back into one shared constant, not because they must today.
++    """
++
++    import os
++
++    raw = os.environ.get("CARNOT_ARC_INDUCE_THINK")
++    if raw is not None and raw != "":
++        return raw.strip() == "1"
++    return ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != "0"
++
+ 
+ def _is_mtp_head_file(name: str) -> bool:
+     """True if `name` looks like an MTP DRAFT HEAD rather than a main weights file.
+@@ -6281,10 +6322,22 @@ class LocalGGUFProposer:
+         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
+         # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
+         # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
+-        _codeonly = (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0") and codeonly_eligible
++        # THINK MODE (lever #6, default OFF -- see induce_think_on()). Takes priority over
++        # codeonly: the two are mutually exclusive by construction (codeonly exists to SUPPRESS
++        # reasoning; think mode exists to ALLOW it), so an operator flipping CARNOT_ARC_INDUCE_THINK
++        # does not need to also touch CARNOT_ARC_CODEONLY_INDUCE. With think OFF (the shipped
++        # default) this is a pure no-op and the codeonly branch below is byte-identical to before.
++        _think_on = induce_think_on() and codeonly_eligible
++        _codeonly = (
++            (not _think_on)
++            and (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0")
++            and codeonly_eligible
++        )
+         _stop_seq = ["```"] if _codeonly else None
+         if _codeonly:
+             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
++        elif _think_on:
++            pass  # no directive, no pre-opened fence: let the model reason before it answers
+         elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
+             prompt = self.no_think_prefix + prompt
+         # DEFECT-REJECTION + PLAIN RE-ASK (2026-07-31). Armed only where it was measured: the
+@@ -6347,7 +6400,12 @@ class LocalGGUFProposer:
+                 _payload["stop"] = _stop_seq
+             body = _json.dumps(_payload).encode()
+             try:
+-                if self.use_chat_template:
++                # `or _think_on`: think mode NEEDS the chat endpoint regardless of the instance's
++                # own use_chat_template setting -- gemma's native thought channel is split into
++                # reasoning_content only on /v1/chat/completions (exp5764), never on raw
++                # /completion. With _think_on False (the shipped default) this is exactly
++                # `self.use_chat_template` and nothing here changes.
++                if self.use_chat_template or _think_on:
+                     # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
+                     # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
+                     _response, text = self._chat_complete_request(
+@@ -6726,9 +6784,18 @@ class LocalGGUFProposer:
+         )
+         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
+         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
++        #
++        # THINK MODE (lever #6, default OFF): the PRE-OPENED ```python fence below is exactly what
++        # exp5714 proved suppresses reasoning even on its own, independent of the codeonly directive
++        # -- so a think-mode call must not send it either. The instruction to return one code block
++        # stays either way; only the priming fence differs.
++        _induce_suffix = (
++            "\n\nReturn ONLY one ```python code block with engine + is_level_complete."
++            if induce_think_on()
++            else "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n"
++        )
+         ok, code = self.generate(
+-            base
+-            + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
++            base + _induce_suffix,
+             ("engine", "is_level_complete"),
+             tries=self.tries,
+             codeonly_eligible=True,
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index eeac7fdea7..4162148c3d 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2710,6 +2710,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own generating script (scripts/arc_gateway_card_ground_truth.py) explicitly holds MAX_ACTIONS out of scope: line 51 describes the run as \"arcade, LLM disabled, nothing submitted, MAX_ACTIONS untouched\" and line 623 records \"MAX_ACTIONS\": \"untouched\" as a published invariant. Grep for SUBMITTED_TARGET_LEVELS / SUBMITTED_EARLY_STOP_GRACE in that script: 0 occurrences.",
+     "evidence": "grep -n MAX_ACTIONS scripts/arc_gateway_card_ground_truth.py (lines 51, 623); grep -n 'SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/arc_gateway_card_ground_truth.py (0 hits)."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+    }
+   ]
+  },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index 8d98c96bd5..f39f31f68a 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1315,6 +1315,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/arc_per_level_reset_attribution_capture.py) references none of MAX_ACTIONS, SUBMITTED_TARGET_LEVELS, or SUBMITTED_EARLY_STOP_GRACE.",
+     "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/arc_per_level_reset_attribution_capture.py: 0 hits."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+    }
+   ]
+  },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index c8086729f9..a8829610c5 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52692,6 +52692,22 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py) references none of the three changed symbols.",
+         "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py: 0 hits."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 845c7389f8..3c69bb1bc4 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -176,6 +176,22 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py) references none of the three changed symbols.",
+         "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py: 0 hits."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index cfb41f2ed3..ce6fea1128 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8718,6 +8718,22 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py) references none of the three changed symbols.",
+         "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py: 0 hits."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 45ad80d87a..205bcae246 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1422,6 +1422,14 @@
+         "acknowledged_on": "2026-08-05",
+         "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
+         "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 2bb5c86e4a..b24c967abf 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5385,6 +5385,14 @@
+         "reason": "This artifact's quantitative sweep data (wins/actions/score per explicit early_stop_grace and budget value) is unaffected: scripts/arc_scored_path_early_stop_sweep.py:151 passes early_stop_grace=grace directly to the constructed explorer as a PARAMETER, never reading the live SUBMITTED_EARLY_STOP_GRACE class default for the measurement itself. What IS superseded: this artifact's own narrative finding \"SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)\" (scripts/analyze_arc_early_stop_sweep.py:294) and its stability-guard assertion that the flag stayed None across the run (arc_scored_path_early_stop_sweep.py:209) correctly describe 2026-07-26; this exact commit (2026-08-07, ops/known-issues.md lever #3) is the authorized flip that finding was informing, not a silent contradiction of it. Its \"shipped MAX_ACTIONS=400\" framing is likewise a dated fact, now superseded by the same commit's MAX_ACTIONS 400->2000 raise.",
+         "evidence": "grep -n SUBMITTED_EARLY_STOP_GRACE scripts/analyze_arc_early_stop_sweep.py (lines 286,289,290,294,500,582) and scripts/arc_scored_path_early_stop_sweep.py (lines 4,51,134,151,183,209,215); the sweep's own row output records early_stop_grace as a swept input field, not a live-constant read.",
+         "note": "APPENDED, not replacing; the artifact's July-26 findings are preserved unedited and remain historically accurate for that date. This acknowledgement documents that this specific later, dated commit is the authorized event superseding its 'not yet flipped' status note, per the never-prune discipline."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index cbfaa5f5f5..a4dbcdf18e 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3476,6 +3476,22 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. results/first_win_llm_on_20260727/analyse.py:433 references SUBMITTED_TARGET_LEVELS only inside a static prose 'definition' string documenting the methodology (\"target_levels=SUBMITTED_TARGET_LEVELS\" as literal text, not a live interpolation) -- the actual run already happened in July under whatever the constant was then (3); this commit does not rewrite that recorded run. python/carnot/experiment_4605_live_integration_scored_agent.py:506-508 does read the live constant, but that module-level function executed at BUILD TIME, not now; no code in this artifact's dependency chain re-reads it after the fact. MAX_ACTIONS / SUBMITTED_EARLY_STOP_GRACE: not referenced by this artifact's own scripts.",
+         "evidence": "grep -n SUBMITTED_TARGET_LEVELS results/first_win_llm_on_20260727/analyse.py (line 433, inside a string literal); grep -n SUBMITTED_TARGET_LEVELS python/carnot/experiment_4605_live_integration_scored_agent.py (lines 506,508,766)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index a563387ac0..35562fb8bf 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3252,6 +3252,22 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the same 2026-08-07 arc_competition_agent.py change is inert to it). No measured or reported value in the file changed.",
+     "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
++   },
++   {
++    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++    "sha256_was": "f1bb314d95ab12ac17077645e8c73028fbea26a19539a97917d1fe3bca28274f",
++    "sha256_now": "bdcd589088f0e138405634c1e08e82139ecf3e14daab1673e5ccafc950d37992",
++    "acknowledged_on": "2026-08-07",
++    "reason": "Second freshness-acknowledgement cascade this session (lever #6, think-mode). The only change to this input file is a SECOND appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
++    "evidence": "git diff results/outer_loop_arc_gateway_rescore_20260726.json shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
++   },
++   {
++    "path": "results/arc_per_level_reset_attribution_20260726.json",
++    "sha256_was": "ec462f25fc3d48abe41be39b89a9fc15646100b6b6145128ed5f14671884e299",
++    "sha256_now": "622acc721dc7f4bcf7f27b3f891ce63c6fae30bf96235268f8dd4b9456b28bf4",
++    "acknowledged_on": "2026-08-07",
++    "reason": "Second freshness-acknowledgement cascade this session (lever #6, think-mode). The only change to this input file is a SECOND appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
++    "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 77c75258e7..c8ed925563 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1118,6 +1118,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own analysis script self-declares the invariant at line 676: \"no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports\".",
+     "evidence": "grep -n 'no SUBMITTED_\\* flag and no MAX_ACTIONS' scripts/analyze_arc_gateway_rescore.py: 1 hit, line 676."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 25d0109f7c..4d372f3cb4 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1125,6 +1125,22 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "This commit's kernel edit (scripts/kaggle/submission_kernel/main.py) adds two env.setdefault() calls (CARNOT_ARC_INDUCE_MAX_TOKENS, CARNOT_ARC_INDUCE_TIMEOUT) inserted before the existing context-pool/VRAM-fit diagnostic block this artifact's fix targets. The generator-concurrency fix itself (n_ctx derivation, _generator_cuda_min_free_mb VRAM guard, MTP resolution) is untouched; the new env vars affect max_tokens/timeout only, not the concurrency/VRAM-fit logic this artifact measured.",
+         "evidence": "git diff scripts/kaggle/submission_kernel/main.py: single localized insertion before the '_default_induce_n_ctx' diagnostic block; no line in the generator-concurrency VRAM-fit block (_generator_cuda_min_free_mb, MTP resolution) was touched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index f89bdf6687..29bcc8fc96 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -352,6 +352,22 @@
+         "reason": "This artifact's actual measurements (the wall-clock envelope math anchored at explicit budgets b400/b1000/b2000, scripts/analyze_arc_llm_on_wallclock_envelope.py) sweep MAX_ACTIONS as an explicit run_game parameter, not the live class default -- unaffected by this change. What IS superseded: this artifact's own decision-status framing, e.g. line 1590 \"none was made -- MAX_ACTIONS is still 400 in the tree\" and line 1454 \"MAX_ACTIONS stays 400\", both correct descriptions of 2026-07-26 that this exact 2026-08-07 commit (ops/known-issues.md lever #3) supersedes -- this artifact's own envelope analysis is the evidence basis this change cites (see the commit message / arc_competition_agent.py:7356's updated comment).",
+         "evidence": "grep -n MAX_ACTIONS scripts/analyze_arc_llm_on_wallclock_envelope.py (lines 2,1076,1326,1454,1518,1590) and scripts/arc_llm_on_wallclock_budget_probe.py (lines 18,32,69) -- all either sweep budget as an explicit parameter or state the pre-change decision status as of build time.",
+         "note": "APPENDED, not replacing; this artifact's envelope math at each swept budget point remains the evidentiary basis this commit's MAX_ACTIONS raise cites."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
++        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index c457b78bd9..0a2d693fb1 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16899,6 +16899,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/analyze_arc_reset_charge_attribution.py) references none of the three changed symbols.",
+         "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/analyze_arc_reset_charge_attribution.py: 0 hits."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+       }
+     ]
+   },
+diff --git a/tests/python/test_arc_induce_think_mode_20260807.py b/tests/python/test_arc_induce_think_mode_20260807.py
+new file mode 100644
+index 0000000000..e4add6ff48
+--- /dev/null
++++ b/tests/python/test_arc_induce_think_mode_20260807.py
+@@ -0,0 +1,223 @@
++"""REQ-ARC-WMTE-6198 (lever #6, 2026-08-07): think-mode toggle for the gemma-4-31B induction path.
++
++Origin: operator directive "we want /think with the 31B model" (ops/known-issues.md, amending the
++2026-08-03 one-slot ruling; the June /no_think freeze is lifted). Gemma-4 has no Qwen-style
++/think-/no_think soft-switch token; its native thought channel only splits into `reasoning_content`
++on the /v1/chat/completions endpoint (exp5764). `induce_think_on()` is a DEFAULT-OFF resolver
++(env CARNOT_ARC_INDUCE_THINK, falling back to ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, currently
++"0" -- no gemma think-mode A/B evidence exists yet). These tests pin two properties:
++
++  1. Think OFF (the shipped default) is BYTE-IDENTICAL to pre-lever-#6 behaviour -- the load-bearing
++     property, mirroring test_codeonly_induce_scoping.py's own off-arm pins.
++  2. Think ON skips the codeonly directive + pre-opened fence and routes through the chat endpoint
++     instead of raw /completion -- the actual mechanism the lever adds.
++"""
++
++from __future__ import annotations
++
++import json
++import urllib.request
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_executable_world_model as awm
++from carnot.agentic.arc_executable_world_model import (
++    LocalGGUFProposer,
++    Transition,
++    induce_think_on,
++)
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++_VALID_CODE = (
++    "```python\nimport numpy as np\n"
++    "def engine(grid, action, data):\n    return np.asarray(grid)\n"
++    "def is_level_complete(grid):\n    return False\n```"
++)
++
++
++class _FakeResp:
++    def __init__(self, payload: bytes) -> None:
++        self._b = payload
++
++    def __enter__(self) -> "_FakeResp":
++        return self
++
++    def __exit__(self, *_a: object) -> bool:
++        return False
++
++    def read(self, *_a: object) -> bytes:
++        return self._b
++
++
++def _capture_raw(monkeypatch: pytest.MonkeyPatch) -> dict:
++    """Intercept the raw /completion POST and capture the request body."""
++    captured: dict = {}
++
++    def fake_urlopen(req, timeout=None):  # noqa: ANN001
++        captured["body"] = json.loads(req.data.decode())
++        captured["url"] = req.full_url
++        return _FakeResp(json.dumps({"content": _VALID_CODE}).encode())
++
++    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
++    return captured
++
++
++@pytest.fixture(autouse=True)
++def _redirect_engine_store(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
++    """Same guard as test_codeonly_induce_scoping.py: never let induce()/refactor() write into the
++    tracked results/arc_e3 evidence store during a test run."""
++    monkeypatch.setattr(awm, "E3_DIR", tmp_path / "e3")
++
++
++def _proposer(monkeypatch: pytest.MonkeyPatch) -> LocalGGUFProposer:
++    p = LocalGGUFProposer(
++        repo_substr="X",
++        model_path="/x.gguf",
++        port=59999,
++        no_think_prefix="",  # matches the live gemma pin, not the historical Qwen prefix
++        max_tokens=128,
++        tries=1,
++    )
++    monkeypatch.setattr(p, "_ensure_server", lambda: True)
++    return p
++
++
++def _one_transition() -> list[Transition]:
++    return [
++        Transition(
++            grid=np.zeros((2, 2), dtype=np.int16),
++            action=1,
++            data=None,
++            next_grid=np.ones((2, 2), dtype=np.int16),
++            level_before=0,
++            level_after=0,
++        )
++    ]
++
++
++# --------------------------------------------------------------------------- #
++# induce_think_on() resolver                                                  #
++# --------------------------------------------------------------------------- #
++def test_think_defaults_off_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
++    assert induce_think_on() is False
++
++
++def test_think_env_override_on(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    assert induce_think_on() is True
++
++
++def test_think_env_override_explicit_off(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++    assert induce_think_on() is False
++
++
++# --------------------------------------------------------------------------- #
++# think OFF (shipped default): byte-identical to pre-lever-#6 behaviour       #
++# --------------------------------------------------------------------------- #
++def test_think_off_is_byte_identical_codeonly_path(monkeypatch: pytest.MonkeyPatch) -> None:
++    """With CARNOT_ARC_INDUCE_THINK unset, generate() must take the EXACT codeonly branch
++    test_codeonly_induce_scoping.py::test_induce_eligible_is_codeonly_with_stop pins."""
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
++    monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
++    cap = _capture_raw(monkeypatch)
++    p = _proposer(monkeypatch)
++    ok, _ = p.generate("BASE_PROMPT", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert ok is True
++    assert cap["body"]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
++    assert cap["body"].get("stop") == ["```"]
++    assert "/v1/chat/completions" not in cap["url"]
++
++
++def test_think_off_induce_appends_pre_opened_fence(monkeypatch: pytest.MonkeyPatch) -> None:
++    """With think off, induce()'s combined call still pre-opens the ```python fence (unchanged
++    from before lever #6)."""
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
++    monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
++    cap = _capture_raw(monkeypatch)
++    p = _proposer(monkeypatch)
++    ok, _ = p.induce("g", _one_transition(), 1)
++    assert ok is True
++    # The codeonly branch wraps the whole prompt as DIRECTIVE + prompt + pre-opened fence, so the
++    # induce()-appended fence ends up in the MIDDLE of the final request body, not at the tail.
++    assert cap["body"]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
++    assert "\n```python\n" in cap["body"]["prompt"]
++    assert cap["body"]["prompt"].rstrip().endswith("```python")  # the codeonly-added closing fence
++
++
++# --------------------------------------------------------------------------- #
++# think ON: no codeonly directive, no pre-opened fence, chat-endpoint routing #
++# --------------------------------------------------------------------------- #
++def test_think_on_skips_codeonly_directive_and_stop(monkeypatch: pytest.MonkeyPatch) -> None:
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    p = _proposer(monkeypatch)
++    calls: list[dict] = []
++
++    def fake_chat(
++        self, prompt, *, max_tokens, temperature, stop, attempt=0, _continuation_prefix=None
++    ):
++        calls.append({"prompt": prompt, "stop": stop})
++        return ({"content": _VALID_CODE, "stop_type": "eos"}, _VALID_CODE)
++
++    monkeypatch.setattr(LocalGGUFProposer, "_chat_complete_request", fake_chat)
++    ok, _ = p.generate("BASE_PROMPT", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert ok is True
++    assert len(calls) == 1
++    assert not calls[0]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
++    assert calls[0]["prompt"] == "BASE_PROMPT"  # no directive, no no_think_prefix prepended either
++    assert calls[0]["stop"] is None  # no forced fence-close stop
++
++
++def test_think_on_routes_through_chat_endpoint_not_raw(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Think mode must use /v1/chat/completions even when self.use_chat_template is False --
++    raw /completion never splits gemma's native thought channel into reasoning_content."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    cap = _capture_raw(monkeypatch)  # would record a call if generate() fell through to raw
++    p = _proposer(monkeypatch)
++    assert p.use_chat_template is False
++
++    def fake_chat(
++        self, prompt, *, max_tokens, temperature, stop, attempt=0, _continuation_prefix=None
++    ):
++        return ({"content": _VALID_CODE, "stop_type": "eos"}, _VALID_CODE)
++
++    monkeypatch.setattr(LocalGGUFProposer, "_chat_complete_request", fake_chat)
++    ok, _ = p.generate("BASE_PROMPT", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert ok is True
++    assert "body" not in cap  # raw /completion was never called
++
++
++def test_think_on_not_eligible_call_is_unaffected(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Think mode is gated on codeonly_eligible, exactly like codeonly itself: a non-eligible
++    call (refactor) must not be routed to the chat endpoint by this flag."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    cap = _capture_raw(monkeypatch)
++    p = _proposer(monkeypatch)
++    ok, _ = p.generate("BASE_PROMPT", ("engine", "is_level_complete"), codeonly_eligible=False)
++    assert ok is True
++    assert cap["body"]["prompt"] == "BASE_PROMPT"  # no_think_prefix is "" for this fixture
++    assert "/v1/chat/completions" not in cap["url"]
++
++
++def test_think_on_induce_omits_pre_opened_fence(monkeypatch: pytest.MonkeyPatch) -> None:
++    """induce()'s combined call must not pre-open the fence when think is on (exp5714: the fence
++    alone suppresses reasoning, independent of the codeonly directive)."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    p = _proposer(monkeypatch)
++    calls: list[dict] = []
++
++    def fake_chat(
++        self, prompt, *, max_tokens, temperature, stop, attempt=0, _continuation_prefix=None
++    ):
++        calls.append({"prompt": prompt})
++        return ({"content": _VALID_CODE, "stop_type": "eos"}, _VALID_CODE)
++
++    monkeypatch.setattr(LocalGGUFProposer, "_chat_complete_request", fake_chat)
++    ok, _ = p.induce("g", _one_transition(), 1)
++    assert ok is True
++    assert len(calls) == 1
++    assert not calls[0]["prompt"].rstrip().endswith("```python")
++    assert "Return ONLY one ```python code block" in calls[0]["prompt"]
+-- 
+2.55.0
+

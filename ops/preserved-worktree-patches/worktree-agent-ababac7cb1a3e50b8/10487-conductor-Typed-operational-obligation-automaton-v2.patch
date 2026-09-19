@@ -1,0 +1,319 @@
+From f0c1786bf32ff49065a447aaf58b5a0e5e1a0728 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 01:20:59 -0400
+Subject: [PATCH 10487/11362] [conductor] Typed operational-obligation
+ automaton v2
+
+Automated research step by research conductor.
+Task ID: exp6802-operational-obligation-automaton-v2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |   2 +-
+ ...2_operational_obligation_automaton_v2.json | 281 ++++++++++++++++++
+ 2 files changed, 282 insertions(+), 1 deletion(-)
+ create mode 100644 results/experiment_6802_operational_obligation_automaton_v2.json
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 22fb4edca4..a5dc8b2ce0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5199,
++  "experiments_checked": 5200,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6802_operational_obligation_automaton_v2.json b/results/experiment_6802_operational_obligation_automaton_v2.json
+new file mode 100644
+index 0000000000..36ef1d5fc2
+--- /dev/null
++++ b/results/experiment_6802_operational_obligation_automaton_v2.json
+@@ -0,0 +1,281 @@
++{
++  "attack_results": [],
++  "backward_compatibility_receipts": {
++    "receipts": [
++      {
++        "command": ".venv/bin/python -m carnot.experiment_6656_arc_trace_automaton_live_loo --validate",
++        "exit_code": 0,
++        "schema": "carnot.arc.trace_fsm.v1",
++        "status": "validated"
++      },
++      {
++        "command": ".venv/bin/python -m carnot.experiment_6681_arc_post_redirect_outcomes --validate",
++        "exit_code": 0,
++        "eligible_redirect_outcome_rows": 30,
++        "status": "validated"
++      },
++      {
++        "command": ".venv/bin/python -m carnot.experiment_6682_arc_held_family_supervisor_ab --validate",
++        "exit_code": 0,
++        "source_verdict_class": "partial",
++        "status": "validated"
++      }
++    ],
++    "v1_read_support_implemented": false
++  },
++  "canonical_byte_receipts": {
++    "receipts": [],
++    "state": "not_run_because_precondition_failed"
++  },
++  "compiler_manifest": {
++    "implementation": null,
++    "state": "not_built_because_precondition_failed",
++    "supervisor_upgrade_target": "python/carnot/agentic/arc_trajectory_supervisor.py"
++  },
++  "duration_s": 20.5,
++  "experiment_id": "experiment_6802_operational_obligation_automaton_v2",
++  "field_principles": {
++    "attack_results": "Keep every required adversarial result visible. The list is empty because the source gate failed before compilation.",
++    "backward_compatibility_receipts": "Separate validated v1 inputs from unimplemented v2 read support.",
++    "canonical_byte_receipts": "Require exact record and automaton byte identity before downstream use.",
++    "compiler_manifest": "Name the one existing supervisor that this task may upgrade.",
++    "duration_s": "Record the wall time of the three existing artifact validators.",
++    "field_principles": "Explain the evidence boundary for each required field.",
++    "frozen_trace_manifest": "Prevent a missing source gate from becoming an invented trace panel.",
++    "gate_check_summary": "Name each precondition, expected value, observed value, and terminal failure.",
++    "hard_violation_count": "Count evaluated hard violations only. Zero here means no rows were evaluated.",
++    "honest_verdict": "Use the exact terminal blocker required by the task contract.",
++    "inference_substrate": "Disclose that the planned interface is deterministic CPU code and uses no LLM.",
++    "obligation_schema": "Show that no v2 schema was created after a failed source gate.",
++    "operational_automaton_fixture_ready": "Provide the exact downstream field consumed by Exp6803.",
++    "priority_order": "Freeze the planned lexicographic order without claiming that a compiler exists.",
++    "random_seed": "Fix the planned mutation order if the source gate is later repaired.",
++    "reproducibility_checksum": "Bind all artifact content except this checksum to one canonical digest.",
++    "rows": "Hold one row per trace or mutation only after preconditions pass.",
++    "solve_claim": "Prevent this source-only block from receiving solve credit.",
++    "solve_provenance": "Classify this development fixture without implying a live solve.",
++    "source_artifact_hashes": "Bind every existing task source and expose the missing source as null.",
++    "source_receipts": "Record existence, hashes, and semantic observations for each required input.",
++    "verdict_class": "Use the closed result enum for automation.",
++    "verifier_is_oracle": "Keep this exact interface separate from a learned self-evaluating verifier."
++  },
++  "frozen_trace_manifest": {
++    "eligible_exp6681_redirect_outcomes": 30,
++    "exp6656_fsm_hash": "sha256:10a9ce22d3b8452b9c80c336c7d208f8c76f4d91815e4ae18c32b5dd55279d63",
++    "source_free_panel_built": false,
++    "state": "not_built_because_precondition_failed"
++  },
++  "gate_check_summary": {
++    "all_passed": false,
++    "checks": [
++      {
++        "check": "v1_trace_automaton_supervisor_exists",
++        "expected": "TraceAutomatonSupervisor in the existing supervisor module",
++        "observed": "present",
++        "passed": true
++      },
++      {
++        "check": "exp6656_validates",
++        "expected": 0,
++        "observed": 0,
++        "passed": true
++      },
++      {
++        "check": "exp6681_exact_redirect_outcomes",
++        "expected": {
++          "arc_outcome_transport_ready": true,
++          "eligible_redirect_outcome_rows": 30
++        },
++        "observed": {
++          "arc_outcome_transport_ready": true,
++          "eligible_redirect_outcome_rows": 30
++        },
++        "passed": true
++      },
++      {
++        "check": "exp6682_partial_verification_receipt",
++        "expected": {
++          "failed_check": "verification_failure",
++          "verdict_class": "partial"
++        },
++        "observed": {
++          "failed_check": "verification_failure",
++          "verdict_class": "partial"
++        },
++        "passed": true
++      },
++      {
++        "check": "arc_solve_registry_exists",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "v594_planner_refresh_and_exp6802_contract_exist",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "existing_arc_requirement_anchors_exist",
++        "expected": [
++          "REQ-ARC-WMTE-6656",
++          "REQ-ARC-WMTE-6681",
++          "REQ-ARC-WMTE-6682"
++        ],
++        "observed": [
++          "REQ-ARC-WMTE-6656",
++          "REQ-ARC-WMTE-6681",
++          "REQ-ARC-WMTE-6682"
++        ],
++        "passed": true
++      },
++      {
++        "check": "required_agentic_verification_spec_exists",
++        "expected": {
++          "contains": "REQ-* anchors",
++          "exists": true,
++          "path": "openspec/capabilities/agentic-verification/spec.md"
++        },
++        "observed": {
++          "contains": null,
++          "exists": false,
++          "path": "openspec/capabilities/agentic-verification/spec.md"
++        },
++        "passed": false
++      }
++    ],
++    "failed_check": "required_agentic_verification_spec_exists",
++    "failed_checks": [
++      "required_agentic_verification_spec_exists"
++    ],
++    "observed": {
++      "contains": null,
++      "exists": false,
++      "path": "openspec/capabilities/agentic-verification/spec.md"
++    },
++    "passed": false
++  },
++  "hard_violation_count": 0,
++  "honest_verdict": "complete_blocked_operational_obligation_automaton",
++  "inference_substrate": "deterministic CPU automaton, no LLM",
++  "obligation_schema": {
++    "schema": null,
++    "state": "not_defined_because_precondition_failed"
++  },
++  "operational_automaton_fixture_ready": false,
++  "priority_order": [
++    "hard_feasibility",
++    "binding_obligations",
++    "soft_progress"
++  ],
++  "random_seed": 6802,
++  "reproducibility_checksum": "sha256:94e19b6bc2487cec5e31bbfca36fb867e19658337699aebf8f03f4e32c44bf69",
++  "rows": [],
++  "run_date": "20260831",
++  "schema": "carnot.experiment_6802.operational_obligation_automaton_v2.blocked.v1",
++  "solve_claim": false,
++  "solve_provenance": "development_proxy",
++  "source_artifact_hashes": {
++    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++    "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++    "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
++    "openspec/capabilities/agentic-verification/spec.md": null,
++    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:7c7c52135af6bc774801090219752747ddca3215e3d066c060683c56c6e8a71a",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:9f5a907f265e0cdb2f9749b81560776c3e016cddc7f70daa3834c8e49eb634bc",
++    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "python/carnot/agentic/arc_trajectory_supervisor.py": "sha256:b4763f89da8e551c14ad96b6b62356af018e53f5aeb1680750b1feb3bf4147bf",
++    "python/carnot/experiment_6656_arc_trace_automaton_live_loo.py": "sha256:c74bd562ff26af633ecbfed88d6040263b662e73b9a4891155250b11d28c2c95",
++    "python/carnot/experiment_6681_arc_post_redirect_outcomes.py": "sha256:7b9c1c41625c678f32baa37e0d4ed5ba75a7e10c96ed25766b0d4f6d5d56722b",
++    "python/carnot/experiment_6682_arc_held_family_supervisor_ab.py": "sha256:1f3cbd66e4d784f8d0bd804fe8ae35963e90fb89aee343a0755db8b629972af0",
++    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++    "research-references.md": "sha256:1a80cd74ab8bcf6952a33a5ce0e6056280af7f14b1ce438a394f24cdc1a63d20",
++    "results/experiment_6656_arc_trace_automaton_live_loo.json": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e",
++    "results/experiment_6681_arc_post_redirect_outcomes.json": "sha256:bf61e50970530a9844103e59f702c68e32a8aba12f78b1c68dd6154685b9107a",
++    "results/experiment_6682_arc_held_family_supervisor_ab.json": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57"
++  },
++  "source_receipts": [
++    {
++      "exists": true,
++      "observation": "Required repository instructions were read.",
++      "path": "AGENTS.md",
++      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++    },
++    {
++      "exists": true,
++      "observation": "Required repository workflow was read.",
++      "path": "CODEX.md",
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "observation": "The active ARC, fail-closed, test-integrity, and writing rules were read.",
++      "path": "CLAUDE.md",
++      "sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad"
++    },
++    {
++      "exists": true,
++      "observation": "FR12 requires deterministic constraint-satisfaction verification.",
++      "path": "_bmad/prd.md",
++      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
++    },
++    {
++      "exists": true,
++      "observation": "V594 defines Exp6802 as an upgrade to the existing automaton with no live claim.",
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:9f5a907f265e0cdb2f9749b81560776c3e016cddc7f70daa3834c8e49eb634bc"
++    },
++    {
++      "exists": false,
++      "observation": "The exact capability path named as an existing required source is absent.",
++      "path": "openspec/capabilities/agentic-verification/spec.md",
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "observation": "The existing ARC capability contains REQ-ARC-WMTE-6656, REQ-ARC-WMTE-6681, and REQ-ARC-WMTE-6682.",
++      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
++      "sha256": "sha256:7c7c52135af6bc774801090219752747ddca3215e3d066c060683c56c6e8a71a"
++    },
++    {
++      "exists": true,
++      "observation": "The v1 supervisor exposes TraceAutomatonSupervisor and accepts carnot.arc.trace_fsm.v1.",
++      "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++      "sha256": "sha256:b4763f89da8e551c14ad96b6b62356af018e53f5aeb1680750b1feb3bf4147bf"
++    },
++    {
++      "exists": true,
++      "observation": "The artifact validates and remains blocked because changed actions lack exact archived outcomes.",
++      "path": "results/experiment_6656_arc_trace_automaton_live_loo.json",
++      "sha256": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e"
++    },
++    {
++      "exists": true,
++      "observation": "The artifact validates with exactly 30 eligible redirect outcome rows.",
++      "path": "results/experiment_6681_arc_post_redirect_outcomes.json",
++      "sha256": "sha256:bf61e50970530a9844103e59f702c68e32a8aba12f78b1c68dd6154685b9107a"
++    },
++    {
++      "exists": true,
++      "observation": "The artifact validates as partial with failed_check verification_failure.",
++      "path": "results/experiment_6682_arc_held_family_supervisor_ab.json",
++      "sha256": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57"
++    },
++    {
++      "exists": true,
++      "observation": "V594 cites CEDAR and constraint weakening and requires a typed operational contract.",
++      "path": "research-references.md",
++      "sha256": "sha256:1a80cd74ab8bcf6952a33a5ce0e6056280af7f14b1ce438a394f24cdc1a63d20"
++    },
++    {
++      "exists": true,
++      "observation": "The registry was read and remains unchanged. This task claims no solve.",
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
++    }
++  ],
++  "status": "complete_blocked_operational_obligation_automaton",
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+-- 
+2.55.0
+

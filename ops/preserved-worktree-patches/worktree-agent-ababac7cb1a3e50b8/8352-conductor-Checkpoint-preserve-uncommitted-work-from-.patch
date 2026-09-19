@@ -1,0 +1,44 @@
+From c2365a9552bda93ec5f0e2403a50fca4631c8b99 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 6 Aug 2026 12:55:31 -0400
+Subject: [PATCH 08352/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c44966e188..9ffb932b5b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-08-06T16:12:19Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 45, "phase": "iteration_start", "last_beat": "2026-08-06T16:55:28Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4f9147e15c..a8cef4f180 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15405,3 +15405,5 @@ Still active  |
+ | 2026-08-06 15:44 UTC | Gated on Exp6160 readiness: freeze a decision-cali | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-06 16:10 UTC | Gated on Exp6161 readiness: one-shot decision-util | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-06 16:12 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
++| 2026-08-06 16:53 UTC | Mandatory prospective continuous strategy-learning | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6164_continu |
++| 2026-08-06 16:55 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 06934cf9ca..f110c09bcd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 44, "phase": "iteration_start", "started_at": "2026-08-06T16:12:19Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 45, "phase": "iteration_start", "started_at": "2026-08-06T16:55:28Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

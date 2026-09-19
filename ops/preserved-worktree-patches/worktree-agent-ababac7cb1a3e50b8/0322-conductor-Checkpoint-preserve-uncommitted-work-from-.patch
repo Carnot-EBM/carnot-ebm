@@ -1,0 +1,43 @@
+From d0982cc5dd00a5b91fbb5a636e81e663a87ddb44 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 13:03:51 -0400
+Subject: [PATCH 00322/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index be48320539..d668db36eb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-06-03T16:44:21Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-06-03T17:03:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b1b96bd20c..cb2c6d984b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7717,3 +7717,4 @@ ERROR: {
+ | 2026-06-03 16:14 UTC | Reconcile the DEFINITIVE Thesis-A close into the r | OK | 107 passed in 4.47s |
+ | 2026-06-03 16:31 UTC | G2 mechanical reproducer (re-do the SKIPPED .344 e | OK | 93 passed in 4.73s |
+ | 2026-06-03 16:42 UTC | G3 narrowing lint (re-do the SKIPPED .344 exp3757) | OK | 91 passed in 4.50s |
++| 2026-06-03 17:01 UTC | Phase-1 SHIP gate (re-do the SKIPPED .344 exp3758) | OK | 86 passed in 14.76s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 608c4f078b..7ffbda12bd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 36, "phase": "iteration_start", "started_at": "2026-06-03T16:44:21Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 37, "phase": "iteration_start", "started_at": "2026-06-03T17:03:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

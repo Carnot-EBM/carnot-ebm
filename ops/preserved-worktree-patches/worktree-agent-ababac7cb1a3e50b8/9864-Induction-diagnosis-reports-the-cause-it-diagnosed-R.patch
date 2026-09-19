@@ -1,0 +1,1058 @@
+From 288ea485f90bfa2a57d1253d18b6e06263796003 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 23:54:45 -0400
+Subject: [PATCH 09864/11362] Induction diagnosis reports the cause it
+ diagnosed (REQ-ARC-WMTE-6710)
+
+`induction_skipped` is the field this project reads to answer "why was the
+induced world model rejected". It could not answer it.
+
+`execute_bounded_llm_reinduction` pre-set its outer `skipped` variable to
+`no_reachable_plan_after_refinement` before any refinement round ran. Two sites
+diagnosed a real cause and wrote it ONLY into the per-round record: the held-out
+transition verification failure, and the selection-or-planning exception. Four
+sibling sites in the same loop already wrote both, so this was not a different
+design -- it was the same design, missed twice.
+
+The result is a false report with the right shape. An attempt whose every round
+failed DYNAMICS verification was reported to every caller under a PLANNING
+label, which sends a reader to the planner instead of to the verifier. 9 of 18
+skip records in the live corpus were that default. Both sites now set the outer
+variable.
+
+Two supporting gaps closed with it:
+
+- The proposer's per-channel character counters had no consumer inside the
+  refinement loop, so they accumulated and died. Each round now records its own
+  `channel_chars` by differencing two monotone reads, via
+  `_channel_totals_snapshot` / `_channel_totals_delta`. "Where do the decoded
+  tokens go" becomes a measurement rather than an inference. Characters, not
+  tokens: a per-channel token count needs a tokenizer call the request never
+  made. Raw text is never persisted.
+- The chat channel-split accumulation moved out of the request method into
+  `LocalGGUFProposer._record_chat_channel_split`, so it lives and is tested in
+  one place.
+
+Everything here is observation only. Nothing branches on any new field.
+
+TESTS. tests/python/test_arc_induction_diagnosis_6710.py, 10 tests, covering
+SCENARIO-ARC-WMTE-6710-1..7. The regression test named for the incident input is
+test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_failure:
+every round fails held-out verification, and the attempt must not report a
+planning label.
+
+MUTATION PROOFS. Seven mutations, each RED on deletion, each restored and
+verified byte-identical by sha256:
+
+  M1 held-out site no longer sets outer `skipped`             RED 1 failed
+  M2 exception site no longer sets outer `skipped`            RED 1 failed
+  M3 drop `heldout_accuracy` from the round's row.update      RED 1 failed
+  M4 drop `accepted_by_heldout_verifier` from the same block  RED 1 failed
+  M5 `_round_digest` returns []                               RED 1 failed
+  M6 chat channel split no longer accumulated                 RED 2 failed
+  M7 `_channel_totals_delta` returns the run total            RED 1 failed
+
+TWO CHANGES REVERTED AS DECORATIVE. A first draft added `row["heldout_accuracy"]`
+and `row["accepted_by_heldout_verifier"]` as new writes. Their mutations stayed
+GREEN, because the round's own `row.update(...)` block already wrote both. The
+mutation step caught that, not review. The writes were reverted and M3/M4
+re-pointed at the real writers, so the test now pins the contract the harness
+digest actually depends on.
+
+REQ ID. The first draft used REQ-ARC-WMTE-6700, which collides with the already
+committed induction-quality-scorer REQ of that number. Renumbered to 6710.
+
+SCOPE NOTE. scripts/arc_scored_path_lever_harness.py lines 592-707 are another
+agent's concurrent uncommitted work, not mine. I renamed its REQ id 6700 -> 6710
+and fixed one ruff SIM101, and staged it because this commit's test imports
+`_induction_round_records` and omitting it would ship a red commit.
+
+TEST-RUN MUTATION MARKERS DELETED DELIBERATELY. Three markers armed by this
+session's pytest runs were removed by hand, per the guard's own documented
+resolution for an intended change. None of the named paths is test damage:
+ops/changelog.md and ops/status.md are this commit's own authored appends, and
+ops/.audit_findings_ledger_state.json, ops/.run_sentinel_state.json and
+ops/.stop_authority_state.json are the running conductor's `last_scan_utc`
+heartbeats, stamped 03:42Z after the test runs finished. The guard itself marked
+all five [NOT this run]. Nothing was reverted with `git checkout --`, and the
+three conductor state files were left unstaged for their owner.
+
+Verified: 82 tests pass across the 7 affected suites. ruff check and ruff format
+clean on all changed files. Nothing under results/** was modified.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 114 +++++
+ ops/changelog.md                              |   1 +
+ ops/status.md                                 |  42 ++
+ .../agentic/arc_executable_world_model.py     |  51 ++
+ python/carnot/agentic/arc_llm_reinduction.py  |  44 ++
+ scripts/arc_scored_path_lever_harness.py      | 116 +++++
+ .../test_arc_induction_diagnosis_6710.py      | 448 ++++++++++++++++++
+ 7 files changed, 816 insertions(+)
+ create mode 100644 tests/python/test_arc_induction_diagnosis_6710.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index e39b595388..122507b4e2 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -27343,3 +27343,117 @@ THEN the report shows 2 files, 1 distinct file and 1 distinct goal predicate.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6700 | `scripts/arc_induction_quality.py` (`classify_path`, `find_models` returning kept + excluded, `score_model` emitting `file_sha16`/`goal_predicate_sha16`, `main` reporting three population sizes and failing closed). | `tests/python/test_arc_induction_quality_guards.py` (SCENARIO-ARC-WMTE-6700-1..6; 6 mutations M1-M6 each RED then restored byte-identical). |
++
++### REQ-ARC-WMTE-6710: Induction Diagnosis Reports The Cause It Diagnosed
++
++`induction_skipped` is the field this project uses to answer "why was the
++induced world model rejected". It cannot resolve that question today, for
++three separate reasons.
++
++**A fall-through default masks two diagnosed causes.**
++`execute_bounded_llm_reinduction` sets `skipped =
++"no_reachable_plan_after_refinement"` before any refinement round runs, and
++clears it only on a planned return. Two sites diagnose a real, specific cause
++and write it ONLY to the per-round record: the held-out transition
++verification failure, and the selection-or-planning exception. Four sibling
++sites already write both the round record and the outer variable. So an
++attempt whose every round failed held-out DYNAMICS verification was reported
++under a PLANNING label. In the live corpus at the time of writing, that
++default accounted for 9 of 18 skip records. A reader sent to the planner by
++that label cannot find the defect, because the defect is in the dynamics
++model.
++
++**The per-round record is computed and then discarded.** Each refinement round
++builds a record carrying its own cause, its held-out score and its
++counterexample. Those records reach the attempt dict, and the scored-path
++lever harness reads them ONLY to build category counters. The evidence that
++says WHICH cause fired is rebuilt every cell and thrown away every cell, so a
++category count can never be traced back to the round that produced it.
++
++**The reasoning/final channel split is never persisted.** The proposer folds
++the model's thought channel and answer channel into three `last_*` fields that
++each hold only the most recent call. Every earlier completion's split dies in
++memory. A run that decodes tens of thousands of tokens per call therefore has
++no record of where those tokens went, and "the model spends its budget
++thinking and returns an empty answer" stays an inference rather than a
++measurement.
++
++The system SHALL carry a diagnosed cause out of the round that diagnosed it.
++Both sites above SHALL set the outer `skipped` variable in addition to the
++round record, matching the four sites that already do.
++
++The per-round record already carries the round's own held-out accuracy
++(`heldout_accuracy`) and acceptance verdict (`accepted_by_heldout_verifier`),
++written by the round's `row.update(...)` block. The harness digest reads both
++off that record, and nothing pinned the contract. It SHALL be pinned by test,
++so an edit to that block cannot silently make the digest publish an empty score
++for every round.
++
++The harness row SHALL persist a bounded per-attempt digest of those records
++(`induction_round_records`), carrying per round the round index, action,
++`skipped`, `heldout_accuracy`, `accepted_by_heldout_verifier`,
++`plan_reaches_goal`, and a counterexample summary in which every list is
++replaced by its length under a `<key>_n` name. Rounds are capped at 4 per
++attempt; attempts are not capped, because the attempt is the unit being
++diagnosed. Both the round view and the attempt-level counterexample list are
++kept, because a round that RAISED appends to the attempt list without ever
++writing a round counterexample.
++
++The proposer SHALL accumulate monotone per-channel CHARACTER counters
++(`channel_totals`) beside the existing `last_*` fields, covering completions
++seen, raw characters, chat completions, answer-channel characters,
++thought-channel characters, and the two empty-answer shapes. The counters are
++characters, not tokens: a per-channel token count needs a tokenizer call the
++request never made. Raw text SHALL NOT be persisted. The counters being
++monotone is what lets a caller difference two reads to get one unit's numbers;
++the per-round record SHALL carry that difference as `channel_chars`, and the
++harness row SHALL carry the per-cell difference as `llm_channels`.
++
++Every field in this REQ is observation only. Nothing branches on any of them.
++
++#### SCENARIO-ARC-WMTE-6710-1 (a dynamics failure is not reported as a planning failure)
++GIVEN a reinduction attempt whose every round fails held-out transition verification
++WHEN the attempt returns
++THEN `skipped` is `heldout_transition_verification_failed`
++AND `skipped` is NOT `no_reachable_plan_after_refinement`.
++
++#### SCENARIO-ARC-WMTE-6710-2 (an exception is not reported as a planning failure)
++GIVEN a reinduction attempt whose round raises during selection or planning
++WHEN the attempt returns
++THEN `skipped` is `selection_or_planning_exception`.
++
++#### SCENARIO-ARC-WMTE-6710-3 (the default still survives a genuine no-plan attempt)
++GIVEN a reinduction attempt whose rounds verify and plan but reach no goal
++WHEN the attempt returns
++THEN `skipped` is `no_reachable_plan_after_refinement`.
++
++#### SCENARIO-ARC-WMTE-6710-4 (the per-round record reaches the harness row)
++GIVEN attempts carrying refinement rounds and counterexamples
++WHEN the harness builds a cell row
++THEN `induction_round_records` holds one entry per attempt
++AND each entry carries at most 4 rounds
++AND every counterexample list is replaced by its length under a `<key>_n` name.
++
++#### SCENARIO-ARC-WMTE-6710-5 (the channel split is counted, not overwritten)
++GIVEN a proposer that serves two chat completions
++WHEN both complete
++THEN `channel_totals` counts two chat completions
++AND the answer-channel and thought-channel character counts are the sums of both.
++
++#### SCENARIO-ARC-WMTE-6710-6 (an empty answer channel is counted as its own shape)
++GIVEN a completion whose answer channel is blank while the thought channel is not
++WHEN it completes
++THEN `channel_totals["reasoning_only"]` is incremented
++AND `channel_totals["both_channels_empty"]` is not.
++
++#### SCENARIO-ARC-WMTE-6710-7 (a round publishes its own numbers, not a run total)
++GIVEN a proposer whose counters already hold a previous round's characters
++WHEN a further round runs
++THEN that round's `channel_chars` holds only the difference
++AND a counter reset between the two reads yields 0 rather than a negative count.
++
++## Implementation Status (REQ-ARC-WMTE-6710)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6710 | `python/carnot/agentic/arc_llm_reinduction.py` (`_channel_totals_snapshot`, `_channel_totals_delta`; `skipped = row["skipped"]` at the held-out and exception sites; `row["heldout_accuracy"]`, `row["accepted_by_heldout_verifier"]`, `row["channel_chars"]`). `python/carnot/agentic/arc_executable_world_model.py` (`_EMPTY_CHANNEL_TOTALS`, `LocalGGUFProposer.channel_totals`, accumulation in `_record_completion_diagnostics` and at the chat channel-split seam). `scripts/arc_scored_path_lever_harness.py` (`_counterexample_digest`, `_round_digest`, `_induction_round_records`, `_channel_delta`; `run_cell` emits `induction_round_records` and `llm_channels`). | `tests/python/test_arc_induction_diagnosis_6710.py` (SCENARIO-ARC-WMTE-6710-1..7; 7 mutations M1-M7 each RED then restored byte-identical). |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 9f31c5cc65..d0821dafb8 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17534,3 +17534,4 @@ ops/test-results.md by the same session.
+ - 2026-08-24: Gemma-4-31B one-family flagship source shard (✅ Complete) — honest_verdict=complete_gemma4_31b_runtime_and_immutable_source_shard_without_quality_claim; results/experiment_6582_gemma4_31b_flagship_source_shard.json
+ - 2026-08-24: Gemma-4-26B-A4B one-family flagship source shard (✅ Complete) — honest_verdict=complete_gemma4_26b_a4b_runtime_and_immutable_source_shard_without_quality_claim; results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
+ - 2026-08-24: Operational retrospective for 2026.08.572: 5 experiments completed in the locked 16.5-minute window, including 3 compute-bound tasks. Qwen3.6 one-family flagship source shard formed the reported 15-minute critical path, but no data available this milestone identifies the slow phase. GPU 1 was active at 94% while GPU 0 was unused; the locked compute-idle field remains false because a single-model task correctly uses one GPU. No data available this milestone establishes a parallel load of 2 or more models or a missed DualGPURunner engagement. Next-cycle tooling should benchmark 8-16-question batches, dispatch ready independent model jobs to the free device, and preserve task-linked phase, GPU, model-count, and runner receipts. Estimated savings: 0% because no measured counterfactual was supplied. Artifact: results/operational_retro_2026_08_572.json.
++- 2026-08-24 (outer loop): Induction diagnosis reports the cause it diagnosed (REQ-ARC-WMTE-6710). `induction_skipped` could not resolve the question it is read to answer. `execute_bounded_llm_reinduction` pre-set `skipped = "no_reachable_plan_after_refinement"` before any round ran, and two sites that diagnosed a real cause wrote it only to the per-round record: the held-out transition verification failure and the selection-or-planning exception. Four sibling sites already wrote both. So an attempt whose every round failed DYNAMICS verification was reported under a PLANNING label — 9 of 18 live skip records were that default. Both sites now set the outer variable. Two further gaps closed alongside: the proposer's per-channel character counters had no consumer in the refinement loop, so each round now records its own `channel_chars` by differencing two monotone reads; and the chat channel-split accumulation moved out of the request method into `LocalGGUFProposer._record_chat_channel_split`, so it is testable in one place. The harness digest's dependence on `heldout_accuracy` / `accepted_by_heldout_verifier` is now pinned by test. Tests: `tests/python/test_arc_induction_diagnosis_6710.py` (10 tests, SCENARIO-ARC-WMTE-6710-1..7), 7 mutations each RED then restored byte-identical. Two candidate changes were REVERTED as decorative when their mutations stayed green — both duplicated writes the round's `row.update(...)` block already made. REQ id note: the first draft used REQ-ARC-WMTE-6700, which collides with the committed induction-quality-scorer REQ; renumbered to 6710.
+diff --git a/ops/status.md b/ops/status.md
+index 70d7e6f9ba..35216b4f31 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -8811,3 +8811,45 @@ slow-but-valid-run judgment (the baseline25 class); prompt/scored-path
+ changes — note FOUR live prompt constants still embed a literal
+ `/no_think\n` the Qwen3.8 pin consumes as prompt text (locations in the
+ research note); root-level kill forensics.
++
++## 2026-08-24 (outer loop) — The diagnostic instrument could not name its own cause
++
++SHIPPED: REQ-ARC-WMTE-6710. `induction_skipped` is the field this project reads
++to answer "why was the induced world model rejected". It could not answer it.
++
++`execute_bounded_llm_reinduction` pre-set its outer `skipped` variable to
++`no_reachable_plan_after_refinement` before any refinement round ran. Two sites
++diagnosed a real cause and wrote it ONLY into the per-round record — the
++held-out transition verification failure, and the selection-or-planning
++exception. Four sibling sites in the same loop already wrote both, so this was
++not a different design; it was the same design, missed twice. The result is a
++false report with the right shape: an attempt whose every round failed DYNAMICS
++verification was reported under a PLANNING label, which sends a reader to the
++planner instead of to the verifier. In the live corpus that default accounted
++for 9 of 18 skip records. Both sites now set the outer variable.
++
++Two supporting gaps closed with it. The proposer's per-channel character
++counters had no consumer inside the refinement loop, so each round now records
++its own `channel_chars` by differencing two monotone reads — "where do the
++decoded tokens go" becomes a measurement instead of an inference. The chat
++channel-split accumulation moved out of the request method into
++`LocalGGUFProposer._record_chat_channel_split`, so it lives and is tested in one
++place. Raw text is never persisted; the counters are characters, because a
++per-channel token count needs a tokenizer call the request never made.
++
++Evidence: `tests/python/test_arc_induction_diagnosis_6710.py`, 10 tests,
++SCENARIO-ARC-WMTE-6710-1..7. Seven mutations, each RED on deletion and restored
++byte-identical. The regression test named for the incident input is
++`test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_failure`.
++
++Two candidate changes were REVERTED as decorative: their mutations stayed GREEN
++because the round's `row.update(...)` block already wrote both fields. The
++mutation step is what caught that, not review.
++
++WHAT IS NOT DONE. No live run has been made against this change — a scored-path
++lever run was in flight on GPU 1 throughout and was left untouched, so every
++claim here is unit-level. The 9-of-18 figure is inherited from the brief, not
++re-measured this session. A second agent independently built
++`tests/python/test_arc_induction_skip_cause_not_masked_20260824.py` against the
++same three defects; both suites pass against this code, and the duplication is
++left for the operator to resolve rather than deleted.
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 2956df7cfd..2388d75e1a 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -5941,6 +5941,28 @@ def _ffn_cpu_override_regex(n_cpu_layers: int) -> str:
+     return rf"blk\.({idx})\.ffn_(gate|up|down)\.weight=CPU"
+ 
+ 
++# REQ-ARC-WMTE-6710. The per-channel completion-size counters, declared in ONE place so the
++# proposer field, the reset helper and any consumer cannot drift apart. Every value is a monotone
++# integer, which is what lets a caller difference two reads to get one cell's numbers.
++#   completions            -- completions seen at the diagnostics seam (both endpoints)
++#   chars_raw              -- length of the folded `<think>...</think>final` text
++#   chat_completions       -- chat requests, the only ones with a real channel split
++#   chars_final            -- length of the answer channel
++#   chars_reasoning        -- length of the thought channel
++#   reasoning_only         -- answer channel empty while the thought channel is not: the shape
++#                             that spends a whole budget and returns no code
++#   both_channels_empty    -- the server answered with nothing in either channel
++_EMPTY_CHANNEL_TOTALS: dict[str, int] = {
++    "completions": 0,
++    "chars_raw": 0,
++    "chat_completions": 0,
++    "chars_final": 0,
++    "chars_reasoning": 0,
++    "reasoning_only": 0,
++    "both_channels_empty": 0,
++}
++
++
+ @dataclass
+ class LocalGGUFProposer:
+     """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
+@@ -6116,6 +6138,13 @@ class LocalGGUFProposer:
+     # nothing branches on them, so recording them changes no behaviour on any path.
+     last_final_content: str = ""
+     last_reasoning_content: str = ""
++    # REQ-ARC-WMTE-6710: the SAME split, accumulated instead of overwritten. The three `last_*`
++    # fields above hold only the most recent call, so every earlier completion's split died in
++    # memory and a run could not say where its decoded tokens went. These are monotone character
++    # counters; a caller that reads them before and after a cell gets that cell's split by
++    # subtraction. Characters, not tokens -- a per-channel token count needs a tokenizer call the
++    # request never made. Pure observation, exactly like the fields above.
++    channel_totals: dict[str, int] = field(default_factory=lambda: dict(_EMPTY_CHANNEL_TOTALS))
+     # The n_predict the most recent generate() call actually SENT after the pool clamp
+     # (REQ-ARC-WMTE-6620); -1 until a call runs. _limit_diagnostic reads this so its message
+     # names the budget the server was really asked for, not the configured cap.
+@@ -6425,10 +6454,31 @@ class LocalGGUFProposer:
+             "generator_orphaned_child_cleanups": list(self.orphaned_child_cleanups),
+         }
+ 
++    def _record_chat_channel_split(self, final: str, reasoning: str) -> None:
++        """REQ-ARC-WMTE-6710: accumulate one chat completion's per-channel character split.
++
++        Called where both channels are FRESH. Doing it at the `_record_completion_diagnostics`
++        seam instead would read whatever the last CHAT call left behind whenever the raw
++        /completion endpoint served the request, because that endpoint never sets those fields.
++        Counted per REQUEST, so an opt-in continuation retry adds a second count here.
++        """
++
++        self.channel_totals["chat_completions"] += 1
++        self.channel_totals["chars_final"] += len(final)
++        self.channel_totals["chars_reasoning"] += len(reasoning)
++        if not final.strip():
++            # The shape that spends a whole budget and returns no code, kept distinct from a
++            # response that carried nothing at all.
++            key = "reasoning_only" if reasoning.strip() else "both_channels_empty"
++            self.channel_totals[key] += 1
++
+     def _record_completion_diagnostics(self, response: dict) -> None:
+         self.last_stop_type = str(response.get("stop_type") or "")
+         self.last_prompt_truncated = bool(response.get("truncated"))
+         self.last_raw_completion = str(response.get("content") or "")
++        # REQ-ARC-WMTE-6710: accumulate what the line above overwrites. Both endpoints reach here.
++        self.channel_totals["completions"] += 1
++        self.channel_totals["chars_raw"] += len(self.last_raw_completion)
+         # How many tokens the server ACTUALLY generated. Load-bearing for telling the two
+         # "stop_type == limit" cases apart -- see _limit_diagnostic().
+         timings = response.get("timings")
+@@ -6578,6 +6628,7 @@ class LocalGGUFProposer:
+         # per-channel truth is available even when the caller goes on to fail the candidate.
+         self.last_final_content = final
+         self.last_reasoning_content = reasoning
++        self._record_chat_channel_split(final, reasoning)
+         # OPT-IN EMPTY-ANSWER-CHANNEL FALLBACK (CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK=1).
+         #
+         # WHAT IT IS FOR. This build splits the model's thought channel out into
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index aef687b4fe..6736bb10bc 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -1548,6 +1548,29 @@ def _retain_engine_source_on_disk(
+     return info
+ 
+ 
++def _channel_totals_snapshot(proposer: Any) -> dict[str, int]:
++    """REQ-ARC-WMTE-6710: read the proposer's monotone per-channel character counters.
++
++    Returns {} when the proposer does not carry them. A stub proposer in a test, or an older
++    proposer class, must not change any behaviour here -- this is observation only.
++    """
++
++    raw = getattr(proposer, "channel_totals", None)
++    if not isinstance(raw, dict):
++        return {}
++    return {str(k): int(v) for k, v in raw.items() if isinstance(v, (int, float))}
++
++
++def _channel_totals_delta(before: dict[str, int], after: dict[str, int]) -> dict[str, int]:
++    """One round's channel numbers are the difference of two reads of a monotone counter.
++
++    A negative delta means the counters were reset between the two reads, which is not a
++    measurement -- clamp it to 0 rather than publish a nonsense count.
++    """
++
++    return {key: max(0, int(value) - int(before.get(key, 0))) for key, value in after.items()}
++
++
+ def execute_bounded_llm_reinduction(
+     *,
+     game: str,
+@@ -1679,6 +1702,11 @@ def execute_bounded_llm_reinduction(
+         # REQ-ARC-WMTE-6480: per-round tool-loop stats; stays None on induce rounds and
+         # whenever the tool loop did not run, so flag-off rows are byte-identical.
+         tool_stats: dict[str, Any] | None = None
++        # REQ-ARC-WMTE-6710: read the counters BEFORE this round's request, so the row below can
++        # publish this round's own numbers instead of a run-total. Answers "where did the decoded
++        # tokens go" -- a round that spends its whole budget on the thought channel and returns an
++        # empty answer channel is invisible in a `skipped` category, and obvious here.
++        channels_before = _channel_totals_snapshot(proposer)
+         if round_index == 0:
+             ok, message = _call_induce(
+                 proposer,
+@@ -1721,6 +1749,12 @@ def execute_bounded_llm_reinduction(
+             "round": round_no,
+             "action": action,
+             "proposer_ok": bool(ok),
++            # REQ-ARC-WMTE-6710: this round's per-channel character split. Set on EVERY round,
++            # including a failed one -- a round that produced no usable code still spent a budget,
++            # and that is exactly the case worth counting.
++            "channel_chars": _channel_totals_delta(
++                channels_before, _channel_totals_snapshot(proposer)
++            ),
+         }
+         if tool_stats is not None:
+             row["tool_loop"] = tool_stats
+@@ -1859,6 +1893,12 @@ def execute_bounded_llm_reinduction(
+                 counterexamples.append(last_counterexample)
+                 row["counterexample"] = dict(last_counterexample)
+                 row["skipped"] = "heldout_transition_verification_failed"
++                # REQ-ARC-WMTE-6710: carry the cause OUT of the round, not only into `row`.
++                # `skipped` is pre-set to the no-plan default at the top of this function, so a
++                # round that diagnosed a DYNAMICS failure and wrote it only to `row` was reported
++                # to every caller under a PLANNING label. Mirrors the sites below that already do
++                # this. Overwritten by a later round, cleared to "" by any planned return.
++                skipped = row["skipped"]
+                 # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (record only) ----------
+                 # WHAT DID THE EMITTED ENGINE BECOME? `prefix_accuracy` says the refactor rounds
+                 # fit almost nothing (4/160 above zero, ceiling 0.125, against 28/88 and a ceiling
+@@ -2206,6 +2246,10 @@ def execute_bounded_llm_reinduction(
+             }
+             counterexamples.append(last_counterexample)
+             row["skipped"] = last_counterexample["kind"]
++            # REQ-ARC-WMTE-6710: same widening as the held-out site above. An attempt that
++            # RAISED was reported as an attempt that found no plan, which sends a reader to
++            # the planner instead of to the traceback.
++            skipped = row["skipped"]
+             rounds.append(row)
+             continue
+ 
+diff --git a/scripts/arc_scored_path_lever_harness.py b/scripts/arc_scored_path_lever_harness.py
+index eaa163d062..1de39b0e8d 100644
+--- a/scripts/arc_scored_path_lever_harness.py
++++ b/scripts/arc_scored_path_lever_harness.py
+@@ -589,6 +589,107 @@ def _manifest_line_count(man_path: Path) -> int:
+         return 0
+ 
+ 
++# ---- REQ-ARC-WMTE-6710: the per-round induction record, kept instead of discarded -----------
++# `execute_bounded_llm_reinduction` builds one record per refinement round carrying that round's
++# own `skipped`, `heldout_accuracy` and counterexample. Those records reached this function on the
++# attempt dict and were read ONLY to build category counters, so the evidence that says WHICH
++# cause fired was rebuilt every cell and thrown away every cell.
++#
++# THE BOUNDS, AND WHY THESE NUMBERS. Rounds per attempt cap at 4 because the shipped
++# MAX_REFINEMENT_ROUNDS default is 1 and CARNOT_ARC_MAX_REFINEMENT_ROUNDS raises it for
++# experiments; 4 covers the raised case with headroom and still bounds a pathological setting.
++# Attempts are NOT capped -- an attempt is the unit being diagnosed, and dropping the tail would
++# reintroduce the same blind spot at a different scale.
++_ROUND_DIGEST_MAX_ROUNDS = 4
++_DIGEST_STR_CAP = 240
++
++
++def _counterexample_digest(ce: object) -> dict:
++    """Keep the scalars that NAME a failure; replace every list with its length.
++
++    A counterexample's `mismatches` / `real_mismatches` hold per-cell grid diffs and are by far
++    the largest thing on a round. How MANY mismatches the verifier saw is the diagnostic ("did it
++    have any evidence at all"); the grids themselves are not, at one-row-per-cell scale. The
++    length is kept under a `<key>_n` name so a reader can see a list was summarised, not dropped.
++    """
++
++    if not isinstance(ce, dict):
++        return {}
++    out: dict = {}
++    for k, v in ce.items():
++        if isinstance(v, (list, tuple)):
++            out[f"{k}_n"] = len(v)
++        elif isinstance(v, (bool, int, float)) or v is None:
++            out[k] = v
++        else:
++            out[k] = str(v)[:_DIGEST_STR_CAP]
++    return out
++
++
++def _round_digest(rounds: object) -> list:
++    """Project each refinement round down to what diagnoses it."""
++
++    if not isinstance(rounds, list):
++        return []
++    out = []
++    for r in rounds[:_ROUND_DIGEST_MAX_ROUNDS]:
++        if not isinstance(r, dict):
++            continue
++        out.append(
++            {
++                "round": r.get("round"),
++                "action": r.get("action"),
++                "skipped": r.get("skipped"),
++                "heldout_accuracy": r.get("heldout_accuracy"),
++                "accepted_by_heldout_verifier": r.get("accepted_by_heldout_verifier"),
++                "plan_reaches_goal": r.get("plan_reaches_goal"),
++                "counterexample": _counterexample_digest(r.get("counterexample")),
++            }
++        )
++    return out
++
++
++def _induction_round_records(atts: list) -> list:
++    """One entry per induction attempt, carrying its rounds and its counterexamples.
++
++    BOTH are kept because they are not the same set. A round that RAISED appends to the attempt's
++    `counterexamples` but never writes `row["counterexample"]`, so the exception evidence exists
++    only in the attempt-level list -- the exact case the round view cannot show.
++    """
++
++    out = []
++    for i, a in enumerate(atts):
++        if not isinstance(a, dict):
++            continue
++        rounds = _round_digest(a.get("refinement_rounds"))
++        ces = [
++            _counterexample_digest(c)
++            for c in list(a.get("counterexamples") or [])[:_ROUND_DIGEST_MAX_ROUNDS]
++        ]
++        if not rounds and not ces:
++            continue
++        out.append(
++            {
++                "attempt": i,
++                "reason": a.get("reason"),
++                "skipped": a.get("skipped"),
++                "rounds": rounds,
++                "counterexamples": ces,
++            }
++        )
++    return out
++
++
++def _channel_delta(before: dict, after: dict) -> dict:
++    """This cell's per-channel completion sizes, by subtracting two monotone reads.
++
++    The proposer is shared across cells, so its counters are cumulative for the whole process.
++    Differencing is the same mechanism `row["llm"]` already uses for the token counters.
++    """
++
++    return {k: int(after.get(k, 0)) - int(before.get(k, 0)) for k in after}
++
++
+ def _action_key(move: dict) -> str:
+     kind = move.get("kind")
+     data = move.get("data") or {}
+@@ -654,6 +755,8 @@ def run_cell(
+     # nothing. Recording health on BOTH sides of the cell makes it detectable per row instead of
+     # having to notice a GPU going idle.
+     llm0 = proposer.snapshot() if proposer is not None else None
++    # REQ-ARC-WMTE-6710: the same before/after read for the per-channel completion sizes.
++    chan0 = dict(getattr(proposer, "channel_totals", None) or {}) if proposer is not None else None
+     gen_ok_before = bool(proposer._inner._healthy()) if proposer is not None else None
+     servers_before = _llama_server_count()
+     t0 = time.time()
+@@ -768,6 +871,12 @@ def run_cell(
+             k: (round(now[k] - llm0[k], 3) if isinstance(now[k], float) else now[k] - llm0[k])
+             for k in now
+         }
++        # REQ-ARC-WMTE-6710. WHERE DID THE DECODED TOKENS GO? `row["llm"]["tokens_predicted"]`
++        # gives the total and cannot say whether the model spent them thinking or answering.
++        # A cell with a large `chars_reasoning`, a near-zero `chars_final` and a non-zero
++        # `reasoning_only` is the model reasoning to EOS without writing code -- a different
++        # fault, with a different fix, from a model that answered badly.
++        row["llm_channels"] = _channel_delta(chan0 or {}, dict(proposer.channel_totals or {}))
+         row["generator_healthy_before"] = gen_ok_before
+         row["generator_healthy_after"] = bool(proposer._inner._healthy())
+         row["llama_servers_before"] = servers_before
+@@ -788,6 +897,7 @@ def run_cell(
+         )
+     else:
+         row["llm"] = None
++        row["llm_channels"] = None
+         row["generator_healthy_before"] = None
+         row["generator_healthy_after"] = None
+         row["llm_on_row_valid"] = not llm
+@@ -799,6 +909,12 @@ def run_cell(
+     row["induction_skipped"] = dict(
+         collections.Counter(a.get("skipped") for a in atts if a.get("skipped"))
+     )
++    # REQ-ARC-WMTE-6710: the EVIDENCE behind the counter above, not only its tally. The counter
++    # holds one category string per attempt; the per-round records say which round failed, on what
++    # held-out accuracy, and against which counterexample. Those records already travelled here on
++    # the attempt dict and were read only to build counters, so every cell recomputed them and
++    # then dropped them. See `_induction_round_records` for the bounds and why they are those.
++    row["induction_round_records"] = _induction_round_records(atts)
+     # CARRY THE MESSAGE, NOT ONLY THE TALLY (2026-08-19). The counter above counts the CATEGORY
+     # string, so an attempt that raised reads `{"exception": 1}` -- the word, with the content
+     # dropped. The agent stores the type, message and (since today) the traceback on the same
+diff --git a/tests/python/test_arc_induction_diagnosis_6710.py b/tests/python/test_arc_induction_diagnosis_6710.py
+new file mode 100644
+index 0000000000..620be461a1
+--- /dev/null
++++ b/tests/python/test_arc_induction_diagnosis_6710.py
+@@ -0,0 +1,448 @@
++"""REQ-ARC-WMTE-6710 / SCENARIO-ARC-WMTE-6710-1..7.
++
++WHAT THESE TESTS PROTECT, AND WHY THEY EXIST.
++
++`induction_skipped` is the field this project uses to answer "why was the induced world model
++rejected". Before this REQ it could not resolve that question, in three separate ways.
++
++  (A) `execute_bounded_llm_reinduction` pre-sets `skipped =
++      "no_reachable_plan_after_refinement"` before any round runs. Two sites diagnosed a real
++      cause and wrote it ONLY to the per-round record -- the held-out dynamics failure, and the
++      selection/planning exception. So an attempt whose every round failed DYNAMICS verification
++      was reported under a PLANNING label, and a reader chasing it went to the planner instead of
++      to the dynamics model. In the live corpus that default was 9 of 18 skip records.
++
++  (B) The per-round records reached the harness and were read only to build category counters.
++      The evidence naming WHICH cause fired was rebuilt every cell and discarded every cell.
++
++  (C) The proposer folded the model's thought and answer channels into three `last_*` fields
++      that hold only the most recent call, so every earlier completion's split died in memory.
++      "The model spends its budget thinking and returns nothing" stayed an inference.
++
++The regression test named for the incident input is
++`test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_failure`.
++
++EVIDENCE SAFETY: every test that touches the engine store redirects it to `tmp_path`. Nothing
++here can write `results/arc_e3`, which is measurement evidence and must never be mutated by a
++test run.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++from pathlib import Path
++from types import ModuleType
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_executable_world_model as e3
++from carnot.agentic import arc_llm_reinduction as _reinduction
++from carnot.agentic.arc_executable_world_model import Transition
++from carnot.agentic.arc_llm_reinduction import (
++    _channel_totals_delta,
++    _channel_totals_snapshot,
++    execute_bounded_llm_reinduction,
++)
++
++GAME = "diag"
++_MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
++# Fixed, not sampled. The held-out tail must contain an action-3 tick, so an engine that models
++# only the move scores BELOW the 1.0 dynamics veto -- which is what puts the loop on the
++# held-out-failure path this REQ is about.
++ACTIONS = [1, 3, 0, 2, 1, 3, 0, 2, 3]
++
++_HARNESS = Path(__file__).resolve().parents[2] / "scripts" / "arc_scored_path_lever_harness.py"
++
++
++@pytest.fixture(autouse=True)
++def _multi_round_cap(monkeypatch):
++    """MAX_REFINEMENT_ROUNDS is capped at 1 on the shipped path. These tests need several rounds
++    so "EVERY round failed held-out verification" is a real sequence rather than one round. The
++    shipped cap is pinned separately by tests/python/test_arc_refinement_rounds_cap.py."""
++
++    monkeypatch.setattr(_reinduction, "MAX_REFINEMENT_ROUNDS", 3)
++
++
++def _true_next(grid: np.ndarray, action: int) -> np.ndarray:
++    g = grid.copy()
++    pos = np.argwhere(g == 3)
++    r, c = int(pos[0][0]), int(pos[0][1])
++    dr, dc = _MOVES[int(action) % 4]
++    g[r, c] = 0
++    g[(r + dr) % g.shape[0], (c + dc) % g.shape[1]] = 3
++    if int(action) % 4 == 3:
++        g[5, 5] = int(g[5, 5]) + 1
++    return g
++
++
++def _corpus() -> tuple[list[Transition], np.ndarray]:
++    grid = np.zeros((6, 6), dtype=int)
++    grid[2, 2] = 3
++    root = grid.copy()
++    rows: list[Transition] = []
++    for action in ACTIONS:
++        nxt = _true_next(grid, action)
++        rows.append(
++            Transition(
++                grid=grid.copy(),
++                action=action,
++                data=None,
++                next_grid=nxt.copy(),
++                level_before=0,
++                level_after=0,
++            )
++        )
++        grid = nxt
++    return rows, root
++
++
++# Models the move, NOT the action-3 counter tick: held-out accuracy 0.6667, so it fails the 1.0
++# dynamics veto on every round.
++PARTIAL_SRC = """
++import numpy as np
++
++_MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
++
++
++def engine(grid, action, data):
++    g = np.asarray(grid).copy()
++    pos = np.argwhere(g == 3)
++    if len(pos) == 0:
++        return g
++    r, c = int(pos[0][0]), int(pos[0][1])
++    dr, dc = _MOVES.get(int(action) % 4, (0, 0))
++    g[r, c] = 0
++    g[(r + dr) % g.shape[0], (c + dc) % g.shape[1]] = 3
++    return g
++
++
++def is_level_complete(grid):
++    return False
++"""
++
++# Models the tick too, so held-out accuracy is 1.0 and the dynamics veto PASSES. Its goal is
++# SATISFIABLE and reachable (the player at the origin of a torus), so the loop gets past the
++# degenerate-goal veto as well -- and then the stub planner returns nothing. That combination is
++# the genuine no-plan case. A constant-False goal would NOT do: it reports
++# `degenerate_goal_predicate`, a different cause, which is what the first draft of this test got
++# wrong and what this test now pins.
++PERFECT_SRC = """
++import numpy as np
++
++_MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
++
++
++def engine(grid, action, data):
++    g = np.asarray(grid).copy()
++    pos = np.argwhere(g == 3)
++    if len(pos) == 0:
++        return g
++    r, c = int(pos[0][0]), int(pos[0][1])
++    dr, dc = _MOVES.get(int(action) % 4, (0, 0))
++    g[r, c] = 0
++    g[(r + dr) % g.shape[0], (c + dc) % g.shape[1]] = 3
++    if int(action) % 4 == 3:
++        g[5, 5] = int(g[5, 5]) + 1
++    return g
++
++
++def is_level_complete(grid):
++    g = np.asarray(grid)
++    pos = np.argwhere(g == 3)
++    return bool(len(pos) and int(pos[0][0]) == 0 and int(pos[0][1]) == 0)
++"""
++
++
++class _ScriptedProposer:
++    """Replays one engine source per round, writing each into the store, exactly as the real
++    proposer does. Nothing in this REQ may depend on the proposer being an LLM."""
++
++    model_specs = "scripted-diagnosis-test-proposer"
++
++    def __init__(self, store: Path, game: str, sources: list[str]) -> None:
++        self.store = Path(store)
++        self.game = game
++        self.sources = list(sources)
++        self.writes: list[int] = []
++
++    def _write(self, index: int) -> tuple[bool, str]:
++        src = self.sources[min(index, len(self.sources) - 1)]
++        path = self.store / self.game / "world_model.py"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(src)
++        self.writes.append(index)
++        return True, f"wrote round {index + 1}"
++
++    def induce(self, game, trans, cell, *, previous_level_complete_grid=None):
++        return self._write(0)
++
++    def refactor(self, game, vr):
++        return self._write(len(self.writes))
++
++
++def _run(monkeypatch, tmp_path, sources, *, load_engine=None, plan_in_model=None):
++    """Drive the REAL `execute_bounded_llm_reinduction`. The selection and verification path is
++    not stubbed: the claim under test is about what that real path reports."""
++
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    transitions, root = _corpus()
++    proposer = _ScriptedProposer(tmp_path, GAME, sources)
++    return execute_bounded_llm_reinduction(
++        game=GAME,
++        transitions=transitions,
++        cell=1,
++        root_grid=root,
++        proposer=proposer,
++        candidate_provider=lambda engine, goal: [("loaded_world_model.py", engine, goal)],
++        load_engine=load_engine or e3.load_engine,
++        plan_in_model=plan_in_model or (lambda engine, goal, grid: None),
++        max_rounds=3,
++        min_heldout_accuracy=1.0,
++    )
++
++
++def _harness() -> ModuleType:
++    """Load the lever harness by path; it lives in scripts/, not an installed package."""
++
++    spec = importlib.util.spec_from_file_location("arc_scored_path_lever_harness", _HARNESS)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++# =============================================================================================
++# DEFECT (A): a diagnosed cause must leave the round that diagnosed it.
++# =============================================================================================
++
++
++def test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_failure(
++    monkeypatch, tmp_path
++):
++    """SCENARIO-ARC-WMTE-6710-1. THE REGRESSION TEST NAMED FOR THE INCIDENT INPUT.
++
++    Every round fails held-out transition verification, which is a DYNAMICS failure. Before the
++    fix this attempt reported `no_reachable_plan_after_refinement` -- a PLANNING label -- because
++    the site wrote its diagnosis only into the per-round record. 9 of 18 live skip records were
++    that default.
++
++    Mutation M1: delete `skipped = row["skipped"]` at the held-out site. RED here.
++    """
++
++    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC, PARTIAL_SRC, PARTIAL_SRC])
++
++    assert outcome.skipped == "heldout_transition_verification_failed", (
++        f"a dynamics failure must be reported as a dynamics failure; got {outcome.skipped!r}"
++    )
++    assert outcome.skipped != "no_reachable_plan_after_refinement"
++    assert [r.get("skipped") for r in outcome.rounds] == [
++        "heldout_transition_verification_failed"
++    ] * 3
++
++
++def test_a_raising_round_is_not_reported_as_a_planning_failure(monkeypatch, tmp_path):
++    """SCENARIO-ARC-WMTE-6710-2. The exception site had the same defect: an attempt that RAISED
++    was reported as an attempt that found no plan, sending a reader to the planner instead of to
++    the traceback.
++
++    Mutation M2: delete `skipped = row["skipped"]` at the exception site. RED here.
++    """
++
++    def _boom(game):
++        raise ValueError("engine load exploded")
++
++    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC], load_engine=_boom)
++
++    assert outcome.skipped == "selection_or_planning_exception", (
++        f"a raising round must report the exception; got {outcome.skipped!r}"
++    )
++    assert outcome.skipped != "no_reachable_plan_after_refinement"
++
++
++def test_a_genuine_no_plan_attempt_still_reports_the_no_plan_default(monkeypatch, tmp_path):
++    """SCENARIO-ARC-WMTE-6710-3. The fix must NARROW the default, not delete it. An attempt whose
++    dynamics verify cleanly and whose planner finds nothing is genuinely a planning failure and
++    must still say so -- otherwise the widening would trade one wrong label for another."""
++
++    outcome = _run(monkeypatch, tmp_path, [PERFECT_SRC, PERFECT_SRC, PERFECT_SRC])
++
++    assert outcome.skipped == "no_reachable_plan_after_refinement", (
++        f"a real no-plan attempt must keep the no-plan label; got {outcome.skipped!r}"
++    )
++    assert all(
++        r.get("skipped") != "heldout_transition_verification_failed" for r in outcome.rounds
++    ), "the dynamics veto must have PASSED for this to be a planning test"
++
++
++def test_the_round_record_carries_its_own_heldout_score_and_verdict(monkeypatch, tmp_path):
++    """SCENARIO-ARC-WMTE-6710-1 (record half). The harness digest reads `heldout_accuracy` and
++    `accepted_by_heldout_verifier` off the ROW. Both are written by the round's `row.update(...)`
++    block, and nothing pinned that contract, so a future edit to that block could silently make
++    the digest publish None for every round without any test noticing.
++
++    Mutation M3: drop `"heldout_accuracy"` from the round's `row.update(...)`. RED here.
++    Mutation M4: drop `"accepted_by_heldout_verifier"` from the same block. RED here.
++    """
++
++    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC, PARTIAL_SRC, PARTIAL_SRC])
++
++    for row in outcome.rounds:
++        assert isinstance(row.get("heldout_accuracy"), float), (
++            f"round {row.get('round')} carries no held-out score: {sorted(row)}"
++        )
++        assert row["heldout_accuracy"] == pytest.approx(2 / 3, abs=1e-3)
++        assert row.get("accepted_by_heldout_verifier") is False
++
++
++# =============================================================================================
++# DEFECT (B): the per-round record must survive into the harness row.
++# =============================================================================================
++
++
++def test_the_harness_keeps_a_bounded_per_round_record():
++    """SCENARIO-ARC-WMTE-6710-4. The harness read the rounds only to count categories, so the
++    evidence behind a count was discarded every cell.
++
++    Mutation M5: make `_round_digest` return []. RED here.
++    """
++
++    m = _harness()
++    atts = [
++        {
++            "reason": "stagnation",
++            "skipped": "heldout_transition_verification_failed",
++            "refinement_rounds": [
++                {
++                    "round": i + 1,
++                    "action": "induce" if i == 0 else "refactor",
++                    "skipped": "heldout_transition_verification_failed",
++                    "heldout_accuracy": 0.667,
++                    "accepted_by_heldout_verifier": False,
++                    "plan_reaches_goal": False,
++                    "counterexample": {
++                        "kind": "heldout_transition_mismatch",
++                        "real_accuracy": 0.667,
++                        "real_mismatches": [{"cell": j} for j in range(40)],
++                    },
++                }
++                for i in range(9)
++            ],
++            "counterexamples": [{"kind": "heldout_transition_mismatch", "mismatches": [1, 2, 3]}],
++        }
++    ]
++
++    records = m._induction_round_records(atts)
++
++    assert len(records) == 1
++    entry = records[0]
++    assert entry["attempt"] == 0
++    assert entry["skipped"] == "heldout_transition_verification_failed"
++    assert len(entry["rounds"]) == m._ROUND_DIGEST_MAX_ROUNDS, (
++        "rounds must be bounded -- these are written per cell"
++    )
++    first = entry["rounds"][0]
++    assert first["heldout_accuracy"] == 0.667
++    assert first["accepted_by_heldout_verifier"] is False
++    # Every list becomes a length under a `<key>_n` name, so a reader can see it was summarised
++    # rather than dropped. The grids themselves are the largest thing on a round.
++    assert first["counterexample"]["real_mismatches_n"] == 40
++    assert "real_mismatches" not in first["counterexample"]
++    assert entry["counterexamples"][0]["mismatches_n"] == 3
++
++
++# =============================================================================================
++# DEFECT (C): the channel split must be counted, not overwritten.
++# =============================================================================================
++
++
++def _proposer_with_counters():
++    """A bare LocalGGUFProposer instance, built without touching a GPU or a server. Only the
++    counter fields and the two accumulation seams are exercised."""
++
++    return e3.LocalGGUFProposer.__new__(e3.LocalGGUFProposer)
++
++
++def test_the_channel_split_is_accumulated_across_completions():
++    """SCENARIO-ARC-WMTE-6710-5. The three `last_*` fields hold only the most recent call, so
++    every earlier completion's split died in memory.
++
++    Mutation M6: delete the three `channel_totals[...] += ...` lines at the chat split seam.
++    RED here.
++    """
++
++    p = _proposer_with_counters()
++    p.channel_totals = dict(e3._EMPTY_CHANNEL_TOTALS)
++    p.last_final_content = ""
++    p.last_reasoning_content = ""
++
++    for final, reasoning in (("abcd", "x" * 100), ("ef", "y" * 50)):
++        e3.LocalGGUFProposer._record_chat_channel_split(p, final, reasoning)
++
++    assert p.channel_totals["chat_completions"] == 2
++    assert p.channel_totals["chars_final"] == 6
++    assert p.channel_totals["chars_reasoning"] == 150
++    assert p.channel_totals["reasoning_only"] == 0
++    assert p.channel_totals["both_channels_empty"] == 0
++
++
++def test_an_empty_answer_channel_is_counted_as_its_own_shape():
++    """SCENARIO-ARC-WMTE-6710-6. This is the shape the whole REQ is for: a call that spends its
++    entire budget on the thought channel and returns no code. It must be distinguishable from a
++    call that returned nothing at all, and from an ordinary short answer."""
++
++    p = _proposer_with_counters()
++    p.channel_totals = dict(e3._EMPTY_CHANNEL_TOTALS)
++    p.last_final_content = ""
++    p.last_reasoning_content = ""
++
++    e3.LocalGGUFProposer._record_chat_channel_split(p, "   ", "thought " * 500)
++    e3.LocalGGUFProposer._record_chat_channel_split(p, "", "")
++
++    assert p.channel_totals["reasoning_only"] == 1
++    assert p.channel_totals["both_channels_empty"] == 1
++    assert p.channel_totals["chat_completions"] == 2
++
++
++def test_a_round_publishes_its_own_numbers_not_a_run_total():
++    """SCENARIO-ARC-WMTE-6710-7. The counters are cumulative for the whole process, so a round
++    that published them raw would report every earlier round's characters too. Differencing two
++    reads is what makes them a per-round measurement.
++
++    Mutation M7: make `_channel_totals_delta` return `dict(after)`. RED here.
++    """
++
++    before = {"completions": 3, "chars_final": 900, "chars_reasoning": 60000}
++    after = {"completions": 4, "chars_final": 1000, "chars_reasoning": 95000}
++
++    assert _channel_totals_delta(before, after) == {
++        "completions": 1,
++        "chars_final": 100,
++        "chars_reasoning": 35000,
++    }
++    # A reset between the two reads is not a measurement; it must clamp rather than publish a
++    # negative count.
++    assert _channel_totals_delta({"chars_final": 500}, {"chars_final": 0}) == {"chars_final": 0}
++
++
++def test_the_snapshot_is_inert_on_a_proposer_without_counters():
++    """A stub proposer -- every scripted proposer in this test suite, and any older proposer
++    class -- must not raise or change behaviour. This is observation only."""
++
++    assert _channel_totals_snapshot(object()) == {}
++    assert _channel_totals_snapshot(None) == {}
++    assert _channel_totals_delta({}, {}) == {}
++
++
++def test_every_round_carries_a_channel_record_even_when_it_failed(monkeypatch, tmp_path):
++    """A round that produced no usable code still spent a budget, and that is exactly the case
++    worth counting. The field must be present on every round, not only successful ones."""
++
++    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC, PARTIAL_SRC, PARTIAL_SRC])
++
++    assert outcome.rounds, "the loop must have run at least one round"
++    for row in outcome.rounds:
++        assert "channel_chars" in row, (
++            f"round {row.get('round')} carries no channel record: {sorted(row)}"
++        )
++        assert isinstance(row["channel_chars"], dict)
+-- 
+2.55.0
+

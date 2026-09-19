@@ -1,0 +1,2896 @@
+From fc7093b5d59b03b1082ae9d6c92868fa782ce76b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 12:30:55 -0400
+Subject: [PATCH 02825/11362] [conductor] PHASE B1 (RESERVED INFRA) --
+ registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .411
+ outcomes; verify the capstone verifier_is_oracle stamping stays durable.
+
+Automated research step by research conductor.
+Task ID: exp4449-registry-gaps-hygiene-gap4-guard
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |   63 +
+ ops/arc_solve_registry.yaml                   |  312 +++--
+ ops/dogfood-memory.json                       |    2 +-
+ ops/verifier_gaps.md                          |   76 +-
+ ops/verifier_registry.yaml                    |   34 +
+ .../experiment_4449_registry_gaps_hygiene.py  | 1133 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...experiment_4449_registry_gaps_hygiene.json |  313 +++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ scripts/capstone_aggregate_available.py       |    8 +
+ ...t_experiment_4449_registry_gaps_hygiene.py |  562 ++++++++
+ 16 files changed, 2343 insertions(+), 194 deletions(-)
+ create mode 100644 python/carnot/experiment_4449_registry_gaps_hygiene.py
+ create mode 100644 results/experiment_4449_registry_gaps_hygiene.json
+ create mode 100644 scripts/capstone_aggregate_available.py
+ create mode 100644 tests/python/test_experiment_4449_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 96456dea82..4c6c0d0fef 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -25754,6 +25754,69 @@ leaderboard submission or production verifier edits.
+ |---|---|---|
+ | REQ-REPORT-4438 | Planned (`python/carnot/experiment_4438_registry_gaps_hygiene.py`, `results/experiment_4438_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4438_registry_gaps_hygiene.py`) |
+ 
++### REQ-REPORT-4449: Registry And Gap Hygiene Reconciles .411 Outcomes Without Verifier Edits
++
++The Exp 4449 workflow SHALL reconcile `ops/verifier_registry.yaml`,
++`ops/verifier_gaps.md`, and `ops/arc_solve_registry.yaml` with the `.411`
++outcome artifacts from Exp 4443 through Exp 4448. The workflow SHALL treat any
++`flagged_adversarial=true` artifact as excluded evidence, SHALL use the robust
++aggregate-available helper so missing or flagged artifacts report per-axis gaps
++without forcing every axis false, SHALL satisfy the compatibility precondition
++that `import scripts.capstone_aggregate_available` succeeds, and SHALL NOT edit
++production verifier code.
++
++The reconciliation SHALL bank the Exp 4443 g50t reproduced level and mark
++`GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT` filled, record the Exp 4444 ft09
++generic config-rule closure while preserving the dc22 residual as open, record
++the Exp 4445 ar25 and ka59 object-motion closures, record the Exp 4447
++documented primitive library, record the Exp 4446 first-contact bank and its
++filled gap, and convert Exp 4448 LOO v2 residuals into closed or still-open
++missing-primitive gap rows. The ARC solve registry SHALL update authoritative
++`reproducible_total_levels` and `reproducible_total_games` from reproduced game
++rows after applying trusted `.411` outcomes; the reconciled totals SHALL be at
++least `38` levels and `19` games after the g50t bank. The workflow SHALL
++preserve never-prune history and SHALL make markdown/YAML updates idempotently.
++
++The workflow SHALL run the GAP-4 execution regression guard and SHALL emit bare
++bool `regression_guard_passed=true` only when the ARC oracle-distinct
++verifier-beats-vote result has not regressed. It SHALL also verify that the
++capstone `verifier_is_oracle` stamping fix remains durable. The workflow SHALL
++write `results/experiment_4449_registry_gaps_hygiene.json` with required fields
++`honest_verdict`, `regression_guard_passed`, `reproducible_total_levels`,
++`reproducible_total_games`, `inference_substrate`, `registry_reconciliation`,
++`availability_report`, `capstone_stamp_fix_durable`, `random_seed`,
++`reproducibility_checksum`, `field_principles`, and
++`submitted_to_leaderboard=false`. Complete-path `honest_verdict` SHALL start
++with `complete:`, `success:`, `passed:`, or `shipped:`. The
++`field_principles.honest_verdict.principle` SHALL equal `terminal-prefixed`,
++`field_principles.regression_guard_passed.principle` SHALL equal
++`BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress`,
++`field_principles.reproducible_total_levels.principle` SHALL equal
++`the reconciled authoritative count (target >= 38 after the g50t bank)`, and
++`field_principles.inference_substrate.principle` SHALL equal
++`aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor`.
++
++#### SCENARIO-REPORT-4449: .411 Hygiene Logs Closures, Updates Counts, And Guards GAP-4
++
++**Given** the verifier registry, verifier-gaps ledger, ARC solve registry, and
++some subset of Exp 4443 through Exp 4448 artifacts are locally available
++**When** the Exp 4449 workflow runs
++**Then** it excludes flagged-adversarial artifacts, reports missing or flagged
++inputs in the aggregate availability report, fills the g50t, ft09, ar25, ka59,
++and first-contact gap rows when their trusted reproduction evidence is present,
++keeps the dc22, tr87, and sc25 residuals open when Exp 4444 or Exp 4448 leave
++them unresolved, records the documented primitive library, updates ARC
++reproducible totals from registry rows, records a verifier-registry role for the
++hygiene pass, emits bare bool `regression_guard_passed`, verifies the capstone
++stamp fix remains durable, writes the required JSON artifact, and performs no
++leaderboard submission or production verifier edits.
++
++## Implementation Status (REQ-REPORT-4449)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4449 | Planned (`python/carnot/experiment_4449_registry_gaps_hygiene.py`, `results/experiment_4449_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4449_registry_gaps_hygiene.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 623e6c45ff..0113d96fc6 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -329,8 +329,7 @@ games:
+   reproduce: arc_solver_kit.reproduce(ar25, ['3']*5 + ['2']*10, Exp4339 apply) reproduced=True
+     L1; checksum 8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391.
+   generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ar25
+-    L1 without ar25's hand world-model recipe; offline_reproduced=True,
+-    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
++    L1 without ar25's hand world-model recipe.
+   world_model: results/arc_e3/ar25/world_model.py
+   world_model_sha256: d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f
+   gotchas:
+@@ -352,8 +351,7 @@ games:
+   reproduce: arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3',
+     'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06.
+   generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ka59
+-    L1 without ka59's hand world-model recipe; offline_reproduced=True,
+-    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
++    L1 without ka59's hand world-model recipe.
+   world_model: results/arc_e3/ka59/world_model.py
+   world_model_sha256: ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba
+   gotchas:
+@@ -378,8 +376,7 @@ games:
+   reproduce: arc_solver_kit.reproduce(ft09, Exp4363 labels, _apply_ft09_label, claimed_level=1)
+     reproduced=True L1; checksum fe02d5adf671bd769d10dea11d6b3a53ba1ff92e9d54d9c7bbbe8eb4d63e2168.
+   generic_verifier_reproduce: Exp4444 results/experiment_4444_generic_config_rule_verifier_operator.json
+-    ft09_resolved_generically=True via config_rule_verifier local_constraint_color_cycle
+-    digest; offline_reproduced=True, reproduced_levels=1, checksum a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4.
++    ft09_resolved_generically=True via config_rule_verifier.
+   world_model: results/arc_e3/ft09/world_model.py
+   world_model_sha256: 8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee
+   gotchas:
+@@ -474,53 +471,63 @@ games:
+ - game: vc33
+   reproducibility: reproduced
+   levels_reproduced: 1
+-  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes to s5i5 and applies
+-    config_rule_verifier support-clearance-as-marker-coverage digest
++  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes
++    first contact through a generic config-rule verifier.
+   gotchas: []
+   dead_ends:
+   - gap_id: GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
+     status: filled
+     game: vc33
+     failure_mode: needs_per_game_RE
+-    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
+-      explored non-winning states
++    missing_discriminator: selectable verifier that distinguishes the target's winning
++      delta from the explored non-winning states
+     candidate_design: derive a selectable verifier from the routed solved-game delta
+     routed_recipe:
+       game: s5i5
+-      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6
+-        from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.
+-      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must
+-        occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial
+-        controlled markers [(9,33),(30,9)].'
+-      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker
+-        x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.
++      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
++        + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
++        it through arc_solver_kit.reproduce.
++      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged
++        0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi.
++        L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].'
++      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
++        controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
++        marker y by +3.
+     loop_result_summary:
+       offline_reproduced: false
+       reproduced_levels: 0
+       mode: standing_arc_loop_routing_only
+     filled_by: experiment_4446_drive_generic_first_contact_bank
+     filled_artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+-    filled_summary: config_rule_verifier support-clearance digest reproduced vc33 L1 offline
++    filled_summary: config_rule_verifier support-clearance digest reproduced vc33
++      L1 offline
+   mechanic_class: config_support_clearance
+-  win_condition: 'L1 support-clearance config: lower click control shifts the paired supports until the
+-    active piece clears the blocking goal color; next_level fires on replay.'
+-  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.
++  win_condition: 'L1 support-clearance config: lower click control shifts the paired
++    supports until the active piece clears the blocking goal color; next_level fires
++    on replay.'
++  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated
++    3 times.
+   reproduce: arc_solver_kit.reproduce(vc33, ['lower_click']*3, apply_vc33_label, claimed_level=1)
++  latest_exp4446_reproduce:
++    artifact: results/experiment_4446_drive_generic_first_contact_bank.json
++    offline_reproduced: true
++    reproduced_levels: 1
++    reproducibility_checksum: 9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361
+ - game: g50t
+   reproducibility: reproduced
+   levels_reproduced: 1
+-  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py reuses the Exp4433 cached
+-    Qwen proposal as a verifier-scored candidate, grounds it with the execution verifier, drives OfflineSolver,
+-    and replays through arc_solver_kit.reproduce.
++  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py execution-grounds
++    the target-offset predicate and replays OfflineSolver.
+   gotchas: []
+   dead_ends:
+   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
+     status: filled
+     game: g50t
+     failure_mode: needs_per_game_RE
+-    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
+-      explored non-winning states
+-    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
++    missing_discriminator: selectable verifier that distinguishes the target's winning
++      delta from the explored non-winning states
++    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
++      visible toggles
+     routed_recipe:
+       game: ls20
+       solver: results/experiment_4285 solve_trace.actions.
+@@ -532,15 +539,20 @@ games:
+       mode: standing_arc_loop_routing_only
+     filled_by: experiment_4443_bank_g50t_example_conditioned_win
+     filled_artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
+-    filled_summary: Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected
+-      inference_substrate.
++    filled_summary: Example-conditioned target-offset win predicate reproduced g50t
++      L1 offline with corrected inference_substrate.
+   mechanic_class: config_toggle_target_offset
+-  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier
+-    grounds against execution state immediately before next_level.'
+-  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves right, ACTION2 moves
+-    down, ACTION5 commits the trigger clone.
+-  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json offline_reproduced=True,
+-    reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
++  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y
++    == target.y + 1; verifier grounds against execution state immediately before next_level.'
++  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves
++    right, ACTION2 moves down, ACTION5 commits the trigger clone.
++  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json
++    offline_reproduced=True, reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
++  latest_exp4443_reproduce:
++    artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
++    offline_reproduced: true
++    reproduced_levels: 1
++    reproducibility_checksum: b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9
+ - game: dc22
+   reproducibility: unsolved
+   levels_reproduced: 0
+@@ -648,8 +660,6 @@ latest_config_rule_verifier_4444:
+   - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+   remaining_gap_ids:
+   - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+-  note: .411 generic config-rule verifier closes the ft09 leave-one-out residual;
+-    dc22 remains an honest non-config movement/interaction target for a later verifier.
+ latest_object_motion_world_model_4445:
+   artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
+   operator: object_motion_world_model
+@@ -661,130 +671,152 @@ latest_object_motion_world_model_4445:
+   reproduced_levels: 2
+   offline_reproduced: true
+   no_regression: true
+-  filled_gap_ids:
+-  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+-  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+-  remaining_gap_ids:
+-  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+-  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+-  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+-  note: .411 generic object-motion world-model operator closes the ar25 and ka59
+-    leave-one-out residuals while recording the cold-control lift.
+ latest_documented_primitive_library_4447:
+   artifact: results/experiment_4447_lilo_documented_primitive_library.json
+-  inference_substrate: aggregation_from_upstream_artifacts
++  inference_substrate: aggregation_from_upstream_artifacts -- the library is induced
++    from existing solve artifacts (symbolic compression, CPU); no live_llm_inference
+   library_coverage: 1.0
+   retrieval_precision_at_1: 1.0
+   constant_leak_violations: []
+-  note: .411 LILO-style AutoDoc library; entries are induced from the consolidated
+-    primitive registry plus solved-game mechanic classes and are retrieved before
+-    generator fallback.
+   documented_primitives:
+-  - name: active_data_collection
++  - derived_from_games:
++    - ar25
++    - ka59
++    - ft09
++    - sc25
+     mechanic_class: world_model
+-    operator: active_data_collection
+-    derived_from_games: [ar25, ka59, ft09, sc25]
+-    description: Collects balanced action and object cases for offline transition grounding.
+-    retrieval_cues: [active data, transition, coverage, object signature, world model]
+-  - name: config_rule_grounding
++    name: active_data_collection
++  - derived_from_games:
++    - s5i5
++    - ft09
++    - tr87
+     mechanic_class: config_rule
+-    operator: config_rule_grounding
+-    derived_from_games: [s5i5, ft09, tr87]
+-    description: Converts grounded visible configuration rules into executable action labels.
+-    retrieval_cues: [config, rule, marker coverage, local constraint, toggle]
+-  - name: config_rule_verifier
++    name: config_rule_grounding
++  - derived_from_games:
++    - s5i5
++    - ft09
++    - g50t
+     mechanic_class: config_rule
+-    operator: config_rule_verifier
+-    derived_from_games: [s5i5, ft09, g50t]
+-    description: Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.
+-    retrieval_cues: [config, verifier, marker coverage, local constraint, target offset, toggle]
+-  - name: glyph_rewrite_matcher
++    name: config_rule_verifier
++  - derived_from_games:
++    - tr87
+     mechanic_class: config_substitution
+-    operator: glyph_rewrite_matcher
+-    derived_from_games: [tr87]
+-    description: Applies reusable glyph and sequence rewrite rules before per-game reverse engineering.
+-    retrieval_cues: [glyph, rewrite, substitution, sequence, editable]
+-  - name: graph_astar_action_cost
++    name: glyph_rewrite_matcher
++  - derived_from_games:
++    - tu93
++    - lp85
++    - cd82
++    - sp80
++    - cn04
++    - m0r0
++    - sk48
++    - su15
+     mechanic_class: graph_explore_navigation
+-    operator: graph_astar_action_cost
+-    derived_from_games: [tu93, lp85, cd82, sp80, cn04, m0r0, sk48, su15]
+-    description: Ranks graph-search frontiers by path cost plus verifier or distance heuristic.
+-    retrieval_cues: [graph, astar, keyboard, click, goal distance, action cost]
+-  - name: object_centric_digest
++    name: graph_astar_action_cost
++  - derived_from_games:
++    - g50t
++    - lp85
++    - tn36
++    - ka59
+     mechanic_class: object_geometry_digest
+-    operator: object_centric_digest
+-    derived_from_games: [g50t, lp85, tn36, ka59]
+-    description: Summarizes connected objects so routing and grounding match mechanic structure.
+-    retrieval_cues: [object, digest, component, bbox, template, program editor]
+-  - name: object_motion_world_model
++    name: object_centric_digest
++  - derived_from_games:
++    - ar25
++    - ka59
++    - sc25
++    - ft09
+     mechanic_class: object_motion_world_model
+-    operator: object_motion_world_model
+-    derived_from_games: [ar25, ka59, sc25, ft09]
+-    description: Retrieves translate, reflect, push, and dynamic-selection transition models.
+-    retrieval_cues: [object motion, world model, motion family, translate, reflect, push]
+-  - name: mechanic_action_sequence_replay
++    name: object_motion_world_model
++  - derived_from_games:
++    - ls20
++    - wa30
+     mechanic_class: action_sequence_replay
+-    operator: graph_astar_action_cost
+-    derived_from_games: [ls20, wa30]
+-    description: Replays a discovered deterministic action-kind sequence through the offline gate.
+-    retrieval_cues: [first solve, action kind sequence, replays offline, trajectory]
+-  - name: mechanic_cast_grid_world_model
++    name: mechanic_action_sequence_replay
++  - derived_from_games:
++    - sc25
+     mechanic_class: cast_grid_world_model
+-    operator: active_data_collection
+-    derived_from_games: [sc25]
+-    description: Models a cast-grid interaction whose spell changes object state before exit planning.
+-    retrieval_cues: [cast grid, spell, shrink, exit, world model, tank controls]
+-  - name: mechanic_click_connect_line
++    name: mechanic_cast_grid_world_model
++  - derived_from_games:
++    - su15
+     mechanic_class: click_connect_line
+-    operator: graph_astar_action_cost
+-    derived_from_games: [su15]
+-    description: Searches click-only line-connection mechanics using object click candidates.
+-    retrieval_cues: [click connect, line, diagonal, click only, rich action candidates]
+-  - name: mechanic_config_substitution
++    name: mechanic_click_connect_line
++  - derived_from_games:
++    - tr87
+     mechanic_class: config_substitution
+-    operator: glyph_rewrite_matcher
+-    derived_from_games: [tr87]
+-    description: Matches editable glyph or sequence substitutions through reusable rewrite rules.
+-    retrieval_cues: [glyph, rewrite, substitution, editable sequence]
+-  - name: mechanic_config_toggle_marker_coverage
++    name: mechanic_config_substitution
++  - derived_from_games:
++    - s5i5
+     mechanic_class: config_toggle_marker_coverage
+-    operator: config_rule_verifier
+-    derived_from_games: [s5i5]
+-    description: Moves controlled markers or supports until all visible target slots are covered.
+-    retrieval_cues: [marker coverage, controlled markers, target markers, support clearance]
+-  - name: mechanic_graph_explore_navigation
++    name: mechanic_config_toggle_marker_coverage
++  - derived_from_games:
++    - cd82
++    - sp80
++    - tu93
++    - cn04
++    - m0r0
++    - sk48
+     mechanic_class: graph_explore_navigation
+-    operator: graph_astar_action_cost
+-    derived_from_games: [cd82, sp80, tu93, cn04, m0r0, sk48]
+-    description: Plans keyboard or click graph exploration with additive path cost and verifier heuristic.
+-    retrieval_cues: [graph explore, keyboard directional, goal distance, adapter free, confirm commit]
+-  - name: mechanic_local_constraint_color_cycle
++    name: mechanic_graph_explore_navigation
++  - derived_from_games:
++    - ft09
+     mechanic_class: local_constraint_color_cycle
+-    operator: config_rule_verifier
+-    derived_from_games: [ft09]
+-    description: Cycles visible cell colors until local equality or inequality constraints hold.
+-    retrieval_cues: [local constraint, color cycle, neighbor, constraints, cells]
+-  - name: mechanic_object_motion_push
++    name: mechanic_local_constraint_color_cycle
++  - derived_from_games:
++    - ka59
+     mechanic_class: object_motion_push
+-    operator: object_motion_world_model
+-    derived_from_games: [ka59]
+-    description: Models player or selector movement that pushes a block through target geometry.
+-    retrieval_cues: [push, block, dynamic selection, object motion, world model]
+-  - name: mechanic_object_motion_reflect
++    name: mechanic_object_motion_push
++  - derived_from_games:
++    - ar25
+     mechanic_class: object_motion_reflect
+-    operator: object_motion_world_model
+-    derived_from_games: [ar25]
+-    description: Models paired object motion where a selected object and reflected object move together.
+-    retrieval_cues: [reflect, reflection, selected object, reflected object, object slots]
+-  - name: mechanic_object_template_alignment
++    name: mechanic_object_motion_reflect
++  - derived_from_games:
++    - r11l
++    - lp85
+     mechanic_class: object_template_alignment
+-    operator: object_centric_digest
+-    derived_from_games: [r11l, lp85]
+-    description: Aligns moveable colored objects with visible goal templates using object geometry.
+-    retrieval_cues: [align, template, goal sprite, moveable piece, drag, object]
+-  - name: mechanic_program_editor_object_attribute_match
++    name: mechanic_object_template_alignment
++  - derived_from_games:
++    - tn36
+     mechanic_class: program_editor_object_attribute_match
+-    operator: object_centric_digest
+-    derived_from_games: [tn36]
+-    description: Edits object command slots until object attributes match the visible target.
+-    retrieval_cues: [program editor, move program, slot, attribute, object target, bit code]
++    name: mechanic_program_editor_object_attribute_match
++latest_loo_generic_v2_4448:
++  artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
++  generic_loo_solve_count_v1_baseline: 2
++  generic_loo_solve_count_v2: 5
++  loo_gate_passed: true
++  closed_residuals_by_new_operator:
++  - closed_by_operator: object_motion_world_model
++    game: ka59
++    v1_residual_delta: missing_push_block_world_model_and_dynamic_selection
++  - closed_by_operator: object_motion_world_model
++    game: ar25
++    v1_residual_delta: missing_reflection_world_model_and_object_motion_plan
++  - closed_by_operator: config_rule_verifier
++    game: ft09
++    v1_residual_delta: missing_local_constraint_color_cycle_verifier
++  missing_verifier_gaps:
++  - attempt_mode: v2_411_operator_remeasurement
++    game: tr87
++    residual_delta: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
++    retrieved_operator: config_rule_grounding
++    v1_routed_to: tu93
++  - attempt_mode: v2_411_operator_remeasurement
++    game: sc25
++    residual_delta: missing_cast_grid_spell_shrink_tank_exit_verifier
++    retrieved_operator: active_data_collection
++    v1_routed_to: cd82
++latest_hygiene_4449:
++  artifact: results/experiment_4449_registry_gaps_hygiene.json
++  reproducible_total_levels: 39
++  reproducible_total_games: 20
++  filled_gap_ids:
++  - GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
++  - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
++  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
++  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
++  - GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
++  open_gap_ids:
++  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
++  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
++  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
++  excluded_artifacts: []
++  note: .411 registry hygiene; flagged_adversarial artifacts excluded from counts.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 316ee0dc3a..84f5e35db6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3467,
++  "experiments_checked": 3468,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index d608662b76..42b40fc2d6 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2195,16 +2195,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ <!-- exp4427-gap-4422-tr87-glyph-rewrite-perception:end -->
+ 
+ <!-- exp4427-gap-4423-g50t-unselectable-first-contact:start -->
+-### GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4427 .409 verifier gap hygiene
+-- status: open
+-- evidence: results/experiment_4423_generic_first_contact_breadth.json; game=g50t; honest_verdict=partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged; offline_reproduced=False; reproduced_levels=0
+-- failure mode: needs_per_game_RE
+-- missing discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
+-- candidate design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+-- priority: high
+-- headroom: 1
+-- build target for .410 planner: true
+-- movement: newly_logged
++### GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
++- status: filled (exp4443_bank_g50t_example_conditioned_win)
++- evidence: results/experiment_4443_bank_g50t_example_conditioned_win.json; target_game=g50t; offline_reproduced=True; reproduced_levels=1; reproducible_total_levels=38
++- failure mode: prior first-contact route could not select the winning target-offset predicate
++- missing discriminator: filled by execution-grounded target-offset verifier
++- candidate design: keep the target-offset config-rule verifier in the generic bank
++- priority: high
++- source artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
++- movement: filled
+ <!-- exp4427-gap-4423-g50t-unselectable-first-contact:end -->
+ 
+ <!-- exp4427-gap-4424-sc25-l2-route-search:start -->
+@@ -2221,80 +2220,85 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ <!-- exp4427-gap-4424-sc25-l2-route-search:end -->
+ 
+ <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:start -->
+-### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4438 .410 registry gap hygiene
++### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4449 .411 registry gap hygiene
+ - status: open
+-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=tr87; routed_to=tu93; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; generic_loo_solve_count=2
++- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=tr87; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; retrieved_operator=config_rule_grounding; generic_loo_solve_count_v2=5
+ - failure mode: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+-- missing discriminator: generic primitive/verifier for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
++- missing discriminator: generic primitive/verifier still missing for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
++- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
+ - priority: high
+-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
++- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
++- movement: updated_still_open
+ <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
+ 
+ <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
+-### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4438 .410 registry gap hygiene
++### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4449 .411 registry gap hygiene
+ - status: open
+-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=sc25; routed_to=cd82; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; generic_loo_solve_count=2
++- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=sc25; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; retrieved_operator=active_data_collection; generic_loo_solve_count_v2=5
+ - failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
+-- missing discriminator: generic primitive/verifier for missing_cast_grid_spell_shrink_tank_exit_verifier
+-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
++- missing discriminator: generic primitive/verifier still missing for missing_cast_grid_spell_shrink_tank_exit_verifier
++- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
+ - priority: high
+-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
++- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
++- movement: updated_still_open
+ <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
+ 
+ <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:start -->
+-### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4438 .410 registry gap hygiene
++### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4449 .411 registry gap hygiene
+ - status: filled (exp4445_generic_object_motion_world_model_operator)
+ - evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ka59; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ka59; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
+ - failure mode: missing_push_block_world_model_and_dynamic_selection
+ - missing discriminator: filled by generic object-slot translate/push transition model with dynamic selection
+-- candidate design: keep the generic operator in the standing loop; extend the same family to deeper hidden-HUD/register tails separately
++- candidate design: keep the generic operator in the standing loop
+ - priority: high
+ - source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
++- movement: filled
+ <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:end -->
+ 
+ <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:start -->
+-### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4438 .410 registry gap hygiene
++### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4449 .411 registry gap hygiene
+ - status: filled (exp4445_generic_object_motion_world_model_operator)
+ - evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ar25; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ar25; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
+ - failure mode: missing_reflection_world_model_and_object_motion_plan
+ - missing discriminator: filled by generic object-slot translate/reflect transition model
+-- candidate design: keep the generic operator in the standing loop; extend the same family to hidden undo-stack deeper tails separately
++- candidate design: keep the generic operator in the standing loop
+ - priority: high
+ - source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
++- movement: filled
+ <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:end -->
+ 
+ <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:start -->
+-### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4438 .410 registry gap hygiene
++### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4449 .411 registry gap hygiene
+ - status: filled (exp4444_generic_config_rule_verifier_operator)
+ - evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; ft09_resolved_generically=True; offline_reproduced=True; reproduced_levels=1; operator=config_rule_verifier; target_recipe_withheld=ft09
+ - failure mode: prior missing_local_constraint_color_cycle_verifier residual is closed for ft09 L1
+-- missing discriminator: filled by generic execution-grounded local_constraint_color_cycle verifier over object-centric digest
+-- candidate design: reuse config_rule_verifier for future local-constraint/toggle digests while preserving reproduce() gates
++- missing discriminator: filled by generic execution-grounded local_constraint_color_cycle verifier
++- candidate design: reuse config_rule_verifier for future local-constraint/toggle digests
+ - priority: high
+-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
++- source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
+ - movement: filled
+ <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
+ 
+ <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
+-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4438 .410 registry gap hygiene
++### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
+ - status: open
+-- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; reproduced_levels=1; dc22 reproduced_levels=0
++- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; dc22 reproduced_levels=0
+ - failure mode: missing_config_rule_verifier_grounding
+-- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest for config_rule_verifier
+-- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until arc_solver_kit.reproduce(dc22, ...) passes
++- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest
++- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until reproduce(dc22) passes
+ - priority: high
+ - source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
+ - movement: updated_still_open
+ <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
+ 
+ <!-- exp4446-gap-4423-vc33-unselectable-first-contact:start -->
+-### GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4446 generic first-contact bank
+-- status: filled
++### GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
++- status: filled (exp4446_drive_generic_first_contact_bank)
+ - evidence: results/experiment_4446_drive_generic_first_contact_bank.json; target_game=vc33; routed_to=s5i5; offline_reproduced=True; reproduced_levels=1
+ - failure mode: closed_by_support_clearance_config_rule
+-- missing discriminator: filled by generic config_rule_verifier support-clearance digest over vc33 L1
+-- candidate design: reuse routed config-rule support-clearance predicates for future click-control games
++- missing discriminator: filled by generic config_rule_verifier support-clearance digest
++- candidate design: reuse routed config-rule support-clearance predicates
+ - priority: high
++- source artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+ - movement: filled
+ <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 2ee2176486..2c46d4e06e 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -1001,6 +1001,30 @@ verifiers:
+     - graph_astar_action_cost
+     - object_centric_digest
+     - active_data_collection
++    eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
++    exp4449_regression_guard_passed: true
++    exp4449_arc_oracle_distinct_verifier_beats_vote: true
++    exp4449_arc1_rule_exec_vote_pass2: 0.4516
++    exp4449_arc1_rule_exec_gated_pass2: 0.5806
++    exp4449_arc1_headroom_recovered: 4
++    exp4449_arc1_vote_wins_lost: 0
++    exp4449_capstone_stamp_fix_durable: true
++    exp4449_reproducible_total_levels: 39
++    exp4449_reproducible_total_games: 20
++    exp4449_filled_gap_ids: &id014
++    - GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
++    - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
++    - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
++    - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
++    - GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
++    exp4449_open_gap_ids: &id015
++    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
++    - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
++    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
++    exp4449_flagged_artifacts_excluded: &id016 []
++    exp4449_generic_loo_solve_count_v2: 5
++    exp4449_primitive_library_coverage: 1.0
++    exp4449_retrieval_precision_at_1: 1.0
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -5057,6 +5081,16 @@ verifiers:
+     gap_ids_logged: *id012
+     excluded_artifacts: *id013
+     eval_exp_4438: results/experiment_4438_registry_gaps_hygiene.json
++  - role_id: oracle_distinct_v411_registry_gaps_hygiene_4449
++    experiment: results/experiment_4449_registry_gaps_hygiene.json
++    role: registry_gaps_arc_hygiene_v411
++    status: v411_outcomes_recorded_with_gap4_guard_and_stamp_durability
++    reproducible_total_levels: 39
++    reproducible_total_games: 20
++    filled_gap_ids: *id014
++    open_gap_ids: *id015
++    excluded_artifacts: *id016
++    eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
+ - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
+   domain: arc_agi3_interactive
+   version: 1
+diff --git a/python/carnot/experiment_4449_registry_gaps_hygiene.py b/python/carnot/experiment_4449_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..c1116f48d5
+--- /dev/null
++++ b/python/carnot/experiment_4449_registry_gaps_hygiene.py
+@@ -0,0 +1,1133 @@
++"""Exp 4449: reconcile .411 registry and verifier-gap hygiene.
++
++Spec refs: REQ-REPORT-4449, SCENARIO-REPORT-4449.
++
++This audit pass reads the .411 outcome artifacts, refreshes the registry and
++gap ledgers, runs the cached GAP-4 execution guard, and writes a terminal
++hygiene artifact. It deliberately does not edit production verifier code.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import hashlib
++import importlib
++import json
++from pathlib import Path
++import re
++import sys
++import time
++from typing import Any, Callable, Mapping
++
++import yaml
++
++from carnot.reporting import capstone_aggregate_available
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4449_registry_gaps_hygiene.json"
++REGISTRY_RELATIVE_PATH = "ops/verifier_registry.yaml"
++GAPS_RELATIVE_PATH = "ops/verifier_gaps.md"
++ARC_REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++
++EXP4443_PATH = "results/experiment_4443_bank_g50t_example_conditioned_win.json"
++EXP4444_PATH = "results/experiment_4444_generic_config_rule_verifier_operator.json"
++EXP4445_PATH = "results/experiment_4445_generic_object_motion_world_model_operator.json"
++EXP4446_PATH = "results/experiment_4446_drive_generic_first_contact_bank.json"
++EXP4447_PATH = "results/experiment_4447_lilo_documented_primitive_library.json"
++EXP4448_PATH = "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
++
++SOURCE_ARTIFACTS = {
++    "4443_g50t_bank": EXP4443_PATH,
++    "4444_config_rule": EXP4444_PATH,
++    "4445_object_motion": EXP4445_PATH,
++    "4446_first_contact": EXP4446_PATH,
++    "4447_primitive_library": EXP4447_PATH,
++    "4448_loo_v2": EXP4448_PATH,
++}
++SOURCE_EXPERIMENT_IDS = {
++    "4443_g50t_bank": 4443,
++    "4444_config_rule": 4444,
++    "4445_object_motion": 4445,
++    "4446_first_contact": 4446,
++    "4447_primitive_library": 4447,
++    "4448_loo_v2": 4448,
++}
++
++RANDOM_SEED = 4449
++SPEC_REFS = ("REQ-REPORT-4449", "SCENARIO-REPORT-4449")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++GAP4_VERIFIER_ID = "gap4_program_induction_stack"
++V411_ROLE_ID = "oracle_distinct_v411_registry_gaps_hygiene_4449"
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "reproducible_total_levels",
++    "reproducible_total_games",
++    "inference_substrate",
++    "registry_reconciliation",
++    "availability_report",
++    "capstone_stamp_fix_durable",
++    "random_seed",
++    "reproducibility_checksum",
++    "field_principles",
++    "submitted_to_leaderboard",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {"principle": "terminal-prefixed"},
++    "regression_guard_passed": {
++        "principle": "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++    },
++    "reproducible_total_levels": {
++        "principle": "the reconciled authoritative count (target >= 38 after the g50t bank)"
++    },
++    "reproducible_total_games": {"principle": "the reconciled authoritative game count (target >= 19)"},
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++    },
++    "availability_report": {
++        "principle": "robust aggregate-available report; missing or flagged inputs do not erase other axes"
++    },
++    "submitted_to_leaderboard": {"principle": "must remain false for this audit-only task"},
++}
++
++GAP_MARKER_OVERRIDES = {
++    "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT": "exp4427-gap-4423-g50t-unselectable-first-contact",
++    "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION": (
++        "exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection"
++    ),
++    "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN": (
++        "exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan"
++    ),
++    "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER": (
++        "exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier"
++    ),
++    "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER": (
++        "exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter"
++    ),
++    "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER": (
++        "exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier"
++    ),
++    "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT": "exp4438-gap-4423-dc22-unselectable-first-contact",
++    "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT": "exp4446-gap-4423-vc33-unselectable-first-contact",
++}
++
++Gap4GuardRunner = Callable[[Path], Mapping[str, Any]]
++CapstoneStampRunner = Callable[[Path], Mapping[str, Any]]
++
++
++def _run_gap4_regression_guard(root: Path) -> Mapping[str, Any]:  # pragma: no cover - live guard boundary
++    from carnot.reporting import verifier_registry_gaps_hygiene_gap4_guard_4410 as exp4410
++
++    return exp4410.run_gap4_regression_guard(root)
++
++
++def _verify_capstone_stamp_fix_durable(root: Path) -> Mapping[str, Any]:  # pragma: no cover
++    from carnot.reporting import verifier_registry_gaps_hygiene_gap4_guard_4410 as exp4410
++
++    return exp4410.verify_capstone_stamp_fix_durable(root)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _sha256(value: Any) -> str:
++    return hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _as_int(value: Any) -> int:
++    try:
++        return int(value or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def _as_float(value: Any) -> float:
++    try:
++        return float(value or 0.0)
++    except (TypeError, ValueError):
++        return 0.0
++
++
++def _slug(value: Any) -> str:
++    text = str(value or "").strip().upper()
++    return re.sub(r"[^A-Z0-9]+", "-", text).strip("-")
++
++
++def _yaml_mapping(path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError) as exc:
++        return {}, {
++            "path": str(path),
++            "readable": False,
++            "yaml_safe_load": False,
++            "error": f"{type(exc).__name__}: {exc}",
++        }
++    if not isinstance(loaded, dict):
++        return {}, {
++            "path": str(path),
++            "readable": False,
++            "yaml_safe_load": True,
++            "error": "top-level YAML is not a mapping",
++        }
++    return loaded, {"path": str(path), "readable": True, "yaml_safe_load": True, "error": ""}
++
++
++def _read_text(path: Path) -> tuple[str, dict[str, Any]]:
++    try:
++        text = path.read_text(encoding="utf-8")
++    except OSError as exc:
++        return "", {"path": str(path), "readable": False, "error": f"{type(exc).__name__}: {exc}"}
++    return text, {"path": str(path), "readable": True, "error": ""}
++
++
++def _load_json(path: Path) -> tuple[dict[str, Any] | None, dict[str, Any]]:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError) as exc:
++        return None, {
++            "path": str(path),
++            "available": False,
++            "error": f"{type(exc).__name__}: {exc}",
++        }
++    if not isinstance(loaded, dict):
++        return None, {"path": str(path), "available": False, "error": "top-level JSON is not an object"}
++    return loaded, {
++        "path": str(path),
++        "available": True,
++        "error": "",
++        "flagged_adversarial": loaded.get("flagged_adversarial") is True,
++        "honest_verdict": str(loaded.get("honest_verdict") or ""),
++        "reproducibility_checksum": str(loaded.get("reproducibility_checksum") or ""),
++    }
++
++
++def load_sources(root: Path = REPO_ROOT) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
++    """REQ-REPORT-4449: read every upstream artifact before reconciling ledgers."""
++
++    payloads: dict[str, Any] = {}
++    report: dict[str, dict[str, Any]] = {}
++    for key, rel_path in SOURCE_ARTIFACTS.items():
++        payload, row = _load_json(root / rel_path)
++        payloads[key] = payload
++        row["relative_path"] = rel_path
++        report[key] = row
++    return payloads, report
++
++
++def _axis_specs() -> list[capstone_aggregate_available.AxisSpec]:
++    return [
++        capstone_aggregate_available.AxisSpec(
++            name="g50t_bank",
++            required_keys=("4443_g50t_bank",),
++            verdict_fn=lambda present: (
++                present["4443_g50t_bank"].get("offline_reproduced") is True
++                and _as_int(present["4443_g50t_bank"].get("reproduced_levels")) >= 1
++            ),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="config_rule",
++            required_keys=("4444_config_rule",),
++            verdict_fn=lambda present: {
++                "ft09_resolved_generically": present["4444_config_rule"].get(
++                    "ft09_resolved_generically"
++                )
++                is True,
++                "dc22_state": present["4444_config_rule"].get("dc22_state"),
++            },
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="object_motion",
++            required_keys=("4445_object_motion",),
++            verdict_fn=lambda present: list(
++                present["4445_object_motion"].get("residuals_closed_generically") or []
++            ),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="first_contact",
++            required_keys=("4446_first_contact",),
++            verdict_fn=lambda present: (
++                present["4446_first_contact"].get("offline_reproduced") is True
++                and _as_int(present["4446_first_contact"].get("reproduced_levels")) >= 1
++            ),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="primitive_library",
++            required_keys=("4447_primitive_library",),
++            verdict_fn=lambda present: _as_float(
++                present["4447_primitive_library"].get("library_coverage")
++            ),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="loo_v2",
++            required_keys=("4448_loo_v2",),
++            verdict_fn=lambda present: _as_int(
++                present["4448_loo_v2"].get("generic_loo_solve_count_v2")
++            ),
++        ),
++    ]
++
++
++def availability_report(payloads: Mapping[str, Any]) -> dict[str, Any]:
++    """REQ-REPORT-4449: report per-axis gaps without poisoning unrelated axes."""
++
++    return capstone_aggregate_available.aggregate_available_report_gaps(
++        payloads,
++        _axis_specs(),
++        artifact_experiment_ids=SOURCE_EXPERIMENT_IDS,
++    )
++
++
++def trusted_payloads(payloads: Mapping[str, Any], report: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
++    available = set(report.get("available_artifact_keys", []))
++    return {
++        key: dict(payload)
++        for key, payload in payloads.items()
++        if key in available and isinstance(payload, Mapping)
++    }
++
++
++def excluded_artifact_paths(payloads: Mapping[str, Any]) -> list[str]:
++    return [
++        SOURCE_ARTIFACTS[key]
++        for key, payload in payloads.items()
++        if isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    ]
++
++
++def _gap_entry(
++    gap_id: str,
++    *,
++    status: str,
++    evidence: str,
++    failure_mode: str,
++    missing_discriminator: str,
++    candidate_design: str,
++    source_artifact: str,
++    priority: str = "high",
++    movement: str = "updated",
++) -> dict[str, Any]:
++    return {
++        "gap_id": gap_id,
++        "status": status,
++        "evidence": evidence,
++        "failure_mode": failure_mode,
++        "missing_discriminator": missing_discriminator,
++        "candidate_design": candidate_design,
++        "priority": priority,
++        "source_artifact": source_artifact,
++        "movement": movement,
++    }
++
++
++def _loo_gap_id(game: str, residual: str) -> str:
++    return f"GAP-4432-LOO-{_slug(game)}-{_slug(residual)}"
++
++
++def _add_gap(entries: dict[str, dict[str, Any]], gap: dict[str, Any]) -> None:
++    entries.setdefault(gap["gap_id"], gap)
++
++
++def collect_gap_entries(trusted: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
++    """SCENARIO-REPORT-4449: convert .411 outcomes into filled or open gap rows."""
++
++    entries: dict[str, dict[str, Any]] = {}
++    exp4443 = trusted.get("4443_g50t_bank", {})
++    if exp4443.get("offline_reproduced") is True and _as_int(exp4443.get("reproduced_levels")) >= 1:
++        _add_gap(
++            entries,
++            _gap_entry(
++                "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++                status="filled (exp4443_bank_g50t_example_conditioned_win)",
++                evidence=(
++                    f"{EXP4443_PATH}; target_game=g50t; offline_reproduced=True; "
++                    f"reproduced_levels={exp4443.get('reproduced_levels')}; "
++                    f"reproducible_total_levels={exp4443.get('reproducible_total_levels')}"
++                ),
++                failure_mode="prior first-contact route could not select the winning target-offset predicate",
++                missing_discriminator="filled by execution-grounded target-offset verifier",
++                candidate_design="keep the target-offset config-rule verifier in the generic bank",
++                source_artifact=EXP4443_PATH,
++                movement="filled",
++            ),
++        )
++
++    exp4444 = trusted.get("4444_config_rule", {})
++    if exp4444.get("ft09_resolved_generically") is True:
++        _add_gap(
++            entries,
++            _gap_entry(
++                _loo_gap_id("ft09", "missing_local_constraint_color_cycle_verifier"),
++                status="filled (exp4444_generic_config_rule_verifier_operator)",
++                evidence=(
++                    f"{EXP4444_PATH}; ft09_resolved_generically=True; offline_reproduced="
++                    f"{exp4444.get('offline_reproduced')}; reproduced_levels={exp4444.get('reproduced_levels')}; "
++                    "operator=config_rule_verifier; target_recipe_withheld=ft09"
++                ),
++                failure_mode="prior missing_local_constraint_color_cycle_verifier residual is closed for ft09 L1",
++                missing_discriminator=(
++                    "filled by generic execution-grounded local_constraint_color_cycle verifier"
++                ),
++                candidate_design="reuse config_rule_verifier for future local-constraint/toggle digests",
++                source_artifact=EXP4444_PATH,
++                movement="filled",
++            ),
++        )
++    if exp4444:
++        _add_gap(
++            entries,
++            _gap_entry(
++                "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++                status="open",
++                evidence=(
++                    f"{EXP4444_PATH}; dc22_state={exp4444.get('dc22_state')}; "
++                    f"honest_verdict={exp4444.get('honest_verdict')}; "
++                    "offline_reproduced=True for ft09 gate only; dc22 reproduced_levels=0"
++                ),
++                failure_mode="missing_config_rule_verifier_grounding",
++                missing_discriminator=(
++                    "dc22 exposes movement/object interaction win logic rather than a grounded "
++                    "local-constraint, marker-coverage, or target-offset toggle digest"
++                ),
++                candidate_design=(
++                    "build a dc22 movement/object-interaction verifier or richer digest extractor; "
++                    "do not count a level until reproduce(dc22) passes"
++                ),
++                source_artifact=EXP4444_PATH,
++                movement="updated_still_open",
++            ),
++        )
++
++    exp4445 = trusted.get("4445_object_motion", {})
++    closed_by_operator = set(exp4445.get("residuals_closed_generically") or [])
++    if exp4445.get("offline_reproduced") is True:
++        if "ar25" in closed_by_operator:
++            _add_gap(
++                entries,
++                _gap_entry(
++                    _loo_gap_id("ar25", "missing_reflection_world_model_and_object_motion_plan"),
++                    status="filled (exp4445_generic_object_motion_world_model_operator)",
++                    evidence=(
++                        f"{EXP4445_PATH}; residuals_closed_generically includes ar25; "
++                        f"offline_reproduced=True; reproduced_levels={exp4445.get('reproduced_levels')}; "
++                        "operator=object_motion_world_model; target_recipe_withheld=ar25; "
++                        f"world_model_accuracy_with_examples={exp4445.get('world_model_accuracy_with_examples')}; "
++                        f"world_model_accuracy_cold={exp4445.get('world_model_accuracy_cold')}"
++                    ),
++                    failure_mode="missing_reflection_world_model_and_object_motion_plan",
++                    missing_discriminator="filled by generic object-slot translate/reflect transition model",
++                    candidate_design="keep the generic operator in the standing loop",
++                    source_artifact=EXP4445_PATH,
++                    movement="filled",
++                ),
++            )
++        if "ka59" in closed_by_operator:
++            _add_gap(
++                entries,
++                _gap_entry(
++                    _loo_gap_id("ka59", "missing_push_block_world_model_and_dynamic_selection"),
++                    status="filled (exp4445_generic_object_motion_world_model_operator)",
++                    evidence=(
++                        f"{EXP4445_PATH}; residuals_closed_generically includes ka59; "
++                        f"offline_reproduced=True; reproduced_levels={exp4445.get('reproduced_levels')}; "
++                        "operator=object_motion_world_model; target_recipe_withheld=ka59; "
++                        f"world_model_accuracy_with_examples={exp4445.get('world_model_accuracy_with_examples')}; "
++                        f"world_model_accuracy_cold={exp4445.get('world_model_accuracy_cold')}"
++                    ),
++                    failure_mode="missing_push_block_world_model_and_dynamic_selection",
++                    missing_discriminator=(
++                        "filled by generic object-slot translate/push transition model with dynamic selection"
++                    ),
++                    candidate_design="keep the generic operator in the standing loop",
++                    source_artifact=EXP4445_PATH,
++                    movement="filled",
++                ),
++            )
++
++    exp4446 = trusted.get("4446_first_contact", {})
++    if exp4446.get("offline_reproduced") is True and _as_int(exp4446.get("reproduced_levels")) >= 1:
++        target_game = str(exp4446.get("target_game") or "vc33")
++        _add_gap(
++            entries,
++            _gap_entry(
++                f"GAP-4423-{_slug(target_game)}-UNSELECTABLE-FIRST-CONTACT",
++                status="filled (exp4446_drive_generic_first_contact_bank)",
++                evidence=(
++                    f"{EXP4446_PATH}; target_game={target_game}; routed_to={exp4446.get('routed_to')}; "
++                    f"offline_reproduced=True; reproduced_levels={exp4446.get('reproduced_levels')}"
++                ),
++                failure_mode="closed_by_support_clearance_config_rule",
++                missing_discriminator="filled by generic config_rule_verifier support-clearance digest",
++                candidate_design="reuse routed config-rule support-clearance predicates",
++                source_artifact=EXP4446_PATH,
++                movement="filled",
++            ),
++        )
++
++    exp4448 = trusted.get("4448_loo_v2", {})
++    if exp4448:
++        for row in exp4448.get("closed_residuals_by_new_operator", []):
++            if not isinstance(row, Mapping):
++                continue
++            operator = str(row.get("closed_by_operator") or "")
++            if operator == "object_motion_world_model" and "4445_object_motion" not in trusted:
++                continue
++            if operator == "config_rule_verifier" and "4444_config_rule" not in trusted:
++                continue
++            game = str(row.get("game") or "")
++            residual = str(row.get("v1_residual_delta") or "")
++            if game and residual:
++                status = f"filled (exp4448_loo_v2_{operator})"
++                _add_gap(
++                    entries,
++                    _gap_entry(
++                        _loo_gap_id(game, residual),
++                        status=status,
++                        evidence=(
++                            f"{EXP4448_PATH}; game={game}; closed_by_operator={operator}; "
++                            f"generic_loo_solve_count_v2={exp4448.get('generic_loo_solve_count_v2')}"
++                        ),
++                        failure_mode=f"prior {residual} residual is closed in LOO v2",
++                        missing_discriminator=f"filled by {operator}",
++                        candidate_design="keep the .411 operator in the generic leave-one-out loop",
++                        source_artifact=EXP4448_PATH,
++                        movement="filled",
++                    ),
++                )
++        for row in exp4448.get("missing_verifier_gaps", []):
++            if not isinstance(row, Mapping):
++                continue
++            game = str(row.get("game") or "")
++            residual = str(row.get("residual_delta") or "")
++            if not game or not residual:
++                continue
++            _add_gap(
++                entries,
++                _gap_entry(
++                    _loo_gap_id(game, residual),
++                    status="open",
++                    evidence=(
++                        f"{EXP4448_PATH}; game={game}; residual_delta={residual}; "
++                        f"retrieved_operator={row.get('retrieved_operator')}; "
++                        f"generic_loo_solve_count_v2={exp4448.get('generic_loo_solve_count_v2')}"
++                    ),
++                    failure_mode=residual,
++                    missing_discriminator=f"generic primitive/verifier still missing for {residual}",
++                    candidate_design=(
++                        "promote the residual into a reusable primitive or verifier, then rerun LOO v3"
++                    ),
++                    source_artifact=EXP4448_PATH,
++                    movement="updated_still_open",
++                ),
++            )
++    return list(entries.values())
++
++
++def _gap_marker(gap_id: str) -> str:
++    return GAP_MARKER_OVERRIDES.get(gap_id, f"exp4449-{_slug(gap_id).lower()}")
++
++
++def _gap_block(gap: Mapping[str, Any]) -> str:
++    return (
++        f"### {gap['gap_id']}: Exp 4449 .411 registry gap hygiene\n"
++        f"- status: {gap.get('status', 'open')}\n"
++        f"- evidence: {gap.get('evidence', '')}\n"
++        f"- failure mode: {gap.get('failure_mode', '')}\n"
++        f"- missing discriminator: {gap.get('missing_discriminator', '')}\n"
++        f"- candidate design: {gap.get('candidate_design', '')}\n"
++        f"- priority: {gap.get('priority', 'high')}\n"
++        f"- source artifact: {gap.get('source_artifact', '')}\n"
++        f"- movement: {gap.get('movement', 'updated')}\n"
++    )
++
++
++def _replace_marked_block(text: str, marker: str, block: str) -> str:
++    start = f"<!-- {marker}:start -->"
++    end = f"<!-- {marker}:end -->"
++    replacement = f"{start}\n{block.rstrip()}\n{end}"
++    if start in text and end in text:
++        prefix, rest = text.split(start, 1)
++        _, suffix = rest.split(end, 1)
++        return f"{prefix}{replacement}{suffix}"
++    return text.rstrip() + "\n\n" + replacement + "\n"
++
++
++def reconcile_gaps_text(gaps_text: str, gap_entries: list[dict[str, Any]]) -> tuple[str, list[str], list[str]]:
++    updated = gaps_text
++    filled: list[str] = []
++    open_ids: list[str] = []
++    for gap in gap_entries:
++        gap_id = str(gap["gap_id"])
++        if str(gap.get("status", "")).startswith("filled"):
++            filled.append(gap_id)
++        else:
++            open_ids.append(gap_id)
++        updated = _replace_marked_block(updated, _gap_marker(gap_id), _gap_block(gap))
++    return updated, filled, open_ids
++
++
++def _find_game(registry: dict[str, Any], game: str) -> dict[str, Any] | None:
++    games = registry.get("games")
++    if not isinstance(games, list):
++        return None
++    for row in games:
++        if isinstance(row, dict) and row.get("game") == game:
++            return row
++    return None
++
++
++def _ensure_game(registry: dict[str, Any], game: str) -> dict[str, Any]:
++    row = _find_game(registry, game)
++    if row is not None:
++        return row
++    row = {"game": game, "reproducibility": "reproduced", "levels_reproduced": 0, "gotchas": []}
++    registry.setdefault("games", []).append(row)
++    return row
++
++
++def _reproduced_counts(registry: Mapping[str, Any]) -> tuple[int, int]:
++    levels = 0
++    games_count = 0
++    games = registry.get("games")
++    if not isinstance(games, list):
++        return 0, 0
++    for row in games:
++        if not isinstance(row, Mapping):
++            continue
++        level_count = _as_int(row.get("levels_reproduced"))
++        if row.get("reproducibility") == "reproduced" and level_count > 0:
++            games_count += 1
++            levels += level_count
++    return levels, games_count
++
++
++def _record_reproduced_game(
++    registry: dict[str, Any],
++    *,
++    game: str,
++    levels: int,
++    artifact_path: str,
++    latest_key: str,
++    checksum: str,
++    solver: str,
++) -> None:
++    row = _ensure_game(registry, game)
++    row["reproducibility"] = "reproduced"
++    row["levels_reproduced"] = max(_as_int(row.get("levels_reproduced")), levels)
++    row.setdefault("gotchas", [])
++    row["solver"] = solver
++    row[latest_key] = {
++        "artifact": artifact_path,
++        "offline_reproduced": True,
++        "reproduced_levels": levels,
++        "reproducibility_checksum": checksum,
++    }
++
++
++def _library_rows(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
++    rows = payload.get("primitives_documented")
++    if not isinstance(rows, list):
++        return []
++    return [dict(row) for row in rows if isinstance(row, Mapping)]
++
++
++def reconcile_arc_registry(
++    registry: Mapping[str, Any],
++    trusted: Mapping[str, Mapping[str, Any]],
++    *,
++    filled_gap_ids: list[str],
++    open_gap_ids: list[str],
++    excluded: list[str],
++) -> tuple[dict[str, Any], dict[str, Any]]:
++    """REQ-REPORT-4449: update reproduced ARC counts from trusted .411 rows."""
++
++    updated = deepcopy(dict(registry))
++    updated.setdefault("games", [])
++
++    exp4443 = trusted.get("4443_g50t_bank", {})
++    if exp4443.get("offline_reproduced") is True:
++        _record_reproduced_game(
++            updated,
++            game=str(exp4443.get("target_game") or "g50t"),
++            levels=max(1, _as_int(exp4443.get("reproduced_levels"))),
++            artifact_path=EXP4443_PATH,
++            latest_key="latest_exp4443_reproduce",
++            checksum=str(exp4443.get("reproducibility_checksum") or ""),
++            solver=(
++                "python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py "
++                "execution-grounds the target-offset predicate and replays OfflineSolver."
++            ),
++        )
++
++    exp4446 = trusted.get("4446_first_contact", {})
++    if exp4446.get("offline_reproduced") is True:
++        _record_reproduced_game(
++            updated,
++            game=str(exp4446.get("target_game") or "vc33"),
++            levels=max(1, _as_int(exp4446.get("reproduced_levels"))),
++            artifact_path=EXP4446_PATH,
++            latest_key="latest_exp4446_reproduce",
++            checksum=str(exp4446.get("reproducibility_checksum") or ""),
++            solver=(
++                "python/carnot/experiment_4446_drive_generic_first_contact_bank.py "
++                "routes first contact through a generic config-rule verifier."
++            ),
++        )
++
++    exp4444 = trusted.get("4444_config_rule", {})
++    if exp4444:
++        row = _ensure_game(updated, "ft09")
++        row["generic_verifier_reproduce"] = (
++            f"Exp4444 {EXP4444_PATH} ft09_resolved_generically="
++            f"{exp4444.get('ft09_resolved_generically')} via config_rule_verifier."
++        )
++        updated["latest_config_rule_verifier_4444"] = {
++            "artifact": EXP4444_PATH,
++            "operator": "config_rule_verifier",
++            "ft09_resolved_generically": exp4444.get("ft09_resolved_generically") is True,
++            "dc22_state": exp4444.get("dc22_state"),
++            "reproduced_levels": _as_int(exp4444.get("reproduced_levels")),
++            "offline_reproduced": exp4444.get("offline_reproduced") is True,
++            "no_regression": exp4444.get("no_regression") is True,
++            "filled_gap_ids": [
++                _loo_gap_id("ft09", "missing_local_constraint_color_cycle_verifier")
++            ]
++            if exp4444.get("ft09_resolved_generically") is True
++            else [],
++            "remaining_gap_ids": ["GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT"],
++        }
++
++    exp4445 = trusted.get("4445_object_motion", {})
++    if exp4445:
++        for game in exp4445.get("residuals_closed_generically", []) or []:
++            row = _ensure_game(updated, str(game))
++            row["generic_object_motion_reproduce"] = (
++                f"Exp4445 object_motion_world_model re-solved {game} L1 without "
++                f"{game}'s hand world-model recipe."
++            )
++        updated["latest_object_motion_world_model_4445"] = {
++            "artifact": EXP4445_PATH,
++            "operator": "object_motion_world_model",
++            "residuals_closed_generically": list(exp4445.get("residuals_closed_generically") or []),
++            "world_model_accuracy_with_examples": exp4445.get("world_model_accuracy_with_examples"),
++            "world_model_accuracy_cold": exp4445.get("world_model_accuracy_cold"),
++            "reproduced_levels": _as_int(exp4445.get("reproduced_levels")),
++            "offline_reproduced": exp4445.get("offline_reproduced") is True,
++            "no_regression": exp4445.get("no_regression") is True,
++        }
++
++    exp4447 = trusted.get("4447_primitive_library", {})
++    if exp4447:
++        updated["latest_documented_primitive_library_4447"] = {
++            "artifact": EXP4447_PATH,
++            "inference_substrate": exp4447.get("inference_substrate", INFERENCE_SUBSTRATE),
++            "library_coverage": exp4447.get("library_coverage"),
++            "retrieval_precision_at_1": exp4447.get("retrieval_precision_at_1"),
++            "constant_leak_violations": list(exp4447.get("constant_leak_violations") or []),
++            "documented_primitives": _library_rows(exp4447),
++        }
++
++    exp4448 = trusted.get("4448_loo_v2", {})
++    if exp4448:
++        updated["latest_loo_generic_v2_4448"] = {
++            "artifact": EXP4448_PATH,
++            "generic_loo_solve_count_v1_baseline": exp4448.get(
++                "generic_loo_solve_count_v1_baseline"
++            ),
++            "generic_loo_solve_count_v2": exp4448.get("generic_loo_solve_count_v2"),
++            "loo_gate_passed": exp4448.get("loo_gate_passed") is True,
++            "closed_residuals_by_new_operator": list(
++                exp4448.get("closed_residuals_by_new_operator") or []
++            ),
++            "missing_verifier_gaps": list(exp4448.get("missing_verifier_gaps") or []),
++        }
++
++    total_levels, total_games = _reproduced_counts(updated)
++    updated["updated"] = "2026-06-19"
++    updated["reproducible_total_levels"] = total_levels
++    updated["reproducible_total_games"] = total_games
++    updated["latest_hygiene_4449"] = {
++        "artifact": RESULT_RELATIVE_PATH,
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "note": ".411 registry hygiene; flagged_adversarial artifacts excluded from counts.",
++    }
++    return updated, {
++        "arc_solve_registry_reconciled": True,
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++    }
++
++
++def _find_verifier(registry: dict[str, Any], verifier_id: str) -> dict[str, Any] | None:
++    verifiers = registry.get("verifiers")
++    if not isinstance(verifiers, list):
++        return None
++    for row in verifiers:
++        if isinstance(row, dict) and row.get("verifier_id") == verifier_id:
++            return row
++    return None
++
++
++def _guard_current(guard: Mapping[str, Any]) -> Mapping[str, Any]:
++    current = guard.get("current")
++    if isinstance(current, Mapping):
++        return current
++    replayed = guard.get("replayed_arc1_rule_exec")
++    if isinstance(replayed, Mapping):
++        return replayed
++    return {}
++
++
++def guard_passed(guard: Mapping[str, Any]) -> bool:
++    current = _guard_current(guard)
++    gated = _as_float(current.get("gated_pass2"))
++    vote = _as_float(current.get("vote_pass2"))
++    lost = _as_int(current.get("vote_wins_lost"))
++    explicit = guard.get("regression_guard_passed") is True or guard.get("gap4_execution_guard_passed") is True
++    beats_vote = guard.get("arc_oracle_distinct_verifier_beats_vote")
++    return bool(explicit and gated >= vote and lost == 0 and beats_vote is not False)
++
++
++def stamp_fix_durable(stamp: Mapping[str, Any]) -> bool:
++    return bool(
++        stamp.get("capstone_stamp_fix_durable") is True
++        or stamp.get("capstone_stamp_fix_verified") is True
++    ) and stamp.get("circular_moat_overclaim_fired") is not True
++
++
++def reconcile_verifier_registry(
++    registry: Mapping[str, Any],
++    *,
++    guard: Mapping[str, Any],
++    stamp: Mapping[str, Any],
++    total_levels: int,
++    total_games: int,
++    filled_gap_ids: list[str],
++    open_gap_ids: list[str],
++    trusted: Mapping[str, Mapping[str, Any]],
++    excluded: list[str],
++) -> tuple[dict[str, Any], dict[str, Any]]:
++    updated = deepcopy(dict(registry))
++    verifier = _find_verifier(updated, GAP4_VERIFIER_ID)
++    if verifier is None:
++        verifier = {
++            "verifier_id": GAP4_VERIFIER_ID,
++            "domain": "arc_agi2_grid",
++            "kind": "process_verifier",
++            "eval": {},
++            "registry_roles": [],
++        }
++        updated.setdefault("verifiers", []).append(verifier)
++
++    current = _guard_current(guard)
++    exp4447 = trusted.get("4447_primitive_library", {})
++    exp4448 = trusted.get("4448_loo_v2", {})
++    verifier.setdefault("eval", {}).update(
++        {
++            "eval_exp_4449": RESULT_RELATIVE_PATH,
++            "exp4449_regression_guard_passed": guard_passed(guard),
++            "exp4449_arc_oracle_distinct_verifier_beats_vote": (
++                guard.get("arc_oracle_distinct_verifier_beats_vote") is not False
++            ),
++            "exp4449_arc1_rule_exec_vote_pass2": current.get("vote_pass2"),
++            "exp4449_arc1_rule_exec_gated_pass2": current.get("gated_pass2"),
++            "exp4449_arc1_headroom_recovered": current.get("headroom_recovered"),
++            "exp4449_arc1_vote_wins_lost": current.get("vote_wins_lost"),
++            "exp4449_capstone_stamp_fix_durable": stamp_fix_durable(stamp),
++            "exp4449_reproducible_total_levels": total_levels,
++            "exp4449_reproducible_total_games": total_games,
++            "exp4449_filled_gap_ids": filled_gap_ids,
++            "exp4449_open_gap_ids": open_gap_ids,
++            "exp4449_flagged_artifacts_excluded": excluded,
++            "exp4449_generic_loo_solve_count_v2": exp4448.get("generic_loo_solve_count_v2"),
++            "exp4449_primitive_library_coverage": exp4447.get("library_coverage"),
++            "exp4449_retrieval_precision_at_1": exp4447.get("retrieval_precision_at_1"),
++        }
++    )
++
++    role = {
++        "role_id": V411_ROLE_ID,
++        "experiment": RESULT_RELATIVE_PATH,
++        "role": "registry_gaps_arc_hygiene_v411",
++        "status": "v411_outcomes_recorded_with_gap4_guard_and_stamp_durability",
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "eval_exp_4449": RESULT_RELATIVE_PATH,
++    }
++    roles = verifier.setdefault("registry_roles", [])
++    if not isinstance(roles, list):
++        roles = verifier["registry_roles"] = []
++    verifier["registry_roles"] = [
++        row for row in roles if not (isinstance(row, Mapping) and row.get("role_id") == V411_ROLE_ID)
++    ] + [role]
++    return updated, {"verifier_registry_reconciled": True}
++
++
++def _check_helper_import() -> dict[str, Any]:
++    repo_root = str(REPO_ROOT)
++    if repo_root not in sys.path:
++        sys.path.insert(0, repo_root)
++    try:
++        module = importlib.import_module("scripts.capstone_aggregate_available")
++    except Exception as exc:  # pragma: no cover - exception type depends on import machinery
++        return {"ok": False, "module": "scripts.capstone_aggregate_available", "error": str(exc)}
++    return {
++        "ok": hasattr(module, "aggregate_available_report_gaps") and hasattr(module, "AxisSpec"),
++        "module": "scripts.capstone_aggregate_available",
++        "error": "",
++    }
++
++
++def check_preconditions(
++    root: Path = REPO_ROOT,
++) -> tuple[dict[str, Any], dict[str, Any], str, dict[str, Any], dict[str, Any]]:
++    verifier_registry, verifier_check = _yaml_mapping(root / REGISTRY_RELATIVE_PATH)
++    arc_registry, arc_check = _yaml_mapping(root / ARC_REGISTRY_RELATIVE_PATH)
++    gaps_text, gaps_check = _read_text(root / GAPS_RELATIVE_PATH)
++    payloads, source_report = load_sources(root)
++    helper_check = _check_helper_import()
++    checks = {
++        "ok": verifier_check["readable"] and arc_check["readable"] and gaps_check["readable"] and helper_check["ok"],
++        "files": {
++            "verifier_registry": verifier_check,
++            "arc_solve_registry": arc_check,
++            "verifier_gaps": gaps_check,
++        },
++        "compatibility_import": helper_check,
++        "source_artifacts": source_report,
++    }
++    return verifier_registry, arc_registry, gaps_text, payloads, checks
++
++
++def _write_yaml(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    text = yaml.safe_dump(dict(payload), sort_keys=False)
++    if path.exists() and path.read_text(encoding="utf-8") == text:
++        return
++    path.write_text(text, encoding="utf-8")
++
++
++def _write_text(path: Path, text: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    if path.exists() and path.read_text(encoding="utf-8") == text:
++        return
++    path.write_text(text, encoding="utf-8")
++
++
++def _checksum_for_artifact(artifact: Mapping[str, Any]) -> str:
++    return _sha256(
++        {
++            "registry_reconciliation": artifact.get("registry_reconciliation"),
++            "availability_report": artifact.get("availability_report"),
++            "regression_guard_passed": artifact.get("regression_guard_passed"),
++            "capstone_stamp_fix_durable": artifact.get("capstone_stamp_fix_durable"),
++            "reproducible_total_levels": artifact.get("reproducible_total_levels"),
++            "reproducible_total_games": artifact.get("reproducible_total_games"),
++            "excluded_artifacts": artifact.get("excluded_artifacts"),
++            "random_seed": artifact.get("random_seed"),
++            "spec_refs": artifact.get("spec_refs"),
++            "inference_substrate": artifact.get("inference_substrate"),
++        }
++    )
++
++
++def build_artifact(
++    *,
++    started_at: float,
++    ended_at: float,
++    availability: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++    registry_reconciliation: Mapping[str, Any],
++    guard: Mapping[str, Any],
++    stamp: Mapping[str, Any],
++    total_levels: int,
++    total_games: int,
++    excluded: list[str],
++) -> dict[str, Any]:
++    guard_ok = guard_passed(guard)
++    stamp_ok = stamp_fix_durable(stamp)
++    suffix = "guard_passed" if guard_ok else "guard_failed"
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4449_registry_gaps_hygiene",
++        "schema": "carnot.exp4449.registry_gaps_hygiene.v1",
++        "honest_verdict": f"complete: registry_gaps_hygiene_4449_{suffix}",
++        "regression_guard_passed": guard_ok,
++        "reproducible_total_levels": int(total_levels),
++        "reproducible_total_games": int(total_games),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "registry_reconciliation": dict(registry_reconciliation),
++        "availability_report": dict(availability),
++        "capstone_stamp_fix_durable": stamp_ok,
++        "capstone_stamp_fix": dict(stamp),
++        "gap4_regression_guard": dict(guard),
++        "excluded_artifacts": list(excluded),
++        "preconditions_checked": dict(preconditions),
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "submitted_to_leaderboard": False,
++        "no_production_verifier_edits": True,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": max(0.0001, round(float(ended_at - started_at), 6)),
++        "model_specs": {
++            "method": INFERENCE_SUBSTRATE,
++            "codex_calls": 0,
++            "live_model_inference": False,
++            "gpu_inference": False,
++            "upstream_artifacts": list(SOURCE_ARTIFACTS.values()),
++        },
++        "registries_reconciled": bool(registry_reconciliation.get("registries_reconciled")),
++    }
++    artifact["reproducibility_checksum"] = _checksum_for_artifact(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete:/success:/passed:/shipped:")
++    if type(artifact.get("regression_guard_passed")) is not bool:
++        errors.append("regression_guard_passed must be bare bool")
++    if type(artifact.get("capstone_stamp_fix_durable")) is not bool:
++        errors.append("capstone_stamp_fix_durable must be bare bool")
++    if type(artifact.get("reproducible_total_levels")) is not int:
++        errors.append("reproducible_total_levels must be bare int")
++    if type(artifact.get("reproducible_total_games")) is not int:
++        errors.append("reproducible_total_games must be bare int")
++    if type(artifact.get("random_seed")) is not int:
++        errors.append("random_seed must be bare int")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must equal aggregation_from_upstream_artifacts")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard must be false")
++    if not isinstance(artifact.get("registry_reconciliation"), Mapping):
++        errors.append("registry_reconciliation must be dict")
++    if not isinstance(artifact.get("availability_report"), Mapping):
++        errors.append("availability_report must be dict")
++    if not isinstance(artifact.get("field_principles"), Mapping):
++        errors.append("field_principles must be dict")
++    else:
++        for field in (
++            "honest_verdict",
++            "regression_guard_passed",
++            "reproducible_total_levels",
++            "reproducible_total_games",
++            "inference_substrate",
++        ):
++            if artifact["field_principles"].get(field) != FIELD_PRINCIPLES[field]:
++                errors.append(f"field_principles.{field}.principle must match REQ-REPORT-4449")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64 or not all(
++        char in "0123456789abcdef" for char in checksum
++    ):
++        errors.append("reproducibility_checksum must be 64-char sha256 hex")
++    if set(SPEC_REFS) - set(artifact.get("spec_refs", [])):
++        errors.append("spec_refs must include REQ-REPORT-4449 and SCENARIO-REPORT-4449")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    gap4_guard_runner: Gap4GuardRunner = _run_gap4_regression_guard,
++    capstone_stamp_runner: CapstoneStampRunner = _verify_capstone_stamp_fix_durable,
++    now: Callable[[], float] = time.perf_counter,
++) -> dict[str, Any]:
++    """REQ-REPORT-4449: reconcile ledgers, run guards, and write the artifact."""
++
++    started = now()
++    root = Path(root)
++    verifier_registry, arc_registry, gaps_text, payloads, preconditions = check_preconditions(root)
++    available = availability_report(payloads)
++    trusted = trusted_payloads(payloads, available)
++    excluded = excluded_artifact_paths(payloads)
++    gap_entries = collect_gap_entries(trusted)
++    updated_gaps, filled_gap_ids, open_gap_ids = reconcile_gaps_text(gaps_text, gap_entries)
++
++    guard = dict(gap4_guard_runner(root))
++    stamp = dict(capstone_stamp_runner(root))
++    updated_arc, arc_report = reconcile_arc_registry(
++        arc_registry,
++        trusted,
++        filled_gap_ids=filled_gap_ids,
++        open_gap_ids=open_gap_ids,
++        excluded=excluded,
++    )
++    updated_verifier, verifier_report = reconcile_verifier_registry(
++        verifier_registry,
++        guard=guard,
++        stamp=stamp,
++        total_levels=arc_report["reproducible_total_levels"],
++        total_games=arc_report["reproducible_total_games"],
++        filled_gap_ids=filled_gap_ids,
++        open_gap_ids=open_gap_ids,
++        trusted=trusted,
++        excluded=excluded,
++    )
++
++    ledgers_writable = bool(preconditions.get("ok"))
++    if ledgers_writable:
++        _write_yaml(root / ARC_REGISTRY_RELATIVE_PATH, updated_arc)
++        _write_yaml(root / REGISTRY_RELATIVE_PATH, updated_verifier)
++        _write_text(root / GAPS_RELATIVE_PATH, updated_gaps)
++
++    registry_reconciliation = {
++        **arc_report,
++        **verifier_report,
++        "verifier_gaps_reconciled": ledgers_writable,
++        "registries_reconciled": bool(ledgers_writable),
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "production_verifier_edits": False,
++    }
++    artifact = build_artifact(
++        started_at=started,
++        ended_at=now(),
++        availability=available,
++        preconditions=preconditions,
++        registry_reconciliation=registry_reconciliation,
++        guard=guard,
++        stamp=stamp,
++        total_levels=arc_report["reproducible_total_levels"],
++        total_games=arc_report["reproducible_total_games"],
++        excluded=excluded,
++    )
++    write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    artifact = run(REPO_ROOT)
++    print(json.dumps(artifact["regression_guard_passed"]))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index a353f5cea0..28fc852c61 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T16:11:44.531108Z",
+-  "duration_s": 0.018344879150390625,
++  "run_date": "2026-06-19T16:29:08.415855Z",
++  "duration_s": 0.01967477798461914,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "74c157aa432f50dd7f8144e8dd49825003ee26d32f872eb5223e397153a01285",
++  "reproducibility_checksum": "aeabc567f885fce668838bcab2ba54e902d7e3134dffef0fe3311835cc1fea7a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "450dce9ec0b71961fae56dad9e0014e6bfbe023b"
++    "adversarial_verify_version": "f9673b24b0eba54f047e967fec4d246fd207d3c1"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 630ab1b8f7..bb4a6582e6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T16:11:44.558271Z",
+-  "duration_s": 0.023213624954223633,
++  "run_date": "2026-06-19T16:29:08.442131Z",
++  "duration_s": 0.021760225296020508,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "ad2225b8ef743c417a068dc749e75c73a7d57b972483b620b1b319440d70e46f",
++  "reproducibility_checksum": "6650defc9765ff4b13d4429fff80ba24a5603963c48c801571ec4afb3835d914",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "450dce9ec0b71961fae56dad9e0014e6bfbe023b"
++    "adversarial_verify_version": "f9673b24b0eba54f047e967fec4d246fd207d3c1"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d829dbaeba..bbedc0bf88 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1572113037109375,
++  "efficiency_gains_ms": 2.1414756774902344,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 954441cdcd..d36628d0dc 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.990496043115854e-05,
++  "duration_s": 2.948602195829153e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4449_registry_gaps_hygiene.json b/results/experiment_4449_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..c22efaf0fd
+--- /dev/null
++++ b/results/experiment_4449_registry_gaps_hygiene.json
+@@ -0,0 +1,313 @@
++{
++  "availability_report": {
++    "available_artifact_keys": [
++      "4443_g50t_bank",
++      "4444_config_rule",
++      "4445_object_motion",
++      "4446_first_contact",
++      "4447_primitive_library",
++      "4448_loo_v2"
++    ],
++    "axes": {
++      "config_rule": {
++        "available_artifact_keys": [
++          "4444_config_rule"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": {
++          "dc22_state": "not_grounded",
++          "ft09_resolved_generically": true
++        }
++      },
++      "first_contact": {
++        "available_artifact_keys": [
++          "4446_first_contact"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": true
++      },
++      "g50t_bank": {
++        "available_artifact_keys": [
++          "4443_g50t_bank"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": true
++      },
++      "loo_v2": {
++        "available_artifact_keys": [
++          "4448_loo_v2"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": 5
++      },
++      "object_motion": {
++        "available_artifact_keys": [
++          "4445_object_motion"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": [
++          "ar25",
++          "ka59"
++        ]
++      },
++      "primitive_library": {
++        "available_artifact_keys": [
++          "4447_primitive_library"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": 1.0
++      }
++    },
++    "flagged_artifacts_excluded": [],
++    "missing_upstream_artifacts": []
++  },
++  "capstone_stamp_fix": {
++    "capstone_aggregation_propagates_oracle_stamp": true,
++    "capstone_aggregation_source": "carnot.reporting.capstone_v406_4401",
++    "capstone_aggregation_uses_available_helper": true,
++    "capstone_path": "results/experiment_4401_capstone_v406.json",
++    "capstone_stamp_fix_durable": true,
++    "capstone_verifier_is_oracle": false,
++    "capstone_verifier_is_oracle_honored": true,
++    "circular_moat_overclaim_fired": false,
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
++      "--json",
++      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json"
++    ],
++    "flag_count": 0,
++    "flags": [],
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json\",\n      \"loaded\": true,\n      \"exp_id\": 4401,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v406_localizer_localizes_but_not_genuine_compounds_false_calibrated_fa\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
++  },
++  "capstone_stamp_fix_durable": true,
++  "duration_s": 0.679909,
++  "excluded_artifacts": [],
++  "experiment": "experiment_4449_registry_gaps_hygiene",
++  "field_principles": {
++    "availability_report": {
++      "principle": "robust aggregate-available report; missing or flagged inputs do not erase other axes"
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefixed"
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++    },
++    "regression_guard_passed": {
++      "principle": "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++    },
++    "reproducible_total_games": {
++      "principle": "the reconciled authoritative game count (target >= 19)"
++    },
++    "reproducible_total_levels": {
++      "principle": "the reconciled authoritative count (target >= 38 after the g50t bank)"
++    },
++    "submitted_to_leaderboard": {
++      "principle": "must remain false for this audit-only task"
++    }
++  },
++  "gap4_regression_guard": {
++    "exp4333_guard": {
++      "offline_replay": {
++        "arc1_rule_exec": {
++          "gated_pass2": 0.5806,
++          "headroom_recovered": 4,
++          "n": 31,
++          "vote_pass2": 0.4516,
++          "vote_wins_lost": 0
++        },
++        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++        "expected": {
++          "arc1_rule_exec": {
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "n": 31,
++            "vote_pass2": 0.4516,
++            "vote_wins_lost": 0
++          }
++        },
++        "no_codex_calls": true,
++        "no_gguf_inference": true,
++        "regression_guard_passed": true,
++        "trm_training_touched": false
++      },
++      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
++      "recorded_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      },
++      "regression_guard_passed": true,
++      "replayed_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
++    "recorded_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "regression_guard_passed": true,
++    "replayed_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    }
++  },
++  "honest_verdict": "complete: registry_gaps_hygiene_4449_guard_passed",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "model_specs": {
++    "codex_calls": 0,
++    "gpu_inference": false,
++    "live_model_inference": false,
++    "method": "aggregation_from_upstream_artifacts",
++    "upstream_artifacts": [
++      "results/experiment_4443_bank_g50t_example_conditioned_win.json",
++      "results/experiment_4444_generic_config_rule_verifier_operator.json",
++      "results/experiment_4445_generic_object_motion_world_model_operator.json",
++      "results/experiment_4446_drive_generic_first_contact_bank.json",
++      "results/experiment_4447_lilo_documented_primitive_library.json",
++      "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
++    ]
++  },
++  "no_production_verifier_edits": true,
++  "preconditions_checked": {
++    "compatibility_import": {
++      "error": "",
++      "module": "scripts.capstone_aggregate_available",
++      "ok": true
++    },
++    "files": {
++      "arc_solve_registry": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
++        "readable": true,
++        "yaml_safe_load": true
++      },
++      "verifier_gaps": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_gaps.md",
++        "readable": true
++      },
++      "verifier_registry": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
++        "readable": true,
++        "yaml_safe_load": true
++      }
++    },
++    "ok": true,
++    "source_artifacts": {
++      "4443_g50t_bank": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: example_conditioned_g50t_L1_banked_with_correct_substrate",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4443_bank_g50t_example_conditioned_win.json",
++        "relative_path": "results/experiment_4443_bank_g50t_example_conditioned_win.json",
++        "reproducibility_checksum": "b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9"
++      },
++      "4444_config_rule": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "complete: ft09_generic_resolved_dc22_not_grounded_gap_logged",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4444_generic_config_rule_verifier_operator.json",
++        "relative_path": "results/experiment_4444_generic_config_rule_verifier_operator.json",
++        "reproducibility_checksum": "a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4"
++      },
++      "4445_object_motion": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: ar25_ka59_object_motion_generic_L1_offline_reproduced",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4445_generic_object_motion_world_model_operator.json",
++        "relative_path": "results/experiment_4445_generic_object_motion_world_model_operator.json",
++        "reproducibility_checksum": "431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c"
++      },
++      "4446_first_contact": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: generic_first_contact_vc33_L1_offline_reproduced",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4446_drive_generic_first_contact_bank.json",
++        "relative_path": "results/experiment_4446_drive_generic_first_contact_bank.json",
++        "reproducibility_checksum": "9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361"
++      },
++      "4447_primitive_library": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: documented_primitive_library_retrieval_gate_passed",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4447_lilo_documented_primitive_library.json",
++        "relative_path": "results/experiment_4447_lilo_documented_primitive_library.json",
++        "reproducibility_checksum": "40afa7857c381e2f81fdc469dd8e1a368172e32ad314480e37e73bc215e79699"
++      },
++      "4448_loo_v2": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: generic_loo_solve_count_v2_5_of_7_beats_v1_2",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4448_loo_generic_solve_benchmark_v2.json",
++        "relative_path": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
++        "reproducibility_checksum": "b935fcb58572409f81c07d85605bc104e586e452182290354d10fbddfee6890c"
++      }
++    }
++  },
++  "random_seed": 4449,
++  "registries_reconciled": true,
++  "registry_reconciliation": {
++    "arc_solve_registry_reconciled": true,
++    "excluded_artifacts": [],
++    "filled_gap_ids": [
++      "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++      "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
++      "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
++      "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
++      "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT"
++    ],
++    "open_gap_ids": [
++      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++      "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"
++    ],
++    "production_verifier_edits": false,
++    "registries_reconciled": true,
++    "reproducible_total_games": 20,
++    "reproducible_total_levels": 39,
++    "verifier_gaps_reconciled": true,
++    "verifier_registry_reconciled": true
++  },
++  "regression_guard_passed": true,
++  "reproducibility_checksum": "c940dffc7e657c8a2216c41a7faac98b417930e4a1ad63cfd8251260ec62f2a9",
++  "reproducible_total_games": 20,
++  "reproducible_total_levels": 39,
++  "result_path": "results/experiment_4449_registry_gaps_hygiene.json",
++  "schema": "carnot.exp4449.registry_gaps_hygiene.v1",
++  "spec_refs": [
++    "REQ-REPORT-4449",
++    "SCENARIO-REPORT-4449"
++  ],
++  "submitted_to_leaderboard": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index fc20a08878..86cebdf328 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T16:11:34Z",
+-  "finished_at": "2026-06-19T16:11:34Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T16:28:58Z",
++  "finished_at": "2026-06-19T16:28:58Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 79f1810c1c..1084fdcb49 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T16:11:34Z",
+-  "finished_at": "2026-06-19T16:11:34Z",
++  "started_at": "2026-06-19T16:28:58Z",
++  "finished_at": "2026-06-19T16:28:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1da2fc08c5..9cc15afb5a 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T16:11:34Z",
+-  "finished_at": "2026-06-19T16:11:34Z",
++  "started_at": "2026-06-19T16:28:58Z",
++  "finished_at": "2026-06-19T16:28:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/capstone_aggregate_available.py b/scripts/capstone_aggregate_available.py
+new file mode 100644
+index 0000000000..ab663924ca
+--- /dev/null
++++ b/scripts/capstone_aggregate_available.py
+@@ -0,0 +1,8 @@
++"""Compatibility import for the capstone aggregate-available helper.
++
++Spec refs: REQ-REPORT-4449, SCENARIO-REPORT-4449.
++"""
++
++from carnot.reporting.capstone_aggregate_available import AxisSpec, aggregate_available_report_gaps
++
++__all__ = ["AxisSpec", "aggregate_available_report_gaps"]
+diff --git a/tests/python/test_experiment_4449_registry_gaps_hygiene.py b/tests/python/test_experiment_4449_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..2b94526406
+--- /dev/null
++++ b/tests/python/test_experiment_4449_registry_gaps_hygiene.py
+@@ -0,0 +1,562 @@
++"""Tests for Exp 4449 registry and gaps hygiene.
++
++Spec refs: REQ-REPORT-4449, SCENARIO-REPORT-4449.
++"""
++
++from __future__ import annotations
++
++import importlib
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4449_registry_gaps_hygiene as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _fixture_games() -> list[dict[str, Any]]:
++    return [
++        {"game": "r11l", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "ls20", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "wa30", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "s5i5", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "lp85", "reproducibility": "reproduced", "levels_reproduced": 5},
++        {"game": "sc25", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "cd82", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "sp80", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "su15", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "tu93", "reproducibility": "reproduced", "levels_reproduced": 5},
++        {"game": "tn36", "reproducibility": "reproduced", "levels_reproduced": 7},
++        {"game": "cn04", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "m0r0", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "sk48", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "ar25", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "ka59", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "ft09", "reproducibility": "reproduced", "levels_reproduced": 1},
++        {"game": "tr87", "reproducibility": "reproduced", "levels_reproduced": 6},
++        {"game": "g50t", "reproducibility": "unsolved", "levels_reproduced": 0},
++    ]
++
++
++def _fixture_arc_registry() -> dict[str, Any]:
++    return {
++        "schema_version": 1,
++        "updated": "2026-06-19",
++        "general_gotchas": [{"id": "offline_is_a_simulator", "note": "offline sim"}],
++        "games": _fixture_games(),
++        "reproducible_total_levels": 37,
++        "reproducible_total_games": 18,
++    }
++
++
++def _fixture_verifier_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": mod.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "eval": {
++                    "exp4438_regression_guard_passed": True,
++                    "exp4438_arc1_rule_exec_vote_pass2": 0.4516,
++                    "exp4438_arc1_rule_exec_gated_pass2": 0.5806,
++                },
++                "registry_roles": [{"role_id": "old", "status": "kept"}],
++            }
++        ]
++    }
++
++
++def _fixture_gaps_text() -> str:
++    blocks = [
++        (
++            "exp4427-gap-4423-g50t-unselectable-first-contact",
++            "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++            "open",
++        ),
++        (
++            "exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection",
++            "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
++            "open",
++        ),
++        (
++            "exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan",
++            "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
++            "open",
++        ),
++        (
++            "exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier",
++            "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
++            "open",
++        ),
++        (
++            "exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter",
++            "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++            "open",
++        ),
++        (
++            "exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier",
++            "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++            "open",
++        ),
++        (
++            "exp4438-gap-4423-dc22-unselectable-first-contact",
++            "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++            "open",
++        ),
++    ]
++    text = "# Verifier Gaps\n"
++    for marker, gap_id, status in blocks:
++        text += (
++            f"\n<!-- {marker}:start -->\n"
++            f"### {gap_id}: stale fixture row\n"
++            f"- status: {status}\n"
++            "- evidence: stale\n"
++            "- failure mode: stale\n"
++            "- missing discriminator: stale\n"
++            "- candidate design: stale\n"
++            "- priority: high\n"
++            f"<!-- {marker}:end -->\n"
++        )
++    return text
++
++
++def _write_fixture_repo(
++    root: Path,
++    *,
++    omit_4447: bool = False,
++    flagged_4445: bool = False,
++) -> None:
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / mod.ARC_REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_fixture_arc_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (root / mod.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_fixture_verifier_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (root / mod.GAPS_RELATIVE_PATH).write_text(_fixture_gaps_text(), encoding="utf-8")
++
++    _write_json(
++        root / mod.EXP4443_PATH,
++        {
++            "experiment": "experiment_4443_bank_g50t_example_conditioned_win",
++            "honest_verdict": "success: example_conditioned_g50t_L1_banked_with_correct_substrate",
++            "target_game": "g50t",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "reproducible_total_levels": 38,
++            "reproducible_total_games": 19,
++            "registry_update": {"gap_filled": True},
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "3" * 64,
++        },
++    )
++    _write_json(
++        root / mod.EXP4444_PATH,
++        {
++            "experiment": "experiment_4444_generic_config_rule_verifier_operator",
++            "honest_verdict": "complete: ft09_generic_resolved_dc22_not_grounded_gap_logged",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "ft09_resolved_generically": True,
++            "dc22_state": "not_grounded",
++            "missing_verifier_gaps": [
++                {
++                    "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++                    "game": "dc22",
++                    "status": "open",
++                    "residual_delta": "missing_config_rule_verifier_grounding",
++                }
++            ],
++            "no_regression": True,
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "4" * 64,
++        },
++    )
++    _write_json(
++        root / mod.EXP4445_PATH,
++        {
++            "experiment": "experiment_4445_generic_object_motion_world_model_operator",
++            "honest_verdict": "success: ar25_ka59_object_motion_generic_L1_offline_reproduced",
++            "flagged_adversarial": flagged_4445,
++            "offline_reproduced": True,
++            "reproduced_levels": 2,
++            "residuals_closed_generically": ["ar25", "ka59"],
++            "world_model_accuracy_with_examples": 1.0,
++            "world_model_accuracy_cold": 0.25,
++            "missing_verifier_gaps": [],
++            "no_regression": True,
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "5" * 64,
++        },
++    )
++    _write_json(
++        root / mod.EXP4446_PATH,
++        {
++            "experiment": "experiment_4446_drive_generic_first_contact_bank",
++            "honest_verdict": "success: generic_first_contact_vc33_L1_offline_reproduced",
++            "target_game": "vc33",
++            "routed_to": "s5i5",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "selected_operator": {"operator": "config_rule_verifier"},
++            "missing_verifier_gaps": [],
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "6" * 64,
++        },
++    )
++    if not omit_4447:
++        _write_json(
++            root / mod.EXP4447_PATH,
++            {
++                "experiment": "experiment_4447_lilo_documented_primitive_library",
++                "honest_verdict": "success: documented_primitive_library_retrieval_gate_passed",
++                "library_coverage": 1.0,
++                "retrieval_precision_at_1": 1.0,
++                "constant_leak_violations": [],
++                "primitives_documented": [
++                    {
++                        "name": "object_motion_world_model",
++                        "mechanic_class": "object_motion_world_model",
++                        "derived_from_games": ["ar25", "ka59"],
++                    }
++                ],
++                "no_regression": True,
++                "verifier_is_oracle": True,
++                "reproducibility_checksum": "7" * 64,
++            },
++        )
++    _write_json(
++        root / mod.EXP4448_PATH,
++        {
++            "experiment": "experiment_4448_loo_generic_solve_benchmark_v2",
++            "honest_verdict": "success: generic_loo_solve_count_v2_5_of_7_beats_v1_2",
++            "generic_loo_solve_count_v1_baseline": 2,
++            "generic_loo_solve_count_v2": 5,
++            "loo_gate_passed": True,
++            "offline_reproduced": True,
++            "closed_residuals_by_new_operator": [
++                {
++                    "game": "ka59",
++                    "closed_by_operator": "object_motion_world_model",
++                    "v1_residual_delta": "missing_push_block_world_model_and_dynamic_selection",
++                },
++                {
++                    "game": "ar25",
++                    "closed_by_operator": "object_motion_world_model",
++                    "v1_residual_delta": "missing_reflection_world_model_and_object_motion_plan",
++                },
++                {
++                    "game": "ft09",
++                    "closed_by_operator": "config_rule_verifier",
++                    "v1_residual_delta": "missing_local_constraint_color_cycle_verifier",
++                },
++            ],
++            "missing_verifier_gaps": [
++                {
++                    "game": "tr87",
++                    "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
++                    "retrieved_operator": "config_rule_grounding",
++                },
++                {
++                    "game": "sc25",
++                    "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
++                    "retrieved_operator": "active_data_collection",
++                },
++            ],
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "8" * 64,
++        },
++    )
++
++
++def _guard_ok(_root: Path) -> dict[str, Any]:
++    return {
++        "regression_guard_passed": True,
++        "arc_oracle_distinct_verifier_beats_vote": True,
++        "current": {
++            "vote_pass2": 0.4516,
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "vote_wins_lost": 0,
++        },
++    }
++
++
++def _stamp_ok(_root: Path) -> dict[str, Any]:
++    return {
++        "capstone_stamp_fix_durable": True,
++        "capstone_verifier_is_oracle_honored": True,
++        "circular_moat_overclaim_fired": False,
++    }
++
++
++def test_req_report_4449_spec_declares_registry_hygiene_contract() -> None:
++    """REQ-REPORT-4449: OpenSpec names the .411 hygiene contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-REPORT-4449",
++        "SCENARIO-REPORT-4449",
++        mod.RESULT_RELATIVE_PATH,
++        "regression_guard_passed",
++        "reproducible_total_levels",
++        "scripts.capstone_aggregate_available",
++        "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor",
++    ):
++        assert marker in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_report_4449_reconciles_411_ledgers_and_guards(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4449: .411 closures, totals, guard, and stamp are reconciled."""
++
++    _write_fixture_repo(tmp_path)
++
++    artifact = mod.run(
++        tmp_path,
++        gap4_guard_runner=_guard_ok,
++        capstone_stamp_runner=_stamp_ok,
++        now=lambda: 10.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: registry_gaps_hygiene_4449_guard_passed"
++    assert type(artifact["regression_guard_passed"]) is bool
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["capstone_stamp_fix_durable"] is True
++    assert artifact["reproducible_total_levels"] == 39
++    assert artifact["reproducible_total_games"] == 20
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["duration_s"] == 0.0001
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["no_production_verifier_edits"] is True
++    assert artifact["field_principles"]["honest_verdict"]["principle"] == "terminal-prefixed"
++    assert (
++        artifact["field_principles"]["regression_guard_passed"]["principle"]
++        == "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++    )
++    assert (
++        artifact["field_principles"]["inference_substrate"]["principle"]
++        == "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++    )
++    assert artifact["availability_report"]["axes"]["g50t_bank"]["verdict"] is True
++    assert artifact["availability_report"]["axes"]["loo_v2"]["verdict"] == 5
++    assert artifact["registry_reconciliation"]["filled_gap_ids"] == [
++        "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++        "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
++        "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
++        "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
++        "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT",
++    ]
++
++    arc_registry = yaml.safe_load((tmp_path / mod.ARC_REGISTRY_RELATIVE_PATH).read_text())
++    assert arc_registry["reproducible_total_levels"] == 39
++    assert arc_registry["reproducible_total_games"] == 20
++    assert next(row for row in arc_registry["games"] if row["game"] == "g50t")[
++        "levels_reproduced"
++    ] == 1
++    assert next(row for row in arc_registry["games"] if row["game"] == "vc33")[
++        "levels_reproduced"
++    ] == 1
++    assert arc_registry["latest_hygiene_4449"]["artifact"] == mod.RESULT_RELATIVE_PATH
++
++    gaps = (tmp_path / mod.GAPS_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene" in gaps
++    assert "- status: filled (exp4443_bank_g50t_example_conditioned_win)" in gaps
++    assert "- status: open\n- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded" in gaps
++    assert "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene" in gaps
++    assert "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER" in gaps
++    assert "results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=sc25" in gaps
++
++    verifier_registry = yaml.safe_load((tmp_path / mod.REGISTRY_RELATIVE_PATH).read_text())
++    verifier = verifier_registry["verifiers"][0]
++    assert verifier["eval"]["eval_exp_4449"] == mod.RESULT_RELATIVE_PATH
++    assert verifier["eval"]["exp4449_regression_guard_passed"] is True
++    assert verifier["eval"]["exp4449_reproducible_total_levels"] == 39
++    assert verifier["registry_roles"][-1]["role_id"] == mod.V411_ROLE_ID
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert mod.artifact_schema_errors(artifact) == []
++    assert importlib.import_module("scripts.capstone_aggregate_available").AxisSpec is not None
++
++
++def test_req_report_4449_aggregate_available_reports_gaps_without_erasing_axes(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-4449: missing/flagged inputs report gaps while other axes compute."""
++
++    _write_fixture_repo(tmp_path, omit_4447=True, flagged_4445=True)
++
++    artifact = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++
++    assert artifact["availability_report"]["axes"]["primitive_library"]["missing_artifacts"] == [
++        {"axis": "primitive_library", "artifact_key": "4447_primitive_library", "experiment_id": 4447}
++    ]
++    assert artifact["availability_report"]["axes"]["object_motion"]["flagged_artifacts"] == [
++        {
++            "axis": "object_motion",
++            "artifact_key": "4445_object_motion",
++            "experiment_id": 4445,
++            "reason": "flagged_adversarial",
++        }
++    ]
++    assert artifact["availability_report"]["axes"]["g50t_bank"]["verdict"] is True
++    assert artifact["registry_reconciliation"]["registries_reconciled"] is True
++    assert "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN" not in artifact[
++        "registry_reconciliation"
++    ]["filled_gap_ids"]
++    assert mod.EXP4445_PATH in artifact["excluded_artifacts"]
++
++
++def test_req_report_4449_schema_and_guard_helpers_reject_bad_shapes(tmp_path: Path) -> None:
++    """REQ-REPORT-4449: bare fields, guard logic, and precondition helpers are defensive."""
++
++    _write_fixture_repo(tmp_path)
++    artifact = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++    second_artifact = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++    assert second_artifact["registry_reconciliation"]["filled_gap_ids"] == artifact[
++        "registry_reconciliation"
++    ]["filled_gap_ids"]
++
++    bad = {
++        **artifact,
++        "honest_verdict": "partial: not terminal",
++        "regression_guard_passed": "true",
++        "reproducible_total_levels": True,
++        "reproducible_total_games": "20",
++        "capstone_stamp_fix_durable": "true",
++        "inference_substrate": "",
++        "submitted_to_leaderboard": True,
++        "random_seed": "4449",
++        "reproducibility_checksum": "bad",
++        "registry_reconciliation": [],
++        "availability_report": [],
++        "field_principles": {"honest_verdict": {"principle": "wrong"}},
++        "spec_refs": [],
++    }
++
++    errors = mod.artifact_schema_errors(bad)
++
++    assert "honest_verdict must start with complete:/success:/passed:/shipped:" in errors
++    assert "regression_guard_passed must be bare bool" in errors
++    assert "reproducible_total_levels must be bare int" in errors
++    assert "reproducible_total_games must be bare int" in errors
++    assert "capstone_stamp_fix_durable must be bare bool" in errors
++    assert "inference_substrate must equal aggregation_from_upstream_artifacts" in errors
++    assert "submitted_to_leaderboard must be false" in errors
++    assert "random_seed must be bare int" in errors
++    assert "registry_reconciliation must be dict" in errors
++    assert "availability_report must be dict" in errors
++    assert "field_principles.regression_guard_passed.principle must match REQ-REPORT-4449" in errors
++    assert "reproducibility_checksum must be 64-char sha256 hex" in errors
++    assert "spec_refs must include REQ-REPORT-4449 and SCENARIO-REPORT-4449" in errors
++    with pytest.raises(ValueError, match="regression_guard_passed"):
++        mod.write_artifact(tmp_path, bad)
++    assert "missing honest_verdict" in mod.artifact_schema_errors({})
++    assert "field_principles must be dict" in mod.artifact_schema_errors({**artifact, "field_principles": []})
++
++    assert mod._as_int("bad") == 0
++    assert mod._as_float("bad") == 0.0
++    assert mod.collect_gap_entries(
++        {
++            "4448_loo_v2": {
++                "closed_residuals_by_new_operator": [
++                    None,
++                    {
++                        "closed_by_operator": "config_rule_verifier",
++                        "game": "ft09",
++                        "v1_residual_delta": "missing_local_constraint_color_cycle_verifier",
++                    },
++                ],
++                "missing_verifier_gaps": [
++                    None,
++                    {"game": "", "residual_delta": "missing"},
++                    {"game": "x", "residual_delta": ""},
++                ],
++            }
++        }
++    ) == []
++    assert mod._find_game({"games": {}}, "g50t") is None
++    assert mod._find_game({"games": [{"game": "x"}]}, "g50t") is None
++    assert mod._reproduced_counts({"games": {}}) == (0, 0)
++    assert mod._reproduced_counts({"games": [None, {"reproducibility": "reproduced", "levels_reproduced": 2}]}) == (
++        2,
++        1,
++    )
++    assert mod._library_rows({"primitives_documented": {}}) == []
++    assert mod._find_verifier({"verifiers": {}}, mod.GAP4_VERIFIER_ID) is None
++    assert mod._find_verifier({"verifiers": [{"verifier_id": "other"}]}, mod.GAP4_VERIFIER_ID) is None
++    assert mod._guard_current({"replayed_arc1_rule_exec": {"vote_pass2": 0.4516}})["vote_pass2"] == 0.4516
++    assert mod._guard_current({}) == {}
++    repo_root = str(mod.REPO_ROOT)
++    original_sys_path = list(sys.path)
++    sys.path[:] = [entry for entry in sys.path if entry != repo_root]
++    try:
++        assert mod._check_helper_import()["ok"] is True
++    finally:
++        sys.path[:] = original_sys_path
++    created_registry, _ = mod.reconcile_verifier_registry(
++        {},
++        guard=_guard_ok(tmp_path),
++        stamp=_stamp_ok(tmp_path),
++        total_levels=39,
++        total_games=20,
++        filled_gap_ids=[],
++        open_gap_ids=[],
++        trusted={},
++        excluded=[],
++    )
++    assert created_registry["verifiers"][0]["verifier_id"] == mod.GAP4_VERIFIER_ID
++    bad_roles_registry, _ = mod.reconcile_verifier_registry(
++        {"verifiers": [{"verifier_id": mod.GAP4_VERIFIER_ID, "registry_roles": "bad", "eval": {}}]},
++        guard=_guard_ok(tmp_path),
++        stamp=_stamp_ok(tmp_path),
++        total_levels=39,
++        total_games=20,
++        filled_gap_ids=[],
++        open_gap_ids=[],
++        trusted={},
++        excluded=[],
++    )
++    assert isinstance(bad_roles_registry["verifiers"][0]["registry_roles"], list)
++    assert mod.guard_passed(
++        {
++            "regression_guard_passed": True,
++            "arc_oracle_distinct_verifier_beats_vote": True,
++            "current": {"gated_pass2": 0.4, "vote_pass2": 0.5, "vote_wins_lost": 0},
++        }
++    ) is False
++    assert mod.guard_passed(
++        {
++            "gap4_execution_guard_passed": True,
++            "current": {"gated_pass2": 0.6, "vote_pass2": 0.5, "vote_wins_lost": 1},
++        }
++    ) is False
++    assert mod.stamp_fix_durable(
++        {"capstone_stamp_fix_verified": True, "circular_moat_overclaim_fired": False}
++    ) is True
++    assert mod._yaml_mapping(tmp_path / "missing.yaml")[1]["readable"] is False
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("[]\n", encoding="utf-8")
++    assert mod._yaml_mapping(list_yaml)[1]["error"] == "top-level YAML is not a mapping"
++    assert mod._read_text(tmp_path / "missing.md")[1]["readable"] is False
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]\n", encoding="utf-8")
++    assert mod._load_json(list_json)[1]["error"] == "top-level JSON is not an object"
+-- 
+2.55.0
+

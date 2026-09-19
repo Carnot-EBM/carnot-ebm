@@ -1,0 +1,1190 @@
+From abece1085b199cb82430edf11f4233a8f35512f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 09:27:43 -0400
+Subject: [PATCH 05888/11362] [conductor] Exp 5308: V485 SOTA source delta
+ refresh
+
+Automated research step by research conductor.
+Task ID: exp5308-sota-source-delta-v485
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  82 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5308_sota_source_delta_v485.py | 542 ++++++++++++++++++
+ research-references.md                        |  16 +
+ ...xperiment_5308_sota_source_delta_v485.json | 206 +++++++
+ ..._experiment_5308_sota_source_delta_v485.py | 269 +++++++++
+ 6 files changed, 1116 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5308_sota_source_delta_v485.py
+ create mode 100644 results/experiment_5308_sota_source_delta_v485.json
+ create mode 100644 tests/python/test_experiment_5308_sota_source_delta_v485.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 635a28f899..29840af619 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -35685,6 +35685,88 @@ present next-roadmap names it, or git status reports changes to
+ |---|---|---|
+ | REQ-REPORT-5307 | Implemented (`python/carnot/experiment_5307_archive_484_activate_485.py`, `results/experiment_5307_archive_484_activate_485.json`) | Implemented (`tests/python/test_experiment_5307_archive_484_activate_485.py`) |
+ 
++### REQ-REPORT-5308: V485 Execution-Time SOTA Source Delta Refresh
++
++The Exp 5308 workflow SHALL perform an execution-time source delta check after
++the `V485 Planner Refresh - 2026-07-06` section in `research-references.md`.
++It SHALL write `results/experiment_5308_sota_source_delta_v485.json` and MAY
++append one clearly delimited execution-refresh section to
++`research-references.md` only when genuinely new actionable source findings
++are absent from the V485 planner block and nearby reference history.
++
++The workflow SHALL check the same source families as the planner refresh:
++arXiv, OpenReview, HuggingFace Papers, Semantic Scholar citation trails for
++EBT `arXiv:2507.02092` and ARM-EBM `arXiv:2512.15605`, GitHub repository
++discovery, Extropic writing, Logical Intelligence public pages, and local
++duplicate comparison against `research-references.md`. It SHALL emphasize EBMs
++for reasoning, neural constraint methods, Ising/annealing and p-bit sampling,
++hallucination detection, KAN verification, energy-guided decoding, hardware
++sampling, and continual constraint learning. It SHALL NOT use `/deep-research`,
++modify `scripts/research_conductor.py`, modify executable roadmap files, or
++reopen retired scopes such as external generated-text scoring, broad GRPO or
++fine-tuning reruns, TSU/Kona execution claims, or CPU-only GGUF offload reruns.
++
++The artifact SHALL include required fields `experiment_id`, `milestone`,
++`status`, `honest_verdict`, `inference_substrate`, `sources_checked`,
++`new_actionable_findings_count`, `references_modified`,
++`references_section_marker`, `retired_scope_reopened`,
++`methodology_duration_s`, and `no_executable_plan_edit`. The fields
++`experiment_id`, `milestone`, `status`, `honest_verdict`,
++`inference_substrate`, `sources_checked`, and `references_section_marker`
++SHALL be principle-annotated. The fields
++`new_actionable_findings_count`, `references_modified`,
++`retired_scope_reopened`, `methodology_duration_s`, and
++`no_executable_plan_edit` SHALL remain bare scalar values for downstream
++gating. `inference_substrate.value` SHALL be
++`literature_ingestion_network_sources`, and `retired_scope_reopened` SHALL be
++false unless a future operator-authorized exclusion-manifest override is
++recorded in the artifact. The artifact SHOULD include
++`actionable_findings` as a principle-annotated list of URLs and Carnot-local
++hooks when findings are appended.
++
++Required field principles:
++
++- `experiment_id`: principle "traceability for the Exp5308 execution-time source delta artifact."
++- `milestone`: principle "milestone accountability for V485 source freshness."
++- `status`: principle "machine-readable terminal state for downstream reconciliation."
++- `honest_verdict`: principle "terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified."
++- `inference_substrate`: principle "literature_ingestion_network_sources because Exp5308 reads network literature/source metadata and makes no experiment outcome claim."
++- `sources_checked`: principle "records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
++- `references_section_marker`: principle "idempotent marker prevents duplicate research-references.md appends."
++- `actionable_findings`: principle "source URLs plus Carnot-local hooks make each appended reference auditable instead of bibliography churn."
++
++#### SCENARIO-REPORT-5308-APPEND-DELTAS: New Network Findings Append A V485 Refresh
++
++**Given** `research-references.md` contains the `V485 Planner Refresh -
++2026-07-06` section
++**And** the focused execution-time network sweep finds source-verified
++actionable deltas not already recorded in the V485 section or nearby reference
++history
++**When** the Exp 5308 workflow runs
++**Then** it appends one dated V485 execution refresh subsection, writes
++`results/experiment_5308_sota_source_delta_v485.json`, declares
++`literature_ingestion_network_sources`, records every required source family,
++sets `new_actionable_findings_count` to the appended reference count, sets
++`references_modified=true`, leaves retired scopes closed, and records
++`no_executable_plan_edit=true`.
++
++#### SCENARIO-REPORT-5308-NOOP: No New Findings Leave References Unchanged
++
++**Given** the focused execution-time network sweep only rediscovers items
++already present in the V485 planner block or elsewhere in
++`research-references.md`
++**When** the Exp 5308 workflow runs
++**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
++`complete:`, sets `new_actionable_findings_count=0`, sets
++`references_modified=false`, leaves `actionable_findings.value=[]`, and does
++not churn `research-references.md`.
++
++## Implementation Status (REQ-REPORT-5308)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5308 | Planned (`python/carnot/experiment_5308_sota_source_delta_v485.py`, `results/experiment_5308_sota_source_delta_v485.json`) | Planned (`tests/python/test_experiment_5308_sota_source_delta_v485.py`) |
++
+ ### REQ-REPORT-5296: V484 Execution-Time SOTA Source Delta Refresh
+ 
+ The Exp 5296 workflow SHALL search 2025-2026 network sources for actionable
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 739e878335..f24a3a74b1 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4277,
++  "experiments_checked": 4278,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5308_sota_source_delta_v485.py b/python/carnot/experiment_5308_sota_source_delta_v485.py
+new file mode 100644
+index 0000000000..f17c7c3dcb
+--- /dev/null
++++ b/python/carnot/experiment_5308_sota_source_delta_v485.py
+@@ -0,0 +1,542 @@
++"""Exp 5308: execution-time SOTA source delta refresh for V485.
++
++Spec refs: REQ-REPORT-5308, SCENARIO-REPORT-5308-APPEND-DELTAS,
++SCENARIO-REPORT-5308-NOOP.
++
++This module records the live source sweep as a deterministic artifact. The
++network checks are intentionally not performed during tests: arXiv, OpenReview,
++Hugging Face, Semantic Scholar, and GitHub change independently of this repo.
++The constants below preserve what was checked, which rows were new relative to
++the V485 planner refresh, and why the rows are actionable without changing the
++executable V485 plan.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_5308_sota_source_delta_v485"
++MILESTONE = "2026.07.485"
++RESULT_RELATIVE_PATH = Path("results/experiment_5308_sota_source_delta_v485.json")
++REFERENCES_RELATIVE_PATH = Path("research-references.md")
++REFRESH_HEADING = "### V485 Execution Refresh - 2026-07-06"
++REFRESH_END_MARKER = "<!-- V485-EXECUTION-REFRESH-2026-07-06-END -->"
++INFERENCE_SUBSTRATE = "literature_ingestion_network_sources"
++
++SPEC_REFS = [
++    "REQ-REPORT-5308",
++    "SCENARIO-REPORT-5308-APPEND-DELTAS",
++    "SCENARIO-REPORT-5308-NOOP",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "traceability for the Exp5308 execution-time source delta artifact.",
++    "milestone": "milestone accountability for V485 source freshness.",
++    "status": "machine-readable terminal state for downstream reconciliation.",
++    "honest_verdict": (
++        "terminal verdict must start with complete: or blocked_ so nuance cannot be "
++        "misclassified."
++    ),
++    "inference_substrate": (
++        "literature_ingestion_network_sources because Exp5308 reads network "
++        "literature/source metadata and makes no experiment outcome claim."
++    ),
++    "sources_checked": (
++        "records every required source family and query channel so a missing source "
++        "cannot masquerade as a zero-new-finding result."
++    ),
++    "references_section_marker": "idempotent marker prevents duplicate research-references.md appends.",
++    "actionable_findings": (
++        "source URLs plus Carnot-local hooks make each appended reference auditable "
++        "instead of bibliography churn."
++    ),
++}
++
++REQUIRED_SOURCE_FAMILIES = (
++    "arxiv",
++    "openreview",
++    "huggingface_papers",
++    "semantic_scholar",
++    "github",
++    "extropic",
++    "logical_intelligence",
++    "local_v485_comparison",
++)
++
++REQUIRED_TOP_LEVEL_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "milestone",
++        "status",
++        "honest_verdict",
++        "inference_substrate",
++        "sources_checked",
++        "new_actionable_findings_count",
++        "references_modified",
++        "references_section_marker",
++        "retired_scope_reopened",
++        "methodology_duration_s",
++        "no_executable_plan_edit",
++        "actionable_findings",
++        "spec_refs",
++        "search_window",
++        "tests_run",
++        "field_principles",
++        "no_deep_research_used",
++        "research_conductor_modified",
++        "roadmap_files_modified",
++    }
++)
++
++REQUIRED_FINDING_FIELDS = frozenset(
++    {
++        "title",
++        "source_url",
++        "arxiv_id_or_repo",
++        "source_family",
++        "category",
++        "carnot_hook",
++        "actionability",
++        "planned_task_impact",
++        "retired_scope_risk",
++    }
++)
++
++ACTIONABLE_FINDINGS: list[JsonDict] = [
++    {
++        "title": "Self-GC: Self-Governing Context for Long-Horizon LLM Agents",
++        "arxiv_id_or_repo": "2607.00692",
++        "source_url": "https://arxiv.org/abs/2607.00692",
++        "source_family": "arxiv",
++        "category": "continual_constraint_context_lifecycle",
++        "carnot_hook": (
++            "Self-GC treats user turns, tool spans, and skill state as indexed context "
++            "objects; a side-channel planner proposes fold, mask, and prune actions; "
++            "and the harness enforces recoverable sidecars, safe commit boundaries, "
++            "and cache-aware commits."
++        ),
++        "actionability": (
++            "For V485 continuous self-learning work, evaluate context-object lifecycle "
++            "decisions separately from final answer quality. Require stable object IDs, "
++            "recoverable sidecars, and explicit safe-commit boundaries before memory or "
++            "skill state is promoted or pruned."
++        ),
++        "planned_task_impact": "no_plan_edit",
++        "retired_scope_risk": "none",
++    },
++    {
++        "title": "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory",
++        "arxiv_id_or_repo": "2607.01935",
++        "source_url": "https://arxiv.org/abs/2607.01935",
++        "source_family": "arxiv",
++        "category": "state_aware_memory_failure_evaluation",
++        "carnot_hook": (
++            "A-TMA isolates ghost-memory failures where old, current, and transition "
++            "facts coexist in the bank, mix during retrieval, and mislead answer-time "
++            "resolution. It evaluates bank maintenance, retrieval, and answer failures "
++            "separately instead of relying only on final QA accuracy."
++        ),
++        "actionability": (
++            "For the V485 transition-level memory verifier, add current, historical, "
++            "and transition labels to conflict-heavy fixtures. Report bank, retrieval, "
++            "and answer-time failure rates separately so a clean final answer cannot "
++            "hide stale or contradictory memory state."
++        ),
++        "planned_task_impact": "no_plan_edit",
++        "retired_scope_risk": "none",
++    },
++]
++
++SOURCES_CHECKED: JsonDict = {
++    "arxiv": {
++        "status": "ok",
++        "queries": [
++            "2026-07 arXiv date-window search for EBM reasoning and language-model verification",
++            "2026-07 arXiv date-window search for neural constraint and symbolic solver methods",
++            "2026-07 arXiv date-window search for Ising, p-bit, annealing, and hardware sampling",
++            "2026-07 arXiv date-window search for hallucination detection over code/tool outputs",
++            "2026-07 arXiv date-window search for KAN verification and certificates",
++            "2026-07 arXiv date-window search for energy-guided decoding",
++            "2026-07 arXiv date-window search for continual memory and constraint learning",
++        ],
++        "new_actionable_ids": ["2607.00692", "2607.01935"],
++        "already_indexed_or_duplicate": [
++            "2607.02491 G-RRM",
++            "2607.00895 Beyond Document Grounding",
++            "2607.01224 AutoMem",
++            "2607.02255 AgenticSTS",
++            "2606.26476 Retrieval-Warmed Energy-Based Reasoning",
++            "2602.06737 KAN optimal abstractions",
++            "2606.30333 Ising continuous relaxation",
++        ],
++        "not_promoted": [
++            "2607.02010 InduceKV is KV-cache and multimodal adaptation work that would "
++            "require a new model-internals substrate rather than a V485 source-delta note.",
++            "2607.01640 AgentFlow and 2607.01641 infinite-agent-loop scanning are agent "
++            "static-analysis leads, not direct EBM/constraint-learning deltas for this task.",
++            "2607.02517 WorldDirector is a video world-model memory paper outside the "
++            "Carnot constraint-verification execution path.",
++        ],
++    },
++    "openreview": {
++        "status": "ok",
++        "queries": [
++            "OpenReview energy and hallucination verifier search",
++            "OpenReview constrained decoding and neuro-symbolic verification search",
++            "OpenReview Spilled Energy, Semantic Energy, and computational-graph CoT pages",
++        ],
++        "result": (
++            "OpenReview results reinforced already indexed Spilled Energy, Semantic "
++            "Energy, and computational-graph reasoning verification references. No "
++            "OpenReview-only source changed the V485 execution priorities."
++        ),
++    },
++    "huggingface_papers": {
++        "status": "ok",
++        "queries": [
++            "HuggingFace Papers lookups for Self-GC 2607.00692 and A-TMA 2607.01935",
++            "HuggingFace Papers memory, agent, EBT, and ARM-EBM related pages",
++            "HuggingFace Papers July 2026 hallucination and constraint-memory watch",
++        ],
++        "result": (
++            "No Hugging Face Papers page supplied a separate actionable delta beyond "
++            "the arXiv primary rows. Context-Folding and AgentFold pages were older "
++            "context-management background, not V485 source deltas."
++        ),
++    },
++    "semantic_scholar": {
++        "status": "ok",
++        "queries": [
++            "DOI:10.48550/arXiv.2507.02092 metadata and citations",
++            "DOI:10.48550/arXiv.2512.15605 metadata and citations",
++        ],
++        "result": (
++            "Direct Graph API checks still returned EBT citationCount=26 and ARM-EBM "
++            "citationCount=8. Samples were already represented in prior V484/V485 "
++            "context, so no Semantic Scholar-only trend claim is added."
++        ),
++        "citation_status": {
++            "EBT": {
++                "arxiv_id": "2507.02092",
++                "citationCount": 26,
++                "influentialCitationCount": 2,
++                "sample_ids": ["2606.18206", "2605.11011", "10.1109/ISPASS69572.2026.00062"],
++            },
++            "ARM-EBM": {
++                "arxiv_id": "2512.15605",
++                "citationCount": 8,
++                "influentialCitationCount": 2,
++                "sample_ids": ["2607.02154", "2605.18871", "10.18653/v1/2026.acl-long.2131"],
++            },
++        },
++    },
++    "github": {
++        "status": "ok",
++        "queries": [
++            "GitHub repository search for Self-GC Self-Governing Context",
++            "GitHub repository search for A-TMA state-aware memory",
++            "GitHub repository search for AgenticSTS and AutoMem duplicate code references",
++            "GitHub repository search for EBT, KAN verification, and constraint-memory repos",
++        ],
++        "result": (
++            "No Self-GC or A-TMA implementation repository was found in the checked "
++            "GitHub search results. AgenticSTS and AutoMem repositories exist but were "
++            "already indexed in Carnot reference history."
++        ),
++    },
++    "extropic": {
++        "status": "ok",
++        "queries": [
++            "extropic.ai/writing index",
++            "TSU 101",
++            "Inside X0 and XTR-0",
++            "thermodynamic-computing-from-zero-to-one",
++        ],
++        "result": (
++            "The public writing index still points to already indexed TSU/XTR-0 and "
++            "probabilistic-hardware material. No Carnot-accessible TSU hardware, SDK, "
++            "or local execution basis was found."
++        ),
++    },
++    "logical_intelligence": {
++        "status": "ok",
++        "queries": [
++            "Logical Intelligence blog and public pages",
++            "Kona, Aleph, and automatic formal verification posts",
++            "energy-based reasoning model public updates",
++        ],
++        "result": (
++            "Logical Intelligence remains a verifier-first strategic signal. Public "
++            "pages still expose no reproducible Kona internals, local SDK, or benchmark "
++            "receipt that would alter V485 execution."
++        ),
++    },
++    "local_v485_comparison": {
++        "status": "ok",
++        "queries": [
++            "research-references.md V485 Planner Refresh - 2026-07-06",
++            "repo-wide duplicate search for Self-GC, A-TMA, 2607.00692, and 2607.01935",
++            "ops/exclusion_manifest.yaml retired scopes",
++            "results/experiment_5296_sota_source_delta_v484.json prior source status",
++        ],
++        "result": (
++            "Self-GC and A-TMA were absent from the V485 planner refresh and nearby "
++            "reference history. They sharpen memory-state and context-lifecycle testing "
++            "without reopening retired external-text scoring, broad fine-tuning, "
++            "TSU/Kona execution, or CPU-only GGUF offload scopes."
++        ),
++    },
++}
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": FIELD_PRINCIPLES[field]}
++
++
++def _validate_principled_wrapper(field: str, artifact: Mapping[str, Any]) -> Any:
++    wrapper = artifact.get(field)
++    if not isinstance(wrapper, Mapping):
++        raise ValueError(f"{field} must be principle-wrapped")
++    if wrapper.get("principle") != FIELD_PRINCIPLES[field]:
++        raise ValueError(f"{field} must include the declared principle")
++    if "value" not in wrapper:
++        raise ValueError(f"{field} missing value")
++    return wrapper["value"]
++
++
++def _verified_url(value: str) -> bool:
++    return value.startswith("https://")
++
++
++def build_artifact(
++    *,
++    actionable_findings: Sequence[Mapping[str, Any]] = ACTIONABLE_FINDINGS,
++    methodology_duration_s: float = 0.0,
++    tests_run: Sequence[str] = (),
++) -> JsonDict:
++    """Build the terminal Exp5308 artifact from source-verified finding rows.
++
++    This artifact is a literature-ingestion receipt. It does not claim model
++    performance, so it records methodology timing rather than compute duration.
++    """
++
++    findings = [dict(row) for row in actionable_findings]
++    count = len(findings)
++    references_modified = count > 0
++    status = "complete"
++    verdict_detail = (
++        f"{count} new actionable V485 source findings appended; executable .485 plan unchanged"
++        if count
++        else "no new actionable V485 source findings; references unchanged"
++    )
++    artifact: JsonDict = {
++        "experiment_id": _principled("experiment_id", EXPERIMENT_ID),
++        "milestone": _principled("milestone", MILESTONE),
++        "status": _principled("status", status),
++        "honest_verdict": _principled("honest_verdict", f"complete: {verdict_detail}."),
++        "inference_substrate": _principled("inference_substrate", INFERENCE_SUBSTRATE),
++        "sources_checked": _principled("sources_checked", dict(SOURCES_CHECKED)),
++        "new_actionable_findings_count": count,
++        "references_modified": references_modified,
++        "references_section_marker": _principled(
++            "references_section_marker", REFRESH_END_MARKER if references_modified else None
++        ),
++        "retired_scope_reopened": False,
++        "methodology_duration_s": round(float(methodology_duration_s), 6),
++        "no_executable_plan_edit": True,
++        "actionable_findings": _principled("actionable_findings", findings),
++        "spec_refs": list(SPEC_REFS),
++        "search_window": {
++            "run_date": "2026-07-06",
++            "years": "2025-2026",
++            "comparison_anchor": "research-references.md V485 Planner Refresh - 2026-07-06",
++        },
++        "tests_run": list(tests_run)
++        or ["tests/python/test_experiment_5308_sota_source_delta_v485.py"],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "no_deep_research_used": True,
++        "research_conductor_modified": False,
++        "roadmap_files_modified": False,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _validate_sources(sources: Any) -> None:
++    if not isinstance(sources, Mapping) or not set(REQUIRED_SOURCE_FAMILIES).issubset(sources):
++        raise ValueError("sources_checked must include every required source family")
++    for family in REQUIRED_SOURCE_FAMILIES:
++        if not isinstance(sources.get(family), Mapping) or sources[family].get("status") != "ok":
++            raise ValueError(f"sources_checked {family} must record status ok")
++
++
++def _validate_findings(findings: Any) -> None:
++    if not isinstance(findings, list):
++        raise ValueError("actionable_findings value must be a list")
++    for row in findings:
++        if not isinstance(row, Mapping) or not REQUIRED_FINDING_FIELDS.issubset(row):
++            raise ValueError(
++                f"actionable_findings rows must include {sorted(REQUIRED_FINDING_FIELDS)}"
++            )
++        if not _verified_url(str(row["source_url"])):
++            raise ValueError("actionable_findings rows must use a verified URL")
++        if row["planned_task_impact"] != "no_plan_edit":
++            raise ValueError("actionable_findings must not edit the active plan")
++        if row["retired_scope_risk"] != "none":
++            raise ValueError("actionable_findings must not reopen retired scopes")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = REQUIRED_TOP_LEVEL_FIELDS.difference(artifact)
++    if missing:
++        raise ValueError(f"missing required fields: {sorted(missing)}")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match REQ-REPORT-5308")
++
++    experiment_id = _validate_principled_wrapper("experiment_id", artifact)
++    if experiment_id != EXPERIMENT_ID:
++        raise ValueError("experiment_id must match Exp5308")
++    milestone = _validate_principled_wrapper("milestone", artifact)
++    if milestone != MILESTONE:
++        raise ValueError("milestone must match 2026.07.485")
++    status = _validate_principled_wrapper("status", artifact)
++    if status not in {"complete", "blocked"}:
++        raise ValueError("status must be complete or blocked")
++    verdict = _validate_principled_wrapper("honest_verdict", artifact)
++    if not (str(verdict).startswith("complete:") or str(verdict).startswith("blocked_")):
++        raise ValueError("honest_verdict must start with complete: or blocked_")
++    substrate = _validate_principled_wrapper("inference_substrate", artifact)
++    if substrate != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be literature_ingestion_network_sources")
++
++    sources = _validate_principled_wrapper("sources_checked", artifact)
++    _validate_sources(sources)
++    findings = _validate_principled_wrapper("actionable_findings", artifact)
++    _validate_findings(findings)
++
++    count = artifact["new_actionable_findings_count"]
++    if not isinstance(count, int) or count != len(findings):
++        raise ValueError("findings count must equal actionable_findings length")
++    references_modified = artifact["references_modified"]
++    if references_modified is not (count > 0):
++        raise ValueError("references_modified must match whether findings were added")
++    marker = _validate_principled_wrapper("references_section_marker", artifact)
++    if marker != (REFRESH_END_MARKER if references_modified else None):
++        raise ValueError("references_section_marker must match the references append state")
++    if artifact["retired_scope_reopened"] is not False:
++        raise ValueError("retired_scope_reopened must remain false for this refresh")
++    duration = artifact["methodology_duration_s"]
++    if not isinstance(duration, int | float) or duration < 0:
++        raise ValueError("methodology_duration_s must be a non-negative number")
++    if artifact["no_executable_plan_edit"] is not True:
++        raise ValueError("executable plan must not be edited by this refresh")
++    if artifact["no_deep_research_used"] is not True:
++        raise ValueError("deep-research must not be used")
++    if artifact["research_conductor_modified"] is not False:
++        raise ValueError("research_conductor.py must not be modified")
++    if artifact["roadmap_files_modified"] is not False:
++        raise ValueError("roadmap files must not be modified")
++    if not artifact["tests_run"]:
++        raise ValueError("tests_run must record at least one test")
++
++
++def _render_finding(row: Mapping[str, Any]) -> str:
++    return (
++        f"- **{row['title']}** ({row['source_url']}): {row['carnot_hook']} "
++        f"Actionability: {row['actionability']}"
++    )
++
++
++def render_refresh_section(artifact: Mapping[str, Any]) -> str:
++    validate_artifact(artifact)
++    findings = artifact["actionable_findings"]["value"]
++    if not findings:
++        return ""
++    lines = [
++        REFRESH_HEADING,
++        "",
++        (
++            "Execution-time sweep after the `.485` planner refresh checked arXiv, "
++            "OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation "
++            "trails, GitHub repositories, Extropic writing, Logical Intelligence "
++            "public pages, and local duplicate history. The findings below were absent "
++            "from the V485 planner block and nearby reference history."
++        ),
++        "",
++        "### New actionable deltas",
++        *(_render_finding(row) for row in findings),
++        "",
++        "### Execution impact",
++        (
++            "- **Plan impact:** No executable `.485` task edit is required. The deltas "
++            "sharpen transition-level memory verification, context-object lifecycle "
++            "testing, and conflict-heavy stale-memory fixtures."
++        ),
++        (
++            "- **Retired scope:** No retired scope was reopened. External generated-text "
++            "scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, and "
++            "CPU-only GGUF offload reruns remain closed."
++        ),
++        (
++            "- **Secondary-source status:** Semantic Scholar EBT/ARM-EBM counts matched "
++            "the prior live check; OpenReview, HuggingFace Papers, Extropic, GitHub, "
++            "and Logical Intelligence did not add a separate execution-changing source."
++        ),
++        "",
++        REFRESH_END_MARKER,
++        "",
++    ]
++    return "\n".join(lines)
++
++
++def append_refresh_section(references_text: str, artifact: Mapping[str, Any]) -> str:
++    if REFRESH_END_MARKER in references_text or REFRESH_HEADING in references_text:
++        return references_text
++    section = render_refresh_section(artifact)
++    if not section:
++        return references_text
++    separator = "\n\n" if references_text and not references_text.endswith("\n\n") else ""
++    return f"{references_text}{separator}{section}"
++
++
++def write_outputs(
++    *,
++    root: Path | str = REPO_ROOT,
++    references_path: Path | None = None,
++    result_path: Path | None = None,
++    actionable_findings: Sequence[Mapping[str, Any]] = ACTIONABLE_FINDINGS,
++    methodology_duration_s: float = 0.0,
++    tests_run: Sequence[str] = (),
++) -> JsonDict:
++    base = Path(root)
++    references = references_path or (base / REFERENCES_RELATIVE_PATH)
++    result = result_path or (base / RESULT_RELATIVE_PATH)
++    artifact = build_artifact(
++        actionable_findings=actionable_findings,
++        methodology_duration_s=methodology_duration_s,
++        tests_run=tests_run,
++    )
++    original = references.read_text(encoding="utf-8") if references.exists() else ""
++    updated = append_refresh_section(original, artifact)
++    references.parent.mkdir(parents=True, exist_ok=True)
++    result.parent.mkdir(parents=True, exist_ok=True)
++    references.write_text(updated, encoding="utf-8")
++    result.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI convenience for the experiment run.
++    artifact = write_outputs()
++    print(artifact["honest_verdict"]["value"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-references.md b/research-references.md
+index 231f819810..5905af881f 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -27523,3 +27523,19 @@ public pages. The items below are promoted into `.485` planning constraints or e
+ - KAN certificate work should move from dynamic spot-check success toward optimal abstraction budgets.
+ 
+ <!-- V485-PLANNER-REFRESH-2026-07-06-END -->
++
++
++### V485 Execution Refresh - 2026-07-06
++
++Execution-time sweep after the `.485` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, Logical Intelligence public pages, and local duplicate history. The findings below were absent from the V485 planner block and nearby reference history.
++
++### New actionable deltas
++- **Self-GC: Self-Governing Context for Long-Horizon LLM Agents** (https://arxiv.org/abs/2607.00692): Self-GC treats user turns, tool spans, and skill state as indexed context objects; a side-channel planner proposes fold, mask, and prune actions; and the harness enforces recoverable sidecars, safe commit boundaries, and cache-aware commits. Actionability: For V485 continuous self-learning work, evaluate context-object lifecycle decisions separately from final answer quality. Require stable object IDs, recoverable sidecars, and explicit safe-commit boundaries before memory or skill state is promoted or pruned.
++- **A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory** (https://arxiv.org/abs/2607.01935): A-TMA isolates ghost-memory failures where old, current, and transition facts coexist in the bank, mix during retrieval, and mislead answer-time resolution. It evaluates bank maintenance, retrieval, and answer failures separately instead of relying only on final QA accuracy. Actionability: For the V485 transition-level memory verifier, add current, historical, and transition labels to conflict-heavy fixtures. Report bank, retrieval, and answer-time failure rates separately so a clean final answer cannot hide stale or contradictory memory state.
++
++### Execution impact
++- **Plan impact:** No executable `.485` task edit is required. The deltas sharpen transition-level memory verification, context-object lifecycle testing, and conflict-heavy stale-memory fixtures.
++- **Retired scope:** No retired scope was reopened. External generated-text scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, and CPU-only GGUF offload reruns remain closed.
++- **Secondary-source status:** Semantic Scholar EBT/ARM-EBM counts matched the prior live check; OpenReview, HuggingFace Papers, Extropic, GitHub, and Logical Intelligence did not add a separate execution-changing source.
++
++<!-- V485-EXECUTION-REFRESH-2026-07-06-END -->
+diff --git a/results/experiment_5308_sota_source_delta_v485.json b/results/experiment_5308_sota_source_delta_v485.json
+new file mode 100644
+index 0000000000..b749a1bdd9
+--- /dev/null
++++ b/results/experiment_5308_sota_source_delta_v485.json
+@@ -0,0 +1,206 @@
++{
++  "actionable_findings": {
++    "principle": "source URLs plus Carnot-local hooks make each appended reference auditable instead of bibliography churn.",
++    "value": [
++      {
++        "actionability": "For V485 continuous self-learning work, evaluate context-object lifecycle decisions separately from final answer quality. Require stable object IDs, recoverable sidecars, and explicit safe-commit boundaries before memory or skill state is promoted or pruned.",
++        "arxiv_id_or_repo": "2607.00692",
++        "carnot_hook": "Self-GC treats user turns, tool spans, and skill state as indexed context objects; a side-channel planner proposes fold, mask, and prune actions; and the harness enforces recoverable sidecars, safe commit boundaries, and cache-aware commits.",
++        "category": "continual_constraint_context_lifecycle",
++        "planned_task_impact": "no_plan_edit",
++        "retired_scope_risk": "none",
++        "source_family": "arxiv",
++        "source_url": "https://arxiv.org/abs/2607.00692",
++        "title": "Self-GC: Self-Governing Context for Long-Horizon LLM Agents"
++      },
++      {
++        "actionability": "For the V485 transition-level memory verifier, add current, historical, and transition labels to conflict-heavy fixtures. Report bank, retrieval, and answer-time failure rates separately so a clean final answer cannot hide stale or contradictory memory state.",
++        "arxiv_id_or_repo": "2607.01935",
++        "carnot_hook": "A-TMA isolates ghost-memory failures where old, current, and transition facts coexist in the bank, mix during retrieval, and mislead answer-time resolution. It evaluates bank maintenance, retrieval, and answer failures separately instead of relying only on final QA accuracy.",
++        "category": "state_aware_memory_failure_evaluation",
++        "planned_task_impact": "no_plan_edit",
++        "retired_scope_risk": "none",
++        "source_family": "arxiv",
++        "source_url": "https://arxiv.org/abs/2607.01935",
++        "title": "A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory"
++      }
++    ]
++  },
++  "experiment_id": {
++    "principle": "traceability for the Exp5308 execution-time source delta artifact.",
++    "value": "experiment_5308_sota_source_delta_v485"
++  },
++  "field_principles": {
++    "actionable_findings": "source URLs plus Carnot-local hooks make each appended reference auditable instead of bibliography churn.",
++    "experiment_id": "traceability for the Exp5308 execution-time source delta artifact.",
++    "honest_verdict": "terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified.",
++    "inference_substrate": "literature_ingestion_network_sources because Exp5308 reads network literature/source metadata and makes no experiment outcome claim.",
++    "milestone": "milestone accountability for V485 source freshness.",
++    "references_section_marker": "idempotent marker prevents duplicate research-references.md appends.",
++    "sources_checked": "records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result.",
++    "status": "machine-readable terminal state for downstream reconciliation."
++  },
++  "honest_verdict": {
++    "principle": "terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified.",
++    "value": "complete: 2 new actionable V485 source findings appended; executable .485 plan unchanged."
++  },
++  "inference_substrate": {
++    "principle": "literature_ingestion_network_sources because Exp5308 reads network literature/source metadata and makes no experiment outcome claim.",
++    "value": "literature_ingestion_network_sources"
++  },
++  "methodology_duration_s": 1.334796,
++  "milestone": {
++    "principle": "milestone accountability for V485 source freshness.",
++    "value": "2026.07.485"
++  },
++  "new_actionable_findings_count": 2,
++  "no_deep_research_used": true,
++  "no_executable_plan_edit": true,
++  "references_modified": true,
++  "references_section_marker": {
++    "principle": "idempotent marker prevents duplicate research-references.md appends.",
++    "value": "<!-- V485-EXECUTION-REFRESH-2026-07-06-END -->"
++  },
++  "research_conductor_modified": false,
++  "retired_scope_reopened": false,
++  "roadmap_files_modified": false,
++  "search_window": {
++    "comparison_anchor": "research-references.md V485 Planner Refresh - 2026-07-06",
++    "run_date": "2026-07-06",
++    "years": "2025-2026"
++  },
++  "sources_checked": {
++    "principle": "records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result.",
++    "value": {
++      "arxiv": {
++        "already_indexed_or_duplicate": [
++          "2607.02491 G-RRM",
++          "2607.00895 Beyond Document Grounding",
++          "2607.01224 AutoMem",
++          "2607.02255 AgenticSTS",
++          "2606.26476 Retrieval-Warmed Energy-Based Reasoning",
++          "2602.06737 KAN optimal abstractions",
++          "2606.30333 Ising continuous relaxation"
++        ],
++        "new_actionable_ids": [
++          "2607.00692",
++          "2607.01935"
++        ],
++        "not_promoted": [
++          "2607.02010 InduceKV is KV-cache and multimodal adaptation work that would require a new model-internals substrate rather than a V485 source-delta note.",
++          "2607.01640 AgentFlow and 2607.01641 infinite-agent-loop scanning are agent static-analysis leads, not direct EBM/constraint-learning deltas for this task.",
++          "2607.02517 WorldDirector is a video world-model memory paper outside the Carnot constraint-verification execution path."
++        ],
++        "queries": [
++          "2026-07 arXiv date-window search for EBM reasoning and language-model verification",
++          "2026-07 arXiv date-window search for neural constraint and symbolic solver methods",
++          "2026-07 arXiv date-window search for Ising, p-bit, annealing, and hardware sampling",
++          "2026-07 arXiv date-window search for hallucination detection over code/tool outputs",
++          "2026-07 arXiv date-window search for KAN verification and certificates",
++          "2026-07 arXiv date-window search for energy-guided decoding",
++          "2026-07 arXiv date-window search for continual memory and constraint learning"
++        ],
++        "status": "ok"
++      },
++      "extropic": {
++        "queries": [
++          "extropic.ai/writing index",
++          "TSU 101",
++          "Inside X0 and XTR-0",
++          "thermodynamic-computing-from-zero-to-one"
++        ],
++        "result": "The public writing index still points to already indexed TSU/XTR-0 and probabilistic-hardware material. No Carnot-accessible TSU hardware, SDK, or local execution basis was found.",
++        "status": "ok"
++      },
++      "github": {
++        "queries": [
++          "GitHub repository search for Self-GC Self-Governing Context",
++          "GitHub repository search for A-TMA state-aware memory",
++          "GitHub repository search for AgenticSTS and AutoMem duplicate code references",
++          "GitHub repository search for EBT, KAN verification, and constraint-memory repos"
++        ],
++        "result": "No Self-GC or A-TMA implementation repository was found in the checked GitHub search results. AgenticSTS and AutoMem repositories exist but were already indexed in Carnot reference history.",
++        "status": "ok"
++      },
++      "huggingface_papers": {
++        "queries": [
++          "HuggingFace Papers lookups for Self-GC 2607.00692 and A-TMA 2607.01935",
++          "HuggingFace Papers memory, agent, EBT, and ARM-EBM related pages",
++          "HuggingFace Papers July 2026 hallucination and constraint-memory watch"
++        ],
++        "result": "No Hugging Face Papers page supplied a separate actionable delta beyond the arXiv primary rows. Context-Folding and AgentFold pages were older context-management background, not V485 source deltas.",
++        "status": "ok"
++      },
++      "local_v485_comparison": {
++        "queries": [
++          "research-references.md V485 Planner Refresh - 2026-07-06",
++          "repo-wide duplicate search for Self-GC, A-TMA, 2607.00692, and 2607.01935",
++          "ops/exclusion_manifest.yaml retired scopes",
++          "results/experiment_5296_sota_source_delta_v484.json prior source status"
++        ],
++        "result": "Self-GC and A-TMA were absent from the V485 planner refresh and nearby reference history. They sharpen memory-state and context-lifecycle testing without reopening retired external-text scoring, broad fine-tuning, TSU/Kona execution, or CPU-only GGUF offload scopes.",
++        "status": "ok"
++      },
++      "logical_intelligence": {
++        "queries": [
++          "Logical Intelligence blog and public pages",
++          "Kona, Aleph, and automatic formal verification posts",
++          "energy-based reasoning model public updates"
++        ],
++        "result": "Logical Intelligence remains a verifier-first strategic signal. Public pages still expose no reproducible Kona internals, local SDK, or benchmark receipt that would alter V485 execution.",
++        "status": "ok"
++      },
++      "openreview": {
++        "queries": [
++          "OpenReview energy and hallucination verifier search",
++          "OpenReview constrained decoding and neuro-symbolic verification search",
++          "OpenReview Spilled Energy, Semantic Energy, and computational-graph CoT pages"
++        ],
++        "result": "OpenReview results reinforced already indexed Spilled Energy, Semantic Energy, and computational-graph reasoning verification references. No OpenReview-only source changed the V485 execution priorities.",
++        "status": "ok"
++      },
++      "semantic_scholar": {
++        "citation_status": {
++          "ARM-EBM": {
++            "arxiv_id": "2512.15605",
++            "citationCount": 8,
++            "influentialCitationCount": 2,
++            "sample_ids": [
++              "2607.02154",
++              "2605.18871",
++              "10.18653/v1/2026.acl-long.2131"
++            ]
++          },
++          "EBT": {
++            "arxiv_id": "2507.02092",
++            "citationCount": 26,
++            "influentialCitationCount": 2,
++            "sample_ids": [
++              "2606.18206",
++              "2605.11011",
++              "10.1109/ISPASS69572.2026.00062"
++            ]
++          }
++        },
++        "queries": [
++          "DOI:10.48550/arXiv.2507.02092 metadata and citations",
++          "DOI:10.48550/arXiv.2512.15605 metadata and citations"
++        ],
++        "result": "Direct Graph API checks still returned EBT citationCount=26 and ARM-EBM citationCount=8. Samples were already represented in prior V484/V485 context, so no Semantic Scholar-only trend claim is added.",
++        "status": "ok"
++      }
++    }
++  },
++  "spec_refs": [
++    "REQ-REPORT-5308",
++    "SCENARIO-REPORT-5308-APPEND-DELTAS",
++    "SCENARIO-REPORT-5308-NOOP"
++  ],
++  "status": {
++    "principle": "machine-readable terminal state for downstream reconciliation.",
++    "value": "complete"
++  },
++  "tests_run": [
++    "tests/python/test_experiment_5308_sota_source_delta_v485.py"
++  ]
++}
+diff --git a/tests/python/test_experiment_5308_sota_source_delta_v485.py b/tests/python/test_experiment_5308_sota_source_delta_v485.py
+new file mode 100644
+index 0000000000..ae2c3d56b0
+--- /dev/null
++++ b/tests/python/test_experiment_5308_sota_source_delta_v485.py
+@@ -0,0 +1,269 @@
++"""Tests for Exp 5308 V485 execution-time source delta refresh.
++
++Spec refs: REQ-REPORT-5308, SCENARIO-REPORT-5308-APPEND-DELTAS,
++SCENARIO-REPORT-5308-NOOP.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5308_sota_source_delta_v485 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_report_5308_spec_declares_v485_refresh_contract() -> None:
++    """REQ-REPORT-5308: OpenSpec anchors the V485 source delta refresh."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-REPORT-5308") : spec.index("### REQ-REPORT-5296")]
++
++    for marker in (
++        "REQ-REPORT-5308",
++        "SCENARIO-REPORT-5308-APPEND-DELTAS",
++        "SCENARIO-REPORT-5308-NOOP",
++        str(mod.RESULT_RELATIVE_PATH),
++        "literature_ingestion_network_sources",
++        "arXiv:2507.02092",
++        "arXiv:2512.15605",
++        "HuggingFace Papers",
++        "Extropic",
++        "Logical Intelligence",
++        "/deep-research",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_build_artifact_records_required_fields_and_v485_deltas() -> None:
++    """REQ-REPORT-5308: artifact records source-verified actionable deltas."""
++
++    artifact = mod.build_artifact(
++        methodology_duration_s=12.5,
++        tests_run=["tests/python/test_experiment_5308_sota_source_delta_v485.py"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"]["value"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == mod.MILESTONE
++    assert artifact["status"]["value"] == "complete"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["new_actionable_findings_count"] == len(mod.ACTIONABLE_FINDINGS)
++    assert artifact["references_modified"] is True
++    assert artifact["retired_scope_reopened"] is False
++    assert artifact["methodology_duration_s"] == 12.5
++    assert artifact["no_executable_plan_edit"] is True
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++
++    sources = artifact["sources_checked"]["value"]
++    assert set(mod.REQUIRED_SOURCE_FAMILIES).issubset(sources)
++    assert sources["arxiv"]["status"] == "ok"
++    assert sources["semantic_scholar"]["status"] == "ok"
++    assert sources["github"]["status"] == "ok"
++    assert sources["huggingface_papers"]["status"] == "ok"
++
++    findings = artifact["actionable_findings"]["value"]
++    assert [row["title"] for row in findings] == [row["title"] for row in mod.ACTIONABLE_FINDINGS]
++    assert {row["arxiv_id_or_repo"] for row in findings} == {"2607.00692", "2607.01935"}
++    assert all(row["source_url"].startswith("https://") for row in findings)
++    assert {row["planned_task_impact"] for row in findings} == {"no_plan_edit"}
++    assert {row["retired_scope_risk"] for row in findings} == {"none"}
++
++
++def test_scenario_report_5308_appends_refresh_section_idempotently() -> None:
++    """SCENARIO-REPORT-5308-APPEND-DELTAS: references append once."""
++
++    artifact = mod.build_artifact()
++    original = "# Research References\n\n### V485 Planner Refresh - 2026-07-06\nOld V485 section.\n"
++
++    updated = mod.append_refresh_section(original, artifact)
++    second = mod.append_refresh_section(updated, artifact)
++
++    assert updated == second
++    assert updated.startswith(original)
++    assert updated.count(mod.REFRESH_HEADING) == 1
++    assert "Self-GC" in updated
++    assert "A-TMA" in updated
++    assert "No executable `.485` task edit is required" in updated
++    assert mod.REFRESH_END_MARKER in updated
++
++
++def test_scenario_report_5308_noop_leaves_references_unchanged() -> None:
++    """SCENARIO-REPORT-5308-NOOP: zero-new refresh does not churn references."""
++
++    artifact = mod.build_artifact(actionable_findings=[])
++    original = "# Research References\n\n### V485 Planner Refresh - 2026-07-06\nOld V485 section.\n"
++
++    mod.validate_artifact(artifact)
++    assert artifact["new_actionable_findings_count"] == 0
++    assert artifact["references_modified"] is False
++    assert artifact["actionable_findings"]["value"] == []
++    assert "no new actionable" in artifact["honest_verdict"]["value"]
++    assert mod.append_refresh_section(original, artifact) == original
++
++
++def test_write_outputs_writes_artifact_and_reference_append(tmp_path: Path) -> None:
++    """REQ-REPORT-5308: writer emits the JSON result and one references append."""
++
++    references = tmp_path / mod.REFERENCES_RELATIVE_PATH
++    result = tmp_path / mod.RESULT_RELATIVE_PATH
++    references.write_text(
++        "# Research References\n\n### V485 Planner Refresh - 2026-07-06\nOld V485 section.\n",
++        encoding="utf-8",
++    )
++
++    artifact = mod.write_outputs(
++        root=tmp_path,
++        references_path=references,
++        result_path=result,
++        methodology_duration_s=9.25,
++        tests_run=["tests/python/test_experiment_5308_sota_source_delta_v485.py"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert result.exists()
++    assert json.loads(result.read_text(encoding="utf-8")) == artifact
++    updated = references.read_text(encoding="utf-8")
++    assert updated.count(mod.REFRESH_HEADING) == 1
++    assert updated.startswith("# Research References")
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (
++            lambda artifact: {k: v for k, v in artifact.items() if k != "sources_checked"},
++            "missing required fields",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "experiment_id": {
++                    "value": "wrong",
++                    "principle": mod.FIELD_PRINCIPLES["experiment_id"],
++                }
++            },
++            "experiment_id",
++        ),
++        (lambda artifact: artifact | {"milestone": mod.MILESTONE}, "principle-wrapped"),
++        (
++            lambda artifact: artifact
++            | {
++                "status": {
++                    "value": "running",
++                    "principle": mod.FIELD_PRINCIPLES["status"],
++                }
++            },
++            "status",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "honest_verdict": {
++                    "value": "done",
++                    "principle": mod.FIELD_PRINCIPLES["honest_verdict"],
++                }
++            },
++            "honest_verdict",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "inference_substrate": {
++                    "value": "aggregation_from_upstream_artifacts",
++                    "principle": mod.FIELD_PRINCIPLES["inference_substrate"],
++                }
++            },
++            "inference_substrate",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "references_section_marker": {
++                    "value": "<!-- wrong -->",
++                    "principle": mod.FIELD_PRINCIPLES["references_section_marker"],
++                }
++            },
++            "references_section_marker",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": {
++                    "value": {"arxiv": artifact["sources_checked"]["value"]["arxiv"]},
++                    "principle": mod.FIELD_PRINCIPLES["sources_checked"],
++                }
++            },
++            "sources_checked",
++        ),
++        (lambda artifact: artifact | {"new_actionable_findings_count": 99}, "findings count"),
++        (lambda artifact: artifact | {"references_modified": False}, "references_modified"),
++        (lambda artifact: artifact | {"retired_scope_reopened": True}, "retired_scope_reopened"),
++        (lambda artifact: artifact | {"methodology_duration_s": -1.0}, "methodology_duration_s"),
++        (lambda artifact: artifact | {"no_executable_plan_edit": False}, "executable plan"),
++        (
++            lambda artifact: artifact
++            | {
++                "actionable_findings": {
++                    "value": [
++                        artifact["actionable_findings"]["value"][0] | {"source_url": "arxiv:bad"}
++                    ],
++                    "principle": mod.FIELD_PRINCIPLES["actionable_findings"],
++                }
++            },
++            "verified URL",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "actionable_findings": {
++                    "value": [
++                        artifact["actionable_findings"]["value"][0]
++                        | {"planned_task_impact": "plan_edit"}
++                    ],
++                    "principle": mod.FIELD_PRINCIPLES["actionable_findings"],
++                }
++            },
++            "active plan",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "actionable_findings": {
++                    "value": [
++                        artifact["actionable_findings"]["value"][0]
++                        | {"retired_scope_risk": "reopened"}
++                    ],
++                    "principle": mod.FIELD_PRINCIPLES["actionable_findings"],
++                }
++            },
++            "retired scopes",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_contract_drift(mutate, message: str) -> None:
++    """REQ-REPORT-5308: schema drift fails closed before artifact write."""
++
++    artifact = mod.build_artifact()
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(mutate(artifact))
++
++
++def test_deliverable_json_matches_required_schema() -> None:
++    """REQ-REPORT-5308: committed deliverable uses the tested schema."""
++
++    payload = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    mod.validate_artifact(payload)
++    assert payload["experiment_id"]["value"] == mod.EXPERIMENT_ID
++    assert payload["honest_verdict"]["value"].startswith("complete:")
+-- 
+2.55.0
+

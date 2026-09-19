@@ -1,0 +1,91 @@
+From 1e38bd14fe3c681155aecd41e884edc1762961b8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 13:37:43 -0400
+Subject: [PATCH 05786/11362] [conductor] Update docs for PHASE 1 gated on
+ exp5273 solver_fixture_ready -- SOTA solver-grounded extraction retry
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                           |  2 ++
+ ops/changelog.md                                |  1 +
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ..._constraint_extraction_retry_gated_v482.json | 17 +++++++++++++++--
+ 6 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index bfd8c8e627..661a09362c 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1986,3 +1986,5 @@ legacy tests.
+ | SCENARIO-VERIFY-5272 | Gated logit probe reports controls or blocks | Implemented-Partial | Artifact followed the telemetry-ready measurement path with sample_count=27 and internal_signal_available.value=true, but honest_verdict={"principle":"Terminal Exp 5272 verdict; starts with complete: or blocked_ and states whether the exposed internal/logit hallucination signal was positive, null, harmful, or unmeasured.","value":"complete: harmful internal/logit signal delta_over_lexical=-0.345679 auroc=0.654321 sample_count=27"}; internal AUROC 0.654320987654321 lagged lexical AUROC 1.0 (delta_over_lexical_baseline.value=-0.345679012345679), so this remains a harmful research finding rather than an implemented verifier-quality win. |
+ | REQ-VERIFY-5273 | Deterministic Solver Fixture Rebuild V482 | Implemented | `python/carnot/experiment_5273_solver_fixture_rebuild_v482.py`; `tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5273_solver_fixture_rebuild_v482.json`; honest_verdict={"principle":"Terminal Exp 5273 verdict; starts with complete: or blocked_ and states whether the deterministic solver fixture is ready for Exp 5274.","value":"complete: solver_fixture_ready true for Exp 5274 deterministic gated retry"}; status=<missing>; solver_fixture_ready=true; baseline_validity.value=1.0; counterexample_coverage.value=1.0; schema_checks_passed.value=true; fixture_count.value=6; reference_copy.false_accepts=0; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no extraction-quality claim is made for Exp 5274. |
+ | SCENARIO-VERIFY-5273 | Offline Fixture Gate Opens Only On Solver-Clean Receipts | Implemented | Artifact sets solver_fixture_ready=true after deterministic reference baseline validity 1.0, counterexample coverage 1.0, schema_checks_passed.value=true, fixture checksums present, and reference-copy false_accepts=0; empty and shuffled controls are recorded so downstream extraction quality remains unclaimed. |
++| REQ-VERIFY-5274 | Solver Constraint Extraction Retry Gated V482 | Scaffolding | `python/carnot/experiment_5274_solver_constraint_extraction_retry_gated_v482.py`; `tests/python/test_experiment_5274_solver_constraint_extraction_retry_gated_v482.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json`; honest_verdict={"principle":"Terminal Exp 5274 verdict; starts with complete: or blocked_ and states whether the retry improved, nulled, regressed, or was unmeasured.","value":"blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured"}; status=null; retry_outcome=unmeasured; rows_total=0; baseline_validity=0.5; prior_v481_validity=0.25; validity_rate=0.0; unsafe_false_accepts=0; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; blocked by llama_cpp_gpu_offload_unavailable, so no implemented extraction-improvement or Complete claim is made. |
++| SCENARIO-VERIFY-5274 | Gated SOTA Extraction Is Scored Only By Solver | Scaffolding | Artifact followed the blocked precondition path with honest_verdict={"principle":"Terminal Exp 5274 verdict; starts with complete: or blocked_ and states whether the retry improved, nulled, regressed, or was unmeasured.","value":"blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured"}; retry_outcome=unmeasured; rows_total=0; schema_valid_outputs=0; malformed_outputs=0; no solver-scored retry ran because llama.cpp GPU offload was unavailable; no external scorer, metric uplift, retro closure, or capability win is claimed. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 20cbf6ec5c..34149c34fb 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10924,3 +10924,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-05: PHASE 0 runtime receipts -- SOTA GGUF internal telemetry harness (✅ Complete) — honest_verdict={"principle":"Terminal Exp 5271 verdict; starts with complete: or blocked_ and states whether SOTA GGUF telemetry receipts are ready for downstream verifier experiments.","value":"complete: telemetry_receipts_ready=true via flagship_moe, flagship_dense, middle_moe"}; status=<missing>; telemetry_harness_ready=true; runtime_ready models=flagship_moe,flagship_dense,middle_moe; inference_substrate.value=live_llm_internal_telemetry_local_gguf_sota; no_quality_claim.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5271_sota_telemetry_receipt_harness_v482.json
+ - 2026-07-05: PHASE 1 gated on exp5271 telemetry_harness_ready -- receipt-clean internal hallucination probe (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal Exp 5272 verdict; starts with complete: or blocked_ and states whether the exposed internal/logit hallucination signal was positive, null, harmful, or unmeasured.","value":"complete: harmful internal/logit signal delta_over_lexical=-0.345679 auroc=0.654321 sample_count=27"}; status=<missing>; internal_signal_available.value=true; auroc.value=0.654320987654321; control_summary.delta_over_lexical_baseline=-0.345679012345679; lexical.auroc=1.0; shuffled_label_control.auroc=0.6419753086419753; no retro_* flags recorded; no TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5272_internal_hallucination_probe_gated_v482.json
+ - 2026-07-05: PHASE 1 solver grounding -- constraint-extraction fixture rebuild before retry (✅ Complete) — honest_verdict={"principle":"Terminal Exp 5273 verdict; starts with complete: or blocked_ and states whether the deterministic solver fixture is ready for Exp 5274.","value":"complete: solver_fixture_ready true for Exp 5274 deterministic gated retry"}; status=<missing>; solver_fixture_ready=true; baseline_validity.value=1.0; counterexample_coverage.value=1.0; fixture_count.value=6; reference_copy.false_accepts=0; schema_checks_passed.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5273_solver_fixture_rebuild_v482.json
++- 2026-07-05: PHASE 1 gated on exp5273 solver_fixture_ready -- SOTA solver-grounded extraction retry (⚠️ Blocked) — honest_verdict={"principle":"Terminal Exp 5274 verdict; starts with complete: or blocked_ and states whether the retry improved, nulled, regressed, or was unmeasured.","value":"blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured"}; status=null; retry_outcome=unmeasured; rows_total=0; baseline_validity=0.5; prior_v481_validity=0.25; validity_rate=0.0; unsafe_false_accepts=0; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5df9590f4d..b529cf8327 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 109, "phase": "iteration_start", "last_beat": "2026-07-05T17:05:14Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 110, "phase": "iteration_start", "last_beat": "2026-07-05T17:36:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d23da622d1..85fff6bd25 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10345,3 +10345,4 @@ web search: |
+ | 2026-07-05 15:20 UTC | PHASE 1 gated on exp5271 telemetry_harness_ready - | OK | 90 passed, 1 warning in 9.50s |
+ | 2026-07-05 16:44 UTC | PHASE 1 solver grounding -- constraint-extraction  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  broken = dict |
+ | 2026-07-05 17:03 UTC | PHASE 1 solver grounding -- constraint-extraction  | OK | cache hit: 87 passed, 1 warning in 12.89s |
++| 2026-07-05 17:34 UTC | PHASE 1 gated on exp5273 solver_fixture_ready -- S | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 86452877e2..f5ce80d4ee 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 109, "phase": "iteration_start", "started_at": "2026-07-05T17:05:14Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 110, "phase": "iteration_start", "started_at": "2026-07-05T17:36:17Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json b/results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json
+index c68195a7b0..3010c4ab25 100644
+--- a/results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json
++++ b/results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json
+@@ -478,5 +478,18 @@
+   "validity_rate": {
+     "principle": "Fraction of model-fixture rows whose schema-valid executable constraints matched the deterministic solver label.",
+     "value": 0.0
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.143891 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

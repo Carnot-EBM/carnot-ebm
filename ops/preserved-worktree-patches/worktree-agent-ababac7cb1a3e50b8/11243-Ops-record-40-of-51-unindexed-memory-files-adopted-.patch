@@ -1,0 +1,148 @@
+From 949932fbe841cf1282dd008bf82f0939c97364fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:57:14 -0400
+Subject: [PATCH 11243/11362] Ops record: 40 of 51 unindexed memory files
+ adopted into tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
+
+changelog: the operator decision, the --adopt mechanism, the 40 indexed
+(with the four HISTORICAL-prefixed hooks), the 11 left out each with its
+reason, envelope before/after, mutation results (8/8 RED), and the gate
+wait. status: item 4 closed with numbers. traceability: SCENARIO-F on the
+REQ-INFRA-6976 row. metrics: turn row.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ _bmad/traceability.md |  2 +-
+ ops/changelog.md      | 63 +++++++++++++++++++++++++++++++++++++++++++
+ ops/metrics.md        |  1 +
+ ops/status.md         | 18 +++++++++++++
+ 4 files changed, 83 insertions(+), 1 deletion(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index fbd4ec4f50..4a8683ce68 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2616,7 +2616,7 @@ legacy tests.
+ | REQ-OPS-MUTATION-PROOF-2 | Staged Python mutation markers refuse commits; all indeterminate Git, decoding, and file-read paths fail closed | Implemented (`scripts/mutation_marker_lint.py`; pre-commit hook `mutation-marker-lint`) | `tests/python/test_mutation_marker_lint.py`; 22 passed; 100% module statement coverage; expanded QA smart subset 219 passed |
+ | REQ-ARC-7010 | New ARC evaluation rows bind hardware, model, context, server, lease, counters, policy/factory, commit, and solve provenance under one fail-closed schema | Implemented (`python/carnot/agentic/arc_eval_provenance.py`; producer `scripts/arc_leaderboard_eval.py`; consumer `scripts/outer_loop_dashboard.py`) | `tests/python/test_arc_eval_provenance_contract_20260905.py`; shared producer/consumer schema, stable hashes, rejection matrix, row agreement, and policy-bound records |
+ | REQ-INFRA-6975 | Memory index drift is detected mechanically: a memory file whose body grew while its `description:` and `MEMORY.md` line stayed the same is DRIFTED until both move; hourly dashboard line plus a point-of-append PostToolUse reminder; fails closed and loud | Implemented 2026-09-05 (`scripts/memory_index_drift.py`; `scripts/outer_loop_dashboard.py:render`; `.claude/settings.json`) | `tests/python/test_memory_index_drift_20260905.py`; 37 tests, 21/21 mutations RED incl. the dashboard call site, both description-hash sites, and the ten rules from the adversarial review |
+-| REQ-INFRA-6976 | The loaded memory index stays inside the harness load envelope (200 lines / 25,000 UTF-16 units, read from the `claude` binary and confirmed end to end) and every pointer stays reachable: two-tier index (`MEMORY.md` + `_index_<group>.md`), exact replica of the harness cut, OVER_CAP / OVER_BUDGET / MISPLACED / DUPLICATE / MISSING_TARGET / GROUP_COUNT_STALE on the dashboard, `--demote` moves a line verbatim and never deletes, hook reminds on index-file writes | Implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`, `:harness_cut`, `:demote`, `:hook_reminder`; live index restructured 25,201 -> 19,705 units, 1 -> 0 invisible, 152/152 reachable) | `tests/python/test_memory_index_capacity_20260905.py`; 32 tests; 24/24 rules RED with byte-identical restores (20/21 first pass, the survivor re-proven in both forms after a both-caps test; 3/3 second pass incl. the hook file-location site), call sites included |
++| REQ-INFRA-6976 | The loaded memory index stays inside the harness load envelope (200 lines / 25,000 UTF-16 units, read from the `claude` binary and confirmed end to end) and every pointer stays reachable: two-tier index (`MEMORY.md` + `_index_<group>.md`), exact replica of the harness cut, OVER_CAP / OVER_BUDGET / MISPLACED / DUPLICATE / MISSING_TARGET / GROUP_COUNT_STALE on the dashboard, `--demote` moves a line verbatim and never deletes, hook reminds on index-file writes | Implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`, `:harness_cut`, `:demote`, `:hook_reminder`; live index restructured 25,201 -> 19,705 units, 1 -> 0 invisible, 152/152 reachable) | `tests/python/test_memory_index_capacity_20260905.py`; 37 tests; 24/24 rules RED with byte-identical restores (20/21 first pass, the survivor re-proven in both forms after a both-caps test; 3/3 second pass incl. the hook file-location site), call sites included; SCENARIO-F `--adopt` (2026-09-05, same day): 8/8 mutations RED with byte-identical restores; live: 40 of 51 unindexed files adopted into tier 2, 11 left out with reasons, 193/204 reachable |
+ | SCENARIO-ARC-7010-LIVE-ROUND-TRIP, SCENARIO-ARC-7010-REJECTION-MATRIX, SCENARIO-ARC-7010-NO-LLM-IS-EXPLICIT, SCENARIO-ARC-7010-SOLVE-PROVENANCE-ENUM, SCENARIO-ARC-7010-HISTORICAL-ROWS-STAY-HISTORICAL | Implemented; forward rows validate while absent, null, malformed, aliased, contradictory, or historical rows remain headline-ineligible | `tests/python/test_arc_eval_provenance_contract_20260905.py`; `tests/python/test_eval_generator_provenance.py`; 470/470 scoped statements covered |
+ | REQ-ARC-FCP-5699-43 | The bounded inert-engine child uses dependency-free transition payloads, launches the validator file directly, and caps BLAS/OpenMP fanout so package startup and parallel workers cannot consume the generated-code deadline; mechanical defects retain precedence | Implemented (`python/carnot/agentic/arc_engine_static_validation.py:_run_isolated_job`; `LocalGGUFProposer._engine_defects` ordering unchanged) | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py`; the mixed inert/raising regression reduced from 56.32s to 1.41s in isolation; focused ARC/Exp6605 set: 79 passed |
+ | REQ-REPORT-6605 | Qwen3.6 direct-plan headroom preserves the experiment contract and a reproducibility checksum that covers the complete test receipt | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`) | `tests/python/test_experiment_6605_qwen36_direct_headroom.py`: 21 passed; 374/374 statements covered (100%); explicit `tests_run=[{"command":"changed","outcome":"failed"}]` mutation rejected |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index a71837fa49..cc4c438b45 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,68 @@
+ # Carnot — Changelog
+ 
++## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
++
++- Origin: operator decision, relayed by the team lead ("do 4"): index the 51
++  memory files that had no `MEMORY.md` line, and keep `_DEMOTE_ORDER` as
++  proposed. Judgment per file was left to this agent: a stale, superseded, or
++  duplicated file may be left out, with the reason written down; none deleted.
++- Mechanism: `python3 scripts/memory_index_drift.py --adopt <file.md> ...`
++  (SCENARIO-INFRA-6976-F). It builds `- [Title](file) — hook` from the file's
++  own `name:` and unquoted `description:`, appends it to `_index_<group>.md`,
++  inserts or re-counts the group line in `MEMORY.md`, and refuses a name that
++  already has a line (a DUPLICATE), an index file, or a missing file. The
++  tier-2 placement is one helper shared with `--demote`. Nothing is written
++  into the loaded surface except the group line; promotion to tier 1 is a
++  hand edit. This was the first real exercise of the group-file mechanism at
++  scale: 40 adoptions across three group files, two of them created on the
++  spot, and the check stayed clean (0 DUPLICATE, 0 MISSING_TARGET, 0
++  GROUP_COUNT_STALE) throughout.
++- Indexed (40): 18 `feedback_*` into `_index_feedback.md` (new), 12
++  `project_*` into `_index_project.md` (new), 10 `reference_*` into
++  `_index_reference.md`. Four `project_*` hooks were given a HISTORICAL
++  prefix by hand so the index does not teach a superseded diagnosis as
++  current: `project_arc_energy_config_space` (directive 2026-06-22; the
++  ARC-energy program was concluded 2026-06-26), `project_arc_generation_not_
++  selection` (.431 diagnosis, superseded by .447/.448),
++  `project_arc_l1_first_contact_wall` (.447/.448; all 25 public games cleared
++  2026-07-17), `project_inverted_auroc_bug` (2026-04-28, fixed same day).
++- Left out (11), each with the reason, none deleted:
++  - `feedback_anthropic_quota_codex_default` (2026-05-02), `feedback_gemini_
++    default_supersedes_codex_default` (2026-05-20), `feedback_gemini_paused`
++    (2026-05-01), `feedback_inner_loop_switched_to_gemini` (2026-05-08),
++    `feedback_pin_gemini_3_1_pro_preview_until_flash_available` (2026-05-20):
++    routing history superseded by Codex-Default v2 (2026-06-10) and covered
++    by the indexed `feedback_codex_default_v2.md`; gemini has been disabled
++    since 2026-06-10 (`30-codex-fallback-20260610.conf`).
++  - `feedback_codex_paused`: an incident marked RESOLVED 2026-05-01 in its own
++    title; the fix lives in `research_conductor.py`.
++  - `feedback_phase5_derisking_committed`: a directive scoped to milestones
++    .94-.95; the track ran (`results/experiment_1222_phase5a_insitu_
++    prototype.json`). Indexing it would read as pending work.
++  - `project_exp3496_corpus_builder`, `project_p01_diagnosis_322`: per-
++    experiment and per-milestone P0.1 status from 2026-05-31; P0.1 was
++    settled afterwards (indexed `project_energy_selection_thesis_bounded`).
++  - `project_kaggle_16gb_gemma12b`: "the Kaggle eval is 16 GB VRAM, 27B does
++    not fit". The eval is an RTX 6000 Blackwell with 96 GB and the pinned
++    generator is Qwen3.8-27B (indexed `feedback_kaggle_gpu_far_faster_than_
++    local`, `project_arc_live_generator`). A line would teach a false fact.
++  - `project_kv260_arrival`: a FedEx arrival date, 2026-04-20.
++- Envelope before/after: `MEMORY.md` 20,089 -> 20,447 units, 115 -> 117 lines
++  (two new group lines only), 0 invisible, budget 24,000 / 190. Tier 2:
++  `_index_reference.md` 49 (8,486 units), `_index_feedback.md` 18 (5,991),
++  `_index_project.md` 12 (3,577). Reachable pointers 153 -> 193; 204 memory
++  files, 11 unindexed by decision. Every pre-existing pointer line is
++  unchanged.
++- `_DEMOTE_ORDER` = `reference, project, incident, feedback, user` is now
++  marked operator-confirmed in the script and the spec; not provisional.
++- Memory: `feedback_memory_index_two_tier.md` body appended, description and
++  index line updated together (REQ-INFRA-6975 both halves).
++- Verification: 5 new tests (37 in the capacity file, 74 with the drift
++  file). Mutation proofs for `--adopt`, synchronous, in this agent's own proof session (run id memidx-m3): 8 of 8 RED, every restore byte-identical by `cmp`, GREEN after each (hook from `description:`, title from `name:`, slug-to-words, refuse already-indexed, refuse missing file, `--adopt` entrypoint, the tier-2 placement call site, and a re-proof of the shared helper's file write after the refactor). No survivor this round; the defect this round was caught by the tests before mutation: the first `pointer_line_from_file` split on `\n---` and read the BODY as the frontmatter, so every title came out as the file name (fixed to walk the `---` fence the way `split_memory_file` does). Commit `45b299fb9f`; its message misspells the neighbouring commit as `a3804b477a1`, it is `a804b477a1`.
++- Gate note: the code commit waited on another agent's open mutation proof
++  (`research_conductor.py`, run id ppid-51459); the gate is repo-global and
++  another agent's proof is never closed from here.
++
+ ## 2026-09-05 — Memory pointer routing regression repair (REQ-INFRA-6976)
+ 
+ - Added `resolved_index_file` as the single actual-or-expected destination
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 94adc3e207..d3c08f3ff7 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3363,3 +3363,4 @@ supervision work itself.
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | — | 2026-09-05 (not captured) | 2026-09-05T12:26Z | Outer-loop supervision, ~13 hourly checks. Shipped four checks: GPU-span reporting in the dashboard (REQ-INFRA-6840 SCENARIO-B, 8 tests, 3/3 mutations RED), the operator-attention line (SCENARIO-C, 6 tests, 3/3), a YAML parse replacing the flag-state regex window that was returning `?` for 18 of 136 flags (SCENARIO-D, 5 tests, 3/3), and the once-per-run diversity arm (REQ-ARC-WMTE-7040, 8 tests, 4/4). Plus `tests/conftest.py` for the tree-wide worktree guard, and structural fixes to `substrate_alias_evidence_lint.py` and `harness_integrity_lint.py`. Incidents owned: a gpt-6-astra model change caused a ~2h conductor outage (rolled back 09:30Z, recovery confirmed); two decorative test suites written and repaired; a byte-vs-UTF-16 cap quoted from a rendered warning string. | see scripts/session-metrics.py |
++| 4 | 2026-09-05T12:44:07Z | 2026-09-05T12:57:14Z | Subagent memory-index-capacity-fix, operator item 4: --adopt (REQ-INFRA-6976 F), 5 tests, 8/8 mutations RED; live: 40 of 51 unindexed memory files indexed into tier 2, 11 left out with reasons, MEMORY.md 20,497/25,000 units, 117/200 lines, 193/204 reachable; _DEMOTE_ORDER operator-confirmed; commits 45b299fb9f + this record | see session-metrics.py |
+diff --git a/ops/status.md b/ops/status.md
+index 28f8938257..594f2d4d07 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -2,6 +2,24 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++## 2026-09-05 12:50Z — Operator item 4 done: 40 of the 51 unindexed memory files now have lines, 11 left out with reasons
++
++Operator decision (relayed): index the 51 files, keep `_DEMOTE_ORDER`. Done live with the new
++`--adopt` (SCENARIO-INFRA-6976-F): the line is built from the file's own `name:` and
++`description:` and lands in `_index_<group>.md`, never in `MEMORY.md`. First exercise of the
++group-file mechanism at scale: 40 adoptions, two new group files, the check clean throughout.
++
++Numbers: `MEMORY.md` 20,089 -> 20,497 units, 115 -> 117 lines, 0 invisible (budget 24,000 /
++190). Tier 2: `_index_reference.md` 49, `_index_feedback.md` 18, `_index_project.md` 12.
++Reachable pointers 153 -> 193 of 204 files. Left out, each with its reason in the changelog:
++five superseded routing-history files, one RESOLVED incident, one completed directive, two
++stale P0.1 status notes, one false-now Kaggle VRAM claim, one FedEx arrival date. Four adopted
++`project_*` hooks carry a HISTORICAL prefix. `_DEMOTE_ORDER` is operator-confirmed in code and
++spec.
++
++Open: none from this item. The 11 left-out files stay on disk; an operator who wants any of
++them listed runs `--adopt <file>` and it lands in its group file.
++
+ ## 2026-09-05 12:53Z — OPERATOR DECIDED all five open items
+ 
+ The operator ruled on the whole open list in one turn. Recorded here because a decision that
+-- 
+2.55.0
+

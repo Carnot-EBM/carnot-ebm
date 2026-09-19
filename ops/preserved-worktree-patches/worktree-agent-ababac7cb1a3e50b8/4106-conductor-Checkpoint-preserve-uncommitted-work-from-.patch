@@ -1,0 +1,70 @@
+From 86125b759e9facc903bca56c24b73d4d4ce92b1f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 01:46:05 -0400
+Subject: [PATCH 04106/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...periment_4766_submission_package_harden.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bf8a4b5ca4..ce28e8389a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 234, "phase": "iteration_start", "last_beat": "2026-06-26T05:32:28Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 235, "phase": "iteration_start", "last_beat": "2026-06-26T05:46:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ac0f50dea2..9ef25fd5a1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9318,3 +9318,4 @@ The contro |
+ | 2026-06-26 04:58 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-06-26 05:15 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 92 passed, 1 warning in 11.11s |
+ | 2026-06-26 05:30 UTC | PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUD | OK | 89 passed, 1 warning in 6.80s |
++| 2026-06-26 05:44 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e30f74313d..4fd61f197d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 234, "phase": "iteration_start", "started_at": "2026-06-26T05:32:28Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 235, "phase": "iteration_start", "started_at": "2026-06-26T05:46:03Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4766_submission_package_harden.json b/results/experiment_4766_submission_package_harden.json
+index 382038db39..5746885022 100644
+--- a/results/experiment_4766_submission_package_harden.json
++++ b/results/experiment_4766_submission_package_harden.json
+@@ -142,5 +142,18 @@
+     "total_with_headroom_gb": 15.146,
+     "vram_estimate_gb": 15.146
+   },
+-  "vram_estimate_gb": 15.146
+-}
++  "vram_estimate_gb": 15.146,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.987299 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

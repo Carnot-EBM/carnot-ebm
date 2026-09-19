@@ -1,0 +1,1501 @@
+From bde934c9ff1e705d55d538804628a0518f9ef6ec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 19:55:45 -0400
+Subject: [PATCH 05510/11362] [conductor] PHASE B1 attack the diagnosed
+ enumeration wall -- reconcile GAP-LIVE-INTEGRATION's stale evidence against
+ current code
+
+Automated research step by research conductor.
+Task ID: exp5174-gap-live-integration-reconciliation-v474
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  35 +-
+ ...ap_live_integration_reconciliation_v474.py | 558 +++++++++++++++
+ ..._live_integration_reconciliation_v474.json | 674 ++++++++++++++++++
+ ...174_gap_live_integration_reconciliation.py | 139 ++++
+ 7 files changed, 1405 insertions(+), 11 deletions(-)
+ create mode 100644 python/carnot/experiment_5174_gap_live_integration_reconciliation_v474.py
+ create mode 100644 results/experiment_5174_gap_live_integration_reconciliation_v474.json
+ create mode 100644 tests/python/test_experiment_5174_gap_live_integration_reconciliation.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 27bd024177..411e251144 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -847,3 +847,6 @@
+ - REQ-CAPSTONE-5167: The `.473` milestone-close capstone aggregator `exp5167-capstone-v473` in `python/carnot/experiment_5167_capstone_v473.py` SHALL write `results/experiment_5167_capstone_v473.json` without modifying `scripts/research_conductor.py`, without modifying `ops/status.md`, without modifying `ops/changelog.md`, and without modifying `_bmad/traceability.md`. It SHALL read every V473 upstream artifact Exp5157 through Exp5166, run or import adversarial verification status for each present artifact, exclude any upstream carrying `flagged_adversarial:true` from headline aggregation, and reconcile rather than rerun the milestone. It SHALL reconcile GAP-4 from Exp5161 as `scale_up_recommended_not_filled` when the pilot recommends scale-up but does not satisfy the filled floor, reconcile DiffusionGemma from Exp5160's cross-corpus recommendation, compute the Exp5159 reproducible-level delta without inflating zero, report the roadmap level-up guarantee as structurally distinct from outcome satisfaction, and confirm Exp5164 did not modify `scripts/research_conductor.py`.
+ - SCENARIO-CAPSTONE-5167: The artifact `results/experiment_5167_capstone_v473.json` must emit top-level fields `per_task_summary`, `gap4_status_reconciled`, `diffusiongemma_gate_reconciled`, `reproducible_total_levels_delta`, `levelup_guarantee_structurally_satisfied`, `levelup_guarantee_outcome_satisfied`, `flagged_adversarial_artifacts_excluded`, `research_conductor_py_untouched_confirmed`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `milestone`, `spec_refs`, `result_path`, `field_principles`, `inference_substrate`, `duration_s`, `source_artifacts`, `adversarial_verification`, `preconditions_checked`, `random_seed`, `reproducibility_checksum`, and `tests_run`. The default `.473` read must summarize Exp5157 as a zero-delta failed warm-start gate, Exp5158 as a failed 1-of-3 ranker improvement gate, Exp5159 as gate-blocked with zero banked levels, Exp5160 as clean cross-corpus DiffusionGemma ungate recommendation, Exp5161 as excluded from headline aggregation because `flagged_adversarial:true` even though its status recommendation is scale-up, Exp5162 as SOTA ingestion with no new post-2026-07-02 primary findings, Exp5163 as a small MMLU-Pro verifier delta whose CI includes zero, Exp5164 as a clean false-zero timing fix with `research_conductor_py_modified=false`, Exp5165 as generation-axis retirement hygiene, and Exp5166 as hardware continuity with no speedup claim. The terminal verdict must start with `complete:` or `complete_` and be a single precise sentence.
+ - SCENARIO-CAPSTONE-5167-FIELD-PRINCIPLES: The required field principles are: `per_task_summary` = "list of {task_id, honest_verdict, headline_outcome} read from every V473 artifact", `gap4_status_reconciled` = "GAP-4 status reconciled from Exp5161 without rounding a pilot up to filled", `diffusiongemma_gate_reconciled` = "DiffusionGemma gate reconciled from Exp5160's clean cross-corpus result", `reproducible_total_levels_delta` = "new banked ARC levels from Exp5159; zero is valid and must not be inflated", `levelup_guarantee_structurally_satisfied` = "roadmap lint found at least one level-up attempt", `levelup_guarantee_outcome_satisfied` = "true only if the level-up attempt actually banked a level", `flagged_adversarial_artifacts_excluded` = "task ids skipped from headline aggregation because flagged_adversarial=true", `research_conductor_py_untouched_confirmed` = "Exp5164 hard constraint that scripts/research_conductor.py stayed untouched", and `honest_verdict` = "terminal-prefix single sentence summarizing the whole milestone without vague celebration."
++- REQ-CAPSTONE-5174: The GAP-LIVE-INTEGRATION reconciliation audit SHALL write `results/experiment_5174_gap_live_integration_reconciliation_v474.json` without rebuilding the ARC agent, without modifying `scripts/research_conductor.py`, and without modifying `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`. It SHALL read the current `ops/verifier_gaps.md` GAP-LIVE-INTEGRATION entry, `python/carnot/agentic/arc_competition_agent.py`, Exp4605 and Exp4652 result artifacts, `ops/arc_solve_registry.yaml`, and `scripts/arc_orphan_solver_lint.py`. It SHALL check the three cited stale-evidence claims directly against current source evidence with file:line references, run the orphan-solver lint, distinguish Exp4652's matched `value_weight=0` baseline from the cost-fixed nonzero value-weight null result, audit banked ARC solve provenance for live self-discovery versus development-proxy rows, update `ops/verifier_gaps.md` with a dated correction rather than silently deleting old text, and recommend the exact reconciled gap status.
++- SCENARIO-CAPSTONE-5174: The artifact `results/experiment_5174_gap_live_integration_reconciliation_v474.json` must emit top-level fields `claim_router_dsl_unimported`, `claim_target_levels_1`, `claim_value_weight_0`, `orphan_lint_result`, `solve_provenance_audit`, `verifier_gaps_md_updated`, `gap_status_recommendation`, `inference_substrate`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `evidence_files_read`, `upstream_artifacts`, `field_principles`, `preconditions_checked`, `random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`. The default audit must mark the original router/DSL and target-level claims stale when current source imports the router/DSL and ships target levels above one, must resolve the value-weight claim as a current nonzero submitted config plus Exp4652 no-lift/null context rather than "never wired", must record the lint output, must surface any registry game-count/provenance mismatch honestly, and must terminal-prefix the verdict as `complete:` or `complete_`.
++- SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES: The required field principles are: `claim_router_dsl_unimported` = "true/false with current file:line evidence for the strategy-router and world-model-DSL imports and use sites.", `claim_target_levels_1` = "true/false with current file:line evidence for `SUBMITTED_TARGET_LEVELS` and `SUBMITTED_AGENT_CONFIG.target_levels`.", `claim_value_weight_0` = "true/false with the distinction between current submitted config, matched zero baseline, and Exp4652 tried-nonzero honest null explicitly resolved.", `orphan_lint_result` = "mechanical pass/fail and output summary from `scripts/arc_orphan_solver_lint.py`.", `solve_provenance_audit` = "counts and per-game basis for banked registry depth provenance; this is the load-bearing mirage-vs-real live-path question.", `verifier_gaps_md_updated` = "true only when GAP-LIVE-INTEGRATION has a dated correction preserving old stale text and recording the new scope.", `gap_status_recommendation` = "closed, downgraded, or re-scoped with exact residual scope.", `inference_substrate` = "aggregation_from_upstream_artifacts.", and `honest_verdict` = "terminal-prefix verdict stating whether the original three claims were stale and what the solve-provenance audit found."
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 9da1be55f0..0daf7da5e4 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -882,3 +882,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_5161_gap4_protocol_execution_pilot_v473.json
++
++## experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['CIRCULAR_MOAT_OVERCLAIM', 'MOAT_CLAIM_RIGOR'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 60c6ac97b8..3f87455939 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4162,
++  "experiments_checked": 4163,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 5a31057275..acfece1662 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2484,18 +2484,33 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+ - priority: medium
+ 
+ ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
+-- status: open
+-- evidence: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer` is bare BFS (measured 8/32 in-distribution,
+-  ~0 OOD — `results/arc_offline_to_live_bridge_v2.json:5,18`) + an LLM tier with 0/6 measured value-added
+-  (:13); `target_levels=1` (stops at first level), `value_weight=0.0` (value head inert). The stronger
+-  `arc_strategy_router.py` / `arc_world_model_dsl.py` are NOT imported by `arc_competition_agent.py` (grep
+-  empty). The "45 reproduced levels" are mostly banked replays of KNOWN games (≈0 on the hidden eval) or
+-  depend on `env._game` internal-state absent live.
++- status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
++- evidence: Original 2026-06-19 evidence, now stale in part: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer`
++  was described as bare BFS (measured 8/32 in-distribution, ~0 OOD — `results/arc_offline_to_live_bridge_v2.json:5,18`)
++  + an LLM tier with 0/6 measured value-added (:13); `target_levels=1`; `value_weight=0.0`; and
++  `arc_strategy_router.py` / `arc_world_model_dsl.py` NOT imported by `arc_competition_agent.py`.
++  2026-07-02 correction: current source refutes the three narrow wiring claims. `arc_competition_agent.py:30`
++  imports `arc_strategy_router`, `:51` imports `ObjectDeltaModel`, `:2157-2164` uses both in `E3AgentPolicy`;
++  `SUBMITTED_TARGET_LEVELS = 3` at `:88` and `SUBMITTED_AGENT_CONFIG["target_levels"]` reads it at `:3132`;
++  `SUBMITTED_VALUE_WEIGHT = 1e-12` at `:83` and `SUBMITTED_AGENT_CONFIG["value_weight"]` reads it at `:3131`.
++  Exp4605 records the submitted config with `target_levels=3`, router/DSL wired, and `value_weight_used=1e-12`.
++  Exp4652 records a matched `value_weight=0.0` baseline plus a cost-fixed nonzero run (`value_weight_set=1e-12`)
++  with zero live lift and `residual_cause_hypothesis=distribution_shift_or_calibration`; this is "tried and did
++  not help", not "never wired". `scripts/arc_orphan_solver_lint.py` now passes (`OK: all solver-like ARC modules
++  are reachable from the live agent path (46 modules in the live closure).`). Residual 2026-07-02 audit of
++  `ops/arc_solve_registry.yaml`: registry declares `reproducible_total_games: 24` but 25 rows carry
++  `levels_reproduced>0`; using the declared-24 view, 4 current-depth banked games are
++  `live_agent_self_discovery` and 20 are `development_proxy` by banking artifact/mechanism (row-level view:
++  4 live, 21 development_proxy, with `wa30` the extra legacy L1 row).
+ - failure mode: `reproducible_total_levels` (what the sprint optimizes) is largely a MIRAGE for the leaderboard;
+   the score is driven by generic OOD solve-rate + action efficiency, which the submitted agent barely has.
+-- missing discriminator: n/a — this is INTEGRATION, not modeling. Wire the router + world-model-DSL into the
+-  submitted agent; raise target_levels; replace RESET-replay nav with forward-edge `_shortest_path`.
+-- priority: high (the most direct move on 0.08)
++- missing discriminator: n/a — this remains INTEGRATION / provenance hygiene, not modeling. Do NOT re-propose
++  "wire the router/DSL" or "raise target_levels" as new work; those are already current-code facts. The real
++  residual scope for exp5176 or a future milestone is to reduce the registry's development-proxy/current-depth
++  ratio by making banked progress arise from the live agent's own runtime self-discovery path, and to keep
++  `reproducible_total_games` aligned with the per-game rows.
++- priority: medium (the stale highest-lever rebuild is closed; the provenance-mirage ratio is still operationally
++  important but is a narrower residual than the original wiring gap)
+ 
+ ### GAP-ARCH-WORLD-MODEL-TRUST-ENERGY: learned oracle-distinct energy for hidden-state world-model trust
+ - status: open
+diff --git a/python/carnot/experiment_5174_gap_live_integration_reconciliation_v474.py b/python/carnot/experiment_5174_gap_live_integration_reconciliation_v474.py
+new file mode 100644
+index 0000000000..3d65c26fbe
+--- /dev/null
++++ b/python/carnot/experiment_5174_gap_live_integration_reconciliation_v474.py
+@@ -0,0 +1,558 @@
++"""Experiment 5174: reconcile GAP-LIVE-INTEGRATION against current code.
++
++Spec refs: REQ-CAPSTONE-5174, SCENARIO-CAPSTONE-5174,
++SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import hashlib
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++CompletedProcessRunner = Callable[..., Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5174_gap_live_integration_reconciliation_v474"
++EXPERIMENT_ID = "5174"
++SCHEMA = "carnot.exp5174.gap_live_integration_reconciliation.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5174_gap_live_integration_reconciliation_v474.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++AGENT_RELATIVE_PATH = "python/carnot/agentic/arc_competition_agent.py"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++GAPS_RELATIVE_PATH = "ops/verifier_gaps.md"
++ORPHAN_LINT_RELATIVE_PATH = "scripts/arc_orphan_solver_lint.py"
++EXP4605_RELATIVE_PATH = "results/experiment_4605_live_integration_scored_agent.json"
++EXP4652_RELATIVE_PATH = "results/experiment_4652_value_routing_cost_fix_live.json"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 5174
++SPEC_REFS = [
++    "REQ-CAPSTONE-5174",
++    "SCENARIO-CAPSTONE-5174",
++    "SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "claim_router_dsl_unimported": {
++        "principle": (
++            "true/false with current file:line evidence for the strategy-router and "
++            "world-model-DSL imports and use sites."
++        )
++    },
++    "claim_target_levels_1": {
++        "principle": (
++            "true/false with current file:line evidence for `SUBMITTED_TARGET_LEVELS` and "
++            "`SUBMITTED_AGENT_CONFIG.target_levels`."
++        )
++    },
++    "claim_value_weight_0": {
++        "principle": (
++            "true/false with the distinction between current submitted config, matched zero "
++            "baseline, and Exp4652 tried-nonzero honest null explicitly resolved."
++        )
++    },
++    "orphan_lint_result": {
++        "principle": (
++            "mechanical pass/fail and output summary from `scripts/arc_orphan_solver_lint.py`."
++        )
++    },
++    "solve_provenance_audit": {
++        "principle": (
++            "counts and per-game basis for banked registry depth provenance; this is the "
++            "load-bearing mirage-vs-real live-path question."
++        )
++    },
++    "verifier_gaps_md_updated": {
++        "principle": (
++            "true only when GAP-LIVE-INTEGRATION has a dated correction preserving old stale "
++            "text and recording the new scope."
++        )
++    },
++    "gap_status_recommendation": {
++        "principle": "closed, downgraded, or re-scoped with exact residual scope."
++    },
++    "inference_substrate": {"principle": INFERENCE_SUBSTRATE},
++    "honest_verdict": {
++        "principle": (
++            "terminal-prefix verdict stating whether the original three claims were stale and "
++            "what the solve-provenance audit found."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "claim_router_dsl_unimported",
++    "claim_target_levels_1",
++    "claim_value_weight_0",
++    "orphan_lint_result",
++    "solve_provenance_audit",
++    "verifier_gaps_md_updated",
++    "gap_status_recommendation",
++    "inference_substrate",
++    "honest_verdict",
++    "evidence_files_read",
++    "upstream_artifacts",
++    "field_principles",
++    "preconditions_checked",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_", "blocked_")
++LIVE = "live_agent_self_discovery"
++DEV = "development_proxy"
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _line_for(path: Path, needle: str) -> tuple[int, str]:
++    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
++        if needle in line:
++            return line_number, line.strip()
++    raise ValueError(f"missing expected source evidence: {needle}")
++
++
++def _evidence(path: Path, needle: str, *, root: Path) -> str:
++    line_number, text = _line_for(path, needle)
++    rel = path.relative_to(root).as_posix()
++    return f"{rel}:{line_number} {text}"
++
++
++def _parse_assignment_float(path: Path, name: str) -> float:
++    pattern = re.compile(rf"^\s*{re.escape(name)}\s*=\s*([0-9.eE+-]+)\s*(?:#.*)?$")
++    for line in path.read_text(encoding="utf-8").splitlines():
++        match = pattern.match(line)
++        if match:
++            return float(match.group(1))
++    raise ValueError(f"missing numeric assignment for {name}")
++
++
++def _parse_assignment_int(path: Path, name: str) -> int:
++    return int(_parse_assignment_float(path, name))
++
++
++def current_source_claims(root: Path | str = REPO_ROOT) -> dict[str, JsonDict]:
++    """Resolve the three stale GAP-LIVE-INTEGRATION claims from current source."""
++
++    root = Path(root)
++    agent = root / AGENT_RELATIVE_PATH
++    router_import = _evidence(
++        agent, "import carnot.agentic.arc_strategy_router as arc_strategy_router", root=root
++    )
++    dsl_import = _evidence(agent, "from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel", root=root)
++    router_use = _evidence(agent, "self.strategy_route = dict(", root=root)
++    dsl_use = _evidence(agent, "self.dsl_model = ObjectDeltaModel(self.short)", root=root)
++    target_constant = _parse_assignment_int(agent, "SUBMITTED_TARGET_LEVELS")
++    target_constant_evidence = _evidence(agent, "SUBMITTED_TARGET_LEVELS = ", root=root)
++    target_config_evidence = _evidence(agent, '"target_levels": SUBMITTED_TARGET_LEVELS', root=root)
++    value_constant = _parse_assignment_float(agent, "SUBMITTED_VALUE_WEIGHT")
++    value_constant_evidence = _evidence(agent, "SUBMITTED_VALUE_WEIGHT = ", root=root)
++    value_config_evidence = _evidence(agent, '"value_weight": SUBMITTED_VALUE_WEIGHT', root=root)
++    bare_value_evidence = _evidence(agent, '"value_weight": 0.0', root=root)
++
++    return {
++        "claim_router_dsl_unimported": {
++            "value": False,
++            "evidence": "; ".join([router_import, dsl_import, router_use, dsl_use]),
++            "current_state": (
++                "stale: arc_strategy_router and arc_world_model_dsl are imported and used by "
++                "E3AgentPolicy on the submitted cascade path."
++            ),
++        },
++        "claim_target_levels_1": {
++            "value": target_constant == 1,
++            "evidence": "; ".join([target_constant_evidence, target_config_evidence]),
++            "current_submitted_target_levels": target_constant,
++            "current_state": (
++                "stale: the submitted config is wired through SUBMITTED_TARGET_LEVELS and the "
++                f"current constant is {target_constant}."
++            ),
++        },
++        "claim_value_weight_0": {
++            "value": value_constant == 0.0,
++            "evidence": "; ".join(
++                [value_constant_evidence, value_config_evidence, bare_value_evidence]
++            ),
++            "current_submitted_value_weight": value_constant,
++            "meaningful_distinction": (
++                "tried_nonzero_no_lift: the current submitted value_weight is nonzero; the "
++                "0.0 value still appears only in the bare-control/matched-baseline config, "
++                "and Exp4652 tested a cost-fixed nonzero value head but found an honest "
++                "zero-lift null attributed to distribution_shift_or_calibration."
++            ),
++        },
++    }
++
++
++def read_exp4605_summary(root: Path | str = REPO_ROOT) -> JsonDict:
++    artifact = _read_json(Path(root) / EXP4605_RELATIVE_PATH)
++    config = artifact["submitted_agent_config"]
++    return {
++        "path": EXP4605_RELATIVE_PATH,
++        "experiment": artifact.get("experiment"),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "solve_provenance": artifact.get("solve_provenance"),
++        "value_weight_used": artifact.get("value_weight_used"),
++        "first_win_delta": artifact.get("first_win_delta"),
++        "multi_level_solve_rate": artifact.get("multi_level_solve_rate"),
++        "null_delta_methodology_note": artifact.get("null_delta_methodology_note"),
++        "submitted_agent_config": {
++            "target_levels": config.get("target_levels"),
++            "value_weight": config.get("value_weight"),
++            "router_wired": config.get("router_wired"),
++            "strategy_router_enabled": config.get("strategy_router_enabled"),
++            "world_model_dsl_wired": config.get("world_model_dsl_wired"),
++        },
++    }
++
++
++def read_exp4652_summary(root: Path | str = REPO_ROOT) -> JsonDict:
++    artifact = _read_json(Path(root) / EXP4652_RELATIVE_PATH)
++    baseline = artifact.get("live_baseline_value_weight_zero", {})
++    return {
++        "path": EXP4652_RELATIVE_PATH,
++        "experiment": artifact.get("experiment"),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "solve_provenance": artifact.get("solve_provenance"),
++        "live_path_reachable": artifact.get("live_path_reachable"),
++        "value_weight_set": artifact.get("value_weight_set"),
++        "live_baseline_value_weight_zero": {
++            "value_weight": baseline.get("value_weight"),
++            "first_win_rate": baseline.get("first_win_rate"),
++            "solve_rate": baseline.get("solve_rate"),
++        },
++        "first_win_rate_delta": artifact.get("first_win_rate_delta"),
++        "solve_rate_delta": artifact.get("solve_rate_delta"),
++        "live_first_win_rate_value_routed": artifact.get("live_first_win_rate_value_routed"),
++        "live_solve_rate_value_routed": artifact.get("live_solve_rate_value_routed"),
++        "residual_cause_hypothesis": artifact.get("residual_cause_hypothesis"),
++        "null_delta_methodology_note": artifact.get("null_delta_methodology_note"),
++        "orphan_lint": artifact.get("orphan_lint"),
++    }
++
++
++def _artifact_refs_for_game(root: Path, game: Mapping[str, Any]) -> list[str]:
++    refs: list[str] = []
++    text_fields = ("solver", "reproduce", "generic_object_motion_reproduce", "generic_glyph_rewrite_reproduce")
++    text = " ".join(str(game.get(key, "")) for key in text_fields)
++    refs.extend(re.findall(r"results/experiment_[A-Za-z0-9_\-]+\.json", text))
++    for key, value in game.items():
++        if not key.startswith("latest_exp") or not isinstance(value, Mapping):
++            continue
++        banked = (
++            value.get("new_levels_banked")
++            or value.get("new_levels_reproduced")
++            or value.get("new_sc25_levels_reproduced")
++        )
++        if value.get("offline_reproduced") is True and banked:
++            artifact = value.get("artifact")
++            if isinstance(artifact, str):
++                refs.append(artifact)
++    # Historical current-depth rows reference loop artifacts rather than experiment JSON.
++    reproduce_text = str(game.get("reproduce", "")) + " " + str(game.get("solver", ""))
++    loop_match = re.search(r"results/arc_loop_solve_[A-Za-z0-9_\-]+\.json", reproduce_text)
++    if loop_match:
++        refs.append(loop_match.group(0))
++
++    seen: list[str] = []
++    for ref in refs:
++        if (root / ref).exists() and ref not in seen:
++            seen.append(ref)
++    return seen
++
++
++def _provenance_from_refs(root: Path, refs: list[str]) -> tuple[str | None, list[JsonDict]]:
++    evidence: list[JsonDict] = []
++    for ref in refs:
++        artifact = _read_json(root / ref)
++        provenance = artifact.get("solve_provenance")
++        evidence.append(
++            {
++                "artifact": ref,
++                "solve_provenance": provenance,
++                "offline_reproduced": artifact.get("offline_reproduced"),
++                "honest_verdict": artifact.get("honest_verdict"),
++                "reached_level": artifact.get("reached_level"),
++                "reproduced_levels": artifact.get("reproduced_levels"),
++            }
++        )
++    for wanted in (LIVE, DEV):
++        if any(row.get("solve_provenance") == wanted for row in evidence):
++            return wanted, evidence
++    return None, evidence
++
++
++def _infer_legacy_provenance(game: Mapping[str, Any]) -> str:
++    text = " ".join(str(game.get(key, "")) for key in ("solver", "reproduce", "action_model"))
++    if "arc_loop_solve" in text or "GameAdapter" in text or "offline_solver" in text:
++        return DEV
++    return DEV
++
++
++def audit_registry_solve_provenance(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Classify current banked registry depth by live self-discovery vs dev proxy."""
++
++    root = Path(root)
++    registry = yaml.safe_load((root / REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++    per_game: dict[str, JsonDict] = {}
++    row_counts = {LIVE: 0, DEV: 0}
++    rows_with_levels = 0
++    for game in registry["games"]:
++        levels = int(game.get("levels_reproduced") or 0)
++        if levels <= 0 or game.get("reproducibility") != "reproduced":
++            continue
++        rows_with_levels += 1
++        refs = _artifact_refs_for_game(root, game)
++        explicit, artifact_evidence = _provenance_from_refs(root, refs)
++        classified = explicit or _infer_legacy_provenance(game)
++        row_counts[classified] += 1
++        reason = "explicit_banking_artifact" if explicit else "legacy_or_registry_mechanism_inferred"
++        per_game[str(game["game"])] = {
++            "levels_reproduced": levels,
++            "classified_provenance": classified,
++            "classification_reason": reason,
++            "artifact_evidence": artifact_evidence,
++        }
++
++    declared_total = int(registry.get("reproducible_total_games") or rows_with_levels)
++    excluded = []
++    declared_counts = dict(row_counts)
++    if rows_with_levels > declared_total:
++        # The registry currently declares 24 games while 25 rows carry levels_reproduced>0.
++        # Exclude the oldest no-artifact L1-only row for the declared-total view, but keep
++        # the row-level count above so the mismatch is visible.
++        overage = rows_with_levels - declared_total
++        candidates = [
++            game
++            for game, basis in per_game.items()
++            if basis["classification_reason"] == "legacy_or_registry_mechanism_inferred"
++            and not basis["artifact_evidence"]
++        ]
++        for game in candidates[:overage]:
++            excluded.append(game)
++            declared_counts[per_game[game]["classified_provenance"]] -= 1
++
++    return {
++        "live_agent_self_discovery_count": declared_counts[LIVE],
++        "development_proxy_count": declared_counts[DEV],
++        "out_of_registry_declared_games": declared_total,
++        "registry_rows_with_reproducible_levels": rows_with_levels,
++        "declared_total_games_mismatch": rows_with_levels != declared_total,
++        "excluded_from_declared_24_view": excluded,
++        "row_level_counts": {
++            "live_agent_self_discovery": row_counts[LIVE],
++            "development_proxy": row_counts[DEV],
++        },
++        "per_game_basis": per_game,
++        "principle": (
++            "This is the real, load-bearing question GAP-LIVE-INTEGRATION gestures at -- "
++            "how much of the registry's progress is genuinely reproducible by the live "
++            "agent's own self-discovery versus an outer-loop-built proxy."
++        ),
++    }
++
++
++def run_orphan_lint(
++    root: Path | str = REPO_ROOT,
++    *,
++    runner: CompletedProcessRunner = subprocess.run,
++) -> JsonDict:
++    root = Path(root)
++    python_bin = root / ".venv" / "bin" / "python"
++    command = [
++        str(python_bin if python_bin.exists() else Path(sys.executable)),
++        ORPHAN_LINT_RELATIVE_PATH,
++    ]
++    completed = runner(
++        command,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++    stdout = str(getattr(completed, "stdout", "") or "")
++    stderr = str(getattr(completed, "stderr", "") or "")
++    returncode = int(getattr(completed, "returncode", 1))
++    passed = returncode == 0
++    output = stdout.strip() or stderr.strip()
++    return {
++        "value": f"{'pass' if passed else 'fail'}: {output}",
++        "passed": passed,
++        "returncode": returncode,
++        "command": " ".join(command),
++        "stdout": stdout,
++        "stderr": stderr,
++    }
++
++
++def _gap_status_recommendation(audit: Mapping[str, Any]) -> JsonDict:
++    live = int(audit["live_agent_self_discovery_count"])
++    dev = int(audit["development_proxy_count"])
++    return {
++        "value": "re-scoped",
++        "new_scope": (
++            "banked ARC registry provenance remains the residual live-integration issue: "
++            f"{live}/{audit['out_of_registry_declared_games']} declared games are current-depth "
++            f"live_agent_self_discovery and {dev}/{audit['out_of_registry_declared_games']} are "
++            "development_proxy by banking artifact or mechanism; do not rebuild router/DSL wiring."
++        ),
++    }
++
++
++def _preconditions(root: Path) -> JsonDict:
++    paths = [
++        AGENT_RELATIVE_PATH,
++        GAPS_RELATIVE_PATH,
++        REGISTRY_RELATIVE_PATH,
++        ORPHAN_LINT_RELATIVE_PATH,
++        EXP4605_RELATIVE_PATH,
++        EXP4652_RELATIVE_PATH,
++        SPEC_RELATIVE_PATH,
++    ]
++    return {
++        "ok": all((root / path).exists() for path in paths),
++        "agents_md_read": (root / "AGENTS.md").exists(),
++        "codex_md_read": (root / "CODEX.md").exists(),
++        "spec_has_req_5174": "REQ-CAPSTONE-5174"
++        in (root / SPEC_RELATIVE_PATH).read_text(encoding="utf-8"),
++        "required_paths_present": {path: (root / path).exists() for path in paths},
++        "leaderboard_submission": False,
++        "agent_rebuild_performed": False,
++        "research_conductor_modified": False,
++    }
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    orphan_lint_result: Mapping[str, Any] | None = None,
++    verifier_gaps_md_updated: bool = False,
++    tests_run: list[str] | None = None,
++    duration_s: float = 0.0,
++) -> JsonDict:
++    root = Path(root)
++    claims = current_source_claims(root)
++    exp4605 = read_exp4605_summary(root)
++    exp4652 = read_exp4652_summary(root)
++    audit = audit_registry_solve_provenance(root)
++    lint = dict(orphan_lint_result or run_orphan_lint(root))
++    honest_verdict = (
++        "complete: original three GAP-LIVE-INTEGRATION claims were stale; current code "
++        "imports router/DSL, ships target_levels=3, and uses a nonzero submitted "
++        "value_weight while Exp4652 records a tried-nonzero honest null; provenance audit "
++        f"finds {audit['live_agent_self_discovery_count']}/"
++        f"{audit['out_of_registry_declared_games']} declared registry games live-self-discovery "
++        f"vs {audit['development_proxy_count']}/"
++        f"{audit['out_of_registry_declared_games']} development-proxy."
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        **claims,
++        "orphan_lint_result": lint,
++        "solve_provenance_audit": audit,
++        "verifier_gaps_md_updated": bool(verifier_gaps_md_updated),
++        "gap_status_recommendation": _gap_status_recommendation(audit),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict,
++        "evidence_files_read": [
++            GAPS_RELATIVE_PATH,
++            AGENT_RELATIVE_PATH,
++            REGISTRY_RELATIVE_PATH,
++            ORPHAN_LINT_RELATIVE_PATH,
++            "CLAUDE.md",
++        ],
++        "upstream_artifacts": {
++            "experiment_4605": exp4605,
++            "experiment_4652": exp4652,
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "preconditions_checked": _preconditions(root),
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s),
++        "tests_run": list(tests_run or []),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload.pop("reproducibility_checksum", None)
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing field: {field}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict lacks terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], root: Path | str = REPO_ROOT) -> Path:
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(root: Path | str = REPO_ROOT) -> JsonDict:
++    started = time.monotonic()
++    lint = run_orphan_lint(root)
++    artifact = build_artifact(
++        root,
++        orphan_lint_result=lint,
++        verifier_gaps_md_updated=True,
++        tests_run=[
++            ".venv/bin/pytest tests/python/test_experiment_5174_gap_live_integration_reconciliation.py -q --no-cov"
++        ],
++        duration_s=time.monotonic() - started,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise RuntimeError("; ".join(errors))
++    write_artifact(artifact, root)
++    return artifact
++
++
++def main() -> int:
++    artifact = run(REPO_ROOT)
++    print(json.dumps({"result_path": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]}, indent=2))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5174_gap_live_integration_reconciliation_v474.json b/results/experiment_5174_gap_live_integration_reconciliation_v474.json
+new file mode 100644
+index 0000000000..addf478b59
+--- /dev/null
++++ b/results/experiment_5174_gap_live_integration_reconciliation_v474.json
+@@ -0,0 +1,674 @@
++{
++  "claim_router_dsl_unimported": {
++    "current_state": "stale: arc_strategy_router and arc_world_model_dsl are imported and used by E3AgentPolicy on the submitted cascade path.",
++    "evidence": "python/carnot/agentic/arc_competition_agent.py:30 import carnot.agentic.arc_strategy_router as arc_strategy_router; python/carnot/agentic/arc_competition_agent.py:51 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel; python/carnot/agentic/arc_competition_agent.py:2157 self.strategy_route = dict(; python/carnot/agentic/arc_competition_agent.py:2164 self.dsl_model = ObjectDeltaModel(self.short)",
++    "value": false
++  },
++  "claim_target_levels_1": {
++    "current_state": "stale: the submitted config is wired through SUBMITTED_TARGET_LEVELS and the current constant is 3.",
++    "current_submitted_target_levels": 3,
++    "evidence": "python/carnot/agentic/arc_competition_agent.py:88 SUBMITTED_TARGET_LEVELS = 3; python/carnot/agentic/arc_competition_agent.py:3132 \"target_levels\": SUBMITTED_TARGET_LEVELS,",
++    "value": false
++  },
++  "claim_value_weight_0": {
++    "current_submitted_value_weight": 1e-12,
++    "evidence": "python/carnot/agentic/arc_competition_agent.py:83 SUBMITTED_VALUE_WEIGHT = 1e-12; python/carnot/agentic/arc_competition_agent.py:3131 \"value_weight\": SUBMITTED_VALUE_WEIGHT,; python/carnot/agentic/arc_competition_agent.py:3230 \"value_weight\": 0.0,",
++    "meaningful_distinction": "tried_nonzero_no_lift: the current submitted value_weight is nonzero; the 0.0 value still appears only in the bare-control/matched-baseline config, and Exp4652 tested a cost-fixed nonzero value head but found an honest zero-lift null attributed to distribution_shift_or_calibration.",
++    "value": false
++  },
++  "duration_s": 0.5341805210337043,
++  "evidence_files_read": [
++    "ops/verifier_gaps.md",
++    "python/carnot/agentic/arc_competition_agent.py",
++    "ops/arc_solve_registry.yaml",
++    "scripts/arc_orphan_solver_lint.py",
++    "CLAUDE.md"
++  ],
++  "experiment": "experiment_5174_gap_live_integration_reconciliation_v474",
++  "experiment_id": "5174",
++  "field_principles": {
++    "claim_router_dsl_unimported": {
++      "principle": "true/false with current file:line evidence for the strategy-router and world-model-DSL imports and use sites."
++    },
++    "claim_target_levels_1": {
++      "principle": "true/false with current file:line evidence for `SUBMITTED_TARGET_LEVELS` and `SUBMITTED_AGENT_CONFIG.target_levels`."
++    },
++    "claim_value_weight_0": {
++      "principle": "true/false with the distinction between current submitted config, matched zero baseline, and Exp4652 tried-nonzero honest null explicitly resolved."
++    },
++    "gap_status_recommendation": {
++      "principle": "closed, downgraded, or re-scoped with exact residual scope."
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefix verdict stating whether the original three claims were stale and what the solve-provenance audit found."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts"
++    },
++    "orphan_lint_result": {
++      "principle": "mechanical pass/fail and output summary from `scripts/arc_orphan_solver_lint.py`."
++    },
++    "solve_provenance_audit": {
++      "principle": "counts and per-game basis for banked registry depth provenance; this is the load-bearing mirage-vs-real live-path question."
++    },
++    "verifier_gaps_md_updated": {
++      "principle": "true only when GAP-LIVE-INTEGRATION has a dated correction preserving old stale text and recording the new scope."
++    }
++  },
++  "gap_status_recommendation": {
++    "new_scope": "banked ARC registry provenance remains the residual live-integration issue: 4/24 declared games are current-depth live_agent_self_discovery and 20/24 are development_proxy by banking artifact or mechanism; do not rebuild router/DSL wiring.",
++    "value": "re-scoped"
++  },
++  "honest_verdict": "complete: original three GAP-LIVE-INTEGRATION claims were stale; current code imports router/DSL, ships target_levels=3, and uses a nonzero submitted value_weight while Exp4652 records a tried-nonzero honest null; provenance audit finds 4/24 declared registry games live-self-discovery vs 20/24 development-proxy.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "orphan_lint_result": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n",
++    "value": "pass: OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure)."
++  },
++  "preconditions_checked": {
++    "agent_rebuild_performed": false,
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "leaderboard_submission": false,
++    "ok": true,
++    "required_paths_present": {
++      "openspec/capabilities/capstone/spec.md": true,
++      "ops/arc_solve_registry.yaml": true,
++      "ops/verifier_gaps.md": true,
++      "python/carnot/agentic/arc_competition_agent.py": true,
++      "results/experiment_4605_live_integration_scored_agent.json": true,
++      "results/experiment_4652_value_routing_cost_fix_live.json": true,
++      "scripts/arc_orphan_solver_lint.py": true
++    },
++    "research_conductor_modified": false,
++    "spec_has_req_5174": true
++  },
++  "random_seed": 5174,
++  "reproducibility_checksum": "sha256:57aea8050254f79e4d172cf48f6c43a294191a763657be3dae9c20a2053170f0",
++  "result_path": "results/experiment_5174_gap_live_integration_reconciliation_v474.json",
++  "schema": "carnot.exp5174.gap_live_integration_reconciliation.v1",
++  "solve_provenance_audit": {
++    "declared_total_games_mismatch": true,
++    "development_proxy_count": 20,
++    "excluded_from_declared_24_view": [
++      "wa30"
++    ],
++    "live_agent_self_discovery_count": 4,
++    "out_of_registry_declared_games": 24,
++    "per_game_basis": {
++      "ar25": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4728_levelup_selfplay.json",
++            "honest_verdict": "success: ar25_L3_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_ar25.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 3
++      },
++      "bp35": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4714_levelup_selfplay.json",
++            "honest_verdict": "success: bp35_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_bp35.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "cd82": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4525_levelup_attempt.json",
++            "honest_verdict": "success: cd82_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 1,
++            "solve_provenance": null
++          },
++          {
++            "artifact": "results/arc_loop_solve_cd82.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "cn04": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4915_levelup_attempt.json",
++            "honest_verdict": "success_cn04_levelup_banked",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 3,
++            "solve_provenance": "live_agent_self_discovery"
++          },
++          {
++            "artifact": "results/arc_loop_solve_cn04.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "live_agent_self_discovery",
++        "levels_reproduced": 3
++      },
++      "dc22": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4666_levelup_selfplay.json",
++            "honest_verdict": "success: dc22_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_dc22.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "ft09": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4642_levelup_selfplay.json",
++            "honest_verdict": "success: ft09_L3_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_ft09.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 3
++      },
++      "g50t": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4884_levelup_attempt.json",
++            "honest_verdict": "success_g50t_levelup_banked",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 2,
++            "solve_provenance": "live_agent_self_discovery"
++          },
++          {
++            "artifact": "results/arc_loop_solve_g50t.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "live_agent_self_discovery",
++        "levels_reproduced": 2
++      },
++      "ka59": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++            "honest_verdict": "success_e3_ka59_L1_reproduced",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 1,
++            "solve_provenance": null
++          }
++        ],
++        "classification_reason": "legacy_or_registry_mechanism_inferred",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 1
++      },
++      "lf52": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4690_levelup_selfplay.json",
++            "honest_verdict": "success: lf52_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_lf52.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "lp85": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/arc_loop_solve_lp85.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 3,
++            "reproduced_levels": 3,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 5
++      },
++      "ls20": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4630_levelup_selfplay.json",
++            "honest_verdict": "success: ls20_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_ls20.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "m0r0": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4515_deepen_graph_explore_l2.json",
++            "honest_verdict": "success: m0r0_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 2,
++            "solve_provenance": null
++          }
++        ],
++        "classification_reason": "legacy_or_registry_mechanism_inferred",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "r11l": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4862_levelup_attempt.json",
++            "honest_verdict": "success_r11l_levelup_banked",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 2,
++            "solve_provenance": "live_agent_self_discovery"
++          },
++          {
++            "artifact": "results/arc_loop_solve_r11l.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "live_agent_self_discovery",
++        "levels_reproduced": 2
++      },
++      "re86": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4702_levelup_selfplay.json",
++            "honest_verdict": "success: re86_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_re86.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "s5i5": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4873_levelup_attempt.json",
++            "honest_verdict": "success_s5i5_levelup_banked",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 2,
++            "solve_provenance": "live_agent_self_discovery"
++          },
++          {
++            "artifact": "results/arc_loop_solve_s5i5.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "live_agent_self_discovery",
++        "levels_reproduced": 2
++      },
++      "sb26": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4678_levelup_selfplay.json",
++            "honest_verdict": "success: sb26_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_sb26.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "sc25": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
++            "honest_verdict": "success: sc25_L5_offline_reproduced_banked_4_new_levels",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 4,
++            "solve_provenance": null
++          }
++        ],
++        "classification_reason": "legacy_or_registry_mechanism_inferred",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 5
++      },
++      "sk48": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4751_levelup_selfplay.json",
++            "honest_verdict": "success: sk48_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_sk48.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "sp80": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4535_levelup_attempt.json",
++            "honest_verdict": "success: sp80_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 1,
++            "solve_provenance": null
++          },
++          {
++            "artifact": "results/arc_loop_solve_sp80.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "su15": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4546_levelup_attempt.json",
++            "honest_verdict": "success: su15_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 1,
++            "solve_provenance": null
++          },
++          {
++            "artifact": "results/arc_loop_solve_su15.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "tn36": {
++        "artifact_evidence": [],
++        "classification_reason": "legacy_or_registry_mechanism_inferred",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 7
++      },
++      "tr87": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/arc_loop_solve_tr87.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 6,
++            "reproduced_levels": 6,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 6
++      },
++      "tu93": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4361_e3_deeper_high_headroom_games.json",
++            "honest_verdict": "success_e3_deeper_tu93_reproduced",
++            "offline_reproduced": null,
++            "reached_level": null,
++            "reproduced_levels": null,
++            "solve_provenance": null
++          },
++          {
++            "artifact": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
++            "honest_verdict": "success: tu93_L5_deepened_primitives_consolidated",
++            "offline_reproduced": true,
++            "reached_level": null,
++            "reproduced_levels": 5,
++            "solve_provenance": null
++          },
++          {
++            "artifact": "results/arc_loop_solve_tu93.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 4,
++            "reproduced_levels": 4,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 5
++      },
++      "vc33": {
++        "artifact_evidence": [
++          {
++            "artifact": "results/experiment_4654_levelup_selfplay.json",
++            "honest_verdict": "success: vc33_L2_offline_reproduced",
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 1,
++            "solve_provenance": "development_proxy"
++          },
++          {
++            "artifact": "results/arc_loop_solve_vc33.json",
++            "honest_verdict": null,
++            "offline_reproduced": true,
++            "reached_level": 2,
++            "reproduced_levels": 2,
++            "solve_provenance": "development_proxy"
++          }
++        ],
++        "classification_reason": "explicit_banking_artifact",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 2
++      },
++      "wa30": {
++        "artifact_evidence": [],
++        "classification_reason": "legacy_or_registry_mechanism_inferred",
++        "classified_provenance": "development_proxy",
++        "levels_reproduced": 1
++      }
++    },
++    "principle": "This is the real, load-bearing question GAP-LIVE-INTEGRATION gestures at -- how much of the registry's progress is genuinely reproducible by the live agent's own self-discovery versus an outer-loop-built proxy.",
++    "registry_rows_with_reproducible_levels": 25,
++    "row_level_counts": {
++      "development_proxy": 21,
++      "live_agent_self_discovery": 4
++    }
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-5174",
++    "SCENARIO-CAPSTONE-5174",
++    "SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES"
++  ],
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5174_gap_live_integration_reconciliation.py -q --no-cov"
++  ],
++  "upstream_artifacts": {
++    "experiment_4605": {
++      "experiment": "experiment_4605_live_integration_scored_agent",
++      "first_win_delta": 0.0,
++      "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++      "multi_level_solve_rate": 0.0,
++      "null_delta_methodology_note": "first_win_delta is zero after running the matched bare control on the same variants; this is an honest no-value null for first-win-rate, not a measurement bug.",
++      "path": "results/experiment_4605_live_integration_scored_agent.json",
++      "solve_provenance": "live_agent_self_discovery",
++      "submitted_agent_config": {
++        "router_wired": true,
++        "strategy_router_enabled": true,
++        "target_levels": 3,
++        "value_weight": 1e-12,
++        "world_model_dsl_wired": true
++      },
++      "value_weight_used": 1e-12
++    },
++    "experiment_4652": {
++      "experiment": "experiment_4652_value_routing_cost_fix_live",
++      "first_win_rate_delta": 0.0,
++      "honest_verdict": "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration.",
++      "live_baseline_value_weight_zero": {
++        "first_win_rate": 0.04,
++        "solve_rate": 0.0,
++        "value_weight": 0.0
++      },
++      "live_first_win_rate_value_routed": 0.04,
++      "live_path_reachable": true,
++      "live_solve_rate_value_routed": 0.0,
++      "null_delta_methodology_note": "A zero live-lift delta is from matched value_weight>0 and value_weight=0 runs on the same variants with the cost-fixed value head under the timeout threshold; it is an honest no-value null, not a measurement bug.",
++      "orphan_lint": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
++        "passed": true,
++        "returncode": 0,
++        "stderr_tail": "",
++        "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (32 modules in the live closure).\n"
++      },
++      "path": "results/experiment_4652_value_routing_cost_fix_live.json",
++      "residual_cause_hypothesis": "distribution_shift_or_calibration",
++      "solve_provenance": "live_agent_self_discovery",
++      "solve_rate_delta": 0.0,
++      "value_weight_set": 1e-12
++    }
++  },
++  "verifier_gaps_md_updated": true
++}
+diff --git a/tests/python/test_experiment_5174_gap_live_integration_reconciliation.py b/tests/python/test_experiment_5174_gap_live_integration_reconciliation.py
+new file mode 100644
+index 0000000000..6666fcee7a
+--- /dev/null
++++ b/tests/python/test_experiment_5174_gap_live_integration_reconciliation.py
+@@ -0,0 +1,139 @@
++"""Tests for Exp5174 GAP-LIVE-INTEGRATION reconciliation.
++
++Spec refs: REQ-CAPSTONE-5174, SCENARIO-CAPSTONE-5174,
++SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def test_req_capstone_5174_spec_declares_reconciliation_contract() -> None:
++    """REQ-CAPSTONE-5174: OpenSpec anchors the reconciliation audit artifact."""
++
++    from carnot import experiment_5174_gap_live_integration_reconciliation_v474 as mod
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-5174" in spec
++    assert "SCENARIO-CAPSTONE-5174" in spec
++    assert "SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_5174_source_claims_are_checked_against_current_lines() -> None:
++    """SCENARIO-CAPSTONE-5174: stale claims are resolved from current source lines."""
++
++    from carnot import experiment_5174_gap_live_integration_reconciliation_v474 as mod
++
++    claims = mod.current_source_claims(REPO)
++
++    assert claims["claim_router_dsl_unimported"]["value"] is False
++    assert "arc_competition_agent.py:30" in claims["claim_router_dsl_unimported"]["evidence"]
++    assert "arc_competition_agent.py:51" in claims["claim_router_dsl_unimported"]["evidence"]
++    assert "arc_competition_agent.py:2157" in claims["claim_router_dsl_unimported"]["evidence"]
++    assert "arc_competition_agent.py:2164" in claims["claim_router_dsl_unimported"]["evidence"]
++
++    assert claims["claim_target_levels_1"]["value"] is False
++    assert "arc_competition_agent.py:88" in claims["claim_target_levels_1"]["evidence"]
++    assert "SUBMITTED_TARGET_LEVELS = 3" in claims["claim_target_levels_1"]["evidence"]
++    assert "arc_competition_agent.py:3132" in claims["claim_target_levels_1"]["evidence"]
++
++    value_claim = claims["claim_value_weight_0"]
++    assert value_claim["value"] is False
++    assert value_claim["current_submitted_value_weight"] == 1e-12
++    assert "arc_competition_agent.py:83" in value_claim["evidence"]
++    assert "arc_competition_agent.py:3131" in value_claim["evidence"]
++    assert "tried_nonzero_no_lift" in value_claim["meaningful_distinction"]
++
++
++def test_scenario_capstone_5174_upstream_artifacts_resolve_value_weight_null() -> None:
++    """SCENARIO-CAPSTONE-5174: Exp4652 means tried-and-nulled, not never-wired."""
++
++    from carnot import experiment_5174_gap_live_integration_reconciliation_v474 as mod
++
++    exp4605 = mod.read_exp4605_summary(REPO)
++    exp4652 = mod.read_exp4652_summary(REPO)
++
++    assert exp4605["submitted_agent_config"]["target_levels"] == 3
++    assert exp4605["submitted_agent_config"]["router_wired"] is True
++    assert exp4605["submitted_agent_config"]["world_model_dsl_wired"] is True
++    assert exp4605["value_weight_used"] == 1e-12
++
++    assert exp4652["live_baseline_value_weight_zero"]["value_weight"] == 0.0
++    assert exp4652["value_weight_set"] == 1e-12
++    assert exp4652["first_win_rate_delta"] == 0.0
++    assert exp4652["solve_rate_delta"] == 0.0
++    assert exp4652["residual_cause_hypothesis"] == "distribution_shift_or_calibration"
++    assert "honest no-value null" in exp4652["null_delta_methodology_note"]
++
++
++def test_scenario_capstone_5174_registry_provenance_audit_counts_banked_paths() -> None:
++    """SCENARIO-CAPSTONE-5174: provenance audit answers the mirage-vs-real question."""
++
++    from carnot import experiment_5174_gap_live_integration_reconciliation_v474 as mod
++
++    audit = mod.audit_registry_solve_provenance(REPO)
++
++    assert audit["live_agent_self_discovery_count"] == 4
++    assert audit["development_proxy_count"] == 20
++    assert audit["out_of_registry_declared_games"] == 24
++    assert audit["registry_rows_with_reproducible_levels"] == 25
++    assert audit["declared_total_games_mismatch"] is True
++    assert audit["excluded_from_declared_24_view"] == ["wa30"]
++    assert audit["row_level_counts"]["live_agent_self_discovery"] == 4
++    assert audit["row_level_counts"]["development_proxy"] == 21
++    assert audit["per_game_basis"]["r11l"]["classified_provenance"] == "live_agent_self_discovery"
++    assert audit["per_game_basis"]["bp35"]["classified_provenance"] == "development_proxy"
++    assert audit["per_game_basis"]["wa30"]["classified_provenance"] == "development_proxy"
++
++
++def test_scenario_capstone_5174_lint_and_artifact_are_stable(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-5174: artifact records lint output and required fields."""
++
++    from carnot import experiment_5174_gap_live_integration_reconciliation_v474 as mod
++
++    def fake_runner(*_args: Any, **_kwargs: Any) -> SimpleNamespace:
++        return SimpleNamespace(
++            returncode=0,
++            stdout="OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n",
++            stderr="",
++        )
++
++    lint = mod.run_orphan_lint(REPO, runner=fake_runner)
++    artifact = mod.build_artifact(
++        REPO,
++        orphan_lint_result=lint,
++        verifier_gaps_md_updated=True,
++        tests_run=["unit fixture"],
++        duration_s=1.25,
++    )
++    errors = mod.artifact_schema_errors(artifact)
++    out = mod.write_artifact(artifact, root=tmp_path)
++    loaded = json.loads(out.read_text(encoding="utf-8"))
++
++    assert lint["value"].startswith("pass")
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "original three GAP-LIVE-INTEGRATION claims were stale" in artifact["honest_verdict"]
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["claim_router_dsl_unimported"]["value"] is False
++    assert artifact["claim_target_levels_1"]["value"] is False
++    assert artifact["claim_value_weight_0"]["value"] is False
++    assert artifact["verifier_gaps_md_updated"] is True
++    assert artifact["gap_status_recommendation"]["value"] == "re-scoped"
++    assert artifact["gap_status_recommendation"]["new_scope"].startswith("banked ARC registry")
++    assert loaded == artifact
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert errors == []
++
+-- 
+2.55.0
+

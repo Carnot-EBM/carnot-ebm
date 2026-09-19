@@ -1,0 +1,1863 @@
+From 693ffdd7a2cbe7a46828e1f20212f379da7cdd84 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 10:53:02 -0400
+Subject: [PATCH 06228/11362] [conductor] Hardware comparable CPU and board
+ timing receipts
+
+Automated research step by research conductor.
+Task ID: exp5424-hardware-comparable-timing-receipts-v493
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            | 113 +++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...ardware_comparable_timing_receipts_v493.py | 699 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...dware_comparable_timing_receipts_v493.json | 370 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ardware_comparable_timing_receipts_v493.py | 362 +++++++++
+ 21 files changed, 1575 insertions(+), 28 deletions(-)
+ create mode 100644 python/carnot/experiment_5424_hardware_comparable_timing_receipts_v493.py
+ create mode 100644 results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+ create mode 100644 tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 372042b641..40f4d981a2 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -16601,6 +16601,119 @@ CPU and board repeat counts, timing receipts, no unsupported speedup claim,
+ 
+ ---
+ 
++### REQ-HW-5424
++
++**Title:** comparable CPU and board timing receipts MUST match workload and result hashes while refusing speedup claims
++
++**Description:**
++Experiment 5424 MUST produce
++`results/experiment_5424_hardware_comparable_timing_receipts_v493.json` as a
++capstone timing-evidence receipt for at least one deterministic same-workload
++solver or p-bit diagnostic selected from Exp 5411 or Exp 5420. The experiment
++SHALL create comparable CPU and board timing evidence when authenticated board
++access is available, but it SHALL NOT turn timing comparability into a hardware
++speedup claim.
++
++The selected workload SHALL have deterministic validity, a stable
++`workload_hash`, a recorded seed, and a deterministic `result_hash`. The CPU
++receipt SHALL repeat the same workload at least three times and record the
++repeat count, environment metadata, seed, workload hash, result hash, and timing
++distribution. If PolarFire is reachable over authenticated SSH, the board
++receipt SHALL run the same workload hash with the same repeat count and record
++its result hash and timing distribution. If PolarFire is unreachable, the
++artifact SHALL emit a blocked hardware precondition with the exact command
++attempted and SHALL NOT fabricate board timing.
++
++KV260 checks, if attempted, MUST use only
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true` reachability and MUST NOT
++use host SD-card, `/dev/mmcblk*`, `/dev/disk`, or block-device probes. GateMate
++checks MUST remain non-destructive DirtyJTAG diagnostics only; they do not
++upgrade into workload timing unless physical/JTAG evidence returns in the same
++receipt.
++
++The artifact SHALL compare CPU and board timing only when both
++`same_workload_hash_match=true` and `same_result_hash_match=true`. Timing
++comparability SHALL be recorded separately from speedup. `hardware_speedup_claim`
++MUST be false in every valid Exp 5424 artifact, including artifacts with
++matching CPU and board receipts.
++
++The artifact SHALL include top-level fields `preconditions_checked`,
++`workload_hash`, `cpu_repeat_count`, `board_repeat_count`, `cpu_result_hash`,
++`board_result_hash`, `same_workload_hash_match`, `same_result_hash_match`,
++`polarfire_reachable`, `kv260_ssh_checked`, `gatemate_diagnostic_checked`,
++`timing_receipts`, `measurement_access_complete`,
++`comparable_timing_receipts_ready`, `hardware_speedup_claim`,
++`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
++`hardware_timing_with_cpu_reference`. `honest_verdict` SHALL start with
++`complete:` only when repeated CPU and board receipts are hash-matched and
++result-matched, or `blocked:` when a hardware precondition or comparability gate
++is missing.
++
++Required field principles:
++
++- `preconditions_checked`: principle "hardware task must fail fast"
++- `workload_hash`: principle "same-workload comparison"
++- `cpu_repeat_count`: principle "CPU timing reliability"
++- `board_repeat_count`: principle "board timing reliability"
++- `cpu_result_hash`: principle "correctness comparison"
++- `board_result_hash`: principle "correctness comparison"
++- `same_workload_hash_match`: principle "no apples-to-oranges timing"
++- `same_result_hash_match`: principle "no invalid speedup"
++- `polarfire_reachable`: principle "board availability"
++- `kv260_ssh_checked`: principle "SSH-only discipline"
++- `gatemate_diagnostic_checked`: principle "physical/JTAG honesty"
++- `timing_receipts`: principle "reproducible evidence"
++- `measurement_access_complete`: principle "physical evidence boundary"
++- `comparable_timing_receipts_ready`: principle "capstone evidence"
++- `hardware_speedup_claim`: principle "no unsupported speedup"
++- `inference_substrate`: principle "explicit substrate"
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_5424_hardware_comparable_timing_receipts_v493 --date 20260708`
++  writes `results/experiment_5424_hardware_comparable_timing_receipts_v493.json`.
++- The artifact includes `spec_refs` containing `REQ-HW-5424` and
++  `SCENARIO-HW-5424`, `random_seed=5424`, `milestone="2026.07.493"`, and a
++  stable `reproducibility_checksum`.
++- The CPU receipt repeats the selected deterministic workload at least three
++  times and records the seed, workload hash, result hash, environment metadata,
++  and timing distribution.
++- The board receipt repeats the same workload hash at least three times only
++  when PolarFire is reachable. If PolarFire is unreachable, the artifact records
++  the exact blocked command attempted and leaves board timing incomplete.
++- `comparable_timing_receipts_ready=true` only when CPU and board repeat counts
++  meet the threshold and both workload hashes and result hashes match.
++- `hardware_speedup_claim=false` in every valid artifact. Timing comparability
++  and speedup are represented as separate fields.
++- KV260 command receipts use only SSH reachability and contain no host
++  block-device or SD-card markers. GateMate command receipts are non-destructive
++  diagnostics only.
++
++**Implementation status:** Planned (Exp 5424)
++
++---
++
++### SCENARIO-HW-5424
++
++**Scenario:** Exp 5424 writes comparable timing receipts without a hardware speedup claim.
++
++**Given:** Exp 5420 selected a deterministic exact-enumerated p-bit/QUBO
++workload with a stable workload hash and result hash,
++**When:** Experiment 5424 repeats that workload on CPU, checks KV260 through
++SSH-only reachability, checks GateMate through non-destructive diagnostics, and
++runs the same workload hash on PolarFire only when authenticated SSH is
++reachable,
++**Then:** It writes
++`results/experiment_5424_hardware_comparable_timing_receipts_v493.json` with
++matching workload/result hash gates, CPU and board repeat counts, timing
++distributions, measurement-access metadata, `hardware_speedup_claim=false`,
++`inference_substrate="hardware_timing_with_cpu_reference"`, and an
++`honest_verdict` beginning with `complete:` or `blocked:`.
++
++**Implementation status:** Planned (Exp 5424)
++
++---
++
+ ### SCENARIO-HW-4910
+ 
+ **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 8b2441ac65..b9d8666a9a 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -685,5 +685,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e980b49592..c2f858f9ec 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4390,
++  "experiments_checked": 4391,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5424_hardware_comparable_timing_receipts_v493.py b/python/carnot/experiment_5424_hardware_comparable_timing_receipts_v493.py
+new file mode 100644
+index 0000000000..9f400719e3
+--- /dev/null
++++ b/python/carnot/experiment_5424_hardware_comparable_timing_receipts_v493.py
+@@ -0,0 +1,699 @@
++#!/usr/bin/env python3
++"""Exp5424: comparable CPU and board timing receipts without speedup claims.
++
++Spec refs: REQ-HW-5424, SCENARIO-HW-5424.
++
++This experiment selects the deterministic p-bit/QUBO workload prepared by
++Exp5420, repeats the exact workload on CPU, and repeats the same workload on
++PolarFire only when authenticated SSH is reachable. The receipt is intentionally
++about comparability: matching workload hashes and result hashes make the timing
++records usable evidence. They do not authorize a hardware speedup headline.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import platform
++import statistics
++import subprocess
++import sys
++import time
++from typing import Any
++
++from carnot import experiment_5420_pbit_hardware_transfer_preflight_v493 as exp5420
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++CommandProbe = exp5420.CommandProbe
++CommandRunner = Callable[[tuple[str, ...], float], CommandProbe]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5424_hardware_comparable_timing_receipts_v493.json"
++)
++
++EXPERIMENT = 5424
++EXPERIMENT_ID = "exp5424-hardware-comparable-timing-receipts-v493"
++MILESTONE = "2026.07.493"
++RUN_DATE = "20260708"
++RANDOM_SEED = 5424
++WORKLOAD_SEED = exp5420.RANDOM_SEED
++SCHEMA = "carnot.experiment_5424.hardware_comparable_timing_receipts.v493"
++SPEC_REFS = ("REQ-HW-5424", "SCENARIO-HW-5424")
++INFERENCE_SUBSTRATE = "hardware_timing_with_cpu_reference"
++REPEAT_TARGET = 3
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SSH_TIMEOUT_S = 5.0
++GATEMATE_TIMEOUT_S = 30.0
++LOCAL_TIMEOUT_S = 10.0
++
++KV260_SSH_COMMAND = exp5420.KV260_SSH_COMMAND
++POLARFIRE_STATUS_COMMAND = exp5420.POLARFIRE_STATUS_COMMAND
++GATEMATE_DETECT_COMMAND = exp5420.GATEMATE_DETECT_COMMAND
++HOST_STORAGE_MARKERS = exp5420.HOST_STORAGE_MARKERS
++FORBIDDEN_COMMAND_TERMS = exp5420.FORBIDDEN_COMMAND_TERMS
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "preconditions_checked": "hardware task must fail fast",
++    "workload_hash": "same-workload comparison",
++    "cpu_repeat_count": "CPU timing reliability",
++    "board_repeat_count": "board timing reliability",
++    "cpu_result_hash": "correctness comparison",
++    "board_result_hash": "correctness comparison",
++    "same_workload_hash_match": "no apples-to-oranges timing",
++    "same_result_hash_match": "no invalid speedup",
++    "polarfire_reachable": "board availability",
++    "kv260_ssh_checked": "SSH-only discipline",
++    "gatemate_diagnostic_checked": "physical/JTAG honesty",
++    "timing_receipts": "reproducible evidence",
++    "measurement_access_complete": "physical evidence boundary",
++    "comparable_timing_receipts_ready": "capstone evidence",
++    "hardware_speedup_claim": "no unsupported speedup",
++    "inference_substrate": "explicit substrate",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def sha256_text(text: str) -> str:
++    """Return a stable SHA-256 digest for transcripts and commands."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Hash a JSON mapping after deterministic serialization."""
++
++    encoded = json.dumps(dict(payload), sort_keys=True, separators=(",", ":"))
++    return sha256_text(encoded)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while ignoring its own checksum field."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def command_to_string(command: Sequence[str]) -> str:
++    """Render commands using the same shell quoting discipline as Exp5420."""
++
++    return exp5420.command_to_string(tuple(command))
++
++
++def run_command(command: tuple[str, ...], timeout_s: float = LOCAL_TIMEOUT_S) -> CommandProbe:
++    """Run one bounded command and convert missing tools/timeouts into receipts."""
++
++    started = time.perf_counter()
++    try:
++        result = subprocess.run(
++            list(command),
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=int(result.returncode),
++            stdout=result.stdout,
++            stderr=result.stderr,
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++    except FileNotFoundError as exc:
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=127,
++            stderr=str(exc),
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++    except subprocess.TimeoutExpired as exc:
++        stdout = exc.stdout if isinstance(exc.stdout, str) else ""
++        stderr = exc.stderr if isinstance(exc.stderr, str) else "timeout"
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=124,
++            stdout=stdout,
++            stderr=stderr,
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++
++
++def select_workload(root: str | Path = REPO_ROOT) -> JsonDict:
++    """Select the deterministic Exp5420 workload used for comparable timing."""
++
++    return exp5420.select_workload(root)
++
++
++def polarfire_workload_command(workload: Mapping[str, Any]) -> tuple[str, ...]:
++    """Build the PolarFire command for the selected same-workload run."""
++
++    return exp5420.polarfire_workload_command(workload)
++
++
++def timing_distribution(values: Sequence[float]) -> JsonDict:
++    """Summarize repeat timings without deriving a speedup ratio."""
++
++    timings = [float(value) for value in values]
++    if not timings:
++        return {"count": 0}
++    return {
++        "count": len(timings),
++        "min_s": min(timings),
++        "max_s": max(timings),
++        "mean_s": round(sum(timings) / len(timings), 9),
++        "median_s": round(float(statistics.median(timings)), 9),
++    }
++
++
++def cpu_environment() -> JsonDict:
++    """Capture CPU timing context so later readers can bound reproducibility."""
++
++    return {
++        "python_version": platform.python_version(),
++        "platform": platform.platform(),
++        "machine": platform.machine(),
++        "processor": platform.processor(),
++    }
++
++
++def cpu_timing_receipt(
++    workload: Mapping[str, Any],
++    *,
++    repeat_count: int = REPEAT_TARGET,
++    clock: Clock = time.perf_counter,
++) -> JsonDict:
++    """Repeat the exact workload on CPU and record result hashes per repeat."""
++
++    repeats: list[JsonDict] = []
++    timings: list[float] = []
++    for repeat_index in range(repeat_count):
++        started = clock()
++        exact = exp5420.exact_enumerate_workload(workload)
++        elapsed = round(max(clock() - started, 0.0), 6)
++        result_hash = exp5420.exact_result_hash(exact)
++        timings.append(elapsed)
++        repeats.append(
++            {
++                "repeat_index": repeat_index + 1,
++                "seed": WORKLOAD_SEED,
++                "workload_hash": workload["workload_hash"],
++                "result_hash": result_hash,
++                "wall_time_s": elapsed,
++                "result_matches_selected": result_hash == workload["exact_result_hash"],
++            }
++        )
++    return {
++        "kind": "cpu_timing",
++        "substrate": "cpu_exact_enumeration",
++        "seed": WORKLOAD_SEED,
++        "artifact_seed": RANDOM_SEED,
++        "workload_hash": workload["workload_hash"],
++        "result_hash": workload["exact_result_hash"],
++        "repeat_count": repeat_count,
++        "repeat_timings_s": timings,
++        "timing_distribution": timing_distribution(timings),
++        "environment": cpu_environment(),
++        "repeats": repeats,
++    }
++
++
++def command_receipt(
++    probe: CommandProbe,
++    *,
++    kind: str,
++    timeout_s: float,
++    outcome: str,
++) -> JsonDict:
++    """Build a compact command receipt while avoiding full raw board logs."""
++
++    return exp5420.command_receipt(probe, kind=kind, timeout_s=timeout_s, outcome=outcome)
++
++
++def _board_result_hash(valid_attempts: Sequence[Mapping[str, Any]]) -> str:
++    hashes = [
++        str(attempt["result_hash"])
++        for attempt in valid_attempts
++        if isinstance(attempt.get("result_hash"), str)
++    ]
++    return hashes[0] if hashes and len(set(hashes)) == 1 else ""
++
++
++def collect_hardware_receipts(
++    *,
++    workload: Mapping[str, Any],
++    repeat_count: int,
++    command_runner: CommandRunner,
++) -> tuple[JsonDict, list[JsonDict], JsonDict]:
++    """Collect SSH/JTAG measurement-access receipts and optional board timings."""
++
++    command_receipts: list[JsonDict] = []
++
++    kv_probe = command_runner(KV260_SSH_COMMAND, SSH_TIMEOUT_S)
++    command_receipts.append(
++        command_receipt(
++            kv_probe,
++            kind="kv260_ssh_only_reachability",
++            timeout_s=SSH_TIMEOUT_S,
++            outcome="reachable" if kv_probe.exit_code == 0 else "blocked",
++        )
++    )
++
++    status_probe = command_runner(POLARFIRE_STATUS_COMMAND, SSH_TIMEOUT_S)
++    polarfire_reachable = status_probe.exit_code == 0
++    command_receipts.append(
++        command_receipt(
++            status_probe,
++            kind="polarfire_ssh_reachability",
++            timeout_s=SSH_TIMEOUT_S,
++            outcome="reachable" if polarfire_reachable else "blocked",
++        )
++    )
++
++    board_attempts: list[JsonDict] = []
++    board_command = polarfire_workload_command(workload)
++    if polarfire_reachable:
++        for repeat_index in range(repeat_count):
++            probe = command_runner(board_command, SSH_TIMEOUT_S)
++            receipt, parse_error = exp5420.parse_board_workload_stdout(probe.stdout, workload)
++            result_hash = (
++                receipt.get("exact_result_hash") if isinstance(receipt, Mapping) else None
++            )
++            wall_time = receipt.get("wall_time_s") if isinstance(receipt, Mapping) else None
++            valid = probe.exit_code == 0 and receipt is not None and parse_error is None
++            board_attempts.append(
++                {
++                    "repeat_index": repeat_index + 1,
++                    "valid": valid,
++                    "parse_error": parse_error,
++                    "workload_hash": receipt.get("workload_hash")
++                    if isinstance(receipt, Mapping)
++                    else None,
++                    "result_hash": result_hash,
++                    "wall_time_s": wall_time,
++                    "receipt": receipt,
++                }
++            )
++            command_receipts.append(
++                command_receipt(
++                    probe,
++                    kind=f"polarfire_same_workload_timing_repeat_{repeat_index + 1}",
++                    timeout_s=SSH_TIMEOUT_S,
++                    outcome="valid_repeat" if valid else "invalid_repeat",
++                )
++            )
++
++    gate_probe = command_runner(GATEMATE_DETECT_COMMAND, GATEMATE_TIMEOUT_S)
++    gate_detected = "gatemate" in gate_probe.combined_output.lower()
++    command_receipts.append(
++        command_receipt(
++            gate_probe,
++            kind="gatemate_non_destructive_dirtyjtag_detect",
++            timeout_s=GATEMATE_TIMEOUT_S,
++            outcome="detected" if gate_detected else "blocked",
++        )
++    )
++
++    valid_attempts = [attempt for attempt in board_attempts if attempt["valid"] is True]
++    board_timings = [
++        float(attempt["wall_time_s"])
++        for attempt in valid_attempts
++        if isinstance(attempt.get("wall_time_s"), int | float)
++    ]
++    board_receipt = {
++        "kind": "polarfire_board_timing",
++        "substrate": "polarfire_board_local_python",
++        "reachable": polarfire_reachable,
++        "seed": WORKLOAD_SEED,
++        "workload_hash": workload["workload_hash"] if polarfire_reachable else "",
++        "result_hash": _board_result_hash(valid_attempts),
++        "repeat_target": repeat_count,
++        "repeat_count": len(valid_attempts),
++        "invalid_repeat_count": len(board_attempts) - len(valid_attempts),
++        "repeat_timings_s": board_timings,
++        "timing_distribution": timing_distribution(board_timings),
++        "attempts": board_attempts,
++    }
++    summary = {
++        "kv260_ssh_checked": True,
++        "kv260_ssh_reachable": kv_probe.exit_code == 0,
++        "polarfire_reachable": polarfire_reachable,
++        "gatemate_diagnostic_checked": True,
++        "gatemate_reachable": gate_detected,
++        "board_repeat_count": len(valid_attempts),
++        "board_result_hash": board_receipt["result_hash"],
++        "blocked_hardware_precondition": None
++        if polarfire_reachable
++        else {
++            "resource": "polarfire_ssh",
++            "command": command_to_string(POLARFIRE_STATUS_COMMAND),
++            "exit_code": int(status_probe.exit_code),
++            "stderr_excerpt": status_probe.stderr.strip()[:240],
++        },
++    }
++    return summary, command_receipts, board_receipt
++
++
++def default_tests_run() -> list[JsonDict]:
++    """Keep CLI artifacts valid before external test results are attached."""
++
++    return [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++
++
++def _normalize_tests(tests_run: Sequence[Mapping[str, Any]] | None) -> list[JsonDict]:
++    return [dict(item) for item in (tests_run if tests_run is not None else default_tests_run())]
++
++
++def readiness_blockers(
++    *,
++    polarfire_reachable: bool,
++    cpu_repeat_count: int,
++    board_repeat_count: int,
++    same_workload_hash_match: bool,
++    same_result_hash_match: bool,
++) -> list[str]:
++    """Explain why timing receipts are not yet comparable."""
++
++    blockers: list[str] = []
++    if not polarfire_reachable:
++        blockers.append("polarfire_unreachable")
++    if cpu_repeat_count < REPEAT_TARGET:
++        blockers.append("cpu_repeat_count_below_threshold")
++    if polarfire_reachable and board_repeat_count < REPEAT_TARGET:
++        blockers.append("board_repeat_count_below_threshold")
++    if polarfire_reachable and not same_workload_hash_match:
++        blockers.append("same_workload_hash_mismatch")
++    if polarfire_reachable and not same_result_hash_match:
++        blockers.append("same_result_hash_mismatch")
++    return blockers
++
++
++def honest_verdict(ready: bool, blockers: Sequence[str]) -> str:
++    """State terminal evidence status while explicitly refusing speedup."""
++
++    if ready:
++        return (
++            "complete: comparable CPU and PolarFire timing receipts are "
++            "hash-matched; hardware_speedup_claim=false"
++        )
++    joined = ",".join(blockers) if blockers else "timing_receipts_not_comparable"
++    return f"blocked: {joined}; hardware_speedup_claim=false"
++
++
++def build_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Build the Exp5424 artifact from repeated CPU and optional board timings."""
++
++    started = clock()
++    workload = select_workload(root)
++    cpu_receipt = cpu_timing_receipt(workload, repeat_count=REPEAT_TARGET, clock=clock)
++    hardware_summary, command_receipts, board_receipt = collect_hardware_receipts(
++        workload=workload,
++        repeat_count=int(cpu_receipt["repeat_count"]),
++        command_runner=command_runner,
++    )
++
++    cpu_repeat_count = int(cpu_receipt["repeat_count"])
++    board_repeat_count = int(hardware_summary["board_repeat_count"])
++    cpu_result_hash = str(cpu_receipt["result_hash"])
++    board_result_hash = str(hardware_summary["board_result_hash"])
++    polarfire_reachable = bool(hardware_summary["polarfire_reachable"])
++    same_workload_hash_match = (
++        polarfire_reachable
++        and board_repeat_count >= REPEAT_TARGET
++        and all(
++            attempt.get("workload_hash") == workload["workload_hash"]
++            for attempt in board_receipt["attempts"]
++            if attempt.get("valid") is True
++        )
++        and board_receipt["invalid_repeat_count"] == 0
++    )
++    same_result_hash_match = (
++        polarfire_reachable
++        and board_repeat_count >= REPEAT_TARGET
++        and board_result_hash == cpu_result_hash
++        and board_receipt["invalid_repeat_count"] == 0
++    )
++    blockers = readiness_blockers(
++        polarfire_reachable=polarfire_reachable,
++        cpu_repeat_count=cpu_repeat_count,
++        board_repeat_count=board_repeat_count,
++        same_workload_hash_match=same_workload_hash_match,
++        same_result_hash_match=same_result_hash_match,
++    )
++    ready = (
++        cpu_repeat_count >= REPEAT_TARGET
++        and board_repeat_count >= REPEAT_TARGET
++        and same_workload_hash_match
++        and same_result_hash_match
++        and not blockers
++    )
++    timing_comparison = {
++        "comparison_performed": ready,
++        "same_workload_hash_match": same_workload_hash_match,
++        "same_result_hash_match": same_result_hash_match,
++        "cpu_timing_distribution": cpu_receipt["timing_distribution"],
++        "board_timing_distribution": board_receipt["timing_distribution"],
++        "speedup_reported": False,
++        "speedup_ratio": None,
++        "comparison_boundary": (
++            "Timing distributions are comparable evidence only; no speedup ratio is claimed."
++        ),
++    }
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "workload_seed": WORKLOAD_SEED,
++        "duration_s": round(max(clock() - started, 0.0), 6),
++        "commit": commit,
++        "preconditions_checked": True,
++        "selected_workload": workload,
++        "workload_hash": workload["workload_hash"],
++        "cpu_repeat_count": cpu_repeat_count,
++        "board_repeat_count": board_repeat_count,
++        "cpu_result_hash": cpu_result_hash,
++        "board_result_hash": board_result_hash,
++        "same_workload_hash_match": same_workload_hash_match,
++        "same_result_hash_match": same_result_hash_match,
++        "polarfire_reachable": polarfire_reachable,
++        "kv260_ssh_checked": bool(hardware_summary["kv260_ssh_checked"]),
++        "gatemate_diagnostic_checked": bool(hardware_summary["gatemate_diagnostic_checked"]),
++        "timing_receipts": [cpu_receipt, board_receipt],
++        "command_receipts": command_receipts,
++        "measurement_access": {
++            "cpu_timing_complete": cpu_repeat_count >= REPEAT_TARGET,
++            "board_timing_complete": board_repeat_count >= REPEAT_TARGET,
++            "blocked_hardware_precondition": hardware_summary["blocked_hardware_precondition"],
++            "missing_physical_records_recoverable_after_fact": False,
++        },
++        "measurement_access_complete": ready,
++        "comparable_timing_receipts_ready": ready,
++        "timing_comparison": timing_comparison,
++        "blocked_hardware_precondition": hardware_summary["blocked_hardware_precondition"],
++        "hardware_speedup_claim": False,
++        "claim_refusal": (
++            "No hardware speedup is claimed; this artifact only records comparable "
++            "timing distributions when workload and result hashes match."
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict(ready, blockers),
++        "readiness_blockers": blockers,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "tests_run": _normalize_tests(tests_run),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _artifact_mentions_host_storage(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact, sort_keys=True, default=str).lower()
++    return any(marker in encoded for marker in HOST_STORAGE_MARKERS)
++
++
++def _command_is_destructive(command_text: str) -> bool:
++    lowered = command_text.lower()
++    return any(term in lowered for term in FORBIDDEN_COMMAND_TERMS)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _validate_tests_run(tests_run: Any) -> None:
++    _require(isinstance(tests_run, list) and tests_run, "tests_run")
++    for index, item in enumerate(tests_run):
++        _require(isinstance(item, Mapping), f"tests_run[{index}]")
++        _require(isinstance(item.get("command"), str) and item["command"], "tests_run command")
++        _require(isinstance(item.get("outcome"), str) and item["outcome"], "tests_run outcome")
++
++
++def _validate_command_receipts(artifact: Mapping[str, Any]) -> None:
++    receipts = artifact.get("command_receipts")
++    _require(isinstance(receipts, list) and receipts, "command_receipts")
++    kv260_count = 0
++    for receipt in receipts:
++        _require(isinstance(receipt, Mapping), "command_receipt")
++        command = receipt.get("command")
++        _require(isinstance(command, str) and command, "command_receipt command")
++        _require(receipt.get("command_sha256") == sha256_text(command), "command hash")
++        _require(not _command_is_destructive(command), "destructive command")
++        if receipt.get("kind") == "kv260_ssh_only_reachability":
++            kv260_count += 1
++            _require(
++                command == command_to_string(KV260_SSH_COMMAND),
++                "KV260 command must be exact SSH-only reachability precondition",
++            )
++    _require(kv260_count == 1, "exactly one KV260 SSH receipt required")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed on mismatched hashes, unsafe probes, or speedup claims."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact, f"missing required field: {field}")
++    _require(artifact.get("schema") == SCHEMA, "schema")
++    _require(artifact.get("experiment_id") == EXPERIMENT_ID, "experiment_id")
++    _require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles")
++    _require(artifact.get("preconditions_checked") is True, "preconditions_checked")
++    _require(isinstance(artifact.get("workload_hash"), str), "workload_hash")
++    _require(isinstance(artifact.get("cpu_repeat_count"), int), "cpu_repeat_count")
++    _require(isinstance(artifact.get("board_repeat_count"), int), "board_repeat_count")
++    _require(isinstance(artifact.get("cpu_result_hash"), str), "cpu_result_hash")
++    _require(isinstance(artifact.get("board_result_hash"), str), "board_result_hash")
++    _require(isinstance(artifact.get("same_workload_hash_match"), bool), "same_workload_hash_match")
++    _require(isinstance(artifact.get("same_result_hash_match"), bool), "same_result_hash_match")
++    _require(isinstance(artifact.get("polarfire_reachable"), bool), "polarfire_reachable")
++    _require(isinstance(artifact.get("kv260_ssh_checked"), bool), "kv260_ssh_checked")
++    _require(
++        isinstance(artifact.get("gatemate_diagnostic_checked"), bool),
++        "gatemate_diagnostic_checked",
++    )
++    _require(isinstance(artifact.get("timing_receipts"), list), "timing_receipts")
++    _require(isinstance(artifact.get("measurement_access_complete"), bool), "measurement_access")
++    _require(
++        isinstance(artifact.get("comparable_timing_receipts_ready"), bool),
++        "comparable_timing_receipts_ready",
++    )
++    _require(artifact.get("hardware_speedup_claim") is False, "hardware_speedup_claim")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    verdict = artifact.get("honest_verdict")
++    _require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require("hardware_speedup_claim=false" in verdict, "honest_verdict speedup boundary")
++    _require(not _artifact_mentions_host_storage(artifact), "host block-device evidence present")
++    _validate_tests_run(artifact.get("tests_run"))
++    _validate_command_receipts(artifact)
++
++    _require(len(artifact["workload_hash"]) == 64, "workload_hash")
++    _require(artifact["cpu_repeat_count"] >= REPEAT_TARGET, "cpu_repeat_count")
++    _require(len(artifact["cpu_result_hash"]) == 64, "cpu_result_hash")
++    if artifact.get("same_workload_hash_match") is True:
++        _require(artifact["board_repeat_count"] >= REPEAT_TARGET, "board_repeat_count")
++    if artifact.get("same_result_hash_match") is True:
++        _require(artifact["board_result_hash"] == artifact["cpu_result_hash"], "result hash match")
++    ready = artifact.get("comparable_timing_receipts_ready") is True
++    _require(artifact.get("measurement_access_complete") is ready, "measurement access boundary")
++    comparison = artifact.get("timing_comparison")
++    _require(isinstance(comparison, Mapping), "timing_comparison")
++    _require(comparison.get("speedup_reported") is False, "speedup_reported")
++    _require(comparison.get("speedup_ratio") is None, "speedup_ratio")
++    _require(comparison.get("comparison_performed") is ready, "comparison gate")
++    if ready:
++        _require(artifact.get("same_workload_hash_match") is True, "same_workload_hash_match")
++        _require(artifact.get("same_result_hash_match") is True, "same_result_hash_match")
++        _require(artifact.get("board_repeat_count") >= REPEAT_TARGET, "board_repeat_count")
++        _require(artifact.get("readiness_blockers") == [], "readiness_blockers")
++    if artifact.get("polarfire_reachable") is False:
++        blocker = artifact.get("blocked_hardware_precondition")
++        _require(isinstance(blocker, Mapping), "blocked_hardware_precondition")
++        _require(blocker.get("command") == command_to_string(POLARFIRE_STATUS_COMMAND), "blocked command")
++    _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "checksum")
++
++
++def write_output(repo_root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    """Write stable JSON after validating the Exp5424 artifact contract."""
++
++    validate_artifact(artifact)
++    path = Path(repo_root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    workload_root: str | Path = REPO_ROOT,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> Path:
++    """Run Exp5424 and write the requested deliverable JSON."""
++
++    artifact = build_artifact(
++        root=workload_root,
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit,
++        tests_run=tests_run,
++    )
++    return write_output(repo_root, artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--commit", default="unknown")
++    parser.add_argument("--tests-command", default="")
++    parser.add_argument("--tests-outcome", default="passed")
++    args = parser.parse_args(argv)
++    tests_run = None
++    if args.tests_command:
++        tests_run = [{"command": args.tests_command, "outcome": args.tests_outcome}]
++    path = run_experiment(
++        repo_root=REPO_ROOT,
++        workload_root=REPO_ROOT,
++        run_date=args.date,
++        commit=args.commit,
++        tests_run=tests_run,
++    )
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    print(f"artifact: {path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index faa1854e8e..23ecafa79a 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T14:39:42.455915+00:00",
+-  "finished_at": "2026-07-08T14:39:42.483376+00:00",
++  "started_at": "2026-07-08T14:52:45.735634+00:00",
++  "finished_at": "2026-07-08T14:52:45.762372+00:00",
+   "duration_s": 0.027,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 8c8afcf4ea..987889382a 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T14:39:42Z",
++  "run_date": "2026-07-08T14:52:46Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 3c6436ad7a..88fd00e8b8 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T14:39:44Z",
+-  "finished_at": "2026-07-08T14:39:44Z",
++  "started_at": "2026-07-08T14:52:47Z",
++  "finished_at": "2026-07-08T14:52:47Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 3e20f30447..5a200e49a8 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T14:39:44Z",
++  "run_date": "2026-07-08T14:52:47Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 12c139e322..a11429f5e3 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-08T14:39:44Z",
++  "run_date": "2026-07-08T14:52:47Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e0752cc08d..d4a7d940d5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T14:38:59.175648Z",
+-  "duration_s": 0.07969450950622559,
++  "run_date": "2026-07-08T14:52:05.478889Z",
++  "duration_s": 0.10493183135986328,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "6efa84bc214b8bbd9d7efd3f45288aa2701da5bbc1b353c6c7acf0d2df73b91a",
++  "reproducibility_checksum": "1d51486043394aa21c3e5bcf9cb859d0992365e8a325f74d818a6ec18162c6c4",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "4ba3518050f73bc901f25b3b245d2b18f5f8644b"
++    "adversarial_verify_version": "9773cae04ee26dba5936ac719d930487f50126b3"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index fb539b8383..b3e974d64e 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.25s, user: 2.93s, system: 0.24s, MEM: 114.99 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.02s, user: 2.70s, system: 0.22s, MEM: 115.23 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 80% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
++Time spent: 78% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 43fef5a7f7..6613e42208 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.14385986328125,
++  "efficiency_gains_ms": 2.1619796752929688,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 384fc33a38..62e51dca10 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-08T14:39:13.677242Z",
++  "run_date": "2026-07-08T14:52:19.320131Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index f2dc1b1431..84ede27bec 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.000126637052744627,
+-  "latency_domino_seconds": 0.0002173781394958496,
++  "latency_legacy_seconds": 0.00020429305732250214,
++  "latency_domino_seconds": 0.00039621395990252495,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 1853e357c6..3eb5fc1975 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.617300271987915,
++  "duration_s": 0.5798671245574951,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 685342c934..13907a1022 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.1628722101449966e-05,
++  "duration_s": 4.156772047281265e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5424_hardware_comparable_timing_receipts_v493.json b/results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+new file mode 100644
+index 0000000000..4ee2e12b66
+--- /dev/null
++++ b/results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+@@ -0,0 +1,370 @@
++{
++  "blocked_hardware_precondition": null,
++  "board_repeat_count": 3,
++  "board_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++  "claim_refusal": "No hardware speedup is claimed; this artifact only records comparable timing distributions when workload and result hashes match.",
++  "command_receipts": [
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "command_sha256": "dfcb05ec95a68b9ca25ea5227c0ff787385cda524db9d23617679e6cf2f2d0f4",
++      "duration_s": 5.00781,
++      "exit_code": 124,
++      "kind": "kv260_ssh_only_reachability",
++      "outcome": "blocked",
++      "stderr_excerpt": "timeout",
++      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++      "command_sha256": "b9e814f65c86bee7dd7fe7a7d7944e2e76fdcd1330e6f7f0cb813bcf9cd690aa",
++      "duration_s": 0.890799,
++      "exit_code": 0,
++      "kind": "polarfire_ssh_reachability",
++      "outcome": "reachable",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
++      "duration_s": 1.362614,
++      "exit_code": 0,
++      "kind": "polarfire_same_workload_timing_repeat_1",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002227, \"w",
++      "stdout_sha256": "98d6f8ae72a819fb7adee1c85faaa822f947db7b3eccc74df42e858ce54c4f93",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
++      "duration_s": 1.297246,
++      "exit_code": 0,
++      "kind": "polarfire_same_workload_timing_repeat_2",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002314, \"w",
++      "stdout_sha256": "da1e4c26b63a99fbfeed721773d4f7204bfed1e1018708814f0535feb1e9c61b",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
++      "duration_s": 1.313586,
++      "exit_code": 0,
++      "kind": "polarfire_same_workload_timing_repeat_3",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002217, \"w",
++      "stdout_sha256": "f643f50035b224b3fe0d087fb1eab91c263b34ba2948f90251126f81e4c445b9",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
++      "duration_s": 0.018021,
++      "exit_code": 0,
++      "kind": "gatemate_non_destructive_dirtyjtag_detect",
++      "outcome": "blocked",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
++      "timeout_s": 30.0
++    }
++  ],
++  "commit": "9773cae04",
++  "comparable_timing_receipts_ready": true,
++  "cpu_repeat_count": 3,
++  "cpu_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++  "duration_s": 9.893732,
++  "experiment": 5424,
++  "experiment_id": "exp5424-hardware-comparable-timing-receipts-v493",
++  "field_principles": {
++    "board_repeat_count": "board timing reliability",
++    "board_result_hash": "correctness comparison",
++    "comparable_timing_receipts_ready": "capstone evidence",
++    "cpu_repeat_count": "CPU timing reliability",
++    "cpu_result_hash": "correctness comparison",
++    "gatemate_diagnostic_checked": "physical/JTAG honesty",
++    "hardware_speedup_claim": "no unsupported speedup",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++    "inference_substrate": "explicit substrate",
++    "kv260_ssh_checked": "SSH-only discipline",
++    "measurement_access_complete": "physical evidence boundary",
++    "polarfire_reachable": "board availability",
++    "preconditions_checked": "hardware task must fail fast",
++    "same_result_hash_match": "no invalid speedup",
++    "same_workload_hash_match": "no apples-to-oranges timing",
++    "timing_receipts": "reproducible evidence",
++    "workload_hash": "same-workload comparison"
++  },
++  "gatemate_diagnostic_checked": true,
++  "hardware_speedup_claim": false,
++  "honest_verdict": "complete: comparable CPU and PolarFire timing receipts are hash-matched; hardware_speedup_claim=false",
++  "inference_substrate": "hardware_timing_with_cpu_reference",
++  "kv260_ssh_checked": true,
++  "measurement_access": {
++    "blocked_hardware_precondition": null,
++    "board_timing_complete": true,
++    "cpu_timing_complete": true,
++    "missing_physical_records_recoverable_after_fact": false
++  },
++  "measurement_access_complete": true,
++  "milestone": "2026.07.493",
++  "polarfire_reachable": true,
++  "preconditions_checked": true,
++  "random_seed": 5424,
++  "readiness_blockers": [],
++  "reproducibility_checksum": "4e1d2edca44bdfa4a608f3d393f77010779e32fd16f7c8376243067e7e0c223e",
++  "run_date": "20260708",
++  "same_result_hash_match": true,
++  "same_workload_hash_match": true,
++  "schema": "carnot.experiment_5424.hardware_comparable_timing_receipts.v493",
++  "selected_workload": {
++    "actions": [
++      "submit",
++      "review",
++      "draft",
++      "outline"
++    ],
++    "exact_result": {
++      "enumerated_permutation_count": 24,
++      "exact_best_sequence": [
++        "outline",
++        "draft",
++        "review",
++        "submit"
++      ],
++      "exact_min_energy": 0,
++      "exact_valid_permutation_count": 1
++    },
++    "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++    "expected_sequence": [
++      "outline",
++      "draft",
++      "review",
++      "submit"
++    ],
++    "fixture_id": "stress_synthetic_linear_review",
++    "precedence": [
++      [
++        "outline",
++        "draft"
++      ],
++      [
++        "draft",
++        "review"
++      ],
++      [
++        "review",
++        "submit"
++      ]
++    ],
++    "seed": 5420,
++    "source_artifact": "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
++    "source_experiment_id": "exp5407-pbit-qubo-active-constraint-stress-v492",
++    "upstream_exact_result": {
++      "enumerated_permutation_count": 24,
++      "exact_best_sequence": [
++        "outline",
++        "draft",
++        "review",
++        "submit"
++      ],
++      "exact_min_energy": 0,
++      "exact_valid_permutation_count": 1
++    },
++    "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++  },
++  "spec_refs": [
++    "REQ-HW-5424",
++    "SCENARIO-HW-5424"
++  ],
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py -q --no-cov; .venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py -q -n0 --no-cov; .venv/bin/coverage report --include='python/carnot/experiment_5424_hardware_comparable_timing_receipts_v493.py' --fail-under=100 -m",
++      "outcome": "passed"
++    }
++  ],
++  "timing_comparison": {
++    "board_timing_distribution": {
++      "count": 3,
++      "max_s": 0.002314,
++      "mean_s": 0.002252667,
++      "median_s": 0.002227,
++      "min_s": 0.002217
++    },
++    "comparison_boundary": "Timing distributions are comparable evidence only; no speedup ratio is claimed.",
++    "comparison_performed": true,
++    "cpu_timing_distribution": {
++      "count": 3,
++      "max_s": 2.9e-05,
++      "mean_s": 2.7333e-05,
++      "median_s": 2.7e-05,
++      "min_s": 2.6e-05
++    },
++    "same_result_hash_match": true,
++    "same_workload_hash_match": true,
++    "speedup_ratio": null,
++    "speedup_reported": false
++  },
++  "timing_receipts": [
++    {
++      "artifact_seed": 5424,
++      "environment": {
++        "machine": "x86_64",
++        "platform": "Linux-7.0.11-1-cachyos-x86_64-with-glibc2.43",
++        "processor": "",
++        "python_version": "3.12.13"
++      },
++      "kind": "cpu_timing",
++      "repeat_count": 3,
++      "repeat_timings_s": [
++        2.9e-05,
++        2.7e-05,
++        2.6e-05
++      ],
++      "repeats": [
++        {
++          "repeat_index": 1,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "result_matches_selected": true,
++          "seed": 5420,
++          "wall_time_s": 2.9e-05,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        },
++        {
++          "repeat_index": 2,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "result_matches_selected": true,
++          "seed": 5420,
++          "wall_time_s": 2.7e-05,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        },
++        {
++          "repeat_index": 3,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "result_matches_selected": true,
++          "seed": 5420,
++          "wall_time_s": 2.6e-05,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        }
++      ],
++      "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++      "seed": 5420,
++      "substrate": "cpu_exact_enumeration",
++      "timing_distribution": {
++        "count": 3,
++        "max_s": 2.9e-05,
++        "mean_s": 2.7333e-05,
++        "median_s": 2.7e-05,
++        "min_s": 2.6e-05
++      },
++      "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++    },
++    {
++      "attempts": [
++        {
++          "parse_error": null,
++          "receipt": {
++            "board_local": true,
++            "exact_best_sequence": [
++              "outline",
++              "draft",
++              "review",
++              "submit"
++            ],
++            "exact_min_energy": 0,
++            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++            "seed": 5420,
++            "wall_time_s": 0.002227,
++            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++          },
++          "repeat_index": 1,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "valid": true,
++          "wall_time_s": 0.002227,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        },
++        {
++          "parse_error": null,
++          "receipt": {
++            "board_local": true,
++            "exact_best_sequence": [
++              "outline",
++              "draft",
++              "review",
++              "submit"
++            ],
++            "exact_min_energy": 0,
++            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++            "seed": 5420,
++            "wall_time_s": 0.002314,
++            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++          },
++          "repeat_index": 2,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "valid": true,
++          "wall_time_s": 0.002314,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        },
++        {
++          "parse_error": null,
++          "receipt": {
++            "board_local": true,
++            "exact_best_sequence": [
++              "outline",
++              "draft",
++              "review",
++              "submit"
++            ],
++            "exact_min_energy": 0,
++            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++            "seed": 5420,
++            "wall_time_s": 0.002217,
++            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++          },
++          "repeat_index": 3,
++          "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++          "valid": true,
++          "wall_time_s": 0.002217,
++          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++        }
++      ],
++      "invalid_repeat_count": 0,
++      "kind": "polarfire_board_timing",
++      "reachable": true,
++      "repeat_count": 3,
++      "repeat_target": 3,
++      "repeat_timings_s": [
++        0.002227,
++        0.002314,
++        0.002217
++      ],
++      "result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
++      "seed": 5420,
++      "substrate": "polarfire_board_local_python",
++      "timing_distribution": {
++        "count": 3,
++        "max_s": 0.002314,
++        "mean_s": 0.002252667,
++        "median_s": 0.002227,
++        "min_s": 0.002217
++      },
++      "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
++    }
++  ],
++  "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9",
++  "workload_seed": 5420
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ca1655da44..525b76a8bf 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T14:38:45Z",
+-  "finished_at": "2026-07-08T14:38:45Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T14:51:53Z",
++  "finished_at": "2026-07-08T14:51:53Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2e7a9e384a..1002ea0960 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T14:38:45Z",
+-  "finished_at": "2026-07-08T14:38:45Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-08T14:51:53Z",
++  "finished_at": "2026-07-08T14:51:53Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 818a24f67c..63d53105ac 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T14:38:45Z",
+-  "finished_at": "2026-07-08T14:38:45Z",
++  "started_at": "2026-07-08T14:51:53Z",
++  "finished_at": "2026-07-08T14:51:53Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py b/tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py
+new file mode 100644
+index 0000000000..88e6c773fe
+--- /dev/null
++++ b/tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py
+@@ -0,0 +1,362 @@
++"""Tests for Exp5424 comparable hardware timing receipts.
++
++Spec refs: REQ-HW-5424, SCENARIO-HW-5424.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5424_hardware_comparable_timing_receipts_v493 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/fpga/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5424_hardware_comparable_timing_receipts_v493.py "
++    "-q --no-cov"
++)
++
++
++class RecordingRunner:
++    """SCENARIO-HW-5424 runner with exact command expectations."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for repeat timing assertions."""
++
++    def __init__(self) -> None:
++        self.value = 5424.0
++
++    def __call__(self) -> float:
++        self.value += 0.01
++        return self.value
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [{"command": TEST_COMMAND, "outcome": "passed"}]
++
++
++def _board_stdout(
++    workload: dict[str, object],
++    *,
++    workload_hash: str | None = None,
++    result_hash: str | None = None,
++    wall_time_s: float = 0.123,
++) -> str:
++    payload = {
++        "board_local": True,
++        "exact_best_sequence": workload["exact_result"]["exact_best_sequence"],
++        "exact_min_energy": workload["exact_result"]["exact_min_energy"],
++        "exact_result_hash": result_hash or workload["exact_result_hash"],
++        "seed": mod.WORKLOAD_SEED,
++        "wall_time_s": wall_time_s,
++        "workload_hash": workload_hash or workload["workload_hash"],
++    }
++    return json.dumps(payload, sort_keys=True) + "\n"
++
++
++def _runner(
++    *,
++    polarfire_status_exit: int = 0,
++    board_stdout: list[str] | None = None,
++    gatemate_exit: int = 0,
++) -> RecordingRunner:
++    workload = mod.select_workload(REPO)
++    board_command = mod.polarfire_workload_command(workload)
++    probes: dict[tuple[str, ...], list[mod.CommandProbe]] = {
++        mod.KV260_SSH_COMMAND: [
++            _probe(
++                mod.KV260_SSH_COMMAND,
++                exit_code=255,
++                stderr="ssh: Could not resolve hostname kria: Name or service not known\n",
++            )
++        ],
++        mod.POLARFIRE_STATUS_COMMAND: [
++            _probe(
++                mod.POLARFIRE_STATUS_COMMAND,
++                exit_code=polarfire_status_exit,
++                stdout="polarfire reachable\n" if polarfire_status_exit == 0 else "",
++                stderr="" if polarfire_status_exit == 0 else "ssh: no route to host\n",
++            )
++        ],
++        mod.GATEMATE_DETECT_COMMAND: [
++            _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                exit_code=gatemate_exit,
++                stdout=(
++                    "GateMate Series GM1Ax IDCODE 0x20000001\n"
++                    if gatemate_exit == 0
++                    else "Jtag frequency : requested 6000000 Hz\n"
++                ),
++                stderr="" if gatemate_exit == 0 else "detect failed\n",
++            )
++        ],
++    }
++    if polarfire_status_exit == 0:
++        outputs = board_stdout or [
++            _board_stdout(workload, wall_time_s=0.101),
++            _board_stdout(workload, wall_time_s=0.102),
++            _board_stdout(workload, wall_time_s=0.103),
++        ]
++        probes[board_command] = [
++            _probe(board_command, stdout=stdout, duration_s=0.2) for stdout in outputs
++        ]
++    return RecordingRunner(probes)
++
++
++def test_req_hw_5424_spec_declares_comparable_timing_contract() -> None:
++    """REQ-HW-5424: OpenSpec anchors comparable timing and speedup refusal."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-HW-5424") : spec.index("### SCENARIO-HW-5424")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-HW-5424",
++        "SCENARIO-HW-5424",
++        str(mod.RESULT_RELATIVE_PATH),
++        "Exp 5420",
++        "workload_hash",
++        "cpu_result_hash",
++        "board_result_hash",
++        "same_workload_hash_match",
++        "same_result_hash_match",
++        "measurement_access_complete",
++        "comparable_timing_receipts_ready",
++        "hardware_speedup_claim",
++        "hardware_timing_with_cpu_reference",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert f'principle "{principle}"' in normalized
++
++
++def test_scenario_hw_5424_writes_hash_matched_comparable_receipts(tmp_path: Path) -> None:
++    """SCENARIO-HW-5424: hash/result matched timing receipts are ready, not speedup."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    out_path = mod.write_output(tmp_path, artifact)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++    board_command = mod.polarfire_workload_command(mod.select_workload(REPO))
++
++    assert runner.commands == [
++        mod.KV260_SSH_COMMAND,
++        mod.POLARFIRE_STATUS_COMMAND,
++        board_command,
++        board_command,
++        board_command,
++        mod.GATEMATE_DETECT_COMMAND,
++    ]
++    assert saved["preconditions_checked"] is True
++    assert saved["workload_hash"] == mod.select_workload(REPO)["workload_hash"]
++    assert saved["cpu_repeat_count"] == mod.REPEAT_TARGET
++    assert saved["board_repeat_count"] == mod.REPEAT_TARGET
++    assert saved["cpu_result_hash"] == mod.select_workload(REPO)["exact_result_hash"]
++    assert saved["board_result_hash"] == saved["cpu_result_hash"]
++    assert saved["same_workload_hash_match"] is True
++    assert saved["same_result_hash_match"] is True
++    assert saved["polarfire_reachable"] is True
++    assert saved["kv260_ssh_checked"] is True
++    assert saved["gatemate_diagnostic_checked"] is True
++    assert saved["measurement_access_complete"] is True
++    assert saved["comparable_timing_receipts_ready"] is True
++    assert saved["hardware_speedup_claim"] is False
++    assert saved["timing_comparison"]["comparison_performed"] is True
++    assert saved["timing_comparison"]["speedup_reported"] is False
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    mod.validate_artifact(saved)
++
++
++def test_req_hw_5424_unreachable_polarfire_records_blocked_precondition() -> None:
++    """REQ-HW-5424: missing board access records the attempted SSH precondition."""
++
++    runner = _runner(polarfire_status_exit=255)
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert mod.polarfire_workload_command(mod.select_workload(REPO)) not in runner.commands
++    assert artifact["polarfire_reachable"] is False
++    assert artifact["board_repeat_count"] == 0
++    assert artifact["board_result_hash"] == ""
++    assert artifact["same_workload_hash_match"] is False
++    assert artifact["same_result_hash_match"] is False
++    assert artifact["measurement_access_complete"] is False
++    assert artifact["comparable_timing_receipts_ready"] is False
++    assert artifact["hardware_speedup_claim"] is False
++    assert artifact["blocked_hardware_precondition"]["command"] == mod.command_to_string(
++        mod.POLARFIRE_STATUS_COMMAND
++    )
++    assert artifact["honest_verdict"].startswith("blocked:")
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_5424_result_hash_drift_refuses_comparability_and_speedup() -> None:
++    """REQ-HW-5424: result-hash drift prevents comparison and speedup claims."""
++
++    workload = mod.select_workload(REPO)
++    runner = _runner(
++        board_stdout=[
++            _board_stdout(workload, wall_time_s=0.101),
++            _board_stdout(workload, result_hash="1" * 64, wall_time_s=0.102),
++            _board_stdout(workload, wall_time_s=0.103),
++        ]
++    )
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert artifact["board_repeat_count"] == 2
++    assert artifact["same_workload_hash_match"] is False
++    assert artifact["same_result_hash_match"] is False
++    assert artifact["measurement_access_complete"] is False
++    assert artifact["comparable_timing_receipts_ready"] is False
++    assert artifact["hardware_speedup_claim"] is False
++    assert "same_result_hash_mismatch" in artifact["readiness_blockers"]
++    assert artifact["timing_receipts"][1]["invalid_repeat_count"] == 1
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_5424_validation_rejects_speedup_low_repeats_and_unsafe_commands() -> None:
++    """REQ-HW-5424: validator fails closed on speedup, thresholds, and unsafe probes."""
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    speedup = deepcopy(artifact)
++    speedup["hardware_speedup_claim"] = True
++    with pytest.raises(ValueError, match="hardware_speedup_claim"):
++        mod.validate_artifact(speedup)
++
++    low_repeats = deepcopy(artifact)
++    low_repeats["cpu_repeat_count"] = 2
++    low_repeats["comparable_timing_receipts_ready"] = False
++    with pytest.raises(ValueError, match="cpu_repeat_count"):
++        mod.validate_artifact(low_repeats)
++
++    unsafe_kv260 = deepcopy(artifact)
++    unsafe_kv260["command_receipts"][0]["command"] = "ssh kria 'ls /dev/mmcblk*'"
++    unsafe_kv260["comparable_timing_receipts_ready"] = False
++    with pytest.raises(ValueError, match="host block-device"):
++        mod.validate_artifact(unsafe_kv260)
++
++    destructive = deepcopy(artifact)
++    destructive["command_receipts"].append(
++        {
++            "kind": "gatemate_bad_write",
++            "command": "openFPGALoader --write flash.bit",
++            "command_sha256": mod.sha256_text("openFPGALoader --write flash.bit"),
++            "exit_code": 0,
++            "duration_s": 0.1,
++            "timeout_s": 1.0,
++            "outcome": "bad",
++            "stdout_sha256": mod.sha256_text(""),
++            "stderr_sha256": mod.sha256_text(""),
++            "stdout_excerpt": "",
++            "stderr_excerpt": "",
++        }
++    )
++    destructive["comparable_timing_receipts_ready"] = False
++    with pytest.raises(ValueError, match="destructive"):
++        mod.validate_artifact(destructive)
++
++    missing_tests = deepcopy(artifact)
++    missing_tests["tests_run"] = []
++    missing_tests["comparable_timing_receipts_ready"] = False
++    with pytest.raises(ValueError, match="tests_run"):
++        mod.validate_artifact(missing_tests)
++
++
++def test_req_hw_5424_defensive_helpers_and_run_experiment(tmp_path: Path) -> None:
++    """REQ-HW-5424: helper paths and run_experiment preserve stable artifacts."""
++
++    ok = mod.run_command(("sh", "-lc", "printf ok"), timeout_s=1.0)
++    missing = mod.run_command(("definitely_missing_carnot_5424",), timeout_s=0.1)
++    timeout = mod.run_command(("sh", "-lc", "sleep 0.2"), timeout_s=0.01)
++
++    assert ok.exit_code == 0
++    assert ok.stdout == "ok"
++    assert missing.exit_code == 127
++    assert timeout.exit_code == 124
++    assert mod.timing_distribution([]) == {"count": 0}
++    assert mod.readiness_blockers(
++        polarfire_reachable=True,
++        cpu_repeat_count=2,
++        board_repeat_count=3,
++        same_workload_hash_match=True,
++        same_result_hash_match=True,
++    ) == ["cpu_repeat_count_below_threshold"]
++    assert mod.default_tests_run()[0]["outcome"] == "pending_external_test_run"
++
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        workload_root=REPO,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert saved["spec_refs"] == list(mod.SPEC_REFS)
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    assert saved["hardware_speedup_claim"] is False
++    mod.validate_artifact(saved)
+-- 
+2.55.0
+

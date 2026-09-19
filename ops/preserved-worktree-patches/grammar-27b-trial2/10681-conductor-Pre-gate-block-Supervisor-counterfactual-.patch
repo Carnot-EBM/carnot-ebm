@@ -1,0 +1,137 @@
+From d6aac0d024834bc936df07d979f33fdec66a948b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 16:56:22 -0400
+Subject: [PATCH 10681/11171] [conductor] Pre-gate block: Supervisor
+ counterfactual credit audit gated on Exp6857 headroom
+
+gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6857-dynamic-live-arc-receipt-router.supervisor_headroom_ready_score (actual=0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._6857_dynamic_live_arc_receipt_router.json | 23 ++++++++-
+ ...upervisor_counterfactual_credit_audit.json | 51 +++++++++++++++++++
+ 5 files changed, 75 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_6858_supervisor_counterfactual_credit_audit.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d13a19d7b0..51b549c8f8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 93, "phase": "iteration_start", "last_beat": "2026-09-01T20:24:22Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 94, "phase": "iteration_start", "last_beat": "2026-09-01T20:56:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d988705c45..c23bda2fd2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17021,3 +17021,4 @@ The l |
+ | 2026-09-01 19:29 UTC | Counterfactual memory-write credit and negative-tr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6855_counter |
+ | 2026-09-01 19:51 UTC | Counterfactual memory-write credit and negative-tr | OK | 110 passed, 2 warnings in 37.17s |
+ | 2026-09-01 20:22 UTC | Sealed risk-sensitive self-learning durability and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-09-01 20:54 UTC | Dynamic provenance-qualified live ARC receipt rout | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9f52aa0866..4d6afd9809 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 93, "phase": "iteration_start", "started_at": "2026-09-01T20:24:22Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 94, "phase": "iteration_start", "started_at": "2026-09-01T20:56:21Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6857_dynamic_live_arc_receipt_router.json b/results/experiment_6857_dynamic_live_arc_receipt_router.json
+index e4c0758db9..e0fcdd89b8 100644
+--- a/results/experiment_6857_dynamic_live_arc_receipt_router.json
++++ b/results/experiment_6857_dynamic_live_arc_receipt_router.json
+@@ -1077,5 +1077,24 @@
+   "tool_gap_first_party_receipts_ready_score": 0,
+   "unmatched_receipt_rows": [],
+   "verdict_class": "null",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-01T20:54:21Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=1.048597 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_6858_supervisor_counterfactual_credit_audit.json b/results/experiment_6858_supervisor_counterfactual_credit_audit.json
+new file mode 100644
+index 0000000000..7ded49601c
+--- /dev/null
++++ b/results/experiment_6858_supervisor_counterfactual_credit_audit.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6858,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-09-01",
++  "started_at": "2026-09-01T20:56:22.589558+00:00",
++  "finished_at": "2026-09-01T20:56:22.589558+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Supervisor counterfactual credit audit gated on Exp6857 headroom",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0 == expected=1",
++  "failed_upstream": "exp6857-dynamic-live-arc-receipt-router",
++  "failed_field": "supervisor_headroom_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1,
++  "failed_expected_type": "int",
++  "failed_observed": 0,
++  "failed_observed_type": "int",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
++  "failed_evidence_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0 == expected=1",
++    "failed_upstream": "exp6857-dynamic-live-arc-receipt-router",
++    "failed_field": "supervisor_headroom_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1,
++    "failed_expected_type": "int",
++    "failed_observed": 0,
++    "failed_observed_type": "int",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
++    "failed_evidence_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f"
++  },
++  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6857-dynamic-live-arc-receipt-router.supervisor_headroom_ready_score (actual=0 == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6857-dynamic-live-arc-receipt-router",
++      "artifact_field": "supervisor_headroom_ready_score",
++      "op": "==",
++      "expected": 1,
++      "expected_type": "int",
++      "actual": 0,
++      "actual_type": "int",
++      "passed": false,
++      "reason": "actual=0 == expected=1",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
++      "artifact_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

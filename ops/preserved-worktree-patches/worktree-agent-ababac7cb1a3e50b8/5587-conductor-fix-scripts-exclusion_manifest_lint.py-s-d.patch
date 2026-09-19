@@ -1,0 +1,666 @@
+From aa2bf2bc8995dab588a9e1c619e49de21a3e2015 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 18:22:04 -0400
+Subject: [PATCH 05587/11362] [conductor] fix
+ scripts/exclusion_manifest_lint.py's documented REAL_BUG -- substring
+ matching without word boundaries, principle-wrapped-field blindness, and
+ partial negation handling
+
+Automated research step by research conductor.
+Task ID: exp5204-exclusion-manifest-lint-real-bug-fix-v476
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  60 +++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...usion_manifest_lint_real_bug_fix_v476.json | 119 ++++++++++
+ scripts/exclusion_manifest_lint.py            |  90 ++++++-
+ tests/python/test_exclusion_manifest_lint.py  | 222 +++++++++++++++++-
+ 5 files changed, 472 insertions(+), 21 deletions(-)
+ create mode 100644 results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 99908808cb..d594eb5d5c 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -33284,6 +33284,66 @@ changelog, traceability, or research-conductor files.
+ |---|---|---|
+ | REQ-REPORT-5202 | Planned (`python/carnot/experiment_5202_architecture_md_reconciliation_v476.py`) | Planned (`tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py`) |
+ 
++### REQ-REPORT-5204: Exclusion-Manifest Lint Handles Retired-Scope Mentions Precisely
++
++The exclusion-manifest linter SHALL classify `retired_extras.blocked_patterns`
++matches with word-boundary-aware matching rather than raw substring checks, so
++retired tokens do not match inside unrelated longer words. It SHALL treat
++negated or prevention-oriented prompt language near a matched blocked pattern as
++compliant mention, not as `BLOCKED_PATTERN_MATCHED`.
++
++The linter SHALL normalize principle-wrapped roadmap task fields written as
++`{principle: ..., value: ...}` before reading `id`, `requires`,
++`operator_override`, `title`, or `prompt`. This normalization SHALL make retired
++experiment-id reuse, retired `requires:` dependencies, operator overrides, and
++blocked-pattern scans behave identically for bare and principle-wrapped fields.
++
++The linter SHALL recognize terminal success verdict prefixes
++`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
++`shipped:`, and `shipped_` when evaluating operator override text or
++terminal-status prose relevant to exclusion-manifest classification.
++
++The Exp 5204 workflow SHALL write
++`results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json` with
++the required top-level fields `counterexample_regression_test_fails_before_fix`,
++`counterexample_regression_test_passes_after_fix`, `four_issues_fixed`,
++`shared_unwrap_helper_reused_or_created`,
++`full_adversarial_verify_test_suite_result`, `backfill_dry_run_result`,
++`inference_substrate`, and `honest_verdict`. The artifact SHALL declare
++`inference_substrate="aggregation_from_upstream_artifacts"` and a terminal
++`honest_verdict` confirming all four documented issues were addressed.
++
++#### SCENARIO-REPORT-5204-NEGATED-BLOCKED-PATTERN: Prevention Mentions Do Not Block
++
++**Given** a roadmap task whose prompt says "Do not reuse the FoVer in-domain
++candidate-selection-pool premise" while the manifest blocks that FoVer premise
++**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
++**Then** it emits no `BLOCKED_PATTERN_MATCHED` risk for that task, while a
++non-negated task that re-proposes the same premise is still hard-blocked.
++
++#### SCENARIO-REPORT-5204-WRAPPED-FIELDS: Principle-Wrapped Fields Are Unwrapped
++
++**Given** roadmap task fields `id`, `requires`, `operator_override`, `title`,
++and `prompt` are written as principle-wrapped `{value, principle}` mappings
++**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
++**Then** retired experiment-id reuse, retired `requires:` references, override
++downgrades, and blocked-pattern matches behave the same as they do for bare
++field values.
++
++#### SCENARIO-REPORT-5204-TERMINAL-PREFIXES: Complete Success Prefixes Count
++
++**Given** a blocked-pattern task carries a principle-wrapped
++`operator_override` beginning with any terminal success prefix family
++**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
++**Then** the override is recognized and the matching risk is downgraded to
++warning instead of being hard-blocked.
++
++## Implementation Status (REQ-REPORT-5204)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5204 | Implemented (`scripts/exclusion_manifest_lint.py`, `results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json`) | Implemented (`tests/python/test_exclusion_manifest_lint.py`) |
++
+ ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
+ 
+ The Exp 5162 workflow SHALL produce
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e48eb6f49b..5a916a6469 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 208,
+   "code_violations": 0,
+-  "experiments_checked": 4180,
++  "experiments_checked": 4181,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json b/results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json
+new file mode 100644
+index 0000000000..13ed042308
+--- /dev/null
++++ b/results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json
+@@ -0,0 +1,119 @@
++{
++  "experiment": "experiment_5204_exclusion_manifest_lint_real_bug_fix_v476",
++  "experiment_id": 5204,
++  "milestone": "2026.07.476",
++  "date": "2026-07-03",
++  "spec_refs": [
++    "REQ-REPORT-5204",
++    "SCENARIO-REPORT-5204-NEGATED-BLOCKED-PATTERN",
++    "SCENARIO-REPORT-5204-WRAPPED-FIELDS",
++    "SCENARIO-REPORT-5204-TERMINAL-PREFIXES"
++  ],
++  "counterexample_regression_test_fails_before_fix": {
++    "principle": "Proves the bug is real and the test genuinely detects it, not a tautology.",
++    "value": true,
++    "evidence": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q failed before implementation with one BLOCKED_PATTERN_MATCHED risk for exp9001-v472-fover-guard."
++  },
++  "counterexample_regression_test_passes_after_fix": {
++    "principle": "The exact audit counterexample must be accepted after the linter learns prevention/negation context.",
++    "value": true,
++    "evidence": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q --no-cov passed after the fix."
++  },
++  "four_issues_fixed": {
++    "principle": "The audit named four defects; the result is incomplete if it fixes only the FoVer counterexample.",
++    "value": {
++      "word_boundary": true,
++      "principle_unwrap": true,
++      "general_negation": true,
++      "terminal_prefix": true
++    }
++  },
++  "shared_unwrap_helper_reused_or_created": {
++    "principle": "Avoiding duplicate principle-wrapper semantics keeps QA-layer checks aligned with adversarial_verify.py.",
++    "value": "Reused scripts.adversarial_verify._normalize_principle_wrapped_fields from scripts/exclusion_manifest_lint.py via _unwrap_principle_value() and _task_with_unwrapped_fields()."
++  },
++  "full_adversarial_verify_test_suite_result": {
++    "principle": "Shared-helper reuse must not regress adversarial_verify.py's own hardening tests.",
++    "value": {
++      "passed": 254,
++      "failed": 0,
++      "command": ".venv/bin/pytest tests/python/test_adversarial_verify*.py -q --no-cov"
++    }
++  },
++  "backfill_dry_run_result": {
++    "principle": "Corpus-wide dry-run checks that the shared QA-layer fix does not create an obvious historical-corpus backfill surprise before any write is applied.",
++    "value": "exit_code=1 dry-run only; scanned 4591 artifact(s), scope=any-critical, found 135 qualifying unstamped critical artifact(s), wrote 0 files. Command: .venv/bin/python scripts/adversarial_verify.py --backfill"
++  },
++  "inference_substrate": {
++    "principle": "This fix and artifact aggregate source, tests, and command outputs only; no live model or hardware inference was performed.",
++    "value": "aggregation_from_upstream_artifacts"
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete:/complete_/success:/success_, and must confirm all FOUR documented issues were addressed, not just the one counterexample.",
++    "value": "success: exclusion_manifest_lint_real_bug_fixed_all_four_issues_word_boundary_principle_unwrap_general_negation_terminal_prefix"
++  },
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q",
++      "result": "failed before fix: assertion saw one BLOCKED_PATTERN_MATCHED risk"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q --no-cov",
++      "result": "1 passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py -q --no-cov",
++      "result": "31 passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py -q -n 0 --cov-reset --cov=scripts.exclusion_manifest_lint --cov-config=/tmp/carnot_exclusion_manifest_coveragerc --cov-report=json:/tmp/exclusion_manifest_coverage.json --cov-report=term-missing --cov-fail-under=0",
++      "result": "31 passed; whole-file coverage 82%; changed executable linter lines covered 35/35"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_adversarial_verify*.py -q --no-cov",
++      "result": "254 passed"
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py --backfill",
++      "result": "exit_code=1 dry-run only; scanned 4591 artifact(s), found 135 would-stamp artifacts, wrote 0 files"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "result": "attempted exact required broad command; interrupted after 2243.44s at 56% because it was already red with unrelated failures and worker crashes: 25791 passed, 212 failed, 96 skipped, 1 error, plus Z3 and JAX worker segfaults"
++    }
++  ],
++  "full_tests_python_result": {
++    "principle": "The requested broad suite status must be reported honestly even when unrelated repository failures prevent an all-green result.",
++    "value": {
++      "command": ".venv/bin/pytest tests/python -q",
++      "completed": false,
++      "exit_code": 2,
++      "interrupted_at_percent": 56,
++      "passed": 25791,
++      "failed": 212,
++      "skipped": 96,
++      "errors": 1,
++      "duration_s": 2243.44,
++      "unrelated_failure_examples": [
++        "tests/python/test_abstention_http_rest_3810.py timed out waiting for HTTP responses",
++        "tests/python/test_adaptive.py worker crashed in z3_math_verifier.py/Z3",
++        "tests/python/test_experiment_557_jepa_v9.py worker crashed during JAX compilation",
++        "multiple capstone tests expected stale arc_levels counts"
++      ]
++    }
++  },
++  "coverage_new_code": {
++    "principle": "Only the linter diff is in scope for the STOP-WHEN-DONE coverage carve-out; pre-existing untested CLI/fallback branches are not chased.",
++    "value": {
++      "changed_executable_lines": 35,
++      "covered_changed_executable_lines": 35,
++      "coverage_percent": 100.0
++    }
++  },
++  "files_changed": [
++    "openspec/capabilities/research-reporting/spec.md",
++    "scripts/exclusion_manifest_lint.py",
++    "tests/python/test_exclusion_manifest_lint.py",
++    "results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json"
++  ]
++}
+diff --git a/scripts/exclusion_manifest_lint.py b/scripts/exclusion_manifest_lint.py
+index 664f7a07db..0bc44da7f6 100644
+--- a/scripts/exclusion_manifest_lint.py
++++ b/scripts/exclusion_manifest_lint.py
+@@ -73,11 +73,27 @@ import re
+ import sys
+ from dataclasses import dataclass, field
+ from pathlib import Path
++from typing import Any
+ 
+ import yaml
+ 
+ PROJECT_ROOT = Path(__file__).resolve().parent.parent
++sys.path.insert(0, str(PROJECT_ROOT))
++from scripts.adversarial_verify import (  # noqa: E402
++    _normalize_principle_wrapped_fields,
++)
++
+ _EXP_ID_RE = re.compile(r"^exp(\d+)[-_]", re.IGNORECASE)
++_TERMINAL_SUCCESS_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
+ 
+ # Wrong-mechanism precondition patterns: (board_pattern, retired_path_pattern,
+ # replacement_pattern, claude_md_section).
+@@ -218,14 +234,27 @@ _NEGATION_WINDOW_CHARS = 80
+ _NEGATION_MARKERS = (
+     "do not",
+     "don't",
++    "don’t",
+     "dont ",
+     "never ",
++    "must not",
++    "should not",
+     "avoid ",
++    "avoids ",
++    "avoided ",
+     "not touch",
+     "not use",
++    "not rely on",
++    "correctly avoided",
+     "without using",
+     "no longer",
+     "instead of",
++    "guard against",
++    "guards against",
++    "guarding against",
++    "prevent ",
++    "prevents ",
++    "preventing ",
+ )
+ 
+ 
+@@ -300,6 +329,42 @@ def _is_negated_context(text: str, match_start: int) -> bool:
+     return any(marker in window for marker in _NEGATION_MARKERS)
+ 
+ 
++def _unwrap_principle_value(value: Any) -> Any:
++    """Return a field's bare value when it follows the shared principle wrapper."""
++    return _normalize_principle_wrapped_fields({"field": value})["field"]
++
++
++def _task_with_unwrapped_fields(task: dict[str, Any]) -> dict[str, Any]:
++    """Normalize top-level principle-wrapped roadmap task fields once per task."""
++    return _normalize_principle_wrapped_fields(task)
++
++
++def _has_terminal_success_prefix(text: str) -> bool:
++    """True when text starts with a recognized terminal success prefix."""
++    return text.strip().lower().startswith(_TERMINAL_SUCCESS_PREFIXES)
++
++
++def _blocked_pattern_regex(pattern_str: str) -> re.Pattern[str]:
++    """Compile a blocked-pattern phrase with token boundaries around it."""
++    escaped = re.escape(pattern_str.strip())
++    escaped = re.sub(r"\\\s+", r"\\s+", escaped)
++    return re.compile(rf"(?<!\w){escaped}(?!\w)", re.IGNORECASE)
++
++
++def _blocked_pattern_matches(
++    haystack: str, blocked_patterns: list[tuple[str, str, str]]
++) -> list[tuple[str, str, str]]:
++    """Return non-negated blocked-pattern matches in task title/prompt text."""
++    matched: list[tuple[str, str, str]] = []
++    for pattern_str, source_id, reason in blocked_patterns:
++        pattern = _blocked_pattern_regex(pattern_str)
++        for match in pattern.finditer(haystack):
++            if not _is_negated_context(haystack, match.start()):
++                matched.append((pattern_str, source_id, reason))
++                break
++    return matched
++
++
+ def _has_operator_override(task: dict) -> bool:
+     """A non-empty `operator_override:` field counts as override.
+ 
+@@ -308,9 +373,11 @@ def _has_operator_override(task: dict) -> bool:
+     etc.). Bare True or empty string does NOT count — operator must
+     cite the directive source so it's auditable.
+     """
+-    val = task.get("operator_override")
+-    if isinstance(val, str) and len(val.strip()) >= 10:
+-        return True
++    val = _unwrap_principle_value(task.get("operator_override"))
++    if isinstance(val, str):
++        stripped = val.strip()
++        if len(stripped) >= 10 or _has_terminal_success_prefix(stripped):
++            return True
+     return False
+ 
+ 
+@@ -324,13 +391,13 @@ def _extract_requires_ids(task: dict) -> list[int]:
+         - exp1756.bitstream
+     Returns the list of integer exp_ids referenced.
+     """
+-    requires = task.get("requires")
++    requires = _unwrap_principle_value(task.get("requires"))
+     if not requires:
+         return []
+     if isinstance(requires, str):
+         items = [requires]
+     elif isinstance(requires, list):
+-        items = [str(x) for x in requires]
++        items = [str(_unwrap_principle_value(x)) for x in requires]
+     else:
+         return []
+ 
+@@ -389,7 +456,10 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
+         ledger = None  # type: ignore[assignment]
+         validate_prior_failures = None  # type: ignore[assignment]
+ 
+-    for task in tasks:
++    for task_raw in tasks:
++        if not isinstance(task_raw, dict):
++            continue
++        task = _task_with_unwrapped_fields(task_raw)
+         task_id = str(task.get("id", "<no-id>"))
+         task_title = str(task.get("title", ""))[:120]
+         override = _has_operator_override(task)
+@@ -447,15 +517,11 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
+         is_scope_audit_task = bool(
+             _SCOPE_AUDIT_TASK_RE.search(task_id) or _SCOPE_AUDIT_TASK_RE.search(task_title)
+         )
+-        haystack = f"{task_title} {task.get('prompt', '')}".lower()
++        haystack = f"{task_title} {task.get('prompt', '')}"
+         matched: list[tuple[str, str, str]] = (
+             []
+             if is_scope_audit_task
+-            else [
+-                (pattern_str, source_id, reason)
+-                for pattern_str, source_id, reason in blocked_patterns
+-                if pattern_str.lower() in haystack
+-            ]
++            else _blocked_pattern_matches(haystack, blocked_patterns)
+         )
+         if matched:
+             valid_priors = False
+diff --git a/tests/python/test_exclusion_manifest_lint.py b/tests/python/test_exclusion_manifest_lint.py
+index dcf570ff58..abc96f9173 100644
+--- a/tests/python/test_exclusion_manifest_lint.py
++++ b/tests/python/test_exclusion_manifest_lint.py
+@@ -27,7 +27,7 @@ monkeypatching) so they don't churn as real retirement entries are added:
+ 
+ from __future__ import annotations
+ 
+-import importlib.util
++import importlib
+ import json
+ import sys
+ from pathlib import Path
+@@ -38,12 +38,8 @@ import yaml
+ 
+ def _load():
+     repo_root = Path(__file__).resolve().parents[2]
+-    module_path = repo_root / "scripts" / "exclusion_manifest_lint.py"
+-    spec = importlib.util.spec_from_file_location("exclusion_manifest_lint", module_path)
+-    assert spec is not None and spec.loader is not None
+-    mod = importlib.util.module_from_spec(spec)
+-    sys.modules["exclusion_manifest_lint"] = mod
+-    spec.loader.exec_module(mod)
++    sys.path.insert(0, str(repo_root))
++    mod = importlib.import_module("scripts.exclusion_manifest_lint")
+     # Pre-cache the REAL failure_ledger module in sys.modules before any test
+     # monkeypatches PROJECT_ROOT: lint()'s lazy `from failure_ledger import ...`
+     # does `sys.path.insert(0, str(PROJECT_ROOT / "scripts"))` using whatever
+@@ -66,7 +62,12 @@ def _load():
+ _MOD = _load()
+ 
+ _SYNTHETIC_MANIFEST = {
+-    "retired": [],
++    "retired": [
++        {
++            "experiment_id": 2091,
++            "reason": "synthetic retired experiment id for REQ-REPORT-5204 tests",
++        }
++    ],
+     "retired_experiments": [],
+     "retired_extras": [
+         {
+@@ -82,6 +83,8 @@ _SYNTHETIC_MANIFEST = {
+             "blocked_patterns": [
+                 "synthetic blocked phrase",
+                 "another blocked pattern here",
++                "FoVer",
++                "FoVer in-domain candidate-selection-pool premise",
+             ],
+         }
+     ],
+@@ -108,7 +111,59 @@ def _write_roadmap(tmp_path: Path, tasks: list[dict]) -> Path:
+     return path
+ 
+ 
++def _principle(value: object) -> dict[str, object]:
++    return {
++        "principle": "REQ-REPORT-5204: wrapped roadmap fields must lint like bare values.",
++        "value": value,
++    }
++
++
+ class TestBlockedPatternMatched:
++    def test_non_mapping_task_entries_are_ignored(self, isolated_project: Path) -> None:
++        """REQ-REPORT-5204: malformed non-mapping task entries do not crash the
++        lint pass or fabricate blocked-pattern risks."""
++        path = isolated_project / "research-roadmap-next.yaml"
++        path.write_text(yaml.safe_dump({"milestone": "2026.07.999", "tasks": ["not-a-task"]}))
++        assert _MOD.lint(path) == []
++
++    def test_negated_fover_counterexample_is_not_blocked(self, isolated_project: Path) -> None:
++        """SCENARIO-REPORT-5204-NEGATED-BLOCKED-PATTERN: the audit's exact
++        counterexample explicitly prevents FoVer premise reuse and must not be
++        classified as BLOCKED_PATTERN_MATCHED."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp9001-v472-fover-guard",
++                    "title": "Guard against FoVer premise reuse",
++                    "prompt": (
++                        "Do not reuse the FoVer in-domain candidate-selection-pool premise; "
++                        "verify all candidate-pool analysis avoids it."
++                    ),
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        assert [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"] == []
++
++    def test_word_boundaries_prevent_inner_word_match(self, isolated_project: Path) -> None:
++        """REQ-REPORT-5204: blocked_patterns matching is token-aware; a retired
++        token must not match inside an unrelated longer word."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp9000-foverification-diagnostic",
++                    "title": "PHASE Q FoVerification diagnostic",
++                    "prompt": "CONTEXT: study a FoVerification helper unrelated to retired scope.",
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        assert [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"] == []
++
+     def test_prompt_match_on_unrelated_id_is_hard_blocked(self, isolated_project: Path) -> None:
+         """SCENARIO: a brand-new task id (no prior artifact, doesn't reuse a
+         retired id) whose PROMPT contains a blocked_pattern string must still
+@@ -277,6 +332,157 @@ class TestBlockedPatternMatched:
+         assert len([r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]) == 1
+ 
+ 
++class TestPrincipleWrappedFields:
++    def test_wrapped_id_reuses_retired_exp_id(self, isolated_project: Path) -> None:
++        """SCENARIO-REPORT-5204-WRAPPED-FIELDS: wrapped id values still trigger
++        EXP_ID_RETIRED."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": _principle("exp2091-retired-id-reuse"),
++                    "title": "PHASE Q wrapped id",
++                    "prompt": "CONTEXT: no blocked pattern.",
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        matched = [r for r in risks if r.violation_class == "EXP_ID_RETIRED"]
++        assert len(matched) == 1
++        assert matched[0].retired_exp_id == 2091
++
++    def test_wrapped_requires_references_retired_exp_id(self, isolated_project: Path) -> None:
++        """SCENARIO-REPORT-5204-WRAPPED-FIELDS: wrapped requires values still
++        trigger REQUIRES_RETIRED_EXP."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp8999-wrapped-requires",
++                    "title": "PHASE Q wrapped requires",
++                    "requires": _principle("exp2091.output"),
++                    "prompt": "CONTEXT: no blocked pattern.",
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        matched = [r for r in risks if r.violation_class == "REQUIRES_RETIRED_EXP"]
++        assert len(matched) == 1
++        assert matched[0].retired_exp_id == 2091
++
++    def test_wrapped_requires_list_item_references_retired_exp_id(
++        self, isolated_project: Path
++    ) -> None:
++        """SCENARIO-REPORT-5204-WRAPPED-FIELDS: wrapped requires list items are
++        normalized before retired dependency checks."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp8998-wrapped-requires-list",
++                    "title": "PHASE Q wrapped requires list",
++                    "requires": [_principle("exp2091.output")],
++                    "prompt": "CONTEXT: no blocked pattern.",
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        matched = [r for r in risks if r.violation_class == "REQUIRES_RETIRED_EXP"]
++        assert len(matched) == 1
++        assert matched[0].retired_exp_id == 2091
++
++    def test_wrapped_operator_override_downgrades_blocked_pattern(
++        self, isolated_project: Path
++    ) -> None:
++        """SCENARIO-REPORT-5204-WRAPPED-FIELDS: wrapped operator_override values
++        are recognized before BLOCKED_PATTERN_MATCHED severity is chosen."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp8997-wrapped-override",
++                    "title": "PHASE Q wrapped override",
++                    "prompt": "CONTEXT: this task will exercise the synthetic blocked phrase here.",
++                    "operator_override": _principle(
++                        "2026-07-03 operator directive: reopened with a new method."
++                    ),
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        matched = [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]
++        assert len(matched) == 1
++        assert matched[0].severity == "WARNING"
++        assert matched[0].has_operator_override is True
++
++    def test_wrapped_title_prompt_principles_are_not_scanned(
++        self, isolated_project: Path
++    ) -> None:
++        """SCENARIO-REPORT-5204-WRAPPED-FIELDS: title/prompt principle text is
++        metadata; only each wrapped value participates in blocked-pattern scans."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": "exp8996-wrapped-title-prompt",
++                    "title": {
++                        "principle": "Mentions synthetic blocked phrase as a lint principle.",
++                        "value": "PHASE Q clean wrapped title",
++                    },
++                    "prompt": {
++                        "principle": "Mentions another blocked pattern here as a lint principle.",
++                        "value": "CONTEXT: clean wrapped prompt with no retired-scope request.",
++                    },
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        assert [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"] == []
++
++
++class TestTerminalPrefixOverride:
++    @pytest.mark.parametrize(
++        "override",
++        [
++            "complete:x",
++            "complete_x",
++            "success:x",
++            "success_x",
++            "passed:x",
++            "passed_x",
++            "shipped:x",
++            "shipped_x",
++        ],
++    )
++    def test_terminal_prefix_operator_override_is_recognized(
++        self, isolated_project: Path, override: str
++    ) -> None:
++        """SCENARIO-REPORT-5204-TERMINAL-PREFIXES: terminal-prefix override
++        text is sufficient to downgrade a blocked-pattern match."""
++        roadmap = _write_roadmap(
++            isolated_project,
++            [
++                {
++                    "id": f"exp8996-terminal-prefix-{override.replace(':', '-')}",
++                    "title": "PHASE Q terminal prefix override",
++                    "prompt": "CONTEXT: this task will exercise the synthetic blocked phrase here.",
++                    "operator_override": _principle(override),
++                    "agent_type": "codex",
++                }
++            ],
++        )
++        risks = _MOD.lint(roadmap)
++        matched = [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]
++        assert len(matched) == 1
++        assert matched[0].severity == "WARNING"
++        assert matched[0].has_operator_override is True
++
++
+ class TestWrongMechanismNegationAware:
+     """2026-07-01: CLASS 4 (WRONG_MECHANISM_PRECONDITION) got the same class of false
+     positive as BLOCKED_PATTERN_MATCHED -- caught on `.471`'s exp5144, whose prompt says
+-- 
+2.55.0
+

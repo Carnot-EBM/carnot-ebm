@@ -1,0 +1,75 @@
+From cbe489252b805855e8b5dac7f3c845bb931dcae5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 10:37:39 -0400
+Subject: [PATCH 05653/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ap4_clean_scale_validation_gated_v478.json | 22 +++++++++++++++++--
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4397579cfc..0c3f8ec5d1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-07-04T14:25:25Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-07-04T14:37:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f5c0bbcb02..f60ece5e46 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10279,3 +10279,4 @@ web search: |
+ | 2026-07-04 12:38 UTC | PHASE 1 GAP-4 authenticity audit -- quarantine fla | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-04 12:59 UTC | PHASE 1 GAP-4 canonical pool builder -- repair whe | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-07-04 14:23 UTC | PHASE 1 gated on exp5224 canonical pool usable --  | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: q_report_5225_ |
++| 2026-07-04 14:35 UTC | PHASE 1 gated on exp5224 canonical pool usable --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5ef9ecb7f2..5279dabb7d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 43, "phase": "iteration_start", "started_at": "2026-07-04T14:25:25Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 44, "phase": "iteration_start", "started_at": "2026-07-04T14:37:35Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5225_gap4_clean_scale_validation_gated_v478.json b/results/experiment_5225_gap4_clean_scale_validation_gated_v478.json
+index 5d452c47df..3f87784f73 100644
+--- a/results/experiment_5225_gap4_clean_scale_validation_gated_v478.json
++++ b/results/experiment_5225_gap4_clean_scale_validation_gated_v478.json
+@@ -1301,5 +1301,23 @@
+     ".venv/bin/pytest tests/python -q: fail/interrupted after unrelated repo failures and z3 worker crash (15 failed, 7473 passed, 7 skipped, 1 error before KeyboardInterrupt at 355.99s)"
+   ],
+   "ties": 120,
+-  "wins": 0
+-}
++  "wins": 0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "canonical_pool_n=120.0 and ties=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "n_scored=120.0 and ties=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "losses=0.0 (exactly zero). Confirm this is not a stub default."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

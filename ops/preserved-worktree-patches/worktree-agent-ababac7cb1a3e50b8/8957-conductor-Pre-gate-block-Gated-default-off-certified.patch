@@ -1,0 +1,78 @@
+From 9bae3b691b23f95e83b178a012c39082853bc147 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 18:43:07 -0400
+Subject: [PATCH 08957/11362] [conductor] Pre-gate block: Gated default-off
+ certified factor future consumer A/B
+
+1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-learning.prospective_live_certified_learning_ready_score (upstream artifact not found for task id 'exp6354-prospective-live-certified-factor-learning')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...ault_off_certified_factor_consumer_ab.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6355_default_off_certified_factor_consumer_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4cddbe8ae5..b49992aa39 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-12T22:41:04Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-08-12T22:43:07Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 519403620c..466e0b554c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15731,3 +15731,5 @@ code |
+ | 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |
+ | 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
+ | 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
++| 2026-08-12 22:41 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
++| 2026-08-12 22:43 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 985c24b72c..c50b133437 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-12T22:41:04Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 31, "phase": "iteration_start", "started_at": "2026-08-12T22:43:07Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6355_default_off_certified_factor_consumer_ab.json b/results/experiment_6355_default_off_certified_factor_consumer_ab.json
+new file mode 100644
+index 0000000000..8173c1a9f2
+--- /dev/null
++++ b/results/experiment_6355_default_off_certified_factor_consumer_ab.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6355,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-12",
++  "started_at": "2026-08-12T22:43:07.395988+00:00",
++  "finished_at": "2026-08-12T22:43:07.395988+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated default-off certified factor future consumer A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-learning.prospective_live_certified_learning_ready_score (upstream artifact not found for task id 'exp6354-prospective-live-certified-factor-learning')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6354-prospective-live-certified-factor-learning",
++      "artifact_field": "prospective_live_certified_learning_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6354-prospective-live-certified-factor-learning'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

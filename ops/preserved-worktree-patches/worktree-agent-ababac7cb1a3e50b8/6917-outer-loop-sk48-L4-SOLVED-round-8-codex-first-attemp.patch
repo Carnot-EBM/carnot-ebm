@@ -1,0 +1,261 @@
+From ae8443e8a5eebb6031c17a9bcba322651c35a009 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 15:53:36 -0400
+Subject: [PATCH 06917/11362] [outer-loop] sk48: L4 SOLVED round 8 (codex,
+ first attempt at fresh territory)
+
+Round-8 gpt-5.6-sol session solved L4 on the first attempt. L4
+introduces two simultaneously-checked perpendicular chain/guide pairs
+(unlike L3's sequential single-chain check) -- both a color-10 and a
+color-11 vertical chain must independently satisfy their target
+sequence at once. Key subtlety: a block pinned on a vertical segment
+behaves differently from an unpinned one during horizontal retraction
+(the endpoint passes through a pinned block but pushes an unpinned
+one), which is what lets one pair stay complete while the other is
+separately restaged.
+
+The winning tail was planned via an offline transition-state search
+but the win itself was live-executed: the source agent's own
+fresh-environment reproduction gate confirmed reached_level=4, and the
+outer loop independently re-verified regardless: 5x fresh env.reset()
++ replay via a new resolver priority branch, all 5 confirmed level=4,
+state=GameState.NOT_FINISHED.
+
+ops/arc_solve_registry.yaml: sk48 levels_reproduced 3 -> 4.
+reproducible_total_levels 165 -> 166 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |  30 +++-
+ ...experiment_4460_submission_package_prep.py |  19 +++
+ ...loop_codex_sk48_probe_round8_20260712.json | 130 ++++++++++++++++++
+ 3 files changed, 177 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_codex_sk48_probe_round8_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 848397ce56..b1d40cb75a 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3280,7 +3280,7 @@ games:
+     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
+ - game: sk48
+   reproducibility: reproduced
+-  levels_reproduced: 3
++  levels_reproduced: 4
+   mechanic_class: chain_color_reorder
+   win_condition: >-
+     L1 chain navigation plus L2 chain-segment color/order matching: replay the
+@@ -3415,6 +3415,32 @@ games:
+     fresh env.reset() + replay via a new resolver priority branch (using
+     the resolver''s registered adapter, not a guessed one), all 5
+     confirmed level=3, state=GameState.NOT_FINISHED.'
++  - 'L4 SOLVED round 8 (2026-07-12, gpt-5.6-sol via codex,
++    results/outer_loop_codex_sk48_probe_round8_20260712.json): first
++    attempt at fresh L4 territory. L4 introduces TWO SIMULTANEOUSLY
++    CHECKED perpendicular chain/guide pairs: the color-10 vertical
++    chain at x=23 must see the sequence 9->14, while the color-11
++    vertical chain at x=35 must independently see 8->12 -- both
++    conditions must hold AT ONCE for the win, not sequentially like
++    L3. The rack reads 9,14,8,12 left to right. A key subtlety: the
++    horizontal carrier initially has segments beneath ALL FOUR rack
++    blocks, so retraction is not simple undo -- shortening its reach
++    selectively DECOUPLES already-correct blocks from ones still being
++    staged. A block PINNED on a vertical segment behaves differently
++    from an unpinned one during a horizontal retraction: the endpoint
++    passes THROUGH a pinned block, while an unpinned block gets pushed
++    ahead of it -- this asymmetry is what lets the x=35 pair stay
++    complete while the x=23 pair is separately lifted and restaged.
++    Winning line: a 25-action L4 tail after the banked 81-action L1-L3
++    prefix (106 actions total); levels_completed advanced to 4.
++    Methodology note: the tail was planned via a source-grounded
++    offline transition-state search (not pure live trial-and-error),
++    but the win itself WAS live-executed and verified: the source
++    agent ran its own fresh-environment reproduction gate on the full
++    106-action sequence and got reached_level=4, and the outer loop
++    independently re-verified regardless: 5x fresh env.reset() +
++    replay via a new resolver priority branch, all 5 confirmed
++    level=4, state=GameState.NOT_FINISHED.'
+   latest_exp4751_levelup_selfplay:
+     artifact: results/experiment_4751_levelup_selfplay.json
+     loop_artifact: results/arc_loop_solve_sk48.json
+@@ -5098,7 +5124,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 165
++reproducible_total_levels: 166
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index f9ee349f77..de105175a1 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -641,7 +641,26 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 4:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_codex_sk48_probe_round8_20260712.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++        if adapter is None:
++            raise RuntimeError("sk48 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 3:
++        # NOTE: unreachable for the live registry entry (which is >=4 as of the
++        # round-8 L4 win); retained as historical dead code documenting the
++        # round-7 (level-3) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_codex_sk48_probe_round8_20260712.json b/results/outer_loop_codex_sk48_probe_round8_20260712.json
+new file mode 100644
+index 0000000000..be6ccdb0d8
+--- /dev/null
++++ b/results/outer_loop_codex_sk48_probe_round8_20260712.json
+@@ -0,0 +1,130 @@
++{
++  "game": "sk48",
++  "model": "gpt-5",
++  "starting_level": 3,
++  "max_level_reached": 4,
++  "total_env_steps_used": 273,
++  "reproduction_verified": true,
++  "action_sequence": [
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}"
++  ],
++  "levels_won_this_session": [
++    4
++  ],
++  "novel_mechanics_found": "Level 4 introduces two simultaneously checked perpendicular chain/guide pairs. The color-10 vertical chain at x=23 must see 9 -> 14, while the color-11 vertical chain at x=35 must see 8 -> 12. The horizontal carrier initially contains segments beneath all four rack blocks, so retraction is not merely undo: shortening its reach selectively decouples already-correct blocks. A block pinned on a vertical segment can remain in place while a horizontal segment retracts through it, allowing the x=35 pair to stay complete while the x=23 pair is lifted and restaged.",
++  "narrative": "The mandated resolver selected results/outer_loop_fable5_sk48_probe_round7_20260712.json. A fresh env.reset() followed by all 81 labels reproduced frame_level 3 exactly. Compact component dumps mapped the L4 rack as 9,14,8,12 from left to right, two vertical chains headed by colors 10 and 11, and two separate bottom guides: color 10 specifies 9,14 and color 11 specifies 8,12. Live diffs verified row motion, extension pushing, and pinned transfers. A source-grounded ACTION1-4 transition model then searched only legal settled states without consuming env.step calls; its 25-action tail reached the exact simultaneous predicate {10:[9,14], 11:[8,12]}. Direct game-logic execution independently confirmed the predicate and armed the success animation. Finally, a newly constructed offline environment replayed the complete 106-label sequence from reset. Labels 81-105 remained at level 3, and label 106 advanced the returned frame to level 4 with GameState.NOT_FINISHED. The full sequence was checkpointed after every gate action at /tmp/codex_sk48_r8_candidate.json.",
++  "gotchas": [
++    "L4 has two independent ordering strips, not one combined four-color strip: color-10 requires 9 then 14, and color-11 requires 8 then 12.",
++    "Both vertical predicates must hold simultaneously; completing one pair and then dragging it away loses progress.",
++    "The active horizontal chain starts with segments hidden beneath every rack block, so early vertical movement can carry the whole row even when only one segment is visually obvious.",
++    "Horizontal retraction can pass through a block pinned by a perpendicular vertical segment; this selective decoupling is essential for preserving the completed x=35 pair.",
++    "The winning action resolves the success animation and returns the next level in the same env.step call, so the decisive evidence is frame_level changing 3 -> 4.",
++    "The reported 273 env.step calls include the mandatory prefix gate, five live mapping actions, one additional 81-label planner-state replay, and the final 106-label fresh reproduction gate."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

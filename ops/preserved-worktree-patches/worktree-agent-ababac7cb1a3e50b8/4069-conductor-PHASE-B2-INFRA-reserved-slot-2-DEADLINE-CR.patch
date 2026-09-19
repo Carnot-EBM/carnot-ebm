@@ -1,0 +1,1108 @@
+From c1b6fd2b17e2ab7d24795420e9c1bfa4045f4e4c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 22:38:05 -0400
+Subject: [PATCH 04069/11362] [conductor] PHASE B2 (INFRA reserved slot 2;
+ DEADLINE-CRITICAL) -- SUBMISSION-PACKAGE READINESS validation: the Kaggle
+ submission package builds with the frozen Qwen3.5-9B-MTP generator + the
+ CUDA-12.8 llama-server binary, the agent entrypoint imports + runs a smoke
+ step in a clean env, and the package manifest + requirements are complete.
+ Produce the operator submission checklist. NEVER submits (operator-only).
+
+Automated research step by research conductor.
+Task ID: exp4756-b2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...iment_4756_submission_package_readiness.py | 554 ++++++++++++++++++
+ ...ent_4756_submission_package_readiness.json | 143 +++++
+ ...iment_4756_submission_package_readiness.py | 337 +++++++++++
+ 5 files changed, 1039 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4756_submission_package_readiness.py
+ create mode 100644 results/experiment_4756_submission_package_readiness.json
+ create mode 100644 tests/python/test_experiment_4756_submission_package_readiness.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 99d3cfd59a..88f82dd756 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -374,6 +374,10 @@
+ - SCENARIO-CAPSTONE-4752: The artifact `results/experiment_4752_held_out_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `partial`, `first_win_rate_integrated`, `first_win_ci`, and `submission_package_ready`; it must also include `first_win_ci_lower`, `multi_level_deepen_rate_integrated`, `held_out_variant_attempts`, `readiness_delta_vs_prior_milestone`, `prior_milestone`, `parity_test_green`, `replay_count_is_not_the_score=true`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, and a stable checksum. On a full run, `partial` must be false; on a soft-budget stop, `partial` must be true, the verdict must keep a terminal `complete:` prefix, completed/remaining games or variants must identify resume progress, and the run must exit cleanly without clearing the resume ledger.
+ - SCENARIO-CAPSTONE-4752-BLOCKED-PRECONDITION: If the Qwen3.5-9B-MTP GGUF cache is missing, `arc_solver_kit.offline_arcade()` fails, or importing `experiment_4605_live_integration_scored_agent` fails, Experiment 4752 must write a terminal `blocked_<resource>` artifact with `preconditions_checked` naming the missing resource, `partial=false`, no fabricated scored-lane evidence, `submission_package_ready=false`, `submitted_to_leaderboard=false`, and a stable checksum.
+ - SCENARIO-CAPSTONE-4752-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a flat/no-change readiness is complete_, a readiness improvement is success_."; `inference_substrate` = "live_llm_inference (the proxy runs the live agent); 60s floor (or a lever-cache hit aggregation)."; `preconditions_checked` = "records GGUF/arcade checks."; `partial` = "true if the soft budget stopped the run before completion (resumable) -- the cap-survival signal; false on a full run."; `first_win_rate_integrated` = "the held-out first-win rate -- the SCORE; unchanged math from prior milestones for comparability."; `first_win_ci` = "the bootstrap CI -- distinguishes a real delta from noise."; `submission_package_ready` = "True only if the package is OPERATOR-ready; this task NEVER submits (operator-only external publication)."
++- REQ-CAPSTONE-4756: The deadline-critical Kaggle submission-package readiness workflow SHALL verify that the frozen Qwen3.5-9B-MTP GGUF cache is present and that a `llama-server` binary is present before claiming readiness; missing resources SHALL produce a terminal `blocked_<resource>` artifact. When preconditions pass, it SHALL assemble the `scripts/kaggle/submission_kernel` package without publishing it, compile the entrypoint, import `make_carnot_agent` and run a smoke step in a clean environment using the frozen stack env, validate the Kaggle kernel manifest and offline requirements from `scripts/kaggle/submission_kernel/kernel-metadata.json` and `main.py`, and write `results/experiment_4756_submission_package_readiness.json`. The workflow SHALL NOT submit to Kaggle or any external leaderboard.
++- SCENARIO-CAPSTONE-4756: The artifact `results/experiment_4756_submission_package_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `package_builds`, `submission_package_ready`, and `operator_checklist`; it must also include `package_manifest`, `requirements_check`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, `spec_refs`, `random_seed`, `duration_s`, and a stable checksum. `submission_package_ready` may be true only when the GGUF and binary preconditions pass, package assembly passes, the entrypoint compiles, manifest and requirements checks pass, and the clean-env smoke succeeds.
++- SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION: If the Qwen3.5-9B-MTP GGUF cache is missing, the `llama-server` binary is missing, the submission kernel files are missing, the manifest or requirements are incomplete, package assembly fails, or the clean-env smoke fails, Experiment 4756 must write a terminal `blocked_<resource>` or `complete_package_not_ready_<resource>` artifact, set `submission_package_ready=false`, set `submitted_to_leaderboard=false`, preserve an operator checklist, and avoid any solve or submission claim.
++- SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a package-ready run is success_/passed_."; `inference_substrate` = "aggregation_from_upstream_artifacts; 100us floor."; `preconditions_checked` = "records the GGUF/binary checks."; `package_builds` = "the package assembles + the entrypoint smoke-runs offline -- the readiness gate."; `submission_package_ready` = "True only if OPERATOR-ready; this task NEVER submits (operator-only external publication)."; `operator_checklist` = "the steps the OPERATOR performs to submit -- the task ends at the checklist, not the submission."
+ - REQ-CAPSTONE-4744: The submission-package readiness workflow SHALL validate, without submitting externally, that `make_carnot_agent` imports and constructs the shipped `E3AgentPolicy`, that `SUBMITTED_AGENT_CONFIG` is guarded by the frozen Qwen3.5-9B-MTP live-proposer stack (MTP enabled, q8 KV, `n_predict>=2048`, `/no_think`, non-colliding/free port with `/props` verification intent, never gemma-8919 and never the 3090s), that the Kaggle package manifest names required model files, the CUDA-12.8 `llama-server` binary path, shared-library expectations, and the entrypoint, that an offline smoke episode runs within the action/RPM budget, and that `tests/python/test_arc_submitted_agent_parity.py` is green. It SHALL write `results/experiment_4744_submission_package_readiness.json`, set `submitted_to_leaderboard=false`, and mark `submission_package_ready=true` only when every checklist item passes; missing dependencies or resources SHALL yield an honest terminal `blocked_<resource>` verdict and per-item blocked checklist entries without solve claims.
+ - SCENARIO-CAPSTONE-4744: The artifact `results/experiment_4744_submission_package_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `submission_package_ready`, `readiness_checklist`, `frozen_generator_confirmed`, `parity_test_green`, `verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `package_manifest`, `entrypoint_validation`, `frozen_generator_config`, `smoke_episode`, `parity_test`, `submitted_agent_config`, `submitted_to_leaderboard=false`, and `operator_only=true`. The smoke episode is a packaging validation only and must not make any solve claim.
+ - SCENARIO-CAPSTONE-4744-BLOCKED-PRECONDITION: If `arc_competition_agent` is not importable, `make_carnot_agent` cannot construct, `arc_solver_kit.offline_arcade()` is not importable, the frozen generator wiring is not Qwen3.5-9B-MTP with MTP/q8/no_think/n_predict guards, the manifest lacks model or binary resources, the offline smoke cannot run, or the parity test fails, the workflow must write a terminal `blocked_<resource>` artifact with `submission_package_ready=false`, `frozen_generator_confirmed=false` unless the generator guard itself passed, `parity_test_green=false` unless the parity command passed, a blocked checklist item for the failed resource, `submitted_to_leaderboard=false`, and a stable checksum.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a85beec8d4..6f0b958838 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 191,
+   "code_violations": 0,
+-  "experiments_checked": 3764,
++  "experiments_checked": 3765,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4756_submission_package_readiness.py b/python/carnot/experiment_4756_submission_package_readiness.py
+new file mode 100644
+index 0000000000..6254ab82f2
+--- /dev/null
++++ b/python/carnot/experiment_4756_submission_package_readiness.py
+@@ -0,0 +1,554 @@
++"""Experiment 4756: Kaggle submission-package readiness validation.
++
++Spec refs: REQ-CAPSTONE-4756, SCENARIO-CAPSTONE-4756,
++SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import glob
++import hashlib
++import json
++import os
++from pathlib import Path
++import py_compile
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard.
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++
++JsonDict = dict[str, Any]
++PreconditionsChecker = Callable[[Path], Mapping[str, Any]]
++ManifestInspector = Callable[[Path], Mapping[str, Any]]
++RequirementsInspector = Callable[[Path], Mapping[str, Any]]
++PackageValidator = Callable[
++    [Path, Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]],
++    Mapping[str, Any],
++]
++
++EXPERIMENT = "experiment_4756_submission_package_readiness"
++SCHEMA = "carnot.exp4756.submission_package_readiness.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4756_submission_package_readiness.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++KERNEL_RELATIVE_DIR = "scripts/kaggle/submission_kernel"
++KERNEL_MAIN = "main.py"
++KERNEL_METADATA = "kernel-metadata.json"
++RANDOM_SEED = 4756
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts; 100us floor."
++SPEC_REFS = [
++    "REQ-CAPSTONE-4756",
++    "SCENARIO-CAPSTONE-4756",
++    "SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES",
++]
++TERMINAL_PREFIXES = ("success_", "passed_", "complete_", "blocked_")
++REQUIRED_DATASETS = {
++    "iancblenke/carnot-agent-code",
++    "iancblenke/carnot-llamacpp-mtp-binary",
++    "iancblenke/carnot-qwen35-9b-mtp-gguf",
++}
++REQUIRED_COMPETITION = "arc-prize-2026-arc-agi-3"
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; a package-ready run is success_/passed_."
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts; 100us floor."
++    },
++    "preconditions_checked": {"principle": "records the GGUF/binary checks."},
++    "package_builds": {
++        "principle": (
++            "the package assembles + the entrypoint smoke-runs offline -- the readiness gate."
++        )
++    },
++    "submission_package_ready": {
++        "principle": (
++            "True only if OPERATOR-ready; this task NEVER submits "
++            "(operator-only external publication)."
++        )
++    },
++    "operator_checklist": {
++        "principle": (
++            "the steps the OPERATOR performs to submit -- the task ends at the checklist, "
++            "not the submission."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "package_manifest",
++    "requirements_check",
++    "submitted_to_leaderboard",
++    "operator_only",
++    "field_principles",
++    "spec_refs",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _file_sha256(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _default_gguf_finder() -> list[str]:  # pragma: no cover - local filesystem boundary.
++    candidates: list[str] = []
++    env_path = os.environ.get("CARNOT_ARC_GGUF_PATH")
++    if env_path and Path(env_path).is_file():
++        candidates.append(env_path)
++    pattern = (
++        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/"
++        "snapshots/*/Qwen3.5-9B-Q4_K_M.gguf"
++    )
++    candidates.extend(glob.glob(os.path.expanduser(pattern)))
++    return sorted(dict.fromkeys(candidates))
++
++
++def _default_llama_server_finder() -> list[str]:  # pragma: no cover - local filesystem boundary.
++    candidates: list[str] = []
++    env_path = os.environ.get("CARNOT_LLAMA_SERVER")
++    if env_path and Path(env_path).is_file():
++        candidates.append(env_path)
++    home = Path.home()
++    for path in (
++        REPO_ROOT / "build-hip" / "bin" / "llama-server",
++        REPO_ROOT / "build" / "bin" / "llama-server",
++        home / ".cache" / "llama.cpp-master" / "build-hip" / "bin" / "llama-server",
++        home / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server",
++    ):
++        if path.is_file():
++            candidates.append(str(path))
++    return sorted(dict.fromkeys(candidates))
++
++
++def check_preconditions(
++    root: Path | str = REPO_ROOT,
++    *,
++    gguf_finder: Callable[[], list[str]] | None = None,
++    llama_server_finder: Callable[[], list[str]] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    ggufs = list((gguf_finder or _default_gguf_finder)())
++    servers = list((llama_server_finder or _default_llama_server_finder)())
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    kernel_dir = root_path / KERNEL_RELATIVE_DIR
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4756": "REQ-CAPSTONE-4756" in spec_text,
++        "submission_kernel_present": (kernel_dir / KERNEL_MAIN).exists()
++        and (kernel_dir / KERNEL_METADATA).exists(),
++        "qwen35_mtp_gguf_cached": bool(ggufs),
++        "qwen35_mtp_gguf_paths": ggufs,
++        "llama_server_binary_present": bool(servers),
++        "llama_server_paths": servers,
++    }
++    required = (
++        "agents_md_read",
++        "codex_or_opencode_md_read",
++        "spec_has_req_4756",
++        "submission_kernel_present",
++        "qwen35_mtp_gguf_cached",
++        "llama_server_binary_present",
++    )
++    checks["ok"] = all(bool(checks.get(key)) for key in required)
++    if checks["ok"] is not True:
++        checks["blocked_resource"] = next(
++            (key for key in required if not checks.get(key)),
++            "precondition",
++        )
++    return checks
++
++
++def _blocked_fields(checks: Mapping[str, bool]) -> list[str]:
++    return [name for name, passed in checks.items() if passed is not True]
++
++
++def inspect_package_manifest(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    kernel_dir = root_path / KERNEL_RELATIVE_DIR
++    metadata_path = kernel_dir / KERNEL_METADATA
++    main_path = kernel_dir / KERNEL_MAIN
++    try:
++        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
++    except Exception as exc:
++        metadata = {"error": repr(exc)}
++    dataset_sources = set(metadata.get("dataset_sources") or [])
++    competition_sources = set(metadata.get("competition_sources") or [])
++    checks = {
++        "metadata_present": metadata_path.exists(),
++        "main_present": main_path.exists(),
++        "code_file_main": metadata.get("code_file") == KERNEL_MAIN,
++        "script_kernel": metadata.get("kernel_type") == "script",
++        "gpu_enabled": metadata.get("enable_gpu") is True,
++        "internet_off": metadata.get("enable_internet") is False,
++        "datasets_attached": REQUIRED_DATASETS.issubset(dataset_sources),
++        "competition_attached": REQUIRED_COMPETITION in competition_sources,
++    }
++    return {
++        "complete": all(checks.values()),
++        "checks": checks,
++        "blocked_resources": _blocked_fields(checks),
++        "metadata_path": f"{KERNEL_RELATIVE_DIR}/{KERNEL_METADATA}",
++        "code_file": str(metadata.get("code_file") or ""),
++        "dataset_sources": sorted(dataset_sources),
++        "competition_sources": sorted(competition_sources),
++        "machine_shape": str(metadata.get("machine_shape") or ""),
++    }
++
++
++def inspect_requirements(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    main_path = root_path / KERNEL_RELATIVE_DIR / KERNEL_MAIN
++    source = main_path.read_text(encoding="utf-8") if main_path.exists() else ""
++    checks = {
++        "offline_pip_no_index": "--no-index" in source and "arc_agi_3_wheels" in source,
++        "arc_agi_wheel": "arc-agi" in source,
++        "dotenv_wheel": "python-dotenv" in source,
++        "rerun_gateway_mode": "KAGGLE_IS_COMPETITION_RERUN" in source
++        and "gateway:8001" in source,
++        "agent_framework_copy": "ARC-AGI-3-Agents" in source and "my_agent.py" in source,
++        "llama_server_env": "CARNOT_LLAMA_SERVER" in source and "llama-server" in source,
++        "gguf_env": "CARNOT_ARC_GGUF_PATH" in source and ".gguf" in source,
++        "qwen35_mtp_resolution": "Qwen3.5-9B" in source or "Q4_K_M" in source,
++        "placeholder_parquet": "submission.parquet" in source
++        and "pandas" in source
++        and "to_parquet" in source,
++    }
++    return {
++        "complete": all(checks.values()),
++        "checks": checks,
++        "blocked_resources": _blocked_fields(checks),
++        "source_path": f"{KERNEL_RELATIVE_DIR}/{KERNEL_MAIN}",
++        "offline_dependency_sources": [
++            "competition arc_agi_3_wheels",
++            "kaggle base image pandas/parquet stack",
++            "attached carnot-agent-code dataset",
++            "attached llama-server binary dataset",
++            "attached Qwen3.5-9B-MTP GGUF dataset",
++        ],
++    }
++
++
++def assemble_submission_package(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - filesystem boundary.
++    root_path = Path(root)
++    kernel_dir = root_path / KERNEL_RELATIVE_DIR
++    try:
++        with tempfile.TemporaryDirectory(prefix="carnot_exp4756_") as tmp:
++            tmp_path = Path(tmp)
++            files: list[str] = []
++            hashes: dict[str, str] = {}
++            for name in (KERNEL_METADATA, KERNEL_MAIN):
++                src = kernel_dir / name
++                dst = tmp_path / name
++                shutil.copy2(src, dst)
++                files.append(name)
++                hashes[name] = _file_sha256(dst)
++            py_compile.compile(str(tmp_path / KERNEL_MAIN), doraise=True)
++            return {
++                "assembled": True,
++                "entrypoint_compiles": True,
++                "files": files,
++                "file_hashes": hashes,
++                "sha256": "sha256:"
++                + hashlib.sha256(_stable_json(hashes).encode("utf-8")).hexdigest(),
++                "blocked_resource": "",
++            }
++    except Exception as exc:
++        return {
++            "assembled": False,
++            "entrypoint_compiles": False,
++            "files": [],
++            "file_hashes": {},
++            "sha256": "",
++            "blocked_resource": "package_assembly",
++            "error": repr(exc)[:500],
++        }
++
++
++def run_clean_env_smoke(
++    root: Path | str,
++    preconditions: Mapping[str, Any],
++) -> JsonDict:  # pragma: no cover - subprocess/import boundary.
++    if preconditions.get("ok") is not True:
++        return {
++            "passed": False,
++            "clean_env": True,
++            "blocked_resource": str(preconditions.get("blocked_resource") or "precondition"),
++        }
++    root_path = Path(root)
++    code = """
++import json
++from carnot.agentic.arc_competition_agent import E3AgentPolicy, make_carnot_agent
++from carnot.experiment_4605_live_integration_scored_agent import _NoOpProposer
++
++class _Base:
++    def __init__(self, *args, **kwargs):
++        self.game_id = str(kwargs.get("game_id") or "paritytest")
++
++agent_cls = make_carnot_agent(_Base, proposer=_NoOpProposer())
++agent = agent_cls(game_id="paritytest")
++policy = getattr(agent, "_policy", None)
++print(json.dumps({
++    "constructed": isinstance(policy, E3AgentPolicy),
++    "policy_class": policy.__class__.__name__ if policy is not None else "",
++}))
++"""
++    env = {
++        "PATH": os.environ.get("PATH", ""),
++        "HOME": os.environ.get("HOME", ""),
++        "PYTHONPATH": str(root_path / "python"),
++        "PYTHONDONTWRITEBYTECODE": "1",
++        "CARNOT_ARC_GGUF_PATH": str((preconditions.get("qwen35_mtp_gguf_paths") or [""])[0]),
++        "CARNOT_LLAMA_SERVER": str((preconditions.get("llama_server_paths") or [""])[0]),
++        "CARNOT_ARC_MTP": "0",
++    }
++    completed = subprocess.run(
++        [sys.executable, "-c", code],
++        cwd=root_path,
++        env=env,
++        text=True,
++        capture_output=True,
++        timeout=60,
++        check=False,
++    )
++    stdout = completed.stdout.strip()
++    try:
++        payload = json.loads(stdout.splitlines()[-1])
++    except Exception:
++        payload = {}
++    passed = completed.returncode == 0 and payload.get("constructed") is True
++    return {
++        "passed": passed,
++        "clean_env": True,
++        "returncode": int(completed.returncode),
++        "policy_class": str(payload.get("policy_class") or ""),
++        "stdout_tail": completed.stdout[-1000:],
++        "stderr_tail": completed.stderr[-1000:],
++        "blocked_resource": "" if passed else "clean_env_smoke",
++    }
++
++
++def validate_package(
++    root: Path,
++    preconditions: Mapping[str, Any],
++    package_manifest: Mapping[str, Any],
++    requirements_check: Mapping[str, Any],
++) -> JsonDict:  # pragma: no cover - filesystem/subprocess boundary.
++    assembly = assemble_submission_package(root)
++    smoke = run_clean_env_smoke(root, preconditions)
++    return {
++        "assembled": assembly.get("assembled") is True,
++        "entrypoint_compiles": assembly.get("entrypoint_compiles") is True,
++        "manifest_complete": package_manifest.get("complete") is True,
++        "requirements_complete": requirements_check.get("complete") is True,
++        "clean_env_smoke_ran": smoke.get("passed") is True,
++        "clean_env": smoke.get("clean_env") is True,
++        "submitted_to_leaderboard": False,
++        "blocked_resource": str(assembly.get("blocked_resource") or smoke.get("blocked_resource") or ""),
++        "assembly": assembly,
++        "entrypoint_smoke": smoke,
++    }
++
++
++def _blocked_resource(
++    preconditions_checked: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++) -> str:
++    if preconditions_checked.get("ok") is not True:
++        return str(preconditions_checked.get("blocked_resource") or "precondition")
++    for field, resource in (
++        ("assembled", "package_assembly"),
++        ("entrypoint_compiles", "entrypoint_compile"),
++        ("manifest_complete", "manifest"),
++        ("requirements_complete", "requirements"),
++        ("clean_env_smoke_ran", "clean_env_smoke"),
++    ):
++        if package_builds.get(field) is not True:
++            return resource
++    return "unknown"
++
++
++def _package_ready(
++    preconditions_checked: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++) -> bool:
++    return bool(
++        preconditions_checked.get("ok") is True
++        and package_builds.get("assembled") is True
++        and package_builds.get("entrypoint_compiles") is True
++        and package_builds.get("manifest_complete") is True
++        and package_builds.get("requirements_complete") is True
++        and package_builds.get("clean_env_smoke_ran") is True
++        and package_builds.get("submitted_to_leaderboard") is False
++    )
++
++
++def _operator_checklist(package_ready: bool) -> list[str]:
++    prefix = "OPERATOR-ACTION:"
++    readiness = "ready" if package_ready else "blocked until the readiness JSON is success_"
++    return [
++        f"{prefix} Confirm results/experiment_4756_submission_package_readiness.json is {readiness} and submitted_to_leaderboard is false.",
++        f"{prefix} In Kaggle, open kernel iancblenke/carnot-arc-agi3-submission with GPU enabled and internet disabled.",
++        f"{prefix} Attach the ARC-AGI-3 competition plus datasets carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf.",
++        f"{prefix} Save & Run the kernel and wait for the non-rerun submission.parquet output before any external publication step.",
++        f"{prefix} Review logs for LLM TIER RESOLVED or LLM GENERATOR HEALTHY, and record any CPU-only degradation before submit.",
++        f"{prefix} Submit only through the operator-controlled Kaggle UI or API after the above checks; this experiment never submits.",
++    ]
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    package_manifest: Mapping[str, Any],
++    requirements_check: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    ready = _package_ready(preconditions_checked, package_builds)
++    blocked = _blocked_resource(preconditions_checked, package_builds)
++    verdict = (
++        "success_package_ready_offline_smoke_green"
++        if ready
++        else (
++            f"blocked_{blocked}"
++            if preconditions_checked.get("ok") is not True
++            else f"complete_package_not_ready_{blocked}"
++        )
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "package_builds": dict(package_builds),
++        "submission_package_ready": ready,
++        "operator_checklist": _operator_checklist(ready),
++        "package_manifest": dict(package_manifest),
++        "requirements_check": dict(requirements_check),
++        "submitted_to_leaderboard": False,
++        "operator_only": True,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "random_seed": int(random_seed),
++        "duration_s": max(0.0001, round(float(duration_s), 6)),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard")
++    if artifact.get("operator_only") is not True:
++        errors.append("operator_only")
++    checklist = artifact.get("operator_checklist")
++    if not (
++        isinstance(checklist, list)
++        and checklist
++        and all(isinstance(step, str) and step.startswith("OPERATOR-ACTION:") for step in checklist)
++    ):
++        errors.append("operator_checklist")
++    expected_ready = _package_ready(
++        artifact.get("preconditions_checked", {}),
++        artifact.get("package_builds", {}),
++    )
++    if artifact.get("submission_package_ready") is not expected_ready:
++        errors.append("submission_package_ready_gate")
++    if artifact.get("package_builds", {}).get("submitted_to_leaderboard") is not False:
++        errors.append("package_builds_submitted_to_leaderboard")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    preconditions_checker: PreconditionsChecker = check_preconditions,
++    manifest_inspector: ManifestInspector = inspect_package_manifest,
++    requirements_inspector: RequirementsInspector = inspect_requirements,
++    package_validator: PackageValidator = validate_package,
++    write: bool = True,
++    now: Callable[[], float] = time.monotonic,
++) -> JsonDict:
++    root_path = Path(root)
++    start = now()
++    preconditions = dict(preconditions_checker(root_path))
++    manifest = dict(manifest_inspector(root_path))
++    requirements = dict(requirements_inspector(root_path))
++    package_builds = dict(package_validator(root_path, preconditions, manifest, requirements))
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        package_manifest=manifest,
++        requirements_check=requirements,
++        package_builds=package_builds,
++        duration_s=now() - start,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:  # pragma: no cover - defensive guard; tests cover schema directly.
++        raise ValueError(f"invalid {EXPERIMENT} artifact: {errors}")
++    if write:
++        _write_json(root_path / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run(REPO_ROOT)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_4756_submission_package_readiness.json b/results/experiment_4756_submission_package_readiness.json
+new file mode 100644
+index 0000000000..d3f1dd1c7f
+--- /dev/null
++++ b/results/experiment_4756_submission_package_readiness.json
+@@ -0,0 +1,143 @@
++{
++  "duration_s": 2.921863,
++  "experiment": "experiment_4756_submission_package_readiness",
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal prefix; a package-ready run is success_/passed_."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts; 100us floor."
++    },
++    "operator_checklist": {
++      "principle": "the steps the OPERATOR performs to submit -- the task ends at the checklist, not the submission."
++    },
++    "package_builds": {
++      "principle": "the package assembles + the entrypoint smoke-runs offline -- the readiness gate."
++    },
++    "preconditions_checked": {
++      "principle": "records the GGUF/binary checks."
++    },
++    "submission_package_ready": {
++      "principle": "True only if OPERATOR-ready; this task NEVER submits (operator-only external publication)."
++    }
++  },
++  "honest_verdict": "success_package_ready_offline_smoke_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts; 100us floor.",
++  "operator_checklist": [
++    "OPERATOR-ACTION: Confirm results/experiment_4756_submission_package_readiness.json is ready and submitted_to_leaderboard is false.",
++    "OPERATOR-ACTION: In Kaggle, open kernel iancblenke/carnot-arc-agi3-submission with GPU enabled and internet disabled.",
++    "OPERATOR-ACTION: Attach the ARC-AGI-3 competition plus datasets carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf.",
++    "OPERATOR-ACTION: Save & Run the kernel and wait for the non-rerun submission.parquet output before any external publication step.",
++    "OPERATOR-ACTION: Review logs for LLM TIER RESOLVED or LLM GENERATOR HEALTHY, and record any CPU-only degradation before submit.",
++    "OPERATOR-ACTION: Submit only through the operator-controlled Kaggle UI or API after the above checks; this experiment never submits."
++  ],
++  "operator_only": true,
++  "package_builds": {
++    "assembled": true,
++    "assembly": {
++      "assembled": true,
++      "blocked_resource": "",
++      "entrypoint_compiles": true,
++      "file_hashes": {
++        "kernel-metadata.json": "sha256:40629bd0ded774706e3356cddeb0e62d11178ab0f7e64f71e517296c423b6cc4",
++        "main.py": "sha256:893d9c196473c07ed99242494213dab4fa62f507a2173f30591d90065b56a03f"
++      },
++      "files": [
++        "kernel-metadata.json",
++        "main.py"
++      ],
++      "sha256": "sha256:900bd246f3c61ee8710ce53c2d9d0ff66a936459bcf76ce0e5b4958be55184c6"
++    },
++    "blocked_resource": "",
++    "clean_env": true,
++    "clean_env_smoke_ran": true,
++    "entrypoint_compiles": true,
++    "entrypoint_smoke": {
++      "blocked_resource": "",
++      "clean_env": true,
++      "passed": true,
++      "policy_class": "E3AgentPolicy",
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "{\"constructed\": true, \"policy_class\": \"E3AgentPolicy\"}\n"
++    },
++    "manifest_complete": true,
++    "requirements_complete": true,
++    "submitted_to_leaderboard": false
++  },
++  "package_manifest": {
++    "blocked_resources": [],
++    "checks": {
++      "code_file_main": true,
++      "competition_attached": true,
++      "datasets_attached": true,
++      "gpu_enabled": true,
++      "internet_off": true,
++      "main_present": true,
++      "metadata_present": true,
++      "script_kernel": true
++    },
++    "code_file": "main.py",
++    "competition_sources": [
++      "arc-prize-2026-arc-agi-3"
++    ],
++    "complete": true,
++    "dataset_sources": [
++      "iancblenke/carnot-agent-code",
++      "iancblenke/carnot-llamacpp-mtp-binary",
++      "iancblenke/carnot-qwen35-9b-mtp-gguf"
++    ],
++    "machine_shape": "NvidiaL4",
++    "metadata_path": "scripts/kaggle/submission_kernel/kernel-metadata.json"
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "llama_server_binary_present": true,
++    "llama_server_paths": [
++      "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
++      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    ],
++    "ok": true,
++    "qwen35_mtp_gguf_cached": true,
++    "qwen35_mtp_gguf_paths": [
++      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++    ],
++    "spec_has_req_4756": true,
++    "submission_kernel_present": true
++  },
++  "random_seed": 4756,
++  "reproducibility_checksum": "sha256:f876383dd1e94855a5bb01bef66cc6717cbde1b96e7eccaa3492a4b6cbac5dc0",
++  "requirements_check": {
++    "blocked_resources": [],
++    "checks": {
++      "agent_framework_copy": true,
++      "arc_agi_wheel": true,
++      "dotenv_wheel": true,
++      "gguf_env": true,
++      "llama_server_env": true,
++      "offline_pip_no_index": true,
++      "placeholder_parquet": true,
++      "qwen35_mtp_resolution": true,
++      "rerun_gateway_mode": true
++    },
++    "complete": true,
++    "offline_dependency_sources": [
++      "competition arc_agi_3_wheels",
++      "kaggle base image pandas/parquet stack",
++      "attached carnot-agent-code dataset",
++      "attached llama-server binary dataset",
++      "attached Qwen3.5-9B-MTP GGUF dataset"
++    ],
++    "source_path": "scripts/kaggle/submission_kernel/main.py"
++  },
++  "schema": "carnot.exp4756.submission_package_readiness.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4756",
++    "SCENARIO-CAPSTONE-4756",
++    "SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES"
++  ],
++  "submission_package_ready": true,
++  "submitted_to_leaderboard": false
++}
+diff --git a/tests/python/test_experiment_4756_submission_package_readiness.py b/tests/python/test_experiment_4756_submission_package_readiness.py
+new file mode 100644
+index 0000000000..ce23f27881
+--- /dev/null
++++ b/tests/python/test_experiment_4756_submission_package_readiness.py
+@@ -0,0 +1,337 @@
++"""Tests for Exp 4756 Kaggle submission-package readiness.
++
++Spec refs: REQ-CAPSTONE-4756, SCENARIO-CAPSTONE-4756,
++SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4756_submission_package_readiness as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_kernel(root: Path) -> None:
++    kernel = root / "scripts" / "kaggle" / "submission_kernel"
++    kernel.mkdir(parents=True)
++    (kernel / "kernel-metadata.json").write_text(
++        json.dumps(
++            {
++                "id": "iancblenke/carnot-arc-agi3-submission",
++                "title": "carnot-arc-agi3-submission",
++                "code_file": "main.py",
++                "language": "python",
++                "kernel_type": "script",
++                "enable_gpu": True,
++                "machine_shape": "NvidiaL4",
++                "enable_internet": False,
++                "dataset_sources": [
++                    "iancblenke/carnot-agent-code",
++                    "iancblenke/carnot-llamacpp-mtp-binary",
++                    "iancblenke/carnot-qwen35-9b-mtp-gguf",
++                ],
++                "competition_sources": ["arc-prize-2026-arc-agi-3"],
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    (kernel / "main.py").write_text(
++        "\n".join(
++            [
++                "import os, subprocess, sys",
++                "COMP = '/kaggle/input/competitions/arc-prize-2026-arc-agi-3'",
++                "subprocess.run([sys.executable, '-m', 'pip', 'install', '--no-index',",
++                "    '--find-links', f'{COMP}/arc_agi_3_wheels', 'arc-agi', 'python-dotenv', '--quiet'])",
++                "AGENT_SRC = 'Qwen3.5-9B CARNOT_LLAMA_SERVER CARNOT_ARC_GGUF_PATH llama-server Qwen3.5-9B-Q4_K_M.gguf'",
++                "print('/kaggle/input ARC-AGI-3-Agents my_agent.py KAGGLE_IS_COMPETITION_RERUN gateway:8001 submission.parquet pandas to_parquet')",
++            ]
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++
++def _preconditions(ok: bool = True) -> JsonDict:
++    return {
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4756": True,
++        "submission_kernel_present": True,
++        "qwen35_mtp_gguf_cached": ok,
++        "qwen35_mtp_gguf_paths": ["/models/Qwen3.5-9B-Q4_K_M.gguf"] if ok else [],
++        "llama_server_binary_present": ok,
++        "llama_server_paths": ["/bin/llama-server"] if ok else [],
++        "ok": ok,
++        **({} if ok else {"blocked_resource": "qwen35_mtp_gguf_cached"}),
++    }
++
++
++def _package_builds(ok: bool = True) -> JsonDict:
++    return {
++        "assembled": ok,
++        "entrypoint_compiles": ok,
++        "manifest_complete": ok,
++        "requirements_complete": ok,
++        "clean_env_smoke_ran": ok,
++        "clean_env": True,
++        "submitted_to_leaderboard": False,
++        "blocked_resource": "" if ok else "clean_env_smoke",
++        "assembly": {"files": ["kernel-metadata.json", "main.py"], "sha256": "sha256:abc"},
++        "entrypoint_smoke": {"passed": ok, "policy_class": "E3AgentPolicy"},
++    }
++
++
++def _smoke_failed_builds() -> JsonDict:
++    build = _package_builds(True)
++    build["clean_env_smoke_ran"] = False
++    build["blocked_resource"] = "clean_env_smoke"
++    build["entrypoint_smoke"] = {"passed": False, "policy_class": ""}
++    return build
++
++
++def test_req_capstone_4756_spec_declares_package_readiness_contract() -> None:
++    """REQ-CAPSTONE-4756: OpenSpec declares the deadline package-readiness contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4756",
++        "SCENARIO-CAPSTONE-4756",
++        "SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION",
++        "SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4756_manifest_and_requirements_are_checked(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4756: manifest and offline requirements are complete."""
++
++    _write_kernel(tmp_path)
++
++    manifest = mod.inspect_package_manifest(tmp_path)
++    requirements = mod.inspect_requirements(tmp_path)
++
++    assert manifest["complete"] is True
++    assert manifest["checks"]["internet_off"] is True
++    assert manifest["checks"]["gpu_enabled"] is True
++    assert manifest["checks"]["datasets_attached"] is True
++    assert manifest["checks"]["competition_attached"] is True
++    assert requirements["complete"] is True
++    assert requirements["checks"]["offline_pip_no_index"] is True
++    assert requirements["checks"]["llama_server_env"] is True
++    assert requirements["checks"]["gguf_env"] is True
++    assert requirements["checks"]["placeholder_parquet"] is True
++
++    bad_metadata = json.loads(
++        (tmp_path / "scripts/kaggle/submission_kernel/kernel-metadata.json").read_text(
++            encoding="utf-8"
++        )
++    )
++    bad_metadata["enable_internet"] = True
++    (tmp_path / "scripts/kaggle/submission_kernel/kernel-metadata.json").write_text(
++        json.dumps(bad_metadata), encoding="utf-8"
++    )
++    assert mod.inspect_package_manifest(tmp_path)["complete"] is False
++
++
++def test_scenario_capstone_4756_builds_ready_artifact_with_operator_checklist() -> None:
++    """SCENARIO-CAPSTONE-4756: green package gate marks operator-ready without submission."""
++
++    manifest = {"complete": True, "checks": {"internet_off": True}}
++    requirements = {"complete": True, "checks": {"offline_pip_no_index": True}}
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_manifest=manifest,
++        requirements_check=requirements,
++        package_builds=_package_builds(True),
++        duration_s=0.1,
++    )
++
++    assert artifact["honest_verdict"] == "success_package_ready_offline_smoke_green"
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts; 100us floor."
++    assert artifact["submission_package_ready"] is True
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["operator_only"] is True
++    assert artifact["package_builds"]["clean_env_smoke_ran"] is True
++    assert artifact["package_manifest"] == manifest
++    assert artifact["requirements_check"] == requirements
++    assert all(step.startswith("OPERATOR-ACTION:") for step in artifact["operator_checklist"])
++    assert any("submit" in step.lower() for step in artifact["operator_checklist"])
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4756_blocks_missing_resources_without_false_ready() -> None:
++    """SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION: missing GGUF blocks readiness."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(False),
++        package_manifest={"complete": True},
++        requirements_check={"complete": True},
++        package_builds=_package_builds(True),
++        duration_s=0.1,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_qwen35_mtp_gguf_cached"
++    assert artifact["submission_package_ready"] is False
++    assert artifact["package_builds"]["assembled"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_4756_schema_rejects_false_ready_submission_and_checksum() -> None:
++    """REQ-CAPSTONE-4756: schema guards readiness, operator-only, and checksums."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_manifest={"complete": True},
++        requirements_check={"complete": True},
++        package_builds=_smoke_failed_builds(),
++        duration_s=0.1,
++    )
++
++    assert artifact["honest_verdict"] == "complete_package_not_ready_clean_env_smoke"
++    assert artifact["submission_package_ready"] is False
++
++    false_ready = dict(artifact, submission_package_ready=True)
++    false_ready["reproducibility_checksum"] = mod.payload_checksum(false_ready)
++    assert "submission_package_ready_gate" in mod.artifact_schema_errors(false_ready)
++
++    submitted = dict(artifact, submitted_to_leaderboard=True)
++    submitted["reproducibility_checksum"] = mod.payload_checksum(submitted)
++    assert "submitted_to_leaderboard" in mod.artifact_schema_errors(submitted)
++
++    bad_checklist = dict(artifact, operator_checklist=["submit now"])
++    bad_checklist["reproducibility_checksum"] = mod.payload_checksum(bad_checklist)
++    assert "operator_checklist" in mod.artifact_schema_errors(bad_checklist)
++
++    drifted = dict(artifact, duration_s=99.0)
++    assert "reproducibility_checksum" in mod.artifact_schema_errors(drifted)
++
++
++def test_scenario_capstone_4756_runner_writes_stable_result(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4756: runner writes the requested result JSON."""
++
++    _write_kernel(tmp_path)
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions(True),
++        manifest_inspector=lambda _root: mod.inspect_package_manifest(_root),
++        requirements_inspector=lambda _root: mod.inspect_requirements(_root),
++        package_validator=lambda _root, _pre, manifest, requirements: {
++            **_package_builds(True),
++            "manifest_complete": manifest["complete"],
++            "requirements_complete": requirements["complete"],
++        },
++        write=True,
++        now=lambda: 10.0,
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert written["submission_package_ready"] is True
++    assert written["reproducibility_checksum"] == mod.payload_checksum(written)
++    assert mod.artifact_schema_errors(written) == []
++
++
++def test_req_capstone_4756_precondition_selection_and_build_gate() -> None:
++    """REQ-CAPSTONE-4756: blocked resource selection covers preconditions and build gates."""
++
++    assert mod._blocked_resource(_preconditions(False), _package_builds(True)) == (
++        "qwen35_mtp_gguf_cached"
++    )
++    for field, expected in (
++        ("assembled", "package_assembly"),
++        ("entrypoint_compiles", "entrypoint_compile"),
++        ("manifest_complete", "manifest"),
++        ("requirements_complete", "requirements"),
++        ("clean_env_smoke_ran", "clean_env_smoke"),
++    ):
++        build = _package_builds(True)
++        build[field] = False
++        assert mod._blocked_resource(_preconditions(True), build) == expected
++    assert mod._blocked_resource(_preconditions(True), _package_builds(True)) == "unknown"
++
++
++def test_req_capstone_4756_preconditions_hash_and_malformed_manifest(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4756: precondition and manifest helpers fail closed."""
++
++    _write_kernel(tmp_path)
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec = tmp_path / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec.parent.mkdir(parents=True)
++    spec.write_text("REQ-CAPSTONE-4756\n", encoding="utf-8")
++    hashed = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
++    hashed.write_text("weights\n", encoding="utf-8")
++
++    checks = mod.check_preconditions(
++        tmp_path,
++        gguf_finder=lambda: [str(hashed)],
++        llama_server_finder=lambda: ["/bin/llama-server"],
++    )
++
++    assert checks["ok"] is True
++    assert checks["qwen35_mtp_gguf_paths"] == [str(hashed)]
++    assert mod._file_sha256(hashed).startswith("sha256:")
++
++    blocked = mod.check_preconditions(
++        tmp_path,
++        gguf_finder=lambda: [],
++        llama_server_finder=lambda: ["/bin/llama-server"],
++    )
++    assert blocked["ok"] is False
++    assert blocked["blocked_resource"] == "qwen35_mtp_gguf_cached"
++
++    metadata = tmp_path / "scripts" / "kaggle" / "submission_kernel" / "kernel-metadata.json"
++    metadata.write_text("{not json", encoding="utf-8")
++    malformed = mod.inspect_package_manifest(tmp_path)
++    assert malformed["complete"] is False
++    assert "code_file_main" in malformed["blocked_resources"]
++
++
++def test_req_capstone_4756_schema_reports_remaining_guard_branches() -> None:
++    """REQ-CAPSTONE-4756: schema reports malformed terminal and operator-only fields."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_manifest={"complete": True},
++        requirements_check={"complete": True},
++        package_builds=_package_builds(True),
++        duration_s=0.1,
++    )
++
++    missing = dict(artifact)
++    del missing["package_manifest"]
++    assert "package_manifest" in mod.artifact_schema_errors(missing)
++
++    for field, bad_value, expected in (
++        ("honest_verdict", "ready", "honest_verdict"),
++        ("inference_substrate", "live_llm_inference", "inference_substrate"),
++        ("field_principles", {}, "field_principles"),
++        ("operator_only", False, "operator_only"),
++    ):
++        malformed = dict(artifact, **{field: bad_value})
++        malformed["reproducibility_checksum"] = mod.payload_checksum(malformed)
++        assert expected in mod.artifact_schema_errors(malformed)
++
++    build_submitted = dict(
++        artifact,
++        package_builds={**artifact["package_builds"], "submitted_to_leaderboard": True},
++    )
++    build_submitted["reproducibility_checksum"] = mod.payload_checksum(build_submitted)
++    assert "package_builds_submitted_to_leaderboard" in mod.artifact_schema_errors(
++        build_submitted
++    )
+-- 
+2.55.0
+

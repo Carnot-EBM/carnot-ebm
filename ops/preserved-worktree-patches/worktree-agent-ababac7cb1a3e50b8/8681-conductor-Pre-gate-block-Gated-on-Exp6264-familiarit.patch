@@ -1,0 +1,77 @@
+From 13070b078d0f5848e0694a696b40295dce237cbb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 04:39:08 -0400
+Subject: [PATCH 08681/11362] [conductor] Pre-gate block: Gated on Exp6264
+ familiarity: chronological two-timescale continuous self-learning A/B
+
+1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.familiarity_gate_ready_score (actual=0.0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...65_chronological_two_timescale_csl_ab.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6265_chronological_two_timescale_csl_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1be413250b..0f3302984e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-10T08:08:48Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-10T08:39:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c36bbaef76..185016df1a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15580,3 +15580,4 @@ Still active  |
+ | 2026-08-10 06:30 UTC | Terminal-artifact completeness and downstream-read | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:   assert "clas |
+ | 2026-08-10 07:54 UTC | Clean immutable local-SOTA event corpus to chronol | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ["honest_verdi |
+ | 2026-08-10 08:06 UTC | Clean immutable local-SOTA event corpus to chronol | OK | 98 passed, 1 warning in 14.54s |
++| 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6fd1efbab5..99b6ef8066 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-10T08:08:48Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-10T08:39:08Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6265_chronological_two_timescale_csl_ab.json b/results/experiment_6265_chronological_two_timescale_csl_ab.json
+new file mode 100644
+index 0000000000..9bc2160a36
+--- /dev/null
++++ b/results/experiment_6265_chronological_two_timescale_csl_ab.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6265,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-10",
++  "started_at": "2026-08-10T08:39:08.678373+00:00",
++  "finished_at": "2026-08-10T08:39:08.678373+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6264 familiarity: chronological two-timescale continuous self-learning A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.familiarity_gate_ready_score (actual=0.0 == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6264-energy-familiarity-memory-gate",
++      "artifact_field": "familiarity_gate_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 == expected=1"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

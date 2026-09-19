@@ -1,0 +1,1263 @@
+From 10a6e42cedfd5580f22352d6ae6b77ac9221e133 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 15:36:07 -0400
+Subject: [PATCH 05683/11362] [conductor] PHASE 1 gated on exp5235
+ qa_calibration_passed -- GAP-4 clean status decision without regenerating the
+ pool
+
+Automated research step by research conductor.
+Task ID: exp5236-gap4-clean-status-after-qa-calibration-v479
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  73 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._clean_status_after_qa_calibration_v479.py | 555 ++++++++++++++++++
+ ...lean_status_after_qa_calibration_v479.json | 115 ++++
+ ..._clean_status_after_qa_calibration_v479.py | 453 ++++++++++++++
+ 5 files changed, 1197 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+ create mode 100644 results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
+ create mode 100644 tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 20adf28ff4..4f7ad1edfd 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -34125,6 +34125,79 @@ Exp 5235 artifact records `duration_methodology_checks_preserved=true`.
+ |---|---|---|
+ | REQ-REPORT-5235 | Implemented (`python/carnot/experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`, `results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`) | Implemented (`tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`) |
+ 
++### REQ-REPORT-5236: GAP-4 Clean Status After QA Calibration
++
++The Exp 5236 workflow SHALL reclassify the existing GAP-4 evidence only after
++reading `results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`
++and confirming `qa_calibration_passed=true`. It SHALL read the frozen Exp 5224
++canonical pool artifact and the frozen Exp 5225 validation artifact, SHALL
++re-run available schema/result checks and adversarial artifact QA checks against
++those artifacts, and SHALL NOT generate new GAP-4 candidates, modify the
++`n=120` canonical pool, or tune the unchanged GAP-4 threshold.
++
++The workflow SHALL choose exactly one `gap4_status_decision` from
++`clean_null`, `clean_positive`, `blocked_flagged`, or
++`blocked_missing_receipts`. It SHALL use `clean_positive` only when the frozen
++validation artifact is clean and the unchanged min-six exact-test rule passes;
++it SHALL use `clean_null` when the frozen validation artifact is clean but does
++not cross that rule; it SHALL use `blocked_flagged` when any recheck reports
++adversarial flags; and it SHALL use `blocked_missing_receipts` when calibration,
++schema, source-artifact, receipt, or precondition evidence is missing or
++malformed.
++
++The artifact SHALL write
++`results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json` and
++SHALL include bare top-level fields `gap4_status_decision`,
++`gap4_headline_eligible`, `canonical_pool_n`, `wins`, `losses`, `ties`,
++`qa_recheck_commands`, `pool_regenerated`, `ops_docs_updated`,
++`inference_substrate`, and `honest_verdict`. `pool_regenerated` SHALL be
++`false`; `inference_substrate` SHALL be
++`frozen_gap4_artifact_reclassification`; and `ops_docs_updated` SHALL be a bare
++boolean so a conductor stop rule can delegate ops/status/traceability
++reconciliation without changing the evidence decision.
++
++Required field principles:
++
++- `gap4_status_decision`: principle "BARE top-level string, exactly one of clean_null, clean_positive, blocked_flagged, blocked_missing_receipts."
++- `gap4_headline_eligible`: principle "BARE top-level boolean. True only for a clean-positive GAP-4 decision that crosses the unchanged min-six rule."
++- `canonical_pool_n`: principle "BARE top-level integer copied from the frozen Exp 5224 canonical pool; must remain 120 for the .478 reclassification."
++- `wins`: principle "BARE top-level integer copied from frozen Exp 5225 validation wins; no new scoring pass may alter it."
++- `losses`: principle "BARE top-level integer copied from frozen Exp 5225 validation losses; no new scoring pass may alter it."
++- `ties`: principle "BARE top-level integer copied from frozen Exp 5225 validation ties; no new scoring pass may alter it."
++- `qa_recheck_commands`: principle "List of commands or deterministic checks and pass/fail outcomes used to recheck Exp 5224 and Exp 5225."
++- `pool_regenerated`: principle "Must be false; Exp 5236 is a reclassification over the frozen .478 pool, not candidate generation."
++- `ops_docs_updated`: principle "Bare boolean recording whether this task updated ops/status/changelog/traceability docs; false is valid when a conductor stop rule delegates reconciliation."
++- `inference_substrate`: principle "Must be frozen_gap4_artifact_reclassification."
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether GAP-4 is clean-null, clean-positive, or still blocked."
++
++#### SCENARIO-REPORT-5236-CLEAN-NULL: Frozen Validation Reclassifies As Clean Null
++
++**Given** Exp 5235 reports `qa_calibration_passed=true`
++**And** Exp 5224 reports a usable frozen canonical pool with
++`canonical_pool_n=120`
++**And** Exp 5225 reports a clean validation with `wins=0`, `losses=0`,
++`ties=120`, and `exact_test_passes_min6_rule=false`
++**When** Exp 5236 re-runs the schema/result checks and adversarial QA checks
++without regenerating the pool
++**Then** the artifact records `gap4_status_decision=clean_null`,
++`gap4_headline_eligible=false`, `pool_regenerated=false`, and a terminal
++honest verdict that says GAP-4 is clean-null.
++
++#### SCENARIO-REPORT-5236-BLOCKED-RECHECK: Flags Or Missing Receipts Block Reclassification
++
++**Given** Exp 5235 is missing or fails calibration, Exp 5224/5225 schema checks
++fail, required frozen metrics are missing, or adversarial QA reports flags
++**When** Exp 5236 builds the status artifact
++**Then** the artifact records either `blocked_missing_receipts` or
++`blocked_flagged`, preserves the frozen metrics that could be read, keeps
++`gap4_headline_eligible=false`, and states the exact remaining blocker.
++
++## Implementation Status (REQ-REPORT-5236)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5236 | Implemented (`python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py`, `results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json`) | Implemented (`tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py`) |
++
+ ### REQ-REPORT-5221: V478 Reserved SOTA Ingestion Refresh
+ 
+ The Exp 5221 workflow SHALL produce
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 652f93c500..720529415b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4210,
++  "experiments_checked": 4211,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py b/python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+new file mode 100644
+index 0000000000..6fc9254df6
+--- /dev/null
++++ b/python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+@@ -0,0 +1,555 @@
++"""Exp 5236: reclassify GAP-4 after artifact-QA calibration.
++
++Spec refs: REQ-REPORT-5236, SCENARIO-REPORT-5236-CLEAN-NULL,
++SCENARIO-REPORT-5236-BLOCKED-RECHECK.
++
++This module is deliberately a reader, not a generator. It takes the frozen
++Exp 5224 pool and Exp 5225 validation as evidence, rechecks their receipts,
++and emits the narrow status decision downstream capstones need.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import os
++from collections.abc import Callable, Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5224_gap4_canonical_pool_builder_v478 as exp5224
++from carnot import experiment_5225_gap4_clean_scale_validation_gated_v478 as exp5225
++from scripts import adversarial_verify as av
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5236_gap4_clean_status_after_qa_calibration_v479"
++EXPERIMENT_ID = 5236
++MILESTONE = "2026.07.479"
++RUN_DATE = "2026-07-04"
++SCHEMA = "carnot.experiment_5236.gap4_clean_status_after_qa_calibration.v479"
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json"
++)
++EXP5235_RELATIVE_PATH = Path(
++    "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json"
++)
++EXP5224_RELATIVE_PATH = Path(exp5224.RESULT_RELATIVE_PATH)
++EXP5225_RELATIVE_PATH = Path(exp5225.RESULT_RELATIVE_PATH)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py"
++)
++INFERENCE_SUBSTRATE = "frozen_gap4_artifact_reclassification"
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++DECISIONS = {
++    "clean_null",
++    "clean_positive",
++    "blocked_flagged",
++    "blocked_missing_receipts",
++}
++SPEC_REFS = [
++    "REQ-REPORT-5236",
++    "SCENARIO-REPORT-5236-CLEAN-NULL",
++    "SCENARIO-REPORT-5236-BLOCKED-RECHECK",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "gap4_status_decision": (
++        "BARE top-level string, exactly one of clean_null, clean_positive, "
++        "blocked_flagged, blocked_missing_receipts."
++    ),
++    "gap4_headline_eligible": (
++        "BARE top-level boolean. True only for a clean-positive GAP-4 decision "
++        "that crosses the unchanged min-six rule."
++    ),
++    "canonical_pool_n": (
++        "BARE top-level integer copied from the frozen Exp 5224 canonical pool; "
++        "must remain 120 for the .478 reclassification."
++    ),
++    "wins": (
++        "BARE top-level integer copied from frozen Exp 5225 validation wins; "
++        "no new scoring pass may alter it."
++    ),
++    "losses": (
++        "BARE top-level integer copied from frozen Exp 5225 validation losses; "
++        "no new scoring pass may alter it."
++    ),
++    "ties": (
++        "BARE top-level integer copied from frozen Exp 5225 validation ties; "
++        "no new scoring pass may alter it."
++    ),
++    "qa_recheck_commands": (
++        "List of commands or deterministic checks and pass/fail outcomes used "
++        "to recheck Exp 5224 and Exp 5225."
++    ),
++    "pool_regenerated": (
++        "Must be false; Exp 5236 is a reclassification over the frozen .478 "
++        "pool, not candidate generation."
++    ),
++    "ops_docs_updated": (
++        "Bare boolean recording whether this task updated "
++        "ops/status/changelog/traceability docs; false is valid when a "
++        "conductor stop rule delegates reconciliation."
++    ),
++    "inference_substrate": "Must be frozen_gap4_artifact_reclassification.",
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ and state "
++        "whether GAP-4 is clean-null, clean-positive, or still blocked."
++    ),
++}
++
++REQUIRED_SCHEMA_FIELDS = {
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "duration_s",
++    "field_principles",
++    "source_artifacts",
++    "qa_calibration_artifact_path",
++    "qa_calibration_passed",
++    "recheck_reports",
++    "remaining_blocker",
++    "status_rationale",
++    "tests_added_or_updated",
++    "reproducibility_checksum",
++    *FIELD_PRINCIPLES,
++}
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, indent=2, sort_keys=True)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Return a checksum that changes when any emitted evidence field changes."""
++
++    payload = dict(artifact)
++    payload.pop("reproducibility_checksum", None)
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return dict(payload) if isinstance(payload, Mapping) else {}
++
++
++def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_name(path.name + ".tmp")
++    tmp.write_text(_stable_json(payload) + "\n", encoding="utf-8")
++    os.replace(tmp, path)
++
++
++def _file_sha256(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _as_int(value: Any) -> int | None:
++    if isinstance(value, bool) or not isinstance(value, int):
++        return None
++    return value
++
++
++def load_source_artifacts(root: Path | str = REPO_ROOT) -> tuple[JsonDict, JsonDict, JsonDict]:
++    """Read the three frozen evidence artifacts from a root directory."""
++
++    root_path = Path(root)
++    return (
++        _read_json(root_path / EXP5235_RELATIVE_PATH),
++        _read_json(root_path / EXP5224_RELATIVE_PATH),
++        _read_json(root_path / EXP5225_RELATIVE_PATH),
++    )
++
++
++def default_schema_recheck(
++    root: Path | str,
++    pool_artifact: Mapping[str, Any],
++    validation_artifact: Mapping[str, Any],
++) -> list[JsonDict]:
++    """Run the same deterministic artifact-schema checks the source modules use."""
++
++    del root
++    pool_rows = pool_artifact.get("candidate_rows")
++    pool_errors = (
++        exp5224.artifact_schema_errors(pool_artifact, pool_rows)
++        if isinstance(pool_rows, list)
++        else ["candidate_rows_missing"]
++    )
++    validation_errors = (
++        exp5225.artifact_schema_errors(validation_artifact)
++        if validation_artifact
++        else ["exp5225_artifact_missing"]
++    )
++    return [
++        {
++            "name": "exp5224_artifact_schema_errors",
++            "path": str(EXP5224_RELATIVE_PATH),
++            "passed": not pool_errors,
++            "errors": list(pool_errors),
++        },
++        {
++            "name": "exp5225_artifact_schema_errors",
++            "path": str(EXP5225_RELATIVE_PATH),
++            "passed": not validation_errors,
++            "errors": list(validation_errors),
++        },
++    ]
++
++
++def default_adversarial_recheck(root: Path | str = REPO_ROOT) -> list[JsonDict]:
++    """Run the real artifact-QA verifier over the frozen Exp 5224/5225 files."""
++
++    root_path = Path(root)
++    reports: list[JsonDict] = []
++    for relative in (EXP5224_RELATIVE_PATH, EXP5225_RELATIVE_PATH):
++        report = av.verify_artifact(root_path / relative)
++        flags = report.get("flags", [])
++        flag_count = _as_int(report.get("flag_count"))
++        if flag_count is None:
++            flag_count = len(flags) if isinstance(flags, list) else 0
++        reports.append(
++            {
++                "name": "adversarial_verify",
++                "path": str(relative),
++                "passed": report.get("loaded") is True and flag_count == 0,
++                "loaded": report.get("loaded") is True,
++                "flag_count": flag_count,
++                "flags": flags if isinstance(flags, list) else [],
++                "error": report.get("error"),
++            }
++        )
++    return reports
++
++
++def _schema_command_summaries(schema_reports: Sequence[Mapping[str, Any]]) -> list[str]:
++    commands: list[str] = []
++    for report in schema_reports:
++        name = str(report.get("name") or "schema_recheck")
++        errors = report.get("errors")
++        error_count = len(errors) if isinstance(errors, list) else 0
++        status = "PASS" if report.get("passed") is True else "FAIL"
++        commands.append(f"{name}: {status} ({error_count} errors)")
++    return commands
++
++
++def _adversarial_command_summary(reports: Sequence[Mapping[str, Any]]) -> str:
++    flagged = sum(int(report.get("flag_count") or 0) for report in reports)
++    status = "PASS" if flagged == 0 and all(report.get("passed") is True for report in reports) else "FAIL"
++    return (
++        ".venv/bin/python scripts/adversarial_verify.py "
++        f"{EXP5224_RELATIVE_PATH} {EXP5225_RELATIVE_PATH} --json: "
++        f"{status} (flagged_count={flagged})"
++    )
++
++
++def _flag_blockers(adversarial_reports: Sequence[Mapping[str, Any]]) -> list[str]:
++    blockers: list[str] = []
++    for report in adversarial_reports:
++        flags = report.get("flags")
++        if not isinstance(flags, list) or not flags:
++            continue
++        kinds = sorted({str(flag.get("kind") or "unknown") for flag in flags if isinstance(flag, Mapping)})
++        blockers.append(f"{report.get('path')}: adversarial_flags={','.join(kinds)}")
++    return blockers
++
++
++def _receipt_blockers(
++    *,
++    qa_artifact: Mapping[str, Any],
++    pool_artifact: Mapping[str, Any],
++    validation_artifact: Mapping[str, Any],
++    schema_reports: Sequence[Mapping[str, Any]],
++    adversarial_reports: Sequence[Mapping[str, Any]],
++) -> list[str]:
++    blockers: list[str] = []
++    if qa_artifact.get("qa_calibration_passed") is not True:
++        blockers.append("qa_calibration_not_passed")
++    pool_n = _as_int(pool_artifact.get("canonical_pool_n"))
++    if pool_artifact.get("gap4_canonical_pool_usable") is not True:
++        blockers.append("exp5224_pool_not_usable")
++    if pool_n != exp5224.CANONICAL_POOL_TARGET_N:
++        blockers.append("canonical_pool_n_not_120")
++    if validation_artifact.get("gap4_clean_validation_complete") is not True:
++        blockers.append("exp5225_clean_validation_not_complete")
++    if validation_artifact.get("precondition_errors"):
++        blockers.append("exp5225_precondition_errors_present")
++    validation_pool_n = _as_int(validation_artifact.get("canonical_pool_n"))
++    if validation_pool_n is not None and pool_n is not None and validation_pool_n != pool_n:
++        blockers.append("exp5224_exp5225_pool_n_mismatch")
++    if _as_int(validation_artifact.get("n_scored")) is None:
++        blockers.append("n_scored_missing")
++    for field in ("wins", "losses", "ties"):
++        if _as_int(validation_artifact.get(field)) is None:
++            blockers.append(f"{field}_missing")
++    for report in schema_reports:
++        if report.get("passed") is True:
++            continue
++        errors = report.get("errors")
++        detail = ",".join(str(item) for item in errors) if isinstance(errors, list) else "failed"
++        blockers.append(f"{report.get('name')}: {detail}")
++    for report in adversarial_reports:
++        if report.get("passed") is True or int(report.get("flag_count") or 0) > 0:
++            continue
++        blockers.append(f"{report.get('path')}: adversarial_recheck_missing_or_failed")
++    return sorted(dict.fromkeys(blockers))
++
++
++def _decision(
++    validation_artifact: Mapping[str, Any],
++    flag_blockers: Sequence[str],
++    receipt_blockers: Sequence[str],
++) -> str:
++    if flag_blockers:
++        return "blocked_flagged"
++    if receipt_blockers:
++        return "blocked_missing_receipts"
++    if validation_artifact.get("exact_test_passes_min6_rule") is True:
++        return "clean_positive"
++    return "clean_null"
++
++
++def _honest_verdict(decision: str, n: int, wins: int, losses: int, ties: int) -> str:
++    if decision == "clean_positive":
++        return (
++            f"success: GAP-4 is clean-positive after QA calibration; frozen n={n} "
++            f"validation has wins={wins}, losses={losses}, ties={ties} and crosses "
++            "the unchanged min-six rule."
++        )
++    if decision == "clean_null":
++        return (
++            f"complete: GAP-4 is clean-null after QA calibration; frozen n={n} "
++            f"validation has wins={wins}, losses={losses}, ties={ties} and does "
++            "not cross the unchanged min-six rule."
++        )
++    return (
++        f"complete: GAP-4 is still blocked after QA calibration with decision "
++        f"{decision}; frozen n={n} validation currently has wins={wins}, "
++        f"losses={losses}, ties={ties}."
++    )
++
++
++def _source_artifact_summaries(root: Path | str) -> list[JsonDict]:
++    root_path = Path(root)
++    summaries: list[JsonDict] = []
++    for relative in (EXP5235_RELATIVE_PATH, EXP5224_RELATIVE_PATH, EXP5225_RELATIVE_PATH):
++        path = root_path / relative
++        payload = _read_json(path)
++        summaries.append(
++            {
++                "path": str(relative),
++                "exists": path.exists(),
++                "sha256": _file_sha256(path),
++                "experiment": payload.get("experiment"),
++                "experiment_id": payload.get("experiment_id"),
++            }
++        )
++    return summaries
++
++
++def _status_rationale(decision: str, blocker: str | None) -> str:
++    if decision == "clean_positive":
++        return "Frozen GAP-4 validation is clean and crosses the unchanged min-six floor."
++    if decision == "clean_null":
++        return "Frozen GAP-4 validation is clean but does not cross the unchanged min-six floor."
++    return str(blocker or "blocked without a more specific blocker")
++
++
++def build_artifact(
++    *,
++    qa_artifact: Mapping[str, Any],
++    pool_artifact: Mapping[str, Any],
++    validation_artifact: Mapping[str, Any],
++    schema_reports: Sequence[Mapping[str, Any]],
++    adversarial_reports: Sequence[Mapping[str, Any]],
++    qa_recheck_commands: Sequence[str] = (),
++    duration_s: float = 0.0,
++    ops_docs_updated: bool = False,
++    source_artifacts: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Build the terminal status artifact from already-frozen evidence.
++
++    The key safety rule is that the status can improve from "blocked by QA" to
++    "clean null" only through reclassification. No candidate rows or thresholds
++    are recomputed here.
++    """
++
++    flags = _flag_blockers(adversarial_reports)
++    receipts = _receipt_blockers(
++        qa_artifact=qa_artifact,
++        pool_artifact=pool_artifact,
++        validation_artifact=validation_artifact,
++        schema_reports=schema_reports,
++        adversarial_reports=adversarial_reports,
++    )
++    decision = _decision(validation_artifact, flags, receipts)
++    blockers = flags if flags else receipts
++    remaining_blocker = "; ".join(blockers) if blockers else None
++    n = _as_int(pool_artifact.get("canonical_pool_n")) or 0
++    wins = _as_int(validation_artifact.get("wins")) or 0
++    losses = _as_int(validation_artifact.get("losses")) or 0
++    ties = _as_int(validation_artifact.get("ties")) or 0
++    commands = [
++        (
++            f"read {EXP5235_RELATIVE_PATH}: "
++            f"{'PASS' if qa_artifact.get('qa_calibration_passed') is True else 'FAIL'} "
++            f"(qa_calibration_passed={qa_artifact.get('qa_calibration_passed')!r})"
++        ),
++        *_schema_command_summaries(schema_reports),
++        _adversarial_command_summary(adversarial_reports),
++        *list(qa_recheck_commands),
++    ]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "duration_s": max(0.0, round(float(duration_s), 6)),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifacts": [dict(item) for item in source_artifacts or ()],
++        "qa_calibration_artifact_path": str(EXP5235_RELATIVE_PATH),
++        "qa_calibration_passed": qa_artifact.get("qa_calibration_passed") is True,
++        "recheck_reports": {
++            "schema": [dict(report) for report in schema_reports],
++            "adversarial": [dict(report) for report in adversarial_reports],
++        },
++        "remaining_blocker": remaining_blocker,
++        "status_rationale": _status_rationale(decision, remaining_blocker),
++        "tests_added_or_updated": [str(TEST_RELATIVE_PATH)],
++        "gap4_status_decision": decision,
++        "gap4_headline_eligible": decision == "clean_positive",
++        "canonical_pool_n": n,
++        "wins": wins,
++        "losses": losses,
++        "ties": ties,
++        "qa_recheck_commands": commands,
++        "pool_regenerated": False,
++        "ops_docs_updated": bool(ops_docs_updated),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(decision, n, wins, losses, ties),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _require_bare_bool(artifact: Mapping[str, Any], field: str) -> None:
++    if not isinstance(artifact.get(field), bool):
++        raise ValueError(f"{field}_bare_bool")
++
++
++def _require_bare_int(artifact: Mapping[str, Any], field: str) -> None:
++    if _as_int(artifact.get(field)) is None:
++        raise ValueError(f"{field}_bare_int")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 5236 schema before the JSON is written."""
++
++    missing = REQUIRED_SCHEMA_FIELDS.difference(artifact)
++    if missing:
++        raise ValueError(f"missing required fields: {sorted(missing)}")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles")
++    decision = artifact.get("gap4_status_decision")
++    if decision not in DECISIONS:
++        raise ValueError("gap4_status_decision")
++    for field in ("gap4_headline_eligible", "pool_regenerated", "ops_docs_updated"):
++        _require_bare_bool(artifact, field)
++    for field in ("canonical_pool_n", "wins", "losses", "ties"):
++        _require_bare_int(artifact, field)
++    if artifact["gap4_headline_eligible"] is not (decision == "clean_positive"):
++        raise ValueError("gap4_headline_eligible")
++    if artifact["pool_regenerated"] is not False:
++        raise ValueError("pool_regenerated")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate")
++    commands = artifact.get("qa_recheck_commands")
++    if not isinstance(commands, list) or not all(isinstance(item, str) for item in commands):
++        raise ValueError("qa_recheck_commands")
++    if decision in {"blocked_flagged", "blocked_missing_receipts"}:
++        if not isinstance(artifact.get("remaining_blocker"), str) or not artifact["remaining_blocker"]:
++            raise ValueError("remaining_blocker")
++    elif artifact.get("remaining_blocker") is not None:
++        raise ValueError("remaining_blocker")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict")
++    if decision == "clean_null" and "clean-null" not in verdict:
++        raise ValueError("honest_verdict")
++    if decision == "clean_positive" and "clean-positive" not in verdict:
++        raise ValueError("honest_verdict")
++    if str(decision).startswith("blocked") and "still blocked" not in verdict:
++        raise ValueError("honest_verdict")
++    if artifact["reproducibility_checksum"] != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++
++
++SchemaRechecker = Callable[[Path | str, Mapping[str, Any], Mapping[str, Any]], list[JsonDict]]
++AdversarialRechecker = Callable[[Path | str], list[JsonDict]]
++
++
++def write_outputs(
++    *,
++    root: Path | str = REPO_ROOT,
++    schema_rechecker: SchemaRechecker = default_schema_recheck,
++    adversarial_rechecker: AdversarialRechecker = default_adversarial_recheck,
++    qa_recheck_commands: Sequence[str] = (),
++    duration_s: float = 0.0,
++    ops_docs_updated: bool = False,
++) -> JsonDict:
++    """Read frozen GAP-4 evidence, recheck it, and write the Exp 5236 artifact."""
++
++    root_path = Path(root)
++    qa_artifact, pool_artifact, validation_artifact = load_source_artifacts(root_path)
++    schema_reports = schema_rechecker(root_path, pool_artifact, validation_artifact)
++    adversarial_reports = adversarial_rechecker(root_path)
++    artifact = build_artifact(
++        qa_artifact=qa_artifact,
++        pool_artifact=pool_artifact,
++        validation_artifact=validation_artifact,
++        schema_reports=schema_reports,
++        adversarial_reports=adversarial_reports,
++        qa_recheck_commands=qa_recheck_commands,
++        duration_s=duration_s,
++        ops_docs_updated=ops_docs_updated,
++        source_artifacts=_source_artifact_summaries(root_path),
++    )
++    validate_artifact(artifact)
++    _write_json_atomic(root_path / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--duration-s", type=float, default=0.0)
++    parser.add_argument("--qa-command", action="append", default=[])
++    parser.add_argument("--ops-docs-updated", action="store_true")
++    args = parser.parse_args(argv)
++    artifact = write_outputs(
++        root=args.root,
++        duration_s=args.duration_s,
++        qa_recheck_commands=args.qa_command,
++        ops_docs_updated=args.ops_docs_updated,
++    )
++    print(_stable_json(artifact))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json b/results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
+new file mode 100644
+index 0000000000..86a843dd83
+--- /dev/null
++++ b/results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
+@@ -0,0 +1,115 @@
++{
++  "canonical_pool_n": 120,
++  "duration_s": 0.25,
++  "experiment": "experiment_5236_gap4_clean_status_after_qa_calibration_v479",
++  "experiment_id": 5236,
++  "field_principles": {
++    "canonical_pool_n": "BARE top-level integer copied from the frozen Exp 5224 canonical pool; must remain 120 for the .478 reclassification.",
++    "gap4_headline_eligible": "BARE top-level boolean. True only for a clean-positive GAP-4 decision that crosses the unchanged min-six rule.",
++    "gap4_status_decision": "BARE top-level string, exactly one of clean_null, clean_positive, blocked_flagged, blocked_missing_receipts.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether GAP-4 is clean-null, clean-positive, or still blocked.",
++    "inference_substrate": "Must be frozen_gap4_artifact_reclassification.",
++    "losses": "BARE top-level integer copied from frozen Exp 5225 validation losses; no new scoring pass may alter it.",
++    "ops_docs_updated": "Bare boolean recording whether this task updated ops/status/changelog/traceability docs; false is valid when a conductor stop rule delegates reconciliation.",
++    "pool_regenerated": "Must be false; Exp 5236 is a reclassification over the frozen .478 pool, not candidate generation.",
++    "qa_recheck_commands": "List of commands or deterministic checks and pass/fail outcomes used to recheck Exp 5224 and Exp 5225.",
++    "ties": "BARE top-level integer copied from frozen Exp 5225 validation ties; no new scoring pass may alter it.",
++    "wins": "BARE top-level integer copied from frozen Exp 5225 validation wins; no new scoring pass may alter it."
++  },
++  "gap4_headline_eligible": false,
++  "gap4_status_decision": "blocked_missing_receipts",
++  "honest_verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.",
++  "inference_substrate": "frozen_gap4_artifact_reclassification",
++  "losses": 0,
++  "milestone": "2026.07.479",
++  "ops_docs_updated": false,
++  "pool_regenerated": false,
++  "qa_calibration_artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
++  "qa_calibration_passed": true,
++  "qa_recheck_commands": [
++    "read results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json: PASS (qa_calibration_passed=True)",
++    "exp5224_artifact_schema_errors: FAIL (1 errors)",
++    "exp5225_artifact_schema_errors: FAIL (1 errors)",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json --json: PASS (flagged_count=0)",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json --json: PASS (flagged_count=0)"
++  ],
++  "recheck_reports": {
++    "adversarial": [
++      {
++        "error": null,
++        "flag_count": 0,
++        "flags": [],
++        "loaded": true,
++        "name": "adversarial_verify",
++        "passed": true,
++        "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json"
++      },
++      {
++        "error": null,
++        "flag_count": 0,
++        "flags": [],
++        "loaded": true,
++        "name": "adversarial_verify",
++        "passed": true,
++        "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
++      }
++    ],
++    "schema": [
++      {
++        "errors": [
++          "reproducibility_checksum"
++        ],
++        "name": "exp5224_artifact_schema_errors",
++        "passed": false,
++        "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json"
++      },
++      {
++        "errors": [
++          "reproducibility_checksum"
++        ],
++        "name": "exp5225_artifact_schema_errors",
++        "passed": false,
++        "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
++      }
++    ]
++  },
++  "remaining_blocker": "exp5224_artifact_schema_errors: reproducibility_checksum; exp5225_artifact_schema_errors: reproducibility_checksum",
++  "reproducibility_checksum": "sha256:7867d25c38f825310690a990564f3110b8a25330f169d6a0781692c884f11a8d",
++  "result_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
++  "run_date": "2026-07-04",
++  "schema": "carnot.experiment_5236.gap4_clean_status_after_qa_calibration.v479",
++  "source_artifacts": [
++    {
++      "exists": true,
++      "experiment": "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
++      "experiment_id": 5235,
++      "path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
++      "sha256": "sha256:8f5d4d72e57e7285519ae5563c5c61bd0a39a164963d5d22533074bf95aaf671"
++    },
++    {
++      "exists": true,
++      "experiment": "experiment_5224_gap4_canonical_pool_builder_v478",
++      "experiment_id": 5224,
++      "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
++      "sha256": "sha256:283dfdfc616053d0d00e487aa4e6722b049ac2d0bbd8e058e4a2a560865be9d9"
++    },
++    {
++      "exists": true,
++      "experiment": "experiment_5225_gap4_clean_scale_validation_gated_v478",
++      "experiment_id": 5225,
++      "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
++      "sha256": "sha256:d45ef78163cda3b34b2f00191e14bb7566795371f53f4dd6408f0c783754dc9e"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5236",
++    "SCENARIO-REPORT-5236-CLEAN-NULL",
++    "SCENARIO-REPORT-5236-BLOCKED-RECHECK"
++  ],
++  "status_rationale": "exp5224_artifact_schema_errors: reproducibility_checksum; exp5225_artifact_schema_errors: reproducibility_checksum",
++  "tests_added_or_updated": [
++    "tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py"
++  ],
++  "ties": 120,
++  "wins": 0
++}
+diff --git a/tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py b/tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+new file mode 100644
+index 0000000000..49482c0df1
+--- /dev/null
++++ b/tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py
+@@ -0,0 +1,453 @@
++"""Tests for Exp 5236 GAP-4 clean status after QA calibration.
++
++Spec refs: REQ-REPORT-5236, SCENARIO-REPORT-5236-CLEAN-NULL,
++SCENARIO-REPORT-5236-BLOCKED-RECHECK.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5236_gap4_clean_status_after_qa_calibration_v479 as mod
++
++
++JsonDict = dict[str, Any]
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++
++
++def _qa_artifact(*, passed: bool = True) -> JsonDict:
++    return {
++        "experiment": "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
++        "experiment_id": 5235,
++        "result_path": str(mod.EXP5235_RELATIVE_PATH),
++        "qa_calibration_passed": passed,
++        "gap4_reclassification_ready": passed,
++        "duration_methodology_checks_preserved": True,
++        "honest_verdict": "complete: QA calibration passed",
++    }
++
++
++def _pool_artifact(*, n: int = 120, usable: bool = True) -> JsonDict:
++    return {
++        "experiment": "experiment_5224_gap4_canonical_pool_builder_v478",
++        "experiment_id": 5224,
++        "result_path": str(mod.EXP5224_RELATIVE_PATH),
++        "gap4_canonical_pool_usable": usable,
++        "canonical_pool_n": n,
++        "candidate_rows": [{"candidate_id": f"row-{idx:03d}"} for idx in range(n)],
++        "protocol_fields_complete": True,
++        "adversarial_verify_passed": True,
++        "honest_verdict": "success: canonical GAP-4 pool usable for validation with n=120",
++    }
++
++
++def _validation_artifact(
++    *,
++    wins: int = 0,
++    losses: int = 0,
++    ties: int = 120,
++    positive: bool = False,
++) -> JsonDict:
++    return {
++        "experiment": "experiment_5225_gap4_clean_scale_validation_gated_v478",
++        "experiment_id": 5225,
++        "result_path": str(mod.EXP5225_RELATIVE_PATH),
++        "gap4_clean_validation_complete": True,
++        "n_scored": wins + losses + ties,
++        "canonical_pool_n": 120,
++        "wins": wins,
++        "losses": losses,
++        "ties": ties,
++        "exact_test_p_value": 0.03125 if positive else 1.0,
++        "exact_test_passes_min6_rule": positive,
++        "effect_direction": "positive" if positive else "null",
++        "precondition_errors": [],
++        "adversarial_verify_passed": True,
++        "honest_verdict": "complete: clean GAP-4 validation null decision",
++    }
++
++
++def _schema_pass() -> list[JsonDict]:
++    return [
++        {"name": "exp5224_artifact_schema_errors", "path": str(mod.EXP5224_RELATIVE_PATH), "passed": True, "errors": []},
++        {"name": "exp5225_artifact_schema_errors", "path": str(mod.EXP5225_RELATIVE_PATH), "passed": True, "errors": []},
++    ]
++
++
++def _adversarial_pass() -> list[JsonDict]:
++    return [
++        {
++            "name": "adversarial_verify",
++            "path": str(mod.EXP5224_RELATIVE_PATH),
++            "passed": True,
++            "loaded": True,
++            "flag_count": 0,
++            "flags": [],
++        },
++        {
++            "name": "adversarial_verify",
++            "path": str(mod.EXP5225_RELATIVE_PATH),
++            "passed": True,
++            "loaded": True,
++            "flag_count": 0,
++            "flags": [],
++        },
++    ]
++
++
++def test_req_report_5236_spec_declares_reclassification_contract() -> None:
++    """REQ-REPORT-5236: OpenSpec anchors the frozen-artifact reclassification."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5236") : spec.index("REQ-REPORT-5221")]
++
++    for marker in (
++        "REQ-REPORT-5236",
++        "SCENARIO-REPORT-5236-CLEAN-NULL",
++        "SCENARIO-REPORT-5236-BLOCKED-RECHECK",
++        str(mod.RESULT_RELATIVE_PATH),
++        "clean_null",
++        "blocked_flagged",
++        "frozen_gap4_artifact_reclassification",
++        "pool_regenerated",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5236_clean_null_reclassifies_frozen_artifacts() -> None:
++    """SCENARIO-REPORT-5236-CLEAN-NULL: clean all-ties validation becomes clean_null."""
++
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(),
++        schema_reports=_schema_pass(),
++        adversarial_reports=_adversarial_pass(),
++        qa_recheck_commands=["adversarial_verify exp5224 exp5225: PASS"],
++        duration_s=0.5,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["gap4_status_decision"] == "clean_null"
++    assert artifact["gap4_headline_eligible"] is False
++    assert artifact["canonical_pool_n"] == 120
++    assert artifact["wins"] == 0
++    assert artifact["losses"] == 0
++    assert artifact["ties"] == 120
++    assert artifact["pool_regenerated"] is False
++    assert artifact["ops_docs_updated"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["remaining_blocker"] is None
++    assert "clean-null" in artifact["honest_verdict"]
++
++
++def test_req_report_5236_clean_positive_is_only_headline_eligible_clean_decision() -> None:
++    """REQ-REPORT-5236: headline eligibility requires the unchanged min-six positive."""
++
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(wins=6, losses=0, ties=114, positive=True),
++        schema_reports=_schema_pass(),
++        adversarial_reports=_adversarial_pass(),
++        qa_recheck_commands=["adversarial_verify exp5224 exp5225: PASS"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["gap4_status_decision"] == "clean_positive"
++    assert artifact["gap4_headline_eligible"] is True
++    assert artifact["wins"] == 6
++    assert "clean-positive" in artifact["honest_verdict"]
++
++
++def test_scenario_report_5236_blocked_flagged_records_exact_flag() -> None:
++    """SCENARIO-REPORT-5236-BLOCKED-RECHECK: adversarial flags keep GAP-4 blocked."""
++
++    flagged_reports = _adversarial_pass()
++    flagged_reports[1] = {
++        "name": "adversarial_verify",
++        "path": str(mod.EXP5225_RELATIVE_PATH),
++        "passed": False,
++        "loaded": True,
++        "flag_count": 1,
++        "flags": [{"kind": "TAUTOLOGY", "severity": "critical", "detail": "copied metric"}],
++    }
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(),
++        schema_reports=_schema_pass(),
++        adversarial_reports=flagged_reports,
++        qa_recheck_commands=["adversarial_verify exp5224 exp5225: FAIL"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["gap4_status_decision"] == "blocked_flagged"
++    assert artifact["gap4_headline_eligible"] is False
++    assert "TAUTOLOGY" in artifact["remaining_blocker"]
++    assert "still blocked" in artifact["honest_verdict"]
++
++
++def test_scenario_report_5236_blocked_missing_receipts_fails_closed() -> None:
++    """SCENARIO-REPORT-5236-BLOCKED-RECHECK: missing calibration/schema receipts block."""
++
++    schema_reports = _schema_pass()
++    schema_reports[0] = {
++        "name": "exp5224_artifact_schema_errors",
++        "path": str(mod.EXP5224_RELATIVE_PATH),
++        "passed": False,
++        "errors": ["canonical_pool_n"],
++    }
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(passed=False),
++        pool_artifact=_pool_artifact(n=119),
++        validation_artifact=_validation_artifact(),
++        schema_reports=schema_reports,
++        adversarial_reports=_adversarial_pass(),
++        qa_recheck_commands=["schema recheck: FAIL"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["gap4_status_decision"] == "blocked_missing_receipts"
++    assert artifact["gap4_headline_eligible"] is False
++    assert "qa_calibration_not_passed" in artifact["remaining_blocker"]
++    assert "canonical_pool_n_not_120" in artifact["remaining_blocker"]
++
++
++def test_req_report_5236_write_outputs_reads_sources_and_writes_json(tmp_path: Path) -> None:
++    """REQ-REPORT-5236: write_outputs emits the terminal reclassification artifact."""
++
++    _write_json(tmp_path / mod.EXP5235_RELATIVE_PATH, _qa_artifact())
++    _write_json(tmp_path / mod.EXP5224_RELATIVE_PATH, _pool_artifact())
++    _write_json(tmp_path / mod.EXP5225_RELATIVE_PATH, _validation_artifact())
++
++    artifact = mod.write_outputs(
++        root=tmp_path,
++        schema_rechecker=lambda _root, _pool, _validation: _schema_pass(),
++        adversarial_rechecker=lambda _root: _adversarial_pass(),
++        qa_recheck_commands=["manual CLI adversarial recheck: PASS"],
++        duration_s=0.25,
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert artifact["gap4_status_decision"] == "clean_null"
++    assert artifact["qa_calibration_artifact_path"] == str(mod.EXP5235_RELATIVE_PATH)
++    assert artifact["qa_recheck_commands"][-1] == "manual CLI adversarial recheck: PASS"
++    assert any("exp5224_artifact_schema_errors: PASS" in item for item in artifact["qa_recheck_commands"])
++    mod.validate_artifact(written)
++
++
++def test_req_report_5236_default_rechecks_and_missing_source_helpers(tmp_path: Path) -> None:
++    """REQ-REPORT-5236: default recheck helpers fail closed on missing receipts."""
++
++    assert mod.load_source_artifacts(tmp_path / "absent") == ({}, {}, {})
++    assert mod._file_sha256(tmp_path / "missing.json") is None
++    assert mod._as_int(True) is None
++
++    missing_schema = mod.default_schema_recheck(tmp_path, {}, {})
++    malformed_schema = mod.default_schema_recheck(
++        tmp_path,
++        {"candidate_rows": [{"candidate_id": "bad"}]},
++        {"experiment": "bad"},
++    )
++    adversarial = mod.default_adversarial_recheck(tmp_path)
++
++    assert missing_schema[0]["errors"] == ["candidate_rows_missing"]
++    assert missing_schema[1]["errors"] == ["exp5225_artifact_missing"]
++    assert malformed_schema[0]["passed"] is False
++    assert malformed_schema[1]["passed"] is False
++    assert [report["loaded"] for report in adversarial] == [False, False]
++    assert all(report["passed"] is False for report in adversarial)
++
++
++def test_req_report_5236_receipt_blockers_cover_malformed_metrics() -> None:
++    """REQ-REPORT-5236: malformed source metrics produce explicit receipt blockers."""
++
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(usable=False),
++        validation_artifact={
++            "canonical_pool_n": 121,
++            "gap4_clean_validation_complete": False,
++            "precondition_errors": ["blocked"],
++            "n_scored": None,
++            "wins": "0",
++            "losses": "0",
++            "ties": "120",
++        },
++        schema_reports=[
++            {
++                "name": "schema_without_list_errors",
++                "path": "x",
++                "passed": False,
++                "errors": "bad",
++            }
++        ],
++        adversarial_reports=[
++            {
++                "name": "adversarial_verify",
++                "path": str(mod.EXP5225_RELATIVE_PATH),
++                "passed": False,
++                "loaded": False,
++                "flag_count": 0,
++                "flags": [],
++            }
++        ],
++    )
++
++    blocker = artifact["remaining_blocker"]
++    assert artifact["gap4_status_decision"] == "blocked_missing_receipts"
++    for marker in (
++        "exp5224_pool_not_usable",
++        "exp5225_clean_validation_not_complete",
++        "exp5225_precondition_errors_present",
++        "exp5224_exp5225_pool_n_mismatch",
++        "n_scored_missing",
++        "wins_missing",
++        "losses_missing",
++        "ties_missing",
++        "schema_without_list_errors: failed",
++        "adversarial_recheck_missing_or_failed",
++    ):
++        assert marker in blocker
++
++
++def test_req_report_5236_validation_rejects_wrapped_fields_and_bad_checksum() -> None:
++    """REQ-REPORT-5236: required fields stay bare and checksum-protected."""
++
++    artifact = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(),
++        schema_reports=_schema_pass(),
++        adversarial_reports=_adversarial_pass(),
++        qa_recheck_commands=["adversarial_verify exp5224 exp5225: PASS"],
++    )
++
++    wrapped = dict(artifact)
++    wrapped["gap4_headline_eligible"] = {"value": False}
++    with pytest.raises(ValueError, match="gap4_headline_eligible_bare_bool"):
++        mod.validate_artifact(wrapped)
++
++    bad_decision = dict(artifact)
++    bad_decision["gap4_status_decision"] = "positiveish"
++    with pytest.raises(ValueError, match="gap4_status_decision"):
++        mod.validate_artifact(bad_decision)
++
++    bad_pool = dict(artifact)
++    bad_pool["pool_regenerated"] = True
++    with pytest.raises(ValueError, match="pool_regenerated"):
++        mod.validate_artifact(bad_pool)
++
++    bad_commands = dict(artifact)
++    bad_commands["qa_recheck_commands"] = ["ok", object()]
++    with pytest.raises(ValueError, match="qa_recheck_commands"):
++        mod.validate_artifact(bad_commands)
++
++    bad_int = dict(artifact)
++    bad_int["wins"] = "0"
++    with pytest.raises(ValueError, match="wins_bare_int"):
++        mod.validate_artifact(bad_int)
++
++    bad_checksum = dict(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
++
++
++def test_req_report_5236_validation_rejects_each_remaining_contract_break() -> None:
++    """REQ-REPORT-5236: validation fails closed for each schema contract break."""
++
++    clean = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(),
++        schema_reports=_schema_pass(),
++        adversarial_reports=_adversarial_pass(),
++    )
++    positive = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(wins=6, losses=0, ties=114, positive=True),
++        schema_reports=_schema_pass(),
++        adversarial_reports=_adversarial_pass(),
++    )
++    flagged_reports = _adversarial_pass()
++    flagged_reports[0] = {
++        "name": "adversarial_verify",
++        "path": str(mod.EXP5224_RELATIVE_PATH),
++        "passed": False,
++        "loaded": True,
++        "flag_count": 1,
++        "flags": [{"kind": "METHODOLOGY_MISSING"}],
++    }
++    blocked = mod.build_artifact(
++        qa_artifact=_qa_artifact(),
++        pool_artifact=_pool_artifact(),
++        validation_artifact=_validation_artifact(),
++        schema_reports=_schema_pass(),
++        adversarial_reports=flagged_reports,
++    )
++
++    missing = dict(clean)
++    missing.pop("schema")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    bad_principles = dict(clean)
++    bad_principles["field_principles"] = {}
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(bad_principles)
++
++    bad_headline = dict(clean)
++    bad_headline["gap4_headline_eligible"] = True
++    with pytest.raises(ValueError, match="gap4_headline_eligible"):
++        mod.validate_artifact(bad_headline)
++
++    bad_substrate = dict(clean)
++    bad_substrate["inference_substrate"] = "aggregation_from_upstream_artifacts"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    blocked_no_reason = dict(blocked)
++    blocked_no_reason["remaining_blocker"] = ""
++    with pytest.raises(ValueError, match="remaining_blocker"):
++        mod.validate_artifact(blocked_no_reason)
++
++    clean_with_reason = dict(clean)
++    clean_with_reason["remaining_blocker"] = "should not be set"
++    with pytest.raises(ValueError, match="remaining_blocker"):
++        mod.validate_artifact(clean_with_reason)
++
++    no_prefix = dict(clean)
++    no_prefix["honest_verdict"] = "GAP-4 is clean-null"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(no_prefix)
++
++    clean_bad_verdict = dict(clean)
++    clean_bad_verdict["honest_verdict"] = "complete: GAP-4 is null"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(clean_bad_verdict)
++
++    positive_bad_verdict = dict(positive)
++    positive_bad_verdict["honest_verdict"] = "success: GAP-4 is positive"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(positive_bad_verdict)
++
++    blocked_bad_verdict = dict(blocked)
++    blocked_bad_verdict["honest_verdict"] = "complete: GAP-4 blocked"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(blocked_bad_verdict)
+-- 
+2.55.0
+

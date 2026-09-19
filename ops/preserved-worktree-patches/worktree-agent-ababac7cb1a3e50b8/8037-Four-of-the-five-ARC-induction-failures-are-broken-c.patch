@@ -1,0 +1,4397 @@
+From 1ec1ed2577dafe2e6d5c642a4bd31a91a82a90e3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 00:59:49 -0400
+Subject: [PATCH 08037/11362] Four of the five ARC induction failures are
+ broken code, and all four are mechanically detectable
+
+PHASE 2 asked whether the four broken-code failures the 2026-07-30 gate audit found -- ft09
+and tu93 falling off the end of engine(), lp85's UnboundLocalError, ft09 round 2's truncation
+-- can be caught before the trust gate sees them, and at what false-positive cost. They can,
+at zero measured false positives, and the checks are proven against the failures themselves
+rather than against fixtures invented to make them look good.
+
+EACH CHECK PINNED TO ITS OWN FAILURE. ft09 is proven on the REAL live engine read off disk
+(upstream_ft09_cells/on__ft09__s1__world_model.py.frozen): the static check flags it, and
+executing it confirms engine(grid, 6, data) is None while the action != 6 path is fine -- a
+per-path defect, exactly as the audit describes. tu93's shape falls to the same check. lp85
+is caught ONLY by the goal arm of the dry run, because its UnboundLocalError comes out of
+is_level_complete, not engine; an engine-only dry run reports nothing for that file, and a
+test pins that near-miss. ft09 round 2 is caught by truncation detection, which must also
+report NOTHING ELSE about a truncated file: it has no end, so "it never returns" would be a
+false statement about it, and feeding a half-written file back as a repair spends the very
+budget the retry needs.
+
+FALSE POSITIVES, 439 REAL GENERATED ENGINES. Every world_model*.py in results/ -- banked
+engines, origin fixtures, logo snapshot, every per-experiment e3_store. 9 flagged (2.05%),
+9 of 9 confirmed by EXECUTING the engine and observing a real None return, 0 unconfirmed. The
+worst reproduces the ft09 mode exactly: vc33's engine echoed its own refactor prompt back as
+comments, including the literal REQUIRED OUTPUT STRUCTURE block, and never wrote a return.
+
+SENSITIVITY, 36 REAL LIVE COMPLETIONS replayed from the Phase-1 capture with their recorded
+stop_type: 13 that the shipped generate() ACCEPTED carry a missing_return -- broken code that
+reached the trust gate as a bad prediction -- and 10 that it REJECTED are retryable
+truncations, incomplete observations discarded as bad models. Cross-checked against Phase 1's
+independently-written AST return check: 0 disagreements on all 28 comparable rows.
+
+A LIVE DEFECT, NOT ONLY A HISTORICAL ONE: the banked results/arc_e3/tu93/world_model.py raises
+ValueError: could not broadcast input array from shape (2,) into shape (3,) on action=4. The
+trust gate can only ever see that as "failed the transition".
+
+42 tests, 12/12 mutations killed (mutation_check.json; baseline green, module restored
+byte-identical). The mutations reverse design decisions, not characters: "an if without an
+else terminates" blinds the ft09/tu93 detection; "drop the goal arm" misses lp85; "the repair
+prompt includes unrepairable defects" spends the budget the retry needs.
+
+THE FUNNEL IS UNCHANGED AND THIS DOES NOT MOVE IT. Stated rather than buried. Phase 1 already
+measured that under the shipped sampler EVERY ft09 engine-only attempt at 4096, 8192 and 16384
+was non-returning, so even wired in, this converts "accepted a None-returning engine" into
+"rejected after three tries" -- a correct diagnosis, not a working engine. Whether the REPAIR
+turns a rejection into a usable engine is a live measurement not yet made. The shipped induce
+path is UNCHANGED by this commit; the module is standalone.
+
+A CLEAN REPORT IS NOT A QUALITY CLAIM, and the design refuses to let it become one. The module
+has no power to admit anything and sits entirely upstream of the trust gate. Phase 1's
+best-scoring completions were the identity function, which clears every check here trivially;
+test_identity_engine_passes_every_check pins that, and engine_changes_anything is reported
+beside a clean report so "no defects found" is never read as "the engine is good". No
+threshold was lowered.
+
+Limitation: lp85's actual source no longer exists (per-cell temp store), so the goal_raised
+arm is proven against a RECONSTRUCTION of the documented mechanism and 0 preserved corpus
+instances. The corpus shows it is not trigger-happy (71 engines x 50 grids, zero goal
+defects), but that arm's sensitivity rests on a reconstruction, not an artefact.
+
+REQ-ARC-WMTE-6052. Banked ARC levels remain 3/3; the submission gate is NOT met.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...arc-engine-static-validation-2026-07-31.md |  125 ++
+ .../arc-world-model-trust-energy/spec.md      |   91 ++
+ ops/changelog.md                              |   68 +
+ .../agentic/arc_engine_static_validation.py   |  655 +++++++++
+ .../completion_replay.json                    |  736 ++++++++++
+ .../corpus_scan.json                          | 1242 +++++++++++++++++
+ .../harness/mutation_check.py                 |  232 +++
+ .../harness/replay_completions.py             |  163 +++
+ .../harness/ruff.toml                         |   27 +
+ .../harness/scan_corpus.py                    |  203 +++
+ .../mutation_check.json                       |  138 ++
+ .../test_arc_engine_static_validation.py      |  544 ++++++++
+ 12 files changed, 4224 insertions(+)
+ create mode 100644 docs/research-notes/arc-engine-static-validation-2026-07-31.md
+ create mode 100644 python/carnot/agentic/arc_engine_static_validation.py
+ create mode 100644 results/arc_engine_validation_20260731/completion_replay.json
+ create mode 100644 results/arc_engine_validation_20260731/corpus_scan.json
+ create mode 100644 results/arc_engine_validation_20260731/harness/mutation_check.py
+ create mode 100644 results/arc_engine_validation_20260731/harness/replay_completions.py
+ create mode 100644 results/arc_engine_validation_20260731/harness/ruff.toml
+ create mode 100644 results/arc_engine_validation_20260731/harness/scan_corpus.py
+ create mode 100644 results/arc_engine_validation_20260731/mutation_check.json
+ create mode 100644 tests/python/test_arc_engine_static_validation.py
+
+diff --git a/docs/research-notes/arc-engine-static-validation-2026-07-31.md b/docs/research-notes/arc-engine-static-validation-2026-07-31.md
+new file mode 100644
+index 0000000000..6bf5ef0964
+--- /dev/null
++++ b/docs/research-notes/arc-engine-static-validation-2026-07-31.md
+@@ -0,0 +1,125 @@
++# Four of the five ARC induction failures are broken code, and all four are mechanically detectable
++
++**2026-07-31 · Phase 2 of the induce-reliability investigation · offline, no GPU**
++
++Upstream: `docs/research-notes/arc-gate-rejection-audit-2026-07-30.md` (which failure is which),
++`docs/research-notes/arc-induce-completion-budget-2026-07-31.md` (Phase 1: the budget is not the
++lever). Artifacts: `results/arc_engine_validation_20260731/`.
++
++## The question
++
++The 2026-07-30 activation grid measured the LLM tier firing on 6 of 6 games and reaching the policy
++on 1 of 6. The gate-rejection audit then established that every rejection was CORRECT, and that four
++of the five failures were broken code rather than a wrong model of the game. Phase 2 asks whether
++those four are detectable before the trust gate sees them, and at what false-positive cost.
++
++## What was built
++
++`python/carnot/agentic/arc_engine_static_validation.py` — a standalone module, spec'd as
++REQ-ARC-WMTE-6052, with one check per observed failure:
++
++| check | the failure it was written for |
++|---|---|
++| `missing_return_defects` (AST fall-through over `engine`) | ft09's live engine returns on `action != 6` and ends the `action == 6` path in a comment wall; tu93's two engines "fall off the end of `engine()` with no return" |
++| `dry_run_defects` — `engine` arm | a generated engine that raises on an observed transition |
++| `dry_run_defects` — `is_level_complete` arm | lp85's `UnboundLocalError: cannot access local variable 'cell'`, which is raised by the GOAL predicate, not the engine |
++| `truncation_defect` (keys on llama-server's own `stop_type == "limit"`) | ft09 round 2's `HIT n_predict=4096 OUTPUT LIMIT` |
++| `repair_prompt_block` | turns a raise into a re-induce carrying the exception text |
++
++It is deliberately **not a gate**. It runs upstream of `WorldModelVerifier` and has no power to admit
++anything; a candidate that passes every check still faces the unchanged trust gate. That separation
++is the whole design, and the reason is in the next section.
++
++## The result that constrains everything else
++
++**Not one of these checks measures quality, and the corpus shows why they must not try.** Phase 1's
++best-scoring completions — accepted by `generate()`, parsing, returning on every path, 19-of-25
++held-out exact — were the identity function `return grid`, and 19 of ft09's 25 transitions are
++no-ops, so "nothing ever changes" gets every one of them right. An identity engine clears every
++check in this module trivially. `test_identity_engine_passes_every_check` pins that, and
++`engine_changes_anything` is reported next to a clean report so that "no defects found" is never
++read as "the engine is good".
++
++## Measurements
++
++### False-positive rate, on 439 real generated engines
++
++Every `world_model*.py` in `results/` — the banked engines, the origin fixtures, the logo snapshot
++and every per-experiment `e3_store` — scanned by the static check, and every flag cross-checked by
++EXECUTING the engine and looking for a real `None` return.
++
++| | |
++|---|---|
++| files scanned | 439 |
++| flagged `missing_return` | 9 (2.05%) |
++| flags confirmed by execution | **9 of 9** |
++| flags NOT reproducible by execution | **0** |
++
++The 9 are true positives, each returning `None` on 7–14 of the 14 probed (action, data) shapes. The
++worst is `results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/vc33/world_model.py`, which is the
++ft09 failure mode exactly: the model echoed its own refactor prompt back as comments — including the
++literal `REQUIRED OUTPUT STRUCTURE` instruction block and a JSON mismatch dump — and never wrote a
++`return`.
++
++Stated honestly: the execution cross-check uses a synthetic probe grid, so a `None` it fails to
++reproduce would not prove the path unreachable. It did not have to arbitrate that, because it
++reproduced all nine.
++
++### Sensitivity, on 36 real live completions
++
++Phase 1 captured 36 completions from the live generator against ft09's real induce prompts, each
++with its recorded `stop_type`, `predicted_n` and raw text. Replaying them through the validator:
++
++| | |
++|---|---|
++| completions replayed | 36 |
++| hit the output cap | 24 |
++| flagged truncated-before-required-symbols | 10 |
++| **shipped `generate()` ACCEPTED, validator flags a defect** | **13** |
++| **shipped `generate()` REJECTED, validator says retryable truncation** | **10** |
++
++The 13 are engines that reached the trust gate as bad predictions when they were broken code. The 10
++are completions discarded as bad models when they were incomplete observations.
++
++Corroboration worth more than either number: Phase 1's harness contains an independently-written AST
++return check. On all 28 rows where both ran, the two agree — **0 disagreements**.
++
++### The dry run finds live defects in banked engines
++
++Run against real offline transitions from `collect_transitions`, the dry run reports 7 raising
++engines and 1 `None`-returning one across the five audited games. One of them is not a historical
++artefact: **`results/arc_e3/tu93/world_model.py`, the banked engine, raises
++`ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`.** The
++trust gate can only ever see that as "failed the transition"; the dry run says what failed and hands
++back a sentence the model can act on.
++
++### Tests
++
++42 tests, mutation-proven: **12 of 12 mutations killed**, machine-readable record at
++`results/arc_engine_validation_20260731/mutation_check.json` with the baseline green and the module
++restored byte-identical. The mutations reverse specific design decisions, not arbitrary characters —
++"an `if` without an `else` terminates" (blinds the ft09/tu93 detection), "drop the goal arm" (misses
++lp85), "the repair prompt includes unrepairable defects" (spends the budget the retry needs).
++
++## What is NOT claimed
++
++**The funnel has not moved, and this module does not by itself move it.** The shipped induce path is
++unchanged by this work; the module is standalone. Even wired in, Phase 1 already measured that under
++the shipped sampler EVERY ft09 engine-only attempt at 4096, 8192 and 16384 tokens was non-returning.
++So on ft09 this check converts "accepted a `None`-returning engine" into "rejected after three
++tries" — a correct diagnosis, not a working engine.
++
++That is the honest shape of the finding: **the checks are proven; the repair is not.** Whether
++telling the model "your `engine` returned None on action 6" produces a returning engine is a live
++measurement that has not been made. It is the obvious next one, and Phase 1's `repeat_penalty`
++result (3/3 non-degenerate engines against 0/3 shipped) is the other half of the same question.
++
++## One limitation stated plainly
++
++lp85's actual failing source no longer exists — the episode's engine store was a per-cell temp
++directory, so unlike ft09 (whose engine was frozen into the Phase-1 capture) it was not preserved.
++The `goal_raised` check is therefore proven against a **reconstruction** of the documented mechanism
++(`UnboundLocalError` on an unbound `cell`, raised from `is_level_complete`, on the root grid) rather
++than against the original file, and against 0 preserved instances in the 439-file corpus. The
++corpus does confirm the check is not trigger-happy — 71 engines × 50 grids, zero goal defects
++reported — but the sensitivity claim for this one arm rests on a reconstruction, not an artefact.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 750966ea34..886c760e9a 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -20503,3 +20503,94 @@ runs sharing an accept-trace hash and a plan ran the identical search.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6051 | `python/carnot/agentic/arc_executable_world_model.py:_state_key` — `b"%d:%d\|" % (h, w) + (a % 10).astype(np.uint8).tobytes()` on the 2-D integer fast path, `to_ascii(a)` otherwise. Swapped in at all **5** key sites: `plan_in_model`'s `seen` seed and both of its branches (best-first goal-energy and blind FIFO BFS), plus `plan_and_execute`'s `seen` seed and its keying site (whose `ndim == 2` guard is preserved). `to_ascii` itself is UNCHANGED and still used for prompts and for the fallback — this adds a key, it does not retire a renderer. | `tests/python/test_arc_state_key_dedup_2026_07_30.py` — 14 tests. **Mutation-proven: 7/7 mutations killed**, each by the test written for it — dropping the `% 10` kills 3 tests (incl. the `plan_in_model` end-to-end), dropping the shape prefix kills `::test_shape_is_part_of_the_key`, dropping the dtype fallback kills 2, and an unconditional fallback (which would satisfy every equivalence test and buy nothing) kills `::test_the_fast_path_is_actually_taken`. **Cross-game verification, 10 games at a 20,000-call cap:** the landed `_state_key` is partition-identical to `to_ascii` on ALL TEN — same engine calls, same unique states, same plan, same accept-trace SHA256. Speedup on the 4 games whose engines do enough work to time (the other 6 exhaust their search queue in 1–148 calls, which verifies the partition but gives no timing signal, and are excluded from the speed table rather than averaged in): **ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x** — no regression anywhere, minimum 1.28x. The spread is explained, not averaged: ka59's peak engine is expensive (`_blocks` alone was 48% of its search), so the key is a smaller share of its total, whereas the other three have cheap engines where the key dominated. An earlier version of this measurement reported "371x" on ka59 — an artefact of arm ORDER, since the control ran first and absorbed one-off engine warm-up; the measurement now discards a warm-up run and takes the minimum of two timed reps per arm. |
++
++## REQ-ARC-WMTE-6052: A Generated Engine SHALL Be Checked For MECHANICAL Defects Before It Is Scored
++
++The 2026-07-30 activation grid measured the ARC live agent's LLM tier firing on **6 of 6** games
++and reaching the policy on **1 of 6**. The 2026-07-30 gate-rejection audit then read every rejected
++engine and established that the rejections were CORRECT — but that four of the five failures were
++BROKEN CODE rather than a wrong model of the game:
++
++| game | the actual defect | what the gate recorded |
++|---|---|---|
++| ft09 | `engine()` returns on `action != 6`, and on the `action == 6` path ends in a 1112-of-1144-line comment wall with **no return** | held-out 1/8, `legacy_accuracy 0.0` — "predicted wrong" |
++| tu93 | both replicates "scan for the player and **fall off the end of `engine()`** with no return" | held-out 0/8, `cell_recall 0.0`, both arms |
++| lp85 | `UnboundLocalError: cannot access local variable 'cell'` raised out of **`is_level_complete`**, on the level ROOT grid | `goal_predicate_error` inside a satisfiability search |
++| ft09 round 2 | the completion **hit the 4096-token output cap** before writing either required symbol | `missing ('engine','is_level_complete')`, retried at the same budget, then discarded |
++
++Each of these is detectable from the source text alone, or by running the code once against
++transitions the agent has ALREADY observed. The system SHALL make that check, and it SHALL make it
++BEFORE the semantic trust gate, so that unusable code becomes an honest retry or a repair instead of
++a misattributed quality verdict.
++
++**THE CHECK IS NOT A GATE AND SHALL NEVER BECOME ONE.** It runs strictly upstream of
++`WorldModelVerifier` / `change_gate_decision` and has no power to ADMIT anything. Its only outputs
++are a defect list (which turns unusable code into a retry) and a repair prompt (which turns a
++crashing engine into a re-induce carrying the exception text). No threshold anywhere is lowered,
++softened or bypassed by it. This clause is load-bearing: a defect scanner that starts making quality
++judgements is a second, weaker gate sitting in front of the real one.
++
++### SCENARIO-ARC-WMTE-6052-1: A clean defect report is NOT a quality claim
++GIVEN the identity engine `def engine(grid, action, data): return grid` on both branches
++WHEN every check in this requirement is run against it
++THEN all of them MUST pass. The Phase-1 budget sweep (2026-07-31) found that the completions
++scoring best on every structural check — accepted, parsing, returning on every path, 19-of-25
++held-out exact — were exactly this function, and that 19 of ft09's 25 transitions are no-ops, so
++"nothing ever changes" gets every one of them right at `cell_recall 0.000`. Degeneracy is the
++change-aware gate's measurement, made downstream over a held-out split with a counterfactual this
++layer does not have. The requirement therefore ALSO mandates a separately-reported
++`engine_changes_anything` datum, so that "no defects found" is never READ as "the engine is good" —
++but that datum SHALL NOT appear in the defect list.
++
++### SCENARIO-ARC-WMTE-6052-2: The fall-through check is biased AGAINST flagging
++GIVEN any construct whose termination semantics are not unambiguous from the AST alone —
++`while True:` with no `break`, a `try` with a `finally`, a `match` without a wildcard case
++THEN the checker MUST assume the path TERMINATES and report nothing.
++A false `missing_return` REJECTS working code, which is strictly worse than the status quo: a
++non-returning engine is already caught downstream (as a wrong prediction, with a misleading reason),
++whereas a false positive throws away an engine that would have worked. Missed detections are the
++accepted cost of a trustworthy clean report. Measured on the real corpus: **439 generated
++`world_model*.py` files on disk, 9 flagged `missing_return`, 9 of 9 confirmed by EXECUTING the
++engine and observing a real `None` return, 0 unconfirmed.**
++
++### SCENARIO-ARC-WMTE-6052-3: The dry run covers BOTH generated functions
++GIVEN lp85's candidate, whose `engine` is a clean identity and whose `is_level_complete` raises
++`UnboundLocalError` on the root grid
++WHEN the dry run is performed
++THEN it MUST report the raise. An engine-only dry run reports NOTHING for this file and would miss
++one of the four failures this requirement exists for. The raise is located by the audit at
++`arc_llm_reinduction.py:750` with `reachable_grids_evaluated: 1`, which pins it to the level's
++opening grid.
++
++### SCENARIO-ARC-WMTE-6052-4: A truncated completion is a MISSING OBSERVATION
++GIVEN a completion whose `stop_type` is `limit` and which lacks a required symbol
++THEN it MUST be reported as `retryable` and MUST NOT be reported as having any other defect.
++A truncated file "has no return" because it has no END; saying so would be a false statement about
++it, and feeding a half-written file back as a repair spends the very budget the retry needs.
++Conversely, a completion that hits the cap AFTER writing every required symbol lost nothing that was
++needed and MUST NOT be flagged.
++
++### SCENARIO-ARC-WMTE-6052-5: A merely-WRONG prediction is not a defect
++GIVEN a well-formed engine that returns a correctly-shaped grid with the wrong contents
++THEN the dry run MUST report nothing. Being wrong about the game is the trust gate's judgement,
++measured properly over a held-out split; duplicating it here with a worse metric is the failure mode
++SCENARIO-1 and the no-gate clause exist to prevent.
++
++### SCENARIO-ARC-WMTE-6052-6: The repair prompt carries the EXCEPTION TEXT
++GIVEN a `goal_raised` defect naming an unbound variable
++THEN the repair block MUST contain the exception type and message, MUST NOT contain any truncation
++defect, and MUST NOT suggest what the game's mechanic might be. The exception text is what makes
++this a fix rather than a veto; a suggested mechanic would put our guess in the model's mouth and
++then grade the model on it.
++
++**WHAT THIS REQUIREMENT DOES NOT CLAIM.** It does not claim the funnel moves. Phase 1 measured that
++under the shipped sampler EVERY ft09 engine-only attempt at 4096, 8192 and 16384 tokens was
++non-returning, so on ft09 this check converts "accepted a `None`-returning engine" into "rejected
++after three tries" — a correct diagnosis, not a working engine. Whether the repair loop or a
++sampler change turns a rejection into a usable engine is a separate, live measurement.
++
++## Implementation Status (REQ-ARC-WMTE-6052)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, last-definition-wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block`. Standalone module: the shipped induce path is UNCHANGED by this commit. | `tests/python/test_arc_engine_static_validation.py` — 42 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 12/12 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index cc73c827c3..d501031690 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,73 @@
+ # Carnot — Changelog
+ 
++## 2026-07-31 (outer-loop, PHASE 2: static + dry-run validation of an induced engine — the four broken-code failures are all mechanically detectable, at 0 false positives in 439 real engines)
++
++**Instruction:** PHASE 2 — add STATIC validation + repair of the generated engine BEFORE the
++semantic gate. Prove each check against its OBSERVED failure: ft09 and tu93 by no-return, lp85 by
++the dry-run, ft09 round 2 by truncation-detection-and-retry. Report the funnel effect.
++Mutation-prove every new test. Commit if it lands.
++
++### Outcome: the checks are PROVEN; the funnel is UNCHANGED, and the module is deliberately not wired in
++
++Shipped `python/carnot/agentic/arc_engine_static_validation.py` (REQ-ARC-WMTE-6052), one check per
++observed failure, plus a repair prompt that carries the exception text back to the model. The
++shipped induce path is UNCHANGED by this commit — the module is standalone.
++
++**Each check proven against its own failure.** ft09 is proven on the REAL live engine read off disk
++(`results/arc_induce_budget_20260731/upstream_ft09_cells/on__ft09__s1__world_model.py.frozen`), not
++a fixture: the static check flags it, and executing it confirms `engine(grid, 6, data) is None`
++while the `action != 6` path is fine — a per-path defect, exactly as the audit describes. tu93's
++shape is caught by the same check. lp85 is caught only by the GOAL arm of the dry run, because its
++`UnboundLocalError` comes out of `is_level_complete`, not `engine` — an engine-only dry run reports
++nothing for that file, and a test pins that near-miss. ft09 round 2 is caught by truncation
++detection, which additionally must NOT report anything else about a truncated file: it has no end,
++so "it never returns" would be a false statement about it.
++
++**False-positive rate, 439 real generated engines** (every `world_model*.py` in `results/`): 9
++flagged `missing_return` (2.05%), **9 of 9 confirmed by EXECUTING the engine and observing a real
++`None` return, 0 unconfirmed**. The worst is vc33's, which reproduces the ft09 mode exactly — the
++model echoed its own refactor prompt back as comments, including the literal `REQUIRED OUTPUT
++STRUCTURE` block, and never wrote a `return`.
++
++**Sensitivity, 36 real live completions** replayed from the Phase-1 capture with their recorded
++`stop_type`: **13 that the shipped `generate()` ACCEPTED carry a `missing_return`** (broken code
++that reached the trust gate as a bad prediction), and **10 that it REJECTED are retryable
++truncations** (incomplete observations discarded as bad models). Cross-checked against Phase 1's
++independently-written AST return check: **0 disagreements on all 28 comparable rows.**
++
++**A live defect in a banked engine, not just a historical one:** `results/arc_e3/tu93/world_model.py`
++raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`.
++The trust gate can only see that as "failed the transition".
++
++**42 tests, 12/12 mutations killed** (`results/arc_engine_validation_20260731/mutation_check.json`,
++baseline green, module restored byte-identical). The mutations reverse design decisions, not
++characters: "an `if` without an `else` terminates" blinds the ft09/tu93 detection; "drop the goal
++arm" misses lp85; "the repair prompt includes unrepairable defects" spends the budget the retry
++needs.
++
++**THE FUNNEL IS UNCHANGED (tier reaches policy 1/6) AND THIS DOES NOT MOVE IT.** Stated rather than
++buried: Phase 1 already measured that under the shipped sampler EVERY ft09 engine-only attempt at
++4096, 8192 and 16384 was non-returning, so even wired in, this check converts "accepted a
++`None`-returning engine" into "rejected after three tries" — a correct diagnosis, not a working
++engine. Whether the REPAIR turns a rejection into a usable engine is a live measurement not yet
++made, and it is the obvious next one.
++
++**A clean report is not a quality claim, and the design refuses to let it become one.** The module
++has no power to admit anything and runs entirely upstream of the trust gate. The Phase-1 sweep's
++best-scoring completions were the identity function, which clears every check here trivially;
++`test_identity_engine_passes_every_check` pins that, and `engine_changes_anything` is reported
++beside a clean report so "no defects found" is never read as "the engine is good". No threshold was
++lowered.
++
++**Limitation, stated plainly:** lp85's actual failing source no longer exists (its engine store was
++a per-cell temp directory), so the `goal_raised` arm is proven against a RECONSTRUCTION of the
++documented mechanism and against 0 preserved instances in the corpus. The corpus confirms it is not
++trigger-happy — 71 engines x 50 grids, zero goal defects — but that arm's sensitivity rests on a
++reconstruction, not an artefact.
++
++Detail: `docs/research-notes/arc-engine-static-validation-2026-07-31.md`.
++Banked ARC levels remain 3/3 and the submission gate is NOT met.
++
+ ## 2026-07-31 (outer-loop: "raise the induce completion budget" — it is not the lever; a repetition penalty is, and the scored path runs with every repetition control off)
+ 
+ **Instruction:** PHASE 1 of the induction-reliability plan — raise the induce completion budget,
+diff --git a/python/carnot/agentic/arc_engine_static_validation.py b/python/carnot/agentic/arc_engine_static_validation.py
+new file mode 100644
+index 0000000000..fd4c81c383
+--- /dev/null
++++ b/python/carnot/agentic/arc_engine_static_validation.py
+@@ -0,0 +1,655 @@
++"""Static + dry-run validation of an LLM-INDUCED world-model engine, BEFORE the trust gate.
++
++WHY THIS EXISTS
++===============
++The 2026-07-30 activation grid measured the ARC live agent's LLM tier firing on 6 of 6 games
++while its output reached the policy on 1 of 6. The 2026-07-30 gate-rejection audit
++(`docs/research-notes/arc-gate-rejection-audit-2026-07-30.md`) then read every rejected engine
++and found that the rejections were CORRECT -- but that four of the five failures were BROKEN
++CODE rather than a bad model of the game:
++
++  * **ft09** -- `engine()` returns `grid.copy()` when `action != 6`, then on the `action == 6`
++    path computes two locals and ends in a 1112-of-1144-line comment wall with NO `return`.
++    Every click therefore evaluates to `None`. The gate saw "predicted wrong", not "returned
++    nothing".
++  * **tu93** -- both replicates' engines "scan for the player and fall off the end of `engine()`
++    with no return" (audit section 3). Held-out 0/8, cell recall 0.0, in both arms.
++  * **lp85** -- generated code raised
++    `UnboundLocalError: cannot access local variable 'cell' where it is not associated with a
++    value`. The audit established this is the GENERATED code's defect, not a harness miscall:
++    a wrong arity or wrong grid type would raise `TypeError`/`AttributeError`. Note WHERE: the
++    raise comes out of `_eval_goal` (`arc_llm_reinduction.py:750`), i.e. from
++    **`is_level_complete`, not `engine`**, on the level's ROOT grid
++    (`reachable_grids_evaluated: 1` pins it there). That is why `dry_run_defects` runs BOTH
++    generated functions -- an engine-only dry run would miss lp85 entirely, which is exactly
++    the kind of near-miss that makes a clean report untrustworthy.
++  * **ft09 round 2** -- the completion hit the 4096-token output cap
++    (`missing ('engine','is_level_complete') ... HIT n_predict=4096 OUTPUT LIMIT`). A completion
++    that stops at the cap without its required symbols is a MISSING OBSERVATION, not evidence
++    about the model.
++
++None of these four is a statement about the model's understanding of the game. Each is
++mechanically detectable from the source text alone, or by running the code once against
++transitions the agent has already observed. That is what this module does.
++
++WHAT THIS MODULE IS NOT
++=======================
++**It is not a gate, and it must never be used as one.** It runs strictly BEFORE the semantic
++trust gate (`WorldModelVerifier` / `change_gate_decision`) and has no power to admit anything.
++Its only outputs are:
++
++  * a defect list, which turns UNUSABLE code into an honest retry, and
++  * a repair prompt, which turns a crashing engine into a re-induce with the exception text.
++
++An engine that passes every check here still faces the UNCHANGED trust gate. Nothing in this
++module lowers, softens or bypasses a quality threshold. That separation is deliberate: the
++Phase-1 sweep (2026-07-31) produced a completion that was accepted, parsed, and returned on
++every path, and was the IDENTITY FUNCTION -- `return grid` on both branches. It would clear
++every check in this file and it models nothing. Catching that is the change-aware gate's job,
++downstream, and this module's clean bill of health is not evidence of quality. See
++`engine_changes_anything()` for the one behavioural datum recorded here, which exists so that
++callers can report it, NOT so that they can gate on it.
++
++THE FALSE-POSITIVE DIRECTION
++============================
++A false `missing_return` would REJECT working code -- strictly worse than the status quo, since
++a non-returning engine is already caught downstream (as a wrong prediction, with a misleading
++reason). So `_falls_through` is deliberately asymmetric: for any construct whose termination
++semantics are not obvious from the AST alone (`while True`, `try/finally`, `match`), it assumes
++the path TERMINATES and reports nothing. It only flags a fall-through it is confident about.
++The cost of that choice is missed detections; the benefit is that a clean report is trustworthy.
++`tests/python/test_arc_engine_static_validation.py` pins the asymmetry with explicit cases.
++"""
++
++from __future__ import annotations
++
++import ast
++from dataclasses import dataclass, field
++from typing import Any, Optional, Sequence
++
++__all__ = [
++    "EngineDefect",
++    "missing_return_defects",
++    "truncation_defect",
++    "dry_run_defects",
++    "engine_changes_anything",
++    "validate_engine_code",
++    "repair_prompt_block",
++]
++
++
++# The engine signature the whole ARC world-model apparatus assumes: `engine(grid, action, data)`
++# returning a grid-shaped array. `WorldModelVerifier.score` calls it as
++# `engine(t.grid.copy(), t.action, t.data)` and wraps the result in `np.asarray`, which is why a
++# `None` return degrades silently into `array(None, dtype=object)` rather than raising.
++_ENGINE_FN = "engine"
++_GOAL_FN = "is_level_complete"
++
++
++@dataclass(frozen=True)
++class EngineDefect:
++    """One mechanically-established defect in a generated engine.
++
++    `kind` is a stable machine-readable token; `detail` is the human sentence that goes into a
++    diagnostic or a repair prompt.
++
++    The two booleans encode WHAT A CALLER MAY DO about it, and they are not the same thing:
++
++      * `retryable` -- the observation is incomplete through no fault of the model (the output
++        cap truncated it). The right response is to ask again with more room. Scoring a
++        truncated completion would be measuring our own budget, not the model.
++      * `repairable` -- the code is complete but wrong in a way the model can be TOLD about
++        (an exception, a `None` return). The right response is to feed the evidence back and
++        re-induce. This is the difference between a veto and a fix.
++
++    A defect may be neither, in which case the caller's only sound move is to reject the
++    candidate and let the ordinary retry/fallback path run.
++    """
++
++    kind: str
++    detail: str
++    line: Optional[int] = None
++    retryable: bool = False
++    repairable: bool = False
++    evidence: dict[str, Any] = field(default_factory=dict)
++
++    def __str__(self) -> str:  # pragma: no cover - trivial formatting
++        where = f" (line {self.line})" if self.line else ""
++        return f"{self.kind}{where}: {self.detail}"
++
++
++# ---------------------------------------------------------------------------
++# 1. STATIC: does every path of engine() return?
++# ---------------------------------------------------------------------------
++
++
++def _terminates(stmt: ast.stmt) -> bool:
++    """Does control flow provably NOT continue past `stmt` to the next sibling statement?
++
++    Deliberately biased toward answering True (see the module docstring's FALSE-POSITIVE
++    DIRECTION section): every uncertain construct is treated as terminating, so a fall-through
++    is only reported when the AST makes it unambiguous.
++    """
++    if isinstance(stmt, (ast.Return, ast.Raise)):
++        return True
++    # `break`/`continue` transfer control out of the current statement list. Inside a loop body
++    # that is not a function-level return, but a body ending in one does not "fall through" to a
++    # following sibling either, so for the purposes of a fall-through walk it terminates the list.
++    if isinstance(stmt, (ast.Break, ast.Continue)):
++        return True
++    if isinstance(stmt, ast.If):
++        # An `if` without an `else` can always be skipped, so it never terminates. With an
++        # `else`, it terminates iff BOTH arms do.
++        if not stmt.orelse:
++            return False
++        return not _falls_through(stmt.body) and not _falls_through(stmt.orelse)
++    if isinstance(stmt, ast.With):
++        return not _falls_through(stmt.body)
++    if isinstance(stmt, (ast.While, ast.For, ast.AsyncFor)):
++        # A loop may execute zero times, so in general it does NOT terminate the path -- EXCEPT
++        # `while True:` with no `break`, which never exits normally. Anything more subtle
++        # (a `while <expr>` that is always true, a `for` over a provably non-empty iterable) is
++        # treated as non-terminating only when it is a plain loop; `while True` is special-cased
++        # because generated engines really do use it and misreading it would be a false positive.
++        if isinstance(stmt, ast.While) and _is_literal_true(stmt.test) and not _has_break(stmt):
++            return True
++        return False
++    if isinstance(stmt, ast.Try):
++        # Conservative: a `try` is a control-flow construct whose exit paths depend on which
++        # exceptions fire at runtime. Treat it as terminating (i.e. do not flag) unless it is
++        # the simple, unambiguous shape where the body and every handler fall through and there
++        # is no finally -- in which case the whole statement plainly falls through.
++        if stmt.finalbody:
++            return True
++        parts = [stmt.body + stmt.orelse] + [h.body for h in stmt.handlers]
++        return not any(_falls_through(p) for p in parts)
++    if isinstance(stmt, ast.Match):
++        # Terminates only if there is a catch-all case AND every case body terminates.
++        if not stmt.cases:
++            return False
++        last = stmt.cases[-1].pattern
++        catch_all = isinstance(last, ast.MatchAs) and last.pattern is None
++        if not catch_all:
++            return False
++        return not any(_falls_through(c.body) for c in stmt.cases)
++    return False
++
++
++def _is_literal_true(node: ast.expr) -> bool:
++    return isinstance(node, ast.Constant) and node.value is True
++
++
++def _has_break(loop: ast.stmt) -> bool:
++    """Is there a `break` bound to THIS loop (not to a nested one)?"""
++    for child in ast.iter_child_nodes(loop):
++        if isinstance(child, (ast.While, ast.For, ast.AsyncFor)):
++            continue  # a break in there belongs to the inner loop
++        if isinstance(child, ast.Break):
++            return True
++        if _has_break(child):
++            return True
++    return False
++
++
++def _falls_through(body: Sequence[ast.stmt]) -> bool:
++    """Can control reach the end of this statement list without returning or raising?"""
++    for stmt in body:
++        if _terminates(stmt):
++            return False
++    return True
++
++
++def _find_function(tree: ast.AST, name: str) -> Optional[ast.FunctionDef]:
++    """The LAST top-level or nested definition of `name`.
++
++    LAST, not first, because Python binds the last definition -- and generated code really does
++    redefine a function (the ft09 frozen engine carries two `import numpy as np` lines from
++    `_combine_world_model`'s concatenation, and a model that writes a draft and then a final
++    version leaves both in the file). Checking the first definition would grade a function that
++    never runs.
++    """
++    found: Optional[ast.FunctionDef] = None
++    for node in ast.walk(tree):
++        if isinstance(node, ast.FunctionDef) and node.name == name:
++            found = node
++    return found
++
++
++def missing_return_defects(code: str, func_name: str = _ENGINE_FN) -> list[EngineDefect]:
++    """Report a defect if `func_name` can reach the end of its body without returning.
++
++    THE OBSERVED FAILURE THIS CATCHES. ft09's live engine (preserved at
++    `results/arc_induce_budget_20260731/upstream_ft09_cells/on__ft09__s1__world_model.py.frozen`)
++    is `if action != 6: return grid.copy()` followed by an `action == 6` path that assigns
++    `r_start`/`c_start` and then ends in comments. `engine(grid, 6, data)` returns `None`, so
++    every click in the game is modelled as "nothing observable happened, and also the prediction
++    has no shape". tu93's two engines fail the same way.
++
++    A `return` with no value (or an explicit `return None`) is reported under the same kind: the
++    caller receives `None` either way, and `np.asarray(None)` is a 0-d object array, not a grid.
++    """
++    try:
++        tree = ast.parse(code)
++    except SyntaxError as exc:
++        return [
++            EngineDefect(
++                kind="syntax_error",
++                detail=f"generated code does not parse: {exc.msg}",
++                line=exc.lineno,
++            )
++        ]
++    fn = _find_function(tree, func_name)
++    if fn is None:
++        return [
++            EngineDefect(
++                kind="missing_function",
++                detail=f"no `def {func_name}` in the generated code",
++            )
++        ]
++    out: list[EngineDefect] = []
++    if _falls_through(fn.body):
++        out.append(
++            EngineDefect(
++                kind="missing_return",
++                detail=(
++                    f"`{func_name}` can reach the end of its body without returning, so it "
++                    f"returns None on that path. Every branch must return a grid-shaped array."
++                ),
++                line=fn.end_lineno,
++                repairable=True,
++                evidence={"function": func_name, "def_line": fn.lineno},
++            )
++        )
++    for node in ast.walk(fn):
++        if isinstance(node, ast.Return) and (
++            node.value is None
++            or (isinstance(node.value, ast.Constant) and node.value.value is None)
++        ):
++            out.append(
++                EngineDefect(
++                    kind="returns_none_literal",
++                    detail=(
++                        f"`{func_name}` has an explicit `return None` (or a bare `return`); the "
++                        f"caller needs a grid-shaped array on every path."
++                    ),
++                    line=node.lineno,
++                    repairable=True,
++                    evidence={"function": func_name},
++                )
++            )
++    return out
++
++
++# ---------------------------------------------------------------------------
++# 2. TRUNCATION: an incomplete observation, not a bad model
++# ---------------------------------------------------------------------------
++
++
++def truncation_defect(
++    *,
++    stop_type: Optional[str],
++    code: str,
++    required: Sequence[str],
++    budget: Optional[int] = None,
++) -> Optional[EngineDefect]:
++    """Was this completion cut off by the output cap before it finished the required symbols?
++
++    THE OBSERVED FAILURE THIS CATCHES. ft09's round-2 induction reported
++    `missing ('engine','is_level_complete') in output ... HIT n_predict=4096 OUTPUT LIMIT`, and
++    round 1 did the same. The shipped `generate()` loop already DETECTS this (it appends the
++    limit diagnostic to its message) but then does the same thing it does for any other unusable
++    output: retry at the same budget, then give up. That treats a truncated completion as
++    evidence about the model when it is evidence about the budget.
++
++    `stop_type` is llama-server's own `stop_type` field as recorded by
++    `LocalGGUFProposer._record_completion_diagnostics` -- `"limit"` when generation stopped
++    because `n_predict` was exhausted.
++
++    Returns None when the completion stopped for any other reason, or when it stopped at the cap
++    but nevertheless contains every required symbol (in which case nothing was lost that we
++    needed, and the ordinary checks apply).
++    """
++    if stop_type != "limit":
++        return None
++    missing = [fn for fn in required if f"def {fn}" not in code]
++    if not missing:
++        return None
++    return EngineDefect(
++        kind="truncated_before_required_symbols",
++        detail=(
++            f"the completion hit the {budget if budget else 'n_predict'}-token output cap "
++            f"before defining {tuple(missing)}. This is a missing observation, not a bad model: "
++            f"re-ask with more room rather than scoring what arrived."
++        ),
++        retryable=True,
++        evidence={"missing": list(missing), "budget": budget},
++    )
++
++
++# ---------------------------------------------------------------------------
++# 3. DRY RUN: execute the engine once against transitions we have already seen
++# ---------------------------------------------------------------------------
++
++
++def _exec_namespace(code: str) -> tuple[Optional[dict], Optional[EngineDefect]]:
++    """Execute the generated module body, returning its namespace or the defect that stopped it.
++
++    Import-time failures are their own defect kind: a `NameError` at module scope means the
++    engine never even existed, which is a different repair from an engine that exists and
++    crashes on a particular transition.
++    """
++    import numpy as np
++
++    ns: dict[str, Any] = {"np": np, "numpy": np}
++    try:
++        exec(compile(code, "<induced_world_model>", "exec"), ns)  # noqa: S102
++    except SyntaxError as exc:
++        return None, EngineDefect(
++            kind="syntax_error",
++            detail=f"generated code does not parse: {exc.msg}",
++            line=exc.lineno,
++        )
++    except Exception as exc:  # noqa: BLE001 - any import-time failure is the datum
++        return None, EngineDefect(
++            kind="module_exec_raised",
++            detail=f"executing the generated module raised {type(exc).__name__}: {exc}",
++            repairable=True,
++            evidence={"exception": type(exc).__name__},
++        )
++    return ns, None
++
++
++def dry_run_defects(
++    code: str,
++    transitions: Sequence[Any],
++    *,
++    limit: int = 25,
++    func_name: str = _ENGINE_FN,
++) -> list[EngineDefect]:
++    """Run `engine` against transitions the agent has ALREADY observed and report what breaks.
++
++    THE OBSERVED FAILURE THIS CATCHES. lp85's round-3 engine raised
++    `UnboundLocalError: cannot access local variable 'cell' where it is not associated with a
++    value`. Nothing about the source text reveals it -- the name is assigned on some path -- so
++    only running the code finds it. Because the exception text names the variable, it is
++    directly repairable: feeding it back is the difference between a veto and a fix.
++
++    This is a DEFECT scan, not a scoring pass. It reports only things that are wrong regardless
++    of how good the model is: an exception, a `None` return, a non-array return, a shape that
++    does not match the input grid. It deliberately does NOT report a wrong prediction -- being
++    wrong about the game is what the trust gate downstream is for, and reporting it here would
++    make this module a second, weaker gate.
++
++    `transitions` are `arc_executable_world_model.Transition`-shaped: `.grid`, `.action`,
++    `.data`. Any object with those three attributes works, so callers can pass test doubles.
++    """
++    import numpy as np
++
++    ns, defect = _exec_namespace(code)
++    if defect is not None:
++        return [defect]
++    assert ns is not None
++    engine = ns.get(func_name)
++    if not callable(engine):
++        return [
++            EngineDefect(
++                kind="missing_function",
++                detail=f"the generated module defines no callable `{func_name}`",
++            )
++        ]
++
++    out: list[EngineDefect] = []
++    seen_kinds: set[str] = set()
++    for i, t in enumerate(list(transitions)[: int(limit)]):
++        grid = np.asarray(t.grid)
++        try:
++            pred = engine(grid.copy(), t.action, t.data)
++        except Exception as exc:  # noqa: BLE001 - the exception IS the observation
++            kind = "engine_raised"
++            if kind not in seen_kinds:
++                seen_kinds.add(kind)
++                out.append(
++                    EngineDefect(
++                        kind=kind,
++                        detail=(
++                            f"`{func_name}(grid, action={t.action}, data={t.data!r})` raised "
++                            f"{type(exc).__name__}: {exc}"
++                        ),
++                        repairable=True,
++                        evidence={
++                            "exception": type(exc).__name__,
++                            "message": str(exc)[:300],
++                            "action": int(t.action),
++                            "transition_index": i,
++                        },
++                    )
++                )
++            continue
++        if pred is None:
++            kind = "engine_returned_none"
++            if kind not in seen_kinds:
++                seen_kinds.add(kind)
++                out.append(
++                    EngineDefect(
++                        kind=kind,
++                        detail=(
++                            f"`{func_name}(grid, action={t.action}, ...)` returned None. "
++                            f"np.asarray(None) is a 0-d object array, so downstream this reads "
++                            f"as a wrong prediction rather than as absent code."
++                        ),
++                        repairable=True,
++                        evidence={"action": int(t.action), "transition_index": i},
++                    )
++                )
++            continue
++        arr = np.asarray(pred)
++        if arr.shape != grid.shape:
++            kind = "engine_wrong_shape"
++            if kind not in seen_kinds:
++                seen_kinds.add(kind)
++                out.append(
++                    EngineDefect(
++                        kind=kind,
++                        detail=(
++                            f"`{func_name}(grid, action={t.action}, ...)` returned shape "
++                            f"{arr.shape}; the input grid is {grid.shape}. The engine must "
++                            f"return a grid of the same shape."
++                        ),
++                        repairable=True,
++                        evidence={
++                            "got": list(arr.shape),
++                            "want": list(grid.shape),
++                            "action": int(t.action),
++                            "transition_index": i,
++                        },
++                    )
++                )
++    out.extend(_goal_defects(ns, transitions, limit=limit))
++    return out
++
++
++def _goal_defects(
++    ns: dict, transitions: Sequence[Any], *, limit: int, func_name: str = _GOAL_FN
++) -> list[EngineDefect]:
++    """Run `is_level_complete` on observed grids and report mechanical failures.
++
++    THE OBSERVED FAILURE THIS CATCHES. lp85's round-3 candidate raised
++    `UnboundLocalError: cannot access local variable 'cell' ...` out of `_eval_goal` on the
++    level's ROOT grid. The satisfiability search caught it and recorded it as
++    `goal_predicate_error`, i.e. as a fact about SATISFIABILITY -- after a whole search had been
++    set up around a predicate that could never be called. Catching it here, at induce time,
++    turns it into a repair with the variable name in hand.
++
++    Reported here: a raise, and a return value that is not usable as a truth value. NOT reported
++    here: a predicate that is constantly True or constantly False, or one that is true at the
++    root. Those are degeneracy judgements and belong to `_goal_satisfiability_check`, which
++    already makes them with a counterfactual this module does not have.
++    """
++    import numpy as np
++
++    goal = ns.get(func_name)
++    if not callable(goal):
++        # A missing goal predicate is a `required`-symbol matter for the caller, not a dry-run
++        # defect: the split-induce path deliberately generates it in a second call.
++        return []
++    out: list[EngineDefect] = []
++    seen: set[str] = set()
++    grids = []
++    for t in list(transitions)[: int(limit)]:
++        grids.append(np.asarray(t.grid))
++        nxt = getattr(t, "next_grid", None)
++        if nxt is not None:
++            grids.append(np.asarray(nxt))
++    for j, g in enumerate(grids):
++        try:
++            res = goal(g.copy())
++        except Exception as exc:  # noqa: BLE001 - the exception IS the observation
++            if "goal_raised" not in seen:
++                seen.add("goal_raised")
++                out.append(
++                    EngineDefect(
++                        kind="goal_raised",
++                        detail=(
++                            f"`{func_name}(grid)` raised {type(exc).__name__}: {exc} on an "
++                            f"observed grid. It must be callable on every grid the game "
++                            f"produces."
++                        ),
++                        repairable=True,
++                        evidence={
++                            "exception": type(exc).__name__,
++                            "message": str(exc)[:300],
++                            "grid_index": j,
++                        },
++                    )
++                )
++            continue
++        try:
++            bool(res)
++        except Exception as exc:  # noqa: BLE001 - e.g. a non-scalar numpy array
++            if "goal_not_boolean" not in seen:
++                seen.add("goal_not_boolean")
++                out.append(
++                    EngineDefect(
++                        kind="goal_not_boolean",
++                        detail=(
++                            f"`{func_name}(grid)` returned {type(res).__name__} which cannot be "
++                            f"used as a truth value ({exc}). Return a single True/False."
++                        ),
++                        repairable=True,
++                        evidence={"returned_type": type(res).__name__, "grid_index": j},
++                    )
++                )
++    return out
++
++
++def engine_changes_anything(
++    code: str, transitions: Sequence[Any], *, limit: int = 25, func_name: str = _ENGINE_FN
++) -> Optional[bool]:
++    """Does the engine EVER produce an output different from its input, on observed transitions?
++
++    RECORDED, NOT GATED. The Phase-1 budget sweep (2026-07-31) found that the completions which
++    scored best under every structural check -- accepted, parsing, returning on every path,
++    19-of-25 held-out exact -- were the IDENTITY FUNCTION, and that 19 of ft09's 25 transitions
++    are no-ops, so "nothing ever changes" gets every one of them right. An identity engine
++    clears `missing_return_defects` and `dry_run_defects` trivially.
++
++    This function exists so a caller can REPORT that fact honestly next to a clean defect
++    report, so that "no defects found" is never mistaken for "the engine is any good". It is
++    deliberately NOT part of `validate_engine_code`'s defect list: degeneracy is a quality
++    judgement, and quality judgements belong to the trust gate, which measures it properly
++    (`change_fidelity`, `cell_recall`, no-op hallucination rate) over a held-out split.
++
++    Returns None when the engine could not be run at all.
++    """
++    import numpy as np
++
++    ns, defect = _exec_namespace(code)
++    if defect is not None:
++        return None
++    assert ns is not None
++    engine = ns.get(func_name)
++    if not callable(engine):
++        return None
++    for t in list(transitions)[: int(limit)]:
++        grid = np.asarray(t.grid)
++        try:
++            pred = engine(grid.copy(), t.action, t.data)
++        except Exception:  # noqa: BLE001, S112 - a raise is not a change
++            continue
++        if pred is None:
++            continue
++        arr = np.asarray(pred)
++        if arr.shape == grid.shape and not np.array_equal(arr, grid):
++            return True
++    return False
++
++
++# ---------------------------------------------------------------------------
++# 4. The single entry point + the repair prompt
++# ---------------------------------------------------------------------------
++
++
++def validate_engine_code(
++    code: str,
++    *,
++    transitions: Optional[Sequence[Any]] = None,
++    stop_type: Optional[str] = None,
++    required: Sequence[str] = (_ENGINE_FN, _GOAL_FN),
++    budget: Optional[int] = None,
++    dry_run_limit: int = 25,
++) -> list[EngineDefect]:
++    """Every check, cheapest first, ordered so the most actionable defect is reported first.
++
++    Order matters for the caller's decision, not just for speed:
++
++      1. **truncation** -- if the completion was cut off, nothing else about it is informative.
++         A truncated file "has no return" because it has no end, and saying so would be wrong.
++      2. **static** -- pure AST, no execution, catches ft09 and tu93.
++      3. **dry run** -- executes the engine, catches lp85. Skipped when no transitions are
++         supplied (the caller may not have them yet).
++
++    Returns [] when nothing mechanically detectable is wrong. That is NOT a quality claim --
++    see `engine_changes_anything`.
++    """
++    trunc = truncation_defect(stop_type=stop_type, code=code, required=required, budget=budget)
++    if trunc is not None:
++        return [trunc]
++    defects = missing_return_defects(code, func_name=_ENGINE_FN)
++    if any(d.kind in {"syntax_error", "missing_function"} for d in defects):
++        return defects
++    if transitions:
++        defects = defects + dry_run_defects(code, transitions, limit=dry_run_limit)
++    return defects
++
++
++def repair_prompt_block(defects: Sequence[EngineDefect], *, code: Optional[str] = None) -> str:
++    """The text to append to a re-induce prompt so the model can FIX what we measured.
++
++    Only `repairable` defects go in. A truncation is not repairable by telling the model about
++    it -- the fix is more budget, and describing the truncation would just consume more of it.
++
++    The block states the observation and asks for the corrected file; it deliberately does not
++    hint at what the game's mechanic might be. Suggesting a mechanic would put our guess in the
++    model's mouth and then grade the model on it.
++    """
++    actionable = [d for d in defects if d.repairable]
++    if not actionable:
++        return ""
++    lines = [
++        "",
++        "YOUR PREVIOUS ANSWER WAS RUN AGAINST THE OBSERVED TRANSITIONS AND FAILED MECHANICALLY.",
++        "These are execution facts, not opinions about the game:",
++        "",
++    ]
++    for d in actionable:
++        where = f" (line {d.line})" if d.line else ""
++        lines.append(f"  * {d.kind}{where} -- {d.detail}")
++    lines += [
++        "",
++        "Fix ONLY these defects. Keep whatever the previous answer got right about the game's",
++        "mechanic. `engine(grid, action, data)` must return a numpy array of the SAME SHAPE as",
++        "`grid` on EVERY path, and must not raise on any observed transition.",
++    ]
++    if code:
++        lines += ["", "The code that failed:", "```python", code.strip(), "```"]
++    return "\n".join(lines) + "\n"
+diff --git a/results/arc_engine_validation_20260731/completion_replay.json b/results/arc_engine_validation_20260731/completion_replay.json
+new file mode 100644
+index 0000000000..3fb4e39111
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/completion_replay.json
+@@ -0,0 +1,736 @@
++{
++  "duration_s": 0.012,
++  "generated_by": "results/arc_engine_validation_20260731/harness/replay_completions.py",
++  "n_completions_replayed": 36,
++  "n_hit_output_cap": 24,
++  "n_shipped_accepted_but_validator_flags": 13,
++  "n_shipped_rejected_but_retryable": 10,
++  "n_truncation_flagged": 10,
++  "rows": [
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 4096,
++      "file": "engine_b4096_a0.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 4096,
++      "file": "engine_b4096_a1.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 4096,
++      "file": "engine_b4096_a2.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 8192,
++      "file": "engine_b8192_a0.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 8192,
++      "file": "engine_b8192_a1.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 8192,
++      "file": "engine_b8192_a2.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 16384,
++      "file": "engine_b16384_a0.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 16384,
++      "file": "engine_b16384_a1.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 16384,
++      "file": "engine_b16384_a2.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 4096,
++      "file": "combined_b4096_a0.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 4096,
++      "file": "combined_b4096_a1.txt",
++      "predicted_n": 3247,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "word",
++      "sweep": "sweep_combined",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "syntax_error"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 4096,
++      "file": "combined_b4096_a2.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 8192,
++      "file": "combined_b8192_a0.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 8192,
++      "file": "combined_b8192_a1.txt",
++      "predicted_n": 3247,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "word",
++      "sweep": "sweep_combined",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "syntax_error"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 8192,
++      "file": "combined_b8192_a2.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 16384,
++      "file": "combined_b16384_a0.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 16384,
++      "file": "combined_b16384_a1.txt",
++      "predicted_n": 3247,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "word",
++      "sweep": "sweep_combined",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "syntax_error"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 16384,
++      "file": "combined_b16384_a2.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_combined",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 4096,
++      "file": "refactor_b4096_a0.txt",
++      "predicted_n": 1891,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "eos",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 4096,
++      "file": "refactor_b4096_a1.txt",
++      "predicted_n": 2542,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "eos",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 4096,
++      "file": "refactor_b4096_a2.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 8192,
++      "file": "refactor_b8192_a0.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "syntax_error"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 8192,
++      "file": "refactor_b8192_a1.txt",
++      "predicted_n": 8192,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 8192,
++      "file": "refactor_b8192_a2.txt",
++      "predicted_n": 426,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "eos",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": null,
++      "attempt": 0,
++      "budget": 16384,
++      "file": "refactor_b16384_a0.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 1,
++      "budget": 16384,
++      "file": "refactor_b16384_a1.txt",
++      "predicted_n": 16384,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": true,
++      "validator_kinds": [
++        "truncated_before_required_symbols"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": true
++    },
++    {
++      "arm": null,
++      "attempt": 2,
++      "budget": 16384,
++      "file": "refactor_b16384_a2.txt",
++      "predicted_n": 426,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "eos",
++      "sweep": "sweep_refactor",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": "off",
++      "attempt": 0,
++      "budget": 4096,
++      "file": "off_engine_b4096_a0.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": "off",
++      "attempt": 1,
++      "budget": 4096,
++      "file": "off_engine_b4096_a1.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": "off",
++      "attempt": 2,
++      "budget": 4096,
++      "file": "off_engine_b4096_a2.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": "repeat_penalty_1.1",
++      "attempt": 0,
++      "budget": 4096,
++      "file": "repeat_penalty_1.1_engine_b4096_a0.txt",
++      "predicted_n": 1912,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "word",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": "repeat_penalty_1.1",
++      "attempt": 1,
++      "budget": 4096,
++      "file": "repeat_penalty_1.1_engine_b4096_a1.txt",
++      "predicted_n": 1133,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "word",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": "repeat_penalty_1.1",
++      "attempt": 2,
++      "budget": 4096,
++      "file": "repeat_penalty_1.1_engine_b4096_a2.txt",
++      "predicted_n": 1448,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "word",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": "dry_0.8",
++      "attempt": 0,
++      "budget": 4096,
++      "file": "dry_0.8_engine_b4096_a0.txt",
++      "predicted_n": 3151,
++      "shipped_returns_on_all_paths": true,
++      "shipped_usable_engine": true,
++      "shipped_would_accept": true,
++      "static_kinds": [],
++      "stop_type": "word",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [],
++      "validator_repairable": false,
++      "validator_retryable": false
++    },
++    {
++      "arm": "dry_0.8",
++      "attempt": 1,
++      "budget": 4096,
++      "file": "dry_0.8_engine_b4096_a1.txt",
++      "predicted_n": 4096,
++      "shipped_returns_on_all_paths": false,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": true,
++      "static_kinds": [
++        "missing_return"
++      ],
++      "stop_type": "limit",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "missing_return"
++      ],
++      "validator_repairable": true,
++      "validator_retryable": false
++    },
++    {
++      "arm": "dry_0.8",
++      "attempt": 2,
++      "budget": 4096,
++      "file": "dry_0.8_engine_b4096_a2.txt",
++      "predicted_n": 2219,
++      "shipped_returns_on_all_paths": null,
++      "shipped_usable_engine": false,
++      "shipped_would_accept": false,
++      "static_kinds": [
++        "syntax_error"
++      ],
++      "stop_type": "word",
++      "sweep": "sweep_sampler",
++      "truncation_flagged": false,
++      "validator_kinds": [
++        "syntax_error"
++      ],
++      "validator_repairable": false,
++      "validator_retryable": false
++    }
++  ],
++  "run_date": "2026-07-31T04:52:44Z"
++}
+diff --git a/results/arc_engine_validation_20260731/corpus_scan.json b/results/arc_engine_validation_20260731/corpus_scan.json
+new file mode 100644
+index 0000000000..d81adb097f
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/corpus_scan.json
+@@ -0,0 +1,1242 @@
++{
++  "dry_run_per_game": {
++    "ft09": {
++      "cell": 1,
++      "engines": [
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3_origin_fixtures/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_logo_snapshot/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r0__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r0__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r1__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r1__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r2__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r2__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r3__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r3__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r4__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r4__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r5__off/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/ft09__r5__on/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A0_control/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A1_mask/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/ft09/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/ft09/world_model.py",
++          "static_kinds": []
++        }
++      ],
++      "game": "ft09",
++      "n_changing": 0,
++      "n_transitions": 25
++    },
++    "lp85": {
++      "cell": 1,
++      "engines": [
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3_origin_fixtures/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r0__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r0__on/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r1__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r1__on/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r2__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [
++            "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
++          ],
++          "dry_run_kinds": [
++            "engine_returned_none"
++          ],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r2__on/lp85/world_model.py",
++          "static_kinds": [
++            "missing_return"
++          ]
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r3__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r3__on/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [
++            "`engine(grid, action=6, data={'x': 0, 'y': 31})` raised ValueError: could not broadcast input array from shape (128,) into shape (64,)"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r4__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r4__on/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r5__off/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/lp85__r5__on/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A0_control/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A1_mask/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/lp85/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/lp85/world_model.py",
++          "static_kinds": []
++        }
++      ],
++      "game": "lp85",
++      "n_changing": 4,
++      "n_transitions": 25
++    },
++    "sc25": {
++      "cell": 1,
++      "engines": [
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3_origin_fixtures/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_logo_snapshot/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A0_control/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A1_mask/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised IndexError: index 64 is out of bounds for axis 1 with size 64"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/sc25/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/sc25/world_model.py",
++          "static_kinds": []
++        }
++      ],
++      "game": "sc25",
++      "n_changing": 11,
++      "n_transitions": 25
++    },
++    "tn36": {
++      "cell": 1,
++      "engines": [
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3/tn36/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3_origin_fixtures/tn36/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A0_control/tn36/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A1_mask/tn36/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/tn36/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/tn36/world_model.py",
++          "static_kinds": []
++        }
++      ],
++      "game": "tn36",
++      "n_changing": 25,
++      "n_transitions": 25
++    },
++    "tu93": {
++      "cell": 1,
++      "engines": [
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised ValueError: could not broadcast input array from shape (2,) into shape (3,)"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_e3/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_e3/tu93/world_model_nav.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised ValueError: could not broadcast input array from shape (2,) into shape (3,)"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_e3_origin_fixtures/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r0__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r0__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r1__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r1__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r2__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r2__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r3__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r3__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r4__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r4__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r5__off/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": false,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3/tu93__r5__on/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised IndexError: index 64 is out of bounds for axis 1 with size 64"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_object_perception_ab_20260728/e3_positive_control/tu93__r0/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_object_perception_ab_20260728/e3_positive_control/tu93__r1/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A0_control/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [],
++          "dry_run_kinds": [],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A1_mask/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised ValueError: could not broadcast input array from shape (2,) into shape (3,)"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/tu93/world_model.py",
++          "static_kinds": []
++        },
++        {
++          "changes_anything": true,
++          "dry_run_details": [
++            "`engine(grid, action=4, data=None)` raised ValueError: could not broadcast input array from shape (2,) into shape (3,)"
++          ],
++          "dry_run_kinds": [
++            "engine_raised"
++          ],
++          "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/tu93/world_model.py",
++          "static_kinds": []
++        }
++      ],
++      "game": "tu93",
++      "n_changing": 25,
++      "n_transitions": 25
++    }
++  },
++  "duration_s": 1.93,
++  "generated_by": "results/arc_engine_validation_20260731/harness/scan_corpus.py",
++  "n_world_model_files_scanned": 439,
++  "pins": {
++    "games": [
++      "ft09",
++      "tu93",
++      "lp85",
++      "tn36",
++      "sc25"
++    ],
++    "n_transitions": 25,
++    "seed": 1
++  },
++  "run_date": "2026-07-31T04:51:52Z",
++  "static": {
++    "flagged": [
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 14,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              false
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 10,
++        "n_lines": 35,
++        "path": "results/arc_e3/cd82/world_model.best.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 13,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              false
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 10,
++        "n_lines": 225,
++        "path": "results/arc_object_perception_ab_20260728/e3/cn04__r5__on/cn04/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 14,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              false
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 37,
++        "n_lines": 474,
++        "path": "results/arc_object_perception_ab_20260728/e3/lp85__r2__on/lp85/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 12,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 38,
++        "n_lines": 90,
++        "path": "results/arc_object_perception_ab_20260728/e3/s5i5__r2__off/s5i5/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 13,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              false
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 12,
++        "n_lines": 403,
++        "path": "results/arc_object_perception_ab_20260728/e3/sp80__r4__off/sp80/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 13,
++          "n_raised": 0,
++          "raised_on": [],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 12,
++        "n_lines": 429,
++        "path": "results/arc_object_perception_ab_20260728/e3/su15__r1__on/su15/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 13,
++          "n_raised": 1,
++          "raised_on": [
++            [
++              6,
++              false,
++              "TypeError"
++            ]
++          ],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 295,
++        "n_lines": 301,
++        "path": "results/arc_object_perception_ab_20260728/e3/su15__r2__off/su15/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 13,
++          "n_raised": 1,
++          "raised_on": [
++            [
++              6,
++              false,
++              "TypeError"
++            ]
++          ],
++          "returns_none_on": [
++            [
++              1,
++              false
++            ],
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              false
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              false
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              false
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              false
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              false
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 10,
++        "n_lines": 384,
++        "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A2_gate/sb26/world_model.py"
++      },
++      {
++        "defect_kinds": [
++          "missing_return"
++        ],
++        "execution_cross_check": {
++          "engine_callable": true,
++          "exec_ok": true,
++          "n_none": 7,
++          "n_raised": 7,
++          "raised_on": [
++            [
++              1,
++              false,
++              "TypeError"
++            ],
++            [
++              2,
++              false,
++              "TypeError"
++            ],
++            [
++              3,
++              false,
++              "TypeError"
++            ],
++            [
++              4,
++              false,
++              "TypeError"
++            ],
++            [
++              5,
++              false,
++              "TypeError"
++            ],
++            [
++              6,
++              false,
++              "TypeError"
++            ]
++          ],
++          "returns_none_on": [
++            [
++              1,
++              true
++            ],
++            [
++              2,
++              true
++            ],
++            [
++              3,
++              true
++            ],
++            [
++              4,
++              true
++            ],
++            [
++              5,
++              true
++            ],
++            [
++              6,
++              true
++            ],
++            [
++              7,
++              true
++            ]
++          ]
++        },
++        "missing_return_line": 181,
++        "n_lines": 336,
++        "path": "results/arc_wm_four_arm_20260727/e3_store/wm_A3_both/vc33/world_model.py"
++      }
++    ],
++    "n_clean": 430,
++    "n_missing_return": 9,
++    "n_missing_return_UNCONFIRMED": 0,
++    "n_missing_return_execution_confirmed": 9
++  }
++}
+diff --git a/results/arc_engine_validation_20260731/harness/mutation_check.py b/results/arc_engine_validation_20260731/harness/mutation_check.py
+new file mode 100644
+index 0000000000..145d38dc19
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/harness/mutation_check.py
+@@ -0,0 +1,232 @@
++#!/usr/bin/env python3
++"""PHASE 2, STEP 3 -- prove every new test can FAIL, by breaking the code it guards.
++
++WHY. A passing test proves nothing on its own: a test that asserts something the code cannot
++violate is a vacuous pass, and this repo has already been bitten by exactly that (see
++`tests/python/test_arc_generator_stderr_capture.py`'s note about assertions "guarded against
++the vacuous pass that occurred while writing it"). The only mechanical evidence that a test is
++load-bearing is that a deliberate defect in the code makes it RED.
++
++HOW. Each mutation is a literal string substitution into
++`python/carnot/agentic/arc_engine_static_validation.py` that reverses one specific design
++decision. The named tests are then run against the mutated module. A mutation is PROVED when
++every one of its named tests fails; a mutation whose tests still pass identifies a test that is
++not actually guarding its check, and is reported as NOT PROVED rather than quietly dropped.
++
++The module is restored from an in-memory copy in a `finally`, and the restoration is verified
++byte-for-byte at the end. Nothing here writes to any evidence directory.
++"""
++
++from __future__ import annotations
++
++import json
++import pathlib
++import subprocess
++import sys
++import time
++
++REPO = pathlib.Path("/home/ianblenke/github.com/ianblenke/carnot")
++MODULE = REPO / "python/carnot/agentic/arc_engine_static_validation.py"
++TESTS = REPO / "tests/python/test_arc_engine_static_validation.py"
++PY = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python"
++OUT = pathlib.Path(__file__).resolve().parent.parent / "mutation_check.json"
++
++# (name, why this mutation is the right reversal, old, new, tests that MUST go red)
++MUTATIONS: list[tuple[str, str, str, str, list[str]]] = [
++    (
++        "if_without_else_terminates",
++        "The core of the ft09/tu93 detection: an `if` with no `else` can be skipped, so it "
++        "cannot terminate a path. Claiming it does blinds the checker to exactly the shape both "
++        "games failed on.",
++        "        if not stmt.orelse:\n            return False",
++        "        if not stmt.orelse:\n            return True",
++        [
++            "test_ft09_frozen_engine_is_flagged_missing_return",
++            "test_tu93_shape_is_flagged_missing_return",
++        ],
++    ),
++    (
++        "loops_always_terminate",
++        "A `for`/`while` may execute zero times. Treating every loop as terminating is the "
++        "single most tempting simplification and it silently accepts the tu93 shape.",
++        "        if isinstance(stmt, ast.While) and _is_literal_true(stmt.test) and not _has_break(stmt):\n            return True\n        return False",
++        "        return True",
++        ["test_loop_that_may_run_zero_times_IS_flagged"],
++    ),
++    (
++        "while_true_not_special_cased",
++        "The reverse error: `while True:` with no `break` never exits normally, so treating it "
++        "like an ordinary loop REJECTS working code -- the false-positive direction.",
++        "        if isinstance(stmt, ast.While) and _is_literal_true(stmt.test) and not _has_break(stmt):\n            return True\n",
++        "",
++        ["test_no_false_positive_on_terminating_shapes"],
++    ),
++    (
++        "break_binds_across_nested_loops",
++        "`_has_break` must not count a `break` that belongs to an inner loop, or an outer "
++        "`while True` looks exitable and a correct engine is rejected.",
++        "        if isinstance(child, (ast.While, ast.For, ast.AsyncFor)):\n            continue  # a break in there belongs to the inner loop\n",
++        "",
++        ["test_break_in_a_nested_loop_does_not_count_for_the_outer_one"],
++    ),
++    (
++        "first_function_definition_wins",
++        "Python binds the LAST definition. Grading the first grades a function that never runs.",
++        "        if isinstance(node, ast.FunctionDef) and node.name == name:\n            found = node",
++        "        if isinstance(node, ast.FunctionDef) and node.name == name and found is None:\n            found = node",
++        ["test_last_definition_wins"],
++    ),
++    (
++        "try_without_finally_always_terminates",
++        "A try/except whose body and handlers all fall through plainly falls through; claiming "
++        "otherwise hides a real defect inside a try block.",
++        "        parts = [stmt.body + stmt.orelse] + [h.body for h in stmt.handlers]\n        return not any(_falls_through(p) for p in parts)",
++        "        return True",
++        ["test_try_except_falling_through_IS_flagged"],
++    ),
++    (
++        "goal_arm_removed_from_dry_run",
++        "lp85's observed failure is raised by `is_level_complete`, not `engine`. Dropping the "
++        "goal arm makes the validator silently miss one of the four failures it exists for.",
++        "    out.extend(_goal_defects(ns, transitions, limit=limit))\n",
++        "",
++        [
++            "test_lp85_unbound_local_is_caught_by_the_goal_dry_run",
++            "test_goal_returning_an_array_is_flagged_not_boolean",
++        ],
++    ),
++    (
++        "truncation_ignores_whether_symbols_arrived",
++        "Hitting the cap AFTER writing both functions loses nothing. Flagging it anyway would "
++        "throw away usable engines and retry forever.",
++        "    missing = [fn for fn in required if f\"def {fn}\" not in code]\n    if not missing:\n        return None",
++        "    missing = [fn for fn in required if f\"def {fn}\" not in code]",
++        ["test_truncation_not_flagged_when_capped_but_complete"],
++    ),
++    (
++        "truncation_does_not_short_circuit",
++        "A truncated file has no end, so 'it never returns' is a false statement about it. "
++        "Reporting both would send a half-written file back as a repair.",
++        "    if trunc is not None:\n        return [trunc]",
++        "    if trunc is not None:\n        pass",
++        ["test_truncation_short_circuits_the_other_checks"],
++    ),
++    (
++        "repair_prompt_includes_unrepairable",
++        "A truncation in the repair block spends the very budget the retry needs.",
++        "    actionable = [d for d in defects if d.repairable]",
++        "    actionable = list(defects)",
++        ["test_repair_prompt_carries_the_exception_text_and_omits_truncation"],
++    ),
++    (
++        "dry_run_grades_predictions",
++        "Reporting a merely-wrong prediction turns this defect scanner into a second, weaker "
++        "trust gate -- the exact thing the module docstring forbids.",
++        "        arr = np.asarray(pred)\n        if arr.shape != grid.shape:",
++        "        arr = np.asarray(pred)\n        nxt = np.asarray(getattr(t, 'next_grid', grid))\n"
++        "        if arr.shape == nxt.shape and not np.array_equal(arr, nxt):\n"
++        "            out.append(EngineDefect(kind='engine_wrong_prediction', detail='wrong'))\n"
++        "        if arr.shape != grid.shape:",
++        ["test_dry_run_does_NOT_report_a_merely_wrong_prediction"],
++    ),
++    (
++        "bare_return_not_flagged",
++        "`return` and `return None` hand the caller None just as surely as falling off the end.",
++        "            node.value is None\n            or (isinstance(node.value, ast.Constant) and node.value.value is None)",
++        "            isinstance(node.value, ast.Constant) and node.value.value is Ellipsis",
++        ["test_explicit_return_none_is_flagged", "test_bare_return_is_flagged"],
++    ),
++]
++
++
++def run_tests(names: list[str]) -> tuple[bool, str]:
++    """Run the named tests. Returns (all_failed, tail-of-output)."""
++    expr = " or ".join(names)
++    proc = subprocess.run(
++        [PY, "-m", "pytest", str(TESTS), "--no-cov", "-q", "-p", "no:xdist", "-k", expr],
++        cwd=str(REPO),
++        capture_output=True,
++        text=True,
++        timeout=900,
++    )
++    tail = (proc.stdout + proc.stderr).strip().splitlines()[-4:]
++    return proc.returncode != 0, "\n".join(tail)
++
++
++def main() -> int:
++    t0 = time.time()
++    original = MODULE.read_text()
++    rows = []
++    try:
++        for name, why, old, new, tests in MUTATIONS:
++            if old not in original:
++                rows.append(
++                    {
++                        "mutation": name,
++                        "status": "ANCHOR_NOT_FOUND",
++                        "proved": False,
++                        "why": why,
++                        "tests": tests,
++                    }
++                )
++                continue
++            if original.count(old) != 1:
++                rows.append(
++                    {
++                        "mutation": name,
++                        "status": f"ANCHOR_AMBIGUOUS_x{original.count(old)}",
++                        "proved": False,
++                        "why": why,
++                        "tests": tests,
++                    }
++                )
++                continue
++            MODULE.write_text(original.replace(old, new, 1))
++            went_red, tail = run_tests(tests)
++            rows.append(
++                {
++                    "mutation": name,
++                    "why": why,
++                    "tests": tests,
++                    "status": "PROVED" if went_red else "NOT_PROVED_TESTS_STILL_GREEN",
++                    "proved": went_red,
++                    "pytest_tail": tail,
++                }
++            )
++            print(f"  {'PROVED   ' if went_red else 'NOT PROVED'} {name}")
++            MODULE.write_text(original)
++    finally:
++        MODULE.write_text(original)
++
++    restored_ok = MODULE.read_text() == original
++    # A clean baseline is part of the evidence: if the whole file were red for an unrelated
++    # reason, every mutation would trivially "prove".
++    base = subprocess.run(
++        [PY, "-m", "pytest", str(TESTS), "--no-cov", "-q"],
++        cwd=str(REPO),
++        capture_output=True,
++        text=True,
++        timeout=900,
++    )
++    out = {
++        "generated_by": "results/arc_engine_validation_20260731/harness/mutation_check.py",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "duration_s": round(time.time() - t0, 2),
++        "module_restored_byte_identical": restored_ok,
++        "baseline_all_green": base.returncode == 0,
++        "baseline_tail": (base.stdout + base.stderr).strip().splitlines()[-2:],
++        "n_mutations": len(rows),
++        "n_proved": sum(1 for r in rows if r["proved"]),
++        "mutations": rows,
++    }
++    OUT.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
++    print(
++        f"\n{out['n_proved']}/{out['n_mutations']} mutations proved caught; "
++        f"baseline green={out['baseline_all_green']}; restored={restored_ok}"
++    )
++    print(f"wrote {OUT}")
++    return 0 if (out["n_proved"] == out["n_mutations"] and restored_ok and base.returncode == 0) else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/results/arc_engine_validation_20260731/harness/replay_completions.py b/results/arc_engine_validation_20260731/harness/replay_completions.py
+new file mode 100644
+index 0000000000..8aeaf758b3
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/harness/replay_completions.py
+@@ -0,0 +1,163 @@
++#!/usr/bin/env python3
++"""PHASE 2, STEP 2 -- replay every REAL completion captured in Phase 1 through the validator.
++
++WHY THIS IS THE RIGHT TEST FOR THE TRUNCATION CHECK. `truncation_defect` keys on llama-server's
++own `stop_type` field, which only exists on a live completion. A unit test can assert the
++function's logic but cannot show that the field ever takes the value the check keys on, on real
++traffic. The Phase-1 budget sweep (2026-07-31) captured 36 completions from the live generator
++against ft09's real induce prompts, each with its recorded `stop_type`, `predicted_n` and the
++raw completion text on disk. Replaying those is the closest thing to a live measurement that
++costs no GPU.
++
++WHAT IT REPORTS. Per completion: what the SHIPPED `generate()` did with it
++(`usable_engine`/`generate_would_accept`, recorded in Phase 1) next to what the validator says.
++The interesting cells are the disagreements:
++
++  * shipped ACCEPTED, validator FLAGS  -- a defect that reached the trust gate as a bad
++    prediction instead of as broken code.
++  * shipped REJECTED, validator says RETRYABLE -- a completion thrown away as a bad model when
++    it was a truncated observation.
++
++Read-only: opens the Phase-1 capture files, writes one JSON into this directory.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import pathlib
++import sys
++import time
++
++REPO = "/home/ianblenke/github.com/ianblenke/carnot"
++sys.path.insert(0, os.path.join(REPO, "python"))
++
++from carnot.agentic.arc_engine_static_validation import (  # noqa: E402
++    missing_return_defects,
++    truncation_defect,
++    validate_engine_code,
++)
++
++HERE = pathlib.Path(__file__).resolve().parent
++CAPTURE = pathlib.Path(REPO) / "results/arc_induce_budget_20260731"
++OUT = HERE.parent / "completion_replay.json"
++
++# Which required-symbol tuple each sweep's call shape asked for. `generate()` is called with
++# ("engine","is_level_complete") on the combined and refactor lanes and ("engine",) on the
++# split-induce engine lane -- getting this wrong would make the truncation check look better or
++# worse than it is, so it is taken from the sweep's own recorded `required` field where present.
++SWEEPS = {
++    "sweep": ("engine",),  # split-induce engine-only lane
++    "sweep_combined": ("engine", "is_level_complete"),
++    "sweep_refactor": ("engine", "is_level_complete"),
++    "sweep_sampler": ("engine",),
++}
++
++
++def _extract_python(text: str) -> str:
++    """The SHIPPED extraction, copied verbatim from `arc_executable_world_model._extract_python`.
++
++    Copied rather than imported so this replay cannot be perturbed by a later edit to that
++    module -- the point is to reproduce what Phase 1's completions were subjected to.
++    """
++    if "```python" in text:
++        text = text.split("```python", 1)[1]
++    if "```" in text:
++        text = text.split("```", 1)[0]
++    return text.strip()
++
++
++def main() -> int:
++    t0 = time.time()
++    rows = []
++    for sweep_name, default_required in SWEEPS.items():
++        sweep_json = CAPTURE / sweep_name / "sweep.json"
++        if not sweep_json.exists():
++            continue
++        data = json.loads(sweep_json.read_text())
++        for r in data.get("rows", []):
++            fname = r.get("completion_file")
++            if not fname:
++                continue
++            path = CAPTURE / sweep_name / fname
++            if not path.exists():
++                rows.append({"sweep": sweep_name, "file": fname, "error": "missing_capture"})
++                continue
++            raw = path.read_text(errors="replace")
++            code = _extract_python(raw) or raw.strip()
++            required = tuple(r.get("required") or default_required)
++            stop_type = r.get("stop_type")
++            budget = r.get("budget")
++
++            trunc = truncation_defect(
++                stop_type=stop_type, code=code, required=required, budget=budget
++            )
++            defects = validate_engine_code(
++                code, stop_type=stop_type, required=required, budget=budget
++            )
++            static_only = missing_return_defects(code)
++            rows.append(
++                {
++                    "sweep": sweep_name,
++                    "file": fname,
++                    "budget": budget,
++                    "attempt": r.get("attempt"),
++                    "arm": r.get("arm"),
++                    "stop_type": stop_type,
++                    "predicted_n": r.get("predicted_n"),
++                    # what Phase 1 recorded the shipped path doing
++                    "shipped_would_accept": r.get("generate_would_accept"),
++                    "shipped_usable_engine": r.get("usable_engine"),
++                    "shipped_returns_on_all_paths": r.get("engine_returns_on_all_paths"),
++                    # what the validator says
++                    "validator_kinds": sorted({d.kind for d in defects}),
++                    "validator_retryable": any(d.retryable for d in defects),
++                    "validator_repairable": any(d.repairable for d in defects),
++                    "truncation_flagged": trunc is not None,
++                    "static_kinds": sorted({d.kind for d in static_only}),
++                }
++            )
++
++    live = [r for r in rows if "error" not in r]
++    capped = [r for r in live if r["stop_type"] == "limit"]
++    trunc_flagged = [r for r in live if r["truncation_flagged"]]
++    # The two disagreement cells that matter (see the module docstring).
++    accepted_but_flagged = [
++        r
++        for r in live
++        if r.get("shipped_would_accept") and r["validator_kinds"] and not r["truncation_flagged"]
++    ]
++    rejected_but_retryable = [
++        r for r in live if not r.get("shipped_would_accept") and r["validator_retryable"]
++    ]
++
++    out = {
++        "generated_by": "results/arc_engine_validation_20260731/harness/replay_completions.py",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "duration_s": round(time.time() - t0, 3),
++        "n_completions_replayed": len(live),
++        "n_hit_output_cap": len(capped),
++        "n_truncation_flagged": len(trunc_flagged),
++        "n_shipped_accepted_but_validator_flags": len(accepted_but_flagged),
++        "n_shipped_rejected_but_retryable": len(rejected_but_retryable),
++        "rows": rows,
++    }
++    OUT.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
++    print(
++        f"replayed {len(live)} real completions: {len(capped)} hit the output cap, "
++        f"{len(trunc_flagged)} flagged truncated-before-required-symbols"
++    )
++    print(
++        f"  shipped ACCEPTED but validator flags a defect: "
++        f"{len(accepted_but_flagged)}  -- {[r['file'] for r in accepted_but_flagged]}"
++    )
++    print(
++        f"  shipped REJECTED but retryable (truncation): "
++        f"{len(rejected_but_retryable)}  -- {[r['file'] for r in rejected_but_retryable]}"
++    )
++    print(f"wrote {OUT}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/arc_engine_validation_20260731/harness/ruff.toml b/results/arc_engine_validation_20260731/harness/ruff.toml
+new file mode 100644
+index 0000000000..12ad259973
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/harness/ruff.toml
+@@ -0,0 +1,27 @@
++# Lint config for the committed copy of this measurement's harness.
++#
++# WHY A LOCAL CONFIG RATHER THAN EDITING THE SCRIPTS. These files are the record of what was
++# actually run on 2026-07-31; the repo's convention (see results/arc_induce_budget_20260731/
++# harness/ruff.toml and pyproject.toml's ruff exclude block) is that a committed record of a run
++# is preserved as-run rather than rewritten to satisfy a linter.
++#
++# Two of the relaxations here are not merely stylistic and are worth stating plainly:
++#
++#   E501  mutation_check.py's MUTATIONS table holds VERBATIM source anchors that must match the
++#         module byte-for-byte. Wrapping one would make the mutation silently fail to apply --
++#         and the harness would then report ANCHOR_NOT_FOUND rather than a false pass, but the
++#         evidence would be lost. They are long because the code they anchor to is long.
++#   I001  scan_corpus.py's imports are ordered by WHEN they may happen: `numpy` and the carnot
++#         modules must be imported AFTER the os.environ mutations that redirect
++#         CARNOT_ARC_E3_DIR away from the evidence directory and pin JAX to CPU. Sorting them
++#         would move a carnot import above the redirect and let a scan write into
++#         results/arc_e3.
++#
++#   SIM115  `open(p).read()` without a context manager -- fine in a short-lived analysis process.
++extend = "../../../pyproject.toml"
++
++[lint]
++ignore = ["E501", "I001", "SIM115"]
++
++[format]
++exclude = ["*"]
+diff --git a/results/arc_engine_validation_20260731/harness/scan_corpus.py b/results/arc_engine_validation_20260731/harness/scan_corpus.py
+new file mode 100644
+index 0000000000..2735ba9f4b
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/harness/scan_corpus.py
+@@ -0,0 +1,203 @@
++#!/usr/bin/env python3
++"""PHASE 2, STEP 1 -- run the static + dry-run checks over EVERY generated engine on disk.
++
++WHY A CORPUS SCAN RATHER THAN A UNIT TEST. A validator that rejects code is only as good as its
++false-positive rate, and a unit test can only measure that against cases its author thought of.
++The repo holds 439 real world-model files written by a real generator across months of runs
++(`results/arc_e3`, `results/arc_e3_origin_fixtures`, `results/arc_logo_snapshot`, and the
++per-experiment `e3_store` directories). Scanning all of them measures the false-positive rate
++against the actual distribution of generated code, including every shape the author did not
++anticipate.
++
++WHAT IT PROVES, AND WHAT IT DOES NOT. Every `missing_return` flag is cross-checked by EXECUTING
++the engine and recording the (action, data-shape) pairs on which it really does return `None`.
++A flag with no confirming execution is reported as `UNCONFIRMED` and counted against the check,
++not quietly dropped -- an AST claim that no execution can reproduce is exactly the kind of
++plausible-looking evidence this project's QA-layer discipline exists to catch.
++
++The execution cross-check uses a SYNTHETIC probe grid, so a `None` it does not reproduce is not
++proof the path is unreachable, only that this probe did not reach it. That is why the AST result
++is the finding and the execution is corroboration, not the other way round.
++
++Read-only with respect to every evidence directory: it opens `world_model*.py` files and never
++writes one. `CARNOT_ARC_E3_DIR` is redirected so that `collect_transitions` cannot write into
++`results/arc_e3`.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import pathlib
++import sys
++import time
++
++REPO = "/home/ianblenke/github.com/ianblenke/carnot"
++sys.path.insert(0, os.path.join(REPO, "python"))
++
++os.environ.setdefault("JAX_PLATFORMS", "cpu")
++os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
++_SCRATCH = os.environ.get("P2_SCRATCH", "/tmp/arc_p2_scratch")
++os.environ.setdefault("CARNOT_ARC_E3_DIR", os.path.join(_SCRATCH, "e3"))
++os.makedirs(os.environ["CARNOT_ARC_E3_DIR"], exist_ok=True)
++
++import numpy as np  # noqa: E402
++
++from carnot.agentic.arc_engine_static_validation import (  # noqa: E402
++    dry_run_defects,
++    engine_changes_anything,
++    missing_return_defects,
++)
++
++HERE = pathlib.Path(__file__).resolve().parent
++OUT = HERE.parent / "corpus_scan.json"
++
++# The five games the 2026-07-30 activation grid measured, in the order the audit reports them.
++GAMES = ["ft09", "tu93", "lp85", "tn36", "sc25"]
++N_TRANS = int(os.environ.get("P2_N_TRANS", "25"))
++SEED = int(os.environ.get("P2_SEED", "1"))
++
++
++def _probe_none_returns(src: str, path: str) -> dict:
++    """Execute the engine on a synthetic grid and record where it returns None.
++
++    Corroboration for the AST flag. Deliberately broad over (action, data) rather than clever:
++    the point is to find ANY reachable None, not to characterise the engine.
++    """
++    ns: dict = {"np": np, "numpy": np}
++    try:
++        exec(compile(src, path, "exec"), ns)  # noqa: S102
++    except Exception as exc:  # noqa: BLE001
++        return {"exec_ok": False, "exec_error": f"{type(exc).__name__}: {exc}"[:200]}
++    engine = ns.get("engine")
++    if not callable(engine):
++        return {"exec_ok": True, "engine_callable": False}
++    grid = np.zeros((64, 64), dtype=int)
++    grid[10, 10] = 3
++    grid[20, 20] = 8
++    none_on = []
++    raised_on = []
++    for action in (1, 2, 3, 4, 5, 6, 7):
++        for data in (None, {"x": 10, "y": 10}):
++            try:
++                res = engine(grid.copy(), action, data)
++            except Exception as exc:  # noqa: BLE001
++                raised_on.append([action, data is not None, type(exc).__name__])
++                continue
++            if res is None:
++                none_on.append([action, data is not None])
++    return {
++        "exec_ok": True,
++        "engine_callable": True,
++        "returns_none_on": none_on,
++        "n_none": len(none_on),
++        "raised_on": raised_on[:6],
++        "n_raised": len(raised_on),
++    }
++
++
++def main() -> int:
++    t0 = time.time()
++    results_root = pathlib.Path(REPO) / "results"
++    files = sorted(results_root.rglob("world_model*.py"))
++
++    # --- static pass over the whole corpus -------------------------------------------------
++    rows = []
++    for p in files:
++        src = p.read_text(errors="replace")
++        defects = missing_return_defects(src)
++        kinds = sorted({d.kind for d in defects})
++        row = {
++            "path": str(p.relative_to(REPO)),
++            "n_lines": src.count("\n") + 1,
++            "defect_kinds": kinds,
++        }
++        if "missing_return" in kinds:
++            row["missing_return_line"] = next(
++                d.line for d in defects if d.kind == "missing_return"
++            )
++            row["execution_cross_check"] = _probe_none_returns(src, str(p))
++        rows.append(row)
++
++    flagged = [r for r in rows if "missing_return" in r["defect_kinds"]]
++    confirmed = [
++        r for r in flagged if int(r.get("execution_cross_check", {}).get("n_none", 0) or 0) > 0
++    ]
++    unconfirmed = [r for r in flagged if r not in confirmed]
++
++    # --- dry run against REAL offline transitions, per game --------------------------------
++    from carnot.agentic import arc_executable_world_model as e3
++
++    per_game = {}
++    for game in GAMES:
++        entry: dict = {"game": game}
++        try:
++            trans, cell = e3.collect_transitions(game, n=N_TRANS, seed=SEED)
++        except Exception as exc:  # noqa: BLE001
++            entry["error"] = f"collect_transitions: {type(exc).__name__}: {exc}"[:200]
++            per_game[game] = entry
++            continue
++        entry["n_transitions"] = len(trans)
++        entry["cell"] = int(cell)
++        entry["n_changing"] = int(
++            sum(1 for t in trans if not np.array_equal(t.grid, t.next_grid))
++        )
++        engines = []
++        for p in files:
++            # Only score engines whose directory names this game, so a dry run is always run
++            # against transitions from the game the engine was induced on.
++            if f"/{game}/" not in str(p) and not str(p.parent).endswith(game):
++                continue
++            src = p.read_text(errors="replace")
++            defects = dry_run_defects(src, trans)
++            engines.append(
++                {
++                    "path": str(p.relative_to(REPO)),
++                    "static_kinds": sorted({d.kind for d in missing_return_defects(src)}),
++                    "dry_run_kinds": sorted({d.kind for d in defects}),
++                    "dry_run_details": [d.detail[:220] for d in defects],
++                    "changes_anything": engine_changes_anything(src, trans),
++                }
++            )
++        entry["engines"] = engines
++        per_game[game] = entry
++
++    out = {
++        "generated_by": "results/arc_engine_validation_20260731/harness/scan_corpus.py",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "duration_s": round(time.time() - t0, 2),
++        "n_world_model_files_scanned": len(files),
++        "static": {
++            "n_clean": len(rows) - len(flagged),
++            "n_missing_return": len(flagged),
++            "n_missing_return_execution_confirmed": len(confirmed),
++            "n_missing_return_UNCONFIRMED": len(unconfirmed),
++            "flagged": flagged,
++        },
++        "dry_run_per_game": per_game,
++        "pins": {"n_transitions": N_TRANS, "seed": SEED, "games": GAMES},
++    }
++    OUT.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
++    print(
++        f"scanned {len(files)} files in {out['duration_s']}s -- "
++        f"missing_return {len(flagged)} "
++        f"(execution-confirmed {len(confirmed)}, UNCONFIRMED {len(unconfirmed)})"
++    )
++    for g, e in per_game.items():
++        if "error" in e:
++            print(f"  {g}: {e['error']}")
++            continue
++        n_raise = sum(1 for r in e["engines"] if "engine_raised" in r["dry_run_kinds"])
++        n_none = sum(1 for r in e["engines"] if "engine_returned_none" in r["dry_run_kinds"])
++        n_inert = sum(1 for r in e["engines"] if r["changes_anything"] is False)
++        print(
++            f"  {g}: {len(e['engines'])} engines, {e['n_transitions']} transitions "
++            f"({e['n_changing']} changing) -- raised {n_raise}, returned-None {n_none}, "
++            f"inert {n_inert}"
++        )
++    print(f"wrote {OUT}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/arc_engine_validation_20260731/mutation_check.json b/results/arc_engine_validation_20260731/mutation_check.json
+new file mode 100644
+index 0000000000..4a7cf7d371
+--- /dev/null
++++ b/results/arc_engine_validation_20260731/mutation_check.json
+@@ -0,0 +1,138 @@
++{
++  "baseline_all_green": true,
++  "baseline_tail": [
++    "..........................................                               [100%]",
++    "============================== 42 passed in 3.14s =============================="
++  ],
++  "duration_s": 12.26,
++  "generated_by": "results/arc_engine_validation_20260731/harness/mutation_check.py",
++  "module_restored_byte_identical": true,
++  "mutations": [
++    {
++      "mutation": "if_without_else_terminates",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_ft09_frozen_engine_is_flagged_missing_return",
++        "test_tu93_shape_is_flagged_missing_return"
++      ],
++      "why": "The core of the ft09/tu93 detection: an `if` with no `else` can be skipped, so it cannot terminate a path. Claiming it does blinds the checker to exactly the shape both games failed on."
++    },
++    {
++      "mutation": "loops_always_terminate",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_loop_that_may_run_zero_times_IS_flagged"
++      ],
++      "why": "A `for`/`while` may execute zero times. Treating every loop as terminating is the single most tempting simplification and it silently accepts the tu93 shape."
++    },
++    {
++      "mutation": "while_true_not_special_cased",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_no_false_positive_on_terminating_shapes"
++      ],
++      "why": "The reverse error: `while True:` with no `break` never exits normally, so treating it like an ordinary loop REJECTS working code -- the false-positive direction."
++    },
++    {
++      "mutation": "break_binds_across_nested_loops",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_break_in_a_nested_loop_does_not_count_for_the_outer_one"
++      ],
++      "why": "`_has_break` must not count a `break` that belongs to an inner loop, or an outer `while True` looks exitable and a correct engine is rejected."
++    },
++    {
++      "mutation": "first_function_definition_wins",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_last_definition_wins"
++      ],
++      "why": "Python binds the LAST definition. Grading the first grades a function that never runs."
++    },
++    {
++      "mutation": "try_without_finally_always_terminates",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_try_except_falling_through_IS_flagged"
++      ],
++      "why": "A try/except whose body and handlers all fall through plainly falls through; claiming otherwise hides a real defect inside a try block."
++    },
++    {
++      "mutation": "goal_arm_removed_from_dry_run",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_lp85_unbound_local_is_caught_by_the_goal_dry_run",
++        "test_goal_returning_an_array_is_flagged_not_boolean"
++      ],
++      "why": "lp85's observed failure is raised by `is_level_complete`, not `engine`. Dropping the goal arm makes the validator silently miss one of the four failures it exists for."
++    },
++    {
++      "mutation": "truncation_ignores_whether_symbols_arrived",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_truncation_not_flagged_when_capped_but_complete"
++      ],
++      "why": "Hitting the cap AFTER writing both functions loses nothing. Flagging it anyway would throw away usable engines and retry forever."
++    },
++    {
++      "mutation": "truncation_does_not_short_circuit",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_truncation_short_circuits_the_other_checks"
++      ],
++      "why": "A truncated file has no end, so 'it never returns' is a false statement about it. Reporting both would send a half-written file back as a repair."
++    },
++    {
++      "mutation": "repair_prompt_includes_unrepairable",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_repair_prompt_carries_the_exception_text_and_omits_truncation"
++      ],
++      "why": "A truncation in the repair block spends the very budget the retry needs."
++    },
++    {
++      "mutation": "dry_run_grades_predictions",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_dry_run_does_NOT_report_a_merely_wrong_prediction"
++      ],
++      "why": "Reporting a merely-wrong prediction turns this defect scanner into a second, weaker trust gate -- the exact thing the module docstring forbids."
++    },
++    {
++      "mutation": "bare_return_not_flagged",
++      "proved": true,
++      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
++      "status": "PROVED",
++      "tests": [
++        "test_explicit_return_none_is_flagged",
++        "test_bare_return_is_flagged"
++      ],
++      "why": "`return` and `return None` hand the caller None just as surely as falling off the end."
++    }
++  ],
++  "n_mutations": 12,
++  "n_proved": 12,
++  "run_date": "2026-07-31T04:56:01Z"
++}
+diff --git a/tests/python/test_arc_engine_static_validation.py b/tests/python/test_arc_engine_static_validation.py
+new file mode 100644
+index 0000000000..727612aa3b
+--- /dev/null
++++ b/tests/python/test_arc_engine_static_validation.py
+@@ -0,0 +1,544 @@
++"""REQ-ARC-WMTE-6052 -- static + dry-run validation of an induced engine, before the trust gate.
++
++EVERY CHECK IS PINNED TO ITS OBSERVED FAILURE, not to a synthetic case invented to make the
++check look good. The four failures come from the 2026-07-30 gate-rejection audit
++(`docs/research-notes/arc-gate-rejection-audit-2026-07-30.md`) and the 2026-07-31 budget sweep:
++
++  * `test_ft09_frozen_engine_*`      -- ft09's REAL live engine, read off disk. Not a fixture.
++  * `test_tu93_shape_*`              -- the "falls off the end of engine()" shape both tu93
++                                        replicates had.
++  * `test_lp85_unbound_local_*`      -- lp85's `UnboundLocalError` from `is_level_complete`,
++                                        reconstructed (see the test's own docstring for why a
++                                        reconstruction is the honest option here).
++  * `test_truncation_*`              -- ft09 round 2's `HIT n_predict=4096 OUTPUT LIMIT`.
++
++AND EVERY CHECK IS PINNED AGAINST ITS FALSE-POSITIVE DIRECTION. A validator that rejects code
++is only as good as its false-positive rate, so `test_no_false_positive_on_*` covers the
++constructs `_falls_through` deliberately refuses to flag. The corpus-scale version of the same
++question -- 439 real generated engines, 9 flagged, 9 execution-confirmed, 0 unconfirmed -- lives
++in `results/arc_engine_validation_20260731/corpus_scan.json`, because that evidence needs the
++real corpus and cannot be asserted from a fixture.
++
++THE ONE THING THESE TESTS MUST NOT BE READ AS SAYING: that a clean report means a good engine.
++`test_identity_engine_passes_every_check` exists to pin the opposite, because the Phase-1 sweep
++found that the completions scoring best on every structural check were the identity function.
++"""
++
++from __future__ import annotations
++
++import pathlib
++import textwrap
++
++import numpy as np
++import pytest
++
++from carnot.agentic.arc_engine_static_validation import (
++    EngineDefect,
++    dry_run_defects,
++    engine_changes_anything,
++    missing_return_defects,
++    repair_prompt_block,
++    truncation_defect,
++    validate_engine_code,
++)
++
++REPO = pathlib.Path(__file__).resolve().parents[2]
++FT09_FROZEN = (
++    REPO
++    / "results/arc_induce_budget_20260731/upstream_ft09_cells/on__ft09__s1__world_model.py.frozen"
++)
++
++
++class _T:
++    """A `Transition` double: the dry run only needs `.grid`, `.action`, `.data`, `.next_grid`."""
++
++    def __init__(self, grid, action, data=None, next_grid=None):
++        self.grid = grid
++        self.action = action
++        self.data = data
++        self.next_grid = grid if next_grid is None else next_grid
++
++
++def _grid(h=8, w=8):
++    g = np.zeros((h, w), dtype=int)
++    g[2, 3] = 4
++    return g
++
++
++def _kinds(defects):
++    return sorted({d.kind for d in defects})
++
++
++# ---------------------------------------------------------------------------
++# ft09 -- the real engine, off disk
++# ---------------------------------------------------------------------------
++
++
++def test_ft09_frozen_artifact_is_present():
++    """The evidence this file's headline case rests on must exist, or these tests are theatre.
++
++    Asserted rather than `skipif`-guarded ON PURPOSE. A `skipif` here would turn this file's
++    single most important case into an invisible failure the day the artifact moved -- the whole
++    ft09 evidence chain would go quiet and the suite would still print green.
++    """
++    assert FT09_FROZEN.exists(), f"missing the ft09 live engine artifact at {FT09_FROZEN}"
++
++
++def test_ft09_frozen_engine_is_flagged_missing_return():
++    """ft09's LIVE engine: `action != 6` returns, the `action == 6` path ends in comments.
++
++    This is the engine that produced the 2026-07-30 episode's ft09 result. The audit describes
++    it as "1112 of 1144 lines pure comment ... `engine()` ends with no `return` on its final
++    path, so it returns None. No-op by omission."
++    """
++    src = FT09_FROZEN.read_text()
++    defects = missing_return_defects(src)
++    assert "missing_return" in _kinds(defects)
++    (d,) = [x for x in defects if x.kind == "missing_return"]
++    assert d.repairable is True
++    assert d.line is not None
++
++
++def test_ft09_frozen_engine_really_does_return_none():
++    """The AST claim, cross-checked by EXECUTION -- an unreproducible claim would be worthless."""
++    src = FT09_FROZEN.read_text()
++    ns: dict = {"np": np, "numpy": np}
++    exec(compile(src, "ft09", "exec"), ns)  # noqa: S102
++    grid = np.zeros((64, 64), dtype=int)
++    assert ns["engine"](grid.copy(), 6, {"x": 46, "y": 38}) is None
++    # ... and the OTHER path is fine, so this is a per-path defect, not a broken file.
++    assert np.asarray(ns["engine"](grid.copy(), 1, None)).shape == (64, 64)
++
++
++def test_ft09_frozen_engine_dry_run_reports_returned_none():
++    """The dry run reaches the same conclusion from behaviour, naming the action."""
++    src = FT09_FROZEN.read_text()
++    trans = [_T(np.zeros((64, 64), dtype=int), 6, {"x": 46, "y": 38})]
++    defects = dry_run_defects(src, trans)
++    assert "engine_returned_none" in _kinds(defects)
++    assert "action=6" in [d for d in defects if d.kind == "engine_returned_none"][0].detail
++
++
++# ---------------------------------------------------------------------------
++# tu93 -- "scan for the player and fall off the end of engine() with no return"
++# ---------------------------------------------------------------------------
++
++
++TU93_SHAPE = textwrap.dedent(
++    """
++    import numpy as np
++
++    def engine(grid, action, data):
++        out = grid.copy()
++        for r in range(grid.shape[0]):
++            for c in range(grid.shape[1]):
++                if grid[r, c] == 4:
++                    if action == 1:
++                        out[r, c] = 0
++                        out[r - 1, c] = 4
++                    elif action == 2:
++                        out[r, c] = 0
++                        out[r + 1, c] = 4
++
++    def is_level_complete(grid):
++        return bool(np.any(grid != 0))
++    """
++)
++
++
++def test_tu93_shape_is_flagged_missing_return():
++    """The audit's tu93 description in code: it scans, it mutates `out`, it never returns it.
++
++    Both tu93 replicates failed this way, at held-out 0/8 and cell recall 0.0 in both arms.
++    """
++    assert "missing_return" in _kinds(missing_return_defects(TU93_SHAPE))
++
++
++def test_tu93_shape_dry_run_confirms_none():
++    trans = [_T(_grid(), 1), _T(_grid(), 2)]
++    assert "engine_returned_none" in _kinds(dry_run_defects(TU93_SHAPE, trans))
++
++
++def test_tu93_degenerate_goal_is_NOT_reported_here():
++    """tu93's `is_level_complete` returns True for any non-empty grid -- and that is NOT our call.
++
++    Degeneracy is a quality judgement made by `_goal_satisfiability_check` with a counterfactual
++    this module does not have. Reporting it here would quietly turn a defect scanner into a
++    second, weaker gate. The dry run must therefore stay silent about it.
++    """
++    trans = [_T(_grid(), 1)]
++    kinds = _kinds(dry_run_defects(TU93_SHAPE, trans))
++    assert not any(k.startswith("goal_") for k in kinds), kinds
++
++
++# ---------------------------------------------------------------------------
++# lp85 -- UnboundLocalError out of the GOAL predicate, on the root grid
++# ---------------------------------------------------------------------------
++
++
++LP85_SHAPE = textwrap.dedent(
++    """
++    import numpy as np
++
++    def engine(grid, action, data):
++        return grid.copy()
++
++    def is_level_complete(grid):
++        # `cell` is bound only inside the loop; on a grid with no cell of value 9 the
++        # `return` below reads it unbound. This is the lp85 defect: generated code, not a
++        # harness miscall -- a wrong arity would raise TypeError instead.
++        for r in range(grid.shape[0]):
++            for c in range(grid.shape[1]):
++                if grid[r, c] == 9:
++                    cell = (r, c)
++        return cell[0] == 0
++    """
++)
++
++
++def test_lp85_unbound_local_is_caught_by_the_goal_dry_run():
++    """lp85's observed failure, reconstructed -- and reconstructed deliberately.
++
++    WHY A RECONSTRUCTION. The episode's engine store was a per-cell temp directory, so unlike
++    ft09 (whose engine was frozen into the Phase-1 capture) lp85's actual source no longer
++    exists. Rather than claim a preserved artifact this file does not have, the test encodes the
++    exact mechanism the audit established: `UnboundLocalError: cannot access local variable
++    'cell' where it is not associated with a value`, raised out of `is_level_complete`, on the
++    ROOT grid (`reachable_grids_evaluated: 1` pins it there).
++
++    The load-bearing part is WHERE it is caught. An engine-only dry run reports nothing for this
++    file -- `engine` is a clean identity -- so the check that catches lp85 is the goal-predicate
++    arm, and this test fails if that arm is removed.
++    """
++    trans = [_T(np.zeros((8, 8), dtype=int), 1)]
++    defects = dry_run_defects(LP85_SHAPE, trans)
++    kinds = _kinds(defects)
++    assert "goal_raised" in kinds, kinds
++    (d,) = [x for x in defects if x.kind == "goal_raised"]
++    assert "UnboundLocalError" in d.detail
++    assert d.repairable is True
++    # The variable name survives into the repair prompt: that is what makes it a fix, not a veto.
++    assert "cell" in d.detail
++
++
++def test_lp85_shape_engine_arm_alone_would_miss_it():
++    """Pins the near-miss: `engine` is clean here, so an engine-only scan reports nothing."""
++    assert missing_return_defects(LP85_SHAPE) == []
++
++
++def test_goal_returning_an_array_is_flagged_not_boolean():
++    """A predicate returning a whole array is unusable as a truth value; `bool()` raises."""
++    code = textwrap.dedent(
++        """
++        import numpy as np
++        def engine(grid, action, data):
++            return grid.copy()
++        def is_level_complete(grid):
++            return grid == 0
++        """
++    )
++    assert "goal_not_boolean" in _kinds(dry_run_defects(code, [_T(_grid(), 1)]))
++
++
++# ---------------------------------------------------------------------------
++# truncation -- a missing observation, not a bad model
++# ---------------------------------------------------------------------------
++
++
++def test_truncation_flagged_when_capped_before_required_symbols():
++    """ft09 round 2: `missing ('engine','is_level_complete') ... HIT n_predict=4096 OUTPUT LIMIT`."""
++    d = truncation_defect(
++        stop_type="limit",
++        code="# a wall of comments and no functions\n",
++        required=("engine", "is_level_complete"),
++        budget=4096,
++    )
++    assert d is not None
++    assert d.kind == "truncated_before_required_symbols"
++    assert d.retryable is True
++    assert d.repairable is False  # telling the model it ran out of room just spends more room
++    assert "4096" in d.detail
++
++
++def test_truncation_not_flagged_when_capped_but_complete():
++    """Hitting the cap AFTER writing both functions loses nothing we needed."""
++    code = "def engine(grid, action, data):\n    return grid\ndef is_level_complete(grid):\n    return False\n"
++    assert (
++        truncation_defect(
++            stop_type="limit", code=code, required=("engine", "is_level_complete"), budget=4096
++        )
++        is None
++    )
++
++
++def test_truncation_not_flagged_on_a_natural_stop():
++    assert truncation_defect(stop_type="word", code="", required=("engine",), budget=4096) is None
++
++
++def test_truncation_short_circuits_the_other_checks():
++    """A truncated file 'has no return' because it has no END. Saying so would be wrong.
++
++    `validate_engine_code` must report the truncation ALONE, so the caller retries with more
++    room instead of feeding a half-written file back as a repair.
++    """
++    half = "def engine(grid, action, data):\n    out = grid.copy()\n    # and then it was cut"
++    defects = validate_engine_code(
++        half, stop_type="limit", required=("engine", "is_level_complete"), budget=4096
++    )
++    assert _kinds(defects) == ["truncated_before_required_symbols"]
++
++
++# ---------------------------------------------------------------------------
++# FALSE-POSITIVE DIRECTION -- the constructs the checker must refuse to flag
++# ---------------------------------------------------------------------------
++
++
++@pytest.mark.parametrize(
++    "body",
++    [
++        # if/else where both arms return
++        "    if action == 6:\n        return grid\n    else:\n        return grid.copy()",
++        # a while True with no break never exits normally
++        "    while True:\n        return grid",
++        # try/finally: exit paths are runtime-dependent; do not flag
++        "    try:\n        return grid\n    finally:\n        pass",
++        # try/except where both arms return
++        "    try:\n        return grid\n    except Exception:\n        return grid.copy()",
++        # with-block whose body returns
++        "    import contextlib\n    with contextlib.suppress(Exception):\n        return grid",
++        # a raise is a legitimate terminal
++        "    raise ValueError('unmodelled action')",
++        # early return then unconditional return
++        "    if action == 1:\n        return grid\n    return grid.copy()",
++        # match with a wildcard where every case returns
++        "    match action:\n        case 1:\n            return grid\n        case _:\n            return grid.copy()",
++    ],
++)
++def test_no_false_positive_on_terminating_shapes(body):
++    """Every one of these returns on all paths. Flagging any of them would REJECT working code.
++
++    That is strictly worse than the status quo: a non-returning engine is already caught
++    downstream (as a wrong prediction, with a misleading reason), whereas a false positive
++    throws away an engine that would have worked.
++    """
++    code = f"import numpy as np\n\ndef engine(grid, action, data):\n{body}\n"
++    assert missing_return_defects(code) == [], code
++
++
++def test_loop_that_may_run_zero_times_IS_flagged():
++    """The tu93 shape in miniature: a `for` can execute zero times, so it does not terminate."""
++    code = (
++        "def engine(grid, action, data):\n    for r in range(grid.shape[0]):\n        return grid\n"
++    )
++    assert "missing_return" in _kinds(missing_return_defects(code))
++
++
++def test_while_true_with_a_break_IS_flagged():
++    """A `while True` that can `break` falls out of the loop and off the end of the function."""
++    code = (
++        "def engine(grid, action, data):\n"
++        "    while True:\n"
++        "        if action == 1:\n"
++        "            break\n"
++    )
++    assert "missing_return" in _kinds(missing_return_defects(code))
++
++
++def test_try_except_falling_through_IS_flagged():
++    """A try/except whose body AND every handler fall through plainly falls through.
++
++    This is the one `try` shape the checker is confident about; the rest (anything with a
++    `finally`) it deliberately declines to judge.
++    """
++    code = (
++        "def engine(grid, action, data):\n"
++        "    try:\n"
++        "        x = grid[0, 0]\n"
++        "    except Exception:\n"
++        "        x = 0\n"
++    )
++    assert "missing_return" in _kinds(missing_return_defects(code))
++
++
++def test_break_in_a_nested_loop_does_not_count_for_the_outer_one():
++    """`_has_break` must bind a `break` to its own loop, or the outer `while True` looks exitable.
++
++    Without the nesting rule this returns a false positive: the inner `break` would be read as
++    letting the outer `while True` fall through, and a correct engine would be rejected.
++    """
++    code = (
++        "def engine(grid, action, data):\n"
++        "    while True:\n"
++        "        for r in range(3):\n"
++        "            break\n"
++        "        return grid\n"
++    )
++    assert missing_return_defects(code) == []
++
++
++def test_last_definition_wins():
++    """Generated files really do define `engine` twice; Python binds the LAST one.
++
++    Grading the first definition would grade a function that never runs -- in either direction.
++    """
++    bad_then_good = (
++        "def engine(grid, action, data):\n    pass\n\n"
++        "def engine(grid, action, data):\n    return grid\n"
++    )
++    good_then_bad = (
++        "def engine(grid, action, data):\n    return grid\n\n"
++        "def engine(grid, action, data):\n    x = 1\n"
++    )
++    assert missing_return_defects(bad_then_good) == []
++    assert "missing_return" in _kinds(missing_return_defects(good_then_bad))
++
++
++# ---------------------------------------------------------------------------
++# the return-None literal, missing symbols, syntax
++# ---------------------------------------------------------------------------
++
++
++def test_explicit_return_none_is_flagged():
++    code = "def engine(grid, action, data):\n    if action == 6:\n        return None\n    return grid\n"
++    assert "returns_none_literal" in _kinds(missing_return_defects(code))
++
++
++def test_bare_return_is_flagged():
++    code = "def engine(grid, action, data):\n    if action == 6:\n        return\n    return grid\n"
++    assert "returns_none_literal" in _kinds(missing_return_defects(code))
++
++
++def test_missing_engine_function_is_its_own_kind():
++    assert _kinds(missing_return_defects("def is_level_complete(g):\n    return False\n")) == [
++        "missing_function"
++    ]
++
++
++def test_syntax_error_is_reported_not_raised():
++    defects = missing_return_defects("def engine(grid, action data):\n    return grid\n")
++    assert _kinds(defects) == ["syntax_error"]
++    assert defects[0].line is not None
++
++
++def test_module_exec_failure_is_its_own_kind():
++    """A NameError at module scope means the engine never existed -- a different repair."""
++    code = "undefined_helper()\n\ndef engine(grid, action, data):\n    return grid\n"
++    assert _kinds(dry_run_defects(code, [_T(_grid(), 1)])) == ["module_exec_raised"]
++
++
++def test_wrong_shape_return_is_flagged():
++    code = "import numpy as np\ndef engine(grid, action, data):\n    return np.zeros((3, 3), dtype=int)\n"
++    defects = dry_run_defects(code, [_T(_grid(), 1)])
++    assert "engine_wrong_shape" in _kinds(defects)
++
++
++def test_dry_run_does_NOT_report_a_merely_wrong_prediction():
++    """Being wrong about the game is the TRUST GATE's call, and duplicating it here would make
++    this module a second gate with a worse metric. A well-formed but wrong engine is clean."""
++    code = "import numpy as np\ndef engine(grid, action, data):\n    return grid * 0\n"
++    trans = [_T(_grid(), 1, next_grid=_grid() + 7)]
++    assert dry_run_defects(code, trans) == []
++
++
++# ---------------------------------------------------------------------------
++# the anti-claim: a clean report is NOT a quality claim
++# ---------------------------------------------------------------------------
++
++
++def test_identity_engine_passes_every_check():
++    """The Phase-1 sweep's best-scoring completion was `return grid` on both branches.
++
++    It is accepted, it parses, it returns on every path, it raises on nothing, and it models
++    nothing. This test exists so that no future reader mistakes an empty defect list for a
++    quality verdict.
++    """
++    code = (
++        "def engine(grid, action, data):\n"
++        "    if action == 6:\n        return grid\n    return grid\n"
++        "def is_level_complete(grid):\n    return False\n"
++    )
++    trans = [_T(_grid(), 6, {"x": 1, "y": 1}), _T(_grid(), 1)]
++    assert validate_engine_code(code, transitions=trans) == []
++    # ... and the one honest signal about it is recorded separately, outside the defect list.
++    assert engine_changes_anything(code, trans) is False
++
++
++def test_engine_changes_anything_is_true_for_a_real_mechanic():
++    code = (
++        "import numpy as np\n"
++        "def engine(grid, action, data):\n"
++        "    out = grid.copy()\n"
++        "    if action == 6:\n        out[0, 0] = 9\n"
++        "    return out\n"
++    )
++    assert engine_changes_anything(code, [_T(_grid(), 6, {"x": 0, "y": 0})]) is True
++
++
++def test_engine_changes_anything_is_none_when_unrunnable():
++    assert engine_changes_anything("def engine(:\n", [_T(_grid(), 1)]) is None
++
++
++# ---------------------------------------------------------------------------
++# the repair prompt
++# ---------------------------------------------------------------------------
++
++
++def test_repair_prompt_carries_the_exception_text_and_omits_truncation():
++    """The exception text is the whole value: it is what turns a veto into a fix.
++
++    A truncation must NOT appear -- it is not repairable by telling the model about it, and
++    describing it would consume the very budget the retry needs.
++    """
++    defects = [
++        EngineDefect(
++            kind="goal_raised",
++            detail="`is_level_complete(grid)` raised UnboundLocalError: cannot access local variable 'cell'",
++            repairable=True,
++        ),
++        EngineDefect(
++            kind="truncated_before_required_symbols",
++            detail="hit the 4096-token cap",
++            retryable=True,
++        ),
++    ]
++    block = repair_prompt_block(defects)
++    assert "UnboundLocalError" in block
++    assert "cell" in block
++    assert "4096" not in block
++    assert "same shape" in block.lower()
++
++
++def test_repair_prompt_is_empty_when_nothing_is_repairable():
++    """No repairable defect must produce NO block -- an empty instruction appended to a prompt
++    is worse than none, because it spends tokens telling the model nothing."""
++    assert repair_prompt_block([EngineDefect(kind="x", detail="y", retryable=True)]) == ""
++    assert repair_prompt_block([]) == ""
++
++
++def test_repair_prompt_can_include_the_failing_code():
++    block = repair_prompt_block(
++        [EngineDefect(kind="missing_return", detail="d", repairable=True)],
++        code="def engine(g, a, d):\n    pass\n",
++    )
++    assert "```python" in block
++    assert "def engine" in block
++
++
++# ---------------------------------------------------------------------------
++# validate_engine_code ordering
++# ---------------------------------------------------------------------------
++
++
++def test_validate_skips_the_dry_run_when_there_are_no_transitions():
++    """The caller may not have transitions yet; the static arm must still run."""
++    code = "def engine(grid, action, data):\n    x = 1\n"
++    assert "missing_return" in _kinds(validate_engine_code(code, transitions=None))
++
++
++def test_validate_returns_empty_for_well_formed_code():
++    code = (
++        "import numpy as np\n"
++        "def engine(grid, action, data):\n    return grid.copy()\n"
++        "def is_level_complete(grid):\n    return bool(np.all(grid == 0))\n"
++    )
++    assert validate_engine_code(code, transitions=[_T(_grid(), 1)]) == []
+-- 
+2.55.0
+

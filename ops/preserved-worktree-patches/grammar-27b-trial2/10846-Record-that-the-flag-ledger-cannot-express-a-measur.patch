@@ -1,0 +1,97 @@
+From c20aa9b83c5e09adf7704bfc58b854e372caaebb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 01:37:33 -0400
+Subject: [PATCH 10846/11171] Record that the flag ledger cannot express a
+ measured null
+
+The dashboard reported 4/4 shipped-but-unevaluated an hour after an A/B
+measured two of those four flags. The reason is structural, not stale data.
+
+All 136 flags in ops/arc_flag_ledger.yaml are state unevaluated, and 15 already
+carry evidence. The only transition out of unevaluated is to "on", and it fires
+only when the measured arm beats baseline. A flag that is measured and found
+not to help records its evidence, sets promotable false, and stays unevaluated
+forever, indistinguishable from a flag nobody ever tested.
+
+Those are different facts. One is a coverage gap and an argument to go measure.
+The other is a finding and an argument to stop spending. Collapsing them hides
+every negative result and makes the headline count monotone -- it can only fall
+on a promotion, and fifteen measured flags have never moved it.
+
+The r11l tools A/B is the live instance: the tool arm fired twice where it had
+never fired, and levels, charged actions and efficiency were identical. A clean
+null that the ledger has no way to say.
+
+Recording a second gap alongside it: that A/B ran as a direct eval invocation
+rather than through --measure, so its evidence never reached the ledger at all.
+
+Deliberately not fixed. Adding a state changes what a headline number means,
+and that is an operator call rather than something to slip into a status check.
+The note states the shape a fix would take and, until then, how to read the
+line honestly: it counts flags not yet promoted.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 48 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 0f8ac6aab1..d6de2d21e1 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -20619,3 +20619,51 @@ pid 727762: ppid=1, non-service cgroup, port 8919 referenced by no live process,
+ Every reap condition and its value:
+ ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 1066 min.
+ Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
++
++## OPERATOR-ATTENTION 2026-09-03: stop authority reaped an orphaned llama-server
++
++pid 1594902: ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 180 min -> terminated
++
++Every reap condition and its value:
++ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 180 min.
++Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
++
++## 2026-09-03 — the flag ledger has no state for "measured, and it did not help"
++
++Found while asking why the dashboard still reported `4/4 shipped-but-unevaluated` an hour after a
++controlled A/B measured two of those four flags.
++
++**The mechanism.** `ops/arc_flag_ledger.yaml` holds 136 flags. **All 136 are `state:
++unevaluated`, and 15 of them already carry non-empty `evidence`.** Reading
++`scripts/arc_flag_ledger.py`, the only transition out of `unevaluated` is to `on`, and it fires
++only on promotion — `if ok: entry["state"] = "on"` in the measure sweep (line ~564) and in
++`cmd_promote` (line ~589), where `ok` means the arm beat baseline. A flag that is measured and
++found NOT to help records its evidence, sets `promotable: False`, and stays `unevaluated`.
++
++**Why that is wrong rather than merely incomplete.** The dashboard's own docstring defines
++unevaluated as "shipped-but-unproven ... work that cannot pay off yet." That is one of two very
++different things:
++
++- nobody has tested this flag — a coverage gap, and a reason to go measure it;
++- someone tested it and it did nothing — a finding, and a reason to stop spending on it.
++
++Collapsing them makes every negative result invisible and makes the headline count monotone: it
++can rise when a flag is discovered and can only fall on a promotion. Fifteen flags have been
++measured; none has moved. An operator reading the line has no way to tell measured-null from
++untouched.
++
++**The concrete instance.** The r11l A/B (`cd82-r11l-727651.json` against `r11l-1594772.json`)
++measured `CARNOT_ARC_INDUCE_TOOL_LOOP` and `CARNOT_ARC_SUPERVISOR_TOOL_ARM`: the tool arm fired
++twice where it had never fired before, and banked levels, charged actions and efficiency were
++identical. That is a clean null. Both flags will read `unevaluated` forever.
++
++**A second, separate gap.** That A/B was run as a direct eval invocation, not through
++`arc_flag_ledger.py --measure`, so its evidence never reached the ledger at all. Measurements made
++outside the sweep are invisible to the ledger even when the sweep's own schema could hold them.
++
++**Not fixed here, deliberately.** Adding a state changes what a headline number means, which is an
++operator call, not a passing edit. The shape a fix would take: a terminal state distinguishing
++measured-null (say `off_measured`) from `unevaluated`, with the dashboard counting only genuinely
++untested flags in its shipped-but-unevaluated line and reporting measured-nulls separately; plus a
++way to record evidence from a measurement that did not run under `--measure`. Until then, read the
++dashboard's flag line as "flags not yet promoted," which is what it actually counts.
+-- 
+2.55.0
+

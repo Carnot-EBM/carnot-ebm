@@ -1,0 +1,2702 @@
+From 5e841dbd998e19ab083a4769d2ba9b9bd0fd2ec8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 02:55:10 -0400
+Subject: [PATCH 10592/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../constraint-verification/spec.md           |  134 ++
+ ops/anomaly-escalations.md                    |    5 +
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ..._three_family_output_free_compatibility.py | 1464 +++++++++++++++++
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ ...hree_family_output_free_compatibility.json |  494 ++++++
+ ..._three_family_output_free_compatibility.py |   10 +
+ ..._three_family_output_free_compatibility.py |  488 ++++++
+ 10 files changed, 2600 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6837_three_family_output_free_compatibility.py
+ create mode 100644 results/experiment_6837_three_family_output_free_compatibility.json
+ create mode 100644 scripts/experiments/experiment_6837_three_family_output_free_compatibility.py
+ create mode 100644 tests/python/test_experiment_6837_three_family_output_free_compatibility.py
+
+diff --git a/openspec/capabilities/constraint-verification/spec.md b/openspec/capabilities/constraint-verification/spec.md
+index 33e94ff8cf..9d5436d3d8 100644
+--- a/openspec/capabilities/constraint-verification/spec.md
++++ b/openspec/capabilities/constraint-verification/spec.md
+@@ -3036,3 +3036,137 @@ for measured duration.
+ | Requirement | Implementation | Verification |
+ |---|---|---|
+ | REQ-CONSTRAINT-6836 and SCENARIO-CONSTRAINT-6836-* | Planned: deterministic typed obligation program and fixed-sequence candidate fixture. | Planned: focused tests, scoped 100% coverage, artifact verification, and lint checks. |
++
++## REQ-CONSTRAINT-6837: Output-Free Compatibility Sequence Scoring
++
++The system SHALL score the frozen Exp6836 compatible and violation candidate
++pairs with local llama.cpp CUDA forced-sequence scoring. It SHALL use exactly
++`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL fit no probe, generate no answer,
++use no LLM judge, and make no HSRM parity claim.
++
++Before inference, the producer SHALL call `cached_sota_pair()`. It SHALL
++require all three exact GGUF files and hashes, embedded GGUF tokenizer
++metadata, token log-probability support, CUDA, a task-owned exclusive GPU
++lease, free ports, sufficient disk, both Exp6836 readiness fields equal to 1,
++and one live forced-score canary per model. Any failed check SHALL write
++`complete_blocked_output_free_compatibility`. The blocked artifact SHALL
++record the exact failed check, expected value, and observed value in
++`gate_check_summary`.
++
++The producer SHALL run one task-owned model process at a time. It SHALL record
++the command, PID, process start time, port, GPU UUID, visible devices, model
++hash, tokenizer hash, first score, final score, and clean teardown. It SHALL
++observe unrelated processes but never interrupt them. Rows from one model
++process SHALL not be attributed to another model.
++
++Each fixed sequence SHALL be scored without sampling, repair, generation,
++grammar constraints, or answer feedback. The prompt tokens SHALL be masked out.
++Each margin SHALL store every candidate token id and token log-probability used
++in the compatible and violation scores. The producer SHALL require equal-token
++pairing within the model tokenizer before computing a margin. It SHALL emit raw
++receipts for every scored candidate.
++
++The producer SHALL checkpoint bounded batches. On restart it SHALL verify row
++hashes and run only missing row identities. It SHALL never regenerate complete
++rows.
++
++The terminal artifact SHALL be
++`results/experiment_6837_three_family_output_free_compatibility.json`. It SHALL
++include `field_principles`, `preconditions_checked`, `inference_substrate`,
++`duration_s`, `model_specs`, `models_used`, `model_artifact_hashes`,
++`tokenizer_receipts`, `process_receipts`, `accelerator_samples`,
++`random_seed`, `source_artifact_hashes`, `reproducibility_checksum`, `rows`,
++`per_model_results`, `per_atom_results`, `joint_results`,
++`shortcut_control_cells`, `checkpoint_manifest`, `method_parity_limits`,
++`obligation_compatibility_stream_ready_score`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. One principle
++SHALL exist for every top-level field. The inference substrate SHALL be
++`live_local_llama_cpp_cuda_forced_sequence_scoring`. `verifier_is_oracle` SHALL
++be false. `verdict_class` SHALL be one of `positive`, `circular_positive`,
++`null`, `blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL be
++terminal, row-supported, and start with `complete_`.
++
++`obligation_compatibility_stream_ready_score` SHALL depend only on authentic
++receipts and row completeness. Effect estimates SHALL stay separate. Lower
++compatible-sequence energy SHALL not be reported as proof of truth. Margins
++SHALL be reported by model, atom family, obligation count, compatible label
++position, prompt length, candidate length, and permutation. The producer SHALL
++not pool models as exchangeable samples.
++
++Field principles SHALL be:
++`field_principles`: Documents why each required field exists.
++`preconditions_checked`: Names every live gate and the exact observed value.
++`inference_substrate`: Distinguishes forced scoring from answer generation.
++`duration_s`: Makes skipped or implausibly short work visible.
++`model_specs`: Freezes the mandated model identities.
++`models_used`: Shows which models actually ran.
++`model_artifact_hashes`: Binds model bytes to scored rows.
++`tokenizer_receipts`: Proves native GGUF tokenization and lengths.
++`process_receipts`: Proves task-owned process identity and teardown.
++`accelerator_samples`: Records CUDA device and lease observations.
++`random_seed`: Makes batch ordering and canaries reproducible.
++`source_artifact_hashes`: Binds Exp6836 and implementation inputs.
++`reproducibility_checksum`: Detects drift across code, source, model, and rows.
++`rows`: Stores every scored model and candidate-pair margin.
++`per_model_results`: Keeps model families separate.
++`per_atom_results`: Reports atom-family margins without pooling models.
++`joint_results`: Reports joint and impossible-case margins separately.
++`shortcut_control_cells`: Audits label position, length, prompt, and permutation cues.
++`checkpoint_manifest`: Proves restart skips complete rows.
++`method_parity_limits`: States this is not HSRM and not truth proof.
++`obligation_compatibility_stream_ready_score`: Gates only on receipts and rows.
++`gate_check_summary`: Names the failed gate in blocked artifacts.
++`verifier_is_oracle`: Keeps exact labels external to model scores.
++`verdict_class`: Uses the closed terminal class vocabulary.
++`honest_verdict`: Gives a terminal complete-prefixed outcome.
++
++### SCENARIO-CONSTRAINT-6837-PRECONDITIONS: Failed Gates Stop Scoring
++
++Given any missing model, hash, tokenizer metadata, log-probability support,
++CUDA, lease, free port, disk budget, Exp6836 readiness field, or canary,
++When Exp6837 evaluates preconditions,
++Then it SHALL write `complete_blocked_output_free_compatibility` with exact
++expected and observed values and SHALL emit no margin rows.
++
++### SCENARIO-CONSTRAINT-6837-FORCED-SCORING: Candidate Scores Use Token Logprobs
++
++Given one compatible and one violation candidate with equal tokenizer length,
++When Exp6837 scores the pair,
++Then the row SHALL include prompt-masked candidate token ids, token
++log-probabilities, compatible score, violation score, and their margin.
++
++### SCENARIO-CONSTRAINT-6837-TOKEN-ALIGNMENT: Pairing Is Equal-Token Only
++
++Given a matched pair whose compatible and violation candidates tokenize to
++different lengths,
++When Exp6837 prepares the row,
++Then the row SHALL be rejected or blocked before a margin is computed.
++
++### SCENARIO-CONSTRAINT-6837-CHECKPOINT-RESTART: Complete Rows Are Immutable
++
++Given a checkpoint with valid row hashes for some identities,
++When Exp6837 restarts,
++Then it SHALL verify those hashes, skip complete identities, and score only
++missing identities.
++
++### SCENARIO-CONSTRAINT-6837-PROCESS-OWNERSHIP: Models Are Isolated
++
++Given three mandated model specs,
++When Exp6837 runs sequential model phases,
++Then each phase SHALL have one task-owned process receipt, no process identity
++reuse across models, and a clean teardown receipt.
++
++### SCENARIO-CONSTRAINT-6837-ARTIFACT: Readiness Is Receipt And Row Complete
++
++Given all expected model-pair rows and authentic receipts,
++When Exp6837 builds the terminal artifact,
++Then readiness SHALL be one only when rows, raw receipts, checkpoints, model
++isolation, and teardown are complete; margin direction SHALL not control
++readiness.
++
++## Implementation Status (REQ-CONSTRAINT-6837)
++
++| Requirement | Implementation | Verification |
++|---|---|---|
++| REQ-CONSTRAINT-6837 and SCENARIO-CONSTRAINT-6837-* | Planned: output-free local llama.cpp CUDA forced-sequence scoring with blocked preflight output. | Planned: focused tests cover preconditions, token alignment, masked scoring, raw receipts, checkpoint restart, model isolation, and artifact readiness. |
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 501f502ff8..3869138cc9 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1657,3 +1657,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_6826_selective_arbiter_sealed_adoption.json
++
++## experiment_6837_three_family_output_free_compatibility.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6837_three_family_output_free_compatibility.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4caa72175e..83ceae3502 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 66, "phase": "iteration_start", "last_beat": "2026-09-01T05:32:48Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 67, "phase": "iteration_start", "last_beat": "2026-09-01T06:55:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 258688f79f..21ccb2df42 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16991,3 +16991,4 @@ The l |
+ | 2026-09-01 04:42 UTC | Milestone 2026.09.598 activated | OK | 13 tasks queued |
+ | 2026-09-01 05:05 UTC | V598 terminal evidence freeze and omission decompo | OK | 88 passed, 1 warning in 34.24s |
+ | 2026-09-01 05:30 UTC | Typed obligation program and matched candidate fix | OK | 103 passed, 1 warning in 16.93s |
++| 2026-09-01 06:53 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: esult-path", s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 48148635ce..0f6c05f348 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 66, "phase": "iteration_start", "started_at": "2026-09-01T05:32:48Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 67, "phase": "iteration_start", "started_at": "2026-09-01T06:55:01Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6837_three_family_output_free_compatibility.py b/python/carnot/experiment_6837_three_family_output_free_compatibility.py
+new file mode 100644
+index 0000000000..5aa0b354b1
+--- /dev/null
++++ b/python/carnot/experiment_6837_three_family_output_free_compatibility.py
+@@ -0,0 +1,1464 @@
++"""Exp6837 output-free forced-sequence compatibility scoring.
++
++Spec refs: REQ-CONSTRAINT-6837, SCENARIO-CONSTRAINT-6837-*.
++
++The experiment scores Exp6836 fixed candidates as sequences. It masks the
++prompt, records candidate token log-probabilities, and reports margins without
++generating answers or treating model energy as truth.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter, defaultdict
++from collections.abc import Callable, Mapping, Sequence
++from datetime import UTC, datetime
++import gc
++import hashlib
++from http.server import BaseHTTPRequestHandler, HTTPServer
++import json
++import math
++import os
++from pathlib import Path
++import platform
++import shutil
++import signal
++import socket
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any, Protocol
++from urllib import request
++
++from carnot.inference.sota_models import (
++    SOTA_GGUF_MODELS,
++    cached_sota_pair,
++    gguf_tokenizer_loadable,
++    resolve_cached_gguf,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/constraint-verification/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6837_three_family_output_free_compatibility.py")
++WRAPPER_RELATIVE_PATH = Path("scripts/experiments/experiment_6837_three_family_output_free_compatibility.py")
++RESULT_RELATIVE_PATH = Path("results/experiment_6837_three_family_output_free_compatibility.json")
++CHECKPOINT_RELATIVE_PATH = Path(
++    "results/checkpoints/experiment_6837_three_family_output_free_compatibility.checkpoint.json"
++)
++EXP6836_RELATIVE_PATH = Path("results/experiment_6836_typed_obligation_program_fixture.json")
++
++SCHEMA = "carnot.experiment_6837.three_family_output_free_compatibility.v1"
++INFERENCE_SUBSTRATE = "live_local_llama_cpp_cuda_forced_sequence_scoring"
++RANDOM_SEED = 6837
++RUN_DATE = "20260901"
++DISK_FLOOR_MB = 1024
++DEFAULT_CONTEXT_LENGTH = 8192
++DEFAULT_N_GPU_LAYERS = -1
++DEFAULT_N_BATCH = 512
++DEFAULT_N_UBATCH = 128
++ROUND_DIGITS = 8
++
++MANDATED_MODEL_HF_IDS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++MODEL_FAMILIES = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": "qwen3_6_35b_a3b",
++    "unsloth/gemma-4-31B-it-GGUF": "gemma4_31b_it",
++    "unsloth/gemma-4-26B-A4B-it-GGUF": "gemma4_26b_a4b_it",
++}
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "model_specs",
++    "models_used",
++    "model_artifact_hashes",
++    "tokenizer_receipts",
++    "process_receipts",
++    "accelerator_samples",
++    "random_seed",
++    "source_artifact_hashes",
++    "reproducibility_checksum",
++    "rows",
++    "per_model_results",
++    "per_atom_results",
++    "joint_results",
++    "shortcut_control_cells",
++    "checkpoint_manifest",
++    "method_parity_limits",
++    "obligation_compatibility_stream_ready_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES = {
++    "field_principles": "Documents why each required field exists.",
++    "preconditions_checked": "Names every live gate and the exact observed value.",
++    "inference_substrate": "Distinguishes forced scoring from answer generation.",
++    "duration_s": "Makes skipped or implausibly short work visible.",
++    "model_specs": "Freezes the mandated model identities.",
++    "models_used": "Shows which models actually ran.",
++    "model_artifact_hashes": "Binds model bytes to scored rows.",
++    "tokenizer_receipts": "Proves native GGUF tokenization and lengths.",
++    "process_receipts": "Proves task-owned process identity and teardown.",
++    "accelerator_samples": "Records CUDA device and lease observations.",
++    "random_seed": "Makes batch ordering and canaries reproducible.",
++    "source_artifact_hashes": "Binds Exp6836 and implementation inputs.",
++    "reproducibility_checksum": "Detects drift across code, source, model, and rows.",
++    "rows": "Stores every scored model and candidate-pair margin.",
++    "per_model_results": "Keeps model families separate.",
++    "per_atom_results": "Reports atom-family margins without pooling models.",
++    "joint_results": "Reports joint and impossible-case margins separately.",
++    "shortcut_control_cells": "Audits label position, length, prompt, and permutation cues.",
++    "checkpoint_manifest": "Proves restart skips complete rows.",
++    "method_parity_limits": "States this is not HSRM and not truth proof.",
++    "obligation_compatibility_stream_ready_score": "Gates only on receipts and rows.",
++    "gate_check_summary": "Names the failed gate in blocked artifacts.",
++    "verifier_is_oracle": "Keeps exact labels external to model scores.",
++    "verdict_class": "Uses the closed terminal class vocabulary.",
++    "honest_verdict": "Gives a terminal complete-prefixed outcome.",
++}
++
++
++class SequenceScoringError(ValueError):
++    """Stable failure type for forced-sequence scoring contract violations."""
++
++
++class ForcedSequenceScorer(Protocol):
++    """Minimal scorer boundary shared by fake tests and the live worker."""
++
++    def start(self) -> JsonDict:
++        """Start the scoring process and return process identity."""
++
++    def score(
++        self,
++        prompt_text: str,
++        candidate_text: str,
++        row_identity: Mapping[str, Any],
++    ) -> JsonDict:
++        """Return prompt-masked candidate token ids and log-probabilities."""
++
++    def close(self) -> JsonDict:
++        """Tear down the scorer and return cleanup receipt."""
++
++
++ScorerFactory = Callable[[Mapping[str, Any], Mapping[str, Any]], ForcedSequenceScorer]
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON once so hashes and row receipts stay stable."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_text(value: str) -> str:
++    """Hash UTF-8 text with the repository's prefixed digest format."""
++
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Hash bytes with the repository's prefixed digest format."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash a file in chunks so large GGUFs do not need one memory buffer."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def read_json(path: str | Path) -> JsonDict:
++    """Read one JSON object and reject arrays or scalar payloads."""
++
++    payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    if not isinstance(payload, Mapping):
++        raise SequenceScoringError(f"json_object_required:{path}")
++    return dict(payload)
++
++
++def write_json_atomic(path: str | Path, payload: Mapping[str, Any]) -> None:
++    """Write a JSON artifact through an atomic replacement."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(
++        "w",
++        encoding="utf-8",
++        dir=target.parent,
++        delete=False,
++    ) as handle:
++        json.dump(dict(payload), handle, indent=2, sort_keys=True)
++        handle.write("\n")
++        tmp_path = Path(handle.name)
++    tmp_path.replace(target)
++
++
++def model_family(hf_id: str) -> str:
++    """Return the stable model-family identifier for a mandated HF id."""
++
++    try:
++        return MODEL_FAMILIES[hf_id]
++    except KeyError as exc:
++        raise SequenceScoringError(f"unknown_model_hf_id:{hf_id}") from exc
++
++
++def gate_check(check: str, expected: Any, observed: Any) -> JsonDict:
++    """Build one exact precondition or readiness gate row."""
++
++    return {
++        "check": str(check),
++        "expected": expected,
++        "observed": observed,
++        "passed": expected == observed,
++    }
++
++
++def _registry_by_hf_id() -> dict[str, JsonDict]:
++    return {str(row["hf_id"]): dict(row) for row in SOTA_GGUF_MODELS}
++
++
++def _tokenizer_receipt(source: Mapping[str, Any], model_path: str) -> JsonDict:
++    provided = source.get("tokenizer_receipt")
++    if isinstance(provided, Mapping):
++        receipt = dict(provided)
++        receipt.setdefault("source", "provided")
++        receipt.setdefault("loadable", False)
++        receipt.setdefault("detail", "")
++        receipt["receipt_hash"] = str(receipt.get("receipt_hash") or sha256_text(canonical_json(receipt)))
++        return receipt
++    ok, detail = gguf_tokenizer_loadable(model_path) if model_path else (False, "missing model_path")
++    receipt = {
++        "source": "embedded_gguf_llama_cpp_vocab_only",
++        "loadable": bool(ok),
++        "detail": str(detail),
++        "model_path_hash": sha256_text(str(Path(model_path).expanduser().resolve())),
++    }
++    receipt["receipt_hash"] = sha256_text(canonical_json(receipt))
++    return receipt
++
++
++def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Normalize the exact three model records and compute local hashes."""
++
++    registry = _registry_by_hf_id()
++    by_hf_id = {str(row.get("hf_id")): dict(row) for row in model_specs}
++    normalized: list[JsonDict] = []
++    for index, hf_id in enumerate(MANDATED_MODEL_HF_IDS):
++        source = by_hf_id.get(hf_id, {})
++        reg = registry.get(hf_id, {})
++        model_path = str(source.get("model_path") or source.get("cache_path") or "")
++        path = Path(model_path).expanduser() if model_path else Path()
++        present = bool(model_path and path.is_file())
++        tokenizer = _tokenizer_receipt(source, model_path) if present else {
++            "source": "missing_model_path",
++            "loadable": False,
++            "detail": f"model_path missing or not on disk: {model_path!r}",
++            "receipt_hash": "",
++        }
++        if not tokenizer.get("receipt_hash"):
++            tokenizer["receipt_hash"] = sha256_text(canonical_json(tokenizer))
++        normalized.append(
++            {
++                "name": str(source.get("name") or reg.get("name") or hf_id.rsplit("/", 1)[-1]),
++                "hf_id": hf_id,
++                "family": model_family(hf_id),
++                "role": str(source.get("role") or reg.get("role") or ""),
++                "gpu": int(source.get("gpu", index) or 0),
++                "model_path": model_path,
++                "cache_path": model_path,
++                "local_model_present": present,
++                "model_sha256": str(source.get("model_sha256") or (sha256_file(path) if present else "")),
++                "tokenizer_receipt": tokenizer,
++                "headline_eligible": source.get("headline_eligible") is not False,
++                "quantization": str(source.get("quantization") or reg.get("quantization") or "Q4_K_M"),
++                "context_length": int(source.get("context_length", DEFAULT_CONTEXT_LENGTH)),
++                "cached_sota_pair_called": bool(source.get("cached_sota_pair_called", False)),
++                "cached_sota_pair_hf_ids": list(source.get("cached_sota_pair_hf_ids") or []),
++            }
++        )
++    return normalized
++
++
++def resolve_model_specs() -> list[JsonDict]:  # pragma: no cover - host cache dependent.
++    """Call `cached_sota_pair()` and resolve all three mandated GGUFs."""
++
++    cached_pair = cached_sota_pair(gpu_indices=(0, 1)) or []
++    cached_hf_ids = [str(row.get("hf_id")) for row in cached_pair if isinstance(row, Mapping)]
++    by_hf_id = {str(row.get("hf_id")): dict(row) for row in cached_pair if isinstance(row, Mapping)}
++    registry = _registry_by_hf_id()
++    rows: list[JsonDict] = []
++    for index, hf_id in enumerate(MANDATED_MODEL_HF_IDS):
++        source = dict(by_hf_id.get(hf_id, {}))
++        reg = registry.get(hf_id, {})
++        quantization = str(reg.get("quantization") or "Q4_K_M")
++        if not source.get("model_path"):
++            source["model_path"] = resolve_cached_gguf(hf_id, quantization) or ""
++        source.setdefault("name", reg.get("name") or hf_id.rsplit("/", 1)[-1])
++        source["hf_id"] = hf_id
++        source.setdefault("role", reg.get("role") or "")
++        source.setdefault("gpu", index)
++        source.setdefault("quantization", quantization)
++        source["cached_sota_pair_called"] = True
++        source["cached_sota_pair_hf_ids"] = cached_hf_ids
++        rows.append(source)
++    return normalize_model_specs(rows)
++
++
++def _fixture_payload(root: Path) -> JsonDict:
++    return read_json(root / EXP6836_RELATIVE_PATH)
++
++
++def load_fixture_rows(root: Path, *, limit: int | None = None) -> list[JsonDict]:
++    """Load frozen Exp6836 pair rows, optionally truncated for unit tests."""
++
++    rows = [dict(row) for row in _fixture_payload(root).get("rows", [])]
++    if limit is not None:
++        rows = rows[: int(limit)]
++    if not rows:
++        raise SequenceScoringError("exp6836_rows_missing")
++    return rows
++
++
++def _source_artifact_hashes(root: Path) -> JsonDict:
++    paths = {
++        "exp6836": EXP6836_RELATIVE_PATH,
++        "module": MODULE_RELATIVE_PATH,
++        "wrapper": WRAPPER_RELATIVE_PATH,
++        "spec": SPEC_RELATIVE_PATH,
++    }
++    return {
++        key: {
++            "path": str(path),
++            "sha256": sha256_file(root / path) if (root / path).is_file() else "missing",
++        }
++        for key, path in paths.items()
++    }
++
++
++def _row_identity(model_spec: Mapping[str, Any], fixture_row: Mapping[str, Any]) -> str:
++    return f"{model_spec['family']}::{fixture_row['row_id']}"
++
++
++def _candidate_label(candidate: Mapping[str, Any]) -> str:
++    exact = dict(candidate.get("exact_check") or {})
++    return "compatible" if exact.get("satisfaction_predicate") is True else "violation"
++
++
++def _select_candidate_pair(fixture_row: Mapping[str, Any]) -> tuple[JsonDict, JsonDict, int]:
++    candidates = [dict(row) for row in fixture_row.get("candidates", [])]
++    compatible = [row for row in candidates if _candidate_label(row) == "compatible"]
++    violations = [row for row in candidates if _candidate_label(row) == "violation"]
++    if len(compatible) != 1 or len(violations) != 1:
++        raise SequenceScoringError(f"one_compatible_one_violation_required:{fixture_row.get('row_id')}")
++    return compatible[0], violations[0], candidates.index(compatible[0])
++
++
++def _score_candidate(
++    *,
++    scorer: ForcedSequenceScorer,
++    prompt_text: str,
++    candidate: Mapping[str, Any],
++    row_identity: str,
++    label: str,
++) -> JsonDict:
++    inputs = dict(candidate.get("expected_tokenization_inputs") or {})
++    candidate_text = str(inputs.get("candidate_text") or candidate.get("raw_text") or "")
++    receipt = scorer.score(
++        prompt_text,
++        candidate_text,
++        {
++            "row_identity": row_identity,
++            "candidate_id": candidate.get("candidate_id"),
++            "label": label,
++        },
++    )
++    token_ids = [int(token) for token in receipt.get("candidate_token_ids", [])]
++    token_logprobs = [float(value) for value in receipt.get("token_logprobs", [])]
++    if len(token_ids) != len(token_logprobs):
++        raise SequenceScoringError(f"token_logprob_alignment_failed:{candidate.get('candidate_id')}")
++    conditional = round(float(receipt.get("conditional_log_likelihood", sum(token_logprobs))), ROUND_DIGITS)
++    return {
++        "candidate_id": candidate.get("candidate_id"),
++        "label": label,
++        "raw_text_sha256": candidate.get("raw_text_sha256") or sha256_text(candidate_text),
++        "prompt_token_ids": [int(token) for token in receipt.get("prompt_token_ids", [])],
++        "candidate_token_ids": token_ids,
++        "token_logprobs": [round(value, ROUND_DIGITS) for value in token_logprobs],
++        "conditional_log_likelihood": conditional,
++        "sequence_energy": round(-conditional, ROUND_DIGITS),
++        "raw_receipt": dict(receipt.get("raw_receipt") or {}),
++    }
++
++
++def _obligation_count(candidate: Mapping[str, Any]) -> int:
++    diagnostics = list(dict(candidate.get("exact_check") or {}).get("diagnostics") or [])
++    return len({str(row.get("obligation_id")) for row in diagnostics if row.get("obligation_id") != "__joint__"})
++
++
++def score_fixture_row(
++    *,
++    fixture_row: Mapping[str, Any],
++    model_spec: Mapping[str, Any],
++    scorer: ForcedSequenceScorer,
++) -> JsonDict:
++    """Score one Exp6836 row and compute a prompt-masked sequence margin."""
++
++    compatible_candidate, violation_candidate, compatible_position = _select_candidate_pair(fixture_row)
++    prompt_text = str(fixture_row.get("prompt_text") or "")
++    identity = _row_identity(model_spec, fixture_row)
++    compatible = _score_candidate(
++        scorer=scorer,
++        prompt_text=prompt_text,
++        candidate=compatible_candidate,
++        row_identity=identity,
++        label="compatible",
++    )
++    violation = _score_candidate(
++        scorer=scorer,
++        prompt_text=prompt_text,
++        candidate=violation_candidate,
++        row_identity=identity,
++        label="violation",
++    )
++    if len(compatible["candidate_token_ids"]) != len(violation["candidate_token_ids"]):
++        raise SequenceScoringError(f"unequal_candidate_token_length:{identity}")
++    comp_score = float(compatible["conditional_log_likelihood"])
++    viol_score = float(violation["conditional_log_likelihood"])
++    violated_atoms = [
++        str(row["atom_id"])
++        for row in dict(violation_candidate.get("exact_check") or {}).get("diagnostics", [])
++        if row.get("passed") is not True and row.get("atom_id")
++    ]
++    row: JsonDict = {
++        "schema": SCHEMA + ".row",
++        "row_identity": identity,
++        "source_row_id": fixture_row.get("row_id"),
++        "source_row_hash": fixture_row.get("row_hash"),
++        "model_hf_id": model_spec.get("hf_id"),
++        "model_family": model_spec.get("family"),
++        "model_hash": model_spec.get("model_sha256"),
++        "tokenizer_hash": dict(model_spec.get("tokenizer_receipt") or {}).get("receipt_hash"),
++        "pair_id": fixture_row.get("pair_id"),
++        "program_id": fixture_row.get("program_id"),
++        "scenario_id": fixture_row.get("scenario_id"),
++        "case_kind": fixture_row.get("case_kind"),
++        "atom_family": fixture_row.get("case_kind"),
++        "obligation_count": _obligation_count(compatible_candidate),
++        "compatible_label_position": compatible_position,
++        "prompt_length": fixture_row.get("prompt_length"),
++        "prompt_sha256": fixture_row.get("prompt_sha256"),
++        "candidate_length": len(compatible["candidate_token_ids"]),
++        "candidate_text_length": len(
++            str(
++                dict(compatible_candidate.get("expected_tokenization_inputs") or {}).get(
++                    "candidate_text",
++                    compatible_candidate.get("raw_text", ""),
++                )
++            ).encode("utf-8")
++        ),
++        "permutation": fixture_row.get("label_swap"),
++        "surface_form": fixture_row.get("surface_form"),
++        "compatible": compatible,
++        "violation": violation,
++        "compatible_candidate_id": compatible_candidate.get("candidate_id"),
++        "violation_candidate_id": violation_candidate.get("candidate_id"),
++        "violated_atom_ids": violated_atoms,
++        "log_likelihood_margin": round(comp_score - viol_score, ROUND_DIGITS),
++        "energy_margin": round(float(compatible["sequence_energy"]) - float(violation["sequence_energy"]), ROUND_DIGITS),
++        "lower_compatible_energy": compatible["sequence_energy"] < violation["sequence_energy"],
++        "no_generation": True,
++        "prompt_masked": True,
++        "row_hash": "",
++    }
++    row["row_hash"] = row_hash(row)
++    return row
++
++
++def row_hash(row: Mapping[str, Any]) -> str:
++    """Hash one scored row while excluding its existing hash field."""
++
++    payload = dict(row)
++    payload["row_hash"] = ""
++    return sha256_text(canonical_json(payload))
++
++
++def build_checkpoint_manifest(rows: Sequence[Mapping[str, Any]], *, expected_row_count: int) -> JsonDict:
++    """Build the restart manifest that stores immutable completed rows."""
++
++    stored_rows = [dict(row) for row in rows]
++    hashes = {str(row["row_identity"]): str(row["row_hash"]) for row in stored_rows}
++    return {
++        "schema": SCHEMA + ".checkpoint",
++        "expected_row_count": int(expected_row_count),
++        "complete_row_count": len(stored_rows),
++        "row_hashes": hashes,
++        "rows": stored_rows,
++        "resumed_row_count": 0,
++        "missing_row_count": max(0, int(expected_row_count) - len(stored_rows)),
++        "checkpoint_hash": sha256_text(canonical_json({"expected": expected_row_count, "hashes": hashes})),
++    }
++
++
++def write_checkpoint(path: str | Path, manifest: Mapping[str, Any]) -> None:
++    """Persist checkpoint rows without writing any tracked state in tests."""
++
++    write_json_atomic(path, manifest)
++
++
++def _read_checkpoint(path: Path) -> JsonDict:
++    if not path.is_file():
++        return {
++            "schema": SCHEMA + ".checkpoint",
++            "expected_row_count": 0,
++            "complete_row_count": 0,
++            "row_hashes": {},
++            "rows": [],
++        }
++    return read_json(path)
++
++
++def _verified_checkpoint_rows(path: Path) -> dict[str, JsonDict]:
++    checkpoint = _read_checkpoint(path)
++    rows = [dict(row) for row in checkpoint.get("rows", [])]
++    hashes = dict(checkpoint.get("row_hashes") or {})
++    verified: dict[str, JsonDict] = {}
++    for row in rows:
++        identity = str(row.get("row_identity"))
++        if row_hash(row) != row.get("row_hash") or hashes.get(identity) != row.get("row_hash"):
++            raise SequenceScoringError(f"checkpoint_row_hash_mismatch:{identity}")
++        verified[identity] = row
++    return verified
++
++
++def forced_sequence_config(config: Mapping[str, Any] | None = None) -> JsonDict:
++    """Return deterministic settings for live and fake scorers."""
++
++    base = {
++        "seed": RANDOM_SEED,
++        "n_ctx": DEFAULT_CONTEXT_LENGTH,
++        "n_gpu_layers": DEFAULT_N_GPU_LAYERS,
++        "n_batch": DEFAULT_N_BATCH,
++        "n_ubatch": DEFAULT_N_UBATCH,
++        "sampling": False,
++        "generation": False,
++        "grammar": False,
++        "answer_feedback": False,
++        "prompt_masking": True,
++    }
++    if config:
++        base.update(dict(config))
++    return base
++
++
++def run_model_phase(
++    *,
++    model_spec: Mapping[str, Any],
++    fixture_rows: Sequence[Mapping[str, Any]],
++    scorer_factory: ScorerFactory,
++    checkpoint_path: str | Path,
++    scorer_config: Mapping[str, Any] | None = None,
++    expected_total_row_count: int | None = None,
++) -> JsonDict:
++    """Run one model phase, reusing valid checkpoint rows for that model."""
++
++    checkpoint = Path(checkpoint_path)
++    existing = _verified_checkpoint_rows(checkpoint)
++    expected_identities = [_row_identity(model_spec, row) for row in fixture_rows]
++    model_existing = {identity: existing[identity] for identity in expected_identities if identity in existing}
++    missing_rows = [
++        dict(row)
++        for row in fixture_rows
++        if _row_identity(model_spec, row) not in model_existing
++    ]
++    scorer = scorer_factory(model_spec, forced_sequence_config(scorer_config))
++    process_receipt = scorer.start()
++    new_rows: list[JsonDict] = []
++    try:
++        for fixture_row in missing_rows:
++            new_rows.append(
++                score_fixture_row(
++                    fixture_row=fixture_row,
++                    model_spec=model_spec,
++                    scorer=scorer,
++                )
++            )
++    finally:
++        teardown = scorer.close()
++    merged_by_identity = {**model_existing, **{str(row["row_identity"]): row for row in new_rows}}
++    model_rows = [merged_by_identity[identity] for identity in expected_identities if identity in merged_by_identity]
++    all_rows_by_identity = {**existing, **merged_by_identity}
++    expected_count = int(expected_total_row_count or len(fixture_rows))
++    manifest = build_checkpoint_manifest(
++        list(all_rows_by_identity.values()),
++        expected_row_count=expected_count,
++    )
++    manifest["resumed_row_count"] = len(model_existing)
++    manifest["missing_row_count"] = len(missing_rows)
++    write_checkpoint(checkpoint, manifest)
++    scores = [row["compatible"]["conditional_log_likelihood"] for row in model_rows]
++    process_receipt = {
++        **dict(process_receipt),
++        "hf_id": model_spec.get("hf_id"),
++        "family": model_spec.get("family"),
++        "first_score": scores[0] if scores else None,
++        "final_score": scores[-1] if scores else None,
++        "teardown": teardown,
++    }
++    return {
++        "model_hf_id": model_spec.get("hf_id"),
++        "family": model_spec.get("family"),
++        "rows": model_rows,
++        "row_count": len(model_rows),
++        "new_row_count": len(new_rows),
++        "process_receipt": process_receipt,
++        "checkpoint_manifest": manifest,
++    }
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    check_rows = [dict(row) for row in checks]
++    failed = [row for row in check_rows if row.get("passed") is not True]
++    first = failed[0] if failed else None
++    return {
++        "passed": first is None,
++        "failed_check": first.get("check") if first else None,
++        "expected": first.get("expected") if first else None,
++        "observed": first.get("observed") if first else None,
++        "checks": check_rows,
++    }
++
++
++def _precondition_blockers(preconditions: Mapping[str, Any]) -> list[str]:
++    blockers = [str(item) for item in preconditions.get("blocked_reasons") or []]
++    if preconditions.get("preconditions_ready") is not True:
++        blockers.append("preconditions_not_ready")
++    for row in preconditions.get("checks") or []:
++        if isinstance(row, Mapping) and row.get("passed") is not True:
++            blockers.append(str(row.get("check")))
++    return sorted(set(blockers))
++
++
++def _model_artifact_hashes(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        str(row["hf_id"]): {
++            "family": row.get("family"),
++            "path": row.get("model_path"),
++            "sha256": row.get("model_sha256"),
++        }
++        for row in model_specs
++    }
++
++
++def _tokenizer_receipts(model_specs: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return [
++        {
++            "hf_id": row.get("hf_id"),
++            "family": row.get("family"),
++            **dict(row.get("tokenizer_receipt") or {}),
++        }
++        for row in model_specs
++    ]
++
++
++def _mean(values: Sequence[float]) -> float | None:
++    return round(sum(values) / len(values), ROUND_DIGITS) if values else None
++
++
++def _margin_summary(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    margins = [float(row["log_likelihood_margin"]) for row in rows]
++    return {
++        "row_count": len(rows),
++        "mean_log_likelihood_margin": _mean(margins),
++        "min_log_likelihood_margin": round(min(margins), ROUND_DIGITS) if margins else None,
++        "max_log_likelihood_margin": round(max(margins), ROUND_DIGITS) if margins else None,
++        "lower_compatible_energy_count": sum(1 for row in rows if row.get("lower_compatible_energy") is True),
++    }
++
++
++def _grouped_results(rows: Sequence[Mapping[str, Any]], key_fields: Sequence[str]) -> list[JsonDict]:
++    grouped: dict[tuple[Any, ...], list[Mapping[str, Any]]] = defaultdict(list)
++    for row in rows:
++        grouped[tuple(row.get(field) for field in key_fields)].append(row)
++    out: list[JsonDict] = []
++    for key, group_rows in sorted(grouped.items(), key=lambda item: canonical_json(item[0])):
++        label = dict(zip(key_fields, key, strict=True))
++        out.append({**label, **_margin_summary(group_rows)})
++    return out
++
++
++def _per_model_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _grouped_results(rows, ("model_hf_id", "model_family"))
++
++
++def _per_atom_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    atom_rows = [row for row in rows if row.get("case_kind") in {"atom_contradiction", "atom_omission"}]
++    return _grouped_results(atom_rows, ("model_hf_id", "model_family", "atom_family", "obligation_count"))
++
++
++def _joint_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    joint_rows = [row for row in rows if row.get("case_kind") in {"joint_violation", "impossible_set"}]
++    return _grouped_results(joint_rows, ("model_hf_id", "model_family", "case_kind", "obligation_count"))
++
++
++def _shortcut_control_cells(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _grouped_results(
++        rows,
++        (
++            "model_hf_id",
++            "model_family",
++            "atom_family",
++            "obligation_count",
++            "compatible_label_position",
++            "prompt_length",
++            "candidate_length",
++            "permutation",
++        ),
++    )
++
++
++def _readiness_checks(
++    *,
++    rows: Sequence[Mapping[str, Any]],
++    expected_row_count: int,
++    process_receipts: Sequence[Mapping[str, Any]],
++    model_specs: Sequence[Mapping[str, Any]],
++    checkpoint_manifest: Mapping[str, Any],
++) -> list[JsonDict]:
++    families = {model_family(hf_id) for hf_id in MANDATED_MODEL_HF_IDS}
++    return [
++        gate_check("row_count_complete", expected_row_count, len(rows)),
++        gate_check("row_identities_unique", len(rows), len({row.get("row_identity") for row in rows})),
++        gate_check(
++            "all_required_models_used",
++            list(MANDATED_MODEL_HF_IDS),
++            [row.get("hf_id") for row in process_receipts],
++        ),
++        gate_check(
++            "model_families_separate",
++            sorted(families),
++            sorted({str(row.get("model_family")) for row in rows}),
++        ),
++        gate_check(
++            "processes_owned",
++            True,
++            all(row.get("owned_by_task") is True for row in process_receipts),
++        ),
++        gate_check(
++            "process_teardown_clean",
++            True,
++            all(dict(row.get("teardown") or {}).get("leak_free") is True for row in process_receipts),
++        ),
++        gate_check(
++            "checkpoint_complete",
++            expected_row_count,
++            checkpoint_manifest.get("complete_row_count"),
++        ),
++        gate_check(
++            "all_row_hashes_valid",
++            True,
++            all(row_hash(row) == row.get("row_hash") for row in rows),
++        ),
++        gate_check(
++            "raw_candidate_receipts_present",
++            True,
++            all(
++                dict(row.get(side) or {}).get("raw_receipt")
++                for row in rows
++                for side in ("compatible", "violation")
++            ),
++        ),
++        gate_check(
++            "exact_model_hashes_present",
++            True,
++            all(str(row.get("model_sha256", "")).startswith("sha256:") for row in model_specs),
++        ),
++    ]
++
++
++def _method_parity_limits() -> JsonDict:
++    return {
++        "fits_probe": False,
++        "uses_llm_judge": False,
++        "generates_answers": False,
++        "hsrm_reproduction": False,
++        "step_boundary_hidden_states_available": False,
++        "effect_estimate_is_truth_proof": False,
++        "truth_authority": "Exp6836 exact labels are external.",
++    }
++
++
++def _reproducibility_checksum(
++    *,
++    source_hashes: Mapping[str, Any],
++    model_hashes: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++) -> str:
++    return sha256_text(
++        canonical_json(
++            {
++                "random_seed": RANDOM_SEED,
++                "source_hashes": source_hashes,
++                "model_hashes": model_hashes,
++                "row_hashes": [row.get("row_hash") for row in rows],
++                "inference_substrate": INFERENCE_SUBSTRATE,
++            }
++        )
++    )
++
++
++def _base_artifact(
++    *,
++    duration_s: float,
++    model_specs: Sequence[Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    source_hashes: Mapping[str, Any],
++) -> JsonDict:
++    model_hashes = _model_artifact_hashes(model_specs)
++    return {
++        "schema": SCHEMA,
++        "experiment_id": 6837,
++        "run_date": RUN_DATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": dict(preconditions_checked),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 6),
++        "model_specs": [dict(row) for row in model_specs],
++        "models_used": [],
++        "model_artifact_hashes": model_hashes,
++        "tokenizer_receipts": _tokenizer_receipts(model_specs),
++        "process_receipts": [],
++        "accelerator_samples": list(preconditions_checked.get("accelerator_samples") or []),
++        "random_seed": RANDOM_SEED,
++        "source_artifact_hashes": dict(source_hashes),
++        "reproducibility_checksum": _reproducibility_checksum(
++            source_hashes=source_hashes,
++            model_hashes=model_hashes,
++            rows=[],
++        ),
++        "rows": [],
++        "per_model_results": [],
++        "per_atom_results": [],
++        "joint_results": [],
++        "shortcut_control_cells": [],
++        "checkpoint_manifest": build_checkpoint_manifest([], expected_row_count=0),
++        "method_parity_limits": _method_parity_limits(),
++        "obligation_compatibility_stream_ready_score": 0,
++        "gate_check_summary": _gate_summary(list(preconditions_checked.get("checks") or [])),
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "complete_blocked_output_free_compatibility",
++        "status": "blocked",
++    }
++
++
++def _blocked_artifact(
++    *,
++    duration_s: float,
++    model_specs: Sequence[Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    source_hashes: Mapping[str, Any],
++) -> JsonDict:
++    artifact = _base_artifact(
++        duration_s=duration_s,
++        model_specs=model_specs,
++        preconditions_checked=preconditions_checked,
++        source_hashes=source_hashes,
++    )
++    artifact["gate_check_summary"] = _gate_summary(list(preconditions_checked.get("checks") or []))
++    return artifact
++
++
++def _complete_artifact(
++    *,
++    duration_s: float,
++    model_specs: Sequence[Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    source_hashes: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++    process_receipts: Sequence[Mapping[str, Any]],
++    checkpoint_manifest: Mapping[str, Any],
++    expected_row_count: int,
++) -> JsonDict:
++    model_hashes = _model_artifact_hashes(model_specs)
++    readiness = _readiness_checks(
++        rows=rows,
++        expected_row_count=expected_row_count,
++        process_receipts=process_receipts,
++        model_specs=model_specs,
++        checkpoint_manifest=checkpoint_manifest,
++    )
++    gate_summary = _gate_summary(readiness)
++    ready = gate_summary["passed"]
++    artifact = _base_artifact(
++        duration_s=duration_s,
++        model_specs=model_specs,
++        preconditions_checked=preconditions_checked,
++        source_hashes=source_hashes,
++    )
++    artifact.update(
++        {
++            "models_used": [row.get("hf_id") for row in process_receipts],
++            "model_artifact_hashes": model_hashes,
++            "process_receipts": [dict(row) for row in process_receipts],
++            "rows": [dict(row) for row in rows],
++            "per_model_results": _per_model_results(rows),
++            "per_atom_results": _per_atom_results(rows),
++            "joint_results": _joint_results(rows),
++            "shortcut_control_cells": _shortcut_control_cells(rows),
++            "checkpoint_manifest": dict(checkpoint_manifest),
++            "obligation_compatibility_stream_ready_score": 1 if ready else 0,
++            "gate_check_summary": gate_summary,
++            "verdict_class": "positive" if ready else "partial",
++            "honest_verdict": "complete_output_free_compatibility_stream_ready"
++            if ready
++            else "complete_partial_output_free_compatibility_stream_incomplete",
++            "status": "complete" if ready else "partial",
++        }
++    )
++    artifact["reproducibility_checksum"] = _reproducibility_checksum(
++        source_hashes=source_hashes,
++        model_hashes=model_hashes,
++        rows=rows,
++    )
++    return artifact
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    result_path: str | Path | None = None,
++    checkpoint_path: str | Path | None = None,
++    model_specs: Sequence[Mapping[str, Any]] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    scorer_factory: ScorerFactory | None = None,
++    scorer_config: Mapping[str, Any] | None = None,
++    fixture_row_limit: int | None = None,
++    write: bool = True,
++) -> JsonDict:
++    """Run Exp6837 or write a blocked artifact when live gates fail."""
++
++    started = time.perf_counter()
++    root = Path(root)
++    result = Path(result_path) if result_path is not None else root / RESULT_RELATIVE_PATH
++    checkpoint = Path(checkpoint_path) if checkpoint_path is not None else root / CHECKPOINT_RELATIVE_PATH
++    specs = normalize_model_specs(model_specs) if model_specs is not None else resolve_model_specs()
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else collect_preconditions(root=root, model_specs=specs, result_path=result, checkpoint_path=checkpoint)
++    )
++    source_hashes = _source_artifact_hashes(root)
++    blockers = _precondition_blockers(preconditions)
++    if blockers:
++        artifact = _blocked_artifact(
++            duration_s=time.perf_counter() - started,
++            model_specs=specs,
++            preconditions_checked=preconditions,
++            source_hashes=source_hashes,
++        )
++        if write:
++            write_json_atomic(result, artifact)
++        return artifact
++    rows = load_fixture_rows(root, limit=fixture_row_limit)
++    factory = scorer_factory or SubprocessForcedSequenceScorer
++    expected_total = len(rows) * len(specs)
++    all_rows: list[JsonDict] = []
++    process_receipts: list[JsonDict] = []
++    checkpoint_manifest = build_checkpoint_manifest([], expected_row_count=expected_total)
++    for spec in specs:
++        phase = run_model_phase(
++            model_spec=spec,
++            fixture_rows=rows,
++            scorer_factory=factory,
++            checkpoint_path=checkpoint,
++            scorer_config=scorer_config,
++            expected_total_row_count=expected_total,
++        )
++        all_rows.extend(phase["rows"])
++        process_receipts.append(dict(phase["process_receipt"]))
++        checkpoint_manifest = dict(phase["checkpoint_manifest"])
++    artifact = _complete_artifact(
++        duration_s=time.perf_counter() - started,
++        model_specs=specs,
++        preconditions_checked=preconditions,
++        source_hashes=source_hashes,
++        rows=all_rows,
++        process_receipts=process_receipts,
++        checkpoint_manifest=checkpoint_manifest,
++        expected_row_count=expected_total,
++    )
++    if write:
++        write_json_atomic(result, artifact)
++    return artifact
++
++
++def _utc_now() -> str:  # pragma: no cover - clock dependent.
++    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
++
++
++def _port_free(port: int) -> bool:  # pragma: no cover - host dependent.
++    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
++        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
++        try:
++            sock.bind(("127.0.0.1", port))
++        except OSError:
++            return False
++    return True
++
++
++def _allocate_ports(count: int) -> list[int]:  # pragma: no cover - host dependent.
++    ports: list[int] = []
++    sockets: list[socket.socket] = []
++    try:
++        for _ in range(count):
++            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
++            sock.bind(("127.0.0.1", 0))
++            ports.append(int(sock.getsockname()[1]))
++            sockets.append(sock)
++    finally:
++        for sock in sockets:
++            sock.close()
++    return ports
++
++
++def _run_command(command: Sequence[str], timeout_s: float = 10.0) -> JsonDict:  # pragma: no cover.
++    started = time.perf_counter()
++    try:
++        result = subprocess.run(
++            list(command),
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++        return {
++            "command": list(command),
++            "returncode": result.returncode,
++            "stdout": result.stdout,
++            "stderr": result.stderr,
++            "duration_s": round(time.perf_counter() - started, 6),
++            "ok": result.returncode == 0,
++        }
++    except Exception as exc:
++        return {
++            "command": list(command),
++            "returncode": None,
++            "stdout": "",
++            "stderr": f"{type(exc).__name__}: {exc}",
++            "duration_s": round(time.perf_counter() - started, 6),
++            "ok": False,
++        }
++
++
++def _cuda_available() -> JsonDict:  # pragma: no cover - host dependent.
++    torch_ok = False
++    torch_detail = ""
++    try:
++        import torch
++
++        torch_ok = bool(torch.cuda.is_available())
++        torch_detail = f"torch_device_count={torch.cuda.device_count()}"
++    except Exception as exc:
++        torch_detail = f"{type(exc).__name__}: {exc}"
++    smi = _run_command(["nvidia-smi", "--query-gpu=index,uuid,name", "--format=csv,noheader"], timeout_s=10)
++    return {
++        "ok": torch_ok or smi.get("ok") is True,
++        "torch_cuda_available": torch_ok,
++        "torch_detail": torch_detail,
++        "nvidia_smi": smi,
++    }
++
++
++def _accelerator_samples() -> list[JsonDict]:  # pragma: no cover - host dependent.
++    smi = _run_command(
++        [
++            "nvidia-smi",
++            "--query-gpu=index,uuid,name,memory.free,memory.total",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10,
++    )
++    samples: list[JsonDict] = []
++    for line in str(smi.get("stdout", "")).splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 5:
++            samples.append(
++                {
++                    "index": parts[0],
++                    "gpu_uuid": parts[1],
++                    "name": parts[2],
++                    "free_vram_mb": parts[3],
++                    "total_vram_mb": parts[4],
++                    "owned_by_task": False,
++                }
++            )
++    return samples
++
++
++def _compute_apps() -> list[JsonDict]:  # pragma: no cover - host dependent.
++    smi = _run_command(
++        [
++            "nvidia-smi",
++            "--query-compute-apps=pid,gpu_uuid,used_memory",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10,
++    )
++    rows: list[JsonDict] = []
++    for line in str(smi.get("stdout", "")).splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 3 and parts[0]:
++            rows.append({"pid": parts[0], "gpu_uuid": parts[1], "used_memory_mb": parts[2]})
++    return rows
++
++
++def _disk_ok(root: Path) -> JsonDict:  # pragma: no cover - host dependent.
++    usage = shutil.disk_usage(root)
++    available_mb = int(usage.free / (1024 * 1024))
++    return {"available_mb": available_mb, "required_mb": DISK_FLOOR_MB, "ok": available_mb >= DISK_FLOOR_MB}
++
++
++def _token_logprob_support() -> JsonDict:  # pragma: no cover - environment dependent.
++    try:
++        from llama_cpp import Llama
++
++        return {"ok": hasattr(Llama, "eval"), "detail": "llama_cpp.Llama.eval present"}
++    except Exception as exc:
++        return {"ok": False, "detail": f"{type(exc).__name__}: {exc}"}
++
++
++def _run_live_canaries(
++    *,
++    root: Path,
++    model_specs: Sequence[Mapping[str, Any]],
++    ports: Sequence[int],
++) -> JsonDict:  # pragma: no cover - live model dependent.
++    first_row = load_fixture_rows(root, limit=1)[0]
++    receipts = []
++    for spec, port in zip(model_specs, ports, strict=True):
++        scorer = SubprocessForcedSequenceScorer(spec, {"port": port, "canary": True})
++        process = scorer.start()
++        try:
++            row = score_fixture_row(fixture_row=first_row, model_spec=spec, scorer=scorer)
++            receipts.append({"hf_id": spec["hf_id"], "ok": True, "margin": row["log_likelihood_margin"]})
++        except Exception as exc:
++            receipts.append({"hf_id": spec["hf_id"], "ok": False, "error": f"{type(exc).__name__}: {exc}"})
++        finally:
++            process["teardown"] = scorer.close()
++    return {"ok": all(row.get("ok") is True for row in receipts), "receipts": receipts}
++
++
++def collect_preconditions(
++    *,
++    root: Path,
++    model_specs: Sequence[Mapping[str, Any]],
++    result_path: Path,
++    checkpoint_path: Path,
++) -> JsonDict:  # pragma: no cover - host/resource dependent.
++    """Collect required live gates while only observing unrelated processes."""
++
++    exp6836 = _fixture_payload(root) if (root / EXP6836_RELATIVE_PATH).is_file() else {}
++    ports = _allocate_ports(len(model_specs))
++    port_status = all(_port_free(port) for port in ports)
++    cuda = _cuda_available()
++    apps = _compute_apps()
++    disk = _disk_ok(root)
++    token_logprobs = _token_logprob_support()
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
++    checks = [
++        gate_check("cached_sota_pair_called", True, all(row.get("cached_sota_pair_called") is True for row in model_specs)),
++        gate_check(
++            "all_three_exact_gguf_files",
++            list(MANDATED_MODEL_HF_IDS),
++            [row.get("hf_id") for row in model_specs if row.get("local_model_present") is True],
++        ),
++        gate_check("model_hashes_present", True, all(str(row.get("model_sha256", "")).startswith("sha256:") for row in model_specs)),
++        gate_check(
++            "native_tokenizer_metadata",
++            True,
++            all(dict(row.get("tokenizer_receipt") or {}).get("loadable") is True for row in model_specs),
++        ),
++        gate_check("token_log_probability_support", True, token_logprobs["ok"]),
++        gate_check("cuda_available", True, cuda["ok"]),
++        gate_check("exclusive_gpu_leases", True, not apps),
++        gate_check("free_ports", True, port_status),
++        gate_check("sufficient_disk", True, disk["ok"]),
++        gate_check("exp6836_typed_obligation_program_ready_score", 1, exp6836.get("typed_obligation_program_ready_score")),
++        gate_check("exp6836_obligation_pair_fixture_ready_score", 1, exp6836.get("obligation_pair_fixture_ready_score")),
++    ]
++    canary_allowed = all(row["passed"] for row in checks)
++    canary = (
++        _run_live_canaries(root=root, model_specs=model_specs, ports=ports)
++        if canary_allowed
++        else {"ok": False, "skipped": True, "reason": "prior_precondition_failed"}
++    )
++    checks.append(gate_check("live_canary_per_model", True, canary["ok"]))
++    blocked = [str(row["check"]) for row in checks if row["passed"] is not True]
++    return {
++        "schema": SCHEMA + ".preconditions",
++        "date": RUN_DATE,
++        "python": {"version": platform.python_version(), "executable": sys.executable},
++        "checks": checks,
++        "blocked_reasons": blocked,
++        "preconditions_ready": not blocked,
++        "cuda": cuda,
++        "accelerator_samples": _accelerator_samples(),
++        "unrelated_compute_processes_observed": apps,
++        "free_ports": ports,
++        "disk": disk,
++        "token_log_probability_support": token_logprobs,
++        "canary": canary,
++        "output_paths": {
++            "result_path": str(result_path),
++            "checkpoint_path": str(checkpoint_path),
++            "result_parent_writable": os.access(result_path.parent, os.W_OK),
++            "checkpoint_parent_writable": os.access(checkpoint_path.parent, os.W_OK),
++        },
++    }
++
++
++class _WorkerEngine:  # pragma: no cover - live model dependent.
++    def __init__(self, model_path: str, config: Mapping[str, Any]) -> None:
++        from llama_cpp import Llama
++
++        self.llm = Llama(
++            model_path=model_path,
++            n_gpu_layers=int(config.get("n_gpu_layers", DEFAULT_N_GPU_LAYERS)),
++            n_ctx=int(config.get("n_ctx", DEFAULT_CONTEXT_LENGTH)),
++            n_batch=int(config.get("n_batch", DEFAULT_N_BATCH)),
++            n_ubatch=int(config.get("n_ubatch", DEFAULT_N_UBATCH)),
++            seed=int(config.get("seed", RANDOM_SEED)),
++            logits_all=True,
++            verbose=False,
++        )
++
++    def _tokenize(self, text: str, *, add_bos: bool) -> list[int]:
++        return list(self.llm.tokenize(text.encode("utf-8"), add_bos=add_bos, special=False))
++
++    @staticmethod
++    def _logprob(logits: Any, token_id: int) -> float:
++        values = [float(value) for value in logits]
++        max_logit = max(values)
++        denom = sum(math.exp(value - max_logit) for value in values)
++        return values[token_id] - max_logit - math.log(denom)
++
++    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> JsonDict:
++        prompt_tokens = self._tokenize(prompt_text, add_bos=True)
++        candidate_tokens = self._tokenize(candidate_text, add_bos=False)
++        all_tokens = prompt_tokens + candidate_tokens
++        self.llm.reset()
++        self.llm.eval(all_tokens)
++        scores = self.llm.scores
++        token_logprobs = []
++        for absolute_index, token_id in enumerate(all_tokens[len(prompt_tokens) :], start=len(prompt_tokens)):
++            token_logprobs.append(self._logprob(scores[absolute_index - 1], int(token_id)))
++        return {
++            "prompt_token_ids": prompt_tokens,
++            "candidate_token_ids": candidate_tokens,
++            "token_logprobs": [round(value, ROUND_DIGITS) for value in token_logprobs],
++            "conditional_log_likelihood": round(sum(token_logprobs), ROUND_DIGITS),
++            "raw_receipt": {
++                "row_identity": row_identity.get("row_identity"),
++                "candidate_id": row_identity.get("candidate_id"),
++                "label": row_identity.get("label"),
++                "prompt_token_count": len(prompt_tokens),
++                "candidate_token_count": len(candidate_tokens),
++                "token_logprob_count": len(token_logprobs),
++            },
++        }
++
++
++class SubprocessForcedSequenceScorer:  # pragma: no cover - live model dependent.
++    """Task-owned HTTP worker around llama.cpp forced scoring."""
++
++    def __init__(self, model_spec: Mapping[str, Any], config: Mapping[str, Any]) -> None:
++        self.model_spec = dict(model_spec)
++        self.config = forced_sequence_config(config)
++        self.port = int(self.config.get("port") or _allocate_ports(1)[0])
++        self.process: subprocess.Popen[Any] | None = None
++        self.command = [
++            sys.executable,
++            "-m",
++            "carnot.experiment_6837_three_family_output_free_compatibility",
++            "--score-worker",
++            "--model-path",
++            str(self.model_spec["model_path"]),
++            "--port",
++            str(self.port),
++        ]
++
++    def start(self) -> JsonDict:
++        env = dict(os.environ)
++        env["CUDA_VISIBLE_DEVICES"] = str(self.model_spec.get("gpu", 0))
++        self.process = subprocess.Popen(
++            self.command,
++            stdin=subprocess.DEVNULL,
++            stdout=subprocess.PIPE,
++            stderr=subprocess.PIPE,
++            text=True,
++            env=env,
++            start_new_session=True,
++        )
++        deadline = time.time() + 180
++        while time.time() < deadline:
++            if self.process.poll() is not None:
++                raise SequenceScoringError(f"score_worker_exited:{self.process.returncode}")
++            try:
++                with request.urlopen(f"http://127.0.0.1:{self.port}/health", timeout=2) as response:
++                    if response.status == 200:
++                        break
++            except OSError:
++                time.sleep(1)
++        else:
++            raise SequenceScoringError("score_worker_health_timeout")
++        return {
++            "command": list(self.command),
++            "pid": self.process.pid,
++            "process_start": _utc_now(),
++            "port": self.port,
++            "gpu_uuid": self.model_spec.get("gpu_uuid"),
++            "visible_devices": [self.model_spec.get("gpu")],
++            "model_hash": self.model_spec.get("model_sha256"),
++            "tokenizer_hash": dict(self.model_spec.get("tokenizer_receipt") or {}).get("receipt_hash"),
++            "owned_by_task": True,
++            "token_logprob_support": True,
++        }
++
++    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> JsonDict:
++        body = json.dumps(
++            {
++                "prompt_text": prompt_text,
++                "candidate_text": candidate_text,
++                "row_identity": dict(row_identity),
++            }
++        ).encode("utf-8")
++        req = request.Request(
++            f"http://127.0.0.1:{self.port}/score",
++            data=body,
++            headers={"Content-Type": "application/json"},
++            method="POST",
++        )
++        with request.urlopen(req, timeout=300) as response:
++            return json.loads(response.read().decode("utf-8"))
++
++    def close(self) -> JsonDict:
++        if self.process is None:
++            return {"action": "not_started", "bounded": True, "leak_free": True}
++        try:
++            os.killpg(self.process.pid, signal.SIGTERM)
++        except ProcessLookupError:
++            return {"action": "already_exited", "bounded": True, "leak_free": True}
++        try:
++            self.process.wait(timeout=30)
++            return {
++                "action": "terminated",
++                "bounded": True,
++                "leak_free": True,
++                "unrelated_process_kill_count_delta": 0,
++            }
++        except subprocess.TimeoutExpired:
++            os.killpg(self.process.pid, signal.SIGKILL)
++            self.process.wait(timeout=10)
++            return {
++                "action": "force_killed",
++                "bounded": True,
++                "leak_free": self.process.poll() is not None,
++                "unrelated_process_kill_count_delta": 0,
++            }
++
++
++def _run_worker(model_path: str, port: int) -> int:  # pragma: no cover - live model dependent.
++    engine = _WorkerEngine(model_path, forced_sequence_config())
++
++    class Handler(BaseHTTPRequestHandler):
++        def log_message(self, fmt: str, *args: Any) -> None:
++            del fmt, args
++
++        def do_GET(self) -> None:
++            if self.path != "/health":
++                self.send_response(404)
++                self.end_headers()
++                return
++            self.send_response(200)
++            self.end_headers()
++            self.wfile.write(b'{"ok":true}')
++
++        def do_POST(self) -> None:
++            if self.path != "/score":
++                self.send_response(404)
++                self.end_headers()
++                return
++            size = int(self.headers.get("Content-Length", "0"))
++            payload = json.loads(self.rfile.read(size).decode("utf-8"))
++            result = engine.score(
++                str(payload["prompt_text"]),
++                str(payload["candidate_text"]),
++                dict(payload["row_identity"]),
++            )
++            body = json.dumps(result).encode("utf-8")
++            self.send_response(200)
++            self.send_header("Content-Type", "application/json")
++            self.send_header("Content-Length", str(len(body)))
++            self.end_headers()
++            self.wfile.write(body)
++
++    server = HTTPServer(("127.0.0.1", int(port)), Handler)
++    try:
++        server.serve_forever()
++    finally:
++        server.server_close()
++        gc.collect()
++    return 0
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """CLI entrypoint for the requested Exp6837 command."""
++
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--result-path", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--checkpoint-path", default=str(REPO_ROOT / CHECKPOINT_RELATIVE_PATH))
++    parser.add_argument("--score-worker", action="store_true")
++    parser.add_argument("--model-path", default="")
++    parser.add_argument("--port", type=int, default=0)
++    args = parser.parse_args(argv)
++    if args.score_worker:  # pragma: no cover - exercised only by live worker subprocesses.
++        return _run_worker(args.model_path, args.port)
++    if args.date != RUN_DATE:
++        raise SequenceScoringError(f"run_date_mismatch:{args.date}")
++    artifact = run(
++        root=REPO_ROOT,
++        result_path=Path(args.result_path),
++        checkpoint_path=Path(args.checkpoint_path),
++        write=True,
++    )
++    print(json.dumps({"result_path": args.result_path, "honest_verdict": artifact["honest_verdict"]}))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 1d5e034532..ff46d3be41 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.37s, user: 2.04s, system: 0.19s, MEM: 114.61 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.60s, user: 3.08s, system: 0.30s, MEM: 114.05 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 76% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 67% 19x read_verilog (2 sec), 12% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_6837_three_family_output_free_compatibility.json b/results/experiment_6837_three_family_output_free_compatibility.json
+new file mode 100644
+index 0000000000..01893893df
+--- /dev/null
++++ b/results/experiment_6837_three_family_output_free_compatibility.json
+@@ -0,0 +1,494 @@
++{
++  "accelerator_samples": [
++    {
++      "free_vram_mb": "23859",
++      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
++      "index": "0",
++      "name": "NVIDIA GeForce RTX 3090",
++      "owned_by_task": false,
++      "total_vram_mb": "24576"
++    },
++    {
++      "free_vram_mb": "702",
++      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++      "index": "1",
++      "name": "NVIDIA GeForce RTX 3090",
++      "owned_by_task": false,
++      "total_vram_mb": "24576"
++    }
++  ],
++  "checkpoint_manifest": {
++    "checkpoint_hash": "sha256:0bb2c327304e17c98f8cca942a880210b88ebaf45f2d0b57216f83cacbcc7ad4",
++    "complete_row_count": 0,
++    "expected_row_count": 0,
++    "missing_row_count": 0,
++    "resumed_row_count": 0,
++    "row_hashes": {},
++    "rows": [],
++    "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1.checkpoint"
++  },
++  "duration_s": 40.757,
++  "experiment_id": 6837,
++  "field_principles": {
++    "accelerator_samples": "Records CUDA device and lease observations.",
++    "checkpoint_manifest": "Proves restart skips complete rows.",
++    "duration_s": "Makes skipped or implausibly short work visible.",
++    "field_principles": "Documents why each required field exists.",
++    "gate_check_summary": "Names the failed gate in blocked artifacts.",
++    "honest_verdict": "Gives a terminal complete-prefixed outcome.",
++    "inference_substrate": "Distinguishes forced scoring from answer generation.",
++    "joint_results": "Reports joint and impossible-case margins separately.",
++    "method_parity_limits": "States this is not HSRM and not truth proof.",
++    "model_artifact_hashes": "Binds model bytes to scored rows.",
++    "model_specs": "Freezes the mandated model identities.",
++    "models_used": "Shows which models actually ran.",
++    "obligation_compatibility_stream_ready_score": "Gates only on receipts and rows.",
++    "per_atom_results": "Reports atom-family margins without pooling models.",
++    "per_model_results": "Keeps model families separate.",
++    "preconditions_checked": "Names every live gate and the exact observed value.",
++    "process_receipts": "Proves task-owned process identity and teardown.",
++    "random_seed": "Makes batch ordering and canaries reproducible.",
++    "reproducibility_checksum": "Detects drift across code, source, model, and rows.",
++    "rows": "Stores every scored model and candidate-pair margin.",
++    "shortcut_control_cells": "Audits label position, length, prompt, and permutation cues.",
++    "source_artifact_hashes": "Binds Exp6836 and implementation inputs.",
++    "tokenizer_receipts": "Proves native GGUF tokenization and lengths.",
++    "verdict_class": "Uses the closed terminal class vocabulary.",
++    "verifier_is_oracle": "Keeps exact labels external to model scores."
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "cached_sota_pair_called",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "all_three_exact_gguf_files",
++        "expected": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "observed": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "passed": true
++      },
++      {
++        "check": "model_hashes_present",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "native_tokenizer_metadata",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "token_log_probability_support",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "cuda_available",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "exclusive_gpu_leases",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "free_ports",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "sufficient_disk",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "exp6836_typed_obligation_program_ready_score",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "exp6836_obligation_pair_fixture_ready_score",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "live_canary_per_model",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      }
++    ],
++    "expected": true,
++    "failed_check": "exclusive_gpu_leases",
++    "observed": false,
++    "passed": false
++  },
++  "honest_verdict": "complete_blocked_output_free_compatibility",
++  "inference_substrate": "live_local_llama_cpp_cuda_forced_sequence_scoring",
++  "joint_results": [],
++  "method_parity_limits": {
++    "effect_estimate_is_truth_proof": false,
++    "fits_probe": false,
++    "generates_answers": false,
++    "hsrm_reproduction": false,
++    "step_boundary_hidden_states_available": false,
++    "truth_authority": "Exp6836 exact labels are external.",
++    "uses_llm_judge": false
++  },
++  "model_artifact_hashes": {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": {
++      "family": "qwen3_6_35b_a3b",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
++    },
++    "unsloth/gemma-4-26B-A4B-it-GGUF": {
++      "family": "gemma4_26b_a4b_it",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
++    },
++    "unsloth/gemma-4-31B-it-GGUF": {
++      "family": "gemma4_31b_it",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
++    }
++  },
++  "model_specs": [
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "context_length": 8192,
++      "family": "qwen3_6_35b_a3b",
++      "gpu": 0,
++      "headline_eligible": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "name": "Qwen3.6-35B-A3B",
++      "quantization": "Q4_K_M",
++      "role": "moe",
++      "tokenizer_receipt": {
++        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++        "loadable": true,
++        "model_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
++        "receipt_hash": "sha256:4029a0283776665ba0709d4f589e69106a9be001e2d182952a315c678ba2346f",
++        "source": "embedded_gguf_llama_cpp_vocab_only"
++      }
++    },
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "context_length": 8192,
++      "family": "gemma4_31b_it",
++      "gpu": 1,
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "name": "Gemma4-31B-it",
++      "quantization": "Q4_K_M",
++      "role": "dense",
++      "tokenizer_receipt": {
++        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "loadable": true,
++        "model_path_hash": "sha256:330c00a9ca503ff3a01df8db6bd046991f1f849b7436ced943721312827a6200",
++        "receipt_hash": "sha256:7b9e54f38e666d2c03ce0dde2dddc68647382a683df4e63ee1d834eb6ba3ae24",
++        "source": "embedded_gguf_llama_cpp_vocab_only"
++      }
++    },
++    {
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "context_length": 8192,
++      "family": "gemma4_26b_a4b_it",
++      "gpu": 1,
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "name": "Gemma4-26B-A4B-it",
++      "quantization": "Q4_K_M",
++      "role": "moe",
++      "tokenizer_receipt": {
++        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "loadable": true,
++        "model_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
++        "receipt_hash": "sha256:5a72e5a368ee89a30d592ff53d5c6b4d19395140c463275d08b509fdafbed575",
++        "source": "embedded_gguf_llama_cpp_vocab_only"
++      }
++    }
++  ],
++  "models_used": [],
++  "obligation_compatibility_stream_ready_score": 0,
++  "per_atom_results": [],
++  "per_model_results": [],
++  "preconditions_checked": {
++    "accelerator_samples": [
++      {
++        "free_vram_mb": "23859",
++        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
++        "index": "0",
++        "name": "NVIDIA GeForce RTX 3090",
++        "owned_by_task": false,
++        "total_vram_mb": "24576"
++      },
++      {
++        "free_vram_mb": "702",
++        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++        "index": "1",
++        "name": "NVIDIA GeForce RTX 3090",
++        "owned_by_task": false,
++        "total_vram_mb": "24576"
++      }
++    ],
++    "blocked_reasons": [
++      "exclusive_gpu_leases",
++      "live_canary_per_model"
++    ],
++    "canary": {
++      "ok": false,
++      "reason": "prior_precondition_failed",
++      "skipped": true
++    },
++    "checks": [
++      {
++        "check": "cached_sota_pair_called",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "all_three_exact_gguf_files",
++        "expected": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "observed": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "passed": true
++      },
++      {
++        "check": "model_hashes_present",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "native_tokenizer_metadata",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "token_log_probability_support",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "cuda_available",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "exclusive_gpu_leases",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "free_ports",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "sufficient_disk",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "exp6836_typed_obligation_program_ready_score",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "exp6836_obligation_pair_fixture_ready_score",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "live_canary_per_model",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      }
++    ],
++    "cuda": {
++      "nvidia_smi": {
++        "command": [
++          "nvidia-smi",
++          "--query-gpu=index,uuid,name",
++          "--format=csv,noheader"
++        ],
++        "duration_s": 0.025615,
++        "ok": true,
++        "returncode": 0,
++        "stderr": "",
++        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090\n"
++      },
++      "ok": true,
++      "torch_cuda_available": true,
++      "torch_detail": "torch_device_count=2"
++    },
++    "date": "20260901",
++    "disk": {
++      "available_mb": 1013818,
++      "ok": true,
++      "required_mb": 1024
++    },
++    "free_ports": [
++      43241,
++      60513,
++      49607
++    ],
++    "output_paths": {
++      "checkpoint_parent_writable": true,
++      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6837_three_family_output_free_compatibility.checkpoint.json",
++      "result_parent_writable": true,
++      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6837_three_family_output_free_compatibility.json"
++    },
++    "preconditions_ready": false,
++    "python": {
++      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "version": "3.12.13"
++    },
++    "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1.preconditions",
++    "token_log_probability_support": {
++      "detail": "llama_cpp.Llama.eval present",
++      "ok": true
++    },
++    "unrelated_compute_processes_observed": [
++      {
++        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
++        "pid": "534404",
++        "used_memory_mb": "256"
++      },
++      {
++        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++        "pid": "375005",
++        "used_memory_mb": "4730"
++      },
++      {
++        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++        "pid": "375086",
++        "used_memory_mb": "18416"
++      },
++      {
++        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++        "pid": "534404",
++        "used_memory_mb": "256"
++      }
++    ]
++  },
++  "process_receipts": [],
++  "random_seed": 6837,
++  "reproducibility_checksum": "sha256:1f3eb6f07a1cf7a76e9253765b0deb5932ee2b553a0fbaa1ac3ebd2fe8162329",
++  "rows": [],
++  "run_date": "20260901",
++  "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1",
++  "shortcut_control_cells": [],
++  "source_artifact_hashes": {
++    "exp6836": {
++      "path": "results/experiment_6836_typed_obligation_program_fixture.json",
++      "sha256": "sha256:8657359ae7dcdf508ae141426d145bc75565119685a7ef841fc0cc9aa567d33c"
++    },
++    "module": {
++      "path": "python/carnot/experiment_6837_three_family_output_free_compatibility.py",
++      "sha256": "sha256:80b600c56dd0318bd430d54dd19e362a19873693f471dfb4572af8f32b590203"
++    },
++    "spec": {
++      "path": "openspec/capabilities/constraint-verification/spec.md",
++      "sha256": "sha256:b7d8815ca868cbb1fb6885e742c46e7ba660981683f61bfbd8f194d6dfdc2108"
++    },
++    "wrapper": {
++      "path": "scripts/experiments/experiment_6837_three_family_output_free_compatibility.py",
++      "sha256": "sha256:d22535233a0374b8c94acecf641742c41ca1fe5805d61d63f5df0b253b94e226"
++    }
++  },
++  "status": "blocked",
++  "tokenizer_receipts": [
++    {
++      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++      "family": "qwen3_6_35b_a3b",
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "loadable": true,
++      "model_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
++      "receipt_hash": "sha256:4029a0283776665ba0709d4f589e69106a9be001e2d182952a315c678ba2346f",
++      "source": "embedded_gguf_llama_cpp_vocab_only"
++    },
++    {
++      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++      "family": "gemma4_31b_it",
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "loadable": true,
++      "model_path_hash": "sha256:330c00a9ca503ff3a01df8db6bd046991f1f849b7436ced943721312827a6200",
++      "receipt_hash": "sha256:7b9e54f38e666d2c03ce0dde2dddc68647382a683df4e63ee1d834eb6ba3ae24",
++      "source": "embedded_gguf_llama_cpp_vocab_only"
++    },
++    {
++      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++      "family": "gemma4_26b_a4b_it",
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "loadable": true,
++      "model_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
++      "receipt_hash": "sha256:5a72e5a368ee89a30d592ff53d5c6b4d19395140c463275d08b509fdafbed575",
++      "source": "embedded_gguf_llama_cpp_vocab_only"
++    }
++  ],
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6837_three_family_output_free_compatibility.py b/scripts/experiments/experiment_6837_three_family_output_free_compatibility.py
+new file mode 100644
+index 0000000000..f8cc3a7d02
+--- /dev/null
++++ b/scripts/experiments/experiment_6837_three_family_output_free_compatibility.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""CLI wrapper for Exp6837 output-free compatibility scoring."""
++
++from __future__ import annotations
++
++from carnot.experiment_6837_three_family_output_free_compatibility import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6837_three_family_output_free_compatibility.py b/tests/python/test_experiment_6837_three_family_output_free_compatibility.py
+new file mode 100644
+index 0000000000..df807a9b6e
+--- /dev/null
++++ b/tests/python/test_experiment_6837_three_family_output_free_compatibility.py
+@@ -0,0 +1,488 @@
++"""REQ-CONSTRAINT-6837 output-free compatibility scoring tests."""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6837_three_family_output_free_compatibility as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / exp.SPEC_RELATIVE_PATH
++
++
++class FakeForcedSequenceScorer:
++    """Small scorer that returns candidate-only token logprobs."""
++
++    start_order: list[str] = []
++    close_order: list[str] = []
++
++    def __init__(self, model_spec: Mapping[str, Any], config: Mapping[str, Any]) -> None:
++        self.model_spec = dict(model_spec)
++        self.config = dict(config)
++        self.closed = False
++        self.score_calls: list[str] = []
++
++    def start(self) -> dict[str, Any]:
++        FakeForcedSequenceScorer.start_order.append(str(self.model_spec["hf_id"]))
++        return {
++            "command": [
++                ".venv/bin/python",
++                "-m",
++                "carnot.experiment_6837_three_family_output_free_compatibility",
++                "--score-worker",
++                "--model-path",
++                self.model_spec["model_path"],
++                "--port",
++                str(9100 + len(FakeForcedSequenceScorer.start_order)),
++            ],
++            "pid": 7000 + len(FakeForcedSequenceScorer.start_order),
++            "process_start": f"fixture-start-{len(FakeForcedSequenceScorer.start_order)}",
++            "port": 9100 + len(FakeForcedSequenceScorer.start_order),
++            "gpu_uuid": f"GPU-fixture-{self.model_spec['family']}",
++            "visible_devices": [self.model_spec["gpu"]],
++            "model_hash": self.model_spec["model_sha256"],
++            "tokenizer_hash": self.model_spec["tokenizer_receipt"]["receipt_hash"],
++            "owned_by_task": True,
++            "token_logprob_support": True,
++            "first_score": None,
++            "final_score": None,
++        }
++
++    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
++        del prompt_text
++        self.score_calls.append(str(row_identity["row_identity"]))
++        token_ids = [len(piece) + index for index, piece in enumerate(candidate_text.split("|"))]
++        if "unequal" in candidate_text:
++            token_ids.append(999)
++        base = -0.1 if row_identity["label"] == "compatible" else -0.4
++        if self.config.get("reverse_margin"):
++            base = -0.8 if row_identity["label"] == "compatible" else -0.2
++        token_logprobs = [round(base - index * 0.01, 6) for index in range(len(token_ids))]
++        score = round(sum(token_logprobs), 6)
++        return {
++            "prompt_token_ids": [101, 102, 103],
++            "candidate_token_ids": token_ids,
++            "token_logprobs": token_logprobs,
++            "conditional_log_likelihood": score,
++            "raw_receipt": {
++                "row_identity": row_identity["row_identity"],
++                "label": row_identity["label"],
++                "prompt_token_count": 3,
++                "candidate_token_count": len(token_ids),
++                "token_logprob_count": len(token_logprobs),
++            },
++        }
++
++    def close(self) -> dict[str, Any]:
++        FakeForcedSequenceScorer.close_order.append(str(self.model_spec["hf_id"]))
++        self.closed = True
++        return {
++            "action": "terminated",
++            "bounded": True,
++            "leak_free": True,
++            "unrelated_process_kill_count_delta": 0,
++        }
++
++
++class CountingScorer(FakeForcedSequenceScorer):
++    """Scorer variant used to prove checkpoint rows are not regenerated."""
++
++    calls_by_model: dict[str, list[str]] = {}
++
++    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
++        identities = CountingScorer.calls_by_model.setdefault(str(self.model_spec["hf_id"]), [])
++        identity = str(row_identity["row_identity"])
++        if identity not in identities:
++            identities.append(identity)
++        return super().score(prompt_text, candidate_text, row_identity)
++
++
++class MisalignedScorer(FakeForcedSequenceScorer):
++    """Scorer variant that violates token/logprob alignment."""
++
++    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
++        del prompt_text, candidate_text, row_identity
++        return {
++            "prompt_token_ids": [1],
++            "candidate_token_ids": [2, 3],
++            "token_logprobs": [-0.1],
++            "conditional_log_likelihood": -0.1,
++            "raw_receipt": {},
++        }
++
++
++def _model_specs(tmp_path: Path) -> list[dict[str, Any]]:
++    specs: list[dict[str, Any]] = []
++    for index, hf_id in enumerate(exp.MANDATED_MODEL_HF_IDS):
++        model_path = tmp_path / f"model-{index}.gguf"
++        model_path.write_bytes(f"GGUF fixture {hf_id}".encode())
++        specs.append(
++            {
++                "name": hf_id.rsplit("/", 1)[-1],
++                "hf_id": hf_id,
++                "family": exp.model_family(hf_id),
++                "role": "fixture",
++                "gpu": index,
++                "model_path": str(model_path),
++                "cache_path": str(model_path),
++                "local_model_present": True,
++                "model_sha256": exp.sha256_file(model_path),
++                "tokenizer_receipt": {
++                    "source": "fixture",
++                    "loadable": True,
++                    "detail": "fixture tokenizer metadata",
++                    "receipt_hash": exp.sha256_text(f"tokenizer:{hf_id}"),
++                },
++                "headline_eligible": True,
++                "quantization": "Q4_K_M",
++            }
++        )
++    return specs
++
++
++def _ready_preconditions() -> dict[str, Any]:
++    return {
++        "preconditions_ready": True,
++        "blocked_reasons": [],
++        "checks": [
++            exp.gate_check("cached_sota_pair_called", True, True),
++            exp.gate_check(
++                "all_three_exact_gguf_files",
++                list(exp.MANDATED_MODEL_HF_IDS),
++                list(exp.MANDATED_MODEL_HF_IDS),
++            ),
++            exp.gate_check("model_hashes_present", True, True),
++            exp.gate_check("native_tokenizer_metadata", True, True),
++            exp.gate_check("token_log_probability_support", True, True),
++            exp.gate_check("cuda_available", True, True),
++            exp.gate_check("exclusive_gpu_leases", True, True),
++            exp.gate_check("free_ports", True, True),
++            exp.gate_check("sufficient_disk", True, True),
++            exp.gate_check("exp6836_typed_obligation_program_ready_score", 1, 1),
++            exp.gate_check("exp6836_obligation_pair_fixture_ready_score", 1, 1),
++            exp.gate_check("live_canary_per_model", True, True),
++        ],
++        "accelerator_samples": [
++            {"gpu_uuid": "GPU-fixture-0", "free_vram_mb": 24000, "owned_by_task": True}
++        ],
++        "free_ports": [9101, 9102, 9103],
++    }
++
++
++def _fixture_rows(limit: int = 2) -> list[dict[str, Any]]:
++    payload = exp.read_json(REPO_ROOT / exp.EXP6836_RELATIVE_PATH)
++    return [dict(row) for row in payload["rows"][:limit]]
++
++
++def test_req_constraint_6837_spec_declares_contract_and_fields() -> None:
++    """REQ-CONSTRAINT-6837 is anchored before implementation behavior."""
++
++    section = SPEC_PATH.read_text(encoding="utf-8").split("## REQ-CONSTRAINT-6837:", 1)[1]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "SCENARIO-CONSTRAINT-6837-PRECONDITIONS",
++        "SCENARIO-CONSTRAINT-6837-FORCED-SCORING",
++        "SCENARIO-CONSTRAINT-6837-TOKEN-ALIGNMENT",
++        "SCENARIO-CONSTRAINT-6837-CHECKPOINT-RESTART",
++        "SCENARIO-CONSTRAINT-6837-PROCESS-OWNERSHIP",
++        "SCENARIO-CONSTRAINT-6837-ARTIFACT",
++        exp.RESULT_RELATIVE_PATH.as_posix(),
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for hf_id in exp.MANDATED_MODEL_HF_IDS:
++        assert hf_id in section
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_6837_preconditions_call_cached_pair_and_resolve_three(
++    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """SCENARIO-CONSTRAINT-6837-PRECONDITIONS requires exact model files."""
++
++    calls: list[str] = []
++    for name in ("qwen.gguf", "gemma31.gguf", "gemma26.gguf"):
++        (tmp_path / name).write_bytes(name.encode("utf-8"))
++
++    def fake_cached_sota_pair(*, gpu_indices: tuple[int, int] = (0, 1)) -> list[dict[str, Any]]:
++        calls.append(f"cached:{gpu_indices}")
++        return [
++            {
++                "name": "qwen",
++                "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++                "gpu": 0,
++                "model_path": str(tmp_path / "qwen.gguf"),
++            },
++            {
++                "name": "gemma26",
++                "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++                "gpu": 1,
++                "model_path": str(tmp_path / "gemma26.gguf"),
++            },
++        ]
++
++    def fake_resolve(hf_id: str, preferred_quant: str = "Q4_K_M") -> str:
++        calls.append(f"resolve:{hf_id}:{preferred_quant}")
++        return str(tmp_path / "gemma31.gguf")
++
++    monkeypatch.setattr(exp, "cached_sota_pair", fake_cached_sota_pair)
++    monkeypatch.setattr(exp, "resolve_cached_gguf", fake_resolve)
++    monkeypatch.setattr(exp, "gguf_tokenizer_loadable", lambda path: (True, f"ok:{path}"))
++
++    specs = exp.resolve_model_specs()
++
++    assert calls[0] == "cached:(0, 1)"
++    assert calls[1] == "resolve:unsloth/gemma-4-31B-it-GGUF:Q4_K_M"
++    assert [row["hf_id"] for row in specs] == list(exp.MANDATED_MODEL_HF_IDS)
++    assert all(row["local_model_present"] is True for row in specs)
++    assert all(row["model_sha256"].startswith("sha256:") for row in specs)
++    assert all(row["tokenizer_receipt"]["loadable"] is True for row in specs)
++
++
++def test_scenario_6837_forced_scoring_masks_prompt_and_records_raw_receipts(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CONSTRAINT-6837-FORCED-SCORING stores token ids and logprobs."""
++
++    scorer = FakeForcedSequenceScorer(_model_specs(tmp_path)[0], {})
++    row = exp.score_fixture_row(
++        fixture_row=_fixture_rows(1)[0],
++        model_spec=_model_specs(tmp_path)[0],
++        scorer=scorer,
++    )
++
++    assert row["compatible_label_position"] == 0
++    assert row["candidate_length"] == len(row["compatible"]["candidate_token_ids"])
++    assert row["compatible"]["prompt_token_ids"] == [101, 102, 103]
++    assert len(row["compatible"]["token_logprobs"]) == row["candidate_length"]
++    assert len(row["violation"]["token_logprobs"]) == row["candidate_length"]
++    assert row["compatible"]["conditional_log_likelihood"] > row["violation"][
++        "conditional_log_likelihood"
++    ]
++    assert row["log_likelihood_margin"] > 0
++    assert row["compatible"]["raw_receipt"]["prompt_token_count"] == 3
++    assert "prompt_token_logprobs" not in row["compatible"]
++
++
++def test_scenario_6837_token_alignment_rejects_unequal_candidate_lengths(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CONSTRAINT-6837-TOKEN-ALIGNMENT forbids unequal-token margins."""
++
++    fixture_row = _fixture_rows(1)[0]
++    fixture_row = json.loads(json.dumps(fixture_row))
++    fixture_row["candidates"][1]["expected_tokenization_inputs"]["candidate_text"] += "|unequal"
++
++    with pytest.raises(exp.SequenceScoringError, match="unequal_candidate_token_length"):
++        exp.score_fixture_row(
++            fixture_row=fixture_row,
++            model_spec=_model_specs(tmp_path)[0],
++            scorer=FakeForcedSequenceScorer(_model_specs(tmp_path)[0], {}),
++        )
++
++
++def test_scenario_6837_checkpoint_restart_skips_complete_rows(tmp_path: Path) -> None:
++    """SCENARIO-CONSTRAINT-6837-CHECKPOINT-RESTART never regenerates complete rows."""
++
++    model_spec = _model_specs(tmp_path)[0]
++    rows = _fixture_rows(2)
++    first = exp.score_fixture_row(
++        fixture_row=rows[0],
++        model_spec=model_spec,
++        scorer=FakeForcedSequenceScorer(model_spec, {}),
++    )
++    checkpoint_path = tmp_path / "checkpoint.json"
++    exp.write_checkpoint(
++        checkpoint_path,
++        exp.build_checkpoint_manifest([first], expected_row_count=2),
++    )
++    CountingScorer.calls_by_model = {}
++
++    phase = exp.run_model_phase(
++        model_spec=model_spec,
++        fixture_rows=rows,
++        scorer_factory=CountingScorer,
++        checkpoint_path=checkpoint_path,
++    )
++
++    assert phase["row_count"] == 2
++    assert phase["rows"][0] == first
++    assert CountingScorer.calls_by_model[model_spec["hf_id"]] == [
++        f"{model_spec['family']}::{rows[1]['row_id']}"
++    ]
++    assert phase["checkpoint_manifest"]["resumed_row_count"] == 1
++    assert phase["checkpoint_manifest"]["missing_row_count"] == 1
++
++
++def test_scenario_6837_process_ownership_model_isolation_and_teardown(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CONSTRAINT-6837-PROCESS-OWNERSHIP isolates model phases."""
++
++    FakeForcedSequenceScorer.start_order = []
++    FakeForcedSequenceScorer.close_order = []
++    artifact = exp.run(
++        root=REPO_ROOT,
++        result_path=tmp_path / "artifact.json",
++        checkpoint_path=tmp_path / "checkpoint.json",
++        model_specs=_model_specs(tmp_path),
++        preconditions_checked=_ready_preconditions(),
++        scorer_factory=FakeForcedSequenceScorer,
++        fixture_row_limit=1,
++        write=True,
++    )
++
++    assert [row["hf_id"] for row in artifact["process_receipts"]] == list(
++        exp.MANDATED_MODEL_HF_IDS
++    )
++    assert len({row["pid"] for row in artifact["process_receipts"]}) == 3
++    assert all(row["owned_by_task"] is True for row in artifact["process_receipts"])
++    assert all(row["teardown"]["leak_free"] is True for row in artifact["process_receipts"])
++    assert FakeForcedSequenceScorer.start_order == list(exp.MANDATED_MODEL_HF_IDS)
++    assert FakeForcedSequenceScorer.close_order == list(exp.MANDATED_MODEL_HF_IDS)
++    assert (tmp_path / "artifact.json").is_file()
++
++
++def test_scenario_6837_readiness_depends_on_rows_not_margin_direction(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CONSTRAINT-6837-ARTIFACT separates readiness from effect size."""
++
++    artifact = exp.run(
++        root=REPO_ROOT,
++        result_path=tmp_path / "artifact.json",
++        checkpoint_path=tmp_path / "checkpoint.json",
++        model_specs=_model_specs(tmp_path),
++        preconditions_checked=_ready_preconditions(),
++        scorer_factory=FakeForcedSequenceScorer,
++        scorer_config={"reverse_margin": True},
++        fixture_row_limit=1,
++        write=False,
++    )
++
++    assert artifact["obligation_compatibility_stream_ready_score"] == 1
++    assert artifact["rows"][0]["log_likelihood_margin"] < 0
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("complete_")
++    assert artifact["method_parity_limits"]["effect_estimate_is_truth_proof"] is False
++
++
++def test_scenario_6837_blocked_output_names_exact_failed_gate(tmp_path: Path) -> None:
++    """SCENARIO-CONSTRAINT-6837-PRECONDITIONS emits blocked artifact rows only."""
++
++    blocked = dict(_ready_preconditions())
++    blocked["preconditions_ready"] = False
++    blocked["blocked_reasons"] = ["cuda_available"]
++    blocked["checks"] = [exp.gate_check("cuda_available", True, False)]
++
++    artifact = exp.run(
++        root=REPO_ROOT,
++        result_path=tmp_path / "blocked.json",
++        checkpoint_path=tmp_path / "checkpoint.json",
++        model_specs=_model_specs(tmp_path),
++        preconditions_checked=blocked,
++        scorer_factory=FakeForcedSequenceScorer,
++        fixture_row_limit=1,
++        write=True,
++    )
++
++    assert artifact["rows"] == []
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "complete_blocked_output_free_compatibility"
++    assert artifact["gate_check_summary"]["failed_check"] == "cuda_available"
++    assert artifact["gate_check_summary"]["observed"] is False
++    assert artifact["obligation_compatibility_stream_ready_score"] == 0
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++
++
++def test_scenario_6837_guard_failures_are_explicit(tmp_path: Path) -> None:
++    """REQ-CONSTRAINT-6837 exposes malformed rows and checkpoints as errors."""
++
++    assert exp.sha256_bytes(b"x").startswith("sha256:")
++
++    invalid_json = tmp_path / "array.json"
++    invalid_json.write_text("[]", encoding="utf-8")
++    with pytest.raises(exp.SequenceScoringError, match="json_object_required"):
++        exp.read_json(invalid_json)
++
++    with pytest.raises(exp.SequenceScoringError, match="unknown_model_hf_id"):
++        exp.model_family("not-a-model")
++
++    missing_specs = exp.normalize_model_specs([])
++    assert all(row["local_model_present"] is False for row in missing_specs)
++    assert all(row["tokenizer_receipt"]["receipt_hash"].startswith("sha256:") for row in missing_specs)
++
++    empty_root = tmp_path / "empty-root"
++    exp.write_json_atomic(empty_root / exp.EXP6836_RELATIVE_PATH, {"rows": []})
++    with pytest.raises(exp.SequenceScoringError, match="exp6836_rows_missing"):
++        exp.load_fixture_rows(empty_root)
++
++    fixture_row = json.loads(json.dumps(_fixture_rows(1)[0]))
++    fixture_row["candidates"][1]["exact_check"]["satisfaction_predicate"] = True
++    with pytest.raises(exp.SequenceScoringError, match="one_compatible_one_violation_required"):
++        exp.score_fixture_row(
++            fixture_row=fixture_row,
++            model_spec=_model_specs(tmp_path)[0],
++            scorer=FakeForcedSequenceScorer(_model_specs(tmp_path)[0], {}),
++        )
++
++    with pytest.raises(exp.SequenceScoringError, match="token_logprob_alignment_failed"):
++        exp.score_fixture_row(
++            fixture_row=_fixture_rows(1)[0],
++            model_spec=_model_specs(tmp_path)[0],
++            scorer=MisalignedScorer(_model_specs(tmp_path)[0], {}),
++        )
++
++    model_spec = _model_specs(tmp_path)[0]
++    scored = exp.score_fixture_row(
++        fixture_row=_fixture_rows(1)[0],
++        model_spec=model_spec,
++        scorer=FakeForcedSequenceScorer(model_spec, {}),
++    )
++    scored["row_hash"] = "sha256:bad"
++    bad_checkpoint = tmp_path / "bad-checkpoint.json"
++    exp.write_checkpoint(
++        bad_checkpoint,
++        exp.build_checkpoint_manifest([scored], expected_row_count=1),
++    )
++    with pytest.raises(exp.SequenceScoringError, match="checkpoint_row_hash_mismatch"):
++        exp.run_model_phase(
++            model_spec=model_spec,
++            fixture_rows=_fixture_rows(1),
++            scorer_factory=FakeForcedSequenceScorer,
++            checkpoint_path=bad_checkpoint,
++        )
++
++
++def test_req_constraint_6837_main_cli_dispatches_run(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-CONSTRAINT-6837 exposes the requested script entrypoint."""
++
++    calls: list[dict[str, Any]] = []
++
++    def fake_run(**kwargs: Any) -> dict[str, Any]:
++        calls.append(dict(kwargs))
++        return {"honest_verdict": "complete_blocked_output_free_compatibility"}
++
++    monkeypatch.setattr(exp, "run", fake_run)
++
++    result_path = tmp_path / "artifact.json"
++    assert exp.main(["--date", "20260901", "--result-path", str(result_path)]) == 0
++    assert calls[0]["result_path"] == result_path
++    assert "complete_blocked_output_free_compatibility" in capsys.readouterr().out
++
++    with pytest.raises(exp.SequenceScoringError, match="run_date_mismatch"):
++        exp.main(["--date", "20260902"])
+-- 
+2.55.0
+

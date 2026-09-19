@@ -1,0 +1,57 @@
+From 5cd85d72c2ae3efc8a0fe6981617df3cd233f959 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 18:56:56 -0400
+Subject: [PATCH 10041/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 0f5ffa206f..0963ffddd4 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T22:54:50Z"
++ "last_scan_utc": "2026-08-26T22:56:53Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e244ee4199..040e4d55bc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 50, "phase": "iteration_start", "last_beat": "2026-08-26T22:54:49Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-08-26T22:56:53Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bc771a2360..0aace3c158 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16576,3 +16576,5 @@ code |
+ | 2026-08-26 22:48 UTC | Twin-prefix verifier discrimination map | OK | 118 passed, 1 warning in 18.66s |
+ | 2026-08-26 22:50 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
+ | 2026-08-26 22:52 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
++| 2026-08-26 22:54 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
++| 2026-08-26 22:56 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 82b477c836..c8b237ded0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 50, "phase": "iteration_start", "started_at": "2026-08-26T22:54:49Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 51, "phase": "iteration_start", "started_at": "2026-08-26T22:56:53Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

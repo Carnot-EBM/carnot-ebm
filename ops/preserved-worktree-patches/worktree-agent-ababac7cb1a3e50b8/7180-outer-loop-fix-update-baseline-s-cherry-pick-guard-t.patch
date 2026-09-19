@@ -1,0 +1,477 @@
+From a1532c36c99a92a96fbfeb62fdb736c6cf4e5a13 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 15 Jul 2026 03:57:57 -0400
+Subject: [PATCH 07180/11362] [outer-loop] fix --update-baseline's cherry-pick
+ guard to tolerate bonus solves; update baseline to today's real 7/8 result
+
+Fourth fix in the submission-prep session. After the three prior fixes
+(620bf5f65, c15dcb972, cc87202d3) landed, a real submission scored
+0.12 on the leaderboard -- a genuine improvement over every prior
+submission's 0.08. Per the user's standing instruction, ran
+--update-baseline to lock in the confirmed result.
+
+It refused: validate_canonical_baseline's cherry-pick guard requires
+the baseline's core-identity field to equal exactly CANONICAL_CORE_GAMES
+(4 games), but the real measurement solved 7/8 (4 core + 3 bonus:
+cd82/ft09/su15) and --update-baseline naively persisted the full
+solved_games (7 entries) as the new baseline's core identity. The
+--check path already handles bonus solves correctly (reported
+separately, never netted against core); --update-baseline just didn't
+apply the same scoping when building the new baseline dict.
+
+Fixed by intersecting the persisted solved_games with
+CANONICAL_CORE_GAMES before validation, so bonus solves are preserved
+in the baseline's other fields (actions_by_game, efficiency_by_game)
+but never block the core-identity check. Verified: baseline now updates
+successfully (solved 7, median actions/solve 7792), and a new
+regression test proves a 7-game bonus-inclusive measurement is accepted
+while still persisting exactly the canonical 4 as solved_games.
+
+ops/arc-submission-baseline.json now reflects today's real, stronger
+measurement (sp80 efficiency 0.0001->0.0264, vc33 0.0001->0.3785,
+plus per-level efficiency/deepest-level/reset-replay/forward-walk
+fields for every game) as the new floor for future gate checks.
+---
+ ops/arc-submission-baseline.json              | 229 +++++++++++++++---
+ scripts/kaggle/arc_local_submission_gate.py   |  11 +
+ .../test_arc_submission_gate_verdict.py       |  70 +++++-
+ 3 files changed, 272 insertions(+), 38 deletions(-)
+
+diff --git a/ops/arc-submission-baseline.json b/ops/arc-submission-baseline.json
+index 182f82322d..037f6ecea6 100644
+--- a/ops/arc-submission-baseline.json
++++ b/ops/arc-submission-baseline.json
+@@ -16,66 +16,106 @@
+       "timed_out": false,
+       "solved": true,
+       "actions": 7792,
+-      "efficiency": 2.0069
++      "efficiency": 2.0069,
++      "per_level_efficiency": 2.0069,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 581,
++      "forward_walk_hit_rate": 0.0096
+     },
+     {
+       "game": "m0r0",
+       "timed_out": false,
+       "solved": true,
+-      "actions": 7810,
+-      "efficiency": 0.0003
++      "actions": 7859,
++      "efficiency": 0.0002,
++      "per_level_efficiency": 0.0002,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 1516,
++      "forward_walk_hit_rate": 0.7431
+     },
+     {
+       "game": "sp80",
+       "timed_out": false,
+       "solved": true,
+-      "actions": 7724,
+-      "efficiency": 0.0001
++      "actions": 7818,
++      "efficiency": 0.0264,
++      "per_level_efficiency": 0.0264,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 806,
++      "forward_walk_hit_rate": 0.1581
+     },
+     {
+       "game": "vc33",
+       "timed_out": false,
+       "solved": true,
+-      "actions": 7731,
+-      "efficiency": 0.0001
++      "actions": 7777,
++      "efficiency": 0.3785,
++      "per_level_efficiency": 0.3785,
++      "levels": 2,
++      "deepest_level_reached": 2,
++      "reset_replay_steps": 1787,
++      "forward_walk_hit_rate": 0.4764
+     },
+     {
+       "game": "cd82",
+       "timed_out": false,
+-      "solved": false,
+-      "actions": 7819,
+-      "efficiency": 0.0
++      "solved": true,
++      "actions": 7740,
++      "efficiency": 0.0016,
++      "per_level_efficiency": 0.0016,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 1177,
++      "forward_walk_hit_rate": 0.0717
+     },
+     {
+       "game": "ft09",
+       "timed_out": false,
+-      "solved": false,
+-      "actions": 7963,
+-      "efficiency": 0.0
++      "solved": true,
++      "actions": 7447,
++      "efficiency": 0.0004,
++      "per_level_efficiency": 0.0004,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 1634,
++      "forward_walk_hit_rate": 0.0936
+     },
+     {
+       "game": "su15",
+       "timed_out": false,
+-      "solved": false,
+-      "actions": 7786,
+-      "efficiency": 0.0
++      "solved": true,
++      "actions": 7908,
++      "efficiency": 0.0088,
++      "per_level_efficiency": 0.0088,
++      "levels": 1,
++      "deepest_level_reached": 1,
++      "reset_replay_steps": 250,
++      "forward_walk_hit_rate": 0.09
+     },
+     {
+       "game": "ls20",
+       "timed_out": false,
+       "solved": false,
+-      "actions": 7821,
+-      "efficiency": 0.0
++      "actions": 7818,
++      "efficiency": 0.0,
++      "per_level_efficiency": 0.0,
++      "levels": 0,
++      "deepest_level_reached": 0,
++      "reset_replay_steps": 903,
++      "forward_walk_hit_rate": 0.0
+     }
+   ],
+   "action_metric": {
+     "field": "actions",
+     "definition": "total_actions_on_solved_games"
+   },
+-  "solved_count": 4,
+-  "median_actions_on_solved": 7761.5,
+-  "median_actions_on_core": 7761.5,
+-  "total_actions_on_solved": 31057,
++  "solved_count": 7,
++  "median_actions_on_solved": 7792,
++  "median_actions_on_core": 7805.0,
++  "total_actions_on_solved": 54341,
+   "timed_out_count": 0,
+   "solved_games": [
+     "lp85",
+@@ -85,16 +125,147 @@
+   ],
+   "actions_by_game": {
+     "lp85": 7792,
+-    "m0r0": 7810,
+-    "sp80": 7724,
+-    "vc33": 7731
++    "m0r0": 7859,
++    "sp80": 7818,
++    "vc33": 7777,
++    "cd82": 7740,
++    "ft09": 7447,
++    "su15": 7908
+   },
+   "efficiency_by_game": {
+     "lp85": 2.0069,
+-    "m0r0": 0.0003,
+-    "sp80": 0.0001,
+-    "vc33": 0.0001
++    "m0r0": 0.0002,
++    "sp80": 0.0264,
++    "vc33": 0.3785,
++    "cd82": 0.0016,
++    "ft09": 0.0004,
++    "su15": 0.0088
++  },
++  "per_level_efficiency_by_game": {
++    "lp85": 2.0069,
++    "m0r0": 0.0002,
++    "sp80": 0.0264,
++    "vc33": 0.3785,
++    "cd82": 0.0016,
++    "ft09": 0.0004,
++    "su15": 0.0088,
++    "ls20": 0.0
++  },
++  "deepest_level_by_game": {
++    "lp85": 1,
++    "m0r0": 1,
++    "sp80": 1,
++    "vc33": 2,
++    "cd82": 1,
++    "ft09": 1,
++    "su15": 1,
++    "ls20": 0
++  },
++  "navigation_by_game": {
++    "lp85": {
++      "reset_replay_steps": 581,
++      "forward_walk_hit_rate": 0.0096
++    },
++    "m0r0": {
++      "reset_replay_steps": 1516,
++      "forward_walk_hit_rate": 0.7431
++    },
++    "sp80": {
++      "reset_replay_steps": 806,
++      "forward_walk_hit_rate": 0.1581
++    },
++    "vc33": {
++      "reset_replay_steps": 1787,
++      "forward_walk_hit_rate": 0.4764
++    },
++    "cd82": {
++      "reset_replay_steps": 1177,
++      "forward_walk_hit_rate": 0.0717
++    },
++    "ft09": {
++      "reset_replay_steps": 1634,
++      "forward_walk_hit_rate": 0.0936
++    },
++    "su15": {
++      "reset_replay_steps": 250,
++      "forward_walk_hit_rate": 0.09
++    },
++    "ls20": {
++      "reset_replay_steps": 903,
++      "forward_walk_hit_rate": 0.0
++    }
++  },
++  "core_efficiency": 2.412,
++  "proposer_config_mismatch": true,
++  "proposer_config_divergence": [
++    {
++      "field": "induction_enabled",
++      "offline": false,
++      "submitted": true,
++      "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()"
++    },
++    {
++      "field": "proposer_kind",
++      "offline": null,
++      "submitted": "LocalGGUFProposer",
++      "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound"
++    }
++  ],
++  "proposer_config_parity": {
++    "parity_guard": "offline_live_proposer_config_parity",
++    "proposer_config_mismatch": true,
++    "proposer_config_divergence": [
++      {
++        "field": "induction_enabled",
++        "offline": false,
++        "submitted": true,
++        "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()"
++      },
++      {
++        "field": "proposer_kind",
++        "offline": null,
++        "submitted": "LocalGGUFProposer",
++        "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound"
++      }
++    ],
++    "offline_config": {
++      "policy": "E3AgentPolicy",
++      "gate_policy_arg": "e3",
++      "cascade": true,
++      "induction_enabled": false,
++      "proposer_kind": null,
++      "proposer_source": "none",
++      "disable_induction_env": "1",
++      "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true"
++    },
++    "submitted_config": {
++      "policy": "E3AgentPolicy",
++      "cascade": true,
++      "induction_enabled": true,
++      "proposer_kind": "LocalGGUFProposer",
++      "proposer_source": "E3AgentPolicy._proposer",
++      "disable_induction_env": "unset",
++      "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
++    }
++  },
++  "offline_effective_proposer_config": {
++    "policy": "E3AgentPolicy",
++    "gate_policy_arg": "e3",
++    "cascade": true,
++    "induction_enabled": false,
++    "proposer_kind": null,
++    "proposer_source": "none",
++    "disable_induction_env": "1",
++    "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true"
++  },
++  "submitted_effective_proposer_config": {
++    "policy": "E3AgentPolicy",
++    "cascade": true,
++    "induction_enabled": true,
++    "proposer_kind": "LocalGGUFProposer",
++    "proposer_source": "E3AgentPolicy._proposer",
++    "disable_induction_env": "unset",
++    "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+   },
+-  "core_efficiency": 2.0074,
+   "note": "verified baseline (update only after a real improvement + successful submit)"
+ }
+\ No newline at end of file
+diff --git a/scripts/kaggle/arc_local_submission_gate.py b/scripts/kaggle/arc_local_submission_gate.py
+index 0a4f8d4451..7684dc15dc 100644
+--- a/scripts/kaggle/arc_local_submission_gate.py
++++ b/scripts/kaggle/arc_local_submission_gate.py
+@@ -814,8 +814,19 @@ def main() -> int:
+     cur = measure(a.policy, a.budget, a.cap)
+ 
+     if a.update_baseline:
++        # 2026-07-15 fix: `cur["solved_games"]` is EVERY game that solved this measurement,
++        # including bonus solves outside CANONICAL_CORE_GAMES (the --check path already handles
++        # this correctly -- bonus solves are reported separately, never netted against core; see
++        # _verdict()'s `bonus = sorted(cur_solved - core)`). But naively persisting the full
++        # solved_games as the NEW baseline's identity broke validate_canonical_baseline's
++        # cherry-pick guard the first time a measurement had bonus solves (7/8 solved: 4 core +
++        # cd82/ft09/su15 bonus) -- the guard requires the baseline's core to be EXACTLY
++        # CANONICAL_CORE_GAMES, and 7 games != 4. The baseline's job is to anchor "core" to the
++        # canonical 4 regardless of how many bonus games a given measurement happened to solve;
++        # only core solves belong in solved_games's role as the core-identity field.
+         candidate = {
+             **cur,
++            "solved_games": sorted(set(cur.get("solved_games") or []) & set(CANONICAL_CORE_GAMES)),
+             "note": "verified baseline (update only after a real improvement + successful submit)",
+         }
+         guard = validate_canonical_baseline(candidate)
+diff --git a/tests/python/test_arc_submission_gate_verdict.py b/tests/python/test_arc_submission_gate_verdict.py
+index 56729b6bc9..58dc80dd6a 100644
+--- a/tests/python/test_arc_submission_gate_verdict.py
++++ b/tests/python/test_arc_submission_gate_verdict.py
+@@ -14,9 +14,11 @@ The relaxation is NOT accepted unless all four assert.
+ CORE (the games the verified baseline solves) = {lp85, m0r0, sp80, vc33}, baseline actions
+ lp85=7792, m0r0=7789, sp80=7724, vc33=7731 (median 7760).
+ """
++
+ from __future__ import annotations
+ 
+ import importlib.util
++import json
+ import sys
+ from pathlib import Path
+ 
+@@ -70,7 +72,8 @@ def test_a2_imitation_prior_fails_core_traded_for_fringe():
+ def test_positive_core_faster_passes_improved():
+     """All CORE solves preserved AND median actions cut -> PASS (IMPROVED)."""
+     ok, msg = gate._verdict(
+-        _cur({"lp85": 4000, "m0r0": 4100, "sp80": 3900, "vc33": 3950}), _baseline())
++        _cur({"lp85": 4000, "m0r0": 4100, "sp80": 3900, "vc33": 3950}), _baseline()
++    )
+     assert ok is True
+     assert "IMPROVED" in msg
+ 
+@@ -78,7 +81,8 @@ def test_positive_core_faster_passes_improved():
+ def test_neutral_core_same_passes_non_inferior():
+     """CORE preserved, actions unchanged -> PASS (non-inferior); the deterministic-rerun control."""
+     ok, msg = gate._verdict(
+-        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}), _baseline())
++        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}), _baseline()
++    )
+     assert ok is True
+     assert "non-inferior" in msg
+ 
+@@ -86,18 +90,24 @@ def test_neutral_core_same_passes_non_inferior():
+ def test_bonus_solve_reported_but_core_required():
+     """A new fringe solve is a reported BONUS on top of a preserved CORE -> PASS with BONUS noted."""
+     ok, msg = gate._verdict(
+-        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731, "ft09": 7600}), _baseline())
++        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731, "ft09": 7600}), _baseline()
++    )
+     assert ok is True
+     assert "BONUS" in msg and "ft09" in msg
+ 
+ 
+ def test_legacy_baseline_without_core_keys_falls_back_to_count():
+     """An old baseline JSON (no solved_games/actions_by_game) -> legacy count check, still works."""
+-    legacy_base = {"solved_count": 4, "median_actions_on_solved": 7760.0,
+-                   "per_game": [{"game": "lp85", "solved": True, "actions": 7792},
+-                                {"game": "m0r0", "solved": True, "actions": 7789},
+-                                {"game": "sp80", "solved": True, "actions": 7724},
+-                                {"game": "vc33", "solved": True, "actions": 7731}]}
++    legacy_base = {
++        "solved_count": 4,
++        "median_actions_on_solved": 7760.0,
++        "per_game": [
++            {"game": "lp85", "solved": True, "actions": 7792},
++            {"game": "m0r0", "solved": True, "actions": 7789},
++            {"game": "sp80", "solved": True, "actions": 7724},
++            {"game": "vc33", "solved": True, "actions": 7731},
++        ],
++    }
+     # per_game present -> CORE reconstructed -> losing m0r0 still FAILs.
+     ok, msg = gate._verdict(_cur({"lp85": 7905, "sp80": 7766, "vc33": 7726}), legacy_base)
+     assert ok is False and "m0r0" in msg
+@@ -289,7 +299,12 @@ def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch,
+     candidate["efficiency_by_game"] = dict(candidate["efficiency_by_game"])
+     candidate["efficiency_by_game"]["lp85"] = 1.0
+     candidate["per_game"] = [
+-        {"game": game, "solved": True, "actions": actions, "efficiency": candidate["efficiency_by_game"][game]}
++        {
++            "game": game,
++            "solved": True,
++            "actions": actions,
++            "efficiency": candidate["efficiency_by_game"][game],
++        }
+         for game, actions in candidate["actions_by_game"].items()
+     ]
+     target = tmp_path / "arc-submission-baseline.json"
+@@ -304,3 +319,40 @@ def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch,
+     assert rc == 1
+     assert not target.exists()
+     assert "canonical baseline guard failed" in captured.out
++
++
++def test_req_arc_fcp_4527_update_baseline_accepts_bonus_solves_outside_core(
++    monkeypatch, tmp_path, capsys
++):
++    """2026-07-15 incident: a real measurement that solves the 4 CORE games PLUS bonus games
++    outside CANONICAL_CORE_GAMES (e.g. cd82/ft09/su15) must NOT be refused by the cherry-pick
++    guard. Before the fix, `--update-baseline` persisted the FULL solved_games (core + bonus) as
++    the new baseline's core-identity field, and validate_canonical_baseline correctly rejected
++    that (7 games != the canonical 4) -- but this then blocked a genuinely improved measurement
++    from ever becoming the new baseline. The fix scopes the persisted solved_games to the
++    intersection with CANONICAL_CORE_GAMES, so bonus solves are recorded elsewhere but never
++    block the update."""
++
++    candidate = _efficiency_baseline()
++    candidate["solved_games"] = sorted({*gate.CANONICAL_CORE_GAMES, "cd82", "ft09", "su15"})
++    candidate["solved_count"] = len(candidate["solved_games"])
++    candidate["actions_by_game"] = {
++        **candidate["actions_by_game"],
++        "cd82": 7800,
++        "ft09": 7801,
++        "su15": 7802,
++    }
++    target = tmp_path / "arc-submission-baseline.json"
++
++    monkeypatch.setattr(gate, "BASELINE", target)
++    monkeypatch.setattr(gate, "measure", lambda _policy, _budget, _cap: candidate)
++    monkeypatch.setattr(sys, "argv", ["arc_local_submission_gate.py", "--update-baseline"])
++
++    rc = gate.main()
++    captured = capsys.readouterr()
++
++    assert rc == 0, captured.out
++    assert target.exists()
++    persisted = json.loads(target.read_text())
++    assert sorted(persisted["solved_games"]) == sorted(gate.CANONICAL_CORE_GAMES)
++    assert "baseline UPDATED" in captured.out
+-- 
+2.55.0
+

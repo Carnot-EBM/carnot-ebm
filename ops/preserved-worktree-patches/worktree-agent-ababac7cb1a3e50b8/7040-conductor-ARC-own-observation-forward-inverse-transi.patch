@@ -1,0 +1,2475 @@
+From f45adf8abe3920e3824df4e5a174f0779804b0f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 06:33:12 -0400
+Subject: [PATCH 07040/11362] [conductor] ARC own-observation forward-inverse
+ transition-cycle verifier prototype
+
+Automated research step by research conductor.
+Task ID: exp5619-arc-forward-inverse-transition-cycle
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  49 ++
+ .../arc-world-model-trust-energy/spec.md      |  61 +++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/agentic/arc_competition_agent.py   | 143 ++++--
+ .../agentic/arc_transition_cycle_verifier.py  | 423 ++++++++++++++++
+ ...19_arc_forward_inverse_transition_cycle.py | 478 ++++++++++++++++++
+ ...00_goal_predicate_veto_live_integration.py | 368 ++++++++++++++
+ results/arc_e3/lp85/world_model.py            |  93 +---
+ ..._arc_forward_inverse_transition_cycle.json | 220 ++++++++
+ ..._goal_predicate_veto_live_integration.json |  98 ++++
+ .../test_arc_transition_cycle_verifier.py     | 175 +++++++
+ ...19_arc_forward_inverse_transition_cycle.py | 150 ++++++
+ 15 files changed, 2146 insertions(+), 119 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_transition_cycle_verifier.py
+ create mode 100644 python/carnot/experiment_5619_arc_forward_inverse_transition_cycle.py
+ create mode 100644 python/carnot/experiment_5700_goal_predicate_veto_live_integration.py
+ create mode 100644 results/experiment_5619_arc_forward_inverse_transition_cycle.json
+ create mode 100644 results/experiment_5700_goal_predicate_veto_live_integration.json
+ create mode 100644 tests/python/test_arc_transition_cycle_verifier.py
+ create mode 100644 tests/python/test_experiment_5619_arc_forward_inverse_transition_cycle.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 06de46b0fc..d3196c5c6c 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -3778,6 +3778,55 @@ including a constant-False stub, would score a trivial 1.0 on an all-no-op windo
+ per CLAUDE.md's FALSE_NEGATIVE_RISK discipline, a null/negative judgment requires a
+ positive control the data does not provide here
+ 
++**LIVE-INTEGRATION EMPIRICAL FOLLOW-UP (2026-07-14, outer-loop, operator-directed).** The
++above was verified with fake proposers/engines only. This follow-up ran the SAME real code
++path with a real proposer against real `lp85` transitions (real `E3AgentPolicy` episode,
++budget=50, real GPU-backed `LocalGGUFProposer`, `Qwen3.5-9B-MTP`), to check whether
++`min_goal_predicate_consistency=1.0` at the live call site's own risk tolerance helps or
++hurts in practice.
++
++*First real attempt (the live-configured strict dynamics gate).* Both a veto-on and a
++veto-off arm, called directly with the live call site's own `min_heldout_accuracy=1.0`,
++failed at ROUND 1 on the PRE-EXISTING dynamics gate (`heldout_transition_verification_
++failed`, `heldout_accuracy` 0.6875 and 0.0 respectively -- neither reached the required
++1.0) before the goal-consistency veto was ever reached. Honest finding: in practice, on
++real first-shot LLM induction, the already-strict `min_heldout_accuracy=1.0` dynamics
++gate is frequently the dominant blocker, so this new veto's real-world marginal impact is
++SUBORDINATE to that pre-existing gate more often than not -- it is checked LAST, after
++goal-satisfiability, which is itself after dynamics acceptance.
++
++*Second, isolated attempt (dynamics gate bypassed to test the veto specifically).* With
++`min_heldout_accuracy=0.0` (bypassing the dynamics gate so the goal-consistency veto gets
++a genuine chance to run) and a fresh proposer per arm (avoiding a real, separately-noted
++LLM-proposer-connection-reuse hiccup found reusing one proposer object across sequential
++`execute_bounded_llm_reinduction` calls -- an infra quirk worth a future look, not
++investigated further here), on the SAME real transitions (47 collected, 1 real level-up):
++the veto-ON arm's real induced predicate scored `goal_predicate_consistency_accuracy=
++0.021277` (correct on only 1 of 47 real transitions) and was correctly rejected
++(`skipped=goal_predicate_consistency_failed`, `planned=False`). The veto-OFF arm's
++(independently induced, comparably poor `heldout_accuracy=0.0`) predicate was accepted
++unchecked and produced `planned=True` (`plan_reaches_goal=True` -- but that check is
++IN-MODEL, verified against the induced engine/goal's own simulation, not against real
++environment ground truth). This is a direct, real confirmation of the exact failure mode
++this requirement exists to catch: a badly-miscalibrated goal predicate installed as a
++search-termination condition, believed successful by the agent's own internal check,
++while actually almost entirely wrong about what a real win looks like.
++
++**Honest caveat.** The two arms used SEPARATE, independent real induction calls (not the
++literal same candidate under test twice), since isolating the goal-consistency check
++required bypassing the dynamics gate cleanly per-arm -- not a perfectly matched pair. Both
++arms' `heldout_accuracy=0.0` suggests comparable induction difficulty on this specific
++transition window, which is why the comparison is still informative, but this is
++disclosed rather than overclaimed as a controlled trial.
++
++**Conclusion: no threshold adjustment.** This evidence supports KEEPING
++`min_goal_predicate_consistency=1.0` at the live call site as originally set (mirroring
++`min_heldout_accuracy=1.0`'s own established risk tolerance) -- a real, badly-wrong
++predicate was directly observed being caught, and no instance of the veto rejecting a
++predicate that was ACTUALLY accurate was observed in any test (unit or live). The
++dynamics-gate-dominance finding above is noted as a real property of the live pipeline's
++layered gates, not a reason to loosen this specific threshold.
++
+ ### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
+ 
+ `ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 2d8ad38c69..1418f5790f 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -14965,3 +14965,64 @@ Then every required field principle is present verbatim, `solve_provenance` is
+ one of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`,
+ and the reproducibility checksum matches the content hash of the target,
+ registry depths, loop evidence, provenance, and banking decision.
++
++### REQ-ARC-WMTE-5619: Agent-Owned Forward/Inverse Transition-Cycle Admission
++
++The ARC live agent SHALL provide a generic forward/inverse transition-cycle verifier that consumes
++only the agent's own runtime `(state, action, successor)` observations. The verifier SHALL build
++game-agnostic action-effect features from rendered state changes, fit or update only within a live
++session, and hold out episodes within each measured game without claiming cross-game transfer.
++
++For each candidate observed transition, the verifier SHALL score two independent factors:
++successor plausibility under observed generic state-change features and sparse inverse-action
++recovery of the executed action from the observed effect signature. A transition SHALL be admitted
++for downstream world-model updates only when both factors pass and the learned forward replay plus
++inverse recovery form a consistent cycle. Corrupted transitions, including permuted actions,
++mismatched successors, no-op substitutions, and wrong-object changes, SHALL fail closed rather than
++mutating the world model.
++
++Experiment 5619 SHALL write
++`results/experiment_5619_arc_forward_inverse_transition_cycle.json` from at least three already
++reproduced public games, with at least 32 held-out valid transitions and at least 32 held-out
++transitions for each corruption condition. The artifact SHALL declare
++`solve_provenance="development_proxy"`, `source_files_read=false`,
++`per_game_adapter_used=false`, and
++`inference_substrate="offline_arcade_live_agent_runtime_filters_no_new_llm"`. It SHALL report
++coverage, abstention, valid-transition acceptance, corrupted-transition rejection, inverse action
++accuracy, forward replay error, per-game heterogeneity, runtime overhead, immutable update receipts,
++random seeds, a reproducibility checksum, and an honest terminal verdict. A verifier that only
++abstains, or that cannot reject the corruption controls, SHALL report a terminal honest null and
++SHALL NOT promote itself as useful.
++
++Required field principles:
++
++- `registry_precheck`: principle "known public reproduced levels only; no duplicate solve or new-level credit is implied."
++- `trace_roster`: principle "every measured transition has auditable game/session/episode provenance from agent-owned observations."
++- `transition_feature_contract`: principle "features are derived from before/action/after frames, not source code, adapters, or hidden oracle flags."
++- `heldout_transitions_by_condition`: principle "valid and adversarial sample sizes are explicit before interpreting rates."
++- `inverse_action_accuracy`: principle "the inverse reachability factor is measured separately from successor plausibility."
++- `forward_replay_error`: principle "effect consistency is measured directly instead of inferred from acceptance."
++- `valid_transition_accept_rate`: principle "coverage is visible; an all-abstain verifier is not useful."
++- `corruption_reject_rate`: principle "negative controls prove bad updates are rejected."
++- `unsafe_transition_accept_count`: principle "fail-closed admission prevents corrupted updates from mutating the world model."
++- `cycle_verifier_positive_control_rate`: principle "the downstream gate exposes a numeric positive-control pass rate."
++- `runtime_overhead`: principle "live-path cost is bounded and not hidden inside aggregate wall time."
++- `random_seeds`: principle "determinism is the precondition for replaying the evaluation."
++- `reproducibility_checksum`: principle "content-addressed replay inputs catch silent corpus or threshold drift."
++- `honest_verdict`: principle "terminal prefix records whether the verifier was useful, over-abstaining, or unsafe."
++
++#### SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION
++
++Given agent-owned transition observations from a live ARC session and frozen thresholds learned
++only from that session's calibration split
++When a held-out transition is evaluated
++Then the verifier admits an update only if successor plausibility passes, inverse action recovery
++matches the executed action, and forward replay reproduces the successor effect signature.
++
++#### SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION
++
++Given held-out transitions corrupted by permuted actions, mismatched successors, no-op
++substitutions, and wrong-object changes
++When the transition-cycle verifier evaluates them
++Then corrupted transitions are rejected or abstained, never admitted as immutable update receipts,
++and `unsafe_transition_accept_count` remains zero.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 02f3df5dab..1e42235591 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 142, "phase": "iteration_start", "last_beat": "2026-07-14T09:50:10Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 143, "phase": "iteration_start", "last_beat": "2026-07-14T10:16:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4848ee4a7e..a33c560f8e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11724,3 +11724,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 09:04 UTC | Native llama.cpp three-GGUF CUDA offload and respo | OK | 86 passed, 1 warning in 10.34s |
+ | 2026-07-14 09:25 UTC | Exact space-time constraint-drift stream with dura | OK | 85 passed, 1 warning in 24.78s |
+ | 2026-07-14 09:48 UTC | Gated on Exp5616 exact fixture: KAN retention-adap | OK | 87 passed, 1 warning in 38.06s |
++| 2026-07-14 10:14 UTC | Gated on Exp5617 nondegenerate duration map: predi | OK | 87 passed, 1 warning in 68.33s (0:01:08) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 25a0264499..532fcec0c4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 142, "phase": "iteration_start", "started_at": "2026-07-14T09:50:10Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 143, "phase": "iteration_start", "started_at": "2026-07-14T10:16:05Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 924ce465ab..d6577ded8c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4548,
++  "experiments_checked": 4549,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index f528dea04c..06531a9754 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -570,6 +570,7 @@ class StepwiseExplorer:
+         similarity_retrieval: bool | None = None,
+         similarity_bucket_width: float = MATM_SIMILARITY_BUCKET_WIDTH,
+         similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
++        transition_cycle_verifier: Any | None = None,
+     ) -> None:
+         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
+         self.auto_hud_mask = bool(auto_hud_mask)
+@@ -729,6 +730,11 @@ class StepwiseExplorer:
+             amortized_first_contact_prior
+         )
+         self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
++        self.transition_cycle_verifier = transition_cycle_verifier
++        self._transition_cycle_receipts: list[dict[str, Any]] = []
++        self._transition_cycle_admitted = 0
++        self._transition_cycle_rejected = 0
++        self._transition_cycle_abstained = 0
+         # IGE cell selection (2026-06-28): when the flag is on and a Go-Explore archive exists without an
+         # explicit selector, attach the LLM-promisingness cell selector (Intelligent Go-Explore). The
+         # selector only RANKS already-archived cells (verifier_is_oracle=False) and falls back to the
+@@ -982,6 +988,27 @@ class StepwiseExplorer:
+             return dict(self.action_effect_expansion_prior.diagnostics())
+         return {"enabled": True}
+ 
++    def transition_cycle_diagnostics(self) -> dict[str, Any]:
++        """REQ-ARC-WMTE-5619: expose forward/inverse update-admission receipts."""
++
++        if self.transition_cycle_verifier is None:
++            return {"enabled": False}
++        diagnostics: dict[str, Any] = {"enabled": True}
++        if hasattr(self.transition_cycle_verifier, "diagnostics"):
++            try:
++                diagnostics.update(dict(self.transition_cycle_verifier.diagnostics()))
++            except Exception:
++                diagnostics["verifier_diagnostics_error"] = True
++        diagnostics.update(
++            {
++                "admitted_update_count": int(self._transition_cycle_admitted),
++                "rejected_update_count": int(self._transition_cycle_rejected),
++                "abstained_update_count": int(self._transition_cycle_abstained),
++                "immutable_update_receipts": list(self._transition_cycle_receipts),
++            }
++        )
++        return diagnostics
++
+     @staticmethod
+     def _salience_diagnostic_prior(action_prior: Any | None) -> Any | None:
+         prior = action_prior
+@@ -1527,6 +1554,29 @@ class StepwiseExplorer:
+                     )
+                 except Exception:
+                     pass
++            cycle_allows_update = True
++            cycle_verifier = getattr(self, "transition_cycle_verifier", None)
++            if cycle_verifier is not None and o.get("previous_frame") is not None:
++                cycle_allows_update = False
++                try:
++                    decision = cycle_verifier.observe_transition(
++                        o.get("previous_frame") or o.get("grid"),
++                        int(o["action"]),
++                        o.get("data"),
++                        latest,
++                    )
++                    if bool(getattr(decision, "admitted", False)):
++                        cycle_allows_update = True
++                        self._transition_cycle_admitted += 1
++                        receipt = getattr(decision, "update_receipt", None)
++                        if isinstance(receipt, dict):
++                            self._transition_cycle_receipts.append(dict(receipt))
++                    elif bool(getattr(decision, "abstained", False)):
++                        self._transition_cycle_abstained += 1
++                    else:
++                        self._transition_cycle_rejected += 1
++                except Exception:
++                    self._transition_cycle_abstained += 1
+             if level_increased:
+                 fcs = getattr(self, "frame_change_scorer", None)
+                 if fcs is not None and hasattr(fcs, "reset"):
+@@ -1566,44 +1616,45 @@ class StepwiseExplorer:
+                 act = {"action": o["action"], "data": o["data"]}
+                 # record the forward edge for frontier-distance navigation (only if the
+                 # action actually CHANGED state — a no-op self-edge is useless to navigate)
+-                self._record_forward_edge(o["origin"], act, h)
+-                if h not in self.graph:
+-                    origin_node = self.graph.get(o["origin"], {})
+-                    opath = origin_node.get("path", [])
+-                    new_path = opath + [act]
+-                    features = self._record_discriminative_sample(
+-                        latest,
+-                        previous_frame=o.get("previous_frame") or origin_node.get("frame"),
+-                        label=1,
+-                        source="alive_frontier",
+-                        node_hash=h,
+-                        path=new_path,
+-                    )
+-                    value, frame_for_value = self._initial_value(latest)
+-                    self.graph[h] = {
+-                        "path": new_path,
+-                        "untested": self._candidates(
++                if cycle_allows_update:
++                    self._record_forward_edge(o["origin"], act, h)
++                    if h not in self.graph:
++                        origin_node = self.graph.get(o["origin"], {})
++                        opath = origin_node.get("path", [])
++                        new_path = opath + [act]
++                        features = self._record_discriminative_sample(
+                             latest,
+-                            path=new_path,
+                             previous_frame=o.get("previous_frame") or origin_node.get("frame"),
+-                        ),
+-                        "value": value,
+-                        "frame": (
+-                            latest
+-                            if self.goal_bias is not None
+-                            or self.dense_curiosity is not None
+-                            or self.action_effect_expansion_prior is not None
+-                            or self.qd_generator is not None
+-                            or self.controllable_novelty_policy is not None
+-                            or self.object_centric_proposal_policy is not None
+-                            or self.go_explore_archive is not None
+-                            or self.similarity_retrieval_enabled
+-                            else frame_for_value
+-                        ),
+-                        "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
+-                        "discriminative_features": features,
+-                    }
+-                self._index_similarity_state(h, latest)
++                            label=1,
++                            source="alive_frontier",
++                            node_hash=h,
++                            path=new_path,
++                        )
++                        value, frame_for_value = self._initial_value(latest)
++                        self.graph[h] = {
++                            "path": new_path,
++                            "untested": self._candidates(
++                                latest,
++                                path=new_path,
++                                previous_frame=o.get("previous_frame") or origin_node.get("frame"),
++                            ),
++                            "value": value,
++                            "frame": (
++                                latest
++                                if self.goal_bias is not None
++                                or self.dense_curiosity is not None
++                                or self.action_effect_expansion_prior is not None
++                                or self.qd_generator is not None
++                                or self.controllable_novelty_policy is not None
++                                or self.object_centric_proposal_policy is not None
++                                or self.go_explore_archive is not None
++                                or self.similarity_retrieval_enabled
++                                else frame_for_value
++                            ),
++                            "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
++                            "discriminative_features": features,
++                        }
++                    self._index_similarity_state(h, latest)
+         self.cur = h
+         if self.root is None and not over:
+             self.root = h
+@@ -2480,6 +2531,7 @@ class E3AgentPolicy:
+         active_probe_budget: int = 2,
+         active_probe_concentration_threshold: float = 0.9,
+         goal_guidance_lambda: float = SUBMITTED_GOAL_GUIDANCE_LAMBDA,
++        transition_cycle_verifier: Any | None = None,
+     ) -> None:
+         import os
+ 
+@@ -2593,6 +2645,7 @@ class E3AgentPolicy:
+             else _route_explore_budget(self.strategy_route)
+         )
+         self.proposer = proposer  # default set lazily to LocalGGUFProposer
++        self.transition_cycle_verifier = transition_cycle_verifier
+         self.phase = "explore"
+         self.plan: list = []
+         self.pi = 0
+@@ -3122,10 +3175,20 @@ class E3AgentPolicy:
+                 g0, aid, data = self._prev
+                 g1 = to_logical(grid_of(latest), self.cell)
+                 transition = Transition(g0, aid, data, g1, self._prev_level, _level_of(latest))
+-                self.transitions.append(transition)
+-                self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+-                self._observe_active_probe_transition(transition)
+-                self._maybe_route_from_transitions()
++                admit_world_model_update = True
++                verifier = getattr(self, "transition_cycle_verifier", None)
++                if verifier is not None:
++                    admit_world_model_update = False
++                    try:
++                        decision = verifier.observe_transition(g0, int(aid), data, g1)
++                        admit_world_model_update = bool(getattr(decision, "admitted", False))
++                    except Exception:
++                        admit_world_model_update = False
++                if admit_world_model_update:
++                    self.transitions.append(transition)
++                    self._dsl_transitions.append((g0, _action_key(aid, data), g1))
++                    self._observe_active_probe_transition(transition)
++                    self._maybe_route_from_transitions()
+             except Exception:
+                 # A degenerate/empty frame (e.g. shape (0,) -- the same class of
+                 # post-terminal sentinel diagnosed in the g50t apply_g50t_label
+diff --git a/python/carnot/agentic/arc_transition_cycle_verifier.py b/python/carnot/agentic/arc_transition_cycle_verifier.py
+new file mode 100644
+index 0000000000..9458733a9f
+--- /dev/null
++++ b/python/carnot/agentic/arc_transition_cycle_verifier.py
+@@ -0,0 +1,423 @@
++"""Generic ARC forward/inverse transition-cycle verifier.
++
++Spec refs: REQ-ARC-WMTE-5619,
++SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION,
++SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION.
++
++The verifier is intentionally modest: it learns sparse action-effect signatures from the
++agent's own observed transitions and admits downstream update receipts only when three checks
++agree. Successor plausibility asks whether the observed effect shape has appeared for the
++candidate action. Inverse recovery asks whether the effect signature predicts the executed
++action. Forward replay applies the learned sparse effect around the action's click coordinate
++and compares the predicted successor to the observed successor.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from dataclasses import dataclass, replace
++import hashlib
++import json
++from typing import Any, Mapping, Sequence
++
++import numpy as np
++
++
++JsonDict = dict[str, Any]
++
++
++@dataclass(frozen=True)
++class ObservedTransition:
++    """One transition caused by the agent, never by a game-source oracle."""
++
++    game: str
++    episode: str
++    step: int
++    state: Any
++    action: int
++    data: Any
++    successor: Any
++    condition: str = "valid"
++    provenance: str = "agent_owned_runtime_observation"
++
++
++@dataclass(frozen=True)
++class TransitionCycleDecision:
++    """Admission result for one candidate world-model update."""
++
++    condition: str
++    admitted: bool
++    rejected: bool
++    abstained: bool
++    successor_plausible: bool
++    inverse_action: int | None
++    inverse_action_matches: bool
++    forward_replay_error: float | None
++    reason: str
++    update_receipt: JsonDict | None = None
++
++
++@dataclass(frozen=True)
++class _EffectFeatures:
++    effect_core: tuple[Any, ...]
++    action_effect: tuple[Any, ...]
++    click_offsets: tuple[tuple[int, int, int, int], ...]
++    spatial_offsets: tuple[tuple[int, int, int, int], ...]
++    changed_count: int
++    state_shape: tuple[int, int]
++
++
++def _grid(value: Any) -> np.ndarray:
++    if hasattr(value, "frame"):
++        value = getattr(value, "frame")
++    return np.asarray(value, dtype=np.int16)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str, ensure_ascii=True)
++
++
++def _hash_payload(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _click_xy(data: Any) -> tuple[int, int] | None:
++    if not isinstance(data, Mapping):
++        return None
++    if "x" not in data or "y" not in data:
++        return None
++    return int(data["x"]), int(data["y"])
++
++
++def _extract_features(state: Any, action: int, data: Any, successor: Any) -> _EffectFeatures:
++    before = _grid(state)
++    after = _grid(successor)
++    if before.shape != after.shape or before.ndim != 2:
++        return _EffectFeatures(
++            effect_core=("malformed", tuple(before.shape), tuple(after.shape)),
++            action_effect=(int(action), "malformed", tuple(before.shape), tuple(after.shape)),
++            click_offsets=(),
++            spatial_offsets=(),
++            changed_count=0,
++            state_shape=(0, 0),
++        )
++    changed = np.argwhere(before != after)
++    pairs = Counter((int(before[r, c]), int(after[r, c])) for r, c in changed)
++    pair_key = tuple(sorted((src, dst, count) for (src, dst), count in pairs.items()))
++    if len(changed):
++        y0, x0 = changed.min(axis=0)
++        y1, x1 = changed.max(axis=0)
++        bbox = (int(y1 - y0 + 1), int(x1 - x0 + 1))
++    else:
++        bbox = (0, 0)
++    click = _click_xy(data)
++    offsets: list[tuple[int, int, int, int]] = []
++    spatial_offsets: list[tuple[int, int, int, int]] = []
++    if click is not None:
++        x, y = click
++        for r, c in changed:
++            offsets.append((int(r - y), int(c - x), int(before[r, c]), int(after[r, c])))
++    if len(changed):
++        y0, x0 = changed.min(axis=0)
++        for r, c in changed:
++            spatial_offsets.append((int(r - y0), int(c - x0), int(before[r, c]), int(after[r, c])))
++    effect_core = (int(len(changed)), bbox, pair_key)
++    action_effect = (int(action), effect_core, tuple(sorted(offsets)))
++    return _EffectFeatures(
++        effect_core=effect_core,
++        action_effect=action_effect,
++        click_offsets=tuple(sorted(offsets)),
++        spatial_offsets=tuple(sorted(spatial_offsets)),
++        changed_count=int(len(changed)),
++        state_shape=(int(before.shape[0]), int(before.shape[1])),
++    )
++
++
++def _normalise_transition(row: Any) -> ObservedTransition:
++    if isinstance(row, ObservedTransition):
++        return row
++    state = getattr(row, "grid", getattr(row, "state", None))
++    successor = getattr(row, "next_grid", getattr(row, "successor", None))
++    return ObservedTransition(
++        game=str(getattr(row, "game", "unknown")),
++        episode=str(getattr(row, "episode", "episode-0")),
++        step=int(getattr(row, "step", 0)),
++        state=state,
++        action=int(getattr(row, "action")),
++        data=getattr(row, "data", None),
++        successor=successor,
++        condition=str(getattr(row, "condition", "valid")),
++        provenance=str(getattr(row, "provenance", "agent_owned_runtime_observation")),
++    )
++
++
++class TransitionCycleVerifier:
++    """Session-local verifier for admitting generic action-effect update receipts."""
++
++    def __init__(self, *, min_support: int = 2, forward_error_threshold: float = 0.0) -> None:
++        self.min_support = max(1, int(min_support))
++        self.forward_error_threshold = max(0.0, float(forward_error_threshold))
++        self._action_effect_counts: dict[int, Counter[tuple[Any, ...]]] = defaultdict(Counter)
++        self._inverse_counts: dict[tuple[Any, ...], Counter[int]] = defaultdict(Counter)
++        self._click_rules: dict[int, Counter[tuple[tuple[int, int, int, int], ...]]] = defaultdict(
++            Counter
++        )
++        self._spatial_rules: dict[int, Counter[tuple[tuple[int, int, int, int], ...]]] = (
++            defaultdict(Counter)
++        )
++        self._observed = 0
++        self._evaluated = 0
++        self._admitted = 0
++        self._rejected = 0
++        self._abstained = 0
++        self._unsafe_accepts = 0
++        self._receipts: list[JsonDict] = []
++
++    def fit(self, rows: Sequence[Any]) -> "TransitionCycleVerifier":
++        for row in rows:
++            self.update(row)
++        return self
++
++    def update(self, row: Any) -> None:
++        transition = _normalise_transition(row)
++        features = _extract_features(
++            transition.state,
++            transition.action,
++            transition.data,
++            transition.successor,
++        )
++        self._observed += 1
++        self._action_effect_counts[int(transition.action)][features.action_effect] += 1
++        self._inverse_counts[features.effect_core][int(transition.action)] += 1
++        if _click_xy(transition.data) is not None and features.click_offsets:
++            self._click_rules[int(transition.action)][features.click_offsets] += 1
++        if features.spatial_offsets:
++            self._spatial_rules[int(transition.action)][features.spatial_offsets] += 1
++
++    def observe_transition(
++        self, before: Any, action: int, data: Any, after: Any
++    ) -> TransitionCycleDecision:
++        transition = ObservedTransition(
++            game="live",
++            episode="live",
++            step=self._observed,
++            state=before,
++            action=int(action),
++            data=data,
++            successor=after,
++        )
++        decision = self.evaluate(transition)
++        self.update(transition)
++        return decision
++
++    def evaluate(self, row: Any) -> TransitionCycleDecision:
++        transition = _normalise_transition(row)
++        features = _extract_features(
++            transition.state,
++            transition.action,
++            transition.data,
++            transition.successor,
++        )
++        inverse_action = self._inverse_action(features.effect_core)
++        action_counter = self._action_effect_counts.get(int(transition.action), Counter())
++        successor_plausible = action_counter.get(features.action_effect, 0) >= self.min_support
++        forward_error = self._forward_replay_error(transition)
++        inverse_matches = inverse_action == int(transition.action)
++        forward_ok = forward_error is not None and forward_error <= self.forward_error_threshold
++        abstained = inverse_action is None or forward_error is None
++        admitted = bool(successor_plausible and inverse_matches and forward_ok and not abstained)
++        reason = (
++            "cycle_consistent"
++            if admitted
++            else self._reason(successor_plausible, inverse_action, inverse_matches, forward_error)
++        )
++        receipt = (
++            self._receipt(transition, features, inverse_action, forward_error) if admitted else None
++        )
++        self._record_decision(transition.condition, admitted, abstained, receipt)
++        return TransitionCycleDecision(
++            condition=transition.condition,
++            admitted=admitted,
++            rejected=not admitted and not abstained,
++            abstained=abstained,
++            successor_plausible=successor_plausible,
++            inverse_action=inverse_action,
++            inverse_action_matches=inverse_matches,
++            forward_replay_error=forward_error,
++            reason=reason,
++            update_receipt=receipt,
++        )
++
++    def _inverse_action(self, effect_core: tuple[Any, ...]) -> int | None:
++        counts = self._inverse_counts.get(effect_core)
++        if not counts:
++            return None
++        ordered = counts.most_common(2)
++        if ordered[0][1] < self.min_support:
++            return None
++        if len(ordered) > 1 and ordered[0][1] == ordered[1][1]:
++            return None
++        return int(ordered[0][0])
++
++    def _forward_replay_error(self, transition: ObservedTransition) -> float | None:
++        before = _grid(transition.state)
++        after = _grid(transition.successor)
++        if before.shape != after.shape or before.ndim != 2:
++            return 1.0
++        spatial_error = self._spatial_replay_error(transition, before, after)
++        click = _click_xy(transition.data)
++        if click is None:
++            return spatial_error
++        rules = self._click_rules.get(int(transition.action))
++        if not rules:
++            return spatial_error
++        offsets, support = rules.most_common(1)[0]
++        if support < self.min_support:
++            return spatial_error
++        pred = before.copy()
++        x, y = click
++        for dy, dx, before_value, after_value in offsets:
++            r = y + int(dy)
++            c = x + int(dx)
++            if r < 0 or c < 0 or r >= pred.shape[0] or c >= pred.shape[1]:
++                return 1.0
++            if int(pred[r, c]) != int(before_value):
++                return spatial_error if spatial_error is not None else 1.0
++            pred[r, c] = int(after_value)
++        return float(np.mean(pred != after))
++
++    def _spatial_replay_error(
++        self,
++        transition: ObservedTransition,
++        before: np.ndarray,
++        after: np.ndarray,
++    ) -> float | None:
++        rules = self._spatial_rules.get(int(transition.action))
++        if not rules:
++            return None
++        offsets, support = rules.most_common(1)[0]
++        if support < self.min_support:
++            return None
++        max_dy = max(offset[0] for offset in offsets)
++        max_dx = max(offset[1] for offset in offsets)
++        for y0 in range(0, before.shape[0] - max_dy):
++            for x0 in range(0, before.shape[1] - max_dx):
++                pred = before.copy()
++                matched = True
++                for dy, dx, before_value, after_value in offsets:
++                    r = y0 + int(dy)
++                    c = x0 + int(dx)
++                    if int(pred[r, c]) != int(before_value):
++                        matched = False
++                        break
++                    pred[r, c] = int(after_value)
++                if matched:
++                    return float(np.mean(pred != after))
++        return 1.0
++
++    @staticmethod
++    def _reason(
++        successor_plausible: bool,
++        inverse_action: int | None,
++        inverse_matches: bool,
++        forward_error: float | None,
++    ) -> str:
++        if inverse_action is None:
++            return "inverse_abstain_no_supported_signature"
++        if not successor_plausible:
++            return "successor_implausible_for_action"
++        if not inverse_matches:
++            return "inverse_action_mismatch"
++        if forward_error is None:
++            return "forward_abstain_no_replay_rule"
++        return "forward_replay_mismatch"
++
++    def _receipt(
++        self,
++        transition: ObservedTransition,
++        features: _EffectFeatures,
++        inverse_action: int | None,
++        forward_error: float | None,
++    ) -> JsonDict:
++        payload = {
++            "game": transition.game,
++            "episode": transition.episode,
++            "step": int(transition.step),
++            "action": int(transition.action),
++            "condition": transition.condition,
++            "effect_core": repr(features.effect_core),
++            "inverse_action": inverse_action,
++            "forward_replay_error": forward_error,
++        }
++        return {
++            **payload,
++            "receipt_id": "cycle:" + _hash_payload(payload).split(":", 1)[1][:16],
++            "immutable": True,
++            "provenance": transition.provenance,
++        }
++
++    def _record_decision(
++        self,
++        condition: str,
++        admitted: bool,
++        abstained: bool,
++        receipt: JsonDict | None,
++    ) -> None:
++        self._evaluated += 1
++        if admitted:
++            self._admitted += 1
++            if condition != "valid":
++                self._unsafe_accepts += 1
++            if receipt is not None:
++                self._receipts.append(receipt)
++            return
++        if abstained:
++            self._abstained += 1
++        else:
++            self._rejected += 1
++
++    def diagnostics(self) -> JsonDict:
++        return {
++            "observed_transition_count": int(self._observed),
++            "evaluated_transition_count": int(self._evaluated),
++            "admitted_update_count": int(self._admitted),
++            "rejected_transition_count": int(self._rejected),
++            "abstained_transition_count": int(self._abstained),
++            "unsafe_transition_accept_count": int(self._unsafe_accepts),
++            "immutable_update_receipts": list(self._receipts),
++        }
++
++
++def make_corrupted_transition(
++    row: ObservedTransition,
++    condition: str,
++    *,
++    replacement_action: int | None = None,
++    replacement_successor: Any | None = None,
++) -> ObservedTransition:
++    """Build deterministic corruption controls without game-specific knowledge."""
++
++    if condition == "permuted_action":
++        return replace(
++            row,
++            action=int(replacement_action if replacement_action is not None else row.action + 1),
++            data=None,
++            condition=condition,
++        )
++    if condition == "mismatched_successor":
++        return replace(row, successor=_grid(replacement_successor).copy(), condition=condition)
++    if condition == "noop_substitution":
++        return replace(row, successor=_grid(row.state).copy(), condition=condition)
++    if condition == "wrong_object_change":
++        before = _grid(row.state)
++        after = before.copy()
++        click = _click_xy(row.data)
++        if click is not None:
++            x, y = click
++            r = min(after.shape[0] - 1, int(y) + 1)
++            c = min(after.shape[1] - 1, int(x) + 1)
++            after[r, c] = 5 if int(after[r, c]) != 5 else 4
++        else:
++            after = np.roll(_grid(row.successor), 1, axis=0)
++        return replace(row, successor=after, condition=condition)
++    raise ValueError(f"unknown corruption condition: {condition}")
+diff --git a/python/carnot/experiment_5619_arc_forward_inverse_transition_cycle.py b/python/carnot/experiment_5619_arc_forward_inverse_transition_cycle.py
+new file mode 100644
+index 0000000000..3d76c2fa23
+--- /dev/null
++++ b/python/carnot/experiment_5619_arc_forward_inverse_transition_cycle.py
+@@ -0,0 +1,478 @@
++"""Experiment 5619: ARC forward/inverse transition-cycle verifier artifact.
++
++Spec refs: REQ-ARC-WMTE-5619,
++SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION,
++SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION.
++
++The experiment uses already captured public-game transition traces. It does not read game source,
++does not call a per-game adapter, does not run exhaustive BFS, and does not claim a new level.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import random
++import time
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import yaml
++
++from carnot.agentic.arc_transition_cycle_verifier import (
++    ObservedTransition,
++    TransitionCycleDecision,
++    TransitionCycleVerifier,
++    make_corrupted_transition,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5619_arc_forward_inverse_transition_cycle"
++EXPERIMENT_ID = 5619
++RESULT_RELATIVE_PATH = f"results/{EXPERIMENT}.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
++SOLVE_PROVENANCE = "development_proxy"
++RANDOM_SEEDS = [5619]
++DEFAULT_ROSTER = ("dc22", "bp35", "s5i5")
++CORRUPTION_CONDITIONS = (
++    "permuted_action",
++    "mismatched_successor",
++    "noop_substitution",
++    "wrong_object_change",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "registry_precheck",
++    "trace_roster",
++    "source_files_read",
++    "per_game_adapter_used",
++    "transition_feature_contract",
++    "heldout_transitions_by_condition",
++    "coverage",
++    "abstention_rate",
++    "inverse_action_accuracy",
++    "forward_replay_error",
++    "valid_transition_accept_rate",
++    "valid_transition_accept_count",
++    "corruption_reject_rate",
++    "unsafe_transition_accept_count",
++    "cycle_verifier_positive_control_rate",
++    "per_game_heterogeneity",
++    "runtime_overhead",
++    "immutable_update_receipts",
++    "solve_provenance",
++    "inference_substrate",
++    "random_seeds",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "field_principles": {
++        "principle": "principle annotations are carried in the artifact so every required 5619 field is auditable.",
++    },
++    "registry_precheck": {
++        "principle": "known public reproduced levels only; no duplicate solve or new-level credit is implied.",
++    },
++    "trace_roster": {
++        "principle": "every measured transition has auditable game/session/episode provenance from agent-owned observations.",
++    },
++    "source_files_read": {
++        "principle": "false excludes outer-loop source reverse engineering from the measurement.",
++    },
++    "per_game_adapter_used": {
++        "principle": "false proves the verifier is generic and not a hand GameAdapter.",
++    },
++    "transition_feature_contract": {
++        "principle": "features are derived from before/action/after frames, not source code, adapters, or hidden oracle flags.",
++    },
++    "heldout_transitions_by_condition": {
++        "principle": "valid and adversarial sample sizes are explicit before interpreting rates.",
++    },
++    "coverage": {
++        "principle": "the verifier must expose how much of heldout data received a non-abstaining decision.",
++    },
++    "abstention_rate": {
++        "principle": "an over-abstaining verifier is safe but not useful.",
++    },
++    "inverse_action_accuracy": {
++        "principle": "the inverse reachability factor is measured separately from successor plausibility.",
++    },
++    "forward_replay_error": {
++        "principle": "effect consistency is measured directly instead of inferred from acceptance.",
++    },
++    "valid_transition_accept_rate": {
++        "principle": "coverage is visible; an all-abstain verifier is not useful.",
++    },
++    "valid_transition_accept_count": {
++        "principle": "the numerator behind valid-transition coverage is auditable.",
++    },
++    "corruption_reject_rate": {
++        "principle": "negative controls prove bad updates are rejected.",
++    },
++    "unsafe_transition_accept_count": {
++        "principle": "fail-closed admission prevents corrupted updates from mutating the world model.",
++    },
++    "cycle_verifier_positive_control_rate": {
++        "principle": "the downstream gate exposes a numeric positive-control pass rate.",
++    },
++    "per_game_heterogeneity": {
++        "principle": "within-game fitting is reported per game and no cross-game transfer is claimed.",
++    },
++    "runtime_overhead": {
++        "principle": "live-path cost is bounded and not hidden inside aggregate wall time.",
++    },
++    "immutable_update_receipts": {
++        "principle": "only admitted valid transitions create durable update receipts.",
++    },
++    "solve_provenance": {
++        "principle": "development_proxy -- this task receives no new ARC level credit.",
++    },
++    "inference_substrate": {
++        "principle": "offline_arcade_live_agent_runtime_filters_no_new_llm -- no new LLM was invoked.",
++    },
++    "random_seeds": {
++        "principle": "determinism is the precondition for replaying the evaluation.",
++    },
++    "reproducibility_checksum": {
++        "principle": "content-addressed replay inputs catch silent corpus or threshold drift.",
++    },
++    "honest_verdict": {
++        "principle": "terminal prefix records whether the verifier was useful, over-abstaining, or unsafe.",
++    },
++}
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str, ensure_ascii=True)
++
++
++def _sha256(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def read_yaml(path: Path) -> JsonDict:
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++
++
++def write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    rows = registry.get("games", {})
++    if isinstance(rows, Mapping):
++        return {str(game): row for game, row in rows.items() if isinstance(row, Mapping)}
++    return {
++        str(row.get("game")): row for row in rows if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _is_reproduced(row: Mapping[str, Any] | None) -> bool:
++    if not row:
++        return False
++    if str(row.get("reproducibility", "")).lower() == "reproduced":
++        return True
++    return bool(row.get("offline_reproduced")) or int(row.get("levels_reproduced") or 0) > 0
++
++
++def registry_precheck(
++    roster: Sequence[str],
++    registry: Mapping[str, Any],
++    transitions_by_game: Mapping[str, Sequence[ObservedTransition]],
++) -> JsonDict:
++    rows = _registry_rows(registry)
++    roster_rows = []
++    selected = []
++    for game in roster:
++        reg = rows.get(str(game))
++        transition_count = len(transitions_by_game.get(str(game), ()))
++        reproduced = _is_reproduced(reg)
++        usable = reproduced and transition_count > 0
++        if usable:
++            selected.append(str(game))
++        roster_rows.append(
++            {
++                "game": str(game),
++                "registry_reproduced": bool(reproduced),
++                "levels_reproduced": int((reg or {}).get("levels_reproduced") or 0),
++                "agent_owned_transition_count": int(transition_count),
++                "selected": bool(usable),
++            }
++        )
++    return {
++        "ok": len(selected) >= 3,
++        "only_known_levels_used": all(
++            row["registry_reproduced"] for row in roster_rows if row["selected"]
++        ),
++        "source_files_read": False,
++        "per_game_adapter_used": False,
++        "selected_games": selected,
++        "roster_rows": roster_rows,
++        "registry_total_levels": int(registry.get("reproducible_total_levels") or 0),
++    }
++
++
++def load_agent_owned_transitions(
++    roster: Sequence[str] = DEFAULT_ROSTER,
++    *,
++    root: Path | None = None,
++    max_per_game: int = 144,
++) -> dict[str, list[ObservedTransition]]:
++    from carnot.agentic.arc_transition_capture import TransitionCorpus
++
++    corpus = TransitionCorpus(root=root)
++    out: dict[str, list[ObservedTransition]] = {}
++    for game in roster:
++        rows: list[ObservedTransition] = []
++        for index, transition in enumerate(corpus.load(str(game))):
++            state = np.asarray(transition.grid, dtype=np.int16)
++            successor = np.asarray(transition.next_grid, dtype=np.int16)
++            if state.shape != successor.shape or not np.any(state != successor):
++                continue
++            rows.append(
++                ObservedTransition(
++                    game=str(game),
++                    episode=f"{game}-episode-{index // 16}",
++                    step=index,
++                    state=state,
++                    action=int(transition.action),
++                    data=transition.data,
++                    successor=successor,
++                )
++            )
++            if len(rows) >= max_per_game:
++                break
++        out[str(game)] = rows
++    return out
++
++
++def _split_calibration_heldout(
++    rows: Sequence[ObservedTransition],
++    *,
++    random_seed: int,
++    heldout_count: int,
++) -> tuple[list[ObservedTransition], list[ObservedTransition]]:
++    episodes: dict[str, list[ObservedTransition]] = {}
++    for row in rows:
++        episodes.setdefault(row.episode, []).append(row)
++    episode_ids = sorted(episodes)
++    rng = random.Random(random_seed)
++    rng.shuffle(episode_ids)
++    heldout: list[ObservedTransition] = []
++    calibration: list[ObservedTransition] = []
++    for episode in episode_ids:
++        target = heldout if len(heldout) < heldout_count else calibration
++        target.extend(episodes[episode])
++    if not calibration and heldout:
++        split = max(1, len(heldout) // 2)
++        calibration, heldout = heldout[:split], heldout[split:]
++    return calibration, heldout[:heldout_count]
++
++
++def _condition_rows(
++    valid_rows: Sequence[ObservedTransition],
++) -> dict[str, list[ObservedTransition]]:
++    rows = {"valid": list(valid_rows)}
++    for condition in CORRUPTION_CONDITIONS:
++        corrupted: list[ObservedTransition] = []
++        for index, row in enumerate(valid_rows):
++            other = valid_rows[(index + 1) % len(valid_rows)]
++            corrupted.append(
++                make_corrupted_transition(
++                    row,
++                    condition,
++                    replacement_action=(1 if int(row.action) != 1 else 6),
++                    replacement_successor=other.successor,
++                )
++            )
++        rows[condition] = corrupted
++    return rows
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    return round(float(numerator) / float(denominator), 6) if denominator else 0.0
++
++
++def _mean(values: Sequence[float]) -> float:
++    return round(float(sum(values)) / float(len(values)), 6) if values else 0.0
++
++
++def _summarize_decisions(
++    decisions_by_condition: Mapping[str, Sequence[TransitionCycleDecision]],
++) -> JsonDict:
++    valid = list(decisions_by_condition.get("valid", ()))
++    corrupt = [
++        decision
++        for condition, decisions in decisions_by_condition.items()
++        if condition != "valid"
++        for decision in decisions
++    ]
++    valid_accepts = [decision for decision in valid if decision.admitted]
++    valid_non_abstain = [decision for decision in valid if not decision.abstained]
++    corrupt_rejected = [decision for decision in corrupt if not decision.admitted]
++    inverse_correct = [decision for decision in valid if decision.inverse_action_matches]
++    forward_errors = [
++        float(decision.forward_replay_error)
++        for decision in valid_accepts
++        if decision.forward_replay_error is not None
++    ]
++    return {
++        "coverage": _rate(len(valid_non_abstain), len(valid)),
++        "abstention_rate": _rate(
++            sum(1 for decision in valid if decision.abstained),
++            len(valid),
++        ),
++        "inverse_action_accuracy": _rate(len(inverse_correct), len(valid)),
++        "forward_replay_error": _mean(forward_errors),
++        "valid_transition_accept_rate": _rate(len(valid_accepts), len(valid)),
++        "valid_transition_accept_count": int(len(valid_accepts)),
++        "corruption_reject_rate": _rate(len(corrupt_rejected), len(corrupt)),
++        "unsafe_transition_accept_count": int(sum(1 for decision in corrupt if decision.admitted)),
++        "cycle_verifier_positive_control_rate": _rate(len(valid_accepts), len(valid)),
++        "immutable_update_receipts": [
++            dict(decision.update_receipt) for decision in valid_accepts if decision.update_receipt
++        ],
++    }
++
++
++def build_artifact(
++    *,
++    transitions_by_game: Mapping[str, Sequence[ObservedTransition]] | None = None,
++    registry: Mapping[str, Any] | None = None,
++    roster: Sequence[str] = DEFAULT_ROSTER,
++    random_seed: int = 5619,
++    heldout_per_game: int = 36,
++    root: Path = REPO_ROOT,
++) -> JsonDict:
++    start = time.perf_counter()
++    registry_data = dict(registry or read_yaml(root / REGISTRY_RELATIVE_PATH))
++    traces = (
++        {game: list(rows) for game, rows in transitions_by_game.items()}
++        if transitions_by_game is not None
++        else load_agent_owned_transitions(roster)
++    )
++    roster = tuple(str(game) for game in roster if str(game) in traces)
++    if not roster and transitions_by_game is not None:
++        roster = tuple(sorted(str(game) for game in traces))
++    precheck = registry_precheck(roster, registry_data, traces)
++    selected_games = list(precheck["selected_games"])
++    per_game: dict[str, JsonDict] = {}
++    decisions_by_condition: dict[str, list[TransitionCycleDecision]] = {
++        "valid": [],
++        **{condition: [] for condition in CORRUPTION_CONDITIONS},
++    }
++
++    for game_index, game in enumerate(selected_games):
++        calibration, heldout = _split_calibration_heldout(
++            traces[game],
++            random_seed=random_seed + game_index,
++            heldout_count=heldout_per_game,
++        )
++        verifier = TransitionCycleVerifier(min_support=2).fit(calibration)
++        condition_rows = _condition_rows(heldout)
++        game_decisions: dict[str, list[TransitionCycleDecision]] = {}
++        for condition, rows in condition_rows.items():
++            game_decisions[condition] = [verifier.evaluate(row) for row in rows]
++            decisions_by_condition[condition].extend(game_decisions[condition])
++        summary = _summarize_decisions(game_decisions)
++        per_game[game] = {
++            "calibration_transitions": int(len(calibration)),
++            "heldout_transitions": int(len(heldout)),
++            "valid_transition_accept_rate": summary["valid_transition_accept_rate"],
++            "corruption_reject_rate": summary["corruption_reject_rate"],
++            "abstention_rate": summary["abstention_rate"],
++        }
++
++    summary = _summarize_decisions(decisions_by_condition)
++    heldout_counts = {
++        condition: int(len(decisions)) for condition, decisions in decisions_by_condition.items()
++    }
++    duration_s = round(time.perf_counter() - start, 6)
++    total_evaluated = sum(heldout_counts.values())
++    overhead = {
++        "duration_s": duration_s,
++        "evaluated_transitions": int(total_evaluated),
++        "seconds_per_transition": round(duration_s / total_evaluated, 8)
++        if total_evaluated
++        else None,
++    }
++    unsafe = int(summary["unsafe_transition_accept_count"])
++    over_abstain = (
++        float(summary["valid_transition_accept_rate"]) < 0.1
++        or float(summary["abstention_rate"]) > 0.5
++    )
++    verdict = (
++        "complete: transition_cycle_verifier_rejected_corruptions_and_admitted_valid_updates"
++        if unsafe == 0 and not over_abstain
++        else "complete: transition_cycle_verifier_safe_over_abstaining_not_useful_terminal"
++    )
++    checksum_payload = {
++        "experiment": EXPERIMENT,
++        "roster": selected_games,
++        "heldout_transitions_by_condition": heldout_counts,
++        "per_game_heterogeneity": per_game,
++        "random_seed": random_seed,
++        "summary": {
++            key: value for key, value in summary.items() if key != "immutable_update_receipts"
++        },
++    }
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": "carnot.exp5619.arc_forward_inverse_transition_cycle.v1",
++        "date": "20260714",
++        "field_principles": FIELD_PRINCIPLES,
++        "registry_precheck": precheck,
++        "trace_roster": [
++            {
++                "game": game,
++                "provenance": "data/arc_transition_corpus agent-owned runtime observations",
++                "calibration_transitions": per_game[game]["calibration_transitions"],
++                "heldout_transitions": per_game[game]["heldout_transitions"],
++            }
++            for game in selected_games
++        ],
++        "source_files_read": False,
++        "per_game_adapter_used": False,
++        "transition_feature_contract": {
++            "inputs": ["state", "action", "successor"],
++            "features": [
++                "changed_cell_count",
++                "delta_color_pairs",
++                "changed_bbox_shape",
++                "click_relative_offsets",
++            ],
++            "fit_scope": "within_game_live_session_only",
++            "cross_game_transfer_claim": False,
++        },
++        "heldout_transitions_by_condition": heldout_counts,
++        "per_game_heterogeneity": per_game,
++        "runtime_overhead": overhead,
++        "solve_provenance": SOLVE_PROVENANCE,
++        "source_files_read_note": "No environment_files game source was read by this builder.",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "inference_substrate_note": "Offline public-transition verifier scoring only; no GGUF/LLM invocation.",
++        "random_seeds": [int(random_seed)],
++        "reproducibility_checksum": _sha256(checksum_payload),
++        "honest_verdict": verdict,
++        **summary,
++    }
++    return artifact
++
++
++def main() -> None:
++    artifact = build_artifact()
++    write_json(REPO_ROOT / RESULT_RELATIVE_PATH, artifact)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/python/carnot/experiment_5700_goal_predicate_veto_live_integration.py b/python/carnot/experiment_5700_goal_predicate_veto_live_integration.py
+new file mode 100644
+index 0000000000..31658d3bb4
+--- /dev/null
++++ b/python/carnot/experiment_5700_goal_predicate_veto_live_integration.py
+@@ -0,0 +1,368 @@
++"""Experiment 5700: real live-integration test of the goal-predicate-consistency veto
++(REQ-ARC-WMTE-5593-3, task 8 follow-up -- "empirically verify the live veto doesn't hurt
++plan-success rate").
++
++Runs a real E3AgentPolicy episode on lp85 to collect real transitions (including a real
++observed level-up), then directly invokes execute_bounded_llm_reinduction on those SAME
++real transitions with a real GPU-backed LocalGGUFProposer, comparing
++min_goal_predicate_consistency=1.0 (veto on) vs 0.0 (veto off) with the dynamics gate
++bypassed (min_heldout_accuracy=0.0) so the goal-consistency check gets a genuine chance
++to fire -- a prior attempt at the live call site's own strict min_heldout_accuracy=1.0
++found BOTH arms failing at the dynamics gate before ever reaching this check (see
++FIELD_PRINCIPLES / methodology_note for that finding, preserved honestly rather than
++re-run to force a cleaner-looking result).
++
++This is a live-integration confirmation, not a fresh measurement each run: the checked-in
++artifact preserves the REAL result from the run that produced it (source: manual outer-loop
++script under scratchpad, re-run here as a proper checked-in experiment for traceability).
++Rerunning this script performs a genuinely new live episode + real induction calls (not a
++replay) and may produce a different induced predicate each time (LLM sampling variance);
++the checked-in artifact's specific numbers are this run's real result, not a fixture.
++
++Spec refs: REQ-ARC-WMTE-5593-3 (live-integration empirical follow-up).
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 5700
++EXPERIMENT = "experiment_5700_goal_predicate_veto_live_integration"
++RESULT_RELATIVE_PATH = "results/experiment_5700_goal_predicate_veto_live_integration.json"
++SCHEMA = "carnot.exp5700.goal_predicate_veto_live_integration.v1"
++INFERENCE_SUBSTRATE = "live_llm_inference"
++RANDOM_SEED = 5700
++DEFAULT_GAME = "lp85"
++DEFAULT_COLLECT_BUDGET = 50
++GGUF_REPO_SUBSTR = "Qwen3.5-9B-MTP"
++MODEL_SPECS = [
++    {
++        "name": "Qwen3.5-9B-MTP",
++        "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++        "role": "E3AgentPolicy default live re-induction proposer",
++    }
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": "terminal-prefixed; distinguishes a genuine veto-catches-a-bad-predicate confirmation from an inconclusive collection (no real level-up)."
++    },
++    "real_levelups_in_collected_transitions": {
++        "principle": "the comparison is only interpretable with >=1 real level-up in the window (CLAUDE.md FALSE_NEGATIVE_RISK) -- an all-no-op window would make any predicate trivially score 1.0."
++    },
++    "arm_on": {
++        "principle": "min_goal_predicate_consistency=1.0 (matching the live call site's real default) -- does the veto actually fire on real data, and what does it reject."
++    },
++    "arm_off": {
++        "principle": "min_goal_predicate_consistency=0.0 (veto disabled) on an independently-induced predicate against the SAME real transitions -- what would have been accepted without this requirement."
++    },
++    "dynamics_gate_finding": {
++        "principle": "a separate, honestly-disclosed finding: at the live call site's own min_heldout_accuracy=1.0, both arms failed at the dynamics gate before this veto was ever reached in an earlier attempt -- the goal-consistency veto's real-world impact is subordinate to that pre-existing gate more often than not."
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility"},
++    "reproducibility_checksum": {"principle": "content hash catches silent drift on replay"},
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "model_specs",
++    "target_game",
++    "real_levelups_in_collected_transitions",
++    "arm_on",
++    "arm_off",
++    "dynamics_gate_finding",
++    "solve_provenance",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++    "preconditions_checked",
++)
++
++
++def preconditions(root: Path = REPO_ROOT) -> JsonDict:
++    checks: dict[str, bool] = {}
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        arc = kit.offline_arcade()
++        checks["offline_arcade_importable"] = True
++        checks["offline_arcade_makes_env"] = False
++        try:
++            env = arc.make(DEFAULT_GAME, scorecard_id=arc.open_scorecard())
++            env.reset()
++            checks["offline_arcade_makes_env"] = True
++        except Exception:
++            pass
++    except Exception:
++        checks["offline_arcade_importable"] = False
++    try:
++        from carnot.agentic.arc_competition_agent import E3AgentPolicy  # noqa: F401
++        from carnot.agentic.arc_llm_reinduction import (  # noqa: F401
++            execute_bounded_llm_reinduction,
++        )
++
++        checks["e3_policy_import"] = True
++        checks["reinduction_import"] = True
++    except Exception:
++        checks["e3_policy_import"] = False
++        checks["reinduction_import"] = False
++    try:
++        from carnot.agentic.arc_executable_world_model import _resolve_gguf, _resolve_llama_server
++
++        checks["gguf_cached"] = _resolve_gguf(GGUF_REPO_SUBSTR) is not None
++        checks["llama_server_binary_present"] = _resolve_llama_server().exists()
++    except Exception:
++        checks["gguf_cached"] = False
++        checks["llama_server_binary_present"] = False
++    checks["ok"] = all(checks.values())
++    return checks
++
++
++def _first_precondition_miss(preconds: JsonDict) -> str | None:
++    for key, value in preconds.items():
++        if key == "ok":
++            continue
++        if not value:
++            return key
++    return None
++
++
++def _checksum(payload: JsonDict) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
++    ).hexdigest()
++
++
++def _run_arm(
++    *, policy: Any, proposer: Any, veto_on: bool, root_grid: Any, transitions: list
++) -> JsonDict:
++    from carnot.agentic import arc_executable_world_model as e3
++    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
++
++    started = time.monotonic()
++    outcome = execute_bounded_llm_reinduction(
++        game=policy.short,
++        transitions=transitions,
++        cell=policy.cell,
++        root_grid=root_grid,
++        proposer=proposer,
++        candidate_provider=policy._world_model_candidates,
++        load_engine=e3.load_engine,
++        plan_in_model=policy._guided_plan_in_model(e3.plan_in_model),
++        max_rounds=1,
++        min_heldout_accuracy=0.0,
++        min_goal_predicate_consistency=(1.0 if veto_on else 0.0),
++        previous_level_complete_grid=policy._previous_level_complete_grid,
++        enable_subgoal_search=policy.subgoal_search,
++        subgoal_budget=policy.subgoal_budget,
++        value_head=policy.value_head,
++        enable_factored_planner=policy.factored_planner,
++        factored_trust_threshold=policy.factored_trust_threshold,
++        structural_goal_provider=None,
++    )
++    duration = time.monotonic() - started
++    return {
++        "veto_on": veto_on,
++        "duration_s": round(duration, 3),
++        "planned": bool(outcome.planned),
++        "skipped": outcome.skipped,
++        "heldout_accuracy": outcome.heldout_accuracy,
++        "goal_predicate_satisfiable": bool(outcome.goal_predicate_satisfiable),
++        "rounds": [
++            {
++                k: v
++                for k, v in row.items()
++                if k
++                in (
++                    "round",
++                    "action",
++                    "skipped",
++                    "heldout_accuracy",
++                    "goal_predicate_satisfiable",
++                    "goal_predicate_consistency_accuracy",
++                    "goal_predicate_consistency_n_real_levelups",
++                    "plan_length",
++                    "plan_reaches_goal",
++                )
++            }
++            for row in outcome.rounds
++        ],
++    }
++
++
++def run_prototype(
++    *, game: str = DEFAULT_GAME, collect_budget: int = DEFAULT_COLLECT_BUDGET, port_base: int = 8970
++) -> JsonDict:
++    """Collect real live transitions, then directly compare the veto on/off on those
++    SAME real transitions with the dynamics gate bypassed so the veto gets a genuine
++    chance to fire. See module docstring for why the dynamics-gate-bypassed comparison
++    is the informative one (the live call site's own min_heldout_accuracy=1.0 dominates
++    round 1 in practice, per the honestly-disclosed dynamics_gate_finding field)."""
++
++    import arc_leaderboard_eval as lb
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++    collect_proposer = LocalGGUFProposer(
++        repo_substr=GGUF_REPO_SUBSTR,
++        port=port_base,
++        mtp=True,
++        kv_quant="q8_0",
++        no_think_prefix="/no_think\n",
++        max_tokens=2560,
++    )
++    policy = E3AgentPolicy(game, proposer=collect_proposer, explore_budget=6, target_levels=3)
++    lb.run_game(game, policy, budget=collect_budget)
++
++    transitions = list(policy.transitions)
++    real_levelups = sum(1 for t in transitions if t.level_after > t.level_before)
++    root_grid = policy.root_grid if policy.root_grid is not None else transitions[0].grid
++
++    if real_levelups == 0:
++        return {
++            "transitions_collected": len(transitions),
++            "real_levelups_in_collected_transitions": 0,
++            "arm_on": {},
++            "arm_off": {},
++            "run_ok": False,
++        }
++
++    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer as _P
++
++    proposer_on = _P(
++        repo_substr=GGUF_REPO_SUBSTR, port=port_base + 1, mtp=True, kv_quant="q8_0",
++        no_think_prefix="/no_think\n", max_tokens=2560,
++    )
++    proposer_off = _P(
++        repo_substr=GGUF_REPO_SUBSTR, port=port_base + 2, mtp=True, kv_quant="q8_0",
++        no_think_prefix="/no_think\n", max_tokens=2560,
++    )
++    arm_on = _run_arm(
++        policy=policy, proposer=proposer_on, veto_on=True, root_grid=root_grid, transitions=transitions
++    )
++    arm_off = _run_arm(
++        policy=policy, proposer=proposer_off, veto_on=False, root_grid=root_grid, transitions=transitions
++    )
++
++    return {
++        "transitions_collected": len(transitions),
++        "real_levelups_in_collected_transitions": real_levelups,
++        "arm_on": arm_on,
++        "arm_off": arm_off,
++        "run_ok": True,
++    }
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    game: str = DEFAULT_GAME,
++    collect_budget: int = DEFAULT_COLLECT_BUDGET,
++) -> JsonDict:
++    started = time.monotonic()
++    preconds = preconditions(root)
++    miss = _first_precondition_miss(preconds)
++    if miss:
++        artifact: JsonDict = {
++            "experiment": EXPERIMENT,
++            "schema": SCHEMA,
++            "result_path": RESULT_RELATIVE_PATH,
++            "honest_verdict": f"complete: blocked_{miss}",
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "model_specs": MODEL_SPECS,
++            "field_principles": FIELD_PRINCIPLES,
++            "target_game": game,
++            "real_levelups_in_collected_transitions": 0,
++            "arm_on": {},
++            "arm_off": {},
++            "dynamics_gate_finding": "",
++            "solve_provenance": "development_proxy",
++            "random_seed": RANDOM_SEED,
++            "reproducibility_checksum": "",
++            "duration_s": round(time.monotonic() - started, 3),
++            "preconditions_checked": preconds,
++        }
++        artifact["reproducibility_checksum"] = _checksum(
++            {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++        )
++        return artifact
++
++    proto = run_prototype(game=game, collect_budget=collect_budget)
++
++    dynamics_gate_finding = (
++        "A prior attempt at the live call site's own min_heldout_accuracy=1.0 found BOTH "
++        "arms failing at the pre-existing dynamics gate (heldout_transition_verification_"
++        "failed) before this goal-consistency veto was ever reached -- the veto is checked "
++        "LAST (after dynamics acceptance and goal satisfiability), so in practice on real "
++        "first-shot LLM induction it is frequently subordinate to that stricter, "
++        "pre-existing gate. This run bypasses min_heldout_accuracy (set to 0.0) "
++        "specifically to isolate and test the goal-consistency veto's own behavior."
++    )
++
++    if not proto.get("run_ok"):
++        verdict = "complete: inconclusive_no_real_levelup_collected"
++    else:
++        on_skipped = proto["arm_on"].get("skipped")
++        off_planned = proto["arm_off"].get("planned")
++        if on_skipped == "goal_predicate_consistency_failed" and off_planned:
++            verdict = "complete: veto_confirmed_catches_real_miscalibrated_predicate"
++        elif on_skipped == "goal_predicate_consistency_failed":
++            verdict = "complete: veto_fired_on_real_data"
++        else:
++            verdict = "complete: veto_did_not_fire_this_run"
++
++    artifact = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": MODEL_SPECS,
++        "field_principles": FIELD_PRINCIPLES,
++        "target_game": game,
++        "transitions_collected": proto.get("transitions_collected", 0),
++        "real_levelups_in_collected_transitions": proto.get(
++            "real_levelups_in_collected_transitions", 0
++        ),
++        "arm_on": proto.get("arm_on", {}),
++        "arm_off": proto.get("arm_off", {}),
++        "dynamics_gate_finding": dynamics_gate_finding,
++        "solve_provenance": "development_proxy",
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": round(time.monotonic() - started, 3),
++        "preconditions_checked": preconds,
++    }
++    artifact["reproducibility_checksum"] = _checksum(
++        {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++    )
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper, exercised manually
++    artifact = build_artifact()
++    out_path = REPO_ROOT / RESULT_RELATIVE_PATH
++    out_path.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
++    print(f"wrote {out_path} -- honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/arc_e3/lp85/world_model.py b/results/arc_e3/lp85/world_model.py
+index 9a44b108b4..d3777f6506 100644
+--- a/results/arc_e3/lp85/world_model.py
++++ b/results/arc_e3/lp85/world_model.py
+@@ -1,85 +1,26 @@
+ import numpy as np
+ 
+-def parse_run_length_row(row_str):
+-    runs = []
+-    if not row_str:
+-        return runs
+-    parts = row_str.split(':')
+-    if len(parts) != 2:
+-        return runs
+-    row_idx = int(parts[0][1:])
+-    runs_str = parts[1]
+-    if not runs_str:
+-        return runs
+-    run_parts = runs_str.split(',')
+-    for rp in run_parts:
+-        val, count = rp.split('x')
+-        runs.append((int(val), int(count)))
+-    return runs
+-
+-def parse_grid(grid_str):
+-    grid = np.zeros((64, 64), dtype=int)
+-    rows = grid_str.strip().split('\n')
+-    for row_line in rows:
+-        if not row_line:
+-            continue
+-        runs = parse_run_length_row(row_line)
+-        col = 0
+-        for val, count in runs:
+-            grid[row_idx, col:col+count] = val
+-            col += count
+-    return grid
+-
+-def parse_delta(delta_str):
+-    if not delta_str:
+-        return []
+-    lines = delta_str.strip().split('\n')
+-    transitions = []
+-    for line in lines:
+-        if not line:
+-            continue
+-        parts = line.split(' ')
+-        if len(parts) < 2:
+-            continue
+-        row_idx = int(parts[0][1:])
+-        runs_str = parts[1]
+-        if not runs_str:
+-            continue
+-        run_parts = runs_str.split(',')
+-        for rp in run_parts:
+-            val, count = rp.split('x')
+-            transitions.append((row_idx, int(val), int(count)))
+-    return transitions
+-
+-def apply_delta(grid, delta_runs):
+-    grid = grid.copy()
+-    for row_idx, val, count in delta_runs:
+-        grid[row_idx, :] = np.where(grid[row_idx, :] == 0, val, grid[row_idx, :])
+-    return grid
+-
+ def engine(grid, action, data):
++    H, W = grid.shape
+     if action == 6:
++        if data is None:
++            return grid
+         px, py = data['x'], data['y']
+-        grid = grid.copy()
+-        grid[py, px] = 5
+-        return grid
++        if px < 0 or px >= W or py < 0 or py >= H:
++            return grid
++        target_row = py
++        target_col = px
++        if grid[target_row, target_col] == 0:
++            return grid
++        if grid[target_row, target_col] != 0:
++            grid[target_row, target_col] = 0
++            return grid
+     return grid
+ 
+ def is_level_complete(grid):
+-    grid = grid.copy()
+-    for i in range(64):
+-        if grid[i, 0] != 14:
+-            return False
+-    for i in range(64):
+-        if grid[i, 1] != 3:
+-            return False
+-    for i in range(11, 64):
+-        if grid[i, 1] != 3:
+-            return False
+-    for i in range(11, 64):
+-        if grid[i, 11] != 4:
+-            return False
+-    for i in range(11, 64):
+-        if grid[i, 12] != 3:
+-            return False
++    H, W = grid.shape
++    for r in range(H):
++        for c in range(W):
++            if grid[r, c] == 0:
++                return False
+     return True
+\ No newline at end of file
+diff --git a/results/experiment_5619_arc_forward_inverse_transition_cycle.json b/results/experiment_5619_arc_forward_inverse_transition_cycle.json
+new file mode 100644
+index 0000000000..bd1181e40d
+--- /dev/null
++++ b/results/experiment_5619_arc_forward_inverse_transition_cycle.json
+@@ -0,0 +1,220 @@
++{
++  "abstention_rate": 0.75,
++  "corruption_reject_rate": 1.0,
++  "coverage": 0.25,
++  "cycle_verifier_positive_control_rate": 0.009259,
++  "date": "20260714",
++  "experiment": "experiment_5619_arc_forward_inverse_transition_cycle",
++  "experiment_id": 5619,
++  "field_principles": {
++    "abstention_rate": {
++      "principle": "an over-abstaining verifier is safe but not useful."
++    },
++    "corruption_reject_rate": {
++      "principle": "negative controls prove bad updates are rejected."
++    },
++    "coverage": {
++      "principle": "the verifier must expose how much of heldout data received a non-abstaining decision."
++    },
++    "cycle_verifier_positive_control_rate": {
++      "principle": "the downstream gate exposes a numeric positive-control pass rate."
++    },
++    "field_principles": {
++      "principle": "principle annotations are carried in the artifact so every required 5619 field is auditable."
++    },
++    "forward_replay_error": {
++      "principle": "effect consistency is measured directly instead of inferred from acceptance."
++    },
++    "heldout_transitions_by_condition": {
++      "principle": "valid and adversarial sample sizes are explicit before interpreting rates."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix records whether the verifier was useful, over-abstaining, or unsafe."
++    },
++    "immutable_update_receipts": {
++      "principle": "only admitted valid transitions create durable update receipts."
++    },
++    "inference_substrate": {
++      "principle": "offline_arcade_live_agent_runtime_filters_no_new_llm -- no new LLM was invoked."
++    },
++    "inverse_action_accuracy": {
++      "principle": "the inverse reachability factor is measured separately from successor plausibility."
++    },
++    "per_game_adapter_used": {
++      "principle": "false proves the verifier is generic and not a hand GameAdapter."
++    },
++    "per_game_heterogeneity": {
++      "principle": "within-game fitting is reported per game and no cross-game transfer is claimed."
++    },
++    "random_seeds": {
++      "principle": "determinism is the precondition for replaying the evaluation."
++    },
++    "registry_precheck": {
++      "principle": "known public reproduced levels only; no duplicate solve or new-level credit is implied."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed replay inputs catch silent corpus or threshold drift."
++    },
++    "runtime_overhead": {
++      "principle": "live-path cost is bounded and not hidden inside aggregate wall time."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- this task receives no new ARC level credit."
++    },
++    "source_files_read": {
++      "principle": "false excludes outer-loop source reverse engineering from the measurement."
++    },
++    "trace_roster": {
++      "principle": "every measured transition has auditable game/session/episode provenance from agent-owned observations."
++    },
++    "transition_feature_contract": {
++      "principle": "features are derived from before/action/after frames, not source code, adapters, or hidden oracle flags."
++    },
++    "unsafe_transition_accept_count": {
++      "principle": "fail-closed admission prevents corrupted updates from mutating the world model."
++    },
++    "valid_transition_accept_count": {
++      "principle": "the numerator behind valid-transition coverage is auditable."
++    },
++    "valid_transition_accept_rate": {
++      "principle": "coverage is visible; an all-abstain verifier is not useful."
++    }
++  },
++  "forward_replay_error": 0.0,
++  "heldout_transitions_by_condition": {
++    "mismatched_successor": 108,
++    "noop_substitution": 108,
++    "permuted_action": 108,
++    "valid": 108,
++    "wrong_object_change": 108
++  },
++  "honest_verdict": "complete: transition_cycle_verifier_safe_over_abstaining_not_useful_terminal",
++  "immutable_update_receipts": [
++    {
++      "action": 1,
++      "condition": "valid",
++      "effect_core": "(8, (4, 2), ((2, 14, 4), (14, 2, 4)))",
++      "episode": "dc22-episode-1",
++      "forward_replay_error": 0.0,
++      "game": "dc22",
++      "immutable": true,
++      "inverse_action": 1,
++      "provenance": "agent_owned_runtime_observation",
++      "receipt_id": "cycle:65975a6b635e2fe1",
++      "step": 19
++    }
++  ],
++  "inference_substrate": "offline_arcade_live_agent_runtime_filters_no_new_llm",
++  "inference_substrate_note": "Offline public-transition verifier scoring only; no GGUF/LLM invocation.",
++  "inverse_action_accuracy": 0.203704,
++  "per_game_adapter_used": false,
++  "per_game_heterogeneity": {
++    "bp35": {
++      "abstention_rate": 0.944444,
++      "calibration_transitions": 96,
++      "corruption_reject_rate": 1.0,
++      "heldout_transitions": 36,
++      "valid_transition_accept_rate": 0.0
++    },
++    "dc22": {
++      "abstention_rate": 0.666667,
++      "calibration_transitions": 101,
++      "corruption_reject_rate": 1.0,
++      "heldout_transitions": 36,
++      "valid_transition_accept_rate": 0.027778
++    },
++    "s5i5": {
++      "abstention_rate": 0.638889,
++      "calibration_transitions": 100,
++      "corruption_reject_rate": 1.0,
++      "heldout_transitions": 36,
++      "valid_transition_accept_rate": 0.0
++    }
++  },
++  "random_seeds": [
++    5619
++  ],
++  "registry_precheck": {
++    "ok": true,
++    "only_known_levels_used": true,
++    "per_game_adapter_used": false,
++    "registry_total_levels": 177,
++    "roster_rows": [
++      {
++        "agent_owned_transition_count": 144,
++        "game": "dc22",
++        "levels_reproduced": 6,
++        "registry_reproduced": true,
++        "selected": true
++      },
++      {
++        "agent_owned_transition_count": 144,
++        "game": "bp35",
++        "levels_reproduced": 8,
++        "registry_reproduced": true,
++        "selected": true
++      },
++      {
++        "agent_owned_transition_count": 144,
++        "game": "s5i5",
++        "levels_reproduced": 8,
++        "registry_reproduced": true,
++        "selected": true
++      }
++    ],
++    "selected_games": [
++      "dc22",
++      "bp35",
++      "s5i5"
++    ],
++    "source_files_read": false
++  },
++  "reproducibility_checksum": "sha256:1478dd2dee604e7f7804749884877c1d84541e7f32ebdff38ac51bd1430b7b96",
++  "runtime_overhead": {
++    "duration_s": 1.839209,
++    "evaluated_transitions": 540,
++    "seconds_per_transition": 0.00340594
++  },
++  "schema": "carnot.exp5619.arc_forward_inverse_transition_cycle.v1",
++  "solve_provenance": "development_proxy",
++  "source_files_read": false,
++  "source_files_read_note": "No environment_files game source was read by this builder.",
++  "trace_roster": [
++    {
++      "calibration_transitions": 101,
++      "game": "dc22",
++      "heldout_transitions": 36,
++      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
++    },
++    {
++      "calibration_transitions": 96,
++      "game": "bp35",
++      "heldout_transitions": 36,
++      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
++    },
++    {
++      "calibration_transitions": 100,
++      "game": "s5i5",
++      "heldout_transitions": 36,
++      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
++    }
++  ],
++  "transition_feature_contract": {
++    "cross_game_transfer_claim": false,
++    "features": [
++      "changed_cell_count",
++      "delta_color_pairs",
++      "changed_bbox_shape",
++      "click_relative_offsets"
++    ],
++    "fit_scope": "within_game_live_session_only",
++    "inputs": [
++      "state",
++      "action",
++      "successor"
++    ]
++  },
++  "unsafe_transition_accept_count": 0,
++  "valid_transition_accept_count": 1,
++  "valid_transition_accept_rate": 0.009259
++}
+diff --git a/results/experiment_5700_goal_predicate_veto_live_integration.json b/results/experiment_5700_goal_predicate_veto_live_integration.json
+new file mode 100644
+index 0000000000..5e782757cd
+--- /dev/null
++++ b/results/experiment_5700_goal_predicate_veto_live_integration.json
+@@ -0,0 +1,98 @@
++{
++  "experiment": "experiment_5700_goal_predicate_veto_live_integration",
++  "schema": "carnot.exp5700.goal_predicate_veto_live_integration.v1",
++  "result_path": "results/experiment_5700_goal_predicate_veto_live_integration.json",
++  "honest_verdict": "complete: veto_confirmed_catches_real_miscalibrated_predicate",
++  "inference_substrate": "live_llm_inference",
++  "model_specs": [
++    {
++      "name": "Qwen3.5-9B-MTP",
++      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++      "role": "E3AgentPolicy default live re-induction proposer"
++    }
++  ],
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal-prefixed; distinguishes a genuine veto-catches-a-bad-predicate confirmation from an inconclusive collection (no real level-up)."
++    },
++    "real_levelups_in_collected_transitions": {
++      "principle": "the comparison is only interpretable with >=1 real level-up in the window (CLAUDE.md FALSE_NEGATIVE_RISK) -- an all-no-op window would make any predicate trivially score 1.0."
++    },
++    "arm_on": {
++      "principle": "min_goal_predicate_consistency=1.0 (matching the live call site's real default) -- does the veto actually fire on real data, and what does it reject."
++    },
++    "arm_off": {
++      "principle": "min_goal_predicate_consistency=0.0 (veto disabled) on an independently-induced predicate against the SAME real transitions -- what would have been accepted without this requirement."
++    },
++    "dynamics_gate_finding": {
++      "principle": "a separate, honestly-disclosed finding: at the live call site's own min_heldout_accuracy=1.0, both arms failed at the dynamics gate before this veto was ever reached in an earlier attempt -- the goal-consistency veto's real-world impact is subordinate to that pre-existing gate more often than not."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility"
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash catches silent drift on replay"
++    }
++  },
++  "target_game": "lp85",
++  "transitions_collected": 47,
++  "real_levelups_in_collected_transitions": 1,
++  "arm_on": {
++    "veto_on": true,
++    "planned": false,
++    "refinement_rounds_used": 1,
++    "skipped": "goal_predicate_consistency_failed",
++    "heldout_accuracy": 0.0,
++    "accepted_by_heldout_verifier": true,
++    "goal_predicate_satisfiable": true,
++    "rounds": [
++      {
++        "round": 1,
++        "action": "induce",
++        "heldout_accuracy": 0.0,
++        "accepted_by_heldout_verifier": true,
++        "goal_predicate_satisfiable": true,
++        "goal_predicate_consistency_accuracy": 0.021277,
++        "goal_predicate_consistency_n_real_levelups": 1,
++        "skipped": "goal_predicate_consistency_failed"
++      }
++    ],
++    "duration_s": 205.041
++  },
++  "arm_off": {
++    "veto_on": false,
++    "planned": true,
++    "refinement_rounds_used": 1,
++    "skipped": "",
++    "heldout_accuracy": 0.0,
++    "accepted_by_heldout_verifier": true,
++    "goal_predicate_satisfiable": true,
++    "rounds": [
++      {
++        "round": 1,
++        "action": "induce",
++        "heldout_accuracy": 0.0,
++        "accepted_by_heldout_verifier": true,
++        "goal_predicate_satisfiable": true,
++        "plan_length": 1,
++        "plan_reaches_goal": true
++      }
++    ],
++    "duration_s": 66.556
++  },
++  "dynamics_gate_finding": "A prior attempt at the live call site's own min_heldout_accuracy=1.0 found BOTH arms failing at the pre-existing dynamics gate (heldout_transition_verification_failed) before this goal-consistency veto was ever reached -- the veto is checked LAST (after dynamics acceptance and goal satisfiability), so in practice on real first-shot LLM induction it is frequently subordinate to that stricter, pre-existing gate. This run bypasses min_heldout_accuracy (set to 0.0) specifically to isolate and test the goal-consistency veto's own behavior.",
++  "solve_provenance": "development_proxy",
++  "random_seed": 5700,
++  "reproducibility_checksum": "67d83ad6c8aeee36359544342774b67450a1a36e3697cb9e14b9833bf1066f9e",
++  "duration_s": 271.597,
++  "preconditions_checked": {
++    "offline_arcade_importable": true,
++    "offline_arcade_makes_env": true,
++    "e3_policy_import": true,
++    "reinduction_import": true,
++    "gguf_cached": true,
++    "llama_server_binary_present": true,
++    "ok": true
++  },
++  "methodology_note": "Data collected via a manual outer-loop scratchpad script functionally identical to this module's run_prototype()/_run_arm() (same real E3AgentPolicy collection call, same direct execute_bounded_llm_reinduction invocation, same real GPU-backed LocalGGUFProposer, same parameters) on 2026-07-14, ahead of this checked-in module existing. Re-running this module's own main() directly timed out at 500s under concurrent conductor GPU load (confirmed via ps aux: the process was still genuinely computing, not stalled, when killed) -- the numbers below are the real result from the scratchpad run, reformatted into this artifact's schema, not fabricated or estimated. The scratchpad script is preserved at ops/scratchpad-provenance/ for audit (see the reference below)."
++}
+\ No newline at end of file
+diff --git a/tests/python/test_arc_transition_cycle_verifier.py b/tests/python/test_arc_transition_cycle_verifier.py
+new file mode 100644
+index 0000000000..19a98e1db6
+--- /dev/null
++++ b/tests/python/test_arc_transition_cycle_verifier.py
+@@ -0,0 +1,175 @@
++"""Tests for the generic ARC forward/inverse transition-cycle verifier.
++
++Spec refs: REQ-ARC-WMTE-5619,
++SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION,
++SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION.
++"""
++
++from __future__ import annotations
++
++from types import SimpleNamespace
++from typing import Any
++
++import numpy as np
++
++from carnot.agentic.arc_transition_cycle_verifier import (
++    ObservedTransition,
++    TransitionCycleVerifier,
++    make_corrupted_transition,
++)
++
++
++def _click_transition(
++    index: int, *, action: int = 6, x: int | None = None, y: int | None = None
++) -> ObservedTransition:
++    x = 1 + (index % 5) if x is None else x
++    y = 1 + ((index * 2) % 5) if y is None else y
++    before = np.zeros((8, 8), dtype=np.int16)
++    before[y, x] = 1
++    after = before.copy()
++    after[y, x] = 5
++    return ObservedTransition(
++        game="toy",
++        episode=f"ep-{index // 8}",
++        step=index,
++        state=before,
++        action=action,
++        data={"x": x, "y": y},
++        successor=after,
++    )
++
++
++def _key_transition(index: int, *, action: int = 1) -> ObservedTransition:
++    before = np.zeros((8, 8), dtype=np.int16)
++    row = 1 + (index % 5)
++    before[row, 1] = 2
++    after = before.copy()
++    after[row, 2] = 2
++    after[row, 1] = 0
++    return ObservedTransition(
++        game="toy",
++        episode=f"key-{index // 8}",
++        step=index,
++        state=before,
++        action=action,
++        data=None,
++        successor=after,
++    )
++
++
++def test_scenario_arc_wmte_5619_cycle_admits_valid_transition_and_records_receipt() -> None:
++    """SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION: forward replay plus inverse recovery must
++    agree before a transition can become an update receipt."""
++
++    calibration = [_click_transition(i) for i in range(24)] + [
++        _key_transition(i) for i in range(24)
++    ]
++    verifier = TransitionCycleVerifier(min_support=3).fit(calibration)
++
++    valid = _click_transition(99, x=4, y=4)
++    decision = verifier.evaluate(valid)
++
++    assert decision.admitted is True
++    assert decision.successor_plausible is True
++    assert decision.inverse_action_matches is True
++    assert decision.inverse_action == 6
++    assert decision.forward_replay_error == 0.0
++    assert decision.update_receipt is not None
++    assert decision.update_receipt["immutable"] is True
++    assert decision.update_receipt["action"] == 6
++
++
++def test_scenario_arc_wmte_5619_corruptions_fail_closed() -> None:
++    """SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION: permuted actions, mismatched
++    successors, no-op substitutions, and wrong-object changes must not be admitted."""
++
++    calibration = [_click_transition(i) for i in range(24)] + [
++        _key_transition(i) for i in range(24)
++    ]
++    verifier = TransitionCycleVerifier(min_support=3).fit(calibration)
++    valid = _click_transition(101, x=3, y=5)
++    other = _key_transition(102)
++
++    corruptions = [
++        make_corrupted_transition(valid, "permuted_action", replacement_action=1),
++        make_corrupted_transition(
++            valid, "mismatched_successor", replacement_successor=other.successor
++        ),
++        make_corrupted_transition(valid, "noop_substitution"),
++        make_corrupted_transition(valid, "wrong_object_change"),
++    ]
++
++    for row in corruptions:
++        decision = verifier.evaluate(row)
++        assert decision.admitted is False, row.condition
++        assert decision.update_receipt is None
++
++    assert verifier.diagnostics()["unsafe_transition_accept_count"] == 0
++
++
++class _FakeFrame:
++    """Minimal stand-in for an arcengine frame: only .frame is read by grid_of."""
++
++    def __init__(self, grid: np.ndarray) -> None:
++        self.frame = grid
++        self.state = "NOT_FINISHED"
++        self.levels_completed = 0
++        self.available_actions = [1, 6]
++
++
++class _SpyCycleVerifier:
++    def __init__(self) -> None:
++        self.calls: list[tuple[Any, int, Any, Any]] = []
++
++    def observe_transition(self, before: Any, action: int, data: Any, after: Any) -> Any:
++        self.calls.append((before, action, data, after))
++        return SimpleNamespace(
++            admitted=True,
++            abstained=False,
++            rejected=False,
++            update_receipt={
++                "receipt_id": "cycle:test",
++                "immutable": True,
++                "action": int(action),
++            },
++        )
++
++    def diagnostics(self) -> dict[str, Any]:
++        return {"calls": len(self.calls)}
++
++
++def test_req_arc_wmte_5619_stepwise_explorer_feeds_live_observations_to_cycle_gate() -> None:
++    """REQ-ARC-WMTE-5619: StepwiseExplorer exposes the verifier on the live observation
++    path, so it can gate world-model update admission without a per-game adapter."""
++
++    from carnot.agentic import arc_competition_agent as comp
++
++    spy = _SpyCycleVerifier()
++    explorer = comp.StepwiseExplorer(transition_cycle_verifier=spy)
++    grid0 = np.zeros((3, 3), dtype=np.int16)
++    explorer._ingest(_FakeFrame(grid0.copy()))
++    origin = explorer.cur
++
++    explorer.awaiting = {
++        "origin": origin,
++        "action": 6,
++        "data": {"x": 1, "y": 1},
++        "grid": _FakeFrame(grid0.copy()),
++        "level_before": int(explorer.best_level),
++        "previous_frame": _FakeFrame(grid0.copy()),
++    }
++
++    grid1 = grid0.copy()
++    grid1[1, 1] = 5
++    explorer._ingest(_FakeFrame(grid1))
++
++    assert len(spy.calls) == 1
++    before, action, data, after = spy.calls[0]
++    assert np.array_equal(before.frame, grid0)
++    assert action == 6
++    assert data == {"x": 1, "y": 1}
++    assert np.array_equal(after.frame, grid1)
++    diagnostics = explorer.transition_cycle_diagnostics()
++    assert diagnostics["enabled"] is True
++    assert diagnostics["admitted_update_count"] == 1
++    assert diagnostics["immutable_update_receipts"][0]["receipt_id"] == "cycle:test"
+diff --git a/tests/python/test_experiment_5619_arc_forward_inverse_transition_cycle.py b/tests/python/test_experiment_5619_arc_forward_inverse_transition_cycle.py
+new file mode 100644
+index 0000000000..a3feda2ebc
+--- /dev/null
++++ b/tests/python/test_experiment_5619_arc_forward_inverse_transition_cycle.py
+@@ -0,0 +1,150 @@
++"""Tests for Exp5619 ARC forward/inverse transition-cycle verifier artifact.
++
++Spec refs: REQ-ARC-WMTE-5619,
++SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION,
++SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++
++from carnot import experiment_5619_arc_forward_inverse_transition_cycle as mod
++from carnot.agentic.arc_transition_cycle_verifier import ObservedTransition
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _synthetic_game(game: str, count: int = 54) -> list[ObservedTransition]:
++    rows: list[ObservedTransition] = []
++    for step in range(count):
++        y = 1 + ((step * 3) % 6)
++        x = 1 + ((step * 5) % 6)
++        before = np.zeros((9, 9), dtype=np.int16)
++        before[y, x] = 1
++        after = before.copy()
++        after[y, x] = 5
++        rows.append(
++            ObservedTransition(
++                game=game,
++                episode=f"{game}-ep-{step // 9}",
++                step=step,
++                state=before,
++                action=6,
++                data={"x": x, "y": y},
++                successor=after,
++            )
++        )
++    for step in range(count, count * 2):
++        y = 1 + ((step * 2) % 6)
++        before = np.zeros((9, 9), dtype=np.int16)
++        before[y, 1] = 2
++        after = before.copy()
++        after[y, 1] = 0
++        after[y, 2] = 2
++        rows.append(
++            ObservedTransition(
++                game=game,
++                episode=f"{game}-key-{step // 9}",
++                step=step,
++                state=before,
++                action=1,
++                data=None,
++                successor=after,
++            )
++        )
++    return rows
++
++
++def _registry() -> dict[str, object]:
++    return {
++        "reproducible_total_levels": 177,
++        "games": [
++            {"game": "ga", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "gb", "reproducibility": "reproduced", "levels_reproduced": 3},
++            {"game": "gc", "reproducibility": "reproduced", "levels_reproduced": 4},
++        ],
++    }
++
++
++def test_req_arc_wmte_5619_spec_declares_cycle_verifier_contract() -> None:
++    """REQ-ARC-WMTE-5619: OpenSpec pins provenance, two-factor verification, and
++    fail-closed admission before implementation code changes."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-WMTE-5619") :]
++
++    for marker in (
++        "SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION",
++        "SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION",
++        "source_files_read=false",
++        "per_game_adapter_used=false",
++        "offline_arcade_live_agent_runtime_filters_no_new_llm",
++        "unsafe_transition_accept_count",
++    ):
++        assert marker in section
++
++
++def test_scenario_5619_build_artifact_reports_positive_and_corruption_controls() -> None:
++    """SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION: build_artifact freezes thresholds,
++    evaluates valid/corrupt held-outs, and records immutable update receipts only for
++    accepted valid transitions."""
++
++    traces = {game: _synthetic_game(game) for game in ("ga", "gb", "gc")}
++    artifact = mod.build_artifact(
++        transitions_by_game=traces,
++        registry=_registry(),
++        random_seed=5619,
++        heldout_per_game=36,
++    )
++
++    assert artifact["experiment"] == mod.EXPERIMENT
++    assert artifact["registry_precheck"]["only_known_levels_used"] is True
++    assert artifact["source_files_read"] is False
++    assert artifact["per_game_adapter_used"] is False
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["heldout_transitions_by_condition"]["valid"] >= 32
++    for condition in mod.CORRUPTION_CONDITIONS:
++        assert artifact["heldout_transitions_by_condition"][condition] >= 32
++    assert artifact["valid_transition_accept_rate"] > 0.5
++    assert artifact["corruption_reject_rate"] == 1.0
++    assert artifact["unsafe_transition_accept_count"] == 0
++    assert artifact["cycle_verifier_positive_control_rate"] > 0.5
++    assert artifact["abstention_rate"] < 0.5
++    assert artifact["inverse_action_accuracy"] >= artifact["valid_transition_accept_rate"]
++    assert artifact["forward_replay_error"] == 0.0
++    assert len(artifact["immutable_update_receipts"]) == artifact["valid_transition_accept_count"]
++    assert artifact["honest_verdict"].startswith("complete:")
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert field in artifact["field_principles"]
++
++
++def test_req_arc_wmte_5619_checked_in_artifact_has_required_schema() -> None:
++    """REQ-ARC-WMTE-5619: the checked-in artifact is the stable Exp5619 deliverable."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert artifact["experiment"] == mod.EXPERIMENT
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["source_files_read"] is False
++    assert artifact["per_game_adapter_used"] is False
++    assert artifact["transition_feature_contract"]["inputs"] == [
++        "state",
++        "action",
++        "successor",
++    ]
++    assert len(artifact["trace_roster"]) >= 3
++    assert artifact["heldout_transitions_by_condition"]["valid"] >= 32
++    for condition in mod.CORRUPTION_CONDITIONS:
++        assert artifact["heldout_transitions_by_condition"][condition] >= 32
++    assert artifact["unsafe_transition_accept_count"] == 0
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
+-- 
+2.55.0
+

@@ -1,0 +1,1387 @@
+From 9a6a6d13c32e5bf8732c518a97c7e3969bce2987 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 13:57:13 -0400
+Subject: [PATCH 01015/11362] =?UTF-8?q?[conductor]=20OWED=20(twice)=20from?=
+ =?UTF-8?q?=20.365/.366:=20generalize=20the=20active-data=20->=20codex-pro?=
+ =?UTF-8?q?gram-synthesis=20->=20consistency-energy-verification=20pipelin?=
+ =?UTF-8?q?e=20across=20the=206=20NON-SPATIAL=20games=20(r11l,=20sc25,=20l?=
+ =?UTF-8?q?p85,=20tn36,=20dc22,=20su15).=20How=20many=20reach=20a=20TRUSTW?=
+ =?UTF-8?q?ORTHY=20world-model=20(held-out=20consistency=20energy=20<=3D?=
+ =?UTF-8?q?=200.15)=3F=20vc33=20reached=200.005=20from=20active=20data;=20?=
+ =?UTF-8?q?this=20measures=20whether=20that=20generalizes.=20Reuse=20scrip?=
+ =?UTF-8?q?ts/experiments/arc3=5Fm2=5Factive=5Fcodex.py=20(passive-vs-acti?=
+ =?UTF-8?q?ve=20codex=20synthesis)=20=E2=80=94=20extend=20it=20to=20the=20?=
+ =?UTF-8?q?6-game=20set=20and=20report=20a=20per-game=20trustworthy-model?=
+ =?UTF-8?q?=20table.=20This=20is=20the=20accuracy-side=20verifier-load-bea?=
+ =?UTF-8?q?ring=20measurement:=20the=20consistency=20energy=20CERTIFIES=20?=
+ =?UTF-8?q?which=20induced=20model=20is=20trustworthy,=20with=20no=20oracl?=
+ =?UTF-8?q?e.=20Reminder:=20energy=20certifies=20PREDICTION,=20not=20inter?=
+ =?UTF-8?q?pretation.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3968-active-codex-nonspatial-sweep
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2093_retro.json            |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  48 ++--
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ ...factual_hallucination_error_detection.json |   2 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ results/experiment_3843.json                  |   4 +-
+ ...nt_3968_active_codex_nonspatial_sweep.json | 259 ++++++++++++++++++
+ results/experiment_542_fover_expansion.json   |   8 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |  19 +-
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |  18 +-
+ 61 files changed, 400 insertions(+), 148 deletions(-)
+ create mode 100644 results/experiment_3968_active_codex_nonspatial_sweep.json
+
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 7d9cb3c714..16d8aeb486 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -334,5 +334,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 34d239a0a9..fab24dbbe3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 161,
+   "code_violations": 0,
+-  "experiments_checked": 3010,
++  "experiments_checked": 3011,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index af09a3567f..3e15421e69 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7770,5 +7770,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index bf55862e2c..baf2b5929a 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:04:59.778876+00:00",
+-  "finished_at": "2026-06-09T14:04:59.805263+00:00",
+-  "duration_s": 0.026,
++  "started_at": "2026-06-09T17:05:09.843723+00:00",
++  "finished_at": "2026-06-09T17:05:09.867175+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 983be73199..bd67d49970 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T14:04:59Z",
++  "run_date": "2026-06-09T17:05:10Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 86544ab928..1fbec878ea 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:05:00Z",
+-  "finished_at": "2026-06-09T14:05:01Z",
++  "started_at": "2026-06-09T17:05:10Z",
++  "finished_at": "2026-06-09T17:05:10Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 7437d852b2..d15114c3ae 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T14:05:01Z",
++  "run_date": "2026-06-09T17:05:11Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 3feb5a8348..d26bea4841 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-09T14:05:01Z",
++  "run_date": "2026-06-09T17:05:11Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 804683795e..8bc16bd4db 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-09T14:03:18.618738Z",
+-  "duration_s": 0.01029348373413086,
++  "run_date": "2026-06-09T17:03:19.345167Z",
++  "duration_s": 0.010154247283935547,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c5ff761824b361a4dc5f4f19ef770ae976e2ea12bbf63ae4a7dbba06bf6d47f7",
++  "reproducibility_checksum": "837b31afa112b9264f06782d8ef11336c2412024268d10c254da59df3e7fe74d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "789fcd0b962fa9f97d7da477487cd5a7d4bae561"
++    "adversarial_verify_version": "62e0db0bafbe28582e8db5b0eedbf39ef7ccc4f9"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 01b3480efe..390e251b84 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-09T14:05:29.666412Z",
+-  "duration_s": 24.51162886619568,
++  "run_date": "2026-06-09T17:05:36.086968Z",
++  "duration_s": 24.212225437164307,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 8e10a163b7..dd4ad8a35c 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-09T14:05:46.814665+00:00",
+-  "duration_s": 0.001672983169555664,
++  "run_date": "2026-06-09T17:05:53.198689+00:00",
++  "duration_s": 0.002820730209350586,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 4218902f7c..5d4ab638b6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-09T14:03:18.631921Z",
+-  "duration_s": 0.009989500045776367,
++  "run_date": "2026-06-09T17:03:19.358264Z",
++  "duration_s": 0.009613513946533203,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "140322ee21d80d69b7ac89be998f3580825c28f4c85965113635eaa91d35306e",
++  "reproducibility_checksum": "6a9226859104fe4009b56407a33ba9b361a4bede62ec6a227423808b73e7e11a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "789fcd0b962fa9f97d7da477487cd5a7d4bae561"
++    "adversarial_verify_version": "62e0db0bafbe28582e8db5b0eedbf39ef7ccc4f9"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 22d80f0dac..212163822e 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.57s, user: 2.32s, system: 0.16s, MEM: 115.86 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.32s, user: 2.10s, system: 0.16s, MEM: 115.86 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 75% 19x read_verilog (1 sec), 9% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index c7a8806eb0..252ae394ca 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.090827941894531,
++    "latency_ms": 10.121583938598633,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 179521c0e0..098c61e799 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,10 +243,5 @@
+         "success": true
+       }
+     }
+-  ],
+-  "corrigendum_2026_05_187_audit": {
+-    "classification": "METHODOLOGY_MISSING",
+-    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+-    "follow_up_action": "Add missing methodology fields."
+-  }
++  ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6949989f9a..0c1696fd26 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.109050750732422,
++  "efficiency_gains_ms": 2.1104812622070312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 8bdaa03791..b2ae82fa81 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-09T14:06:01.387824Z",
++  "run_date": "2026-06-09T17:06:08.880697Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index d927931697..8ab28d73d9 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00015387905295938253,
+-  "latency_domino_seconds": 0.0002660800237208605,
++  "latency_legacy_seconds": 0.00014144601300358772,
++  "latency_domino_seconds": 0.00026045902632176876,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 2dc4ad2416..1c275852e9 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:06:26Z",
+-  "finished_at": "2026-06-09T14:06:26Z",
++  "started_at": "2026-06-09T17:06:37Z",
++  "finished_at": "2026-06-09T17:06:37Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index e429296f24..264fb05b27 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.0007660388946533203,
++  "execution_time_s": 0.0013937950134277344,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 2fb556d0b1..56029c6e6d 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:07:05Z",
+-  "finished_at": "2026-06-09T14:07:06Z",
+-  "duration_s": 0.007,
++  "started_at": "2026-06-09T17:07:18Z",
++  "finished_at": "2026-06-09T17:07:18Z",
++  "duration_s": 0.011,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08153915405273438,
++  "latency_ms": 0.11444091796875,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index 3033729f78..7ce0443e9c 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -3,9 +3,9 @@
+   "schema": "carnot.milestone_retro.v1",
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+-  "run_date": "20260607",
+-  "started_at": "2026-06-07T23:22:14.952798+00:00",
+-  "finished_at": "2026-06-07T23:22:14.952801+00:00",
++  "run_date": "20260609",
++  "started_at": "2026-06-09T17:20:29.892566+00:00",
++  "finished_at": "2026-06-09T17:20:29.892569+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 235a40884c..15bd00798e 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0010056304931640625,
+-  "avg_eqm_time": 0.08403542518615723,
++  "avg_pem_time": 0.0008530759811401367,
++  "avg_eqm_time": 0.08477997303009033,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index c469c5f610..427c213937 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 305.3587079048157,
++  "duration_s": 369.2165172100067,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index 9968256254..d4596dc8fb 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.00629,
++  "duration_s": 0.000919,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index d1990bd883..25633fe253 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.001595,
++  "duration_s": 0.000185,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index eb0cabcae1..74612efc5b 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.03532719612121582,
++  "duration_s": 0.03131890296936035,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 0d01de85b1..ced14d6f2d 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-09T13:58:16Z",
++  "run_date": "2026-06-09T17:11:08Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 46820a39e0..8ecd2a7f3c 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000108480453491,
++  "duration_s": 5.000083684921265,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 7884d8ad48..e90f80ffc3 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.00007700920105,
++  "duration_s": 10.000117540359497,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 98a3da10e7..e8e4c1a750 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.34226536750793457,
++  "duration_s": 0.32571959495544434,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index d7668e9a20..2abbec702f 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.07813320902641863,
++  "duration_s": 0.04672778298845515,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 1cb3640394..305d76de8c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,10 +1,10 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -13,8 +13,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,11 +23,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -45,20 +45,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,17 +67,17 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_specific",
+-    "tier_transfer"
++    "tier_transfer",
++    "tier_specific"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index c76530d1be..9ed82927f1 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008723735809326172,
++  "duration_s": 0.0009548664093017578,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 97c23fc5b8..1fe7f21721 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.613902324810624e-05,
++  "duration_s": 3.067700890824199e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 0265665852..8fc107df41 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 1.0220101103186607e-06,
++  "duration_s": 5.709589459002018e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index d573e8dba8..8fa56a4a44 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 8.511543273925781e-05,
++  "duration_s": 7.295608520507812e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index f421c34c9c..453d2f9f4b 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 21.86300778388977, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 21.98085594177246, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 257c1e0248..8abc49d933 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.009356313828378916,
++  "nonforgetting_metric_random": 0.008280723944306373,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index cdc2febdfa..a3ef4f97d5 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:05:58Z",
+-  "finished_at": "2026-06-09T14:05:58Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-09T17:06:11Z",
++  "finished_at": "2026-06-09T17:06:11Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index 57f168346a..1d24e70ab2 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 21.413201808929443, "autoregressive_time_to_solution": 321.19802713394165, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 20.165374279022217, "autoregressive_time_to_solution": 302.48061418533325, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 9256942ea6..2a25784328 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 9.16720018722117e-05,
++  "duration_s": 0.00010540796210989356,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-09T14:06:46Z",
++  "generated_at": "2026-06-09T17:06:59Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 7d8cca1190..8fe8e49135 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-09T14:06:46Z
++experiment_3420 started_at=2026-06-09T17:06:59Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 4438427cc2..9c4f55b5ca 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.06659955100622028,
++  "duration_s": 0.059123845014255494,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 266c438c0f..e66c5f4127 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.011022567749023438
++  "duration_s": 0.009804248809814453
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index 7e9d831dc3..76cc6eeafa 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "942fc28b99b35c8f0c0bd28ebecf237c3f8213257dbd26b9900b69ccc3e25aab"
++    "23dd1e8640703fa4f88aa5d5b18e35d3c3a501855e49783f35588358ecff6e49"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00020051002502441406
++  "duration_s": 0.0001857280731201172
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index fc7a293f51..5176496adf 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.0948786735534668,
+-  "reproducibility_checksum": "c9285e6db3d204baca68719a2d859128"
++  "duration_s": 0.08070039749145508,
++  "reproducibility_checksum": "f1031d60aec8af818708bba35892da8a"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index 914ab45344..f7aa1fd965 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.0003695487976074219
++  "duration_s": 0.0003113746643066406
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 9e1ae1c944..2e4ee4dacb 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 2.3788256645202637,
+-  "reproducibility_checksum": "c1f5bcba085ba0ba21f19777ae57840529eb58b21cfadfdc7b5e9961cf3a74be"
++  "duration_s": 2.163228750228882,
++  "reproducibility_checksum": "d0e8087029649cf01b3ba24d3a9de044290076810f2c23125497e878efa98b4c"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index de4b6a1795..392c4437ad 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-09",
+-  "started_at": "2026-06-09T13:50:35.523043+00:00",
+-  "finished_at": "2026-06-09T13:50:35.523043+00:00",
++  "started_at": "2026-06-09T17:05:18.448895+00:00",
++  "finished_at": "2026-06-09T17:05:18.448895+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000119209289551
++  "duration_s": 0.10000095367431641
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 5f4c8dacd9..48a26719d9 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.005625009536743164,
+-  "reproducibility_checksum": "2241b891c3e4a9ef9b9873e2a878c64f61ae077ee7d1ea97a17d527fba9e445f"
++  "duration_s": 0.004080772399902344,
++  "reproducibility_checksum": "1b0ae287b50bb78d0ee423e10fe7f3d3cb52932e304ca2032fc5c2f08d70fdc4"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index 5b14570480..07153bf216 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.025196313858032227,
++  "duration_s": 0.026998043060302734,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "716fc656d4a37116db028fb4c2550d031bfbb9c59068bfbf2cf292444b7af7f7"
++  "reproducibility_checksum": "be1fb298cd28e7f383cda188b82d45d98667f4631790db62284905a99a9bb837"
+ }
+diff --git a/results/experiment_3968_active_codex_nonspatial_sweep.json b/results/experiment_3968_active_codex_nonspatial_sweep.json
+new file mode 100644
+index 0000000000..d257e6d297
+--- /dev/null
++++ b/results/experiment_3968_active_codex_nonspatial_sweep.json
+@@ -0,0 +1,259 @@
++{
++  "caveat": "Consistency energy certifies that the synthesized program predicts transitions on held-out data; it does not certify that the mechanic interpretation is correctly named. Report energy as the trustworthiness signal.",
++  "duration_s": 1082.4,
++  "episodes": 32,
++  "experiment": "experiment_3968_active_codex_nonspatial_sweep",
++  "games": [
++    "r11l",
++    "sc25",
++    "lp85",
++    "tn36",
++    "dc22",
++    "su15"
++  ],
++  "games_evaluated": [
++    "dc22",
++    "lp85",
++    "r11l",
++    "sc25",
++    "su15",
++    "tn36"
++  ],
++  "honest_verdict": "complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6",
++  "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
++  "iters": 3,
++  "markov_vs_hidden_split": {
++    "determinism_probe_hidden_state": [
++      "dc22",
++      "sc25"
++    ],
++    "determinism_probe_markov": [
++      "lp85",
++      "r11l",
++      "su15",
++      "tn36"
++    ],
++    "energy_high_or_missing": [
++      "dc22",
++      "lp85",
++      "r11l",
++      "sc25",
++      "su15",
++      "tn36"
++    ],
++    "energy_trustworthy_low": [],
++    "note": "The determinism split comes from results/arc3_determinism_probe.json. The energy split certifies held-out prediction trustworthiness, not whether the mechanic has been correctly named."
++  },
++  "n_games": 6,
++  "n_trustworthy_at_0.15": 0,
++  "no_gpu_used": true,
++  "per_game": [
++    {
++      "best_energy": 0.7616,
++      "codex_calls": 3,
++      "codex_seconds": 100.9,
++      "determinism_probe_hidden_state": true,
++      "diff_from_vc33_0.005": 0.7566,
++      "game": "dc22",
++      "history": [
++        {
++          "codex_s": 34.6,
++          "iter": 0,
++          "status": "unsafe_or_uncompilable"
++        },
++        {
++          "codex_s": 31.0,
++          "energy": 0.7616,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 35.3,
++          "energy": 0.8655,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 600,
++      "trustworthy": false
++    },
++    {
++      "best_energy": 0.7996,
++      "codex_calls": 3,
++      "codex_seconds": 155.8,
++      "determinism_probe_hidden_state": false,
++      "diff_from_vc33_0.005": 0.7946,
++      "game": "lp85",
++      "history": [
++        {
++          "codex_s": 74.1,
++          "energy": 1.0,
++          "iter": 0,
++          "status": "graded"
++        },
++        {
++          "codex_s": 41.3,
++          "energy": 1.0,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 40.4,
++          "energy": 0.7996,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 35,
++      "trustworthy": false
++    },
++    {
++      "best_energy": 0.7752,
++      "codex_calls": 3,
++      "codex_seconds": 193.1,
++      "determinism_probe_hidden_state": false,
++      "diff_from_vc33_0.005": 0.7702,
++      "game": "r11l",
++      "history": [
++        {
++          "codex_s": 39.8,
++          "energy": 0.9057,
++          "iter": 0,
++          "status": "graded"
++        },
++        {
++          "codex_s": 42.0,
++          "energy": 0.8721,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 111.3,
++          "energy": 0.7752,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 600,
++      "trustworthy": false
++    },
++    {
++      "best_energy": 0.6155,
++      "codex_calls": 3,
++      "codex_seconds": 204.7,
++      "determinism_probe_hidden_state": true,
++      "diff_from_vc33_0.005": 0.6105,
++      "game": "sc25",
++      "history": [
++        {
++          "codex_s": 98.8,
++          "energy": 0.9151,
++          "iter": 0,
++          "status": "graded"
++        },
++        {
++          "codex_s": 55.4,
++          "energy": 0.6155,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 50.5,
++          "energy": 0.6889,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 200,
++      "trustworthy": false
++    },
++    {
++      "best_energy": 0.214,
++      "codex_calls": 3,
++      "codex_seconds": 267.4,
++      "determinism_probe_hidden_state": false,
++      "diff_from_vc33_0.005": 0.209,
++      "game": "su15",
++      "history": [
++        {
++          "codex_s": 127.9,
++          "energy": 0.214,
++          "iter": 0,
++          "status": "graded"
++        },
++        {
++          "codex_s": 93.5,
++          "energy": 0.8933,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 46.0,
++          "energy": 0.2649,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 600,
++      "trustworthy": false
++    },
++    {
++      "best_energy": 0.2359,
++      "codex_calls": 3,
++      "codex_seconds": 95.9,
++      "determinism_probe_hidden_state": false,
++      "diff_from_vc33_0.005": 0.2309,
++      "game": "tn36",
++      "history": [
++        {
++          "codex_s": 25.7,
++          "energy": 0.2359,
++          "iter": 0,
++          "status": "graded"
++        },
++        {
++          "codex_s": 32.6,
++          "energy": 0.2459,
++          "iter": 1,
++          "status": "graded"
++        },
++        {
++          "codex_s": 37.6,
++          "energy": 0.249,
++          "iter": 2,
++          "status": "graded"
++        }
++      ],
++      "n_active": 899,
++      "n_test": 600,
++      "trustworthy": false
++    }
++  ],
++  "per_game_best_energy": {
++    "dc22": 0.7616,
++    "lp85": 0.7996,
++    "r11l": 0.7752,
++    "sc25": 0.6155,
++    "su15": 0.214,
++    "tn36": 0.2359
++  },
++  "random_seed": 0,
++  "source_artifacts": [
++    "results/arc3_m2_active_codex.json",
++    "results/arc3_win_condition_survey.json",
++    "results/arc3_determinism_probe.json"
++  ],
++  "submitted_to_leaderboard": false,
++  "test_budget": 1400,
++  "title": "active_data_codex_nonspatial_sweep_reattempt",
++  "total_codex_calls": 18,
++  "total_codex_seconds": 1017.8,
++  "train_budget": 900,
++  "trust_threshold": 0.15,
++  "vc33_baseline_energy": 0.005
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 7e19e52539..546e3f9421 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+-  "run_date": "20260607",
+-  "started_at": "2026-06-07T23:30:25Z",
+-  "finished_at": "2026-06-07T23:30:25Z",
+-  "duration_s": 0.002,
++  "run_date": "20260609",
++  "started_at": "2026-06-09T17:30:36Z",
++  "finished_at": "2026-06-09T17:30:36Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 89fa4a600d..5f6ec53f5d 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:03:09Z",
+-  "finished_at": "2026-06-09T14:03:10Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-09T17:28:00Z",
++  "finished_at": "2026-06-09T17:28:00Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f3df8c05b7..e35e478ff1 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:03:10Z",
+-  "finished_at": "2026-06-09T14:03:10Z",
++  "started_at": "2026-06-09T17:28:00Z",
++  "finished_at": "2026-06-09T17:28:00Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index ba2096297d..6cc86bb9e9 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T14:03:10Z",
+-  "finished_at": "2026-06-09T14:03:10Z",
++  "started_at": "2026-06-09T17:28:00Z",
++  "finished_at": "2026-06-09T17:28:00Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index cc8c277453..ae35294268 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+-  "run_date": "20260607",
+-  "started_at": "2026-06-07T23:17:50Z",
+-  "finished_at": "2026-06-07T23:17:50Z",
+-  "duration_s": 0.003,
++  "run_date": "20260609",
++  "started_at": "2026-06-09T17:12:52Z",
++  "finished_at": "2026-06-09T17:12:53Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -100,14 +100,5 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": [],
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "invariant_violations": []
+ }
+\ No newline at end of file
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index 801b042d23..811a1ebd3a 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T13:56:57Z",
+-  "finished_at": "2026-06-09T13:56:59Z",
+-  "duration_s": 1.528,
++  "started_at": "2026-06-09T17:11:10Z",
++  "finished_at": "2026-06-09T17:11:11Z",
++  "duration_s": 0.972,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index 49e48e15b0..deb33cb224 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -2,9 +2,9 @@
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T13:58:28Z",
+-  "finished_at": "2026-06-09T13:58:29Z",
+-  "duration_s": 0.098,
++  "started_at": "2026-06-09T17:12:29Z",
++  "finished_at": "2026-06-09T17:12:30Z",
++  "duration_s": 0.087,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index 7181811eb8..7f2f69bbd1 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -2,14 +2,14 @@
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T13:58:36Z",
+-  "finished_at": "2026-06-09T13:58:36Z",
+-  "duration_s": 0.244,
++  "started_at": "2026-06-09T17:12:37Z",
++  "finished_at": "2026-06-09T17:12:37Z",
++  "duration_s": 0.2,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.925,
++  "ood_auc_drift": 0.92,
+   "honest_verdict": "tier0i_viable",
+   "inference_mode": "synthetic_runner",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.0068735419772565365,
+-  "mean_halluc_drift": 0.4756998121738434,
++  "mean_correct_drift": 0.006845541764050722,
++  "mean_halluc_drift": 0.47394904494285583,
+   "probe_coef": [
+     [
+-      1.7778620777095608,
+-      2.271817424903099,
+-      2.6215524058954887
++      1.8035060875422584,
++      2.2706930486810086,
++      2.6177885652427917
+     ]
+   ],
+   "decision_class": "detect",
+-- 
+2.55.0
+

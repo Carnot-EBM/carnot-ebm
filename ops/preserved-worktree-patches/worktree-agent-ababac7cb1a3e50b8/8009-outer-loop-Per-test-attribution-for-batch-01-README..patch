@@ -1,0 +1,108 @@
+From 265c1d3a671666b60aa5bbd33542d942582d008f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 06:42:34 -0400
+Subject: [PATCH 08009/11362] [outer-loop] Per-test attribution for batch 01:
+ README.md is rewritten by a test that says so in its own name
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Docs only, no code change. The audit-hook plugin attributes 13 of batch 01's 16 moved files to an
+exact test node.
+
+README.md — CLAUDE.md's Public Documentation Discipline lists it as operator-curated and forbids the
+autonomous loop from editing it — is rewritten by
+tests/python/test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels
+(plus 3 siblings, and test_experiment_1931_hf_publisher.py::test_success_upload and
+test_experiment_1750.py::{blocked,success}). A PASSING test does it on every suite run, and the
+hazard commit's list of 39 did not include README.md at all. The same batch attributes
+openspec/papers/paper-v6/section-6-limitations.md to test_experiment_1911.py::test_experiment_1911_schema.
+
+INSTRUMENT LIMIT, RECORDED RATHER THAN PAPERED OVER. Three of the 16 are UNATTRIBUTED:
+output/kanele_synth/post_synth.dcp, results/experiment_1822_rtl_synth.log, and
+results/experiment_2510_ensemble_v7.json. A CPython audit hook only observes writes from the process
+it is installed in, so a script that shells out to Vivado or yosys writes from a CHILD process it
+never sees. Those files show up in git status (hence in the batch total) but cannot be attributed
+per-test by this instrument. Subprocess writers are a separate class needing a different tool —
+strace/fanotify, or wrapping subprocess.run — and anyone extending this survey should know that
+before trusting an "unattributed" row.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...e-rewrites-the-record-survey-2026-07-29.md | 31 +++++++++++++++++++
+ ops/known-issues.md                           | 16 ++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+index 9b6eeed748..de0ccdcbf7 100644
+--- a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
++++ b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+@@ -154,6 +154,37 @@ was written — stated rather than rounded up):**
+ | `expbatch_02` | 250 | 3 |
+ | **so far** | **750** | **25** |
+ 
++**Batch 01, attributed per test** (the audit-hook plugin, merged across xdist workers):
++
++| test node | file rewritten |
++|---|---|
++| `test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels` (+3 siblings, and `test_experiment_1931_hf_publisher.py::test_success_upload`, `test_experiment_1750.py::{test_experiment_1750_blocked,_success}`) | **`README.md`** |
++| `test_experiment_1911.py::test_experiment_1911_schema` | `openspec/papers/paper-v6/section-6-limitations.md`, `results/experiment_1911_phase4_canonical_decision.json` |
++| `test_experiment_1747_diagnostic.py::test_main` | `results/experiment_1747_ebt_mode_collapse_check.json` |
++| `test_experiment_1750.py::{test_experiment_1750_blocked,test_experiment_1750_success}` | `results/experiment_1750_huggingface_retry.json` |
++| `test_experiment_1938_nrgpt_loss_probe.py::test_experiment_1938_nrgpt_loss_probe` | `results/experiment_1938_nrgpt_loss_probe.json` |
++| `test_experiment_1970_domino_fast_constraints.py::test_domino_fast_constraints` | `results/experiment_1970_domino_fast_constraints.json` |
++| `test_experiment_2085_pem_sudoku_eval.py::test_run_experiment` | `results/experiment_2085_pem_sudoku_eval.json` |
++| `test_experiment_2090_crane_humaneval.py::test_main` | `results/experiment_2090_crane_humaneval.json` |
++| `test_experiment_2097.py::test_experiment_2097_evaluates_eqm_vs_pem` | `results/experiment_2097_eqm_eval.json` |
++| `test_experiment_2521_ensemble_v7.py::test_run_experiment_creates_deliverable` | `results/experiment_2521_ensemble_v7.json` |
++| `test_experiment_2538_kv260_sd_flash.py::test_experiment_2538_produces_valid_artifact` | `results/experiment_2538_kv260_sd_flash.json` |
++| *(unattributed — see below)* | `output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`, `results/experiment_2510_ensemble_v7.json` |
++
++**`README.md` is rewritten by a test that says so in its own name.**
++`test_run_cleanup_rewrites_public_docs_with_provenance_labels` runs `experiment_209_cleanup`'s
++public-docs rewriter against the live `README.md`. CLAUDE.md's Public Documentation Discipline lists
++`README.md` as operator-curated and forbids the autonomous loop from editing it; a passing test does
++it on every suite run. The hazard commit's list of 39 did not include it.
++
++**Three files are unattributed, and that is a stated limit of the instrument, not an oversight.** A
++CPython audit hook only sees writes made by the Python process it is installed in. A script that
++shells out — Vivado for `output/kanele_synth/post_synth.dcp`, yosys for
++`results/experiment_1822_rtl_synth.log` — writes from a CHILD process the hook never observes. Those
++three are visible to `git status` (which is why they appear in the batch total) but not to per-test
++attribution. Anyone extending this survey should treat subprocess writers as a separate class
++requiring a different instrument (e.g. an `strace`/`fanotify` layer, or wrapping `subprocess.run`).
++
+ Batch 01's 16 include the two NON-`results/` files from the original hazard —
+ `openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp` — and
+ one the hazard commit did not list at all: **`README.md`**, which CLAUDE.md's Public Documentation
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index c9265ab466..f6ee9c2126 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -42,6 +42,22 @@ tracked artifacts, and **none of the six responsible tests uses `runpy`** — ea
+ `main()`/`run_experiment()` — versus 125 that call `runpy.run_path` at all, and only 20 that point it
+ at an experiment script. The class is orders of magnitude larger than the hazard commit's estimate.
+ 
++**README.md IS IN THE BLAST RADIUS, AND THE TEST SAYS SO IN ITS OWN NAME.** Per-test attribution of
++batch 01 names `tests/python/test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels`
++(plus 3 siblings, and `test_experiment_1931_hf_publisher.py::test_success_upload`,
++`test_experiment_1750.py::{blocked,success}`) as rewriters of the live **`README.md`**. CLAUDE.md's
++Public Documentation Discipline lists README.md as operator-curated and forbids autonomous-loop
++edits; a PASSING test does it on every suite run, and the hazard commit's list of 39 did not include
++it. Same batch also attributes `openspec/papers/paper-v6/section-6-limitations.md` to
++`test_experiment_1911.py::test_experiment_1911_schema`.
++
++**INSTRUMENT LIMIT, STATED.** Three of batch 01's 16 are UNATTRIBUTED
++(`output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`,
++`results/experiment_2510_ensemble_v7.json`). A CPython audit hook only sees writes from the process
++it is installed in, so a script that shells out to Vivado or yosys writes from a CHILD process the
++hook never observes. Those files are visible to `git status` but not to per-test attribution.
++Subprocess writers are a separate class needing a different instrument.
++
+ **A WORSE, SEPARATE FINDING — 94 scripts write to a HARDCODED ABSOLUTE PATH.** Midway through the
+ survey the canonical repo went dirty on its own: `results/experiment_3734_fix_harness_and_bounded_train_chunk1.json`
+ lost `flagged_adversarial: true`, its `corrigendum_pending`/`corrigendum_note`, AND the hand-written
+-- 
+2.55.0
+

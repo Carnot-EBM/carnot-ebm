@@ -1,0 +1,43 @@
+From b8275eb18997df1093d62f7716899af14167d247 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 16:09:36 -0400
+Subject: [PATCH 08467/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 31d9442437..befa77281f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 96, "phase": "iteration_start", "last_beat": "2026-08-07T19:35:37Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 97, "phase": "iteration_start", "last_beat": "2026-08-07T20:09:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c22b5a4b5a..bd1ece525b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15475,3 +15475,4 @@ Still active  |
+ | 2026-08-07 18:08 UTC | Plan milestone 2026.08.537 | OK | 14 tasks proposed |
+ | 2026-08-07 18:10 UTC | Milestone 2026.08.537 activated | OK | 14 tasks queued |
+ | 2026-08-07 19:33 UTC | Fail-closed terminal-artifact contract after V536  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ef test_req_in |
++| 2026-08-07 20:07 UTC | Fail-closed terminal-artifact contract after V536  | OK | 93 passed, 1 warning in 8.40s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c38f004ab4..d006ff681f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 96, "phase": "iteration_start", "started_at": "2026-08-07T19:35:37Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 97, "phase": "iteration_start", "started_at": "2026-08-07T20:09:33Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

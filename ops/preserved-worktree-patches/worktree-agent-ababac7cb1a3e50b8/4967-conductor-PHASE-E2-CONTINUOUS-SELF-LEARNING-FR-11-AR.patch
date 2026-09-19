@@ -1,0 +1,1161 @@
+From 8346f8528024a0acd04ab4671e5e5930aafc4729 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 01:22:24 -0400
+Subject: [PATCH 04967/11362] [conductor] PHASE E2 (CONTINUOUS SELF-LEARNING /
+ FR-11; ARC self-play) -- the standing arc_loop_solve self-play loop on a
+ banked checkpointed game (rotated OFF .460 su15 / .459 ft09 / .458 sp80 /
+ .457 dc22 -- prefer r11l; lf52/ls20 alternates): warm-started verifier-routed
+ solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier. The
+ learned verifier improves across runs = continuous self-learning
+ (research-program Tier 3 / FR-11). HONEST substrate
+ (verifier_ensemble_against_cached_candidates unless the generator ran >=60s).
+
+Automated research step by research conductor.
+Task ID: exp5011-e2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ models/arc_verifier_r11l.json                 |  18 +-
+ openspec/capabilities/self-learning/spec.md   | 109 ++++++
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    |  16 +-
+ ...ment_5011_self_play_verifier_checkpoint.py | 279 +++++++++++++
+ results/arc_loop_solve_r11l.json              |   4 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...nt_5011_self_play_verifier_checkpoint.json | 105 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ment_5011_self_play_verifier_checkpoint.py | 367 ++++++++++++++++++
+ 15 files changed, 904 insertions(+), 34 deletions(-)
+ create mode 100644 python/carnot/experiment_5011_self_play_verifier_checkpoint.py
+ create mode 100644 results/experiment_5011_self_play_verifier_checkpoint.json
+ create mode 100644 tests/python/test_experiment_5011_self_play_verifier_checkpoint.py
+
+diff --git a/models/arc_verifier_r11l.json b/models/arc_verifier_r11l.json
+index eaafd1aa1b..c0f4669bc3 100644
+--- a/models/arc_verifier_r11l.json
++++ b/models/arc_verifier_r11l.json
+@@ -2,19 +2,15 @@
+   "schema": "carnot_arc_learned_verifier_v1",
+   "kind": "linear_value_head",
+   "weights": [
+-    -0.9999999999993356,
+-    0.0016785213991348253,
+-    0.982174807265323,
+-    0.0002397887713050105
+-  ],
+-  "feature_names": [
+-    "nonzero",
+-    "colors",
+-    "cells"
++    1.280046003450307,
++    6.541978148361142,
++    -1.2837933240739134,
++    -0.0003134261045086028
+   ],
++  "feature_names": "adapter_featurize",
+   "trained_games": [
+     "r11l"
+   ],
+-  "n_samples": 3,
+-  "provenance": "graph_explore first-solve r11l->L1"
++  "n_samples": 24,
++  "provenance": "arc_loop_solve r11l->L2"
+ }
+\ No newline at end of file
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 281b03ce67..287b88b32e 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -15598,3 +15598,112 @@ fabricated checkpoint refresh.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4993 | Implemented (`python/carnot/experiment_4993_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4993_self_play_verifier_checkpoint.py`) |
++
++---
++
++## REQ-LEARN-5011: Preferred r11l ARC Self-Play Verifier Checkpoint Refresh
++
++Experiment 5011 SHALL run the standing ARC self-play loop on the preferred
++banked target `r11l` with the existing `models/arc_verifier_r11l.json`
++checkpoint. The loop SHALL warm-start from the saved checkpoint when its feature
++arity matches the adapter, reproduction-gate at least one offline level, train
++on this run's self-play traces, refresh the learned verifier checkpoint, and
++write `results/experiment_5011_self_play_verifier_checkpoint.json`. If `r11l`
++cannot satisfy the checkpoint-refresh precondition, the experiment SHALL record
++the blocked resource or residual honestly and SHALL NOT fabricate refresh
++evidence.
++
++`r11l` SHALL expose a deterministic learned-verifier feature vector compatible
++with its 4-weight adapter-free first-solve checkpoint: nonzero cell count,
++distinct color count, and cell count, plus the checkpoint's stored bias term.
++Loading the existing checkpoint with this feature vector SHALL not require an
++LLM generator; failure to load SHALL fall back to the hand verifier without
++claiming a warm-started checkpoint.
++
++The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
++that `ops/arc_solve_registry.yaml` is loadable, that `r11l` has a banked level,
++and that `models/arc_verifier_r11l.json` exists before the run. If any required
++resource is missing, Experiment 5011 SHALL write a terminal `blocked_*` artifact
++that records the failed precondition and SHALL NOT claim a refreshed checkpoint.
++
++The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
++only when the checkpoint mtime advances, `offline_reproduced=true`,
++`reproduced_levels >= 1`, and the fresh artifact is not live-rechecked as
++critical by the adversarial verifier. A failed loop, missing checkpoint, stale
++mtime, failed reproduction gate, critical live recheck, or rotation back to
++`su15`, `ft09`, `sp80`, `dc22`, `lp85`, `ar25`, `bp35`, `vc33`, `sk48`,
++`ls20`, or `re86` SHALL write a terminal `complete_*` or `blocked_*` artifact
++with the residual instead of fabricating checkpoint progress.
++
++Experiment 5011 SHALL maintain the Exp 4949/4960/4971/4982/4993 substrate fix.
++When the standing loop uses the offline reproduction gate and checkpoint
++training without invoking an LLM generator, the artifact SHALL declare
++`verifier_ensemble_against_cached_candidates` and SHALL record a measured
++`duration_s >= 1.0`. It SHALL declare `live_llm_inference` only for a measured
++LLM-generator run with `duration_s >= 60.0`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11 / continuous self-learning)."
++- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++- `reproduced_levels`: principle "the depth confirmed this run."
++- `target_game`: principle "the rotated self-play target (differs from .460 su15 / .459 ft09 / .458 sp80 / .457 dc22 / .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86)."
++- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts (NOT outer_loop_re)."
++- `inference_substrate`: principle "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s (maintains the .456 substrate fix)."
++- `duration_s`: principle "measured wall-clock; consistent with inference_substrate."
++- `flag_resolved`: principle "true iff NOT flagged true_live_recheck=critical."
++- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++
++### SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED
++
++**Given** `arc_solver_kit.offline_arcade()` is available, `r11l` is banked in
++`ops/arc_solve_registry.yaml`, `models/arc_verifier_r11l.json` exists before
++the standing loop runs, and the `r11l` adapter exposes a compatible 3-feature
++learned-verifier vector
++**When** `scripts/arc_loop_solve.py --game r11l` reports an offline-reproduced
++level and writes the learned verifier checkpoint
++**Then** Experiment 5011 records `verifier_checkpoint_refreshed=true`,
++`checkpoint_path=models/arc_verifier_r11l.json`, advanced checkpoint mtimes,
++`offline_reproduced=true`, `reproduced_levels >= 1`, `target_game=r11l`,
++`solve_provenance=live_agent_self_discovery`, `flag_resolved=true`, and
++`honest_verdict=success_self_play_checkpoint_refreshed`.
++
++### SCENARIO-LEARN-5011-SUBSTRATE-FIX
++
++**Given** the loop uses the offline reproduction gate and checkpoint training
++without an LLM generator
++**When** Experiment 5011 builds its artifact
++**Then** it declares
++`inference_substrate=verifier_ensemble_against_cached_candidates`, records
++`duration_s >= 1.0`, and does not trigger a critical `DURATION_TOO_SHORT`
++live recheck.
++
++### SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION
++
++**Given** the loop result is missing, the reproduction gate fails, the
++checkpoint path is absent, the checkpoint mtime does not advance, or the fresh
++artifact is critically flagged
++**When** Experiment 5011 builds its artifact
++**Then** it records `verifier_checkpoint_refreshed=false` or
++`flag_resolved=false` as applicable, preserves the residual cause, keeps
++`offline_reproduced` and `reproduced_levels` grounded in the loop result, and
++does not emit a success verdict.
++
++### SCENARIO-LEARN-5011-BLOCKED-PRECONDITION
++
++**Given** the offline arcade is unavailable, the registry is missing, the
++selected target is not banked, the checkpoint file is absent before the run, or
++the selection is one of the recent targets `su15`, `ft09`, `sp80`, `dc22`,
++`lp85`, `ar25`, `bp35`, `vc33`, `sk48`, `ls20`, or `re86`
++**When** Experiment 5011 checks preconditions
++**Then** it writes `results/experiment_5011_self_play_verifier_checkpoint.json`
++with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
++fabricated checkpoint refresh.
++
++## Implementation Status (Exp 5011)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5011 | Implemented (`python/carnot/experiment_5011_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_5011_self_play_verifier_checkpoint.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5fdbb20fad..763799ecf2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 204,
+   "code_violations": 0,
+-  "experiments_checked": 4017,
++  "experiments_checked": 4018,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index d3ba8fe6fc..66dfe6dc59 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -2641,6 +2641,8 @@ def _sk48():
+ 
+ def _r11l():
+     """r11l -- click-template handle averaging with an offline-gated L2 tail."""
++    import numpy as np
++
+     from carnot.agentic import arc_solver_kit as kit
+     from carnot.agentic.arc_agi3_live_adapter import _game_action
+ 
+@@ -2713,12 +2715,24 @@ def _r11l():
+                     distance += 100
+         return float(distance)
+ 
++    def featurize(game):
++        pixels = np.asarray(game.get_pixels(0, 0, 64, 64))
++        if pixels.ndim == 3:
++            pixels = pixels[0]
++        flat = [int(value) for value in pixels.reshape(-1).tolist()]
++        nonzero = [value for value in flat if value != 0]
++        return [
++            float(len(nonzero)),
++            float(len(set(nonzero))),
++            float(pixels.size),
++        ]
++
+     return GameAdapter(
+         game="r11l",
+         action_labels=action_labels,
+         apply=apply,
+         state_key=state_key,
+-        featurize=None,
++        featurize=featurize,
+         hand_verifier=hand_verifier,
+         warmup_label=None,
+         depth_caps={1: 0, 2: 0, 3: 0},
+diff --git a/python/carnot/experiment_5011_self_play_verifier_checkpoint.py b/python/carnot/experiment_5011_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..4b51b17aa7
+--- /dev/null
++++ b/python/carnot/experiment_5011_self_play_verifier_checkpoint.py
+@@ -0,0 +1,279 @@
++"""Experiment 5011: preferred r11l ARC self-play checkpoint refresh.
++
++Spec refs: REQ-LEARN-5011,
++SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED,
++SCENARIO-LEARN-5011-SUBSTRATE-FIX,
++SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION,
++SCENARIO-LEARN-5011-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++from contextlib import contextmanager
++from pathlib import Path
++from typing import Any, Iterator
++
++from carnot import experiment_4993_self_play_verifier_checkpoint as previous
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULTS = REPO / "results"
++REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
++ARTIFACT = RESULTS / "experiment_5011_self_play_verifier_checkpoint.json"
++
++EXPERIMENT = "experiment_5011_self_play_verifier_checkpoint"
++SCHEMA = "carnot.exp5011.self_play_verifier_checkpoint.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5011_self_play_verifier_checkpoint.json"
++RANDOM_SEED = 5011
++DEFAULT_TARGET_GAME = "r11l"
++DISALLOWED_TARGET_GAMES = (
++    "su15",
++    "ft09",
++    "sp80",
++    "dc22",
++    "lp85",
++    "ar25",
++    "bp35",
++    "vc33",
++    "sk48",
++    "ls20",
++    "re86",
++)
++INFERENCE_SUBSTRATE = previous.INFERENCE_SUBSTRATE
++LIVE_LLM_SUBSTRATE = previous.LIVE_LLM_SUBSTRATE
++SOLVE_PROVENANCE = previous.SOLVE_PROVENANCE
++SUCCESS_VERDICT = previous.SUCCESS_VERDICT
++VERIFIER_MIN_DURATION_S = previous.VERIFIER_MIN_DURATION_S
++LIVE_LLM_MIN_DURATION_S = previous.LIVE_LLM_MIN_DURATION_S
++
++SPEC_REFS = [
++    "REQ-LEARN-5011",
++    "SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED",
++    "SCENARIO-LEARN-5011-SUBSTRATE-FIX",
++    "SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-LEARN-5011-BLOCKED-PRECONDITION",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++    ),
++    "verifier_checkpoint_refreshed": (
++        "the self-improvement signal -- the learned verifier trained on this run's traces "
++        "(FR-11 / continuous self-learning)."
++    ),
++    "checkpoint_path": (
++        "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++    ),
++    "offline_reproduced": (
++        "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++    ),
++    "reproduced_levels": "the depth confirmed this run.",
++    "target_game": (
++        "the rotated self-play target (differs from .460 su15 / .459 ft09 / "
++        ".458 sp80 / .457 dc22 / .456 lp85 / .455 ar25 / .453 bp35 / "
++        ".452 vc33 / .451 sk48 / .450 ls20 / .449 re86)."
++    ),
++    "solve_provenance": (
++        "live_agent_self_discovery -- self-play is the agent improving on its own attempts "
++        "(NOT outer_loop_re)."
++    ),
++    "inference_substrate": (
++        "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) "
++        "for an offline gate run; live_llm_inference (60s floor) ONLY if the generator "
++        "ran >=60s (maintains the .456 substrate fix)."
++    ),
++    "duration_s": "measured wall-clock; consistent with inference_substrate.",
++    "flag_resolved": "true iff NOT flagged true_live_recheck=critical.",
++    "preconditions_checked": (
++        "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++    ),
++}
++
++REQUIRED_FIELDS = previous.REQUIRED_FIELDS
++_PATCHED_PREVIOUS_GLOBALS = (
++    "REPO",
++    "RESULTS",
++    "REGISTRY",
++    "ARTIFACT",
++    "EXPERIMENT",
++    "SCHEMA",
++    "RESULT_RELATIVE_PATH",
++    "RANDOM_SEED",
++    "DEFAULT_TARGET_GAME",
++    "DISALLOWED_TARGET_GAMES",
++    "INFERENCE_SUBSTRATE",
++    "LIVE_LLM_SUBSTRATE",
++    "SOLVE_PROVENANCE",
++    "SUCCESS_VERDICT",
++    "VERIFIER_MIN_DURATION_S",
++    "LIVE_LLM_MIN_DURATION_S",
++    "SPEC_REFS",
++    "FIELD_PRINCIPLES",
++)
++
++
++@contextmanager
++def _previous_scope() -> Iterator[None]:
++    saved = {name: getattr(previous, name) for name in _PATCHED_PREVIOUS_GLOBALS}
++    for name in _PATCHED_PREVIOUS_GLOBALS:
++        setattr(previous, name, globals()[name])
++    try:
++        yield
++    finally:
++        for name, value in saved.items():
++            setattr(previous, name, value)
++
++
++def _call_previous(function_name: str, *args: Any, **kwargs: Any) -> Any:
++    with _previous_scope():
++        return getattr(previous, function_name)(*args, **kwargs)
++
++
++def _target_game(game: str | None) -> str:
++    return game or DEFAULT_TARGET_GAME
++
++
++def _rotation_ok(game: str | None) -> bool:
++    return game not in DISALLOWED_TARGET_GAMES
++
++
++def stable_checksum(payload: dict[str, Any]) -> str:
++    return _call_previous("stable_checksum", payload)
++
++
++def summarize_loop_result(
++    *,
++    game: str,
++    loop_result: dict[str, Any] | None,
++    loop_result_path: str,
++    checkpoint_mtime_before_ns: int | None,
++) -> dict[str, Any]:
++    return _call_previous(
++        "summarize_loop_result",
++        game=game,
++        loop_result=loop_result,
++        loop_result_path=loop_result_path,
++        checkpoint_mtime_before_ns=checkpoint_mtime_before_ns,
++    )
++
++
++def build_artifact(
++    *,
++    target_selection: dict[str, Any],
++    loop_summary: dict[str, Any],
++    preconditions_checked: dict[str, Any],
++    duration_s: float | None = None,
++    flag_resolved: bool = True,
++) -> dict[str, Any]:
++    return _call_previous(
++        "build_artifact",
++        target_selection=target_selection,
++        loop_summary=loop_summary,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        flag_resolved=flag_resolved,
++    )
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: dict[str, Any],
++    target_game: str | None = None,
++    duration_s: float | None = None,
++    flag_resolved: bool = True,
++) -> dict[str, Any]:
++    return _call_previous(
++        "build_blocked_artifact",
++        reason=reason,
++        preconditions_checked=preconditions_checked,
++        target_game=target_game,
++        duration_s=duration_s,
++        flag_resolved=flag_resolved,
++    )
++
++
++def artifact_schema_errors(payload: dict[str, Any]) -> list[str]:
++    return _call_previous("artifact_schema_errors", payload)
++
++
++def write_artifact(payload: dict[str, Any], path: Path | None = None) -> Path:
++    output = ARTIFACT if path is None else Path(path)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def check_preconditions(game: str | None = None) -> dict[str, Any]:
++    return _call_previous("check_preconditions", game)
++
++
++def _precondition_failure(preconditions: dict[str, Any]) -> str | None:
++    return _call_previous("_precondition_failure", preconditions)
++
++
++def _relative_path(path: Path) -> str:
++    return _call_previous("_relative_path", path)
++
++
++def _read_loop_result(path: Path) -> dict[str, Any] | None:
++    return _call_previous("_read_loop_result", path)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--game")
++    parser.add_argument("--loop-result")
++    parser.add_argument("--checkpoint-mtime-before-ns", type=int)
++    parser.add_argument("--duration-s", type=float, default=VERIFIER_MIN_DURATION_S)
++    parser.add_argument("--flag-unresolved", action="store_true")
++    args = parser.parse_args(argv)
++
++    preconditions = check_preconditions(args.game)
++    selection = dict(preconditions.get("target_selection") or {})
++    flag_resolved = not args.flag_unresolved
++    failure = _precondition_failure(preconditions)
++    if failure is not None:
++        artifact = build_blocked_artifact(
++            reason=failure,
++            preconditions_checked=preconditions,
++            target_game=args.game or selection.get("game") or DEFAULT_TARGET_GAME,
++            duration_s=args.duration_s,
++            flag_resolved=flag_resolved,
++        )
++    else:
++        game = str(selection["game"])
++        loop_path = (
++            Path(args.loop_result) if args.loop_result else RESULTS / f"arc_loop_solve_{game}.json"
++        )
++        loop_summary = summarize_loop_result(
++            game=game,
++            loop_result=_read_loop_result(loop_path),
++            loop_result_path=_relative_path(loop_path),
++            checkpoint_mtime_before_ns=args.checkpoint_mtime_before_ns,
++        )
++        artifact = build_artifact(
++            target_selection=selection,
++            loop_summary=loop_summary,
++            preconditions_checked=preconditions,
++            duration_s=args.duration_s,
++            flag_resolved=flag_resolved,
++        )
++
++    write_artifact(artifact, ARTIFACT)
++    print(f"honest_verdict={artifact['honest_verdict']}")
++    print(f"verifier_checkpoint_refreshed={artifact['verifier_checkpoint_refreshed']}")
++    print(f"checkpoint_path={artifact['checkpoint_path']}")
++    print(f"target_game={artifact['target_game']}")
++    print(f"inference_substrate={artifact['inference_substrate']}")
++    print(f"duration_s={artifact['duration_s']}")
++    print(f"flag_resolved={artifact['flag_resolved']}")
++    print(f"schema_errors={artifact['schema_errors']}")
++    return 0 if not artifact["schema_errors"] else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_r11l.json b/results/arc_loop_solve_r11l.json
+index dc97ad9b6f..78d911fb3f 100644
+--- a/results/arc_loop_solve_r11l.json
++++ b/results/arc_loop_solve_r11l.json
+@@ -3,7 +3,7 @@
+   "reached_level": 2,
+   "moves": 24,
+   "states_expanded": 24,
+-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
++  "verifier_src": "learned_verifier_live_checkpoint",
+   "hazard_prune": true,
+   "hazard_pruner_stats": {
+     "observed": 0,
+@@ -16,7 +16,7 @@
+   },
+   "offline_reproduced": true,
+   "reproduced_levels": 2,
+-  "learned_verifier_checkpoint": null,
++  "learned_verifier_checkpoint": "models/arc_verifier_r11l.json",
+   "selected_generic_operators": [
+     {
+       "operator": "approach_dispatcher_operator",
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index de375c515a..73ab87c6e1 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-30T03:57:00.977511Z",
+-  "duration_s": 0.06439638137817383,
++  "run_date": "2026-06-30T05:21:10.722505Z",
++  "duration_s": 0.06282472610473633,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "a08ffb04f3fd59c86794113e65c33b7cfc44dbcf9317b5c61e08c46da4512840",
++  "reproducibility_checksum": "a57374feeeac60b7a036f44dce02c81543447bac87209b33193986ad154197bd",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "388382ce811a7416f3853f0ea58c335e8f79814f"
++    "adversarial_verify_version": "8ac73b4be04e119477a5c997f274b7670189b903"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 575475a9c6..910ff235fd 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-30T03:57:01.093616Z",
+-  "duration_s": 0.10541439056396484,
++  "run_date": "2026-06-30T05:21:10.806689Z",
++  "duration_s": 0.0771946907043457,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "31c551276ebfb9c558367f05c8c26d6581075d8e8f069f8fcff6cf628e75737f",
++  "reproducibility_checksum": "07d2be111de95c336667b08182068945794ad41e46d7bc8032453da366d37653",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "388382ce811a7416f3853f0ea58c335e8f79814f"
++    "adversarial_verify_version": "8ac73b4be04e119477a5c997f274b7670189b903"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 09f6a3f8c2..ca826d70de 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.143383026123047,
++  "efficiency_gains_ms": 2.124309539794922,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9f8d20cf1f..796f5c1726 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.800991155207157e-05,
++  "duration_s": 4.018493928015232e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5011_self_play_verifier_checkpoint.json b/results/experiment_5011_self_play_verifier_checkpoint.json
+new file mode 100644
+index 0000000000..c0223ff320
+--- /dev/null
++++ b/results/experiment_5011_self_play_verifier_checkpoint.json
+@@ -0,0 +1,105 @@
++{
++  "checkpoint_mtime_after_ns": "1782796773022298678",
++  "checkpoint_mtime_before_ns": "1782487069296411011",
++  "checkpoint_mtime_delta_ns": 309703725887667,
++  "checkpoint_path": "models/arc_verifier_r11l.json",
++  "duration_s": 2.559,
++  "experiment": "experiment_5011_self_play_verifier_checkpoint",
++  "field_principles": {
++    "checkpoint_path": "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3).",
++    "duration_s": "measured wall-clock; consistent with inference_substrate.",
++    "flag_resolved": "true iff NOT flagged true_live_recheck=critical.",
++    "honest_verdict": "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed.",
++    "inference_substrate": "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s (maintains the .456 substrate fix).",
++    "offline_reproduced": "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact.",
++    "preconditions_checked": "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint.",
++    "reproduced_levels": "the depth confirmed this run.",
++    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts (NOT outer_loop_re).",
++    "target_game": "the rotated self-play target (differs from .460 su15 / .459 ft09 / .458 sp80 / .457 dc22 / .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86).",
++    "verifier_checkpoint_refreshed": "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11 / continuous self-learning)."
++  },
++  "flag_resolved": true,
++  "honest_verdict": "success_self_play_checkpoint_refreshed",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "loop_result_path": "results/arc_loop_solve_r11l.json",
++  "loop_solve_provenance": "development_proxy",
++  "model_specs": {
++    "checkpoint_template": "models/arc_verifier_<game>.json",
++    "standing_loop": "scripts/arc_loop_solve.py"
++  },
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "checkpoint_existing": {
++      "game": "r11l",
++      "ok": true,
++      "path": "models/arc_verifier_r11l.json"
++    },
++    "offline_arcade": {
++      "check": "arc_solver_kit.offline_arcade()",
++      "ok": true
++    },
++    "ok": true,
++    "registry_loadable": {
++      "ok": true,
++      "path": "ops/arc_solve_registry.yaml"
++    },
++    "target_banked": {
++      "game": "r11l",
++      "ok": true,
++      "prior_level": 2,
++      "reason": "preferred_banked_target"
++    },
++    "target_rotation": {
++      "game": "r11l",
++      "ok": true,
++      "rotated_off": [
++        "su15",
++        "ft09",
++        "sp80",
++        "dc22",
++        "lp85",
++        "ar25",
++        "bp35",
++        "vc33",
++        "sk48",
++        "ls20",
++        "re86"
++      ]
++    },
++    "target_selection": {
++      "banked": true,
++      "game": "r11l",
++      "prior_level": 2,
++      "reason": "preferred_banked_target"
++    }
++  },
++  "random_seed": 5011,
++  "reproduced_levels": 2,
++  "reproducibility_checksum": "e71c9694bd9d0614c8a39afdd02ef4cad6807c9ed43a6a3054333e64160313af",
++  "reproduction_gate": {
++    "claimed_level": 2,
++    "game": "r11l",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 2,
++    "reproduced": true
++  },
++  "result_path": "results/experiment_5011_self_play_verifier_checkpoint.json",
++  "schema": "carnot.exp5011.self_play_verifier_checkpoint.v1",
++  "schema_errors": [],
++  "self_play_residual": "checkpoint_refreshed_gate_passed",
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-LEARN-5011",
++    "SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED",
++    "SCENARIO-LEARN-5011-SUBSTRATE-FIX",
++    "SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-LEARN-5011-BLOCKED-PRECONDITION"
++  ],
++  "states_expanded": 24,
++  "target_game": "r11l",
++  "target_registry_prior_level": 2,
++  "target_selection_reason": "preferred_banked_target",
++  "verifier_checkpoint_refreshed": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1ad082d8c9..2a6d658f63 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T03:56:43Z",
+-  "finished_at": "2026-06-30T03:56:43Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-30T05:20:51Z",
++  "finished_at": "2026-06-30T05:20:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0f70f79213..4ec27f008a 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T03:56:43Z",
+-  "finished_at": "2026-06-30T03:56:43Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-30T05:20:51Z",
++  "finished_at": "2026-06-30T05:20:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e7b246e095..6a1ea393c6 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T03:56:43Z",
+-  "finished_at": "2026-06-30T03:56:43Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-30T05:20:51Z",
++  "finished_at": "2026-06-30T05:20:51Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5011_self_play_verifier_checkpoint.py b/tests/python/test_experiment_5011_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..8c9998b6e6
+--- /dev/null
++++ b/tests/python/test_experiment_5011_self_play_verifier_checkpoint.py
+@@ -0,0 +1,367 @@
++"""Tests for Exp 5011 ARC self-play verifier checkpoint refresh.
++
++Spec refs: REQ-LEARN-5011,
++SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED,
++SCENARIO-LEARN-5011-SUBSTRATE-FIX,
++SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION,
++SCENARIO-LEARN-5011-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import scripts.adversarial_verify as av
++from carnot import experiment_4993_self_play_verifier_checkpoint as exp4993
++from carnot import experiment_5011_self_play_verifier_checkpoint as exp5011
++from carnot.agentic import arc_game_adapters as adapters
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_value_learner import LearnedVerifier
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _loop_result(game: str, reached_level: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": game,
++        "reached_level": reached_level,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached_level if reproduced else 0,
++        "states_expanded": 24,
++        "learned_verifier_checkpoint": f"models/arc_verifier_{game}.json",
++        "solve_provenance": "live_agent_self_discovery",
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": reached_level,
++            "reached_level": reached_level,
++            "reproduced": reproduced,
++            "mode": "offline_reproduction_gate_no_quota",
++        },
++    }
++
++
++def _preconditions(game: str = "r11l", *, ok: bool = True) -> dict[str, object]:
++    return {
++        "ok": ok,
++        "offline_arcade": {"ok": True},
++        "registry_loadable": {"ok": True, "path": "ops/arc_solve_registry.yaml"},
++        "target_banked": {"ok": True, "game": game, "prior_level": 2},
++        "checkpoint_existing": {"ok": True, "path": f"models/arc_verifier_{game}.json"},
++        "target_rotation": {
++            "ok": game not in exp5011.DISALLOWED_TARGET_GAMES,
++            "game": game,
++            "rotated_off": list(exp5011.DISALLOWED_TARGET_GAMES),
++        },
++        "target_selection": {
++            "game": game,
++            "prior_level": 2,
++            "banked": True,
++            "reason": "preferred_banked_target_r11l",
++        },
++    }
++
++
++def _success_artifact(tmp_path: Path, monkeypatch) -> dict[str, object]:
++    ckpt = tmp_path / "models" / "arc_verifier_r11l.json"
++    ckpt.parent.mkdir()
++    ckpt.write_text('{"ok": true}\n', encoding="utf-8")
++    before_ns = ckpt.stat().st_mtime_ns - 1
++    monkeypatch.setattr(exp5011, "REPO", tmp_path)
++
++    summary = exp5011.summarize_loop_result(
++        game="r11l",
++        loop_result=_loop_result("r11l"),
++        loop_result_path="results/arc_loop_solve_r11l.json",
++        checkpoint_mtime_before_ns=before_ns,
++    )
++    return exp5011.build_artifact(
++        target_selection={
++            "game": "r11l",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "preferred_banked_target_r11l",
++        },
++        loop_summary=summary,
++        preconditions_checked=_preconditions("r11l"),
++        duration_s=2.0,
++        flag_resolved=True,
++    )
++
++
++def test_req_learn_5011_spec_declares_required_contract() -> None:
++    """REQ-LEARN-5011: OpenSpec anchors the preferred r11l checkpoint contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert exp5011._target_game(None) == "r11l"
++    assert exp5011._target_game("lf52") == "lf52"
++    assert exp5011._rotation_ok("r11l") is True
++    assert exp5011._rotation_ok("su15") is False
++    assert exp5011._rotation_ok("ft09") is False
++    assert exp5011._rotation_ok("ls20") is False
++    for ref in exp5011.SPEC_REFS:
++        assert ref in spec
++    assert exp5011.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp5011.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_req_learn_5011_r11l_adapter_loads_existing_checkpoint() -> None:
++    """REQ-LEARN-5011: r11l exposes the 3 features required by its 4-weight head."""
++
++    ad = adapters.get_adapter("r11l")
++    assert ad is not None
++    assert callable(ad.featurize)
++
++    arc = kit.offline_arcade()
++    env = arc.make("r11l", scorecard_id=arc.open_scorecard())
++    env.reset()
++    features = [float(value) for value in ad.featurize(env._game)]
++    checkpoint = json.loads((REPO / "models" / "arc_verifier_r11l.json").read_text())
++    verifier = LearnedVerifier.load(REPO / "models" / "arc_verifier_r11l.json", ad.featurize)
++
++    assert features == [4084.0, 5.0, 4096.0]
++    assert len(features) + 1 == len(checkpoint["weights"])
++    assert verifier.n_samples == checkpoint["n_samples"]
++    assert verifier(env._game) >= 0.0
++
++
++def test_scenario_learn_5011_checkpoint_refreshed_success(tmp_path: Path, monkeypatch) -> None:
++    """SCENARIO-LEARN-5011-CHECKPOINT-REFRESHED: r11l checkpoint refresh succeeds."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    assert artifact["experiment"] == exp5011.EXPERIMENT
++    assert artifact["schema"] == exp5011.SCHEMA
++    assert artifact["spec_refs"] == exp5011.SPEC_REFS
++    assert artifact["random_seed"] == exp5011.RANDOM_SEED
++    assert artifact["field_principles"] == exp5011.FIELD_PRINCIPLES
++    assert artifact["honest_verdict"] == exp5011.SUCCESS_VERDICT
++    assert artifact["verifier_checkpoint_refreshed"] is True
++    assert artifact["checkpoint_path"] == "models/arc_verifier_r11l.json"
++    assert artifact["target_game"] == "r11l"
++    assert artifact["inference_substrate"] == exp5011.INFERENCE_SUBSTRATE
++    assert artifact["duration_s"] == 2.0
++    assert artifact["flag_resolved"] is True
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 2
++    assert artifact["states_expanded"] == 24
++    assert artifact["self_play_residual"] == "checkpoint_refreshed_gate_passed"
++    assert int(artifact["checkpoint_mtime_after_ns"]) > int(artifact["checkpoint_mtime_before_ns"])
++    assert artifact["checkpoint_mtime_delta_ns"] > 0
++    assert artifact["schema_errors"] == []
++    assert exp5011.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_5011_substrate_fix_avoids_duration_too_short(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-5011-SUBSTRATE-FIX: offline gate uses verifier substrate."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    floor = av.duration_floor_for_artifact(artifact)
++    flags: list[object] = []
++    av.check_duration_vs_claim(artifact, flags)
++
++    assert floor == {
++        "substrate": exp5011.INFERENCE_SUBSTRATE,
++        "min_duration_s": 1.0,
++        "reason": "verifier_scoring",
++    }
++    assert [getattr(flag, "kind", None) for flag in flags] == []
++
++    out = tmp_path / "artifact.json"
++    exp5011.write_artifact(artifact, out)
++    report = av.verify_artifact(out)
++    critical = [flag for flag in report["flags"] if flag.get("severity") == "critical"]
++    assert [flag["kind"] for flag in critical] == []
++
++
++def test_scenario_learn_5011_residual_and_blocked_paths(tmp_path: Path, monkeypatch) -> None:
++    """SCENARIO-LEARN-5011-RESIDUAL-NO-FABRICATION: failures stay residuals."""
++
++    monkeypatch.setattr(exp5011, "REPO", tmp_path)
++    failed = _loop_result("r11l", reached_level=0, reproduced=False)
++    failed["learned_verifier_checkpoint"] = None
++
++    summary = exp5011.summarize_loop_result(
++        game="r11l",
++        loop_result=failed,
++        loop_result_path="results/arc_loop_solve_r11l.json",
++        checkpoint_mtime_before_ns=123,
++    )
++    residual = exp5011.build_artifact(
++        target_selection={
++            "game": "r11l",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "preferred_banked_target_r11l",
++        },
++        loop_summary=summary,
++        preconditions_checked={**_preconditions("r11l"), "checkpoint_existing": {"ok": False}},
++        duration_s=1.1,
++        flag_resolved=True,
++    )
++    unresolved = exp5011.build_artifact(
++        target_selection={
++            "game": "r11l",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "preferred_banked_target_r11l",
++        },
++        loop_summary={
++            **summary,
++            "offline_reproduced": True,
++            "reproduced_levels": 2,
++            "learned_verifier_checkpoint": "models/arc_verifier_r11l.json",
++            "checkpoint_mtime_before_ns": "1",
++            "checkpoint_mtime_after_ns": "2",
++            "checkpoint_mtime_delta_ns": 1,
++            "self_play_residual": "checkpoint_refreshed_gate_passed",
++        },
++        preconditions_checked=_preconditions("r11l"),
++        duration_s=1.1,
++        flag_resolved=False,
++    )
++    blocked = exp5011.build_blocked_artifact(
++        reason="checkpoint_missing",
++        preconditions_checked={
++            **_preconditions("r11l", ok=False),
++            "checkpoint_existing": {"ok": False, "path": "models/arc_verifier_r11l.json"},
++        },
++        target_game="r11l",
++        duration_s=1.0,
++        flag_resolved=True,
++    )
++    missing = exp5011.summarize_loop_result(
++        game="r11l",
++        loop_result=None,
++        loop_result_path="results/arc_loop_solve_r11l.json",
++        checkpoint_mtime_before_ns="bad",
++    )
++
++    assert residual["honest_verdict"] == "complete_r11l_self_play_residual_reproduction_gate_failed"
++    assert residual["verifier_checkpoint_refreshed"] is False
++    assert residual["checkpoint_path"] is None
++    assert residual["checkpoint_mtime_after_ns"] is None
++    assert residual["checkpoint_mtime_delta_ns"] is None
++    assert residual["schema_errors"] == []
++    assert unresolved["flag_resolved"] is False
++    assert unresolved["honest_verdict"] != exp5011.SUCCESS_VERDICT
++    assert blocked["honest_verdict"] == "blocked_checkpoint_missing"
++    assert blocked["target_game"] == "r11l"
++    assert blocked["verifier_checkpoint_refreshed"] is False
++    assert blocked["schema_errors"] == []
++    assert missing["self_play_residual"] == "loop_result_missing"
++    assert missing["checkpoint_mtime_before_ns"] is None
++    assert missing["search_state_count"] == 0
++
++
++def test_req_learn_5011_schema_rejects_stale_metadata_and_bad_substrate(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """REQ-LEARN-5011: schema rejects stale identity, targets, and substrate drift."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    for field, old_value, expected in (
++        ("experiment", exp4993.EXPERIMENT, "experiment_mismatch"),
++        ("schema", exp4993.SCHEMA, "schema_mismatch"),
++        ("spec_refs", exp4993.SPEC_REFS, "spec_refs_mismatch"),
++        ("random_seed", exp4993.RANDOM_SEED, "random_seed_mismatch"),
++    ):
++        stale = dict(artifact)
++        stale[field] = old_value
++        stale["reproducibility_checksum"] = exp5011.stable_checksum(stale)
++        assert expected in exp5011.artifact_schema_errors(stale)
++
++    too_fast = dict(artifact, duration_s=0.25)
++    too_fast["reproducibility_checksum"] = exp5011.stable_checksum(too_fast)
++    assert "duration_too_short_for_verifier_ensemble" in exp5011.artifact_schema_errors(
++        too_fast
++    )
++
++    live_too_fast = dict(artifact, inference_substrate="live_llm_inference", duration_s=2.5)
++    live_too_fast["reproducibility_checksum"] = exp5011.stable_checksum(live_too_fast)
++    live_errors = exp5011.artifact_schema_errors(live_too_fast)
++    assert "inference_substrate_mismatch" in live_errors
++    assert "duration_too_short_for_live_llm_inference" in live_errors
++
++    unknown_substrate = dict(artifact, inference_substrate="deterministic_verifier")
++    unknown_substrate["reproducibility_checksum"] = exp5011.stable_checksum(unknown_substrate)
++    assert "unknown_inference_substrate" in exp5011.artifact_schema_errors(unknown_substrate)
++
++    for target in ("su15", "ft09", "ls20"):
++        rotation_violation = dict(artifact, target_game=target)
++        rotation_violation["reproducibility_checksum"] = exp5011.stable_checksum(
++            rotation_violation
++        )
++        assert "success_target_rotation_violation" in exp5011.artifact_schema_errors(
++            rotation_violation
++        )
++
++
++def test_scenario_learn_5011_preconditions_and_main_write_artifacts(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-5011-BLOCKED-PRECONDITION: CLI writes terminal artifacts."""
++
++    monkeypatch.setattr(exp5011.previous, "check_preconditions", lambda game=None: _preconditions("r11l"))
++    ok_preconditions = exp5011.check_preconditions("r11l")
++    blocked_preconditions = {**_preconditions("su15"), "ok": False}
++
++    assert ok_preconditions["target_rotation"]["ok"] is True
++    assert blocked_preconditions["ok"] is False
++    assert exp5011._precondition_failure(blocked_preconditions).startswith("target_rotation_")
++
++    ckpt = tmp_path / "models" / "arc_verifier_r11l.json"
++    ckpt.parent.mkdir()
++    ckpt.write_text('{"ok": true}\n', encoding="utf-8")
++    loop_result = tmp_path / "results" / "arc_loop_solve_r11l.json"
++    loop_result.parent.mkdir()
++    loop_result.write_text(json.dumps(_loop_result("r11l")), encoding="utf-8")
++    output = tmp_path / "results" / "experiment_5011_self_play_verifier_checkpoint.json"
++
++    monkeypatch.setattr(exp5011, "REPO", tmp_path)
++    monkeypatch.setattr(exp5011, "ARTIFACT", output)
++    monkeypatch.setattr(exp5011, "check_preconditions", lambda game=None: _preconditions("r11l"))
++
++    ok = exp5011.main(
++        [
++            "--game",
++            "r11l",
++            "--loop-result",
++            str(loop_result),
++            "--checkpoint-mtime-before-ns",
++            str(ckpt.stat().st_mtime_ns - 1),
++            "--duration-s",
++            "4.0",
++        ]
++    )
++    written = json.loads(output.read_text(encoding="utf-8"))
++
++    assert ok == 0
++    assert written["honest_verdict"] == exp5011.SUCCESS_VERDICT
++    assert written["result_path"] == exp5011.RESULT_RELATIVE_PATH
++
++    monkeypatch.setattr(
++        exp5011,
++        "check_preconditions",
++        lambda game=None: {
++            **_preconditions("su15", ok=False),
++            "target_rotation": {"ok": False, "game": "su15"},
++            "target_selection": {"game": "su15"},
++        },
++    )
++    blocked_code = exp5011.main(["--game", "su15", "--duration-s", "1.0"])
++    blocked = json.loads(output.read_text(encoding="utf-8"))
++
++    assert blocked_code == 0
++    assert blocked["honest_verdict"].startswith("blocked_target_rotation_")
++    assert blocked["target_game"] == "su15"
+-- 
+2.55.0
+

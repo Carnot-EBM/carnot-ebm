@@ -1,0 +1,43 @@
+From 4c361c15f05f34b078b3bfb4b5e71bfceccc9298 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 17:27:37 -0400
+Subject: [PATCH 10319/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ae8d8c5926..0c11ad3ccd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-08-29T21:05:37Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-08-29T21:27:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1b19efbc81..8f67310343 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16793,3 +16793,4 @@ The l |
+ | 2026-08-29 21:01 UTC | Diagnostic prefix-backtracking repair A/B | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6759-oracle-distinct-diagnostic-energy- |
+ | 2026-08-29 21:03 UTC | Held-family oracle-distinct diagnostic energy v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6758-proof-transport-independent-audit, e |
+ | 2026-08-29 21:03 UTC | Diagnostic prefix-backtracking repair A/B | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6759-oracle-distinct-diagnostic-energy- |
++| 2026-08-29 21:25 UTC | Capacity-controlled procedural memory stream | OK | 93 passed, 1 warning in 16.64s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2659660e4e..3880607201 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 52, "phase": "iteration_start", "started_at": "2026-08-29T21:05:37Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 53, "phase": "iteration_start", "started_at": "2026-08-29T21:27:32Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

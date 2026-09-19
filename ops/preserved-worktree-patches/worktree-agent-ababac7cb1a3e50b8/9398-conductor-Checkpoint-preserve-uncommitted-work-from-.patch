@@ -1,0 +1,43 @@
+From ccd4ad56908be59f7b193f60cd296e151f4bb4cf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 08:47:37 -0400
+Subject: [PATCH 09398/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5a29cfc4d6..85f1a8a071 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 134, "phase": "iteration_start", "last_beat": "2026-08-21T12:29:59Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 135, "phase": "iteration_start", "last_beat": "2026-08-21T12:47:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 04654ba282..6d3ef4489e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16225,3 +16225,4 @@ code |
+ | 2026-08-21 12:08 UTC | Activation REFUSED: milestone 2026.08.558 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+ | 2026-08-21 12:11 UTC | Milestone 2026.08.558 activated | OK | 3 tasks queued |
+ | 2026-08-21 12:27 UTC | V557 evidence freeze and V558 branch preflight | OK | 88 passed, 1 warning in 12.11s |
++| 2026-08-21 12:45 UTC | Monotonic task phase and concurrency receipt contr | OK | 101 passed, 1 warning in 10.15s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dbdfa71927..4111fd7c60 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 134, "phase": "iteration_start", "started_at": "2026-08-21T12:29:59Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 135, "phase": "iteration_start", "started_at": "2026-08-21T12:47:33Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

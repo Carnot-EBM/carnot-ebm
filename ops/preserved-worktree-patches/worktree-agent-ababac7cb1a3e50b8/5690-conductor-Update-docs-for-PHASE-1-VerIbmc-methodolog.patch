@@ -1,0 +1,127 @@
+From 23cfda8cae2d8edeb3b3265a2507c18a554ac373 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 17:14:48 -0400
+Subject: [PATCH 05690/11362] [conductor] Update docs for PHASE 1 VerIbmc
+ methodology-correct rerun -- local SOTA GGUF solver feedback or retire if
+ null repeats
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                       |  2 +
+ openspec/capabilities/self-learning/spec.md | 73 +++++++++++++++++++++
+ ops/changelog.md                            |  1 +
+ ops/status.md                               |  1 +
+ 4 files changed, 77 insertions(+)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 66c4cc9497..1460ef4985 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1886,3 +1886,5 @@ legacy tests.
+ | SCENARIO-REPORT-5234-BLOCKED-METADATA | Citation metadata fails closed | Implemented-Partial | Artifact records EBT and ARM-EBM Semantic Scholar attempt logs with attempt 1 HTTP/2 429 and attempt 2 HTTP 200, citation counts 26 and 8 respectively, and no invented metadata, roadmap mutation, or retired-scope reopening; completed artifact followed the successful-retry path while preserving fail-closed behavior in tests. |
+ | REQ-VERIFY-5237 | GAP-1 stability freeze-or-retire decision blocks unstable Exp 5209 subset | Implemented-Partial | `python/carnot/verify/arc_gap1_stability_freeze_or_retire.py`; `tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5237_gap1_stability_freeze_or_retire_v479.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.","value":"complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."}; status=<missing>; gap1_stability_decision.value=blocked_instability; gap1_registry_promoted.value=false; frozen_subset.value=null; stability_rule_predeclared.value=true; no_new_broad_search.value=true; refuted_single_invariant_excluded.value=true; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no freeze or registry promotion is claimed. |
+ | SCENARIO-VERIFY-5237 | Unstable Exp 5209 subset blocks the current promotion path | Implemented-Partial | Artifact records a non-leaky existing Exp 5209 positive result but blocks the current path because the exact selected subset is not stable enough to freeze; future reopening requires one exact subset to win at least 10 of 20 grouped splits with invariant inclusion frequency at least half of grouped splits and leakage/no-held-out-tuning guards passing. |
++| REQ-VERIFY-5238 | VerIbmc methodology-correct rerun retires the current local solver-feedback path when clean uplift is non-positive | Implemented-Partial | `python/carnot/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`; `tests/python/test_experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired.","value":"complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"}; status=<missing>; n_examples.value=3; solver_only_solved.value=1; llm_only_solved.value=2; llm_solver_feedback_solved.value=2; solver_feedback_uplift.value=0.0; methodology_receipts_complete.value=true; retire_current_veribmc_path.value=true; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no solver-feedback improvement or retro closure is claimed. |
++| SCENARIO-VERIFY-5238 | Clean null retires the current local feedback path | Implemented-Partial | Artifact evaluates solver-only, LLM-only, and LLM-plus-solver-feedback arms on the same fixed mini-suite with methodology receipts complete; `llm_solver_feedback_solved.value=2` ties the stronger `llm_only_solved.value=2` baseline, `solver_feedback_uplift.value=0.0`, and `retire_current_veribmc_path.value=true`, so this remains a null research finding rather than a completed solver-feedback win. |
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 34d15ca915..2f436d3935 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -16427,3 +16427,76 @@ rollback receipt.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5143 | Planned (`python/carnot/experiment_5143_openskill_k2v_self_learning_v471.py`) | Planned (`tests/python/test_experiment_5143_openskill_k2v_self_learning_v471.py`) |
++
++---
++
++## REQ-LEARN-5239: Controlled Typed-Memory Consumer Ablation
++
++Experiment 5239 SHALL evaluate the Exp 5227 typed multi-head verifier memory as
++a controlled nonparametric consumer before any ARC patch-synthesis promotion.
++The evaluation SHALL use a small controlled stream derived from existing
++verifier and ARC artifacts where the correct prior is intentionally reusable by
++a later task. The experiment SHALL NOT train, fine-tune, or mutate model
++weights.
++
++The experiment SHALL compare exactly these five arms with fixed seeds and the
++same one-prior-slot per-query budget:
++
++- `no_memory`
++- `best_constant`
++- `per_query_random`
++- `shuffled_memory`
++- `aligned_memory`
++
++The result artifact SHALL be
++`results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json`
++and SHALL include `continuous_self_learning_task`, `memory_heads_tested`,
++`controlled_stream_n`, `arms`, `aligned_vs_shuffled_delta`,
++`aligned_vs_no_memory_delta`, `degradation_detected`,
++`retention_check_passed`, `rollback_policy_exercised`,
++`recommended_arc_memory_heads`, `inference_substrate`, and
++`honest_verdict`. The `inference_substrate` value SHALL be
++`controlled_nonparametric_typed_memory_ablation`.
++
++### REQ-LEARN-5239 Sub-requirements
++
++- REQ-LEARN-5239-1: The controlled stream SHALL be constructed from the existing
++  Exp 5227 typed memory artifact and SHALL exercise the `constraints`,
++  `provenance`, `failures`, and `skills_rubrics` heads.
++- REQ-LEARN-5239-2: The `aligned_memory` arm SHALL retrieve the entry intended
++  for the current task, while `shuffled_memory` SHALL use a fixed derangement of
++  the same entries so any gain is attributable to task-aligned memory rather
++  than generic memory bias.
++- REQ-LEARN-5239-3: The `best_constant` arm SHALL choose one memory entry for
++  all tasks by deterministic held-in score, and `per_query_random` SHALL choose
++  one memory entry per task with a fixed random seed.
++- REQ-LEARN-5239-4: The artifact SHALL report aligned-vs-shuffled and
++  aligned-vs-no-memory deltas, detect irrelevant-memory degradation, and record
++  whether retention passed after both promoted and rolled-back memories were
++  consumed.
++- REQ-LEARN-5239-5: Rollback behavior SHALL be considered exercised only when
++  at least one rolled-back typed-memory entry changes the selected consumer
++  action to a rollback, quarantine, retirement, or no-promote action.
++- REQ-LEARN-5239-6: `recommended_arc_memory_heads` SHALL list only the typed
++  heads that show controlled useful reuse for ARC patch-synthesis decisions.
++
++### SCENARIO-LEARN-5239: Aligned Memory Beats Shuffled and No-Memory Controls
++
++**Given** the Exp 5227 typed multi-head memory artifact contains promoted and
++rolled-back verifier/ARC entries
++**When** Experiment 5239 evaluates `no_memory`, `best_constant`,
++`per_query_random`, `shuffled_memory`, and `aligned_memory` on the same
++controlled stream with the same one-prior-slot budget
++**Then** `aligned_memory` reports positive `aligned_vs_shuffled_delta` and
++positive `aligned_vs_no_memory_delta`
++**And** irrelevant memory degradation is detected when shuffled or random memory
++falls below the no-memory arm
++**And** retention and rollback checks pass without model training
++**And** the honest verdict starts with `complete:`, `complete_`, `success:`, or
++`success_` and states whether typed memory shows controlled useful reuse.
++
++## Implementation Status (Exp 5239)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5239 | Planned (`python/carnot/pipeline/controlled_memory_ablation.py`) | Planned (`tests/python/test_experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.py`) |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ef2553b760..17b83b5d1d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10875,3 +10875,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-04: PHASE 1 artifact QA -- calibrate structured-null and pool-size tautology flags before reruns (⚠️ Blocked) — honest_verdict=complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks.; results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json
+ - 2026-07-04: PHASE 1 gated on exp5235 qa_calibration_passed -- GAP-4 clean status decision without regenerating the pool (⚠️ Blocked) — honest_verdict=complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.; results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
+ - 2026-07-04: PHASE 1 GAP-1 stability decision -- freeze a non-leaky subset or retire the current promotion path (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.","value":"complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."}; status=<missing>; gap1_stability_decision.value=blocked_instability; gap1_registry_promoted.value=false; frozen_subset.value=null; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5237_gap1_stability_freeze_or_retire_v479.json
++- 2026-07-04: PHASE 1 VerIbmc methodology-correct rerun -- local SOTA GGUF solver feedback or retire if null repeats (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired.","value":"complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"}; status=<missing>; n_examples.value=3; solver_only_solved.value=1; llm_only_solved.value=2; llm_solver_feedback_solved.value=2; solver_feedback_uplift.value=0.0; methodology_receipts_complete.value=true; retire_current_veribmc_path.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json
+diff --git a/ops/status.md b/ops/status.md
+index 54c9631157..2f205748e8 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5794,3 +5794,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-04 | Exp 5233: PHASE 0 transition -- archive .478 truth and activate .479 | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and must state whether .479 was activated.","value":"complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim."}; status=<missing>; clean_handoff=true; roadmap_activation_check.activated=true; research_roadmap_yaml_activated.value=true; exclusion_manifest_confirmed_clean.value=true; validation checks passed: exclusion_manifest_lint and validate_prior_failures; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5233, SCENARIO-REPORT-5233, SCENARIO-REPORT-5233-BLOCKED-PRECONDITION; status label mapped to blocked because the verdict contains `blocked` | results/experiment_5233_archive_478_activate_479.json |
+ | 2026-07-04 | Exp 5234: PHASE 0 SOTA ingestion -- refresh 2025-2026 artifact QA, memory, KAN, hardware, and citation trail before execution | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.","value":"complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."}; status=null; new_references_added.value=0; references_md_updated.value=false; retired_scope_reopened.value=false; inference_substrate.value=literature_ingestion; EBT Semantic Scholar citation_count=26 after 429 retry; ARM-EBM Semantic Scholar citation_count=8 after 429 retry; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5234, SCENARIO-REPORT-5234, SCENARIO-REPORT-5234-BLOCKED-METADATA; status label mapped to ⚠️ Partial / Not Viable / Research Finding because the verdict records no new actionable findings and no measured improvement | results/experiment_5234_sota_ingestion_v479.json |
+ | 2026-07-04 | Exp 5237: PHASE 1 GAP-1 stability decision -- freeze a non-leaky subset or retire the current promotion path | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.","value":"complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."}; status=<missing>; gap1_stability_decision.value=blocked_instability; gap1_registry_promoted.value=false; frozen_subset.value=null; stability_rule_predeclared.value=true; no_new_broad_search.value=true; refuted_single_invariant_excluded.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5237, SCENARIO-VERIFY-5237; status label mapped to ⚠️ Blocked because the verdict contains `blocked` | results/experiment_5237_gap1_stability_freeze_or_retire_v479.json |
++| 2026-07-04 | Exp 5238: PHASE 1 VerIbmc methodology-correct rerun -- local SOTA GGUF solver feedback or retire if null repeats | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired.","value":"complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"}; status=<missing>; n_examples.value=3; solver_only_solved.value=1; llm_only_solved.value=2; llm_solver_feedback_solved.value=2; solver_feedback_uplift.value=0.0; methodology_receipts_complete.value=true; retire_current_veribmc_path.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5238, SCENARIO-VERIFY-5238; status label mapped to ⚠️ Partial / Not Viable / Research Finding because the verdict records a clean null and solver_feedback_uplift.value=0.0, not a measured solver-feedback win | results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json |
+-- 
+2.55.0
+

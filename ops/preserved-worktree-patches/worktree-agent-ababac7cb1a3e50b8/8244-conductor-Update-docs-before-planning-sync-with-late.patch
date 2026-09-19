@@ -1,0 +1,60 @@
+From 2db433fa360a775858d19982191e662c8bc30229 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 20:16:22 -0400
+Subject: [PATCH 08244/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 491ce20d3a..b09daf993a 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,308</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,318</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b6415e64fc..2ea37bbab3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-08-04T23:41:37Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-08-05T00:13:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index de53db79d5..0cf6bb90c0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15325,3 +15325,4 @@ No output thi |
+ | 2026-08-04 23:12 UTC | Gated internal-state Phase-D selector against tune | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6118-phase-d-per-layer-surface, exp6117-p |
+ | 2026-08-04 23:23 UTC | GateMate changed-physical-state continuity gate | OK | 94 passed, 1 warning in 11.40s |
+ | 2026-08-04 23:39 UTC | ARC live-path generic primitive reachability and h | OK | 86 passed, 1 warning in 9.94s |
++| 2026-08-05 00:11 UTC | Branch-independent .530 capstone and architecture  | OK | 87 passed, 1 warning in 14.73s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8a32f1fd61..6497d8083a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 33, "phase": "iteration_start", "started_at": "2026-08-04T23:41:37Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 34, "phase": "iteration_start", "started_at": "2026-08-05T00:13:50Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

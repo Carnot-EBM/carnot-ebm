@@ -1,0 +1,822 @@
+From a76b5f03f850af1d76857b94ec244701650e5cdd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 23:52:52 -0400
+Subject: [PATCH 09600/11362] [outer-loop] Audit timeout slack + evidence for
+ no-LLM substrate aliases
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Two guards in the fabrication-gate layer, both from measurements taken
+during tonight's health checks.
+
+REQ-CONDUCTOR-RECEIPT-2 — a caller timeout must outlast its own budget.
+REQ-CONDUCTOR-RECEIPT-1 gave the QA-layer audit a budget it knows about so
+it could write a PARTIAL report instead of dying. It still died, because
+the two numbers were set independently and contradicted each other: budget
+750s, kill timeout 900s, slack 150s, measured cost of one unit 250-375s.
+The budget is checked BETWEEN units, never inside one, so a unit starting
+near the deadline runs past the kill and no report lands at all. Effect:
+two PARTIAL reports in a month, of 2 and 3 units against --limit 20, a hard
+timeout at the 2026-08-22T22:33Z close, and rotation stuck at offset 5 of
+174 units.
+
+AUDIT_TIMEOUT_SLACK_S = 600 states the relationship. QA-layer budget 750 ->
+1800s and timeout 900 -> 2400s; the claim audit keeps its 750s budget and
+gets timeout 900 -> 1350s, which had the same too-small-slack shape.
+test_audit_run_receipts.py::TestBudgetTimeoutSlack AST-parses the real call
+sites and asserts the inequality, so the numbers cannot drift apart again.
+Mutations: revert the QA timeout -> RED; shrink the slack constant -> RED;
+revert the QA budget -> RED; each restored byte-identical, GREEN.
+
+REQ-SUBSTRATE-ALIAS-1 — a new alias carries evidence, not only a name.
+adversarial_verify.py skips DURATION_TOO_SHORT for any substrate named in
+NO_LLM_SUBSTRATE_ALIASES, and nothing governed who may add a name. Measured
+2026-08-23: 38 aliases, 19 added in two days, and every sampled addition
+landed in the same conductor commit as the artifact it exempted — 59c8f8602d
+registered an alias at 22:24Z and wrote experiment_6520 at 22:25Z. So an
+experiment could clear the gate by naming its own substrate in the gate.
+That is the QA-Layer Authenticity Discipline's founding concern in live
+form, and the inverse of the pattern-list-narrower-than-its-concept bug:
+here the list widens to accommodate what it was built to catch.
+
+scripts/substrate_alias_evidence_lint.py refuses a commit that adds an
+alias without either a test naming the string or a dated line in
+ops/substrate_alias_acks.md. Fails closed when the diff cannot be read.
+Removals and unrelated edits pass — the requirement is on widening.
+Verified end to end against the exp6520 shape: staging a real alias
+addition refuses with the alias named; adding an ack line passes.
+
+Mutations: evidence check disabled -> 5 RED; fail-open on git error -> RED;
+drop the HEAD subtraction -> RED. Dropping the '+'-prefix filter first left
+the suite GREEN — the check was decorative, double-covered by the HEAD
+subtraction. Rather than delete it, added a test pinning the case where it
+does bite (empty or stale head_text, where every '-' line would parse as an
+addition and REMOVING an alias would demand evidence). It is RED now.
+
+The new lint is itself a guard, so qa-layer-audit-scope-check refused this
+commit until it was classified. It is now in GUARD_TARGETS with its reason:
+a silent non-firing there lets an experiment clear the fabrication gate by
+naming its own substrate. That scope check working on this very commit is
+the machinery behaving as designed.
+
+The 38 aliases present today are grandfathered; auditing them is separate,
+still-open work noted in the ack file.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .pre-commit-config.yaml                       |  12 ++
+ .../capabilities/research-harnesses/spec.md   | 126 +++++++++++
+ ops/substrate_alias_acks.md                   |  35 ++++
+ scripts/qa_layer_authenticity_audit.py        |   8 +
+ scripts/research_conductor.py                 |  25 ++-
+ scripts/substrate_alias_evidence_lint.py      | 176 ++++++++++++++++
+ tests/python/test_audit_run_receipts.py       |  71 +++++++
+ .../test_substrate_alias_evidence_lint.py     | 195 ++++++++++++++++++
+ 8 files changed, 645 insertions(+), 3 deletions(-)
+ create mode 100644 ops/substrate_alias_acks.md
+ create mode 100644 scripts/substrate_alias_evidence_lint.py
+ create mode 100644 tests/python/test_substrate_alias_evidence_lint.py
+
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index a94071aa26..2e82e2f324 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -341,6 +341,18 @@ repos:
+         files: ^research-complete\.yaml$
+         pass_filenames: true
+ 
++      - id: substrate-alias-evidence-lint
++        name: A new no-LLM substrate alias carries evidence (REQ-SUBSTRATE-ALIAS-1)
++        # The fabrication gate skips DURATION_TOO_SHORT for any substrate named
++        # in NO_LLM_SUBSTRATE_ALIASES. Measured 2026-08-23: 19 of 38 aliases
++        # added in two days, each in the same commit as the artifact it
++        # exempted. A new alias now needs a test naming it, or a dated line in
++        # ops/substrate_alias_acks.md. Fails closed if the diff cannot be read.
++        entry: .venv/bin/python scripts/substrate_alias_evidence_lint.py
++        language: system
++        files: ^scripts/adversarial_verify\.py$
++        pass_filenames: false
++
+       - id: determination-preservation-lint
+         name: Fabrication-gate determinations are not silently dropped
+         # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 92df00b9ec..ce10681f35 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -7853,6 +7853,132 @@ report file.
+ |---|---|---|
+ | REQ-CONDUCTOR-RECEIPT-1 | Implemented (`scripts/research_conductor.py`: `_run_audit_with_receipt` over all nine milestone-close audit invocations; `scripts/qa_layer_authenticity_audit.py`: `--budget-seconds`, PARTIAL header, rotation state written only after the report, advanced by completed units) | Implemented (`tests/python/test_audit_run_receipts.py`, 8 tests; mutations: receipt check believes exit code -> RED, rotation advances by limit -> RED, state written before report -> RED) |
+ 
++## REQ-CONDUCTOR-RECEIPT-2: A Caller Timeout SHALL Exceed The Program's Own Budget By One Worst-Case Unit
++
++Origin incident, 2026-08-23. REQ-CONDUCTOR-RECEIPT-1 gave the QA-layer
++audit a budget it knows about, so it could write a PARTIAL report
++instead of dying. It still died. The two numbers were set
++independently and contradicted each other:
++
++| Number | Value | Where |
++|---|---|---|
++| audit's own budget | 750s | `--budget-seconds` |
++| caller's kill timeout | 900s | `timeout=` |
++| slack between them | 150s | — |
++| measured cost of ONE unit | 250-375s | two PARTIAL reports, 2026-08-22 |
++
++The budget is checked BEFORE each unit, never during one. So a unit
++that starts at 749s runs to roughly 1124s, the caller kills the
++process at 900s, and no report is written at all. The partial-report
++mechanism cannot fire when the slack is smaller than the work it is
++meant to interrupt.
++
++The measured effect: two successful PARTIAL reports in a month, of 2
++and 3 units against `--limit 20`, and a hard timeout at the
++2026-08-22T22:33Z close. Rotation sat at offset 5 of 174 units.
++
++The rule. For every audit invocation that passes the program a
++wall-clock budget, the caller's kill timeout SHALL exceed that budget
++by at least `AUDIT_TIMEOUT_SLACK_S`, the worst-case cost of a single
++unit plus the time to write the report. A test SHALL read the call
++sites and assert the inequality, so the two numbers cannot drift apart
++again silently.
++
++This is deliberately an inequality over two constants, not a smarter
++scheduler. The failure was not that the audit was slow; it was that
++nobody stated the relationship between the two numbers, so editing
++either one alone was safe-looking and wrong.
++
++#### SCENARIO-CONDUCTOR-RECEIPT-5
++
++Given any `_run_audit_with_receipt` call site that passes
++`--budget-seconds N`, the call's `timeout` SHALL be at least
++`N + AUDIT_TIMEOUT_SLACK_S`.
++
++#### SCENARIO-CONDUCTOR-RECEIPT-6
++
++Given a budget that expires mid-unit, the process SHALL still have
++time to finish that unit and write its PARTIAL receipt before the
++caller's timeout fires.
++
++## Implementation Status (REQ-CONDUCTOR-RECEIPT-2)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-RECEIPT-2 | Implemented (`scripts/research_conductor.py`: `AUDIT_TIMEOUT_SLACK_S`; QA-layer audit budget 750 -> 1800s, timeout 900 -> 2400s; claim audit and any future budgeted audit held to the same inequality) | Implemented (`tests/python/test_audit_run_receipts.py::TestBudgetTimeoutSlack`; mutation: shrink slack below one unit -> RED, restore -> GREEN) |
++
++## REQ-SUBSTRATE-ALIAS-1: A New No-LLM Substrate Alias SHALL Carry Evidence, Not Only A Name
++
++Origin incident, 2026-08-23. `adversarial_verify.py`'s
++`DURATION_TOO_SHORT` check exempts artifacts whose declared
++`inference_substrate` appears in `NO_LLM_SUBSTRATE_ALIASES`. Nothing
++governed who may add a name to that tuple. Measured on 2026-08-23: 38
++aliases, 19 of them added in two days, and every sampled addition
++landed in the SAME conductor commit as the artifact it exempted —
++for example `59c8f8602d`, which added
++`local_compact_router_plus_exact_exception_table_and_native_solver_no_llm`
++at 22:24Z and wrote `experiment_6520` at 22:25Z.
++
++So an experiment that trips the fabrication gate can clear itself by
++naming its own substrate in the gate's allowlist, in its own commit,
++with no test, no review, and no evidence that the declared substrate
++does no LLM work. This is the QA-Layer Authenticity Discipline's
++founding concern in live form: the layer that decides whether every
++other result counts is being edited by the results it judges.
++
++It is also the inverse of the pattern-list-narrower-than-its-concept
++bug this project keeps hitting. Here the list WIDENS to accommodate
++whatever it was built to catch, which reads as a growing taxonomy and
++is a shrinking gate.
++
++The rule. A commit that ADDS a name to `NO_LLM_SUBSTRATE_ALIASES`
++SHALL also carry evidence for that name, being either:
++
++1. a test under `tests/python/` that names the alias string, or
++2. an entry in `ops/substrate_alias_acks.md` naming the alias, dated,
++   with one line stating why the substrate genuinely invokes no LLM.
++
++A commit that adds an alias with neither SHALL be refused. The check
++SHALL fail closed: if it cannot read the staged diff, it SHALL refuse
++rather than pass.
++
++Adding the alias and the artifact it exempts in one commit is
++permitted WITH evidence and refused without it. The same-commit shape
++is the clearest abuse but not the only one, so the requirement is on
++the alias, not on the pairing.
++
++#### SCENARIO-SUBSTRATE-ALIAS-1
++
++Given a staged diff that adds a `*_no_llm` alias and no test naming it
++and no ack entry, the lint SHALL exit non-zero and name the alias.
++
++#### SCENARIO-SUBSTRATE-ALIAS-2
++
++Given the same diff plus a test that names the alias string, the lint
++SHALL pass.
++
++#### SCENARIO-SUBSTRATE-ALIAS-3
++
++Given the same diff plus a dated entry in `ops/substrate_alias_acks.md`
++naming the alias, the lint SHALL pass.
++
++#### SCENARIO-SUBSTRATE-ALIAS-4
++
++Given a staged diff that REMOVES an alias, or changes unrelated lines,
++the lint SHALL pass — the requirement is on widening the gate, not on
++touching the file.
++
++#### SCENARIO-SUBSTRATE-ALIAS-5
++
++Given a `git diff` invocation that fails, the lint SHALL exit non-zero
++stating it could not verify, never exit zero.
++
++## Implementation Status (REQ-SUBSTRATE-ALIAS-1)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-SUBSTRATE-ALIAS-1 | Implemented (`scripts/substrate_alias_evidence_lint.py`; pre-commit hook `substrate-alias-evidence-lint`; `ops/substrate_alias_acks.md` as the operator-ack channel) | Implemented (`tests/python/test_substrate_alias_evidence_lint.py`; mutations: evidence check disabled -> RED, fail-open on git error -> RED, removal treated as addition -> RED) |
++
+ ## REQ-CONDUCTOR-VERDICT-1: Artifacts MAY Declare A Closed Verdict Class, Cross-Checked Structurally
+ 
+ Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`
+diff --git a/ops/substrate_alias_acks.md b/ops/substrate_alias_acks.md
+new file mode 100644
+index 0000000000..329efb2114
+--- /dev/null
++++ b/ops/substrate_alias_acks.md
+@@ -0,0 +1,35 @@
++# Substrate alias acknowledgements
++
++Operator acknowledgements for names added to `NO_LLM_SUBSTRATE_ALIASES` in
++`scripts/adversarial_verify.py` (REQ-SUBSTRATE-ALIAS-1).
++
++## Why this file exists
++
++An alias in that tuple exempts an artifact from the fabrication gate's
++`DURATION_TOO_SHORT` check. On 2026-08-23 the tuple held 38 aliases, 19 of them
++added in the preceding two days, and every sampled addition landed in the same
++commit as the artifact it exempted. Nothing recorded why any of them was
++believed to run no LLM.
++
++An alias needs either a test naming it or a line here. This file is the second
++option: cheaper than a test when the substrate is obviously deterministic, and
++still a written reason a later reader can check.
++
++## How to add a line
++
++One line per alias. Date it, name it exactly as it appears in the tuple, and
++say in plain words what the experiment actually ran and why no model was
++invoked. "Deterministic" alone is not a reason — say what did the work.
++
++    - 2026-08-23 `example_exact_solver_no_llm` — runs the Z3 solver over a
++      pre-built instance file; no model is loaded and no server is contacted.
++
++## Acknowledgements
++
++<!-- Append below. Never rewrite or remove a line: an ack that turned out to be
++     wrong gets a dated correction underneath it, not a deletion. -->
++
++_None yet. The 38 aliases present when this rule shipped are grandfathered —
++the lint governs additions from 2026-08-23 onward. Auditing the existing 38 is
++separate, still-open work; see the QA-layer audit's coverage of
++`adversarial_verify.py`._
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index 16fe195f8d..a4eac2365a 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -162,6 +162,14 @@ WHOLE_FILE_TARGETS = (
+ # workflow, and an audit that hard-fails on a concurrent rename is an audit nobody runs.
+ # ---------------------------------------------------------------------------------------
+ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
++    (
++        PROJECT_ROOT / "scripts" / "substrate_alias_evidence_lint.py",
++        "decides whether a commit may WIDEN adversarial_verify's no-LLM allowlist, and "
++        "every name added there exempts artifacts from the fabrication gate's duration "
++        "check -- a silent non-firing here lets an experiment clear the gate by naming "
++        "its own substrate in the gate (measured 2026-08-23: 19 of 38 aliases added in "
++        "two days, each in the same commit as the artifact it exempted)",
++    ),
+     (
+         PROJECT_ROOT / "scripts" / "determination_preservation_lint.py",
+         "refuses commits that drop a fabrication-gate determination; the 2026-07-29 "
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 5355138f6d..f9b3ff6169 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -5084,6 +5084,16 @@ def _dogfood_verify_generated_code() -> None:
+         logger.debug("DOGFOOD: Skipped due to error: %s", e)
+ 
+ 
++# REQ-CONDUCTOR-RECEIPT-2. When we hand an audit its own wall-clock budget, the
++# kill timeout below must leave room to FINISH the unit that was running when the
++# budget expired, plus write the report. The budget is checked between units, never
++# inside one, so slack smaller than one unit means the partial-report mechanism can
++# never fire. Measured cost of one QA-layer unit: 250-375s (two PARTIAL reports,
++# 2026-08-22). 600s covers the worst observed unit with margin.
++# tests/python/test_audit_run_receipts.py asserts the inequality at every call site.
++AUDIT_TIMEOUT_SLACK_S = 600
++
++
+ def _run_audit_with_receipt(
+     name: str,
+     cmd: list[str],
+@@ -5300,14 +5310,19 @@ def research_step(
+                         "--limit",
+                         "20",
+                         "--budget-seconds",
+-                        "750",
++                        "1800",
+                         "--model",
+                         AGENT_TYPE_AUDIT,
+                         "--model-name",
+                         AGENT_MODEL_AUDIT,
+                     ],
+                     receipt=PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md",
+-                    timeout=900,
++                    # 1800 + AUDIT_TIMEOUT_SLACK_S. Raised from 750/900 on
++                    # 2026-08-23: at 250-375s per unit the old pair could only
++                    # ever review 2-3 of 20 units, and a unit starting near the
++                    # 750s mark blew the 900s kill before any report landed.
++                    # Rotation had sat at offset 5 of 174 units.
++                    timeout=2400,
+                 )
+ 
+             # Artifact convention audit (2026-08-13). The four audits above review CODE and
+@@ -5365,7 +5380,11 @@ def research_step(
+                         AGENT_MODEL_AUDIT,
+                     ],
+                     receipt=PROJECT_ROOT / "ops" / "experiment_claim_audit_report.md",
+-                    timeout=900,
++                    # 750 + AUDIT_TIMEOUT_SLACK_S (REQ-CONDUCTOR-RECEIPT-2). Was
++                    # 900, which left 150s for a unit that can take longer than
++                    # that -- the same too-small-slack shape that silenced the
++                    # QA-layer audit. Budget unchanged; only the slack was wrong.
++                    timeout=1350,
+                 )
+ 
+             # Audit-findings ledger (REQ-OPS-AUDIT-LEDGER-1): flagged claim-audit
+diff --git a/scripts/substrate_alias_evidence_lint.py b/scripts/substrate_alias_evidence_lint.py
+new file mode 100644
+index 0000000000..683904495b
+--- /dev/null
++++ b/scripts/substrate_alias_evidence_lint.py
+@@ -0,0 +1,176 @@
++#!/usr/bin/env python3
++"""Refuse a commit that widens the fabrication gate's no-LLM allowlist without evidence.
++
++REQ-SUBSTRATE-ALIAS-1 (openspec/capabilities/research-harnesses/spec.md).
++
++WHY THIS EXISTS. `adversarial_verify.py` skips its DURATION_TOO_SHORT check for
++any artifact whose declared `inference_substrate` appears in
++`NO_LLM_SUBSTRATE_ALIASES`. Nothing governed who may add a name to that tuple.
++Measured 2026-08-23: 38 aliases, 19 added in two days, and every sampled
++addition landed in the SAME commit as the artifact it exempted (for example
++commit 59c8f8602d, which registered the alias at 22:24Z and wrote
++experiment_6520 at 22:25Z).
++
++That means an experiment that trips the fabrication gate could clear itself by
++naming its own substrate in the gate's allowlist, with no test and no review.
++The layer that decides whether every other result counts was being edited by
++the results it judges.
++
++WHAT IT ASKS FOR. A new alias must arrive with one of two things:
++
++  1. a test under tests/python/ that names the alias string, or
++  2. a dated line in ops/substrate_alias_acks.md saying why that substrate
++     genuinely invokes no LLM.
++
++Either is cheap. Neither is automatic, which is the point -- someone has to
++state the reason in a place a reader can find it.
++
++WHAT IT DOES NOT ASK FOR. Removing an alias, renaming a variable, or editing
++any other part of the file is fine. The requirement is on WIDENING the gate.
++
++FAIL DIRECTION: closed. If the staged diff cannot be read, this refuses rather
++than passing -- a guard that returns "clean" when it could not look is the
++worst state a guard can be in (CLAUDE.md, QA-Layer Authenticity Discipline).
++"""
++
++from __future__ import annotations
++
++import argparse
++import re
++import subprocess
++import sys
++from pathlib import Path
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++
++GATE_FILE = "scripts/adversarial_verify.py"
++ACK_FILE = "ops/substrate_alias_acks.md"
++TEST_DIR = "tests/python"
++
++# The alias shape the gate consults. Deliberately the STRING LITERAL form: a
++# constant name (LOCAL_COMPACT_..._SUBSTRATE) can be renamed freely, but the
++# literal is what an artifact's inference_substrate field is compared against.
++ALIAS_RE = re.compile(r'"([a-z0-9_]*_no_llm)"')
++
++
++class GitUnavailable(RuntimeError):
++    """Raised when the staged diff cannot be read. Callers must refuse, not pass."""
++
++
++def new_aliases(diff_text: str, head_text: str) -> list[str]:
++    """Alias literals ADDED by this diff that HEAD did not already contain.
++
++    Subtracting HEAD's aliases matters because one alias normally appears twice
++    in a real change -- once as a module constant, once inside the tuple -- and
++    because reformatting can re-add a line that was never new.
++    """
++    already = set(ALIAS_RE.findall(head_text))
++    added: list[str] = []
++    for line in diff_text.splitlines():
++        if not line.startswith("+") or line.startswith("+++"):
++            continue
++        for alias in ALIAS_RE.findall(line):
++            if alias not in already and alias not in added:
++                added.append(alias)
++    return added
++
++
++def find_evidence(alias: str, test_texts: dict[str, str], ack_text: str) -> str | None:
++    """Return a human-readable evidence location, or None when there is none."""
++    if alias in ack_text:
++        return ACK_FILE
++    for name, body in test_texts.items():
++        if alias in body:
++            return name
++    return None
++
++
++def _run_git(args: list[str]) -> str:
++    try:
++        proc = subprocess.run(
++            ["git", *args],
++            cwd=PROJECT_ROOT,
++            capture_output=True,
++            text=True,
++            check=False,
++        )
++    except OSError as exc:  # git missing entirely
++        raise GitUnavailable(f"could not run git: {exc}") from exc
++    if proc.returncode != 0:
++        raise GitUnavailable(
++            f"git {' '.join(args)} failed rc={proc.returncode}: {proc.stderr.strip()}"
++        )
++    return proc.stdout
++
++
++def collect_evidence_texts() -> tuple[dict[str, str], str]:
++    """Read every test file and the ack file. Missing ack file is not an error."""
++    tests: dict[str, str] = {}
++    test_root = PROJECT_ROOT / TEST_DIR
++    if test_root.is_dir():
++        for path in sorted(test_root.rglob("*.py")):
++            try:
++                tests[str(path.relative_to(PROJECT_ROOT))] = path.read_text(encoding="utf-8")
++            except OSError:
++                continue
++    ack_path = PROJECT_ROOT / ACK_FILE
++    ack_text = ""
++    if ack_path.is_file():
++        try:
++            ack_text = ack_path.read_text(encoding="utf-8")
++        except OSError:
++            ack_text = ""
++    return tests, ack_text
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    # pre-commit passes the staged filenames; we ignore them and ask git
++    # directly, because a rename or a partial stage would otherwise hide the
++    # addition.
++    parser.add_argument("files", nargs="*", help="ignored; the staged diff is authoritative")
++    args = parser.parse_args(argv)
++    del args
++
++    try:
++        diff = _run_git(["diff", "--cached", "-U0", "--", GATE_FILE])
++        if not diff.strip():
++            return 0
++        head = _run_git(["show", f"HEAD:{GATE_FILE}"])
++    except GitUnavailable as exc:
++        print(f"substrate-alias-evidence-lint: REFUSING -- {exc}", file=sys.stderr)
++        print("  Cannot verify whether this commit widens the fabrication gate.", file=sys.stderr)
++        return 1
++
++    aliases = new_aliases(diff, head)
++    if not aliases:
++        return 0
++
++    tests, ack_text = collect_evidence_texts()
++    unsupported = [a for a in aliases if find_evidence(a, tests, ack_text) is None]
++
++    for alias in aliases:
++        where = find_evidence(alias, tests, ack_text)
++        if where:
++            print(f"substrate-alias-evidence-lint: {alias} -- evidence in {where}")
++
++    if not unsupported:
++        return 0
++
++    print("", file=sys.stderr)
++    print("substrate-alias-evidence-lint: REFUSING (REQ-SUBSTRATE-ALIAS-1)", file=sys.stderr)
++    print("", file=sys.stderr)
++    print("This commit widens the fabrication gate's no-LLM allowlist. Each new", file=sys.stderr)
++    print("alias exempts artifacts from the DURATION_TOO_SHORT check, so it needs", file=sys.stderr)
++    print("evidence a reader can find. Missing evidence for:", file=sys.stderr)
++    for alias in unsupported:
++        print(f"    {alias}", file=sys.stderr)
++    print("", file=sys.stderr)
++    print("Supply ONE of:", file=sys.stderr)
++    print(f"  - a test under {TEST_DIR}/ that names the alias string, or", file=sys.stderr)
++    print(f"  - a dated line in {ACK_FILE} saying why this substrate runs no LLM.", file=sys.stderr)
++    return 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/tests/python/test_audit_run_receipts.py b/tests/python/test_audit_run_receipts.py
+index e4c2a01cd8..5640a24b09 100644
+--- a/tests/python/test_audit_run_receipts.py
++++ b/tests/python/test_audit_run_receipts.py
+@@ -168,3 +168,74 @@ class TestQaAuditBudgetAndRotation:
+         with pytest.raises(IsADirectoryError):
+             qla.main()
+         assert not (tmp_path / "ops" / ".qa_layer_audit_rotation.json").exists()
++
++
++class TestBudgetTimeoutSlack:
++    """REQ-CONDUCTOR-RECEIPT-2: a caller timeout must outlast its own budget.
++
++    SCENARIO-CONDUCTOR-RECEIPT-5 / -6. The budget is checked BETWEEN units, so a
++    unit that starts just before the deadline still runs to completion. If the
++    caller's kill timeout does not leave room for that unit plus the report
++    write, the PARTIAL-report mechanism cannot fire and the audit dies silently
++    -- which is what happened to the QA-layer audit at 750s budget / 900s
++    timeout against units measured at 250-375s each.
++
++    This reads the REAL conductor source rather than a fixture: the defect was
++    two constants drifting apart, and only the real call sites can show that.
++    """
++
++    @staticmethod
++    def _budgeted_call_sites() -> list[tuple[str, int, int]]:
++        """(audit name, --budget-seconds, timeout=) for every budgeted call."""
++        import ast
++
++        tree = ast.parse((REPO_ROOT / "scripts" / "research_conductor.py").read_text())
++        found: list[tuple[str, int, int]] = []
++        for node in ast.walk(tree):
++            if not isinstance(node, ast.Call):
++                continue
++            if getattr(node.func, "id", None) != "_run_audit_with_receipt":
++                continue
++            name = None
++            if node.args and isinstance(node.args[0], ast.Constant):
++                name = node.args[0].value
++            timeout = None
++            for kw in node.keywords:
++                if kw.arg == "timeout" and isinstance(kw.value, ast.Constant):
++                    timeout = kw.value.value
++            budget = None
++            for arg in node.args:
++                if not isinstance(arg, ast.List):
++                    continue
++                parts = [e.value for e in arg.elts if isinstance(e, ast.Constant)]
++                for i, part in enumerate(parts):
++                    if part == "--budget-seconds" and i + 1 < len(parts):
++                        budget = int(parts[i + 1])
++            if budget is not None and timeout is not None:
++                found.append((str(name), budget, timeout))
++        return found
++
++    def test_slack_constant_covers_a_worst_case_unit(self) -> None:
++        # 375s was the worst measured QA-layer unit (2 units / 750s budget,
++        # 2026-08-22). The constant must cover that plus the report write.
++        assert rc.AUDIT_TIMEOUT_SLACK_S >= 375
++
++    def test_every_budgeted_audit_has_slack(self) -> None:
++        sites = self._budgeted_call_sites()
++        # Guard the guard: if the AST walk finds nothing, this test would pass
++        # vacuously and the invariant would go unchecked.
++        assert sites, "no budgeted _run_audit_with_receipt call sites found"
++        violations = [
++            f"{name}: timeout={timeout} < budget={budget} + slack={rc.AUDIT_TIMEOUT_SLACK_S}"
++            for name, budget, timeout in sites
++            if timeout < budget + rc.AUDIT_TIMEOUT_SLACK_S
++        ]
++        assert not violations, "; ".join(violations)
++
++    def test_qa_layer_budget_reviews_more_than_a_handful(self) -> None:
++        # The origin incident was not only the timeout: a 750s budget against
++        # 250-375s units could review 2-3 of 20 selected units, so rotation
++        # crawled (offset 5 of 174). Assert the budget buys a meaningful slice.
++        sites = {name: (budget, timeout) for name, budget, timeout in self._budgeted_call_sites()}
++        budget, _ = sites["qa-layer-authenticity-audit"]
++        assert budget // 375 >= 4, f"budget {budget}s reviews < 4 worst-case units"
+diff --git a/tests/python/test_substrate_alias_evidence_lint.py b/tests/python/test_substrate_alias_evidence_lint.py
+new file mode 100644
+index 0000000000..943e992a7a
+--- /dev/null
++++ b/tests/python/test_substrate_alias_evidence_lint.py
+@@ -0,0 +1,195 @@
++"""Tests for the no-LLM substrate alias evidence lint.
++
++REQ: REQ-SUBSTRATE-ALIAS-1 (openspec/capabilities/research-harnesses/spec.md).
++SCENARIOs: SCENARIO-SUBSTRATE-ALIAS-1 (no evidence -> refuse), -2 (test names
++the alias -> pass), -3 (ack entry -> pass), -4 (removal / unrelated edit ->
++pass), -5 (git failure -> refuse, never pass).
++
++Origin: on 2026-08-23 the fabrication gate's NO_LLM_SUBSTRATE_ALIASES tuple
++held 38 names, 19 added in two days, and every sampled addition landed in the
++same conductor commit as the artifact it exempted -- commit 59c8f8602d
++registered an alias at 22:24Z and wrote experiment_6520 at 22:25Z. An
++experiment could clear the gate by naming its own substrate in the gate.
++
++No test writes tracked state; the git-facing paths are monkeypatched.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "scripts"))
++
++import pytest  # noqa: E402
++
++import substrate_alias_evidence_lint as lint  # noqa: E402
++
++# A realistic pair of added lines: the module constant and the tuple entry,
++# which is how a real alias addition looks in the diff.
++DIFF_ADDING_ALIAS = """\
++diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
++--- a/scripts/adversarial_verify.py
+++++ b/scripts/adversarial_verify.py
++@@ -418,0 +419,3 @@
+++LOCAL_COMPACT_ROUTER_SUBSTRATE = (
+++    "local_compact_router_plus_exact_exception_table_and_native_solver_no_llm"
+++)
++@@ -440,0 +444 @@
+++    LOCAL_COMPACT_ROUTER_SUBSTRATE,
++"""
++
++NEW_ALIAS = "local_compact_router_plus_exact_exception_table_and_native_solver_no_llm"
++
++HEAD_WITHOUT_ALIAS = """\
++NO_LLM_SUBSTRATE_ALIASES = (
++    "aggregation_from_upstream_artifacts_no_llm",
++    "deterministic_automaton_no_llm",
++)
++"""
++
++HEAD_WITH_ALIAS = HEAD_WITHOUT_ALIAS.replace(
++    '    "deterministic_automaton_no_llm",',
++    f'    "deterministic_automaton_no_llm",\n    "{NEW_ALIAS}",',
++)
++
++
++class TestNewAliasDetection:
++    def test_added_alias_is_detected_once(self) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-1, detection half. The literal appears on
++        # one added line and the constant name on another; the alias must be
++        # reported exactly once, not twice.
++        assert lint.new_aliases(DIFF_ADDING_ALIAS, HEAD_WITHOUT_ALIAS) == [NEW_ALIAS]
++
++    def test_alias_already_in_head_is_not_new(self) -> None:
++        # Reformatting can re-add a line for an alias that already existed.
++        # Widening the gate is the trigger, not touching the file.
++        assert lint.new_aliases(DIFF_ADDING_ALIAS, HEAD_WITH_ALIAS) == []
++
++    def test_removal_is_not_an_addition(self) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-4. Narrowing the gate needs no evidence.
++        removal = DIFF_ADDING_ALIAS.replace("\n+", "\n-")
++        assert lint.new_aliases(removal, HEAD_WITH_ALIAS) == []
++
++    def test_removal_is_not_an_addition_even_with_an_empty_head(self) -> None:
++        # The test above passes even without the '+' prefix check, because a
++        # removed alias is by definition already in HEAD and the `already`
++        # subtraction filters it. Mutation testing found that: deleting the
++        # prefix check left the suite green, i.e. the check was decorative.
++        #
++        # It stops being decorative the moment head_text is empty or stale --
++        # a caller that reads HEAD from the wrong ref, or a future
++        # diff-from-file mode. Then every '-' line would parse as an addition
++        # and REMOVING an alias would demand evidence. Pin that here so the
++        # prefix check is load-bearing under test.
++        removal = DIFF_ADDING_ALIAS.replace("\n+", "\n-")
++        assert lint.new_aliases(removal, "") == []
++
++    def test_unrelated_added_lines_are_ignored(self) -> None:
++        unrelated = (
++            "--- a/scripts/adversarial_verify.py\n"
++            "+++ b/scripts/adversarial_verify.py\n"
++            "+SOME_OTHER_CONSTANT = 3\n"
++            '+SUBSTRATE_KIND_LIVE = "live_llm_inference"\n'
++        )
++        assert lint.new_aliases(unrelated, HEAD_WITHOUT_ALIAS) == []
++
++    def test_diff_header_plusplusplus_is_not_an_added_line(self) -> None:
++        # `+++ b/...` starts with '+' and must not be parsed as content.
++        header_only = f"+++ b/x_{NEW_ALIAS}.py\n"
++        assert lint.new_aliases(header_only, HEAD_WITHOUT_ALIAS) == []
++
++
++class TestEvidence:
++    def test_no_evidence_anywhere(self) -> None:
++        assert lint.find_evidence(NEW_ALIAS, {}, "") is None
++
++    def test_test_file_naming_the_alias_counts(self) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-2.
++        tests = {"tests/python/test_x.py": f'assert sub == "{NEW_ALIAS}"'}
++        assert lint.find_evidence(NEW_ALIAS, tests, "") == "tests/python/test_x.py"
++
++    def test_ack_entry_counts(self) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-3.
++        ack = f"- 2026-08-23 `{NEW_ALIAS}` — runs Z3 over a prebuilt instance."
++        assert lint.find_evidence(NEW_ALIAS, {}, ack) == lint.ACK_FILE
++
++    def test_evidence_for_a_different_alias_does_not_count(self) -> None:
++        # The check must be per-alias. A neighbouring alias's ack line must not
++        # launder an unrelated addition through.
++        ack = "- 2026-08-23 `some_other_thing_no_llm` — deterministic replay."
++        assert lint.find_evidence(NEW_ALIAS, {}, ack) is None
++
++
++class TestMainExitCodes:
++    @staticmethod
++    def _patch_git(monkeypatch, diff: str, head: str) -> None:
++        def fake(args: list[str]) -> str:
++            if args[:2] == ["diff", "--cached"]:
++                return diff
++            if args[0] == "show":
++                return head
++            raise AssertionError(f"unexpected git call: {args}")
++
++        monkeypatch.setattr(lint, "_run_git", fake)
++
++    def test_refuses_when_alias_added_without_evidence(self, monkeypatch, capsys) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-1.
++        self._patch_git(monkeypatch, DIFF_ADDING_ALIAS, HEAD_WITHOUT_ALIAS)
++        monkeypatch.setattr(lint, "collect_evidence_texts", lambda: ({}, ""))
++        assert lint.main([]) == 1
++        assert NEW_ALIAS in capsys.readouterr().err
++
++    def test_passes_when_evidence_present(self, monkeypatch) -> None:
++        self._patch_git(monkeypatch, DIFF_ADDING_ALIAS, HEAD_WITHOUT_ALIAS)
++        monkeypatch.setattr(
++            lint,
++            "collect_evidence_texts",
++            lambda: ({}, f"- 2026-08-23 `{NEW_ALIAS}` — exact solver only."),
++        )
++        assert lint.main([]) == 0
++
++    def test_passes_when_gate_file_untouched(self, monkeypatch) -> None:
++        self._patch_git(monkeypatch, "", HEAD_WITHOUT_ALIAS)
++        monkeypatch.setattr(lint, "collect_evidence_texts", lambda: ({}, ""))
++        assert lint.main([]) == 0
++
++    def test_refuses_when_git_fails(self, monkeypatch, capsys) -> None:
++        # SCENARIO-SUBSTRATE-ALIAS-5. Fail closed: a guard that answers "clean"
++        # when it could not look is worse than no guard.
++        def boom(args: list[str]) -> str:
++            raise lint.GitUnavailable("git diff failed rc=128")
++
++        monkeypatch.setattr(lint, "_run_git", boom)
++        assert lint.main([]) == 1
++        assert "REFUSING" in capsys.readouterr().err
++
++    def test_reports_each_unsupported_alias(self, monkeypatch, capsys) -> None:
++        second = "another_made_up_substrate_no_llm"
++        diff = DIFF_ADDING_ALIAS + f'+    "{second}",\n'
++        self._patch_git(monkeypatch, diff, HEAD_WITHOUT_ALIAS)
++        monkeypatch.setattr(
++            lint,
++            "collect_evidence_texts",
++            lambda: ({"tests/python/test_a.py": NEW_ALIAS}, ""),
++        )
++        assert lint.main([]) == 1
++        err = capsys.readouterr().err
++        assert second in err
++        # The supported one must NOT appear in the refusal list.
++        assert err.count(NEW_ALIAS) == 0
++
++
++class TestWiring:
++    def test_hook_is_registered(self) -> None:
++        # A lint nothing calls is the bug class this project keeps hitting.
++        config = (REPO_ROOT / ".pre-commit-config.yaml").read_text()
++        assert "substrate-alias-evidence-lint" in config
++
++    def test_ack_file_exists(self) -> None:
++        assert (REPO_ROOT / lint.ACK_FILE).is_file()
++
++    @pytest.mark.parametrize("alias", ["x_no_llm", "deterministic_automaton_no_llm"])
++    def test_alias_regex_matches_the_real_shape(self, alias: str) -> None:
++        assert lint.ALIAS_RE.findall(f'    "{alias}",') == [alias]
+-- 
+2.55.0
+

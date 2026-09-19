@@ -1,0 +1,43 @@
+From 47d201f8b988d95a8035e9b6c87ed2172ffb887e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 08:35:27 -0400
+Subject: [PATCH 00992/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index eb3dda2866..2d9bd4f980 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 49, "phase": "iteration_start", "last_beat": "2026-06-09T12:18:46Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 50, "phase": "iteration_start", "last_beat": "2026-06-09T12:35:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4b2380282b..c9f0ae2b93 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8101,3 +8101,4 @@ c |
+ | 2026-06-09 11:11 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.91s |
+ | 2026-06-09 12:14 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-06-09 12:16 UTC | Milestone 2026.06.367 activated | OK | 11 tasks queued |
++| 2026-06-09 12:33 UTC | Archive .366 -> activate .367; GREEN-GATE: assert  | OK | 110 passed in 5.51s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7e126cbb66..90e15e4ba8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 49, "phase": "iteration_start", "started_at": "2026-06-09T12:18:46Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 50, "phase": "iteration_start", "started_at": "2026-06-09T12:35:26Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

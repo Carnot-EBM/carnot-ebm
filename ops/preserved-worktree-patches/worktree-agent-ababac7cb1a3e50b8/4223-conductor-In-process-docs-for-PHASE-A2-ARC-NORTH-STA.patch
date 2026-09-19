@@ -1,0 +1,25 @@
+From 2ecdeb1c1c34c47ac7cb0307f512b983b3b0a6af Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 11:21:59 -0400
+Subject: [PATCH 04223/11362] [conductor] In-process docs for PHASE A2 (ARC
+ NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW
+ reproducible level on a ROTATED unsolved target (bp35/sb26).
+ offline_reproduced gated.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index aab8014247..54c2064c5c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10162,3 +10162,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-26: PHASE E (CAPSTONE .441) -- aggregate the .441 scorecard: the S2 off-path trust-gate verdict (live trust value -> S3 authorized, or bounded), the level-up bank, self-play, readiness, reproducible_total_levels. SKIP genuinely-flagged artifacts but record the S2 true verdict from the gate numbers (note any stale-conductor false-positive). (✅ Complete) — honest_verdict=complete_s2_structural_energy_bounded_v441_capstone_ready; results/experiment_4799_capstone_v441.json
+ - 2026-06-26: PHASE 0 (TRANSITION) -- archive .441 -> activate .442; assert YAML parses + pre-test gate green; DETECT + RESOLVE any poison pre-test. RECORD the true .441 close-state (S2 was a DEGENERATE NON-TEST -- inconclusive, NOT bounded; S2-v2 re-tests with a diverse pool). (✅ Complete) — honest_verdict=complete_441_archived_442_activated_already_active_s2_inconclusive_recorded; results/experiment_4800_archive_441_activate_442.json
+ - 2026-06-26: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S2-v2 OFF-PATH TRUST GATE with an ENFORCED behaviorally-DIVERSE candidate pool. S2 (exp4791) was a degenerate non-test (candidate engines bit-identical on held-out transitions, so any selector scored the same). S2-v2 generates a candidate pool that genuinely spans off-path generalization, logs per-game selections, and uses an EFFECTIVE-GAMES gate so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake null. (✅ Complete) — honest_verdict=complete_structural_energy_s2v2_bounded_diverse_pool; results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
++- 2026-06-26: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED unsolved target (bp35/sb26). offline_reproduced gated. (✅ Complete) — honest_verdict=complete_bp35_no_new_level_residual_existing_depth; results/experiment_4802_levelup_attempt.json
+-- 
+2.55.0
+

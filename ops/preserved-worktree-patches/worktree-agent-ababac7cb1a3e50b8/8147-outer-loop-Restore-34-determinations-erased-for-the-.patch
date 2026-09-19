@@ -1,0 +1,774 @@
+From fe489db8471d3eed14f392ca4baf0d04e2e291c9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 3 Aug 2026 14:43:33 -0400
+Subject: [PATCH 08147/11362] [outer-loop] Restore 34 determinations erased for
+ the SECOND time; clear the freshness debt my own change created
+
+TWO FINDINGS, both corrections owed rather than formalities.
+
+1. THE PREMISE WAS BACKWARDS. artifact_freshness_lint.py was NOT red at pristine HEAD
+   with pre-existing debt. It was GREEN. Recorded dependency hashes do not match HEAD
+   (recorded cf34e53f/d3401dfd vs HEAD 8406b89a), but every one of those drifts was
+   already covered by a freshness_acknowledgements block pinning HEAD's exact hash. A
+   first analysis that ignored the acknowledgement mechanism reported "11 pre-existing
+   stale artifacts"; re-run with the lint's own ack logic it is 0. Every one of the 12
+   stale reports was caused by THIS session's staged edits to four modules -- so this
+   is not inherited debt, it is my change paying for itself.
+
+2. A TEST RUN ERASED 34 DETERMINATIONS, AGAIN. Conductor commit 4b7c813d28 ran
+   `git add -A` after a pytest child rewrote tracked results/** in place; 7 artifacts
+   lost 27 determination/corrigendum keys, incl. 6 `flagged_adversarial` quarantine
+   stamps and exp3946's `solve_provenance`. Six still carried a
+   flagged_adversarial_restoration_note from 2026-07-27 -- the same records, destroyed
+   a second time. Dropping a stamp RE-ADMITS a quarantined artifact to headline
+   aggregation, so this is a live correctness risk, not bookkeeping. Restored
+   byte-identical to 509b3ed0e8; the conductor's MEASUREMENT values are kept
+   (fail-forward). Verified strictly additive: dropped=0, changed=0 on all 7.
+
+WHY ACKNOWLEDGEMENTS AND NOT 12 REBUILDS. A rebuild was tried first, on the cheapest
+artifact: arc_gateway_card_ground_truth_20260727.json, 374.2s, 48/48 cells, 6 games x 3
+seeds replayed through E3AgentPolicy. NO SCIENTIFIC FIGURE MOVED -- the verdict still
+reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44
+cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was
+identical. The only deltas were 48 wall-clock timings, provenance hashes and the
+checksum. But the rebuild also SILENTLY DROPPED all 5 pre-existing acknowledgement
+blocks (33 keys) -- a never-prune violation executed by the rebuild tooling. That
+rebuild was reverted. Repeating it 11 more times would have rewritten hundreds of
+published timings and destroyed ~100 hand-written records to re-prove what one rebuild
+already proved. The 22 acknowledgements added here follow the precedent of the 5 prior
+default-OFF changes to this same file, each cleared the same way.
+
+The rebuild tooling dropping freshness_acknowledgements is a real defect and is filed
+here rather than fixed, because fixing it belongs with whoever owns the analyser.
+
+Each acknowledgement pins the exact new hash, so it expires the moment the file changes
+again. Inertness argued per module: agent = one default-OFF branch; trust_energy =
+additive, gated call site; executable_world_model = observation-only counters, zero
+lines removed; experiment_5760 = whitelist widened to stop dropping keys. Backed by 55
+tests passing in BOTH flag directions with trajectory-invariance for OFF.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...rc_gateway_card_ground_truth_20260727.json | 12 ++++++-
+ ..._per_level_reset_attribution_20260726.json | 12 ++++++-
+ results/experiment_1938_nrgpt_loss_probe.json | 27 ++++++++++++++--
+ results/experiment_2085_pem_sudoku_eval.json  | 27 ++++++++++++++--
+ ..._fix_harness_and_bounded_train_chunk1.json | 27 ++++++++++++++--
+ results/experiment_3946_r11l_first_solve.json | 13 +++++++-
+ ...sota_ingestion_verifier_moat_guidance.json | 25 ++++++++++++++-
+ ...sota_ingestion_verifier_moat_guidance.json | 25 ++++++++++++++-
+ ...6011_world_model_change_gate_four_arm.json | 32 ++++++++++++++++++-
+ ...ent_6012_hidden_state_trust_gate_hole.json | 32 ++++++++++++++++++-
+ ...6013_hidden_state_change_gate_closure.json | 32 ++++++++++++++++++-
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json | 20 ++++++++++++
+ results/experiment_696_icalm_abstention.json  | 27 ++++++++++++++--
+ ...p_arc_early_stop_grace_sweep_20260726.json | 12 ++++++-
+ ..._win_llm_on_eval_concurrency_20260727.json | 22 ++++++++++++-
+ ...arc_gateway_accurate_rescore_20260726.json | 22 ++++++++++++-
+ ...ter_loop_arc_gateway_rescore_20260726.json | 12 ++++++-
+ ...rc_generator_concurrency_fix_20260727.json | 22 ++++++++++++-
+ ...rc_llm_on_wallclock_envelope_20260726.json | 22 ++++++++++++-
+ ...arc_reset_charge_attribution_20260726.json | 12 ++++++-
+ 20 files changed, 412 insertions(+), 23 deletions(-)
+
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index ba8530d6bd..f4e27bc864 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2685,6 +2685,16 @@
+     "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+     "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+     "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++    "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++    "acknowledged_on": "2026-08-03",
++    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++    "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++    "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++    "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+    }
+   ]
+  },
+@@ -2753,4 +2763,4 @@
+   "historical_artifacts_rewritten": 0,
+   "submitted_anything": false
+  }
+-}
+\ No newline at end of file
++}
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index aa6f81800d..a59490d1da 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1290,6 +1290,16 @@
+     "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+     "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+     "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++    "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++    "acknowledged_on": "2026-08-03",
++    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++    "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++    "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++    "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+    }
+   ]
+  },
+@@ -1788,4 +1798,4 @@
+   },
+   "power_note": "This is a WITNESS that the whole-run total mis-ranks the costly share on the cells measured, not a correlation estimate. Each game has at most 3 seeds, so no rank test here could reach p<0.05 (a 3-point support cannot). The claim being made is existential -- 'a cell with MORE total resets can have FEWER costly ones' -- and one counterexample settles it."
+  }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..08d520477e 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,28 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
+-}
+\ No newline at end of file
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
++}
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..3e19b38005 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,28 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+-}
+\ No newline at end of file
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
++}
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 1bef27a44a..79b0aca1ce 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,28 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.41
+-}
+\ No newline at end of file
++  "duration_s": 0.41,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.3 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
++}
+diff --git a/results/experiment_3946_r11l_first_solve.json b/results/experiment_3946_r11l_first_solve.json
+index 0523ca2b44..f54291e184 100644
+--- a/results/experiment_3946_r11l_first_solve.json
++++ b/results/experiment_3946_r11l_first_solve.json
+@@ -38,5 +38,16 @@
+   ],
+   "solved": true,
+   "title": "arc3_m2v5b_r11l_first_solve",
+-  "total_actions": 4
++  "total_actions": 4,
++  "inference_substrate_correction_note": "CORRECTED 2026-07-27 by the outer loop. The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set, so this artifact blocked EVERY commit that staged it -- and it has been invalid since it was written (byte-identical at HEAD). The replacement is the legal value that describes what the run actually did, established by reading the artifact rather than guessing: duration_s=0.2 with NO gguf / llama / llm / cuda / torch / model_specs / induction reference anywhere in the file, i.e. a pure offline-arcade agent run with no LLM tier. That substrate's duration floor is 0.01s, which 0.2s clears, so the relabel does not launder a too-fast run past a stricter floor. The original string is preserved above per CLAUDE.md never-prune; no measurement value was touched.\n\nADVERSARIAL REVIEW ADDENDUM (2026-07-27, same day). Three things the original note did not say. (1) The substrate was re-confirmed by READING THE SCRIPT, not merely by the absence of gguf/llama/llm strings in the artifact: scripts/experiments/experiment_3946_r11l_first_solve.py constructs Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR) and steps the offline sim directly, and imports no llama_cpp / transformers / torch / cuda anywhere. So no LLM ran and nothing was laundered past a stricter duration floor. (2) THE RELABEL MADE THIS ARTIFACT AUDITABLE FOR THE FIRST TIME, and that is a change in its own right: measured directly, scripts/adversarial_verify.py returns 0 flags on a reconstructed pre-relabel copy and 1 WARN (METHODOLOGY_MISSING: reproducibility_checksum) on the corrected file. The old string matched no substrate classifier, so it escaped every check -- an illegal value was quieter than a legal one. The new WARN is REAL and is not being suppressed: CLAUDE.md's substrate table requires random_seed AND reproducibility_checksum for offline_arcade_live_agent_runtime_self_discovery_no_llm; this artifact has random_seed=42 and NO reproducibility_checksum. It cannot be back-computed from a completed run and will NOT be fabricated. (3) The script reads engine internals (env._game and env._game.yfbjozweime) for ground-truth piece/target pairs, so 'self_discovery' in the substrate name describes the OFFLINE-ARCADE-no-LLM half of the value, not a claim that the live agent discovered this game unaided; the legal set offers no more precise value. Treat the solve_provenance as development_proxy at best.",
++  "solve_provenance": "development_proxy",
++  "solve_provenance_note": "Declared 2026-07-27 by adversarial review (CLAUDE.md \"ARC Live-Path Reachability Discipline\" self-solve provenance contract). This run reads engine internals (env._game.yfbjozweime) for ground-truth piece/target pairs, which the LIVE agent cannot do on a hidden game, so it is a development proxy -- NOT evidence that the live agent self-discovers this solve. Recorded rather than left undeclared, which the contract treats as a WARN.",
++  "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
++  "restored_2026_08_03_keys": [
++    "inference_substrate_correction_note",
++    "solve_provenance",
++    "solve_provenance_note",
++    "inference_substrate_original_invalid_value"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+ }
+diff --git a/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+index 6c5d648e8a..534d1e6ba5 100644
+--- a/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
++++ b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+@@ -63,5 +63,28 @@
+       "name": "ARC-AGI-3 technical report",
+       "url": "https://arxiv.org/abs/2603.24621"
+     }
+-  ]
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+ }
+diff --git a/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json b/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+index 0b3a353aab..fe83959875 100644
+--- a/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
++++ b/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+@@ -71,5 +71,28 @@
+       "queued_diffusiongemma_implication": "For DiffusionGemma, compare external Carnot energy with an internal sequence-level energy baseline so guidance is not just an EBM approximation claim.",
+       "url": "https://arxiv.org/abs/2410.21357"
+     }
+-  ]
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+ }
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index a4f765f10f..ed935f1f63 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52631,6 +52631,36 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
++        "sha256_was": "f7bbe936177c9b00ea679ea22f7c19006c79686ddf085d46685d0bc80134a8a4",
++        "sha256_now": "b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF and otherwise purely additive. New symbols only (cegis_accept_split_enabled, AcceptanceSplit, _n_gradeable, split_refinement_acceptance). The single call site is gated `split_refinement_acceptance(transitions) if cegis_accept_split_enabled() else None`, so with the flag unset acceptance_split is None, select_trusted_world_model takes exactly the path it took before, and the one new reported field acceptance_split_enabled evaluates to False.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ]
+   },
+@@ -52736,4 +52766,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 738090d0ec..9a571c7914 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -115,6 +115,36 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
++        "sha256_was": "f7bbe936177c9b00ea679ea22f7c19006c79686ddf085d46685d0bc80134a8a4",
++        "sha256_now": "b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF and otherwise purely additive. New symbols only (cegis_accept_split_enabled, AcceptanceSplit, _n_gradeable, split_refinement_acceptance). The single call site is gated `split_refinement_acceptance(transitions) if cegis_accept_split_enabled() else None`, so with the flag unset acceptance_split is None, select_trusted_world_model takes exactly the path it took before, and the one new reported field acceptance_split_enabled evaluates to False.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ]
+   },
+@@ -23383,4 +23413,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 99f62e1134..234d78dd70 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8657,6 +8657,36 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
++        "sha256_was": "f7bbe936177c9b00ea679ea22f7c19006c79686ddf085d46685d0bc80134a8a4",
++        "sha256_now": "b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF and otherwise purely additive. New symbols only (cegis_accept_split_enabled, AcceptanceSplit, _n_gradeable, split_refinement_acceptance). The single call site is gated `split_refinement_acceptance(transitions) if cegis_accept_split_enabled() else None`, so with the flag unset acceptance_split is None, select_trusted_world_model takes exactly the path it took before, and the one new reported field acceptance_split_enabled evaluates to False.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ]
+   },
+@@ -8737,4 +8767,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 7225f133c6..e4e13a4b3b 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1386,6 +1386,26 @@
+         "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
+         "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
+         "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
++      },
++      {
++        "path": "python/carnot/experiment_5760_cegis_refinement_induction_ab.py",
++        "sha256_was": "b1a536a16e898f741d612721080763289e08954391ca90ef3ae694ae9bf9c96b",
++        "sha256_now": "45f03d7da9ace00dec8bc2b12d61d4b3bbe36c564a45ce4ee13ee14934e354bc",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042, additive pass-through. It widens the `slim_rounds` whitelist comprehension so engine-behaviour keys the reinduction loop ALREADY records survive into the shard instead of being silently dropped. It adds keys to an output dict and changes no computation, no ordering and no acceptance decision.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 04b96d940b..6a633950c7 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -100,5 +100,28 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": []
+-}
+\ No newline at end of file
++  "invariant_violations": [],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
++}
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 17dbba0f79..cc267700be 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5359,6 +5359,16 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ]
+   },
+@@ -5375,4 +5385,4 @@
+     "values_changed_total": 13,
+     "keys_restored_after_wholesale_rewrite": []
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index dc8042f3b1..664eb7c016 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3425,9 +3425,29 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+   },
+   "reproducibility_checksum": "sha256:735b5c2395dbe6390ab263b02f23eaae67a33b44774518a9c27de3cd8b794c95"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index 997d0cb9db..9adf007b5e 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3198,6 +3198,26 @@
+     "sha256_now": "f5a871cc9d0002bb67d75f3a29a2e178662a70f80af80ff55e08238d6aace864",
+     "reason": "The upstream artifact changed in its `provenance` block ONLY: REQ-ARC-WMTE-6083 appended one `freshness_acknowledgements` entry recording that the win-transition supply in arc_competition_agent.py is now behind a default-OFF env gate. Not one measured value, gate, count or verdict in the upstream artifact was touched, so nothing this artifact imports from it can have moved.",
+     "evidence": "PROVEN MECHANICALLY, not asserted: the upstream file was loaded at git HEAD and from disk, the `provenance` key popped from both, and the remaining objects compared for equality -- they are equal, so the ONLY difference is inside `provenance`, which this artifact does not consume. The upstream acknowledgement is itself evidenced by the live-path measurement in results/outer_loop_arc_win_transition_exposure_20260802.json: over 128 live induce calls the argument was None on all 98 that reached the gated call site, and `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, so passing None and omitting the keyword are the same computation."
++   },
++   {
++    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++    "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
++    "sha256_now": "36b12b7e88ef10245028f8a401acace12041eefd443dbf3d078b91ad9e04e829",
++    "acknowledged_on": "2026-08-03",
++    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++    "reason": "Second-order cascade from the 2026-08-03 REQ-ARC-WMTE-6090/6042 acknowledgement pass, and the upstream delta is PROVENANCE METADATA ONLY. This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements block was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
++    "evidence": "Measured, not asserted: a key-set and value diff of each upstream artifact against its state at commit 0202829d4da9 reports DROPPED=0, VALUES CHANGED=0, ADDED=8, and all 8 added keys live under provenance.freshness_acknowledgements. Since every number this artifact consumes from upstream is unchanged, a rebuild could not alter any figure here. The upstream acknowledgements themselves rest on a full 374.2s rebuild of results/arc_gateway_card_ground_truth_20260727.json against this working tree, which reproduced every scientific figure byte-identically.",
++    "why_not_rebuilt": "A rebuild_command is registered, but rebuilding would recompute nothing: the inputs are bit-identical apart from appended provenance metadata. It would also drop this artifact's own pre-existing acknowledgement blocks, which is the never-prune defect in the rebuild tooling recorded on the sibling artifacts today."
++   },
++   {
++    "path": "results/arc_per_level_reset_attribution_20260726.json",
++    "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
++    "sha256_now": "297be25d2faa5888046fe79066a140db51f24854b5e9262378eb12512d2bfebf",
++    "acknowledged_on": "2026-08-03",
++    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++    "reason": "Second-order cascade from the 2026-08-03 REQ-ARC-WMTE-6090/6042 acknowledgement pass, and the upstream delta is PROVENANCE METADATA ONLY. This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements block was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
++    "evidence": "Measured, not asserted: a key-set and value diff of each upstream artifact against its state at commit 0202829d4da9 reports DROPPED=0, VALUES CHANGED=0, ADDED=8, and all 8 added keys live under provenance.freshness_acknowledgements. Since every number this artifact consumes from upstream is unchanged, a rebuild could not alter any figure here. The upstream acknowledgements themselves rest on a full 374.2s rebuild of results/arc_gateway_card_ground_truth_20260727.json against this working tree, which reproduced every scientific figure byte-identically.",
++    "why_not_rebuilt": "A rebuild_command is registered, but rebuilding would recompute nothing: the inputs are bit-identical apart from appended provenance metadata. It would also drop this artifact's own pre-existing acknowledgement blocks, which is the never-prune defect in the rebuild tooling recorded on the sibling artifacts today."
+    }
+   ]
+  },
+@@ -3236,4 +3256,4 @@
+   },
+   "verdict": "REBUILD IS NUMERICALLY INERT: every headline, median and per-cell value is unchanged."
+  }
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 0ea8a1df7b..7006e8e016 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1093,6 +1093,16 @@
+     "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+     "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+     "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++    "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++    "acknowledged_on": "2026-08-03",
++    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++    "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++    "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++    "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
+    }
+   ]
+  },
+@@ -1101,4 +1111,4 @@
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
+  "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 14ce0c1222..d0b3c3b98d 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1058,9 +1058,29 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+   },
+   "reproducibility_checksum": "sha256:7b9f345f0181c25a023968e44d3e9eeb80fa065390b406e1639db53836faab5c"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index be94c4ad75..7af07655a2 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -300,6 +300,26 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "4e2f768779396847cee200f865a778c7f9aceb93500f6b672f0584f111ebcb13",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6042 instrumentation, and it is OBSERVATION-ONLY. It adds counters (n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable) incremented inside an already-existing loop and recorded on VerifyResult. Zero lines were removed. No prediction, decision, threshold, gate or control-flow branch reads any of them, so the verifier's output is bit-identical.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+@@ -3607,4 +3627,4 @@
+     "corroborates_the_memory_ceiling": "thread-per-game is also the mechanism behind the prior sweep's memory finding: all ~110 search graphs are retained simultaneously in one process."
+   },
+   "acceptance_gate_all_passed": true
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index 7da7deb620..853090b442 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16858,6 +16858,16 @@
+         "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+         "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+         "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
++        "acknowledged_on": "2026-08-03",
++        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
++        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
++        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
++        "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+       }
+     ]
+   },
+@@ -16872,4 +16882,4 @@
+     "values_changed_total": 28,
+     "keys_restored_after_wholesale_rewrite": []
+   }
+-}
+\ No newline at end of file
++}
+-- 
+2.55.0
+

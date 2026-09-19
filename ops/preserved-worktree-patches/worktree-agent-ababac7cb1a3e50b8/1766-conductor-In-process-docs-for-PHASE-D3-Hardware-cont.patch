@@ -1,0 +1,35 @@
+From 5b9201cffe894f75ff55bc73a4f9980eaa4d23ad Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 09:04:47 -0400
+Subject: [PATCH 01766/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20D3=20=E2=80=94=20Hardware=20continuity=20(consolid?=
+ =?UTF-8?q?ated;=20GateMate=20+=20PolarFire=20drive-toward-terminal;=20KV2?=
+ =?UTF-8?q?60=20terminal/opportunistic).=20Per-board=20reachability=20+=20?=
+ =?UTF-8?q?next=20concrete=20step.=20GateMate=20(openFPGALoader=20-c=20dir?=
+ =?UTF-8?q?tyJtag=20--detect;=20toward=20n=3D16=20Ising=20tile=20flash).?=
+ =?UTF-8?q?=20PolarFire=20(ssh=20polarfire;=20toward=20end-to-end=20Carnot?=
+ =?UTF-8?q?=20dispatch).=20KV260=20opportunistic-confirm=20(ssh=20kria;=20?=
+ =?UTF-8?q?terminal).=20Per=20KV260=20SSH-Not-SD-Card=20Discipline:=20SSH-?=
+ =?UTF-8?q?reachability=20/=20USB-detect=20are=20the=20ONLY=20valid=20prec?=
+ =?UTF-8?q?onditions.=20DISTINCT=20wall-clock=20timers=20per=20board.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f2f06a6032..f3c00ea651 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9101,3 +9101,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-14: PHASE C3 — ARC-AGI-3 LIVE-env grounding probe (the §0 unblocked north-star step). Connect the EXISTING offline harness (python/carnot/agentic/arc_agi3_world_model.py) to the live SDK (arc_agi, anonymous key), enumerate the 25 live environments, and run a random/greedy baseline to establish the REAL-env metric pipeline (EnvironmentScore.score / levels_completed = ACCURACY; actions vs baseline_actions = EFFICIENCY). NO leaderboard submission (operator-only); NO scored online play beyond a reachability/baseline probe (online quota gate stays). Honest blocked_arc_live_* if access fails. (✅ Complete) — honest_verdict=complete: arc_live_env_reachable_random_greedy_baseline_lp85-305b61c3; results/experiment_4191_arc_live_env_grounding_probe.json
+ - 2026-06-14: PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .388 sweep mapped onto the efficiency-moat / GAP-4-sovereignty / DiffusionGemma stack: arXiv 2602.22871 (reward-guided diffusion stitching), 2604.06260 (S^3 stratified scaling search), openreview cve4NOiyVp (1/1000-cost LLM judge), 2504.01005 (SC cost crossover), 2504.16828 (ThinkPRM). RE-FLAG CEM 2510.20607 as needing OPERATOR authorization (trained-content-energy SELECTOR lineage is retired). SOTA->experiment mapping note; flag the strongest for .389. Cite real arXiv IDs. (✅ Complete) — honest_verdict=complete: sota_ingestion_efficiency_gap4_diffusion_mapped_v389; results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.json
+ - 2026-06-14: PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .388 state into ops/verifier_gaps.md: the efficiency-moat verdict (exp4186 verifier_efficiency_win + cost ratio), the GAP-4 graded-gate (exp4187), and the sovereign-generator result (exp4188). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune). (⚠️ Research Finding) — honest_verdict=complete: registry_gaps_reconciled_to_v388_truth_regression_guard_passed_True_efficiency_filled_verifier_efficiency_win_gap4_filled_guarded_graded_gate_holds_plus4_minus0_sovereign_building_sovereign_local_generator_positive_flagged; results/experiment_4193_verifier_registry_gaps_hygiene.json
++- 2026-06-14: PHASE D3 — Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board. (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_4194_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only; results/experiment_4194_hardware_continuity.json
+-- 
+2.55.0
+

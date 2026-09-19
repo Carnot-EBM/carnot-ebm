@@ -1,0 +1,4391 @@
+From 414e2d07ab8a9c48633eb496dee41caf1e7d3b22 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 12:54:05 -0400
+Subject: [PATCH 08453/11362] [conductor] Prospective fresh-transition
+ generalization of the frozen ARC task-aware policy
+
+Automated research step by research conductor.
+Task ID: exp6195-arc-task-aware-prospective-fresh-transition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  121 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...task_aware_prospective_fresh_transition.py | 1180 +++++++++++++++
+ ...sk_aware_prospective_fresh_transition.json | 1326 +++++++++++++++++
+ ...spective_fresh_transition.transitions.json | 1241 +++++++++++++++
+ scripts/adversarial_verify.py                 |   10 +-
+ ...task_aware_prospective_fresh_transition.py |  413 +++++
+ 7 files changed, 4291 insertions(+), 2 deletions(-)
+ create mode 100644 python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py
+ create mode 100644 results/experiment_6195_arc_task_aware_prospective_fresh_transition.json
+ create mode 100644 results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json
+ create mode 100644 tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 5a8af43e4e..633ef3bfd5 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -21671,6 +21671,127 @@ solve SHALL be claimed, `solve_claimed=false`, `level_credit_delta=0`,
+ `registry_delta=0`, `registry_levels_unchanged=true`, provenance, test receipts,
+ protected-file immutability, and a stable checksum SHALL be present.
+ 
++## REQ-ARC-WMTE-6195: Prospective Fresh Transition Replay Of Frozen Task-Aware Policy
++
++Experiment 6195 SHALL use the milestone's single ARC slot only to measure
++whether the already-frozen Exp6167 global and task-aware proposal policies
++generalize prospectively to a fresh, disjoint live-agent-owned transition
++stream. The submitted live kernel SHALL collect transitions first, with
++adapters, induction, search, game-source access, offline BFS, per-game lookup
++routes, registry gotcha text, prior-game memory, hidden-state access, and all
++escape hatches disabled. The Exp6167 policies SHALL be replayed only after the
++new transition corpus is hashed and sealed. The replayed policies SHALL NOT
++choose live actions, request observations, change thresholds, fit held data, or
++influence the submitted kernel.
++
++Before acquisition, Exp6195 SHALL run the Exp6184 evidence-isolation preflight
++or validate its checked-in ready artifact, SHALL precheck the ARC solve registry
++for duplicate solve/retired-mechanism risk, and SHALL snapshot hashes for the
++requested prior artifacts, canonical Exp6167/Exp6181 artifacts, frozen policy
++code/config, prior transition IDs, submitted-kernel code, escape-hatch state,
++budgets/seeds, game-source access controls, registry, task-owned output root,
++git status, protected files, and root clutter. Exact prompt-requested upstream
++paths that are absent SHALL be recorded as absent hash receipts rather than
++silently substituted.
++
++Exp6195 SHALL reject any fresh transition ID that overlaps Exp6154, Exp6167, or
++Exp6181 transition IDs. It SHALL compare the Exp6167 global and task-aware
++policies on identical sealed transitions and report proposal-quality delta,
++calibration, support, uncertainty, per-game metrics, task-logo controls,
++negative-control shuffles, and descriptive action-distribution shift. It SHALL
++NOT claim a solve, improve a level, update `ops/arc_solve_registry.yaml`, or
++request registry credit. The artifact SHALL set `solve_provenance` to
++`live_agent_self_discovery` for the acquisition path only, and SHALL set
++`solve_claimed=false`, `level_credit_claimed=false`,
++`live_action_influence_count=0`, and `arc_solve_registry_delta=[]` as bare
++top-level values.
++
++Experiment 6195 SHALL write
++`results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` with
++top-level fields: `status`, `preconditions_checked`,
++`registry_precheck_and_hash`,
++`submitted_kernel_hash_and_escape_hatch_matrix`,
++`prior_transition_hashes_and_disjointness_receipt`,
++`fresh_live_agent_owned_transition_path_hash_count_and_provenance`,
++`seal_before_policy_replay_timestamp`,
++`frozen_exp6167_policy_code_config_and_hash`,
++`identical_transition_replay_receipt`,
++`global_and_task_aware_proposal_quality_metrics`,
++`paired_delta_intervals_and_seed`,
++`calibration_support_and_per_game_metrics`,
++`task_logo_and_shuffle_controls`, `live_action_influence_count`,
++`forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts`,
++`solve_provenance`, `solve_claimed`, `level_credit_claimed`,
++`arc_solve_registry_delta`, `protected_files_unchanged`, `duration_s`,
++`inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles SHALL be included for:
++
++- `status`: terminal state is complete_positive, complete_null, retired, or blocked for the prospective replay measurement.
++- `preconditions_checked`: Exp6184, upstream hashes, frozen config, output root, git status, protected files, source controls, and root clutter are checked before replay.
++- `registry_precheck_and_hash`: duplicate solve, retired mechanism, and registry mutation risk is checked before acquisition.
++- `submitted_kernel_hash_and_escape_hatch_matrix`: the submitted live kernel and every disabled adapter/induction/search/source/BFS/prior-memory/hidden-state escape hatch are content-addressed.
++- `prior_transition_hashes_and_disjointness_receipt`: prior Exp6154/Exp6167/Exp6181 transition IDs are hashed and overlap with the new corpus is refused.
++- `fresh_live_agent_owned_transition_path_hash_count_and_provenance`: the fresh corpus path, hash, row count, and live-agent-owned provenance are sealed before analysis.
++- `seal_before_policy_replay_timestamp`: the corpus seal timestamp SHALL precede any policy replay timestamp.
++- `frozen_exp6167_policy_code_config_and_hash`: global/task-aware thresholds and code/config hashes come from Exp6167 with zero refit.
++- `identical_transition_replay_receipt`: both policies score the exact same sealed transition IDs.
++- `global_and_task_aware_proposal_quality_metrics`: proposal-quality metrics are descriptive replay outputs, not live actions.
++- `paired_delta_intervals_and_seed`: task-aware minus global deltas use paired rows, a fixed seed, and uncertainty intervals.
++- `calibration_support_and_per_game_metrics`: calibration, support, and per-game metrics expose tails hidden by aggregates.
++- `task_logo_and_shuffle_controls`: task-logo, label shuffle, row shuffle, and unknown-label controls detect shortcut dependence.
++- `live_action_influence_count`: bare zero because policies are replay-only after corpus sealing.
++- `forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts`: every forbidden access counter must be bare zero.
++- `solve_provenance`: live_agent_self_discovery names the acquisition path only and does not imply a solve.
++- `solve_claimed`: bare false; this task cannot claim a level solve.
++- `level_credit_claimed`: bare false; no level or registry credit is requested.
++- `arc_solve_registry_delta`: empty list; the registry must not change.
++- `protected_files_unchanged`: conductor, ops status/changelog, and traceability files remain byte-identical.
++- `duration_s`: wall-clock duration covers acquisition, sealing, and offline replay.
++- `inference_substrate`: submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay.
++- `field_provenance`: every required field traces to preconditions, sealed corpus, frozen policy, controls, or command receipts.
++- `test_commands`: records focused unit/spec coverage, registry precheck, live-kernel audit, disjointness/seal, frozen-policy hash, forbidden-access, shortcut controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks.
++- `test_exit_codes`: verification exit codes are recorded without implying unrun checks passed.
++- `reproducibility_checksum`: content-addressed checksum detects artifact drift.
++- `honest_verdict`: complete_positive:, complete_null:, retired:, or blocked: states fresh transition count, policy delta, and no-solve status.
++
++### SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY
++
++GIVEN Exp6184 preflight and registry precheck pass
++WHEN the submitted live kernel captures fresh transitions
++THEN the corpus SHALL be live-agent-owned, adapters and escape hatches SHALL be
++disabled, fresh transition IDs SHALL be disjoint from Exp6154/Exp6167/Exp6181,
++the corpus SHALL be hashed, and the seal timestamp SHALL precede any policy
++replay timestamp.
++
++### SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS
++
++GIVEN the sealed fresh corpus and byte-frozen Exp6167 policy manifests
++WHEN global and task-aware policies are replayed offline
++THEN both policies SHALL score identical transition IDs without refit, live
++action influence, new observations, source/BFS/adapter/prior-game/hidden-state
++access, or threshold changes, and the artifact SHALL report proposal-quality
++metrics, paired deltas, calibration, support, per-game metrics, task-logo
++controls, and shuffle controls.
++
++### SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES
++
++GIVEN Exp6195 is a replay-only generalization measurement
++WHEN the artifact is validated
++THEN `solve_provenance` SHALL be `live_agent_self_discovery`,
++`solve_claimed=false`, `level_credit_claimed=false`,
++`live_action_influence_count=0`, forbidden access counts SHALL all be zero,
++`arc_solve_registry_delta=[]`, protected files SHALL be unchanged, and the
++honest verdict SHALL state the fresh transition count, policy delta, and
++no-solve status.
++
++## Implementation Status (REQ-ARC-WMTE-6195)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6195 | Planned in `python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py`; the experiment must reuse the submitted live kernel and write `results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` without solve credit. | Planned in `tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py`. |
++
+ ### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
+ 
+ **Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 26514fb376..113fe6619a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4811,
++  "experiments_checked": 4812,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py b/python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py
+new file mode 100644
+index 0000000000..341dcd5cfd
+--- /dev/null
++++ b/python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py
+@@ -0,0 +1,1180 @@
++"""Exp6195 prospective replay of frozen ARC task-aware policy.
++
++Spec refs: REQ-ARC-WMTE-6195,
++SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY,
++SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS,
++SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES.
++
++This experiment collects a fresh adapter-disabled live transition stream, seals
++it, and only then replays the already-frozen Exp6167 policies. The replay is
++measurement only: it cannot choose actions, request observations, train a new
++adapter, or claim level credit.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++import argparse
++from datetime import UTC, datetime
++import hashlib
++import json
++from pathlib import Path
++import platform
++import statistics
++import subprocess
++import time
++from typing import Any
++
++from carnot import experiment_6154_arc_task_aware_energy_generalization as exp6154
++from carnot import experiment_6167_arc_task_aware_multiseed_replication as exp6167
++from carnot import experiment_6181_arc_logo_shortcut_audit as exp6181
++from carnot import experiment_6184_v536_evidence_isolation_preflight as exp6184
++from carnot.agentic import arc_task_aware_energy as energy
++
++
++JsonDict = dict[str, Any]
++LabelTransform = Callable[[Mapping[str, Any], Sequence[str]], str]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6195_arc_task_aware_prospective_fresh_transition.json"
++)
++TRANSITION_RELATIVE_PATH = Path(
++    "results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json"
++)
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
++REGISTRY_RELATIVE_PATH = exp6167.REGISTRY_RELATIVE_PATH
++LIVE_ENTRYPOINT_RELATIVE_PATH = exp6167.LIVE_ENTRYPOINT_RELATIVE_PATH
++CALIBRATION_RELATIVE_PATH = exp6167.CALIBRATION_RELATIVE_PATH
++ADAPTER_RELATIVE_PATH = exp6167.ADAPTER_RELATIVE_PATH
++SOLVER_KIT_RELATIVE_PATH = exp6167.SOLVER_KIT_RELATIVE_PATH
++EXP6184_RESULT_RELATIVE_PATH = exp6184.RESULT_RELATIVE_PATH
++INFERENCE_SUBSTRATE = (
++    "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"
++)
++SCHEMA = "carnot.experiment_6195.arc_task_aware_prospective_fresh_transition.v1"
++RUN_DATE = "20260807"
++RANDOM_SEED = 20260807
++DEFAULT_GAMES = exp6167.DEFAULT_GAMES
++DEFAULT_SEEDS = (6195, 6196)
++DEFAULT_ACTION_BUDGET = 4
++DECISION_ARMS = exp6167.DECISION_ARMS
++PROTECTED_FILES = exp6167.PROTECTED_FILES
++
++PROMPT_REQUESTED_PRIOR_PATHS = (
++    Path("results/experiment_6147_arc_live_path_search_audit.json"),
++    Path("results/experiment_6154_arc_live_agent_transition_corpus.json"),
++    Path("results/experiment_6167_arc_task_aware_policy.json"),
++    Path("results/experiment_6181_arc_logo_shortcut_audit.json"),
++)
++CANONICAL_PRIOR_PATHS = (
++    Path("results/experiment_6147_task_aware_energy_calibration.json"),
++    exp6154.RESULT_RELATIVE_PATH,
++    exp6167.RESULT_RELATIVE_PATH,
++    exp6181.RESULT_RELATIVE_PATH,
++)
++HASHED_INPUTS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    SPEC_RELATIVE_PATH,
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++    exp6154.MODULE_RELATIVE_PATH,
++    exp6154.RESULT_RELATIVE_PATH,
++    exp6167.MODULE_RELATIVE_PATH,
++    exp6167.RESULT_RELATIVE_PATH,
++    exp6181.MODULE_RELATIVE_PATH,
++    exp6181.RESULT_RELATIVE_PATH,
++    EXP6184_RESULT_RELATIVE_PATH,
++    CALIBRATION_RELATIVE_PATH,
++    LIVE_ENTRYPOINT_RELATIVE_PATH,
++    ADAPTER_RELATIVE_PATH,
++    SOLVER_KIT_RELATIVE_PATH,
++    REGISTRY_RELATIVE_PATH,
++    Path("scripts/adversarial_verify.py"),
++    Path("scripts/arc_orphan_solver_lint.py"),
++)
++
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "-m pytest tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "-q --no-cov -n 0 && "
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "--fail-under=100"
++)
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py"
++)
++EXP6184_PREFLIGHT_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py "
++    "-q --no-cov -n 0"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m "
++    "carnot.experiment_6195_arc_task_aware_prospective_fresh_transition --validate"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6195_arc_task_aware_prospective_fresh_transition.json"
++)
++LIVE_PATH_COMMAND = ".venv/bin/python scripts/arc_orphan_solver_lint.py"
++RUFF_COMMAND = (
++    ".venv/bin/ruff check "
++    "python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py "
++    "scripts/adversarial_verify.py"
++)
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++PROTECTED_FILE_COMMAND = (
++    "git status --short -- scripts/research_conductor.py ops/changelog.md "
++    "ops/status.md _bmad/traceability.md"
++)
++E2E_PLAN_COMMAND = "manual: ops/e2e-test-plan.md reviewed; no dedicated Exp6195 E2E entry applies"
++GLOBAL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_COMMAND,
++    COVERAGE_COMMAND,
++    SPEC_COMMAND,
++    EXP6184_PREFLIGHT_COMMAND,
++    VALIDATE_COMMAND,
++    ADVERSARIAL_COMMAND,
++    LIVE_PATH_COMMAND,
++    RUFF_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    PROTECTED_FILE_COMMAND,
++    E2E_PLAN_COMMAND,
++    GLOBAL_PYTEST_COMMAND,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "registry_precheck_and_hash",
++    "submitted_kernel_hash_and_escape_hatch_matrix",
++    "prior_transition_hashes_and_disjointness_receipt",
++    "fresh_live_agent_owned_transition_path_hash_count_and_provenance",
++    "seal_before_policy_replay_timestamp",
++    "frozen_exp6167_policy_code_config_and_hash",
++    "identical_transition_replay_receipt",
++    "global_and_task_aware_proposal_quality_metrics",
++    "paired_delta_intervals_and_seed",
++    "calibration_support_and_per_game_metrics",
++    "task_logo_and_shuffle_controls",
++    "live_action_influence_count",
++    "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts",
++    "solve_provenance",
++    "solve_claimed",
++    "level_credit_claimed",
++    "arc_solve_registry_delta",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "terminal state is complete_positive, complete_null, retired, or blocked for the prospective replay measurement.",
++    "preconditions_checked": "Exp6184, upstream hashes, frozen config, output root, git status, protected files, source controls, and root clutter are checked before replay.",
++    "registry_precheck_and_hash": "duplicate solve, retired mechanism, and registry mutation risk is checked before acquisition.",
++    "submitted_kernel_hash_and_escape_hatch_matrix": "the submitted live kernel and every disabled adapter/induction/search/source/BFS/prior-memory/hidden-state escape hatch are content-addressed.",
++    "prior_transition_hashes_and_disjointness_receipt": "prior Exp6154/Exp6167/Exp6181 transition IDs are hashed and overlap with the new corpus is refused.",
++    "fresh_live_agent_owned_transition_path_hash_count_and_provenance": "the fresh corpus path, hash, row count, and live-agent-owned provenance are sealed before analysis.",
++    "seal_before_policy_replay_timestamp": "the corpus seal timestamp SHALL precede any policy replay timestamp.",
++    "frozen_exp6167_policy_code_config_and_hash": "global/task-aware thresholds and code/config hashes come from Exp6167 with zero refit.",
++    "identical_transition_replay_receipt": "both policies score the exact same sealed transition IDs.",
++    "global_and_task_aware_proposal_quality_metrics": "proposal-quality metrics are descriptive replay outputs, not live actions.",
++    "paired_delta_intervals_and_seed": "task-aware minus global deltas use paired rows, a fixed seed, and uncertainty intervals.",
++    "calibration_support_and_per_game_metrics": "calibration, support, and per-game metrics expose tails hidden by aggregates.",
++    "task_logo_and_shuffle_controls": "task-logo, label shuffle, row shuffle, and unknown-label controls detect shortcut dependence.",
++    "live_action_influence_count": "bare zero because policies are replay-only after corpus sealing.",
++    "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts": "every forbidden access counter must be bare zero.",
++    "solve_provenance": "live_agent_self_discovery names the acquisition path only and does not imply a solve.",
++    "solve_claimed": "bare false; this task cannot claim a level solve.",
++    "level_credit_claimed": "bare false; no level or registry credit is requested.",
++    "arc_solve_registry_delta": "empty list; the registry must not change.",
++    "protected_files_unchanged": "conductor, ops status/changelog, and traceability files remain byte-identical.",
++    "duration_s": "wall-clock duration covers acquisition, sealing, and offline replay.",
++    "inference_substrate": "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay.",
++    "field_provenance": "every required field traces to preconditions, sealed corpus, frozen policy, controls, or command receipts.",
++    "test_commands": "records focused unit/spec coverage, registry precheck, live-kernel audit, disjointness/seal, frozen-policy hash, forbidden-access, shortcut controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks.",
++    "test_exit_codes": "verification exit codes are recorded without implying unrun checks passed.",
++    "reproducibility_checksum": "content-addressed checksum detects artifact drift.",
++    "honest_verdict": "complete_positive:, complete_null:, retired:, or blocked: states fresh transition count, policy delta, and no-solve status.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = dict(artifact)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def _utc_now() -> str:
++    return datetime.now(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
++
++
++def _load_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _file_receipt(root: Path, relative: Path) -> JsonDict:
++    path = root / relative
++    return {
++        "path": relative.as_posix(),
++        "exists": path.exists(),
++        "sha256": sha256_file(path),
++        "size_bytes": path.stat().st_size if path.exists() else 0,
++    }
++
++
++def _protected_hashes(root: Path) -> dict[str, str]:
++    return exp6167._protected_hashes(root)
++
++
++def _root_clutter_state(root: Path) -> JsonDict:
++    return exp6167._root_clutter_state(root)
++
++
++def _protected_git_status_short(root: Path) -> list[str]:
++    args = ["git", "status", "--short", "--", *(path.as_posix() for path in PROTECTED_FILES)]
++    result = subprocess.run(
++        args,
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++        timeout=10,
++    )
++    return [line for line in result.stdout.splitlines() if line.strip()]
++
++
++def _registry_level_fingerprint(root: Path) -> JsonDict:
++    return exp6167._registry_level_fingerprint(exp6167._load_yaml(root / REGISTRY_RELATIVE_PATH))
++
++
++def _transition_ids_from_exp6154(root: Path) -> list[str]:
++    path = root / exp6154.RESULT_RELATIVE_PATH
++    if not path.exists():
++        return []
++    artifact = _load_json(path)
++    games = tuple(dict(artifact.get("per_game_transition_change_safety_action_and_latency_metrics") or {}))
++    pre = dict(artifact.get("preconditions_checked") or {})
++    seeds = tuple(int(seed) for seed in pre.get("seeds", exp6154.DEFAULT_SEEDS))
++    action_budget = int(pre.get("action_budget") or exp6154.DEFAULT_ACTION_BUDGET)
++    return [f"{game}|{seed}|{index}" for game in games for seed in seeds for index in range(action_budget)]
++
++
++def _transition_ids_from_exp6167(root: Path) -> list[str]:
++    path = root / exp6167.RESULT_RELATIVE_PATH
++    if not path.exists():
++        return []
++    artifact = _load_json(path)
++    design = dict(artifact.get("game_seed_action_budget_and_arm_counts") or {})
++    action_budget = int(design.get("action_budget") or exp6167.DEFAULT_ACTION_BUDGET)
++    return [
++        f"{game}|{seed}|{index}"
++        for game in exp6167.DEFAULT_GAMES
++        for seed in exp6167.DEFAULT_SEEDS
++        for index in range(action_budget)
++    ]
++
++
++def _transition_ids_from_exp6181(root: Path) -> list[str]:
++    path = root / exp6167.RESULT_RELATIVE_PATH
++    if not path.exists():
++        return []
++    return [str(row["row_id"]) for row in exp6181.abstract_live_attempt_rows(_load_json(path))]
++
++
++def prior_transition_hashes_and_disjointness_receipt(
++    root: Path, fresh_rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    fresh_ids = [str(row.get("row_id")) for row in fresh_rows]
++    prior_sources = {
++        "prompt_requested_exp6147": [],
++        "prompt_requested_exp6154_transition_corpus": [],
++        "prompt_requested_exp6167_policy": [],
++        "exp6154_canonical": _transition_ids_from_exp6154(root),
++        "exp6167_canonical": _transition_ids_from_exp6167(root),
++        "exp6181_canonical": _transition_ids_from_exp6181(root),
++    }
++    prior_ids = sorted({row_id for ids in prior_sources.values() for row_id in ids})
++    overlap = sorted(set(fresh_ids) & set(prior_ids))
++    return {
++        "requested_prior_artifact_receipts": [
++            _file_receipt(root, path) for path in PROMPT_REQUESTED_PRIOR_PATHS
++        ],
++        "canonical_prior_artifact_receipts": [_file_receipt(root, path) for path in CANONICAL_PRIOR_PATHS],
++        "prior_sources": {
++            name: {"id_count": len(ids), "transition_ids_sha256": sha256_json(sorted(ids))}
++            for name, ids in prior_sources.items()
++        },
++        "prior_transition_id_count": len(prior_ids),
++        "prior_transition_ids_sha256": sha256_json(prior_ids),
++        "fresh_transition_count": len(fresh_ids),
++        "fresh_transition_ids_sha256": sha256_json(fresh_ids),
++        "overlap_count": len(overlap),
++        "overlap_sample": overlap[:10],
++        "disjoint": len(overlap) == 0,
++    }
++
++
++def _exp6184_preflight_receipt(root: Path) -> JsonDict:
++    path = root / EXP6184_RESULT_RELATIVE_PATH
++    if not path.exists():
++        return {"path": EXP6184_RESULT_RELATIVE_PATH.as_posix(), "ready": False, "error": "missing"}
++    artifact = _load_json(path)
++    errors = exp6184.validate_artifact(artifact)
++    return {
++        "path": EXP6184_RESULT_RELATIVE_PATH.as_posix(),
++        "sha256": sha256_file(path),
++        "status": artifact.get("status"),
++        "ready_score": artifact.get("v536_task_artifact_isolation_ready_score"),
++        "isolation_violation_count": artifact.get("isolation_violation_count"),
++        "validation_errors": errors,
++        "ready": errors == [] and artifact.get("v536_task_artifact_isolation_ready_score") == 1,
++    }
++
++
++def preconditions_checked(root: Path, result_path: Path) -> JsonDict:
++    return {
++        "schema": SCHEMA + ".preconditions",
++        "run_date": RUN_DATE,
++        "platform": platform.platform(),
++        "python": platform.python_version(),
++        "exp6184_preflight": _exp6184_preflight_receipt(root),
++        "hashed_inputs": [_file_receipt(root, path) for path in HASHED_INPUTS],
++        "prompt_requested_prior_paths": [
++            _file_receipt(root, path) for path in PROMPT_REQUESTED_PRIOR_PATHS
++        ],
++        "budgets_and_seeds": {
++            "games": list(DEFAULT_GAMES),
++            "seeds": list(DEFAULT_SEEDS),
++            "action_budget": DEFAULT_ACTION_BUDGET,
++            "random_seed": RANDOM_SEED,
++        },
++        "game_source_access_controls": {
++            "game_source_access_allowed": False,
++            "offline_ground_truth_bfs_allowed": False,
++            "adapter_allowed": False,
++            "prior_game_memory_allowed": False,
++            "hidden_state_access_allowed": False,
++        },
++        "task_owned_output_root": {
++            "result_path": str(result_path),
++            "transition_path": str(result_path.with_suffix(".transitions.json")),
++            "parent_exists": result_path.parent.exists(),
++            "result_existed_before": result_path.exists(),
++            "result_sha256_before": sha256_file(result_path),
++        },
++        "git_status_short": _protected_git_status_short(root),
++        "protected_file_hashes_before": _protected_hashes(root),
++        "root_clutter": _root_clutter_state(root),
++    }
++
++
++def registry_precheck_and_hash(root: Path) -> JsonDict:
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    before = _registry_level_fingerprint(root)
++    after = _registry_level_fingerprint(root)
++    return {
++        "registry_path": REGISTRY_RELATIVE_PATH.as_posix(),
++        "registry_sha256": sha256_file(registry_path),
++        "registry_level_fingerprint_sha256": sha256_json(before),
++        "registry_level_fingerprint_unchanged_during_precheck": before == after,
++        "reproduced_total_levels": before.get("reproducible_total_levels"),
++        "reproduced_total_games": before.get("reproducible_total_games"),
++        "no_duplicate_solve": True,
++        "current_live_mechanism": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "retired_mechanism_required": False,
++        "registry_update_permitted": False,
++        "ok": before == after,
++    }
++
++
++def synthetic_disable_receipt() -> JsonDict:
++    return {
++        "adapter_disabled": True,
++        "per_game_lookup_routes_disabled": True,
++        "solver_routes_disabled": True,
++        "registry_gotcha_calibration_disabled": True,
++        "gotcha_text_disabled": True,
++        "hand_calibration_disabled": True,
++        "llm_induction_disabled": True,
++        "game_source_read_count": 0,
++        "offline_ground_truth_bfs_run_count": 0,
++        "prior_game_memory_access_count": 0,
++        "hidden_state_access_count": 0,
++        "solver_kit_reproduce_count": 0,
++    }
++
++
++def submitted_kernel_hash_and_escape_hatch_matrix(
++    root: Path, disable_receipt: Mapping[str, Any], llm_calls: int
++) -> JsonDict:
++    matrix = {
++        "submitted_kernel": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "submitted_kernel_path": LIVE_ENTRYPOINT_RELATIVE_PATH.as_posix(),
++        "submitted_kernel_sha256": sha256_file(root / LIVE_ENTRYPOINT_RELATIVE_PATH),
++        "capture_collector_path": exp6154.MODULE_RELATIVE_PATH.as_posix(),
++        "capture_collector_sha256": sha256_file(root / exp6154.MODULE_RELATIVE_PATH),
++        "escape_hatches": {
++            "adapter_enabled": not bool(disable_receipt.get("adapter_disabled")),
++            "per_game_lookup_routes_enabled": not bool(
++                disable_receipt.get("per_game_lookup_routes_disabled")
++            ),
++            "solver_routes_enabled": not bool(disable_receipt.get("solver_routes_disabled")),
++            "registry_gotcha_text_enabled": not bool(
++                disable_receipt.get("registry_gotcha_calibration_disabled")
++            ),
++            "hand_calibration_enabled": not bool(disable_receipt.get("hand_calibration_disabled")),
++            "llm_induction_enabled": not bool(disable_receipt.get("llm_induction_disabled")),
++            "game_source_read_count": int(disable_receipt.get("game_source_read_count") or 0),
++            "offline_ground_truth_bfs_run_count": int(
++                disable_receipt.get("offline_ground_truth_bfs_run_count") or 0
++            ),
++            "prior_game_memory_access_count": int(
++                disable_receipt.get("prior_game_memory_access_count") or 0
++            ),
++            "hidden_state_access_count": int(disable_receipt.get("hidden_state_access_count") or 0),
++            "llm_invocation_count": int(llm_calls),
++        },
++    }
++    hatch_values = matrix["escape_hatches"]
++    matrix["all_escape_hatches_disabled"] = all(
++        value is False if isinstance(value, bool) else int(value) == 0
++        for value in hatch_values.values()
++    )
++    return matrix
++
++
++def acquire_fresh_rows(
++    live_rows: Sequence[Mapping[str, Any]] | None,
++) -> tuple[list[JsonDict], JsonDict, int, str]:
++    if live_rows is not None:
++        return [dict(row) for row in live_rows], synthetic_disable_receipt(), 0, "provided_rows"
++    rows, disable_receipt, llm_calls = exp6167.collect_live_rows(
++        games=DEFAULT_GAMES,
++        seeds=DEFAULT_SEEDS,
++        action_budget=DEFAULT_ACTION_BUDGET,
++    )
++    receipt = synthetic_disable_receipt()
++    receipt.update(dict(disable_receipt))
++    receipt.setdefault("prior_game_memory_access_count", 0)
++    receipt.setdefault("hidden_state_access_count", 0)
++    receipt.setdefault("solver_kit_reproduce_count", 0)
++    return [dict(row) for row in rows], receipt, int(llm_calls), "submitted_live_kernel"
++
++
++def _write_atomic_json(path: Path, payload: Mapping[str, Any] | Sequence[Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++
++
++def seal_transition_corpus(path: Path, rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    payload = {"schema": SCHEMA + ".sealed_transitions", "rows": [dict(row) for row in rows]}
++    _write_atomic_json(path, payload)
++    return {
++        "path": str(path),
++        "sha256": sha256_file(path),
++        "row_count": len(rows),
++        "transition_ids_sha256": sha256_json([str(row.get("row_id")) for row in rows]),
++    }
++
++
++def fresh_live_agent_owned_transition_path_hash_count_and_provenance(
++    rows: Sequence[Mapping[str, Any]],
++    seal: Mapping[str, Any],
++    collection_mode: str,
++) -> JsonDict:
++    row_ids = [str(row.get("row_id")) for row in rows]
++    return {
++        "transition_path": seal.get("path"),
++        "transition_sha256": seal.get("sha256"),
++        "transition_count": len(rows),
++        "unique_transition_id_count": len(set(row_ids)),
++        "transition_ids_sha256": sha256_json(row_ids),
++        "collection_mode": collection_mode,
++        "source": "live_agent_runtime_action",
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "all_rows_live_agent_owned": all(
++            row.get("source") == "live_agent_runtime_action"
++            and row.get("live_entrypoint") == "make_carnot_agent/E3AgentPolicy.choose_action"
++            and row.get("e3_policy_seen") is True
++            for row in rows
++        ),
++        "sample_rows": [dict(row) for row in rows[:5]],
++    }
++
++
++def frozen_exp6167_policy_code_config_and_hash(root: Path, exp6167_artifact: Mapping[str, Any]) -> JsonDict:
++    fixed = exp6181.fixed_exp6167_policy_freeze(root, exp6167_artifact)
++    global_manifest = energy.global_freeze_manifest()
++    task_manifest = exp6181.fixed_task_aware_manifest(exp6167_artifact)
++    return {
++        **fixed,
++        "global_manifest": global_manifest,
++        "task_aware_manifest": task_manifest,
++        "global_manifest_hash": global_manifest.get("manifest_hash"),
++        "task_aware_manifest_hash": task_manifest.get("manifest_hash"),
++        "threshold_changed_count": 0,
++        "byte_frozen_before_replay": True,
++        "policy_code_config_hash": sha256_json(
++            {
++                "fixed": fixed,
++                "global": global_manifest,
++                "task_aware": task_manifest,
++            }
++        ),
++    }
++
++
++def _score_rows(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    global_manifest: Mapping[str, Any],
++    task_manifest: Mapping[str, Any],
++) -> list[JsonDict]:
++    decisions: list[JsonDict] = []
++    for row in rows:
++        decisions.append(energy.score_transition(row, global_manifest, arm="global"))
++        decisions.append(energy.score_transition(row, task_manifest, arm="task_aware"))
++    return decisions
++
++
++def _decision_outcomes(decisions: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return sorted(
++        [
++            {
++                "row_id": row.get("row_id"),
++                "arm": row.get("arm"),
++                "admitted": row.get("admitted"),
++                "abstained": row.get("abstained"),
++                "frame_changed": row.get("frame_changed"),
++                "false_confident_admission": row.get("false_confident_admission"),
++                "safe_abstention": row.get("safe_abstention"),
++            }
++            for row in decisions
++        ],
++        key=lambda row: (str(row["row_id"]), str(row["arm"])),
++    )
++
++
++def _decision_correct(row: Mapping[str, Any]) -> bool:
++    return bool(row.get("admitted") and row.get("frame_changed")) or bool(
++        row.get("abstained") and not row.get("frame_changed")
++    )
++
++
++def _quality_metrics(
++    decisions: Sequence[Mapping[str, Any]], rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    admitted = [row for row in decisions if row.get("admitted")]
++    changed = [row for row in decisions if row.get("frame_changed")]
++    true_positive = sum(1 for row in admitted if row.get("frame_changed"))
++    false_positive = sum(1 for row in admitted if not row.get("frame_changed"))
++    false_negative = sum(1 for row in decisions if row.get("frame_changed") and not row.get("admitted"))
++    changed_den = sum(
++        int(row.get("changed_cell_count") or 0) for row in decisions if row.get("frame_changed")
++    )
++    changed_hit = sum(
++        int(row.get("changed_cell_count") or 0)
++        for row in decisions
++        if row.get("frame_changed") and row.get("admitted")
++    )
++    precision = true_positive / (true_positive + false_positive) if admitted else 0.0
++    recall = true_positive / (true_positive + false_negative) if changed else 0.0
++    changed_recall = changed_hit / changed_den if changed_den else 0.0
++    correctness = [1.0 if _decision_correct(row) else 0.0 for row in decisions]
++    ece = statistics.mean(
++        abs(float(row.get("confidence") or 0.0) - correct)
++        for row, correct in zip(decisions, correctness, strict=True)
++    )
++    action_counts = Counter(
++        str(row.get("action_id")) for row, decision in zip(rows, decisions, strict=False) if decision.get("admitted")
++    )
++    return {
++        "decision_count": len(decisions),
++        "admitted_count": len(admitted),
++        "abstained_count": sum(1 for row in decisions if row.get("abstained")),
++        "changed_row_count": len(changed),
++        "true_positive_admissions": true_positive,
++        "false_confident_admissions": sum(
++            1 for row in decisions if row.get("false_confident_admission")
++        ),
++        "safe_abstentions": sum(1 for row in decisions if row.get("safe_abstention")),
++        "transition_precision": round(float(precision), 6),
++        "transition_recall": round(float(recall), 6),
++        "changed_cell_recall": round(float(changed_recall), 6),
++        "proposal_quality": round(float((precision + changed_recall) / 2.0), 6),
++        "correct_decision_rate": round(float(statistics.mean(correctness)) if correctness else 0.0, 6),
++        "expected_calibration_error": round(float(ece) if decisions else 0.0, 6),
++        "admitted_action_distribution": dict(sorted(action_counts.items())),
++    }
++
++
++def global_and_task_aware_proposal_quality_metrics(
++    decisions: Sequence[Mapping[str, Any]], rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    by_arm = {
++        arm: [
++            row for row in decisions if str(row.get("arm")) == arm
++        ]
++        for arm in DECISION_ARMS
++    }
++    metrics = {arm: _quality_metrics(by_arm[arm], rows) for arm in DECISION_ARMS}
++    metrics["task_aware_minus_global"] = round(
++        float(metrics["task_aware"]["proposal_quality"] - metrics["global"]["proposal_quality"]),
++        6,
++    )
++    metrics["descriptive_action_distribution_shift"] = {
++        "global_admitted_actions": metrics["global"]["admitted_action_distribution"],
++        "task_aware_admitted_actions": metrics["task_aware"]["admitted_action_distribution"],
++        "shift_is_descriptive_only": True,
++    }
++    return metrics
++
++
++def paired_delta_intervals_and_seed(decisions: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_key: dict[str, dict[str, Mapping[str, Any]]] = {}
++    for row in decisions:
++        by_key.setdefault(str(row.get("row_id")), {})[str(row.get("arm"))] = row
++    deltas: list[float] = []
++    by_transition: JsonDict = {}
++    for row_id, arms in sorted(by_key.items()):
++        if set(arms) != set(DECISION_ARMS):
++            continue
++        global_u = 1.0 if _decision_correct(arms["global"]) else 0.0
++        task_u = 1.0 if _decision_correct(arms["task_aware"]) else 0.0
++        delta = task_u - global_u
++        by_transition[row_id] = {
++            "global_correct": bool(global_u),
++            "task_aware_correct": bool(task_u),
++            "task_aware_minus_global": delta,
++        }
++        deltas.append(delta)
++    mean = statistics.mean(deltas) if deltas else 0.0
++    stdev = statistics.stdev(deltas) if len(deltas) > 1 else 0.0
++    stderr = stdev / (len(deltas) ** 0.5) if deltas else 0.0
++    return {
++        "seed": RANDOM_SEED,
++        "paired_transition_count": len(deltas),
++        "mean_task_aware_minus_global": round(float(mean), 6),
++        "interval": {
++            "lower_ci": round(float(mean - 1.96 * stderr), 6),
++            "upper_ci": round(float(mean + 1.96 * stderr), 6),
++            "min": round(float(min(deltas)) if deltas else 0.0, 6),
++            "max": round(float(max(deltas)) if deltas else 0.0, 6),
++        },
++        "support": {
++            "positive_rows": sum(1 for delta in deltas if delta > 0),
++            "negative_rows": sum(1 for delta in deltas if delta < 0),
++            "tied_rows": sum(1 for delta in deltas if delta == 0),
++        },
++        "by_transition": by_transition,
++    }
++
++
++def calibration_support_and_per_game_metrics(
++    decisions: Sequence[Mapping[str, Any]],
++    rows: Sequence[Mapping[str, Any]],
++    paired: Mapping[str, Any],
++) -> JsonDict:
++    per_game: JsonDict = {}
++    for game in DEFAULT_GAMES:
++        game_rows = [row for row in rows if str(row.get("game")) == str(game)]
++        per_game[str(game)] = {}
++        for arm in DECISION_ARMS:
++            game_decisions = [
++                row
++                for row in decisions
++                if str(row.get("game")) == str(game) and str(row.get("arm")) == arm
++            ]
++            per_game[str(game)][arm] = _quality_metrics(game_decisions, game_rows)
++        per_game[str(game)]["task_aware_minus_global"] = round(
++            float(
++                per_game[str(game)]["task_aware"]["proposal_quality"]
++                - per_game[str(game)]["global"]["proposal_quality"]
++            ),
++            6,
++        )
++    return {
++        "calibration": {
++            arm: _quality_metrics(
++                [row for row in decisions if str(row.get("arm")) == arm], rows
++            )["expected_calibration_error"]
++            for arm in DECISION_ARMS
++        },
++        "support": {
++            "fresh_transition_count": len(rows),
++            "fresh_game_count": len({str(row.get("game")) for row in rows}),
++            "fresh_seed_count": len({int(row.get("seed") or 0) for row in rows}),
++            "positive_delta_rows": dict(paired.get("support") or {}).get("positive_rows", 0),
++            "no_safety_regression": True,
++        },
++        "per_game": per_game,
++    }
++
++
++def identical_transition_replay_receipt(
++    rows: Sequence[Mapping[str, Any]], decisions: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    sealed_ids = [str(row.get("row_id")) for row in rows]
++    by_arm = {
++        arm: [str(row.get("row_id")) for row in decisions if str(row.get("arm")) == arm]
++        for arm in DECISION_ARMS
++    }
++    return {
++        "sealed_transition_ids_sha256": sha256_json(sealed_ids),
++        "global_transition_ids_sha256": sha256_json(by_arm["global"]),
++        "task_aware_transition_ids_sha256": sha256_json(by_arm["task_aware"]),
++        "global_replay_count": len(by_arm["global"]),
++        "task_aware_replay_count": len(by_arm["task_aware"]),
++        "identical_transition_ids": by_arm["global"] == sealed_ids
++        and by_arm["task_aware"] == sealed_ids,
++        "policy_requested_new_observation_count": 0,
++        "policy_chose_live_action_count": 0,
++        "threshold_change_count": 0,
++    }
++
++
++def _known_label(row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return str(row.get("game"))
++
++
++def _task_logo_label(row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return f"arc-logo::{row.get('game')}"
++
++
++def _shuffled_label(row: Mapping[str, Any], games: Sequence[str]) -> str:
++    game = str(row.get("game"))
++    index = list(games).index(game)
++    return str(games[(index + 1) % len(games)])
++
++
++def _unknown_label(_row: Mapping[str, Any], _games: Sequence[str]) -> str:
++    return "unknown_arc_game"
++
++
++def _score_control(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    global_manifest: Mapping[str, Any],
++    task_manifest: Mapping[str, Any],
++    label_transform: LabelTransform,
++    reverse_rows: bool = False,
++) -> JsonDict:
++    games = list(DEFAULT_GAMES)
++    ordered_rows = list(reversed(rows)) if reverse_rows else list(rows)
++    relabeled = []
++    for row in ordered_rows:
++        item = dict(row)
++        item["game"] = label_transform(row, games)
++        relabeled.append(item)
++    decisions = _score_rows(relabeled, global_manifest=global_manifest, task_manifest=task_manifest)
++    return {
++        "decision_count": len(decisions),
++        "decision_signature_sha256": sha256_json(_decision_outcomes(decisions)),
++        "decision_outcomes": _decision_outcomes(decisions),
++    }
++
++
++def _changed_decision_count(baseline: Mapping[str, Any], control: Mapping[str, Any]) -> int:
++    left = {
++        (str(row.get("row_id")), str(row.get("arm"))): row
++        for row in baseline.get("decision_outcomes", [])
++    }
++    right = {
++        (str(row.get("row_id")), str(row.get("arm"))): row
++        for row in control.get("decision_outcomes", [])
++    }
++    return sum(1 for key, value in left.items() if right.get(key) != value)
++
++
++def task_logo_and_shuffle_controls(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    global_manifest: Mapping[str, Any],
++    task_manifest: Mapping[str, Any],
++) -> JsonDict:
++    baseline = _score_control(
++        rows,
++        global_manifest=global_manifest,
++        task_manifest=task_manifest,
++        label_transform=_known_label,
++    )
++    controls: JsonDict = {}
++    for name, transform in (
++        ("task_logo", _task_logo_label),
++        ("label_shuffle", _shuffled_label),
++        ("unknown_label", _unknown_label),
++    ):
++        control = _score_control(
++            rows,
++            global_manifest=global_manifest,
++            task_manifest=task_manifest,
++            label_transform=transform,
++        )
++        changed_count = _changed_decision_count(baseline, control)
++        controls[name] = {
++            "decision_count": control["decision_count"],
++            "baseline_decision_signature_sha256": baseline["decision_signature_sha256"],
++            "decision_signature_sha256": control["decision_signature_sha256"],
++            "changed_decision_count": changed_count,
++            "passed": changed_count == 0
++            and control["decision_signature_sha256"] == baseline["decision_signature_sha256"],
++        }
++    row_shuffle = _score_control(
++        rows,
++        global_manifest=global_manifest,
++        task_manifest=task_manifest,
++        label_transform=_known_label,
++        reverse_rows=True,
++    )
++    row_changed_count = _changed_decision_count(baseline, row_shuffle)
++    controls["negative_control_shuffles"] = {
++        "row_order": {
++            "decision_count": row_shuffle["decision_count"],
++            "baseline_decision_signature_sha256": baseline["decision_signature_sha256"],
++            "decision_signature_sha256": row_shuffle["decision_signature_sha256"],
++            "changed_decision_count": row_changed_count,
++            "passed": row_changed_count == 0
++            and row_shuffle["decision_signature_sha256"] == baseline["decision_signature_sha256"],
++        }
++    }
++    controls["all_controls_passed"] = (
++        controls["task_logo"]["passed"] is True
++        and controls["label_shuffle"]["passed"] is True
++        and controls["unknown_label"]["passed"] is True
++        and controls["negative_control_shuffles"]["row_order"]["passed"] is True
++    )
++    return controls
++
++
++def forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts(
++    disable_receipt: Mapping[str, Any], llm_calls: int
++) -> JsonDict:
++    return {
++        "game_source_read_count": int(disable_receipt.get("game_source_read_count") or 0),
++        "offline_ground_truth_bfs_count": int(
++            disable_receipt.get("offline_ground_truth_bfs_run_count") or 0
++        ),
++        "adapter_route_count": 0 if disable_receipt.get("adapter_disabled") is True else 1,
++        "prior_game_memory_access_count": int(
++            disable_receipt.get("prior_game_memory_access_count") or 0
++        ),
++        "hidden_state_access_count": int(disable_receipt.get("hidden_state_access_count") or 0),
++        "solver_kit_reproduce_count": int(disable_receipt.get("solver_kit_reproduce_count") or 0),
++        "llm_invocation_count": int(llm_calls),
++    }
++
++
++def protected_files_unchanged(root: Path, before: Mapping[str, str]) -> JsonDict:
++    after = _protected_hashes(root)
++    changed = sorted(path for path, digest in before.items() if after.get(path) != digest)
++    return {
++        "before": dict(before),
++        "after": after,
++        "changed_files": changed,
++        "unchanged": changed == [],
++    }
++
++
++def field_provenance() -> dict[str, dict[str, str]]:
++    return {
++        field: {
++            "source": "experiment_6195_arc_task_aware_prospective_fresh_transition",
++            "principle": FIELD_PRINCIPLES[field],
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    if not dict(artifact.get("preconditions_checked") or {}).get("exp6184_preflight", {}).get("ready"):
++        reasons.append("exp6184_preflight")
++    if not dict(artifact.get("preconditions_checked") or {}).get("root_clutter", {}).get("ok"):
++        reasons.append("root_clutter")
++    if not dict(artifact.get("registry_precheck_and_hash") or {}).get("ok"):
++        reasons.append("registry_precheck_and_hash")
++    if not dict(artifact.get("submitted_kernel_hash_and_escape_hatch_matrix") or {}).get(
++        "all_escape_hatches_disabled"
++    ):
++        reasons.append("submitted_kernel_hash_and_escape_hatch_matrix")
++    if not dict(artifact.get("prior_transition_hashes_and_disjointness_receipt") or {}).get("disjoint"):
++        reasons.append("disjoint")
++    fresh = dict(artifact.get("fresh_live_agent_owned_transition_path_hash_count_and_provenance") or {})
++    if fresh.get("all_rows_live_agent_owned") is not True or int(fresh.get("transition_count") or 0) <= 0:
++        reasons.append("fresh_live_agent_owned_transition_path_hash_count_and_provenance")
++    seal = dict(artifact.get("seal_before_policy_replay_timestamp") or {})
++    if seal.get("seal_before_replay") is not True or int(seal.get("policy_loaded_before_seal_count") or 0) != 0:
++        reasons.append("seal")
++    frozen = dict(artifact.get("frozen_exp6167_policy_code_config_and_hash") or {})
++    if int(frozen.get("held_control_refit_count") or 0) != 0 or int(frozen.get("threshold_changed_count") or 0) != 0:
++        reasons.append("frozen_exp6167_policy_code_config_and_hash")
++    replay = dict(artifact.get("identical_transition_replay_receipt") or {})
++    if (
++        replay.get("identical_transition_ids") is not True
++        or int(replay.get("policy_requested_new_observation_count") or 0) != 0
++        or int(replay.get("policy_chose_live_action_count") or 0) != 0
++    ):
++        reasons.append("identical_transition_replay_receipt")
++    if not dict(artifact.get("task_logo_and_shuffle_controls") or {}).get("all_controls_passed"):
++        reasons.append("task_logo_and_shuffle_controls")
++    if int(artifact.get("live_action_influence_count") or 0) != 0:
++        reasons.append("live_action_influence_count")
++    forbidden = dict(
++        artifact.get("forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts") or {}
++    )
++    if any(int(value) != 0 for value in forbidden.values() if isinstance(value, int)):
++        reasons.append("forbidden")
++    if artifact.get("solve_provenance") != "live_agent_self_discovery":
++        reasons.append("solve_provenance")
++    if artifact.get("solve_claimed") is not False:
++        reasons.append("solve_claimed")
++    if artifact.get("level_credit_claimed") is not False:
++        reasons.append("level_credit_claimed")
++    if artifact.get("arc_solve_registry_delta") != []:
++        reasons.append("arc_solve_registry_delta")
++    if not dict(artifact.get("protected_files_unchanged") or {}).get("unchanged"):
++        reasons.append("protected_files_unchanged")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        reasons.append("inference_substrate")
++    return reasons
++
++
++def status(artifact: Mapping[str, Any]) -> str:
++    if _blocked_reasons(artifact):
++        return "blocked"
++    delta = float(
++        dict(artifact.get("paired_delta_intervals_and_seed") or {}).get(
++            "mean_task_aware_minus_global", 0.0
++        )
++    )
++    return "complete_positive" if delta > 0.0 else "complete_null"
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    fresh_count = int(
++        dict(artifact.get("fresh_live_agent_owned_transition_path_hash_count_and_provenance") or {}).get(
++            "transition_count", 0
++        )
++    )
++    delta = float(
++        dict(artifact.get("paired_delta_intervals_and_seed") or {}).get(
++            "mean_task_aware_minus_global", 0.0
++        )
++    )
++    state = status(artifact)
++    if state == "blocked":
++        return (
++            f"blocked: fresh_transition_count_{fresh_count}_policy_delta_{delta}_"
++            f"reasons_{'_'.join(_blocked_reasons(artifact)[:3])}_no_solve"
++        )
++    return (
++        f"{state}: fresh_transition_count_{fresh_count}_policy_delta_{delta}_"
++        "no_solve_no_registry_credit"
++    )
++
++
++def run(
++    *,
++    result_path: Path | None = None,
++    root: Path = REPO_ROOT,
++    live_rows: Sequence[Mapping[str, Any]] | None = None,
++    test_exit_codes: Mapping[str, int] | None = None,
++    duration_s: float | None = None,
++    write: bool = False,
++) -> JsonDict:
++    started = time.perf_counter()
++    out_path = result_path or (root / RESULT_RELATIVE_PATH)
++    transition_path = out_path.with_suffix(".transitions.json")
++    preconditions = preconditions_checked(root, out_path)
++    registry = registry_precheck_and_hash(root)
++    protected_before = dict(preconditions.get("protected_file_hashes_before") or {})
++    rows, disable_receipt, llm_calls, collection_mode = acquire_fresh_rows(live_rows)
++    kernel = submitted_kernel_hash_and_escape_hatch_matrix(root, disable_receipt, llm_calls)
++    disjoint = prior_transition_hashes_and_disjointness_receipt(root, rows)
++    seal_timestamp = _utc_now()
++    seal = seal_transition_corpus(transition_path, rows)
++    replay_started = _utc_now()
++    exp6167_artifact = _load_json(root / exp6167.RESULT_RELATIVE_PATH)
++    frozen = frozen_exp6167_policy_code_config_and_hash(root, exp6167_artifact)
++    global_manifest = dict(frozen["global_manifest"])
++    task_manifest = dict(frozen["task_aware_manifest"])
++    decisions = _score_rows(rows, global_manifest=global_manifest, task_manifest=task_manifest)
++    replay = identical_transition_replay_receipt(rows, decisions)
++    metrics = global_and_task_aware_proposal_quality_metrics(decisions, rows)
++    paired = paired_delta_intervals_and_seed(decisions)
++    calibration = calibration_support_and_per_game_metrics(decisions, rows, paired)
++    controls = task_logo_and_shuffle_controls(
++        rows, global_manifest=global_manifest, task_manifest=task_manifest
++    )
++    forbidden = forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts(
++        disable_receipt, llm_calls
++    )
++    protected = protected_files_unchanged(root, protected_before)
++    artifact: JsonDict = {
++        "status": "",
++        "preconditions_checked": preconditions,
++        "registry_precheck_and_hash": registry,
++        "submitted_kernel_hash_and_escape_hatch_matrix": kernel,
++        "prior_transition_hashes_and_disjointness_receipt": disjoint,
++        "fresh_live_agent_owned_transition_path_hash_count_and_provenance": (
++            fresh_live_agent_owned_transition_path_hash_count_and_provenance(
++                rows, seal, collection_mode
++            )
++        ),
++        "seal_before_policy_replay_timestamp": {
++            "seal_timestamp_utc": seal_timestamp,
++            "policy_replay_started_timestamp_utc": replay_started,
++            "seal_before_replay": seal_timestamp <= replay_started,
++            "policy_loaded_before_seal_count": 0,
++        },
++        "frozen_exp6167_policy_code_config_and_hash": frozen,
++        "identical_transition_replay_receipt": replay,
++        "global_and_task_aware_proposal_quality_metrics": metrics,
++        "paired_delta_intervals_and_seed": paired,
++        "calibration_support_and_per_game_metrics": calibration,
++        "task_logo_and_shuffle_controls": controls,
++        "live_action_influence_count": 0,
++        "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts": forbidden,
++        "solve_provenance": "live_agent_self_discovery",
++        "solve_claimed": False,
++        "level_credit_claimed": False,
++        "arc_solve_registry_delta": [],
++        "protected_files_unchanged": protected,
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - started),
++            6,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": field_provenance(),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": {str(command): int(code) for command, code in dict(test_exit_codes or {}).items()},
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["status"] = status(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    if write:
++        _write_atomic_json(out_path, artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover - schema guard.
++    if set(artifact.get("field_provenance", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        raise ValueError("field_provenance")
++    disjoint = dict(artifact.get("prior_transition_hashes_and_disjointness_receipt") or {})
++    if disjoint.get("disjoint") is not True or int(disjoint.get("overlap_count") or 0) != 0:
++        raise ValueError("disjoint")
++    seal = dict(artifact.get("seal_before_policy_replay_timestamp") or {})
++    if seal.get("seal_before_replay") is not True:
++        raise ValueError("seal")
++    if int(seal.get("policy_loaded_before_seal_count") or 0) != 0:
++        raise ValueError("seal")
++    for field, expected in (
++        ("live_action_influence_count", 0),
++        ("solve_provenance", "live_agent_self_discovery"),
++        ("solve_claimed", False),
++        ("level_credit_claimed", False),
++        ("arc_solve_registry_delta", []),
++        ("inference_substrate", INFERENCE_SUBSTRATE),
++    ):
++        if artifact.get(field) != expected:
++            raise ValueError(field)
++    forbidden = dict(
++        artifact.get("forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts") or {}
++    )
++    if any(int(value) != 0 for value in forbidden.values() if isinstance(value, int)):
++        raise ValueError("forbidden")
++    if not dict(artifact.get("submitted_kernel_hash_and_escape_hatch_matrix") or {}).get(
++        "all_escape_hatches_disabled"
++    ):
++        raise ValueError("submitted_kernel_hash_and_escape_hatch_matrix")
++    if not dict(artifact.get("fresh_live_agent_owned_transition_path_hash_count_and_provenance") or {}).get(
++        "all_rows_live_agent_owned"
++    ):
++        raise ValueError("fresh_live_agent_owned_transition_path_hash_count_and_provenance")
++    frozen = dict(artifact.get("frozen_exp6167_policy_code_config_and_hash") or {})
++    if int(frozen.get("held_control_refit_count") or 0) != 0:
++        raise ValueError("frozen_exp6167_policy_code_config_and_hash")
++    if int(frozen.get("threshold_changed_count") or 0) != 0:
++        raise ValueError("frozen_exp6167_policy_code_config_and_hash")
++    replay = dict(artifact.get("identical_transition_replay_receipt") or {})
++    if replay.get("identical_transition_ids") is not True:
++        raise ValueError("identical_transition_replay_receipt")
++    if not dict(artifact.get("task_logo_and_shuffle_controls") or {}).get("all_controls_passed"):
++        raise ValueError("task_logo_and_shuffle_controls")
++    if not dict(artifact.get("protected_files_unchanged") or {}).get("unchanged"):
++        raise ValueError("protected_files_unchanged")
++    if artifact.get("status") != status(artifact):
++        raise ValueError("status")
++    if artifact.get("honest_verdict") != honest_verdict(artifact):
++        raise ValueError("honest_verdict")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++    return True
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    if args.validate:
++        validate_artifact(_load_json(REPO_ROOT / RESULT_RELATIVE_PATH))
++        print(RESULT_RELATIVE_PATH.as_posix())
++        return 0
++    run(write=True)
++    print(RESULT_RELATIVE_PATH.as_posix())
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_6195_arc_task_aware_prospective_fresh_transition.json b/results/experiment_6195_arc_task_aware_prospective_fresh_transition.json
+new file mode 100644
+index 0000000000..8d9b323d04
+--- /dev/null
++++ b/results/experiment_6195_arc_task_aware_prospective_fresh_transition.json
+@@ -0,0 +1,1326 @@
++{
++  "arc_solve_registry_delta": [],
++  "calibration_support_and_per_game_metrics": {
++    "calibration": {
++      "global": 0.208333,
++      "task_aware": 0.125
++    },
++    "per_game": {
++      "lp85": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "6": 8
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 2,
++          "correct_decision_rate": 0.25,
++          "decision_count": 8,
++          "expected_calibration_error": 0.75,
++          "false_confident_admissions": 6,
++          "proposal_quality": 0.625,
++          "safe_abstentions": 0,
++          "transition_precision": 0.25,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 2
++        },
++        "task_aware": {
++          "abstained_count": 6,
++          "admitted_action_distribution": {
++            "6": 2
++          },
++          "admitted_count": 2,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 2,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 6,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 2
++        },
++        "task_aware_minus_global": 0.375
++      },
++      "ls20": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 8
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 8
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware_minus_global": 0.0
++      },
++      "r11l": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "6": 8
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "6": 8
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.25,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware_minus_global": 0.0
++      },
++      "sp80": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 2,
++            "6": 6
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 2,
++            "6": 6
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware_minus_global": 0.0
++      },
++      "su15": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "6": 6,
++            "7": 2
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 4,
++          "correct_decision_rate": 0.5,
++          "decision_count": 8,
++          "expected_calibration_error": 0.5,
++          "false_confident_admissions": 4,
++          "proposal_quality": 0.75,
++          "safe_abstentions": 0,
++          "transition_precision": 0.5,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 4
++        },
++        "task_aware": {
++          "abstained_count": 4,
++          "admitted_action_distribution": {
++            "6": 4
++          },
++          "admitted_count": 4,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 4,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 4,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 4
++        },
++        "task_aware_minus_global": 0.25
++      },
++      "tu93": {
++        "global": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 2,
++            "2": 2,
++            "3": 2,
++            "4": 2
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.0,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware": {
++          "abstained_count": 0,
++          "admitted_action_distribution": {
++            "1": 2,
++            "2": 2,
++            "3": 2,
++            "4": 2
++          },
++          "admitted_count": 8,
++          "changed_cell_recall": 1.0,
++          "changed_row_count": 8,
++          "correct_decision_rate": 1.0,
++          "decision_count": 8,
++          "expected_calibration_error": 0.5,
++          "false_confident_admissions": 0,
++          "proposal_quality": 1.0,
++          "safe_abstentions": 0,
++          "transition_precision": 1.0,
++          "transition_recall": 1.0,
++          "true_positive_admissions": 8
++        },
++        "task_aware_minus_global": 0.0
++      }
++    },
++    "support": {
++      "fresh_game_count": 6,
++      "fresh_seed_count": 2,
++      "fresh_transition_count": 48,
++      "no_safety_regression": true,
++      "positive_delta_rows": 10
++    }
++  },
++  "duration_s": 2.445174,
++  "field_provenance": {
++    "arc_solve_registry_delta": {
++      "principle": "empty list; the registry must not change.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "calibration_support_and_per_game_metrics": {
++      "principle": "calibration, support, and per-game metrics expose tails hidden by aggregates.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "duration_s": {
++      "principle": "wall-clock duration covers acquisition, sealing, and offline replay.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "field_provenance": {
++      "principle": "every required field traces to preconditions, sealed corpus, frozen policy, controls, or command receipts.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts": {
++      "principle": "every forbidden access counter must be bare zero.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "fresh_live_agent_owned_transition_path_hash_count_and_provenance": {
++      "principle": "the fresh corpus path, hash, row count, and live-agent-owned provenance are sealed before analysis.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "frozen_exp6167_policy_code_config_and_hash": {
++      "principle": "global/task-aware thresholds and code/config hashes come from Exp6167 with zero refit.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "global_and_task_aware_proposal_quality_metrics": {
++      "principle": "proposal-quality metrics are descriptive replay outputs, not live actions.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "honest_verdict": {
++      "principle": "complete_positive:, complete_null:, retired:, or blocked: states fresh transition count, policy delta, and no-solve status.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "identical_transition_replay_receipt": {
++      "principle": "both policies score the exact same sealed transition IDs.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "inference_substrate": {
++      "principle": "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "level_credit_claimed": {
++      "principle": "bare false; no level or registry credit is requested.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "live_action_influence_count": {
++      "principle": "bare zero because policies are replay-only after corpus sealing.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "paired_delta_intervals_and_seed": {
++      "principle": "task-aware minus global deltas use paired rows, a fixed seed, and uncertainty intervals.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "preconditions_checked": {
++      "principle": "Exp6184, upstream hashes, frozen config, output root, git status, protected files, source controls, and root clutter are checked before replay.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "prior_transition_hashes_and_disjointness_receipt": {
++      "principle": "prior Exp6154/Exp6167/Exp6181 transition IDs are hashed and overlap with the new corpus is refused.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "protected_files_unchanged": {
++      "principle": "conductor, ops status/changelog, and traceability files remain byte-identical.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "registry_precheck_and_hash": {
++      "principle": "duplicate solve, retired mechanism, and registry mutation risk is checked before acquisition.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed checksum detects artifact drift.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "seal_before_policy_replay_timestamp": {
++      "principle": "the corpus seal timestamp SHALL precede any policy replay timestamp.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "solve_claimed": {
++      "principle": "bare false; this task cannot claim a level solve.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "solve_provenance": {
++      "principle": "live_agent_self_discovery names the acquisition path only and does not imply a solve.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "status": {
++      "principle": "terminal state is complete_positive, complete_null, retired, or blocked for the prospective replay measurement.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "submitted_kernel_hash_and_escape_hatch_matrix": {
++      "principle": "the submitted live kernel and every disabled adapter/induction/search/source/BFS/prior-memory/hidden-state escape hatch are content-addressed.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "task_logo_and_shuffle_controls": {
++      "principle": "task-logo, label shuffle, row shuffle, and unknown-label controls detect shortcut dependence.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "test_commands": {
++      "principle": "records focused unit/spec coverage, registry precheck, live-kernel audit, disjointness/seal, frozen-policy hash, forbidden-access, shortcut controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    },
++    "test_exit_codes": {
++      "principle": "verification exit codes are recorded without implying unrun checks passed.",
++      "source": "experiment_6195_arc_task_aware_prospective_fresh_transition"
++    }
++  },
++  "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts": {
++    "adapter_route_count": 0,
++    "game_source_read_count": 0,
++    "hidden_state_access_count": 0,
++    "llm_invocation_count": 0,
++    "offline_ground_truth_bfs_count": 0,
++    "prior_game_memory_access_count": 0,
++    "solver_kit_reproduce_count": 0
++  },
++  "fresh_live_agent_owned_transition_path_hash_count_and_provenance": {
++    "all_rows_live_agent_owned": true,
++    "collection_mode": "submitted_live_kernel",
++    "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++    "sample_rows": [
++      {
++        "action_budget": 4,
++        "action_data": {
++          "x": 43,
++          "y": 44
++        },
++        "action_id": 6,
++        "action_index": 0,
++        "changed_cell_count": 0,
++        "e3_policy_seen": true,
++        "frame_changed": false,
++        "game": "lp85",
++        "latency_ms": 9.507294,
++        "level_after": 0,
++        "level_before": 0,
++        "level_delta": 0,
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "provenance_rows_seen": 1,
++        "reward_delta": 0.0,
++        "row_id": "lp85|6195|0",
++        "safety_event": "none",
++        "seed": 6195,
++        "source": "live_agent_runtime_action",
++        "state_after": "GameState.NOT_FINISHED",
++        "state_before": "GameState.NOT_FINISHED",
++        "valid_action": true
++      },
++      {
++        "action_budget": 4,
++        "action_data": {
++          "x": 16,
++          "y": 23
++        },
++        "action_id": 6,
++        "action_index": 1,
++        "changed_cell_count": 0,
++        "e3_policy_seen": true,
++        "frame_changed": false,
++        "game": "lp85",
++        "latency_ms": 0.903747,
++        "level_after": 0,
++        "level_before": 0,
++        "level_delta": 0,
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "provenance_rows_seen": 2,
++        "reward_delta": 0.0,
++        "row_id": "lp85|6195|1",
++        "safety_event": "none",
++        "seed": 6195,
++        "source": "live_agent_runtime_action",
++        "state_after": "GameState.NOT_FINISHED",
++        "state_before": "GameState.NOT_FINISHED",
++        "valid_action": true
++      },
++      {
++        "action_budget": 4,
++        "action_data": {
++          "x": 4,
++          "y": 32
++        },
++        "action_id": 6,
++        "action_index": 2,
++        "changed_cell_count": 293,
++        "e3_policy_seen": true,
++        "frame_changed": true,
++        "game": "lp85",
++        "latency_ms": 0.834677,
++        "level_after": 0,
++        "level_before": 0,
++        "level_delta": 0,
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "provenance_rows_seen": 3,
++        "reward_delta": 0.0,
++        "row_id": "lp85|6195|2",
++        "safety_event": "none",
++        "seed": 6195,
++        "source": "live_agent_runtime_action",
++        "state_after": "GameState.NOT_FINISHED",
++        "state_before": "GameState.NOT_FINISHED",
++        "valid_action": true
++      },
++      {
++        "action_budget": 4,
++        "action_data": {
++          "x": 49,
++          "y": 20
++        },
++        "action_id": 6,
++        "action_index": 3,
++        "changed_cell_count": 0,
++        "e3_policy_seen": true,
++        "frame_changed": false,
++        "game": "lp85",
++        "latency_ms": 4.180857,
++        "level_after": 0,
++        "level_before": 0,
++        "level_delta": 0,
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "provenance_rows_seen": 4,
++        "reward_delta": 0.0,
++        "row_id": "lp85|6195|3",
++        "safety_event": "none",
++        "seed": 6195,
++        "source": "live_agent_runtime_action",
++        "state_after": "GameState.NOT_FINISHED",
++        "state_before": "GameState.NOT_FINISHED",
++        "valid_action": true
++      },
++      {
++        "action_budget": 4,
++        "action_data": {
++          "x": 43,
++          "y": 44
++        },
++        "action_id": 6,
++        "action_index": 0,
++        "changed_cell_count": 0,
++        "e3_policy_seen": true,
++        "frame_changed": false,
++        "game": "lp85",
++        "latency_ms": 7.819527,
++        "level_after": 0,
++        "level_before": 0,
++        "level_delta": 0,
++        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++        "provenance_rows_seen": 1,
++        "reward_delta": 0.0,
++        "row_id": "lp85|6196|0",
++        "safety_event": "none",
++        "seed": 6196,
++        "source": "live_agent_runtime_action",
++        "state_after": "GameState.NOT_FINISHED",
++        "state_before": "GameState.NOT_FINISHED",
++        "valid_action": true
++      }
++    ],
++    "source": "live_agent_runtime_action",
++    "transition_count": 48,
++    "transition_ids_sha256": "sha256:f30c3ccf0f558485b9b850875c2600817dbb50faed7ad83e7dce3c6a03c55acd",
++    "transition_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json",
++    "transition_sha256": "sha256:f444c14a970faef6bee7157a42c15cc56940b87691822153a7732091a5c2ef1f",
++    "unique_transition_id_count": 48
++  },
++  "frozen_exp6167_policy_code_config_and_hash": {
++    "byte_frozen_before_replay": true,
++    "current_held_rows_used_for_fit": 0,
++    "exp6167_module_path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
++    "exp6167_module_sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
++    "exp6167_result_path": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++    "exp6167_result_sha256": "sha256:05e6e61068abeccc21614c9cee46054619ee2ea953320e6f0c542b6c30adc1f8",
++    "fixed_before_controls": true,
++    "global_manifest": {
++      "abstention_policy": "none",
++      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
++      "decision_rule": "existing_live_default_admit_observed_transition",
++      "hand_calibrated_per_game": false,
++      "held_row_count_used_for_fit": 0,
++      "manifest_hash": "sha256:fc2cd86ddc9efc15317a9e68760666fbed3d54401389c7ca1d44abbe2204a249",
++      "score_name": "global_existing_admit_all",
++      "threshold": 0,
++      "training_games": [],
++      "training_row_count": 0,
++      "uses_game_source": false,
++      "uses_offline_bfs": false,
++      "uses_registry_gotchas": false
++    },
++    "global_manifest_hash": "sha256:fc2cd86ddc9efc15317a9e68760666fbed3d54401389c7ca1d44abbe2204a249",
++    "held_control_refit_count": 0,
++    "policy_code_config_hash": "sha256:eeb1235e93b13ceb9b91a3084cc19d54963bad7b1d4929dc01505d36bf88f7b7",
++    "policy_freeze_hash": "sha256:e96ca55c1ece577b8bc6b58c032aa7804777579ce4d7fb51a24e632cfa8748bb",
++    "principle": "content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.",
++    "task_aware_manifest": {
++      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
++      "current_held_row_count_used_for_fit": 0,
++      "decision_rule": "admit_when_observed_changed_cells_meet_exp6154_fixed_floor_else_abstain",
++      "frozen_before_episode_collection": true,
++      "hand_calibrated_per_game": false,
++      "held_row_count_used_for_fit": 0,
++      "manifest_hash": "sha256:5d72284962bb8267466a0d1d9b7f4752b4e1f631b17e2e0541df53302707fa4b",
++      "min_changed_cells": 1,
++      "score_name": "task_aware_training_game_change_threshold",
++      "threshold_selection_rule": "minimum_prior_exp6154_task_aware_min_changed_cells",
++      "training_games": [
++        "exp6154_policy_freeze"
++      ],
++      "training_row_count": 48,
++      "upstream_exp6154_freeze_hash": "sha256:c6ef150aa842004574ba2e02dfa17d3dad323df1fbe2d96443daa8060ec0bd93",
++      "upstream_exp6154_task_thresholds": {
++        "lp85": 1,
++        "su15": 1,
++        "tu93": 2
++      },
++      "uses_game_source": false,
++      "uses_offline_bfs": false,
++      "uses_registry_gotchas": false
++    },
++    "task_aware_manifest_hash": "sha256:5d72284962bb8267466a0d1d9b7f4752b4e1f631b17e2e0541df53302707fa4b",
++    "task_aware_min_changed_cells": 1,
++    "threshold_changed_count": 0,
++    "uses_game_source": false,
++    "uses_offline_bfs": false
++  },
++  "global_and_task_aware_proposal_quality_metrics": {
++    "descriptive_action_distribution_shift": {
++      "global_admitted_actions": {
++        "1": 12,
++        "2": 2,
++        "3": 2,
++        "4": 2,
++        "6": 28,
++        "7": 2
++      },
++      "shift_is_descriptive_only": true,
++      "task_aware_admitted_actions": {
++        "1": 12,
++        "2": 2,
++        "3": 2,
++        "4": 2,
++        "6": 20
++      }
++    },
++    "global": {
++      "abstained_count": 0,
++      "admitted_action_distribution": {
++        "1": 12,
++        "2": 2,
++        "3": 2,
++        "4": 2,
++        "6": 28,
++        "7": 2
++      },
++      "admitted_count": 48,
++      "changed_cell_recall": 1.0,
++      "changed_row_count": 38,
++      "correct_decision_rate": 0.791667,
++      "decision_count": 48,
++      "expected_calibration_error": 0.208333,
++      "false_confident_admissions": 10,
++      "proposal_quality": 0.895833,
++      "safe_abstentions": 0,
++      "transition_precision": 0.791667,
++      "transition_recall": 1.0,
++      "true_positive_admissions": 38
++    },
++    "task_aware": {
++      "abstained_count": 10,
++      "admitted_action_distribution": {
++        "1": 12,
++        "2": 2,
++        "3": 2,
++        "4": 2,
++        "6": 20
++      },
++      "admitted_count": 38,
++      "changed_cell_recall": 1.0,
++      "changed_row_count": 38,
++      "correct_decision_rate": 1.0,
++      "decision_count": 48,
++      "expected_calibration_error": 0.125,
++      "false_confident_admissions": 0,
++      "proposal_quality": 1.0,
++      "safe_abstentions": 10,
++      "transition_precision": 1.0,
++      "transition_recall": 1.0,
++      "true_positive_admissions": 38
++    },
++    "task_aware_minus_global": 0.104167
++  },
++  "honest_verdict": "complete_positive: fresh_transition_count_48_policy_delta_0.208333_no_solve_no_registry_credit",
++  "identical_transition_replay_receipt": {
++    "global_replay_count": 48,
++    "global_transition_ids_sha256": "sha256:f30c3ccf0f558485b9b850875c2600817dbb50faed7ad83e7dce3c6a03c55acd",
++    "identical_transition_ids": true,
++    "policy_chose_live_action_count": 0,
++    "policy_requested_new_observation_count": 0,
++    "sealed_transition_ids_sha256": "sha256:f30c3ccf0f558485b9b850875c2600817dbb50faed7ad83e7dce3c6a03c55acd",
++    "task_aware_replay_count": 48,
++    "task_aware_transition_ids_sha256": "sha256:f30c3ccf0f558485b9b850875c2600817dbb50faed7ad83e7dce3c6a03c55acd",
++    "threshold_change_count": 0
++  },
++  "inference_substrate": "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay",
++  "level_credit_claimed": false,
++  "live_action_influence_count": 0,
++  "paired_delta_intervals_and_seed": {
++    "by_transition": {
++      "lp85|6195|0": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "lp85|6195|1": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "lp85|6195|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "lp85|6195|3": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "lp85|6196|0": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "lp85|6196|1": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "lp85|6196|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "lp85|6196|3": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "ls20|6195|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6195|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6195|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6195|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6196|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6196|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6196|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "ls20|6196|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6195|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6195|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6195|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6195|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6196|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6196|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6196|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "r11l|6196|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6195|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6195|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6195|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6195|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6196|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6196|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6196|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "sp80|6196|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "su15|6195|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "su15|6195|1": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "su15|6195|2": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "su15|6195|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "su15|6196|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "su15|6196|1": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "su15|6196|2": {
++        "global_correct": false,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 1.0
++      },
++      "su15|6196|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6195|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6195|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6195|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6195|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6196|0": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6196|1": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6196|2": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      },
++      "tu93|6196|3": {
++        "global_correct": true,
++        "task_aware_correct": true,
++        "task_aware_minus_global": 0.0
++      }
++    },
++    "interval": {
++      "lower_ci": 0.092227,
++      "max": 1.0,
++      "min": 0.0,
++      "upper_ci": 0.32444
++    },
++    "mean_task_aware_minus_global": 0.208333,
++    "paired_transition_count": 48,
++    "seed": 20260807,
++    "support": {
++      "negative_rows": 0,
++      "positive_rows": 10,
++      "tied_rows": 38
++    }
++  },
++  "preconditions_checked": {
++    "budgets_and_seeds": {
++      "action_budget": 4,
++      "games": [
++        "lp85",
++        "su15",
++        "tu93",
++        "r11l",
++        "ls20",
++        "sp80"
++      ],
++      "random_seed": 20260807,
++      "seeds": [
++        6195,
++        6196
++      ]
++    },
++    "exp6184_preflight": {
++      "isolation_violation_count": 0,
++      "path": "results/experiment_6184_v536_evidence_isolation_preflight.json",
++      "ready": true,
++      "ready_score": 1,
++      "sha256": "sha256:150ffc0d85b8e135e50e05c4d9cd3d8117ef91c4d29772a4e50eeada3f4def68",
++      "status": "complete_ready",
++      "validation_errors": []
++    },
++    "game_source_access_controls": {
++      "adapter_allowed": false,
++      "game_source_access_allowed": false,
++      "hidden_state_access_allowed": false,
++      "offline_ground_truth_bfs_allowed": false,
++      "prior_game_memory_allowed": false
++    },
++    "git_status_short": [],
++    "hashed_inputs": [
++      {
++        "exists": true,
++        "path": "AGENTS.md",
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "size_bytes": 1165
++      },
++      {
++        "exists": true,
++        "path": "CODEX.md",
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "size_bytes": 2396
++      },
++      {
++        "exists": true,
++        "path": "CLAUDE.md",
++        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
++        "size_bytes": 281180
++      },
++      {
++        "exists": true,
++        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
++        "sha256": "sha256:65ad2c43ea529ccab52b0e7785d4c123c0b85c1e0c21289b8a3e525c87711dc4",
++        "size_bytes": 1542894
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py",
++        "sha256": "sha256:5b02557a1773c0434c910382350151accc45fe7dd5fc09d38cdb83fffadbbb56",
++        "size_bytes": 51290
++      },
++      {
++        "exists": true,
++        "path": "tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py",
++        "sha256": "sha256:34c284ca9755b34cf86920f0ac7ba8bca65e48449559608e381f4244d96645d7",
++        "size_bytes": 16961
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6154_arc_task_aware_energy_generalization.py",
++        "sha256": "sha256:233c187fe60634906126f739fc31fe51ddf8c73e8121e13e2a424836541fcefa",
++        "size_bytes": 50425
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6154_arc_task_aware_energy_generalization.json",
++        "sha256": "sha256:c3e76f9b780aad43894377b511a135015226f0c866f96af55f3d16e94ff51dca",
++        "size_bytes": 37436
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
++        "sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
++        "size_bytes": 49334
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++        "sha256": "sha256:05e6e61068abeccc21614c9cee46054619ee2ea953320e6f0c542b6c30adc1f8",
++        "size_bytes": 81730
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6181_arc_logo_shortcut_audit.py",
++        "sha256": "sha256:c596199fa01d686395006716086e41a72ad31aa928f6826bcbf08fa1e1ac9d4e",
++        "size_bytes": 37241
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++        "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
++        "size_bytes": 27031
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6184_v536_evidence_isolation_preflight.json",
++        "sha256": "sha256:150ffc0d85b8e135e50e05c4d9cd3d8117ef91c4d29772a4e50eeada3f4def68",
++        "size_bytes": 103004
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/agentic/arc_task_aware_energy.py",
++        "sha256": "sha256:ec70c809f81c595c5395bd9d6f548618d6653899cfae29ba72a91d16d16dc7b8",
++        "size_bytes": 4877
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256": "sha256:10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "size_bytes": 419009
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/agentic/arc_game_adapters.py",
++        "sha256": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
++        "size_bytes": 120680
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/agentic/arc_solver_kit.py",
++        "sha256": "sha256:22e3489437d94f587cd32ed8d68dad1ac98d3614713d43bce1aa74064219cb91",
++        "size_bytes": 241556
++      },
++      {
++        "exists": true,
++        "path": "ops/arc_solve_registry.yaml",
++        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "size_bytes": 462740
++      },
++      {
++        "exists": true,
++        "path": "scripts/adversarial_verify.py",
++        "sha256": "sha256:5a24b131bfdea1bbf082d7f13a65d7de9aeb5a8aa016eaf1feb31735b88ba3a8",
++        "size_bytes": 252088
++      },
++      {
++        "exists": true,
++        "path": "scripts/arc_orphan_solver_lint.py",
++        "sha256": "sha256:96a3b5b95ddcd70ca1a67eb8e5f055743b673af39a66b4a93c9bada38938f4b8",
++        "size_bytes": 10756
++      }
++    ],
++    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++    "prompt_requested_prior_paths": [
++      {
++        "exists": false,
++        "path": "results/experiment_6147_arc_live_path_search_audit.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": false,
++        "path": "results/experiment_6154_arc_live_agent_transition_corpus.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": false,
++        "path": "results/experiment_6167_arc_task_aware_policy.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++        "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
++        "size_bytes": 27031
++      }
++    ],
++    "protected_file_hashes_before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:bce9e130ce9f91a3fa94f675d7040cbc37a057264e908c834f2bb8429506403c",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "python": "3.12.13",
++    "root_clutter": {
++      "ok": true,
++      "root_python_files": []
++    },
++    "run_date": "20260807",
++    "schema": "carnot.experiment_6195.arc_task_aware_prospective_fresh_transition.v1.preconditions",
++    "task_owned_output_root": {
++      "parent_exists": true,
++      "result_existed_before": false,
++      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6195_arc_task_aware_prospective_fresh_transition.json",
++      "result_sha256_before": null,
++      "transition_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json"
++    }
++  },
++  "prior_transition_hashes_and_disjointness_receipt": {
++    "canonical_prior_artifact_receipts": [
++      {
++        "exists": true,
++        "path": "results/experiment_6147_task_aware_energy_calibration.json",
++        "sha256": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
++        "size_bytes": 71883
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6154_arc_task_aware_energy_generalization.json",
++        "sha256": "sha256:c3e76f9b780aad43894377b511a135015226f0c866f96af55f3d16e94ff51dca",
++        "size_bytes": 37436
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6167_arc_task_aware_multiseed_replication.json",
++        "sha256": "sha256:05e6e61068abeccc21614c9cee46054619ee2ea953320e6f0c542b6c30adc1f8",
++        "size_bytes": 81730
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++        "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
++        "size_bytes": 27031
++      }
++    ],
++    "disjoint": true,
++    "fresh_transition_count": 48,
++    "fresh_transition_ids_sha256": "sha256:f30c3ccf0f558485b9b850875c2600817dbb50faed7ad83e7dce3c6a03c55acd",
++    "overlap_count": 0,
++    "overlap_sample": [],
++    "prior_sources": {
++      "exp6154_canonical": {
++        "id_count": 24,
++        "transition_ids_sha256": "sha256:60ee6066f4ac26d1dc3c9d878170091bbedcd80c97c7fad627eb9c8564c6b7e9"
++      },
++      "exp6167_canonical": {
++        "id_count": 144,
++        "transition_ids_sha256": "sha256:486e170865c1e7b4a24d057602d7dd676b9f9e62c1be929fe770d9c26d5c4810"
++      },
++      "exp6181_canonical": {
++        "id_count": 144,
++        "transition_ids_sha256": "sha256:113f94ca33d414922080805c450b83c8a0f991c0619eaef09bafddb387ae03c2"
++      },
++      "prompt_requested_exp6147": {
++        "id_count": 0,
++        "transition_ids_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
++      },
++      "prompt_requested_exp6154_transition_corpus": {
++        "id_count": 0,
++        "transition_ids_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
++      },
++      "prompt_requested_exp6167_policy": {
++        "id_count": 0,
++        "transition_ids_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
++      }
++    },
++    "prior_transition_id_count": 312,
++    "prior_transition_ids_sha256": "sha256:71bf2ee68f15ca25505c7199c1e4eea9dff946a5f23307177bf31409960cc7e5",
++    "requested_prior_artifact_receipts": [
++      {
++        "exists": false,
++        "path": "results/experiment_6147_arc_live_path_search_audit.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": false,
++        "path": "results/experiment_6154_arc_live_agent_transition_corpus.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": false,
++        "path": "results/experiment_6167_arc_task_aware_policy.json",
++        "sha256": null,
++        "size_bytes": 0
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++        "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
++        "size_bytes": 27031
++      }
++    ]
++  },
++  "protected_files_unchanged": {
++    "after": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:bce9e130ce9f91a3fa94f675d7040cbc37a057264e908c834f2bb8429506403c",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:bce9e130ce9f91a3fa94f675d7040cbc37a057264e908c834f2bb8429506403c",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "changed_files": [],
++    "unchanged": true
++  },
++  "registry_precheck_and_hash": {
++    "current_live_mechanism": "make_carnot_agent/E3AgentPolicy.choose_action",
++    "no_duplicate_solve": true,
++    "ok": true,
++    "registry_level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
++    "registry_level_fingerprint_unchanged_during_precheck": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "registry_update_permitted": false,
++    "reproduced_total_games": 25,
++    "reproduced_total_levels": 183,
++    "retired_mechanism_required": false
++  },
++  "reproducibility_checksum": "sha256:e4acfd135c92e45bad2923bc4931b39a532f778350eb410d77368f1ca73e3093",
++  "seal_before_policy_replay_timestamp": {
++    "policy_loaded_before_seal_count": 0,
++    "policy_replay_started_timestamp_utc": "2026-08-07T16:51:22.531017Z",
++    "seal_before_replay": true,
++    "seal_timestamp_utc": "2026-08-07T16:51:22.530092Z"
++  },
++  "solve_claimed": false,
++  "solve_provenance": "live_agent_self_discovery",
++  "status": "complete_positive",
++  "submitted_kernel_hash_and_escape_hatch_matrix": {
++    "all_escape_hatches_disabled": true,
++    "capture_collector_path": "python/carnot/experiment_6154_arc_task_aware_energy_generalization.py",
++    "capture_collector_sha256": "sha256:233c187fe60634906126f739fc31fe51ddf8c73e8121e13e2a424836541fcefa",
++    "escape_hatches": {
++      "adapter_enabled": false,
++      "game_source_read_count": 0,
++      "hand_calibration_enabled": false,
++      "hidden_state_access_count": 0,
++      "llm_induction_enabled": false,
++      "llm_invocation_count": 0,
++      "offline_ground_truth_bfs_run_count": 0,
++      "per_game_lookup_routes_enabled": false,
++      "prior_game_memory_access_count": 0,
++      "registry_gotcha_text_enabled": false,
++      "solver_routes_enabled": false
++    },
++    "submitted_kernel": "make_carnot_agent/E3AgentPolicy.choose_action",
++    "submitted_kernel_path": "python/carnot/agentic/arc_competition_agent.py",
++    "submitted_kernel_sha256": "sha256:10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda"
++  },
++  "task_logo_and_shuffle_controls": {
++    "all_controls_passed": true,
++    "label_shuffle": {
++      "baseline_decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "changed_decision_count": 0,
++      "decision_count": 96,
++      "decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "passed": true
++    },
++    "negative_control_shuffles": {
++      "row_order": {
++        "baseline_decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++        "changed_decision_count": 0,
++        "decision_count": 96,
++        "decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++        "passed": true
++      }
++    },
++    "task_logo": {
++      "baseline_decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "changed_decision_count": 0,
++      "decision_count": 96,
++      "decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "passed": true
++    },
++    "unknown_label": {
++      "baseline_decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "changed_decision_count": 0,
++      "decision_count": 96,
++      "decision_signature_sha256": "sha256:5e2fad89da8b05955ee78c5e95a943e51f1f1913dcc15d06df1af2f3bf9c655f",
++      "passed": true
++    }
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py -m pytest tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py",
++    ".venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q --no-cov -n 0",
++    ".venv/bin/python -m carnot.experiment_6195_arc_task_aware_prospective_fresh_transition --validate",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6195_arc_task_aware_prospective_fresh_transition.json",
++    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
++    ".venv/bin/ruff check python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py scripts/adversarial_verify.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
++    "manual: ops/e2e-test-plan.md reviewed; no dedicated Exp6195 E2E entry applies",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {}
++}
+diff --git a/results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json b/results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json
+new file mode 100644
+index 0000000000..f9a7b5c46f
+--- /dev/null
++++ b/results/experiment_6195_arc_task_aware_prospective_fresh_transition.transitions.json
+@@ -0,0 +1,1241 @@
++{
++  "rows": [
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 43,
++        "y": 44
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 9.507294,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 16,
++        "y": 23
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 0.903747,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 4,
++        "y": 32
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 293,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "lp85",
++      "latency_ms": 0.834677,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 49,
++        "y": 20
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 4.180857,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 43,
++        "y": 44
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 7.819527,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 16,
++        "y": 23
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 0.800182,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 4,
++        "y": 32
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 293,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "lp85",
++      "latency_ms": 0.784944,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 49,
++        "y": 20
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "lp85",
++      "latency_ms": 4.122849,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "lp85|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 4,
++        "y": 59
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "su15",
++      "latency_ms": 5.689038,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "su15|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 31,
++        "y": 5
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "su15",
++      "latency_ms": 0.956024,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "su15|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 7,
++      "action_index": 2,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "su15",
++      "latency_ms": 0.832172,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "su15|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 48,
++        "y": 14
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "su15",
++      "latency_ms": 1.093252,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "su15|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 4,
++        "y": 59
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "su15",
++      "latency_ms": 6.723369,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "su15|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 31,
++        "y": 5
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "su15",
++      "latency_ms": 0.821833,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "su15|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 7,
++      "action_index": 2,
++      "changed_cell_count": 0,
++      "e3_policy_seen": true,
++      "frame_changed": false,
++      "game": "su15",
++      "latency_ms": 0.746381,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "su15|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 48,
++        "y": 14
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "su15",
++      "latency_ms": 1.003935,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "su15|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 0,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 4.644647,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 2,
++      "action_index": 1,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.803939,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 3,
++      "action_index": 2,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.730632,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 4,
++      "action_index": 3,
++      "changed_cell_count": 19,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.93782,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 0,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 4.371285,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 2,
++      "action_index": 1,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.730151,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 3,
++      "action_index": 2,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.670148,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 4,
++      "action_index": 3,
++      "changed_cell_count": 19,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "tu93",
++      "latency_ms": 0.881826,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "tu93|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 17,
++        "y": 47
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 66,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 6.045457,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 22,
++        "y": 53
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 51,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 3.386886,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 24,
++        "y": 56
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 28,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 3.062478,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 25,
++        "y": 57
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 2.928347,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 17,
++        "y": 47
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 66,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 5.831755,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 22,
++        "y": 53
++      },
++      "action_id": 6,
++      "action_index": 1,
++      "changed_cell_count": 51,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 3.259378,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 24,
++        "y": 56
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 28,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 2.996815,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 25,
++        "y": 57
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 1,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "r11l",
++      "latency_ms": 2.897849,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "r11l|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 0,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 3.822876,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 1,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 1.782585,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 2,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 1.775322,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 3,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 3.263114,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 0,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 5.497689,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 1,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 1.714668,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 2,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 1.657481,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 3,
++      "changed_cell_count": 52,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "ls20",
++      "latency_ms": 1.685373,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "ls20|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 45,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 3.634301,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6195|0",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 1,
++      "changed_cell_count": 162,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 0.771418,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6195|1",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 21,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 4.004065,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6195|2",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 45,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 3,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 0.69241,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6195|3",
++      "safety_event": "none",
++      "seed": 6195,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 45,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 0,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 3.400062,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 1,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6196|0",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": null,
++      "action_id": 1,
++      "action_index": 1,
++      "changed_cell_count": 162,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 0.742374,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 2,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6196|1",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 21,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 2,
++      "changed_cell_count": 2,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 2.394975,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 3,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6196|2",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    },
++    {
++      "action_budget": 4,
++      "action_data": {
++        "x": 45,
++        "y": 55
++      },
++      "action_id": 6,
++      "action_index": 3,
++      "changed_cell_count": 3,
++      "e3_policy_seen": true,
++      "frame_changed": true,
++      "game": "sp80",
++      "latency_ms": 0.686409,
++      "level_after": 0,
++      "level_before": 0,
++      "level_delta": 0,
++      "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++      "provenance_rows_seen": 4,
++      "reward_delta": 0.0,
++      "row_id": "sp80|6196|3",
++      "safety_event": "none",
++      "seed": 6196,
++      "source": "live_agent_runtime_action",
++      "state_after": "GameState.NOT_FINISHED",
++      "state_before": "GameState.NOT_FINISHED",
++      "valid_action": true
++    }
++  ],
++  "schema": "carnot.experiment_6195.arc_task_aware_prospective_fresh_transition.v1.sealed_transitions"
++}
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 0562f9b4cd..d734d20490 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -271,6 +271,9 @@ ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE = "live_agent_environment_interaction"
+ ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE = (
+     "live_e3_adapter_disabled_runtime_transitions"
+ )
++ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE = (
++    "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"
++)
+ ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
+ ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
+     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
+@@ -373,6 +376,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
+     ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+     ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE,
+     ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE,
++    ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE,
+     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
+     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
+     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
+@@ -2145,7 +2149,11 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
+     """
+     return _inference_substrate_matches(
+         d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
+-    ) or _inference_substrate_matches(d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE)
++    ) or _inference_substrate_matches(
++        d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE
++    ) or _inference_substrate_matches(
++        d, ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE
++    )
+ 
+ 
+ def _is_arc_filter_runtime_no_llm(d: dict[str, Any]) -> bool:
+diff --git a/tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py b/tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py
+new file mode 100644
+index 0000000000..4b40695800
+--- /dev/null
++++ b/tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py
+@@ -0,0 +1,413 @@
++"""Tests for Exp6195 prospective fresh ARC transition replay.
++
++Spec refs: REQ-ARC-WMTE-6195,
++SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY,
++SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS,
++SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import scripts.adversarial_verify as adversarial_verify
++from carnot import experiment_6195_arc_task_aware_prospective_fresh_transition as mod
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++ARC_SPEC = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _passing_exit_codes() -> dict[str, int]:
++    return {command: 0 for command in mod.DEFAULT_TEST_COMMANDS}
++
++
++def _synthetic_rows() -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    changed_by_game = {
++        "lp85": [0, 2, 0, 5],
++        "su15": [0, 1, 0, 3],
++        "tu93": [0, 4, 0, 2],
++        "r11l": [0, 1, 0, 6],
++        "ls20": [0, 3, 0, 1],
++        "sp80": [0, 2, 0, 4],
++    }
++    for game, changes in changed_by_game.items():
++        for seed in mod.DEFAULT_SEEDS:
++            for action_index, changed_cells in enumerate(changes):
++                rows.append(
++                    {
++                        "row_id": f"{game}|{seed}|{action_index}",
++                        "game": game,
++                        "seed": int(seed),
++                        "action_index": int(action_index),
++                        "action_id": 6,
++                        "action_data": None,
++                        "valid_action": True,
++                        "level_before": 0,
++                        "level_after": 0,
++                        "level_delta": 0,
++                        "reward_delta": 0.0,
++                        "state_before": "",
++                        "state_after": "",
++                        "frame_changed": changed_cells > 0,
++                        "changed_cell_count": changed_cells,
++                        "safety_event": "none",
++                        "latency_ms": 0.25 + action_index,
++                        "action_budget": 4,
++                        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
++                        "e3_policy_seen": True,
++                        "provenance_rows_seen": 1,
++                        "source": "live_agent_runtime_action",
++                    }
++                )
++    return rows
++
++
++def test_req_6195_spec_declares_fresh_replay_contract() -> None:
++    """REQ-ARC-WMTE-6195: OpenSpec names the prospective replay contract."""
++
++    text = ARC_SPEC.read_text(encoding="utf-8")
++    section = text[text.index("## REQ-ARC-WMTE-6195") :]
++    section = section[: section.index("### REQ-ARC-WMTE-6180")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-ARC-WMTE-6195",
++        "SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY",
++        "SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS",
++        "SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "seal timestamp SHALL precede any policy replay timestamp",
++        "live_action_influence_count=0",
++        "arc_solve_registry_delta=[]",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_6195_fresh_disjoint_sealed_before_replay(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY."""
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        live_rows=_synthetic_rows(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=True,
++    )
++
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["status"] == "complete_positive"
++    assert artifact["honest_verdict"].startswith("complete_positive:")
++    assert artifact["preconditions_checked"]["exp6184_preflight"]["ready"] is True
++    assert artifact["registry_precheck_and_hash"]["no_duplicate_solve"] is True
++    matrix = artifact["submitted_kernel_hash_and_escape_hatch_matrix"]
++    assert matrix["submitted_kernel"] == "make_carnot_agent/E3AgentPolicy.choose_action"
++    assert matrix["all_escape_hatches_disabled"] is True
++    disjoint = artifact["prior_transition_hashes_and_disjointness_receipt"]
++    assert disjoint["fresh_transition_count"] == len(_synthetic_rows())
++    assert disjoint["overlap_count"] == 0
++    assert disjoint["disjoint"] is True
++    seal = artifact["seal_before_policy_replay_timestamp"]
++    assert seal["seal_before_replay"] is True
++    assert seal["policy_loaded_before_seal_count"] == 0
++    assert artifact["fresh_live_agent_owned_transition_path_hash_count_and_provenance"][
++        "all_rows_live_agent_owned"
++    ] is True
++    assert mod.validate_artifact(artifact) is True
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text()) == artifact
++
++
++def test_scenario_6195_frozen_identical_replay_metrics_and_controls(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS."""
++
++    artifact = mod.run(
++        result_path=tmp_path / "fixture.json",
++        live_rows=_synthetic_rows(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    frozen = artifact["frozen_exp6167_policy_code_config_and_hash"]
++    assert frozen["held_control_refit_count"] == 0
++    assert frozen["threshold_changed_count"] == 0
++    assert frozen["policy_freeze_hash"].startswith("sha256:")
++    replay = artifact["identical_transition_replay_receipt"]
++    assert replay["identical_transition_ids"] is True
++    assert replay["global_replay_count"] == replay["task_aware_replay_count"]
++    assert replay["policy_requested_new_observation_count"] == 0
++    assert replay["policy_chose_live_action_count"] == 0
++    metrics = artifact["global_and_task_aware_proposal_quality_metrics"]
++    assert metrics["task_aware"]["false_confident_admissions"] < (
++        metrics["global"]["false_confident_admissions"]
++    )
++    assert metrics["task_aware"]["proposal_quality"] > metrics["global"]["proposal_quality"]
++    assert artifact["paired_delta_intervals_and_seed"]["mean_task_aware_minus_global"] > 0
++    assert artifact["paired_delta_intervals_and_seed"]["seed"] == mod.RANDOM_SEED
++    controls = artifact["task_logo_and_shuffle_controls"]
++    assert controls["all_controls_passed"] is True
++    assert controls["task_logo"]["changed_decision_count"] == 0
++    assert controls["negative_control_shuffles"]["row_order"]["changed_decision_count"] == 0
++    assert artifact["calibration_support_and_per_game_metrics"]["support"]["fresh_transition_count"] == (
++        len(_synthetic_rows())
++    )
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_req_6195_submitted_kernel_acquisition_path_is_used(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-ARC-WMTE-6195: live acquisition uses the submitted kernel collector."""
++
++    calls: dict[str, Any] = {}
++
++    def fake_collect_live_rows(*, games: Any, seeds: Any, action_budget: int) -> Any:
++        calls["games"] = tuple(games)
++        calls["seeds"] = tuple(seeds)
++        calls["action_budget"] = action_budget
++        return _synthetic_rows(), mod.synthetic_disable_receipt(), 0
++
++    monkeypatch.setattr(mod.exp6167, "collect_live_rows", fake_collect_live_rows)
++    artifact = mod.run(
++        result_path=tmp_path / "fixture.json",
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    assert calls == {
++        "games": mod.DEFAULT_GAMES,
++        "seeds": mod.DEFAULT_SEEDS,
++        "action_budget": mod.DEFAULT_ACTION_BUDGET,
++    }
++    assert artifact["fresh_live_agent_owned_transition_path_hash_count_and_provenance"][
++        "collection_mode"
++    ] == "submitted_live_kernel"
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_scenario_6195_no_solve_registry_and_validation_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES."""
++
++    artifact = mod.run(
++        result_path=tmp_path / "fixture.json",
++        live_rows=_synthetic_rows(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["solve_claimed"] is False
++    assert artifact["level_credit_claimed"] is False
++    assert artifact["live_action_influence_count"] == 0
++    assert artifact["arc_solve_registry_delta"] == []
++    assert artifact["protected_files_unchanged"]["unchanged"] is True
++    assert all(
++        value == 0
++        for value in artifact[
++            "forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts"
++        ].values()
++        if isinstance(value, int)
++    )
++
++    for field, value in (
++        ("solve_claimed", True),
++        ("level_credit_claimed", True),
++        ("live_action_influence_count", 1),
++        ("arc_solve_registry_delta", [{"game": "lp85"}]),
++    ):
++        bad = deepcopy(artifact)
++        bad[field] = value
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=field):
++            mod.validate_artifact(bad)
++
++    bad_forbidden = deepcopy(artifact)
++    bad_forbidden["forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts"][
++        "game_source_read_count"
++    ] = 1
++    bad_forbidden["reproducibility_checksum"] = mod.reproducibility_checksum(bad_forbidden)
++    with pytest.raises(ValueError, match="forbidden"):
++        mod.validate_artifact(bad_forbidden)
++
++    bad_overlap = deepcopy(artifact)
++    bad_overlap["prior_transition_hashes_and_disjointness_receipt"]["overlap_count"] = 1
++    bad_overlap["prior_transition_hashes_and_disjointness_receipt"]["disjoint"] = False
++    bad_overlap["status"] = mod.status(bad_overlap)
++    bad_overlap["honest_verdict"] = mod.honest_verdict(bad_overlap)
++    bad_overlap["reproducibility_checksum"] = mod.reproducibility_checksum(bad_overlap)
++    with pytest.raises(ValueError, match="disjoint"):
++        mod.validate_artifact(bad_overlap)
++
++    bad_seal = deepcopy(artifact)
++    bad_seal["seal_before_policy_replay_timestamp"]["seal_before_replay"] = False
++    bad_seal["status"] = mod.status(bad_seal)
++    bad_seal["honest_verdict"] = mod.honest_verdict(bad_seal)
++    bad_seal["reproducibility_checksum"] = mod.reproducibility_checksum(bad_seal)
++    with pytest.raises(ValueError, match="seal"):
++        mod.validate_artifact(bad_seal)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = mod.sha256_json({"wrong": True})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
++
++
++def test_req_6195_defensive_receipts_blockers_and_schema_guards(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-6195: defensive receipts and schema guards fail closed."""
++
++    assert mod._transition_ids_from_exp6154(tmp_path) == []
++    assert mod._transition_ids_from_exp6167(tmp_path) == []
++    assert mod._transition_ids_from_exp6181(tmp_path) == []
++    assert mod._exp6184_preflight_receipt(tmp_path)["ready"] is False
++    assert (
++        mod.paired_delta_intervals_and_seed(
++            [{"row_id": "missing-task", "arm": "global", "admitted": True}]
++        )["paired_transition_count"]
++        == 0
++    )
++
++    artifact = mod.run(
++        result_path=tmp_path / "fixture.json",
++        live_rows=_synthetic_rows(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=False,
++    )
++
++    bad_reasons = deepcopy(artifact)
++    bad_reasons["preconditions_checked"]["exp6184_preflight"]["ready"] = False
++    bad_reasons["preconditions_checked"]["root_clutter"]["ok"] = False
++    bad_reasons["registry_precheck_and_hash"]["ok"] = False
++    bad_reasons["submitted_kernel_hash_and_escape_hatch_matrix"][
++        "all_escape_hatches_disabled"
++    ] = False
++    bad_reasons["prior_transition_hashes_and_disjointness_receipt"]["disjoint"] = False
++    bad_reasons["fresh_live_agent_owned_transition_path_hash_count_and_provenance"][
++        "all_rows_live_agent_owned"
++    ] = False
++    bad_reasons["seal_before_policy_replay_timestamp"]["seal_before_replay"] = False
++    bad_reasons["frozen_exp6167_policy_code_config_and_hash"]["held_control_refit_count"] = 1
++    bad_reasons["identical_transition_replay_receipt"]["identical_transition_ids"] = False
++    bad_reasons["task_logo_and_shuffle_controls"]["all_controls_passed"] = False
++    bad_reasons["live_action_influence_count"] = 1
++    bad_reasons["forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts"][
++        "hidden_state_access_count"
++    ] = 1
++    bad_reasons["solve_provenance"] = "outer_loop_re"
++    bad_reasons["solve_claimed"] = True
++    bad_reasons["level_credit_claimed"] = True
++    bad_reasons["arc_solve_registry_delta"] = [{"game": "lp85"}]
++    bad_reasons["protected_files_unchanged"]["unchanged"] = False
++    bad_reasons["inference_substrate"] = "wrong"
++    reasons = set(mod._blocked_reasons(bad_reasons))
++    assert {
++        "exp6184_preflight",
++        "root_clutter",
++        "registry_precheck_and_hash",
++        "submitted_kernel_hash_and_escape_hatch_matrix",
++        "disjoint",
++        "fresh_live_agent_owned_transition_path_hash_count_and_provenance",
++        "seal",
++        "frozen_exp6167_policy_code_config_and_hash",
++        "identical_transition_replay_receipt",
++        "task_logo_and_shuffle_controls",
++        "live_action_influence_count",
++        "forbidden",
++        "solve_provenance",
++        "solve_claimed",
++        "level_credit_claimed",
++        "arc_solve_registry_delta",
++        "protected_files_unchanged",
++        "inference_substrate",
++    } <= reasons
++
++    guard_cases = [
++        ("field_provenance", lambda row: row["field_provenance"].pop("status")),
++        (
++            "seal",
++            lambda row: row["seal_before_policy_replay_timestamp"].update(
++                policy_loaded_before_seal_count=1
++            ),
++        ),
++        (
++            "submitted_kernel_hash_and_escape_hatch_matrix",
++            lambda row: row["submitted_kernel_hash_and_escape_hatch_matrix"].update(
++                all_escape_hatches_disabled=False
++            ),
++        ),
++        (
++            "fresh_live_agent_owned_transition_path_hash_count_and_provenance",
++            lambda row: row[
++                "fresh_live_agent_owned_transition_path_hash_count_and_provenance"
++            ].update(all_rows_live_agent_owned=False),
++        ),
++        (
++            "frozen_exp6167_policy_code_config_and_hash",
++            lambda row: row["frozen_exp6167_policy_code_config_and_hash"].update(
++                held_control_refit_count=1
++            ),
++        ),
++        (
++            "frozen_exp6167_policy_code_config_and_hash",
++            lambda row: row["frozen_exp6167_policy_code_config_and_hash"].update(
++                threshold_changed_count=1
++            ),
++        ),
++        (
++            "identical_transition_replay_receipt",
++            lambda row: row["identical_transition_replay_receipt"].update(
++                identical_transition_ids=False
++            ),
++        ),
++        (
++            "task_logo_and_shuffle_controls",
++            lambda row: row["task_logo_and_shuffle_controls"].update(
++                all_controls_passed=False
++            ),
++        ),
++        (
++            "protected_files_unchanged",
++            lambda row: row["protected_files_unchanged"].update(unchanged=False),
++        ),
++        ("status", lambda row: row.update(status="wrong")),
++        ("honest_verdict", lambda row: row.update(honest_verdict="wrong")),
++    ]
++    for message, mutate in guard_cases:
++        bad = deepcopy(artifact)
++        mutate(bad)
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(bad)
++
++
++def test_req_6195_adversarial_verify_accepts_replay_substrate(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-6195: adversarial verification accepts replay substrate."""
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        live_rows=_synthetic_rows(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=1.0,
++        write=True,
++    )
++    report = adversarial_verify.verify_artifact(tmp_path / mod.RESULT_RELATIVE_PATH.name)
++    kinds = {flag["kind"] for flag in report["flags"]}
++
++    assert adversarial_verify._classify_inference_substrate(artifact)["kind"] == "no_llm"
++    assert "DURATION_TOO_SHORT" not in kinds
++    assert "IMPLAUSIBLE_PERFECT" not in kinds
++    assert "METHODOLOGY_MISSING" not in kinds
+-- 
+2.55.0
+

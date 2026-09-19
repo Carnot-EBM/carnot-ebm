@@ -1,0 +1,43 @@
+From 7b9120a9da8bd3a7eb892ecaa25cc06d4a36cb6c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 00:46:31 -0400
+Subject: [PATCH 07748/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4fc478dc78..b0b71d2a89 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-07-24T03:24:56Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-07-24T04:46:28Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c291c47a5d..42e4d4d439 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14204,3 +14204,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-24 01:26 UTC | Exact terminal-boundary handoff from .521 into .52 | OK | 87 passed, 1 warning in 13.26s |
+ | 2026-07-24 01:59 UTC | Dated evidence refresh after the V522 planner mark | OK | 88 passed, 2 warnings in 11.50s |
+ | 2026-07-24 03:22 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: eas. I’m waiti |
++| 2026-07-24 04:44 UTC | Adaptive-state microkernel E2E attribution and req | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5865_adaptiv |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9c4f2844d5..554f68b23a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 15, "phase": "iteration_start", "started_at": "2026-07-24T03:24:56Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 16, "phase": "iteration_start", "started_at": "2026-07-24T04:46:28Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

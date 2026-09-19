@@ -1,0 +1,62 @@
+From 6b6739c4d20969abe196a73bec4e66611a5cfe7f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 11:13:20 -0400
+Subject: [PATCH 08441/11362] [conductor] Pre-gate block: Calibration-only CLUE
+ and residualized linear code selector gated on Exp6189 surface
+
+1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-surface.surface_ready_score (upstream artifact not found for task id 'exp6189-matching-base-code-hidden-state-surface')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_6190_calibration_clue_linear_code_selector.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 873debd503..ff84bdd3da 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 83, "phase": "iteration_start", "last_beat": "2026-08-07T15:11:17Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 84, "phase": "iteration_start", "last_beat": "2026-08-07T15:13:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 39944142b7..9f2860259a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15457,3 +15457,5 @@ Still active  |
+ | 2026-08-07 15:07 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
+ | 2026-08-07 15:09 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
+ | 2026-08-07 15:11 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
++| 2026-08-07 15:11 UTC | Calibration-only CLUE and residualized linear code | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-su |
++| 2026-08-07 15:13 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b33988c66a..0696bec773 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 83, "phase": "iteration_start", "started_at": "2026-08-07T15:11:17Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 84, "phase": "iteration_start", "started_at": "2026-08-07T15:13:20Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6190_calibration_clue_linear_code_selector.json b/results/experiment_6190_calibration_clue_linear_code_selector.json
+index 1b340c6848..ba6d9d6d11 100644
+--- a/results/experiment_6190_calibration_clue_linear_code_selector.json
++++ b/results/experiment_6190_calibration_clue_linear_code_selector.json
+@@ -2,8 +2,8 @@
+   "experiment": 6190,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-07",
+-  "started_at": "2026-08-07T15:11:17.989703+00:00",
+-  "finished_at": "2026-08-07T15:11:17.989703+00:00",
++  "started_at": "2026-08-07T15:13:20.512181+00:00",
++  "finished_at": "2026-08-07T15:13:20.512181+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Calibration-only CLUE and residualized linear code selector gated on Exp6189 surface",
+-- 
+2.55.0
+

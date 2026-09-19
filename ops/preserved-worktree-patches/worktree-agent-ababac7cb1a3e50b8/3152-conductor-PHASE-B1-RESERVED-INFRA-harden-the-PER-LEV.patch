@@ -1,0 +1,3034 @@
+From 719964fa47c1339ab63e9e53d790910de3402df2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 22:09:46 -0400
+Subject: [PATCH 03152/11362] [conductor] PHASE B1 (RESERVED INFRA) -- harden
+ the PER-LEVEL EFFICIENCY gate (the real metric, shipped 2026-06-20): track
+ deepest-level-reached + per-level-efficiency PER GAME as first-class,
+ CI-guard it, and wire validate_canonical_baseline into --update-baseline
+ (re-review caveat: an lp85 efficiency floor on persist, so a deflated
+ baseline cannot disarm the per-game guard).
+
+Automated research step by research conductor.
+Task ID: exp4527-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  43 ++
+ .../papers/paper-v6/section-6-limitations.md  |   6 +
+ ops/anomaly-escalations.md                    |   5 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   8 +
+ .../experiment_4527_nav_metric_harness.py     | 441 ++++++++++++++++
+ results/arc_live_oracle_gap.json              | 184 +++----
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   8 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1861_equivalence.json      |  11 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   6 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2090_crane_humaneval.json  |  10 +-
+ results/experiment_2093_retro.json            |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  24 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   8 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   8 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ .../experiment_4527_nav_metric_harness.json   | 476 ++++++++++++++++++
+ results/experiment_542_fover_expansion.json   |   8 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |  19 +-
+ ...iment_833_constraint_delta_root_cause.json |   8 +-
+ ...periment_885_spectral_attention_probe.json |   8 +-
+ .../experiment_911_drift_probe_tier0i.json    |  20 +-
+ scripts/arc_leaderboard_eval.py               |  26 +-
+ scripts/kaggle/arc_local_submission_gate.py   | 180 ++++++-
+ .../test_arc_submission_gate_verdict.py       | 113 +++++
+ ...test_experiment_4527_nav_metric_harness.py | 271 ++++++++++
+ 68 files changed, 1746 insertions(+), 278 deletions(-)
+ create mode 100644 python/carnot/experiment_4527_nav_metric_harness.py
+ create mode 100644 results/experiment_4527_nav_metric_harness.json
+ create mode 100644 tests/python/test_experiment_4527_nav_metric_harness.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 52651c458b..bfad9e7c61 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -499,6 +499,33 @@ Required field principles:
+ - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+ - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+ 
++### REQ-ARC-FCP-4527: Nav Metric First-Class Submission Gate Guard
++
++Experiment 4527 SHALL write
++`results/experiment_4527_nav_metric_harness.json` after validating that the
++local submission gate records the authoritative per-game score levers and the
++secondary navigation diagnostics as first-class fields. The gate SHALL keep
++CORE set-containment and per-level efficiency as the verdict metric; it SHALL
++track each game's deepest level reached and per-level efficiency, because
++solving more or deeper levels is the real score lever. The gate SHALL also
++track each game's `reset_replay_steps` and `forward_walk_hit_rate` from the
++live navigation diagnostics, but these diagnostics SHALL only produce a
++wall-clock warning and SHALL NOT replace or demote the per-level score verdict.
++
++The `--update-baseline` path SHALL validate the candidate baseline with
++`validate_canonical_baseline` before persisting it. An efficiency-bearing
++baseline SHALL include per-level efficiency for every CORE game and SHALL keep
++the `lp85` per-level efficiency at or above the canonical floor, so a deflated
++baseline cannot later disarm the SF-3 per-game efficiency guard.
++
++Required field principles:
++
++- `honest_verdict`: principle "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR complete: nav_metric_partial_<reason>."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
++- `nav_metric_added`: principle "names the per-game nav fields the gate now tracks -- the nav-regression early warning."
++- `tests_added_pass`: principle "Tests Must Run and Assert."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
+ ### REQ-ARC-FCP-4524: Stop After Scored Target Level-Up
+ 
+ Experiment 4524 SHALL write
+@@ -740,3 +767,19 @@ Then every row uses the same total `actions` field, reports CORE preservation
+ and navigation diagnostics, passes the positive-control reduction guard, and
+ wires `SUBMITTED_AGENT_CONFIG` only for a strict `IMPROVED` CORE median action
+ reduction.
++
++### SCENARIO-ARC-FCP-4527: Nav Metrics Are CI-Guarded But Secondary
++
++Given the local submission gate measures the fixed eight-game set with the
++authoritative per-level scorecard
++When a measured config preserves CORE solves and per-level efficiency but has
++more `reset_replay_steps` at equal total actions
++Then the verdict remains non-inferior, the dashboard emits a navigation
++regression warning, and the per-game rows expose `deepest_level_reached`,
++`per_level_efficiency`, `reset_replay_steps`, and `forward_walk_hit_rate`.
++
++Given the gate is invoked with `--update-baseline`
++When the measured candidate baseline is missing CORE efficiency or drops `lp85`
++below the canonical per-level efficiency floor
++Then the baseline is not persisted and the command reports the canonical
++baseline guard failure.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 1217cb2fdd..b4f56d067d 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -478,5 +478,11 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index fb94cc63f7..8adf9d90ef 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -531,3 +531,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_4490_human_replay_frame_change_predictor.json
++
++## experiment_4526_integration_8game_gate.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4526_integration_8game_gate.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a7c2a7601a..a1e7a2feb3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 132, "phase": "iteration_start", "last_beat": "2026-06-21T00:23:49Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 133, "phase": "iteration_start", "last_beat": "2026-06-21T01:46:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 60bcb775bb..8294b019a5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8986,3 +8986,4 @@ c |
+ | 2026-06-20 23:39 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-06-21 00:04 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 86 passed, 1 warning in 8.20s |
+ | 2026-06-21 00:21 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
++| 2026-06-21 01:44 UTC | PHASE B1 (RESERVED INFRA) -- harden the PER-LEVEL  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ambda _root: { |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index aeb7ed2695..5241a7c2af 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 132, "phase": "iteration_start", "started_at": "2026-06-21T00:23:49Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 133, "phase": "iteration_start", "started_at": "2026-06-21T01:46:55Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d4a1f86ef4..0c83d4513b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 183,
+   "code_violations": 0,
+-  "experiments_checked": 3544,
++  "experiments_checked": 3545,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index fe10bad771..d327af6f45 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -8668,5 +8668,13 @@ value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/experiment_4527_nav_metric_harness.py b/python/carnot/experiment_4527_nav_metric_harness.py
+new file mode 100644
+index 0000000000..0ac433fda6
+--- /dev/null
++++ b/python/carnot/experiment_4527_nav_metric_harness.py
+@@ -0,0 +1,441 @@
++"""Experiment 4527: nav metric local submission gate hardening.
++
++Spec refs: REQ-ARC-FCP-4527, SCENARIO-ARC-FCP-4527.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib.util
++import json
++import subprocess
++import time
++from collections.abc import Callable, Mapping
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4527_nav_metric_harness.json"
++GATE_RELATIVE_PATH = "scripts/kaggle/arc_local_submission_gate.py"
++BASELINE_RELATIVE_PATH = "ops/arc-submission-baseline.json"
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py "
++    "tests/python/test_experiment_4527_nav_metric_harness.py -q --no-cov"
++)
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
++)
++CORE_EFFICIENCY_BASELINE = 2.0074
++REQUIREMENTS = ("REQ-ARC-FCP-4527",)
++SCENARIOS = ("SCENARIO-ARC-FCP-4527",)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR "
++        "complete: nav_metric_partial_<reason>."
++    ),
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
++    ),
++    "nav_metric_added": (
++        "names the per-game nav fields the gate now tracks -- the nav-regression early warning."
++    ),
++    "tests_added_pass": "Tests Must Run and Assert.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "field_principles",
++    "requirements",
++    "scenarios",
++    "gate_result",
++    "baseline_guard",
++    "canonical_game_set",
++    "canonical_core_games",
++    "core_efficiency_baseline",
++    "score_metric_primary",
++    "nav_metric_secondary",
++    "per_game_deepest_level_reached",
++    "per_game_per_level_efficiency",
++    "per_game_nav_diagnostics",
++    "reproducibility_checksum",
++    "leaderboard_submission",
++    "result_path",
++    "duration_s",
++)
++
++
++def _load_gate_module() -> Any:
++    gate_path = REPO_ROOT / GATE_RELATIVE_PATH
++    spec = importlib.util.spec_from_file_location("arc_local_submission_gate_4527", gate_path)
++    if spec is None or spec.loader is None:  # pragma: no cover - importlib failure boundary.
++        raise RuntimeError(f"cannot load {gate_path}")
++    gate = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(gate)
++    return gate
++
++
++GATE = _load_gate_module()
++CANONICAL_GAME_SET = tuple(GATE.CANONICAL_GAME_SET)
++CANONICAL_CORE_GAMES = tuple(GATE.CANONICAL_CORE_GAMES)
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _stable_checksum(payload)
++
++
++def _current_measurement(gate_result: Mapping[str, Any]) -> Mapping[str, Any]:
++    current = gate_result.get("current")
++    return current if isinstance(current, Mapping) else {}
++
++
++def _map_int(value: Any) -> dict[str, int]:
++    if not isinstance(value, Mapping):
++        return {}
++    return {str(game): int(level or 0) for game, level in value.items()}
++
++
++def _deepest_level_by_game(current: Mapping[str, Any]) -> dict[str, int]:
++    explicit = _map_int(current.get("deepest_level_by_game"))
++    if explicit:
++        return explicit
++    out: dict[str, int] = {}
++    for row in current.get("per_game", []) or []:
++        if not isinstance(row, Mapping) or row.get("game") is None:
++            continue
++        out[str(row["game"])] = int(row.get("deepest_level_reached", row.get("reached", row.get("levels", 0))) or 0)
++    return out
++
++
++def _per_level_efficiency_by_game(current: Mapping[str, Any]) -> dict[str, float]:
++    for key in ("per_level_efficiency_by_game", "efficiency_by_game"):
++        value = current.get(key)
++        if isinstance(value, Mapping) and value:
++            return {str(game): float(score or 0.0) for game, score in value.items()}
++    out: dict[str, float] = {}
++    for row in current.get("per_game", []) or []:
++        if not isinstance(row, Mapping) or row.get("game") is None:
++            continue
++        score = row.get("per_level_efficiency", row.get("efficiency"))
++        if score is not None:
++            out[str(row["game"])] = float(score)
++    return out
++
++
++def _nav_by_game(current: Mapping[str, Any]) -> dict[str, dict[str, float]]:
++    explicit = current.get("navigation_by_game")
++    if isinstance(explicit, Mapping) and explicit:
++        return {
++            str(game): {
++                "reset_replay_steps": int((value or {}).get("reset_replay_steps") or 0),
++                "forward_walk_hit_rate": float((value or {}).get("forward_walk_hit_rate") or 0.0),
++            }
++            for game, value in explicit.items()
++            if isinstance(value, Mapping)
++        }
++    out: dict[str, dict[str, float]] = {}
++    for row in current.get("per_game", []) or []:
++        if not isinstance(row, Mapping) or row.get("game") is None:
++            continue
++        diagnostics = row.get("navigation_diagnostics")
++        if not isinstance(diagnostics, Mapping):
++            diagnostics = row
++        out[str(row["game"])] = {
++            "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
++            "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
++        }
++    return out
++
++
++def _extract_json_object(text: str) -> dict[str, Any]:  # pragma: no cover - subprocess boundary.
++    start = text.find("{")
++    if start < 0:
++        return {}
++    return json.loads(text[start:])
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - local resource boundary.
++    root_path = Path(root)
++    spec_path = root_path / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++    checks: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "gate_help_precondition": False,
++        "baseline_file_present": (root_path / BASELINE_RELATIVE_PATH).exists(),
++        "spec_has_req_4527": spec_path.exists() and "REQ-ARC-FCP-4527" in spec_path.read_text(encoding="utf-8"),
++    }
++    cmd = [str(root_path / ".venv" / "bin" / "python"), str(root_path / GATE_RELATIVE_PATH), "--help"]
++    try:
++        completed = subprocess.run(cmd, cwd=root_path, capture_output=True, text=True, timeout=30)
++        checks["gate_help_precondition"] = completed.returncode == 0
++        if completed.returncode != 0:
++            checks["gate_help_error"] = completed.stderr[-500:]
++    except Exception as exc:
++        checks["gate_help_error"] = repr(exc)
++    checks["ok"] = bool(
++        checks["agents_md_read"]
++        and checks["codex_md_read"]
++        and checks["gate_help_precondition"]
++        and checks["baseline_file_present"]
++        and checks["spec_has_req_4527"]
++    )
++    return checks
++
++
++def run_gate(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - offline gate boundary.
++    root_path = Path(root)
++    cmd = [
++        str(root_path / ".venv" / "bin" / "python"),
++        str(root_path / GATE_RELATIVE_PATH),
++        "--check",
++        "--json",
++        "--lever",
++        "submitted_default",
++    ]
++    completed = subprocess.run(cmd, cwd=root_path, capture_output=True, text=True, timeout=240)
++    parsed = _extract_json_object(completed.stdout)
++    parsed["gate_command"] = " ".join(cmd)
++    parsed["gate_returncode"] = completed.returncode
++    if completed.stderr:
++        parsed["gate_stderr"] = completed.stderr[-2000:]
++    if not parsed:
++        return {
++            "pass": False,
++            "verdict": "gate_json_parse_failed",
++            "gate_command": " ".join(cmd),
++            "gate_returncode": completed.returncode,
++            "stdout_tail": completed.stdout[-2000:],
++            "stderr_tail": completed.stderr[-2000:],
++        }
++    return parsed
++
++
++def run_focused_tests(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess boundary.
++    root_path = Path(root)
++    completed = subprocess.run(
++        FOCUSED_TEST_COMMAND.split(),
++        cwd=root_path,
++        capture_output=True,
++        text=True,
++        timeout=120,
++    )
++    return {
++        "command": FOCUSED_TEST_COMMAND,
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "stdout_tail": completed.stdout[-2000:],
++        "stderr_tail": completed.stderr[-2000:],
++    }
++
++
++def _honest_verdict(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    gate_result: Mapping[str, Any],
++    tests_added_pass: Mapping[str, Any],
++    deepest: Mapping[str, Any],
++    efficiency: Mapping[str, Any],
++    nav: Mapping[str, Any],
++) -> str:
++    if preconditions_checked.get("ok") is not True:
++        return "blocked_nav_metric_preconditions"
++    guard = gate_result.get("baseline_guard")
++    if isinstance(guard, Mapping) and guard.get("ok") is not True:
++        return "complete: nav_metric_partial_baseline_guard"
++    if tests_added_pass.get("passed") is not True:
++        return "complete: nav_metric_partial_tests_not_green"
++    if not deepest or not efficiency or not nav:
++        return "complete: nav_metric_partial_missing_per_game_fields"
++    if gate_result.get("pass") is not True:
++        return "complete: nav_metric_partial_gate_regression"
++    return "shipped: nav_metric_first_class_ci_guarded"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    gate_result: Mapping[str, Any],
++    tests_added_pass: Mapping[str, Any],
++    duration_s: float | None,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4527: assemble the terminal nav metric harness artifact."""
++
++    current = _current_measurement(gate_result)
++    deepest = _deepest_level_by_game(current)
++    efficiency = _per_level_efficiency_by_game(current)
++    nav = _nav_by_game(current)
++    dashboard = gate_result.get("lever_dashboard_row")
++    warning = ""
++    if isinstance(dashboard, Mapping):
++        warning = str(dashboard.get("nav_regression_warning") or "")
++    artifact = {
++        "experiment": "experiment_4527_nav_metric_harness",
++        "schema": "carnot.arc_nav_metric_harness_4527.v1",
++        "honest_verdict": _honest_verdict(
++            preconditions_checked=preconditions_checked,
++            gate_result=gate_result,
++            tests_added_pass=tests_added_pass,
++            deepest=deepest,
++            efficiency=efficiency,
++            nav=nav,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "nav_metric_added": {
++            "per_game_fields": [
++                "deepest_level_reached",
++                "per_level_efficiency",
++                "reset_replay_steps",
++                "forward_walk_hit_rate",
++            ],
++            "score_fields": ["deepest_level_reached", "per_level_efficiency"],
++            "nav_fields": ["reset_replay_steps", "forward_walk_hit_rate"],
++            "secondary_warning": warning,
++        },
++        "tests_added_pass": dict(tests_added_pass),
++        "gate_result": dict(gate_result),
++        "baseline_guard": dict(gate_result.get("baseline_guard") or {}),
++        "canonical_game_set": list(CANONICAL_GAME_SET),
++        "canonical_core_games": list(CANONICAL_CORE_GAMES),
++        "core_efficiency_baseline": CORE_EFFICIENCY_BASELINE,
++        "score_metric_primary": "per_level_efficiency_and_deepest_level_reached",
++        "nav_metric_secondary": "reset_replay_steps_and_forward_walk_hit_rate_warn_only",
++        "per_game_deepest_level_reached": deepest,
++        "per_game_per_level_efficiency": efficiency,
++        "per_game_nav_diagnostics": nav,
++        "reproducibility_checksum": "",
++        "leaderboard_submission": False,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": None if duration_s is None else float(duration_s),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match REQ-ARC-FCP-4527")
++    if artifact.get("canonical_game_set") != list(CANONICAL_GAME_SET):
++        errors.append("canonical_game_set must match")
++    if artifact.get("canonical_core_games") != list(CANONICAL_CORE_GAMES):
++        errors.append("canonical_core_games must match")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if str(verdict).startswith("shipped:") and artifact.get("tests_added_pass", {}).get("passed") is not True:
++        errors.append("shipped artifact requires tests_added_pass.passed=true")
++    nav_metric = artifact.get("nav_metric_added")
++    if not isinstance(nav_metric, Mapping):
++        errors.append("nav_metric_added must be a mapping")
++    elif nav_metric.get("per_game_fields") != [
++        "deepest_level_reached",
++        "per_level_efficiency",
++        "reset_replay_steps",
++        "forward_walk_hit_rate",
++    ]:
++        errors.append("nav_metric_added must name the four per-game fields")
++    for field in (
++        "per_game_deepest_level_reached",
++        "per_game_per_level_efficiency",
++        "per_game_nav_diagnostics",
++    ):
++        if str(verdict).startswith("shipped:") and not isinstance(artifact.get(field), Mapping):
++            errors.append(f"{field} must be a mapping")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum must match artifact content")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], root: Path | str = REPO_ROOT) -> Path:
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    gate_runner: Callable[[Path], dict[str, Any]] = run_gate,
++    tests_runner: Callable[[Path], dict[str, Any]] = run_focused_tests,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4527: run the gate hardening checks and write the JSON artifact."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path)
++    )
++    gate_result = gate_runner(root_path) if preconditions.get("ok") is True else {
++        "pass": False,
++        "verdict": "blocked_nav_metric_preconditions",
++        "baseline_guard": {},
++        "current": {},
++    }
++    tests_result = tests_runner(root_path) if preconditions.get("ok") is True else {
++        "command": FOCUSED_TEST_COMMAND,
++        "passed": False,
++        "blocked": True,
++    }
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        gate_result=gate_result,
++        tests_added_pass=tests_result,
++        duration_s=max(0.0, float(now()) - started),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(artifact, root_path)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - script wrapper.
++    artifact = run()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - script wrapper.
++    raise SystemExit(main())
+diff --git a/results/arc_live_oracle_gap.json b/results/arc_live_oracle_gap.json
+index 77fcca5aaa..13240b6f18 100644
+--- a/results/arc_live_oracle_gap.json
++++ b/results/arc_live_oracle_gap.json
+@@ -4,144 +4,82 @@
+   "policy": "e3",
+   "budget": 8000,
+   "live_levels": 0,
+-  "oracle_levels": 6,
+-  "gap": 6,
++  "oracle_levels": 1,
++  "gap": 1,
+   "efficiency_sum": 0.0,
+   "open_gaps": [
+     {
+-      "game": "ar25",
++      "game": "ls20",
+       "stuck_at_level": 0,
+-      "actions_spent": 7763,
+-      "signature": "no_level_up_within_budget",
+-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-    },
+-    {
+-      "game": "cn04",
+-      "stuck_at_level": 0,
+-      "actions_spent": 7843,
+-      "signature": "no_level_up_within_budget",
+-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-    },
+-    {
+-      "game": "ka59",
+-      "stuck_at_level": 0,
+-      "actions_spent": 7728,
+-      "signature": "no_level_up_within_budget",
+-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-    },
+-    {
+-      "game": "sc25",
+-      "stuck_at_level": 0,
+-      "actions_spent": 7677,
+-      "signature": "no_level_up_within_budget",
+-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-    },
+-    {
+-      "game": "sk48",
+-      "stuck_at_level": 0,
+-      "actions_spent": 7859,
+-      "signature": "no_level_up_within_budget",
+-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-    },
+-    {
+-      "game": "wa30",
+-      "stuck_at_level": 0,
+-      "actions_spent": 7818,
++      "actions_spent": 7821,
+       "signature": "no_level_up_within_budget",
+       "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+     }
+   ],
+   "per_game": [
+     {
+-      "game": "ar25",
+-      "levels": 0,
+-      "reached": 0,
+-      "actions": 7763,
+-      "efficiency": 0.0,
+-      "gap": {
+-        "game": "ar25",
+-        "stuck_at_level": 0,
+-        "actions_spent": 7763,
+-        "signature": "no_level_up_within_budget",
+-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-      },
+-      "oracle_levels": 1,
+-      "gap_vs_oracle": 1
+-    },
+-    {
+-      "game": "cn04",
+-      "levels": 0,
+-      "reached": 0,
+-      "actions": 7843,
+-      "efficiency": 0.0,
+-      "gap": {
+-        "game": "cn04",
+-        "stuck_at_level": 0,
+-        "actions_spent": 7843,
+-        "signature": "no_level_up_within_budget",
+-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-      },
+-      "oracle_levels": 1,
+-      "gap_vs_oracle": 1
+-    },
+-    {
+-      "game": "ka59",
++      "game": "ls20",
+       "levels": 0,
+       "reached": 0,
+-      "actions": 7728,
++      "actions": 7821,
+       "efficiency": 0.0,
+-      "gap": {
+-        "game": "ka59",
+-        "stuck_at_level": 0,
+-        "actions_spent": 7728,
+-        "signature": "no_level_up_within_budget",
+-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
++      "per_level_efficiency": 0.0,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 7821,
++          "human_actions": 22,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 123,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 73,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 84,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 96,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 192,
++          "completed": false
++        },
++        {
++          "level": 6,
++          "agent_actions": 0,
++          "human_actions": 186,
++          "completed": false
++        }
++      ],
++      "deepest_level_reached": 0,
++      "navigation_diagnostics": {
++        "reset_replay_steps": 882,
++        "forward_walk_hit_rate": 0.0
+       },
+-      "oracle_levels": 1,
+-      "gap_vs_oracle": 1
+-    },
+-    {
+-      "game": "sc25",
+-      "levels": 0,
+-      "reached": 0,
+-      "actions": 7677,
+-      "efficiency": 0.0,
+-      "gap": {
+-        "game": "sc25",
+-        "stuck_at_level": 0,
+-        "actions_spent": 7677,
+-        "signature": "no_level_up_within_budget",
+-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-      },
+-      "oracle_levels": 1,
+-      "gap_vs_oracle": 1
+-    },
+-    {
+-      "game": "sk48",
+-      "levels": 0,
+-      "reached": 0,
+-      "actions": 7859,
+-      "efficiency": 0.0,
+-      "gap": {
+-        "game": "sk48",
+-        "stuck_at_level": 0,
+-        "actions_spent": 7859,
+-        "signature": "no_level_up_within_budget",
+-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+-      },
+-      "oracle_levels": 1,
+-      "gap_vs_oracle": 1
+-    },
+-    {
+-      "game": "wa30",
+-      "levels": 0,
+-      "reached": 0,
+-      "actions": 7818,
+-      "efficiency": 0.0,
++      "reset_replay_steps": 882,
++      "forward_walk_hit_rate": 0.0,
++      "actions_to_first_levelup": null,
+       "gap": {
+-        "game": "wa30",
++        "game": "ls20",
+         "stuck_at_level": 0,
+-        "actions_spent": 7818,
++        "actions_spent": 7821,
+         "signature": "no_level_up_within_budget",
+         "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+       },
+@@ -150,5 +88,5 @@
+     }
+   ],
+   "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+-  "honest_verdict": "complete_live_oracle_gap_0_of_6_levels_gap_6"
++  "honest_verdict": "complete_live_oracle_gap_0_of_1_levels_gap_1"
+ }
+\ No newline at end of file
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index 65ed1a7ab1..473c66fe32 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-06-20T18:54:03Z"
++  "saved_at": "2026-06-21T00:43:29Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 7bf61cc88d..ac818d9d65 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T18:50:06.486370+00:00",
+-  "finished_at": "2026-06-20T18:50:06.528576+00:00",
+-  "duration_s": 0.042,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:52:24.335531+00:00",
++  "finished_at": "2026-06-21T01:52:24.376013+00:00",
++  "duration_s": 0.04,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 53c731954e..30597baaba 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-20T18:50:06Z",
++  "run_date": "2026-06-21T01:52:24Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 8f8467aea2..5495403c22 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T18:50:08Z",
+-  "finished_at": "2026-06-20T18:50:08Z",
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:52:26Z",
++  "finished_at": "2026-06-21T01:52:26Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 87fdd2afcb..29479aa536 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-20T18:50:08Z",
++  "run_date": "2026-06-21T01:52:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index b80861a6e6..e922b83371 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-20T18:50:08Z",
++  "run_date": "2026-06-21T01:52:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c967420072..98ea541fa9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-21T00:02:56.318486Z",
+-  "duration_s": 0.021968603134155273,
++  "run_date": "2026-06-21T01:49:36.722290Z",
++  "duration_s": 0.026915311813354492,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ea163881a16c7b4b1306a05c2487675c1068bb62859b7ef6871da0f16f2f1539",
++  "reproducibility_checksum": "6c0b6fb17dc193f57c651fb74a88c24dc3c08f969836cc4b8ae28b7fad2e398d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "2dc0c9eb57523a5a442e331dc19ecd6aee3ba141"
++    "adversarial_verify_version": "ab64f5ac7211dd54ba984b8275326dc96db62c24"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 7a939aae12..37a657579a 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-20T18:51:42.267547Z",
+-  "duration_s": 53.43316197395325,
++  "run_date": "2026-06-21T01:53:49.030196Z",
++  "duration_s": 53.97088646888733,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index f9c2bbec90..be076e9d97 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-20T18:52:08.834117+00:00",
+-  "duration_s": 0.008880853652954102,
++  "run_date": "2026-06-21T01:54:13.157169+00:00",
++  "duration_s": 0.009596109390258789,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index cddd6ee5ba..51c602361f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-21T00:02:56.351468Z",
+-  "duration_s": 0.02699756622314453,
++  "run_date": "2026-06-21T01:49:36.759388Z",
++  "duration_s": 0.0304567813873291,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "f606360dfdafe8c05b48cfa864714f5120c8faa730b4efa8fcf16da74e6a8a59",
++  "reproducibility_checksum": "e8608356e735a4c57a2260246cd8d8cb025f6fd1829e0ae7e6ce9caaa03825cf",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "2dc0c9eb57523a5a442e331dc19ecd6aee3ba141"
++    "adversarial_verify_version": "ab64f5ac7211dd54ba984b8275326dc96db62c24"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 787a6d0f17..7cb24ff736 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.21s, user: 1.99s, system: 0.17s, MEM: 115.73 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.33s, user: 2.12s, system: 0.16s, MEM: 115.92 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 79% 19x read_verilog (1 sec), 7% 1x synth_xilinx (0 sec), ...
++Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index 167cf79bbc..2938088fe0 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.081052780151367,
++    "latency_ms": 10.07986068725586,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1861_equivalence.json b/results/experiment_1861_equivalence.json
+index c2c8c2fda4..305db0f7fc 100644
+--- a/results/experiment_1861_equivalence.json
++++ b/results/experiment_1861_equivalence.json
+@@ -8,14 +8,5 @@
+     "classification": "TAUTOLOGY",
+     "rationale": "py_loss and rs_loss agree to >5 sig figs.",
+     "follow_up_action": "Fix loss computation."
+-  },
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "py_loss=0.22222222222222232 and rs_loss=0.22222222222222232 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 89edc1a707..15ab76a43f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.108335494995117,
++  "efficiency_gains_ms": 2.112150192260742,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index a4ac302b87..a237e12fc2 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-20T18:52:34.635290Z",
++  "run_date": "2026-06-21T01:54:39.614656Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 9c03d4bb91..e7c4d3218b 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00030013301875442266,
+-  "latency_domino_seconds": 0.0007644540164619684,
++  "latency_legacy_seconds": 0.0004947079578414559,
++  "latency_domino_seconds": 0.0012582909548655152,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index cc9727875b..58762150aa 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -2,9 +2,9 @@
+   "experiment": 2031,
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T18:53:49Z",
+-  "finished_at": "2026-06-20T18:53:49Z",
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:55:53Z",
++  "finished_at": "2026-06-21T01:55:53Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index d84bbdc00c..bc62bc6762 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.0012288093566894531,
++  "execution_time_s": 0.0012350082397460938,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 62c0d62f24..ad53d7ed38 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T15:03:58Z",
+-  "finished_at": "2026-06-20T15:03:59Z",
+-  "duration_s": 0.009,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:56:57Z",
++  "finished_at": "2026-06-21T01:56:57Z",
++  "duration_s": 0.017,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.09036064147949219,
++  "latency_ms": 0.12731552124023438,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index 7089f9eaf3..f527ea2bbf 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -3,9 +3,9 @@
+   "schema": "carnot.milestone_retro.v1",
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T15:48:48.780020+00:00",
+-  "finished_at": "2026-06-20T15:48:48.780024+00:00",
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:11:07.125678+00:00",
++  "finished_at": "2026-06-21T01:11:07.125685+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 39a8b98055..5d7b1f4aaf 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008528232574462891,
+-  "avg_eqm_time": 0.1903369188308716,
++  "avg_pem_time": 0.00081817626953125,
++  "avg_eqm_time": 0.1909883451461792,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 3c71b6dc6e..67420719d3 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 330.53193616867065,
++  "duration_s": 302.7009539604187,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index 2ca40f95f1..0f5024ab23 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.001041,
++  "duration_s": 0.001355,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index ccbd9a45fb..da5c339830 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.000343,
++  "duration_s": 0.000309,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 7ab2662737..0df9922006 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.21169567108154297,
++  "duration_s": 0.20427441596984863,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 891c8c107b..cf78967575 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-20T15:11:35Z",
++  "run_date": "2026-06-21T00:51:07Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 7dc779e2ca..5e9e5accd1 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.00008225440979,
++  "duration_s": 5.000104665756226,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 5ed72de449..84ddff17e8 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000090599060059,
++  "duration_s": 10.00009799003601,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 37e55c61e8..bde5bff7ca 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.424971342086792,
++  "duration_s": 0.39731502532958984,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 0faa2211db..f96942afb0 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.9340021699899808,
++  "duration_s": 0.8194652249803767,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index ee6cbe6408..305d76de8c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,10 +1,10 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -13,8 +13,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,10 +67,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -79,8 +79,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_specific",
+-    "tier_transfer"
++    "tier_transfer",
++    "tier_specific"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index e06024358f..22e7aa479b 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009086132049560547,
++  "duration_s": 0.0009543895721435547,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2e268b2631..3894e860d0 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6990892365574837e-05,
++  "duration_s": 3.357301466166973e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 7f53433af0..02d5edc542 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 1.5130499377846718e-06,
++  "duration_s": 7.620546966791153e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 012520e91c..598f71a5a6 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 0.0003275871276855469,
++  "duration_s": 0.00028896331787109375,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 2fd7cfdc6c..22bff7788d 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 87.72759938240051, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 1973.4623142287676, "final_energy": 8.860623545838312, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 77.19961166381836, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 1973.4623142287676, "final_energy": 8.860623545838312, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 9b23b072d1..94dbf71f1a 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.010661100063472987,
++  "nonforgetting_metric_random": 0.007989345550537109,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 6cd6430f5a..104b1d600f 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T15:24:22Z",
+-  "finished_at": "2026-06-20T15:24:22Z",
+-  "duration_s": 0.012,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:05:10Z",
++  "finished_at": "2026-06-21T01:05:10Z",
++  "duration_s": 0.008,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index 4c5ce97847..6b0a4fd962 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 90.8283462524414, "autoregressive_time_to_solution": 1362.425193786621, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 1973.4623142287676, "final_energy": 8.860623545838312, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 124.62509799003601, "autoregressive_time_to_solution": 1869.3764698505402, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 1973.4623142287676, "final_energy": 8.860623545838312, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 6a8232e561..9e507bd7d7 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 0.0003611969295889139,
++  "duration_s": 0.0005296029848977923,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-20T15:27:34Z",
++  "generated_at": "2026-06-21T01:09:28Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 0ed826ad75..274f97137a 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-20T15:27:34Z
++experiment_3420 started_at=2026-06-21T01:09:28Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index e5bb2178bb..8c652d35af 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+-  "run_date": "2026-06-20",
+-  "started_at": "2026-06-20T18:50:35.121009+00:00",
+-  "finished_at": "2026-06-20T18:50:35.121009+00:00",
++  "run_date": "2026-06-21",
++  "started_at": "2026-06-21T01:52:51.888518+00:00",
++  "finished_at": "2026-06-21T01:52:51.888518+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000119209289551
++  "duration_s": 0.10000190734863282
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index d770d4e4ff..a090fb8925 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.02386784553527832,
+-  "reproducibility_checksum": "1f58d9ef01d2e254c6727c98873ebd6da52954c7a0fd29f88557ed6a15e11181"
++  "duration_s": 0.02335500717163086,
++  "reproducibility_checksum": "6f31e4685f30831d31b0ce47f66be3b0c521d4aad0fdeaf5ace90a03eb4935d9"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 3b96c64a06..1242cfab1f 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.53
++  "duration_s": 0.38
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index c4e6c6bd2a..d7f43cc418 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.055419921875,
++  "duration_s": 0.058975934982299805,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "f3967049bc604e034d6d1ff9bcb25699eb06c70df6d490bb062bfc798a0ac028"
++  "reproducibility_checksum": "c8ecb992ac6d2129239387897acbe6cddfcb0481a7a98e9b062a4721ac5f4394"
+ }
+diff --git a/results/experiment_4527_nav_metric_harness.json b/results/experiment_4527_nav_metric_harness.json
+new file mode 100644
+index 0000000000..8bc6d6f6b1
+--- /dev/null
++++ b/results/experiment_4527_nav_metric_harness.json
+@@ -0,0 +1,476 @@
++{
++  "baseline_guard": {
++    "action_metric_field": "actions",
++    "canonical_baseline_median_actions": 7760.0,
++    "canonical_game_set": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33",
++      "cd82",
++      "ft09",
++      "su15",
++      "ls20"
++    ],
++    "canonical_lp85_per_level_efficiency_floor": 2.0069,
++    "core_games": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33"
++    ],
++    "errors": [],
++    "ok": true
++  },
++  "canonical_core_games": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33"
++  ],
++  "canonical_game_set": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33",
++    "cd82",
++    "ft09",
++    "su15",
++    "ls20"
++  ],
++  "core_efficiency_baseline": 2.0074,
++  "duration_s": 45.062343818019144,
++  "experiment": "experiment_4527_nav_metric_harness",
++  "field_principles": {
++    "honest_verdict": "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR complete: nav_metric_partial_<reason>.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
++    "nav_metric_added": "names the per-game nav fields the gate now tracks -- the nav-regression early warning.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "tests_added_pass": "Tests Must Run and Assert."
++  },
++  "gate_result": {
++    "baseline": {
++      "median_actions_on_solved": 7761.5,
++      "solved_count": 4,
++      "total_actions_on_solved": 31057
++    },
++    "baseline_guard": {
++      "action_metric_field": "actions",
++      "canonical_baseline_median_actions": 7760.0,
++      "canonical_game_set": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "canonical_lp85_per_level_efficiency_floor": 2.0069,
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "errors": [],
++      "ok": true
++    },
++    "current": {
++      "action_metric": {
++        "definition": "total_actions_on_solved_games",
++        "field": "actions"
++      },
++      "actions_by_game": {
++        "lp85": 20,
++        "m0r0": 3891,
++        "sp80": 7218,
++        "vc33": 1758
++      },
++      "core_efficiency": 2.0074,
++      "deepest_level_by_game": {
++        "cd82": 0,
++        "ft09": 0,
++        "lp85": 1,
++        "ls20": 0,
++        "m0r0": 1,
++        "sp80": 1,
++        "su15": 0,
++        "vc33": 1
++      },
++      "efficiency_by_game": {
++        "lp85": 2.0069,
++        "m0r0": 0.0003,
++        "sp80": 0.0001,
++        "vc33": 0.0001
++      },
++      "games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "median_actions_on_core": 2824.5,
++      "median_actions_on_solved": 2824.5,
++      "navigation_by_game": {
++        "cd82": {
++          "forward_walk_hit_rate": 0.0769,
++          "reset_replay_steps": 325
++        },
++        "ft09": {
++          "forward_walk_hit_rate": 0.027,
++          "reset_replay_steps": 28
++        },
++        "lp85": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "ls20": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 882
++        },
++        "m0r0": {
++          "forward_walk_hit_rate": 0.0776,
++          "reset_replay_steps": 212
++        },
++        "sp80": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 562
++        },
++        "su15": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 335
++        },
++        "vc33": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 37
++        }
++      },
++      "per_game": [
++        {
++          "actions": 20,
++          "deepest_level_reached": 1,
++          "efficiency": 2.0069,
++          "forward_walk_hit_rate": 0.0,
++          "game": "lp85",
++          "levels": 1,
++          "per_level_efficiency": 2.0069,
++          "reset_replay_steps": 0,
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 3891,
++          "deepest_level_reached": 1,
++          "efficiency": 0.0003,
++          "forward_walk_hit_rate": 0.0776,
++          "game": "m0r0",
++          "levels": 1,
++          "per_level_efficiency": 0.0003,
++          "reset_replay_steps": 212,
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7218,
++          "deepest_level_reached": 1,
++          "efficiency": 0.0001,
++          "forward_walk_hit_rate": 0.0,
++          "game": "sp80",
++          "levels": 1,
++          "per_level_efficiency": 0.0001,
++          "reset_replay_steps": 562,
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 1758,
++          "deepest_level_reached": 1,
++          "efficiency": 0.0001,
++          "forward_walk_hit_rate": 0.0,
++          "game": "vc33",
++          "levels": 1,
++          "per_level_efficiency": 0.0001,
++          "reset_replay_steps": 37,
++          "solved": true,
++          "timed_out": false
++        },
++        {
++          "actions": 7819,
++          "deepest_level_reached": 0,
++          "efficiency": 0.0,
++          "forward_walk_hit_rate": 0.0769,
++          "game": "cd82",
++          "levels": 0,
++          "per_level_efficiency": 0.0,
++          "reset_replay_steps": 325,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7963,
++          "deepest_level_reached": 0,
++          "efficiency": 0.0,
++          "forward_walk_hit_rate": 0.027,
++          "game": "ft09",
++          "levels": 0,
++          "per_level_efficiency": 0.0,
++          "reset_replay_steps": 28,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7786,
++          "deepest_level_reached": 0,
++          "efficiency": 0.0,
++          "forward_walk_hit_rate": 0.0,
++          "game": "su15",
++          "levels": 0,
++          "per_level_efficiency": 0.0,
++          "reset_replay_steps": 335,
++          "solved": false,
++          "timed_out": false
++        },
++        {
++          "actions": 7821,
++          "deepest_level_reached": 0,
++          "efficiency": 0.0,
++          "forward_walk_hit_rate": 0.0,
++          "game": "ls20",
++          "levels": 0,
++          "per_level_efficiency": 0.0,
++          "reset_replay_steps": 882,
++          "solved": false,
++          "timed_out": false
++        }
++      ],
++      "per_level_efficiency_by_game": {
++        "cd82": 0.0,
++        "ft09": 0.0,
++        "lp85": 2.0069,
++        "ls20": 0.0,
++        "m0r0": 0.0003,
++        "sp80": 0.0001,
++        "su15": 0.0,
++        "vc33": 0.0001
++      },
++      "policy": "e3",
++      "solved_count": 4,
++      "solved_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "timed_out_count": 0,
++      "total_actions_on_solved": 12887
++    },
++    "gate_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/kaggle/arc_local_submission_gate.py --check --json --lever submitted_default",
++    "gate_returncode": 0,
++    "lever_dashboard_row": {
++      "actions_saved_vs_baseline": 4937.0,
++      "baseline_median_actions_on_core": 7761.5,
++      "baseline_navigation_by_game": {
++        "cd82": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "ft09": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "lp85": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "ls20": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "m0r0": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "sp80": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "su15": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "vc33": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        }
++      },
++      "bonus_solves": [],
++      "canonical_game_set": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": true,
++      "lever": "submitted_default",
++      "lost_core_solves": [],
++      "median_actions_on_core": 2824.5,
++      "metric_action_field": "actions",
++      "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
++      "nav_regression_warning": "",
++      "navigation_by_game": {
++        "cd82": {
++          "forward_walk_hit_rate": 0.0769,
++          "reset_replay_steps": 325
++        },
++        "ft09": {
++          "forward_walk_hit_rate": 0.027,
++          "reset_replay_steps": 28
++        },
++        "lp85": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 0
++        },
++        "ls20": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 882
++        },
++        "m0r0": {
++          "forward_walk_hit_rate": 0.0776,
++          "reset_replay_steps": 212
++        },
++        "sp80": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 562
++        },
++        "su15": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 335
++        },
++        "vc33": {
++          "forward_walk_hit_rate": 0.0,
++          "reset_replay_steps": 37
++        }
++      },
++      "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074",
++      "verdict_pass": true
++    },
++    "pass": true,
++    "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074"
++  },
++  "honest_verdict": "shipped: nav_metric_first_class_ci_guarded",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
++  "leaderboard_submission": false,
++  "nav_metric_added": {
++    "nav_fields": [
++      "reset_replay_steps",
++      "forward_walk_hit_rate"
++    ],
++    "per_game_fields": [
++      "deepest_level_reached",
++      "per_level_efficiency",
++      "reset_replay_steps",
++      "forward_walk_hit_rate"
++    ],
++    "score_fields": [
++      "deepest_level_reached",
++      "per_level_efficiency"
++    ],
++    "secondary_warning": ""
++  },
++  "nav_metric_secondary": "reset_replay_steps_and_forward_walk_hit_rate_warn_only",
++  "per_game_deepest_level_reached": {
++    "cd82": 0,
++    "ft09": 0,
++    "lp85": 1,
++    "ls20": 0,
++    "m0r0": 1,
++    "sp80": 1,
++    "su15": 0,
++    "vc33": 1
++  },
++  "per_game_nav_diagnostics": {
++    "cd82": {
++      "forward_walk_hit_rate": 0.0769,
++      "reset_replay_steps": 325
++    },
++    "ft09": {
++      "forward_walk_hit_rate": 0.027,
++      "reset_replay_steps": 28
++    },
++    "lp85": {
++      "forward_walk_hit_rate": 0.0,
++      "reset_replay_steps": 0
++    },
++    "ls20": {
++      "forward_walk_hit_rate": 0.0,
++      "reset_replay_steps": 882
++    },
++    "m0r0": {
++      "forward_walk_hit_rate": 0.0776,
++      "reset_replay_steps": 212
++    },
++    "sp80": {
++      "forward_walk_hit_rate": 0.0,
++      "reset_replay_steps": 562
++    },
++    "su15": {
++      "forward_walk_hit_rate": 0.0,
++      "reset_replay_steps": 335
++    },
++    "vc33": {
++      "forward_walk_hit_rate": 0.0,
++      "reset_replay_steps": 37
++    }
++  },
++  "per_game_per_level_efficiency": {
++    "cd82": 0.0,
++    "ft09": 0.0,
++    "lp85": 2.0069,
++    "ls20": 0.0,
++    "m0r0": 0.0003,
++    "sp80": 0.0001,
++    "su15": 0.0,
++    "vc33": 0.0001
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "baseline_file_present": true,
++    "codex_md_read": true,
++    "gate_help_precondition": true,
++    "ok": true,
++    "spec_has_req_4527": true
++  },
++  "reproducibility_checksum": "sha256:b0769869b4333ccb76f1658e752c659c2902644ad52540f2d8d6a585e53c7167",
++  "requirements": [
++    "REQ-ARC-FCP-4527"
++  ],
++  "result_path": "results/experiment_4527_nav_metric_harness.json",
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4527"
++  ],
++  "schema": "carnot.arc_nav_metric_harness_4527.v1",
++  "score_metric_primary": "per_level_efficiency_and_deepest_level_reached",
++  "tests_added_pass": {
++    "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4527_nav_metric_harness.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [23 items]\n\n.......................                                                  [100%]\n============================== 23 passed in 3.89s ==============================\n"
++  }
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 863cb66a75..ff809eb089 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+-  "run_date": "20260619",
+-  "started_at": "2026-06-19T07:22:39Z",
+-  "finished_at": "2026-06-19T07:22:39Z",
+-  "duration_s": 0.014,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:06:21Z",
++  "finished_at": "2026-06-21T01:06:21Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a00e6bd2b5..40b8d9ace3 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T00:02:46Z",
+-  "finished_at": "2026-06-21T00:02:46Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-21T02:01:29Z",
++  "finished_at": "2026-06-21T02:01:29Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 91d9ffdca1..90ddcadf7f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T00:02:46Z",
+-  "finished_at": "2026-06-21T00:02:46Z",
++  "started_at": "2026-06-21T02:01:30Z",
++  "finished_at": "2026-06-21T02:01:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index a0849f1c56..be66f31943 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T00:02:46Z",
+-  "finished_at": "2026-06-21T00:02:46Z",
++  "started_at": "2026-06-21T02:01:30Z",
++  "finished_at": "2026-06-21T02:01:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 3cbb50740b..677605d2ea 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+-  "run_date": "20260619",
+-  "started_at": "2026-06-19T07:29:38Z",
+-  "finished_at": "2026-06-19T07:29:38Z",
+-  "duration_s": 0.021,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T01:19:13Z",
++  "finished_at": "2026-06-21T01:19:13Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -100,14 +100,5 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": [],
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "invariant_violations": []
+ }
+\ No newline at end of file
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index a0f210d24a..f58d7ee893 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+-  "run_date": "20260620",
+-  "started_at": "2026-06-20T15:16:52Z",
+-  "finished_at": "2026-06-20T15:16:54Z",
+-  "duration_s": 1.185,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T00:45:59Z",
++  "finished_at": "2026-06-21T00:46:00Z",
++  "duration_s": 0.951,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index 0db6d16444..d3c74f78f9 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+-  "run_date": "20260619",
+-  "started_at": "2026-06-19T07:21:50Z",
+-  "finished_at": "2026-06-19T07:21:51Z",
+-  "duration_s": 0.919,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T02:02:42Z",
++  "finished_at": "2026-06-21T02:02:42Z",
++  "duration_s": 0.155,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index 90107ce5a1..b9b91d7263 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -1,15 +1,15 @@
+ {
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+-  "run_date": "20260619",
+-  "started_at": "2026-06-19T07:22:23Z",
+-  "finished_at": "2026-06-19T07:22:35Z",
+-  "duration_s": 11.653,
++  "run_date": "20260621",
++  "started_at": "2026-06-21T00:47:07Z",
++  "finished_at": "2026-06-21T00:47:09Z",
++  "duration_s": 2.443,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.955,
++  "ood_auc_drift": 0.965,
+   "honest_verdict": "tier0i_viable",
+   "inference_mode": "synthetic_runner",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.006803973577916622,
+-  "mean_halluc_drift": 0.47454309463500977,
++  "mean_correct_drift": 0.006779956165701151,
++  "mean_halluc_drift": 0.4746679365634918,
+   "probe_coef": [
+     [
+-      1.7755155563354492,
+-      2.269463300704956,
+-      2.630167245864868
++      1.7823255062103271,
++      2.2810592651367188,
++      2.616948127746582
+     ]
+   ],
+   "decision_class": "detect",
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index 41f901b91c..51a8e0f626 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -89,6 +89,22 @@ def _baseline_actions(env, game: str) -> dict:
+     return {}
+ 
+ 
++def _navigation_diagnostics(policy) -> dict:
++    """Expose the live explorer replay tax without making it a score metric."""
++
++    explorer = getattr(policy, "explorer", None)
++    if explorer is None or not hasattr(explorer, "navigation_diagnostics"):
++        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
++    try:
++        diagnostics = explorer.navigation_diagnostics()
++    except Exception:
++        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
++    return {
++        "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
++        "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
++    }
++
++
+ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
+     arc = kit.offline_arcade()
+     env = arc.make(game, scorecard_id=arc.open_scorecard())
+@@ -169,8 +185,13 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None)
+         gap = {"game": game, "stuck_at_level": reached, "actions_spent": actions,
+                "signature": "no_level_up_within_budget",
+                "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"}
++    nav = _navigation_diagnostics(policy)
+     return {"game": game, "levels": levels, "reached": reached, "actions": actions,
+-            "efficiency": eff, "per_level": per_level,
++            "efficiency": eff, "per_level_efficiency": eff, "per_level": per_level,
++            "deepest_level_reached": reached,
++            "navigation_diagnostics": nav,
++            "reset_replay_steps": nav["reset_replay_steps"],
++            "forward_walk_hit_rate": nav["forward_walk_hit_rate"],
+             "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
+             "gap": gap}
+ 
+@@ -221,7 +242,8 @@ def main() -> int:
+             gaps.append(r["gap"])
+         extra = (f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})" if games_mode == "oracle" else "")
+         print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5} "
+-              f"eff={r['efficiency']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
++              f"eff={r['efficiency']:.4f} nav_reset={r['reset_replay_steps']} "
++              f"nav_fwhr={r['forward_walk_hit_rate']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
+     if games_mode == "oracle":
+         print(f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
+               f"oracle levels (gap {gap_sum}). Closed: "
+diff --git a/scripts/kaggle/arc_local_submission_gate.py b/scripts/kaggle/arc_local_submission_gate.py
+index 61f3bc56d2..2117be6d4f 100644
+--- a/scripts/kaggle/arc_local_submission_gate.py
++++ b/scripts/kaggle/arc_local_submission_gate.py
+@@ -34,6 +34,7 @@ CANONICAL_GAME_SET = ("lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "l
+ CANONICAL_BASELINE_ACTIONS_BY_GAME = {"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}
+ CANONICAL_CORE_GAMES = tuple(CANONICAL_BASELINE_ACTIONS_BY_GAME)
+ CANONICAL_BASELINE_MEDIAN_ACTIONS = 7760.0
++CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR = 2.0069
+ CANONICAL_ACTION_FIELD = "actions"
+ CANONICAL_ACTION_METRIC = {
+     "field": CANONICAL_ACTION_FIELD,
+@@ -43,7 +44,11 @@ HEADROOM_BUDGET_CANDIDATES = (8000, 12000, 16000, 24000)
+ DEFAULT_BUDGET = 8000
+ # 4 reliably-solvable games (the bare-BFS solves) + 4 controls. Small so the gate runs in a couple minutes.
+ GATE_GAMES = list(CANONICAL_GAME_SET)
+-_LINE = re.compile(r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)(?:\s*eff=([\d.]+))?")
++_LINE = re.compile(
++    r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)"
++    r"(?:\s*eff=([\d.]+))?"
++    r"(?:\s*nav_reset=(\d+)\s*nav_fwhr=([\d.]+))?"
++)
+ EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression (FALLBACK metric)
+ EFFICIENCY_DROP_SLACK = 0.97  # PRIMARY: fail if CORE per-level efficiency drops below 97% of baseline
+ BIG_ACTIONS = 10 ** 9
+@@ -65,20 +70,77 @@ def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
+             if game in ln and "live=L" in ln:
+                 m = _LINE.search(ln)
+         if not m:
+-            return {"game": game, "timed_out": False, "solved": False, "actions": None, "efficiency": None}
+-        levels, actions = int(m.group(2)), int(m.group(3))
++            return {
++                "game": game,
++                "timed_out": False,
++                "solved": False,
++                "actions": None,
++                "efficiency": None,
++                "per_level_efficiency": None,
++                "levels": 0,
++                "deepest_level_reached": 0,
++                "reset_replay_steps": 0,
++                "forward_walk_hit_rate": 0.0,
++            }
++        reached, levels, actions = int(m.group(1)), int(m.group(2)), int(m.group(3))
+         eff = float(m.group(4)) if m.group(4) is not None else None
+-        return {"game": game, "timed_out": False, "solved": levels >= 1, "actions": actions,
+-                "efficiency": eff}
++        reset_steps = int(m.group(5)) if m.group(5) is not None else 0
++        hit_rate = float(m.group(6)) if m.group(6) is not None else 0.0
++        return {
++            "game": game,
++            "timed_out": False,
++            "solved": levels >= 1,
++            "actions": actions,
++            "efficiency": eff,
++            "per_level_efficiency": eff,
++            "levels": levels,
++            "deepest_level_reached": reached,
++            "reset_replay_steps": reset_steps,
++            "forward_walk_hit_rate": hit_rate,
++        }
+     except subprocess.TimeoutExpired:
+-        return {"game": game, "timed_out": True, "solved": False, "actions": None, "efficiency": None}
++        return {
++            "game": game,
++            "timed_out": True,
++            "solved": False,
++            "actions": None,
++            "efficiency": None,
++            "per_level_efficiency": None,
++            "levels": 0,
++            "deepest_level_reached": 0,
++            "reset_replay_steps": 0,
++            "forward_walk_hit_rate": 0.0,
++        }
++
++
++def _normalize_game_row(row: dict) -> dict:
++    out = dict(row)
++    if out.get("per_level_efficiency") is None and out.get("efficiency") is not None:
++        out["per_level_efficiency"] = float(out["efficiency"])
++    if out.get("deepest_level_reached") is None:
++        out["deepest_level_reached"] = int(out.get("reached", out.get("levels") or 0) or 0)
++    out["reset_replay_steps"] = int(out.get("reset_replay_steps") or 0)
++    out["forward_walk_hit_rate"] = float(out.get("forward_walk_hit_rate") or 0.0)
++    return out
+ 
+ 
+ def measure(policy: str, budget: int, cap: int) -> dict:
+     with ThreadPoolExecutor(max_workers=8) as ex:
+-        rows = list(ex.map(lambda g: _measure_game(g, policy, budget, cap), GATE_GAMES))
++        rows = [_normalize_game_row(row) for row in ex.map(lambda g: _measure_game(g, policy, budget, cap), GATE_GAMES)]
+     solved = [r for r in rows if r["solved"]]
+     acts = [r["actions"] for r in solved if r["actions"] is not None]
++    per_level_efficiency_by_game = {
++        r["game"]: float(r["per_level_efficiency"])
++        for r in rows
++        if r.get("per_level_efficiency") is not None
++    }
++    navigation_by_game = {
++        r["game"]: {
++            "reset_replay_steps": int(r.get("reset_replay_steps") or 0),
++            "forward_walk_hit_rate": float(r.get("forward_walk_hit_rate") or 0.0),
++        }
++        for r in rows
++    }
+     return {
+         "policy": policy, "games": GATE_GAMES, "per_game": rows,
+         "action_metric": dict(CANONICAL_ACTION_METRIC),
+@@ -104,6 +166,9 @@ def measure(policy: str, budget: int, cap: int) -> dict:
+         # sum(min(human/agent_per_level,1)^2), NOT total actions. The eval now emits it (eff=); this is the
+         # PRIMARY metric the verdict judges (median actions is demoted to a wall-clock/compute-budget proxy).
+         "efficiency_by_game": {r["game"]: r["efficiency"] for r in solved if r.get("efficiency") is not None},
++        "per_level_efficiency_by_game": per_level_efficiency_by_game,
++        "deepest_level_by_game": {r["game"]: int(r.get("deepest_level_reached") or 0) for r in rows},
++        "navigation_by_game": navigation_by_game,
+         "core_efficiency": round(sum(
+             r["efficiency"] for r in rows
+             if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None), 4),
+@@ -114,10 +179,40 @@ def _efficiency_by_game(measurement: dict) -> dict[str, float]:
+     eff = measurement.get("efficiency_by_game")
+     if isinstance(eff, dict) and eff:
+         return {str(g): float(v) for g, v in eff.items() if v is not None}
++    per_level = measurement.get("per_level_efficiency_by_game")
++    if isinstance(per_level, dict) and per_level:
++        return {str(g): float(v) for g, v in per_level.items() if v is not None}
+     out: dict[str, float] = {}
+     for row in measurement.get("per_game", []) or []:
+         if isinstance(row, dict) and row.get("efficiency") is not None:
+             out[str(row["game"])] = float(row["efficiency"])
++        elif isinstance(row, dict) and row.get("per_level_efficiency") is not None:
++            out[str(row["game"])] = float(row["per_level_efficiency"])
++    return out
++
++
++def _navigation_by_game(measurement: dict) -> dict[str, dict[str, float]]:
++    nav = measurement.get("navigation_by_game")
++    if isinstance(nav, dict) and nav:
++        return {
++            str(game): {
++                "reset_replay_steps": int((value or {}).get("reset_replay_steps") or 0),
++                "forward_walk_hit_rate": float((value or {}).get("forward_walk_hit_rate") or 0.0),
++            }
++            for game, value in nav.items()
++            if isinstance(value, dict)
++        }
++    out: dict[str, dict[str, float]] = {}
++    for row in measurement.get("per_game", []) or []:
++        if not isinstance(row, dict) or row.get("game") is None:
++            continue
++        diagnostics = row.get("navigation_diagnostics")
++        if not isinstance(diagnostics, dict):
++            diagnostics = row
++        out[str(row["game"])] = {
++            "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
++            "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
++        }
+     return out
+ 
+ 
+@@ -187,6 +282,16 @@ def validate_canonical_baseline(base: dict) -> dict:
+         missing = [g for g in CANONICAL_CORE_GAMES if g not in eff]
+         if missing:
+             errors.append(f"baseline missing per-level efficiency for CORE games {missing}")
++        lp85_efficiency = eff.get("lp85")
++        if (
++            lp85_efficiency is not None
++            and float(lp85_efficiency) < CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR
++        ):
++            errors.append(
++                "baseline lp85 per-level efficiency "
++                f"{float(lp85_efficiency):.4f} below floor "
++                f"{CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR:.4f}"
++            )
+     else:
+         # LEGACY total-actions baseline (no efficiency, e.g. unit fixtures): keep the 7760 cherry-pick guard.
+         if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
+@@ -202,6 +307,7 @@ def validate_canonical_baseline(base: dict) -> dict:
+         "errors": errors,
+         "canonical_game_set": list(CANONICAL_GAME_SET),
+         "canonical_baseline_median_actions": CANONICAL_BASELINE_MEDIAN_ACTIONS,
++        "canonical_lp85_per_level_efficiency_floor": CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR,
+         "core_games": sorted(CANONICAL_CORE_GAMES),
+         "action_metric_field": CANONICAL_ACTION_FIELD,
+     }
+@@ -301,6 +407,7 @@ def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
+     cur_median = median([cur_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
+     base_median = median([base_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
+     bonus = sorted(cur_solved - core)
++    nav_warning = _nav_regression_warning(cur, base, core=core)
+     return {
+         "lever": lever,
+         "metric_action_field": _action_metric_field(cur),
+@@ -316,6 +423,10 @@ def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
+         "bonus_solves": bonus,
+         "verdict_pass": ok,
+         "verdict": msg,
++        "navigation_by_game": _navigation_by_game(cur),
++        "baseline_navigation_by_game": _navigation_by_game(base),
++        "nav_regression_warning": nav_warning,
++        "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
+     }
+ 
+ 
+@@ -323,6 +434,16 @@ def positive_control(base: dict) -> dict:
+     base_acts = _actions_by_game(base)
+     core = _baseline_core(base)
+     improved = {game: max(1, int(base_acts[game]) - 1000) for game in core}
++    base_eff = _efficiency_by_game(base)
++    improved_eff = None
++    if base_eff:
++        improved_eff = {game: float(base_eff.get(game, 0.0)) for game in core}
++        for game in sorted(core):
++            if game != "lp85":
++                improved_eff[game] = round(improved_eff.get(game, 0.0) + 0.1, 4)
++                break
++        else:
++            improved_eff["lp85"] = round(improved_eff.get("lp85", 0.0) + 0.1, 4)
+     cur = {
+         "games": list(CANONICAL_GAME_SET),
+         "action_metric": dict(CANONICAL_ACTION_METRIC),
+@@ -331,6 +452,10 @@ def positive_control(base: dict) -> dict:
+         "actions_by_game": improved,
+         "median_actions_on_solved": median(improved.values()),
+     }
++    if improved_eff is not None:
++        cur["efficiency_by_game"] = improved_eff
++        cur["per_level_efficiency_by_game"] = improved_eff
++        cur["core_efficiency"] = round(sum(improved_eff.values()), 4)
+     row = dashboard_row(cur, base, lever="positive_control")
+     return {
+         "passed": bool(row["verdict_pass"] and row["median_actions_on_core"] < row["baseline_median_actions_on_core"]),
+@@ -338,6 +463,29 @@ def positive_control(base: dict) -> dict:
+     }
+ 
+ 
++def _nav_regression_warning(cur: dict, base: dict, *, core: set[str] | None = None) -> str:
++    cur_nav = _navigation_by_game(cur)
++    base_nav = _navigation_by_game(base)
++    if not cur_nav or not base_nav:
++        return ""
++    cur_actions = _actions_by_game(cur)
++    base_actions = _actions_by_game(base)
++    games = sorted(core or set(base_nav))
++    regressed = [
++        game
++        for game in games
++        if cur_actions.get(game) == base_actions.get(game)
++        and cur_nav.get(game, {}).get("reset_replay_steps", 0)
++        > base_nav.get(game, {}).get("reset_replay_steps", 0)
++    ]
++    if not regressed:
++        return ""
++    return (
++        f"WARN: reset_replay_steps increased for {regressed} at equal actions "
++        "(secondary wall-clock signal; per-level efficiency remains the score metric)"
++    )
++
++
+ def _solved_set(measurement: dict) -> set[str]:
+     solved = measurement.get("solved_games")
+     if solved is not None:
+@@ -410,8 +558,22 @@ def main() -> int:
+     cur = measure(a.policy, a.budget, a.cap)
+ 
+     if a.update_baseline:
+-        BASELINE.write_text(json.dumps({**cur, "note": "verified baseline (update only after a real "
+-                                        "improvement + successful submit)"}, indent=2))
++        candidate = {
++            **cur,
++            "note": "verified baseline (update only after a real improvement + successful submit)",
++        }
++        guard = validate_canonical_baseline(candidate)
++        if not guard["ok"]:
++            print(f"[gate] REFUSED baseline update: canonical baseline guard failed {guard['errors']}")
++            if a.json:
++                print(json.dumps({
++                    "pass": False,
++                    "verdict": f"REGRESSION: canonical baseline guard failed {guard['errors']}",
++                    "baseline_guard": guard,
++                    "current": cur,
++                }, indent=2))
++            return 1
++        BASELINE.write_text(json.dumps(candidate, indent=2))
+         print(f"[gate] baseline UPDATED: solved {cur['solved_count']}, "
+               f"median actions/solve {cur['median_actions_on_solved']}")
+         return 0
+diff --git a/tests/python/test_arc_submission_gate_verdict.py b/tests/python/test_arc_submission_gate_verdict.py
+index 8ad2f77dd9..56729b6bc9 100644
+--- a/tests/python/test_arc_submission_gate_verdict.py
++++ b/tests/python/test_arc_submission_gate_verdict.py
+@@ -17,6 +17,7 @@ lp85=7792, m0r0=7789, sp80=7724, vc33=7731 (median 7760).
+ from __future__ import annotations
+ 
+ import importlib.util
++import sys
+ from pathlib import Path
+ 
+ _GATE = Path(__file__).resolve().parents[2] / "scripts" / "kaggle" / "arc_local_submission_gate.py"
+@@ -191,3 +192,115 @@ def test_req_arc_fcp_4518_cli_exposes_lever_and_canonical_budget_default():
+ 
+     assert args.lever == "A6"
+     assert args.budget == gate.DEFAULT_BUDGET
++
++
++def _efficiency_baseline() -> dict:
++    baseline = _baseline()
++    baseline["efficiency_by_game"] = {
++        "lp85": gate.CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR,
++        "m0r0": 0.0003,
++        "sp80": 0.0001,
++        "vc33": 0.0001,
++    }
++    baseline["core_efficiency"] = 2.0074
++    return baseline
++
++
++def test_req_arc_fcp_4527_measure_tracks_per_game_score_and_nav_fields(monkeypatch):
++    """REQ-ARC-FCP-4527: measure() promotes score and nav diagnostics into CI-guarded maps."""
++
++    def fake_measure_game(game: str, _policy: str, _budget: int, _cap: int) -> dict:
++        solved = game in gate.CANONICAL_CORE_GAMES
++        return {
++            "game": game,
++            "timed_out": False,
++            "solved": solved,
++            "actions": 100 if solved else 999,
++            "efficiency": 1.25 if game == "lp85" else (0.25 if solved else 0.0),
++            "levels": 2 if game == "lp85" else (1 if solved else 0),
++            "deepest_level_reached": 2 if game == "lp85" else (1 if solved else 0),
++            "reset_replay_steps": 7 if game == "lp85" else 3,
++            "forward_walk_hit_rate": 0.5 if game == "lp85" else 0.0,
++        }
++
++    monkeypatch.setattr(gate, "_measure_game", fake_measure_game)
++
++    measurement = gate.measure("fixture", budget=123, cap=4)
++
++    assert measurement["deepest_level_by_game"]["lp85"] == 2
++    assert measurement["per_level_efficiency_by_game"]["lp85"] == 1.25
++    assert measurement["navigation_by_game"]["lp85"] == {
++        "reset_replay_steps": 7,
++        "forward_walk_hit_rate": 0.5,
++    }
++    lp85 = next(row for row in measurement["per_game"] if row["game"] == "lp85")
++    assert lp85["deepest_level_reached"] == 2
++    assert lp85["per_level_efficiency"] == 1.25
++    assert lp85["reset_replay_steps"] == 7
++    assert lp85["forward_walk_hit_rate"] == 0.5
++
++
++def test_req_arc_fcp_4527_nav_regression_warns_without_changing_core_verdict():
++    """SCENARIO-ARC-FCP-4527: higher replay tax at equal actions is WARN, not a score fail."""
++
++    base = _baseline()
++    base["navigation_by_game"] = {
++        game: {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25}
++        for game in gate.CANONICAL_CORE_GAMES
++    }
++    cur = _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731})
++    cur["navigation_by_game"] = {
++        game: {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25}
++        for game in gate.CANONICAL_CORE_GAMES
++    }
++    cur["navigation_by_game"]["lp85"] = {
++        "reset_replay_steps": 25,
++        "forward_walk_hit_rate": 0.10,
++    }
++
++    row = gate.dashboard_row(cur, base, lever="nav_regression_fixture")
++
++    assert row["verdict_pass"] is True
++    assert "non-inferior" in row["verdict"]
++    assert row["nav_regression_warning"].startswith("WARN:")
++    assert "lp85" in row["nav_regression_warning"]
++    assert row["navigation_by_game"]["lp85"]["reset_replay_steps"] == 25
++
++
++def test_req_arc_fcp_4527_validate_baseline_rejects_deflated_lp85_efficiency():
++    """REQ-ARC-FCP-4527: canonical baseline validation pins the lp85 efficiency floor."""
++
++    assert gate.validate_canonical_baseline(_efficiency_baseline())["ok"] is True
++
++    deflated = _efficiency_baseline()
++    deflated["efficiency_by_game"] = dict(deflated["efficiency_by_game"])
++    deflated["efficiency_by_game"]["lp85"] = gate.CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR - 0.0001
++
++    validation = gate.validate_canonical_baseline(deflated)
++
++    assert validation["ok"] is False
++    assert any("lp85" in error and "floor" in error for error in validation["errors"])
++
++
++def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch, tmp_path, capsys):
++    """REQ-ARC-FCP-4527: --update-baseline validates before persisting a new baseline."""
++
++    candidate = _efficiency_baseline()
++    candidate["efficiency_by_game"] = dict(candidate["efficiency_by_game"])
++    candidate["efficiency_by_game"]["lp85"] = 1.0
++    candidate["per_game"] = [
++        {"game": game, "solved": True, "actions": actions, "efficiency": candidate["efficiency_by_game"][game]}
++        for game, actions in candidate["actions_by_game"].items()
++    ]
++    target = tmp_path / "arc-submission-baseline.json"
++
++    monkeypatch.setattr(gate, "BASELINE", target)
++    monkeypatch.setattr(gate, "measure", lambda _policy, _budget, _cap: candidate)
++    monkeypatch.setattr(sys, "argv", ["arc_local_submission_gate.py", "--update-baseline"])
++
++    rc = gate.main()
++    captured = capsys.readouterr()
++
++    assert rc == 1
++    assert not target.exists()
++    assert "canonical baseline guard failed" in captured.out
+diff --git a/tests/python/test_experiment_4527_nav_metric_harness.py b/tests/python/test_experiment_4527_nav_metric_harness.py
+new file mode 100644
+index 0000000000..6d2d24188b
+--- /dev/null
++++ b/tests/python/test_experiment_4527_nav_metric_harness.py
+@@ -0,0 +1,271 @@
++"""Tests for Exp 4527 nav metric submission-gate hardening.
++
++Spec refs: REQ-ARC-FCP-4527, SCENARIO-ARC-FCP-4527.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_4527_nav_metric_harness as exp4527
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _preconditions() -> dict[str, object]:
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "gate_help_precondition": True,
++        "baseline_file_present": True,
++        "spec_has_req_4527": True,
++        "ok": True,
++    }
++
++
++def _gate_result() -> dict[str, object]:
++    return {
++        "pass": True,
++        "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074",
++        "baseline_guard": {"ok": True, "errors": []},
++        "lever_dashboard_row": {
++            "lever": "submitted_default",
++            "verdict_pass": True,
++            "nav_regression_warning": "WARN: reset_replay_steps increased for ['lp85']",
++        },
++        "current": {
++            "policy": "e3",
++            "games": list(exp4527.CANONICAL_GAME_SET),
++            "solved_games": list(exp4527.CANONICAL_CORE_GAMES),
++            "core_efficiency": exp4527.CORE_EFFICIENCY_BASELINE,
++            "efficiency_by_game": {
++                "lp85": 2.0069,
++                "m0r0": 0.0003,
++                "sp80": 0.0001,
++                "vc33": 0.0001,
++            },
++            "per_level_efficiency_by_game": {
++                "lp85": 2.0069,
++                "m0r0": 0.0003,
++                "sp80": 0.0001,
++                "vc33": 0.0001,
++            },
++            "deepest_level_by_game": {
++                "lp85": 1,
++                "m0r0": 1,
++                "sp80": 1,
++                "vc33": 1,
++            },
++            "navigation_by_game": {
++                "lp85": {"reset_replay_steps": 25, "forward_walk_hit_rate": 0.10},
++                "m0r0": {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25},
++                "sp80": {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25},
++                "vc33": {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25},
++            },
++            "per_game": [
++                {
++                    "game": "lp85",
++                    "solved": True,
++                    "actions": 7792,
++                    "efficiency": 2.0069,
++                    "per_level_efficiency": 2.0069,
++                    "levels": 1,
++                    "deepest_level_reached": 1,
++                    "reset_replay_steps": 25,
++                    "forward_walk_hit_rate": 0.10,
++                }
++            ],
++        },
++    }
++
++
++def test_req_arc_fcp_4527_spec_declares_nav_metric_harness_contract() -> None:
++    """REQ-ARC-FCP-4527: OpenSpec anchors the nav metric harness fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4527" in spec
++    assert "SCENARIO-ARC-FCP-4527" in spec
++    assert exp4527.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4527.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_req_arc_fcp_4527_builds_terminal_artifact_with_required_fields() -> None:
++    """REQ-ARC-FCP-4527: artifact records score fields, nav fields, and tests."""
++
++    artifact = exp4527.build_artifact(
++        preconditions_checked=_preconditions(),
++        gate_result=_gate_result(),
++        tests_added_pass={"command": "fixture", "passed": True},
++        duration_s=0.25,
++    )
++
++    assert exp4527.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "shipped: nav_metric_first_class_ci_guarded"
++    assert artifact["inference_substrate"] == exp4527.INFERENCE_SUBSTRATE
++    assert artifact["nav_metric_added"]["per_game_fields"] == [
++        "deepest_level_reached",
++        "per_level_efficiency",
++        "reset_replay_steps",
++        "forward_walk_hit_rate",
++    ]
++    assert artifact["nav_metric_added"]["secondary_warning"] == (
++        "WARN: reset_replay_steps increased for ['lp85']"
++    )
++    assert artifact["per_game_deepest_level_reached"]["lp85"] == 1
++    assert artifact["per_game_per_level_efficiency"]["lp85"] == 2.0069
++    assert artifact["per_game_nav_diagnostics"]["lp85"]["reset_replay_steps"] == 25
++    assert artifact["tests_added_pass"]["passed"] is True
++
++
++def test_scenario_arc_fcp_4527_run_writes_json_with_injected_gate(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4527: run() writes the stable deliverable JSON."""
++
++    artifact = exp4527.run(
++        root=tmp_path,
++        write=True,
++        preconditions_checked=_preconditions(),
++        gate_runner=lambda _root: _gate_result(),
++        tests_runner=lambda _root: {"command": "fixture", "passed": True},
++        now=lambda: 1.0,
++    )
++
++    out = tmp_path / exp4527.RESULT_RELATIVE_PATH
++    assert out.exists()
++    assert json.loads(out.read_text(encoding="utf-8")) == artifact
++    assert artifact["honest_verdict"].startswith("shipped:")
++
++
++def test_req_arc_fcp_4527_fallback_extractors_read_per_game_rows() -> None:
++    """REQ-ARC-FCP-4527: artifact helpers preserve fields when maps are absent."""
++
++    current = {
++        "deepest_level_by_game": [],
++        "per_game": [
++            [],
++            {"game": None, "levels": 4},
++            {
++                "game": "lp85",
++                "reached": 2,
++                "efficiency": 1.5,
++                "navigation_diagnostics": {
++                    "reset_replay_steps": 8,
++                    "forward_walk_hit_rate": 0.75,
++                },
++            },
++            {
++                "game": "m0r0",
++                "levels": 1,
++                "per_level_efficiency": 0.25,
++                "reset_replay_steps": 3,
++                "forward_walk_hit_rate": 0.5,
++            },
++            {"game": "sp80", "levels": 0},
++        ],
++    }
++
++    assert exp4527._map_int(None) == {}
++    assert exp4527._deepest_level_by_game(current) == {"lp85": 2, "m0r0": 1, "sp80": 0}
++    assert exp4527._per_level_efficiency_by_game(current) == {"lp85": 1.5, "m0r0": 0.25}
++    assert exp4527._nav_by_game(current) == {
++        "lp85": {"reset_replay_steps": 8, "forward_walk_hit_rate": 0.75},
++        "m0r0": {"reset_replay_steps": 3, "forward_walk_hit_rate": 0.5},
++        "sp80": {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0},
++    }
++
++
++def test_req_arc_fcp_4527_honest_verdict_branches() -> None:
++    """REQ-ARC-FCP-4527: terminal verdicts name the partial reason."""
++
++    base_kwargs = {
++        "preconditions_checked": _preconditions(),
++        "gate_result": _gate_result(),
++        "tests_added_pass": {"passed": True},
++        "deepest": {"lp85": 1},
++        "efficiency": {"lp85": 2.0},
++        "nav": {"lp85": {"reset_replay_steps": 0, "forward_walk_hit_rate": 1.0}},
++    }
++
++    assert exp4527._honest_verdict(**{**base_kwargs, "preconditions_checked": {"ok": False}}) == (
++        "blocked_nav_metric_preconditions"
++    )
++    assert exp4527._honest_verdict(**{**base_kwargs, "gate_result": {"baseline_guard": {"ok": False}}}) == (
++        "complete: nav_metric_partial_baseline_guard"
++    )
++    assert exp4527._honest_verdict(**{**base_kwargs, "tests_added_pass": {"passed": False}}) == (
++        "complete: nav_metric_partial_tests_not_green"
++    )
++    assert exp4527._honest_verdict(**{**base_kwargs, "deepest": {}}) == (
++        "complete: nav_metric_partial_missing_per_game_fields"
++    )
++    assert exp4527._honest_verdict(**{**base_kwargs, "gate_result": {"pass": False}}) == (
++        "complete: nav_metric_partial_gate_regression"
++    )
++
++
++def test_req_arc_fcp_4527_schema_errors_cover_guardrails() -> None:
++    """REQ-ARC-FCP-4527: schema validation rejects malformed terminal artifacts."""
++
++    valid = exp4527.build_artifact(
++        preconditions_checked=_preconditions(),
++        gate_result=_gate_result(),
++        tests_added_pass={"command": "fixture", "passed": True},
++        duration_s=0.25,
++    )
++
++    missing = dict(valid)
++    missing.pop("honest_verdict")
++    assert any("missing required field honest_verdict" in error for error in exp4527.artifact_schema_errors(missing))
++
++    replacements = [
++        ("honest_verdict", "maybe"),
++        ("inference_substrate", "live_llm_inference"),
++        ("field_principles", {}),
++        ("canonical_game_set", []),
++        ("canonical_core_games", []),
++        ("leaderboard_submission", True),
++        ("tests_added_pass", {"passed": False}),
++        ("nav_metric_added", None),
++        ("reproducibility_checksum", "bad"),
++    ]
++    for key, value in replacements:
++        artifact = dict(valid)
++        artifact[key] = value
++        assert exp4527.artifact_schema_errors(artifact), key
++
++    wrong_nav = dict(valid)
++    wrong_nav["nav_metric_added"] = {"per_game_fields": ["deepest_level_reached"]}
++    assert any("four per-game fields" in error for error in exp4527.artifact_schema_errors(wrong_nav))
++
++    wrong_map = dict(valid)
++    wrong_map["per_game_deepest_level_reached"] = []
++    assert any("must be a mapping" in error for error in exp4527.artifact_schema_errors(wrong_map))
++
++    wrong_checksum = dict(valid)
++    wrong_checksum["reproducibility_checksum"] = "sha256:bad"
++    assert any("checksum must match" in error for error in exp4527.artifact_schema_errors(wrong_checksum))
++
++
++def test_req_arc_fcp_4527_run_rejects_invalid_generated_artifact(monkeypatch) -> None:
++    """REQ-ARC-FCP-4527: run() refuses to write a schema-invalid artifact."""
++
++    monkeypatch.setattr(exp4527, "artifact_schema_errors", lambda _artifact: ["boom"])
++
++    try:
++        exp4527.run(
++            root=REPO,
++            write=False,
++            preconditions_checked=_preconditions(),
++            gate_runner=lambda _root: _gate_result(),
++            tests_runner=lambda _root: {"command": "fixture", "passed": True},
++            now=lambda: 1.0,
++        )
++    except ValueError as exc:
++        assert "boom" in str(exc)
++    else:  # pragma: no cover - defensive assertion path.
++        raise AssertionError("run() should reject schema errors")
+-- 
+2.55.0
+

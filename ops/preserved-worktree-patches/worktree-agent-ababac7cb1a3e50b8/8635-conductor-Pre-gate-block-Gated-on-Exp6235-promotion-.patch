@@ -1,0 +1,62 @@
+From 0bd511de0f657e69ba297aa1f65388612d4f491e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 09:38:21 -0400
+Subject: [PATCH 08635/11362] [conductor] Pre-gate block: Gated on Exp6235
+ promotion: default-off online constraint-memory shadow consumer
+
+1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl.continuous_learning_promotion_ready_score (upstream artifact not found for task id 'exp6235-prospective-two-timescale-live-csl')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ ...eriment_6236_online_constraint_memory_shadow_consumer.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 410bf396e3..67691e444f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-09T13:36:18Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-08-09T13:38:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e7c26551e4..8223d9089a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15562,3 +15562,5 @@ Still active  |
+ | 2026-08-09 13:34 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
+ | 2026-08-09 13:34 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
+ | 2026-08-09 13:36 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
++| 2026-08-09 13:36 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
++| 2026-08-09 13:38 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 180fa55f70..abd5eb0463 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-09T13:36:18Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 19, "phase": "iteration_start", "started_at": "2026-08-09T13:38:20Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6236_online_constraint_memory_shadow_consumer.json b/results/experiment_6236_online_constraint_memory_shadow_consumer.json
+index d6d34eed7d..e294478cce 100644
+--- a/results/experiment_6236_online_constraint_memory_shadow_consumer.json
++++ b/results/experiment_6236_online_constraint_memory_shadow_consumer.json
+@@ -2,8 +2,8 @@
+   "experiment": 6236,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-09",
+-  "started_at": "2026-08-09T13:36:18.592365+00:00",
+-  "finished_at": "2026-08-09T13:36:18.592365+00:00",
++  "started_at": "2026-08-09T13:38:20.975267+00:00",
++  "finished_at": "2026-08-09T13:38:20.975267+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6235 promotion: default-off online constraint-memory shadow consumer",
+-- 
+2.55.0
+

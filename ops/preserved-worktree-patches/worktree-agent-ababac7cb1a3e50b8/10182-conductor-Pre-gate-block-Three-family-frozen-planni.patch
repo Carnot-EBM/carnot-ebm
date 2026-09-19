@@ -1,0 +1,164 @@
+From 05c58faa9837ef3c934b5c225cd86543deaee90b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 19:58:17 -0400
+Subject: [PATCH 10182/11362] [conductor] Pre-gate block: Three-family frozen
+ planning proposal bank
+
+1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.planning_fixture_audit_passed (upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json         |  2 +-
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/.stop_authority_state.json                |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ results/experiment_1822_rtl_synth.log         |  2 +-
+ ...ment_6718_sota_planning_proposal_bank.json | 57 +++++++++++++++++++
+ 8 files changed, 65 insertions(+), 6 deletions(-)
+ create mode 100644 results/experiment_6718_sota_planning_proposal_bank.json
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index e80ded456e..039c604dd2 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -38,5 +38,5 @@
+   "AUDIT_FINDING_UNTRIAGED|verifier_authenticity_lint.py age-week 0|": "2026-08-27T00:08:48Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T22:12:50Z"
++ "last_scan_utc": "2026-08-28T23:45:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 8fa4c0ccf1..e3323f917f 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T22:35:00Z"
++ "last_scan_utc": "2026-08-28T23:58:17Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index b8ee18f8bc..08663edad8 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T22:12:50Z",
++ "last_scan_utc": "2026-08-28T23:45:49Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8632f92746..040e9736e4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 45, "phase": "iteration_start", "last_beat": "2026-08-28T22:34:59Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 46, "phase": "iteration_start", "last_beat": "2026-08-28T23:58:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index eb1c3ab154..3fbd6351a3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16719,3 +16719,5 @@ code |
+ | 2026-08-28 22:32 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: y.
+ codex
+ The l |
++| 2026-08-28 23:56 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ptured termina |
++| 2026-08-28 23:58 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e92ef60a9f..ed881b1af2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 45, "phase": "iteration_start", "started_at": "2026-08-28T22:34:59Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 46, "phase": "iteration_start", "started_at": "2026-08-28T23:58:16Z"}
+\ No newline at end of file
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 49827707cd..3196a76d4c 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.00s, user: 1.81s, system: 0.15s, MEM: 116.40 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.00s, user: 1.79s, system: 0.16s, MEM: 116.01 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_6718_sota_planning_proposal_bank.json b/results/experiment_6718_sota_planning_proposal_bank.json
+new file mode 100644
+index 0000000000..8560674996
+--- /dev/null
++++ b/results/experiment_6718_sota_planning_proposal_bank.json
+@@ -0,0 +1,57 @@
++{
++  "experiment": 6718,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-28",
++  "started_at": "2026-08-28T23:58:17.137908+00:00",
++  "finished_at": "2026-08-28T23:58:17.137908+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Three-family frozen planning proposal bank",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge'",
++  "failed_upstream": "exp6717-planning-audit-receipt-merge",
++  "failed_field": "planning_fixture_audit_passed",
++  "failed_operator": "in",
++  "failed_expected": [
++    true
++  ],
++  "failed_expected_type": "list",
++  "failed_observed": null,
++  "failed_observed_type": "null",
++  "failed_evidence_path": null,
++  "failed_evidence_sha256": null,
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge'",
++    "failed_upstream": "exp6717-planning-audit-receipt-merge",
++    "failed_field": "planning_fixture_audit_passed",
++    "failed_operator": "in",
++    "failed_expected": [
++      true
++    ],
++    "failed_expected_type": "list",
++    "failed_observed": null,
++    "failed_observed_type": "null",
++    "failed_evidence_path": null,
++    "failed_evidence_sha256": null
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.planning_fixture_audit_passed (upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6717-planning-audit-receipt-merge",
++      "artifact_field": "planning_fixture_audit_passed",
++      "op": "in",
++      "expected": [
++        true
++      ],
++      "expected_type": "list",
++      "actual": null,
++      "actual_type": "null",
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge'",
++      "artifact_path": null,
++      "artifact_sha256": null
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

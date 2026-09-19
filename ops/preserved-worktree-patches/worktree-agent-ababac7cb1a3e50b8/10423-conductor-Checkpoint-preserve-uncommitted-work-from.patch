@@ -1,0 +1,43 @@
+From aed16ee1fbe90932f769e1e8c78f89e35d8f581c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 14:23:03 -0400
+Subject: [PATCH 10423/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f068f5eba0..5c23c2592b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-08-30T17:57:51Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-08-30T18:22:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8ec7650f47..c18de407fe 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16850,3 +16850,4 @@ The l |
+ | 2026-08-30 17:14 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | No file changes produced |
+ | 2026-08-30 17:33 UTC | Parent-owned durable row checkpoint and resume con | OK | 96 passed, 1 warning in 19.45s |
+ | 2026-08-30 17:55 UTC | Exact constraint-dependency graph and hard-negativ | OK | 91 passed, 1 warning in 18.15s |
++| 2026-08-30 18:20 UTC | Group-aware soft fixed-point proposer | OK | 92 passed, 1 warning in 19.51s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 577bf49200..8cfd778a94 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 36, "phase": "iteration_start", "started_at": "2026-08-30T17:57:51Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 37, "phase": "iteration_start", "started_at": "2026-08-30T18:22:58Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

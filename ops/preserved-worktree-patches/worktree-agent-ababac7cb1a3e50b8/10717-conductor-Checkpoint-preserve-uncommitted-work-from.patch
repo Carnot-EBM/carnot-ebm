@@ -1,0 +1,86 @@
+From 765509f5ba9af9743a8a524e8ee6369f4191c5ec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 00:17:23 -0400
+Subject: [PATCH 10717/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...cal_tokenizer_binding_requalification.json | 22 +++++++++++++++----
+ 4 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 35882063f0..6afd5a9b49 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 106, "phase": "iteration_start", "last_beat": "2026-09-02T03:38:43Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 107, "phase": "iteration_start", "last_beat": "2026-09-02T04:17:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 81bd8d8bf8..7a13c37f55 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17047,3 +17047,4 @@ The l |
+ | 2026-09-02 02:49 UTC | Plan milestone 2026.09.601 | OK | 9 tasks proposed |
+ | 2026-09-02 02:53 UTC | Milestone 2026.09.601 activated | OK | 9 tasks queued |
+ | 2026-09-02 03:36 UTC | V601 evidence and method-change contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-09-02 04:15 UTC | Canonical tokenizer binding requalification | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ac15da8648..58e9165253 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 106, "phase": "iteration_start", "started_at": "2026-09-02T03:38:43Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 107, "phase": "iteration_start", "started_at": "2026-09-02T04:17:14Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6866_canonical_tokenizer_binding_requalification.json b/results/experiment_6866_canonical_tokenizer_binding_requalification.json
+index 27252377e9..230073ba11 100644
+--- a/results/experiment_6866_canonical_tokenizer_binding_requalification.json
++++ b/results/experiment_6866_canonical_tokenizer_binding_requalification.json
+@@ -18839,12 +18839,12 @@
+       {
+         "probe_class": "unicode_nfc",
+         "probe_id": "unicode_nfc",
+-        "text": "café Ångström"
++        "text": "caf\u00e9 \u00c5ngstr\u00f6m"
+       },
+       {
+         "probe_class": "unicode_nfd",
+         "probe_id": "unicode_nfd",
+-        "text": "café Ångström"
++        "text": "cafe\u0301 A\u030angstro\u0308m"
+       },
+       {
+         "probe_class": "punctuation",
+@@ -19320,5 +19320,19 @@
+   "status": "complete",
+   "token_likelihood_call_count": 0,
+   "verdict_class": "positive",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-02T04:15:14Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=51.742794 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

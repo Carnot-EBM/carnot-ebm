@@ -1,0 +1,43 @@
+From 042833743490dbdabb67c23b56201d36ae7fb1a7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 22:55:37 -0400
+Subject: [PATCH 00361/11362] [outer-loop] Stop tracking large training
+ checkpoints (results/**/*.pt); untrack the 765MB exp3734 checkpoint
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The conductor's Thesis-A bounded-training driver saved results/experiment_3734_checkpoint.pt
+(765 MB), which exceeds GitHub's 100 MB per-file limit and silently blocked every push to the
+canonical GitHub remote for 143 commits — leaving carnot-ebm.org / GitHub Pages stale while
+the gitea mirror stayed current. Added results/**/*.pt to .gitignore and untracked the file
+(it remains on disk). History purge of the blob follows via git-filter-repo.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ .gitignore | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index 342d0e8883..b54fd2fccd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -77,6 +77,15 @@ models/openai_privacy_filter/
+ #   must be tracked (e.g. a small hand-built artifact), add a negation
+ #   with `!models/<dirname>/`.
+ 
++# Large training checkpoints.  The conductor's bounded-training drivers
++# (Thesis-A EBT, etc.) save *.pt checkpoints under results/; one of them
++# (results/experiment_3734_checkpoint.pt, 765 MB) exceeded GitHub's 100 MB
++# limit and silently blocked every push for 143 commits.  History was
++# purged with git-filter-repo 2026-06-03.  These patterns keep checkpoints
++# untracked so it cannot recur.  Result JSON artifacts are still tracked.
++results/**/*.pt
++results/*.pt
++
+ # Vivado intermediate / future-build artifacts.  The .gen/ subtree
+ # contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
+ # and .vhdl) that GitHub also rejected.
+-- 
+2.55.0
+

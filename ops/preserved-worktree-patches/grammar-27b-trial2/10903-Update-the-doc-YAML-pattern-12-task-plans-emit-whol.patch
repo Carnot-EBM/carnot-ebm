@@ -1,0 +1,67 @@
+From d9d2b89b50d859d2310d04e32e988390f83b16b2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 12:36:31 -0400
+Subject: [PATCH 10903/11171] Update the doc/YAML pattern: 12-task plans emit
+ whole, 14-task plans truncate
+
+Milestone 608 planned 12 and emitted 12. With 605 also 12-and-12, and 606 and
+607 both planning 14 and emitting 4 and 7, the split on planned task count is
+now perfect in both directions across four milestones with no counterexample.
+
+That is the strongest support yet for the budget reading in the previous
+correction, and it is worth recording precisely because I have already had to
+retract one narrowing on this same question. Still four milestones. Still not
+established.
+
+Names the two things that would settle it, cheapest first: the record-wide
+sweep of document count against YAML count across every milestone rather than
+only the measured ones, and a 13-task plan, which the record does not contain
+and which would locate the boundary instead of bracketing it between 12 and 14.
+
+Records what the evidence now rules out, since a reader of the first entry alone
+would still believe all three: the divergence is not random, it does not require
+a preceding planner timeout because 607 had none, and it is not a fixed YAML
+size because it produced 4 and then 7.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e298b2dfa7..88e6bad601 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -20880,3 +20880,28 @@ capstone — have no YAML entry and will not run.
+ count for every milestone the record holds, not just the ones a contract experiment happened to
+ measure. If divergence tracks a threshold in the planned count rather than a fixed YAML size, that
+ sweep shows it immediately and cheaply, and it either establishes the budget reading or kills it.
++
++### Third update, 2026-09-03 16:35Z: milestone 608 makes the split 2-for-2 either way
++
++608 planned **12** tasks and emitted **12** into the YAML — clean. The table now reads:
++
++| Milestone | document tasks | YAML tasks | outcome |
++|---|---|---|---|
++| 605 | 12 | 12 | clean |
++| 606 | 14 | 4 | diverged |
++| 607 | 14 | 7 | diverged |
++| 608 | **12** | **12** | clean |
++
++Both 12-task plans emitted in full. Both 14-task plans truncated, to different lengths. That is a
++perfect split on the planned count and, so far, no counterexample. It is the strongest support yet
++for the reading in the correction above: a budget that a 14-task plan exceeds and a 12-task plan
++fits, with the YAML keeping the prefix that made it.
++
++Still four milestones, and still not established. What would make it convincing, in order of cost:
++the record-wide sweep already proposed (document count against YAML count for every milestone, not
++only those a contract experiment measured); and a 13-task plan, which the record does not yet
++contain and which would locate the boundary rather than merely bracketing it between 12 and 14.
++
++What this rules OUT, which matters as much: the divergence is not random, not tied to a preceding
++planner timeout (607 had none), and not a fixed YAML size (4 then 7). Anyone reading only the first
++entry above would still believe all three.
+-- 
+2.55.0
+

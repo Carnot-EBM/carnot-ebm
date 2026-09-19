@@ -1,0 +1,68 @@
+From bd08d8d071c98e5947231bebcca785beed57a78f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 14:23:51 -0400
+Subject: [PATCH 11075/11171] Correct the induce note: that run used both GPUs,
+ not GPU 1
+
+The note's setup line says GPU 1. The run was launched with
+CARNOT_ARC_GENERATOR_CUDA_GPU=1 but its llama-server appeared on both cards under
+one pid, 10,542 and 11,364 MiB at about 50% each, visible in the 01:35Z and
+02:35Z hourly checks. So its 31-38 tok/s decode and 6h57m wall-clock are
+dual-card numbers and a single-card reproduction should not expect them.
+
+Scoped deliberately rather than corrected wholesale. The 2026-09-03 tools A/B was
+genuinely single-card -- GPU 0 read 4 MiB throughout both arms -- so the 2,496 MiB
+arm-ON/arm-OFF delta and the note that it left 1,155 MiB against a 1,500 MiB guard
+margin stand as recorded. Only the induce run was dual-card, and saying so
+precisely matters more than a blanket retraction.
+
+Records why it went unnoticed for a day: the dashboard prints per-GPU totals
+rather than per-process ownership, so one server holding both cards is
+indistinguishable from two jobs holding one each, and I read the line I expected.
+It surfaced only when GPU 1 showed full utilisation at a moment I knew I had
+nothing running.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...ce-engines-are-lookup-tables-2026-09-04.md | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md b/docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md
+index a43934a0c0..ed68f1d8ab 100644
+--- a/docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md
++++ b/docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md
+@@ -197,3 +197,30 @@ REQ-CONDUCTOR-VERDICT-3.
+ `cell_recall` numbers this note has been missing throughout. Not done here: it is a third instance
+ of the same wiring pattern in three days and deserves to be designed once rather than added
+ piecemeal a field at a time.
++
++---
++
++## Correction to the setup line: this run used BOTH GPUs, not GPU 1
++
++The header says "GPU 1". That is wrong, and it matters for anyone reproducing the timings.
++
++The run was launched with `CARNOT_ARC_GENERATOR_CUDA_GPU=1`, but its llama-server appeared on both
++cards under a single pid — 10,542 MiB on one and 11,364 MiB on the other, both at ~50%
++utilisation, recorded in the hourly checks at 01:35Z and 02:35Z. So the decode figures of 31–38
++tok/s and the 6h57m wall-clock are **dual-card numbers**. A single-card reproduction should not
++expect them.
++
++**The cause is general, not specific to this run.** The conductor/outer-loop GPU split is a
++convention with no enforcement point: `CUDA_VISIBLE_DEVICES` is unset by the parent, so any script
++doing `os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0,1")` takes both cards. Full detail in
++`ops/known-issues.md` 2026-09-04.
++
++**What this does NOT invalidate.** The tools A/B measurements from 2026-09-03 were genuinely
++single-card: GPU 0 read 4 MiB throughout both arms while GPU 1 carried 20,925 MiB (arm OFF) and
++23,421 MiB (arm ON). That 2,496 MiB delta, and the note that it left 1,155 MiB free against a
++1,500 MiB guard margin, stand as recorded. Only this induce run was dual-card.
++
++**How it was missed for a day.** The dashboard prints per-GPU totals, not per-process ownership. A
++server holding both cards looks exactly like two independent jobs holding one each, and I read the
++line I expected. The distinction only surfaced when GPU 1 showed 100% utilisation at a moment I knew
++I had nothing running.
+-- 
+2.55.0
+

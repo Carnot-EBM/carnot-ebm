@@ -1,0 +1,248 @@
+From b485151b2ecb0d5517b52a572b753fd3705ff5f8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 15 Jul 2026 20:18:50 -0400
+Subject: [PATCH 07197/11362] [outer-loop] REQ-ARC-FCP-5699-16: 5x search
+ budget does not rescue the 5699-15 wall -- not a tunable-parameter fix
+
+Added a DEV-ONLY CARNOT_ARC_PLAN_MAX_NODES env override to _call_plan_in_model
+(unset in production, byte-identical default; guarded by a
+_planner_accepts_max_nodes signature check matching the existing
+goal_energy/diagnostics pattern), then re-ran sp80 budget=250 with
+CARNOT_ARC_PLAN_MAX_NODES=100000 -- 5x plan_in_model's 20000-node default.
+
+Result: termination_reason is still "max_nodes_reached" at nodes_expanded
+~100000 for both arms independently (100015/100001), planned=false. 5x more
+search budget did not find a plan against the tier-1 CNN-dynamics-prior
+engine, ruling out the tunable-parameter-fix hypothesis REQ-ARC-FCP-5699-15
+raised. Combined with 5699-15 (the goal predicate is real,
+is_level_complete_was_none=false), the sharper remaining explanation is that
+the induced model's multi-step rollout does not represent a discoverable
+path to its own goal predicate -- either locally-accurate-but-not-globally-
+coherent dynamics, or a dynamics/goal self-consistency gap. Distinguishing
+those would require inspecting the model's own predicted rollout directly, a
+materially deeper investigation than the last three REQs -- flagged as a
+natural checkpoint rather than continuing open-endedly on one n=1 game.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     | 73 +++++++++++++++++++
+ ops/known-issues.md                           | 23 ++++++
+ .../carnot/agentic/arc_competition_agent.py   | 22 ++++++
+ results/arc_sge_live_path_ab_sp80.json        | 12 +--
+ 4 files changed, 124 insertions(+), 6 deletions(-)
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 6a67caec25..8cb19d47d9 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -5930,6 +5930,79 @@ fully-enumerated-empty search space, and identifying the actual mechanism as the
+ node-budget being insufficient (or the induced model's multi-step rollout diverging from reality
+ before the budget is exhausted) to reach the goal predicate from within the induced model
+ 
++### REQ-ARC-FCP-5699-16: 5x Budget Does Not Rescue The 5699-15 Wall -- Not A Tunable-Parameter Fix
++
++REQ-ARC-FCP-5699-15 named the cheapest distinguishing follow-up: re-run with `max_nodes` raised
++well past 20000 on the same sp80 trace. If a plan is found, the wall is a tunable-parameter limit.
++If the search still exhausts, that points toward the induced model's multi-step rollout genuinely
++diverging from reality (or the goal region being unreachable within the model as induced), which
++the 1-step held-out cell-recall gate cannot detect.
++
++**Implementation.** `_call_plan_in_model` (`arc_competition_agent.py`) gained a DEV-ONLY
++`CARNOT_ARC_PLAN_MAX_NODES` environment-variable override, unset in production (byte-identical
++default behavior), guarded the same way as the `goal_energy`/`diagnostics` kwargs (a
++`_planner_accepts_max_nodes` signature check so a `plan_in_model`-shaped test double without a
++`max_nodes` parameter is never broken by the override). When set, it overrides `plan_in_model`'s
++`max_nodes=20000` default for both production induction tiers.
++
++**Re-ran sp80, `budget=250`, `CARNOT_ARC_PLAN_MAX_NODES=100000` (5x the default).** Both arms'
++tier-1 diagnostics:
++
++```
++baseline_discriminative: is_level_complete_was_none=false, nodes_expanded=100015, termination_reason=max_nodes_reached
++sge:                     is_level_complete_was_none=false, nodes_expanded=100001, termination_reason=max_nodes_reached
++```
++
++`planned=false`, `engine_source=None` for both -- the tier-1 engine still produced no plan, even
++at 5x the search budget, again with near-identical overshoot-adjusted node counts across two
++independently-induced models (100015 vs 100001, the same reproducibility signature as the 20000
++case).
++
++**This rules out the tunable-parameter hypothesis.** Raising `max_nodes` 5x did not find a plan.
++Combined with 5699-15's finding that the goal predicate IS real (`is_level_complete_was_none=
++false`), the remaining, sharper explanation is that the induced CNN-prior model's multi-step
++rollout does not represent a path to its own induced goal predicate that is discoverable within a
++budget this large -- i.e. either the model's forward predictions diverge from a self-consistent
++trajectory quickly enough that no bounded BFS/best-first search over it reaches the goal (the
++model is locally accurate per-step but not globally coherent over the many steps a real solve
++requires), or the induced goal predicate itself does not correspond to any state the model's own
++transition function can actually produce from `root_grid` (a self-consistency gap between the
++learned dynamics and the learned goal condition, not a search problem at all). This session did
++not further distinguish between those two variants -- doing so would require inspecting the
++model's own predicted trajectories directly (e.g., sampling a rollout and checking how quickly
++predicted grids diverge from plausible real dynamics), which is a materially deeper, more
++instrumentation-heavy investigation than the last three REQs in this chain and a natural point to
++check in with the operator before continuing, rather than open-endedly deepening further on a
++single n=1 game.
++
++**Honest scope limit, unchanged from 5699-15: n=1 game (sp80), n=1 induction attempt per arm.**
++This is a negative result on the specific "is it just a budget knob" question, decisively answered
++for sp80's tier-1 engine -- it does not establish that model-rollout-divergence is the general
++explanation for the wall across other games or other induction attempts.
++
++**Concrete next step if this thread continues.** Either (a) inspect the tier-1 model's own
++predicted rollout directly -- from `root_grid`, greedily follow the induced `engine`'s own
++transitions for a bounded number of steps and check for structural implausibility (repeated
++no-op-looking transitions, grids that diverge from any observed real transition's statistics,
++etc.) to distinguish "model predicts a coherent-but-wrong world" from "model predicts noise
++quickly"; or (b) the cheaper breadth check named in 5699-14/5699-15 -- repeat the
++diagnostics-instrumented measurement on 1-2 more unsolved games to see whether `max_nodes_reached`
++recurs as the dominant termination reason there too, which would suggest this is a systemic
++property of the tier-1 CNN-prior-warm-start path rather than sp80-specific.
++
++#### SCENARIO-ARC-FCP-5699-16-RAISED-BUDGET-DOES-NOT-RESCUE-THE-WALL
++
++Given REQ-ARC-FCP-5699-15 found the tier-1 engine's search exhausts its 20000-node budget without
++finding a plan, and named "raise max_nodes and re-test" as the cheapest way to distinguish a
++tunable-parameter limit from a deeper model-rollout-divergence issue
++When `CARNOT_ARC_PLAN_MAX_NODES=100000` (5x the default) is set and sp80 is re-measured on the same
++production stack, both arms
++Then `termination_reason` is still `"max_nodes_reached"` (nodes_expanded ~100000 for both arms
++independently, `planned=false`) -- ruling out the tunable-parameter-fix hypothesis and sharpening
++the remaining explanation toward the induced model's multi-step rollout not representing a
++discoverable path to its own goal predicate, a materially different and deeper question than any
++prior REQ-ARC-FCP-5699-N step addressed
++
+ ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+ 
+ `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ef9abda268..d738b711ed 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -601,6 +601,29 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+    (tunable-parameter fix) vs. still exhausts (points at rollout divergence, which the 1-step
+    held-out cell-recall gate can't detect); (b) repeat on 1-2 more unsolved games to see if
+    `max_nodes_reached` is the dominant termination reason generally.
++
++   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-16, answers 5699-15's cheapest
++   distinguishing test):** added a DEV-ONLY `CARNOT_ARC_PLAN_MAX_NODES` env override to
++   `_call_plan_in_model` (unset in production, byte-identical default; guarded by a
++   `_planner_accepts_max_nodes` signature check same as the `goal_energy`/`diagnostics` kwargs),
++   re-ran sp80 `budget=250` with `CARNOT_ARC_PLAN_MAX_NODES=100000` (5x the default). **Result:
++   still `termination_reason="max_nodes_reached"` at `nodes_expanded` ~100000 for BOTH arms
++   independently (100015/100001), `planned=false`.** 5x more search budget did NOT find a plan --
++   this rules out the tunable-parameter-fix hypothesis. Combined with 5699-15 (the goal predicate
++   IS real, `is_level_complete_was_none=false`), the sharper remaining explanation is that the
++   induced CNN-prior model's multi-step rollout does not represent a discoverable path to its own
++   goal predicate within a budget this large -- either the model is locally accurate but not
++   globally coherent over many compounded steps, or the induced goal predicate doesn't correspond
++   to any state the model's own transition function can actually reach from `root_grid` (a
++   dynamics/goal self-consistency gap, not a search problem). **Distinguishing between those two
++   would require inspecting the model's own predicted rollout directly -- a materially deeper,
++   more instrumentation-heavy investigation than the last three REQs, and a natural checkpoint to
++   confirm direction with the operator before continuing** rather than open-endedly deepening
++   further on one n=1 game. Concrete next step if picked up again: (a) sample the tier-1 engine's
++   own greedy rollout from `root_grid` for a bounded number of steps and check for structural
++   implausibility vs. observed real transitions (distinguishes "coherent but wrong" from "diverges
++   to noise fast"); or (b) the cheaper breadth check -- repeat this diagnostic on 1-2 more
++   unsolved games to see if `max_nodes_reached` recurs there too (systemic vs. sp80-specific).
+ 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index b4296b40d2..ca285a5c63 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -3163,13 +3163,35 @@ class E3AgentPolicy:
+             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
+         )
+ 
++    @staticmethod
++    def _planner_accepts_max_nodes(plan_in_model) -> bool:
++        import inspect
++
++        try:
++            signature = inspect.signature(plan_in_model)
++        except (TypeError, ValueError):
++            return True
++        if "max_nodes" in signature.parameters:
++            return True
++        return any(
++            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
++        )
++
+     def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None):
++        import os
++
+         goal_energy = self._goal_energy_for_plan(is_done)
+         kwargs: dict = {}
+         if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
+             kwargs["goal_energy"] = goal_energy
+         if diagnostics is not None and self._planner_accepts_diagnostics(plan_in_model):
+             kwargs["diagnostics"] = diagnostics
++        # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so
++        # this changes nothing by default. Lets an A/B/diagnostic script raise plan_in_model's
++        # search budget past its 20000-node default without editing production call sites.
++        _max_nodes_override = os.environ.get("CARNOT_ARC_PLAN_MAX_NODES")
++        if _max_nodes_override and self._planner_accepts_max_nodes(plan_in_model):
++            kwargs["max_nodes"] = int(_max_nodes_override)
+         return plan_in_model(engine, is_done, start_grid, **kwargs)
+ 
+     def _guided_plan_in_model(self, plan_in_model):
+diff --git a/results/arc_sge_live_path_ab_sp80.json b/results/arc_sge_live_path_ab_sp80.json
+index 33146aaade..9b97972e16 100644
+--- a/results/arc_sge_live_path_ab_sp80.json
++++ b/results/arc_sge_live_path_ab_sp80.json
+@@ -66,7 +66,7 @@
+         "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+       },
+       "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
+-      "duration_s": 167.9806981086731,
++      "duration_s": 119.56615877151489,
+       "arm": "baseline_discriminative",
+       "explorer_explored_out": false,
+       "induction_attempts": [
+@@ -92,11 +92,11 @@
+           },
+           "ttt_prior_engine_plan_diagnostics": {
+             "is_level_complete_was_none": false,
+-            "nodes_expanded": 20008,
++            "nodes_expanded": 100015,
+             "termination_reason": "max_nodes_reached"
+           },
+           "verify_accuracy": 0.0,
+-          "verify_cell_recall": 0.0188,
++          "verify_cell_recall": 0.0,
+           "trust_metric": "exact"
+         }
+       ],
+@@ -163,7 +163,7 @@
+         "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+       },
+       "candidate_router_type": "SGECandidateRouter",
+-      "duration_s": 107.25701904296875,
++      "duration_s": 236.49886918067932,
+       "arm": "sge",
+       "explorer_explored_out": false,
+       "induction_attempts": [
+@@ -189,7 +189,7 @@
+           },
+           "ttt_prior_engine_plan_diagnostics": {
+             "is_level_complete_was_none": false,
+-            "nodes_expanded": 20002,
++            "nodes_expanded": 100001,
+             "termination_reason": "max_nodes_reached"
+           },
+           "verify_accuracy": 0.0,
+@@ -200,5 +200,5 @@
+       "induction_attempts_not_skipped": 0
+     }
+   },
+-  "run_date": "2026-07-16T00:04:36Z"
++  "run_date": "2026-07-16T00:16:28Z"
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

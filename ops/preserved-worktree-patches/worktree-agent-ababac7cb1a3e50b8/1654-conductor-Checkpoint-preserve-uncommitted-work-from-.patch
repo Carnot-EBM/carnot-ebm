@@ -1,0 +1,43 @@
+From 1bb576eb8d4161a491835c71dae5ccbe7b8ee81c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 13:28:18 -0400
+Subject: [PATCH 01654/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8dc25d943b..acd29d030a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 41, "phase": "iteration_start", "last_beat": "2026-06-13T17:12:39Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 42, "phase": "iteration_start", "last_beat": "2026-06-13T17:28:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1d98a392b2..ae93fd4802 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8436,3 +8436,4 @@ c |
+ | 2026-06-13 16:37 UTC | THE DECISION-GRADE MOAT TEST (decidable at the INT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+ | 2026-06-13 16:52 UTC | THE decisive verifier-as-REWARD GRAFT (DEFENSIVE o | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-13 17:10 UTC | NORTH STAR (ARC-AGI-3 EFFICIENCY axis, OFFLINE/air | OK | 89 passed, 1 warning in 5.62s |
++| 2026-06-13 17:26 UTC | OBSERVABILITY FIX (reserved infra slot; OVERDUE ~2 | OK | 91 passed, 1 warning in 5.85s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 260f97a609..be26be0462 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 41, "phase": "iteration_start", "started_at": "2026-06-13T17:12:39Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 42, "phase": "iteration_start", "started_at": "2026-06-13T17:28:17Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

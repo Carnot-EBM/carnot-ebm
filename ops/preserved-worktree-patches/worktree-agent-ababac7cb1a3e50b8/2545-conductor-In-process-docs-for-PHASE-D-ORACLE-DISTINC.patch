@@ -1,0 +1,54 @@
+From 07dfa2eeb3626feed6aad555f6a22891c781c915 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 10:34:48 -0400
+Subject: [PATCH 02545/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20D=20(ORACLE-DISTINCT=20cross-domain=20DETECTION;?=
+ =?UTF-8?q?=20complementary;=20cheap;=20verifier=5Fis=5Foracle=3Dfalse)=20?=
+ =?UTF-8?q?--=20does=20the=20verifier-as-DETECTOR=20GENERALIZE=20beyond=20?=
+ =?UTF-8?q?FoVer=3F=20exp4375/exp4381=20measured=20detection=20on=20FoVer?=
+ =?UTF-8?q?=20ONLY=20(AUROC=200.918).=20The=20verifier=20is=20DOMAIN-BOUND?=
+ =?UTF-8?q?=20(north-star=20=C2=A70=20step=202=20'verifier=20domain=20expa?=
+ =?UTF-8?q?nsion';=20memory=20verifier-domain-bound-math-only:=20math=20st?=
+ =?UTF-8?q?rong,=20facts/code=20weak);=20the=20.404=20SOTA-ingestion's=20o?=
+ =?UTF-8?q?wn=20failure-mode=20note:=20'Math=20PRM=20gains=20can=20FAIL=20?=
+ =?UTF-8?q?on=20FoVer=20or=20ARC=20traces'.=20Score=20the=20detector=20aga?=
+ =?UTF-8?q?inst=20a=20NON-FoVer=20cached=20corpus=20(the=20GAP-4=20ARC=20p?=
+ =?UTF-8?q?ool=20results/arc3=5Ftrm=5Fverifier=5Frerank.json;=20and/or=20t?=
+ =?UTF-8?q?he=20cached=20code=20HumanEval/MBPP=20/=20GSM8K=20candidate=20p?=
+ =?UTF-8?q?ools=20from=20the=20headroom=20census=20per=20the=20detector=20?=
+ =?UTF-8?q?spec).=20Report=20detection=20AUROC=20+=20the=20SELECTION-headr?=
+ =?UTF-8?q?oom=20PER=20domain=20--=20the=20headline=20is=20the=20DIVERGENC?=
+ =?UTF-8?q?E=20(detect=20where=20you=20cannot=20select).=20Emit=20detector?=
+ =?UTF-8?q?=5Fgeneralizes=5Fcross=5Fdomain=20BARE=20bool=20:=3D=20(detecti?=
+ =?UTF-8?q?on=20AUROC=20CI95=20lower=20bound=20>=200.5=20on=20>=3D1=20NON-?=
+ =?UTF-8?q?FoVer=20domain).=20verifier=5Fis=5Foracle=3Dfalse.=20A=20win=20?=
+ =?UTF-8?q?=3D=20the=20detection=20capability=20is=20a=20GENERAL=20Carnot?=
+ =?UTF-8?q?=20property=20(not=20FoVer-specific)=20--=20the=20verifier-doma?=
+ =?UTF-8?q?in-expansion=20step;=20a=20domain=20where=20detection=20~=3D=20?=
+ =?UTF-8?q?chance=20is=20LOGGED=20as=20a=20missing-verifier=20gap=20(ops/v?=
+ =?UTF-8?q?erifier=5Fgaps.md)=20--=20that=20IS=20the=20product=20backlog.?=
+ =?UTF-8?q?=20This=20is=20cross-domain=20DETECTION=20(AUROC=20where=20sele?=
+ =?UTF-8?q?ction=20headroom=20is=20~0),=20NOT=20the=20RETIRED=20cross-doma?=
+ =?UTF-8?q?in=20SELECTION=20axis=20(exp4314).=20Cached=20candidates,=20CPU?=
+ =?UTF-8?q?,=20zero=20quota.=20NO=20TRM=20training.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d2c56b64ef..b10d444cde 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9310,3 +9310,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-18: PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the high-headroom cracked games, augmented by Mind-Studio lookahead-fidelity (arXiv:2606.16070 VERIFIED via the .404 SOTA-ingestion): lp85 L6 + tu93 L5 + tn36 L8 (the program-editor object-control, the NAMED registry gap) + tr87 L7, +1 each per Incremental-Progress Scoping. The registry (34 reproducible levels / 17 games) has un-reproduced deeper levels: lp85 at L5 (exp4372 reproduced L5; next L6), tu93 at L4 (next L5), tn36 at L7 (next: crack the program-editor object-control per the registry 'next:' note), tr87 at L6 (next L7). EXTEND the existing world models / solvers (results/arc_e3/<game>/world_model.py, scripts/arc3_tn36_offline_solver.py, the tu93/lp85/tr87 solvers) to the next level via the explore-verify-plan harness, NOW augmented by Mind-Studio (2606.16070): entropy-selected exploration traces + a lightweight per-game skill file + K-step LOOKAHEAD-FIDELITY checks (does the induced world model's K-step rollout match the env?) BEFORE planning. LOOP the four targets with a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior reproduced best (arc_solver_kit.reproduce). Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH target. (⚠️ Research Finding) — honest_verdict=complete_e3_deeper_partial; results/experiment_4383_e3_deeper_high_headroom_lookahead.json
+ - 2026-06-18: PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; close the named hidden-rule gaps) -- E3 the BLOCKED-mechanic next-levels: ar25 L2 (close the action7 undo-stack gap) + ka59 L2 (close the step-counter HUD gap) + ft09 L2, +1 each per Incremental-Progress Scoping. .402/.403/.404 reproduced ar25 L1 (reflection mechanic), ka59 L1 (hidden_step_counter_hud_gap), ft09 L1, but the next levels are blocked on the NAMED hidden-rule gaps: ar25_l2_action7_undo_stack, ka59 step-counter HUD register, ft09 residual world-model mismatch. exp4373 (.404) extended these with the active-data lever but produced NO new levels (complete_e3_ar25_ka59_ft09_partial). This attempt ADDS Mind-Studio K-step lookahead-fidelity (arXiv:2606.16070) on top of the active-data collection: for ar25 model the action7 undo-stack with lookahead-validated transitions; for ka59 model the hidden step-counter HUD register; for ft09 coverage-balanced transitions + lookahead before synthesis. The codex agent IS the proposer (NO nested CodexProposer). HARD gate per game: a NEW level offline_reproduced=true beyond the prior best. An honest partial per game (refined model + the sharper residual gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH game. (⚠️ Research Finding) — honest_verdict=complete_e3_ar25_ka59_ft09_partial; results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json
+ - 2026-06-18: PHASE C (CONTINUOUS SELF-LEARNING; mandated per research-program.md; the DETECTOR compounds; verifier_is_oracle=false) -- does the verifier-as-DETECTOR SELF-IMPROVE / COMPOUND as labeled traces accumulate? The .402-.404 self-learning vehicle was the action-cost heuristic (exp4364 25->16) -- now SETTLED (exp4370 null). The LIVE vehicle is the detector (exp4375 AUROC 0.918; exp4381 makes it actionable). Apply the SAME compounding-curve discipline (the exp4364 pattern) to the detector: the detector's operating threshold + the BiPRM fusion weights are LEARNED and updated ONLINE as labeled (output, is_correct, step-label) traces accumulate; measure held-out detection localization-F1 / AUROC / selective-risk vs the accumulated-corpus SIZE (a monotone-improving learning curve), reproduction-gated, with a POSITIVE CONTROL (a from-scratch detector trained on the full corpus as the ceiling) and a NO-LEARNING baseline (the fixed-threshold detector). Emit detector_compounds BARE bool := (held-out localization-F1 / AUROC rises with corpus size BEYOND the no-learning baseline, CI95-excl-0, AND the positive control confirms the curve is not flat-because-saturated). verifier_is_oracle=false. A win = the detector vehicle COMPOUNDS (it gets better with data, like the action-cost heuristic did before it settled); a CLEAN null (the detector is already saturated on FoVer -> no learning headroom, confirmed by the positive control) is decision-grade and points to cross-domain (exp4386) for fresh headroom. Cached candidates, CPU, zero quota. NO TRM training. (⚠️ Research Finding) — honest_verdict=success: detector_compounds_heldout_localization_f1; results/experiment_4385_detector_self_learning_compounds.json
++- 2026-06-18: PHASE D (ORACLE-DISTINCT cross-domain DETECTION; complementary; cheap; verifier_is_oracle=false) -- does the verifier-as-DETECTOR GENERALIZE beyond FoVer? exp4375/exp4381 measured detection on FoVer ONLY (AUROC 0.918). The verifier is DOMAIN-BOUND (north-star §0 step 2 'verifier domain expansion'; memory verifier-domain-bound-math-only: math strong, facts/code weak); the .404 SOTA-ingestion's own failure-mode note: 'Math PRM gains can FAIL on FoVer or ARC traces'. Score the detector against a NON-FoVer cached corpus (the GAP-4 ARC pool results/arc3_trm_verifier_rerank.json; and/or the cached code HumanEval/MBPP / GSM8K candidate pools from the headroom census per the detector spec). Report detection AUROC + the SELECTION-headroom PER domain -- the headline is the DIVERGENCE (detect where you cannot select). Emit detector_generalizes_cross_domain BARE bool := (detection AUROC CI95 lower bound > 0.5 on >=1 NON-FoVer domain). verifier_is_oracle=false. A win = the detection capability is a GENERAL Carnot property (not FoVer-specific) -- the verifier-domain-expansion step; a domain where detection ~= chance is LOGGED as a missing-verifier gap (ops/verifier_gaps.md) -- that IS the product backlog. This is cross-domain DETECTION (AUROC where selection headroom is ~0), NOT the RETIRED cross-domain SELECTION axis (exp4314). Cached candidates, CPU, zero quota. NO TRM training. (⚠️ Research Finding) — honest_verdict=success: detector_generalizes_cross_domain_non_fover; results/experiment_4386_cross_domain_detection_generalization.json
+-- 
+2.55.0
+

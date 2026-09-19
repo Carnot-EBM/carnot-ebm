@@ -1,0 +1,1728 @@
+From 82097f7a6efb0268043bbe9254df65a920fa8679 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 07:07:58 -0400
+Subject: [PATCH 01744/11362] =?UTF-8?q?[conductor]=20PHASE=20B2=20(SELF-LE?=
+ =?UTF-8?q?ARNING=20+=20decentralization)=20=E2=80=94=20Sovereign=20local?=
+ =?UTF-8?q?=20generator=20+=20GAP-4-verified=20self-distillation.=20Replac?=
+ =?UTF-8?q?e=20codex=20with=20a=20LOCAL=20open-weight=20generator=20(gemma?=
+ =?UTF-8?q?-4-26B-A4B-it-GGUF=20/=20Qwen3.6-35B-A3B-GGUF)=20for=20ARC=20pr?=
+ =?UTF-8?q?ogram=20induction:=20does=20a=20fully-sovereign=20generator=20+?=
+ =?UTF-8?q?=20the=20hardened=20GAP-4=20execution=20verifier=20recover=20AR?=
+ =?UTF-8?q?C=20headroom=20with=20NO=20closed-weight=20call=20(decentraliza?=
+ =?UTF-8?q?tion=20rule=201)=3F=20The=20verifier=20labels=20demo-perfect=20?=
+ =?UTF-8?q?induced=20programs;=20those=20verified=20programs=20form=20a=20?=
+ =?UTF-8?q?self-distillation=20corpus=20(Tier-2/Tier-3=20=E2=80=94=20the?=
+ =?UTF-8?q?=20verifier=20TEACHES=20the=20local=20generator).=20Report=20lo?=
+ =?UTF-8?q?cal=20induction=20rate=20vs=20codex,=20pool-rerank=20pass@2,=20?=
+ =?UTF-8?q?distillation-corpus=20size.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4188-sovereign-local-generator-gap4-self-distill
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  44 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ign_local_generator_gap4_self_distill.json | 285 ++++++
+ ...reign_local_generator_gap4_self_distill.py | 822 ++++++++++++++++++
+ ...l_generator_gap4_self_distill_corpus.jsonl |   7 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...reign_local_generator_gap4_self_distill.py | 351 ++++++++
+ 13 files changed, 1526 insertions(+), 17 deletions(-)
+ create mode 100644 results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+ create mode 100644 results/experiment_4188_sovereign_local_generator_gap4_self_distill.py
+ create mode 100644 results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl
+ create mode 100644 tests/python/test_experiment_4188_sovereign_local_generator_gap4_self_distill.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index fa0e894396..f3ceefc297 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12184,6 +12184,50 @@ gate matches or exceeds the exact-match `+4/-0` pass@2 baseline, or
+ `complete: gap4_graded_relaxation_adds_nothing_on_arc1...` when the relaxation
+ adds no ARC-1 recovery beyond the exact baseline.
+ 
++### REQ-VERIFY-4188: Sovereign Local GAP-4 Generator Self-Distillation Corpus
++
++The repository SHALL provide Exp 4188 at
++`results/experiment_4188_sovereign_local_generator_gap4_self_distill.py` to
++measure whether a cached local SOTA GGUF generator plus the hardened GAP-4
++graded execution gate recovers ARC-1 pool headroom without any closed-weight
++call. Before any induction or replay, the runner SHALL call
++`cached_sota_pair()` and SHALL stop with
++`honest_verdict=blocked_model_not_cached_sota_gguf` if fewer than two mandated
++SOTA GGUFs resolve to `.gguf` paths. It SHALL load or reference the selected
++generator by `.gguf` path only and SHALL NOT use `AutoTokenizer` for the GGUF
++precondition.
++
++For a complete run, the implementation SHALL induce or replay local GGUF
++best-of-N `def transform(grid)` samples using demo pairs only, re-verify each
++candidate program mechanically against all demos, execute verified
++demo-perfect programs on test inputs, and rerank the ARC-1 candidate pool with
++the Exp 4187 hardened guarded graded gate. The generator prompt surface SHALL
++exclude task ids, candidate pools, and gold test outputs. The runner SHALL
++bank verifier-labeled demo-perfect `(demo_pairs -> program)` pairs into a
++JSONL self-distillation corpus and SHALL NOT fine-tune the GGUF in this
++milestone.
++
++The terminal artifact SHALL write
++`results/experiment_4188_sovereign_local_generator_gap4_self_distill.json`
++with top-level fields `honest_verdict`, `local_induction_rate`,
++`sovereign_pool_pass2`, `self_distillation_corpus_size`,
++`no_closed_weight_call`, `model_specs`, `random_seed`,
++`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
++`duration_s`, and `inference_substrate`. `no_closed_weight_call` SHALL be a
++bare bool and SHALL be true for every completed or model-blocked run.
++
++### SCENARIO-VERIFY-4188: Local GGUF Replay Banks Demo-Perfect Programs
++
++Given a cached SOTA GGUF pair, a readable ARC-1 candidate pool, and local GGUF
++samples for that pool, when Exp 4188 runs, then it re-verifies demo-perfect
++programs without closed-weight calls, reports `local_induction_rate` as
++`demo-perfect / total` with the Codex `29/31` reference, reports
++`sovereign_pool_pass2` for the local hardened-gate rerank against TRM vote and
++the Codex hardened-gate reference, reports
++`self_distillation_corpus_size` as the number of verifier-labeled demo-perfect
++programs banked, emits a terminal-prefix complete or success verdict, and
++writes the self-distillation corpus without gold labels.
++
+ ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
+ 
+ The repository SHALL provide Exp 4036 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f0e6de0503..ad263ec7f6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3210,
++  "experiments_checked": 3211,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 260342e78f..29d75d998e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-14T10:34:59.949479Z",
+-  "duration_s": 0.02102041244506836,
++  "run_date": "2026-06-14T11:06:05.647807Z",
++  "duration_s": 0.021996259689331055,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "07886ee063a6154ea4f8aa0ee5d4340345df41968c42bf9da3f74fab9d9a87f2",
++  "reproducibility_checksum": "3dc6deee7008223bf42f049ac671d32996716e06f33109c0e99a9591569ba067",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3112f9a71ebcb20d26c1c99eefa48aac0bf319a2"
++    "adversarial_verify_version": "f382bbba0376fd83f8c9ddda49927d7effd72cbc"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 14596fc24d..7b3285390c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-14T10:34:59.981053Z",
+-  "duration_s": 0.025984525680541992,
++  "run_date": "2026-06-14T11:06:05.679615Z",
++  "duration_s": 0.024962425231933594,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "20196339bb4e63edb44def942c7535217b32b4a9a7a5645b1a769aee62ff4be9",
++  "reproducibility_checksum": "478967662f986e5be6b7e87d0f691519ea8092eda70372ab97e3ff35d71abd54",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3112f9a71ebcb20d26c1c99eefa48aac0bf319a2"
++    "adversarial_verify_version": "f382bbba0376fd83f8c9ddda49927d7effd72cbc"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 2e7a4260f5..89edc1a707 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1092891693115234,
++  "efficiency_gains_ms": 2.108335494995117,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2f531693c4..a153872ad9 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9816001188009977e-05,
++  "duration_s": 3.215999458916485e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4188_sovereign_local_generator_gap4_self_distill.json b/results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+new file mode 100644
+index 0000000000..642bd51d0c
+--- /dev/null
++++ b/results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+@@ -0,0 +1,285 @@
++{
++  "duration_s": 1.168103,
++  "experiment": "experiment_4188_sovereign_local_generator_gap4_self_distill",
++  "field_principles": {
++    "honest_verdict": "Terminal-prefixed. An honest 'local generator under-induces vs codex' is a COMPLETE, decision-grade verdict (it bounds the sovereignty claim).",
++    "local_induction_rate": "demo-perfect / total with a LOCAL generator vs the codex 29/31 -- the decentralization-rule-1 measurement.",
++    "model_specs": "The local GGUF generator invoked; required methodology for a live-LLM artifact.",
++    "no_closed_weight_call": "Bare bool: zero codex/closed-weight calls were made (decentralization rule 1 -- Carnot works end-to-end on local open models).",
++    "random_seed": "Determinism precondition; the induction + verification must be reproducible.",
++    "reproducibility_checksum": "Hash of the task subset + generator config; catches silent drift.",
++    "self_distillation_corpus_size": "Count of verifier-labeled demo-perfect programs banked for distillation -- the FR-11 self-learning loop where the energy function is the ground-truth reward.",
++    "sovereign_pool_pass2": "pool-rerank pass@2 with the local generator + hardened gate vs TRM vote -- does a fully-sovereign stack recover ARC headroom?"
++  },
++  "honest_verdict": "success: sovereign_local_gap4_recovers_headroom_pass20.4839_cov0.2258_corpus7",
++  "inference_substrate": "local_gguf_checkpoint_replay_plus_deterministic_hardened_gate",
++  "local_induction_rate": {
++    "codex_reference": {
++      "demo_perfect": 29,
++      "rate": 0.9355,
++      "total": 31
++    },
++    "demo_perfect": 7,
++    "rate": 0.2258,
++    "total": 31
++  },
++  "model_specs": {
++    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "generator_model": "Qwen3.6-35B-A3B",
++    "generator_source": "local_gguf_checkpoint_replay",
++    "hardened_gate": "experiment_4187_gap4_graded_execution_gate_hardening",
++    "source_checkpoint_k_samples_per_task": 8,
++    "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
++    "source_checkpoint_schema": "carnot.experiment_4059_decentralization_moe_resume.checkpoint.v1"
++  },
++  "n_tasks": 31,
++  "n_unique_tasks": 30,
++  "no_closed_weight_call": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "models": [
++        {
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++          "name": "Qwen3.6-35B-A3B"
++        },
++        {
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++          "name": "Gemma4-26B-A4B-it"
++        }
++      ],
++      "resource": "sota_gguf_pair_cached"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++      "resource": "arc1_candidate_pool"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
++      "resource": "local_gguf_samples_checkpoint"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4187_gap4_graded_execution_gate_hardening.json",
++      "resource": "hardened_gap4_gate_artifact"
++    }
++  ],
++  "prior_local_moe_null": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4069_decentralization_moe_sync.json",
++  "programs_reverified": [
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "50a16a69"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "66e6c45b"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "17cae0c1"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "fafd9572"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "a59b95c0"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "4e469f39"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "a57f2f04"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "96a8c0cd"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "8719f442"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "1a2e2828"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "25094a63"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "2f0c5170"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "3ee1011a"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "2072aba6"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "712bf12e"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "505fff84"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "be03b35f"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "c7d4e6ad"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "1a6449f1"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "f0df5ff0"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "81c0276b"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "692cd3b6"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "c3202e5a"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "ac3e2b04"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "0b17323b"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "5833af48"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "79fb03f4"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "b9630600"
++    },
++    {
++      "demo_fit": 1.0,
++      "demo_perfect": true,
++      "has_prediction": true,
++      "task": "00576224"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "f3e62deb"
++    },
++    {
++      "demo_fit": 0.0,
++      "demo_perfect": false,
++      "has_prediction": false,
++      "task": "f3e62deb"
++    }
++  ],
++  "random_seed": 12345,
++  "reproducibility_checksum": "81a4a43ecabd833a",
++  "reproducibility_checksum_sources": [
++    "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz"
++  ],
++  "schema": "carnot.experiment_4188_sovereign_local_generator_gap4_self_distill.v1",
++  "self_distillation_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl",
++  "self_distillation_corpus_size": 7,
++  "sovereign_pool_pass2": {
++    "LOCAL_HARDENED_GATE": 0.4839,
++    "TRM_VOTE": 0.4516,
++    "codex_hardened_reference": 0.5806,
++    "delta_vs_vote": 0.0323,
++    "gate_fire_count": 6,
++    "guard_block_count": 0,
++    "lost": 0,
++    "pass_at_1": {
++      "LOCAL_HARDENED_GATE": 0.4839,
++      "TRM_VOTE": 0.4194
++    },
++    "recovered": 1
++  },
++  "title": "Sovereign local GAP-4 generator with hardened execution gate"
++}
+diff --git a/results/experiment_4188_sovereign_local_generator_gap4_self_distill.py b/results/experiment_4188_sovereign_local_generator_gap4_self_distill.py
+new file mode 100644
+index 0000000000..81e0c4e15e
+--- /dev/null
++++ b/results/experiment_4188_sovereign_local_generator_gap4_self_distill.py
+@@ -0,0 +1,822 @@
++#!/usr/bin/env python3
++"""Exp 4188: sovereign local GAP-4 generator plus self-distillation corpus.
++
++This runner measures the local open-weight generator side of GAP-4.  It checks
++that the mandated SOTA GGUF pair is cached, replays or induces local GGUF
++`def transform(grid)` samples from demos only, re-verifies demo perfection with
++the mechanical GAP-4 execution verifier, reranks with the hardened Exp 4187
++graded gate, and banks verifier-labeled demo-perfect programs for later
++distillation.  It never calls Codex or any closed-weight generator.
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import hashlib
++import json
++import re
++import sys
++import time
++from concurrent.futures import ThreadPoolExecutor, TimeoutError
++from pathlib import Path
++from typing import Any, Callable
++
++import numpy as np
++
++ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = ROOT / "python"
++EXPERIMENTS_DIR = ROOT / "scripts" / "experiments"
++for _path in (PYTHON_DIR, EXPERIMENTS_DIR, ROOT):
++    if str(_path) not in sys.path:  # pragma: no cover - import-path bootstrap.
++        sys.path.insert(0, str(_path))
++
++from carnot.agentic.gap4_graded_execution_gate import (  # noqa: E402
++    DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++    DEFAULT_TAU,
++    gated_rank_indices,
++    hit_indices,
++    pass_at_k,
++    select_guarded_graded_candidate,
++    vote_rank_indices,
++)
++
++
++ARTIFACT_PATH = ROOT / "results" / "experiment_4188_sovereign_local_generator_gap4_self_distill.json"
++CORPUS_PATH = ROOT / "results" / "experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl"
++POOL_PATH = ROOT / "results" / "arc3_gap3_stage2_eval_pool.json.gz"
++CHECKPOINT_PATH = ROOT / "results" / "decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json"
++HARDENED_GATE_PATH = ROOT / "results" / "experiment_4187_gap4_graded_execution_gate_hardening.json"
++PRIOR_NULL_PATH = ROOT / "results" / "experiment_4069_decentralization_moe_sync.json"
++
++RANDOM_SEED = 12345
++DEFAULT_K = 8
++CODEX_DEMO_PERFECT = 29
++CODEX_TOTAL = 31
++CODEX_HARDENED_PASS2 = 0.5806
++EXEC_TIMEOUT_S = 5.0
++
++_FORBIDDEN = (
++    "__import__",
++    "open(",
++    "eval(",
++    "exec(",
++    "compile(",
++    "subprocess",
++    "os.",
++    "sys.",
++    "import os",
++    "import sys",
++    "import subprocess",
++    "socket",
++    "shutil",
++    "Path(",
++    "getattr(",
++    "setattr(",
++    "globals(",
++    "locals(",
++    "type(",
++    "np.load",
++    "np.save",
++    "np.fromfile",
++    "np.memmap",
++    ".tofile",
++)
++
++_SAFE_BUILTIN_NAMES = [
++    "range",
++    "len",
++    "min",
++    "max",
++    "abs",
++    "enumerate",
++    "zip",
++    "sum",
++    "sorted",
++    "list",
++    "dict",
++    "set",
++    "tuple",
++    "int",
++    "float",
++    "bool",
++    "map",
++    "filter",
++    "reversed",
++    "any",
++    "all",
++    "round",
++    "isinstance",
++    "str",
++]
++
++REQUIRED_FIELDS = [
++    "honest_verdict",
++    "local_induction_rate",
++    "sovereign_pool_pass2",
++    "self_distillation_corpus_size",
++    "no_closed_weight_call",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "field_principles",
++    "duration_s",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. An honest 'local generator under-induces vs codex' is a "
++        "COMPLETE, decision-grade verdict (it bounds the sovereignty claim)."
++    ),
++    "local_induction_rate": (
++        "demo-perfect / total with a LOCAL generator vs the codex 29/31 -- the "
++        "decentralization-rule-1 measurement."
++    ),
++    "sovereign_pool_pass2": (
++        "pool-rerank pass@2 with the local generator + hardened gate vs TRM vote -- "
++        "does a fully-sovereign stack recover ARC headroom?"
++    ),
++    "self_distillation_corpus_size": (
++        "Count of verifier-labeled demo-perfect programs banked for distillation -- "
++        "the FR-11 self-learning loop where the energy function is the ground-truth reward."
++    ),
++    "no_closed_weight_call": (
++        "Bare bool: zero codex/closed-weight calls were made (decentralization rule 1 -- "
++        "Carnot works end-to-end on local open models)."
++    ),
++    "model_specs": (
++        "The local GGUF generator invoked; required methodology for a live-LLM artifact."
++    ),
++    "random_seed": "Determinism precondition; the induction + verification must be reproducible.",
++    "reproducibility_checksum": (
++        "Hash of the task subset + generator config; catches silent drift."
++    ),
++}
++
++
++def _numpy_only_import(name: str, *args: Any, **kwargs: Any) -> Any:
++    if name == "numpy" or name.startswith("numpy."):
++        return __import__(name, *args, **kwargs)
++    raise ImportError(f"import of {name!r} is blocked in the GAP-4 sandbox")
++
++
++def _safe_builtins() -> dict[str, Any]:
++    import builtins as _builtins
++
++    out = {name: getattr(_builtins, name) for name in _SAFE_BUILTIN_NAMES}
++    out["__import__"] = _numpy_only_import
++    return out
++
++
++def safe_transform_from_code(code: str) -> Callable[[Any], np.ndarray | None] | None:
++    for token in _FORBIDDEN:
++        if re.search(r"(?<![A-Za-z0-9_])" + re.escape(token), code):
++            return None
++    body = "\n".join(
++        line for line in code.splitlines() if not line.strip().startswith(("import ", "from "))
++    )
++    namespace = {"np": np, "numpy": np, "__builtins__": _safe_builtins()}
++    try:
++        exec(body, namespace)
++    except Exception:
++        return None
++    fn = namespace.get("transform")
++    if not callable(fn):
++        return None
++
++    def _call(grid: Any) -> np.ndarray | None:
++        try:
++            out = np.asarray(fn(np.asarray(grid, dtype=np.int64).copy()), dtype=np.int64)
++        except Exception:
++            return None
++        if out.ndim != 2 or out.size == 0 or out.shape[0] > 30 or out.shape[1] > 30:
++            return None
++        if out.min() < 0 or out.max() > 9:
++            return None
++        return out
++
++    def wrapped(grid: Any) -> np.ndarray | None:
++        executor = ThreadPoolExecutor(max_workers=1)
++        try:
++            return executor.submit(_call, grid).result(timeout=EXEC_TIMEOUT_S)
++        except TimeoutError:  # pragma: no cover - defensive around live generated loops.
++            return None
++        finally:
++            executor.shutdown(wait=False)
++
++    return wrapped
++
++
++def demo_fit(fn: Callable[[Any], np.ndarray | None], demos: list[dict[str, Any]]) -> float:
++    hits = 0
++    for pair in demos:
++        out = fn(pair["input"])
++        if out is not None and np.array_equal(out, np.asarray(pair["output"], dtype=np.int64)):
++            hits += 1
++    return hits / max(1, len(demos))
++
++
++def _default_cached_sota_pair() -> list[dict[str, Any]] | None:  # pragma: no cover
++    from scripts.experiment_template import cached_sota_pair  # noqa: PLC0415
++
++    return cached_sota_pair()
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _load_pool(path: Path) -> list[dict[str, Any]]:
++    with gzip.open(path, "rt", encoding="utf-8") as handle:
++        payload = json.load(handle)
++    entries = payload.get("entries")
++    if not isinstance(entries, list):
++        raise ValueError("pool artifact missing entries list")
++    return entries
++
++
++def _load_checkpoint(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    tasks = payload.get("tasks")
++    if not isinstance(tasks, dict):
++        raise ValueError("checkpoint artifact missing tasks map")
++    return payload
++
++
++def _gguf_pair_available(specs: list[dict[str, Any]] | None) -> bool:
++    return bool(
++        isinstance(specs, list)
++        and len(specs) >= 2
++        and all(str(spec.get("model_path", "")).endswith(".gguf") for spec in specs[:2])
++    )
++
++
++def _select_generator_spec(
++    specs: list[dict[str, Any]],
++    checkpoint_model: str | None = None,
++) -> dict[str, Any]:
++    if checkpoint_model:
++        for spec in specs:
++            if spec.get("name") == checkpoint_model:
++                return dict(spec)
++    for spec in specs:
++        if spec.get("hf_id") == "unsloth/Qwen3.6-35B-A3B-GGUF":
++            return dict(spec)
++    return dict(specs[0])
++
++
++def _check_preconditions(
++    *,
++    specs: list[dict[str, Any]] | None,
++    pool_path: Path,
++    checkpoint_path: Path,
++    hardened_gate_path: Path,
++) -> list[dict[str, Any]]:
++    return [
++        {
++            "resource": "sota_gguf_pair_cached",
++            "available": _gguf_pair_available(specs),
++            "models": [
++                {
++                    "name": spec.get("name"),
++                    "hf_id": spec.get("hf_id"),
++                    "model_path": spec.get("model_path"),
++                }
++                for spec in (specs or [])[:2]
++            ],
++        },
++        {"resource": "arc1_candidate_pool", "available": pool_path.exists(), "path": str(pool_path)},
++        {
++            "resource": "local_gguf_samples_checkpoint",
++            "available": checkpoint_path.exists(),
++            "path": str(checkpoint_path),
++        },
++        {
++            "resource": "hardened_gap4_gate_artifact",
++            "available": hardened_gate_path.exists(),
++            "path": str(hardened_gate_path),
++        },
++    ]
++
++
++def _blocker(preconditions: list[dict[str, Any]]) -> str | None:
++    by_resource = {row["resource"]: bool(row["available"]) for row in preconditions}
++    if not by_resource.get("sota_gguf_pair_cached", False):
++        return "blocked_model_not_cached_sota_gguf"
++    if not by_resource.get("arc1_candidate_pool", False):
++        return "blocked_arc1_candidate_pool_missing"
++    if not by_resource.get("hardened_gap4_gate_artifact", False):
++        return "blocked_hardened_gap4_gate_missing"
++    return None
++
++
++def blocked_artifact(
++    *,
++    verdict: str,
++    preconditions: list[dict[str, Any]],
++    duration_s: float,
++    model_specs: dict[str, Any] | None = None,
++) -> dict[str, Any]:
++    artifact = {
++        "experiment": "experiment_4188_sovereign_local_generator_gap4_self_distill",
++        "schema": "carnot.experiment_4188_sovereign_local_generator_gap4_self_distill.v1",
++        "title": "Sovereign local GAP-4 generator with hardened execution gate",
++        "honest_verdict": verdict,
++        "local_induction_rate": {
++            "demo_perfect": 0,
++            "total": 0,
++            "rate": 0.0,
++            "codex_reference": {
++                "demo_perfect": CODEX_DEMO_PERFECT,
++                "total": CODEX_TOTAL,
++                "rate": round(CODEX_DEMO_PERFECT / CODEX_TOTAL, 4),
++            },
++        },
++        "sovereign_pool_pass2": {
++            "TRM_VOTE": 0.0,
++            "LOCAL_HARDENED_GATE": 0.0,
++            "delta_vs_vote": 0.0,
++            "codex_hardened_reference": CODEX_HARDENED_PASS2,
++            "recovered": 0,
++            "lost": 0,
++        },
++        "self_distillation_corpus_size": 0,
++        "no_closed_weight_call": True,
++        "model_specs": model_specs or {},
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "preconditions_checked": preconditions,
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(duration_s, 6),
++        "inference_substrate": "local_gguf_precondition_blocked",
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _sample_draw_index(sample: dict[str, Any]) -> int:
++    value = sample.get("draw_index", 0)
++    return int(value) if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def _to_grid_list(value: Any) -> list[list[int]] | None:
++    if value is None:
++        return None
++    arr = np.asarray(value)
++    if arr.ndim != 2 or arr.size == 0:
++        return None
++    return [[int(cell) for cell in row] for row in arr.tolist()]
++
++
++def _verified_records_for_task(
++    task: str,
++    demos: list[dict[str, Any]],
++    samples: list[dict[str, Any]],
++) -> tuple[list[dict[str, Any]], float]:
++    records: list[dict[str, Any]] = []
++    best_fit = 0.0
++    seen_codes: set[str] = set()
++    for sample in sorted(samples, key=_sample_draw_index):
++        code = sample.get("code")
++        if not isinstance(code, str) or not code.strip():
++            continue
++        fn = safe_transform_from_code(code)
++        if fn is None:
++            continue
++        fit = float(demo_fit(fn, demos))
++        best_fit = max(best_fit, fit)
++        if fit < 1.0:
++            continue
++        clean_code = code.strip()
++        if clean_code in seen_codes:
++            continue
++        seen_codes.add(clean_code)
++        records.append(
++            {
++                "task": task,
++                "draw_index": _sample_draw_index(sample),
++                "demo_fit": 1.0,
++                "code": clean_code,
++                "local_s": float(sample.get("local_s", 0.0) or 0.0),
++                "_fn": fn,
++            }
++        )
++    return records, best_fit
++
++
++def build_verified_programs(
++    entries: list[dict[str, Any]],
++    samples_by_task: dict[str, list[dict[str, Any]]],
++    *,
++    generator_spec: dict[str, Any],
++) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
++    by_task: dict[str, dict[str, Any]] = {}
++    for entry in entries:
++        by_task.setdefault(entry["task"], entry)
++
++    verified_by_task: dict[str, list[dict[str, Any]]] = {}
++    best_fit_by_task: dict[str, float] = {}
++    corpus: list[dict[str, Any]] = []
++    for task in sorted(by_task):
++        entry = by_task[task]
++        samples = samples_by_task.get(task, [])
++        verified, best_fit = _verified_records_for_task(task, entry["demos"], samples)
++        verified_by_task[task] = verified
++        best_fit_by_task[task] = best_fit
++        for rec in verified:
++            corpus.append(
++                {
++                    "task": task,
++                    "demo_pairs": entry["demos"],
++                    "program": rec["code"],
++                    "verifier_label": "demo_perfect",
++                    "demo_fit": rec["demo_fit"],
++                    "source_draw_index": rec["draw_index"],
++                    "generator_model": generator_spec.get("name"),
++                    "generator_hf_id": generator_spec.get("hf_id"),
++                    "reward_energy": "execution_consistency_demo_exact",
++                }
++            )
++
++    programs: list[dict[str, Any]] = []
++    for entry in entries:
++        verified = verified_by_task.get(entry["task"], [])
++        if not verified:
++            programs.append(
++                {
++                    "task": entry["task"],
++                    "demo_fit": round(best_fit_by_task.get(entry["task"], 0.0), 4),
++                    "demo_perfect": False,
++                    "pred_grid": None,
++                    "code": None,
++                    "source_draw_index": None,
++                }
++            )
++            continue
++        selected = verified[0]
++        pred = selected["_fn"](entry["test_input"])
++        programs.append(
++            {
++                "task": entry["task"],
++                "demo_fit": 1.0,
++                "demo_perfect": True,
++                "pred_grid": _to_grid_list(pred),
++                "code": selected["code"],
++                "source_draw_index": selected["draw_index"],
++            }
++        )
++    return programs, corpus
++
++
++def score_hardened_gate(
++    entries: list[dict[str, Any]],
++    programs: list[dict[str, Any]],
++    *,
++    tau: float = DEFAULT_TAU,
++    high_vote_guard_threshold: int | float | None = DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++) -> dict[str, Any]:
++    if len(entries) != len(programs):
++        raise ValueError("entries/programs length mismatch")
++    vote_rankings = [vote_rank_indices(entry["candidates"]) for entry in entries]
++    gated_rankings: list[list[int]] = []
++    selections: list[dict[str, Any]] = []
++    for entry, program in zip(entries, programs, strict=True):
++        if entry["task"] != program["task"]:
++            raise ValueError(f"task mismatch: {entry['task']} != {program['task']}")
++        selection = select_guarded_graded_candidate(
++            entry["candidates"],
++            prediction=program.get("pred_grid"),
++            demo_fit=program.get("demo_fit"),
++            task_id=entry["task"],
++            tau=tau,
++            high_vote_guard_threshold=high_vote_guard_threshold,
++        )
++        selections.append(selection)
++        gated_rankings.append(gated_rank_indices(entry["candidates"], selection["selected_index"]))
++
++    vote_hits = hit_indices(entries, vote_rankings, 2)
++    gated_hits = hit_indices(entries, gated_rankings, 2)
++    pass2_vote = pass_at_k(entries, vote_rankings, 2)
++    pass2_gate = pass_at_k(entries, gated_rankings, 2)
++    return {
++        "pass_at_1": {
++            "TRM_VOTE": pass_at_k(entries, vote_rankings, 1),
++            "LOCAL_HARDENED_GATE": pass_at_k(entries, gated_rankings, 1),
++        },
++        "pass_at_2": {
++            "TRM_VOTE": pass2_vote,
++            "LOCAL_HARDENED_GATE": pass2_gate,
++        },
++        "recovered": len(gated_hits - vote_hits),
++        "lost": len(vote_hits - gated_hits),
++        "gate_fire_count": sum(1 for selection in selections if selection["gate_fired"]),
++        "guard_block_count": sum(1 for selection in selections if selection["guard_blocked"]),
++        "selection_details": selections,
++    }
++
++
++def _write_corpus(path: Path, corpus: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = "\n".join(json.dumps(row, sort_keys=True) for row in corpus)
++    path.write_text(payload + ("\n" if payload else ""), encoding="utf-8")
++
++
++def _file_sha(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _reproducibility_checksum(
++    *,
++    entries: list[dict[str, Any]],
++    generator_spec: dict[str, Any],
++    checkpoint_path: Path,
++    seed: int,
++) -> str:
++    task_subset = [
++        {
++            "task": entry["task"],
++            "n_candidates": len(entry.get("candidates", [])),
++            "n_demos": len(entry.get("demos", [])),
++        }
++        for entry in entries
++    ]
++    blob = json.dumps(
++        {
++            "checkpoint_sha256": _file_sha(checkpoint_path),
++            "generator_hf_id": generator_spec.get("hf_id"),
++            "generator_model_path": generator_spec.get("model_path"),
++            "seed": seed,
++            "task_subset": task_subset,
++        },
++        sort_keys=True,
++    )
++    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
++
++
++def _verdict(rate: float, pass2_gate: float, pass2_vote: float, corpus_size: int) -> str:
++    if pass2_gate > pass2_vote:
++        return (
++            "success: sovereign_local_gap4_recovers_headroom_"
++            f"pass2{pass2_gate}_cov{rate}_corpus{corpus_size}"
++        )
++    return (
++        "complete: local_generator_underinduces_vs_codex_"
++        f"cov{rate}_pass2{pass2_gate}_corpus{corpus_size}"
++    )
++
++
++def _complete_artifact(
++    *,
++    entries: list[dict[str, Any]],
++    programs: list[dict[str, Any]],
++    corpus: list[dict[str, Any]],
++    scored: dict[str, Any],
++    generator_spec: dict[str, Any],
++    preconditions: list[dict[str, Any]],
++    checkpoint_payload: dict[str, Any],
++    checkpoint_path: Path,
++    corpus_path: Path,
++    duration_s: float,
++) -> dict[str, Any]:
++    total = len(entries)
++    n_demo_perfect = sum(1 for program in programs if program.get("demo_perfect"))
++    rate = round(n_demo_perfect / max(1, total), 4)
++    pass2_vote = scored["pass_at_2"]["TRM_VOTE"]
++    pass2_gate = scored["pass_at_2"]["LOCAL_HARDENED_GATE"]
++    artifact = {
++        "experiment": "experiment_4188_sovereign_local_generator_gap4_self_distill",
++        "schema": "carnot.experiment_4188_sovereign_local_generator_gap4_self_distill.v1",
++        "title": "Sovereign local GAP-4 generator with hardened execution gate",
++        "honest_verdict": _verdict(rate, pass2_gate, pass2_vote, len(corpus)),
++        "local_induction_rate": {
++            "demo_perfect": n_demo_perfect,
++            "total": total,
++            "rate": rate,
++            "codex_reference": {
++                "demo_perfect": CODEX_DEMO_PERFECT,
++                "total": CODEX_TOTAL,
++                "rate": round(CODEX_DEMO_PERFECT / CODEX_TOTAL, 4),
++            },
++        },
++        "sovereign_pool_pass2": {
++            "TRM_VOTE": pass2_vote,
++            "LOCAL_HARDENED_GATE": pass2_gate,
++            "delta_vs_vote": round(pass2_gate - pass2_vote, 4),
++            "codex_hardened_reference": CODEX_HARDENED_PASS2,
++            "recovered": scored["recovered"],
++            "lost": scored["lost"],
++            "pass_at_1": scored["pass_at_1"],
++            "gate_fire_count": scored["gate_fire_count"],
++            "guard_block_count": scored["guard_block_count"],
++        },
++        "self_distillation_corpus_size": len(corpus),
++        "self_distillation_corpus_path": str(corpus_path),
++        "no_closed_weight_call": True,
++        "model_specs": {
++            "generator_model": generator_spec.get("name"),
++            "generator_hf_id": generator_spec.get("hf_id"),
++            "generator_gguf_path": generator_spec.get("model_path"),
++            "generator_source": "local_gguf_checkpoint_replay",
++            "source_checkpoint_path": str(checkpoint_path),
++            "source_checkpoint_schema": checkpoint_payload.get("schema"),
++            "source_checkpoint_k_samples_per_task": checkpoint_payload.get("k_samples_per_task"),
++            "hardened_gate": "experiment_4187_gap4_graded_execution_gate_hardening",
++        },
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": _reproducibility_checksum(
++            entries=entries,
++            generator_spec=generator_spec,
++            checkpoint_path=checkpoint_path,
++            seed=RANDOM_SEED,
++        ),
++        "reproducibility_checksum_sources": [str(checkpoint_path), str(POOL_PATH)],
++        "preconditions_checked": preconditions,
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(duration_s, 6),
++        "inference_substrate": "local_gguf_checkpoint_replay_plus_deterministic_hardened_gate",
++        "n_tasks": total,
++        "n_unique_tasks": len({entry["task"] for entry in entries}),
++        "programs_reverified": [
++            {
++                "task": program["task"],
++                "demo_perfect": bool(program["demo_perfect"]),
++                "demo_fit": program["demo_fit"],
++                "has_prediction": program["pred_grid"] is not None,
++            }
++            for program in programs
++        ],
++        "prior_local_moe_null": str(PRIOR_NULL_PATH),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:")
++        or verdict.startswith("success:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["no_closed_weight_call"], bool):
++        raise ValueError("no_closed_weight_call must be a bare bool")
++    if artifact["no_closed_weight_call"] is not True:
++        raise ValueError("no_closed_weight_call must be true")
++    if not isinstance(artifact["self_distillation_corpus_size"], int) or isinstance(
++        artifact["self_distillation_corpus_size"], bool
++    ):
++        raise ValueError("self_distillation_corpus_size must be a bare int")
++    if not isinstance(artifact["random_seed"], int) or isinstance(artifact["random_seed"], bool):
++        raise ValueError("random_seed must be a bare int")
++    for field in ("local_induction_rate", "sovereign_pool_pass2", "model_specs", "field_principles"):
++        if not isinstance(artifact[field], dict):
++            raise ValueError(f"{field} must be a dict")
++    if not isinstance(artifact["preconditions_checked"], list):
++        raise ValueError("preconditions_checked must be a list")
++    if not isinstance(artifact["reproducibility_checksum"], str):
++        raise ValueError("reproducibility_checksum must be a string")
++    if not isinstance(artifact["duration_s"], float):
++        raise ValueError("duration_s must be a bare float")
++    if not isinstance(artifact["inference_substrate"], str):
++        raise ValueError("inference_substrate must be a string")
++
++
++def _live_samples_if_checkpoint_missing(  # pragma: no cover
++    entries: list[dict[str, Any]],
++    generator_spec: dict[str, Any],
++    checkpoint_path: Path,
++) -> dict[str, Any]:  # pragma: no cover - loads a live multi-GB GGUF only when no checkpoint exists.
++    from experiment_4012_gap4_local_best_of_n import (  # noqa: PLC0415
++        IndependentLocalSampler,
++        induce_pool_best_of_n,
++        load_local_llama,
++    )
++
++    llama = load_local_llama(str(generator_spec["model_path"]), seed=RANDOM_SEED)
++    sampler = IndependentLocalSampler(llama, base_seed=RANDOM_SEED)
++    tasks = induce_pool_best_of_n(
++        entries,
++        sampler,
++        k=DEFAULT_K,
++        checkpoint_path=checkpoint_path,
++        model_name=str(generator_spec["name"]),
++    )
++    return {
++        "schema": "carnot.experiment_4188.live_generated_checkpoint.v1",
++        "k_samples_per_task": DEFAULT_K,
++        "local_model_used": generator_spec["name"],
++        "tasks": tasks,
++    }
++
++
++def run(
++    *,
++    artifact_path: Path = ARTIFACT_PATH,
++    corpus_path: Path = CORPUS_PATH,
++    pool_path: Path = POOL_PATH,
++    checkpoint_path: Path = CHECKPOINT_PATH,
++    hardened_gate_path: Path = HARDENED_GATE_PATH,
++    cached_pair_fn: Callable[[], list[dict[str, Any]] | None] = _default_cached_sota_pair,
++) -> dict[str, Any]:
++    started = time.time()
++    artifact_path = Path(artifact_path)
++    corpus_path = Path(corpus_path)
++    pool_path = Path(pool_path)
++    checkpoint_path = Path(checkpoint_path)
++    hardened_gate_path = Path(hardened_gate_path)
++    specs = cached_pair_fn()
++    preconditions = _check_preconditions(
++        specs=specs,
++        pool_path=pool_path,
++        checkpoint_path=checkpoint_path,
++        hardened_gate_path=hardened_gate_path,
++    )
++    blocker = _blocker(preconditions)
++    if blocker:
++        artifact = blocked_artifact(
++            verdict=blocker,
++            preconditions=preconditions,
++            duration_s=time.time() - started,
++        )
++        _write_json(artifact_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    checkpoint_payload = _load_checkpoint(checkpoint_path) if checkpoint_path.exists() else {}
++    generator_spec = _select_generator_spec(
++        specs or [],
++        checkpoint_model=checkpoint_payload.get("local_model_used"),
++    )
++    entries = _load_pool(pool_path)
++    if checkpoint_payload:
++        samples_by_task = checkpoint_payload["tasks"]
++    else:  # pragma: no cover - live GGUF fallback when no local checkpoint exists.
++        checkpoint_payload = _live_samples_if_checkpoint_missing(
++            entries,
++            generator_spec,
++            checkpoint_path,
++        )
++        samples_by_task = checkpoint_payload["tasks"]
++
++    programs, corpus = build_verified_programs(
++        entries,
++        samples_by_task,
++        generator_spec=generator_spec,
++    )
++    scored = score_hardened_gate(entries, programs)
++    _write_corpus(corpus_path, corpus)
++    artifact = _complete_artifact(
++        entries=entries,
++        programs=programs,
++        corpus=corpus,
++        scored=scored,
++        generator_spec=generator_spec,
++        preconditions=preconditions,
++        checkpoint_payload=checkpoint_payload,
++        checkpoint_path=checkpoint_path,
++        corpus_path=corpus_path,
++        duration_s=time.time() - started,
++    )
++    _write_json(artifact_path, artifact)
++    print(f"-> {artifact['honest_verdict']}", flush=True)
++    print(
++        "   local_induction="
++        f"{artifact['local_induction_rate']['demo_perfect']}/"
++        f"{artifact['local_induction_rate']['total']} "
++        f"pass2={artifact['sovereign_pool_pass2']['LOCAL_HARDENED_GATE']} "
++        f"vote={artifact['sovereign_pool_pass2']['TRM_VOTE']} "
++        f"corpus={artifact['self_distillation_corpus_size']}",
++        flush=True,
++    )
++    return artifact
++
++
++def main(argv: list[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--artifact", type=Path, default=ARTIFACT_PATH)
++    parser.add_argument("--corpus", type=Path, default=CORPUS_PATH)
++    parser.add_argument("--pool", type=Path, default=POOL_PATH)
++    parser.add_argument("--checkpoint", type=Path, default=CHECKPOINT_PATH)
++    parser.add_argument("--hardened-gate", type=Path, default=HARDENED_GATE_PATH)
++    args = parser.parse_args(argv)
++    run(
++        artifact_path=args.artifact,
++        corpus_path=args.corpus,
++        pool_path=args.pool,
++        checkpoint_path=args.checkpoint,
++        hardened_gate_path=args.hardened_gate,
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl b/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl
+new file mode 100644
+index 0000000000..ec888455fe
+--- /dev/null
++++ b/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl
+@@ -0,0 +1,7 @@
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[8, 6], [6, 4]], "output": [[8, 6, 8, 6, 8, 6], [6, 4, 6, 4, 6, 4], [6, 8, 6, 8, 6, 8], [4, 6, 4, 6, 4, 6], [8, 6, 8, 6, 8, 6], [6, 4, 6, 4, 6, 4]]}, {"input": [[7, 9], [4, 3]], "output": [[7, 9, 7, 9, 7, 9], [4, 3, 4, 3, 4, 3], [9, 7, 9, 7, 9, 7], [3, 4, 3, 4, 3, 4], [7, 9, 7, 9, 7, 9], [4, 3, 4, 3, 4, 3]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "def transform(grid):\n    H, W = grid.shape\n    flipped = grid[:, ::-1]\n    result = np.zeros((3 * H, 3 * W), dtype=int)\n    for bi in range(3):\n        for bj in range(3):\n            if bi % 2 == 0:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = grid\n            else:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = flipped\n    return result", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 0, "task": "00576224", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "output": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}, {"input": [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "output": [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "import numpy as np\n\ndef transform(grid):\n    # Find coordinates of non-zero pixels\n    rows, cols = np.where(grid != 0)\n    points = list(zip(rows, cols))\n    \n    if len(points) < 2:\n        # Not enough points to determine a direction, or just one point?\n        # Based on demos, we have at least 3 points.\n        # If only 1 point, maybe no extension? Or maybe vector is undefined.\n        # Let's assume valid input based on demos.\n        return grid\n\n    # Sort points by row index (and column index just in case)\n    points.sort()\n    \n    # Determine the step vector\n    # We can take the difference between the first two points\n    # Or average of differences if there are more points to be robust\n    r1, c1 = points[0]\n    r2, c2 = points[1]\n    dr = r2 - r1\n    dc = c2 - c1\n    \n    # It's possible the points are not perfectly aligned or there's noise, \n    # but ARC tasks are usually clean. \n    # Let's verify if the vector is consistent for the first few points.\n    # Actually, just taking the first difference is likely sufficient.\n    \n    # Start extending from the last point\n    current_r, current_c = points[-1]\n    \n    # Create a copy of the grid to modify\n    output_grid = grid.copy()\n    \n    while True:\n        next_r = current_r + dr\n        next_c = current_c + dc\n        \n        if 0 <= next_r < output_grid.shape[0] and 0 <= next_c < output_grid.shape[1]:\n            output_grid[next_r, next_c] = 2\n            current_r, current_c = next_r, next_c\n        else:\n            break\n            \n    return output_grid", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 1, "task": "0b17323b", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[0, 5, 0], [5, 5, 5], [0, 5, 0]], "output": [[0, 0, 1, 2, 0, 0], [0, 0, 2, 1, 0, 0], [1, 2, 1, 2, 1, 2], [2, 1, 2, 1, 2, 1], [0, 0, 1, 2, 0, 0], [0, 0, 2, 1, 0, 0]]}, {"input": [[5, 0, 0], [0, 5, 0], [0, 0, 5]], "output": [[1, 2, 0, 0, 0, 0], [2, 1, 0, 0, 0, 0], [0, 0, 1, 2, 0, 0], [0, 0, 2, 1, 0, 0], [0, 0, 0, 0, 1, 2], [0, 0, 0, 0, 2, 1]]}, {"input": [[0, 5, 0], [0, 5, 5], [5, 5, 0]], "output": [[0, 0, 1, 2, 0, 0], [0, 0, 2, 1, 0, 0], [0, 0, 1, 2, 1, 2], [0, 0, 2, 1, 2, 1], [1, 2, 1, 2, 0, 0], [2, 1, 2, 1, 0, 0]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "import numpy as np\n\ndef transform(grid):\n    h, w = grid.shape\n    new_h, new_w = h * 2, w * 2\n    result = np.zeros((new_h, new_w), dtype=int)\n    pattern = np.array([[1, 2], [2, 1]])\n    \n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == 5:\n                result[2*r:2*r+2, 2*c:2*c+2] = pattern\n    return result", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 5, "task": "2072aba6", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "output": [[2, 2, 2, 2, 2], [2, 3, 3, 3, 2], [2, 3, 8, 3, 2], [2, 3, 3, 3, 2], [2, 2, 2, 2, 2]]}, {"input": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "output": [[1, 1, 1, 1, 1, 1], [1, 3, 3, 3, 3, 1], [1, 3, 6, 6, 3, 1], [1, 3, 6, 6, 3, 1], [1, 3, 3, 3, 3, 1], [1, 1, 1, 1, 1, 1]]}, {"input": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "output": [[8, 8, 8, 8, 8, 8, 8, 8], [8, 3, 3, 3, 3, 3, 3, 8], [8, 3, 4, 4, 4, 4, 3, 8], [8, 3, 4, 7, 7, 4, 3, 8], [8, 3, 4, 7, 7, 4, 3, 8], [8, 3, 4, 4, 4, 4, 3, 8], [8, 3, 3, 3, 3, 3, 3, 8], [8, 8, 8, 8, 8, 8, 8, 8]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "import numpy as np\n\ndef transform(grid):\n    # Find all non-zero objects\n    # For each color, find the longest horizontal or vertical segment\n    \n    rows, cols = grid.shape\n    colors = set()\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] != 0:\n                colors.add(grid[r][c])\n    \n    # For each color, find the longest segment\n    color_lengths = {}\n    for color in colors:\n        max_len = 0\n        # Check horizontal segments\n        for r in range(rows):\n            seg_len = 0\n            for c in range(cols):\n                if grid[r][c] == color:\n                    seg_len += 1\n                    max_len = max(max_len, seg_len)\n                else:\n                    seg_len = 0\n        # Check vertical segments\n        for c in range(cols):\n            seg_len = 0\n            for r in range(rows):\n                if grid[r][c] == color:\n                    seg_len += 1\n                    max_len = max(max_len, seg_len)\n                else:\n                    seg_len = 0\n        color_lengths[color] = max_len\n    \n    # Sort by length descending\n    sorted_colors = sorted(color_lengths.keys(), key=lambda c: color_lengths[c], reverse=True)\n    \n    # Output size\n    output_size = color_lengths[sorted_colors[0]]\n    \n    # Create output grid\n    output = np.zeros((output_size, output_size), dtype=int)\n    \n    for r in range(output_size):\n        for c in range(output_size):\n            layer = min(r, c, output_size - 1 - r, output_size - 1 - c)\n            output[r][c] = sorted_colors[layer]\n    \n    return output", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 5, "task": "3ee1011a", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[0, 0, 0, 0], [0, 3, 4, 0], [0, 7, 6, 0], [0, 0, 0, 0]], "output": [[3, 0, 0, 4], [0, 0, 0, 0], [0, 0, 0, 0], [7, 0, 0, 6]]}, {"input": [[0, 0, 0, 0], [0, 5, 6, 0], [0, 8, 3, 0], [0, 0, 0, 0]], "output": [[5, 0, 0, 6], [0, 0, 0, 0], [0, 0, 0, 0], [8, 0, 0, 3]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "def transform(grid):\n    out = np.zeros_like(grid)\n    coords = np.argwhere(grid != 0)\n    # coords will be [[1,1], [1,2], [2,1], [2,2]]\n    # We can just map them to corners\n    # But simpler: just take the 2x2 block values and place at corners\n    # Let's find the bounding box of non-zeros\n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    block = grid[r_min:r_max+1, c_min:c_max+1]\n    out[0, 0] = block[0, 0]\n    out[0, -1] = block[0, -1]\n    out[-1, 0] = block[1, 0]\n    out[-1, -1] = block[1, -1]\n    return out", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 0, "task": "66e6c45b", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[9, 7, 9], [9, 6, 7], [7, 6, 6]], "output": [[9, 7, 9, 9, 7, 9, 9, 7, 9], [9, 6, 7, 9, 6, 7, 9, 6, 7], [7, 6, 6, 7, 6, 6, 7, 6, 6], [9, 7, 9, 9, 7, 9, 9, 7, 9], [9, 6, 7, 9, 6, 7, 9, 6, 7], [7, 6, 6, 7, 6, 6, 7, 6, 6], [9, 7, 9, 9, 7, 9, 9, 7, 9], [9, 6, 7, 9, 6, 7, 9, 6, 7], [7, 6, 6, 7, 6, 6, 7, 6, 6]]}, {"input": [[3, 4, 4], [3, 3, 3], [3, 4, 4]], "output": [[3, 4, 4, 3, 4, 4], [3, 3, 3, 3, 3, 3], [3, 4, 4, 3, 4, 4], [3, 4, 4, 3, 4, 4], [3, 3, 3, 3, 3, 3], [3, 4, 4, 3, 4, 4]]}, {"input": [[8, 2, 1], [1, 8, 3], [2, 1, 3]], "output": [[8, 2, 1, 8, 2, 1, 8, 2, 1, 8, 2, 1], [1, 8, 3, 1, 8, 3, 1, 8, 3, 1, 8, 3], [2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3], [8, 2, 1, 8, 2, 1, 8, 2, 1, 8, 2, 1], [1, 8, 3, 1, 8, 3, 1, 8, 3, 1, 8, 3], [2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3], [8, 2, 1, 8, 2, 1, 8, 2, 1, 8, 2, 1], [1, 8, 3, 1, 8, 3, 1, 8, 3, 1, 8, 3], [2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3], [8, 2, 1, 8, 2, 1, 8, 2, 1, 8, 2, 1], [1, 8, 3, 1, 8, 3, 1, 8, 3, 1, 8, 3], [2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3]]}, {"input": [[7, 7, 7], [7, 2, 2], [7, 7, 2]], "output": [[7, 7, 7, 7, 7, 7], [7, 2, 2, 7, 2, 2], [7, 7, 2, 7, 7, 2], [7, 7, 7, 7, 7, 7], [7, 2, 2, 7, 2, 2], [7, 7, 2, 7, 7, 2]]}, {"input": [[2, 3, 2], [3, 3, 2], [2, 2, 1]], "output": [[2, 3, 2, 2, 3, 2, 2, 3, 2], [3, 3, 2, 3, 3, 2, 3, 3, 2], [2, 2, 1, 2, 2, 1, 2, 2, 1], [2, 3, 2, 2, 3, 2, 2, 3, 2], [3, 3, 2, 3, 3, 2, 3, 3, 2], [2, 2, 1, 2, 2, 1, 2, 2, 1], [2, 3, 2, 2, 3, 2, 2, 3, 2], [3, 3, 2, 3, 3, 2, 3, 3, 2], [2, 2, 1, 2, 2, 1, 2, 2, 1]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "def transform(grid):\n    n = len(np.unique(grid))\n    return np.tile(grid, (n, n))", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 0, "task": "a59b95c0", "verifier_label": "demo_perfect"}
++{"demo_fit": 1.0, "demo_pairs": [{"input": [[1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 2, 2], [1, 1, 0, 2, 2]], "output": [[1, 0], [1, 1]]}, {"input": [[1, 0, 0, 1, 1], [1, 1, 0, 1, 0], [0, 0, 0, 0, 0], [1, 1, 0, 2, 2], [0, 1, 0, 2, 2]], "output": [[0, 1], [1, 1]]}, {"input": [[1, 1, 0, 0, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 0, 0, 2, 2], [1, 1, 0, 2, 2]], "output": [[1, 0], [1, 0]]}], "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "generator_model": "Qwen3.6-35B-A3B", "program": "import numpy as np\n\ndef transform(grid):\n    return np.rot90(grid[:2, :2])", "reward_energy": "execution_consistency_demo_exact", "source_draw_index": 5, "task": "be03b35f", "verifier_label": "demo_perfect"}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e99a3099bd..ffc073be01 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:50:33Z",
+-  "finished_at": "2026-06-14T10:50:33Z",
++  "started_at": "2026-06-14T11:05:56Z",
++  "finished_at": "2026-06-14T11:05:56Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1a7014bc6a..32d60a4df5 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:50:33Z",
+-  "finished_at": "2026-06-14T10:50:33Z",
++  "started_at": "2026-06-14T11:05:56Z",
++  "finished_at": "2026-06-14T11:05:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2878662147..78d2557366 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:50:34Z",
+-  "finished_at": "2026-06-14T10:50:34Z",
++  "started_at": "2026-06-14T11:05:57Z",
++  "finished_at": "2026-06-14T11:05:57Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4188_sovereign_local_generator_gap4_self_distill.py b/tests/python/test_experiment_4188_sovereign_local_generator_gap4_self_distill.py
+new file mode 100644
+index 0000000000..191774a88a
+--- /dev/null
++++ b/tests/python/test_experiment_4188_sovereign_local_generator_gap4_self_distill.py
+@@ -0,0 +1,351 @@
++"""Tests for Exp 4188 sovereign local GAP-4 generator self-distillation.
++
++REQ-VERIFY-4188 / SCENARIO-VERIFY-4188: the runner must either block honestly
++when the mandated SOTA GGUF pair is absent, or replay local GGUF-generated
++programs through the hardened GAP-4 gate and bank only verifier-labeled
++demo-perfect programs.
++"""
++
++from __future__ import annotations
++
++import gzip
++import importlib.util
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++
++ROOT = Path(__file__).parents[2]
++MODULE_PATH = ROOT / "results" / "experiment_4188_sovereign_local_generator_gap4_self_distill.py"
++
++PLUS_ONE = "def transform(grid):\n    return grid + 1\n"
++IDENTITY = "def transform(grid):\n    return grid\n"
++WRONG = "def transform(grid):\n    return grid + 9\n"
++
++
++def _load_module():
++    spec = importlib.util.spec_from_file_location("experiment_4188", MODULE_PATH)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _demo(value_in: int, value_out: int) -> dict[str, Any]:
++    return {"input": [[value_in]], "output": [[value_out]]}
++
++
++def _candidate(grid: list[list[int]], *, votes: int, correct: bool) -> dict[str, Any]:
++    return {"grid": grid, "votes": votes, "correct": correct}
++
++
++def _entry(
++    task: str,
++    demos: list[dict[str, Any]],
++    test_input: list[list[int]],
++    candidates: list[dict[str, Any]],
++) -> dict[str, Any]:
++    return {
++        "task": task,
++        "demos": demos,
++        "test_input": test_input,
++        "candidates": candidates,
++    }
++
++
++def _synthetic_entries() -> list[dict[str, Any]]:
++    return [
++        _entry(
++            "recover",
++            [_demo(1, 2), _demo(3, 4)],
++            [[5]],
++            [
++                _candidate([[9]], votes=10, correct=False),
++                _candidate([[8]], votes=9, correct=False),
++                _candidate([[6]], votes=1, correct=True),
++            ],
++        ),
++        _entry(
++            "vote_keeps",
++            [_demo(4, 4), _demo(7, 7)],
++            [[2]],
++            [
++                _candidate([[2]], votes=10, correct=True),
++                _candidate([[0]], votes=1, correct=False),
++            ],
++        ),
++        _entry(
++            "no_verified_program",
++            [_demo(1, 3), _demo(2, 4)],
++            [[3]],
++            [
++                _candidate([[0]], votes=10, correct=False),
++                _candidate([[1]], votes=9, correct=False),
++                _candidate([[5]], votes=1, correct=True),
++            ],
++        ),
++    ]
++
++
++def _write_pool(path: Path, entries: list[dict[str, Any]]) -> None:
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump({"entries": entries}, handle)
++
++
++def _sample(task: str, code: str, *, draw_index: int, claimed_perfect: bool = True) -> dict[str, Any]:
++    return {
++        "task": task,
++        "draw_index": draw_index,
++        "status": "graded",
++        "demo_fit": 1.0 if claimed_perfect else 0.0,
++        "demo_perfect": claimed_perfect,
++        "local_s": 0.25,
++        "code": code,
++    }
++
++
++def _write_checkpoint(path: Path) -> None:
++    payload = {
++        "schema": "carnot.exp4188.synthetic_checkpoint.v1",
++        "k_samples_per_task": 2,
++        "local_model_used": "Qwen3.6-35B-A3B",
++        "tasks": {
++            "recover": [_sample("recover", PLUS_ONE, draw_index=0)],
++            "vote_keeps": [_sample("vote_keeps", IDENTITY, draw_index=0)],
++            "no_verified_program": [
++                _sample("no_verified_program", WRONG, draw_index=0, claimed_perfect=True)
++            ],
++        },
++    }
++    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
++
++
++def _cached_pair() -> list[dict[str, Any]]:
++    return [
++        {
++            "name": "Qwen3.6-35B-A3B",
++            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "gpu": 0,
++            "model_path": "/models/qwen.gguf",
++        },
++        {
++            "name": "Gemma4-26B-A4B-it",
++            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++            "gpu": 1,
++            "model_path": "/models/gemma26.gguf",
++        },
++    ]
++
++
++def test_req_verify_4188_spec_declared() -> None:
++    # REQ-VERIFY-4188: OpenSpec declares the sovereign local generator artifact first.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    assert "REQ-VERIFY-4188" in spec
++    assert "SCENARIO-VERIFY-4188" in spec
++    assert "experiment_4188_sovereign_local_generator_gap4_self_distill.py" in spec
++    assert "blocked_model_not_cached_sota_gguf" in spec
++    assert "self_distillation_corpus_size" in spec
++
++
++def test_req_verify_4188_blocks_when_sota_gguf_pair_missing(tmp_path: Path) -> None:
++    # REQ-VERIFY-4188: missing SOTA GGUF pair blocks before pool reads or inference.
++    exp = _load_module()
++    artifact_path = tmp_path / "artifact.json"
++
++    artifact = exp.run(
++        artifact_path=artifact_path,
++        corpus_path=tmp_path / "corpus.jsonl",
++        pool_path=tmp_path / "missing_pool.json.gz",
++        checkpoint_path=tmp_path / "missing_checkpoint.json",
++        hardened_gate_path=tmp_path / "missing_4187.json",
++        cached_pair_fn=lambda: None,
++    )
++
++    exp.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_model_not_cached_sota_gguf"
++    assert artifact["no_closed_weight_call"] is True
++    assert artifact["local_induction_rate"]["total"] == 0
++    assert artifact_path.exists()
++
++
++def test_req_verify_4188_hardened_replay_and_corpus(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4188: local demo-perfect programs drive hardened gate and corpus banking.
++    exp = _load_module()
++    pool_path = tmp_path / "pool.json.gz"
++    checkpoint_path = tmp_path / "checkpoint.json"
++    hardened_path = tmp_path / "experiment_4187.json"
++    artifact_path = tmp_path / "artifact.json"
++    corpus_path = tmp_path / "corpus.jsonl"
++    _write_pool(pool_path, _synthetic_entries())
++    _write_checkpoint(checkpoint_path)
++    hardened_path.write_text(json.dumps({"honest_verdict": "complete: hardened"}), encoding="utf-8")
++
++    artifact = exp.run(
++        artifact_path=artifact_path,
++        corpus_path=corpus_path,
++        pool_path=pool_path,
++        checkpoint_path=checkpoint_path,
++        hardened_gate_path=hardened_path,
++        cached_pair_fn=_cached_pair,
++    )
++
++    exp.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("success:")
++    assert artifact["local_induction_rate"] == {
++        "demo_perfect": 2,
++        "total": 3,
++        "rate": 0.6667,
++        "codex_reference": {"demo_perfect": 29, "total": 31, "rate": 0.9355},
++    }
++    assert artifact["sovereign_pool_pass2"]["TRM_VOTE"] == 0.3333
++    assert artifact["sovereign_pool_pass2"]["LOCAL_HARDENED_GATE"] == 0.6667
++    assert artifact["sovereign_pool_pass2"]["recovered"] == 1
++    assert artifact["sovereign_pool_pass2"]["lost"] == 0
++    assert artifact["self_distillation_corpus_size"] == 2
++    assert artifact["no_closed_weight_call"] is True
++    assert artifact["model_specs"]["generator_hf_id"] == "unsloth/Qwen3.6-35B-A3B-GGUF"
++    lines = [json.loads(line) for line in corpus_path.read_text(encoding="utf-8").splitlines()]
++    assert [line["task"] for line in lines] == ["recover", "vote_keeps"]
++    assert all(line["verifier_label"] == "demo_perfect" for line in lines)
++    assert all("correct" not in line and "test_output" not in line for line in lines)
++
++
++def test_req_verify_4188_rejects_schema_poison(tmp_path: Path) -> None:
++    # REQ-VERIFY-4188: no_closed_weight_call must remain a bare bool.
++    exp = _load_module()
++    artifact = exp.blocked_artifact(
++        verdict="blocked_model_not_cached_sota_gguf",
++        preconditions=[{"resource": "sota_gguf_pair_cached", "available": False}],
++        duration_s=0.1,
++    )
++    artifact["no_closed_weight_call"] = "true"
++    with pytest.raises(ValueError, match="no_closed_weight_call"):
++        exp.validate_artifact(artifact)
++
++
++def test_req_verify_4188_helper_edges_and_error_branches(tmp_path: Path) -> None:
++    # REQ-VERIFY-4188: deterministic helpers reject unsafe code and malformed replay inputs.
++    exp = _load_module()
++
++    assert exp._numpy_only_import("numpy").__name__ == "numpy"
++    with pytest.raises(ImportError):
++        exp._numpy_only_import("os")
++    assert exp.safe_transform_from_code("def transform(grid):\n    return open('x')\n") is None
++    assert exp.safe_transform_from_code("def transform(:\n") is None
++    assert exp.safe_transform_from_code("x = 1\n") is None
++    assert exp.safe_transform_from_code("def transform(grid):\n    return 99\n")([[1]]) is None
++    assert (
++        exp.safe_transform_from_code("def transform(grid):\n    raise RuntimeError('boom')\n")(
++            [[1]]
++        )
++        is None
++    )
++    assert exp._sample_draw_index({"draw_index": True}) == 0
++    assert exp._to_grid_list(None) is None
++    assert exp._to_grid_list([1, 2, 3]) is None
++
++    bad_pool = tmp_path / "bad_pool.json.gz"
++    with gzip.open(bad_pool, "wt", encoding="utf-8") as handle:
++        json.dump({"entries": {}}, handle)
++    with pytest.raises(ValueError, match="entries list"):
++        exp._load_pool(bad_pool)
++
++    bad_checkpoint = tmp_path / "bad_checkpoint.json"
++    bad_checkpoint.write_text(json.dumps({"tasks": []}), encoding="utf-8")
++    with pytest.raises(ValueError, match="tasks map"):
++        exp._load_checkpoint(bad_checkpoint)
++
++    assert exp._gguf_pair_available([{"model_path": "one.gguf"}]) is False
++    assert exp._select_generator_spec(
++        [
++            {"name": "Gemma", "hf_id": "gemma", "model_path": "g.gguf"},
++            {
++                "name": "Qwen3.6-35B-A3B",
++                "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++                "model_path": "q.gguf",
++            },
++        ],
++        checkpoint_model=None,
++    )["name"] == "Qwen3.6-35B-A3B"
++    assert exp._select_generator_spec(
++        [{"name": "Only", "hf_id": "only", "model_path": "only.gguf"}],
++        checkpoint_model="missing",
++    )["name"] == "Only"
++    assert exp._blocker([{"resource": "sota_gguf_pair_cached", "available": True}]) == (
++        "blocked_arc1_candidate_pool_missing"
++    )
++    assert exp._blocker(
++        [
++            {"resource": "sota_gguf_pair_cached", "available": True},
++            {"resource": "arc1_candidate_pool", "available": True},
++            {"resource": "hardened_gap4_gate_artifact", "available": False},
++        ]
++    ) == "blocked_hardened_gap4_gate_missing"
++
++    duplicate_records, best_fit = exp._verified_records_for_task(
++        "dup",
++        [_demo(1, 2)],
++        [
++            {"code": "", "draw_index": 0},
++            {"code": "import os\ndef transform(grid):\n    return grid\n", "draw_index": 1},
++            _sample("dup", PLUS_ONE, draw_index=2),
++            _sample("dup", PLUS_ONE, draw_index=3),
++        ],
++    )
++    assert len(duplicate_records) == 1
++    assert best_fit == 1.0
++
++    entries = _synthetic_entries()
++    with pytest.raises(ValueError, match="length mismatch"):
++        exp.score_hardened_gate(entries, [])
++    with pytest.raises(ValueError, match="task mismatch"):
++        exp.score_hardened_gate(
++            [entries[0]],
++            [{"task": "other", "demo_fit": 1.0, "pred_grid": [[6]]}],
++        )
++
++    empty_corpus = tmp_path / "empty.jsonl"
++    exp._write_corpus(empty_corpus, [])
++    assert empty_corpus.read_text(encoding="utf-8") == ""
++    assert exp._file_sha(tmp_path / "missing.txt") is None
++    assert exp._verdict(0.1, 0.3, 0.5, 0).startswith("complete:")
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("honest_verdict", "done", "terminal prefix"),
++        ("no_closed_weight_call", False, "must be true"),
++        ("self_distillation_corpus_size", True, "bare int"),
++        ("random_seed", True, "bare int"),
++        ("local_induction_rate", [], "must be a dict"),
++        ("preconditions_checked", {}, "must be a list"),
++        ("reproducibility_checksum", 123, "must be a string"),
++        ("duration_s", 1, "bare float"),
++        ("inference_substrate", 123, "must be a string"),
++    ],
++)
++def test_req_verify_4188_validate_rejects_typed_fields(
++    field: str,
++    value: Any,
++    message: str,
++) -> None:
++    # REQ-VERIFY-4188: terminal artifacts keep bare typed schema fields.
++    exp = _load_module()
++    artifact = exp.blocked_artifact(
++        verdict="blocked_model_not_cached_sota_gguf",
++        preconditions=[{"resource": "sota_gguf_pair_cached", "available": False}],
++        duration_s=0.1,
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        exp.validate_artifact(artifact)
++
++
++def test_req_verify_4188_validate_rejects_missing_field() -> None:
++    # REQ-VERIFY-4188: every required artifact field must be present.
++    exp = _load_module()
++    with pytest.raises(ValueError, match="missing required field"):
++        exp.validate_artifact({})
+-- 
+2.55.0
+

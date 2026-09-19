@@ -1,0 +1,69 @@
+From ec54597a9d98871329867148c68355a65aef8d4b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 20:42:37 -0400
+Subject: [PATCH 05134/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                      |  2 +-
+ ops/conductor-log.md                              |  1 +
+ ops/conductor-state.json                          |  2 +-
+ ...experiment_5057_gate_state_preflight_v465.json | 15 ++++++++++++++-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d606bcd1c5..75f71ef981 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-07-01T00:27:04Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-07-01T00:42:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9d8db982c3..b9a241fde3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9686,3 +9686,4 @@ The contro |
+ | 2026-07-01 00:08 UTC | Plan milestone 2026.06.465 | OK | 13 tasks proposed |
+ | 2026-07-01 00:11 UTC | Milestone 2026.06.465 activated | OK | 13 tasks queued |
+ | 2026-07-01 00:25 UTC | PHASE 0 transition -- archive .464, activate .465, | OK | 86 passed, 1 warning in 6.95s |
++| 2026-07-01 00:40 UTC | PHASE A1 preflight -- split SOTA model readiness,  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index add6d0b1f9..9729ef5e22 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 31, "phase": "iteration_start", "started_at": "2026-07-01T00:27:04Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 32, "phase": "iteration_start", "started_at": "2026-07-01T00:42:36Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5057_gate_state_preflight_v465.json b/results/experiment_5057_gate_state_preflight_v465.json
+index c04709d9b4..40db234afc 100644
+--- a/results/experiment_5057_gate_state_preflight_v465.json
++++ b/results/experiment_5057_gate_state_preflight_v465.json
+@@ -133,5 +133,18 @@
+       "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+       "role": "middle_moe"
+     }
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.009395 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
++    }
+   ]
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

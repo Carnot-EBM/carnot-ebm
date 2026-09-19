@@ -1,0 +1,75 @@
+From 552330fab4331a4ef26a82fce8604762a2c9c12e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:38:50 -0400
+Subject: [PATCH 10150/11362] [conductor] Pre-gate block: Oracle-distinct
+ structural plan energy
+
+1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.proposal_corpus_ready (upstream artifact not found for task id 'exp6691-sota-planning-proposal-corpus')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                        | 2 +-
+ ops/conductor-heartbeat.json                        | 2 +-
+ ops/conductor-log.md                                | 2 ++
+ ops/conductor-state.json                            | 2 +-
+ results/experiment_6692_structural_plan_energy.json | 4 ++--
+ 5 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 25bbe686a5..02ab07b9fb 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:36:47Z"
++ "last_scan_utc": "2026-08-28T06:38:50Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c35ea5e975..fe5f9f5507 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-08-28T06:36:46Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-08-28T06:38:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 109f474293..99a788b8e7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16678,3 +16678,5 @@ code |
+ | 2026-08-28 06:34 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
+ | 2026-08-28 06:34 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
+ | 2026-08-28 06:36 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
++| 2026-08-28 06:36 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
++| 2026-08-28 06:38 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index eae7fb453f..20239de33d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 20, "phase": "iteration_start", "started_at": "2026-08-28T06:36:46Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 21, "phase": "iteration_start", "started_at": "2026-08-28T06:38:49Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6692_structural_plan_energy.json b/results/experiment_6692_structural_plan_energy.json
+index 765a09d423..be265806cb 100644
+--- a/results/experiment_6692_structural_plan_energy.json
++++ b/results/experiment_6692_structural_plan_energy.json
+@@ -2,8 +2,8 @@
+   "experiment": 6692,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-28",
+-  "started_at": "2026-08-28T06:36:47.210540+00:00",
+-  "finished_at": "2026-08-28T06:36:47.210540+00:00",
++  "started_at": "2026-08-28T06:38:50.556907+00:00",
++  "finished_at": "2026-08-28T06:38:50.556907+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Oracle-distinct structural plan energy",
+-- 
+2.55.0
+

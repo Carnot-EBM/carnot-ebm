@@ -1,0 +1,622 @@
+From 8c795d2e685f70ebcbc14d6a4777b9a363316b5e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 17:45:59 -0400
+Subject: [PATCH 00923/11362] [outer-loop] offline ARC-AGI-3: action-pruner
+ (object_click) = 0/183, same as random floor
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Added an object-aware exploration policy (verifier-as-action-pruner: click OBJECT centroids
+via connected-components perception instead of random pixels; cycle keyboard actions). Offline
+air-gapped over 25 games: 0/183 levels, identical to the random floor. It survives marginally
+longer (4 games to budget vs random's 2 -> slightly fewer GAME_OVERs) but solves nothing.
+
+HONEST FINDING (sharpens the competition architecture): action-pruning/perception alone does
+NOT solve ARC-AGI-3 — solving requires INDUCING each game's rule, which the verifier does not
+do. Confirms the recurring boundary on the live games: verifier PRUNES (where/efficiency), a
+policy/GENERATOR must INDUCE (what/accuracy). Next load-bearing piece = a rule-inducing policy
+(LLM-based reasoning agent and/or learned), with the verifier as the efficiency layer (prune
+its action space, route, avoid game-over).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_offline_eval_object_click.json | 505 ++++++++++++++++++++
+ scripts/experiments/arc3_offline_eval.py    |  69 ++-
+ 2 files changed, 573 insertions(+), 1 deletion(-)
+ create mode 100644 results/arc3_offline_eval_object_click.json
+
+diff --git a/results/arc3_offline_eval_object_click.json b/results/arc3_offline_eval_object_click.json
+new file mode 100644
+index 0000000000..2a6215993f
+--- /dev/null
++++ b/results/arc3_offline_eval_object_click.json
+@@ -0,0 +1,505 @@
++{
++  "ACCURACY_solve_rate": 0.0,
++  "ACCURACY_total_levels_solved": 0,
++  "ACCURACY_total_win_levels": 183,
++  "EFFICIENCY_mean_action_ratio_on_solved": null,
++  "budget_cap": 3000,
++  "budget_factor": 1.5,
++  "duration_s": 8.3,
++  "experiment": "arc3_offline_eval",
++  "games_with_any_progress": 0,
++  "gate_note": "Offline, air-gapped. This is the number the quota-gate compares: only go ONLINE when ACCURACY_total_levels_solved (then EFFICIENCY) beats BOTH the TRM-agent baseline AND our best prior submitted Carnot run.",
++  "honest_verdict": "complete: arc3_offline_object_click_levels0of183_games_with_progress0_meaneffNone",
++  "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
++  "n_games": 25,
++  "no_llm_used": true,
++  "per_game": [
++    {
++      "actions_used": 130,
++      "baseline_actions": [
++        78,
++        175,
++        179,
++        230,
++        96,
++        54,
++        67
++      ],
++      "budget": 1318,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "g50t-5849a774",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 7
++    },
++    {
++      "actions_used": 60,
++      "baseline_actions": [
++        22,
++        33,
++        51,
++        26,
++        52,
++        49
++      ],
++      "budget": 349,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "r11l-495a7899",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 129,
++      "baseline_actions": [
++        22,
++        123,
++        73,
++        84,
++        96,
++        192,
++        186
++      ],
++      "budget": 1164,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "ls20-9607627b",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 7
++    },
++    {
++      "actions_used": 1122,
++      "baseline_actions": [
++        32,
++        50,
++        75,
++        37,
++        89,
++        159,
++        233,
++        73
++      ],
++      "budget": 1122,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "ar25-0c556536",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 64,
++      "baseline_actions": [
++        21,
++        48,
++        44,
++        38,
++        33,
++        87,
++        86,
++        131,
++        163
++      ],
++      "budget": 976,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "bp35-0a0ad940",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 9
++    },
++    {
++      "actions_used": 35,
++      "baseline_actions": [
++        22,
++        42,
++        26,
++        115,
++        36,
++        31,
++        8,
++        40,
++        41
++      ],
++      "budget": 541,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "su15-1944f8ab",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 9
++    },
++    {
++      "actions_used": 177,
++      "baseline_actions": [
++        17,
++        38,
++        31,
++        16,
++        41,
++        60,
++        26,
++        159
++      ],
++      "budget": 582,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "lp85-305b61c3",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 30,
++      "baseline_actions": [
++        39,
++        58,
++        25,
++        148,
++        96,
++        152
++      ],
++      "budget": 777,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "sp80-589a99af",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 128,
++      "baseline_actions": [
++        54,
++        58,
++        40,
++        45,
++        71,
++        146
++      ],
++      "budget": 621,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "tr87-cd924810",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 100,
++      "baseline_actions": [
++        28,
++        109,
++        51,
++        51,
++        33,
++        132,
++        326
++      ],
++      "budget": 1095,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "ka59-38d34dbb",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 7
++    },
++    {
++      "actions_used": 200,
++      "baseline_actions": [
++        71,
++        119,
++        183,
++        98,
++        368,
++        68,
++        79,
++        442,
++        415
++      ],
++      "budget": 2764,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "wa30-ee6fef47",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 9
++    },
++    {
++      "actions_used": 50,
++      "baseline_actions": [
++        7,
++        18,
++        44,
++        61,
++        131,
++        34,
++        152
++      ],
++      "budget": 670,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "vc33-5430563c",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 7
++    },
++    {
++      "actions_used": 61,
++      "baseline_actions": [
++        32,
++        72,
++        26,
++        40,
++        30,
++        55,
++        62
++      ],
++      "budget": 475,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "tn36-ef4dde99",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 7
++    },
++    {
++      "actions_used": 64,
++      "baseline_actions": [
++        32,
++        81,
++        60,
++        71,
++        205,
++        148,
++        244,
++        109,
++        164,
++        225
++      ],
++      "budget": 2008,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "lf52-271a04aa",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 10
++    },
++    {
++      "actions_used": 75,
++      "baseline_actions": [
++        29,
++        54,
++        85,
++        300,
++        208,
++        113
++      ],
++      "budget": 1183,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "cn04-2fe56bfb",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 100,
++      "baseline_actions": [
++        26,
++        42,
++        86,
++        108,
++        189,
++        139,
++        424,
++        241
++      ],
++      "budget": 1882,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "re86-8af5384d",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 151,
++      "baseline_actions": [
++        30,
++        111,
++        203,
++        26,
++        500,
++        237
++      ],
++      "budget": 1660,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "m0r0-492f87ba",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 319,
++      "baseline_actions": [
++        18,
++        28,
++        18,
++        19,
++        31,
++        23,
++        58,
++        18
++      ],
++      "budget": 319,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "sb26-7fbdac44",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 50,
++      "baseline_actions": [
++        20,
++        89,
++        106,
++        54,
++        162,
++        38,
++        86,
++        83
++      ],
++      "budget": 957,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "s5i5-18d95033",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 128,
++      "baseline_actions": [
++        59,
++        102,
++        67,
++        98,
++        324,
++        578
++      ],
++      "budget": 1842,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "dc22-fdcac232",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 1605,
++      "baseline_actions": [
++        61,
++        177,
++        101,
++        103,
++        230,
++        181,
++        125,
++        92
++      ],
++      "budget": 1605,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "sk48-d8078629",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 8
++    },
++    {
++      "actions_used": 50,
++      "baseline_actions": [
++        19,
++        16,
++        34,
++        42,
++        123,
++        80,
++        14,
++        23,
++        111
++      ],
++      "budget": 693,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "tu93-0768757b",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 9
++    },
++    {
++      "actions_used": 100,
++      "baseline_actions": [
++        55,
++        8,
++        41,
++        21,
++        23,
++        23
++      ],
++      "budget": 256,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "cd82-fb555c5d",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 203,
++      "baseline_actions": [
++        36,
++        6,
++        32,
++        83,
++        143,
++        50
++      ],
++      "budget": 525,
++      "final_state": "GameState.GAME_OVER",
++      "game_id": "sc25-635fd71a",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    },
++    {
++      "actions_used": 312,
++      "baseline_actions": [
++        43,
++        12,
++        23,
++        28,
++        65,
++        37
++      ],
++      "budget": 312,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "ft09-0d8bbf25",
++      "levels_solved": 0,
++      "per_level_action_ratio": [],
++      "per_level_actions": [],
++      "win_levels": 6
++    }
++  ],
++  "policy": "object_click",
++  "random_seed": 0,
++  "submitted_to_leaderboard": false,
++  "title": "arc3_offline_eval_object_click"
++}
+diff --git a/scripts/experiments/arc3_offline_eval.py b/scripts/experiments/arc3_offline_eval.py
+index d5a711911c..3722c2d687 100644
+--- a/scripts/experiments/arc3_offline_eval.py
++++ b/scripts/experiments/arc3_offline_eval.py
+@@ -43,7 +43,74 @@ def random_policy(frame, ctx, rng):
+     return by_id.get(a_int, GameAction.ACTION1), data
+ 
+ 
+-POLICIES = {"random": random_policy}
++def _objects(frame):
++    """Connected non-background components -> candidate click targets (the action-pruner).
++    Returns list of (y, x) representative cells, one per object. Pure perception, no induction."""
++    import numpy as np
++    try:
++        arr = np.array(frame.frame)
++        if arr.ndim == 3:
++            arr = arr[-1]
++    except Exception:
++        return []
++    vals, counts = np.unique(arr, return_counts=True)
++    bg = int(vals[counts.argmax()])
++    mask = arr != bg
++    if not mask.any():
++        return []
++    # simple 4-neighbour flood-fill labelling (no scipy dependency)
++    h, w = arr.shape
++    seen = np.zeros_like(mask, dtype=bool)
++    targets = []
++    for i in range(h):
++        for j in range(w):
++            if mask[i, j] and not seen[i, j]:
++                stack = [(i, j)]
++                seen[i, j] = True
++                cells = []
++                while stack:
++                    y, x = stack.pop()
++                    cells.append((y, x))
++                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                        ny, nx = y + dy, x + dx
++                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
++                            seen[ny, nx] = True
++                            stack.append((ny, nx))
++                cy = sum(c[0] for c in cells) // len(cells)
++                cx = sum(c[1] for c in cells) // len(cells)
++                targets.append((cy, cx))
++    return targets
++
++
++def object_click_policy(frame, ctx, rng):
++    """Verifier-as-action-pruner: on click games, click OBJECT centroids (round-robin) instead
++    of random pixels; on keyboard games, cycle action types systematically. Pure perception +
++    structured exploration — NO rule induction (that's the generator's job, TBD)."""
++    from arcengine.enums import GameAction
++    by_id = {a.value: a for a in GameAction}
++    av = list(getattr(frame, "available_actions", []) or [])
++    if not av:
++        return None, None
++    mem = ctx.setdefault("mem", {"obj_i": 0, "kb_i": 0})
++    if 6 in av:  # click action available -> click an object, not a random pixel
++        objs = _objects(frame)
++        if objs:
++            y, x = objs[mem["obj_i"] % len(objs)]
++            mem["obj_i"] += 1
++            # small jitter within the object's neighbourhood
++            return GameAction.ACTION6, {"x": int(x), "y": int(y)}
++        # no objects -> fall back to a random click
++        return GameAction.ACTION6, {"x": rng.randrange(ctx["grid_w"]), "y": rng.randrange(ctx["grid_h"])}
++    # keyboard-only: cycle through the available non-reset actions systematically
++    kb = [a for a in av if a != 0]
++    if kb:
++        a_int = kb[mem["kb_i"] % len(kb)]
++        mem["kb_i"] += 1
++        return by_id.get(a_int, GameAction.ACTION1), None
++    return by_id.get(rng.choice(av), GameAction.ACTION1), None
++
++
++POLICIES = {"random": random_policy, "object_click": object_click_policy}
+ 
+ 
+ def _grid_dims(frame):
+-- 
+2.55.0
+

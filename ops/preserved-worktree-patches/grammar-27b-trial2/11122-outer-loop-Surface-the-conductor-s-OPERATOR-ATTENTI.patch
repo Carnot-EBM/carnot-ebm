@@ -1,0 +1,220 @@
+From 763a1b18ff14a6e801a339644e69b0531cda88d9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 21:15:35 -0400
+Subject: [PATCH 11122/11171] [outer-loop] Surface the conductor's
+ OPERATOR-ATTENTION rows on the dashboard
+
+The run sentinel is report-only by design: 'a false stop is worse than a slow
+human'. So its findings need a person, and they were written only to
+ops/conductor-log.md, which the hourly check does not read.
+
+At 00:04Z it named an orphaned llama-server holding 21.9 GB across both GPUs
+on the conductor's own port. At 00:15Z the same orphan was found and killed by
+hand, re-derived from scratch, while the escalation naming it sat unread. The
+guard had fired 12 times before and was acted on once, by accident. A
+detection nobody reads is a detection that did not happen.
+
+Every kind is named with its count and none is truncated. That clause is
+load-bearing rather than tidy: the orphan was 1 row of 18 and the other 17
+were one routine kind, so a top-kind-only line would have hidden precisely the
+row worth seeing. A mutation proves it.
+
+Rejected: making the sentinel kill the orphan. Its docstring argues the
+opposite and that argument is sound; the gap was in reading, not in reaping.
+
+6 tests, 3/3 mutations RED with byte-identical restores. Verified on the live
+log: attention AUDIT_FINDING_UNTRIAGED=17 ORPHANED_LLAMA_SERVER=1.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   | 27 ++++++
+ scripts/outer_loop_dashboard.py               | 37 +++++++++
+ ...outer_loop_dashboard_attention_20260905.py | 82 +++++++++++++++++++
+ 3 files changed, 146 insertions(+)
+ create mode 100644 tests/python/test_outer_loop_dashboard_attention_20260905.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 23ff6c494c..d9c23fa714 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10003,6 +10003,33 @@ across both: 10,542 MiB on GPU 0 and 11,364 MiB on GPU 1. The first misreport wa
+ hand in commit bd08d8d071, and the prose written afterwards did not prevent the second. That is
+ why this is a check and not a rule.
+ 
++**SCENARIO-INFRA-6840-C: the conductor's OPERATOR-ATTENTION escalations appear on the
++dashboard.**
++
++The dashboard SHALL count the conductor's `OPERATOR-ATTENTION: <KIND>` rows for the current UTC
++day and print one `attention` line naming EVERY kind with its count. It SHALL NOT truncate to the
++most frequent kind, and SHALL NOT count a prior day's rows. When the conductor escalated nothing,
++no line is printed.
++
++Origin: 2026-09-05. `scripts/conductor_run_sentinel.py` is report-only by design — its own
++docstring states "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human." Its
++findings therefore require a human, and they were written only to `ops/conductor-log.md`, which
++the hourly check does not read. At 00:04Z the sentinel named an orphaned `llama-server` holding
++10,554 MiB on GPU 0 and 11,376 MiB on GPU 1, reparented to init, listening on the conductor's own
++E3 port. At 00:15Z the same orphan was found and killed by hand, re-derived from nothing, while
++the escalation naming it sat unread. The guard had fired 12 times before that and was acted on
++once, by accident.
++
++The no-truncation clause is load-bearing: the orphan warning was 1 row out of 18 that day, and 17
++of the other rows were a single routine kind. A line showing only the most frequent kind would
++have hidden exactly the row that mattered.
++
++Implementation status: implemented 2026-09-05
++(`scripts/outer_loop_dashboard.py:attention_kinds`, `:attention_line`;
++`tests/python/test_outer_loop_dashboard_attention_20260905.py`, 6 tests, 3/3 mutations RED with
++byte-identical restores). Verified firing on the live log:
++`attention   AUDIT_FINDING_UNTRIAGED=17  ORPHANED_LLAMA_SERVER=1`.
++
+ Implementation status: implemented 2026-09-04
+ (`scripts/outer_loop_dashboard.py:gpu_indices_for`, `:gpu_span_label`;
+ `tests/python/test_outer_loop_dashboard_gpu_span_20260904.py`, 8 tests, 3/3 mutations RED with
+diff --git a/scripts/outer_loop_dashboard.py b/scripts/outer_loop_dashboard.py
+index c83cd28413..2cab48788c 100755
+--- a/scripts/outer_loop_dashboard.py
++++ b/scripts/outer_loop_dashboard.py
+@@ -87,6 +87,39 @@ def outcome_mix(day: str) -> dict[str, int]:
+     return counts
+ 
+ 
++def attention_kinds(day: str) -> list[tuple[str, int]]:
++    """The conductor's OPERATOR-ATTENTION escalations for one day, by kind, most frequent first.
++
++    WHY THIS EXISTS. `scripts/conductor_run_sentinel.py` is report-only by design -- its own
++    docstring says "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human."
++    So its findings need a human, and they were written only to `ops/conductor-log.md`, which the
++    hourly check does not grep. On 2026-09-05 the sentinel named an orphaned llama-server holding
++    21.9 GB across both GPUs at 00:04Z; the same orphan was then found and killed by hand at
++    00:15Z, having been re-derived from scratch. The escalation had been sitting in the log the
++    whole time. A detection nobody reads is a detection that did not happen.
++    """
++
++    log = REPO / "ops" / "conductor-log.md"
++    if not log.exists():
++        return []
++    counts: dict[str, int] = {}
++    for line in log.read_text(errors="replace").splitlines():
++        if not line.startswith(f"| {day}"):
++            continue
++        m = re.search(r"\|\s*OPERATOR-ATTENTION:\s*([A-Z_]+)\s*\|", line)
++        if m:
++            counts[m.group(1)] = counts.get(m.group(1), 0) + 1
++    return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
++
++
++def attention_line(kinds: list[tuple[str, int]]) -> str:
++    """One line, or empty when the conductor escalated nothing today."""
++
++    if not kinds:
++        return ""
++    return "attention   " + "  ".join(f"{k}={n}" for k, n in kinds)
++
++
+ def flag_states(names: list[str]) -> dict[str, str]:
+     """Flag-ledger states. An `unevaluated` flag is shipped-but-untested -- a coverage gap,
+     work that cannot pay off yet. An `off_measured` flag was tested and did not help -- a
+@@ -470,6 +503,10 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
+     if rows:
+         L.append("gpu         " + " | ".join(rows))
+ 
++    att = attention_line(attention_kinds(f"{now:%Y-%m-%d}"))
++    if att:
++        L.append(att)
++
+     for name, pid, receipt in jobs or []:
+         if pid_alive(pid):
+             worker = gpu_worker_for(pid)
+diff --git a/tests/python/test_outer_loop_dashboard_attention_20260905.py b/tests/python/test_outer_loop_dashboard_attention_20260905.py
+new file mode 100644
+index 0000000000..e990a75b71
+--- /dev/null
++++ b/tests/python/test_outer_loop_dashboard_attention_20260905.py
+@@ -0,0 +1,82 @@
++"""Spec: REQ-INFRA-6840, SCENARIO-INFRA-6840-C
++
++The dashboard surfaces the conductor's OPERATOR-ATTENTION escalations for today.
++
++INCIDENT 2026-09-05. `scripts/conductor_run_sentinel.py` is report-only by design: its own
++docstring says "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human." Its
++findings therefore need a human to act. They were written only to `ops/conductor-log.md`, which
++the hourly check does not read.
++
++At 00:04Z the sentinel named an orphaned `llama-server` holding 21.9 GB across both GPUs on the
++conductor's own port. At 00:15Z the same orphan was found and killed by hand, re-derived from
++nothing, while the escalation naming it sat in the log. A detection nobody reads is a detection
++that did not happen.
++
++The guard fired 12 times before this and was acted on once, by accident.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++import pytest
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++import outer_loop_dashboard as dash  # noqa: E402
++
++_LOG = """| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 1 |
++| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | a.py OPEN 1 days |
++| 2026-09-05 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | b.py OPEN 1 days |
++| 2026-09-04 23:00 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | yesterday, not today |
++| 2026-09-05 00:06 UTC | Some ordinary task | OK | 12 passed |
++"""
++
++
++@pytest.fixture()
++def logged(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
++    """Point REPO at tmp_path so the test never reads the real conductor log.
++
++    A test that reads `ops/conductor-log.md` would pass or fail on whatever the conductor
++    happened to be doing, which is not a test.
++    """
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "ops" / "conductor-log.md").write_text(_LOG)
++    monkeypatch.setattr(dash, "REPO", tmp_path)
++    return tmp_path
++
++
++def test_escalations_are_counted_by_kind(logged: Path) -> None:
++    assert dash.attention_kinds("2026-09-05") == [
++        ("AUDIT_FINDING_UNTRIAGED", 2),
++        ("ORPHANED_LLAMA_SERVER", 1),
++    ]
++
++
++def test_yesterdays_escalation_is_not_counted_today(logged: Path) -> None:
++    """The orphan warning repeats daily; a stale count would read as a fresh one."""
++    kinds = dict(dash.attention_kinds("2026-09-05"))
++    assert kinds["ORPHANED_LLAMA_SERVER"] == 1
++
++
++def test_an_ordinary_row_is_not_an_escalation(logged: Path) -> None:
++    assert all(k != "Some ordinary task" for k, _ in dash.attention_kinds("2026-09-05"))
++
++
++def test_a_quiet_day_produces_no_line(logged: Path) -> None:
++    assert dash.attention_kinds("2026-09-01") == []
++    assert dash.attention_line([]) == ""
++
++
++def test_the_line_names_every_kind_with_its_count() -> None:
++    line = dash.attention_line([("AUDIT_FINDING_UNTRIAGED", 17), ("ORPHANED_LLAMA_SERVER", 1)])
++    assert "ORPHANED_LLAMA_SERVER=1" in line
++    assert "AUDIT_FINDING_UNTRIAGED=17" in line
++
++
++def test_a_rare_kind_is_not_hidden_behind_a_common_one() -> None:
++    """The orphan warning is 1 of 18 rows. Truncating to the top kind would have hidden it."""
++    line = dash.attention_line([("AUDIT_FINDING_UNTRIAGED", 17), ("ORPHANED_LLAMA_SERVER", 1)])
++    assert "ORPHANED_LLAMA_SERVER" in line
+-- 
+2.55.0
+

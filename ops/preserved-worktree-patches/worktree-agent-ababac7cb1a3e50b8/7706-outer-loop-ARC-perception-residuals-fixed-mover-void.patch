@@ -1,0 +1,225 @@
+From 9bae599c41378304e13fdf01bbde49c4fe85b3b3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 19:37:53 -0400
+Subject: [PATCH 07706/11362] [outer-loop] ARC perception residuals fixed:
+ mover void-FP + under-exploration (REQ-ARC-WMTE-5833)
+
+- Adaptive exploration (pick next available action) -> all 8 games gather 50-60
+  transitions (was 8 on r11l/ft09).
+- Mover FP fixed via signal-strength bar (align>=0.7 over evidence>=4), not a
+  compactness heuristic (rigid same-color match dropped ls20's MORPHING avatar;
+  global density dropped avatars whose color is shared). Keeps sc25 (color-9,
+  0.92/47) + ls20 (color-9, 1.0/59); cn04 now surfaces a real marker piece
+  (color-8) instead of the color-0 void.
+- HUD still 3/3 confusers (bp35/lf52/tu93). Minor residuals: sc25 meter, tu93 token.
+
+9 unit tests + ruff + mypy clean. Next: end-to-end goal gate under detector perception.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/verifier_gaps.md                          | 16 ++++-
+ .../agentic/arc_entity_hud_perception.py      | 72 +++++++++----------
+ ...ion_detectors_realframe_gate_20260723.json | 22 +++---
+ 3 files changed, 60 insertions(+), 50 deletions(-)
+
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index b2c93d4f16..eaee269891 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2653,9 +2653,19 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   not just an area guard; (2) sc25's col-62/63 meter missed (0.63 change-rate, below the near-every-action
+   bar); (3) r11l/ft09 under-explored (8 transitions -- the fixed exploration plan is filtered by per-game
+   action availability; a harness gap, not a detector gap); (4) tu93 token mover not surfaced by the scripted
+-  moves. Next: fix (1)+(3), then the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal measurement under
+-  DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8 goal-correctness, then
+-  the execution/dynamics half for the navigate games.
++  moves.
++- **RESIDUALS (1)+(3) FIXED 2026-07-23 (same session).** (3) Exploration made ADAPTIVE (pick the next
++  pattern action that is actually available this frame) -> all 8 games now gather 50-60 transitions (was 8 on
++  r11l/ft09). (1) The mover FP was addressed by the SIGNAL-STRENGTH bar, not a compactness heuristic (two
++  heuristics -- rigid same-color blob match, then global density -- each mis-rejected a real avatar: the
++  same-color match drops ls20's MORPHING avatar, and global density drops an avatar whose color is shared
++  with other cells). Raising `align_min`>=0.7 over `min_evidence`>=4 keeps the strong avatar signal
++  (sc25 color-9 align 0.92/ev 47; ls20 color-9 align 1.0/ev 59) and drops the weak void drift; cn04 now
++  surfaces color-8, a REAL marker piece that moves, instead of the color-0 void. Remaining minor residuals:
++  (2) sc25 meter still not flagged (0.63 change-rate), and tu93's token mover not surfaced by the scripted
++  moves -- both minor and not blocking. Next: the END-TO-END gate -- re-run the REQ-ARC-WMTE-5832 goal
++  measurement under DETECTOR-produced perception (not hand-authored) to confirm it recovers the ~7/8
++  goal-correctness, then the execution/dynamics half for the navigate games.
+ 
+ ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
+ - status: open
+diff --git a/python/carnot/agentic/arc_entity_hud_perception.py b/python/carnot/agentic/arc_entity_hud_perception.py
+index 163a07bc2c..e395599174 100644
+--- a/python/carnot/agentic/arc_entity_hud_perception.py
++++ b/python/carnot/agentic/arc_entity_hud_perception.py
+@@ -195,40 +195,40 @@ def detect_hud_registers(
+     return bands
+ 
+ 
+-def _largest_blob_per_color(grid: np.ndarray) -> dict[int, ColorBlob]:
+-    """The biggest connected component of each color (connected_color_blobs already suppresses huge
+-    background fills). Using the LARGEST connected blob -- not the color's global centroid -- is what makes
+-    mover detection robust to a scattered non-entity color whose global centroid drifts as cells flicker."""
+-    out: dict[int, ColorBlob] = {}
+-    for b in connected_color_blobs(grid):
+-        cur = out.get(int(b.color))
+-        if cur is None or b.pixel_count > cur.pixel_count:
+-            out[int(b.color)] = b
+-    return out
++def _bounded_color_centroid(
++    grid: np.ndarray, color: int, *, max_area_fraction: float
++) -> Optional[tuple[float, float]]:
++    """Centroid of a color's cells if the color occupies at most `max_area_fraction` of the grid (an
++    entity, not a background-like fill). Global centroid -- not a rigid same-color blob match -- so a
++    MORPHING avatar (ls20 changes color as it moves) stays trackable on the transitions where the color is
++    present in both frames."""
++    ys, xs = np.nonzero(grid == color)
++    n = int(ys.size)
++    if n == 0 or n > max_area_fraction * grid.size:
++        return None
++    return (float(ys.mean()), float(xs.mean()))
+ 
+ 
+ def detect_mover(
+     transitions: list[Transition],
+     *,
+-    min_evidence: int = 2,
+-    align_min: float = 0.5,
++    min_evidence: int = 4,
++    align_min: float = 0.7,
+     max_shift: float = 4.0,
+     max_area_fraction: float = 0.15,
+-    min_density: float = 0.35,
+-    size_tol: float = 0.5,
+ ) -> Optional[Mover]:
+-    """Find the PLAYER: the color whose COMPACT connected blob translates RIGIDLY in the direction of the
+-    directional action (1-4) used. For each directional transition we match each non-background color's
+-    largest blob before -> after and score how well its centroid shift aligns with the action's unit vector,
+-    requiring a small real shift (~1 cell) and a size-preserving match (a rigid slide, not a recolor).
+-
+-    Two guards keep a non-entity color from masquerading as the player: (a) `max_area_fraction` excludes a
+-    color occupying too much of the grid (a void/background-like region), and (b) `min_density`
+-    (pixel_count / bbox_area) requires the blob to be COMPACT -- a real sprite fills its bounding box; a
+-    scattered set of flickering cells does not. Measured need: cn04's color-0 void was selected as the mover
+-    with alignment 1.0 under a global-centroid rule (its centroid drifts as the board changes); requiring a
+-    compact, rigidly-translating connected blob removes it while keeping the sc25/ls20 avatar (a dense
+-    sprite)."""
++    """Find the PLAYER: the color whose centroid consistently translates in the direction of the directional
++    action (1-4) used. For each directional transition and each entity-sized non-background color present in
++    both frames, we score how well its centroid shift aligns with the action's unit vector (dot of the unit
++    shift with the unit direction), requiring a small real shift (~1 cell, not a whole-board recolor). The
++    color with the strongest, best-supported alignment is the player.
++
++    Robustness comes from the SIGNAL STRENGTH bar, not a compactness heuristic: a real avatar slides with the
++    keys on nearly every directional action (measured align ~0.9-1.0, evidence 24-43 across sc25/ls20),
++    whereas a scattered non-entity color (cn04's color-0 void) only drifts incidentally (align ~0.55, low
++    evidence). Requiring `align_min`>=0.7 over `min_evidence`>=4 directional transitions keeps the avatars
++    and drops the void, without a density heuristic that mis-rejected real avatars whose color is shared with
++    other cells. Global centroid keeps a morphing avatar trackable."""
+     scores: dict[int, list[float]] = {}
+     for t in transitions:
+         d = _DIR.get(int(t.action))
+@@ -239,21 +239,17 @@ def detect_mover(
+         if before.shape != after.shape or not _frame_changed(before, after):
+             continue
+         bg = _background_color(before)
+-        area = before.size
+         dir_vec = np.asarray(d, dtype=float)
+         dir_unit = dir_vec / np.linalg.norm(dir_vec)
+-        lb = _largest_blob_per_color(before)
+-        la = _largest_blob_per_color(after)
+-        for color, bb in lb.items():
+-            if color == bg or bb.pixel_count > max_area_fraction * area:
++        for color in np.unique(before):
++            color = int(color)
++            if color == bg:
+                 continue
+-            bbox_area = bb.height * bb.width
+-            if bbox_area <= 0 or (bb.pixel_count / bbox_area) < min_density:
+-                continue  # scattered -> not a compact entity (kills the cn04 void FP)
+-            ab = la.get(color)
+-            if ab is None or abs(ab.pixel_count - bb.pixel_count) > size_tol * bb.pixel_count:
+-                continue  # no size-preserving match -> not a rigid slide
+-            shift = np.asarray(ab.centroid) - np.asarray(bb.centroid)
++            cb = _bounded_color_centroid(before, color, max_area_fraction=max_area_fraction)
++            ca = _bounded_color_centroid(after, color, max_area_fraction=max_area_fraction)
++            if cb is None or ca is None:
++                continue
++            shift = np.asarray(ca) - np.asarray(cb)
+             mag = float(np.linalg.norm(shift))
+             if mag < 0.3 or mag > max_shift:
+                 continue
+diff --git a/results/outer_loop_arc_perception_detectors_realframe_gate_20260723.json b/results/outer_loop_arc_perception_detectors_realframe_gate_20260723.json
+index 9edf7384ca..68d1b80d5a 100644
+--- a/results/outer_loop_arc_perception_detectors_realframe_gate_20260723.json
++++ b/results/outer_loop_arc_perception_detectors_realframe_gate_20260723.json
+@@ -8,7 +8,7 @@
+   "verifier_is_oracle": false,
+   "solve_provenance": "development_proxy",
+   "random_seed": 5833,
+-  "reproducibility_checksum": "sha256:e68bc6df0f530965afed0c10770b816919446162576e53b7f6103147b5791f73",
++  "reproducibility_checksum": "sha256:aebf1de5a766dca0a5a0ecc1224a05d38f6b4d20eddd143233c706b82be3645a",
+   "methodology_note": "Offline arcade stepping with a FIXED scripted exploration (deterministic, no LLM). Detectors use ONLY the agent's own observed transitions; source ground truth is used for offline judging only, never fed to the detectors. Public-game frames stepped for offline dev validation (authorized); never in the hidden submission.",
+   "per_game": [
+     {
+@@ -66,15 +66,15 @@
+       ],
+       "hud_bands": [],
+       "mover": {
+-        "color": 2,
+-        "alignment": 1.0,
+-        "evidence": 24
++        "color": 9,
++        "alignment": 0.92,
++        "evidence": 47
+       },
+       "ground_truth": {
+         "hud": "cols ~62/63 (mana/move meter)",
+         "player": "yes (avatar moves 1-4)"
+       },
+-      "perception_text": "PLAYER token (color 2) at row=20 col=29 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=30 col=62 size=120\n  #1 color=9 at row=20 col=13 size=14\n  #2 color=10 at row=20 col=14 size=16\n  #4 color=10 at row=20 col=40 size=8\n  #5 color=9 at row=20 col=42 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #8 color=0 at row=50 col=30 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4\n  #14 color=15 at row=54 col=18 size=4\n  #15 color=0 at row=55 col=25 size=9"
++      "perception_text": "PLAYER token (color 9) at row=20 col=13 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=0 at row=30 col=62 size=120\n  #2 color=10 at row=20 col=14 size=16\n  #3 color=2 at row=20 col=29 size=76\n  #4 color=10 at row=20 col=40 size=8\n  #6 color=3 at row=55 col=30 size=208\n  #7 color=2 at row=50 col=25 size=9\n  #8 color=0 at row=50 col=30 size=9\n  #9 color=2 at row=50 col=35 size=9\n  #10 color=3 at row=54 col=16 size=36\n  #11 color=2 at row=54 col=16 size=48\n  #12 color=15 at row=52 col=16 size=4\n  #13 color=15 at row=54 col=12 size=4"
+     },
+     {
+       "game": "tu93",
+@@ -115,12 +115,16 @@
+           "monotone_ratio": 0.0
+         }
+       ],
+-      "mover": null,
++      "mover": {
++        "color": 9,
++        "alignment": 1.0,
++        "evidence": 59
++      },
+       "ground_truth": {
+         "hud": "(none prominent)",
+         "player": "yes (avatar color ~9 moves 1-4)"
+       },
+-      "perception_text": "Other distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #3 color=9 at row=12 col=36 size=5\n  #4 color=9 at row=13 col=35 size=1\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #10 color=9 at row=48 col=41 size=15\n  #11 color=5 at row=58 col=6 size=76\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter)."
++      "perception_text": "PLAYER token (color 9) at row=12 col=36 -- it MOVES when you use actions 1/2/3/4.\nOther distinct objects (candidate targets):\n  #0 color=5 at row=26 col=2 size=208\n  #1 color=3 at row=35 col=35 size=892\n  #2 color=5 at row=12 col=36 size=43\n  #5 color=4 at row=38 col=30 size=100\n  #6 color=0 at row=32 col=21 size=3\n  #7 color=1 at row=32 col=20 size=1\n  #8 color=1 at row=33 col=21 size=1\n  #9 color=12 at row=46 col=41 size=10\n  #11 color=5 at row=58 col=6 size=76\n  #14 color=5 at row=62 col=38 size=112\n  #15 color=3 at row=62 col=21 size=34\n  #16 color=11 at row=62 col=42 size=50\nSTATUS/COUNTER bands to IGNORE for the goal (they change on every action; not the game board): row 62 (counter counter)."
+     },
+     {
+       "game": "cn04",
+@@ -141,7 +145,7 @@
+       "mover": {
+         "color": 8,
+         "alignment": 1.0,
+-        "evidence": 8
++        "evidence": 40
+       },
+       "ground_truth": {
+         "hud": "(none prominent)",
+@@ -188,5 +192,5 @@
+       "perception_text": "Other distinct objects (candidate targets):\n  #0 color=9 at row=4 col=6 size=36\n  #1 color=8 at row=4 col=14 size=36\n  #2 color=9 at row=4 col=22 size=36\n  #3 color=9 at row=4 col=40 size=36\n  #4 color=8 at row=4 col=48 size=36\n  #5 color=9 at row=4 col=56 size=36\n  #6 color=8 at row=12 col=6 size=36\n  #7 color=2 at row=10 col=12 size=4\n  #8 color=0 at row=10 col=14 size=4\n  #9 color=2 at row=12 col=16 size=8\n  #10 color=9 at row=12 col=22 size=36\n  #11 color=8 at row=12 col=40 size=36"
+     }
+   ],
+-  "duration_s": 2.81
++  "duration_s": 1.5
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From e7d4c4b19d569dc8843eb49360407a4e2fc46530 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 22:24:41 -0400
+Subject: [PATCH 02948/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 51894d112a..941b86982a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-06-20T02:15:09Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 45, "phase": "iteration_start", "last_beat": "2026-06-20T02:24:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 56f3d92582..14e7974c38 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8894,3 +8894,4 @@ c |
+ | 2026-06-20 01:36 UTC | PHASE A7 (ARC NORTH STAR; operator-only submit) -- | OK | 119 passed, 1 warning in 636.78s (0:10:36) |
+ | 2026-06-20 01:54 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 8.35s |
+ | 2026-06-20 02:13 UTC | PHASE B2 (RESERVED INFRA; the DURABLE FIX for the  | OK | 128 passed, 1 warning in 8.18s |
++| 2026-06-20 02:22 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 109 passed, 1 warning in 8.66s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1967fffe5f..7592022725 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 44, "phase": "iteration_start", "started_at": "2026-06-20T02:15:09Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 45, "phase": "iteration_start", "started_at": "2026-06-20T02:24:39Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

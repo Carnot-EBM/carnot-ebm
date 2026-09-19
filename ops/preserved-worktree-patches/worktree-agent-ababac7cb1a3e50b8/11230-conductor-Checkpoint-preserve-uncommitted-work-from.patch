@@ -1,0 +1,43 @@
+From 3f3e8e8d220cf7963ee99092626300d58e4dc7b0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 07:53:03 -0400
+Subject: [PATCH 11230/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5b91a0d3e0..53e26bf316 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-09-05T11:18:01Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-09-05T11:52:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 86cefb0874..12737554b6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17337,3 +17337,4 @@ code |
+ | 2026-09-05 10:49 UTC | Plan milestone 2026.09.615 | OK | 12 tasks proposed |
+ | 2026-09-05 10:52 UTC | Milestone 2026.09.615 activated | OK | 12 tasks queued |
+ | 2026-09-05 11:16 UTC | V615 source delta and exact task-contract prefligh | OK | 111 passed, 1 warning in 10.53s |
++| 2026-09-05 11:50 UTC | Task-linked phase, GPU, and runner receipt contrac | OK | 109 passed, 1 warning in 10.90s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 18858a2bc0..17fd92671a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 4, "phase": "iteration_start", "started_at": "2026-09-05T11:18:01Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 5, "phase": "iteration_start", "started_at": "2026-09-05T11:52:55Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

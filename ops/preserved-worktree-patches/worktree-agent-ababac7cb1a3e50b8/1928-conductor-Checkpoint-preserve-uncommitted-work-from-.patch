@@ -1,0 +1,43 @@
+From 6437a8118cd5d8b170916b53ee9ac5c2be0c55ea Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 06:29:28 -0400
+Subject: [PATCH 01928/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e95e31a68e..75dfac1924 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 35, "phase": "iteration_start", "last_beat": "2026-06-15T10:12:46Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-06-15T10:29:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3d63ef5319..5e1df9e54a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8535,3 +8535,4 @@ c |
+ | 2026-06-15 09:34 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 87 passed, 1 warning in 4.50s |
+ | 2026-06-15 09:54 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking w | OK | 87 passed, 1 warning in 7.04s |
+ | 2026-06-15 10:10 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 8.53s |
++| 2026-06-15 10:27 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | OK | 89 passed, 1 warning in 7.14s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 58c4fce07c..d22c5a0130 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 35, "phase": "iteration_start", "started_at": "2026-06-15T10:12:46Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 36, "phase": "iteration_start", "started_at": "2026-06-15T10:29:27Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

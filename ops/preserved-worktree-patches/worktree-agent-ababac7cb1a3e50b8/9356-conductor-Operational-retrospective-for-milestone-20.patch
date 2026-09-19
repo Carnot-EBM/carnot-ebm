@@ -1,0 +1,103 @@
+From ae3975795a07d54dd2ad10e75f843c3040db005c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 19 Aug 2026 15:36:55 -0400
+Subject: [PATCH 09356/11362] [conductor] Operational retrospective for
+ milestone 2026.08.556
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_556.json | 56 ++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_556.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 120a778cd0..dd2d5648d7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6213,3 +6213,10 @@ The critical path for milestone .250:
+ - theme: one long corpus workflow dominated execution under coarse reconstructed timing
+ - key result: the operational record ranks the compute tail but does not establish its phase-level cause, compute-period GPU efficiency, or parallel multi-model runner behavior
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.556
++
++- exp_range: exp6462-exp6468 (visible dependency-reference bounds only; the complete milestone range is not available)
++- theme: readiness-dependent corpus execution formed the operational tail under reconstructed timing
++- key result: the milestone record identifies the long compute path, but it cannot attribute phase costs, grade task-time GPU use, or show a missed parallel multi-model runner dispatch
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3213e71729..42ac5ba201 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17047,3 +17047,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-19: Independent unique-event CSL provenance and lifecycle audit v2 (✅ Complete) — honest_verdict=success: independent V556 unique-event CSL audit confirms eligible evidence; results/experiment_6470_independent_unique_event_csl_audit.json
+ - 2026-08-19: ARC generic safety-shield objective A/B without solve claim (✅ Complete) — honest_verdict=success: Exp6471 generic safety shield passed without a solve claim; results/experiment_6471_arc_generic_safety_shield_objective_ab.json
+ - 2026-08-19: V556 independent adversarial capstone and reconciliation (✅ Complete) — honest_verdict=complete: V556 capstone audit replayable; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false; results/experiment_6472_v556_adversarial_capstone.json
++- 2026-08-19: Operational retrospective for 2026.08.556: 11 experiments completed in 29.1 reconstructed minutes, and 6 were compute-bound. The 22.69-minute readiness-labelled corpus workflow set the tail, but the timing record does not isolate its phases. The locked task-idle field is false, the idle device snapshot is not linked to an active compute task, and no concurrency receipt supports a DualGPURunner finding. Add readiness-aware scheduling plus task-scoped phase, GPU, model-count, and runner receipts. Estimated savings: 0%, because this run has no measured counterfactual. Artifact: results/operational_retro_2026_08_556.json.
+diff --git a/results/operational_retro_2026_08_556.json b/results/operational_retro_2026_08_556.json
+new file mode 100644
+index 0000000000..6ed396cdcd
+--- /dev/null
++++ b/results/operational_retro_2026_08_556.json
+@@ -0,0 +1,56 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.556",
++  "generated_at": "2026-08-19T19:31:07Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 29.1,
++  "experiments_completed": 11,
++  "compute_bound_experiments_count": 6,
++  "slowest_experiments": [
++    {
++      "experiment": "Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2",
++      "duration_minutes": 22.69,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V556 primary-source freshness receipt",
++      "duration_minutes": 1.88,
++      "compute_bound": false
++    },
++    {
++      "experiment": "SOTA raw persistence and unique-event canary",
++      "duration_minutes": 1.77,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Prospective unique-event verifier-bounded continuous self-learning",
++      "duration_minutes": 1.72,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated on Exp6468 CSL readiness: unique-event corruption and restart replication",
++      "duration_minutes": 0.72,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 11 experiments in 29.1 minutes, including 6 compute-bound experiments. The 22.69-minute provenance-complete fixed-policy corpus v2 set the execution tail, while the locked task-level GPU-idle indicator remained false.",
++  "bottlenecks_identified": [
++    "The provenance-complete fixed-policy corpus v2 consumed 22.69 of 29.1 minutes. Its label identifies a canary-readiness dependency, but the data does not separate readiness wait, setup, inference, or persistence time.",
++    "Disk-mtime reconstruction ranks experiment duration but does not provide task-scoped phase or GPU telemetry. The cause of the compute tail and the efficiency of accelerator use therefore cannot be measured."
++  ],
++  "improvements_suggested": [
++    "Add a readiness-aware preflight that records gate evaluation separately and lets the scheduler run independent ready work while a dependency remains unresolved.",
++    "Record phase boundaries and task-scoped GPU samples from experiment start through completion so waiting time can be separated from accelerator work.",
++    "Record loaded-model concurrency and runner selection for each compute task. Select DualGPURunner only when two or more models run in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Separate readiness checks from measured execution and dispatch other ready work during unresolved gates.",
++    "Add experiment-linked phase timing and GPU duty-cycle receipts.",
++    "Add model-count and runner-selection receipts, with DualGPURunner routing for parallel multi-model work."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The available data identifies the tail but does not establish its internal cause, compute-period GPU efficiency, or parallel model loading. A defensible savings rate cannot be calculated from this single reconstructed run, so the estimate remains zero."
++}
+-- 
+2.55.0
+

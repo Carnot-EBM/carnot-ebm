@@ -1,0 +1,40 @@
+From 8c97b32442df13132a4698f62da55e7f9aac7901 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 10:32:26 -0400
+Subject: [PATCH 03971/11362] [outer-loop] known-issue: exp4729 (held-out
+ first-win SCORE) deterministically exceeds codex 4800s cap
+
+Watchdog (.435): PHASE A4 exp4729 FAILed 2x on the codex hard wall-clock cap (12:35, 13:58 UTC),
+3rd attempt running. The 3-fail-skip (MAX_FAILURES_PER_TASK=3) will retire it after the 3rd fail
+and advance to A5, but it burned ~4h and produced ~0 commits this window. Root cause: the
+held-out-proxy readiness script runs >4800s; codex kills it every time. Operator fix: scope it
+down / checkpoint-resume / route off codex. Planner: do not re-propose the full-proxy SCORE on
+codex without addressing the cap.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/known-issues.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index b2f8e15a1c..d6036596f1 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,14 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### 2026-06-25 (INFRASTRUCTURE / operator decision needed — outer-loop watchdog): exp4729 (held-out first-win SCORE) DETERMINISTICALLY exceeds the codex 4800s hard wall-clock cap
++
++**Observed (2 watchdogs, `.435):** PHASE A4 = `exp4729-a4` (`python/carnot/experiment_4729_held_out_first_win_readiness.py`, runs the held-out first-win proxy over the public games) FAILed at 12:35 and 13:58 UTC, both `Codex CLI error: Hard wall-clock cap after 4800s`, and was on a 3rd attempt at 14:27. The conductor's `MAX_FAILURES_PER_TASK=3` 3-fail-skip WILL retire it after the 3rd fail (~15:20 UTC) and advance to A5 — so it self-recovers, but it has burned ~3×80min = ~4h on one task and produced no artifact (the main reason `.435 had ~0 commits across the 12:35–14:30 window). Nothing blocking depends on its artifact (the E capstone aggregates whatever `4729_*.json` exists, if any).
++
++**Root cause:** the readiness script's full-proxy run is >4800s wall-clock; codex's per-task hard cap kills it every time. NOT a test bug, NOT fixable by the agent — it is a task-scope/runtime decision.
++
++**Recommended fix (operator):** one of — (a) scope the readiness measurement down (fewer games / lower per-game budget) so a run finishes <~70min; (b) make the script checkpoint/resume so a capped run still emits a partial-but-usable artifact; (c) route it OFF codex (direct `.venv/bin/python` invocation or `requires_claude_verified` with a longer cap) since it is a measurement script, not an agentic task. Also: the planner should NOT re-propose the same full-proxy SCORE scope on codex next milestone without one of these (Failed-Experiment Rerun Discipline — the failure is a wall-clock cap, which may not be captured in `research-complete.yaml` as a verdict, so flag explicitly).
++
+ ### 2026-06-25 (MANDATORY-NEXT-MILESTONE, operator-directed: "yes" pre-stage): PERCEPTION-GROUNDED STRUCTURAL-ALIGNMENT L2 GOAL — the next multi-level (L1->L2) deepening step
+ 
+ **Origin:** the 2026-06-25 outer-loop goal-free deepening probe (`scripts/experiments/proto_goalfree_deepen.py`,
+-- 
+2.55.0
+

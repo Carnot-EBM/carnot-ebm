@@ -1,0 +1,43 @@
+From 10e7bda379a34f2059c8efc61ad17cceea1b8c8f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 11:25:09 -0400
+Subject: [PATCH 04475/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ea7aaac1e3..1d681a3916 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-06-27T15:12:14Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-27T15:25:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index beda7460f7..da34412689 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9454,3 +9454,4 @@ The contro |
+ | 2026-06-27 14:26 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GE | OK | 90 passed, 1 warning in 6.71s |
+ | 2026-06-27 14:46 UTC | PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- | OK | 89 passed, 1 warning in 9.13s |
+ | 2026-06-27 15:10 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 110 passed, 1 warning in 8.40s |
++| 2026-06-27 15:23 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 10.77s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3cb7a218e9..2d9e8d2003 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 7, "phase": "iteration_start", "started_at": "2026-06-27T15:12:14Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-27T15:25:06Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

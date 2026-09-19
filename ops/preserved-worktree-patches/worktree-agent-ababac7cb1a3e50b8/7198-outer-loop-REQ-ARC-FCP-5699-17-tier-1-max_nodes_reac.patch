@@ -1,0 +1,595 @@
+From 2ba53a7864f6f061e8042bf61be9155eb1106c91 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 15 Jul 2026 20:32:27 -0400
+Subject: [PATCH 07198/11362] [outer-loop] REQ-ARC-FCP-5699-17: tier-1
+ max_nodes_reached wall recurs identically on cd82 and g50t
+
+Repeated the REQ-ARC-FCP-5699-15/16 diagnostic (default max_nodes=20000,
+budget=250, no code changes needed) on cd82 and g50t -- both drawn from this
+REQ chain's original 4-game sample, both HIDDEN_STATE_GAME_IDS members, a
+structurally different second-tier gate path than sp80's.
+
+Result: the pattern recurs identically on all 4 new arm-measurements.
+explored_out=False, is_level_complete_was_none=False,
+termination_reason=max_nodes_reached at nodes_expanded 20005-20034,
+planned=False for every arm (cd82: 20014/20012; g50t: 20005/20034).
+Combined with sp80's prior 4 measurements, that's 6/6 arm-measurements
+across 3 games landing on the same tier-1 exhaustion signature -- confirming
+the wall is systemic, not sp80-specific, including on a structurally
+different hidden-state-gated code path. Which second-tier gate fires
+afterward remains game-class-dependent; only tier 1's exhaustion is uniform.
+
+Scope limit: n=3 games out of the 25-game registry, all from the same prior
+sample -- "likely dominant across the corpus" is now reasonable, "confirmed
+for all 25 games" is not, per Sample-Size Rigor discipline.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     |  72 ++++++
+ ops/known-issues.md                           |  20 ++
+ results/arc_sge_live_path_ab_cd82.json        | 208 +++++++++++++++++
+ results/arc_sge_live_path_ab_g50t.json        | 220 ++++++++++++++++++
+ 4 files changed, 520 insertions(+)
+ create mode 100644 results/arc_sge_live_path_ab_cd82.json
+ create mode 100644 results/arc_sge_live_path_ab_g50t.json
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 8cb19d47d9..96bcbaff54 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -6003,6 +6003,78 @@ the remaining explanation toward the induced model's multi-step rollout not repr
+ discoverable path to its own goal predicate, a materially different and deeper question than any
+ prior REQ-ARC-FCP-5699-N step addressed
+ 
++### REQ-ARC-FCP-5699-17: Breadth Check -- The Tier-1 max_nodes_reached Wall Recurs Identically On Two More Games
++
++REQ-ARC-FCP-5699-15/16 named the cheaper of two remaining follow-ups: repeat the diagnostics-
++instrumented measurement on 1-2 more games to see whether `max_nodes_reached` is a systemic
++property of the tier-1 CNN-prior-warm-start path, or specific to sp80. No code changes were
++needed -- the diagnostics wiring from 5699-15/16 already flows into `policy.induction_attempts`
++for any game `arc_sge_live_path_ab.py` is pointed at.
++
++**Ran the identical diagnostic (default `max_nodes=20000`, `budget=250`) on `cd82` and `g50t`** --
++both drawn from this REQ chain's original 4-game sample (REQ-ARC-FCP-5699-6 through -10), for
++direct comparability. Both are in `HIDDEN_STATE_GAME_IDS`, unlike sp80, so their single induction
++attempt routes through the OTHER second-tier gate (`hidden_state_trust_below_threshold` at
++~line 3689, not sp80's `world_model_accuracy_below_threshold` at ~line 3708) -- but tier 1's
++`gated_engine_from_transitions` warm-start attempt runs FIRST regardless of hidden-state routing
++(the check happens earlier, ~line 3448-3468, before the `HIDDEN_STATE_GAME_IDS` branch), so the
++same tier-1 diagnostics apply uniformly across both game classes.
++
++```
++cd82 baseline: explored_out=False, is_level_complete_was_none=False, nodes_expanded=20014, termination_reason=max_nodes_reached, planned=False
++cd82 sge:      explored_out=False, is_level_complete_was_none=False, nodes_expanded=20012, termination_reason=max_nodes_reached, planned=False
++g50t baseline: explored_out=False, is_level_complete_was_none=False, nodes_expanded=20005, termination_reason=max_nodes_reached, planned=False
++g50t sge:      explored_out=False, is_level_complete_was_none=False, nodes_expanded=20034, termination_reason=max_nodes_reached, planned=False
++```
++
++**The pattern recurs identically, on all six arm-measurements across three games now (sp80's two
++arms at both the 20000 and 100000 budgets, cd82's two arms, g50t's two arms).** Every single one:
++`explorer_explored_out=False` (the real ~48-candidate generator never exhausts -- 5699-13/14
++confirmed, still holding), exactly one induction attempt (`reason="stall"` at
++`transition_count=25`, the same trigger every time), tier 1's goal predicate genuinely real
++(`is_level_complete_was_none=False`), and tier 1's search always ends in `"max_nodes_reached"`
++with `planned=False` -- never `"queue_exhausted"`, never a successful plan. The node counts
++cluster tightly around the `max_nodes` setting in effect for that run (20005-20034 at the default,
++100001-100015 at 5x), consistent with independently-induced-but-similarly-behaved CNN priors
++across different games, not a fluke specific to one game's induced dynamics.
++
++**What this narrows.** The tier-1 `max_nodes_reached` wall is now confirmed SYSTEMIC across the
++n=3 games tested, not an sp80 idiosyncrasy -- it recurs identically on a second AND third game,
++including one structurally different code path (`HIDDEN_STATE_GAME_IDS` routing). This strengthens
++REQ-ARC-FCP-5699-15/16's standing hypothesis (the induced model's multi-step rollout does not
++represent a discoverable path to its own goal predicate within any tested budget) from a single
++n=1 lead to a reproduced, multi-game pattern. What does NOT generalize from this measurement:
++WHICH second-tier gate fires after tier 1 fails (game-class-dependent, per `HIDDEN_STATE_GAME_IDS`
++membership) -- only tier 1's own exhaustion behavior is shown to be uniform.
++
++**Honest scope limit.** n=3 games out of the 25-game registry, all three drawn from the SAME prior
++sample this REQ chain already used (5699-6 through -10) -- not a random or exhaustive sample of
++the registry. It is now reasonable to treat `max_nodes_reached` as the LIKELY dominant tier-1
++termination reason across the broader corpus, but "likely" is not "confirmed for all 25 games" --
++per Sample-Size Rigor discipline, a claim about the full registry would need a wider sample.
++
++**Concrete next step if this thread continues.** The cheap breadth-check avenue is now
++well-exercised (3/3 recur); the higher-value remaining avenue is REQ-ARC-FCP-5699-16's other named
++follow-up -- inspect the tier-1 model's own predicted rollout directly (greedily follow the
++induced `engine`'s transitions from `root_grid` for a bounded number of steps and check for
++structural implausibility against real observed transitions) to distinguish "the model predicts a
++coherent-but-wrong world that a search can't reach the goal in" from "the model's predictions
++diverge into structural noise quickly" -- the deeper, more instrumentation-heavy investigation
++5699-16 flagged as a natural checkpoint before continuing.
++
++#### SCENARIO-ARC-FCP-5699-17-TIER-1-WALL-RECURS-ON-TWO-MORE-GAMES
++
++Given REQ-ARC-FCP-5699-15/16 established the tier-1 `max_nodes_reached` wall on sp80 alone (n=1),
++and named repeating the diagnostic on more games as the cheap way to check whether it generalizes
++When the same diagnostics-instrumented measurement (default `max_nodes=20000`, `budget=250`) is
++run on `cd82` and `g50t` -- both `HIDDEN_STATE_GAME_IDS` members, a structurally different
++second-tier gate path than sp80
++Then all four new arm-measurements (cd82 baseline/sge, g50t baseline/sge) show the identical
++tier-1 signature -- `is_level_complete_was_none=False`, `termination_reason="max_nodes_reached"`
++at `nodes_expanded` clustered near 20000, `planned=False` -- confirming the wall is systemic
++across n=3 games tested (not sp80-specific), while which SECOND-tier gate fires afterward remains
++game-class-dependent
++
+ ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+ 
+ `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index d738b711ed..404b3e1c8d 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -624,6 +624,26 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+    implausibility vs. observed real transitions (distinguishes "coherent but wrong" from "diverges
+    to noise fast"); or (b) the cheaper breadth check -- repeat this diagnostic on 1-2 more
+    unsolved games to see if `max_nodes_reached` recurs there too (systemic vs. sp80-specific).
++
++   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-17, executes the cheap breadth check):**
++   ran the identical diagnostic (no code changes needed) on `cd82` and `g50t` (both from this
++   chain's original 4-game sample, both `HIDDEN_STATE_GAME_IDS` members -- a structurally
++   different second-tier gate than sp80's). **Result: the pattern recurs IDENTICALLY on all 4 new
++   arm-measurements** -- `explored_out=False`, `is_level_complete_was_none=False`,
++   `termination_reason=max_nodes_reached` at `nodes_expanded` 20005-20034, `planned=False`
++   (cd82: 20014/20012; g50t: 20005/20034). Combined with sp80's prior 4 measurements (20000 and
++   100000 budgets), that's 6/6 arm-measurements across 3 games all landing on the same tier-1
++   exhaustion signature. **This confirms the `max_nodes_reached` wall is SYSTEMIC, not
++   sp80-specific** -- it recurs on a second AND third game including a structurally different
++   hidden-state-gated code path. What does NOT generalize: WHICH second-tier gate fires after tier
++   1 fails is game-class-dependent (`hidden_state_trust_below_threshold` for cd82/g50t vs.
++   sp80's `world_model_accuracy_below_threshold`) -- only tier 1's exhaustion is uniform. **Scope
++   limit: n=3 games out of the 25-game registry**, all drawn from the same prior sample -- "likely
++   dominant across the corpus" is now reasonable, "confirmed for all 25 games" is not. Concrete
++   next step if picked up again: the breadth-check avenue is now well-exercised (3/3); the
++   higher-value remaining avenue is inspecting the tier-1 model's own predicted rollout directly
++   to distinguish "coherent but wrong" from "diverges to noise fast" -- the deeper investigation
++   REQ-ARC-FCP-5699-16 flagged as a natural checkpoint before continuing further.
+ 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+diff --git a/results/arc_sge_live_path_ab_cd82.json b/results/arc_sge_live_path_ab_cd82.json
+new file mode 100644
+index 0000000000..b463ddabb4
+--- /dev/null
++++ b/results/arc_sge_live_path_ab_cd82.json
+@@ -0,0 +1,208 @@
++{
++  "experiment": "arc_sge_live_path_ab",
++  "req": "REQ-ARC-FCP-5699-12",
++  "game": "cd82",
++  "budget": 250,
++  "methodology_note": "Both arms use genuinely full-production E3AgentPolicy(game, proposer=None) -- the SAME induction/frame-change-scorer/goal-bias/action-effect-expansion-prior defaults SUBMITTED_AGENT_CONFIG ships, NOT the stripped-down outer_loop_sge_smoke_test.py harness. The only difference between arms is candidate_router. Scored via arc_leaderboard_eval.run_game() -- the real leaderboard scorer.",
++  "results": {
++    "baseline_discriminative": {
++      "game": "cd82",
++      "levels": 0,
++      "reached": 0,
++      "actions": 247,
++      "efficiency": 0.0,
++      "per_level_efficiency": 0.0,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 247,
++          "human_actions": 55,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 8,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 41,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 21,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 23,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 23,
++          "completed": false
++        }
++      ],
++      "deepest_level_reached": 0,
++      "navigation_diagnostics": {
++        "reset_replay_steps": 2,
++        "forward_walk_hit_rate": 0.0
++      },
++      "reset_replay_steps": 2,
++      "forward_walk_hit_rate": 0.0,
++      "actions_to_first_levelup": null,
++      "gap": {
++        "game": "cd82",
++        "stuck_at_level": 0,
++        "actions_spent": 247,
++        "signature": "no_level_up_within_budget",
++        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
++      },
++      "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
++      "duration_s": 38.85494637489319,
++      "arm": "baseline_discriminative",
++      "explorer_explored_out": false,
++      "induction_attempts": [
++        {
++          "reason": "stall",
++          "goal_level": 1,
++          "transition_count": 25,
++          "dsl_transition_count": 25,
++          "model_specs": "offline_dsl_induction_no_llm",
++          "planned": false,
++          "skipped": "hidden_state_trust_below_threshold",
++          "ttt_prior_engine": {
++            "backend": "cnn",
++            "n_transitions": 25,
++            "warm_start": false,
++            "prior_transition_count": 0,
++            "prior_loaded": true,
++            "heldout_accuracy": 0.0,
++            "heldout_cell_recall": 0.6,
++            "trust_threshold": 0.5,
++            "trust_metric": "cell_recall",
++            "gate": "PASS"
++          },
++          "ttt_prior_engine_plan_diagnostics": {
++            "is_level_complete_was_none": false,
++            "nodes_expanded": 20014,
++            "termination_reason": "max_nodes_reached"
++          },
++          "trust_energy": 124.04694,
++          "heldout_change_consistency": 0.0,
++          "heldout_accuracy": 0.0,
++          "correct_changed_cells": 0,
++          "binary_gate_pass": false
++        }
++      ],
++      "induction_attempts_not_skipped": 0
++    },
++    "sge": {
++      "game": "cd82",
++      "levels": 0,
++      "reached": 0,
++      "actions": 238,
++      "efficiency": 0.0,
++      "per_level_efficiency": 0.0,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 238,
++          "human_actions": 55,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 8,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 41,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 21,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 23,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 23,
++          "completed": false
++        }
++      ],
++      "deepest_level_reached": 0,
++      "navigation_diagnostics": {
++        "reset_replay_steps": 20,
++        "forward_walk_hit_rate": 0.26666666666666666
++      },
++      "reset_replay_steps": 20,
++      "forward_walk_hit_rate": 0.26666666666666666,
++      "actions_to_first_levelup": null,
++      "gap": {
++        "game": "cd82",
++        "stuck_at_level": 0,
++        "actions_spent": 238,
++        "signature": "no_level_up_within_budget",
++        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
++      },
++      "candidate_router_type": "SGECandidateRouter",
++      "duration_s": 101.28186821937561,
++      "arm": "sge",
++      "explorer_explored_out": false,
++      "induction_attempts": [
++        {
++          "reason": "stall",
++          "goal_level": 1,
++          "transition_count": 25,
++          "dsl_transition_count": 25,
++          "model_specs": "offline_dsl_induction_no_llm",
++          "planned": false,
++          "skipped": "hidden_state_trust_below_threshold",
++          "ttt_prior_engine": {
++            "backend": "cnn",
++            "n_transitions": 25,
++            "warm_start": false,
++            "prior_transition_count": 0,
++            "prior_loaded": true,
++            "heldout_accuracy": 0.0,
++            "heldout_cell_recall": 0.7858,
++            "trust_threshold": 0.5,
++            "trust_metric": "cell_recall",
++            "gate": "PASS"
++          },
++          "ttt_prior_engine_plan_diagnostics": {
++            "is_level_complete_was_none": false,
++            "nodes_expanded": 20012,
++            "termination_reason": "max_nodes_reached"
++          },
++          "trust_energy": 435.266815,
++          "heldout_change_consistency": 0.0,
++          "heldout_accuracy": 0.125,
++          "correct_changed_cells": 0,
++          "binary_gate_pass": false
++        }
++      ],
++      "induction_attempts_not_skipped": 0
++    }
++  },
++  "run_date": "2026-07-16T00:24:30Z"
++}
+\ No newline at end of file
+diff --git a/results/arc_sge_live_path_ab_g50t.json b/results/arc_sge_live_path_ab_g50t.json
+new file mode 100644
+index 0000000000..0117fff324
+--- /dev/null
++++ b/results/arc_sge_live_path_ab_g50t.json
+@@ -0,0 +1,220 @@
++{
++  "experiment": "arc_sge_live_path_ab",
++  "req": "REQ-ARC-FCP-5699-12",
++  "game": "g50t",
++  "budget": 250,
++  "methodology_note": "Both arms use genuinely full-production E3AgentPolicy(game, proposer=None) -- the SAME induction/frame-change-scorer/goal-bias/action-effect-expansion-prior defaults SUBMITTED_AGENT_CONFIG ships, NOT the stripped-down outer_loop_sge_smoke_test.py harness. The only difference between arms is candidate_router. Scored via arc_leaderboard_eval.run_game() -- the real leaderboard scorer.",
++  "results": {
++    "baseline_discriminative": {
++      "game": "g50t",
++      "levels": 0,
++      "reached": 0,
++      "actions": 248,
++      "efficiency": 0.0,
++      "per_level_efficiency": 0.0,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 248,
++          "human_actions": 78,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 175,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 179,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 230,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 96,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 54,
++          "completed": false
++        },
++        {
++          "level": 6,
++          "agent_actions": 0,
++          "human_actions": 67,
++          "completed": false
++        }
++      ],
++      "deepest_level_reached": 0,
++      "navigation_diagnostics": {
++        "reset_replay_steps": 2,
++        "forward_walk_hit_rate": 0.9696969696969697
++      },
++      "reset_replay_steps": 2,
++      "forward_walk_hit_rate": 0.9696969696969697,
++      "actions_to_first_levelup": null,
++      "gap": {
++        "game": "g50t",
++        "stuck_at_level": 0,
++        "actions_spent": 248,
++        "signature": "no_level_up_within_budget",
++        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
++      },
++      "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
++      "duration_s": 62.99194884300232,
++      "arm": "baseline_discriminative",
++      "explorer_explored_out": false,
++      "induction_attempts": [
++        {
++          "reason": "stall",
++          "goal_level": 1,
++          "transition_count": 25,
++          "dsl_transition_count": 25,
++          "model_specs": "offline_dsl_induction_no_llm",
++          "planned": false,
++          "skipped": "hidden_state_trust_below_threshold",
++          "ttt_prior_engine": {
++            "backend": "cnn",
++            "n_transitions": 25,
++            "warm_start": false,
++            "prior_transition_count": 0,
++            "prior_loaded": true,
++            "heldout_accuracy": 0.0,
++            "heldout_cell_recall": 0.7216,
++            "trust_threshold": 0.5,
++            "trust_metric": "cell_recall",
++            "gate": "PASS"
++          },
++          "ttt_prior_engine_plan_diagnostics": {
++            "is_level_complete_was_none": false,
++            "nodes_expanded": 20005,
++            "termination_reason": "max_nodes_reached"
++          },
++          "trust_energy": 143.477921,
++          "heldout_change_consistency": 0.0,
++          "heldout_accuracy": 0.0,
++          "correct_changed_cells": 0,
++          "binary_gate_pass": false
++        }
++      ],
++      "induction_attempts_not_skipped": 0
++    },
++    "sge": {
++      "game": "g50t",
++      "levels": 0,
++      "reached": 0,
++      "actions": 248,
++      "efficiency": 0.0,
++      "per_level_efficiency": 0.0,
++      "per_level": [
++        {
++          "level": 0,
++          "agent_actions": 248,
++          "human_actions": 78,
++          "completed": false
++        },
++        {
++          "level": 1,
++          "agent_actions": 0,
++          "human_actions": 175,
++          "completed": false
++        },
++        {
++          "level": 2,
++          "agent_actions": 0,
++          "human_actions": 179,
++          "completed": false
++        },
++        {
++          "level": 3,
++          "agent_actions": 0,
++          "human_actions": 230,
++          "completed": false
++        },
++        {
++          "level": 4,
++          "agent_actions": 0,
++          "human_actions": 96,
++          "completed": false
++        },
++        {
++          "level": 5,
++          "agent_actions": 0,
++          "human_actions": 54,
++          "completed": false
++        },
++        {
++          "level": 6,
++          "agent_actions": 0,
++          "human_actions": 67,
++          "completed": false
++        }
++      ],
++      "deepest_level_reached": 0,
++      "navigation_diagnostics": {
++        "reset_replay_steps": 3,
++        "forward_walk_hit_rate": 0.96
++      },
++      "reset_replay_steps": 3,
++      "forward_walk_hit_rate": 0.96,
++      "actions_to_first_levelup": null,
++      "gap": {
++        "game": "g50t",
++        "stuck_at_level": 0,
++        "actions_spent": 248,
++        "signature": "no_level_up_within_budget",
++        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
++      },
++      "candidate_router_type": "SGECandidateRouter",
++      "duration_s": 288.6740050315857,
++      "arm": "sge",
++      "explorer_explored_out": false,
++      "induction_attempts": [
++        {
++          "reason": "stall",
++          "goal_level": 1,
++          "transition_count": 25,
++          "dsl_transition_count": 25,
++          "model_specs": "offline_dsl_induction_no_llm",
++          "planned": false,
++          "skipped": "hidden_state_trust_below_threshold",
++          "ttt_prior_engine": {
++            "backend": "cnn",
++            "n_transitions": 25,
++            "warm_start": false,
++            "prior_transition_count": 0,
++            "prior_loaded": true,
++            "heldout_accuracy": 0.0,
++            "heldout_cell_recall": 0.6225,
++            "trust_threshold": 0.5,
++            "trust_metric": "cell_recall",
++            "gate": "PASS"
++          },
++          "ttt_prior_engine_plan_diagnostics": {
++            "is_level_complete_was_none": false,
++            "nodes_expanded": 20034,
++            "termination_reason": "max_nodes_reached"
++          },
++          "trust_energy": 497.944779,
++          "heldout_change_consistency": 0.0,
++          "heldout_accuracy": 0.125,
++          "correct_changed_cells": 0,
++          "binary_gate_pass": false
++        }
++      ],
++      "induction_attempts_not_skipped": 0
++    }
++  },
++  "run_date": "2026-07-16T00:30:48Z"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

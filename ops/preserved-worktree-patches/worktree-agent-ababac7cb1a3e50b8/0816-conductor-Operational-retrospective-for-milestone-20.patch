@@ -1,0 +1,146 @@
+From b14dc6307860d1eef51cf9a6ef9b4eddd9b1d461 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 11:09:32 -0400
+Subject: [PATCH 00816/11362] [conductor] Operational retrospective for
+ milestone 2026.06.362
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ append_retro_362.py                        | 45 ++++++++++++++++++++++
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  8 ++++
+ results/operational_retro_2026_06_362.json | 20 +++++++---
+ 4 files changed, 73 insertions(+), 6 deletions(-)
+ create mode 100644 append_retro_362.py
+
+diff --git a/append_retro_362.py b/append_retro_362.py
+new file mode 100644
+index 0000000000..bfdba14488
+--- /dev/null
++++ b/append_retro_362.py
+@@ -0,0 +1,45 @@
++import json
++import os
++
++# Update JSON
++with open('results/operational_retro_2026_06_362.json', 'r') as f:
++    data = json.load(f)
++
++data['summary'] = "There were 0 experiments completed and 0 compute-bound experiments this milestone, resulting in 0 total wall time minutes. No experiments were executed."
++data['bottlenecks_identified'] = ["No experiments were run during this milestone."]
++data['improvements_suggested'] = ["Investigate why no experiment commits were found for this milestone."]
++data['top_3_highest_leverage_actions'] = ["Verify milestone activation triggers.", "Check research conductor logs for failures.", "Validate pending tasks in queue."]
++data['estimated_time_savings_pct'] = 0
++data['meta_reflection'] = "Because no experiments were found, the retrospective is inherently empty. We must ensure the research conductor is actually dispatching tasks."
++
++with open('results/operational_retro_2026_06_362.json', 'w') as f:
++    json.dump(data, f, indent=2)
++
++# Update ops/changelog.md
++changelog_entry = """## 2026-06-07 (Milestone 2026.06.362 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_362.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
++
++"""
++
++with open('ops/changelog.md', 'r') as f:
++    content = f.read()
++
++new_content = content.replace('# Carnot — Changelog\n\n', '# Carnot — Changelog\n\n' + changelog_entry)
++
++with open('ops/changelog.md', 'w') as f:
++    f.write(new_content)
++
++# Update docs/research-log.md
++research_log_entry = """
++### Milestone 2026.06.362
++- exp_range: none
++- theme: Operational Retrospective
++- key result: Honest negative: no experiment commits found since activation of 2026.06.362.
++- acceptance: 0/0 criteria met
++"""
++
++with open('docs/research-log.md', 'a') as f:
++    f.write(research_log_entry)
++
++print("Done updating files.")
+\ No newline at end of file
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 8b044408ba..a4fb7f4fd3 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5067,3 +5067,9 @@ The critical path for milestone .250:
+ - theme: Operational efficiency and bottleneck analysis
+ - key result: honest negative: no experiment commits found since activation
+ - acceptance: 0/0 criteria met
++
++### Milestone 2026.06.362
++- exp_range: none
++- theme: Operational Retrospective
++- key result: Honest negative: no experiment commits found since activation of 2026.06.362.
++- acceptance: 0/0 criteria met
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 01f7bbd5f3..3e987f8aec 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,9 @@
+ # Carnot — Changelog
+ 
++## 2026-06-07 (Milestone 2026.06.362 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_362.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
++
+ ## 2026-06-07 (Milestone 2026.06.361 Operational Retrospective)
+ 
+ - [outer-loop] Wrote `results/operational_retro_2026_06_361.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
+@@ -931,6 +935,10 @@
+ - Milestone 2026.05.207 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.207. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+ # Carnot — Changelog
+ 
++## 2026-06-07 (Milestone 2026.06.362 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_362.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
++
+ ## 2026-06-03 (Milestone 2026.06.343 Operational Retrospective)
+ 
+ - [outer-loop] Wrote `results/operational_retro_2026_06_343.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: no data available this milestone.
+diff --git a/results/operational_retro_2026_06_362.json b/results/operational_retro_2026_06_362.json
+index b9eb85dba5..c2cfc48c68 100644
+--- a/results/operational_retro_2026_06_362.json
++++ b/results/operational_retro_2026_06_362.json
+@@ -1,17 +1,25 @@
+ {
+   "schema": "carnot.operational_retro.v64",
+   "milestone": "2026.06.362",
+-  "generated_at": "2026-06-07T13:02:18Z",
++  "generated_at": "2026-06-07T15:08:29Z",
+   "retro_type": "operational_full",
+   "total_wall_time_minutes": 0,
+   "experiments_completed": 0,
+   "compute_bound_experiments_count": 0,
+   "slowest_experiments": [],
+   "gpu_idle_on_compute_bound_tasks": null,
+-  "summary": "",
+-  "bottlenecks_identified": [],
+-  "improvements_suggested": [],
+-  "top_3_highest_leverage_actions": [],
++  "summary": "There were 0 experiments completed and 0 compute-bound experiments this milestone, resulting in 0 total wall time minutes. No experiments were executed.",
++  "bottlenecks_identified": [
++    "No experiments were run during this milestone."
++  ],
++  "improvements_suggested": [
++    "Investigate why no experiment commits were found for this milestone."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Verify milestone activation triggers.",
++    "Check research conductor logs for failures.",
++    "Validate pending tasks in queue."
++  ],
+   "estimated_time_savings_pct": 0,
+-  "meta_reflection": ""
++  "meta_reflection": "Because no experiments were found, the retrospective is inherently empty. We must ensure the research conductor is actually dispatching tasks."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

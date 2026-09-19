@@ -1,0 +1,51 @@
+From 2a672cdc562886fad30d560c6a268cf1afd5e6ff Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 09:59:21 -0400
+Subject: [PATCH 00448/11362] [outer-loop] Fix GitHub Pages build: remove
+ orphaned ebt_tmp submodule gitlink
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Every GitHub Pages build was failing at the Checkout step with:
+  fatal: No url found for submodule path 'ebt_tmp' in .gitmodules
+  git failed with exit code 128
+
+Root cause: the vendored EBT repo (ebt_tmp/, which has its own .git) was committed
+as a submodule gitlink (mode 160000) with no .gitmodules entry. GitHub's
+pages-build-deployment workflow runs `git submodule update --init --recursive`,
+which dies on the orphaned gitlink — failing every Pages build instantly (duration 0,
+generic "Page build failed"). The last successful Pages build predated this commit
+reaching GitHub. Untracked the gitlink (ebt_tmp stays on disk) and gitignored it so
+the conductor's `git add -A` can't reintroduce it. This unblocks Pages (and publishes
+the blog post + ~143 commits of site updates that were stuck behind it).
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ .gitignore | 4 ++++
+ ebt_tmp    | 1 -
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+ delete mode 160000 ebt_tmp
+
+diff --git a/.gitignore b/.gitignore
+index b54fd2fccd..7d3dcc1262 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -142,3 +142,7 @@ tests/python/test_conductor_supervisor.py
+ 
+ # Conductor pre-test fingerprint cache — local-only, regenerated on first run
+ ops/.pretest-cache.json
++
++# Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
++# an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
++ebt_tmp/
+diff --git a/ebt_tmp b/ebt_tmp
+deleted file mode 160000
+index 19420cbeae..0000000000
+--- a/ebt_tmp
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 19420cbeae655bbf11930219a675ade6897019e8
+-- 
+2.55.0
+

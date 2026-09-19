@@ -1,0 +1,3818 @@
+From 6b41cdbb22ab25dd15094d26a456815d0921b04f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 06:39:05 -0400
+Subject: [PATCH 10875/11171] [conductor] V606 SOTA ingestion and method map
+
+Automated research step by research conductor.
+Task ID: exp6925-v606-sota-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  126 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../experiment_6925_v606_sota_ingestion.py    | 1196 ++++++++++
+ research-references.md                        |    8 +
+ .../experiment_6925_v606_sota_ingestion.json  | 2088 +++++++++++++++++
+ .../experiment_6925_v606_sota_ingestion.py    |   24 +
+ ...est_experiment_6925_v606_sota_ingestion.py |  297 +++
+ 7 files changed, 3740 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6925_v606_sota_ingestion.py
+ create mode 100644 results/experiment_6925_v606_sota_ingestion.json
+ create mode 100644 scripts/experiments/experiment_6925_v606_sota_ingestion.py
+ create mode 100644 tests/python/test_experiment_6925_v606_sota_ingestion.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 4b58ee3fd2..7f9a08b1d5 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -61544,3 +61544,129 @@ teardown, and aggregate duration.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6924 and SCENARIO-REPORT-6924-* | Planned (`python/carnot/task_runtime_receipts.py`; `scripts/experiment_template.py`; `python/carnot/experiment_6924_task_runtime_receipt_adoption.py`; `scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py`) | Planned (`tests/python/test_experiment_6924_task_runtime_receipt_adoption.py`) |
++
++### REQ-REPORT-6925: V606 SOTA Ingestion SHALL Be Bounded, Cited, And Advisory
++
++Exp6925 SHALL freeze its dated query plan before it makes a network request.
++The plan SHALL contain the exact query text, allowed domains, planned UTC
++timestamps, retry limit, concurrency limit, timeout, and acceptance criteria.
++The network policy SHALL allow one request at a time and at most two attempts
++per query. It SHALL not use a broad multi-agent research harness.
++
++The preflight SHALL require the active V606 roadmap, the reference ledger,
++the network policy in `CLAUDE.md`, and a query plan dated `20260903`. A missing
++or mismatched input SHALL produce a blocked artifact. The blocked artifact
++SHALL use `complete_blocked_v606_sota_ingestion` and SHALL name the failed
++check, expected value, and observed value.
++
++The plan SHALL query arXiv first for 2025-2026 work on energy-based models,
++neural constraints, Ising machine learning, hallucination verification,
++Kolmogorov-Arnold networks, constrained generation, accelerated sampling, and
++continual learning. It SHALL then query OpenReview, Hugging Face Papers,
++Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
++`2512.15605`, official GitHub repositories, Extropic writing, and Logical
++Intelligence updates.
++
++Every planned source family SHALL have one terminal query row. A terminal row
++MAY report an update, no update, rate limit, unavailable source, or local
++incompatibility. A failed request SHALL remain visible. It SHALL not become an
++empty success. Each query row SHALL record its canonical URL, query text,
++planned and actual UTC timestamps, allowed domains, attempt count, status,
++and terminal outcome.
++
++Exp6925 SHALL recheck VeRA, Solver-Hard Is Not Model-Hard, Sampling for
++Quality, constrained sequential Monte Carlo, ISM, Memoir, CL-Bench, span
++grounding, Torx, Thermalizers, SMC-SD, KANELÉ, and Symbolic-KAN. Each accepted
++or rejected candidate SHALL have one row. Each row SHALL include canonical
++URL, date, source type, relevance, evidence grade, code availability, local
++compatibility, disposition, and exclusion reason.
++
++Every method map row SHALL cite a checked source. It SHALL name the affected
++V606 experiment, the reusable method, the implementation boundary, and any
++incompatibility. New roadmap ideas SHALL appear only in
++`v607_candidate_rows`. Exp6925 SHALL not edit the locked V606 design or active
++roadmap.
++
++The reference ledger update SHALL be append-only. A finding SHALL be appended
++only when it is primary or first-party, verified, absent from the existing
++ledger, and material to a local executable contract. A duplicate, unchanged
++source, secondary-only claim, or incompatible implementation SHALL be
++rejected or placed in the V607 candidate table. A zero-finding result SHALL
++leave `research-references.md` byte-identical.
++
++The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
++`field_principles`, `preconditions_checked`, `inference_substrate`,
++`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
++`source_family_rows`, `candidate_rows`, `accepted_finding_rows`,
++`rejected_finding_rows`, `citation_edge_rows`, `implementation_rows`,
++`compatibility_rows`, `ledger_append_rows`, `v607_candidate_rows`,
++`rate_limit_rows`, `random_seed`, `reproducibility_checksum`,
++`v606_sota_ingestion_complete_score`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
++`field_principles` SHALL contain one principle for every required field and
++the completion score.
++`model_specs` SHALL explicitly record that no experimental model was invoked;
++paper and repository model names are citations, not runtime claims.
++
++The dated receipt SHALL be written to
++`results/experiment_6925_v606_sota_ingestion.json` by
++`python/carnot/experiment_6925_v606_sota_ingestion.py` through the thin
++`scripts/experiments/experiment_6925_v606_sota_ingestion.py` wrapper.
++
++`inference_substrate` SHALL equal
++`bounded_primary_source_web_research_no_model_inference`.
++`verifier_is_oracle` SHALL be false. `v606_sota_ingestion_complete_score`
++SHALL equal one only when every source family has a terminal query row and
++every candidate has a terminal disposition. The score SHALL describe research
++completion only. It SHALL not promote a science result. A complete artifact
++SHALL use verdict class `null` when no material update exists or `positive`
++when a verified material update exists. Every terminal honest verdict SHALL
++start with `complete_`.
++
++#### SCENARIO-REPORT-6925-PREFLIGHT: Missing Inputs Block Before Research
++
++**Given** a missing V606 roadmap, reference ledger, network policy, or dated query plan
++**When** Exp6925 runs its preflight
++**Then** the completion score is zero
++**And** the gate summary records expected and observed values.
++
++#### SCENARIO-REPORT-6925-PLAN: Queries Are Frozen And ArXiv Runs First
++
++**Given** the dated query plan
++**When** its rows are validated
++**Then** exact queries, domains, timestamps, retry limits, timeouts, and acceptance rules are present
++**And** all eight arXiv topic rows precede every follow-up source row.
++
++#### SCENARIO-REPORT-6925-TERMINAL: Every Source Family And Candidate Terminates
++
++**Given** a source is unchanged, unavailable, rate limited, or incompatible
++**When** Exp6925 records the result
++**Then** the source and candidate rows retain that explicit terminal outcome
++**And** the completion score can become one without inventing an update.
++
++#### SCENARIO-REPORT-6925-MAP: Methods Map To V606 Without Rewriting It
++
++**Given** a checked method has a reusable local consequence
++**When** Exp6925 builds the method map
++**Then** the row cites the source and names a V606 experiment and boundary
++**And** roadmap-changing work appears only as a V607 candidate.
++
++#### SCENARIO-REPORT-6925-LEDGER: Only New Verified Findings Append
++
++**Given** the current reference ledger and checked candidates
++**When** Exp6925 selects ledger additions
++**Then** duplicates and unchanged sources do not append
++**And** a zero-addition run preserves the ledger bytes.
++
++#### SCENARIO-REPORT-6925-ARTIFACT: Rows Recompute The Completion Score
++
++**Given** a terminal ingestion artifact
++**When** an independent validator reads its rows
++**Then** it recomputes source-family and candidate coverage
++**And** it rejects a missing field, bad checksum, or false completion score.
++
++## Implementation Status (REQ-REPORT-6925)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6925 and SCENARIO-REPORT-6925-* | Implemented (`python/carnot/experiment_6925_v606_sota_ingestion.py`; `scripts/experiments/experiment_6925_v606_sota_ingestion.py`) | Covered (`tests/python/test_experiment_6925_v606_sota_ingestion.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4a099227ad..b216504e52 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5278,
++  "experiments_checked": 5279,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6925_v606_sota_ingestion.py b/python/carnot/experiment_6925_v606_sota_ingestion.py
+new file mode 100644
+index 0000000000..78aa9bf473
+--- /dev/null
++++ b/python/carnot/experiment_6925_v606_sota_ingestion.py
+@@ -0,0 +1,1196 @@
++"""Build the bounded V606 execution-time SOTA ingestion artifact.
++
++Spec refs: REQ-REPORT-6925 and SCENARIO-REPORT-6925-*.
++
++The module records a small source recheck. The query plan is fixed in source
++before access. This prevents a later result from changing the search terms
++that produced it.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import argparse
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot.experiment_artifacts import atomic_write_json, atomic_write_text
++from carnot.paths import repo_root as find_repo_root
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "experiment_6925_v606_sota_ingestion"
++RUN_DATE = "20260903"
++RANDOM_SEED = 6925
++INFERENCE_SUBSTRATE = "bounded_primary_source_web_research_no_model_inference"
++SCHEMA_VERSION = "carnot.experiment_6925.v606_sota_ingestion.v1"
++
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6925_v606_sota_ingestion.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6925_v606_sota_ingestion.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++RESULT_RELATIVE_PATH = Path("results/experiment_6925_v606_sota_ingestion.json")
++LEDGER_RELATIVE_PATH = Path("research-references.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++DESIGN_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++NETWORK_POLICY_RELATIVE_PATH = Path("CLAUDE.md")
++
++ARXIV_FAMILIES = (
++    "arxiv_ebm",
++    "arxiv_neural_constraints",
++    "arxiv_ising_ml",
++    "arxiv_hallucination_verification",
++    "arxiv_kan",
++    "arxiv_constrained_generation",
++    "arxiv_accelerated_sampling",
++    "arxiv_continual_learning",
++)
++FOLLOWUP_FAMILIES = (
++    "openreview",
++    "huggingface_papers",
++    "semantic_scholar_ebt",
++    "semantic_scholar_arm_ebm",
++    "github_official",
++    "extropic",
++    "logical_intelligence",
++)
++SOURCE_FAMILIES = ARXIV_FAMILIES + FOLLOWUP_FAMILIES
++
++NAMED_CANDIDATES = (
++    "vera",
++    "solver_hard",
++    "sampling_for_quality",
++    "twisted_smc",
++    "syntactic_semantic_smc",
++    "ism",
++    "memoir",
++    "cl_bench",
++    "grounded_in_context",
++    "span_level_hallucination",
++    "torx",
++    "thermalizers",
++    "smc_sd",
++    "kanele",
++    "symbolic_kan",
++)
++
++_ACCEPTANCE = (
++    "Accept only a primary paper or first-party source with stable identity, a verifiable date, "
++    "clear V606 relevance, and an executable local consequence. Record duplicates, no-update "
++    "results, access failures, and incompatible implementations as terminal non-findings."
++)
++
++# This is the dated query plan. It was frozen at 2026-09-03T10:20:00Z before
++# the first network request. Planned times order the sequential requests; they
++# are not claims about response time.
++_FROZEN_QUERY_PLAN: tuple[JsonDict, ...] = (
++    {
++        "query_id": "arxiv_ebm",
++        "source_family": "arxiv_ebm",
++        "query_text": '("energy-based model" OR "energy-based transformer") AND (reasoning OR verification) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:30:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_neural_constraints",
++        "source_family": "arxiv_neural_constraints",
++        "query_text": '("neural constraint" OR "constraint reasoning" OR neuro-symbolic) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:31:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_ising_ml",
++        "source_family": "arxiv_ising_ml",
++        "query_text": '(Ising AND ("machine learning" OR sampling OR "probabilistic computing")) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:32:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_hallucination_verification",
++        "source_family": "arxiv_hallucination_verification",
++        "query_text": '((hallucination AND (verification OR detection)) OR "span grounding") AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:33:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_kan",
++        "source_family": "arxiv_kan",
++        "query_text": '("Kolmogorov-Arnold Network" OR KAN) AND (symbolic OR constraint OR FPGA OR LUT) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:34:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_constrained_generation",
++        "source_family": "arxiv_constrained_generation",
++        "query_text": '("constrained generation" OR "controlled generation") AND (SMC OR "sequential Monte Carlo" OR verifier) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:35:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_accelerated_sampling",
++        "source_family": "arxiv_accelerated_sampling",
++        "query_text": "((accelerated OR speculative OR reward-guided) AND sampling AND (LLM OR EBM OR Ising)) AND submittedDate:[202501010000 TO 202612312359]",
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:36:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "arxiv_continual_learning",
++        "source_family": "arxiv_continual_learning",
++        "query_text": '(("continual learning" OR "strategy memory" OR "episodic memory") AND (LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]',
++        "canonical_url": "https://export.arxiv.org/api/query",
++        "allowed_domains": ["arxiv.org", "export.arxiv.org"],
++        "planned_utc": "2026-09-03T10:37:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "openreview",
++        "source_family": "openreview",
++        "query_text": 'site:openreview.net ("energy based" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026',
++        "canonical_url": "https://openreview.net/search",
++        "allowed_domains": ["openreview.net"],
++        "planned_utc": "2026-09-03T10:38:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "huggingface_papers",
++        "source_family": "huggingface_papers",
++        "query_text": 'site:huggingface.co/papers (VeRA OR ISM OR CL-Bench OR verification OR "continual learning")',
++        "canonical_url": "https://huggingface.co/papers",
++        "allowed_domains": ["huggingface.co"],
++        "planned_utc": "2026-09-03T10:39:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "semantic_scholar_ebt",
++        "source_family": "semantic_scholar_ebt",
++        "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++        "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++        "allowed_domains": ["api.semanticscholar.org", "semanticscholar.org"],
++        "planned_utc": "2026-09-03T10:40:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "semantic_scholar_arm_ebm",
++        "source_family": "semantic_scholar_arm_ebm",
++        "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++        "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++        "allowed_domains": ["api.semanticscholar.org", "semanticscholar.org"],
++        "planned_utc": "2026-09-03T10:41:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "github_official",
++        "source_family": "github_official",
++        "query_text": "official repositories ISM SMC-SD KANELE EBT Torx updated 2025 2026",
++        "canonical_url": "https://github.com/search",
++        "allowed_domains": ["github.com", "api.github.com"],
++        "planned_utc": "2026-09-03T10:42:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "extropic",
++        "source_family": "extropic",
++        "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation update",
++        "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
++        "allowed_domains": ["extropic.ai"],
++        "planned_utc": "2026-09-03T10:43:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++    {
++        "query_id": "logical_intelligence",
++        "source_family": "logical_intelligence",
++        "query_text": "Logical Intelligence Kona EBM weights code training recipe runner update",
++        "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        "allowed_domains": ["logicalintelligence.com"],
++        "planned_utc": "2026-09-03T10:44:00Z",
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    },
++)
++
++
++def frozen_query_plan() -> list[JsonDict]:
++    """Return a copy so callers cannot mutate the frozen source plan."""
++
++    return [deepcopy(row) for row in _FROZEN_QUERY_PLAN]
++
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "model_specs",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "query_rows",
++    "source_family_rows",
++    "candidate_rows",
++    "accepted_finding_rows",
++    "rejected_finding_rows",
++    "citation_edge_rows",
++    "implementation_rows",
++    "compatibility_rows",
++    "ledger_append_rows",
++    "v607_candidate_rows",
++    "rate_limit_rows",
++    "random_seed",
++    "reproducibility_checksum",
++    "v606_sota_ingestion_complete_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "schema": "A versioned schema lets later validators detect a changed artifact contract.",
++    "experiment_id": "A stable identity binds the research receipt to the scheduled V606 task.",
++    "run_date": "The date separates this execution-time check from the earlier planning sweep.",
++    "status": "A terminal status distinguishes a complete source pass from a blocked preflight.",
++    "field_principles": "A principle for each field explains why the evidence is needed.",
++    "preconditions_checked": "Preflight rows prove the roadmap, ledger, policy, and dated plan existed before research.",
++    "inference_substrate": "The substrate states that this task used source research and no model inference.",
++    "model_specs": "An explicit empty invocation receipt prevents cited model names from implying that inference ran.",
++    "duration_s": "Elapsed research time makes an implausibly short source claim visible.",
++    "source_artifact_hashes": "Hashes bind the result to the exact local sources that defined V606.",
++    "rows": "A combined row ledger lets a checker inspect evidence without trusting summaries.",
++    "query_rows": "One terminal row per query preserves no-update and access-failure outcomes.",
++    "source_family_rows": "Family summaries prove that every required source surface terminated.",
++    "candidate_rows": "One row per named method prevents selective reporting of rechecks.",
++    "accepted_finding_rows": "Accepted rows show which checked methods remain relevant or changed.",
++    "rejected_finding_rows": "Rejected rows retain exclusions and stop weak evidence from disappearing.",
++    "citation_edge_rows": "Citation edges bind each local method claim to a checked canonical source.",
++    "implementation_rows": "Implementation rows map source methods to exact V606 experiments and boundaries.",
++    "compatibility_rows": "Compatibility rows expose dependencies that the local stack cannot reuse directly.",
++    "ledger_append_rows": "Append rows isolate genuinely new verified facts from repeated ledger content.",
++    "v607_candidate_rows": "Future ideas stay advisory and cannot silently rewrite locked V606 work.",
++    "rate_limit_rows": "Rate-limit rows keep missing responses from becoming false no-update claims.",
++    "random_seed": "A fixed seed makes deterministic row ordering reproducible.",
++    "reproducibility_checksum": "The payload hash detects any later change to the research receipt.",
++    "v606_sota_ingestion_complete_score": "The score becomes one only when every required source and method has a terminal row.",
++    "gate_check_summary": "The gate summary names exact expected and observed values when preflight blocks.",
++    "verifier_is_oracle": "False states that source review is not an executable correctness oracle.",
++    "verdict_class": "The class separates an advisory update from a null or blocked research outcome.",
++    "honest_verdict": "A terminal complete_ prefix lets the conductor classify the outcome without guessing.",
++}
++
++_QUERY_RESULTS: dict[str, JsonDict] = {
++    "arxiv_ebm": {
++        "actual_utc": "2026-09-03T10:20:42Z",
++        "attempt_count": 2,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "The results returned EBT and Distributional EBM. Both sources were already in the ledger.",
++    },
++    "arxiv_neural_constraints": {
++        "actual_utc": "2026-09-03T10:21:02Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "The relevant symbolic-integration position paper was already selected for V606.",
++    },
++    "arxiv_ising_ml": {
++        "actual_utc": "2026-09-03T10:21:18Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "No returned 2025-2026 Ising result changed the V606 no-hardware boundary.",
++    },
++    "arxiv_hallucination_verification": {
++        "actual_utc": "2026-09-03T10:21:32Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "Span-level work, including arXiv:2607.00895, was already present in the ledger.",
++    },
++    "arxiv_kan": {
++        "actual_utc": "2026-09-03T10:21:47Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "KANELÉ and Symbolic-KAN remained the relevant results and were already ledgered.",
++    },
++    "arxiv_constrained_generation": {
++        "actual_utc": "2026-09-03T10:22:03Z",
++        "attempt_count": 2,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "The second bounded attempt returned the already-ledgered self-distilled twisted-SMC paper.",
++    },
++    "arxiv_accelerated_sampling": {
++        "actual_utc": "2026-09-03T10:22:19Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "No result superseded Sampling for Quality or changed the SMC-SD compatibility boundary.",
++    },
++    "arxiv_continual_learning": {
++        "actual_utc": "2026-09-03T10:22:35Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "ISM, AdaMEM, AgentCL, and related strategy-memory work were already present in the ledger.",
++    },
++    "openreview": {
++        "actual_utc": "2026-09-03T10:22:52Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "Current ICLR and NeurIPS records added no reproducible method that changes V606.",
++    },
++    "huggingface_papers": {
++        "actual_utc": "2026-09-03T10:23:08Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "CL-Bench, AgentCL, and SkillLearnBench pages repeated already-ledgered sources.",
++    },
++    "semantic_scholar_ebt": {
++        "actual_utc": "2026-09-03T10:23:32Z",
++        "attempt_count": 2,
++        "http_status": 200,
++        "status": "success_after_tool_rejection",
++        "terminal_outcome": "no_update",
++        "evidence": "The direct API returned 35 rows. The newest visible paper was arXiv:2608.14186, already ledgered.",
++    },
++    "semantic_scholar_arm_ebm": {
++        "actual_utc": "2026-09-03T10:23:38Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "The direct API returned eight rows. No row post-dated the prior V606 sweep.",
++    },
++    "github_official": {
++        "actual_utc": "2026-09-03T10:24:01Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "implementation_update",
++        "evidence": "ISM, SMC-SD, and KANELÉ repositories were reachable. ISM disclosed hosted-model dependencies not recorded in the V606 section.",
++    },
++    "extropic": {
++        "actual_utc": "2026-09-03T10:24:18Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_update",
++        "evidence": "The August update still exposes Torx, previews Thermalizers, and targets Z1 access in 2027.",
++    },
++    "logical_intelligence": {
++        "actual_utc": "2026-09-03T10:24:32Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "unavailable_reproducible_assets",
++        "evidence": "The Kona page remained a product description with no public weights, training recipe, or local runner.",
++    },
++}
++
++
++def validate_query_plan(plan: list[JsonDict], run_date: str) -> list[str]:
++    """Check the fixed plan before any caller uses its source routes."""
++
++    expected_date = f"{run_date[:4]}-{run_date[4:6]}-{run_date[6:]}T"
++    if run_date != RUN_DATE or any(
++        not row["planned_utc"].startswith(expected_date) for row in plan
++    ):
++        return ["query plan date does not match run date"]
++    errors: list[str] = []
++    for row in plan:
++        if row["max_attempts"] != 2:
++            errors.append(f"query {row['query_id']} must allow exactly two attempts")
++        if row["concurrency_limit"] != 1:
++            errors.append(f"query {row['query_id']} must use concurrency one")
++        if row["timeout_s"] != 20:
++            errors.append(f"query {row['query_id']} must use the 20 second timeout")
++        if not row["query_text"] or not row["allowed_domains"] or not row["acceptance_criteria"]:
++            errors.append(f"query {row['query_id']} lacks a frozen source field")
++    if [row["source_family"] for row in plan[:8]] != list(ARXIV_FAMILIES):
++        errors.append("arXiv source families must be first")
++    if {row["source_family"] for row in plan} != set(SOURCE_FAMILIES):
++        errors.append("query plan source family coverage is incomplete")
++    return errors
++
++
++def check_preconditions(root: Path, run_date: str) -> list[JsonDict]:
++    """Return fail-closed checks for every required local research input."""
++
++    roadmap = root / ROADMAP_RELATIVE_PATH
++    ledger = root / LEDGER_RELATIVE_PATH
++    policy = root / NETWORK_POLICY_RELATIVE_PATH
++    plan_errors = validate_query_plan(frozen_query_plan(), run_date)
++    checks = (
++        (
++            "current_roadmap",
++            roadmap.exists() and "milestone: 2026.09.606" in roadmap.read_text(encoding="utf-8"),
++            "active roadmap exists and declares 2026.09.606",
++            roadmap.as_posix() if roadmap.exists() else "missing",
++        ),
++        (
++            "reference_ledger",
++            ledger.exists(),
++            "research-references.md exists",
++            ledger.as_posix() if ledger.exists() else "missing",
++        ),
++        (
++            "network_policy",
++            policy.exists()
++            and "SOTA-Ingestion Cycle Discipline" in policy.read_text(encoding="utf-8")
++            and "low-concurrency" in policy.read_text(encoding="utf-8"),
++            "CLAUDE.md contains the low-concurrency SOTA-ingestion policy",
++            policy.as_posix() if policy.exists() else "missing",
++        ),
++        (
++            "dated_query_plan",
++            not plan_errors,
++            "frozen query plan dated 20260903 passes validation",
++            "valid" if not plan_errors else "; ".join(plan_errors),
++        ),
++    )
++    return [
++        {"resource": name, "available": available, "expected": expected, "observed": observed}
++        for name, available, expected, observed in checks
++    ]
++
++
++def query_rows() -> list[JsonDict]:
++    """Join the frozen query plan to the retained terminal receipts."""
++
++    rows = []
++    for planned in frozen_query_plan():
++        row = deepcopy(planned)
++        row.update(_QUERY_RESULTS[planned["query_id"]])
++        row["terminal"] = True
++        rows.append(row)
++    return rows
++
++
++_CANDIDATE_ROWS: tuple[JsonDict, ...] = (
++    {
++        "candidate_id": "vera",
++        "title": "VeRA: Verified Reasoning Data Augmentation at Scale",
++        "canonical_url": "https://arxiv.org/abs/2602.13217",
++        "date": "2026-01-23",
++        "source_type": "paper",
++        "relevance": "Executable generators create fresh verified variants for the V606 headroom fixture.",
++        "evidence_grade": "A",
++        "code_available": True,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Reuse the generator-and-checker pattern only; do not import unknown benchmark assumptions.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "solver_hard",
++        "title": "Solver-Hard Is Not Model-Hard",
++        "canonical_url": "https://arxiv.org/abs/2607.17047",
++        "date": "2026-07-19",
++        "source_type": "paper",
++        "relevance": "Measured model headroom must replace solver conflict counts as the admission signal.",
++        "evidence_grade": "A",
++        "code_available": True,
++        "local_compatibility": "compatible",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Exclude solver runtime and conflict counts from model-hardness labels.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "sampling_for_quality",
++        "title": "Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo",
++        "canonical_url": "https://arxiv.org/abs/2604.16453",
++        "date": "2026-04-07",
++        "source_type": "paper",
++        "relevance": "Soft weights, ESS resampling, and resample-move updates map to Exp6934.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Use complete-candidate energy; do not claim parity with the paper's prefix reward model.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "twisted_smc",
++        "title": "Improving Constrained Language Generation via Self-Distilled Twisted Sequential Monte Carlo",
++        "canonical_url": "https://arxiv.org/abs/2507.02315",
++        "date": "2025-07-03",
++        "source_type": "paper",
++        "relevance": "Twisted SMC supports particle allocation under sparse constraints.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "V606 forbids self-distillation and weight changes; only the inference primitive remains relevant.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "syntactic_semantic_smc",
++        "title": "Syntactic and Semantic Control of Large Language Models via Sequential Monte Carlo",
++        "canonical_url": "https://arxiv.org/abs/2504.13139",
++        "date": "2025-04-18",
++        "source_type": "paper",
++        "relevance": "The paper supports adaptive particle allocation for controlled generation.",
++        "evidence_grade": "A",
++        "code_available": True,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Its probabilistic-program stack is not the local llama.cpp complete-candidate interface.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "ism",
++        "title": "ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning",
++        "canonical_url": "https://github.com/pdx97/ISM",
++        "date": "2026-06-30",
++        "source_type": "first_party_repository",
++        "relevance": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation.",
++        "evidence_grade": "B",
++        "code_available": True,
++        "local_compatibility": "partial",
++        "disposition": "accepted_new",
++        "exclusion_reason": "The reference runner requires hosted OpenAI solvers, synthesizers, and embeddings; V606 can reuse only the data and reset pattern.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "memoir",
++        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
++        "canonical_url": "https://arxiv.org/abs/2607.20792",
++        "date": "2026-07-22",
++        "source_type": "paper",
++        "relevance": "Its fixed-budget result supports delayed post-episode memory writes.",
++        "evidence_grade": "A",
++        "code_available": True,
++        "local_compatibility": "compatible",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Exclude within-episode coupled reads and writes from V606.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "cl_bench",
++        "title": "Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments",
++        "canonical_url": "https://arxiv.org/abs/2606.05661",
++        "date": "2026-06-04",
++        "source_type": "paper",
++        "relevance": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "compatible",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Do not treat a memory-write count as a learning result.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "grounded_in_context",
++        "title": "ORION Grounded in Context: Retrieval-Based Method for Hallucination Detection",
++        "canonical_url": "https://arxiv.org/abs/2504.15771",
++        "date": "2025-05-22",
++        "source_type": "paper",
++        "relevance": "Small claim units aligned to retrieved evidence support span-first acquisition.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Do not use its learned NLI score as final relation authority.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "span_level_hallucination",
++        "title": "Span-Level Hallucination Detection for LLM-Generated Answers",
++        "canonical_url": "https://arxiv.org/abs/2504.18639",
++        "date": "2025-04-25",
++        "source_type": "paper",
++        "relevance": "Semantic-role decomposition reinforces exact evidence-span capture before classification.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Exclude GPT and NLI adjudication from the final exact V606 qualifier.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "torx",
++        "title": "A Framework for Stochastic Differentiable Programming",
++        "canonical_url": "https://arxiv.org/abs/2608.01612",
++        "date": "2026-08-13",
++        "source_type": "paper",
++        "relevance": "Typed stochastic circuits motivate a serializable sampler interface.",
++        "evidence_grade": "A",
++        "code_available": True,
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The local extro-torx 0.0.1 CPU path does not authorize an XTR-0 or Z1 claim.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "thermalizers",
++        "title": "Thermalizing Stochastic Programs",
++        "canonical_url": "https://arxiv.org/abs/2608.01615",
++        "date": "2026-08-13",
++        "source_type": "paper",
++        "relevance": "Per-factor and accumulated compilation error define a future portability check.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "incompatible",
++        "disposition": "rejected",
++        "exclusion_reason": "Thermalizers remains a preview and no authenticated thermodynamic device route exists.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "smc_sd",
++        "title": "SMC Speculative Decoding",
++        "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++        "date": "2026-04-17",
++        "source_type": "first_party_repository",
++        "relevance": "Its ESS-driven particle reweighting is a useful implementation comparison.",
++        "evidence_grade": "B",
++        "code_available": True,
++        "local_compatibility": "incompatible",
++        "disposition": "rejected",
++        "exclusion_reason": "The current repository requires patched SGLang; V606 uses llama.cpp and targets quality rather than speculative throughput.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "kanele",
++        "title": "KANELÉ: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation",
++        "canonical_url": "https://github.com/Duchstf/KANELE",
++        "date": "2025-12-14",
++        "source_type": "first_party_repository",
++        "relevance": "The repository provides a concrete future LUT-based KAN hardware path.",
++        "evidence_grade": "B",
++        "code_available": True,
++        "local_compatibility": "incompatible",
++        "disposition": "rejected",
++        "exclusion_reason": "It targets Vivado 2024.1 and Xilinx devices; Vivado is absent and V606 has no FPGA task.",
++        "terminal": True,
++    },
++    {
++        "candidate_id": "symbolic_kan",
++        "title": "Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure for Interpretable Learning",
++        "canonical_url": "https://arxiv.org/abs/2603.23854",
++        "date": "2026-03-25",
++        "source_type": "paper",
++        "relevance": "Discrete primitive selection could support future interpretable constraint energy.",
++        "evidence_grade": "A",
++        "code_available": False,
++        "local_compatibility": "incompatible",
++        "disposition": "rejected",
++        "exclusion_reason": "No public implementation was found and V606 excludes adaptive KAN work from its blocking graph.",
++        "terminal": True,
++    },
++)
++
++
++def candidate_rows() -> list[JsonDict]:
++    """Return one terminal evidence row for every named recheck."""
++
++    return deepcopy(_CANDIDATE_ROWS)
++
++
++def implementation_rows() -> list[JsonDict]:
++    """Map the five requested method families to locked V606 experiments."""
++
++    return [
++        {
++            "method_family": "grounded_acquisition",
++            "candidate_id": "grounded_in_context",
++            "source_url": "https://arxiv.org/abs/2504.15771",
++            "v606_experiment": "Exp6926",
++            "reusable_method": "Copy exact evidence spans before assigning a semantic relation.",
++            "implementation_boundary": "Deterministic offsets and ASP effects remain final authority; no learned NLI judge.",
++        },
++        {
++            "method_family": "continual_memory",
++            "candidate_id": "ism",
++            "source_url": "https://github.com/pdx97/ISM",
++            "v606_experiment": "Exp6930",
++            "reusable_method": "Use hard episode resets and a compact success-and-failure strategy bank.",
++            "implementation_boundary": "Use local frozen-model rows and exact delayed outcomes, not hosted OpenAI calls.",
++        },
++        {
++            "method_family": "verified_variant",
++            "candidate_id": "vera",
++            "source_url": "https://arxiv.org/abs/2602.13217",
++            "v606_experiment": "Exp6932",
++            "reusable_method": "Generate fresh equivalent and hardened instances from executable specifications.",
++            "implementation_boundary": "Keep generation and final checking independent and seal held-out seeds.",
++        },
++        {
++            "method_family": "sequential_monte_carlo",
++            "candidate_id": "sampling_for_quality",
++            "source_url": "https://arxiv.org/abs/2604.16453",
++            "v606_experiment": "Exp6934",
++            "reusable_method": "Use soft Boltzmann weights, ESS resampling, and bounded resample-move steps.",
++            "implementation_boundary": "Particles are complete candidates and budgets match both controls.",
++        },
++        {
++            "method_family": "hardware_sampling",
++            "candidate_id": "torx",
++            "source_url": "https://arxiv.org/abs/2608.01612",
++            "v606_experiment": "Exp6934",
++            "reusable_method": "Keep particle and factor rows serializable as typed stochastic-program inputs.",
++            "implementation_boundary": "V606 runs no thermodynamic hardware and makes no speed, power, or device claim.",
++        },
++    ]
++
++
++def compatibility_rows() -> list[JsonDict]:
++    """Record concrete source-to-local implementation mismatches."""
++
++    return [
++        {
++            "candidate_id": "ism",
++            "constraint": "hosted_models",
++            "observed": "gpt-4.1-mini, gpt-4o, gpt-4o-mini, and text-embedding-3-small",
++            "effect": "Reuse the schema format only; implement V606 with local frozen-model evidence and exact outcomes.",
++        },
++        {
++            "candidate_id": "twisted_smc",
++            "constraint": "weight_mutation",
++            "observed": "self-distillation refines the base model",
++            "effect": "V606 may reuse only the training-free particle concept.",
++        },
++        {
++            "candidate_id": "syntactic_semantic_smc",
++            "constraint": "runner_interface",
++            "observed": "language-model probabilistic-program stack",
++            "effect": "Build a bounded llama.cpp complete-candidate sampler instead of importing the stack.",
++        },
++        {
++            "candidate_id": "smc_sd",
++            "constraint": "backend",
++            "observed": "patched SGLang is required and is not installed",
++            "effect": "Do not claim SMC-SD throughput or direct compatibility.",
++        },
++        {
++            "candidate_id": "torx",
++            "constraint": "substrate",
++            "observed": "extro-torx 0.0.1 is importable on the local CPU path",
++            "effect": "Serialization experiments are possible, but no thermodynamic hardware claim is allowed.",
++        },
++        {
++            "candidate_id": "thermalizers",
++            "constraint": "availability",
++            "observed": "paper and preview only",
++            "effect": "Defer compiler parity and accumulated-error reproduction.",
++        },
++        {
++            "candidate_id": "kanele",
++            "constraint": "toolchain",
++            "observed": "Vivado 2024.1 and named Xilinx devices are required; Vivado is absent",
++            "effect": "Defer FPGA work beyond V606.",
++        },
++        {
++            "candidate_id": "symbolic_kan",
++            "constraint": "implementation",
++            "observed": "no public code found",
++            "effect": "Keep as a V607 candidate, not an executable V606 dependency.",
++        },
++        {
++            "candidate_id": "logical_intelligence",
++            "constraint": "assets",
++            "observed": "no public Kona weights, recipe, or local runner",
++            "effect": "Keep Kona as an architecture comparator only.",
++        },
++    ]
++
++
++def citation_edge_rows() -> list[JsonDict]:
++    """Bind every candidate disposition to the source that supports it."""
++
++    return [
++        {
++            "candidate_id": row["candidate_id"],
++            "canonical_url": row["canonical_url"],
++            "supports": row["relevance"],
++            "evidence_grade": row["evidence_grade"],
++        }
++        for row in candidate_rows()
++    ]
++
++
++def v607_candidate_rows() -> list[JsonDict]:
++    """Keep roadmap-changing ideas outside the locked V606 contract."""
++
++    return [
++        {
++            "candidate_id": "ism_local_adapter",
++            "target_milestone": "V607+",
++            "proposal": "Test a local typed strategy-bank adapter against the unchanged V606 read-only control.",
++            "prerequisite": "V606 Exp6931 terminal cold audit.",
++        },
++        {
++            "candidate_id": "smc_sd_backend_canary",
++            "target_milestone": "V607+",
++            "proposal": "Recheck a pinned SMC-SD backend only if it supports the local runner and matched quality budgets.",
++            "prerequisite": "An installable SGLang or llama.cpp-compatible reference path.",
++        },
++        {
++            "candidate_id": "kanele_simulation",
++            "target_milestone": "V607+",
++            "proposal": "Run a device-free KANELÉ conversion and simulation canary before any board task.",
++            "prerequisite": "A reproducible compatible Vivado toolchain or open simulator path.",
++        },
++        {
++            "candidate_id": "symbolic_kan_energy",
++            "target_milestone": "V607+",
++            "proposal": "Compare discrete primitive expressions with the existing exact constraint-energy baseline.",
++            "prerequisite": "Public code or a separately specified clean-room implementation.",
++        },
++    ]
++
++
++_LEDGER_APPEND_ROWS: tuple[JsonDict, ...] = (
++    {
++        "candidate_id": "ism_reference_implementation_compatibility",
++        "title": "ISM reference implementation compatibility update",
++        "canonical_url": "https://github.com/pdx97/ISM",
++        "date": "2026-09-03",
++        "finding": "The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.",
++        "v607_use": "Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately.",
++    },
++)
++
++
++def ledger_append_rows() -> list[JsonDict]:
++    """Return the single verified fact absent from the prior V606 block."""
++
++    return deepcopy(_LEDGER_APPEND_ROWS)
++
++
++def source_family_rows(queries: list[JsonDict]) -> list[JsonDict]:
++    """Reduce terminal query receipts to one row per required family."""
++
++    return [
++        {
++            "source_family": family,
++            "query_id": next(row["query_id"] for row in queries if row["source_family"] == family),
++            "terminal_outcome": next(
++                row["terminal_outcome"] for row in queries if row["source_family"] == family
++            ),
++            "terminal": all(row["terminal"] for row in queries if row["source_family"] == family),
++        }
++        for family in SOURCE_FAMILIES
++    ]
++
++
++def _file_hash(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else "missing"
++
++
++def source_artifact_hashes(root: Path) -> dict[str, str]:
++    """Hash all task-defining local inputs named in the V606 prompt."""
++
++    relatives = (
++        Path("CLAUDE.md"),
++        Path("CODEX.md"),
++        Path("research-program.md"),
++        LEDGER_RELATIVE_PATH,
++        ROADMAP_RELATIVE_PATH,
++        DESIGN_RELATIVE_PATH,
++        Path("ops/conductor-log.md"),
++        Path("research-complete.yaml"),
++        SPEC_RELATIVE_PATH,
++    )
++    return {relative.as_posix(): _file_hash(root / relative) for relative in relatives}
++
++
++def _combined_rows(groups: list[tuple[str, list[JsonDict]]]) -> list[JsonDict]:
++    rows = []
++    for row_type, group in groups:
++        rows.extend({"row_type": row_type, **deepcopy(row)} for row in group)
++    return rows
++
++
++def payload_checksum(artifact: dict[str, object]) -> str:
++    """Hash a normalized payload while excluding its self-referential field."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
++    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def build_artifact(
++    *, root: Path, run_date: str, duration_s: float, output_root: Path | None = None
++) -> dict[str, object]:
++    """Build a complete artifact or a schema-complete blocked preflight."""
++
++    del output_root
++    preconditions = check_preconditions(root, run_date)
++    failed = next((row for row in preconditions if not row["available"]), None)
++    queries = [] if failed else query_rows()
++    candidates = [] if failed else candidate_rows()
++    implementations = [] if failed else implementation_rows()
++    compatibilities = [] if failed else compatibility_rows()
++    citations = [] if failed else citation_edge_rows()
++    future = [] if failed else v607_candidate_rows()
++    appends = [] if failed else ledger_append_rows()
++    families = [] if failed else source_family_rows(queries)
++    accepted = [row for row in candidates if row["disposition"].startswith("accepted")]
++    rejected = [row for row in candidates if row["disposition"] == "rejected"]
++    complete = bool(
++        not failed
++        and {row["source_family"] for row in queries} == set(SOURCE_FAMILIES)
++        and all(row["terminal"] for row in queries)
++        and {row["candidate_id"] for row in candidates} == set(NAMED_CANDIDATES)
++        and all(row["terminal"] for row in candidates)
++    )
++    rows = _combined_rows(
++        [
++            ("query", queries),
++            ("source_family", families),
++            ("candidate", candidates),
++            ("citation_edge", citations),
++            ("implementation", implementations),
++            ("compatibility", compatibilities),
++            ("ledger_append", appends),
++            ("v607_candidate", future),
++        ]
++    )
++    if failed:
++        gate_summary: JsonDict = {
++            "all_gates_passed": False,
++            "failed_check": failed["resource"],
++            "expected": failed["expected"],
++            "observed": failed["observed"],
++        }
++        status = "blocked"
++        verdict_class = "blocked"
++        verdict = "complete_blocked_v606_sota_ingestion"
++    else:
++        gate_summary = {
++            "all_gates_passed": complete,
++            "failed_check": None,
++            "expected": "15 terminal source families and 15 terminal named candidates",
++            "observed": f"{len(families)} source families and {len(candidates)} candidates",
++        }
++        status = "complete"
++        verdict_class = "positive" if appends else "null"
++        verdict = (
++            "complete_v606_sota_ingestion_with_one_new_compatibility_finding"
++            if appends
++            else "complete_null_v606_sota_ingestion_no_new_findings"
++        )
++    artifact: dict[str, object] = {
++        "schema": SCHEMA_VERSION,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "status": status,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": {
++            "invoked_models": [],
++            "method": "No experimental model inference; bounded primary-source retrieval only.",
++        },
++        "duration_s": duration_s,
++        "source_artifact_hashes": source_artifact_hashes(root),
++        "rows": rows,
++        "query_rows": queries,
++        "source_family_rows": families,
++        "candidate_rows": candidates,
++        "accepted_finding_rows": accepted,
++        "rejected_finding_rows": rejected,
++        "citation_edge_rows": citations,
++        "implementation_rows": implementations,
++        "compatibility_rows": compatibilities,
++        "ledger_append_rows": appends,
++        "v607_candidate_rows": future,
++        "rate_limit_rows": [],
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "v606_sota_ingestion_complete_score": int(complete),
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": verdict_class,
++        "honest_verdict": verdict,
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact_or_path: dict[str, object] | Path) -> list[str]:
++    """Validate row coverage, terminal states, and the payload checksum."""
++
++    if isinstance(artifact_or_path, Path):
++        if not artifact_or_path.exists():
++            return ["artifact missing"]
++        artifact = json.loads(artifact_or_path.read_text(encoding="utf-8"))
++    else:
++        artifact = artifact_or_path
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        return [f"missing required field: {missing[0]}"]
++    errors = []
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact["verifier_is_oracle"] is not False:
++        errors.append("verifier_is_oracle must be false")
++    if set(artifact["field_principles"]) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field principles do not cover required fields")
++    blocked = artifact["status"] == "blocked"
++    if not blocked:
++        queries = artifact["query_rows"]
++        candidates = artifact["candidate_rows"]
++        source_complete = {row["source_family"] for row in queries} == set(SOURCE_FAMILIES) and all(
++            row["terminal"] for row in queries
++        )
++        candidate_complete = {row["candidate_id"] for row in candidates} == set(
++            NAMED_CANDIDATES
++        ) and all(row["terminal"] for row in candidates)
++        if not source_complete:
++            errors.append("source family coverage is incomplete")
++        if not candidate_complete:
++            errors.append("candidate coverage is incomplete")
++        if artifact["v606_sota_ingestion_complete_score"] != int(
++            source_complete and candidate_complete
++        ):
++            errors.append("completion score does not match terminal rows")
++    elif (
++        artifact["v606_sota_ingestion_complete_score"] != 0
++        or artifact["honest_verdict"] != "complete_blocked_v606_sota_ingestion"
++    ):
++        errors.append("blocked artifact fields are inconsistent")
++    if artifact["reproducibility_checksum"] != payload_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    return errors
++
++
++def append_verified_findings(root: Path, artifact: dict[str, object]) -> list[str]:
++    """Append marked verified findings and never replace earlier ledger text."""
++
++    path = root / LEDGER_RELATIVE_PATH
++    text = path.read_text(encoding="utf-8")
++    appended = []
++    blocks = []
++    for row in artifact["ledger_append_rows"]:
++        marker = f"<!-- EXP6925-{row['candidate_id'].upper()} -->"
++        if marker in text:
++            continue
++        blocks.append(
++            "\n".join(
++                (
++                    marker,
++                    f"### {row['title']} - {row['date']}",
++                    f"- **Source:** {row['canonical_url']}",
++                    f"- **Verified finding:** {row['finding']}",
++                    f"- **V607 boundary:** {row['v607_use']}",
++                )
++            )
++        )
++        appended.append(row["candidate_id"])
++    if blocks:
++        suffix = (
++            "\n\n## V606 Execution-Time SOTA Ingestion - 2026-09-03\n\n"
++            + "\n\n".join(blocks)
++            + "\n"
++        )
++        atomic_write_text(path, text.rstrip() + suffix, allow_override=False)
++    return appended
++
++
++def write_artifact(artifact: dict[str, object], path: Path) -> Path:
++    """Atomically write one validated experiment JSON file."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return atomic_write_json(path, artifact, sort_keys=True)
++
++
++def main(argv: list[str] | None = None) -> int:
++    """Write or validate the V606 SOTA-ingestion result."""
++
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--validate", type=Path)
++    args = parser.parse_args(argv)
++    if args.validate:
++        return int(bool(validate_artifact(args.validate)))
++    root = find_repo_root()
++    draft = build_artifact(root=root, run_date=args.date, duration_s=315.0)
++    if draft["status"] != "blocked":
++        append_verified_findings(root, draft)
++        draft = build_artifact(root=root, run_date=args.date, duration_s=315.0)
++    output = args.output or root / RESULT_RELATIVE_PATH
++    write_artifact(draft, output)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-references.md b/research-references.md
+index 74644e54bb..32999aa41c 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -40272,3 +40272,11 @@ writes.
+   the dependency is scientifically necessary.
+ 
+ <!-- V585-PLANNER-REFRESH-20260828-END -->
++
++## V606 Execution-Time SOTA Ingestion - 2026-09-03
++
++<!-- EXP6925-ISM_REFERENCE_IMPLEMENTATION_COMPATIBILITY -->
++### ISM reference implementation compatibility update - 2026-09-03
++- **Source:** https://github.com/pdx97/ISM
++- **Verified finding:** The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.
++- **V607 boundary:** Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately.
+diff --git a/results/experiment_6925_v606_sota_ingestion.json b/results/experiment_6925_v606_sota_ingestion.json
+new file mode 100644
+index 0000000000..2ec13283c5
+--- /dev/null
++++ b/results/experiment_6925_v606_sota_ingestion.json
+@@ -0,0 +1,2088 @@
++{
++  "accepted_finding_rows": [
++    {
++      "candidate_id": "vera",
++      "canonical_url": "https://arxiv.org/abs/2602.13217",
++      "code_available": true,
++      "date": "2026-01-23",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Reuse the generator-and-checker pattern only; do not import unknown benchmark assumptions.",
++      "local_compatibility": "partial",
++      "relevance": "Executable generators create fresh verified variants for the V606 headroom fixture.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "VeRA: Verified Reasoning Data Augmentation at Scale"
++    },
++    {
++      "candidate_id": "solver_hard",
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "code_available": true,
++      "date": "2026-07-19",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude solver runtime and conflict counts from model-hardness labels.",
++      "local_compatibility": "compatible",
++      "relevance": "Measured model headroom must replace solver conflict counts as the admission signal.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Solver-Hard Is Not Model-Hard"
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "canonical_url": "https://arxiv.org/abs/2604.16453",
++      "code_available": false,
++      "date": "2026-04-07",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Use complete-candidate energy; do not claim parity with the paper's prefix reward model.",
++      "local_compatibility": "partial",
++      "relevance": "Soft weights, ESS resampling, and resample-move updates map to Exp6934.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "canonical_url": "https://arxiv.org/abs/2507.02315",
++      "code_available": false,
++      "date": "2025-07-03",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "V606 forbids self-distillation and weight changes; only the inference primitive remains relevant.",
++      "local_compatibility": "partial",
++      "relevance": "Twisted SMC supports particle allocation under sparse constraints.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Improving Constrained Language Generation via Self-Distilled Twisted Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "canonical_url": "https://arxiv.org/abs/2504.13139",
++      "code_available": true,
++      "date": "2025-04-18",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Its probabilistic-program stack is not the local llama.cpp complete-candidate interface.",
++      "local_compatibility": "partial",
++      "relevance": "The paper supports adaptive particle allocation for controlled generation.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Syntactic and Semantic Control of Large Language Models via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "ism",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "code_available": true,
++      "date": "2026-06-30",
++      "disposition": "accepted_new",
++      "evidence_grade": "B",
++      "exclusion_reason": "The reference runner requires hosted OpenAI solvers, synthesizers, and embeddings; V606 can reuse only the data and reset pattern.",
++      "local_compatibility": "partial",
++      "relevance": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning"
++    },
++    {
++      "candidate_id": "memoir",
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "code_available": true,
++      "date": "2026-07-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude within-episode coupled reads and writes from V606.",
++      "local_compatibility": "compatible",
++      "relevance": "Its fixed-budget result supports delayed post-episode memory writes.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
++    },
++    {
++      "candidate_id": "cl_bench",
++      "canonical_url": "https://arxiv.org/abs/2606.05661",
++      "code_available": false,
++      "date": "2026-06-04",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not treat a memory-write count as a learning result.",
++      "local_compatibility": "compatible",
++      "relevance": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments"
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "canonical_url": "https://arxiv.org/abs/2504.15771",
++      "code_available": false,
++      "date": "2025-05-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not use its learned NLI score as final relation authority.",
++      "local_compatibility": "partial",
++      "relevance": "Small claim units aligned to retrieved evidence support span-first acquisition.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "ORION Grounded in Context: Retrieval-Based Method for Hallucination Detection"
++    },
++    {
++      "candidate_id": "span_level_hallucination",
++      "canonical_url": "https://arxiv.org/abs/2504.18639",
++      "code_available": false,
++      "date": "2025-04-25",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude GPT and NLI adjudication from the final exact V606 qualifier.",
++      "local_compatibility": "partial",
++      "relevance": "Semantic-role decomposition reinforces exact evidence-span capture before classification.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Span-Level Hallucination Detection for LLM-Generated Answers"
++    },
++    {
++      "candidate_id": "torx",
++      "canonical_url": "https://arxiv.org/abs/2608.01612",
++      "code_available": true,
++      "date": "2026-08-13",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The local extro-torx 0.0.1 CPU path does not authorize an XTR-0 or Z1 claim.",
++      "local_compatibility": "partial",
++      "relevance": "Typed stochastic circuits motivate a serializable sampler interface.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "A Framework for Stochastic Differentiable Programming"
++    }
++  ],
++  "candidate_rows": [
++    {
++      "candidate_id": "vera",
++      "canonical_url": "https://arxiv.org/abs/2602.13217",
++      "code_available": true,
++      "date": "2026-01-23",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Reuse the generator-and-checker pattern only; do not import unknown benchmark assumptions.",
++      "local_compatibility": "partial",
++      "relevance": "Executable generators create fresh verified variants for the V606 headroom fixture.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "VeRA: Verified Reasoning Data Augmentation at Scale"
++    },
++    {
++      "candidate_id": "solver_hard",
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "code_available": true,
++      "date": "2026-07-19",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude solver runtime and conflict counts from model-hardness labels.",
++      "local_compatibility": "compatible",
++      "relevance": "Measured model headroom must replace solver conflict counts as the admission signal.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Solver-Hard Is Not Model-Hard"
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "canonical_url": "https://arxiv.org/abs/2604.16453",
++      "code_available": false,
++      "date": "2026-04-07",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Use complete-candidate energy; do not claim parity with the paper's prefix reward model.",
++      "local_compatibility": "partial",
++      "relevance": "Soft weights, ESS resampling, and resample-move updates map to Exp6934.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "canonical_url": "https://arxiv.org/abs/2507.02315",
++      "code_available": false,
++      "date": "2025-07-03",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "V606 forbids self-distillation and weight changes; only the inference primitive remains relevant.",
++      "local_compatibility": "partial",
++      "relevance": "Twisted SMC supports particle allocation under sparse constraints.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Improving Constrained Language Generation via Self-Distilled Twisted Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "canonical_url": "https://arxiv.org/abs/2504.13139",
++      "code_available": true,
++      "date": "2025-04-18",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Its probabilistic-program stack is not the local llama.cpp complete-candidate interface.",
++      "local_compatibility": "partial",
++      "relevance": "The paper supports adaptive particle allocation for controlled generation.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Syntactic and Semantic Control of Large Language Models via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "ism",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "code_available": true,
++      "date": "2026-06-30",
++      "disposition": "accepted_new",
++      "evidence_grade": "B",
++      "exclusion_reason": "The reference runner requires hosted OpenAI solvers, synthesizers, and embeddings; V606 can reuse only the data and reset pattern.",
++      "local_compatibility": "partial",
++      "relevance": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning"
++    },
++    {
++      "candidate_id": "memoir",
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "code_available": true,
++      "date": "2026-07-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude within-episode coupled reads and writes from V606.",
++      "local_compatibility": "compatible",
++      "relevance": "Its fixed-budget result supports delayed post-episode memory writes.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
++    },
++    {
++      "candidate_id": "cl_bench",
++      "canonical_url": "https://arxiv.org/abs/2606.05661",
++      "code_available": false,
++      "date": "2026-06-04",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not treat a memory-write count as a learning result.",
++      "local_compatibility": "compatible",
++      "relevance": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments"
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "canonical_url": "https://arxiv.org/abs/2504.15771",
++      "code_available": false,
++      "date": "2025-05-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not use its learned NLI score as final relation authority.",
++      "local_compatibility": "partial",
++      "relevance": "Small claim units aligned to retrieved evidence support span-first acquisition.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "ORION Grounded in Context: Retrieval-Based Method for Hallucination Detection"
++    },
++    {
++      "candidate_id": "span_level_hallucination",
++      "canonical_url": "https://arxiv.org/abs/2504.18639",
++      "code_available": false,
++      "date": "2025-04-25",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude GPT and NLI adjudication from the final exact V606 qualifier.",
++      "local_compatibility": "partial",
++      "relevance": "Semantic-role decomposition reinforces exact evidence-span capture before classification.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Span-Level Hallucination Detection for LLM-Generated Answers"
++    },
++    {
++      "candidate_id": "torx",
++      "canonical_url": "https://arxiv.org/abs/2608.01612",
++      "code_available": true,
++      "date": "2026-08-13",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The local extro-torx 0.0.1 CPU path does not authorize an XTR-0 or Z1 claim.",
++      "local_compatibility": "partial",
++      "relevance": "Typed stochastic circuits motivate a serializable sampler interface.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "A Framework for Stochastic Differentiable Programming"
++    },
++    {
++      "candidate_id": "thermalizers",
++      "canonical_url": "https://arxiv.org/abs/2608.01615",
++      "code_available": false,
++      "date": "2026-08-13",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "Thermalizers remains a preview and no authenticated thermodynamic device route exists.",
++      "local_compatibility": "incompatible",
++      "relevance": "Per-factor and accumulated compilation error define a future portability check.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Thermalizing Stochastic Programs"
++    },
++    {
++      "candidate_id": "smc_sd",
++      "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++      "code_available": true,
++      "date": "2026-04-17",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "The current repository requires patched SGLang; V606 uses llama.cpp and targets quality rather than speculative throughput.",
++      "local_compatibility": "incompatible",
++      "relevance": "Its ESS-driven particle reweighting is a useful implementation comparison.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "SMC Speculative Decoding"
++    },
++    {
++      "candidate_id": "kanele",
++      "canonical_url": "https://github.com/Duchstf/KANELE",
++      "code_available": true,
++      "date": "2025-12-14",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "It targets Vivado 2024.1 and Xilinx devices; Vivado is absent and V606 has no FPGA task.",
++      "local_compatibility": "incompatible",
++      "relevance": "The repository provides a concrete future LUT-based KAN hardware path.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "KANEL\u00c9: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation"
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "canonical_url": "https://arxiv.org/abs/2603.23854",
++      "code_available": false,
++      "date": "2026-03-25",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "No public implementation was found and V606 excludes adaptive KAN work from its blocking graph.",
++      "local_compatibility": "incompatible",
++      "relevance": "Discrete primitive selection could support future interpretable constraint energy.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure for Interpretable Learning"
++    }
++  ],
++  "citation_edge_rows": [
++    {
++      "candidate_id": "vera",
++      "canonical_url": "https://arxiv.org/abs/2602.13217",
++      "evidence_grade": "A",
++      "supports": "Executable generators create fresh verified variants for the V606 headroom fixture."
++    },
++    {
++      "candidate_id": "solver_hard",
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "evidence_grade": "A",
++      "supports": "Measured model headroom must replace solver conflict counts as the admission signal."
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "canonical_url": "https://arxiv.org/abs/2604.16453",
++      "evidence_grade": "A",
++      "supports": "Soft weights, ESS resampling, and resample-move updates map to Exp6934."
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "canonical_url": "https://arxiv.org/abs/2507.02315",
++      "evidence_grade": "A",
++      "supports": "Twisted SMC supports particle allocation under sparse constraints."
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "canonical_url": "https://arxiv.org/abs/2504.13139",
++      "evidence_grade": "A",
++      "supports": "The paper supports adaptive particle allocation for controlled generation."
++    },
++    {
++      "candidate_id": "ism",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "evidence_grade": "B",
++      "supports": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation."
++    },
++    {
++      "candidate_id": "memoir",
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "evidence_grade": "A",
++      "supports": "Its fixed-budget result supports delayed post-episode memory writes."
++    },
++    {
++      "candidate_id": "cl_bench",
++      "canonical_url": "https://arxiv.org/abs/2606.05661",
++      "evidence_grade": "A",
++      "supports": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit."
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "canonical_url": "https://arxiv.org/abs/2504.15771",
++      "evidence_grade": "A",
++      "supports": "Small claim units aligned to retrieved evidence support span-first acquisition."
++    },
++    {
++      "candidate_id": "span_level_hallucination",
++      "canonical_url": "https://arxiv.org/abs/2504.18639",
++      "evidence_grade": "A",
++      "supports": "Semantic-role decomposition reinforces exact evidence-span capture before classification."
++    },
++    {
++      "candidate_id": "torx",
++      "canonical_url": "https://arxiv.org/abs/2608.01612",
++      "evidence_grade": "A",
++      "supports": "Typed stochastic circuits motivate a serializable sampler interface."
++    },
++    {
++      "candidate_id": "thermalizers",
++      "canonical_url": "https://arxiv.org/abs/2608.01615",
++      "evidence_grade": "A",
++      "supports": "Per-factor and accumulated compilation error define a future portability check."
++    },
++    {
++      "candidate_id": "smc_sd",
++      "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++      "evidence_grade": "B",
++      "supports": "Its ESS-driven particle reweighting is a useful implementation comparison."
++    },
++    {
++      "candidate_id": "kanele",
++      "canonical_url": "https://github.com/Duchstf/KANELE",
++      "evidence_grade": "B",
++      "supports": "The repository provides a concrete future LUT-based KAN hardware path."
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "canonical_url": "https://arxiv.org/abs/2603.23854",
++      "evidence_grade": "A",
++      "supports": "Discrete primitive selection could support future interpretable constraint energy."
++    }
++  ],
++  "compatibility_rows": [
++    {
++      "candidate_id": "ism",
++      "constraint": "hosted_models",
++      "effect": "Reuse the schema format only; implement V606 with local frozen-model evidence and exact outcomes.",
++      "observed": "gpt-4.1-mini, gpt-4o, gpt-4o-mini, and text-embedding-3-small"
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "constraint": "weight_mutation",
++      "effect": "V606 may reuse only the training-free particle concept.",
++      "observed": "self-distillation refines the base model"
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "constraint": "runner_interface",
++      "effect": "Build a bounded llama.cpp complete-candidate sampler instead of importing the stack.",
++      "observed": "language-model probabilistic-program stack"
++    },
++    {
++      "candidate_id": "smc_sd",
++      "constraint": "backend",
++      "effect": "Do not claim SMC-SD throughput or direct compatibility.",
++      "observed": "patched SGLang is required and is not installed"
++    },
++    {
++      "candidate_id": "torx",
++      "constraint": "substrate",
++      "effect": "Serialization experiments are possible, but no thermodynamic hardware claim is allowed.",
++      "observed": "extro-torx 0.0.1 is importable on the local CPU path"
++    },
++    {
++      "candidate_id": "thermalizers",
++      "constraint": "availability",
++      "effect": "Defer compiler parity and accumulated-error reproduction.",
++      "observed": "paper and preview only"
++    },
++    {
++      "candidate_id": "kanele",
++      "constraint": "toolchain",
++      "effect": "Defer FPGA work beyond V606.",
++      "observed": "Vivado 2024.1 and named Xilinx devices are required; Vivado is absent"
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "constraint": "implementation",
++      "effect": "Keep as a V607 candidate, not an executable V606 dependency.",
++      "observed": "no public code found"
++    },
++    {
++      "candidate_id": "logical_intelligence",
++      "constraint": "assets",
++      "effect": "Keep Kona as an architecture comparator only.",
++      "observed": "no public Kona weights, recipe, or local runner"
++    }
++  ],
++  "duration_s": 315.0,
++  "experiment_id": "experiment_6925_v606_sota_ingestion",
++  "field_principles": {
++    "accepted_finding_rows": "Accepted rows show which checked methods remain relevant or changed.",
++    "candidate_rows": "One row per named method prevents selective reporting of rechecks.",
++    "citation_edge_rows": "Citation edges bind each local method claim to a checked canonical source.",
++    "compatibility_rows": "Compatibility rows expose dependencies that the local stack cannot reuse directly.",
++    "duration_s": "Elapsed research time makes an implausibly short source claim visible.",
++    "experiment_id": "A stable identity binds the research receipt to the scheduled V606 task.",
++    "field_principles": "A principle for each field explains why the evidence is needed.",
++    "gate_check_summary": "The gate summary names exact expected and observed values when preflight blocks.",
++    "honest_verdict": "A terminal complete_ prefix lets the conductor classify the outcome without guessing.",
++    "implementation_rows": "Implementation rows map source methods to exact V606 experiments and boundaries.",
++    "inference_substrate": "The substrate states that this task used source research and no model inference.",
++    "ledger_append_rows": "Append rows isolate genuinely new verified facts from repeated ledger content.",
++    "model_specs": "An explicit empty invocation receipt prevents cited model names from implying that inference ran.",
++    "preconditions_checked": "Preflight rows prove the roadmap, ledger, policy, and dated plan existed before research.",
++    "query_rows": "One terminal row per query preserves no-update and access-failure outcomes.",
++    "random_seed": "A fixed seed makes deterministic row ordering reproducible.",
++    "rate_limit_rows": "Rate-limit rows keep missing responses from becoming false no-update claims.",
++    "rejected_finding_rows": "Rejected rows retain exclusions and stop weak evidence from disappearing.",
++    "reproducibility_checksum": "The payload hash detects any later change to the research receipt.",
++    "rows": "A combined row ledger lets a checker inspect evidence without trusting summaries.",
++    "run_date": "The date separates this execution-time check from the earlier planning sweep.",
++    "schema": "A versioned schema lets later validators detect a changed artifact contract.",
++    "source_artifact_hashes": "Hashes bind the result to the exact local sources that defined V606.",
++    "source_family_rows": "Family summaries prove that every required source surface terminated.",
++    "status": "A terminal status distinguishes a complete source pass from a blocked preflight.",
++    "v606_sota_ingestion_complete_score": "The score becomes one only when every required source and method has a terminal row.",
++    "v607_candidate_rows": "Future ideas stay advisory and cannot silently rewrite locked V606 work.",
++    "verdict_class": "The class separates an advisory update from a null or blocked research outcome.",
++    "verifier_is_oracle": "False states that source review is not an executable correctness oracle."
++  },
++  "gate_check_summary": {
++    "all_gates_passed": true,
++    "expected": "15 terminal source families and 15 terminal named candidates",
++    "failed_check": null,
++    "observed": "15 source families and 15 candidates"
++  },
++  "honest_verdict": "complete_v606_sota_ingestion_with_one_new_compatibility_finding",
++  "implementation_rows": [
++    {
++      "candidate_id": "grounded_in_context",
++      "implementation_boundary": "Deterministic offsets and ASP effects remain final authority; no learned NLI judge.",
++      "method_family": "grounded_acquisition",
++      "reusable_method": "Copy exact evidence spans before assigning a semantic relation.",
++      "source_url": "https://arxiv.org/abs/2504.15771",
++      "v606_experiment": "Exp6926"
++    },
++    {
++      "candidate_id": "ism",
++      "implementation_boundary": "Use local frozen-model rows and exact delayed outcomes, not hosted OpenAI calls.",
++      "method_family": "continual_memory",
++      "reusable_method": "Use hard episode resets and a compact success-and-failure strategy bank.",
++      "source_url": "https://github.com/pdx97/ISM",
++      "v606_experiment": "Exp6930"
++    },
++    {
++      "candidate_id": "vera",
++      "implementation_boundary": "Keep generation and final checking independent and seal held-out seeds.",
++      "method_family": "verified_variant",
++      "reusable_method": "Generate fresh equivalent and hardened instances from executable specifications.",
++      "source_url": "https://arxiv.org/abs/2602.13217",
++      "v606_experiment": "Exp6932"
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "implementation_boundary": "Particles are complete candidates and budgets match both controls.",
++      "method_family": "sequential_monte_carlo",
++      "reusable_method": "Use soft Boltzmann weights, ESS resampling, and bounded resample-move steps.",
++      "source_url": "https://arxiv.org/abs/2604.16453",
++      "v606_experiment": "Exp6934"
++    },
++    {
++      "candidate_id": "torx",
++      "implementation_boundary": "V606 runs no thermodynamic hardware and makes no speed, power, or device claim.",
++      "method_family": "hardware_sampling",
++      "reusable_method": "Keep particle and factor rows serializable as typed stochastic-program inputs.",
++      "source_url": "https://arxiv.org/abs/2608.01612",
++      "v606_experiment": "Exp6934"
++    }
++  ],
++  "inference_substrate": "bounded_primary_source_web_research_no_model_inference",
++  "ledger_append_rows": [
++    {
++      "candidate_id": "ism_reference_implementation_compatibility",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "date": "2026-09-03",
++      "finding": "The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.",
++      "title": "ISM reference implementation compatibility update",
++      "v607_use": "Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately."
++    }
++  ],
++  "model_specs": {
++    "invoked_models": [],
++    "method": "No experimental model inference; bounded primary-source retrieval only."
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "expected": "active roadmap exists and declares 2026.09.606",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++      "resource": "current_roadmap"
++    },
++    {
++      "available": true,
++      "expected": "research-references.md exists",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
++      "resource": "reference_ledger"
++    },
++    {
++      "available": true,
++      "expected": "CLAUDE.md contains the low-concurrency SOTA-ingestion policy",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
++      "resource": "network_policy"
++    },
++    {
++      "available": true,
++      "expected": "frozen query plan dated 20260903 passes validation",
++      "observed": "valid",
++      "resource": "dated_query_plan"
++    }
++  ],
++  "query_rows": [
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:20:42Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The results returned EBT and Distributional EBM. Both sources were already in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:30:00Z",
++      "query_id": "arxiv_ebm",
++      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (reasoning OR verification) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:02Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The relevant symbolic-integration position paper was already selected for V606.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:31:00Z",
++      "query_id": "arxiv_neural_constraints",
++      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_neural_constraints",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:18Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No returned 2025-2026 Ising result changed the V606 no-hardware boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:32:00Z",
++      "query_id": "arxiv_ising_ml",
++      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_ising_ml",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:32Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "Span-level work, including arXiv:2607.00895, was already present in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:33:00Z",
++      "query_id": "arxiv_hallucination_verification",
++      "query_text": "((hallucination AND (verification OR detection)) OR \"span grounding\") AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_hallucination_verification",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:47Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "KANEL\u00c9 and Symbolic-KAN remained the relevant results and were already ledgered.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:34:00Z",
++      "query_id": "arxiv_kan",
++      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (symbolic OR constraint OR FPGA OR LUT) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_kan",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:03Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The second bounded attempt returned the already-ledgered self-distilled twisted-SMC paper.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:35:00Z",
++      "query_id": "arxiv_constrained_generation",
++      "query_text": "(\"constrained generation\" OR \"controlled generation\") AND (SMC OR \"sequential Monte Carlo\" OR verifier) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_constrained_generation",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:19Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No result superseded Sampling for Quality or changed the SMC-SD compatibility boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:36:00Z",
++      "query_id": "arxiv_accelerated_sampling",
++      "query_text": "((accelerated OR speculative OR reward-guided) AND sampling AND (LLM OR EBM OR Ising)) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_accelerated_sampling",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:35Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "ISM, AdaMEM, AgentCL, and related strategy-memory work were already present in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:37:00Z",
++      "query_id": "arxiv_continual_learning",
++      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_continual_learning",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:52Z",
++      "allowed_domains": [
++        "openreview.net"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://openreview.net/search",
++      "concurrency_limit": 1,
++      "evidence": "Current ICLR and NeurIPS records added no reproducible method that changes V606.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:38:00Z",
++      "query_id": "openreview",
++      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026",
++      "source_family": "openreview",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:08Z",
++      "allowed_domains": [
++        "huggingface.co"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://huggingface.co/papers",
++      "concurrency_limit": 1,
++      "evidence": "CL-Bench, AgentCL, and SkillLearnBench pages repeated already-ledgered sources.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:39:00Z",
++      "query_id": "huggingface_papers",
++      "query_text": "site:huggingface.co/papers (VeRA OR ISM OR CL-Bench OR verification OR \"continual learning\")",
++      "source_family": "huggingface_papers",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:32Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++      "concurrency_limit": 1,
++      "evidence": "The direct API returned 35 rows. The newest visible paper was arXiv:2608.14186, already ledgered.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:40:00Z",
++      "query_id": "semantic_scholar_ebt",
++      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "source_family": "semantic_scholar_ebt",
++      "status": "success_after_tool_rejection",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:38Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++      "concurrency_limit": 1,
++      "evidence": "The direct API returned eight rows. No row post-dated the prior V606 sweep.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:41:00Z",
++      "query_id": "semantic_scholar_arm_ebm",
++      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "source_family": "semantic_scholar_arm_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:01Z",
++      "allowed_domains": [
++        "github.com",
++        "api.github.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://github.com/search",
++      "concurrency_limit": 1,
++      "evidence": "ISM, SMC-SD, and KANEL\u00c9 repositories were reachable. ISM disclosed hosted-model dependencies not recorded in the V606 section.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:42:00Z",
++      "query_id": "github_official",
++      "query_text": "official repositories ISM SMC-SD KANELE EBT Torx updated 2025 2026",
++      "source_family": "github_official",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "implementation_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:18Z",
++      "allowed_domains": [
++        "extropic.ai"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
++      "concurrency_limit": 1,
++      "evidence": "The August update still exposes Torx, previews Thermalizers, and targets Z1 access in 2027.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:43:00Z",
++      "query_id": "extropic",
++      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation update",
++      "source_family": "extropic",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:32Z",
++      "allowed_domains": [
++        "logicalintelligence.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++      "concurrency_limit": 1,
++      "evidence": "The Kona page remained a product description with no public weights, training recipe, or local runner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:44:00Z",
++      "query_id": "logical_intelligence",
++      "query_text": "Logical Intelligence Kona EBM weights code training recipe runner update",
++      "source_family": "logical_intelligence",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets",
++      "timeout_s": 20
++    }
++  ],
++  "random_seed": 6925,
++  "rate_limit_rows": [],
++  "rejected_finding_rows": [
++    {
++      "candidate_id": "thermalizers",
++      "canonical_url": "https://arxiv.org/abs/2608.01615",
++      "code_available": false,
++      "date": "2026-08-13",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "Thermalizers remains a preview and no authenticated thermodynamic device route exists.",
++      "local_compatibility": "incompatible",
++      "relevance": "Per-factor and accumulated compilation error define a future portability check.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Thermalizing Stochastic Programs"
++    },
++    {
++      "candidate_id": "smc_sd",
++      "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++      "code_available": true,
++      "date": "2026-04-17",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "The current repository requires patched SGLang; V606 uses llama.cpp and targets quality rather than speculative throughput.",
++      "local_compatibility": "incompatible",
++      "relevance": "Its ESS-driven particle reweighting is a useful implementation comparison.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "SMC Speculative Decoding"
++    },
++    {
++      "candidate_id": "kanele",
++      "canonical_url": "https://github.com/Duchstf/KANELE",
++      "code_available": true,
++      "date": "2025-12-14",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "It targets Vivado 2024.1 and Xilinx devices; Vivado is absent and V606 has no FPGA task.",
++      "local_compatibility": "incompatible",
++      "relevance": "The repository provides a concrete future LUT-based KAN hardware path.",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "KANEL\u00c9: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation"
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "canonical_url": "https://arxiv.org/abs/2603.23854",
++      "code_available": false,
++      "date": "2026-03-25",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "No public implementation was found and V606 excludes adaptive KAN work from its blocking graph.",
++      "local_compatibility": "incompatible",
++      "relevance": "Discrete primitive selection could support future interpretable constraint energy.",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure for Interpretable Learning"
++    }
++  ],
++  "reproducibility_checksum": "8ae568decab64322a0abb448205c3f34ad6c82c7daacc4085b9d5540bbe803c3",
++  "rows": [
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:20:42Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The results returned EBT and Distributional EBM. Both sources were already in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:30:00Z",
++      "query_id": "arxiv_ebm",
++      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (reasoning OR verification) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:02Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The relevant symbolic-integration position paper was already selected for V606.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:31:00Z",
++      "query_id": "arxiv_neural_constraints",
++      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_neural_constraints",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:18Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No returned 2025-2026 Ising result changed the V606 no-hardware boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:32:00Z",
++      "query_id": "arxiv_ising_ml",
++      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_ising_ml",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:32Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "Span-level work, including arXiv:2607.00895, was already present in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:33:00Z",
++      "query_id": "arxiv_hallucination_verification",
++      "query_text": "((hallucination AND (verification OR detection)) OR \"span grounding\") AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_hallucination_verification",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:21:47Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "KANEL\u00c9 and Symbolic-KAN remained the relevant results and were already ledgered.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:34:00Z",
++      "query_id": "arxiv_kan",
++      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (symbolic OR constraint OR FPGA OR LUT) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_kan",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:03Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The second bounded attempt returned the already-ledgered self-distilled twisted-SMC paper.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:35:00Z",
++      "query_id": "arxiv_constrained_generation",
++      "query_text": "(\"constrained generation\" OR \"controlled generation\") AND (SMC OR \"sequential Monte Carlo\" OR verifier) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_constrained_generation",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:19Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No result superseded Sampling for Quality or changed the SMC-SD compatibility boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:36:00Z",
++      "query_id": "arxiv_accelerated_sampling",
++      "query_text": "((accelerated OR speculative OR reward-guided) AND sampling AND (LLM OR EBM OR Ising)) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_accelerated_sampling",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:35Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "ISM, AdaMEM, AgentCL, and related strategy-memory work were already present in the ledger.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:37:00Z",
++      "query_id": "arxiv_continual_learning",
++      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_continual_learning",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:22:52Z",
++      "allowed_domains": [
++        "openreview.net"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://openreview.net/search",
++      "concurrency_limit": 1,
++      "evidence": "Current ICLR and NeurIPS records added no reproducible method that changes V606.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:38:00Z",
++      "query_id": "openreview",
++      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026",
++      "row_type": "query",
++      "source_family": "openreview",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:08Z",
++      "allowed_domains": [
++        "huggingface.co"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://huggingface.co/papers",
++      "concurrency_limit": 1,
++      "evidence": "CL-Bench, AgentCL, and SkillLearnBench pages repeated already-ledgered sources.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:39:00Z",
++      "query_id": "huggingface_papers",
++      "query_text": "site:huggingface.co/papers (VeRA OR ISM OR CL-Bench OR verification OR \"continual learning\")",
++      "row_type": "query",
++      "source_family": "huggingface_papers",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:32Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++      "concurrency_limit": 1,
++      "evidence": "The direct API returned 35 rows. The newest visible paper was arXiv:2608.14186, already ledgered.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:40:00Z",
++      "query_id": "semantic_scholar_ebt",
++      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "row_type": "query",
++      "source_family": "semantic_scholar_ebt",
++      "status": "success_after_tool_rejection",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:23:38Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++      "concurrency_limit": 1,
++      "evidence": "The direct API returned eight rows. No row post-dated the prior V606 sweep.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:41:00Z",
++      "query_id": "semantic_scholar_arm_ebm",
++      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "row_type": "query",
++      "source_family": "semantic_scholar_arm_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:01Z",
++      "allowed_domains": [
++        "github.com",
++        "api.github.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://github.com/search",
++      "concurrency_limit": 1,
++      "evidence": "ISM, SMC-SD, and KANEL\u00c9 repositories were reachable. ISM disclosed hosted-model dependencies not recorded in the V606 section.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:42:00Z",
++      "query_id": "github_official",
++      "query_text": "official repositories ISM SMC-SD KANELE EBT Torx updated 2025 2026",
++      "row_type": "query",
++      "source_family": "github_official",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "implementation_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:18Z",
++      "allowed_domains": [
++        "extropic.ai"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
++      "concurrency_limit": 1,
++      "evidence": "The August update still exposes Torx, previews Thermalizers, and targets Z1 access in 2027.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:43:00Z",
++      "query_id": "extropic",
++      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation update",
++      "row_type": "query",
++      "source_family": "extropic",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept only a primary paper or first-party source with stable identity, a verifiable date, clear V606 relevance, and an executable local consequence. Record duplicates, no-update results, access failures, and incompatible implementations as terminal non-findings.",
++      "actual_utc": "2026-09-03T10:24:32Z",
++      "allowed_domains": [
++        "logicalintelligence.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++      "concurrency_limit": 1,
++      "evidence": "The Kona page remained a product description with no public weights, training recipe, or local runner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T10:44:00Z",
++      "query_id": "logical_intelligence",
++      "query_text": "Logical Intelligence Kona EBM weights code training recipe runner update",
++      "row_type": "query",
++      "source_family": "logical_intelligence",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets",
++      "timeout_s": 20
++    },
++    {
++      "query_id": "arxiv_ebm",
++      "row_type": "source_family",
++      "source_family": "arxiv_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_neural_constraints",
++      "row_type": "source_family",
++      "source_family": "arxiv_neural_constraints",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_ising_ml",
++      "row_type": "source_family",
++      "source_family": "arxiv_ising_ml",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_hallucination_verification",
++      "row_type": "source_family",
++      "source_family": "arxiv_hallucination_verification",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_kan",
++      "row_type": "source_family",
++      "source_family": "arxiv_kan",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_constrained_generation",
++      "row_type": "source_family",
++      "source_family": "arxiv_constrained_generation",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_accelerated_sampling",
++      "row_type": "source_family",
++      "source_family": "arxiv_accelerated_sampling",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_continual_learning",
++      "row_type": "source_family",
++      "source_family": "arxiv_continual_learning",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "openreview",
++      "row_type": "source_family",
++      "source_family": "openreview",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "huggingface_papers",
++      "row_type": "source_family",
++      "source_family": "huggingface_papers",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "semantic_scholar_ebt",
++      "row_type": "source_family",
++      "source_family": "semantic_scholar_ebt",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "semantic_scholar_arm_ebm",
++      "row_type": "source_family",
++      "source_family": "semantic_scholar_arm_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "github_official",
++      "row_type": "source_family",
++      "source_family": "github_official",
++      "terminal": true,
++      "terminal_outcome": "implementation_update"
++    },
++    {
++      "query_id": "extropic",
++      "row_type": "source_family",
++      "source_family": "extropic",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "logical_intelligence",
++      "row_type": "source_family",
++      "source_family": "logical_intelligence",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets"
++    },
++    {
++      "candidate_id": "vera",
++      "canonical_url": "https://arxiv.org/abs/2602.13217",
++      "code_available": true,
++      "date": "2026-01-23",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Reuse the generator-and-checker pattern only; do not import unknown benchmark assumptions.",
++      "local_compatibility": "partial",
++      "relevance": "Executable generators create fresh verified variants for the V606 headroom fixture.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "VeRA: Verified Reasoning Data Augmentation at Scale"
++    },
++    {
++      "candidate_id": "solver_hard",
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "code_available": true,
++      "date": "2026-07-19",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude solver runtime and conflict counts from model-hardness labels.",
++      "local_compatibility": "compatible",
++      "relevance": "Measured model headroom must replace solver conflict counts as the admission signal.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Solver-Hard Is Not Model-Hard"
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "canonical_url": "https://arxiv.org/abs/2604.16453",
++      "code_available": false,
++      "date": "2026-04-07",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Use complete-candidate energy; do not claim parity with the paper's prefix reward model.",
++      "local_compatibility": "partial",
++      "relevance": "Soft weights, ESS resampling, and resample-move updates map to Exp6934.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "canonical_url": "https://arxiv.org/abs/2507.02315",
++      "code_available": false,
++      "date": "2025-07-03",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "V606 forbids self-distillation and weight changes; only the inference primitive remains relevant.",
++      "local_compatibility": "partial",
++      "relevance": "Twisted SMC supports particle allocation under sparse constraints.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Improving Constrained Language Generation via Self-Distilled Twisted Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "canonical_url": "https://arxiv.org/abs/2504.13139",
++      "code_available": true,
++      "date": "2025-04-18",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Its probabilistic-program stack is not the local llama.cpp complete-candidate interface.",
++      "local_compatibility": "partial",
++      "relevance": "The paper supports adaptive particle allocation for controlled generation.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Syntactic and Semantic Control of Large Language Models via Sequential Monte Carlo"
++    },
++    {
++      "candidate_id": "ism",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "code_available": true,
++      "date": "2026-06-30",
++      "disposition": "accepted_new",
++      "evidence_grade": "B",
++      "exclusion_reason": "The reference runner requires hosted OpenAI solvers, synthesizers, and embeddings; V606 can reuse only the data and reset pattern.",
++      "local_compatibility": "partial",
++      "relevance": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation.",
++      "row_type": "candidate",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning"
++    },
++    {
++      "candidate_id": "memoir",
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "code_available": true,
++      "date": "2026-07-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude within-episode coupled reads and writes from V606.",
++      "local_compatibility": "compatible",
++      "relevance": "Its fixed-budget result supports delayed post-episode memory writes.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
++    },
++    {
++      "candidate_id": "cl_bench",
++      "canonical_url": "https://arxiv.org/abs/2606.05661",
++      "code_available": false,
++      "date": "2026-06-04",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not treat a memory-write count as a learning result.",
++      "local_compatibility": "compatible",
++      "relevance": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments"
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "canonical_url": "https://arxiv.org/abs/2504.15771",
++      "code_available": false,
++      "date": "2025-05-22",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Do not use its learned NLI score as final relation authority.",
++      "local_compatibility": "partial",
++      "relevance": "Small claim units aligned to retrieved evidence support span-first acquisition.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "ORION Grounded in Context: Retrieval-Based Method for Hallucination Detection"
++    },
++    {
++      "candidate_id": "span_level_hallucination",
++      "canonical_url": "https://arxiv.org/abs/2504.18639",
++      "code_available": false,
++      "date": "2025-04-25",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exclude GPT and NLI adjudication from the final exact V606 qualifier.",
++      "local_compatibility": "partial",
++      "relevance": "Semantic-role decomposition reinforces exact evidence-span capture before classification.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Span-Level Hallucination Detection for LLM-Generated Answers"
++    },
++    {
++      "candidate_id": "torx",
++      "canonical_url": "https://arxiv.org/abs/2608.01612",
++      "code_available": true,
++      "date": "2026-08-13",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The local extro-torx 0.0.1 CPU path does not authorize an XTR-0 or Z1 claim.",
++      "local_compatibility": "partial",
++      "relevance": "Typed stochastic circuits motivate a serializable sampler interface.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "A Framework for Stochastic Differentiable Programming"
++    },
++    {
++      "candidate_id": "thermalizers",
++      "canonical_url": "https://arxiv.org/abs/2608.01615",
++      "code_available": false,
++      "date": "2026-08-13",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "Thermalizers remains a preview and no authenticated thermodynamic device route exists.",
++      "local_compatibility": "incompatible",
++      "relevance": "Per-factor and accumulated compilation error define a future portability check.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Thermalizing Stochastic Programs"
++    },
++    {
++      "candidate_id": "smc_sd",
++      "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++      "code_available": true,
++      "date": "2026-04-17",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "The current repository requires patched SGLang; V606 uses llama.cpp and targets quality rather than speculative throughput.",
++      "local_compatibility": "incompatible",
++      "relevance": "Its ESS-driven particle reweighting is a useful implementation comparison.",
++      "row_type": "candidate",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "SMC Speculative Decoding"
++    },
++    {
++      "candidate_id": "kanele",
++      "canonical_url": "https://github.com/Duchstf/KANELE",
++      "code_available": true,
++      "date": "2025-12-14",
++      "disposition": "rejected",
++      "evidence_grade": "B",
++      "exclusion_reason": "It targets Vivado 2024.1 and Xilinx devices; Vivado is absent and V606 has no FPGA task.",
++      "local_compatibility": "incompatible",
++      "relevance": "The repository provides a concrete future LUT-based KAN hardware path.",
++      "row_type": "candidate",
++      "source_type": "first_party_repository",
++      "terminal": true,
++      "title": "KANEL\u00c9: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation"
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "canonical_url": "https://arxiv.org/abs/2603.23854",
++      "code_available": false,
++      "date": "2026-03-25",
++      "disposition": "rejected",
++      "evidence_grade": "A",
++      "exclusion_reason": "No public implementation was found and V606 excludes adaptive KAN work from its blocking graph.",
++      "local_compatibility": "incompatible",
++      "relevance": "Discrete primitive selection could support future interpretable constraint energy.",
++      "row_type": "candidate",
++      "source_type": "paper",
++      "terminal": true,
++      "title": "Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure for Interpretable Learning"
++    },
++    {
++      "candidate_id": "vera",
++      "canonical_url": "https://arxiv.org/abs/2602.13217",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Executable generators create fresh verified variants for the V606 headroom fixture."
++    },
++    {
++      "candidate_id": "solver_hard",
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Measured model headroom must replace solver conflict counts as the admission signal."
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "canonical_url": "https://arxiv.org/abs/2604.16453",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Soft weights, ESS resampling, and resample-move updates map to Exp6934."
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "canonical_url": "https://arxiv.org/abs/2507.02315",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Twisted SMC supports particle allocation under sparse constraints."
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "canonical_url": "https://arxiv.org/abs/2504.13139",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "The paper supports adaptive particle allocation for controlled generation."
++    },
++    {
++      "candidate_id": "ism",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "evidence_grade": "B",
++      "row_type": "citation_edge",
++      "supports": "The repository exposes the strategy bank, episodic reset, and active maintenance implementation."
++    },
++    {
++      "candidate_id": "memoir",
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Its fixed-budget result supports delayed post-episode memory writes."
++    },
++    {
++      "candidate_id": "cl_bench",
++      "canonical_url": "https://arxiv.org/abs/2606.05661",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Gain over prior ability and forgetting metrics map to the four-arm V606 audit."
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "canonical_url": "https://arxiv.org/abs/2504.15771",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Small claim units aligned to retrieved evidence support span-first acquisition."
++    },
++    {
++      "candidate_id": "span_level_hallucination",
++      "canonical_url": "https://arxiv.org/abs/2504.18639",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Semantic-role decomposition reinforces exact evidence-span capture before classification."
++    },
++    {
++      "candidate_id": "torx",
++      "canonical_url": "https://arxiv.org/abs/2608.01612",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Typed stochastic circuits motivate a serializable sampler interface."
++    },
++    {
++      "candidate_id": "thermalizers",
++      "canonical_url": "https://arxiv.org/abs/2608.01615",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Per-factor and accumulated compilation error define a future portability check."
++    },
++    {
++      "candidate_id": "smc_sd",
++      "canonical_url": "https://github.com/abdelfattah-lab/smcsd",
++      "evidence_grade": "B",
++      "row_type": "citation_edge",
++      "supports": "Its ESS-driven particle reweighting is a useful implementation comparison."
++    },
++    {
++      "candidate_id": "kanele",
++      "canonical_url": "https://github.com/Duchstf/KANELE",
++      "evidence_grade": "B",
++      "row_type": "citation_edge",
++      "supports": "The repository provides a concrete future LUT-based KAN hardware path."
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "canonical_url": "https://arxiv.org/abs/2603.23854",
++      "evidence_grade": "A",
++      "row_type": "citation_edge",
++      "supports": "Discrete primitive selection could support future interpretable constraint energy."
++    },
++    {
++      "candidate_id": "grounded_in_context",
++      "implementation_boundary": "Deterministic offsets and ASP effects remain final authority; no learned NLI judge.",
++      "method_family": "grounded_acquisition",
++      "reusable_method": "Copy exact evidence spans before assigning a semantic relation.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2504.15771",
++      "v606_experiment": "Exp6926"
++    },
++    {
++      "candidate_id": "ism",
++      "implementation_boundary": "Use local frozen-model rows and exact delayed outcomes, not hosted OpenAI calls.",
++      "method_family": "continual_memory",
++      "reusable_method": "Use hard episode resets and a compact success-and-failure strategy bank.",
++      "row_type": "implementation",
++      "source_url": "https://github.com/pdx97/ISM",
++      "v606_experiment": "Exp6930"
++    },
++    {
++      "candidate_id": "vera",
++      "implementation_boundary": "Keep generation and final checking independent and seal held-out seeds.",
++      "method_family": "verified_variant",
++      "reusable_method": "Generate fresh equivalent and hardened instances from executable specifications.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2602.13217",
++      "v606_experiment": "Exp6932"
++    },
++    {
++      "candidate_id": "sampling_for_quality",
++      "implementation_boundary": "Particles are complete candidates and budgets match both controls.",
++      "method_family": "sequential_monte_carlo",
++      "reusable_method": "Use soft Boltzmann weights, ESS resampling, and bounded resample-move steps.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2604.16453",
++      "v606_experiment": "Exp6934"
++    },
++    {
++      "candidate_id": "torx",
++      "implementation_boundary": "V606 runs no thermodynamic hardware and makes no speed, power, or device claim.",
++      "method_family": "hardware_sampling",
++      "reusable_method": "Keep particle and factor rows serializable as typed stochastic-program inputs.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2608.01612",
++      "v606_experiment": "Exp6934"
++    },
++    {
++      "candidate_id": "ism",
++      "constraint": "hosted_models",
++      "effect": "Reuse the schema format only; implement V606 with local frozen-model evidence and exact outcomes.",
++      "observed": "gpt-4.1-mini, gpt-4o, gpt-4o-mini, and text-embedding-3-small",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "twisted_smc",
++      "constraint": "weight_mutation",
++      "effect": "V606 may reuse only the training-free particle concept.",
++      "observed": "self-distillation refines the base model",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "syntactic_semantic_smc",
++      "constraint": "runner_interface",
++      "effect": "Build a bounded llama.cpp complete-candidate sampler instead of importing the stack.",
++      "observed": "language-model probabilistic-program stack",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "smc_sd",
++      "constraint": "backend",
++      "effect": "Do not claim SMC-SD throughput or direct compatibility.",
++      "observed": "patched SGLang is required and is not installed",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "torx",
++      "constraint": "substrate",
++      "effect": "Serialization experiments are possible, but no thermodynamic hardware claim is allowed.",
++      "observed": "extro-torx 0.0.1 is importable on the local CPU path",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "thermalizers",
++      "constraint": "availability",
++      "effect": "Defer compiler parity and accumulated-error reproduction.",
++      "observed": "paper and preview only",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "kanele",
++      "constraint": "toolchain",
++      "effect": "Defer FPGA work beyond V606.",
++      "observed": "Vivado 2024.1 and named Xilinx devices are required; Vivado is absent",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "symbolic_kan",
++      "constraint": "implementation",
++      "effect": "Keep as a V607 candidate, not an executable V606 dependency.",
++      "observed": "no public code found",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "logical_intelligence",
++      "constraint": "assets",
++      "effect": "Keep Kona as an architecture comparator only.",
++      "observed": "no public Kona weights, recipe, or local runner",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "ism_reference_implementation_compatibility",
++      "canonical_url": "https://github.com/pdx97/ISM",
++      "date": "2026-09-03",
++      "finding": "The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.",
++      "row_type": "ledger_append",
++      "title": "ISM reference implementation compatibility update",
++      "v607_use": "Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately."
++    },
++    {
++      "candidate_id": "ism_local_adapter",
++      "prerequisite": "V606 Exp6931 terminal cold audit.",
++      "proposal": "Test a local typed strategy-bank adapter against the unchanged V606 read-only control.",
++      "row_type": "v607_candidate",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "smc_sd_backend_canary",
++      "prerequisite": "An installable SGLang or llama.cpp-compatible reference path.",
++      "proposal": "Recheck a pinned SMC-SD backend only if it supports the local runner and matched quality budgets.",
++      "row_type": "v607_candidate",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "kanele_simulation",
++      "prerequisite": "A reproducible compatible Vivado toolchain or open simulator path.",
++      "proposal": "Run a device-free KANEL\u00c9 conversion and simulation canary before any board task.",
++      "row_type": "v607_candidate",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "symbolic_kan_energy",
++      "prerequisite": "Public code or a separately specified clean-room implementation.",
++      "proposal": "Compare discrete primitive expressions with the existing exact constraint-energy baseline.",
++      "row_type": "v607_candidate",
++      "target_milestone": "V607+"
++    }
++  ],
++  "run_date": "20260903",
++  "schema": "carnot.experiment_6925.v606_sota_ingestion.v1",
++  "source_artifact_hashes": {
++    "CLAUDE.md": "474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++    "openspec/capabilities/research-reporting/spec.md": "b063954442dd5f8f5d08136a0d47d9ec1d94b35d920c88a2f0a16ecca1ee70ad",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": "514f9cea2447480a3bdc843a1bf83aa06ee7b0e555cb698267e4b4da73e26222",
++    "ops/conductor-log.md": "ec10ae36e3b71d208af7d59373cda93e92663021a2e0fb6eb3519f2d5a520541",
++    "research-complete.yaml": "c8c92590a77fae05728134c89d2b7b15f708847a2a51eed8fdff0d7c8940607d",
++    "research-program.md": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++    "research-references.md": "e4491fcadfc82a8dfc4db7286fdf5b1edd1a5fd0377ee5cb62d2a74b72c1f19f",
++    "research-roadmap.yaml": "287eacb087963d8eca9d01d9d05f0628fa779ea31c36bab03238c50ffb79de04"
++  },
++  "source_family_rows": [
++    {
++      "query_id": "arxiv_ebm",
++      "source_family": "arxiv_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_neural_constraints",
++      "source_family": "arxiv_neural_constraints",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_ising_ml",
++      "source_family": "arxiv_ising_ml",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_hallucination_verification",
++      "source_family": "arxiv_hallucination_verification",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_kan",
++      "source_family": "arxiv_kan",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_constrained_generation",
++      "source_family": "arxiv_constrained_generation",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_accelerated_sampling",
++      "source_family": "arxiv_accelerated_sampling",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "arxiv_continual_learning",
++      "source_family": "arxiv_continual_learning",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "openreview",
++      "source_family": "openreview",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "huggingface_papers",
++      "source_family": "huggingface_papers",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "semantic_scholar_ebt",
++      "source_family": "semantic_scholar_ebt",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "semantic_scholar_arm_ebm",
++      "source_family": "semantic_scholar_arm_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "github_official",
++      "source_family": "github_official",
++      "terminal": true,
++      "terminal_outcome": "implementation_update"
++    },
++    {
++      "query_id": "extropic",
++      "source_family": "extropic",
++      "terminal": true,
++      "terminal_outcome": "no_update"
++    },
++    {
++      "query_id": "logical_intelligence",
++      "source_family": "logical_intelligence",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets"
++    }
++  ],
++  "status": "complete",
++  "v606_sota_ingestion_complete_score": 1,
++  "v607_candidate_rows": [
++    {
++      "candidate_id": "ism_local_adapter",
++      "prerequisite": "V606 Exp6931 terminal cold audit.",
++      "proposal": "Test a local typed strategy-bank adapter against the unchanged V606 read-only control.",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "smc_sd_backend_canary",
++      "prerequisite": "An installable SGLang or llama.cpp-compatible reference path.",
++      "proposal": "Recheck a pinned SMC-SD backend only if it supports the local runner and matched quality budgets.",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "kanele_simulation",
++      "prerequisite": "A reproducible compatible Vivado toolchain or open simulator path.",
++      "proposal": "Run a device-free KANEL\u00c9 conversion and simulation canary before any board task.",
++      "target_milestone": "V607+"
++    },
++    {
++      "candidate_id": "symbolic_kan_energy",
++      "prerequisite": "Public code or a separately specified clean-room implementation.",
++      "proposal": "Compare discrete primitive expressions with the existing exact constraint-energy baseline.",
++      "target_milestone": "V607+"
++    }
++  ],
++  "verdict_class": "positive",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6925_v606_sota_ingestion.py b/scripts/experiments/experiment_6925_v606_sota_ingestion.py
+new file mode 100644
+index 0000000000..523ad4ebdb
+--- /dev/null
++++ b/scripts/experiments/experiment_6925_v606_sota_ingestion.py
+@@ -0,0 +1,24 @@
++#!/usr/bin/env python3
++"""Run the bounded V606 execution-time SOTA ingestion.
++
++Spec ref: REQ-REPORT-6925.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(REPO_ROOT) not in sys.path:
++    sys.path.insert(0, str(REPO_ROOT))
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_6925_v606_sota_ingestion import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6925_v606_sota_ingestion.py b/tests/python/test_experiment_6925_v606_sota_ingestion.py
+new file mode 100644
+index 0000000000..790eaf197d
+--- /dev/null
++++ b/tests/python/test_experiment_6925_v606_sota_ingestion.py
+@@ -0,0 +1,297 @@
++"""Tests for the V606 execution-time SOTA ingestion.
++
++Spec refs: REQ-REPORT-6925, SCENARIO-REPORT-6925-PREFLIGHT,
++SCENARIO-REPORT-6925-PLAN, SCENARIO-REPORT-6925-TERMINAL,
++SCENARIO-REPORT-6925-MAP, SCENARIO-REPORT-6925-LEDGER, and
++SCENARIO-REPORT-6925-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++import sys
++
++import pytest
++
++from carnot import experiment_6925_v606_sota_ingestion as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++
++def _artifact(tmp_path: Path) -> dict[str, object]:
++    return mod.build_artifact(
++        root=REPO,
++        run_date="20260903",
++        duration_s=1.0,
++        output_root=tmp_path,
++    )
++
++
++def _with_checksum(artifact: dict[str, object]) -> dict[str, object]:
++    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
++    return artifact
++
++
++def _fake_repo(tmp_path: Path, *, include_policy: bool = True) -> Path:
++    root = tmp_path / "repo"
++    required = {
++        "research-roadmap.yaml": "milestone: 2026.09.606\n",
++        "research-references.md": "# Reference ledger\n",
++        "CLAUDE.md": "## SOTA-Ingestion Cycle Discipline (MANDATORY)\nlow-concurrency\n",
++        "openspec/change-proposals/research-roadmap-vNEXT.md": "# V606\n",
++    }
++    if not include_policy:
++        required.pop("CLAUDE.md")
++    for relative, text in required.items():
++        path = root / relative
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(text, encoding="utf-8")
++    return root
++
++
++def test_req_report_6925_spec_declares_bounded_advisory_contract() -> None:
++    """REQ-REPORT-6925: OpenSpec owns the complete ingestion contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-REPORT-6925") :]
++    for marker in (
++        "SCENARIO-REPORT-6925-PREFLIGHT",
++        "SCENARIO-REPORT-6925-PLAN",
++        "SCENARIO-REPORT-6925-TERMINAL",
++        "SCENARIO-REPORT-6925-MAP",
++        "SCENARIO-REPORT-6925-LEDGER",
++        "SCENARIO-REPORT-6925-ARTIFACT",
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_6925_plan_is_dated_exact_and_arxiv_first() -> None:
++    """SCENARIO-REPORT-6925-PLAN: the plan freezes bounded query order."""
++
++    plan = mod.frozen_query_plan()
++    assert mod.validate_query_plan(plan, "20260903") == []
++    assert len(plan) >= len(mod.SOURCE_FAMILIES)
++    assert [row["source_family"] for row in plan[:8]] == list(mod.ARXIV_FAMILIES)
++    assert len({row["query_id"] for row in plan}) == len(plan)
++    assert all(row["planned_utc"].startswith("2026-09-03T") for row in plan)
++    assert all(row["max_attempts"] == 2 for row in plan)
++    assert all(row["concurrency_limit"] == 1 for row in plan)
++    assert all(row["timeout_s"] == 20 for row in plan)
++    assert all(row["query_text"] and row["allowed_domains"] for row in plan)
++    assert all(row["acceptance_criteria"] for row in plan)
++
++    bad = deepcopy(plan)
++    bad[0]["max_attempts"] = 3
++    assert "query arxiv_ebm must allow exactly two attempts" in mod.validate_query_plan(
++        bad, "20260903"
++    )
++    assert mod.validate_query_plan(plan, "20260904") == ["query plan date does not match run date"]
++
++    malformed = deepcopy(plan)
++    malformed[0]["concurrency_limit"] = 2
++    malformed[0]["timeout_s"] = 21
++    malformed[0]["query_text"] = ""
++    malformed[0], malformed[8] = malformed[8], malformed[0]
++    malformed.pop()
++    errors = mod.validate_query_plan(malformed, "20260903")
++    assert "query arxiv_ebm must use concurrency one" in errors
++    assert "query arxiv_ebm must use the 20 second timeout" in errors
++    assert "query arxiv_ebm lacks a frozen source field" in errors
++    assert "arXiv source families must be first" in errors
++    assert "query plan source family coverage is incomplete" in errors
++
++
++def test_scenario_report_6925_preflight_fails_closed(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6925-PREFLIGHT: missing policy blocks before research."""
++
++    root = _fake_repo(tmp_path)
++    rows = mod.check_preconditions(root, "20260903")
++    assert all(row["available"] for row in rows)
++
++    missing_policy = _fake_repo(tmp_path / "missing", include_policy=False)
++    blocked = mod.build_artifact(
++        root=missing_policy,
++        run_date="20260903",
++        duration_s=0.1,
++        output_root=tmp_path,
++    )
++    assert blocked["status"] == "blocked"
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked["honest_verdict"] == "complete_blocked_v606_sota_ingestion"
++    assert blocked["v606_sota_ingestion_complete_score"] == 0
++    assert blocked["gate_check_summary"]["failed_check"] == "network_policy"
++    assert mod.validate_artifact(blocked) == []
++
++
++def test_scenario_report_6925_candidates_have_terminal_evidence_rows() -> None:
++    """SCENARIO-REPORT-6925-TERMINAL: every named method terminates."""
++
++    candidates = mod.candidate_rows()
++    assert set(mod.NAMED_CANDIDATES) == {row["candidate_id"] for row in candidates}
++    for row in candidates:
++        assert row["canonical_url"].startswith("https://")
++        assert row["date"]
++        assert row["source_type"] in {"paper", "first_party_repository"}
++        assert row["relevance"]
++        assert row["evidence_grade"] in {"A", "B"}
++        assert isinstance(row["code_available"], bool)
++        assert row["local_compatibility"] in {"compatible", "partial", "incompatible"}
++        assert row["disposition"] in {"accepted_existing", "accepted_new", "rejected"}
++        assert row["exclusion_reason"]
++        assert row["terminal"] is True
++
++    queries = mod.query_rows()
++    assert {row["source_family"] for row in queries} == set(mod.SOURCE_FAMILIES)
++    assert all(row["terminal"] for row in queries)
++    assert all(1 <= row["attempt_count"] <= row["max_attempts"] for row in queries)
++    assert all(row["canonical_url"].startswith("https://") for row in queries)
++
++
++def test_scenario_report_6925_method_map_cites_v606_and_incompatibilities() -> None:
++    """SCENARIO-REPORT-6925-MAP: checked methods map without changing V606."""
++
++    candidates = {row["candidate_id"]: row for row in mod.candidate_rows()}
++    mappings = mod.implementation_rows()
++    assert {row["method_family"] for row in mappings} == {
++        "grounded_acquisition",
++        "continual_memory",
++        "verified_variant",
++        "sequential_monte_carlo",
++        "hardware_sampling",
++    }
++    for row in mappings:
++        assert row["candidate_id"] in candidates
++        assert row["source_url"] == candidates[row["candidate_id"]]["canonical_url"]
++        assert row["v606_experiment"].startswith("Exp69")
++        assert row["reusable_method"]
++        assert row["implementation_boundary"]
++
++    edges = mod.citation_edge_rows()
++    assert len(edges) >= len(mappings)
++    assert all(edge["canonical_url"].startswith("https://") for edge in edges)
++    assert mod.compatibility_rows()
++    assert all(row["constraint"] and row["effect"] for row in mod.compatibility_rows())
++    assert all(row["target_milestone"] == "V607+" for row in mod.v607_candidate_rows())
++
++
++def test_scenario_report_6925_ledger_is_append_only_and_idempotent(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6925-LEDGER: only accepted-new rows append once."""
++
++    root = _fake_repo(tmp_path)
++    ledger = root / mod.LEDGER_RELATIVE_PATH
++    before = ledger.read_bytes()
++    no_updates = _artifact(tmp_path)
++    no_updates["ledger_append_rows"] = []
++    assert mod.append_verified_findings(root, no_updates) == []
++    assert ledger.read_bytes() == before
++
++    update = {
++        "candidate_id": "new_primary_finding",
++        "title": "A verified new primary finding",
++        "canonical_url": "https://arxiv.org/abs/2609.99999",
++        "date": "2026-09-03",
++        "finding": "This source changes one future executable contract.",
++        "v607_use": "Test the changed contract in V607.",
++    }
++    no_updates["ledger_append_rows"] = [update]
++    appended = mod.append_verified_findings(root, no_updates)
++    assert appended == ["new_primary_finding"]
++    text = ledger.read_text(encoding="utf-8")
++    assert "A verified new primary finding" in text
++    assert mod.append_verified_findings(root, no_updates) == []
++    assert ledger.read_text(encoding="utf-8") == text
++
++
++def test_scenario_report_6925_artifact_recomputes_score_and_checksum(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6925-ARTIFACT: rows support independent validation."""
++
++    artifact = _artifact(tmp_path)
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["status"] == "complete"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["v606_sota_ingestion_complete_score"] == 1
++    assert artifact["verdict_class"] in {"null", "positive"}
++    assert artifact["honest_verdict"].startswith("complete_")
++    assert set(artifact["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    bad = deepcopy(artifact)
++    bad["query_rows"] = bad["query_rows"][:-1]
++    assert "source family coverage is incomplete" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad["candidate_rows"][0]["terminal"] = False
++    assert "candidate coverage is incomplete" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad["reproducibility_checksum"] = "wrong"
++    assert "reproducibility checksum mismatch" in mod.validate_artifact(bad)
++
++    bad = deepcopy(artifact)
++    bad["inference_substrate"] = "unspecified"
++    bad["verifier_is_oracle"] = True
++    bad["field_principles"] = {}
++    errors = mod.validate_artifact(_with_checksum(bad))
++    assert "inference_substrate mismatch" in errors
++    assert "verifier_is_oracle must be false" in errors
++    assert "field principles do not cover required fields" in errors
++
++    blocked_root = _fake_repo(tmp_path / "blocked", include_policy=False)
++    bad = mod.build_artifact(root=blocked_root, run_date="20260903", duration_s=0.1)
++    bad["v606_sota_ingestion_complete_score"] = 1
++    assert "blocked artifact fields are inconsistent" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad.pop("rows")
++    assert mod.validate_artifact(bad) == ["missing required field: rows"]
++
++
++def test_scenario_report_6925_write_validate_and_cli(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-6925: the wrapper writes one stable, validated JSON file."""
++
++    monkeypatch.delenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", raising=False)
++    artifact = _artifact(tmp_path)
++    path = tmp_path / "result.json"
++    assert mod.write_artifact(artifact, path) == path
++    assert mod.validate_artifact(path) == []
++    assert json.loads(path.read_text(encoding="utf-8"))["experiment_id"] == mod.EXPERIMENT_ID
++    assert mod.validate_artifact(tmp_path / "missing.json") == ["artifact missing"]
++
++    cli_root = _fake_repo(tmp_path / "cli")
++    monkeypatch.setattr(mod, "find_repo_root", lambda: cli_root)
++    cli_path = tmp_path / "cli.json"
++    assert mod.main(["--date", "20260903", "--output", str(cli_path)]) == 0
++    assert cli_path.exists()
++    assert mod.main(["--validate", str(cli_path)]) == 0
++
++    invalid = tmp_path / "invalid.json"
++    invalid.write_text("{}\n", encoding="utf-8")
++    assert mod.main(["--validate", str(invalid)]) == 1
++    with pytest.raises(ValueError, match="missing required field"):
++        mod.write_artifact({}, tmp_path / "never-written.json")
++
++    blocked_root = _fake_repo(tmp_path / "blocked-cli", include_policy=False)
++    monkeypatch.setattr(mod, "find_repo_root", lambda: blocked_root)
++    blocked_path = tmp_path / "blocked-cli.json"
++    assert mod.main(["--date", "20260903", "--output", str(blocked_path)]) == 0
++    assert json.loads(blocked_path.read_text(encoding="utf-8"))["status"] == "blocked"
++
++    monkeypatch.setattr(
++        sys,
++        "argv",
++        [mod.MODULE_RELATIVE_PATH.as_posix(), "--validate", str(path)],
++    )
++    with pytest.raises(SystemExit, match="0"):
++        runpy.run_path(REPO / mod.MODULE_RELATIVE_PATH, run_name="__main__")
+-- 
+2.55.0
+

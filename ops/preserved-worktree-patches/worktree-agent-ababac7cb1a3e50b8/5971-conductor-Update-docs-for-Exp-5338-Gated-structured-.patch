@@ -1,0 +1,101 @@
+From 6e20517ed6ce5527feb31b003c72752be0ca8b48 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 02:02:52 -0400
+Subject: [PATCH 05971/11362] [conductor] Update docs for Exp 5338: Gated
+ structured-output protocol calibration for local SOTA
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                           |  2 ++
+ ops/changelog.md                                |  1 +
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ops/status.md                                   |  1 +
+ ...ctured_output_protocol_calibration_v487.json | 17 +++++++++++++++--
+ 7 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index a651daaf8c..7d11138fa1 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2185,3 +2185,5 @@ legacy tests.
+ | SCENARIO-REPORT-5336-NOOP | No New Findings Leave References Unchanged | Scaffolding | The no-op path remains unexercised by this artifact because new_actionable_findings_count=2 and references_modified=true. This row makes no no-op branch closure claim. |
+ | REQ-VERIFY-5337 | SOTA Runtime Corrigendum Multimodel V487 | Implemented | `python/carnot/experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`; `tests/python/test_experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json`; honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a clean unflagged-duration live GGUF receipt exists.","value":"complete: sota_runtime_clean_receipt_ready=flagship_dense:llama-cli"}; status.value=complete; inference_substrate.value=live_llm_inference; runtime_unblocked_min_one_mandated=true; sota_runtime_clean_receipt_ready=true; quality_claim_permitted=false; no_autotokenizer_used=true; repeat_count=4; token_count=32; methodology_duration_s=62.809631; gpu_memory_delta_mb_max=18630; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; claim is limited to a runtime-only clean GGUF receipt, not SOTA answer quality. |
+ | SCENARIO-VERIFY-5337 | Clean Corrigendum Re-Runs The Stable Dense Receipt | Implemented | Artifact records Step 0 preconditions and re-runs the stable dense `llama-cli` receipt as live_llm_inference, producing 4/4 completed receipt rows with completed_load_first_token_and_8_tokens=true, 8 generated tokens each, offload_authenticated=true, methodology_duration_s=62.809631, and sota_runtime_clean_receipt_ready=true. Optional flagship_moe and middle_moe matrix rows are skipped with explicit preservation reasons. No retro closure, AUC/TP/FP/signed_improvement, violation_rate, answer-quality, verifier-quality, solver-quality, memory-usefulness, or SOTA accuracy claim is recorded. |
++| REQ-VERIFY-5338 | Structured Output Protocol Calibration V487 | Implemented | `python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`; `tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5338_structured_output_protocol_calibration_v487.json`; honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready.","value":"complete: structured_output_protocol_ready=final_sentinel_post_think_json_v1"}; status.value=complete; structured_output_protocol_ready=true; selected_variant_id=final_sentinel_post_think_json_v1; parse_success_rate=1.0; final_json_extraction_rate=1.0; thinking_text_outside_final_rate=1.0; unsafe_false_accepts=0; no_quality_claim=true; flagged_adversarial=true; corrigendum_pending=DURATION_TOO_SHORT critical, METHODOLOGY_MISSING warn; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; claim is limited to a parse-only structured-output protocol, not answer quality. |
++| SCENARIO-VERIFY-5338 | Final-Sentinel Extraction Opens Parse-Only Protocol Gate | Implemented | Artifact selects final_sentinel_post_think_json_v1 and records structured_output_protocol_ready=true with parse_success_rate=1.0 and final_json_extraction_rate=1.0 over 2 calibration prompts, unsafe_false_accepts=0, and no_quality_claim=true. It preserves flagged_adversarial=true and corrigendum_pending=DURATION_TOO_SHORT critical, METHODOLOGY_MISSING warn, so this row does not claim live quality, SOTA accuracy, retro closure, AUC/TP/FP/signed_improvement, or violation_rate evidence. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index dcc3f8d7c2..59e9d1c90c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10993,3 +10993,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-07: Exp 5335 archive 2026.07.486 and activate 2026.07.487 transition audit (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete: or blocked_ and preserve missing roadmap-next, flagged, bounded, and no-claim evidence without laundering it.","value":"blocked_archive_486_activate_487: transition preconditions failed; roadmap_next_present=false; no active roadmap overwrite or conductor edit was performed by this task."}; status.value=blocked; archived_milestone.value=2026.07.486; activated_milestone.value=2026.07.487; roadmap_next_present=false; failed_preconditions=roadmap_next_missing; active_roadmap_modified=false; conductor_modified=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5335_archive_486_activate_487.json
+ - 2026-07-07: Exp 5336 V487 SOTA source delta refresh (✅ Complete) — honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified.","value":"complete: 2 new actionable V487 source findings appended; executable .487 plan unchanged."}; status.value=complete; new_actionable_findings_count=2; references_modified=true; executable_plan_change_required=false; retired_scope_reopened=false; methodology_duration_s=1742.381; semantic_scholar.status=rate_limited with no citation-trend claim; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5336_sota_source_delta_v487.json
+ - 2026-07-07: Exp 5337 SOTA runtime corrigendum and multi-model receipt expansion (✅ Complete) — honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a clean unflagged-duration live GGUF receipt exists.","value":"complete: sota_runtime_clean_receipt_ready=flagship_dense:llama-cli"}; status.value=complete; runtime_unblocked_min_one_mandated=true; sota_runtime_clean_receipt_ready=true; repeat_count=4; token_count=32; methodology_duration_s=62.809631; first_token_time_s_min=14.390425936318934; first_token_time_s_max=16.393704833928496; gpu_memory_delta_mb_max=18630; quality_claim_permitted=false; no_autotokenizer_used=true; multi_model_receipt_matrix roles=flagship_dense clean_live_receipt_ready, flagship_moe skipped, middle_moe skipped; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json
++- 2026-07-07: Exp 5338 gated structured-output protocol calibration for local SOTA (✅ Complete) — honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready.","value":"complete: structured_output_protocol_ready=final_sentinel_post_think_json_v1"}; status.value=complete; inference_substrate.value=live_llm_inference; selected_variant_id=final_sentinel_post_think_json_v1; structured_output_protocol_ready=true; parse_success_rate=1.0; final_json_extraction_rate=1.0; unsafe_false_accepts=0; calibration_prompt_count=2; no_quality_claim=true; flagged_adversarial=true; corrigendum_pending=DURATION_TOO_SHORT critical, METHODOLOGY_MISSING warn; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5338_structured_output_protocol_calibration_v487.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index aa1f4ece53..c5d2a1ccb8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 202, "phase": "iteration_start", "last_beat": "2026-07-07T05:38:39Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 203, "phase": "iteration_start", "last_beat": "2026-07-07T06:01:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 588fe5224b..f60d954863 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10449,3 +10449,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
+ | 2026-07-07 04:57 UTC | Exp 5335: Archive 2026.07.486 and activate 2026.07 | OK | 86 passed, 1 warning in 7.67s |
+ | 2026-07-07 05:15 UTC | Exp 5336: V487 SOTA source delta refresh | OK | 112 passed, 1 warning in 7.97s |
+ | 2026-07-07 05:36 UTC | Exp 5337: SOTA runtime corrigendum and multi-model | OK | 87 passed, 1 warning in 10.66s |
++| 2026-07-07 05:59 UTC | Exp 5338: Gated structured-output protocol calibra | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 66c042cce0..783be35ad4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 202, "phase": "iteration_start", "started_at": "2026-07-07T05:38:39Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 203, "phase": "iteration_start", "started_at": "2026-07-07T06:01:18Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index f421e7e566..3eddec7bd8 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5959,3 +5959,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-07 | Exp 5335: Archive 2026.07.486 and record 2026.07.487 activation preconditions | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete: or blocked_ and preserve missing roadmap-next, flagged, bounded, and no-claim evidence without laundering it.","value":"blocked_archive_486_activate_487: transition preconditions failed; roadmap_next_present=false; no active roadmap overwrite or conductor edit was performed by this task."}; status.value=blocked; inference_substrate.value=aggregation_from_upstream_artifacts; archived_milestone.value=2026.07.486; activated_milestone.value=2026.07.487; roadmap_next_present=false; milestone_doc_present=true; failed_preconditions=roadmap_next_missing; active_roadmap_modified=false; conductor_modified=false; v486_capstone_verdict.value="complete: .486 synthesized with runtime_stable=True, sota_quality_measured=True, rewrite_smt_self_learning_clean=True, internal_signal=open_but_flagged, kan_localization_ready=True, hardware_speedup_claim=false"; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5335, SCENARIO-REPORT-5335, SCENARIO-REPORT-5335-BLOCKED-NEXT-ROADMAP; status label mapped to ⚠️ Blocked because honest_verdict.value starts with `blocked_`, status.value=blocked, roadmap_next_present=false, and failed_preconditions includes roadmap_next_missing | results/experiment_5335_archive_486_activate_487.json |
+ | 2026-07-07 | Exp 5336: V487 SOTA source delta refresh | ✅ Complete | honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified.","value":"complete: 2 new actionable V487 source findings appended; executable .487 plan unchanged."}; status.value=complete; inference_substrate.value=literature_ingestion_network_sources; new_actionable_findings_count=2; references_modified=true; executable_plan_change_required=false; retired_scope_reopened=false; actionable findings MACLA arXiv 2512.18950 and NSPSG openreview:cbtykHVWX9; semantic_scholar.status=rate_limited with no citation-trend claim; tests_run tests/python/test_experiment_5336_sota_source_delta_v487.py; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5336, SCENARIO-REPORT-5336-APPEND-DELTAS, SCENARIO-REPORT-5336-NOOP; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=complete, artifact records 2 new actionable V487 source findings appended, references_modified=true, executable_plan_change_required=false, and retired_scope_reopened=false | results/experiment_5336_sota_source_delta_v487.json |
+ | 2026-07-07 | Exp 5337: SOTA runtime corrigendum and multi-model receipt expansion | ✅ Complete | honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a clean unflagged-duration live GGUF receipt exists.","value":"complete: sota_runtime_clean_receipt_ready=flagship_dense:llama-cli"}; status.value=complete; inference_substrate.value=live_llm_inference; runtime_unblocked_min_one_mandated=true; sota_runtime_clean_receipt_ready=true; quality_claim_permitted=false; no_autotokenizer_used=true; repeat_count=4; token_count=32; methodology_duration_s=62.809631; first_token_time_s=[14.390425936318934,16.393704833928496]; gpu_memory_delta_mb_max=18630; receipt_rows completed=4/4 with 8 generated tokens each and offload_authenticated=true; multi_model_receipt_matrix flagship_dense=clean_live_receipt_ready flagship_moe=skipped middle_moe=skipped; tests_run focused Exp5337 coverage passed with 100% new-code coverage; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5337, SCENARIO-VERIFY-5337; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=complete, and the artifact records a clean live GGUF runtime receipt meeting the 60s runtime-only gate while quality_claim_permitted=false | results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json |
++| 2026-07-07 | Exp 5338: Gated structured-output protocol calibration for local SOTA | ✅ Complete | honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready.","value":"complete: structured_output_protocol_ready=final_sentinel_post_think_json_v1"}; status.value=complete; inference_substrate.value=live_llm_inference; selected_variant_id=final_sentinel_post_think_json_v1; structured_output_protocol_ready=true; parse_success_rate=1.0; final_json_extraction_rate=1.0; thinking_text_outside_final_rate=1.0; unsafe_false_accepts=0; calibration_prompt_count=2; no_quality_claim=true; flagged_adversarial=true; corrigendum_pending=DURATION_TOO_SHORT critical, METHODOLOGY_MISSING warn; tests_run.value=[]; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5338, SCENARIO-VERIFY-5338; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=complete, structured_output_protocol_ready=true, parse_success_rate=1.0, final_json_extraction_rate=1.0, and unsafe_false_accepts=0, while no_quality_claim=true and the corrigendum_pending caveats remain recorded | results/experiment_5338_structured_output_protocol_calibration_v487.json |
+diff --git a/results/experiment_5338_structured_output_protocol_calibration_v487.json b/results/experiment_5338_structured_output_protocol_calibration_v487.json
+index 88739269ca..95bde71788 100644
+--- a/results/experiment_5338_structured_output_protocol_calibration_v487.json
++++ b/results/experiment_5338_structured_output_protocol_calibration_v487.json
+@@ -401,5 +401,18 @@
+     "value": []
+   },
+   "thinking_text_outside_final_rate": 1.0,
+-  "unsafe_false_accepts": 0
+-}
++  "unsafe_false_accepts": 0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=46.083161 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

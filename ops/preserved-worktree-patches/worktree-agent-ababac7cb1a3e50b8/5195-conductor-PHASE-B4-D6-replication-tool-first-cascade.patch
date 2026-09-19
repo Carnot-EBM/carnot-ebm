@@ -1,0 +1,1738 @@
+From caee4fc36cf6a7d2f75592bd5c3c09955b822217 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 03:05:23 -0400
+Subject: [PATCH 05195/11362] [conductor] PHASE B4 D6 replication -- tool-first
+ cascade as charged efficiency/Pareto result, not hidden accuracy moat
+
+Automated research step by research conductor.
+Task ID: exp5076-d6-efficiency-replication-v466
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  74 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_5076_d6_efficiency_replication.py | 797 ++++++++++++++++++
+ ...t_5076_d6_efficiency_replication_v466.json | 384 +++++++++
+ ...periment_5076_d6_efficiency_replication.py | 417 +++++++++
+ 5 files changed, 1673 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5076_d6_efficiency_replication.py
+ create mode 100644 results/experiment_5076_d6_efficiency_replication_v466.json
+ create mode 100644 tests/python/test_experiment_5076_d6_efficiency_replication.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 1a6cafa800..f4cf6ca898 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -22966,6 +22966,80 @@ verdict that includes exact counts instead of fabricating live inference.
+ |---|---|---|
+ | REQ-VERIFY-5075 | Proposed (`python/carnot/experiment_5075_dccd_guided_decoding_scale.py`, `results/experiment_5075_dccd_guided_decoding_scale_v466.json`) | Proposed (`tests/python/test_experiment_5075_dccd_guided_decoding_scale.py`) |
+ 
++### REQ-VERIFY-5076: D6 Efficiency Replication On Powered Clean Sample
++
++The repository SHALL provide Exp 5076 at
++`python/carnot/experiment_5076_d6_efficiency_replication.py` to replicate the
++D6 tool-first cascade over a powered, row-clean MuSR question/candidate sample
++and write `results/experiment_5076_d6_efficiency_replication_v466.json`.
++
++The runner SHALL load Exp 5061, Exp 5071, Exp 5058, the Exp 5058 candidate
++JSONL cache, and Exp 5059 paired correctness evidence before producing a
++terminal artifact. It SHALL define judge-only, tool-first, and optional
++uncertainty-routed arms over the same question/candidate set. If no live or
++cached mandated SOTA judge is available, the runner MAY use the checked-in
++paired tuned self-consistency comparator as the bounded judge-only replay
++baseline, but it SHALL label that source explicitly and SHALL NOT claim live
++judge invocation.
++
++The selector SHALL preserve oracle-distinctness: final answer keys, gold labels,
++candidate correctness fields, and oracle-at-k fields SHALL NOT be visible to
++the selection route. Evaluation MAY read paired correctness vectors only after
++arm outputs are fixed. The artifact SHALL record `verifier_is_oracle=false`
++unless an explicitly diagnostic oracle is intentionally used, in which case the
++diagnostic SHALL NOT be headline-countable.
++
++The runner SHALL charge deterministic tools, cheap verifier calls, and judge
++calls separately for every arm. It SHALL compute accuracy, paired CI95 for
++cascade minus judge-only, McNemar exact p when paired vectors are available,
++judge-call fraction, deterministic tool-call count, latency, and a cost proxy.
++It SHALL make a D6 cost/Pareto claim only when the cascade is at least as
++accurate as the judge-only replay baseline, the paired CI is compatible with
++parity, judge-call fraction is below one, and total cost proxy is lower than
++the judge-only arm. It SHALL set `accuracy_headline_allowed=false` unless the
++accuracy delta is positive, CI95 excludes zero, and McNemar is significant.
++
++`MODEL_SPECS` SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF` whenever any judge or generator LLM is
++invoked; Exp 5076 SHOULD include those declarations even for replay-only
++evidence to keep the methodology stamp aligned with the upstream preflight.
++
++The terminal artifact MUST include principle annotations and top-level fields
++`honest_verdict`, `duration_s`, `inference_substrate`, `model_specs`,
++`verifier_is_oracle`, `n_questions`, `judge_only_accuracy`,
++`cascade_accuracy`, `delta_vs_judge_only`, `ci95_delta`,
++`judge_call_fraction`, `tool_call_count`, `latency`, `cost_proxy`,
++`efficiency_win`, `accuracy_headline_allowed`, and `flagged_adversarial`. It
++SHOULD also include McNemar p, arm-level metrics, source artifact paths,
++upstream adversarial flags, sample-cleanliness evidence, and a reproducibility
++checksum.
++
++### SCENARIO-VERIFY-5076: D6 Replay Allows Pareto But Not Accuracy Headline
++
++Given Exp 5058 provides row-clean mandated-SOTA candidate rows, Exp 5059
++provides oracle-distinct paired verifier and tuned self-consistency correctness
++on the same question set, Exp 5061 previously observed zero judge calls, and
++Exp 5071 reports no live completion/logprob endpoint, when Exp 5076 runs, then
++it writes every required artifact field, defines judge-only, tool-first, and
++optional uncertainty-routed arms over the same question IDs, records no live
++judge invocation, computes accuracy, CI95, McNemar, judge-call fraction,
++latency, and separated cost proxy accounting, keeps `verifier_is_oracle=false`,
++and emits `success_d6_efficiency_pareto_win_no_accuracy_headline` only when the
++cost and CI gates justify a Pareto win while the accuracy-headline gate remains
++closed.
++
++If the clean sample, paired correctness vectors, or required upstream artifacts
++are unavailable, Exp 5076 SHALL write a blocked or
++`complete_d6_replication_no_pareto_win` terminal artifact with null/zero
++metrics as appropriate rather than fabricating judge-only or cascade accuracy.
++
++## Implementation Status (REQ-VERIFY-5076)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5076 | Proposed (`python/carnot/experiment_5076_d6_efficiency_replication.py`, `results/experiment_5076_d6_efficiency_replication_v466.json`) | Proposed (`tests/python/test_experiment_5076_d6_efficiency_replication.py`) |
++
+ ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
+ 
+ The repository SHALL provide Exp 5046 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 882d6e0a97..69fbaa1682 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4078,
++  "experiments_checked": 4079,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5076_d6_efficiency_replication.py b/python/carnot/experiment_5076_d6_efficiency_replication.py
+new file mode 100644
+index 0000000000..f38c017e04
+--- /dev/null
++++ b/python/carnot/experiment_5076_d6_efficiency_replication.py
+@@ -0,0 +1,797 @@
++#!/usr/bin/env python3
++"""Exp 5076: D6 efficiency replication on a powered clean sample.
++
++Spec refs: REQ-VERIFY-5076, SCENARIO-VERIFY-5076.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++import math
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.moat_benchmark_harness import (  # noqa: E402
++    DEFAULT_RANDOM_SEED,
++    mcnemar_exact_p,
++    paired_bootstrap_ci,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++Clock = Callable[[], float]
++
++EXPERIMENT_ID = 5076
++EXPERIMENT_NAME = "experiment_5076_d6_efficiency_replication"
++MODULE_RELATIVE_PATH = "python/carnot/experiment_5076_d6_efficiency_replication.py"
++SCHEMA = "carnot.experiment_5076_d6_efficiency_replication.v466"
++RESULT_RELATIVE_PATH = "results/experiment_5076_d6_efficiency_replication_v466.json"
++EXP5058_RESULT_RELATIVE_PATH = "results/experiment_5058_sota_candidate_refresh_inwriting.json"
++EXP5058_CACHE_RELATIVE_PATH = "results/experiment_5058_sota_candidate_refresh_inwriting.jsonl"
++EXP5059_RESULT_RELATIVE_PATH = "results/experiment_5059_d1_sota_refresh_audit.json"
++EXP5061_RESULT_RELATIVE_PATH = "results/experiment_5061_tool_first_cascade.json"
++EXP5071_RESULT_RELATIVE_PATH = "results/experiment_5071_gguf_logprob_preflight_v466.json"
++SPEC_REFS = ["REQ-VERIFY-5076", "SCENARIO-VERIFY-5076"]
++RANDOM_SEED = 20260701
++
++MANDATED_MODEL_SPECS: dict[str, str] = {
++    "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++    "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++}
++
++REPLAY_SUBSTRATE = "deterministic_tool_first_replay_no_live_judge"
++PRECONDITION_SUBSTRATE = "precondition_check_only"
++
++DETERMINISTIC_TOOL_COST_UNITS = 0.001
++CHEAP_VERIFIER_COST_UNITS = 0.01
++JUDGE_CALL_COST_UNITS = 1.0
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++    "model_specs",
++    "verifier_is_oracle",
++    "n_questions",
++    "judge_only_accuracy",
++    "cascade_accuracy",
++    "delta_vs_judge_only",
++    "ci95_delta",
++    "judge_call_fraction",
++    "tool_call_count",
++    "latency",
++    "cost_proxy",
++    "efficiency_win",
++    "accuracy_headline_allowed",
++    "flagged_adversarial",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; success means D6 is a lower-cost Pareto point but not an accuracy headline."
++    },
++    "duration_s": {"principle": "measured wall-clock time for this replay/accounting pass."},
++    "inference_substrate": {
++        "principle": "declares replay-only versus live judge/generator inference; no live judge is hidden."
++    },
++    "model_specs": {
++        "principle": "all mandated SOTA GGUF IDs plus upstream preflight and invocation provenance."
++    },
++    "verifier_is_oracle": {
++        "principle": "false unless an explicit diagnostic oracle is used; selector does not see answer keys."
++    },
++    "n_questions": {
++        "principle": "number of paired questions shared by judge-only, tool-first, and optional routed arms."
++    },
++    "judge_only_accuracy": {
++        "principle": "accuracy of the replayed judge-only comparator on the same question set."
++    },
++    "cascade_accuracy": {
++        "principle": "tool-first cascade accuracy after selection is fixed, evaluated on paired correctness."
++    },
++    "delta_vs_judge_only": {"principle": "cascade_accuracy minus judge_only_accuracy."},
++    "ci95_delta": {
++        "principle": "paired bootstrap CI95 for cascade correctness minus judge-only correctness."
++    },
++    "judge_call_fraction": {
++        "principle": "tool-first cascade judge calls divided by judge-only baseline calls."
++    },
++    "tool_call_count": {
++        "principle": "deterministic constraint and evidence tool calls charged to the tool-first arm."
++    },
++    "latency": {"principle": "arm-level measured latency for replay/accounting work."},
++    "cost_proxy": {
++        "principle": "separate deterministic-tool, cheap-verifier, and judge-call cost proxy accounting."
++    },
++    "efficiency_win": {
++        "principle": "true only when parity-compatible accuracy is achieved at lower charged cost."
++    },
++    "accuracy_headline_allowed": {
++        "principle": "true only when delta is positive, CI95 excludes zero, and McNemar is significant."
++    },
++    "flagged_adversarial": {
++        "principle": "false for an internally consistent replay artifact; upstream flags are recorded separately."
++    },
++}
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_object(path: Path) -> JsonDict | None:
++    try:
++        payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++    return dict(payload) if isinstance(payload, Mapping) else None
++
++
++def read_jsonl(path: Path) -> list[JsonDict]:
++    try:
++        lines = Path(path).read_text(encoding="utf-8").splitlines()
++    except OSError:
++        return []
++    rows: list[JsonDict] = []
++    for line in lines:
++        if not line.strip():
++            continue
++        try:
++            payload = json.loads(line)
++        except json.JSONDecodeError:
++            continue
++        if isinstance(payload, Mapping):
++            rows.append(dict(payload))
++    return rows
++
++
++def _number(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return None
++    return parsed if math.isfinite(parsed) else None
++
++
++def _as_binary_list(value: Any) -> list[int]:
++    if not isinstance(value, Sequence) or isinstance(value, (bytes, str)):
++        return []
++    out: list[int] = []
++    for item in value:
++        parsed = _number(item)
++        if parsed is None or parsed not in {0.0, 1.0}:
++            return []
++        out.append(int(parsed))
++    return out
++
++
++def _accuracy(correct: Sequence[int]) -> float | None:
++    return round(sum(int(value) for value in correct) / len(correct), 6) if correct else None
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    return round(numerator / denominator, 6) if denominator else 0.0
++
++
++def _elapsed(start: float, now: Clock) -> float:
++    return round(max(0.0, float(now()) - start), 6)
++
++
++def _question_id(row: JsonMap) -> str:
++    value = str(row.get("question_id") or "").strip()
++    if value:
++        return value
++    return f"question:{row.get('question_index', '')}"
++
++
++def _question_set_hash(question_ids: Sequence[str]) -> str:
++    return "sha256:" + hashlib.sha256(_json_dumps(list(question_ids)).encode("utf-8")).hexdigest()
++
++
++def _source_paths(root: Path) -> dict[str, str]:
++    return {
++        "exp5058": (root / EXP5058_RESULT_RELATIVE_PATH).as_posix(),
++        "exp5058_cache": (root / EXP5058_CACHE_RELATIVE_PATH).as_posix(),
++        "exp5059": (root / EXP5059_RESULT_RELATIVE_PATH).as_posix(),
++        "exp5061": (root / EXP5061_RESULT_RELATIVE_PATH).as_posix(),
++        "exp5071": (root / EXP5071_RESULT_RELATIVE_PATH).as_posix(),
++    }
++
++
++def _upstream_flags(sources: Mapping[str, JsonMap | None]) -> list[str]:
++    labels = {
++        "exp5058": EXP5058_RESULT_RELATIVE_PATH,
++        "exp5059": EXP5059_RESULT_RELATIVE_PATH,
++        "exp5061": EXP5061_RESULT_RELATIVE_PATH,
++        "exp5071": EXP5071_RESULT_RELATIVE_PATH,
++    }
++    return [
++        labels[name]
++        for name, payload in sources.items()
++        if name in labels and isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    ]
++
++
++def _model_specs(
++    *,
++    exp5058: JsonMap | None,
++    exp5059: JsonMap | None,
++    exp5061: JsonMap | None,
++    exp5071: JsonMap | None,
++    judge_llm_invoked: bool,
++) -> JsonDict:
++    return {
++        "mandated_sota": dict(MANDATED_MODEL_SPECS),
++        "judge_llm_invoked": bool(judge_llm_invoked),
++        "generator_llm_invoked": False,
++        "policy": "mandatory SOTA IDs are declared; replay-only run does not invoke a judge or generator LLM.",
++        "exp5058_model_specs": dict((exp5058 or {}).get("model_specs") or {}),
++        "exp5059_model_specs": dict((exp5059 or {}).get("model_specs") or {}),
++        "exp5061_model_specs": dict((exp5061 or {}).get("model_specs") or {}),
++        "exp5071_model_specs": dict((exp5071 or {}).get("model_specs") or {}),
++    }
++
++
++def _sample_cleanliness(exp5058: JsonMap | None, rows: Sequence[JsonMap]) -> tuple[JsonDict, list[str]]:
++    errors: list[str] = []
++    mandatory_ids = set(MANDATED_MODEL_SPECS.values())
++    row_ids: set[str] = set()
++    question_ids: list[str] = []
++    seen_questions: set[str] = set()
++    if not isinstance(exp5058, Mapping) or exp5058.get("candidate_refresh_ready") is not True:
++        errors.append("candidate_refresh_not_ready")
++    if not rows:
++        errors.append("candidate_cache_empty")
++    legacy_rows = 0
++    non_mandated_rows = 0
++    unparsed_rows = 0
++    missing_choice_rows = 0
++    duplicate_row_ids = 0
++    for index, row in enumerate(rows):
++        row_id = str(row.get("row_id") or f"row:{index}")
++        if row_id in row_ids:
++            duplicate_row_ids += 1
++        row_ids.add(row_id)
++        question_id = _question_id(row)
++        if question_id not in seen_questions:
++            seen_questions.add(question_id)
++            question_ids.append(question_id)
++        if row.get("legacy_model_used") is True:
++            legacy_rows += 1
++        if str(row.get("model_id") or "") not in mandatory_ids:
++            non_mandated_rows += 1
++        if str(row.get("parse_status") or "parsed") != "parsed":
++            unparsed_rows += 1
++        choices = row.get("choices")
++        if not isinstance(choices, Sequence) or isinstance(choices, (str, bytes)) or not choices:
++            missing_choice_rows += 1
++    if legacy_rows:
++        errors.append("legacy_model_rows_present")
++    if non_mandated_rows:
++        errors.append("non_mandated_model_rows_present")
++    if unparsed_rows:
++        errors.append("unparsed_rows_present")
++    if missing_choice_rows:
++        errors.append("missing_choices")
++    if duplicate_row_ids:
++        errors.append("duplicate_row_ids")
++    return (
++        {
++            "row_clean": not errors,
++            "powered_candidate_rows": bool(rows) and non_mandated_rows == 0 and legacy_rows == 0,
++            "n_candidate_rows": len(rows),
++            "n_questions_in_cache": len(question_ids),
++            "legacy_rows": legacy_rows,
++            "non_mandated_model_rows": non_mandated_rows,
++            "unparsed_rows": unparsed_rows,
++            "missing_choice_rows": missing_choice_rows,
++            "duplicate_row_ids": duplicate_row_ids,
++            "errors": errors,
++        },
++        question_ids,
++    )
++
++
++def _paired_correct(exp5059: JsonMap | None) -> JsonDict:
++    if not isinstance(exp5059, Mapping):
++        return {}
++    metrics = exp5059.get("refreshed_candidate_metrics")
++    paired = metrics.get("paired_correct") if isinstance(metrics, Mapping) else None
++    if not isinstance(paired, Mapping):
++        paired = exp5059.get("paired_correct")
++    return dict(paired) if isinstance(paired, Mapping) else {}
++
++
++def _prediction_list(exp5059: JsonMap | None) -> list[str | None]:
++    if not isinstance(exp5059, Mapping):
++        return []
++    metrics = exp5059.get("refreshed_candidate_metrics")
++    raw = metrics.get("predictions") if isinstance(metrics, Mapping) else exp5059.get("predictions")
++    if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
++        return []
++    return [str(item) if item is not None and str(item).strip() else None for item in raw]
++
++
++def _correct_vectors(exp5059: JsonMap | None) -> tuple[list[int], str, list[int]]:
++    paired = _paired_correct(exp5059)
++    verifier = _as_binary_list(paired.get("verifier"))
++    for key in ("cached_sota_judge", "sota_judge", "strong_judge", "judge"):
++        judge = _as_binary_list(paired.get(key))
++        if judge:
++            return verifier, key, judge
++    return verifier, "bounded_tuned_self_consistency_comparator_no_live_judge", _as_binary_list(
++        paired.get("tuned_self_consistency")
++    )
++
++
++def _cost(tool_calls: int, cheap_calls: int, judge_calls: int) -> JsonDict:
++    tool_cost = round(tool_calls * DETERMINISTIC_TOOL_COST_UNITS, 6)
++    cheap_cost = round(cheap_calls * CHEAP_VERIFIER_COST_UNITS, 6)
++    judge_cost = round(judge_calls * JUDGE_CALL_COST_UNITS, 6)
++    return {
++        "deterministic_tool_calls": int(tool_calls),
++        "cheap_verifier_calls": int(cheap_calls),
++        "judge_calls": int(judge_calls),
++        "deterministic_tool_cost_units": tool_cost,
++        "cheap_verifier_cost_units": cheap_cost,
++        "judge_cost_units": judge_cost,
++        "total_cost_units": round(tool_cost + cheap_cost + judge_cost, 6),
++    }
++
++
++def _empty_cost_proxy() -> JsonDict:
++    return {
++        "unit": "relative_call_cost",
++        "unit_costs": {
++            "deterministic_tool": DETERMINISTIC_TOOL_COST_UNITS,
++            "cheap_verifier": CHEAP_VERIFIER_COST_UNITS,
++            "judge_call": JUDGE_CALL_COST_UNITS,
++        },
++        "judge_only": _cost(0, 0, 0),
++        "tool_first": _cost(0, 0, 0),
++        "uncertainty_routed": _cost(0, 0, 0),
++        "tool_first_vs_judge_only_cost_ratio": None,
++    }
++
++
++def _checksum(artifact: JsonMap) -> str:
++    basis = {
++        "experiment_id": artifact.get("experiment_id"),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "n_questions": artifact.get("n_questions"),
++        "judge_only_accuracy": artifact.get("judge_only_accuracy"),
++        "cascade_accuracy": artifact.get("cascade_accuracy"),
++        "ci95_delta": artifact.get("ci95_delta"),
++        "judge_call_fraction": artifact.get("judge_call_fraction"),
++        "cost_proxy": artifact.get("cost_proxy"),
++    }
++    return "sha256:" + hashlib.sha256(_json_dumps(basis).encode("utf-8")).hexdigest()
++
++
++def _base_artifact(
++    *,
++    root: Path,
++    artifact_path: Path,
++    honest_verdict: str,
++    duration_s: float,
++    exp5058: JsonMap | None,
++    exp5059: JsonMap | None,
++    exp5061: JsonMap | None,
++    exp5071: JsonMap | None,
++    sample_cleanliness: JsonMap | None = None,
++    question_ids: Sequence[str] = (),
++    blocked_error: str | None = None,
++) -> JsonDict:
++    q_hash = _question_set_hash(question_ids)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": artifact_path.as_posix(),
++        "honest_verdict": honest_verdict,
++        "duration_s": round(max(0.0, duration_s), 6),
++        "inference_substrate": PRECONDITION_SUBSTRATE,
++        "model_specs": _model_specs(
++            exp5058=exp5058,
++            exp5059=exp5059,
++            exp5061=exp5061,
++            exp5071=exp5071,
++            judge_llm_invoked=False,
++        ),
++        "verifier_is_oracle": False,
++        "n_questions": 0,
++        "judge_only_accuracy": None,
++        "cascade_accuracy": None,
++        "delta_vs_judge_only": None,
++        "ci95_delta": None,
++        "mcnemar_p": None,
++        "judge_call_fraction": None,
++        "tool_call_count": 0,
++        "cheap_verifier_call_count": 0,
++        "judge_call_count": 0,
++        "latency": {
++            "judge_only_s": 0.0,
++            "tool_first_s": 0.0,
++            "uncertainty_routed_s": 0.0,
++            "total_s": round(max(0.0, duration_s), 6),
++        },
++        "cost_proxy": _empty_cost_proxy(),
++        "efficiency_win": False,
++        "accuracy_headline_allowed": False,
++        "flagged_adversarial": False,
++        "same_question_candidate_set": bool(question_ids),
++        "question_set_hash": q_hash,
++        "arms": {},
++        "sample_cleanliness": dict(sample_cleanliness or {}),
++        "oracle_distinctness": {
++            "selector_answer_key_visible": False,
++            "selector_gold_visible": False,
++            "paired_correctness_used_after_selection_only": True,
++            "verifier_is_oracle": False,
++        },
++        "upstream_flagged_adversarial_sources": _upstream_flags(
++            {"exp5058": exp5058, "exp5059": exp5059, "exp5061": exp5061, "exp5071": exp5071}
++        ),
++        "source_artifacts": _source_paths(root),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    if blocked_error:
++        artifact["blocked_error"] = blocked_error[:1000]
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def _complete_artifact(
++    *,
++    root: Path,
++    artifact_path: Path,
++    duration_s: float,
++    exp5058: JsonMap,
++    exp5059: JsonMap,
++    exp5061: JsonMap | None,
++    exp5071: JsonMap | None,
++    sample_cleanliness: JsonMap,
++    question_ids: Sequence[str],
++    bootstrap_samples: int,
++    seed: int,
++) -> JsonDict:
++    verifier_correct, judge_source, judge_correct = _correct_vectors(exp5059)
++    sample_question_ids = list(question_ids)
++    n_rows = min(len(verifier_correct), len(judge_correct), len(sample_question_ids))
++    question_ids = sample_question_ids[:n_rows]
++    if n_rows <= 0:
++        return _base_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            honest_verdict="blocked_d6_replication_paired_correctness_unavailable",
++            duration_s=duration_s,
++            exp5058=exp5058,
++            exp5059=exp5059,
++            exp5061=exp5061,
++            exp5071=exp5071,
++            sample_cleanliness=sample_cleanliness,
++            question_ids=sample_question_ids,
++            blocked_error="paired verifier and judge-only comparator correctness vectors are unavailable",
++        )
++    verifier_correct = verifier_correct[:n_rows]
++    judge_correct = judge_correct[:n_rows]
++    predictions = _prediction_list(exp5059)
++    cached_or_live_judge = judge_source != "bounded_tuned_self_consistency_comparator_no_live_judge"
++    tool_call_count = 0
++    cheap_verifier_calls = 0
++    judge_call_count = 0
++    route_counts = {
++        "cheap_verifier": 0,
++        "judge_fallback": 0,
++        "comparator_replay_fallback": 0,
++        "abstain_uncertain": 0,
++    }
++    cascade_correct: list[int] = []
++    for index in range(n_rows):
++        tool_call_count += 2
++        cheap_verifier_calls += 1
++        prediction = predictions[index] if index < len(predictions) else None
++        if prediction is not None:
++            route_counts["cheap_verifier"] += 1
++            cascade_correct.append(int(verifier_correct[index]))
++            continue
++        route_counts["abstain_uncertain"] += 1
++        cascade_correct.append(int(judge_correct[index]))
++        if cached_or_live_judge:
++            judge_call_count += 1
++            route_counts["judge_fallback"] += 1
++        else:
++            tool_call_count += 1
++            route_counts["comparator_replay_fallback"] += 1
++
++    judge_only_accuracy = _accuracy(judge_correct)
++    cascade_accuracy = _accuracy(cascade_correct)
++    delta = (
++        round(float(cascade_accuracy) - float(judge_only_accuracy), 6)
++        if cascade_accuracy is not None and judge_only_accuracy is not None
++        else None
++    )
++    ci95 = paired_bootstrap_ci(cascade_correct, judge_correct, seed=seed, samples=bootstrap_samples)
++    mcnemar_p = mcnemar_exact_p(cascade_correct, judge_correct)
++    judge_only_calls = n_rows
++    judge_fraction = _rate(judge_call_count, judge_only_calls)
++    judge_only_cost = _cost(0, 0, judge_only_calls)
++    tool_first_cost = _cost(tool_call_count, cheap_verifier_calls, judge_call_count)
++    uncertainty_cost = _cost(0, 0, 0)
++    cost_ratio = round(tool_first_cost["total_cost_units"] / judge_only_cost["total_cost_units"], 6)
++    accuracy_headline_allowed = bool(
++        delta is not None and delta > 0.0 and ci95[0] > 0.0 and mcnemar_p < 0.05
++    )
++    efficiency_win = bool(
++        delta is not None
++        and delta >= 0.0
++        and ci95[0] >= 0.0
++        and judge_fraction < 1.0
++        and tool_first_cost["total_cost_units"] < judge_only_cost["total_cost_units"]
++    )
++    honest_verdict = (
++        "success_d6_efficiency_pareto_win_no_accuracy_headline"
++        if efficiency_win and not accuracy_headline_allowed
++        else "success_d6_efficiency_pareto_win_accuracy_headline_supported"
++        if efficiency_win
++        else "complete_d6_replication_no_pareto_win"
++    )
++    q_hash = _question_set_hash(question_ids)
++    no_live_or_cached = not cached_or_live_judge and not bool((exp5071 or {}).get("live_completion_invoked"))
++    uncertainty_status = (
++        "not_executed_no_live_or_cached_judge" if no_live_or_cached else "defined_not_selected"
++    )
++    artifact = _base_artifact(
++        root=root,
++        artifact_path=artifact_path,
++        honest_verdict=honest_verdict,
++        duration_s=duration_s,
++        exp5058=exp5058,
++        exp5059=exp5059,
++        exp5061=exp5061,
++        exp5071=exp5071,
++        sample_cleanliness=sample_cleanliness,
++        question_ids=question_ids,
++    )
++    artifact.update(
++        {
++            "inference_substrate": REPLAY_SUBSTRATE,
++            "n_questions": n_rows,
++            "judge_only_accuracy": judge_only_accuracy,
++            "cascade_accuracy": cascade_accuracy,
++            "delta_vs_judge_only": delta,
++            "ci95_delta": ci95,
++            "mcnemar_p": mcnemar_p,
++            "judge_call_fraction": judge_fraction,
++            "tool_call_count": tool_call_count,
++            "cheap_verifier_call_count": cheap_verifier_calls,
++            "judge_call_count": judge_call_count,
++            "latency": {
++                "judge_only_s": 0.0,
++                "tool_first_s": round(max(0.0, duration_s), 6),
++                "uncertainty_routed_s": 0.0,
++                "total_s": round(max(0.0, duration_s), 6),
++            },
++            "cost_proxy": {
++                "unit": "relative_call_cost",
++                "unit_costs": {
++                    "deterministic_tool": DETERMINISTIC_TOOL_COST_UNITS,
++                    "cheap_verifier": CHEAP_VERIFIER_COST_UNITS,
++                    "judge_call": JUDGE_CALL_COST_UNITS,
++                },
++                "judge_only": judge_only_cost,
++                "tool_first": tool_first_cost,
++                "uncertainty_routed": uncertainty_cost,
++                "tool_first_vs_judge_only_cost_ratio": cost_ratio,
++            },
++            "efficiency_win": efficiency_win,
++            "accuracy_headline_allowed": accuracy_headline_allowed,
++            "same_question_candidate_set": True,
++            "question_set_hash": q_hash,
++            "judge_only_source": judge_source,
++            "judge_only_call_count": judge_only_calls,
++            "route_counts": route_counts,
++            "arms": {
++                "judge_only": {
++                    "status": "replayed",
++                    "accuracy": judge_only_accuracy,
++                    "judge_calls": judge_only_calls,
++                    "tool_calls": 0,
++                    "cheap_verifier_calls": 0,
++                    "question_set_hash": q_hash,
++                    "source": judge_source,
++                },
++                "tool_first": {
++                    "status": "executed_replay",
++                    "accuracy": cascade_accuracy,
++                    "judge_calls": judge_call_count,
++                    "tool_calls": tool_call_count,
++                    "cheap_verifier_calls": cheap_verifier_calls,
++                    "question_set_hash": q_hash,
++                    "source": "deterministic_tools_plus_oracle_distinct_exp5059_verifier",
++                },
++                "uncertainty_routed": {
++                    "status": uncertainty_status,
++                    "accuracy": None,
++                    "judge_calls": 0,
++                    "tool_calls": 0,
++                    "cheap_verifier_calls": 0,
++                    "question_set_hash": q_hash,
++                    "source": "optional_cached_or_live_judge_route",
++                },
++            },
++            "model_specs": _model_specs(
++                exp5058=exp5058,
++                exp5059=exp5059,
++                exp5061=exp5061,
++                exp5071=exp5071,
++                judge_llm_invoked=False,
++            ),
++            "prior_exp5061": {
++                "honest_verdict": (exp5061 or {}).get("honest_verdict"),
++                "judge_call_fraction": (exp5061 or {}).get("judge_call_fraction"),
++                "efficiency_win": (exp5061 or {}).get("efficiency_win"),
++            },
++        }
++    )
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    bootstrap_samples: int = 2000,
++    seed: int = RANDOM_SEED,
++    now: Clock = time.perf_counter,
++    write: bool = True,
++) -> JsonDict:
++    root = Path(root)
++    artifact_path = Path(artifact_path) if artifact_path else root / RESULT_RELATIVE_PATH
++    start = float(now())
++    exp5058 = read_json_object(root / EXP5058_RESULT_RELATIVE_PATH)
++    exp5059 = read_json_object(root / EXP5059_RESULT_RELATIVE_PATH)
++    exp5061 = read_json_object(root / EXP5061_RESULT_RELATIVE_PATH)
++    exp5071 = read_json_object(root / EXP5071_RESULT_RELATIVE_PATH)
++    rows = read_jsonl(root / EXP5058_CACHE_RELATIVE_PATH)
++    sample_cleanliness, question_ids = _sample_cleanliness(exp5058, rows)
++    if not sample_cleanliness["row_clean"]:
++        artifact = _base_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            honest_verdict="blocked_d6_replication_clean_sample_unavailable",
++            duration_s=_elapsed(start, now),
++            exp5058=exp5058,
++            exp5059=exp5059,
++            exp5061=exp5061,
++            exp5071=exp5071,
++            sample_cleanliness=sample_cleanliness,
++            question_ids=question_ids,
++            blocked_error="candidate refresh or candidate JSONL did not pass row-clean powered-sample checks",
++        )
++    elif not isinstance(exp5059, Mapping) or exp5059.get("best_arm_available") is not True:
++        artifact = _base_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            honest_verdict="blocked_d6_replication_paired_correctness_unavailable",
++            duration_s=_elapsed(start, now),
++            exp5058=exp5058,
++            exp5059=exp5059,
++            exp5061=exp5061,
++            exp5071=exp5071,
++            sample_cleanliness=sample_cleanliness,
++            question_ids=question_ids,
++            blocked_error="Exp5059 best_arm_available is not true",
++        )
++    else:
++        artifact = _complete_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            duration_s=_elapsed(start, now),
++            exp5058=exp5058,
++            exp5059=exp5059,
++            exp5061=exp5061,
++            exp5071=exp5071,
++            sample_cleanliness=sample_cleanliness,
++            question_ids=question_ids,
++            bootstrap_samples=bootstrap_samples,
++            seed=seed,
++        )
++    if write:
++        write_json(artifact_path, artifact)
++    return artifact
++
++
++def _is_rate_or_none(value: Any) -> bool:
++    return value is None or (
++        isinstance(value, (int, float)) and not isinstance(value, bool) and 0.0 <= float(value) <= 1.0
++    )
++
++
++def _is_nonnegative_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
++
++
++def _ci_ok(value: Any) -> bool:
++    return value is None or (
++        isinstance(value, list) and len(value) == 2 and all(_number(item) is not None for item in value)
++    )
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    required_errors = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    model_text = _json_dumps(artifact.get("model_specs") or {})
++    checks = [
++        ("schema", artifact.get("schema") == SCHEMA),
++        ("spec_refs", artifact.get("spec_refs") == SPEC_REFS),
++        ("honest_verdict", str(artifact.get("honest_verdict") or "").startswith(("success_d6_", "complete_d6_", "blocked_d6_"))),
++        ("duration_s", _number(artifact.get("duration_s")) is not None and float(artifact.get("duration_s")) >= 0.0),
++        ("inference_substrate", isinstance(artifact.get("inference_substrate"), str) and bool(artifact.get("inference_substrate"))),
++        ("model_specs", all(model_id in model_text for model_id in MANDATED_MODEL_SPECS.values())),
++        ("verifier_is_oracle", artifact.get("verifier_is_oracle") is False),
++        ("n_questions", _is_nonnegative_int(artifact.get("n_questions"))),
++        ("judge_only_accuracy", _is_rate_or_none(artifact.get("judge_only_accuracy"))),
++        ("cascade_accuracy", _is_rate_or_none(artifact.get("cascade_accuracy"))),
++        ("delta_vs_judge_only", artifact.get("delta_vs_judge_only") is None or _number(artifact.get("delta_vs_judge_only")) is not None),
++        ("ci95_delta", _ci_ok(artifact.get("ci95_delta"))),
++        ("judge_call_fraction", _is_rate_or_none(artifact.get("judge_call_fraction"))),
++        ("tool_call_count", _is_nonnegative_int(artifact.get("tool_call_count"))),
++        ("latency", isinstance(artifact.get("latency"), Mapping)),
++        ("cost_proxy", isinstance(artifact.get("cost_proxy"), Mapping)),
++        ("efficiency_win", isinstance(artifact.get("efficiency_win"), bool)),
++        ("accuracy_headline_allowed", isinstance(artifact.get("accuracy_headline_allowed"), bool)),
++        ("flagged_adversarial", isinstance(artifact.get("flagged_adversarial"), bool)),
++        ("field_principles", set((artifact.get("field_principles") or {}).keys()) == set(FIELD_PRINCIPLES.keys())),
++    ]
++    return sorted(set(required_errors + [name for name, ok in checks if not ok]))
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI entrypoint
++    _ = argv
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "result_path": str(REPO_ROOT / RESULT_RELATIVE_PATH),
++                "honest_verdict": artifact.get("honest_verdict"),
++                "n_questions": artifact.get("n_questions"),
++                "judge_only_accuracy": artifact.get("judge_only_accuracy"),
++                "cascade_accuracy": artifact.get("cascade_accuracy"),
++                "judge_call_fraction": artifact.get("judge_call_fraction"),
++                "efficiency_win": artifact.get("efficiency_win"),
++                "accuracy_headline_allowed": artifact.get("accuracy_headline_allowed"),
++            },
++            sort_keys=True,
++        )
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        print(f"schema_errors={errors}", file=sys.stderr)
++        return 1
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI entrypoint
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_5076_d6_efficiency_replication_v466.json b/results/experiment_5076_d6_efficiency_replication_v466.json
+new file mode 100644
+index 0000000000..3844ecc465
+--- /dev/null
++++ b/results/experiment_5076_d6_efficiency_replication_v466.json
+@@ -0,0 +1,384 @@
++{
++  "accuracy_headline_allowed": false,
++  "arms": {
++    "judge_only": {
++      "accuracy": 0.585,
++      "cheap_verifier_calls": 0,
++      "judge_calls": 200,
++      "question_set_hash": "sha256:bd4cf44d5d5c08584fffff5c1112eed5807a3431f0ab9d1f5129b4a859ed59fc",
++      "source": "bounded_tuned_self_consistency_comparator_no_live_judge",
++      "status": "replayed",
++      "tool_calls": 0
++    },
++    "tool_first": {
++      "accuracy": 0.665,
++      "cheap_verifier_calls": 200,
++      "judge_calls": 0,
++      "question_set_hash": "sha256:bd4cf44d5d5c08584fffff5c1112eed5807a3431f0ab9d1f5129b4a859ed59fc",
++      "source": "deterministic_tools_plus_oracle_distinct_exp5059_verifier",
++      "status": "executed_replay",
++      "tool_calls": 400
++    },
++    "uncertainty_routed": {
++      "accuracy": null,
++      "cheap_verifier_calls": 0,
++      "judge_calls": 0,
++      "question_set_hash": "sha256:bd4cf44d5d5c08584fffff5c1112eed5807a3431f0ab9d1f5129b4a859ed59fc",
++      "source": "optional_cached_or_live_judge_route",
++      "status": "not_executed_no_live_or_cached_judge",
++      "tool_calls": 0
++    }
++  },
++  "cascade_accuracy": 0.665,
++  "cheap_verifier_call_count": 200,
++  "ci95_delta": [
++    -0.005,
++    0.16
++  ],
++  "cost_proxy": {
++    "judge_only": {
++      "cheap_verifier_calls": 0,
++      "cheap_verifier_cost_units": 0.0,
++      "deterministic_tool_calls": 0,
++      "deterministic_tool_cost_units": 0.0,
++      "judge_calls": 200,
++      "judge_cost_units": 200.0,
++      "total_cost_units": 200.0
++    },
++    "tool_first": {
++      "cheap_verifier_calls": 200,
++      "cheap_verifier_cost_units": 2.0,
++      "deterministic_tool_calls": 400,
++      "deterministic_tool_cost_units": 0.4,
++      "judge_calls": 0,
++      "judge_cost_units": 0.0,
++      "total_cost_units": 2.4
++    },
++    "tool_first_vs_judge_only_cost_ratio": 0.012,
++    "uncertainty_routed": {
++      "cheap_verifier_calls": 0,
++      "cheap_verifier_cost_units": 0.0,
++      "deterministic_tool_calls": 0,
++      "deterministic_tool_cost_units": 0.0,
++      "judge_calls": 0,
++      "judge_cost_units": 0.0,
++      "total_cost_units": 0.0
++    },
++    "unit": "relative_call_cost",
++    "unit_costs": {
++      "cheap_verifier": 0.01,
++      "deterministic_tool": 0.001,
++      "judge_call": 1.0
++    }
++  },
++  "delta_vs_judge_only": 0.08,
++  "duration_s": 0.016732,
++  "efficiency_win": false,
++  "experiment": "experiment_5076_d6_efficiency_replication",
++  "experiment_id": 5076,
++  "field_principles": {
++    "accuracy_headline_allowed": {
++      "principle": "true only when delta is positive, CI95 excludes zero, and McNemar is significant."
++    },
++    "cascade_accuracy": {
++      "principle": "tool-first cascade accuracy after selection is fixed, evaluated on paired correctness."
++    },
++    "ci95_delta": {
++      "principle": "paired bootstrap CI95 for cascade correctness minus judge-only correctness."
++    },
++    "cost_proxy": {
++      "principle": "separate deterministic-tool, cheap-verifier, and judge-call cost proxy accounting."
++    },
++    "delta_vs_judge_only": {
++      "principle": "cascade_accuracy minus judge_only_accuracy."
++    },
++    "duration_s": {
++      "principle": "measured wall-clock time for this replay/accounting pass."
++    },
++    "efficiency_win": {
++      "principle": "true only when parity-compatible accuracy is achieved at lower charged cost."
++    },
++    "flagged_adversarial": {
++      "principle": "false for an internally consistent replay artifact; upstream flags are recorded separately."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success means D6 is a lower-cost Pareto point but not an accuracy headline."
++    },
++    "inference_substrate": {
++      "principle": "declares replay-only versus live judge/generator inference; no live judge is hidden."
++    },
++    "judge_call_fraction": {
++      "principle": "tool-first cascade judge calls divided by judge-only baseline calls."
++    },
++    "judge_only_accuracy": {
++      "principle": "accuracy of the replayed judge-only comparator on the same question set."
++    },
++    "latency": {
++      "principle": "arm-level measured latency for replay/accounting work."
++    },
++    "model_specs": {
++      "principle": "all mandated SOTA GGUF IDs plus upstream preflight and invocation provenance."
++    },
++    "n_questions": {
++      "principle": "number of paired questions shared by judge-only, tool-first, and optional routed arms."
++    },
++    "tool_call_count": {
++      "principle": "deterministic constraint and evidence tool calls charged to the tool-first arm."
++    },
++    "verifier_is_oracle": {
++      "principle": "false unless an explicit diagnostic oracle is used; selector does not see answer keys."
++    }
++  },
++  "flagged_adversarial": false,
++  "honest_verdict": "complete_d6_replication_no_pareto_win",
++  "inference_substrate": "deterministic_tool_first_replay_no_live_judge",
++  "judge_call_count": 0,
++  "judge_call_fraction": 0.0,
++  "judge_only_accuracy": 0.585,
++  "judge_only_call_count": 200,
++  "judge_only_source": "bounded_tuned_self_consistency_comparator_no_live_judge",
++  "latency": {
++    "judge_only_s": 0.0,
++    "tool_first_s": 0.016732,
++    "total_s": 0.016732,
++    "uncertainty_routed_s": 0.0
++  },
++  "mcnemar_p": 0.076369,
++  "model_specs": {
++    "exp5058_model_specs": {
++      "flagship_dense": {
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++      },
++      "flagship_moe": {
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++      },
++      "middle_moe": {
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++      }
++    },
++    "exp5059_model_specs": {
++      "exp5058_model_specs": {
++        "flagship_dense": {
++          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++        },
++        "flagship_moe": {
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++        },
++        "middle_moe": {
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++        }
++      },
++      "mandated_sota": {
++        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
++      },
++      "powered_d1_scorer": {
++        "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
++        "scorer_trained": true,
++        "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
++      }
++    },
++    "exp5061_model_specs": {
++      "exp5057_model_specs": {
++        "flagship_dense": {
++          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++        },
++        "flagship_moe": {
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++        },
++        "middle_moe": {
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++        }
++      },
++      "exp5059_model_specs": {
++        "exp5058_model_specs": {
++          "flagship_dense": {
++            "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++            "missing_diagnostic": null,
++            "preferred_quant": "Q4_K_M",
++            "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++          },
++          "flagship_moe": {
++            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "missing_diagnostic": null,
++            "preferred_quant": "Q4_K_M",
++            "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++          },
++          "middle_moe": {
++            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++            "missing_diagnostic": null,
++            "preferred_quant": "Q4_K_M",
++            "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++          }
++        },
++        "mandated_sota": {
++          "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++          "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
++        },
++        "powered_d1_scorer": {
++          "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
++          "scorer_trained": true,
++          "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
++        }
++      },
++      "mandated_sota": {
++        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
++      },
++      "strong_judge_fallback": {
++        "policy": "optional fallback only; no legacy small model headline evidence",
++        "ready": false,
++        "usable_sota_models": [
++          {
++            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++            "role": "flagship_moe"
++          },
++          {
++            "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++            "role": "flagship_dense"
++          },
++          {
++            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++            "role": "middle_moe"
++          }
++        ],
++        "used": false
++      }
++    },
++    "exp5071_model_specs": {
++      "experiment_id": 3013,
++      "headline_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "loader": "llama_cpp",
++      "preferred_quantization": "Q4_K_M",
++      "random_seed": 3013,
++      "resolved_models": {
++        "flagship_dense": {
++          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++        },
++        "flagship_moe": {
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++        },
++        "middle_moe": {
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "missing_diagnostic": null,
++          "preferred_quant": "Q4_K_M",
++          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++        }
++      },
++      "smoke_only_models": [
++        "Qwen/Qwen3.5-0.8B",
++        "unsloth/gemma-4-E4B-it-GGUF"
++      ],
++      "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1",
++      "telemetry_request": {
++        "logits_all": true,
++        "logprobs": 5,
++        "top_k_alternatives_required": true
++      }
++    },
++    "generator_llm_invoked": false,
++    "judge_llm_invoked": false,
++    "mandated_sota": {
++      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
++    },
++    "policy": "mandatory SOTA IDs are declared; replay-only run does not invoke a judge or generator LLM."
++  },
++  "n_questions": 200,
++  "oracle_distinctness": {
++    "paired_correctness_used_after_selection_only": true,
++    "selector_answer_key_visible": false,
++    "selector_gold_visible": false,
++    "verifier_is_oracle": false
++  },
++  "prior_exp5061": {
++    "efficiency_win": true,
++    "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
++    "judge_call_fraction": 0.0
++  },
++  "question_set_hash": "sha256:bd4cf44d5d5c08584fffff5c1112eed5807a3431f0ab9d1f5129b4a859ed59fc",
++  "random_seed": 20260701,
++  "reproducibility_checksum": "sha256:43aa4bd2dd0059aea2469122eb4160886a1073ddae6b5975a73dba5bef5906ae",
++  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5076_d6_efficiency_replication_v466.json",
++  "route_counts": {
++    "abstain_uncertain": 0,
++    "cheap_verifier": 200,
++    "comparator_replay_fallback": 0,
++    "judge_fallback": 0
++  },
++  "same_question_candidate_set": true,
++  "sample_cleanliness": {
++    "duplicate_row_ids": 0,
++    "errors": [],
++    "legacy_rows": 0,
++    "missing_choice_rows": 0,
++    "n_candidate_rows": 1525,
++    "n_questions_in_cache": 200,
++    "non_mandated_model_rows": 0,
++    "powered_candidate_rows": true,
++    "row_clean": true,
++    "unparsed_rows": 0
++  },
++  "schema": "carnot.experiment_5076_d6_efficiency_replication.v466",
++  "source_artifacts": {
++    "exp5058": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.json",
++    "exp5058_cache": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl",
++    "exp5059": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json",
++    "exp5061": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5061_tool_first_cascade.json",
++    "exp5071": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5071_gguf_logprob_preflight_v466.json"
++  },
++  "spec_refs": [
++    "REQ-VERIFY-5076",
++    "SCENARIO-VERIFY-5076"
++  ],
++  "tool_call_count": 400,
++  "upstream_flagged_adversarial_sources": [
++    "results/experiment_5058_sota_candidate_refresh_inwriting.json",
++    "results/experiment_5059_d1_sota_refresh_audit.json"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/tests/python/test_experiment_5076_d6_efficiency_replication.py b/tests/python/test_experiment_5076_d6_efficiency_replication.py
+new file mode 100644
+index 0000000000..1ea4b5afcc
+--- /dev/null
++++ b/tests/python/test_experiment_5076_d6_efficiency_replication.py
+@@ -0,0 +1,417 @@
++"""Tests for Exp 5076 D6 efficiency replication.
++
++Spec refs: REQ-VERIFY-5076, SCENARIO-VERIFY-5076.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5076_d6_efficiency_replication as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++
++
++def _model_specs() -> dict[str, dict[str, str | None]]:
++    return {
++        role: {"hf_id": hf_id, "resolved_path": f"/models/{role}.gguf"}
++        for role, hf_id in exp.MANDATED_MODEL_SPECS.items()
++    }
++
++
++def _candidate_rows(n_questions: int = 6, *, legacy: bool = False) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for question_index in range(n_questions):
++        for candidate_index, answer in enumerate(("A", "B")):
++            rows.append(
++                {
++                    "schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.row.v1",
++                    "row_id": f"fixture:{question_index}/sota5058-{candidate_index:04d}",
++                    "question_id": f"fixture:{question_index}",
++                    "question_index": question_index,
++                    "candidate_index": candidate_index,
++                    "question": "Who is the most likely murderer?",
++                    "choices": ["A", "B"],
++                    "answer_text": answer,
++                    "parsed_answer": answer,
++                    "parse_status": "parsed",
++                    "prompt_hash": f"prompt-{question_index:03d}",
++                    "model_id": exp.MANDATED_MODEL_SPECS["flagship_moe"],
++                    "model_role": "flagship_moe",
++                    "model_path": "/models/qwen.gguf",
++                    "legacy_model_used": legacy,
++                    "structured_constraints": {
++                        "allowed_answers": ["A", "B"],
++                        "answer_in_allowed_choices": True,
++                    },
++                }
++            )
++    return rows
++
++
++def _exp5058(root: Path, *, ready: bool = True, flagged: bool = True) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.v1",
++        "honest_verdict": "complete_sota_candidate_refresh_ready_d1_d6"
++        if ready
++        else "blocked_candidate_refresh_unavailable",
++        "candidate_refresh_ready": ready,
++        "candidate_cache_path": (root / exp.EXP5058_CACHE_RELATIVE_PATH).as_posix(),
++        "n_questions": 6 if ready else 0,
++        "n_candidates": 12 if ready else 0,
++        "legacy_models_smoke_only": True,
++        "flagged_adversarial": flagged,
++        "model_specs": _model_specs(),
++    }
++
++
++def _exp5059(
++    *,
++    verifier: list[int] | None = None,
++    tuned_sc: list[int] | None = None,
++    cached_judge: list[int] | None = None,
++    predictions: list[str | None] | None = None,
++    best_arm_available: bool = True,
++) -> dict[str, Any]:
++    verifier_correct = verifier if verifier is not None else [1, 1, 0, 1, 0, 1]
++    tuned_correct = tuned_sc if tuned_sc is not None else [1, 1, 0, 1, 0, 1]
++    paired_correct: dict[str, list[int]] = {
++        "verifier": verifier_correct,
++        "tuned_self_consistency": tuned_correct,
++    }
++    if cached_judge is not None:
++        paired_correct["cached_sota_judge"] = cached_judge
++    return {
++        "schema": "carnot.experiment_5059_d1_sota_refresh_audit.v1",
++        "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p000",
++        "best_arm_available": best_arm_available,
++        "verifier_is_oracle": False,
++        "legacy_models_smoke_only": True,
++        "flagged_adversarial": True,
++        "model_specs": {"mandated_sota": dict(exp.MANDATED_MODEL_SPECS)},
++        "refreshed_candidate_metrics": {
++            "predictions": predictions or ["A", "B", "A", "B", "A", "B"],
++            "paired_correct": paired_correct,
++        },
++    }
++
++
++def _exp5061() -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5061_tool_first_cascade.v1",
++        "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
++        "cascade_executed": True,
++        "judge_call_fraction": 0.0,
++        "efficiency_win": True,
++        "verifier_is_oracle": False,
++    }
++
++
++def _exp5071(*, live: bool = False) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5071_gguf_logprob_preflight.v466",
++        "honest_verdict": "complete_gguf_logprob_preflight_partial_ready",
++        "sota_models_ready": True,
++        "completion_endpoint_ready": live,
++        "logprob_endpoint_ready": live,
++        "top_logprob_or_confidence_ready": live,
++        "live_completion_invoked": live,
++        "flagged_adversarial": False,
++        "model_specs": {
++            "headline_models": list(exp.MANDATED_MODEL_SPECS.values()),
++            "resolved_models": _model_specs(),
++        },
++    }
++
++
++def _setup_root(tmp_path: Path) -> Path:
++    root = tmp_path / "root"
++    _write_json(root / exp.EXP5058_RESULT_RELATIVE_PATH, _exp5058(root))
++    _write_json(root / exp.EXP5059_RESULT_RELATIVE_PATH, _exp5059())
++    _write_json(root / exp.EXP5061_RESULT_RELATIVE_PATH, _exp5061())
++    _write_json(root / exp.EXP5071_RESULT_RELATIVE_PATH, _exp5071())
++    _write_jsonl(root / exp.EXP5058_CACHE_RELATIVE_PATH, _candidate_rows())
++    return root
++
++
++def test_req_verify_5076_spec_declares_replication_contract() -> None:
++    """REQ-VERIFY-5076: OpenSpec anchors the D6 replication artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    module_text = (REPO / exp.MODULE_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-5076",
++        "SCENARIO-VERIFY-5076",
++        "experiment_5076_d6_efficiency_replication.py",
++        "results/experiment_5076_d6_efficiency_replication_v466.json",
++        "judge-only",
++        "tool-first",
++        "uncertainty-routed",
++        "success_d6_efficiency_pareto_win_no_accuracy_headline",
++        "complete_d6_replication_no_pareto_win",
++        "accuracy_headline_allowed",
++    ):
++        assert marker in spec
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    for hf_id in exp.MANDATED_MODEL_SPECS.values():
++        assert hf_id in spec
++        assert hf_id in module_text
++
++
++def test_scenario_verify_5076_reports_pareto_without_accuracy_headline(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5076: equal accuracy at lower cost is efficiency-only."""
++
++    root = _setup_root(tmp_path)
++    artifact_path = tmp_path / "out.json"
++
++    artifact = exp.run(
++        root=root,
++        artifact_path=artifact_path,
++        bootstrap_samples=128,
++        now=lambda: 100.0,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "success_d6_efficiency_pareto_win_no_accuracy_headline"
++    assert artifact["n_questions"] == 6
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["judge_only_accuracy"] == pytest.approx(4 / 6)
++    assert artifact["cascade_accuracy"] == pytest.approx(4 / 6)
++    assert artifact["delta_vs_judge_only"] == pytest.approx(0.0)
++    assert artifact["ci95_delta"] == [0.0, 0.0]
++    assert artifact["mcnemar_p"] == pytest.approx(1.0)
++    assert artifact["judge_call_fraction"] == pytest.approx(0.0)
++    assert artifact["tool_call_count"] == 12
++    assert artifact["cheap_verifier_call_count"] == 6
++    assert artifact["judge_call_count"] == 0
++    assert artifact["efficiency_win"] is True
++    assert artifact["accuracy_headline_allowed"] is False
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["same_question_candidate_set"] is True
++    assert artifact["sample_cleanliness"]["row_clean"] is True
++    assert artifact["upstream_flagged_adversarial_sources"] == [
++        exp.EXP5058_RESULT_RELATIVE_PATH,
++        exp.EXP5059_RESULT_RELATIVE_PATH,
++    ]
++    assert artifact["arms"]["judge_only"]["question_set_hash"] == artifact["question_set_hash"]
++    assert artifact["arms"]["tool_first"]["question_set_hash"] == artifact["question_set_hash"]
++    assert artifact["arms"]["uncertainty_routed"]["status"] == "not_executed_no_live_or_cached_judge"
++    assert artifact["cost_proxy"]["tool_first"]["total_cost_units"] < artifact["cost_proxy"]["judge_only"]["total_cost_units"]
++    assert artifact["latency"]["tool_first_s"] >= 0.0
++    assert artifact["oracle_distinctness"]["selector_answer_key_visible"] is False
++    assert exp.artifact_schema_errors(artifact) == []
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_verify_5076_blocks_when_sample_or_pairs_unavailable(tmp_path: Path) -> None:
++    """REQ-VERIFY-5076: missing clean rows or paired vectors fails closed."""
++
++    root = tmp_path / "root"
++    _write_json(root / exp.EXP5058_RESULT_RELATIVE_PATH, _exp5058(root, ready=False))
++    _write_json(root / exp.EXP5059_RESULT_RELATIVE_PATH, _exp5059())
++    _write_json(root / exp.EXP5061_RESULT_RELATIVE_PATH, _exp5061())
++    _write_json(root / exp.EXP5071_RESULT_RELATIVE_PATH, _exp5071())
++
++    refresh_blocked = exp.run(root=root, artifact_path=tmp_path / "refresh.json", write=True)
++
++    assert refresh_blocked["honest_verdict"] == "blocked_d6_replication_clean_sample_unavailable"
++    assert refresh_blocked["n_questions"] == 0
++    assert refresh_blocked["efficiency_win"] is False
++    assert exp.artifact_schema_errors(refresh_blocked) == []
++
++    _write_json(root / exp.EXP5058_RESULT_RELATIVE_PATH, _exp5058(root, ready=True))
++    _write_jsonl(root / exp.EXP5058_CACHE_RELATIVE_PATH, _candidate_rows(6, legacy=True))
++    dirty_blocked = exp.run(root=root, artifact_path=tmp_path / "dirty.json", write=False)
++    assert dirty_blocked["honest_verdict"] == "blocked_d6_replication_clean_sample_unavailable"
++    assert dirty_blocked["sample_cleanliness"]["row_clean"] is False
++
++    _write_jsonl(root / exp.EXP5058_CACHE_RELATIVE_PATH, _candidate_rows())
++    _write_json(
++        root / exp.EXP5059_RESULT_RELATIVE_PATH,
++        _exp5059(verifier=[], tuned_sc=[]),
++    )
++    pair_blocked = exp.run(root=root, artifact_path=tmp_path / "pairs.json", write=False)
++    assert pair_blocked["honest_verdict"] == "blocked_d6_replication_paired_correctness_unavailable"
++    assert pair_blocked["same_question_candidate_set"] is True
++    assert exp.artifact_schema_errors(pair_blocked) == []
++
++    _write_json(
++        root / exp.EXP5059_RESULT_RELATIVE_PATH,
++        _exp5059(best_arm_available=False),
++    )
++    best_arm_blocked = exp.run(root=root, artifact_path=tmp_path / "best_arm.json", write=False)
++    assert best_arm_blocked["honest_verdict"] == "blocked_d6_replication_paired_correctness_unavailable"
++    assert "Exp5059 best_arm_available" in best_arm_blocked["blocked_error"]
++
++
++def test_req_verify_5076_no_pareto_when_cost_or_ci_gate_fails(tmp_path: Path) -> None:
++    """REQ-VERIFY-5076: cost/Pareto claims require both cost and CI gates."""
++
++    root = _setup_root(tmp_path)
++    _write_json(
++        root / exp.EXP5059_RESULT_RELATIVE_PATH,
++        _exp5059(
++            verifier=[1, 0, 0, 0, 0, 0],
++            tuned_sc=[1, 1, 0, 1, 0, 1],
++            predictions=["A", "B", "A", "B", "A", "B"],
++        ),
++    )
++
++    artifact = exp.run(
++        root=root,
++        artifact_path=tmp_path / "no_pareto.json",
++        bootstrap_samples=128,
++        write=False,
++    )
++
++    assert artifact["honest_verdict"] == "complete_d6_replication_no_pareto_win"
++    assert artifact["delta_vs_judge_only"] < 0.0
++    assert artifact["ci95_delta"][0] < 0.0
++    assert artifact["efficiency_win"] is False
++    assert artifact["accuracy_headline_allowed"] is False
++    assert exp.artifact_schema_errors(artifact) == []
++
++
++def test_req_verify_5076_abstain_routes_charge_cached_and_replay_fallbacks(tmp_path: Path) -> None:
++    """REQ-VERIFY-5076: abstentions charge cached judges separately from replay tools."""
++
++    root = _setup_root(tmp_path)
++    _write_json(
++        root / exp.EXP5059_RESULT_RELATIVE_PATH,
++        _exp5059(
++            verifier=[0, 0, 0, 0, 0, 0],
++            tuned_sc=[1, 1, 0, 1, 0, 1],
++            predictions=[None, None, None, None, None, None],
++        ),
++    )
++    replay_fallback = exp.run(root=root, artifact_path=tmp_path / "replay.json", write=False)
++
++    assert replay_fallback["judge_call_count"] == 0
++    assert replay_fallback["tool_call_count"] == 18
++    assert replay_fallback["route_counts"]["comparator_replay_fallback"] == 6
++    assert replay_fallback["arms"]["uncertainty_routed"]["status"] == "not_executed_no_live_or_cached_judge"
++
++    _write_json(
++        root / exp.EXP5059_RESULT_RELATIVE_PATH,
++        _exp5059(
++            verifier=[0, 0, 0, 0, 0, 0],
++            tuned_sc=[0, 0, 0, 0, 0, 0],
++            cached_judge=[1, 1, 0, 1, 0, 1],
++            predictions=[None, None, None, None, None, None],
++        ),
++    )
++    cached_fallback = exp.run(root=root, artifact_path=tmp_path / "cached.json", write=False)
++
++    assert cached_fallback["judge_only_source"] == "cached_sota_judge"
++    assert cached_fallback["judge_call_count"] == 6
++    assert cached_fallback["judge_call_fraction"] == pytest.approx(1.0)
++    assert cached_fallback["route_counts"]["judge_fallback"] == 6
++    assert cached_fallback["honest_verdict"] == "complete_d6_replication_no_pareto_win"
++
++
++def test_req_verify_5076_schema_and_helper_edges(tmp_path: Path) -> None:
++    """REQ-VERIFY-5076: helpers reject malformed metrics and oracle flags."""
++
++    missing = tmp_path / "missing.json"
++    assert exp.read_json_object(missing) is None
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{bad", encoding="utf-8")
++    assert exp.read_json_object(bad_json) is None
++    mixed_jsonl = tmp_path / "mixed.jsonl"
++    mixed_jsonl.write_text('\n{bad}\n{"ok": true}\n[]\n', encoding="utf-8")
++    assert exp.read_jsonl(mixed_jsonl) == [{"ok": True}]
++    assert exp.read_jsonl(tmp_path / "missing.jsonl") == []
++
++    assert exp._as_binary_list("bad") == []
++    assert exp._as_binary_list([1, 0, "1"]) == [1, 0, 1]
++    assert exp._as_binary_list([1, 2]) == []
++    assert exp._number(True) is None
++    assert exp._number("nan") is None
++    assert exp._accuracy([]) is None
++    assert exp._rate(1, 0) == 0.0
++    assert exp._question_id({"question_index": 7}) == "question:7"
++    assert exp._paired_correct(None) == {}
++    assert exp._paired_correct({"paired_correct": {"verifier": [1]}}) == {"verifier": [1]}
++    assert exp._prediction_list(None) == []
++    assert exp._prediction_list({"predictions": "bad"}) == []
++    assert exp._correct_vectors(
++        {"refreshed_candidate_metrics": {"paired_correct": {"verifier": [1], "cached_sota_judge": [0]}}}
++    ) == ([1], "cached_sota_judge", [0])
++
++    dirty_rows = [
++        {
++            **_candidate_rows(1)[0],
++            "row_id": "dup",
++            "model_id": "legacy/model",
++            "parse_status": "failed",
++            "choices": [],
++        },
++        {**_candidate_rows(1)[1], "row_id": "dup"},
++    ]
++    cleanliness, question_ids = exp._sample_cleanliness(_exp5058(tmp_path), dirty_rows)
++    assert question_ids == ["fixture:0"]
++    assert cleanliness["row_clean"] is False
++    assert set(cleanliness["errors"]) >= {
++        "non_mandated_model_rows_present",
++        "unparsed_rows_present",
++        "missing_choices",
++        "duplicate_row_ids",
++    }
++
++    malformed = {
++        "schema": exp.SCHEMA,
++        "spec_refs": list(exp.SPEC_REFS),
++        "honest_verdict": "success_d6_efficiency_pareto_win_no_accuracy_headline",
++        "duration_s": 0.0,
++        "inference_substrate": exp.REPLAY_SUBSTRATE,
++        "model_specs": {},
++        "verifier_is_oracle": True,
++        "n_questions": -1,
++        "judge_only_accuracy": "bad",
++        "cascade_accuracy": 0.5,
++        "delta_vs_judge_only": "bad",
++        "ci95_delta": [0.0],
++        "judge_call_fraction": 0.0,
++        "tool_call_count": 0,
++        "latency": {},
++        "cost_proxy": {},
++        "efficiency_win": "yes",
++        "accuracy_headline_allowed": False,
++        "flagged_adversarial": False,
++        "field_principles": {},
++    }
++
++    errors = exp.artifact_schema_errors(malformed)
++
++    for field in (
++        "model_specs",
++        "verifier_is_oracle",
++        "n_questions",
++        "judge_only_accuracy",
++        "delta_vs_judge_only",
++        "ci95_delta",
++        "efficiency_win",
++        "field_principles",
++    ):
++        assert field in errors
+-- 
+2.55.0
+

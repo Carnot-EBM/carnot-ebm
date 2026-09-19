@@ -1,0 +1,1231 @@
+From 4bf3d430b30039d6a75532218313f216bf192aa6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 16:48:32 -0400
+Subject: [PATCH 10438/11362] [conductor] Cold causal-use, forgetting, poison,
+ restart, and rollback audit
+
+Automated research step by research conductor.
+Task ID: exp6792-csl-causal-safety-cold-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/continuous-learning/spec.md  |  93 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...iment_6792_csl_causal_safety_cold_audit.py | 539 ++++++++++++++++++
+ ...ent_6792_csl_causal_safety_cold_audit.json | 211 +++++++
+ ...iment_6792_csl_causal_safety_cold_audit.py |  17 +
+ ...iment_6792_csl_causal_safety_cold_audit.py | 300 ++++++++++
+ 6 files changed, 1161 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6792_csl_causal_safety_cold_audit.py
+ create mode 100644 results/experiment_6792_csl_causal_safety_cold_audit.json
+ create mode 100644 scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py
+ create mode 100644 tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py
+
+diff --git a/openspec/capabilities/continuous-learning/spec.md b/openspec/capabilities/continuous-learning/spec.md
+index 632e52a051..a15ca70336 100644
+--- a/openspec/capabilities/continuous-learning/spec.md
++++ b/openspec/capabilities/continuous-learning/spec.md
+@@ -8398,3 +8398,96 @@ And `gate_check_summary` SHALL retain the failed check and observed value.
+ | Requirement | Python | Tests |
+ |-------------|--------|-------|
+ | REQ-CL-6791 and SCENARIO-CL-6791-* | Implemented: `python/carnot/experiment_6791_compositional_online_constraint_routing_ab.py`; `scripts/experiments/experiment_6791_compositional_online_constraint_routing_ab.py`; terminal artifact `results/experiment_6791_compositional_online_constraint_routing_ab.json`. | Implemented: `tests/python/test_experiment_6791_compositional_online_constraint_routing_ab.py`. |
++
++## REQ-CL-6792: Independent CSL Causal And Safety Cold Audit
++
++Given Exp6791 claims a complete compositional self-learning comparison,
++When Exp6792 runs for planning date 20260830,
++Then it SHALL read checked-in evidence in a fresh CPU process without an LLM.
++It SHALL not import Exp6791 producer code or trust its headline aggregates.
++It SHALL write
++`results/experiment_6792_csl_causal_safety_cold_audit.json`.
++
++Before replay, Exp6792 SHALL require `compositional_csl_completed=true`, one
++complete row for each event, arm, and all five orders, exact source hashes,
++raw parent and new-state transaction byte snapshots, and exact receipt hashes.
++One missing prerequisite SHALL stop the audit before causal or safety replay.
++The blocked artifact SHALL use status `complete_blocked_csl_causal_audit`.
++Its `gate_check_summary` SHALL name each failed check and its observed value.
++
++A complete audit SHALL recompute writes, later reads, action changes, component
++attribution, utility, route cost, retention, hard-case harm, support, and
++order-level confidence bounds from raw rows. For each credited factor, it SHALL
++replay the later event with only that factor disabled. Causal credit SHALL
++require a changed selected route and an exact-receipt utility difference. It
++SHALL also replay every event with retrieval disabled.
++
++A complete audit SHALL reject outcome-false poison, relation poison, stale
++receipts, duplicate IDs, and tombstone reappearance. No attack SHALL be
++admitted or change an action. It SHALL restart at frozen transaction
++boundaries, require exact state bytes and next actions, force capacity
++eviction, and recheck old-family retention and hard cases after each phase.
++It SHALL trigger rollback with one controlled harmful update. Rollback SHALL
++restore prior bytes, retrievals, route action, and metrics. Attack evidence
++SHALL remain in the artifact.
++
++The artifact SHALL include `field_principles`, `inference_substrate`,
++`duration_s`, `random_seed`, `reproducibility_checksum`,
++`source_artifact_hashes`, `rows`, `cold_recomputed_metrics`,
++`headline_differences`, `credited_factor_count`,
++`factors_with_changed_action_witness`, `retrieval_disable_effects`,
++`poison_attack_results`, `admitted_poison_count`, `influenced_poison_count`,
++`restart_byte_identity`, `restart_action_identity`,
++`capacity_eviction_receipts`, `retention_after_phase`,
++`hard_case_harm_after_phase`, `rollback_byte_identity`,
++`rollback_action_identity`, `source_verdict_supported`,
++`csl_causal_audit_completed`, `gate_check_summary`, `verifier_is_oracle`,
++`verdict_class`, and `honest_verdict`. `inference_substrate` SHALL equal
++`fresh-process CPU causal and safety replay, no LLM`.
++`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only `positive`,
++`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
++`honest_verdict` SHALL start with an approved terminal prefix.
++
++### SCENARIO-CL-6792-PRECONDITIONS: Missing Raw Bytes Stop The Audit
++
++Given a source omits parent or new-state transaction byte snapshots,
++When Exp6792 checks its prerequisites,
++Then it SHALL record the missing byte fields and stop before all replay work.
++
++### SCENARIO-CL-6792-COLD-RECOMPUTE: Raw Rows Own Every Metric
++
++Given all prerequisites pass,
++When Exp6792 recomputes the comparison,
++Then raw event rows and exact receipts SHALL own every metric and order effect.
++
++### SCENARIO-CL-6792-CAUSAL: Credit Requires An Action And Utility Witness
++
++Given one factor receives causal credit,
++When only that factor is disabled against the same bytes,
++Then the selected route and exact-receipt utility SHALL both change.
++
++### SCENARIO-CL-6792-SAFETY: Attacks Cannot Enter Or Influence Memory
++
++Given each preregistered poison, stale, duplicate, and tombstone attack,
++When admission and later retrieval run,
++Then admitted and influenced poison counts SHALL both remain zero.
++
++### SCENARIO-CL-6792-DURABILITY: Restart, Eviction, And Rollback Preserve State
++
++Given frozen boundaries, capacity pressure, and one harmful update,
++When Exp6792 restarts and rolls back,
++Then bytes, next actions, retrievals, retention, hard cases, and metrics SHALL
++match their required prior values.
++
++### SCENARIO-CL-6792-TERMINAL: Completion Does Not Depend On Effect Sign
++
++Given all audit rows and controls finish,
++When the source effect is positive, null, or rejected,
++Then `csl_causal_audit_completed` SHALL be true. Positive support SHALL require
++every source, causal, durability, and safety gate to pass.
++
++## Implementation Status (REQ-CL-6792)
++
++| Requirement | Python | Tests |
++|-------------|--------|-------|
++| REQ-CL-6792 and SCENARIO-CL-6792-* | Planned: `python/carnot/experiment_6792_csl_causal_safety_cold_audit.py`; `scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py`; terminal artifact `results/experiment_6792_csl_causal_safety_cold_audit.json`. | Planned: `tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py`. |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d4a54c3351..27d22c1e50 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5187,
++  "experiments_checked": 5188,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6792_csl_causal_safety_cold_audit.py b/python/carnot/experiment_6792_csl_causal_safety_cold_audit.py
+new file mode 100644
+index 0000000000..40fda51a15
+--- /dev/null
++++ b/python/carnot/experiment_6792_csl_causal_safety_cold_audit.py
+@@ -0,0 +1,539 @@
++"""Cold-audit the Exp6791 self-learning claim before causal replay.
++
++Spec refs: REQ-CL-6792 and SCENARIO-CL-6792-*.
++
++The audit reads checked-in JSON in a fresh CPU process. It stops before replay
++when source evidence cannot support an independent byte-level audit. This rule
++prevents producer booleans from replacing the transaction bytes they describe.
++"""
++
++from __future__ import annotations
++
++import argparse
++import base64
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import tempfile
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260830"
++EXPERIMENT_ID = "experiment_6792_csl_causal_safety_cold_audit"
++SCHEMA = "carnot.experiment_6792.csl_causal_safety_cold_audit.v1"
++INFERENCE_SUBSTRATE = "fresh-process CPU causal and safety replay, no LLM"
++RANDOM_SEED = 6_792_030
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6792_csl_causal_safety_cold_audit.py")
++SCRIPT_RELATIVE_PATH = Path("scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py")
++RESULT_RELATIVE_PATH = Path("results/experiment_6792_csl_causal_safety_cold_audit.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/continuous-learning/spec.md")
++SOURCE_RELATIVE_PATHS = {
++    "experiment_6790": Path("results/experiment_6790_chronological_constraint_routing_stream.json"),
++    "experiment_6791": Path(
++        "results/experiment_6791_compositional_online_constraint_routing_ab.json"
++    ),
++    "experiment_6750": Path("results/experiment_6750_csl_durability_support_poison_audit.json"),
++    "experiment_6763": Path("results/experiment_6763_csl_hard_case_forgetting_audit.json"),
++}
++EXPECTED_SOURCE_HASHES = {
++    "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++    "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99",
++    "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
++    "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
++}
++EXPECTED_ORDER_HASHES = {
++    "order_1": "sha256:eb1b5e209eb223964c68e0b479ed5f0c339a41c40fdbb7bf743c831722b55183",
++    "order_2": "sha256:58c7ecf2ce649ad058c96d192c8667945f11ebe185516855f504417e67f08ddd",
++    "order_3": "sha256:259b36180d68a5c7214078f3659c42b55bb663ee4ab82ec1b81226c7c815ccf4",
++    "order_4": "sha256:b3a2752bf52c4ca72ed084b21ada328a154b4504979f369f7cc6a9682704cf39",
++    "order_5": "sha256:ac41cb8ac831556cca9e2fb2a0ebebd966cb567be7e294ca8201d0f81f32d14e",
++}
++EXPECTED_ARMS = {
++    "frozen_controller",
++    "compositional_online",
++    "random_update_placebo",
++    "retrieval_disabled_online",
++}
++EXPECTED_EVENT_COUNT = 240
++EXPECTED_ROW_COUNT = len(EXPECTED_ORDER_HASHES) * EXPECTED_EVENT_COUNT * len(EXPECTED_ARMS)
++VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++REQUIRED_AUDIT_FIELDS = (
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "source_artifact_hashes",
++    "rows",
++    "cold_recomputed_metrics",
++    "headline_differences",
++    "credited_factor_count",
++    "factors_with_changed_action_witness",
++    "retrieval_disable_effects",
++    "poison_attack_results",
++    "admitted_poison_count",
++    "influenced_poison_count",
++    "restart_byte_identity",
++    "restart_action_identity",
++    "capacity_eviction_receipts",
++    "retention_after_phase",
++    "hard_case_harm_after_phase",
++    "rollback_byte_identity",
++    "rollback_action_identity",
++    "source_verdict_supported",
++    "csl_causal_audit_completed",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    *REQUIRED_AUDIT_FIELDS,
++)
++FIELD_PRINCIPLES = {
++    "schema": "The version makes incompatible audit payloads fail closed.",
++    "experiment_id": "The stable ID binds the artifact to this cold audit.",
++    "run_date": "The fixed date prevents silent protocol drift.",
++    "status": "The status separates a source block from a complete replay.",
++    "field_principles": "Each field states the evidence boundary it protects.",
++    "inference_substrate": "The audit uses a fresh CPU process and no LLM.",
++    "duration_s": "Measured wall time shows that prerequisite checks ran.",
++    "random_seed": "The fixed seed owns later replay and confidence sampling.",
++    "reproducibility_checksum": "The checksum detects drift in stable audit evidence.",
++    "source_artifact_hashes": "Exact file hashes bind every checked-in source.",
++    "rows": "Rows hold source replays, causal controls, and attacks after admission.",
++    "cold_recomputed_metrics": "Raw rows must own metrics after prerequisites pass.",
++    "headline_differences": "Cold values must be compared with source headlines.",
++    "credited_factor_count": "The count includes only action and utility witnesses.",
++    "factors_with_changed_action_witness": "Each credited factor needs an action witness.",
++    "retrieval_disable_effects": "The global control isolates retrieval effects.",
++    "poison_attack_results": "Attack rows must remain visible after rejection.",
++    "admitted_poison_count": "No poison can enter durable memory.",
++    "influenced_poison_count": "No poison can change a later action.",
++    "restart_byte_identity": "Restarted state must match exact prior bytes.",
++    "restart_action_identity": "Restarted state must choose the same next action.",
++    "capacity_eviction_receipts": "Eviction receipts expose every removed record.",
++    "retention_after_phase": "Old-family retention is checked after each phase.",
++    "hard_case_harm_after_phase": "Hard cases are checked after each phase.",
++    "rollback_byte_identity": "Rollback must restore exact prior bytes.",
++    "rollback_action_identity": "Rollback must restore retrieval and action behavior.",
++    "source_verdict_supported": "Positive support needs every causal and safety gate.",
++    "csl_causal_audit_completed": "Completion depends on work, not effect sign.",
++    "gate_check_summary": "Each failure keeps its expected and observed value.",
++    "verifier_is_oracle": "False keeps the audit separate from outcome authority.",
++    "verdict_class": "A closed class prevents an ambiguous terminal claim.",
++    "honest_verdict": "A terminal prefix lets automation classify the result.",
++}
++
++
++def canonical_json_bytes(value: Any) -> bytes:
++    """Return one stable JSON byte form for audit checksums."""
++
++    return (
++        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True) + "\n"
++    ).encode("utf-8")
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return a project-style SHA-256 digest."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: Path) -> str | None:
++    """Hash exact source bytes, or return no hash for an absent source."""
++
++    return sha256_bytes(path.read_bytes()) if path.is_file() else None
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read one JSON object and reject arrays or scalar roots."""
++
++    value = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(value, dict):
++        raise ValueError(f"JSON object required: {path}")
++    return value
++
++
++def _gate(check: str, expected: Any, observed: Any) -> JsonDict:
++    """Keep exact values so a failed prerequisite remains diagnosable."""
++
++    return {
++        "check": check,
++        "expected": deepcopy(expected),
++        "observed": deepcopy(observed),
++        "passed": observed == expected,
++    }
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Collect failed prerequisites without discarding their evidence."""
++
++    copied = [deepcopy(dict(row)) for row in checks]
++    failures = [row for row in copied if row["passed"] is not True]
++    return {
++        "all_passed": not failures,
++        "checks": copied,
++        "failed_checks": [row["check"] for row in failures],
++        "failures": failures,
++    }
++
++
++def _complete_row_observation(source: Mapping[str, Any]) -> JsonDict:
++    """Count complete order-event-arm cells without trusting source totals."""
++
++    rows = source.get("rows", [])
++    required = {
++        "arm",
++        "event_id",
++        "hidden_receipt_hash",
++        "order_id",
++        "position",
++        "revealed_post_action_receipt",
++        "row_key",
++        "snapshot",
++        "transaction",
++    }
++    row_keys = [row.get("row_key") for row in rows if isinstance(row, Mapping)]
++    cells = Counter(
++        (
++            str(row.get("order_id")),
++            str(row.get("event_id")),
++            str(row.get("arm")),
++        )
++        for row in rows
++        if isinstance(row, Mapping)
++    )
++    complete_rows = sum(
++        required <= set(row)
++        and row.get("arm") in EXPECTED_ARMS
++        and row.get("order_id") in EXPECTED_ORDER_HASHES
++        for row in rows
++        if isinstance(row, Mapping)
++    )
++    return {
++        "row_count": len(rows),
++        "complete_rows": complete_rows,
++        "unique_row_keys": len(set(row_keys)),
++        "unique_cells": len(cells),
++        "singleton_cells": sum(count == 1 for count in cells.values()),
++        "transaction_receipt_count": len(source.get("transaction_receipts", [])),
++    }
++
++
++def _transaction_byte_observation(source: Mapping[str, Any]) -> JsonDict:
++    """Verify raw parent and new bytes against each committed receipt hash."""
++
++    receipts = [
++        row
++        for row in source.get("transaction_receipts", [])
++        if isinstance(row, Mapping) and row.get("committed") is True
++    ]
++    parent_count = sum(isinstance(row.get("parent_bytes_b64"), str) for row in receipts)
++    new_count = sum(isinstance(row.get("new_state_bytes_b64"), str) for row in receipts)
++    hash_matches = 0
++    for row in receipts:
++        parent = row.get("parent_bytes_b64")
++        new = row.get("new_state_bytes_b64")
++        if isinstance(parent, str) and isinstance(new, str):
++            try:
++                parent_bytes = base64.b64decode(parent.encode("ascii"), validate=True)
++                new_bytes = base64.b64decode(new.encode("ascii"), validate=True)
++            except (ValueError, UnicodeEncodeError):
++                continue
++            hash_matches += int(
++                sha256_bytes(parent_bytes) == row.get("parent_hash")
++                and sha256_bytes(new_bytes) == row.get("new_state_hash")
++            )
++    return {
++        "committed_receipts": len(receipts),
++        "parent_byte_snapshots": parent_count,
++        "new_state_byte_snapshots": new_count,
++        "byte_hash_matches": hash_matches,
++    }
++
++
++def _exact_receipt_observation(
++    source: Mapping[str, Any], routing_source: Mapping[str, Any]
++) -> JsonDict:
++    """Match each arm receipt hash to its independent Exp6790 event receipt."""
++
++    expected = {
++        (str(row.get("order_id")), str(row.get("event_id"))): row.get("hidden_receipt_hash")
++        for row in routing_source.get("rows", [])
++        if isinstance(row, Mapping)
++    }
++    rows = source.get("rows", [])
++    matching = sum(
++        row.get("hidden_receipt_hash")
++        == expected.get((str(row.get("order_id")), str(row.get("event_id"))))
++        == row.get("revealed_post_action_receipt", {}).get("source_receipt_hash")
++        for row in rows
++        if isinstance(row, Mapping)
++    )
++    return {"expected_rows": EXPECTED_ROW_COUNT, "matching_rows": matching}
++
++
++def evaluate_preconditions(
++    sources: Mapping[str, Mapping[str, Any]], source_paths: Mapping[str, Path]
++) -> JsonDict:
++    """Check all frozen inputs before causal or safety code can execute."""
++
++    source = sources.get("experiment_6791", {})
++    routing_source = sources.get("experiment_6790", {})
++    complete_rows = _complete_row_observation(source)
++    expected_rows = {
++        "row_count": EXPECTED_ROW_COUNT,
++        "complete_rows": EXPECTED_ROW_COUNT,
++        "unique_row_keys": EXPECTED_ROW_COUNT,
++        "unique_cells": EXPECTED_ROW_COUNT,
++        "singleton_cells": EXPECTED_ROW_COUNT,
++        "transaction_receipt_count": EXPECTED_ROW_COUNT,
++    }
++    observed_hashes = {name: sha256_file(Path(path)) for name, path in source_paths.items()}
++    expected_hash_evidence = {
++        "artifact_hashes": EXPECTED_SOURCE_HASHES,
++        "exp6791_source_artifact_hash": EXPECTED_SOURCE_HASHES["experiment_6790"],
++    }
++    observed_hash_evidence = {
++        "artifact_hashes": observed_hashes,
++        "exp6791_source_artifact_hash": source.get("source_artifact_hash"),
++    }
++    byte_observation = _transaction_byte_observation(source)
++    expected_bytes = {
++        "committed_receipts": byte_observation["committed_receipts"],
++        "parent_byte_snapshots": byte_observation["committed_receipts"],
++        "new_state_byte_snapshots": byte_observation["committed_receipts"],
++        "byte_hash_matches": byte_observation["committed_receipts"],
++    }
++    order_hashes = source.get("frozen_manifest", {}).get("order_hashes", {})
++    observed_orders = {
++        "order_count": len(order_hashes),
++        "order_hashes": order_hashes,
++        "rows_per_order": dict(
++            sorted(
++                Counter(
++                    str(row.get("order_id"))
++                    for row in source.get("rows", [])
++                    if isinstance(row, Mapping)
++                ).items()
++            )
++        ),
++    }
++    expected_orders = {
++        "order_count": len(EXPECTED_ORDER_HASHES),
++        "order_hashes": EXPECTED_ORDER_HASHES,
++        "rows_per_order": {
++            order_id: EXPECTED_EVENT_COUNT * len(EXPECTED_ARMS)
++            for order_id in EXPECTED_ORDER_HASHES
++        },
++    }
++    checks = [
++        _gate("compositional_csl_completed", True, source.get("compositional_csl_completed")),
++        _gate("complete_per_event_rows", expected_rows, complete_rows),
++        _gate("source_hashes", expected_hash_evidence, observed_hash_evidence),
++        _gate("transaction_byte_snapshots", expected_bytes, byte_observation),
++        _gate(
++            "exact_receipt_hashes",
++            {"expected_rows": EXPECTED_ROW_COUNT, "matching_rows": EXPECTED_ROW_COUNT},
++            _exact_receipt_observation(source, routing_source),
++        ),
++        _gate("all_five_orders", expected_orders, observed_orders),
++    ]
++    return _gate_summary(checks)
++
++
++def _source_hashes(source_paths: Mapping[str, Path]) -> JsonDict:
++    """Record exact input hashes even when one prerequisite blocks replay."""
++
++    return {name: sha256_file(Path(path)) for name, path in source_paths.items()}
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash stable evidence while excluding elapsed wall time and this hash."""
++
++    material = {
++        key: artifact.get(key)
++        for key in REQUIRED_ARTIFACT_FIELDS
++        if key not in {"duration_s", "reproducibility_checksum"}
++    }
++    return sha256_bytes(canonical_json_bytes(material))
++
++
++def build_artifact(
++    *,
++    source_paths: Mapping[str, Path] | None = None,
++    run_date: str = RUN_DATE,
++    duration_s: float | None = None,
++) -> JsonDict:
++    """Build the terminal block and never enter replay after a failed gate."""
++
++    if len(run_date) != 8 or not run_date.isdigit():
++        raise ValueError("date must use YYYYMMDD")
++    started = time.monotonic()
++    paths = {
++        name: Path(path)
++        for name, path in (
++            source_paths
++            or {name: REPO_ROOT / relative for name, relative in SOURCE_RELATIVE_PATHS.items()}
++        ).items()
++    }
++    sources = {name: read_json_object(path) for name, path in paths.items()}
++    summary = evaluate_preconditions(sources, paths)
++    if summary["all_passed"]:
++        raise RuntimeError("source prerequisites passed; a complete replay is required")
++    failed = summary["failures"][0]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "status": "complete_blocked_csl_causal_audit",
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(
++            float(duration_s) if duration_s is not None else time.monotonic() - started,
++            6,
++        ),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "source_artifact_hashes": _source_hashes(paths),
++        "rows": [],
++        "cold_recomputed_metrics": {},
++        "headline_differences": {},
++        "credited_factor_count": 0,
++        "factors_with_changed_action_witness": [],
++        "retrieval_disable_effects": [],
++        "poison_attack_results": [],
++        "admitted_poison_count": 0,
++        "influenced_poison_count": 0,
++        "restart_byte_identity": None,
++        "restart_action_identity": None,
++        "capacity_eviction_receipts": [],
++        "retention_after_phase": {},
++        "hard_case_harm_after_phase": {},
++        "rollback_byte_identity": None,
++        "rollback_action_identity": None,
++        "source_verdict_supported": False,
++        "csl_causal_audit_completed": False,
++        "gate_check_summary": summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": (
++            "complete_blocked_csl_causal_audit: "
++            f"{failed['check']} expected {failed['expected']!r}, observed {failed['observed']!r}"
++        ),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return closed schema errors without changing the audit evidence."""
++
++    errors: list[str] = []
++    if set(artifact) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("required field set mismatch")
++    if set(artifact.get("field_principles", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field principle coverage mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference substrate mismatch")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random seed mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if artifact.get("verdict_class") not in VERDICT_CLASSES:
++        errors.append("verdict class is outside the closed enum")
++    if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest verdict lacks a terminal prefix")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    if artifact.get("status") == "complete_blocked_csl_causal_audit":
++        if artifact.get("verdict_class") != "blocked":
++            errors.append("blocked verdict_class mismatch")
++        if artifact.get("csl_causal_audit_completed") is not False:
++            errors.append("blocked audit cannot be complete")
++        if artifact.get("rows") != []:
++            errors.append("blocked audit contains replay rows")
++        summary = artifact.get("gate_check_summary", {})
++        if summary.get("all_passed") is not False or not summary.get("failures"):
++            errors.append("blocked audit lacks a failed gate")
++    return errors
++
++
++def write_artifact(path: Path | str, artifact: Mapping[str, Any]) -> JsonDict:
++    """Validate and publish one complete artifact with an atomic rename."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    data = json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n"
++    descriptor, name = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=target.parent)
++    temporary = Path(name)
++    try:
++        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
++            handle.write(data)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, target)
++    finally:
++        temporary.unlink(missing_ok=True)
++    return {"path": str(target), "atomic_rename": True, "sha256": sha256_file(target)}
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the prerequisite audit or validate its stored terminal artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    output = Path(args.output)
++    if args.validate:
++        artifact = read_json_object(output)
++        errors = validate_artifact(artifact)
++        if errors:
++            raise ValueError("; ".join(errors))
++    else:
++        artifact = build_artifact(run_date=args.date)
++        write_artifact(output, artifact)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6792_csl_causal_safety_cold_audit.json b/results/experiment_6792_csl_causal_safety_cold_audit.json
+new file mode 100644
+index 0000000000..a249e486f4
+--- /dev/null
++++ b/results/experiment_6792_csl_causal_safety_cold_audit.json
+@@ -0,0 +1,211 @@
++{
++  "admitted_poison_count": 0,
++  "capacity_eviction_receipts": [],
++  "cold_recomputed_metrics": {},
++  "credited_factor_count": 0,
++  "csl_causal_audit_completed": false,
++  "duration_s": 0.300828,
++  "experiment_id": "experiment_6792_csl_causal_safety_cold_audit",
++  "factors_with_changed_action_witness": [],
++  "field_principles": {
++    "admitted_poison_count": "No poison can enter durable memory.",
++    "capacity_eviction_receipts": "Eviction receipts expose every removed record.",
++    "cold_recomputed_metrics": "Raw rows must own metrics after prerequisites pass.",
++    "credited_factor_count": "The count includes only action and utility witnesses.",
++    "csl_causal_audit_completed": "Completion depends on work, not effect sign.",
++    "duration_s": "Measured wall time shows that prerequisite checks ran.",
++    "experiment_id": "The stable ID binds the artifact to this cold audit.",
++    "factors_with_changed_action_witness": "Each credited factor needs an action witness.",
++    "field_principles": "Each field states the evidence boundary it protects.",
++    "gate_check_summary": "Each failure keeps its expected and observed value.",
++    "hard_case_harm_after_phase": "Hard cases are checked after each phase.",
++    "headline_differences": "Cold values must be compared with source headlines.",
++    "honest_verdict": "A terminal prefix lets automation classify the result.",
++    "inference_substrate": "The audit uses a fresh CPU process and no LLM.",
++    "influenced_poison_count": "No poison can change a later action.",
++    "poison_attack_results": "Attack rows must remain visible after rejection.",
++    "random_seed": "The fixed seed owns later replay and confidence sampling.",
++    "reproducibility_checksum": "The checksum detects drift in stable audit evidence.",
++    "restart_action_identity": "Restarted state must choose the same next action.",
++    "restart_byte_identity": "Restarted state must match exact prior bytes.",
++    "retention_after_phase": "Old-family retention is checked after each phase.",
++    "retrieval_disable_effects": "The global control isolates retrieval effects.",
++    "rollback_action_identity": "Rollback must restore retrieval and action behavior.",
++    "rollback_byte_identity": "Rollback must restore exact prior bytes.",
++    "rows": "Rows hold source replays, causal controls, and attacks after admission.",
++    "run_date": "The fixed date prevents silent protocol drift.",
++    "schema": "The version makes incompatible audit payloads fail closed.",
++    "source_artifact_hashes": "Exact file hashes bind every checked-in source.",
++    "source_verdict_supported": "Positive support needs every causal and safety gate.",
++    "status": "The status separates a source block from a complete replay.",
++    "verdict_class": "A closed class prevents an ambiguous terminal claim.",
++    "verifier_is_oracle": "False keeps the audit separate from outcome authority."
++  },
++  "gate_check_summary": {
++    "all_passed": false,
++    "checks": [
++      {
++        "check": "compositional_csl_completed",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "complete_per_event_rows",
++        "expected": {
++          "complete_rows": 4800,
++          "row_count": 4800,
++          "singleton_cells": 4800,
++          "transaction_receipt_count": 4800,
++          "unique_cells": 4800,
++          "unique_row_keys": 4800
++        },
++        "observed": {
++          "complete_rows": 4800,
++          "row_count": 4800,
++          "singleton_cells": 4800,
++          "transaction_receipt_count": 4800,
++          "unique_cells": 4800,
++          "unique_row_keys": 4800
++        },
++        "passed": true
++      },
++      {
++        "check": "source_hashes",
++        "expected": {
++          "artifact_hashes": {
++            "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
++            "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
++            "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++            "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
++          },
++          "exp6791_source_artifact_hash": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4"
++        },
++        "observed": {
++          "artifact_hashes": {
++            "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
++            "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
++            "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++            "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
++          },
++          "exp6791_source_artifact_hash": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4"
++        },
++        "passed": true
++      },
++      {
++        "check": "transaction_byte_snapshots",
++        "expected": {
++          "byte_hash_matches": 3189,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 3189,
++          "parent_byte_snapshots": 3189
++        },
++        "observed": {
++          "byte_hash_matches": 0,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 0,
++          "parent_byte_snapshots": 0
++        },
++        "passed": false
++      },
++      {
++        "check": "exact_receipt_hashes",
++        "expected": {
++          "expected_rows": 4800,
++          "matching_rows": 4800
++        },
++        "observed": {
++          "expected_rows": 4800,
++          "matching_rows": 4800
++        },
++        "passed": true
++      },
++      {
++        "check": "all_five_orders",
++        "expected": {
++          "order_count": 5,
++          "order_hashes": {
++            "order_1": "sha256:eb1b5e209eb223964c68e0b479ed5f0c339a41c40fdbb7bf743c831722b55183",
++            "order_2": "sha256:58c7ecf2ce649ad058c96d192c8667945f11ebe185516855f504417e67f08ddd",
++            "order_3": "sha256:259b36180d68a5c7214078f3659c42b55bb663ee4ab82ec1b81226c7c815ccf4",
++            "order_4": "sha256:b3a2752bf52c4ca72ed084b21ada328a154b4504979f369f7cc6a9682704cf39",
++            "order_5": "sha256:ac41cb8ac831556cca9e2fb2a0ebebd966cb567be7e294ca8201d0f81f32d14e"
++          },
++          "rows_per_order": {
++            "order_1": 960,
++            "order_2": 960,
++            "order_3": 960,
++            "order_4": 960,
++            "order_5": 960
++          }
++        },
++        "observed": {
++          "order_count": 5,
++          "order_hashes": {
++            "order_1": "sha256:eb1b5e209eb223964c68e0b479ed5f0c339a41c40fdbb7bf743c831722b55183",
++            "order_2": "sha256:58c7ecf2ce649ad058c96d192c8667945f11ebe185516855f504417e67f08ddd",
++            "order_3": "sha256:259b36180d68a5c7214078f3659c42b55bb663ee4ab82ec1b81226c7c815ccf4",
++            "order_4": "sha256:b3a2752bf52c4ca72ed084b21ada328a154b4504979f369f7cc6a9682704cf39",
++            "order_5": "sha256:ac41cb8ac831556cca9e2fb2a0ebebd966cb567be7e294ca8201d0f81f32d14e"
++          },
++          "rows_per_order": {
++            "order_1": 960,
++            "order_2": 960,
++            "order_3": 960,
++            "order_4": 960,
++            "order_5": 960
++          }
++        },
++        "passed": true
++      }
++    ],
++    "failed_checks": [
++      "transaction_byte_snapshots"
++    ],
++    "failures": [
++      {
++        "check": "transaction_byte_snapshots",
++        "expected": {
++          "byte_hash_matches": 3189,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 3189,
++          "parent_byte_snapshots": 3189
++        },
++        "observed": {
++          "byte_hash_matches": 0,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 0,
++          "parent_byte_snapshots": 0
++        },
++        "passed": false
++      }
++    ]
++  },
++  "hard_case_harm_after_phase": {},
++  "headline_differences": {},
++  "honest_verdict": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++  "inference_substrate": "fresh-process CPU causal and safety replay, no LLM",
++  "influenced_poison_count": 0,
++  "poison_attack_results": [],
++  "random_seed": 6792030,
++  "reproducibility_checksum": "sha256:47a335bdf0b7715ba9eb364426dc1f8b94710b711cf254b138de5a5f3f65ee16",
++  "restart_action_identity": null,
++  "restart_byte_identity": null,
++  "retention_after_phase": {},
++  "retrieval_disable_effects": [],
++  "rollback_action_identity": null,
++  "rollback_byte_identity": null,
++  "rows": [],
++  "run_date": "20260830",
++  "schema": "carnot.experiment_6792.csl_causal_safety_cold_audit.v1",
++  "source_artifact_hashes": {
++    "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
++    "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
++    "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++    "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
++  },
++  "source_verdict_supported": false,
++  "status": "complete_blocked_csl_causal_audit",
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py b/scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py
+new file mode 100644
+index 0000000000..5252971d1f
+--- /dev/null
++++ b/scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py
+@@ -0,0 +1,17 @@
++#!/usr/bin/env python3
++"""Repository entry point for REQ-CL-6792."""
++
++from pathlib import Path
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[2]
++PYTHON = ROOT / "python"
++if str(PYTHON) not in sys.path:
++    sys.path.insert(0, str(PYTHON))
++
++from carnot.experiment_6792_csl_causal_safety_cold_audit import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py b/tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py
+new file mode 100644
+index 0000000000..0600083534
+--- /dev/null
++++ b/tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py
+@@ -0,0 +1,300 @@
++"""Tests for the independent Exp6792 CSL causal and safety cold audit.
++
++Spec refs: REQ-CL-6792, SCENARIO-CL-6792-PRECONDITIONS,
++SCENARIO-CL-6792-COLD-RECOMPUTE, SCENARIO-CL-6792-CAUSAL,
++SCENARIO-CL-6792-SAFETY, SCENARIO-CL-6792-DURABILITY,
++SCENARIO-CL-6792-TERMINAL.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import inspect
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6792_csl_causal_safety_cold_audit as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / exp.SPEC_RELATIVE_PATH
++SOURCE_PATHS = {
++    name: REPO_ROOT / relative_path for name, relative_path in exp.SOURCE_RELATIVE_PATHS.items()
++}
++
++
++@pytest.fixture(scope="module")
++def sources() -> dict[str, dict]:
++    """Load each checked-in source once because the audit never mutates it."""
++
++    return {name: exp.read_json_object(path) for name, path in SOURCE_PATHS.items()}
++
++
++@pytest.fixture(scope="module")
++def blocked_artifact() -> dict:
++    """Build the real fail-closed result once for all schema assertions."""
++
++    return exp.build_artifact(
++        source_paths=SOURCE_PATHS,
++        run_date=exp.RUN_DATE,
++        duration_s=0.25,
++    )
++
++
++def test_req_cl_6792_spec_owns_the_cold_audit_contract() -> None:
++    """REQ-CL-6792 anchors the independent audit before implementation."""
++
++    section = SPEC_PATH.read_text(encoding="utf-8").split("## REQ-CL-6792", 1)[1]
++    for marker in (
++        "SCENARIO-CL-6792-PRECONDITIONS",
++        "SCENARIO-CL-6792-COLD-RECOMPUTE",
++        "SCENARIO-CL-6792-CAUSAL",
++        "SCENARIO-CL-6792-SAFETY",
++        "SCENARIO-CL-6792-DURABILITY",
++        "SCENARIO-CL-6792-TERMINAL",
++        "complete_blocked_csl_causal_audit",
++        exp.INFERENCE_SUBSTRATE,
++        exp.MODULE_RELATIVE_PATH.as_posix(),
++        exp.SCRIPT_RELATIVE_PATH.as_posix(),
++        exp.RESULT_RELATIVE_PATH.as_posix(),
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_AUDIT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_cl_6792_preconditions_find_only_missing_raw_bytes(
++    sources: dict[str, dict],
++) -> None:
++    """SCENARIO-CL-6792-PRECONDITIONS stops on absent transaction bytes."""
++
++    summary = exp.evaluate_preconditions(sources, SOURCE_PATHS)
++
++    assert summary["all_passed"] is False
++    assert summary["failed_checks"] == ["transaction_byte_snapshots"]
++    failure = summary["failures"][0]
++    assert failure["expected"] == {
++        "committed_receipts": 3189,
++        "parent_byte_snapshots": 3189,
++        "new_state_byte_snapshots": 3189,
++        "byte_hash_matches": 3189,
++    }
++    assert failure["observed"] == {
++        "committed_receipts": 3189,
++        "parent_byte_snapshots": 0,
++        "new_state_byte_snapshots": 0,
++        "byte_hash_matches": 0,
++    }
++    checks = {row["check"]: row for row in summary["checks"]}
++    assert checks["compositional_csl_completed"]["passed"] is True
++    assert checks["complete_per_event_rows"]["observed"]["row_count"] == 4800
++    assert checks["all_five_orders"]["observed"]["order_count"] == 5
++    assert checks["source_hashes"]["passed"] is True
++    assert checks["exact_receipt_hashes"]["observed"] == {
++        "expected_rows": 4800,
++        "matching_rows": 4800,
++    }
++
++
++def test_source_evidence_is_read_without_producer_or_headline_imports() -> None:
++    """SCENARIO-CL-6792-COLD-RECOMPUTE keeps source producers outside the audit."""
++
++    source = inspect.getsource(exp)
++    assert "experiment_6791_compositional_online_constraint_routing_ab import" not in source
++    assert "from carnot import experiment_6791" not in source
++    for field in (
++        "online_minus_frozen_lcb",
++        "online_minus_frozen_order_effects",
++        "component_action_attribution",
++    ):
++        assert f'source["{field}"]' not in source
++
++
++def test_blocked_artifact_has_all_fields_and_no_replay_evidence(
++    blocked_artifact: dict,
++) -> None:
++    """SCENARIO-CL-6792-TERMINAL emits one valid complete blocked artifact."""
++
++    artifact = blocked_artifact
++    assert set(artifact) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["status"] == "complete_blocked_csl_causal_audit"
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"].startswith("complete_blocked_csl_causal_audit:")
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["rows"] == []
++    assert artifact["cold_recomputed_metrics"] == {}
++    assert artifact["headline_differences"] == {}
++    assert artifact["credited_factor_count"] == 0
++    assert artifact["factors_with_changed_action_witness"] == []
++    assert artifact["retrieval_disable_effects"] == []
++    assert artifact["poison_attack_results"] == []
++    assert artifact["capacity_eviction_receipts"] == []
++    assert artifact["retention_after_phase"] == {}
++    assert artifact["hard_case_harm_after_phase"] == {}
++    assert artifact["restart_byte_identity"] is None
++    assert artifact["restart_action_identity"] is None
++    assert artifact["rollback_byte_identity"] is None
++    assert artifact["rollback_action_identity"] is None
++    assert artifact["admitted_poison_count"] == 0
++    assert artifact["influenced_poison_count"] == 0
++    assert artifact["source_verdict_supported"] is False
++    assert artifact["csl_causal_audit_completed"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["source_artifact_hashes"] == exp.EXPECTED_SOURCE_HASHES
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_precondition_tampering_names_each_observed_failure(
++    sources: dict[str, dict], tmp_path: Path
++) -> None:
++    """REQ-CL-6792 preserves exact observed values for every failed gate."""
++
++    tampered = deepcopy(sources)
++    tampered["experiment_6791"]["compositional_csl_completed"] = False
++    tampered["experiment_6791"]["rows"] = tampered["experiment_6791"]["rows"][:-1]
++    tampered["experiment_6791"]["frozen_manifest"]["order_hashes"].pop("order_5")
++    tampered["experiment_6791"]["source_artifact_hash"] = "sha256:wrong"
++    tampered["experiment_6791"]["rows"][0]["hidden_receipt_hash"] = "sha256:wrong"
++    copied_paths = dict(SOURCE_PATHS)
++    copied = tmp_path / "experiment_6791.json"
++    copied.write_text(json.dumps(tampered["experiment_6791"]), encoding="utf-8")
++    copied_paths["experiment_6791"] = copied
++
++    summary = exp.evaluate_preconditions(tampered, copied_paths)
++
++    assert summary["failed_checks"] == [
++        "compositional_csl_completed",
++        "complete_per_event_rows",
++        "source_hashes",
++        "transaction_byte_snapshots",
++        "exact_receipt_hashes",
++        "all_five_orders",
++    ]
++    assert all("observed" in row for row in summary["failures"])
++
++
++def test_transaction_byte_checker_rejects_malformed_and_accepts_exact_bytes() -> None:
++    """SCENARIO-CL-6792-PRECONDITIONS verifies bytes instead of receipt claims."""
++
++    exact = b"{}\n"
++    source = {
++        "transaction_receipts": [
++            {
++                "committed": True,
++                "parent_bytes_b64": "e30K",
++                "new_state_bytes_b64": "e30K",
++                "parent_hash": exp.sha256_bytes(exact),
++                "new_state_hash": exp.sha256_bytes(exact),
++            },
++            {
++                "committed": True,
++                "parent_bytes_b64": "not-base64",
++                "new_state_bytes_b64": "é",
++                "parent_hash": "sha256:wrong",
++                "new_state_hash": "sha256:wrong",
++            },
++            {"committed": False},
++        ]
++    }
++
++    assert exp._transaction_byte_observation(source) == {
++        "committed_receipts": 2,
++        "parent_byte_snapshots": 2,
++        "new_state_byte_snapshots": 2,
++        "byte_hash_matches": 1,
++    }
++
++
++def test_complete_replay_guard_and_internal_validation_are_fail_closed(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CL-6792 never substitutes partial work after prerequisite checks."""
++
++    real_evaluate = exp.evaluate_preconditions
++    monkeypatch.setattr(
++        exp,
++        "evaluate_preconditions",
++        lambda sources, paths: {"all_passed": True},
++    )
++    with pytest.raises(RuntimeError, match="complete replay is required"):
++        exp.build_artifact(source_paths=SOURCE_PATHS, duration_s=0.1)
++    monkeypatch.setattr(exp, "evaluate_preconditions", real_evaluate)
++
++    real_validate = exp.validate_artifact
++    monkeypatch.setattr(exp, "validate_artifact", lambda artifact: ["forced invalid"])
++    with pytest.raises(ValueError, match="forced invalid"):
++        exp.build_artifact(source_paths=SOURCE_PATHS, duration_s=0.1)
++    monkeypatch.setattr(exp, "validate_artifact", real_validate)
++
++
++def test_validation_and_atomic_writer_fail_closed(blocked_artifact: dict, tmp_path: Path) -> None:
++    """REQ-CL-6792 validates exact fields before one atomic artifact write."""
++
++    target = tmp_path / "artifact.json"
++    receipt = exp.write_artifact(target, blocked_artifact)
++    assert receipt["atomic_rename"] is True
++    assert receipt["sha256"] == exp.sha256_file(target)
++    assert json.loads(target.read_text(encoding="utf-8")) == blocked_artifact
++
++    invalid = deepcopy(blocked_artifact)
++    invalid["verdict_class"] = "null"
++    invalid["reproducibility_checksum"] = exp.reproducibility_checksum(invalid)
++    assert "blocked verdict_class mismatch" in exp.validate_artifact(invalid)
++    with pytest.raises(ValueError, match="blocked verdict_class mismatch"):
++        exp.write_artifact(tmp_path / "invalid.json", invalid)
++
++    general = deepcopy(blocked_artifact)
++    general["unexpected"] = True
++    general["field_principles"] = {}
++    general["inference_substrate"] = "wrong"
++    general["random_seed"] = -1
++    general["verifier_is_oracle"] = True
++    general["verdict_class"] = "wrong"
++    general["honest_verdict"] = "wrong"
++    general["reproducibility_checksum"] = "wrong"
++    general["csl_causal_audit_completed"] = True
++    general["rows"] = [{}]
++    general["gate_check_summary"] = {"all_passed": True, "failures": []}
++    assert set(exp.validate_artifact(general)) == {
++        "required field set mismatch",
++        "field principle coverage mismatch",
++        "inference substrate mismatch",
++        "random seed mismatch",
++        "verifier_is_oracle must be false",
++        "verdict class is outside the closed enum",
++        "honest verdict lacks a terminal prefix",
++        "reproducibility checksum mismatch",
++        "blocked verdict_class mismatch",
++        "blocked audit cannot be complete",
++        "blocked audit contains replay rows",
++        "blocked audit lacks a failed gate",
++    }
++
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="JSON object required"):
++        exp.read_json_object(malformed)
++
++
++def test_cli_writes_and_validates_task_owned_artifact(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-CL-6792 keeps the required command on the validated writer path."""
++
++    output = tmp_path / "result.json"
++    assert exp.main(["--date", exp.RUN_DATE, "--output", str(output)]) == 0
++    stored = exp.read_json_object(output)
++    assert stored["status"] == "complete_blocked_csl_causal_audit"
++    assert exp.main(["--validate", "--output", str(output)]) == 0
++    assert "complete_blocked_csl_causal_audit:" in capsys.readouterr().out
++    invalid = json.loads(output.read_text(encoding="utf-8"))
++    invalid["verdict_class"] = "null"
++    invalid["reproducibility_checksum"] = exp.reproducibility_checksum(invalid)
++    output.write_text(json.dumps(invalid), encoding="utf-8")
++    with pytest.raises(ValueError, match="blocked verdict_class mismatch"):
++        exp.main(["--validate", "--output", str(output)])
++    with pytest.raises(ValueError, match="YYYYMMDD"):
++        exp.build_artifact(source_paths=SOURCE_PATHS, run_date="2026-08-30")
+-- 
+2.55.0
+

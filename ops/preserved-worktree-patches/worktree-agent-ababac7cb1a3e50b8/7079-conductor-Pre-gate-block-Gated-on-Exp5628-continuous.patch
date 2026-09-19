@@ -1,0 +1,61 @@
+From 58ffa7bbf88bf3afb1b65759276bff4508b171ce Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 10:39:21 -0400
+Subject: [PATCH 07079/11362] [conductor] Pre-gate block: Gated on Exp5628
+ continuous-self-learning readiness: independent adversarial promotion audit
+
+1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.unsafe_false_accept_count (actual={'by_arm': {'active_component_substitution_control': 0, 'frozen_controller_control': 0, 'frozen_no_update': 0, 'frozen_spline_control': 0, 'loss_smoothed_adaptation': 0, 'no_update_control': 0, 'predictive_window_controller': 0, 'reset_adapt': 0, 'retain_exact_replay': 0, 'shuffled_order_control': 0, 'update_substitution_control': 0}, 'total': 0} == expected=0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                 | 2 +-
+ ops/conductor-log.md                                         | 1 +
+ ops/conductor-state.json                                     | 2 +-
+ results/experiment_5629_conformal_kan_independent_audit.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7e7a2ec7b8..962db72b32 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 158, "phase": "iteration_start", "last_beat": "2026-07-14T14:37:19Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 159, "phase": "iteration_start", "last_beat": "2026-07-14T14:39:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6e322d0b1d..ae010cbb9c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11740,3 +11740,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 14:10 UTC | Parameter-free group-conditional online conformal  | OK | 95 passed, 1 warning in 70.07s (0:01:10) |
+ | 2026-07-14 14:33 UTC | Gated on Exp5627 coverage and safety: conformal ac | OK | 86 passed, 1 warning in 110.47s (0:01:50) |
+ | 2026-07-14 14:35 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
++| 2026-07-14 14:37 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e201f19f43..45cec57404 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 158, "phase": "iteration_start", "started_at": "2026-07-14T14:37:19Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 159, "phase": "iteration_start", "started_at": "2026-07-14T14:39:21Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5629_conformal_kan_independent_audit.json b/results/experiment_5629_conformal_kan_independent_audit.json
+index b9a660aa8b..6497eb905c 100644
+--- a/results/experiment_5629_conformal_kan_independent_audit.json
++++ b/results/experiment_5629_conformal_kan_independent_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 5629,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-14",
+-  "started_at": "2026-07-14T14:37:19.033035+00:00",
+-  "finished_at": "2026-07-14T14:37:19.033035+00:00",
++  "started_at": "2026-07-14T14:39:21.275441+00:00",
++  "finished_at": "2026-07-14T14:39:21.275441+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5628 continuous-self-learning readiness: independent adversarial promotion audit",
+-- 
+2.55.0
+

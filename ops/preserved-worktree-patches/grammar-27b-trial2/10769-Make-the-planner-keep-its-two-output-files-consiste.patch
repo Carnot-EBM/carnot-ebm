@@ -1,0 +1,167 @@
+From 1fe5e74d839459f0dbb5d24129892a0b3dc58526 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 11:04:52 -0400
+Subject: [PATCH 10769/11171] Make the planner keep its two output files
+ consistent (REQ-RESEARCH-6890)
+
+The premise I was given -- an id-range reservation bug -- does not exist. There is
+no allocator reserving ranges. One planner run creates BOTH
+openspec/change-proposals/research-roadmap-vNEXT.md and research-roadmap-next.yaml,
+and it wrote a document declaring "13 tasks, exp6885 through exp6897" alongside a
+YAML holding 4. The day before it claimed 11 tasks for .602 alongside a YAML holding
+4. The planner is inconsistent with itself; nothing downstream trims the list.
+
+Confirmed rather than assumed: the .603 document and the .603 roadmap were written
+by the same planner run at 13:29 UTC, which logged "4 tasks proposed".
+
+Each milestone's own contract experiment caught it -- exp6874 on
+v602_document_yaml_parity, exp6885 on document_yaml_task_contract -- but only AFTER
+activation, and in .602 the root failure cascade-blocked exp6875 through exp6877, so
+3 of 4 real tasks never ran.
+
+The fix is a prompt requirement, deliberately not an activation gate. A guard that
+refuses on mismatch would deadlock the loop if the planner reproduced the mismatch
+on replan, and the conductor allows only two replans. The per-task contract check
+already detects the condition; this aims to stop it being produced. The instruction
+carries its incident, because a rule without its cost gets edited away by someone
+who does not know it.
+
+6 tests, 3 of 3 mutations RED. One asserts placement between FILE 2 and the optional
+fields section, since the instruction is useless 40 lines away from the file list,
+and one scans the new fragment for unescaped braces, which would break the planner
+at format time rather than in review.
+
+Takes effect on the conductor's next restart: it runs as a long-lived --loop
+process and will not re-read this file before then.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/research_conductor.py                 | 15 ++++
+ .../python/test_planner_doc_yaml_contract.py  | 88 +++++++++++++++++++
+ 2 files changed, 103 insertions(+)
+ create mode 100644 tests/python/test_planner_doc_yaml_contract.py
+
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index d625fbf7b8..67051dd106 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -5125,6 +5125,21 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
+         f"- End each prompt with: Run command, 'Do NOT push. Do NOT modify "
+         f"scripts/research_conductor.py.'\n"
+         f"- Use {{project_root}} and {{date}} as placeholders in prompts\n\n"
++        f"THE TWO FILES MUST AGREE ON THE TASK LIST — THIS IS CHECKED:\n\n"
++        f"Write FILE 2 first, then make FILE 1's task contract describe exactly\n"
++        f"what FILE 2 contains. If FILE 1 says '13 tasks, exp6885 through\n"
++        f"exp6897' then FILE 2 MUST hold 13 tasks with those exact ids, in that\n"
++        f"order. Do not write an aspirational task list in the document and a\n"
++        f"shorter one in the YAML.\n\n"
++        f"This is not a style rule. Milestone 2026.09.602's document claimed 11\n"
++        f"tasks (exp6874-exp6884) while its YAML held 4, and milestone .603's\n"
++        f"claimed 13 (exp6885-exp6897) while its YAML held 4. Both times the\n"
++        f"milestone's own contract experiment failed its gate on the mismatch;\n"
++        f"in .602 that cascade-blocked 3 of the 4 real tasks. A document that\n"
++        f"promises science the YAML never runs costs the whole milestone.\n\n"
++        f"If you decide mid-plan to emit fewer tasks, EDIT FILE 1 to match\n"
++        f"before you finish. The count and the id range in the document are a\n"
++        f"contract, not a wish.\n\n"
+         f"OPTIONAL YAML FIELDS — POPULATE WHEN APPLICABLE:\n\n"
+         f"The conductor reads two optional fields per task that activate runtime\n"
+         f"speedups (see scripts/conductor_gates.py).  Populating them lets simple\n"
+diff --git a/tests/python/test_planner_doc_yaml_contract.py b/tests/python/test_planner_doc_yaml_contract.py
+new file mode 100644
+index 0000000000..953062909b
+--- /dev/null
++++ b/tests/python/test_planner_doc_yaml_contract.py
+@@ -0,0 +1,88 @@
++"""Spec: REQ-RESEARCH-6890, SCENARIO-RESEARCH-6890-A
++
++The planner prompt tells the agent its two output files must describe the same task list.
++
++INCIDENT 2026-09-02, twice in one day. One planner run writes BOTH
++`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`. It wrote a
++document declaring "13 tasks, exp6885 through exp6897" alongside a YAML holding 4, and the day
++before, a document claiming 11 tasks (exp6874-exp6884) alongside a YAML holding 4.
++
++Each milestone's own contract experiment caught the mismatch and failed its gate — exp6874 on
++`v602_document_yaml_parity`, exp6885 on `document_yaml_task_contract`. In .602 that root failure
++cascade-blocked exp6875, exp6876 and exp6877, so 3 of the milestone's 4 real tasks never ran.
++
++This is a PROMPT fix, not a mechanical gate, and that was deliberate. An activation guard that
++refuses on mismatch would deadlock the loop if the planner reproduced the mismatch on replan, and
++the conductor allows only 2 replans. The existing per-task contract check already detects it; the
++prompt aims to stop it being produced.
++"""
++
++from __future__ import annotations
++
++import re
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++CONDUCTOR = REPO / "scripts" / "research_conductor.py"
++
++
++def _planner_prompt_text() -> str:
++    """The planner prompt is built with f-string fragments; read the source region.
++
++    Reading the SOURCE rather than calling the builder keeps this test free of the conductor's
++    import side effects, which pull in torch and jax.
++    """
++    return CONDUCTOR.read_text(encoding="utf-8")
++
++
++def test_the_prompt_requires_the_two_files_to_agree() -> None:
++    src = _planner_prompt_text()
++    assert "THE TWO FILES MUST AGREE ON THE TASK LIST" in src
++
++
++def test_the_prompt_names_the_failure_it_prevents() -> None:
++    """A rule without its incident gets edited away by someone who does not know the cost."""
++    src = _planner_prompt_text()
++    assert "2026.09.602" in src
++    assert "cascade-blocked 3" in src
++
++
++def test_the_prompt_tells_the_agent_what_to_do_when_it_trims() -> None:
++    """The failure mode is deciding mid-plan to emit fewer tasks and leaving the document."""
++    src = _planner_prompt_text()
++    assert "EDIT FILE 1 to match" in src
++
++
++def test_the_instruction_sits_before_the_optional_fields_section() -> None:
++    """Ordering matters: it must land while the agent is still reading about the two files.
++
++    Placed after OPTIONAL YAML FIELDS it would be separated from FILE 1 / FILE 2 by ~40 lines of
++    unrelated field documentation.
++    """
++    src = _planner_prompt_text()
++    two_files = src.index("THE TWO FILES MUST AGREE ON THE TASK LIST")
++    optional = src.index("OPTIONAL YAML FIELDS")
++    file2 = src.index("FILE 2: research-roadmap-next.yaml")
++    assert file2 < two_files < optional
++
++
++def test_the_prompt_still_creates_both_files() -> None:
++    """Guard against an edit that drops one of the two outputs while rewording this section."""
++    src = _planner_prompt_text()
++    assert "FILE 1: openspec/change-proposals/research-roadmap-vNEXT.md" in src
++    assert "FILE 2: research-roadmap-next.yaml" in src
++
++
++def test_no_stray_unescaped_brace_was_introduced() -> None:
++    """The prompt is f-string fragments; a bare { would raise at format time, not at import.
++
++    The incident text contains `exp6885-exp6897`, not a brace, but a future edit adding a literal
++    example dict would break the planner at runtime rather than in review.
++    """
++    src = _planner_prompt_text()
++    start = src.index("THE TWO FILES MUST AGREE ON THE TASK LIST")
++    end = src.index("OPTIONAL YAML FIELDS", start)
++    section = src[start:end]
++    # every { or } in an f-string fragment must be doubled
++    for m in re.finditer(r"(?<!\{)\{(?!\{)|(?<!\})\}(?!\})", section):
++        raise AssertionError(f"unescaped brace at offset {m.start()} in the new prompt section")
+-- 
+2.55.0
+

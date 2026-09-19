@@ -1,0 +1,78 @@
+From 9f44426a192e75acc6ee924aaf669fcb990080e1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 00:21:34 -0400
+Subject: [PATCH 07869/11362] [outer-loop] cd82 residual DIAGNOSED: budget-wall
+ variance of the uniform draw, shared by the reference -- deliberately NOT
+ patched
+
+The 1-of-9 residual is not a capability loss and not caused by the click gate.
+
+ATTRIBUTION: B2 (gate ON) and B2_nofix (gate OFF) lose cd82 recoloured IDENTICALLY on seed
+20260724 -> the gate is causally irrelevant. Every GREEDY-draw arm solves it (A, B, C, D all
+levels=1); only the uniform-draw arms miss it, on one seed. Arm E -- just-explore ITSELF -- also
+loses cd82 recoloured on one of its seeds, so this is a property of uniform-random draw rather
+than a Carnot defect.
+
+BUDGET PROBE: 2000 -> levels=0 using 1977 of 2000 actions (AT THE WALL, not stuck);
+3000 -> 0 (2967 actions); 4000 -> levels=1 (3930 actions). Budget-recoverable.
+
+NO CODE CHANGE, deliberately. The only way to remove this variance is to make the within-tier
+draw less uniform -- but the uniform draw is exactly what carries the gains (B2 beats greedy B by
+2-3 games and stays colour-robust where B degrades 9->8 under recolour). Patching it to rescue one
+near-budget cell would remove the working mechanism. The budget was also NOT raised for the
+definitive run: that would make the numbers non-comparable with every prior run in this series.
+The failing cell stays in the denominator rather than being excused.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...riment_5836_frontier_click_vocab_gate.json | 34 ++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/results/experiment_5836_frontier_click_vocab_gate.json b/results/experiment_5836_frontier_click_vocab_gate.json
+index f168ab6d73..12dcf04afb 100644
+--- a/results/experiment_5836_frontier_click_vocab_gate.json
++++ b/results/experiment_5836_frontier_click_vocab_gate.json
+@@ -21262,5 +21262,37 @@
+     "residual": "1 of 9 cells (recolor_negative_control, seed 20260724) still loses cd82. cd82 is a CLICK game, so the gate correctly does not touch it -- this is a different mechanism (uniform-draw variance on a recoloured board), not the nav/click domain error, and it is NOT claimed as fixed.",
+     "scope_caveat": "This invocation ran arms A/B2/B2_nofix only, so the harness correctly stamps its own capability verdict 'uninterpretable_no_positive_control' (arm E absent). That does not affect THIS question, which is an internal B2-vs-B2_nofix attribution, but the capability headline of this file must not be cited without the positive control -- use results/experiment_5836_frontier_discipline_generalization.json for that."
+   },
+-  "reproducibility_checksum": "sha256:84eebbd1bdfe6408fed26d0d061a567bb3c2aad7e75ced217111f957382533ca"
++  "cd82_residual_diagnosis": {
++    "date": "2026-07-25",
++    "question": "The 1-of-9 residual: B2 loses cd82 under recolour on seed 20260724. Is it a capability loss caused by the click gate, a defect in the uniform draw, or budget variance?",
++    "attribution_evidence": {
++      "click_gate_is_NOT_the_cause": "B2 (gate ON) and B2_nofix (gate OFF) lose cd82 IDENTICALLY on seed 20260724 and both solve it on the other two seeds -- so the gate is causally irrelevant here.",
++      "it_is_specifically_the_UNIFORM_DRAW": "every greedy-draw arm solves cd82 recoloured (A, B, C, D all levels=1); only the uniform-draw arms miss it, and only on one seed.",
++      "the_REFERENCE_shows_the_same_variance": "arm E (just-explore itself) also loses cd82 recoloured on one of its three seeds (20260726). This is a property of uniform-random draw, not a Carnot bug."
++    },
++    "budget_probe": [
++      {
++        "budget": 2000,
++        "levels": 0,
++        "actions": 1977,
++        "states_expanded": 365
++      },
++      {
++        "budget": 3000,
++        "levels": 0,
++        "actions": 2967,
++        "states_expanded": 489
++      },
++      {
++        "budget": 4000,
++        "levels": 1,
++        "actions": 3930,
++        "states_expanded": 604
++      }
++    ],
++    "finding": "BUDGET-RECOVERABLE, therefore NOT a capability loss. At budget 2000 the run consumed 1977 of 2000 actions -- it was at the budget WALL, not stuck. The same cell solves at budget 4000. The uniform draw simply needs ~2x the actions of the greedy draw on this game/seed.",
++    "action_taken": "NO CODE CHANGE, deliberately. The only way to remove this variance is to make the within-tier draw less uniform -- but the uniform draw is precisely the mechanism carrying the gains (B2 beats greedy B by 2-3 games, and B2 is colour-robust where B degrades 9->8 under recolour). Sacrificing it to rescue one near-budget cell would remove what works. Documented as a known, quantified, reference-shared variance property instead.",
++    "how_to_read_the_8_of_9": "8/9 strict per-seed dominance at budget 2000 UNDERSTATES the mechanism: the one failing cell is a budget-wall artifact, not a lost capability. It is left in the denominator rather than excused, and the budget was NOT raised for the definitive run, because changing the budget mid-program would make the numbers non-comparable with every prior run in this experiment series."
++  },
++  "reproducibility_checksum": "sha256:f9de2c6b32a764270ebf350c6ebfe52ff5a1c80a4094f24d86dd80f1ce1f600d"
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

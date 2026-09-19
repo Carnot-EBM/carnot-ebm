@@ -1,0 +1,76 @@
+From aae538c845059dd794b55cfe96edfe98e851e174 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 09:20:58 -0400
+Subject: [PATCH 01438/11362] [conductor] Operational retrospective for
+ milestone 2026.06.378
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_06_378.json | 30 ++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_378.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 580d168dd0..d3af7f3083 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5193,3 +5193,9 @@ The critical path for milestone .250:
+ - theme: False-zero detector gap again — while .377 actually ran the verifier-as-reward RFT pivot (the project's central bet: does verifier-certified training beat the cold base / gold-SFT held-out?)
+ - key result: Honest negative twice over. (1) Retro data: 0 experiment commits since activation; both GPUs idle at the snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null. (2) Real .377 (per capstone exp4085): the verifier-as-reward RFT pivot BLOCKED at its precision gate — exp4077 measured verifier certification precision 0.6818 < the 0.85 corpus-trust threshold, so the RFT-CORRECT corpus was poisoned and exp4078 train + exp4079 ARC held-out eval could not run (blocked_precision_gate_unmet); the Sudoku positive control (exp4080) and 9th-game solve (exp4082, ft09-0d8bbf25 at action 4) both completed but were flagged_adversarial and capstone-skipped; SOTA ingestion (exp4081) and registry/gaps hygiene (exp4083) landed clean. So the pivot's first decision-grade attempt produced an honest blocked-not-validated, and the zero timing is a detector artifact (detector_gap_suspected=true) — observability, not execution.
+ - acceptance: retro-data 0/0 (false-zero); per .377 capstone exp4085 the headline pivot question (did verifier-as-reward RFT beat gold-SFT held-out?) returned BLOCKED — precision gate unmet (0.6818<0.85), no ARC RFT held-out eval; Sudoku control + 9th game flagged-skipped; SOTA-ingestion + registry-hygiene clean
++
++### Milestone 2026.06.378
++- exp_range: exp4086-exp4097 (per the on-disk ops/changelog.md window read this turn; the authoritative milestone-scoped timing detector again falsely reported 0 — the recurring false-zero gap documented across .363–.377, with .376 absent, now extending to .378)
++- theme: False-zero detector gap again — while .378 actually ran the UNGATED capstone test of the precision-rescue de-risk (did stacked model-free certification filters raise demo-perfect→test-gold to ≥0.85?) plus the gated verifier-as-reward RFT Phase B — the honest follow-through to .377's fabrication-blocked pivot
++- key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle at the snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .378 shipped exp4086–exp4097: per capstone exp4097 the PRECISION RESCUE SUCCEEDED — the stacked model-free filters (demo-perfect + augmentation-invariance + k-of-n independent-induction agreement + graded min-Hamming) raised P(test-gold | certified) to best 0.8824 at recall 0.7143, clearing the 0.85@recall≥0.20 de-risk gate (exp4087) — and the off-ARC analog TRANSFERRED (exp4093: code demo-fit precision 0.96, consistency filter holds 0.96), converting the verifier's domain-generality from argument to datum. But Phase B (the clean verifier-LABEL A-vs-B RFT measurement) produced NO clean A>B: the LoRA corpus-build/train arm blocked (exp4088 blocked_lora_smoke_checkpoints), so A-vs-B stayed pending/absent (exp4095, exp4097). Offsetting accuracy win: 10th ARC game first-solved (exp4092, r11l-495a7899 at action 4, games 9→10); hardware continuity recorded (exp4096: PolarFire hash-verified CPU dispatch OK, GateMate n=16 flash still blocked/unreachable, KV260 terminal); 1 flagged-skipped. Unlike .377 (fabricated), .378 produced an honest decision-grade mix. So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
++- acceptance: retro-data 0/0 (false-zero); per .378 capstone exp4097 the headline came back MIXED-but-decision-grade (NOT fabricated, unlike .377): PRECISION RESCUED (0.8824 ≥ the 0.85@recall≥0.20 de-risk gate, exp4087) + OFF-ARC TRANSFER datum (0.96, exp4093), but PHASE B no clean A-vs-B (RFT train blocked, exp4088), ACCURACY +1 to 10 games (exp4092), HARDWARE PolarFire-dispatch-OK / GateMate-blocked / KV260-terminal (exp4096); 1 flagged-skipped
+diff --git a/ops/changelog.md b/ops/changelog.md
+index dcc161e2bd..3193622d16 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8999,3 +8999,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-12: VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF -- the safety-gate regression guard). RECORD the .378 outcomes into ops/verifier_gaps.md: the GAP-5 precision-rescue result (exp4087: did stacked filters reach 0.85?) and the verifier-as-reward RFT outcome (exp4090: A-vs-B). Note in ops/verifier_registry.yaml that the verifier's certification-precision operating point is now characterized. Keep the registry/gaps the honest source of truth. (✅ Complete) — honest_verdict=complete: gap4_arc1_reproduced_True_precision_precision_rescue_succeeded_rft_rft_a_vs_b_pending_absent; results/experiment_4095_verifier_registry_gaps_hygiene.json
+ - 2026-06-12: Hardware continuity (GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> investigate the .377 n=16 bitstream flash rc=1 block; next step toward a clean n=16 Ising tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot dispatch; .377 hash-verified CPU dispatch succeeded). KV260 opportunistic-confirm (ssh kria; terminal). DISTINCT wall-clock timers per board (no shared-timestamp tautology). (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only; results/experiment_4096_hardware_continuity.json
+ - 2026-06-12: Capstone .378 (UNGATED): the headline question is DID THE PRECISION RESCUE REACH 0.85, AND DID THE CLEAN RFT MEASURE A>B -- OR DID WE HONESTLY BOUND THE THESIS? Aggregate: PRECISION RESCUE = exp4087 (did stacked offline filters raise demo-perfect->test-gold from 0.68 to >=0.85 @ recall>=0.20?); PIVOT = exp4090 (A-vs-B verifier-label CI-excl-0, gated on the rescue + a real synchronous train) + exp4091 (Sudoku pipeline-sanity reproduced?); DOMAIN-GENERALITY = exp4093 (off-ARC demo-fit precision transfer); ACCURACY = exp4092 (total_games_solved, monotonic +1); SOTA = exp4094. Honest verdict: did .378 move the headline (precision rescued + A>B) or honestly BOUND it (precision-bounded -> Phase B skipped)? Either is decision-grade -- .377 fabricated; .378 will not. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists. (✅ Complete) — honest_verdict=complete: capstone_v378_precision_rescued_0.8824_phaseB_no_clean_A_vs_B_games10_offarc_transfer_flagged_skipped1; results/experiment_4097_capstone_v378.json
++- 2026-06-12: Operational retrospective for milestone 2026.06.378 — the authoritative milestone-scoped timing detector again reported a FALSE-ZERO (0 experiment commits / 0 wall-minutes / 0 compute-bound tasks), the recurring detector gap documented across .363–.377 (.376 absent), now extending to .378. Both RTX 3090s idle at the snapshot is CORRECT (the detector feed contained 0 compute-bound tasks; gpu_idle_on_compute_bound_tasks=null) — not a bottleneck, and DualGPURunner is inapplicable with no model loaded. On-disk ops/changelog.md confirms .378 actually ran exp4086–exp4097: the precision-rescue de-risk SUCCEEDED (exp4087: stacked model-free certification filters raised demo-perfect→test-gold to best 0.8824 at recall 0.7143, clearing the 0.85@recall≥0.20 gate), the off-ARC analog transferred (exp4093: code demo-fit precision 0.96), the 10th ARC game first-solved (exp4092: r11l at action 4), but Phase B produced no clean verifier-label A-vs-B (exp4088 blocked_lora_smoke_checkpoints; A-vs-B pending/absent per exp4097); 1 flagged-skipped. The recurring failure is observability, not execution; highest-leverage fix remains root-causing the timing detector (or sourcing the retro window from the committed changelog) so capstone/aggregation milestones stop looking empty. results/operational_retro_2026_06_378.json
+diff --git a/results/operational_retro_2026_06_378.json b/results/operational_retro_2026_06_378.json
+new file mode 100644
+index 0000000000..c0ebe47cc1
+--- /dev/null
++++ b/results/operational_retro_2026_06_378.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.378",
++  "generated_at": "2026-06-12T13:16:27Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "Milestone 2026.06.378 recorded NO experiment commits since activation: the authoritative TIMING DATA is empty, so total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. This is consistent with an UNGATED capstone/aggregation milestone, which reads upstream artifacts rather than producing new experiment commits. With zero compute-bound tasks, both RTX 3090s correctly sit idle at 0% (gpu_idle_on_compute_bound_tasks=null, i.e. N/A) — per the GPU IDLE INTERPRETATION RULE that is expected behaviour, not a bottleneck. No per-experiment wall-time or GPU-efficiency analysis is possible from this milestone's data.",
++  "bottlenecks_identified": [
++    "No operational timing signal: zero experiment commits since activation of 2026.06.378, so per-experiment wall-time and slowest-experiment analysis cannot be performed from commit data this milestone.",
++    "Observability gap for aggregation milestones: capstone/aggregation work (reading upstream artifacts, inference_substrate=aggregation_from_upstream_artifacts) emits no experiment-commit timing data, making such milestones invisible (total_wall_time_minutes=0) to the operational retrospective's per-experiment analysis.",
++    "Ambiguity at 0 commits: an empty timing block cannot, on its own, distinguish an aggregation milestone (expected to produce 0 experiment commits) from an interrupted or stalled run (a Checkpoint commit preserving interrupted work was present in recent history). Both look identical to the retro."
++  ],
++  "improvements_suggested": [
++    "Wire aggregation-artifact wall-time into the timing harness: detect results/*capstone*.json and results/operational_retro_*.json writes and record their elapsed time, so capstone milestones report a non-zero total_wall_time_minutes instead of looking empty.",
++    "Classify each milestone by inference_substrate at activation (aggregation_from_upstream_artifacts vs live_llm_inference vs verifier_ensemble_against_cached_candidates). The retro can then skip GPU-efficiency analysis for aggregation milestones and stop emitting an ambiguous null.",
++    "Emit a 0-experiment-commit disambiguation signal at retro time: have the generator label whether 0 commits is aggregation-expected or interrupted-run (cross-check for a 'Checkpoint: preserve uncommitted work' commit), so an interrupted run is not silently read as a clean capstone.",
++    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because there are no compute-bound tasks; DualGPURunner enforcement is inapplicable when no model is loaded."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Record aggregation/capstone artifact write-time in the timing harness so capstone milestones report non-zero total_wall_time_minutes and become legible to the operational retro.",
++    "Tag milestones by inference_substrate at activation so the retro selects the correct analysis (GPU efficiency for live-inference milestones vs upstream-provenance for aggregation milestones) instead of reporting an ambiguous null.",
++    "Add an aggregation-expected vs interrupted-run disambiguation to the retro generator (key off the presence of a Checkpoint/interrupted commit) so a stalled milestone is never mistaken for a clean capstone with 0 commits."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "With no per-experiment timing data, the honest operational lesson is about observability, not speed: there is no measured wall-time to optimize this milestone, so estimated_time_savings_pct is 0. The real gap is that an aggregation/capstone milestone and an interrupted run are currently indistinguishable when both yield an empty timing block — making aggregation milestones legible to the retro is the actionable improvement, not any compute speedup."
++}
+-- 
+2.55.0
+

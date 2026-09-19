@@ -1,0 +1,56 @@
+From 1f6d27a8a9f1aea2a022aaf039a74a2a8cd360ee Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 22:56:13 -0400
+Subject: [PATCH 09966/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index b0ef664ac4..210c48a9df 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -8,5 +8,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T02:44:48Z"
++ "last_scan_utc": "2026-08-26T02:56:10Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index daa5ae16ee..0b223b7e40 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-26T02:27:59Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-26T02:56:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 69a8f4b78e..c081966a6a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16502,3 +16502,4 @@ code |
+ | 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | determination_preservation_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on |
+ | 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 0: OPEN 1 days: |
+ | 2026-08-26 02:25 UTC | Prospective chronological invariant continuous sel | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
++| 2026-08-26 02:54 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a8a066ea3c..580c3cf967 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-26T02:27:59Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-26T02:56:09Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

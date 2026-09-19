@@ -1,0 +1,41 @@
+From ebedba2f9486bad609370573ba9a614e9fd7f842 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 05:30:39 -0400
+Subject: [PATCH 00914/11362] [outer-loop] stage eval max_new 1024->4096 for
+ the truncation-clean RFT rerun
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Seed 0 of the powered run hit 9.3% eval truncation on the verbose process_weighted arm
+-> TRUNCATION_INVALID. Per operator, bump eval max_new to 4096 so every arm COMPLETES and
+the accuracy comparison is truncation-clean. Applies to the RERUN (running #1 finishes on
+1024 for consistency; modules already loaded in memory). Generation max_new stays 1024
+deliberately — raising it would let the verbose process_weighted-favored traces grow
+unbounded and AMPLIFY the length confound; the correct generation-side de-confound is
+length-normalizing the process reward, offered as a separate follow-up.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../experiments/process_reward_weighted_sft_phase1_draft.py  | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/experiments/process_reward_weighted_sft_phase1_draft.py b/scripts/experiments/process_reward_weighted_sft_phase1_draft.py
+index d931cb89b1..cd1135c447 100644
+--- a/scripts/experiments/process_reward_weighted_sft_phase1_draft.py
++++ b/scripts/experiments/process_reward_weighted_sft_phase1_draft.py
+@@ -162,7 +162,10 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
+         # (MiniCPM5 over-thinks GSM8K -> spec sets enable_thinking=False).
+         return spec.format_prompt(tok, q)
+ 
+-    max_new = 512 if smoke else 1024  # headroom above GSM8K's ~320-token solutions
++    max_new = 512 if smoke else 4096  # 4096 (was 1024): seed-0 hit 9.3% eval truncation on
++    # the process_weighted arm (verbose) -> TRUNCATION_INVALID. 4096 lets every arm COMPLETE
++    # so the accuracy read is clean (most GSM8K solutions are ~320 tok; only the rambling
++    # minority uses the extra headroom -> early-eos keeps eval cost ~flat for well-behaved arms).
+     @torch.no_grad()
+     def _eval(model) -> dict:
+         """Returns acc AND truncation instrumentation -- truncation silently scores
+-- 
+2.55.0
+

@@ -1,0 +1,127 @@
+From 33aa07be3c800edf4d723b92df2cabe94d6698b7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 09:13:04 -0400
+Subject: [PATCH 09402/11362] [conductor] Operational retrospective for
+ milestone 2026.08.558
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 ++++
+ docs/research-notes/arc-agi3-news-watch.md | 10 +++++
+ ops/.arc_news_watch_state.json             |  6 +--
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_558.json | 47 ++++++++++++++++++++++
+ 5 files changed, 68 insertions(+), 3 deletions(-)
+ create mode 100644 results/operational_retro_2026_08_558.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 04c018f825..6eb18afee6 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6227,3 +6227,10 @@ The critical path for milestone .250:
+ - theme: zero-resolution synthesis work exposed a timing-observability gap, not an accelerator bottleneck
+ - key result: no compute-bound work occurred; idle GPUs were correct, and no DualGPURunner requirement arose
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.558
++
++- exp_range: no data available this milestone
++- theme: zero-resolution synthesis-only execution exposed a live timing-receipt gap without an accelerator bottleneck
++- key result: no compute-bound work ran; GPU idleness was correct and no DualGPURunner requirement arose
++- acceptance: no data available this milestone
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 84a243b239..ddcbf750d1 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -171,3 +171,13 @@ CHECK_TIMED_OUT
+ 
+ - **Leaderboard shakeup:** **cstl** now leads at **3.57**; **Lord Han Solo** is second at **2.76**, **The AGI Boys** third at **2.66**, **Jonathan Wang2022** fourth at **2.59**, and **Daniel Franzen** fifth at **2.58**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+ 
++## 2026-08-21 13:11 UTC -- NEW
++
++- Leaderboard shakeup: Tufa Labs is now #2 at 2.97; Akhil Tolani entered at #4 with 2.73; AbeLincoln1865 entered at #5 with 2.72. Lord Han Solo fell to #3, while The AGI Boys, Jonathan Wang2022, and Daniel Franzen fell to #6–#8. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
++
++- Kaggle added RTX 6000 (`g4-standard-48`) machines to the competition’s hardware pool. [Competition overview](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/overview/description)
++
++- Scoring clarification: a valid non-RESET action counts toward both efficiency scoring and the action budget even when it leaves the frame unchanged. The host confirmed the scored server matches offline competition mode. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/718638)
++
++- The host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had none enabled; all other identified causes were individually below 5%. [Kaggle host post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
++
+diff --git a/ops/.arc_news_watch_state.json b/ops/.arc_news_watch_state.json
+index e35730fc8d..a04841e285 100644
+--- a/ops/.arc_news_watch_state.json
++++ b/ops/.arc_news_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- **Leaderboard shakeup:** **cstl** now leads at **3.57**; **Lord Han Solo** is second at **2.76**, **The AGI Boys** third at **2.66**, **Jonathan Wang2022** fourth at **2.59**, and **Daniel Franzen** fifth at **2.58**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)",
+-  "last_checked": "2026-08-20T13:12:27.590739+00:00",
+-  "history_count": 23
++  "last_findings": "- Leaderboard shakeup: Tufa Labs is now #2 at 2.97; Akhil Tolani entered at #4 with 2.73; AbeLincoln1865 entered at #5 with 2.72. Lord Han Solo fell to #3, while The AGI Boys, Jonathan Wang2022, and Daniel Franzen fell to #6\u2013#8. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n\n- Kaggle added RTX 6000 (`g4-standard-48`) machines to the competition\u2019s hardware pool. [Competition overview](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/overview/description)\n\n- Scoring clarification: a valid non-RESET action counts toward both efficiency scoring and the action budget even when it leaves the frame unchanged. The host confirmed the scored server matches offline competition mode. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/718638)\n\n- The host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had none enabled; all other identified causes were individually below 5%. [Kaggle host post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)",
++  "last_checked": "2026-08-21T13:11:57.366958+00:00",
++  "history_count": 24
+ }
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e601dedd61..4346996b78 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17070,3 +17070,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-21: V557 evidence freeze and V558 branch preflight (✅ Complete) — honest_verdict=complete: V557 terminal evidence frozen; Exp6463 held lineage retired; Exp6478 remains finite no-LLM exact-energy evidence; factor-cache and ARC shield readiness are narrow preflight fields only.; results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json
+ - 2026-08-21: Monotonic task phase and concurrency receipt contract (✅ Complete) — honest_verdict=complete: reusable phase and concurrency receipt validation is ready; no conductor concurrency change is claimed; results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json
+ - 2026-08-21: Immutable prospective constraint stream commitment (✅ Complete) — honest_verdict=complete: prospective constraint stream sealed with exact labels, balanced membership, backend parity, held isolation, and no model output; results/experiment_6482_immutable_prospective_constraint_stream_commitment.json
++- 2026-08-21: Operational retrospective for 2026.08.558: 3 synthesis-only experiments completed in 0.0 minutes, with no compute-bound work. GPU idleness was not a compute-task fault, and no concurrent-model DualGPURunner requirement applied. Replace fallback timing reconstruction with task-linked live timing, GPU, model-count, runner, experiment-ID, and acceptance receipts. Estimated savings: 0%, because no measured counterfactual was available. Artifact: results/operational_retro_2026_08_558.json.
+diff --git a/results/operational_retro_2026_08_558.json b/results/operational_retro_2026_08_558.json
+new file mode 100644
+index 0000000000..ff4f6e3ada
+--- /dev/null
++++ b/results/operational_retro_2026_08_558.json
+@@ -0,0 +1,47 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.558",
++  "generated_at": "2026-08-21T13:10:31Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 3,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "Immutable prospective constraint stream commitment",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V557 evidence freeze and V558 branch preflight",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Monotonic task phase and concurrency receipt contract",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 3 synthesis-only experiments in 0.0 total minutes, with 0 compute-bound experiments. The idle GPU snapshot is therefore not a compute-task utilization fault, and no parallel multi-model DualGPURunner requirement applies.",
++  "bottlenecks_identified": [
++    "No execution bottleneck was measurable because all 3 experiments were synthesis-only and the supplied timing resolution reported 0 minutes per experiment.",
++    "Timing observability depended on disk-mtime reconstruction after the live git-log path found no milestone commits, so no phase-level duration cause was available."
++  ],
++  "improvements_suggested": [
++    "Emit task-linked monotonic phase timestamps and a durable timing receipt during each experiment so milestone analysis does not depend on disk-mtime reconstruction.",
++    "Include compute classification, concurrent model count, and runner selection in each timing receipt so GPU utilization and DualGPURunner eligibility are auditable.",
++    "Include stable experiment IDs and acceptance counts in the milestone-scoped timing export so operational documentation does not require unavailable-data placeholders.",
++    "Keep synthesis-only work off the GPU dispatch path and reserve GPU scheduling for explicitly compute-bound work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Write live task-linked phase and duration receipts for every experiment.",
++    "Record compute classification, model concurrency, GPU activity, and runner selection in one dispatch receipt.",
++    "Export stable experiment IDs and acceptance counts with the milestone timing data."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence supports a narrow conclusion: execution showed no measurable delay, while coarse fallback timing limited causal analysis. The savings estimate remains conservative because no measured counterfactual was supplied."
++}
+-- 
+2.55.0
+

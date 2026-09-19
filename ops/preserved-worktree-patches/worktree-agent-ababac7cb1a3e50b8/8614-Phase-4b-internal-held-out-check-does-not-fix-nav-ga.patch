@@ -1,0 +1,482 @@
+From 7176680858346d8a032585e1be31dbece9107b71 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 08:08:12 -0400
+Subject: [PATCH 08614/11362] Phase 4b: internal held-out check does not fix
+ nav gate's cd82 gap (negative)
+
+Follow-up to REQ-ARC-WMTE-6244's cd82 false positive: tried hardening
+is_confident_nav with a train/held-out generalization check. Built it,
+tested against the known true positive (tu93) BEFORE committing, and found
+it also scores 0.0 -- not a fitting bug (train-only refit's structural
+params for tu93 are fully correct) but the same HUD/step-counter
+contamination this project's own structured_nav_heldout comment already
+names. Switched to changed-cell recall (the metric already preferred for
+that reason): does not rescue it either -- cd82 (0.507) and wa30 (0.823,
+a known false positive) both score at or above tu93 (0.417).
+
+Reverted the code change before committing anything. Recorded as a negative
+result (REQ-ARC-WMTE-6245) per the Failed-Experiment Rerun Discipline, so a
+future retry does not re-walk the same two metrics at the same sample size.
+is_confident_nav's three existing structural checks are unchanged.
+
+determination_preservation_lint, adversarial_verify, artifact_freshness_lint
+all clean.
+---
+ ...-live-agent-improvement-plan-2026-08-08.md |  11 +
+ .../arc-world-model-trust-energy/spec.md      |  57 +++++
+ ..._confidence_internal_heldout_negative.json | 140 ++++++++++++
+ ...av_confidence_internal_heldout_negative.py | 205 ++++++++++++++++++
+ 4 files changed, 413 insertions(+)
+ create mode 100644 results/experiment_6245_nav_confidence_internal_heldout_negative.json
+ create mode 100644 scripts/experiments/experiment_6245_nav_confidence_internal_heldout_negative.py
+
+diff --git a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+index 11e370ec47..c74678f3f8 100644
+--- a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
++++ b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+@@ -365,6 +365,17 @@ mechanic class(es); the template, detector, and pre-LLM cascade slot all exist.
+ banked levels up, zero regressions on non-family controls — the same gate shape the nav work
+ pre-registered.*
+ 
++**PARTIALLY DONE (2026-08-09, REQ-ARC-WMTE-6244) — diagnosis, not a new mechanic class.**
++Mode A turned out to be FOUR distinct root causes (ar25 crashes on a codegen bug, ka59 memorizes
++induce-time coordinates, re86 assumes the wrong action modality, cd82 gives up on keyboard
++actions), not one shared gap a single new mechanic-class template would close. Tried the cheapest
++adjacent fix — hardening the EXISTING nav template's confidence gate to reject cd82's
++false-positive fit (REQ-ARC-WMTE-6245) — and found it does not work at this project's typical
++transition-sample sizes (neither exact-match nor changed-cell recall discriminates the real nav
++game from the false positives); reverted before committing, negative result recorded. Building an
++actual new mechanic-class detector for ka59 (push-block) or re86 (toggle/move) remains open and
++unstarted — this diagnosis narrows WHAT to build for each game rather than picking one blindly.
++
+ **4c. Mode B attack: change-magnitude prior + off-path drift falsifier.**
+ The 2026-07-29 admission-bottleneck note splits failures into two modes wanting OPPOSITE
+ corrections and names a sparsity/change-magnitude constraint on predicted writes as "cheap to
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 22a12ae7f1..f55701b37f 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22845,6 +22845,63 @@ false-positive gap in `is_confident_nav`, not a usable win.
+ |---|---|---|
+ | REQ-ARC-WMTE-6244 | `scripts/experiments/experiment_6244_mode_a_error_class_diagnosis.py` (analysis-only; reads frozen fixtures + offline-arcade transitions, no production code changed). | `results/experiment_6244_mode_a_error_class_diagnosis.json` (the artifact IS the check — deterministic seed reproduces identically across two independent runs; adversarial_verify and determination_preservation_lint both clean). |
+ 
++### REQ-ARC-WMTE-6245: Internal Held-Out Consistency Check Does Not Fix `is_confident_nav`'s cd82 Gap (Negative Result, No Code Shipped)
++
++**Origin:** direct follow-up to REQ-ARC-WMTE-6244's cd82 finding — a natural next question is
++whether `is_confident_nav` can be hardened to catch it. First candidate design: since the gate's
++existing structural checks (no padding avatar, >=3 directions, real goal) all pass on cd82's
++spurious fit, add a GENERALIZATION check instead — refit `InducedNavWorldModel` on a train-only
++slice of the same transitions, and require the held-out slice's move-transitions to be predicted
++correctly above some threshold.
++
++**BUILT, TESTED AGAINST THE KNOWN TRUE POSITIVE FIRST, AND RETRACTED BEFORE SHIPPING.** Implemented
++the internal split inside `fit()` (an additive `internal_heldout_n` / `internal_heldout_exact_match`
++pair in `fit_quality`, gated behind a `len(rows) >= 8` floor so it never fires on data too small to
++mean anything) and wired a new check into `is_confident_nav` guarded so a hand-constructed model
++(as this module's own existing regression tests use, bypassing `fit()`) is unaffected. Before
++committing, ran it against `tu93` (the ONE source-verified real nav game per REQ-ARC-WMTE-5844) —
++and found it ALSO scores 0.0 internal held-out EXACT match. Not a fitting bug: the train-only
++refit's own structural parameters for tu93 come out fully correct (avatar={4,9}, displacement
++magnitudes matching the known-good full-data fit, goal=14, wall={5}) — the 0.0 comes from the SAME
++HUD/step-counter contamination this project's own `structured_nav_heldout` comment already names
++elsewhere ("a CORRECT avatar-only nav model scores heldout ~0 ... it models the avatar's move, not
++the co-moving key / STEP-COUNTER HUD / rails"). Switching to changed-cell recall (the metric this
++project already prefers for exactly that reason) does NOT rescue it either: measured tu93=0.417,
++cd82=0.507, sk48=0.432, wa30=0.823 — BOTH known false positives (cd82, wa30) score as high or
++higher than the one true positive. Reverted the code change (`git checkout --` on
++`arc_nav_world_model.py`) before committing anything; the negative result is recorded here and in
++`results/experiment_6245_nav_confidence_internal_heldout_negative.json` instead of a silently
++undone diff.
++
++**WHY THIS IS RECORDED RATHER THAN QUIETLY DROPPED.** Per the Failed-Experiment Rerun Discipline,
++a future task re-proposing "harden `is_confident_nav` with an internal held-out check" needs this
++on record: at n=40 transitions per game (this project's typical live episode-budget scale), NEITHER
++exact-match NOR changed-cell recall discriminates a real rigid-avatar fit from a spurious
++coincidental co-translation via a train/held-out split. A retry needs either substantially more
++transitions per game than typical live budgets provide, or a genuinely different discriminating
++signal — not agreement (REQ-ARC-WMTE-6244 already ruled that out: tu93's own per-direction
++`displacement_agreement`, 0.18-0.57, is LOWER than cd82's false-positive fit, 0.5-0.8), not internal
++held-out accuracy under either metric tried here.
++
++#### SCENARIO-ARC-WMTE-6245-EXACT-MATCH-REJECTS-THE-TRUE-POSITIVE
++
++Given tu93's transitions split into a train-only refit and a held-out slice, the train-only fit's
++own structural parameters (avatar, displacement, goal, walls) are confirmed correct, yet full-grid
++exact-match accuracy on the held-out slice is 0.0 — an internal-consistency gate built on this
++metric would incorrectly reject the one real nav game it must never reject.
++
++#### SCENARIO-ARC-WMTE-6245-CELL-RECALL-DOES-NOT-SEPARATE-TRUE-FROM-FALSE-POSITIVES
++
++Given the same train/held-out split scored by changed-cell recall instead of exact match, both
++known false-positive games (cd82, wa30) score at or above the true positive's (tu93's) score —
++no single threshold on this metric both keeps tu93 and rejects cd82/wa30.
++
++## Implementation Status (REQ-ARC-WMTE-6245)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6245 | None — the candidate fix to `arc_nav_world_model.py` was built, measured against the known true/false positives, found not to discriminate, and reverted (`git checkout --`) before commit. `is_confident_nav`'s three existing structural checks are unchanged. | `results/experiment_6245_nav_confidence_internal_heldout_negative.json` (the artifact IS the check — reproduces the exact numbers from the pre-revert manual measurement; adversarial_verify and determination_preservation_lint both clean). |
++
+ ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
+ 
+ **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
+diff --git a/results/experiment_6245_nav_confidence_internal_heldout_negative.json b/results/experiment_6245_nav_confidence_internal_heldout_negative.json
+new file mode 100644
+index 0000000000..87d383807d
+--- /dev/null
++++ b/results/experiment_6245_nav_confidence_internal_heldout_negative.json
+@@ -0,0 +1,140 @@
++{
++  "experiment": "experiment_6245_nav_confidence_internal_heldout_negative",
++  "title": "Negative result: internal train/held-out consistency check does not discriminate real nav fits from REQ-ARC-WMTE-6244's cd82 false positive",
++  "run_date": "2026-08-09T12:06:54Z",
++  "question": "Does refitting InducedNavWorldModel on a train-only slice and scoring held-out move-transitions (via exact-match, or via changed-cell recall) reliably separate tu93 (the one known real nav fit) from cd82/sk48/wa30 (known false positives)?",
++  "per_game": {
++    "tu93": {
++      "role": "known_true_positive",
++      "train_fit_structural_params": {
++        "avatar_colors": [
++          4,
++          9
++        ],
++        "displacement": {
++          "4": [
++            0,
++            6
++          ],
++          "2": [
++            6,
++            0
++          ],
++          "1": [
++            -6,
++            0
++          ],
++          "3": [
++            0,
++            -6
++          ]
++        },
++        "goal_color": 14,
++        "wall_colors": [
++          5
++        ]
++      },
++      "n_held_moves": 10,
++      "internal_heldout_exact_match_rate": 0.0,
++      "internal_heldout_mean_cell_recall": 0.4168
++    },
++    "cd82": {
++      "role": "known_false_positive_req_6244",
++      "train_fit_structural_params": {
++        "avatar_colors": [
++          2
++        ],
++        "displacement": {
++          "3": [
++            -3,
++            -11
++          ],
++          "4": [
++            3,
++            11
++          ],
++          "2": [
++            11,
++            3
++          ],
++          "1": [
++            -11,
++            -3
++          ]
++        },
++        "goal_color": 15,
++        "wall_colors": []
++      },
++      "n_held_moves": 4,
++      "internal_heldout_exact_match_rate": 0.0,
++      "internal_heldout_mean_cell_recall": 0.5066
++    },
++    "sk48": {
++      "role": "known_false_positive_req_5844_two_snake",
++      "train_fit_structural_params": {
++        "avatar_colors": [
++          0
++        ],
++        "displacement": {
++          "1": [
++            -6,
++            0
++          ],
++          "2": [
++            6,
++            0
++          ]
++        },
++        "goal_color": 1,
++        "wall_colors": []
++      },
++      "n_held_moves": 3,
++      "internal_heldout_exact_match_rate": 0.0,
++      "internal_heldout_mean_cell_recall": 0.4322
++    },
++    "wa30": {
++      "role": "known_false_positive_req_5844_sokoban",
++      "train_fit_structural_params": {
++        "avatar_colors": [
++          0,
++          14
++        ],
++        "displacement": {
++          "4": [
++            0,
++            4
++          ],
++          "2": [
++            4,
++            0
++          ],
++          "3": [
++            0,
++            -4
++          ],
++          "1": [
++            -4,
++            0
++          ]
++        },
++        "goal_color": 2,
++        "wall_colors": []
++      },
++      "n_held_moves": 7,
++      "internal_heldout_exact_match_rate": 0.0,
++      "internal_heldout_mean_cell_recall": 0.8225
++    }
++  },
++  "exact_match_discriminates_tp_from_fp": false,
++  "cell_recall_discriminates_tp_from_fp": false,
++  "honest_verdict": "complete_neither_metric_discriminates_no_code_shipped",
++  "honest_verdict_principle": "terminal `complete_` prefix; states the negative result plainly rather than as a process-completion claim with the actual finding buried in prose.",
++  "solve_provenance": "development_proxy",
++  "arc_solve_claim": false,
++  "verifier_is_oracle": true,
++  "verifier_is_oracle_principle": "each game's own real next_grid is the ground truth this check compares against.",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "random_seed": 6244,
++  "duration_s": 1.763,
++  "reproducibility_checksum": "3aa052f76ddc32c16dbcc4789c24ea99a603e58eae4444d8362d6dc00a8a6886"
++}
+diff --git a/scripts/experiments/experiment_6245_nav_confidence_internal_heldout_negative.py b/scripts/experiments/experiment_6245_nav_confidence_internal_heldout_negative.py
+new file mode 100644
+index 0000000000..4e181e5e03
+--- /dev/null
++++ b/scripts/experiments/experiment_6245_nav_confidence_internal_heldout_negative.py
+@@ -0,0 +1,205 @@
++#!/usr/bin/env python3
++"""REQ-ARC-WMTE-6245: an internal held-out consistency check does NOT discriminate real nav fits
++from REQ-ARC-WMTE-6244's cd82 false positive (negative result; no code shipped).
++
++MOTIVATION. REQ-ARC-WMTE-6244 found `is_confident_nav` passes cd82 (a game whose induced engine
++gives up on keyboard actions and hardcodes a bad click response) with a real-looking 4-direction
++displacement fit, yet that fit scores 0 held-out exact-match -- reproduced across two independent
++samples. The gate's existing structural checks (no padding-colour avatar, >=3 directions, a real
++goal colour) do not catch this. The first candidate fix tried here: refit on a TRAIN-only slice of
++the same transitions and score the held slice's move-transitions -- a genuine rigid-avatar fit
++should reproduce unseen moves of the SAME game; a spurious coincidental co-translation should not.
++
++TWO SCORING METRICS TESTED, BOTH FAIL TO DISCRIMINATE.
++
++1. Full-grid exact match: tu93 (the ONE source-verified real nav game) scores 0.0 on this
++   internal check too -- NOT because the fit is wrong (avatar/displacement/goal all come out
++   correct), but because of the SAME HUD/step-counter contamination this project's own prior work
++   already diagnosed and worked around elsewhere (`structured_nav_heldout`'s own comment: "a
++   CORRECT avatar-only nav model scores heldout ~0 ... it models the avatar's move, not the
++   co-moving key / STEP-COUNTER HUD / rails"). A gate built on this metric would reject the one
++   real nav game it must not reject.
++
++2. Changed-cell recall (the metric the project already prefers for exactly this HUD-contamination
++   reason, per `trust_cell_recall`): does NOT rescue the discrimination either. Measured:
++   tu93=0.417, cd82=0.507, sk48=0.432, wa30=0.823 -- the two KNOWN false positives (cd82, wa30)
++   score AS HIGH OR HIGHER than the one true positive. A threshold set to keep tu93 would also
++   keep cd82 and wa30; a threshold set to reject cd82/wa30 would also reject tu93.
++
++CONCLUSION. At n=40 transitions per game, an internal train/held-out split is too small and too
++noisy to reliably separate a real rigid-avatar fit from a spurious coincidental co-translation --
++under EITHER scoring metric tried. This is a genuine negative result for this specific approach,
++not a implementation bug: both metrics were implemented correctly (verified: the fit's own
++structural parameters for tu93's train-only refit are directly confirmed correct -- avatar={4,9},
++displacement magnitudes match the known-good full-data fit, goal=14, wall={5} -- so the
++discrimination failure is a property of the METRIC choice + sample size, not a fitting bug).
++`is_confident_nav`'s existing three structural checks are UNCHANGED by this result; cd82's
++false-positive gap (REQ-ARC-WMTE-6244) remains open, and the next candidate fix (if pursued) needs
++either substantially more transitions per game than this project's live episode budgets typically
++provide, or a genuinely different discriminating signal (not agreement, not internal held-out
++accuracy under either metric tried here) than anything tested in REQ-ARC-WMTE-6244/6245.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++
++import numpy as np
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic import arc_executable_world_model as e3  # noqa: E402
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel, _norm  # noqa: E402
++
++OUT = REPO / "results" / "experiment_6245_nav_confidence_internal_heldout_negative.json"
++GAMES = {
++    "tu93": "known_true_positive",
++    "cd82": "known_false_positive_req_6244",
++    "sk48": "known_false_positive_req_5844_two_snake",
++    "wa30": "known_false_positive_req_5844_sokoban",
++}
++N_TRANSITIONS = 40
++SEED = 6244
++HOLDOUT_FRAC = 0.25
++
++
++def _internal_split_and_score(game: str) -> dict:
++    trans, _cell = e3.collect_transitions(game, n=N_TRANSITIONS, seed=SEED)
++    rows = [_norm(t) for t in trans]
++    k = max(2, int(len(rows) * HOLDOUT_FRAC))
++    train_rows, held_rows = rows[:-k], rows[-k:]
++    train_model = InducedNavWorldModel.fit(train_rows)
++    held_moves = [
++        r
++        for r in held_rows
++        if r[1] in train_model.displacement
++        and not np.array_equal(np.asarray(r[0]), np.asarray(r[2]))
++    ]
++
++    exact_matches = []
++    cell_recalls = []
++    for g0, a, g1, *_ in held_moves:
++        g0a, g1a = np.asarray(g0), np.asarray(g1)
++        pred = np.asarray(train_model.engine(g0, a))
++        exact_matches.append(bool(pred.shape == g1a.shape and np.array_equal(pred, g1a)))
++        m = g0a != g1a
++        if pred.shape != g1a.shape or not m.any():
++            cell_recalls.append(0.0)
++        else:
++            cell_recalls.append(float((pred[m] == g1a[m]).mean()))
++
++    return {
++        "train_fit_structural_params": {
++            "avatar_colors": sorted(train_model.avatar_colors),
++            "displacement": {str(k): v for k, v in train_model.displacement.items()},
++            "goal_color": train_model.goal_color,
++            "wall_colors": sorted(train_model.wall_colors),
++        },
++        "n_held_moves": len(held_moves),
++        "internal_heldout_exact_match_rate": (
++            round(float(np.mean(exact_matches)), 4) if exact_matches else None
++        ),
++        "internal_heldout_mean_cell_recall": (
++            round(float(np.mean(cell_recalls)), 4) if cell_recalls else None
++        ),
++    }
++
++
++def build_artifact() -> dict:
++    t0 = time.time()
++    per_game = {}
++    for game, label in GAMES.items():
++        row = {"role": label}
++        try:
++            row.update(_internal_split_and_score(game))
++        except Exception as exc:  # noqa: BLE001
++            row["error"] = repr(exc)[:200]
++        per_game[game] = row
++
++    exact_rates = {
++        g: r["internal_heldout_exact_match_rate"]
++        for g, r in per_game.items()
++        if r.get("internal_heldout_exact_match_rate") is not None
++    }
++    recall_rates = {
++        g: r["internal_heldout_mean_cell_recall"]
++        for g, r in per_game.items()
++        if r.get("internal_heldout_mean_cell_recall") is not None
++    }
++    tp_exact = exact_rates.get("tu93")
++    fp_exact = [exact_rates[g] for g in ("cd82", "sk48", "wa30") if g in exact_rates]
++    tp_recall = recall_rates.get("tu93")
++    fp_recall = [recall_rates[g] for g in ("cd82", "sk48", "wa30") if g in recall_rates]
++
++    exact_discriminates = bool(tp_exact is not None and fp_exact and tp_exact > max(fp_exact) + 0.2)
++    recall_discriminates = bool(
++        tp_recall is not None and fp_recall and tp_recall > max(fp_recall) + 0.2
++    )
++
++    art = {
++        "experiment": "experiment_6245_nav_confidence_internal_heldout_negative",
++        "title": (
++            "Negative result: internal train/held-out consistency check does not discriminate "
++            "real nav fits from REQ-ARC-WMTE-6244's cd82 false positive"
++        ),
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "question": (
++            "Does refitting InducedNavWorldModel on a train-only slice and scoring held-out "
++            "move-transitions (via exact-match, or via changed-cell recall) reliably separate "
++            "tu93 (the one known real nav fit) from cd82/sk48/wa30 (known false positives)?"
++        ),
++        "per_game": per_game,
++        "exact_match_discriminates_tp_from_fp": exact_discriminates,
++        "cell_recall_discriminates_tp_from_fp": recall_discriminates,
++        "honest_verdict": (
++            "complete_neither_metric_discriminates_no_code_shipped"
++            if not exact_discriminates and not recall_discriminates
++            else "complete_at_least_one_metric_discriminates_see_per_game_data"
++        ),
++        "honest_verdict_principle": (
++            "terminal `complete_` prefix; states the negative result plainly rather than as a "
++            "process-completion claim with the actual finding buried in prose."
++        ),
++        "solve_provenance": "development_proxy",
++        "arc_solve_claim": False,
++        "verifier_is_oracle": True,
++        "verifier_is_oracle_principle": (
++            "each game's own real next_grid is the ground truth this check compares against."
++        ),
++        "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++        "random_seed": SEED,
++    }
++    art["duration_s"] = round(time.time() - t0, 3)
++    payload = {k: v for k, v in art.items() if k != "duration_s"}
++    art["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode()
++    ).hexdigest()
++    return art
++
++
++def main() -> int:
++    art = build_artifact()
++    OUT.write_text(json.dumps(art, indent=2, default=str) + "\n", encoding="utf-8")
++    for game, row in art["per_game"].items():
++        print(
++            game,
++            row.get("role"),
++            "exact=",
++            row.get("internal_heldout_exact_match_rate"),
++            "cell_recall=",
++            row.get("internal_heldout_mean_cell_recall"),
++        )
++    print("exact_match_discriminates:", art["exact_match_discriminates_tp_from_fp"])
++    print("cell_recall_discriminates:", art["cell_recall_discriminates_tp_from_fp"])
++    print("verdict:", art["honest_verdict"])
++    print("wrote", OUT)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

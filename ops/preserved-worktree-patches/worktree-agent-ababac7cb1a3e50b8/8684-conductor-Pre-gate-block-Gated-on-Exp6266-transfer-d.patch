@@ -1,0 +1,78 @@
+From 83ca0f2f15608204698203da5e332d41bfddf883 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 04:45:16 -0400
+Subject: [PATCH 08684/11362] [conductor] Pre-gate block: Gated on Exp6266
+ transfer: default-off energy-familiarity constraint-memory shadow consumer
+
+1 of 1 gate(s) failed; first failure: exp6266-family-task-holdout-csl-audit.family_task_transfer_ready_score (upstream artifact not found for task id 'exp6266-family-task-holdout-csl-audit')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ..._constraint_memory_shadow_consumer_v2.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6267_constraint_memory_shadow_consumer_v2.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dd17a91e19..cf5530ec9b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-10T08:43:13Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-10T08:45:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3b20192334..661f5703fd 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15583,3 +15583,5 @@ Still active  |
+ | 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
+ | 2026-08-10 08:39 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
+ | 2026-08-10 08:41 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
++| 2026-08-10 08:43 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
++| 2026-08-10 08:45 UTC | Gated on Exp6265 promotion: leave-family-and-task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6265-chronological-two-timescale-csl-ab) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 47f2c11cb4..2b0a92b840 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-10T08:43:13Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-10T08:45:16Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6267_constraint_memory_shadow_consumer_v2.json b/results/experiment_6267_constraint_memory_shadow_consumer_v2.json
+new file mode 100644
+index 0000000000..60c2210795
+--- /dev/null
++++ b/results/experiment_6267_constraint_memory_shadow_consumer_v2.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6267,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-10",
++  "started_at": "2026-08-10T08:45:16.430599+00:00",
++  "finished_at": "2026-08-10T08:45:16.430599+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6266 transfer: default-off energy-familiarity constraint-memory shadow consumer",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6266-family-task-holdout-csl-audit.family_task_transfer_ready_score (upstream artifact not found for task id 'exp6266-family-task-holdout-csl-audit')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6266-family-task-holdout-csl-audit",
++      "artifact_field": "family_task_transfer_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6266-family-task-holdout-csl-audit'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

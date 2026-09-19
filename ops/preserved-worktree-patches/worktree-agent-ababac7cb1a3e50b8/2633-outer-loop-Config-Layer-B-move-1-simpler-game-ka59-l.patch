@@ -1,0 +1,66 @@
+From 42948f4d46c69bc673a02730678240201d710448 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 17:33:57 -0400
+Subject: [PATCH 02633/11362] [outer-loop] Config Layer B move #1: simpler game
+ (ka59) -- local gemma-12B CANNOT read raw 64x64 scene at either rule
+ difficulty
+
+Operator move #1: test whether the offline local 12B grounds a config win-rule on a SIMPLER game
+(ka59, 1-D recolor strip) before concluding the model is too weak -- tr87 (hardest, glyph-rewrite)
+proposed-but-didn't-ground. Same reader + same prompt scaffolding; only the game (rule difficulty)
+changes.
+
+Result: NOT grounded -- and the failure is more fundamental than tr87's. gemma-4-12B-it-Q4 on the
+iGPU (offline-legal, ~4.2 tok/s) wrote 'def is_win(grid):' then filled the ENTIRE body with degenerate
+repeated comments ('Row 63 is the bottom row.' / 'The rest of grid is the rule.' looping), never wrote
+one line of logic, ran out of bounded tokens with an empty body -> syntax error. raw_sample banked in
+the artifact as proof.
+
+Conclusion: the bottleneck is RAW-SCENE READING, not rule complexity. The local 12B loses spatial
+track of the dense 64x64 ASCII grid and degenerates -- on BOTH the hard rewrite (tr87) and the simple
+recolor strip (ka59). So the offline model at this size/quant is too weak for raw-scene rule induction.
+The lever is now clear: scaffolding that REMOVES the grid-parsing burden (hand the model the editable
+region + candidate reference/legend regions as small structured arrays, not 64x64 ASCII), or a stronger
+reader. NOT a simpler game.
+
+Infra notes captured: iGPU throughput 4.2 tok/s (4096-token default needs ~975s > 900s timeout -> the
+original TimeoutError); a stop:['python first; the propose-
+then-ground verifier + bounded generation both work correctly.
+
+Generalized scripts/experiments/arc3_config_layerb_llm.py (parameterized game, action-aware collector,
+bounded generation w/ raw capture). Adversarial-verify clean (0 flags).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_config_layerb_llm_ka59.json | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/results/arc3_config_layerb_llm_ka59.json b/results/arc3_config_layerb_llm_ka59.json
+index 28b650f36a..dc6988ef40 100644
+--- a/results/arc3_config_layerb_llm_ka59.json
++++ b/results/arc3_config_layerb_llm_ka59.json
+@@ -7,14 +7,14 @@
+     4
+   ],
+   "generation": {
+-    "n_predict": 1200,
+-    "stop": [
+-      "```"
+-    ],
+-    "bounded": true
++    "n_predict": 1100,
++    "stop": null,
++    "bounded": true,
++    "igpu_tok_per_s": 4.2
+   },
+   "inference_substrate": "offline_arc_agi3_layerb_llm_scene_reader_iGPU_port8920",
+   "llm_proposed_rule": false,
++  "raw_sample": "```python\nimport numpy as np\n\ndef is_win(grid):\n    # The EDITABLE region is rows 63..63, cols 20..63 (Wait, the row 63 is the row at the bottom).\n    # Row 63 is the row at the bottom.\n    # rows 63..63, cols 26..63 (the cells the player edits).\n    # row 63 is the bottom row.\n    # The grid is 64x64.\n    #thought\n    #The EDITABLE region is row 63, cols 26..63.\n    #The rest of the grid contains the rules.\n    #Row 63 is the bottom row.\n    #The rest of the grid contains the rules.\n    #Row 63, cols 26..63.\n    #The rest of grid is the rule.\n    #The rest of grid is the rule.\n    #The rest of grid is grid[63, 26:64].\n    #The rest of grid is grid[63, 26:64].\n    #thought\n    #The EDITABLE region is row 63, cols 26..63.\n    #The rest of grid is the rule.\n    #The EDITABLE region is row 63",
+   "honest_verdict": "complete_layerb_llm_failed_to_propose_rule_local_gguf_insufficient",
+-  "msg": "local model code unusable after 2 tries (missing def is_win)"
++  "msg": "local model code unusable after 2 tries (syntax error line 60: expected an indented block after function definition on line 3)"
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

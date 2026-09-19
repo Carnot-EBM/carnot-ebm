@@ -1,0 +1,65 @@
+From 65863d72a4148b7ae5dbe50bcd340e8e29a61914 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 03:53:16 -0400
+Subject: [PATCH 09128/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ..._6414_fresh_three_family_factor_event_corpus.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 48ba28fb8c..c11d8ede12 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-08-14T07:35:39Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-08-14T07:53:13Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bcbabc7d26..c143c1e94c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15810,3 +15810,4 @@ code |
+ | 2026-08-14 06:48 UTC | V552 dated source delta and executable scope freez | OK | 88 passed, 1 warning in 7.99s |
+ | 2026-08-14 07:06 UTC | Independent V551 powered-claim integrity audit and | OK | 89 passed, 1 warning in 11.58s |
+ | 2026-08-14 07:33 UTC | Authenticated three-family SOTA GGUF execution rec | OK | 86 passed, 1 warning in 9.00s |
++| 2026-08-14 07:51 UTC | Gated on Exp6413 authentic receipts: fresh three-f | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9b6616d0b9..93011b872d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 19, "phase": "iteration_start", "started_at": "2026-08-14T07:35:39Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 20, "phase": "iteration_start", "started_at": "2026-08-14T07:53:13Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6414_fresh_three_family_factor_event_corpus.json b/results/experiment_6414_fresh_three_family_factor_event_corpus.json
+index a020fb4cb1..853c66d321 100644
+--- a/results/experiment_6414_fresh_three_family_factor_event_corpus.json
++++ b/results/experiment_6414_fresh_three_family_factor_event_corpus.json
+@@ -10133,5 +10133,13 @@
+     ],
+     "schema": "carnot.experiment_6414.fresh_three_family_factor_event_corpus.v1.unlicensed_abstentions"
+   },
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=48.151455055 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From eb89aa686199568b20cef82ee4cb1d752c11b72b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 05:40:44 -0400
+Subject: [PATCH 09020/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 84c0874500..c26b1169b8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-13T09:38:38Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-13T09:40:41Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a3a27d2f47..58136c1551 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15770,3 +15770,4 @@ code |
+ | 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |
+ | 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+ | 2026-08-13 09:36 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
++| 2026-08-13 09:38 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 010505dac2..089bcb5f09 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-13T09:38:38Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-13T09:40:41Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

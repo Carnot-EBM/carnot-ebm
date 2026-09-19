@@ -1,0 +1,125 @@
+From 7c97f43e48b55a2aa075d8eb832fdcc7cd64b5fa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 03:46:56 -0400
+Subject: [PATCH 02246/11362] [outer-loop] relicense project Apache-2.0 ->
+ MIT-0 (sole-author decision; ARC Prize prize-eligibility)
+
+Operator decision (AskUserQuestion 2026-06-17): whole-project MIT-0 for foolproof ARC
+Prize 2026 eligibility ('submitter-authored solution code must be CC0/MIT-0'). Sole
+author, so relicensable without consent issues.
+
+Legally-operative:
+- LICENSE -> MIT No Attribution (+ third-party carve-out note)
+- NOTICE -> Carnot code is MIT-0; PRESERVES the THRML Apache-2.0 third-party attribution
+- pyproject.toml license = MIT-0, classifier MIT, license-files keeps NOTICE
+Forward-looking generators -> MIT-0: hf_publisher model-card template, session_memory_pack
+DEFAULT_LICENSE, carnot_ebm_modelcard_v53. Public: README frontmatter (license: other +
+license_name mit-0), docs/index.html badge/meta, CLAUDE.md project vision. Code+test:
+phase1_ship_readiness now asserts MIT-0 (test fixture updated; 6/6 green).
+
+PRESERVED as Apache-2.0 (third-party, MUST NOT relicense): python/carnot/sampling/
+_vendored_thrml/, python/carnot/phase3/ebt_upstream/, and references to third-party
+licenses (D-Wave Ocean SDK, gpt-oss teacher). LEFT per never-prune: historical
+experiment_NNN scripts whose artifacts recorded Apache-2.0 at the time (their tests pin
+that historical output). HF license tag uses 'other'+mit-0 (HF has no mit-0 tag).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ CLAUDE.md                                        | 6 +++---
+ python/carnot/models/carnot_ebm_modelcard_v53.md | 4 +++-
+ python/carnot/pipeline/hf_publisher.py           | 6 ++++--
+ python/carnot/pipeline/session_memory_pack.py    | 2 +-
+ tests/python/test_phase1_ship_readiness.py       | 2 +-
+ 5 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 46408c9b8f..181a7557c2 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -565,16 +565,16 @@ If any answer is yes, the change is not ready.
+ 
+ ## Project Vision (Three Phases + Parallel Tracks)
+ 
+-1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. **Ship a useful, operational software product** (Apache-2.0 package + MCP server + CLI + HuggingFace mirror). Phase 1 ship gate is purely *software-operational*:
++1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. **Ship a useful, operational software product** (MIT-0 package + MCP server + CLI + HuggingFace mirror). Phase 1 ship gate is purely *software-operational*:
+    - All FR-* technical requirements implemented (✓ as of 2026-05-08)
+-   - PyPI package + Apache-2.0 license shipped
++   - PyPI package + MIT-0 license shipped (relicensed from Apache-2.0 on 2026-06-17 for ARC Prize prize-eligibility; sole-author decision)
+    - HuggingFace mirror per Rule 3 (mandatory mirroring)
+    - MCP server + CLI documentation for external integrators
+    - At least one independent reproducer (could be a teammate, a CI run, or an external user)
+ 
+    Phase 1 ship is **NOT gated on**: paper publication, hardware validation, FPGA bring-up, Phase 4 active-inference validation, or any non-software deliverable (operator directives 2026-05-08).
+ 2. **Phase 2 (medium-term):** Hardware acceleration via Extropic TSU, FPGA Ising machines, and potentially photonic computing. Sovereignty hardware demos (GateMate, PolarFire SoC, Tenstorrent eval) live here, not in Phase 1.
+-3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. Apache 2.0, hardware-portable.
++3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. MIT-0, hardware-portable.
+ 
+ **Parallel tracks** (run alongside whatever phase is current — do not gate phase advancement):
+ 
+diff --git a/python/carnot/models/carnot_ebm_modelcard_v53.md b/python/carnot/models/carnot_ebm_modelcard_v53.md
+index f8d8ae0231..b9cae55783 100644
+--- a/python/carnot/models/carnot_ebm_modelcard_v53.md
++++ b/python/carnot/models/carnot_ebm_modelcard_v53.md
+@@ -1,6 +1,8 @@
+ ---
+ language: en
+-license: apache-2.0
++license: other
++license_name: mit-0
++license_link: LICENSE
+ tags:
+   - energy-based-model
+   - verifiable-reasoning
+diff --git a/python/carnot/pipeline/hf_publisher.py b/python/carnot/pipeline/hf_publisher.py
+index a395d1c322..6d04e67a3a 100644
+--- a/python/carnot/pipeline/hf_publisher.py
++++ b/python/carnot/pipeline/hf_publisher.py
+@@ -74,7 +74,9 @@ class HuggingFacePublisher:
+                 publish_mechanism = "hf_api_direct"
+                 # Do the upload
+                 model_card = """---
+-license: apache-2.0
++license: other
++license_name: mit-0
++license_link: LICENSE
+ ---
+ 
+ # ThinkPRM v3
+@@ -173,7 +175,7 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
+             "hf_url": f"https://huggingface.co/{self.repo_id}" if hf_upload_succeeded else None,
+             "external_load_verified": external_load_verified,
+             "model_card_has_emojis": False,
+-            "model_card_has_apache_license": True,
++            "model_card_has_mit0_license": True,
+             "acceptance_gate_passed": (hf_upload_succeeded and external_load_verified) if not blocked else False,
+             "acceptance_gate_criteria": "Real HF upload + external load + emoji-free OR honest blocked verdict.",
+             "methodology_note": "Per exp1711 PyPI precedent + 2026-05-16 PyPI-via-CI clarification, blocked_credentials is honest. If a CI workflow for HF exists, use tag-push trigger like PyPI.",
+diff --git a/python/carnot/pipeline/session_memory_pack.py b/python/carnot/pipeline/session_memory_pack.py
+index 8b394cb258..252b3d99c1 100644
+--- a/python/carnot/pipeline/session_memory_pack.py
++++ b/python/carnot/pipeline/session_memory_pack.py
+@@ -27,7 +27,7 @@ from carnot.pipeline.session_memory import SessionMemory, _escape_model_id
+ PACK_SCHEMA = "carnot.session_memory_pack.v1"
+ PACK_SCHEMA_VERSION = "1.0.0"
+ PACK_SCHEMA_URL = "https://carnot-ebm.org/schemas/session_memory_v1.json"
+-DEFAULT_LICENSE = "Apache-2.0"
++DEFAULT_LICENSE = "MIT-0"
+ 
+ JsonDict = dict[str, Any]
+ PackInput = JsonDict | str | pathlib.Path | PathLike[str]
+diff --git a/tests/python/test_phase1_ship_readiness.py b/tests/python/test_phase1_ship_readiness.py
+index 0183bdc0a6..643a60c6b4 100644
+--- a/tests/python/test_phase1_ship_readiness.py
++++ b/tests/python/test_phase1_ship_readiness.py
+@@ -107,7 +107,7 @@ Use `carnot verify-code examples/math_funcs.py --func gcd --pbt`.
+         _write(root / "data/token_activations_tqa_qwen35.safetensors", "placeholder")
+ 
+     for model_id in REQUIRED_PER_TOKEN_EXPORTS:
+-        _write(root / f"exports/{model_id}/README.md", "---\nlicense: apache-2.0\n---\n")
++        _write(root / f"exports/{model_id}/README.md", "---\nlicense: other\nlicense_name: mit-0\n---\n")
+         _write(root / f"exports/{model_id}/config.json", "{}\n")
+         _write(root / f"exports/{model_id}/model.safetensors", "placeholder")
+         _write(root / f"exports/{model_id}/training_metadata.json", "{}\n")
+-- 
+2.55.0
+

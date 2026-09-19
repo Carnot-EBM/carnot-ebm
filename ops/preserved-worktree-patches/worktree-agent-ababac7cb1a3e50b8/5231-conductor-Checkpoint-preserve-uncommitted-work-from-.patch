@@ -1,0 +1,43 @@
+From 8baca2b1cf42bc5a02d301eb79bf7c1e5e263329 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 05:51:22 -0400
+Subject: [PATCH 05231/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c89d731693..f6ff196ac7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 72, "phase": "iteration_start", "last_beat": "2026-07-01T09:49:18Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 73, "phase": "iteration_start", "last_beat": "2026-07-01T09:51:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cfbad9911b..8dafa01bba 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9736,3 +9736,4 @@ The contro |
+ | 2026-07-01 09:43 UTC | PHASE A2 uPRM substrate retry -- gated on Exp5085  | OK | 86 passed, 1 warning in 6.68s |
+ | 2026-07-01 09:45 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+ | 2026-07-01 09:47 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
++| 2026-07-01 09:49 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6208e98c9d..f012a67423 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 72, "phase": "iteration_start", "started_at": "2026-07-01T09:49:18Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 73, "phase": "iteration_start", "started_at": "2026-07-01T09:51:20Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

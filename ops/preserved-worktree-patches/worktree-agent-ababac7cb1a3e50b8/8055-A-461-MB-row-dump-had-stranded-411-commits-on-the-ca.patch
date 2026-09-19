@@ -1,0 +1,222 @@
+From 6f757bdefba5200670bf5d213c6c13372ed45f84 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 12:34:41 -0400
+Subject: [PATCH 08055/11362] A 461 MB row dump had stranded 411 commits on the
+ canonical mirror for 8 days
+
+Every push to github.com/Carnot-EBM/carnot-ebm failed from 2026-07-23 onward. GitHub's
+pre-receive hook rejects a whole push if any commit in it carries a file over 100 MB, and
+`results/experiment_5852_three_family_paired_embeddings.rows.jsonl` (439.8 MiB, added by the
+conductor in 300a3a373) is in that range. gitea stayed current the entire time, so the two
+mirrors silently diverged -- which is precisely what mirroring is supposed to prevent.
+
+IT LOOKED LIKE ONE FAILING REMOTE, AND THAT IS WHY IT SURVIVED 8 DAYS. `origin` is a multi-URL
+push remote (gitea AND github). `git push origin main` pushed both, gitea accepted, github
+rejected, and the combined output read as a single error against one destination. Only
+`git ls-remote` per URL shows the truth: gitea at HEAD, github 411 commits behind.
+
+WHAT WAS DONE. `git filter-repo --path <path> --invert-paths --prune-empty never` on an ISOLATED
+clone -- the canonical checkout was never touched while a measurement run was live in it.
+Verified before publishing anything:
+
+  commits           20753 -> 20753   (--prune-empty never; no commit dropped)
+  files              32149 -> 32148   (diff is exactly the one removed path)
+  surviving blobs   ALL 32148 sha-identical
+  >100MB reachable  1 -> 0
+  github HEAD       still an ancestor -> FAST-FORWARD, not a force-push
+
+That last line is the one that mattered. Because the blob enters at 300a3a373 -- after github's
+stale HEAD e02deec27 -- every commit github had already published kept its sha. No history
+anyone else may have pulled was rewritten. Pushed e02deec27..6cb4b4623 cleanly.
+
+THE FILE IS STILL ON DISK, AND I NEARLY LOST IT. `git checkout -B main <rewritten>` deleted it
+from the working tree -- it was tracked in the old lineage and absent from the new one, so
+checkout did exactly what it should. Restored from tag pre-filter-repo-backup-20260731 and
+verified two ways: byte-identical to the original blob b224cfa0
+(sha256 a76ccc5f...), and all 1944 rows re-hashed with the experiment's own `source_row_hash`
+against their recorded values -- 0 mismatches. Anyone repeating this sequence should take the
+backup tag FIRST; it is the only reason this was recoverable.
+
+NOT A NEVER-PRUNE VIOLATION. Only bulk float data left git. The record survives in the tracked
+637 KB companion .json -- claims, methodology, deterministic config hash, and per-row sha256
+hashes for all 1944 rows -- plus the separate exp5853 integrity audit. Every row remains
+individually attested and the corpus is regenerable from a pinned config.
+
+THE .gitignore LINE IS LOAD-BEARING, not hygiene. The conductor and outer loop both run
+`git add -A`; without it the file is re-added on the next commit and the mirror re-breaks
+immediately.
+
+DISCLOSED, NOT FIXED: a fresh clone no longer has this file, and three tracked code paths
+reference it by name (experiment_5852.py:47, experiment_5862.py:123, and
+test_experiment_5853...py:387). That matters for the G2 independent-reproducer gate, which runs
+from a clean checkout. Left as a separate change on purpose -- altering test behaviour inside a
+history rewrite would make both harder to review. ops/large-artifact-exclusions.md carries the
+verification command, the recovery command, the regeneration path, and the note that Git LFS is
+the better answer if this recurs.
+
+The ~19 GB of other >100MB blobs (models/openai_privacy_filter/**) are NOT reachable from main --
+they live on feature branches and the pre-filter-repo-backup-20260424 tag -- so they never
+blocked this push and were left alone. Pushing those branches to GitHub will fail the same way.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .gitignore                       |  16 ++++
+ ops/large-artifact-exclusions.md | 121 +++++++++++++++++++++++++++++++
+ 2 files changed, 137 insertions(+)
+ create mode 100644 ops/large-artifact-exclusions.md
+
+diff --git a/.gitignore b/.gitignore
+index 28744fa873..f3f209fe6a 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -266,3 +266,19 @@ data/arc_transition_corpus/
+ # scratch, not measurements -- the measurements are ab.json and the completion .txt files.
+ results/arc_engine_validation_20260731/harness/ab/*/e3/
+ results/arc_engine_validation_20260731/harness/capture/*/e3/
++
++# LARGE ARTIFACT EXCLUSION (2026-07-31) -- see ops/large-artifact-exclusions.md
++#
++# This 461 MB row dump exceeded GitHub's hard 100 MB per-file limit, and its presence in history
++# blocked EVERY push to the canonical mirror from 2026-07-23 onward -- 411 commits stranded. It
++# was removed from main's history by git-filter-repo and REMAINS ON DISK, untracked.
++#
++# The ignore entry is the load-bearing half: the conductor and outer loop both run `git add -A`,
++# so without this line the file would be re-added on the next commit and re-break the mirror
++# immediately. Do not remove it without also solving the >100 MB problem (Git LFS or equivalent).
++#
++# NOT a never-prune violation: the substantive record -- claims, methodology, per-row sha256
++# hashes for all 1944 rows, the deterministic config hash, and the integrity audit -- lives in
++# results/experiment_5852_three_family_paired_embeddings.json (637 KB, still tracked) and
++# results/experiment_5853_paired_embedding_integrity_audit.json. Only bulk float data left git.
++results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+diff --git a/ops/large-artifact-exclusions.md b/ops/large-artifact-exclusions.md
+new file mode 100644
+index 0000000000..af39061ac8
+--- /dev/null
++++ b/ops/large-artifact-exclusions.md
+@@ -0,0 +1,121 @@
++# Large-Artifact Exclusions — files on disk but not in git
++
++Durable record of artifacts deliberately removed from git history because they exceed a hosting
++limit. **Append only. Never delete an entry** — an entry that disappears is indistinguishable
++from a file nobody ever noticed was missing, which is the exact failure this file exists to
++prevent.
++
++Every entry must state: what was removed, why, where the substantive record survives, how to
++verify the on-disk copy is intact, and how to regenerate it from scratch.
++
++---
++
++## `results/experiment_5852_three_family_paired_embeddings.rows.jsonl`
++
++| | |
++|---|---|
++| Removed | 2026-07-31 |
++| Size | 461,137,495 bytes (439.8 MiB) |
++| Reason | Exceeds GitHub's hard 100 MB per-file limit |
++| Method | `git filter-repo --path <path> --invert-paths --prune-empty never` |
++| Introduced by | `300a3a373` (2026-07-23) "[conductor] Current-SOTA causal-pair embedding extraction across three model families" |
++| Pre-rewrite backup | tag `pre-filter-repo-backup-20260731` → `ebce169de` |
++| On disk? | **Yes** — untracked, ignored via `.gitignore` |
++
++### Why this had to happen
++
++The blob blocked **every** push to the canonical GitHub mirror from 2026-07-23 onward. GitHub's
++pre-receive hook rejects the whole push if any commit in it carries a >100 MB file, so **411
++commits sat unpushed for 8 days** while gitea stayed current — the two mirrors silently diverged,
++which defeats the point of mirroring (CLAUDE.md "Decentralization-Respecting Design Constraints"
++rule 3: the canonical URL is the one users mirror *from*).
++
++Nothing about this was visible as a failure. `git push origin main` is a multi-URL push (gitea +
++github); gitea accepted, github rejected, and the combined output looked like a single failure
++against one remote. It was only found by checking `git ls-remote` per URL.
++
++### This is NOT a never-prune violation
++
++Only bulk float data left version control. The substantive record is intact and still tracked:
++
++- `results/experiment_5852_three_family_paired_embeddings.json` (637 KB) — claims, methodology,
++  `model_specs`, `preconditions_checked`, `honest_verdict`, `deterministic_embedding_config`
++  (with `config_hash`), and a `row_file_receipt` carrying **per-row sha256 hashes for all 1,944
++  rows** keyed by `candidate_id|model`, plus `row_hash_root` and `row_count`.
++- `results/experiment_5853_paired_embedding_integrity_audit.json` — the independent integrity
++  audit of this very corpus.
++
++So every row remains individually attested, and the corpus is regenerable from a deterministic
++config. What was lost from git is the float payload those hashes describe — not the evidence.
++
++### Verify the on-disk copy is intact
++
++Checks the data itself, not merely that a file exists. Recomputes each row's hash with the
++experiment's own `source_row_hash` and compares against the recorded value:
++
++```bash
++.venv/bin/python - <<'PY'
++import json, sys
++sys.path.insert(0, "python")
++from carnot.experiment_5852_three_family_paired_embeddings import source_row_hash
++bad = n = 0
++with open("results/experiment_5852_three_family_paired_embeddings.rows.jsonl") as fh:
++    for line in fh:
++        if not line.strip():
++            continue
++        row = json.loads(line); n += 1
++        if row.get("row_hash") != source_row_hash(row):
++            bad += 1
++print(f"rows={n} mismatches={bad}", "INTACT" if bad == 0 else "CORRUPT")
++PY
++```
++
++Verified 2026-07-31 immediately after the rewrite: **1,944 rows, 0 mismatches.** The restored
++file is byte-identical to the original blob `b224cfa0733d517bdb510afc473bbae0d46e4be5`
++(sha256 `a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23`).
++
++Note the file's plain sha256 does **not** equal the receipt's `receipt_hash` or `row_hash_root`
++— those are derived (a hash over the receipt structure, and a root over per-row hashes), not
++file digests. Comparing against them directly will look like corruption and is not.
++
++### Recover it
++
++From the backup tag, if the on-disk copy is ever lost:
++
++```bash
++git show pre-filter-repo-backup-20260731:results/experiment_5852_three_family_paired_embeddings.rows.jsonl \
++  > results/experiment_5852_three_family_paired_embeddings.rows.jsonl
++```
++
++That tag exists **only in the local repo and on gitea** — it is not pushed to GitHub (pushing it
++would re-introduce the blob and re-block the mirror). If the local repo and gitea are both lost,
++regenerate instead: `python/carnot/experiment_5852_three_family_paired_embeddings.py`, whose
++`deterministic_embedding_config` (`config_hash`
++`sha256:74bebba9e9291c4c0e34f965ed55c4d82661367f63bf4a211f8f11926695cd66`) pins the backend,
++`n_ctx`, batch sizes, precision and padding vocabulary.
++
++### Known consequence: a fresh clone does not have this file
++
++Three tracked code paths reference it by name and will not find it in a clean checkout:
++
++- `python/carnot/experiment_5852_three_family_paired_embeddings.py:47` (`ROW_FILE_RELATIVE_PATH`)
++- `python/carnot/experiment_5862_v521_capstone_reconciliation.py:123`
++- `tests/python/test_experiment_5853_paired_embedding_integrity_audit.py:387`
++
++This matters most for the **G2 independent-reproducer gate**, which runs from a clean clone. Any
++of these paths that a reproducer must exercise needs either a regeneration step or a skip-with-
++reason. Recorded here rather than silently discovered later; not fixed as part of the rewrite,
++because changing test behaviour and a history rewrite in one motion would make each harder to
++review.
++
++### If this recurs
++
++Prefer **Git LFS** (`git lfs migrate import --above=100MB`) over another removal — it keeps large
++artifacts under version control instead of trading them for a `.gitignore` line. It was not used
++here because it needs LFS support and quota on *both* the GitHub and gitea remotes, and the
++immediate problem was 411 stranded commits.
++
++Blobs >100 MB exist elsewhere in this repo (~19 GB, mostly `models/openai_privacy_filter/**`) but
++are **not reachable from `main`** — they live on feature branches and the
++`pre-filter-repo-backup-20260424` tag. They do not block a `main` push and were left untouched.
++Pushing any of those branches to GitHub **will** fail for the same reason.
+-- 
+2.55.0
+

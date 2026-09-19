@@ -1,0 +1,65 @@
+From f4e1f659e06300f991b027b960fcb01e9cc2b58e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 11:33:42 -0400
+Subject: [PATCH 06806/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...eriment_5569_causal_memory_policy_tournament.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 97de201c4a..60eb0c5b2d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-07-11T15:18:00Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-07-11T15:33:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b1abfd5fe7..2d8b00a499 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10765,3 +10765,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-11 14:15 UTC | Exact ASP FSM solve-versus-verify near-miss corpus | OK | 86 passed, 1 warning in 10.66s |
+ | 2026-07-11 14:59 UTC | Gated local SOTA solve-versus-verify asymmetry pan | OK | Deliverable already exists in repo |
+ | 2026-07-11 15:16 UTC | Gated generator-stratified verifier co-evolution t | OK | 86 passed, 1 warning in 11.88s |
++| 2026-07-11 15:31 UTC | Causal SelfMem policy tournament on multi-session  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4222dd1405..040c5a2d62 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 8, "phase": "iteration_start", "started_at": "2026-07-11T15:18:00Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 9, "phase": "iteration_start", "started_at": "2026-07-11T15:33:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5569_causal_memory_policy_tournament.json b/results/experiment_5569_causal_memory_policy_tournament.json
+index acad0bc701..cff6b71923 100644
+--- a/results/experiment_5569_causal_memory_policy_tournament.json
++++ b/results/experiment_5569_causal_memory_policy_tournament.json
+@@ -68499,5 +68499,13 @@
+     "write_amplification": 1.0
+   },
+   "weights_mutated": false,
+-  "write_amplification": 1.0
+-}
++  "write_amplification": 1.0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "backward_retention_delta=0.3333333334 and forward_transfer_delta=0.3333333334 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,23 @@
+From f652fdfc9af88b896782ce089ea65e7264095096 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 16:15:29 -0400
+Subject: [PATCH 07839/11362] [conductor] In-process docs for Gated on Exp5896
+ fixture: three-family translate-run-inspect-repair A/B
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 82815c7f74..d965389bc0 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11790,3 +11790,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-24: Gated on Exp5893 fixture: one-to-one atom-grounding acquisition A/B (✅ Complete) — honest_verdict=complete_positive: one_to_one_grounding_beats_learned_controls_zero_unsafe_accepts; results/experiment_5894_one_to_one_grounding_ab.json
+ - 2026-07-24: Gated on Exp5894 mechanism: prospective shortcut-safe continuous self-learning (✅ Complete) — honest_verdict=complete_null: shortcut_safe_csl_not_promotion_eligible; results/experiment_5895_shortcut_safe_continuous_self_learning.json
+ - 2026-07-24: Engine-neutral typed ConstraintIR fixture with exact certificates (✅ Complete) — honest_verdict=ready: deterministic typed ConstraintIR fixture replays with Python/Z3 agreement; results/experiment_5896_typed_constraint_ir_fixture.json
++- 2026-07-24: Gated on Exp5896 fixture: three-family translate-run-inspect-repair A/B (⚠️ Blocked) — honest_verdict=blocked_precondition: exp5896_gate_replayed; results/experiment_5897_sota_constraint_ir_repair_ab.json
+-- 
+2.55.0
+

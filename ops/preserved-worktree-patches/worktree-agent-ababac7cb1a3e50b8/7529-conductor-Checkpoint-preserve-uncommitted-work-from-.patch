@@ -1,0 +1,43 @@
+From 07c803d590dfe1a4b769f7b41c6633f0db9c2110 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 13:19:26 -0400
+Subject: [PATCH 07529/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9dc40215da..13455fb079 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 254, "phase": "iteration_start", "last_beat": "2026-07-22T16:54:54Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 255, "phase": "iteration_start", "last_beat": "2026-07-22T17:19:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f80ce54b5d..658f4768e8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14124,3 +14124,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 16:17 UTC | Activation REFUSED: milestone 2026.07.517 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+ | 2026-07-22 16:19 UTC | Milestone 2026.07.517 activated | OK | 4 tasks queued |
+ | 2026-07-22 16:52 UTC | Transition terminal .516 evidence and allocate col | OK | 88 passed, 1 warning in 11.27s |
++| 2026-07-22 17:17 UTC | Time-windowed post-V517 literature freshness recei | OK | 88 passed, 2 warnings in 11.10s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e7b04c5a98..bdb0b556b4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 254, "phase": "iteration_start", "started_at": "2026-07-22T16:54:54Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 255, "phase": "iteration_start", "started_at": "2026-07-22T17:19:22Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

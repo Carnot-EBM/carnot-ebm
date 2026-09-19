@@ -1,0 +1,643 @@
+From 21767c22070568bb21fcd787c7214debccbd0c58 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 06:34:04 -0400
+Subject: [PATCH 10273/11362] Correct the claim enforcement: it never fired,
+ and the deadlock was still live
+
+An adversarial review of yesterday's REQ-INFRA-6820 commit found its central
+claim false in the deployed state. Both halves confirmed by reproduction before
+touching anything.
+
+THE FEATURE WAS INERT. `check()` identifies the committing session solely by
+`CARNOT_AGENT_SCOPE_ID`. A repo-wide grep found exactly one reference to that
+variable: its own definition. Nothing exported it -- not the conductor, not
+`declare()`'s output, not the docstring -- so every committer read as
+unidentified and cross-session enforcement never fired for anyone. The earlier
+commit appeared to work only because I exported the variable by hand while
+testing it.
+
+THE DEADLOCK WAS STILL LIVE. The older out-of-scope branch read
+`committer is None or run_id == committer`, so an unattributable commit was
+judged by EVERY declaration. Reproduced exactly, following the tool's own
+documented usage: agent A declares a.py, agent B declares b.py, B stages only
+its own b.py, refused by A's record. The comment in `check()` claimed
+per-session judging had removed this; the None fall-through kept it, and
+`test_two_scopes_are_both_enforced` locked it in as a requirement. That test now
+asserts the corrected policy and explains what it used to demand.
+
+So the two policies were paired the worst possible way: maximal freeze, zero
+enforcement. Corrections:
+
+- `declare()` prints `export CARNOT_AGENT_SCOPE_ID=<id>`.
+- An unattributable commit is judged only when attribution is unambiguous --
+  exactly one live declaration. Honest cost: with several sessions and no
+  exported id, out-of-scope checking is off, which the export line mitigates.
+- Staleness now applies to the out-of-scope branch. It did not, so the refusal
+  text promising that a claim older than 4h "stops blocking on its own" was
+  false for the branch that actually fired -- a crashed agent locked everyone
+  out permanently.
+
+TIMESTAMPS: ONE PARSE, ONE CLOCK. Ordering keyed on the raw string while expiry
+parsed, so they disagreed three ways. `"!bad-timestamp"` was unparseable, hence
+never stale, while `"!"` sorts below every ISO stamp -- one corrupt file owned
+its patterns forever, under a comment claiming an unusable timestamp loses every
+comparison. `"10:00:00Z"` vs `"10:00:00.500000+00:00"`: `.` < `Z`, so the later
+stamp sorted older. `"08:00:00-05:00"` is 13:00Z and sorted before `"09:00:00Z"`.
+Only the first is reachable while `declare()` is the sole writer, and a
+comparison right only under that monopoly is not right.
+
+`*.py` CLAIMED THE WHOLE REPOSITORY. fnmatch's `*` crosses `/`, so a one-line
+`--scope '*.py'` owned every Python file in the tree against every other session
+for four hours. A wildcard-leading pattern with no directory separator is now
+advisory, like `*`. `scripts/*.py` stays enforceable.
+
+GUARD 1: EQUALITY, NOT CONTAINMENT. `is_relative_to` passed a package at
+`<root>/.claude/worktrees/agent-abc/python/carnot` -- the real layout here, so a
+leaked worktree PYTHONPATH in a main-checkout run went undetected -- and nested
+repo clones, which this repo demonstrably grows. It now requires exactly
+`<tests_root>/python/carnot`. `tests/integration/conftest.py` was missing the
+guard entirely although `testpaths` covers it and `test_install.py` imports
+carnot.
+
+TESTS THAT NOW BITE. The review proved five mutations left the suite green:
+`check()`'s enforcement call replaced by `{}`, `declare()`'s warning call
+replaced by `{}`, the age key destroyed (the run ids happened to sort with age,
+so the ordering property was decorative), the universal charset shrunk to `"*"`,
+and the conftest call replaced by `pass`. Every rule was tested through a pure
+function and no rule was tested through the entry point production uses -- the
+exp5879 hollow-fix shape again. All five are RED now, via tests that build a
+real git repo and call `check()` and `declare()`. Also added: an autouse fixture
+clearing the ambient scope id, because three shipped tests failed when the
+variable was exported, which is the state any agent using this tool is in.
+
+Declaration-time warning also missed glob-vs-glob overlap, including two
+sessions declaring the identical glob -- the likeliest collision of all.
+
+95 tests green across the four affected files. Live check verified both ways:
+unidentified (how the conductor commits) exits 0, so nothing is frozen;
+identified refuses correctly. Conductor still active throughout.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+
+Two further catches while landing this, both by the project's own guards:
+`qa-layer-audit-scope-check` refused until `worktree_import_guard.py` was
+classified (it is now a GUARD_TARGET, with the reason that a silent non-firing
+there turns every proof green against a file that was never loaded), and three
+tests in `test_harness_integrity_lint.py` failed because my own shell had the
+scope id exported -- the same ambient-environment sensitivity the review found,
+in a second file. Both fixed here.
+---
+ .../carnot/testing/worktree_import_guard.py   |  12 +-
+ scripts/harness_integrity_lint.py             | 120 +++++++++--
+ scripts/qa_layer_authenticity_audit.py        |   8 +
+ tests/integration/conftest.py                 |  15 ++
+ .../python/test_harness_claim_enforcement.py  | 190 ++++++++++++++++++
+ tests/python/test_harness_integrity_lint.py   |  35 +++-
+ tests/python/test_worktree_import_guard.py    |  39 ++++
+ 7 files changed, 396 insertions(+), 23 deletions(-)
+
+diff --git a/python/carnot/testing/worktree_import_guard.py b/python/carnot/testing/worktree_import_guard.py
+index 81cacff17d..b272aeffdc 100644
+--- a/python/carnot/testing/worktree_import_guard.py
++++ b/python/carnot/testing/worktree_import_guard.py
+@@ -43,7 +43,17 @@ def foreign_import_reason(tests_root: Path, package_dir: Path) -> str | None:
+ 
+     tests_root = tests_root.resolve()
+     package_dir = package_dir.resolve()
+-    if package_dir.is_relative_to(tests_root):
++    # EQUALITY, NOT CONTAINMENT (corrected 2026-08-29). Containment passed two real cases it
++    # should have caught, because on this machine worktrees and clones live UNDER the main root:
++    #
++    #   tests /home/x/carnot  +  package /home/x/carnot/.claude/worktrees/agent-abc/python/carnot
++    #   tests /home/x/carnot  +  package /home/x/carnot/output/carnot-clone/python/carnot
++    #
++    # The first is a worktree PYTHONPATH leaking into a main-checkout run -- an agent shell's
++    # export outliving its session -- which is this trap with the trees swapped. The second is
++    # not hypothetical either: a scorer once swept two full repo clones nested inside the root.
++    # The guard knows exactly where the package belongs, so it should say so.
++    if package_dir == tests_root / "python" / "carnot":
+         return None
+     return (
+         f"tests were loaded from {tests_root}\n"
+diff --git a/scripts/harness_integrity_lint.py b/scripts/harness_integrity_lint.py
+index 983290b529..a6e9d5b7a0 100644
+--- a/scripts/harness_integrity_lint.py
++++ b/scripts/harness_integrity_lint.py
+@@ -256,10 +256,6 @@ def _matches(path: str, patterns: list[str]) -> bool:
+ #: forever -- so without expiry the first crashed session would permanently lock its paths.
+ CLAIM_STALE_AFTER = timedelta(hours=4)
+ 
+-#: Sorts after every real ISO timestamp, so a declaration with no usable `declared_at` loses
+-#: every wound-wait comparison instead of silently winning them.
+-_YOUNGEST = "~"
+-
+ 
+ def is_universal_pattern(pattern: str) -> bool:
+     """Does this pattern claim the whole repository rather than a part of it?
+@@ -277,25 +273,69 @@ def is_universal_pattern(pattern: str) -> bool:
+     stripped = pattern.strip()
+     if not stripped:
+         return True
+-    return all(ch in "*?/[]!-" for ch in stripped)
++    if all(ch in "*?/[]!-" for ch in stripped):
++        return True
++    # A BARE EXTENSION CLAIMS THE WHOLE REPOSITORY (2026-08-29). `fnmatch`'s `*` crosses `/`,
++    # so `--scope '*.py'` is a one-line declaration that owns every Python file in the tree --
++    # `python/carnot/paths.py`, `tests/python/conftest.py`, the conductor itself -- against
++    # every other session for the whole staleness window. It "names a real path segment" only
++    # in the sense of an extension, so the first version classified it enforceable.
++    #
++    # The concept is "claims the whole repository in practice", and a pattern with no directory
++    # separator that begins with a wildcard satisfies it. `scripts/*.py` is unaffected: it names
++    # a directory and stays enforceable.
++    if "/" not in stripped and stripped.startswith(("*", "?")):
++        return True
++    return False
+ 
+ 
+-def _claim_age_key(record: dict) -> str:
+-    value = record.get("declared_at")
+-    return value if isinstance(value, str) and value else _YOUNGEST
++def claim_instant(record: dict) -> datetime | None:
++    """When this declaration was made, as an aware UTC datetime. None means UNUSABLE.
+ 
++    ONE PARSE, ONE CLOCK. The first version keyed ordering on the RAW string and expiry on a
++    parsed value, so the two disagreed in three ways an adversarial review demonstrated:
++
++      * `"!bad-timestamp"` is unparseable, so expiry treated it as fresh forever, while `"!"`
++        (0x21) sorts below every real ISO stamp -- one corrupt file owned its patterns
++        permanently. The comment claimed an unusable timestamp "loses every comparison"; it
++        won them all. A pattern list narrower than the concept it named.
++      * `"...10:00:00Z"` versus `"...10:00:00.500000+00:00"`: `.` (0x2E) < `Z` (0x5A), so the
++        stamp half a second LATER sorted older.
++      * `"08:00:00-05:00"` is 13:00Z and sorted before `"09:00:00Z"`.
++
++    Only the first is reachable today, because `declare()` is the sole writer and always emits
++    `+00:00` with microseconds. The other two are one hand-edit or one second writer away, and
++    a comparison that is right only while one function has a monopoly on the format is not
++    right.
++    """
+ 
+-def _claim_is_stale(record: dict, now: datetime) -> bool:
+     raw = record.get("declared_at")
+     if not isinstance(raw, str) or not raw:
+-        return False  # undated, not expired -- it loses on age instead
++        return None
+     try:
+-        declared = datetime.fromisoformat(raw)
++        parsed = datetime.fromisoformat(raw)
+     except ValueError:
+-        return False
+-    if declared.tzinfo is None:
+-        declared = declared.replace(tzinfo=UTC)
+-    return (now - declared) > CLAIM_STALE_AFTER
++        return None
++    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
++
++
++def _claim_age_key(record: dict) -> tuple[int, datetime]:
++    """Sortable age. An unusable timestamp sorts after every real one, so it never wins."""
++    instant = claim_instant(record)
++    return (1, datetime.max.replace(tzinfo=UTC)) if instant is None else (0, instant)
++
++
++def _claim_is_stale(record: dict, now: datetime) -> bool:
++    """Is this claim abandoned? An UNUSABLE timestamp counts as stale.
++
++    Treating an undated claim as fresh-forever was the other half of the corrupt-record bug:
++    it could neither be aged out nor out-ranked. A claim that cannot say when it was made
++    cannot be trusted to hold a path against a claim that can.
++    """
++    instant = claim_instant(record)
++    if instant is None:
++        return True
++    return (now - instant) > CLAIM_STALE_AFTER
+ 
+ 
+ def claim_owner(path: str, records: list[dict], now: datetime) -> str | None:
+@@ -378,8 +418,17 @@ def overlapping_older_claims(
+             ]
+             if not theirs:
+                 continue
+-            overlap = any(_matches(lit, [pattern]) for lit in _literals(theirs)) or any(
+-                _matches(lit, theirs) for lit in _literals([pattern])
++            # Literal probes cannot see glob-vs-glob overlap, and two sessions declaring the
++            # SAME glob is the single most likely collision there is -- it produced no warning
++            # at all, so the younger session learned at commit time, after the work, which is
++            # the exact cost this warning exists to avoid. Exact equality and mutual matching
++            # cover the common cases; full glob intersection is undecidable in general and the
++            # commit-time refusal remains the backstop.
++            overlap = (
++                pattern in theirs
++                or any(_matches(lit, [pattern]) for lit in _literals(theirs))
++                or any(_matches(lit, theirs) for lit in _literals([pattern]))
++                or any(fnmatch.fnmatch(q, pattern) or fnmatch.fnmatch(pattern, q) for q in theirs)
+             )
+             if overlap:
+                 found[pattern] = owner
+@@ -502,6 +551,14 @@ def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "dec
+     for path in sorted(unseal):
+         print(f"  unseal  {path}")
+     print(f"  sealed  {len(seals)} harness file(s), anchored to {anchor}")
++    # EXPORT THIS OR NOTHING WORKS. `check()` identifies the committing session solely by this
++    # variable. Until 2026-08-29 nothing in the repository ever set it -- a grep found exactly
++    # one reference, its own definition -- so every committer read as unidentified: cross-session
++    # enforcement never fired for anyone, while the out-of-scope branch judged the unidentified
++    # committer by EVERY declaration and refused it. The feature was dead and the freeze was
++    # live, which is the worst pairing of the two policies.
++    print("\nExport this so your commits are recognised as yours:")
++    print(f"  export {RUN_ID_ENV}={run_id}")
+     print(
+         f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}"
+     )
+@@ -537,6 +594,11 @@ def check() -> int:
+         if record:
+             explicitly_unsealed.update(record.get("unsealed") or [])
+ 
++    judged_at = datetime.now(UTC)
++    live_records = [
++        r for r in (_load_scope(s) for s in scopes) if r and not _claim_is_stale(r, judged_at)
++    ]
++
+     failures: list[str] = []
+     for scope_path in scopes:
+         record = _load_scope(scope_path)
+@@ -573,8 +635,28 @@ def check() -> int:
+         # When the committing session cannot be identified, EVERY declaration judges, which is
+         # the old behaviour and the strict direction: an unidentified committer is held to all
+         # of them rather than none.
++        # WHO JUDGES AN UNIDENTIFIED COMMITTER (corrected 2026-08-29). This read
++        # `committer is None or run_id == committer` -- every declaration judged every
++        # unattributable commit. Combined with nothing ever setting the variable, that made the
++        # 2026-08-29 deadlock still live in the deployed state: agent A declares a.py, agent B
++        # declares b.py, B stages only its own b.py, and A's record refuses it. Reproduced
++        # exactly, following the tool's own documented usage.
++        #
++        # An unattributable commit cannot be checked against "did YOU stage something you did
++        # not declare" -- there is no YOU. Guessing it belongs to all of them freezes the repo.
++        # The one case where attribution is unambiguous is a single live declaration, so that
++        # is the only case where an unidentified committer is judged.
++        #
++        # STALENESS APPLIES HERE TOO. It did not, and the refusal text promising that a claim
++        # older than the window "stops blocking on its own" was false for the branch that
++        # actually fired: a crashed agent locked every other session out permanently.
+         committer = os.environ.get(RUN_ID_ENV)
+-        judges_scope = committer is None or run_id == committer
++        if _claim_is_stale(record, judged_at):
++            judges_scope = False
++        elif committer is not None:
++            judges_scope = run_id == committer
++        else:
++            judges_scope = len(live_records) == 1
+         out_of_scope = [p for p in staged if not _matches(p, patterns)] if judges_scope else []
+         if out_of_scope:
+             failures.append(
+@@ -637,7 +719,7 @@ def check() -> int:
+     # claims resolve the same way from either side instead of deadlocking.
+     committer_id = os.environ.get(RUN_ID_ENV)
+     records = [r for r in (_load_scope(s) for s in scopes) if r]
+-    contested = contested_paths(staged, records, committer_id, datetime.now(UTC))
++    contested = contested_paths(staged, records, committer_id, judged_at)
+     if contested:
+         by_owner: dict[str, list[str]] = {}
+         for path, owner in sorted(contested.items()):
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index 306f805d07..57f9b9f707 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -162,6 +162,14 @@ WHOLE_FILE_TARGETS = (
+ # workflow, and an audit that hard-fails on a concurrent rename is an audit nobody runs.
+ # ---------------------------------------------------------------------------------------
+ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
++    (
++        PROJECT_ROOT / "python" / "carnot" / "testing" / "worktree_import_guard.py",
++        "decides whether a test run is measuring the checkout it claims to measure; per-agent "
++        "worktrees make `import carnot` resolve to the MAIN tree unless PYTHONPATH is pinned, "
++        "so a silent non-firing here turns every assertion and every mutation proof GREEN "
++        "while the edited file was never loaded -- a guard that is trusted and blind, which "
++        "is worse than the shared-index failure worktrees were adopted to fix",
++    ),
+     (
+         PROJECT_ROOT / "scripts" / "capstone_milestone_rot_lint.py",
+         "decides whether a capstone module will go stale and abort the test suite -- the "
+diff --git a/tests/integration/conftest.py b/tests/integration/conftest.py
+index 9590b85c60..d2e26540ac 100644
+--- a/tests/integration/conftest.py
++++ b/tests/integration/conftest.py
+@@ -9,3 +9,18 @@ import jax
+ 
+ # Force CPU for reproducibility (REQ-VERIFY-001).
+ jax.config.update("jax_platform_name", "cpu")
++
++
++# The same foreign-checkout refusal the python suite carries (REQ-INFRA-6810). `testpaths`
++# includes this directory and `test_install.py` imports carnot, so `pytest tests/integration`
++# from an unpinned worktree was exactly "tests and package from different checkouts" and was
++# not refused -- the guard was wired into one of the two conftests that needed it.
++from pathlib import Path as _Path  # noqa: E402
++
++import carnot as _carnot  # noqa: E402
++
++from carnot.testing.worktree_import_guard import check as _check_worktree_import  # noqa: E402
++
++_check_worktree_import(
++    _Path(__file__).resolve().parents[2], _Path(_carnot.__file__).resolve().parent
++)
+diff --git a/tests/python/test_harness_claim_enforcement.py b/tests/python/test_harness_claim_enforcement.py
+index 98a7c9bd81..f6857a4654 100644
+--- a/tests/python/test_harness_claim_enforcement.py
++++ b/tests/python/test_harness_claim_enforcement.py
+@@ -161,3 +161,193 @@ def test_disjoint_scopes_produce_no_warning() -> None:
+     mine = rec("beta", 1, "docs/*")
+     older = rec("alpha", 2, "scripts/target.py")
+     assert overlapping_older_claims(["docs/*"], mine, [older], NOW) == {}
++
++
++# --- Tests that BITE at the wiring, added 2026-08-29 after an adversarial review -------------
++# Every test above exercises a PURE FUNCTION. An adversarial review replaced the enforcement
++# call inside `check()` with `contested = {}`, and the warning call inside `declare()` with
++# `wounds = {}`, and the suite stayed GREEN both times: the feature itself was untested and only
++# its helpers were covered. That is the same shape as the exp5879 hollow fix -- verifying
++# through a path production never takes. These go through the real entry points.
++
++import json  # noqa: E402
++import os  # noqa: E402
++import subprocess  # noqa: E402
++
++import pytest  # noqa: E402
++
++import harness_integrity_lint as guard  # noqa: E402
++
++
++@pytest.fixture(autouse=True)
++def _no_ambient_scope_id(monkeypatch: pytest.MonkeyPatch) -> None:
++    """The suite must not inherit the developer's own session id.
++
++    Running the harness tests with `CARNOT_AGENT_SCOPE_ID` exported -- the state any agent that
++    actually used this tool is in -- failed three shipped tests. A test whose verdict depends on
++    the operator's shell is not measuring the code.
++    """
++    monkeypatch.delenv(guard.RUN_ID_ENV, raising=False)
++
++
++@pytest.fixture
++def repo(tmp_path, monkeypatch: pytest.MonkeyPatch):
++    """A real git repo with the guard's module-level paths pointed at it."""
++    subprocess.run(["git", "init", "-q", "."], cwd=tmp_path, check=True)
++    for key, value in (("user.email", "t@t"), ("user.name", "t")):
++        subprocess.run(["git", "config", key, value], cwd=tmp_path, check=True)
++    (tmp_path / "a.py").write_text("x\n")
++    (tmp_path / "b.py").write_text("y\n")
++    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
++    subprocess.run(["git", "commit", "-qm", "base"], cwd=tmp_path, check=True)
++    monkeypatch.chdir(tmp_path)
++    monkeypatch.setattr(guard, "REPO", tmp_path)
++    monkeypatch.setattr(guard, "SCOPES", tmp_path / "ops" / ".agent_scopes")
++    return tmp_path
++
++
++def _declare(run_id: str, *scope: str) -> None:
++    guard.declare(list(scope), [], run_id)
++
++
++def _stage(repo, name: str) -> None:
++    (repo / name).write_text((repo / name).read_text() + "edit\n")
++    subprocess.run(["git", "add", name], cwd=repo, check=True)
++
++
++def test_check_refuses_a_path_another_session_owns(repo, monkeypatch, capsys) -> None:
++    """The enforcement branch is wired into `check()`, not merely implemented beside it."""
++    _declare("alpha", "a.py")
++    _declare("beta", "b.py")
++    _stage(repo, "a.py")
++    monkeypatch.setenv(guard.RUN_ID_ENV, "beta")
++    assert guard.check() == 1
++    assert "claimed by alpha" in capsys.readouterr().out
++
++
++def test_check_permits_a_session_committing_its_own_declared_path(repo, monkeypatch) -> None:
++    _declare("alpha", "a.py")
++    _declare("beta", "b.py")
++    _stage(repo, "b.py")
++    monkeypatch.setenv(guard.RUN_ID_ENV, "beta")
++    assert guard.check() == 0
++
++
++def test_two_narrow_scopes_do_not_deadlock_through_the_real_entry_point(repo) -> None:
++    """The 2026-08-29 deadlock, end to end, with NO environment variable set.
++
++    This is how the tool is actually used -- nothing in the repository set the id until the
++    same day this test was written -- and in that state every declaration judged every commit,
++    so B staging only its own file was refused by A's record. The pure-function test of the
++    same property passed throughout, because it never asked who was judging.
++    """
++    _declare("agent-a", "a.py")
++    _declare("agent-b", "b.py")
++    _stage(repo, "b.py")
++    assert guard.check() == 0
++
++
++def test_a_stale_declaration_stops_blocking_through_the_real_entry_point(repo) -> None:
++    """The refusal text promised this and the branch that fired did not honour it."""
++    _declare("ghost", "a.py")
++    path = guard.SCOPES / "ghost.scope.json"
++    record = json.loads(path.read_text())
++    record["declared_at"] = (datetime.now(UTC) - CLAIM_STALE_AFTER - timedelta(hours=1)).isoformat()
++    path.write_text(json.dumps(record))
++    _stage(repo, "b.py")
++    assert guard.check() == 0
++
++
++def test_a_lone_declaration_still_judges_an_unidentified_commit(repo) -> None:
++    """Attribution is unambiguous with one declaration, so the guard must not go silent."""
++    _declare("solo", "a.py")
++    _stage(repo, "b.py")
++    assert guard.check() == 1
++
++
++def test_declare_warns_about_an_older_overlapping_claim(repo, capsys) -> None:
++    """The declaration-time warning is wired into `declare()`."""
++    _declare("alpha", "scripts/target.py")
++    capsys.readouterr()
++    _declare("beta", "scripts/*")
++    assert "WOUNDED" in capsys.readouterr().out
++
++
++def test_declare_tells_the_agent_to_export_the_id(repo, capsys) -> None:
++    """Without this line nothing ever identifies a committer and the feature is inert.
++
++    Before 2026-08-29 a repo-wide grep for the variable found exactly one hit: its own
++    definition. Enforcement never fired for anyone.
++    """
++    _declare("alpha", "a.py")
++    assert f"export {guard.RUN_ID_ENV}=alpha" in capsys.readouterr().out
++
++
++# --- ordering tests that bite (run ids chosen to sort AGAINST age) ---------------------------
++# The originals used ids where the run-id tie-break happened to agree with age ("older" < "young"),
++# so destroying the age key entirely left them green.
++
++
++def test_age_beats_run_id_when_the_two_disagree() -> None:
++    older = rec("zzz-old", 3, "x.py")
++    younger = rec("aaa-new", 1, "x.py")
++    assert claim_owner("x.py", [younger, older], NOW) == "zzz-old"
++
++
++def test_a_corrupt_timestamp_never_wins_and_is_treated_as_abandoned() -> None:
++    """`"!"` sorts below every ISO stamp, and an unparseable value was never expiring.
++
++    One corrupt or hostile scope file owned its patterns permanently, while the comment beside
++    the code claimed an unusable timestamp loses every comparison.
++    """
++    corrupt = {"run_id": "corrupt", "declared_at": "!bad-timestamp", "scope": ["x.py"]}
++    assert claim_owner("x.py", [corrupt, rec("honest", 1, "x.py")], NOW) == "honest"
++    assert contested_paths(["x.py"], [corrupt], "anyone", NOW) == {}
++
++
++def test_lexical_order_does_not_decide_age() -> None:
++    """`.` < `Z`, so a half-second-later stamp sorted OLDER across two timestamp spellings."""
++    early = {"run_id": "early", "declared_at": "2026-08-29T10:00:00Z", "scope": ["x.py"]}
++    late = {"run_id": "late", "declared_at": "2026-08-29T10:00:00.500000+00:00", "scope": ["x.py"]}
++    assert claim_owner("x.py", [early, late], NOW) == "early"
++
++
++def test_a_non_utc_offset_is_compared_as_an_instant() -> None:
++    utc = {"run_id": "utc", "declared_at": "2026-08-29T09:00:00+00:00", "scope": ["x.py"]}
++    offset = {"run_id": "offset", "declared_at": "2026-08-29T08:00:00-05:00", "scope": ["x.py"]}
++    assert claim_owner("x.py", [utc, offset], NOW) == "utc"
++
++
++# --- the universal-pattern charset, which was entirely untested ------------------------------
++
++
++@pytest.mark.parametrize("pattern", ["*", "**", "*/*", "?", "-", "", "   "])
++def test_patterns_that_claim_everything_are_advisory(pattern: str) -> None:
++    assert is_universal_pattern(pattern)
++
++
++def test_a_bare_extension_claims_the_whole_repository() -> None:
++    """`fnmatch`'s `*` crosses `/`, so `*.py` owned every Python file in the tree."""
++    assert is_universal_pattern("*.py")
++    assert (
++        contested_paths(
++            ["python/carnot/paths.py", "tests/python/conftest.py"],
++            [rec("grabber", 1, "*.py")],
++            "stranger",
++            NOW,
++        )
++        == {}
++    )
++
++
++# `[a-z]` matches single-character names only, so it claims a place rather than the tree.
++@pytest.mark.parametrize("pattern", ["scripts/*.py", "scripts/*", "a.py", "docs/notes", "[a-z]"])
++def test_a_pattern_naming_a_place_stays_enforceable(pattern: str) -> None:
++    assert not is_universal_pattern(pattern)
++
++
++def test_identical_globs_warn_at_declaration_time() -> None:
++    """Two sessions declaring the same glob is the likeliest collision and warned about nothing."""
++    mine = rec("beta", 1, "scripts/*")
++    older = rec("alpha", 2, "scripts/*")
++    assert overlapping_older_claims(["scripts/*"], mine, [older], NOW) == {"scripts/*": "alpha"}
+diff --git a/tests/python/test_harness_integrity_lint.py b/tests/python/test_harness_integrity_lint.py
+index d136f8d347..5925245bba 100644
+--- a/tests/python/test_harness_integrity_lint.py
++++ b/tests/python/test_harness_integrity_lint.py
+@@ -223,12 +223,41 @@ def test_list_reports_active_and_unreadable_scopes(guard, capsys):
+     assert "UNREADABLE" in capsys.readouterr().out
+ 
+ 
+-def test_two_scopes_are_both_enforced(guard, monkeypatch, capsys):
+-    """Concurrent sessions each keep their own guard; neither relaxes the other."""
++@pytest.fixture(autouse=True)
++def _no_ambient_scope_id(monkeypatch):
++    """This suite must not inherit the developer's own session id.
++
++    Three tests here fail when `CARNOT_AGENT_SCOPE_ID` is exported -- the state any agent that
++    actually used this tool is in, and the state the operator shell was in while fixing it. A
++    test whose verdict depends on the ambient environment is not measuring the code.
++    """
++    monkeypatch.delenv(_load_module().RUN_ID_ENV, raising=False)
++
++
++def test_two_scopes_do_not_refuse_an_unattributable_commit(guard, monkeypatch, capsys):
++    """CORRECTED 2026-08-29. This test previously asserted the DEADLOCK as a requirement.
++
++    It declared two scopes, staged a path belonging to the first, and required the SECOND to
++    refuse it -- "neither relaxes the other". With nothing in the repository ever setting
++    `CARNOT_AGENT_SCOPE_ID` (a grep found one hit, its own definition), every real commit took
++    that path: agent A declares a.py, agent B declares b.py, B stages only its own b.py, and
++    A's record refuses it. The comment in `check()` claimed per-session judging had removed
++    this; the `committer is None` fall-through kept it alive, and this test locked it in.
++
++    An unattributable commit cannot be asked "did YOU stage something you did not declare" --
++    there is no YOU -- so it is judged only when attribution is unambiguous, meaning exactly
++    one live declaration. That is a real weakening when several sessions run without exporting
++    their id, and the mitigation is that `declare()` now prints the export line.
++    """
+     _declare(guard, "scripts/a.py", run_id="run-a")
+     _declare(guard, "scripts/b.py", run_id="run-b")
+     monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/a.py"])
+-    assert guard.check() == 1  # in scope for run-a, out of scope for run-b
++    monkeypatch.delenv(guard.RUN_ID_ENV, raising=False)
++    assert guard.check() == 0
++
++    # Identified, the guard is as strict as it ever was.
++    monkeypatch.setenv(guard.RUN_ID_ENV, "run-b")
++    assert guard.check() == 1
+     assert "run-b" in capsys.readouterr().out
+ 
+ 
+diff --git a/tests/python/test_worktree_import_guard.py b/tests/python/test_worktree_import_guard.py
+index fa99bddd75..b4c62d33dc 100644
+--- a/tests/python/test_worktree_import_guard.py
++++ b/tests/python/test_worktree_import_guard.py
+@@ -69,3 +69,42 @@ def test_the_override_is_honoured_and_is_exact(monkeypatch) -> None:
+     except RuntimeError:
+         return
+     raise AssertionError("a non-'1' value disabled the guard")
++
++
++# --- The WIRING, not just the rule (added 2026-08-29 after an adversarial review) -------------
++# The review replaced the `_check_worktree_import(...)` call in `tests/python/conftest.py` with
++# `pass` and this file stayed 7/7 GREEN: the guard's rule was tested and its installation was
++# not. A guard nothing calls is the bug class this repository keeps rediscovering.
++
++
++def test_both_conftests_invoke_the_guard() -> None:
++    """`testpaths` covers tests/python AND tests/integration; both must refuse.
++
++    `tests/integration/test_install.py` imports carnot, so `pytest tests/integration` from an
++    unpinned worktree was exactly the trap and was not refused -- the guard had been wired into
++    one of the two places that needed it.
++    """
++    repo = Path(__file__).resolve().parents[2]
++    for rel in ("tests/python/conftest.py", "tests/integration/conftest.py"):
++        text = (repo / rel).read_text()
++        assert "worktree_import_guard" in text, f"{rel} does not import the guard"
++        assert "_check_worktree_import(" in text, f"{rel} imports the guard but never calls it"
++
++
++def test_a_nested_worktree_or_clone_is_still_foreign() -> None:
++    """Containment passed this; on this machine worktrees and clones live UNDER the main root.
++
++    A worktree PYTHONPATH leaking into a main-checkout run is this trap with the trees swapped,
++    and nested repo clones are not hypothetical here -- a scorer once swept two of them.
++    """
++    root = Path("/home/x/carnot")
++    for nested in (
++        root / ".claude/worktrees/agent-abc/python/carnot",
++        root / "output/carnot-clone/python/carnot",
++    ):
++        assert foreign_import_reason(root, nested) is not None
++
++
++def test_the_canonical_location_is_accepted() -> None:
++    root = Path("/home/x/carnot")
++    assert foreign_import_reason(root, root / "python" / "carnot") is None
+-- 
+2.55.0
+

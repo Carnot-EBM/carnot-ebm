@@ -1,0 +1,953 @@
+From a79bfcba6486a4a4ed63d7e79cb5729a4f908fbd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 09:19:12 -0400
+Subject: [PATCH 07508/11362] [conductor] Gated on Exp5790 admission readiness:
+ run a matched three-family independent single-shot ARC hypothesis panel
+
+Automated research step by research conductor.
+Task ID: exp5791-arc-sota-independent-hypothesis-panel
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-news-watch.md    |   2 +
+ .../arc-world-model-trust-energy/spec.md      | 121 ++++++++++++++++++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/.arc_news_watch_state.json                |   4 +-
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...1_arc_sota_independent_hypothesis_panel.py |  71 ++++++++--
+ results/arc_e3/cd82/world_model.py            |   4 +-
+ ...68_direct_incontext_prediction_shard.jsonl |   1 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ ...arc_sota_independent_hypothesis_panel.json |  10 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...1_arc_sota_independent_hypothesis_panel.py | 110 ++++++++++++++++
+ 33 files changed, 357 insertions(+), 66 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 6dda968219..1589b2e9fb 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -52,3 +52,5 @@ CHECK_TIMED_OUT
+ 
+ - Organizers analyzed 500 failed submissions: about one-third lacked a traceable visible error, while almost 20% required a GPU without enabling one. Kaggle additionally clarified its 10 MB log cap, 20 GB `/kaggle/working` quota, and 30 GB CPU-notebook memory limit. [Error analysis](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119), [runtime clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+ 
++## 2026-07-22 13:14 UTC -- checked, nothing new
++
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 6b3a07afdf..36a38e1b37 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -16497,3 +16497,124 @@ Then average accuracy cannot override pivotal-coverage failure, cycle consistenc
+ insufficient, `solve_claimed=false`, `registry_credit=false`, and
+ `admission_contract_ready_score` is `1.0` only when every control and deterministic replay gate
+ passes.
++
++### REQ-ARC-WMTE-5791: Matched SOTA Independent Single-Shot Hypothesis Panel
++
++Experiment 5791 SHALL run a matched independent single-shot executable-world-model panel across
++all three mandated local SOTA GGUF families:
++`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. The producer SHALL replay Exp5790 gates before scoring,
++perform a registry precheck, call `cached_sota_pair()`, verify both RTX 3090s, real CUDA offload,
++GGUF file hashes, llama.cpp runtime, RAM/disk, agent-owned trace hashes, and output/checkpoint
++paths, and SHALL emit a terminal `blocked:` artifact rather than substitute tiny-model or CPU-only
++evidence when headline offload or fresh-cell receipts are missing.
++
++Each fresh matched family cell SHALL use independent single-shot hypothesis samples only. Every
++sample SHALL see the same allowed train evidence once and SHALL receive no compiler, replay,
++admission, calibration, or test feedback before generation. The producer SHALL preserve immutable
++source and metadata hashes computed before compile/sandbox/admission scoring, and no rejected or
++failed hypothesis may be repaired or regenerated as a continuation of the same sample. At least
++three independent hypotheses per induction unit/family SHALL be generated, or the artifact SHALL
++document the power rationale and keep missing/failed hypotheses in denominators.
++
++The existing Gemma 4 31B single-shot rows from Exp5764 SHALL be imported by hash only as a
++development-proxy anchor. The import receipt SHALL disclose that Exp5764 used an older
++single-family development protocol, SHALL exclude the anchor from matched comparisons, and SHALL
++record the fixed development anchor delta for context only. Fresh matched cells, not the imported
++anchor, SHALL support family/capacity inference.
++
++Every immutable hypothesis SHALL be compiled/sandboxed and scored through all Exp5790 admission
++rungs. The artifact SHALL report family, capacity, ordinary and pivotal accuracy, unseen-action
++fidelity, rollout calibration, stability, admissibility, source/game-identity leaks, degeneracy
++types, and hypothesis diversity. Clustered intervals SHALL be computed by held-out game or
++induction unit. `panel_ready_score=1.0` SHALL require all three real SOTA families, complete
++hypothesis hashes, zero source/game-ID leaks, and at least two admissible independent hypotheses
++for downstream selection. The panel SHALL NOT execute a live solve, SHALL NOT submit to any
++registry, and SHALL set `solve_claimed=false` and `registry_credit=false`.
++
++Experiment 5791 SHALL write
++`results/experiment_5791_arc_sota_independent_hypothesis_panel.json` with these bare top-level
++fields: `status`; `preconditions_checked`; `registry_precheck`; `solve_claimed=false`;
++`registry_credit=false`; `MODEL_SPECS`; `models_used`; `model_runtime_receipts`;
++`gpu_offload_receipts`; `agent_owned_split_manifest`; `development_anchor_import_receipt`;
++`fresh_matched_cells`; `prompt_and_sampling_receipts`; `hypothesis_hashes`;
++`independence_receipts`; `no_refinement_receipts`; `compile_sandbox_receipts`;
++`admission_rung_scores`; `ordinary_transition_metrics`; `unseen_action_metrics`;
++`pivotal_transition_metrics`; `rollout_calibration_metrics`; `family_comparison`;
++`hypothesis_diversity_metrics`; `degeneracy_taxonomy`; `sample_size_justification`;
++`source_game_identity_leaks`; bare `admissible_hypothesis_count`; bare
++`real_sota_model_count`; bare `panel_ready_score`; `producer_gate_fields`;
++`inference_substrate=real_local_llama_cpp_cuda_single_shot_model_synthesis_plus_immutable_agent_owned_arc_replay`;
++`test_commands`; `test_exit_codes`; `reproducibility_checksum`; and `honest_verdict` beginning
++`complete:` or `blocked:`.
++
++Required field principles:
++
++- `status`: principle "terminal panel state for downstream gates."
++- `preconditions_checked`: principle "records cached_sota_pair, registry, CUDA offload, GGUF hashes, runtime, RAM/disk, split, trace, and checkpoint gates before scoring."
++- `registry_precheck`: principle "public registry state is checked so the panel cannot mint solve credit."
++- `solve_claimed`: principle "false because independent hypotheses are scored only, never submitted or executed for level credit."
++- `registry_credit`: principle "false because no new public-game registry level is banked."
++- `MODEL_SPECS`: principle "declares the three mandated SOTA family cells with exact paths, hashes, quantization, templates, CUDA layers, runtime, prompts, sampling, stop policy, and seeds."
++- `models_used`: principle "records exact SOTA GGUF IDs actually used for matched inference; blocked pre-prompt artifacts record an empty list."
++- `model_runtime_receipts`: principle "llama.cpp CUDA runtime, cache, and command receipts make live local inference auditable."
++- `gpu_offload_receipts`: principle "RTX 3090 offload receipts prevent silent CPU or tiny-model evidence."
++- `agent_owned_split_manifest`: principle "fresh matched cells use agent-owned split rows rather than source or registry identity."
++- `development_anchor_import_receipt`: principle "Exp5764 Gemma 31B rows are hash-imported as development proxy only and excluded from matched comparisons."
++- `fresh_matched_cells`: principle "fresh all-family single-shot cells carry the matched comparison."
++- `prompt_and_sampling_receipts`: principle "prompts, sampling, stop policy, seeds, and one-pass evidence are recorded for independence."
++- `hypothesis_hashes`: principle "immutable source and metadata hashes prove hypotheses were frozen before compile and scoring."
++- `independence_receipts`: principle "each sample sees allowed train evidence once and receives no compiler, replay, admission, calibration, or test feedback."
++- `no_refinement_receipts`: principle "rejected or failed hypotheses are never repaired."
++- `compile_sandbox_receipts`: principle "compile failures are computed from frozen source, stay in denominators, and are recorded before admission scoring."
++- `admission_rung_scores`: principle "every immutable hypothesis is scored through Exp5790 L0-L4."
++- `ordinary_transition_metrics`: principle "ordinary exact accuracy is visible but insufficient for panel readiness."
++- `unseen_action_metrics`: principle "unseen-action fidelity is measured separately from ordinary replay."
++- `pivotal_transition_metrics`: principle "pivotal accuracy gates readiness independently of average accuracy."
++- `rollout_calibration_metrics`: principle "seed stability and error growth bound simulator drift."
++- `family_comparison`: principle "fresh matched cells, not the imported anchor, support capacity/family inference."
++- `hypothesis_diversity_metrics`: principle "independent hypotheses must show source and prediction diversity, not duplicate samples."
++- `degeneracy_taxonomy`: principle "compile failures, leaks, action-ignore, memorization, pivotal omission, and duplicates are classified."
++- `sample_size_justification`: principle "at least three hypotheses per induction unit/family or a documented power rationale."
++- `source_game_identity_leaks`: principle "zero source or game-ID leaks are required for readiness."
++- `admissible_hypothesis_count`: principle "bare downstream scalar for admitted independent hypotheses."
++- `real_sota_model_count`: principle "bare downstream scalar; panel readiness requires all three real SOTA families."
++- `panel_ready_score`: principle "bare downstream scalar; 1.0 requires all three real SOTA families, complete hashes, zero leaks, and at least two admissible independent hypotheses."
++- `producer_gate_fields`: principle "lists bare downstream gates without wrapping them in objects."
++- `inference_substrate`: principle "declares the required real local llama.cpp CUDA single-shot synthesis plus immutable agent-owned ARC replay substrate."
++- `test_commands`: principle "records verification commands used for the artifact."
++- `test_exit_codes`: principle "records command exit codes rather than prose-only verification."
++- `reproducibility_checksum`: principle "content-addressed artifact catches silent protocol, metric, or precondition drift."
++- `honest_verdict`: principle "terminal complete:/blocked: verdict reports the matched panel without solve credit."
++
++#### SCENARIO-ARC-WMTE-5791-PRECONDITION-BLOCKS-TINY-OR-CPU-EVIDENCE
++
++Given the three mandated SOTA GGUF model IDs, Exp5790 replay gates, registry state, CUDA runtime,
++dual RTX 3090 inventory, GGUF hashes, RAM/disk, trace hashes, output path, fresh hypothesis path,
++and checkpoint path
++When any headline offload, cache, trace, fresh-cell, checkpoint, or registry precondition is
++missing
++Then Exp5791 emits `status=blocked`, leaves `models_used=[]`, keeps
++`solve_claimed=false` and `registry_credit=false`, records the failed gates and runtime receipts,
++sets `panel_ready_score=0.0`, and does not use tiny models or CPU-only output as evidence.
++
++#### SCENARIO-ARC-WMTE-5791-INDEPENDENT-IMMUTABLE-HASHES-NO-FEEDBACK
++
++Given fresh agent-owned split rows and at least three single-shot samples per induction
++unit/family
++When Exp5791 freezes each sample before compile/sandbox/admission scoring
++Then every hypothesis has source and metadata hashes, hash freeze stage `pre_compile`,
++compile/sandbox receipts derived from frozen source, one-pass prompt/sampling receipts, no
++compiler/replay/admission/calibration/test feedback, no edited-after-freeze repairs, and all
++compile failures remain in the admission denominators.
++
++#### SCENARIO-ARC-WMTE-5791-ADMISSION-PANEL-NO-SOLVE-CREDIT
++
++Given fresh immutable hypotheses across Qwen 35B, Gemma 31B, and Gemma 26B plus the hash-imported
++Exp5764 Gemma 31B development proxy anchor
++When Exp5791 scores every fresh hypothesis through the Exp5790 L0-L4 admission ladder
++Then ordinary, unseen-action, rollout-calibration, pivotal, family-comparison, diversity,
++degeneracy, and leak metrics are reported over fresh matched cells only; the imported anchor is
++excluded from family inference; `panel_ready_score=1.0` only if all three real SOTA families,
++complete hashes, zero leaks, sufficient sample size, and at least two admissible independent
++hypotheses pass; and no field supports solve or registry credit.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 43731505dd..79f69f80e6 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -937,5 +937,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/.arc_news_watch_state.json b/ops/.arc_news_watch_state.json
+index f2ecbb8081..b164016670 100644
+--- a/ops/.arc_news_watch_state.json
++++ b/ops/.arc_news_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+   "last_findings": "- YUTO KOJIMA set a new Kaggle high score of **1.86**. Tecnod8.AI is second at **1.61**, and ippeiogawa entered fourth at **1.58**, moving the **1.56** trio to joint fifth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n\n- ARC Prize reported **GPT-5.6 Sol Max at 7.8% verified ARC-AGI-3 performance**\u201413.33% Public and 7.78% Semi-Private\u2014and the first model to win a public environment, scoring 87% on ft09. [Official results](https://arcprize.org/results/openai-gpt-5-6)\n\n- Organizers analyzed 500 failed submissions: about one-third lacked a traceable visible error, while almost 20% required a GPU without enabling one. Kaggle additionally clarified its 10 MB log cap, 20 GB `/kaggle/working` quota, and 30 GB CPU-notebook memory limit. [Error analysis](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119), [runtime clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)",
+-  "last_checked": "2026-07-21T13:14:59.862584+00:00",
+-  "history_count": 8
++  "last_checked": "2026-07-22T13:14:33.946386+00:00",
++  "history_count": 9
+ }
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 4e404848f8..eab9d357e8 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1144,3 +1144,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_5770_v515_source_delta_ingestion.json
++
++## experiment_5791_arc_sota_independent_hypothesis_panel.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a5c486a50c..4d29da1a0e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4634,
++  "experiments_checked": 4635,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py b/python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py
+index 81d1bed95c..e1a01e1f1f 100644
+--- a/python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py
++++ b/python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py
+@@ -626,7 +626,13 @@ def _family_summary(scored: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+         pivotal = [float(row["score"]["pivotal"]["pivotal_accuracy"]) for row in rows]
+         unseen = [float(row["score"]["unseen_action"]["unseen_action_accuracy"]) for row in rows]
+         admitted = sum(1 for row in rows if row["score"]["decision"]["admitted"] is True)
++        capacity = next(
++            (str(row["hypothesis"].get("capacity")) for row in rows if row["hypothesis"].get("capacity")),
++            "unknown",
++        )
+         summary[family] = {
++            "family": family,
++            "capacity": capacity,
+             "hypothesis_count": len(rows),
+             "admissible_count": admitted,
+             "mean_ordinary_accuracy": _mean(ordinary),
+@@ -743,11 +749,17 @@ def _sample_size_justification(scored: Sequence[Mapping[str, Any]]) -> dict[str,
+ 
+ 
+ def _real_sota_count(model_specs: Sequence[Mapping[str, Any]]) -> int:
+-    return sum(
+-        1
+-        for spec in model_specs
+-        if spec.get("hf_id") in MANDATED_HF_IDS and spec.get("real_sota") is True
+-    )
++    seen: set[str] = set()
++    for spec in model_specs:
++        hf_id = str(spec.get("hf_id") or "")
++        family = str(spec.get("family") or "")
++        if (
++            hf_id in MANDATED_HF_IDS
++            and FAMILY_BY_HF_ID.get(hf_id) == family
++            and spec.get("real_sota") is True
++        ):
++            seen.add(hf_id)
++    return len(seen)
+ 
+ 
+ def _agent_owned_split_manifest(rows: Sequence[Mapping[str, Any]], provenance: Mapping[str, Any]) -> dict[str, Any]:
+@@ -863,6 +875,10 @@ def build_artifact(
+     diversity = _diversity_metrics(scored)
+     sample_size = _sample_size_justification(scored)
+     compile_receipts = _compile_receipts(hypotheses)
++    repaired_rejected_count = sum(
++        1 for row in hypotheses if row.get("repaired_rejected_hypothesis") is True
++    )
++    edited_after_freeze_count = sum(1 for row in hypotheses if row.get("edited_after_freeze") is True)
+     admissible_count = sum(1 for row in scored if row["score"]["decision"]["admitted"] is True)
+     model_specs = list(preconditions["MODEL_SPECS"])
+     real_count = _real_sota_count(model_specs)
+@@ -882,6 +898,9 @@ def build_artifact(
+             and admissible_count >= 2
+             and families_complete
+             and sample_size["sample_size_gate_passed"] is True
++            and diversity["diversity_passed"] is True
++            and repaired_rejected_count == 0
++            and edited_after_freeze_count == 0
+         )
+         else 0.0
+     )
+@@ -935,8 +954,8 @@ def build_artifact(
+             "same_allowed_train_evidence_once": True,
+         },
+         "no_refinement_receipts": {
+-            "repaired_rejected_hypothesis_count": 0,
+-            "edited_after_freeze_count": sum(1 for row in hypotheses if row.get("edited_after_freeze") is True),
++            "repaired_rejected_hypothesis_count": repaired_rejected_count,
++            "edited_after_freeze_count": edited_after_freeze_count,
+             "feedback_used_for_generation": False,
+         },
+         "compile_sandbox_receipts": compile_receipts,
+@@ -1015,7 +1034,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
+         raise ValueError("producer_gate_fields")
+     if artifact.get("source_game_identity_leaks") != []:
+         raise ValueError("source_game_identity_leaks")
+-    if artifact.get("status") == "complete":
++    status = str(artifact.get("status") or "")
++    honest_verdict = str(artifact.get("honest_verdict", ""))
++    if status == "complete":
++        if not honest_verdict.startswith("complete:"):
++            raise ValueError("honest_verdict")
+         if models_used != list(MANDATED_HF_IDS):
+             raise ValueError("models_used")
+         if artifact.get("real_sota_model_count") != 3:
+@@ -1026,6 +1049,25 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
+             raise ValueError("panel_ready_score")
+         if artifact.get("family_comparison", {}).get("fresh_only") is not True:
+             raise ValueError("family_comparison")
++        family_rows = artifact.get("family_comparison", {}).get("families", {})
++        if not all(
++            isinstance(summary, Mapping)
++            and summary.get("family") == family
++            and bool(summary.get("capacity"))
++            for family, summary in dict(family_rows).items()
++        ):
++            raise ValueError("family_comparison")
++        if artifact.get("hypothesis_diversity_metrics", {}).get("diversity_passed") is not True:
++            raise ValueError("hypothesis_diversity_metrics")
++        if artifact.get("sample_size_justification", {}).get("sample_size_gate_passed") is not True:
++            raise ValueError("sample_size_justification")
++        no_refinement = artifact.get("no_refinement_receipts", {})
++        if (
++            no_refinement.get("repaired_rejected_hypothesis_count") != 0
++            or no_refinement.get("edited_after_freeze_count") != 0
++            or no_refinement.get("feedback_used_for_generation") is not False
++        ):
++            raise ValueError("no_refinement_receipts")
+         if not all(
+             row.get("source_sha256")
+             and row.get("metadata_sha256")
+@@ -1049,14 +1091,21 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
+         ):
+             raise ValueError("compile_sandbox_receipts")
+     else:
+-        if models_used:
++        if status != "blocked":
++            raise ValueError("status")
++        if not honest_verdict.startswith("blocked:"):
++            raise ValueError("honest_verdict")
++        runtime_receipts = artifact.get("model_runtime_receipts", {})
++        matched_inference = runtime_receipts.get("matched_inference_executed") is True
++        blocked_before_prompt = runtime_receipts.get("generation_blocked_before_prompting") is True
++        if matched_inference and models_used != list(MANDATED_HF_IDS):
++            raise ValueError("models_used")
++        if blocked_before_prompt and models_used:
+             raise ValueError("models_used")
+         if artifact.get("panel_ready_score") != 0.0:
+             raise ValueError("panel_ready_score")
+     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
+         raise ValueError("inference_substrate")
+-    if not str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")):
+-        raise ValueError("honest_verdict")
+     if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
+         raise ValueError("reproducibility_checksum")
+     return True
+diff --git a/results/arc_e3/cd82/world_model.py b/results/arc_e3/cd82/world_model.py
+index 75035fd594..1086d1bc33 100644
+--- a/results/arc_e3/cd82/world_model.py
++++ b/results/arc_e3/cd82/world_model.py
+@@ -2,8 +2,8 @@ import numpy as np
+ 
+ def engine(grid, action, data):
+     if action == 1:
+-        return grid.copy()
+-    return grid.copy()
++        return grid
++    return grid
+ 
+ def is_level_complete(grid):
+     return False
+\ No newline at end of file
+diff --git a/results/exp5768_direct_incontext_prediction_shard.jsonl b/results/exp5768_direct_incontext_prediction_shard.jsonl
+index 00edae5e2e..f39ef283b4 100644
+--- a/results/exp5768_direct_incontext_prediction_shard.jsonl
++++ b/results/exp5768_direct_incontext_prediction_shard.jsonl
+@@ -33,3 +33,4 @@
+ {"game": "sk48", "trial": 2, "grid_shape": [64, 64], "n_transitions": 12, "n_changing": 12, "n_noop": 0, "n_blocked_transitions": 0, "k_examples_used": 4, "prediction_mode": "delta", "n_ctx": 32768, "heldout_accuracy": 0.0, "heldout_accuracy_changing": 0.0, "heldout_accuracy_noop": null, "heldout_accuracy_parseable_only": 0.0, "mean_cell_agreement": 0.9408, "mean_changed_cell_recall": 0.0383, "parse_success_rate": 0.9167, "shape_match_rate": 0.9167, "identity_copy_rate": 0.0833, "identity_copy_rate_changing": 0.0833, "null_delta_rate": 0.0, "null_delta_rate_changing": 0.0, "mean_pred_delta_size": 121.9091, "mean_true_delta_size": 164.6667, "n_truncated": 1, "n_prompt_truncated": 1, "per_transition": [{"i": 0, "action": 1, "changed": true, "n_true_changes": 96, "n_pred_changes": 12, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.97509765625, "changed_cell_recall": 0.020833333333333332, "wall_s": 32.85, "stop_type": "eos", "prompt_truncated": false}, {"i": 1, "action": 4, "changed": true, "n_true_changes": 13, "n_pred_changes": 12, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.993896484375, "changed_cell_recall": 0.0, "wall_s": 32.56, "stop_type": "eos", "prompt_truncated": false}, {"i": 2, "action": 4, "changed": true, "n_true_changes": 12, "n_pred_changes": null, "k_examples": 4, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 30.3, "stop_type": "eos", "prompt_truncated": false}, {"i": 3, "action": 4, "changed": true, "n_true_changes": 12, "n_pred_changes": 13, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.996826171875, "changed_cell_recall": 0.0, "wall_s": 48.77, "stop_type": "eos", "prompt_truncated": false}, {"i": 4, "action": 4, "changed": true, "n_true_changes": 9, "n_pred_changes": 13, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.99755859375, "changed_cell_recall": 0.0, "wall_s": 32.81, "stop_type": "eos", "prompt_truncated": false}, {"i": 5, "action": 3, "changed": true, "n_true_changes": 36, "n_pred_changes": 861, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.8486328125, "changed_cell_recall": 0.0, "wall_s": 292.44, "stop_type": "limit", "prompt_truncated": true}, {"i": 6, "action": 2, "changed": true, "n_true_changes": 184, "n_pred_changes": 121, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": true, "cell_agreement": 0.955078125, "changed_cell_recall": 0.0, "wall_s": 64.89, "stop_type": "eos", "prompt_truncated": false}, {"i": 7, "action": 2, "changed": true, "n_true_changes": 185, "n_pred_changes": 148, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.954833984375, "changed_cell_recall": 0.4, "wall_s": 73.11, "stop_type": "eos", "prompt_truncated": false}, {"i": 8, "action": 4, "changed": true, "n_true_changes": 8, "n_pred_changes": 13, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.994873046875, "changed_cell_recall": 0.0, "wall_s": 32.88, "stop_type": "eos", "prompt_truncated": false}, {"i": 9, "action": 3, "changed": true, "n_true_changes": 52, "n_pred_changes": 15, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.98388671875, "changed_cell_recall": 0.0, "wall_s": 33.46, "stop_type": "eos", "prompt_truncated": false}, {"i": 10, "action": 1, "changed": true, "n_true_changes": 201, "n_pred_changes": 96, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.939208984375, "changed_cell_recall": 0.0, "wall_s": 57.56, "stop_type": "eos", "prompt_truncated": false}, {"i": 11, "action": 4, "changed": true, "n_true_changes": 1168, "n_pred_changes": 37, "k_examples": 4, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.709228515625, "changed_cell_recall": 0.0, "wall_s": 40.03, "stop_type": "eos", "prompt_truncated": false}], "arm": "gemma31b_direct_prediction", "server_n_ctx": 32768}
+ {"game": "vc33", "trial": 0, "grid_shape": [64, 64], "n_transitions": 3, "n_changing": 3, "n_noop": 0, "n_blocked_transitions": 0, "k_examples_used": 3, "prediction_mode": "delta", "n_ctx": 32768, "heldout_accuracy": 0.0, "heldout_accuracy_changing": 0.0, "heldout_accuracy_noop": null, "heldout_accuracy_parseable_only": 0.0, "mean_cell_agreement": 0.7463, "mean_changed_cell_recall": 0.2743, "parse_success_rate": 1.0, "shape_match_rate": 1.0, "identity_copy_rate": 0.0, "identity_copy_rate_changing": 0.0, "null_delta_rate": 0.0, "null_delta_rate_changing": 0.0, "mean_pred_delta_size": 263.0, "mean_true_delta_size": 1091.3333, "n_truncated": 0, "n_prompt_truncated": 0, "per_transition": [{"i": 0, "action": 6, "changed": true, "n_true_changes": 265, "n_pred_changes": 266, "k_examples": 3, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.961181640625, "changed_cell_recall": 0.4075471698113208, "wall_s": 96.15, "stop_type": "eos", "prompt_truncated": false}, {"i": 1, "action": 6, "changed": true, "n_true_changes": 266, "n_pred_changes": 280, "k_examples": 3, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.957763671875, "changed_cell_recall": 0.40977443609022557, "wall_s": 99.37, "stop_type": "eos", "prompt_truncated": false}, {"i": 2, "action": 6, "changed": true, "n_true_changes": 2743, "n_pred_changes": 243, "k_examples": 3, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.320068359375, "changed_cell_recall": 0.005468465184104995, "wall_s": 87.9, "stop_type": "eos", "prompt_truncated": false}], "arm": "gemma31b_direct_prediction", "server_n_ctx": 32768}
+ {"game": "vc33", "trial": 1, "grid_shape": [64, 64], "n_transitions": 3, "n_changing": 3, "n_noop": 0, "n_blocked_transitions": 0, "k_examples_used": 3, "prediction_mode": "delta", "n_ctx": 32768, "heldout_accuracy": 0.0, "heldout_accuracy_changing": 0.0, "heldout_accuracy_noop": null, "heldout_accuracy_parseable_only": 0.0, "mean_cell_agreement": 0.9612, "mean_changed_cell_recall": 0.4075, "parse_success_rate": 0.3333, "shape_match_rate": 0.3333, "identity_copy_rate": 0.0, "identity_copy_rate_changing": 0.0, "null_delta_rate": 0.0, "null_delta_rate_changing": 0.0, "mean_pred_delta_size": 266.0, "mean_true_delta_size": 1091.3333, "n_truncated": 0, "n_prompt_truncated": 0, "per_transition": [{"i": 0, "action": 6, "changed": true, "n_true_changes": 265, "n_pred_changes": 266, "k_examples": 3, "server_ok": true, "parse_ok": true, "shape_ok": true, "exact": false, "identity_copy": false, "cell_agreement": 0.961181640625, "changed_cell_recall": 0.4075471698113208, "wall_s": 95.75, "stop_type": "eos", "prompt_truncated": false}, {"i": 1, "action": 6, "changed": true, "n_true_changes": 266, "n_pred_changes": null, "k_examples": 3, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 53.14, "stop_type": "eos", "prompt_truncated": false}, {"i": 2, "action": 6, "changed": true, "n_true_changes": 2743, "n_pred_changes": null, "k_examples": 3, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 65.44, "stop_type": "eos", "prompt_truncated": false}], "arm": "gemma31b_direct_prediction", "server_n_ctx": 32768}
++{"game": "ft09", "trial": 1, "grid_shape": [64, 64], "n_transitions": 4, "n_changing": 4, "n_noop": 0, "n_blocked_transitions": 0, "k_examples_used": 4, "prediction_mode": "delta", "n_ctx": 32768, "heldout_accuracy": 0.0, "heldout_accuracy_changing": 0.0, "heldout_accuracy_noop": null, "heldout_accuracy_parseable_only": null, "mean_cell_agreement": null, "mean_changed_cell_recall": null, "parse_success_rate": 0.0, "shape_match_rate": 0.0, "identity_copy_rate": 0.0, "identity_copy_rate_changing": 0.0, "null_delta_rate": null, "null_delta_rate_changing": null, "mean_pred_delta_size": null, "mean_true_delta_size": 918.0, "n_truncated": 0, "n_prompt_truncated": 0, "per_transition": [{"i": 0, "action": 6, "changed": true, "n_true_changes": 38, "n_pred_changes": null, "k_examples": 4, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 33.65, "stop_type": "eos", "prompt_truncated": false}, {"i": 1, "action": 6, "changed": true, "n_true_changes": 38, "n_pred_changes": null, "k_examples": 4, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 1802.89, "stop_type": "eos", "prompt_truncated": false}, {"i": 2, "action": 6, "changed": true, "n_true_changes": 38, "n_pred_changes": null, "k_examples": 4, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 62.84, "stop_type": "eos", "prompt_truncated": false}, {"i": 3, "action": 6, "changed": true, "n_true_changes": 3558, "n_pred_changes": null, "k_examples": 4, "server_ok": false, "parse_ok": false, "shape_ok": false, "exact": false, "identity_copy": false, "cell_agreement": null, "changed_cell_recall": null, "wall_s": 28.16, "stop_type": "eos", "prompt_truncated": false}], "arm": "gemma31b_direct_prediction", "server_n_ctx": 32768}
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 70adb3d760..3ccb677a1c 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T09:55:23.515475+00:00",
+-  "finished_at": "2026-07-22T09:55:23.542976+00:00",
+-  "duration_s": 0.028,
++  "started_at": "2026-07-22T13:00:24.270865+00:00",
++  "finished_at": "2026-07-22T13:00:24.297130+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index fe9bbed48c..eeff2d5dc3 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-22T09:55:24Z",
++  "run_date": "2026-07-22T13:00:24Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0020e324da..0eba222cb6 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T09:55:25Z",
+-  "finished_at": "2026-07-22T09:55:25Z",
++  "started_at": "2026-07-22T13:00:25Z",
++  "finished_at": "2026-07-22T13:00:25Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index fed059c2e7..b4dc23c64a 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-22T09:55:25Z",
++  "run_date": "2026-07-22T13:00:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 4d817ff022..8454c124ad 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-22T09:55:25Z",
++  "run_date": "2026-07-22T13:00:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 4016f08c0f..eb7757ec56 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-22T09:52:43.447737Z",
+-  "duration_s": 0.1304466724395752,
++  "run_date": "2026-07-22T12:58:48.128803Z",
++  "duration_s": 0.08661556243896484,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "d7088981e4e9e5c2046a0497b14f214bc9ff863bf08d178ba00a2a7fb541fb6f",
++  "reproducibility_checksum": "b0c85d22adc0a73791569824a24bed922fe343df90dee63cc108e46d79f12c22",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "431c7046a4dd29f45805697994d13b2f1d557ed4"
++    "adversarial_verify_version": "bb3b8574683e277b5d2c755120b1faa7ad791fdc"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 5bd75c714f..0ba37c0459 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-22T10:02:44.070659Z",
+-  "duration_s": 85.45355367660522,
++  "run_date": "2026-07-22T13:06:19.703827Z",
++  "duration_s": 96.74089980125427,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 5c530f6d6a..155d966f6b 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-22T10:03:25.671949+00:00",
+-  "duration_s": 0.009927511215209961,
++  "run_date": "2026-07-22T13:07:04.196867+00:00",
++  "duration_s": 0.01570749282836914,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index ae9fd0f369..6f5fadc540 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-22T09:52:43.665637Z",
+-  "duration_s": 0.19738531112670898,
++  "run_date": "2026-07-22T12:58:48.248720Z",
++  "duration_s": 0.10970377922058105,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "c6c16a671fe50f67fa3360783be1ce3d84ace751a365715f2533dae167aa8cc5",
++  "reproducibility_checksum": "92b39da65d199ca85507e25ef9bba4bf1efe43d983e79acc80ebac9686b92252",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "431c7046a4dd29f45805697994d13b2f1d557ed4"
++    "adversarial_verify_version": "bb3b8574683e277b5d2c755120b1faa7ad791fdc"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index ad44f85e06..6f9cc3111d 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 5.60s, user: 5.01s, system: 0.46s, MEM: 115.92 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.21s, user: 2.87s, system: 0.24s, MEM: 115.34 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 77% 19x read_verilog (4 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 44b9e80a21..361f4101f3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.123594284057617,
++  "efficiency_gains_ms": 2.141714096069336,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 787d4d35f0..7dc84b9aea 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-22T09:52:03.088644Z",
++  "run_date": "2026-07-22T12:58:20.210993Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 78f512225d..3b1a5f2c0d 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00020355195738375187,
+-  "latency_domino_seconds": 0.0003994900034740567,
++  "latency_legacy_seconds": 0.00014614500105381012,
++  "latency_domino_seconds": 0.00029058498330414295,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 96cbacf82c..e01ab48334 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T09:53:00Z",
+-  "finished_at": "2026-07-22T09:53:00Z",
++  "started_at": "2026-07-22T12:58:55Z",
++  "finished_at": "2026-07-22T12:58:55Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 47d65ec77d..f9d8c122e4 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T09:53:51Z",
+-  "finished_at": "2026-07-22T09:53:51Z",
++  "started_at": "2026-07-22T12:59:30Z",
++  "finished_at": "2026-07-22T12:59:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.080108642578125,
++  "latency_ms": 0.05221366882324219,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 5133f3a6e0..0d50016d5a 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0011627960205078125,
+-  "avg_eqm_time": 0.10960565090179443,
++  "avg_pem_time": 0.0008786296844482421,
++  "avg_eqm_time": 0.07245113849639892,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index a9607466cf..28d4632d40 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.61783766746521,
++  "duration_s": 0.5577521324157715,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d87d663134..52de7e6d40 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 8.64530447870493e-05,
++  "duration_s": 4.180893301963806e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 0b0b2e8a93..7cf48477bc 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.47
++  "duration_s": 0.49
+ }
+\ No newline at end of file
+diff --git a/results/experiment_5791_arc_sota_independent_hypothesis_panel.json b/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+index 412056ef28..65e323dff9 100644
+--- a/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
++++ b/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+@@ -161,7 +161,7 @@
+         "gpu": 1,
+         "name": "NVIDIA GeForce RTX 3090",
+         "memory_total_mib": 24576,
+-        "memory_used_mib": 21444,
++        "memory_used_mib": 4,
+         "offload_ok": true,
+         "headline_load_verified": false,
+         "vram_delta_mib": 0
+@@ -184,8 +184,8 @@
+     },
+     "disk_ram": {
+       "ok": true,
+-      "disk_free_mb": 1171256,
+-      "ram_free_mb": 85368,
++      "disk_free_mb": 1171542,
++      "ram_free_mb": 86695,
+       "min_disk_free_mb": 4096,
+       "min_ram_free_mb": 4096
+     },
+@@ -342,7 +342,7 @@
+       "gpu": 1,
+       "name": "NVIDIA GeForce RTX 3090",
+       "memory_total_mib": 24576,
+-      "memory_used_mib": 21444,
++      "memory_used_mib": 4,
+       "offload_ok": true,
+       "headline_load_verified": false,
+       "vram_delta_mib": 0
+@@ -516,6 +516,6 @@
+     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+     ".venv/bin/ruff check python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py scripts/experiments/experiment_5791_arc_sota_independent_hypothesis_panel.py": 0
+   },
+-  "reproducibility_checksum": "sha256:e9361b13891e5c1726267e30d53615f63cae977313deb93e8a7755f3ff64f546",
++  "reproducibility_checksum": "sha256:ea0e5888531778e40a71ee72de294cf787307b648f22833cab5c3c2e23d95c29",
+   "honest_verdict": "blocked: headline_gpu_offload_receipts_present"
+ }
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0437805083..66170be06e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T11:36:21Z",
+-  "finished_at": "2026-07-22T11:36:21Z",
+-  "duration_s": 0.01,
++  "started_at": "2026-07-22T13:01:50Z",
++  "finished_at": "2026-07-22T13:01:51Z",
++  "duration_s": 0.006,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 48cdbe1857..f22c68cca4 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T11:36:21Z",
+-  "finished_at": "2026-07-22T11:36:22Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-22T13:01:51Z",
++  "finished_at": "2026-07-22T13:01:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 75cfb68d42..ebd9a3f2dd 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260722",
+-  "started_at": "2026-07-22T11:36:22Z",
+-  "finished_at": "2026-07-22T11:36:22Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-22T13:01:51Z",
++  "finished_at": "2026-07-22T13:01:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py b/tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py
+index 8de06e9e98..cbbf89c34a 100644
+--- a/tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py
++++ b/tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py
+@@ -335,6 +335,7 @@ def test_scenario_arc_wmte_5791_independent_hashes_and_admission_panel(
+     assert saved["prompt_and_sampling_receipts"]["feedback_used_for_generation"] is False
+     assert saved["independence_receipts"]["all_samples_independent_single_shot"] is True
+     assert saved["no_refinement_receipts"]["repaired_rejected_hypothesis_count"] == 0
++    assert saved["no_refinement_receipts"]["edited_after_freeze_count"] == 0
+     assert len(saved["hypothesis_hashes"]) == 9
+     assert all(row["source_sha256"] for row in saved["hypothesis_hashes"])
+     assert all(row["freeze_stage"] == "pre_compile" for row in saved["hypothesis_hashes"])
+@@ -347,6 +348,11 @@ def test_scenario_arc_wmte_5791_independent_hashes_and_admission_panel(
+     assert saved["source_game_identity_leaks"] == []
+     assert saved["admissible_hypothesis_count"] >= 2
+     assert saved["real_sota_model_count"] == 3
++    assert saved["hypothesis_diversity_metrics"]["diversity_passed"] is True
++    assert saved["sample_size_justification"]["sample_size_gate_passed"] is True
++    for family, summary in saved["family_comparison"]["families"].items():
++        assert summary["capacity"]
++        assert summary["family"] == family
+     assert saved["panel_ready_score"] == pytest.approx(1.0)
+     assert saved["producer_gate_fields"] == list(mod.PRODUCER_GATE_FIELDS)
+     assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
+@@ -355,6 +361,67 @@ def test_scenario_arc_wmte_5791_independent_hashes_and_admission_panel(
+     mod.validate_artifact(saved)
+ 
+ 
++def test_req_arc_wmte_5791_model_specs_and_unique_real_family_gate() -> None:
++    """REQ-ARC-WMTE-5791: MODEL_SPECS are exact and real-family counting is unique."""
++
++    assert [spec["hf_id"] for spec in mod.MODEL_SPECS] == list(mod.MANDATED_HF_IDS)
++    assert [spec["family"] for spec in mod.MODEL_SPECS] == ["qwen35b", "gemma31b", "gemma26b"]
++    for spec in mod.MODEL_SPECS:
++        assert spec["quantization"] == "Q4_K_M"
++        assert spec["chat_template"] == "embedded"
++        assert spec["cuda_layers"] == 999
++        assert spec["runtime"] == "llama.cpp CUDA"
++        assert spec["prompt_id"] == "arc_world_model_single_shot_v1"
++        assert spec["sampling"]["temperature"] == pytest.approx(0.7)
++        assert spec["sampling"]["top_p"] == pytest.approx(0.95)
++        assert spec["sampling"]["max_tokens"] == 16384
++        assert spec["stop_policy"]
++        assert len(spec["seeds"]) == 3
++        assert not str(spec["hf_id"]).startswith(("mock/", "test/"))
++
++    duplicate_qwen = [
++        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "family": "qwen35b", "real_sota": True},
++        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "family": "qwen35b", "real_sota": True},
++        {"hf_id": "unsloth/gemma-4-31B-it-GGUF", "family": "gemma31b", "real_sota": True},
++    ]
++    assert mod._real_sota_count(duplicate_qwen) == 2
++
++
++def test_scenario_arc_wmte_5791_panel_readiness_requires_diversity_and_no_refinement(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-5791-INDEPENDENT-IMMUTABLE-HASHES-NO-FEEDBACK."""
++
++    rows = _rows()
++    monkeypatch.setattr(mod, "structured_preconditions", lambda **_kw: _preconditions_fixture())
++    monkeypatch.setattr(mod, "load_agent_owned_transition_rows", lambda *_args, **_kw: rows)
++
++    duplicate_source = _fresh_hypotheses(rows)
++    duplicate_source[1]["source"] = duplicate_source[0]["source"]
++    monkeypatch.setattr(mod, "load_fresh_matched_hypotheses", lambda *_args, **_kw: duplicate_source)
++    duplicate_artifact = mod.build_artifact(root=tmp_path)
++
++    assert duplicate_artifact["hypothesis_diversity_metrics"]["diversity_passed"] is False
++    assert duplicate_artifact["panel_ready_score"] == pytest.approx(0.0)
++    assert duplicate_artifact["status"] == "blocked"
++    mod.validate_artifact(duplicate_artifact)
++
++    edited_after_freeze = _fresh_hypotheses(rows)
++    edited_after_freeze[0]["edited_after_freeze"] = True
++    monkeypatch.setattr(
++        mod,
++        "load_fresh_matched_hypotheses",
++        lambda *_args, **_kw: edited_after_freeze,
++    )
++    edited_artifact = mod.build_artifact(root=tmp_path)
++
++    assert edited_artifact["no_refinement_receipts"]["edited_after_freeze_count"] == 1
++    assert edited_artifact["panel_ready_score"] == pytest.approx(0.0)
++    assert edited_artifact["status"] == "blocked"
++    mod.validate_artifact(edited_artifact)
++
++
+ def test_scenario_arc_wmte_5791_compile_sandbox_is_source_derived() -> None:
+     """SCENARIO-ARC-WMTE-5791-INDEPENDENT-IMMUTABLE-HASHES-NO-FEEDBACK."""
+ 
+@@ -431,6 +498,22 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
+         ("admissible_hypothesis_count", lambda data: data.__setitem__("admissible_hypothesis_count", 1)),
+         ("panel_ready_score", lambda data: data.__setitem__("panel_ready_score", 0.5)),
+         ("family_comparison", lambda data: data["family_comparison"].__setitem__("fresh_only", False)),
++        (
++            "family_comparison",
++            lambda data: data["family_comparison"]["families"]["qwen35b"].__setitem__("capacity", ""),
++        ),
++        (
++            "hypothesis_diversity_metrics",
++            lambda data: data["hypothesis_diversity_metrics"].__setitem__("diversity_passed", False),
++        ),
++        (
++            "sample_size_justification",
++            lambda data: data["sample_size_justification"].__setitem__("sample_size_gate_passed", False),
++        ),
++        (
++            "no_refinement_receipts",
++            lambda data: data["no_refinement_receipts"].__setitem__("edited_after_freeze_count", 1),
++        ),
+         ("hypothesis_hashes", lambda data: data["hypothesis_hashes"][0].__setitem__("source_sha256", "")),
+         (
+             "compile_sandbox_receipts",
+@@ -460,6 +543,9 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
+     blocked = deepcopy(artifact)
+     blocked["status"] = "blocked"
+     blocked["models_used"] = []
++    blocked["model_runtime_receipts"]["matched_inference_executed"] = False
++    blocked["model_runtime_receipts"]["generation_blocked_before_prompting"] = True
++    blocked["honest_verdict"] = "blocked: manual_pre_prompt_block"
+     blocked["panel_ready_score"] = 1.0
+     blocked["reproducibility_checksum"] = mod.payload_checksum(blocked)
+     with pytest.raises(ValueError, match="panel_ready_score"):
+@@ -468,10 +554,34 @@ def test_req_arc_wmte_5791_validation_rejects_manual_overclaims(
+     blocked_models = deepcopy(artifact)
+     blocked_models["status"] = "blocked"
+     blocked_models["panel_ready_score"] = 0.0
++    blocked_models["model_runtime_receipts"]["matched_inference_executed"] = False
++    blocked_models["model_runtime_receipts"]["generation_blocked_before_prompting"] = True
++    blocked_models["honest_verdict"] = "blocked: manual_pre_prompt_block"
+     blocked_models["reproducibility_checksum"] = mod.payload_checksum(blocked_models)
+     with pytest.raises(ValueError, match="models_used"):
+         mod.validate_artifact(blocked_models)
+ 
++    invalid_status = deepcopy(artifact)
++    invalid_status["status"] = "partial"
++    with pytest.raises(ValueError, match="status"):
++        mod.validate_artifact(invalid_status)
++
++    blocked_bad_verdict = deepcopy(artifact)
++    blocked_bad_verdict["status"] = "blocked"
++    blocked_bad_verdict["panel_ready_score"] = 0.0
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(blocked_bad_verdict)
++
++    post_scoring_block_missing_models = deepcopy(artifact)
++    post_scoring_block_missing_models["status"] = "blocked"
++    post_scoring_block_missing_models["models_used"] = []
++    post_scoring_block_missing_models["panel_ready_score"] = 0.0
++    post_scoring_block_missing_models["honest_verdict"] = "blocked: post_scoring_gate_failed"
++    post_scoring_block_missing_models["model_runtime_receipts"]["matched_inference_executed"] = True
++    post_scoring_block_missing_models["model_runtime_receipts"]["generation_blocked_before_prompting"] = False
++    with pytest.raises(ValueError, match="models_used"):
++        mod.validate_artifact(post_scoring_block_missing_models)
++
+ 
+ def test_req_arc_wmte_5791_degeneracy_and_leak_taxonomy_edges() -> None:
+     """REQ-ARC-WMTE-5791: degeneracy and leak taxonomy covers every named edge."""
+-- 
+2.55.0
+

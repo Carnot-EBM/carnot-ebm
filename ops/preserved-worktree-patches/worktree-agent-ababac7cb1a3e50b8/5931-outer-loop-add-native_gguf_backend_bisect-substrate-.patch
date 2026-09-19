@@ -1,0 +1,202 @@
+From 3eb2311f466371222ba0ceee5fa09bb5832aba8b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 18:42:47 -0400
+Subject: [PATCH 05931/11362] [outer-loop] add native_gguf_backend_bisect
+ substrate; exp5323 resolves the multi-milestone llama-cli blocker
+
+User asked to dig into exp5323, the flag-bisect task I'd been watching
+for after documenting the native llama-cli hang fix. Genuinely good
+news: the conductor independently bisected to the same -st/--single-turn
+fix, confirming completed_load_first_token_and_8_tokens=True with
+authenticated GPU offload (backend_variant=llama-cli-single-turn-batch512)
+-- resolving the blocker that stalled .484's exp5297 and .485's exp5309
+across two milestones. runtime_unblocked_min_one_mandated=True,
+sota_backend_candidate_ready=True.
+
+It still got flagged DURATION_TOO_SHORT (20.8s) under the generic 60s
+live_llm_inference floor -- the seventh time this exact substrate-
+recognition bug class has appeared this week. A bisect that stops at
+the first working flag combination (real GPU-backed model load, but not
+a full generation benchmark across every variant) is genuinely faster
+than the 60s floor is calibrated for.
+
+Added local_native_llama_cpp_gguf_backend_bisect as the 9th recognized
+substrate (5.0s floor), wired ahead of the generic live_llm_inference
+check. Confirmed the earlier uppercase-MODEL_SPECS-casing fix (from
+exp5262/exp5263 earlier this week) already covers this artifact's
+methodology check -- 0 flags on live re-check, no further exemption
+needed.
+
+7 new tests (tests/python/test_adversarial_verify_native_gguf_backend_
+bisect_substrate.py): recognition-function coverage, floor-value check,
+an exact exp5323 reproduction now clean, a fabricated-near-instant-claim
+regression guard, and a full-generation-still-needs-60s regression
+guard. Full suite (298 tests) green. Corpus-wide dry-run sanity check
+stable (5 qualifying artifacts, normal drift).
+
+Un-quarantined exp5323: 0 flags (was 1 CRITICAL).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ scripts/adversarial_verify.py                 | 26 +++++
+ ...fy_native_gguf_backend_bisect_substrate.py | 97 +++++++++++++++++++
+ 2 files changed, 123 insertions(+)
+ create mode 100644 tests/python/test_adversarial_verify_native_gguf_backend_bisect_substrate.py
+
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 052c0a809d..c6a2c00041 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -299,6 +299,18 @@ LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
+ DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE = "deterministic_smt_hint_validation_no_llm"
+ DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S = 0.0001
+ 
++# Native-llama.cpp-CLI backend/flag bisect: probes a handful of backend-variant + flag
++# combinations against the mandated SOTA models to find one that completes load + first-token +
++# bounded generation without hanging or timing out. Real GPU-backed model load(s) happen, but the
++# bisect stops as soon as ONE working combination is confirmed rather than running a full
++# generation benchmark across all variants -- genuinely faster than the 60s live_llm_inference
++# floor, similar reasoning to the small-N SOTA GGUF pilot substrate. Discovered 2026-07-06
++# (exp5323, duration_s=20.8, found the working `-st`/`--single-turn` variant this project's own
++# CLAUDE.md documents -- see the native-llama-cli-hang fix -- and confirmed
++# completed_load_first_token_and_8_tokens=True with authenticated GPU offload).
++NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE = "local_native_llama_cpp_gguf_backend_bisect"
++NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S = 5.0
++
+ # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
+ # including negative controls whose details mention GGUF/CUDA/live-model markers.
+ # The artifact itself runs JSON lint tests, not model inference, so exact
+@@ -1936,6 +1948,14 @@ def _is_deterministic_smt_hint_validation(d: dict[str, Any]) -> bool:
+     return _inference_substrate_matches(d, DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE)
+ 
+ 
++def _is_native_gguf_backend_bisect(d: dict[str, Any]) -> bool:
++    """True when the artifact declares a native-llama.cpp-CLI backend/flag bisect (stops at
++    the first working combination, not a full generation benchmark). See
++    NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE for the exemplar incident (exp5323)."""
++
++    return _inference_substrate_matches(d, NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE)
++
++
+ def _descriptor_key_present(value: Any, wanted: str) -> bool:
+     """True if a real artifact field named `wanted` appears outside metadata.
+ 
+@@ -2057,6 +2077,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
+             "min_duration_s": DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S,
+             "reason": "deterministic_smt_hint_validation",
+         }
++    if _is_native_gguf_backend_bisect(d):
++        return {
++            "substrate": NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
++            "min_duration_s": NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S,
++            "reason": "native_gguf_backend_bisect",
++        }
+     if _is_live_llm_inference(d):
+         return {
+             "substrate": LIVE_LLM_SUBSTRATE,
+diff --git a/tests/python/test_adversarial_verify_native_gguf_backend_bisect_substrate.py b/tests/python/test_adversarial_verify_native_gguf_backend_bisect_substrate.py
+new file mode 100644
+index 0000000000..7962e67a0a
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_native_gguf_backend_bisect_substrate.py
+@@ -0,0 +1,97 @@
++"""Tests for adversarial_verify.py's local_native_llama_cpp_gguf_backend_bisect substrate.
++
++Origin: 2026-07-06. exp5323 (results/experiment_5323_native_gguf_backend_flag_bisect_v486.json)
++resolved the multi-milestone native-llama-cli-hang blocker (see CLAUDE.md's Build Environment
++section and the exp5297/exp5309 incidents) by independently bisecting to the -st/--single-turn
++flag, confirming completed_load_first_token_and_8_tokens=True with authenticated GPU offload in
++20.8s. Got flagged DURATION_TOO_SHORT under the generic 60s live_llm_inference floor because no
++substrate category recognized "a bounded bisect that stops at the first working flag combination,
++not a full generation benchmark" -- the seventh time this exact bug class has appeared this week.
++
++Spec refs: none (operational lint fix, no OpenSpec capability).
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import scripts.adversarial_verify as av
++
++
++def _write_payload(tmp_path: Path, payload: dict[str, Any]) -> Path:
++    path = tmp_path / "artifact.json"
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _report_for_payload(tmp_path: Path, payload: dict[str, Any]) -> dict[str, Any]:
++    return av.verify_artifact(_write_payload(tmp_path, payload))
++
++
++def _flag_kinds(report: dict[str, Any]) -> set[str]:
++    return {flag["kind"] for flag in report["flags"]}
++
++
++class TestIsNativeGgufBackendBisect:
++    def test_recognizes_canonical_substrate_value(self) -> None:
++        d = {"inference_substrate": "local_native_llama_cpp_gguf_backend_bisect"}
++        assert av._is_native_gguf_backend_bisect(d) is True
++
++    def test_does_not_match_generic_live_llm_inference(self) -> None:
++        d = {"inference_substrate": "live_llm_inference"}
++        assert av._is_native_gguf_backend_bisect(d) is False
++
++    def test_does_not_match_missing_field(self) -> None:
++        assert av._is_native_gguf_backend_bisect({}) is False
++
++
++class TestDurationFloorForArtifact:
++    def test_returns_the_5s_floor(self) -> None:
++        d = {"inference_substrate": "local_native_llama_cpp_gguf_backend_bisect"}
++        floor = av.duration_floor_for_artifact(d)
++        assert floor == {
++            "substrate": "local_native_llama_cpp_gguf_backend_bisect",
++            "min_duration_s": 5.0,
++            "reason": "native_gguf_backend_bisect",
++        }
++
++
++class TestExp5323IncidentReproduction:
++    def test_21s_bisect_no_longer_flags_duration_too_short(self, tmp_path: Path) -> None:
++        payload = {
++            "experiment": "exp5323_repro",
++            "honest_verdict": (
++                "complete: native_llama_cpp_backend_candidate_ready=flagship_dense:llama-cli"
++            ),
++            "inference_substrate": "local_native_llama_cpp_gguf_backend_bisect",
++            "duration_s": 20.830088,
++            "MODEL_SPECS": {"flagship_dense": {"hf_id": "unsloth/gemma-4-31B-it-GGUF"}},
++        }
++        report = _report_for_payload(tmp_path, payload)
++        assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
++
++    def test_genuinely_too_fast_claim_is_still_caught(self, tmp_path: Path) -> None:
++        payload = {
++            "experiment": "exp_fabricated_bisect",
++            "honest_verdict": "complete: fake fast bisect result",
++            "inference_substrate": "local_native_llama_cpp_gguf_backend_bisect",
++            "duration_s": 0.5,
++            "MODEL_SPECS": {"flagship_dense": {"hf_id": "unsloth/gemma-4-31B-it-GGUF"}},
++        }
++        report = _report_for_payload(tmp_path, payload)
++        assert "DURATION_TOO_SHORT" in _flag_kinds(report)
++
++    def test_full_generation_claim_still_needs_the_60s_floor(self, tmp_path: Path) -> None:
++        """Regression guard: declaring the new substrate must not become a loophole for
++        artifacts that actually claim full generative inference."""
++        payload = {
++            "experiment": "exp_full_generation",
++            "honest_verdict": "complete: full generation run",
++            "inference_substrate": "live_llm_inference",
++            "duration_s": 10.0,
++            "model_specs": {"gguf_path": "/some/path/model.gguf"},
++        }
++        report = _report_for_payload(tmp_path, payload)
++        assert "DURATION_TOO_SHORT" in _flag_kinds(report)
+-- 
+2.55.0
+

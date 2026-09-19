@@ -1,0 +1,2046 @@
+From 0592091c1c838166c379168b514d16033e25e0f4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 01:16:21 -0400
+Subject: [PATCH 00957/11362] [conductor] Archive .364 -> activate .365;
+ GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse
+ under yaml.safe_load, the core pretest subset is green, and the ARC agentic
+ modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth,
+ arc_world_model_dsl), so .365 can EXECUTE the ARC first-solve tasks.
+
+Automated research step by research conductor.
+Task ID: exp3945-archive-v364-activate-v365
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  69 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../archive_v364_activate_v365_3945.py        | 949 ++++++++++++++++++
+ research-complete.yaml                        |  52 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...iment_3945_archive_v364_activate_v365.json | 109 ++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...eriment_3945_archive_v364_activate_v365.py |  28 +
+ ...eriment_3945_archive_v364_activate_v365.py | 492 +++++++++
+ 23 files changed, 1729 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_v364_activate_v365_3945.py
+ create mode 100644 results/experiment_3945_archive_v364_activate_v365.json
+ create mode 100644 scripts/experiments/experiment_3945_archive_v364_activate_v365.py
+ create mode 100644 tests/python/test_experiment_3945_archive_v364_activate_v365.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index d53092af43..5184540b80 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -18485,3 +18485,72 @@ markdown edits.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3943 | Implemented (`python/carnot/reporting/literature_synthesis_3943.py`, `scripts/experiments/experiment_3943_literature_synthesis.py`) | Implemented (`tests/python/test_experiment_3943_literature_synthesis.py`) |
++
++### REQ-REPORT-3945: Archive .364 And Activate .365 With ARC Substrate Gates
++
++The Exp 3945 workflow SHALL archive milestone `2026.06.364`, confirm milestone
++`2026.06.365` is active in the current research roadmap, and write
++`results/experiment_3945_archive_v364_activate_v365.json`. Before editing any
++record, it SHALL run `.venv/bin/python -c "import yaml;
++yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
++that precondition fails, it SHALL write a blocked artifact whose
++`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
++NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
++
++The workflow SHALL read Exp 3934 through Exp 3944 verdicts by invoking
++`scripts/summarize_artifact.py` over the authoritative result artifact paths
++rather than raw-reading the milestone JSONs for verdict extraction. It SHALL
++append an idempotent `.364` archive record to `research-complete.yaml`
++containing all eleven task verdicts, recording missing artifacts as missing
++rather than fabricating conductor success. Every appended scalar containing
++`: ` SHALL be quoted so the .355 colon-poison failure cannot recur.
++
++After the archive append, the workflow SHALL confirm both
++`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
++`yaml.safe_load`. It SHALL run `.venv/bin/pytest
++tests/python/test_arc_agi3_world_model.py
++tests/python/test_arc_world_model_synth.py
++tests/python/test_arc_world_model_dsl.py -q --no-header -n 0 --no-cov -o
++addopts=` and record the bare boolean `arc_substrate_tests_green`. It SHALL
++run an import probe for `carnot.agentic.arc_agi3_world_model`,
++`carnot.agentic.arc_world_model_synth`, and
++`carnot.agentic.arc_world_model_dsl`, recording the aggregate bare boolean
++`arc_modules_importable` plus per-module import results.
++
++The terminal artifact SHALL include bare top-level fields
++`archived_milestone`, `activated_milestone`,
++`research_complete_yaml_parses`, `exclusion_manifest_parses`,
++`arc_substrate_tests_green`, `arc_modules_importable`, `honest_verdict`,
++`duration_s`, and `inference_substrate`. On the complete path,
++`honest_verdict` SHALL start with `complete:` or `success:`. Blocked verdicts
++SHALL start with `blocked_<resource>`. This is a record-only aggregation task
++and SHALL NOT modify `ops/changelog.md`, `ops/status.md`,
++`_bmad/traceability.md`, or `scripts/research_conductor.py`; those documents
++are reconciled by the conductor's separate status step.
++
++#### SCENARIO-REPORT-3945: V364 Archive Opens The ARC First-Solve Push
++
++**Given** `.365` is active, `research-complete.yaml` and
++`ops/exclusion_manifest.yaml` safe-load, the Exp 3934 through Exp 3944
++artifacts can be summarized, the ARC substrate tests pass, and the ARC agentic
++modules import
++**When** the Exp 3945 workflow runs
++**Then** it appends the `.364` task verdicts to `research-complete.yaml`,
++quotes colon-bearing scalars, confirms both YAML files still parse, records
++the ARC test and import green gates, writes the required terminal artifact,
++and leaves ops/status/traceability/conductor files unchanged.
++
++#### SCENARIO-REPORT-3945-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
++
++**Given** `research-complete.yaml` does not safe-load
++**When** the Exp 3945 workflow runs
++**Then** it writes a blocked artifact prefixed by
++`blocked_research_complete_yaml_poison`, records the failed YAML parse in
++`preconditions_checked`, and leaves both `research-complete.yaml` and
++`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
++
++## Implementation Status (REQ-REPORT-3945)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3945 | Planned (`python/carnot/reporting/archive_v364_activate_v365_3945.py`, `scripts/experiments/experiment_3945_archive_v364_activate_v365.py`) | Planned (`tests/python/test_experiment_3945_archive_v364_activate_v365.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 58bcd4b9f4..ab01d92c2a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 160,
+   "code_violations": 0,
+-  "experiments_checked": 2998,
++  "experiments_checked": 2999,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v364_activate_v365_3945.py b/python/carnot/reporting/archive_v364_activate_v365_3945.py
+new file mode 100644
+index 0000000000..b52a5ef849
+--- /dev/null
++++ b/python/carnot/reporting/archive_v364_activate_v365_3945.py
+@@ -0,0 +1,949 @@
++"""Archive .364, activate .365, and record ARC substrate readiness.
++
++Spec refs: REQ-REPORT-3945, SCENARIO-REPORT-3945,
++SCENARIO-REPORT-3945-BLOCKED-YAML.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.364"
++ACTIVATED_MILESTONE = "2026.06.365"
++RANDOM_SEED = 3945
++OUTPUT_REL_PATH = Path("results/experiment_3945_archive_v364_activate_v365.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++PYTHON_BIN = Path(".venv/bin/python")
++PYTEST_BIN = Path(".venv/bin/pytest")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++ARCHIVE_MARKER = "correction_type: v364_archive_activate_v365_arc_push"
++
++ARC_SUBSTRATE_TESTS = (
++    "tests/python/test_arc_agi3_world_model.py",
++    "tests/python/test_arc_world_model_synth.py",
++    "tests/python/test_arc_world_model_dsl.py",
++)
++ARC_IMPORT_MODULES = (
++    "carnot.agentic.arc_agi3_world_model",
++    "carnot.agentic.arc_world_model_synth",
++    "carnot.agentic.arc_world_model_dsl",
++)
++ARC_IMPORT_INCANTATION = (
++    "import importlib, json, sys\n"
++    f"mods = {list(ARC_IMPORT_MODULES)!r}\n"
++    "out = {}\n"
++    "for mod in mods:\n"
++    "    try:\n"
++    "        importlib.import_module(mod)\n"
++    "        out[mod] = {'import_ok': True, 'error': None}\n"
++    "    except Exception as exc:\n"
++    "        out[mod] = {'import_ok': False, 'error': repr(exc)}\n"
++    "print(json.dumps(out, sort_keys=True))\n"
++    "sys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
++)
++
++V364_TASKS = (
++    {
++        "exp_id": "3934",
++        "id": "exp3934-archive-v363-activate-v364",
++        "title": "Archive .363 and activate .364 with unblock-state gates",
++        "deliverable": "results/experiment_3934_archive_v363_activate_v364.json",
++    },
++    {
++        "exp_id": "3935",
++        "id": "exp3935-run-validate-competent-judge",
++        "title": "Run and validate the competent GenRM/ThinkPRM judge",
++        "deliverable": "results/experiment_3935_competent_judge_build.json",
++    },
++    {
++        "exp_id": "3936",
++        "id": "exp3936-valid-efficiency-head-to-head",
++        "title": "Valid efficiency head-to-head",
++        "deliverable": "results/experiment_3936_valid_efficiency_head_to_head.json",
++    },
++    {
++        "exp_id": "3937",
++        "id": "exp3937-non-degenerate-cascade-router",
++        "title": "Non-degenerate Meta-EBM cascade router",
++        "deliverable": "results/experiment_3937_non_degenerate_cascade_router.json",
++    },
++    {
++        "exp_id": "3938",
++        "id": "exp3938-moat-scissor-replication-independent-corpus",
++        "title": "Moat scissor replication on an independent corpus",
++        "deliverable": "results/experiment_3938_moat_scissor_replication.json",
++    },
++    {
++        "exp_id": "3939",
++        "id": "exp3939-arc-agi3-agentic-step2",
++        "title": "ARC-AGI-3 agentic step 2",
++        "deliverable": "results/experiment_3939_arc_agi3_agentic_step2.json",
++    },
++    {
++        "exp_id": "3940",
++        "id": "exp3940-fr11-v27-cascade-band-online-learning",
++        "title": "FR-11 v27 cascade-band online learning",
++        "deliverable": "results/experiment_3940_fr11_v27_cascade_band_online_learning.json",
++    },
++    {
++        "exp_id": "3941",
++        "id": "exp3941-hardware-continuity-clean",
++        "title": "Hardware continuity clean rerun",
++        "deliverable": "results/experiment_3941_hardware_continuity_clean.json",
++    },
++    {
++        "exp_id": "3942",
++        "id": "exp3942-verifier-cross-domain-discriminating-value-map",
++        "title": "Verifier cross-domain discriminating-value map",
++        "deliverable": "results/experiment_3942_verifier_cross_domain_map.json",
++    },
++    {
++        "exp_id": "3943",
++        "id": "exp3943-literature-synthesis",
++        "title": "Literature synthesis for verifier efficiency proof",
++        "deliverable": "results/experiment_3943_literature_synthesis.json",
++    },
++    {
++        "exp_id": "3944",
++        "id": "exp3944-capstone-v364",
++        "title": "Capstone .364 verifier scorecard",
++        "deliverable": "results/experiment_3944_capstone_v364.json",
++    },
++)
++SUMMARY_EXP_IDS = tuple(str(task["exp_id"]) for task in V364_TASKS)
++SUMMARY_DELIVERABLES = {str(task["exp_id"]): str(task["deliverable"]) for task in V364_TASKS}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "archived_milestone",
++    "activated_milestone",
++    "research_complete_yaml_parses",
++    "exclusion_manifest_parses",
++    "arc_substrate_tests_green",
++    "arc_modules_importable",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "archived_milestone": "Provenance: which milestone was archived (2026.06.364).",
++    "activated_milestone": "Confirms .365 is live so downstream tasks resolve.",
++    "research_complete_yaml_parses": "Bare bool: the colon-poison guard still loads.",
++    "exclusion_manifest_parses": "Bare bool: the manifest still loads under yaml.safe_load.",
++    "arc_substrate_tests_green": "Bare bool: the ARC M0/M2 unit tests pass.",
++    "arc_modules_importable": "Bare bool: the agentic ARC modules import for .365 execution.",
++    "honest_verdict": "Terminal-prefix verdict for the record task.",
++    "duration_s": "Aggregation wall-clock duration with a small floor.",
++    "inference_substrate": "Aggregation substrate for a record-only task.",
++}
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured subprocess output for one required command."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def yaml_parses(text: str) -> bool:
++    """Return true when PyYAML can safe-load the provided text."""
++
++    try:
++        yaml.safe_load(text)
++    except yaml.YAMLError:
++        return False
++    return True
++
++
++def yaml_single_quote(value: str) -> str:
++    """Render a YAML single-quoted scalar."""
++
++    return "'" + value.replace("'", "''") + "'"
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Compute a duration with the aggregation plausibility floor."""
++
++    if started_s is None:
++        return 0.0001
++    end_s = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(0.0001, end_s - float(started_s)), 6)
++
++
++def write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write deterministic JSON with a trailing newline."""
++
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    """Return true when the value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def no_forbidden_markers(value: Mapping[str, Any]) -> bool:
++    """Return true when aggregation output did not copy live-compute markers."""
++
++    encoded = json.dumps(value, sort_keys=True)
++    return all(marker not in encoded for marker in ("GGUF / CUDA", "GGUF", "CUDA", "live-model"))
++
++
++def _milestone_from_text(text: str) -> str:
++    for line in text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def read_active_milestone(root: Path) -> tuple[str, str]:
++    """Return the active milestone and roadmap path used for confirmation."""
++
++    for rel_path in (Path("research-roadmap.yaml"), Path("research-roadmap-next.yaml")):
++        path = root / rel_path
++        if path.exists():
++            milestone = _milestone_from_text(path.read_text(encoding="utf-8"))
++            if milestone != "unknown":
++                return milestone, str(rel_path)
++    return "unknown", "research-roadmap.yaml"
++
++
++def research_complete_yaml_command() -> list[str]:
++    """Return the mandated research-complete YAML poison-guard command."""
++
++    return [
++        str(PYTHON_BIN),
++        "-c",
++        "import yaml; yaml.safe_load(open('research-complete.yaml'))",
++    ]
++
++
++def summary_command() -> list[str]:
++    """Return the disciplined artifact-reader command for Exp 3934 through 3944."""
++
++    return [
++        str(PYTHON_BIN),
++        "scripts/summarize_artifact.py",
++        *[SUMMARY_DELIVERABLES[exp_id] for exp_id in SUMMARY_EXP_IDS],
++    ]
++
++
++def arc_substrate_test_command() -> list[str]:
++    """Return the mandated ARC substrate test command."""
++
++    return [
++        str(PYTEST_BIN),
++        *ARC_SUBSTRATE_TESTS,
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts=",
++    ]
++
++
++def arc_modules_import_command() -> list[str]:
++    """Return the ARC module import diagnostic command."""
++
++    return [str(PYTHON_BIN), "-c", ARC_IMPORT_INCANTATION]
++
++
++def _run_command(command: list[str], root: Path) -> CommandResult:
++    try:
++        completed = subprocess.run(
++            command,
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++        return CommandResult(
++            command=command,
++            exit_code=int(completed.returncode),
++            stdout=str(completed.stdout),
++            stderr=str(completed.stderr),
++        )
++    except subprocess.CalledProcessError as exc:
++        return CommandResult(
++            command=command,
++            exit_code=int(exc.returncode),
++            stdout=str(exc.output or ""),
++            stderr=str(exc.stderr or ""),
++        )
++    except OSError as exc:
++        return CommandResult(command=command, exit_code=127, stdout="", stderr=str(exc))
++
++
++def run_research_complete_parse_check(root: Path) -> CommandResult:
++    """Run the mandated YAML poison-guard command."""
++
++    return _run_command(research_complete_yaml_command(), root)
++
++
++def run_summarize_artifacts(root: Path) -> CommandResult:
++    """Run the disciplined artifact reader for the .364 source artifacts."""
++
++    return _run_command(summary_command(), root)
++
++
++def run_arc_substrate_tests(root: Path) -> CommandResult:
++    """Run the ARC substrate green-gate tests."""
++
++    return _run_command(arc_substrate_test_command(), root)
++
++
++def run_arc_modules_import_check(root: Path) -> CommandResult:
++    """Run the ARC module import diagnostic."""
++
++    return _run_command(arc_modules_import_command(), root)
++
++
++def _exp_id_from_artifact_line(line: str) -> str | None:
++    stripped = line.strip()
++    if not stripped.startswith("ARTIFACT  experiment_"):
++        return None
++    return stripped.split("experiment_", 1)[1].split("_", 1)[0]
++
++
++def _parse_float(raw: str) -> float | None:
++    try:
++        return float(raw.strip())
++    except ValueError:
++        return None
++
++
++def parse_summary_records(summary_stdout: str) -> dict[str, dict[str, Any]]:
++    """Extract per-experiment verdicts, flags, and durations from summary text."""
++
++    records: dict[str, dict[str, Any]] = {}
++    current_exp_id: str | None = None
++    for line in summary_stdout.splitlines():
++        exp_id = _exp_id_from_artifact_line(line)
++        if exp_id is not None:
++            current_exp_id = exp_id
++            records.setdefault(exp_id, {})
++            continue
++        if current_exp_id is None:
++            continue
++        stripped = line.strip()
++        if stripped.startswith("verdict"):
++            records[current_exp_id]["verdict"] = stripped.split(":", 1)[1].strip()
++        elif stripped.startswith("flagged_adversarial"):
++            records[current_exp_id]["stamped_flagged"] = "stamped): True" in stripped
++            records[current_exp_id]["live_critical"] = "LIVE re-check: CRITICAL" in stripped
++        elif stripped.startswith("duration_s"):
++            raw_duration = stripped.split(":", 1)[1].split("substrate:", 1)[0].strip()
++            records[current_exp_id]["duration_s"] = _parse_float(raw_duration)
++    return records
++
++
++def _decorated_verdict(exp_id: str, verdict: str, record: Mapping[str, Any]) -> str:
++    value = verdict
++    if record.get("live_critical") is True:
++        value += " [summarize_artifact LIVE_CRITICAL]"
++    elif record.get("stamped_flagged") is True:
++        value += " [summarize_artifact stamped_flagged]"
++    if exp_id == "3944" and "efficiencyINCONCLUSIVE" in value:
++        value += " [efficiency=INCONCLUSIVE moat_replicated=false earns=false]"
++    return value
++
++
++def task_verdicts_from_summary(summary_stdout: str) -> dict[str, str]:
++    """Return all .364 task verdicts from summarize_artifact output."""
++
++    records = parse_summary_records(summary_stdout)
++    verdicts: dict[str, str] = {}
++    for task in V364_TASKS:
++        exp_id = str(task["exp_id"])
++        task_id = str(task["id"])
++        record = records.get(exp_id, {})
++        raw_verdict = str(record.get("verdict") or "")
++        if raw_verdict:
++            verdicts[task_id] = _decorated_verdict(exp_id, raw_verdict, record)
++        else:
++            deliverable = SUMMARY_DELIVERABLES[exp_id]
++            verdicts[task_id] = (
++                f"missing_artifact: summarize_artifact.py found no JSON artifact for {deliverable}"
++            )
++    return verdicts
++
++
++def build_prior_verdicts_summary(task_verdicts: Mapping[str, str]) -> str:
++    """Build the required bare scalar one-line-per-experiment summary."""
++
++    lines: list[str] = []
++    for task in V364_TASKS:
++        task_id = str(task["id"])
++        exp_id = str(task["exp_id"])
++        lines.append(f"exp{exp_id}: {task_verdicts.get(task_id, 'missing')}")
++    return "\n".join(lines)
++
++
++def build_research_complete_block(task_verdicts: Mapping[str, str]) -> str:
++    """Build the append-only `.364` archive record."""
++
++    finding = (
++        ".364 landed the competent-judge fixture but left the verifier-earns-place "
++        "proof inconclusive: most proof tasks lack landed artifacts, and the .365 "
++        "push shifts to ARC first-solve work on the recorded substrate."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  {ARCHIVE_MARKER}",
++        f"  title: {yaml_single_quote('Archive .364 and activate .365 for the ARC first-solve push')}",
++        "  doc: docs/research-notes/arc-agi3-agent-research-plan.md",
++        "  completed: '2026-06-09'",
++        f"  finding: {yaml_single_quote(finding)}",
++        "  activation_recorded: exp3945-archive-v364-activate-v365",
++        "  tasks:",
++    ]
++    for task in V364_TASKS:
++        task_id = str(task["id"])
++        result = task_verdicts.get(task_id, "missing")
++        lines.extend(
++            [
++                f"  - id: {task_id}",
++                f"    title: {yaml_single_quote(str(task['title']))}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {yaml_single_quote(result)}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def append_research_complete_record(text: str, task_verdicts: Mapping[str, str]) -> str:
++    """Append the `.364` archive record once, preserving existing content."""
++
++    if ARCHIVE_MARKER in text:
++        return text
++    return f"{text.rstrip()}\n{build_research_complete_block(task_verdicts)}"
++
++
++def parse_arc_module_imports(result: CommandResult) -> dict[str, dict[str, Any]]:
++    """Parse the import-probe JSON, falling back to all-false on malformed output."""
++
++    try:
++        raw = json.loads(result.stdout)
++    except json.JSONDecodeError as exc:
++        return {
++            module: {"import_ok": False, "error": f"unparseable import probe output: {exc}"}
++            for module in ARC_IMPORT_MODULES
++        }
++    parsed: dict[str, dict[str, Any]] = {}
++    for module in ARC_IMPORT_MODULES:
++        row = raw.get(module) if isinstance(raw, Mapping) else None
++        if isinstance(row, Mapping):
++            parsed[module] = {
++                "import_ok": bool(row.get("import_ok")),
++                "error": row.get("error"),
++            }
++        else:
++            parsed[module] = {"import_ok": False, "error": "module missing from import probe"}
++    return parsed
++
++
++def terminal_verdict() -> str:
++    """Return the complete-path verdict."""
++
++    return "complete: archived_v364_v365_active_arc_substrate_green_modules_importable"
++
++
++def _base_payload(
++    *,
++    honest_verdict: str,
++    research_complete_yaml_parses: bool,
++    exclusion_manifest_parses: bool,
++    arc_substrate_tests_green: bool,
++    arc_modules_importable: bool,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    task_verdicts: Mapping[str, str],
++    active_milestone_confirmed: bool,
++    active_roadmap_path: str,
++    research_complete_parse_result: CommandResult | None,
++    summary_result: CommandResult | None,
++    arc_substrate_test_result: CommandResult | None,
++    arc_modules_import_result: CommandResult | None,
++    arc_module_import_results: Mapping[str, Any] | None,
++) -> JsonDict:
++    payload: JsonDict = {
++        "schema": "carnot.archive_activation.v364_to_v365_3945.v1",
++        "experiment_id": "exp3945",
++        "task_id": "exp3945-archive-v364-activate-v365",
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "exclusion_manifest_parses": exclusion_manifest_parses,
++        "arc_substrate_tests_green": arc_substrate_tests_green,
++        "arc_modules_importable": arc_modules_importable,
++        "honest_verdict": honest_verdict,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "prior_milestone_verdicts_summary": build_prior_verdicts_summary(task_verdicts),
++        "task_verdicts": dict(task_verdicts),
++        "n_tasks_archived": len(task_verdicts),
++        "research_complete_parse_command": (
++            research_complete_parse_result.command
++            if research_complete_parse_result
++            else research_complete_yaml_command()
++        ),
++        "research_complete_parse_exit_code": (
++            research_complete_parse_result.exit_code if research_complete_parse_result else None
++        ),
++        "summary_command": summary_result.command if summary_result else summary_command(),
++        "summary_exit_code": summary_result.exit_code if summary_result else None,
++        "arc_substrate_test_command": (
++            arc_substrate_test_result.command
++            if arc_substrate_test_result
++            else arc_substrate_test_command()
++        ),
++        "arc_substrate_test_exit_code": (
++            arc_substrate_test_result.exit_code if arc_substrate_test_result else None
++        ),
++        "arc_modules_import_command": (
++            arc_modules_import_result.command
++            if arc_modules_import_result
++            else arc_modules_import_command()
++        ),
++        "arc_modules_import_exit_code": (
++            arc_modules_import_result.exit_code if arc_modules_import_result else None
++        ),
++        "arc_module_import_results": dict(arc_module_import_results or {}),
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "active_roadmap_path": active_roadmap_path,
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(
++    reason: str,
++    *,
++    research_complete_yaml_parses: bool,
++    exclusion_manifest_parses: bool,
++    arc_substrate_tests_green: bool,
++    arc_modules_importable: bool,
++    preconditions_checked: Mapping[str, Any],
++    started_s: float | None,
++    now_s: float | None,
++    task_verdicts: Mapping[str, str] | None = None,
++    active_milestone_confirmed: bool = False,
++    active_roadmap_path: str = "research-roadmap.yaml",
++    research_complete_parse_result: CommandResult | None = None,
++    summary_result: CommandResult | None = None,
++    arc_substrate_test_result: CommandResult | None = None,
++    arc_modules_import_result: CommandResult | None = None,
++    arc_module_import_results: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build a blocked artifact without fabricating green gates."""
++
++    return _base_payload(
++        honest_verdict=reason,
++        research_complete_yaml_parses=research_complete_yaml_parses,
++        exclusion_manifest_parses=exclusion_manifest_parses,
++        arc_substrate_tests_green=arc_substrate_tests_green,
++        arc_modules_importable=arc_modules_importable,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_from(started_s, now_s),
++        task_verdicts=task_verdicts or {},
++        active_milestone_confirmed=active_milestone_confirmed,
++        active_roadmap_path=active_roadmap_path,
++        research_complete_parse_result=research_complete_parse_result,
++        summary_result=summary_result,
++        arc_substrate_test_result=arc_substrate_test_result,
++        arc_modules_import_result=arc_modules_import_result,
++        arc_module_import_results=arc_module_import_results,
++    )
++
++
++def build_complete_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    started_s: float | None,
++    now_s: float | None,
++    task_verdicts: Mapping[str, str],
++    active_roadmap_path: str,
++    research_complete_parse_result: CommandResult,
++    summary_result: CommandResult,
++    arc_substrate_test_result: CommandResult,
++    arc_modules_import_result: CommandResult,
++    arc_module_import_results: Mapping[str, Any],
++) -> JsonDict:
++    """Build the complete Exp 3945 terminal artifact."""
++
++    payload = _base_payload(
++        honest_verdict=terminal_verdict(),
++        research_complete_yaml_parses=True,
++        exclusion_manifest_parses=True,
++        arc_substrate_tests_green=True,
++        arc_modules_importable=True,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_from(started_s, now_s),
++        task_verdicts=task_verdicts,
++        active_milestone_confirmed=True,
++        active_roadmap_path=active_roadmap_path,
++        research_complete_parse_result=research_complete_parse_result,
++        summary_result=summary_result,
++        arc_substrate_test_result=arc_substrate_test_result,
++        arc_modules_import_result=arc_modules_import_result,
++        arc_module_import_results=arc_module_import_results,
++    )
++    validate_artifact(payload)
++    return payload
++
++
++def _write_blocked(output_path: Path, payload: Mapping[str, Any]) -> Path:
++    write_payload(output_path, payload)
++    return output_path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    research_complete_parse_result: CommandResult | None = None,
++    summary_result: CommandResult | None = None,
++    arc_substrate_test_result: CommandResult | None = None,
++    arc_modules_import_result: CommandResult | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Append the `.364` archive and write the Exp 3945 artifact."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    manifest_path = root_path / EXCLUSION_MANIFEST_REL_PATH
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    complete_exists = complete_path.exists()
++    complete_text = complete_path.read_text(encoding="utf-8") if complete_exists else ""
++    parse_result = (
++        research_complete_parse_result
++        if research_complete_parse_result is not None
++        else run_research_complete_parse_check(root_path)
++    )
++    parses_before = complete_exists and parse_result.exit_code == 0 and yaml_parses(complete_text)
++    preconditions: JsonDict = {
++        "research_complete_yaml_exists": complete_exists,
++        "research_complete_yaml_parsed_before": parses_before,
++        "research_complete_yaml_parsed_after": False,
++        "exclusion_manifest_exists": manifest_path.exists(),
++        "exclusion_manifest_parsed": False,
++        "active_milestone": active_milestone,
++        "active_roadmap_path": active_roadmap_path,
++    }
++    if not complete_exists:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_yaml_poison_missing",
++                research_complete_yaml_parses=False,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++            ),
++        )
++    if not parses_before:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_yaml_poison",
++                research_complete_yaml_parses=False,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++            ),
++        )
++    if active_milestone != ACTIVATED_MILESTONE:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_v365_not_active",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++            ),
++        )
++
++    summary = summary_result if summary_result is not None else run_summarize_artifacts(root_path)
++    if summary.exit_code not in {0, 1, 2}:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_v364_summary_command_failed",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++            ),
++        )
++    task_verdicts = task_verdicts_from_summary(summary.stdout)
++    complete_appended = append_research_complete_record(complete_text, task_verdicts)
++    if not yaml_parses(complete_appended):
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_append_invalid",
++                research_complete_yaml_parses=False,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++            ),
++        )
++    complete_path.write_text(complete_appended, encoding="utf-8")
++    preconditions["research_complete_yaml_parsed_after"] = yaml_parses(
++        complete_path.read_text(encoding="utf-8")
++    )
++    if not manifest_path.exists():
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_exclusion_manifest_missing",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++            ),
++        )
++    manifest_text = manifest_path.read_text(encoding="utf-8")
++    manifest_parses = yaml_parses(manifest_text)
++    preconditions["exclusion_manifest_parsed"] = manifest_parses
++    if not manifest_parses:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_exclusion_manifest_yaml_poison",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=False,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++            ),
++        )
++
++    test_result = (
++        arc_substrate_test_result
++        if arc_substrate_test_result is not None
++        else run_arc_substrate_tests(root_path)
++    )
++    if test_result.exit_code != 0:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_arc_substrate_tests_failed",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=True,
++                arc_substrate_tests_green=False,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++                arc_substrate_test_result=test_result,
++            ),
++        )
++
++    import_result = (
++        arc_modules_import_result
++        if arc_modules_import_result is not None
++        else run_arc_modules_import_check(root_path)
++    )
++    import_results = parse_arc_module_imports(import_result)
++    imports_ok = import_result.exit_code == 0 and all(
++        bool(row.get("import_ok")) for row in import_results.values()
++    )
++    if not imports_ok:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_arc_module_import",
++                research_complete_yaml_parses=True,
++                exclusion_manifest_parses=True,
++                arc_substrate_tests_green=True,
++                arc_modules_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++                research_complete_parse_result=parse_result,
++                summary_result=summary,
++                arc_substrate_test_result=test_result,
++                arc_modules_import_result=import_result,
++                arc_module_import_results=import_results,
++            ),
++        )
++
++    payload = build_complete_artifact(
++        preconditions_checked=preconditions,
++        started_s=start,
++        now_s=now_s,
++        task_verdicts=task_verdicts,
++        active_roadmap_path=active_roadmap_path,
++        research_complete_parse_result=parse_result,
++        summary_result=summary,
++        arc_substrate_test_result=test_result,
++        arc_modules_import_result=import_result,
++        arc_module_import_results=import_results,
++    )
++    write_payload(output_path, payload)
++    return output_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3945 archive/activation contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    _ensure(not missing_principles, f"missing field principles: {missing_principles}")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _ensure(not isinstance(artifact.get(field), Mapping), f"{field} must be a bare scalar")
++    _ensure("model_specs" not in artifact, "model_specs must not be present")
++    _ensure("target_model" not in artifact, "target_model must not be present")
++    _ensure(no_forbidden_markers(artifact), "artifact must not contain compute-bound markers")
++    _ensure(artifact.get("archived_milestone") == ARCHIVED_MILESTONE, "archived milestone mismatch")
++    _ensure(artifact.get("activated_milestone") == ACTIVATED_MILESTONE, "activated milestone mismatch")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference substrate mismatch")
++    for field in (
++        "research_complete_yaml_parses",
++        "exclusion_manifest_parses",
++        "arc_substrate_tests_green",
++        "arc_modules_importable",
++    ):
++        _ensure(isinstance(artifact.get(field), bool), f"{field} bool required")
++    verdict = str(artifact.get("honest_verdict") or "")
++    _ensure(
++        verdict.startswith(("complete:", "success:", "blocked_")),
++        "honest_verdict must have a terminal prefix",
++    )
++    if verdict.startswith(("complete:", "success:")):
++        _ensure(
++            artifact.get("research_complete_yaml_parses") is True,
++            "research-complete YAML must parse",
++        )
++        _ensure(artifact.get("exclusion_manifest_parses") is True, "manifest must parse")
++        _ensure(
++            artifact.get("arc_substrate_tests_green") is True,
++            "ARC substrate tests must be green",
++        )
++        _ensure(
++            artifact.get("arc_modules_importable") is True,
++            "ARC module imports must pass",
++        )
++        _ensure(artifact.get("active_milestone_confirmed") is True, "active milestone required")
++        _ensure(artifact.get("n_tasks_archived") == len(V364_TASKS), "n_tasks_archived must equal 11")
++        summary = str(artifact.get("prior_milestone_verdicts_summary") or "")
++        for exp_id in SUMMARY_EXP_IDS:
++            _ensure(f"exp{exp_id}:" in summary, f"missing exp{exp_id} summary")
++    duration_s = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration_s, (int, float))
++        and not isinstance(duration_s, bool)
++        and float(duration_s) >= 0.0001,
++        "duration_s must be numeric with the 0.0001s floor",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(is_sha256(checksum), "reproducibility_checksum must be a sha256 hex string")
++    _ensure(checksum == payload_checksum(artifact), "reproducibility_checksum does not match artifact content")
++
++
++def main() -> int:
++    """Write the default Exp 3945 artifact and print its path."""
++
++    print(run(REPO_ROOT))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 290e65383b..183caf6dec 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -36843,3 +36843,55 @@ milestones:
+       \ against a competent judge (the .363 INCONCLUSIVE now resolved). paper_ready stays TRUE; frozen 0.9131 unchanged."
+     deliverable: results/experiment_3944_capstone_v364.json
+     result: OK (conductor)
++- id: 2026.06.364
++  correction_type: v364_archive_activate_v365_arc_push
++  title: 'Archive .364 and activate .365 for the ARC first-solve push'
++  doc: docs/research-notes/arc-agi3-agent-research-plan.md
++  completed: '2026-06-09'
++  finding: '.364 landed the competent-judge fixture but left the verifier-earns-place proof inconclusive: most proof tasks lack landed artifacts, and the .365 push shifts to ARC first-solve work on the recorded substrate.'
++  activation_recorded: exp3945-archive-v364-activate-v365
++  tasks:
++  - id: exp3934-archive-v363-activate-v364
++    title: 'Archive .363 and activate .364 with unblock-state gates'
++    deliverable: results/experiment_3934_archive_v363_activate_v364.json
++    result: 'complete: archived_v363_v364_active_unblock_state_recorded_green_gates'
++  - id: exp3935-run-validate-competent-judge
++    title: 'Run and validate the competent GenRM/ThinkPRM judge'
++    deliverable: results/experiment_3935_competent_judge_build.json
++    result: 'complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed'
++  - id: exp3936-valid-efficiency-head-to-head
++    title: 'Valid efficiency head-to-head'
++    deliverable: results/experiment_3936_valid_efficiency_head_to_head.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json'
++  - id: exp3937-non-degenerate-cascade-router
++    title: 'Non-degenerate Meta-EBM cascade router'
++    deliverable: results/experiment_3937_non_degenerate_cascade_router.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json'
++  - id: exp3938-moat-scissor-replication-independent-corpus
++    title: 'Moat scissor replication on an independent corpus'
++    deliverable: results/experiment_3938_moat_scissor_replication.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json'
++  - id: exp3939-arc-agi3-agentic-step2
++    title: 'ARC-AGI-3 agentic step 2'
++    deliverable: results/experiment_3939_arc_agi3_agentic_step2.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json'
++  - id: exp3940-fr11-v27-cascade-band-online-learning
++    title: 'FR-11 v27 cascade-band online learning'
++    deliverable: results/experiment_3940_fr11_v27_cascade_band_online_learning.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json'
++  - id: exp3941-hardware-continuity-clean
++    title: 'Hardware continuity clean rerun'
++    deliverable: results/experiment_3941_hardware_continuity_clean.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json'
++  - id: exp3942-verifier-cross-domain-discriminating-value-map
++    title: 'Verifier cross-domain discriminating-value map'
++    deliverable: results/experiment_3942_verifier_cross_domain_map.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json'
++  - id: exp3943-literature-synthesis
++    title: 'Literature synthesis for verifier efficiency proof'
++    deliverable: results/experiment_3943_literature_synthesis.json
++    result: 'complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched'
++  - id: exp3944-capstone-v364
++    title: 'Capstone .364 verifier scorecard'
++    deliverable: results/experiment_3944_capstone_v364.json
++    result: 'complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]'
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 135fcbd176..17a4a785d0 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T04:58:53.899897+00:00",
+-  "finished_at": "2026-06-09T04:58:53.923073+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-09T05:16:06.047065+00:00",
++  "finished_at": "2026-06-09T05:16:06.070998+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 901b07f4e9..c5a784f282 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T04:58:54Z",
++  "run_date": "2026-06-09T05:16:06Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index afcb78ddec..f394f47f15 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T04:58:54Z",
+-  "finished_at": "2026-06-09T04:58:55Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-09T05:16:07Z",
++  "finished_at": "2026-06-09T05:16:07Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index ffe72e6735..a4a6f3eb4c 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T04:58:55Z",
++  "run_date": "2026-06-09T05:16:07Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 2dd432cc2f..14aad9ccbd 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-09T04:58:55Z",
++  "run_date": "2026-06-09T05:16:07Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d050b5f851..0388fc6b19 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-09T04:57:14.157749Z",
+-  "duration_s": 0.012525796890258789,
++  "run_date": "2026-06-09T05:14:25.917883Z",
++  "duration_s": 0.010536909103393555,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "933746e5e9a059d85389130982f6ffa13d7293757bdb26195c0bbd03106adc85",
++  "reproducibility_checksum": "287dd4b8af257f1330f06865b12accb8a3bc721a820b88200c461c0c099cae89",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "891225493cc1505ab242027a09baa24d7a57898e"
++    "adversarial_verify_version": "f863a7fbe92f2b7316af42824b3d8073dbd4be1d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e9ec9d6c7b..844f2ba542 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-09T04:57:14.172921Z",
+-  "duration_s": 0.011266708374023438,
++  "run_date": "2026-06-09T05:14:25.930444Z",
++  "duration_s": 0.009321212768554688,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "f01cf51eae3a3efa7c79e1d999da5665522628a58d6d4e2a0b2f002c7b9adc0b",
++  "reproducibility_checksum": "17fe88625e9e8186f6cb545dc06d39222cf1441ae6f42b0e781d9941a0f0e6ca",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "891225493cc1505ab242027a09baa24d7a57898e"
++    "adversarial_verify_version": "f863a7fbe92f2b7316af42824b3d8073dbd4be1d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 2e7a4260f5..89edc1a707 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1092891693115234,
++  "efficiency_gains_ms": 2.108335494995117,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index e2dfbea9d9..fe33da2bd7 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.272367000579834,
++  "duration_s": 0.3040199279785156,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index d870e1a445..9950859e9c 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.000843048095703125,
++  "duration_s": 0.00083160400390625,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 0a32420254..8f8a61d89f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.601899905130267e-05,
++  "duration_s": 3.2490992452949286e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index f19e2fd00c..b7271d39b9 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.610054358839989e-07,
++  "duration_s": 5.409820005297661e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 15d6fbd2a9..aaf7288797 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.459785461425781e-05,
++  "duration_s": 4.649162292480469e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3945_archive_v364_activate_v365.json b/results/experiment_3945_archive_v364_activate_v365.json
+new file mode 100644
+index 0000000000..b839cb489b
+--- /dev/null
++++ b/results/experiment_3945_archive_v364_activate_v365.json
+@@ -0,0 +1,109 @@
++{
++  "activated_milestone": "2026.06.365",
++  "active_milestone_confirmed": true,
++  "active_roadmap_path": "research-roadmap.yaml",
++  "arc_module_import_results": {
++    "carnot.agentic.arc_agi3_world_model": {
++      "error": null,
++      "import_ok": true
++    },
++    "carnot.agentic.arc_world_model_dsl": {
++      "error": null,
++      "import_ok": true
++    },
++    "carnot.agentic.arc_world_model_synth": {
++      "error": null,
++      "import_ok": true
++    }
++  },
++  "arc_modules_import_command": [
++    ".venv/bin/python",
++    "-c",
++    "import importlib, json, sys\nmods = ['carnot.agentic.arc_agi3_world_model', 'carnot.agentic.arc_world_model_synth', 'carnot.agentic.arc_world_model_dsl']\nout = {}\nfor mod in mods:\n    try:\n        importlib.import_module(mod)\n        out[mod] = {'import_ok': True, 'error': None}\n    except Exception as exc:\n        out[mod] = {'import_ok': False, 'error': repr(exc)}\nprint(json.dumps(out, sort_keys=True))\nsys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
++  ],
++  "arc_modules_import_exit_code": 0,
++  "arc_modules_importable": true,
++  "arc_substrate_test_command": [
++    ".venv/bin/pytest",
++    "tests/python/test_arc_agi3_world_model.py",
++    "tests/python/test_arc_world_model_synth.py",
++    "tests/python/test_arc_world_model_dsl.py",
++    "-q",
++    "--no-header",
++    "-n",
++    "0",
++    "--no-cov",
++    "-o",
++    "addopts="
++  ],
++  "arc_substrate_test_exit_code": 0,
++  "arc_substrate_tests_green": true,
++  "archived_milestone": "2026.06.364",
++  "duration_s": 9.843966,
++  "exclusion_manifest_parses": true,
++  "experiment_id": "exp3945",
++  "field_principles": {
++    "activated_milestone": "Confirms .365 is live so downstream tasks resolve.",
++    "arc_modules_importable": "Bare bool: the agentic ARC modules import for .365 execution.",
++    "arc_substrate_tests_green": "Bare bool: the ARC M0/M2 unit tests pass.",
++    "archived_milestone": "Provenance: which milestone was archived (2026.06.364).",
++    "duration_s": "Aggregation wall-clock duration with a small floor.",
++    "exclusion_manifest_parses": "Bare bool: the manifest still loads under yaml.safe_load.",
++    "honest_verdict": "Terminal-prefix verdict for the record task.",
++    "inference_substrate": "Aggregation substrate for a record-only task.",
++    "research_complete_yaml_parses": "Bare bool: the colon-poison guard still loads."
++  },
++  "honest_verdict": "complete: archived_v364_v365_active_arc_substrate_green_modules_importable",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_tasks_archived": 11,
++  "preconditions_checked": {
++    "active_milestone": "2026.06.365",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "exclusion_manifest_exists": true,
++    "exclusion_manifest_parsed": true,
++    "research_complete_yaml_exists": true,
++    "research_complete_yaml_parsed_after": true,
++    "research_complete_yaml_parsed_before": true
++  },
++  "prior_milestone_verdicts_summary": "exp3934: complete: archived_v363_v364_active_unblock_state_recorded_green_gates\nexp3935: complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed\nexp3936: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json\nexp3937: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json\nexp3938: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json\nexp3939: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json\nexp3940: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json\nexp3941: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json\nexp3942: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json\nexp3943: complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched\nexp3944: complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]",
++  "random_seed": 3945,
++  "reproducibility_checksum": "d78f8cf7a4c2617c285f77769f89f7671ebd01c641712786460ef9a30982f3c5",
++  "research_complete_parse_command": [
++    ".venv/bin/python",
++    "-c",
++    "import yaml; yaml.safe_load(open('research-complete.yaml'))"
++  ],
++  "research_complete_parse_exit_code": 0,
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v364_to_v365_3945.v1",
++  "summary_command": [
++    ".venv/bin/python",
++    "scripts/summarize_artifact.py",
++    "results/experiment_3934_archive_v363_activate_v364.json",
++    "results/experiment_3935_competent_judge_build.json",
++    "results/experiment_3936_valid_efficiency_head_to_head.json",
++    "results/experiment_3937_non_degenerate_cascade_router.json",
++    "results/experiment_3938_moat_scissor_replication.json",
++    "results/experiment_3939_arc_agi3_agentic_step2.json",
++    "results/experiment_3940_fr11_v27_cascade_band_online_learning.json",
++    "results/experiment_3941_hardware_continuity_clean.json",
++    "results/experiment_3942_verifier_cross_domain_map.json",
++    "results/experiment_3943_literature_synthesis.json",
++    "results/experiment_3944_capstone_v364.json"
++  ],
++  "summary_exit_code": 0,
++  "task_id": "exp3945-archive-v364-activate-v365",
++  "task_verdicts": {
++    "exp3934-archive-v363-activate-v364": "complete: archived_v363_v364_active_unblock_state_recorded_green_gates",
++    "exp3935-run-validate-competent-judge": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
++    "exp3936-valid-efficiency-head-to-head": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json",
++    "exp3937-non-degenerate-cascade-router": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json",
++    "exp3938-moat-scissor-replication-independent-corpus": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json",
++    "exp3939-arc-agi3-agentic-step2": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json",
++    "exp3940-fr11-v27-cascade-band-online-learning": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json",
++    "exp3941-hardware-continuity-clean": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json",
++    "exp3942-verifier-cross-domain-discriminating-value-map": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json",
++    "exp3943-literature-synthesis": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched",
++    "exp3944-capstone-v364": "complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 018a4526b0..3a803871be 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T04:57:05Z",
+-  "finished_at": "2026-06-09T04:57:05Z",
++  "started_at": "2026-06-09T05:14:17Z",
++  "finished_at": "2026-06-09T05:14:17Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ff83b15a54..76faeaea9e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T04:57:05Z",
+-  "finished_at": "2026-06-09T04:57:06Z",
++  "started_at": "2026-06-09T05:14:17Z",
++  "finished_at": "2026-06-09T05:14:17Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 390d5a370c..ef34c99cfa 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T04:57:06Z",
+-  "finished_at": "2026-06-09T04:57:06Z",
++  "started_at": "2026-06-09T05:14:17Z",
++  "finished_at": "2026-06-09T05:14:17Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_3945_archive_v364_activate_v365.py b/scripts/experiments/experiment_3945_archive_v364_activate_v365.py
+new file mode 100644
+index 0000000000..055a1d92c7
+--- /dev/null
++++ b/scripts/experiments/experiment_3945_archive_v364_activate_v365.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3945 .364 archive and .365 activation."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.archive_v364_activate_v365_3945 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3945_archive_v364_activate_v365.py b/tests/python/test_experiment_3945_archive_v364_activate_v365.py
+new file mode 100644
+index 0000000000..6c4f84fd99
+--- /dev/null
++++ b/tests/python/test_experiment_3945_archive_v364_activate_v365.py
+@@ -0,0 +1,492 @@
++"""Tests for Exp 3945 .364 archive and .365 activation.
++
++Spec refs: REQ-REPORT-3945, SCENARIO-REPORT-3945,
++SCENARIO-REPORT-3945-BLOCKED-YAML.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot.reporting import archive_v364_activate_v365_3945 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++SUMMARY_STDOUT = """\
++!! no artifact matched: results/experiment_3936_valid_efficiency_head_to_head.json
++!! no artifact matched: results/experiment_3937_non_degenerate_cascade_router.json
++!! no artifact matched: results/experiment_3938_moat_scissor_replication.json
++!! no artifact matched: results/experiment_3939_arc_agi3_agentic_step2.json
++!! no artifact matched: results/experiment_3940_fr11_v27_cascade_band_online_learning.json
++!! no artifact matched: results/experiment_3941_hardware_continuity_clean.json
++!! no artifact matched: results/experiment_3942_verifier_cross_domain_map.json
++==============================================================================
++ARTIFACT  experiment_3934_archive_v363_activate_v364.json
++------------------------------------------------------------------------------
++  verdict          : complete: archived_v363_v364_active_unblock_state_recorded_green_gates
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 14.089807   substrate: aggregation_from_upstream_artifacts
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3935_competent_judge_build.json
++------------------------------------------------------------------------------
++  verdict          : complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 60.212172746658325   substrate: live_llm_inference:robust_gguf_competent_process_judge
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3943_literature_synthesis.json
++------------------------------------------------------------------------------
++  verdict          : complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 0.0001   substrate: no_new_inference_document_synthesis_cpu
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3944_capstone_v364.json
++------------------------------------------------------------------------------
++  verdict          : complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 0.26017643400700763   substrate: aggregation_from_upstream_artifacts
++  adversarial flags: none
++==============================================================================
++"""
++
++
++def _command_result(
++    command: list[str],
++    *,
++    exit_code: int = 0,
++    stdout: str = "ok\n",
++    stderr: str = "",
++) -> mod.CommandResult:
++    return mod.CommandResult(command=command, exit_code=exit_code, stdout=stdout, stderr=stderr)
++
++
++def _summary_result(exit_code: int = 0, stdout: str = SUMMARY_STDOUT) -> mod.CommandResult:
++    return _command_result(mod.summary_command(), exit_code=exit_code, stdout=stdout)
++
++
++def _import_stdout(*, all_ok: bool = True) -> str:
++    return json.dumps(
++        {
++            module: {"import_ok": all_ok, "error": None if all_ok else "ImportError"}
++            for module in mod.ARC_IMPORT_MODULES
++        },
++        sort_keys=True,
++    )
++
++
++def _import_result(*, all_ok: bool = True) -> mod.CommandResult:
++    return _command_result(
++        mod.arc_modules_import_command(),
++        exit_code=0 if all_ok else 1,
++        stdout=_import_stdout(all_ok=all_ok),
++    )
++
++
++def _seed_repo(
++    root: Path,
++    *,
++    corrupt_complete: bool = False,
++    milestone: str = "2026.06.365",
++    manifest: str | None = None,
++) -> None:
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{milestone}"\n'
++        "tasks:\n"
++        "  - id: exp3945-archive-v364-activate-v365\n",
++        encoding="utf-8",
++    )
++    complete_text = (
++        "milestones:\n"
++        "- id: 2026.06.364\n"
++        "  title: stale conductor archive\n"
++        "  completed: '2026-06-09'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp3934-archive-v363-activate-v364\n"
++        "    deliverable: results/experiment_3934_archive_v363_activate_v364.json\n"
++        "    result: OK (conductor)\n"
++    )
++    if corrupt_complete:
++        complete_text += "  - id: poison\n    result: complete: unquoted colon\n"
++    (root / "research-complete.yaml").write_text(complete_text, encoding="utf-8")
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "experiments").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "exclusion_manifest.yaml").write_text(
++        manifest or "retired_experiments:\n  - experiment_id: 3920\n    reason: existing\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "changelog.md").write_text("changelog before\n", encoding="utf-8")
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text("# conductor before\n", encoding="utf-8")
++
++
++def _run_success(root: Path, **overrides: object) -> Path:
++    kwargs = {
++        "research_complete_parse_result": _command_result(mod.research_complete_yaml_command()),
++        "summary_result": _summary_result(),
++        "arc_substrate_test_result": _command_result(mod.arc_substrate_test_command()),
++        "arc_modules_import_result": _import_result(),
++        "started_s": 1.0,
++        "now_s": 2.25,
++    }
++    kwargs.update(overrides)
++    return mod.run(root, **kwargs)
++
++
++def test_req_report_3945_spec_anchor_exists() -> None:
++    """REQ-REPORT-3945: OpenSpec declares the archive and ARC green-gate contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3945" in spec
++    assert "SCENARIO-REPORT-3945" in spec
++    assert "SCENARIO-REPORT-3945-BLOCKED-YAML" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert "test_arc_agi3_world_model.py" in spec
++    assert "arc_world_model_dsl" in spec
++
++
++def test_scenario_report_3945_run_appends_archive_and_green_gates(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3945: archive .364 and record the .365 ARC gates."""
++
++    _seed_repo(tmp_path)
++    before = {
++        "complete": (tmp_path / "research-complete.yaml").read_text(encoding="utf-8"),
++        "manifest": (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8"),
++        "roadmap": (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++        "conductor": (tmp_path / "scripts" / "research_conductor.py").read_text(encoding="utf-8"),
++    }
++
++    out_path = _run_success(tmp_path)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    complete_text = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    archived = yaml.safe_load(complete_text)["milestones"][-1]
++    task_results = {task["id"]: task["result"] for task in archived["tasks"]}
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.terminal_verdict()
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert not isinstance(artifact[field], dict), field
++    assert artifact["archived_milestone"] == "2026.06.364"
++    assert artifact["activated_milestone"] == "2026.06.365"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["exclusion_manifest_parses"] is True
++    assert artifact["arc_substrate_tests_green"] is True
++    assert artifact["arc_modules_importable"] is True
++    assert artifact["n_tasks_archived"] == 11
++    assert artifact["duration_s"] == 1.25
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert "exp3936: missing_artifact:" in artifact["prior_milestone_verdicts_summary"]
++    assert "exp3944: complete: capstone_v364_efficiencyINCONCLUSIVE" in artifact[
++        "prior_milestone_verdicts_summary"
++    ]
++    assert artifact["arc_module_import_results"]["carnot.agentic.arc_world_model_dsl"][
++        "import_ok"
++    ] is True
++
++    assert complete_text.startswith(before["complete"].rstrip())
++    assert complete_text.count(mod.ARCHIVE_MARKER) == 1
++    assert complete_text.count("- id: 2026.06.364") == 2
++    assert "result: complete:" not in complete_text
++    assert "result: 'complete:" in complete_text
++    assert archived["activation_recorded"] == "exp3945-archive-v364-activate-v365"
++    assert task_results["exp3936-valid-efficiency-head-to-head"].startswith("missing_artifact:")
++    assert task_results["exp3944-capstone-v364"].startswith("complete: capstone_v364")
++    assert yaml.safe_load(complete_text)
++
++    assert (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(
++        encoding="utf-8"
++    ) == before["manifest"]
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == before["roadmap"]
++    assert (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8") == before["changelog"]
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before["status"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8") == before["trace"]
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before["conductor"]
++
++
++def test_req_report_3945_append_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-3945: rerunning does not duplicate the archive entry."""
++
++    _seed_repo(tmp_path)
++
++    first = _run_success(tmp_path).read_text(encoding="utf-8")
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second = _run_success(tmp_path).read_text(encoding="utf-8")
++
++    assert first == second
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == first_complete
++    assert first_complete.count(mod.ARCHIVE_MARKER) == 1
++
++
++def test_scenario_report_3945_blocked_yaml_writes_artifact_without_edits(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3945-BLOCKED-YAML: corrupt YAML exits before edits."""
++
++    _seed_repo(tmp_path, corrupt_complete=True)
++    before_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    before_manifest = (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8")
++
++    out_path = mod.run(
++        tmp_path,
++        research_complete_parse_result=_command_result(
++            mod.research_complete_yaml_command(),
++            exit_code=1,
++            stderr="yaml parser failed",
++        ),
++        summary_result=_summary_result(),
++        arc_substrate_test_result=_command_result(mod.arc_substrate_test_command()),
++        arc_modules_import_result=_import_result(),
++        started_s=7.0,
++        now_s=7.1,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison")
++    assert artifact["research_complete_yaml_parses"] is False
++    assert artifact["exclusion_manifest_parses"] is False
++    assert artifact["arc_substrate_tests_green"] is False
++    assert artifact["arc_modules_importable"] is False
++    assert artifact["preconditions_checked"]["research_complete_yaml_exists"] is True
++    assert artifact["preconditions_checked"]["research_complete_yaml_parsed_before"] is False
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == before_complete
++    assert (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8") == before_manifest
++
++
++def test_req_report_3945_helpers_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-3945: hard helper failures block instead of fabricating success."""
++
++    _seed_repo(tmp_path, milestone="2026.06.364")
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_v365_not_active")
++
++    _seed_repo(tmp_path, manifest="retired: [\n")
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_exclusion_manifest_yaml_poison")
++
++    _seed_repo(tmp_path)
++    (tmp_path / "ops" / "exclusion_manifest.yaml").unlink()
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_exclusion_manifest_missing")
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        _run_success(tmp_path, summary_result=_summary_result(exit_code=127, stdout="")).read_text(
++            encoding="utf-8"
++        )
++    )
++    assert artifact["honest_verdict"].startswith("blocked_v364_summary_command_failed")
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        _run_success(
++            tmp_path,
++            arc_substrate_test_result=_command_result(mod.arc_substrate_test_command(), exit_code=1),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_arc_substrate_tests_failed")
++    assert artifact["arc_substrate_tests_green"] is False
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        _run_success(tmp_path, arc_modules_import_result=_import_result(all_ok=False)).read_text(
++            encoding="utf-8"
++        )
++    )
++    assert artifact["honest_verdict"].startswith("blocked_arc_module_import")
++    assert artifact["arc_modules_importable"] is False
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("arc_substrate_tests_green"), "missing required"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (lambda p: p.update(archived_milestone="2026.06.363"), "archived milestone"),
++        (lambda p: p.update(activated_milestone="2026.06.364"), "activated milestone"),
++        (lambda p: p.update(research_complete_yaml_parses=False), "research-complete"),
++        (lambda p: p.update(exclusion_manifest_parses=False), "manifest"),
++        (lambda p: p.update(arc_substrate_tests_green=False), "ARC substrate"),
++        (lambda p: p.update(arc_modules_importable=False), "ARC module imports"),
++        (lambda p: p.update(active_milestone_confirmed=False), "active milestone"),
++        (lambda p: p.update(n_tasks_archived=10), "n_tasks_archived"),
++        (lambda p: p.update(prior_milestone_verdicts_summary="exp3934: ok"), "missing exp3935"),
++        (lambda p: p.update(inference_substrate="live_model"), "inference"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(copied_marker="CUDA"), "compute-bound markers"),
++    ],
++)
++def test_req_report_3945_validate_artifact_rejects_regressions(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3945: validation rejects fields that hide transition risk."""
++
++    _seed_repo(tmp_path)
++    payload = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(broken)
++
++
++def test_req_report_3945_summary_and_import_helpers() -> None:
++    """REQ-REPORT-3945: summaries preserve missing verdicts and ARC imports."""
++
++    records = mod.parse_summary_records(SUMMARY_STDOUT)
++    verdicts = mod.task_verdicts_from_summary(SUMMARY_STDOUT)
++    summary = mod.build_prior_verdicts_summary(verdicts)
++    critical_summary = SUMMARY_STDOUT.replace("LIVE re-check: clean", "LIVE re-check: CRITICAL", 1)
++    critical_verdicts = mod.task_verdicts_from_summary(critical_summary)
++
++    assert records["3934"]["duration_s"] == pytest.approx(14.089807)
++    assert verdicts["exp3936-valid-efficiency-head-to-head"].startswith("missing_artifact:")
++    assert "LIVE_CRITICAL" in critical_verdicts["exp3934-archive-v363-activate-v364"]
++    assert "exp3944: complete: capstone_v364_efficiencyINCONCLUSIVE" in summary
++    assert mod.yaml_single_quote("complete: ok") == "'complete: ok'"
++    assert mod.duration_from(None, None) == 0.0001
++    assert mod._milestone_from_text("tasks: []\n") == "unknown"
++    parsed = mod.parse_arc_module_imports(_import_result())
++    assert parsed["carnot.agentic.arc_world_model_synth"]["import_ok"] is True
++    malformed = _command_result(mod.arc_modules_import_command(), stdout="{not json", exit_code=1)
++    assert "unparseable" in str(
++        mod.parse_arc_module_imports(malformed)["carnot.agentic.arc_world_model_dsl"]["error"]
++    )
++    partial = _command_result(
++        mod.arc_modules_import_command(),
++        stdout=json.dumps({"carnot.agentic.arc_agi3_world_model": {"import_ok": True}}),
++    )
++    assert mod.parse_arc_module_imports(partial)["carnot.agentic.arc_world_model_dsl"][
++        "import_ok"
++    ] is False
++
++
++def test_req_report_3945_edge_fallbacks(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3945: defensive fallback paths stay explicit and covered."""
++
++    assert mod.read_active_milestone(tmp_path) == ("unknown", "research-roadmap.yaml")
++    odd_summary = """\
++==============================================================================
++ARTIFACT  experiment_3934_archive_v363_activate_v364.json
++------------------------------------------------------------------------------
++  verdict          : complete: archive
++  flagged_adversarial (stamped): True   |   LIVE re-check: warn
++  duration_s       : not-a-number   substrate: aggregation
++  adversarial flags: none
++==============================================================================
++"""
++    records = mod.parse_summary_records(odd_summary)
++    verdicts = mod.task_verdicts_from_summary(odd_summary)
++    assert records["3934"]["duration_s"] is None
++    assert "stamped_flagged" in verdicts["exp3934-archive-v363-activate-v364"]
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-complete.yaml").unlink()
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison_missing")
++
++    _seed_repo(tmp_path)
++    monkeypatch.setattr(mod, "append_research_complete_record", lambda *args: "milestones: [\n")
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_append_invalid")
++
++
++def test_req_report_3945_subprocess_helpers(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3945: subprocess helpers use the mandated commands."""
++
++    calls: list[list[str]] = []
++
++    class Completed:
++        returncode = 0
++        stdout = _import_stdout()
++        stderr = ""
++
++    def run_subprocess(cmd: list[str], **kwargs: object) -> Completed:
++        calls.append(cmd)
++        assert kwargs["cwd"] == tmp_path
++        return Completed()
++
++    monkeypatch.setattr(mod.subprocess, "run", run_subprocess)
++    assert mod.run_research_complete_parse_check(tmp_path).command == (
++        mod.research_complete_yaml_command()
++    )
++    assert calls == [mod.research_complete_yaml_command()]
++
++    calls.clear()
++    assert mod.run_summarize_artifacts(tmp_path).stdout == _import_stdout()
++    assert calls == [mod.summary_command()]
++
++    calls.clear()
++    assert mod.run_arc_substrate_tests(tmp_path).exit_code == 0
++    assert calls == [mod.arc_substrate_test_command()]
++
++    calls.clear()
++    assert mod.run_arc_modules_import_check(tmp_path).stdout == _import_stdout()
++    assert calls == [mod.arc_modules_import_command()]
++
++    def fail_subprocess(cmd: list[str], **kwargs: object) -> object:
++        raise mod.subprocess.CalledProcessError(1, cmd, output="", stderr="failed")
++
++    monkeypatch.setattr(mod.subprocess, "run", fail_subprocess)
++    assert mod.run_arc_substrate_tests(tmp_path).exit_code == 1
++    assert mod.run_arc_modules_import_check(tmp_path).exit_code == 1
++
++    def os_error_subprocess(cmd: list[str], **kwargs: object) -> object:
++        raise OSError("missing executable")
++
++    monkeypatch.setattr(mod.subprocess, "run", os_error_subprocess)
++    assert mod.run_research_complete_parse_check(tmp_path).exit_code == 127
++    assert mod.run_summarize_artifacts(tmp_path).exit_code == 127
++
++
++def test_scenario_report_3945_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3945: the requested script entrypoint exists."""
++
++    script = Path("scripts/experiments/experiment_3945_archive_v364_activate_v365.py")
++    assert script.exists()
++    text = script.read_text(encoding="utf-8")
++    assert "archive_v364_activate_v365_3945" in text
++
++
++def test_req_report_3945_main_prints_written_path(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-3945: module main is a thin printable runner."""
++
++    out_path = tmp_path / "results" / "experiment_3945_archive_v364_activate_v365.json"
++    monkeypatch.setattr(mod, "run", lambda root: out_path)
++
++    assert mod.main() == 0
++    assert str(out_path) in capsys.readouterr().out
+-- 
+2.55.0
+

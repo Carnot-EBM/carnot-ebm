@@ -1,0 +1,43 @@
+From 3ce2cf9fc6e84e94baeb800c257b47deadb1f551 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 11:44:58 -0400
+Subject: [PATCH 10648/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 654ac383cb..0374622b7f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 83, "phase": "iteration_start", "last_beat": "2026-09-01T15:16:36Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 84, "phase": "iteration_start", "last_beat": "2026-09-01T15:44:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 97e9547612..35024f0fca 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17011,3 +17011,4 @@ The l |
+ | 2026-09-01 14:42 UTC | Plan milestone 2026.09.599 | OK | 13 tasks proposed |
+ | 2026-09-01 14:45 UTC | Milestone 2026.09.599 activated | OK | 13 tasks queued |
+ | 2026-09-01 15:14 UTC | V599 method-change and evidence contract | OK | 114 passed, 1 warning in 19.38s |
++| 2026-09-01 15:42 UTC | Independent typed-program isomorphic authority aud | OK | 113 passed, 1 warning in 13.35s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index da64f06ea2..4bf7add305 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 83, "phase": "iteration_start", "started_at": "2026-09-01T15:16:36Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 84, "phase": "iteration_start", "started_at": "2026-09-01T15:44:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 7d1732b162936f90a7cdb16855e21080ebec67ac Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 20 Jul 2026 09:54:30 -0400
+Subject: [PATCH 07394/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 46ad653282..c6f5a2be59 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-07-20T13:19:26Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-07-20T13:54:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c3e8b97647..6237d83b8e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13847,3 +13847,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-20 11:54 UTC | Milestone 2026.07.514 activated | OK | 14 tasks queued |
+ | 2026-07-20 13:17 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: uild_report(
+ + |
++| 2026-07-20 13:52 UTC | Transition terminal .513 evidence, preserve blocke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5755_transit |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d3bd7b458e..86725b3c75 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 29, "phase": "iteration_start", "started_at": "2026-07-20T13:19:26Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 30, "phase": "iteration_start", "started_at": "2026-07-20T13:54:26Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

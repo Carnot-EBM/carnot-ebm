@@ -1,0 +1,1050 @@
+From fe6b9fe7445d964437756693caa2c2f42ee99169 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 06:50:48 -0400
+Subject: [PATCH 01741/11362] =?UTF-8?q?[conductor]=20PHASE=20B1=20?=
+ =?UTF-8?q?=E2=80=94=20GAP-4=20graded=20execution-energy=20gate=20(product?=
+ =?UTF-8?q?ion-safe).=20Implement+validate=20the=20graded=20min-hamming=20?=
+ =?UTF-8?q?gate=20(tau=3D0.005=20ONLY=20+=20a=20vote-aware=20guard=20block?=
+ =?UTF-8?q?ing=20the=20measured=20exact-match=20mis-promotion=20over=20hig?=
+ =?UTF-8?q?h-vote=20gold,=20the=2025094a63=20case)=20on=20the=20non-degene?=
+ =?UTF-8?q?rate=20ARC-1=20venue.=20The=20agreement=20signal=20STAYS=20a=20?=
+ =?UTF-8?q?confidence=20label=20only=20(exp4023=20retired=20agreement-as-s?=
+ =?UTF-8?q?elector).=20Report=20pass@1/pass@2=20vs=20vote,=20the=20gross?=
+ =?UTF-8?q?=20+/-=20ledger,=20and=20band=20precision=20at=20tau<=3D0.02.?=
+ =?UTF-8?q?=20Makes=20the=20proven=20+4/-0=20GAP-4=20verifier=20safe=20for?=
+ =?UTF-8?q?=20a=20richer=20candidate=20pool.=20READ-ONLY=20w.r.t.=20TRM=20?=
+ =?UTF-8?q?training.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4187-gap4-graded-execution-gate-hardening
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  44 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/gap4_graded_execution_gate.py     | 189 +++++++++++
+ ..._gap4_graded_execution_gate_hardening.json |  72 +++++
+ ...87_gap4_graded_execution_gate_hardening.py | 295 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_gap4_graded_execution_gate.py        | 113 +++++++
+ ...87_gap4_graded_execution_gate_hardening.py | 193 ++++++++++++
+ 10 files changed, 913 insertions(+), 7 deletions(-)
+ create mode 100644 python/carnot/agentic/gap4_graded_execution_gate.py
+ create mode 100644 results/experiment_4187_gap4_graded_execution_gate_hardening.json
+ create mode 100644 results/experiment_4187_gap4_graded_execution_gate_hardening.py
+ create mode 100644 tests/python/agentic/test_gap4_graded_execution_gate.py
+ create mode 100644 tests/python/test_experiment_4187_gap4_graded_execution_gate_hardening.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 2f1607061b..fa0e894396 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12140,6 +12140,50 @@ that sovereign positive, otherwise emits
+ remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
+ in `missing_verifier_gaps`.
+ 
++### REQ-VERIFY-4187: GAP-4 Production-Safe Graded Execution Gate
++
++The repository SHALL provide Exp 4187 at
++`results/experiment_4187_gap4_graded_execution_gate_hardening.py` to replay the
++cached ARC-1 GAP-4 induced programs and candidate pool without Codex, GGUF, GPU,
++or retraining. Before scoring, the runner SHALL verify that
++`results/arc3_gap4_induced_programs.json` and
++`results/arc3_gap4_rule_exec_verifier.json` exist. If either precondition is
++missing, it SHALL write
++`results/experiment_4187_gap4_graded_execution_gate_hardening.json` with
++`honest_verdict=blocked_gap4_arc1_pool_missing` and stop.
++
++For a complete replay, the implementation SHALL promote a candidate only when
++the saved program is demo-perfect (`demo_fit == 1.0`), the candidate has minimum
++normalized Hamming distance from the executed prediction, and that distance is
++at most `tau=0.005`. The gate SHALL apply a vote-aware guard that refuses a
++promotion when it would demote an otherwise pass@1 high-vote gold candidate,
++including the recorded ARC-1 `25094a63` mis-promotion. Agreement signals from
++program outputs SHALL be recorded only as confidence labels and SHALL NOT select
++or promote candidates.
++
++The terminal artifact SHALL include bare top-level fields `honest_verdict`,
++`graded_gate_pass2_vs_vote`, `vote_aware_guard_blocked_mispromotion`,
++`gross_recovery_ledger`, `band_precision_at_tau`, `random_seed`,
++`reproducibility_checksum`, `gate_fire_count`, `pass_at_1`, `pass_at_2`,
++`pass2_vote_wins_lost`, `agreement_confidence_label_only`, `duration_s`, and
++`inference_substrate`.
++
++### SCENARIO-VERIFY-4187: Guarded Graded Gate Holds ARC-1 Safety
++
++Given the cached ARC-1 GAP-4 induced programs and rule-execution verifier
++artifact are present, when Exp 4187 replays the ARC-1 pool, then it uses only
++offline deterministic evidence (`inference_substrate=deterministic_verifier`),
++computes TRM vote and guarded graded pass@1/pass@2 on the same candidate pool,
++reports `graded_gate_pass2_vs_vote` as `pass@2(guarded_graded_gate) -
++pass@2(vote)`, reports `gross_recovery_ledger` as recovered and lost candidate
++counts, reports `band_precision_at_tau` for the `tau<=0.02` graded band, sets
++`vote_aware_guard_blocked_mispromotion=true` only if the `25094a63` high-vote
++gold promotion was blocked, confirms `pass2_vote_wins_lost=0`, and emits either
++`complete: gap4_graded_gate_holds_exact_baseline...` when the guarded graded
++gate matches or exceeds the exact-match `+4/-0` pass@2 baseline, or
++`complete: gap4_graded_relaxation_adds_nothing_on_arc1...` when the relaxation
++adds no ARC-1 recovery beyond the exact baseline.
++
+ ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
+ 
+ The repository SHALL provide Exp 4036 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3412b84aa4..f0e6de0503 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3209,
++  "experiments_checked": 3210,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/gap4_graded_execution_gate.py b/python/carnot/agentic/gap4_graded_execution_gate.py
+new file mode 100644
+index 0000000000..8808cf3350
+--- /dev/null
++++ b/python/carnot/agentic/gap4_graded_execution_gate.py
+@@ -0,0 +1,189 @@
++"""Production-safe GAP-4 graded execution gate.
++
++The gate is intentionally narrow: a saved program may promote a candidate only
++when it is demo-perfect and its executed prediction is within a small normalized
++Hamming radius of a pool candidate. A vote-aware guard blocks extreme
++high-confidence vote leaders from being demoted by that promotion.
++"""
++
++from __future__ import annotations
++
++from typing import Any
++
++DEFAULT_TAU = 0.005
++DEFAULT_BAND_TAU = 0.02
++DEFAULT_HIGH_VOTE_GUARD_THRESHOLD = 900
++
++
++def _as_rows(grid: Any) -> list[list[Any]]:
++    if grid is None:
++        return []
++    return [list(row) for row in grid]
++
++
++def _grid_shape(grid: Any) -> tuple[int, int]:
++    rows = _as_rows(grid)
++    return len(rows), len(rows[0]) if rows else 0
++
++
++def _grid_size(grid: Any) -> int:
++    rows, cols = _grid_shape(grid)
++    return rows * cols
++
++
++def normalized_hamming(candidate: Any, prediction: Any) -> float:
++    """Return normalized Hamming distance, with shape mismatches always worse.
++
++    Same-shape grids are scored as the fraction of disagreeing cells. Shape
++    mismatches return `1 + relative_size_delta`, so every same-shape candidate
++    beats every shape-mismatched candidate under the graded gate.
++    """
++    c_rows = _as_rows(candidate)
++    p_rows = _as_rows(prediction)
++    c_shape = _grid_shape(c_rows)
++    p_shape = _grid_shape(p_rows)
++    if c_shape == p_shape:
++        total = max(1, c_shape[0] * c_shape[1])
++        diff = sum(
++            1
++            for r in range(c_shape[0])
++            for col in range(c_shape[1])
++            if c_rows[r][col] != p_rows[r][col]
++        )
++        return diff / total
++    c_size = _grid_size(c_rows)
++    p_size = _grid_size(p_rows)
++    return 1.0 + abs(c_size - p_size) / max(1, c_size, p_size)
++
++
++def select_guarded_graded_candidate(
++    candidates: list[dict[str, Any]],
++    *,
++    prediction: Any,
++    demo_fit: float | int | None,
++    task_id: str = "",
++    tau: float = DEFAULT_TAU,
++    high_vote_guard_threshold: int | float | None = DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++    agreement_confidence_label: bool = False,
++) -> dict[str, Any]:
++    """Choose the guarded graded-gate candidate for one ARC pool entry.
++
++    Selection uses only demo fit, executed prediction, candidate grids, and
++    candidate vote counts. `correct` labels, when present in replay fixtures, are
++    ignored by the selector and used only by callers for post-hoc scoring.
++    """
++    result = {
++        "task_id": task_id,
++        "gate_fired": False,
++        "selected_index": None,
++        "would_select_index": None,
++        "min_hamming": None,
++        "guard_blocked": False,
++        "reason": "not_evaluated",
++        "agreement_confidence_label": bool(agreement_confidence_label),
++    }
++    if float(demo_fit or 0.0) != 1.0:
++        result["reason"] = "demo_fit_not_exact"
++        return result
++    if prediction is None:
++        result["reason"] = "prediction_missing"
++        return result
++    if not candidates:
++        result["reason"] = "candidate_pool_empty"
++        return result
++
++    distances = [normalized_hamming(c.get("grid"), prediction) for c in candidates]
++    min_index = min(range(len(distances)), key=lambda i: distances[i])
++    min_hamming = distances[min_index]
++    result["would_select_index"] = min_index
++    result["min_hamming"] = min_hamming
++    if min_hamming > tau:
++        result["reason"] = "outside_tau"
++        return result
++
++    top_vote_index = max(range(len(candidates)), key=lambda i: candidates[i].get("votes", 0))
++    top_votes = candidates[top_vote_index].get("votes", 0)
++    if (
++        high_vote_guard_threshold is not None
++        and min_index != top_vote_index
++        and top_votes >= high_vote_guard_threshold
++    ):
++        result["guard_blocked"] = True
++        result["reason"] = "vote_aware_guard_high_vote_leader"
++        return result
++
++    result["gate_fired"] = True
++    result["selected_index"] = min_index
++    result["reason"] = "promoted"
++    return result
++
++
++def vote_rank_indices(candidates: list[dict[str, Any]]) -> list[int]:
++    """Return candidate indices in TRM vote order."""
++    return sorted(range(len(candidates)), key=lambda i: (-candidates[i].get("votes", 0), i))
++
++
++def gated_rank_indices(candidates: list[dict[str, Any]], selected_index: int | None) -> list[int]:
++    """Return vote order with one guarded gate promotion, if any."""
++    return sorted(
++        range(len(candidates)),
++        key=lambda i: (0 if selected_index is not None and i == selected_index else 1,
++                       -candidates[i].get("votes", 0),
++                       i),
++    )
++
++
++def pass_at_k(entries: list[dict[str, Any]], rankings: list[list[int]], k: int) -> float:
++    """Score pass@k from candidate rankings using post-hoc `correct` labels."""
++    hits = 0
++    for entry, order in zip(entries, rankings, strict=True):
++        candidates = entry["candidates"]
++        hits += int(any(candidates[i].get("correct", False) for i in order[:k]))
++    return round(hits / max(1, len(entries)), 4)
++
++
++def hit_indices(entries: list[dict[str, Any]], rankings: list[list[int]], k: int) -> set[int]:
++    """Return entry indices whose ranked top-k contains a gold candidate."""
++    out: set[int] = set()
++    for i, (entry, order) in enumerate(zip(entries, rankings, strict=True)):
++        candidates = entry["candidates"]
++        if any(candidates[j].get("correct", False) for j in order[:k]):
++            out.add(i)
++    return out
++
++
++def non_exact_band_precision(
++    entries: list[dict[str, Any]],
++    programs: list[dict[str, Any]],
++    *,
++    band_tau: float = DEFAULT_BAND_TAU,
++) -> dict[str, Any]:
++    """Measure precision for non-exact near candidates with `0 < hamming <= band_tau`.
++
++    This is diagnostic only. It intentionally excludes exact matches because the
++    exact-match gate already established the ARC-1 positive; the band measures
++    whether graded relaxation itself is trustworthy.
++    """
++    total = 0
++    correct = 0
++    for entry, program in zip(entries, programs, strict=True):
++        if float(program.get("demo_fit", 0.0)) != 1.0 or program.get("pred_grid") is None:
++            continue
++        distances = [
++            normalized_hamming(candidate.get("grid"), program["pred_grid"])
++            for candidate in entry["candidates"]
++        ]
++        if not distances:
++            continue
++        min_distance = min(distances)
++        if 0.0 < min_distance <= band_tau:
++            total += 1
++            min_index = distances.index(min_distance)
++            correct += int(entry["candidates"][min_index].get("correct", False))
++    return {
++        "tau": band_tau,
++        "definition": "demo-perfect entries whose closest candidate has 0 < min_hamming <= tau",
++        "correct": correct,
++        "total": total,
++        "precision": round(correct / total, 4) if total else None,
++    }
+diff --git a/results/experiment_4187_gap4_graded_execution_gate_hardening.json b/results/experiment_4187_gap4_graded_execution_gate_hardening.json
+new file mode 100644
+index 0000000000..a1ca12cee3
+--- /dev/null
++++ b/results/experiment_4187_gap4_graded_execution_gate_hardening.json
+@@ -0,0 +1,72 @@
++{
++  "agreement_confidence_label_only": true,
++  "band_precision_at_tau": {
++    "correct": 0,
++    "definition": "demo-perfect entries whose closest candidate has 0 < min_hamming <= tau",
++    "precision": 0.0,
++    "tau": 0.02,
++    "total": 4
++  },
++  "duration_s": 0.266131,
++  "experiment": "experiment_4187_gap4_graded_execution_gate_hardening",
++  "field_principles": {
++    "band_precision_at_tau": "Precision of the non-exact tau<=0.02 graded band.",
++    "graded_gate_pass2_vs_vote": "pass@2(graded gate) - pass@2(vote) on ARC-1; must not regress below the +4/-0 exact-match baseline.",
++    "gross_recovery_ledger": "{recovered, lost} pass@2 candidate counts vs vote.",
++    "honest_verdict": "Terminal-prefixed. A production-safe gate that holds +4/-0 or an honest graded-relaxation-adds-nothing verdict is complete.",
++    "random_seed": "Determinism precondition for bit-reproducible replay.",
++    "reproducibility_checksum": "Hash of the induced-program set plus ARC-1 pool.",
++    "vote_aware_guard_blocked_mispromotion": "Bare bool: the guard blocked the 25094a63 high-vote-gold exact-match mis-promotion."
++  },
++  "gate_fire_count": 16,
++  "graded_gate_pass2_vs_vote": 0.129,
++  "gross_recovery_ledger": {
++    "lost": 0,
++    "recovered": 4
++  },
++  "guard_block_count": 1,
++  "honest_verdict": "complete: gap4_graded_relaxation_adds_nothing_on_arc1_holds_exact_baseline_n31_vote_0.4516_graded_0.5806_recovered_4_lost_0_guarded_25094a63",
++  "inference_substrate": "deterministic_verifier",
++  "n_tasks": 31,
++  "no_new_model_calls": true,
++  "pass2_vote_wins_lost": 0,
++  "pass_at_1": {
++    "GRADED_GATE": 0.5806,
++    "TRM_VOTE": 0.4194
++  },
++  "pass_at_2": {
++    "EXACT_MATCH_GUARDED": 0.5806,
++    "GRADED_GATE": 0.5806,
++    "TRM_VOTE": 0.4516
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++      "resource": "arc1_candidate_pool"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
++      "resource": "arc1_induced_programs"
++    }
++  ],
++  "random_seed": 12345,
++  "relaxation_added_recoveries": 0,
++  "reproducibility_checksum": "9fe0c769508feadd3e94964f2dadb76a99ff0065dad295ddf0a739707b5c2f74",
++  "reproducibility_checksum_sources": [
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz"
++  ],
++  "selection_policy": "demo_fit == 1.0 and argmin normalized Hamming <= tau; agreement is recorded only as a confidence label and is never used as a selector",
++  "tau": 0.005,
++  "title": "GAP-4 guarded graded execution-energy gate replay on ARC-1",
++  "vote_aware_guard": {
++    "blocked_tasks": [
++      "25094a63"
++    ],
++    "rule": "block a non-top-vote promotion when the vote leader has at least threshold_votes",
++    "threshold_votes": 900
++  },
++  "vote_aware_guard_blocked_mispromotion": true
++}
+diff --git a/results/experiment_4187_gap4_graded_execution_gate_hardening.py b/results/experiment_4187_gap4_graded_execution_gate_hardening.py
+new file mode 100644
+index 0000000000..f17351ed20
+--- /dev/null
++++ b/results/experiment_4187_gap4_graded_execution_gate_hardening.py
+@@ -0,0 +1,295 @@
++#!/usr/bin/env python3
++"""Exp 4187: production-safe GAP-4 graded execution gate hardening.
++
++This is a deterministic replay over cached ARC-1 evidence. It makes no Codex,
++GGUF, GPU, or retraining calls.
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / "python"))
++
++from carnot.agentic.gap4_graded_execution_gate import (  # noqa: E402
++    DEFAULT_BAND_TAU,
++    DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++    DEFAULT_TAU,
++    gated_rank_indices,
++    hit_indices,
++    non_exact_band_precision,
++    pass_at_k,
++    select_guarded_graded_candidate,
++    vote_rank_indices,
++)
++
++POOL_PATH = ROOT / "results" / "arc3_gap3_stage2_eval_pool.json.gz"
++PROGRAMS_PATH = ROOT / "results" / "arc3_gap4_induced_programs.json"
++RULE_EXEC_PATH = ROOT / "results" / "arc3_gap4_rule_exec_verifier.json"
++ARTIFACT_PATH = ROOT / "results" / "experiment_4187_gap4_graded_execution_gate_hardening.json"
++EXACT_MATCH_BASELINE_RECOVERED = 4
++
++
++def _load_pool(path: Path) -> list[dict[str, Any]]:
++    with gzip.open(path, "rt", encoding="utf-8") as f:
++        return json.load(f)["entries"]
++
++
++def _load_programs(path: Path) -> list[dict[str, Any]]:
++    return json.loads(path.read_text(encoding="utf-8"))["programs"]
++
++
++def _checksum(paths: list[Path]) -> str:
++    h = hashlib.sha256()
++    for path in paths:
++        h.update(path.name.encode("utf-8"))
++        h.update(b"\0")
++        h.update(path.read_bytes())
++        h.update(b"\0")
++    return h.hexdigest()
++
++
++def _write_artifact(path: Path, artifact: dict[str, Any]) -> dict[str, Any]:
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def _blocked_artifact(
++    *,
++    artifact_path: Path,
++    pool_path: Path,
++    programs_path: Path,
++    rule_exec_path: Path,
++    started: float,
++) -> dict[str, Any]:
++    artifact = {
++        "experiment": "experiment_4187_gap4_graded_execution_gate_hardening",
++        "honest_verdict": "blocked_gap4_arc1_pool_missing",
++        "preconditions_checked": [
++            {"resource": "arc1_candidate_pool", "path": str(pool_path), "available": pool_path.exists()},
++            {"resource": "arc1_induced_programs", "path": str(programs_path), "available": programs_path.exists()},
++            {"resource": "arc1_rule_exec_verifier", "path": str(rule_exec_path), "available": rule_exec_path.exists()},
++        ],
++        "duration_s": round(time.time() - started, 6),
++        "inference_substrate": "deterministic_verifier",
++    }
++    return _write_artifact(artifact_path, artifact)
++
++
++def _rankings_for_gate(
++    entries: list[dict[str, Any]],
++    programs: list[dict[str, Any]],
++    *,
++    tau: float,
++    high_vote_guard_threshold: int | float | None,
++) -> tuple[list[list[int]], list[dict[str, Any]]]:
++    rankings: list[list[int]] = []
++    selections: list[dict[str, Any]] = []
++    for entry, program in zip(entries, programs, strict=True):
++        if entry["task"] != program["task"]:
++            raise ValueError(f"task mismatch: {entry['task']} != {program['task']}")
++        selection = select_guarded_graded_candidate(
++            entry["candidates"],
++            prediction=program.get("pred_grid"),
++            demo_fit=program.get("demo_fit"),
++            task_id=entry["task"],
++            tau=tau,
++            high_vote_guard_threshold=high_vote_guard_threshold,
++        )
++        selections.append(selection)
++        rankings.append(gated_rank_indices(entry["candidates"], selection["selected_index"]))
++    return rankings, selections
++
++
++def build_artifact(
++    *,
++    entries: list[dict[str, Any]],
++    programs: list[dict[str, Any]],
++    rule_exec: dict[str, Any],
++    pool_path: Path,
++    programs_path: Path,
++    tau: float = DEFAULT_TAU,
++    band_tau: float = DEFAULT_BAND_TAU,
++    high_vote_guard_threshold: int | float | None = DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++    started: float,
++) -> dict[str, Any]:
++    vote_rankings = [vote_rank_indices(entry["candidates"]) for entry in entries]
++    gated_rankings, selections = _rankings_for_gate(
++        entries,
++        programs,
++        tau=tau,
++        high_vote_guard_threshold=high_vote_guard_threshold,
++    )
++    exact_rankings, _ = _rankings_for_gate(
++        entries,
++        programs,
++        tau=0.0,
++        high_vote_guard_threshold=high_vote_guard_threshold,
++    )
++
++    vote_hits_p2 = hit_indices(entries, vote_rankings, 2)
++    gated_hits_p2 = hit_indices(entries, gated_rankings, 2)
++    exact_hits_p2 = hit_indices(entries, exact_rankings, 2)
++    recovered = len(gated_hits_p2 - vote_hits_p2)
++    lost = len(vote_hits_p2 - gated_hits_p2)
++    guarded_250 = any(
++        entry["task"] == "25094a63" and selection["guard_blocked"]
++        for entry, selection in zip(entries, selections, strict=True)
++    )
++
++    pass1_vote = pass_at_k(entries, vote_rankings, 1)
++    pass2_vote = pass_at_k(entries, vote_rankings, 2)
++    pass1_gate = pass_at_k(entries, gated_rankings, 1)
++    pass2_gate = pass_at_k(entries, gated_rankings, 2)
++    exact_pass2 = pass_at_k(entries, exact_rankings, 2)
++    pass2_delta = round(pass2_gate - pass2_vote, 4)
++    exact_baseline_delta = round(EXACT_MATCH_BASELINE_RECOVERED / max(1, len(entries)), 4)
++    relaxation_added_recoveries = max(0, len(gated_hits_p2 - exact_hits_p2))
++
++    if pass2_delta >= exact_baseline_delta and lost == 0 and guarded_250:
++        verdict = (
++            "complete: gap4_graded_relaxation_adds_nothing_on_arc1_"
++            f"holds_exact_baseline_n{len(entries)}_vote_{pass2_vote}_"
++            f"graded_{pass2_gate}_recovered_{recovered}_lost_{lost}_"
++            "guarded_25094a63"
++        )
++    else:
++        verdict = (
++            "complete: gap4_graded_gate_bounded_arc1_"
++            f"vote_{pass2_vote}_graded_{pass2_gate}_recovered_{recovered}_"
++            f"lost_{lost}_guarded_{guarded_250}"
++        )
++
++    return {
++        "experiment": "experiment_4187_gap4_graded_execution_gate_hardening",
++        "title": "GAP-4 guarded graded execution-energy gate replay on ARC-1",
++        "honest_verdict": verdict,
++        "inference_substrate": "deterministic_verifier",
++        "n_tasks": len(entries),
++        "tau": tau,
++        "graded_gate_pass2_vs_vote": pass2_delta,
++        "vote_aware_guard_blocked_mispromotion": guarded_250,
++        "gross_recovery_ledger": {"recovered": recovered, "lost": lost},
++        "band_precision_at_tau": non_exact_band_precision(entries, programs, band_tau=band_tau),
++        "gate_fire_count": sum(1 for selection in selections if selection["gate_fired"]),
++        "guard_block_count": sum(1 for selection in selections if selection["guard_blocked"]),
++        "pass_at_1": {"TRM_VOTE": pass1_vote, "GRADED_GATE": pass1_gate},
++        "pass_at_2": {
++            "TRM_VOTE": pass2_vote,
++            "GRADED_GATE": pass2_gate,
++            "EXACT_MATCH_GUARDED": exact_pass2,
++        },
++        "pass2_vote_wins_lost": lost,
++        "relaxation_added_recoveries": relaxation_added_recoveries,
++        "agreement_confidence_label_only": True,
++        "selection_policy": (
++            "demo_fit == 1.0 and argmin normalized Hamming <= tau; agreement is recorded only as "
++            "a confidence label and is never used as a selector"
++        ),
++        "vote_aware_guard": {
++            "threshold_votes": high_vote_guard_threshold,
++            "rule": "block a non-top-vote promotion when the vote leader has at least threshold_votes",
++            "blocked_tasks": [
++                entry["task"]
++                for entry, selection in zip(entries, selections, strict=True)
++                if selection["guard_blocked"]
++            ],
++        },
++        "field_principles": {
++            "honest_verdict": (
++                "Terminal-prefixed. A production-safe gate that holds +4/-0 or an honest "
++                "graded-relaxation-adds-nothing verdict is complete."
++            ),
++            "graded_gate_pass2_vs_vote": (
++                "pass@2(graded gate) - pass@2(vote) on ARC-1; must not regress below the "
++                "+4/-0 exact-match baseline."
++            ),
++            "vote_aware_guard_blocked_mispromotion": (
++                "Bare bool: the guard blocked the 25094a63 high-vote-gold exact-match "
++                "mis-promotion."
++            ),
++            "gross_recovery_ledger": "{recovered, lost} pass@2 candidate counts vs vote.",
++            "band_precision_at_tau": "Precision of the non-exact tau<=0.02 graded band.",
++            "random_seed": "Determinism precondition for bit-reproducible replay.",
++            "reproducibility_checksum": "Hash of the induced-program set plus ARC-1 pool.",
++        },
++        "preconditions_checked": [
++            {"resource": "arc1_candidate_pool", "path": str(pool_path), "available": True},
++            {"resource": "arc1_induced_programs", "path": str(programs_path), "available": True},
++        ],
++        "random_seed": int(rule_exec.get("random_seed", 12345)),
++        "reproducibility_checksum": _checksum([programs_path, pool_path]),
++        "reproducibility_checksum_sources": [str(programs_path), str(pool_path)],
++        "no_new_model_calls": True,
++        "duration_s": round(time.time() - started, 6),
++    }
++
++
++def run(
++    *,
++    pool_path: Path = POOL_PATH,
++    programs_path: Path = PROGRAMS_PATH,
++    rule_exec_path: Path = RULE_EXEC_PATH,
++    artifact_path: Path = ARTIFACT_PATH,
++    tau: float = DEFAULT_TAU,
++    band_tau: float = DEFAULT_BAND_TAU,
++    high_vote_guard_threshold: int | float | None = DEFAULT_HIGH_VOTE_GUARD_THRESHOLD,
++) -> dict[str, Any]:
++    started = time.time()
++    pool_path = Path(pool_path)
++    programs_path = Path(programs_path)
++    rule_exec_path = Path(rule_exec_path)
++    artifact_path = Path(artifact_path)
++    if not (pool_path.exists() and programs_path.exists() and rule_exec_path.exists()):
++        return _blocked_artifact(
++            artifact_path=artifact_path,
++            pool_path=pool_path,
++            programs_path=programs_path,
++            rule_exec_path=rule_exec_path,
++            started=started,
++        )
++
++    entries = _load_pool(pool_path)
++    programs = _load_programs(programs_path)
++    rule_exec = json.loads(rule_exec_path.read_text(encoding="utf-8"))
++    artifact = build_artifact(
++        entries=entries,
++        programs=programs,
++        rule_exec=rule_exec,
++        pool_path=pool_path,
++        programs_path=programs_path,
++        tau=tau,
++        band_tau=band_tau,
++        high_vote_guard_threshold=high_vote_guard_threshold,
++        started=started,
++    )
++    return _write_artifact(artifact_path, artifact)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--pool", type=Path, default=POOL_PATH)
++    parser.add_argument("--programs", type=Path, default=PROGRAMS_PATH)
++    parser.add_argument("--rule-exec", type=Path, default=RULE_EXEC_PATH)
++    parser.add_argument("--artifact", type=Path, default=ARTIFACT_PATH)
++    args = parser.parse_args(argv)
++    artifact = run(
++        pool_path=args.pool,
++        programs_path=args.programs,
++        rule_exec_path=args.rule_exec,
++        artifact_path=args.artifact,
++    )
++    print(f"-> {artifact['honest_verdict']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index fd573f0696..e99a3099bd 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:34:50Z",
+-  "finished_at": "2026-06-14T10:34:50Z",
++  "started_at": "2026-06-14T10:50:33Z",
++  "finished_at": "2026-06-14T10:50:33Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a70a3a23f8..1a7014bc6a 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:34:50Z",
+-  "finished_at": "2026-06-14T10:34:50Z",
++  "started_at": "2026-06-14T10:50:33Z",
++  "finished_at": "2026-06-14T10:50:33Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e9e8c98379..2878662147 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T10:34:50Z",
+-  "finished_at": "2026-06-14T10:34:51Z",
++  "started_at": "2026-06-14T10:50:34Z",
++  "finished_at": "2026-06-14T10:50:34Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/agentic/test_gap4_graded_execution_gate.py b/tests/python/agentic/test_gap4_graded_execution_gate.py
+new file mode 100644
+index 0000000000..add13276c9
+--- /dev/null
++++ b/tests/python/agentic/test_gap4_graded_execution_gate.py
+@@ -0,0 +1,113 @@
++"""Tests for the GAP-4 guarded graded execution gate.
++
++REQ-VERIFY-4187 / SCENARIO-VERIFY-4187: the production gate promotes only
++demo-perfect executed predictions within tau, blocks high-vote vote overrides,
++and leaves agreement as a confidence label rather than a selector.
++"""
++
++from carnot.agentic.gap4_graded_execution_gate import (
++    non_exact_band_precision,
++    normalized_hamming,
++    select_guarded_graded_candidate,
++)
++
++
++def test_req_verify_4187_requires_demo_fit_exactly_one() -> None:
++    candidates = [{"grid": [[1]], "votes": 1}]
++
++    result = select_guarded_graded_candidate(
++        candidates,
++        prediction=[[1]],
++        demo_fit=0.999,
++        tau=0.005,
++    )
++
++    assert result["gate_fired"] is False
++    assert result["selected_index"] is None
++    assert result["reason"] == "demo_fit_not_exact"
++
++
++def test_req_verify_4187_promotes_min_hamming_within_tau() -> None:
++    candidates = [
++        {"grid": [[9, 9], [9, 9]], "votes": 20},
++        {"grid": [[1, 2], [3, 4]], "votes": 1},
++    ]
++
++    result = select_guarded_graded_candidate(
++        candidates,
++        prediction=[[1, 2], [3, 4]],
++        demo_fit=1.0,
++        tau=0.005,
++    )
++
++    assert result["gate_fired"] is True
++    assert result["selected_index"] == 1
++    assert result["min_hamming"] == 0.0
++    assert result["agreement_confidence_label"] is False
++
++
++def test_req_verify_4187_blocks_high_vote_override_without_gold_oracle() -> None:
++    candidates = [
++        {"grid": [[7]], "votes": 945},
++        {"grid": [[3]], "votes": 32},
++    ]
++
++    result = select_guarded_graded_candidate(
++        candidates,
++        prediction=[[3]],
++        demo_fit=1.0,
++        task_id="25094a63",
++        tau=0.005,
++        high_vote_guard_threshold=900,
++        agreement_confidence_label=True,
++    )
++
++    assert result["gate_fired"] is False
++    assert result["guard_blocked"] is True
++    assert result["selected_index"] is None
++    assert result["would_select_index"] == 1
++    assert result["agreement_confidence_label"] is True
++
++
++def test_req_verify_4187_normalized_hamming_shape_mismatch_is_worse() -> None:
++    pred = [[1, 2], [3, 4]]
++
++    assert normalized_hamming(pred, pred) == 0.0
++    assert normalized_hamming([[1, 2], [3, 0]], pred) == 0.25
++    assert normalized_hamming([[1, 2]], pred) > 1.0
++    assert normalized_hamming(None, pred) > 1.0
++
++
++def test_req_verify_4187_abstains_on_missing_prediction_or_empty_pool() -> None:
++    missing_pred = select_guarded_graded_candidate(
++        [{"grid": [[1]], "votes": 1}],
++        prediction=None,
++        demo_fit=1.0,
++    )
++    empty_pool = select_guarded_graded_candidate(
++        [],
++        prediction=[[1]],
++        demo_fit=1.0,
++    )
++
++    assert missing_pred["reason"] == "prediction_missing"
++    assert empty_pool["reason"] == "candidate_pool_empty"
++
++
++def test_req_verify_4187_band_precision_skips_ineligible_rows() -> None:
++    entries = [
++        {"candidates": [{"grid": [[1]], "correct": True}]},
++        {"candidates": []},
++    ]
++    programs = [
++        {"demo_fit": 0.5, "pred_grid": [[1]]},
++        {"demo_fit": 1.0, "pred_grid": [[1]]},
++    ]
++
++    assert non_exact_band_precision(entries, programs) == {
++        "tau": 0.02,
++        "definition": "demo-perfect entries whose closest candidate has 0 < min_hamming <= tau",
++        "correct": 0,
++        "total": 0,
++        "precision": None,
++    }
+diff --git a/tests/python/test_experiment_4187_gap4_graded_execution_gate_hardening.py b/tests/python/test_experiment_4187_gap4_graded_execution_gate_hardening.py
+new file mode 100644
+index 0000000000..b0056c3361
+--- /dev/null
++++ b/tests/python/test_experiment_4187_gap4_graded_execution_gate_hardening.py
+@@ -0,0 +1,193 @@
++"""Tests for Exp 4187 GAP-4 graded execution gate hardening.
++
++REQ-VERIFY-4187 / SCENARIO-VERIFY-4187: the replay artifact must be produced
++from cached evidence, carry the required schema fields, and report the
++vote-aware guard against the 25094a63 high-vote promotion.
++"""
++
++from __future__ import annotations
++
++import gzip
++import importlib.util
++import json
++from pathlib import Path
++
++import pytest
++
++
++ROOT = Path(__file__).parents[2]
++MODULE_PATH = ROOT / "results" / "experiment_4187_gap4_graded_execution_gate_hardening.py"
++
++
++def _load_module():
++    spec = importlib.util.spec_from_file_location("experiment_4187", MODULE_PATH)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _write_pool(path: Path) -> None:
++    near_pred = [[0 for _ in range(10)] for _ in range(10)]
++    near_wrong = [[0 for _ in range(10)] for _ in range(10)]
++    near_wrong[0][0] = 1
++    near_gold = [[0 for _ in range(10)] for _ in range(10)]
++    near_gold[0][0] = 2
++    entries = [
++        {
++            "task": "recover_task",
++            "candidates": [
++                {"grid": [[0]], "votes": 10, "correct": False},
++                {"grid": [[8]], "votes": 9, "correct": False},
++                {"grid": [[1]], "votes": 1, "correct": True},
++            ],
++        },
++        {
++            "task": "25094a63",
++            "candidates": [
++                {"grid": [[7]], "votes": 945, "correct": True},
++                {"grid": [[3]], "votes": 32, "correct": False},
++                {"grid": [[4]], "votes": 1, "correct": False},
++            ],
++        },
++        {
++            "task": "near_miss_task",
++            "candidates": [
++                {"grid": near_wrong, "votes": 6, "correct": False},
++                {"grid": near_gold, "votes": 5, "correct": True},
++                {"grid": [[9]], "votes": 1, "correct": False},
++            ],
++        },
++    ]
++    with gzip.open(path, "wt", encoding="utf-8") as f:
++        json.dump({"entries": entries}, f)
++
++
++def _write_programs(path: Path) -> None:
++    programs = [
++        {
++            "task": "recover_task",
++            "demo_fit": 1.0,
++            "demo_perfect": True,
++            "pred_grid": [[1]],
++        },
++        {
++            "task": "25094a63",
++            "demo_fit": 1.0,
++            "demo_perfect": True,
++            "pred_grid": [[3]],
++        },
++        {
++            "task": "near_miss_task",
++            "demo_fit": 1.0,
++            "demo_perfect": True,
++            "pred_grid": [[0 for _ in range(10)] for _ in range(10)],
++        },
++    ]
++    path.write_text(json.dumps({"programs": programs}), encoding="utf-8")
++
++
++def test_req_verify_4187_blocked_when_cached_pool_missing(tmp_path: Path) -> None:
++    exp = _load_module()
++    artifact_path = tmp_path / "experiment_4187.json"
++
++    artifact = exp.run(
++        pool_path=tmp_path / "missing_pool.json.gz",
++        programs_path=tmp_path / "missing_programs.json",
++        rule_exec_path=tmp_path / "missing_rule_exec.json",
++        artifact_path=artifact_path,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_gap4_arc1_pool_missing"
++    assert artifact_path.exists()
++
++
++def test_req_verify_4187_artifact_schema_and_guard(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    exp = _load_module()
++    monkeypatch.setattr(exp, "EXACT_MATCH_BASELINE_RECOVERED", 1)
++    pool_path = tmp_path / "pool.json.gz"
++    programs_path = tmp_path / "programs.json"
++    rule_exec_path = tmp_path / "rule_exec.json"
++    artifact_path = tmp_path / "experiment_4187.json"
++    _write_pool(pool_path)
++    _write_programs(programs_path)
++    rule_exec_path.write_text(json.dumps({"random_seed": 12345}), encoding="utf-8")
++
++    artifact = exp.run(
++        pool_path=pool_path,
++        programs_path=programs_path,
++        rule_exec_path=rule_exec_path,
++        artifact_path=artifact_path,
++        high_vote_guard_threshold=900,
++    )
++
++    required = {
++        "honest_verdict",
++        "graded_gate_pass2_vs_vote",
++        "vote_aware_guard_blocked_mispromotion",
++        "gross_recovery_ledger",
++        "band_precision_at_tau",
++        "random_seed",
++        "reproducibility_checksum",
++        "gate_fire_count",
++        "pass_at_1",
++        "pass_at_2",
++        "pass2_vote_wins_lost",
++        "agreement_confidence_label_only",
++        "duration_s",
++        "inference_substrate",
++    }
++    assert required <= artifact.keys()
++    assert artifact["vote_aware_guard_blocked_mispromotion"] is True
++    assert artifact["pass2_vote_wins_lost"] == 0
++    assert artifact["gross_recovery_ledger"] == {"recovered": 1, "lost": 0}
++    assert artifact["band_precision_at_tau"]["total"] == 1
++    assert artifact["band_precision_at_tau"]["correct"] == 0
++    assert artifact["agreement_confidence_label_only"] is True
++    assert artifact_path.exists()
++
++
++def test_req_verify_4187_rejects_task_mismatch(tmp_path: Path) -> None:
++    exp = _load_module()
++    entries = [{"task": "a", "candidates": [{"grid": [[1]], "votes": 1, "correct": True}]}]
++    programs = [{"task": "b", "demo_fit": 1.0, "pred_grid": [[1]]}]
++
++    with pytest.raises(ValueError, match="task mismatch"):
++        exp.build_artifact(
++            entries=entries,
++            programs=programs,
++            rule_exec={"random_seed": 12345},
++            pool_path=tmp_path / "pool.json.gz",
++            programs_path=tmp_path / "programs.json",
++            started=0.0,
++        )
++
++
++def test_req_verify_4187_cli_main_writes_artifact(tmp_path: Path) -> None:
++    exp = _load_module()
++    pool_path = tmp_path / "pool.json.gz"
++    programs_path = tmp_path / "programs.json"
++    rule_exec_path = tmp_path / "rule_exec.json"
++    artifact_path = tmp_path / "experiment_4187.json"
++    _write_pool(pool_path)
++    _write_programs(programs_path)
++    rule_exec_path.write_text(json.dumps({"random_seed": 12345}), encoding="utf-8")
++
++    assert exp.main(
++        [
++            "--pool",
++            str(pool_path),
++            "--programs",
++            str(programs_path),
++            "--rule-exec",
++            str(rule_exec_path),
++            "--artifact",
++            str(artifact_path),
++        ]
++    ) == 0
++
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("complete: gap4_graded_gate_bounded_arc1")
+-- 
+2.55.0
+

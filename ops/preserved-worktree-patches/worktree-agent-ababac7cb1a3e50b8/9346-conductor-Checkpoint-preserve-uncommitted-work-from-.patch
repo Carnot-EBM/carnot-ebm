@@ -1,0 +1,44 @@
+From e4d9da4afc463d412eb61f28106a8f4d8dd7da4a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 19 Aug 2026 14:26:14 -0400
+Subject: [PATCH 09346/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d9073a6389..0af87eded2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-19T17:56:26Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 13, "phase": "iteration_start", "last_beat": "2026-08-19T18:26:10Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ab9ff3ff37..40d4ac398e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16070,3 +16070,5 @@ code |
+ | 2026-08-19 17:27 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
+ | 2026-08-19 17:54 UTC | Prospective unique-event verifier-bounded continuo | OK | 89 passed, 1 warning in 8.99s |
+ | 2026-08-19 17:56 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
++| 2026-08-19 18:24 UTC | Gated on Exp6468 CSL readiness: unique-event corru | OK | 88 passed, 1 warning in 9.14s |
++| 2026-08-19 18:26 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bb93375b72..72de92f76e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-19T17:56:26Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 13, "phase": "iteration_start", "started_at": "2026-08-19T18:26:10Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,225 @@
+From 994f4f8a4da85d8ad406d93cef3c61880fd604f5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 22:15:09 -0400
+Subject: [PATCH 10199/11362] exp5879: make the debt decision actually reach
+ production
+
+My earlier fix (1af1337177) was HOLLOW, and an independent review caught it. It
+was the origin bug re-committed one level up: the original defect was that
+classify_test_debt correctly labelled unrelated debt and then blocked on it
+anyway -- "the classification had no consequence" -- and my fix added a new
+decision field that ALSO had no consequence.
+
+Two independent holes, both demonstrated by execution:
+
+  1. build_artifact called classify_test_debt with three arguments and never
+     passed global_failure_node_ids, so production took the fail-closed None
+     path on every run and nothing changed.
+  2. status() keyed on debt["unrelated_global_suite_debt"] -- the
+     CLASSIFICATION, which stays True whenever debt exists -- not on
+     blocks_terminal_ready_status, the DECISION my change computed. So even
+     with perfect evidence the verdict still read "blocked:
+     science_ready_but_unrelated_global_suite_debt".
+
+The verification I quoted in that commit called classify_test_debt DIRECTLY
+with evidence handed in: a path production never takes. Test the call site, not
+the function. That commit also added zero tests, which is how both holes
+survived.
+
+Fixed here: build_artifact accepts and FORWARDS the evidence; status() keys on
+the decision and falls back to the classification when the field is absent, so
+artifacts written before this change do not shift meaning.
+
+Six tests, and they assert the CALL SITE rather than the function -- one
+inspects build_artifact's source for the forwarding, because a parameter that
+is accepted and dropped on the floor is exactly the failure being prevented.
+Mutation-proved 3/3 RED: re-drop the evidence, re-key status on the
+classification, and make the decision ignore the delta. Module restored
+byte-identical, suite green before and after.
+
+Writing my own test fixture taught the same lesson a third time: I fabricated a
+"hardness_surface_headroom_ready_score" key, which that function ignores
+because it recomputes from real evidence fields, so the test failed for the
+wrong reason and looked like a code bug. The committed helper monkeypatches the
+function and says why.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ..._hardness_headroom_taxonomy_corrigendum.py |  27 ++++-
+ ...test_experiment_5879_global_debt_wiring.py | 110 ++++++++++++++++++
+ 2 files changed, 135 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_experiment_5879_global_debt_wiring.py
+
+diff --git a/python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py b/python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py
+index 0d78776f1d..0df846efa1 100644
+--- a/python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py
++++ b/python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py
+@@ -691,7 +691,17 @@ def status(artifact: Mapping[str, Any]) -> str:
+ 
+     score = hardness_surface_headroom_ready_score(artifact)
+     debt = dict(artifact.get("test_debt_classification") or {})
+-    if score == 1.0 and debt.get("unrelated_global_suite_debt") is True:
++    # Key on the DECISION, not the CLASSIFICATION. `unrelated_global_suite_debt` says the debt
++    # exists; `blocks_terminal_ready_status` says whether it is this task's fault, which is the
++    # question REQ-HARNESS-5920 asks. Keying on the classification is what made the first fix
++    # hollow: the decision field was computed correctly and then read by nothing.
++    #
++    # Falls back to the classification when the decision field is absent, so an artifact
++    # written before this change still reads exactly as it did.
++    blocks = debt.get("blocks_terminal_ready_status")
++    if blocks is None:
++        blocks = debt.get("unrelated_global_suite_debt")
++    if score == 1.0 and blocks is True:
+         return "blocked"
+     if score == 1.0:
+         return "complete_ready"
+@@ -752,8 +762,20 @@ def build_artifact(
+     test_exit_codes: Mapping[str, int],
+     duration_s: float,
+     root: Path = REPO_ROOT,
++    global_failure_node_ids: Sequence[str] | None = None,
+ ) -> JsonDict:
+-    """Build the terminal corrigendum artifact from already-read rows."""
++    """Build the terminal corrigendum artifact from already-read rows.
++
++    `global_failure_node_ids` is what the global suite actually failed on. None means no
++    evidence, which is NOT the same as no failures: `classify_test_debt` then fails closed and
++    the debt blocks exactly as it did before REQ-HARNESS-5920 was wired here.
++
++    THIS PARAMETER EXISTS BECAUSE ITS ABSENCE MADE THE FIRST WIRING HOLLOW (2026-08-29).
++    `classify_test_debt` gained the delta, and this caller never passed it, so production took
++    the fail-closed path on every run and nothing changed. The verification quoted in that
++    commit tested `classify_test_debt` directly with evidence handed in -- a path production
++    never takes. Test the call site, not the function.
++    """
+ 
+     root = Path(root)
+     split_definitions = dict(
+@@ -777,6 +799,7 @@ def build_artifact(
+         test_commands,
+         test_exit_codes,
+         science_matrix_ready=decision["hardness_surface_headroom_ready_score"] == 1.0,
++        global_failure_node_ids=global_failure_node_ids,
+     )
+     artifact: JsonDict = {
+         "schema": SCHEMA,
+diff --git a/tests/python/test_experiment_5879_global_debt_wiring.py b/tests/python/test_experiment_5879_global_debt_wiring.py
+new file mode 100644
+index 0000000000..e5b37f16c3
+--- /dev/null
++++ b/tests/python/test_experiment_5879_global_debt_wiring.py
+@@ -0,0 +1,110 @@
++"""REQ-HARNESS-5920: the exp5879 debt decision must reach production, and be consumed.
++
++INCIDENT 2026-08-29, and it is why these tests exist rather than a manual check. The first
++wiring of the node-id delta into this module was HOLLOW in two independent ways:
++
++  1. `build_artifact` never passed `global_failure_node_ids` to `classify_test_debt`, so
++     production always took the fail-closed None path and nothing changed.
++  2. `status()` keyed on `unrelated_global_suite_debt` -- the CLASSIFICATION, which stays True
++     whenever debt exists -- rather than on `blocks_terminal_ready_status`, the DECISION the
++     change computed. So even with perfect evidence the verdict still read
++     "blocked: science_ready_but_unrelated_global_suite_debt".
++
++The commit's verification called `classify_test_debt` DIRECTLY with evidence handed in: a path
++production never takes. That is the lesson these tests encode -- exercise the CALL SITE, not
++the function. Both holes are asserted here so neither can return silently.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot import experiment_5879_hardness_headroom_taxonomy_corrigendum as exp  # noqa: E402
++from carnot.global_suite_baseline import baseline_node_ids  # noqa: E402
++
++
++def _debt(nodes, *, science_ready: bool = True, owned_ok: bool = True):
++    """Classify with a failing global suite and (by default) clean owned checks."""
++    commands = (
++        list(exp.DEFAULT_TEST_COMMANDS)
++        if hasattr(exp, "DEFAULT_TEST_COMMANDS")
++        else [exp.FULL_TEST_COMMAND]
++    )
++    codes = {c: 0 for c in commands}
++    codes[exp.FULL_TEST_COMMAND] = 3
++    if not owned_ok:
++        for c in commands:
++            if c != exp.FULL_TEST_COMMAND:
++                codes[c] = 1
++                break
++    return exp.classify_test_debt(
++        commands, codes, science_matrix_ready=science_ready, global_failure_node_ids=nodes
++    )
++
++
++def _status_with_score(monkeypatch, debt, score: float) -> str:
++    """`hardness_surface_headroom_ready_score` recomputes from real evidence fields rather than
++    reading a key, so it is monkeypatched. Fabricating that key looks like it works and
++    silently scores 0.0 -- a first version of this test did exactly that and failed for the
++    wrong reason."""
++
++    monkeypatch.setattr(exp, "hardness_surface_headroom_ready_score", lambda _a: score)
++    return exp.status({"test_debt_classification": debt})
++
++
++def test_build_artifact_accepts_and_forwards_the_evidence() -> None:
++    """Hole 1: the parameter must exist on the CALLER, not only on the function."""
++    import inspect
++
++    sig = inspect.signature(exp.build_artifact)
++    assert "global_failure_node_ids" in sig.parameters
++    src = inspect.getsource(exp.build_artifact)
++    assert "global_failure_node_ids=global_failure_node_ids" in src, (
++        "build_artifact must FORWARD the evidence to classify_test_debt; accepting it and "
++        "dropping it on the floor is the hollow fix this test exists to prevent"
++    )
++
++
++def test_status_consumes_the_decision_not_the_classification(monkeypatch) -> None:
++    """Hole 2: with baseline-only debt the verdict must stop saying blocked."""
++    debt = _debt(baseline_node_ids())
++    assert debt["blocks_terminal_ready_status"] is False
++    assert _status_with_score(monkeypatch, debt, 1.0) != "blocked"
++
++
++def test_a_new_failing_node_still_blocks(monkeypatch) -> None:
++    """A regression this task caused must still block, evidence or not."""
++    debt = _debt(baseline_node_ids() + ["tests/python/test_regression.py::test_new"])
++    assert debt["blocks_terminal_ready_status"] is True
++    assert (
++        exp.status({"test_debt_classification": debt, "hardness_surface_headroom_ready_score": 1.0})
++        == "blocked"
++    )
++
++
++def test_no_evidence_fails_closed(monkeypatch) -> None:
++    """No node-id evidence is not the same as no failures."""
++    debt = _debt(None)
++    assert debt["blocks_terminal_ready_status"] is True
++    assert (
++        exp.status({"test_debt_classification": debt, "hardness_surface_headroom_ready_score": 1.0})
++        == "blocked"
++    )
++
++
++def test_an_owned_failure_still_blocks_even_with_clean_global_debt() -> None:
++    """This change must not weaken the module's own verification."""
++    debt = _debt(baseline_node_ids(), owned_ok=False)
++    assert debt["blocks_terminal_ready_status"] is True
++
++
++def test_a_legacy_artifact_without_the_decision_field_reads_as_before(monkeypatch) -> None:
++    """Artifacts written before this change must not change meaning."""
++    monkeypatch.setattr(exp, "hardness_surface_headroom_ready_score", lambda _a: 1.0)
++    assert (
++        exp.status({"test_debt_classification": {"unrelated_global_suite_debt": True}}) == "blocked"
++    )
+-- 
+2.55.0
+

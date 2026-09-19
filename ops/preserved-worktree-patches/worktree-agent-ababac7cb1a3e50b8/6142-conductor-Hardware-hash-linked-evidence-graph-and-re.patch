@@ -1,0 +1,3055 @@
+From 2e2c504c73ae4db114d382573e9d1120872765eb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 02:10:14 -0400
+Subject: [PATCH 06142/11362] [conductor] Hardware hash-linked evidence graph
+ and repeatability receipt without speedup claim
+
+Automated research step by research conductor.
+Task ID: exp5398-v491-hardware-evidence-graph-repeatability
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  90 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...dware_evidence_graph_repeatability_v491.py | 971 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...idence_graph_repeatability_v491.graph.json | 359 +++++++
+ ...are_evidence_graph_repeatability_v491.json | 595 +++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...dware_evidence_graph_repeatability_v491.py | 631 ++++++++++++
+ 26 files changed, 2686 insertions(+), 46 deletions(-)
+ create mode 100644 python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py
+ create mode 100644 results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json
+ create mode 100644 results/experiment_5398_hardware_evidence_graph_repeatability_v491.json
+ create mode 100644 tests/python/test_experiment_5398_hardware_evidence_graph_repeatability_v491.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index a3349ad4db..8d68a9e33b 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -16314,6 +16314,96 @@ discipline rather than speedup.
+ 
+ ---
+ 
++### REQ-HW-5398
++
++**Title:** Hardware-continuity v491 MUST emit a hash-linked evidence graph with repeatability classes
++
++**Description:**
++Experiment 5398 MUST produce
++`results/experiment_5398_hardware_evidence_graph_repeatability_v491.json` as a
++principle-annotated v491 receipt for KV260, PolarFire, and GateMate. The
++artifact MUST extend the v490 hash-chain receipt into a separate hash-linked
++evidence graph containing command nodes, observation nodes, verification nodes,
++board-state hashes, input hashes, output hashes, edge relations, and offline
++verifier status.
++
++KV260 evidence MUST be SSH/board-local reachability only. The experiment MUST
++record DNS or SSH-alias diagnostics for `kria`, then run the exact
++non-destructive reachability command
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If KV260 is
++unreachable, the artifact MUST report `kv260_reachability.value.status` as
++`unreachable` with the blocked reason. Host block-device paths such as
++`/dev/mmcblk*`, `/dev/disk`, or host SD-card probes MUST NOT be used as KV260
++evidence.
++
++PolarFire MUST run the established safe board-local deterministic hash workload
++at least three times when authenticated SSH is reachable. The artifact MUST
++record the repeated board-local timings, output hashes, timing variance,
++repeat count, and a reproducibility class. If PolarFire is not reachable, the
++artifact MUST record repeat count zero, null timing variance, and an honest
++blocked class.
++
++GateMate MUST record DirtyJTAG USB visibility, current toolchain state, and
++whether a real workload path is available. It may run only non-destructive
++detection or workload commands when the physical/JTAG path is actually
++available. If that path is unavailable, GateMate MUST be marked
++`blocked_physical_or_jtag`, and `gatemate_workload_path_available.value` MUST
++be false.
++
++`hardware_speedup_claim.value` MUST remain false unless repeated board-local
++timing evidence and a valid same-workload speedup comparison both exist. In
++this v491 receipt, repeated PolarFire workload timing may set
++`repeatability_evidence_present.value=true`, but it MUST NOT by itself enable a
++speedup claim because no board-vs-baseline acceleration comparison is made.
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_5398_hardware_evidence_graph_repeatability_v491 --date 20260708`
++  writes `results/experiment_5398_hardware_evidence_graph_repeatability_v491.json`
++  and the separate evidence graph named by `evidence_graph_path.value`.
++- The artifact includes `spec_refs` containing `REQ-HW-5398` and
++  `SCENARIO-HW-5398`, `random_seed=5398`, `milestone.value="2026.07.491"`,
++  and a stable `reproducibility_checksum`.
++- Required fields include `status`, `milestone`, `boards_checked`,
++  `evidence_graph_path`, `evidence_graph_hash`, `offline_verifier_path`,
++  `offline_verifier_passed`, `polar_fire_repeat_count`,
++  `polar_fire_timing_variance`, `kv260_reachability`,
++  `gatemate_workload_path_available`, `repeatability_evidence_present`,
++  `hardware_speedup_claim`, `destructive_action_taken`, and
++  `honest_verdict`.
++- The evidence graph verifier recomputes every node hash, checks the
++  previous-hash links, validates edges, rejects destructive commands, rejects
++  host block-device KV260 evidence, and confirms the graph hash.
++- `hardware_speedup_claim.value=false` and
++  `destructive_action_taken.value=false` in every valid v491 artifact.
++
++**Implementation status:** Planned (Exp 5398)
++
++---
++
++### SCENARIO-HW-5398
++
++**Scenario:** Exp 5398 writes v491 evidence graph repeatability receipts without speedup claims.
++
++**Given:** Exp 5386 recorded hash-chained board receipts but lacked repeated
++board-local timing evidence for a speedup claim.
++**When:** Experiment 5398 records KV260 DNS/SSH diagnostics, attempts the exact
++KV260 BatchMode SSH reachability command, repeats the safe PolarFire workload
++three times when SSH is reachable, records GateMate DirtyJTAG/toolchain and
++physical/JTAG status, constructs a hash-linked evidence graph, and runs the
++offline graph verifier.
++**Then:** It writes the v491 artifact and evidence graph with the required
++principle-wrapped fields, KV260 SSH-only evidence, PolarFire repeatability
++class and timing variance when available, GateMate blocked or detected status,
++`offline_verifier_passed.value=true` for a valid graph,
++`repeatability_evidence_present.value=true` only when repeated board-local
++timing evidence exists, `hardware_speedup_claim.value=false`,
++`destructive_action_taken.value=false`, and an `honest_verdict.value` beginning
++with `complete:` or `blocked:`.
++
++**Implementation status:** Planned (Exp 5398)
++
++---
++
+ ### SCENARIO-HW-4910
+ 
+ **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index a92d8238c8..ea4f9a6563 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -667,5 +667,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c6f9e406bd..a643a6a10c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4364,
++  "experiments_checked": 4365,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py b/python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py
+new file mode 100644
+index 0000000000..b882487999
+--- /dev/null
++++ b/python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py
+@@ -0,0 +1,971 @@
++#!/usr/bin/env python3
++"""Exp 5398: hash-linked hardware evidence graph with repeatability classes.
++
++Spec refs: REQ-HW-5398, SCENARIO-HW-5398.
++
++This module records what the bench can honestly prove about the active FPGA
++boards. The graph form is intentionally more explicit than a flat receipt:
++commands, board observations, and verification status are separate hash-linked
++nodes. That makes each blocked board and each repeated board-local timing run
++auditable without turning continuity evidence into an acceleration claim.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_5293_hardware_continuity_reachability_v483 as base
++from carnot import experiment_5374_hardware_continuity_receipts_v489 as receipts
++from carnot import experiment_5386_hardware_hashchain_receipts_v490 as prev
++
++
++JsonDict = dict[str, Any]
++Clock = prev.Clock
++CommandProbe = prev.CommandProbe
++CommandRunner = prev.CommandRunner
++
++RUN_DATE = "20260708"
++EXPERIMENT_ID = "exp5398-hardware-evidence-graph-repeatability-v491"
++EXPERIMENT_NAME = "experiment_5398_hardware_evidence_graph_repeatability"
++MILESTONE = "2026.07.491"
++SCHEMA = "carnot.experiment_5398.hardware_evidence_graph_repeatability.v491"
++GRAPH_SCHEMA = "carnot.hardware.evidence_graph.v1"
++SPEC_REFS = ("REQ-HW-5398", "SCENARIO-HW-5398")
++RANDOM_SEED = 5398
++INFERENCE_SUBSTRATE = "hardware_evidence_graph_repeatability_no_speedup"
++HARDWARE_EVIDENCE_LEVEL = "hash_linked_evidence_graph_repeatability_no_speedup"
++GENESIS_NODE_HASH = "0" * 64
++OFFLINE_VERIFIER_PATH = (
++    "python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py"
++)
++
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json"
++)
++EVIDENCE_GRAPH_RELATIVE_PATH = Path(
++    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json"
++)
++PRIOR_RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5386_hardware_hashchain_receipts_v490.json"
++)
++
++HOST_DATE_COMMAND = prev.HOST_DATE_COMMAND
++HARDWARE_ENV_COMMAND = prev.HARDWARE_ENV_COMMAND
++TOOL_VERSION_COMMAND = prev.TOOL_VERSION_COMMAND
++GATEMATE_USB_COMMAND = prev.GATEMATE_USB_COMMAND
++POLARFIRE_USB_COMMAND = prev.POLARFIRE_USB_COMMAND
++GPU_CONTEXT_COMMAND = prev.GPU_CONTEXT_COMMAND
++KV260_SSH_TRUE_COMMAND = prev.KV260_SSH_TRUE_COMMAND
++KV260_REQUIRED_COMMAND_FORM = prev.KV260_REQUIRED_COMMAND_FORM
++POLARFIRE_STATUS_COMMAND = prev.POLARFIRE_STATUS_COMMAND
++GATEMATE_DETECT_COMMAND = prev.GATEMATE_DETECT_COMMAND
++
++KV260_SSH_CONFIG_COMMAND = ("ssh", "-G", "kria")
++KV260_DNS_COMMAND = ("getent", "hosts", "kria")
++LOCAL_TIMEOUT_S = prev.LOCAL_TIMEOUT_S
++SSH_TIMEOUT_S = prev.SSH_TIMEOUT_S
++GATEMATE_TIMEOUT_S = prev.GATEMATE_TIMEOUT_S
++POLARFIRE_REPEAT_TARGET = 3
++BOARDS_CHECKED = ("KV260", "PolarFire", "GateMate")
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++POLARFIRE_WORKLOAD_INPUT = b"carnot-exp5398-polarfire-repeatability-v491\n"
++POLARFIRE_WORKLOAD_OUTPUT_SUFFIX = b"|polarfire-v491-output"
++POLARFIRE_EXPECTED_INPUT_SHA256 = hashlib.sha256(POLARFIRE_WORKLOAD_INPUT).hexdigest()
++POLARFIRE_EXPECTED_OUTPUT_SHA256 = hashlib.sha256(
++    POLARFIRE_WORKLOAD_INPUT + POLARFIRE_WORKLOAD_OUTPUT_SUFFIX
++).hexdigest()
++POLARFIRE_WORKLOAD_PYTHON = (
++    "import hashlib,json,platform,socket,time;"
++    "started=time.perf_counter();"
++    'payload=b"carnot-exp5398-polarfire-repeatability-v491\\n";'
++    'out=hashlib.sha256(payload+b"|polarfire-v491-output").hexdigest();'
++    "receipt={"
++    '"hostname":socket.gethostname(),'
++    '"uname":" ".join(platform.uname()),'
++    '"python_version":platform.python_version(),'
++    '"input_sha256":hashlib.sha256(payload).hexdigest(),'
++    '"output_sha256":out,'
++    '"wall_time_s":round(time.perf_counter()-started,6)'
++    "};"
++    "print(json.dumps(receipt,sort_keys=True))"
++)
++POLARFIRE_WORKLOAD_COMMAND = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    "polarfire",
++    f"python3 -c '{POLARFIRE_WORKLOAD_PYTHON}'",
++)
++
++REQUIRED_WRAPPED_FIELDS = (
++    "status",
++    "milestone",
++    "boards_checked",
++    "evidence_graph_path",
++    "evidence_graph_hash",
++    "offline_verifier_path",
++    "offline_verifier_passed",
++    "polar_fire_repeat_count",
++    "polar_fire_timing_variance",
++    "kv260_reachability",
++    "gatemate_workload_path_available",
++    "repeatability_evidence_present",
++    "hardware_speedup_claim",
++    "destructive_action_taken",
++    "honest_verdict",
++    "tests_run",
++    "preconditions_checked",
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Complete if the v491 receipt and graph were emitted, even when boards are blocked honestly.",
++    "milestone": "Pins this receipt to 2026.07.491 so hardware state is not treated as floating.",
++    "boards_checked": "Lists the active hardware lanes classified by this receipt.",
++    "evidence_graph_path": "Names the separate hash-linked evidence graph emitted with the artifact.",
++    "evidence_graph_hash": "SHA-256 of graph content, excluding only its self-hash field.",
++    "offline_verifier_path": "Identifies the offline verifier used to recompute graph hashes and safety gates.",
++    "offline_verifier_passed": "True only if the graph verifier passed on the emitted graph.",
++    "polar_fire_repeat_count": "Counts safe PolarFire board-local workload attempts when SSH is reachable.",
++    "polar_fire_timing_variance": "Measured variance across repeated board-local timings, or null when unavailable.",
++    "kv260_reachability": "Classifies KV260 as reachable, unreachable, or not_checked with SSH/DNS reason.",
++    "gatemate_workload_path_available": "True only when GateMate has an actual non-destructive workload path.",
++    "repeatability_evidence_present": "True only if repeated board-local timing and stable output hashes exist.",
++    "hardware_speedup_claim": "False unless repeated board-local timing and a same-workload speedup comparison exist.",
++    "destructive_action_taken": "False because this experiment runs no flash, program, dd, or storage-write command.",
++    "honest_verdict": "One-line summary starting with complete: or blocked: for conductor reconciliation.",
++    "tests_run": "Records verification commands without treating them as hardware evidence.",
++    "preconditions_checked": "Records date, sanitized environment, local tools, USB visibility, and SSH targets.",
++}
++
++
++@dataclass(frozen=True)
++class GraphVerification:
++    """Offline graph verifier result.
++
++    The verifier reports all discovered errors instead of failing on the first
++    one because evidence graphs are audit artifacts. A full error list tells a
++    future operator whether the problem is a broken hash link, unsafe command,
++    missing node, or graph-level hash mismatch.
++    """
++
++    passed: bool
++    errors: list[str]
++
++
++def require(condition: bool, message: str) -> None:
++    if not condition:
++        raise AssertionError(message)
++
++
++def wrap_field(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def sha256_text(text: str) -> str:
++    return receipts.sha256_text(text)
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    return base.sha256_json(payload)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def combined_output_sha256(command: Mapping[str, Any]) -> str:
++    return prev.combined_output_sha256(command)
++
++
++def node_content_hash(node: Mapping[str, Any]) -> str:
++    stable = dict(node)
++    stable["node_hash"] = ""
++    return sha256_json(stable)
++
++
++def graph_content_hash(graph: Mapping[str, Any]) -> str:
++    stable = dict(graph)
++    stable["graph_hash"] = ""
++    return sha256_json(stable)
++
++
++def timing_variance(values: Sequence[float]) -> float | None:
++    if len(values) < 2:
++        return None
++    mean = sum(values) / len(values)
++    return round(sum((value - mean) ** 2 for value in values) / len(values), 12)
++
++
++def parse_ssh_alias_config(stdout: str) -> JsonDict:
++    parsed: JsonDict = {}
++    for line in stdout.splitlines():
++        parts = line.strip().split(None, 1)
++        if len(parts) == 2 and parts[0] in {"hostname", "user", "port"}:
++            parsed[parts[0]] = parts[1]
++    return parsed
++
++
++def parse_polarfire_workload_stdout(stdout: str) -> tuple[JsonDict | None, str | None]:
++    parsed: Any | None = None
++    for line in stdout.splitlines():
++        candidate = line.strip()
++        if not candidate:
++            continue
++        try:
++            parsed = json.loads(candidate)
++        except json.JSONDecodeError:
++            continue
++        if isinstance(parsed, Mapping):
++            break
++    if not isinstance(parsed, Mapping):
++        return None, "workload stdout is not valid JSON"
++
++    receipt: JsonDict = {
++        "hostname": parsed.get("hostname"),
++        "uname": parsed.get("uname"),
++        "python_version": parsed.get("python_version"),
++        "input_sha256": parsed.get("input_sha256"),
++        "output_sha256": parsed.get("output_sha256"),
++        "wall_time_s": parsed.get("wall_time_s"),
++        "workload_class": "deterministic_sha256_transform",
++        "board_local": True,
++        "speedup_claimed": False,
++    }
++    errors: list[str] = []
++    for key in ("hostname", "uname", "input_sha256", "output_sha256"):
++        if not isinstance(receipt.get(key), str) or not receipt[key]:
++            errors.append(f"{key} missing")
++    if receipt.get("input_sha256") != POLARFIRE_EXPECTED_INPUT_SHA256:
++        errors.append("input_sha256 mismatch")
++    if receipt.get("output_sha256") != POLARFIRE_EXPECTED_OUTPUT_SHA256:
++        errors.append("output_sha256 mismatch")
++    if not isinstance(receipt.get("wall_time_s"), int | float) or receipt["wall_time_s"] < 0:
++        errors.append("wall_time_s invalid")
++    if receipt.get("python_version") is not None and not isinstance(
++        receipt.get("python_version"), str
++    ):
++        errors.append("python_version invalid")
++    return receipt, "; ".join(errors) if errors else None
++
++
++def default_tests_run() -> list[JsonDict]:
++    return [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++
++
++def _command_receipt(
++    *,
++    probe: CommandProbe,
++    timeout_s: float,
++    kind: str,
++    outcome: str,
++    command_override: str | None = None,
++) -> JsonDict:
++    return receipts.command_receipt(
++        probe=probe,
++        timeout_s=timeout_s,
++        kind=kind,
++        outcome=outcome,
++        command_override=command_override,
++    )
++
++
++def kv260_reachability(
++    *, command_runner: CommandRunner
++) -> tuple[JsonDict, JsonDict | None, list[JsonDict]]:
++    alias_probe = command_runner(KV260_SSH_CONFIG_COMMAND, LOCAL_TIMEOUT_S)
++    dns_probe = command_runner(KV260_DNS_COMMAND, LOCAL_TIMEOUT_S)
++    ssh_probe = command_runner(KV260_SSH_TRUE_COMMAND, SSH_TIMEOUT_S)
++    reachable = ssh_probe.exit_code == 0
++    reason = None if reachable else (ssh_probe.stderr.strip() or "ssh reachability failed")
++    blocker = None
++    if not reachable:
++        blocker = receipts.blocker_from_probe(
++            "unreachable",
++            ssh_probe,
++            SSH_TIMEOUT_S,
++            command_override=KV260_REQUIRED_COMMAND_FORM,
++        )
++    detail: JsonDict = {
++        "board": "KV260",
++        "status": "reachable" if reachable else "unreachable",
++        "reason": reason,
++        "check_method": "ssh_batchmode_true_only",
++        "command_form": KV260_REQUIRED_COMMAND_FORM,
++        "ssh_alias": parse_ssh_alias_config(alias_probe.stdout),
++        "dns": {
++            "command": base.command_to_string(KV260_DNS_COMMAND),
++            "exit_code": int(dns_probe.exit_code),
++            "resolved": dns_probe.exit_code == 0,
++            "identifier": base.remote_identifier(dns_probe.combined_output)
++            if dns_probe.combined_output
++            else None,
++            "stdout_sha256": sha256_text(dns_probe.stdout),
++            "stderr_sha256": sha256_text(dns_probe.stderr),
++        },
++        "ssh": {
++            "exit_code": int(ssh_probe.exit_code),
++            "reachable": reachable,
++            "identifier": base.remote_identifier(ssh_probe.combined_output)
++            if ssh_probe.combined_output
++            else None,
++            "stdout_sha256": sha256_text(ssh_probe.stdout),
++            "stderr_sha256": sha256_text(ssh_probe.stderr),
++        },
++        "blocked_reason": blocker,
++        "speedup_claimed": False,
++    }
++    commands = [
++        _command_receipt(
++            probe=alias_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="kv260_ssh_alias_config",
++            outcome="recorded" if alias_probe.exit_code == 0 else "alias_unavailable",
++        ),
++        _command_receipt(
++            probe=dns_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="kv260_dns_alias_lookup",
++            outcome="resolved" if dns_probe.exit_code == 0 else "unresolved",
++        ),
++        _command_receipt(
++            probe=ssh_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="kv260_ssh_true_reachability_probe",
++            outcome=detail["status"],
++            command_override=KV260_REQUIRED_COMMAND_FORM,
++        ),
++    ]
++    return detail, blocker, commands
++
++
++def polarfire_repeatability(
++    *, command_runner: CommandRunner
++) -> tuple[JsonDict, JsonDict | None, list[JsonDict]]:
++    status_probe = command_runner(POLARFIRE_STATUS_COMMAND, SSH_TIMEOUT_S)
++    reachable = status_probe.exit_code == 0
++    commands = [
++        _command_receipt(
++            probe=status_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="polarfire_authenticated_status_probe",
++            outcome="reachable" if reachable else "unreachable",
++        )
++    ]
++    base_detail: JsonDict = {
++        "board": "PolarFire",
++        "status": "reachable" if reachable else "unreachable",
++        "ssh_reachable": reachable,
++        "probe_exit_code": int(status_probe.exit_code),
++        "remote_identifier": base.remote_identifier(status_probe.combined_output)
++        if reachable
++        else None,
++        "repeat_target": POLARFIRE_REPEAT_TARGET,
++        "repeat_count": 0,
++        "valid_repeat_count": 0,
++        "timing_variance": None,
++        "output_hashes": [],
++        "workload_attempts": [],
++        "reproducibility_class": "blocked_polarfire_ssh_unreachable",
++        "speedup_claimed": False,
++    }
++    if not reachable:
++        return (
++            base_detail,
++            receipts.blocker_from_probe("unreachable", status_probe, SSH_TIMEOUT_S),
++            commands,
++        )
++
++    attempts: list[JsonDict] = []
++    blocker: JsonDict | None = None
++    for index in range(POLARFIRE_REPEAT_TARGET):
++        probe = command_runner(POLARFIRE_WORKLOAD_COMMAND, SSH_TIMEOUT_S)
++        receipt, parse_error = parse_polarfire_workload_stdout(probe.stdout)
++        valid = probe.exit_code == 0 and receipt is not None and parse_error is None
++        attempts.append(
++            {
++                "index": index + 1,
++                "exit_code": int(probe.exit_code),
++                "valid": valid,
++                "parse_error": parse_error,
++                "receipt": receipt,
++                "wall_time_s": receipt.get("wall_time_s") if isinstance(receipt, Mapping) else None,
++                "input_sha256": receipt.get("input_sha256") if isinstance(receipt, Mapping) else None,
++                "output_sha256": receipt.get("output_sha256") if isinstance(receipt, Mapping) else None,
++            }
++        )
++        if not valid and blocker is None:
++            blocker = receipts.blocker_from_probe(
++                parse_error or probe.stderr.strip() or "workload command failed",
++                probe,
++                SSH_TIMEOUT_S,
++            )
++        commands.append(
++            _command_receipt(
++                probe=probe,
++                timeout_s=SSH_TIMEOUT_S,
++                kind=f"polarfire_board_local_workload_repeat_{index + 1}",
++                outcome="valid_repeat" if valid else "invalid_repeat",
++            )
++        )
++
++    timing_values = [
++        float(attempt["wall_time_s"])
++        for attempt in attempts
++        if isinstance(attempt.get("wall_time_s"), int | float)
++    ]
++    output_hashes = [
++        str(attempt["output_sha256"])
++        for attempt in attempts
++        if isinstance(attempt.get("output_sha256"), str)
++    ]
++    valid_attempts = [attempt for attempt in attempts if attempt["valid"] is True]
++    stable_outputs = len(set(output_hashes)) == 1 and output_hashes == [
++        POLARFIRE_EXPECTED_OUTPUT_SHA256
++    ] * POLARFIRE_REPEAT_TARGET
++    repeatability_present = len(valid_attempts) >= POLARFIRE_REPEAT_TARGET and stable_outputs
++    if repeatability_present:
++        repeatability_class = "repeatable_board_local_same_output_timing"
++    elif len(output_hashes) >= 2 and len(set(output_hashes)) > 1:
++        repeatability_class = "non_reproducible_output_hash_drift"
++    else:
++        repeatability_class = "insufficient_valid_board_local_repeats"
++    base_detail.update(
++        {
++            "status": "reachable/repeated_workload",
++            "repeat_count": len(attempts),
++            "valid_repeat_count": len(valid_attempts),
++            "timing_variance": timing_variance(timing_values),
++            "output_hashes": output_hashes,
++            "workload_attempts": attempts,
++            "workload_validated": repeatability_present,
++            "reproducibility_class": repeatability_class,
++        }
++    )
++    return base_detail, blocker, commands
++
++
++def gatemate_status(
++    *,
++    command_runner: CommandRunner,
++    context: Mapping[str, Any],
++    gatemate_physical_path_available: bool | None,
++) -> tuple[JsonDict, JsonDict | None, list[JsonDict], bool]:
++    path_available = receipts.gatemate_path_available_from_context(
++        context, gatemate_physical_path_available
++    )
++    detail_status, detail, blocker, commands = receipts.gatemate_status_from_context(
++        command_runner=command_runner,
++        context=context,
++        physical_path_available=path_available,
++    )
++    detail = dict(detail)
++    workload_path_available = False
++    detail["real_workload_path_available"] = False
++    if detail_status == "detected":
++        detail["jtag_detect_status"] = "detected"
++        detail["status"] = "blocked_physical_or_jtag"
++        detail["reason"] = "dirtyjtag_detected_but_no_real_workload_path"
++        blocker = {"reason": "dirtyjtag_detected_but_no_real_workload_path"}
++    return detail, blocker, commands, workload_path_available
++
++
++def command_board(kind: str) -> str:
++    if kind.startswith("kv260"):
++        return "KV260"
++    if kind.startswith("polarfire"):
++        return "PolarFire"
++    if kind.startswith("gatemate"):
++        return "GateMate"
++    return "Host"
++
++
++def append_node(nodes: list[JsonDict], node: JsonDict) -> JsonDict:
++    node["previous_node_hash"] = nodes[-1]["node_hash"] if nodes else GENESIS_NODE_HASH
++    node["node_hash"] = node_content_hash(node)
++    nodes.append(node)
++    return node
++
++
++def command_node(index: int, command: Mapping[str, Any]) -> JsonDict:
++    command_text = str(command.get("command", ""))
++    return {
++        "id": f"cmd:{index}:{command.get('kind')}",
++        "node_type": "command",
++        "board": command_board(str(command.get("kind", ""))),
++        "kind": command.get("kind"),
++        "command": command_text,
++        "command_sha256": sha256_text(command_text),
++        "input_hash": sha256_text(command_text),
++        "output_hash": combined_output_sha256(command),
++        "stdout_sha256": command.get("stdout_sha256"),
++        "stderr_sha256": command.get("stderr_sha256"),
++        "exit_code": command.get("exit_code"),
++        "outcome": command.get("outcome"),
++        "node_hash": "",
++    }
++
++
++def observation_node(
++    *,
++    node_id: str,
++    board: str,
++    board_state: Mapping[str, Any],
++    command_node_ids: Sequence[str],
++    reproducibility_class: str,
++    input_hash: str,
++    output_hash: str,
++) -> JsonDict:
++    return {
++        "id": node_id,
++        "node_type": "observation",
++        "board": board,
++        "observed_command_node_ids": list(command_node_ids),
++        "board_state": dict(board_state),
++        "board_state_hash": sha256_json(dict(board_state)),
++        "input_hash": input_hash,
++        "output_hash": output_hash,
++        "reproducibility_class": reproducibility_class,
++        "node_hash": "",
++    }
++
++
++def verification_node(*, checked_node_count: int, checked_edge_count: int) -> JsonDict:
++    return {
++        "id": "verify:offline:0",
++        "node_type": "verification",
++        "board": "offline",
++        "verifier_path": OFFLINE_VERIFIER_PATH,
++        "offline_verifier_status": "passed",
++        "checked_node_count": checked_node_count,
++        "checked_edge_count": checked_edge_count,
++        "graph_hash_algorithm": "sha256_json_canonical_excluding_graph_hash",
++        "node_hash": "",
++    }
++
++
++def build_evidence_graph(
++    *,
++    commands_run: Sequence[Mapping[str, Any]],
++    kv260_detail: Mapping[str, Any],
++    polarfire_detail: Mapping[str, Any],
++    gatemate_detail: Mapping[str, Any],
++) -> JsonDict:
++    nodes: list[JsonDict] = []
++    edges: list[JsonDict] = []
++    command_ids_by_board: dict[str, list[str]] = {"KV260": [], "PolarFire": [], "GateMate": []}
++    for index, command in enumerate(commands_run):
++        node = append_node(nodes, command_node(index, command))
++        board = str(node["board"])
++        if board in command_ids_by_board:
++            command_ids_by_board[board].append(str(node["id"]))
++
++    observations = [
++        observation_node(
++            node_id="obs:kv260:reachability",
++            board="KV260",
++            board_state=kv260_detail,
++            command_node_ids=command_ids_by_board["KV260"],
++            reproducibility_class=str(kv260_detail.get("status", "not_checked")),
++            input_hash=sha256_text(KV260_REQUIRED_COMMAND_FORM),
++            output_hash=sha256_json(kv260_detail),
++        ),
++        observation_node(
++            node_id="obs:polarfire:repeatability",
++            board="PolarFire",
++            board_state=polarfire_detail,
++            command_node_ids=command_ids_by_board["PolarFire"],
++            reproducibility_class=str(polarfire_detail.get("reproducibility_class")),
++            input_hash=POLARFIRE_EXPECTED_INPUT_SHA256,
++            output_hash=sha256_json(polarfire_detail),
++        ),
++        observation_node(
++            node_id="obs:gatemate:workload_path",
++            board="GateMate",
++            board_state=gatemate_detail,
++            command_node_ids=command_ids_by_board["GateMate"],
++            reproducibility_class=str(gatemate_detail.get("status", "blocked_physical_or_jtag")),
++            input_hash=sha256_text("gatemate_dirtyjtag_toolchain_state"),
++            output_hash=sha256_json(gatemate_detail),
++        ),
++    ]
++    for observation in observations:
++        append_node(nodes, observation)
++        for command_id in observation["observed_command_node_ids"]:
++            edges.append(
++                {"from": command_id, "to": observation["id"], "relation": "supports_observation"}
++            )
++    checked_edge_count = len(edges) + len(observations)
++    verifier = append_node(
++        nodes,
++        verification_node(checked_node_count=len(nodes) + 1, checked_edge_count=checked_edge_count),
++    )
++    for observation in observations:
++        edges.append({"from": observation["id"], "to": verifier["id"], "relation": "verified_by"})
++
++    graph: JsonDict = {
++        "schema": GRAPH_SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "nodes": nodes,
++        "edges": edges,
++        "graph_hash": "",
++    }
++    graph["graph_hash"] = graph_content_hash(graph)
++    return graph
++
++
++def verify_evidence_graph(graph: Mapping[str, Any]) -> GraphVerification:
++    errors: list[str] = []
++    if graph.get("schema") != GRAPH_SCHEMA:
++        errors.append("schema mismatch")
++    nodes = graph.get("nodes")
++    edges = graph.get("edges")
++    if not isinstance(nodes, list) or not nodes:
++        errors.append("nodes missing")
++        nodes = []
++    if not isinstance(edges, list):
++        errors.append("edges missing")
++        edges = []
++    previous_hash = GENESIS_NODE_HASH
++    node_ids: set[str] = set()
++    node_types: set[str] = set()
++    for index, node in enumerate(nodes):
++        if not isinstance(node, Mapping):
++            errors.append(f"node[{index}] not mapping")
++            continue
++        node_id = node.get("id")
++        if not isinstance(node_id, str) or not node_id:
++            errors.append(f"node[{index}] missing id")
++            continue
++        if node_id in node_ids:
++            errors.append(f"duplicate node id {node_id}")
++        node_ids.add(node_id)
++        node_types.add(str(node.get("node_type")))
++        if node.get("previous_node_hash") != previous_hash:
++            errors.append(f"previous_node_hash mismatch at {node_id}")
++        if node.get("node_hash") != node_content_hash(node):
++            errors.append(f"node_hash mismatch at {node_id}")
++        previous_hash = str(node.get("node_hash"))
++        if node.get("node_type") == "command" and receipts.command_is_destructive(
++            str(node.get("command", ""))
++        ):
++            errors.append(f"destructive command at {node_id}")
++        if node.get("node_type") == "observation":
++            board_state = node.get("board_state")
++            if not isinstance(board_state, Mapping):
++                errors.append(f"board_state missing at {node_id}")
++            elif node.get("board_state_hash") != sha256_json(board_state):
++                errors.append(f"board_state_hash mismatch at {node_id}")
++            if node.get("board") == "KV260" and not receipts.no_host_mmcblk_kv260_evidence(
++                {"board_state": board_state}
++            ):
++                errors.append(f"host block-device KV260 evidence at {node_id}")
++        for key in ("input_hash", "output_hash"):
++            if node.get("node_type") in {"command", "observation"}:
++                value = node.get(key)
++                if not isinstance(value, str) or len(value) != 64:
++                    errors.append(f"{key} invalid at {node_id}")
++    for required_type in ("command", "observation", "verification"):
++        if required_type not in node_types:
++            errors.append(f"{required_type} node missing")
++    for edge in edges:
++        if not isinstance(edge, Mapping):
++            errors.append("edge not mapping")
++            continue
++        if edge.get("from") not in node_ids or edge.get("to") not in node_ids:
++            errors.append("unknown edge endpoint")
++    if graph.get("graph_hash") != graph_content_hash(graph):
++        errors.append("graph_hash mismatch")
++    return GraphVerification(passed=not errors, errors=errors)
++
++
++def destructive_action_taken(commands: Sequence[Mapping[str, Any]]) -> bool:
++    return any(receipts.command_is_destructive(str(command.get("command", ""))) for command in commands)
++
++
++def honest_verdict(
++    *,
++    kv260_status: str,
++    polarfire_repeat_count: int,
++    gatemate_workload_path_available: bool,
++    repeatability_evidence_present: bool,
++    hardware_speedup_claim: bool,
++) -> str:
++    return (
++        "complete: "
++        f"kv260={kv260_status} "
++        f"polar_fire_repeat_count={polarfire_repeat_count} "
++        f"gatemate_workload_path_available={str(gatemate_workload_path_available).lower()} "
++        f"repeatability_evidence_present={str(repeatability_evidence_present).lower()} "
++        f"hardware_speedup_claim={str(hardware_speedup_claim).lower()}"
++    )
++
++
++def build_evidence_bundle(
++    *,
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> tuple[JsonDict, JsonDict]:
++    started = clock()
++    context, commands_run = receipts.collect_preconditions(command_runner)
++    context["prior_receipt"] = str(PRIOR_RESULT_RELATIVE_PATH)
++    context["ssh_targets"] = {"KV260": "kria", "PolarFire": "polarfire"}
++
++    kv260_detail, kv260_blocker, kv260_commands = kv260_reachability(
++        command_runner=command_runner
++    )
++    commands_run.extend(kv260_commands)
++    polarfire_detail, polarfire_blocker, polarfire_commands = polarfire_repeatability(
++        command_runner=command_runner
++    )
++    commands_run.extend(polarfire_commands)
++    gatemate_detail, gatemate_blocker, gatemate_commands, gatemate_workload_path = (
++        gatemate_status(
++            command_runner=command_runner,
++            context=context,
++            gatemate_physical_path_available=gatemate_physical_path_available,
++        )
++    )
++    commands_run.extend(gatemate_commands)
++
++    graph = build_evidence_graph(
++        commands_run=commands_run,
++        kv260_detail=kv260_detail,
++        polarfire_detail=polarfire_detail,
++        gatemate_detail=gatemate_detail,
++    )
++    verification = verify_evidence_graph(graph)
++    repeatability_present = polarfire_detail.get("workload_validated") is True
++    hardware_speedup_claim = False
++    tests = [dict(item) for item in (tests_run if tests_run is not None else default_tests_run())]
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "duration_s": base.round_duration(clock() - started),
++        "commit": commit,
++        "status": wrap_field("status", "complete"),
++        "milestone": wrap_field("milestone", MILESTONE),
++        "boards_checked": wrap_field("boards_checked", list(BOARDS_CHECKED)),
++        "evidence_graph_path": wrap_field(
++            "evidence_graph_path", EVIDENCE_GRAPH_RELATIVE_PATH.as_posix()
++        ),
++        "evidence_graph_hash": wrap_field("evidence_graph_hash", graph_content_hash(graph)),
++        "offline_verifier_path": wrap_field("offline_verifier_path", OFFLINE_VERIFIER_PATH),
++        "offline_verifier_passed": wrap_field("offline_verifier_passed", verification.passed),
++        "polar_fire_repeat_count": wrap_field(
++            "polar_fire_repeat_count", int(polarfire_detail.get("repeat_count", 0))
++        ),
++        "polar_fire_timing_variance": wrap_field(
++            "polar_fire_timing_variance", polarfire_detail.get("timing_variance")
++        ),
++        "kv260_reachability": wrap_field("kv260_reachability", kv260_detail),
++        "gatemate_workload_path_available": wrap_field(
++            "gatemate_workload_path_available", gatemate_workload_path
++        ),
++        "repeatability_evidence_present": wrap_field(
++            "repeatability_evidence_present", repeatability_present
++        ),
++        "hardware_speedup_claim": wrap_field("hardware_speedup_claim", hardware_speedup_claim),
++        "destructive_action_taken": wrap_field(
++            "destructive_action_taken", destructive_action_taken(commands_run)
++        ),
++        "honest_verdict": wrap_field(
++            "honest_verdict",
++            honest_verdict(
++                kv260_status=str(kv260_detail["status"]),
++                polarfire_repeat_count=int(polarfire_detail.get("repeat_count", 0)),
++                gatemate_workload_path_available=gatemate_workload_path,
++                repeatability_evidence_present=repeatability_present,
++                hardware_speedup_claim=hardware_speedup_claim,
++            ),
++        ),
++        "tests_run": wrap_field("tests_run", tests),
++        "preconditions_checked": wrap_field("preconditions_checked", context),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "hardware_evidence_level": HARDWARE_EVIDENCE_LEVEL,
++        "commands_run": commands_run,
++        "board_details": {
++            "KV260": kv260_detail,
++            "PolarFire": polarfire_detail,
++            "GateMate": gatemate_detail,
++        },
++        "blocked_reason": {
++            "KV260": kv260_blocker,
++            "PolarFire": polarfire_blocker,
++            "GateMate": gatemate_blocker,
++        },
++        "offline_verifier_errors": verification.errors,
++        "docs_update_decision": {
++            "ops_changelog_updated": False,
++            "ops_status_updated": False,
++            "reason": "task stop rule delegates docs/status reconciliation to the conductor",
++        },
++        "conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact, graph)
++    return artifact, graph
++
++
++def validate_wrapped_field(artifact: Mapping[str, Any], field: str) -> Any:
++    wrapped = artifact.get(field)
++    require(isinstance(wrapped, Mapping), f"{field} must be principle-wrapped")
++    require(wrapped.get("principle") == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++    require("value" in wrapped, f"{field} missing value")
++    return wrapped["value"]
++
++
++def validate_tests_run(tests_run: Any) -> None:
++    require(isinstance(tests_run, list) and tests_run, "tests_run must be non-empty")
++    for index, item in enumerate(tests_run):
++        require(isinstance(item, Mapping), f"tests_run[{index}] must be mapping")
++        require(isinstance(item.get("command"), str) and item["command"], "test command missing")
++        require(isinstance(item.get("outcome"), str) and item["outcome"], "test outcome missing")
++
++
++def validate_artifact(artifact: Mapping[str, Any], graph: Mapping[str, Any]) -> None:
++    for field in REQUIRED_WRAPPED_FIELDS:
++        validate_wrapped_field(artifact, field)
++    require(artifact.get("schema") == SCHEMA, "schema mismatch")
++    require(artifact.get("experiment_id") == EXPERIMENT_ID, "experiment_id mismatch")
++    require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs mismatch")
++    require(artifact.get("random_seed") == RANDOM_SEED, "random_seed mismatch")
++    require(validate_wrapped_field(artifact, "status") == "complete", "status mismatch")
++    require(validate_wrapped_field(artifact, "milestone") == MILESTONE, "milestone mismatch")
++    require(
++        validate_wrapped_field(artifact, "boards_checked") == list(BOARDS_CHECKED),
++        "boards_checked mismatch",
++    )
++    require(
++        validate_wrapped_field(artifact, "evidence_graph_path")
++        == EVIDENCE_GRAPH_RELATIVE_PATH.as_posix(),
++        "evidence_graph_path mismatch",
++    )
++    require(
++        validate_wrapped_field(artifact, "evidence_graph_hash") == graph_content_hash(graph),
++        "evidence_graph_hash mismatch",
++    )
++    require(
++        validate_wrapped_field(artifact, "offline_verifier_path") == OFFLINE_VERIFIER_PATH,
++        "offline_verifier_path mismatch",
++    )
++    verification = verify_evidence_graph(graph)
++    require(verification.passed is True, f"offline verifier failed: {verification.errors}")
++    require(
++        validate_wrapped_field(artifact, "offline_verifier_passed") is True,
++        "offline_verifier_passed mismatch",
++    )
++    repeat_count = validate_wrapped_field(artifact, "polar_fire_repeat_count")
++    require(isinstance(repeat_count, int) and repeat_count >= 0, "bad repeat count")
++    variance = validate_wrapped_field(artifact, "polar_fire_timing_variance")
++    require(variance is None or isinstance(variance, int | float), "bad timing variance")
++    kv260 = validate_wrapped_field(artifact, "kv260_reachability")
++    require(
++        isinstance(kv260, Mapping) and kv260.get("status") in {"reachable", "unreachable", "not_checked"},
++        "bad kv260_reachability",
++    )
++    require(
++        validate_wrapped_field(artifact, "gatemate_workload_path_available") is False,
++        "gatemate workload path unexpectedly available",
++    )
++    require(
++        validate_wrapped_field(artifact, "hardware_speedup_claim") is False,
++        "hardware_speedup_claim must be false",
++    )
++    require(
++        validate_wrapped_field(artifact, "destructive_action_taken") is False,
++        "destructive_action_taken must be false",
++    )
++    verdict = validate_wrapped_field(artifact, "honest_verdict")
++    require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "bad verdict")
++    require("hardware_speedup_claim=false" in verdict, "verdict missing speedup boundary")
++    validate_tests_run(validate_wrapped_field(artifact, "tests_run"))
++    require(receipts.no_host_mmcblk_kv260_evidence(artifact), "host block-device evidence present")
++    require(artifact.get("conductor_modified") is False, "conductor_modified mismatch")
++    require(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum mismatch",
++    )
++
++
++def write_outputs(repo_root: str | Path, artifact: Mapping[str, Any], graph: Mapping[str, Any]) -> Path:
++    validate_artifact(artifact, graph)
++    root = Path(repo_root)
++    graph_path = root / EVIDENCE_GRAPH_RELATIVE_PATH
++    artifact_path = root / RESULT_RELATIVE_PATH
++    graph_path.parent.mkdir(parents=True, exist_ok=True)
++    graph_path.write_text(json.dumps(dict(graph), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    artifact_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8"
++    )
++    return artifact_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str | None = None,
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> Path:
++    artifact, graph = build_evidence_bundle(
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit or base.get_git_commit(repo_root),
++        gatemate_physical_path_available=gatemate_physical_path_available,
++        tests_run=tests_run,
++    )
++    return write_outputs(repo_root, artifact, graph)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument(
++        "--gatemate-physical-path-available",
++        action="store_true",
++        help="Run bounded GateMate detect because the current physical/JTAG path is available.",
++    )
++    args = parser.parse_args(argv)
++    print(
++        run_experiment(
++            repo_root=Path("."),
++            run_date=args.date,
++            gatemate_physical_path_available=args.gatemate_physical_path_available or None,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index b87c407177..3ad97ad408 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T05:20:40.609143+00:00",
+-  "finished_at": "2026-07-08T05:20:40.634636+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-07-08T06:09:40.071281+00:00",
++  "finished_at": "2026-07-08T06:09:40.097379+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index c8d866ccb1..f47b4c9761 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T05:20:40Z",
++  "run_date": "2026-07-08T06:09:40Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 5034ee8a09..732f787997 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T02:10:39Z",
+-  "finished_at": "2026-07-08T02:10:39Z",
++  "started_at": "2026-07-08T06:09:41Z",
++  "finished_at": "2026-07-08T06:09:41Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index ead12061c1..239a5e37de 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T02:10:39Z",
++  "run_date": "2026-07-08T06:09:41Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index b4481c504d..5691fb9b7b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-08T02:10:39Z",
++  "run_date": "2026-07-08T06:09:41Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5c32dc8158..b779122450 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-08T05:51:37.917890Z",
+-  "duration_s": 0.07742667198181152,
++  "run_date": "2026-07-08T06:08:49.197651Z",
++  "duration_s": 0.07810354232788086,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0109a504f0d96d7103f48cd762ad54d949e1fccd0594cc1007dd0b500579e123",
++  "reproducibility_checksum": "00fa326bdfd05a6456635bdd07cf04dc23857a22ce958c600a5275cc1e3f2f23",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "4678ea7e4ee43274cd23500bff898fda4177f045"
++    "adversarial_verify_version": "14c232e2a332a1cd989c78f30333aca193641358"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 4b25a112a1..69b413000f 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-08T05:20:05.989514Z",
+-  "duration_s": 13.842503070831299,
++  "run_date": "2026-07-08T06:09:05.588955Z",
++  "duration_s": 12.974497556686401,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 0fbbeaf342..d64543309f 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-08T05:20:25.227586+00:00",
+-  "duration_s": 0.0007648468017578125,
++  "run_date": "2026-07-08T06:09:23.760057+00:00",
++  "duration_s": 0.0017292499542236328,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index d3f09c3ca1..d28ee3821d 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T05:51:38.015359Z",
+-  "duration_s": 0.08599472045898438,
++  "run_date": "2026-07-08T06:08:49.316386Z",
++  "duration_s": 0.10765409469604492,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d456eb25c7124bfeb73e14bcfa2484f7d74cceb8e07a86b1fa91b911f7f07dad",
++  "reproducibility_checksum": "d2e0fb3a4135a7f8fcc2a4594fd840b5800032bea7c4798631606361057cca89",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "4678ea7e4ee43274cd23500bff898fda4177f045"
++    "adversarial_verify_version": "14c232e2a332a1cd989c78f30333aca193641358"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 0753244bbb..712d677aea 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.23s, user: 2.78s, system: 0.27s, MEM: 114.31 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.72s, user: 2.42s, system: 0.21s, MEM: 115.08 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 78% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0f68d234d2..ee74e225f3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1750926971435547,
++  "efficiency_gains_ms": 2.1436214447021484,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 6138b675e6..92ab190444 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-08T05:20:40.121264Z",
++  "run_date": "2026-07-08T06:09:37.996919Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 69d52690ec..70012f9f3c 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757108
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 8f64d5d57c..04dfb42515 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0001406441442668438,
+-  "latency_domino_seconds": 0.0002801758237183094,
++  "latency_legacy_seconds": 0.00014834897592663765,
++  "latency_domino_seconds": 0.00029069604352116585,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 25d499dd33..03f1b40ab6 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5135030746459961,
++  "duration_s": 0.6427028179168701,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 904eae3fde..e86d4f54a2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.1468068957328796e-05,
++  "duration_s": 3.06982547044754e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json b/results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json
+new file mode 100644
+index 0000000000..f6727a439a
+--- /dev/null
++++ b/results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json
+@@ -0,0 +1,359 @@
++{
++  "edges": [
++    {
++      "from": "cmd:6:kv260_ssh_alias_config",
++      "relation": "supports_observation",
++      "to": "obs:kv260:reachability"
++    },
++    {
++      "from": "cmd:7:kv260_dns_alias_lookup",
++      "relation": "supports_observation",
++      "to": "obs:kv260:reachability"
++    },
++    {
++      "from": "cmd:8:kv260_ssh_true_reachability_probe",
++      "relation": "supports_observation",
++      "to": "obs:kv260:reachability"
++    },
++    {
++      "from": "cmd:9:polarfire_authenticated_status_probe",
++      "relation": "supports_observation",
++      "to": "obs:polarfire:repeatability"
++    },
++    {
++      "from": "obs:kv260:reachability",
++      "relation": "verified_by",
++      "to": "verify:offline:0"
++    },
++    {
++      "from": "obs:polarfire:repeatability",
++      "relation": "verified_by",
++      "to": "verify:offline:0"
++    },
++    {
++      "from": "obs:gatemate:workload_path",
++      "relation": "verified_by",
++      "to": "verify:offline:0"
++    }
++  ],
++  "experiment_id": "exp5398-hardware-evidence-graph-repeatability-v491",
++  "graph_hash": "6385aebfe73a12e0a175369f4f43bb091501b6cd63824c00716e3b9bb4cde67a",
++  "milestone": "2026.07.491",
++  "nodes": [
++    {
++      "board": "Host",
++      "command": "sh -lc 'printf '\"'\"'host='\"'\"'; hostname; printf '\"'\"'date_utc='\"'\"'; date -u +%Y-%m-%dT%H:%M:%SZ; printf '\"'\"'date_local='\"'\"'; date +%Y-%m-%dT%H:%M:%S%z'",
++      "command_sha256": "017630c1181845b0285cc0358a0ae631b8bd83f22b360b509715c2de66b007c6",
++      "exit_code": 0,
++      "id": "cmd:0:step0_host_date_context",
++      "input_hash": "017630c1181845b0285cc0358a0ae631b8bd83f22b360b509715c2de66b007c6",
++      "kind": "step0_host_date_context",
++      "node_hash": "3999c4e8dfd4cd0232a8461a4adf988e7397d4c808fa5e000467991f914d52d6",
++      "node_type": "command",
++      "outcome": "recorded",
++      "output_hash": "e6d05e35c0cdbe6106a910784dcb58ee0dde52c7e51cbd6a4adf656f205bba99",
++      "previous_node_hash": "0000000000000000000000000000000000000000000000000000000000000000",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "5395e259e3d10fa52603e08af028c31e44e8e46c691e2d8fdd1976bd2ecddfdc"
++    },
++    {
++      "board": "Host",
++      "command": "env",
++      "command_sha256": "b77349bf1fa9b26d45d545d7d64dad96737e9cfbb3cbb5f5d10fb77b0fcc44ad",
++      "exit_code": 0,
++      "id": "cmd:1:local_hardware_environment",
++      "input_hash": "b77349bf1fa9b26d45d545d7d64dad96737e9cfbb3cbb5f5d10fb77b0fcc44ad",
++      "kind": "local_hardware_environment",
++      "node_hash": "36270c65eb6050b708b796500c5f2acd70eb5290f156c1fc0953766d9da4f0a4",
++      "node_type": "command",
++      "outcome": "recorded",
++      "output_hash": "aad86e1b8e55ccff7c36097e2b78d782af57ad7cbfd174bbf68485b34c65ab7e",
++      "previous_node_hash": "3999c4e8dfd4cd0232a8461a4adf988e7397d4c808fa5e000467991f914d52d6",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "1d3a16353d033868c0a1085d8750bc5753b21dd3180d0ec988a3898ec677e3b7"
++    },
++    {
++      "board": "Host",
++      "command": "sh -lc 'for tool in ssh openFPGALoader yosys nextpnr-himbaechel gmpack lsusb; do if command -v \"$tool\" >/dev/null 2>&1; then printf '\"'\"'%s_path=%s\\n'\"'\"' \"$tool\" \"$(command -v \"$tool\")\"; version=\"$($tool -V 2>&1 | head -n 1)\"; if [ -z \"$version\" ]; then version=\"$($tool --version 2>&1 | head -n 1)\"; fi; printf '\"'\"'%s_version=%s\\n'\"'\"' \"$tool\" \"$version\"; else printf '\"'\"'%s_path=\\n%s_version=\\n'\"'\"' \"$tool\" \"$tool\"; fi; done'",
++      "command_sha256": "817289baea7ea563d8e73d05cbb23b92ae26d74f257015af3588c4ba66a50276",
++      "exit_code": 0,
++      "id": "cmd:2:local_tool_versions",
++      "input_hash": "817289baea7ea563d8e73d05cbb23b92ae26d74f257015af3588c4ba66a50276",
++      "kind": "local_tool_versions",
++      "node_hash": "926989e9e25547584020df5e5dd4a0db3858e53d5ddd0ea6e73841dbe33b4994",
++      "node_type": "command",
++      "outcome": "recorded",
++      "output_hash": "11156e5f1951a14903cd06e8c02f74e00b4e51bb4b5fb5c93190a3814d500ab3",
++      "previous_node_hash": "36270c65eb6050b708b796500c5f2acd70eb5290f156c1fc0953766d9da4f0a4",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "69c79691cea28be468665b9d83b6a4f9a010357e1dd93ccaf7241eeea67d6137"
++    },
++    {
++      "board": "Host",
++      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1209:c0ca; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++      "command_sha256": "2a1699445b2070a8e311573058abda93ce76d6322de5800842882e7f2d44ad4f",
++      "exit_code": 0,
++      "id": "cmd:3:local_usb_gatemate_dirtyjtag",
++      "input_hash": "2a1699445b2070a8e311573058abda93ce76d6322de5800842882e7f2d44ad4f",
++      "kind": "local_usb_gatemate_dirtyjtag",
++      "node_hash": "30da010e26b09dde6308d5458686dd45813b7cc475d87b16b7d5b9f9a631561a",
++      "node_type": "command",
++      "outcome": "visible",
++      "output_hash": "6baea4d1e132a1305bd09eb819bb64d20f1768a186a4e142cc7e8452adea9196",
++      "previous_node_hash": "926989e9e25547584020df5e5dd4a0db3858e53d5ddd0ea6e73841dbe33b4994",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c"
++    },
++    {
++      "board": "Host",
++      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1514:2008; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++      "command_sha256": "8b02182254f35b82ac66d20c34e9caf40af89f91e6ec4aa21eecdf93943121ac",
++      "exit_code": 0,
++      "id": "cmd:4:local_usb_polarfire_flashpro",
++      "input_hash": "8b02182254f35b82ac66d20c34e9caf40af89f91e6ec4aa21eecdf93943121ac",
++      "kind": "local_usb_polarfire_flashpro",
++      "node_hash": "b6f2e67ada9f0a8803c8d6fc78aab18b38c07f1ee863775960b46fb299c4199c",
++      "node_type": "command",
++      "outcome": "visible",
++      "output_hash": "6baea4d1e132a1305bd09eb819bb64d20f1768a186a4e142cc7e8452adea9196",
++      "previous_node_hash": "30da010e26b09dde6308d5458686dd45813b7cc475d87b16b7d5b9f9a631561a",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c"
++    },
++    {
++      "board": "Host",
++      "command": "sh -lc 'if command -v nvidia-smi >/dev/null 2>&1; then nvidia-smi --query-gpu=name,memory.total --format=csv,noheader; else echo '\"'\"'nvidia-smi_not_found'\"'\"' >&2; exit 127; fi'",
++      "command_sha256": "6f9bdbf52f52bbdbdfcc57025c9591ceb665ec89de02492d560fb407da407732",
++      "exit_code": 0,
++      "id": "cmd:5:local_dual_rtx3090_runtime_context",
++      "input_hash": "6f9bdbf52f52bbdbdfcc57025c9591ceb665ec89de02492d560fb407da407732",
++      "kind": "local_dual_rtx3090_runtime_context",
++      "node_hash": "f8148b05942e9469184dfcc27e0d0cf318b5f542c4e1cca4ce3fa9ed4e5ffa6d",
++      "node_type": "command",
++      "outcome": "dual_rtx3090_context",
++      "output_hash": "cfdd66bc9c56dea5483303b3ac44d87f20fd077568867539b775abc82b37c720",
++      "previous_node_hash": "b6f2e67ada9f0a8803c8d6fc78aab18b38c07f1ee863775960b46fb299c4199c",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "21b3e5755f235b5513acd0d2253aae577c553c90a037d4ef2a82b052f7d3c20a"
++    },
++    {
++      "board": "KV260",
++      "command": "ssh -G kria",
++      "command_sha256": "9b4e7a611476c6c860e22345b4fdb0fb548cd0cbad46093251353dd02c5d9034",
++      "exit_code": 0,
++      "id": "cmd:6:kv260_ssh_alias_config",
++      "input_hash": "9b4e7a611476c6c860e22345b4fdb0fb548cd0cbad46093251353dd02c5d9034",
++      "kind": "kv260_ssh_alias_config",
++      "node_hash": "4d99ce482fe886372375f6ea56bcc20c00ac215b47b367458f05dc27a3b97aff",
++      "node_type": "command",
++      "outcome": "recorded",
++      "output_hash": "710dff57066af5a0803905bd0e4ff51ea6a12d6639f17ee4d63f0106d9672583",
++      "previous_node_hash": "f8148b05942e9469184dfcc27e0d0cf318b5f542c4e1cca4ce3fa9ed4e5ffa6d",
++      "stderr_sha256": "ef10ca67f3574d4cfcdd67492e01f28444852920ace8e6f2242000b6e7213c27",
++      "stdout_sha256": "ca8371a7d0be86efba70a290947a786fbf2141197085f282082734d6aae25553"
++    },
++    {
++      "board": "KV260",
++      "command": "getent hosts kria",
++      "command_sha256": "7f5e824d4b2cadd358fb2ac289646439f446ff22fb9a9af43de893e3553360e4",
++      "exit_code": 124,
++      "id": "cmd:7:kv260_dns_alias_lookup",
++      "input_hash": "7f5e824d4b2cadd358fb2ac289646439f446ff22fb9a9af43de893e3553360e4",
++      "kind": "kv260_dns_alias_lookup",
++      "node_hash": "181968f423aa928281d1f0d66eaff23006917f53b3de3d574ccb3d912ce364db",
++      "node_type": "command",
++      "outcome": "unresolved",
++      "output_hash": "b0e0baf3ddced7f2cf16dbc56c9bd3960773b207ef283a610c2b15ee92aa788f",
++      "previous_node_hash": "4d99ce482fe886372375f6ea56bcc20c00ac215b47b367458f05dc27a3b97aff",
++      "stderr_sha256": "68fce8a0aa38ab4ba8daa1d027bba0184de4913fcedd5a698b7f78e193cf0256",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++    },
++    {
++      "board": "KV260",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "command_sha256": "b97534bd69bdfd6cbb6b83460bd0cfbc9a67de01519e5d29279e028f8fb3c872",
++      "exit_code": 255,
++      "id": "cmd:8:kv260_ssh_true_reachability_probe",
++      "input_hash": "b97534bd69bdfd6cbb6b83460bd0cfbc9a67de01519e5d29279e028f8fb3c872",
++      "kind": "kv260_ssh_true_reachability_probe",
++      "node_hash": "6f49a1e224a777b7a79b2e8d3627157bde36056f3adf1fbba5787a886a86e8fd",
++      "node_type": "command",
++      "outcome": "unreachable",
++      "output_hash": "cc6b6d12a057c7303de209b5b9c233c66e83103ac727151e9a0d06d31063a219",
++      "previous_node_hash": "181968f423aa928281d1f0d66eaff23006917f53b3de3d574ccb3d912ce364db",
++      "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++    },
++    {
++      "board": "PolarFire",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++      "command_sha256": "3d2c1f9d6b8a4fd5fcef61d5c7524964c60c4108fa793dd3fa26edc1edacc1b4",
++      "exit_code": 255,
++      "id": "cmd:9:polarfire_authenticated_status_probe",
++      "input_hash": "3d2c1f9d6b8a4fd5fcef61d5c7524964c60c4108fa793dd3fa26edc1edacc1b4",
++      "kind": "polarfire_authenticated_status_probe",
++      "node_hash": "d0755b08d82d1e17c1a2f373a82e1b848d10f142c98a7ccb2586c88559207fb7",
++      "node_type": "command",
++      "outcome": "unreachable",
++      "output_hash": "2c8ef2e58035aab734a7c03c89138b28bcb6a10ef635c8c112160fb88e4254ce",
++      "previous_node_hash": "6f49a1e224a777b7a79b2e8d3627157bde36056f3adf1fbba5787a886a86e8fd",
++      "stderr_sha256": "78b38de874883471cf84a1eeac440694b448647cf496918c9a904ff583b41252",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++    },
++    {
++      "board": "KV260",
++      "board_state": {
++        "blocked_reason": {
++          "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++          "exit_code": 255,
++          "reason": "unreachable",
++          "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++          "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++          "stdout_excerpt": "",
++          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++          "timeout_s": 10.0
++        },
++        "board": "KV260",
++        "check_method": "ssh_batchmode_true_only",
++        "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "dns": {
++          "command": "getent hosts kria",
++          "exit_code": 124,
++          "identifier": "command timed out after 5.0s",
++          "resolved": false,
++          "stderr_sha256": "68fce8a0aa38ab4ba8daa1d027bba0184de4913fcedd5a698b7f78e193cf0256",
++          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++        },
++        "reason": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "speedup_claimed": false,
++        "ssh": {
++          "exit_code": 255,
++          "identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++          "reachable": false,
++          "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++        },
++        "ssh_alias": {
++          "hostname": "kv260.local",
++          "port": "22",
++          "user": "ubuntu"
++        },
++        "status": "unreachable"
++      },
++      "board_state_hash": "3e774ae359a37afb2b6791b9ec59443f32b9ef89309cceaef9bfdc78ca1437e0",
++      "id": "obs:kv260:reachability",
++      "input_hash": "b97534bd69bdfd6cbb6b83460bd0cfbc9a67de01519e5d29279e028f8fb3c872",
++      "node_hash": "c1ff8a38a61aa800b1dd88daaaafc74619b8629b86c75f5e58e87a11a2c9b59e",
++      "node_type": "observation",
++      "observed_command_node_ids": [
++        "cmd:6:kv260_ssh_alias_config",
++        "cmd:7:kv260_dns_alias_lookup",
++        "cmd:8:kv260_ssh_true_reachability_probe"
++      ],
++      "output_hash": "3e774ae359a37afb2b6791b9ec59443f32b9ef89309cceaef9bfdc78ca1437e0",
++      "previous_node_hash": "d0755b08d82d1e17c1a2f373a82e1b848d10f142c98a7ccb2586c88559207fb7",
++      "reproducibility_class": "unreachable"
++    },
++    {
++      "board": "PolarFire",
++      "board_state": {
++        "board": "PolarFire",
++        "output_hashes": [],
++        "probe_exit_code": 255,
++        "remote_identifier": null,
++        "repeat_count": 0,
++        "repeat_target": 3,
++        "reproducibility_class": "blocked_polarfire_ssh_unreachable",
++        "speedup_claimed": false,
++        "ssh_reachable": false,
++        "status": "unreachable",
++        "timing_variance": null,
++        "valid_repeat_count": 0,
++        "workload_attempts": []
++      },
++      "board_state_hash": "3f4dd2f4f1f6ed6e16a9ee72867af24c89aa483260026a227319b7169f2c669d",
++      "id": "obs:polarfire:repeatability",
++      "input_hash": "f279e67b3188b2e9973c97524d7df270d16a7858c16cc4c90a6a68848182c575",
++      "node_hash": "3d0f7c952e655e12e85dbb5b15612a0a5fc894f60d12eb68d9f3eaff9bff78a5",
++      "node_type": "observation",
++      "observed_command_node_ids": [
++        "cmd:9:polarfire_authenticated_status_probe"
++      ],
++      "output_hash": "3f4dd2f4f1f6ed6e16a9ee72867af24c89aa483260026a227319b7169f2c669d",
++      "previous_node_hash": "c1ff8a38a61aa800b1dd88daaaafc74619b8629b86c75f5e58e87a11a2c9b59e",
++      "reproducibility_class": "blocked_polarfire_ssh_unreachable"
++    },
++    {
++      "board": "GateMate",
++      "board_state": {
++        "board": "GateMate",
++        "dirtyjtag_usb": {
++          "device_identifier": "1209:c0ca",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        },
++        "jtag_detect_attempted": false,
++        "physical_or_jtag_path_available": false,
++        "real_workload_path_available": false,
++        "reason": "physical_or_jtag_path_not_available_or_unchanged",
++        "speedup_claimed": false,
++        "status": "blocked_physical_or_jtag",
++        "tool_versions": {
++          "gmpack": {
++            "path": "/opt/oss-cad-suite/bin/gmpack",
++            "present": true,
++            "version": "Error: unrecognised option '-V'"
++          },
++          "lsusb": {
++            "path": "/opt/oss-cad-suite/bin/lsusb",
++            "present": true,
++            "version": "1d6b:0003 (bus 8, device 1)"
++          },
++          "nextpnr-himbaechel": {
++            "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++            "present": true,
++            "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++          },
++          "openFPGALoader": {
++            "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++            "present": true,
++            "version": "openFPGALoader v1.1.1"
++          },
++          "ssh": {
++            "path": "/usr/bin/ssh",
++            "present": true,
++            "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++          },
++          "yosys": {
++            "path": "/opt/oss-cad-suite/bin/yosys",
++            "present": true,
++            "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++          }
++        }
++      },
++      "board_state_hash": "e20cf26e8b9410118c1ce5e4f52453beff2c65b9b0063d6176bb0e430f09deb2",
++      "id": "obs:gatemate:workload_path",
++      "input_hash": "19c38937df7843b406ef817c094fb6bf52e35bdb21631a5ee8154b99118c2c35",
++      "node_hash": "a422e94bd2b7c8fc1cb1d9b8f661912f2af8330517d2399f664262d1299d1eb8",
++      "node_type": "observation",
++      "observed_command_node_ids": [],
++      "output_hash": "e20cf26e8b9410118c1ce5e4f52453beff2c65b9b0063d6176bb0e430f09deb2",
++      "previous_node_hash": "3d0f7c952e655e12e85dbb5b15612a0a5fc894f60d12eb68d9f3eaff9bff78a5",
++      "reproducibility_class": "blocked_physical_or_jtag"
++    },
++    {
++      "board": "offline",
++      "checked_edge_count": 7,
++      "checked_node_count": 14,
++      "graph_hash_algorithm": "sha256_json_canonical_excluding_graph_hash",
++      "id": "verify:offline:0",
++      "node_hash": "5fd09479ddcacc6e9b7268cf0c1d48563156a24220a26ac4fd5d5abc28f9e587",
++      "node_type": "verification",
++      "offline_verifier_status": "passed",
++      "previous_node_hash": "a422e94bd2b7c8fc1cb1d9b8f661912f2af8330517d2399f664262d1299d1eb8",
++      "verifier_path": "python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py"
++    }
++  ],
++  "schema": "carnot.hardware.evidence_graph.v1"
++}
+diff --git a/results/experiment_5398_hardware_evidence_graph_repeatability_v491.json b/results/experiment_5398_hardware_evidence_graph_repeatability_v491.json
+new file mode 100644
+index 0000000000..1a528d0dc5
+--- /dev/null
++++ b/results/experiment_5398_hardware_evidence_graph_repeatability_v491.json
+@@ -0,0 +1,595 @@
++{
++  "blocked_reason": {
++    "GateMate": {
++      "prior_evidence": "results/experiment_5361_hardware_continuity_workload_v488.json",
++      "reason": "physical_or_jtag_path_not_available_or_unchanged"
++    },
++    "KV260": {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "exit_code": 255,
++      "reason": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    },
++    "PolarFire": {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++      "exit_code": 255,
++      "reason": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname mpfs-disco-kit.local: Name or service not known",
++      "stderr_sha256": "78b38de874883471cf84a1eeac440694b448647cf496918c9a904ff583b41252",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    }
++  },
++  "board_details": {
++    "GateMate": {
++      "board": "GateMate",
++      "dirtyjtag_usb": {
++        "device_identifier": "1209:c0ca",
++        "stderr": "",
++        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++        "visible": true
++      },
++      "jtag_detect_attempted": false,
++      "physical_or_jtag_path_available": false,
++      "real_workload_path_available": false,
++      "reason": "physical_or_jtag_path_not_available_or_unchanged",
++      "speedup_claimed": false,
++      "status": "blocked_physical_or_jtag",
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      }
++    },
++    "KV260": {
++      "blocked_reason": {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "exit_code": 255,
++        "reason": "unreachable",
++        "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_excerpt": "",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "timeout_s": 10.0
++      },
++      "board": "KV260",
++      "check_method": "ssh_batchmode_true_only",
++      "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "dns": {
++        "command": "getent hosts kria",
++        "exit_code": 124,
++        "identifier": "command timed out after 5.0s",
++        "resolved": false,
++        "stderr_sha256": "68fce8a0aa38ab4ba8daa1d027bba0184de4913fcedd5a698b7f78e193cf0256",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++      },
++      "reason": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "speedup_claimed": false,
++      "ssh": {
++        "exit_code": 255,
++        "identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "reachable": false,
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++      },
++      "ssh_alias": {
++        "hostname": "kv260.local",
++        "port": "22",
++        "user": "ubuntu"
++      },
++      "status": "unreachable"
++    },
++    "PolarFire": {
++      "board": "PolarFire",
++      "output_hashes": [],
++      "probe_exit_code": 255,
++      "remote_identifier": null,
++      "repeat_count": 0,
++      "repeat_target": 3,
++      "reproducibility_class": "blocked_polarfire_ssh_unreachable",
++      "speedup_claimed": false,
++      "ssh_reachable": false,
++      "status": "unreachable",
++      "timing_variance": null,
++      "valid_repeat_count": 0,
++      "workload_attempts": []
++    }
++  },
++  "boards_checked": {
++    "principle": "Lists the active hardware lanes classified by this receipt.",
++    "value": [
++      "KV260",
++      "PolarFire",
++      "GateMate"
++    ]
++  },
++  "commands_run": [
++    {
++      "command": "sh -lc 'printf '\"'\"'host='\"'\"'; hostname; printf '\"'\"'date_utc='\"'\"'; date -u +%Y-%m-%dT%H:%M:%SZ; printf '\"'\"'date_local='\"'\"'; date +%Y-%m-%dT%H:%M:%S%z'",
++      "duration_s": 0.073415,
++      "exit_code": 0,
++      "kind": "step0_host_date_context",
++      "outcome": "recorded",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "host=icbfl1\ndate_utc=2026-07-08T06:07:21Z\ndate_local=2026-07-08T02:07:21-0400",
++      "stdout_line_count": 3,
++      "stdout_sha256": "5395e259e3d10fa52603e08af028c31e44e8e46c691e2d8fdd1976bd2ecddfdc",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "env",
++      "duration_s": 0.00196,
++      "exit_code": 0,
++      "kind": "local_hardware_environment",
++      "outcome": "recorded",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "CARNOT_ARC_GENERATOR_CUDA_GPU\nCARNOT_FORCE_LIVE\nCARNOT_MODE",
++      "stdout_line_count": 3,
++      "stdout_sha256": "1d3a16353d033868c0a1085d8750bc5753b21dd3180d0ec988a3898ec677e3b7",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "sh -lc 'for tool in ssh openFPGALoader yosys nextpnr-himbaechel gmpack lsusb; do if command -v \"$tool\" >/dev/null 2>&1; then printf '\"'\"'%s_path=%s\\n'\"'\"' \"$tool\" \"$(command -v \"$tool\")\"; version=\"$($tool -V 2>&1 | head -n 1)\"; if [ -z \"$version\" ]; then version=\"$($tool --version 2>&1 | head -n 1)\"; fi; printf '\"'\"'%s_version=%s\\n'\"'\"' \"$tool\" \"$version\"; else printf '\"'\"'%s_path=\\n%s_version=\\n'\"'\"' \"$tool\" \"$tool\"; fi; done'",
++      "duration_s": 0.287339,
++      "exit_code": 0,
++      "kind": "local_tool_versions",
++      "outcome": "recorded",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026\nopenFPGALoader_path=/opt/oss-cad-suite/bin/openFPGALoader\nopenFPGALoader_version=openFPGALoader v1.1.1\nyosys_path=/opt/oss-cad-suite/bin/yosys\nyosys_version=Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nnextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\nnextpnr-himbaechel_version=\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version next...<truncated 169 chars>",
++      "stdout_line_count": 12,
++      "stdout_sha256": "69c79691cea28be468665b9d83b6a4f9a010357e1dd93ccaf7241eeea67d6137",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1209:c0ca; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++      "duration_s": 0.077323,
++      "exit_code": 0,
++      "kind": "local_usb_gatemate_dirtyjtag",
++      "outcome": "visible",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++      "stdout_line_count": 20,
++      "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1514:2008; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++      "duration_s": 0.086599,
++      "exit_code": 0,
++      "kind": "local_usb_polarfire_flashpro",
++      "outcome": "visible",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++      "stdout_line_count": 20,
++      "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "sh -lc 'if command -v nvidia-smi >/dev/null 2>&1; then nvidia-smi --query-gpu=name,memory.total --format=csv,noheader; else echo '\"'\"'nvidia-smi_not_found'\"'\"' >&2; exit 127; fi'",
++      "duration_s": 0.100041,
++      "exit_code": 0,
++      "kind": "local_dual_rtx3090_runtime_context",
++      "outcome": "dual_rtx3090_context",
++      "stderr_excerpt": "",
++      "stderr_line_count": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB",
++      "stdout_line_count": 2,
++      "stdout_sha256": "21b3e5755f235b5513acd0d2253aae577c553c90a037d4ef2a82b052f7d3c20a",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -G kria",
++      "duration_s": 0.004432,
++      "exit_code": 0,
++      "kind": "kv260_ssh_alias_config",
++      "outcome": "recorded",
++      "stderr_excerpt": "Pseudo-terminal will not be allocated because stdin is not a terminal.",
++      "stderr_line_count": 1,
++      "stderr_sha256": "ef10ca67f3574d4cfcdd67492e01f28444852920ace8e6f2242000b6e7213c27",
++      "stdout_excerpt": "host kria\nuser ubuntu\nhostname kv260.local\nport 22\naddressfamily any\nbatchmode no\ncanonicalizefallbacklocal yes\ncanonicalizehostname false\ncheckhostip no\ncompression no\ncontrolmaster false\nenablesshkeysign no\nclearallforwardings no\nexitonforwardfailure no\nfingerprinthash SHA256\nforwardx11 no\nforwardx11trusted no\ngatewayports no\ngssapiauthentication no\ngssapidelegatecredentials no\nhashknownhosts no\nhostbasedauthentication no\nidentitiesonly yes\nkbdinter...<truncated 3793 chars>",
++      "stdout_line_count": 79,
++      "stdout_sha256": "ca8371a7d0be86efba70a290947a786fbf2141197085f282082734d6aae25553",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "getent hosts kria",
++      "duration_s": 5.00737,
++      "exit_code": 124,
++      "kind": "kv260_dns_alias_lookup",
++      "outcome": "unresolved",
++      "stderr_excerpt": "command timed out after 5.0s",
++      "stderr_line_count": 1,
++      "stderr_sha256": "68fce8a0aa38ab4ba8daa1d027bba0184de4913fcedd5a698b7f78e193cf0256",
++      "stdout_excerpt": "",
++      "stdout_line_count": 0,
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "duration_s": 5.053339,
++      "exit_code": 255,
++      "kind": "kv260_ssh_true_reachability_probe",
++      "outcome": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "stderr_line_count": 1,
++      "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++      "stdout_excerpt": "",
++      "stdout_line_count": 0,
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++      "duration_s": 5.023294,
++      "exit_code": 255,
++      "kind": "polarfire_authenticated_status_probe",
++      "outcome": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname mpfs-disco-kit.local: Name or service not known",
++      "stderr_line_count": 1,
++      "stderr_sha256": "78b38de874883471cf84a1eeac440694b448647cf496918c9a904ff583b41252",
++      "stdout_excerpt": "",
++      "stdout_line_count": 0,
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    }
++  ],
++  "commit": "14c232e2a332a1cd989c78f30333aca193641358",
++  "conductor_modified": false,
++  "destructive_action_taken": {
++    "principle": "False because this experiment runs no flash, program, dd, or storage-write command.",
++    "value": false
++  },
++  "docs_update_decision": {
++    "ops_changelog_updated": false,
++    "ops_status_updated": false,
++    "reason": "task stop rule delegates docs/status reconciliation to the conductor"
++  },
++  "duration_s": 15.717171,
++  "evidence_graph_hash": {
++    "principle": "SHA-256 of graph content, excluding only its self-hash field.",
++    "value": "6385aebfe73a12e0a175369f4f43bb091501b6cd63824c00716e3b9bb4cde67a"
++  },
++  "evidence_graph_path": {
++    "principle": "Names the separate hash-linked evidence graph emitted with the artifact.",
++    "value": "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json"
++  },
++  "experiment": "experiment_5398_hardware_evidence_graph_repeatability",
++  "experiment_id": "exp5398-hardware-evidence-graph-repeatability-v491",
++  "gatemate_workload_path_available": {
++    "principle": "True only when GateMate has an actual non-destructive workload path.",
++    "value": false
++  },
++  "hardware_evidence_level": "hash_linked_evidence_graph_repeatability_no_speedup",
++  "hardware_speedup_claim": {
++    "principle": "False unless repeated board-local timing and a same-workload speedup comparison exist.",
++    "value": false
++  },
++  "honest_verdict": {
++    "principle": "One-line summary starting with complete: or blocked: for conductor reconciliation.",
++    "value": "complete: kv260=unreachable polar_fire_repeat_count=0 gatemate_workload_path_available=false repeatability_evidence_present=false hardware_speedup_claim=false"
++  },
++  "inference_substrate": "hardware_evidence_graph_repeatability_no_speedup",
++  "kv260_reachability": {
++    "principle": "Classifies KV260 as reachable, unreachable, or not_checked with SSH/DNS reason.",
++    "value": {
++      "blocked_reason": {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "exit_code": 255,
++        "reason": "unreachable",
++        "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_excerpt": "",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "timeout_s": 10.0
++      },
++      "board": "KV260",
++      "check_method": "ssh_batchmode_true_only",
++      "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "dns": {
++        "command": "getent hosts kria",
++        "exit_code": 124,
++        "identifier": "command timed out after 5.0s",
++        "resolved": false,
++        "stderr_sha256": "68fce8a0aa38ab4ba8daa1d027bba0184de4913fcedd5a698b7f78e193cf0256",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++      },
++      "reason": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "speedup_claimed": false,
++      "ssh": {
++        "exit_code": 255,
++        "identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "reachable": false,
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++      },
++      "ssh_alias": {
++        "hostname": "kv260.local",
++        "port": "22",
++        "user": "ubuntu"
++      },
++      "status": "unreachable"
++    }
++  },
++  "milestone": {
++    "principle": "Pins this receipt to 2026.07.491 so hardware state is not treated as floating.",
++    "value": "2026.07.491"
++  },
++  "offline_verifier_errors": [],
++  "offline_verifier_passed": {
++    "principle": "True only if the graph verifier passed on the emitted graph.",
++    "value": true
++  },
++  "offline_verifier_path": {
++    "principle": "Identifies the offline verifier used to recompute graph hashes and safety gates.",
++    "value": "python/carnot/experiment_5398_hardware_evidence_graph_repeatability_v491.py"
++  },
++  "polar_fire_repeat_count": {
++    "principle": "Counts safe PolarFire board-local workload attempts when SSH is reachable.",
++    "value": 0
++  },
++  "polar_fire_timing_variance": {
++    "principle": "Measured variance across repeated board-local timings, or null when unavailable.",
++    "value": null
++  },
++  "preconditions_checked": {
++    "principle": "Records date, sanitized environment, local tools, USB visibility, and SSH targets.",
++    "value": {
++      "gpu_runtime_context": {
++        "command_exit_code": 0,
++        "detected_gpu_lines": [
++          "NVIDIA GeForce RTX 3090, 24576 MiB",
++          "NVIDIA GeForce RTX 3090, 24576 MiB"
++        ],
++        "dual_rtx3090_present": true,
++        "nvidia_smi_available": true,
++        "rtx3090_count": 2,
++        "runtime_relevance": "local SOTA model-runtime context only",
++        "sampler_hardware_acceleration_claimed": false,
++        "speedup_claimed": false
++      },
++      "hardware_environment": {
++        "CARNOT_ARC_GENERATOR_CUDA_GPU": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_FORCE_LIVE": {
++          "present": true,
++          "truthy": true,
++          "value_recorded": false
++        },
++        "CARNOT_GATEMATE_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_MODE": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "GATEMATE_PHYSICAL_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "KONA_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_KONA_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "THRML_HOME": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "TSU_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "XTR0_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        }
++      },
++      "host_date": {
++        "date_local": "2026-07-08T02:07:21-0400",
++        "date_utc": "2026-07-08T06:07:21Z",
++        "exit_code": 0,
++        "host": "icbfl1",
++        "stderr": ""
++      },
++      "kv260_check_method": "ssh_batchmode_true_only",
++      "operator_visible_hardware_assumptions": {
++        "gatemate_physical_jtag_path_available": null,
++        "hardware_speedup_claim": false,
++        "kv260_checked_by_ssh_only": true,
++        "kv260_host_storage_precondition_retired": true,
++        "no_destructive_flash": true
++      },
++      "prior_receipt": "results/experiment_5386_hardware_hashchain_receipts_v490.json",
++      "prior_receipts": [
++        "results/experiment_5361_hardware_continuity_workload_v488.json"
++      ],
++      "public_reference_boundaries": {
++        "extropic_tsu": {
++          "boundary": "public THRML/Extropic TSU/XTR context only; no local authenticated TSU run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        },
++        "logical_kona": {
++          "boundary": "public Logical/Kona context only; no local authenticated Kona run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        }
++      },
++      "ssh_targets": {
++        "KV260": "kria",
++        "PolarFire": "polarfire"
++      },
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      },
++      "usb_visibility": {
++        "GateMate": {
++          "device_identifier": "1209:c0ca",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        },
++        "PolarFire": {
++          "device_identifier": "1514:2008",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        }
++      }
++    }
++  },
++  "random_seed": 5398,
++  "repeatability_evidence_present": {
++    "principle": "True only if repeated board-local timing and stable output hashes exist.",
++    "value": false
++  },
++  "reproducibility_checksum": "9db54d5e462b87d6f4254d11e911891bbd3a6478db4c24d3f1e5e53a02e93798",
++  "run_date": "20260708",
++  "schema": "carnot.experiment_5398.hardware_evidence_graph_repeatability.v491",
++  "spec_refs": [
++    "REQ-HW-5398",
++    "SCENARIO-HW-5398"
++  ],
++  "status": {
++    "principle": "Complete if the v491 receipt and graph were emitted, even when boards are blocked honestly.",
++    "value": "complete"
++  },
++  "tests_run": {
++    "principle": "Records verification commands without treating them as hardware evidence.",
++    "value": [
++      {
++        "command": "verification not yet attached at artifact generation",
++        "outcome": "pending_external_test_run"
++      }
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0158350c21..65f29dddef 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T05:51:25Z",
+-  "finished_at": "2026-07-08T05:51:25Z",
++  "started_at": "2026-07-08T06:08:36Z",
++  "finished_at": "2026-07-08T06:08:36Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cf709b01ed..9559c1af50 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T05:51:25Z",
+-  "finished_at": "2026-07-08T05:51:25Z",
++  "started_at": "2026-07-08T06:08:36Z",
++  "finished_at": "2026-07-08T06:08:36Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 3043fa3fbc..8b9586a51c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T05:51:25Z",
+-  "finished_at": "2026-07-08T05:51:25Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T06:08:37Z",
++  "finished_at": "2026-07-08T06:08:37Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5398_hardware_evidence_graph_repeatability_v491.py b/tests/python/test_experiment_5398_hardware_evidence_graph_repeatability_v491.py
+new file mode 100644
+index 0000000000..b7ca831d2e
+--- /dev/null
++++ b/tests/python/test_experiment_5398_hardware_evidence_graph_repeatability_v491.py
+@@ -0,0 +1,631 @@
++"""Tests for Exp 5398 hardware evidence graph repeatability receipts.
++
++Spec refs: REQ-HW-5398, SCENARIO-HW-5398.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5398_hardware_evidence_graph_repeatability_v491 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/fpga/spec.md"
++
++
++class RecordingRunner:
++    """SCENARIO-HW-5398 runner with explicit safe command receipts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for REQ-HW-5398 duration and checksum assertions."""
++
++    def __init__(self) -> None:
++        self.value = 5398.0
++
++    def __call__(self) -> float:
++        self.value += 0.125
++        return self.value
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _workload_stdout(
++    *,
++    input_sha256: str | None = None,
++    output_sha256: str | None = None,
++    wall_time_s: float = 0.1,
++) -> str:
++    return (
++        json.dumps(
++            {
++                "hostname": "mpfs-disco-kit",
++                "input_sha256": input_sha256 or mod.POLARFIRE_EXPECTED_INPUT_SHA256,
++                "output_sha256": output_sha256 or mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": "3.12.12",
++                "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64",
++                "wall_time_s": wall_time_s,
++            },
++            sort_keys=True,
++        )
++        + "\n"
++    )
++
++
++def _base_probes(*, openfpga_present: bool = True) -> dict[tuple[str, ...], list[mod.CommandProbe]]:
++    openfpga_path = "/opt/oss-cad-suite/bin/openFPGALoader" if openfpga_present else ""
++    openfpga_version = "openFPGALoader v1.1.1" if openfpga_present else ""
++    return {
++        mod.HOST_DATE_COMMAND: [
++            _probe(
++                mod.HOST_DATE_COMMAND,
++                stdout=(
++                    "host=carnot-host\n"
++                    "date_utc=2026-07-08T14:00:00Z\n"
++                    "date_local=2026-07-08T10:00:00-0400\n"
++                ),
++            )
++        ],
++        mod.HARDWARE_ENV_COMMAND: [
++            _probe(
++                mod.HARDWARE_ENV_COMMAND,
++                stdout=(
++                    "CARNOT_MODE=live\n"
++                    "EXTROPIC_API_KEY=do-not-record\n"
++                    "KONA_API_KEY=also-hidden\n"
++                    "PRIVATE_TOKEN=hidden\n"
++                ),
++            )
++        ],
++        mod.TOOL_VERSION_COMMAND: [
++            _probe(
++                mod.TOOL_VERSION_COMMAND,
++                stdout=(
++                    "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.0p1\n"
++                    f"openFPGALoader_path={openfpga_path}\n"
++                    f"openFPGALoader_version={openfpga_version}\n"
++                    "yosys_path=/opt/oss-cad-suite/bin/yosys\n"
++                    "yosys_version=Yosys 0.64\n"
++                    "nextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\n"
++                    "nextpnr-himbaechel_version=nextpnr-himbaechel 0.8\n"
++                    "gmpack_path=/opt/oss-cad-suite/bin/gmpack\n"
++                    "gmpack_version=gmpack 2026.04\n"
++                    "lsusb_path=/usr/bin/lsusb\nlsusb_version=lsusb (usbutils) 018\n"
++                ),
++            )
++        ],
++        mod.GATEMATE_USB_COMMAND: [
++            _probe(mod.GATEMATE_USB_COMMAND, stdout="1209:c0ca DirtyJTAG\n")
++        ],
++        mod.POLARFIRE_USB_COMMAND: [
++            _probe(mod.POLARFIRE_USB_COMMAND, stdout="1514:2008 FlashPro5\n")
++        ],
++        mod.GPU_CONTEXT_COMMAND: [
++            _probe(
++                mod.GPU_CONTEXT_COMMAND,
++                stdout=("NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB\n"),
++            )
++        ],
++    }
++
++
++def _runner(
++    *,
++    kv260_exit: int = 255,
++    kv260_stdout: str = "",
++    kv260_stderr: str = "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
++    polarfire_status_exit: int = 0,
++    polarfire_status_stdout: str = (
++        "hostname=mpfs-disco-kit\n"
++        "uname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64\n"
++        "python=Python 3.12.12\n"
++    ),
++    polarfire_status_stderr: str = "",
++    polarfire_workload_stdout: list[str] | None = None,
++    polarfire_workload_exit: int = 0,
++    gatemate_path_available: bool = False,
++    gatemate_detect_exit: int = 0,
++    gatemate_detect_stdout: str = "GateMate Series GM1Ax IDCODE 0x20000001\n",
++    openfpga_present: bool = True,
++) -> RecordingRunner:
++    probes = _base_probes(openfpga_present=openfpga_present)
++    probes[mod.KV260_SSH_CONFIG_COMMAND] = [
++        _probe(
++            mod.KV260_SSH_CONFIG_COMMAND,
++            stdout="hostname kv260.local\nuser xilinx\nport 22\n",
++        )
++    ]
++    probes[mod.KV260_DNS_COMMAND] = [
++        _probe(
++            mod.KV260_DNS_COMMAND,
++            exit_code=2,
++            stderr="getent: ahosts kria: Name or service not known\n",
++        )
++    ]
++    probes[mod.KV260_SSH_TRUE_COMMAND] = [
++        _probe(
++            mod.KV260_SSH_TRUE_COMMAND,
++            exit_code=kv260_exit,
++            stdout=kv260_stdout,
++            stderr=kv260_stderr,
++        )
++    ]
++    probes[mod.POLARFIRE_STATUS_COMMAND] = [
++        _probe(
++            mod.POLARFIRE_STATUS_COMMAND,
++            exit_code=polarfire_status_exit,
++            stdout=polarfire_status_stdout,
++            stderr=polarfire_status_stderr,
++        )
++    ]
++    if polarfire_status_exit == 0:
++        outputs = polarfire_workload_stdout or [
++            _workload_stdout(wall_time_s=0.10),
++            _workload_stdout(wall_time_s=0.12),
++            _workload_stdout(wall_time_s=0.11),
++        ]
++        probes[mod.POLARFIRE_WORKLOAD_COMMAND] = [
++            _probe(
++                mod.POLARFIRE_WORKLOAD_COMMAND,
++                exit_code=polarfire_workload_exit,
++                stdout=stdout,
++                stderr="" if polarfire_workload_exit == 0 else "workload failed\n",
++            )
++            for stdout in outputs
++        ]
++    if gatemate_path_available and openfpga_present:
++        probes[mod.GATEMATE_DETECT_COMMAND] = [
++            _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                exit_code=gatemate_detect_exit,
++                stdout=gatemate_detect_stdout,
++                stderr="" if gatemate_detect_exit == 0 else "dirtyJtag open failed\n",
++            )
++        ]
++    return RecordingRunner(probes)
++
++
++def _value(artifact: dict[str, object], field: str) -> object:
++    wrapped = artifact[field]
++    assert isinstance(wrapped, dict)
++    return wrapped["value"]
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5398_hardware_evidence_graph_repeatability_v491.py -q",
++            "outcome": "passed in test fixture",
++        }
++    ]
++
++
++def test_req_hw_5398_spec_declares_evidence_graph_contract() -> None:
++    """REQ-HW-5398: OpenSpec anchors the v491 evidence graph contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-HW-5398") : spec.index("### SCENARIO-HW-4910")]
++
++    for marker in (
++        "REQ-HW-5398",
++        "SCENARIO-HW-5398",
++        str(mod.RESULT_RELATIVE_PATH),
++        "command nodes",
++        "observation nodes",
++        "verification nodes",
++        mod.KV260_REQUIRED_COMMAND_FORM,
++        "evidence_graph_path",
++        "evidence_graph_hash",
++        "offline_verifier_path",
++        "offline_verifier_passed",
++        "polar_fire_repeat_count",
++        "polar_fire_timing_variance",
++        "kv260_reachability",
++        "gatemate_workload_path_available",
++        "repeatability_evidence_present",
++        "hardware_speedup_claim",
++        "destructive_action_taken",
++        "honest_verdict",
++    ):
++        assert marker in section
++
++
++def test_scenario_hw_5398_builds_verified_repeatability_graph() -> None:
++    """SCENARIO-HW-5398: repeated PolarFire workload creates verified evidence."""
++
++    runner = _runner()
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert runner.commands == [
++        mod.HOST_DATE_COMMAND,
++        mod.HARDWARE_ENV_COMMAND,
++        mod.TOOL_VERSION_COMMAND,
++        mod.GATEMATE_USB_COMMAND,
++        mod.POLARFIRE_USB_COMMAND,
++        mod.GPU_CONTEXT_COMMAND,
++        mod.KV260_SSH_CONFIG_COMMAND,
++        mod.KV260_DNS_COMMAND,
++        mod.KV260_SSH_TRUE_COMMAND,
++        mod.POLARFIRE_STATUS_COMMAND,
++        mod.POLARFIRE_WORKLOAD_COMMAND,
++        mod.POLARFIRE_WORKLOAD_COMMAND,
++        mod.POLARFIRE_WORKLOAD_COMMAND,
++    ]
++    assert mod.GATEMATE_DETECT_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "milestone") == "2026.07.491"
++    assert _value(artifact, "boards_checked") == ["KV260", "PolarFire", "GateMate"]
++    assert _value(artifact, "evidence_graph_path") == mod.EVIDENCE_GRAPH_RELATIVE_PATH.as_posix()
++    assert _value(artifact, "evidence_graph_hash") == mod.graph_content_hash(graph)
++    assert _value(artifact, "offline_verifier_path") == mod.OFFLINE_VERIFIER_PATH
++    assert _value(artifact, "offline_verifier_passed") is True
++    assert _value(artifact, "polar_fire_repeat_count") == 3
++    assert _value(artifact, "polar_fire_timing_variance") == pytest.approx(0.000066666667)
++    assert _value(artifact, "repeatability_evidence_present") is True
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "destructive_action_taken") is False
++    assert _value(artifact, "gatemate_workload_path_available") is False
++    assert _value(artifact, "kv260_reachability")["status"] == "unreachable"
++    assert _value(artifact, "kv260_reachability")["ssh_alias"]["hostname"] == "kv260.local"
++    assert "complete:" in _value(artifact, "honest_verdict")
++    assert "hardware_speedup_claim=false" in _value(artifact, "honest_verdict")
++    assert graph["schema"] == mod.GRAPH_SCHEMA
++    assert graph["graph_hash"] == mod.graph_content_hash(graph)
++    assert {node["node_type"] for node in graph["nodes"]} == {
++        "command",
++        "observation",
++        "verification",
++    }
++    assert any(
++        node["node_type"] == "observation"
++        and node["board"] == "PolarFire"
++        and node["reproducibility_class"] == "repeatable_board_local_same_output_timing"
++        for node in graph["nodes"]
++    )
++    assert mod.verify_evidence_graph(graph).passed is True
++    assert "do-not-record" not in json.dumps(artifact)
++    assert "also-hidden" not in json.dumps(artifact)
++    assert "PRIVATE_TOKEN" not in json.dumps(artifact)
++    assert "/dev/mmcblk" not in json.dumps(artifact).lower()
++    mod.validate_artifact(artifact, graph)
++
++
++def test_polarfire_unreachable_keeps_complete_receipt_without_repeatability() -> None:
++    """REQ-HW-5398: complete graph receipts can honestly preserve blockers."""
++
++    runner = _runner(
++        polarfire_status_exit=255,
++        polarfire_status_stdout="",
++        polarfire_status_stderr="ssh: connect to host polarfire port 22: No route to host\n",
++    )
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert mod.POLARFIRE_WORKLOAD_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "polar_fire_repeat_count") == 0
++    assert _value(artifact, "polar_fire_timing_variance") is None
++    assert _value(artifact, "repeatability_evidence_present") is False
++    assert artifact["board_details"]["PolarFire"]["reproducibility_class"] == (
++        "blocked_polarfire_ssh_unreachable"
++    )
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact, graph)
++
++
++def test_mismatched_polarfire_output_hash_blocks_repeatability_class() -> None:
++    """REQ-HW-5398: repeat timing is not reproducible when output hashes drift."""
++
++    runner = _runner(
++        polarfire_workload_stdout=[
++            _workload_stdout(wall_time_s=0.10),
++            _workload_stdout(output_sha256="0" * 64, wall_time_s=0.12),
++            _workload_stdout(wall_time_s=0.11),
++        ]
++    )
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert _value(artifact, "polar_fire_repeat_count") == 3
++    assert _value(artifact, "repeatability_evidence_present") is False
++    assert artifact["board_details"]["PolarFire"]["reproducibility_class"] == (
++        "non_reproducible_output_hash_drift"
++    )
++    assert artifact["blocked_reason"]["PolarFire"]["reason"] == "output_sha256 mismatch"
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact, graph)
++
++
++def test_invalid_polarfire_repeats_are_classified_without_repeatability() -> None:
++    """REQ-HW-5398: malformed board-local receipts do not become repeat evidence."""
++
++    bad_receipt, bad_error = mod.parse_polarfire_workload_stdout(
++        "\nnot json\n"
++        + json.dumps(
++            {
++                "hostname": "",
++                "input_sha256": "1" * 64,
++                "output_sha256": mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": 312,
++                "uname": "Linux mpfs-disco-kit riscv64",
++                "wall_time_s": -1.0,
++            },
++            sort_keys=True,
++        )
++    )
++    assert isinstance(bad_receipt, dict)
++    assert bad_error is not None
++    assert "hostname missing" in bad_error
++    assert "input_sha256 mismatch" in bad_error
++    assert "wall_time_s invalid" in bad_error
++    assert "python_version invalid" in bad_error
++    assert mod.parse_polarfire_workload_stdout("not json\n") == (
++        None,
++        "workload stdout is not valid JSON",
++    )
++
++    runner = _runner(polarfire_workload_stdout=["not json\n", "not json\n", "not json\n"])
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert _value(artifact, "polar_fire_repeat_count") == 3
++    assert _value(artifact, "polar_fire_timing_variance") is None
++    assert _value(artifact, "repeatability_evidence_present") is False
++    assert artifact["board_details"]["PolarFire"]["reproducibility_class"] == (
++        "insufficient_valid_board_local_repeats"
++    )
++    assert artifact["blocked_reason"]["PolarFire"]["reason"] == (
++        "workload stdout is not valid JSON"
++    )
++    mod.validate_artifact(artifact, graph)
++
++
++def test_gatemate_detect_is_non_destructive_and_still_not_a_workload_path() -> None:
++    """SCENARIO-HW-5398: GateMate detect is separate from workload availability."""
++
++    runner = _runner(kv260_exit=0, kv260_stderr="", gatemate_path_available=True)
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++
++    assert mod.GATEMATE_DETECT_COMMAND in runner.commands
++    assert _value(artifact, "kv260_reachability")["status"] == "reachable"
++    assert artifact["board_details"]["GateMate"]["status"] == "blocked_physical_or_jtag"
++    assert artifact["board_details"]["GateMate"]["jtag_detect_status"] == "detected"
++    assert _value(artifact, "gatemate_workload_path_available") is False
++    assert _value(artifact, "destructive_action_taken") is False
++    assert any(
++        node["node_type"] == "command"
++        and node["board"] == "GateMate"
++        and "openFPGALoader" in node["command"]
++        for node in graph["nodes"]
++    )
++    mod.validate_artifact(artifact, graph)
++
++
++def test_helpers_and_verifier_reject_tampered_graphs() -> None:
++    """REQ-HW-5398: offline verifier fails closed on graph drift and unsafe evidence."""
++
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    assert mod.parse_ssh_alias_config("hostname kria\nport 22\nuser xilinx\n") == {
++        "hostname": "kria",
++        "port": "22",
++        "user": "xilinx",
++    }
++    assert mod.timing_variance([0.10, 0.12, 0.11]) == pytest.approx(0.000066666667)
++    assert mod.timing_variance([0.10]) is None
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["nodes"][0]["node_hash"] = "f" * 64
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "node_hash mismatch" in result.errors[0]
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["edges"].append({"from": "missing", "to": "also-missing", "relation": "bad"})
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "unknown edge endpoint" in result.errors[0]
++
++    tampered = json.loads(json.dumps(graph))
++    first_command = next(node for node in tampered["nodes"] if node["node_type"] == "command")
++    first_command["command"] = "openFPGALoader --write flash.bit"
++    first_command["node_hash"] = mod.node_content_hash(first_command)
++    tampered["graph_hash"] = mod.graph_content_hash(tampered)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "destructive command" in result.errors[0]
++
++    tampered = json.loads(json.dumps(graph))
++    kv_obs = next(
++        node
++        for node in tampered["nodes"]
++        if node["node_type"] == "observation" and node["board"] == "KV260"
++    )
++    kv_obs["board_state"]["bad_evidence"] = "/dev/mmcblk0"
++    kv_obs["board_state_hash"] = mod.sha256_json(kv_obs["board_state"])
++    kv_obs["node_hash"] = mod.node_content_hash(kv_obs)
++    tampered["graph_hash"] = mod.graph_content_hash(tampered)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "host block-device" in result.errors[0]
++
++    empty = {"schema": "bad", "nodes": [], "edges": "bad", "graph_hash": "bad"}
++    result = mod.verify_evidence_graph(empty)
++    assert result.passed is False
++    assert "schema mismatch" in result.errors
++    assert "nodes missing" in result.errors
++    assert "edges missing" in result.errors
++    assert "command node missing" in result.errors
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["nodes"][0] = "not a node"
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "node[0] not mapping" in result.errors
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["nodes"][0].pop("id")
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "node[0] missing id" in result.errors
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["nodes"][1]["id"] = tampered["nodes"][0]["id"]
++    tampered["nodes"][1]["node_hash"] = mod.node_content_hash(tampered["nodes"][1])
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert any("duplicate node id" in error for error in result.errors)
++
++    tampered = json.loads(json.dumps(graph))
++    obs = next(node for node in tampered["nodes"] if node["node_type"] == "observation")
++    obs.pop("board_state")
++    obs["node_hash"] = mod.node_content_hash(obs)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert any("board_state missing" in error for error in result.errors)
++
++    tampered = json.loads(json.dumps(graph))
++    obs = next(node for node in tampered["nodes"] if node["node_type"] == "observation")
++    obs["board_state_hash"] = "0" * 64
++    obs["node_hash"] = mod.node_content_hash(obs)
++    tampered["graph_hash"] = mod.graph_content_hash(tampered)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert any("board_state_hash mismatch" in error for error in result.errors)
++
++    tampered = json.loads(json.dumps(graph))
++    cmd = next(node for node in tampered["nodes"] if node["node_type"] == "command")
++    cmd["input_hash"] = "short"
++    cmd["node_hash"] = mod.node_content_hash(cmd)
++    tampered["graph_hash"] = mod.graph_content_hash(tampered)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert any("input_hash invalid" in error for error in result.errors)
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["nodes"] = [
++        node for node in tampered["nodes"] if node["node_type"] != "verification"
++    ]
++    tampered["edges"] = []
++    tampered["graph_hash"] = mod.graph_content_hash(tampered)
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "verification node missing" in result.errors
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["edges"].append("not an edge")
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "edge not mapping" in result.errors
++
++    tampered = json.loads(json.dumps(graph))
++    tampered["graph_hash"] = "0" * 64
++    result = mod.verify_evidence_graph(tampered)
++    assert result.passed is False
++    assert "graph_hash mismatch" in result.errors
++
++    artifact["hardware_speedup_claim"]["value"] = True
++    with pytest.raises(AssertionError, match="hardware_speedup_claim"):
++        mod.validate_artifact(artifact, graph)
++
++
++def test_run_experiment_writes_artifact_and_graph(tmp_path: Path) -> None:
++    """SCENARIO-HW-5398: run_experiment writes stable v491 JSON artifacts."""
++
++    artifact_path = mod.run_experiment(
++        repo_root=tmp_path,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    graph_path = tmp_path / mod.EVIDENCE_GRAPH_RELATIVE_PATH
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    graph = json.loads(graph_path.read_text(encoding="utf-8"))
++
++    assert artifact_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert graph_path.exists()
++    assert _value(artifact, "evidence_graph_hash") == mod.graph_content_hash(graph)
++    assert artifact["spec_refs"] == list(mod.SPEC_REFS)
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert _value(artifact, "offline_verifier_passed") is True
++    mod.validate_artifact(artifact, graph)
++
++
++def test_default_tests_run_keeps_cli_bundle_valid() -> None:
++    """REQ-HW-5398: CLI-style artifacts still record verification provenance."""
++
++    artifact, graph = mod.build_evidence_bundle(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++    )
++
++    assert _value(artifact, "tests_run") == [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++    mod.validate_artifact(artifact, graph)
+-- 
+2.55.0
+

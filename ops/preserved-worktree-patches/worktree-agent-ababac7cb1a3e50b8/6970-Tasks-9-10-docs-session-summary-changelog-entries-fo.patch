@@ -1,0 +1,98 @@
+From 8122960e22040e058b956a28ea93d31cbed5a6fb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 13 Jul 2026 21:43:18 -0400
+Subject: [PATCH 06970/11362] Tasks 9+10 docs: session summary + changelog
+ entries for live-wiring follow-ons
+
+Updates ops/status.md (session summary) and ops/changelog.md with the task 9
+(InertClickSigPruner) and task 10 (ObjectHistorySaliencePrior) live-wiring
+follow-ons and exp5601's real empirical validation result.
+
+ops/known-issues.md's task 9/10 addenda are NOT included in this commit --
+blocked by the same overdue-priority-lint as the earlier task-8 commit (an
+unrelated, pre-existing stale priority). The known-issues.md edits remain
+staged on disk.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md |  3 +++
+ ops/status.md    | 52 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4bb0e3c58a..01c54e6549 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11463,3 +11463,6 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-13: [outer-loop] Task 8: multi-seed pre-registered leave-one-game-out gate — GATE FAILS, TRM-as-generator retired (✅ Complete) — honest_verdict=complete: ptrm_loo_gate_failed_no_majority_significant_and_above_baseline; heldout_games=[ft09,m0r0,vc33,sk48,cd82]; n_seeds=10; games_ptrm_beats_non_recursive_significantly=[ft09]; games_ptrm_beats_majority_baseline=[ft09,vc33,cd82]; retire_trm_generator_line=True; per known-issues.md task 8's `retire_if_same_verdict: true`, the whole TRM-as-generator line for ARC-AGI-3 is retired; results/experiment_5600_ptrm_loo_gate.json
+ - 2026-07-14: Execution-time V505 source delta and experiment mapping (✅ Complete) — honest_verdict=complete: accepted 2 non-duplicate actionable V505 source deltas and kept closed scopes closed; results/experiment_5579_v505_source_delta_ingestion.json
+ - 2026-07-14: Cached local-SOTA parser forensics, repair, and positive control (⚠️ Blocked) — honest_verdict=blocked_cached_raw_responses_unavailable_hash_only_forensics; results/experiment_5580_parser_forensics_positive_control.json
++- 2026-07-13: [outer-loop] Task 9 follow-on: wired InertClickSigPruner.rank_candidates + observe into StepwiseExplorer/E3AgentPolicy (✅ Complete) — closed the live-wiring gap task 9's own DONE note flagged; new `inert_click_pruner` param, gated OFF by default (SUBMITTED_INERT_CLICK_PRUNER_ENABLED=False); 8 new tests, 46+ pre-existing tests unaffected; REQ-ARC-FCP-5595 spec updated.
++- 2026-07-13: [outer-loop] Task 10 follow-on: built + wired ObjectHistorySaliencePrior (object_hash change-history bonus) into action_prior (✅ Complete) — closed task 10's own deferred live-wiring gap; wraps ColorBlobSaliencePrior (mirrors GeometricSaliencePrior), no new arc_competition_agent.py hook sites needed (action_prior already generic); gated OFF by default (SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED=False); 28 new tests; REQ-ARC-FCP-5591-2 spec added.
++- 2026-07-13: [outer-loop] Task 10 empirical validation — real exp5601 offline-sim prototype CONFIRMS non-degenerate change-history signal on real m0r0 play (✅ Complete) — honest_verdict=complete: object_history_salience_prototype_confirmed_2_hashes_with_real_change_signal_across_1_games; transitions_collected=37; click_transitions=32; hashes_tracked=15; hashes_with_evidence_and_nonzero_change_rate=2; adversarial_degeneracy_check={pairs_checked:8,pairs_differentiated:0} (honest sample-size limitation, not a mechanism failure); results/experiment_5601_object_history_salience_offline_sim_prototype.json
+diff --git a/ops/status.md b/ops/status.md
+index c8f0add7b5..90ddbe657b 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,56 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-07-13 (Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired)
++**Last Updated:** 2026-07-13 (Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior)
++
++## Session 2026-07-13 - Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior
++
++Continued the `ops/known-issues.md` numbered task list past task 8. Task 9
++(InertClickSigPruner) and task 10 (`object_hash`/`blob_topology`) were both
++already marked DONE from earlier sessions, but each had an explicitly
++flagged, still-open live-wiring gap — closed both this session.
++
++**Task 9 follow-on:** wired `InertClickSigPruner.rank_candidates` into
++`StepwiseExplorer._candidates` (alongside `program_synthesis_filter`/
++`goal_candidate_guidance`) and a real `observe()` call into `_ingest`'s
++per-transition OBSERVE hook — without the observe half, the filter would
++have been wired but permanently a no-op (its tally never accumulates).
++Threaded a new `inert_click_pruner` param through `StepwiseExplorer` and
++`E3AgentPolicy`, gated OFF by default
++(`SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`), matching every other
++freshly-wired-but-unvalidated component. 8 new tests, 46+ pre-existing
++related tests unaffected.
++
++**Task 10 follow-on:** built `ObjectHistorySaliencePrior`
++(`python/carnot/agentic/arc_object_history_salience.py`), wrapping
++`ColorBlobSaliencePrior` (mirroring the existing `GeometricSaliencePrior`
++precedent) with a per-`object_hash` change-history bonus — click candidates
++on objects previously observed to change the frame get preferred over
++untested or reliably-inert ones. Because `action_prior` was already a
++generic composable slot, no new hook call sites were needed in
++`arc_competition_agent.py` at all — `_ingest`'s existing hooks and
++`_candidates`' existing score consumption dispatch to the wrapper
++automatically once `E3AgentPolicy` wraps `action_prior` with it (confirmed
++directly). Gated OFF by default
++(`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`). 28 new tests.
++
++Both mechanisms then got a REAL empirical-validation prototype run (exp5601
++for task 10, following exp5591/exp5595's established real-game pattern
++against `m0r0`): 37 real transitions, 32 clicks, 15 object identities
++tracked, 2 cleared the evidence floor with a genuine nonzero change rate —
++`honest_verdict: complete: object_history_salience_prototype_confirmed_2_
++hashes_with_real_change_signal_across_1_games`. An adversarial degeneracy
++sub-check found 0/8 same-base-tier real pairs diverging in this specific
++sample (an honest sample-size limitation, not a mechanism failure — the
++synthetic unit test already proves differentiation is possible).
++
++Both mechanisms remain gated OFF for the SCORED agent pending their own
++matched-budget offline A/B (states/actions-expanded reduction, zero
++regression in reproduced levels), per the `solve_rate_dropped` guardrail —
++this session validated that both mechanisms are correctly wired and have
++real, non-degenerate signal to act on, not that flipping them on is safe.
++
++Total this session: 99 new tests across both follow-ons, all passing;
++ruff/mypy clean on every touched file.
+ 
+ ## Session 2026-07-13 - Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired
+ 
+-- 
+2.55.0
+

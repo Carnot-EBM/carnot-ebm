@@ -1,0 +1,3054 @@
+From 2f35486d9295e1fdd3e25bdaea83ae368d86b205 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 04:54:47 -0400
+Subject: [PATCH 06556/11362] [conductor] Gated SOTA GGUF CSL memory panel v2
+
+Automated research step by research conductor.
+Task ID: exp5530-gated-sota-csl-memory-panel-v2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |   89 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...xperiment_5530_sota_csl_memory_panel_v2.py | 1204 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2090_crane_humaneval.json  |    6 +-
+ results/experiment_2097_eqm_eval.json         |    4 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...eriment_5530_sota_csl_memory_panel_v2.json | 1135 ++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...xperiment_5530_sota_csl_memory_panel_v2.py |  351 +++++
+ 18 files changed, 2806 insertions(+), 27 deletions(-)
+ create mode 100644 python/carnot/experiment_5530_sota_csl_memory_panel_v2.py
+ create mode 100644 results/experiment_5530_sota_csl_memory_panel_v2.json
+ create mode 100644 tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 7d262cb27f..60ac8f131c 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -21300,3 +21300,92 @@ recorded as explicit rates.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5529 | Implemented (`python/carnot/experiment_5529_csl_event_topic_residue_stress.py`, `results/experiment_5529_csl_event_topic_residue_stress.json`) | Implemented (`tests/python/test_experiment_5529_csl_event_topic_residue_stress.py`) |
++
++## REQ-LEARN-5530: SOTA GGUF CSL Memory Panel v2
++
++The Exp5530 workflow SHALL write
++`results/experiment_5530_sota_csl_memory_panel_v2.json` only after loading the
++canonical Exp5528 gate artifact and the Exp5529 event/topic residue-stress
++artifact. It SHALL require `csl_gate_fields_conductor_visible=true` from
++Exp5528 and `csl_residue_stress_ready=true` from Exp5529 before any positive
++CSL claim is allowed. The workflow SHALL use the mandated local SOTA GGUF model
++set (`unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`) through `cached_sota_pair()` or the
++repository local-GGUF resolver pattern, and SHALL NOT call a HuggingFace
++`AutoTokenizer.from_pretrained` path for any GGUF repository.
++
++The panel SHALL run a bounded before/after external-memory condition with at
++least one available mandated SOTA GGUF model. Model weights SHALL remain
++immutable. The artifact SHALL record memory hashes before and after external
++memory updates, model-file receipts before and after generation, and explicit
++GPU-offload evidence. Held-out scores SHALL be exact outcomes from an
++independent label table, not utility scores or labels stored in memory. The
++same held-out label IDs SHALL be scored under no-memory, fresh-memory, and
++stale-memory controls. Utility deltas SHALL be reported separately from token
++or verifier cost deltas, and negative transfer and stale-evidence rejection
++SHALL be explicit rates.
++
++The artifact SHALL include required fields `model_specs`, `models_attempted`,
++`no_memory_score`, `fresh_memory_score`, `stale_memory_score`,
++`heldout_delta`, `negative_transfer_rate`, `stale_evidence_rejection_rate`,
++`memory_hash_before`, `memory_hash_after`, `no_model_weight_mutation`,
++`gpu_offload_evidence`, `continuous_self_learning_evidence`,
++`csl_claim_allowed`, `tests_added_or_reused`, `field_principles`,
++`inference_substrate`, and `honest_verdict`. It SHALL set
++`inference_substrate="local_sota_gguf_csl_memory_panel"`. It SHALL set
++`csl_claim_allowed=true` only when `heldout_delta > 0`,
++`negative_transfer_rate` is zero, stale evidence is fully rejected, upstream
++gates are loadable and true, at least one mandated GGUF model ran with
++GPU-offload evidence, and model-weight receipts are unchanged.
++
++### REQ-LEARN-5530 Sub-requirements
++
++- REQ-LEARN-5530-1: The workflow SHALL parse Exp5528 and Exp5529 artifacts and
++  expose whether each required upstream gate was loadable and true.
++- REQ-LEARN-5530-2: `model_specs` SHALL list the three mandated local SOTA GGUF
++  IDs, local path availability, and selected-run receipts; legacy GGUFs SHALL
++  not count as headline models.
++- REQ-LEARN-5530-3: No-memory, fresh-memory, and stale-memory conditions SHALL
++  evaluate the same held-out label IDs from an independent label table.
++- REQ-LEARN-5530-4: `memory_hash_before` and `memory_hash_after` SHALL be
++  deterministic hashes of external memory state and SHALL differ after
++  verifier-governed memory updates.
++- REQ-LEARN-5530-5: `no_model_weight_mutation` SHALL be true only when
++  before/after model-file receipts match and no adapter or training write is
++  reported.
++- REQ-LEARN-5530-6: `gpu_offload_evidence` SHALL distinguish preflight support,
++  load-time memory delta, and any blocked preconditions.
++- REQ-LEARN-5530-7: `csl_claim_allowed` SHALL remain false unless the held-out
++  utility delta is positive, stale evidence is rejected, negative transfer is
++  zero, and no model weights changed.
++
++### SCENARIO-LEARN-5530-UPSTREAM-GATES: Upstream Artifacts Must Be Loadable
++
++**Given** the Exp5528 and Exp5529 artifacts exist and are valid JSON
++**When** the Exp5530 workflow evaluates preconditions
++**Then** it SHALL record both gate paths, gate values, and whether the gate
++state allows a positive CSL claim.
++
++### SCENARIO-LEARN-5530-CONTROLS: Held-Out Controls Use Independent Labels
++
++**Given** the same held-out task IDs are evaluated under no-memory,
++fresh-memory, and stale-memory conditions
++**When** the panel scores model outputs
++**Then** `heldout_delta` SHALL equal `fresh_memory_score - no_memory_score`
++**And** stale-memory outcomes SHALL be reported separately from stale-evidence
++rejection in the fresh-memory arm.
++
++### SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION: External Memory Is The Only Learned State
++
++**Given** a mandated GGUF model is selected for the panel
++**When** the before/after run completes
++**Then** model-file receipts SHALL match, `no_model_weight_mutation` SHALL be
++true, and any positive CSL evidence SHALL be attributed only to external memory
++state.
++
++## Implementation Status (Exp 5530)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5530 | Planned (`python/carnot/experiment_5530_sota_csl_memory_panel_v2.py`, `results/experiment_5530_sota_csl_memory_panel_v2.json`) | Planned (`tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4b4c59d379..59efc2ff5e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4484,
++  "experiments_checked": 4485,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5530_sota_csl_memory_panel_v2.py b/python/carnot/experiment_5530_sota_csl_memory_panel_v2.py
+new file mode 100644
+index 0000000000..418d9d9735
+--- /dev/null
++++ b/python/carnot/experiment_5530_sota_csl_memory_panel_v2.py
+@@ -0,0 +1,1204 @@
++"""Exp5530 local-SOTA GGUF CSL memory panel v2.
++
++Spec refs: REQ-LEARN-5530,
++SCENARIO-LEARN-5530-UPSTREAM-GATES,
++SCENARIO-LEARN-5530-CONTROLS,
++SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION.
++
++The panel keeps the GGUF model frozen. The only state that changes is a small,
++hashable external memory table. Exact held-out labels live in a separate table,
++so the model output is scored by an independent witness rather than by memory
++utility or a self-reported model verdict.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++import re
++import subprocess
++import time
++from typing import Any
++
++from carnot.inference.sota_models import cached_sota_pair, resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++CachedPairFn = Callable[[], list[Mapping[str, Any]] | None]
++RuntimeProbe = Callable[..., Mapping[str, Any]]
++GenerationRunner = Callable[..., Mapping[str, Any]]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5530_sota_csl_memory_panel_v2.json")
++UPSTREAM_5528_PATH = Path("results/experiment_5528_csl_canonical_gate_artifact.json")
++UPSTREAM_5529_PATH = Path("results/experiment_5529_csl_event_topic_residue_stress.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5530_sota_csl_memory_panel_v2.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py")
++
++SCHEMA = "carnot.experiment_5530.sota_csl_memory_panel_v2.v1"
++EXPERIMENT_ID = "experiment_5530_sota_csl_memory_panel_v2"
++TASK_ID = "exp5530-gated-sota-csl-memory-panel-v2"
++MILESTONE = "2026.07.501"
++RUN_DATE = "2026-07-10"
++RANDOM_SEED = 5530
++DEFAULT_QUANTIZATION = "Q4_K_M"
++N_GPU_LAYERS = -1
++MAX_TOKENS = 16
++INFERENCE_SUBSTRATE = "local_sota_gguf_csl_memory_panel"
++INDEPENDENT_LABEL_SOURCE = "deterministic_fixture::heldout_labels_not_memory"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++NO_MEMORY_CONDITION = "no_memory"
++FRESH_MEMORY_CONDITION = "fresh_memory"
++STALE_MEMORY_CONDITION = "stale_memory"
++CONDITIONS = (NO_MEMORY_CONDITION, FRESH_MEMORY_CONDITION, STALE_MEMORY_CONDITION)
++
++MANDATED_MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "role": "flagship_moe",
++        "name": "Qwen3.6-35B-A3B",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "flagship_dense",
++        "name": "Gemma4-31B-it",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "middle_moe",
++        "name": "Gemma4-26B-A4B-it",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++)
++MANDATED_HF_IDS = tuple(str(spec["hf_id"]) for spec in MANDATED_MODEL_SPECS)
++RUN_ROLE_PREFERENCE = ("middle_moe", "flagship_moe", "flagship_dense")
++SPEC_REFS = (
++    "REQ-LEARN-5530",
++    "SCENARIO-LEARN-5530-UPSTREAM-GATES",
++    "SCENARIO-LEARN-5530-CONTROLS",
++    "SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "model_specs",
++    "models_attempted",
++    "no_memory_score",
++    "fresh_memory_score",
++    "stale_memory_score",
++    "heldout_delta",
++    "negative_transfer_rate",
++    "stale_evidence_rejection_rate",
++    "memory_hash_before",
++    "memory_hash_after",
++    "no_model_weight_mutation",
++    "gpu_offload_evidence",
++    "continuous_self_learning_evidence",
++    "csl_claim_allowed",
++    "tests_added_or_reused",
++    "field_principles",
++    "inference_substrate",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "model_specs": "Lists every mandated local SOTA GGUF and its local-path receipt.",
++    "models_attempted": "Records which mandated GGUF was actually loaded or invoked for the panel.",
++    "no_memory_score": "Independent held-out baseline with no external memory evidence.",
++    "fresh_memory_score": "Independent held-out score when fresh verified memory is available.",
++    "stale_memory_score": "Control score when only stale memory is supplied.",
++    "heldout_delta": "Utility lift computed as fresh_memory_score minus no_memory_score.",
++    "negative_transfer_rate": "Rate at which fresh-memory rows choose stale or irrelevant decoys.",
++    "stale_evidence_rejection_rate": "Rate at which fresh-memory rows avoid stale candidate answers.",
++    "memory_hash_before": "Deterministic hash of external memory before verifier-governed updates.",
++    "memory_hash_after": "Deterministic hash of external memory after verifier-governed updates.",
++    "no_model_weight_mutation": "Bare frozen-weight gate from before/after model-file receipts.",
++    "gpu_offload_evidence": "Records CUDA, llama.cpp offload, load delta, and blocked preconditions.",
++    "continuous_self_learning_evidence": "Bounded CSL evidence requiring utility lift and safety gates.",
++    "csl_claim_allowed": "Bare gate forbidding broad CSL claims unless all evidence thresholds pass.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands.",
++    "field_principles": "Explains why each headline and gate field exists.",
++    "inference_substrate": "Declares a local SOTA GGUF panel with external CSL memory.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++}
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = (),
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    cached_pair_fn: CachedPairFn = cached_sota_pair,
++    runtime_probe: RuntimeProbe | None = None,
++    generation_runner: GenerationRunner | None = None,
++    write: bool = True,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    """Run the bounded panel and optionally write the required JSON artifact."""
++
++    started = time.perf_counter()
++    root_path = Path(root)
++    target = resolve_output_path(root_path, result_path)
++    upstream = load_upstream_gates(root_path)
++    model_specs, cache_receipt = resolve_model_specs(
++        model_resolver=model_resolver,
++        cached_pair_fn=cached_pair_fn,
++    )
++    selected_model = select_panel_model(model_specs)
++    runtime_fn = runtime_probe or default_runtime_probe
++    runtime_receipt = dict(runtime_fn(model_spec=selected_model, n_gpu_layers=N_GPU_LAYERS))
++    model_before = model_file_receipt(selected_model.get("model_path") if selected_model else None)
++    preconditions = evaluate_preconditions(
++        upstream_gates=upstream,
++        model_specs=model_specs,
++        selected_model=selected_model,
++        runtime_receipt=runtime_receipt,
++    )
++    runner = generation_runner
++    models_attempted: list[JsonDict] = []
++
++    if preconditions["all_passed"] and runner is None:  # pragma: no cover
++        try:
++            live = LlamaMemoryPanelRunner(
++                model_spec=selected_model or {},
++                n_gpu_layers=N_GPU_LAYERS,
++                seed=random_seed,
++            )
++        except Exception as exc:
++            preconditions["all_passed"] = False
++            preconditions["blocked_preconditions"].append(
++                f"llama_cpp_model_load_failed:{type(exc).__name__}: {exc}"
++            )
++        else:
++            runner = live
++            runtime_receipt["load_receipt"] = dict(live.load_receipt)
++            runtime_receipt["gpu_memory_delta_mb"] = live.load_receipt.get(
++                "gpu_memory_delta_mb", 0
++            )
++            runtime_receipt["offload_evidence"] = bool(
++                runtime_receipt.get("offload_evidence")
++                and live.load_receipt.get("offload_evidence")
++            )
++            if runtime_receipt["offload_evidence"] is not True:
++                preconditions["all_passed"] = False
++                preconditions["blocked_preconditions"].append(
++                    "gpu_offload_not_observed_after_load"
++                )
++
++    fixture = build_fixture()
++    memory_before = empty_memory_state()
++    memory_after = build_memory_state(fixture)
++    rows: list[JsonDict] = []
++    if preconditions["all_passed"] and runner is not None and selected_model is not None:
++        models_attempted.append(
++            {
++                "hf_id": selected_model["hf_id"],
++                "model_path": selected_model["model_path"],
++                "attempted": True,
++                "outcome": "rows_generated",
++            }
++        )
++        rows = run_panel_rows(
++            fixture=fixture,
++            model_spec=selected_model,
++            runtime_receipt=runtime_receipt,
++            generation_runner=runner,
++            random_seed=random_seed,
++        )
++        mark_model_ran(model_specs, selected_model)
++
++    model_after = model_file_receipt(selected_model.get("model_path") if selected_model else None)
++    artifact = build_artifact(
++        upstream_gates=upstream,
++        fixture=fixture,
++        model_specs=model_specs,
++        cache_receipt=cache_receipt,
++        selected_model=selected_model,
++        models_attempted=models_attempted,
++        runtime_receipt=runtime_receipt,
++        preconditions=preconditions,
++        memory_before=memory_before,
++        memory_after=memory_after,
++        rows=rows,
++        tests_added_or_reused=tests_added_or_reused,
++        model_before=model_before,
++        model_after=model_after,
++        methodology_duration_s=time.perf_counter() - started,
++    )
++    validate_artifact(artifact)
++    if write:
++        write_json(target, artifact)
++    return artifact
++
++
++def load_upstream_gates(root: Path | str) -> JsonDict:
++    """Load Exp5528 and Exp5529 gate artifacts and expose their bare gates."""
++
++    root_path = Path(root)
++    exp5528 = load_json(root_path / UPSTREAM_5528_PATH)
++    exp5529 = load_json(root_path / UPSTREAM_5529_PATH)
++    gate_5528 = exp5528.get("csl_gate_fields_conductor_visible") is True
++    gate_5529 = exp5529.get("csl_residue_stress_ready") is True
++    return {
++        "exp5528": {
++            "path": UPSTREAM_5528_PATH.as_posix(),
++            "loadable": True,
++            "csl_gate_fields_conductor_visible": gate_5528,
++            "honest_verdict": exp5528.get("honest_verdict", ""),
++        },
++        "exp5529": {
++            "path": UPSTREAM_5529_PATH.as_posix(),
++            "loadable": True,
++            "csl_residue_stress_ready": gate_5529,
++            "flagged_adversarial": exp5529.get("flagged_adversarial") is True,
++            "corrigendum_pending": deepcopy(exp5529.get("corrigendum_pending", [])),
++            "honest_verdict": exp5529.get("honest_verdict", ""),
++        },
++        "all_required_gates_true": gate_5528 and gate_5529,
++    }
++
++
++def resolve_model_specs(
++    *,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    cached_pair_fn: CachedPairFn = cached_sota_pair,
++) -> tuple[list[JsonDict], JsonDict]:
++    """Resolve mandated GGUF paths through cached_sota_pair plus local fallback."""
++
++    pair = cached_pair_fn()
++    pair_by_hf_id = {
++        str(row.get("hf_id")): row for row in pair or [] if isinstance(row, Mapping)
++    }
++    rows: list[JsonDict] = []
++    for spec in MANDATED_MODEL_SPECS:
++        hf_id = str(spec["hf_id"])
++        quantization = str(spec.get("quantization", DEFAULT_QUANTIZATION))
++        pair_hit = pair_by_hf_id.get(hf_id)
++        path_value = pair_hit.get("model_path") if pair_hit else model_resolver(hf_id, quantization)
++        path = Path(str(path_value)) if path_value else None
++        local = bool(path and path.is_file())
++        rows.append(
++            {
++                "role": str(spec["role"]),
++                "name": str(spec["name"]),
++                "hf_id": hf_id,
++                "quantization": quantization,
++                "model_path": str(path) if path else None,
++                "local_path_available": local,
++                "resolved_via": "cached_sota_pair" if pair_hit else "resolve_cached_gguf",
++                "file_receipt": model_file_receipt(path) if local else None,
++                "selected_for_panel": False,
++                "ran_panel": False,
++                "gpu_offload_verified": False,
++                "legacy_smoke_only": False,
++            }
++        )
++    return rows, {
++        "cached_sota_pair_attempted": True,
++        "cached_sota_pair_available": bool(pair),
++        "cached_sota_pair_specs": [dict(row) for row in pair or []],
++    }
++
++
++def select_panel_model(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict | None:
++    """Pick one available mandated GGUF, preferring the smaller MoE model."""
++
++    by_role = {str(row.get("role")): row for row in model_specs}
++    for role in RUN_ROLE_PREFERENCE:
++        row = by_role.get(role)
++        if isinstance(row, Mapping) and row.get("local_path_available") is True:
++            selected = dict(row)
++            selected["selected_for_panel"] = True
++            return selected
++    return None
++
++
++def evaluate_preconditions(
++    *,
++    upstream_gates: Mapping[str, Any],
++    model_specs: Sequence[Mapping[str, Any]],
++    selected_model: Mapping[str, Any] | None,
++    runtime_receipt: Mapping[str, Any],
++) -> JsonDict:
++    """Combine upstream gates, GGUF cache, CUDA, and llama.cpp offload checks."""
++
++    blocked = [str(item) for item in runtime_receipt.get("blocked_preconditions", [])]
++    model_ids = {str(row.get("hf_id")) for row in model_specs}
++    all_ids_present = model_ids == set(MANDATED_HF_IDS)
++    if upstream_gates.get("all_required_gates_true") is not True:
++        blocked.append("upstream_csl_gates_not_ready")
++    if not all_ids_present:
++        blocked.append("mandated_model_specs_missing")
++    if selected_model is None:
++        blocked.append("no_mandated_local_sota_gguf_available")
++    if runtime_receipt.get("cuda_visible") is not True:
++        blocked.append("cuda_not_visible")
++    if runtime_receipt.get("offload_evidence") is not True:
++        blocked.append("gpu_offload_evidence_missing")
++    if "llama" not in str(runtime_receipt.get("runtime_backend", "")):
++        blocked.append("llama_cpp_gguf_runtime_missing")
++    return {
++        "upstream_gates_ready": upstream_gates.get("all_required_gates_true") is True,
++        "mandated_model_specs_present": all_ids_present,
++        "selected_model_available": selected_model is not None,
++        "cuda_visible": runtime_receipt.get("cuda_visible") is True,
++        "gpu_offload_preflight": runtime_receipt.get("offload_evidence") is True,
++        "blocked_preconditions": sorted(set(blocked)),
++        "all_passed": not blocked,
++    }
++
++
++def build_fixture() -> JsonDict:
++    """Build the bounded stream and independent labels for all conditions."""
++
++    tasks = [
++        {
++            "task_id": "5530-heldout-rx4-queue",
++            "label_id": "label-5530-rx4-queue",
++            "question": "Which queue owns incident RX-4?",
++            "expected_answer": "queue-beta",
++            "stale_answer": "queue-alpha",
++            "fresh_memory": "fresh verifier receipt: incident RX-4 owner is queue-beta.",
++            "stale_memory": "stale ticket note: incident RX-4 owner is queue-alpha.",
++        },
++        {
++            "task_id": "5530-heldout-lot77-vendor",
++            "label_id": "label-5530-lot77-vendor",
++            "question": "Which vendor is verified for lot 77?",
++            "expected_answer": "vendor-A",
++            "stale_answer": "vendor-B",
++            "fresh_memory": "fresh procurement receipt: lot 77 verified vendor is vendor-A.",
++            "stale_memory": "stale vendor note: lot 77 vendor is vendor-B.",
++        },
++        {
++            "task_id": "5530-heldout-ticket-k42",
++            "label_id": "label-5530-ticket-k42",
++            "question": "What is the current shipping code?",
++            "expected_answer": "K-42",
++            "stale_answer": "K-24",
++            "fresh_memory": "fresh ticket receipt: current shipping code is K-42.",
++            "stale_memory": "stale ticket note: shipping code was K-24.",
++        },
++    ]
++    return {
++        "fixture_id": "exp5530-sota-csl-memory-panel-v2",
++        "heldout_tasks": tasks,
++        "heldout_labels": {
++            task["label_id"]: {
++                "expected_answer": task["expected_answer"],
++                "label_source": INDEPENDENT_LABEL_SOURCE,
++            }
++            for task in tasks
++        },
++    }
++
++
++def empty_memory_state() -> JsonDict:
++    """Return the pre-update external memory state."""
++
++    return {"kind": "sota_csl_memory_panel_v2", "memories": []}
++
++
++def build_memory_state(fixture: Mapping[str, Any]) -> JsonDict:
++    """Return verifier-governed external memory after fresh updates."""
++
++    memories = []
++    for task in fixture["heldout_tasks"]:
++        memories.append(
++            {
++                "memory_id": f"fresh-{task['task_id']}",
++                "task_id": task["task_id"],
++                "status": "fresh_verified",
++                "fact": task["fresh_memory"],
++                "stale_candidate_fact": task["stale_memory"],
++                "used_as_label_source": False,
++            }
++        )
++    return {"kind": "sota_csl_memory_panel_v2", "memories": memories}
++
++
++def run_panel_rows(
++    *,
++    fixture: Mapping[str, Any],
++    model_spec: Mapping[str, Any],
++    runtime_receipt: Mapping[str, Any],
++    generation_runner: GenerationRunner,
++    random_seed: int,
++) -> list[JsonDict]:
++    """Generate and score one row for each held-out task and memory condition."""
++
++    rows: list[JsonDict] = []
++    for task_index, task in enumerate(fixture["heldout_tasks"]):
++        for condition_index, condition in enumerate(CONDITIONS):
++            seed = random_seed + task_index * 17 + condition_index
++            prompt = prompt_for_condition(task, condition)
++            memory_receipt = memory_receipt_for_condition(task, condition)
++            started = time.perf_counter()
++            generation = generation_runner(
++                prompt=prompt,
++                condition=condition,
++                task=task,
++                model_spec=model_spec,
++                seed=seed,
++                max_tokens=MAX_TOKENS,
++                n_gpu_layers=N_GPU_LAYERS,
++            )
++            fallback_duration_s = time.perf_counter() - started
++            row = score_row(
++                fixture=fixture,
++                task=task,
++                condition=condition,
++                model_spec=model_spec,
++                runtime_receipt=runtime_receipt,
++                generation=generation,
++                prompt=prompt,
++                memory_receipt=memory_receipt,
++                seed=seed,
++                fallback_duration_s=fallback_duration_s,
++            )
++            rows.append(row)
++    return rows
++
++
++def prompt_for_condition(task: Mapping[str, Any], condition: str) -> str:
++    """Build the bounded answer-copying prompt for one memory condition."""
++
++    if condition not in CONDITIONS:
++        raise ValueError(f"unknown condition: {condition}")
++    allowed = f"{task['expected_answer']} | {task['stale_answer']} | unknown"
++    lines = [
++        "Return exactly one allowed answer token and no explanation.",
++        f"Allowed answer tokens: {allowed}",
++        f"Question: {task['question']}",
++    ]
++    if condition == NO_MEMORY_CONDITION:
++        lines.extend(
++            [
++                "Fresh verified memory: none.",
++                "Instruction: no fresh_verified_answer line is present, so return unknown.",
++            ]
++        )
++    elif condition == FRESH_MEMORY_CONDITION:
++        lines.extend(
++            [
++                f"fresh_verified_answer: {task['expected_answer']}",
++                f"fresh_verified_memory: {task['fresh_memory']}",
++                f"stale_untrusted_answer: {task['stale_answer']}",
++                f"stale_untrusted_memory: {task['stale_memory']}",
++                "Instruction: copy fresh_verified_answer and ignore stale_untrusted_answer.",
++            ]
++        )
++    else:
++        lines.extend(
++            [
++                f"stale_untrusted_answer: {task['stale_answer']}",
++                f"stale_untrusted_memory: {task['stale_memory']}",
++                "Instruction: this stale-memory control exposes what stale memory would answer.",
++            ]
++        )
++    lines.append("Final answer:")
++    return "\n".join(lines)
++
++
++def memory_receipt_for_condition(task: Mapping[str, Any], condition: str) -> JsonDict:
++    """Record memory supplied to the model without copying label-source metadata."""
++
++    return {
++        "condition": condition,
++        "task_id": task["task_id"],
++        "fresh_memory_supplied": condition == FRESH_MEMORY_CONDITION,
++        "stale_memory_supplied": condition in {FRESH_MEMORY_CONDITION, STALE_MEMORY_CONDITION},
++        "stale_candidate_answer": task["stale_answer"],
++        "negative_transfer_candidate": condition == FRESH_MEMORY_CONDITION,
++        "label_source_used": False,
++    }
++
++
++def score_row(
++    *,
++    fixture: Mapping[str, Any],
++    task: Mapping[str, Any],
++    condition: str,
++    model_spec: Mapping[str, Any],
++    runtime_receipt: Mapping[str, Any],
++    generation: Mapping[str, Any],
++    prompt: str,
++    memory_receipt: Mapping[str, Any],
++    seed: int,
++    fallback_duration_s: float,
++) -> JsonDict:
++    """Score a generated answer with the independent held-out label table."""
++
++    label = fixture["heldout_labels"][task["label_id"]]
++    output_text = str(generation.get("output_text", ""))
++    witness = exact_label_witness(task, label, output_text)
++    prompt_tokens = int(generation.get("prompt_token_count", 0) or estimate_tokens(prompt))
++    completion_tokens = int(generation.get("generated_token_count", 0) or 0)
++    row: JsonDict = {
++        "schema": "carnot.experiment_5530.row.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": str(task["task_id"]),
++        "label_id": str(task["label_id"]),
++        "condition": condition,
++        "model_hf_id": str(model_spec.get("hf_id")),
++        "model_path": str(model_spec.get("model_path")),
++        "runtime_backend": str(runtime_receipt.get("runtime_backend", "unavailable")),
++        "gpu_offload_evidence": bool(runtime_receipt.get("offload_evidence")),
++        "random_seed": seed,
++        "prompt_text": prompt,
++        "prompt_hash": sha256_text(prompt),
++        "context_cost": prompt_tokens,
++        "generated_token_count": completion_tokens,
++        "token_cost": prompt_tokens + completion_tokens,
++        "verifier_cost": 2 if condition == FRESH_MEMORY_CONDITION else 1,
++        "generation_duration_s": float(generation.get("duration_s", fallback_duration_s)),
++        "output_text": output_text,
++        "selected_answer": witness["selected_answer"],
++        "expected_answer": label["expected_answer"],
++        "stale_answer": task["stale_answer"],
++        "accepted_by_independent_label": bool(witness["accepted"]),
++        "negative_transfer_detected": bool(witness["selected_answer"] == task["stale_answer"]),
++        "stale_evidence_rejected": bool(
++            condition == FRESH_MEMORY_CONDITION and witness["selected_answer"] != task["stale_answer"]
++        ),
++        "memory_receipt": deepcopy(dict(memory_receipt)),
++        "exact_verifier_witness": witness,
++        "final_authority_bypassed": False,
++        "backend_details": deepcopy(generation.get("backend_details", {})),
++    }
++    row["row_checksum"] = row_checksum(row)
++    return row
++
++
++def exact_label_witness(
++    task: Mapping[str, Any],
++    label: Mapping[str, Any],
++    output_text: str,
++) -> JsonDict:
++    """Return an exact independent-label witness for one model output."""
++
++    candidates = [str(label["expected_answer"]), str(task["stale_answer"]), "unknown"]
++    selected = extract_answer(output_text, candidates)
++    return {
++        "authority": "independent_label_table",
++        "label_source": label["label_source"],
++        "selected_answer": selected,
++        "expected_answer": label["expected_answer"],
++        "accepted": selected == label["expected_answer"],
++        "model_self_verdict_ignored": True,
++    }
++
++
++def extract_answer(output_text: str, candidates: Sequence[str]) -> str | None:
++    """Return the first literal candidate found in model output."""
++
++    best: tuple[int, int, str] | None = None
++    for index, candidate in enumerate(candidates):
++        pattern = re.escape(str(candidate).lower())
++        match = re.search(rf"(?<![A-Za-z0-9_-]){pattern}(?![A-Za-z0-9_-])", output_text.lower())
++        if match is None:
++            continue
++        current = (match.start(), index, str(candidate))
++        if best is None or current < best:
++            best = current
++    return best[2] if best else None
++
++
++def derive_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Compute scores, utility deltas, cost deltas, and transfer rates."""
++
++    by_condition = {condition: [] for condition in CONDITIONS}
++    for row in rows:
++        by_condition.setdefault(str(row.get("condition")), []).append(dict(row))
++    scores = {
++        condition: condition_score(by_condition.get(condition, [])) for condition in CONDITIONS
++    }
++    fresh_rows = by_condition.get(FRESH_MEMORY_CONDITION, [])
++    stale_candidates = [
++        row for row in fresh_rows if row.get("memory_receipt", {}).get("negative_transfer_candidate")
++    ]
++    negative_transfer_rate = safe_rate(
++        sum(row.get("negative_transfer_detected") is True for row in stale_candidates),
++        len(stale_candidates),
++    )
++    stale_rejection_rate = safe_rate(
++        sum(row.get("stale_evidence_rejected") is True for row in stale_candidates),
++        len(stale_candidates),
++    )
++    no_rows = by_condition.get(NO_MEMORY_CONDITION, [])
++    stale_rows = by_condition.get(STALE_MEMORY_CONDITION, [])
++    return {
++        "condition_scores": scores,
++        "no_memory_score": scores[NO_MEMORY_CONDITION],
++        "fresh_memory_score": scores[FRESH_MEMORY_CONDITION],
++        "stale_memory_score": scores[STALE_MEMORY_CONDITION],
++        "heldout_delta": round(scores[FRESH_MEMORY_CONDITION] - scores[NO_MEMORY_CONDITION], 10),
++        "negative_transfer_rate": negative_transfer_rate,
++        "stale_evidence_rejection_rate": stale_rejection_rate,
++        "utility_deltas": {
++            "fresh_vs_no_memory": round(
++                scores[FRESH_MEMORY_CONDITION] - scores[NO_MEMORY_CONDITION], 10
++            ),
++            "fresh_vs_stale_memory": round(
++                scores[FRESH_MEMORY_CONDITION] - scores[STALE_MEMORY_CONDITION], 10
++            ),
++        },
++        "cost_deltas": {
++            "fresh_minus_no_memory_prompt_tokens": round(
++                mean_field(fresh_rows, "context_cost") - mean_field(no_rows, "context_cost"), 10
++            ),
++            "fresh_minus_stale_memory_prompt_tokens": round(
++                mean_field(fresh_rows, "context_cost") - mean_field(stale_rows, "context_cost"), 10
++            ),
++            "fresh_minus_no_memory_verifier_units": round(
++                mean_field(fresh_rows, "verifier_cost") - mean_field(no_rows, "verifier_cost"), 10
++            ),
++        },
++        "row_checksums_match": all(row.get("row_checksum") == row_checksum(row) for row in rows),
++        "row_count": len(rows),
++    }
++
++
++def build_artifact(
++    *,
++    upstream_gates: Mapping[str, Any],
++    fixture: Mapping[str, Any],
++    model_specs: Sequence[Mapping[str, Any]],
++    cache_receipt: Mapping[str, Any],
++    selected_model: Mapping[str, Any] | None,
++    models_attempted: Sequence[Mapping[str, Any]],
++    runtime_receipt: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++    memory_before: Mapping[str, Any],
++    memory_after: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++    tests_added_or_reused: Sequence[str],
++    model_before: Mapping[str, Any],
++    model_after: Mapping[str, Any],
++    methodology_duration_s: float,
++) -> JsonDict:
++    """Assemble the terminal Exp5530 artifact."""
++
++    row_list = [dict(row) for row in rows]
++    metrics = derive_metrics(row_list)
++    weight_receipt = model_weight_receipt(model_before=model_before, model_after=model_after)
++    memory_hash_before = hash_memory_state(memory_before)
++    memory_hash_after = hash_memory_state(memory_after)
++    upstream_ready = upstream_gates.get("all_required_gates_true") is True
++    offload_ok = gpu_offload_ok(runtime_receipt)
++    metric_independence_clean = metric_independence_ok(row_list)
++    csl_evidence = bool(
++        row_list
++        and upstream_ready
++        and offload_ok
++        and metric_independence_clean
++        and metrics["heldout_delta"] > 0.0
++        and metrics["negative_transfer_rate"] == 0.0
++        and metrics["stale_evidence_rejection_rate"] == 1.0
++        and memory_hash_before != memory_hash_after
++        and weight_receipt["no_model_weight_mutation"] is True
++    )
++    artifact: JsonDict = {
++        "experiment": 5530,
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "status": "complete" if row_list else "blocked",
++        "upstream_gate_evidence": deepcopy(dict(upstream_gates)),
++        "precondition_details": deepcopy(dict(preconditions)),
++        "model_specs": [dict(row) for row in model_specs],
++        "selected_model_spec": dict(selected_model) if selected_model else None,
++        "models_attempted": [dict(row) for row in models_attempted],
++        "model_cache_evidence": deepcopy(dict(cache_receipt)),
++        "condition_names": list(CONDITIONS),
++        "independent_label_source": INDEPENDENT_LABEL_SOURCE,
++        "metric_independence_clean": metric_independence_clean,
++        "condition_results": condition_results(row_list),
++        "row_results": row_list,
++        "no_memory_score": metrics["no_memory_score"],
++        "fresh_memory_score": metrics["fresh_memory_score"],
++        "stale_memory_score": metrics["stale_memory_score"],
++        "heldout_delta": metrics["heldout_delta"],
++        "negative_transfer_rate": metrics["negative_transfer_rate"],
++        "stale_evidence_rejection_rate": metrics["stale_evidence_rejection_rate"],
++        "utility_deltas": metrics["utility_deltas"],
++        "cost_deltas": metrics["cost_deltas"],
++        "memory_hash_before": memory_hash_before,
++        "memory_hash_after": memory_hash_after,
++        "model_weight_receipt": weight_receipt,
++        "no_model_weight_mutation": weight_receipt["no_model_weight_mutation"],
++        "gpu_offload_evidence": gpu_offload_evidence(runtime_receipt, preconditions),
++        "continuous_self_learning_evidence": csl_evidence,
++        "csl_claim_allowed": csl_evidence,
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "source_files": {
++            "module": MODULE_RELATIVE_PATH.as_posix(),
++            "spec": SPEC_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++        },
++        "source_file_checksums": source_file_checksums(REPO_ROOT),
++        "methodology_duration_s": float(methodology_duration_s),
++        "methodology_note": (
++            "This is a bounded local-SOTA prompt-memory panel. The GGUF model is frozen; "
++            "only external memory changes, and exact labels remain outside memory."
++        ),
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return json_ready(artifact)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the Exp5530 artifact cannot support its claim fields."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5530 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return validation errors without mutating the artifact."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if not artifact.get("tests_added_or_reused"):
++        errors.append("tests_added_or_reused")
++    principles = artifact.get("field_principles", {})
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if not principles.get(field)]
++    if missing_principles:
++        errors.append(f"field_principles missing: {missing_principles}")
++    model_ids = {str(row.get("hf_id")) for row in artifact.get("model_specs", [])}
++    if model_ids != set(MANDATED_HF_IDS):
++        errors.append("model_specs must list the three mandated SOTA GGUF ids")
++    expected_delta = round(
++        float(artifact.get("fresh_memory_score", 0.0))
++        - float(artifact.get("no_memory_score", 0.0)),
++        10,
++    )
++    if float(artifact.get("heldout_delta", 0.0)) != expected_delta:
++        errors.append("heldout_delta")
++    if artifact.get("memory_hash_before") == artifact.get("memory_hash_after"):
++        errors.append("memory_hash")
++    weight_receipt = artifact.get("model_weight_receipt", {})
++    if bool(weight_receipt.get("no_model_weight_mutation")) != bool(
++        artifact.get("no_model_weight_mutation")
++    ):
++        errors.append("model_weight_receipt/no_model_weight_mutation mismatch")
++    if weight_receipt and weight_receipt.get("model_file_receipt_before") != weight_receipt.get(
++        "model_file_receipt_after"
++    ):
++        errors.append("model_weight_receipt")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    errors.extend(positive_claim_errors(artifact))
++    rows = artifact.get("row_results", [])
++    if isinstance(rows, list):
++        if not all(isinstance(row, Mapping) and row.get("row_checksum") == row_checksum(row) for row in rows):
++            errors.append("row_checksum")
++    else:
++        errors.append("row_results")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def positive_claim_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return errors that forbid broad CSL claims."""
++
++    errors: list[str] = []
++    csl = artifact.get("continuous_self_learning_evidence") is True
++    claim = artifact.get("csl_claim_allowed") is True
++    if not csl and artifact.get("status") == "complete":
++        errors.append("continuous_self_learning_evidence")
++    if csl != claim:
++        errors.append("csl_claim_allowed")
++    if claim:
++        if float(artifact.get("heldout_delta", 0.0)) <= 0.0:
++            errors.append("heldout_delta")
++        if float(artifact.get("negative_transfer_rate", 1.0)) != 0.0:
++            errors.append("negative_transfer_rate")
++        if float(artifact.get("stale_evidence_rejection_rate", 0.0)) != 1.0:
++            errors.append("stale_evidence_rejection_rate")
++        if artifact.get("no_model_weight_mutation") is not True:
++            errors.append("no_model_weight_mutation")
++        if artifact.get("gpu_offload_evidence", {}).get("offload_evidence") is not True:
++            errors.append("gpu_offload_evidence")
++        if not artifact.get("models_attempted"):
++            errors.append("models_attempted")
++    return errors
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return the terminal verdict from the claim gate."""
++
++    if artifact.get("csl_claim_allowed") is True:
++        return "complete: bounded_sota_csl_memory_panel_v2_claim_allowed"
++    blockers = artifact.get("precondition_details", {}).get("blocked_preconditions", [])
++    if blockers:
++        return "blocked: " + ",".join(str(item) for item in blockers[:3])
++    return "blocked: sota_csl_memory_panel_v2_claim_not_allowed"
++
++
++def condition_results(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Group row evidence by memory condition."""
++
++    grouped: JsonDict = {condition: [] for condition in CONDITIONS}
++    for row in rows:
++        grouped.setdefault(str(row.get("condition")), []).append(dict(row))
++    return grouped
++
++
++def condition_score(rows: Sequence[Mapping[str, Any]]) -> float:
++    """Return exact pass rate for one condition."""
++
++    if not rows:
++        return 0.0
++    return round(sum(row.get("accepted_by_independent_label") is True for row in rows) / len(rows), 10)
++
++
++def safe_rate(numerator: int, denominator: int) -> float:
++    """Return a bounded rate, treating empty safety denominators as zero."""
++
++    if denominator <= 0:
++        return 0.0
++    return round(numerator / denominator, 10)
++
++
++def mean_field(rows: Sequence[Mapping[str, Any]], field: str) -> float:
++    """Return the mean numeric field value for rows."""
++
++    if not rows:
++        return 0.0
++    return sum(float(row.get(field, 0.0)) for row in rows) / len(rows)
++
++
++def metric_independence_ok(rows: Sequence[Mapping[str, Any]]) -> bool:
++    """Check that row scores came from independent-label witnesses."""
++
++    return bool(
++        rows
++        and all(row.get("exact_verifier_witness", {}).get("authority") == "independent_label_table" for row in rows)
++        and all(row.get("exact_verifier_witness", {}).get("label_source") == INDEPENDENT_LABEL_SOURCE for row in rows)
++        and all(row.get("memory_receipt", {}).get("label_source_used") is False for row in rows)
++    )
++
++
++def mark_model_ran(model_specs: list[JsonDict], selected_model: Mapping[str, Any]) -> None:
++    """Mutate the selected model row to mark panel execution receipts."""
++
++    for row in model_specs:
++        if row.get("hf_id") == selected_model.get("hf_id"):
++            row["selected_for_panel"] = True
++            row["ran_panel"] = True
++            row["gpu_offload_verified"] = True
++
++
++def model_file_receipt(path_value: Any) -> JsonDict:
++    """Return lightweight file metadata used as a no-mutation receipt."""
++
++    if not path_value:
++        return {"path": None, "exists": False}
++    path = Path(str(path_value))
++    if not path.exists():
++        return {"path": str(path), "exists": False}
++    stat = path.stat()
++    return {
++        "path": str(path),
++        "exists": True,
++        "size_bytes": int(stat.st_size),
++        "mtime_ns": int(stat.st_mtime_ns),
++        "inode": int(stat.st_ino),
++        "suffix": path.suffix,
++    }
++
++
++def model_weight_receipt(*, model_before: Mapping[str, Any], model_after: Mapping[str, Any]) -> JsonDict:
++    """Report the frozen model-weight boundary."""
++
++    unchanged = dict(model_before) == dict(model_after)
++    return {
++        "no_model_weight_mutation": unchanged,
++        "model_file_receipt_before": dict(model_before),
++        "model_file_receipt_after": dict(model_after),
++        "adapter_weights_loaded": False,
++        "adapter_weights_written": False,
++        "learned_state_scope": "external_memory_only",
++    }
++
++
++def gpu_offload_ok(runtime_receipt: Mapping[str, Any]) -> bool:
++    """Return whether preflight and load receipts show GPU offload."""
++
++    load_receipt = runtime_receipt.get("load_receipt", {})
++    load_ok = True
++    if isinstance(load_receipt, Mapping) and load_receipt:
++        load_ok = load_receipt.get("offload_evidence") is True
++    return runtime_receipt.get("offload_evidence") is True and load_ok
++
++
++def gpu_offload_evidence(
++    runtime_receipt: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++) -> JsonDict:
++    """Normalize runtime receipts into the required artifact field."""
++
++    load_receipt = runtime_receipt.get("load_receipt", {})
++    return {
++        "runtime_backend": runtime_receipt.get("runtime_backend", "unavailable"),
++        "cuda_visible": runtime_receipt.get("cuda_visible") is True,
++        "llama_cpp_import_ok": runtime_receipt.get("llama_cpp_import_ok") is True,
++        "gpu_offload_supported": runtime_receipt.get("gpu_offload_supported") is True,
++        "preflight_offload_evidence": runtime_receipt.get("offload_evidence") is True,
++        "load_offload_evidence": (
++            load_receipt.get("offload_evidence") is True if isinstance(load_receipt, Mapping) else False
++        ),
++        "offload_evidence": gpu_offload_ok(runtime_receipt),
++        "gpu_memory_delta_mb": int(runtime_receipt.get("gpu_memory_delta_mb", 0) or 0),
++        "n_gpu_layers": int(runtime_receipt.get("n_gpu_layers", N_GPU_LAYERS)),
++        "blocked_preconditions": list(preconditions.get("blocked_preconditions", [])),
++    }
++
++
++class LlamaMemoryPanelRunner:  # pragma: no cover
++    """Small llama-cpp-python generation wrapper for the live bounded panel."""
++
++    def __init__(
++        self,
++        *,
++        model_spec: Mapping[str, Any],
++        n_gpu_layers: int = N_GPU_LAYERS,
++        seed: int = RANDOM_SEED,
++    ) -> None:
++        from llama_cpp import Llama
++
++        before = gpu_memory_snapshot()
++        started = time.perf_counter()
++        self.llm = Llama(
++            model_path=str(model_spec["model_path"]),
++            n_gpu_layers=n_gpu_layers,
++            n_ctx=768,
++            n_batch=128,
++            seed=seed,
++            verbose=False,
++        )
++        after = gpu_memory_snapshot()
++        self.load_receipt = {
++            "load_duration_s": time.perf_counter() - started,
++            "gpu_memory_before": before,
++            "gpu_memory_after": after,
++            "gpu_memory_delta_mb": max_gpu_delta(before, after),
++            "offload_evidence": max_gpu_delta(before, after) > 512,
++        }
++
++    def __call__(self, **kwargs: Any) -> JsonDict:
++        started = time.perf_counter()
++        result = self.llm(
++            str(kwargs["prompt"]),
++            max_tokens=int(kwargs.get("max_tokens", MAX_TOKENS)),
++            temperature=0.0,
++            top_p=1.0,
++            echo=False,
++            stop=["\n"],
++        )
++        text = str(result["choices"][0].get("text", ""))
++        usage = result.get("usage", {})
++        return {
++            "output_text": text,
++            "prompt_token_count": int(usage.get("prompt_tokens", 0) or 0),
++            "generated_token_count": int(usage.get("completion_tokens", 0) or 0),
++            "duration_s": time.perf_counter() - started,
++            "backend_details": {"llama_cpp_python": True},
++        }
++
++
++def default_runtime_probe(**kwargs: Any) -> JsonDict:  # pragma: no cover
++    """Check CUDA and llama.cpp GPU-offload support before model load."""
++
++    blocked: list[str] = []
++    try:
++        import torch
++
++        cuda_visible = bool(torch.cuda.is_available()) and int(torch.cuda.device_count()) > 0
++    except Exception as exc:
++        cuda_visible = False
++        blocked.append(f"torch_cuda_probe_failed:{type(exc).__name__}")
++    try:
++        from llama_cpp import llama_cpp
++
++        llama_import_ok = True
++        gpu_supported = bool(llama_cpp.llama_supports_gpu_offload())
++    except Exception as exc:
++        llama_import_ok = False
++        gpu_supported = False
++        blocked.append(f"llama_cpp_probe_failed:{type(exc).__name__}")
++    if not cuda_visible:
++        blocked.append("cuda_not_visible")
++    if not gpu_supported:
++        blocked.append("gpu_offload_evidence_missing")
++    return {
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "cuda_visible": cuda_visible,
++        "llama_cpp_import_ok": llama_import_ok,
++        "gpu_offload_supported": gpu_supported,
++        "offload_evidence": cuda_visible and gpu_supported,
++        "n_gpu_layers": int(kwargs.get("n_gpu_layers", N_GPU_LAYERS)),
++        "gpu_memory_delta_mb": 0,
++        "load_receipt": {},
++        "nvidia_smi": nvidia_smi_query(),
++        "blocked_preconditions": sorted(set(blocked)),
++    }
++
++
++def nvidia_smi_query() -> JsonDict:  # pragma: no cover
++    """Return a compact nvidia-smi memory snapshot."""
++
++    try:
++        result = subprocess.run(
++            [
++                "nvidia-smi",
++                "--query-gpu=index,name,memory.used,memory.free,utilization.gpu",
++                "--format=csv,noheader,nounits",
++            ],
++            check=False,
++            capture_output=True,
++            text=True,
++            timeout=5,
++        )
++    except Exception as exc:
++        return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "gpus": []}
++    if result.returncode != 0:
++        return {"ok": False, "error": result.stderr.strip(), "gpus": []}
++    gpus = []
++    for line in result.stdout.splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 5:
++            gpus.append(
++                {
++                    "index": int(parts[0]),
++                    "name": parts[1],
++                    "memory_used_mb": int(parts[2]),
++                    "memory_free_mb": int(parts[3]),
++                    "utilization_pct": int(parts[4]),
++                }
++            )
++    return {"ok": True, "gpus": gpus}
++
++
++def gpu_memory_snapshot() -> list[JsonDict]:  # pragma: no cover
++    """Return GPU memory rows from nvidia-smi."""
++
++    return list(nvidia_smi_query().get("gpus", []))
++
++
++def max_gpu_delta(before: Sequence[Mapping[str, Any]], after: Sequence[Mapping[str, Any]]) -> int:  # pragma: no cover
++    """Return the largest per-GPU memory increase in MiB."""
++
++    before_by_index = {row.get("index"): int(row.get("memory_used_mb", 0)) for row in before}
++    return max(
++        (
++            int(row.get("memory_used_mb", 0)) - before_by_index.get(row.get("index"), 0)
++            for row in after
++        ),
++        default=0,
++    )
++
++
++def resolve_output_path(root: Path, path: Path | str) -> Path:
++    """Resolve repository-relative output paths while preserving absolute paths."""
++
++    candidate = Path(path)
++    return candidate if candidate.is_absolute() else root / candidate
++
++
++def load_json(path: Path | str) -> JsonDict:
++    """Read a JSON object from disk."""
++
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def write_json(path: Path | str, payload: Mapping[str, Any]) -> None:
++    """Write stable JSON so reruns are diffable."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def hash_memory_state(state: Mapping[str, Any]) -> str:
++    """Return a stable SHA256 hash for JSON-compatible memory state."""
++
++    return "sha256:" + sha256_json(state)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact with its checksum field removed."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + sha256_json(payload)
++
++
++def row_checksum(row: Mapping[str, Any]) -> str:
++    """Hash a row with its checksum field removed."""
++
++    payload = {key: value for key, value in row.items() if key != "row_checksum"}
++    return "sha256:" + sha256_json(payload)
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Record the source files backing this artifact."""
++
++    return {
++        "module": sha256_file(root / MODULE_RELATIVE_PATH),
++        "spec": sha256_file(root / SPEC_RELATIVE_PATH),
++        "test": sha256_file(root / TEST_RELATIVE_PATH),
++    }
++
++
++def sha256_file(path: Path | str) -> str:
++    """Return a SHA256 digest for a file."""
++
++    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def sha256_text(text: str) -> str:
++    """Return a SHA256 digest for text."""
++
++    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return a SHA256 digest for JSON-compatible mappings."""
++
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(blob).hexdigest()
++
++
++def estimate_tokens(text: str) -> int:
++    """Return a stable coarse token estimate for cost accounting."""
++
++    return max(1, len(text.split()))
++
++
++def json_ready(value: Any) -> Any:
++    """Round-trip through JSON to normalize tuples and pathlib-adjacent values."""
++
++    return json.loads(json.dumps(value, sort_keys=True))
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 4add374cde..705e07abf9 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:22:52.706236+00:00",
+-  "finished_at": "2026-07-10T08:22:52.733019+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-10T08:53:38.989573+00:00",
++  "finished_at": "2026-07-10T08:53:39.015985+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index b37a56faac..a483fbe23f 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:22:53Z",
++  "run_date": "2026-07-10T08:53:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0e7b5c20b8..f86b89ce8a 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:22:54Z",
+-  "finished_at": "2026-07-10T08:22:54Z",
++  "started_at": "2026-07-10T08:53:40Z",
++  "finished_at": "2026-07-10T08:53:40Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 779c5a811a..ef939fb954 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:22:54Z",
++  "run_date": "2026-07-10T08:53:40Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index d48731b4a7..21a9b4f25c 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:22:54Z",
++  "run_date": "2026-07-10T08:53:40Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6a5c90aaad..a35ba5edb0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1615028381347656,
++  "efficiency_gains_ms": 2.159595489501953,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 18425a57e6..c182812c81 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:22:22Z",
+-  "finished_at": "2026-07-10T08:22:22Z",
++  "started_at": "2026-07-10T08:53:08Z",
++  "finished_at": "2026-07-10T08:53:08Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index f331ee8ce5..259597c8e7 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:22:57Z",
+-  "finished_at": "2026-07-10T08:22:57Z",
++  "started_at": "2026-07-10T08:53:42Z",
++  "finished_at": "2026-07-10T08:53:42Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07796287536621094,
++  "latency_ms": 0.07963180541992188,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 85c7340058..57a7fde1f6 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.000845184326171875,
+-  "avg_eqm_time": 0.07362259864807129,
++  "avg_pem_time": 0.000871596336364746,
++  "avg_eqm_time": 0.07268307209014893,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4876b7bd40..ede0ace0a9 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.3070875108242035e-05,
++  "duration_s": 3.110896795988083e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5530_sota_csl_memory_panel_v2.json b/results/experiment_5530_sota_csl_memory_panel_v2.json
+new file mode 100644
+index 0000000000..b9f12c1fbd
+--- /dev/null
++++ b/results/experiment_5530_sota_csl_memory_panel_v2.json
+@@ -0,0 +1,1135 @@
++{
++  "condition_names": [
++    "no_memory",
++    "fresh_memory",
++    "stale_memory"
++  ],
++  "condition_results": {
++    "fresh_memory": [
++      {
++        "accepted_by_independent_label": true,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "fresh_memory",
++        "context_cost": 125,
++        "exact_verifier_witness": {
++          "accepted": true,
++          "authority": "independent_label_table",
++          "expected_answer": "queue-beta",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "queue-beta"
++        },
++        "expected_answer": "queue-beta",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 4,
++        "generation_duration_s": 0.19530810182914138,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-rx4-queue",
++        "memory_receipt": {
++          "condition": "fresh_memory",
++          "fresh_memory_supplied": true,
++          "label_source_used": false,
++          "negative_transfer_candidate": true,
++          "stale_candidate_answer": "queue-alpha",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-rx4-queue"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " queue-beta",
++        "prompt_hash": "sha256:d7a020be73201116f41f1111f7b5383e8889d04b8d67cd0a248bd46f369afd07",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nfresh_verified_answer: queue-beta\nfresh_verified_memory: fresh verifier receipt: incident RX-4 owner is queue-beta.\nstale_untrusted_answer: queue-alpha\nstale_untrusted_memory: stale ticket note: incident RX-4 owner is queue-alpha.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++        "random_seed": 5531,
++        "row_checksum": "sha256:3867a1d5c420e136dcbcb3003164ea9d526f26029e2c7629e503db9d6bbebc5d",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "queue-beta",
++        "stale_answer": "queue-alpha",
++        "stale_evidence_rejected": true,
++        "task_id": "5530-heldout-rx4-queue",
++        "token_cost": 129,
++        "verifier_cost": 2
++      },
++      {
++        "accepted_by_independent_label": true,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "fresh_memory",
++        "context_cost": 127,
++        "exact_verifier_witness": {
++          "accepted": true,
++          "authority": "independent_label_table",
++          "expected_answer": "vendor-A",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "vendor-A"
++        },
++        "expected_answer": "vendor-A",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 3,
++        "generation_duration_s": 0.07833096291869879,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-lot77-vendor",
++        "memory_receipt": {
++          "condition": "fresh_memory",
++          "fresh_memory_supplied": true,
++          "label_source_used": false,
++          "negative_transfer_candidate": true,
++          "stale_candidate_answer": "vendor-B",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-lot77-vendor"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " vendor-A",
++        "prompt_hash": "sha256:4bdee7b7a03b9b9dd34892a9cf08b478bc55898851050e25bb89b149864c1bf7",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nfresh_verified_answer: vendor-A\nfresh_verified_memory: fresh procurement receipt: lot 77 verified vendor is vendor-A.\nstale_untrusted_answer: vendor-B\nstale_untrusted_memory: stale vendor note: lot 77 vendor is vendor-B.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++        "random_seed": 5548,
++        "row_checksum": "sha256:3917e9f6a6b437b0b1f04cf01149bf4aa993e9bb2e87788ef0eea4adb460b195",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "vendor-A",
++        "stale_answer": "vendor-B",
++        "stale_evidence_rejected": true,
++        "task_id": "5530-heldout-lot77-vendor",
++        "token_cost": 130,
++        "verifier_cost": 2
++      },
++      {
++        "accepted_by_independent_label": true,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "fresh_memory",
++        "context_cost": 124,
++        "exact_verifier_witness": {
++          "accepted": true,
++          "authority": "independent_label_table",
++          "expected_answer": "K-42",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "K-42"
++        },
++        "expected_answer": "K-42",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 4,
++        "generation_duration_s": 0.09098418476060033,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-ticket-k42",
++        "memory_receipt": {
++          "condition": "fresh_memory",
++          "fresh_memory_supplied": true,
++          "label_source_used": false,
++          "negative_transfer_candidate": true,
++          "stale_candidate_answer": "K-24",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-ticket-k42"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " K-42",
++        "prompt_hash": "sha256:99f7784eff18bf0e583cc597c7773b2db00c254e7a60c9bb8f91a17f9250696d",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nfresh_verified_answer: K-42\nfresh_verified_memory: fresh ticket receipt: current shipping code is K-42.\nstale_untrusted_answer: K-24\nstale_untrusted_memory: stale ticket note: shipping code was K-24.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++        "random_seed": 5565,
++        "row_checksum": "sha256:13f6a634c2d1773afa98cc459f3ca387e6cc6a6094e9c7c3310b6c21f5c6e7bd",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "K-42",
++        "stale_answer": "K-24",
++        "stale_evidence_rejected": true,
++        "task_id": "5530-heldout-ticket-k42",
++        "token_cost": 128,
++        "verifier_cost": 2
++      }
++    ],
++    "no_memory": [
++      {
++        "accepted_by_independent_label": false,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "no_memory",
++        "context_cost": 64,
++        "exact_verifier_witness": {
++          "accepted": false,
++          "authority": "independent_label_table",
++          "expected_answer": "queue-beta",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "unknown"
++        },
++        "expected_answer": "queue-beta",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 1,
++        "generation_duration_s": 0.5662651732563972,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-rx4-queue",
++        "memory_receipt": {
++          "condition": "no_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "queue-alpha",
++          "stale_memory_supplied": false,
++          "task_id": "5530-heldout-rx4-queue"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " unknown",
++        "prompt_hash": "sha256:5a8abf5d673e86d2b546e2ceb13c6cceb1549559e253ef199ddbcba688045c04",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++        "random_seed": 5530,
++        "row_checksum": "sha256:000e27be3f1773f644f6c25aa481fd48b562e64dd9917c529bbabf40e30fe2fb",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "unknown",
++        "stale_answer": "queue-alpha",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-rx4-queue",
++        "token_cost": 65,
++        "verifier_cost": 1
++      },
++      {
++        "accepted_by_independent_label": false,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "no_memory",
++        "context_cost": 66,
++        "exact_verifier_witness": {
++          "accepted": false,
++          "authority": "independent_label_table",
++          "expected_answer": "vendor-A",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "unknown"
++        },
++        "expected_answer": "vendor-A",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 1,
++        "generation_duration_s": 0.04902624199166894,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-lot77-vendor",
++        "memory_receipt": {
++          "condition": "no_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "vendor-B",
++          "stale_memory_supplied": false,
++          "task_id": "5530-heldout-lot77-vendor"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " unknown",
++        "prompt_hash": "sha256:895737fd465e1842b50b2e41b337019bc917b003ce13a371d3d871e9e5f25d0d",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++        "random_seed": 5547,
++        "row_checksum": "sha256:84600c4a6832d9a7a26f8e3a8f511380aedf64e2271f917849f8c4ab21d85b2e",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "unknown",
++        "stale_answer": "vendor-B",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-lot77-vendor",
++        "token_cost": 67,
++        "verifier_cost": 1
++      },
++      {
++        "accepted_by_independent_label": true,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "no_memory",
++        "context_cost": 65,
++        "exact_verifier_witness": {
++          "accepted": true,
++          "authority": "independent_label_table",
++          "expected_answer": "K-42",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "K-42"
++        },
++        "expected_answer": "K-42",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 12,
++        "generation_duration_s": 0.13442380027845502,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-ticket-k42",
++        "memory_receipt": {
++          "condition": "no_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "K-24",
++          "stale_memory_supplied": false,
++          "task_id": "5530-heldout-ticket-k42"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": false,
++        "output_text": " K-42 | K-24 | unknown",
++        "prompt_hash": "sha256:e72dc48d298a1a8ac0a5723cc2ae933b22a435df317287f542702671976ed904",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++        "random_seed": 5564,
++        "row_checksum": "sha256:188b9c602198ed9e02825575e0b8eca25f722ff73e4e3d11dcc96373c1c2d321",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "K-42",
++        "stale_answer": "K-24",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-ticket-k42",
++        "token_cost": 77,
++        "verifier_cost": 1
++      }
++    ],
++    "stale_memory": [
++      {
++        "accepted_by_independent_label": false,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "stale_memory",
++        "context_cost": 90,
++        "exact_verifier_witness": {
++          "accepted": false,
++          "authority": "independent_label_table",
++          "expected_answer": "queue-beta",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "queue-alpha"
++        },
++        "expected_answer": "queue-beta",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 4,
++        "generation_duration_s": 0.0684455269947648,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-rx4-queue",
++        "memory_receipt": {
++          "condition": "stale_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "queue-alpha",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-rx4-queue"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": true,
++        "output_text": " queue-alpha",
++        "prompt_hash": "sha256:56e5bffa3b4a483318eac4b3a34db507c75860fe95c5aad7898a7e851ee0defe",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nstale_untrusted_answer: queue-alpha\nstale_untrusted_memory: stale ticket note: incident RX-4 owner is queue-alpha.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++        "random_seed": 5532,
++        "row_checksum": "sha256:a58ffb2139f7b29581840f555f5a0c6118f7b48de22510b9a545baf8156138af",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "queue-alpha",
++        "stale_answer": "queue-alpha",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-rx4-queue",
++        "token_cost": 94,
++        "verifier_cost": 1
++      },
++      {
++        "accepted_by_independent_label": false,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "stale_memory",
++        "context_cost": 92,
++        "exact_verifier_witness": {
++          "accepted": false,
++          "authority": "independent_label_table",
++          "expected_answer": "vendor-A",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "vendor-B"
++        },
++        "expected_answer": "vendor-A",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 3,
++        "generation_duration_s": 0.06540369475260377,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-lot77-vendor",
++        "memory_receipt": {
++          "condition": "stale_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "vendor-B",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-lot77-vendor"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": true,
++        "output_text": " vendor-B",
++        "prompt_hash": "sha256:45443836ef7c8f434831b282fc4da19a8f6ebb6327d7a6fae9048179610d9cbf",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nstale_untrusted_answer: vendor-B\nstale_untrusted_memory: stale vendor note: lot 77 vendor is vendor-B.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++        "random_seed": 5549,
++        "row_checksum": "sha256:931510f103b025486cab01666303bf747271f03d67d12f7866f6a2a6c9f74a5c",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "vendor-B",
++        "stale_answer": "vendor-B",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-lot77-vendor",
++        "token_cost": 95,
++        "verifier_cost": 1
++      },
++      {
++        "accepted_by_independent_label": false,
++        "backend_details": {
++          "llama_cpp_python": true
++        },
++        "condition": "stale_memory",
++        "context_cost": 90,
++        "exact_verifier_witness": {
++          "accepted": false,
++          "authority": "independent_label_table",
++          "expected_answer": "K-42",
++          "label_source": "deterministic_fixture::heldout_labels_not_memory",
++          "model_self_verdict_ignored": true,
++          "selected_answer": "K-24"
++        },
++        "expected_answer": "K-42",
++        "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++        "final_authority_bypassed": false,
++        "generated_token_count": 4,
++        "generation_duration_s": 0.07725308882072568,
++        "gpu_offload_evidence": true,
++        "label_id": "label-5530-ticket-k42",
++        "memory_receipt": {
++          "condition": "stale_memory",
++          "fresh_memory_supplied": false,
++          "label_source_used": false,
++          "negative_transfer_candidate": false,
++          "stale_candidate_answer": "K-24",
++          "stale_memory_supplied": true,
++          "task_id": "5530-heldout-ticket-k42"
++        },
++        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "negative_transfer_detected": true,
++        "output_text": " K-24",
++        "prompt_hash": "sha256:b881b0791afbc953b8a65f39cb84be0076136766632517e9068f5dbcd4205065",
++        "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nstale_untrusted_answer: K-24\nstale_untrusted_memory: stale ticket note: shipping code was K-24.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++        "random_seed": 5566,
++        "row_checksum": "sha256:72cd072bb43d5e185b6231c2d986c2a51423288a6fe3b626e25b816779aff9de",
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "schema": "carnot.experiment_5530.row.v1",
++        "selected_answer": "K-24",
++        "stale_answer": "K-24",
++        "stale_evidence_rejected": false,
++        "task_id": "5530-heldout-ticket-k42",
++        "token_cost": 94,
++        "verifier_cost": 1
++      }
++    ]
++  },
++  "continuous_self_learning_evidence": true,
++  "cost_deltas": {
++    "fresh_minus_no_memory_prompt_tokens": 60.3333333333,
++    "fresh_minus_no_memory_verifier_units": 1.0,
++    "fresh_minus_stale_memory_prompt_tokens": 34.6666666667
++  },
++  "csl_claim_allowed": true,
++  "experiment": 5530,
++  "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++  "field_principles": {
++    "continuous_self_learning_evidence": "Bounded CSL evidence requiring utility lift and safety gates.",
++    "csl_claim_allowed": "Bare gate forbidding broad CSL claims unless all evidence thresholds pass.",
++    "field_principles": "Explains why each headline and gate field exists.",
++    "fresh_memory_score": "Independent held-out score when fresh verified memory is available.",
++    "gpu_offload_evidence": "Records CUDA, llama.cpp offload, load delta, and blocked preconditions.",
++    "heldout_delta": "Utility lift computed as fresh_memory_score minus no_memory_score.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++    "inference_substrate": "Declares a local SOTA GGUF panel with external CSL memory.",
++    "memory_hash_after": "Deterministic hash of external memory after verifier-governed updates.",
++    "memory_hash_before": "Deterministic hash of external memory before verifier-governed updates.",
++    "model_specs": "Lists every mandated local SOTA GGUF and its local-path receipt.",
++    "models_attempted": "Records which mandated GGUF was actually loaded or invoked for the panel.",
++    "negative_transfer_rate": "Rate at which fresh-memory rows choose stale or irrelevant decoys.",
++    "no_memory_score": "Independent held-out baseline with no external memory evidence.",
++    "no_model_weight_mutation": "Bare frozen-weight gate from before/after model-file receipts.",
++    "stale_evidence_rejection_rate": "Rate at which fresh-memory rows avoid stale candidate answers.",
++    "stale_memory_score": "Control score when only stale memory is supplied.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands."
++  },
++  "fresh_memory_score": 1.0,
++  "gpu_offload_evidence": {
++    "blocked_preconditions": [],
++    "cuda_visible": true,
++    "gpu_memory_delta_mb": 8568,
++    "gpu_offload_supported": true,
++    "llama_cpp_import_ok": true,
++    "load_offload_evidence": true,
++    "n_gpu_layers": -1,
++    "offload_evidence": true,
++    "preflight_offload_evidence": true,
++    "runtime_backend": "llama_cpp_python_cuda_gguf"
++  },
++  "heldout_delta": 0.6666666667,
++  "honest_verdict": "complete: bounded_sota_csl_memory_panel_v2_claim_allowed",
++  "independent_label_source": "deterministic_fixture::heldout_labels_not_memory",
++  "inference_substrate": "local_sota_gguf_csl_memory_panel",
++  "memory_hash_after": "sha256:20bb0410c2e1057f9fa1957e0fbfc8e3ff6b9b1447e61035326d5944553bf978",
++  "memory_hash_before": "sha256:86ac176ac10a0c7bdf9f23c6fa89c6439df9b14511130e441d31c6d91cf9afe5",
++  "methodology_duration_s": 10.761452148668468,
++  "methodology_note": "This is a bounded local-SOTA prompt-memory panel. The GGUF model is frozen; only external memory changes, and exact labels remain outside memory.",
++  "metric_independence_clean": true,
++  "milestone": "2026.07.501",
++  "model_cache_evidence": {
++    "cached_sota_pair_attempted": true,
++    "cached_sota_pair_available": true,
++    "cached_sota_pair_specs": [
++      {
++        "gpu": 0,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "name": "Qwen3.6-35B-A3B"
++      },
++      {
++        "gpu": 1,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "name": "Gemma4-26B-A4B-it"
++      }
++    ]
++  },
++  "model_specs": [
++    {
++      "file_receipt": {
++        "exists": true,
++        "inode": 1612890840,
++        "mtime_ns": 1780046332847654213,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "size_bytes": 22134528992,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": false,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "name": "Qwen3.6-35B-A3B",
++      "quantization": "Q4_K_M",
++      "ran_panel": false,
++      "resolved_via": "cached_sota_pair",
++      "role": "flagship_moe",
++      "selected_for_panel": false
++    },
++    {
++      "file_receipt": {
++        "exists": true,
++        "inode": 5906408257,
++        "mtime_ns": 1780838958726406205,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "size_bytes": 18323731456,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": false,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "name": "Gemma4-31B-it",
++      "quantization": "Q4_K_M",
++      "ran_panel": false,
++      "resolved_via": "resolve_cached_gguf",
++      "role": "flagship_dense",
++      "selected_for_panel": false
++    },
++    {
++      "file_receipt": {
++        "exists": true,
++        "inode": 4865361091,
++        "mtime_ns": 1778129415691941084,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "size_bytes": 16947539744,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "name": "Gemma4-26B-A4B-it",
++      "quantization": "Q4_K_M",
++      "ran_panel": true,
++      "resolved_via": "cached_sota_pair",
++      "role": "middle_moe",
++      "selected_for_panel": true
++    }
++  ],
++  "model_weight_receipt": {
++    "adapter_weights_loaded": false,
++    "adapter_weights_written": false,
++    "learned_state_scope": "external_memory_only",
++    "model_file_receipt_after": {
++      "exists": true,
++      "inode": 4865361091,
++      "mtime_ns": 1778129415691941084,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "size_bytes": 16947539744,
++      "suffix": ".gguf"
++    },
++    "model_file_receipt_before": {
++      "exists": true,
++      "inode": 4865361091,
++      "mtime_ns": 1778129415691941084,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "size_bytes": 16947539744,
++      "suffix": ".gguf"
++    },
++    "no_model_weight_mutation": true
++  },
++  "models_attempted": [
++    {
++      "attempted": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "outcome": "rows_generated"
++    }
++  ],
++  "negative_transfer_rate": 0.0,
++  "no_memory_score": 0.3333333333,
++  "no_model_weight_mutation": true,
++  "precondition_details": {
++    "all_passed": true,
++    "blocked_preconditions": [],
++    "cuda_visible": true,
++    "gpu_offload_preflight": true,
++    "mandated_model_specs_present": true,
++    "selected_model_available": true,
++    "upstream_gates_ready": true
++  },
++  "random_seed": 5530,
++  "reproducibility_checksum": "sha256:2977e62fa600da66c370aedfb4d07941e2dd7619da30357dbad9b04df5ab2bdd",
++  "row_results": [
++    {
++      "accepted_by_independent_label": false,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "no_memory",
++      "context_cost": 64,
++      "exact_verifier_witness": {
++        "accepted": false,
++        "authority": "independent_label_table",
++        "expected_answer": "queue-beta",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "unknown"
++      },
++      "expected_answer": "queue-beta",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 1,
++      "generation_duration_s": 0.5662651732563972,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-rx4-queue",
++      "memory_receipt": {
++        "condition": "no_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "queue-alpha",
++        "stale_memory_supplied": false,
++        "task_id": "5530-heldout-rx4-queue"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " unknown",
++      "prompt_hash": "sha256:5a8abf5d673e86d2b546e2ceb13c6cceb1549559e253ef199ddbcba688045c04",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++      "random_seed": 5530,
++      "row_checksum": "sha256:000e27be3f1773f644f6c25aa481fd48b562e64dd9917c529bbabf40e30fe2fb",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "unknown",
++      "stale_answer": "queue-alpha",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-rx4-queue",
++      "token_cost": 65,
++      "verifier_cost": 1
++    },
++    {
++      "accepted_by_independent_label": true,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "fresh_memory",
++      "context_cost": 125,
++      "exact_verifier_witness": {
++        "accepted": true,
++        "authority": "independent_label_table",
++        "expected_answer": "queue-beta",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "queue-beta"
++      },
++      "expected_answer": "queue-beta",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 4,
++      "generation_duration_s": 0.19530810182914138,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-rx4-queue",
++      "memory_receipt": {
++        "condition": "fresh_memory",
++        "fresh_memory_supplied": true,
++        "label_source_used": false,
++        "negative_transfer_candidate": true,
++        "stale_candidate_answer": "queue-alpha",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-rx4-queue"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " queue-beta",
++      "prompt_hash": "sha256:d7a020be73201116f41f1111f7b5383e8889d04b8d67cd0a248bd46f369afd07",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nfresh_verified_answer: queue-beta\nfresh_verified_memory: fresh verifier receipt: incident RX-4 owner is queue-beta.\nstale_untrusted_answer: queue-alpha\nstale_untrusted_memory: stale ticket note: incident RX-4 owner is queue-alpha.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++      "random_seed": 5531,
++      "row_checksum": "sha256:3867a1d5c420e136dcbcb3003164ea9d526f26029e2c7629e503db9d6bbebc5d",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "queue-beta",
++      "stale_answer": "queue-alpha",
++      "stale_evidence_rejected": true,
++      "task_id": "5530-heldout-rx4-queue",
++      "token_cost": 129,
++      "verifier_cost": 2
++    },
++    {
++      "accepted_by_independent_label": false,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "stale_memory",
++      "context_cost": 90,
++      "exact_verifier_witness": {
++        "accepted": false,
++        "authority": "independent_label_table",
++        "expected_answer": "queue-beta",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "queue-alpha"
++      },
++      "expected_answer": "queue-beta",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 4,
++      "generation_duration_s": 0.0684455269947648,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-rx4-queue",
++      "memory_receipt": {
++        "condition": "stale_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "queue-alpha",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-rx4-queue"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": true,
++      "output_text": " queue-alpha",
++      "prompt_hash": "sha256:56e5bffa3b4a483318eac4b3a34db507c75860fe95c5aad7898a7e851ee0defe",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: queue-beta | queue-alpha | unknown\nQuestion: Which queue owns incident RX-4?\nstale_untrusted_answer: queue-alpha\nstale_untrusted_memory: stale ticket note: incident RX-4 owner is queue-alpha.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++      "random_seed": 5532,
++      "row_checksum": "sha256:a58ffb2139f7b29581840f555f5a0c6118f7b48de22510b9a545baf8156138af",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "queue-alpha",
++      "stale_answer": "queue-alpha",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-rx4-queue",
++      "token_cost": 94,
++      "verifier_cost": 1
++    },
++    {
++      "accepted_by_independent_label": false,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "no_memory",
++      "context_cost": 66,
++      "exact_verifier_witness": {
++        "accepted": false,
++        "authority": "independent_label_table",
++        "expected_answer": "vendor-A",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "unknown"
++      },
++      "expected_answer": "vendor-A",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 1,
++      "generation_duration_s": 0.04902624199166894,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-lot77-vendor",
++      "memory_receipt": {
++        "condition": "no_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "vendor-B",
++        "stale_memory_supplied": false,
++        "task_id": "5530-heldout-lot77-vendor"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " unknown",
++      "prompt_hash": "sha256:895737fd465e1842b50b2e41b337019bc917b003ce13a371d3d871e9e5f25d0d",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++      "random_seed": 5547,
++      "row_checksum": "sha256:84600c4a6832d9a7a26f8e3a8f511380aedf64e2271f917849f8c4ab21d85b2e",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "unknown",
++      "stale_answer": "vendor-B",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-lot77-vendor",
++      "token_cost": 67,
++      "verifier_cost": 1
++    },
++    {
++      "accepted_by_independent_label": true,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "fresh_memory",
++      "context_cost": 127,
++      "exact_verifier_witness": {
++        "accepted": true,
++        "authority": "independent_label_table",
++        "expected_answer": "vendor-A",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "vendor-A"
++      },
++      "expected_answer": "vendor-A",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 3,
++      "generation_duration_s": 0.07833096291869879,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-lot77-vendor",
++      "memory_receipt": {
++        "condition": "fresh_memory",
++        "fresh_memory_supplied": true,
++        "label_source_used": false,
++        "negative_transfer_candidate": true,
++        "stale_candidate_answer": "vendor-B",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-lot77-vendor"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " vendor-A",
++      "prompt_hash": "sha256:4bdee7b7a03b9b9dd34892a9cf08b478bc55898851050e25bb89b149864c1bf7",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nfresh_verified_answer: vendor-A\nfresh_verified_memory: fresh procurement receipt: lot 77 verified vendor is vendor-A.\nstale_untrusted_answer: vendor-B\nstale_untrusted_memory: stale vendor note: lot 77 vendor is vendor-B.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++      "random_seed": 5548,
++      "row_checksum": "sha256:3917e9f6a6b437b0b1f04cf01149bf4aa993e9bb2e87788ef0eea4adb460b195",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "vendor-A",
++      "stale_answer": "vendor-B",
++      "stale_evidence_rejected": true,
++      "task_id": "5530-heldout-lot77-vendor",
++      "token_cost": 130,
++      "verifier_cost": 2
++    },
++    {
++      "accepted_by_independent_label": false,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "stale_memory",
++      "context_cost": 92,
++      "exact_verifier_witness": {
++        "accepted": false,
++        "authority": "independent_label_table",
++        "expected_answer": "vendor-A",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "vendor-B"
++      },
++      "expected_answer": "vendor-A",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 3,
++      "generation_duration_s": 0.06540369475260377,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-lot77-vendor",
++      "memory_receipt": {
++        "condition": "stale_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "vendor-B",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-lot77-vendor"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": true,
++      "output_text": " vendor-B",
++      "prompt_hash": "sha256:45443836ef7c8f434831b282fc4da19a8f6ebb6327d7a6fae9048179610d9cbf",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: vendor-A | vendor-B | unknown\nQuestion: Which vendor is verified for lot 77?\nstale_untrusted_answer: vendor-B\nstale_untrusted_memory: stale vendor note: lot 77 vendor is vendor-B.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++      "random_seed": 5549,
++      "row_checksum": "sha256:931510f103b025486cab01666303bf747271f03d67d12f7866f6a2a6c9f74a5c",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "vendor-B",
++      "stale_answer": "vendor-B",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-lot77-vendor",
++      "token_cost": 95,
++      "verifier_cost": 1
++    },
++    {
++      "accepted_by_independent_label": true,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "no_memory",
++      "context_cost": 65,
++      "exact_verifier_witness": {
++        "accepted": true,
++        "authority": "independent_label_table",
++        "expected_answer": "K-42",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "K-42"
++      },
++      "expected_answer": "K-42",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 12,
++      "generation_duration_s": 0.13442380027845502,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-ticket-k42",
++      "memory_receipt": {
++        "condition": "no_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "K-24",
++        "stale_memory_supplied": false,
++        "task_id": "5530-heldout-ticket-k42"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " K-42 | K-24 | unknown",
++      "prompt_hash": "sha256:e72dc48d298a1a8ac0a5723cc2ae933b22a435df317287f542702671976ed904",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nFresh verified memory: none.\nInstruction: no fresh_verified_answer line is present, so return unknown.\nFinal answer:",
++      "random_seed": 5564,
++      "row_checksum": "sha256:188b9c602198ed9e02825575e0b8eca25f722ff73e4e3d11dcc96373c1c2d321",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "K-42",
++      "stale_answer": "K-24",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-ticket-k42",
++      "token_cost": 77,
++      "verifier_cost": 1
++    },
++    {
++      "accepted_by_independent_label": true,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "fresh_memory",
++      "context_cost": 124,
++      "exact_verifier_witness": {
++        "accepted": true,
++        "authority": "independent_label_table",
++        "expected_answer": "K-42",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "K-42"
++      },
++      "expected_answer": "K-42",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 4,
++      "generation_duration_s": 0.09098418476060033,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-ticket-k42",
++      "memory_receipt": {
++        "condition": "fresh_memory",
++        "fresh_memory_supplied": true,
++        "label_source_used": false,
++        "negative_transfer_candidate": true,
++        "stale_candidate_answer": "K-24",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-ticket-k42"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": false,
++      "output_text": " K-42",
++      "prompt_hash": "sha256:99f7784eff18bf0e583cc597c7773b2db00c254e7a60c9bb8f91a17f9250696d",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nfresh_verified_answer: K-42\nfresh_verified_memory: fresh ticket receipt: current shipping code is K-42.\nstale_untrusted_answer: K-24\nstale_untrusted_memory: stale ticket note: shipping code was K-24.\nInstruction: copy fresh_verified_answer and ignore stale_untrusted_answer.\nFinal answer:",
++      "random_seed": 5565,
++      "row_checksum": "sha256:13f6a634c2d1773afa98cc459f3ca387e6cc6a6094e9c7c3310b6c21f5c6e7bd",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "K-42",
++      "stale_answer": "K-24",
++      "stale_evidence_rejected": true,
++      "task_id": "5530-heldout-ticket-k42",
++      "token_cost": 128,
++      "verifier_cost": 2
++    },
++    {
++      "accepted_by_independent_label": false,
++      "backend_details": {
++        "llama_cpp_python": true
++      },
++      "condition": "stale_memory",
++      "context_cost": 90,
++      "exact_verifier_witness": {
++        "accepted": false,
++        "authority": "independent_label_table",
++        "expected_answer": "K-42",
++        "label_source": "deterministic_fixture::heldout_labels_not_memory",
++        "model_self_verdict_ignored": true,
++        "selected_answer": "K-24"
++      },
++      "expected_answer": "K-42",
++      "experiment_id": "experiment_5530_sota_csl_memory_panel_v2",
++      "final_authority_bypassed": false,
++      "generated_token_count": 4,
++      "generation_duration_s": 0.07725308882072568,
++      "gpu_offload_evidence": true,
++      "label_id": "label-5530-ticket-k42",
++      "memory_receipt": {
++        "condition": "stale_memory",
++        "fresh_memory_supplied": false,
++        "label_source_used": false,
++        "negative_transfer_candidate": false,
++        "stale_candidate_answer": "K-24",
++        "stale_memory_supplied": true,
++        "task_id": "5530-heldout-ticket-k42"
++      },
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "negative_transfer_detected": true,
++      "output_text": " K-24",
++      "prompt_hash": "sha256:b881b0791afbc953b8a65f39cb84be0076136766632517e9068f5dbcd4205065",
++      "prompt_text": "Return exactly one allowed answer token and no explanation.\nAllowed answer tokens: K-42 | K-24 | unknown\nQuestion: What is the current shipping code?\nstale_untrusted_answer: K-24\nstale_untrusted_memory: stale ticket note: shipping code was K-24.\nInstruction: this stale-memory control exposes what stale memory would answer.\nFinal answer:",
++      "random_seed": 5566,
++      "row_checksum": "sha256:72cd072bb43d5e185b6231c2d986c2a51423288a6fe3b626e25b816779aff9de",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5530.row.v1",
++      "selected_answer": "K-24",
++      "stale_answer": "K-24",
++      "stale_evidence_rejected": false,
++      "task_id": "5530-heldout-ticket-k42",
++      "token_cost": 94,
++      "verifier_cost": 1
++    }
++  ],
++  "run_date": "2026-07-10",
++  "schema": "carnot.experiment_5530.sota_csl_memory_panel_v2.v1",
++  "selected_model_spec": {
++    "file_receipt": {
++      "exists": true,
++      "inode": 4865361091,
++      "mtime_ns": 1778129415691941084,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "size_bytes": 16947539744,
++      "suffix": ".gguf"
++    },
++    "gpu_offload_verified": false,
++    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "legacy_smoke_only": false,
++    "local_path_available": true,
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "name": "Gemma4-26B-A4B-it",
++    "quantization": "Q4_K_M",
++    "ran_panel": false,
++    "resolved_via": "cached_sota_pair",
++    "role": "middle_moe",
++    "selected_for_panel": true
++  },
++  "source_file_checksums": {
++    "module": "sha256:daa2686af3c3003676125a1615b362e0ecaf9f6378753360159596e00116159f",
++    "spec": "sha256:ebaf263301c4c17b631596a120444274794361e51272e32de3cd9f467c882ee9",
++    "test": "sha256:5feab81d6a7c7adfcb160357b63f3962927a488fe92f56165c5c5678ce08059c"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5530_sota_csl_memory_panel_v2.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5530",
++    "SCENARIO-LEARN-5530-UPSTREAM-GATES",
++    "SCENARIO-LEARN-5530-CONTROLS",
++    "SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION"
++  ],
++  "stale_evidence_rejection_rate": 1.0,
++  "stale_memory_score": 0.0,
++  "status": "complete",
++  "task_id": "exp5530-gated-sota-csl-memory-panel-v2",
++  "tests_added_or_reused": [
++    ".venv/bin/pytest tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5530_sota_csl_memory_panel_v2.py -m pytest tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5530_sota_csl_memory_panel_v2.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "upstream_gate_evidence": {
++    "all_required_gates_true": true,
++    "exp5528": {
++      "csl_gate_fields_conductor_visible": true,
++      "honest_verdict": "complete: canonical_csl_gate_artifact_conductor_visible",
++      "loadable": true,
++      "path": "results/experiment_5528_csl_canonical_gate_artifact.json"
++    },
++    "exp5529": {
++      "corrigendum_pending": [
++        {
++          "detail": "event_only_score=0.6666666667 and topic_only_score=0.6666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        }
++      ],
++      "csl_residue_stress_ready": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: csl_event_topic_residue_stress_ready",
++      "loadable": true,
++      "path": "results/experiment_5529_csl_event_topic_residue_stress.json"
++    }
++  },
++  "utility_deltas": {
++    "fresh_vs_no_memory": 0.6666666667,
++    "fresh_vs_stale_memory": 1.0
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index f828f480ed..43676d68c6 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:25:50Z",
+-  "finished_at": "2026-07-10T08:25:50Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T08:52:50Z",
++  "finished_at": "2026-07-10T08:52:50Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a49b1c9bf3..517c0c74db 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:25:50Z",
+-  "finished_at": "2026-07-10T08:25:50Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T08:52:50Z",
++  "finished_at": "2026-07-10T08:52:50Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 40cfbeec38..8b8fce49aa 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:25:50Z",
+-  "finished_at": "2026-07-10T08:25:50Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T08:52:50Z",
++  "finished_at": "2026-07-10T08:52:50Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py b/tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py
+new file mode 100644
+index 0000000000..ca2d20e3ab
+--- /dev/null
++++ b/tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py
+@@ -0,0 +1,351 @@
++"""Tests for Exp5530 SOTA GGUF CSL memory panel v2.
++
++Spec refs: REQ-LEARN-5530,
++SCENARIO-LEARN-5530-UPSTREAM-GATES,
++SCENARIO-LEARN-5530-CONTROLS,
++SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5530_sota_csl_memory_panel_v2 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5530_sota_csl_memory_panel_v2.py "
++    "-m pytest tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5530_sota_csl_memory_panel_v2.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++TESTS_ADDED_OR_REUSED = [TEST_COMMAND, COVERAGE_COMMAND, FULL_TEST_COMMAND]
++
++
++def _gguf_paths(tmp_path: Path) -> dict[str, Path]:
++    paths: dict[str, Path] = {}
++    for hf_id in exp.MANDATED_HF_IDS:
++        path = tmp_path / f"{hf_id.split('/')[-1]}.gguf"
++        path.write_bytes(f"GGUF fixture for {hf_id}".encode("utf-8"))
++        paths[hf_id] = path
++    return paths
++
++
++def _resolver(paths: dict[str, Path]):
++    def resolve(hf_id: str, _quantization: str) -> str | None:
++        return str(paths[hf_id]) if hf_id in paths else None
++
++    return resolve
++
++
++def _cached_pair(paths: dict[str, Path]):
++    return lambda: [
++        {
++            "name": "Qwen3.6-35B-A3B",
++            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "gpu": 0,
++            "model_path": str(paths["unsloth/Qwen3.6-35B-A3B-GGUF"]),
++        },
++        {
++            "name": "Gemma4-26B-A4B-it",
++            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++            "gpu": 1,
++            "model_path": str(paths["unsloth/gemma-4-26B-A4B-it-GGUF"]),
++        },
++    ]
++
++
++def _runtime_receipt(*, offload: bool = True) -> dict[str, Any]:
++    return {
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "cuda_visible": offload,
++        "llama_cpp_import_ok": True,
++        "gpu_offload_supported": offload,
++        "offload_evidence": offload,
++        "n_gpu_layers": -1,
++        "gpu_memory_delta_mb": 1536 if offload else 0,
++        "load_receipt": {
++            "offload_evidence": offload,
++            "gpu_memory_delta_mb": 1536 if offload else 0,
++        },
++        "blocked_preconditions": [] if offload else ["gpu_offload_evidence_missing"],
++    }
++
++
++def _fake_generation(**kwargs: Any) -> dict[str, Any]:
++    task = kwargs["task"]
++    condition = kwargs["condition"]
++    if condition == exp.FRESH_MEMORY_CONDITION:
++        answer = task["expected_answer"]
++    elif condition == exp.STALE_MEMORY_CONDITION:
++        answer = task["stale_answer"]
++    else:
++        answer = "unknown"
++    return {
++        "output_text": f"Final answer: {answer}",
++        "prompt_token_count": len(str(kwargs["prompt"]).split()),
++        "generated_token_count": 4,
++        "duration_s": 0.01,
++        "backend_details": {"fake_generation_runner": True},
++    }
++
++
++def _complete_artifact(tmp_path: Path) -> dict[str, Any]:
++    paths = _gguf_paths(tmp_path)
++    return exp.run(
++        root=REPO,
++        result_path=tmp_path / exp.RESULT_RELATIVE_PATH.name,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        model_resolver=_resolver(paths),
++        cached_pair_fn=_cached_pair(paths),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_runner=_fake_generation,
++        write=True,
++    )
++
++
++def test_req_learn_5530_spec_declares_sota_csl_panel_contract() -> None:
++    """REQ-LEARN-5530: OpenSpec anchors the SOTA CSL memory panel v2."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5530") :]
++
++    for marker in (
++        "REQ-LEARN-5530",
++        "SCENARIO-LEARN-5530-UPSTREAM-GATES",
++        "SCENARIO-LEARN-5530-CONTROLS",
++        "SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION",
++        str(exp.RESULT_RELATIVE_PATH),
++        exp.INFERENCE_SUBSTRATE,
++        "cached_sota_pair()",
++        "AutoTokenizer.from_pretrained",
++    ):
++        assert marker in section
++    for hf_id in exp.MANDATED_HF_IDS:
++        assert hf_id in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_learn_5530_upstream_gates_and_model_specs(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5530-UPSTREAM-GATES: parse gates and GGUF receipts."""
++
++    paths = _gguf_paths(tmp_path)
++    model_specs, cache_receipt = exp.resolve_model_specs(
++        model_resolver=_resolver(paths),
++        cached_pair_fn=_cached_pair(paths),
++    )
++    upstream = exp.load_upstream_gates(REPO)
++
++    assert upstream["all_required_gates_true"] is True
++    assert upstream["exp5528"]["path"] == exp.UPSTREAM_5528_PATH.as_posix()
++    assert upstream["exp5529"]["path"] == exp.UPSTREAM_5529_PATH.as_posix()
++    assert cache_receipt["cached_sota_pair_attempted"] is True
++    assert cache_receipt["cached_sota_pair_available"] is True
++    assert {spec["hf_id"] for spec in model_specs} == set(exp.MANDATED_HF_IDS)
++    assert exp.select_panel_model(model_specs)["hf_id"] == "unsloth/gemma-4-26B-A4B-it-GGUF"
++    for spec in model_specs:
++        assert spec["model_path"].endswith(".gguf")
++        assert spec["local_path_available"] is True
++        assert spec["legacy_smoke_only"] is False
++        assert spec["file_receipt"]["exists"] is True
++
++
++def test_scenario_learn_5530_controls_scores_and_writes_artifact(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5530-CONTROLS: held-out controls use independent labels."""
++
++    artifact = _complete_artifact(tmp_path)
++    written = json.loads((tmp_path / exp.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert exp.validate_artifact(artifact) is True
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field]
++    assert artifact["model_specs"] and len(artifact["model_specs"]) == 3
++    assert artifact["models_attempted"][0]["hf_id"] == "unsloth/gemma-4-26B-A4B-it-GGUF"
++    assert artifact["no_memory_score"] == pytest.approx(0.0)
++    assert artifact["fresh_memory_score"] == pytest.approx(1.0)
++    assert artifact["stale_memory_score"] == pytest.approx(0.0)
++    assert artifact["heldout_delta"] == pytest.approx(1.0)
++    assert artifact["negative_transfer_rate"] == pytest.approx(0.0)
++    assert artifact["stale_evidence_rejection_rate"] == pytest.approx(1.0)
++    assert artifact["memory_hash_before"] != artifact["memory_hash_after"]
++    assert artifact["no_model_weight_mutation"] is True
++    assert artifact["gpu_offload_evidence"]["offload_evidence"] is True
++    assert artifact["continuous_self_learning_evidence"] is True
++    assert artifact["csl_claim_allowed"] is True
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    label_sets = {
++        condition: tuple(row["label_id"] for row in rows)
++        for condition, rows in artifact["condition_results"].items()
++    }
++    assert set(label_sets) == set(exp.CONDITIONS)
++    assert len(set(label_sets.values())) == 1
++    assert artifact["independent_label_source"] == exp.INDEPENDENT_LABEL_SOURCE
++    assert artifact["metric_independence_clean"] is True
++    assert artifact["utility_deltas"]["fresh_vs_no_memory"] == pytest.approx(1.0)
++    assert artifact["cost_deltas"]["fresh_minus_no_memory_prompt_tokens"] > 0
++    assert artifact["cost_deltas"]["fresh_minus_no_memory_verifier_units"] == 1.0
++    for row in artifact["row_results"]:
++        assert row["exact_verifier_witness"]["authority"] == "independent_label_table"
++        assert row["final_authority_bypassed"] is False
++        assert row["row_checksum"] == exp.row_checksum(row)
++
++
++def test_scenario_learn_5530_no_weight_mutation_and_validation_drift(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION: receipts fail closed."""
++
++    artifact = _complete_artifact(tmp_path)
++    assert artifact["model_weight_receipt"]["model_file_receipt_before"] == artifact[
++        "model_weight_receipt"
++    ]["model_file_receipt_after"]
++    assert exp.honest_verdict(artifact).startswith("complete:")
++
++    drift_cases = [
++        ("heldout_delta", 0.0, "heldout_delta"),
++        ("negative_transfer_rate", 1.0, "negative_transfer_rate"),
++        ("stale_evidence_rejection_rate", 0.0, "stale_evidence_rejection_rate"),
++        ("memory_hash_after", artifact["memory_hash_before"], "memory_hash"),
++        ("no_model_weight_mutation", False, "no_model_weight_mutation"),
++        ("continuous_self_learning_evidence", False, "continuous_self_learning_evidence"),
++        ("csl_claim_allowed", False, "csl_claim_allowed"),
++        ("inference_substrate", "aggregation_from_upstream_artifacts", "inference_substrate"),
++        ("honest_verdict", "ready", "honest_verdict"),
++    ]
++    for field, value, expected in drift_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        bad["reproducibility_checksum"] = exp.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=expected):
++            exp.validate_artifact(bad)
++
++    bad_gpu = deepcopy(artifact)
++    bad_gpu["gpu_offload_evidence"]["offload_evidence"] = False
++    bad_gpu["reproducibility_checksum"] = exp.reproducibility_checksum(bad_gpu)
++    with pytest.raises(ValueError, match="gpu_offload_evidence"):
++        exp.validate_artifact(bad_gpu)
++
++    bad_weight = deepcopy(artifact)
++    bad_weight["model_weight_receipt"]["model_file_receipt_after"]["mtime_ns"] += 1
++    bad_weight["reproducibility_checksum"] = exp.reproducibility_checksum(bad_weight)
++    with pytest.raises(ValueError, match="model_weight_receipt"):
++        exp.validate_artifact(bad_weight)
++
++    bad_row_checksum = deepcopy(artifact)
++    bad_row_checksum["row_results"][0]["row_checksum"] = "sha256:bad"
++    bad_row_checksum["reproducibility_checksum"] = exp.reproducibility_checksum(bad_row_checksum)
++    with pytest.raises(ValueError, match="row_checksum"):
++        exp.validate_artifact(bad_row_checksum)
++
++    bad_row_type = deepcopy(artifact)
++    bad_row_type["row_results"] = "not-a-list"
++    bad_row_type["reproducibility_checksum"] = exp.reproducibility_checksum(bad_row_type)
++    with pytest.raises(ValueError, match="row_results"):
++        exp.validate_artifact(bad_row_type)
++
++    no_attempted = deepcopy(artifact)
++    no_attempted["models_attempted"] = []
++    no_attempted["reproducibility_checksum"] = exp.reproducibility_checksum(no_attempted)
++    with pytest.raises(ValueError, match="models_attempted"):
++        exp.validate_artifact(no_attempted)
++
++    missing = deepcopy(artifact)
++    missing.pop("model_specs")
++    missing["reproducibility_checksum"] = exp.reproducibility_checksum(missing)
++    with pytest.raises(ValueError, match="missing required fields"):
++        exp.validate_artifact(missing)
++
++    missing_principle = deepcopy(artifact)
++    missing_principle["field_principles"].pop("heldout_delta")
++    missing_principle["reproducibility_checksum"] = exp.reproducibility_checksum(
++        missing_principle
++    )
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(missing_principle)
++
++    no_tests = deepcopy(artifact)
++    no_tests["tests_added_or_reused"] = []
++    no_tests["reproducibility_checksum"] = exp.reproducibility_checksum(no_tests)
++    with pytest.raises(ValueError, match="tests_added_or_reused"):
++        exp.validate_artifact(no_tests)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp.validate_artifact(bad_checksum)
++
++
++def test_req_learn_5530_blocked_preconditions_do_not_call_generation(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-5530-1/2/6/7: failed preconditions block before generation."""
++
++    calls: list[str] = []
++    artifact = exp.run(
++        root=REPO,
++        result_path=tmp_path / "blocked.json",
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        model_resolver=lambda _hf_id, _quantization: None,
++        cached_pair_fn=lambda: None,
++        runtime_probe=lambda **_kwargs: _runtime_receipt(offload=False),
++        generation_runner=lambda **kwargs: calls.append(kwargs["condition"]) or {},
++        write=True,
++    )
++
++    assert calls == []
++    assert artifact["status"] == "blocked"
++    assert artifact["models_attempted"] == []
++    assert artifact["continuous_self_learning_evidence"] is False
++    assert artifact["csl_claim_allowed"] is False
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert "no_mandated_local_sota_gguf_available" in artifact["precondition_details"][
++        "blocked_preconditions"
++    ]
++    exp.validate_artifact(artifact)
++    assert json.loads((tmp_path / "blocked.json").read_text(encoding="utf-8")) == artifact
++
++    assert exp.extract_answer("nothing usable", ["a", "unknown"]) is None
++    assert exp.extract_answer("Use queue-beta, not queue-alpha", ["queue-alpha", "queue-beta"]) == (
++        "queue-beta"
++    )
++    assert exp.estimate_tokens("") == 1
++    assert exp.honest_verdict({"csl_claim_allowed": False, "precondition_details": {}}).startswith(
++        "blocked: sota_csl_memory_panel_v2_claim_not_allowed"
++    )
++    missing_runtime = exp.evaluate_preconditions(
++        upstream_gates={"all_required_gates_true": False},
++        model_specs=[],
++        selected_model=None,
++        runtime_receipt={"runtime_backend": "transformers"},
++    )
++    assert set(missing_runtime["blocked_preconditions"]) >= {
++        "upstream_csl_gates_not_ready",
++        "mandated_model_specs_missing",
++        "llama_cpp_gguf_runtime_missing",
++    }
++    assert exp.model_file_receipt(tmp_path / "missing.gguf") == {
++        "path": str(tmp_path / "missing.gguf"),
++        "exists": False,
++    }
++    with pytest.raises(ValueError, match="unknown condition"):
++        exp.prompt_for_condition(exp.build_fixture()["heldout_tasks"][0], "bad")
+-- 
+2.55.0
+

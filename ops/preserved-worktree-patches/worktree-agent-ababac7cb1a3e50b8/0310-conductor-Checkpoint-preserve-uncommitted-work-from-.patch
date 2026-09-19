@@ -1,0 +1,43 @@
+From 70f9ed63e3d09f365004e2ae4700e16230b7a3ab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 12:01:24 -0400
+Subject: [PATCH 00310/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 40e5b9421b..5b5ce11884 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-06-03T15:42:51Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-06-03T16:01:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2b73d60678..148e43a786 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7713,3 +7713,4 @@ ERROR: {
+ | 2026-06-03 15:03 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-06-03 15:38 UTC | Plan milestone 2026.06.345 | OK | 11 tasks proposed |
+ | 2026-06-03 15:40 UTC | Milestone 2026.06.345 activated | OK | 11 tasks queued |
++| 2026-06-03 15:59 UTC | Archive milestone .344 HONESTLY (it produced ZERO  | OK | 104 passed in 4.86s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a6ac6984e5..e0851e2080 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 32, "phase": "iteration_start", "started_at": "2026-06-03T15:42:51Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 33, "phase": "iteration_start", "started_at": "2026-06-03T16:01:23Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

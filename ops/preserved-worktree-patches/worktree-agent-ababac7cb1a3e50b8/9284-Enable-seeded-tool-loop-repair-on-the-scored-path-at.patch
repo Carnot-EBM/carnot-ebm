@@ -1,0 +1,85 @@
+From ec6f09b71a26cc9dfb30636e22b82157cfafec51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 17 Aug 2026 22:06:05 -0400
+Subject: [PATCH 09284/11362] Enable seeded tool-loop repair on the scored path
+ at the 0.6 gate
+
+Operator decision, on the evidence from 4 seeded catastrophic cells: 2 convert
+outright to recall 1.0 / accuracy 1.0 and flip the trust layer from reject to
+accept, 2 return their seed unchanged. Recorded as a conversion rate rather
+than a pooled mean, because the +0.44 arithmetic mean describes no cell in the
+set. One conversion is verified out of sample (sb26, tail 1.0, scan clean); the
+other has no scoreable tail because that window's single tail row IS the
+excluded level-up row, which was checked against the instrument rather than
+assumed. Memorisation scan clean on all four.
+
+Turn cap 12 -> 8. Every win across both arms converged by turn 7. Seven runs
+burned the 12-turn cap at 17-24 minutes each and none recovered, so 8 preserves
+all 11 observed wins and cuts each cap-burner by a third.
+
+SET IN THE KERNEL, NOT AS A CODE DEFAULT. The evidence is scored-path evidence.
+The conductor runs orders of magnitude more inductions, where ~10 minutes and a
+budget slot per miss is a different trade-off that nobody has measured. The code
+default stays OFF and its tests still pin that, so this flip is one line to
+revert and cannot leak into local or conductor runs.
+
+Verified with the kernel's exact environment: repair active, cap 8, threshold
+0.6, and the gate still refuses every case it should -- a trust-ACCEPTED engine
+(`downstream_accepted_engine`), recall 0.93 (`recall_not_catastrophic`),
+n_changing 2 (`insufficient_changing_evidence`), and an exhausted per-game
+budget. Without the environment the defaults read OFF and cap 12. 64 tests green.
+
+This is an engine-quality lever and not a levels lever. The induced goal
+predicate has never fired on a real win state (0 of 31 across 49 evaluations),
+so levels are won by exploration rather than by planning. Expect better engines.
+Do not expect the score to move on this alone.
+
+NOT YET IN A SUBMISSION: kernel v21 was prepped before this change and does not
+contain it. Reaching the scored path needs a re-prep.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/kaggle/submission_kernel/main.py | 26 ++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index d10faa9fc9..14ce4a7727 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -173,6 +173,32 @@ sys.path.insert(0, str(carnot))
+ # specific) -> expected to transfer to the hidden eval games' own structure-missed wins.
+ os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1"
+ 
++# SEEDED TOOL-LOOP REPAIR (operator-enabled 2026-08-17, REQ-ARC-WMTE-6470). When an induced
++# engine is rejected by the trust layer AND its cell_recall is below the 0.6 gate, re-run
++# induction ONCE as a tool-calling loop seeded with the failed engine, instead of accepting a
++# useless engine. Measured on 4 seeded catastrophic cells: 2 convert outright to recall 1.0 /
++# accuracy 1.0 and flip trust reject -> accept (sb26, tail 1.0, memorisation scan clean; sp80,
++# scan clean, no scoreable tail exists on that window), 2 return their seed unchanged. Stated as
++# a conversion rate on purpose -- the arithmetic mean of +0.44 describes no cell in the set.
++# COST OF A MISS, accepted: ~9-11 min and one of two per-game slots, because the counter
++# increments when the repair FIRES, before the outcome exists. Bounded by the turn cap below.
++# SAFE BY CONSTRUCTION, and confirmed empirically at 7 of 7: the loop is seeded with the failed
++# engine and cannot return a candidate with more visible mismatches, so no run regressed below
++# its seed. A trust-ACCEPTED engine is never re-rolled (`decide_resample` returns
++# `downstream_accepted_engine` first), so this can only act on engines the pipeline was going to
++# discard anyway.
++# THIS IS AN ENGINE-QUALITY LEVER, NOT A LEVELS LEVER. The induced goal predicate has never
++# fired on a real win state (0 of 31), so levels are won by exploration, not by planning. Expect
++# better engines, not more levels.
++# Set HERE rather than as a code default deliberately: the evidence is scored-path evidence. The
++# conductor runs orders of magnitude more inductions, where ~10 min per miss is a different
++# trade-off that nobody has measured. Code default stays OFF and its tests still pin that.
++os.environ["CARNOT_ARC_INDUCE_TOOL_LOOP"] = "repair"
++# Turn cap 12 -> 8. Every win across both arms converged by turn 7 (unseeded 3,3,4,4,5,6; seeded
++# 3,5,5,6,7). Seven runs burned the 12-turn cap at 17-24 min each and not one recovered. So 8
++# preserves all 11 observed wins and cuts each cap-burner by a third.
++os.environ["CARNOT_ARC_INDUCE_TOOL_TURNS"] = "8"
++
+ # --- generator (LLM tier) resolution + LOUD visibility (2026-06-21) --------------------------------
+ # The v3=0.08 run could NOT be diagnosed because nothing logged whether the Qwen generator loaded or
+ # silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
+-- 
+2.55.0
+

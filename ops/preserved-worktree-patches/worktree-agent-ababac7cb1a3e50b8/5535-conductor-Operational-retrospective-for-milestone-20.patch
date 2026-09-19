@@ -1,0 +1,208 @@
+From 64e706ee2ccc73a9cccf8f9aeb8fefa78bba8d62 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 01:37:29 -0400
+Subject: [PATCH 05535/11362] [conductor] Operational retrospective for
+ milestone 2026.07.474
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           | 41 ++++++++++++++++
+ ops/known-issues.md                        | 55 ++++++++++++++++++++++
+ ops/metrics.md                             |  1 +
+ results/operational_retro_2026_07_474.json | 27 ++++++-----
+ 5 files changed, 117 insertions(+), 13 deletions(-)
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 3799f36ce3..954fbaa35d 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5661,3 +5661,9 @@ The critical path for milestone .250:
+ - theme: operational retrospective for a milestone whose authoritative timing source again reports no post-activation experiment commits -- the 4th consecutive retro-generation pass to hit the same named FALSE-ZERO gap (.469, .472, .473 x3, now .474)
+ - key result: honest negative -- the TIMING DATA block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks, so no slowest-experiment, GPU-idle, or DualGPURunner finding is supported; re-verified this pass that scripts/retro_timing_fallback.py (built by exp5164 in .473 specifically to reconstruct this gap from disk mtimes) is present on disk but still has zero references in scripts/research_conductor.py, and ops/known-issues.md still has zero mentions of the gap, so the Overdue-Priority Forcing Function still has no entry to mechanically force pickup on
+ - acceptance: 0/1 -- wiring still not done and the known-issues.md entry that would force it still does not exist; this retro task's scope forbids editing research_conductor.py or research-roadmap.yaml, so closing this requires a dedicated non-retro task
++
++### Milestone 2026.07.474 (same-day addendum -- known-issues.md entry filed, gap escalated not just re-diagnosed)
++- exp_range: no new experiment IDs this pass (re-verified via `git log cd06fc3f0..HEAD`, the "Activate milestone 2026.07.474" commit -- 43 commits, not derivable from the supplied TIMING DATA block itself)
++- theme: second retro-generation pass for this milestone number; re-confirms the FALSE-ZERO reading with a cleaner activation-commit-bounded git range, and closes the specific escalation gap the prior four passes (.469, .473 x3, .474 x1) all diagnosed but never filed
++- key result: independently spot-checked results/operational_retro_2026_07_469.json and results/operational_retro_2026_07_473.json directly (both confirm experiments_completed=0) rather than trusting the prior narrative, then filed the missing ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES entry ("NEW 2026-07-03 ... WIRE scripts/retro_timing_fallback.py ...") with a deliverable slug, so the Overdue-Priority Forcing Function's mechanical pickup lint now has an entry to act on
++- acceptance: 1/2 -- escalation done (known-issues.md entry now exists); wiring itself still not done (this retro task's scope forbids editing scripts/research_conductor.py), so a dedicated non-retro task is still required to close the loop
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 7d85f43946..861791432e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,46 @@
+ # Carnot — Changelog
+ 
++## 2026-07-03 (Operational retrospective .474, second pass -- confirmed false-zero again, filed the missing known-issues.md escalation -- claude)
++
++- Wrote `results/operational_retro_2026_07_474.json` for milestone `2026.07.474`. The supplied
++  TIMING DATA block again reported "no experiment commits found since activation" (locked fields
++  `total_wall_time_minutes`/`experiments_completed`/`compute_bound_experiments_count` = 0,
++  `slowest_experiments` = `[]`, `gpu_idle_on_compute_bound_tasks` = `null`) -- left exactly as
++  pre-filled per the task's LOCKED FIELDS instruction. Only the interpretive fields (`summary`,
++  `bottlenecks_identified`, `improvements_suggested`, `top_3_highest_leverage_actions`,
++  `estimated_time_savings_pct`, `meta_reflection`) were written this pass.
++- Found this milestone already had a full prior retro committed at `25d53090e` (generated_at
++  `2026-07-03T02:11:15Z`) that had reached the identical false-zero diagnosis before the JSON was
++  reset back to skeleton state for this second pass -- so this pass re-verified the finding from
++  scratch rather than trusting the prior text, and it holds up: `git log cd06fc3f0..HEAD` (the
++  "Activate milestone 2026.07.474" commit) shows **43 real commits** spanning PHASE 0 through
++  PHASE Z (ARC oracle-distinct cross-corpus scale-up, DiffusionGemma pilot, KV260/PolarFire/
++  GateMate hardware continuity, the QA-Layer Authenticity Discipline) -- not an empty milestone.
++- Independently re-confirmed `scripts/retro_timing_fallback.py` (the disk-mtime reconstruction
++  fix built for exp5164 in `.473`) is still unwired: `grep -n retro_timing_fallback
++  scripts/research_conductor.py` returns zero hits. Also independently spot-checked
++  `results/operational_retro_2026_07_469.json` and `results/operational_retro_2026_07_473.json`
++  directly (not just trusted the prior narrative) -- both confirm
++  `experiments_completed=0`/`total_wall_time_minutes=0`, corroborating the recurring pattern
++  across `.469`, `.473` (three prior passes), and now `.474` (two passes).
++- **Closed the actual process gap this time instead of re-recommending it:** three prior retro
++  passes (two for `.473`, one for `.474`) all correctly recommended escalating this into
++  `ops/known-issues.md` MANDATORY-NEXT-MILESTONE PRIORITIES, and a grep confirmed that
++  recommendation was never acted on (zero hits for `retro_timing_fallback` or `FALSE-ZERO` in
++  `ops/known-issues.md` before this pass). Filed the entry directly this pass -- see
++  `ops/known-issues.md` "NEW 2026-07-03 ... WIRE scripts/retro_timing_fallback.py ..." -- with a
++  `deliverable:` slug so a dedicated non-retro task can pick it up, and so the Overdue-Priority
++  Forcing Function's mechanical pickup lint has something to act on if it is skipped 3+ more
++  milestones running.
++- This retro-generation task's own scope still forbids editing `scripts/research_conductor.py`,
++  so the wiring fix itself remains unshipped after this pass -- but the missing link (an actual
++  known-issues.md entry, not just a fourth changelog paragraph recommending one) is now closed.
++- Checked `docs/research-log.md` before writing and found it already had a `### Milestone
++  2026.07.474` entry (from the first `.474` retro pass, itself noting ".469, .472, .473 x3, now
++  .474" as the recurrence count) -- per "Public Documentation Discipline" research-log entries
++  are immutable, so appended a `(same-day addendum -- known-issues.md entry filed)` section
++  rather than editing or duplicating the existing one, mirroring the two `.473` addenda pattern.
++
+ ## 2026-07-02 (Operational retrospective .473, third pass -- gap still unwired, now also unlogged in known-issues.md -- claude)
+ 
+ - Wrote `results/operational_retro_2026_07_473.json` for milestone `2026.07.473`
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 2feec2f667..c8c6ae6a63 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1287,6 +1287,61 @@ tasks are not.
+ 
+ ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+ 
++### NEW 2026-07-03 (MANDATORY — outer-loop escalation after 4th recurrence): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY
++
++**Origin:** operational retrospectives for milestones .469, .473 (three separate generation
++passes), and .474 (two separate generation passes) have ALL reported a false "no experiment
++commits found since activation" TIMING DATA block, even though `git log <activate-commit>..HEAD`
++shows dozens of real substantive commits every time (.474 alone: 43 commits, PHASE 0 through
++PHASE Z, verified 2026-07-03 by the second .474 retro pass). `scripts/retro_timing_fallback.py`
++(built 2026-07-02 for exp5164 specifically to reconstruct real per-milestone wall-time from disk
++mtimes, and validated against 4 known-good milestones — .450, .467, .470, .472, all with
++`matches_known_good: true` in the exp5164 artifact) has existed on disk for over a day and has
++been independently re-diagnosed as unwired on **every one of those retro passes**
++(`grep -n retro_timing_fallback scripts/research_conductor.py` returns zero hits every time,
++confirmed again 2026-07-03). Each retrospective correctly recommended wiring it in, and each
++recommendation evaporated because no MANDATORY-NEXT-MILESTONE entry ever captured it — this
++entry closes that specific escalation gap.
++
++**Why this matters.** Every affected milestone's operational retrospective is a fabricated-
++looking "nothing happened" artifact even when the milestone did substantial work (the .474
++window alone includes the ARC oracle-distinct cross-corpus scale-up, the DiffusionGemma pilot,
++KV260/PolarFire/GateMate hardware continuity, and the QA-Layer Authenticity Discipline — see
++`ops/changelog.md` .474 entries). This defeats the point of the operational-retrospective
++mechanism: bottleneck/GPU-efficiency analysis cannot run against an artificially-empty TIMING
++DATA block, so several consecutive milestones' worth of real efficiency signal has gone
++unanalyzed, and each retro pass burns a turn re-diagnosing the identical gap from scratch.
++
++**The task to queue:**
++1. Read `results/experiment_5164_retro_timing_falsezero_fix_v473.json` and
++   `scripts/retro_timing_fallback.py` to confirm the reconstruction API surface — it already has
++   `wiring_instructions_present: true` recorded, and `research_conductor_py_modified: false`
++   (i.e. exp5164 deliberately built the fix without wiring it, per that task's own scope limits).
++2. Wire the fallback into whichever `research_conductor.py` function assembles the operational-
++   retro task's TIMING DATA block: when the live path would otherwise report zero commits since
++   activation, run the disk-mtime reconstruction and label its output
++   `reconstructed_from_disk_mtime: true` (never silently conflated with live-measured timing).
++3. Add a regression check that fails loudly when a retro artifact's `experiments_completed=0`
++   while `ops/changelog.md` shows committed experiment entries for that same milestone prefix —
++   this exact mismatch has now recurred across 3 milestones and 5 retro-generation passes
++   undetected by anything except manual outer-loop `git log` review.
++4. Backfill corrected retros for `.469`, `.473`, and `.474` once real timing data is available,
++   so the historical efficiency record is not permanently stuck at false zeros.
++
++**Falsifiable gate:** the next operational-retrospective task for any milestone after this task
++lands MUST show non-zero `experiments_completed` and `total_wall_time_minutes` whenever
++`ops/changelog.md` records committed experiment entries for that milestone. `retire_if_same_
++verdict: true` — if the wiring lands and a subsequent retro still reports a false zero against a
++milestone with real commits, that is a distinct bug in the wiring itself, not this same gap, and
++should be filed as a new entry rather than reopening this one.
++
++deliverable: "results/experiment_<next>_retro_timing_fallback_wiring.json"
++
++**Scope boundary (why this couldn't be closed by any of the retro passes that found it):**
++operational-retrospective tasks are explicitly barred from editing `scripts/research_conductor.py`
++(per that task's own prompt), so no retro pass — including the ones that diagnosed this — can
++close the gap directly. It requires a dedicated non-retro task, which is what this entry queues.
++
+ ### MMLU-PRO FEW-SHOT GENERATOR IMPROVEMENT 2026-07-01 (outer-loop, "let's improve the generator first (few-shot prompting) to help SC-vote land somewhere meaningful")
+ 
+ **Real improvement, but the confound is only partly resolved.**
+diff --git a/ops/metrics.md b/ops/metrics.md
+index d640c12236..3d81a1c2e0 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3245,3 +3245,4 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
+ | 9 | 2026-06-10T14:42:09Z | 2026-06-10T14:55:00Z | LeCun world-models talk analysis (operator-shared): quote bank + reference memory + paper-v6 positioning mappings; committed | ~15k |
+ | 10 | 2026-07-01T05:18:55Z | 2026-07-01T05:36:39Z | Planned milestone 2026.07.466: read requested project context, performed 2025-2026 source sweep, appended V466 references, wrote research-roadmap-vNEXT.md and research-roadmap-next.yaml (14 tasks), updated status/changelog, validation clean. | ~90k |
+ | 11 | 2026-07-02T14:37:45Z | 2026-07-02T14:46:05Z | "Write an operational retrospective for milestone 2026.07.473": filled interpretive fields in the pre-locked skeleton JSON; git-log-verified the supplied zero-commit TIMING DATA is a FALSE-ZERO (exp5156/5161/5164 landed post-activation, exp5164's own fix module scripts/retro_timing_fallback.py is unwired); appended ops/changelog.md entry + docs/research-log.md addendum (did not duplicate the immutable prior 2026.07.473 entry). | ~35k |
++| 12 | 2026-07-03T05:30:54Z | 2026-07-03T05:36:46Z | "Write an operational retrospective for milestone 2026.07.474": second retro pass for this milestone (skeleton had been reset); filled interpretive fields only, locked numeric fields left untouched; re-verified the FALSE-ZERO via `git log cd06fc3f0..HEAD` (43 real commits) and direct checks of the .469/.473 retro artifacts; broke the 4-pass diagnose-but-never-escalate cycle by filing the missing ops/known-issues.md MANDATORY-NEXT-MILESTONE entry (retro_timing_fallback wiring) with a deliverable slug; appended changelog entry + research-log same-day addendum (existing .474 entry is immutable). | ~35k |
+diff --git a/results/operational_retro_2026_07_474.json b/results/operational_retro_2026_07_474.json
+index a19b77dce5..de0647cc66 100644
+--- a/results/operational_retro_2026_07_474.json
++++ b/results/operational_retro_2026_07_474.json
+@@ -1,30 +1,31 @@
+ {
+   "schema": "carnot.operational_retro.v64",
+   "milestone": "2026.07.474",
+-  "generated_at": "2026-07-03T02:11:15Z",
++  "generated_at": "2026-07-03T05:30:37Z",
+   "retro_type": "operational_full",
+   "total_wall_time_minutes": 0,
+   "experiments_completed": 0,
+   "compute_bound_experiments_count": 0,
+   "slowest_experiments": [],
+   "gpu_idle_on_compute_bound_tasks": null,
+-  "summary": "Milestone 2026.07.474 has zero recorded experiment commits since activation per the supplied TIMING DATA: 0 experiments completed, 0 minutes of wall-clock time, no compute-bound tasks to evaluate. Both GPUs are idle at 0% utilization, but with no compute-bound tasks in scope this milestone, that idle state cannot be attributed to a scheduling or dispatch inefficiency. This is the third consecutive milestone (after .469 and .473) whose retro received a zero-commit TIMING DATA block despite the milestone otherwise completing normally in ops/changelog.md.",
++  "summary": "The authoritative TIMING DATA block reports zero experiment commits since 2026.07.474's activation (0 minutes, 0 experiments, 0 compute-bound tasks), so no compute-bound duration or GPU-utilization ranking can be produced from authoritative data this pass. Independent verification (git log cd06fc3f0..HEAD, the 'Activate milestone 2026.07.474' commit) found 43 real commits spanning PHASE 0 through PHASE Z plus a prior .474 retrospective already committed at 25d53090e -- confirming this is a false-zero TIMING DATA reading, not an empty milestone, and the fourth such retro-generation pass to hit this exact condition across three milestones (.469, .473 x3, .474 x2).",
+   "bottlenecks_identified": [
+-    "No experiment commits are visible in the TIMING DATA block for this milestone, so no compute-bound duration or GPU-utilization analysis can be performed from authoritative data.",
+-    "This is a recurring pattern, not an isolated one: milestones .469 and .473 both hit the identical zero-commit TIMING DATA condition in their retros, and exp5164 (v473) was built specifically to diagnose and reconstruct this false-zero gap from disk mtimes. Its own artifact confirms non-zero reconstructed timing for .467/.470/.472 (154.7, 203.8, and 83.3 wall minutes respectively) that the live retro pipeline had reported as zero.",
+-    "The bottleneck is therefore most plausibly in the retro-generation tooling itself, not in milestone .474's actual execution: scripts/retro_timing_fallback.py exists on disk (built 2026-07-02, per exp5164) but a repo grep finds zero references to it in scripts/research_conductor.py — the fallback module was never wired into the path that produces the TIMING DATA block this retro consumes."
++    "No compute-bound experiment data is present in the supplied TIMING DATA block, so no duration or GPU-efficiency ranking can be produced this pass from authoritative data alone.",
++    "Confirmed recurring false-zero, not an isolated gap: results/operational_retro_2026_07_469.json and results/operational_retro_2026_07_473.json both show experiments_completed=0/total_wall_time_minutes=0 (checked directly this pass), and this is the second .474 retro pass to hit the same condition (the first, committed at 25d53090e, generated_at 2026-07-03T02:11:15Z, already diagnosed it). git log confirms 43 real commits landed between cd06fc3f0 ('Activate milestone 2026.07.474') and HEAD.",
++    "Root cause remains unwired: scripts/retro_timing_fallback.py (built 2026-07-02 for exp5164, validated against 4 known-good milestones -- .450, .467, .470, .472 -- with research_conductor_py_modified=false recorded in its own artifact) still has zero references in scripts/research_conductor.py per a fresh grep this pass.",
++    "The missing link was escalation, not diagnosis: the prior .474 pass and multiple .473 passes all correctly recommended filing this as an ops/known-issues.md MANDATORY-NEXT-MILESTONE priority, but a grep for 'retro_timing_fallback' and 'FALSE-ZERO' in ops/known-issues.md returned zero hits before this pass -- meaning the Overdue-Priority Forcing Function had nothing to mechanically pick up."
+   ],
+   "improvements_suggested": [
+-    "Wire scripts/retro_timing_fallback.py into whichever research_conductor.py function assembles the TIMING DATA block for operational-retro tasks, per the 'wiring_instructions_present: true' field exp5164 already recorded — this task is explicitly barred from editing research_conductor.py itself, so this is a queued follow-up, not something resolved here.",
+-    "Until wired in, have the retro-generation step call the fallback reconstruction directly (or have the operational-retro task prompt include its reconstructed numbers as a supplementary, clearly-labeled block) so retros stop reporting false zeros for milestones that actually ran a full task chain.",
+-    "Add a regression check that fails loudly when a milestone's retro reports experiments_completed=0 while ops/changelog.md shows committed experiment entries for that same milestone prefix — this exact mismatch has now recurred 3 times (.469, .473, .474) undetected.",
+-    "Re-run this operational retrospective's timing analysis once the fallback module is wired in so future milestones get real duration/GPU-efficiency data instead of an empty set."
++    "Wire scripts/retro_timing_fallback.py into research_conductor.py's retro TIMING DATA assembly step. The fix already exists and is validated; this retro task's own scope forbids editing research_conductor.py, so it must land as a dedicated non-retro task.",
++    "This pass files the missing ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES entry directly (see the new 2026-07-03 entry in that file) instead of recommending the escalation a fifth time -- closing the specific process gap where diagnosis kept happening but never reached the mechanically-enforced priority list.",
++    "Add an automated cross-check in the retro-generation step that compares a proposed experiments_completed=0 against ops/changelog.md's commit count for that milestone prefix, and flags the mismatch before the retro is written rather than requiring a human or outer-loop session to notice via manual git log.",
++    "Once real timing data flows through, backfill corrected retros for .469, .473, and .474 so the historical efficiency record is not permanently stuck at false zeros for three milestones."
+   ],
+   "top_3_highest_leverage_actions": [
+-    "Wire the already-built scripts/retro_timing_fallback.py into research_conductor.py's retro TIMING DATA assembly step — this is a known fix sitting unintegrated since .473 (exp5164), and is the direct root cause of this milestone's (and the prior two milestones') empty retro data.",
+-    "Add an automated cross-check between a milestone's retro artifact and ops/changelog.md commit count for that milestone prefix, so a false-zero retro is flagged at generation time instead of silently recurring.",
+-    "Once real timing data flows through, resume normal compute-bound duration and GPU-utilization analysis — there is nothing further to diagnose about .474's actual execution efficiency from an empty TIMING DATA block."
++    "Wire the already-built, already-validated scripts/retro_timing_fallback.py into research_conductor.py's TIMING DATA assembly -- this single change fixes the false-zero for every future milestone at once and has been ready since .473 (exp5164).",
++    "Keep the newly-filed known-issues.md MANDATORY-NEXT-MILESTONE entry in place through the Overdue-Priority Forcing Function until the wiring lands -- three prior retro passes diagnosed this correctly but the recommendation evaporated each time because it was never logged where the mechanical pickup lint could act on it.",
++    "Add the changelog-vs-experiments_completed cross-check so a false-zero retro is caught at generation time instead of requiring manual git log verification every single pass."
+   ],
+   "estimated_time_savings_pct": 0,
+-  "meta_reflection": "With zero experiments visible in the authoritative TIMING DATA, this retrospective cannot diagnose .474's real execution efficiency — but it CAN diagnose the retro process's own efficiency, and the finding there is concrete: a disk-mtime timing-reconstruction fix (exp5164) was built specifically for this false-zero gap in .473 and never got wired into research_conductor.py, so the same blind spot has now silently recurred for a third milestone in a row."
++  "meta_reflection": "With authoritative TIMING DATA empty for a third distinct milestone in a row, this pass adds value not by inventing numbers but by finally closing a loop three prior passes opened and never finished: it independently re-verifies the false-zero (43 real commits since activation) and, instead of recommending escalation a fourth time, writes the ops/known-issues.md entry the Overdue-Priority Forcing Function needs to force a dedicated wiring task. No wall-clock efficiency conclusion about .474's actual execution can be drawn until that task lands and a corrected retro is regenerated -- estimated_time_savings_pct is left at 0 because there is no measurable inefficiency to quantify from an empty data block, only restored analytical visibility once fixed."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

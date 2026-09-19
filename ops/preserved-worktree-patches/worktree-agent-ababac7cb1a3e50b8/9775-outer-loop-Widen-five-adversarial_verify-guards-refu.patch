@@ -1,0 +1,609 @@
+From 08e6d688169ba084021ee3a00c250b506ac09962 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 22:14:39 -0400
+Subject: [PATCH 09775/11362] [outer-loop] Widen five adversarial_verify
+ guards; refute two audit findings
+
+The 2026-08-23 QA-layer audit returned six SILENT_NON_FIRING and one REAL_BUG
+against adversarial_verify.py. Five are real and are fixed here. Two are not,
+and saying so plainly matters more than the fixes: the brief that carried this
+work described four of the seven as principle-wrapper blindness recurring, and
+that reading does not survive contact with the code.
+
+REFUTED, with evidence. _numeric_pairs does ignore a principle-wrapped number
+when called directly -- but no caller calls it directly. verify_artifact
+normalizes every top-level {"principle", "value"} wrapper before any check
+runs, which is the 2026-07-02 exp5161 fix. Measured: a wrapped tautology pair,
+a wrapped pair nested inside `metrics`, and a bare pair all produce the same
+TAUTOLOGY flag, and 49 corpus artifacts carry two or more wrapped numeric
+top-level fields that depend on this. The origin bug is fixed and stayed
+fixed; the reviewer was shown one function with no caller.
+
+_declares_terminal_artifact_readiness was reported blind to a readiness
+declaration wrapped at the PAYLOAD level. No artifact has that shape -- the
+convention wraps individual fields -- and a wrapped `status` FIELD, which 58
+artifacts do carry, still triggers the check. REQ-INFRA-6262 also makes
+principle-wrapped values gate-INELIGIBLE deliberately, so unwrapping here
+would contradict a spec'd requirement rather than fix a bug.
+
+Both refutations are pinned by tests anyway. A refutation nothing guards is
+one refactor from becoming true.
+
+FIXED, each with a regression test named for the audit's own input:
+- _is_finite_number accepted only int/float, so numpy.float32(0.913) as an
+  in-memory `auroc` silently skipped every numeric check. Now numbers.Real,
+  with the bool carve-out intact. It also raised OverflowError on an integer
+  too large for float -- a predicate that crashes takes the verifier down on
+  one oversized number in one artifact.
+- _is_timestamp_field classified `checkpoint_mtime_delta_ns` (real, in
+  exp5039) as a wall-clock instant, removing a measured span from tautology
+  detection. Interval words now win over the instant markers. `runtime_ms`
+  goes with it: "time" inside "runtime" was exempting a duration.
+- _is_count_field did not recognize `folds` -- the fold count of a
+  cross-validation, exactly what its docstring describes. Ten sibling count
+  nouns were missing with it.
+- _is_chance_floor_score did not recognize `permuted`, half the project's
+  vocabulary for a shuffled-label control, in a list claiming to hold all of
+  it.
+- check_terminal_artifact_readiness matched "capstone" inside "noncapstone",
+  so an artifact whose name says it is not a capstone inherited the capstone
+  exemption and lost its critical flag. Same class as "diffusiongemma_met"
+  matching inside "meta_tensor".
+- The returned report read honest_verdict from the pre-normalization payload,
+  reporting an empty verdict for the 155 artifacts that wrap it -- the exact
+  field the origin incident was about.
+
+CORPUS MEASUREMENT, all 5775 results/experiment_*.json before and after: 2
+artifacts change, ZERO flags added anywhere. exp4716 loses a critical
+TAUTOLOGY on held_out_variant_attempts == min_held_out_variant_attempts ==
+100, a budget and the value that met it. exp5211 drops two of three duplicate
+TAUTOLOGY flags on counts over the same 120-row pool and stays quarantined by
+the third. Both removals inspected by hand and both are false positives.
+
+MUTATIONS, each deleted then restored byte-identically: numeric widening
+(3 failed / 6 passed), count words (7/9), interval guard (2/3), permut marker
+(1/4), capstone boundary (1/2), verdict unwrap (1/2). All six RED mutated,
+GREEN restored, sha256 unchanged.
+
+DEFERRED, deliberately. Two of the audit's over-exemption counterexamples are
+NOT fixed here: `unshuffled_x` matching the `shuffled` marker, and `count`
+matching inside `discounted_return`. Both remove exemptions rather than add
+them, both measure zero corpus change today, and an un/non negation guard can
+itself over-correct on a name like `unshuffled_control_auroc`. They are a
+separate decision with no evidence either way, not a side effect of this one.
+
+The eight test failures in this area are pre-existing: the same eight fail at
+HEAD with this file reverted, driven by exp6228 now carrying
+flagged_adversarial, not by anything here.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/adversarial_verify.py                 | 123 ++++++-
+ ...erify_qa_layer_missed_inputs_2026_08_23.py | 311 ++++++++++++++++++
+ 2 files changed, 423 insertions(+), 11 deletions(-)
+ create mode 100644 tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py
+
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 5aa15e9c47..00b9bfde2e 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -98,6 +98,7 @@ from __future__ import annotations
+ import argparse
+ import json
+ import math
++import numbers
+ import re
+ import sys
+ from pathlib import Path
+@@ -593,7 +594,15 @@ def check_terminal_artifact_readiness(
+     classification: TerminalClassification,
+     flags: list[Flag],
+ ) -> None:
+-    """Flag declared artifacts whose exact path has no terminal state."""
++    """Flag declared artifacts whose exact path has no terminal state.
++
++    The capstone carve-out matches `capstone` as a WHOLE WORD in the basename.
++    A plain substring test also matched `noncapstone`, so an artifact whose
++    name says it is not a capstone inherited the capstone exemption and its
++    critical flag was silently dropped (2026-08-23 QA-layer audit MISSED
++    INPUT). Same class as `"diffusiongemma_met"` matching inside
++    `meta_tensor`, fixed 2026-07-03.
++    """
+ 
+     if classification.terminal:
+         return
+@@ -602,7 +611,7 @@ def check_terminal_artifact_readiness(
+     verdict = str(classification.honest_verdict_raw or "").lower()
+     if (
+         classification.classification == "partial"
+-        and "capstone" in path_name
++        and "capstone" in _name_tokens(path_name)
+         and (status.startswith("complete_partial") or verdict.startswith("complete_partial"))
+     ):
+         return
+@@ -627,13 +636,30 @@ def _flag_summary(flags: list[Flag]) -> dict[str, Any]:
+ 
+ 
+ def _is_finite_number(v: Any) -> bool:
+-    """True if v is a real, finite numeric value."""
++    """True if v is a real, finite numeric value.
++
++    Accepts any real number, not only Python's built-in int and float. An
++    experiment script that imports this module and checks its own in-memory
++    dict before writing it holds numpy scalars, and the old
++    `isinstance(v, (int, float))` answered False for every one of them -- so
++    those metrics silently skipped every numeric check (2026-08-23 QA-layer
++    audit, MISSED INPUT `numpy.float32(0.913)` as an `auroc`).
++
++    Two carve-outs survive the widening. bool is an int subclass but is not a
++    measurement, so it stays rejected. An integer too large to convert to
++    float used to raise OverflowError out of a predicate, taking the whole
++    verifier down on one oversized number in one artifact; it now answers
++    False.
++    """
+     if isinstance(v, bool):
+         # bool is a subclass of int; explicitly reject so True/False
+         # don't trigger tautology comparison.
+         return False
+-    if isinstance(v, (int, float)):
+-        return math.isfinite(float(v))
++    if isinstance(v, numbers.Real):
++        try:
++            return math.isfinite(float(v))
++        except (OverflowError, ValueError, TypeError):
++            return False
+     return False
+ 
+ 
+@@ -662,12 +688,46 @@ def _numeric_pairs(d: dict[str, Any]) -> list[tuple[str, str, float, float]]:
+     return pairs
+ 
+ 
++def _name_tokens(name: str) -> set[str]:
++    """Whole words in a field name, so a marker can be matched as a word.
++
++    `folds_5` and `n_folds` both yield the word `folds`, while `discounted`
++    does not yield `count`. Shared by the count and timestamp classifiers so
++    they agree on what a word is.
++    """
++    return set(re.findall(r"[a-z0-9]+", name.lower()))
++
++
++# Ordinary count nouns. Each names a thing you can have several of, so two of
++# them landing on the same small integer is arithmetic, not evidence of a bug.
++# Added 2026-08-23 after the QA-layer audit named `{"folds": 5}` -- a
++# cross-validation fold count, exactly what the docstring below describes, that
++# the marker list did not recognize.
++_COUNT_WORDS = frozenset(
++    {
++        "wins",
++        "losses",
++        "ties",
++        "draws",
++        "folds",
++        "trials",
++        "replicates",
++        "samples",
++        "attempts",
++        "repeats",
++        "batches",
++        "successes",
++        "failures",
++    }
++)
++
++
+ def _is_count_field(name: str) -> bool:
+     """Field whose name implies a combinatorial count — small-integer
+     coincidence is plausible, not suspicious."""
+     nl = name.lower()
+-    tokens = set(re.findall(r"[a-z0-9]+", nl))
+-    if tokens & {"wins", "losses", "ties"}:
++    tokens = _name_tokens(nl)
++    if tokens & _COUNT_WORDS:
+         return True
+     count_markers = (
+         "count",
+@@ -719,6 +779,19 @@ _IDENTIFIER_FIELDS = frozenset(
+ )
+ 
+ 
++# Words that name a span between two instants rather than one instant. A span
++# is a measurement and belongs in the tautology check; an instant is not.
++# `runtime` is here because `runtime_ms` was exempted by the `time`-inside-a-
++# longer-word match -- the 2026-08-23 QA-layer audit's counterexample, where a
++# runtime and a solver latency agreeing to seven digits went unexamined.
++_INTERVAL_WORDS = frozenset({"delta", "elapsed", "duration", "interval", "span", "runtime"})
++
++
++def _names_a_measured_interval(name: str) -> bool:
++    """True if the field name says it holds an elapsed span, not an instant."""
++    return bool(_name_tokens(name) & _INTERVAL_WORDS)
++
++
+ def _is_timestamp_field(k: str) -> bool:
+     """True if the field is a wall-clock TIMESTAMP (not a measured metric).
+ 
+@@ -733,8 +806,17 @@ def _is_timestamp_field(k: str) -> bool:
+     Conservative: a bare duration like `latency_ns` / `duration_ns` is NOT a
+     timestamp (no time-ish token) and is left in the tautology check, so a real
+     duration coincidence is still caught.
++
++    A field naming a measured INTERVAL is not a timestamp even when it also
++    carries a time-ish word. Origin: the 2026-08-23 QA-layer audit named
++    `checkpoint_mtime_delta_ns` in
++    `results/experiment_5039_self_play_verifier_checkpoint.json` -- a real
++    elapsed measurement that the `mtime` branch exempted, quietly removing a
++    genuine metric from tautology detection.
+     """
+     kl = k.lower()
++    if _names_a_measured_interval(kl):
++        return False
+     if "mtime" in kl or "timestamp" in kl:
+         return True
+     if kl.endswith(("_ts", "_epoch", "_unixtime")):
+@@ -752,11 +834,27 @@ def _is_chance_floor_score(k: str) -> bool:
+     is 0.5 -- such fields legitimately sit at exactly 0.5 (a majority-class
+     control by construction, a null/origin probe driven to chance, a shuffled
+     control), so two of them coinciding at 0.5 is a floor coincidence, not a
+-    distinct-measurement tautology. See exp4771 (S0' reopen) in check_tautology."""
++    distinct-measurement tautology. See exp4771 (S0' reopen) in check_tautology.
++
++    `permut` covers the other ordinary name for a shuffled-label control
++    (`binary_permuted_label_accuracy`, `label_permutation_control`). The
++    2026-08-23 QA-layer audit named that omission: the concept is "a control
++    whose expected value is chance", and half the project's vocabulary for it
++    was missing from a list that claimed to hold all of it."""
+     kl = k.lower()
+     return any(
+         t in kl
+-        for t in ("auroc", "auc", "probe", "control", "chance", "baseline", "majority", "shuffled")
++        for t in (
++            "auroc",
++            "auc",
++            "probe",
++            "control",
++            "chance",
++            "baseline",
++            "majority",
++            "shuffled",
++            "permut",
++        )
+     )
+ 
+ 
+@@ -6518,8 +6616,11 @@ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, An
+     check_arc_offline_live_overclaim(d, flags)
+     check_arc_outer_loop_solve(d, flags)
+ 
+-    verdict_raw = d_raw.get("honest_verdict") or ""
+-    verdict = verdict_raw if isinstance(verdict_raw, str) else ""
++    # Read the verdict the way every check above reads it: through the
++    # principle wrapper. 155 corpus artifacts wrap `honest_verdict`, and
++    # reading `d_raw` here reported an empty verdict for all of them -- the
++    # exact field the 2026-07-02 exp5161 incident was about.
++    verdict = _verdict_text(d) or ""
+     return {
+         "artifact": str(path),
+         "loaded": True,
+diff --git a/tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py b/tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py
+new file mode 100644
+index 0000000000..15e7eaaeb6
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py
+@@ -0,0 +1,311 @@
++"""Regression tests for the 2026-08-23 QA-layer audit MISSED INPUTS.
++
++Origin: the milestone-close QA-layer audit (`ops/qa_layer_authenticity_audit_report.md`,
++2026-08-23) returned six `SILENT_NON_FIRING` verdicts and one `REAL_BUG` against
++`scripts/adversarial_verify.py`. Per the CLAUDE.md "QA-Layer Authenticity Discipline",
++every `## MISSED INPUT` line names a concrete input that falls inside a guard's own
++stated concept and gets through anyway -- so each line is both the widening and the
++regression test. Each test below uses the audit's input VERBATIM, not a synthetic
++happy path, so a future narrowing of the same pattern list fails here first.
++
++Two of the seven findings are REFUTED rather than fixed; both keep a test anyway,
++because a refutation that nothing guards is one refactor away from becoming true:
++
++  * `_numeric_pairs` was reported blind to principle-wrapped numbers. It is, in
++    isolation -- but the live `verify_artifact` path normalizes every top-level
++    `{"principle": ..., "value": ...}` wrapper before any check runs (the 2026-07-02
++    exp5161 fix). `TestNumericPairsWrappedFieldsLivePath` pins that end-to-end
++    behavior so deleting the normalizer call is caught here.
++  * `_declares_terminal_artifact_readiness` was reported blind to a readiness
++    declaration wrapped at the PAYLOAD level. No artifact has that shape (the
++    wrapper convention wraps individual fields), and REQ-INFRA-6262 deliberately
++    makes principle-wrapped values gate-INELIGIBLE rather than unwrapping them.
++    `TestReadinessTriggerFieldLevelWrapper` pins what a real wrapped `status`
++    actually does.
++
++Spec refs: REQ-INFRA-6262 / SCENARIO-INFRA-6262-2 (declared-artifact readiness
++boundary, exercised by `TestNonCapstoneBasenameDoesNotExempt`). The remaining
++tests cover operational lint helpers with no OpenSpec capability of their own.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++import scripts.adversarial_verify as av
++from carnot.terminal_artifacts import TerminalClassification
++
++
++def _write(tmp_path: Path, name: str, payload: dict[str, Any]) -> Path:
++    path = tmp_path / name
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _kinds(report: dict[str, Any]) -> set[str]:
++    return {flag["kind"] for flag in report["flags"]}
++
++
++class TestIsFiniteNumberNumericTypes:
++    """REAL_BUG: `_is_finite_number` rejected real finite numbers.
++
++    Audit MISSED INPUT: `numpy.float32(0.913)` stored as an in-memory `auroc` value.
++    A numpy scalar cannot reach here through `json.load`, but experiment scripts
++    import this module and check their own in-memory dicts before writing them --
++    that is the path where a metric silently skips every numeric check.
++    """
++
++    def test_accepts_numpy_float32_auroc(self) -> None:
++        assert av._is_finite_number(np.float32(0.913)) is True
++
++    def test_accepts_numpy_int64(self) -> None:
++        assert av._is_finite_number(np.int64(7)) is True
++
++    def test_still_rejects_numpy_bool(self) -> None:
++        # bool is not a measurement; the original bool carve-out must survive
++        # the widening, or True/False start entering tautology comparison.
++        assert av._is_finite_number(np.bool_(True)) is False
++
++    def test_still_rejects_python_bool(self) -> None:
++        assert av._is_finite_number(True) is False
++        assert av._is_finite_number(False) is False
++
++    def test_huge_finite_int_does_not_raise(self) -> None:
++        # `float(10**400)` raises OverflowError. A predicate that crashes takes
++        # the whole verifier down on one oversized integer in one artifact.
++        assert av._is_finite_number(10**400) is False
++
++    def test_still_rejects_non_numbers(self) -> None:
++        assert av._is_finite_number("0.5") is False
++        assert av._is_finite_number(None) is False
++        assert av._is_finite_number(float("inf")) is False
++        assert av._is_finite_number(float("nan")) is False
++
++
++class TestIsTimestampFieldMeasuredDelta:
++    """SILENT_NON_FIRING: a measured delta was classified as a wall-clock instant.
++
++    Audit MISSED INPUT: `results/experiment_5039_self_play_verifier_checkpoint.json`
++    contains `"checkpoint_mtime_delta_ns": 246740982365865`. That is an elapsed
++    measurement, not an instant, so exempting it removes a real metric from
++    tautology detection.
++    """
++
++    def test_measured_mtime_delta_is_not_a_timestamp(self) -> None:
++        assert av._is_timestamp_field("checkpoint_mtime_delta_ns") is False
++
++    def test_elapsed_and_duration_markers_are_not_timestamps(self) -> None:
++        assert av._is_timestamp_field("elapsed_timestamp_delta_s") is False
++        assert av._is_timestamp_field("wall_clock_duration_ns") is False
++
++    def test_a_runtime_is_a_span_not_an_instant(self) -> None:
++        # Audit COUNTEREXAMPLE: `runtime_ms` was exempt because "time" occurs
++        # inside "runtime", so `runtime_ms == solver_latency_ms` to seven
++        # digits was never compared.
++        assert av._is_timestamp_field("runtime_ms") is False
++        assert av._is_timestamp_field("solver_latency_ms") is False
++
++    def test_genuine_epoch_timestamps_are_still_exempt(self) -> None:
++        # exp4763 origin case: two nanosecond epoch instants share leading sig
++        # figs by construction. Widening must not re-open that false positive.
++        assert av._is_timestamp_field("checkpoint_mtime_before_ns") is True
++        assert av._is_timestamp_field("checkpoint_mtime_after_ns") is True
++        assert av._is_timestamp_field("run_started_timestamp") is True
++        assert av._is_timestamp_field("created_ts") is True
++
++
++class TestIsCountFieldOrdinaryCountVocabulary:
++    """SILENT_NON_FIRING: ordinary count nouns were not recognized as counts.
++
++    Audit MISSED INPUT: `{"folds": 5}` -- a cross-validation fold count is exactly
++    the small combinatorial integer the docstring describes, yet the classifier
++    returned negative.
++    """
++
++    def test_folds_is_a_count(self) -> None:
++        assert av._is_count_field("folds") is True
++
++    @pytest.mark.parametrize(
++        "name", ["trials", "replicates", "draws", "samples", "attempts", "repeats"]
++    )
++    def test_sibling_count_nouns_are_counts(self, name: str) -> None:
++        assert av._is_count_field(name) is True
++
++    def test_existing_count_markers_still_recognized(self) -> None:
++        assert av._is_count_field("n_samples") is True
++        assert av._is_count_field("completed_count") is True
++        assert av._is_count_field("wins") is True
++
++    def test_a_plain_score_is_still_not_a_count(self) -> None:
++        assert av._is_count_field("auroc") is False
++        assert av._is_count_field("final_loss") is False
++
++
++class TestIsChanceFloorScorePermutedControl:
++    """SILENT_NON_FIRING: a permutation control was not recognized as chance-floor.
++
++    Audit MISSED INPUT: `binary_permuted_label_accuracy` is a realistic
++    shuffled-label control whose expected value is 0.5, but "permuted" was absent
++    from the marker tuple -- so two honest controls both sitting at the 0.5 floor
++    were compared as if they were two distinct measurements.
++    """
++
++    def test_permuted_label_control_is_chance_floor(self) -> None:
++        assert av._is_chance_floor_score("binary_permuted_label_accuracy") is True
++
++    def test_permutation_control_is_chance_floor(self) -> None:
++        assert av._is_chance_floor_score("label_permutation_control_score") is True
++
++    def test_existing_markers_still_recognized(self) -> None:
++        assert av._is_chance_floor_score("loo_auroc_majority_control") is True
++        assert av._is_chance_floor_score("shuffled_control_auroc") is True
++
++    def test_a_plain_accuracy_is_not_chance_floor(self) -> None:
++        assert av._is_chance_floor_score("final_accuracy") is False
++
++
++class TestNonCapstoneBasenameDoesNotExempt:
++    """SILENT_NON_FIRING: `"capstone" in path_name` matched inside `noncapstone`.
++
++    Audit MISSED INPUT: `complete_partial_not_attempted` as the honest verdict of a
++    nonterminal partial artifact whose basename contains `noncapstone` -- the
++    function returns without adding a critical flag. Same class as the 2026-07-03
++    `"diffusiongemma_met" in verdict` matching inside `meta_tensor`.
++
++    Spec: REQ-INFRA-6262 / SCENARIO-INFRA-6262-2 (nonterminal classes fail closed).
++    """
++
++    @staticmethod
++    def _classification(path: str) -> TerminalClassification:
++        return TerminalClassification(
++            classification="partial",
++            terminal=False,
++            reason="partial declaration",
++            path=path,
++            status_raw=None,
++            honest_verdict_raw="complete_partial_not_attempted",
++        )
++
++    def test_noncapstone_partial_is_still_flagged_critical(self) -> None:
++        flags: list[av.Flag] = []
++        av.check_terminal_artifact_readiness(
++            self._classification("results/experiment_4217_noncapstone_ablation.json"), flags
++        )
++        assert [f.kind for f in flags] == [av.NONTERMINAL_FLAG_KIND]
++        assert flags[0].severity == "critical"
++
++    def test_a_real_capstone_partial_is_still_exempt(self) -> None:
++        # The carve-out itself is deliberate: a capstone may honestly declare a
++        # partial. Only the substring collision is being closed.
++        flags: list[av.Flag] = []
++        av.check_terminal_artifact_readiness(
++            self._classification("results/experiment_4217_capstone_v420.json"), flags
++        )
++        assert flags == []
++
++
++class TestReadinessTriggerFieldLevelWrapper:
++    """REFUTED finding, pinned: the readiness trigger and the wrapper convention.
++
++    The audit's MISSED INPUT wraps the WHOLE payload
++    (`{"principle": ..., "value": {"status": "ready"}}`). No artifact has that
++    shape -- the convention wraps individual fields -- and REQ-INFRA-6262 makes
++    principle-wrapped values gate-ineligible on purpose. A wrapped `status` FIELD,
++    which is the real shape (58 artifacts carry one), still triggers the check.
++    """
++
++    def test_field_level_wrapped_status_still_triggers(self) -> None:
++        payload = {"status": {"principle": "Terminal state of the run.", "value": "complete"}}
++        assert av._declares_terminal_artifact_readiness(payload) is True
++
++    def test_bare_status_still_triggers(self) -> None:
++        assert av._declares_terminal_artifact_readiness({"status": "complete"}) is True
++
++    def test_payload_without_status_does_not_trigger(self) -> None:
++        assert av._declares_terminal_artifact_readiness({"honest_verdict": "complete_x"}) is False
++
++
++class TestNumericPairsWrappedFieldsLivePath:
++    """REFUTED finding, pinned: wrapped numbers DO reach the tautology check.
++
++    The audit's MISSED INPUT is a real artifact carrying
++    `auroc = {"principle": "Held-out AUROC", "value": 0.997}` and
++    `baseline_auroc = {"principle": "Baseline AUROC", "value": 0.512}`. Calling
++    `_numeric_pairs` directly on that dict does return nothing -- but the live
++    path normalizes wrappers first, so the pair is produced. 49 corpus artifacts
++    carry two or more wrapped numeric top-level fields and depend on this.
++    """
++
++    def test_direct_call_on_wrapped_dict_returns_nothing(self) -> None:
++        wrapped = {
++            "auroc": {"principle": "Held-out AUROC", "value": 0.997},
++            "baseline_auroc": {"principle": "Baseline AUROC", "value": 0.512},
++        }
++        assert av._numeric_pairs(wrapped) == []
++
++    def test_normalized_dict_yields_the_pair(self) -> None:
++        wrapped = {
++            "auroc": {"principle": "Held-out AUROC", "value": 0.997},
++            "baseline_auroc": {"principle": "Baseline AUROC", "value": 0.512},
++        }
++        assert av._numeric_pairs(av._normalize_principle_wrapped_fields(wrapped)) == [
++            ("auroc", "baseline_auroc", 0.997, 0.512)
++        ]
++
++    def test_live_path_flags_a_wrapped_tautology_exactly_like_a_bare_one(
++        self, tmp_path: Path
++    ) -> None:
++        common = {"experiment": 9001, "honest_verdict": "complete_probe"}
++        wrapped = _write(
++            tmp_path,
++            "experiment_9001_wrapped.json",
++            {
++                **common,
++                "final_train_loss": {"principle": "Training loss", "value": 0.4271883},
++                "final_val_loss": {"principle": "Validation loss", "value": 0.4271883},
++            },
++        )
++        bare = _write(
++            tmp_path,
++            "experiment_9002_bare.json",
++            {**common, "final_train_loss": 0.4271883, "final_val_loss": 0.4271883},
++        )
++        assert "TAUTOLOGY" in _kinds(av.verify_artifact(wrapped))
++        assert _kinds(av.verify_artifact(wrapped)) == _kinds(av.verify_artifact(bare))
++
++
++class TestReportHonestVerdictReadsThroughWrapper:
++    """The report's `honest_verdict` was read from the pre-normalization payload.
++
++    155 corpus artifacts wrap `honest_verdict`. Every CHECK sees the unwrapped
++    value, but the returned report read `d_raw` and fell back to `""` on a dict --
++    so a caller reading the report saw an empty verdict for exactly the field the
++    2026-07-02 origin incident was about.
++    """
++
++    def test_wrapped_verdict_appears_in_the_report(self, tmp_path: Path) -> None:
++        path = _write(
++            tmp_path,
++            "experiment_9003_wrapped_verdict.json",
++            {
++                "experiment": 9003,
++                "honest_verdict": {
++                    "principle": "Self-declared terminal state.",
++                    "value": "complete_probe_ran",
++                },
++            },
++        )
++        assert av.verify_artifact(path)["honest_verdict"] == "complete_probe_ran"
++
++    def test_bare_verdict_still_appears(self, tmp_path: Path) -> None:
++        path = _write(
++            tmp_path,
++            "experiment_9004_bare_verdict.json",
++            {"experiment": 9004, "honest_verdict": "complete_probe_ran"},
++        )
++        assert av.verify_artifact(path)["honest_verdict"] == "complete_probe_ran"
+-- 
+2.55.0
+

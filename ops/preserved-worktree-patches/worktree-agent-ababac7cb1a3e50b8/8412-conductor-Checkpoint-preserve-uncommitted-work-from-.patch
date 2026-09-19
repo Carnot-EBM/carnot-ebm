@@ -1,0 +1,43 @@
+From 0d112ac3bc3efc6a2c63ed518ee2d87a88305c8c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 04:49:35 -0400
+Subject: [PATCH 08412/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a1910c707d..c0c693c284 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 70, "phase": "iteration_start", "last_beat": "2026-08-07T08:31:36Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 71, "phase": "iteration_start", "last_beat": "2026-08-07T08:49:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7cb840e074..09cdf0d42d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15443,3 +15443,4 @@ Still active  |
+ | 2026-08-07 08:14 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
+ | 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |
+ | 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
++| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3b770b850f..ca0137ca2f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 70, "phase": "iteration_start", "started_at": "2026-08-07T08:31:36Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 71, "phase": "iteration_start", "started_at": "2026-08-07T08:49:32Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

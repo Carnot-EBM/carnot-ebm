@@ -1,0 +1,1832 @@
+From 41d45e2cdcc22d146aff5dfaa76e64edca689efc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 21:22:45 -0400
+Subject: [PATCH 05523/11362] [conductor] PHASE C2 a genuinely different
+ verifier mechanism class -- TrajSelector-style hidden-state verifier pilot
+ (VerifySteer as fallback)
+
+Automated research step by research conductor.
+Task ID: exp5178-hidden-state-verifier-pilot-v474
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  92 ++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...t_5178_hidden_state_verifier_pilot_v474.py | 988 ++++++++++++++++++
+ ...p4_scaleup_decentralization_tier_v474.json |  75 +-
+ ..._tier_v474.local_generator.checkpoint.json |  15 -
+ ...5178_hidden_state_verifier_pilot_v474.json | 231 ++++
+ ...t_5178_hidden_state_verifier_pilot_v474.py | 256 +++++
+ 8 files changed, 1607 insertions(+), 57 deletions(-)
+ create mode 100644 python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py
+ delete mode 100644 results/experiment_5177_gap4_scaleup_decentralization_tier_v474.local_generator.checkpoint.json
+ create mode 100644 results/experiment_5178_hidden_state_verifier_pilot_v474.json
+ create mode 100644 tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index a393d9b9c4..8e5c26b99a 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -32709,6 +32709,98 @@ label an identity cache smoke as a successful local-generator measurement.
+ |---|---|---|
+ | REQ-REPORT-5177 | Planned (`python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) | Planned (`tests/python/test_experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) |
+ 
++### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
++
++The Exp 5178 workflow SHALL write
++`results/experiment_5178_hidden_state_verifier_pilot_v474.json` for a
++bounded oracle-distinct hidden-state verifier pilot. The workflow SHALL read the
++V474 verifier-moat reference block in `research-references.md`, the Phase D
++MuSR negative artifact `results/distributional_energy_verifier_musr.json`, and
++the local MuSR trace pool under `results/musr_traces/`. The workflow SHALL NOT
++modify `scripts/research_conductor.py`, SHALL NOT update ops/status,
++ops/changelog, or `_bmad/traceability.md`, and SHALL declare
++`inference_substrate="live_llm_inference"`.
++
++The workflow SHALL first check whether
++`unsloth/gemma-4-26B-A4B-it-GGUF` resolves to a local GGUF and whether the
++current llama.cpp path can expose internal vectors from that model. If only
++final-token embedding vectors are available, the artifact SHALL record that
++limitation explicitly and SHALL treat the run as a bounded TrajSelector-style
++linear-probe pilot rather than a full 0.6B end-to-end verifier. If hidden-state
++vectors cannot be read at all, the artifact SHALL report
++`hidden_state_access_feasible=false`, include
++`blocked_hidden_state_access_infeasible` in the honest verdict, and SHALL NOT
++fabricate verifier accuracy.
++
++When vectors are available, the workflow SHALL evaluate a leakage-safe question
++split over MuSR candidates: tune the self-consistency K on training questions,
++evaluate tuned K-way voting on held-out questions, train a small hidden-vector
++probe only on training candidates, and select held-out candidates by probe
++score. The workflow SHALL compute paired bootstrap CI95 for hidden-verifier
++accuracy minus tuned-SC accuracy, McNemar's test, oracle@K headroom, and a
++separate detection measurement for the "both candidates identically wrong"
++case where majority vote structurally cannot detect that the shared answer is
++wrong.
++
++The terminal artifact SHALL include top-level fields
++`hidden_state_access_feasible`, `design_path_taken`, `corpus_used`,
++`tuned_sc_baseline_accuracy`, `hidden_state_verifier_accuracy`,
++`accuracy_delta_ci95`, `mcnemar_p_value`,
++`identically_wrong_detection_result`, `compute_cost_vs_sc`,
++`compute_cost_vs_llm_judge`, `verifier_is_oracle=false`, `headroom_present`,
++`random_seed`, `inference_substrate="live_llm_inference"`,
++`reproducibility_checksum`, and `honest_verdict`. It SHOULD also include
++model/vector access metadata, tuned K by fold, pilot N, oracle@K, compared
++Phase D artifacts, per-question paired correctness arrays, and tests run.
++
++Required field principles:
++
++- `hidden_state_access_feasible`: principle "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model."
++- `design_path_taken`: principle "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification."
++- `corpus_used`: principle "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class."
++- `tuned_sc_baseline_accuracy`: principle "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson."
++- `hidden_state_verifier_accuracy`: principle "Selection accuracy of the hidden-vector verifier on held-out questions."
++- `accuracy_delta_ci95`: principle "Paired bootstrap CI95 for hidden verifier minus tuned SC."
++- `mcnemar_p_value`: principle "Paired exact McNemar test over hidden verifier vs tuned SC correctness."
++- `identically_wrong_detection_result`: principle "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect."
++- `compute_cost_vs_sc`: principle "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency."
++- `compute_cost_vs_llm_judge`: principle "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge."
++- `verifier_is_oracle`: principle "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only."
++- `headroom_present`: principle "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative."
++- `random_seed`: principle "Deterministic split, tuning, bootstrap, and checksum reproducibility."
++- `inference_substrate`: principle "This task uses live local LLM inference for the hidden-vector access check and pilot vectors."
++- `reproducibility_checksum`: principle "Content-addressed hash catches silent artifact or row drift."
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency."
++
++#### SCENARIO-REPORT-5178: Hidden Vectors Are Compared Against Tuned SC
++
++**Given** the MuSR trace pool exists, the Phase D MuSR negative artifact exists,
++and the Gemma GGUF path exposes final-token hidden vectors through llama.cpp
++**When** the Exp 5178 workflow runs on a bounded pilot subset
++**Then** it writes the terminal JSON artifact, records
++`hidden_state_access_feasible=true`, records the final-vector access
++limitation, tunes self-consistency K on training questions, evaluates the
++hidden-vector probe on held-out questions, computes paired CI95 and McNemar's
++test, confirms oracle@K headroom, records same-wrong detection, reports compute
++cost versus SC and a generative judge, and sets `verifier_is_oracle=false`.
++
++#### SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS: No Hidden Vectors Blocks Honestly
++
++**Given** the Gemma GGUF is missing or llama.cpp cannot expose usable internal
++vectors
++**When** the Exp 5178 workflow runs
++**Then** it writes a terminal blocked artifact with all required fields,
++records the failed precondition, keeps `verifier_is_oracle=false`, sets
++`hidden_state_access_feasible=false`, leaves unverifiable accuracy fields null
++or zero with an explicit blocker note, and includes
++`blocked_hidden_state_access_infeasible` in `honest_verdict`.
++
++## Implementation Status (REQ-REPORT-5178)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5178 | Planned (`python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py`) | Planned (`tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py`) |
++
+ ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
+ 
+ The Exp 5162 workflow SHALL produce
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 0daf7da5e4..ccac0c295f 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -887,3 +887,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['CIRCULAR_MOAT_OVERCLAIM', 'MOAT_CLAIM_RIGOR'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
++
++## experiment_5178_hidden_state_verifier_pilot_v474.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_5178_hidden_state_verifier_pilot_v474.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a9083326f1..184d86836b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4166,
++  "experiments_checked": 4167,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py b/python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py
+new file mode 100644
+index 0000000000..716befcdc1
+--- /dev/null
++++ b/python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py
+@@ -0,0 +1,988 @@
++"""Exp 5178: hidden-state verifier pilot for the V474 verifier-moat question.
++
++Spec refs: REQ-REPORT-5178, SCENARIO-REPORT-5178,
++SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS.
++
++This module tests the mechanism class that Phase D did not cover: a verifier
++that reads the generator's own internal vectors rather than generated text
++scores or logprobs. The live llama.cpp path currently exposes final-token
++embedding vectors, not full per-layer tensors or a generation-time steering
++hook, so the complete path is deliberately scoped as a small TrajSelector-style
++linear-probe pilot rather than a full 0.6B verifier replication.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import math
++from pathlib import Path
++import random
++import time
++from typing import Any
++
++import numpy as np
++
++
++JsonDict = dict[str, Any]
++VectorProvider = Callable[[list[str]], np.ndarray]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5178_hidden_state_verifier_pilot_v474"
++EXPERIMENT_ID = 5178
++SCHEMA = "carnot.hidden_state_verifier_pilot_5178.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5178_hidden_state_verifier_pilot_v474.json"
++MUSR_TRACES_RELATIVE_PATH = "results/musr_traces"
++PHASE_D_MUSR_RELATIVE_PATH = "results/distributional_energy_verifier_musr.json"
++RESEARCH_REFERENCES_RELATIVE_PATH = "research-references.md"
++HIDDEN_MODEL_ID = "unsloth/gemma-4-26B-A4B-it-GGUF"
++CORPUS_USED = "MuSR/murder_mysteries"
++RANDOM_SEED = 5178
++DEFAULT_MAX_QUESTIONS = 6
++DEFAULT_N_FOLDS = 3
++DEFAULT_N_BOOTSTRAP = 1000
++HEADROOM_MIN_DELTA = 0.05
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_", "blocked_")
++SPEC_REFS = [
++    "REQ-REPORT-5178",
++    "SCENARIO-REPORT-5178",
++    "SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "hidden_state_access_feasible": (
++        "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model."
++    ),
++    "design_path_taken": (
++        "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification."
++    ),
++    "corpus_used": (
++        "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class."
++    ),
++    "tuned_sc_baseline_accuracy": (
++        "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson."
++    ),
++    "hidden_state_verifier_accuracy": (
++        "Selection accuracy of the hidden-vector verifier on held-out questions."
++    ),
++    "accuracy_delta_ci95": (
++        "Paired bootstrap CI95 for hidden verifier minus tuned SC."
++    ),
++    "mcnemar_p_value": (
++        "Paired exact McNemar test over hidden verifier vs tuned SC correctness."
++    ),
++    "identically_wrong_detection_result": (
++        "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect."
++    ),
++    "compute_cost_vs_sc": (
++        "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency."
++    ),
++    "compute_cost_vs_llm_judge": (
++        "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge."
++    ),
++    "verifier_is_oracle": (
++        "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only."
++    ),
++    "headroom_present": (
++        "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative."
++    ),
++    "random_seed": (
++        "Deterministic split, tuning, bootstrap, and checksum reproducibility."
++    ),
++    "inference_substrate": (
++        "This task uses live local LLM inference for the hidden-vector access check and pilot vectors."
++    ),
++    "reproducibility_checksum": (
++        "Content-addressed hash catches silent artifact or row drift."
++    ),
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency."
++    ),
++}
++
++REQUIRED_PRINCIPLED_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_FIELDS = (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "hidden_state_access_feasible",
++    "design_path_taken",
++    "corpus_used",
++    "tuned_sc_baseline_accuracy",
++    "hidden_state_verifier_accuracy",
++    "accuracy_delta_ci95",
++    "mcnemar_p_value",
++    "identically_wrong_detection_result",
++    "compute_cost_vs_sc",
++    "compute_cost_vs_llm_judge",
++    "verifier_is_oracle",
++    "headroom_present",
++    "random_seed",
++    "inference_substrate",
++    "reproducibility_checksum",
++    "honest_verdict",
++    "pilot_n_questions",
++    "pilot_n_candidates",
++    "oracle_at_k_accuracy",
++    "phase_d_context",
++    "hidden_state_access_metadata",
++    "tuned_k_by_fold",
++    "paired_correct",
++    "tests_run",
++    "duration_s",
++    "field_principles",
++)
++
++
++@dataclass(frozen=True)
++class CandidateRow:
++    answer: str
++    reasoning: str
++    correct: bool
++
++
++@dataclass(frozen=True)
++class MusrQuestion:
++    index: int
++    question: str
++    narrative: str
++    gold: str
++    candidates: tuple[CandidateRow, ...]
++
++
++@dataclass(frozen=True)
++class HiddenStateAccessStatus:
++    feasible: bool
++    reason: str
++    metadata: Mapping[str, Any]
++
++
++@dataclass(frozen=True)
++class TunedSCResult:
++    sc_correct_by_question: dict[int, int]
++    tuned_k_by_fold: dict[int, int]
++    tuned_k_by_question: dict[int, int]
++    k_candidates: tuple[int, ...]
++
++
++@dataclass(frozen=True)
++class HiddenProbeResult:
++    verifier_correct_by_question: dict[int, int]
++    selected_scores_by_question: dict[int, float]
++    threshold_by_question: dict[int, float]
++    score_by_candidate: dict[tuple[int, int], float]
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": FIELD_PRINCIPLES[field]}
++
++
++def _value(artifact: Mapping[str, Any], field: str) -> Any:
++    raw = artifact.get(field)
++    if isinstance(raw, Mapping) and "value" in raw:
++        return raw.get("value")
++    return raw
++
++
++def _round_float(value: float | None, digits: int = 6) -> float | None:
++    if value is None:
++        return None
++    if isinstance(value, float) and math.isnan(value):
++        return None
++    return round(float(value), digits)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = json.loads(json.dumps(dict(artifact), sort_keys=True, default=str))
++    checksum = payload.get("reproducibility_checksum")
++    if isinstance(checksum, Mapping):
++        checksum = dict(checksum)
++        checksum["value"] = ""
++        payload["reproducibility_checksum"] = checksum
++    else:
++        payload["reproducibility_checksum"] = {"value": ""}
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return dict(loaded) if isinstance(loaded, Mapping) else {}
++
++
++def _sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _candidate_text(question: MusrQuestion, candidate: CandidateRow) -> str:
++    reasoning = candidate.reasoning.strip()
++    if len(reasoning) > 900:
++        reasoning = reasoning[-900:]
++    return (
++        f"Question: {question.question}\n"
++        f"Candidate reasoning boundary:\n{reasoning}\n"
++        f"Candidate final answer: {candidate.answer}"
++    )
++
++
++def load_musr_questions(
++    root: Path | str = REPO_ROOT,
++    *,
++    max_questions: int | None = None,
++) -> list[MusrQuestion]:
++    trace_dir = Path(root) / MUSR_TRACES_RELATIVE_PATH
++    questions: list[MusrQuestion] = []
++    for path in sorted(trace_dir.glob("q*.json")):
++        raw = _read_json(path)
++        candidates: list[CandidateRow] = []
++        gold = str(raw.get("gold", "")).strip()
++        for cand in raw.get("candidates", []):
++            if not isinstance(cand, Mapping):
++                continue
++            answer = str(cand.get("answer", "")).strip()
++            reasoning = str(cand.get("reasoning", ""))
++            correct = bool(cand.get("correct", answer == gold))
++            candidates.append(CandidateRow(answer=answer, reasoning=reasoning, correct=correct))
++        if gold and candidates:
++            questions.append(
++                MusrQuestion(
++                    index=int(raw.get("q", len(questions))),
++                    question=str(raw.get("question", "")),
++                    narrative=str(raw.get("narrative", "")),
++                    gold=gold,
++                    candidates=tuple(candidates),
++                )
++            )
++        if max_questions is not None and len(questions) >= max_questions:
++            break
++    return questions
++
++
++def question_folds(n_questions: int, *, n_folds: int, seed: int) -> list[set[int]]:
++    if n_questions <= 0:
++        return []
++    count = max(2, min(int(n_folds), n_questions))
++    order = list(range(n_questions))
++    random.Random(seed).shuffle(order)
++    return [set(order[i::count]) for i in range(count)]
++
++
++def _sc_answer(candidates: Sequence[CandidateRow], k: int) -> str | None:
++    selected = [candidate.answer for candidate in candidates[: max(1, int(k))] if candidate.answer]
++    if not selected:
++        return None
++    counts = Counter(selected)
++    best_count = max(counts.values())
++    for answer in selected:
++        if counts[answer] == best_count:
++            return answer
++    return selected[0]
++
++
++def _sc_correct(question: MusrQuestion, k: int) -> int:
++    return int(_sc_answer(question.candidates, k) == question.gold)
++
++
++def _candidate_k_values(questions: Sequence[MusrQuestion]) -> tuple[int, ...]:
++    max_k = max((len(question.candidates) for question in questions), default=1)
++    return tuple(range(1, max_k + 1))
++
++
++def cross_validated_tuned_sc(
++    questions: Sequence[MusrQuestion],
++    folds: Sequence[set[int]],
++) -> TunedSCResult:
++    k_values = _candidate_k_values(questions)
++    tuned_k_by_fold: dict[int, int] = {}
++    tuned_k_by_question: dict[int, int] = {}
++    sc_correct_by_question: dict[int, int] = {}
++
++    all_indices = set(range(len(questions)))
++    for fold_i, test_indices in enumerate(folds):
++        train_indices = sorted(all_indices - set(test_indices))
++        if not train_indices:
++            train_indices = sorted(test_indices)
++        scored: list[tuple[float, int]] = []
++        for k in k_values:
++            acc = sum(_sc_correct(questions[i], k) for i in train_indices) / len(train_indices)
++            scored.append((acc, k))
++        best_acc = max(acc for acc, _k in scored)
++        best_k = max(k for acc, k in scored if acc == best_acc)
++        tuned_k_by_fold[fold_i] = best_k
++        for qi in sorted(test_indices):
++            tuned_k_by_question[qi] = best_k
++            sc_correct_by_question[qi] = _sc_correct(questions[qi], best_k)
++
++    return TunedSCResult(
++        sc_correct_by_question=sc_correct_by_question,
++        tuned_k_by_fold=tuned_k_by_fold,
++        tuned_k_by_question=tuned_k_by_question,
++        k_candidates=k_values,
++    )
++
++
++def _flatten_candidate_texts(questions: Sequence[MusrQuestion]) -> tuple[list[str], list[tuple[int, int]]]:
++    texts: list[str] = []
++    keys: list[tuple[int, int]] = []
++    for qi, question in enumerate(questions):
++        for ci, candidate in enumerate(question.candidates):
++            texts.append(_candidate_text(question, candidate))
++            keys.append((qi, ci))
++    return texts, keys
++
++
++def _labels_for_keys(questions: Sequence[MusrQuestion], keys: Sequence[tuple[int, int]]) -> np.ndarray:
++    return np.asarray([int(questions[qi].candidates[ci].correct) for qi, ci in keys], dtype=int)
++
++
++def _normalize_rows(vectors: np.ndarray) -> np.ndarray:
++    arr = np.asarray(vectors, dtype=float)
++    if arr.ndim != 2:
++        raise ValueError(f"expected 2-D hidden vectors, got shape {arr.shape}")
++    norms = np.linalg.norm(arr, axis=1, keepdims=True)
++    return arr / np.maximum(norms, 1e-12)
++
++
++def _centroid_scores(train_x: np.ndarray, train_y: np.ndarray, test_x: np.ndarray) -> np.ndarray:
++    train_x = _normalize_rows(train_x)
++    test_x = _normalize_rows(test_x)
++    positives = train_x[train_y == 1]
++    negatives = train_x[train_y == 0]
++    if len(positives) == 0 or len(negatives) == 0:
++        return np.zeros(test_x.shape[0], dtype=float)
++    pos = positives.mean(axis=0)
++    neg = negatives.mean(axis=0)
++    direction = pos - neg
++    norm = float(np.linalg.norm(direction))
++    if norm <= 1e-12:
++        return np.zeros(test_x.shape[0], dtype=float)
++    direction = direction / norm
++    return test_x @ direction
++
++
++def _quantile(values: Sequence[float], q: float) -> float:
++    if not values:
++        return 0.0
++    ordered = sorted(float(value) for value in values)
++    pos = min(len(ordered) - 1, max(0, int(round(q * (len(ordered) - 1)))))
++    return ordered[pos]
++
++
++def cross_validated_hidden_probe(
++    questions: Sequence[MusrQuestion],
++    vectors: np.ndarray,
++    keys: Sequence[tuple[int, int]],
++    folds: Sequence[set[int]],
++) -> HiddenProbeResult:
++    labels = _labels_for_keys(questions, keys)
++    all_indices = set(range(len(questions)))
++    verifier_correct_by_question: dict[int, int] = {}
++    selected_scores_by_question: dict[int, float] = {}
++    threshold_by_question: dict[int, float] = {}
++    score_by_candidate: dict[tuple[int, int], float] = {}
++
++    for test_indices in folds:
++        train_questions = all_indices - set(test_indices)
++        train_rows = np.asarray([i for i, (qi, _ci) in enumerate(keys) if qi in train_questions], dtype=int)
++        test_rows = np.asarray([i for i, (qi, _ci) in enumerate(keys) if qi in test_indices], dtype=int)
++        if len(train_rows) == 0 or len(test_rows) == 0:
++            continue
++
++        train_scores = _centroid_scores(vectors[train_rows], labels[train_rows], vectors[train_rows])
++        test_scores = _centroid_scores(vectors[train_rows], labels[train_rows], vectors[test_rows])
++        for row_i, score in zip(test_rows.tolist(), test_scores.tolist(), strict=True):
++            score_by_candidate[keys[row_i]] = float(score)
++
++        selected_correct_train_scores: list[float] = []
++        train_score_by_key = {
++            keys[row_i]: float(score)
++            for row_i, score in zip(train_rows.tolist(), train_scores.tolist(), strict=True)
++        }
++        for qi in sorted(train_questions):
++            local = [(train_score_by_key[(qi, ci)], ci) for ci in range(len(questions[qi].candidates))]
++            score, ci = max(local, key=lambda item: (item[0], -item[1]))
++            if questions[qi].candidates[ci].correct:
++                selected_correct_train_scores.append(score)
++        threshold = _quantile(selected_correct_train_scores, 0.10)
++
++        for qi in sorted(test_indices):
++            local = [
++                (score_by_candidate[(qi, ci)], ci)
++                for ci in range(len(questions[qi].candidates))
++                if (qi, ci) in score_by_candidate
++            ]
++            if not local:
++                continue
++            score, ci = max(local, key=lambda item: (item[0], -item[1]))
++            verifier_correct_by_question[qi] = int(questions[qi].candidates[ci].correct)
++            selected_scores_by_question[qi] = float(score)
++            threshold_by_question[qi] = float(threshold)
++
++    for key in keys:
++        score_by_candidate.setdefault(key, 0.0)
++
++    return HiddenProbeResult(
++        verifier_correct_by_question=verifier_correct_by_question,
++        selected_scores_by_question=selected_scores_by_question,
++        threshold_by_question=threshold_by_question,
++        score_by_candidate=score_by_candidate,
++    )
++
++
++def oracle_at_k_correct(questions: Sequence[MusrQuestion]) -> dict[int, int]:
++    return {
++        qi: int(any(candidate.correct for candidate in question.candidates))
++        for qi, question in enumerate(questions)
++    }
++
++
++def paired_bootstrap_ci(
++    treatment_correct: Sequence[int],
++    baseline_correct: Sequence[int],
++    *,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    seed: int = RANDOM_SEED,
++) -> list[float]:
++    if len(treatment_correct) != len(baseline_correct):
++        raise ValueError("paired arrays must have equal length")
++    n = len(treatment_correct)
++    if n == 0:
++        return [0.0, 0.0]
++    rng = random.Random(seed)
++    deltas: list[float] = []
++    for _ in range(max(1, int(n_bootstrap))):
++        idxs = [rng.randrange(n) for _ in range(n)]
++        delta = sum(treatment_correct[i] for i in idxs) / n - sum(
++            baseline_correct[i] for i in idxs
++        ) / n
++        deltas.append(delta)
++    deltas.sort()
++    lo = deltas[int(0.025 * (len(deltas) - 1))]
++    hi = deltas[int(0.975 * (len(deltas) - 1))]
++    return [round(lo, 6), round(hi, 6)]
++
++
++def mcnemar_exact_p(treatment_correct: Sequence[int], baseline_correct: Sequence[int]) -> float:
++    if len(treatment_correct) != len(baseline_correct):
++        raise ValueError("paired arrays must have equal length")
++    b = sum(1 for t, b0 in zip(treatment_correct, baseline_correct, strict=True) if t and not b0)
++    c = sum(1 for t, b0 in zip(treatment_correct, baseline_correct, strict=True) if b0 and not t)
++    n = b + c
++    if n == 0:
++        return 1.0
++    tail = sum(math.comb(n, k) * (0.5**n) for k in range(min(b, c) + 1))
++    return round(min(1.0, 2.0 * tail), 6)
++
++
++def identically_wrong_detection(
++    questions: Sequence[MusrQuestion],
++    tuned_sc: TunedSCResult,
++    hidden: HiddenProbeResult,
++) -> JsonDict:
++    cases: list[JsonDict] = []
++    for qi, question in enumerate(questions):
++        k = max(2, tuned_sc.tuned_k_by_question.get(qi, 2))
++        first_two = list(question.candidates[:k])[:2]
++        if len(first_two) < 2:
++            continue
++        same_wrong = (
++            first_two[0].answer
++            and first_two[0].answer == first_two[1].answer
++            and first_two[0].answer != question.gold
++        )
++        if not same_wrong:
++            continue
++        score = hidden.selected_scores_by_question.get(qi, 0.0)
++        threshold = hidden.threshold_by_question.get(qi, 0.0)
++        detected = bool(score < threshold)
++        cases.append(
++            {
++                "question_index": question.index,
++                "shared_wrong_answer": first_two[0].answer,
++                "hidden_score": round(float(score), 6),
++                "detection_threshold": round(float(threshold), 6),
++                "hidden_detected": detected,
++            }
++        )
++    n_cases = len(cases)
++    detected_count = sum(int(case["hidden_detected"]) for case in cases)
++    return {
++        "n_cases": n_cases,
++        "detection_rate": round(detected_count / n_cases, 6) if n_cases else 0.0,
++        "detected_count": detected_count,
++        "sc_detection_rate": 0.0,
++        "sc_structural_note": "plain majority vote has no correctness signal when top candidates agree on the same wrong answer",
++        "cases": cases[:10],
++    }
++
++
++def _phase_d_context(root: Path | str) -> JsonDict:
++    path = Path(root) / PHASE_D_MUSR_RELATIVE_PATH
++    payload = _read_json(path)
++    return {
++        "path": PHASE_D_MUSR_RELATIVE_PATH,
++        "exists": path.exists(),
++        "sha256": _sha256_file(path),
++        "honest_verdict": payload.get("honest_verdict"),
++        "self_consistency_accuracy": payload.get("self_consistency_accuracy"),
++        "distributional_energy_accuracy": payload.get("distributional_energy_accuracy"),
++        "verifier_is_oracle": payload.get("verifier_is_oracle"),
++    }
++
++
++def _reference_context(root: Path | str) -> JsonDict:
++    path = Path(root) / RESEARCH_REFERENCES_RELATIVE_PATH
++    text = path.read_text(encoding="utf-8") if path.exists() else ""
++    markers = [
++        "TrajSelector",
++        "VerifySteer",
++        "Discriminative Verification",
++        "Explanatory Verifier",
++    ]
++    return {
++        "path": RESEARCH_REFERENCES_RELATIVE_PATH,
++        "exists": path.exists(),
++        "markers_found": [marker for marker in markers if marker in text],
++    }
++
++
++def _verdict(hidden_acc: float, sc_acc: float, ci: Sequence[float], cost_vs_judge: Mapping[str, Any]) -> str:
++    delta = hidden_acc - sc_acc
++    if ci and ci[0] > 0:
++        accuracy_axis = "beats_tuned_sc_accuracy"
++        prefix = "success_"
++    elif ci and ci[1] < 0:
++        accuracy_axis = "loses_to_tuned_sc_accuracy"
++        prefix = "complete_"
++    else:
++        point = "point_lower" if delta < 0 else "point_higher" if delta > 0 else "point_equal"
++        accuracy_axis = f"ties_tuned_sc_accuracy_{point}"
++        prefix = "complete_"
++    judge_efficiency = (
++        "wins_vs_llm_judge_no_decode"
++        if cost_vs_judge.get("generative_decode_tokens_required") == 0
++        else "vs_llm_judge_efficiency_unresolved"
++    )
++    return (
++        f"{prefix}hidden_state_verifier_{accuracy_axis}_"
++        f"efficiency_loses_to_sc_extra_hidden_forward_{judge_efficiency}_"
++        f"hidden{hidden_acc:.3f}_sc{sc_acc:.3f}_delta{delta:+.3f}"
++    )
++
++
++def build_complete_artifact(
++    *,
++    questions: Sequence[MusrQuestion],
++    vectors: np.ndarray,
++    keys: Sequence[tuple[int, int]],
++    hidden_state_status: HiddenStateAccessStatus,
++    phase_d_context: Mapping[str, Any],
++    reference_context: Mapping[str, Any],
++    duration_s: float,
++    tests_run: Sequence[str] = (),
++    n_folds: int = DEFAULT_N_FOLDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    folds = question_folds(len(questions), n_folds=n_folds, seed=random_seed)
++    tuned_sc = cross_validated_tuned_sc(questions, folds)
++    hidden = cross_validated_hidden_probe(questions, vectors, keys, folds)
++    oracle = oracle_at_k_correct(questions)
++    ordered_q = sorted(tuned_sc.sc_correct_by_question)
++    sc_correct = [tuned_sc.sc_correct_by_question[qi] for qi in ordered_q]
++    hidden_correct = [hidden.verifier_correct_by_question.get(qi, 0) for qi in ordered_q]
++    oracle_correct = [oracle[qi] for qi in ordered_q]
++
++    n_questions = len(ordered_q)
++    sc_acc = sum(sc_correct) / n_questions if n_questions else 0.0
++    hidden_acc = sum(hidden_correct) / n_questions if n_questions else 0.0
++    oracle_acc = sum(oracle_correct) / n_questions if n_questions else 0.0
++    ci = paired_bootstrap_ci(
++        hidden_correct,
++        sc_correct,
++        n_bootstrap=n_bootstrap,
++        seed=random_seed + 1,
++    )
++    p_value = mcnemar_exact_p(hidden_correct, sc_correct)
++    same_wrong = identically_wrong_detection(questions, tuned_sc, hidden)
++    headroom_present = bool((oracle_acc - sc_acc) >= HEADROOM_MIN_DELTA)
++    candidate_count = len(keys)
++    measured_s = hidden_state_status.metadata.get("measured_vector_seconds")
++    per_candidate_s = (
++        float(measured_s) / candidate_count
++        if isinstance(measured_s, (int, float)) and candidate_count
++        else None
++    )
++    compute_vs_sc = {
++        "candidate_vectors_scored": candidate_count,
++        "extra_forward_passes_per_candidate": 1,
++        "efficiency_result": "loses_to_sc_extra_hidden_forward",
++        "generation_reused_from_musr_trace_pool": True,
++        "measured_vector_seconds": _round_float(measured_s),
++        "measured_seconds_per_candidate": _round_float(per_candidate_s),
++        "accuracy_axis": "hidden verifier compared after tuned SC candidate generation",
++    }
++    compute_vs_judge = {
++        "candidate_vectors_scored": candidate_count,
++        "generative_decode_tokens_required": 0,
++        "judge_forward_decode_avoided": True,
++        "efficiency_result": "wins_vs_llm_judge_no_decode",
++        "relative_cost_note": (
++            "The hidden-vector probe performs embedding forward passes and a small linear score; "
++            "a generative judge would require prompt evaluation plus decoded judgment tokens per candidate."
++        ),
++    }
++    verdict = _verdict(hidden_acc, sc_acc, ci, compute_vs_judge)
++    design = (
++        "trajselector_trained_probe: llama.cpp exposed final-token hidden vectors, not full "
++        "per-layer states; this pilot trains a leakage-safe centroid probe on those generator "
++        "internal vectors rather than a 0.6B end-to-end verifier."
++    )
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "hidden_state_access_feasible": _wrap("hidden_state_access_feasible", True),
++        "design_path_taken": _wrap("design_path_taken", design),
++        "corpus_used": _wrap("corpus_used", CORPUS_USED),
++        "tuned_sc_baseline_accuracy": _wrap("tuned_sc_baseline_accuracy", round(sc_acc, 6)),
++        "hidden_state_verifier_accuracy": _wrap("hidden_state_verifier_accuracy", round(hidden_acc, 6)),
++        "accuracy_delta_ci95": _wrap("accuracy_delta_ci95", ci),
++        "mcnemar_p_value": _wrap("mcnemar_p_value", p_value),
++        "identically_wrong_detection_result": _wrap("identically_wrong_detection_result", same_wrong),
++        "compute_cost_vs_sc": _wrap("compute_cost_vs_sc", compute_vs_sc),
++        "compute_cost_vs_llm_judge": _wrap("compute_cost_vs_llm_judge", compute_vs_judge),
++        "verifier_is_oracle": _wrap("verifier_is_oracle", False),
++        "headroom_present": _wrap("headroom_present", headroom_present),
++        "random_seed": _wrap("random_seed", random_seed),
++        "inference_substrate": _wrap("inference_substrate", "live_llm_inference"),
++        "reproducibility_checksum": _wrap("reproducibility_checksum", ""),
++        "honest_verdict": _wrap("honest_verdict", verdict),
++        "pilot_n_questions": n_questions,
++        "pilot_n_candidates": candidate_count,
++        "oracle_at_k_accuracy": round(oracle_acc, 6),
++        "headroom_delta_oracle_minus_sc": round(oracle_acc - sc_acc, 6),
++        "phase_d_context": dict(phase_d_context),
++        "research_reference_context": dict(reference_context),
++        "hidden_state_access_metadata": dict(hidden_state_status.metadata)
++        | {"status_reason": hidden_state_status.reason},
++        "tuned_k_by_fold": {str(k): v for k, v in tuned_sc.tuned_k_by_fold.items()},
++        "tuned_k_by_question": {str(k): v for k, v in tuned_sc.tuned_k_by_question.items()},
++        "paired_correct": {
++            "question_indices": ordered_q,
++            "hidden_state_verifier": hidden_correct,
++            "tuned_self_consistency": sc_correct,
++            "oracle_at_k": oracle_correct,
++        },
++        "score_summary": {
++            "selected_hidden_scores": {
++                str(qi): round(score, 6)
++                for qi, score in hidden.selected_scores_by_question.items()
++            },
++            "detection_thresholds": {
++                str(qi): round(score, 6)
++                for qi, score in hidden.threshold_by_question.items()
++            },
++        },
++        "tests_run": list(tests_run),
++        "duration_s": round(float(duration_s), 6),
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    artifact["reproducibility_checksum"] = _wrap(
++        "reproducibility_checksum",
++        payload_checksum(artifact),
++    )
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    duration_s: float,
++    tests_run: Sequence[str] = (),
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    blocked_reason = reason if reason.startswith("blocked_") else f"blocked_{reason}"
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "hidden_state_access_feasible": _wrap("hidden_state_access_feasible", False),
++        "design_path_taken": _wrap("design_path_taken", blocked_reason),
++        "corpus_used": _wrap("corpus_used", CORPUS_USED),
++        "tuned_sc_baseline_accuracy": _wrap("tuned_sc_baseline_accuracy", 0.0),
++        "hidden_state_verifier_accuracy": _wrap("hidden_state_verifier_accuracy", 0.0),
++        "accuracy_delta_ci95": _wrap("accuracy_delta_ci95", [0.0, 0.0]),
++        "mcnemar_p_value": _wrap("mcnemar_p_value", 1.0),
++        "identically_wrong_detection_result": _wrap(
++            "identically_wrong_detection_result",
++            {
++                "n_cases": 0,
++                "detection_rate": 0.0,
++                "detected_count": 0,
++                "sc_detection_rate": 0.0,
++                "blocked_reason": blocked_reason,
++            },
++        ),
++        "compute_cost_vs_sc": _wrap(
++            "compute_cost_vs_sc",
++            {"blocked_reason": blocked_reason, "candidate_vectors_scored": 0},
++        ),
++        "compute_cost_vs_llm_judge": _wrap(
++            "compute_cost_vs_llm_judge",
++            {"blocked_reason": blocked_reason, "generative_decode_tokens_required": None},
++        ),
++        "verifier_is_oracle": _wrap("verifier_is_oracle", False),
++        "headroom_present": _wrap("headroom_present", False),
++        "random_seed": _wrap("random_seed", random_seed),
++        "inference_substrate": _wrap("inference_substrate", "live_llm_inference"),
++        "reproducibility_checksum": _wrap("reproducibility_checksum", ""),
++        "honest_verdict": _wrap("honest_verdict", blocked_reason),
++        "pilot_n_questions": 0,
++        "pilot_n_candidates": 0,
++        "oracle_at_k_accuracy": 0.0,
++        "phase_d_context": {},
++        "hidden_state_access_metadata": {"blocked_reason": blocked_reason},
++        "tuned_k_by_fold": {},
++        "paired_correct": {
++            "question_indices": [],
++            "hidden_state_verifier": [],
++            "tuned_self_consistency": [],
++            "oracle_at_k": [],
++        },
++        "tests_run": list(tests_run),
++        "duration_s": round(float(duration_s), 6),
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    artifact["reproducibility_checksum"] = _wrap(
++        "reproducibility_checksum",
++        payload_checksum(artifact),
++    )
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    for field in REQUIRED_PRINCIPLED_FIELDS:
++        raw = artifact.get(field)
++        if not isinstance(raw, Mapping) or "value" not in raw or "principle" not in raw:
++            errors.append(f"{field} must be principle-wrapped")
++            continue
++        if raw.get("principle") != FIELD_PRINCIPLES[field]:
++            errors.append(f"{field} has wrong principle")
++    if _value(artifact, "verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    verdict = _value(artifact, "honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must use a terminal prefix")
++    ci = _value(artifact, "accuracy_delta_ci95")
++    if not isinstance(ci, list) or len(ci) != 2:
++        errors.append("accuracy_delta_ci95 must be a two-number CI95")
++    feasible = _value(artifact, "hidden_state_access_feasible")
++    if not isinstance(feasible, bool):
++        errors.append("hidden_state_access_feasible must be bool")
++    if _value(artifact, "inference_substrate") != "live_llm_inference":
++        errors.append("inference_substrate must be live_llm_inference")
++    checksum = _value(artifact, "reproducibility_checksum")
++    if isinstance(checksum, str) and checksum.startswith("sha256:"):
++        if checksum != payload_checksum(artifact):
++            errors.append("reproducibility_checksum mismatch")
++    else:
++        errors.append("reproducibility_checksum must be sha256")
++    return errors
++
++
++def _coerce_one_embedding(raw: Any) -> np.ndarray:
++    data = raw[0] if isinstance(raw, tuple) else raw
++    arr = np.asarray(data, dtype=float)
++    if arr.ndim == 1:
++        return arr
++    if arr.ndim == 2 and arr.shape[0] > 0:
++        return arr[-1]
++    raise ValueError(f"cannot coerce llama embedding shape {arr.shape}")
++
++
++def make_live_llama_vector_provider(
++    *,
++    max_text_chars: int = 1200,
++    n_ctx: int = 256,
++    n_gpu_layers: int = -1,
++) -> tuple[HiddenStateAccessStatus, VectorProvider]:
++    from carnot.inference.sota_models import resolve_cached_gguf
++
++    path = resolve_cached_gguf(HIDDEN_MODEL_ID, preferred_quant="Q4_K_M")
++    if path is None:
++        status = HiddenStateAccessStatus(
++            feasible=False,
++            reason="blocked_hidden_state_access_infeasible: local Gemma GGUF not cached",
++            metadata={"model_id": HIDDEN_MODEL_ID},
++        )
++        return status, lambda _texts: np.empty((0, 0), dtype=float)
++
++    try:
++        from llama_cpp import LLAMA_POOLING_TYPE_LAST, Llama
++    except Exception as exc:
++        status = HiddenStateAccessStatus(
++            feasible=False,
++            reason=f"blocked_hidden_state_access_infeasible: llama_cpp import failed: {exc!r}",
++            metadata={"model_id": HIDDEN_MODEL_ID, "gguf_path": path},
++        )
++        return status, lambda _texts: np.empty((0, 0), dtype=float)
++
++    load_started = time.time()
++    try:
++        llm = Llama(
++            model_path=str(path),
++            n_ctx=int(n_ctx),
++            n_batch=min(32, int(n_ctx)),
++            n_gpu_layers=int(n_gpu_layers),
++            offload_kqv=bool(n_gpu_layers != 0),
++            embedding=True,
++            pooling_type=LLAMA_POOLING_TYPE_LAST,
++            logits_all=False,
++            seed=RANDOM_SEED,
++            verbose=False,
++        )
++        load_s = time.time() - load_started
++        smoke_started = time.time()
++        smoke_vec = _coerce_one_embedding(llm.embed("Hidden-state access smoke.", normalize=False, truncate=True))
++        smoke_s = time.time() - smoke_started
++    except Exception as exc:
++        status = HiddenStateAccessStatus(
++            feasible=False,
++            reason=f"blocked_hidden_state_access_infeasible: llama.cpp embedding smoke failed: {exc!r}",
++            metadata={"model_id": HIDDEN_MODEL_ID, "gguf_path": path},
++        )
++        return status, lambda _texts: np.empty((0, 0), dtype=float)
++
++    timing = {"embed_s": 0.0, "calls": 0}
++
++    def provider(texts: list[str]) -> np.ndarray:
++        vectors: list[np.ndarray] = []
++        started = time.time()
++        for text in texts:
++            clipped = str(text)[:max_text_chars]
++            vectors.append(_coerce_one_embedding(llm.embed(clipped, normalize=False, truncate=True)))
++        timing["embed_s"] += time.time() - started
++        timing["calls"] += len(texts)
++        return np.vstack(vectors).astype(float)
++
++    status = HiddenStateAccessStatus(
++        feasible=True,
++        reason="llama.cpp final-token embedding vector smoke succeeded",
++        metadata={
++            "model_id": HIDDEN_MODEL_ID,
++            "gguf_path": path,
++            "hidden_state_extraction_path": "llama_cpp.Llama(embedding=True,pooling_type=LAST).embed",
++            "vector_shape": list(smoke_vec.shape),
++            "load_s": round(load_s, 6),
++            "smoke_s": round(smoke_s, 6),
++            "llama_cpp_hidden_state_limitation": (
++                "final-token embedding vectors available; full per-layer hidden states and steering hooks not exposed"
++            ),
++            "timing_ref": timing,
++        },
++    )
++    return status, provider
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | None = None,
++    vector_provider: VectorProvider | None = None,
++    max_questions: int = DEFAULT_MAX_QUESTIONS,
++    n_folds: int = DEFAULT_N_FOLDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    duration_s: float | None = None,
++    hidden_state_status: HiddenStateAccessStatus | None = None,
++    tests_run: Sequence[str] = (),
++) -> JsonDict:
++    started = time.time()
++    root_path = Path(root)
++    output = result_path or (root_path / RESULT_RELATIVE_PATH)
++    if vector_provider is None or hidden_state_status is None:
++        live_status, live_provider = make_live_llama_vector_provider()
++        hidden_state_status = hidden_state_status or live_status
++        vector_provider = vector_provider or live_provider
++
++    if not hidden_state_status.feasible:
++        artifact = build_blocked_artifact(
++            reason=hidden_state_status.reason,
++            duration_s=duration_s if duration_s is not None else time.time() - started,
++            tests_run=tests_run,
++        )
++    else:
++        questions = load_musr_questions(root_path, max_questions=max_questions)
++        if len(questions) < 2:
++            artifact = build_blocked_artifact(
++                reason="blocked_hidden_state_access_infeasible: insufficient MuSR traces for question-split pilot",
++                duration_s=duration_s if duration_s is not None else time.time() - started,
++                tests_run=tests_run,
++            )
++        else:
++            texts, keys = _flatten_candidate_texts(questions)
++            vector_started = time.time()
++            vectors = vector_provider(texts)
++            measured = time.time() - vector_started
++            metadata = dict(hidden_state_status.metadata)
++            timing_ref = metadata.pop("timing_ref", None)
++            if isinstance(timing_ref, Mapping):
++                measured = float(timing_ref.get("embed_s", measured) or measured)
++                metadata["vector_provider_calls"] = timing_ref.get("calls")
++            metadata["measured_vector_seconds"] = round(float(measured), 6)
++            hidden_state_status = HiddenStateAccessStatus(
++                feasible=True,
++                reason=hidden_state_status.reason,
++                metadata=metadata,
++            )
++            artifact = build_complete_artifact(
++                questions=questions,
++                vectors=vectors,
++                keys=keys,
++                hidden_state_status=hidden_state_status,
++                phase_d_context=_phase_d_context(root_path),
++                reference_context=_reference_context(root_path),
++                duration_s=duration_s if duration_s is not None else time.time() - started,
++                tests_run=tests_run,
++                n_folds=n_folds,
++                n_bootstrap=n_bootstrap,
++            )
++
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError(f"invalid Exp 5178 artifact: {errors}")
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(json.dumps({"honest_verdict": artifact["honest_verdict"]["value"]}, indent=2))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json b/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json
+index 216745129e..3e077afdcb 100644
+--- a/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json
++++ b/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json
+@@ -41,7 +41,7 @@
+     0.015873,
+     0.131148
+   ],
+-  "duration_s": 1.003452,
++  "duration_s": 617.917435,
+   "exact_test_discordant_losses": 0,
+   "exact_test_discordant_wins": {
+     "principle": "The actual discordant wins from the achieved rows, not a projected count.",
+@@ -114,9 +114,10 @@
+       "checkpoint_resume_used": true,
+       "demo_perfect_count": 0,
+       "domains": {
+-        "arc1": 5
++        "arc1": 3,
++        "arc2": 2
+       },
+-      "duration_s": 0.007847,
++      "duration_s": 616.157319,
+       "identity_cache_smoke": false,
+       "induction_rate": 0.0,
+       "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+@@ -134,56 +135,56 @@
+           "demo_fit": 0.0,
+           "demo_perfect": false,
+           "domain": "arc1",
+-          "local_key": "arc1:0:50a16a69",
++          "local_key": "arc1:1:66e6c45b",
+           "pred_in_pool": false,
+           "pred_is_pool_correct": false,
+-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle and provide a Python function `transform(grid)` that implements the observed transformation.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2",
++          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nI should return a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's look at the demos.\nDemo 1:\nInput:\n[[0,0,0,0],\n [0,3,4,0],\n [0,7,",
+           "status": "no_code",
+-          "task": "50a16a69"
++          "task": "66e6c45b"
+         },
+         {
+           "demo_fit": 0.0,
+           "demo_perfect": false,
+           "domain": "arc1",
+-          "local_key": "arc1:1:66e6c45b",
++          "local_key": "arc1:28:00576224",
+           "pred_in_pool": false,
+           "pred_is_pool_correct": false,
+-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle based on two examples and apply the rule to a test input.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[0, 0, 0, 0],\n [0, 3, 4, 0],\n [0, 7, 6, 0],\n [0, 0, 0, 0]]\n```\nOutput:\n```\n[[3, 0, 0, 4],\n [0, 0, 0, 0],\n [0, 0, 0, 0],\n [7, 0, 0, 6]]\n```\n\nLet's look at ",
++          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the demos.\nDemo 1:\nInput:\n[[8, 6],\n [6, 4]]\nOutput:",
+           "status": "no_code",
+-          "task": "66e6c45b"
++          "task": "00576224"
+         },
+         {
+           "demo_fit": 0.0,
+           "demo_perfect": false,
+           "domain": "arc1",
+-          "local_key": "arc1:2:17cae0c1",
++          "local_key": "arc1:16:be03b35f",
+           "pred_in_pool": false,
+           "pred_is_pool_correct": false,
+-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC (Abstraction and Reasoning Corpus) puzzle.\nI need to analyze the provided demos to infer the transformation rule and then apply it to the test input.\nFinally, I need to output a Python function `transform(grid)` that performs this transformation.\n\n**Analys",
++          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the data.\nDemos:\nDemo 1:\nInput:\n[[1,1,0,1,1],\n [1,0",
+           "status": "no_code",
+-          "task": "17cae0c1"
++          "task": "be03b35f"
+         },
+         {
+           "demo_fit": 0.0,
+           "demo_perfect": false,
+-          "domain": "arc1",
+-          "local_key": "arc1:28:00576224",
++          "domain": "arc2",
++          "local_key": "arc2:8:28a6681f",
+           "pred_in_pool": false,
+           "pred_is_pool_correct": false,
+-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the demos.\nDemo 1:\nInput:\n[[8, 6],\n [6, 4]]\nOutput:",
++          "response_preview": "\n\nReturn only one Python code block defining def transform(grid). np is provided; no imports, files, or environment.\n\n<think>\n\n</think>\n\nTo solve this task, we need to infer the transformation rule from the provided demos and apply it to the test input.\n\n**Analysis of Demos:**\n\n1.  **Demo 1:**\n    *",
+           "status": "no_code",
+-          "task": "00576224"
++          "task": "28a6681f"
+         },
+         {
+           "demo_fit": 0.0,
+           "demo_perfect": false,
+-          "domain": "arc1",
+-          "local_key": "arc1:16:be03b35f",
++          "domain": "arc2",
++          "local_key": "arc2:27:dd6b8c4b",
+           "pred_in_pool": false,
+           "pred_is_pool_correct": false,
+-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the data.\nDemos:\nDemo 1:\nInput:\n[[1,1,0,1,1],\n [1,0",
++          "response_preview": "\n\nReturn only one Python code block defining def transform(grid). np is provided; no imports, files, or numpy.\n\n<think>\n\n</think>\n\nTo solve this task, we need to infer the transformation rule from the provided demos and apply it to the test input.\n\n**Analysis of Demos:**\n\n1.  **Identify Key Objects:",
+           "status": "no_code",
+-          "task": "be03b35f"
++          "task": "dd6b8c4b"
+         }
+       ],
+       "scoring_kind": "candidate_pool_correct_given_demo_perfect",
+@@ -192,6 +193,15 @@
+       "target_n": 5
+     }
+   },
++  "model_specs": {
++    "codex_first_arm": "Rescored checked-in GAP-4 ARC-1 and ARC-2 codex-first candidate/program artifacts with checkpoint/resume accounting.",
++    "local_generator_arm": {
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "identity_cache_smoke": false,
++      "loader": "llama.cpp",
++      "prompt_kind": "arc_transform_induction_from_demos"
++    }
++  },
+   "partial": false,
+   "preconditions": {
+     "exp5161": {
+@@ -211,7 +221,7 @@
+   "remaining_rows": [],
+   "reproducibility_checksum": {
+     "principle": "Content-addressed hash catches silent artifact or row drift.",
+-    "value": "sha256:31e64bc95b84ea8de2fa19dd75c3e08e4058bba3d863de8d99c0cb06193f1466"
++    "value": "sha256:912afa8d18421800a5691e7bd34f70ed6ba930f68e2e9ea18021a6e84183a250"
+   },
+   "result_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json",
+   "scaleup_rows": [
+@@ -1131,6 +1141,7 @@
+     "SCENARIO-REPORT-5177",
+     "SCENARIO-REPORT-5177-LOCAL-GENERATOR"
+   ],
++  "target_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+   "target_n": {
+     "principle": "Target selected from Exp 5161's observed 4/60 discordant-win rate, rounded into the 150-200 scale-up range for margin.",
+     "value": 180
+@@ -1140,23 +1151,5 @@
+     "exp5161_observed_n": 60,
+     "proportional_n_for_six_wins": 90,
+     "selected_with_margin": 180
+-  },
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "IMPLAUSIBLE_PERFECT",
+-      "severity": "info",
+-      "detail": "exact_test_discordant_losses=0.0 (exactly zero). Confirm this is not a stub default."
+-    },
+-    {
+-      "kind": "DURATION_TOO_SHORT",
+-      "severity": "critical",
+-      "detail": "duration_s=1.003452 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+-    },
+-    {
+-      "kind": "METHODOLOGY_MISSING",
+-      "severity": "warn",
+-      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+-    }
+-  ]
+-}
+\ No newline at end of file
++  }
++}
+diff --git a/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.local_generator.checkpoint.json b/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.local_generator.checkpoint.json
+deleted file mode 100644
+index 96ac24722e..0000000000
+--- a/results/experiment_5177_gap4_scaleup_decentralization_tier_v474.local_generator.checkpoint.json
++++ /dev/null
+@@ -1,15 +0,0 @@
+-{
+-  "scored_rows": [
+-    {
+-      "demo_fit": 0.0,
+-      "demo_perfect": false,
+-      "domain": "arc1",
+-      "local_key": "arc1:1:66e6c45b",
+-      "pred_in_pool": false,
+-      "pred_is_pool_correct": false,
+-      "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nI should return a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's look at the demos.\nDemo 1:\nInput:\n[[0,0,0,0],\n [0,3,4,0],\n [0,7,",
+-      "status": "no_code",
+-      "task": "66e6c45b"
+-    }
+-  ]
+-}
+diff --git a/results/experiment_5178_hidden_state_verifier_pilot_v474.json b/results/experiment_5178_hidden_state_verifier_pilot_v474.json
+new file mode 100644
+index 0000000000..1fe6f1a962
+--- /dev/null
++++ b/results/experiment_5178_hidden_state_verifier_pilot_v474.json
+@@ -0,0 +1,231 @@
++{
++  "accuracy_delta_ci95": {
++    "principle": "Paired bootstrap CI95 for hidden verifier minus tuned SC.",
++    "value": [
++      -0.666667,
++      0.0
++    ]
++  },
++  "compute_cost_vs_llm_judge": {
++    "principle": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge.",
++    "value": {
++      "candidate_vectors_scored": 48,
++      "efficiency_result": "wins_vs_llm_judge_no_decode",
++      "generative_decode_tokens_required": 0,
++      "judge_forward_decode_avoided": true,
++      "relative_cost_note": "The hidden-vector probe performs embedding forward passes and a small linear score; a generative judge would require prompt evaluation plus decoded judgment tokens per candidate."
++    }
++  },
++  "compute_cost_vs_sc": {
++    "principle": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency.",
++    "value": {
++      "accuracy_axis": "hidden verifier compared after tuned SC candidate generation",
++      "candidate_vectors_scored": 48,
++      "efficiency_result": "loses_to_sc_extra_hidden_forward",
++      "extra_forward_passes_per_candidate": 1,
++      "generation_reused_from_musr_trace_pool": true,
++      "measured_seconds_per_candidate": 0.665146,
++      "measured_vector_seconds": 31.927019
++    }
++  },
++  "corpus_used": {
++    "principle": "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class.",
++    "value": "MuSR/murder_mysteries"
++  },
++  "design_path_taken": {
++    "principle": "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification.",
++    "value": "trajselector_trained_probe: llama.cpp exposed final-token hidden vectors, not full per-layer states; this pilot trains a leakage-safe centroid probe on those generator internal vectors rather than a 0.6B end-to-end verifier."
++  },
++  "duration_s": 35.279684,
++  "experiment": "experiment_5178_hidden_state_verifier_pilot_v474",
++  "experiment_id": 5178,
++  "field_principles": {
++    "accuracy_delta_ci95": "Paired bootstrap CI95 for hidden verifier minus tuned SC.",
++    "compute_cost_vs_llm_judge": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge.",
++    "compute_cost_vs_sc": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency.",
++    "corpus_used": "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class.",
++    "design_path_taken": "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification.",
++    "headroom_present": "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative.",
++    "hidden_state_access_feasible": "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model.",
++    "hidden_state_verifier_accuracy": "Selection accuracy of the hidden-vector verifier on held-out questions.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency.",
++    "identically_wrong_detection_result": "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect.",
++    "inference_substrate": "This task uses live local LLM inference for the hidden-vector access check and pilot vectors.",
++    "mcnemar_p_value": "Paired exact McNemar test over hidden verifier vs tuned SC correctness.",
++    "random_seed": "Deterministic split, tuning, bootstrap, and checksum reproducibility.",
++    "reproducibility_checksum": "Content-addressed hash catches silent artifact or row drift.",
++    "tuned_sc_baseline_accuracy": "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson.",
++    "verifier_is_oracle": "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only."
++  },
++  "headroom_delta_oracle_minus_sc": 0.666667,
++  "headroom_present": {
++    "principle": "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative.",
++    "value": true
++  },
++  "hidden_state_access_feasible": {
++    "principle": "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model.",
++    "value": true
++  },
++  "hidden_state_access_metadata": {
++    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "hidden_state_extraction_path": "llama_cpp.Llama(embedding=True,pooling_type=LAST).embed",
++    "llama_cpp_hidden_state_limitation": "final-token embedding vectors available; full per-layer hidden states and steering hooks not exposed",
++    "load_s": 2.621799,
++    "measured_vector_seconds": 31.927019,
++    "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "smoke_s": 0.663237,
++    "status_reason": "llama.cpp final-token embedding vector smoke succeeded",
++    "vector_provider_calls": 48,
++    "vector_shape": [
++      2816
++    ]
++  },
++  "hidden_state_verifier_accuracy": {
++    "principle": "Selection accuracy of the hidden-vector verifier on held-out questions.",
++    "value": 0.0
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency.",
++    "value": "complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333"
++  },
++  "identically_wrong_detection_result": {
++    "principle": "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect.",
++    "value": {
++      "cases": [
++        {
++          "detection_threshold": 0.100959,
++          "hidden_detected": true,
++          "hidden_score": 0.059254,
++          "question_index": 4,
++          "shared_wrong_answer": "Emma"
++        }
++      ],
++      "detected_count": 1,
++      "detection_rate": 1.0,
++      "n_cases": 1,
++      "sc_detection_rate": 0.0,
++      "sc_structural_note": "plain majority vote has no correctness signal when top candidates agree on the same wrong answer"
++    }
++  },
++  "inference_substrate": {
++    "principle": "This task uses live local LLM inference for the hidden-vector access check and pilot vectors.",
++    "value": "live_llm_inference"
++  },
++  "mcnemar_p_value": {
++    "principle": "Paired exact McNemar test over hidden verifier vs tuned SC correctness.",
++    "value": 0.5
++  },
++  "oracle_at_k_accuracy": 1.0,
++  "paired_correct": {
++    "hidden_state_verifier": [
++      0,
++      0,
++      0,
++      0,
++      0,
++      0
++    ],
++    "oracle_at_k": [
++      1,
++      1,
++      1,
++      1,
++      1,
++      1
++    ],
++    "question_indices": [
++      0,
++      1,
++      2,
++      3,
++      4,
++      5
++    ],
++    "tuned_self_consistency": [
++      0,
++      1,
++      0,
++      1,
++      0,
++      0
++    ]
++  },
++  "phase_d_context": {
++    "distributional_energy_accuracy": 0.515,
++    "exists": true,
++    "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.515_pure_0.535_vs_sc_0.56_delta_-0.045_ci_-0.105_0.015_puredelta_-0.025_ci_-0.095_0.045_sc_not_saturated_headroom_unrealized",
++    "path": "results/distributional_energy_verifier_musr.json",
++    "self_consistency_accuracy": 0.56,
++    "sha256": "sha256:d4d7196d9f7e29fece0b1dfc8007b3b3c82464211dc1a965fa118548fbdd85fb",
++    "verifier_is_oracle": false
++  },
++  "pilot_n_candidates": 48,
++  "pilot_n_questions": 6,
++  "random_seed": {
++    "principle": "Deterministic split, tuning, bootstrap, and checksum reproducibility.",
++    "value": 5178
++  },
++  "reproducibility_checksum": {
++    "principle": "Content-addressed hash catches silent artifact or row drift.",
++    "value": "sha256:a1c067d8c21c5e204de84ed12bd016fd77271e77bdbbbf11c9215aeba52fbb61"
++  },
++  "research_reference_context": {
++    "exists": true,
++    "markers_found": [
++      "TrajSelector",
++      "VerifySteer",
++      "Discriminative Verification",
++      "Explanatory Verifier"
++    ],
++    "path": "research-references.md"
++  },
++  "result_path": "results/experiment_5178_hidden_state_verifier_pilot_v474.json",
++  "schema": "carnot.hidden_state_verifier_pilot_5178.v1",
++  "score_summary": {
++    "detection_thresholds": {
++      "0": 0.032405,
++      "1": 0.107308,
++      "2": 0.032405,
++      "3": 0.107308,
++      "4": 0.100959,
++      "5": 0.100959
++    },
++    "selected_hidden_scores": {
++      "0": 0.108775,
++      "1": 0.124709,
++      "2": 0.048719,
++      "3": 0.156009,
++      "4": 0.059254,
++      "5": 0.021059
++    }
++  },
++  "spec_refs": [
++    "REQ-REPORT-5178",
++    "SCENARIO-REPORT-5178",
++    "SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS"
++  ],
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py -q -o addopts=''"
++  ],
++  "tuned_k_by_fold": {
++    "0": 8,
++    "1": 2,
++    "2": 2
++  },
++  "tuned_k_by_question": {
++    "0": 8,
++    "1": 2,
++    "2": 8,
++    "3": 2,
++    "4": 2,
++    "5": 2
++  },
++  "tuned_sc_baseline_accuracy": {
++    "principle": "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson.",
++    "value": 0.333333
++  },
++  "verifier_is_oracle": {
++    "principle": "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only.",
++    "value": false
++  }
++}
+diff --git a/tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py b/tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py
+new file mode 100644
+index 0000000000..178c5d1751
+--- /dev/null
++++ b/tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py
+@@ -0,0 +1,256 @@
++"""Tests for Exp 5178 hidden-state verifier pilot.
++
++Spec refs: REQ-REPORT-5178, SCENARIO-REPORT-5178,
++SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++from carnot import experiment_5178_hidden_state_verifier_pilot_v474 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _candidate(answer: str, correct: bool, signal: str) -> dict[str, Any]:
++    return {
++        "answer": answer,
++        "correct": int(correct),
++        "reasoning": f"{signal} reasoning paragraph. ANSWER: {answer}",
++    }
++
++
++def _write_trace(root: Path, q: int, gold: str, candidates: list[dict[str, Any]]) -> None:
++    trace_dir = root / mod.MUSR_TRACES_RELATIVE_PATH
++    trace_dir.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "q": q,
++        "question": f"Who is responsible in synthetic case {q}?",
++        "narrative": f"Synthetic MuSR narrative {q}",
++        "choices": ["A", "B", "C"],
++        "gold": gold,
++        "n_candidates": len(candidates),
++        "candidates": candidates,
++    }
++    (trace_dir / f"q{q:04d}.json").write_text(
++        json.dumps(payload, sort_keys=True),
++        encoding="utf-8",
++    )
++
++
++def _write_phase_d_context(root: Path) -> None:
++    path = root / mod.PHASE_D_MUSR_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete_musr_energy_verifier_no_win",
++                "self_consistency_accuracy": 0.56,
++                "distributional_energy_accuracy": 0.515,
++                "verifier_is_oracle": False,
++            },
++            sort_keys=True,
++        ),
++        encoding="utf-8",
++    )
++    (root / "research-references.md").write_text(
++        "TrajSelector VerifySteer Discriminative Verification Explanatory Verifier\n",
++        encoding="utf-8",
++    )
++
++
++def _repo_with_traces(tmp_path: Path) -> Path:
++    _write_phase_d_context(tmp_path)
++    rows = [
++        ("A", [("B", False, "distractor"), ("A", True, "reliable"), ("A", True, "reliable")]),
++        ("A", [("B", False, "distractor"), ("B", False, "distractor"), ("A", True, "reliable")]),
++        ("B", [("A", False, "distractor"), ("B", True, "reliable"), ("B", True, "reliable")]),
++        ("B", [("A", False, "distractor"), ("A", False, "distractor"), ("B", True, "reliable")]),
++        ("C", [("A", False, "distractor"), ("A", False, "distractor"), ("A", False, "distractor")]),
++        ("C", [("B", False, "distractor"), ("C", True, "reliable"), ("C", True, "reliable")]),
++    ]
++    for q, (gold, candidates) in enumerate(rows):
++        _write_trace(
++            tmp_path,
++            q,
++            gold,
++            [_candidate(answer, correct, signal) for answer, correct, signal in candidates],
++        )
++    return tmp_path
++
++
++def _fake_vectors(texts: list[str]) -> np.ndarray:
++    vectors: list[list[float]] = []
++    for text in texts:
++        if "reliable" in text:
++            vectors.append([2.0, 0.1, 1.0])
++        elif "distractor" in text:
++            vectors.append([0.1, 2.0, -1.0])
++        else:
++            vectors.append([0.5, 0.5, 0.0])
++    return np.asarray(vectors, dtype=float)
++
++
++def test_req_report_5178_spec_declares_hidden_state_contract() -> None:
++    """REQ-REPORT-5178: OpenSpec declares the hidden-state pilot fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-REPORT-5178") :]
++
++    for marker in (
++        "REQ-REPORT-5178",
++        "SCENARIO-REPORT-5178",
++        "SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5178_builds_hidden_vector_pilot_artifact(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5178: hidden-vector scoring is compared to tuned SC."""
++
++    root = _repo_with_traces(tmp_path)
++    artifact = mod.run(
++        root=root,
++        result_path=root / mod.RESULT_RELATIVE_PATH,
++        vector_provider=_fake_vectors,
++        max_questions=6,
++        n_folds=3,
++        n_bootstrap=200,
++        duration_s=12.5,
++        hidden_state_status=mod.HiddenStateAccessStatus(
++            feasible=True,
++            reason="fixture final-token hidden vectors available",
++            metadata={
++                "model_id": mod.HIDDEN_MODEL_ID,
++                "hidden_state_extraction_path": "fixture",
++                "vector_shape": [3],
++            },
++        ),
++        tests_run=["unit fixture"],
++    )
++
++    assert artifact["hidden_state_access_feasible"]["value"] is True
++    assert artifact["design_path_taken"]["value"].startswith("trajselector_trained_probe")
++    assert artifact["corpus_used"]["value"] == "MuSR/murder_mysteries"
++    assert artifact["tuned_sc_baseline_accuracy"]["value"] < artifact["oracle_at_k_accuracy"]
++    assert artifact["hidden_state_verifier_accuracy"]["value"] >= artifact["tuned_sc_baseline_accuracy"]["value"]
++    assert len(artifact["accuracy_delta_ci95"]["value"]) == 2
++    assert 0.0 <= artifact["mcnemar_p_value"]["value"] <= 1.0
++    assert artifact["identically_wrong_detection_result"]["value"]["n_cases"] >= 1
++    assert artifact["identically_wrong_detection_result"]["value"]["sc_detection_rate"] == 0.0
++    assert artifact["compute_cost_vs_sc"]["value"]["candidate_vectors_scored"] == artifact["pilot_n_candidates"]
++    assert artifact["compute_cost_vs_llm_judge"]["value"]["generative_decode_tokens_required"] == 0
++    assert artifact["verifier_is_oracle"]["value"] is False
++    assert artifact["headroom_present"]["value"] is True
++    assert artifact["random_seed"]["value"] == mod.RANDOM_SEED
++    assert artifact["inference_substrate"]["value"] == "live_llm_inference"
++    assert artifact["honest_verdict"]["value"].startswith(("complete_", "success_"))
++    assert artifact["reproducibility_checksum"]["value"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads((root / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++
++
++def test_scenario_report_5178_blocked_hidden_access_is_terminal(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS: no vectors blocks honestly."""
++
++    _write_phase_d_context(tmp_path)
++    artifact = mod.build_blocked_artifact(
++        reason="blocked_hidden_state_access_infeasible: llama.cpp exposed no vectors",
++        duration_s=1.0,
++        tests_run=["blocked fixture"],
++    )
++
++    assert artifact["hidden_state_access_feasible"]["value"] is False
++    assert artifact["design_path_taken"]["value"].startswith("blocked_hidden_state_access_infeasible")
++    assert artifact["hidden_state_verifier_accuracy"]["value"] == 0.0
++    assert artifact["tuned_sc_baseline_accuracy"]["value"] == 0.0
++    assert artifact["accuracy_delta_ci95"]["value"] == [0.0, 0.0]
++    assert artifact["verifier_is_oracle"]["value"] is False
++    assert artifact["honest_verdict"]["value"].startswith("blocked_hidden_state_access_infeasible")
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_report_5178_statistics_are_paired_and_tuned(tmp_path: Path) -> None:
++    """REQ-REPORT-5178: tuned SC, McNemar, and bootstrap stay paired."""
++
++    questions = mod.load_musr_questions(_repo_with_traces(tmp_path))
++    folds = mod.question_folds(len(questions), n_folds=3, seed=123)
++    tuned = mod.cross_validated_tuned_sc(questions, folds)
++
++    assert set(tuned.tuned_k_by_fold) == {0, 1, 2}
++    assert set(tuned.sc_correct_by_question) == set(range(len(questions)))
++    assert max(tuned.k_candidates) == 3
++
++    ci = mod.paired_bootstrap_ci([1, 0, 1, 0], [0, 0, 1, 1], n_bootstrap=200, seed=3)
++    p = mod.mcnemar_exact_p([1, 0, 1, 0], [0, 0, 1, 1])
++
++    assert len(ci) == 2
++    assert ci[0] <= ci[1]
++    assert p == pytest.approx(1.0)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (
++            lambda artifact: {key: value for key, value in artifact.items() if key != "random_seed"},
++            "missing required fields",
++        ),
++        (
++            lambda artifact: artifact
++            | {"verifier_is_oracle": {"value": True, "principle": mod.FIELD_PRINCIPLES["verifier_is_oracle"]}},
++            "verifier_is_oracle",
++        ),
++        (
++            lambda artifact: artifact | {"hidden_state_access_feasible": True},
++            "principle-wrapped",
++        ),
++        (
++            lambda artifact: artifact
++            | {"accuracy_delta_ci95": {"value": [0.1], "principle": mod.FIELD_PRINCIPLES["accuracy_delta_ci95"]}},
++            "CI95",
++        ),
++        (
++            lambda artifact: artifact
++            | {"honest_verdict": {"value": "done", "principle": mod.FIELD_PRINCIPLES["honest_verdict"]}},
++            "honest_verdict",
++        ),
++    ],
++)
++def test_req_report_5178_schema_rejects_bad_artifacts(
++    tmp_path: Path,
++    mutate: Any,
++    message: str,
++) -> None:
++    """REQ-REPORT-5178: malformed required fields fail closed."""
++
++    artifact = mod.run(
++        root=_repo_with_traces(tmp_path),
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        vector_provider=_fake_vectors,
++        max_questions=6,
++        n_folds=3,
++        n_bootstrap=80,
++        duration_s=12.5,
++        hidden_state_status=mod.HiddenStateAccessStatus(
++            feasible=True,
++            reason="fixture",
++            metadata={"hidden_state_extraction_path": "fixture"},
++        ),
++    )
++
++    errors = mod.artifact_schema_errors(mutate(artifact))
++
++    assert any(message in error for error in errors)
+-- 
+2.55.0
+

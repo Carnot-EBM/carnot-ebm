@@ -1,0 +1,43 @@
+From 632ae888b4129fe1d1469f0622f0429a887c755b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 23:10:49 -0400
+Subject: [PATCH 08975/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 50aa54d7c6..696fe90117 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-13T02:42:13Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-13T03:10:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 88da1774af..948ca4bcd9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15743,3 +15743,4 @@ code |
+ | 2026-08-13 00:56 UTC | Milestone 2026.08.548 activated | OK | 4 tasks queued |
+ | 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts"]  |
+ | 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |
++| 2026-08-13 03:08 UTC | V548 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 8.34s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b1d61a8fda..a25e63a6a4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-13T02:42:13Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-13T03:10:46Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

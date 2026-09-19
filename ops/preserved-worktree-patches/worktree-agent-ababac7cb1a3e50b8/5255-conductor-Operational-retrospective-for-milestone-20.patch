@@ -1,0 +1,85 @@
+From 17f156213d80e1b3bb369740708911e4b92f4ae9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 07:52:14 -0400
+Subject: [PATCH 05255/11362] [conductor] Operational retrospective for
+ milestone 2026.07.467
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  2 +-
+ ops/changelog.md                           | 13 +++++++++++++
+ results/operational_retro_2026_07_467.json | 19 +++++++++----------
+ 3 files changed, 23 insertions(+), 11 deletions(-)
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index f1b5a93dce..6734e45eb1 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5611,5 +5611,5 @@ The critical path for milestone .250:
+ ### Milestone 2026.07.467
+ - exp_range: no data available this milestone
+ - theme: empty-window operational retrospective with GPU claims suppressed
+-- key result: no data available this milestone; the locked artifact records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries, so the idle GPU snapshot is informational rather than evidence of wasted compute
++- key result: no data available this milestone; the supplied timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries, so the idle GPU snapshot is informational rather than evidence of wasted compute
+ - acceptance: 0/0 criteria met -- the supplied timing data contains no experiment entries to evaluate
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 9c11cb129b..2f88ae568d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,18 @@
+ # Carnot — Changelog
+ 
++## 2026-07-01 (Operational retrospective .467 -- empty timing window, GPU idle not a bottleneck -- codex)
++
++- Wrote `results/operational_retro_2026_07_467.json` for milestone `2026.07.467`.
++  The supplied timing data reports 0 completed experiments, 0 wall-time minutes, and
++  0 compute-bound experiments; no slowest experiment or compute-bound duration can be
++  derived.
++- Interpreted the GPU state under the milestone rule: both RTX 3090s were idle, but
++  with 0 compute-bound tasks in the timing data, `gpu_idle_on_compute_bound_tasks`
++  remains `null` and GPU idle is not reported as a bottleneck.
++- Highest-leverage follow-up: add an early no-experiment-commits watchdog and keep
++  DualGPURunner recommendations gated on timing data that actually declares 2+ parallel
++  compute-bound model tasks.
++
+ ## 2026-07-01 (Milestone 2026.07.466 research roadmap staged — codex)
+ 
+ - Appended the `.466` planner source set to `research-references.md`, covering uPRM, VPR, DCCD,
+diff --git a/results/operational_retro_2026_07_467.json b/results/operational_retro_2026_07_467.json
+index ff68970f07..b0189543e0 100644
+--- a/results/operational_retro_2026_07_467.json
++++ b/results/operational_retro_2026_07_467.json
+@@ -8,21 +8,20 @@
+   "compute_bound_experiments_count": 0,
+   "slowest_experiments": [],
+   "gpu_idle_on_compute_bound_tasks": null,
+-  "summary": "No data available this milestone: the authoritative timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound timing entries, the idle GPU snapshot is informational rather than a reportable utilization failure.",
++  "summary": "No data available this milestone for experiment timings: the milestone-scoped timing data reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries present, the idle GPU snapshot is not evidence of wasted compute-bound execution.",
+   "bottlenecks_identified": [
+-    "no data available this milestone for timing-derived bottlenecks",
+-    "No compute-bound timing entries were present, so GPU idle and DualGPURunner engagement cannot be assessed as failures."
++    "No experiment commits were found since activation, so there is no slowest experiment or execution bottleneck to rank from the supplied timing data."
+   ],
+   "improvements_suggested": [
+-    "Emit an explicit empty-window timing status when activation has no experiment commits.",
+-    "Gate GPU-utilization alerts on the presence of compute-bound timing rows before adding operational bottlenecks.",
+-    "Surface the empty timing-window reason in operator summaries so reviewers do not infer throughput from unrelated GPU snapshots."
++    "Add an early milestone dispatch watchdog that alerts when an activated milestone has no experiment commits before retrospective time.",
++    "Have the retrospective input explicitly distinguish an intentionally empty window from a missed launch so operators do not have to infer it from absent timing rows.",
++    "Gate any DualGPURunner recommendation on timing data that declares two or more parallel compute-bound model tasks."
+   ],
+   "top_3_highest_leverage_actions": [
+-    "Add a first-class no-data retrospective path that fills slowest-experiment sections with an explicit no-data marker.",
+-    "Keep GPU-idle claims mechanically gated by compute-bound timing evidence.",
+-    "Include the activation-window timing status in changelog and research-log templates."
++    "Surface a no-experiment-commits warning immediately after activation if no artifact lands in the expected launch window.",
++    "Record an explicit empty-window reason in the retrospective input when a milestone closes with 0 completed experiments.",
++    "Keep GPU-idle checks conditional on compute-bound timing entries so synthesis-only or empty milestones do not create false bottlenecks."
+   ],
+   "estimated_time_savings_pct": 0,
+-  "meta_reflection": "This retrospective is intentionally sparse because the only scoped timing evidence says no experiment commits were found. The GPU state shows idle devices, but without compute-bound timing rows that is a state observation rather than an efficiency finding."
++  "meta_reflection": "This retrospective is intentionally bounded to the supplied TIMING DATA and GPU STATE blocks. Because the timing data contains no experiment entries, every compute-bound, duration, and DualGPURunner question resolves to no data available this milestone rather than an inferred operational failure."
+ }
+-- 
+2.55.0
+

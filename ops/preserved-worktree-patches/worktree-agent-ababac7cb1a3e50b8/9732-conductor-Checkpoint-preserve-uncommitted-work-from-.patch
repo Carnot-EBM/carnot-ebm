@@ -1,0 +1,87 @@
+From 49312097dfcbc6033da4d9d507eb7c32ad41cee3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 16:35:21 -0400
+Subject: [PATCH 09732/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                    |  6 ++++--
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...riment_6561_v568_evidence_gate_contract.json | 17 +++++++++++++++--
+ 5 files changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 57f55cef19..4b648040bc 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -4,6 +4,8 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z",
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z"
+  },
+- "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T20:14:36Z"
++ "last_scan_notes": [
++  "pid 2934327 /home/ianblenke/.claude/jobs/ad0c053d/tmp/retention_run/rows.json: out file missing, run unsupervisable this cycle"
++ ],
++ "last_scan_utc": "2026-08-23T20:35:16Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 57be6bdfb8..28f2f1724d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-23T20:14:35Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-23T20:35:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a0ba426d6a..1a4cf62047 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16357,3 +16357,4 @@ code |
+ | 2026-08-23 20:04 UTC | Activation replan 1/2: 2026.08.568 | OK | refused roadmap quarantined to roadmap-2026.08.568-refusal1.yaml; replanning wit |
+ | 2026-08-23 20:10 UTC | Plan milestone 2026.08.568 | OK | 4 tasks proposed |
+ | 2026-08-23 20:12 UTC | Milestone 2026.08.568 activated | OK | 4 tasks queued |
++| 2026-08-23 20:33 UTC | V568 evidence eligibility, exclusion, model, and g | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1883af449d..80ac112c95 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-23T20:14:35Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-23T20:35:16Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6561_v568_evidence_gate_contract.json b/results/experiment_6561_v568_evidence_gate_contract.json
+index be070283d6..74f7f274e5 100644
+--- a/results/experiment_6561_v568_evidence_gate_contract.json
++++ b/results/experiment_6561_v568_evidence_gate_contract.json
+@@ -2289,5 +2289,18 @@
+       }
+     ]
+   },
+-  "reproducibility_checksum": "sha256:8ec50431b03dc83f2a989c383cc4d0247e3e1ce129d3c36c1da5c02c67c68ddd"
+-}
++  "reproducibility_checksum": "sha256:8ec50431b03dc83f2a989c383cc4d0247e3e1ce129d3c36c1da5c02c67c68ddd",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=10.891728 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

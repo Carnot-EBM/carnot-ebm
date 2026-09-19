@@ -1,0 +1,65 @@
+From 8c8efb3f1d8cafc5d6d6a11770af9572ac5e6a94 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 03:06:25 -0400
+Subject: [PATCH 04122/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...771_structural_energy_s0prime_origin_matched.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0d59269c3b..b8422cf74f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 240, "phase": "iteration_start", "last_beat": "2026-06-26T06:50:21Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 241, "phase": "iteration_start", "last_beat": "2026-06-26T07:06:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ce72f4681e..d70410dff4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9324,3 +9324,4 @@ The contro |
+ | 2026-06-26 06:28 UTC | PHASE E (CAPSTONE .438) -- aggregate the .438 scor | OK | 89 passed, 1 warning in 7.76s |
+ | 2026-06-26 06:31 UTC | Milestone 2026.06.439 activated | OK | 10 tasks queued |
+ | 2026-06-26 06:48 UTC | PHASE 0 (TRANSITION) -- archive .438 -> activate . | OK | 86 passed, 1 warning in 9.96s |
++| 2026-06-26 07:04 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 40b1c4cbd3..1a27375b4d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 240, "phase": "iteration_start", "started_at": "2026-06-26T06:50:21Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 241, "phase": "iteration_start", "started_at": "2026-06-26T07:06:23Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4771_structural_energy_s0prime_origin_matched.json b/results/experiment_4771_structural_energy_s0prime_origin_matched.json
+index 0f799d4197..6645374adf 100644
+--- a/results/experiment_4771_structural_energy_s0prime_origin_matched.json
++++ b/results/experiment_4771_structural_energy_s0prime_origin_matched.json
+@@ -602,5 +602,13 @@
+     0.1271826145701076,
+     0.33248035484558097
+   ],
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "loo_auroc_majority_control=0.5 and origin_probe_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

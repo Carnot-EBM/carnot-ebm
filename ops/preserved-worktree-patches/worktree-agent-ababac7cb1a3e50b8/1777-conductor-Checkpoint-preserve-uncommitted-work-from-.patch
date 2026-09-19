@@ -1,0 +1,43 @@
+From 5865675f1a3d54e32f20e586469f1a2a45f7f591 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 10:25:44 -0400
+Subject: [PATCH 01777/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fca475bb8f..0ce4c8d247 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-14T14:10:14Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-06-14T14:25:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index baaaab4579..12090d04f7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8479,3 +8479,4 @@ c |
+ | 2026-06-14 13:19 UTC | PHASE D4 — Capstone .388 (UNGATED): headline quest | OK | 85 passed, 1 warning in 4.53s |
+ | 2026-06-14 14:06 UTC | Plan milestone 2026.06.389 | OK | 11 tasks proposed |
+ | 2026-06-14 14:08 UTC | Milestone 2026.06.389 activated | OK | 11 tasks queued |
++| 2026-06-14 14:23 UTC | Archive .388 -> activate .389; KEEP the hardened g | OK | 91 passed, 1 warning in 7.01s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a5cf69422b..63e90d2f33 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-14T14:10:14Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 9, "phase": "iteration_start", "started_at": "2026-06-14T14:25:42Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

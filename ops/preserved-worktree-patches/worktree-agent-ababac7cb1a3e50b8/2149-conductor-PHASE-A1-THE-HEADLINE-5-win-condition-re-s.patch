@@ -1,0 +1,3576 @@
+From 41b037892685517c87eba9a194431c91684f655f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 16 Jun 2026 16:30:54 -0400
+Subject: [PATCH 02149/11362] =?UTF-8?q?[conductor]=20PHASE=20A1=20(THE=20H?=
+ =?UTF-8?q?EADLINE;=20=C2=A75=20win=20condition;=20re-scope=20the=20failed?=
+ =?UTF-8?q?=20C1)=20--=20PROVE=20EFFICIENCY-PARITY:=20energy-verifier=20vs?=
+ =?UTF-8?q?=20a=20WELL-PROMPTED=20LLM-judge=20on=20cross-family=20ARC=20se?=
+ =?UTF-8?q?lection,=20reported=20as=20an=20iso-FLOPs=20accuracy=20curve.?=
+ =?UTF-8?q?=20.396=20(exp4284)=20showed=20the=20energy=20verifier=20BEATS?=
+ =?UTF-8?q?=20a=20Qwen3.6-35B=20judge=20(0.654=20vs=200.212)=20at=20~50M?=
+ =?UTF-8?q?=C3=97=20lower=20cost=20--=20BUT=20the=20judge=20scored=20BELOW?=
+ =?UTF-8?q?=20random=20(0.25=20for=204=20candidates),=20so=20a=20skeptic?=
+ =?UTF-8?q?=20blames=20the=20prompt.=20.397's=20harden=20(exp4294)=20FAILE?=
+ =?UTF-8?q?D=20to=20run=20(doomed-looped=20on=20the=202h=20cap=20+=20a=20s?=
+ =?UTF-8?q?trong=5Fjudge.py=20bug;=20no=20artifact=20--=20a=20failed=20tas?=
+ =?UTF-8?q?k,=20NOT=20a=20measured=20null).=20RE-SCOPE=20to=20fit=20the=20?=
+ =?UTF-8?q?window=20AND=20remove=20the=20weak-prompt=20confound:=20(a)=20a?=
+ =?UTF-8?q?=20STRONGER=20judge=20prompt=20(few-shot=20+=20explicit=20grid-?=
+ =?UTF-8?q?reasoning=20+=20CoT,=20per=20Thinking-Small-Judges=20arXiv:2509?=
+ =?UTF-8?q?.13332)=20+=20a=202nd=20judge=20model=20(gemma-4-31B=20alongsid?=
+ =?UTF-8?q?e=20Qwen3.6-35B);=20(b)=20report=20the=20head-to-head=20as=20a?=
+ =?UTF-8?q?=20FIXED-COMPUTE=20/=20iso-FLOPs=20accuracy=20curve=20(Budget-a?=
+ =?UTF-8?q?ware=20Discriminative=20Verification=20arXiv:2510.14913)=20--?=
+ =?UTF-8?q?=20a=20discriminative=20verifier=20(one=20forward=20pass)=20vs?=
+ =?UTF-8?q?=20a=20CoT=20judge=20is=20a=20clean=20iso-compute=20comparison;?=
+ =?UTF-8?q?=20(c)=20FIT=20THE=20WINDOW:=20single-synchronous-resume-accumu?=
+ =?UTF-8?q?late,=20checkpoint=20after=20EVERY=20judge=20call,=20per-task?=
+ =?UTF-8?q?=20progress=20prints=20(the=20codex=20idle-timeout=20fix),=20a?=
+ =?UTF-8?q?=20PARTIAL=20(one=20well-prompted=20judge,=20n>=3D30)=20ACCEPTE?=
+ =?UTF-8?q?D=20--=20headroom-route,=20do=20NOT=20gate-block.=20Emit=20effi?=
+ =?UTF-8?q?ciency=5Fpareto=5Fholds=20BARE=20bool=20:=3D=20(energy=20accura?=
+ =?UTF-8?q?cy=20within/above=20the=20BEST-prompted=20judge's=20CI=20AND=20?=
+ =?UTF-8?q?cost=5Fratio=20<=3D=200.1).=20verifier=5Fis=5Foracle=3Dfalse.?=
+ =?UTF-8?q?=20Precedent:=20CompassVerifier=202508.03686,=20Calibrated=20Re?=
+ =?UTF-8?q?asoning=202509.19681.=20This=20is=20the=20operator's=20STATED?=
+ =?UTF-8?q?=20=C2=A75=20win=20condition,=20finally=20hardened.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4303-verifier-efficiency-parity-isoflops
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   86 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...erifier_efficiency_parity_isoflops_4303.py |  789 ++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...3_verifier_efficiency_parity_isoflops.json | 1054 +++++++++++++++++
+ ...303_verifier_efficiency_parity_isoflops.py |   17 +
+ ...efficiency_parity_isoflops_checkpoint.json |  730 ++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...303_verifier_efficiency_parity_isoflops.py |  650 ++++++++++
+ 14 files changed, 3345 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py
+ create mode 100644 results/experiment_4303_verifier_efficiency_parity_isoflops.json
+ create mode 100644 results/experiment_4303_verifier_efficiency_parity_isoflops.py
+ create mode 100644 results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json
+ create mode 100644 tests/python/test_experiment_4303_verifier_efficiency_parity_isoflops.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 74595eed7b..8acfac5e1a 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -16550,6 +16550,92 @@ then it writes `honest_verdict=blocked_judge_models_not_cached`, records the
+ failed preconditions, keeps the required bare fields present, and performs no
+ judge calls.
+ 
++### REQ-VERIFY-4303: ARC Efficiency-Parity Iso-FLOPs Strong Judge Rerun
++
++The repository SHALL provide Exp 4303 at
++`python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py` and
++`results/experiment_4303_verifier_efficiency_parity_isoflops.py` to rerun the
++Exp 4294 hardened efficiency measurement under explicit window discipline and
++to report the head-to-head as an iso-FLOPs accuracy curve. Before any judge
++inference, the runner SHALL check the requested local judge GGUF caches for
++`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`, SHALL load
++GGUFs only by non-empty `.gguf` paths rather than HuggingFace tokenizer APIs,
++SHALL check `llama_cpp` only after at least one judge GGUF is available, SHALL
++check the Exp 4270 manifest, Exp 4271 cross-family selections, Exp 4243
++candidate pool, and Exp 4244 learned Set-Encoder verifier, and SHALL record
++that the run performs no TRM training and does not touch `results/trm_runs/`.
++If both judge GGUFs are missing, it SHALL write
++`honest_verdict=blocked_judge_models_not_cached`, record
++`preconditions_checked`, keep required bare fields present, and stop without
++fabricating judge calls. If the run window expires before one available judge
++finishes at least 30 task selections, it SHALL write
++`honest_verdict=blocked_window_exceeded` with the partial checkpoint path.
++
++When at least one judge precondition passes, the runner SHALL evaluate at least
++30 held-out-family ARC task selections from the Exp 4271 cross-family artifact.
++The energy arm SHALL be the learned family-disjoint Set-Encoder selections from
++Exp 4271, and SHALL measure CPU forward-pass wall-clock plus FLOPs-proxy cost
++over the same candidates. Each available LLM judge arm SHALL use the same
++strong prompt as Exp 4294: few-shot ARC selection examples, explicit
++grid-reasoning instructions, chain-of-thought style deliberation, and a final
++zero-based candidate index. The runner SHALL run synchronously, print per-task
++progress, write a checkpoint after every judge call, resume completed judge
++task selections from that checkpoint on restart, and accept a partial
++single-judge result with `selection_task_n>=30` as a complete decision-grade
++artifact rather than blocking on the second judge.
++
++The terminal artifact SHALL write
++`results/experiment_4303_verifier_efficiency_parity_isoflops.json` with
++required fields `honest_verdict`, bare bool `efficiency_pareto_holds`, bare
++float `accuracy_energy_verifier`, bare float `accuracy_best_judge`,
++two-float `accuracy_delta_ci95`, bare float `cost_ratio`,
++`iso_flops_curve`, bare bool `verifier_is_oracle=false`,
++`preconditions_checked`, bare int `random_seed`, string
++`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
++`inference_substrate`, `duration_s`, `adversarial_verify`,
++`checkpoint_path`, and per-judge metrics. `efficiency_pareto_holds` SHALL be
++true iff the energy verifier is not significantly worse than the
++best-prompted available judge under the bootstrap interval and
++`cost_ratio <= 0.1`. `iso_flops_curve` SHALL report accuracy versus total
++FLOPs-proxy for the energy verifier and every completed judge arm, including
++the best judge used for `cost_ratio`. The artifact SHALL run
++`scripts/adversarial_verify.py` after the JSON is written when live judge
++measurement occurs, and SHALL set `verifier_is_oracle=false` because the
++learned energy verifier is oracle-distinct from executable correctness.
++
++The required field principles are:
++`honest_verdict` = `Terminal-prefixed. A hardened Pareto win (beats well-prompted judges at lower cost), a parity-at-lower-cost, a 'a stronger judge closes the accuracy gap', and an honest blocked_window_exceeded are ALL COMPLETE -- the §5 efficiency axis is decision-grade either way.`;
++`efficiency_pareto_holds` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the energy verifier matches/beats the BEST-prompted judge (within/above CI) at <=0.1x cost -- the skeptic-proof §5 efficiency headline, the operator's stated win condition.`;
++`accuracy_energy_verifier` = `BARE float: the learned energy verifier's selection accuracy on held-out families -- the cheap forward-pass arm (compare to the .396 0.654).`;
++`accuracy_best_judge` = `BARE float: the BEST of the WELL-prompted judges -- if a stronger prompt lifts the judge well above the .396 0.212, the weak-prompt confound was real and the win is now honest at the corrected number.`;
++`accuracy_delta_ci95` = `Bootstrap CI95 of (energy - best judge) accuracy -- 'parity' means this CI includes 0 / is not significantly negative; a positive lower bound is a Pareto win even against a strong judge.`;
++`cost_ratio` = `BARE float: energy-verifier cost / best-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 (10x cheaper), ideally <=0.01 (100x).`;
++`iso_flops_curve` = `Accuracy-vs-total-FLOPs for the verifier and the judge (Budget-aware Discriminative Verification 2510.14913) -- the honest head-to-head metric (a fair iso-compute comparison, not '1 verifier call vs 1 judge call').`;
++`verifier_is_oracle` = `BARE bool=false -- the energy verifier on cross-family selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike the retired code-efficiency).`;
++`preconditions_checked` = `Records the judge GGUF caches + candidate load + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
++`random_seed` = `Determinism precondition for the selection + bootstrap.`;
++`reproducibility_checksum` = `Hash of the candidates + the selectors' outputs + the cost accounting; lets a third party re-run.`;
++`model_specs` = `The judge GGUF ids + the stronger prompt + the energy verifier + the cost-accounting method; required methodology.`
++
++### SCENARIO-VERIFY-4303: Iso-FLOPs Strong Judge Result Is Checkpointed
++
++Given at least one of the requested local SOTA GGUF judges is cached,
++`llama_cpp` is importable, Exp 4270 manifest, Exp 4271 cross-family
++selections, Exp 4243 candidate pool, and Exp 4244 learned Set-Encoder are
++available, when Exp 4303 runs, then it evaluates at least 30 held-out-family
++ARC tasks for the energy verifier and at least one well-prompted judge, writes
++a checkpoint after every judge call, resumes already-completed judge calls from
++that checkpoint on restart, reports the energy-verifier and each completed
++judge selection accuracy on the same candidate finalist sets, reports the
++bootstrap CI95 for the energy-minus-best-judge accuracy delta with at least
++2000 resamples by default, reports `cost_ratio`, reports `iso_flops_curve`,
++declares `verifier_is_oracle=false`, records the requested GGUF ids, strong
++prompt, energy verifier, cost method, random seed, and reproducibility
++checksum in `model_specs`, and runs adversarial verification cleanly. If both
++judge GGUF cache preconditions fail, then it writes
++`honest_verdict=blocked_judge_models_not_cached`, records the failed
++preconditions, keeps required bare fields present, and performs no judge calls.
++
+ ### REQ-VERIFY-4273: ARC Cross-Family Online Adaptation
+ 
+ The repository SHALL provide Exp 4273 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 55570d7b4a..22bb9afe0a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 177,
+   "code_violations": 0,
+-  "experiments_checked": 3319,
++  "experiments_checked": 3320,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py b/python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py
+new file mode 100644
+index 0000000000..436e47ef33
+--- /dev/null
++++ b/python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py
+@@ -0,0 +1,789 @@
++"""Exp 4303 ARC verifier efficiency versus strong judges on an iso-FLOPs curve.
++
++Spec refs: REQ-VERIFY-4303, SCENARIO-VERIFY-4303.
++"""
++
++from __future__ import annotations
++
++import gc
++import hashlib
++import json
++import math
++import subprocess
++import sys
++import time
++from collections.abc import Callable
++from pathlib import Path
++from typing import Any
++
++from carnot.inference.sota_models import resolve_cached_gguf
++from carnot.reporting import verifier_efficiency_harden_strong_judge_4294 as exp4294
++from carnot.reporting import verifier_efficiency_vs_llm_judge_4284 as exp4284
++
++
++RANDOM_SEED = 4303
++OUTPUT_REL = Path("results/experiment_4303_verifier_efficiency_parity_isoflops.json")
++CHECKPOINT_REL = Path("results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json")
++SPEC_REFS = ["REQ-VERIFY-4303", "SCENARIO-VERIFY-4303"]
++INFERENCE_SUBSTRATE = "live_strong_llm_judges_vs_oracle_distinct_arc_energy_verifier_isoflops"
++PROMPT_VERSION = "exp4303-arc-selector-strong-fewshot-isoflops-v1"
++QWEN_JUDGE_ID = exp4294.QWEN_JUDGE_ID
++GEMMA_JUDGE_ID = exp4294.GEMMA_JUDGE_ID
++REQUESTED_JUDGE_IDS = (QWEN_JUDGE_ID, GEMMA_JUDGE_ID)
++MIN_TASKS = 30
++LIVE_SELECTION_TASKS = 30
++DEFAULT_BOOTSTRAP_RESAMPLES = 2000
++DEFAULT_WINDOW_S = 6900.0
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A hardened Pareto win (beats well-prompted judges at "
++        "lower cost), a parity-at-lower-cost, a 'a stronger judge closes the "
++        "accuracy gap', and an honest blocked_window_exceeded are ALL COMPLETE -- "
++        "the §5 efficiency axis is decision-grade either way."
++    ),
++    "efficiency_pareto_holds": (
++        "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff "
++        "the energy verifier matches/beats the BEST-prompted judge (within/above "
++        "CI) at <=0.1x cost -- the skeptic-proof §5 efficiency headline, the "
++        "operator's stated win condition."
++    ),
++    "accuracy_energy_verifier": (
++        "BARE float: the learned energy verifier's selection accuracy on "
++        "held-out families -- the cheap forward-pass arm (compare to the .396 "
++        "0.654)."
++    ),
++    "accuracy_best_judge": (
++        "BARE float: the BEST of the WELL-prompted judges -- if a stronger prompt "
++        "lifts the judge well above the .396 0.212, the weak-prompt confound was "
++        "real and the win is now honest at the corrected number."
++    ),
++    "accuracy_delta_ci95": (
++        "Bootstrap CI95 of (energy - best judge) accuracy -- 'parity' means this "
++        "CI includes 0 / is not significantly negative; a positive lower bound is "
++        "a Pareto win even against a strong judge."
++    ),
++    "cost_ratio": (
++        "BARE float: energy-verifier cost / best-judge cost (wall-clock + "
++        "FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 "
++        "(10x cheaper), ideally <=0.01 (100x)."
++    ),
++    "iso_flops_curve": (
++        "Accuracy-vs-total-FLOPs for the verifier and the judge (Budget-aware "
++        "Discriminative Verification 2510.14913) -- the honest head-to-head "
++        "metric (a fair iso-compute comparison, not '1 verifier call vs 1 judge "
++        "call')."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- the energy verifier on cross-family selection is "
++        "oracle-distinct (NOT the executable oracle); keeps the efficiency "
++        "measurement non-circular (unlike the retired code-efficiency)."
++    ),
++    "preconditions_checked": (
++        "Records the judge GGUF caches + candidate load + TRM-stand-down verified; "
++        "pre-empts the silent-missing-resource fabrication mode."
++    ),
++    "random_seed": "Determinism precondition for the selection + bootstrap.",
++    "reproducibility_checksum": (
++        "Hash of the candidates + the selectors' outputs + the cost accounting; "
++        "lets a third party re-run."
++    ),
++    "model_specs": (
++        "The judge GGUF ids + the stronger prompt + the energy verifier + the "
++        "cost-accounting method; required methodology."
++    ),
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "efficiency_pareto_holds",
++    "accuracy_energy_verifier",
++    "accuracy_best_judge",
++    "accuracy_delta_ci95",
++    "cost_ratio",
++    "iso_flops_curve",
++    "verifier_is_oracle",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "model_specs",
++    "field_principles",
++    "spec_refs",
++    "inference_substrate",
++    "duration_s",
++    "adversarial_verify",
++    "checkpoint_path",
++    "judge_metrics",
++)
++
++
++class BlockedRun(RuntimeError):
++    """Expected precondition or window failure that still writes an artifact."""
++
++    def __init__(self, reason: str, preconditions: list[dict[str, Any]] | None = None) -> None:
++        super().__init__(reason)
++        self.reason = reason
++        self.preconditions = preconditions or []
++
++
++def default_judge_specs_provider() -> list[dict[str, Any]]:  # pragma: no cover - local cache dependent.
++    specs: list[dict[str, Any]] = []
++    for hf_id in REQUESTED_JUDGE_IDS:
++        model_path = resolve_cached_gguf(hf_id)
++        path = Path(str(model_path)) if model_path else Path("")
++        if path.exists() and path.is_file() and path.stat().st_size > 0:
++            specs.append(
++                {
++                    "name": hf_id.rsplit("/", 1)[-1].removesuffix("-GGUF"),
++                    "hf_id": hf_id,
++                    "model_path": str(path),
++                    "active_params_b": exp4284._model_active_params_b({"hf_id": hf_id}),
++                }
++            )
++    return specs
++
++
++def default_llama_import_checker() -> bool:  # pragma: no cover - environment dependent.
++    try:
++        __import__("llama_cpp")
++    except Exception:
++        return False
++    return True
++
++
++def default_trm_stand_down_checker(repo_root: Path) -> tuple[bool, str]:  # pragma: no cover - process dependent.
++    proc = subprocess.run(
++        ["pgrep", "-af", "trm|TRM|src/nn/train.py"],
++        capture_output=True,
++        text=True,
++        timeout=5,
++        check=False,
++    )
++    lines = [line for line in proc.stdout.splitlines() if str(repo_root / "results" / "trm_runs") in line]
++    if lines:
++        return False, "; ".join(lines[:3])
++    return True, "no active TRM training process writing this repo's results/trm_runs"
++
++
++def _round_metric(value: float) -> float:
++    return exp4284._round_metric(value)
++
++
++def _bare_float(value: Any) -> bool:
++    return isinstance(value, float) and math.isfinite(value)
++
++
++def _checksum(payload: dict[str, Any]) -> str:
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _normalize_judge_specs(
++    raw_specs: list[dict[str, Any]] | tuple[dict[str, Any], ...] | None,
++) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
++    by_id = {
++        str(spec.get("hf_id")): dict(spec)
++        for spec in raw_specs or []
++        if isinstance(spec, dict) and spec.get("hf_id")
++    }
++    available: list[dict[str, Any]] = []
++    checks: list[dict[str, Any]] = []
++    skipped: list[str] = []
++    for hf_id in REQUESTED_JUDGE_IDS:
++        spec = by_id.get(hf_id)
++        model_path = Path(str(spec.get("model_path") if spec else ""))
++        if spec and model_path.exists() and model_path.is_file() and model_path.stat().st_size > 0:
++            normalized = dict(spec)
++            normalized.setdefault("name", hf_id.rsplit("/", 1)[-1].removesuffix("-GGUF"))
++            normalized.setdefault("active_params_b", exp4284._model_active_params_b(normalized))
++            available.append(normalized)
++            checks.append(
++                {
++                    "resource": f"cached_judge_gguf:{hf_id}",
++                    "available": True,
++                    "detail": str(model_path),
++                }
++            )
++        else:
++            checks.append(
++                {
++                    "resource": f"cached_judge_gguf:{hf_id}",
++                    "available": False,
++                    "detail": str(model_path) if spec else "not resolved",
++                }
++            )
++            skipped.append(hf_id)
++    return available, checks, skipped
++
++
++def _empty_checkpoint() -> dict[str, Any]:
++    return {"version": 1, "experiment_id": 4303, "judges": {}}
++
++
++def _read_checkpoint(path: Path) -> dict[str, Any]:
++    if not path.exists():
++        return _empty_checkpoint()
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict) or not isinstance(payload.get("judges"), dict):
++        return _empty_checkpoint()
++    return payload
++
++
++def _write_checkpoint(path: Path, checkpoint: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(checkpoint, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _checkpoint_rows(checkpoint: dict[str, Any], judge_id: str) -> list[dict[str, Any]]:
++    judge_block = checkpoint.setdefault("judges", {}).setdefault(judge_id, {"selections": []})
++    rows = judge_block.setdefault("selections", [])
++    return rows if isinstance(rows, list) else []
++
++
++def _selection_row(
++    case: exp4284.SelectionCase,
++    *,
++    chosen_index: int,
++    judge_id: str,
++    record: dict[str, Any],
++    checkpoint_resumed: bool,
++) -> dict[str, Any]:
++    if chosen_index < 0 or chosen_index >= len(case.finalists):
++        chosen_index = 0
++    chosen = case.finalists[chosen_index]
++    energy_index = next(
++        index for index, candidate in enumerate(case.finalists) if candidate.candidate_id == case.energy_candidate_id
++    )
++    return {
++        "task_id": case.task_id,
++        "family_id": case.family_id,
++        "fold": case.fold,
++        "candidate_count": len(case.finalists),
++        "all_candidate_count": len(case.all_candidates),
++        "energy_candidate_id": case.energy_candidate_id,
++        "energy_finalist_index": energy_index,
++        "energy_correct": bool(case.energy_correct),
++        "judge_id": judge_id,
++        "judge_chosen_index": chosen_index,
++        "judge_candidate_id": chosen.candidate_id,
++        "judge_correct": bool(chosen.correct),
++        "judge_cost": record,
++        "checkpoint_resumed": checkpoint_resumed,
++    }
++
++
++def run_checkpointed_strong_llm_judge(
++    cases: list[exp4284.SelectionCase],
++    judge_client: Any,
++    *,
++    judge_id: str,
++    checkpoint_path: Path,
++    checkpoint: dict[str, Any],
++    deadline_monotonic: float | None,
++) -> tuple[list[dict[str, Any]], dict[str, Any], bool]:
++    rows = _checkpoint_rows(checkpoint, judge_id)
++    by_task = {str(row.get("task_id")): dict(row) for row in rows if isinstance(row, dict) and row.get("task_id")}
++    selections: list[dict[str, Any]] = []
++    resumed_any = False
++    for case_index, case in enumerate(cases, start=1):
++        cached = by_task.get(case.task_id)
++        if cached:
++            cached["checkpoint_resumed"] = True
++            selections.append(cached)
++            resumed_any = True
++            continue
++        if deadline_monotonic is not None and time.perf_counter() >= deadline_monotonic:
++            raise BlockedRun("blocked_window_exceeded")
++        if case_index == 1 or case_index % 5 == 0 or case_index == len(cases):
++            print(f"[exp4303] {judge_id} judging {case_index}/{len(cases)}", flush=True)
++        candidate_texts = [
++            exp4284._candidate_prompt_text(candidate, index) for index, candidate in enumerate(case.finalists)
++        ]
++        chosen_index = int(judge_client.judge(exp4284._problem_text(case), candidate_texts))
++        records = getattr(judge_client, "records", [])
++        record = dict(records[-1]) if records else {"chosen_index": chosen_index}
++        record.setdefault("latency_s", 0.0)
++        record.setdefault("prompt_tokens", 0)
++        record.setdefault("completion_tokens", 0)
++        record.setdefault("total_tokens", 0)
++        record.setdefault("raw_output", "")
++        record.setdefault("parse_status", "record_missing")
++        row = _selection_row(
++            case,
++            chosen_index=chosen_index,
++            judge_id=judge_id,
++            record=record,
++            checkpoint_resumed=False,
++        )
++        rows.append(row)
++        _write_checkpoint(checkpoint_path, checkpoint)
++        selections.append(row)
++    costs = [row["judge_cost"] for row in selections]
++    return selections, {
++        "total_wall_clock_s": round(sum(exp4284._safe_float(cost.get("latency_s")) for cost in costs), 6),
++        "total_tokens": int(sum(exp4284._safe_float(cost.get("total_tokens")) for cost in costs)),
++        "prompt_tokens": int(sum(exp4284._safe_float(cost.get("prompt_tokens")) for cost in costs)),
++        "completion_tokens": int(sum(exp4284._safe_float(cost.get("completion_tokens")) for cost in costs)),
++    }, resumed_any
++
++
++def _iso_flops_curve(
++    *,
++    metrics: list[dict[str, Any]],
++    energy_cost: dict[str, Any],
++    accuracy_energy: float,
++    best_judge_id: str,
++) -> dict[str, Any]:
++    points = [
++        {
++            "arm": "energy_verifier",
++            "total_flops_proxy": float(energy_cost["flops_proxy"]),
++            "accuracy": float(accuracy_energy),
++            "selection_task_n": int(metrics[0]["cost_accounting"]["selection_task_n"]),
++        }
++    ]
++    for metric in metrics:
++        llm = metric["cost_accounting"]["llm_judge"]
++        points.append(
++            {
++                "arm": metric["judge_id"],
++                "total_flops_proxy": float(llm["flops_proxy"]),
++                "accuracy": float(metric["accuracy"]),
++                "selection_task_n": len(metric["selections"]),
++            }
++        )
++    points.sort(key=lambda point: point["total_flops_proxy"])
++    return {
++        "x_axis": "total_flops_proxy",
++        "y_axis": "selection_accuracy",
++        "curve_policy": "one point per completed selector arm over the same held-out ARC finalist tasks",
++        "best_judge_id": best_judge_id,
++        "points": points,
++    }
++
++
++def _blocked_artifact(
++    reason: str,
++    preconditions: list[dict[str, Any]],
++    *,
++    random_seed: int,
++    duration_s: float,
++    checkpoint_path: Path,
++) -> dict[str, Any]:
++    return {
++        "honest_verdict": reason,
++        "efficiency_pareto_holds": False,
++        "accuracy_energy_verifier": 0.0,
++        "accuracy_best_judge": 0.0,
++        "accuracy_delta_ci95": [0.0, 0.0],
++        "cost_ratio": 0.0,
++        "iso_flops_curve": {
++            "x_axis": "total_flops_proxy",
++            "y_axis": "selection_accuracy",
++            "curve_policy": "not computed because the run blocked before judge measurement",
++            "best_judge_id": None,
++            "points": [],
++        },
++        "verifier_is_oracle": False,
++        "preconditions_checked": preconditions,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": _checksum(
++            {"blocked": reason, "preconditions": preconditions, "checkpoint_path": str(checkpoint_path)}
++        ),
++        "model_specs": {
++            "status": "blocked",
++            "blocked_reason": reason,
++            "requested_judge_ggufs": list(REQUESTED_JUDGE_IDS),
++            "strong_prompt": {"version": PROMPT_VERSION, "summary": exp4294.STRONG_PROMPT_SUMMARY},
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": "precondition_block",
++        "duration_s": round(duration_s, 6),
++        "adversarial_verify": {"status": "not_run", "reason": reason},
++        "checkpoint_path": str(checkpoint_path),
++        "acceptance_gate": reason in {"blocked_judge_models_not_cached", "blocked_window_exceeded"},
++        "selection_task_n": 0,
++        "best_judge_id": None,
++        "skipped_judge_ids": list(REQUESTED_JUDGE_IDS),
++        "judge_metrics": [],
++        "cost_accounting": {},
++        "per_task": [],
++    }
++
++
++def _complete_artifact(
++    *,
++    judge_results: list[dict[str, Any]],
++    energy_cost: dict[str, Any],
++    checksums: dict[str, str],
++    model_path: Path,
++    build: dict[str, Any],
++    preconditions: list[dict[str, Any]],
++    skipped_judge_ids: list[str],
++    random_seed: int,
++    bootstrap_resamples: int,
++    duration_s: float,
++    checkpoint_path: Path,
++) -> dict[str, Any]:
++    metrics = exp4294._judge_metrics_for_results(
++        raw_results=judge_results,
++        energy_cost=energy_cost,
++        n_tasks=len(judge_results[0]["selections"]),
++    )
++    best = exp4294._best_judge_result(metrics)
++    best_selections = best["selections"]
++    energy_hits = [bool(row["energy_correct"]) for row in best_selections]
++    best_hits = [bool(row["judge_correct"]) for row in best_selections]
++    deltas = [float(e) - float(j) for e, j in zip(energy_hits, best_hits, strict=True)]
++    accuracy_energy = exp4294._energy_accuracy(best_selections)
++    accuracy_best_judge = _round_metric(best["accuracy"])
++    ci95 = exp4284._bootstrap_ci95(deltas, random_seed=random_seed, resamples=bootstrap_resamples)
++    cost_ratio = float(best["cost_ratio"])
++    efficiency_pareto_holds = bool(ci95[1] >= 0.0 and cost_ratio <= 0.1)
++    if efficiency_pareto_holds and accuracy_energy > accuracy_best_judge:
++        verdict = "complete: hardened_pareto_win"
++    elif efficiency_pareto_holds:
++        verdict = "complete: parity_at_lower_cost"
++    elif ci95[1] < 0.0:
++        verdict = "complete: stronger_judge_closes_accuracy_gap"
++    else:
++        verdict = "complete: no_cost_advantage"
++    compact_metrics = [
++        {
++            "judge_id": metric["judge_id"],
++            "accuracy": metric["accuracy"],
++            "cost_ratio": metric["cost_ratio"],
++            "selection_task_n": len(metric["selections"]),
++            "checkpoint_resumed": any(bool(row.get("checkpoint_resumed")) for row in metric["selections"]),
++            "total_wall_clock_s": metric["judge_cost"]["total_wall_clock_s"],
++            "total_tokens": metric["judge_cost"]["total_tokens"],
++            "prompt_tokens": metric["judge_cost"]["prompt_tokens"],
++            "completion_tokens": metric["judge_cost"]["completion_tokens"],
++            "estimated_dollars_per_1k_selections": metric["cost_accounting"]["llm_judge"][
++                "estimated_dollars_per_1k_selections"
++            ],
++            "flops_proxy": metric["cost_accounting"]["llm_judge"]["flops_proxy"],
++        }
++        for metric in metrics
++    ]
++    per_task = exp4294._merge_per_task(metrics)
++    iso_flops_curve = _iso_flops_curve(
++        metrics=metrics,
++        energy_cost=energy_cost,
++        accuracy_energy=accuracy_energy,
++        best_judge_id=best["judge_id"],
++    )
++    cost_accounting = {
++        "method": (
++            "cost_ratio is energy estimated dollars per 1k selections divided by "
++            "the best-accuracy well-prompted judge's estimated dollars per 1k "
++            "selections; wall-clock and FLOPs/token ratios are reported alongside."
++        ),
++        "selection_task_n": len(best_selections),
++        "energy_verifier": dict(energy_cost),
++        "best_judge_id": best["judge_id"],
++        "best_judge": best["cost_accounting"]["llm_judge"],
++        "ratios": best["cost_accounting"]["ratios"],
++        "constants": best["cost_accounting"]["constants"],
++        "judge_arms": {
++            metric["judge_id"]: {
++                "accuracy": metric["accuracy"],
++                "llm_judge": metric["cost_accounting"]["llm_judge"],
++                "ratios": metric["cost_accounting"]["ratios"],
++            }
++            for metric in metrics
++        },
++    }
++    checksum_payload = {
++        "checksums": checksums,
++        "cost_accounting": cost_accounting,
++        "iso_flops_curve": iso_flops_curve,
++        "judge_metrics": compact_metrics,
++        "per_task": per_task,
++        "random_seed": int(random_seed),
++    }
++    return {
++        "honest_verdict": f"{verdict}_delta_{_round_metric(accuracy_energy - accuracy_best_judge):.4f}",
++        "efficiency_pareto_holds": efficiency_pareto_holds,
++        "accuracy_energy_verifier": accuracy_energy,
++        "accuracy_best_judge": accuracy_best_judge,
++        "accuracy_delta_ci95": ci95,
++        "cost_ratio": _round_metric(cost_ratio),
++        "iso_flops_curve": iso_flops_curve,
++        "verifier_is_oracle": False,
++        "preconditions_checked": preconditions,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": _checksum(checksum_payload),
++        "model_specs": {
++            "requested_judge_ggufs": list(REQUESTED_JUDGE_IDS),
++            "available_judge_ggufs": [metric["judge_id"] for metric in metrics],
++            "skipped_judge_ggufs": list(skipped_judge_ids),
++            "judge_ggufs": [dict(result["judge_spec"]) for result in metrics],
++            "strong_prompt": {
++                "version": PROMPT_VERSION,
++                "summary": exp4294.STRONG_PROMPT_SUMMARY,
++                "template_sha256": _checksum(
++                    {"prompt": exp4294._build_strong_prompt("{problem}", ["Candidate 0: ..."])}
++                ),
++                "final_answer_contract": "Final answer: <index>",
++            },
++            "energy_verifier": {
++                "path": str(model_path),
++                "verifier_is_oracle": False,
++                "model_specs": build.get("model_specs", {}),
++            },
++            "cost_accounting_method": cost_accounting["method"],
++            "candidate_policy": (
++                "Judges see deduplicated selector finalists: Exp 4271 energy pick, "
++                "SC-vote pick, matched control, online-adapt pick, then top vote-weight "
++                f"candidates up to {exp4284.MAX_FINALISTS_PER_TASK}."
++            ),
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(
++            max(float(duration_s), max(metric["judge_cost"]["total_wall_clock_s"] for metric in metrics)),
++            6,
++        ),
++        "adversarial_verify": {"status": "pending"},
++        "checkpoint_path": str(checkpoint_path),
++        "acceptance_gate": True,
++        "selection_task_n": len(best_selections),
++        "bootstrap_resamples": int(bootstrap_resamples),
++        "best_judge_id": best["judge_id"],
++        "skipped_judge_ids": list(skipped_judge_ids),
++        "judge_metrics": compact_metrics,
++        "cost_accounting": cost_accounting,
++        "per_task": per_task,
++        "precondition_checksums": checksums,
++    }
++
++
++def _run_adversarial_verify(repo_root: Path, artifact_path: Path) -> dict[str, Any]:
++    script = repo_root / "scripts" / "adversarial_verify.py"
++    proc = subprocess.run(
++        [sys.executable, str(script), "--json", str(artifact_path)],
++        capture_output=True,
++        text=True,
++        timeout=60,
++        check=False,
++    )
++    try:
++        payload = json.loads(proc.stdout)
++    except json.JSONDecodeError:
++        payload = {"stdout": proc.stdout, "stderr": proc.stderr}
++    payload["returncode"] = proc.returncode
++    return payload
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (verdict.startswith("complete:") or verdict.startswith("blocked_")):
++        raise ValueError("honest_verdict must have a terminal prefix")
++    if type(artifact["efficiency_pareto_holds"]) is not bool:
++        raise ValueError("efficiency_pareto_holds must be a bare bool")
++    for field in ("accuracy_energy_verifier", "accuracy_best_judge", "cost_ratio"):
++        if not _bare_float(artifact[field]):
++            raise ValueError(f"{field} must be a bare float")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be the bare bool false")
++    if type(artifact["random_seed"]) is not int:
++        raise ValueError("random_seed must be a bare int")
++    if not isinstance(artifact["accuracy_delta_ci95"], list) or len(artifact["accuracy_delta_ci95"]) != 2:
++        raise ValueError("accuracy_delta_ci95 must be a two-float list")
++    if not isinstance(artifact["iso_flops_curve"], dict) or not isinstance(
++        artifact["iso_flops_curve"].get("points"), list
++    ):
++        raise ValueError("iso_flops_curve must be an object with points")
++    for field in ("preconditions_checked", "judge_metrics"):
++        if not isinstance(artifact[field], list):
++            raise ValueError(f"{field} must be a list")
++    for field in ("model_specs", "adversarial_verify"):
++        if not isinstance(artifact[field], dict):
++            raise ValueError(f"{field} must be an object")
++    checksum = artifact["reproducibility_checksum"]
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match REQ-VERIFY-4303")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs do not match REQ-VERIFY-4303")
++
++
++def _write_artifact(repo_root: Path, artifact: dict[str, Any]) -> dict[str, Any]:
++    validate_artifact(artifact)
++    output = repo_root / OUTPUT_REL
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def run(
++    repo_root: Path | str = Path("."),
++    *,
++    judge_specs_provider: Callable[[], list[dict[str, Any]] | tuple[dict[str, Any], ...] | None] = (
++        default_judge_specs_provider
++    ),
++    llama_import_checker: Callable[[], bool] = default_llama_import_checker,
++    judge_factory: Callable[[dict[str, Any]], Any] = exp4294.StrongPromptCostMeteredLlmJudge,
++    trm_stand_down_checker: Callable[[Path], tuple[bool, str]] = default_trm_stand_down_checker,
++    random_seed: int = RANDOM_SEED,
++    bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES,
++    min_tasks: int = MIN_TASKS,
++    max_tasks: int | None = None,
++    window_s: float = DEFAULT_WINDOW_S,
++    max_completed_judges: int = 1,
++    adversarial_runner: Callable[[Path], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    checkpoint_path = root / CHECKPOINT_REL
++    preconditions: list[dict[str, Any]] = []
++    skipped_judge_ids: list[str] = []
++    checksums: dict[str, str] = {}
++
++    try:
++        available_specs, cache_checks, skipped_judge_ids = _normalize_judge_specs(judge_specs_provider())
++        preconditions.extend(cache_checks)
++        trm_ok, trm_detail = trm_stand_down_checker(root)
++        preconditions.append(
++            {"resource": "trm_training_stand_down", "available": bool(trm_ok), "detail": trm_detail}
++        )
++        cases, checksums, energy_model, energy_model_path, build = exp4284.load_selection_cases(
++            root,
++            min_tasks=min_tasks,
++            max_tasks=max_tasks,
++        )
++        preconditions.extend(
++            [
++                {
++                    "resource": "cross_family_candidates",
++                    "available": True,
++                    "detail": f"{len(cases)} tasks loaded",
++                },
++                {
++                    "resource": "energy_verifier",
++                    "available": True,
++                    "detail": str(energy_model_path),
++                },
++            ]
++        )
++        if not available_specs:
++            raise BlockedRun("blocked_judge_models_not_cached", preconditions)
++        if not llama_import_checker():
++            preconditions.append(
++                {"resource": "llama_cpp", "available": False, "detail": "import llama_cpp failed"}
++            )
++            raise BlockedRun("blocked_llama_cpp_unavailable", preconditions)
++        preconditions.append({"resource": "llama_cpp", "available": True, "detail": "import OK"})
++        energy_cost = exp4284.measure_energy_forward_cost(cases, energy_model)
++        checkpoint = _read_checkpoint(checkpoint_path)
++        raw_results: list[dict[str, Any]] = []
++        deadline = start + float(window_s) if window_s > 0 else None
++        for judge_index, judge_spec in enumerate(available_specs):
++            judge_id = str(judge_spec["hf_id"])
++            if deadline is not None and time.perf_counter() >= deadline:
++                if raw_results:
++                    skipped_judge_ids.append(judge_id)
++                    break
++                raise BlockedRun("blocked_window_exceeded", preconditions)
++            judge_client = None
++            try:
++                judge_client = judge_factory(judge_spec)
++                selections, judge_cost, checkpoint_resumed = run_checkpointed_strong_llm_judge(
++                    cases,
++                    judge_client,
++                    judge_id=judge_id,
++                    checkpoint_path=checkpoint_path,
++                    checkpoint=checkpoint,
++                    deadline_monotonic=deadline,
++                )
++                if len(selections) >= int(min_tasks):
++                    raw_results.append(
++                        {
++                            "judge_id": judge_id,
++                            "judge_spec": dict(judge_spec),
++                            "selections": selections,
++                            "judge_cost": judge_cost,
++                            "checkpoint_resumed": checkpoint_resumed,
++                        }
++                    )
++                    if len(raw_results) >= int(max_completed_judges):
++                        skipped_judge_ids.extend(
++                            str(spec["hf_id"]) for spec in available_specs[judge_index + 1 :]
++                        )
++                        break
++            except BlockedRun as blocked:
++                if raw_results and blocked.reason == "blocked_window_exceeded":
++                    skipped_judge_ids.append(judge_id)
++                    break
++                raise
++            except Exception as exc:
++                preconditions.append(
++                    {
++                        "resource": f"llm_judge_runtime:{judge_id}",
++                        "available": False,
++                        "detail": repr(exc),
++                    }
++                )
++                skipped_judge_ids.append(judge_id)
++            finally:
++                judge_client = None
++                gc.collect()
++        if not raw_results:
++            raise BlockedRun("blocked_llm_judge_runtime", preconditions)
++        artifact = _complete_artifact(
++            judge_results=raw_results,
++            energy_cost=energy_cost,
++            checksums=checksums,
++            model_path=energy_model_path,
++            build=build,
++            preconditions=preconditions,
++            skipped_judge_ids=sorted(set(skipped_judge_ids)),
++            random_seed=random_seed,
++            bootstrap_resamples=bootstrap_resamples,
++            duration_s=time.perf_counter() - start,
++            checkpoint_path=checkpoint_path,
++        )
++    except exp4284.BlockedRun as blocked:
++        artifact = _blocked_artifact(
++            blocked.reason,
++            preconditions,
++            random_seed=random_seed,
++            duration_s=time.perf_counter() - start,
++            checkpoint_path=checkpoint_path,
++        )
++    except BlockedRun as blocked:
++        artifact = _blocked_artifact(
++            blocked.reason,
++            blocked.preconditions or preconditions,
++            random_seed=random_seed,
++            duration_s=time.perf_counter() - start,
++            checkpoint_path=checkpoint_path,
++        )
++
++    output_path = root / OUTPUT_REL
++    artifact = _write_artifact(root, artifact)
++    if artifact["honest_verdict"].startswith("complete:"):
++        artifact["adversarial_verify"] = (
++            adversarial_runner(output_path)
++            if adversarial_runner is not None
++            else _run_adversarial_verify(root, output_path)
++        )
++        artifact = _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - exercised by required script command.
++    artifact = run(Path(__file__).resolve().parents[3], max_tasks=LIVE_SELECTION_TASKS)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 49792663df..d9cf302f5a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-16T18:11:44.039836Z",
+-  "duration_s": 0.016573190689086914,
++  "run_date": "2026-06-16T20:29:32.298664Z",
++  "duration_s": 0.040051937103271484,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1bcb3b0c72dbda6c04a454bd83c2c96a138c7a493867c0d67009904b29ea3dd1",
++  "reproducibility_checksum": "da43c22ed2ec3b22dac2b1a7a6787960b0f6eb2e040da0e133610636a3aaf33b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "74de5c110c7a8d6dae22f73a7a3f68fc9a4e0634"
++    "adversarial_verify_version": "e678940f95ae5dbd3ae603b62b91a4699a43661c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e53d4cb67b..26d9c16fa9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-16T18:11:44.063212Z",
+-  "duration_s": 0.019413471221923828,
++  "run_date": "2026-06-16T20:29:32.354908Z",
++  "duration_s": 0.04693865776062012,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "1be1c7c5f8a584a1dcf47ce8f901f08846f10c5087a2eb48e1224b0094bbe740",
++  "reproducibility_checksum": "fbec1d14af8a446950475677ee02d18554d51c15ceb569a4141f9e6e1e903669",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "74de5c110c7a8d6dae22f73a7a3f68fc9a4e0634"
++    "adversarial_verify_version": "e678940f95ae5dbd3ae603b62b91a4699a43661c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bbe80996a6..2b4617a9a1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111673355102539,
++  "efficiency_gains_ms": 2.112865447998047,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d22038cdc2..43b0242213 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.600698594003916e-05,
++  "duration_s": 3.482599277049303e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4303_verifier_efficiency_parity_isoflops.json b/results/experiment_4303_verifier_efficiency_parity_isoflops.json
+new file mode 100644
+index 0000000000..93de42b574
+--- /dev/null
++++ b/results/experiment_4303_verifier_efficiency_parity_isoflops.json
+@@ -0,0 +1,1054 @@
++{
++  "acceptance_gate": true,
++  "accuracy_best_judge": 0.5,
++  "accuracy_delta_ci95": [
++    0.1,
++    0.5
++  ],
++  "accuracy_energy_verifier": 0.8,
++  "adversarial_verify": {
++    "flagged_count": 0,
++    "reports": [
++      {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4303_verifier_efficiency_parity_isoflops.json",
++        "exp_id": null,
++        "flag_count": 0,
++        "flags": [],
++        "honest_verdict": "complete: hardened_pareto_win_delta_0.3000",
++        "loaded": true,
++        "max_severity": -1,
++        "title": ""
++      }
++    ],
++    "returncode": 0
++  },
++  "best_judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++  "bootstrap_resamples": 2000,
++  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json",
++  "cost_accounting": {
++    "best_judge": {
++      "active_params_b": 3.0,
++      "completion_tokens": 1440,
++      "estimated_dollars_per_1k_selections": 0.00801954,
++      "flops_proxy": 267318000000000.0,
++      "prompt_tokens": 43113,
++      "total_tokens": 44553,
++      "total_wall_clock_s": 1704.893496
++    },
++    "best_judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "constants": {
++      "energy_dollars_per_tflop": 7e-07,
++      "llm_dollars_per_1k_tokens": 0.00018
++    },
++    "energy_verifier": {
++      "candidate_forward_passes": 10056,
++      "estimated_dollars_per_1k_selections": 8.289361919999999e-11,
++      "flops_proxy": 118419456.0,
++      "score_checksum_component": 101.118810862806,
++      "total_wall_clock_s": 0.088247071
++    },
++    "judge_arms": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "accuracy": 0.5,
++        "llm_judge": {
++          "active_params_b": 3.0,
++          "completion_tokens": 1440,
++          "estimated_dollars_per_1k_selections": 0.00801954,
++          "flops_proxy": 267318000000000.0,
++          "prompt_tokens": 43113,
++          "total_tokens": 44553,
++          "total_wall_clock_s": 1704.893496
++        },
++        "ratios": {
++          "estimated_dollars_per_1k": 1.03e-08,
++          "flops_proxy": 4.43e-07,
++          "wall_clock": 5.1761e-05
++        }
++      }
++    },
++    "method": "cost_ratio is energy estimated dollars per 1k selections divided by the best-accuracy well-prompted judge's estimated dollars per 1k selections; wall-clock and FLOPs/token ratios are reported alongside.",
++    "ratios": {
++      "estimated_dollars_per_1k": 1.03e-08,
++      "flops_proxy": 4.43e-07,
++      "wall_clock": 5.1761e-05
++    },
++    "selection_task_n": 30
++  },
++  "cost_ratio": 1.03e-08,
++  "duration_s": 1704.893496,
++  "efficiency_pareto_holds": true,
++  "field_principles": {
++    "accuracy_best_judge": "BARE float: the BEST of the WELL-prompted judges -- if a stronger prompt lifts the judge well above the .396 0.212, the weak-prompt confound was real and the win is now honest at the corrected number.",
++    "accuracy_delta_ci95": "Bootstrap CI95 of (energy - best judge) accuracy -- 'parity' means this CI includes 0 / is not significantly negative; a positive lower bound is a Pareto win even against a strong judge.",
++    "accuracy_energy_verifier": "BARE float: the learned energy verifier's selection accuracy on held-out families -- the cheap forward-pass arm (compare to the .396 0.654).",
++    "cost_ratio": "BARE float: energy-verifier cost / best-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 (10x cheaper), ideally <=0.01 (100x).",
++    "efficiency_pareto_holds": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the energy verifier matches/beats the BEST-prompted judge (within/above CI) at <=0.1x cost -- the skeptic-proof \u00a75 efficiency headline, the operator's stated win condition.",
++    "honest_verdict": "Terminal-prefixed. A hardened Pareto win (beats well-prompted judges at lower cost), a parity-at-lower-cost, a 'a stronger judge closes the accuracy gap', and an honest blocked_window_exceeded are ALL COMPLETE -- the \u00a75 efficiency axis is decision-grade either way.",
++    "iso_flops_curve": "Accuracy-vs-total-FLOPs for the verifier and the judge (Budget-aware Discriminative Verification 2510.14913) -- the honest head-to-head metric (a fair iso-compute comparison, not '1 verifier call vs 1 judge call').",
++    "model_specs": "The judge GGUF ids + the stronger prompt + the energy verifier + the cost-accounting method; required methodology.",
++    "preconditions_checked": "Records the judge GGUF caches + candidate load + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
++    "random_seed": "Determinism precondition for the selection + bootstrap.",
++    "reproducibility_checksum": "Hash of the candidates + the selectors' outputs + the cost accounting; lets a third party re-run.",
++    "verifier_is_oracle": "BARE bool=false -- the energy verifier on cross-family selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike the retired code-efficiency)."
++  },
++  "honest_verdict": "complete: hardened_pareto_win_delta_0.3000",
++  "inference_substrate": "live_strong_llm_judges_vs_oracle_distinct_arc_energy_verifier_isoflops",
++  "iso_flops_curve": {
++    "best_judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "curve_policy": "one point per completed selector arm over the same held-out ARC finalist tasks",
++    "points": [
++      {
++        "accuracy": 0.8,
++        "arm": "energy_verifier",
++        "selection_task_n": 30,
++        "total_flops_proxy": 118419456.0
++      },
++      {
++        "accuracy": 0.5,
++        "arm": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "selection_task_n": 30,
++        "total_flops_proxy": 267318000000000.0
++      }
++    ],
++    "x_axis": "total_flops_proxy",
++    "y_axis": "selection_accuracy"
++  },
++  "judge_metrics": [
++    {
++      "accuracy": 0.5,
++      "checkpoint_resumed": true,
++      "completion_tokens": 1440,
++      "cost_ratio": 1.03e-08,
++      "estimated_dollars_per_1k_selections": 0.00801954,
++      "flops_proxy": 267318000000000.0,
++      "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "prompt_tokens": 43113,
++      "selection_task_n": 30,
++      "total_tokens": 44553,
++      "total_wall_clock_s": 1704.893496
++    }
++  ],
++  "model_specs": {
++    "available_judge_ggufs": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF"
++    ],
++    "candidate_policy": "Judges see deduplicated selector finalists: Exp 4271 energy pick, SC-vote pick, matched control, online-adapt pick, then top vote-weight candidates up to 4.",
++    "cost_accounting_method": "cost_ratio is energy estimated dollars per 1k selections divided by the best-accuracy well-prompted judge's estimated dollars per 1k selections; wall-clock and FLOPs/token ratios are reported alongside.",
++    "energy_verifier": {
++      "model_specs": {
++        "architecture": "deepsets_pooled_context_set_encoder",
++        "architecture_note": "Permutation-equivariant DeepSets scorer: per-candidate MLP embedding, mean/max pooled full-set context, and per-candidate logits conditioned on that context.",
++        "calibration": "train_fold_temperature_scaling_for_set_encoder_and_isotonic_for_logistic",
++        "cross_candidate_conditioning": "vote priors, self-consistency margins, modal-grid agreement, duplicate counts, shape/palette family indicators, and DeepSets mean/max latent pooling over all candidates",
++        "feature_set": [
++          "vote_weight",
++          "self_consistency_margin",
++          "vote_weight_rank_fraction",
++          "cell_confidence_mean",
++          "cell_confidence_margin",
++          "cell_confidence_rank_fraction",
++          "grid_height",
++          "grid_width",
++          "grid_cells",
++          "grid_color_count",
++          "grid_nonzero_frac",
++          "grid_entropy",
++          "program_length",
++          "program_digit_fraction",
++          "program_demo_fit",
++          "program_n_calls",
++          "set_candidate_count",
++          "set_vote_mean",
++          "set_vote_max",
++          "set_vote_std",
++          "set_confidence_mean",
++          "set_confidence_max",
++          "set_confidence_std",
++          "set_entropy_mean",
++          "set_entropy_max",
++          "set_entropy_std",
++          "set_cells_mean",
++          "set_cells_max",
++          "set_cells_std",
++          "vote_weight_zscore",
++          "cell_confidence_zscore",
++          "grid_entropy_zscore",
++          "grid_cells_zscore",
++          "modal_cell_agreement_frac",
++          "grid_duplicate_count",
++          "grid_duplicate_frac",
++          "shape_family_count",
++          "shape_family_frac",
++          "shape_vote_frac",
++          "is_modal_shape",
++          "palette_family_count",
++          "palette_family_frac",
++          "palette_vote_frac",
++          "is_modal_palette",
++          "same_shape_as_input",
++          "area_delta_from_input_frac"
++        ],
++        "hidden_dim": 32,
++        "imbalance_loss": "class_weighted_bce_with_positive_task_minibatches; negative-only tasks are scored held-out but do not form training minibatches",
++        "logistic_ablation": "same_fold_augmented_logistic_392",
++        "set_attention_reference": "CPU-fast fallback for the Set-LLM set-attention-mask / Set-Encoder cross-candidate attention lever; still consumes the full candidate set without positional features.",
++        "status": "trained",
++        "training_epochs": 32,
++        "training_recipe": "task_held_out_oof_candidate_detection"
++      },
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
++      "verifier_is_oracle": false
++    },
++    "judge_ggufs": [
++      {
++        "active_params_b": 3.0,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "name": "Qwen3.6-35B-A3B"
++      }
++    ],
++    "requested_judge_ggufs": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "skipped_judge_ggufs": [
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "strong_prompt": {
++      "final_answer_contract": "Final answer: <index>",
++      "summary": "few-shot ARC selector prompt with explicit grid-reasoning checks, metadata skepticism, and a final zero-based `Final answer: <index>` contract",
++      "template_sha256": "08417ab7e26fcbec2d0226b806555bda88ba059650ab6cb56c1dae480afca0a7",
++      "version": "exp4303-arc-selector-strong-fewshot-isoflops-v1"
++    }
++  },
++  "per_task": [
++    {
++      "all_candidate_count": 51,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:0b17323b::candidate7",
++      "energy_correct": false,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:0b17323b",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:0b17323b::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 52.023863,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1846,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible portions of the output grids.\n\n**1. Analysis of Metadata:**\n*   **Candidate 0:** `cell_confidence_mean`:",
++            "total_tokens": 1894
++          }
++        }
++      },
++      "task_id": "gap3_stage2:0b17323b"
++    },
++    {
++      "all_candidate_count": 599,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:17cae0c1::candidate292",
++      "energy_correct": false,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:17cae0c1",
++      "fold": 3,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:17cae0c1::candidate292",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 28.623121,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 935,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the provided output grids and infer the underlying transformation rule from the context of \"gap3_stage2\". Although the input grid is not explicitly provided, the metadata",
++            "total_tokens": 983
++          }
++        }
++      },
++      "task_id": "gap3_stage2:17cae0c1"
++    },
++    {
++      "all_candidate_count": 4,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:1a2e2828",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:1a2e2828::candidate3",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 26.234097,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 730,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the task `gap3_stage2:1a2e2828` and the provided candidates.\n\n**1. Task Analysis:**\nThe task ID `",
++            "total_tokens": 778
++          }
++        }
++      },
++      "task_id": "gap3_stage2:1a2e2828"
++    },
++    {
++      "all_candidate_count": 943,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:1a6449f1::candidate942",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:1a6449f1",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:1a6449f1::candidate942",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 47.612761,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1315,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the input/output grids and the metadata provided, keeping in mind the task is `gap3_stage2:1a6449f1`.",
++            "total_tokens": 1363
++          }
++        }
++      },
++      "task_id": "gap3_stage2:1a6449f1"
++    },
++    {
++      "all_candidate_count": 42,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:2072aba6::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:2072aba6",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:2072aba6::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 37.461526,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 997,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the output grids provided for the candidates. Since the input grid is not explicitly provided, we infer the task logic from the consistency and structure of the candidates,",
++            "total_tokens": 1045
++          }
++        }
++      },
++      "task_id": "gap3_stage2:2072aba6"
++    },
++    {
++      "all_candidate_count": 11,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:25094a63::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:25094a63",
++      "fold": 3,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:25094a63::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 69.564152,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1897,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visible grid data and metadata to identify the underlying pattern.\n\n**1. Metadata Analysis:**\n*   **Candidate 0:** `cell_confidence_mean`:",
++            "total_tokens": 1945
++          }
++        }
++      },
++      "task_id": "gap3_stage2:25094a63"
++    },
++    {
++      "all_candidate_count": 362,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:2f0c5170::candidate361",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:2f0c5170",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:2f0c5170::candidate9",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 47.92253,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1221,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the output grids, specifically focusing on grid dimensions and object symmetry/shape, which are critical in ARC tasks.\n\n**1. Grid Dimension Analysis:**",
++            "total_tokens": 1269
++          }
++        }
++      },
++      "task_id": "gap3_stage2:2f0c5170"
++    },
++    {
++      "all_candidate_count": 214,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:3ee1011a::candidate213",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:3ee1011a",
++      "fold": 2,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:3ee1011a::candidate4",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 47.881703,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1104,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural properties of the output grids and compare them against typical ARC task patterns, specifically looking for symmetry, consistency, and logical completion of shapes.\n\n**1. Analy",
++            "total_tokens": 1152
++          }
++        }
++      },
++      "task_id": "gap3_stage2:3ee1011a"
++    },
++    {
++      "all_candidate_count": 108,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:4e469f39::candidate1",
++      "energy_correct": true,
++      "energy_finalist_index": 1,
++      "family_id": "original_arc_task:4e469f39",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:4e469f39::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 59.263267,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1518,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the output grids, specifically looking for a coherent pattern or transformation rule that applies to the objects present.\n\n**1. Analyze the Grid Structure and",
++            "total_tokens": 1566
++          }
++        }
++      },
++      "task_id": "gap3_stage2:4e469f39"
++    },
++    {
++      "all_candidate_count": 578,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:505fff84::candidate577",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:505fff84",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:505fff84::candidate577",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 34.619621,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 869,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the task `gap3_stage2:505fff84`. Although the input grid is not explicitly provided,",
++            "total_tokens": 917
++          }
++        }
++      },
++      "task_id": "gap3_stage2:505fff84"
++    },
++    {
++      "all_candidate_count": 5,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:50a16a69::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:50a16a69",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:50a16a69::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 40.702759,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1004,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the output grids and compare them against the metadata provided.\n\n**1. Analysis of Candidate Grids:**\n\n*   **Candidate 0:**",
++            "total_tokens": 1052
++          }
++        }
++      },
++      "task_id": "gap3_stage2:50a16a69"
++    },
++    {
++      "all_candidate_count": 996,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:5833af48::candidate995",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:5833af48",
++      "fold": 2,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:5833af48::candidate995",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 71.412685,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1856,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the task `gap3_stage2:5833af48` and the provided candidates.\n\n**1. Task Analysis:**\nThe task ID `gap",
++            "total_tokens": 1904
++          }
++        }
++      },
++      "task_id": "gap3_stage2:5833af48"
++    },
++    {
++      "all_candidate_count": 5,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:66e6c45b",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 35.83355,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 843,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the metadata and the grid structures provided.\n\n**1. Metadata Analysis:**\n*   **Candidate 0:**\n    *   `cell_confidence_mean`:",
++            "total_tokens": 891
++          }
++        }
++      },
++      "task_id": "gap3_stage2:66e6c45b"
++    },
++    {
++      "all_candidate_count": 56,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:692cd3b6",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:692cd3b6::candidate10",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 76.15144,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1860,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual structure and logical consistency of the output grids provided. The problem involves a grid transformation task (gap3_stage2).\n\n**1. Analyze the Grid Structure",
++            "total_tokens": 1908
++          }
++        }
++      },
++      "task_id": "gap3_stage2:692cd3b6"
++    },
++    {
++      "all_candidate_count": 196,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:712bf12e::candidate195",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:712bf12e",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:712bf12e::candidate195",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 73.781046,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1829,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided grids and metadata for the task `gap3_stage2:712bf12e`.\n\n**1. Analysis of Grid Structure and Content:**",
++            "total_tokens": 1877
++          }
++        }
++      },
++      "task_id": "gap3_stage2:712bf12e"
++    },
++    {
++      "all_candidate_count": 601,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:79fb03f4::candidate600",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:79fb03f4",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:79fb03f4::candidate600",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 74.892188,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1873,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visible grid structures and metadata provided for the four candidates. The task is `gap3_stage2:79fb03f4`.\n\n**1. Analysis",
++            "total_tokens": 1921
++          }
++        }
++      },
++      "task_id": "gap3_stage2:79fb03f4"
++    },
++    {
++      "all_candidate_count": 306,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:81c0276b::candidate305",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:81c0276b",
++      "fold": 2,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:81c0276b::candidate305",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 35.383896,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 811,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the task `gap3_stage2:81c0276b`. Although the input grid is not explicitly",
++            "total_tokens": 859
++          }
++        }
++      },
++      "task_id": "gap3_stage2:81c0276b"
++    },
++    {
++      "all_candidate_count": 5,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:8719f442::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:8719f442",
++      "fold": 3,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:8719f442::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 74.802152,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1869,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible grid structures.\n\n**1. Analysis of Metadata:**\n*   **Candidate 0:**\n    *   `cell_confidence_mean",
++            "total_tokens": 1917
++          }
++        }
++      },
++      "task_id": "gap3_stage2:8719f442"
++    },
++    {
++      "all_candidate_count": 634,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:96a8c0cd::candidate633",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:96a8c0cd",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:96a8c0cd::candidate12",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 76.383425,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1884,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns and metadata provided for the candidates.\n\n**1. Analyze the Task and Metadata:**\n*   **Task:** `gap3_stage2:9",
++            "total_tokens": 1932
++          }
++        }
++      },
++      "task_id": "gap3_stage2:96a8c0cd"
++    },
++    {
++      "all_candidate_count": 606,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:a57f2f04::candidate605",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:a57f2f04",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:a57f2f04::candidate13",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 74.813398,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1871,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns in the provided grids and apply logical consistency based on typical ARC (Abstraction and Reasoning Corpus) task structures.\n\n**1. Analyze the Grid",
++            "total_tokens": 1919
++          }
++        }
++      },
++      "task_id": "gap3_stage2:a57f2f04"
++    },
++    {
++      "all_candidate_count": 7,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++      "energy_correct": false,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:a59b95c0",
++      "fold": 2,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:a59b95c0::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 69.414519,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1590,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids provided, specifically focusing on grid dimensions, pattern consistency, and metadata confidence.\n\n**1. Grid Dimension Analysis:**\n*   **Candidate",
++            "total_tokens": 1638
++          }
++        }
++      },
++      "task_id": "gap3_stage2:a59b95c0"
++    },
++    {
++      "all_candidate_count": 13,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:ac3e2b04",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 74.762273,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 1862,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency and logical patterns within the output grids provided. The task appears to involve a grid with a repeating structure, likely composed of multiple identical or symmetric sub-grids",
++            "total_tokens": 1910
++          }
++        }
++      },
++      "task_id": "gap3_stage2:ac3e2b04"
++    },
++    {
++      "all_candidate_count": 24,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:b9630600::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:b9630600",
++      "fold": 2,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:b9630600::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 75.506052,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1886,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible portions of the output grids.\n\n**1. Analysis of Metadata:**\n*   **Program Demo Fit:** All candidates (0,",
++            "total_tokens": 1934
++          }
++        }
++      },
++      "task_id": "gap3_stage2:b9630600"
++    },
++    {
++      "all_candidate_count": 8,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:be03b35f::candidate2",
++      "energy_correct": false,
++      "energy_finalist_index": 2,
++      "family_id": "original_arc_task:be03b35f",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:be03b35f::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 34.648378,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 754,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the problem context and the provided candidates.\n\n**1. Problem Analysis:**\n*   **Task:** `gap3_stage2:be03b35f",
++            "total_tokens": 802
++          }
++        }
++      },
++      "task_id": "gap3_stage2:be03b35f"
++    },
++    {
++      "all_candidate_count": 754,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:c3202e5a::candidate228",
++      "energy_correct": false,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:c3202e5a",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:c3202e5a::candidate228",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 38.926363,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 891,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the problem `gap3_stage2:c3202e5a`.\n\n**1. Grid Size Consistency",
++            "total_tokens": 939
++          }
++        }
++      },
++      "task_id": "gap3_stage2:c3202e5a"
++    },
++    {
++      "all_candidate_count": 4,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:c7d4e6ad",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 61.05794,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 1504,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the objects within the grid across the candidates. The grid appears to contain multiple distinct colored shapes (objects) arranged in a specific pattern. Let's identify",
++            "total_tokens": 1552
++          }
++        }
++      },
++      "task_id": "gap3_stage2:c7d4e6ad"
++    },
++    {
++      "all_candidate_count": 212,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++      "energy_correct": true,
++      "energy_finalist_index": 0,
++      "family_id": "original_arc_task:f0df5ff0",
++      "fold": 4,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:f0df5ff0::candidate138",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 54.016551,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1304,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided grids and metadata in the context of the ARC task `gap3_stage2:f0df5ff0`.\n\n**1. Analysis of Candidate Grids:**",
++            "total_tokens": 1352
++          }
++        }
++      },
++      "task_id": "gap3_stage2:f0df5ff0"
++    },
++    {
++      "all_candidate_count": 52,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:f3e62deb::candidate2",
++      "energy_correct": false,
++      "energy_finalist_index": 1,
++      "family_id": "original_arc_task:f3e62deb",
++      "fold": 0,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:f3e62deb::candidate20",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 61.304481,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1517,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns in the output grids and infer the underlying transformation rule from the problem context `gap3_stage2:f3e62deb`.\n\n**1. Analy",
++            "total_tokens": 1565
++          }
++        }
++      },
++      "task_id": "gap3_stage2:f3e62deb"
++    },
++    {
++      "all_candidate_count": 657,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap3_stage2:fafd9572::candidate656",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:fafd9572",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap3_stage2:fafd9572::candidate23",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 74.058598,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1814,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural and color patterns in the provided grids, assuming a consistent transformation rule across the objects present.\n\n**1. Analyze the Grid Structure and Objects:**\nThe",
++            "total_tokens": 1862
++          }
++        }
++      },
++      "task_id": "gap3_stage2:fafd9572"
++    },
++    {
++      "all_candidate_count": 2003,
++      "candidate_count": 4,
++      "energy_candidate_id": "gap4_arc2:13e47133::candidate2002",
++      "energy_correct": true,
++      "energy_finalist_index": 3,
++      "family_id": "original_arc_task:13e47133",
++      "fold": 1,
++      "judge_outputs": {
++        "unsloth/Qwen3.6-35B-A3B-GGUF": {
++          "judge_candidate_id": "gap4_arc2:13e47133::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 75.835161,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1859,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the metadata and the visible structure of the output grids, keeping in mind the nature of ARC tasks (often involving symmetry, object manipulation, or pattern completion).\n\n**1",
++            "total_tokens": 1907
++          }
++        }
++      },
++      "task_id": "gap4_arc2:13e47133"
++    }
++  ],
++  "precondition_checksums": {
++    "cross_family_sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0",
++    "manifest_sha256": "67c21873a57b9c0dd13df278f06eb633037b31f7612008bdb0c1f51042034866",
++    "pool_sha256": "ab174673aa3c75f4f0e0952d845f78fbbcf5dee483be51c0ad7008597bdf818c"
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "resource": "cached_judge_gguf:unsloth/Qwen3.6-35B-A3B-GGUF"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "resource": "cached_judge_gguf:unsloth/gemma-4-31B-it-GGUF"
++    },
++    {
++      "available": false,
++      "detail": "1726338 uv run python src/nn/train.py experiment=trm_sudoku_extreme_1k_aug_1k logger=csv save_dir=null append_wandb_name_to_save_dir=false seed=4108 data.data_dir=./data/sudoku_extreme_1k_aug_1k ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt +trainer.max_time=00:12:00:00 callbacks.model_checkpoint.monitor=val/exact_accuracy callbacks.model_checkpoint.mode=max callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline callbacks.model_checkpoint.save_last=true callbacks.model_checkpoint.save_top_k=1 callbacks.model_checkpoint.auto_insert_metric_name=false; 1726342 /home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/bin/python3 src/nn/train.py experiment=trm_sudoku_extreme_1k_aug_1k logger=csv save_dir=null append_wandb_name_to_save_dir=false seed=4108 data.data_dir=./data/sudoku_extreme_1k_aug_1k ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt +trainer.max_time=00:12:00:00 callbacks.model_checkpoint.monitor=val/exact_accuracy callbacks.model_checkpoint.mode=max callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline callbacks.model_checkpoint.save_last=true callbacks.model_checkpoint.save_top_k=1 callbacks.model_checkpoint.auto_insert_metric_name=false",
++      "resource": "trm_training_stand_down"
++    },
++    {
++      "available": true,
++      "detail": "30 tasks loaded",
++      "resource": "cross_family_candidates"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
++      "resource": "energy_verifier"
++    },
++    {
++      "available": true,
++      "detail": "import OK",
++      "resource": "llama_cpp"
++    }
++  ],
++  "random_seed": 4303,
++  "reproducibility_checksum": "d0d49f36621f29eaf6b747485a79bfb9312f0349ea08adad94cfa61a914ad0ca",
++  "selection_task_n": 30,
++  "skipped_judge_ids": [
++    "unsloth/gemma-4-31B-it-GGUF"
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-4303",
++    "SCENARIO-VERIFY-4303"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4303_verifier_efficiency_parity_isoflops.py b/results/experiment_4303_verifier_efficiency_parity_isoflops.py
+new file mode 100644
+index 0000000000..67dd2db73e
+--- /dev/null
++++ b/results/experiment_4303_verifier_efficiency_parity_isoflops.py
+@@ -0,0 +1,17 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 4303 verifier efficiency parity iso-FLOPs rerun."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.verifier_efficiency_parity_isoflops_4303 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json b/results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json
+new file mode 100644
+index 0000000000..732ef92dac
+--- /dev/null
++++ b/results/experiment_4303_verifier_efficiency_parity_isoflops_checkpoint.json
+@@ -0,0 +1,730 @@
++{
++  "experiment_id": 4303,
++  "judges": {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": {
++      "selections": [
++        {
++          "all_candidate_count": 51,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:0b17323b::candidate7",
++          "energy_correct": false,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:0b17323b",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:0b17323b::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 52.023863,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1846,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible portions of the output grids.\n\n**1. Analysis of Metadata:**\n*   **Candidate 0:** `cell_confidence_mean`:",
++            "total_tokens": 1894
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:0b17323b"
++        },
++        {
++          "all_candidate_count": 599,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:17cae0c1::candidate292",
++          "energy_correct": false,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:17cae0c1",
++          "fold": 3,
++          "judge_candidate_id": "gap3_stage2:17cae0c1::candidate292",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 28.623121,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 935,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the provided output grids and infer the underlying transformation rule from the context of \"gap3_stage2\". Although the input grid is not explicitly provided, the metadata",
++            "total_tokens": 983
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:17cae0c1"
++        },
++        {
++          "all_candidate_count": 4,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:1a2e2828",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:1a2e2828::candidate3",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 26.234097,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 730,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the task `gap3_stage2:1a2e2828` and the provided candidates.\n\n**1. Task Analysis:**\nThe task ID `",
++            "total_tokens": 778
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:1a2e2828"
++        },
++        {
++          "all_candidate_count": 943,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:1a6449f1::candidate942",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:1a6449f1",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:1a6449f1::candidate942",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 47.612761,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1315,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the input/output grids and the metadata provided, keeping in mind the task is `gap3_stage2:1a6449f1`.",
++            "total_tokens": 1363
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:1a6449f1"
++        },
++        {
++          "all_candidate_count": 42,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:2072aba6::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:2072aba6",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:2072aba6::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 37.461526,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 997,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the output grids provided for the candidates. Since the input grid is not explicitly provided, we infer the task logic from the consistency and structure of the candidates,",
++            "total_tokens": 1045
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:2072aba6"
++        },
++        {
++          "all_candidate_count": 11,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:25094a63::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:25094a63",
++          "fold": 3,
++          "judge_candidate_id": "gap3_stage2:25094a63::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 69.564152,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1897,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visible grid data and metadata to identify the underlying pattern.\n\n**1. Metadata Analysis:**\n*   **Candidate 0:** `cell_confidence_mean`:",
++            "total_tokens": 1945
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:25094a63"
++        },
++        {
++          "all_candidate_count": 362,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:2f0c5170::candidate361",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:2f0c5170",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:2f0c5170::candidate9",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 47.92253,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1221,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the output grids, specifically focusing on grid dimensions and object symmetry/shape, which are critical in ARC tasks.\n\n**1. Grid Dimension Analysis:**",
++            "total_tokens": 1269
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:2f0c5170"
++        },
++        {
++          "all_candidate_count": 214,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:3ee1011a::candidate213",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:3ee1011a",
++          "fold": 2,
++          "judge_candidate_id": "gap3_stage2:3ee1011a::candidate4",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 47.881703,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1104,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural properties of the output grids and compare them against typical ARC task patterns, specifically looking for symmetry, consistency, and logical completion of shapes.\n\n**1. Analy",
++            "total_tokens": 1152
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:3ee1011a"
++        },
++        {
++          "all_candidate_count": 108,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:4e469f39::candidate1",
++          "energy_correct": true,
++          "energy_finalist_index": 1,
++          "family_id": "original_arc_task:4e469f39",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:4e469f39::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 59.263267,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1518,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the output grids, specifically looking for a coherent pattern or transformation rule that applies to the objects present.\n\n**1. Analyze the Grid Structure and",
++            "total_tokens": 1566
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:4e469f39"
++        },
++        {
++          "all_candidate_count": 578,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:505fff84::candidate577",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:505fff84",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:505fff84::candidate577",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 34.619621,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 869,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the task `gap3_stage2:505fff84`. Although the input grid is not explicitly provided,",
++            "total_tokens": 917
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:505fff84"
++        },
++        {
++          "all_candidate_count": 5,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:50a16a69::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:50a16a69",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:50a16a69::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 40.702759,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1004,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the patterns in the output grids and compare them against the metadata provided.\n\n**1. Analysis of Candidate Grids:**\n\n*   **Candidate 0:**",
++            "total_tokens": 1052
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:50a16a69"
++        },
++        {
++          "all_candidate_count": 996,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:5833af48::candidate995",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:5833af48",
++          "fold": 2,
++          "judge_candidate_id": "gap3_stage2:5833af48::candidate995",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 71.412685,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1856,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the task `gap3_stage2:5833af48` and the provided candidates.\n\n**1. Task Analysis:**\nThe task ID `gap",
++            "total_tokens": 1904
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:5833af48"
++        },
++        {
++          "all_candidate_count": 5,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:66e6c45b",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 35.83355,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 843,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the metadata and the grid structures provided.\n\n**1. Metadata Analysis:**\n*   **Candidate 0:**\n    *   `cell_confidence_mean`:",
++            "total_tokens": 891
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:66e6c45b"
++        },
++        {
++          "all_candidate_count": 56,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:692cd3b6",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:692cd3b6::candidate10",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 76.15144,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1860,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual structure and logical consistency of the output grids provided. The problem involves a grid transformation task (gap3_stage2).\n\n**1. Analyze the Grid Structure",
++            "total_tokens": 1908
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:692cd3b6"
++        },
++        {
++          "all_candidate_count": 196,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:712bf12e::candidate195",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:712bf12e",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:712bf12e::candidate195",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 73.781046,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1829,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided grids and metadata for the task `gap3_stage2:712bf12e`.\n\n**1. Analysis of Grid Structure and Content:**",
++            "total_tokens": 1877
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:712bf12e"
++        },
++        {
++          "all_candidate_count": 601,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:79fb03f4::candidate600",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:79fb03f4",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:79fb03f4::candidate600",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 74.892188,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1873,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visible grid structures and metadata provided for the four candidates. The task is `gap3_stage2:79fb03f4`.\n\n**1. Analysis",
++            "total_tokens": 1921
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:79fb03f4"
++        },
++        {
++          "all_candidate_count": 306,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:81c0276b::candidate305",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:81c0276b",
++          "fold": 2,
++          "judge_candidate_id": "gap3_stage2:81c0276b::candidate305",
++          "judge_chosen_index": 3,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 35.383896,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 811,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the task `gap3_stage2:81c0276b`. Although the input grid is not explicitly",
++            "total_tokens": 859
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:81c0276b"
++        },
++        {
++          "all_candidate_count": 5,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:8719f442::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:8719f442",
++          "fold": 3,
++          "judge_candidate_id": "gap3_stage2:8719f442::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 74.802152,
++            "parse_status": "parsed_candidate_reference",
++            "prompt_tokens": 1869,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible grid structures.\n\n**1. Analysis of Metadata:**\n*   **Candidate 0:**\n    *   `cell_confidence_mean",
++            "total_tokens": 1917
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:8719f442"
++        },
++        {
++          "all_candidate_count": 634,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:96a8c0cd::candidate633",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:96a8c0cd",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:96a8c0cd::candidate12",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 76.383425,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1884,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns and metadata provided for the candidates.\n\n**1. Analyze the Task and Metadata:**\n*   **Task:** `gap3_stage2:9",
++            "total_tokens": 1932
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:96a8c0cd"
++        },
++        {
++          "all_candidate_count": 606,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:a57f2f04::candidate605",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:a57f2f04",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:a57f2f04::candidate13",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 74.813398,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1871,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns in the provided grids and apply logical consistency based on typical ARC (Abstraction and Reasoning Corpus) task structures.\n\n**1. Analyze the Grid",
++            "total_tokens": 1919
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:a57f2f04"
++        },
++        {
++          "all_candidate_count": 7,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++          "energy_correct": false,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:a59b95c0",
++          "fold": 2,
++          "judge_candidate_id": "gap3_stage2:a59b95c0::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 69.414519,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1590,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids provided, specifically focusing on grid dimensions, pattern consistency, and metadata confidence.\n\n**1. Grid Dimension Analysis:**\n*   **Candidate",
++            "total_tokens": 1638
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:a59b95c0"
++        },
++        {
++          "all_candidate_count": 13,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:ac3e2b04",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 74.762273,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 1862,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency and logical patterns within the output grids provided. The task appears to involve a grid with a repeating structure, likely composed of multiple identical or symmetric sub-grids",
++            "total_tokens": 1910
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:ac3e2b04"
++        },
++        {
++          "all_candidate_count": 24,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:b9630600::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:b9630600",
++          "fold": 2,
++          "judge_candidate_id": "gap3_stage2:b9630600::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 75.506052,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1886,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided metadata and the visible portions of the output grids.\n\n**1. Analysis of Metadata:**\n*   **Program Demo Fit:** All candidates (0,",
++            "total_tokens": 1934
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:b9630600"
++        },
++        {
++          "all_candidate_count": 8,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:be03b35f::candidate2",
++          "energy_correct": false,
++          "energy_finalist_index": 2,
++          "family_id": "original_arc_task:be03b35f",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:be03b35f::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 34.648378,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 754,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the problem context and the provided candidates.\n\n**1. Problem Analysis:**\n*   **Task:** `gap3_stage2:be03b35f",
++            "total_tokens": 802
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:be03b35f"
++        },
++        {
++          "all_candidate_count": 754,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:c3202e5a::candidate228",
++          "energy_correct": false,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:c3202e5a",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:c3202e5a::candidate228",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 38.926363,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 891,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the properties of the output grids in the context of the problem `gap3_stage2:c3202e5a`.\n\n**1. Grid Size Consistency",
++            "total_tokens": 939
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:c3202e5a"
++        },
++        {
++          "all_candidate_count": 4,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:c7d4e6ad",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++          "judge_chosen_index": 0,
++          "judge_correct": true,
++          "judge_cost": {
++            "chosen_index": 0,
++            "completion_tokens": 48,
++            "latency_s": 61.05794,
++            "parse_status": "defaulted_no_valid_index",
++            "prompt_tokens": 1504,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural consistency of the objects within the grid across the candidates. The grid appears to contain multiple distinct colored shapes (objects) arranged in a specific pattern. Let's identify",
++            "total_tokens": 1552
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:c7d4e6ad"
++        },
++        {
++          "all_candidate_count": 212,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++          "energy_correct": true,
++          "energy_finalist_index": 0,
++          "family_id": "original_arc_task:f0df5ff0",
++          "fold": 4,
++          "judge_candidate_id": "gap3_stage2:f0df5ff0::candidate138",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 54.016551,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1304,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the provided grids and metadata in the context of the ARC task `gap3_stage2:f0df5ff0`.\n\n**1. Analysis of Candidate Grids:**",
++            "total_tokens": 1352
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:f0df5ff0"
++        },
++        {
++          "all_candidate_count": 52,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:f3e62deb::candidate2",
++          "energy_correct": false,
++          "energy_finalist_index": 1,
++          "family_id": "original_arc_task:f3e62deb",
++          "fold": 0,
++          "judge_candidate_id": "gap3_stage2:f3e62deb::candidate20",
++          "judge_chosen_index": 3,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 3,
++            "completion_tokens": 48,
++            "latency_s": 61.304481,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1517,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the visual patterns in the output grids and infer the underlying transformation rule from the problem context `gap3_stage2:f3e62deb`.\n\n**1. Analy",
++            "total_tokens": 1565
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:f3e62deb"
++        },
++        {
++          "all_candidate_count": 657,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap3_stage2:fafd9572::candidate656",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:fafd9572",
++          "fold": 1,
++          "judge_candidate_id": "gap3_stage2:fafd9572::candidate23",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 74.058598,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1814,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the structural and color patterns in the provided grids, assuming a consistent transformation rule across the objects present.\n\n**1. Analyze the Grid Structure and Objects:**\nThe",
++            "total_tokens": 1862
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap3_stage2:fafd9572"
++        },
++        {
++          "all_candidate_count": 2003,
++          "candidate_count": 4,
++          "checkpoint_resumed": false,
++          "energy_candidate_id": "gap4_arc2:13e47133::candidate2002",
++          "energy_correct": true,
++          "energy_finalist_index": 3,
++          "family_id": "original_arc_task:13e47133",
++          "fold": 1,
++          "judge_candidate_id": "gap4_arc2:13e47133::candidate1",
++          "judge_chosen_index": 1,
++          "judge_correct": false,
++          "judge_cost": {
++            "chosen_index": 1,
++            "completion_tokens": 48,
++            "latency_s": 75.835161,
++            "parse_status": "parsed_first_valid_integer",
++            "prompt_tokens": 1859,
++            "raw_output": "<think>\n\n</think>\n\nTo determine the correct candidate, we must analyze the metadata and the visible structure of the output grids, keeping in mind the nature of ARC tasks (often involving symmetry, object manipulation, or pattern completion).\n\n**1",
++            "total_tokens": 1907
++          },
++          "judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "task_id": "gap4_arc2:13e47133"
++        }
++      ]
++    }
++  },
++  "version": 1
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 20dfe7b384..a3a938ceed 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260616",
+-  "started_at": "2026-06-16T18:16:02Z",
+-  "finished_at": "2026-06-16T18:16:02Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-16T20:29:19Z",
++  "finished_at": "2026-06-16T20:29:19Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ef821b43e9..1355747027 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260616",
+-  "started_at": "2026-06-16T18:16:02Z",
+-  "finished_at": "2026-06-16T18:16:02Z",
++  "started_at": "2026-06-16T20:29:19Z",
++  "finished_at": "2026-06-16T20:29:19Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b74e0b17fb..9f74552d23 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260616",
+-  "started_at": "2026-06-16T18:16:02Z",
+-  "finished_at": "2026-06-16T18:16:02Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-16T20:29:19Z",
++  "finished_at": "2026-06-16T20:29:19Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4303_verifier_efficiency_parity_isoflops.py b/tests/python/test_experiment_4303_verifier_efficiency_parity_isoflops.py
+new file mode 100644
+index 0000000000..647fe3e07c
+--- /dev/null
++++ b/tests/python/test_experiment_4303_verifier_efficiency_parity_isoflops.py
+@@ -0,0 +1,650 @@
++"""Tests for Exp 4303 ARC verifier efficiency iso-FLOPs rerun.
++
++Spec refs: REQ-VERIFY-4303, SCENARIO-VERIFY-4303.
++"""
++
++from __future__ import annotations
++
++import gzip
++import itertools
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import verifier_efficiency_parity_isoflops_4303 as mod
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_gzip_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump(payload, handle, sort_keys=True)
++
++
++class FakeJudge:
++    def __init__(self, choices: list[int], *, latency_s: float = 3.0) -> None:
++        self.choices = list(choices)
++        self.latency_s = latency_s
++        self.records: list[dict[str, Any]] = []
++        self.calls = 0
++
++    def judge(self, problem: str, candidates: list[str]) -> int:
++        assert "ARC held-out-family selection" in problem
++        assert any("Candidate 0" in candidate for candidate in candidates)
++        self.calls += 1
++        choice = self.choices.pop(0)
++        self.records.append(
++            {
++                "chosen_index": choice,
++                "latency_s": self.latency_s,
++                "prompt_tokens": 180,
++                "completion_tokens": 32,
++                "total_tokens": 212,
++                "raw_output": f"Grid reasoning: compare finalists. Final answer: {choice}",
++                "parse_status": "parsed_final_answer",
++            }
++        )
++        return choice
++
++
++def _candidate(task_id: str, index: int, *, correct: bool, vote: float) -> dict[str, Any]:
++    return {
++        "candidate_id": f"{task_id}::candidate{index}",
++        "candidate_index": index,
++        "grid": [[index, 0], [0, index]],
++        "is_correct": correct,
++        "features": {
++            "vote_weight": vote,
++            "self_consistency_margin": vote - 0.5,
++            "cell_confidence_mean": vote,
++            "cell_confidence_margin": 0.1,
++            "program_demo_fit": 1.0,
++            "program_length": 10.0 + index,
++        },
++    }
++
++
++def _make_repo(root: Path, *, task_n: int = 3) -> Path:
++    tasks = []
++    manifest_rows = []
++    task_rows = []
++    for idx in range(task_n):
++        task_id = f"gap3_stage2:T{idx}"
++        correct_index = 1 if idx != 1 else 2
++        energy_index = 1 if idx != 1 else 0
++        tasks.append(
++            {
++                "task_id": task_id,
++                "raw_task_id": f"T{idx}",
++                "source_id": "gap3_stage2",
++                "candidate_count": 3,
++                "candidates": [
++                    _candidate(task_id, 0, correct=correct_index == 0, vote=0.7),
++                    _candidate(task_id, 1, correct=correct_index == 1, vote=0.2),
++                    _candidate(task_id, 2, correct=correct_index == 2, vote=0.1),
++                ],
++            }
++        )
++        manifest_rows.append(
++            {
++                "task_id": task_id,
++                "raw_task_id": f"T{idx}",
++                "source_id": "gap3_stage2",
++                "source_kind": "induced",
++                "family_id": f"family-{idx}",
++                "fold": idx,
++                "target_hash": "hash",
++                "recovered_by": "fixture",
++                "target_hash_recovered": True,
++                "source_join_found": True,
++            }
++        )
++        task_rows.append(
++            {
++                "task_id": task_id,
++                "family_id": f"family-{idx}",
++                "fold": idx,
++                "oracle_hit": True,
++                "vote_candidate_id": f"{task_id}::candidate0",
++                "vote_correct": correct_index == 0,
++                "set_encoder_candidate_id": f"{task_id}::candidate{energy_index}",
++                "set_encoder_correct": correct_index == energy_index,
++                "set_encoder_score_margin_vs_vote": 0.2,
++                "matched_control_candidate_id": f"{task_id}::candidate0",
++                "matched_control_correct": correct_index == 0,
++                "online_adapt_candidate_id": f"{task_id}::candidate1",
++                "online_adapt_correct": correct_index == 1,
++            }
++        )
++
++    _write_gzip_json(
++        root / mod.exp4284.POOL_REL,
++        {
++            "schema": "fixture",
++            "task_n": len(tasks),
++            "candidate_n": sum(len(task["candidates"]) for task in tasks),
++            "tasks": tasks,
++        },
++    )
++    _write_json(root / mod.exp4284.MANIFEST_REL, {"schema": "fixture", "rows": manifest_rows})
++    _write_json(
++        root / mod.exp4284.CROSS_FAMILY_REL,
++        {
++            "honest_verdict": "complete: fixture",
++            "held_out_task_n": len(tasks),
++            "pass_rates": {"set_encoder_at_1": 2 / 3},
++            "task_rows": task_rows,
++            "verifier_is_oracle": False,
++        },
++    )
++    model_path = root / "results" / "fixture_set_encoder.json"
++    _write_json(
++        model_path,
++        {
++            "model": {
++                "model_type": "constant_set_score",
++                "constant_score": 0.5,
++                "feature_names": [],
++                "feature_means": [],
++                "feature_scales": [],
++                "hidden_dim": 1,
++                "temperature": 1.0,
++            },
++            "model_type": "constant_set_score",
++            "feature_names": [],
++            "verifier_is_oracle": False,
++        },
++    )
++    _write_json(
++        root / mod.exp4284.SET_ENCODER_BUILD_REL,
++        {
++            "aggregator_trained": True,
++            "learned_verifier_path": str(model_path),
++            "verifier_is_oracle": False,
++            "model_specs": {"architecture": "fixture"},
++        },
++    )
++    (root / "models").mkdir(parents=True, exist_ok=True)
++    (root / "models" / "qwen.gguf").write_bytes(b"qwen gguf")
++    scripts = root / "scripts"
++    scripts.mkdir(parents=True)
++    (scripts / "adversarial_verify.py").write_text(
++        "import json, sys\nprint(json.dumps({'flag_count': 0, 'artifact': sys.argv[-1]}))\n",
++        encoding="utf-8",
++    )
++    return root
++
++
++def _spec(hf_id: str, path: Path, active_params_b: float) -> dict[str, Any]:
++    return {
++        "name": hf_id.rsplit("/", 1)[-1].removesuffix("-GGUF"),
++        "hf_id": hf_id,
++        "model_path": str(path),
++        "active_params_b": active_params_b,
++    }
++
++
++def test_req_4303_spec_declares_isoflops_contract() -> None:
++    """REQ-VERIFY-4303: OpenSpec declares the iso-FLOPs strong-judge contract."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4303",
++        "SCENARIO-VERIFY-4303",
++        "python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py",
++        "results/experiment_4303_verifier_efficiency_parity_isoflops.py",
++        "results/experiment_4303_verifier_efficiency_parity_isoflops.json",
++        "blocked_judge_models_not_cached",
++        "blocked_window_exceeded",
++        "efficiency_pareto_holds",
++        "accuracy_energy_verifier",
++        "accuracy_best_judge",
++        "accuracy_delta_ci95",
++        "cost_ratio",
++        "iso_flops_curve",
++        "verifier_is_oracle=false",
++        mod.QWEN_JUDGE_ID,
++        mod.GEMMA_JUDGE_ID,
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++
++def test_scenario_4303_accepts_one_checkpointed_strong_judge(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4303: one completed judge is enough and emits iso-FLOPs."""
++
++    root = _make_repo(tmp_path)
++    (root / mod.CHECKPOINT_REL).write_text("[]\n", encoding="utf-8")
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++    judge = FakeJudge([99, 99, 99], latency_s=2.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda spec: judge,
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        min_tasks=3,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["accuracy_energy_verifier"] == pytest.approx(2 / 3)
++    assert artifact["accuracy_best_judge"] == pytest.approx(0.0)
++    assert artifact["efficiency_pareto_holds"] is True
++    assert artifact["cost_ratio"] <= 0.1
++    assert artifact["selection_task_n"] == 3
++    assert artifact["best_judge_id"] == mod.QWEN_JUDGE_ID
++    assert artifact["skipped_judge_ids"] == [mod.GEMMA_JUDGE_ID]
++    assert artifact["adversarial_verify"]["returncode"] == 0
++    assert {point["arm"] for point in artifact["iso_flops_curve"]["points"]} == {
++        "energy_verifier",
++        mod.QWEN_JUDGE_ID,
++    }
++    assert artifact["iso_flops_curve"]["best_judge_id"] == mod.QWEN_JUDGE_ID
++    assert artifact["model_specs"]["strong_prompt"]["version"] == mod.PROMPT_VERSION
++    assert artifact["model_specs"]["cost_accounting_method"]
++    assert all(row["judge_outputs"][mod.QWEN_JUDGE_ID]["judge_correct"] is False for row in artifact["per_task"])
++
++    checkpoint = json.loads((root / mod.CHECKPOINT_REL).read_text(encoding="utf-8"))
++    assert len(checkpoint["judges"][mod.QWEN_JUDGE_ID]["selections"]) == 3
++    written = json.loads((root / mod.OUTPUT_REL).read_text(encoding="utf-8"))
++    assert written == artifact
++
++
++def test_scenario_4303_resumes_checkpoint_without_rejudging(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4303: completed judge calls are reused from checkpoint."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++    first_judge = FakeJudge([0, 0, 0], latency_s=2.0)
++    mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda spec: first_judge,
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        min_tasks=3,
++        adversarial_runner=lambda path: {"returncode": 0, "artifact": str(path)},
++    )
++    second_judge = FakeJudge([], latency_s=2.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda spec: second_judge,
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        min_tasks=3,
++        adversarial_runner=lambda path: {"returncode": 0, "artifact": str(path)},
++    )
++
++    assert second_judge.calls == 0
++    assert artifact["selection_task_n"] == 3
++    assert artifact["judge_metrics"][0]["checkpoint_resumed"] is True
++
++
++def test_req_4303_blocks_without_cached_judges_before_llama_import(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: missing GGUFs write blocked artifact without judge inference."""
++
++    root = _make_repo(tmp_path)
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [],
++        llama_import_checker=lambda: pytest.fail("llama import check must not run without GGUF"),
++        judge_factory=lambda _spec: pytest.fail("judge must not load without GGUF"),
++        trm_stand_down_checker=lambda _root: (False, "active TRM training process observed"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_judge_models_not_cached"
++    assert artifact["efficiency_pareto_holds"] is False
++    assert artifact["accuracy_energy_verifier"] == 0.0
++    assert artifact["accuracy_best_judge"] == 0.0
++    assert artifact["iso_flops_curve"]["points"] == []
++    assert artifact["model_specs"]["status"] == "blocked"
++    assert artifact["adversarial_verify"]["status"] == "not_run"
++    assert any(row["resource"] == "cross_family_candidates" and row["available"] for row in artifact["preconditions_checked"])
++    assert any(row["resource"] == "energy_verifier" and row["available"] for row in artifact["preconditions_checked"])
++    assert any(row["resource"] == "trm_training_stand_down" and not row["available"] for row in artifact["preconditions_checked"])
++
++
++def test_req_4303_blocks_when_llama_cpp_unavailable(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: llama.cpp is checked only after a real GGUF is available."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: False,
++        judge_factory=lambda _spec: pytest.fail("judge must not load when llama_cpp is unavailable"),
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_llama_cpp_unavailable"
++    assert any(row["resource"] == "llama_cpp" and not row["available"] for row in artifact["preconditions_checked"])
++
++
++def test_req_4303_blocks_runtime_failures_without_fabricating(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: judge runtime failures become honest blocked artifacts."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda _spec: (_ for _ in ()).throw(RuntimeError("load failed")),
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_llm_judge_runtime"
++    assert any(row["resource"].startswith("llm_judge_runtime:") for row in artifact["preconditions_checked"])
++
++
++def test_req_4303_blocks_if_window_expires_before_first_judge(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: no completed judge before the window gives blocked_window_exceeded."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda _spec: pytest.fail("judge must not load after expired window"),
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++        window_s=0.000000000001,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_window_exceeded"
++    assert artifact["acceptance_gate"] is True
++
++
++def test_req_4303_blocks_if_first_judge_expires_mid_call(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-VERIFY-4303: first-judge mid-call timeout is blocked, not fabricated."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++    clock_values = itertools.chain([0.0] * 4, itertools.repeat(999.0))
++    monkeypatch.setattr(mod.time, "perf_counter", lambda: next(clock_values))
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda _spec: FakeJudge([]),
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++        window_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_window_exceeded"
++    assert artifact["selection_task_n"] == 0
++
++
++def test_scenario_4303_keeps_first_judge_when_second_hits_window(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """SCENARIO-VERIFY-4303: a finished first judge is complete even if the second times out."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++    gemma_path = root / "models" / "gemma.gguf"
++    gemma_path.write_bytes(b"gemma gguf")
++    gemma_spec = _spec(mod.GEMMA_JUDGE_ID, gemma_path, 31.0)
++    qwen_judge = FakeJudge([0, 0, 0], latency_s=2.0)
++    gemma_judge = FakeJudge([], latency_s=2.0)
++    clock_values = itertools.chain([0.0] * 7, itertools.repeat(999.0))
++    monkeypatch.setattr(mod.time, "perf_counter", lambda: next(clock_values))
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec, gemma_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda spec: qwen_judge if spec["hf_id"] == mod.QWEN_JUDGE_ID else gemma_judge,
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        min_tasks=3,
++        window_s=1.0,
++        max_completed_judges=2,
++        adversarial_runner=lambda path: {"returncode": 0, "artifact": str(path)},
++    )
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["best_judge_id"] == mod.QWEN_JUDGE_ID
++    assert artifact["skipped_judge_ids"] == [mod.GEMMA_JUDGE_ID]
++    assert gemma_judge.calls == 0
++
++
++def test_scenario_4303_keeps_first_judge_when_second_expires_mid_call(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-VERIFY-4303: a mid-judge timeout after one result still completes."""
++
++    root = _make_repo(tmp_path)
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, root / "models" / "qwen.gguf", 3.0)
++    gemma_path = root / "models" / "gemma.gguf"
++    gemma_path.write_bytes(b"gemma gguf")
++    gemma_spec = _spec(mod.GEMMA_JUDGE_ID, gemma_path, 31.0)
++    qwen_judge = FakeJudge([0, 0, 0], latency_s=2.0)
++    gemma_judge = FakeJudge([], latency_s=2.0)
++    clock_values = itertools.chain([0.0] * 8, itertools.repeat(999.0))
++    monkeypatch.setattr(mod.time, "perf_counter", lambda: next(clock_values))
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec, gemma_spec],
++        llama_import_checker=lambda: True,
++        judge_factory=lambda spec: qwen_judge if spec["hf_id"] == mod.QWEN_JUDGE_ID else gemma_judge,
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        min_tasks=3,
++        window_s=1.0,
++        max_completed_judges=2,
++        adversarial_runner=lambda path: {"returncode": 0, "artifact": str(path)},
++    )
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["skipped_judge_ids"] == [mod.GEMMA_JUDGE_ID]
++    assert gemma_judge.calls == 0
++
++
++def test_req_4303_blocks_missing_candidate_inputs(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: candidate-load failures are recorded before inference."""
++
++    root = tmp_path
++    judge_path = root / "models" / "qwen.gguf"
++    judge_path.parent.mkdir(parents=True)
++    judge_path.write_bytes(b"qwen gguf")
++    qwen_spec = _spec(mod.QWEN_JUDGE_ID, judge_path, 3.0)
++
++    artifact = mod.run(
++        root,
++        judge_specs_provider=lambda: [qwen_spec],
++        llama_import_checker=lambda: pytest.fail("llama import check must wait for candidates"),
++        judge_factory=lambda _spec: pytest.fail("judge must not load without candidates"),
++        trm_stand_down_checker=lambda _root: (True, "no TRM training launched"),
++        random_seed=mod.RANDOM_SEED,
++        min_tasks=3,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_cross_family_candidates"
++
++
++def test_run_checkpointed_judge_honors_deadline(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4303: per-task judge calls stop when the deadline expires."""
++
++    root = _make_repo(tmp_path)
++    cases, _, _, _, _ = mod.exp4284.load_selection_cases(root, min_tasks=3)
++
++    with pytest.raises(mod.BlockedRun, match="blocked_window_exceeded"):
++        mod.run_checkpointed_strong_llm_judge(
++            cases,
++            FakeJudge([]),
++            judge_id=mod.QWEN_JUDGE_ID,
++            checkpoint_path=root / mod.CHECKPOINT_REL,
++            checkpoint={"judges": {}},
++            deadline_monotonic=0.0,
++        )
++
++
++def test_run_adversarial_verify_preserves_non_json_output(tmp_path: Path) -> None:
++    """REQ-VERIFY-4303: adversarial verifier output is recorded even if unparsable."""
++
++    script = tmp_path / "scripts" / "adversarial_verify.py"
++    script.parent.mkdir(parents=True)
++    script.write_text("print('not-json')\n", encoding="utf-8")
++
++    report = mod._run_adversarial_verify(tmp_path, tmp_path / "artifact.json")
++
++    assert report["stdout"] == "not-json\n"
++    assert report["returncode"] == 0
++
++
++def _manual_selection_rows(energy_hits: list[bool], judge_hits: list[bool]) -> list[dict[str, Any]]:
++    rows = []
++    for index, (energy_hit, judge_hit) in enumerate(zip(energy_hits, judge_hits, strict=True)):
++        rows.append(
++            {
++                "task_id": f"T{index}",
++                "family_id": f"family-{index}",
++                "fold": index,
++                "candidate_count": 2,
++                "all_candidate_count": 3,
++                "energy_candidate_id": f"T{index}::energy",
++                "energy_finalist_index": 0,
++                "energy_correct": energy_hit,
++                "judge_id": mod.QWEN_JUDGE_ID,
++                "judge_chosen_index": 1,
++                "judge_candidate_id": f"T{index}::judge",
++                "judge_correct": judge_hit,
++                "judge_cost": {
++                    "latency_s": 2.0,
++                    "prompt_tokens": 100,
++                    "completion_tokens": 10,
++                    "total_tokens": 110,
++                    "raw_output": "Final answer: 1",
++                    "parse_status": "parsed_final_answer",
++                },
++            }
++        )
++    return rows
++
++
++@pytest.mark.parametrize(
++    ("energy_hits", "judge_hits", "energy_dollars", "verdict_prefix"),
++    [
++        ([True, False, True], [True, False, True], 1e-12, "complete: parity_at_lower_cost"),
++        ([False, False, False], [True, True, True], 1e-12, "complete: stronger_judge_closes_accuracy_gap"),
++        ([True, True, True], [False, False, False], 1.0, "complete: no_cost_advantage"),
++    ],
++)
++def test_complete_artifact_verdict_variants(
++    tmp_path: Path,
++    energy_hits: list[bool],
++    judge_hits: list[bool],
++    energy_dollars: float,
++    verdict_prefix: str,
++) -> None:
++    """REQ-VERIFY-4303: every complete verdict is terminal-prefixed and valid."""
++
++    artifact = mod._complete_artifact(
++        judge_results=[
++            {
++                "judge_id": mod.QWEN_JUDGE_ID,
++                "judge_spec": {"hf_id": mod.QWEN_JUDGE_ID, "model_path": "fixture.gguf", "active_params_b": 3.0},
++                "selections": _manual_selection_rows(energy_hits, judge_hits),
++                "judge_cost": {
++                    "total_wall_clock_s": 6.0,
++                    "total_tokens": 330,
++                    "prompt_tokens": 300,
++                    "completion_tokens": 30,
++                },
++            }
++        ],
++        energy_cost={
++            "total_wall_clock_s": 0.1,
++            "candidate_forward_passes": 9,
++            "flops_proxy": 9.0,
++            "score_checksum_component": 0.0,
++            "estimated_dollars_per_1k_selections": energy_dollars,
++        },
++        checksums={"fixture": "sha256"},
++        model_path=tmp_path / "model.json",
++        build={"model_specs": {"architecture": "fixture"}},
++        preconditions=[],
++        skipped_judge_ids=[mod.GEMMA_JUDGE_ID],
++        random_seed=mod.RANDOM_SEED,
++        bootstrap_resamples=200,
++        duration_s=1.0,
++        checkpoint_path=tmp_path / mod.CHECKPOINT_REL,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith(verdict_prefix)
++
++
++def _valid_blocked_artifact(tmp_path: Path) -> dict[str, Any]:
++    return mod._blocked_artifact(
++        "blocked_judge_models_not_cached",
++        [{"resource": "fixture", "available": False, "detail": "fixture"}],
++        random_seed=mod.RANDOM_SEED,
++        duration_s=0.1,
++        checkpoint_path=tmp_path / mod.CHECKPOINT_REL,
++    )
++
++
++@pytest.mark.parametrize(
++    "mutate",
++    [
++        lambda artifact: artifact.pop("cost_ratio"),
++        lambda artifact: artifact.update({"honest_verdict": "not-terminal"}),
++        lambda artifact: artifact.update({"efficiency_pareto_holds": 0}),
++        lambda artifact: artifact.update({"accuracy_energy_verifier": 0}),
++        lambda artifact: artifact.update({"verifier_is_oracle": True}),
++        lambda artifact: artifact.update({"random_seed": 4303.0}),
++        lambda artifact: artifact.update({"accuracy_delta_ci95": [0.0]}),
++        lambda artifact: artifact.update({"iso_flops_curve": {"points": None}}),
++        lambda artifact: artifact.update({"preconditions_checked": {}}),
++        lambda artifact: artifact.update({"model_specs": []}),
++        lambda artifact: artifact.update({"reproducibility_checksum": "short"}),
++        lambda artifact: artifact.update({"field_principles": {}}),
++        lambda artifact: artifact.update({"spec_refs": []}),
++    ],
++)
++def test_validate_artifact_rejects_malformed_outputs(tmp_path: Path, mutate: Any) -> None:
++    """REQ-VERIFY-4303: required bare fields are mechanically validated."""
++
++    artifact = _valid_blocked_artifact(tmp_path)
++    mutate(artifact)
++
++    with pytest.raises(ValueError):
++        mod.validate_artifact(artifact)
+-- 
+2.55.0
+

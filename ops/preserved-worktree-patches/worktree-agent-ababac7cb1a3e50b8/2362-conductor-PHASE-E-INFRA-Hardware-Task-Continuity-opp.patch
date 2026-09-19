@@ -1,0 +1,1052 @@
+From 22486f51890dad600dd6c593dbc25c8d5c7f63ec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 15:10:59 -0400
+Subject: [PATCH 02362/11362] =?UTF-8?q?[conductor]=20PHASE=20E=20(INFRA;?=
+ =?UTF-8?q?=20Hardware-Task=20Continuity,=20opportunistic=20per=20north-st?=
+ =?UTF-8?q?ar=20=C2=A73)=20--=20KV260=20(THE=20sovereignty=20story;=20SSH-?=
+ =?UTF-8?q?only,=20NEVER=20host=20SD-card)=20continuity=20check=20+=20an?=
+ =?UTF-8?q?=20opportunistic=20GateMate/PolarFire=20reachability=20probe.?=
+ =?UTF-8?q?=20north-star=20=C2=A73=20relaxes=20the=20per-board=20mandate?=
+ =?UTF-8?q?=20to=20KV260-until-terminal=20then=20opportunistic;=20this=20i?=
+ =?UTF-8?q?s=20the=20opportunistic=20check.=20PRECONDITION=20the=20KV260?=
+ =?UTF-8?q?=20via=20SSH-reachability=20(ssh=20-o=20ConnectTimeout=3D5=20-o?=
+ =?UTF-8?q?=20BatchMode=3Dyes=20kria=20'true'),=20NEVER=20a=20host-SD-card?=
+ =?UTF-8?q?=20device-node=20check=20(the=20retired=20mechanism=20per=20the?=
+ =?UTF-8?q?=202026-05-20=20SSH-not-SD-card=20directive).=20If=20KV260=20re?=
+ =?UTF-8?q?achable:=20confirm=20the=20carnot=5Fising=20bitstream=20loads?=
+ =?UTF-8?q?=20(xmutil=20listapps);=20record=20a=20board-state=20transcript?=
+ =?UTF-8?q?.=20If=20unreachable:=20honest=5Fverdict=20blocked=5Fkv260=5Fss?=
+ =?UTF-8?q?h=5Funreachable=20(NOT=20a=20fabrication).=20Opportunistic=20Ga?=
+ =?UTF-8?q?teMate=20(openFPGALoader=20--detect)=20+=20PolarFire=20(ssh=20p?=
+ =?UTF-8?q?olarfire=20'true')=20reachability.=20NO=20new=20FPGA-bitstream-?=
+ =?UTF-8?q?redesign=20(re-scoped).=20DOC-ONLY/audit=20fallback=20keeps=20t?=
+ =?UTF-8?q?he=20boards=20visible=20if=20hardware=20is=20unreachable.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4345-hardware-continuity
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  72 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4345_hardware_continuity.py    | 395 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4345_hardware_continuity.json  | 114 +++++
+ .../experiment_4345_hardware_continuity.py    |  29 ++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...est_experiment_4345_hardware_continuity.py | 217 ++++++++++
+ 13 files changed, 844 insertions(+), 17 deletions(-)
+ create mode 100644 python/carnot/experiment_4345_hardware_continuity.py
+ create mode 100644 results/experiment_4345_hardware_continuity.json
+ create mode 100644 results/experiment_4345_hardware_continuity.py
+ create mode 100644 tests/python/test_experiment_4345_hardware_continuity.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 225ab9f23f..64f695900a 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -8154,6 +8154,78 @@ The artifact MUST include `field_principles` entries for the required fields:
+ 
+ ---
+ 
++### REQ-HW-4345
++
++**Title:** Opportunistic hardware continuity MUST record KV260 SSH state and board reachability
++
++**Description:**
++Experiment 4345 MUST produce
++`results/experiment_4345_hardware_continuity.json` as the opportunistic
++hardware-continuity artifact after the `.400` baseline
++`results/experiment_4334_hardware_continuity.json`. The experiment MUST treat
++KV260 as SSH-only, per north-star §3 and the KV260 SSH-Not-SD-Card discipline:
++the only valid KV260 precondition is
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host SD-card block-device checks
++are a retired mechanism and MUST NOT appear in the artifact.
++
++If KV260 SSH is unreachable, the experiment MUST write an honest
++`blocked_kv260_ssh_unreachable` verdict, record the failed SSH precondition,
++set `kv260_reachable` to bare `false`, and stop without fabricating GateMate or
++PolarFire state. If KV260 SSH is reachable, the experiment MUST run
++`ssh kria 'xmutil listapps'` to record whether the Carnot Ising bitstream is
++loadable, then opportunistically probe GateMate with
++`openFPGALoader -c dirtyJtag --detect` and PolarFire with
++`ssh -o ConnectTimeout=5 polarfire 'true'`. The result MUST preserve board
++visibility with a `boards_probed` list, where each entry has `name`,
++`reachable`, and `state` fields, and MUST include a board-state transcript of
++the commands that were actually run.
++
++The artifact MUST include `field_principles` entries for the required fields:
++
++- `honest_verdict`: `Terminal-prefixed. Records the KV260 SSH continuity + opportunistic board reachability (or blocked_kv260_ssh_unreachable -- an honest non-fabrication).`
++- `kv260_reachable`: `BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH precondition, NEVER host SD-card).`
++- `boards_probed`: `list: each board {name, reachable, state} -- keeps the boards visible in the milestone retro per the continuity discipline.`
++- `preconditions_checked`: `Records the SSH reachability checks (NEVER a host-SD-card device-node check); pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap.`
++
++**Acceptance criteria:**
++- `python3 results/experiment_4345_hardware_continuity.py` writes
++  `results/experiment_4345_hardware_continuity.json`.
++- If KV260 is unreachable, `honest_verdict` is exactly
++  `blocked_kv260_ssh_unreachable`, `kv260_reachable` is a bare boolean false,
++  and `preconditions_checked` records the KV260 SSH command and exit code.
++- If KV260 is reachable, `kv260_reachable` is a bare boolean true,
++  `boards_probed` includes KV260, GateMate, and PolarFire entries, and the
++  board-state transcript includes `ssh kria 'xmutil listapps'`,
++  `openFPGALoader -c dirtyJtag --detect`, and
++  `ssh -o ConnectTimeout=5 polarfire 'true'` results.
++- `preconditions_checked` records the actual SSH/USB reachability probes that
++  were run before any board state is claimed, and no host SD-card marker appears
++  in the JSON artifact.
++- `honest_verdict` starts with `complete:` for reachable KV260 continuity or is
++  exactly `blocked_kv260_ssh_unreachable`.
++
++**Implementation status:** Pending (Exp 4345)
++
++---
++
++### SCENARIO-HW-4345
++
++**Scenario:** Exp 4345 records KV260 SSH continuity and opportunistic board reachability.
++
++**Given:** KV260 is the terminal sovereignty board and must be checked by SSH
++only, while GateMate and PolarFire are opportunistic continuity probes.
++**When:** Experiment 4345 runs the KV260 SSH precondition and, only when it
++succeeds, runs KV260 `xmutil listapps`, GateMate DirtyJTAG detect, and PolarFire
++SSH reachability.
++**Then:** It writes `results/experiment_4345_hardware_continuity.json` with the
++required field principles, bare `kv260_reachable`, `boards_probed`,
++`preconditions_checked`, a board-state transcript, deterministic seed,
++checksum, no fabric speedup claim, and no KV260 host SD-card precondition.
++
++**Implementation status:** Pending (Exp 4345)
++
++---
++
+ ### SCENARIO-HW-4334
+ 
+ **Scenario:** Exp 4334 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 893df0b772..24146cf920 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 179,
+   "code_violations": 0,
+-  "experiments_checked": 3362,
++  "experiments_checked": 3363,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4345_hardware_continuity.py b/python/carnot/experiment_4345_hardware_continuity.py
+new file mode 100644
+index 0000000000..6382807e2d
+--- /dev/null
++++ b/python/carnot/experiment_4345_hardware_continuity.py
+@@ -0,0 +1,395 @@
++"""Exp 4345 opportunistic KV260 SSH and board reachability continuity.
++
++This module records KV260 through the current SSH-only mechanism. If KV260 is
++not reachable over SSH, the artifact stops at an honest blocked verdict instead
++of inventing GateMate or PolarFire state. When KV260 is reachable, the module
++records the KV260 `xmutil listapps` state, then opportunistically probes
++GateMate DirtyJTAG and PolarFire SSH reachability.
++
++Spec refs: REQ-HW-4345, SCENARIO-HW-4345.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_4334_hardware_continuity as _baseline
++
++
++EXPERIMENT_ID = 4345
++SCHEMA = "carnot.hardware_continuity_opportunistic_reachability.v1"
++SPEC_REFS = ["REQ-HW-4345", "SCENARIO-HW-4345"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4345_hardware_continuity.json"
++RANDOM_SEED = 4345
++INFERENCE_SUBSTRATE = "hardware_smoke"
++BOARD_NAMES = ("kv260", "gatemate", "polarfire")
++
++KV260_SSH_PRECONDITION = _baseline.KV260_SSH_PRECONDITION
++KV260_LISTAPPS_COMMAND = _baseline.KV260_LISTAPPS_COMMAND
++GATEMATE_DETECT_COMMAND = _baseline.GATEMATE_DETECT_COMMAND
++POLARFIRE_SSH_PRECONDITION = _baseline.POLARFIRE_SSH_PRECONDITION
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "kv260_reachable",
++    "boards_probed",
++    "preconditions_checked",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. Records the KV260 SSH continuity + opportunistic board "
++        "reachability (or blocked_kv260_ssh_unreachable -- an honest non-fabrication)."
++    ),
++    "kv260_reachable": (
++        "BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH "
++        "precondition, NEVER host SD-card)."
++    ),
++    "boards_probed": (
++        "list: each board {name, reachable, state} -- keeps the boards visible in the "
++        "milestone retro per the continuity discipline."
++    ),
++    "preconditions_checked": (
++        "Records the SSH reachability checks (NEVER a host-SD-card device-node check); "
++        "pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap."
++    ),
++}
++
++CommandProbe = _baseline.CommandProbe
++CommandRunner = _baseline.CommandRunner
++Clock = _baseline.Clock
++
++run_command = _baseline.run_command
++prepend_oss_cad_suite = _baseline.prepend_oss_cad_suite
++command_to_string = _baseline.command_to_string
++payload_checksum = _baseline.payload_checksum
++state_token = _baseline.state_token
++
++
++def build_artifact(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> dict[str, Any]:
++    """Build the Exp 4345 artifact from live or injected board probes."""
++    root = Path(repo_root)
++    started = clock()
++    preconditions: list[dict[str, Any]] = []
++    transcript: list[dict[str, Any]] = []
++
++    kv260_probe = command_runner(KV260_SSH_PRECONDITION, 10.0)
++    kv260_reachable = kv260_probe.exit_code == 0
++    preconditions.append(_precondition_entry("kv260_ssh", "ssh", kv260_probe, kv260_reachable))
++    transcript.append(_transcript_entry("kv260", "kv260_ssh_precondition", kv260_probe))
++
++    boards_probed = [
++        {
++            "name": "kv260",
++            "reachable": kv260_reachable,
++            "state": "kv260_ssh_reachable" if kv260_reachable else "blocked_kv260_ssh_unreachable",
++        }
++    ]
++
++    if kv260_reachable:
++        xmutil_probe = command_runner(KV260_LISTAPPS_COMMAND, 30.0)
++        boards_probed[0]["state"] = _kv260_listapps_state(xmutil_probe)
++        transcript.append(_transcript_entry("kv260", "kv260_xmutil_listapps", xmutil_probe))
++
++        gatemate_probe = command_runner(GATEMATE_DETECT_COMMAND, 30.0)
++        gatemate_idcode = _gatemate_idcode(gatemate_probe)
++        gatemate_reachable = bool(gatemate_idcode)
++        preconditions.append(
++            _precondition_entry("gatemate_jtag_detect", "usb_dirtyjtag", gatemate_probe, gatemate_reachable)
++        )
++        transcript.append(_transcript_entry("gatemate", "gatemate_dirtyjtag_detect", gatemate_probe))
++        boards_probed.append(
++            {
++                "name": "gatemate",
++                "reachable": gatemate_reachable,
++                "state": (
++                    f"gatemate_idcode_{gatemate_idcode}"
++                    if gatemate_reachable
++                    else "blocked_gatemate_unreachable"
++                ),
++            }
++        )
++
++        polarfire_probe = command_runner(POLARFIRE_SSH_PRECONDITION, 10.0)
++        polarfire_reachable = polarfire_probe.exit_code == 0
++        preconditions.append(
++            _precondition_entry("polarfire_ssh", "ssh", polarfire_probe, polarfire_reachable)
++        )
++        transcript.append(_transcript_entry("polarfire", "polarfire_ssh_precondition", polarfire_probe))
++        boards_probed.append(
++            {
++                "name": "polarfire",
++                "reachable": polarfire_reachable,
++                "state": "polarfire_ssh_reachable"
++                if polarfire_reachable
++                else "blocked_polarfire_unreachable",
++            }
++        )
++
++    artifact: dict[str, Any] = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "random_seed": RANDOM_SEED,
++        "honest_verdict": "",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_context": _source_context(root),
++        "kv260_reachable": kv260_reachable,
++        "boards_probed": boards_probed,
++        "preconditions_checked": preconditions,
++        "board_state_transcript": transcript,
++        "duration_s": _round_duration(clock() - started),
++        "fabric_acceleration_claimed": False,
++        "speedup_claim_made": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def honest_verdict(artifact: dict[str, Any]) -> str:
++    """Return the terminal-prefixed Exp 4345 verdict."""
++    if artifact.get("kv260_reachable") is False:
++        return "blocked_kv260_ssh_unreachable"
++    states = {entry["name"]: entry["state"] for entry in artifact["boards_probed"]}
++    return (
++        "complete: hardware_continuity_4345_"
++        f"kv260_{state_token(str(states['kv260']))}_"
++        f"gatemate_{state_token(str(states['gatemate']))}_"
++        f"polarfire_{state_token(str(states['polarfire']))}_"
++        "ssh_only_opportunistic"
++    )
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> Path:
++    """Run Exp 4345 and write `results/experiment_4345_hardware_continuity.json`."""
++    prepend_oss_cad_suite()
++    artifact = build_artifact(repo_root=repo_root, command_runner=command_runner, clock=clock)
++    return write_artifact(repo_root, artifact)
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, Any]) -> Path:
++    path = Path(repo_root) / OUTPUT_REL_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    _require(artifact.get("schema") == SCHEMA, "schema must identify Exp 4345")
++    _require(artifact.get("experiment") == EXPERIMENT_ID, "experiment must be 4345")
++    _require(artifact.get("spec_refs") == SPEC_REFS, "spec_refs must name REQ/SCENARIO 4345")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed must be 4345")
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    _require(not missing, f"missing required artifact fields: {sorted(missing)}")
++    _validate_principles(artifact)
++    _require(isinstance(artifact.get("kv260_reachable"), bool), "kv260_reachable must be bare bool")
++    _validate_boards_probed(artifact)
++    _validate_preconditions(artifact)
++    _validate_transcript(artifact)
++    _validate_source_context(artifact)
++    _require(
++        "mmcblk" not in json.dumps(artifact, sort_keys=True, default=str).lower(),
++        "SD-card precondition marker is forbidden",
++    )
++    _require(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate must be hardware_smoke",
++    )
++    _require(artifact.get("honest_verdict") == honest_verdict(artifact), "stale verdict")
++    _require(artifact.get("fabric_acceleration_claimed") is False, "no fabric acceleration claim")
++    _require(artifact.get("speedup_claim_made") is False, "no speedup claim")
++    _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "bad checksum")
++
++
++def _precondition_entry(
++    resource: str,
++    mechanism: str,
++    probe: CommandProbe,
++    available: bool,
++) -> dict[str, Any]:
++    return {
++        "resource": resource,
++        "mechanism": mechanism,
++        "available": bool(available),
++        "command": command_to_string(probe.command),
++        "duration_s": _round_duration(probe.duration_s),
++        "exit_code": probe.exit_code,
++        "observed": _observed(probe),
++    }
++
++
++def _transcript_entry(board: str, stage: str, probe: CommandProbe) -> dict[str, Any]:
++    return {
++        "board": board,
++        "stage": stage,
++        "command": command_to_string(probe.command),
++        "exit_code": probe.exit_code,
++        "duration_s": _round_duration(probe.duration_s),
++        "output_excerpt": _observed(probe)[:1000],
++    }
++
++
++def _kv260_listapps_state(probe: CommandProbe) -> str:
++    if probe.exit_code != 0:
++        return f"kv260_xmutil_listapps_blocked_returncode_{probe.exit_code}"
++    observed = _observed(probe).lower()
++    return (
++        "kv260_carnot_ising_listapps_seen"
++        if "carnot_ising" in observed
++        else "kv260_xmutil_listapps_no_carnot_ising_seen"
++    )
++
++
++def _gatemate_idcode(probe: CommandProbe) -> str:
++    return "0x20000001" if "0x20000001" in _observed(probe).lower() else ""
++
++
++def _observed(probe: CommandProbe) -> str:
++    text = probe.combined_output.strip()
++    return text if text else f"returncode={probe.exit_code}"
++
++
++def _source_context(repo_root: Path) -> dict[str, Any]:
++    prior_path = repo_root / "results" / "experiment_4334_hardware_continuity.json"
++    prior_payload = _read_json(prior_path)
++    return {
++        "previous_experiment": 4334,
++        "most_recent_hardware_continuity_artifact": str(prior_path),
++        "previous_artifact_read": bool(prior_payload),
++        "previous_honest_verdict": prior_payload.get("honest_verdict"),
++        "previous_kv260_reachable": prior_payload.get("kv260_reachable"),
++        "previous_per_board_reachability": prior_payload.get("per_board_reachability"),
++    }
++
++
++def _read_json(path: Path) -> dict[str, Any]:
++    if not path.exists():
++        return {}
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):  # pragma: no cover - corrupt local artifact.
++        return {}
++
++
++def _validate_principles(artifact: dict[str, Any]) -> None:
++    principles = artifact.get("field_principles")
++    _require(isinstance(principles, dict), "field_principles must be dict")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(principles.get(field) == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++        _require(
++            not (isinstance(artifact[field], dict) and set(artifact[field]) == {"value", "principle"}),
++            f"{field} must remain a bare value",
++        )
++
++
++def _validate_boards_probed(artifact: dict[str, Any]) -> None:
++    boards = artifact.get("boards_probed")
++    _require(isinstance(boards, list), "boards_probed must be a list")
++    names = [entry.get("name") for entry in boards if isinstance(entry, dict)]
++    expected = list(BOARD_NAMES) if artifact["kv260_reachable"] else ["kv260"]
++    _require(names == expected, "boards_probed has wrong board order")
++    for entry in boards:
++        _require(isinstance(entry, dict), "board entries must be dicts")
++        _require(set(entry) == {"name", "reachable", "state"}, "board entries must stay minimal")
++        _require(isinstance(entry["reachable"], bool), "board reachable must be bool")
++        _require(isinstance(entry["state"], str) and entry["state"], "board state must be non-empty")
++    if artifact["kv260_reachable"]:
++        _require(boards[0]["reachable"] is True, "reachable artifact must have KV260 reachable")
++    else:
++        _require(boards == [{"name": "kv260", "reachable": False, "state": "blocked_kv260_ssh_unreachable"}], "blocked KV260 board mismatch")
++
++
++def _validate_preconditions(artifact: dict[str, Any]) -> None:
++    preconditions = artifact.get("preconditions_checked")
++    _require(isinstance(preconditions, list), "preconditions_checked must be a list")
++    expected_resources = (
++        ["kv260_ssh", "gatemate_jtag_detect", "polarfire_ssh"]
++        if artifact["kv260_reachable"]
++        else ["kv260_ssh"]
++    )
++    expected_commands = {
++        "kv260_ssh": command_to_string(KV260_SSH_PRECONDITION),
++        "gatemate_jtag_detect": command_to_string(GATEMATE_DETECT_COMMAND),
++        "polarfire_ssh": command_to_string(POLARFIRE_SSH_PRECONDITION),
++    }
++    _require(
++        [entry.get("resource") for entry in preconditions if isinstance(entry, dict)] == expected_resources,
++        "preconditions_checked has wrong resources",
++    )
++    for entry in preconditions:
++        _require(isinstance(entry, dict), "precondition entries must be dicts")
++        _require({"resource", "available", "command", "exit_code"} <= set(entry), "missing precondition keys")
++        _require(isinstance(entry["available"], bool), "precondition available must be bool")
++        _require(entry["command"] == expected_commands[entry["resource"]], "invalid precondition command")
++
++
++def _validate_transcript(artifact: dict[str, Any]) -> None:
++    transcript = artifact.get("board_state_transcript")
++    _require(isinstance(transcript, list), "board_state_transcript must be a list")
++    expected_stages = (
++        [
++            "kv260_ssh_precondition",
++            "kv260_xmutil_listapps",
++            "gatemate_dirtyjtag_detect",
++            "polarfire_ssh_precondition",
++        ]
++        if artifact["kv260_reachable"]
++        else ["kv260_ssh_precondition"]
++    )
++    _require(
++        [entry.get("stage") for entry in transcript if isinstance(entry, dict)] == expected_stages,
++        "board_state_transcript has wrong stages",
++    )
++    for entry in transcript:
++        _require(isinstance(entry, dict), "transcript entries must be dicts")
++        _require({"board", "stage", "command", "exit_code", "output_excerpt"} <= set(entry), "bad transcript entry")
++
++
++def _validate_source_context(artifact: dict[str, Any]) -> None:
++    source = artifact.get("source_context")
++    _require(isinstance(source, dict), "source_context must be present")
++    _require(source.get("previous_experiment") == 4334, "source_context must read Exp 4334")
++    _require(
++        str(source.get("most_recent_hardware_continuity_artifact", "")).endswith(
++            "experiment_4334_hardware_continuity.json"
++        ),
++        "source_context must point at Exp 4334",
++    )
++
++
++def _round_duration(value: float) -> float:
++    return round(max(float(value), 0.000001), 6)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)  # pragma: no cover
++
++
++def main() -> None:  # pragma: no cover
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"boards_probed: {artifact['boards_probed']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index ba8bdd169e..f616ac90ca 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-17T14:59:23.920783Z",
+-  "duration_s": 0.02076888084411621,
++  "run_date": "2026-06-17T19:09:11.449220Z",
++  "duration_s": 0.02113509178161621,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "033a64f677d912508e49553a00da83a832310e908e175ecae7290a990c67ad7f",
++  "reproducibility_checksum": "3a0ef9791030711dca993b2aecd4a2871ab6a8e2f06ec2f6871d68c407275ec5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "352f6ea4c784a05e100b276a8d4dd04bd895ba6d"
++    "adversarial_verify_version": "26e2acd0c66c36c286634e742b0163b2de2bdb6e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 05186bcdfb..2f9120acf7 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-17T14:59:23.953171Z",
+-  "duration_s": 0.026741504669189453,
++  "run_date": "2026-06-17T19:09:11.472924Z",
++  "duration_s": 0.01963067054748535,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "afcba050f3c7cb6057e05289aded716fcaf70ffa4fab7c971e6d117b04b9edaa",
++  "reproducibility_checksum": "7ae51dcf9e9d12e098ea643f8793861c88f3a49f84545ab0b71cf9e763bef98e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "352f6ea4c784a05e100b276a8d4dd04bd895ba6d"
++    "adversarial_verify_version": "26e2acd0c66c36c286634e742b0163b2de2bdb6e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9a64a96c8c..09f6a3f8c2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1419525146484375,
++  "efficiency_gains_ms": 2.143383026123047,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 160e41fc10..f66b9b652c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0867988243699074e-05,
++  "duration_s": 2.8965005185455084e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4345_hardware_continuity.json b/results/experiment_4345_hardware_continuity.json
+new file mode 100644
+index 0000000000..12c5bcf83f
+--- /dev/null
++++ b/results/experiment_4345_hardware_continuity.json
+@@ -0,0 +1,114 @@
++{
++  "board_state_transcript": [
++    {
++      "board": "kv260",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.687515,
++      "exit_code": 0,
++      "output_excerpt": "returncode=0",
++      "stage": "kv260_ssh_precondition"
++    },
++    {
++      "board": "kv260",
++      "command": "ssh kria 'xmutil listapps'",
++      "duration_s": 0.832899,
++      "exit_code": 1,
++      "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
++      "stage": "kv260_xmutil_listapps"
++    },
++    {
++      "board": "gatemate",
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "duration_s": 0.047815,
++      "exit_code": 0,
++      "output_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "stage": "gatemate_dirtyjtag_detect"
++    },
++    {
++      "board": "polarfire",
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "duration_s": 0.911805,
++      "exit_code": 0,
++      "output_excerpt": "returncode=0",
++      "stage": "polarfire_ssh_precondition"
++    }
++  ],
++  "boards_probed": [
++    {
++      "name": "kv260",
++      "reachable": true,
++      "state": "kv260_xmutil_listapps_blocked_returncode_1"
++    },
++    {
++      "name": "gatemate",
++      "reachable": false,
++      "state": "blocked_gatemate_unreachable"
++    },
++    {
++      "name": "polarfire",
++      "reachable": true,
++      "state": "polarfire_ssh_reachable"
++    }
++  ],
++  "duration_s": 6.480765,
++  "experiment": 4345,
++  "fabric_acceleration_claimed": false,
++  "field_principles": {
++    "boards_probed": "list: each board {name, reachable, state} -- keeps the boards visible in the milestone retro per the continuity discipline.",
++    "honest_verdict": "Terminal-prefixed. Records the KV260 SSH continuity + opportunistic board reachability (or blocked_kv260_ssh_unreachable -- an honest non-fabrication).",
++    "kv260_reachable": "BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH precondition, NEVER host SD-card).",
++    "preconditions_checked": "Records the SSH reachability checks (NEVER a host-SD-card device-node check); pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap."
++  },
++  "honest_verdict": "complete: hardware_continuity_4345_kv260_kv260_xmutil_listapps_blocked_returncode_1_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_ssh_reachable_ssh_only_opportunistic",
++  "inference_substrate": "hardware_smoke",
++  "kv260_reachable": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.687515,
++      "exit_code": 0,
++      "mechanism": "ssh",
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    },
++    {
++      "available": false,
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "duration_s": 0.047815,
++      "exit_code": 0,
++      "mechanism": "usb_dirtyjtag",
++      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "resource": "gatemate_jtag_detect"
++    },
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "duration_s": 0.911805,
++      "exit_code": 0,
++      "mechanism": "ssh",
++      "observed": "returncode=0",
++      "resource": "polarfire_ssh"
++    }
++  ],
++  "random_seed": 4345,
++  "reproducibility_checksum": "e668166d3017e5bbd13cca29054016821447e2390ed261c2a85ed5d44c876d9c",
++  "schema": "carnot.hardware_continuity_opportunistic_reachability.v1",
++  "source_context": {
++    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4334_hardware_continuity.json",
++    "previous_artifact_read": true,
++    "previous_experiment": 4334,
++    "previous_honest_verdict": "complete: hardware_continuity_4334_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only",
++    "previous_kv260_reachable": true,
++    "previous_per_board_reachability": {
++      "gatemate": false,
++      "kv260": true,
++      "polarfire": true
++    }
++  },
++  "spec_refs": [
++    "REQ-HW-4345",
++    "SCENARIO-HW-4345"
++  ],
++  "speedup_claim_made": false
++}
+diff --git a/results/experiment_4345_hardware_continuity.py b/results/experiment_4345_hardware_continuity.py
+new file mode 100644
+index 0000000000..9176d094ea
+--- /dev/null
++++ b/results/experiment_4345_hardware_continuity.py
+@@ -0,0 +1,29 @@
++#!/usr/bin/env python3
++"""Runner for Exp 4345 opportunistic hardware continuity.
++
++Spec refs: REQ-HW-4345, SCENARIO-HW-4345.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_4345_hardware_continuity import run_experiment
++
++    out_path = run_experiment(repo_root=REPO_ROOT)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path.relative_to(REPO_ROOT)}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"boards_probed: {artifact['boards_probed']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a999e71d50..1d722861c0 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T14:59:14Z",
+-  "finished_at": "2026-06-17T14:59:14Z",
++  "started_at": "2026-06-17T19:09:02Z",
++  "finished_at": "2026-06-17T19:09:02Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6649d34ff8..ad016f839d 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T14:59:14Z",
+-  "finished_at": "2026-06-17T14:59:14Z",
++  "started_at": "2026-06-17T19:09:02Z",
++  "finished_at": "2026-06-17T19:09:02Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index cd7d9c3336..f8c3da6ec3 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T14:59:14Z",
+-  "finished_at": "2026-06-17T14:59:15Z",
++  "started_at": "2026-06-17T19:09:02Z",
++  "finished_at": "2026-06-17T19:09:02Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4345_hardware_continuity.py b/tests/python/test_experiment_4345_hardware_continuity.py
+new file mode 100644
+index 0000000000..5723c6a521
+--- /dev/null
++++ b/tests/python/test_experiment_4345_hardware_continuity.py
+@@ -0,0 +1,217 @@
++"""Tests for Exp 4345 opportunistic hardware continuity.
++
++Spec refs: REQ-HW-4345, SCENARIO-HW-4345.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_4345_hardware_continuity as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4345 command runner with queued board transcripts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        del timeout_s
++        command = tuple(command)
++        self.commands.append(command)
++        if command in self.probes and self.probes[command]:
++            return self.probes[command].pop(0)
++        raise AssertionError(f"unexpected command: {command!r}")
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _write_previous_4334(repo_root: Path) -> None:
++    results = repo_root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    (results / "experiment_4334_hardware_continuity.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: hardware_continuity_4334_prior",
++                "kv260_reachable": True,
++                "per_board_reachability": {
++                    "kv260": True,
++                    "polarfire": True,
++                    "gatemate": False,
++                },
++            }
++        ),
++        encoding="utf-8",
++    )
++
++
++def test_req_hw_4345_spec_entry_declares_required_artifact_contract() -> None:
++    """REQ-HW-4345: OpenSpec anchors fields, commands, and blocked fallback."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4345" in spec
++    assert "SCENARIO-HW-4345" in spec
++    assert "experiment_4345_hardware_continuity.json" in spec
++    assert "experiment_4334_hardware_continuity.json" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert mod.FIELD_PRINCIPLES[field] in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "ssh kria 'xmutil listapps'" in spec
++    assert "openFPGALoader -c dirtyJtag --detect" in spec
++    assert "ssh -o ConnectTimeout=5 polarfire 'true'" in spec
++    assert "blocked_kv260_ssh_unreachable" in spec
++    assert "Host SD-card block-device checks" in spec
++
++
++def test_scenario_hw_4345_records_reachable_kv260_and_opportunistic_boards(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4345: reachable KV260 emits board list and transcript."""
++    _write_previous_4334(tmp_path)
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [_probe(mod.KV260_SSH_PRECONDITION, duration_s=0.2)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(
++                    mod.KV260_LISTAPPS_COMMAND,
++                    stdout="app: carnot_ising_v2_n64 status: loadable\n",
++                    duration_s=0.3,
++                )
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout="IDCode : 0x20000001 colognechip GateMate GM1Ax\n",
++                    duration_s=0.4,
++                )
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, duration_s=0.5)
++            ],
++        }
++    )
++
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=runner)
++    out_path = mod.write_artifact(tmp_path, artifact)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert runner.commands == [
++        mod.KV260_SSH_PRECONDITION,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.GATEMATE_DETECT_COMMAND,
++        mod.POLARFIRE_SSH_PRECONDITION,
++    ]
++    assert saved["schema"] == mod.SCHEMA
++    assert saved["experiment"] == mod.EXPERIMENT_ID
++    assert saved["spec_refs"] == mod.SPEC_REFS
++    assert saved["source_context"]["previous_experiment"] == 4334
++    assert saved["source_context"]["previous_artifact_read"] is True
++    assert saved["kv260_reachable"] is True
++    assert saved["boards_probed"] == [
++        {"name": "kv260", "reachable": True, "state": "kv260_carnot_ising_listapps_seen"},
++        {"name": "gatemate", "reachable": True, "state": "gatemate_idcode_0x20000001"},
++        {"name": "polarfire", "reachable": True, "state": "polarfire_ssh_reachable"},
++    ]
++    assert [entry["resource"] for entry in saved["preconditions_checked"]] == [
++        "kv260_ssh",
++        "gatemate_jtag_detect",
++        "polarfire_ssh",
++    ]
++    assert [entry["stage"] for entry in saved["board_state_transcript"]] == [
++        "kv260_ssh_precondition",
++        "kv260_xmutil_listapps",
++        "gatemate_dirtyjtag_detect",
++        "polarfire_ssh_precondition",
++    ]
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert saved["field_principles"][field] == mod.FIELD_PRINCIPLES[field]
++    assert saved["honest_verdict"].startswith("complete: hardware_continuity_4345_")
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    assert "mmcblk" not in json.dumps(saved).lower()
++    mod.validate_artifact(saved)
++
++
++def test_req_hw_4345_blocks_without_secondary_probes_when_kv260_ssh_fails(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4345: KV260 SSH failure is an honest blocked non-fabrication."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, 255, stderr="ssh timeout", duration_s=0.6)
++            ],
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert runner.commands == [mod.KV260_SSH_PRECONDITION]
++    assert saved["honest_verdict"] == "blocked_kv260_ssh_unreachable"
++    assert saved["kv260_reachable"] is False
++    assert saved["boards_probed"] == [
++        {"name": "kv260", "reachable": False, "state": "blocked_kv260_ssh_unreachable"}
++    ]
++    assert saved["preconditions_checked"][0]["resource"] == "kv260_ssh"
++    assert saved["preconditions_checked"][0]["available"] is False
++    assert saved["source_context"]["previous_artifact_read"] is False
++    assert "gatemate_jtag_detect" not in json.dumps(saved)
++    assert "polarfire_ssh" not in json.dumps(saved)
++    mod.validate_artifact(saved)
++
++
++def test_req_hw_4345_records_reachable_kv260_with_opportunistic_blocks(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4345: reachable KV260 can coexist with blocked optional boards."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [_probe(mod.KV260_SSH_PRECONDITION, duration_s=0.2)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(mod.KV260_LISTAPPS_COMMAND, 1, stderr="xmutil needs sudo", duration_s=0.3)
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(mod.GATEMATE_DETECT_COMMAND, stdout="no idcode\n", duration_s=0.4)
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.5)
++            ],
++        }
++    )
++
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=runner)
++
++    assert artifact["kv260_reachable"] is True
++    assert artifact["boards_probed"] == [
++        {
++            "name": "kv260",
++            "reachable": True,
++            "state": "kv260_xmutil_listapps_blocked_returncode_1",
++        },
++        {"name": "gatemate", "reachable": False, "state": "blocked_gatemate_unreachable"},
++        {"name": "polarfire", "reachable": False, "state": "blocked_polarfire_unreachable"},
++    ]
++    assert artifact["honest_verdict"].startswith("complete: hardware_continuity_4345_")
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_4345_required_runner_lives_under_results() -> None:
++    """REQ-HW-4345: the required `python3 results/...` runner is present."""
++    runner = Path("results/experiment_4345_hardware_continuity.py")
++
++    assert runner.exists()
++    text = runner.read_text(encoding="utf-8")
++    assert "experiment_4345_hardware_continuity" in text
++    assert "run_experiment" in text
+-- 
+2.55.0
+

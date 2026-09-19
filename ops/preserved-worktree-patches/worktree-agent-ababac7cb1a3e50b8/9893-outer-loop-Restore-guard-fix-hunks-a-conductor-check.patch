@@ -1,0 +1,150 @@
+From 4ca9d9fe32d55a8c738d9ac1dd7af6ec20181608 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 05:03:04 -0400
+Subject: [PATCH 09893/11362] [outer-loop] Restore guard-fix hunks a conductor
+ checkpoint deleted
+
+A conductor checkpoint commit, 2b5d340c70 "preserve uncommitted work from
+interrupted run", committed a stale working tree over 5e74c37b7c twelve minutes
+after it landed. It removed 73 lines across two files with zero insertions -- a
+pure deletion, which is why restoring from 5e74c37b7c is exact and loses nothing.
+
+What it destroyed:
+
+  scripts/audit_findings_ledger.py       61 lines: EXCLUDED_SOURCES,
+                                         discover_milestone_close_audits(),
+                                         unclassified_audits()
+  scripts/qa_layer_authenticity_audit.py 12 lines: the GUARD_TARGETS entry for
+                                         mutation_marker_lint.py
+
+The tests asserting them survived, so the suite was RED at HEAD -- 3 failed, 24
+passed -- and `--check-targets` reported mutation_marker_lint.py as an
+UNCLASSIFIED GUARD. The commit message of 5e74c37b7c claimed the lint was in
+GUARD_TARGETS with the reason written down. That claim was false at HEAD, through
+no fault of its author.
+
+After restore: 27 passed, and --check-targets exits 0 with every wired guard
+classified.
+
+WHAT THIS INCIDENT IS. The checkpoint path stages everything and skips hooks. It
+deleted the deliverable built that same hour to stop findings being silently lost,
+and no hook fired, because that path does not run them. Found by an independent
+adversarial reviewer looking at something else -- not by a guard, not by CI, and
+not by me. Nothing in the repository would have reported it.
+
+Restored from git rather than re-derived, per the never-prune rule: the work
+existed and was correct, so the record should show it removed and put back, not
+rewritten.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/audit_findings_ledger.py       | 61 ++++++++++++++++++++++++++
+ scripts/qa_layer_authenticity_audit.py | 12 +++++
+ 2 files changed, 73 insertions(+)
+
+diff --git a/scripts/audit_findings_ledger.py b/scripts/audit_findings_ledger.py
+index d94e34bc65..61d98fd2e2 100644
+--- a/scripts/audit_findings_ledger.py
++++ b/scripts/audit_findings_ledger.py
+@@ -233,6 +233,44 @@ class Source(NamedTuple):
+     parser: Callable[[str, tuple[str, ...]], list[dict]]
+ 
+ 
++#: Milestone-close audits deliberately NOT ingested, each with the reason.
++#: This is not a convenience list -- it is the audit trail. Both of these
++#: report zero flagged findings today, so an UNSTATED exclusion would look
++#: identical to a working inclusion: the ledger would be silent either way and
++#: nobody could tell which. Writing the reason is what makes the difference
++#: visible, and `test_every_milestone_close_audit_is_classified` fails the
++#: build if a new audit appears in neither list.
++EXCLUDED_SOURCES: dict[str, str] = {
++    "verifier_authenticity_audit.py": (
++        "its flagged set is a LOCAL variable inside the run function "
++        "(`flagged_verdicts = {...}`), not a module-level constant, so this "
++        "ledger cannot import it. Including it would mean re-declaring the "
++        "copy this module refuses on principle. Promote it to a module "
++        "constant and it becomes a one-line addition to SOURCES."
++    ),
++    "artifact_convention_audit.py": (
++        "flagged is a POSITIONAL SLICE of VERDICTS (`VERDICTS[1:3]`), so there "
++        "is no name to import and the slice silently re-points if anyone "
++        "reorders the tuple. Same fix: give it a named constant."
++    ),
++    "pages_adversarial_audit.py": (
++        "advisory prose review of the public landing page. It emits no "
++        "per-unit verdict enum at all, so there is no flagged finding for a "
++        "disposition ledger to age. Operator-curated by design."
++    ),
++    "arc_self_solve_audit.py": (
++        "its verdicts classify SOLVE PROVENANCE, not a guard defect. A "
++        "flagged row here is actioned by quarantining an artifact through the "
++        "fabrication gate, which is a different mechanism with its own record."
++    ),
++    "qa_layer_authenticity_audit.py": (
++        "INGESTED -- listed here only so a reader sweeping this dict sees it "
++        "is accounted for. Its real entry is in SOURCES below."
++    ),
++    "experiment_claim_audit.py": ("INGESTED -- see SOURCES below. Listed for the same reason."),
++}
++
++
+ SOURCES: tuple[Source, ...] = (
+     # Claim audit stays first so a combined run appends its rows in the
+     # same order as before the widening.
+@@ -247,6 +285,29 @@ SOURCES: tuple[Source, ...] = (
+ )
+ 
+ 
++def discover_milestone_close_audits() -> set[str]:
++    """Every `*_audit.py` the conductor invokes at milestone close.
++
++    DERIVED from the caller, not listed here. A hand-maintained list is the
++    pattern-narrower-than-concept shape this module's own incident was: the
++    thing that must not drift is "which audits exist", and the conductor is
++    the only place that knows. Returns an empty set if the conductor cannot be
++    read -- the caller treats that as a skip, never as "all classified".
++    """
++    conductor = REPO / "scripts" / "research_conductor.py"
++    try:
++        text = conductor.read_text(encoding="utf-8")
++    except OSError:
++        return set()
++    return set(re.findall(r"\b([a-z_0-9]+_audit\.py)", text))
++
++
++def unclassified_audits() -> set[str]:
++    """Milestone-close audits that are in neither SOURCES nor EXCLUDED_SOURCES."""
++    known = {f"{s.module}.py" for s in SOURCES} | set(EXCLUDED_SOURCES)
++    return discover_milestone_close_audits() - known
++
++
+ def parse_ledger(text: str) -> tuple[list[dict], list[str]]:
+     """(entries, malformed lines). A data row has exactly 6 cells and an
+     ISO first-seen date; header/separator rows are structural, not data."""
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index a9dd434889..d1b1568be7 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -243,6 +243,18 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
+         "change; the regression lock for truthful archival (REQ-CONDUCTOR-ARCHIVE-2, "
+         "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
+     ),
++    (
++        PROJECT_ROOT / "scripts" / "mutation_marker_lint.py",
++        "decides whether a mutation proof's marker may reach a commit. Its silent "
++        "non-firing publishes a mutated line into the record on a path nothing else "
++        "watches: a marked no-op statement is valid Python that clears every other "
++        "hook here, and on 2026-08-25 one sat in arc_executable_world_model.py on the "
++        "LIVE ARC scored path. It is also the ONLY mechanical half of "
++        "REQ-OPS-MUTATION-PROOF -- the session wrapper beside it is opt-in -- so a hole "
++        "here is the whole defense. (The marker token is deliberately not spelled out "
++        "in this string: the lint scans this file, and quoting it would brick every "
++        "commit.)",
++    ),
+     (
+         PROJECT_ROOT / "scripts" / "audit_findings_ledger.py",
+         "decides whether a flagged audit verdict is ever answered, so its silent non-firing "
+-- 
+2.55.0
+

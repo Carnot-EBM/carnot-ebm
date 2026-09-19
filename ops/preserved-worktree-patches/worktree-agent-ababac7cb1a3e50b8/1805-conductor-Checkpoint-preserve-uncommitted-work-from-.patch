@@ -1,0 +1,43 @@
+From 8ab9b6df86e988c315204fc3c17e679fc87914be Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 13:51:15 -0400
+Subject: [PATCH 01805/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1ded56fab1..de00e3f5a6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-06-14T16:48:46Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-06-14T17:51:13Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f1a7f04b92..26a50980de 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8490,3 +8490,4 @@ c |
+ | 2026-06-14 16:12 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env: run the PROVEN Car | OK | 88 passed, 1 warning in 6.98s |
+ | 2026-06-14 16:28 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 6.48s |
+ | 2026-06-14 16:46 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-14 17:49 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 4.18s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a7a82986d1..de0ef8f358 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 19, "phase": "iteration_start", "started_at": "2026-06-14T16:48:46Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 20, "phase": "iteration_start", "started_at": "2026-06-14T17:51:13Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

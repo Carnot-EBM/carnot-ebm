@@ -1,0 +1,56 @@
+From 6aed722aeb831ee753dcb3c882d8917066a1c3e6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 12:51:51 -0400
+Subject: [PATCH 09827/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index e23d4e5e55..3795ea642d 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T16:45:07Z"
++ "last_scan_utc": "2026-08-24T16:51:47Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6d1bd4616a..038e83d171 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-24T16:12:07Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-24T16:51:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b89706f170..596c964b2e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16414,3 +16414,4 @@ code |
+ +    a |
+ | 2026-08-24 15:51 UTC | Qwen3.6 one-family flagship source shard | SKIP | Pre-tests failing, self-heal failed: 1 failed, 95 passed, 1 warning in 10.48s |
+ | 2026-08-24 16:10 UTC | Qwen3.6 one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6581_qwen36_ |
++| 2026-08-24 16:49 UTC | Gemma-4-31B one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6582_gemma4_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b03fdf3fa6..a74b502719 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-24T16:12:07Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-24T16:51:46Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

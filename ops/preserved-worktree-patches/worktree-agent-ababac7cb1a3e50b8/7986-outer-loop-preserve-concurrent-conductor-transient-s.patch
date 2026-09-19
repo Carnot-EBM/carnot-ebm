@@ -1,0 +1,1033 @@
+From 75b612f217b4449c3cff7cc683e1596b18152f1d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 26 Jul 2026 12:34:12 -0400
+Subject: [PATCH 07986/11362] [outer-loop] preserve concurrent conductor
+ transient state before the review-fix commit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Commit-first, never stash (CLAUDE.md 'Never Stash — Always Commit-First'). The conductor is running
+and writing ops/conductor-{log,state,heartbeat} + research-complete.yaml continuously, which races
+pre-commit's own stash/restore and reports 'files were modified by this hook' on hooks that modify
+nothing (canonical_url_lint.py and check_torch_cuda both exit clean standalone).
+---
+ .../arc-agi3-leaderboard-technique-watch.md   |   4 +
+ docs/research-notes/arc-agi3-news-watch.md    |   4 +
+ ...arc_leaderboard_technique_watch_state.json |   6 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          | 104 +++
+ ops/conductor-state.json                      |   2 +-
+ research-complete.yaml                        | 750 ++++++++++++++++++
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ 12 files changed, 879 insertions(+), 17 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index 43b9bf1661..0a560c7554 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -50,3 +50,7 @@ CHECK_TIMED_OUT
+ 
+ - **Dinesh Kumar Thiyagarajan (#10) — newly discovered `brain-v1` artifact.** Its `BrainV2` package implements object-centric parsing, hash-state frontier BFS, an explicit EXPLORE→MODEL→PLAN→RECOVER controller, competing mechanic hypotheses, an LLM-written executable world model backtested against observed transitions, cross-game mechanic memory, and failure reflection. **Classification: (b) GENERAL-PURPOSE components.** However, its prompt also maps known public game prefixes to mechanic classes and accepts pre-solved/analytical prefix lists. **Classification: (a) EXPLOIT/HARDCODED contamination.** No game-source reading appears in this artifact, and nothing links it to the current submission; bundled “Omega Prime” additions are explicitly disabled/unscored. [Dataset](https://www.kaggle.com/datasets/dineshkumar0705/brain-v1), [leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+ 
++## 2026-07-26 13:33 UTC -- NEW
++
++- **New top-five entrant:** **Yuchen20** (`yuchen2066`) is now **#5 at 1.58**, tied with ippeiogawa. No submission-linked public code or ARC-AGI-3 writeup was found, so no evidence-based exploit/general-purpose classification or Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/yuchen2066/code)
++
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 3ccf001b85..b263b439c3 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -63,3 +63,7 @@ CHECK_TIMED_OUT
+ - ARC Prize verified Claude Opus 5 (High) at **30.16%**, a new ARC-AGI-3 model high score; it completed five Public Demo environments no previous model had beaten. [Official result](https://arcprize.org/results/anthropic-claude-opus-5)
+ - The competition host published an analysis of 500 failed Kaggle submissions: roughly one-third had no traceable notebook error, nearly 20% required a GPU that was not enabled, and each remaining failure category accounted for under 5%. [Kaggle announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+ 
++## 2026-07-26 13:13 UTC -- check failed
++
++CHECK_TIMED_OUT
++
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+index 1bd08f69ab..69f0334fb8 100644
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ b/ops/.arc_leaderboard_technique_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- **Dinesh Kumar Thiyagarajan (#10) \u2014 newly discovered `brain-v1` artifact.** Its `BrainV2` package implements object-centric parsing, hash-state frontier BFS, an explicit EXPLORE\u2192MODEL\u2192PLAN\u2192RECOVER controller, competing mechanic hypotheses, an LLM-written executable world model backtested against observed transitions, cross-game mechanic memory, and failure reflection. **Classification: (b) GENERAL-PURPOSE components.** However, its prompt also maps known public game prefixes to mechanic classes and accepts pre-solved/analytical prefix lists. **Classification: (a) EXPLOIT/HARDCODED contamination.** No game-source reading appears in this artifact, and nothing links it to the current submission; bundled \u201cOmega Prime\u201d additions are explicitly disabled/unscored. [Dataset](https://www.kaggle.com/datasets/dineshkumar0705/brain-v1), [leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)",
+-  "last_checked": "2026-07-25T13:37:47.920641+00:00",
+-  "history_count": 9
++  "last_findings": "- **New top-five entrant:** **Yuchen20** (`yuchen2066`) is now **#5 at 1.58**, tied with ippeiogawa. No submission-linked public code or ARC-AGI-3 writeup was found, so no evidence-based exploit/general-purpose classification or Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/yuchen2066/code)",
++  "last_checked": "2026-07-26T13:33:27.294169+00:00",
++  "history_count": 10
+ }
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fb93cda952..bc8c21155f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-07-26T11:46:09Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 119, "phase": "iteration_start", "last_beat": "2026-07-26T16:33:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 02f82d804b..a0d6ecfda7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14322,3 +14322,107 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-26 11:19 UTC | Gated on Exp5935 ready: all-three-model non-prunin | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5936_sota_at |
+ | 2026-07-26 11:44 UTC | Gated on Exp5935 ready: all-three-model non-prunin | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5936_sota_at |
+ | 2026-07-26 11:46 UTC | Gated on Exp5936 stream: exact included/excluded-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5936-sota-atomic-support-union-ab) |
++| 2026-07-26 12:53 UTC | Plan milestone 2026.07.528 | OK | 13 tasks proposed |
++| 2026-07-26 12:55 UTC | Gated on Exp5936 stream: exact included/excluded-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5936-sota-atomic-support-union-ab) |
++| 2026-07-26 12:55 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 12:57 UTC | Gated on Exp5936 stream: exact included/excluded-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5936-sota-atomic-support-union-ab) |
++| 2026-07-26 12:57 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:00 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:02 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:04 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:06 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:08 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:10 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:13 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:15 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:17 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:19 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:21 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:23 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:26 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:28 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:30 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:32 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:34 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:36 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:39 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:41 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:43 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:45 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:47 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:49 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:52 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:54 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:56 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 13:58 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:00 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:02 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:05 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:07 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:09 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:11 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:13 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:15 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:18 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:20 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:22 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:24 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:26 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:29 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:31 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:33 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:35 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:37 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:40 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:42 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:44 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:46 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:48 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:51 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:53 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:55 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:57 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 14:59 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:02 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:04 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:06 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:08 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:10 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:13 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:15 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:17 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:19 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:21 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:24 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:26 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:28 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:30 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:32 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:35 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:37 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:39 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:41 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:43 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:45 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:48 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:50 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:52 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:54 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:56 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 15:59 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:01 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:03 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:05 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:07 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:09 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:12 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:14 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:16 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:18 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:20 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:22 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:25 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:27 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:29 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:31 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-07-26 16:33 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 97398b4174..0aa6c497e5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 18, "phase": "iteration_start", "started_at": "2026-07-26T11:46:09Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 119, "phase": "iteration_start", "started_at": "2026-07-26T16:33:42Z"}
+\ No newline at end of file
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 193131be86..0c3729e085 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -48046,3 +48046,753 @@ milestones:
+     title: Branch-independent .526 capstone and exact reconciliation
+     deliverable: results/experiment_5931_v526_capstone_reconciliation.json
+     result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
++- id: 2026.07.527
++  title: Non-Pruning Semantic Constraint Acquisition, Prospective Neighborhood Learning, and ARC Convention Generalization
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-26'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp5932-transition-v527
++    title: Exact terminal-boundary handoff from .526 into .527
++    deliverable: results/experiment_5932_transition_v527.json
++    result: OK (conductor)
++  - id: exp5933-aggregation-substrate-qa-repair
++    title: Aggregation-aware adversarial-verifier substrate repair
++    deliverable: results/experiment_5933_aggregation_substrate_qa_repair.json
++    result: OK (conductor)
++  - id: exp5934-v527-source-delta-ingestion
++    title: Dated evidence refresh after the V527 planner marker
++    deliverable: results/experiment_5934_v527_source_delta_ingestion.json
++    result: OK (conductor)
++  - id: exp5935-non-pruning-atomic-constraint-support
++    title: Non-pruning atomic ConstraintIR support and exact-completion fixture
++    deliverable: results/experiment_5935_non_pruning_atomic_constraint_support.json
++    result: OK (conductor)
++  - id: exp5936-sota-atomic-support-union-ab
++    title: 'Gated on Exp5935 ready: all-three-model non-pruning atomic-support union A/B'
++    deliverable: results/experiment_5936_sota_atomic_support_union_ab.json
++    result: OK (conductor)
++  - id: exp5937-excluded-pool-coverage-audit
++    title: 'Gated on Exp5936 stream: exact included/excluded-pool semantic coverage audit'
++    deliverable: results/experiment_5937_excluded_pool_coverage_audit.json
++    result: OK (conductor)
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 6913fa1b06..81a0388a7d 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 0,
+   "random_seed": 42,
+-  "duration_s": 3.780914306640625,
+-  "reproducibility_checksum": "4beb586d9d8c0bb07ac0026846850e89200270461f377efe7c642e2d9e72443a"
++  "duration_s": 6.225756406784058,
++  "reproducibility_checksum": "89a9f93c771c574d4c7dde6aa795efae5d6800333ee4e84cc0c2a633a9c4fdd4"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index f07bed94ab..206c95b52f 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 1.8258006572723389,
+-  "reproducibility_checksum": "f27a4665c6ef978a23b6ea6b7f29f1a50a130b3679120f0497812857f58bd5c6"
++  "duration_s": 1.74503493309021,
++  "reproducibility_checksum": "ce8dd44b5635b23239ee557f53811a75394fc86e1dc1619cbf89d194e0876086"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3b903470fa..b502b39b68 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260726",
+-  "started_at": "2026-07-26T12:18:58Z",
+-  "finished_at": "2026-07-26T12:18:59Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-26T14:30:28Z",
++  "finished_at": "2026-07-26T14:30:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 995a4b080d..aa034f63a3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260726",
+-  "started_at": "2026-07-26T12:18:59Z",
+-  "finished_at": "2026-07-26T12:18:59Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-26T14:30:28Z",
++  "finished_at": "2026-07-26T14:30:28Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1189a2d39b..1217a749b5 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260726",
+-  "started_at": "2026-07-26T12:18:59Z",
+-  "finished_at": "2026-07-26T12:18:59Z",
++  "started_at": "2026-07-26T14:30:28Z",
++  "finished_at": "2026-07-26T14:30:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+-- 
+2.55.0
+

@@ -1,0 +1,671 @@
+From 59bbc250de5ae0e69e31f158646a7d2faec6d2af Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 21:00:09 -0400
+Subject: [PATCH 08317/11362] Bump pre-commit ruff pin to v0.15.17; classify
+ tracked_results_guard.py in QA-layer scope
+
+---
+ .pre-commit-config.yaml                       |  10 +-
+ .../agentic/arc_executable_world_model.py     |  74 +++++++-
+ ...riment_6144_v533_source_delta_ingestion.py |  65 +++----
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ scripts/qa_layer_authenticity_audit.py        |   9 +
+ ..._arc_chat_force_continuation_2026_08_05.py | 177 ++++++++++++++++++
+ 12 files changed, 347 insertions(+), 44 deletions(-)
+ create mode 100644 tests/python/test_arc_chat_force_continuation_2026_08_05.py
+
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index 5959e058bf..4ba44e0c06 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -67,7 +67,15 @@ repos:
+   # `.venv/bin/ruff check --fix` and `.venv/bin/ruff format` manually
+   # before staging if they want auto-fixes.
+   - repo: https://github.com/astral-sh/ruff-pre-commit
+-    rev: v0.15.9
++    # v0.15.9 -> v0.15.17 (2026-08-05): pyproject.toml's per-file-ignores gained UP045
++    # (commit cfca5de955), a rule id v0.15.9 does not recognize -- ruff fails to PARSE
++    # the config at all rather than reporting a lint finding, so both hooks below have
++    # been erroring on every commit that reaches them since that commit landed (silently
++    # bypassed via --no-verify on automated commits, but blocking any hook-respecting
++    # commit that touched a Python file). v0.15.17 is not a guess: it is the exact
++    # version already running in .venv/bin/ruff, verified to parse pyproject.toml clean
++    # and pass `ruff check`/`ruff format --check` on this repo before the bump.
++    rev: v0.15.17
+     hooks:
+       - id: ruff
+         args: ["--no-fix"]
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 16028653e6..3c7ccff880 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -5489,6 +5489,7 @@ class LocalGGUFProposer:
+         temperature: float,
+         stop: Optional[list],
+         attempt: int = 0,
++        _continuation_prefix: Optional[str] = None,
+     ) -> tuple[dict, str]:
+         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
+         applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
+@@ -5504,17 +5505,30 @@ class LocalGGUFProposer:
+             so _extract_python cannot accidentally grab a ```python block written INSIDE the
+             model's reasoning trace.
+ 
++        `_continuation_prefix`, internal-only (set only by the retry this method issues on
++        itself -- see CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION below), appends a trailing
++        assistant-role message so the server continues generation from that exact text instead
++        of starting a fresh turn. Not part of the public call surface.
++
+         Raises on a network/transport error; the caller converts that to its failure tuple,
+         exactly like the raw /completion path."""
+         import json as _json
+         import urllib.request
+ 
++        messages: list[dict[str, str]] = [{"role": "user", "content": prompt}]
++        if _continuation_prefix is not None:
++            messages.append({"role": "assistant", "content": _continuation_prefix})
+         payload: dict[str, Any] = {
+-            "messages": [{"role": "user", "content": prompt}],
++            "messages": messages,
+             "max_tokens": int(max_tokens),
+             "temperature": float(temperature),
+             "cache_prompt": True,
+         }
++        if _continuation_prefix is not None:
++            # llama-server's convention for resuming generation from a supplied assistant
++            # prefix: skip re-adding the template's own generation prompt (the turn markers
++            # that would otherwise be inserted AFTER our partial assistant text, corrupting it).
++            payload["add_generation_prompt"] = False
+         # Same opt-in determinism as the raw /completion path -- it must be on BOTH, or the
+         # chat-template route (which Qwen3.6/ThinkingCap take) would stay nondeterministic while
+         # the artifact claimed a seeded run. `attempt` is threaded in from the retry ladder so
+@@ -5567,6 +5581,64 @@ class LocalGGUFProposer:
+             and os.environ.get("CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK") == "1"
+         ):
+             extraction = reasoning
++        # OPT-IN FORCED-CONTINUATION RETRY (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION=1).
++        #
++        # WHAT IT IS FOR. Measured live 2026-08-05, n=5 cells, one call each: the model reasons
++        # correctly (sb26 derives the exact right numpy slice; r11l explicitly decides "let's
++        # just return the grid as is") and then emits EOS at </think> WITHOUT EVER WRITING CODE,
++        # at 4.5k-11.7k tokens -- all well under the 16384 budget, so this is not truncation. The
++        # channel-fallback above cannot help here: it reads the reasoning channel INSTEAD of the
++        # answer channel, but in this failure shape neither channel contains a code block, so the
++        # fallback just substitutes one codeless text for another.
++        #
++        # THE FIX. Re-issue ONE request with the model's own reasoning fed back as a trailing
++        # assistant-role message (an "assistant prefill" -- the standard llama.cpp-server
++        # mechanism for resuming generation from supplied text) plus an explicit nudge to
++        # continue into the code fence. The model continues from exactly where it stopped rather
++        # than re-planning from scratch, so this costs one short follow-up call, not a full retry.
++        #
++        # WHY IT IS DEFAULT-OFF, SEPARATE FROM THE FLAG ABOVE, AND ONLY FIRES ONCE. Same
++        # quality-risk reasoning as the channel fallback -- forcing continuation past a model's
++        # own EOS is a real intervention the frozen live/scored path must not inherit silently.
++        # Kept as a SEPARATE flag (not folded into CARNOT_ARC_EMPTY_CONTENT_FALLBACK) because it
++        # is a materially different mechanism: a second network call, not a different read. Fires
++        # at most once per call -- `_continuation_prefix is None` is what distinguishes a
++        # top-level call from the retry it issues on itself, so the retry can never retry again.
++        # No-op whenever `extraction` already has a code marker: every passing path is untouched
++        # with the flag on or off, which is the property the both-directions test pins.
++        if (
++            _continuation_prefix is None
++            and "```" not in extraction
++            and "def " not in extraction
++            and reasoning.strip()
++            and os.environ.get("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION") == "1"
++        ):
++            fence = "```python\n"
++            _prefix = reasoning.rstrip() + "\n</think>\n\n" + fence
++            retry_normalized, retry_extraction = self._chat_complete_request(
++                prompt,
++                max_tokens=max_tokens,
++                temperature=temperature,
++                stop=stop,
++                attempt=attempt,
++                _continuation_prefix=_prefix,
++            )
++            # DEFENSIVE, NOT ASSUMED: whether this llama.cpp build echoes the supplied prefix
++            # back in its response, or returns only the newly-generated continuation tokens, is
++            # server-specific and was NOT confirmed before this shipped (see the commit message
++            # for the live-probe result). Handle both without guessing which one is live: if the
++            # retry's own extraction already carries a fence/def marker, the prefix was echoed
++            # and `retry_extraction` is already complete; otherwise it is continuation-only and
++            # our forced fence belongs in front of it.
++            final = (
++                retry_extraction
++                if ("```" in retry_extraction or "def " in retry_extraction)
++                else (fence + retry_extraction if retry_extraction.strip() else "")
++            )
++            full = str(retry_normalized.get("content") or final)
++            extraction = final
++            self.last_final_content = final
++            raw = retry_normalized
+         # HOW MANY TOKENS THE SERVER ACTUALLY GENERATED -- normalized into llama.cpp's native
+         # `timings.predicted_n` shape. WITHOUT THIS the mode-C detector is STRUCTURALLY DEAD on
+         # this endpoint (found 2026-07-27, adversarial review): the normalized dict carried no
+diff --git a/python/carnot/experiment_6144_v533_source_delta_ingestion.py b/python/carnot/experiment_6144_v533_source_delta_ingestion.py
+index 7591efaa15..7ebf24f17c 100644
+--- a/python/carnot/experiment_6144_v533_source_delta_ingestion.py
++++ b/python/carnot/experiment_6144_v533_source_delta_ingestion.py
+@@ -133,9 +133,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
+         "path, protected files, endpoint failures, and rate limits are recorded "
+         "before source decisions."
+     ),
+-    "search_window_and_marker_receipt": (
+-        "Only a hash-anchored post-marker window is eligible."
+-    ),
++    "search_window_and_marker_receipt": ("Only a hash-anchored post-marker window is eligible."),
+     "source_queries_and_endpoint_receipts": (
+         "Every source route records role, URL, query, access outcome, timestamp, "
+         "candidate count, and low-concurrency evidence."
+@@ -144,8 +142,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
+         "Discovery metadata cannot be mistaken for primary or official evidence."
+     ),
+     "accepted_rejected_duplicate_retired_and_abstained_findings": (
+-        "Every candidate receives one explicit disposition backed by a primary or "
+-        "official URL."
++        "Every candidate receives one explicit disposition backed by a primary or official URL."
+     ),
+     "sota_to_experiment_mapping": (
+         "Ingestion may inform execution but cannot add, remove, rename, or re-gate a task."
+@@ -168,17 +165,14 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
+         "Reference-ledger appends are append-only and forbidden for zero accepted findings."
+     ),
+     "roadmap_identity_gate_and_exclusion_immutability": (
+-        "Roadmap task IDs, gates, task identity, and exclusions stay immutable "
+-        "during ingestion."
++        "Roadmap task IDs, gates, task identity, and exclusions stay immutable during ingestion."
+     ),
+     "protected_files_unchanged": (
+         "Roadmaps, conductor, ops ledgers, retired-scope controls, and protected "
+         "sources remain byte-identical unless explicitly owned."
+     ),
+     "duration_s": "Measured wall time exposes the bounded literature-ingestion substrate.",
+-    "inference_substrate": (
+-        "Use `literature_ingestion`; no local research model is invoked."
+-    ),
++    "inference_substrate": ("Use `literature_ingestion`; no local research model is invoked."),
+     "field_provenance": (
+         "Every field traces to source receipts, local hashes, query families, or "
+         "classification records."
+@@ -191,8 +185,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
+     ),
+     "test_exit_codes": "Exit codes prevent failed checks from becoming success.",
+     "reproducibility_checksum": (
+-        "A checksum detects later marker, source, classification, append, or "
+-        "immutability drift."
++        "A checksum detects later marker, source, classification, append, or immutability drift."
+     ),
+     "honest_verdict": (
+         "Use `complete_delta:`, `complete_null:`, or `blocked:` and distinguish "
+@@ -682,7 +675,7 @@ DEFAULT_RETIRED_SCOPE_FINDINGS: tuple[JsonDict, ...] = (
+         "retired_reopen_shapes_manifest_guard",
+         "retired_scope",
+         "Renamed Phase-D, generated-answer, CSL exact-slot, THRML parity, ARC, KAN, or hardware reopen shapes",
+-        "https://github.com/ianblenke/carnot/blob/main/ops/exclusion_manifest.yaml",
++        "https://github.com/Carnot-EBM/carnot-ebm/blob/main/ops/exclusion_manifest.yaml",
+         identifier="retired_v533_reopen_shapes",
+         receipt_id="local_sweep_clusters_v533",
+         query_family="local_tooling",
+@@ -921,9 +914,7 @@ def _roadmap_snapshot(path: Path) -> JsonDict:
+         loaded = {}
+     raw_tasks = loaded.get("tasks") if isinstance(loaded.get("tasks"), list) else []
+     task_ids = [
+-        str(row.get("id"))
+-        for row in raw_tasks
+-        if isinstance(row, Mapping) and row.get("id")
++        str(row.get("id")) for row in raw_tasks if isinstance(row, Mapping) and row.get("id")
+     ]
+     gates = [
+         {"id": row.get("id"), "gated_on": row.get("gated_on")}
+@@ -1150,9 +1141,7 @@ def _bucket_findings(accepted_findings: Sequence[JsonDict]) -> JsonDict:
+ def _source_counts(source_receipts: Sequence[JsonDict]) -> JsonDict:
+     counts = Counter(str(row["source_role"]) for row in source_receipts)
+     return {
+-        "principle": REQUIRED_FIELD_PRINCIPLES[
+-            "primary_secondary_and_official_source_counts"
+-        ],
++        "principle": REQUIRED_FIELD_PRINCIPLES["primary_secondary_and_official_source_counts"],
+         "primary": counts["primary"],
+         "secondary": counts["secondary"],
+         "official": counts["official"],
+@@ -1182,9 +1171,7 @@ def _semantic_scholar_receipts(source_receipts: Sequence[JsonDict]) -> JsonDict:
+     ebt = by_id.get("semantic_scholar_v533_ebt_citations", {})
+     arm = by_id.get("semantic_scholar_v533_arm_ebm_citations", {})
+     return {
+-        "principle": REQUIRED_FIELD_PRINCIPLES[
+-            "semantic_scholar_ebt_and_arm_ebm_receipts"
+-        ],
++        "principle": REQUIRED_FIELD_PRINCIPLES["semantic_scholar_ebt_and_arm_ebm_receipts"],
+         "ebt_arxiv_id": "2507.02092",
+         "arm_ebm_arxiv_id": "2512.15605",
+         "ebt_visible_citation_count": ebt.get("candidate_count", 0),
+@@ -1321,9 +1308,7 @@ def _immutability_receipt(root: Path) -> JsonDict:
+     active = _roadmap_snapshot(root / ROADMAP_RELATIVE_PATH)
+     staged = _roadmap_snapshot(root / ROADMAP_NEXT_RELATIVE_PATH)
+     return {
+-        "principle": REQUIRED_FIELD_PRINCIPLES[
+-            "roadmap_identity_gate_and_exclusion_immutability"
+-        ],
++        "principle": REQUIRED_FIELD_PRINCIPLES["roadmap_identity_gate_and_exclusion_immutability"],
+         "task_ids_unchanged": True,
+         "gates_unchanged": True,
+         "exclusions_unchanged": True,
+@@ -1435,9 +1420,7 @@ def build_artifact(
+         "search_started_at": search_started_at,
+         "search_finished_at": search_finished_at,
+         "search_window_and_marker_receipt": {
+-            "principle": REQUIRED_FIELD_PRINCIPLES[
+-                "search_window_and_marker_receipt"
+-            ],
++            "principle": REQUIRED_FIELD_PRINCIPLES["search_window_and_marker_receipt"],
+             "boundary_marker": PLANNER_MARKER,
+             "planner_heading": PLANNER_HEADING,
+             "marker_line": marker_line,
+@@ -1453,9 +1436,7 @@ def build_artifact(
+             ),
+         },
+         "source_queries_and_endpoint_receipts": {
+-            "principle": REQUIRED_FIELD_PRINCIPLES[
+-                "source_queries_and_endpoint_receipts"
+-            ],
++            "principle": REQUIRED_FIELD_PRINCIPLES["source_queries_and_endpoint_receipts"],
+             "source_receipts": source_rows,
+             "endpoint_failures": endpoint_failures,
+             "rate_limit_receipts": rate_limits,
+@@ -1482,12 +1463,8 @@ def build_artifact(
+             "same_day_ordering_uncertainty": True,
+             "utc_cutoff": search_finished_at,
+         },
+-        "semantic_scholar_ebt_and_arm_ebm_receipts": _semantic_scholar_receipts(
+-            source_rows
+-        ),
+-        "openreview_huggingface_github_extropic_and_kona_receipts": _group_receipts(
+-            source_rows
+-        ),
++        "semantic_scholar_ebt_and_arm_ebm_receipts": _semantic_scholar_receipts(source_rows),
++        "openreview_huggingface_github_extropic_and_kona_receipts": _group_receipts(source_rows),
+         "duplicate_and_retired_scope_filter": _retired_scope_filter(),
+         "references_append_receipt": _references_append_receipt(
+             accepted_findings=accepted,
+@@ -1546,9 +1523,7 @@ def build_and_write_artifact(
+         test_commands=test_commands,
+         test_exit_codes=test_exit_codes,
+     )
+-    accepted = dry["accepted_rejected_duplicate_retired_and_abstained_findings"][
+-        "accepted"
+-    ]
++    accepted = dry["accepted_rejected_duplicate_retired_and_abstained_findings"]["accepted"]
+     appended = False
+     if dry["status"] == "complete" and accepted and EXECUTION_DELTA_HEADING not in before_text:
+         references_path.write_text(
+@@ -1599,7 +1574,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
+     source_block = artifact["source_queries_and_endpoint_receipts"]
+     _require(isinstance(source_block, Mapping), "source_queries must be an object")
+     source_receipts = source_block.get("source_receipts")
+-    _require(isinstance(source_receipts, list) and source_receipts, "source_queries missing receipts")
++    _require(
++        isinstance(source_receipts, list) and source_receipts, "source_queries missing receipts"
++    )
+     for receipt in source_receipts:
+         for field in SOURCE_RECEIPT_REQUIRED_FIELDS:
+             _require(field in receipt, f"source receipt missing {field}")
+@@ -1650,7 +1627,11 @@ def main() -> int:
+         duration_s=round((finished - started).total_seconds(), 6),
+     )
+     validate_artifact(artifact)
+-    print(json.dumps({"status": artifact["status"], "result": artifact["result_path"]}, sort_keys=True))
++    print(
++        json.dumps(
++            {"status": artifact["status"], "result": artifact["result_path"]}, sort_keys=True
++        )
++    )
+     return 0
+ 
+ 
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 95f4e3b969..f650f22236 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52669,6 +52669,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "PROVEN BY REBUILD (results/experiment_6011_world_model_change_gate_four_arm.json, rebuilt to scratch and diffed leaf-by-leaf against the committed version): all 75 rows are byte-identical except `elapsed_s` (wall-clock only). Zero measured values moved. The rebuild tool's own known defect dropped 3 hand-added rebuild_note_20260731_* / original_timings_superseded_by_rebuild keys, restored separately, not from this dependency change."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 376eca9744..7dd378426c 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -153,6 +153,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 9f18fbe3b7..b1b3284a16 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8695,6 +8695,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 6bb72a2f56..45ad80d87a 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1414,6 +1414,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index fddd3efad0..5c914fc05c 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3453,6 +3453,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 23ab21af35..2a3bc02630 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1094,6 +1094,14 @@
+         "acknowledged_on": "2026-08-04",
+         "reason": "The 2026-08-04 change to arc_llm_on_liveness_lint.py adds ONE branch: when a row carries no `llm` block there are no call-level primitives to recompute from, so a False stamp is reported as STAMP_FALSE_UNAUDITABLE at WARN instead of STAMP_FALSE_UNEXPLAINED at FAIL. It adds no measurement and changes no computation this artifact performs.",
+         "evidence": "PROVEN BY RUNNING THE LINT BEFORE AND AFTER. Whole-corpus counts moved 56 FAIL / 280 WARN -> 55 FAIL / 281 WARN: exactly one finding reclassified FAIL->WARN, which is the single exp5972 raw_row_summary row this branch was written for. 55 equals the exempt forward-only baseline in ops/arc_llm_on_liveness_baseline.json, so NO pre-existing FAIL was silenced and no NEW finding remains. This artifact reports the generator-concurrency fix and cites no FAIL/WARN count, so no published figure in it moves."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 1fcb18c77d..e6024b1e2b 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -328,6 +328,14 @@
+         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
+         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
+         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
++        "acknowledged_on": "2026-08-05",
++        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
++        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index 77509cb08d..1ccea8f8c1 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -211,6 +211,15 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
+         "decides whether an ARC solver counts as live-path-reachable, i.e. whether the "
+         "work counts at all",
+     ),
++    (
++        PROJECT_ROOT / "python" / "carnot" / "testing" / "tracked_results_guard.py",
++        "RUNTIME guard for the sibling half of the Test-Run Record Integrity Discipline: "
++        "fires at the moment a test writes a tracked results/** file, the exact mechanism "
++        "that silently rewrote the research record (2026-07-29 incident). Same shape as "
++        "operator_curated_doc_guard.py above -- not a pre-commit hook, so --check-targets "
++        "alone would never have found it -- listed here explicitly, added 2026-08-05 after "
++        "landing 7 hours unclassified.",
++    ),
+ )
+ 
+ # Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This
+diff --git a/tests/python/test_arc_chat_force_continuation_2026_08_05.py b/tests/python/test_arc_chat_force_continuation_2026_08_05.py
+new file mode 100644
+index 0000000000..f38ad66eaf
+--- /dev/null
++++ b/tests/python/test_arc_chat_force_continuation_2026_08_05.py
+@@ -0,0 +1,177 @@
++"""The empty-answer-channel fallback (CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK) reads a
++different channel when the answer is empty. Measured live 2026-08-05 (n=5 cells, exp6091):
++that does not help when NEITHER channel has code -- the model reasons correctly then emits
++EOS at </think> without ever writing an answer, well under the token budget. This tests the
++fix: CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION re-issues one request with the model's own
++reasoning fed back as an assistant-role prefill, forcing continuation into the code fence
++rather than a fresh turn.
++
++SCENARIO-ARC-CHAT-CONTINUATION-2026-08-05
++"""
++
++from __future__ import annotations
++
++import json
++from typing import Any
++
++import pytest
++
++from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++THINK_NO_CODE = "Let's implement this.\n    * Wait, what about is_level_complete?\n    * I'll just return False."
++REAL_CODE = "import numpy as np\n\n\ndef engine(grid, action, data=None):\n    return grid.copy()\n"
++
++
++class _ChatServer:
++    """Fakes the /v1/chat/completions HTTP boundary only. Distinguishes a continuation
++    retry from a fresh call by checking whether the posted payload carries a trailing
++    assistant-role message -- the actual signal `_chat_complete_request` sends, not call
++    order, so the test cannot pass by accident on ordering alone."""
++
++    def __init__(self, first_reply: dict, continuation_reply: dict | None = None) -> None:
++        self.first_reply = first_reply
++        self.continuation_reply = continuation_reply
++        self.calls: list[dict] = []
++
++    def urlopen(self, req: Any, timeout: float | None = None) -> Any:  # noqa: ANN401
++        payload = json.loads(req.data.decode())
++        self.calls.append(payload)
++        is_continuation = payload["messages"][-1]["role"] == "assistant"
++        body = (
++            self.continuation_reply
++            if is_continuation and self.continuation_reply
++            else self.first_reply
++        )
++
++        class _Resp:
++            def __enter__(_s):  # noqa: ANN001, N805
++                return _s
++
++            def __exit__(_s, *a):  # noqa: ANN001, N805
++                return False
++
++            def read(_s):  # noqa: ANN001, N805
++                return json.dumps(body).encode()
++
++        return _Resp()
++
++
++def _openai_shape(*, content: str = "", reasoning: str = "", finish_reason: str = "stop") -> dict:
++    return {
++        "choices": [
++            {
++                "message": {"content": content, "reasoning_content": reasoning},
++                "finish_reason": finish_reason,
++            }
++        ]
++    }
++
++
++def _proposer(monkeypatch: pytest.MonkeyPatch, server: _ChatServer):
++    import urllib.request
++
++    prop = LocalGGUFProposer(repo_substr="gemma-4-31B-it", port=65512)
++    monkeypatch.setattr(prop, "_ensure_server", lambda: True)
++    monkeypatch.setattr(urllib.request, "urlopen", server.urlopen)
++    return prop
++
++
++@pytest.fixture(autouse=True)
++def _shipped_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    for var in (
++        "CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION",
++        "CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK",
++    ):
++        monkeypatch.delenv(var, raising=False)
++
++
++class TestFlagDefaultsOffAndIsANoOp:
++    def test_flag_off_leaves_the_bug_reproducing(self, monkeypatch: pytest.MonkeyPatch):
++        """OFF must reproduce the exact 2026-08-05 failure: one call, empty extraction, no
++        retry issued. This is what makes the default a true no-op."""
++        srv = _ChatServer(_openai_shape(content="", reasoning=THINK_NO_CODE))
++        prop = _proposer(monkeypatch, srv)
++        normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert extraction == "", "flag OFF must not read any fallback or continuation"
++        assert len(srv.calls) == 1, "flag OFF must never issue a second request"
++
++    def test_flag_on_but_answer_already_present_is_untouched(self, monkeypatch: pytest.MonkeyPatch):
++        """No-op whenever extraction already has a code marker -- the property the docstring
++        claims. Proves the flag cannot regress an already-passing cell."""
++        monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++        srv = _ChatServer(_openai_shape(content=REAL_CODE, reasoning="reasoning here"))
++        prop = _proposer(monkeypatch, srv)
++        _normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert "def engine" in extraction
++        assert len(srv.calls) == 1, "a passing call must not trigger a retry"
++
++    def test_flag_on_but_reasoning_also_empty_is_a_no_op(self, monkeypatch: pytest.MonkeyPatch):
++        """Nothing to continue from -- must not retry with an empty prefix."""
++        monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++        srv = _ChatServer(_openai_shape(content="", reasoning=""))
++        prop = _proposer(monkeypatch, srv)
++        _normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert extraction == ""
++        assert len(srv.calls) == 1
++
++
++class TestTheFixRecoversCode:
++    def test_continuation_only_reply_is_fence_prepended(self, monkeypatch: pytest.MonkeyPatch):
++        """Server returns ONLY the newly-generated tokens after the supplied prefix (no
++        echo) -- the defensive fence-prepend path. The reply body deliberately has NEITHER
++        a fence NOR "def " (adversarial-review finding: the first draft of this fixture
++        accidentally contained both, so it silently exercised the OTHER branch instead)."""
++        monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++        srv = _ChatServer(
++            first_reply=_openai_shape(content="", reasoning=THINK_NO_CODE),
++            continuation_reply=_openai_shape(content="    return grid.copy()\n"),
++        )
++        prop = _proposer(monkeypatch, srv)
++        _normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert extraction.startswith("```python\n"), "the prepend arm must have fired"
++        assert "return grid.copy()" in extraction
++        assert len(srv.calls) == 2, "must issue exactly one retry"
++        assert srv.calls[1]["messages"][-1]["role"] == "assistant"
++        assert srv.calls[1]["messages"][-1]["content"].endswith("```python\n")
++        assert srv.calls[1].get("add_generation_prompt") is False
++
++    def test_echoed_prefix_reply_is_not_double_fenced(self, monkeypatch: pytest.MonkeyPatch):
++        """Server echoes the supplied prefix back plus new tokens -- the retry's own
++        extraction already carries the fence, so it must be used AS-IS, not re-prepended
++        (a naive prepend would corrupt the extraction with a duplicate fence line)."""
++        monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++        echoed = "```python\n" + REAL_CODE + "```"
++        srv = _ChatServer(
++            first_reply=_openai_shape(content="", reasoning=THINK_NO_CODE),
++            continuation_reply=_openai_shape(content=echoed),
++        )
++        prop = _proposer(monkeypatch, srv)
++        _normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert extraction.count("```python") == 1, "must not double the fence"
++        assert "def engine" in extraction
++
++    def test_retry_never_retries_itself(self, monkeypatch: pytest.MonkeyPatch):
++        """The recursion guard: if the retry ALSO comes back empty, there must be exactly
++        one retry attempt total, never a chain. A missing guard here would let a
++        persistently-empty model spin the call budget."""
++        monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++        srv = _ChatServer(
++            first_reply=_openai_shape(content="", reasoning=THINK_NO_CODE),
++            continuation_reply=_openai_shape(content="", reasoning=""),
++        )
++        prop = _proposer(monkeypatch, srv)
++        _normalized, extraction = prop._chat_complete_request(
++            "induce prompt", max_tokens=16384, temperature=0.0, stop=None
++        )
++        assert len(srv.calls) == 2, "must stop after exactly one retry, not chain"
++        assert extraction == ""
+-- 
+2.55.0
+

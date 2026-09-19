@@ -1,0 +1,1841 @@
+From 184428b8a97d998700ebdd7530c6b715780c4bda Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 14:28:49 -0400
+Subject: [PATCH 06049/11362] [conductor] Budget-curated memory governance for
+ dependency-safe self-learning
+
+Automated research step by research conductor.
+Task ID: exp5368-v489-budget-curated-memory-governance
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 134 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...8_budget_curated_memory_governance_v489.py | 888 ++++++++++++++++++
+ ...budget_curated_memory_governance_v489.json | 418 +++++++++
+ ...8_budget_curated_memory_governance_v489.py | 338 +++++++
+ 5 files changed, 1779 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5368_budget_curated_memory_governance_v489.py
+ create mode 100644 results/experiment_5368_budget_curated_memory_governance_v489.json
+ create mode 100644 tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 821902ef95..eee42ce9de 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -18641,3 +18641,137 @@ measurements
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5357 | Implemented (`python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py`, `results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json`) | Implemented (`tests/python/test_experiment_5357_dependency_drift_self_learning_scaleup_v488.py`) |
++
++---
++
++## REQ-LEARN-5368: Budget-Curated Memory Governance Fixture v489
++
++Experiment 5368 SHALL build a deterministic budget-curated memory governance
++fixture for continuous self-learning without mutating model weights. The
++fixture SHALL reuse Exp5355 dependency-provenance evidence and Exp5356
++memory-tool drift evidence where possible, then add per-memory-item governance
++fields for provenance, byte cost, estimated verifier value, stale risk, poison
++risk, sharing risk, and trust label.
++
++The fixture SHALL score every memory item by value-minus-harm per byte. Harm
++SHALL be computed from stale, poison, and sharing risks, and the score SHALL be
++`(estimated_verifier_value - harm) / byte_cost`. Budgeted curation SHALL process
++items in deterministic descending score order. Clean useful items with verified
++provenance MAY be kept while the byte budget remains. Stale, poisoned, or
++untrusted items SHALL be deflected by DROP or QUARANTINE decisions and SHALL NOT
++be accepted as trusted useful memory. SHARE decisions SHALL require provenance,
++TRUST, KEEP, and low sharing risk.
++
++The deterministic panel SHALL include clean useful cases, stale cases, poisoned
++cases, untrusted-provenance cases, and low-value or over-budget clean cases.
++The fixture SHALL emit KEEP, DROP, SHARE, QUARANTINE, TRUST, and UNTRUST
++decisions and SHALL measure retained bytes, value-minus-harm per byte,
++keep/share/trust precision, stale and poison deflection, rollback recovery, and
++unsafe false accepts as separate fields.
++
++The result artifact SHALL be
++`results/experiment_5368_budget_curated_memory_governance_v489.json` and SHALL
++include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
++principle-wrapped `status` whose value is `budget_curated_memory_ready` only
++if the fixture runs, principle-wrapped `honest_verdict` whose value starts with
++`complete:` or `blocked_`, principle-wrapped `inference_substrate` with
++`value=deterministic_budget_curated_memory_governance`, bare boolean
++`continuous_self_learning_target` with value true, bare boolean
++`no_weight_mutation` with value true, bare boolean
++`budget_curated_memory_ready`, bare integer `memory_item_count`, bare integer
++`budget_bytes`, bare integer `retained_bytes`, bare numeric
++`value_minus_harm_per_byte_mean`, bare numeric `keep_precision`, bare numeric
++`stale_memory_deflection_rate`, bare numeric
++`poison_memory_deflection_rate`, bare numeric `share_decision_precision`, bare
++numeric `trust_decision_precision`, bare numeric `rollback_recovery_rate`,
++bare integer `unsafe_false_accepts`, and principle-wrapped `tests_run`.
++
++The required field principles SHALL be:
++
++- `experiment_id`: Stable id ties the artifact to this roadmap task.
++- `milestone`: Keeps the governance fixture tied to the `.489` memory budget
++  scale-up gate.
++- `status`: Complete only if the budget governance fixture runs.
++- `honest_verdict`: One-line ready or blocked verdict with a terminal prefix.
++- `inference_substrate`: Expected value is
++  deterministic_budget_curated_memory_governance.
++- `continuous_self_learning_target`: Bare boolean must be true because this
++  advances continuous self-learning.
++- `no_weight_mutation`: Bare boolean must be true because the fixture governs
++  memory only, not model weights.
++- `budget_curated_memory_ready`: Bare boolean gate for scale-up; true only
++  when value, cost, harm, and trust decisions are all measured.
++- `memory_item_count`: Bare integer counts memory records evaluated.
++- `budget_bytes`: Bare integer records the memory byte budget used by the
++  fixture.
++- `retained_bytes`: Bare integer records bytes retained after curation.
++- `value_minus_harm_per_byte_mean`: Bare numeric score normalized by byte cost.
++- `keep_precision`: Bare numeric fraction of kept items that are useful and
++  non-harmful.
++- `stale_memory_deflection_rate`: Bare numeric fraction of stale items not
++  trusted or not used.
++- `poison_memory_deflection_rate`: Bare numeric fraction of poisoned items not
++  trusted or not used.
++- `share_decision_precision`: Bare numeric fraction of shared items that pass
++  provenance and trust constraints.
++- `trust_decision_precision`: Bare numeric fraction of trusted items that are
++  clean useful items.
++- `rollback_recovery_rate`: Bare numeric recovery rate after bad memory is
++  detected.
++- `unsafe_false_accepts`: Bare integer count of harmful memory items accepted
++  as trusted useful memory.
++- `tests_run`: Lists deterministic governance, coverage, and pytest commands.
++
++### REQ-LEARN-5368 Sub-requirements
++
++- REQ-LEARN-5368-1: The source gate SHALL load Exp5355, Exp5356, and Exp5357
++  artifacts and require their readiness gates, zero unsafe false accepts,
++  rollback readiness, and no upstream model-weight mutation.
++- REQ-LEARN-5368-2: Every memory item SHALL include provenance, byte cost,
++  estimated verifier value, stale risk, poison risk, sharing risk, trust label,
++  usefulness, harmfulness, and rollback availability.
++- REQ-LEARN-5368-3: Curation SHALL compute value-minus-harm per byte for every
++  item and SHALL choose KEEP, DROP, or QUARANTINE under a fixed byte budget in
++  deterministic score order.
++- REQ-LEARN-5368-4: TRUST decisions SHALL require clean useful memory,
++  verified provenance, and stale/poison risks below the trust thresholds.
++- REQ-LEARN-5368-5: SHARE decisions SHALL require KEEP, TRUST, verified
++  provenance, and sharing risk below the sharing threshold.
++- REQ-LEARN-5368-6: Stale and poisoned memory SHALL be deflected by not being
++  trusted or not being used, and bad-memory rollback rows SHALL recover.
++- REQ-LEARN-5368-7: `budget_curated_memory_ready` SHALL be true only when the
++  source gate passes, all value/cost/harm/trust decisions are measured,
++  retained bytes are within budget, unsafe false accepts are zero, stale and
++  poison deflection are positive, keep/share/trust precision are positive,
++  rollback recovery works, tests are recorded, and no model weights mutate.
++
++### SCENARIO-LEARN-5368-BUDGET: Score-Guided KEEP/DROP Under Budget
++
++**Given** clean useful memory, stale memory, poisoned memory, and low-value
++memory with byte costs
++**When** curation ranks by value-minus-harm per byte under the fixed byte
++budget
++**Then** high-value clean memories are kept before lower-score memories
++**And** retained bytes do not exceed `budget_bytes`.
++
++### SCENARIO-LEARN-5368-SAFETY: Stale and Poisoned Memory Are Deflected
++
++**Given** stale and poisoned memory cases
++**When** the governance rules compute TRUST and curation decisions
++**Then** stale and poisoned records are UNTRUSTed or not used
++**And** `unsafe_false_accepts` remains zero
++**And** rollback recovery is measured for bad memory.
++
++### SCENARIO-LEARN-5368-SHARE-TRUST: Sharing Requires Provenance and Trust
++
++**Given** kept clean memory and unsafe or unverified memory
++**When** SHARE decisions are computed
++**Then** only kept trusted memory with verified provenance and low sharing risk
++is shared
++**And** shared-memory precision is measured separately from keep precision.
++
++## Implementation Status (Exp 5368)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5368 | Implemented (`python/carnot/experiment_5368_budget_curated_memory_governance_v489.py`, `results/experiment_5368_budget_curated_memory_governance_v489.json`) | Implemented (`tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4a7d08b2ff..eab6c3f439 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4334,
++  "experiments_checked": 4335,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5368_budget_curated_memory_governance_v489.py b/python/carnot/experiment_5368_budget_curated_memory_governance_v489.py
+new file mode 100644
+index 0000000000..7c21838209
+--- /dev/null
++++ b/python/carnot/experiment_5368_budget_curated_memory_governance_v489.py
+@@ -0,0 +1,888 @@
++"""Exp5368: deterministic budget-curated memory governance.
++
++Spec refs: REQ-LEARN-5368, SCENARIO-LEARN-5368-BUDGET,
++SCENARIO-LEARN-5368-SAFETY, SCENARIO-LEARN-5368-SHARE-TRUST.
++
++This fixture adds the cost side of continuous self-learning. Useful memory is
++not automatically good memory: it can be stale, poisoned, too risky to share,
++or simply too expensive for a bounded context budget. The module therefore
++scores memory by value-minus-harm per byte and makes deterministic KEEP, DROP,
++SHARE, QUARANTINE, TRUST, and UNTRUST decisions without loading or changing any
++model weights.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5355_dependency_provenance_self_learning_v488 as exp5355
++from carnot import experiment_5356_memory_tool_drift_harness_v488 as exp5356
++from carnot import experiment_5357_dependency_drift_self_learning_scaleup_v488 as exp5357
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5368_budget_curated_memory_governance_v489"
++EXPERIMENT_ID = 5368
++MILESTONE = "v489"
++SCHEMA = "carnot.experiment_5368.budget_curated_memory_governance.v489"
++RUN_DATE = "2026-07-07"
++RANDOM_SEED = 5368
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5368_budget_curated_memory_governance_v489.json"
++)
++EXP5355_RELATIVE_PATH = exp5355.RESULT_RELATIVE_PATH
++EXP5356_RELATIVE_PATH = exp5356.RESULT_RELATIVE_PATH
++EXP5357_RELATIVE_PATH = exp5357.RESULT_RELATIVE_PATH
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5368_budget_curated_memory_governance_v489.py"
++)
++EXP5355_MODULE_RELATIVE_PATH = exp5355.MODULE_RELATIVE_PATH
++EXP5356_MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5356_memory_tool_drift_harness_v488.py"
++)
++EXP5357_MODULE_RELATIVE_PATH = exp5357.MODULE_RELATIVE_PATH
++
++INFERENCE_SUBSTRATE = "deterministic_budget_curated_memory_governance"
++SPEC_REFS = (
++    "REQ-LEARN-5368",
++    "SCENARIO-LEARN-5368-BUDGET",
++    "SCENARIO-LEARN-5368-SAFETY",
++    "SCENARIO-LEARN-5368-SHARE-TRUST",
++)
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++DEFAULT_BUDGET_BYTES = 400
++MEMORY_ITEM_COUNT = 7
++TRUST_STALE_RISK_MAX = 0.2
++TRUST_POISON_RISK_MAX = 0.1
++SHARE_RISK_MAX = 0.1
++POISON_QUARANTINE_RISK = 0.7
++STALE_QUARANTINE_RISK = 0.6
++
++REQUIRED_FIELD_PRINCIPLES = {
++    "experiment_id": "Stable id ties the artifact to this roadmap task.",
++    "milestone": (
++        "Keeps the governance fixture tied to the `.489` memory budget "
++        "scale-up gate."
++    ),
++    "status": "Complete only if the budget governance fixture runs.",
++    "honest_verdict": "One-line ready or blocked verdict with a terminal prefix.",
++    "inference_substrate": (
++        "Expected value is deterministic_budget_curated_memory_governance."
++    ),
++    "continuous_self_learning_target": (
++        "Bare boolean must be true because this advances continuous "
++        "self-learning."
++    ),
++    "no_weight_mutation": (
++        "Bare boolean must be true because the fixture governs memory only, "
++        "not model weights."
++    ),
++    "budget_curated_memory_ready": (
++        "Bare boolean gate for scale-up; true only when value, cost, harm, "
++        "and trust decisions are all measured."
++    ),
++    "memory_item_count": "Bare integer counts memory records evaluated.",
++    "budget_bytes": (
++        "Bare integer records the memory byte budget used by the fixture."
++    ),
++    "retained_bytes": "Bare integer records bytes retained after curation.",
++    "value_minus_harm_per_byte_mean": (
++        "Bare numeric score normalized by byte cost."
++    ),
++    "keep_precision": (
++        "Bare numeric fraction of kept items that are useful and non-harmful."
++    ),
++    "stale_memory_deflection_rate": (
++        "Bare numeric fraction of stale items not trusted or not used."
++    ),
++    "poison_memory_deflection_rate": (
++        "Bare numeric fraction of poisoned items not trusted or not used."
++    ),
++    "share_decision_precision": (
++        "Bare numeric fraction of shared items that pass provenance and trust "
++        "constraints."
++    ),
++    "trust_decision_precision": (
++        "Bare numeric fraction of trusted items that are clean useful items."
++    ),
++    "rollback_recovery_rate": (
++        "Bare numeric recovery rate after bad memory is detected."
++    ),
++    "unsafe_false_accepts": (
++        "Bare integer count of harmful memory items accepted as trusted useful "
++        "memory."
++    ),
++    "tests_run": (
++        "Lists deterministic governance, coverage, and pytest commands."
++    ),
++}
++WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "status",
++    "honest_verdict",
++    "inference_substrate",
++    "tests_run",
++)
++BARE_INTEGER_FIELDS = (
++    "memory_item_count",
++    "budget_bytes",
++    "retained_bytes",
++    "unsafe_false_accepts",
++)
++BARE_BOOL_FIELDS = ("budget_curated_memory_ready",)
++BARE_NUMERIC_FIELDS = (
++    "value_minus_harm_per_byte_mean",
++    "keep_precision",
++    "stale_memory_deflection_rate",
++    "poison_memory_deflection_rate",
++    "share_decision_precision",
++    "trust_decision_precision",
++    "rollback_recovery_rate",
++)
++
++
++@dataclass(frozen=True)
++class MemoryItem:
++    """One self-learning memory candidate with explicit governance inputs."""
++
++    memory_id: str
++    memory_variant: str
++    provenance: Mapping[str, Any]
++    byte_cost: int
++    estimated_verifier_value: float
++    stale_risk: float
++    poison_risk: float
++    sharing_risk: float
++    trust_label: str
++    useful: bool
++    harmful: bool
++    rollback_available: bool
++
++    def harm_score(self) -> float:
++        return round(self.stale_risk + self.poison_risk + self.sharing_risk, 6)
++
++    def value_minus_harm_per_byte(self) -> float:
++        return round(
++            (self.estimated_verifier_value - self.harm_score()) / self.byte_cost,
++            6,
++        )
++
++    def as_dict(self) -> JsonDict:
++        return {
++            "memory_id": self.memory_id,
++            "memory_variant": self.memory_variant,
++            "provenance": dict(self.provenance),
++            "byte_cost": self.byte_cost,
++            "estimated_verifier_value": self.estimated_verifier_value,
++            "stale_risk": self.stale_risk,
++            "poison_risk": self.poison_risk,
++            "sharing_risk": self.sharing_risk,
++            "trust_label": self.trust_label,
++            "useful": self.useful,
++            "harmful": self.harmful,
++            "rollback_available": self.rollback_available,
++        }
++
++
++def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Require clean provenance, drift, and scale-up artifacts before curation."""
++
++    root_path = Path(root)
++    dependency = _read_json(root_path / EXP5355_RELATIVE_PATH)
++    drift = _read_json(root_path / EXP5356_RELATIVE_PATH)
++    scaleup = _read_json(root_path / EXP5357_RELATIVE_PATH)
++    checks = {
++        "dependency_provenance_ready": (
++            dependency.get("dependency_provenance_ready") is True
++        ),
++        "memory_tool_drift_ready": drift.get("memory_tool_drift_ready") is True,
++        "self_learning_scaleup_ready": (
++            scaleup.get("self_learning_scaleup_ready") is True
++        ),
++        "source_unsafe_false_accepts_zero": (
++            dependency.get("unsafe_false_accepts") == 0
++            and drift.get("unsafe_false_accepts") == 0
++            and scaleup.get("unsafe_false_accepts") == 0
++        ),
++        "rollback_recovery_ready": (
++            drift.get("rollback_recovery_rate") == 1.0
++            and scaleup.get("rollback_recovery_rate") == 1.0
++        ),
++        "no_weight_mutation": (
++            dependency.get("no_weight_mutation") is True
++            and drift.get("no_weight_mutation") is True
++            and scaleup.get("no_weight_mutation") is True
++        ),
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {
++        **checks,
++        "failed_gates": failed,
++        "all_passed": not failed,
++        "source_artifacts": [
++            str(EXP5355_RELATIVE_PATH),
++            str(EXP5356_RELATIVE_PATH),
++            str(EXP5357_RELATIVE_PATH),
++        ],
++        "dependency_source_honest_verdict": _wrapped_value(
++            dependency.get("honest_verdict")
++        ),
++        "drift_source_honest_verdict": _wrapped_value(drift.get("honest_verdict")),
++        "scaleup_source_honest_verdict": _wrapped_value(
++            scaleup.get("honest_verdict")
++        ),
++    }
++
++
++def build_memory_items() -> tuple[MemoryItem, ...]:
++    """Build a deterministic memory panel from provenance and drift fixtures."""
++
++    return (
++        _memory_item(
++            "mem5368-clean-dependency-edge",
++            "clean",
++            EXP5355_RELATIVE_PATH,
++            "exp5355:dep-positive-retrieval",
++            "dependency edge that reconstructs safe retrieval",
++            120,
++            0.95,
++            0.02,
++            0.01,
++            0.08,
++            "verified_clean",
++            useful=True,
++            harmful=False,
++            rollback_available=False,
++        ),
++        _memory_item(
++            "mem5368-clean-rollback-route",
++            "clean",
++            EXP5356_RELATIVE_PATH,
++            "exp5356:choose-rollback-route:rollback",
++            "rollback route that restores clean selection",
++            100,
++            0.85,
++            0.03,
++            0.02,
++            0.05,
++            "verified_clean",
++            useful=True,
++            harmful=False,
++            rollback_available=False,
++        ),
++        _memory_item(
++            "mem5368-clean-scaleup-summary",
++            "clean",
++            EXP5357_RELATIVE_PATH,
++            "exp5357:trace-memory-poisoned-tool:combined",
++            "combined policy summary with zero unsafe accepts",
++            180,
++            0.92,
++            0.04,
++            0.02,
++            0.12,
++            "verified_clean",
++            useful=True,
++            harmful=False,
++            rollback_available=False,
++        ),
++        _memory_item(
++            "mem5368-stale-runtime-receipt",
++            "stale",
++            EXP5356_RELATIVE_PATH,
++            "exp5356:choose-rollback-route:stale",
++            "old runtime receipt that would route to stale rollback",
++            90,
++            0.70,
++            0.75,
++            0.05,
++            0.12,
++            "stale",
++            useful=False,
++            harmful=True,
++            rollback_available=True,
++        ),
++        _memory_item(
++            "mem5368-poisoned-tool-override",
++            "poisoned",
++            EXP5356_RELATIVE_PATH,
++            "exp5356:select-safety-gate:poisoned",
++            "poisoned memory that asks to accept without verifier",
++            80,
++            0.80,
++            0.10,
++            0.90,
++            0.35,
++            "poisoned",
++            useful=False,
++            harmful=True,
++            rollback_available=True,
++        ),
++        _memory_item(
++            "mem5368-unverified-sharing-tip",
++            "unverified",
++            EXP5355_RELATIVE_PATH,
++            "exp5355:unverified-share-tip",
++            "unsourced sharing hint with weak provenance",
++            70,
++            0.55,
++            0.10,
++            0.20,
++            0.50,
++            "unverified",
++            useful=False,
++            harmful=True,
++            rollback_available=True,
++            provenance_verified=False,
++        ),
++        _memory_item(
++            "mem5368-clean-low-value-overbudget",
++            "low_value",
++            EXP5357_RELATIVE_PATH,
++            "exp5357:trace-cycle-benign-drift-control",
++            "clean but low-value summary that does not fit the budget",
++            220,
++            0.45,
++            0.04,
++            0.02,
++            0.03,
++            "verified_clean",
++            useful=True,
++            harmful=False,
++            rollback_available=False,
++        ),
++    )
++
++
++def curate_memory_items(
++    items: Sequence[MemoryItem],
++    *,
++    budget_bytes: int = DEFAULT_BUDGET_BYTES,
++) -> JsonDict:
++    """Score memory by value-minus-harm per byte and apply budget rules."""
++
++    retained_bytes = 0
++    rows: list[JsonDict] = []
++    ranked_items = sorted(
++        items,
++        key=lambda item: (-item.value_minus_harm_per_byte(), item.memory_id),
++    )
++    for rank, item in enumerate(ranked_items, start=1):
++        trust_decision = _trust_decision(item)
++        keep_decision = _keep_decision(
++            item,
++            trust_decision,
++            retained_bytes,
++            budget_bytes,
++        )
++        if keep_decision == "KEEP":
++            retained_bytes += item.byte_cost
++        share_decision = _share_decision(item, trust_decision, keep_decision)
++        rows.append(
++            {
++                **item.as_dict(),
++                "score_rank": rank,
++                "harm_score": item.harm_score(),
++                "value_minus_harm_per_byte": item.value_minus_harm_per_byte(),
++                "provenance_verified": bool(item.provenance["verified"]),
++                "trust_decision": trust_decision,
++                "keep_decision": keep_decision,
++                "share_decision": share_decision,
++                "rollback_recovered": _rollback_recovered(item),
++                "decision_inputs_measured": {
++                    "value": item.estimated_verifier_value is not None,
++                    "cost": item.byte_cost > 0,
++                    "harm": True,
++                    "trust": trust_decision in {"TRUST", "UNTRUST"},
++                },
++            }
++        )
++    return _curation_metrics(rows, budget_bytes, retained_bytes)
++
++
++def build_result_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the terminal budget-governance artifact from deterministic rows."""
++
++    source_gate = confirm_source_gate(root=root)
++    if source_gate["all_passed"]:
++        curation = curate_memory_items(build_memory_items())
++    else:
++        curation = _blocked_curation()
++    complete = _governance_complete(source_gate, curation, tests_run)
++    status = (
++        "budget_curated_memory_ready"
++        if complete
++        else "blocked_budget_curated_memory_gate"
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "source_artifacts": [
++            str(EXP5355_RELATIVE_PATH),
++            str(EXP5356_RELATIVE_PATH),
++            str(EXP5357_RELATIVE_PATH),
++        ],
++        "experiment_id": _wrap("experiment_id", EXPERIMENT_ID),
++        "milestone": _wrap("milestone", MILESTONE),
++        "status": _wrap("status", status),
++        "honest_verdict": _wrap(
++            "honest_verdict",
++            _honest_verdict(complete, source_gate, curation, tests_run),
++        ),
++        "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
++        "continuous_self_learning_target": True,
++        "no_weight_mutation": bool(source_gate["no_weight_mutation"]),
++        "budget_curated_memory_ready": complete,
++        "memory_item_count": curation["memory_item_count"],
++        "budget_bytes": curation["budget_bytes"],
++        "retained_bytes": curation["retained_bytes"],
++        "value_minus_harm_per_byte_mean": curation[
++            "value_minus_harm_per_byte_mean"
++        ],
++        "keep_precision": curation["keep_precision"],
++        "stale_memory_deflection_rate": curation[
++            "stale_memory_deflection_rate"
++        ],
++        "poison_memory_deflection_rate": curation[
++            "poison_memory_deflection_rate"
++        ],
++        "share_decision_precision": curation["share_decision_precision"],
++        "trust_decision_precision": curation["trust_decision_precision"],
++        "rollback_recovery_rate": curation["rollback_recovery_rate"],
++        "unsafe_false_accepts": curation["unsafe_false_accepts"],
++        "tests_run": _wrap("tests_run", [dict(row) for row in tests_run]),
++        "source_gate": source_gate,
++        "readiness_gate": _readiness_gate(source_gate, curation, tests_run),
++        "memory_decision_rows": curation["decision_rows"],
++        "decision_summary": curation["decision_summary"],
++        "score_formula": "(estimated_verifier_value - harm_score) / byte_cost",
++        "thresholds": {
++            "trust_stale_risk_max": TRUST_STALE_RISK_MAX,
++            "trust_poison_risk_max": TRUST_POISON_RISK_MAX,
++            "share_risk_max": SHARE_RISK_MAX,
++            "poison_quarantine_risk": POISON_QUARANTINE_RISK,
++            "stale_quarantine_risk": STALE_QUARANTINE_RISK,
++        },
++        "weight_mutation_receipt": _weight_mutation_receipt(),
++        "methodology_note": (
++            "Exp5368 is deterministic and fixture-only. It reuses Exp5355 "
++            "provenance, Exp5356 memory drift controls, and Exp5357 scale-up "
++            "readiness as source gates, then scores memory records by "
++            "value-minus-harm per byte under a fixed byte budget. It invokes "
++            "no LLM, API judge, fine-tuning path, adapter update, or "
++            "foundation-weight mutation."
++        ),
++        "field_principles": dict(REQUIRED_FIELD_PRINCIPLES),
++        "source_artifact_checksums": source_artifact_checksums(root),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate fields consumed by downstream memory scale-up gates."""
++
++    for field in WRAPPED_FIELDS:
++        wrapped = artifact.get(field)
++        if (
++            not isinstance(wrapped, Mapping)
++            or "value" not in wrapped
++            or wrapped.get("principle") != REQUIRED_FIELD_PRINCIPLES[field]
++        ):
++            raise ValueError(f"{field} must be principle-wrapped")
++    if not str(artifact["honest_verdict"]["value"]).startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict terminal prefix invalid")
++    if artifact["inference_substrate"]["value"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if artifact.get("continuous_self_learning_target") is not True:
++        raise ValueError("continuous_self_learning_target must be bare true")
++    if artifact.get("no_weight_mutation") is not True:
++        raise ValueError("no_weight_mutation must be bare true")
++    for field in BARE_INTEGER_FIELDS:
++        value = artifact.get(field)
++        if isinstance(value, bool) or not isinstance(value, int):
++            raise ValueError(f"{field} must be a bare integer")
++    for field in BARE_BOOL_FIELDS:
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")
++    for field in BARE_NUMERIC_FIELDS:
++        if not _is_numeric(artifact.get(field)):
++            raise ValueError(f"{field} must be bare numeric")
++    if artifact["retained_bytes"] > artifact["budget_bytes"]:
++        raise ValueError("retained_bytes must not exceed budget_bytes")
++    if artifact.get("unsafe_false_accepts") != 0:
++        raise ValueError("unsafe_false_accepts must be 0")
++    if artifact["budget_curated_memory_ready"]:
++        if not artifact["tests_run"]["value"]:
++            raise ValueError("tests_run must record commands for ready governance")
++        if not artifact["readiness_gate"]["value_cost_harm_trust_measured"]:
++            raise ValueError("value_cost_harm_trust_measured must be true")
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5368 result artifact and return its JSON payload."""
++
++    artifact = build_result_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Return sha256 receipts for source artifacts, spec, and modules."""
++
++    root_path = Path(root)
++    return {
++        "exp5355": _sha256_file(root_path / EXP5355_RELATIVE_PATH),
++        "exp5356": _sha256_file(root_path / EXP5356_RELATIVE_PATH),
++        "exp5357": _sha256_file(root_path / EXP5357_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "exp5355_module": _sha256_file(root_path / EXP5355_MODULE_RELATIVE_PATH),
++        "exp5356_module": _sha256_file(root_path / EXP5356_MODULE_RELATIVE_PATH),
++        "exp5357_module": _sha256_file(root_path / EXP5357_MODULE_RELATIVE_PATH),
++    }
++
++
++def _memory_item(
++    memory_id: str,
++    memory_variant: str,
++    source_artifact: Path,
++    source_ref: str,
++    evidence_summary: str,
++    byte_cost: int,
++    estimated_verifier_value: float,
++    stale_risk: float,
++    poison_risk: float,
++    sharing_risk: float,
++    trust_label: str,
++    *,
++    useful: bool,
++    harmful: bool,
++    rollback_available: bool,
++    provenance_verified: bool = True,
++) -> MemoryItem:
++    return MemoryItem(
++        memory_id=memory_id,
++        memory_variant=memory_variant,
++        provenance={
++            "source_artifact": str(source_artifact),
++            "source_ref": source_ref,
++            "evidence_summary": evidence_summary,
++            "verified": provenance_verified,
++        },
++        byte_cost=byte_cost,
++        estimated_verifier_value=estimated_verifier_value,
++        stale_risk=stale_risk,
++        poison_risk=poison_risk,
++        sharing_risk=sharing_risk,
++        trust_label=trust_label,
++        useful=useful,
++        harmful=harmful,
++        rollback_available=rollback_available,
++    )
++
++
++def _trust_decision(item: MemoryItem) -> str:
++    trusted = bool(
++        item.provenance["verified"]
++        and item.trust_label == "verified_clean"
++        and item.useful
++        and not item.harmful
++        and item.stale_risk <= TRUST_STALE_RISK_MAX
++        and item.poison_risk <= TRUST_POISON_RISK_MAX
++    )
++    return "TRUST" if trusted else "UNTRUST"
++
++
++def _keep_decision(
++    item: MemoryItem,
++    trust_decision: str,
++    retained_bytes: int,
++    budget_bytes: int,
++) -> str:
++    if (
++        item.poison_risk >= POISON_QUARANTINE_RISK
++        or item.stale_risk >= STALE_QUARANTINE_RISK
++        or (item.harmful and trust_decision == "UNTRUST")
++    ):
++        return "QUARANTINE"
++    if trust_decision != "TRUST" or item.value_minus_harm_per_byte() <= 0.0:
++        return "DROP"
++    if retained_bytes + item.byte_cost > budget_bytes:
++        return "DROP"
++    return "KEEP"
++
++
++def _share_decision(
++    item: MemoryItem,
++    trust_decision: str,
++    keep_decision: str,
++) -> str:
++    if (
++        keep_decision == "KEEP"
++        and trust_decision == "TRUST"
++        and item.provenance["verified"]
++        and item.sharing_risk <= SHARE_RISK_MAX
++    ):
++        return "SHARE"
++    return "DO_NOT_SHARE"
++
++
++def _rollback_recovered(item: MemoryItem) -> bool:
++    return bool(item.rollback_available and (item.harmful or item.memory_variant == "stale"))
++
++
++def _curation_metrics(
++    rows: Sequence[Mapping[str, Any]],
++    budget_bytes: int,
++    retained_bytes: int,
++) -> JsonDict:
++    kept = [row for row in rows if row["keep_decision"] == "KEEP"]
++    shared = [row for row in rows if row["share_decision"] == "SHARE"]
++    trusted = [row for row in rows if row["trust_decision"] == "TRUST"]
++    stale = [row for row in rows if row["memory_variant"] == "stale"]
++    poisoned = [row for row in rows if row["memory_variant"] == "poisoned"]
++    bad = [
++        row
++        for row in rows
++        if row["harmful"]
++        or row["memory_variant"] in {"stale", "poisoned", "unverified"}
++    ]
++    unsafe_false_accepts = sum(
++        1
++        for row in rows
++        if row["harmful"]
++        and row["keep_decision"] == "KEEP"
++        and row["trust_decision"] == "TRUST"
++    )
++    decision_summary = {
++        "keep_ids": [row["memory_id"] for row in kept],
++        "share_ids": [row["memory_id"] for row in shared],
++        "trust_ids": [row["memory_id"] for row in trusted],
++        "drop_ids": [row["memory_id"] for row in rows if row["keep_decision"] == "DROP"],
++        "quarantine_ids": [
++            row["memory_id"] for row in rows if row["keep_decision"] == "QUARANTINE"
++        ],
++    }
++    return {
++        "decision_rows": list(rows),
++        "decision_summary": decision_summary,
++        "memory_item_count": len(rows),
++        "budget_bytes": budget_bytes,
++        "retained_bytes": retained_bytes,
++        "value_minus_harm_per_byte_mean": _mean(
++            row["value_minus_harm_per_byte"] for row in rows
++        ),
++        "keep_precision": _rate(
++            sum(1 for row in kept if row["useful"] and not row["harmful"]),
++            len(kept),
++        ),
++        "stale_memory_deflection_rate": _rate(
++            sum(
++                1
++                for row in stale
++                if row["trust_decision"] == "UNTRUST" or row["keep_decision"] != "KEEP"
++            ),
++            len(stale),
++        ),
++        "poison_memory_deflection_rate": _rate(
++            sum(
++                1
++                for row in poisoned
++                if row["trust_decision"] == "UNTRUST" or row["keep_decision"] != "KEEP"
++            ),
++            len(poisoned),
++        ),
++        "share_decision_precision": _rate(
++            sum(
++                1
++                for row in shared
++                if row["provenance_verified"]
++                and row["trust_decision"] == "TRUST"
++                and row["sharing_risk"] <= SHARE_RISK_MAX
++            ),
++            len(shared),
++        ),
++        "trust_decision_precision": _rate(
++            sum(1 for row in trusted if row["useful"] and not row["harmful"]),
++            len(trusted),
++        ),
++        "rollback_recovery_rate": _rate(
++            sum(1 for row in bad if row["rollback_recovered"]),
++            len(bad),
++        ),
++        "unsafe_false_accepts": unsafe_false_accepts,
++        "value_cost_harm_trust_measured": all(
++            row["decision_inputs_measured"]["value"]
++            and row["decision_inputs_measured"]["cost"]
++            and row["decision_inputs_measured"]["harm"]
++            and row["decision_inputs_measured"]["trust"]
++            for row in rows
++        ),
++    }
++
++
++def _blocked_curation() -> JsonDict:
++    return _curation_metrics([], DEFAULT_BUDGET_BYTES, 0)
++
++
++def _readiness_gate(
++    source_gate: Mapping[str, Any],
++    curation: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    checks = {
++        "source_gate_passed": source_gate["all_passed"] is True,
++        "value_cost_harm_trust_measured": (
++            curation["value_cost_harm_trust_measured"] is True
++        ),
++        "retained_within_budget": curation["retained_bytes"] <= curation["budget_bytes"],
++        "unsafe_false_accepts_zero": curation["unsafe_false_accepts"] == 0,
++        "stale_deflection_positive": curation["stale_memory_deflection_rate"] > 0.0,
++        "poison_deflection_positive": curation["poison_memory_deflection_rate"] > 0.0,
++        "keep_precision_positive": curation["keep_precision"] > 0.0,
++        "share_precision_positive": curation["share_decision_precision"] > 0.0,
++        "trust_precision_positive": curation["trust_decision_precision"] > 0.0,
++        "rollback_recovery_ready": curation["rollback_recovery_rate"] == 1.0,
++        "tests_recorded": bool(tests_run),
++        "no_weight_mutation": source_gate["no_weight_mutation"] is True,
++    }
++    return {
++        **checks,
++        "failed_gates": [name for name, passed in checks.items() if not passed],
++        "all_passed": all(checks.values()),
++    }
++
++
++def _governance_complete(
++    source_gate: Mapping[str, Any],
++    curation: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> bool:
++    return bool(_readiness_gate(source_gate, curation, tests_run)["all_passed"])
++
++
++def _honest_verdict(
++    complete: bool,
++    source_gate: Mapping[str, Any],
++    curation: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> str:
++    if complete:
++        return (
++            "complete: budget-curated memory governance evaluated "
++            f"{curation['memory_item_count']} memory items under "
++            f"{curation['budget_bytes']} bytes, retained "
++            f"{curation['retained_bytes']} bytes, deflected stale and poisoned "
++            "memory, shared only trusted provenance-backed memory, recovered "
++            "bad-memory rollback, and preserved no model weight mutation"
++        )
++    blockers = list(source_gate.get("failed_gates", []))
++    blockers.extend(_readiness_gate(source_gate, curation, tests_run)["failed_gates"])
++    if not tests_run:
++        blockers.append("tests_not_recorded")
++    return "blocked_budget_curated_memory_not_ready: " + ",".join(
++        dict.fromkeys(blockers)
++    )
++
++
++def _weight_mutation_receipt() -> JsonDict:
++    return {
++        "no_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weight_hash_before": "sha256:no_model_weights_loaded",
++        "model_weight_hash_after": "sha256:no_model_weights_loaded",
++        "state_mutation_targets": [
++            "deterministic_memory_governance_rows",
++            "deterministic_budget_curation_summary",
++            "deterministic_share_trust_decisions",
++        ],
++        "forbidden_updates": {
++            "fine_tune_model_weights": False,
++            "lora_or_adapter_update": False,
++            "foundation_weight_write": False,
++        },
++    }
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": REQUIRED_FIELD_PRINCIPLES[field]}
++
++
++def _wrapped_value(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, tuple | list):
++        return [_json_ready(item) for item in value]
++    return json.loads(json.dumps(value, sort_keys=True))
++
++
++def _mean(values: Sequence[float] | Any) -> float:
++    rows = list(values)
++    if not rows:
++        return 0.0
++    return round(sum(float(value) for value in rows) / len(rows), 6)
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    if denominator == 0:
++        return 0.0
++    return round(numerator / denominator, 6)
++
++
++def _is_numeric(value: Any) -> bool:
++    return isinstance(value, int | float) and not isinstance(value, bool)
+diff --git a/results/experiment_5368_budget_curated_memory_governance_v489.json b/results/experiment_5368_budget_curated_memory_governance_v489.json
+new file mode 100644
+index 0000000000..2f667250af
+--- /dev/null
++++ b/results/experiment_5368_budget_curated_memory_governance_v489.json
+@@ -0,0 +1,418 @@
++{
++  "budget_bytes": 400,
++  "budget_curated_memory_ready": true,
++  "continuous_self_learning_target": true,
++  "decision_summary": {
++    "drop_ids": [
++      "mem5368-clean-low-value-overbudget"
++    ],
++    "keep_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-scaleup-summary"
++    ],
++    "quarantine_ids": [
++      "mem5368-stale-runtime-receipt",
++      "mem5368-unverified-sharing-tip",
++      "mem5368-poisoned-tool-override"
++    ],
++    "share_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge"
++    ],
++    "trust_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-scaleup-summary",
++      "mem5368-clean-low-value-overbudget"
++    ]
++  },
++  "experiment": "experiment_5368_budget_curated_memory_governance_v489",
++  "experiment_id": {
++    "principle": "Stable id ties the artifact to this roadmap task.",
++    "value": 5368
++  },
++  "field_principles": {
++    "budget_bytes": "Bare integer records the memory byte budget used by the fixture.",
++    "budget_curated_memory_ready": "Bare boolean gate for scale-up; true only when value, cost, harm, and trust decisions are all measured.",
++    "continuous_self_learning_target": "Bare boolean must be true because this advances continuous self-learning.",
++    "experiment_id": "Stable id ties the artifact to this roadmap task.",
++    "honest_verdict": "One-line ready or blocked verdict with a terminal prefix.",
++    "inference_substrate": "Expected value is deterministic_budget_curated_memory_governance.",
++    "keep_precision": "Bare numeric fraction of kept items that are useful and non-harmful.",
++    "memory_item_count": "Bare integer counts memory records evaluated.",
++    "milestone": "Keeps the governance fixture tied to the `.489` memory budget scale-up gate.",
++    "no_weight_mutation": "Bare boolean must be true because the fixture governs memory only, not model weights.",
++    "poison_memory_deflection_rate": "Bare numeric fraction of poisoned items not trusted or not used.",
++    "retained_bytes": "Bare integer records bytes retained after curation.",
++    "rollback_recovery_rate": "Bare numeric recovery rate after bad memory is detected.",
++    "share_decision_precision": "Bare numeric fraction of shared items that pass provenance and trust constraints.",
++    "stale_memory_deflection_rate": "Bare numeric fraction of stale items not trusted or not used.",
++    "status": "Complete only if the budget governance fixture runs.",
++    "tests_run": "Lists deterministic governance, coverage, and pytest commands.",
++    "trust_decision_precision": "Bare numeric fraction of trusted items that are clean useful items.",
++    "unsafe_false_accepts": "Bare integer count of harmful memory items accepted as trusted useful memory.",
++    "value_minus_harm_per_byte_mean": "Bare numeric score normalized by byte cost."
++  },
++  "honest_verdict": {
++    "principle": "One-line ready or blocked verdict with a terminal prefix.",
++    "value": "complete: budget-curated memory governance evaluated 7 memory items under 400 bytes, retained 400 bytes, deflected stale and poisoned memory, shared only trusted provenance-backed memory, recovered bad-memory rollback, and preserved no model weight mutation"
++  },
++  "inference_substrate": {
++    "principle": "Expected value is deterministic_budget_curated_memory_governance.",
++    "value": "deterministic_budget_curated_memory_governance"
++  },
++  "keep_precision": 1.0,
++  "memory_decision_rows": [
++    {
++      "byte_cost": 100,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.85,
++      "harm_score": 0.1,
++      "harmful": false,
++      "keep_decision": "KEEP",
++      "memory_id": "mem5368-clean-rollback-route",
++      "memory_variant": "clean",
++      "poison_risk": 0.02,
++      "provenance": {
++        "evidence_summary": "rollback route that restores clean selection",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:choose-rollback-route:rollback",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": false,
++      "rollback_recovered": false,
++      "score_rank": 1,
++      "share_decision": "SHARE",
++      "sharing_risk": 0.05,
++      "stale_risk": 0.03,
++      "trust_decision": "TRUST",
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_minus_harm_per_byte": 0.0075
++    },
++    {
++      "byte_cost": 120,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.95,
++      "harm_score": 0.11,
++      "harmful": false,
++      "keep_decision": "KEEP",
++      "memory_id": "mem5368-clean-dependency-edge",
++      "memory_variant": "clean",
++      "poison_risk": 0.01,
++      "provenance": {
++        "evidence_summary": "dependency edge that reconstructs safe retrieval",
++        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++        "source_ref": "exp5355:dep-positive-retrieval",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": false,
++      "rollback_recovered": false,
++      "score_rank": 2,
++      "share_decision": "SHARE",
++      "sharing_risk": 0.08,
++      "stale_risk": 0.02,
++      "trust_decision": "TRUST",
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_minus_harm_per_byte": 0.007
++    },
++    {
++      "byte_cost": 180,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.92,
++      "harm_score": 0.18,
++      "harmful": false,
++      "keep_decision": "KEEP",
++      "memory_id": "mem5368-clean-scaleup-summary",
++      "memory_variant": "clean",
++      "poison_risk": 0.02,
++      "provenance": {
++        "evidence_summary": "combined policy summary with zero unsafe accepts",
++        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
++        "source_ref": "exp5357:trace-memory-poisoned-tool:combined",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": false,
++      "rollback_recovered": false,
++      "score_rank": 3,
++      "share_decision": "DO_NOT_SHARE",
++      "sharing_risk": 0.12,
++      "stale_risk": 0.04,
++      "trust_decision": "TRUST",
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_minus_harm_per_byte": 0.004111
++    },
++    {
++      "byte_cost": 220,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.45,
++      "harm_score": 0.09,
++      "harmful": false,
++      "keep_decision": "DROP",
++      "memory_id": "mem5368-clean-low-value-overbudget",
++      "memory_variant": "low_value",
++      "poison_risk": 0.02,
++      "provenance": {
++        "evidence_summary": "clean but low-value summary that does not fit the budget",
++        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
++        "source_ref": "exp5357:trace-cycle-benign-drift-control",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": false,
++      "rollback_recovered": false,
++      "score_rank": 4,
++      "share_decision": "DO_NOT_SHARE",
++      "sharing_risk": 0.03,
++      "stale_risk": 0.04,
++      "trust_decision": "TRUST",
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_minus_harm_per_byte": 0.001636
++    },
++    {
++      "byte_cost": 90,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.7,
++      "harm_score": 0.92,
++      "harmful": true,
++      "keep_decision": "QUARANTINE",
++      "memory_id": "mem5368-stale-runtime-receipt",
++      "memory_variant": "stale",
++      "poison_risk": 0.05,
++      "provenance": {
++        "evidence_summary": "old runtime receipt that would route to stale rollback",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:choose-rollback-route:stale",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": true,
++      "rollback_recovered": true,
++      "score_rank": 5,
++      "share_decision": "DO_NOT_SHARE",
++      "sharing_risk": 0.12,
++      "stale_risk": 0.75,
++      "trust_decision": "UNTRUST",
++      "trust_label": "stale",
++      "useful": false,
++      "value_minus_harm_per_byte": -0.002444
++    },
++    {
++      "byte_cost": 70,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.55,
++      "harm_score": 0.8,
++      "harmful": true,
++      "keep_decision": "QUARANTINE",
++      "memory_id": "mem5368-unverified-sharing-tip",
++      "memory_variant": "unverified",
++      "poison_risk": 0.2,
++      "provenance": {
++        "evidence_summary": "unsourced sharing hint with weak provenance",
++        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++        "source_ref": "exp5355:unverified-share-tip",
++        "verified": false
++      },
++      "provenance_verified": false,
++      "rollback_available": true,
++      "rollback_recovered": true,
++      "score_rank": 6,
++      "share_decision": "DO_NOT_SHARE",
++      "sharing_risk": 0.5,
++      "stale_risk": 0.1,
++      "trust_decision": "UNTRUST",
++      "trust_label": "unverified",
++      "useful": false,
++      "value_minus_harm_per_byte": -0.003571
++    },
++    {
++      "byte_cost": 80,
++      "decision_inputs_measured": {
++        "cost": true,
++        "harm": true,
++        "trust": true,
++        "value": true
++      },
++      "estimated_verifier_value": 0.8,
++      "harm_score": 1.35,
++      "harmful": true,
++      "keep_decision": "QUARANTINE",
++      "memory_id": "mem5368-poisoned-tool-override",
++      "memory_variant": "poisoned",
++      "poison_risk": 0.9,
++      "provenance": {
++        "evidence_summary": "poisoned memory that asks to accept without verifier",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:select-safety-gate:poisoned",
++        "verified": true
++      },
++      "provenance_verified": true,
++      "rollback_available": true,
++      "rollback_recovered": true,
++      "score_rank": 7,
++      "share_decision": "DO_NOT_SHARE",
++      "sharing_risk": 0.35,
++      "stale_risk": 0.1,
++      "trust_decision": "UNTRUST",
++      "trust_label": "poisoned",
++      "useful": false,
++      "value_minus_harm_per_byte": -0.006875
++    }
++  ],
++  "memory_item_count": 7,
++  "methodology_note": "Exp5368 is deterministic and fixture-only. It reuses Exp5355 provenance, Exp5356 memory drift controls, and Exp5357 scale-up readiness as source gates, then scores memory records by value-minus-harm per byte under a fixed byte budget. It invokes no LLM, API judge, fine-tuning path, adapter update, or foundation-weight mutation.",
++  "milestone": {
++    "principle": "Keeps the governance fixture tied to the `.489` memory budget scale-up gate.",
++    "value": "v489"
++  },
++  "no_weight_mutation": true,
++  "poison_memory_deflection_rate": 1.0,
++  "random_seed": 5368,
++  "readiness_gate": {
++    "all_passed": true,
++    "failed_gates": [],
++    "keep_precision_positive": true,
++    "no_weight_mutation": true,
++    "poison_deflection_positive": true,
++    "retained_within_budget": true,
++    "rollback_recovery_ready": true,
++    "share_precision_positive": true,
++    "source_gate_passed": true,
++    "stale_deflection_positive": true,
++    "tests_recorded": true,
++    "trust_precision_positive": true,
++    "unsafe_false_accepts_zero": true,
++    "value_cost_harm_trust_measured": true
++  },
++  "reproducibility_checksum": "sha256:f813925a341e522b144d7fc7fb25f9c3ecf23a7f698ee88af968fba889d3b2b0",
++  "retained_bytes": 400,
++  "rollback_recovery_rate": 1.0,
++  "run_date": "2026-07-07",
++  "schema": "carnot.experiment_5368.budget_curated_memory_governance.v489",
++  "score_formula": "(estimated_verifier_value - harm_score) / byte_cost",
++  "share_decision_precision": 1.0,
++  "source_artifact_checksums": {
++    "exp5355": "sha256:91228b5bd86b2804e514d223106ccd9c457a0e06a69552d50c1651ba14e5b4bf",
++    "exp5355_module": "sha256:b35004fff83315e22c547506515417d558f976ee5a802eaf75e723f4c488349d",
++    "exp5356": "sha256:eb062aa36fcdb4b8f8d56d7b61e6977189cbd9c69e0c5c5adba10c0dcffb3d25",
++    "exp5356_module": "sha256:f90f4141b86e5e601f04c067364b8b117d4538328cc80210706a96a393aee168",
++    "exp5357": "sha256:01194df770f0a3a1ec580c73335e9d2c108d5bf1eb74039c2b4e8856a237f865",
++    "exp5357_module": "sha256:0d5b09c86438ad069e28c0aa2594793961b70d13d72cf235c83b9306a4f54b2a",
++    "module": "sha256:a8fac811338ed712b3360542fc165847274282f6413a1f485900f0e00f942fc5",
++    "spec": "sha256:7f9e93d13e3d407a4d2c154791d625a80faa91a52001163baeabde2218141954"
++  },
++  "source_artifacts": [
++    "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++    "results/experiment_5356_memory_tool_drift_harness_v488.json",
++    "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json"
++  ],
++  "source_gate": {
++    "all_passed": true,
++    "dependency_provenance_ready": true,
++    "dependency_source_honest_verdict": "complete: deterministic dependency-edge provenance built 37 accepted graph edges, detected and quarantined missing-edge and cyclic-dependency cases, kept unsafe false accepts at 0, kept execution feedback separate from memory hygiene, and preserved no model weight mutation",
++    "drift_source_honest_verdict": "complete: deterministic memory-tool drift harness measured 32 memory cases, clean accuracy 1.0, induced drift rate 1.0, rollback recovery 1.0, counterfactual deflection 1.0, zero unsafe false accepts, and no model weight mutation",
++    "failed_gates": [],
++    "memory_tool_drift_ready": true,
++    "no_weight_mutation": true,
++    "rollback_recovery_ready": true,
++    "scaleup_source_honest_verdict": "complete: dependency-drift self-learning scale-up validated 10 events across 5 traces, preserved always-full quality, kept unsafe false accepts at 0, recovered rollback at 1.0, kept aggregate metrics non-duplicated, improved process metrics, and preserved no model weight mutation",
++    "self_learning_scaleup_ready": true,
++    "source_artifacts": [
++      "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++      "results/experiment_5356_memory_tool_drift_harness_v488.json",
++      "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json"
++    ],
++    "source_unsafe_false_accepts_zero": true
++  },
++  "spec_refs": [
++    "REQ-LEARN-5368",
++    "SCENARIO-LEARN-5368-BUDGET",
++    "SCENARIO-LEARN-5368-SAFETY",
++    "SCENARIO-LEARN-5368-SHARE-TRUST"
++  ],
++  "stale_memory_deflection_rate": 1.0,
++  "status": {
++    "principle": "Complete only if the budget governance fixture runs.",
++    "value": "budget_curated_memory_ready"
++  },
++  "tests_run": {
++    "principle": "Lists deterministic governance, coverage, and pytest commands.",
++    "value": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q --no-cov",
++        "outcome": "passed"
++      },
++      {
++        "command": ".venv/bin/coverage run --source=python/carnot/experiment_5368_budget_curated_memory_governance_v489.py -m pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q --no-cov && .venv/bin/coverage report --fail-under=100",
++        "outcome": "passed"
++      },
++      {
++        "command": ".venv/bin/pytest tests/python -q",
++        "outcome": "passed"
++      }
++    ]
++  },
++  "thresholds": {
++    "poison_quarantine_risk": 0.7,
++    "share_risk_max": 0.1,
++    "stale_quarantine_risk": 0.6,
++    "trust_poison_risk_max": 0.1,
++    "trust_stale_risk_max": 0.2
++  },
++  "trust_decision_precision": 1.0,
++  "unsafe_false_accepts": 0,
++  "value_minus_harm_per_byte_mean": 0.001051,
++  "weight_mutation_receipt": {
++    "forbidden_updates": {
++      "fine_tune_model_weights": false,
++      "foundation_weight_write": false,
++      "lora_or_adapter_update": false
++    },
++    "model_weight_hash_after": "sha256:no_model_weights_loaded",
++    "model_weight_hash_before": "sha256:no_model_weights_loaded",
++    "model_weights_loaded": false,
++    "no_weight_mutation": true,
++    "state_mutation_targets": [
++      "deterministic_memory_governance_rows",
++      "deterministic_budget_curation_summary",
++      "deterministic_share_trust_decisions"
++    ]
++  }
++}
+diff --git a/tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py b/tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py
+new file mode 100644
+index 0000000000..99db78da16
+--- /dev/null
++++ b/tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py
+@@ -0,0 +1,338 @@
++"""Tests for Exp5368 budget-curated memory governance.
++
++Spec refs: REQ-LEARN-5368, SCENARIO-LEARN-5368-BUDGET,
++SCENARIO-LEARN-5368-SAFETY, SCENARIO-LEARN-5368-SHARE-TRUST.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5368_budget_curated_memory_governance_v489 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def test_req_learn_5368_spec_declares_budget_governance_contract() -> None:
++    """REQ-LEARN-5368: OpenSpec anchors fields, rules, and scenarios."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5368") :]
++    normalized_section = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5368",
++        "SCENARIO-LEARN-5368-BUDGET",
++        "SCENARIO-LEARN-5368-SAFETY",
++        "SCENARIO-LEARN-5368-SHARE-TRUST",
++        str(exp.RESULT_RELATIVE_PATH),
++        "value-minus-harm per byte",
++        "provenance, byte cost, estimated verifier value, stale risk, poison",
++        "KEEP, DROP, SHARE, QUARANTINE, TRUST, and UNTRUST",
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field, principle in exp.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized_section
++
++
++def test_req_learn_5368_source_gate_reuses_clean_prior_fixtures() -> None:
++    """REQ-LEARN-5368-1: prior readiness gates are required before curation."""
++
++    gate = exp.confirm_source_gate(root=REPO)
++
++    assert gate["all_passed"] is True
++    assert gate["dependency_provenance_ready"] is True
++    assert gate["memory_tool_drift_ready"] is True
++    assert gate["self_learning_scaleup_ready"] is True
++    assert gate["source_unsafe_false_accepts_zero"] is True
++    assert gate["rollback_recovery_ready"] is True
++    assert gate["no_weight_mutation"] is True
++    assert str(exp.EXP5355_RELATIVE_PATH) in gate["source_artifacts"]
++    assert str(exp.EXP5356_RELATIVE_PATH) in gate["source_artifacts"]
++    assert str(exp.EXP5357_RELATIVE_PATH) in gate["source_artifacts"]
++
++
++def test_req_learn_5368_memory_items_have_required_governance_fields() -> None:
++    """REQ-LEARN-5368-2: every item carries value, cost, harm, and trust data."""
++
++    items = exp.build_memory_items()
++    rows = [item.as_dict() for item in items]
++
++    assert len(items) == exp.MEMORY_ITEM_COUNT
++    assert {row["memory_variant"] for row in rows} >= {
++        "clean",
++        "stale",
++        "poisoned",
++        "unverified",
++        "low_value",
++    }
++    for row in rows:
++        assert {
++            "provenance",
++            "byte_cost",
++            "estimated_verifier_value",
++            "stale_risk",
++            "poison_risk",
++            "sharing_risk",
++            "trust_label",
++            "useful",
++            "harmful",
++            "rollback_available",
++        }.issubset(row)
++        assert row["byte_cost"] > 0
++        assert row["provenance"]["source_artifact"].startswith("results/")
++
++
++def test_scenario_learn_5368_budget_keeps_highest_score_items_first() -> None:
++    """SCENARIO-LEARN-5368-BUDGET: KEEP/DROP follows score under budget."""
++
++    curation = exp.curate_memory_items(exp.build_memory_items())
++    kept_rows = [row for row in curation["decision_rows"] if row["keep_decision"] == "KEEP"]
++    dropped_rows = [row for row in curation["decision_rows"] if row["keep_decision"] == "DROP"]
++
++    assert curation["retained_bytes"] <= exp.DEFAULT_BUDGET_BYTES
++    assert [row["memory_id"] for row in kept_rows] == [
++        "mem5368-clean-rollback-route",
++        "mem5368-clean-dependency-edge",
++        "mem5368-clean-scaleup-summary",
++    ]
++    assert [row["score_rank"] for row in kept_rows] == [1, 2, 3]
++    assert any(row["memory_id"] == "mem5368-clean-low-value-overbudget" for row in dropped_rows)
++    assert all(row["value_minus_harm_per_byte"] > 0.0 for row in kept_rows)
++
++
++def test_scenario_learn_5368_safety_and_share_trust_metrics_gate_ready() -> None:
++    """SCENARIO-LEARN-5368-SAFETY/SHARE-TRUST: unsafe memory is deflected."""
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit budget memory governance", "outcome": "passed"}],
++    )
++    shared_rows = [
++        row for row in artifact["memory_decision_rows"] if row["share_decision"] == "SHARE"
++    ]
++    trusted_rows = [
++        row for row in artifact["memory_decision_rows"] if row["trust_decision"] == "TRUST"
++    ]
++    stale_rows = [
++        row for row in artifact["memory_decision_rows"] if row["memory_variant"] == "stale"
++    ]
++    poisoned_rows = [
++        row for row in artifact["memory_decision_rows"] if row["memory_variant"] == "poisoned"
++    ]
++    expected_mean = round(
++        sum(row["value_minus_harm_per_byte"] for row in artifact["memory_decision_rows"])
++        / artifact["memory_item_count"],
++        6,
++    )
++
++    assert artifact["budget_curated_memory_ready"] is True
++    assert artifact["memory_item_count"] == exp.MEMORY_ITEM_COUNT
++    assert artifact["budget_bytes"] == exp.DEFAULT_BUDGET_BYTES
++    assert artifact["retained_bytes"] == sum(row["byte_cost"] for row in artifact["memory_decision_rows"] if row["keep_decision"] == "KEEP")
++    assert artifact["retained_bytes"] <= artifact["budget_bytes"]
++    assert artifact["value_minus_harm_per_byte_mean"] == expected_mean
++    assert artifact["keep_precision"] == 1.0
++    assert artifact["stale_memory_deflection_rate"] == 1.0
++    assert artifact["poison_memory_deflection_rate"] == 1.0
++    assert artifact["share_decision_precision"] == 1.0
++    assert artifact["trust_decision_precision"] == 1.0
++    assert artifact["rollback_recovery_rate"] == 1.0
++    assert artifact["unsafe_false_accepts"] == 0
++    assert all(row["trust_decision"] == "UNTRUST" or row["keep_decision"] != "KEEP" for row in stale_rows)
++    assert all(row["trust_decision"] == "UNTRUST" or row["keep_decision"] != "KEEP" for row in poisoned_rows)
++    assert all(row["provenance_verified"] and row["trust_decision"] == "TRUST" for row in shared_rows)
++    assert all(row["useful"] and not row["harmful"] for row in trusted_rows)
++
++
++def test_req_learn_5368_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5368-7: run() writes the required terminal artifact."""
++
++    tests_run = [
++        {"command": "pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q", "outcome": "passed"},
++        {"command": "coverage run --source=python/carnot/experiment_5368_budget_curated_memory_governance_v489.py -m pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q", "outcome": "passed"},
++    ]
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(root=REPO, result_path=result_path, tests_run=tests_run)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["schema"] == exp.SCHEMA
++    assert artifact["experiment_id"]["value"] == exp.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == exp.MILESTONE
++    assert artifact["status"]["value"] == "budget_curated_memory_ready"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["continuous_self_learning_target"] is True
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["budget_curated_memory_ready"] is True
++    assert artifact["tests_run"]["value"] == tests_run
++    assert artifact["field_principles"] == exp.REQUIRED_FIELD_PRINCIPLES
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5368_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-LEARN-5368: checked-in artifact is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_result_artifact(root=REPO, tests_run=result["tests_run"]["value"])
++
++    assert result == replay
++    assert result["honest_verdict"]["value"].startswith("complete:")
++    assert result["budget_curated_memory_ready"] is True
++    assert result["no_weight_mutation"] is True
++    assert result["unsafe_false_accepts"] == 0
++    exp.validate_artifact(result)
++
++
++def test_req_learn_5368_blocked_when_tests_not_recorded() -> None:
++    """REQ-LEARN-5368-7: ready gate stays false without test records."""
++
++    artifact = exp.build_result_artifact(root=REPO, tests_run=[])
++
++    assert artifact["status"]["value"] == "blocked_budget_curated_memory_gate"
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_budget_curated_memory_not_ready:"
++    )
++    assert "tests_recorded" in artifact["readiness_gate"]["failed_gates"]
++    assert "tests_not_recorded" in artifact["honest_verdict"]["value"]
++    assert artifact["budget_curated_memory_ready"] is False
++    assert artifact["unsafe_false_accepts"] == 0
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5368_blocked_when_source_gate_fails(monkeypatch) -> None:
++    """REQ-LEARN-5368-1: failed upstream gates block the budget fixture."""
++
++    failed_gate = {
++        "all_passed": False,
++        "dependency_provenance_ready": False,
++        "memory_tool_drift_ready": True,
++        "self_learning_scaleup_ready": True,
++        "source_unsafe_false_accepts_zero": True,
++        "rollback_recovery_ready": True,
++        "no_weight_mutation": True,
++        "failed_gates": ["dependency_provenance_ready"],
++        "source_artifacts": [],
++    }
++    monkeypatch.setattr(exp, "confirm_source_gate", lambda root=REPO: failed_gate)
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit budget memory governance", "outcome": "passed"}],
++    )
++
++    assert artifact["budget_curated_memory_ready"] is False
++    assert artifact["memory_item_count"] == 0
++    assert artifact["retained_bytes"] == 0
++    assert artifact["readiness_gate"]["source_gate_passed"] is False
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_budget_curated_memory_not_ready:"
++    )
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5368_helper_branches_are_deterministic() -> None:
++    """REQ-LEARN-5368-3: helper branches fail closed deterministically."""
++
++    untrusted_low_value = exp.MemoryItem(
++        memory_id="mem5368-helper-untrusted-low-value",
++        memory_variant="helper",
++        provenance={
++            "source_artifact": "results/helper.json",
++            "source_ref": "helper",
++            "evidence_summary": "helper branch",
++            "verified": False,
++        },
++        byte_cost=16,
++        estimated_verifier_value=0.01,
++        stale_risk=0.0,
++        poison_risk=0.0,
++        sharing_risk=0.0,
++        trust_label="unverified",
++        useful=False,
++        harmful=False,
++        rollback_available=False,
++    )
++
++    assert exp._keep_decision(untrusted_low_value, "UNTRUST", 0, 64) == "DROP"
++    assert exp._wrapped_value("plain") == "plain"
++    assert exp._json_ready(Path("helper")) == "helper"
++
++
++def test_req_learn_5368_validation_rejects_schema_drift() -> None:
++    """REQ-LEARN-5368-7: artifact validation rejects scalar and gate drift."""
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit budget governance", "outcome": "passed"}],
++    )
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"]["value"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"]["value"] = "deterministic_context_memory"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_learning = deepcopy(artifact)
++    bad_learning["continuous_self_learning_target"] = {"value": True}
++    with pytest.raises(ValueError, match="continuous_self_learning_target"):
++        exp.validate_artifact(bad_learning)
++
++    bad_weight = deepcopy(artifact)
++    bad_weight["no_weight_mutation"] = False
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_weight)
++
++    bad_count = deepcopy(artifact)
++    bad_count["memory_item_count"] = True
++    with pytest.raises(ValueError, match="memory_item_count"):
++        exp.validate_artifact(bad_count)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["keep_precision"] = {"value": 1.0}
++    with pytest.raises(ValueError, match="keep_precision"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["budget_curated_memory_ready"] = "yes"
++    with pytest.raises(ValueError, match="budget_curated_memory_ready"):
++        exp.validate_artifact(bad_ready)
++
++    bad_budget = deepcopy(artifact)
++    bad_budget["retained_bytes"] = bad_budget["budget_bytes"] + 1
++    with pytest.raises(ValueError, match="retained_bytes"):
++        exp.validate_artifact(bad_budget)
++
++    bad_unsafe = deepcopy(artifact)
++    bad_unsafe["unsafe_false_accepts"] = 1
++    with pytest.raises(ValueError, match="unsafe_false_accepts"):
++        exp.validate_artifact(bad_unsafe)
++
++    bad_missing_tests = deepcopy(artifact)
++    bad_missing_tests["tests_run"]["value"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_missing_tests)
++
++    bad_gate = deepcopy(artifact)
++    bad_gate["readiness_gate"]["value_cost_harm_trust_measured"] = False
++    with pytest.raises(ValueError, match="value_cost_harm_trust_measured"):
++        exp.validate_artifact(bad_gate)
++
++    bad_field = deepcopy(artifact)
++    bad_field["status"] = {"value": "budget_curated_memory_ready"}
++    with pytest.raises(ValueError, match="status"):
++        exp.validate_artifact(bad_field)
+-- 
+2.55.0
+

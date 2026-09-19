@@ -1,0 +1,727 @@
+From 6696ad468124798e8906d6d5354259b973594dc5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 12:33:10 -0400
+Subject: [PATCH 10901/11362] [conductor] Plan next milestone: 2026.09.608
+
+Planning agent proposed 12 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 510 +++++++++---------
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ research-complete.yaml                        |  34 ++
+ research-roadmap-next.yaml                    |  17 +
+ 6 files changed, 302 insertions(+), 266 deletions(-)
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 366ae82a27..23443fea56 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,356 +1,338 @@
+-# Carnot Research Roadmap vNEXT: Grounded Learning and Internal Energy
++# Carnot Research Roadmap vNEXT: Causal Verification and Reversible Trace Learning
+ 
+ **Created:** 2026-09-03  
+-**Milestone:** 2026.09.607  
+-**Status:** Planned  
+-**Supersedes:** milestone 2026.09.606, experiments 6923-6926  
+-**Task contract:** exactly 14 tasks, Exp6927 through Exp6940, in the order below  
++**Milestone:** 2026.09.608  
++**Status:** Planned after activation refusal repair  
++**Supersedes:** milestone 2026.09.607, experiments 6927-6933  
++**Task contract:** exactly 12 tasks, Exp6941 through Exp6952, in the order below  
+ **Execution manifest:** research-roadmap-next.yaml
+ 
+-## What Milestone 2026.09.606 Proved
++## What Milestone 2026.09.607 Proved
+ 
+ | Result | Experiment | Finding |
+ |---|---:|---|
+-| Lifecycle evidence contract | 6923 | The runtime audit still blocked on roadmap lifecycle state. A science branch must not depend on this class of contract. |
+-| Task-owned runtime receipt helper | 6924 | The reusable adoption path is ready, but its result was null because no live SOTA GPU receipt proved adoption. |
+-| Execution-time SOTA refresh | 6925 | All three required local GGUF families remain the mandated baseline. The public ISM runner is hosted-API-bound. Only its schema and update patterns transfer directly. |
+-| Span-first exact fixture | 6926 | Fifteen family-label cells and 69 rows now preserve byte spans, direction, aliases, and exact labels without disagreement. The result is circular-positive because it proves fixture integrity, not live model acquisition. |
++| Execution-time literature delta | 6927 | The source audit completed. It added one exact metadata correction for the KAN verification paper. |
++| SOTA runtime receipt | 6928 | The artifact claimed receipt readiness. Adversarial review quarantined it because 57 seconds was too short for its three-model claim. It cannot support a runtime headline. |
++| Live span acquisition | 6929 | The task reached one hard wall-time cap and two agent-network failures. It produced no terminal artifact. |
++| Relation qualification | 6930 | The conductor blocked this task after Exp6929 retired. No qualification result exists. |
++| Exact strategy fixture | 6931 | Three agent-network failures retired the task before a terminal artifact existed. |
++| Episodic self-learning and cold audit | 6932-6933 | Both tasks blocked on the retired fixture chain. V607 produced no continuous self-learning result. |
+ 
+-Milestone 2026.09.606 did not run the ten science tasks described by its stale
+-design document. Its active YAML contained four tasks only. V607 treats Exp6926
+-as the last executed ID. This document and the next-roadmap YAML carry the same
+-14-task contract.
++The V607 design document promised 14 tasks. The active YAML contained seven.
++V608 does not preserve that mismatch. This document and the execution manifest
++contain the same 12 tasks, titles, deliverables, order, and structured gates.
+ 
+ ## Three Largest Gaps to the PRD
+ 
+-### Gap 1: Live language still does not become trusted constraints
++### Gap 1: Exact verification coverage is not tied to useful decisions
+ 
+-The exact span fixture exists. Carnot has not shown that each required SOTA
+-model can copy grounded spans, preserve direction, and form exact held-out
+-relations at useful accuracy. This blocks FR01, FR02, and the natural-language
+-side of the Kona-style interface.
++Carnot has exact outcome checks and several learned signals. It has not measured
++when step labels cover enough of a causal trace for first-error credit to help.
++It also lacks a non-saturated SOTA candidate bank for this test. This gap blocks
++FR-12 and weakens the verification part of FR-11.
+ 
+-### Gap 2: Continuous self-learning has no clean prospective utility result
++### Gap 2: Internal signals have not shown causal selection value
+ 
+-Carnot has persistent stores and certified update machinery. Recent sealed
+-tests found harmful writes, weak abstention, or no utility. FR11 needs a clean
+-ordered experiment with immutable exact receipts, delayed writes, hard resets,
+-retention, rollback, and a no-memory control.
++Earlier hidden-state work often blocked on missing inputs. Other work measured
++decodability without proving a better decision. Carnot needs replayable local
++GGUF state surfaces and matched random-direction controls. A positive claim must
++improve exact held-out top-1 selection, not only AUROC.
+ 
+-### Gap 3: Energy has not improved a non-saturated SOTA decision
++### Gap 3: Continuous learning and ARC energy lack safe causal credit
+ 
+-Exact-guided generation saturated in Exp6920. Earlier hidden-state probes tied
+-or lost to simple controls. Carnot still lacks a non-circular result in which a
+-structural energy or internal-state verifier improves candidate choice under a
+-matched budget. This blocks FR03, FR06, FR08, FR09, and the Phase-D bridge.
++Recent memory tasks found harmful writes, weak abstention, or no prospective
++utility. The live ARC agent also lacks a branch-discriminative energy result from
++its own attempts. V608 tests both gaps with exact receipts. The memory task keeps
++weights frozen. The ARC task stays shadow-only and makes no solve claim.
+ 
+-## Research Basis Added for V607
++## Research Basis Added for V608
+ 
+-- HSRM, arXiv:2608.30841, reads hidden states at reasoning-step boundaries and
+-  trains a compact candidate ranker from outcome labels.
+-- Sparse Reward Subsystem, arXiv:2602.00986, reports that reward signals can
+-  concentrate in a small neuron subset.
+-- NSVIF, ICLR 2026 OpenReview RZGs4OAH6g, supports a hybrid span-to-constraint
+-  path with exact symbolic checks.
+-- Sampling for Quality, arXiv:2604.16453, motivates matched-budget population
+-  resampling with soft rewards.
+-- Extropic Z1 remains a future-access target. Kona remains a non-executable
+-  architecture comparator. Neither belongs in the blocking graph.
++- **When Decodability Is Not Enough**, arXiv:2609.02438, separates hidden-state
++  decodability from causal behavior. It motivates random-direction and
++  score-only controls.
++- **Discriminative World Models**, arXiv:2609.02885, motivates learning from
++  authentic alternative-action successor states.
++- **Trace-as-State**, arXiv:2609.02702, motivates placing an admitted prior trace
++  before fresh context instead of appending it after the context.
++- **Learning from Feedback**, arXiv:2609.02859, supports exact external outcomes
++  as memory-write authority. A model judge cannot authorize its own update.
++- **Coverage, Not Targeting**, arXiv:2609.02417, requires a verifier-density
++  measurement before targeted credit.
++- **Cliff**, arXiv:2609.02817, supplies the first-error credit shape. V608 uses
++  this shape only with exact first-invalid-step labels.
++- **Budgeted Verification**, arXiv:2609.02783, reinforces fixed proposal budgets
++  and explicit stopping costs.
+ 
+-The dated source notes and compatibility limits are in
+-research-references.md under the V607 planner refresh.
++The dated source checks, code-state limits, and hardware boundaries are in
++research-references.md under the V608 planner refresh.
+ 
+-## V607 Architecture
++## V608 Architecture
+ 
+ ~~~text
+-                    advisory roots
+-       ┌──────────────────┐  ┌────────────────────┐
+-       │ literature delta │  │ SOTA runtime proof │
+-       │      Exp6927     │  │      Exp6928       │
+-       └──────────────────┘  └────────────────────┘
+-
+-User text + hidden reference labels
+-                 │
+-                 ▼
+-       ┌────────────────────┐
+-       │ span-first SOTA     │
+-       │ acquisition Exp6929│
+-       └─────────┬──────────┘
+-                 │ exact held-out qualification
+-                 ▼
+-       ┌────────────────────┐
+-       │ relation bank      │
+-       │      Exp6930       │
+-       └────────────────────┘
+-
+-Exact strategy episodes                    Fresh candidate groups
+-          │                                          │
+-          ▼                                          ▼
+-┌────────────────────┐                     ┌────────────────────┐
+-│ fixture Exp6931    │                     │ headroom Exp6934   │
+-└─────────┬──────────┘                     └─────────┬──────────┘
+-          ▼                                          ▼
+-┌────────────────────┐                     ┌────────────────────┐
+-│ episodic memory    │                     │ energy canary      │
+-│ Exp6932            │                     │ Exp6935            │
+-└─────────┬──────────┘                     └─────────┬──────────┘
+-          ▼                                          ▼
+-┌────────────────────┐                     ┌────────────────────┐
+-│ cold audit Exp6933 │                     │ SMC Exp6936        │
+-└────────────────────┘                     └────────────────────┘
+-
+-Mandated local GGUF runtime
+-          │
+-          ▼
+-┌────────────────────┐       ready only       ┌────────────────────┐
+-│ state reachability │───────────────────────▶│ compact ranker     │
+-│ Exp6937            │                        │ Exp6938            │
+-└────────────────────┘                        └────────────────────┘
+-
+-Live ARC attempts ─────────▶ induction emission audit Exp6939
+-
+-All available receipts ───▶ ungated capstone Exp6940 ───▶ V608 handoff
++                     advisory evidence
++               ┌──────────────────────┐
++               │ source delta Exp6941 │
++               └──────────────────────┘
++
++               ┌──────────────────────┐
++               │ contract Exp6942     │
++               └───────┬────────┬─────┘
++                       │        │
++                       │        ▼
++                       │  ┌────────────────────┐
++                       │  │ ARC branches 6948  │
++                       │  └─────────┬──────────┘
++                       │            ▼
++                       │  ┌────────────────────┐
++                       │  │ branch energy 6949 │
++                       │  └────────────────────┘
++                       ▼
++               ┌──────────────────────┐
++               │ exact prefix corpus  │
++               │ Exp6943              │
++               └───────┬────────┬─────┘
++                       │        │
++                       │        ▼
++                       │  ┌────────────────────┐
++                       │  │ trace memory 6950  │
++                       │  └─────────┬──────────┘
++                       │            ▼
++                       │  ┌────────────────────┐
++                       │  │ cold audit 6951    │
++                       │  └────────────────────┘
++                       ▼
++               ┌──────────────────────┐
++               │ SOTA prefix bank     │
++               │ Exp6944              │
++               └────────┬─────────┬───┘
++                        │         │
++                        ▼         ▼
++             ┌───────────────┐  ┌────────────────────┐
++             │ prefix energy │  │ GGUF state 6946    │
++             │ Exp6945       │  └─────────┬──────────┘
++             └───────────────┘            ▼
++                                  ┌────────────────────┐
++                                  │ causal select 6947 │
++                                  └────────────────────┘
++
++        all available receipts ──▶ capstone Exp6952 ──▶ V609
+ ~~~
+ 
+-Exact checkers remain the update and release authority. Learned scores may
++Exact solvers define fixture labels and external outcomes. Learned energies may
+ rank candidates. They may not certify their own labels. Outcome labels stay out
+-of model inputs. Every comparison emits per-unit rows.
++of model prompts and memory reads.
+ 
+-## Phase A: Grounded Inputs and Runtime Evidence
++## Phase A: Evidence, Contract, and Exact Prefix Data
+ 
+-### Exp6927: V607 execution-time literature delta and compatibility map
++### Exp6941: V608 post-marker source delta and compatibility audit
+ 
+-Recheck the named source families at execution time. Append only verified
+-deltas. Record incompatible code paths and explicit no-update results. This is
+-the required SOTA-ingestion slot. It is advisory and ungated.
++Recheck the dated V608 papers and named secondary sources. Record metadata,
++implementation state, local compatibility, citation edges, and explicit
++no-update rows. This task is advisory. No science task gates on it.
+ 
+-### Exp6928: Dual-GPU SOTA runtime receipt qualification
++### Exp6942: V608 executable contract and bounded-shard preflight
+ 
+-Adopt the Exp6924 helper in one bounded real model run. Exercise all three
+-required GGUF families sequentially on the dual RTX 3090 host. Prove process
+-ownership, device identity, offload, phase intervals, cache state, teardown,
+-and fresh-process replay. This is infrastructure slot 1 of 2. It is advisory
+-and ungated.
++Compare this document with the active YAML. Require exactly 12 tasks and exact
++parity for IDs, titles, deliverables, and gates. Validate model contracts,
++prompt endings, prior-failure blocks, exclusion rules, and bounded work units.
++This task is the root gate for the exact-prefix and ARC corpus branches.
+ 
+-### Exp6929: Three-family live span-first relation acquisition
++### Exp6943: Verifier-density prefix corpus with exact first-error labels
+ 
+-Use the Exp6926 fixture contract on held-out prompts. Run Qwen3.6-35B-A3B,
+-Gemma-4-31B-it, and Gemma-4-26B-A4B-it. Require verbatim spans before a typed
+-directed relation. Preserve every malformed and failed row. Do not reprompt
+-with hidden labels.
++Build at least 144 deterministic trace pairs across arithmetic updates, graph
++reachability, and small scheduling problems. Emit exact prefix-validity vectors,
++first-invalid-step labels, density bands, split hashes, and fresh-process replay.
++This fixture can receive only a circular-positive conformance verdict.
+ 
+-### Exp6930: Independent exact relation qualification
++The activation refusal matched this task to four older corpus-shaped failures.
++The YAML now records all four with exact verdicts, changed mechanisms, and
++`retire_if_same_verdict: true`. V608 uses exact deterministic semantics. It does
++not reuse a safety classifier, adaptive injection ensemble, ARC RFT corpus, or
++LoRA checkpoint path.
+ 
+-This task runs only when Exp6929 emits
+-span_acquisition_bank_ready_score == 1. A fresh process checks offsets,
+-aliases, direction, schema, and hidden reference labels. The task reports
+-coverage and accuracy by model and relation family. It may not infer missing
+-rows or repair model outputs.
++### Exp6944: Three-family bounded non-saturated prefix reasoning bank
+ 
+-## Phase B: Continuous Self-Learning
++Run only after Exp6943 emits `prefix_corpus_ready_score == 1`. Generate exactly
++144 attempts across the three mandated GGUF families. Checkpoint each output
++before the next call. Freeze raw text before exact checking. Keep malformed,
++timed-out, and low-quality rows in the denominator. Readiness does not require
++headroom or accuracy.
+ 
+-### Exp6931: Exact strategy-episode and delayed-write fixture
++## Phase B: Structural and Internal Causal Verification
+ 
+-Create ordered episodes with exact pre-action state, action, outcome,
+-constraint receipt, and reusable strategy fields. Include useful, irrelevant,
+-contradictory, poisoned, and rollback cases. Freeze train, validation, and
+-retention order before any model run.
++### Exp6945: Exact-prefix credit geometry and structural-energy canary
+ 
+-### Exp6932: Prospective selective episodic self-learning
++Run only after Exp6944 emits `reasoning_bank_complete_score == 1`. Compare
++outcome-only, uniform reward-to-go, exact first-error, and shuffled
++matched-concentration credit. Use one matched architecture and reward mass.
++Require held-out top-1 selection gain. AUROC alone is not positive evidence.
+ 
+-This task runs only when Exp6931 emits
+-strategy_episode_fixture_ready_score == 1. Compare three complete systems:
+-no memory, read-only retrieval, and exact-admitted delayed writes. Run all
+-three required SOTA model families. Reset processes between arms. Admit writes
+-only after exact outcomes. Measure next-event utility, abstention, retention,
+-rollback, and contamination. This is the milestone's FR11 continuous
+-self-learning task.
++### Exp6946: GGUF causal-state surface and replay receipt
+ 
+-### Exp6933: Fresh-process episodic-memory safety audit
++Run only after Exp6944 emits `reasoning_bank_complete_score == 1`. Probe tokens,
++logits, embeddings, and intermediate layers at exact trace-line boundaries.
++Record unsupported runner surfaces directly. Require replayable non-text state
++from at least one Qwen family and one Gemma family before downstream use.
+ 
+-This task runs only when Exp6932 emits
+-episodic_memory_run_complete_score == 1. Recompute every headline from raw
+-rows in a fresh process. Test restart, provenance, delayed-copy poison,
+-tombstone reappearance, old-family retention, and rollback. Audit completion,
+-not a positive effect, is the gate.
++### Exp6947: Causal hidden-state selection with random-direction controls
+ 
+-## Phase C: Non-Saturated Energy and Hidden-State Verification
++Run only after Exp6946 emits `causal_state_surface_ready_score == 1`. Compare
++compact state rankers with at least 20 norm-matched random directions,
++likelihood, final embeddings, structural energy, fixed order, and shuffled
++labels. Require paired exact top-1 gain with a confidence interval above zero.
+ 
+-### Exp6934: Three-family non-saturated proposal bank
++## Phase C: ARC Branch-Discriminative Energy
+ 
+-Generate a frozen bank with all three required SOTA families. Select held-out
+-items only when the baseline has real headroom. Keep groups with both correct
+-and incorrect candidates. Save token budgets, seeds, runner receipts, exact
+-labels, and every rejected group. Do not train on the evaluation groups.
++### Exp6948: ARC live-attempt branching corpus audit
+ 
+-### Exp6935: Structural-energy headroom admission canary
++Run only after Exp6942 emits `v608_execution_contract_ready_score == 1`. Scan
++the live agent's own attempt receipts for normalized states with at least two
++executed actions and exact successor observations. Exclude source inspection,
++hand adapters, offline ground-truth search, and synthetic counterfactuals. The
++task makes no game-level or level-level solve claim.
+ 
+-This task runs only when Exp6934 emits
+-headroom_proposal_bank_ready_score == 1. Score typed candidate structures with
+-Carnot energy. Compare top-1 selection with random, majority, likelihood, and
+-simple exact-feature controls. Admit population guidance only when the paired
+-held-out improvement is positive with a confidence interval above zero and the
+-result survives permutation and label-leak checks.
++### Exp6949: Within-game branch-discriminative world-state energy
+ 
+-### Exp6936: Population SMC with exact structural energy
++Run only after Exp6948 emits `arc_branch_corpus_ready_score == 1`. Compare
++predicted-state matching energy, supervised next-state regression, action-only
++ranking, and shuffled labels. Train and test chronologically within each game.
++Keep the result shadow-only and default-off. Do not change the solve registry.
+ 
+-This task runs only when Exp6935 emits
+-population_guidance_admitted_score == 1. Implement resample-move population
+-search over the same frozen item distribution. Compare guided SMC, unguided
+-SMC, and fixed-budget Best-of-N. Match model calls, candidate count, token
+-budget, and stopping rules. Exact outcomes evaluate candidates but never enter
+-the proposal context.
++## Phase D: Reversible Self-Learning and Synthesis
+ 
+-### Exp6937: GGUF hidden-state reachability and sparse-signal canary
++### Exp6950: Prospective Trace-as-State continuous self-learning
+ 
+-Test Qwen3.6-35B-A3B and Gemma-4-31B-it through the local GGUF runner. Record
+-which token, layer, chunk, cache, embedding, and logit states are actually
+-available without re-decoding text. Compare full accessible state, sparse
+-coordinates, final embedding, logits, and content-blind controls on exact
+-candidate labels. Unsupported intermediate layers are a valid blocked result.
+-This is a new HSRM compatibility question, not a rerun of the retired MMLU-Pro
+-probe path.
++Run only after Exp6943 emits `prefix_corpus_ready_score == 1`. Compare no
++memory, append-after memory, and trace-before memory in separate processes.
++Only a prior exact-success receipt can authorize a write. Match trace bytes and
++token budgets between memory arms. Keep model weights frozen. Test retention,
++poison, contradiction, restart, tombstone, and rollback behavior. This is the
++required continuous self-learning experiment for FR-11.
+ 
+-### Exp6938: Compact hidden-state candidate ranker
++### Exp6951: Fresh-process trace-memory causal audit
+ 
+-This task runs only when Exp6937 emits
+-hidden_state_capture_ready_score == 1. Train a small tie-safe ranker on cached
+-states from disjoint candidate groups. Compare it with likelihood,
+-final-embedding, sparse-coordinate, and structural-energy controls. Report
+-Best-of-N accuracy, ranking AUROC, calibration, latency, and paired intervals.
+-Do not use a text verifier or model judge as ground truth.
++Run only after Exp6950 emits `trace_state_run_complete_score == 1`. Recompute
++all comparative metrics from raw rows and saved stores. Verify time order,
++receipt authority, equal budgets, model immutability, retention, and rollback.
++The audit may not upgrade an upstream null result.
+ 
+-## Phase D: Live-Path Audit and Synthesis
++### Exp6952: V608 independent capstone and V609 handoff
+ 
+-### Exp6939: ARC post-fix induction emission and held-out accuracy audit
+-
+-Use fresh live attempts on r11l after the 98,304-token context repair. Measure
+-whether the agent emits a usable induced transition model and whether that
+-model predicts held-out transitions. Compare the required Qwen3.6 flagship
+-with the current production control. This task does not seek or claim a new
+-game-level solve. It does not repeat the zero-delta tool/no-tool credit test.
+-
+-### Exp6940: V607 independent capstone and V608 handoff
+-
+-Aggregate available branch receipts without gating on a positive result. Skip
+-missing, blocked, disqualified, and adversarially flagged evidence from positive
+-headlines. Recompute task count, ID order, gate fields, model coverage,
+-self-learning status, verifier circularity, and hardware provenance. This is
+-infrastructure slot 2 of 2 and the only handoff task.
++Aggregate all available receipts without gating on a positive branch. Recompute
++the task contract, branch headlines, controls, model coverage, ARC boundaries,
++memory safety, and exclusion implications. Preserve missing, blocked, circular,
++null, partial, disqualified, and adversarially flagged states.
+ 
+ ## Exact Task Contract
+ 
+ | Order | Task ID | Title | Deliverable | Structured gate |
+ |---:|---|---|---|---|
+-| 1 | exp6927-v607-literature-delta | V607 execution-time literature delta and compatibility map | results/experiment_6927_v607_literature_delta.json | none |
+-| 2 | exp6928-sota-runtime-receipt-qualification | Dual-GPU SOTA runtime receipt qualification | results/experiment_6928_sota_runtime_receipt_qualification.json | none |
+-| 3 | exp6929-three-family-span-acquisition | Three-family live span-first relation acquisition | results/experiment_6929_three_family_span_acquisition.json | none |
+-| 4 | exp6930-independent-relation-qualification | Independent exact relation qualification | results/experiment_6930_independent_relation_qualification.json | exp6929-three-family-span-acquisition.span_acquisition_bank_ready_score == 1 |
+-| 5 | exp6931-strategy-episode-fixture | Exact strategy-episode and delayed-write fixture | results/experiment_6931_strategy_episode_fixture.json | none |
+-| 6 | exp6932-selective-episodic-memory | Prospective selective episodic self-learning | results/experiment_6932_selective_episodic_memory.json | exp6931-strategy-episode-fixture.strategy_episode_fixture_ready_score == 1 |
+-| 7 | exp6933-memory-cold-audit | Fresh-process episodic-memory safety audit | results/experiment_6933_memory_cold_audit.json | exp6932-selective-episodic-memory.episodic_memory_run_complete_score == 1 |
+-| 8 | exp6934-headroom-proposal-bank | Three-family non-saturated proposal bank | results/experiment_6934_headroom_proposal_bank.json | none |
+-| 9 | exp6935-structural-energy-headroom-canary | Structural-energy headroom admission canary | results/experiment_6935_structural_energy_headroom_canary.json | exp6934-headroom-proposal-bank.headroom_proposal_bank_ready_score == 1 |
+-| 10 | exp6936-population-smc-guidance | Population SMC with exact structural energy | results/experiment_6936_population_smc_guidance.json | exp6935-structural-energy-headroom-canary.population_guidance_admitted_score == 1 |
+-| 11 | exp6937-gguf-hidden-state-reachability | GGUF hidden-state reachability and sparse-signal canary | results/experiment_6937_gguf_hidden_state_reachability.json | none |
+-| 12 | exp6938-compact-hidden-state-ranker | Compact hidden-state candidate ranker | results/experiment_6938_compact_hidden_state_ranker.json | exp6937-gguf-hidden-state-reachability.hidden_state_capture_ready_score == 1 |
+-| 13 | exp6939-arc-induction-emission-audit | ARC post-fix induction emission and held-out accuracy audit | results/experiment_6939_arc_induction_emission_audit.json | none |
+-| 14 | exp6940-v607-capstone | V607 independent capstone and V608 handoff | results/experiment_6940_v607_capstone.json | none |
++| 1 | exp6941-v608-source-delta | V608 post-marker source delta and compatibility audit | results/experiment_6941_v608_source_delta.json | none |
++| 2 | exp6942-v608-contract-preflight | V608 executable contract and bounded-shard preflight | results/experiment_6942_v608_contract_preflight.json | none |
++| 3 | exp6943-verifier-density-prefix-corpus | Verifier-density prefix corpus with exact first-error labels | results/experiment_6943_verifier_density_prefix_corpus.json | exp6942-v608-contract-preflight.v608_execution_contract_ready_score == 1 |
++| 4 | exp6944-three-family-prefix-bank | Three-family bounded non-saturated prefix reasoning bank | results/experiment_6944_three_family_prefix_bank.json | exp6943-verifier-density-prefix-corpus.prefix_corpus_ready_score == 1 |
++| 5 | exp6945-prefix-credit-energy-canary | Exact-prefix credit geometry and structural-energy canary | results/experiment_6945_prefix_credit_energy_canary.json | exp6944-three-family-prefix-bank.reasoning_bank_complete_score == 1 |
++| 6 | exp6946-gguf-causal-state-surface | GGUF causal-state surface and replay receipt | results/experiment_6946_gguf_causal_state_surface.json | exp6944-three-family-prefix-bank.reasoning_bank_complete_score == 1 |
++| 7 | exp6947-causal-hidden-selection | Causal hidden-state selection with random-direction controls | results/experiment_6947_causal_hidden_selection.json | exp6946-gguf-causal-state-surface.causal_state_surface_ready_score == 1 |
++| 8 | exp6948-arc-branch-corpus | ARC live-attempt branching corpus audit | results/experiment_6948_arc_branch_corpus.json | exp6942-v608-contract-preflight.v608_execution_contract_ready_score == 1 |
++| 9 | exp6949-arc-branch-energy | Within-game branch-discriminative world-state energy | results/experiment_6949_arc_branch_energy.json | exp6948-arc-branch-corpus.arc_branch_corpus_ready_score == 1 |
++| 10 | exp6950-trace-state-self-learning | Prospective Trace-as-State continuous self-learning | results/experiment_6950_trace_state_self_learning.json | exp6943-verifier-density-prefix-corpus.prefix_corpus_ready_score == 1 |
++| 11 | exp6951-trace-memory-cold-audit | Fresh-process trace-memory causal audit | results/experiment_6951_trace_memory_cold_audit.json | exp6950-trace-state-self-learning.trace_state_run_complete_score == 1 |
++| 12 | exp6952-v608-capstone | V608 independent capstone and V609 handoff | results/experiment_6952_v608_capstone.json | none |
+ 
+ ## Dependency Graph
+ 
+ ~~~text
+-Exp6927                           advisory root
+-Exp6928                           advisory infrastructure root
+-Exp6929 ──ready──▶ Exp6930        grounded acquisition
+-Exp6931 ──ready──▶ Exp6932 ──run-complete──▶ Exp6933
+-Exp6934 ──ready──▶ Exp6935 ──admitted──▶ Exp6936
+-Exp6937 ──capture-ready──▶ Exp6938
+-Exp6939                           independent live ARC audit
+-Exp6940                           ungated aggregate of available receipts
++Exp6941                                      advisory root
++Exp6942 ──contract-ready──▶ Exp6943 ──corpus-ready──▶ Exp6944
++Exp6944 ──bank-complete───▶ Exp6945
++Exp6944 ──bank-complete───▶ Exp6946 ──state-ready──▶ Exp6947
++Exp6942 ──contract-ready──▶ Exp6948 ──corpus-ready─▶ Exp6949
++Exp6943 ──corpus-ready────▶ Exp6950 ──run-complete▶ Exp6951
++Exp6952                                      ungated aggregate
+ ~~~
+ 
+-No science task gates on Exp6927, Exp6928, or Exp6940. A blocked producer must
+-write gate_check_summary and its declared ready score. The conductor can then
+-skip only the direct dependent task.
++No science task gates on Exp6941 or Exp6952. Each blocked producer must still
++write its declared gate field and `gate_check_summary`. The conductor can then
++skip only direct dependents.
+ 
+ ## Model Contract
+ 
+-Every experiment that invokes an LLM must declare MODEL_SPECS through the
+-helpers in scripts/experiment_template.py.
++Every task that invokes an LLM declares `MODEL_SPECS` through the current local
++GGUF resolver.
+ 
+ | Task | Required headline model set |
+ |---|---|
+-| Exp6928 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it |
+-| Exp6929 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it |
+-| Exp6932 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it |
+-| Exp6934 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it |
+-| Exp6936 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it |
+-| Exp6937 | Qwen3.6-35B-A3B and Gemma-4-31B-it |
+-| Exp6939 | Qwen3.6-35B-A3B plus the current production control |
+-
+-Legacy small models may run CPU smoke tests. They may not support a headline.
+-GGUF tokenizer metadata comes from the GGUF or runner. Do not call
+-AutoTokenizer.from_pretrained() on a GGUF repository ID.
++| Exp6944 | Qwen3.6-35B-A3B, Gemma-4-31B-it, and Gemma-4-26B-A4B-it |
++| Exp6946 | Qwen3.6-35B-A3B, Gemma-4-31B-it, and Gemma-4-26B-A4B-it |
++| Exp6950 | Qwen3.6-35B-A3B and Gemma-4-26B-A4B-it |
++
++Legacy small models may run CPU smoke tests. They cannot support a headline.
++GGUF tokenizers come from the GGUF file or runner. No task calls
++`AutoTokenizer.from_pretrained()` on a GGUF repository ID.
+ 
+ ## Acceptance and Reporting Rules
+ 
+-- Every task writes its artifact even when blocked.
+-- Every artifact declares the closed verdict_class enum.
+-- Every blocked artifact names the failed check, expected value, and observed
+-  value in gate_check_summary.
+-- Every comparative task emits one per-unit row for every model, item, arm,
+-  seed, and condition used by its headline.
+-- Every model-bearing task records the selected model, quantization, runner,
+-  device path, offload, cache state, duration, and teardown.
+-- Every learned result records split hashes and proves label isolation.
+-- Every task annotates each required field with a scientific principle.
+-- A verifier used as its own oracle cannot receive a positive verdict class.
+-- Exp6939 makes no game-level solve claim, so it has no ARC solve provenance.
+-- No task may modify scripts/research_conductor.py.
++- Every task writes its artifact when blocked.
++- Every artifact declares the closed `verdict_class` enum.
++- Every blocked verdict names the failed check, expected value, and observed
++  value in `gate_check_summary`.
++- Every comparative task emits per-unit rows for each item, arm, seed, family,
++  and condition used by a headline.
++- Every model task records model, quantization, runner, device, offload, cache,
++  duration, task-owned receipt, and teardown.
++- Every learned result records split hashes and label-isolation checks.
++- Exact outcomes remain external authority. A learned verifier cannot certify
++  its own labels.
++- Exp6948 and Exp6949 record `solve_claimed=false`. They do not need
++  `solve_provenance` because neither task claims a game-level solve.
++- No task modifies `scripts/research_conductor.py`.
+ 
+ ## Hardware Requirements
+ 
+ | Tasks | Hardware | Budget and boundary |
+ |---|---|---|
+-| 6927, 6930, 6931, 6933, 6940 | CPU and network where stated | Bounded audits and exact replay. No accelerator claim. |
+-| 6928, 6929, 6932, 6934, 6936, 6937, 6939 | Dual RTX 3090 CUDA | Run required GGUF models sequentially unless measured memory allows safe concurrency. Record both GPU UUIDs and peak VRAM. |
+-| 6935, 6938 | CUDA for training or scoring, CPU replay | Use frozen rows. Keep training bounded. Save checkpoints and split hashes. |
+-| all tasks | Disk | Reuse cached GGUF files. Store large hidden arrays or proposal rows under results/checkpoints/, not in Git. |
+-| none | KV260, GateMate, PolarFire, XTR-0, or Z1 | Attached boards and future TSUs are outside the blocking graph. Make no hardware speed or power claim. |
++| 6941-6943, 6945, 6947-6949, 6951-6952 | CPU and network where stated | Bounded audits, exact replay, or small-model training. No accelerator claim. |
++| 6944, 6946, 6950 | Dual RTX 3090 CUDA | Run local GGUF models sequentially. Checkpoint each output or event. Record GPU UUIDs, offload, peak VRAM, and teardown. |
++| all tasks | Disk | Reuse cached GGUF files. Put large states and checkpoints under results/checkpoints/. |
++| none | KV260, GateMate, PolarFire, XTR-0, or Z1 | These devices remain outside the dependency graph. Make no speed, power, or availability claim. |
++
++## Decentralization Implications
++
++V608 remains local-first. All model work uses open local GGUF weights. Exact
++solvers and stored receipts remain the authority. No closed model, hosted API,
++or unavailable hardware sits on a science dependency path.
+ 
+ ## Estimated Execution Budget
+ 
+ | Phase | Tasks | Expected wall time |
+ |---|---|---:|
+-| A | 6927-6930 | 12-20 hours |
+-| B | 6931-6933 | 12-20 hours |
+-| C | 6934-6938 | 22-36 hours |
+-| D | 6939-6940 | 8-14 hours |
+-| Total | 14 tasks | 54-90 hours |
++| A | 6941-6944 | 12-17 hours |
++| B | 6945-6947 | 16 hours |
++| C | 6948-6949 | 7 hours |
++| D | 6950-6952 | 19 hours |
++| Total | 12 tasks | 54-59 hours |
+ 
+-The conductor executes tasks serially. Model caches and proposal checkpoints
+-must make restarts safe. Wall-time estimates include bounded reruns, not
+-unlimited retries.
++The conductor executes tasks serially. GPU tasks use bounded row counts and
++per-unit checkpoints. A failed unit remains visible and cannot trigger an
++unbounded retry loop.
+ 
+ ## Explicitly Deferred
+ 
+-- Weight updates and LoRA continual learning remain deferred until external
+-  exact-memory utility is positive and safe.
+-- Full EBT or Kona-scale pretraining remains deferred. V607 tests internal
+-  verification signals, not a foundation-model training claim.
+-- MMLU-Pro hidden-state probing remains retired. V607 uses exact grouped
+-  candidates and a new HSRM-style method.
+-- New ARC game solves remain outside V607. Exp6939 audits the live induction
+-  path only.
+-- FPGA or TSU acceleration remains opportunistic. No unavailable device sits
+-  on a dependency path.
++- Weight updates and LoRA continual learning remain deferred. V608 tests
++  reversible external trace state with frozen weights.
++- A full EBT or Kona training run remains deferred. Kona is an architecture
++  comparator without public weights or a local runner.
++- Generated-text and log-probability reward scorers remain retired.
++- New ARC game or level solves remain outside V608. The ARC branch is a
++  provenance-qualified shadow experiment only.
++- FPGA and TSU performance work remains outside this milestone.
+ 
+ ## Completion Contract
+ 
+-V607 is complete when exactly these 14 task IDs have terminal artifacts or
+-conductor-written blocked artifacts in this order. Exp6940 must report branch
+-truth without converting a null, blocked, circular, partial, or disqualified
+-result into a positive claim. Before activation, validate this document against
++V608 is complete when these 12 task IDs have terminal artifacts or
++conductor-written blocked artifacts in this order. Exp6952 must preserve every
++non-positive evidence class. Before activation, validate this document against
+ research-roadmap-next.yaml for exact task count, ID order, titles,
+-deliverables, and gates.
++deliverables, and gates. The exclusion-manifest lint must report no hard
++violations.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 820b927b44..288f83dbc8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-09-03T15:15:59Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-09-03T16:25:52Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 853feaa577..b5c89943b0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17150,3 +17150,6 @@ code |
+ | 2026-09-03 15:16 UTC | Prospective selective episodic self-learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6931-strategy-episode-fixture) |
+ | 2026-09-03 15:16 UTC | Fresh-process episodic-memory safety audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6932-selective-episodic-memory) |
+ | 2026-09-03 15:17 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
++| 2026-09-03 16:23 UTC | Plan milestone 2026.09.608 | OK | 12 tasks proposed |
++| 2026-09-03 16:26 UTC | Activation REFUSED: milestone 2026.09.608 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-09-03 16:26 UTC | Activation replan 1/2: 2026.09.608 | OK | refused roadmap quarantined to roadmap-2026.09.608-refusal1.yaml; replanning wit |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b067f84b29..eee7e0bed3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 31, "phase": "iteration_start", "started_at": "2026-09-03T15:15:59Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 32, "phase": "iteration_start", "started_at": "2026-09-03T16:25:52Z"}
+\ No newline at end of file
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 1acf311c4b..339ecbd1d6 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -84734,3 +84734,37 @@ milestones:
+     title: Exact span-first relation fixture
+     deliverable: results/experiment_6926_span_first_relation_fixture.json
+     result: OK
++- id: 2026.09.607
++  title: Grounded learning, non-saturated energy, and internal verification
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-09-03'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6927-v607-literature-delta
++    title: V607 execution-time literature delta and compatibility map
++    deliverable: results/experiment_6927_v607_literature_delta.json
++    result: OK
++  - id: exp6928-sota-runtime-receipt-qualification
++    title: Dual-GPU SOTA runtime receipt qualification
++    deliverable: results/experiment_6928_sota_runtime_receipt_qualification.json
++    result: FLAGGED
++  - id: exp6929-three-family-span-acquisition
++    title: Three-family live span-first relation acquisition
++    deliverable: results/experiment_6929_three_family_span_acquisition.json
++    result: SKIPPED (3-fail)
++  - id: exp6930-independent-relation-qualification
++    title: Independent exact relation qualification
++    deliverable: results/experiment_6930_independent_relation_qualification.json
++    result: GATE_BLOCKED
++  - id: exp6931-strategy-episode-fixture
++    title: Exact strategy-episode and delayed-write fixture
++    deliverable: results/experiment_6931_strategy_episode_fixture.json
++    result: SKIPPED (3-fail)
++  - id: exp6932-selective-episodic-memory
++    title: Prospective selective episodic self-learning
++    deliverable: results/experiment_6932_selective_episodic_memory.json
++    result: GATE_BLOCKED
++  - id: exp6933-memory-cold-audit
++    title: Fresh-process episodic-memory safety audit
++    deliverable: results/experiment_6933_memory_cold_audit.json
++    result: GATE_BLOCKED
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 9d25e3e660..5f872ccdbb 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -251,6 +251,23 @@ tasks:
+ 
+     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6943_verifier_density_prefix_corpus.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp2600-safety-corpus-verifier
++      verdict: blocked_sklearn
++      addressed_by: "This task builds deterministic exact step labels with existing solver and interpreter interfaces. It does not train the blocked sklearn safety verifier or reuse its synthetic safety corpus."
++      retire_if_same_verdict: true
++    - experiment_id: exp3441-verifier-ensemble-vs-adaptive-injection-corpus-v3
++      verdict: "complete: ensemble_beats_sidecar_but_below_replacement_grade"
++      addressed_by: "This task proves exact fixture conformance only. It does not train a verifier ensemble, use the adaptive injection corpus, or seek replacement-grade discrimination."
++      retire_if_same_verdict: true
++    - experiment_id: exp4077-verifier-reward-rft-corpus-build
++      verdict: blocked_precision_gate_unmet_0.6818_1.0000
++      addressed_by: "This task uses exact matched corruptions across three deterministic domains. It has no verifier-certification precision gate, ARC RFT corpus, or LoRA training dependency."
++      retire_if_same_verdict: true
++    - experiment_id: exp4088-verifier-reward-rft-corpus-build
++      verdict: blocked_lora_smoke_checkpoints
++      addressed_by: "This task writes and replays a deterministic exact prefix fixture. It does not require generated ARC programs, LoRA smoke checkpoints, or a trainable language model."
++      retire_if_same_verdict: true
+ 
+ - id: exp6944-three-family-prefix-bank
+   title: Three-family bounded non-saturated prefix reasoning bank
+-- 
+2.55.0
+

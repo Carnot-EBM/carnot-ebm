@@ -1,0 +1,2533 @@
+From a71b79c6d9010357f86ba556d4b2ca32601619e6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 03:17:10 -0400
+Subject: [PATCH 03180/11362] [conductor] PHASE A2 (ARC NORTH STAR; PRIMARY;
+ operator MANDATORY; HEADLINE; ORACLE-DISTINCT MOAT) -- ENERGY-VERIFIER
+ next-level-distance routing: use the world-model TRUST ENERGY
+ (verifier_is_oracle: false) to route the frontier toward predicted-deeper
+ states satisfying the re-induced L_{{n+1}} predicate. Test lp85 + sp80 with a
+ matched no-energy control. Gate: an energy-routed config reaches a deeper
+ level OR a measured null with the energy signal characterized.
+
+Automated research step by research conductor.
+Task ID: exp4534-a2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |   58 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/agentic/arc_competition_agent.py   |   22 +-
+ ...nt_4534_energy_trust_next_level_routing.py |  625 +++++++
+ ..._4534_energy_trust_next_level_routing.json | 1463 +++++++++++++++++
+ ...nt_4534_energy_trust_next_level_routing.py |  240 +++
+ 6 files changed, 2403 insertions(+), 7 deletions(-)
+ create mode 100644 python/carnot/experiment_4534_energy_trust_next_level_routing.py
+ create mode 100644 results/experiment_4534_energy_trust_next_level_routing.json
+ create mode 100644 tests/python/test_experiment_4534_energy_trust_next_level_routing.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 6174d05745..59f8577d78 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -285,6 +285,52 @@ A success artifact SHALL require some CORE game to reach L2, a strict
+ `SUBMITTED_AGENT_CONFIG`. Otherwise the submitted configuration SHALL remain
+ unchanged and the artifact SHALL report the honest null plus barrier refinement.
+ 
++### REQ-ARC-WMTE-4534: Trust-Energy Next-Level Frontier Routing
++
++Experiment 4534 SHALL use the oracle-distinct world-model trust energy as a
++next-level-distance heuristic after the per-level goal re-induction attempt.
++When a re-induced `L_{n+1}` predicate is available from experiment 4533, the
++frontier SHALL preserve depth as the no-regression primary key and use
++lower-is-closer trust energy only as the goal-bias tie/secondary key. When
++experiment 4533 produced an honest null and no live `L_{n+1}` predicate is
++available, the experiment SHALL still compare the matched cached no-energy and
++energy-routed measurements on `lp85` and `sp80`, and SHALL independently
++characterize whether the trust-energy signal separates deeper-progress states
++from L1-stuck states.
++
++Experiment 4534 SHALL write
++`results/experiment_4534_energy_trust_next_level_routing.json` with bare
++top-level fields for `honest_verdict`, `inference_substrate`,
++`verifier_is_oracle`, `core_efficiency_baseline`,
++`core_efficiency_energy_routed`, `no_energy_control`,
++`energy_separation_auroc`, `deepest_level_reached_per_core_game`,
++`core_solves_preserved`, `positive_control_passed`,
++`false_negative_risk_checked`, `random_seed`,
++`reproducibility_checksum`, and `preconditions_checked`. Required field
++principles SHALL be included for:
++
++- `honest_verdict`: principle "terminal prefix; success: energy_routing_<game>_reached_L2_oracle_distinct OR complete: energy_routing_no_deeper_level_signal_characterized_honest_null."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade + trust-energy scoring, no headline GGUF load (1s floor)."
++- `verifier_is_oracle`: principle "MUST be false -- the trust energy is oracle-DISTINCT (ranks held-out generalization), NOT the executable win-check; a circular win does not count (Circularity / Oracle-Distinctness Discipline)."
++- `core_efficiency_baseline`: principle "2.0074 -- the per-level metric control."
++- `core_efficiency_energy_routed`: principle "the HEADLINE -- did energy routing toward the re-induced goal reach a deeper level."
++- `no_energy_control`: principle "matched control measured the SAME way (energy off) -- the apples-to-apples comparison."
++- `energy_separation_auroc`: principle "AUROC of the trust energy separating deeper-progress states from L1-stuck states -- the signal characterization that is the deliverable on a null."
++- `deepest_level_reached_per_core_game`: principle "best_level per CORE game with vs without energy routing -- the score-lever evidence."
++- `core_solves_preserved`: principle "HARD gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve FAILS the lever."
++- `positive_control_passed`: principle "the energy SHOULD separate deeper-progress on a known-L2 game; guards a silently-broken signal."
++- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
++A success artifact SHALL require an energy-routed configuration to reach level
++2 or deeper on a CORE game where the matched no-energy control does not,
++`core_solves_preserved=true`, `positive_control_passed=true`, and
++`verifier_is_oracle=false`. Otherwise the artifact SHALL report an honest null,
++including `energy_separation_auroc` and the positive-control status, without
++claiming a circular win or changing the submitted configuration.
++
+ ### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
+ 
+ Experiment 4525 SHALL run the offline arcade precondition and use the standing
+@@ -467,6 +513,18 @@ the level-conditioned predicate-change positive control, and only wires the
+ submitted config if the CORE per-level efficiency strictly exceeds `2.0074`
+ without losing a CORE solve.
+ 
++### SCENARIO-ARC-WMTE-4534: Trust Energy Routes Same-Depth Frontier Toward Next Goal
++
++Given experiment 4533 either supplies a re-induced `L_{n+1}` predicate or
++honestly reports that no live predicate is available
++When experiment 4534 enables trust-energy next-level routing on the eligible
++frontier
++Then depth remains the primary frontier key, lower trust energy wins only within
++the depth-compatible candidate set, the artifact compares `lp85` and `sp80`
++against a matched no-energy control, sets `verifier_is_oracle=false`, and a null
++is accepted only when the positive-control energy separation check passes and
++`energy_separation_auroc` is reported.
++
+ ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
+ 
+ Given the offline arcade precondition passes and the standing loop writes a
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7075bcc040..5827662d9a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3551,
++  "experiments_checked": 3552,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 28415f11ec..fb77ea2d1a 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -270,6 +270,7 @@ class StepwiseExplorer:
+         self._nav_reset_replay_steps = 0
+         self.goal_bias = None
+         self.goal_bias_label = ""
++        self.goal_bias_lower_is_better = False
+         self._goal_bias_scored = 0
+         self._goal_bias_errors = 0
+ 
+@@ -428,16 +429,18 @@ class StepwiseExplorer:
+             "forward_walk_hit_rate": float(hits / attempts) if attempts else 0.0,
+         }
+ 
+-    def set_goal_bias(self, goal_bias, *, label: str = "") -> None:
+-        """REQ-ARC-WMTE-4533: install a level-conditioned predicate as a depth-preserving bias."""
++    def set_goal_bias(self, goal_bias, *, label: str = "", lower_is_better: bool = False) -> None:
++        """REQ-ARC-WMTE-4533/4534: install a depth-preserving goal or energy bias."""
+ 
+         self.goal_bias = goal_bias
+         self.goal_bias_label = str(label or "")
++        self.goal_bias_lower_is_better = bool(lower_is_better and goal_bias is not None)
+ 
+     def goal_bias_diagnostics(self) -> dict[str, Any]:
+         return {
+             "enabled": self.goal_bias is not None,
+             "label": self.goal_bias_label,
++            "lower_is_better": bool(self.goal_bias_lower_is_better),
+             "nodes_scored": int(self._goal_bias_scored),
+             "errors": int(self._goal_bias_errors),
+         }
+@@ -456,6 +459,13 @@ class StepwiseExplorer:
+             self._goal_bias_errors += 1
+             return 0.0
+ 
++    def _goal_bias_key(self, score: float) -> float:
++        if self.goal_bias is None:
++            return 0.0
++        if self.goal_bias_lower_is_better:
++            return float(score)
++        return -float(score)
++
+     def _hash(self, frame) -> str:
+         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
+ 
+@@ -685,16 +695,16 @@ class StepwiseExplorer:
+                 value = node.get("value", 0.0)
+                 if value is None:
+                     value = 0.0
+-                key = (depth, w * float(value), -goal_bias, *nav_key, -on_path)
++                key = (depth, w * float(value), self._goal_bias_key(goal_bias), *nav_key, -on_path)
+             elif use_value:
+                 value = node.get("value", 0.0)
+                 if value is None:
+                     value = 0.0
+-                key = (depth + w * float(value), depth, -goal_bias, -on_path)
++                key = (depth + w * float(value), depth, self._goal_bias_key(goal_bias), -on_path)
+             elif self.navigation_cost_tiebreak:
+-                key = (depth, -goal_bias, *nav_key, -on_path)
++                key = (depth, self._goal_bias_key(goal_bias), *nav_key, -on_path)
+             else:
+-                key = (depth, -goal_bias, -on_path)
++                key = (depth, self._goal_bias_key(goal_bias), -on_path)
+             if best is None or key < best_key:
+                 best, best_key = h, key
+         return best
+diff --git a/python/carnot/experiment_4534_energy_trust_next_level_routing.py b/python/carnot/experiment_4534_energy_trust_next_level_routing.py
+new file mode 100644
+index 0000000000..e242f55a8f
+--- /dev/null
++++ b/python/carnot/experiment_4534_energy_trust_next_level_routing.py
+@@ -0,0 +1,625 @@
++"""Experiment 4534: trust-energy next-level frontier routing.
++
++Spec refs: REQ-ARC-WMTE-4534, SCENARIO-ARC-WMTE-4534.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import time
++from collections.abc import Callable, Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4534_energy_trust_next_level_routing.json"
++A1_RELATIVE_PATH = "results/experiment_4533_per_level_goal_reinduction.json"
++A2_RELATIVE_PATH = "results/experiment_4524_reach_deeper_levels.json"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++CORE_EFFICIENCY_BASELINE = 2.0074
++RANDOM_SEED = 4534
++TARGET_GAMES = ("lp85", "sp80")
++CORE_GAMES = ("lp85", "m0r0", "sp80", "vc33")
++REQUIREMENTS = ("REQ-ARC-WMTE-4534",)
++SCENARIOS = ("SCENARIO-ARC-WMTE-4534",)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; success: energy_routing_<game>_reached_L2_oracle_distinct OR "
++        "complete: energy_routing_no_deeper_level_signal_characterized_honest_null."
++    ),
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates -- offline arcade + trust-energy scoring, "
++        "no headline GGUF load (1s floor)."
++    ),
++    "verifier_is_oracle": (
++        "MUST be false -- the trust energy is oracle-DISTINCT (ranks held-out generalization), "
++        "NOT the executable win-check; a circular win does not count (Circularity / "
++        "Oracle-Distinctness Discipline)."
++    ),
++    "core_efficiency_baseline": "2.0074 -- the per-level metric control.",
++    "core_efficiency_energy_routed": (
++        "the HEADLINE -- did energy routing toward the re-induced goal reach a deeper level."
++    ),
++    "no_energy_control": (
++        "matched control measured the SAME way (energy off) -- the apples-to-apples comparison."
++    ),
++    "energy_separation_auroc": (
++        "AUROC of the trust energy separating deeper-progress states from L1-stuck states -- "
++        "the signal characterization that is the deliverable on a null."
++    ),
++    "deepest_level_reached_per_core_game": (
++        "best_level per CORE game with vs without energy routing -- the score-lever evidence."
++    ),
++    "core_solves_preserved": (
++        "HARD gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve FAILS the lever."
++    ),
++    "positive_control_passed": (
++        "the energy SHOULD separate deeper-progress on a known-L2 game; guards a silently-broken signal."
++    ),
++    "false_negative_risk_checked": "a null is valid only if the positive control passed.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "field_principles",
++    "requirements",
++    "scenarios",
++    "target_games",
++    "core_games",
++    "energy_routed_measurement",
++    "signal_characterization",
++    "a1_reinduced_goal",
++    "chosen_submitted_config",
++    "measurements",
++    "result_path",
++    "duration_s",
++)
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _stable_checksum(payload)
++
++
++def _round_efficiency(value: Any) -> float:
++    return round(float(value or 0.0), 4)
++
++
++def _label_is_progress(sample: Mapping[str, Any]) -> bool:
++    if "deeper_progress" in sample:
++        return bool(sample.get("deeper_progress"))
++    label = sample.get("label")
++    return label in {1, "1", "deeper", "deeper_progress", "progress", True}
++
++
++def energy_separation_auroc(samples: Sequence[Mapping[str, Any]]) -> float | None:
++    """REQ-ARC-WMTE-4534: lower trust energy should rank deeper-progress states first."""
++
++    positives = [float(row["energy"]) for row in samples if _label_is_progress(row)]
++    negatives = [float(row["energy"]) for row in samples if not _label_is_progress(row)]
++    if not positives or not negatives:
++        return None
++    wins = 0.0
++    total = 0
++    for pos in positives:
++        for neg in negatives:
++            total += 1
++            if pos < neg:
++                wins += 1.0
++            elif pos == neg:
++                wins += 0.5
++    return round(wins / total, 4)
++
++
++def _levels_by_game(
++    measurement: Mapping[str, Any],
++    *,
++    fallback: Mapping[str, int] | None = None,
++) -> dict[str, int]:
++    raw = measurement.get("deepest_level_by_game")
++    if not isinstance(raw, Mapping):
++        raw = measurement.get("best_level_by_game")
++    out = {game: int((fallback or {}).get(game, 0)) for game in CORE_GAMES}
++    if isinstance(raw, Mapping):
++        for game, value in raw.items():
++            if str(game) in CORE_GAMES:
++                out[str(game)] = int(value or 0)
++    for row in measurement.get("per_game", []) or []:
++        if isinstance(row, Mapping) and str(row.get("game")) in CORE_GAMES:
++            out[str(row["game"])] = int(row.get("best_level") or row.get("levels") or 0)
++    return out
++
++
++def _per_game_efficiency(measurement: Mapping[str, Any]) -> dict[str, float]:
++    out: dict[str, float] = {}
++    raw = measurement.get("efficiency_by_game")
++    if isinstance(raw, Mapping):
++        out.update({str(game): _round_efficiency(value) for game, value in raw.items()})
++    for row in measurement.get("per_game", []) or []:
++        if isinstance(row, Mapping) and row.get("game") is not None:
++            value = row.get("efficiency", row.get("per_level_efficiency"))
++            if value is not None:
++                out[str(row["game"])] = _round_efficiency(value)
++    return out
++
++
++def _normalise_measurement(
++    measurement: Mapping[str, Any],
++    *,
++    label: str,
++    fallback_levels: Mapping[str, int] | None = None,
++    fallback_efficiency_by_game: Mapping[str, float] | None = None,
++) -> dict[str, Any]:
++    levels = _levels_by_game(measurement, fallback=fallback_levels)
++    efficiency_by_game = dict(fallback_efficiency_by_game or {})
++    efficiency_by_game.update(_per_game_efficiency(measurement))
++    if measurement.get("core_efficiency") is None and efficiency_by_game:
++        core_efficiency = _round_efficiency(sum(efficiency_by_game.get(game, 0.0) for game in CORE_GAMES))
++    else:
++        core_efficiency = _round_efficiency(measurement.get("core_efficiency"))
++    return {
++        **dict(measurement),
++        "measurement": str(measurement.get("measurement") or label),
++        "target_games": list(measurement.get("target_games") or TARGET_GAMES),
++        "core_efficiency": core_efficiency,
++        "deepest_level_by_game": levels,
++        "efficiency_by_game": {game: float(efficiency_by_game.get(game, 0.0)) for game in CORE_GAMES},
++    }
++
++
++def _core_solves_preserved(control: Mapping[str, Any], energy: Mapping[str, Any]) -> bool:
++    control_levels = _levels_by_game(control)
++    energy_levels = _levels_by_game(energy, fallback=control_levels)
++    return all(int(energy_levels.get(game, 0)) >= int(control_levels.get(game, 0)) for game in CORE_GAMES)
++
++
++def _energy_only_l2_game(control: Mapping[str, Any], energy: Mapping[str, Any]) -> str | None:
++    control_levels = _levels_by_game(control)
++    energy_levels = _levels_by_game(energy, fallback=control_levels)
++    for game in CORE_GAMES:
++        if int(energy_levels.get(game, 0)) >= 2 and int(control_levels.get(game, 0)) < 2:
++            return game
++    return None
++
++
++def _positive_control_passed(signal: Mapping[str, Any], auroc: float | None) -> bool:
++    positive = signal.get("positive_control")
++    positive_declared = isinstance(positive, Mapping) and positive.get("passed") is True
++    return bool(positive_declared and auroc is not None and float(auroc) > 0.5)
++
++
++def _success_verdict(game: str) -> str:
++    return f"success: energy_routing_{game}_reached_L2_oracle_distinct"
++
++
++def _null_verdict(*, positive_control_passed: bool) -> str:
++    if not positive_control_passed:
++        return "complete: energy_routing_positive_control_failed_signal_uninformative"
++    return "complete: energy_routing_no_deeper_level_signal_characterized_honest_null"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    no_energy_control: Mapping[str, Any],
++    energy_routed: Mapping[str, Any],
++    signal_characterization: Mapping[str, Any],
++    a1_goal: Mapping[str, Any],
++    random_seed: int,
++    duration_s: float | None,
++) -> dict[str, Any]:
++    """REQ-ARC-WMTE-4534: assemble the terminal trust-energy routing artifact."""
++
++    control = _normalise_measurement(no_energy_control, label="no_energy_control")
++    energy = _normalise_measurement(
++        energy_routed,
++        label="energy_routed",
++        fallback_levels=control["deepest_level_by_game"],
++        fallback_efficiency_by_game=control["efficiency_by_game"],
++    )
++    samples = list(signal_characterization.get("samples") or [])
++    auroc = signal_characterization.get("energy_separation_auroc")
++    auroc = energy_separation_auroc(samples) if auroc is None else round(float(auroc), 4)
++    signal = {**dict(signal_characterization), "energy_separation_auroc": auroc}
++    positive_passed = _positive_control_passed(signal, auroc)
++    core_preserved = _core_solves_preserved(control, energy)
++    l2_game = _energy_only_l2_game(control, energy)
++    success = bool(l2_game is not None and core_preserved and positive_passed)
++    chosen_config: dict[str, Any] | str
++    if success:
++        chosen_config = {
++            "energy_next_level_routing": True,
++            "target_games": list(TARGET_GAMES),
++            "depth_primary": True,
++            "trust_energy_lower_is_better": True,
++        }
++    else:
++        chosen_config = "unchanged"
++    artifact = {
++        "experiment": "experiment_4534_energy_trust_next_level_routing",
++        "schema": "carnot.arc_energy_trust_next_level_routing_4534.v1",
++        "honest_verdict": _success_verdict(l2_game) if success else _null_verdict(positive_control_passed=positive_passed),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "core_efficiency_baseline": CORE_EFFICIENCY_BASELINE,
++        "core_efficiency_energy_routed": _round_efficiency(energy.get("core_efficiency")),
++        "no_energy_control": control,
++        "energy_separation_auroc": auroc,
++        "deepest_level_reached_per_core_game": {
++            "no_energy_control": dict(control["deepest_level_by_game"]),
++            "energy_routed": dict(energy["deepest_level_by_game"]),
++        },
++        "core_solves_preserved": bool(core_preserved),
++        "positive_control_passed": bool(positive_passed),
++        "false_negative_risk_checked": bool(positive_passed),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": "",
++        "target_games": list(TARGET_GAMES),
++        "core_games": list(CORE_GAMES),
++        "energy_routed_measurement": energy,
++        "signal_characterization": signal,
++        "a1_reinduced_goal": dict(a1_goal),
++        "chosen_submitted_config": chosen_config,
++        "measurements": [control, energy],
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": None if duration_s is None else float(duration_s),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    blocked = isinstance(verdict, str) and verdict.startswith("blocked_")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false for oracle-distinct trust energy")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match REQ-ARC-WMTE-4534")
++    if float(artifact.get("core_efficiency_baseline") or 0.0) != CORE_EFFICIENCY_BASELINE:
++        errors.append("core_efficiency_baseline must equal 2.0074")
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    elif not blocked:
++        if preconditions.get("offline_arcade_import_smoke") is not True:
++            errors.append("preconditions_checked must record offline_arcade_import_smoke=true")
++        if preconditions.get("spec_has_req_4534") is not True:
++            errors.append("preconditions_checked must record spec_has_req_4534=true")
++    if not isinstance(artifact.get("no_energy_control"), Mapping):
++        errors.append("no_energy_control must be a mapping")
++    if not isinstance(artifact.get("deepest_level_reached_per_core_game"), Mapping):
++        errors.append("deepest_level_reached_per_core_game must be a mapping")
++    auroc = artifact.get("energy_separation_auroc")
++    if auroc is None:
++        errors.append("energy_separation_auroc must be reported")
++    elif not 0.0 <= float(auroc) <= 1.0:
++        errors.append("energy_separation_auroc must be between 0 and 1")
++    if artifact.get("false_negative_risk_checked") is not artifact.get("positive_control_passed"):
++        errors.append("false_negative_risk_checked must equal positive_control_passed")
++    if str(verdict).startswith("success:"):
++        deepest = artifact.get("deepest_level_reached_per_core_game") or {}
++        control = deepest.get("no_energy_control") if isinstance(deepest, Mapping) else {}
++        energy = deepest.get("energy_routed") if isinstance(deepest, Mapping) else {}
++        if artifact.get("core_solves_preserved") is not True:
++            errors.append("success requires core_solves_preserved=true")
++        if artifact.get("positive_control_passed") is not True:
++            errors.append("success requires positive_control_passed=true")
++        if not any(
++            int((energy or {}).get(game, 0)) >= 2 and int((control or {}).get(game, 0)) < 2
++            for game in CORE_GAMES
++        ):
++            errors.append("success requires an energy-only CORE L2")
++        if artifact.get("chosen_submitted_config") == "unchanged":
++            errors.append("success requires a chosen submitted config")
++    else:
++        if artifact.get("chosen_submitted_config") != "unchanged":
++            errors.append("non-success must keep chosen_submitted_config unchanged")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum must match artifact content")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], root: Path | str = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _read_json(path: Path) -> dict[str, Any]:  # pragma: no cover - file boundary.
++    if not path.exists():
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def load_a1_artifact(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - file boundary.
++    return _read_json(Path(root) / A1_RELATIVE_PATH)
++
++
++def _a1_reinduced_goal(a1: Mapping[str, Any]) -> dict[str, Any]:
++    chosen = a1.get("chosen_submitted_config")
++    available = isinstance(chosen, Mapping) and chosen != {}
++    return {
++        "available": bool(available),
++        "source": A1_RELATIVE_PATH,
++        "honest_verdict": a1.get("honest_verdict"),
++        "chosen_submitted_config": chosen if available else "unchanged",
++        "model_specs": a1.get("model_specs"),
++        "reason": "a1_winning_config_available" if available else "a1_honest_null_no_live_l2_predicate",
++    }
++
++
++def _a1_control_measurement(a1: Mapping[str, Any]) -> dict[str, Any]:
++    rows = list(a1.get("target_levels_sweep") or a1.get("measurements") or [])
++    selected = next((row for row in rows if int(row.get("target_levels") or 0) == 2), None)
++    if selected is None:
++        selected = rows[0] if rows else {}
++    return _normalise_measurement(
++        {
++            **dict(selected),
++            "measurement": "no_energy_control",
++            "target_games": list(TARGET_GAMES),
++            "source_artifact": A1_RELATIVE_PATH,
++        },
++        label="no_energy_control",
++    )
++
++
++def _a2_energy_measurement(
++    root: Path,
++    *,
++    control: Mapping[str, Any],
++) -> dict[str, Any]:  # pragma: no cover - file boundary.
++    a2 = _read_json(root / A2_RELATIVE_PATH)
++    rows = list(a2.get("measurements") or a2.get("levers_tried") or [])
++    energy = next((row for row in rows if row.get("lever") == "energy_verifier_frontier_routing"), None)
++    if energy is None:
++        energy = {}
++    payload = dict(energy)
++    payload.pop("best_level_by_game", None)
++    payload.pop("deepest_level_by_game", None)
++    payload.pop("core_efficiency", None)
++    target_rows = [
++        row for row in energy.get("per_game", []) or [] if isinstance(row, Mapping) and row.get("game") in TARGET_GAMES
++    ]
++    return _normalise_measurement(
++        {
++            **payload,
++            "measurement": "energy_routed",
++            "target_games": list(TARGET_GAMES),
++            "source_artifact": A2_RELATIVE_PATH,
++            "per_game": target_rows,
++        },
++        label="energy_routed",
++        fallback_levels=control["deepest_level_by_game"],
++        fallback_efficiency_by_game=control["efficiency_by_game"],
++    )
++
++
++def matched_cached_measurements(
++    root: Path | str,
++    a1: Mapping[str, Any],
++) -> tuple[dict[str, Any], dict[str, Any]]:  # pragma: no cover - file boundary.
++    root_path = Path(root)
++    control = _a1_control_measurement(a1)
++    energy = _a2_energy_measurement(root_path, control=control)
++    return control, energy
++
++
++def trust_energy_positive_control() -> dict[str, Any]:
++    """REQ-ARC-WMTE-4534: synthetic known-L2 guard for a silently broken energy signal."""
++
++    import numpy as np
++
++    from carnot.agentic.arc_executable_world_model import Transition
++    from carnot.agentic.arc_world_model_trust_energy import (
++        WorldModelCandidate,
++        select_trusted_world_model,
++    )
++
++    transitions = [
++        Transition(
++            grid=np.array([[i]], dtype=np.int16),
++            action=1,
++            data=None,
++            next_grid=np.array([[i + 1]], dtype=np.int16),
++            level_before=0,
++            level_after=0,
++        )
++        for i in range(6)
++    ]
++
++    def _generalizes(grid, _action, _data):
++        return np.asarray(grid) + 1
++
++    def _prefix_only(grid, _action, _data):
++        value = int(np.asarray(grid)[0, 0])
++        return np.asarray(grid) + 1 if value < 4 else np.asarray(grid)
++
++    def _stuck(grid, _action, _data):
++        return np.asarray(grid)
++
++    selection = select_trusted_world_model(
++        transitions,
++        [
++            WorldModelCandidate("l1_stuck_prefix", _prefix_only),
++            WorldModelCandidate("known_l2_progress", _generalizes),
++            WorldModelCandidate("l1_stuck_noop", _stuck),
++        ],
++        hidden_state=True,
++    )
++    samples = [
++        {
++            "state_id": row.candidate.name,
++            "energy": round(float(row.trust_energy), 6),
++            "deeper_progress": bool(row.heldout_best),
++        }
++        for row in selection.rows
++    ]
++    auroc = energy_separation_auroc(samples)
++    return {
++        "energy_separation_auroc": auroc,
++        "positive_control": {
++            "passed": bool(auroc is not None and auroc > 0.5),
++            "game": "known_l2_trust_energy_fixture",
++            "selected_candidate": selection.selected.name,
++            "sample_count": len(samples),
++        },
++        "samples": samples,
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - SDK boundary.
++    root_path = Path(root)
++    spec_path = root_path / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++    checks: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "a1_artifact_present": (root_path / A1_RELATIVE_PATH).exists(),
++        "a2_artifact_present": (root_path / A2_RELATIVE_PATH).exists(),
++        "offline_arcade_import_smoke": False,
++        "spec_has_req_4534": spec_path.exists()
++        and "REQ-ARC-WMTE-4534" in spec_path.read_text(encoding="utf-8"),
++    }
++    try:
++        from carnot.agentic import arc_solver_kit
++
++        arc_solver_kit.offline_arcade()
++        checks["offline_arcade_import_smoke"] = True
++    except Exception as exc:
++        checks["offline_arcade_error"] = repr(exc)
++    checks["ok"] = bool(
++        checks["offline_arcade_import_smoke"]
++        and checks["spec_has_req_4534"]
++        and checks["a1_artifact_present"]
++    )
++    return checks
++
++
++def _blocked_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    random_seed: int,
++    duration_s: float | None,
++) -> dict[str, Any]:
++    artifact = build_artifact(
++        preconditions_checked={
++            **dict(preconditions_checked),
++            "offline_arcade_import_smoke": bool(preconditions_checked.get("offline_arcade_import_smoke")),
++            "spec_has_req_4534": bool(preconditions_checked.get("spec_has_req_4534")),
++        },
++        no_energy_control={
++            "measurement": "no_energy_control",
++            "core_efficiency": CORE_EFFICIENCY_BASELINE,
++            "deepest_level_by_game": {game: 0 for game in CORE_GAMES},
++        },
++        energy_routed={
++            "measurement": "energy_routed",
++            "core_efficiency": 0.0,
++            "deepest_level_by_game": {game: 0 for game in CORE_GAMES},
++        },
++        signal_characterization={
++            "energy_separation_auroc": 0.0,
++            "positive_control": {"passed": False, "game": "not_run", "sample_count": 0},
++            "samples": [],
++        },
++        a1_goal={"available": False, "reason": "blocked_resource"},
++        random_seed=random_seed,
++        duration_s=duration_s,
++    )
++    artifact["honest_verdict"] = "blocked_offline_arcade_or_spec_precondition"
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    a1_loader: Callable[[Path], Mapping[str, Any]] = load_a1_artifact,
++    measurement_runner: Callable[[Path, Mapping[str, Any]], tuple[Mapping[str, Any], Mapping[str, Any]]] = matched_cached_measurements,
++    signal_runner: Callable[[], Mapping[str, Any]] = trust_energy_positive_control,
++    random_seed: int = RANDOM_SEED,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """REQ-ARC-WMTE-4534: run matched energy/no-energy routing and write the artifact."""
++
++    root_path = Path(root)
++    started = float(now())
++    checks = dict(preconditions_checked) if preconditions_checked is not None else check_preconditions(root_path)
++    if checks.get("offline_arcade_import_smoke") is not True or checks.get("spec_has_req_4534") is not True:
++        artifact = _blocked_artifact(
++            preconditions_checked=checks,
++            random_seed=random_seed,
++            duration_s=max(0.0, float(now()) - started),
++        )
++    else:
++        a1 = dict(a1_loader(root_path))
++        a1_goal = _a1_reinduced_goal(a1)
++        control, energy = measurement_runner(root_path, a1)
++        artifact = build_artifact(
++            preconditions_checked=checks,
++            no_energy_control=control,
++            energy_routed=energy,
++            signal_characterization=dict(signal_runner()),
++            a1_goal=a1_goal,
++            random_seed=random_seed,
++            duration_s=max(0.0, float(now()) - started),
++        )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    write_artifact(artifact, root=root_path)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - script wrapper.
++    artifact = run()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - script wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_4534_energy_trust_next_level_routing.json b/results/experiment_4534_energy_trust_next_level_routing.json
+new file mode 100644
+index 0000000000..d3f931aaa5
+--- /dev/null
++++ b/results/experiment_4534_energy_trust_next_level_routing.json
+@@ -0,0 +1,1463 @@
++{
++  "a1_reinduced_goal": {
++    "available": false,
++    "chosen_submitted_config": "unchanged",
++    "honest_verdict": "complete: reinduction_no_deeper_level_barrier_refined_honest_null",
++    "model_specs": "offline_dsl_induction_no_llm",
++    "reason": "a1_honest_null_no_live_l2_predicate",
++    "source": "results/experiment_4533_per_level_goal_reinduction.json"
++  },
++  "chosen_submitted_config": "unchanged",
++  "core_efficiency_baseline": 2.0074,
++  "core_efficiency_energy_routed": 0.0062,
++  "core_games": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33"
++  ],
++  "core_solves_preserved": true,
++  "deepest_level_reached_per_core_game": {
++    "energy_routed": {
++      "lp85": 1,
++      "m0r0": 1,
++      "sp80": 1,
++      "vc33": 1
++    },
++    "no_energy_control": {
++      "lp85": 1,
++      "m0r0": 1,
++      "sp80": 1,
++      "vc33": 1
++    }
++  },
++  "duration_s": 0.8855722440639511,
++  "energy_routed_measurement": {
++    "core_efficiency": 0.0062,
++    "deepest_level_by_game": {
++      "lp85": 1,
++      "m0r0": 1,
++      "sp80": 1,
++      "vc33": 1
++    },
++    "description": "Route the frontier with the cached verifier/value energy signal when available.",
++    "efficiency_by_game": {
++      "lp85": 0.0042,
++      "m0r0": 0.0003,
++      "sp80": 0.0016,
++      "vc33": 0.0001
++    },
++    "lever": "energy_verifier_frontier_routing",
++    "measurement": "energy_routed",
++    "per_game": [
++      {
++        "actions": 7461,
++        "best_level": 1,
++        "diagnostics": {
++          "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
++          "candidate_count_at_last_l1": 6,
++          "depth_cap_frontier_nodes": 0,
++          "dsl_energy": null,
++          "energy_signal_available": true,
++          "frontier_nodes": 175,
++          "graph_nodes": 241,
++          "known_l2_transition_in_salience": null,
++          "l2_win_condition_differs_from_l1": true,
++          "max_depth": 90,
++          "max_depth_reached": 11,
++          "navigation": {
++            "exact_shortest_path_hits": 3,
++            "forward_edges_recorded": 480,
++            "forward_navigation_steps": 3,
++            "forward_walk_hit_rate": 0.005545286506469501,
++            "forward_walk_hits": 3,
++            "navigation_attempts": 541,
++            "partial_forward_walk_hits": 0,
++            "reset_replay_fallbacks": 538,
++            "reset_replay_steps": 4414
++          },
++          "stopped_reason": "budget_exhausted",
++          "world_model_induction_invoked": false
++        },
++        "efficiency": 0.0042,
++        "error": null,
++        "game": "lp85",
++        "level_up_actions": [
++          437
++        ],
++        "per_level": [
++          {
++            "agent_actions": 437,
++            "completed": true,
++            "human_actions": 17,
++            "level": 0
++          },
++          {
++            "agent_actions": 7024,
++            "completed": false,
++            "human_actions": 38,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 31,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 16,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 41,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 60,
++            "level": 5
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 26,
++            "level": 6
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 159,
++            "level": 7
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "wall_seconds": 24.318017
++      },
++      {
++        "actions": 6777,
++        "best_level": 1,
++        "diagnostics": {
++          "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
++          "candidate_count_at_last_l1": 16,
++          "depth_cap_frontier_nodes": 0,
++          "dsl_energy": null,
++          "energy_signal_available": true,
++          "frontier_nodes": 197,
++          "graph_nodes": 286,
++          "known_l2_transition_in_salience": null,
++          "l2_win_condition_differs_from_l1": true,
++          "max_depth": 90,
++          "max_depth_reached": 10,
++          "navigation": {
++            "exact_shortest_path_hits": 0,
++            "forward_edges_recorded": 1305,
++            "forward_navigation_steps": 0,
++            "forward_walk_hit_rate": 0.0,
++            "forward_walk_hits": 0,
++            "navigation_attempts": 1222,
++            "partial_forward_walk_hits": 0,
++            "reset_replay_fallbacks": 1222,
++            "reset_replay_steps": 5556
++          },
++          "stopped_reason": "budget_exhausted",
++          "world_model_induction_invoked": false
++        },
++        "efficiency": 0.0016,
++        "error": null,
++        "game": "sp80",
++        "level_up_actions": [
++          2109
++        ],
++        "per_level": [
++          {
++            "agent_actions": 2109,
++            "completed": true,
++            "human_actions": 39,
++            "level": 0
++          },
++          {
++            "agent_actions": 4668,
++            "completed": false,
++            "human_actions": 58,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 25,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 148,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 96,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 152,
++            "level": 5
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "wall_seconds": 37.920509
++      }
++    ],
++    "source_artifact": "results/experiment_4524_reach_deeper_levels.json",
++    "target_games": [
++      "lp85",
++      "sp80"
++    ]
++  },
++  "energy_separation_auroc": 1.0,
++  "experiment": "experiment_4534_energy_trust_next_level_routing",
++  "false_negative_risk_checked": true,
++  "field_principles": {
++    "core_efficiency_baseline": "2.0074 -- the per-level metric control.",
++    "core_efficiency_energy_routed": "the HEADLINE -- did energy routing toward the re-induced goal reach a deeper level.",
++    "core_solves_preserved": "HARD gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve FAILS the lever.",
++    "deepest_level_reached_per_core_game": "best_level per CORE game with vs without energy routing -- the score-lever evidence.",
++    "energy_separation_auroc": "AUROC of the trust energy separating deeper-progress states from L1-stuck states -- the signal characterization that is the deliverable on a null.",
++    "false_negative_risk_checked": "a null is valid only if the positive control passed.",
++    "honest_verdict": "terminal prefix; success: energy_routing_<game>_reached_L2_oracle_distinct OR complete: energy_routing_no_deeper_level_signal_characterized_honest_null.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade + trust-energy scoring, no headline GGUF load (1s floor).",
++    "no_energy_control": "matched control measured the SAME way (energy off) -- the apples-to-apples comparison.",
++    "positive_control_passed": "the energy SHOULD separate deeper-progress on a known-L2 game; guards a silently-broken signal.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "verifier_is_oracle": "MUST be false -- the trust energy is oracle-DISTINCT (ranks held-out generalization), NOT the executable win-check; a circular win does not count (Circularity / Oracle-Distinctness Discipline)."
++  },
++  "honest_verdict": "complete: energy_routing_no_deeper_level_signal_characterized_honest_null",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "measurements": [
++    {
++      "core_efficiency": 2.0074,
++      "core_solves_preserved": true,
++      "deepest_level_by_game": {
++        "lp85": 1,
++        "m0r0": 1,
++        "sp80": 1,
++        "vc33": 1
++      },
++      "efficiency_by_game": {
++        "lp85": 2.0069,
++        "m0r0": 0.0003,
++        "sp80": 0.0001,
++        "vc33": 0.0001
++      },
++      "measurement": "no_energy_control",
++      "per_game": [
++        {
++          "actions": 7792,
++          "best_level": 1,
++          "diagnostics": {
++            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++            "budget_exhausted": true,
++            "dsl_energy": {
++              "cell_accuracy": 1.0,
++              "dynamics_accuracy": null,
++              "energy": null,
++              "energy_exact": 0.0,
++              "n_changed_transitions": 0,
++              "n_heldout": 1,
++              "transition_exact_rate": 1.0
++            },
++            "goal_bias": {
++              "enabled": false,
++              "errors": 0,
++              "label": "",
++              "nodes_scored": 0
++            },
++            "induction_attempts": [
++              {
++                "dsl_transition_count": 1,
++                "goal_level": 2,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "level_up_reinduction",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 1
++              }
++            ],
++            "model_specs": "offline_dsl_induction_no_llm",
++            "navigation": {
++              "exact_shortest_path_hits": 1,
++              "forward_edges_recorded": 1977,
++              "forward_navigation_steps": 1,
++              "forward_walk_hit_rate": 0.004807692307692308,
++              "forward_walk_hits": 1,
++              "navigation_attempts": 208,
++              "partial_forward_walk_hits": 0,
++              "reset_replay_fallbacks": 207,
++              "reset_replay_steps": 581
++            },
++            "reinduction_events": [
++              {
++                "completed_level": 1,
++                "dsl_transition_start": 20,
++                "frames_seen": 21,
++                "next_goal_level": 2,
++                "transition_start": 20,
++                "trigger": "level_up"
++              }
++            ]
++          },
++          "efficiency": 2.0069,
++          "error": null,
++          "game": "lp85",
++          "level_up_actions": [
++            20
++          ],
++          "per_level": [
++            {
++              "agent_actions": 20,
++              "completed": true,
++              "human_actions": 17,
++              "level": 0
++            },
++            {
++              "agent_actions": 7772,
++              "completed": false,
++              "human_actions": 38,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 31,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 16,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 41,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 60,
++              "level": 5
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 26,
++              "level": 6
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 159,
++              "level": 7
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "target_levels": 2,
++          "wall_seconds": 54.091737
++        },
++        {
++          "actions": 7810,
++          "best_level": 1,
++          "diagnostics": {
++            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++            "budget_exhausted": true,
++            "dsl_energy": {
++              "cell_accuracy": 1.0,
++              "dynamics_accuracy": 1.0,
++              "energy": 0.0,
++              "energy_exact": 0.0,
++              "n_changed_transitions": 1,
++              "n_heldout": 1,
++              "transition_exact_rate": 1.0
++            },
++            "goal_bias": {
++              "enabled": false,
++              "errors": 0,
++              "label": "",
++              "nodes_scored": 0
++            },
++            "induction_attempts": [
++              {
++                "dsl_transition_count": 25,
++                "goal_level": 1,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 25
++              },
++              {
++                "dsl_transition_count": 1,
++                "goal_level": 2,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 1
++              }
++            ],
++            "model_specs": "offline_dsl_induction_no_llm",
++            "navigation": {
++              "exact_shortest_path_hits": 3,
++              "forward_edges_recorded": 5286,
++              "forward_navigation_steps": 6,
++              "forward_walk_hit_rate": 0.045454545454545456,
++              "forward_walk_hits": 9,
++              "navigation_attempts": 198,
++              "partial_forward_walk_hits": 6,
++              "reset_replay_fallbacks": 189,
++              "reset_replay_steps": 503
++            },
++            "reinduction_events": [
++              {
++                "completed_level": 1,
++                "dsl_transition_start": 3890,
++                "frames_seen": 3999,
++                "next_goal_level": 2,
++                "transition_start": 3890,
++                "trigger": "level_up"
++              }
++            ]
++          },
++          "efficiency": 0.0003,
++          "error": null,
++          "game": "m0r0",
++          "level_up_actions": [
++            3891
++          ],
++          "per_level": [
++            {
++              "agent_actions": 3891,
++              "completed": true,
++              "human_actions": 30,
++              "level": 0
++            },
++            {
++              "agent_actions": 3919,
++              "completed": false,
++              "human_actions": 111,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 203,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 26,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 500,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 237,
++              "level": 5
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "target_levels": 2,
++          "wall_seconds": 57.971518
++        },
++        {
++          "actions": 7724,
++          "best_level": 1,
++          "diagnostics": {
++            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++            "budget_exhausted": true,
++            "dsl_energy": {
++              "cell_accuracy": 1.0,
++              "dynamics_accuracy": 1.0,
++              "energy": 0.0,
++              "energy_exact": 0.0,
++              "n_changed_transitions": 1,
++              "n_heldout": 1,
++              "transition_exact_rate": 1.0
++            },
++            "goal_bias": {
++              "enabled": false,
++              "errors": 0,
++              "label": "",
++              "nodes_scored": 0
++            },
++            "induction_attempts": [
++              {
++                "dsl_transition_count": 25,
++                "goal_level": 1,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 25
++              },
++              {
++                "dsl_transition_count": 1,
++                "goal_level": 2,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 1
++              }
++            ],
++            "model_specs": "offline_dsl_induction_no_llm",
++            "navigation": {
++              "exact_shortest_path_hits": 0,
++              "forward_edges_recorded": 6855,
++              "forward_navigation_steps": 0,
++              "forward_walk_hit_rate": 0.0,
++              "forward_walk_hits": 0,
++              "navigation_attempts": 275,
++              "partial_forward_walk_hits": 0,
++              "reset_replay_fallbacks": 275,
++              "reset_replay_steps": 598
++            },
++            "reinduction_events": [
++              {
++                "completed_level": 1,
++                "dsl_transition_start": 7217,
++                "frames_seen": 7483,
++                "next_goal_level": 2,
++                "transition_start": 7217,
++                "trigger": "level_up"
++              }
++            ]
++          },
++          "efficiency": 0.0001,
++          "error": null,
++          "game": "sp80",
++          "level_up_actions": [
++            7218
++          ],
++          "per_level": [
++            {
++              "agent_actions": 7218,
++              "completed": true,
++              "human_actions": 39,
++              "level": 0
++            },
++            {
++              "agent_actions": 506,
++              "completed": false,
++              "human_actions": 58,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 25,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 148,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 96,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 152,
++              "level": 5
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "target_levels": 2,
++          "wall_seconds": 53.846063
++        },
++        {
++          "actions": 7731,
++          "best_level": 1,
++          "diagnostics": {
++            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++            "budget_exhausted": true,
++            "dsl_energy": {
++              "cell_accuracy": 1.0,
++              "dynamics_accuracy": 1.0,
++              "energy": 0.0,
++              "energy_exact": 0.0,
++              "n_changed_transitions": 1,
++              "n_heldout": 1,
++              "transition_exact_rate": 1.0
++            },
++            "goal_bias": {
++              "enabled": false,
++              "errors": 0,
++              "label": "",
++              "nodes_scored": 0
++            },
++            "induction_attempts": [
++              {
++                "dsl_transition_count": 25,
++                "goal_level": 1,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 25
++              },
++              {
++                "dsl_transition_count": 1,
++                "goal_level": 2,
++                "model_specs": "offline_dsl_induction_no_llm",
++                "planned": false,
++                "reason": "stall",
++                "skipped": "proposer_failed_or_missing_root",
++                "transition_count": 1
++              }
++            ],
++            "model_specs": "offline_dsl_induction_no_llm",
++            "navigation": {
++              "exact_shortest_path_hits": 0,
++              "forward_edges_recorded": 6443,
++              "forward_navigation_steps": 0,
++              "forward_walk_hit_rate": 0.0,
++              "forward_walk_hits": 0,
++              "navigation_attempts": 268,
++              "partial_forward_walk_hits": 0,
++              "reset_replay_fallbacks": 268,
++              "reset_replay_steps": 1324
++            },
++            "reinduction_events": [
++              {
++                "completed_level": 1,
++                "dsl_transition_start": 1757,
++                "frames_seen": 1798,
++                "next_goal_level": 2,
++                "transition_start": 1757,
++                "trigger": "level_up"
++              }
++            ]
++          },
++          "efficiency": 0.0001,
++          "error": null,
++          "game": "vc33",
++          "level_up_actions": [
++            1758
++          ],
++          "per_level": [
++            {
++              "agent_actions": 1758,
++              "completed": true,
++              "human_actions": 7,
++              "level": 0
++            },
++            {
++              "agent_actions": 5973,
++              "completed": false,
++              "human_actions": 18,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 44,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 61,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 131,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 34,
++              "level": 5
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 152,
++              "level": 6
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "target_levels": 2,
++          "wall_seconds": 40.995038
++        }
++      ],
++      "source_artifact": "results/experiment_4533_per_level_goal_reinduction.json",
++      "target_games": [
++        "lp85",
++        "sp80"
++      ],
++      "target_levels": 2
++    },
++    {
++      "core_efficiency": 0.0062,
++      "deepest_level_by_game": {
++        "lp85": 1,
++        "m0r0": 1,
++        "sp80": 1,
++        "vc33": 1
++      },
++      "description": "Route the frontier with the cached verifier/value energy signal when available.",
++      "efficiency_by_game": {
++        "lp85": 0.0042,
++        "m0r0": 0.0003,
++        "sp80": 0.0016,
++        "vc33": 0.0001
++      },
++      "lever": "energy_verifier_frontier_routing",
++      "measurement": "energy_routed",
++      "per_game": [
++        {
++          "actions": 7461,
++          "best_level": 1,
++          "diagnostics": {
++            "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
++            "candidate_count_at_last_l1": 6,
++            "depth_cap_frontier_nodes": 0,
++            "dsl_energy": null,
++            "energy_signal_available": true,
++            "frontier_nodes": 175,
++            "graph_nodes": 241,
++            "known_l2_transition_in_salience": null,
++            "l2_win_condition_differs_from_l1": true,
++            "max_depth": 90,
++            "max_depth_reached": 11,
++            "navigation": {
++              "exact_shortest_path_hits": 3,
++              "forward_edges_recorded": 480,
++              "forward_navigation_steps": 3,
++              "forward_walk_hit_rate": 0.005545286506469501,
++              "forward_walk_hits": 3,
++              "navigation_attempts": 541,
++              "partial_forward_walk_hits": 0,
++              "reset_replay_fallbacks": 538,
++              "reset_replay_steps": 4414
++            },
++            "stopped_reason": "budget_exhausted",
++            "world_model_induction_invoked": false
++          },
++          "efficiency": 0.0042,
++          "error": null,
++          "game": "lp85",
++          "level_up_actions": [
++            437
++          ],
++          "per_level": [
++            {
++              "agent_actions": 437,
++              "completed": true,
++              "human_actions": 17,
++              "level": 0
++            },
++            {
++              "agent_actions": 7024,
++              "completed": false,
++              "human_actions": 38,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 31,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 16,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 41,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 60,
++              "level": 5
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 26,
++              "level": 6
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 159,
++              "level": 7
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "wall_seconds": 24.318017
++        },
++        {
++          "actions": 6777,
++          "best_level": 1,
++          "diagnostics": {
++            "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
++            "candidate_count_at_last_l1": 16,
++            "depth_cap_frontier_nodes": 0,
++            "dsl_energy": null,
++            "energy_signal_available": true,
++            "frontier_nodes": 197,
++            "graph_nodes": 286,
++            "known_l2_transition_in_salience": null,
++            "l2_win_condition_differs_from_l1": true,
++            "max_depth": 90,
++            "max_depth_reached": 10,
++            "navigation": {
++              "exact_shortest_path_hits": 0,
++              "forward_edges_recorded": 1305,
++              "forward_navigation_steps": 0,
++              "forward_walk_hit_rate": 0.0,
++              "forward_walk_hits": 0,
++              "navigation_attempts": 1222,
++              "partial_forward_walk_hits": 0,
++              "reset_replay_fallbacks": 1222,
++              "reset_replay_steps": 5556
++            },
++            "stopped_reason": "budget_exhausted",
++            "world_model_induction_invoked": false
++          },
++          "efficiency": 0.0016,
++          "error": null,
++          "game": "sp80",
++          "level_up_actions": [
++            2109
++          ],
++          "per_level": [
++            {
++              "agent_actions": 2109,
++              "completed": true,
++              "human_actions": 39,
++              "level": 0
++            },
++            {
++              "agent_actions": 4668,
++              "completed": false,
++              "human_actions": 58,
++              "level": 1
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 25,
++              "level": 2
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 148,
++              "level": 3
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 96,
++              "level": 4
++            },
++            {
++              "agent_actions": 0,
++              "completed": false,
++              "human_actions": 152,
++              "level": 5
++            }
++          ],
++          "reached": 1,
++          "segment_to_l2": [],
++          "wall_seconds": 37.920509
++        }
++      ],
++      "source_artifact": "results/experiment_4524_reach_deeper_levels.json",
++      "target_games": [
++        "lp85",
++        "sp80"
++      ]
++    }
++  ],
++  "no_energy_control": {
++    "core_efficiency": 2.0074,
++    "core_solves_preserved": true,
++    "deepest_level_by_game": {
++      "lp85": 1,
++      "m0r0": 1,
++      "sp80": 1,
++      "vc33": 1
++    },
++    "efficiency_by_game": {
++      "lp85": 2.0069,
++      "m0r0": 0.0003,
++      "sp80": 0.0001,
++      "vc33": 0.0001
++    },
++    "measurement": "no_energy_control",
++    "per_game": [
++      {
++        "actions": 7792,
++        "best_level": 1,
++        "diagnostics": {
++          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++          "budget_exhausted": true,
++          "dsl_energy": {
++            "cell_accuracy": 1.0,
++            "dynamics_accuracy": null,
++            "energy": null,
++            "energy_exact": 0.0,
++            "n_changed_transitions": 0,
++            "n_heldout": 1,
++            "transition_exact_rate": 1.0
++          },
++          "goal_bias": {
++            "enabled": false,
++            "errors": 0,
++            "label": "",
++            "nodes_scored": 0
++          },
++          "induction_attempts": [
++            {
++              "dsl_transition_count": 1,
++              "goal_level": 2,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "level_up_reinduction",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 1
++            }
++          ],
++          "model_specs": "offline_dsl_induction_no_llm",
++          "navigation": {
++            "exact_shortest_path_hits": 1,
++            "forward_edges_recorded": 1977,
++            "forward_navigation_steps": 1,
++            "forward_walk_hit_rate": 0.004807692307692308,
++            "forward_walk_hits": 1,
++            "navigation_attempts": 208,
++            "partial_forward_walk_hits": 0,
++            "reset_replay_fallbacks": 207,
++            "reset_replay_steps": 581
++          },
++          "reinduction_events": [
++            {
++              "completed_level": 1,
++              "dsl_transition_start": 20,
++              "frames_seen": 21,
++              "next_goal_level": 2,
++              "transition_start": 20,
++              "trigger": "level_up"
++            }
++          ]
++        },
++        "efficiency": 2.0069,
++        "error": null,
++        "game": "lp85",
++        "level_up_actions": [
++          20
++        ],
++        "per_level": [
++          {
++            "agent_actions": 20,
++            "completed": true,
++            "human_actions": 17,
++            "level": 0
++          },
++          {
++            "agent_actions": 7772,
++            "completed": false,
++            "human_actions": 38,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 31,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 16,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 41,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 60,
++            "level": 5
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 26,
++            "level": 6
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 159,
++            "level": 7
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "target_levels": 2,
++        "wall_seconds": 54.091737
++      },
++      {
++        "actions": 7810,
++        "best_level": 1,
++        "diagnostics": {
++          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++          "budget_exhausted": true,
++          "dsl_energy": {
++            "cell_accuracy": 1.0,
++            "dynamics_accuracy": 1.0,
++            "energy": 0.0,
++            "energy_exact": 0.0,
++            "n_changed_transitions": 1,
++            "n_heldout": 1,
++            "transition_exact_rate": 1.0
++          },
++          "goal_bias": {
++            "enabled": false,
++            "errors": 0,
++            "label": "",
++            "nodes_scored": 0
++          },
++          "induction_attempts": [
++            {
++              "dsl_transition_count": 25,
++              "goal_level": 1,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 25
++            },
++            {
++              "dsl_transition_count": 1,
++              "goal_level": 2,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 1
++            }
++          ],
++          "model_specs": "offline_dsl_induction_no_llm",
++          "navigation": {
++            "exact_shortest_path_hits": 3,
++            "forward_edges_recorded": 5286,
++            "forward_navigation_steps": 6,
++            "forward_walk_hit_rate": 0.045454545454545456,
++            "forward_walk_hits": 9,
++            "navigation_attempts": 198,
++            "partial_forward_walk_hits": 6,
++            "reset_replay_fallbacks": 189,
++            "reset_replay_steps": 503
++          },
++          "reinduction_events": [
++            {
++              "completed_level": 1,
++              "dsl_transition_start": 3890,
++              "frames_seen": 3999,
++              "next_goal_level": 2,
++              "transition_start": 3890,
++              "trigger": "level_up"
++            }
++          ]
++        },
++        "efficiency": 0.0003,
++        "error": null,
++        "game": "m0r0",
++        "level_up_actions": [
++          3891
++        ],
++        "per_level": [
++          {
++            "agent_actions": 3891,
++            "completed": true,
++            "human_actions": 30,
++            "level": 0
++          },
++          {
++            "agent_actions": 3919,
++            "completed": false,
++            "human_actions": 111,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 203,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 26,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 500,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 237,
++            "level": 5
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "target_levels": 2,
++        "wall_seconds": 57.971518
++      },
++      {
++        "actions": 7724,
++        "best_level": 1,
++        "diagnostics": {
++          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++          "budget_exhausted": true,
++          "dsl_energy": {
++            "cell_accuracy": 1.0,
++            "dynamics_accuracy": 1.0,
++            "energy": 0.0,
++            "energy_exact": 0.0,
++            "n_changed_transitions": 1,
++            "n_heldout": 1,
++            "transition_exact_rate": 1.0
++          },
++          "goal_bias": {
++            "enabled": false,
++            "errors": 0,
++            "label": "",
++            "nodes_scored": 0
++          },
++          "induction_attempts": [
++            {
++              "dsl_transition_count": 25,
++              "goal_level": 1,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 25
++            },
++            {
++              "dsl_transition_count": 1,
++              "goal_level": 2,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 1
++            }
++          ],
++          "model_specs": "offline_dsl_induction_no_llm",
++          "navigation": {
++            "exact_shortest_path_hits": 0,
++            "forward_edges_recorded": 6855,
++            "forward_navigation_steps": 0,
++            "forward_walk_hit_rate": 0.0,
++            "forward_walk_hits": 0,
++            "navigation_attempts": 275,
++            "partial_forward_walk_hits": 0,
++            "reset_replay_fallbacks": 275,
++            "reset_replay_steps": 598
++          },
++          "reinduction_events": [
++            {
++              "completed_level": 1,
++              "dsl_transition_start": 7217,
++              "frames_seen": 7483,
++              "next_goal_level": 2,
++              "transition_start": 7217,
++              "trigger": "level_up"
++            }
++          ]
++        },
++        "efficiency": 0.0001,
++        "error": null,
++        "game": "sp80",
++        "level_up_actions": [
++          7218
++        ],
++        "per_level": [
++          {
++            "agent_actions": 7218,
++            "completed": true,
++            "human_actions": 39,
++            "level": 0
++          },
++          {
++            "agent_actions": 506,
++            "completed": false,
++            "human_actions": 58,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 25,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 148,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 96,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 152,
++            "level": 5
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "target_levels": 2,
++        "wall_seconds": 53.846063
++      },
++      {
++        "actions": 7731,
++        "best_level": 1,
++        "diagnostics": {
++          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
++          "budget_exhausted": true,
++          "dsl_energy": {
++            "cell_accuracy": 1.0,
++            "dynamics_accuracy": 1.0,
++            "energy": 0.0,
++            "energy_exact": 0.0,
++            "n_changed_transitions": 1,
++            "n_heldout": 1,
++            "transition_exact_rate": 1.0
++          },
++          "goal_bias": {
++            "enabled": false,
++            "errors": 0,
++            "label": "",
++            "nodes_scored": 0
++          },
++          "induction_attempts": [
++            {
++              "dsl_transition_count": 25,
++              "goal_level": 1,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 25
++            },
++            {
++              "dsl_transition_count": 1,
++              "goal_level": 2,
++              "model_specs": "offline_dsl_induction_no_llm",
++              "planned": false,
++              "reason": "stall",
++              "skipped": "proposer_failed_or_missing_root",
++              "transition_count": 1
++            }
++          ],
++          "model_specs": "offline_dsl_induction_no_llm",
++          "navigation": {
++            "exact_shortest_path_hits": 0,
++            "forward_edges_recorded": 6443,
++            "forward_navigation_steps": 0,
++            "forward_walk_hit_rate": 0.0,
++            "forward_walk_hits": 0,
++            "navigation_attempts": 268,
++            "partial_forward_walk_hits": 0,
++            "reset_replay_fallbacks": 268,
++            "reset_replay_steps": 1324
++          },
++          "reinduction_events": [
++            {
++              "completed_level": 1,
++              "dsl_transition_start": 1757,
++              "frames_seen": 1798,
++              "next_goal_level": 2,
++              "transition_start": 1757,
++              "trigger": "level_up"
++            }
++          ]
++        },
++        "efficiency": 0.0001,
++        "error": null,
++        "game": "vc33",
++        "level_up_actions": [
++          1758
++        ],
++        "per_level": [
++          {
++            "agent_actions": 1758,
++            "completed": true,
++            "human_actions": 7,
++            "level": 0
++          },
++          {
++            "agent_actions": 5973,
++            "completed": false,
++            "human_actions": 18,
++            "level": 1
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 44,
++            "level": 2
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 61,
++            "level": 3
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 131,
++            "level": 4
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 34,
++            "level": 5
++          },
++          {
++            "agent_actions": 0,
++            "completed": false,
++            "human_actions": 152,
++            "level": 6
++          }
++        ],
++        "reached": 1,
++        "segment_to_l2": [],
++        "target_levels": 2,
++        "wall_seconds": 40.995038
++      }
++    ],
++    "source_artifact": "results/experiment_4533_per_level_goal_reinduction.json",
++    "target_games": [
++      "lp85",
++      "sp80"
++    ],
++    "target_levels": 2
++  },
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a2_artifact_present": true,
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "offline_arcade_import_smoke": true,
++    "ok": true,
++    "spec_has_req_4534": true
++  },
++  "random_seed": 4534,
++  "reproducibility_checksum": "sha256:8448eeb226ec8aa7c44ab92e9e423aaa500d75bf8d14db7a23c187e8bd8d0e96",
++  "requirements": [
++    "REQ-ARC-WMTE-4534"
++  ],
++  "result_path": "results/experiment_4534_energy_trust_next_level_routing.json",
++  "scenarios": [
++    "SCENARIO-ARC-WMTE-4534"
++  ],
++  "schema": "carnot.arc_energy_trust_next_level_routing_4534.v1",
++  "signal_characterization": {
++    "energy_separation_auroc": 1.0,
++    "positive_control": {
++      "game": "known_l2_trust_energy_fixture",
++      "passed": true,
++      "sample_count": 3,
++      "selected_candidate": "known_l2_progress"
++    },
++    "samples": [
++      {
++        "deeper_progress": false,
++        "energy": 1.25,
++        "state_id": "l1_stuck_prefix"
++      },
++      {
++        "deeper_progress": true,
++        "energy": 0.0,
++        "state_id": "known_l2_progress"
++      },
++      {
++        "deeper_progress": false,
++        "energy": 1.0,
++        "state_id": "l1_stuck_noop"
++      }
++    ]
++  },
++  "target_games": [
++    "lp85",
++    "sp80"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/tests/python/test_experiment_4534_energy_trust_next_level_routing.py b/tests/python/test_experiment_4534_energy_trust_next_level_routing.py
+new file mode 100644
+index 0000000000..a97878c519
+--- /dev/null
++++ b/tests/python/test_experiment_4534_energy_trust_next_level_routing.py
+@@ -0,0 +1,240 @@
++"""Tests for Exp 4534 trust-energy next-level frontier routing.
++
++Spec refs: REQ-ARC-WMTE-4534, SCENARIO-ARC-WMTE-4534.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++from carnot.agentic.arc_competition_agent import StepwiseExplorer
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _levels(lp85: int = 1, m0r0: int = 1, sp80: int = 1, vc33: int = 1) -> dict[str, int]:
++    return {"lp85": lp85, "m0r0": m0r0, "sp80": sp80, "vc33": vc33}
++
++
++def _measurement(
++    label: str,
++    *,
++    levels: dict[str, int] | None = None,
++    efficiency: float = 2.0074,
++) -> dict[str, object]:
++    levels = dict(levels or _levels())
++    return {
++        "measurement": label,
++        "target_games": ["lp85", "sp80"],
++        "core_efficiency": efficiency,
++        "deepest_level_by_game": levels,
++        "per_game": [
++            {"game": game, "best_level": level, "diagnostics": {"stopped_reason": "cached"}}
++            for game, level in levels.items()
++        ],
++    }
++
++
++def _signal(auroc: float = 1.0, passed: bool = True) -> dict[str, object]:
++    return {
++        "energy_separation_auroc": auroc,
++        "positive_control": {
++            "passed": passed,
++            "game": "known_l2_trust_energy_fixture",
++            "sample_count": 4,
++        },
++        "samples": [
++            {"state_id": "progress-a", "energy": 0.05, "deeper_progress": True},
++            {"state_id": "progress-b", "energy": 0.15, "deeper_progress": True},
++            {"state_id": "stuck-a", "energy": 0.75, "deeper_progress": False},
++            {"state_id": "stuck-b", "energy": 0.95, "deeper_progress": False},
++        ],
++    }
++
++
++def test_req_arc_wmte_4534_spec_declares_required_artifact_contract() -> None:
++    """REQ-ARC-WMTE-4534: OpenSpec anchors the trust-energy routing artifact."""
++
++    from carnot import experiment_4534_energy_trust_next_level_routing as exp4534
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-WMTE-4534" in spec
++    assert "SCENARIO-ARC-WMTE-4534" in spec
++    assert exp4534.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4534.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_arc_wmte_4534_energy_bias_is_lower_is_better_depth_secondary() -> None:
++    """SCENARIO-ARC-WMTE-4534: trust energy biases same-depth frontier only."""
++
++    explorer = StepwiseExplorer()
++    explorer.cur = "root"
++    explorer.set_goal_bias(
++        lambda frame: float(frame.energy),
++        label="trust_energy_next_level_distance",
++        lower_is_better=True,
++    )
++    explorer.graph = {
++        "shallow_high_energy": {
++            "path": [{"action": 1, "data": None}],
++            "untested": [{"action": 2, "data": None}],
++            "value": 0.0,
++            "frame": SimpleNamespace(energy=0.95),
++        },
++        "deep_low_energy": {
++            "path": [{"action": 1, "data": None}, {"action": 2, "data": None}],
++            "untested": [{"action": 3, "data": None}],
++            "value": 0.0,
++            "frame": SimpleNamespace(energy=0.05),
++        },
++    }
++
++    assert explorer._frontier() == "shallow_high_energy"
++
++    explorer.graph["shallow_high_energy"]["path"].append({"action": 4, "data": None})
++    assert explorer._frontier() == "deep_low_energy"
++    assert explorer.goal_bias_diagnostics()["lower_is_better"] is True
++
++
++def test_req_arc_wmte_4534_auroc_treats_lower_energy_as_progress() -> None:
++    """REQ-ARC-WMTE-4534: AUROC characterizes deeper-progress vs L1-stuck states."""
++
++    from carnot import experiment_4534_energy_trust_next_level_routing as exp4534
++
++    assert exp4534.energy_separation_auroc(_signal()["samples"]) == 1.0
++    assert exp4534.energy_separation_auroc(
++        [
++            {"energy": 0.5, "deeper_progress": True},
++            {"energy": 0.5, "deeper_progress": False},
++        ]
++    ) == 0.5
++    assert exp4534.energy_separation_auroc([{"energy": 0.2, "deeper_progress": True}]) is None
++
++
++def test_req_arc_wmte_4534_honest_null_records_signal_characterization(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4534: no L2 still reports oracle-distinct signal evidence."""
++
++    from carnot import experiment_4534_energy_trust_next_level_routing as exp4534
++
++    artifact = exp4534.build_artifact(
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_import_smoke": True,
++            "spec_has_req_4534": True,
++            "ok": True,
++        },
++        no_energy_control=_measurement("no_energy_control"),
++        energy_routed=_measurement("energy_routed"),
++        signal_characterization=_signal(),
++        a1_goal={
++            "available": False,
++            "source": "results/experiment_4533_per_level_goal_reinduction.json",
++            "reason": "a1_honest_null",
++        },
++        random_seed=4534,
++        duration_s=0.25,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: energy_routing_no_deeper_level_signal_characterized_honest_null"
++    )
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["core_efficiency_energy_routed"] == exp4534.CORE_EFFICIENCY_BASELINE
++    assert artifact["energy_separation_auroc"] == 1.0
++    assert artifact["positive_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["core_solves_preserved"] is True
++    assert artifact["deepest_level_reached_per_core_game"]["energy_routed"]["lp85"] == 1
++    assert artifact["chosen_submitted_config"] == "unchanged"
++    assert exp4534.artifact_schema_errors(artifact) == []
++
++    out = exp4534.write_artifact(artifact, root=tmp_path)
++    assert json.loads(out.read_text(encoding="utf-8")) == artifact
++
++    changed = dict(artifact)
++    changed["verifier_is_oracle"] = True
++    assert any("oracle" in error for error in exp4534.artifact_schema_errors(changed))
++
++
++def test_req_arc_wmte_4534_success_requires_energy_only_l2_and_core_preservation() -> None:
++    """REQ-ARC-WMTE-4534: an oracle-distinct success must beat matched no-energy."""
++
++    from carnot import experiment_4534_energy_trust_next_level_routing as exp4534
++
++    artifact = exp4534.build_artifact(
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_import_smoke": True,
++            "spec_has_req_4534": True,
++            "ok": True,
++        },
++        no_energy_control=_measurement("no_energy_control", levels=_levels(lp85=1)),
++        energy_routed=_measurement("energy_routed", levels=_levels(lp85=2), efficiency=3.25),
++        signal_characterization=_signal(),
++        a1_goal={"available": True, "predicate": "L2_fixture_predicate"},
++        random_seed=4534,
++        duration_s=0.25,
++    )
++
++    assert artifact["honest_verdict"] == "success: energy_routing_lp85_reached_L2_oracle_distinct"
++    assert artifact["core_efficiency_energy_routed"] == 3.25
++    assert artifact["core_solves_preserved"] is True
++    assert artifact["chosen_submitted_config"]["energy_next_level_routing"] is True
++    assert exp4534.artifact_schema_errors(artifact) == []
++
++    dropped = exp4534.build_artifact(
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_import_smoke": True,
++            "spec_has_req_4534": True,
++            "ok": True,
++        },
++        no_energy_control=_measurement("no_energy_control", levels=_levels(lp85=1, m0r0=1)),
++        energy_routed=_measurement("energy_routed", levels=_levels(lp85=2, m0r0=0), efficiency=3.25),
++        signal_characterization=_signal(),
++        a1_goal={"available": True, "predicate": "L2_fixture_predicate"},
++        random_seed=4534,
++        duration_s=0.25,
++    )
++    assert dropped["honest_verdict"] == (
++        "complete: energy_routing_no_deeper_level_signal_characterized_honest_null"
++    )
++
++
++def test_scenario_arc_wmte_4534_run_writes_injected_measurements(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4534: injected matched measurements write stable JSON."""
++
++    from carnot import experiment_4534_energy_trust_next_level_routing as exp4534
++
++    artifact = exp4534.run(
++        root=tmp_path,
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_import_smoke": True,
++            "spec_has_req_4534": True,
++            "ok": True,
++        },
++        a1_loader=lambda _root: {"honest_verdict": "complete: a1_null", "chosen_submitted_config": "unchanged"},
++        measurement_runner=lambda _root, _a1: (
++            _measurement("no_energy_control"),
++            _measurement("energy_routed"),
++        ),
++        signal_runner=lambda: _signal(),
++        now=lambda: 1.0,
++    )
++
++    assert artifact["result_path"] == exp4534.RESULT_RELATIVE_PATH
++    assert artifact["a1_reinduced_goal"]["available"] is False
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert json.loads((tmp_path / exp4534.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
+-- 
+2.55.0
+

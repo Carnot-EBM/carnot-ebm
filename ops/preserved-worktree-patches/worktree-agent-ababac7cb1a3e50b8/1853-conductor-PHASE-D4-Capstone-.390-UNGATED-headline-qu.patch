@@ -1,0 +1,1792 @@
+From 2bed1f914460af58c9c80b40d36b0edbc6531777 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 20:29:35 -0400
+Subject: [PATCH 01853/11362] [conductor] PHASE D4 -- Capstone .390 (UNGATED):
+ headline question is DID A LEARNED (ORACLE-DISTINCT) VERIFIER BEAT VOTE ON
+ ARC -- exp4210 oracle_distinct_beats_vote (verifier_is_oracle=false, matched
+ control, CI95-excl-0): the first oracle-distinct verifier win (closes
+ GAP-3-ties-vote; informs the DiffusionGemma gate) OR an honest
+ ties-vote-with-headroom null. Aggregate: ORACLE-DISTINCT = exp4210 + exp4209
+ (off-fold AUROC) + exp4208 (detector divergence); VERIFIER-AS-REWARD =
+ exp4211 (verifier_label_carries_signal + A-vs-B delta/CI + Youden-J +
+ positive_control); SOVEREIGNTY-DISTILL = exp4212 (certified corpus +
+ latent-vs-absent); ARC = exp4213 (total_levels) + exp4214 (live solver
+ accuracy-vs-floor); SOTA = exp4215; registry = exp4216; hardware = exp4217.
+ SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR
+ verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on.
+
+Automated research step by research conductor.
+Task ID: exp4218-capstone-v390
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/reporting/capstone_v390_4218.py | 779 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4218_capstone_v390.json    | 363 ++++++++
+ results/experiment_4218_capstone_v390.py      |  23 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../test_experiment_4218_capstone_v390.py     | 392 +++++++++
+ 14 files changed, 1585 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v390_4218.py
+ create mode 100644 results/experiment_4218_capstone_v390.json
+ create mode 100644 results/experiment_4218_capstone_v390.py
+ create mode 100644 tests/python/test_experiment_4218_capstone_v390.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 777c6cdbd2..278913cb46 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -68,3 +68,6 @@
+ - REQ-CAPSTONE-4206: The .389 capstone must aggregate every existing upstream artifact from exp4197 through exp4205 using the Reading-Results discipline, must skip every artifact stamped `flagged_adversarial:true` before importing any metric, must cite every upstream artifact by sha256, must answer whether clean exp4199 measured verifier-label training signal beyond the same-generator random-label/distillation confound, must report the clean Phase-0 code operating point only when the exp4197 Phase-0 artifact is not flagged, must report the clean certified-ARC distill latent/absent read only when exp4200 is not flagged, must import clean total ARC levels from exp4201, must import clean live solver-vs-floor standing from exp4202, must import the strongest .390 SOTA flag from exp4203, and must force one headline outcome from `{verifier_reward_real_label_carries_training_signal, verifier_reward_null_equals_distillation_or_spurious, verifier_reward_invalid_or_underpowered, verifier_reward_no_code_operating_point}`.
+ - SCENARIO-CAPSTONE-4206: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, `headline_outcome`, `verifier_as_reward_status`, `phase0_operating_point`, `arc_distill_latent_or_absent`, `total_arc_levels_solved`, and `upstream_provenance`; `headline_outcome` must be `verifier_reward_real_label_carries_training_signal` only when clean exp4199 reports a positive A-vs-B CI excluding zero with positive control and truncation guard confirmed, `verifier_reward_null_equals_distillation_or_spurious` only when the clean A-vs-B CI includes zero after those controls, `verifier_reward_no_code_operating_point` when the clean Phase-0 operating-point precondition is missing or skipped, and otherwise `verifier_reward_invalid_or_underpowered`; flagged upstreams must have empty `fields_imported`, and clean exp4202 may report live solver floor progress as efficiency-only without converting that into verifier-label training signal.
+ - SCENARIO-CAPSTONE-4206-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. An honest 'A~=B = distillation null' or 'no operating point cleared' is COMPLETE and decision-grade -- it tells .390 exactly whether the pivot's mechanism works."; `headline_outcome` = "One of the enumerated set -- forces a single unambiguous read of the pivot's first clean test."; `verifier_as_reward_status` = "REAL (label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / NO-OPERATING-POINT -- the operator-pivot's standing after .389."; `phase0_operating_point` = "The code Phase-0 precision + Youden J the test cleared (exp4197) -- the precondition that grids failed and code met."; `arc_distill_latent_or_absent` = "Whether the certified-ARC-corpus in-context lift (exp4200) shows the abstraction latent (distill viable .390) or absent (need a stronger base)."; `total_arc_levels_solved` = "The monotonic ARC progress metric after .389 (must be >= 15)."; and `upstream_provenance` = "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
++- REQ-CAPSTONE-4218: The .390 capstone must aggregate existing upstream artifacts from exp4208 through exp4217 using the Reading-Results discipline, must skip every artifact stamped `flagged_adversarial:true` before importing any metric, must cite every upstream artifact by sha256, must honor `verifier_is_oracle` so circular execution-grounded results never headline an oracle-distinct moat or resolve the DiffusionGemma gate, must decide the oracle-distinct ARC frontier from exp4209 and exp4210, must decide the owed verifier-as-reward A-vs-B standing from exp4211, must import clean detector AUROC versus selector-headroom divergence from exp4208, clean ARC progress from exp4213, clean live solver accuracy from exp4214, and the strongest .391 SOTA flag from exp4215, and must force one headline outcome from `{oracle_distinct_verifier_beats_vote_first_moat, oracle_distinct_verifier_ties_vote_with_headroom_null, oracle_distinct_no_headroom_or_no_learnable_signal, verifier_reward_real_label_carries_signal, verifier_reward_null_distillation}`.
++- SCENARIO-CAPSTONE-4218: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, `headline_outcome`, `oracle_distinct_status`, `verifier_as_reward_status`, `diffusiongemma_gate_resolvable`, `total_arc_levels_solved`, and `upstream_provenance`; `oracle_distinct_status` must be `MOAT-WON` only when a clean oracle-distinct verifier reports `verifier_is_oracle:false`, a matched control, headroom present, and CI95 excluding zero, `TIES-VOTE-NULL` only when the same clean matched-control headroom setting runs and the CI includes zero, and otherwise `NO-HEADROOM-OR-NO-SIGNAL`; `verifier_as_reward_status` must be `REAL` only when clean exp4211 reports a positive A-vs-B CI excluding zero with positive control, `NULL` only when a clean controlled A-vs-B CI includes zero, `ACCUMULATING` when the clean artifact honestly has no held-out A-vs-B evaluation yet, and otherwise `INVALID-or-UNDERPOWERED`; `diffusiongemma_gate_resolvable` must be true only for a clean oracle-distinct matched-control moat win and false for blocked, null, no-headroom, or circular execution-grounded evidence; flagged upstreams must have empty `fields_imported`.
++- SCENARIO-CAPSTONE-4218-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .391 whether the oracle-distinct frontier is reachable on ARC."; `headline_outcome` = "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot."; `oracle_distinct_status` = "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .390; a circular result does NOT count here."; `verifier_as_reward_status` = "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING -- the owed 2026-06-11 pivot's standing after .390."; `diffusiongemma_gate_resolvable` = "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING."; `total_arc_levels_solved` = "The monotonic ARC progress metric after .390 (must be >= 15)."; and `upstream_provenance` = "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index c9494ef292..e2685dcdef 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -421,3 +421,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4212_certified_arc_corpus_distill_lift.json
++
++## experiment_4216_verifier_registry_gaps_hygiene.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_4216_verifier_registry_gaps_hygiene.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d50f104ffe..26f01ee197 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 175,
+   "code_violations": 0,
+-  "experiments_checked": 3237,
++  "experiments_checked": 3238,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v390_4218.py b/python/carnot/reporting/capstone_v390_4218.py
+new file mode 100644
+index 0000000000..f2b904d97e
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v390_4218.py
+@@ -0,0 +1,779 @@
++"""Build the Exp 4218 v390 oracle-distinct verifier capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4218, SCENARIO-CAPSTONE-4218.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4218_capstone_v390.json")
++EXPERIMENT_ID = 4218
++RANDOM_SEED = 4218
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = ["REQ-CAPSTONE-4218", "SCENARIO-CAPSTONE-4218"]
++
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    4208: Path("results/experiment_4208_verifier_as_detector_auroc.json"),
++    4209: Path("results/experiment_4209_oracle_distinct_arc_verifier_build.json"),
++    4210: Path("results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json"),
++    4211: Path("results/experiment_4211_verifier_as_reward_finish_synchronous.json"),
++    4212: Path("results/experiment_4212_certified_arc_corpus_distill_lift.json"),
++    4213: Path("results/experiment_4213_arc_incremental_progress.json"),
++    4214: Path("results/experiment_4214_arc_live_env_solver_accuracy.json"),
++    4215: Path("results/experiment_4215_sota_ingestion_oracle_distinct.json"),
++    4216: Path("results/experiment_4216_verifier_registry_gaps_hygiene.json"),
++    4217: Path("results/experiment_4217_hardware_continuity.json"),
++}
++
++HEADLINE_OUTCOMES = {
++    "oracle_distinct_verifier_beats_vote_first_moat",
++    "oracle_distinct_verifier_ties_vote_with_headroom_null",
++    "oracle_distinct_no_headroom_or_no_learnable_signal",
++    "verifier_reward_real_label_carries_signal",
++    "verifier_reward_null_distillation",
++}
++
++ORACLE_DISTINCT_STATUSES = {
++    "MOAT-WON",
++    "TIES-VOTE-NULL",
++    "NO-HEADROOM-OR-NO-SIGNAL",
++}
++
++VERIFIER_AS_REWARD_STATUSES = {
++    "REAL",
++    "NULL",
++    "INVALID-or-UNDERPOWERED",
++    "ACCUMULATING",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "headline_outcome",
++    "oracle_distinct_status",
++    "verifier_as_reward_status",
++    "diffusiongemma_gate_resolvable",
++    "total_arc_levels_solved",
++    "upstream_provenance",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct "
++        "signal' is COMPLETE and decision-grade -- it tells .391 whether the "
++        "oracle-distinct frontier is reachable on ARC."
++    ),
++    "headline_outcome": (
++        "One of the enumerated set -- forces a single unambiguous read of the "
++        "oracle-distinct frontier + the verifier-as-reward pivot."
++    ),
++    "oracle_distinct_status": (
++        "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / "
++        "TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's "
++        "standing after .390; a circular result does NOT count here."
++    ),
++    "verifier_as_reward_status": (
++        "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / "
++        "INVALID-or-UNDERPOWERED / ACCUMULATING -- the owed 2026-06-11 pivot's "
++        "standing after .390."
++    ),
++    "diffusiongemma_gate_resolvable": (
++        "BARE bool: true ONLY if an oracle-distinct win landed with a matched control "
++        "(verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it "
++        "STILL-PENDING."
++    ),
++    "total_arc_levels_solved": (
++        "The monotonic ARC progress metric after .390 (must be >= 15)."
++    ),
++    "upstream_provenance": (
++        "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail "
++        "that a capstone synthesizes nothing from nothing."
++    ),
++}
++
++
++def read_json_object(path: Path) -> JsonDict:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def is_sha256(value: object) -> bool:
++    return (
++        isinstance(value, str)
++        and len(value) == 64
++        and all(ch in "0123456789abcdef" for ch in value)
++    )
++
++
++def selected_upstream_paths(root: Path | str) -> dict[int, Path | None]:
++    root_path = Path(root)
++    return {
++        experiment_id: path if (path := root_path / rel_path).exists() else None
++        for experiment_id, rel_path in DEFAULT_UPSTREAM_PATHS.items()
++    }
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def verdict_text(payload: Mapping[str, Any] | None) -> str:
++    value = payload.get("honest_verdict") if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def bool_metric(payload: Mapping[str, Any] | None, field: str) -> bool | None:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, bool) else None
++
++
++def int_metric(payload: Mapping[str, Any] | None, field: str) -> int:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def float_metric(payload: Mapping[str, Any] | None, field: str) -> float | None:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    if isinstance(value, (int, float)) and not isinstance(value, bool):
++        return float(value)
++    return None
++
++
++def str_metric(payload: Mapping[str, Any] | None, field: str) -> str:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def nested_map(payload: Mapping[str, Any] | None, field: str) -> Mapping[str, Any]:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, Mapping) else {}
++
++
++def ci95(payload: Mapping[str, Any] | None, field: str) -> list[float] | None:
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)) or len(value) != 2:
++        return None
++    low, high = value
++    if not isinstance(low, (int, float)) or isinstance(low, bool):
++        return None
++    if not isinstance(high, (int, float)) or isinstance(high, bool):
++        return None
++    return [float(low), float(high)]
++
++
++def ci_excludes_zero(interval: Sequence[float] | None) -> bool:
++    return interval is not None and (interval[0] > 0.0 or interval[1] < 0.0)
++
++
++def ci_includes_zero(interval: Sequence[float] | None) -> bool:
++    return interval is not None and interval[0] <= 0.0 <= interval[1]
++
++
++def detector_selection_divergence(
++    payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial"}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing"}
++    return {
++        "status": "included",
++        "detection_auroc_by_domain": dict(nested_map(payload, "detection_auroc_by_domain")),
++        "detection_auroc_ci95_by_domain": dict(
++            nested_map(payload, "detection_auroc_ci95_by_domain")
++        ),
++        "selector_headroom_by_domain": dict(nested_map(payload, "selector_headroom_by_domain")),
++        "verifier_is_oracle_by_domain": dict(nested_map(payload, "verifier_is_oracle_by_domain")),
++        "n_by_domain": dict(nested_map(payload, "n_by_domain")),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def learned_arc_verifier(
++    payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "off_fold_auroc": None}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "off_fold_auroc": None}
++    return {
++        "status": "included",
++        "selector_trained": bool_metric(payload, "selector_trained") is True,
++        "off_fold_auroc": float_metric(payload, "oracle_distinct_auroc"),
++        "off_fold_auroc_ci95": ci95(payload, "oracle_distinct_auroc_ci95"),
++        "verifier_is_oracle": bool_metric(payload, "verifier_is_oracle"),
++        "learned_verifier_path": str_metric(payload, "learned_verifier_path"),
++        "accepted_rejected_n": dict(nested_map(payload, "accepted_rejected_n")),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def _gate_interval(payload: Mapping[str, Any] | None) -> list[float] | None:
++    return (
++        ci95(payload, "oracle_distinct_ci95")
++        or ci95(payload, "oracle_distinct_delta_ci95")
++        or ci95(payload, "ci95")
++    )
++
++
++def oracle_distinct_frontier(
++    gate_payload: Mapping[str, Any] | None,
++    build_payload: Mapping[str, Any] | None,
++    detector: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL"}
++    if not isinstance(gate_payload, Mapping):
++        return {"status": "missing", "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL"}
++
++    verifier_is_oracle = bool_metric(gate_payload, "verifier_is_oracle")
++    if verifier_is_oracle is None:
++        verifier_is_oracle = bool_metric(build_payload, "verifier_is_oracle")
++    matched_control = bool_metric(gate_payload, "matched_control") is True or bool_metric(
++        gate_payload, "matched_control_present"
++    ) is True
++    headroom_present = bool_metric(gate_payload, "headroom_present")
++    if headroom_present is None:
++        headroom = nested_map(detector, "selector_headroom_by_domain").get("arc")
++        headroom_present = isinstance(headroom, (int, float)) and not isinstance(headroom, bool) and headroom > 0.0
++    interval = _gate_interval(gate_payload)
++    delta = float_metric(gate_payload, "oracle_distinct_delta")
++    if delta is None:
++        delta = float_metric(gate_payload, "verifier_lift_vs_vote")
++    blocked = str_metric(gate_payload, "status") == "blocked" or verdict_text(gate_payload).startswith(
++        "blocked"
++    )
++    comparison_ran = not blocked and (
++        delta is not None or bool_metric(gate_payload, "oracle_distinct_beats_vote") is not None
++    )
++    beat_flag = bool_metric(gate_payload, "oracle_distinct_beats_vote") is True
++    moat_won = (
++        verifier_is_oracle is False
++        and matched_control
++        and headroom_present is True
++        and comparison_ran
++        and ci_excludes_zero(interval)
++        and (beat_flag or (delta is not None and delta > 0.0))
++    )
++    ties_vote = (
++        verifier_is_oracle is False
++        and matched_control
++        and headroom_present is True
++        and comparison_ran
++        and ci_includes_zero(interval)
++    )
++    if moat_won:
++        status = "MOAT-WON"
++    elif ties_vote:
++        status = "TIES-VOTE-NULL"
++    else:
++        status = "NO-HEADROOM-OR-NO-SIGNAL"
++    return {
++        "status": "included",
++        "oracle_distinct_status": status,
++        "oracle_distinct_beats_vote": moat_won,
++        "comparison_ran": comparison_ran,
++        "verifier_is_oracle": verifier_is_oracle,
++        "matched_control": matched_control,
++        "headroom_present": headroom_present is True,
++        "oracle_distinct_delta": delta,
++        "oracle_distinct_ci95": interval,
++        "ci95_excludes_zero": ci_excludes_zero(interval),
++        "gate_check_summary": str_metric(gate_payload, "gate_check_summary"),
++        "blocked_at_layer": str_metric(gate_payload, "blocked_at_layer"),
++        "honest_verdict": verdict_text(gate_payload),
++    }
++
++
++def verifier_as_reward(
++    payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "verifier_as_reward_status": "INVALID-or-UNDERPOWERED"}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "verifier_as_reward_status": "INVALID-or-UNDERPOWERED"}
++    interval = ci95(payload, "a_vs_b_ci95")
++    delta = float_metric(payload, "a_vs_b_delta")
++    positive_control = bool_metric(payload, "positive_control_confirmed") is True
++    label_carries = bool_metric(payload, "verifier_label_carries_signal") is True
++    accumulated = nested_map(payload, "accumulated_n")
++    eval_n = accumulated.get("eval")
++    evaluation = nested_map(payload, "evaluation")
++    no_eval_yet = (
++        eval_n == 0
++        or str_metric(evaluation, "status").startswith("pending")
++        or verdict_text(payload).startswith("progress: accumulating")
++    )
++    if positive_control and label_carries and delta is not None and delta > 0.0 and ci_excludes_zero(interval):
++        status = "REAL"
++    elif positive_control and interval is not None and ci_includes_zero(interval):
++        status = "NULL"
++    elif no_eval_yet:
++        status = "ACCUMULATING"
++    else:
++        status = "INVALID-or-UNDERPOWERED"
++    return {
++        "status": "included",
++        "verifier_as_reward_status": status,
++        "a_vs_b_delta": delta,
++        "a_vs_b_ci95": interval,
++        "a_vs_b_ci_excludes_zero": ci_excludes_zero(interval),
++        "verifier_label_carries_signal": status == "REAL",
++        "positive_control_confirmed": positive_control,
++        "accumulated_n": dict(accumulated),
++        "pass_at_1": dict(nested_map(payload, "pass_at_1")),
++        "training": dict(nested_map(payload, "training")),
++        "evaluation": dict(evaluation),
++        "truncation_guard": dict(nested_map(payload, "truncation_guard")),
++        "verifier_is_oracle": bool_metric(payload, "verifier_is_oracle"),
++        "youden_j": float_metric(payload, "youden_j"),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def certified_corpus_latent_or_absent(
++    payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "latent_or_absent": "SKIPPED-FLAGGED"}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "latent_or_absent": "MISSING"}
++    latent = str_metric(payload, "distill_lift_latent_vs_absent").upper()
++    if not latent:
++        interval = ci95(payload, "distill_lift_ci95")
++        latent = "LATENT" if interval is not None and interval[0] > 0.0 else "ABSENT"
++    return {
++        "status": "included",
++        "latent_or_absent": latent,
++        "certified_corpus_size": int_metric(payload, "certified_corpus_size"),
++        "certification_precision": dict(nested_map(payload, "certification_precision")),
++        "distill_lift_delta": float_metric(payload, "distill_lift_delta"),
++        "distill_lift_ci95": ci95(payload, "distill_lift_ci95"),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def arc_progress(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "total_arc_levels_solved": 0}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "total_arc_levels_solved": 0}
++    return {
++        "status": "included",
++        "total_arc_levels_solved": int_metric(payload, "total_levels_solved"),
++        "total_arc_games_solved": int_metric(payload, "total_games_solved"),
++        "new_levels_solved_this_task": int_metric(payload, "new_levels_solved_this_task"),
++        "levels_completed": int_metric(payload, "levels_completed"),
++        "real_env_confirmed": bool_metric(payload, "real_env_confirmed") is True,
++        "acceptance_gate_passed": bool_metric(payload, "acceptance_gate_passed") is True,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def live_solver_accuracy(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "solver_completes_level": False}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "solver_completes_level": False}
++    metrics = nested_map(payload, "live_env_metrics")
++    beats = nested_map(payload, "solver_beats_floor")
++    return {
++        "status": "included",
++        "solver_completes_level": bool_metric(payload, "solver_completes_level") is True,
++        "levels_completed": int_metric(metrics, "levels_completed"),
++        "score": float_metric(metrics, "score"),
++        "live_env_reachable": bool_metric(payload, "live_env_reachable") is True,
++        "solver_beats_floor_accuracy": bool_metric(nested_map(beats, "accuracy"), "beats") is True,
++        "solver_beats_floor_efficiency": bool_metric(nested_map(beats, "efficiency"), "beats") is True,
++        "solver_beats_floor_overall": bool_metric(beats, "overall") is True,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def sota_v391(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "flagged_for_v391": ""}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "flagged_for_v391": ""}
++    methods = payload.get("methods_mapped")
++    return {
++        "status": "included",
++        "flagged_for_v391": str_metric(payload, "flagged_for_v391"),
++        "methods_mapped_count": len(methods) if isinstance(methods, list) else 0,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def registry_hygiene(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "regression_guard_passed": False}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "regression_guard_passed": False}
++    return {
++        "status": "included",
++        "regression_guard_passed": bool_metric(payload, "regression_guard_passed") is True,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def hardware_continuity(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    if was_skipped:
++        return {"status": "skipped_flagged_adversarial", "kv260_terminal_confirmed": False}
++    if not isinstance(payload, Mapping):
++        return {"status": "missing", "kv260_terminal_confirmed": False}
++    return {
++        "status": "included",
++        "per_board_reachability": dict(nested_map(payload, "per_board_reachability")),
++        "gatemate_step_taken": str_metric(payload, "gatemate_step_taken"),
++        "polarfire_step_taken": str_metric(payload, "polarfire_step_taken"),
++        "kv260_terminal_confirmed": bool_metric(payload, "kv260_terminal_confirmed") is True,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def headline_outcome(oracle_status: str, reward_status: str) -> str:
++    if oracle_status == "MOAT-WON":
++        return "oracle_distinct_verifier_beats_vote_first_moat"
++    if oracle_status == "TIES-VOTE-NULL":
++        return "oracle_distinct_verifier_ties_vote_with_headroom_null"
++    if reward_status == "REAL":
++        return "verifier_reward_real_label_carries_signal"
++    if reward_status == "NULL":
++        return "verifier_reward_null_distillation"
++    return "oracle_distinct_no_headroom_or_no_learnable_signal"
++
++
++def honest_verdict(outcome: str, oracle_status: str, reward_status: str, total_levels: int, skipped_count: int) -> str:
++    gate = "resolvable" if oracle_status == "MOAT-WON" else "still_pending"
++    return (
++        f"complete: capstone_v390_{outcome}_oracle_{oracle_status}_"
++        f"reward_{reward_status}_arc_levels{total_levels}_"
++        f"flagged_skipped{skipped_count}_diffusiongemma_{gate}"
++    )
++
++
++def imported_fields_by_id(clean_ids: set[int]) -> dict[int, list[str]]:
++    fields: dict[int, list[str]] = {experiment_id: [] for experiment_id in DEFAULT_UPSTREAM_PATHS}
++    if 4208 in clean_ids:
++        fields[4208] = [
++            "detection_auroc_by_domain",
++            "detection_auroc_ci95_by_domain",
++            "selector_headroom_by_domain",
++            "verifier_is_oracle_by_domain",
++            "n_by_domain",
++        ]
++    if 4209 in clean_ids:
++        fields[4209] = [
++            "selector_trained",
++            "oracle_distinct_auroc",
++            "oracle_distinct_auroc_ci95",
++            "verifier_is_oracle",
++            "learned_verifier_path",
++            "accepted_rejected_n",
++        ]
++    if 4210 in clean_ids:
++        fields[4210] = [
++            "status",
++            "gate_check_summary",
++            "blocked_at_layer",
++            "oracle_distinct_beats_vote",
++            "oracle_distinct_delta",
++            "oracle_distinct_ci95",
++            "matched_control",
++            "headroom_present",
++            "verifier_is_oracle",
++        ]
++    if 4211 in clean_ids:
++        fields[4211] = [
++            "a_vs_b_delta",
++            "a_vs_b_ci95",
++            "verifier_label_carries_signal",
++            "positive_control_confirmed",
++            "accumulated_n",
++            "pass_at_1",
++            "evaluation",
++            "training",
++            "verifier_is_oracle",
++            "youden_j",
++        ]
++    if 4212 in clean_ids:
++        fields[4212] = [
++            "certified_corpus_size",
++            "certification_precision",
++            "distill_lift_delta",
++            "distill_lift_ci95",
++            "distill_lift_latent_vs_absent",
++        ]
++    if 4213 in clean_ids:
++        fields[4213] = [
++            "total_levels_solved",
++            "total_games_solved",
++            "new_levels_solved_this_task",
++            "levels_completed",
++            "real_env_confirmed",
++        ]
++    if 4214 in clean_ids:
++        fields[4214] = [
++            "solver_completes_level",
++            "live_env_metrics",
++            "solver_beats_floor",
++            "live_env_reachable",
++        ]
++    if 4215 in clean_ids:
++        fields[4215] = ["flagged_for_v391", "methods_mapped"]
++    if 4216 in clean_ids:
++        fields[4216] = ["regression_guard_passed"]
++    if 4217 in clean_ids:
++        fields[4217] = [
++            "per_board_reachability",
++            "gatemate_step_taken",
++            "polarfire_step_taken",
++            "kv260_terminal_confirmed",
++        ]
++    return fields
++
++
++def flagged_artifacts_skipped(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    skipped_ids: set[int],
++) -> list[JsonDict]:
++    return [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id].relative_to(root)),
++            "reason": "flagged_adversarial:true",
++            "sha256": sha256_file(paths[experiment_id]),
++            "honest_verdict": verdict_text(upstreams[experiment_id]),
++        }
++        for experiment_id in DEFAULT_UPSTREAM_PATHS
++        if paths[experiment_id] is not None and experiment_id in skipped_ids
++    ]
++
++
++def upstream_provenance(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    skipped_ids: set[int],
++    fields_by_id: Mapping[int, list[str]],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for experiment_id in DEFAULT_UPSTREAM_PATHS:
++        path = paths[experiment_id]
++        if path is None:
++            continue
++        skipped = experiment_id in skipped_ids
++        rows.append(
++            {
++                "experiment_id": experiment_id,
++                "path": str(path.relative_to(root)),
++                "sha256": sha256_file(path),
++                "fields_imported": [] if skipped else list(fields_by_id.get(experiment_id, [])),
++                "skipped": skipped,
++                "skip_reason": "flagged_adversarial:true" if skipped else "",
++                "honest_verdict": verdict_text(upstreams[experiment_id]),
++            }
++        )
++    return rows
++
++
++def missing_upstream_artifacts(paths: Mapping[int, Path | None]) -> list[JsonDict]:
++    return [
++        {"experiment_id": experiment_id}
++        for experiment_id in DEFAULT_UPSTREAM_PATHS
++        if paths[experiment_id] is None
++    ]
++
++
++def duration_from(started_s: float, now_s: float | None) -> float:
++    end = time.perf_counter() if now_s is None else float(now_s)
++    return max(0.0001, end - started_s)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = selected_upstream_paths(root_path)
++    upstreams: dict[int, Mapping[str, Any] | None] = {
++        experiment_id: read_json_object(path) if path is not None else None
++        for experiment_id, path in paths.items()
++    }
++    skipped_ids = {experiment_id for experiment_id, payload in upstreams.items() if flagged(payload)}
++    clean_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and experiment_id not in skipped_ids
++    }
++    clean = {experiment_id: upstreams[experiment_id] for experiment_id in clean_ids}
++
++    detector = detector_selection_divergence(clean.get(4208), was_skipped=4208 in skipped_ids)
++    learned = learned_arc_verifier(clean.get(4209), was_skipped=4209 in skipped_ids)
++    oracle = oracle_distinct_frontier(
++        clean.get(4210), clean.get(4209), detector, was_skipped=4210 in skipped_ids
++    )
++    reward = verifier_as_reward(clean.get(4211), was_skipped=4211 in skipped_ids)
++    certified = certified_corpus_latent_or_absent(
++        clean.get(4212), was_skipped=4212 in skipped_ids
++    )
++    arc = arc_progress(clean.get(4213), was_skipped=4213 in skipped_ids)
++    live = live_solver_accuracy(clean.get(4214), was_skipped=4214 in skipped_ids)
++    sota = sota_v391(clean.get(4215), was_skipped=4215 in skipped_ids)
++    registry = registry_hygiene(clean.get(4216), was_skipped=4216 in skipped_ids)
++    hardware = hardware_continuity(clean.get(4217), was_skipped=4217 in skipped_ids)
++
++    oracle_status = str(oracle["oracle_distinct_status"])
++    reward_status = str(reward["verifier_as_reward_status"])
++    outcome = headline_outcome(oracle_status, reward_status)
++    total_levels = int(arc["total_arc_levels_solved"])
++    skipped = flagged_artifacts_skipped(root_path, paths, upstreams, skipped_ids)
++    fields_by_id = imported_fields_by_id(clean_ids)
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v390_4218.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": honest_verdict(
++            outcome, oracle_status, reward_status, total_levels, len(skipped)
++        ),
++        "headline_outcome": outcome,
++        "oracle_distinct_status": oracle_status,
++        "oracle_distinct_frontier": oracle,
++        "learned_arc_verifier": learned,
++        "detector_selection_divergence": detector,
++        "verifier_as_reward_status": reward_status,
++        "verifier_as_reward": reward,
++        "certified_corpus_latent_or_absent": certified,
++        "diffusiongemma_gate_resolvable": oracle_status == "MOAT-WON",
++        "total_arc_levels_solved": total_levels,
++        "arc_progress": arc,
++        "live_solver_accuracy": live,
++        "strongest_sota_flagged_for_v391": str(sota.get("flagged_for_v391") or ""),
++        "sota_v391": sota,
++        "registry_hygiene": registry,
++        "hardware_continuity": hardware,
++        "flagged_artifacts_skipped": skipped,
++        "upstream_provenance": upstream_provenance(
++            root_path, paths, upstreams, skipped_ids, fields_by_id
++        ),
++        "missing_upstream_artifacts": missing_upstream_artifacts(paths),
++        "duration_s": duration_from(start, now_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if not str(artifact.get("honest_verdict", "")).startswith(
++        ("complete:", "success:", "blocked:")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if artifact.get("headline_outcome") not in HEADLINE_OUTCOMES:
++        raise ValueError("headline_outcome must be enumerated")
++    if artifact.get("oracle_distinct_status") not in ORACLE_DISTINCT_STATUSES:
++        raise ValueError("oracle_distinct_status must be enumerated")
++    if artifact.get("verifier_as_reward_status") not in VERIFIER_AS_REWARD_STATUSES:
++        raise ValueError("verifier_as_reward_status must be enumerated")
++    if not isinstance(artifact.get("diffusiongemma_gate_resolvable"), bool):
++        raise ValueError("DiffusionGemma gate flag must be a bool")
++    total_levels = artifact.get("total_arc_levels_solved")
++    if not isinstance(total_levels, int) or isinstance(total_levels, bool) or total_levels < 15:
++        raise ValueError("total ARC levels must be an integer >= 15")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be an object")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if principles.get(field) != principle:
++            raise ValueError(f"{field} principle mismatch")
++    provenance = artifact.get("upstream_provenance")
++    if not isinstance(provenance, list):
++        raise ValueError("upstream_provenance must be a list")
++    for row in provenance:
++        if not isinstance(row, Mapping):
++            raise ValueError("upstream_provenance entries must be objects")
++        if not isinstance(row.get("experiment_id"), int):
++            raise ValueError("upstream_provenance entries need integer experiment_id")
++        if not isinstance(row.get("fields_imported"), list):
++            raise ValueError("upstream_provenance fields_imported must be a list")
++        if row.get("skipped") is True and row.get("fields_imported") != []:
++            raise ValueError("skipped upstreams must import no fields")
++        if not is_sha256(row.get("sha256")):
++            raise ValueError("upstream_provenance entries need sha256")
++    if not isinstance(artifact.get("flagged_artifacts_skipped"), list):
++        raise ValueError("flagged_artifacts_skipped must be a list")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    root_path = Path(root)
++    artifact = build_artifact(root_path, started_s=started_s, now_s=now_s)
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def main() -> int:
++    output = write_artifact(REPO_ROOT)
++    print(output)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 000112dcb4..840454a417 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-15T00:01:57.536928Z",
+-  "duration_s": 0.0202486515045166,
++  "run_date": "2026-06-15T00:27:33.674844Z",
++  "duration_s": 0.017101526260375977,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "60010e353d21e00bca2977a8e48de1e7222e3f5f47c959c108b2487e45bee5a0",
++  "reproducibility_checksum": "4a16ba36d27ae0f64f8b09a85d0177a712913e0564b92bf3ce18e00ccd227398",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8dee0363fec1cb2f821d0ed28f68a33d11a7187d"
++    "adversarial_verify_version": "9eb5daa6c7a81030520023d252f92f4136b443fe"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index ff7ef989ea..3cfefb5374 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-15T00:01:57.559522Z",
+-  "duration_s": 0.01862931251525879,
++  "run_date": "2026-06-15T00:27:33.703511Z",
++  "duration_s": 0.02455425262451172,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e8385d555da092f71ab4c91ef07135bf73235c24bdbb7b93232db29a67998cff",
++  "reproducibility_checksum": "90da073be9a93bf195a278761afcb4e3259dba2d9bb03887a20a6c527dd99653",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8dee0363fec1cb2f821d0ed28f68a33d11a7187d"
++    "adversarial_verify_version": "9eb5daa6c7a81030520023d252f92f4136b443fe"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index c9df1b5258..92c4c0e462 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1076202392578125,
++  "efficiency_gains_ms": 2.139568328857422,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ff41cd7b76..1db47b1794 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.7431000489741564e-05,
++  "duration_s": 2.7992005925625563e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4218_capstone_v390.json b/results/experiment_4218_capstone_v390.json
+new file mode 100644
+index 0000000000..9a26accaf0
+--- /dev/null
++++ b/results/experiment_4218_capstone_v390.json
+@@ -0,0 +1,363 @@
++{
++  "arc_progress": {
++    "acceptance_gate_passed": true,
++    "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
++    "levels_completed": 2,
++    "new_levels_solved_this_task": 1,
++    "real_env_confirmed": true,
++    "status": "included",
++    "total_arc_games_solved": 13,
++    "total_arc_levels_solved": 16
++  },
++  "certified_corpus_latent_or_absent": {
++    "latent_or_absent": "SKIPPED-FLAGGED",
++    "status": "skipped_flagged_adversarial"
++  },
++  "detector_selection_divergence": {
++    "detection_auroc_by_domain": {
++      "arc": 0.9016,
++      "code": 1.0,
++      "math": 1.0,
++      "sudoku": 1.0
++    },
++    "detection_auroc_ci95_by_domain": {
++      "arc": [
++        0.7828,
++        0.9984
++      ],
++      "code": [
++        1.0,
++        1.0
++      ],
++      "math": [
++        1.0,
++        1.0
++      ],
++      "sudoku": [
++        1.0,
++        1.0
++      ]
++    },
++    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
++    "n_by_domain": {
++      "arc": 8041,
++      "code": 100,
++      "math": 651,
++      "sudoku": 4224
++    },
++    "selector_headroom_by_domain": {
++      "arc": 0.129,
++      "code": 0.18,
++      "math": 0.0,
++      "sudoku": 0.0007
++    },
++    "status": "included",
++    "verifier_is_oracle_by_domain": {
++      "arc": false,
++      "code": true,
++      "math": true,
++      "sudoku": true
++    }
++  },
++  "diffusiongemma_gate_resolvable": false,
++  "duration_s": 0.001269333006348461,
++  "experiment_id": 4218,
++  "field_principles": {
++    "diffusiongemma_gate_resolvable": "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING.",
++    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot.",
++    "honest_verdict": "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .391 whether the oracle-distinct frontier is reachable on ARC.",
++    "oracle_distinct_status": "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .390; a circular result does NOT count here.",
++    "total_arc_levels_solved": "The monotonic ARC progress metric after .390 (must be >= 15).",
++    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing.",
++    "verifier_as_reward_status": "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING -- the owed 2026-06-11 pivot's standing after .390."
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_id": 4212,
++      "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
++      "path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "7bb487f4027e62e4bd6668e6292f55eda99015889722cce46912a53bab2f0ede"
++    },
++    {
++      "experiment_id": 4216,
++      "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
++      "path": "results/experiment_4216_verifier_registry_gaps_hygiene.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "06b0410951f6b5fc44cea3f815e150e58bf45b92c32f639a643cf43d9883030b"
++    }
++  ],
++  "hardware_continuity": {
++    "gatemate_step_taken": "blocked_gatemate_unreachable",
++    "honest_verdict": "complete: hardware_continuity_4217_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
++    "kv260_terminal_confirmed": true,
++    "per_board_reachability": {
++      "gatemate": false,
++      "kv260": true,
++      "polarfire": true
++    },
++    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
++    "status": "included"
++  },
++  "headline_outcome": "oracle_distinct_no_headroom_or_no_learnable_signal",
++  "honest_verdict": "complete: capstone_v390_oracle_distinct_no_headroom_or_no_learnable_signal_oracle_NO-HEADROOM-OR-NO-SIGNAL_reward_ACCUMULATING_arc_levels16_flagged_skipped2_diffusiongemma_still_pending",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "learned_arc_verifier": {
++    "accepted_rejected_n": {
++      "accepted": 0,
++      "rejected": 0,
++      "total": 0
++    },
++    "honest_verdict": "blocked_arc_pool_no_candidate_labels",
++    "learned_verifier_path": "",
++    "off_fold_auroc": 0.0,
++    "off_fold_auroc_ci95": [
++      0.0,
++      0.0
++    ],
++    "selector_trained": false,
++    "status": "included",
++    "verifier_is_oracle": false
++  },
++  "live_solver_accuracy": {
++    "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
++    "levels_completed": 0,
++    "live_env_reachable": true,
++    "score": 0.0,
++    "solver_beats_floor_accuracy": false,
++    "solver_beats_floor_efficiency": true,
++    "solver_beats_floor_overall": true,
++    "solver_completes_level": false,
++    "status": "included"
++  },
++  "missing_upstream_artifacts": [],
++  "oracle_distinct_frontier": {
++    "blocked_at_layer": "conductor_pre_gate",
++    "ci95_excludes_zero": false,
++    "comparison_ran": false,
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build.selector_trained (actual=False == expected=True)",
++    "headroom_present": true,
++    "honest_verdict": "blocked_gate_check_failed",
++    "matched_control": false,
++    "oracle_distinct_beats_vote": false,
++    "oracle_distinct_ci95": null,
++    "oracle_distinct_delta": null,
++    "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL",
++    "status": "included",
++    "verifier_is_oracle": false
++  },
++  "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL",
++  "random_seed": 4218,
++  "registry_hygiene": {
++    "regression_guard_passed": false,
++    "status": "skipped_flagged_adversarial"
++  },
++  "reproducibility_checksum": "d6663db6eb698c6cb284b55faa1ba3053ba0549a982e8e902bc5e6e21127d84c",
++  "schema": "carnot.capstone_v390_4218.v1",
++  "sota_v391": {
++    "flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
++    "honest_verdict": "complete: sota_ingestion_oracle_distinct_mapped_v391",
++    "methods_mapped_count": 8,
++    "status": "included"
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4218",
++    "SCENARIO-CAPSTONE-4218"
++  ],
++  "strongest_sota_flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
++  "total_arc_levels_solved": 16,
++  "upstream_provenance": [
++    {
++      "experiment_id": 4208,
++      "fields_imported": [
++        "detection_auroc_by_domain",
++        "detection_auroc_ci95_by_domain",
++        "selector_headroom_by_domain",
++        "verifier_is_oracle_by_domain",
++        "n_by_domain"
++      ],
++      "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
++      "path": "results/experiment_4208_verifier_as_detector_auroc.json",
++      "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4209,
++      "fields_imported": [
++        "selector_trained",
++        "oracle_distinct_auroc",
++        "oracle_distinct_auroc_ci95",
++        "verifier_is_oracle",
++        "learned_verifier_path",
++        "accepted_rejected_n"
++      ],
++      "honest_verdict": "blocked_arc_pool_no_candidate_labels",
++      "path": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
++      "sha256": "9fdd46ab273a6916384b6960c3c366433ba553c9888928f7081f39ffd2845b8a",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4210,
++      "fields_imported": [
++        "status",
++        "gate_check_summary",
++        "blocked_at_layer",
++        "oracle_distinct_beats_vote",
++        "oracle_distinct_delta",
++        "oracle_distinct_ci95",
++        "matched_control",
++        "headroom_present",
++        "verifier_is_oracle"
++      ],
++      "honest_verdict": "blocked_gate_check_failed",
++      "path": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++      "sha256": "57266e0a71f0f3cdaee04eefffed49325e081ba52a26a0393b9b6d06158688f4",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4211,
++      "fields_imported": [
++        "a_vs_b_delta",
++        "a_vs_b_ci95",
++        "verifier_label_carries_signal",
++        "positive_control_confirmed",
++        "accumulated_n",
++        "pass_at_1",
++        "evaluation",
++        "training",
++        "verifier_is_oracle",
++        "youden_j"
++      ],
++      "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
++      "path": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
++      "sha256": "40d6c7d798aa539e0c82d96e68c8b2eb442cfa5e86e93f2355bf2c6df487bb2b",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4212,
++      "fields_imported": [],
++      "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
++      "path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
++      "sha256": "7bb487f4027e62e4bd6668e6292f55eda99015889722cce46912a53bab2f0ede",
++      "skip_reason": "flagged_adversarial:true",
++      "skipped": true
++    },
++    {
++      "experiment_id": 4213,
++      "fields_imported": [
++        "total_levels_solved",
++        "total_games_solved",
++        "new_levels_solved_this_task",
++        "levels_completed",
++        "real_env_confirmed"
++      ],
++      "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
++      "path": "results/experiment_4213_arc_incremental_progress.json",
++      "sha256": "867674b91454b5b27d8121421196d2f8219a3e435242d403ebcced4a69c8eb6c",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4214,
++      "fields_imported": [
++        "solver_completes_level",
++        "live_env_metrics",
++        "solver_beats_floor",
++        "live_env_reachable"
++      ],
++      "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
++      "path": "results/experiment_4214_arc_live_env_solver_accuracy.json",
++      "sha256": "4529bb7e7629fd19f6a74df2ce4942242bc867bb0b90ea0ff6a2daa3feeed926",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4215,
++      "fields_imported": [
++        "flagged_for_v391",
++        "methods_mapped"
++      ],
++      "honest_verdict": "complete: sota_ingestion_oracle_distinct_mapped_v391",
++      "path": "results/experiment_4215_sota_ingestion_oracle_distinct.json",
++      "sha256": "afdd154809519e2bae3028c564241da97872284f1cb48cc8c2aa7cc878b1e480",
++      "skip_reason": "",
++      "skipped": false
++    },
++    {
++      "experiment_id": 4216,
++      "fields_imported": [],
++      "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
++      "path": "results/experiment_4216_verifier_registry_gaps_hygiene.json",
++      "sha256": "06b0410951f6b5fc44cea3f815e150e58bf45b92c32f639a643cf43d9883030b",
++      "skip_reason": "flagged_adversarial:true",
++      "skipped": true
++    },
++    {
++      "experiment_id": 4217,
++      "fields_imported": [
++        "per_board_reachability",
++        "gatemate_step_taken",
++        "polarfire_step_taken",
++        "kv260_terminal_confirmed"
++      ],
++      "honest_verdict": "complete: hardware_continuity_4217_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
++      "path": "results/experiment_4217_hardware_continuity.json",
++      "sha256": "92f1be623bc354a991e508470c214996c69ffd5954386309c59f443eac5979ad",
++      "skip_reason": "",
++      "skipped": false
++    }
++  ],
++  "verifier_as_reward": {
++    "a_vs_b_ci95": null,
++    "a_vs_b_ci_excludes_zero": false,
++    "a_vs_b_delta": null,
++    "accumulated_n": {
++      "eval": 0,
++      "train_A": 0,
++      "train_B": 0,
++      "train_C": 0,
++      "train_D": 0
++    },
++    "evaluation": {
++      "bootstrap_resamples": 2000,
++      "error": null,
++      "memorization_shortcut_diagnostic": null,
++      "pass_at_1": {},
++      "seeds": [],
++      "status": "pending_heldout_eval",
++      "task_rows": [],
++      "truncation_rate": {}
++    },
++    "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
++    "pass_at_1": {},
++    "positive_control_confirmed": false,
++    "status": "included",
++    "training": {
++      "accumulated_train_examples": {
++        "A": 0,
++        "B": 0,
++        "C": 0,
++        "D": 0
++      },
++      "error": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
++      "per_arm": {},
++      "progress_events": [],
++      "runner_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
++      "status": "failed",
++      "used_detached_process": false
++    },
++    "truncation_guard": {
++      "max_allowed_truncation_rate": 0.05,
++      "max_observed_truncation_rate": null
++    },
++    "verifier_as_reward_status": "ACCUMULATING",
++    "verifier_is_oracle": true,
++    "verifier_label_carries_signal": false,
++    "youden_j": 0.4137931034482759
++  },
++  "verifier_as_reward_status": "ACCUMULATING"
++}
+diff --git a/results/experiment_4218_capstone_v390.py b/results/experiment_4218_capstone_v390.py
+new file mode 100644
+index 0000000000..06caa73176
+--- /dev/null
++++ b/results/experiment_4218_capstone_v390.py
+@@ -0,0 +1,23 @@
++#!/usr/bin/env python3
++"""Run Exp 4218 v390 oracle-distinct verifier capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4218, SCENARIO-CAPSTONE-4218.
++"""
++
++# ruff: noqa: E402,I001
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.capstone_v390_4218 import write_artifact  # noqa: E402
++
++
++if __name__ == "__main__":
++    output = write_artifact(REPO_ROOT)
++    print(output.read_text(encoding="utf-8"), end="")
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 977cfdf457..2778105c84 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T00:04:54Z",
+-  "finished_at": "2026-06-15T00:04:54Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-06-15T00:27:24Z",
++  "finished_at": "2026-06-15T00:27:24Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c14cc421f3..5d7d01f668 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T00:04:54Z",
+-  "finished_at": "2026-06-15T00:04:54Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-15T00:27:24Z",
++  "finished_at": "2026-06-15T00:27:24Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2dfc79b24f..68af56032d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T00:04:54Z",
+-  "finished_at": "2026-06-15T00:04:54Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-15T00:27:24Z",
++  "finished_at": "2026-06-15T00:27:24Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4218_capstone_v390.py b/tests/python/test_experiment_4218_capstone_v390.py
+new file mode 100644
+index 0000000000..5f68de183d
+--- /dev/null
++++ b/tests/python/test_experiment_4218_capstone_v390.py
+@@ -0,0 +1,392 @@
++"""Tests for Exp 4218 .390 oracle-distinct capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4218, SCENARIO-CAPSTONE-4218.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import capstone_v390_4218 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _minimal_payloads() -> dict[int, JsonDict]:
++    return {
++        4208: {
++            "honest_verdict": "complete: detector fixture",
++            "detection_auroc_by_domain": {"arc": 0.9, "math": 1.0},
++            "detection_auroc_ci95_by_domain": {"arc": [0.8, 0.99]},
++            "selector_headroom_by_domain": {"arc": 0.13, "math": 0.0},
++            "verifier_is_oracle_by_domain": {"arc": False, "math": True},
++            "n_by_domain": {"arc": 8000, "math": 650},
++        },
++        4209: {
++            "honest_verdict": "complete: selector fixture",
++            "selector_trained": True,
++            "oracle_distinct_auroc": 0.72,
++            "oracle_distinct_auroc_ci95": [0.62, 0.82],
++            "verifier_is_oracle": False,
++            "learned_verifier_path": "results/fixture-selector.pkl",
++            "accepted_rejected_n": {"accepted": 12, "rejected": 18, "total": 30},
++        },
++        4210: {
++            "honest_verdict": "complete: oracle distinct win fixture",
++            "status": "complete",
++            "oracle_distinct_beats_vote": True,
++            "oracle_distinct_delta": 0.04,
++            "oracle_distinct_ci95": [0.01, 0.07],
++            "verifier_is_oracle": False,
++            "matched_control": True,
++            "headroom_present": True,
++        },
++        4211: {
++            "honest_verdict": "complete: reward fixture",
++            "verifier_label_carries_signal": False,
++            "positive_control_confirmed": True,
++            "a_vs_b_delta": 0.0,
++            "a_vs_b_ci95": [-0.02, 0.02],
++            "accumulated_n": {"eval": 20},
++            "evaluation": {"status": "complete"},
++            "verifier_is_oracle": True,
++            "youden_j": 0.4,
++        },
++        4212: {
++            "honest_verdict": "complete: certified corpus fixture",
++            "certified_corpus_size": 16,
++            "certification_precision": {"rate": 0.9375},
++            "distill_lift_delta": 0.0,
++            "distill_lift_ci95": [0.0, 0.0],
++            "distill_lift_latent_vs_absent": "absent",
++        },
++        4213: {
++            "honest_verdict": "success: arc progress fixture",
++            "total_levels_solved": 16,
++            "total_games_solved": 13,
++            "new_levels_solved_this_task": 1,
++            "levels_completed": 2,
++            "real_env_confirmed": True,
++            "acceptance_gate_passed": True,
++        },
++        4214: {
++            "honest_verdict": "complete: live solver fixture",
++            "solver_completes_level": False,
++            "live_env_metrics": {"levels_completed": 0, "score": 0.0},
++            "solver_beats_floor": {
++                "accuracy": {"beats": False},
++                "efficiency": {"beats": True},
++                "overall": True,
++            },
++            "live_env_reachable": True,
++        },
++        4215: {
++            "honest_verdict": "complete: sota fixture",
++            "flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
++            "methods_mapped": [{"name": "ARBITER conservative override"}],
++        },
++        4216: {
++            "honest_verdict": "complete: registry fixture",
++            "regression_guard_passed": True,
++        },
++        4217: {
++            "honest_verdict": "complete: hardware fixture",
++            "per_board_reachability": {"gatemate": False, "kv260": True, "polarfire": True},
++            "gatemate_step_taken": "blocked_gatemate_unreachable",
++            "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
++            "kv260_terminal_confirmed": True,
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[int, JsonDict]) -> None:
++    for experiment_id, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++
++
++def _expect_validation_error(artifact: JsonDict, mutator: Any, match: str) -> None:
++    mutated = json.loads(json.dumps(artifact))
++    mutator(mutated)
++    with pytest.raises(ValueError, match=match):
++        mod.validate_artifact(mutated)
++
++
++def test_req_capstone_4218_spec_anchor_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4218: OpenSpec declares the .390 capstone contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4218" in spec
++    assert "SCENARIO-CAPSTONE-4218" in spec
++    for outcome in mod.HEADLINE_OUTCOMES:
++        assert outcome in spec
++    for status in mod.ORACLE_DISTINCT_STATUSES | mod.VERIFIER_AS_REWARD_STATUSES:
++        assert status in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert mod.FIELD_PRINCIPLES[field] in spec
++    assert "verifier_is_oracle:false" in spec
++    assert "flagged_adversarial:true" in spec
++
++
++def test_scenario_capstone_4218_current_artifacts_decide_frontier_and_reward() -> None:
++    """SCENARIO-CAPSTONE-4218: current .390 artifacts skip flagged upstreams first."""
++
++    artifact = mod.build_artifact(Path.cwd(), started_s=1.0, now_s=1.5)
++
++    mod.validate_artifact(artifact)
++    assert artifact["headline_outcome"] == "oracle_distinct_no_headroom_or_no_learnable_signal"
++    assert artifact["oracle_distinct_status"] == "NO-HEADROOM-OR-NO-SIGNAL"
++    assert artifact["verifier_as_reward_status"] == "ACCUMULATING"
++    assert artifact["diffusiongemma_gate_resolvable"] is False
++    assert artifact["honest_verdict"].startswith(
++        "complete: capstone_v390_oracle_distinct_no_headroom_or_no_learnable_signal_"
++    )
++    assert artifact["learned_arc_verifier"]["off_fold_auroc"] == 0.0
++    assert artifact["learned_arc_verifier"]["selector_trained"] is False
++    assert artifact["oracle_distinct_frontier"]["oracle_distinct_beats_vote"] is False
++    assert artifact["oracle_distinct_frontier"]["comparison_ran"] is False
++    assert artifact["oracle_distinct_frontier"]["verifier_is_oracle"] is False
++    assert artifact["detector_selection_divergence"]["detection_auroc_by_domain"]["arc"] == 0.9016
++    assert artifact["detector_selection_divergence"]["selector_headroom_by_domain"]["arc"] == 0.129
++    assert artifact["verifier_as_reward"]["a_vs_b_delta"] is None
++    assert artifact["verifier_as_reward"]["a_vs_b_ci95"] is None
++    assert artifact["verifier_as_reward"]["positive_control_confirmed"] is False
++    assert artifact["verifier_as_reward"]["verifier_is_oracle"] is True
++    assert artifact["certified_corpus_latent_or_absent"]["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert artifact["certified_corpus_latent_or_absent"]["latent_or_absent"] == (
++        "SKIPPED-FLAGGED"
++    )
++    assert artifact["total_arc_levels_solved"] == 16
++    assert artifact["arc_progress"]["new_levels_solved_this_task"] == 1
++    assert artifact["arc_progress"]["real_env_confirmed"] is True
++    assert artifact["live_solver_accuracy"]["solver_completes_level"] is False
++    assert artifact["live_solver_accuracy"]["levels_completed"] == 0
++    assert artifact["strongest_sota_flagged_for_v391"] == (
++        "arbiter_conservative_override_arc_wrong_majority_v391"
++    )
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++
++    skipped = {row["experiment_id"] for row in artifact["flagged_artifacts_skipped"]}
++    assert skipped == {4212, 4216}
++
++    provenance = {row["experiment_id"]: row for row in artifact["upstream_provenance"]}
++    assert set(provenance) == set(mod.DEFAULT_UPSTREAM_PATHS)
++    for experiment_id, rel_path in mod.DEFAULT_UPSTREAM_PATHS.items():
++        expected_sha = hashlib.sha256((Path.cwd() / rel_path).read_bytes()).hexdigest()
++        assert provenance[experiment_id]["sha256"] == expected_sha
++    for experiment_id in (4212, 4216):
++        assert provenance[experiment_id]["skipped"] is True
++        assert provenance[experiment_id]["fields_imported"] == []
++    assert "detection_auroc_by_domain" in provenance[4208]["fields_imported"]
++    assert "oracle_distinct_auroc" in provenance[4209]["fields_imported"]
++    assert "gate_check_summary" in provenance[4210]["fields_imported"]
++    assert "a_vs_b_delta" in provenance[4211]["fields_imported"]
++    assert "total_levels_solved" in provenance[4213]["fields_imported"]
++    assert "solver_completes_level" in provenance[4214]["fields_imported"]
++    assert "flagged_for_v391" in provenance[4215]["fields_imported"]
++    assert "per_board_reachability" in provenance[4217]["fields_imported"]
++
++
++def test_req_capstone_4218_headline_branches(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4218: clean inputs distinguish oracle and reward outcomes."""
++
++    payloads = _minimal_payloads()
++    _write_default_artifacts(tmp_path, payloads)
++    win = mod.build_artifact(tmp_path, started_s=2.0, now_s=2.25)
++    mod.validate_artifact(win)
++    assert win["headline_outcome"] == "oracle_distinct_verifier_beats_vote_first_moat"
++    assert win["oracle_distinct_status"] == "MOAT-WON"
++    assert win["diffusiongemma_gate_resolvable"] is True
++    assert win["verifier_as_reward_status"] == "NULL"
++
++    payloads = _minimal_payloads()
++    payloads[4210]["oracle_distinct_beats_vote"] = False
++    payloads[4210]["oracle_distinct_delta"] = 0.0
++    payloads[4210]["oracle_distinct_ci95"] = [-0.03, 0.03]
++    _write_default_artifacts(tmp_path, payloads)
++    tie = mod.build_artifact(tmp_path, started_s=3.0, now_s=3.25)
++    assert tie["headline_outcome"] == "oracle_distinct_verifier_ties_vote_with_headroom_null"
++    assert tie["oracle_distinct_status"] == "TIES-VOTE-NULL"
++    assert tie["diffusiongemma_gate_resolvable"] is False
++
++    payloads = _minimal_payloads()
++    payloads[4209]["selector_trained"] = False
++    payloads[4210] = {"honest_verdict": "blocked_gate_check_failed", "status": "blocked"}
++    payloads[4211]["a_vs_b_delta"] = 0.05
++    payloads[4211]["a_vs_b_ci95"] = [0.01, 0.09]
++    payloads[4211]["verifier_label_carries_signal"] = True
++    _write_default_artifacts(tmp_path, payloads)
++    reward_real = mod.build_artifact(tmp_path, started_s=4.0, now_s=4.25)
++    assert reward_real["headline_outcome"] == "verifier_reward_real_label_carries_signal"
++    assert reward_real["oracle_distinct_status"] == "NO-HEADROOM-OR-NO-SIGNAL"
++    assert reward_real["verifier_as_reward_status"] == "REAL"
++
++    payloads = _minimal_payloads()
++    payloads[4209]["selector_trained"] = False
++    payloads[4210] = {"honest_verdict": "blocked_gate_check_failed", "status": "blocked"}
++    _write_default_artifacts(tmp_path, payloads)
++    reward_null = mod.build_artifact(tmp_path, started_s=5.0, now_s=5.25)
++    assert reward_null["headline_outcome"] == "verifier_reward_null_distillation"
++    assert reward_null["verifier_as_reward_status"] == "NULL"
++
++    payloads = _minimal_payloads()
++    payloads[4209]["selector_trained"] = False
++    payloads[4210] = {"honest_verdict": "blocked_gate_check_failed", "status": "blocked"}
++    payloads[4211]["positive_control_confirmed"] = False
++    _write_default_artifacts(tmp_path, payloads)
++    no_signal = mod.build_artifact(tmp_path, started_s=6.0, now_s=6.25)
++    assert no_signal["headline_outcome"] == "oracle_distinct_no_headroom_or_no_learnable_signal"
++    assert no_signal["verifier_as_reward_status"] == "INVALID-or-UNDERPOWERED"
++
++
++def test_req_capstone_4218_validation_write_and_missing_edges(
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-4218: validation protects schema, checksums, and writes."""
++
++    payloads = _minimal_payloads()
++    _write_default_artifacts(tmp_path, payloads)
++    artifact = mod.build_artifact(tmp_path, started_s=7.0, now_s=7.25)
++
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="did not contain a JSON object"):
++        mod.read_json_object(malformed)
++
++    output = mod.write_artifact(
++        tmp_path,
++        output_path=Path("results/experiment_4218_capstone_v390.json"),
++        started_s=8.0,
++        now_s=8.25,
++    )
++    written = json.loads(output.read_text(encoding="utf-8"))
++    mod.validate_artifact(written)
++    assert written["reproducibility_checksum"] == mod.payload_checksum(written)
++
++    missing_root = tmp_path / "missing"
++    payloads_without_4215 = _minimal_payloads()
++    payloads_without_4215.pop(4215)
++    _write_default_artifacts(missing_root, payloads_without_4215)
++    missing = mod.build_artifact(missing_root, started_s=9.0, now_s=9.25)
++    assert missing["missing_upstream_artifacts"] == [{"experiment_id": 4215}]
++    assert missing["sota_v391"]["status"] == "missing"
++
++    assert mod.ci95({"x": ["bad", 1.0]}, "x") is None
++    assert mod.ci95({"x": [1.0, "bad"]}, "x") is None
++    assert mod.detector_selection_divergence({}, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.detector_selection_divergence(None, was_skipped=False)["status"] == "missing"
++    assert mod.learned_arc_verifier({}, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.learned_arc_verifier(None, was_skipped=False)["status"] == "missing"
++    assert mod.oracle_distinct_frontier(None, None, None, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.oracle_distinct_frontier(None, None, None, was_skipped=False)["status"] == "missing"
++    assert mod.certified_corpus_latent_or_absent(None, was_skipped=False)["status"] == "missing"
++    assert mod.certified_corpus_latent_or_absent({}, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert (
++        mod.certified_corpus_latent_or_absent({"distill_lift_ci95": [0.01, 0.02]}, was_skipped=False)[
++            "latent_or_absent"
++        ]
++        == "LATENT"
++    )
++    assert mod.arc_progress({}, was_skipped=True)["status"] == "skipped_flagged_adversarial"
++    assert mod.arc_progress(None, was_skipped=False)["status"] == "missing"
++    assert mod.live_solver_accuracy({}, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.live_solver_accuracy(None, was_skipped=False)["status"] == "missing"
++    assert mod.sota_v391({}, was_skipped=True)["status"] == "skipped_flagged_adversarial"
++    assert mod.registry_hygiene(None, was_skipped=False)["status"] == "missing"
++    assert mod.hardware_continuity({}, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.hardware_continuity(None, was_skipped=False)["status"] == "missing"
++    assert mod.verifier_as_reward(None, was_skipped=True)["status"] == (
++        "skipped_flagged_adversarial"
++    )
++    assert mod.verifier_as_reward(None, was_skipped=False)["status"] == "missing"
++
++    _expect_validation_error(artifact, lambda a: a.pop("honest_verdict"), "missing required")
++    _expect_validation_error(artifact, lambda a: a.update({"honest_verdict": "bad"}), "terminal")
++    _expect_validation_error(artifact, lambda a: a.update({"headline_outcome": "bad"}), "headline")
++    _expect_validation_error(
++        artifact, lambda a: a.update({"oracle_distinct_status": "bad"}), "oracle"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"verifier_as_reward_status": "bad"}), "reward"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"diffusiongemma_gate_resolvable": "bad"}), "DiffusionGemma"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"total_arc_levels_solved": 14}), "ARC levels"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"field_principles": []}), "field_principles"
++    )
++    _expect_validation_error(
++        artifact,
++        lambda a: a["field_principles"].update({"honest_verdict": "wrong"}),
++        "principle",
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"upstream_provenance": {}}), "upstream_provenance"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a["upstream_provenance"].append(42), "entries must be objects"
++    )
++    _expect_validation_error(
++        artifact,
++        lambda a: a["upstream_provenance"][0].update({"experiment_id": "4208"}),
++        "integer experiment_id",
++    )
++    _expect_validation_error(
++        artifact,
++        lambda a: a["upstream_provenance"][0].update({"fields_imported": "bad"}),
++        "fields_imported",
++    )
++    _expect_validation_error(
++        artifact,
++        lambda a: a["upstream_provenance"][0].update({"skipped": True}),
++        "skipped upstreams",
++    )
++    _expect_validation_error(
++        artifact, lambda a: a["upstream_provenance"][0].update({"sha256": "bad"}), "sha256"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"flagged_artifacts_skipped": {}}), "flagged"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"inference_substrate": "bad"}), "inference_substrate"
++    )
++    _expect_validation_error(
++        artifact, lambda a: a.update({"reproducibility_checksum": "bad"}), "checksum"
++    )
++    _expect_validation_error(artifact, lambda a: a.update({"duration_s": 99.0}), "checksum")
++
++    output_path = tmp_path / "results" / "experiment_4218_capstone_v390.json"
++    monkeypatch.setattr(mod, "write_artifact", lambda root: output_path)
++    assert mod.main() == 0
++    assert str(output_path) in capsys.readouterr().out
+-- 
+2.55.0
+

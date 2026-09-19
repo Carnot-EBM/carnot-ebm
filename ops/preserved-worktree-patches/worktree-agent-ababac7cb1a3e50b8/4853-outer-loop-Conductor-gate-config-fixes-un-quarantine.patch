@@ -1,0 +1,101 @@
+From 78ec69c53a0e5f0c21decfe79145bdfbec78e98b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 12:51:46 -0400
+Subject: [PATCH 04853/11362] [outer-loop] Conductor gate-config fixes:
+ un-quarantine the 4 tests (fix #1 already resolved via --no-cov)
+
+Operator-directed (after the n=200 result + conductor at the .458->.459 boundary). Addressing the two
+gate-config fixes:
+
+FIX #1 (transition gate slowness) -- ALREADY RESOLVED in-repo, verified: the latest transition module
+exp4968 uses `pytest <own-test> -q --no-cov` and the conductor's own full-suite gate already uses
+`--no-cov -o addopts=` (research_conductor.py:1354). No transition cap-fail since 12:48 UTC. Documented the
+DURABILITY REQUIREMENT in ops/known-issues.md so future transition modules keep --no-cov + own-test.
+
+FIX #2 (the 4 quarantined tests) -- ROOT CAUSE was NOT real-I/O hangs: diagnosed that 4940/4941/4943/4944
+are heavy-compute tests made ~15x slower by COVERAGE instrumentation (6s each with --no-cov vs 90s+ with
+coverage); the full coverage-instrumented suite then blew the codex cap. With coverage off in every
+conductor gate (fix #1), they pass in ~6s and no longer threaten a cap -> UN-QUARANTINED (removed from
+conftest collect_ignore). Verified: all 4 collected + 47 passed in 2.99s with --no-cov. No mocking needed
+(they were never broken). Restores their coverage in CI/full-suite runs (which have no codex cap).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/known-issues.md      | 19 +++++++++++++++++++
+ tests/python/conftest.py | 30 +++++++++++-------------------
+ 2 files changed, 30 insertions(+), 19 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ced5263c02..5aa1c19589 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,25 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### 2026-06-29 RESOLVED (outer-loop watchdog): milestone-TRANSITION pretest gate must use `--no-cov` + own-test (not full coverage-instrumented suite)
++
++**Incident:** the milestone .456 and .457 archive/activate TRANSITION tasks repeatedly FAILED with
++"Codex CLI error: Hard wall-clock cap after ~4801s" (caps at 04:04/05:27/06:50 + 12:48 UTC 2026-06-29),
++stalling each milestone rollover (~80 min wasted/transition; self-recovered via fast-retry / deliverable-
++exists). **Root cause:** the transition modules used `PRETEST_COMMAND = ["pytest", "tests/python", "-q"]`,
++which inherits pyproject COVERAGE addopts (`--cov ... --cov-fail-under=99`). Coverage instrumentation makes
++the full 43,704-test suite (incl. several heavy-compute tests like exp4940/4941/4943/4944, ~15x slower
++under coverage: 6s -> 90s+ each) exceed codex's 80-min cap. It was NEVER a hang — it was coverage cost.
++**Resolution (already converged in-repo):** the latest transition module `experiment_4968_archive_457_
++activate_458.py` uses `pytest <own-test-file> -q --no-cov` (fast targeted gate), and the conductor's own
++full-suite gate already uses `--no-cov -o addopts=` (research_conductor.py:1354). No transition cap-fail
++since 12:48. The 4 heavy tests were un-quarantined (they pass in ~6s with `--no-cov`; conftest
++collect_ignore note 2026-06-29). **DURABILITY REQUIREMENT for future transition-module authors (planner /
++outer-loop):** a milestone archive/activate transition's `PRETEST_COMMAND` MUST be
++`[".venv/bin/pytest", "tests/python/test_experiment_<N>_archive_*.py", "-q", "--no-cov"]` (its OWN test +
++`--no-cov`) — NEVER the full `tests/python` suite with coverage addopts, which re-introduces the cap.
++
++
+ ### 2026-06-26 (MANDATORY-NEXT-MILESTONE, operator-directed "ignoring the deadline, we MUST pursue oracle-distinct structural energy"): S0 — the cheap decisive core-bet probe
+ 
+ > **STATUS (2026-06-26): PROGRAM CONCLUDED — do NOT re-propose energy stages.** The full staged
+diff --git a/tests/python/conftest.py b/tests/python/conftest.py
+index e0760e99ba..8e6a99546d 100644
+--- a/tests/python/conftest.py
++++ b/tests/python/conftest.py
+@@ -70,25 +70,17 @@ collect_ignore = [
+     "test_experiment_1029_fover_expansion_v2.py",
+     "test_experiment_1031_energy_ssd_v3.py",
+     "test_experiment_1043_fover_expansion_v3.py",
+-    # test_experiment_4940/4941 (post-6/30 distributional-energy-verifier turnkey +
+-    # bank-and-pivot audit) each HANG the full suite: a test invokes mod.main(...) which
+-    # runs the real distributional-energy dry-run (model/FoVer-ensemble/data I/O) instead
+-    # of mocking it (30 dots then hang on the last item per file). The full `pytest
+-    # tests/python -q` pretest gate therefore never returns -> the milestone .457
+-    # archive/activate TRANSITION task ran codex past its 4801s wall-clock cap and FAILED
+-    # 2026-06-29 04:04 + 05:27 UTC (conductor stall loop; the pretest gate is
+-    # PRETEST_COMMAND=pytest tests/python -q in experiment_4957). Quarantined here (the
+-    # documented last-resort mechanism) to unblock the transition; the proper fix is to mock
+-    # the model/data I/O in mod.main for these two tests (their network-checker test is
+-    # already correctly monkeypatched). Observed: outer-loop watchdog 2026-06-29.
+-    "test_experiment_4940_distributional_energy_verifier_executable_spec.py",
+-    "test_experiment_4941_bank_and_pivot_audit.py",
+-    # test_experiment_4943/4944 hang the same way (full RUN >90s; the hang is at test-RUN
+-    # time, not collection — a bisect of the .457 test range 4940-4957 found exactly four
+-    # hangers: 4940, 4941, 4943, 4944; all the others complete in 66-89s). Same root cause +
+-    # same last-resort quarantine; same proper follow-up (mock the heavy I/O).
+-    "test_experiment_4943_stamping_backfill_and_wiring_readiness.py",
+-    "test_experiment_4944_kv260_continuity.py",
++    # 2026-06-29 RESOLVED + UN-QUARANTINED: test_experiment_4940/4941/4943/4944 were quarantined as an
++    # emergency unblock when the milestone .456/.457 archive/activate TRANSITION gate (then
++    # PRETEST_COMMAND=`pytest tests/python -q`, WITH pyproject coverage addopts) ran codex past its 4801s
++    # cap. ROOT CAUSE (diagnosed by the outer-loop watchdog): these are HEAVY-compute tests and COVERAGE
++    # INSTRUMENTATION made them ~15x slower (6s each with --no-cov vs 90s+ with coverage); the full
++    # coverage-instrumented suite then blew the cap. They were NEVER hanging on real I/O. FIXED at the
++    # gate: the transition modules now use `pytest <own-test> -q --no-cov` (exp4968), and the conductor's
++    # own full-suite gate already uses `--no-cov -o addopts=` (research_conductor.py:1354). With coverage
++    # off in every conductor gate, these tests pass in ~6s and no longer threaten any cap, so they are
++    # un-quarantined here (verified: all 4 pass rc=0 in ~6s with --no-cov). The remaining slowness only
++    # appears in full-suite-WITH-coverage runs (CI / manual), which have no codex cap.
+ ]
+ 
+ 
+-- 
+2.55.0
+

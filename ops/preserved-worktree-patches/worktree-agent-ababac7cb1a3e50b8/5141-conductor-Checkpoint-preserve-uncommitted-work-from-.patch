@@ -1,0 +1,80 @@
+From 90ca7d5bfde43f02675c4842bfc49037076d7fa1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 21:13:12 -0400
+Subject: [PATCH 05141/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...experiment_5059_d1_sota_refresh_audit.json | 27 +++++++++++++++++--
+ 4 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 525588f90e..d133d78672 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-07-01T00:58:13Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-07-01T01:13:10Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 771931243e..634b39168b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9688,3 +9688,4 @@ The contro |
+ | 2026-07-01 00:25 UTC | PHASE 0 transition -- archive .464, activate .465, | OK | 86 passed, 1 warning in 6.95s |
+ | 2026-07-01 00:40 UTC | PHASE A1 preflight -- split SOTA model readiness,  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-01 00:56 UTC | PHASE A2 SOTA candidate refresh -- use delayed con | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-01 01:11 UTC | PHASE D1 audit -- rerun the powered LoRA-EBM/EORM  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 57babba696..2a20109f5a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 33, "phase": "iteration_start", "started_at": "2026-07-01T00:58:13Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 34, "phase": "iteration_start", "started_at": "2026-07-01T01:13:10Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5059_d1_sota_refresh_audit.json b/results/experiment_5059_d1_sota_refresh_audit.json
+index 1213e8bc27..c6482ee511 100644
+--- a/results/experiment_5059_d1_sota_refresh_audit.json
++++ b/results/experiment_5059_d1_sota_refresh_audit.json
+@@ -1194,5 +1194,28 @@
+     "exp5058": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.json",
+     "frozen_candidates": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl"
+   },
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "delta_vs_tuned_sc=0.08 and frozen_candidate_delta=0.08 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "candidate_refresh_value_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.419143 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

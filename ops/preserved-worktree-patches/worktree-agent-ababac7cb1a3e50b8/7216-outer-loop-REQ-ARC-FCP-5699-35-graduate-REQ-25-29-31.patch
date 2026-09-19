@@ -1,0 +1,719 @@
+From 7970321624c7753caea2a63758ae12f74a2292b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 16 Jul 2026 13:46:59 -0400
+Subject: [PATCH 07216/11362] [outer-loop] REQ-ARC-FCP-5699-35: graduate
+ REQ-25/29/31 fixes to the live agent default
+
+The 25-game public roster is near-saturated for further per-game deepening
+(only lf52/sk48/bp35 aren't full_game_clear, all three already dead-ended on
+a recent attempt). Operator-directed pivot: graduate three validated,
+zero-regression sub-thread fixes from dev-only env-var gating to the
+production default, improving the scored hidden-game agent's induction
+robustness across all games instead of chasing one more banked level.
+
+Graduated: _proposer()'s max_tokens/timeout 2560/300->4096/600
+(REQ-32-validated for the live 9B model), refactor_prompt's structural
+reminder to default-on, and the stall-triggered bounded-refinement loop to
+default-on. All three keep an explicit =0 opt-out.
+
+Two real bugs found and fixed DURING graduation, not before it:
+
+1. The dev-only refinement-loop code unconditionally returned regardless of
+   outcome, which would have silently discarded a separate, valuable,
+   pre-existing trust-energy-based world-model selector on every non-planned
+   stall once made default. Fixed to only return on planned=True, falling
+   through otherwise.
+
+2. The test suite caught a deeper version of the same problem:
+   execute_bounded_llm_reinduction can raise mid-round (not just cleanly
+   return planned=False), and an exception propagates straight past the
+   fallthrough fix to the method's outermost handler, aborting the whole
+   attempt. Fixed with a second, local try/except around just that call,
+   falling through on any exception, matching the existing
+   program_synthesis_filter_error/ttt_prior_engine_error non-fatal pattern.
+
+A third, independent drift bug: _load_sge_candidate_router() builds its own
+separate proposer and its own test asserts it must match _proposer()'s
+config "IDENTICALLY" -- it had hardcoded max_tokens=2560 with no timeout
+override at all, silently drifting once _proposer()'s default moved. Fixed
+to read the same env-var-overridable defaults.
+
+Verification: the 5-file/78-test original scope passes (5 tests rewritten
+as graduated-default + explicit-opt-out pairs, none deleted); a ~3880-test
+repo-wide ARC/submission-package sweep found 38 failures before the
+local-exception fix, 9 resolved by it with zero new failures, and the
+remaining 29 cross-checked against a clean git worktree at the
+pre-graduation commit: 27 fail identically on the unmodified baseline
+(pre-existing, unrelated drift) and 2 pass cleanly in isolation on both
+clean and modified code (parallel-batch test pollution, not a regression).
+A direct memory-growth probe found the one CI memory-watchdog hit (+582MB)
+is a one-time import-warming cost (+810MB call 1, then +43MB/+2MB/+0MB
+calls 2-4, completely flat), not a production leak risk.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     | 110 ++++++++++++
+ ops/known-issues.md                           |  33 ++++
+ .../carnot/agentic/arc_competition_agent.py   | 169 +++++++++++-------
+ .../agentic/arc_executable_world_model.py     |   6 +-
+ ...rc_induce_prompt_large_grid_scalability.py |  28 ++-
+ .../python/test_arc_submitted_agent_parity.py |  31 ++--
+ ...xperiment_4544_llm_proposer_reinduction.py | 119 +++++++++++-
+ 7 files changed, 403 insertions(+), 93 deletions(-)
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 061ab77bf4..70180d62aa 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -7523,6 +7523,116 @@ budget and applying the structural reminder are BOTH independently necessary for
+ model, neither sufficient alone, and the resulting code's hardcoded example-coordinate structure
+ means this structural fix should not be read as having also closed the accuracy gap
+ 
++### REQ-ARC-FCP-5699-35: Graduate REQ-25/29/31 To The Live Agent Default -- With A Real Robustness Fix Found Along The Way
++
++The 25-game public roster is near-saturated for further per-game deepening (REQ-ARC-FCP-5699-33's
++own registry audit: only lf52/sk48/bp35 aren't `full_game_clear`, and all three already have a
++recent, dedicated deepening attempt on record that found nothing -- re-attempting without a new
++angle would be a doomed rerun). Operator-directed pivot: instead of chasing one more banked level,
++graduate the three validated, zero-regression fixes from this sub-thread out of dev-only env-var
++gating and into the actual production default -- improving the SCORED hidden-game agent's
++induction robustness across ALL games, not one.
++
++**The three graduations (all keep an explicit opt-out, matching the existing `CARNOT_ARC_MTP=0`
++pattern used elsewhere in the same files):**
++
++1. `_proposer()`'s `max_tokens`/`timeout` defaults (`arc_competition_agent.py`): `2560`/`300` ->
++   `4096`/`600`. REQ-ARC-FCP-5699-32 measured 4096/600 reaches `proposer_ok=True` on 6/6 rounds of
++   a real full-budget live run for THIS (9B) model -- the 8192 requirement REQ-ARC-FCP-5699-34
++   found was specific to a 3x larger, non-live candidate, not this one. Both env vars remain
++   overridable.
++2. `refactor_prompt`'s structural reminder (`arc_executable_world_model.py`): default-on
++   (`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER` now `!= "0"` instead of `== "1"`). REQ-31/32 found
++   zero regressions across a full real run.
++3. The stall-triggered bounded-refinement loop (`arc_competition_agent.py`): default-on
++   (`CARNOT_ARC_STALL_REFACTOR_LOOP` now `!= "0"` instead of `== "1"`) -- routes first-contact
++   induction through `execute_bounded_llm_reinduction`'s counterexample-driven refinement instead
++   of one single-shot attempt.
++
++**A real, self-caught bug found DURING graduation, not before it.** The dev-only version of (3)
++unconditionally `return`ed after the refinement-loop block regardless of whether it actually
++reached a plan. That was safe while opt-in (an operator explicitly traded the pre-existing
++`active_probe_controller`/plain single-shot fallback path away for the duration of a diagnostic
++run) but would have been a REAL regression once graduated to the always-on default: REQ-32's own
++measurement showed the strict `min_heldout_accuracy=1.0` gate this loop uses is rarely met (0/6
++rounds across a full g50t run), so EVERY non-planned stall would have silently discarded a
++separate, valuable, pre-existing mechanism -- a trust-energy-based world-model selector that does
++NOT require a perfect candidate, does NOT require `.refactor()` to exist, and was reachable for
++every prior stall event. Fixed by changing the unconditional `return` to a conditional one: return
++only when `stall_outcome.planned` is `True`; otherwise fall through to the unchanged
++`active_probe_controller` / plain single-shot path below, exactly as before this REQ.
++
++**A second, deeper bug found via the test suite, not by inspection.** Even with the fallthrough
++fix, a REAL regression surfaced in `tests/python/test_arc_world_model_trust_energy.py::
++test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate`: `execute_bounded_llm_reinduction`
++CAN raise mid-call (e.g. its round-2 `proposer.refactor(...)` call, if the round-1 candidate
++doesn't clear the strict gate) -- and an exception raised INSIDE the call propagates straight past
++my conditional-return fix (which only handles the CLEAN `planned=False` return case) to this
++method's OUTERMOST exception handler, aborting the entire `_induce_and_plan()` attempt and
++skipping the fallback path just the same, just via a different mechanism (an exception instead of
++a clean return). Root-caused via a temporary debug `traceback.print_exc()` in the outer handler
++(added, used, then reverted -- never left in the committed diff): `AttributeError: '_FakeProposer'
++object has no attribute 'refactor'` in the test's case, but any real exception during refinement
++(model timeout, malformed response, etc.) would trigger the identical failure mode in production.
++Fixed with a SECOND, LOCAL `try/except` around just the `execute_bounded_llm_reinduction` call
++itself: any exception now falls through to the plain path exactly like a clean `planned=False`
++outcome, recording `stall_refactor_loop_error` on the attempt (matching the existing non-fatal
++`program_synthesis_filter_error`/`ttt_prior_engine_error` pattern already used elsewhere in this
++same method). This is a genuine production robustness improvement, not merely a test fix -- the
++bug would have fired on ANY refinement-round exception in the live agent, not just this test's
++specific stub gap.
++
++**A third, independent drift bug found by the test suite's own "configured IDENTICALLY" contract.**
++`_load_sge_candidate_router()` builds its OWN separate `LocalGGUFProposer` and its own test
++(`test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config`) asserts this
++must match `_proposer()`'s config "IDENTICALLY" (so both share one warm llama-server, never a
++second model load). It turned out to hardcode `max_tokens=2560` as a bare literal and never set
++`timeout` at all -- so when `_proposer()`'s default moved to 4096/600, this function silently
++drifted out of sync, exactly the failure mode its own docstring warns against. Fixed to read the
++SAME env-var-overridable defaults `_proposer()` now does.
++
++**Verification (thorough, given this touches the scored hidden-game agent):**
++
++1. The 5 original test files (78 tests): 5 pre-existing tests needed updating because their own
++   premise ("unset == old/disabled behavior") is now intentionally false -- each was rewritten as
++   a graduated-default test plus a companion explicit-opt-out test preserving the old behavior
++   byte-for-byte, rather than deleted. All 78 pass.
++2. A repo-wide ARC/submission-package sweep (`tests/python/ -k "arc_ or arc3 or submission_package
++   or 4544 or 4744"`, ~3880 tests) found 38 failures before the local try/except fix; the fix
++   resolved 9 of them (all sharing the same root cause -- the propagating-exception bug above) with
++   ZERO new failures introduced. The remaining 29 were cross-checked against a clean `git worktree`
++   at the pre-graduation commit: 27 fail identically on the unmodified baseline (confirmed
++   pre-existing, unrelated drift -- e.g. a stale committed artifact's schema, a growing
++   generic-operator registry's selection ordering) and the other 2
++   (`test_off_arc_execution_verifier_transfer_accumulate.py`) pass cleanly in isolation on BOTH the
++   clean baseline and the modified code, confirming they were parallel-batch test-pollution
++   artifacts, not a real regression.
++3. A direct memory-growth probe (4 repeated calls to `_induce_and_plan()` through the graduated
++   path) found the pytest memory-watchdog's one CI-relevant hit
++   (`test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate`'s teardown, +582MB) is a
++   ONE-TIME import-warming cost (heavy candidate-scoring/DSL-fitting modules imported for the first
++   time), not a real per-call leak: RSS grew +810MB on the first call, then +43MB, +2MB, +0MB on
++   calls 2-4 -- completely flat. Not a production risk for a long-running Kaggle session; the cost
++   is paid once, not accumulated.
++
++Required field principles:
++
++- `stall_refactor_loop_error`: principle "records WHY the bounded-refinement attempt was abandoned
++  when it fails via exception rather than a clean planned=False, so a reviewer can distinguish
++  'the model tried and failed the strict gate' from 'the mechanism itself broke' without needing to
++  reproduce the failure."
++
++#### SCENARIO-ARC-FCP-5699-35-GRADUATION-PRESERVES-THE-PRE-EXISTING-FALLBACK
++
++Given the three REQ-25/29/31 fixes graduated from dev-only opt-in to the production default
++When a stall-triggered induction attempt's bounded-refinement loop either (a) completes cleanly
++without reaching a plan, or (b) raises an exception mid-round (e.g. a proposer that cannot complete
++a refactor round)
++Then in BOTH cases execution falls through to the pre-existing `active_probe_controller` / plain
++single-shot trust-energy-selector path exactly as it did before this REQ -- the graduation is
++strictly additive, never silently discarding a working fallback mechanism, verified by both a
++targeted regression test and a clean-worktree-diffed repo-wide sweep showing zero new failures
++
+ ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+ 
+ `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index fc6822d557..5c65abbbe5 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1076,6 +1076,39 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+    but ONLY together with the reminder -- neither alone was sufficient (both orderings tested).
+    **Does NOT settle:** whether this now-completing candidate would raise heldout_accuracy above
+    the 0.125 ceiling -- the hardcoded-coordinate structure makes that implausible but unmeasured.
++
++   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-35, operator-directed pivot: the 25-game
++   public roster is near-saturated for further deepening (only lf52/sk48/bp35 aren't
++   full_game_clear, all three already dead-ended on a recent attempt) -- graduate the three
++   validated, zero-regression sub-thread fixes to the PRODUCTION default instead, benefiting the
++   scored agent across ALL games rather than chasing one more banked level):** graduated
++   `_proposer()`'s max_tokens/timeout 2560/300->4096/600 (REQ-32-validated for the live 9B model),
++   `refactor_prompt`'s structural reminder to default-on, and the stall-triggered bounded-refinement
++   loop to default-on -- all three keep an explicit `=0` opt-out. **Two real bugs found and fixed
++   DURING graduation, not before it:** (1) the dev-only refinement-loop code unconditionally
++   `return`ed regardless of outcome, which would have silently discarded a separate, valuable,
++   pre-existing trust-energy-based world-model selector (no perfect-candidate requirement, no
++   `.refactor()` dependency) on every non-planned stall once made default -- fixed to only return
++   on `planned=True`, falling through otherwise; (2) the test suite caught a DEEPER version of the
++   same problem: `execute_bounded_llm_reinduction` can RAISE mid-round (not just cleanly return
++   `planned=False`), and an exception propagates straight past the fallthrough fix to the method's
++   outermost handler, aborting the whole attempt -- fixed with a second, local try/except around
++   just that call, falling through on ANY exception, matching the existing
++   `program_synthesis_filter_error`/`ttt_prior_engine_error` non-fatal pattern already in the same
++   method. **A third, independent drift bug**: `_load_sge_candidate_router()` builds its own
++   separate proposer and its OWN test asserts it must match `_proposer()`'s config "IDENTICALLY" --
++   it had hardcoded `max_tokens=2560` with no `timeout` override at all, silently drifting once
++   `_proposer()`'s default moved; fixed to read the same env-var-overridable defaults. **Verification
++   (thorough, given the scored hidden-game agent is affected):** the 5-file/78-test original scope
++   passes (5 tests rewritten as graduated-default + explicit-opt-out pairs, none deleted); a
++   ~3880-test repo-wide ARC/submission-package sweep found 38 failures before the local-exception
++   fix, 9 resolved by it with zero new failures, and the remaining 29 cross-checked against a clean
++   `git worktree` at the pre-graduation commit: 27 fail identically on the unmodified baseline
++   (pre-existing, unrelated drift) and 2 pass cleanly in isolation on both clean and modified code
++   (parallel-batch test pollution, not a regression). A direct memory-growth probe (4 repeated
++   `_induce_and_plan()` calls) found the one CI memory-watchdog hit (+582MB) is a ONE-TIME
++   import-warming cost (+810MB call 1, then +43MB/+2MB/+0MB calls 2-4, completely flat) -- not a
++   production leak risk for a long-running Kaggle session.
+ 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index cff990af08..d158310301 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -526,7 +526,13 @@ def _load_sge_candidate_router(game_id: str) -> Any | None:
+         mtp=(_os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+         kv_quant="q8_0",
+         no_think_prefix="/no_think\n",
+-        max_tokens=2560,
++        # REQ-ARC-FCP-5699-35: read the SAME env-var-overridable defaults as _proposer()'s own
++        # lazy default (4096/600, was a hardcoded max_tokens=2560 literal with no timeout
++        # override at all -- caught by test_req_arc_fcp_5699_11_load_sge_candidate_router_
++        # reuses_frozen_generator_config's own "configured IDENTICALLY" contract when the
++        # _proposer() default graduated and this one silently didn't move with it).
++        max_tokens=int(_os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
++        timeout=int(_os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
+         n_gpu_layers=int(_os.environ.get("CARNOT_ARC_NGL", "999")),
+     )
+     return SGECandidateRouter(
+@@ -3328,20 +3334,23 @@ class E3AgentPolicy:
+             # keeps that many of the top weight layers in system RAM (mmap'd, prefilled in page cache) instead
+             # of VRAM, freeing GPU memory for the q8 KV-cache + the live CNN dynamics fit that coexists with
+             # the LLM on the shared 16GB eval GPU. Acceptable because the ARC eval has no internal time limit.
+-            # DEV-ONLY overrides (REQ-ARC-FCP-5699-28, unset -> 2560/300, byte-identical to
+-            # before): live evidence (a g50t refactor-loop round genuinely hit "[HIT
+-            # n_predict=2560 OUTPUT LIMIT before completing]") confirmed max_tokens is a real
+-            # bottleneck for the induce/refactor calls this proposer serves; the sge arm's
+-            # separate 300s TimeoutError showed the existing timeout is already sometimes
+-            # insufficient at the CURRENT budget. Both need to move together, not just one.
++            # Graduated to default 4096/600 (REQ-ARC-FCP-5699-35, was 2560/300 dev-only override
++            # per REQ-ARC-FCP-5699-28): live evidence (a g50t refactor-loop round genuinely hit
++            # "[HIT n_predict=2560 OUTPUT LIMIT before completing]") confirmed max_tokens was a
++            # real bottleneck for the induce/refactor calls this proposer serves; the sge arm's
++            # separate 300s TimeoutError showed the old timeout was already sometimes
++            # insufficient at the old budget. REQ-ARC-FCP-5699-32 validated 4096/600 reaches
++            # proposer_ok=True on 6/6 rounds of a real full-budget live run for THIS (9B) model --
++            # the 8192 requirement found in REQ-ARC-FCP-5699-34 was specific to a 3x larger,
++            # non-live candidate model, not this one. Both env vars remain overridable.
+             self.proposer = LocalGGUFProposer(
+                 repo_substr="Qwen3.5-9B-MTP",
+                 model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
+                 mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+                 kv_quant="q8_0",
+                 no_think_prefix="/no_think\n",
+-                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "2560")),
+-                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "300")),
++                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
++                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
+                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
+             )
+         return self.proposer
+@@ -3668,61 +3677,93 @@ class E3AgentPolicy:
+                     self.plan = list(outcome.plan)
+                 return
+             self._fit_dsl_model()
+-            # DEV-ONLY (REQ-ARC-FCP-5699-24, unset in production -- falls through to the
+-            # unchanged plain single-shot path below): the refactor/refinement loop
+-            # (execute_bounded_llm_reinduction) was previously reachable ONLY from the
+-            # level_up_reinduction branch above, so stall-triggered first-contact induction got
+-            # exactly one shot with zero counterexample-driven refinement. This routes the SAME
+-            # bounded-refinement mechanism through the stall path, with
+-            # previous_level_complete_grid=None and structural_goal_provider=None (both
+-            # confirmed handled gracefully by execute_bounded_llm_reinduction without crashing --
+-            # the goal-repair half still can't help without an exemplar, per REQ-ARC-FCP-5699-24,
+-            # but the DYNAMICS-side refactor rounds operate on transition mismatches, which DO
+-            # exist pre-first-win).
+-            if os.environ.get("CARNOT_ARC_STALL_REFACTOR_LOOP") == "1":
+-                stall_outcome = execute_bounded_llm_reinduction(
+-                    game=self.short,
+-                    transitions=active_transitions,
+-                    cell=self.cell,
+-                    root_grid=self.root_grid,
+-                    proposer=self._proposer(),
+-                    candidate_provider=self._world_model_candidates,
+-                    load_engine=e3.load_engine,
+-                    plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
+-                    max_rounds=MAX_REFINEMENT_ROUNDS,
+-                    min_heldout_accuracy=1.0,
+-                    min_goal_predicate_consistency=1.0,
+-                    previous_level_complete_grid=self._previous_level_complete_grid,
+-                    enable_subgoal_search=self.subgoal_search,
+-                    subgoal_budget=self.subgoal_budget,
+-                    value_head=self.value_head,
+-                    enable_factored_planner=self.factored_planner,
+-                    factored_trust_threshold=self.factored_trust_threshold,
+-                    structural_goal_provider=None,
+-                )
+-                attempt.update(
+-                    {
+-                        "model_specs": stall_outcome.model_specs,
+-                        "planned": bool(stall_outcome.planned),
+-                        "skipped": stall_outcome.skipped,
+-                        "plan_length": len(stall_outcome.plan),
+-                        "selected_candidate_name": stall_outcome.selected_candidate_name,
+-                        "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
+-                        "refinement_rounds": list(stall_outcome.rounds),
+-                        "counterexamples": list(stall_outcome.counterexamples),
+-                        "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
+-                        "goal_predicate_satisfiable": bool(
+-                            stall_outcome.goal_predicate_satisfiable
+-                        ),
+-                        "goal_satisfiability": dict(stall_outcome.goal_satisfiability),
+-                        "stall_refactor_loop_used": True,
+-                    }
+-                )
+-                if stall_outcome.goal_predicate is not None:
+-                    self._install_goal_bias(stall_outcome.goal_predicate)
+-                if stall_outcome.planned:
+-                    self.plan = list(stall_outcome.plan)
+-                return
++            # Graduated to default-on (REQ-ARC-FCP-5699-35, was DEV-ONLY per REQ-ARC-FCP-5699-24
++            # / -25): the refactor/refinement loop (execute_bounded_llm_reinduction) was
++            # previously reachable ONLY from the level_up_reinduction branch above, so
++            # stall-triggered first-contact induction got exactly one shot with zero
++            # counterexample-driven refinement. This routes the SAME bounded-refinement
++            # mechanism through the stall path, with previous_level_complete_grid=None and
++            # structural_goal_provider=None (both confirmed handled gracefully by
++            # execute_bounded_llm_reinduction without crashing -- the goal-repair half still
++            # can't help without an exemplar, per REQ-ARC-FCP-5699-24, but the DYNAMICS-side
++            # refactor rounds operate on transition mismatches, which DO exist pre-first-win).
++            # CARNOT_ARC_STALL_REFACTOR_LOOP=0 remains an explicit opt-out, matching the
++            # CARNOT_ARC_MTP=0 pattern in _proposer() above.
++            #
++            # IMPORTANT graduation fix (REQ-ARC-FCP-5699-35): the dev-only version below
++            # unconditionally `return`ed after this block regardless of whether stall_outcome
++            # actually reached a plan. That was fine while opt-in (an operator explicitly chose
++            # to trade the active_probe/plain-path fallback away), but silently discarding a
++            # working fallback for every non-planned outcome would be a real regression once this
++            # is the production default -- REQ-ARC-FCP-5699-32's own measurement showed the
++            # min_heldout_accuracy=1.0 gate is rarely met (0/6 rounds across a full real run on
++            # g50t). So this now falls through to the unchanged active_probe_controller / plain
++            # single-shot path below whenever the refinement loop does NOT reach a planned
++            # outcome, instead of returning unconditionally -- strictly additive, never removes
++            # the pre-graduation fallback capability.
++            if os.environ.get("CARNOT_ARC_STALL_REFACTOR_LOOP", "1") != "0":
++                # Local try/except (REQ-ARC-FCP-5699-35 hardening, found via a real regression
++                # while graduating: test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate
++                # broke because execute_bounded_llm_reinduction's round-2 refactor() call can
++                # raise (e.g. a proposer/model that can't complete a refactor round) BEFORE ever
++                # returning a result -- an exception here previously propagated straight to this
++                # method's OUTERMOST except block, aborting the ENTIRE induce-and-plan attempt
++                # and silently skipping the plain single-shot / trust-energy-selector path below,
++                # not just the planned=True short-circuit my fallthrough already handles. Any
++                # exception during the bounded-refinement attempt now falls through exactly like
++                # a clean planned=False outcome -- strictly additive, never removes the
++                # pre-graduation fallback capability, matching the surrounding
++                # program_synthesis_filter_error / ttt_prior_engine_error non-fatal pattern.
++                try:
++                    stall_outcome = execute_bounded_llm_reinduction(
++                        game=self.short,
++                        transitions=active_transitions,
++                        cell=self.cell,
++                        root_grid=self.root_grid,
++                        proposer=self._proposer(),
++                        candidate_provider=self._world_model_candidates,
++                        load_engine=e3.load_engine,
++                        plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
++                        max_rounds=MAX_REFINEMENT_ROUNDS,
++                        min_heldout_accuracy=1.0,
++                        min_goal_predicate_consistency=1.0,
++                        previous_level_complete_grid=self._previous_level_complete_grid,
++                        enable_subgoal_search=self.subgoal_search,
++                        subgoal_budget=self.subgoal_budget,
++                        value_head=self.value_head,
++                        enable_factored_planner=self.factored_planner,
++                        factored_trust_threshold=self.factored_trust_threshold,
++                        structural_goal_provider=None,
++                    )
++                except Exception as stall_exc:
++                    attempt["stall_refactor_loop_used"] = False
++                    attempt["stall_refactor_loop_error"] = repr(stall_exc)[:160]
++                    stall_outcome = None
++                if stall_outcome is not None:
++                    attempt.update(
++                        {
++                            "model_specs": stall_outcome.model_specs,
++                            "planned": bool(stall_outcome.planned),
++                            "skipped": stall_outcome.skipped,
++                            "plan_length": len(stall_outcome.plan),
++                            "selected_candidate_name": stall_outcome.selected_candidate_name,
++                            "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
++                            "refinement_rounds": list(stall_outcome.rounds),
++                            "counterexamples": list(stall_outcome.counterexamples),
++                            "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
++                            "goal_predicate_satisfiable": bool(
++                                stall_outcome.goal_predicate_satisfiable
++                            ),
++                            "goal_satisfiability": dict(stall_outcome.goal_satisfiability),
++                            "stall_refactor_loop_used": True,
++                        }
++                    )
++                    if stall_outcome.goal_predicate is not None:
++                        self._install_goal_bias(stall_outcome.goal_predicate)
++                    if stall_outcome.planned:
++                        self.plan = list(stall_outcome.plan)
++                        return
++                # else: fall through to active_probe_controller / plain single-shot path below
+             if self.active_probe_controller_enabled and self.root_grid is not None:
+                 try:
+                     from carnot.agentic.arc_active_probe import (
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 0da2b2dbaf..90b63d098b 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -1250,7 +1250,11 @@ def refactor_prompt(game: str, vr: VerifyResult) -> str:
+     mism = json.dumps(_bounded_mismatches(vr.mismatches), indent=1)
+     before = ""
+     after = ""
+-    if os.environ.get("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER") == "1":
++    # Graduated to default-on (REQ-ARC-FCP-5699-35): REQ-31/32 validated this reminder fixes a
++    # real class-wrapping/missing-function pathology with zero observed regressions (6/6 success
++    # across a full-budget live run). CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=0 remains an
++    # explicit opt-out escape hatch, matching the CARNOT_ARC_MTP=0 pattern elsewhere in this file.
++    if os.environ.get("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "1") != "0":
+         before = _REFACTOR_STRUCTURE_REMINDER_BEFORE
+         after = _REFACTOR_STRUCTURE_REMINDER_AFTER
+     return f"""The executable world model at results/arc_e3/{game}/world_model.py reproduces
+diff --git a/tests/python/test_arc_induce_prompt_large_grid_scalability.py b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+index 8f3dc7bd06..150fee4fa6 100644
+--- a/tests/python/test_arc_induce_prompt_large_grid_scalability.py
++++ b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+@@ -224,13 +224,16 @@ def test_req_arc_fcp_5699_26_bounded_mismatches_leaves_small_lists_untouched():
+     assert "your_prediction_was_wrong_at_omitted_count" not in bounded[0]
+ 
+ 
+-def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_scale():
++def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_scale(monkeypatch):
+     """Regression test for the exact bug: 5 mismatches this large previously serialized past
+     4000 chars and got hard-truncated into invalid JSON. Confirms the fix's MISMATCHES block
+-    parses as JSON regardless."""
++    parses as JSON regardless. Structure reminder explicitly disabled: REQ-ARC-FCP-5699-35
++    graduated it to default-on, and its trailing text after the MISMATCHES block is unrelated
++    to what THIS test checks (the mismatches JSON serialization itself)."""
+     import json as _json
+     from types import SimpleNamespace
+ 
++    monkeypatch.setenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "0")
+     mismatches = [_mismatch(i, n_cells=30) for i in range(5)]
+     # sanity-check the regression premise: the OLD approach really would have produced
+     # invalid JSON at this scale.
+@@ -276,12 +279,27 @@ def _refactor_vr():
+     )
+ 
+ 
+-def test_req_arc_fcp_5699_31_refactor_prompt_default_unset_is_byte_identical(monkeypatch):
+-    """Regression-safety anchor: CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER unset (production
+-    default) -- the prompt must be byte-identical to the pre-5699-31 template."""
++def test_req_arc_fcp_5699_35_refactor_prompt_default_unset_now_includes_reminder(monkeypatch):
++    """REQ-ARC-FCP-5699-35 graduated the reminder to default-on: CARNOT_ARC_REFACTOR_STRUCTURE_
++    REMINDER unset (production default) now behaves identically to the explicit "1" case,
++    superseding the REQ-ARC-FCP-5699-31 dev-only "unset == byte-identical to pre-31" contract."""
+     monkeypatch.delenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", raising=False)
+     vr = _refactor_vr()
+     prompt = e3.refactor_prompt("g50t", vr)
++    assert "REQUIRED OUTPUT STRUCTURE" in prompt
++    assert "def engine(grid, action, data):" in prompt
++    assert "def is_level_complete(grid):" in prompt
++
++
++def test_req_arc_fcp_5699_35_refactor_prompt_explicit_opt_out_is_byte_identical_to_pre_31(
++    monkeypatch,
++):
++    """The explicit opt-out (CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=0) still reproduces the
++    exact pre-REQ-ARC-FCP-5699-31 template byte-for-byte -- the escape hatch this graduation
++    preserves, matching the CARNOT_ARC_MTP=0 pattern used elsewhere for this same purpose."""
++    monkeypatch.setenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "0")
++    vr = _refactor_vr()
++    prompt = e3.refactor_prompt("g50t", vr)
+     assert "REQUIRED OUTPUT STRUCTURE" not in prompt
+     assert "class WorldModel" not in prompt  # sanity: nothing about classes is injected
+     tail = (
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index a70957a27b..cd6e096786 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -252,31 +252,34 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
+     assert completer.mtp is True
+     assert completer.kv_quant == "q8_0"
+     assert completer.no_think_prefix == "/no_think\n"
+-    assert completer.max_tokens == 2560
++    assert completer.max_tokens == 4096  # REQ-ARC-FCP-5699-35: graduated default, was 2560
++    assert (
++        completer.timeout == 600
++    )  # REQ-ARC-FCP-5699-35: graduated default, was the 300 field default
+     assert completer.port == 8919  # the DEFAULT port, same as _proposer()'s own default
+ 
+ 
+-def test_req_arc_fcp_5699_28_proposer_default_max_tokens_and_timeout_unchanged():
+-    """Neither env var set (production default) -- _proposer()'s lazy default must construct
+-    byte-identical to before REQ-ARC-FCP-5699-28: max_tokens=2560, timeout=300."""
++def test_req_arc_fcp_5699_35_proposer_default_max_tokens_and_timeout_graduated():
++    """Neither env var set (production default) -- _proposer()'s lazy default now constructs
++    with the REQ-ARC-FCP-5699-32-validated budget (max_tokens=4096, timeout=600), graduated
++    from the REQ-ARC-FCP-5699-28 dev-only override (was 2560/300, the pre-32 default)."""
+     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+     proposer = pol._proposer()
+     assert isinstance(proposer, LocalGGUFProposer)
+-    assert proposer.max_tokens == 2560
+-    assert proposer.timeout == 300
++    assert proposer.max_tokens == 4096
++    assert proposer.timeout == 600
+ 
+ 
+ def test_req_arc_fcp_5699_28_proposer_max_tokens_and_timeout_env_override(monkeypatch):
+-    """CARNOT_ARC_INDUCE_MAX_TOKENS/CARNOT_ARC_INDUCE_TIMEOUT let a diagnostic run raise both
+-    values -- REQ-ARC-FCP-5699-28's own live evidence (a real "[HIT n_predict=2560 OUTPUT LIMIT
+-    before completing]" truncation, plus a separate 300s TimeoutError) confirmed both are real
+-    bottlenecks that need to move together."""
+-    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")
+-    monkeypatch.setenv("CARNOT_ARC_INDUCE_TIMEOUT", "600")
++    """CARNOT_ARC_INDUCE_MAX_TOKENS/CARNOT_ARC_INDUCE_TIMEOUT still let a diagnostic run
++    override the (now-graduated) default to different values -- the override mechanism REQ-28
++    introduced survives REQ-35's default-value graduation unchanged."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TIMEOUT", "900")
+     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+     proposer = pol._proposer()
+-    assert proposer.max_tokens == 4096
+-    assert proposer.timeout == 600
++    assert proposer.max_tokens == 8192
++    assert proposer.timeout == 900
+ 
+ 
+ def test_req_arc_fcp_5699_11_load_submitted_candidate_router_uses_sge_when_enabled(monkeypatch):
+diff --git a/tests/python/test_experiment_4544_llm_proposer_reinduction.py b/tests/python/test_experiment_4544_llm_proposer_reinduction.py
+index be72638c3d..66ccdcb05e 100644
+--- a/tests/python/test_experiment_4544_llm_proposer_reinduction.py
++++ b/tests/python/test_experiment_4544_llm_proposer_reinduction.py
+@@ -391,19 +391,63 @@ def test_scenario_arc_wmte_4544_e3_policy_records_llm_refinement(monkeypatch) ->
+     assert attempt["verifier_is_oracle"] is False
+ 
+ 
+-def test_req_arc_fcp_5699_24_stall_refactor_loop_disabled_by_default(monkeypatch) -> None:
+-    """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP unset (production default) -- a
+-    stall-triggered (first-contact) induction attempt must NOT call
+-    execute_bounded_llm_reinduction; it falls through to the pre-existing plain single-shot path,
+-    byte-identical to before this REQ."""
++def test_req_arc_fcp_5699_35_stall_refactor_loop_enabled_by_default(monkeypatch) -> None:
++    """REQ-ARC-FCP-5699-35 graduated this to default-on: CARNOT_ARC_STALL_REFACTOR_LOOP unset
++    (production default) now DOES route a stall-triggered (first-contact) induction attempt
++    through execute_bounded_llm_reinduction, superseding the REQ-ARC-FCP-5699-24 dev-only
++    "unset == disabled" contract."""
+ 
+     from carnot.agentic import arc_competition_agent as agent
++    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+ 
+     monkeypatch.delenv("CARNOT_ARC_STALL_REFACTOR_LOOP", raising=False)
+ 
++    called = {"n": 0}
++
++    def _capture(**_kwargs):
++        called["n"] += 1
++        return LlmReinductionResult(
++            planned=False,
++            plan=[],
++            goal_predicate=None,
++            engine=None,
++            skipped="proposer_failed",
++        )
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _capture, raising=False)
++
++    policy = agent.E3AgentPolicy(
++        "paritytest",
++        proposer=SimpleNamespace(
++            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
++        ),
++        value_head=lambda _frame: 0.0,
++    )
++    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
++    policy.root_grid = np.array([[1]], dtype=np.int16)
++    policy._pending_induction_reason = "stall"
++
++    policy._induce_and_plan()
++
++    assert called["n"] == 1
++    attempt = policy.induction_attempts[-1]
++    assert attempt["reason"] == "stall"
++    assert attempt["stall_refactor_loop_used"] is True
++
++
++def test_req_arc_fcp_5699_35_stall_refactor_loop_explicit_opt_out(monkeypatch) -> None:
++    """The explicit opt-out (CARNOT_ARC_STALL_REFACTOR_LOOP=0) still reproduces the exact
++    pre-REQ-ARC-FCP-5699-24 behavior: execute_bounded_llm_reinduction is never called on a
++    stall, and the attempt falls through to the pre-existing plain single-shot path -- the
++    escape hatch this graduation preserves."""
++
++    from carnot.agentic import arc_competition_agent as agent
++
++    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "0")
++
+     def _fail_if_called(**_kwargs):
+         raise AssertionError(
+-            "execute_bounded_llm_reinduction must not fire when the env var is unset"
++            "execute_bounded_llm_reinduction must not fire when explicitly disabled"
+         )
+ 
+     monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fail_if_called, raising=False)
+@@ -431,7 +475,10 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
+     """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP=1 routes a stall-triggered
+     (first-contact) induction attempt through execute_bounded_llm_reinduction, with
+     previous_level_complete_grid=None (no exemplar exists yet) and structural_goal_provider=None,
+-    and records the outcome onto the attempt exactly as the level_up_reinduction branch does."""
++    and records the outcome onto the attempt exactly as the level_up_reinduction branch does.
++    Since the mocked outcome is planned=False, this also exercises REQ-ARC-FCP-5699-35's
++    fallthrough to the plain single-shot path (the proposer stub below needs a real .induce()
++    so that fallthrough completes instead of raising AttributeError on the minimal stub)."""
+ 
+     from carnot.agentic import arc_competition_agent as agent
+     from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+@@ -464,7 +511,10 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
+ 
+     policy = agent.E3AgentPolicy(
+         "paritytest",
+-        proposer=SimpleNamespace(model_specs=result.model_specs),
++        proposer=SimpleNamespace(
++            model_specs=result.model_specs,
++            induce=lambda *_a, **_k: (False, "test_stub_declines"),
++        ),
+         value_head=lambda _frame: 0.0,
+     )
+     policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+@@ -477,12 +527,63 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
+     assert captured_kwargs["structural_goal_provider"] is None
+ 
+     attempt = policy.induction_attempts[-1]
++    # the stall loop's own fields survive the fallthrough (they're not touched again below)
+     assert attempt["stall_refactor_loop_used"] is True
+     assert attempt["refinement_rounds_used"] == 3
+-    assert attempt["skipped"] == "no_reachable_plan_after_refinement"
++    # REQ-ARC-FCP-5699-35's fallthrough then tries the plain single-shot path (since
++    # planned=False), whose own outcome legitimately supersedes "skipped"/"planned" as the
++    # attempt's FINAL overall result -- both sub-outcomes are honestly represented: the stall
++    # loop genuinely ran 3 rounds (recorded above), AND neither mechanism produced a plan.
++    assert attempt["skipped"] == "proposer_failed_or_missing_root"
+     assert attempt["planned"] is False
+ 
+ 
++def test_req_arc_fcp_5699_35_stall_refactor_loop_planned_true_does_not_fall_through(
++    monkeypatch,
++) -> None:
++    """When execute_bounded_llm_reinduction DOES reach a plan (planned=True), the stall path
++    returns immediately with that plan installed -- it must NOT fall through to the plain
++    single-shot path and overwrite the already-successful outcome."""
++
++    from carnot.agentic import arc_competition_agent as agent
++    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
++
++    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1")
++
++    plan = [{"action": 1}]
++    result = LlmReinductionResult(
++        planned=True,
++        plan=plan,
++        goal_predicate=None,
++        engine=None,
++        refinement_rounds_used=1,
++        model_specs="stub",
++        skipped="",
++    )
++
++    monkeypatch.setattr(
++        agent, "execute_bounded_llm_reinduction", lambda **_k: result, raising=False
++    )
++
++    def _fail_if_called(*_a, **_k):
++        raise AssertionError("plain single-shot path must not fire when already planned=True")
++
++    policy = agent.E3AgentPolicy(
++        "paritytest",
++        proposer=SimpleNamespace(model_specs="stub", induce=_fail_if_called),
++        value_head=lambda _frame: 0.0,
++    )
++    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
++    policy.root_grid = np.array([[1]], dtype=np.int16)
++    policy._pending_induction_reason = "stall"
++
++    policy._induce_and_plan()  # must not raise the AssertionError above
++
++    attempt = policy.induction_attempts[-1]
++    assert attempt["planned"] is True
++    assert policy.plan == plan
++
++
+ def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
+     """REQ-ARC-WMTE-4544: helper branches emit compact counterexamples."""
+ 
+-- 
+2.55.0
+

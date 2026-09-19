@@ -1,0 +1,654 @@
+From 064aaa92d32bd2332e7cc52e93f141c1aa8691ed Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 11:33:19 -0400
+Subject: [PATCH 08528/11362] Share one BFS per call instead of one per node in
+ StepwiseExplorer (2026-08-08 review, Speed #1)
+
+_frontier ran a fresh, independent BFS over the whole known graph for
+every eligible node on every call, then next_move re-ran BFS again for
+the winner; _partial_forward_path repeated the same shape, firing one BFS
+per candidate ancestor. Every one of these BFS calls shares the same
+source, self.cur, so they were computing the same distances repeatedly --
+cost that grows with the action budget, which this project just raised
+400 -> 2000. Found in the 2026-08-08 adversarial review
+(docs/research-notes/live-agent-adversarial-review-2026-08-08.md, Speed
+finding 1).
+
+Adds a cache keyed on (self.cur, self._adj_version) (_adj_version bumps
+only when _record_forward_edge learns a genuinely new edge). A new
+_forward_paths_from(src) runs the BFS once, to completion, returning
+every forward-reachable node's path; _cur_forward_paths() serves the
+cached map; _exact_forward_path(src, dst) is an O(1) lookup when
+src == self.cur and falls back unchanged to the original
+_exact_shortest_path otherwise, so _similarity_shortest_path's different-
+source calls are provably untouched. _shortest_path (used by both
+_frontier's per-node key and next_move's winner lookup) and
+_partial_forward_path's ancestor scan now call _exact_forward_path
+instead of re-running BFS. _exact_shortest_path itself is unchanged.
+
+Behavior preservation: both the old and new BFS use the same FIFO queue,
+same per-node edge iteration order, and same first-arrival-wins
+semantics -- running to completion instead of stopping early cannot
+change which path is assigned to a node, since neither implementation
+ever revisits an already-assigned node. The independent verifier wrote
+its own adversarial test (a diamond graph with a genuine same-depth tie
+between two routes) to confirm tie-break order matches exactly, closing
+the one gap the shipped tests left untested.
+
+2 new tests added to test_experiment_4523_forward_walk_navigation.py
+(alongside the 4 pre-existing, untouched): node-by-node agreement between
+_exact_forward_path and the untouched _exact_shortest_path on a branching
+graph with an unreachable node, plus cache reuse/invalidation on a new
+edge and on self.cur moving; and a spy proving _partial_forward_path now
+runs exactly one shared BFS across three candidate ancestors (versus
+three independent runs before), replaying the old per-ancestor algorithm
+inline to confirm a byte-identical result. Adversarially verified
+independently as CONFIRMED_FIXED, "safe to commit as-is." Re-verified
+myself -- 6/6 pass, --no-cov, targeted file only; syntax-checked the
+staged content directly before running anything, after fix2's patch-
+splitting mishap earlier in this same session.
+
+Adds REQ-ARC-WMTE-6222 to the openspec capability (already present from
+the first commit's spec batch). 12 results/*.json artifacts get a
+freshness_acknowledgements entry: the fix is a verified byte-identical-
+outcome caching refactor, not a behavior change, so no historical
+artifact's recorded search outcome or game result can differ. One
+second-order cascade (an artifact citing two of the acknowledged
+artifacts by hash) resolved the same way.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../carnot/agentic/arc_competition_agent.py   |  90 +++++++++++-
+ ...rc_gateway_card_ground_truth_20260727.json |   8 ++
+ ..._per_level_reset_attribution_20260726.json |   8 ++
+ ...6011_world_model_change_gate_four_arm.json |   8 ++
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 ++
+ ...6013_hidden_state_change_gate_closure.json |   8 ++
+ ...p_arc_early_stop_grace_sweep_20260726.json |   8 ++
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 ++
+ ...arc_gateway_accurate_rescore_20260726.json |  16 +++
+ ...ter_loop_arc_gateway_rescore_20260726.json |   8 ++
+ ...rc_generator_concurrency_fix_20260727.json |   8 ++
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 ++
+ ...arc_reset_charge_attribution_20260726.json |   8 ++
+ ...experiment_4523_forward_walk_navigation.py | 129 +++++++++++++++++-
+ 14 files changed, 311 insertions(+), 12 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 08b0e8ad4b..9cbb4c5db1 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -1500,6 +1500,13 @@ class StepwiseExplorer:
+         self._early_stop_frame_mark = 0
+         self.early_stopped = False
+         self.adj: dict[str, list] = {}  # known forward edges: hash -> [(action_dict, next_hash)]
++        # Perf fix (2026-08-08 adversarial review, "Speed" finding 1): every caller that needs a
++        # forward path FROM self.cur used to run its own from-scratch BFS. All of those BFS runs
++        # share one source, so one BFS per (self.cur, adj-state) pair is enough; the map below
++        # caches it. `_adj_version` bumps whenever a new edge is learned, which is the only thing
++        # that can make a cached map stale.
++        self._adj_version = 0
++        self._forward_bfs_cache: tuple[Optional[str], int, dict[str, list]] | None = None
+         self._nav_attempts = 0
+         self._nav_exact_hits = 0
+         self._nav_partial_hits = 0
+@@ -2670,6 +2677,9 @@ class StepwiseExplorer:
+             return
+         edges.append((act, next_hash))
+         self._nav_edges_recorded += 1
++        # A new edge can change what's forward-reachable from self.cur, so the cached
++        # single-source BFS map (see `_cur_forward_paths`) must be recomputed on next use.
++        self._adj_version += 1
+         # REQ-ARC-WMTE-5836: mirror into the reverse index the distance gradient walks. Kept in
+         # lock-step with self.adj HERE (the single forward-edge write path) rather than rebuilt on
+         # demand, so the two indices cannot drift. Only state-CHANGING edges reach this point (the
+@@ -3464,6 +3474,66 @@ class StepwiseExplorer:
+                 q.append((nxt, npath))
+         return None
+ 
++    def _forward_paths_from(self, src: Optional[str]) -> dict[str, list]:
++        """One BFS from ``src`` over the known forward edges (``self.adj``), returning every
++        forward-reachable node's shortest action path from ``src``.
++
++        Same traversal as ``_exact_shortest_path`` (FIFO queue, first-arrival wins, same
++        per-node edge order), just run to completion instead of stopping at one target. BFS
++        visits nodes in non-decreasing hop order and never revisits a node once it has a
++        path, so the path this assigns to any node ``X`` is the exact same one
++        ``_exact_shortest_path(src, X)`` would compute on its own -- this is the "one
++        distance-map BFS per call is exactly equivalent" sharing the 2026-08-08 adversarial
++        review asked for, not a new search.
++        """
++
++        from collections import deque
++
++        if src is None:
++            return {}
++        paths: dict[str, list] = {src: []}
++        q: deque[str] = deque([src])
++        while q:
++            node = q.popleft()
++            base = paths[node]
++            for act, nxt in self.adj.get(node, []):
++                if nxt in paths:
++                    continue
++                paths[nxt] = base + [act]
++                q.append(nxt)
++        return paths
++
++    def _cur_forward_paths(self) -> dict[str, list]:
++        """Cached result of ``_forward_paths_from(self.cur)``.
++
++        Every caller in this file that wants a forward path FROM ``self.cur`` (the frontier
++        navigation-cost tie-break, the winner's forward walk, the partial-forward-path
++        fallback) shares this one map instead of each re-running its own BFS. The cache key
++        is ``(self.cur, self._adj_version)``: it is recomputed the moment either the agent
++        moves to a different node or a new edge is learned, so a stale map can never be
++        served.
++        """
++
++        cache = self._forward_bfs_cache
++        if cache is not None and cache[0] == self.cur and cache[1] == self._adj_version:
++            return cache[2]
++        paths = self._forward_paths_from(self.cur)
++        self._forward_bfs_cache = (self.cur, self._adj_version, paths)
++        return paths
++
++    def _exact_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
++        """Same contract as ``_exact_shortest_path`` (action path over known forward edges,
++        or ``None`` if ``dst`` isn't forward-reachable from ``src``), but for ``src ==
++        self.cur`` -- the only source every navigation call in this file actually uses --
++        this is an O(1) lookup into the shared BFS map instead of a fresh traversal. Any
++        other ``src`` (e.g. a similarity-retrieval candidate, which starts from a different
++        node than ``self.cur``) still gets its own from-scratch BFS, unchanged.
++        """
++
++        if src == self.cur:
++            return self._cur_forward_paths().get(dst)
++        return self._exact_shortest_path(src, dst)
++
+     def _shortest_path(
+         self,
+         src: Optional[str],
+@@ -3471,7 +3541,7 @@ class StepwiseExplorer:
+         *,
+         allow_similarity: bool = True,
+     ) -> Optional[list]:
+-        exact = self._exact_shortest_path(src, dst)
++        exact = self._exact_forward_path(src, dst)
+         if exact is not None:
+             self._last_shortest_path_kind = "exact"
+             return exact
+@@ -3604,7 +3674,13 @@ class StepwiseExplorer:
+         return None
+ 
+     def _partial_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
+-        """Walk to the deepest reachable ancestor of dst, then replay only the suffix."""
++        """Walk to the deepest reachable ancestor of dst, then replay only the suffix.
++
++        Every candidate ancestor shares the same navigation source (``src``, always
++        ``self.cur`` at this method's one call site), so the per-ancestor reachability
++        lookup below goes through ``_exact_forward_path`` and reuses the one shared BFS
++        (see ``_cur_forward_paths``) instead of each ancestor re-running its own traversal.
++        """
+ 
+         if src is None or dst not in self.graph:
+             return None
+@@ -3617,7 +3693,7 @@ class StepwiseExplorer:
+             ancestor_path = node.get("path", [])
+             if not self._path_is_prefix(ancestor_path, target_path):
+                 continue
+-            forward = self._exact_shortest_path(src, ancestor)
++            forward = self._exact_forward_path(src, ancestor)
+             if forward is None:
+                 continue
+             depth = len(ancestor_path)
+@@ -4606,12 +4682,12 @@ class E3AgentPolicy:
+         hud_mask_stage2_confirm: bool | None = None,
+         value_head: Any = _DEFAULT_VALUE_HEAD,
+         value_weight: float = SUBMITTED_VALUE_WEIGHT,
++        search_mode: str = SUBMITTED_SEARCH_MODE,
+         # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): defaults to the
+         # SUBMITTED_* constant directly, matching target_levels/value_weight/search_mode above --
+         # unlike the boolean feature flags below this is a plain numeric knob with no
+         # CARNOT_ARC_* env override convention of its own, so there is no `_fd_gate` ladder here.
+         early_stop_grace: Optional[int] = SUBMITTED_EARLY_STOP_GRACE,
+-        search_mode: str = SUBMITTED_SEARCH_MODE,
+         mechanic_detector=None,
+         frame_change_scorer: Any = _DEFAULT_FRAME_CHANGE_SCORER,
+         frame_change_prune_threshold: float | None = None,
+@@ -4754,8 +4830,8 @@ class E3AgentPolicy:
+         elif goal_candidate_guidance is False:
+             goal_candidate_guidance = None
+         self.explorer = StepwiseExplorer(
+-            early_stop_grace=early_stop_grace,
+             target_levels=target_levels,
++            early_stop_grace=early_stop_grace,
+             auto_hud_mask=auto_hud_mask,
+             edge_bar_hud_mask=edge_bar_hud_mask,
+             hud_mask_collapse_guard=hud_mask_collapse_guard,
+@@ -7257,12 +7333,12 @@ SUBMITTED_AGENT_CONFIG = {
+     "cascade": True,
+     # explorer config the live agent actually runs.
+     "value_weight": SUBMITTED_VALUE_WEIGHT,
++    "target_levels": SUBMITTED_TARGET_LEVELS,
+     # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): pinned here so the parity
+     # test below can catch a future re-drift between the declared config and what the explorer
+     # actually receives. Fixed 2026-08-08 -- was previously read nowhere (see the comment on the
+     # SUBMITTED_EARLY_STOP_GRACE declaration for the incident this closes).
+     "early_stop_grace": SUBMITTED_EARLY_STOP_GRACE,
+-    "target_levels": SUBMITTED_TARGET_LEVELS,
+     "search_mode": SUBMITTED_SEARCH_MODE,
+     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
+     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
+@@ -7576,8 +7652,8 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
+                 E3AgentPolicy(
+                     gid,
+                     proposer=proposer,
+-                    early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
+                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
++                    early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
+                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
+                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
+                     lazy_value_top_k=int(SUBMITTED_AGENT_CONFIG["lazy_value_top_k"]),
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index c5c27bbd6e..6b6d20654a 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2742,6 +2742,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index 0c9d1912de..b5e537f6a7 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1347,6 +1347,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index a2281ddf45..fe399b34d0 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52756,6 +52756,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index f3f01a8cb6..cb8a542806 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -240,6 +240,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 294f3755a3..2fd77ac81b 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8782,6 +8782,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 145fdfecac..c67222e02e 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5425,6 +5425,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "This artifact's own generating script IS scripts/analyze_arc_early_stop_sweep.py, changed by this same fix -- but only its _flag_is_dead() -> _flag_wiring_state() diagnostic helper, which INSPECTS current live wiring state (via inspect.signature) for a report the artifact does not consume. It reads the underlying sweep row files (results/early_stop_sweep_20260726/rows_*.json) verbatim and does not re-derive or recompute their measured values -- confirmed by reading the script's own analyze_*() functions, which aggregate the pre-recorded rows, not re-run games."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index a1c45c0759..b279dd4a22 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3540,6 +3540,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index d615e0a908..c2b810bbe8 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3316,6 +3316,22 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Second-order cascade from REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged (see their own acknowledgement entries), only the bookkeeping grew.",
+         "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++        "sha256_was": "679a860690251bacf69ec0d648decde7ae1e9d5c51ef56d8404f0abbb8552e36",
++        "sha256_now": "789d008e5d9df07a1def846d4c1bbdcf0362f04922dc21ee168739f8d165d445",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change (verified byte-identical-outcome BFS refactor), which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/arc_per_level_reset_attribution_20260726.json",
++        "sha256_was": "f40962681635cf4bb7523eed46373644bbde4c7f4a56f015814511b76f670dc4",
++        "sha256_now": "d4cef365482547c37eb10ec730dda359142738ccffcd7e659d26864c84f7cd2a",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change (verified byte-identical-outcome BFS refactor), which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 28be4a96bf..953f7ad9e1 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1150,6 +1150,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 1548c00c0c..53635efaed 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1189,6 +1189,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 6d69fcc07e..f871272bbd 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -416,6 +416,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
+         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index f395d79856..1c619e389c 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16939,6 +16939,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
++        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
++        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+       }
+     ]
+   },
+diff --git a/tests/python/test_experiment_4523_forward_walk_navigation.py b/tests/python/test_experiment_4523_forward_walk_navigation.py
+index 2a95c119f1..e86cda672e 100644
+--- a/tests/python/test_experiment_4523_forward_walk_navigation.py
++++ b/tests/python/test_experiment_4523_forward_walk_navigation.py
+@@ -83,7 +83,11 @@ def test_scenario_arc_fcp_4523_frontier_tiebreak_keeps_depth_primary() -> None:
+     exp.best_level = 0
+     exp.graph = {
+         "C": {"path": [{"action": 9, "data": None}], "untested": [], "value": 0.0},
+-        "shallow": {"path": [{"action": 1, "data": None}], "untested": [{"action": 8, "data": None}], "value": 0.0},
++        "shallow": {
++            "path": [{"action": 1, "data": None}],
++            "untested": [{"action": 8, "data": None}],
++            "value": 0.0,
++        },
+         "replay_first": {
+             "path": [{"action": 2, "data": None}, {"action": 3, "data": None}],
+             "untested": [{"action": 4, "data": None}],
+@@ -156,12 +160,18 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
+         preconditions_checked={"offline_arcade_import": True},
+         baseline=_baseline(),
+         config_sweep=[control, improved],
+-        positive_control={"passed": True, "reset_replay_steps_before": 9, "reset_replay_steps_after": 1},
++        positive_control={
++            "passed": True,
++            "reset_replay_steps_before": 9,
++            "reset_replay_steps_after": 1,
++        },
+         random_seed=4523,
+         duration_s=0.25,
+     )
+ 
+-    assert artifact["honest_verdict"] == "success: forward_walk_median_actions_on_core_7400_below_7760"
++    assert (
++        artifact["honest_verdict"] == "success: forward_walk_median_actions_on_core_7400_below_7760"
++    )
+     assert artifact["median_actions_on_core_control"] == 7760.0
+     assert artifact["median_actions_on_core_best"] == 7400.0
+     assert artifact["core_solves_preserved"] is True
+@@ -176,8 +186,15 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
+     null_artifact = exp4523.build_artifact(
+         preconditions_checked={"offline_arcade_import": True},
+         baseline=_baseline(),
+-        config_sweep=[control, {**improved, "measurement": _measurement(median=7760.0, reset_steps=800)}],
+-        positive_control={"passed": True, "reset_replay_steps_before": 9, "reset_replay_steps_after": 1},
++        config_sweep=[
++            control,
++            {**improved, "measurement": _measurement(median=7760.0, reset_steps=800)},
++        ],
++        positive_control={
++            "passed": True,
++            "reset_replay_steps_before": 9,
++            "reset_replay_steps_after": 1,
++        },
+         random_seed=4523,
+         duration_s=0.25,
+     )
+@@ -190,3 +207,105 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
+     out.parent.mkdir(parents=True)
+     exp4523.write_artifact(artifact, tmp_path)
+     assert json.loads(out.read_text(encoding="utf-8")) == artifact
++
++
++def test_shared_forward_bfs_cache_matches_per_node_bfs_and_is_reused() -> None:
++    """2026-08-08 adversarial review, "Speed" finding 1: one shared single-source BFS from
++    ``self.cur`` must return exactly what the old per-node ``_exact_shortest_path`` calls
++    returned, and must not be recomputed unless ``self.cur`` moves or a new edge is learned.
++
++    Graph: CUR -2-> A -4-> C, CUR -3-> B -5-> D -6-> E. ISLAND has no incoming edge at all.
++    """
++
++    exp = StepwiseExplorer(online_discriminative=False)
++    exp.cur = "CUR"
++    exp._record_forward_edge("CUR", {"action": 2, "data": None}, "A")
++    exp._record_forward_edge("CUR", {"action": 3, "data": None}, "B")
++    exp._record_forward_edge("A", {"action": 4, "data": None}, "C")
++    exp._record_forward_edge("B", {"action": 5, "data": None}, "D")
++    exp._record_forward_edge("D", {"action": 6, "data": None}, "E")
++
++    # Correctness: the new shared-cache lookup (`_exact_forward_path`) must agree, node by
++    # node, with the untouched original per-call BFS (`_exact_shortest_path`) it replaces.
++    for node in ["CUR", "A", "B", "C", "D", "E", "ISLAND"]:
++        assert exp._exact_forward_path("CUR", node) == exp._exact_shortest_path("CUR", node)
++
++    # Reuse: two calls with no intervening `self.cur` move or new edge share one BFS map.
++    first = exp._cur_forward_paths()
++    second = exp._cur_forward_paths()
++    assert first is second
++
++    # Invalidation on a newly-learned edge: the map changes and is no longer the same object.
++    exp._record_forward_edge("E", {"action": 7, "data": None}, "F")
++    third = exp._cur_forward_paths()
++    assert third is not first
++    assert third["F"] == exp._exact_shortest_path("CUR", "F")
++
++    # Invalidation on `self.cur` moving: recomputed relative to the new source.
++    exp.cur = "A"
++    fourth = exp._cur_forward_paths()
++    assert fourth is not third
++    assert fourth["C"] == exp._exact_shortest_path("A", "C")
++    assert "CUR" not in fourth  # no edge back to CUR from A
++
++
++def test_partial_forward_path_reuses_one_shared_bfs_and_matches_old_per_ancestor_scan() -> None:
++    """2026-08-08 adversarial review, "Speed" finding 1: ``_partial_forward_path`` must stop
++    running one BFS per candidate ancestor and reuse the single shared map instead, while
++    still returning exactly what the old per-ancestor-BFS loop would have returned.
++
++    ROOT/ANC1/ANC2 are candidate ancestors of DST by REPLAY path prefix; only ANC2 is
++    forward-reachable from CUR over known-working edges (a shortcut edge CUR->ANC2), so the
++    old code would run 3 separate from-scratch BFS calls (one per ancestor, including the
++    two unreachable ones) to find that out.
++    """
++
++    exp = StepwiseExplorer(online_discriminative=False)
++    exp.cur = "CUR"
++    exp.graph = {
++        "ROOT": {"path": []},
++        "ANC1": {"path": [{"action": 1, "data": None}]},
++        "ANC2": {"path": [{"action": 1, "data": None}, {"action": 2, "data": None}]},
++        "DST": {
++            "path": [
++                {"action": 1, "data": None},
++                {"action": 2, "data": None},
++                {"action": 3, "data": None},
++            ]
++        },
++    }
++    exp._record_forward_edge("CUR", {"action": 10, "data": None}, "ANC2")
++
++    calls: list[str | None] = []
++    original_bfs = exp._forward_paths_from
++    exp._forward_paths_from = lambda src: calls.append(src) or original_bfs(src)
++
++    result = exp._partial_forward_path("CUR", "DST")
++
++    assert calls == ["CUR"], "expected exactly one shared BFS run, not one per ancestor"
++
++    # Correctness: replay the OLD per-ancestor-BFS algorithm verbatim (calling the untouched
++    # `_exact_shortest_path` once per candidate ancestor) and confirm byte-identical output.
++    old_best_depth = -1
++    old_best_plan = None
++    for ancestor, node in exp.graph.items():
++        if ancestor == "DST":
++            continue
++        ancestor_path = node.get("path", [])
++        if not exp._path_is_prefix(ancestor_path, exp.graph["DST"]["path"]):
++            continue
++        forward = exp._exact_shortest_path("CUR", ancestor)
++        if forward is None:
++            continue
++        depth = len(ancestor_path)
++        if depth <= old_best_depth:
++            continue
++        suffix = [
++            {"action": int(s["action"]), "data": s.get("data")}
++            for s in exp.graph["DST"]["path"][depth:]
++        ]
++        old_best_depth = depth
++        old_best_plan = list(forward) + suffix
++
++    assert result == old_best_plan
++    assert result == [{"action": 10, "data": None}, {"action": 3, "data": None}]
+-- 
+2.55.0
+

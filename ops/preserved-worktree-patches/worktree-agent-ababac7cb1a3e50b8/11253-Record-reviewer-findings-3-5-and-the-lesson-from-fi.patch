@@ -1,0 +1,91 @@
+From caa975b65a371556332327e077f7ecc1be78b7bf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 09:28:01 -0400
+Subject: [PATCH 11253/11362] Record reviewer findings 3-5 and the lesson from
+ finding 4
+
+Finding 4 is the one worth keeping past this branch. The round-three agent
+reported "15/15 mutations RED, none survived" and that statement is true: every
+mutation it wrote bit a real assertion. Two producer writes simply had no mutation
+written for them, and the reviewer proved it by deleting them and watching the
+suite stay green.
+
+A proof table showing N of N RED says nothing about code no mutation was ever
+written for. A missing mutation and a surviving mutation have the same
+consequence, and only the second is visible in the table. The completeness
+question -- which producer writes are named by no mutation -- has to be asked
+separately.
+
+Also records that cd82's non-monotone level counter is now corroborated here from
+the artifact (a segment completing level 1 behind a final counter of 0), and that
+finding 3 predates this branch so the agent is not told it caused it.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 49 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 3 deletions(-)
+
+diff --git a/ops/status.md b/ops/status.md
+index 9f15477528..89c1bfdc5e 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -80,9 +80,52 @@ have `arms_used=[]` because every arm was INELIGIBLE rather than spent — the r
+ a window is neither a cell nor not-decidable, while the report tells the reader zero cells means
+ no level ran dry. Remainder requested from the reviewer.
+ 
+-**Routing:** the findings go to the agent that owns the file, not to the reviewer. DECISION 18
+-(does a level the classical path clears anyway count as a new-arm specification) is unaffected
+-and still open.
++### Findings 3 to 5, and the cd82 corroboration (13:40Z)
++
++**cd82 non-monotone counter — NOW CORROBORATED HERE, independently of the reviewer.**
++`results/arc_leaderboard_eval_runs/cd82-r11l-727651.json` `per_game[1]` reads final `levels: 0`
++and `deepest_level_reached: 0`, while `level_reset_attribution.segments` holds one segment with
++`level_completed: 1`. A completed level behind a final counter of zero is a non-monotone counter,
++which is all finding 1 requires. The exact indices `(770, 0->1) (873, 1->0) (1512, 0->1)
++(1615, 1->0)` remain the reviewer's; I did not reconstruct them.
++
++**Finding 4 — the one that changes how this round is reported. Two producer fields are bitten by
++NO mutation.** `experiment_6921_arc_dynamic_supervisor_banked_credit.py:721-734` passes
++`arms_enabled`, `unredirected_windows` and `unredirected_windows_dropped` into the corrected
++ledger. Only `unredirected_windows` is covered (M9). The reviewer deleted the other two and the
++suite stayed green, because the single test exercising the path
++(`test_req_arc_wmte_6921_new_arm_receipt_stays_recommendation_only`) uses a fixture with all four
++arms in `redirects`, so `enabled_arms_for_entry` returns the same set via the `legacy_default`
++fallback whether or not `arms_enabled` survives — and the test asserts only `cells[0]["level"]`.
++
++**The lesson, and it generalises past this branch.** The agent reported "15/15 mutations RED,
++none survived." That statement is TRUE. Every mutation it wrote bit a real assertion. Two
++producer writes simply had no mutation written for them. **A proof table showing N of N RED says
++nothing about code that no mutation was ever written for** — a missing mutation and a surviving
++mutation have the same consequence and only the second is visible in the table. The completeness
++question has to be asked separately: which producer writes are not named by any mutation?
++Reviewer's fix: assert `arms_enabled_source == "receipt"` and add a `dropped > 0` fixture, then
++add the two matching mutations.
++
++**Finding 3, full text now received, reviewer's, not verified here.** `enabled <= arms_used`
++tests whether every enabled arm was SPENT. It cannot express a window where the arms are unspent
++but every one is INELIGIBLE — `attempt_cap_reached` blocks both re-induction rungs,
++`goal_bias_installed: False` blocks `drop_goal_bias`. Such a window is neither a cell nor
++not-decidable, while the report tells the reader zero cells means no level ran dry. The reviewer
++quotes REQ-7031's own Origin paragraph describing exactly this state on `r11l-1594772` level 2.
++**This PREDATES the branch** — inherited from REQ-6640/7030's framing; the branch's contribution
++is the over-claiming sentence. Computable from fields the 7031 rows already carry.
++
++**Finding 5, MINOR, reviewer's, truncated — remainder requested.** `stagnations_unredirected`
++enters `base` and rides onto every per-level cell while remaining a whole-run count;
++`windows_dropped` is the entry total, not the level's, and REQ-7033 rule 4 lists it among the
++per-cell fields without qualifying it. The 7033-C test cannot discriminate because all 64 of its
++rows are on level 2. In a change whose subject is not pooling, two pooled fields sit unqualified
++on a per-level record.
++
++**Routing:** all findings go to the agent that owns the file, not to the reviewer. A finding and
++the right to edit are separate things; putting the finder on the fix has already put two agents
++on one file three times today. DECISION 18 is unaffected and still open.
+ 
+ 
+ **OPERATOR DECISION 18: does a level the classical path clears anyway count as a new-arm
+-- 
+2.55.0
+

@@ -1,0 +1,3640 @@
+From dfd311b6c326d0c8a3d9be298330a1e0e335d2f8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 07:53:56 -0400
+Subject: [PATCH 10624/11362] [conductor] ARC tool-gap transport and
+ causal-support audit
+
+Automated research step by research conductor.
+Task ID: exp6845-tool-gap-causal-support-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/arc-agi/spec.md         |   88 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...ment_6845_tool_gap_causal_support_audit.py | 1286 ++++++++++++++
+ ...nt_6845_tool_gap_causal_support_audit.json | 1476 +++++++++++++++++
+ ...ment_6845_tool_gap_causal_support_audit.py |    8 +
+ ...ment_6845_tool_gap_causal_support_audit.py |  711 ++++++++
+ 6 files changed, 3570 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6845_tool_gap_causal_support_audit.py
+ create mode 100644 results/experiment_6845_tool_gap_causal_support_audit.json
+ create mode 100644 scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py
+ create mode 100644 tests/python/test_experiment_6845_tool_gap_causal_support_audit.py
+
+diff --git a/openspec/capabilities/arc-agi/spec.md b/openspec/capabilities/arc-agi/spec.md
+index b9f465ea92..025787f7b4 100644
+--- a/openspec/capabilities/arc-agi/spec.md
++++ b/openspec/capabilities/arc-agi/spec.md
+@@ -1572,3 +1572,91 @@ states, or supervisor modes
+ **Then** source hashes, row hashes, and the reproducibility checksum are stable;
+ `solve_claim=false`; `verifier_is_oracle=false`; and `honest_verdict` starts
+ with `complete_`.
++
++## REQ-ARC-6845: Tool-Gap Causal Support Audit
++
++Experiment 6845 SHALL audit tool-gap obligations from frozen terminal ARC
++artifacts. It SHALL not launch a live ARC run. It SHALL keep request transport,
++tool receipt, agent-visible response, next action, and later outcome as separate
++links.
++
++The producer SHALL require `arc_inventory_complete_score=1`, at least one
++terminal tool-gap cell, immutable raw transcript hashes, request and response
++identities, agent-visible receipt text, next-action receipts, exact later
++outcomes, duplicate-free identities, temporal order, same-configuration
++matching, and nonzero headroom before effect eligibility can be 1. If a gate
++fails, it SHALL still write a terminal
++`complete_blocked_tool_gap_causal_support_audit` artifact. The blocked artifact
++SHALL include `gate_check_summary` with the failed check, expected value, and
++observed value.
++
++The reducer SHALL build a fresh obligation ledger. Each obligation row SHALL
++record the missing fact, requested tool, actual call, exact response,
++agent-visible text, next action, and later exact outcome. A transport receipt
++SHALL not imply utility. A visible response with no changed next action SHALL
++count as transport success but not as use.
++
++The analysis SHALL keep each run configuration in its own stratum. Loop-off
++`r11l`/`lp85` and `ls20`/`wa30` evidence SHALL remain separate from loop-on
++`sp80`/`su15`, `tu93`/`cn04`, and `m0r0`/`sk48` evidence unless execution-time
++receipts prove exact parity. Unmatched and no-headroom rows SHALL be reported as
++diagnostics rather than pooled.
++
++The artifact SHALL write
++`results/experiment_6845_tool_gap_causal_support_audit.json` with these
++top-level fields: `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`,
++`reproducibility_checksum`, `per_game_results`, `configuration_strata`,
++`obligation_ledger`, `request_receipt_joins`, `agent_visibility_results`,
++`next_action_results`, `later_outcome_results`, `transport_results`,
++`utility_results`, `headroom_results`, `unmatched_cell_results`,
++`tool_gap_audit_complete_score`, `tool_gap_effect_eligible_score`,
++`solve_claim`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`.
++
++`inference_substrate` SHALL identify deterministic CPU transcript audit work.
++`tool_gap_audit_complete_score` SHALL be derived from audit completeness.
++`tool_gap_effect_eligible_score` SHALL be 1 only when valid joins, timing,
++matching, exact outcomes, and headroom gates pass. That score SHALL mean
++eligibility only. It SHALL not mean the effect is positive. `solve_claim` SHALL
++be false. `verifier_is_oracle` SHALL be false. A complete no-solve,
++no-effect-eligibility audit SHALL use `verdict_class=blocked` when any required
++gate fails; otherwise `verdict_class` SHALL be `null`.
++
++### SCENARIO-ARC-6845-REQUEST-RECEIPT-JOIN
++
++**Given** a tool-gap obligation with request, call, response, and transcript
++identities
++**When** Exp6845 reduces the row
++**Then** the request-to-receipt join is explicit, duplicate-free, and hash-bound.
++
++### SCENARIO-ARC-6845-VISIBILITY-NEXT-ACTION
++
++**Given** a tool response that was rendered back to the agent
++**When** Exp6845 measures utility
++**Then** transport success, response use, and next-action change are reported as
++separate metrics.
++
++### SCENARIO-ARC-6845-GATES-FAIL-CLOSED
++
++**Given** missing outcomes, missing identities, invalid timing, duplicate
++identities, no terminal tool-gap cells, or zero headroom
++**When** Exp6845 evaluates gates
++**Then** it writes `complete_blocked_tool_gap_causal_support_audit`, sets
++`tool_gap_effect_eligible_score=0`, and records the failed check and observed
++value in `gate_check_summary`.
++
++### SCENARIO-ARC-6845-STRATA-NOT-POOLED
++
++**Given** loop-off and loop-on rows for the same model, policy, and budget
++**When** Exp6845 builds strata
++**Then** rows remain separated by game, run, model, policy, budget, tool-loop
++state, supervisor state, and requested tool.
++
++### SCENARIO-ARC-6845-HASHES-NO-SOLVE
++
++**Given** the same frozen source artifacts
++**When** Exp6845 rebuilds the audit
++**Then** source hashes, raw transcript hashes, row hashes, and the
++reproducibility checksum are stable; `solve_claim=false`;
++`verifier_is_oracle=false`; and `honest_verdict` starts with `complete_`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ed7575c299..bc43b3bd7d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5225,
++  "experiments_checked": 5226,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6845_tool_gap_causal_support_audit.py b/python/carnot/experiment_6845_tool_gap_causal_support_audit.py
+new file mode 100644
+index 0000000000..a5be102136
+--- /dev/null
++++ b/python/carnot/experiment_6845_tool_gap_causal_support_audit.py
+@@ -0,0 +1,1286 @@
++"""Audit tool-gap causal support from frozen ARC transcript receipts.
++
++Spec refs: REQ-ARC-6845 and SCENARIO-ARC-6845-*.
++
++This reducer reads existing files only. It separates tool request transport
++from later utility, because a response reaching the agent is not proof that the
++agent used it or made progress from it.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter, defaultdict
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import os
++from pathlib import Path
++import statistics
++import sys
++import time
++from typing import Any
++
++from carnot.agentic.arc_solve_artifact_discipline import (
++    DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
++MODULE_PATH = Path("python/carnot/experiment_6845_tool_gap_causal_support_audit.py")
++WRAPPER_PATH = Path("scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py")
++OUTPUT_PATH = Path("results/experiment_6845_tool_gap_causal_support_audit.json")
++SCHEMA = "carnot.experiment_6845.tool_gap_causal_support_audit.v1"
++INFERENCE_SUBSTRATE = DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE
++VERDICT_CLASSES = {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
++EXPECTED_BATCH_CELLS: tuple[tuple[str, str], ...] = (
++    ("r11l", "off_or_unobserved"),
++    ("lp85", "off_or_unobserved"),
++    ("ls20", "off_or_unobserved"),
++    ("wa30", "off_or_unobserved"),
++    ("sp80", "selfparse"),
++    ("su15", "selfparse"),
++    ("tu93", "selfparse"),
++    ("cn04", "selfparse"),
++    ("m0r0", "selfparse"),
++    ("sk48", "selfparse"),
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "reproducibility_checksum",
++    "per_game_results",
++    "configuration_strata",
++    "obligation_ledger",
++    "request_receipt_joins",
++    "agent_visibility_results",
++    "next_action_results",
++    "later_outcome_results",
++    "transport_results",
++    "utility_results",
++    "headroom_results",
++    "unmatched_cell_results",
++    "tool_gap_audit_complete_score",
++    "tool_gap_effect_eligible_score",
++    "solve_claim",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++TOP_LEVEL_FIELDS = ("schema", "experiment_id", "run_date", "status", *REQUIRED_ARTIFACT_FIELDS)
++
++FIELD_PRINCIPLES: JsonDict = {
++    "schema": "The schema lets later reducers reject incompatible audit files.",
++    "experiment_id": "The identifier binds this artifact to REQ-ARC-6845.",
++    "run_date": "The date states when the frozen transcript audit ran.",
++    "status": "The status separates effect-eligible audits from blocked audits.",
++    "field_principles": "Each top-level field states why an auditor needs it.",
++    "preconditions_checked": "The gates show which evidence was required before eligibility.",
++    "inference_substrate": "This is deterministic CPU transcript audit work, not a live run.",
++    "duration_s": "Wall time exposes skipped or fabricated reducer execution.",
++    "source_artifact_hashes": "Source hashes bind the frozen artifacts used as inputs.",
++    "reproducibility_checksum": "One digest binds the audit content except wall time.",
++    "per_game_results": "One obligation row keeps the request, response, action, and outcome local.",
++    "configuration_strata": "Strata prevent pooling across unlike games or configurations.",
++    "obligation_ledger": "The fresh ledger lists every reduced tool-gap obligation.",
++    "request_receipt_joins": "Join counts show whether request and response identities exist.",
++    "agent_visibility_results": "Visibility rates show whether responses reached the agent text.",
++    "next_action_results": "Next-action rates show whether the agent acted after the response.",
++    "later_outcome_results": "Outcome rates show whether exact later progress was available.",
++    "transport_results": "Transport metrics stop receipt success from becoming utility.",
++    "utility_results": "Utility metrics measure use, changed action, progress, and invalid actions.",
++    "headroom_results": "Headroom shows whether rows could distinguish useful actions.",
++    "unmatched_cell_results": "Unmatched, loop-off, and no-obligation cells stay visible.",
++    "tool_gap_audit_complete_score": "Completeness is about audit shape, not effect size.",
++    "tool_gap_effect_eligible_score": "Eligibility is 1 only when joins, timing, matching, outcomes, and headroom pass.",
++    "solve_claim": "False prevents an audit artifact from becoming an ARC solve claim.",
++    "gate_check_summary": "A blocked verdict names the first failed check and observed value.",
++    "verifier_is_oracle": "False because exact later outcomes are external receipts.",
++    "verdict_class": "A closed verdict class prevents unsupported positives.",
++    "honest_verdict": "The complete_ prefix states the terminal evidence boundary.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    """Encode JSON in one stable form for row and artifact hashes."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    return sha256_bytes(canonical_json(value).encode("utf-8"))
++
++
++def _is_sha256(value: Any) -> bool:
++    return isinstance(value, str) and value.startswith("sha256:") and len(value) > 20
++
++
++def _read_bytes(path: Path) -> tuple[bytes, str | None]:
++    try:
++        return path.read_bytes(), None
++    except OSError as exc:
++        return b"", type(exc).__name__
++
++
++def _load_json(raw: bytes) -> JsonDict:
++    try:
++        payload = json.loads(raw.decode("utf-8"))
++    except (UnicodeDecodeError, json.JSONDecodeError):
++        return {}
++    return payload if isinstance(payload, dict) else {}
++
++
++def _relative(path: Path, root: Path) -> str:
++    try:
++        return str(path.resolve().relative_to(root.resolve()))
++    except ValueError:
++        return str(path)
++
++
++def _common_root(source_paths: Mapping[str, Path] | None) -> Path:
++    if not source_paths:
++        return REPO_ROOT
++    existing = [path.resolve() for path in source_paths.values() if path.exists()]
++    if not existing:
++        return REPO_ROOT
++    return Path(os.path.commonpath([str(path) for path in existing]))
++
++
++def collect_default_source_paths(root: Path = REPO_ROOT) -> dict[str, Path]:
++    """Collect bounded source files and terminal rows named by Exp6843."""
++
++    paths: dict[str, Path] = {
++        "agents_md": root / "AGENTS.md",
++        "claude_md": root / "CLAUDE.md",
++        "codex_md": root / "CODEX.md",
++        "north_star": root / "ops/north-star.md",
++        "ops_status": root / "ops/status.md",
++        "spec": root / SPEC_PATH,
++        "module_source": root / MODULE_PATH,
++        "wrapper_source": root / WRAPPER_PATH,
++        "agent_runtime_missing": root / "python/carnot/agent_runtime.py",
++        "experiment_6473": root / "results/experiment_6473_tool_loop_compaction_pilot_ab.json",
++        "experiment_6777": root / "results/experiment_6777_arc_tool_gap_transport.json",
++        "experiment_6820_missing": root
++        / "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "experiment_6843": root / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
++    }
++    exp6843_path = paths["experiment_6843"]
++    raw, error = _read_bytes(exp6843_path)
++    payload = _load_json(raw) if error is None else {}
++    for row in payload.get("rows", []) if isinstance(payload.get("rows"), list) else []:
++        if isinstance(row, Mapping) and isinstance(row.get("source_path"), str):
++            source_path = root / row["source_path"]
++            if source_path.suffix == ".json":
++                paths[f"leaderboard:{source_path.name}"] = source_path
++    run_dir = root / "results/arc_leaderboard_eval_runs"
++    if not any(key.startswith("leaderboard:") for key in paths) and run_dir.exists():
++        for path in sorted(run_dir.glob("*.json")):
++            paths[f"leaderboard:{path.name}"] = path
++    return paths
++
++
++def _source_record(name: str, path: Path, root: Path) -> JsonDict:
++    raw, error = _read_bytes(path)
++    payload = _load_json(raw) if error is None else {}
++    return {
++        "name": name,
++        "path": _relative(path, root),
++        "exists": error is None,
++        "read_error": error,
++        "file_sha256": sha256_bytes(raw) if error is None else None,
++        "size_bytes": len(raw) if error is None else None,
++        "status": payload.get("status"),
++        "honest_verdict": payload.get("honest_verdict"),
++        "verdict_class": payload.get("verdict_class"),
++        "top_level_keys": sorted(payload) if payload else [],
++        "_payload": payload,
++        "_raw_text": raw.decode("utf-8", errors="replace") if error is None else "",
++    }
++
++
++def _source_records(source_paths: Mapping[str, Path], root: Path) -> dict[str, JsonDict]:
++    return {name: _source_record(name, path, root) for name, path in sorted(source_paths.items())}
++
++
++def source_artifact_hashes(records: Mapping[str, Mapping[str, Any]]) -> dict[str, JsonDict]:
++    return {
++        name: {key: value for key, value in record.items() if not key.startswith("_")}
++        for name, record in records.items()
++    }
++
++
++def _payload(records: Mapping[str, Mapping[str, Any]], name: str) -> JsonDict:
++    value = records.get(name, {}).get("_payload", {})
++    return value if isinstance(value, dict) else {}
++
++
++def _finite_number(value: Any) -> bool:
++    return isinstance(value, (int, float)) and not isinstance(value, bool)
++
++
++def _mean(values: Sequence[float]) -> float | None:
++    if not values:
++        return None
++    return float(statistics.fmean(values))
++
++
++def _rate_interval(count: int, total: int) -> JsonDict:
++    if total <= 0:
++        return {"lower": None, "upper": None, "method": "normal_approximation_95"}
++    rate = count / total
++    spread = 1.96 * ((rate * (1 - rate) / total) ** 0.5)
++    return {
++        "lower": max(0.0, rate - spread),
++        "upper": min(1.0, rate + spread),
++        "method": "normal_approximation_95",
++    }
++
++
++def _check(check: str, expected: Any, observed: Any, passed: bool | None = None) -> JsonDict:
++    return {
++        "check": check,
++        "expected": expected,
++        "observed": observed,
++        "passed": observed == expected if passed is None else bool(passed),
++    }
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    failed = next((row for row in checks if row.get("passed") is not True), None)
++    if failed is None:
++        return {
++            "passed": True,
++            "failed_check": None,
++            "expected": "all gates pass",
++            "observed": "all gates pass",
++        }
++    return {
++        "passed": False,
++        "failed_check": failed.get("check"),
++        "expected": failed.get("expected"),
++        "observed": failed.get("observed"),
++    }
++
++
++def _inventory_cells(records: Mapping[str, Mapping[str, Any]]) -> list[JsonDict]:
++    inventory = _payload(records, "experiment_6843")
++    cells: list[JsonDict] = []
++    for row in inventory.get("rows", []) if isinstance(inventory.get("rows"), list) else []:
++        if not isinstance(row, Mapping):
++            continue
++        cells.append(
++            {
++                "source_path": row.get("source_path"),
++                "source_artifact_sha256": row.get("source_artifact_sha256"),
++                "run": row.get("run_id"),
++                "game": row.get("game"),
++                "model": row.get("model_id") or "unknown",
++                "policy": row.get("policy") or "unknown",
++                "budget": row.get("budget"),
++                "tool_loop_state": row.get("tool_loop_state") or "unknown",
++                "supervisor_state": row.get("supervisor_state") or "unknown",
++                "tool_gap_receipt_complete": row.get("tool_gap_receipt_complete") is True,
++                "tool_gap_receipt_count": row.get("tool_gap_receipt_count") or 0,
++                "tool_gap_calls_total": row.get("tool_gap_calls_total") or 0,
++                "tool_gap_event_count": row.get("tool_gap_event_count") or 0,
++                "inventory_stratum_identity": row.get("stratum_identity"),
++                "inventory_row_sha256": row.get("row_sha256"),
++            }
++        )
++    return cells
++
++
++def _records_by_path(records: Mapping[str, Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
++    return {str(record.get("path")): record for record in records.values() if record.get("path")}
++
++
++def _game_rows(payload: Mapping[str, Any], game: Any) -> list[Mapping[str, Any]]:
++    rows = payload.get("per_game", [])
++    if not isinstance(rows, list):
++        return []
++    return [row for row in rows if isinstance(row, Mapping) and row.get("game") == game]
++
++
++def _tool_gap_stats(game_row: Mapping[str, Any]) -> list[Mapping[str, Any]]:
++    diagnostics = game_row.get("policy_diagnostics", {})
++    attempts = diagnostics.get("induction_attempts", []) if isinstance(diagnostics, Mapping) else []
++    stats: list[Mapping[str, Any]] = []
++    for attempt in attempts if isinstance(attempts, list) else []:
++        if isinstance(attempt, Mapping) and isinstance(attempt.get("tool_gap"), Mapping):
++            stats.append(attempt["tool_gap"])
++    return stats
++
++
++def _event_requested_tool(event: Mapping[str, Any]) -> str:
++    if event.get("kind") == "bad_arguments":
++        return str(event.get("tool") or event.get("requested_tool") or "unknown")
++    return str(event.get("requested_tool") or event.get("tool") or "unknown")
++
++
++def _event_missing_fact(event: Mapping[str, Any]) -> str:
++    if isinstance(event.get("missing_fact"), str) and event.get("missing_fact"):
++        return str(event["missing_fact"])
++    if event.get("kind") == "bad_arguments":
++        return f"signature mismatch for tool {_event_requested_tool(event)}"
++    return f"tool unavailable: {_event_requested_tool(event)}"
++
++
++def _outcome_score(outcome: Mapping[str, Any]) -> float:
++    reward = outcome.get("reward")
++    if isinstance(reward, Mapping) and reward.get("present") is True:
++        value = reward.get("value")
++        if _finite_number(value):
++            return float(value)
++    before = outcome.get("levels_completed_before", 0)
++    after = outcome.get("levels_completed_after", 0)
++    level_delta = (
++        float(after) - float(before) if _finite_number(before) and _finite_number(after) else 0.0
++    )
++    termination = outcome.get("termination")
++    state = str(termination.get("state", "") if isinstance(termination, Mapping) else "").upper()
++    if state == "GAME_OVER" and level_delta <= 0:
++        return -1.0
++    return level_delta
++
++
++def _direction(outcome: Mapping[str, Any]) -> str:
++    score = _outcome_score(outcome)
++    if score > 0:
++        return "progress"
++    if score < 0 or outcome.get("error") is not None or outcome.get("outcome_status") != "returned":
++        return "regression"
++    return "abstention"
++
++
++def _headroom_nonzero(outcome: Mapping[str, Any]) -> bool:
++    headroom = outcome.get("headroom")
++    if not isinstance(headroom, Mapping):
++        return False
++    if headroom.get("nonzero_headroom") is True:
++        return True
++    baseline = headroom.get("baseline_score")
++    best = headroom.get("best_available_score")
++    return _finite_number(baseline) and _finite_number(best) and float(best) != float(baseline)
++
++
++def _action_validity(row: Mapping[str, Any]) -> JsonDict:
++    receipt = row.get("next_action_receipt")
++    if isinstance(receipt, Mapping) and isinstance(receipt.get("proposal_validity"), Mapping):
++        validity = dict(receipt["proposal_validity"])
++        if "valid" in validity:
++            return validity
++    action = row.get("next_action")
++    if not isinstance(action, Mapping):
++        return {"valid": False, "reason": "missing_next_action", "available_action_ids": []}
++    kind = action.get("kind")
++    available = receipt.get("available_actions", []) if isinstance(receipt, Mapping) else []
++    available_list = list(available) if isinstance(available, list) else []
++    if kind == "RESET":
++        return {"valid": True, "reason": "reset_control", "available_action_ids": available_list}
++    if available_list and kind not in available_list:
++        return {
++            "valid": False,
++            "reason": "kind_not_in_available_actions",
++            "action_kind": kind,
++            "available_action_ids": available_list,
++        }
++    data = action.get("data")
++    if kind == 6 and not (
++        isinstance(data, Mapping)
++        and isinstance(data.get("x"), int)
++        and isinstance(data.get("y"), int)
++    ):
++        return {
++            "valid": False,
++            "reason": "action6_requires_integer_xy",
++            "action_kind": kind,
++            "available_action_ids": available_list,
++        }
++    return {
++        "valid": True,
++        "reason": "kind_available_and_payload_well_formed",
++        "action_kind": kind,
++        "available_action_ids": available_list,
++    }
++
++
++def _event_sequence_ok(event: Mapping[str, Any]) -> bool:
++    keys = (
++        "request_sequence",
++        "receipt_sequence",
++        "visibility_sequence",
++        "next_action_sequence",
++        "outcome_sequence",
++    )
++    values = [event.get(key) for key in keys]
++    if not all(_finite_number(value) for value in values):
++        return False
++    return all(float(left) < float(right) for left, right in zip(values, values[1:]))
++
++
++def _stratum_identity(row: Mapping[str, Any]) -> str:
++    return "|".join(
++        str(row.get(key))
++        for key in (
++            "game",
++            "run",
++            "model",
++            "policy",
++            "budget",
++            "tool_loop_state",
++            "supervisor_state",
++            "requested_tool",
++        )
++    )
++
++
++def _row_with_hash(row: JsonDict) -> JsonDict:
++    material = {key: value for key, value in row.items() if key != "row_sha256"}
++    return {**row, "row_sha256": sha256_json(material)}
++
++
++def _reduce_event(
++    *,
++    cell: Mapping[str, Any],
++    source_record: Mapping[str, Any],
++    event: Mapping[str, Any],
++    event_index: int,
++) -> JsonDict:
++    requested_tool = _event_requested_tool(event)
++    receipt = event.get("next_action_receipt")
++    later = event.get("later_exact_outcome")
++    receipt = receipt if isinstance(receipt, Mapping) else {}
++    later = later if isinstance(later, Mapping) else {}
++    action_row = {"next_action": event.get("next_action"), "next_action_receipt": receipt}
++    validity = _action_validity(action_row)
++    request_joined = (
++        _is_sha256(event.get("request_id"))
++        and _is_sha256(event.get("tool_receipt_id"))
++        and _is_sha256(event.get("response_id"))
++        and isinstance(event.get("actual_call"), Mapping)
++        and isinstance(event.get("exact_response"), Mapping)
++        and str(event.get("actual_call", {}).get("name")) == requested_tool
++    )
++    agent_visible = _is_sha256(event.get("agent_visible_response_id")) and bool(
++        str(event.get("agent_visible_text") or "").strip()
++    )
++    next_action_receipted = (
++        bool(receipt)
++        and _is_sha256(receipt.get("next_action_id") or event.get("next_action_id"))
++        and isinstance(event.get("next_action"), Mapping)
++    )
++    exact_outcome = (
++        _is_sha256(later.get("outcome_id"))
++        and later.get("outcome_status") == "returned"
++        and later.get("live_return") is True
++        and later.get("fully_joined") is True
++    )
++    reduced: JsonDict = {
++        "row_kind": "eligible_tool_gap_obligation",
++        "source_artifact": source_record.get("name"),
++        "source_path": source_record.get("path"),
++        "source_artifact_sha256": source_record.get("file_sha256"),
++        "game": cell.get("game"),
++        "run": cell.get("run"),
++        "model": cell.get("model"),
++        "policy": cell.get("policy"),
++        "budget": cell.get("budget"),
++        "tool_loop_state": cell.get("tool_loop_state"),
++        "supervisor_state": cell.get("supervisor_state"),
++        "event_index": event_index,
++        "missing_fact": _event_missing_fact(event),
++        "requested_tool": requested_tool,
++        "actual_call": event.get("actual_call"),
++        "exact_response": event.get("exact_response"),
++        "agent_visible_text": event.get("agent_visible_text"),
++        "next_action": event.get("next_action"),
++        "next_action_receipt": dict(receipt),
++        "later_exact_outcome": {
++            **dict(later),
++            "level_delta": _outcome_score(later),
++            "direction": _direction(later),
++        },
++        "request": {
++            "request_id": event.get("request_id"),
++            "turn": event.get("turn"),
++            "request_sequence": event.get("request_sequence"),
++        },
++        "receipt": {
++            "tool_receipt_id": event.get("tool_receipt_id"),
++            "response_id": event.get("response_id"),
++            "receipt_sequence": event.get("receipt_sequence"),
++        },
++        "agent_visible_response_id": event.get("agent_visible_response_id"),
++        "raw_transcript_sha256": event.get("raw_transcript_sha256"),
++        "next_action_id": event.get("next_action_id") or receipt.get("next_action_id"),
++        "request_receipt_joined": request_joined,
++        "agent_visible": agent_visible,
++        "next_action_receipted": next_action_receipted,
++        "exact_later_outcome_joined": exact_outcome,
++        "temporal_order_verified": _event_sequence_ok(event),
++        "transport_success": bool(request_joined and agent_visible),
++        "response_used": receipt.get("used_tool_response") is True,
++        "action_changed": receipt.get("changed_after_response") is True,
++        "proposal_validity": validity,
++        "invalid_action": validity.get("valid") is not True,
++        "transition_progress": 1 if _direction(later) == "progress" else 0,
++        "regression": _direction(later) == "regression",
++        "abstention": _direction(later) == "abstention",
++        "headroom": {
++            "nonzero_headroom": _headroom_nonzero(later),
++            "source": "later_exact_outcome.headroom",
++        },
++        "matched_cell": True,
++        "inventory_stratum_identity": cell.get("inventory_stratum_identity"),
++    }
++    reduced["matched_stratum"] = _stratum_identity(reduced)
++    reduced["obligation_identity"] = sha256_json(
++        {
++            "request_id": event.get("request_id"),
++            "tool_receipt_id": event.get("tool_receipt_id"),
++            "response_id": event.get("response_id"),
++            "visible_id": event.get("agent_visible_response_id"),
++            "next_action_id": reduced["next_action_id"],
++            "outcome_id": later.get("outcome_id"),
++        }
++    )
++    return _row_with_hash(reduced)
++
++
++def reduce_obligation_rows(
++    records: Mapping[str, Mapping[str, Any]],
++    cells: Sequence[Mapping[str, Any]],
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Reduce terminal tool-gap cells into obligation rows and unmatched cells."""
++
++    by_path = _records_by_path(records)
++    rows: list[JsonDict] = []
++    unmatched: list[JsonDict] = []
++    for cell in cells:
++        if cell.get("tool_gap_receipt_complete") is not True:
++            unmatched.append(
++                {
++                    "source_artifact": "experiment_6843",
++                    "matched_stratum": cell.get("inventory_stratum_identity"),
++                    "game": cell.get("game"),
++                    "reason": "tool_gap_receipt_missing_or_loop_off",
++                    "row_count": 1,
++                }
++            )
++            continue
++        source_path = str(cell.get("source_path"))
++        source_record = by_path.get(source_path)
++        if source_record is None or source_record.get("exists") is not True:
++            unmatched.append(
++                {
++                    "source_artifact": "experiment_6843",
++                    "matched_stratum": cell.get("inventory_stratum_identity"),
++                    "game": cell.get("game"),
++                    "reason": "source_artifact_missing",
++                    "row_count": 1,
++                    "observed": source_path,
++                }
++            )
++            continue
++        event_count = 0
++        for game_row in _game_rows(source_record.get("_payload", {}), cell.get("game")):
++            for stats in _tool_gap_stats(game_row):
++                events = stats.get("tool_gap_events", [])
++                if not isinstance(events, list):
++                    continue
++                for event in events:
++                    if isinstance(event, Mapping):
++                        event_count += 1
++                        rows.append(
++                            _reduce_event(
++                                cell=cell,
++                                source_record=source_record,
++                                event=event,
++                                event_index=event_count,
++                            )
++                        )
++        if event_count == 0:
++            unmatched.append(
++                {
++                    "source_artifact": str(source_record.get("name")),
++                    "matched_stratum": cell.get("inventory_stratum_identity"),
++                    "game": cell.get("game"),
++                    "reason": "no_tool_gap_obligation_events",
++                    "row_count": 1,
++                    "observed": {
++                        "tool_gap_calls_total": cell.get("tool_gap_calls_total"),
++                        "tool_gap_event_count": cell.get("tool_gap_event_count"),
++                    },
++                }
++            )
++    return sorted(rows, key=lambda row: (row["matched_stratum"], row["event_index"])), unmatched
++
++
++def _group_by_stratum(rows: Sequence[Mapping[str, Any]]) -> dict[str, list[Mapping[str, Any]]]:
++    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
++    for row in rows:
++        grouped[str(row["matched_stratum"])].append(row)
++    return dict(grouped)
++
++
++def _cell_stratum(cell: Mapping[str, Any]) -> str:
++    return "|".join(
++        str(cell.get(key))
++        for key in (
++            "game",
++            "run",
++            "model",
++            "policy",
++            "budget",
++            "tool_loop_state",
++            "supervisor_state",
++        )
++    )
++
++
++def configuration_strata(
++    rows: Sequence[Mapping[str, Any]],
++    cells: Sequence[Mapping[str, Any]],
++    expected_missing: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    groups = _group_by_stratum(rows)
++    strata: dict[str, JsonDict] = {}
++    for cell in cells:
++        key = _cell_stratum(cell) + "|none_observed"
++        strata[key] = {
++            "matched_stratum": key,
++            "game": cell.get("game"),
++            "run": cell.get("run"),
++            "model": cell.get("model"),
++            "policy": cell.get("policy"),
++            "budget": cell.get("budget"),
++            "tool_loop_state": cell.get("tool_loop_state"),
++            "supervisor_state": cell.get("supervisor_state"),
++            "requested_tool": "none_observed",
++            "terminal_tool_gap_cell": cell.get("tool_gap_receipt_complete") is True,
++            "obligation_count": 0,
++            "transport_success_count": 0,
++            "response_used_count": 0,
++            "nonzero_headroom": False,
++        }
++    for stratum, group in groups.items():
++        first = group[0]
++        strata[stratum] = {
++            "matched_stratum": stratum,
++            "game": first.get("game"),
++            "run": first.get("run"),
++            "model": first.get("model"),
++            "policy": first.get("policy"),
++            "budget": first.get("budget"),
++            "tool_loop_state": first.get("tool_loop_state"),
++            "supervisor_state": first.get("supervisor_state"),
++            "requested_tool": first.get("requested_tool"),
++            "terminal_tool_gap_cell": True,
++            "obligation_count": len(group),
++            "transport_success_count": sum(int(row.get("transport_success")) for row in group),
++            "response_used_count": sum(int(row.get("response_used")) for row in group),
++            "nonzero_headroom": any(
++                row.get("headroom", {}).get("nonzero_headroom") for row in group
++            ),
++        }
++        cell_key = (
++            "|".join(
++                str(first.get(key))
++                for key in (
++                    "game",
++                    "run",
++                    "model",
++                    "policy",
++                    "budget",
++                    "tool_loop_state",
++                    "supervisor_state",
++                )
++            )
++            + "|none_observed"
++        )
++        strata.pop(cell_key, None)
++    values = sorted(strata.values(), key=lambda row: str(row["matched_stratum"]))
++    return {
++        "stratum_count": len(values),
++        "obligation_stratum_count": sum(int(row["obligation_count"] > 0) for row in values),
++        "unmatched_stratum_count": sum(int(row["obligation_count"] == 0) for row in values),
++        "strata": values,
++        "expected_missing_configurations": list(expected_missing),
++        "pooling_rule": (
++            "game, run, model, policy, budget, tool-loop state, supervisor state, "
++            "and requested tool must match"
++        ),
++    }
++
++
++def request_receipt_joins(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    request_ids = [row.get("request", {}).get("request_id") for row in rows]
++    response_ids = [row.get("receipt", {}).get("response_id") for row in rows]
++    obligation_ids = [row.get("obligation_identity") for row in rows]
++    duplicate_requests = sorted(
++        item for item, count in Counter(request_ids).items() if item and count > 1
++    )
++    duplicate_responses = sorted(
++        item for item, count in Counter(response_ids).items() if item and count > 1
++    )
++    duplicate_obligations = sorted(
++        item for item, count in Counter(obligation_ids).items() if item and count > 1
++    )
++    missing = [
++        row["row_sha256"]
++        for row in rows
++        if not (
++            _is_sha256(row.get("request", {}).get("request_id"))
++            and _is_sha256(row.get("receipt", {}).get("tool_receipt_id"))
++            and _is_sha256(row.get("receipt", {}).get("response_id"))
++        )
++    ]
++    mismatch = [
++        row["row_sha256"]
++        for row in rows
++        if not (
++            isinstance(row.get("actual_call"), Mapping)
++            and str(row.get("actual_call", {}).get("name")) == str(row.get("requested_tool"))
++        )
++    ]
++    return {
++        "rows_reduced": len(rows),
++        "joined_count": sum(int(row.get("request_receipt_joined") is True) for row in rows),
++        "missing_identity_row_hashes": missing,
++        "missing_identity_count": len(missing),
++        "request_response_mismatch_row_hashes": mismatch,
++        "request_response_mismatch_count": len(mismatch),
++        "duplicate_request_ids": duplicate_requests,
++        "duplicate_response_ids": duplicate_responses,
++        "duplicate_obligation_identities": duplicate_obligations,
++        "raw_transcript_hash_missing_count": sum(
++            int(not _is_sha256(row.get("raw_transcript_sha256"))) for row in rows
++        ),
++    }
++
++
++def _stratum_rate_rows(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    counters: Mapping[str, str],
++) -> list[JsonDict]:
++    results: list[JsonDict] = []
++    for stratum, group in sorted(_group_by_stratum(rows).items()):
++        total = len(group)
++        base: JsonDict = {
++            "matched_stratum": stratum,
++            "game": group[0]["game"],
++            "run": group[0]["run"],
++            "model": group[0]["model"],
++            "policy": group[0]["policy"],
++            "budget": group[0]["budget"],
++            "tool_loop_state": group[0]["tool_loop_state"],
++            "supervisor_state": group[0]["supervisor_state"],
++            "requested_tool": group[0]["requested_tool"],
++            "obligation_count": total,
++        }
++        for output_name, row_key in counters.items():
++            count = sum(int(row.get(row_key) is True or row.get(row_key) == 1) for row in group)
++            base[f"{output_name}_count"] = count
++            base[f"{output_name}_rate"] = count / total if total else None
++            base[f"{output_name}_uncertainty"] = _rate_interval(count, total)
++        results.append(base)
++    return results
++
++
++def agent_visibility_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _stratum_rate_rows(rows, counters={"agent_visible": "agent_visible"})
++
++
++def next_action_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _stratum_rate_rows(
++        rows,
++        counters={
++            "next_action_receipted": "next_action_receipted",
++            "action_change": "action_changed",
++        },
++    )
++
++
++def later_outcome_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _stratum_rate_rows(
++        rows,
++        counters={
++            "exact_later_outcome": "exact_later_outcome_joined",
++            "transition_progress": "transition_progress",
++        },
++    )
++
++
++def transport_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return _stratum_rate_rows(
++        rows,
++        counters={
++            "request_receipt_joined": "request_receipt_joined",
++            "transport_success": "transport_success",
++        },
++    )
++
++
++def utility_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    results: list[JsonDict] = []
++    for stratum, group in sorted(_group_by_stratum(rows).items()):
++        total = len(group)
++        used = sum(int(row.get("response_used") is True) for row in group)
++        changed = sum(int(row.get("action_changed") is True) for row in group)
++        progress = sum(int(row.get("transition_progress") == 1) for row in group)
++        invalid = sum(int(row.get("invalid_action") is True) for row in group)
++        scores = [float(row["later_exact_outcome"]["level_delta"]) for row in group]
++        results.append(
++            {
++                "matched_stratum": stratum,
++                "game": group[0]["game"],
++                "run": group[0]["run"],
++                "model": group[0]["model"],
++                "policy": group[0]["policy"],
++                "budget": group[0]["budget"],
++                "tool_loop_state": group[0]["tool_loop_state"],
++                "supervisor_state": group[0]["supervisor_state"],
++                "requested_tool": group[0]["requested_tool"],
++                "obligation_count": total,
++                "use_count": used,
++                "use_rate": used / total if total else None,
++                "action_change_count": changed,
++                "action_change_rate": changed / total if total else None,
++                "transition_progress_count": progress,
++                "transition_progress_rate": progress / total if total else None,
++                "invalid_action_count": invalid,
++                "invalid_action_rate": invalid / total if total else None,
++                "mean_later_outcome_score": _mean(scores),
++                "uncertainty": {
++                    "use_rate_interval_95": _rate_interval(used, total),
++                    "action_change_rate_interval_95": _rate_interval(changed, total),
++                    "transition_progress_rate_interval_95": _rate_interval(progress, total),
++                    "invalid_action_rate_interval_95": _rate_interval(invalid, total),
++                    "small_n_descriptive_only": total < 30,
++                },
++                "effect_eligible": all(
++                    row.get("transport_success")
++                    and row.get("exact_later_outcome_joined")
++                    and row.get("temporal_order_verified")
++                    and row.get("matched_cell")
++                    for row in group
++                )
++                and any(row.get("headroom", {}).get("nonzero_headroom") for row in group),
++            }
++        )
++    return results
++
++
++def headroom_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    results: list[JsonDict] = []
++    for stratum, group in sorted(_group_by_stratum(rows).items()):
++        outcome_scores = [float(row["later_exact_outcome"]["level_delta"]) for row in group]
++        nonzero = any(row.get("headroom", {}).get("nonzero_headroom") for row in group)
++        results.append(
++            {
++                "matched_stratum": stratum,
++                "game": group[0]["game"],
++                "run": group[0]["run"],
++                "model": group[0]["model"],
++                "policy": group[0]["policy"],
++                "budget": group[0]["budget"],
++                "tool_loop_state": group[0]["tool_loop_state"],
++                "supervisor_state": group[0]["supervisor_state"],
++                "requested_tool": group[0]["requested_tool"],
++                "obligation_count": len(group),
++                "later_outcome_scores": outcome_scores,
++                "nonzero_headroom": nonzero,
++                "no_headroom_row_hashes": [
++                    row["row_sha256"]
++                    for row in group
++                    if row.get("headroom", {}).get("nonzero_headroom") is not True
++                ],
++                "rule": "later_exact_outcome.headroom must show a score difference",
++            }
++        )
++    return results
++
++
++def _blocked_source_diagnostics(records: Mapping[str, Mapping[str, Any]]) -> list[JsonDict]:
++    diagnostics: list[JsonDict] = []
++    for name in ("experiment_6777", "experiment_6820_missing"):
++        record = records.get(name, {})
++        if record.get("exists") is not True or record.get("status") == "blocked":
++            diagnostics.append(
++                {
++                    "source_artifact": name,
++                    "matched_stratum": None,
++                    "game": None,
++                    "reason": "missing_source_artifact"
++                    if record.get("exists") is not True
++                    else "blocked_source_artifact",
++                    "row_count": 0,
++                    "observed": {
++                        "path": record.get("path"),
++                        "read_error": record.get("read_error"),
++                        "status": record.get("status"),
++                        "honest_verdict": record.get("honest_verdict"),
++                    },
++                }
++            )
++    return diagnostics
++
++
++def _status_declares_expected_batches(records: Mapping[str, Mapping[str, Any]]) -> bool:
++    text = str(records.get("ops_status", {}).get("_raw_text", ""))
++    return "sp80,su15" in text and "tu93,cn04" in text and "m0r0,sk48" in text
++
++
++def expected_configuration_diagnostics(
++    records: Mapping[str, Mapping[str, Any]],
++    cells: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    if not _status_declares_expected_batches(records):
++        return []
++    present = {(str(cell.get("game")), str(cell.get("tool_loop_state"))) for cell in cells}
++    diagnostics: list[JsonDict] = []
++    for game, tool_loop_state in EXPECTED_BATCH_CELLS:
++        if (game, tool_loop_state) in present:
++            continue
++        diagnostics.append(
++            {
++                "source_artifact": "ops_status",
++                "matched_stratum": None,
++                "game": game,
++                "reason": "expected_configuration_missing_terminal_receipt",
++                "row_count": 0,
++                "observed": {"expected_tool_loop_state": tool_loop_state},
++            }
++        )
++    return diagnostics
++
++
++def obligation_ledger(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "row_count": len(rows),
++        "rows": list(rows),
++        "row_rule": (
++            "one row per tool_gap_events entry with request, receipt, visible text, "
++            "next action, and later outcome fields preserved"
++        ),
++    }
++
++
++def _all_visible(
++    visibility: Sequence[Mapping[str, Any]], rows: Sequence[Mapping[str, Any]]
++) -> bool:
++    return bool(rows) and all(row.get("agent_visible") is True for row in rows)
++
++
++def _all_next_actions(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(row.get("next_action_receipted") is True for row in rows)
++
++
++def _all_exact_outcomes(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(row.get("exact_later_outcome_joined") is True for row in rows)
++
++
++def _all_temporal(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(row.get("temporal_order_verified") is True for row in rows)
++
++
++def _all_matched(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(row.get("matched_cell") is True for row in rows)
++
++
++def _any_headroom(headroom: Sequence[Mapping[str, Any]]) -> bool:
++    return any(row.get("nonzero_headroom") is True for row in headroom)
++
++
++def _duplicate_transport_identities(join: Mapping[str, Any]) -> list[str]:
++    return sorted(
++        set(join.get("duplicate_request_ids", []))
++        | set(join.get("duplicate_response_ids", []))
++        | set(join.get("duplicate_obligation_identities", []))
++    )
++
++
++def evaluate_preconditions(
++    records: Mapping[str, Mapping[str, Any]],
++    cells: Sequence[Mapping[str, Any]],
++    rows: Sequence[Mapping[str, Any]],
++    join: Mapping[str, Any],
++    visibility: Sequence[Mapping[str, Any]],
++    next_actions: Sequence[Mapping[str, Any]],
++    later_outcomes: Sequence[Mapping[str, Any]],
++    strata: Mapping[str, Any],
++    headroom: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    inventory = _payload(records, "experiment_6843")
++    terminal_cells = [cell for cell in cells if cell.get("tool_gap_receipt_complete") is True]
++    missing_visibility = sum(int(row.get("agent_visible") is not True) for row in rows)
++    missing_next = sum(int(row.get("next_action_receipted") is not True) for row in rows)
++    missing_outcomes = sum(int(row.get("exact_later_outcome_joined") is not True) for row in rows)
++    temporal_failures = sum(int(row.get("temporal_order_verified") is not True) for row in rows)
++    duplicate_ids = _duplicate_transport_identities(join)
++    return [
++        _check("arc_inventory_complete_score", 1, inventory.get("arc_inventory_complete_score")),
++        _check("terminal_tool_gap_cells", ">0", len(terminal_cells), len(terminal_cells) > 0),
++        _check("tool_gap_obligations", ">0", len(rows), len(rows) > 0),
++        _check(
++            "immutable_raw_transcript_hashes",
++            True,
++            {
++                "rows_checked": len(rows),
++                "missing": join.get("raw_transcript_hash_missing_count"),
++            },
++            len(rows) > 0 and join.get("raw_transcript_hash_missing_count") == 0,
++        ),
++        _check(
++            "request_response_identities",
++            True,
++            {
++                "missing_identity_count": join.get("missing_identity_count"),
++                "request_response_mismatch_count": join.get("request_response_mismatch_count"),
++            },
++            join.get("missing_identity_count") == 0
++            and join.get("request_response_mismatch_count") == 0
++            and bool(rows),
++        ),
++        _check(
++            "agent_visible_responses",
++            True,
++            {"missing_agent_visible_count": missing_visibility, "visibility_results": visibility},
++            _all_visible(visibility, rows),
++        ),
++        _check(
++            "next_action_receipts",
++            True,
++            {"missing_next_action_count": missing_next, "next_action_results": next_actions},
++            _all_next_actions(rows),
++        ),
++        _check(
++            "exact_later_outcomes",
++            True,
++            {
++                "missing_exact_later_outcome_count": missing_outcomes,
++                "later_outcome_results": later_outcomes,
++            },
++            _all_exact_outcomes(rows),
++        ),
++        _check(
++            "temporal_order",
++            True,
++            {"temporal_failure_count": temporal_failures},
++            _all_temporal(rows),
++        ),
++        _check("duplicate_transport_identities", [], duplicate_ids),
++        _check(
++            "matched_cells",
++            True,
++            {
++                "all_obligations_matched": _all_matched(rows),
++                "configuration_strata": strata,
++            },
++            _all_matched(rows) and int(strata.get("obligation_stratum_count", 0) or 0) > 0,
++        ),
++        _check(
++            "headroom_nonzero",
++            True,
++            {"headroom_results": headroom},
++            _any_headroom(headroom),
++        ),
++    ]
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash all stable artifact content except wall time and this digest."""
++
++    return sha256_json(
++        {
++            key: value
++            for key, value in artifact.items()
++            if key not in {"duration_s", "reproducibility_checksum"}
++        }
++    )
++
++
++def build_artifact(
++    *,
++    run_date: str,
++    duration_s: float,
++    source_paths: Mapping[str, Path] | None = None,
++    root: Path | None = None,
++) -> JsonDict:
++    """Build the tool-gap audit from frozen source artifacts."""
++
++    if root is None:
++        root = _common_root(source_paths) if source_paths is not None else REPO_ROOT
++    paths = dict(source_paths or collect_default_source_paths(root))
++    records = _source_records(paths, root)
++    cells = _inventory_cells(records)
++    rows, unmatched = reduce_obligation_rows(records, cells)
++    unmatched.extend(_blocked_source_diagnostics(records))
++    expected_missing = expected_configuration_diagnostics(records, cells)
++    unmatched.extend(expected_missing)
++    strata = configuration_strata(rows, cells, expected_missing)
++    join = request_receipt_joins(rows)
++    visibility = agent_visibility_results(rows)
++    next_actions = next_action_results(rows)
++    later_outcomes = later_outcome_results(rows)
++    transport = transport_results(rows)
++    utility = utility_results(rows)
++    headroom = headroom_results(rows)
++    preconditions = evaluate_preconditions(
++        records,
++        cells,
++        rows,
++        join,
++        visibility,
++        next_actions,
++        later_outcomes,
++        strata,
++        headroom,
++    )
++    gate_summary = _gate_summary(preconditions)
++    effect_eligible = int(gate_summary["passed"])
++    status = (
++        "complete_tool_gap_causal_support_audit"
++        if effect_eligible
++        else "complete_blocked_tool_gap_causal_support_audit"
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": "exp6845-tool-gap-causal-support-audit",
++        "run_date": run_date,
++        "status": status,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(duration_s),
++        "source_artifact_hashes": source_artifact_hashes(records),
++        "reproducibility_checksum": "",
++        "per_game_results": rows,
++        "configuration_strata": strata,
++        "obligation_ledger": obligation_ledger(rows),
++        "request_receipt_joins": join,
++        "agent_visibility_results": visibility,
++        "next_action_results": next_actions,
++        "later_outcome_results": later_outcomes,
++        "transport_results": transport,
++        "utility_results": utility,
++        "headroom_results": headroom,
++        "unmatched_cell_results": unmatched,
++        "tool_gap_audit_complete_score": 1,
++        "tool_gap_effect_eligible_score": effect_eligible,
++        "solve_claim": False,
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "null" if effect_eligible else "blocked",
++        "honest_verdict": (
++            "complete_tool_gap_causal_support_audit_effect_eligible_no_solve_claim"
++            if effect_eligible
++            else "complete_blocked_tool_gap_causal_support_audit"
++        ),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema errors. Claim strength is validated by gate rows."""
++
++    errors: list[str] = []
++    missing = [field for field in TOP_LEVEL_FIELDS if field not in artifact]
++    if missing:
++        errors.append("required artifact fields are missing")
++    if set(artifact.get("field_principles", {})) != set(artifact):
++        errors.append("field principles do not cover every top-level field")
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference substrate mismatch")
++    if artifact.get("solve_claim") is not False:
++        errors.append("solve_claim must be false")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if artifact.get("verdict_class") not in VERDICT_CLASSES:
++        errors.append("verdict class is outside the closed set")
++    if not str(artifact.get("honest_verdict", "")).startswith("complete_"):
++        errors.append("honest verdict lacks complete_ terminal prefix")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    if artifact.get("tool_gap_audit_complete_score") != 1:
++        errors.append("tool-gap audit complete score mismatch")
++    if artifact.get("tool_gap_effect_eligible_score") not in {0, 1}:
++        errors.append("effect eligible score must be binary")
++
++    status = artifact.get("status")
++    gate = artifact.get("gate_check_summary", {})
++    if status == "complete_blocked_tool_gap_causal_support_audit":
++        if artifact.get("verdict_class") != "blocked":
++            errors.append("blocked verdict_class mismatch")
++        if artifact.get("tool_gap_effect_eligible_score") != 0:
++            errors.append("blocked artifact marked effect eligible")
++        if not isinstance(gate, Mapping) or not gate.get("failed_check"):
++            errors.append("blocked artifact lacks failed check")
++    elif status == "complete_tool_gap_causal_support_audit":
++        if artifact.get("verdict_class") != "null":
++            errors.append("complete audit verdict_class mismatch")
++        if artifact.get("tool_gap_effect_eligible_score") != 1:
++            errors.append("complete artifact lacks effect eligibility")
++        if not isinstance(gate, Mapping) or gate.get("passed") is not True:
++            errors.append("complete artifact gate summary mismatch")
++        if not artifact.get("per_game_results"):
++            errors.append("complete audit lacks per_game rows")
++    else:
++        errors.append("status mismatch")
++
++    for row in artifact.get("per_game_results", []):
++        if not str(row.get("row_sha256", "")).startswith("sha256:"):
++            errors.append("per_game row missing hash")
++            break
++    return errors
++
++
++def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description="Audit tool-gap causal support.")
++    parser.add_argument("--date", required=True, help="execution date as YYYYMMDD")
++    parser.add_argument("--output", default=str(REPO_ROOT / OUTPUT_PATH), help="artifact path")
++    args = parser.parse_args(argv)
++
++    start = time.monotonic()
++    paths = collect_default_source_paths(REPO_ROOT)
++    artifact = build_artifact(
++        run_date=args.date,
++        duration_s=time.monotonic() - start,
++        source_paths=paths,
++        root=REPO_ROOT,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        for error in errors:
++            print(f"validation error: {error}", file=sys.stderr)
++        return 1
++    _write_json_atomic(Path(args.output), artifact)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6845_tool_gap_causal_support_audit.json b/results/experiment_6845_tool_gap_causal_support_audit.json
+new file mode 100644
+index 0000000000..6560057acf
+--- /dev/null
++++ b/results/experiment_6845_tool_gap_causal_support_audit.json
+@@ -0,0 +1,1476 @@
++{
++  "agent_visibility_results": [],
++  "configuration_strata": {
++    "expected_missing_configurations": [
++      {
++        "game": "tu93",
++        "matched_stratum": null,
++        "observed": {
++          "expected_tool_loop_state": "selfparse"
++        },
++        "reason": "expected_configuration_missing_terminal_receipt",
++        "row_count": 0,
++        "source_artifact": "ops_status"
++      },
++      {
++        "game": "cn04",
++        "matched_stratum": null,
++        "observed": {
++          "expected_tool_loop_state": "selfparse"
++        },
++        "reason": "expected_configuration_missing_terminal_receipt",
++        "row_count": 0,
++        "source_artifact": "ops_status"
++      }
++    ],
++    "obligation_stratum_count": 0,
++    "pooling_rule": "game, run, model, policy, budget, tool-loop state, supervisor state, and requested tool must match",
++    "strata": [
++      {
++        "budget": 399,
++        "game": "ar25",
++        "matched_stratum": "ar25|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "ar25",
++        "matched_stratum": "ar25|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "ar25",
++        "matched_stratum": "ar25|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "cd82",
++        "matched_stratum": "cd82|cd82-ft09-ka59-3452377|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "cd82-ft09-ka59-3452377",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "lp85",
++        "matched_stratum": "lp85|lp85-r11l-3762597|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "lp85-r11l-3762597",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "ls20",
++        "matched_stratum": "ls20|ls20-wa30-4186462|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "ls20-wa30-4186462",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "m0r0",
++        "matched_stratum": "m0r0|m0r0-sk48-132287|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "m0r0-sk48-132287",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": true,
++        "tool_loop_state": "selfparse",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "r11l",
++        "matched_stratum": "r11l|lp85-r11l-3762597|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "lp85-r11l-3762597",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "sk48",
++        "matched_stratum": "sk48|m0r0-sk48-132287|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "m0r0-sk48-132287",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": true,
++        "tool_loop_state": "selfparse",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "sp80",
++        "matched_stratum": "sp80|sp80-su15-70215|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sp80-su15-70215",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "sp80",
++        "matched_stratum": "sp80|sp80-su15-70505|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sp80-su15-70505",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": true,
++        "tool_loop_state": "selfparse",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "su15",
++        "matched_stratum": "su15|sp80-su15-70215|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sp80-su15-70215",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "su15",
++        "matched_stratum": "su15|sp80-su15-70505|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sp80-su15-70505",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": true,
++        "tool_loop_state": "selfparse",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 399,
++        "game": "tu93",
++        "matched_stratum": "tu93|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|unknown|S_llmon|399|unknown|applied|none_observed",
++        "model": "unknown",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "S_llmon",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66",
++        "supervisor_state": "applied",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "unknown",
++        "transport_success_count": 0
++      },
++      {
++        "budget": 2500,
++        "game": "wa30",
++        "matched_stratum": "wa30|ls20-wa30-4186462|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++        "model": "unsloth/Qwen3.8-27B-GGUF",
++        "nonzero_headroom": false,
++        "obligation_count": 0,
++        "policy": "e3",
++        "requested_tool": "none_observed",
++        "response_used_count": 0,
++        "run": "ls20-wa30-4186462",
++        "supervisor_state": "unobserved",
++        "terminal_tool_gap_cell": false,
++        "tool_loop_state": "off_or_unobserved",
++        "transport_success_count": 0
++      }
++    ],
++    "stratum_count": 20,
++    "unmatched_stratum_count": 20
++  },
++  "duration_s": 0.0007875360315665603,
++  "experiment_id": "exp6845-tool-gap-causal-support-audit",
++  "field_principles": {
++    "agent_visibility_results": "Visibility rates show whether responses reached the agent text.",
++    "configuration_strata": "Strata prevent pooling across unlike games or configurations.",
++    "duration_s": "Wall time exposes skipped or fabricated reducer execution.",
++    "experiment_id": "The identifier binds this artifact to REQ-ARC-6845.",
++    "field_principles": "Each top-level field states why an auditor needs it.",
++    "gate_check_summary": "A blocked verdict names the first failed check and observed value.",
++    "headroom_results": "Headroom shows whether rows could distinguish useful actions.",
++    "honest_verdict": "The complete_ prefix states the terminal evidence boundary.",
++    "inference_substrate": "This is deterministic CPU transcript audit work, not a live run.",
++    "later_outcome_results": "Outcome rates show whether exact later progress was available.",
++    "next_action_results": "Next-action rates show whether the agent acted after the response.",
++    "obligation_ledger": "The fresh ledger lists every reduced tool-gap obligation.",
++    "per_game_results": "One obligation row keeps the request, response, action, and outcome local.",
++    "preconditions_checked": "The gates show which evidence was required before eligibility.",
++    "reproducibility_checksum": "One digest binds the audit content except wall time.",
++    "request_receipt_joins": "Join counts show whether request and response identities exist.",
++    "run_date": "The date states when the frozen transcript audit ran.",
++    "schema": "The schema lets later reducers reject incompatible audit files.",
++    "solve_claim": "False prevents an audit artifact from becoming an ARC solve claim.",
++    "source_artifact_hashes": "Source hashes bind the frozen artifacts used as inputs.",
++    "status": "The status separates effect-eligible audits from blocked audits.",
++    "tool_gap_audit_complete_score": "Completeness is about audit shape, not effect size.",
++    "tool_gap_effect_eligible_score": "Eligibility is 1 only when joins, timing, matching, outcomes, and headroom pass.",
++    "transport_results": "Transport metrics stop receipt success from becoming utility.",
++    "unmatched_cell_results": "Unmatched, loop-off, and no-obligation cells stay visible.",
++    "utility_results": "Utility metrics measure use, changed action, progress, and invalid actions.",
++    "verdict_class": "A closed verdict class prevents unsupported positives.",
++    "verifier_is_oracle": "False because exact later outcomes are external receipts."
++  },
++  "gate_check_summary": {
++    "expected": ">0",
++    "failed_check": "tool_gap_obligations",
++    "observed": 0,
++    "passed": false
++  },
++  "headroom_results": [],
++  "honest_verdict": "complete_blocked_tool_gap_causal_support_audit",
++  "inference_substrate": "deterministic_cpu_live_receipt_audit_no_llm",
++  "later_outcome_results": [],
++  "next_action_results": [],
++  "obligation_ledger": {
++    "row_count": 0,
++    "row_rule": "one row per tool_gap_events entry with request, receipt, visible text, next action, and later outcome fields preserved",
++    "rows": []
++  },
++  "per_game_results": [],
++  "preconditions_checked": [
++    {
++      "check": "arc_inventory_complete_score",
++      "expected": 1,
++      "observed": 1,
++      "passed": true
++    },
++    {
++      "check": "terminal_tool_gap_cells",
++      "expected": ">0",
++      "observed": 4,
++      "passed": true
++    },
++    {
++      "check": "tool_gap_obligations",
++      "expected": ">0",
++      "observed": 0,
++      "passed": false
++    },
++    {
++      "check": "immutable_raw_transcript_hashes",
++      "expected": true,
++      "observed": {
++        "missing": 0,
++        "rows_checked": 0
++      },
++      "passed": false
++    },
++    {
++      "check": "request_response_identities",
++      "expected": true,
++      "observed": {
++        "missing_identity_count": 0,
++        "request_response_mismatch_count": 0
++      },
++      "passed": false
++    },
++    {
++      "check": "agent_visible_responses",
++      "expected": true,
++      "observed": {
++        "missing_agent_visible_count": 0,
++        "visibility_results": []
++      },
++      "passed": false
++    },
++    {
++      "check": "next_action_receipts",
++      "expected": true,
++      "observed": {
++        "missing_next_action_count": 0,
++        "next_action_results": []
++      },
++      "passed": false
++    },
++    {
++      "check": "exact_later_outcomes",
++      "expected": true,
++      "observed": {
++        "later_outcome_results": [],
++        "missing_exact_later_outcome_count": 0
++      },
++      "passed": false
++    },
++    {
++      "check": "temporal_order",
++      "expected": true,
++      "observed": {
++        "temporal_failure_count": 0
++      },
++      "passed": false
++    },
++    {
++      "check": "duplicate_transport_identities",
++      "expected": [],
++      "observed": [],
++      "passed": true
++    },
++    {
++      "check": "matched_cells",
++      "expected": true,
++      "observed": {
++        "all_obligations_matched": false,
++        "configuration_strata": {
++          "expected_missing_configurations": [
++            {
++              "game": "tu93",
++              "matched_stratum": null,
++              "observed": {
++                "expected_tool_loop_state": "selfparse"
++              },
++              "reason": "expected_configuration_missing_terminal_receipt",
++              "row_count": 0,
++              "source_artifact": "ops_status"
++            },
++            {
++              "game": "cn04",
++              "matched_stratum": null,
++              "observed": {
++                "expected_tool_loop_state": "selfparse"
++              },
++              "reason": "expected_configuration_missing_terminal_receipt",
++              "row_count": 0,
++              "source_artifact": "ops_status"
++            }
++          ],
++          "obligation_stratum_count": 0,
++          "pooling_rule": "game, run, model, policy, budget, tool-loop state, supervisor state, and requested tool must match",
++          "strata": [
++            {
++              "budget": 399,
++              "game": "ar25",
++              "matched_stratum": "ar25|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "ar25",
++              "matched_stratum": "ar25|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "ar25",
++              "matched_stratum": "ar25|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "cd82",
++              "matched_stratum": "cd82|cd82-ft09-ka59-3452377|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "cd82-ft09-ka59-3452377",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "lp85",
++              "matched_stratum": "lp85|lp85-r11l-3762597|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "lp85-r11l-3762597",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "ls20",
++              "matched_stratum": "ls20|ls20-wa30-4186462|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "ls20-wa30-4186462",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "m0r0",
++              "matched_stratum": "m0r0|m0r0-sk48-132287|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "m0r0-sk48-132287",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": true,
++              "tool_loop_state": "selfparse",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "r11l",
++              "matched_stratum": "r11l|lp85-r11l-3762597|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "lp85-r11l-3762597",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "sk48",
++              "matched_stratum": "sk48|m0r0-sk48-132287|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "m0r0-sk48-132287",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": true,
++              "tool_loop_state": "selfparse",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "sp80",
++              "matched_stratum": "sp80|sp80-su15-70215|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sp80-su15-70215",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "sp80",
++              "matched_stratum": "sp80|sp80-su15-70505|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sp80-su15-70505",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": true,
++              "tool_loop_state": "selfparse",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "su15",
++              "matched_stratum": "su15|sp80-su15-70215|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sp80-su15-70215",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "su15",
++              "matched_stratum": "su15|sp80-su15-70505|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sp80-su15-70505",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": true,
++              "tool_loop_state": "selfparse",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 399,
++              "game": "tu93",
++              "matched_stratum": "tu93|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|unknown|S_llmon|399|unknown|applied|none_observed",
++              "model": "unknown",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "S_llmon",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66",
++              "supervisor_state": "applied",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "unknown",
++              "transport_success_count": 0
++            },
++            {
++              "budget": 2500,
++              "game": "wa30",
++              "matched_stratum": "wa30|ls20-wa30-4186462|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|none_observed",
++              "model": "unsloth/Qwen3.8-27B-GGUF",
++              "nonzero_headroom": false,
++              "obligation_count": 0,
++              "policy": "e3",
++              "requested_tool": "none_observed",
++              "response_used_count": 0,
++              "run": "ls20-wa30-4186462",
++              "supervisor_state": "unobserved",
++              "terminal_tool_gap_cell": false,
++              "tool_loop_state": "off_or_unobserved",
++              "transport_success_count": 0
++            }
++          ],
++          "stratum_count": 20,
++          "unmatched_stratum_count": 20
++        }
++      },
++      "passed": false
++    },
++    {
++      "check": "headroom_nonzero",
++      "expected": true,
++      "observed": {
++        "headroom_results": []
++      },
++      "passed": false
++    }
++  ],
++  "reproducibility_checksum": "sha256:d98512c2a0d59635929085ff12626885a502a0734c3d41193f05740c8ce5f5df",
++  "request_receipt_joins": {
++    "duplicate_obligation_identities": [],
++    "duplicate_request_ids": [],
++    "duplicate_response_ids": [],
++    "joined_count": 0,
++    "missing_identity_count": 0,
++    "missing_identity_row_hashes": [],
++    "raw_transcript_hash_missing_count": 0,
++    "request_response_mismatch_count": 0,
++    "request_response_mismatch_row_hashes": [],
++    "rows_reduced": 0
++  },
++  "run_date": "20260901",
++  "schema": "carnot.experiment_6845.tool_gap_causal_support_audit.v1",
++  "solve_claim": false,
++  "source_artifact_hashes": {
++    "agent_runtime_missing": {
++      "exists": false,
++      "file_sha256": null,
++      "honest_verdict": null,
++      "name": "agent_runtime_missing",
++      "path": "python/carnot/agent_runtime.py",
++      "read_error": "FileNotFoundError",
++      "size_bytes": null,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "agents_md": {
++      "exists": true,
++      "file_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "honest_verdict": null,
++      "name": "agents_md",
++      "path": "AGENTS.md",
++      "read_error": null,
++      "size_bytes": 1165,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "claude_md": {
++      "exists": true,
++      "file_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++      "honest_verdict": null,
++      "name": "claude_md",
++      "path": "CLAUDE.md",
++      "read_error": null,
++      "size_bytes": 304897,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "codex_md": {
++      "exists": true,
++      "file_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "honest_verdict": null,
++      "name": "codex_md",
++      "path": "CODEX.md",
++      "read_error": null,
++      "size_bytes": 2396,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "experiment_6473": {
++      "exists": true,
++      "file_sha256": "sha256:0a5c092a4a3e7554d0ef9b03d4c686632dd6ba4c4afa0e1b0c23c885cf4826cd",
++      "honest_verdict": "complete: compaction pilot A/B measured on 13 paired live cells; one or more gates FAIL (G-Q is a pilot signal, never a claim)",
++      "name": "experiment_6473",
++      "path": "results/experiment_6473_tool_loop_compaction_pilot_ab.json",
++      "read_error": null,
++      "size_bytes": 19031,
++      "status": null,
++      "top_level_keys": [
++        "arm_meta",
++        "cells",
++        "design_note",
++        "duration_s",
++        "experiment",
++        "experiment_id",
++        "field_provenance",
++        "honest_verdict",
++        "inference_substrate",
++        "model_specs",
++        "phase0",
++        "phase1_gates",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "req",
++        "run_date",
++        "title"
++      ],
++      "verdict_class": null
++    },
++    "experiment_6777": {
++      "exists": true,
++      "file_sha256": "sha256:0e30a3c833d79ba8ea6c937c7d4530d39f39224fc386b8e6e4ddd8dc3ee1d9c9",
++      "honest_verdict": "blocked_gate_check_failed",
++      "name": "experiment_6777",
++      "path": "results/experiment_6777_arc_tool_gap_transport.json",
++      "read_error": null,
++      "size_bytes": 2375,
++      "status": "blocked",
++      "top_level_keys": [
++        "blocked_at_layer",
++        "blocked_diagnostic_contract",
++        "blocked_reason",
++        "duration_s",
++        "experiment",
++        "failed_evidence_path",
++        "failed_evidence_sha256",
++        "failed_expected",
++        "failed_expected_type",
++        "failed_field",
++        "failed_observed",
++        "failed_observed_type",
++        "failed_operator",
++        "failed_upstream",
++        "finished_at",
++        "gate_check_summary",
++        "gates_evaluated",
++        "honest_verdict",
++        "run_date",
++        "schema",
++        "started_at",
++        "status",
++        "title"
++      ],
++      "verdict_class": null
++    },
++    "experiment_6820_missing": {
++      "exists": false,
++      "file_sha256": null,
++      "honest_verdict": null,
++      "name": "experiment_6820_missing",
++      "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++      "read_error": "FileNotFoundError",
++      "size_bytes": null,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "experiment_6843": {
++      "exists": true,
++      "file_sha256": "sha256:ac0168c5c312a0d4f9b35c879534b3de89f804d5a9fc5297f5a6ccfe3d91aa98",
++      "honest_verdict": "complete_live_arc_inventory_terminal_evidence_only_no_solve_claim",
++      "name": "experiment_6843",
++      "path": "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
++      "read_error": null,
++      "size_bytes": 83485,
++      "status": "complete_live_arc_inventory",
++      "top_level_keys": [
++        "arc_inventory_complete_score",
++        "configuration_strata",
++        "duration_s",
++        "experiment_id",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "incomplete_artifact_manifest",
++        "inference_substrate",
++        "preconditions_checked",
++        "process_observations",
++        "reproducibility_checksum",
++        "rows",
++        "run_date",
++        "schema",
++        "solve_claim",
++        "source_artifact_hashes",
++        "status",
++        "supervisor_cells_ready_score",
++        "supervisor_eligible_cells",
++        "terminal_artifact_manifest",
++        "tool_gap_cells_ready_score",
++        "tool_gap_eligible_cells",
++        "unmatched_cell_reasons",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "verdict_class": "null"
++    },
++    "leaderboard:arc_supervisor_refinement_ledger.json": {
++      "exists": true,
++      "file_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
++      "honest_verdict": null,
++      "name": "leaderboard:arc_supervisor_refinement_ledger.json",
++      "path": "ops/arc_supervisor_refinement_ledger.json",
++      "read_error": null,
++      "size_bytes": 8570,
++      "status": null,
++      "top_level_keys": [
++        "created_at",
++        "entries",
++        "recommendation",
++        "schema",
++        "updated_at"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:cd82-ft09-ka59-3452377.json": {
++      "exists": true,
++      "file_sha256": "sha256:d9c5a734dae9b1dfb2c9d0921acee06cfc4f25012d40a8be133ea9b059421202",
++      "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
++      "name": "leaderboard:cd82-ft09-ka59-3452377.json",
++      "path": "results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json",
++      "read_error": null,
++      "size_bytes": 1725743,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:lp85-r11l-3762597.json": {
++      "exists": true,
++      "file_sha256": "sha256:6a4ef8195bf141decd3c6811213a8117f720c689dbd6e90d8bf5031411478c0f",
++      "honest_verdict": "complete_leaderboard_eval_3_levels_0_gaps",
++      "name": "leaderboard:lp85-r11l-3762597.json",
++      "path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
++      "read_error": null,
++      "size_bytes": 2832638,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:ls20-wa30-4186462.json": {
++      "exists": true,
++      "file_sha256": "sha256:566503be73de79d39070d58a266dd4f9133c051ae4e8e08ff1488f21e6022328",
++      "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
++      "name": "leaderboard:ls20-wa30-4186462.json",
++      "path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
++      "read_error": null,
++      "size_bytes": 3389667,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:m0r0-sk48-132287.json": {
++      "exists": true,
++      "file_sha256": "sha256:d1e17456bd9fc423830275c5037eef80b00eb8a2e910f6232151e2ae487a5adc",
++      "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
++      "name": "leaderboard:m0r0-sk48-132287.json",
++      "path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
++      "read_error": null,
++      "size_bytes": 3812906,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:sp80-su15-70215.json": {
++      "exists": true,
++      "file_sha256": "sha256:728b90009f9a1332abc64d6080d154fb3122cae545813a508a01926d8a675017",
++      "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
++      "name": "leaderboard:sp80-su15-70215.json",
++      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
++      "read_error": null,
++      "size_bytes": 2440955,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "leaderboard:sp80-su15-70505.json": {
++      "exists": true,
++      "file_sha256": "sha256:7f30eeb42e814789161c6935dd8b2d178163df413dd1e65d32b0d4b9707a2d61",
++      "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
++      "name": "leaderboard:sp80-su15-70505.json",
++      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
++      "read_error": null,
++      "size_bytes": 2574289,
++      "status": null,
++      "top_level_keys": [
++        "budget",
++        "efficiency_sum",
++        "experiment",
++        "games_mode",
++        "gap",
++        "honest_verdict",
++        "inference_substrate",
++        "live_levels",
++        "open_gaps",
++        "oracle_levels",
++        "per_game",
++        "policy",
++        "random_seed"
++      ],
++      "verdict_class": null
++    },
++    "module_source": {
++      "exists": true,
++      "file_sha256": "sha256:35dc3700a4bcdc8c5489cb0a06ca9b6a08c8785d889b161d589c8de97c73dbcb",
++      "honest_verdict": null,
++      "name": "module_source",
++      "path": "python/carnot/experiment_6845_tool_gap_causal_support_audit.py",
++      "read_error": null,
++      "size_bytes": 51905,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "north_star": {
++      "exists": true,
++      "file_sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
++      "honest_verdict": null,
++      "name": "north_star",
++      "path": "ops/north-star.md",
++      "read_error": null,
++      "size_bytes": 24434,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "ops_status": {
++      "exists": true,
++      "file_sha256": "sha256:8c606dc136cc0eba8ebef03093368d98d39d4847523b4c057a562346a813e789",
++      "honest_verdict": null,
++      "name": "ops_status",
++      "path": "ops/status.md",
++      "read_error": null,
++      "size_bytes": 1239750,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "spec": {
++      "exists": true,
++      "file_sha256": "sha256:45d435772e557be59e1765d254b7f8c1adff3bc8db027d58a9c1db5ef230f86a",
++      "honest_verdict": null,
++      "name": "spec",
++      "path": "openspec/capabilities/arc-agi/spec.md",
++      "read_error": null,
++      "size_bytes": 84272,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    },
++    "wrapper_source": {
++      "exists": true,
++      "file_sha256": "sha256:4c943b8acb1de2c930de7203814a4b9a4665b31bea73ed5aac081bb224ef672c",
++      "honest_verdict": null,
++      "name": "wrapper_source",
++      "path": "scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py",
++      "read_error": null,
++      "size_bytes": 206,
++      "status": null,
++      "top_level_keys": [],
++      "verdict_class": null
++    }
++  },
++  "status": "complete_blocked_tool_gap_causal_support_audit",
++  "tool_gap_audit_complete_score": 1,
++  "tool_gap_effect_eligible_score": 0,
++  "transport_results": [],
++  "unmatched_cell_results": [
++    {
++      "game": "cd82",
++      "matched_stratum": "leaderboard_trajectory|cd82-ft09-ka59-3452377|cd82|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "r11l",
++      "matched_stratum": "leaderboard_trajectory|lp85-r11l-3762597|r11l|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "lp85",
++      "matched_stratum": "leaderboard_trajectory|lp85-r11l-3762597|lp85|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "ls20",
++      "matched_stratum": "leaderboard_trajectory|ls20-wa30-4186462|ls20|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "wa30",
++      "matched_stratum": "leaderboard_trajectory|ls20-wa30-4186462|wa30|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "m0r0",
++      "matched_stratum": "leaderboard_trajectory|m0r0-sk48-132287|m0r0|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
++      "observed": {
++        "tool_gap_calls_total": 11,
++        "tool_gap_event_count": 0
++      },
++      "reason": "no_tool_gap_obligation_events",
++      "row_count": 1,
++      "source_artifact": "leaderboard:m0r0-sk48-132287.json"
++    },
++    {
++      "game": "sk48",
++      "matched_stratum": "leaderboard_trajectory|m0r0-sk48-132287|sk48|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
++      "observed": {
++        "tool_gap_calls_total": 3,
++        "tool_gap_event_count": 0
++      },
++      "reason": "no_tool_gap_obligation_events",
++      "row_count": 1,
++      "source_artifact": "leaderboard:m0r0-sk48-132287.json"
++    },
++    {
++      "game": "sp80",
++      "matched_stratum": "leaderboard_trajectory|sp80-su15-70215|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "su15",
++      "matched_stratum": "leaderboard_trajectory|sp80-su15-70215|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "sp80",
++      "matched_stratum": "leaderboard_trajectory|sp80-su15-70505|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
++      "observed": {
++        "tool_gap_calls_total": 10,
++        "tool_gap_event_count": 0
++      },
++      "reason": "no_tool_gap_obligation_events",
++      "row_count": 1,
++      "source_artifact": "leaderboard:sp80-su15-70505.json"
++    },
++    {
++      "game": "su15",
++      "matched_stratum": "leaderboard_trajectory|sp80-su15-70505|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
++      "observed": {
++        "tool_gap_calls_total": 6,
++        "tool_gap_event_count": 0
++      },
++      "reason": "no_tool_gap_obligation_events",
++      "row_count": 1,
++      "source_artifact": "leaderboard:sp80-su15-70505.json"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "ar25",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|ar25|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|tu93|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "ar25",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|ar25|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": "ar25",
++      "matched_stratum": "supervisor_refinement_ledger|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|ar25|unknown|S_llmon|399|unknown|applied|complete",
++      "reason": "tool_gap_receipt_missing_or_loop_off",
++      "row_count": 1,
++      "source_artifact": "experiment_6843"
++    },
++    {
++      "game": null,
++      "matched_stratum": null,
++      "observed": {
++        "honest_verdict": "blocked_gate_check_failed",
++        "path": "results/experiment_6777_arc_tool_gap_transport.json",
++        "read_error": null,
++        "status": "blocked"
++      },
++      "reason": "blocked_source_artifact",
++      "row_count": 0,
++      "source_artifact": "experiment_6777"
++    },
++    {
++      "game": null,
++      "matched_stratum": null,
++      "observed": {
++        "honest_verdict": null,
++        "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "read_error": "FileNotFoundError",
++        "status": null
++      },
++      "reason": "missing_source_artifact",
++      "row_count": 0,
++      "source_artifact": "experiment_6820_missing"
++    },
++    {
++      "game": "tu93",
++      "matched_stratum": null,
++      "observed": {
++        "expected_tool_loop_state": "selfparse"
++      },
++      "reason": "expected_configuration_missing_terminal_receipt",
++      "row_count": 0,
++      "source_artifact": "ops_status"
++    },
++    {
++      "game": "cn04",
++      "matched_stratum": null,
++      "observed": {
++        "expected_tool_loop_state": "selfparse"
++      },
++      "reason": "expected_configuration_missing_terminal_receipt",
++      "row_count": 0,
++      "source_artifact": "ops_status"
++    }
++  ],
++  "utility_results": [],
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py b/scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py
+new file mode 100644
+index 0000000000..edf7c1af2c
+--- /dev/null
++++ b/scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++"""Run REQ-ARC-6845 tool-gap causal support audit."""
++
++from carnot.experiment_6845_tool_gap_causal_support_audit import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6845_tool_gap_causal_support_audit.py b/tests/python/test_experiment_6845_tool_gap_causal_support_audit.py
+new file mode 100644
+index 0000000000..9601b85c3b
+--- /dev/null
++++ b/tests/python/test_experiment_6845_tool_gap_causal_support_audit.py
+@@ -0,0 +1,711 @@
++"""REQ-ARC-6845 tool-gap causal support audit tests."""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.agentic import arc_solve_artifact_discipline as discipline
++from carnot import experiment_6845_tool_gap_causal_support_audit as exp
++from scripts import arc_artifact_lint as arc_lint
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _write_text(path: Path, text: str) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++    return path
++
++
++def _digest(prefix: str, index: int) -> str:
++    return f"sha256:{prefix}{index:058d}"
++
++
++def _inventory_row(
++    *,
++    game: str = "sp80",
++    run: str = "sp80-selfparse",
++    source_path: str | None = None,
++    tool_loop: str = "selfparse",
++    complete: bool = True,
++) -> dict[str, Any]:
++    source = source_path or f"results/arc_leaderboard_eval_runs/{run}.json"
++    return {
++        "artifact_family": "leaderboard_trajectory",
++        "source_path": source,
++        "source_artifact_sha256": _digest("source", len(game)),
++        "run_id": run,
++        "game": game,
++        "model_id": "unsloth/Qwen3.8-27B-GGUF",
++        "policy": "e3",
++        "budget": 2500,
++        "tool_loop_state": tool_loop,
++        "supervisor_state": "unobserved",
++        "receipt_completeness": "complete",
++        "trajectory_receipt_complete": True,
++        "tool_gap_receipt_complete": complete,
++        "tool_gap_receipt_count": 1 if complete else 0,
++        "tool_gap_calls_total": 3 if complete else 0,
++        "tool_gap_event_count": 1 if complete else 0,
++        "producer_configuration": {
++            "levels_recorded": 1,
++            "actions_recorded": 50,
++            "charged_actions": 50,
++        },
++        "stratum_identity": (
++            "leaderboard_trajectory|"
++            f"{run}|{game}|unsloth/Qwen3.8-27B-GGUF|e3|2500|"
++            f"{tool_loop}|unobserved|complete"
++        ),
++        "row_sha256": _digest("row", len(game)),
++    }
++
++
++def _inventory(rows: list[dict[str, Any]] | None = None, *, complete: int = 1) -> dict[str, Any]:
++    selected = rows if rows is not None else [_inventory_row()]
++    eligible = [row for row in selected if row.get("tool_gap_receipt_complete") is True]
++    return {
++        "schema": "carnot.experiment_6843.live_arc_evidence_stratum_freeze.v1",
++        "status": "complete_live_arc_inventory",
++        "arc_inventory_complete_score": complete,
++        "tool_gap_eligible_cells": {
++            "count": len(eligible),
++            "row_ids": [row["stratum_identity"] for row in eligible],
++        },
++        "rows": selected,
++        "unmatched_cell_reasons": [],
++        "honest_verdict": "complete_live_arc_inventory",
++        "verdict_class": "null",
++    }
++
++
++def _event(
++    *,
++    index: int = 1,
++    tool: str = "get_full_grid",
++    before: int = 0,
++    after: int = 1,
++    used_response: bool = True,
++    changed_after_response: bool = True,
++    valid_action: bool = True,
++    headroom: bool = True,
++) -> dict[str, Any]:
++    available = [6]
++    next_action = {"kind": 6, "data": {"x": index, "y": index + 1}}
++    if not valid_action:
++        next_action = {"kind": 9, "data": {"x": index, "y": index + 1}}
++    return {
++        "kind": "unknown_tool",
++        "missing_fact": "full grid bytes for transition 3",
++        "requested_tool": tool,
++        "argument_keys": ["t", "which"],
++        "turn": index,
++        "request_sequence": 10 + index,
++        "receipt_sequence": 20 + index,
++        "visibility_sequence": 30 + index,
++        "next_action_sequence": 40 + index,
++        "outcome_sequence": 50 + index,
++        "request_id": _digest("request", index),
++        "tool_receipt_id": _digest("receipt", index),
++        "response_id": _digest("response", index),
++        "agent_visible_response_id": _digest("visible", index),
++        "next_action_id": _digest("nextaction", index),
++        "raw_transcript_sha256": _digest("transcript", index),
++        "actual_call": {
++            "name": tool,
++            "arguments": {"t": 3, "which": "before"},
++        },
++        "exact_response": {
++            "ok": False,
++            "error": f"unknown tool: {tool}",
++            "source": "dispatch_tool",
++        },
++        "agent_visible_text": (
++            "<tool_response>\n"
++            + json.dumps({"ok": False, "error": f"unknown tool: {tool}"})
++            + "\n</tool_response>"
++        ),
++        "next_action": next_action,
++        "next_action_receipt": {
++            "next_action_id": _digest("nextaction", index),
++            "used_tool_response": used_response,
++            "changed_after_response": changed_after_response,
++            "available_actions": available,
++        },
++        "later_exact_outcome": {
++            "outcome_id": _digest("outcome", index),
++            "outcome_status": "returned",
++            "live_return": True,
++            "fully_joined": True,
++            "levels_completed_before": before,
++            "levels_completed_after": after,
++            "reward": {"present": False, "value": None},
++            "termination": {"state": "NOT_FINISHED"},
++            "headroom": {
++                "baseline_score": 0.0,
++                "best_available_score": 1.0 if headroom else 0.0,
++            },
++        },
++    }
++
++
++def _leaderboard(
++    *,
++    game: str = "sp80",
++    events: list[dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    return {
++        "experiment": "arc_leaderboard_eval",
++        "games_mode": "claimed",
++        "policy": "e3",
++        "budget": 2500,
++        "random_seed": 20260719,
++        "honest_verdict": "complete_leaderboard_eval_1_levels_1_gaps",
++        "per_game": [
++            {
++                "game": game,
++                "levels": 1,
++                "reached": 1,
++                "actions": 50,
++                "charged_actions": 50,
++                "policy_diagnostics": {
++                    "proposer": {"repo_substr": "Qwen3.8-27B"},
++                    "induction_attempts": [
++                        {
++                            "model_specs": "Qwen3.8-27B-Q4_K_M GGUF",
++                            "tool_gap": {
++                                "tool_gap_events": events if events is not None else [_event()],
++                                "tool_gap_events_dropped": 0,
++                                "candidate_tools_enabled": [],
++                                "candidate_tools_rejected": [],
++                                "terminated_by": "early_stop_non_improving",
++                                "tool_calls_total": 3,
++                            },
++                        }
++                    ],
++                },
++            }
++        ],
++    }
++
++
++def _source_paths(
++    tmp_path: Path,
++    *,
++    inventory: dict[str, Any] | None = None,
++    leaderboards: dict[str, dict[str, Any]] | None = None,
++) -> dict[str, Path]:
++    boards = leaderboards or {"sp80-selfparse": _leaderboard()}
++    paths = {
++        "agents_md": _write_text(tmp_path / "AGENTS.md", "# agents\n"),
++        "claude_md": _write_text(tmp_path / "CLAUDE.md", "# claude\n"),
++        "codex_md": _write_text(tmp_path / "CODEX.md", "# codex\n"),
++        "north_star": _write_text(tmp_path / "ops/north-star.md", "# north star\n"),
++        "ops_status": _write_text(tmp_path / "ops/status.md", "# status\n"),
++        "spec": _write_text(
++            tmp_path / exp.SPEC_PATH,
++            (REPO_ROOT / exp.SPEC_PATH).read_text(encoding="utf-8"),
++        ),
++        "experiment_6473": _write_json(
++            tmp_path / "results/experiment_6473_tool_loop_compaction_pilot_ab.json",
++            {"honest_verdict": "complete: pilot transport only"},
++        ),
++        "experiment_6777": _write_json(
++            tmp_path / "results/experiment_6777_arc_tool_gap_transport.json",
++            {
++                "status": "blocked",
++                "honest_verdict": "blocked_gate_check_failed",
++                "gate_check_summary": "upstream transport gate blocked",
++            },
++        ),
++        "experiment_6820_missing": tmp_path
++        / "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "experiment_6843": _write_json(
++            tmp_path / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
++            inventory or _inventory(),
++        ),
++    }
++    for run, payload in boards.items():
++        paths[f"leaderboard:{run}.json"] = _write_json(
++            tmp_path / f"results/arc_leaderboard_eval_runs/{run}.json",
++            payload,
++        )
++    return paths
++
++
++def test_req_6845_spec_precedes_implementation() -> None:
++    """REQ-ARC-6845 declares gates, scenarios, and artifact fields."""
++
++    text = (REPO_ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("## REQ-ARC-6845:") :]
++    for marker in (
++        "SCENARIO-ARC-6845-REQUEST-RECEIPT-JOIN",
++        "SCENARIO-ARC-6845-VISIBILITY-NEXT-ACTION",
++        "SCENARIO-ARC-6845-GATES-FAIL-CLOSED",
++        "SCENARIO-ARC-6845-STRATA-NOT-POOLED",
++        "SCENARIO-ARC-6845-HASHES-NO-SOLVE",
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++        assert field in exp.FIELD_PRINCIPLES
++
++
++def test_scenario_6845_request_receipt_visibility_and_utility_success(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-REQUEST-RECEIPT-JOIN links the whole chain."""
++
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(tmp_path),
++    )
++
++    assert artifact["status"] == "complete_tool_gap_causal_support_audit"
++    assert artifact["tool_gap_audit_complete_score"] == 1
++    assert artifact["tool_gap_effect_eligible_score"] == 1
++    assert artifact["solve_claim"] is False
++    assert artifact["verifier_is_oracle"] is False
++    row = artifact["per_game_results"][0]
++    assert row["missing_fact"] == "full grid bytes for transition 3"
++    assert row["requested_tool"] == "get_full_grid"
++    assert row["actual_call"]["name"] == "get_full_grid"
++    assert row["request_receipt_joined"] is True
++    assert row["agent_visible"] is True
++    assert row["next_action_receipted"] is True
++    assert row["exact_later_outcome_joined"] is True
++    assert row["later_exact_outcome"]["direction"] == "progress"
++    assert artifact["request_receipt_joins"]["joined_count"] == 1
++    assert artifact["agent_visibility_results"][0]["agent_visible_rate"] == 1
++    assert artifact["next_action_results"][0]["action_change_rate"] == 1
++    assert artifact["transport_results"][0]["transport_success_rate"] == 1
++    assert artifact["utility_results"][0]["use_rate"] == 1
++    assert artifact["utility_results"][0]["transition_progress_rate"] == 1
++    assert artifact["utility_results"][0]["invalid_action_rate"] == 0
++    assert artifact["headroom_results"][0]["nonzero_headroom"] is True
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_scenario_6845_transport_success_does_not_imply_utility(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-VISIBILITY-NEXT-ACTION separates transport and use."""
++
++    event = _event(after=0, used_response=False, changed_after_response=False)
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={"sp80-selfparse": _leaderboard(events=[event])},
++        ),
++    )
++
++    assert artifact["status"] == "complete_tool_gap_causal_support_audit"
++    utility = artifact["utility_results"][0]
++    assert artifact["transport_results"][0]["transport_success_rate"] == 1
++    assert utility["use_rate"] == 0
++    assert utility["action_change_rate"] == 0
++    assert utility["transition_progress_rate"] == 0
++    assert utility["effect_eligible"] is True
++
++
++@pytest.mark.parametrize(
++    ("mutator", "failed_check"),
++    [
++        (
++            lambda event: event.update({"raw_transcript_sha256": None}),
++            "immutable_raw_transcript_hashes",
++        ),
++        (
++            lambda event: event.update({"response_id": None}),
++            "request_response_identities",
++        ),
++        (
++            lambda event: event.update({"agent_visible_text": ""}),
++            "agent_visible_responses",
++        ),
++        (
++            lambda event: event.pop("next_action_receipt"),
++            "next_action_receipts",
++        ),
++        (
++            lambda event: event["later_exact_outcome"].update({"outcome_id": None}),
++            "exact_later_outcomes",
++        ),
++        (
++            lambda event: event.update({"outcome_sequence": event["next_action_sequence"]}),
++            "temporal_order",
++        ),
++        (
++            lambda event: event["later_exact_outcome"]["headroom"].update(
++                {"best_available_score": 0.0}
++            ),
++            "headroom_nonzero",
++        ),
++    ],
++)
++def test_scenario_6845_gates_fail_closed(
++    tmp_path: Path,
++    mutator: Any,
++    failed_check: str,
++) -> None:
++    """SCENARIO-ARC-6845-GATES-FAIL-CLOSED records the first failed check."""
++
++    event = _event()
++    mutator(event)
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={"sp80-selfparse": _leaderboard(events=[event])},
++        ),
++    )
++
++    assert artifact["status"] == "complete_blocked_tool_gap_causal_support_audit"
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["tool_gap_effect_eligible_score"] == 0
++    assert artifact["gate_check_summary"]["failed_check"] == failed_check
++    assert artifact["gate_check_summary"]["observed"] is not None
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_scenario_6845_duplicate_identities_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-GATES-FAIL-CLOSED rejects duplicate transport IDs."""
++
++    event = _event(index=1)
++    duplicate = deepcopy(event)
++    duplicate["turn"] = 2
++    duplicate["request_sequence"] = 12
++    duplicate["receipt_sequence"] = 22
++    duplicate["visibility_sequence"] = 32
++    duplicate["next_action_sequence"] = 42
++    duplicate["outcome_sequence"] = 52
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={"sp80-selfparse": _leaderboard(events=[event, duplicate])},
++        ),
++    )
++
++    assert artifact["gate_check_summary"]["failed_check"] == "duplicate_transport_identities"
++    assert artifact["request_receipt_joins"]["duplicate_request_ids"] == [event["request_id"]]
++    assert artifact["tool_gap_effect_eligible_score"] == 0
++
++
++def test_scenario_6845_terminal_tool_gap_cells_required(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-GATES-FAIL-CLOSED rejects no terminal tool-gap cell."""
++
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(tmp_path, inventory=_inventory(rows=[]), leaderboards={}),
++    )
++
++    assert artifact["status"] == "complete_blocked_tool_gap_causal_support_audit"
++    assert artifact["gate_check_summary"]["failed_check"] == "terminal_tool_gap_cells"
++    assert artifact["per_game_results"] == []
++    assert artifact["unmatched_cell_results"]
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_scenario_6845_configuration_strata_never_pool_loop_states(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-STRATA-NOT-POOLED keeps loop states separate."""
++
++    on_row = _inventory_row(game="sp80", run="sp80-on", tool_loop="selfparse")
++    off_row = _inventory_row(game="sp80", run="sp80-off", tool_loop="off_or_unobserved")
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            inventory=_inventory(rows=[on_row, off_row]),
++            leaderboards={
++                "sp80-on": _leaderboard(game="sp80", events=[_event(index=1)]),
++                "sp80-off": _leaderboard(game="sp80", events=[_event(index=2)]),
++            },
++        ),
++    )
++
++    strata = artifact["configuration_strata"]["strata"]
++    assert artifact["configuration_strata"]["stratum_count"] == 2
++    assert {row["tool_loop_state"] for row in strata} == {"selfparse", "off_or_unobserved"}
++    assert all("tool-loop state" in artifact["configuration_strata"]["pooling_rule"] for _ in [0])
++    assert len({row["matched_stratum"] for row in artifact["per_game_results"]}) == 2
++
++
++def test_scenario_6845_hashes_validator_lint_and_cli(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-ARC-6845-HASHES-NO-SOLVE keeps stable hashes and writes JSON."""
++
++    paths = _source_paths(tmp_path)
++    artifact = exp.build_artifact(run_date="20260901", duration_s=0.25, source_paths=paths)
++
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++    assert artifact["per_game_results"][0]["row_sha256"].startswith("sha256:")
++    assert artifact["per_game_results"][0]["raw_transcript_sha256"].startswith("sha256:")
++    changed = deepcopy(artifact)
++    changed["duration_s"] = 999.0
++    assert exp.reproducibility_checksum(changed) == artifact["reproducibility_checksum"]
++    assert discipline.duration_floor_s(exp.INFERENCE_SUBSTRATE) == 0.0001
++    assert (
++        arc_lint.lint_artifact(
++            tmp_path / "results/experiment_6845_tool_gap_causal_support_audit.json",
++            artifact,
++        )
++        == []
++    )
++
++    broken = deepcopy(artifact)
++    broken["solve_claim"] = True
++    broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
++    assert "solve_claim must be false" in exp.validate_artifact(broken)
++
++    broken = deepcopy(artifact)
++    broken["field_principles"].pop("per_game_results")
++    broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
++    assert "field principles do not cover every top-level field" in exp.validate_artifact(broken)
++
++    monkeypatch.setattr(exp, "collect_default_source_paths", lambda _root: paths)
++    output = tmp_path / "out.json"
++    assert exp.main(["--date", "20260901", "--output", str(output)]) == 0
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["honest_verdict"].startswith("complete_")
++    assert written["run_date"] == "20260901"
++
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced failure"])
++    assert exp.main(["--date", "20260901", "--output", str(tmp_path / "bad.json")]) == 1
++
++
++def test_scenario_6845_defensive_validation_branches(tmp_path: Path) -> None:
++    """SCENARIO-ARC-6845-GATES-FAIL-CLOSED covers malformed inputs."""
++
++    assert exp._load_json(b"{") == {}
++    assert exp._load_json(b"[]") == {}
++    assert exp._source_record("missing", tmp_path / "missing.json", tmp_path)["exists"] is False
++    assert exp._relative(Path("/not/under/root.json"), tmp_path).endswith("root.json")
++    assert exp._common_root(None) == exp.REPO_ROOT
++    assert exp._common_root({"missing": tmp_path / "missing.json"}) == exp.REPO_ROOT
++    assert exp.collect_default_source_paths(tmp_path)["experiment_6843"].name.endswith(".json")
++    _write_json(
++        tmp_path / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
++        _inventory(rows=[_inventory_row(source_path="results/arc_leaderboard_eval_runs/x.json")]),
++    )
++    assert "leaderboard:x.json" in exp.collect_default_source_paths(tmp_path)
++    _write_json(
++        tmp_path / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
++        {"rows": []},
++    )
++    _write_json(tmp_path / "results/arc_leaderboard_eval_runs/fallback.json", {})
++    assert "leaderboard:fallback.json" in exp.collect_default_source_paths(tmp_path)
++    assert exp._mean([]) is None
++    assert exp._rate_interval(0, 0)["lower"] is None
++    assert exp._inventory_cells({"experiment_6843": {"_payload": {"rows": [None]}}}) == []
++    assert exp._game_rows({"per_game": {}}, "sp80") == []
++    assert exp._outcome_score({"reward": {"present": True, "value": 2}}) == 2
++    assert (
++        exp._outcome_score(
++            {
++                "levels_completed_before": 0,
++                "levels_completed_after": 0,
++                "termination": {"state": "GAME_OVER"},
++            }
++        )
++        == -1
++    )
++    assert exp._direction({"error": "boom", "outcome_status": "returned"}) == "regression"
++    assert exp._is_sha256(_digest("x", 1))
++    assert exp._is_sha256(None) is False
++    assert (
++        exp._event_requested_tool({"kind": "bad_arguments", "tool": "diff_grids"}) == "diff_grids"
++    )
++    assert exp._event_missing_fact({"kind": "bad_arguments", "tool": "diff_grids"}).startswith(
++        "signature mismatch"
++    )
++    assert (
++        exp._event_missing_fact({"requested_tool": "scan_board"}) == "tool unavailable: scan_board"
++    )
++    assert exp._headroom_nonzero({}) is False
++    assert exp._headroom_nonzero({"headroom": {"nonzero_headroom": True}}) is True
++    assert exp._action_validity(
++        {"next_action_receipt": {"proposal_validity": {"valid": False, "reason": "fixture"}}}
++    ) == {"valid": False, "reason": "fixture"}
++    assert exp._action_validity({"next_action": None})["reason"] == "missing_next_action"
++    assert (
++        exp._action_validity(
++            {
++                "next_action": {"kind": 6, "data": {"x": "bad", "y": 1}},
++                "next_action_receipt": {"available_actions": [6]},
++            }
++        )["reason"]
++        == "action6_requires_integer_xy"
++    )
++    assert exp._action_validity(
++        {
++            "next_action": {"kind": "RESET"},
++            "next_action_receipt": {"available_actions": []},
++        }
++    )["valid"]
++    assert exp._event_sequence_ok({"request_sequence": 1}) is False
++
++    event = _event(valid_action=False)
++    artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={"sp80-selfparse": _leaderboard(events=[event])},
++        ),
++    )
++    assert artifact["utility_results"][0]["invalid_action_rate"] == 1
++
++    empty_event_artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={"sp80-selfparse": _leaderboard(events=[])},
++        ),
++    )
++    assert empty_event_artifact["gate_check_summary"]["failed_check"] == "tool_gap_obligations"
++    assert any(
++        row["reason"] == "no_tool_gap_obligation_events"
++        for row in empty_event_artifact["unmatched_cell_results"]
++    )
++    off_cell_artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            inventory=_inventory(rows=[_inventory_row(complete=False)]),
++            leaderboards={"sp80-selfparse": _leaderboard(events=[_event()])},
++        ),
++    )
++    assert any(
++        row["reason"] == "tool_gap_receipt_missing_or_loop_off"
++        for row in off_cell_artifact["unmatched_cell_results"]
++    )
++    bad_stats_artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=_source_paths(
++            tmp_path,
++            leaderboards={
++                "sp80-selfparse": _leaderboard(events={"not": "a list"}),  # type: ignore[arg-type]
++            },
++        ),
++    )
++    assert bad_stats_artifact["gate_check_summary"]["failed_check"] == "tool_gap_obligations"
++    expected_paths = _source_paths(tmp_path)
++    expected_paths["ops_status"].write_text(
++        "Batches 3-5 (`sp80,su15`, `tu93,cn04`, `m0r0,sk48`) run with selfparse.\n",
++        encoding="utf-8",
++    )
++    expected_artifact = exp.build_artifact(
++        run_date="20260901",
++        duration_s=0.25,
++        source_paths=expected_paths,
++    )
++    missing_games = {
++        row["game"]
++        for row in expected_artifact["unmatched_cell_results"]
++        if row["reason"] == "expected_configuration_missing_terminal_receipt"
++    }
++    assert {"cn04", "tu93"} <= missing_games
++    assert expected_artifact["configuration_strata"]["expected_missing_configurations"]
++    assert (
++        "_raw_text"
++        not in exp.source_artifact_hashes(
++            {"ops_status": exp._source_record("ops_status", expected_paths["ops_status"], tmp_path)}
++        )["ops_status"]
++    )
++
++    def checked(mutator: Any, expected: str) -> None:
++        broken = deepcopy(artifact)
++        mutator(broken)
++        if "reproducibility_checksum" in broken:
++            broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
++        assert expected in exp.validate_artifact(broken)
++
++    checked(lambda data: data.pop("schema"), "required artifact fields are missing")
++    checked(lambda data: data.update({"schema": "bad"}), "schema mismatch")
++    checked(
++        lambda data: data.update({"inference_substrate": "bad"}), "inference substrate mismatch"
++    )
++    checked(
++        lambda data: data.update({"verifier_is_oracle": True}), "verifier_is_oracle must be false"
++    )
++    checked(
++        lambda data: data.update({"verdict_class": "surprise"}),
++        "verdict class is outside the closed set",
++    )
++    checked(
++        lambda data: data.update({"honest_verdict": "blocked"}),
++        "honest verdict lacks complete_ terminal prefix",
++    )
++    checked(
++        lambda data: data.update({"tool_gap_audit_complete_score": 0}),
++        "tool-gap audit complete score mismatch",
++    )
++    checked(
++        lambda data: data.update({"tool_gap_effect_eligible_score": 2}),
++        "effect eligible score must be binary",
++    )
++    checked(
++        lambda data: data["per_game_results"][0].update({"row_sha256": "bad"}),
++        "per_game row missing hash",
++    )
++    broken_checksum = deepcopy(artifact)
++    broken_checksum["status"] = "changed"
++    assert "reproducibility checksum mismatch" in exp.validate_artifact(broken_checksum)
++
++    blocked = deepcopy(artifact)
++    blocked.update(
++        {
++            "status": "complete_blocked_tool_gap_causal_support_audit",
++            "verdict_class": "null",
++            "tool_gap_effect_eligible_score": 1,
++            "gate_check_summary": {"passed": False},
++        }
++    )
++    blocked["reproducibility_checksum"] = exp.reproducibility_checksum(blocked)
++    errors = exp.validate_artifact(blocked)
++    assert "blocked verdict_class mismatch" in errors
++    assert "blocked artifact marked effect eligible" in errors
++    assert "blocked artifact lacks failed check" in errors
++
++    complete = deepcopy(artifact)
++    complete.update(
++        {
++            "status": "complete_tool_gap_causal_support_audit",
++            "verdict_class": "blocked",
++            "tool_gap_effect_eligible_score": 0,
++            "gate_check_summary": {"passed": False},
++        }
++    )
++    complete["reproducibility_checksum"] = exp.reproducibility_checksum(complete)
++    errors = exp.validate_artifact(complete)
++    assert "complete audit verdict_class mismatch" in errors
++    assert "complete artifact lacks effect eligibility" in errors
++    assert "complete artifact gate summary mismatch" in errors
++
++    no_rows_complete = deepcopy(artifact)
++    no_rows_complete["per_game_results"] = []
++    no_rows_complete["reproducibility_checksum"] = exp.reproducibility_checksum(no_rows_complete)
++    assert "complete audit lacks per_game rows" in exp.validate_artifact(no_rows_complete)
++
++    checked(lambda data: data.update({"status": "unknown"}), "status mismatch")
+-- 
+2.55.0
+

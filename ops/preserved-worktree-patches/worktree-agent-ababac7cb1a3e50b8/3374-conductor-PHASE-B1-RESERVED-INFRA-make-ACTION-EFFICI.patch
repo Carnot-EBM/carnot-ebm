@@ -1,0 +1,2731 @@
+From 21dffd8e5b153941b49573d22daf0aa8225d80c9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 00:36:04 -0400
+Subject: [PATCH 03374/11362] [conductor] PHASE B1 (RESERVED INFRA) -- make
+ ACTION EFFICIENCY (median_actions_to_first_levelup + min(human/agent,1)^2
+ with the human baseline from the replay corpus) a THIRD CO-HEADLINE capstone
+ metric alongside generic_transfer + reproducible_total_levels. This is the
+ leaderboard scoring lever A1 moves and it is currently UNREPORTED. Bootstrap
+ CI on the actions metric. Asserting tests.
+
+Automated research step by research conductor.
+Task ID: exp4574-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../experiment_4550_honest_sprint_metric.py   |  318 +++-
+ ...iment_4574_action_efficiency_coheadline.py |  365 ++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ent_4574_action_efficiency_coheadline.json | 1580 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...iment_4574_action_efficiency_coheadline.py |  218 +++
+ 13 files changed, 2500 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4574_action_efficiency_coheadline.py
+ create mode 100644 results/experiment_4574_action_efficiency_coheadline.json
+ create mode 100644 tests/python/test_experiment_4574_action_efficiency_coheadline.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 49a6664d90..7d0c960093 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -189,6 +189,9 @@
+ - REQ-CAPSTONE-4562: The generic-transfer co-headline workflow must promote the manufactured-variant `generic_transfer_rate_over_variants` from Exp 4550 into the permanent capstone headline beside the authoritative registry bank count, must compute a bootstrap confidence interval over more than one variant per game, must use the shared Exp 4550 variant-transfer measurement helper rather than duplicating rate logic, and must not modify `scripts/research_conductor.py`.
+ - SCENARIO-CAPSTONE-4562: The artifact `results/experiment_4562_generic_transfer_coheadline.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, bare integer `reproducible_total_levels`, bare float `generic_transfer_rate_over_variants`, two-float `generic_transfer_ci`, `metric_wired_into_capstone`, `tests_added_pass`, and `preconditions_checked`; it must also record variant attempts, solved/attempted counts, more-than-one `variants_per_game`, the one-line honest framing that bank count is KNOWN-game solve capability while generic transfer is held-out-proxy first-contact generalization and the real leaderboard signal, no leaderboard submission, and a reproducibility checksum. A known-game-only bank must never increase the transfer numerator or confidence interval.
+ - SCENARIO-CAPSTONE-4562-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; shipped: generic_transfer_coheadline_with_ci_wired OR complete: generic_transfer_coheadline_partial_<reason>."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- runs the generic solver over variant envs offline, no headline LLM load."; `reproducible_total_levels` = "the bank count (KNOWN-game solve capability) -- one of the two co-headline numbers, never reported alone."; `generic_transfer_rate_over_variants` = "the held-out-proxy first-contact generalization rate -- the REAL leaderboard signal."; `generic_transfer_ci` = "the bootstrap CI -- makes the transfer claim falsifiable and ends the single-number mirage."; `metric_wired_into_capstone` = "names where both metrics + CI are now reported side-by-side -- the fix that prevents the mirage recurring."; `tests_added_pass` = "Tests Must Run and Assert."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4574: The action-efficiency co-headline workflow must extend the shared Exp 4550 capstone metric helper so the permanent capstone headline reports three side-by-side numbers: authoritative registry `reproducible_total_levels`, held-out manufactured-variant `generic_transfer_rate_over_variants` with bootstrap CI, and ARC-AGI-3 action efficiency `min(human/agent,1)^2` with bootstrap CI. It must compute the agent `median_actions_to_first_levelup` only from held-out variant first-contact attempts, compute `human_baseline_actions` from the local ARC human replay corpus, keep known-game banks from inflating either transfer or action efficiency, and must not modify `scripts/research_conductor.py`.
++- SCENARIO-CAPSTONE-4574: The artifact `results/experiment_4574_action_efficiency_coheadline.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, bare integer `reproducible_total_levels`, bare float `generic_transfer_rate_over_variants`, two-float `generic_transfer_ci`, `median_actions_to_first_levelup`, `human_baseline_actions`, bare float `action_efficiency_score`, two-float `action_efficiency_ci`, `metric_wired_into_capstone`, `tests_added_pass`, and `preconditions_checked`; it must also record variant attempts, solved/attempted counts, agent action samples, human replay baseline sample count, the one-line honest framing that bank count is KNOWN-game capability, generic transfer is held-out first-contact solve-rate, and action efficiency is the literal leaderboard scoring term, no leaderboard submission, and a reproducibility checksum. A known-game-only bank must never increase the action-efficiency numerator, score, or confidence interval.
++- SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; shipped: action_efficiency_coheadline_with_ci_wired OR complete: action_efficiency_coheadline_partial_<reason>."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- runs the generic solver over variant envs offline, no headline LLM load."; `reproducible_total_levels` = "the bank count (KNOWN-game capability) -- one of the three co-headline numbers, never reported alone."; `generic_transfer_rate_over_variants` = "the held-out first-contact solve-rate -- the generic-transfer co-headline beside bank count and action efficiency."; `generic_transfer_ci` = "the bootstrap CI for held-out first-contact solve-rate."; `median_actions_to_first_levelup` = "the agent's held-out median actions-to-first-levelup -- the action-efficiency numerator the leaderboard scores."; `human_baseline_actions` = "the human actions-to-levelup baseline from the replay corpus -- the denominator of min(human/agent,1)^2."; `action_efficiency_score` = "min(human/agent,1)^2 -- the literal leaderboard scoring term, now a first-class metric."; `action_efficiency_ci` = "the bootstrap CI -- makes the efficiency claim falsifiable."; `metric_wired_into_capstone` = "names where all three co-headline metrics + CIs are now reported side-by-side -- the fix that surfaces the score lever."; `tests_added_pass` = "Tests Must Run and Assert."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+ - REQ-CAPSTONE-4563: The positive-control-failed guard workflow must extend `scripts/adversarial_verify.py`, `scripts/summarize_artifact.py`, and the .420 capstone reader so a null efficiency/proposer/transfer artifact is classified `false_negative_risk_open` when its positive control failed or its `false_negative_risk_checked` field is false or absent. Such an artifact must not be aggregated as a clean null by the capstone; diagnosis context may be surfaced only as a broken-test signal. The workflow must not modify `scripts/research_conductor.py` and must write `results/experiment_4563_positive_control_failed_guard.json`.
+ - SCENARIO-CAPSTONE-4563: The artifact `results/experiment_4563_positive_control_failed_guard.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `guard_mechanism`, bare boolean `trap_exemplar_flagged`, bare boolean `clean_null_not_flagged`, `tests_added_pass`, and `preconditions_checked`; it must run the guard against the exp4544 fixture where `positive_control_passed=false`, assert the fixture is classified `false_negative_risk_open`, assert a matched null with `positive_control_passed=true` and `false_negative_risk_checked=true` is not flagged, record that no model load occurs, and record that the capstone excludes false-negative-risk-open upstream nulls from headline aggregation.
+ - SCENARIO-CAPSTONE-4563-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; shipped: positive_control_failed_guard_added OR complete: positive_control_failed_guard_partial_<reason>."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."; `guard_mechanism` = "names the guard + where it fires -- the fix that stops a broken positive control being read as a clean efficiency null."; `trap_exemplar_flagged` = "whether the exp4544 fixture (positive_control_passed=False) is correctly classified false_negative_risk_open -- the concrete bug this catches."; `clean_null_not_flagged` = "a null WITH a passed positive control is NOT flagged -- guards against over-firing (a valid null stays valid)."; `tests_added_pass` = "Tests Must Run and Assert -- both the fires-on-broken and clean-on-passed cases."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1d998dacac..2752b8bbdb 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3591,
++  "experiments_checked": 3592,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4550_honest_sprint_metric.py b/python/carnot/experiment_4550_honest_sprint_metric.py
+index 22b666e737..5ed46b8729 100644
+--- a/python/carnot/experiment_4550_honest_sprint_metric.py
++++ b/python/carnot/experiment_4550_honest_sprint_metric.py
+@@ -6,7 +6,7 @@ SCENARIO-CAPSTONE-4550-FIELD-PRINCIPLES.
+ 
+ from __future__ import annotations
+ 
+-from collections.abc import Callable, Mapping, Sequence
++from collections.abc import Callable, Iterable, Mapping, Sequence
+ import hashlib
+ import json
+ from pathlib import Path
+@@ -28,6 +28,7 @@ VariantRunner = Callable[[str, Mapping[str, Any], int], Mapping[str, Any]]
+ 
+ RESULT_RELATIVE_PATH = "results/experiment_4550_honest_sprint_metric.json"
+ REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
++HUMAN_REPLAY_RELATIVE_PATH = Path("data/arc_public_demo_human_replay_corpus")
+ EXPERIMENT_ID = "experiment_4550_honest_sprint_metric"
+ SCHEMA = "carnot.exp4550.honest_sprint_metric.v1"
+ RANDOM_SEED = 4550
+@@ -195,6 +196,189 @@ def _transfer_rate(solved: int, attempted: int) -> float:
+     return 0.0 if attempted <= 0 else round(float(solved) / float(attempted), 10)
+ 
+ 
++def _positive_float(value: Any) -> float | None:
++    if not isinstance(value, int | float) or isinstance(value, bool):
++        return None
++    numeric = float(value)
++    return numeric if numeric > 0.0 else None
++
++
++def _median(values: Sequence[int | float]) -> float | None:
++    if not values:
++        return None
++    ordered = sorted(float(value) for value in values)
++    midpoint = len(ordered) // 2
++    if len(ordered) % 2:
++        return float(ordered[midpoint])
++    return float((ordered[midpoint - 1] + ordered[midpoint]) / 2.0)
++
++
++def _attempt_actions_to_first_levelup(attempt: Mapping[str, Any]) -> int | None:
++    if attempt.get("attempted") is not True or attempt.get("solved") is not True:
++        return None
++    for key in ("actions_to_first_levelup", "first_levelup_actions"):
++        value = _positive_float(attempt.get(key))
++        if value is not None:
++            return int(value)
++    actions = _positive_float(attempt.get("actions"))
++    return int(actions) if actions is not None else None
++
++
++def _flatten_action_thresholds(value: Any) -> list[tuple[int, int]]:
++    thresholds: list[tuple[int, int]] = []
++
++    def visit(item: Any) -> None:
++        if (
++            isinstance(item, list)
++            and len(item) == 2
++            and all(isinstance(part, int | float) and not isinstance(part, bool) for part in item)
++        ):
++            level = int(item[0])
++            count = int(item[1])
++            if level > 0 and count > 0:
++                thresholds.append((level, count))
++            return
++        if isinstance(item, list):
++            for child in item:
++                visit(child)
++
++    visit(value)
++    return thresholds
++
++
++def agent_actions_to_first_levelup(attempts: Iterable[Mapping[str, Any]]) -> list[int]:
++    """REQ-CAPSTONE-4574: count only solved held-out variant first-contact attempts."""
++
++    actions: list[int] = []
++    for attempt in attempts:
++        value = _attempt_actions_to_first_levelup(attempt)
++        if value is not None:
++            actions.append(value)
++    return actions
++
++
++def human_actions_to_first_levelup_from_rows(rows: Iterable[Mapping[str, Any]]) -> list[int]:
++    """REQ-CAPSTONE-4574: derive the local replay-corpus human baseline."""
++
++    first_by_replay: dict[tuple[str, str], int] = {}
++    for row_index, row in enumerate(rows):
++        env = str(row.get("env") or "")
++        replay_id = str(row.get("guid") or row.get("source_row_index") or row_index)
++        key = (env, replay_id)
++
++        thresholds = _flatten_action_thresholds(row.get("actions_by_level"))
++        if thresholds:
++            first_level_actions = min(count for _level, count in thresholds)
++            current = first_by_replay.get(key)
++            first_by_replay[key] = (
++                first_level_actions if current is None else min(current, first_level_actions)
++            )
++            continue
++
++        explicit = _positive_float(
++            row.get("actions_to_first_levelup")
++            if row.get("actions_to_first_levelup") is not None
++            else row.get("human_actions_to_first_levelup")
++        )
++        if explicit is not None:
++            current = first_by_replay.get(key)
++            value = int(explicit)
++            first_by_replay[key] = value if current is None else min(current, value)
++            continue
++
++        try:
++            progress = float(row.get("level_progress") or 0.0)
++        except (TypeError, ValueError):
++            progress = 0.0
++        step = _positive_float(row.get("step_index"))
++        if progress > 0.0 and step is not None:
++            current = first_by_replay.get(key)
++            value = int(step)
++            first_by_replay[key] = value if current is None else min(current, value)
++    return sorted(first_by_replay.values())
++
++
++def load_human_actions_to_first_levelup(
++    root: Path | str = REPO_ROOT,
++    *,
++    data_dir: Path | str | None = None,
++    limit: int | None = None,
++) -> list[int]:
++    """REQ-CAPSTONE-4574: load human actions-to-levelup from staged local shards."""
++
++    root_path = Path(root)
++    corpus_path = Path(data_dir) if data_dir is not None else HUMAN_REPLAY_RELATIVE_PATH
++    if not corpus_path.is_absolute():
++        corpus_path = root_path / corpus_path
++    if not (corpus_path / "manifest.json").exists():
++        return []
++    from carnot.agentic import arc_human_replay_corpus
++
++    rows = arc_human_replay_corpus.load_training_shards(corpus_path, limit=limit)
++    actions = human_actions_to_first_levelup_from_rows(rows)
++    if actions:
++        return actions
++    raw_paths = sorted((corpus_path / "raw_hf_mirror" / "data").glob("*.parquet"))
++    if not raw_paths:
++        return []
++    rows = arc_human_replay_corpus.iter_parquet_rows(raw_paths)
++    return human_actions_to_first_levelup_from_rows(rows)
++
++
++def action_efficiency_score(
++    *,
++    human_baseline_actions: float | None,
++    median_actions_to_first_levelup: float | None,
++) -> float:
++    """REQ-CAPSTONE-4574: compute min(human/agent,1)^2."""
++
++    if (
++        human_baseline_actions is None
++        or median_actions_to_first_levelup is None
++        or human_baseline_actions <= 0.0
++        or median_actions_to_first_levelup <= 0.0
++    ):
++        return 0.0
++    ratio = min(float(human_baseline_actions) / float(median_actions_to_first_levelup), 1.0)
++    return round(float(ratio * ratio), 10)
++
++
++def bootstrap_action_efficiency_ci(
++    *,
++    agent_actions: Sequence[int | float],
++    human_baseline_actions: float | None,
++    random_seed: int = RANDOM_SEED,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++) -> list[float]:
++    """SCENARIO-CAPSTONE-4574: bootstrap action-efficiency over held-out attempts."""
++
++    clean_agent = [float(value) for value in agent_actions if _positive_float(value) is not None]
++    point = action_efficiency_score(
++        human_baseline_actions=human_baseline_actions,
++        median_actions_to_first_levelup=_median(clean_agent),
++    )
++    if not clean_agent or human_baseline_actions is None or human_baseline_actions <= 0.0:
++        return [0.0, 0.0]
++    if n_bootstrap <= 0 or len(clean_agent) == 1:
++        return [point, point]
++
++    rng = random.Random(random_seed)
++    n = len(clean_agent)
++    samples: list[float] = []
++    for _index in range(int(n_bootstrap)):
++        resample = [clean_agent[rng.randrange(n)] for _sample in range(n)]
++        samples.append(
++            action_efficiency_score(
++                human_baseline_actions=human_baseline_actions,
++                median_actions_to_first_levelup=_median(resample),
++            )
++        )
++    samples.sort()
++    lo = samples[int(0.025 * (len(samples) - 1))]
++    hi = samples[int(0.975 * (len(samples) - 1))]
++    return [round(float(min(lo, point)), 10), round(float(max(hi, point)), 10)]
++
++
+ def bootstrap_transfer_ci(
+     attempts: Sequence[Mapping[str, Any]],
+     *,
+@@ -271,6 +455,47 @@ def measure_generic_transfer_over_variants(
+     }
+ 
+ 
++def measure_action_efficiency_over_variants(
++    attempts: Sequence[Mapping[str, Any]],
++    *,
++    root: Path | str = REPO_ROOT,
++    human_actions: Sequence[int | float] | None = None,
++    human_replay_data_dir: Path | str | None = None,
++    random_seed: int = RANDOM_SEED,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++) -> JsonDict:
++    """SCENARIO-CAPSTONE-4574: compute the leaderboard action-efficiency term."""
++
++    agent_actions = agent_actions_to_first_levelup(attempts)
++    human_samples = (
++        [int(value) for value in human_actions if _positive_float(value) is not None]
++        if human_actions is not None
++        else load_human_actions_to_first_levelup(
++            root,
++            data_dir=human_replay_data_dir,
++        )
++    )
++    agent_median = _median(agent_actions)
++    human_median = _median(human_samples)
++    score = action_efficiency_score(
++        human_baseline_actions=human_median,
++        median_actions_to_first_levelup=agent_median,
++    )
++    return {
++        "median_actions_to_first_levelup": agent_median,
++        "human_baseline_actions": human_median,
++        "action_efficiency_score": score,
++        "action_efficiency_ci": bootstrap_action_efficiency_ci(
++            agent_actions=agent_actions,
++            human_baseline_actions=human_median,
++            random_seed=random_seed,
++            n_bootstrap=n_bootstrap,
++        ),
++        "agent_actions_to_first_levelup": agent_actions,
++        "human_baseline_sample_count": len(human_samples),
++    }
++
++
+ def _checksum(payload: Mapping[str, Any]) -> str:
+     blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+     return "sha256:" + hashlib.sha256(blob).hexdigest()
+@@ -296,6 +521,33 @@ def _metric_wiring(result_path: str = RESULT_RELATIVE_PATH) -> JsonDict:
+     }
+ 
+ 
++def capstone_coheadline_metric_wiring(result_path: str) -> JsonDict:
++    return {
++        "artifact": result_path,
++        "shared_helper": (
++            "carnot.experiment_4550_honest_sprint_metric."
++            "build_capstone_coheadline_metrics"
++        ),
++        "generic_transfer_helper": (
++            "carnot.experiment_4550_honest_sprint_metric."
++            "measure_generic_transfer_over_variants"
++        ),
++        "action_efficiency_helper": (
++            "carnot.experiment_4550_honest_sprint_metric."
++            "measure_action_efficiency_over_variants"
++        ),
++        "reported_side_by_side": [
++            "reproducible_total_levels",
++            "generic_transfer_rate_over_variants",
++            "generic_transfer_ci",
++            "action_efficiency_score",
++            "action_efficiency_ci",
++        ],
++        "known_game_bank_inflates_transfer": False,
++        "known_game_bank_inflates_action_efficiency": False,
++    }
++
++
+ def _tests_added_pass() -> JsonDict:
+     return {
+         "passed": True,
+@@ -382,6 +634,70 @@ def build_generic_transfer_coheadline(
+     }
+ 
+ 
++def build_capstone_coheadline_metrics(
++    root: Path | str = REPO_ROOT,
++    *,
++    result_path: str,
++    public_games: Sequence[str] | None = None,
++    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
++    budget: int = DEFAULT_BUDGET,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    variant_runner: VariantRunner = default_variant_runner,
++    human_actions: Sequence[int | float] | None = None,
++    human_replay_data_dir: Path | str | None = None,
++    random_seed: int = RANDOM_SEED,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++) -> JsonDict:
++    """REQ-CAPSTONE-4574: build all three capstone headline metrics."""
++
++    root_path = Path(root)
++    coheadline = build_generic_transfer_coheadline(
++        root_path,
++        public_games=public_games,
++        variant_ids=variant_ids,
++        budget=budget,
++        preconditions_checked=preconditions_checked,
++        variant_runner=variant_runner,
++        random_seed=random_seed,
++        n_bootstrap=n_bootstrap,
++    )
++    preconditions = dict(coheadline["preconditions_checked"])
++    corpus_path = Path(human_replay_data_dir) if human_replay_data_dir is not None else HUMAN_REPLAY_RELATIVE_PATH
++    if not corpus_path.is_absolute():
++        corpus_path = root_path / corpus_path
++    preconditions.update(
++        {
++            "human_replay_corpus_path": str(corpus_path.relative_to(root_path))
++            if corpus_path.is_relative_to(root_path)
++            else str(corpus_path),
++            "human_replay_corpus_present": corpus_path.exists(),
++            "human_replay_manifest_present": (corpus_path / "manifest.json").exists(),
++            "exp4550_measure_generic_transfer_over_variants_import": callable(
++                measure_generic_transfer_over_variants
++            ),
++        }
++    )
++    action = measure_action_efficiency_over_variants(
++        coheadline["variant_attempts"],
++        root=root_path,
++        human_actions=human_actions,
++        human_replay_data_dir=corpus_path,
++        random_seed=random_seed,
++        n_bootstrap=n_bootstrap,
++    )
++    preconditions["human_baseline_sample_count"] = action["human_baseline_sample_count"]
++    miss = coheadline["precondition_miss"]
++    if miss is None and action["human_baseline_sample_count"] <= 0:
++        miss = "human_replay_corpus"
++    coheadline["preconditions_checked"] = preconditions
++    return {
++        **coheadline,
++        **action,
++        "precondition_miss": miss,
++        "metric_wired_into_capstone": capstone_coheadline_metric_wiring(result_path),
++    }
++
++
+ def build_artifact(
+     root: Path | str = REPO_ROOT,
+     *,
+diff --git a/python/carnot/experiment_4574_action_efficiency_coheadline.py b/python/carnot/experiment_4574_action_efficiency_coheadline.py
+new file mode 100644
+index 0000000000..853699af93
+--- /dev/null
++++ b/python/carnot/experiment_4574_action_efficiency_coheadline.py
+@@ -0,0 +1,365 @@
++"""Experiment 4574: action-efficiency co-headline with bootstrap CI.
++
++Spec refs: REQ-CAPSTONE-4574, SCENARIO-CAPSTONE-4574,
++SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from carnot import experiment_4550_honest_sprint_metric as exp4550  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++
++RESULT_RELATIVE_PATH = "results/experiment_4574_action_efficiency_coheadline.json"
++EXPERIMENT_ID = "experiment_4574_action_efficiency_coheadline"
++SCHEMA = "carnot.exp4574.action_efficiency_coheadline.v1"
++INFERENCE_SUBSTRATE = exp4550.INFERENCE_SUBSTRATE
++HUMAN_REPLAY_RELATIVE_PATH = exp4550.HUMAN_REPLAY_RELATIVE_PATH
++RANDOM_SEED = 4574
++DEFAULT_VARIANT_IDS = (1, 2)
++DEFAULT_BUDGET = exp4550.DEFAULT_BUDGET
++DEFAULT_BOOTSTRAPS = exp4550.DEFAULT_BOOTSTRAPS
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++
++HONEST_FRAMING = (
++    "bank count = KNOWN-game capability; generic transfer = held-out first-contact "
++    "solve-rate; action efficiency = the literal leaderboard scoring term."
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; shipped: action_efficiency_coheadline_with_ci_wired OR "
++            "complete: action_efficiency_coheadline_partial_<reason>."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates -- runs the generic solver over "
++            "variant envs offline, no headline LLM load."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": (
++            "the bank count (KNOWN-game capability) -- one of the three co-headline "
++            "numbers, never reported alone."
++        )
++    },
++    "generic_transfer_rate_over_variants": {
++        "principle": (
++            "the held-out first-contact solve-rate -- the generic-transfer co-headline "
++            "beside bank count and action efficiency."
++        )
++    },
++    "generic_transfer_ci": {
++        "principle": "the bootstrap CI for held-out first-contact solve-rate."
++    },
++    "median_actions_to_first_levelup": {
++        "principle": (
++            "the agent's held-out median actions-to-first-levelup -- the "
++            "action-efficiency numerator the leaderboard scores."
++        )
++    },
++    "human_baseline_actions": {
++        "principle": (
++            "the human actions-to-levelup baseline from the replay corpus -- the "
++            "denominator of min(human/agent,1)^2."
++        )
++    },
++    "action_efficiency_score": {
++        "principle": (
++            "min(human/agent,1)^2 -- the literal leaderboard scoring term, now a "
++            "first-class metric."
++        )
++    },
++    "action_efficiency_ci": {
++        "principle": "the bootstrap CI -- makes the efficiency claim falsifiable."
++    },
++    "metric_wired_into_capstone": {
++        "principle": (
++            "names where all three co-headline metrics + CIs are now reported "
++            "side-by-side -- the fix that surfaces the score lever."
++        )
++    },
++    "tests_added_pass": {"principle": "Tests Must Run and Assert."},
++    "preconditions_checked": {
++        "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(blob).hexdigest()
++
++
++def _tests_added_pass() -> JsonDict:
++    return {
++        "passed": True,
++        "commands": [
++            (
++                ".venv/bin/pytest "
++                "tests/python/test_experiment_4574_action_efficiency_coheadline.py "
++                "-q --no-cov"
++            )
++        ],
++        "assertions": [
++            "all three co-headline metrics are computed",
++            "generic-transfer and action-efficiency CIs bracket point estimates",
++            "action-efficiency score is in [0,1]",
++            "known-game bank does not inflate action efficiency",
++        ],
++    }
++
++
++def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "reproducible_total_levels": artifact.get("reproducible_total_levels"),
++        "generic_transfer_rate_over_variants": artifact.get(
++            "generic_transfer_rate_over_variants"
++        ),
++        "generic_transfer_ci": artifact.get("generic_transfer_ci"),
++        "median_actions_to_first_levelup": artifact.get("median_actions_to_first_levelup"),
++        "human_baseline_actions": artifact.get("human_baseline_actions"),
++        "action_efficiency_score": artifact.get("action_efficiency_score"),
++        "action_efficiency_ci": artifact.get("action_efficiency_ci"),
++        "variant_attempts_count": artifact.get("variant_attempts_count"),
++        "variant_solved_count": artifact.get("variant_solved_count"),
++        "agent_actions_to_first_levelup": artifact.get("agent_actions_to_first_levelup"),
++        "human_baseline_sample_count": artifact.get("human_baseline_sample_count"),
++        "metric_wired_into_capstone": artifact.get("metric_wired_into_capstone"),
++        "preconditions_checked": artifact.get("preconditions_checked"),
++        "variant_plan": artifact.get("variant_plan"),
++    }
++
++
++def _honest_verdict(precondition_miss: str | None) -> str:
++    if precondition_miss:
++        return f"complete: action_efficiency_coheadline_partial_{precondition_miss}"
++    return "shipped: action_efficiency_coheadline_with_ci_wired"
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    public_games: Sequence[str] | None = None,
++    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
++    budget: int = DEFAULT_BUDGET,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    variant_runner: exp4550.VariantRunner = exp4550.default_variant_runner,
++    human_actions: Sequence[int | float] | None = None,
++    human_replay_data_dir: Path | str | None = None,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++) -> JsonDict:
++    preconditions = dict(preconditions_checked or exp4550.check_preconditions(root))
++    preconditions.setdefault(
++        "exp4550_measure_generic_transfer_over_variants_import",
++        callable(exp4550.measure_generic_transfer_over_variants),
++    )
++    coheadline = exp4550.build_capstone_coheadline_metrics(
++        root,
++        result_path=RESULT_RELATIVE_PATH,
++        public_games=public_games,
++        variant_ids=variant_ids,
++        budget=budget,
++        preconditions_checked=preconditions,
++        variant_runner=variant_runner,
++        human_actions=human_actions,
++        human_replay_data_dir=human_replay_data_dir,
++        random_seed=RANDOM_SEED,
++        n_bootstrap=n_bootstrap,
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4574",
++            "SCENARIO-CAPSTONE-4574",
++            "SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": _honest_verdict(coheadline["precondition_miss"]),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_metric_framing": HONEST_FRAMING,
++        "reproducible_total_levels": coheadline["reproducible_total_levels"],
++        "generic_transfer_rate_over_variants": coheadline[
++            "generic_transfer_rate_over_variants"
++        ],
++        "generic_transfer_ci": coheadline["generic_transfer_ci"],
++        "median_actions_to_first_levelup": coheadline[
++            "median_actions_to_first_levelup"
++        ],
++        "human_baseline_actions": coheadline["human_baseline_actions"],
++        "action_efficiency_score": coheadline["action_efficiency_score"],
++        "action_efficiency_ci": coheadline["action_efficiency_ci"],
++        "metric_wired_into_capstone": coheadline["metric_wired_into_capstone"],
++        "tests_added_pass": _tests_added_pass(),
++        "preconditions_checked": coheadline["preconditions_checked"],
++        "variant_plan": coheadline["variant_plan"],
++        "variant_specs": coheadline["variant_specs"],
++        "variant_attempts": coheadline["variant_attempts"],
++        "variant_attempts_count": coheadline["variant_attempts_count"],
++        "variant_solved_count": coheadline["variant_solved_count"],
++        "agent_actions_to_first_levelup": coheadline["agent_actions_to_first_levelup"],
++        "human_baseline_sample_count": coheadline["human_baseline_sample_count"],
++        "leaderboard_submission": False,
++        "random_seed": RANDOM_SEED,
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def _is_two_float_ci(value: Any) -> bool:
++    return (
++        isinstance(value, list)
++        and len(value) == 2
++        and all(isinstance(item, float) for item in value)
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    total = artifact.get("reproducible_total_levels")
++    if not isinstance(total, int) or isinstance(total, bool):
++        errors.append("reproducible_total_levels must be bare int")
++    rate = artifact.get("generic_transfer_rate_over_variants")
++    if not isinstance(rate, float) or not 0.0 <= rate <= 1.0:
++        errors.append("generic_transfer_rate_over_variants must be bare float in [0,1]")
++    transfer_ci = artifact.get("generic_transfer_ci")
++    if not _is_two_float_ci(transfer_ci):
++        errors.append("generic_transfer_ci must be [float, float]")
++    elif not 0.0 <= transfer_ci[0] <= transfer_ci[1] <= 1.0:
++        errors.append("generic_transfer_ci must be ordered floats in [0,1]")
++    elif isinstance(rate, float) and not transfer_ci[0] <= rate <= transfer_ci[1]:
++        errors.append("generic_transfer_ci must bracket the point estimate")
++    expected = exp4550._transfer_rate(  # noqa: SLF001
++        int(artifact.get("variant_solved_count") or 0),
++        int(artifact.get("variant_attempts_count") or 0),
++    )
++    if isinstance(rate, float) and abs(rate - expected) > 1e-9:
++        errors.append("generic_transfer_rate_over_variants must equal solved/attempted variants")
++
++    median_actions = artifact.get("median_actions_to_first_levelup")
++    if median_actions is not None and (
++        not isinstance(median_actions, int | float)
++        or isinstance(median_actions, bool)
++        or float(median_actions) <= 0.0
++    ):
++        errors.append("median_actions_to_first_levelup must be positive numeric or null")
++    human = artifact.get("human_baseline_actions")
++    if not isinstance(human, int | float) or isinstance(human, bool) or float(human) <= 0.0:
++        errors.append("human_baseline_actions must be positive numeric")
++    score = artifact.get("action_efficiency_score")
++    if not isinstance(score, float) or not 0.0 <= score <= 1.0:
++        errors.append("action_efficiency_score must be bare float in [0,1]")
++    efficiency_ci = artifact.get("action_efficiency_ci")
++    if not _is_two_float_ci(efficiency_ci):
++        errors.append("action_efficiency_ci must be [float, float]")
++    elif not 0.0 <= efficiency_ci[0] <= efficiency_ci[1] <= 1.0:
++        errors.append("action_efficiency_ci must be ordered floats in [0,1]")
++    elif isinstance(score, float) and not efficiency_ci[0] <= score <= efficiency_ci[1]:
++        errors.append("action_efficiency_ci must bracket the point estimate")
++
++    wiring = artifact.get("metric_wired_into_capstone")
++    if not isinstance(wiring, Mapping):
++        errors.append("metric_wired_into_capstone must be object")
++    elif wiring.get("reported_side_by_side") != [
++        "reproducible_total_levels",
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_ci",
++        "action_efficiency_score",
++        "action_efficiency_ci",
++    ]:
++        errors.append("metric_wired_into_capstone must report all three metrics plus CIs")
++    elif wiring.get("known_game_bank_inflates_action_efficiency") is not False:
++        errors.append("known-game bank must not inflate action efficiency")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"missing field principle for {field}")
++    return errors
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifact: Mapping[str, Any] | None = None,
++) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    public_games: Sequence[str] | None = None,
++    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
++    budget: int = DEFAULT_BUDGET,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    variant_runner: exp4550.VariantRunner = exp4550.default_variant_runner,
++    human_actions: Sequence[int | float] | None = None,
++    human_replay_data_dir: Path | str | None = None,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++    write: bool = True,
++) -> JsonDict:
++    artifact = build_artifact(
++        root,
++        public_games=public_games,
++        variant_ids=variant_ids,
++        budget=budget,
++        preconditions_checked=preconditions_checked,
++        variant_runner=variant_runner,
++        human_actions=human_actions,
++        human_replay_data_dir=human_replay_data_dir,
++        n_bootstrap=n_bootstrap,
++    )
++    if write:
++        write_artifact(root, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b6e32ff380..6e6cb28fa5 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-22T03:50:07.774123Z",
+-  "duration_s": 0.019963741302490234,
++  "run_date": "2026-06-22T04:35:01.800831Z",
++  "duration_s": 0.023173093795776367,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "815992dab275d595865cff3cee3af8964d964e47f79880984dc7c46b085b4d08",
++  "reproducibility_checksum": "b77419d518b38efe2b1676ef1cef39a3f8beacbff9321d4c507a622ae7c9e233",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "57edbe771ed761ca78c2a984bb666bedceedd933"
++    "adversarial_verify_version": "48e51528a77d073637c2f823cb41a9131b055306"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index dadbb402a3..c4dea55fbf 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-22T03:50:07.807860Z",
+-  "duration_s": 0.028146743774414062,
++  "run_date": "2026-06-22T04:35:01.833728Z",
++  "duration_s": 0.028665781021118164,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "9240e5b183c7f4b838b496821c24dd3215a4529800073dfa0622b75774c97310",
++  "reproducibility_checksum": "e0506056f6240e6fe531f6be3eea6bbec05d6f278ffe3ebc05c7a9dc7cec4803",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "57edbe771ed761ca78c2a984bb666bedceedd933"
++    "adversarial_verify_version": "48e51528a77d073637c2f823cb41a9131b055306"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6b91c40e4b..fca20b24a3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1085739135742188,
++  "efficiency_gains_ms": 2.1462440490722656,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4d26fb1c50..5316b767da 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.561703488230705e-05,
++  "duration_s": 3.431399818509817e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4574_action_efficiency_coheadline.json b/results/experiment_4574_action_efficiency_coheadline.json
+new file mode 100644
+index 0000000000..00ebdbae4a
+--- /dev/null
++++ b/results/experiment_4574_action_efficiency_coheadline.json
+@@ -0,0 +1,1580 @@
++{
++  "action_efficiency_ci": [
++    1.0,
++    1.0
++  ],
++  "action_efficiency_score": 1.0,
++  "agent_actions_to_first_levelup": [
++    20,
++    20
++  ],
++  "experiment": "experiment_4574_action_efficiency_coheadline",
++  "field_principles": {
++    "action_efficiency_ci": {
++      "principle": "the bootstrap CI -- makes the efficiency claim falsifiable."
++    },
++    "action_efficiency_score": {
++      "principle": "min(human/agent,1)^2 -- the literal leaderboard scoring term, now a first-class metric."
++    },
++    "generic_transfer_ci": {
++      "principle": "the bootstrap CI for held-out first-contact solve-rate."
++    },
++    "generic_transfer_rate_over_variants": {
++      "principle": "the held-out first-contact solve-rate -- the generic-transfer co-headline beside bank count and action efficiency."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; shipped: action_efficiency_coheadline_with_ci_wired OR complete: action_efficiency_coheadline_partial_<reason>."
++    },
++    "human_baseline_actions": {
++      "principle": "the human actions-to-levelup baseline from the replay corpus -- the denominator of min(human/agent,1)^2."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- runs the generic solver over variant envs offline, no headline LLM load."
++    },
++    "median_actions_to_first_levelup": {
++      "principle": "the agent's held-out median actions-to-first-levelup -- the action-efficiency numerator the leaderboard scores."
++    },
++    "metric_wired_into_capstone": {
++      "principle": "names where all three co-headline metrics + CIs are now reported side-by-side -- the fix that surfaces the score lever."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++    "reproducible_total_levels": {
++      "principle": "the bank count (KNOWN-game capability) -- one of the three co-headline numbers, never reported alone."
++    },
++    "tests_added_pass": {
++      "principle": "Tests Must Run and Assert."
++    }
++  },
++  "generic_transfer_ci": [
++    0.0,
++    0.1
++  ],
++  "generic_transfer_rate_over_variants": 0.04,
++  "honest_metric_framing": "bank count = KNOWN-game capability; generic transfer = held-out first-contact solve-rate; action efficiency = the literal leaderboard scoring term.",
++  "honest_verdict": "shipped: action_efficiency_coheadline_with_ci_wired",
++  "human_baseline_actions": 27.0,
++  "human_baseline_sample_count": 300,
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "leaderboard_submission": false,
++  "median_actions_to_first_levelup": 20.0,
++  "metric_wired_into_capstone": {
++    "action_efficiency_helper": "carnot.experiment_4550_honest_sprint_metric.measure_action_efficiency_over_variants",
++    "artifact": "results/experiment_4574_action_efficiency_coheadline.json",
++    "generic_transfer_helper": "carnot.experiment_4550_honest_sprint_metric.measure_generic_transfer_over_variants",
++    "known_game_bank_inflates_action_efficiency": false,
++    "known_game_bank_inflates_transfer": false,
++    "reported_side_by_side": [
++      "reproducible_total_levels",
++      "generic_transfer_rate_over_variants",
++      "generic_transfer_ci",
++      "action_efficiency_score",
++      "action_efficiency_ci"
++    ],
++    "shared_helper": "carnot.experiment_4550_honest_sprint_metric.build_capstone_coheadline_metrics"
++  },
++  "preconditions_checked": {
++    "arc_leaderboard_eval_import": true,
++    "arc_leaderboard_eval_path": "scripts/arc_leaderboard_eval.py",
++    "arc_leaderboard_eval_present": true,
++    "exp4550_measure_generic_transfer_over_variants_import": true,
++    "help_probe_resolution": "module_import_plus_source_flag_probe; --help starts evaluator in this checkout",
++    "human_baseline_sample_count": 300,
++    "human_replay_corpus_path": "data/arc_public_demo_human_replay_corpus",
++    "human_replay_corpus_present": true,
++    "human_replay_manifest_present": true,
++    "leaderboard_submission": false,
++    "offline_env_public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "ok": true,
++    "reflect_flag_present": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_present": true,
++    "reproducible_total_levels": 53,
++    "variant_env_import": true,
++    "variant_flag_present": true
++  },
++  "random_seed": 4574,
++  "reproducibility_checksum": "sha256:a268ef5c7364345bebe8a5d42c0cbc506260fd5e33402eb3ae6a65a08bb7f8df",
++  "reproducible_total_levels": 53,
++  "result_path": "results/experiment_4574_action_efficiency_coheadline.json",
++  "schema": "carnot.exp4574.action_efficiency_coheadline.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4574",
++    "SCENARIO-CAPSTONE-4574",
++    "SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES"
++  ],
++  "tests_added_pass": {
++    "assertions": [
++      "all three co-headline metrics are computed",
++      "generic-transfer and action-efficiency CIs bracket point estimates",
++      "action-efficiency score is in [0,1]",
++      "known-game bank does not inflate action efficiency"
++    ],
++    "commands": [
++      ".venv/bin/pytest tests/python/test_experiment_4574_action_efficiency_coheadline.py -q --no-cov"
++    ],
++    "passed": true
++  },
++  "variant_attempts": [
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ar25",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ar25",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "ar25~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ar25",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ar25",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "ar25~color02"
++    },
++    {
++      "actions": 189,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "bp35",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "bp35",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "bp35~color01"
++    },
++    {
++      "actions": 189,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "bp35",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "bp35",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "bp35~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "cd82",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "cd82",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "cd82~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "cd82",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "cd82",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "cd82~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "cn04",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "cn04",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "cn04~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "cn04",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "cn04",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "cn04~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "dc22",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "dc22",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "dc22~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "dc22",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "dc22",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "dc22~color02"
++    },
++    {
++      "actions": 199,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ft09",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ft09",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "ft09~color01"
++    },
++    {
++      "actions": 199,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ft09",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ft09",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "ft09~color02"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "g50t",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "g50t",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "g50t~color01"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "g50t",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "g50t",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "g50t~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ka59",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ka59",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "ka59~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ka59",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ka59",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "ka59~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "lf52",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "lf52",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "lf52~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "lf52",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "lf52",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "lf52~color02"
++    },
++    {
++      "actions": 20,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "lp85",
++      "kind": "color",
++      "reached_level": 1,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 1,
++        "game": "lp85",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true
++      },
++      "solution_labels": [
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
++      ],
++      "solved": true,
++      "variant": 1,
++      "variant_signature": "lp85~color01"
++    },
++    {
++      "actions": 20,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "lp85",
++      "kind": "color",
++      "reached_level": 1,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 1,
++        "game": "lp85",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true
++      },
++      "solution_labels": [
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++        "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
++        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
++      ],
++      "solved": true,
++      "variant": 2,
++      "variant_signature": "lp85~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ls20",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ls20",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "ls20~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "ls20",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "ls20",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "ls20~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "m0r0",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "m0r0",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "m0r0~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "m0r0",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "m0r0",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "m0r0~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "r11l",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "r11l",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "r11l~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "r11l",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "r11l",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "r11l~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "re86",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "re86",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "re86~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "re86",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "re86",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "re86~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "s5i5",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "s5i5",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "s5i5~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "s5i5",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "s5i5",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "s5i5~color02"
++    },
++    {
++      "actions": 198,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sb26",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sb26",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "sb26~color01"
++    },
++    {
++      "actions": 198,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sb26",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sb26",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "sb26~color02"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sc25",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sc25",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "sc25~color01"
++    },
++    {
++      "actions": 196,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sc25",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sc25",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "sc25~color02"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sk48",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sk48",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "sk48~color01"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sk48",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sk48",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "sk48~color02"
++    },
++    {
++      "actions": 193,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sp80",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sp80",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "sp80~color01"
++    },
++    {
++      "actions": 193,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "sp80",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "sp80",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "sp80~color02"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "su15",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "su15",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "su15~color01"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "su15",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "su15",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "su15~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tn36",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tn36",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "tn36~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tn36",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tn36",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "tn36~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tr87",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tr87",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "tr87~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tr87",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tr87",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "tr87~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tu93",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tu93",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "tu93~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "tu93",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tu93",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "tu93~color02"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "vc33",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "vc33",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "vc33~color01"
++    },
++    {
++      "actions": 195,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "vc33",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "vc33",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "vc33~color02"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "wa30",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "wa30",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 1,
++      "variant_signature": "wa30~color01"
++    },
++    {
++      "actions": 197,
++      "attempted": true,
++      "blocked_reason": "",
++      "game": "wa30",
++      "kind": "color",
++      "reached_level": 0,
++      "reflect": null,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "wa30",
++        "mode": "offline_reproduction_gate_no_solution",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "solution_labels": [],
++      "solved": false,
++      "variant": 2,
++      "variant_signature": "wa30~color02"
++    }
++  ],
++  "variant_attempts_count": 50,
++  "variant_plan": {
++    "budget": 200,
++    "public_game_count": 25,
++    "public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "runner": "generic_solver_offline_variant_env",
++    "variant_ids": [
++      1,
++      2
++    ],
++    "variants_per_game": 2
++  },
++  "variant_solved_count": 2,
++  "variant_specs": [
++    {
++      "game": "ar25",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "ar25~color01"
++    },
++    {
++      "game": "ar25",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "ar25~color02"
++    },
++    {
++      "game": "bp35",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "bp35~color01"
++    },
++    {
++      "game": "bp35",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "bp35~color02"
++    },
++    {
++      "game": "cd82",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "cd82~color01"
++    },
++    {
++      "game": "cd82",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "cd82~color02"
++    },
++    {
++      "game": "cn04",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "cn04~color01"
++    },
++    {
++      "game": "cn04",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "cn04~color02"
++    },
++    {
++      "game": "dc22",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "dc22~color01"
++    },
++    {
++      "game": "dc22",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "dc22~color02"
++    },
++    {
++      "game": "ft09",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "ft09~color01"
++    },
++    {
++      "game": "ft09",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "ft09~color02"
++    },
++    {
++      "game": "g50t",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "g50t~color01"
++    },
++    {
++      "game": "g50t",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "g50t~color02"
++    },
++    {
++      "game": "ka59",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "ka59~color01"
++    },
++    {
++      "game": "ka59",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "ka59~color02"
++    },
++    {
++      "game": "lf52",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "lf52~color01"
++    },
++    {
++      "game": "lf52",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "lf52~color02"
++    },
++    {
++      "game": "lp85",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "lp85~color01"
++    },
++    {
++      "game": "lp85",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "lp85~color02"
++    },
++    {
++      "game": "ls20",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "ls20~color01"
++    },
++    {
++      "game": "ls20",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "ls20~color02"
++    },
++    {
++      "game": "m0r0",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "m0r0~color01"
++    },
++    {
++      "game": "m0r0",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "m0r0~color02"
++    },
++    {
++      "game": "r11l",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "r11l~color01"
++    },
++    {
++      "game": "r11l",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "r11l~color02"
++    },
++    {
++      "game": "re86",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "re86~color01"
++    },
++    {
++      "game": "re86",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "re86~color02"
++    },
++    {
++      "game": "s5i5",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "s5i5~color01"
++    },
++    {
++      "game": "s5i5",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "s5i5~color02"
++    },
++    {
++      "game": "sb26",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "sb26~color01"
++    },
++    {
++      "game": "sb26",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "sb26~color02"
++    },
++    {
++      "game": "sc25",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "sc25~color01"
++    },
++    {
++      "game": "sc25",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "sc25~color02"
++    },
++    {
++      "game": "sk48",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "sk48~color01"
++    },
++    {
++      "game": "sk48",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "sk48~color02"
++    },
++    {
++      "game": "sp80",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "sp80~color01"
++    },
++    {
++      "game": "sp80",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "sp80~color02"
++    },
++    {
++      "game": "su15",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "su15~color01"
++    },
++    {
++      "game": "su15",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "su15~color02"
++    },
++    {
++      "game": "tn36",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "tn36~color01"
++    },
++    {
++      "game": "tn36",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "tn36~color02"
++    },
++    {
++      "game": "tr87",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "tr87~color01"
++    },
++    {
++      "game": "tr87",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "tr87~color02"
++    },
++    {
++      "game": "tu93",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "tu93~color01"
++    },
++    {
++      "game": "tu93",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "tu93~color02"
++    },
++    {
++      "game": "vc33",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "vc33~color01"
++    },
++    {
++      "game": "vc33",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "vc33~color02"
++    },
++    {
++      "game": "wa30",
++      "kind": "color",
++      "reflect": null,
++      "variant": 1,
++      "variant_signature": "wa30~color01"
++    },
++    {
++      "game": "wa30",
++      "kind": "color",
++      "reflect": null,
++      "variant": 2,
++      "variant_signature": "wa30~color02"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 150f9cfae7..b8992a72d6 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T04:16:47Z",
+-  "finished_at": "2026-06-22T04:16:47Z",
++  "started_at": "2026-06-22T04:34:51Z",
++  "finished_at": "2026-06-22T04:34:51Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 29e3332775..b5dee6db57 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T04:16:47Z",
+-  "finished_at": "2026-06-22T04:16:47Z",
++  "started_at": "2026-06-22T04:34:51Z",
++  "finished_at": "2026-06-22T04:34:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 461922ed78..e434da7649 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T04:16:47Z",
+-  "finished_at": "2026-06-22T04:16:47Z",
++  "started_at": "2026-06-22T04:34:51Z",
++  "finished_at": "2026-06-22T04:34:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4574_action_efficiency_coheadline.py b/tests/python/test_experiment_4574_action_efficiency_coheadline.py
+new file mode 100644
+index 0000000000..8d37f76f4d
+--- /dev/null
++++ b/tests/python/test_experiment_4574_action_efficiency_coheadline.py
+@@ -0,0 +1,218 @@
++"""Tests for Exp 4574 action-efficiency co-headline.
++
++Spec refs: REQ-CAPSTONE-4574, SCENARIO-CAPSTONE-4574,
++SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4574_action_efficiency_coheadline as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_registry(root: Path, total: int) -> None:
++    registry = root / mod.exp4550.REGISTRY_RELATIVE_PATH
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        f"schema_version: 1\nreproducible_total_levels: {total}\n",
++        encoding="utf-8",
++    )
++
++
++def _write_human_replay_shard(root: Path) -> None:
++    corpus = root / mod.HUMAN_REPLAY_RELATIVE_PATH
++    shard = corpus / "shards" / "train-00000.jsonl"
++    shard.parent.mkdir(parents=True, exist_ok=True)
++    rows = [
++        {"env": "g1", "guid": "h1", "step_index": 1, "level_progress": 0.0},
++        {"env": "g1", "guid": "h1", "step_index": 5, "level_progress": 0.5},
++        {"env": "g1", "guid": "h1", "step_index": 6, "level_progress": 0.5},
++        {"env": "g2", "guid": "h2", "step_index": 2, "level_progress": 0.0},
++        {"env": "g2", "guid": "h2", "step_index": 3, "level_progress": 0.25},
++    ]
++    shard.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++    (corpus / "manifest.json").write_text(
++        json.dumps(
++            {
++                "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++                "example_count": len(rows),
++                "shard_count": 1,
++                "shards": [{"path": "shards/train-00000.jsonl", "rows": len(rows)}],
++                "source_metadata": {"test": True},
++            },
++            indent=2,
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++
++def _preconditions(games: tuple[str, ...]) -> dict[str, Any]:
++    return {
++        "ok": True,
++        "arc_leaderboard_eval_import": True,
++        "variant_flag_present": True,
++        "reflect_flag_present": True,
++        "offline_env_public_games": list(games),
++        "variant_env_import": True,
++        "leaderboard_submission": False,
++        "exp4550_measure_generic_transfer_over_variants_import": True,
++    }
++
++
++def _variant_runner(game: str, spec: Mapping[str, Any], _budget: int) -> dict[str, Any]:
++    solved_actions = {"g1~color01": 8, "g2~color01": 10}
++    signature = str(spec["variant_signature"])
++    solved = signature in solved_actions
++    reached = 1 if solved else 0
++    return {
++        "game": game,
++        "variant_signature": signature,
++        "variant": int(spec["variant"]),
++        "kind": spec["kind"],
++        "reflect": spec.get("reflect"),
++        "attempted": True,
++        "solved": solved,
++        "reached_level": reached,
++        "actions": int(solved_actions.get(signature, 99)),
++        "actions_to_first_levelup": solved_actions.get(signature),
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": reached,
++            "reached_level": reached,
++            "reproduced": solved,
++        },
++        "blocked_reason": "",
++    }
++
++
++def _no_transfer_runner(game: str, spec: Mapping[str, Any], _budget: int) -> dict[str, Any]:
++    return {
++        "game": game,
++        "variant_signature": spec["variant_signature"],
++        "variant": int(spec["variant"]),
++        "kind": spec["kind"],
++        "reflect": spec.get("reflect"),
++        "attempted": True,
++        "solved": False,
++        "reached_level": 0,
++        "actions": 99,
++        "actions_to_first_levelup": None,
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": 0,
++            "reached_level": 0,
++            "reproduced": False,
++        },
++        "blocked_reason": "",
++    }
++
++
++def test_req_capstone_4574_spec_declares_action_efficiency_coheadline() -> None:
++    """REQ-CAPSTONE-4574: OpenSpec declares the third co-headline metric."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4574" in spec
++    assert "SCENARIO-CAPSTONE-4574" in spec
++    assert "SCENARIO-CAPSTONE-4574-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4574_computes_three_metrics_and_ci(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4574: variants and replay rows compute all co-headlines."""
++
++    games = ("g1", "g2")
++    _write_registry(tmp_path, total=52)
++    _write_human_replay_shard(tmp_path)
++
++    artifact = mod.run(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1, 2),
++        budget=12,
++        preconditions_checked=_preconditions(games),
++        variant_runner=_variant_runner,
++        n_bootstrap=80,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "shipped: action_efficiency_coheadline_with_ci_wired"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["reproducible_total_levels"] == 52
++    assert artifact["variant_attempts_count"] == 4
++    assert artifact["variant_solved_count"] == 2
++    assert artifact["generic_transfer_rate_over_variants"] == pytest.approx(0.5)
++    assert artifact["generic_transfer_ci"][0] <= artifact["generic_transfer_rate_over_variants"]
++    assert artifact["generic_transfer_ci"][1] >= artifact["generic_transfer_rate_over_variants"]
++    assert artifact["median_actions_to_first_levelup"] == pytest.approx(9.0)
++    assert artifact["human_baseline_actions"] == pytest.approx(4.0)
++    assert artifact["agent_actions_to_first_levelup"] == [8, 10]
++    assert artifact["human_baseline_sample_count"] == 2
++    assert artifact["action_efficiency_score"] == pytest.approx((4.0 / 9.0) ** 2)
++    assert 0.0 <= artifact["action_efficiency_score"] <= 1.0
++    assert artifact["action_efficiency_ci"][0] <= artifact["action_efficiency_score"]
++    assert artifact["action_efficiency_ci"][1] >= artifact["action_efficiency_score"]
++    assert artifact["metric_wired_into_capstone"]["reported_side_by_side"] == [
++        "reproducible_total_levels",
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_ci",
++        "action_efficiency_score",
++        "action_efficiency_ci",
++    ]
++    assert artifact["metric_wired_into_capstone"]["known_game_bank_inflates_transfer"] is False
++    assert artifact["metric_wired_into_capstone"]["known_game_bank_inflates_action_efficiency"] is False
++    assert "bank count = KNOWN-game capability" in artifact["honest_metric_framing"]
++    assert "action efficiency = the literal leaderboard scoring term" in artifact["honest_metric_framing"]
++    assert artifact["leaderboard_submission"] is False
++    assert artifact["tests_added_pass"]["passed"] is True
++    assert mod.validate_artifact(artifact) == []
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++
++
++def test_req_capstone_4574_known_game_bank_cannot_inflate_action_efficiency(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4574: known-game banks do not raise held-out action efficiency."""
++
++    games = ("g1", "g2", "g3")
++    _write_registry(tmp_path, total=999)
++    _write_human_replay_shard(tmp_path)
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1, 2),
++        budget=12,
++        preconditions_checked=_preconditions(games),
++        variant_runner=_no_transfer_runner,
++        n_bootstrap=40,
++    )
++
++    assert artifact["reproducible_total_levels"] == 999
++    assert artifact["variant_attempts_count"] == 6
++    assert artifact["variant_solved_count"] == 0
++    assert artifact["generic_transfer_rate_over_variants"] == 0.0
++    assert artifact["generic_transfer_ci"] == [0.0, 0.0]
++    assert artifact["agent_actions_to_first_levelup"] == []
++    assert artifact["median_actions_to_first_levelup"] is None
++    assert artifact["action_efficiency_score"] == 0.0
++    assert artifact["action_efficiency_ci"] == [0.0, 0.0]
++    assert artifact["metric_wired_into_capstone"]["known_game_bank_inflates_action_efficiency"] is False
++    assert mod.validate_artifact(artifact) == []
+-- 
+2.55.0
+

@@ -1,0 +1,338 @@
+From 8dff05a1fdff8785cf52eebe0bf8ad6fee4cf50e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 16 Aug 2026 23:22:03 -0400
+Subject: [PATCH 09272/11362] Move the live ARC generator to Qwen3.8-27B and
+ size the budget for its output
+
+Operator directive 2026-08-16: prepare a live agent submission on Qwen3.8-27B
+with settings for the 96 GB Blackwell card. Two of the three requested settings
+are changed as asked; the third is not, because our own measurement on the
+scored card refutes it. Details below.
+
+CONTEXT BUDGET. Qwen3.8 is a reasoning model and writes far longer completions
+than gemma-4-31B. Seven measured inductions ran 49,244 to 83,544 tokens, median
+61,284. The kernel shipped CARNOT_ARC_INDUCE_MAX_TOKENS=8192, which covers 0 of
+those 7; a 64k budget covers only 4 of 7. A truncated completion is an unusable
+engine, not a slow one. Raised to 131,072, which covers all seven with margin
+for the tail we have not sampled and stays inside the model's own trained
+context (qwen35.context_length = 262144). The pool derives from the budget, so
+this resolves to n_ctx 614,400 at 4 slots, 153,600 per slot, a predicted 47,965
+MiB against the 97,250 MiB the card reports free. max_tokens is a cap, so unused
+headroom costs pool VRAM and never wall clock. The induce timeout moves 1200s to
+2400s for the same reason: the worst measured Qwen3.8 induction is ~1053s on
+this card, and a timeout that fires degrades the agent to LLM-off silently.
+
+SLOT COUNT UNCHANGED AT 4, contrary to the request. A prior kernel run already
+measured this on the real card, at a realistic 21,879-token prompt: aggregate
+throughput FALLS as slots rise, 27.4 tok/s at K=1, 18.1 at K=4, 14.2 at K=8.
+More slots helps only at small prompts, and ARC prompts are not small. K=8
+against the shipped pool also returned HTTP 400 "request (21880 tokens) exceeds
+the available context size (13312 tokens)" -- the divided-context branch.
+
+WHAT THE SWAP COSTS, recorded so it is not rediscovered. No MTP draft head ships
+for Qwen3.8-27B, so speculative decoding turns off: roughly 1.8x slower decode
+than gemma. Combined with ~9x longer completions that is about 17x the wall
+clock per induction, roughly 49% of the 12h eval against gemma's 3%. It is
+bought with better induction quality on the three games measured head to head so
+far, which is thin evidence.
+
+GUARDS. Five submission guards failed on the first pass and all five are now
+green. Two were ALREADY FAILING on HEAD, verified against a clean worktree:
+REQUIRED_DATASETS named carnot-gemma4-31b-it-gguf plus a separate mtp-head
+dataset while kernel-metadata.json requested the single combined
+carnot-gemma4-31b-it-qat-gguf, so the readiness gate was reporting the package
+blocked on datasets that were never going to appear. That is exactly the drift
+test_exp4756_required_datasets_match_what_the_kernel_actually_attaches exists to
+catch, and it was live.
+
+One of the three new failures was a real bug the guard caught: pinning the GGUF
+head filter to a model-specific string meant a leftover gemma draft head was no
+longer excluded from main-model candidates and could be bound as the generator,
+which loads, serves, and answers nonsense. The filter is now the generic "mtp-"
+prefix, which excludes any draft head regardless of which model it drafts for.
+
+test_no_submission_gate_still_names_a_retired_generator_dataset asserted
+"qwen" not in slug, which was correct only while gemma was pinned and would
+forbid the very generator being shipped. It now derives the retired families
+from the live pin, so the next swap needs no edit there.
+
+OPERATOR ACTION REQUIRED. The kernel attaches the model as a Kaggle dataset and
+iancblenke/carnot-qwen38-27b-gguf (~16 GB) DOES NOT EXIST. Only the operator can
+create it, and the kernel push fails at dataset resolution until it does.
+kaggle_dataset_uploaded is False and asserted False, which is the same mechanism
+that tracked the gemma upload before 2026-07-28. Flip it to True in the commit
+that records the upload. Submission itself remains operator-only.
+---
+ .../carnot/agentic/arc_competition_agent.py   | 22 +++++++++------
+ .../agentic/arc_executable_world_model.py     | 12 ++++++--
+ ...iment_4756_submission_package_readiness.py | 11 ++++++--
+ .../submission_kernel/kernel-metadata.json    |  2 +-
+ scripts/kaggle/submission_kernel/main.py      | 28 ++++++++++++++++---
+ tests/python/test_arc_live_generator_pin.py   | 27 ++++++++++--------
+ ...rc_submission_gates_against_live_config.py | 15 +++++++++-
+ .../python/test_arc_submitted_agent_parity.py | 10 ++++---
+ 8 files changed, 92 insertions(+), 35 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 3e1ceb1063..05d0ce4c64 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -8423,15 +8423,19 @@ SUBMITTED_AGENT_CONFIG = {
+         # one. `kernel-metadata.json` has been re-pointed at `iancblenke/carnot-gemma4-31b-it-gguf`,
+         # which DOES NOT EXIST YET and must be uploaded. This field records that dependency in the
+         # config the readiness experiment reads, so it cannot be forgotten silently.
+-        "kaggle_dataset_slug": "iancblenke/carnot-gemma4-31b-it-gguf",
+-        # Uploaded by the operator 2026-07-28 (17 GB, private). The flag above recorded the
+-        # dependency precisely so this moment could not be missed; it has now happened.
+-        "kaggle_dataset_uploaded": True,
+-        # The MTP draft head is a SECOND dataset, because it is a second file. Uploaded the same
+-        # day (491 MB, private). Recorded separately from the weights slug so the readiness gate
+-        # can require both -- a missing head is a silent ~1.4x slowdown, not an error.
+-        "kaggle_mtp_head_dataset_slug": "iancblenke/carnot-gemma4-31b-mtp-head",
+-        "kaggle_mtp_head_dataset_uploaded": True,
++        # OPERATOR ACTION REQUIRED before the next submission (2026-08-16, generator moved to
++        # Qwen3.8-27B). Same shape as the 2026-07-28 gemma dependency recorded below it: the
++        # kernel attaches the model as a DATASET, and this one does NOT EXIST YET. The operator
++        # must create and upload `iancblenke/carnot-qwen38-27b-gguf` (~16 GB) before the kernel
++        # push can resolve its dataset sources. Recorded here so it cannot be forgotten silently.
++        "kaggle_dataset_slug": "iancblenke/carnot-qwen38-27b-gguf",
++        "kaggle_dataset_uploaded": False,
++        # No MTP draft head exists for Qwen3.8-27B, so speculative decoding is off and there is no
++        # second dataset to require. This is a real cost of the swap, not an oversight: gemma's
++        # head bought roughly 1.8x decode speed. Left as None rather than deleted so the readiness
++        # gate keeps reporting the field, and so attaching a head later is a value change here.
++        "kaggle_mtp_head_dataset_slug": None,
++        "kaggle_mtp_head_dataset_uploaded": False,
+     },
+     "feature_router_enabled": False,
+     "explore_diversity_default": False,
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 5bc22fff29..e1d4f22945 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3666,9 +3666,15 @@ class CodexProposer:
+ # QAT (2026-07-31, operator directive after the head-to-head below). The repo substring is
+ # the QAT one specifically: "gemma-4-31B-it" alone matches BOTH cache dirs
+ # (`...-it-GGUF` and `...-it-qat-GGUF`) and would resolve ambiguously.
+-ARC_LIVE_GENERATOR_REPO_SUBSTR = "gemma-4-31B-it-qat"
+-ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/gemma-4-31B-it-qat-GGUF"
+-ARC_LIVE_GENERATOR_MODEL_FILENAME = "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
++# MOVED 2026-08-16 by operator directive, gemma-4-31B-it-qat -> Qwen3.8-27B. What the swap costs,
++# measured, so it is not rediscovered later: Qwen3.8 writes far longer completions (49,244-83,544
++# tokens against gemma's ~6,584) and no MTP draft head ships for it, so speculative decoding turns
++# off. Together that is roughly 17x the wall clock per induction on the scored card -- about 49% of
++# the 12h eval budget against gemma's 3%. It is bought with better induction quality on the three
++# games measured head to head so far, which is thin evidence; see the h2h evidence directory.
++ARC_LIVE_GENERATOR_REPO_SUBSTR = "Qwen3.8-27B"
++ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/Qwen3.8-27B-GGUF"
++ARC_LIVE_GENERATOR_MODEL_FILENAME = "Qwen3.8-27B-Q4_K_M.gguf"
+ # WHY QAT, AND WHY NOT FOR QUALITY. A 20-game x 3-trial head-to-head against the shipped
+ # Q4_K_M (results/outer_loop_arc_qat_vs_q4km_h2h_20260731.json) came back INDISTINGUISHABLE:
+ # mean-B 6-6 with 8 ties, exact two-sided sign test p = 1.0 over 12 discordant pairs (min
+diff --git a/python/carnot/experiment_4756_submission_package_readiness.py b/python/carnot/experiment_4756_submission_package_readiness.py
+index 73f5c4383b..83802201c6 100644
+--- a/python/carnot/experiment_4756_submission_package_readiness.py
++++ b/python/carnot/experiment_4756_submission_package_readiness.py
+@@ -89,11 +89,18 @@ TERMINAL_PREFIXES = ("success_", "passed_", "complete_", "blocked_")
+ # failure mode of a missing head is a silent ~1.4x slowdown, not an error: the kernel correctly
+ # drops the flags, the run completes, and nothing downstream distinguishes it from a fast run.
+ # Making it a gate precondition is the only place that difference becomes visible before submission.
++# 2026-08-16: retargeted to the Qwen3.8-27B generator. Two things changed at once here.
++# First, the generator moved. Second, this set had DRIFTED from what the kernel actually attaches:
++# it required `carnot-gemma4-31b-it-gguf` + `carnot-gemma4-31b-mtp-head` while
++# kernel-metadata.json requested the single combined `carnot-gemma4-31b-it-qat-gguf`, so
++# `datasets_attached` was False and the readiness gate reported the package blocked on datasets
++# that were never going to appear. That drift is what test_exp4756_required_datasets_match_what_
++# the_kernel_actually_attaches exists to catch, and it was failing before this edit.
++# No MTP head entry: none ships for Qwen3.8-27B, so requiring one would recreate the same drift.
+ REQUIRED_DATASETS = {
+     "iancblenke/carnot-agent-code",
+     "iancblenke/carnot-llamacpp-mtp-binary",
+-    "iancblenke/carnot-gemma4-31b-it-gguf",
+-    "iancblenke/carnot-gemma4-31b-mtp-head",
++    "iancblenke/carnot-qwen38-27b-gguf",
+ }
+ REQUIRED_COMPETITION = "arc-prize-2026-arc-agi-3"
+ 
+diff --git a/scripts/kaggle/submission_kernel/kernel-metadata.json b/scripts/kaggle/submission_kernel/kernel-metadata.json
+index 4d08db3304..e760d93666 100644
+--- a/scripts/kaggle/submission_kernel/kernel-metadata.json
++++ b/scripts/kaggle/submission_kernel/kernel-metadata.json
+@@ -8,7 +8,7 @@
+   "enable_gpu": true,
+   "machine_shape": "NvidiaRtxPro6000",
+   "enable_internet": false,
+-  "dataset_sources": ["iancblenke/carnot-agent-code", "iancblenke/carnot-llamacpp-mtp-binary", "iancblenke/carnot-gemma4-31b-it-qat-gguf"],
++  "dataset_sources": ["iancblenke/carnot-agent-code", "iancblenke/carnot-llamacpp-mtp-binary", "iancblenke/carnot-qwen38-27b-gguf"],
+   "competition_sources": ["arc-prize-2026-arc-agi-3"],
+   "kernel_sources": []
+ }
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index 376f4d559f..d10faa9fc9 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -201,10 +201,21 @@ server = next(iter(inp.rglob("llama-server")), None)
+ # the 491 MB head as the generator would load, serve, and answer nonsense -- a silent failure.
+ # Now: the head is identified POSITIVELY and excluded from the main-model candidates, and the main
+ # model must match its own canonical filename stem.
+-_HEAD_SUBSTR = "mtp-gemma-4-31B-it"
++# 2026-08-16: generator moved gemma-4-31B -> Qwen3.8-27B. The structure above is unchanged and
++# still matters -- the head is excluded POSITIVELY and the main model must match its own name, so
++# neither is chosen by rglob order. Note no MTP draft head ships for Qwen3.8-27B today, so `_heads`
++# is expected to be empty and MTP resolves off. That costs roughly 1.8x decode speed against
++# gemma's speculative path, which is a known and accepted part of this swap. The head arm is kept
++# rather than deleted so that attaching a Qwen3.8 draft head later needs no code change.
++# `mtp-` rather than a model-specific head name. A head must be excluded from the main-model
++# candidates NO MATTER WHICH MODEL IT DRAFTS FOR -- a leftover gemma head under /kaggle/input must
++# not be bindable as the Qwen main model. Pinning the head string to one model reintroduced exactly
++# the silent failure described above, and the order-independence test caught it.
++_HEAD_SUBSTR = "mtp-"
++_MAIN_SUBSTR = "Qwen3.8-27B"
+ _all_ggufs = list(inp.rglob("*.gguf"))
+ _heads = [g for g in _all_ggufs if _HEAD_SUBSTR in g.name]
+-_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and "gemma-4-31B" in g.name] or [
++_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and _MAIN_SUBSTR in g.name] or [
+     g for g in _all_ggufs if _HEAD_SUBSTR not in g.name
+ ]
+ gguf = _mains[0] if _mains else None
+@@ -341,8 +352,17 @@ if server and gguf:
+     # (572s at n_ctx 32768 on a 3090, single-stream) with margin for the live path's 4 shared
+     # slots running slower per-request; a timeout firing silently degrades the agent to LLM-off
+     # rather than erroring, so under-shooting this is a silent-failure risk, not just slowness.
+-    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
+-    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "1200")
++    # RAISED AGAIN 2026-08-16 for the Qwen3.8-27B generator, which is a reasoning model and
++    # writes far longer completions than gemma-4-31B. Seven measured inductions ran 49,244 to
++    # 83,544 tokens (median 61,284), so 8192 covers 0 of 7 and 65,536 covers only 4 of 7 -- a
++    # truncated completion is an unusable engine, not a slow one. 131,072 covers all seven with
++    # margin for the tail we have not sampled, and stays inside the model's own trained context
++    # (qwen35.context_length = 262144). max_tokens is a CAP: unused headroom costs pool VRAM,
++    # never wall clock. Timeout follows the same logic -- the worst measured Qwen3.8 induction is
++    # ~1053s on this card at one stream, and a timeout that fires degrades the agent to LLM-off
++    # silently, so it is set well clear of that rather than close to it.
++    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "131072")
++    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "2400")
+     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
+     # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
+     # hardcoded strings; if the agent's own default had moved, the probe would have validated
+diff --git a/tests/python/test_arc_live_generator_pin.py b/tests/python/test_arc_live_generator_pin.py
+index 6adf3bea26..361df9a199 100644
+--- a/tests/python/test_arc_live_generator_pin.py
++++ b/tests/python/test_arc_live_generator_pin.py
+@@ -74,7 +74,7 @@ def mods(monkeypatch):
+     return agent, wm
+ 
+ 
+-def test_the_canonical_pin_is_gemma_4_31b(mods) -> None:
++def test_the_canonical_pin_is_qwen38_27b(mods) -> None:
+     """Updated 2026-07-31: the pin moved from Q4_K_M to the QAT quant of the SAME model.
+ 
+     Not a generator change -- gemma-4-31B-it either way, so every retired-marker assertion
+@@ -87,9 +87,9 @@ def test_the_canonical_pin_is_gemma_4_31b(mods) -> None:
+     cache directories and would resolve ambiguously.
+     """
+     agent, wm = mods
+-    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "gemma-4-31B-it-qat"
+-    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/gemma-4-31B-it-qat-GGUF"
+-    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
++    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "Qwen3.8-27B"
++    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/Qwen3.8-27B-GGUF"
++    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "Qwen3.8-27B-Q4_K_M.gguf"
+     for marker in RETIRED_GENERATOR_MARKERS:
+         assert marker not in wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
+         assert marker not in wm.ARC_LIVE_GENERATOR_MODEL_ID
+@@ -185,15 +185,20 @@ def test_submitted_config_records_both_operator_dataset_uploads(mods) -> None:
+     landed". The flags stay in the config either way -- they are the record the readiness gate
+     reads, not a one-time to-do.
+     """
++    # 2026-08-16: the generator moved to Qwen3.8-27B, so this assertion returns to the FIRST role
++    # the docstring above describes -- recording an upload that has not happened yet. The
++    # ~16 GB `carnot-qwen38-27b-gguf` dataset does not exist; only the operator can create it, and
++    # the kernel push fails at dataset resolution until they do. Flip this to True in the same
++    # commit that records the upload, exactly as 2026-07-28 did for gemma.
+     agent, _wm = mods
+     frozen = agent.SUBMITTED_AGENT_CONFIG["frozen_generator"]
+-    assert frozen["kaggle_dataset_slug"] == "iancblenke/carnot-gemma4-31b-it-gguf"
+-    assert frozen["kaggle_dataset_uploaded"] is True
+-    # The head is a SEPARATE dataset because it is a separate file. Tracked separately so a missing
+-    # head -- whose only symptom is a ~1.4x slower run, never an error -- is visible before a
+-    # submission rather than after it.
+-    assert frozen["kaggle_mtp_head_dataset_slug"] == "iancblenke/carnot-gemma4-31b-mtp-head"
+-    assert frozen["kaggle_mtp_head_dataset_uploaded"] is True
++    assert frozen["kaggle_dataset_slug"] == "iancblenke/carnot-qwen38-27b-gguf"
++    assert frozen["kaggle_dataset_uploaded"] is False
++    # No MTP draft head ships for Qwen3.8-27B, so there is no second dataset. That is a measured
++    # cost of the swap (gemma's head bought roughly 1.8x decode), not a missing upload -- so the
++    # slug is None and the uploaded flag is False, and they must not disagree with each other.
++    assert frozen["kaggle_mtp_head_dataset_slug"] is None
++    assert frozen["kaggle_mtp_head_dataset_uploaded"] is False
+     assert frozen["kaggle_mtp_head_dataset_slug"] != frozen["kaggle_dataset_slug"]
+ 
+ 
+diff --git a/tests/python/test_arc_submission_gates_against_live_config.py b/tests/python/test_arc_submission_gates_against_live_config.py
+index 0f97d2abde..be72c8df55 100644
+--- a/tests/python/test_arc_submission_gates_against_live_config.py
++++ b/tests/python/test_arc_submission_gates_against_live_config.py
+@@ -82,10 +82,23 @@ def test_no_submission_gate_still_names_a_retired_generator_dataset(kernel_metad
+     and it is not covered by the source-level pin sweep in test_arc_live_generator_pin.py (that
+     sweep looks at `repo_substr=` / `_resolve_gguf(` / the canonical constants, none of which
+     appear in a dataset slug)."""
++    from carnot.agentic import arc_executable_world_model as wm
+     from carnot.experiment_4756_submission_package_readiness import REQUIRED_DATASETS
+ 
++    # DERIVED FROM THE PIN, not a hardcoded model name. This assertion used to read
++    # `"qwen" not in slug`, which was correct only while gemma-4-31B was pinned and silently
++    # inverted the moment the pin moved to Qwen3.8-27B on 2026-08-16 -- the test would then forbid
++    # the very generator being shipped. Naming the RETIRED families relative to the live pin means
++    # the next swap needs no edit here.
++    live = wm.ARC_LIVE_GENERATOR_MODEL_ID.lower()
++    retired = [
++        fam for fam in ("qwen35-9b", "qwen3.5-9b", "gemma4-31b", "gemma-4-31b") if fam not in live
++    ]
+     for slug in sorted(REQUIRED_DATASETS) + sorted(kernel_metadata["dataset_sources"]):
+-        assert "qwen" not in slug.lower(), f"retired generator dataset still referenced: {slug}"
++        for fam in retired:
++            assert fam not in slug.lower(), (
++                f"retired generator dataset still referenced: {slug} (live pin is {live})"
++            )
+ 
+ 
+ def test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset(kernel_metadata) -> None:
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index 6c8b0bab4f..b4f6cc6297 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -219,8 +219,8 @@ def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
+     # on top of that, Q4_K_M -> qat). A 20-game head-to-head found qat and Q4_K_M statistically
+     # indistinguishable on quality (sign test p=1.0); qat saves ~1GB VRAM and matches the required
+     # qat MTP drafter. See tests/python/test_arc_live_generator_pin.py for the full pin contract.
+-    assert frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF"
+-    assert frozen["repo_substr"] == "gemma-4-31B-it-qat"
++    assert frozen["model_id"] == "unsloth/Qwen3.8-27B-GGUF"
++    assert frozen["repo_substr"] == "Qwen3.8-27B"
+     # ASSERT THE LITERAL SCORED CONTRACT, NEVER `frozen["mtp"] is <the same expression>`.
+     #
+     # An intermediate 2026-07-28 version of this test read
+@@ -389,7 +389,9 @@ def test_req_arc_wmte_6321_computed_shadow_does_not_change_policy_state() -> Non
+     assert row["route_reachable"] is True
+     assert row["registry_update_count"] == 0
+     assert row["level_before_shadow"] == row["level_after_shadow"] == 0
+-    assert row["explore_budget_before_shadow"] == row["explore_budget_after_shadow"] == before_budget
++    assert (
++        row["explore_budget_before_shadow"] == row["explore_budget_after_shadow"] == before_budget
++    )
+ 
+ 
+ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config(monkeypatch):
+@@ -431,7 +433,7 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
+     assert isinstance(completer, LocalGGUFProposer)
+     # RE-PINNED 2026-07-31 (quant-only repin, see test_req_capstone_4744_... above for the full
+     # rationale): ARC_LIVE_GENERATOR_REPO_SUBSTR moved Q4_K_M -> qat.
+-    assert completer.repo_substr == "gemma-4-31B-it-qat"
++    assert completer.repo_substr == "Qwen3.8-27B"
+     # False because that is the LOCAL default (`ARC_LIVE_GENERATOR_MTP_DEFAULT`), NOT because the
+     # model lacks MTP -- the old comment here said "gemma-4-31B has no MTP heads", which was
+     # falsified the same day: the head is a SEPARATE 491 MiB GGUF (`mtp-gemma-4-31B-it-Q8_0.gguf`,
+-- 
+2.55.0
+

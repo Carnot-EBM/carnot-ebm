@@ -1,0 +1,77 @@
+From 02d1c339cc81c204c0ccc7b0bdf88a549fc65ddc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 06:16:37 -0400
+Subject: [PATCH 05237/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                     |  2 +-
+ ops/conductor-log.md                             |  1 +
+ ops/conductor-state.json                         |  2 +-
+ ...riment_5089_pbit_guided_cdcl_bridge_v467.json | 16 ++++++++++++++--
+ 4 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 657d526fba..b159914aa1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 74, "phase": "iteration_start", "last_beat": "2026-07-01T10:03:28Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 75, "phase": "iteration_start", "last_beat": "2026-07-01T10:16:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ff5e935c57..c0b1d00a71 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9738,3 +9738,4 @@ The contro |
+ | 2026-07-01 09:47 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+ | 2026-07-01 09:49 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+ | 2026-07-01 10:01 UTC | PHASE B1 logprob-free process verifier -- temporal | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, MOAT_CLAIM_RIGOR — result quara |
++| 2026-07-01 10:14 UTC | PHASE B2 exact-verifier pivot -- p-bit/Ising-guide | FLAGGED | adversarial_verify CRITICAL: MOAT_CLAIM_RIGOR — result quarantined, not a clean  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 22692dc364..fcc34fc5b1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 74, "phase": "iteration_start", "started_at": "2026-07-01T10:03:28Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 75, "phase": "iteration_start", "started_at": "2026-07-01T10:16:35Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5089_pbit_guided_cdcl_bridge_v467.json b/results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
+index 045bb1652f..c91077cef4 100644
+--- a/results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
++++ b/results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
+@@ -27,7 +27,7 @@
+     "pure_solver_effort": "Exact solver effort with no temporary assumptions.",
+     "random_assumption_effort": "Exact solver effort after random temporary assumptions plus fallback."
+   },
+-  "flagged_adversarial": false,
++  "flagged_adversarial": true,
+   "helps_declared_family": false,
+   "honest_verdict": "complete_pbit_guided_cdcl_distribution_sensitive_no_win",
+   "inference_substrate": "deterministic_solver_plus_stochastic_sampler",
+@@ -472,5 +472,17 @@
+   "spec_refs": [
+     "REQ-VERIFY-5089",
+     "SCENARIO-VERIFY-5089"
++  ],
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    },
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "warn",
++      "detail": "Null/moat-retirement claim is uninformative because headroom_present is not declared true. A no-headroom corpus cannot support 'does not beat SC' or 'moat retired' as a moat bound."
++    }
+   ]
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

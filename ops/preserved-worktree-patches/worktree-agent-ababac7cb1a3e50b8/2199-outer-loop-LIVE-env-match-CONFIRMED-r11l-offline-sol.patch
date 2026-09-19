@@ -1,0 +1,41 @@
+From 9783c602d4749041860f61ccf50557c25d4ac86b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 16 Jun 2026 21:53:38 -0400
+Subject: [PATCH 02199/11362] [outer-loop] LIVE env-match CONFIRMED: r11l
+ offline solution replays live to L1
+
+Operator-greenlit single live call: offline==live layout confirmed -> Mode-1
+replay submissions VALID (our 6 reproducible levels submittable as pure
+action-replays, no verifier at submit-time). No leaderboard scorecard
+submitted (played + read level only). Verifier still needed for solving NEW
+levels live + third-party reproduction.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_live_env_match_probe.json | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 results/arc3_live_env_match_probe.json
+
+diff --git a/results/arc3_live_env_match_probe.json b/results/arc3_live_env_match_probe.json
+new file mode 100644
+index 0000000000..3038da529e
+--- /dev/null
++++ b/results/arc3_live_env_match_probe.json
+@@ -0,0 +1,14 @@
++{
++  "experiment": "arc3_live_env_match_probe",
++  "game": "r11l-495a7899",
++  "claim": "offline-derived solutions replay on the LIVE env (offline==live layout)",
++  "offline_level_reached": 1,
++  "online_level_reached": 1,
++  "env_match_confirmed": true,
++  "submission_mode_1_replay_valid": true,
++  "verifier_needed_at_submit_time": false,
++  "leaderboard_submitted": false,
++  "note": "Single operator-greenlit live call: reset+4 actions, scorecard opened to play but NOT closed/submitted. Confirms our 6 reproducible levels can be submitted as pure action-replays (no verifier at submit-time). Verifier still required for solving NEW levels live + third-party reproduction.",
++  "run_date": "2026-06-17",
++  "inference_substrate": "live_arc_agi3_env_single_game_replay"
++}
+-- 
+2.55.0
+

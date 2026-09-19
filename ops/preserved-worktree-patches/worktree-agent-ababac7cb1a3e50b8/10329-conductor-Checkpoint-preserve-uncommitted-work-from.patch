@@ -1,0 +1,43 @@
+From 928fccf0da93b763743a12779f381aab213dc683 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 20:42:55 -0400
+Subject: [PATCH 10329/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9b75cc7277..5e40d4231f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-30T00:25:23Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-30T00:42:51Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cd3ed3e553..4fc1829f21 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16803,3 +16803,4 @@ The l |
+ | 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | capstone_milestone_rot_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on cap |
+ | 2026-08-30 00:23 UTC | Exclusive full-load ARC preflight and teardown rec | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ad"),
+ +        |
++| 2026-08-30 00:40 UTC | Exclusive full-load ARC preflight and teardown rec | OK | 113 passed, 1 warning in 8.76s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 614f9e1771..f85cc86af2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-30T00:25:23Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-30T00:42:51Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

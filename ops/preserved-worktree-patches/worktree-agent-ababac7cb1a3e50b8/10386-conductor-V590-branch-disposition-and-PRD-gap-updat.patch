@@ -1,0 +1,1256 @@
+From 3b744edb7de4703d4fd061bc386d3ec5c0ba44ab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 09:34:26 -0400
+Subject: [PATCH 10386/11362] [conductor] V590 branch disposition and PRD gap
+ update
+
+Automated research step by research conductor.
+Task ID: exp6780-v590-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-news-watch.md    |   6 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...experiment_6780_v590_branch_disposition.py | 237 +++++++++++++++---
+ ...periment_6780_v590_branch_disposition.json | 218 ++++++++++++----
+ ...experiment_6780_v590_branch_disposition.py | 196 ++++++++++++++-
+ 5 files changed, 581 insertions(+), 78 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 0075a1bf62..64b35eb60d 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -219,3 +219,9 @@ CHECK_TIMED_OUT
+ 
+ CHECK_TIMED_OUT
+ 
++## 2026-08-30 13:14 UTC -- NEW
++
++- Leaderboard shakeup: Tufa Labs improved to 4.71 (#3); Tong Hui Kang to 4.27 (#4); rfbr entered #5 at 3.37; Youssef Nader @ Aurelic is #6 at 3.19; Tony G fell to #7; Daniel Franzen is #8 at 3.15; Liao Zixu and sawada entered #9–10. wking edewd dropped to #18. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
++
++- On July 17, the host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, nearly 20% required a GPU that had not been enabled, and remaining causes—each below 5%—included missing datasets/dependencies, logic errors, CUDA OOM, using the public API instead of competition settings, and writing to read-only `/kaggle/input`. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
++
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 80946e6158..a297332d5a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5176,
++  "experiments_checked": 5177,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6780_v590_branch_disposition.py b/python/carnot/experiment_6780_v590_branch_disposition.py
+index e64242dec9..c69ececd06 100644
+--- a/python/carnot/experiment_6780_v590_branch_disposition.py
++++ b/python/carnot/experiment_6780_v590_branch_disposition.py
+@@ -10,7 +10,7 @@ Spec refs: REQ-REPORT-6780 and SCENARIO-REPORT-6780-*.
+ from __future__ import annotations
+ 
+ import argparse
+-from collections import Counter, defaultdict
++from collections import defaultdict
+ from collections.abc import Mapping, Sequence
+ import copy
+ import hashlib
+@@ -334,17 +334,44 @@ def load_source_artifacts(root: Path, planned: Sequence[Mapping[str, Any]]) -> d
+                 "error": str(exc),
+             }
+             continue
++        terminal = _source_payload_is_terminal(payload)
+         sources[task_id] = {
+-            "artifact_state": "present",
++            "artifact_state": "present" if terminal else "nonterminal",
+             "valid_json": True,
+             "payload": payload,
+             "sha256": sha256_file(path),
+             "path": path_text,
+-            "error": None,
++            "error": None if terminal else "source_artifact_nonterminal",
+         }
+     return sources
+ 
+ 
++def _source_payload_is_terminal(payload: Mapping[str, Any]) -> bool:
++    """Accept only source states that clearly say the producer has stopped."""
++
++    terminal_stems = (
++        "complete",
++        "success",
++        "passed",
++        "shipped",
++        "blocked",
++        "gate_block",
++        "failed",
++        "flagged",
++        "retired",
++        "null",
++        "partial",
++        "disqualified",
++    )
++    for value in (payload.get("status"), payload.get("honest_verdict")):
++        text = str(value or "").strip().lower()
++        if any(
++            text == stem or text.startswith((f"{stem}_", f"{stem}:")) for stem in terminal_stems
++        ):
++            return True
++    return False
++
++
+ def _payload(record: Mapping[str, Any] | None) -> Mapping[str, Any]:
+     value = record.get("payload") if isinstance(record, Mapping) else None
+     return value if isinstance(value, Mapping) else {}
+@@ -484,7 +511,9 @@ def recompute_proof(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
+         "no_ghost_violations": grammar.get("no_ghost_violations"),
+         "comparison_rows": len(rows),
+         "proof_transport_ab_completed": bool(comparison.get("proof_transport_ab_completed")),
+-        "exact_valid_rate_by_arm": _arm_rates(rows, "exact_valid"),
++        "exact_valid_rate_by_arm": _arm_rates(rows, "exact_valid")
++        if rows
++        else _mean([], "no_eligible_comparative_rows"),
+         "paired_exact_valid_effects": effects,
+     }
+ 
+@@ -496,13 +525,21 @@ def recompute_repair(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
+     repair = _payload(sources.get("exp6772"))
+     rows = _rows(repair)
+     effect = paired_effect(rows, "prefix_backtracking", "full_regeneration", "exact_valid")
++    harmful = paired_effect(rows, "prefix_backtracking", "full_regeneration", "harmful_flip")
++    support = paired_effect(rows, "prefix_backtracking", "full_regeneration", "support_loss")
+     return {
+         "proof_transport_audit_ready": bool(audit.get("proof_transport_audit_ready")),
+         "repair_panel_ready": bool(audit.get("repair_panel_ready")),
+         "repair_rows": len(rows),
+         "paired_exact_valid_effect": effect,
+-        "harmful_flips_by_arm": _arm_rates(rows, "harmful_flip"),
+-        "support_loss_by_arm": _arm_rates(rows, "support_loss"),
++        "paired_harmful_flip_effect": harmful,
++        "paired_support_loss_effect": support,
++        "harmful_flips_by_arm": _arm_rates(rows, "harmful_flip")
++        if rows
++        else _mean([], "no_eligible_repair_rows"),
++        "support_loss_by_arm": _arm_rates(rows, "support_loss")
++        if rows
++        else _mean([], "no_eligible_repair_rows"),
+         "source_interval_ignored": repair.get("paired_interval") or repair.get("repair_interval"),
+     }
+ 
+@@ -514,7 +551,7 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
+     comparison = _payload(sources.get("exp6774"))
+     audit = _payload(sources.get("exp6775"))
+     rows = _rows(comparison)
+-    activity = {
++    activity: JsonDict = {
+         name: 0 for name in ("commits", "rejects", "rollbacks", "retrievals", "action_influences")
+     }
+     source_keys = {
+@@ -528,6 +565,12 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
+         for target, source in source_keys.items():
+             value = _number(row.get(source))
+             activity[target] += int(value or 0)
++    if not rows:
++        activity = {
++            name: None
++            for name in ("commits", "rejects", "rollbacks", "retrievals", "action_influences")
++        }
++        activity["cause"] = "no_eligible_prospective_rows"
+     audit_gates = audit.get("audit_gates") if isinstance(audit.get("audit_gates"), Mapping) else {}
+     gates = {
+         "activity": bool(comparison.get("prospective_csl_completed"))
+@@ -548,14 +591,18 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
+         "live_model_invoked": bool(preflight.get("live_model_invoked")),
+         "prospective_rows": len(rows),
+         "prospective_csl_completed": bool(comparison.get("prospective_csl_completed")),
+-        "prequential_yield_by_arm": _arm_means(rows, "prequential_yield"),
++        "prequential_yield_by_arm": _arm_means(rows, "prequential_yield")
++        if rows
++        else _mean([], "no_eligible_prospective_rows"),
+         "procedural_minus_no_memory_order_effect": paired_effect(
+             rows, "procedural_memory", "no_memory", "prequential_yield"
+         ),
+         "procedural_minus_trace_order_effect": paired_effect(
+             rows, "procedural_memory", "detailed_trace", "prequential_yield"
+         ),
+-        "historical_loss_by_arm": _arm_means(rows, "historical_loss"),
++        "historical_loss_by_arm": _arm_means(rows, "historical_loss")
++        if rows
++        else _mean([], "no_eligible_prospective_rows"),
+         "transaction_activity": activity,
+         "cold_audit_completed": bool(audit.get("cold_audit_completed")),
+         "required_positive_gates": gates,
+@@ -579,34 +626,48 @@ def recompute_arc(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
+     effect = paired_effect(action_rows, "selfparse", "control_unset", "actions_to_progress")
+     decision = str(audit.get("adoption_decision") or "unavailable")
+     cold_pass = bool(audit.get("cold_actions_to_progress_audit_passed"))
++    tool_gap_events = transport.get("tool_gap_events")
++    tool_gap_event_count = len(tool_gap_events) if isinstance(tool_gap_events, list) else None
++    supervisor_evidence_cause = None if eligible_supervisor else "no_eligible_live_supervisor_rows"
+     return {
+         "supervisor_rows": len(supervisor_rows),
+         "eligible_supervisor_rows": len(eligible_supervisor),
+         "shadow_supervisor_transport_ready": bool(
+             supervisor.get("shadow_supervisor_transport_ready")
+         ),
+-        "row_recomputed_firings": sum(
+-            int(row.get("arm_fired") or 0) for row in eligible_supervisor
+-        ),
++        "row_recomputed_firings": sum(int(row.get("arm_fired") or 0) for row in eligible_supervisor)
++        if eligible_supervisor
++        else None,
+         "row_recomputed_helped": sum(
+             int(row.get("arm_helped_counterfactual") or 0) for row in eligible_supervisor
+-        ),
++        )
++        if eligible_supervisor
++        else None,
++        "supervisor_evidence_cause": supervisor_evidence_cause,
+         "declared_firings_after_by_arm": supervisor.get("firings_after_by_arm") or {},
+         "evidence_floor_met_by_arm": supervisor.get("evidence_floor_met_by_arm") or {},
+         "tool_gap_transport_ready": bool(transport.get("tool_gap_transport_ready")),
+-        "tool_gap_event_count": len(transport.get("tool_gap_events") or []),
++        "tool_gap_event_count": tool_gap_event_count,
++        "tool_gap_event_count_cause": None
++        if isinstance(tool_gap_events, list)
++        else "tool_gap_events_missing",
+         "tool_gap_analyzer_ingest_passed": bool(transport.get("analyzer_ingest_passed")),
+         "actions_to_progress_rows": len(action_rows),
+         "actions_to_progress_ab_completed": bool(
+             comparison.get("actions_to_progress_ab_completed")
+         ),
+-        "actions_to_progress_by_arm": _arm_means(action_rows, "actions_to_progress"),
++        "actions_to_progress_by_arm": _arm_means(action_rows, "actions_to_progress")
++        if action_rows
++        else _mean([], "no_eligible_actions_to_progress_rows"),
+         "selfparse_minus_control_actions_effect": effect,
+         "cold_actions_to_progress_audit_passed": cold_pass,
+         "adoption_decision": decision,
+         "adoption_positive": cold_pass
+         and decision == "promote"
+-        and effect.get("pair_count", 0) > 0,
++        and bool(comparison.get("actions_to_progress_ab_completed"))
++        and effect.get("pair_count", 0) > 0
++        and effect.get("mean_delta") is not None
++        and effect["mean_delta"] < 0,
+         "solve_claim": bool(
+             supervisor.get("solve_claim")
+             or comparison.get("solve_claim")
+@@ -653,6 +714,8 @@ def _declared_class(record: Mapping[str, Any]) -> str:
+         return "disqualified"
+     if state == "current_synthesis":
+         return "partial"
++    if state == "nonterminal":
++        return "partial"
+     if state == "missing":
+         return "blocked"
+     payload = _payload(record)
+@@ -781,6 +844,8 @@ def build_experiment_rows(
+             declared = "complete_blocked_missing_artifact: planned deliverable is absent"
+         elif state == "invalid":
+             declared = "complete_disqualified_invalid_artifact: source JSON could not be loaded"
++        elif state == "nonterminal":
++            declared = "complete_partial_nonterminal_artifact: source producer has not stopped"
+         elif state == "current_synthesis":
+             declared = HONEST_VERDICT
+         source_rows = _rows(payload)
+@@ -794,7 +859,9 @@ def build_experiment_rows(
+                 "branch": plan["branch"],
+                 "path": plan["path"],
+                 "artifact_state": state,
+-                "terminal": state in {"present", "missing", "invalid", "current_synthesis"},
++                "terminal": state
++                in {"present", "missing", "invalid", "nonterminal", "current_synthesis"},
++                "source_artifact_terminal": state == "present",
+                 "valid_json": bool(record.get("valid_json")),
+                 "artifact_sha256": record.get("sha256"),
+                 "status": payload.get("status") or state,
+@@ -844,15 +911,24 @@ def _branch_class(
+                 "dccd_environment-minus-repaired_direct", {}
+             )
+             repair = headlines["repair"]["paired_exact_valid_effect"]
++            harmful = headlines["repair"].get("paired_harmful_flip_effect", {})
++            support = headlines["repair"].get("paired_support_loss_effect", {})
+             return (
+                 "positive"
+-                if (delta.get("mean_delta") or 0) > 0 and (repair.get("mean_delta") or 0) > 0
++                if (delta.get("mean_delta") or 0) > 0
++                and (repair.get("mean_delta") or 0) > 0
++                and harmful.get("pair_count", 0) > 0
++                and harmful.get("mean_delta") is not None
++                and harmful["mean_delta"] <= 0
++                and support.get("pair_count", 0) > 0
++                and support.get("mean_delta") is not None
++                and support["mean_delta"] <= 0
+                 else "null"
+             )
+         return "partial" if "positive" in classes else "blocked"
+     if branch == "continuous_memory":
+         gates = headlines[branch]["required_positive_gates"]
+-        if all(gates.values()):
++        if headlines[branch]["cold_audit_completed"] and all(gates.values()):
+             return "positive"
+         return "blocked" if "blocked" in classes else "null"
+     if branch == "arc":
+@@ -871,12 +947,6 @@ def build_branch_rows(
+     """Build four independent branch rows with local verdicts and actions."""
+ 
+     by_task = {str(row["task_id"]): row for row in rows}
+-    adv_paths = Counter(
+-        str(row.get("artifact"))
+-        for row in adversarial_findings
+-        if row.get("flag_count", 0) or row.get("flags")
+-    )
+-    row_paths = Counter(str(row.get("artifact")) for row in row_findings if row.get("findings"))
+     out = []
+     for branch in BRANCH_ORDER:
+         task_ids = BRANCH_TASKS[branch]
+@@ -899,8 +969,16 @@ def build_branch_rows(
+                 "verdict_class": verdict,
+                 "branch_disposition": verdict,
+                 "headline": headline,
+-                "adversarial_finding_count": sum(adv_paths[path] for path in paths),
+-                "row_consistency_finding_count": sum(row_paths[path] for path in paths),
++                "adversarial_finding_count": sum(
++                    int(finding.get("flag_count") or len(finding.get("flags") or []))
++                    for finding in adversarial_findings
++                    if any(str(finding.get("artifact", "")).endswith(path) for path in paths)
++                ),
++                "row_consistency_finding_count": sum(
++                    len(finding.get("findings") or [])
++                    for finding in row_findings
++                    if any(str(finding.get("artifact", "")).endswith(path) for path in paths)
++                ),
+                 "claim_boundary": CLAIM_BOUNDARIES[branch],
+                 "next_action": NEXT_ACTIONS[branch],
+             }
+@@ -976,10 +1054,18 @@ def build_fr12_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
+     repair = headlines["repair"]
+     comparison = proof["paired_exact_valid_effects"]
+     direct = comparison.get("dccd_environment-minus-repaired_direct", {})
++    harmful = repair["paired_harmful_flip_effect"]
++    support = repair["paired_support_loss_effect"]
+     positive = (
+         proof["proof_transport_ab_completed"]
+         and (direct.get("mean_delta") or 0) > 0
+         and (repair["paired_exact_valid_effect"].get("mean_delta") or 0) > 0
++        and harmful.get("pair_count", 0) > 0
++        and harmful.get("mean_delta") is not None
++        and harmful["mean_delta"] <= 0
++        and support.get("pair_count", 0) > 0
++        and support.get("mean_delta") is not None
++        and support["mean_delta"] <= 0
+     )
+     return {
+         "positive": bool(positive),
+@@ -995,6 +1081,8 @@ def build_fr12_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
+         "repair": {
+             "row_count": repair["repair_rows"],
+             "row_citation": repair["paired_exact_valid_effect"],
++            "harmful_flip_effect": harmful,
++            "support_loss_effect": support,
+             "harmful_flips": repair["harmful_flips_by_arm"],
+         },
+     }
+@@ -1006,8 +1094,9 @@ def build_fr11_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
+     memory = headlines["continuous_memory"]
+     gates = memory["required_positive_gates"]
+     return {
+-        "positive": all(gates.values()),
++        "positive": memory["cold_audit_completed"] and all(gates.values()),
+         "disposition": branch_class,
++        "cold_audit_completed": memory["cold_audit_completed"],
+         "required_positive_gates": gates,
+         "row_citations": {
+             "prospective_rows": memory["prospective_rows"],
+@@ -1234,6 +1323,75 @@ def collect_audits(root: Path, sources: Mapping[str, Mapping[str, Any]]) -> Json
+     }
+ 
+ 
++def collect_self_audits(root: Path, artifact_path: Path) -> tuple[JsonDict, JsonDict]:
++    """Audit the published capstone so its own conflicts remain visible."""
++
++    verifier = _load_script_module(root, "adversarial_verify")
++    lint = _load_script_module(root, "verdict_row_consistency_lint")
++    adversarial = verifier.verify_artifact(artifact_path)
++    status, findings = lint.check_artifact(artifact_path)
++    row_report = {
++        "task_id": CAPSTONE_TASK_ID,
++        "artifact": str(artifact_path),
++        "status": status,
++        "findings": findings,
++        "blocking_count": sum(
++            any(finding.startswith(prefix) for prefix in lint.HARD_CLASSES) for finding in findings
++        ),
++        "warning_count": sum(
++            not any(finding.startswith(prefix) for prefix in lint.HARD_CLASSES)
++            for finding in findings
++        ),
++    }
++    return adversarial, row_report
++
++
++def reconcile_self_audits(
++    artifact: Mapping[str, Any],
++    adversarial_report: Mapping[str, Any],
++    row_report: Mapping[str, Any],
++    root: Path,
++    *,
++    duration_s: float,
++) -> JsonDict:
++    """Add measured self-audit output and rebuild dependent branch receipts."""
++
++    out = copy.deepcopy(dict(artifact))
++    adversarial = [
++        row
++        for row in out.get("adversarial_findings", [])
++        if not isinstance(row, Mapping) or row.get("exp_id") != 6780
++    ]
++    adversarial.append(dict(adversarial_report))
++    row_findings = [
++        row
++        for row in out.get("verdict_row_consistency_findings", [])
++        if not isinstance(row, Mapping) or row.get("task_id") != CAPSTONE_TASK_ID
++    ]
++    row_findings.append(dict(row_report))
++    out["adversarial_findings"] = adversarial
++    out["verdict_row_consistency_findings"] = row_findings
++    out["branch_rows"] = build_branch_rows(
++        out["rows"], out["row_recomputed_headlines"], adversarial, row_findings
++    )
++    critical = [
++        dict(flag)
++        for flag in adversarial_report.get("flags", [])
++        if isinstance(flag, Mapping) and flag.get("severity") == "critical"
++    ]
++    out["flagged_adversarial"] = bool(critical)
++    out["corrigendum_pending"] = [
++        {
++            **flag,
++            "disposition": "preserved_required_partial_terminal_contract_conflict",
++        }
++        for flag in critical
++    ]
++    out["duration_s"] = round(float(duration_s), 6)
++    out["reproducibility_checksum"] = reproducibility_checksum(out, root)
++    return out
++
++
+ def _hardware_disposition(root: Path, sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
+     prior = {}
+     prior_path = root / PRIOR_DISPOSITION_PATH
+@@ -1369,7 +1527,7 @@ def build_artifact(
+             "gate_failures": row["gate_failures"],
+         }
+         for row in rows
+-        if row["artifact_state"] in {"missing", "invalid"}
++        if row["artifact_state"] in {"missing", "invalid", "nonterminal"}
+     ]
+     elapsed = duration_s if duration_s is not None else time.monotonic() - started
+     artifact: JsonDict = {
+@@ -1476,6 +1634,7 @@ def atomic_write_json(path: Path, artifact: Mapping[str, Any]) -> None:
+ def main(argv: Sequence[str] | None = None) -> int:
+     """Build, validate, and atomically publish the requested V590 artifact."""
+ 
++    started = time.monotonic()
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--date", default=PLANNING_DATE)
+     parser.add_argument("--root", type=Path, default=REPO_ROOT)
+@@ -1499,9 +1658,29 @@ def main(argv: Sequence[str] | None = None) -> int:
+         raise ValueError(f"invalid V590 artifact: {findings}")
+     output = args.output if args.output.is_absolute() else root / args.output
+     atomic_write_json(output, artifact)
++    canonical_output = (root / RESULT_PATH).resolve()
++    if not args.no_external_audits and output.resolve() == canonical_output:
++        self_adversarial, self_row = collect_self_audits(root, output.resolve())
++        artifact = reconcile_self_audits(
++            artifact,
++            self_adversarial,
++            self_row,
++            root,
++            duration_s=time.monotonic() - started,
++        )
++        findings = validate_artifact(artifact, root)
++        if findings:
++            raise ValueError(f"invalid V590 artifact after self-audit: {findings}")
++        atomic_write_json(output, artifact)
+     reloaded = json.loads(output.read_text(encoding="utf-8"))
+     if validate_artifact(reloaded, root):
+         raise ValueError("atomic V590 artifact failed cold reload")
++    if not args.no_external_audits and output.resolve() == canonical_output:
++        final_adversarial, final_row = collect_self_audits(root, output.resolve())
++        if final_adversarial.get("flags") != self_adversarial.get("flags"):
++            raise ValueError("final V590 adversarial self-audit changed after reconciliation")
++        if final_row.get("findings") != self_row.get("findings"):
++            raise ValueError("final V590 row self-audit changed after reconciliation")
+     print(json.dumps({"artifact": str(output), "honest_verdict": HONEST_VERDICT}, sort_keys=True))
+     return 0
+ 
+diff --git a/results/experiment_6780_v590_branch_disposition.json b/results/experiment_6780_v590_branch_disposition.json
+index 171aa34dd0..80c1df329c 100644
+--- a/results/experiment_6780_v590_branch_disposition.json
++++ b/results/experiment_6780_v590_branch_disposition.json
+@@ -112,12 +112,12 @@
+         "force_exploration_diversity": false,
+         "tool_loop_reinduction": false
+       },
+-      "firings": 0,
++      "firings": null,
+       "transport_ready": false
+     },
+     "tool_gap": {
+       "analyzer_ingest_passed": false,
+-      "events": 0,
++      "events": null,
+       "transport_ready": false
+     }
+   },
+@@ -218,7 +218,7 @@
+   ],
+   "branch_rows": [
+     {
+-      "adversarial_finding_count": 0,
++      "adversarial_finding_count": 2,
+       "branch": "proof",
+       "branch_disposition": "partial",
+       "claim_boundary": "Fixture and grammar readiness do not prove live exact-valid gain or localized repair.",
+@@ -226,7 +226,11 @@
+         "proof": {
+           "comparison_rows": 0,
+           "dynamic_proof_grammar_ready": true,
+-          "exact_valid_rate_by_arm": {},
++          "exact_valid_rate_by_arm": {
++            "cause": "no_eligible_comparative_rows",
++            "denominator": 0,
++            "value": null
++          },
+           "grammar_rows": 45,
+           "no_ghost_violations": 0,
+           "paired_exact_valid_effects": {
+@@ -247,7 +251,11 @@
+           "valid_unsat_reachable": true
+         },
+         "repair": {
+-          "harmful_flips_by_arm": {},
++          "harmful_flips_by_arm": {
++            "cause": "no_eligible_repair_rows",
++            "denominator": 0,
++            "value": null
++          },
+           "paired_exact_valid_effect": {
+             "cause": "no_eligible_comparative_rows",
+             "ci95_high": null,
+@@ -256,11 +264,31 @@
+             "pair_count": 0,
+             "value": null
+           },
++          "paired_harmful_flip_effect": {
++            "cause": "no_eligible_comparative_rows",
++            "ci95_high": null,
++            "ci95_low": null,
++            "mean_delta": null,
++            "pair_count": 0,
++            "value": null
++          },
++          "paired_support_loss_effect": {
++            "cause": "no_eligible_comparative_rows",
++            "ci95_high": null,
++            "ci95_low": null,
++            "mean_delta": null,
++            "pair_count": 0,
++            "value": null
++          },
+           "proof_transport_audit_ready": false,
+           "repair_panel_ready": false,
+           "repair_rows": 0,
+           "source_interval_ignored": null,
+-          "support_loss_by_arm": {}
++          "support_loss_by_arm": {
++            "cause": "no_eligible_repair_rows",
++            "denominator": 0,
++            "value": null
++          }
+         }
+       },
+       "next_action": "Exclude the repeated GPU-starved proof comparison route until an owned RTX 3090 is available.",
+@@ -290,10 +318,18 @@
+       "headline": {
+         "cold_audit_completed": false,
+         "csl_live_preflight_ready": false,
+-        "historical_loss_by_arm": {},
++        "historical_loss_by_arm": {
++          "cause": "no_eligible_prospective_rows",
++          "denominator": 0,
++          "value": null
++        },
+         "live_model_invoked": false,
+         "preflight_rows": 11,
+-        "prequential_yield_by_arm": {},
++        "prequential_yield_by_arm": {
++          "cause": "no_eligible_prospective_rows",
++          "denominator": 0,
++          "value": null
++        },
+         "procedural_minus_no_memory_order_effect": {
+           "cause": "no_eligible_comparative_rows",
+           "ci95_high": null,
+@@ -322,11 +358,12 @@
+           "support": false
+         },
+         "transaction_activity": {
+-          "action_influences": 0,
+-          "commits": 0,
+-          "rejects": 0,
+-          "retrievals": 0,
+-          "rollbacks": 0
++          "action_influences": null,
++          "cause": "no_eligible_prospective_rows",
++          "commits": null,
++          "rejects": null,
++          "retrievals": null,
++          "rollbacks": null
+         }
+       },
+       "next_action": "Exclude the repeated GPU-capacity preflight route until one model has an owned lease.",
+@@ -351,7 +388,11 @@
+       "claim_boundary": "Supervisor and tool transport do not prove adoption without a cold actions-to-progress effect.",
+       "headline": {
+         "actions_to_progress_ab_completed": false,
+-        "actions_to_progress_by_arm": {},
++        "actions_to_progress_by_arm": {
++          "cause": "no_eligible_actions_to_progress_rows",
++          "denominator": 0,
++          "value": null
++        },
+         "actions_to_progress_rows": 0,
+         "adoption_decision": "unavailable",
+         "adoption_positive": false,
+@@ -369,8 +410,8 @@
+           "force_exploration_diversity": false,
+           "tool_loop_reinduction": false
+         },
+-        "row_recomputed_firings": 0,
+-        "row_recomputed_helped": 0,
++        "row_recomputed_firings": null,
++        "row_recomputed_helped": null,
+         "selfparse_minus_control_actions_effect": {
+           "cause": "no_eligible_comparative_rows",
+           "ci95_high": null,
+@@ -381,9 +422,11 @@
+         },
+         "shadow_supervisor_transport_ready": false,
+         "solve_claim": false,
++        "supervisor_evidence_cause": "no_eligible_live_supervisor_rows",
+         "supervisor_rows": 40,
+         "tool_gap_analyzer_ingest_passed": false,
+-        "tool_gap_event_count": 0,
++        "tool_gap_event_count": null,
++        "tool_gap_event_count_cause": "tool_gap_events_missing",
+         "tool_gap_transport_ready": false
+       },
+       "next_action": "Keep supervisor and selfparse default-off until a cold actions-to-progress audit exists.",
+@@ -447,7 +490,7 @@
+       "updated": false
+     }
+   ],
+-  "duration_s": 14.20602,
++  "duration_s": 11.392652,
+   "expected_task_ids": [
+     "exp6768-targetable-proof-panel-expansion",
+     "exp6769-environment-indexed-proof-grammar-v2",
+@@ -495,6 +538,7 @@
+     "verifier_is_oracle": "States that this synthesis is not a correctness oracle."
+   },
+   "fr11_disposition": {
++    "cold_audit_completed": false,
+     "disposition": "blocked",
+     "positive": false,
+     "required_positive_gates": {
+@@ -507,7 +551,11 @@
+       "support": false
+     },
+     "row_citations": {
+-      "historical_loss_by_arm": {},
++      "historical_loss_by_arm": {
++        "cause": "no_eligible_prospective_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "procedural_minus_no_memory": {
+         "cause": "no_eligible_comparative_rows",
+         "ci95_high": null,
+@@ -526,11 +574,12 @@
+       },
+       "prospective_rows": 0,
+       "transaction_activity": {
+-        "action_influences": 0,
+-        "commits": 0,
+-        "rejects": 0,
+-        "retrievals": 0,
+-        "rollbacks": 0
++        "action_influences": null,
++        "cause": "no_eligible_prospective_rows",
++        "commits": null,
++        "rejects": null,
++        "retrievals": null,
++        "rollbacks": null
+       }
+     }
+   },
+@@ -555,7 +604,19 @@
+     },
+     "positive": false,
+     "repair": {
+-      "harmful_flips": {},
++      "harmful_flip_effect": {
++        "cause": "no_eligible_comparative_rows",
++        "ci95_high": null,
++        "ci95_low": null,
++        "mean_delta": null,
++        "pair_count": 0,
++        "value": null
++      },
++      "harmful_flips": {
++        "cause": "no_eligible_repair_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "row_citation": {
+         "cause": "no_eligible_comparative_rows",
+         "ci95_high": null,
+@@ -564,7 +625,15 @@
+         "pair_count": 0,
+         "value": null
+       },
+-      "row_count": 0
++      "row_count": 0,
++      "support_loss_effect": {
++        "cause": "no_eligible_comparative_rows",
++        "ci95_high": null,
++        "ci95_low": null,
++        "mean_delta": null,
++        "pair_count": 0,
++        "value": null
++      }
+     }
+   },
+   "gate_check_summary": [
+@@ -1080,11 +1149,12 @@
+           "support": false
+         },
+         "transaction_activity": {
+-          "action_influences": 0,
+-          "commits": 0,
+-          "rejects": 0,
+-          "retrievals": 0,
+-          "rollbacks": 0
++          "action_influences": null,
++          "cause": "no_eligible_prospective_rows",
++          "commits": null,
++          "rejects": null,
++          "retrievals": null,
++          "rollbacks": null
+         }
+       }
+     },
+@@ -1486,7 +1556,7 @@
+     ],
+     "window": 14
+   },
+-  "reproducibility_checksum": "sha256:5eda1696c344b05f3e49edccb5fa8b404c99661772df9ddeab2e8174bbde7e6c",
++  "reproducibility_checksum": "sha256:c9d15a8dd2c0498a892608fc2f224ad1c316727a961278f8f08ebb725565d173",
+   "retirement_recommendations": [
+     {
+       "branch": "proof",
+@@ -1523,7 +1593,11 @@
+   "row_recomputed_headlines": {
+     "arc": {
+       "actions_to_progress_ab_completed": false,
+-      "actions_to_progress_by_arm": {},
++      "actions_to_progress_by_arm": {
++        "cause": "no_eligible_actions_to_progress_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "actions_to_progress_rows": 0,
+       "adoption_decision": "unavailable",
+       "adoption_positive": false,
+@@ -1541,8 +1615,8 @@
+         "force_exploration_diversity": false,
+         "tool_loop_reinduction": false
+       },
+-      "row_recomputed_firings": 0,
+-      "row_recomputed_helped": 0,
++      "row_recomputed_firings": null,
++      "row_recomputed_helped": null,
+       "selfparse_minus_control_actions_effect": {
+         "cause": "no_eligible_comparative_rows",
+         "ci95_high": null,
+@@ -1553,18 +1627,28 @@
+       },
+       "shadow_supervisor_transport_ready": false,
+       "solve_claim": false,
++      "supervisor_evidence_cause": "no_eligible_live_supervisor_rows",
+       "supervisor_rows": 40,
+       "tool_gap_analyzer_ingest_passed": false,
+-      "tool_gap_event_count": 0,
++      "tool_gap_event_count": null,
++      "tool_gap_event_count_cause": "tool_gap_events_missing",
+       "tool_gap_transport_ready": false
+     },
+     "continuous_memory": {
+       "cold_audit_completed": false,
+       "csl_live_preflight_ready": false,
+-      "historical_loss_by_arm": {},
++      "historical_loss_by_arm": {
++        "cause": "no_eligible_prospective_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "live_model_invoked": false,
+       "preflight_rows": 11,
+-      "prequential_yield_by_arm": {},
++      "prequential_yield_by_arm": {
++        "cause": "no_eligible_prospective_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "procedural_minus_no_memory_order_effect": {
+         "cause": "no_eligible_comparative_rows",
+         "ci95_high": null,
+@@ -1593,11 +1677,12 @@
+         "support": false
+       },
+       "transaction_activity": {
+-        "action_influences": 0,
+-        "commits": 0,
+-        "rejects": 0,
+-        "retrievals": 0,
+-        "rollbacks": 0
++        "action_influences": null,
++        "cause": "no_eligible_prospective_rows",
++        "commits": null,
++        "rejects": null,
++        "retrievals": null,
++        "rollbacks": null
+       }
+     },
+     "execution_contract": {
+@@ -1608,7 +1693,11 @@
+     "proof": {
+       "comparison_rows": 0,
+       "dynamic_proof_grammar_ready": true,
+-      "exact_valid_rate_by_arm": {},
++      "exact_valid_rate_by_arm": {
++        "cause": "no_eligible_comparative_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "grammar_rows": 45,
+       "no_ghost_violations": 0,
+       "paired_exact_valid_effects": {
+@@ -1629,7 +1718,11 @@
+       "valid_unsat_reachable": true
+     },
+     "repair": {
+-      "harmful_flips_by_arm": {},
++      "harmful_flips_by_arm": {
++        "cause": "no_eligible_repair_rows",
++        "denominator": 0,
++        "value": null
++      },
+       "paired_exact_valid_effect": {
+         "cause": "no_eligible_comparative_rows",
+         "ci95_high": null,
+@@ -1638,11 +1731,31 @@
+         "pair_count": 0,
+         "value": null
+       },
++      "paired_harmful_flip_effect": {
++        "cause": "no_eligible_comparative_rows",
++        "ci95_high": null,
++        "ci95_low": null,
++        "mean_delta": null,
++        "pair_count": 0,
++        "value": null
++      },
++      "paired_support_loss_effect": {
++        "cause": "no_eligible_comparative_rows",
++        "ci95_high": null,
++        "ci95_low": null,
++        "mean_delta": null,
++        "pair_count": 0,
++        "value": null
++      },
+       "proof_transport_audit_ready": false,
+       "repair_panel_ready": false,
+       "repair_rows": 0,
+       "source_interval_ignored": null,
+-      "support_loss_by_arm": {}
++      "support_loss_by_arm": {
++        "cause": "no_eligible_repair_rows",
++        "denominator": 0,
++        "value": null
++      }
+     }
+   },
+   "rows": [
+@@ -1662,6 +1775,7 @@
+       "raw_row_count": 126,
+       "raw_rows_available": true,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "complete",
+       "summary_receipt": {
+@@ -1693,6 +1807,7 @@
+       "raw_row_count": 45,
+       "raw_rows_available": true,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "complete",
+       "summary_receipt": {
+@@ -1737,6 +1852,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "complete_blocked_proof_transport_ab_v2",
+       "summary_receipt": {
+@@ -1777,6 +1893,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "blocked",
+       "summary_receipt": {
+@@ -1825,6 +1942,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": "file_missing",
+       "status": "missing",
+       "summary_receipt": null,
+@@ -1864,6 +1982,7 @@
+       "raw_row_count": 11,
+       "raw_rows_available": true,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "blocked",
+       "summary_receipt": {
+@@ -1904,6 +2023,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": "file_missing",
+       "status": "missing",
+       "summary_receipt": null,
+@@ -1938,6 +2058,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": "file_missing",
+       "status": "missing",
+       "summary_receipt": null,
+@@ -2030,6 +2151,7 @@
+       "raw_row_count": 40,
+       "raw_rows_available": true,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "complete_blocked_shadow_supervisor_accrual",
+       "summary_receipt": {
+@@ -2070,6 +2192,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": true,
+       "source_error": null,
+       "status": "blocked",
+       "summary_receipt": {
+@@ -2110,6 +2233,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": "file_missing",
+       "status": "missing",
+       "summary_receipt": null,
+@@ -2144,6 +2268,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": "file_missing",
+       "status": "missing",
+       "summary_receipt": null,
+@@ -2169,6 +2294,7 @@
+       "raw_row_count": 0,
+       "raw_rows_available": false,
+       "row_type": "experiment",
++      "source_artifact_terminal": false,
+       "source_error": null,
+       "status": "current_synthesis",
+       "summary_receipt": null,
+diff --git a/tests/python/test_experiment_6780_v590_branch_disposition.py b/tests/python/test_experiment_6780_v590_branch_disposition.py
+index ed1fa6c114..70135ba1ef 100644
+--- a/tests/python/test_experiment_6780_v590_branch_disposition.py
++++ b/tests/python/test_experiment_6780_v590_branch_disposition.py
+@@ -91,15 +91,20 @@ def test_source_loader_preserves_present_missing_invalid_and_current(tmp_path: P
+         {"task_id": "exp6768", "path": "results/good.json"},
+         {"task_id": "exp6769", "path": "results/bad.json"},
+         {"task_id": "exp6770", "path": "results/missing.json"},
++        {"task_id": "exp6771", "path": "results/running.json"},
+         {"task_id": "exp6780", "path": exp.RESULT_PATH.as_posix()},
+     ]
+     (tmp_path / "results").mkdir()
+     (tmp_path / "results/good.json").write_text('{"status":"complete"}', encoding="utf-8")
+     (tmp_path / "results/bad.json").write_text("[]", encoding="utf-8")
++    (tmp_path / "results/running.json").write_text(
++        '{"status":"running","rows":[{"metric":1}]}', encoding="utf-8"
++    )
+     sources = exp.load_source_artifacts(tmp_path, planned)
+     assert sources["exp6768"]["artifact_state"] == "present"
+     assert sources["exp6769"]["artifact_state"] == "invalid"
+     assert sources["exp6770"]["artifact_state"] == "missing"
++    assert sources["exp6771"]["artifact_state"] == "nonterminal"
+     assert sources["exp6780"]["artifact_state"] == "current_synthesis"
+ 
+ 
+@@ -191,6 +196,25 @@ def test_missing_comparative_rows_are_null_not_zero() -> None:
+     assert repair["paired_exact_valid_effect"]["value"] is None
+ 
+ 
++def test_missing_memory_and_arc_rows_are_null_not_measured_zero() -> None:
++    """SCENARIO-REPORT-6780-ROW-RECOMPUTATION: missing counts stay unknown."""
++
++    sources = _empty_sources()
++    memory = exp.recompute_continuous_memory(sources)
++    arc = exp.recompute_arc(sources)
++    assert memory["prequential_yield_by_arm"] == {
++        "value": None,
++        "denominator": 0,
++        "cause": "no_eligible_prospective_rows",
++    }
++    assert memory["transaction_activity"]["commits"] is None
++    assert memory["transaction_activity"]["cause"] == "no_eligible_prospective_rows"
++    assert arc["row_recomputed_firings"] is None
++    assert arc["supervisor_evidence_cause"] == "no_eligible_live_supervisor_rows"
++    assert arc["tool_gap_event_count"] is None
++    assert arc["tool_gap_event_count_cause"] == "tool_gap_events_missing"
++
++
+ def test_continuous_memory_recomputes_order_effects_activity_and_loss() -> None:
+     """REQ-REPORT-6780: FR11 uses order rows and every cold audit gate."""
+ 
+@@ -298,6 +322,94 @@ def test_arc_adoption_requires_cold_actions_to_progress_not_transport() -> None:
+     assert arc["selfparse_minus_control_actions_effect"]["mean_delta"] == -2.5
+     assert arc["adoption_positive"] is True
+ 
++    worse = copy.deepcopy(sources)
++    worse["exp6778"] = _record(
++        {
++            "rows": [
++                {"pair_id": "a", "arm": "control_unset", "actions_to_progress": 8},
++                {"pair_id": "a", "arm": "selfparse", "actions_to_progress": 12},
++            ],
++            "actions_to_progress_ab_completed": True,
++        }
++    )
++    assert exp.recompute_arc(worse)["adoption_positive"] is False
++
++
++def test_fr11_and_fr12_positive_credit_requires_cold_and_safety_gates() -> None:
++    """REQ-REPORT-6780: positive branch credit requires every stated gate."""
++
++    sources = _empty_sources()
++    sources["exp6774"] = _record(
++        {
++            "prospective_csl_completed": True,
++            "rows": [
++                {
++                    "order_id": "o1",
++                    "arm": "no_memory",
++                    "prequential_yield": 0.4,
++                    "commits": 0,
++                    "rejects": 0,
++                    "retrieval_count": 0,
++                    "action_influence_count": 0,
++                },
++                {
++                    "order_id": "o1",
++                    "arm": "procedural_memory",
++                    "prequential_yield": 0.7,
++                    "commits": 1,
++                    "rejects": 1,
++                    "retrieval_count": 1,
++                    "action_influence_count": 1,
++                },
++            ],
++        }
++    )
++    sources["exp6775"] = _record(
++        {
++            "cold_audit_completed": False,
++            "audit_gates": {name: True for name in exp.FR11_GATES},
++        }
++    )
++    memory = exp.recompute_continuous_memory(sources)
++    fr11 = exp.build_fr11_disposition({"continuous_memory": memory}, "null")
++    assert all(memory["required_positive_gates"].values())
++    assert fr11["positive"] is False
++
++    sources["exp6770"] = _record(
++        {
++            "proof_transport_ab_completed": True,
++            "rows": [
++                {"pair_id": "p1", "arm": "repaired_direct", "exact_valid": False},
++                {"pair_id": "p1", "arm": "dccd_environment", "exact_valid": True},
++            ],
++        }
++    )
++    sources["exp6772"] = _record(
++        {
++            "rows": [
++                {
++                    "pair_id": "p1",
++                    "arm": "full_regeneration",
++                    "exact_valid": False,
++                    "harmful_flip": False,
++                    "support_loss": False,
++                },
++                {
++                    "pair_id": "p1",
++                    "arm": "prefix_backtracking",
++                    "exact_valid": True,
++                    "harmful_flip": True,
++                    "support_loss": False,
++                },
++            ]
++        }
++    )
++    headlines = exp.recompute_headlines(sources)
++    fr12 = exp.build_fr12_disposition(headlines, "null")
++    assert headlines["repair"]["paired_exact_valid_effect"]["mean_delta"] == 1.0
++    assert headlines["repair"]["paired_harmful_flip_effect"]["mean_delta"] == 1.0
++    assert fr12["positive"] is False
++
+ 
+ def test_actual_source_rows_preserve_terminal_and_missing_states() -> None:
+     """SCENARIO-REPORT-6780-PRECONDITIONS: the live V590 roster is complete."""
+@@ -400,6 +512,56 @@ def test_artifact_build_is_valid_deterministic_and_honest() -> None:
+     assert changed_duration["reproducibility_checksum"] == artifact["reproducibility_checksum"]
+ 
+ 
++def test_self_audit_reconciliation_preserves_critical_and_row_findings() -> None:
++    """SCENARIO-REPORT-6780-VALIDATION: the capstone keeps its own audit flags."""
++
++    artifact = exp.build_artifact(REPO, "20260830", audit_bundle=_audit_bundle(), duration_s=1.0)
++    self_adversarial = {
++        "artifact": str(REPO / exp.RESULT_PATH),
++        "loaded": True,
++        "exp_id": 6780,
++        "flag_count": 2,
++        "flags": [
++            {
++                "kind": "NONTERMINAL_DECLARED_ARTIFACT",
++                "severity": "critical",
++                "detail": "partial marker present",
++            },
++            {
++                "kind": "VERDICT_PREFIX_CLASS_CONTRADICTION",
++                "severity": "warn",
++                "detail": "complete_partial conflicts with partial",
++            },
++        ],
++    }
++    self_row = {
++        "task_id": "exp6780",
++        "artifact": str(REPO / exp.RESULT_PATH),
++        "status": "findings",
++        "findings": ["ALL_ROWS_NULL: disposition rows are not outcome rows"],
++        "blocking_count": 1,
++        "warning_count": 0,
++    }
++    reconciled = exp.reconcile_self_audits(
++        artifact,
++        self_adversarial,
++        self_row,
++        REPO,
++        duration_s=2.0,
++    )
++    assert reconciled["flagged_adversarial"] is True
++    assert reconciled["corrigendum_pending"][0]["kind"] == "NONTERMINAL_DECLARED_ARTIFACT"
++    assert reconciled["adversarial_findings"][-1] == self_adversarial
++    assert reconciled["verdict_row_consistency_findings"][-1] == self_row
++    execution = next(
++        row for row in reconciled["branch_rows"] if row["branch"] == "execution_contract"
++    )
++    assert execution["adversarial_finding_count"] == 2
++    assert execution["row_consistency_finding_count"] == 1
++    assert reconciled["duration_s"] == 2.0
++    assert exp.validate_artifact(reconciled, REPO) == []
++
++
+ def test_validator_rejects_schema_enum_rows_prefix_and_checksum() -> None:
+     """REQ-REPORT-6780: invalid synthesis claims fail closed."""
+ 
+@@ -561,8 +723,16 @@ def test_invalid_source_row_and_all_branch_classifier_outcomes() -> None:
+                 "dccd_environment-minus-repaired_direct": {"mean_delta": 0.2}
+             },
+         },
+-        "repair": {"repair_rows": 2, "paired_exact_valid_effect": {"mean_delta": 0.1}},
+-        "continuous_memory": {"required_positive_gates": {"activity": True}},
++        "repair": {
++            "repair_rows": 2,
++            "paired_exact_valid_effect": {"mean_delta": 0.1},
++            "paired_harmful_flip_effect": {"pair_count": 2, "mean_delta": 0.0},
++            "paired_support_loss_effect": {"pair_count": 2, "mean_delta": 0.0},
++        },
++        "continuous_memory": {
++            "cold_audit_completed": True,
++            "required_positive_gates": {"activity": True},
++        },
+         "arc": {"adoption_positive": True},
+     }
+     assert (
+@@ -585,6 +755,28 @@ def test_invalid_source_row_and_all_branch_classifier_outcomes() -> None:
+     )
+ 
+ 
++def test_branch_rows_count_absolute_audit_paths() -> None:
++    """SCENARIO-REPORT-6780-VALIDATION: source findings stay branch-visible."""
++
++    planned, _ = exp.load_planned_tasks(REPO)
++    sources = exp.load_source_artifacts(REPO, planned)
++    rows = exp.build_experiment_rows(planned, sources)
++    branches = exp.build_branch_rows(
++        rows,
++        exp.recompute_headlines(sources),
++        [
++            {
++                "artifact": str(REPO / exp.TASK_PATHS["exp6768"]),
++                "flag_count": 1,
++                "flags": [{"severity": "warn"}],
++            }
++        ],
++        [],
++    )
++    proof = next(row for row in branches if row["branch"] == "proof")
++    assert proof["adversarial_finding_count"] == 1
++
++
+ def test_external_audit_bundle_and_skip_paths(monkeypatch: pytest.MonkeyPatch) -> None:
+     """SCENARIO-REPORT-6780-VALIDATION: each audit runner is invoked and retained."""
+ 
+-- 
+2.55.0
+

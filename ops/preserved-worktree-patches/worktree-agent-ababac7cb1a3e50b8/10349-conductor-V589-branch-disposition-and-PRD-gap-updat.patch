@@ -1,0 +1,194 @@
+From 6a1e58f8d7ba8ae0f1014a764dcc156213c9749f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 02:32:12 -0400
+Subject: [PATCH 10349/11362] [conductor] V589 branch disposition and PRD gap
+ update
+
+Automated research step by research conductor.
+Task ID: exp6767-v589-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_6767_v589_branch_disposition.json |   6 +-
+ ...experiment_6767_v589_branch_disposition.py | 113 ++++++++++++++++++
+ 3 files changed, 117 insertions(+), 4 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 67dfc70e9b..45e3d2d7e9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5167,
++  "experiments_checked": 5168,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6767_v589_branch_disposition.json b/results/experiment_6767_v589_branch_disposition.json
+index 7b795d9930..fdc24bed8f 100644
+--- a/results/experiment_6767_v589_branch_disposition.json
++++ b/results/experiment_6767_v589_branch_disposition.json
+@@ -549,7 +549,7 @@
+     "reason": "stop_when_done_rule_delegates_docs_to_followup_reconciler",
+     "reconciled": false
+   },
+-  "duration_s": 18.943939156015404,
++  "duration_s": 19.149777812999673,
+   "expected_task_deliverables": [
+     {
+       "artifact_sha256": "sha256:6e556e3f90e7e5a71194cf4c4bd4b373ff1354d0cfa4b8b7f66c0459e471ad1d",
+@@ -1100,7 +1100,7 @@
+     {
+       "note": "not modified by Exp6767 synthesis",
+       "path": "ops/changelog.md",
+-      "sha256_current": "sha256:64c85997dc049c039febd5906a69e2644814c105fd3b22610c271cbc45238c93",
++      "sha256_current": "sha256:266571f3a4136b1d5bd9109b539c7a17ca6911469b9d916c0c6c566869423ed3",
+       "unchanged": true
+     },
+     {
+@@ -1130,7 +1130,7 @@
+     "report_hash": "sha256:d0cdce5329de2d5ef8459f86385f0cb172cebc15f43bb594401aa5d4ee044aac",
+     "summary_excerpt": "recurring-blocker-ledger: 58 blocked task(s) across 20 milestones, 32 distinct blocker(s).\n  diagnostic coverage: 58 record a reason, 0 record NOTHING.\n\n  RECURRING (2+ times):\n    x27  blocked_gate_check_failed\n          milestones 2026.08.569..2026.08.588  e.g. experiment_6568_immutable_source_span_claim_stream.json\n          x2 because: N of N gate(s) failed; first failure: <task>.activation_contract_ready_score (actual=N.N == expected=N.N)\n          x2 because: N of N gate(s) failed; first failure: <task>.vN_contract_ready (actual=False == expected=True)\n\n  Re-run with --emit-known-issue to schedule these for investigation."
+   },
+-  "reproducibility_checksum": "sha256:207e0f6306d73f42ba515fa5ef7fe494128eb70dca6ef3ffd610f641c9d7bdc1",
++  "reproducibility_checksum": "sha256:7723460f41206ebf567f8d76fbd1e57c0ba9255c92195e47d01c6e6ab27f13be",
+   "retirement_recommendations": [
+     {
+       "current_task_id": "exp6767",
+diff --git a/tests/python/test_experiment_6767_v589_branch_disposition.py b/tests/python/test_experiment_6767_v589_branch_disposition.py
+index c969067a03..59e1efeb58 100644
+--- a/tests/python/test_experiment_6767_v589_branch_disposition.py
++++ b/tests/python/test_experiment_6767_v589_branch_disposition.py
+@@ -278,6 +278,41 @@ def test_scenario_report_6767_validator_findings_are_preserved(
+     assert len(calls) == 4
+ 
+ 
++def test_scenario_report_6767_validator_parsers_ignore_nonfinding_lines(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6767-VALIDATORS: parser noise is not promoted to findings."""
++
++    assert exp._parse_row_lint_findings("plain line\n[BLOCK] real\ntrailer") == ["[BLOCK] real"]
++
++    def fake_ledger(_args: list[str], _root: Path) -> tuple[int, str]:
++        return 0, "  RECURRING (2+ times):\n    not-a-count\n    x2  blocked_gate"
++
++    monkeypatch.setattr(exp, "_run_command", fake_ledger)
++    assert exp.run_recurring_blockers(REPO)["recurring"] == ["x2  blocked_gate"]
++
++    wrapper_path = REPO / "scripts/experiments/experiment_6767_v589_branch_disposition.py"
++    saved_path = list(sys.path)
++    saved_module = sys.modules.get("carnot.experiment_6767_v589_branch_disposition")
++    sys.modules["carnot.experiment_6767_v589_branch_disposition"] = exp
++    for path in (REPO, REPO / "python"):
++        if str(path) not in sys.path:
++            sys.path.insert(0, str(path))
++    spec = importlib.util.spec_from_file_location("exp6767_wrapper_present", wrapper_path)
++    assert spec and spec.loader
++    wrapper = importlib.util.module_from_spec(spec)
++    try:
++        spec.loader.exec_module(wrapper)
++    finally:
++        sys.path = saved_path
++        if saved_module is None:
++            sys.modules.pop("carnot.experiment_6767_v589_branch_disposition", None)
++        else:
++            sys.modules["carnot.experiment_6767_v589_branch_disposition"] = saved_module
++    assert wrapper.main(["--validate", "--output", str(tmp_path / "missing.json")]) == 1
++
++
+ def test_req_report_6767_missing_or_mutated_inputs_fail_closed(
+     current_inputs: tuple[list[dict], dict[str, dict]],
+     tmp_path: Path,
+@@ -475,6 +510,84 @@ def test_req_report_6767_synthetic_nonblocked_row_recomputes() -> None:
+     assert paired["context_matched"]["pair_count"] == 0
+ 
+ 
++def test_req_report_6767_sparse_row_shapes_stay_explicit() -> None:
++    """REQ-REPORT-6767: sparse rows stay local instead of being repaired by prose."""
++
++    assert exp._model_ids({"models_used": [{}, None, ""], "rows": [{"model": {}}]}) == []
++
++    arc = exp.recompute_arc(
++        {
++            "exp6764": _present({"arc_exclusive_load_ready": True}),
++            "exp6765": _present(
++                {
++                    "object_table_ab_completed": True,
++                    "rows": [
++                        {
++                            "row_kind": "science",
++                            "arm": "table_inline",
++                            "prompt_tokens": "100",
++                            "change_fidelity": "0.90",
++                            "failure_class": None,
++                            "live_model_invoked": False,
++                        }
++                    ],
++                }
++            ),
++        }
++    )
++    assert arc["ab_science_rows"] == {"numerator": 1, "denominator": 1, "rate": 1.0}
++    assert arc["mean_prompt_token_savings"] is None
++    assert arc["change_fidelity_by_arm"] == {}
++
++    paired = exp._paired_trajectory_deltas(
++        [
++            {
++                "evaluator_path": "exact_enumerator",
++                "method": "independent_factor",
++                "trajectory_tv": "unknown",
++            },
++            {
++                "evaluator_path": "exact_enumerator",
++                "method": "independent_factor",
++                "trajectory_tv": 0.4,
++                "factor_id": "f1",
++            },
++            {
++                "evaluator_path": "exact_enumerator",
++                "method": "context_matched",
++                "trajectory_tv": 0.3,
++                "factor_id": "other",
++            },
++        ]
++    )
++    assert paired["context_matched"]["pair_count"] == 0
++
++    stochastic = exp.recompute_stochastic(
++        {
++            "exp6766": _present(
++                {
++                    "rows": [
++                        {
++                            "evaluator_path": "exact_enumerator",
++                            "method": "independent_factor",
++                            "trajectory_tv": "unknown",
++                            "conditional_kl": 0.2,
++                        },
++                        {
++                            "evaluator_path": "exact_enumerator",
++                            "method": "context_matched",
++                            "trajectory_tv": 0.1,
++                            "conditional_kl": "unknown",
++                        },
++                    ]
++                }
++            )
++        }
++    )
++    assert stochastic["mean_trajectory_tv_by_method"]["context_matched"]["value"] == 0.1
++    assert stochastic["mean_conditional_kl_by_method"]["independent_factor"]["value"] == 0.2
++
++
+ def test_scenario_report_6767_validator_and_validation_edges(
+     current_inputs: tuple[list[dict], dict[str, dict]],
+     monkeypatch: pytest.MonkeyPatch,
+-- 
+2.55.0
+

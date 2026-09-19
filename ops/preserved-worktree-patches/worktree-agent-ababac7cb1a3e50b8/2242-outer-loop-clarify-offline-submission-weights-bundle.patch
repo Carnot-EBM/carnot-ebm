@@ -1,0 +1,58 @@
+From 52eb4055f7c420fac7c088ae20db74157ec4cf85 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 03:26:40 -0400
+Subject: [PATCH 02242/11362] [outer-loop] clarify offline submission: weights
+ bundled as Kaggle dataset, mounted at /kaggle/input
+
+'No internet' blocks hosted-API calls, NOT local file reads. Trained weights (TRM ckpt /
+GGUF) upload once as a Kaggle Dataset, mount read-only in the offline sandbox, load from
+disk -> a LOCAL model is offline-legal precisely because it's a bundled FILE. Two findings:
+(1) prize-eligible license is CC0/MIT-0 (stricter than Apache-2.0) -- action item;
+(2) a possible third-party-compute call-out (~$10k cap) seen in ARC-AGI-2 is UNCONFIRMED
+for ARC-AGI-3 -- verify before relying on it.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...ggle-submission-requirements-2026-06-17.md | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md b/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md
+index a6a860cb67..aeffcaffc0 100644
+--- a/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md
++++ b/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md
+@@ -53,6 +53,32 @@ wall-clock, 10 steps/sec.
+   competition rules tab / the eval description in the downloaded ARC-AGI-3-Agents data,
+   or a small probe submission.
+ 
++## How "no internet" works with bundled model weights (TRM / GGUF)
++
++"No internet at eval" blocks LIVE NETWORK CALLS (hosted APIs: GPT/Claude/Gemini/codex) —
++it does NOT block reading local files. Trained weights ride along WITH the submission:
++1. Upload the weights ONCE (with internet, ahead of time) as a **Kaggle Dataset / Kaggle
++   Models** artifact.
++2. Attach that artifact to the submission notebook/agent.
++3. At eval the organizers mount it read-only into the offline sandbox at
++   `/kaggle/input/<dataset>/...`; the agent loads it from disk
++   (`torch.load('/kaggle/input/.../trm.ckpt')` or `llama_cpp.Llama(model_path=...)`) —
++   a pure disk read, no network. The game environments are likewise local in the sandbox.
++So a LOCAL model (trained TRM weights OR an open GGUF) is the correct engine precisely
++because it is a bundled FILE, not a hosted service. A hosted API is the ONE thing the
++offline rule forbids. The eval is a Kaggle notebook the organizers run (swap data, Save,
++within ~12h on the provided GPU); a 5M-param TRM runs trivially, a Q4 12B GGUF fits.
++
++**LICENSING CATCH (action item):** prize-eligible solutions must be released **CC0 or
++MIT-0** — MORE permissive than our Apache-2.0. For prize eligibility the submission +
++bundled weights need CC0/MIT-0, not just Apache-2.0. (Internal use stays Apache-2.0.)
++
++**TO VERIFY in the rules tab:** some ARC tracks (seen in the ARC-AGI-2 description) let
++submissions call OUT to third-party compute (Modal/Lambda/RunPod) under a ~$10k runtime
++cap — which would re-open external/larger compute. UNCONFIRMED for ARC-AGI-3 (its stated
++rule is "no internet, rules out hosted APIs"). Safe default = fully-offline bundled
++weights; confirm before relying on a compute-call-out path.
++
+ ## How our assets map (low integration cost)
+ 
+ Our solver already operates on exactly the `frame -> GameAction` interface:
+-- 
+2.55.0
+

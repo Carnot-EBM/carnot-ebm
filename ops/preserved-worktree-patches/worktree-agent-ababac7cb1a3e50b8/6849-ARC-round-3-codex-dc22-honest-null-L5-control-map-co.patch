@@ -1,0 +1,90 @@
+From 5537a83b2a7400059375d0e0ab1298a523818c13 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 07:36:00 -0400
+Subject: [PATCH 06849/11362] ARC round-3 (codex): dc22 honest null, L5 control
+ map completed
+
+Continuation of round-3. dc22's L5 wall holds again, but this session
+fully grounded the four AA99 quadrant controls precisely ((44,29)=left,
+(49,29)=up, (54,29)=right, (59,29)=down on the color-8 structure) and
+found a previously-missed hidden control: a large 6 button at (52,48)
+teleports the avatar between checker portals, distinct from the L4
+checker-tile-click teleport.
+
+Tested all 6/9 phase combinations against the dotted color-15 chute --
+it remained non-walkable in every combination, confirming the chute
+mechanism is the real remaining unknown. Also found and documented a
+genuine soft-lock risk for future attempts: advancing the 2-button cycle
+after crossing the row-44 bridge irreversibly traps the avatar (the
+final closure is refused because it would delete the avatar's support).
+
+No new level banked; reproducible_total_levels stays 142.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml              | 18 ++++++++++++++++++
+ results/outer_loop_codex_dc22_probe.json |  9 +++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 17facfb579..bca7d6e7cd 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3260,6 +3260,24 @@ games:
+     dependency: the lower color-15 route stays dotted/non-walkable, blocking
+     the solid F bar and the B-button-shifted shelf below it. No new level
+     banked; this is meaningfully further than the prior scouting pass.'
++  - 'L5 progress round 3, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex):
++    fully grounded the four AA99 quadrant controls precisely -- (44,29)=left,
++    (49,29)=up, (54,29)=right, (59,29)=down on the color-8 structure, 4px
++    increments. Confirmed the routing sequence from round 2 (route the
++    structure up at the far-left, right until touching the color-12 slab,
++    latch with the 8 button at (52,35), then drag as a combined 8/12
++    structure to bridge the disconnected regions). NEW: found a previously
++    missed hidden control -- the large 6 button at (52,48) teleports the
++    avatar between the checker portals (distinct from the checker-tile-click
++    teleport in the L4 mechanic). Tested all 6/9 phase combinations against
++    the dotted color-15 chute -- it remained non-walkable in every
++    combination. Advancing the 2-button cycle after crossing closed the
++    row-44 bridge from the center and IRREVERSIBLY trapped the avatar at its
++    east endpoint (the final closure step is refused because it would delete
++    the avatar''s support -- a genuine soft-lock risk to avoid in future
++    attempts: do not cycle the 2-button past the bridge-open state while
++    standing on it). No new level banked; the chute mechanism remains the
++    real unknown blocking L5.'
+   dead_ends:
+   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
+   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
+diff --git a/results/outer_loop_codex_dc22_probe.json b/results/outer_loop_codex_dc22_probe.json
+index 61f5cb42a6..4f9fcd3484 100644
+--- a/results/outer_loop_codex_dc22_probe.json
++++ b/results/outer_loop_codex_dc22_probe.json
+@@ -3,19 +3,20 @@
+   "model": "gpt-5.6-sol",
+   "starting_level": 4,
+   "max_level_reached": 4,
+-  "total_env_steps_used": 622,
++  "total_env_steps_used": 593,
+   "reproduction_verified": false,
+   "action_sequence": ["{\"action\":3}","{\"action\":1}","{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":6,\"grid\":[52,23],\"sprite\":\"buezna-inzejt-refgps\",\"x\":52,\"y\":31}","{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}","{\"action\":4}","{\"action\":4}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":6,\"grid\":[52,23],\"sprite\":\"buezna-inzejt-refgps\",\"x\":52,\"y\":31}","{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}","{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":6,\"grid\":[52,23],\"sprite\":\"buezna-inzejt-refgps\",\"x\":52,\"y\":31}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":4}","{\"action\":3}","{\"action\":6,\"grid\":[51,19],\"sprite\":\"buezna-blrmbx\",\"x\":51,\"y\":27}","{\"action\":3}","{\"action\":3}","{\"action\":6,\"grid\":[51,10],\"sprite\":\"buezna-refgps\",\"x\":51,\"y\":18}","{\"action\":3}","{\"action\":2}","{\"action\":2}","{\"action\":2}","{\"action\":3}","{\"action\":6,\"grid\":[51,19],\"sprite\":\"buezna-blrmbx\",\"x\":51,\"y\":27}","{\"action\":6,\"grid\":[51,10],\"sprite\":\"buezna-refgps\",\"x\":51,\"y\":18}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":3}","{\"action\":6,\"grid\":[51,19],\"sprite\":\"buezna-blrmbx\",\"x\":51,\"y\":27}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[51,28],\"sprite\":\"buezna-matkhq\",\"x\":51,\"y\":36}","{\"action\":1}","{\"action\":1}","{\"action\":4}","{\"action\":4}","{\"action\":1}","{\"action\":4}","{\"action\":6,\"grid\":[51,37],\"sprite\":\"buezna-pueite\",\"x\":51,\"y\":45}","{\"action\":1}","{\"action\":1}","{\"action\":1}","{\"action\":6,\"grid\":[51,10],\"sprite\":\"buezna-refgps\",\"x\":51,\"y\":18}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":4}","{\"action\":2}","{\"action\":2}","{\"action\":4}","{\"action\": 1}","{\"action\": 2}","{\"action\": 2}","{\"action\": 4}","{\"action\": 4}","{\"action\": 1}","{\"action\": 6, \"x\": 52, \"y\": 19}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 2}","{\"action\": 4}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 3}","{\"action\": 3}","{\"action\": 3}","{\"action\": 2}","{\"action\": 2}","{\"action\": 1}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 1}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 2}","{\"action\": 2}","{\"action\": 6, \"x\": 52, \"y\": 19}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 4}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 2}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 6, \"x\": 46, \"y\": 28}","{\"action\": 4}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 6, \"x\": 56, \"y\": 28}","{\"action\": 2}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 4}","{\"action\": 2}","{\"action\": 2}","{\"action\": 4}"],
+   "levels_won_this_session": [],
+-  "novel_mechanics_found": "LEVEL 5: the four AA99 quadrants are directional controls for a movable color-8 piece (left/up/right/down in four-pixel increments). When the 8 piece is maneuvered into the color-12 slab and the 8 button is clicked, it changes shape and latches onto the slab; subsequent directional clicks drag the combined 8/12 structure. This lets the slab be routed around obstacles and used as a temporary bridge between the separated start and upper regions. The 9 button transfers solidity between the west 9 block and the east dotted 9 strip; it refuses while the player is standing on the support that would disappear. The 6 button teleports the player between the two checker portals. The 2 button incrementally opens the row-44 wall from both ends, briefly yields a full color-12 bridge, then closes from the middle outward. The B button shifts the row-54 shelf right in two-pixel steps and wraps after reaching the right-side color-15 region.",
+-  "narrative": "Resolved and replayed the 212-action banked prefix from a fresh environment, confirming frame.levels_completed == 4 before exploration. I mapped the level-5 controls, latched the movable 8 piece to the 12 slab, routed that slab as a bridge, crossed into the upper region, used the checker portal to reach the lower west region, opened the horizontal wall bridge, and reached its far-right endpoint. The remaining unsolved dependency is the lower color-15 route: its vertical strip stays dotted/non-walkable, while the solid F bar and shifted shelf lie below it. I stopped at 622 total steps with no level-5 win observed and did not spend beyond the 700-step cap on a redundant level-4 gate.",
++  "novel_mechanics_found": "LEVEL 5: the four previously unexplained AA99 quadrants are directional controls for a movable color-8 structure: (44,29)=left, (49,29)=up, (54,29)=right, and (59,29)=down, moving in four-pixel increments. The structure must first be routed upward at the far-left side, moved right until it touches the color-12 slab, and latched with the 8 button at (52,35); direction clicks then drag the combined 8/12 structure. Routing that combined structure left, down, then right makes a temporary bridge between the disconnected start and upper platforms. The large 6 button at (52,48), an unexplained control missed by the earlier shallow scout, teleports the avatar between the checker portals. The 9 button transfers solidity between the west and east 9 regions and refuses if the avatar would lose support. The 2 button opens the row-44 wall from both ends, briefly yields a full color-12 bridge, then closes it from the middle outward; the B button shifts the row-54 shelf right and wraps.",
++  "narrative": "Resolved the 212-action banked prefix and replayed it from two fresh environments, both times confirming frame.levels_completed == 4. On level 5 I independently grounded the hidden four-direction controls, latched and routed the movable 8/12 bridge, crossed into the upper region, restored the bridge, reached the top checker, and used the hidden 6 control to teleport to the lower-west stack. I opened and crossed the row-44 bridge, positioned the lower shelf under the dotted color-15 chute, and tested the visible controls and all 6/9 phase combinations; the chute remained non-walkable. Advancing the 2-button cycle after crossing closed the bridge from the center and irreversibly trapped the avatar at its east endpoint, where the final closure is refused because it would delete the avatar's support. No level-5 win was observed. I stopped at 593 total env.step calls because the remaining 107 calls could not fund the 212-action replay needed for a new live attempt or reproduction gate.",
+   "gotchas": [
+     "Direction mapping remains ACTION1=up, ACTION2=down, ACTION3=left, ACTION4=right; movement is two pixels.",
+     "The 8 piece is initially independent. The 8 button only produced a visible latch/change after the piece was aligned with the 12 slab; afterward the direction controls dragged both together.",
+     "The 9 button is refused if transferring solidity would remove the player's current support.",
+     "The 2-button bridge is stateful: after becoming a complete color-12 bridge, further clicks close it from the center. Standing at the far-right endpoint can trap the player because the last closure is refused while they remain there.",
+     "The B shelf wraps from its rightmost position back to the left; move it to x=24..29 before attempting the lower color-15 descent.",
+-    "A second env.reset() followed by the same 212 labels still reached level 4 but rendered a different initial level-5 player/8-piece arrangement, so fresh-env replay should be preferred for future verification.",
++    "The banked 212-label prefix reached level 4 in both fresh environments used this session; no new level-5 sequence was completed.",
++    "For the next attempt, finish probing the 2-button material cycle while the avatar is still on the fixed west pad before crossing the row-44 bridge; crossing at the full-open stage and then advancing the cycle creates an irreversible east-end trap.",
+     "Blocked/no-op actions still consume the game's visible tick counter and the campaign env.step budget."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+-- 
+2.55.0
+

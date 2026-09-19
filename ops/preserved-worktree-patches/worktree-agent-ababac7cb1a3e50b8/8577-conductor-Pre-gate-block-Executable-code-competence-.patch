@@ -1,0 +1,78 @@
+From 3ad1f4b31244dca2f523f20437818499cf49f40f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 00:13:53 -0400
+Subject: [PATCH 08577/11362] [conductor] Pre-gate block: Executable-code
+ competence and genuine selectable-headroom audit
+
+1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_integrity_ready_score (upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...riment_6223_livecodebench_headroom_v3.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6223_livecodebench_headroom_v3.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9dd9b563cc..10853e898c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2311437, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-09T04:11:50Z"}
+\ No newline at end of file
++{"pid": 2311437, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-09T04:13:53Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 82e5e83f76..db5b856b6c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15525,3 +15525,5 @@ Still active  |
+ | 2026-08-09 04:05 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
+ | 2026-08-09 04:07 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
+ | 2026-08-09 04:09 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
++| 2026-08-09 04:11 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
++| 2026-08-09 04:13 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 07f3d52fc4..4b4bcb4edf 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2311437, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-09T04:11:50Z"}
+\ No newline at end of file
++{"pid": 2311437, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-09T04:13:53Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6223_livecodebench_headroom_v3.json b/results/experiment_6223_livecodebench_headroom_v3.json
+new file mode 100644
+index 0000000000..78f1d35e47
+--- /dev/null
++++ b/results/experiment_6223_livecodebench_headroom_v3.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6223,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-09",
++  "started_at": "2026-08-09T04:13:53.303491+00:00",
++  "finished_at": "2026-08-09T04:13:53.303491+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Executable-code competence and genuine selectable-headroom audit",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_integrity_ready_score (upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6222-livecodebench-k8-pool-v3",
++      "artifact_field": "pool_integrity_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

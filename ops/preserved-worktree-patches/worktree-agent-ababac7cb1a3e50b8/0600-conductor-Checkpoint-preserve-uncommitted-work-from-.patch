@@ -1,0 +1,43 @@
+From d0ee931e1330dec16e0ab7c0f00c62c93d9c6ea7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 04:31:58 -0400
+Subject: [PATCH 00600/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a9190d3c2d..7a37dd60ac 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-06-05T08:29:43Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-06-05T08:31:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 425f5201d6..950114ae88 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7856,3 +7856,4 @@ ERROR: {
+ | 2026-06-05 08:23 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.57s |
+ | 2026-06-05 08:25 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.30s |
+ | 2026-06-05 08:27 UTC | GateMate A1-EVB-2M hardware continuity (terminal-s | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.90s |
++| 2026-06-05 08:29 UTC | GateMate A1-EVB-2M hardware continuity (terminal-s | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.80s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dad337f5d4..8b2e269cf2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 31, "phase": "iteration_start", "started_at": "2026-06-05T08:29:43Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 32, "phase": "iteration_start", "started_at": "2026-06-05T08:31:57Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

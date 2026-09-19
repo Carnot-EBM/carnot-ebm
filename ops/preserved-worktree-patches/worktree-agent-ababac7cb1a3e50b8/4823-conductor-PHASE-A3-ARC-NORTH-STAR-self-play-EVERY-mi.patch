@@ -1,0 +1,1424 @@
+From cbd639a8ad9e8f05816f703d217148db26abced0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 10:18:00 -0400
+Subject: [PATCH 04823/11362] [conductor] PHASE A3 (ARC NORTH STAR; self-play
+ EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+ loop on a banked game with an existing checkpoint, ROTATED OFF .457 dc22 /
+ .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449
+ re86 (pick a banked game with a models/arc_verifier_<game>.json checkpoint --
+ prefer sp80; ft09 / su15 are alternates -- DIFFERENT from A1's and A2's
+ targets): warm-started verifier-routed solve -> reproduction gate -> TRAIN +
+ CHECKPOINT the learned verifier. MAINTAIN the .456-landed substrate fix:
+ declare the HONEST inference_substrate
+ (verifier_ensemble_against_cached_candidates when the offline gate runs
+ without the LLM; live_llm_inference ONLY if the generator ran >=60s) so the
+ artifact is NOT DURATION_TOO_SHORT-flagged.
+
+Automated research step by research conductor.
+Task ID: exp4971-a3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 103 ++++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ment_4971_self_play_verifier_checkpoint.py | 280 ++++++++++++++
+ results/arc_loop_solve_ft09.json              | 149 +++++++-
+ .../q0006.json                                |   1 +
+ .../q0007.json                                |   1 +
+ .../q0008.json                                |   1 +
+ .../q0009.json                                |   1 +
+ .../q0010.json                                |   1 +
+ .../q0011.json                                |   1 +
+ .../q0012.json                                |   1 +
+ .../q0013.json                                |   1 +
+ .../q0014.json                                |   1 +
+ .../q0015.json                                |   1 +
+ .../q0016.json                                |   1 +
+ .../q0017.json                                |   1 +
+ .../q0018.json                                |   1 +
+ .../q0019.json                                |   1 +
+ .../q0020.json                                |   1 +
+ .../q0021.json                                |   1 +
+ .../q0022.json                                |   1 +
+ .../q0023.json                                |   1 +
+ .../q0024.json                                |   1 +
+ .../q0025.json                                |   1 +
+ .../q0026.json                                |   1 +
+ .../q0027.json                                |   1 +
+ .../q0028.json                                |   1 +
+ .../q0029.json                                |   1 +
+ .../q0030.json                                |   1 +
+ .../q0031.json                                |   1 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ ...nt_4971_self_play_verifier_checkpoint.json | 102 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ment_4971_self_play_verifier_checkpoint.py | 342 ++++++++++++++++++
+ 37 files changed, 1015 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/experiment_4971_self_play_verifier_checkpoint.py
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0006.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0007.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0008.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0009.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0010.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0011.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0012.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0013.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0014.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0015.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0016.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0017.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0018.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0019.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0020.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0021.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0022.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0023.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0024.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0025.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0026.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0027.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0028.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0029.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0030.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0031.json
+ create mode 100644 results/experiment_4971_self_play_verifier_checkpoint.json
+ create mode 100644 tests/python/test_experiment_4971_self_play_verifier_checkpoint.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index fb6dd5480e..b64b6bc005 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -15286,3 +15286,106 @@ fabricated checkpoint refresh.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4960 | Implemented (`python/carnot/experiment_4960_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4960_self_play_verifier_checkpoint.py`) |
++
++---
++
++## REQ-LEARN-4971: Continued Rotated ARC Self-Play Verifier Checkpoint Refresh
++
++Experiment 4971 SHALL run the standing ARC self-play loop on a rotated banked
++target with an existing learned verifier checkpoint, selecting `ft09` because
++the preferred `sp80` candidate reproduced but did not refresh a checkpoint under
++the current adapter, while `ft09` is banked, has `models/arc_verifier_ft09.json`,
++is not `.457`'s `dc22`, `.456`'s `lp85`, `.455`'s `ar25`, `.453`'s `bp35`,
++`.452`'s `vc33`, `.451`'s `sk48`, `.450`'s `ls20`, `.449`'s `re86`, or A1/A2's
++targets. The loop SHALL warm-start from `models/arc_verifier_ft09.json`,
++reproduction-gate at least one offline level, train on this run's self-play
++traces, refresh the checkpoint, and write
++`results/experiment_4971_self_play_verifier_checkpoint.json`.
++
++The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
++that `ops/arc_solve_registry.yaml` is loadable, that the selected target has a
++banked level, and that `models/arc_verifier_<game>.json` exists before the run.
++If any required resource is missing, Experiment 4971 SHALL write a terminal
++`blocked_*` artifact that records the failed precondition and SHALL NOT claim a
++refreshed checkpoint.
++
++The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
++only when the checkpoint mtime advances, `offline_reproduced=true`,
++`reproduced_levels >= 1`, and the fresh artifact is not live-rechecked as
++critical by the adversarial verifier. A failed loop, missing checkpoint, stale
++mtime, failed reproduction gate, critical live recheck, or rotation back to
++`dc22`, `lp85`, `ar25`, `bp35`, `vc33`, `sk48`, `ls20`, or `re86` SHALL write
++a terminal `complete_*` or `blocked_*` artifact with the residual instead of
++fabricating checkpoint progress.
++
++Experiment 4971 SHALL maintain the Exp 4949/4960 substrate fix. When the
++standing loop uses the offline reproduction gate and checkpoint training
++without invoking an LLM generator, the artifact SHALL declare
++`verifier_ensemble_against_cached_candidates` and SHALL record a measured
++`duration_s >= 1.0`. It SHALL declare `live_llm_inference` only for a measured
++LLM-generator run with `duration_s >= 60.0`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++- `reproduced_levels`: principle "the depth confirmed this run."
++- `target_game`: principle "the rotated self-play target (differs from .457 dc22 / .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2)."
++- `inference_substrate`: principle "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s. This MAINTAINS the .456 exp4949 substrate fix."
++- `duration_s`: principle "the measured wall-clock; must be consistent with inference_substrate (>=1s for verifier-ensemble, >=60s for live_llm_inference)."
++- `flag_resolved`: principle "true iff the fresh artifact is NOT flagged true_live_recheck=critical (the substrate declaration holds)."
++- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
++- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++
++### SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED
++
++**Given** `arc_solver_kit.offline_arcade()` is available, `ft09` is banked in
++`ops/arc_solve_registry.yaml`, and `models/arc_verifier_ft09.json` exists before
++the standing loop runs
++**When** `scripts/arc_loop_solve.py --game ft09` reports an offline-reproduced
++level and writes the learned verifier checkpoint
++**Then** Experiment 4971 records `verifier_checkpoint_refreshed=true`,
++`checkpoint_path=models/arc_verifier_ft09.json`, advanced checkpoint mtimes,
++`offline_reproduced=true`, `reproduced_levels >= 1`, `target_game=ft09`,
++`solve_provenance=live_agent_self_discovery`, `flag_resolved=true`, and
++`honest_verdict=success_self_play_checkpoint_refreshed`.
++
++### SCENARIO-LEARN-4971-SUBSTRATE-FIX
++
++**Given** the loop uses the offline reproduction gate and checkpoint training
++without an LLM generator
++**When** Experiment 4971 builds its artifact
++**Then** it declares
++`inference_substrate=verifier_ensemble_against_cached_candidates`, records
++`duration_s >= 1.0`, and does not trigger a critical `DURATION_TOO_SHORT`
++live recheck.
++
++### SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION
++
++**Given** the loop result is missing, the reproduction gate fails, the
++checkpoint path is absent, the checkpoint mtime does not advance, or the fresh
++artifact is critically flagged
++**When** Experiment 4971 builds its artifact
++**Then** it records `verifier_checkpoint_refreshed=false` or
++`flag_resolved=false` as applicable, preserves the residual cause, keeps
++`offline_reproduced` and `reproduced_levels` grounded in the loop result, and
++does not emit a success verdict.
++
++### SCENARIO-LEARN-4971-BLOCKED-PRECONDITION
++
++**Given** the offline arcade is unavailable, the registry is missing, the
++selected target is not banked, the checkpoint file is absent before the run, or
++the selection is one of the recent or conflicting targets `dc22`, `lp85`,
++`ar25`, `bp35`, `vc33`, `sk48`, `ls20`, or `re86`
++**When** Experiment 4971 checks preconditions
++**Then** it writes `results/experiment_4971_self_play_verifier_checkpoint.json`
++with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
++fabricated checkpoint refresh.
++
++## Implementation Status (Exp 4971)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4971 | Implemented (`python/carnot/experiment_4971_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4971_self_play_verifier_checkpoint.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 23956328c4..edcddd87a9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 203,
+   "code_violations": 0,
+-  "experiments_checked": 3977,
++  "experiments_checked": 3978,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4971_self_play_verifier_checkpoint.py b/python/carnot/experiment_4971_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..17a7dfacef
+--- /dev/null
++++ b/python/carnot/experiment_4971_self_play_verifier_checkpoint.py
+@@ -0,0 +1,280 @@
++"""Experiment 4971: rotated ARC self-play checkpoint refresh.
++
++Spec refs: REQ-LEARN-4971,
++SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED,
++SCENARIO-LEARN-4971-SUBSTRATE-FIX,
++SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION,
++SCENARIO-LEARN-4971-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++from contextlib import contextmanager
++from pathlib import Path
++from typing import Any, Iterator
++
++from carnot import experiment_4960_self_play_verifier_checkpoint as previous
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULTS = REPO / "results"
++REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
++ARTIFACT = RESULTS / "experiment_4971_self_play_verifier_checkpoint.json"
++
++EXPERIMENT = "experiment_4971_self_play_verifier_checkpoint"
++SCHEMA = "carnot.exp4971.self_play_verifier_checkpoint.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4971_self_play_verifier_checkpoint.json"
++RANDOM_SEED = 4971
++DEFAULT_TARGET_GAME = "ft09"
++DISALLOWED_TARGET_GAMES = (
++    "dc22",
++    "lp85",
++    "ar25",
++    "bp35",
++    "vc33",
++    "sk48",
++    "ls20",
++    "re86",
++)
++INFERENCE_SUBSTRATE = previous.INFERENCE_SUBSTRATE
++LIVE_LLM_SUBSTRATE = previous.LIVE_LLM_SUBSTRATE
++SOLVE_PROVENANCE = previous.SOLVE_PROVENANCE
++SUCCESS_VERDICT = previous.SUCCESS_VERDICT
++VERIFIER_MIN_DURATION_S = previous.VERIFIER_MIN_DURATION_S
++LIVE_LLM_MIN_DURATION_S = previous.LIVE_LLM_MIN_DURATION_S
++
++SPEC_REFS = [
++    "REQ-LEARN-4971",
++    "SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED",
++    "SCENARIO-LEARN-4971-SUBSTRATE-FIX",
++    "SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-LEARN-4971-BLOCKED-PRECONDITION",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++    ),
++    "verifier_checkpoint_refreshed": (
++        "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++    ),
++    "checkpoint_path": (
++        "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++    ),
++    "offline_reproduced": (
++        "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++    ),
++    "reproduced_levels": "the depth confirmed this run.",
++    "target_game": (
++        "the rotated self-play target (differs from .457 dc22 / .456 lp85 / "
++        ".455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / "
++        ".449 re86 AND from A1/A2)."
++    ),
++    "inference_substrate": (
++        "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) "
++        "for an offline gate run; live_llm_inference (60s floor) ONLY if the generator "
++        "ran >=60s. This MAINTAINS the .456 exp4949 substrate fix."
++    ),
++    "duration_s": (
++        "the measured wall-clock; must be consistent with inference_substrate "
++        "(>=1s for verifier-ensemble, >=60s for live_llm_inference)."
++    ),
++    "flag_resolved": (
++        "true iff the fresh artifact is NOT flagged true_live_recheck=critical "
++        "(the substrate declaration holds)."
++    ),
++    "solve_provenance": (
++        "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
++    ),
++    "preconditions_checked": (
++        "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++    ),
++}
++
++REQUIRED_FIELDS = previous.REQUIRED_FIELDS
++_PATCHED_PREVIOUS_GLOBALS = (
++    "REPO",
++    "RESULTS",
++    "REGISTRY",
++    "ARTIFACT",
++    "EXPERIMENT",
++    "SCHEMA",
++    "RESULT_RELATIVE_PATH",
++    "RANDOM_SEED",
++    "DEFAULT_TARGET_GAME",
++    "DISALLOWED_TARGET_GAMES",
++    "INFERENCE_SUBSTRATE",
++    "LIVE_LLM_SUBSTRATE",
++    "SOLVE_PROVENANCE",
++    "SUCCESS_VERDICT",
++    "VERIFIER_MIN_DURATION_S",
++    "LIVE_LLM_MIN_DURATION_S",
++    "SPEC_REFS",
++    "FIELD_PRINCIPLES",
++)
++
++
++@contextmanager
++def _previous_scope() -> Iterator[None]:
++    saved = {name: getattr(previous, name) for name in _PATCHED_PREVIOUS_GLOBALS}
++    for name in _PATCHED_PREVIOUS_GLOBALS:
++        setattr(previous, name, globals()[name])
++    try:
++        yield
++    finally:
++        for name, value in saved.items():
++            setattr(previous, name, value)
++
++
++def _target_game(game: str | None) -> str:
++    return game or DEFAULT_TARGET_GAME
++
++
++def _rotation_ok(game: str | None) -> bool:
++    return game not in DISALLOWED_TARGET_GAMES
++
++
++def stable_checksum(payload: dict[str, Any]) -> str:
++    return previous.stable_checksum(payload)
++
++
++def summarize_loop_result(
++    *,
++    game: str,
++    loop_result: dict[str, Any] | None,
++    loop_result_path: str,
++    checkpoint_mtime_before_ns: int | None,
++) -> dict[str, Any]:
++    with _previous_scope():
++        return previous.summarize_loop_result(
++            game=game,
++            loop_result=loop_result,
++            loop_result_path=loop_result_path,
++            checkpoint_mtime_before_ns=checkpoint_mtime_before_ns,
++        )
++
++
++def build_artifact(
++    *,
++    target_selection: dict[str, Any],
++    loop_summary: dict[str, Any],
++    preconditions_checked: dict[str, Any],
++    duration_s: float | None = None,
++    flag_resolved: bool = True,
++) -> dict[str, Any]:
++    with _previous_scope():
++        return previous.build_artifact(
++            target_selection=target_selection,
++            loop_summary=loop_summary,
++            preconditions_checked=preconditions_checked,
++            duration_s=duration_s,
++            flag_resolved=flag_resolved,
++        )
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: dict[str, Any],
++    target_game: str | None = None,
++    duration_s: float | None = None,
++    flag_resolved: bool = True,
++) -> dict[str, Any]:
++    with _previous_scope():
++        return previous.build_blocked_artifact(
++            reason=reason,
++            preconditions_checked=preconditions_checked,
++            target_game=target_game,
++            duration_s=duration_s,
++            flag_resolved=flag_resolved,
++        )
++
++
++def artifact_schema_errors(payload: dict[str, Any]) -> list[str]:
++    with _previous_scope():
++        return previous.artifact_schema_errors(payload)
++
++
++def write_artifact(payload: dict[str, Any], path: Path | None = None) -> Path:
++    output = ARTIFACT if path is None else Path(path)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def check_preconditions(game: str | None = None) -> dict[str, Any]:  # pragma: no cover - live boundary.
++    with _previous_scope():
++        return previous.check_preconditions(_target_game(game))
++
++
++def _precondition_failure(preconditions: dict[str, Any]) -> str | None:
++    with _previous_scope():
++        return previous._precondition_failure(preconditions)
++
++
++def _relative_path(path: Path) -> str:
++    with _previous_scope():
++        return previous._relative_path(path)
++
++
++def _read_loop_result(path: Path) -> dict[str, Any] | None:
++    with _previous_scope():
++        return previous._read_loop_result(path)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--game")
++    parser.add_argument("--loop-result")
++    parser.add_argument("--checkpoint-mtime-before-ns", type=int)
++    parser.add_argument("--duration-s", type=float, default=VERIFIER_MIN_DURATION_S)
++    parser.add_argument("--flag-unresolved", action="store_true")
++    args = parser.parse_args(argv)
++
++    preconditions = check_preconditions(args.game)
++    selection = dict(preconditions.get("target_selection") or {})
++    flag_resolved = not args.flag_unresolved
++    failure = _precondition_failure(preconditions)
++    if failure is not None:
++        artifact = build_blocked_artifact(
++            reason=failure,
++            preconditions_checked=preconditions,
++            target_game=args.game or selection.get("game") or DEFAULT_TARGET_GAME,
++            duration_s=args.duration_s,
++            flag_resolved=flag_resolved,
++        )
++    else:
++        game = str(selection["game"])
++        loop_path = (
++            Path(args.loop_result) if args.loop_result else RESULTS / f"arc_loop_solve_{game}.json"
++        )
++        loop_summary = summarize_loop_result(
++            game=game,
++            loop_result=_read_loop_result(loop_path),
++            loop_result_path=_relative_path(loop_path),
++            checkpoint_mtime_before_ns=args.checkpoint_mtime_before_ns,
++        )
++        artifact = build_artifact(
++            target_selection=selection,
++            loop_summary=loop_summary,
++            preconditions_checked=preconditions,
++            duration_s=args.duration_s,
++            flag_resolved=flag_resolved,
++        )
++
++    write_artifact(artifact, ARTIFACT)
++    print(f"honest_verdict={artifact['honest_verdict']}")
++    print(f"verifier_checkpoint_refreshed={artifact['verifier_checkpoint_refreshed']}")
++    print(f"checkpoint_path={artifact['checkpoint_path']}")
++    print(f"target_game={artifact['target_game']}")
++    print(f"inference_substrate={artifact['inference_substrate']}")
++    print(f"duration_s={artifact['duration_s']}")
++    print(f"flag_resolved={artifact['flag_resolved']}")
++    print(f"schema_errors={artifact['schema_errors']}")
++    return 0 if not artifact["schema_errors"] else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_ft09.json b/results/arc_loop_solve_ft09.json
+index 11dd4eeb8a..95b60a0668 100644
+--- a/results/arc_loop_solve_ft09.json
++++ b/results/arc_loop_solve_ft09.json
+@@ -3,9 +3,17 @@
+   "reached_level": 3,
+   "moves": 25,
+   "states_expanded": 39,
+-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
+-  "hazard_prune": false,
+-  "hazard_pruner_stats": null,
++  "verifier_src": "learned_verifier_live_checkpoint",
++  "hazard_prune": true,
++  "hazard_pruner_stats": {
++    "observed": 25,
++    "pruned": 0,
++    "n_deaths": 0,
++    "lethal_mode": null,
++    "trust": 0.0,
++    "specificity": 0.0,
++    "model_fitted": false
++  },
+   "offline_reproduced": true,
+   "reproduced_levels": 3,
+   "learned_verifier_checkpoint": "models/arc_verifier_ft09.json",
+@@ -28,7 +36,8 @@
+     {
+       "operator": "value_head_bridge_fix_operator",
+       "derived_from_games": [
+-        "exp4616_offline_live_bridge_disambiguation"
++        "exp4616_offline_live_bridge_disambiguation",
++        "exp4652_value_routing_cost_fix_live"
+       ],
+       "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+       "selector_tags": [
+@@ -41,6 +50,71 @@
+         "transfer"
+       ]
+     },
++    {
++      "operator": "cheap_value_routing_cost_fix_operator",
++      "derived_from_games": [
++        "exp4652_value_routing_cost_fix_live"
++      ],
++      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
++      "selector_tags": [
++        "value_head",
++        "cheap_feature",
++        "value_routing",
++        "cost_fix",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "dagger_off_path_data_collection_operator",
++      "derived_from_games": [
++        "exp4665_dagger_distribution_shift_value_routing"
++      ],
++      "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
++      "selector_tags": [
++        "dagger",
++        "off_path",
++        "search_distribution",
++        "value_head",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "programmatic_expert_trust_weighting_operator",
++      "derived_from_games": [
++        "exp4677_poe_world_factored_subgoal_planner"
++      ],
++      "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
++      "selector_tags": [
++        "programmatic_expert",
++        "trust_weighting",
++        "factored_planner",
++        "candidate_generation",
++        "world_model",
++        "graph_explore",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "controllable_novelty_embedding_operator",
++      "derived_from_games": [
++        "exp4688_controllable_novelty_proposal_policy_live"
++      ],
++      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
++      "selector_tags": [
++        "controllable_novelty",
++        "directed_exploration",
++        "intrinsic_proposal",
++        "candidate_generation",
++        "action_effect",
++        "graph_explore",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "per_level_reinduction_operator",
+       "derived_from_games": [
+@@ -143,6 +217,73 @@
+         "transfer"
+       ]
+     },
++    {
++      "operator": "online_warm_action_effect_controller_operator",
++      "derived_from_games": [
++        "exp4726_online_action_learning_driver_valid_test",
++        "exp4727_active_probe_disambiguation"
++      ],
++      "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
++      "selector_tags": [
++        "online_action_learning",
++        "online_warm",
++        "action_effect",
++        "frame_change",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
++      "selector_tags": [
++        "goal_energy",
++        "graded_goal_satisfaction",
++        "search_heuristic",
++        "graph_explore",
++        "candidate_ranking",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "energy_fitness_qd_generator_operator",
++      "derived_from_games": [
++        "exp4738_energy_fitness_qd_generation_valid_test"
++      ],
++      "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
++      "selector_tags": [
++        "energy_qd",
++        "map_elites",
++        "candidate_generation",
++        "energy_fitness",
++        "graph_explore",
++        "click",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "object_centric_representation_builder_operator",
++      "derived_from_games": [
++        "exp4700_object_centric_perception_proposal_live",
++        "exp4701_amortized_exploration_prior_go_explore_live"
++      ],
++      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
++      "selector_tags": [
++        "object_centric",
++        "perception",
++        "representation_builder",
++        "candidate_generation",
++        "graph_explore",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "object_centric_digest",
+       "derived_from_games": [
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0006.json b/results/distributional_energy_verifier_musr_checkpoints/q0006.json
+new file mode 100644
+index 0000000000..032afecaec
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0006.json
+@@ -0,0 +1 @@
++{"q": 6, "gold": "Terrance", "n_choices": 2, "sc_answer": "Nelson", "energy_answer": "Nelson", "energy_pure_answer": "Nelson", "judge_answer": "Nelson", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Nelson", "Nelson", "Nelson", "Nelson", "Nelson", "Nelson", "Nelson", "Nelson"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0007.json b/results/distributional_energy_verifier_musr_checkpoints/q0007.json
+new file mode 100644
+index 0000000000..0607d9161e
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0007.json
+@@ -0,0 +1 @@
++{"q": 7, "gold": "Nelson", "n_choices": 2, "sc_answer": "Nelson", "energy_answer": "Nelson", "energy_pure_answer": "Nelson", "judge_answer": "Nelson", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 6, "answers": [null, "Nelson", "Nelson", "Nelson", "Nelson", "Terrance", null, "Nelson"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0008.json b/results/distributional_energy_verifier_musr_checkpoints/q0008.json
+new file mode 100644
+index 0000000000..d63637b745
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0008.json
+@@ -0,0 +1 @@
++{"q": 8, "gold": "Ronald", "n_choices": 2, "sc_answer": "Julia", "energy_answer": "Julia", "energy_pure_answer": "Julia", "judge_answer": "Julia", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Julia", "Julia", "Julia", "Ronald", "Julia", "Julia", "Julia", "Julia"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0009.json b/results/distributional_energy_verifier_musr_checkpoints/q0009.json
+new file mode 100644
+index 0000000000..81a926adca
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0009.json
+@@ -0,0 +1 @@
++{"q": 9, "gold": "Julia", "n_choices": 2, "sc_answer": "Julia", "energy_answer": "Julia", "energy_pure_answer": "Julia", "judge_answer": "Julia", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Julia", "Julia", "Julia", "Julia", "Ronald", "Julia", "Julia", "Ronald"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0010.json b/results/distributional_energy_verifier_musr_checkpoints/q0010.json
+new file mode 100644
+index 0000000000..153b449bee
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0010.json
+@@ -0,0 +1 @@
++{"q": 10, "gold": "Unity", "n_choices": 2, "sc_answer": "Unity", "energy_answer": "Unity", "energy_pure_answer": "Unity", "judge_answer": "Unity", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 7, "answers": ["Vivian", "Unity", "Unity", "Unity", null, "Vivian", "Unity", "Vivian"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0011.json b/results/distributional_energy_verifier_musr_checkpoints/q0011.json
+new file mode 100644
+index 0000000000..d30f39664c
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0011.json
+@@ -0,0 +1 @@
++{"q": 11, "gold": "Vivian", "n_choices": 2, "sc_answer": "Vivian", "energy_answer": "Vivian", "energy_pure_answer": "Vivian", "judge_answer": "Vivian", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Unity", "Vivian", "Vivian", "Vivian", "Vivian", "Vivian", "Vivian", "Vivian"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0012.json b/results/distributional_energy_verifier_musr_checkpoints/q0012.json
+new file mode 100644
+index 0000000000..aec9465193
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0012.json
+@@ -0,0 +1 @@
++{"q": 12, "gold": "Milton", "n_choices": 2, "sc_answer": "Emma", "energy_answer": "Emma", "energy_pure_answer": "Emma", "judge_answer": "Emma", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Emma", "Emma", "Milton", "Emma", "Emma", "Emma", "Milton", "Emma"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0013.json b/results/distributional_energy_verifier_musr_checkpoints/q0013.json
+new file mode 100644
+index 0000000000..884b9edd54
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0013.json
+@@ -0,0 +1 @@
++{"q": 13, "gold": "Emma", "n_choices": 2, "sc_answer": "Emma", "energy_answer": "Emma", "energy_pure_answer": "Emma", "judge_answer": "Emma", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Emma", "Emma", "Emma", "Emma", "Emma", "Milton", "Emma", "Emma"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0014.json b/results/distributional_energy_verifier_musr_checkpoints/q0014.json
+new file mode 100644
+index 0000000000..6c81c8b1fc
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0014.json
+@@ -0,0 +1 @@
++{"q": 14, "gold": "Lance", "n_choices": 2, "sc_answer": "Lance", "energy_answer": "Harper", "energy_pure_answer": "Harper", "judge_answer": "Lance", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Lance", "Lance", "Lance", "Harper", "Harper", "Harper", "Harper", "Lance"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0015.json b/results/distributional_energy_verifier_musr_checkpoints/q0015.json
+new file mode 100644
+index 0000000000..f49c8a215b
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0015.json
+@@ -0,0 +1 @@
++{"q": 15, "gold": "Harper", "n_choices": 2, "sc_answer": "Harper", "energy_answer": "Harper", "energy_pure_answer": "Harper", "judge_answer": "Harper", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Harper", "Harper", "Harper", "Harper", "Lance", "Harper", "Harper", "Harper"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0016.json b/results/distributional_energy_verifier_musr_checkpoints/q0016.json
+new file mode 100644
+index 0000000000..72e1145090
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0016.json
+@@ -0,0 +1 @@
++{"q": 16, "gold": "Ruby", "n_choices": 2, "sc_answer": "Roscoe", "energy_answer": "Roscoe", "energy_pure_answer": "Roscoe", "judge_answer": "Roscoe", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0017.json b/results/distributional_energy_verifier_musr_checkpoints/q0017.json
+new file mode 100644
+index 0000000000..fe71ec44ea
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0017.json
+@@ -0,0 +1 @@
++{"q": 17, "gold": "Roscoe", "n_choices": 2, "sc_answer": "Roscoe", "energy_answer": "Roscoe", "energy_pure_answer": "Roscoe", "judge_answer": "Roscoe", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Roscoe", "Ruby"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0018.json b/results/distributional_energy_verifier_musr_checkpoints/q0018.json
+new file mode 100644
+index 0000000000..e72247b0e7
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0018.json
+@@ -0,0 +1 @@
++{"q": 18, "gold": "Angela", "n_choices": 2, "sc_answer": "Roy", "energy_answer": "Angela", "energy_pure_answer": "Angela", "judge_answer": "Angela", "sc_correct": 0, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Angela", "Roy", "Angela", "Angela", "Roy", "Roy", "Roy", "Roy"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0019.json b/results/distributional_energy_verifier_musr_checkpoints/q0019.json
+new file mode 100644
+index 0000000000..4bc1706612
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0019.json
+@@ -0,0 +1 @@
++{"q": 19, "gold": "Roy", "n_choices": 2, "sc_answer": "Roy", "energy_answer": "Roy", "energy_pure_answer": "Roy", "judge_answer": "Roy", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Roy", "Roy", "Roy", "Roy", "Roy", "Roy", "Roy", "Roy"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0020.json b/results/distributional_energy_verifier_musr_checkpoints/q0020.json
+new file mode 100644
+index 0000000000..03793f188f
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0020.json
+@@ -0,0 +1 @@
++{"q": 20, "gold": "Ervin", "n_choices": 2, "sc_answer": "Ervin", "energy_answer": "Ervin", "energy_pure_answer": "Andrew", "judge_answer": "Andrew", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Ervin", "Andrew", "Ervin", "Ervin", "Ervin", "Andrew", "Andrew", "Andrew"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0021.json b/results/distributional_energy_verifier_musr_checkpoints/q0021.json
+new file mode 100644
+index 0000000000..d319d13caf
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0021.json
+@@ -0,0 +1 @@
++{"q": 21, "gold": "Andrew", "n_choices": 2, "sc_answer": "Andrew", "energy_answer": "Andrew", "energy_pure_answer": "Andrew", "judge_answer": "Andrew", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 7, "answers": [null, "Andrew", "Andrew", "Andrew", "Andrew", "Andrew", "Andrew", "Andrew"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0022.json b/results/distributional_energy_verifier_musr_checkpoints/q0022.json
+new file mode 100644
+index 0000000000..62a9930f9c
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0022.json
+@@ -0,0 +1 @@
++{"q": 22, "gold": "Oscar", "n_choices": 2, "sc_answer": "Brianna", "energy_answer": "Brianna", "energy_pure_answer": "Brianna", "judge_answer": "Brianna", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Brianna", "Brianna", "Brianna", "Brianna", "Brianna", "Brianna", "Brianna", "Brianna"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0023.json b/results/distributional_energy_verifier_musr_checkpoints/q0023.json
+new file mode 100644
+index 0000000000..488fe932e1
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0023.json
+@@ -0,0 +1 @@
++{"q": 23, "gold": "Brianna", "n_choices": 2, "sc_answer": "Oscar", "energy_answer": "Oscar", "energy_pure_answer": "Oscar", "judge_answer": "Oscar", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Oscar", "Oscar", "Oscar", "Brianna", "Brianna", "Oscar", "Brianna", "Oscar"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0024.json b/results/distributional_energy_verifier_musr_checkpoints/q0024.json
+new file mode 100644
+index 0000000000..b0a90c3a72
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0024.json
+@@ -0,0 +1 @@
++{"q": 24, "gold": "Jay", "n_choices": 2, "sc_answer": "Jay", "energy_answer": "Jay", "energy_pure_answer": "Jay", "judge_answer": "Jay", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Jay", "Jay", "Autumn", "Jay", "Autumn", "Autumn", "Autumn", "Jay"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0025.json b/results/distributional_energy_verifier_musr_checkpoints/q0025.json
+new file mode 100644
+index 0000000000..a98e75a681
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0025.json
+@@ -0,0 +1 @@
++{"q": 25, "gold": "Autumn", "n_choices": 2, "sc_answer": "Autumn", "energy_answer": "Autumn", "energy_pure_answer": "Autumn", "judge_answer": "Autumn", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 7, "answers": ["Jay", "Jay", "Autumn", null, "Autumn", "Autumn", "Jay", "Autumn"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0026.json b/results/distributional_energy_verifier_musr_checkpoints/q0026.json
+new file mode 100644
+index 0000000000..d61ce151dc
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0026.json
+@@ -0,0 +1 @@
++{"q": 26, "gold": "Anthony", "n_choices": 2, "sc_answer": "Max", "energy_answer": "Max", "energy_pure_answer": "Max", "judge_answer": "Max", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Anthony", "Max", "Max", "Max", "Anthony", "Max", "Max", "Max"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0027.json b/results/distributional_energy_verifier_musr_checkpoints/q0027.json
+new file mode 100644
+index 0000000000..ef351bc372
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0027.json
+@@ -0,0 +1 @@
++{"q": 27, "gold": "Max", "n_choices": 2, "sc_answer": "Max", "energy_answer": "Max", "energy_pure_answer": "Max", "judge_answer": "Anthony", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 0, "n_valid_candidates": 6, "answers": ["Max", "Anthony", null, "Max", "Anthony", "Anthony", "Max", null], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0028.json b/results/distributional_energy_verifier_musr_checkpoints/q0028.json
+new file mode 100644
+index 0000000000..407f3cb041
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0028.json
+@@ -0,0 +1 @@
++{"q": 28, "gold": "Xochitl", "n_choices": 2, "sc_answer": "Martin", "energy_answer": "Martin", "energy_pure_answer": "Martin", "judge_answer": "Martin", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 7, "answers": ["Martin", null, "Martin", "Martin", "Martin", "Martin", "Martin", "Xochitl"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0029.json b/results/distributional_energy_verifier_musr_checkpoints/q0029.json
+new file mode 100644
+index 0000000000..715ab4fd15
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0029.json
+@@ -0,0 +1 @@
++{"q": 29, "gold": "Martin", "n_choices": 2, "sc_answer": "Martin", "energy_answer": "Martin", "energy_pure_answer": "Martin", "judge_answer": "Martin", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 6, "answers": ["Martin", "Martin", "Martin", "Martin", null, null, "Martin", "Martin"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0030.json b/results/distributional_energy_verifier_musr_checkpoints/q0030.json
+new file mode 100644
+index 0000000000..cd3e7e5a86
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0030.json
+@@ -0,0 +1 @@
++{"q": 30, "gold": "Willard", "n_choices": 2, "sc_answer": "Miles", "energy_answer": "Miles", "energy_pure_answer": "Miles", "judge_answer": "Willard", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Willard", "Miles", "Miles", "Miles", "Miles", "Miles", "Miles", "Miles"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0031.json b/results/distributional_energy_verifier_musr_checkpoints/q0031.json
+new file mode 100644
+index 0000000000..2fc34650f2
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0031.json
+@@ -0,0 +1 @@
++{"q": 31, "gold": "Miles", "n_choices": 2, "sc_answer": "Miles", "energy_answer": "Miles", "energy_pure_answer": "Miles", "judge_answer": "Miles", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 7, "answers": ["Miles", "Miles", null, "Miles", "Miles", "Miles", "Miles", "Willard"], "energy_abstained": false}
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 39fee28196..c4f82d5d25 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-29T13:38:06.976697Z",
+-  "duration_s": 0.07356929779052734,
++  "run_date": "2026-06-29T14:17:39.349084Z",
++  "duration_s": 0.08788752555847168,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "e4dc6de277c2096a1cbef74c400f3f3b047525e2b871e1c32db7cf3b3d5a208a",
++  "reproducibility_checksum": "e18a814b078bd6aa35a7d70c57c093ad7ca62b87bb9f097f715a4d7ecf7e2782",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d23afc94c99e23281dac040ffb8e108467e5983a"
++    "adversarial_verify_version": "2ca49689f4de16e055e5244e0a3a1b8633c27db8"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 2e223b3ced..a502392725 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-29T13:38:07.092687Z",
+-  "duration_s": 0.1053009033203125,
++  "run_date": "2026-06-29T14:17:39.471294Z",
++  "duration_s": 0.11011481285095215,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "162dc23cdcd11b58383c7a70f8fded66027a9edd5c7882e21a435ecee34d6d39",
++  "reproducibility_checksum": "675937d2be466fa8a5560d267e4c03a4c1d939c1b30bb5546602375d9f24c3db",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d23afc94c99e23281dac040ffb8e108467e5983a"
++    "adversarial_verify_version": "2ca49689f4de16e055e5244e0a3a1b8633c27db8"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_4971_self_play_verifier_checkpoint.json b/results/experiment_4971_self_play_verifier_checkpoint.json
+new file mode 100644
+index 0000000000..de98a61db9
+--- /dev/null
++++ b/results/experiment_4971_self_play_verifier_checkpoint.json
+@@ -0,0 +1,102 @@
++{
++  "checkpoint_mtime_after_ns": "1782742521008685505",
++  "checkpoint_mtime_before_ns": "1782248474032877602",
++  "checkpoint_mtime_delta_ns": 494046975807903,
++  "checkpoint_path": "models/arc_verifier_ft09.json",
++  "duration_s": 5.132647,
++  "experiment": "experiment_4971_self_play_verifier_checkpoint",
++  "field_principles": {
++    "checkpoint_path": "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3).",
++    "duration_s": "the measured wall-clock; must be consistent with inference_substrate (>=1s for verifier-ensemble, >=60s for live_llm_inference).",
++    "flag_resolved": "true iff the fresh artifact is NOT flagged true_live_recheck=critical (the substrate declaration holds).",
++    "honest_verdict": "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed.",
++    "inference_substrate": "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s. This MAINTAINS the .456 exp4949 substrate fix.",
++    "offline_reproduced": "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact.",
++    "preconditions_checked": "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint.",
++    "reproduced_levels": "the depth confirmed this run.",
++    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts.",
++    "target_game": "the rotated self-play target (differs from .457 dc22 / .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2).",
++    "verifier_checkpoint_refreshed": "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++  },
++  "flag_resolved": true,
++  "honest_verdict": "success_self_play_checkpoint_refreshed",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "loop_result_path": "results/arc_loop_solve_ft09.json",
++  "loop_solve_provenance": "development_proxy",
++  "model_specs": {
++    "checkpoint_template": "models/arc_verifier_<game>.json",
++    "standing_loop": "scripts/arc_loop_solve.py"
++  },
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "checkpoint_existing": {
++      "game": "ft09",
++      "ok": true,
++      "path": "models/arc_verifier_ft09.json"
++    },
++    "offline_arcade": {
++      "check": "arc_solver_kit.offline_arcade()",
++      "ok": true
++    },
++    "ok": true,
++    "registry_loadable": {
++      "ok": true,
++      "path": "ops/arc_solve_registry.yaml"
++    },
++    "target_banked": {
++      "game": "ft09",
++      "ok": true,
++      "prior_level": 3,
++      "reason": "preferred_banked_target"
++    },
++    "target_rotation": {
++      "game": "ft09",
++      "ok": true,
++      "rotated_off": [
++        "dc22",
++        "lp85",
++        "ar25",
++        "bp35",
++        "vc33",
++        "sk48",
++        "ls20",
++        "re86"
++      ]
++    },
++    "target_selection": {
++      "banked": true,
++      "game": "ft09",
++      "prior_level": 3,
++      "reason": "preferred_banked_target"
++    }
++  },
++  "random_seed": 4971,
++  "reproduced_levels": 3,
++  "reproducibility_checksum": "a3e4d7190cf0892eeca3e3e29ae05dd2e20460db3bc6b414aed9b67113115930",
++  "reproduction_gate": {
++    "claimed_level": 3,
++    "game": "ft09",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 3,
++    "reproduced": true
++  },
++  "result_path": "results/experiment_4971_self_play_verifier_checkpoint.json",
++  "schema": "carnot.exp4971.self_play_verifier_checkpoint.v1",
++  "schema_errors": [],
++  "self_play_residual": "checkpoint_refreshed_gate_passed",
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-LEARN-4971",
++    "SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED",
++    "SCENARIO-LEARN-4971-SUBSTRATE-FIX",
++    "SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-LEARN-4971-BLOCKED-PRECONDITION"
++  ],
++  "states_expanded": 39,
++  "target_game": "ft09",
++  "target_registry_prior_level": 3,
++  "target_selection_reason": "preferred_banked_target",
++  "verifier_checkpoint_refreshed": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c7d041a420..3972f47661 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T13:37:50Z",
+-  "finished_at": "2026-06-29T13:37:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-29T14:17:15Z",
++  "finished_at": "2026-06-29T14:17:15Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 49c017e645..725612d0ef 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T13:37:50Z",
+-  "finished_at": "2026-06-29T13:37:50Z",
++  "started_at": "2026-06-29T14:17:15Z",
++  "finished_at": "2026-06-29T14:17:15Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 4a1f39d77b..b07288b9c5 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T13:37:50Z",
+-  "finished_at": "2026-06-29T13:37:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-29T14:17:15Z",
++  "finished_at": "2026-06-29T14:17:15Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4971_self_play_verifier_checkpoint.py b/tests/python/test_experiment_4971_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..e67d3032b5
+--- /dev/null
++++ b/tests/python/test_experiment_4971_self_play_verifier_checkpoint.py
+@@ -0,0 +1,342 @@
++"""Tests for Exp 4971 ARC self-play verifier checkpoint refresh.
++
++Spec refs: REQ-LEARN-4971,
++SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED,
++SCENARIO-LEARN-4971-SUBSTRATE-FIX,
++SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION,
++SCENARIO-LEARN-4971-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import scripts.adversarial_verify as av
++from carnot import experiment_4960_self_play_verifier_checkpoint as exp4960
++from carnot import experiment_4971_self_play_verifier_checkpoint as exp4971
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _loop_result(game: str, reached_level: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": game,
++        "reached_level": reached_level,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached_level if reproduced else 0,
++        "states_expanded": 91,
++        "learned_verifier_checkpoint": f"models/arc_verifier_{game}.json",
++        "solve_provenance": "live_agent_self_discovery",
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": reached_level,
++            "reached_level": reached_level,
++            "reproduced": reproduced,
++            "mode": "offline_reproduction_gate_no_quota",
++        },
++    }
++
++
++def _preconditions(game: str = "ft09", *, ok: bool = True) -> dict[str, object]:
++    return {
++        "ok": ok,
++        "offline_arcade": {"ok": True},
++        "registry_loadable": {"ok": True, "path": "ops/arc_solve_registry.yaml"},
++        "target_banked": {"ok": True, "game": game, "prior_level": 2},
++        "checkpoint_existing": {"ok": True, "path": f"models/arc_verifier_{game}.json"},
++        "target_rotation": {
++            "ok": True,
++            "game": game,
++            "rotated_off": list(exp4971.DISALLOWED_TARGET_GAMES),
++        },
++        "target_selection": {
++            "game": game,
++            "prior_level": 2,
++            "banked": True,
++            "reason": f"rotated_banked_target_warm_start_{game}",
++        },
++    }
++
++
++def _success_artifact(tmp_path: Path, monkeypatch) -> dict[str, object]:
++    ckpt = tmp_path / "models" / "arc_verifier_ft09.json"
++    ckpt.parent.mkdir()
++    ckpt.write_text('{"ok": true}\n', encoding="utf-8")
++    before_ns = ckpt.stat().st_mtime_ns - 1
++    monkeypatch.setattr(exp4971, "REPO", tmp_path)
++
++    summary = exp4971.summarize_loop_result(
++        game="ft09",
++        loop_result=_loop_result("ft09"),
++        loop_result_path="results/arc_loop_solve_ft09.json",
++        checkpoint_mtime_before_ns=before_ns,
++    )
++    return exp4971.build_artifact(
++        target_selection={
++            "game": "ft09",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "rotated_banked_target_warm_start_ft09",
++        },
++        loop_summary=summary,
++        preconditions_checked=_preconditions("ft09"),
++        duration_s=2.75,
++        flag_resolved=True,
++    )
++
++
++def test_req_learn_4971_spec_declares_required_contract() -> None:
++    """REQ-LEARN-4971: OpenSpec anchors the rotated ft09 checkpoint contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert exp4971._target_game(None) == "ft09"
++    assert exp4971._target_game("su15") == "su15"
++    assert exp4971._rotation_ok("ft09") is True
++    assert exp4971._rotation_ok("dc22") is False
++    for ref in exp4971.SPEC_REFS:
++        assert ref in spec
++    assert exp4971.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4971.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_learn_4971_checkpoint_refreshed_success(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-4971-CHECKPOINT-REFRESHED: ft09 checkpoint refresh succeeds."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    assert artifact["experiment"] == exp4971.EXPERIMENT
++    assert artifact["schema"] == exp4971.SCHEMA
++    assert artifact["spec_refs"] == exp4971.SPEC_REFS
++    assert artifact["random_seed"] == exp4971.RANDOM_SEED
++    assert artifact["field_principles"] == exp4971.FIELD_PRINCIPLES
++    assert artifact["honest_verdict"] == exp4971.SUCCESS_VERDICT
++    assert artifact["verifier_checkpoint_refreshed"] is True
++    assert artifact["checkpoint_path"] == "models/arc_verifier_ft09.json"
++    assert artifact["target_game"] == "ft09"
++    assert artifact["inference_substrate"] == exp4971.INFERENCE_SUBSTRATE
++    assert artifact["duration_s"] == 2.75
++    assert artifact["flag_resolved"] is True
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 2
++    assert artifact["states_expanded"] == 91
++    assert "search_state_count" not in artifact
++    assert artifact["self_play_residual"] == "checkpoint_refreshed_gate_passed"
++    assert int(artifact["checkpoint_mtime_after_ns"]) > int(artifact["checkpoint_mtime_before_ns"])
++    assert artifact["checkpoint_mtime_delta_ns"] > 0
++    assert artifact["schema_errors"] == []
++    assert exp4971.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4971_substrate_fix_avoids_duration_too_short(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-4971-SUBSTRATE-FIX: offline gate uses verifier substrate."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    floor = av.duration_floor_for_artifact(artifact)
++    flags: list[object] = []
++    av.check_duration_vs_claim(artifact, flags)
++
++    assert floor == {
++        "substrate": exp4971.INFERENCE_SUBSTRATE,
++        "min_duration_s": 1.0,
++        "reason": "verifier_scoring",
++    }
++    assert [getattr(flag, "kind", None) for flag in flags] == []
++
++    out = tmp_path / "artifact.json"
++    exp4971.write_artifact(artifact, out)
++    report = av.verify_artifact(out)
++    critical = [flag for flag in report["flags"] if flag.get("severity") == "critical"]
++    assert [flag["kind"] for flag in critical] == []
++
++
++def test_scenario_learn_4971_residual_and_blocked_paths(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-4971-RESIDUAL-NO-FABRICATION: failures stay residuals."""
++
++    monkeypatch.setattr(exp4971, "REPO", tmp_path)
++    failed = _loop_result("ft09", reached_level=0, reproduced=False)
++    failed["learned_verifier_checkpoint"] = None
++
++    summary = exp4971.summarize_loop_result(
++        game="ft09",
++        loop_result=failed,
++        loop_result_path="results/arc_loop_solve_ft09.json",
++        checkpoint_mtime_before_ns=123,
++    )
++    residual = exp4971.build_artifact(
++        target_selection={
++            "game": "ft09",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "rotated_banked_target_warm_start_ft09",
++        },
++        loop_summary=summary,
++        preconditions_checked={**_preconditions("ft09"), "checkpoint_existing": {"ok": False}},
++        duration_s=1.1,
++        flag_resolved=True,
++    )
++    unresolved = exp4971.build_artifact(
++        target_selection={
++            "game": "ft09",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "rotated_banked_target_warm_start_ft09",
++        },
++        loop_summary={
++            **summary,
++            "offline_reproduced": True,
++            "reproduced_levels": 2,
++            "learned_verifier_checkpoint": "models/arc_verifier_ft09.json",
++            "checkpoint_mtime_before_ns": "1",
++            "checkpoint_mtime_after_ns": "2",
++            "checkpoint_mtime_delta_ns": 1,
++            "self_play_residual": "checkpoint_refreshed_gate_passed",
++        },
++        preconditions_checked=_preconditions("ft09"),
++        duration_s=1.1,
++        flag_resolved=False,
++    )
++    blocked = exp4971.build_blocked_artifact(
++        reason="checkpoint_missing",
++        preconditions_checked={
++            **_preconditions("ft09", ok=False),
++            "checkpoint_existing": {"ok": False, "path": "models/arc_verifier_ft09.json"},
++        },
++        target_game="ft09",
++        duration_s=1.0,
++        flag_resolved=True,
++    )
++    missing = exp4971.summarize_loop_result(
++        game="ft09",
++        loop_result=None,
++        loop_result_path="results/arc_loop_solve_ft09.json",
++        checkpoint_mtime_before_ns="bad",
++    )
++
++    assert residual["honest_verdict"] == "complete_ft09_self_play_residual_reproduction_gate_failed"
++    assert residual["verifier_checkpoint_refreshed"] is False
++    assert residual["checkpoint_path"] is None
++    assert residual["checkpoint_mtime_after_ns"] is None
++    assert residual["checkpoint_mtime_delta_ns"] is None
++    assert residual["flag_resolved"] is True
++    assert residual["schema_errors"] == []
++    assert unresolved["flag_resolved"] is False
++    assert unresolved["honest_verdict"] != exp4971.SUCCESS_VERDICT
++    assert "success_verdict_without_gate" not in unresolved["schema_errors"]
++    assert blocked["honest_verdict"] == "blocked_checkpoint_missing"
++    assert blocked["target_game"] == "ft09"
++    assert blocked["verifier_checkpoint_refreshed"] is False
++    assert blocked["schema_errors"] == []
++    assert missing["self_play_residual"] == "loop_result_missing"
++    assert missing["checkpoint_mtime_before_ns"] is None
++    assert missing["search_state_count"] == 0
++
++
++def test_req_learn_4971_schema_rejects_stale_metadata_and_bad_substrate(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """REQ-LEARN-4971: schema rejects stale identity, targets, and substrate drift."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    for field, old_value, expected in (
++        ("experiment", exp4960.EXPERIMENT, "experiment_mismatch"),
++        ("schema", exp4960.SCHEMA, "schema_mismatch"),
++        ("spec_refs", exp4960.SPEC_REFS, "spec_refs_mismatch"),
++        ("random_seed", exp4960.RANDOM_SEED, "random_seed_mismatch"),
++    ):
++        stale = dict(artifact)
++        stale[field] = old_value
++        stale["reproducibility_checksum"] = exp4971.stable_checksum(stale)
++        assert expected in exp4971.artifact_schema_errors(stale)
++
++    too_fast = dict(artifact, duration_s=0.25)
++    too_fast["reproducibility_checksum"] = exp4971.stable_checksum(too_fast)
++    assert "duration_too_short_for_verifier_ensemble" in exp4971.artifact_schema_errors(
++        too_fast
++    )
++
++    live_too_fast = dict(artifact, inference_substrate="live_llm_inference", duration_s=2.5)
++    live_too_fast["reproducibility_checksum"] = exp4971.stable_checksum(live_too_fast)
++    live_errors = exp4971.artifact_schema_errors(live_too_fast)
++    assert "inference_substrate_mismatch" in live_errors
++    assert "duration_too_short_for_live_llm_inference" in live_errors
++
++    unknown_substrate = dict(artifact, inference_substrate="deterministic_verifier")
++    unknown_substrate["reproducibility_checksum"] = exp4971.stable_checksum(unknown_substrate)
++    assert "unknown_inference_substrate" in exp4971.artifact_schema_errors(
++        unknown_substrate
++    )
++
++    rotation_violation = dict(artifact, target_game="dc22")
++    rotation_violation["reproducibility_checksum"] = exp4971.stable_checksum(
++        rotation_violation
++    )
++    assert "success_target_rotation_violation" in exp4971.artifact_schema_errors(
++        rotation_violation
++    )
++
++
++def test_scenario_learn_4971_main_writes_success_and_blocked_artifacts(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-LEARN-4971-BLOCKED-PRECONDITION: CLI writes terminal artifacts."""
++
++    ckpt = tmp_path / "models" / "arc_verifier_ft09.json"
++    ckpt.parent.mkdir()
++    ckpt.write_text('{"ok": true}\n', encoding="utf-8")
++    loop_result = tmp_path / "results" / "arc_loop_solve_ft09.json"
++    loop_result.parent.mkdir()
++    loop_result.write_text(json.dumps(_loop_result("ft09")), encoding="utf-8")
++    output = tmp_path / "results" / "experiment_4971_self_play_verifier_checkpoint.json"
++
++    monkeypatch.setattr(exp4971, "REPO", tmp_path)
++    monkeypatch.setattr(exp4971, "ARTIFACT", output)
++    monkeypatch.setattr(exp4971, "check_preconditions", lambda game=None: _preconditions("ft09"))
++
++    ok = exp4971.main(
++        [
++            "--game",
++            "ft09",
++            "--loop-result",
++            str(loop_result),
++            "--checkpoint-mtime-before-ns",
++            str(ckpt.stat().st_mtime_ns - 1),
++            "--duration-s",
++            "4.0",
++        ]
++    )
++    written = json.loads(output.read_text(encoding="utf-8"))
++
++    assert ok == 0
++    assert written["honest_verdict"] == exp4971.SUCCESS_VERDICT
++    assert written["result_path"] == exp4971.RESULT_RELATIVE_PATH
++
++    monkeypatch.setattr(
++        exp4971,
++        "check_preconditions",
++        lambda game=None: {
++            **_preconditions("dc22", ok=False),
++            "target_rotation": {"ok": False, "game": "dc22"},
++            "target_selection": {"game": "dc22"},
++        },
++    )
++    blocked_code = exp4971.main(["--game", "dc22", "--duration-s", "1.0"])
++    blocked = json.loads(output.read_text(encoding="utf-8"))
++
++    assert blocked_code == 0
++    assert blocked["honest_verdict"].startswith("blocked_target_rotation_")
++    assert blocked["target_game"] == "dc22"
+-- 
+2.55.0
+

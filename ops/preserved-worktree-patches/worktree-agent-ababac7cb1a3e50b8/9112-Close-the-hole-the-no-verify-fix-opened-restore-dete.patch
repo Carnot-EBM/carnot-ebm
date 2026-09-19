@@ -1,0 +1,117 @@
+From 550bf64092d1374e121aa48a2758ff6847ca16f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 22:27:52 -0400
+Subject: [PATCH 09112/11362] Close the hole the --no-verify fix opened:
+ restore determinations on the checkpoint path
+
+Found by the guard refusing my own commit. A test run had rewritten 13 historical
+artifacts and stripped the fabrication-gate quarantine from five -- exp833,
+exp1736, exp3361, exp3377, exp3392 each lost `flagged_adversarial: true` plus
+`corrigendum_note` and `corrigendum_pending`. exp2824 silently changed a metric
+(`tier_low` to `tier_transfer`, 0.5 to 0.8). Everything else in the diffs was
+fresh timestamps, so the only real content of the rewrite was the deletion of
+recorded review judgements. All 13 restored from HEAD.
+
+THE HOLE IS MINE AND IT IS NOW CLOSED. Earlier today the conductor's checkpoint
+commit was changed to `--no-verify`, because pre-commit's stash-restore cycle had
+destroyed an outer-loop session's work twice in one hour. That is right for a
+commit whose only job is preserving work. It also skips
+determination-preservation-lint -- so the next checkpoint would have published
+this exact damage silently, with no refusal and nobody reading a diff. I removed
+the guard that would have caught the thing that happened hours later.
+
+`git_commit_and_push` already called `_restore_dropped_determinations()` before
+its own `--no-verify` for precisely this reason. The checkpoint path did not. It
+does now, before staging.
+
+Restore rather than refuse, deliberately. A checkpoint that refuses leaves the
+work uncommitted and vulnerable, which is the failure the checkpoint block exists
+to prevent. Restoring keeps both: the new numbers land and the determination
+survives.
+
+The general lesson, and this is the fourth recurrence of test-run record damage:
+skipping a hook suite to protect one property can silently drop another. When you
+disable verification on a path, enumerate what that path was getting from the
+hooks and re-add each protection you still need directly. `--no-verify` is not a
+scalpel unless you make it one.
+---
+ ops/known-issues.md           | 34 ++++++++++++++++++++++++++++++++++
+ scripts/research_conductor.py | 20 ++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e1f36caa9e..85c90c6dce 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17974,3 +17974,37 @@ actions would invert the scored metric. The right fix is the state key itself,
+ not a flag: a key that collapses distinct states makes sc25 invisible to every
+ future flag measurement, because no flag can change an outcome decided before
+ the search runs.
++
++## 2026-08-13 Test-run record damage, fourth recurrence, and the hole the --no-verify fix opened
++
++A test run rewrote **13 historical artifacts**. Five lost their fabrication-gate
++quarantine: exp833, exp1736, exp3361, exp3377, exp3392 each had
++`flagged_adversarial: true` plus `corrigendum_note` and `corrigendum_pending`
++deleted. exp2824 silently changed a metric (`tier_low` renamed to
++`tier_transfer`, values 0.5 to 0.8). Everything else in the diffs was fresh
++timestamps.
++
++So the only real content of the rewrite was the deletion of recorded review
++judgements. `determination-preservation-lint` refused the commit and named every
++lost field. All 13 restored from HEAD. Working as designed.
++
++**The hole, which is mine and is now closed.** Earlier the same day the
++conductor's checkpoint commit was changed to `--no-verify`, because pre-commit's
++stash-restore cycle had destroyed an outer-loop session's work twice in one hour.
++That fix is right for a commit whose only job is preserving work. It also skips
++`determination-preservation-lint`, so the very next checkpoint would have
++published this damage silently, with no refusal and nobody reading a diff.
++
++`git_commit_and_push` already called `_restore_dropped_determinations()` before
++its own `--no-verify` for exactly this reason. The checkpoint path did not. It
++does now.
++
++Restore rather than refuse, deliberately: a checkpoint that refuses leaves the
++work uncommitted and vulnerable, which is the failure the checkpoint exists to
++prevent. Restoring keeps both -- new numbers land, the determination survives.
++
++**The general lesson, worth stating because this is the fourth recurrence.**
++Skipping a hook suite to protect one property can silently drop another. When you
++disable verification on a path, enumerate what that path was getting from the
++hooks and re-add each protection you still need directly. `--no-verify` is not a
++scalpel unless you make it one.
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index fe5106f05c..6f813d5dc9 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -5144,6 +5144,26 @@ def research_step(
+     # deliverables when claude -p was killed mid-run. Now we commit everything
+     # as a checkpoint so nothing is lost.
+     if git_has_changes():
++        # Put back any fabrication-gate determination a test run stripped, BEFORE staging.
++        #
++        # This pairs with the --no-verify below and is not optional alongside it. Skipping the
++        # hooks is right for a commit whose only job is preserving work -- pre-commit's
++        # stash-restore cycle can destroy that work -- but it also skips
++        # determination-preservation-lint, which is the guard that refuses a commit dropping a
++        # `flagged_adversarial` stamp or a corrigendum.
++        #
++        # Not hypothetical. On 2026-08-13 a test run rewrote 13 historical artifacts and stripped
++        # the quarantine stamp plus corrigendum records from five of them (exp833, exp1736,
++        # exp3361, exp3377, exp3392). The diffs carried no new science -- fresh timestamps, and in
++        # exp2824 a silently changed metric -- so the only real content of the rewrite was the
++        # deletion of a review's recorded judgement. `git_commit_and_push` already called this
++        # restore for exactly that reason; this path did not, so it would have published the
++        # damage on the next checkpoint.
++        #
++        # Restore rather than refuse, deliberately. A checkpoint that refuses leaves the work
++        # uncommitted and vulnerable, which is the failure this whole block exists to prevent.
++        # Restoring keeps both: the new numbers land, the determination survives.
++        _restore_dropped_determinations()
+         _, porcelain, _ = run_cmd(["git", "diff", "--name-only"])
+         _, untracked, _ = run_cmd(["git", "ls-files", "--others", "--exclude-standard"])
+         changed = [f.strip() for f in porcelain.splitlines() if f.strip()]
+-- 
+2.55.0
+

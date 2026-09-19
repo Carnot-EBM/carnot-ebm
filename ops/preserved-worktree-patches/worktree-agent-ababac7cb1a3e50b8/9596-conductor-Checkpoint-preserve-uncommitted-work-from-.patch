@@ -1,0 +1,43 @@
+From f1d297cf5739f5ff7550c3dbe6c9dbf8e1b7f58e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 23:25:50 -0400
+Subject: [PATCH 09596/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f7552941ca..99334f72ee 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-08-23T03:06:49Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-08-23T03:25:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8b526e6d2c..92634e8055 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16303,3 +16303,4 @@ code |
+ | 2026-08-23 02:25 UTC | Safety Net learned router with exact exception and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-23 02:45 UTC | Transactional refinement-witness exact conflict me | OK | 89 passed, 1 warning in 10.78s |
+ | 2026-08-23 03:04 UTC | Chronological refinement-valid conflict self-learn | OK | 104 passed, 1 warning in 12.35s |
++| 2026-08-23 03:23 UTC | Adaptive validation and independent conflict self- | OK | 87 passed, 1 warning in 11.30s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 28a7b43492..c9d976ba3f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 33, "phase": "iteration_start", "started_at": "2026-08-23T03:06:49Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 34, "phase": "iteration_start", "started_at": "2026-08-23T03:25:47Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

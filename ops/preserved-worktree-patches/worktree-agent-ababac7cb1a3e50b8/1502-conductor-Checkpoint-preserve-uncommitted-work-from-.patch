@@ -1,0 +1,43 @@
+From 3601a234b3b7ba93d88289e6c077366840864ffe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 18:54:26 -0400
+Subject: [PATCH 01502/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dccb4e3aa9..6b2816fdff 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-12T22:31:53Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-12T22:54:25Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ff71a98cf1..cd60d9d853 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8384,3 +8384,4 @@ c |
+ | 2026-06-12 21:51 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 5.23s |
+ | 2026-06-12 22:11 UTC | Capstone .380 (UNGATED): headline question is DID  | OK | 88 passed in 4.69s |
+ | 2026-06-12 22:21 UTC | Milestone 2026.06.381 activated | OK | 10 tasks queued |
++| 2026-06-12 22:44 UTC | Archive .380 -> activate .381; KEEP the hardened g | OK | 94 passed in 4.84s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c7b211eebe..1f1dd9e39d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-12T22:31:53Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-12T22:54:25Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

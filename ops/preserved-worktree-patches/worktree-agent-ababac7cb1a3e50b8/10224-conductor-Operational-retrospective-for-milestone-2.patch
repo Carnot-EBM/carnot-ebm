@@ -1,0 +1,95 @@
+From 5e37ff4f57f23b47c8bee30c11c8681220bf6d96 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 00:34:41 -0400
+Subject: [PATCH 10224/11362] [conductor] Operational retrospective for
+ milestone 2026.08.586
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++++
+ ops/changelog.md                           | 13 ++++++++
+ results/operational_retro_2026_08_586.json | 36 ++++++++++++++++++++++
+ 3 files changed, 56 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_586.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 5a5aebf74e..4d71dc81d8 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6423,3 +6423,10 @@ The critical path for milestone .250:
+ - theme: compute-only planning-bank execution exposed GPU engagement and timing-observability gaps
+ - key result: honest operational negative — the only compute-bound task registered 0.0 minutes while both GPUs were idle; duration cause and parallel-model runner applicability have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.586
++
++- exp_range: no data available this milestone
++- theme: modification-time fallback erased the phase shape of a lone object-table compute task
++- key result: honest operational negative — 1 compute task landed at 0.0-minute resolution; stage attribution, simultaneous model execution, and runner applicability have no data available this milestone
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 45cd7f48e8..6260513430 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18187,3 +18187,16 @@ dispatch. The next tooling priority is a fail-fast GPU engagement check joined
+ to monotonic phase timing and launch metadata. Estimated time savings is 0%
+ because the timing data measures no positive duration.
+ - 2026-08-29: Object-table fetch-on-demand A/B against the measured change_fidelity win (⚠️ Blocked) — honest_verdict=blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start; results/experiment_6716_object_table_fetch_on_demand_ab.json
++
++## 2026-08-29 — Milestone 2026.08.586 operational retrospective
++
++The bounded execution record contains 1 compute-bound item and reports 0.0
++minutes total. Object-table fetch-on-demand A/B ranks as slowest only because
++no competing entry exists; no data available this milestone attributes its
++duration to an execution stage. The immutable idle-on-compute value is false,
++so this report does not treat accelerator idle as a bottleneck. The source
++blocks do not establish parallel loading of 2 or more models or a missed
++DualGPURunner dispatch. The highest-leverage tooling change is one launch
++receipt with monotonic timestamps, task-linked GPU samples, model count, and
++runner identity. Since observed elapsed time has no positive amount, the
++savings estimate is 0%.
+diff --git a/results/operational_retro_2026_08_586.json b/results/operational_retro_2026_08_586.json
+new file mode 100644
+index 0000000000..19975b7d99
+--- /dev/null
++++ b/results/operational_retro_2026_08_586.json
+@@ -0,0 +1,36 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.586",
++  "generated_at": "2026-08-29T04:29:50Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 1,
++  "compute_bound_experiments_count": 1,
++  "slowest_experiments": [
++    {
++      "experiment": "Object-table fetch-on-demand A/B against the measured change_fidelity win",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The bounded record contains 1 compute-bound experiment and 0.0 minutes of elapsed time. This resolution is insufficient for causal or savings analysis.",
++  "bottlenecks_identified": [
++    "Modification-time fallback collapsed the full execution into a 0.0-minute observation, so stage attribution is unavailable.",
++    "Neither source block identifies simultaneous model loads or runner dispatch, which prevents a concurrency audit."
++  ],
++  "improvements_suggested": [
++    "Have the harness emit high-resolution monotonic timestamps for each execution stage.",
++    "Write task-linked GPU samples and worker process identifiers into every compute receipt.",
++    "Persist model count and runner identity, and select DualGPURunner only for 2-or-more-model parallel work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Replace modification-time duration reconstruction with harness-owned monotonic timestamps.",
++    "Correlate accelerator samples and worker processes with the active task.",
++    "Add model count and chosen runner to the launch receipt."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "Object-table fetch-on-demand A/B ranks first because there is only 1 entry, not because a positive delay was measured. The immutable GPU-idle value is false, so the blocks do not support an idle-during-compute finding. No source row documents 2 or more simultaneous models, so DualGPURunner compliance cannot be judged."
++}
+-- 
+2.55.0
+

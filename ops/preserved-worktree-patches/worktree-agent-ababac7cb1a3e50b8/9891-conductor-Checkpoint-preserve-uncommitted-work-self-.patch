@@ -1,0 +1,65 @@
+From eb5440ca5e76778b0d56ad12e413b552c5816b31 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 04:50:32 -0400
+Subject: [PATCH 09891/11362] [conductor] Checkpoint: preserve uncommitted work
+ (self-heal failed)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json | 2 +-
+ ops/.pretest-poison-counter.json      | 4 +---
+ ops/.run_sentinel_state.json          | 2 +-
+ ops/.stop_authority_state.json        | 2 +-
+ 4 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 1330ed88bd..71b3a90c1c 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T08:20:24Z"
++ "last_scan_utc": "2026-08-25T08:50:30Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index fcddf65d51..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_6590_qwen36_constraint_first_stream.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 4093f0b239..53c05889de 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -7,5 +7,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T08:49:56Z"
++ "last_scan_utc": "2026-08-25T08:50:29Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 2fd5313c03..e2844cf790 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T08:20:24Z",
++ "last_scan_utc": "2026-08-25T08:50:30Z",
+  "written": {}
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

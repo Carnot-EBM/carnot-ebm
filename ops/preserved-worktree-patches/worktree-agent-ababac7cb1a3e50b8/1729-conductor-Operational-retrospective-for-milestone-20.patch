@@ -1,0 +1,74 @@
+From 410f5759ef1bb060ceaf68c17b04e5006f775ad1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 05:02:05 -0400
+Subject: [PATCH 01729/11362] [conductor] Operational retrospective for
+ milestone 2026.06.387
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_06_387.json | 28 ++++++++++++++++++++++
+ 3 files changed, 35 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_387.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 138d595e84..9b03fcd00b 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5223,3 +5223,9 @@ The critical path for milestone .250:
+ - theme: False-zero detector gap again — while .386 actually ran the outer-loop-owned contiguous-training headline: has the contiguous run converged the Sudoku-Extreme baseline toward ~0.87, and did the DEFENSIVE Carnot-verifier graft FIRE or DEFER (including the gate lowered to 0.82 per the 2026-06-13 operator directive)?
+ - key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .386 shipped exp4167–exp4173: per capstone exp4173 the outer-loop contiguous run is STILL IN PROGRESS (val ~0.504, checkpoint 2026-06-13T04:41:29Z, below the 0.85/0.82 faithful threshold), so the DECISIVE verifier graft DEFERRED again (exp4168 graft_deferred at val 0.5148; the v2 graft at the lowered 0.82 gate returned an A≈B null), leaving the moat unproven and DiffusionGemma STILL-PENDING; ARC held at 13 games (exp4169 no new solve, no unsolved strict-nonspatial candidates); only the reserved infra slots landed clean — SOTA ingestion (exp4170, flagged strongest for .387) + hardware continuity (exp4172: PolarFire hash-verified CPU dispatch OK, GateMate n=16 flash blocked/unreachable, KV260 terminal); 1 flagged-skipped. So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
+ - acceptance: retro-data 0/0 (false-zero); per .386 capstone exp4173 the headline came back STILL-ACCUMULATING / graft-deferred — BASELINE not yet faithful (outer-loop training in progress, val ~0.504 < 0.85, exp4167), DECISIVE GRAFT deferred + A≈B null at the 0.82 gate (exp4168) so the MOAT stays unproven and DIFFUSIONGEMMA still-pending; ACCURACY held at 13 games (no new solve, exp4169); infra slots clean (SOTA exp4170, hardware PolarFire-OK/GateMate-blocked/KV260-terminal exp4172); 1 flagged-skipped
++
++### Milestone 2026.06.387
++- exp_range: exp4175-exp4183 (per the on-disk ops/changelog.md window read this turn; the authoritative milestone-scoped timing detector again falsely reported 0 — the recurring false-zero gap documented across .363–.386, with .376/.379/.380/.381/.385 absent from this log, now extending to .387)
++- theme: False-zero detector gap again — while .387 actually ran the DECISIVE headroom-controlled verifier-moat test: with a positive-control headroom census established FIRST (A1, exp4175), does the executable verifier ensemble + V-STaR learned selector (exp4176) add value WHERE headroom exists vs a matched no-verifier control, and did GAP-3 Stage-1 model-native ARC energy reach the proven ~13pp ARC headroom?
++- key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .387 shipped exp4175–exp4183 and the headline came back POSITIVE: per capstone exp4183 the MOAT IS PROVEN — on the A1-established headroom_present positive control (exp4175), the headroom-controlled moat test (exp4177, with a matched no-verifier control + the V-STaR learned selector exp4176) showed the verifier ADDS VALUE where headroom exists (CI excludes 0), resolving the existential verifier-value question, and the previously-pending DiffusionGemma gate is NOW MET. GAP-3 Stage-1 was a BOUNDED honest-negative (exp4178 model-native ARC energy did NOT reach the ~13pp headroom; does_not_advance — compositional energy minimization flagged for Stage-2 in .388, exp4180). Offsetting accuracy win: ARC advanced lp85-305b61c3 to L2 (exp4179, total 14). Reserved infra landed clean — SOTA ingestion (exp4180), registry/gaps hygiene (exp4181, regression guard passed True, moat recorded as filled), hardware continuity (exp4182: PolarFire hash-verified CPU dispatch OK, GateMate n=16 flash blocked/unreachable, KV260 terminal); 0 flagged-skipped. So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
++- acceptance: retro-data 0/0 (false-zero); per .387 capstone exp4183 the headline came back POSITIVE — MOAT PROVEN (verifier adds value where headroom exists, exp4177, on the A1 headroom_present positive control exp4175 + V-STaR selector exp4176) and DIFFUSIONGEMMA gate NOW MET; GAP-3 Stage-1 BOUNDED honest-negative (model-native ARC energy below ~13pp, exp4178, CEM flagged for Stage-2 v388); ACCURACY +1 (lp85→L2, total 14, exp4179); HARDWARE PolarFire-dispatch-OK / GateMate-blocked / KV260-terminal (exp4182); 0 flagged-skipped
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d27d3ffe27..ee41a81d48 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9090,3 +9090,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-14: PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .387 state into ops/verifier_gaps.md: the headroom-controlled moat verdict (exp4177) + the GAP-3 Stage-1 result (exp4178). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune). (⚠️ Research Finding) — honest_verdict=complete: registry_gaps_reconciled_to_v387_truth_regression_guard_passed_True_moat_filled_headroom_controlled_verifier_value_added_gap3_open_stage1_honest_negative_does_not_advance; results/experiment_4181_verifier_registry_gaps_hygiene.json
+ - 2026-06-14: PHASE D3 — Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board. (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_4182_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only; results/experiment_4182_hardware_continuity.json
+ - 2026-06-14: PHASE D4 — Capstone .387 (UNGATED): headline question is DID THE HEADROOM-CONTROLLED MOAT TEST RESOLVE THE VERIFIER-VALUE QUESTION (positive where headroom exists, or honestly bounded), AND DID GAP-3 STAGE-1 REACH THE ~13pp ARC HEADROOM? Aggregate: HEADROOM = exp4175; MOAT = exp4177 (verifier_value_added + CI); GAP-3 = exp4178 (pass2_energy_vs_vote + gates); ARC = exp4179; SOTA = exp4180. Resolve whether the DiffusionGemma gate is NOW MET. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on. (✅ Complete) — honest_verdict=complete: capstone_v387_moat_proven_headroom_present_moat_PROVEN-headroom-present_gap3_BOUNDED_diffusiongemma_MET_arc_levels14_sota_cem_gap3_stage2_compositional_arc_energy_v388_flagged_skipped0; results/experiment_4183_capstone_v387.json
++- 2026-06-14: OPERATIONAL RETROSPECTIVE 2026.06.387 — the milestone-scoped timing detector again reported a FALSE-ZERO (0 experiment commits / 0 wall-time / 0 compute-bound), the recurring observability gap documented across .363–.386. On-disk git (diff since activation ffea13829) + ops/changelog.md confirm .387 actually ran exp4175–exp4183 (phases A1–D4) and committed the capstone exp4183 (honest_verdict=complete): MOAT PROVEN (verifier adds value where headroom exists, on the A1-established headroom_present positive control), DiffusionGemma gate NOW MET, GAP-3 Stage-1 bounded honest-negative, ARC +1 (lp85→L2, total 14), 0 flagged-skipped. Locked retro fields stay 0 (what the broken detector saw); the single bottleneck is observability, not execution. Highest-leverage fix: repair the timing detector's milestone↔commit association (11+ consecutive false-zeros) + add a changelog/results-scan fallback so retros self-populate. results/operational_retro_2026_06_387.json
+diff --git a/results/operational_retro_2026_06_387.json b/results/operational_retro_2026_06_387.json
+new file mode 100644
+index 0000000000..ef35831dd6
+--- /dev/null
++++ b/results/operational_retro_2026_06_387.json
+@@ -0,0 +1,28 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.387",
++  "generated_at": "2026-06-14T08:56:01Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits, 0 wall-time minutes, and 0 compute-bound tasks for 2026.06.387 — but this is the RECURRING FALSE-ZERO detector gap (documented across .363–.375 in docs/research-log.md, 11 consecutive through .375), not a genuinely idle milestone. On-disk primary sources contradict the detector: git diff since .387 activation (ffea13829) committed experiment_4175–experiment_4180 artifacts + scripts, ops/changelog.md shows phases A1–D4 all complete, and results/ holds experiment_4175 through experiment_4183 (capstone exp4183, honest_verdict=complete). The single operational finding this milestone is therefore observability, not execution: the timing detector cannot associate the conductor's commits with the active milestone window, so per-experiment wall-time and slowest-experiment ranking are impossible to compute from the detector alone.",
++  "bottlenecks_identified": [
++    "RECURRING timing-detector false-zero (PRIMARY, non-GPU): the milestone-scoped detector reported 0 experiment commits since .387 activation while git, ops/changelog.md, and results/ independently confirm exp4175–exp4183 landed (phases A1–D4 + capstone). This is the same observability gap the research-log flagged as 11 consecutive milestones through .375; .387 is another instance. While the detector is blind, no wall-time or slowest-experiment bottleneck analysis is possible — the locked 0/0/0 fields record what the broken detector saw, not reality.",
++    "Retro-generation depends on a single fragile signal: because the timing detector is the only authoritative numeric input, a detector miss forces every retro to be hand-recovered by reading ops/changelog.md. That manual recovery is itself an operator-time cost incurred every milestone."
++  ],
++  "improvements_suggested": [
++    "Root-cause and fix the milestone-scoped timing detector's commit-association bug. It has under-reported 0 for 11+ consecutive milestones; the likely cause is that '[conductor] PHASE X' / experiment-artifact commits are not being matched to the active milestone tag or commit-range window. This is the highest-leverage operational fix — it restores bottleneck analysis for every future retro at once.",
++    "Until the detector is fixed, wire a changelog fallback into the retro generator: parse ops/changelog.md for the active milestone's '✅ Complete' / honest_verdict lines and results/experiment_*.json run_date+duration_s, so slowest_experiments and total_wall_time_minutes auto-populate instead of defaulting to 0. This is exactly the manual recovery step done by hand this milestone.",
++    "Emit a milestone-scoped duration index built by scanning results/experiment_*.json (run_date, duration_s, inference_substrate) rather than parsing git commits, decoupling timing analysis from the commit-association path that keeps failing."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Fix the timing detector's milestone-association bug (11+ consecutive false-zeros) — the standing observability debt that has degraded every retro since .363.",
++    "Add the ops/changelog.md + results/-scan fallback to the retro generator so a detector miss self-heals into a populated retro instead of a 0/0/0 skeleton.",
++    "Build a results/-directory duration index (run_date/duration_s/inference_substrate) so future wall-time and GPU-efficiency analysis no longer depends on commit parsing."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "For the recurring case documented through .375, the operational story is not that experiments ran slowly — they ran fine, and .387's phases were CPU/offline by design (zero GGUF/GPU), so the idle GPUs are correct behaviour, not a bottleneck. The standing debt is observability: the retro tooling is blind to work that demonstrably landed (exp4175–exp4183). Estimated experiment-wall-time savings are 0 because there is no measured slow experiment to remove; the real win is fixing the detector so future retros can find bottlenecks at all instead of being hand-recovered from the changelog."
++}
+-- 
+2.55.0
+

@@ -1,0 +1,74 @@
+From 742df3263c55250b43b4de8add84135749e4e940 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 18:54:50 -0400
+Subject: [PATCH 10040/11362] [conductor] Pre-gate block: Failure-localized
+ suffix regeneration A/B
+
+1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus.regeneration_headroom_count (actual=2 >= expected=8)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                                  | 2 +-
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_6651_failure_localized_suffix_regeneration.json | 4 ++--
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index f9a214431a..0f5ffa206f 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T22:52:47Z"
++ "last_scan_utc": "2026-08-26T22:54:50Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 69643d9e4d..e244ee4199 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 49, "phase": "iteration_start", "last_beat": "2026-08-26T22:52:46Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 50, "phase": "iteration_start", "last_beat": "2026-08-26T22:54:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6a2b9ca23f..bc771a2360 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16575,3 +16575,4 @@ code |
+ | 2026-08-26 22:25 UTC | Exact certificate proposal corpus | OK | cache hit: 119 passed, 1 warning in 8.85s |
+ | 2026-08-26 22:48 UTC | Twin-prefix verifier discrimination map | OK | 118 passed, 1 warning in 18.66s |
+ | 2026-08-26 22:50 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
++| 2026-08-26 22:52 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 88982808e9..82b477c836 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 49, "phase": "iteration_start", "started_at": "2026-08-26T22:52:46Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 50, "phase": "iteration_start", "started_at": "2026-08-26T22:54:49Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6651_failure_localized_suffix_regeneration.json b/results/experiment_6651_failure_localized_suffix_regeneration.json
+index bc2d8cc9d9..ad42a41ea0 100644
+--- a/results/experiment_6651_failure_localized_suffix_regeneration.json
++++ b/results/experiment_6651_failure_localized_suffix_regeneration.json
+@@ -2,8 +2,8 @@
+   "experiment": 6651,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-26",
+-  "started_at": "2026-08-26T22:52:47.391208+00:00",
+-  "finished_at": "2026-08-26T22:52:47.391208+00:00",
++  "started_at": "2026-08-26T22:54:50.677915+00:00",
++  "finished_at": "2026-08-26T22:54:50.677915+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Failure-localized suffix regeneration A/B",
+-- 
+2.55.0
+

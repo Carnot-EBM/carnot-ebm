@@ -1,0 +1,43 @@
+From 112f8dc7923d8e37635ae198d765c41861541d70 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 06:23:10 -0400
+Subject: [PATCH 10272/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e32aee7ea4..3ce31f1cd3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-29T10:04:07Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-29T10:23:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ceaa37b3a3..df470d6098 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16762,3 +16762,4 @@ The l |
+ | 2026-08-29 09:42 UTC | Diagnostic-energy localized repair versus full reg | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6746-oracle-distinct-diagnostic-energy. |
+ | 2026-08-29 09:44 UTC | Diagnostic-energy localized repair versus full reg | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6746-oracle-distinct-diagnostic-energy. |
+ | 2026-08-29 10:02 UTC | Read-only episode and atomic constraint-memory com | OK | 104 passed, 1 warning in 8.68s |
++| 2026-08-29 10:21 UTC | Prospective support-preserving transactional self- | OK | 105 passed, 1 warning in 8.80s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9f0cda57ab..bfa7c37f58 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-29T10:04:07Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-29T10:23:06Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

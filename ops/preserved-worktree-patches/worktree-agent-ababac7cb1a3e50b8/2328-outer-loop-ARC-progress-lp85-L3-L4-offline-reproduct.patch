@@ -1,0 +1,120 @@
+From 5c066c817d81bbabfefe3de9dc45c9ed12c4c541 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 10:34:38 -0400
+Subject: [PATCH 02328/11362] [outer-loop] ARC progress: lp85 L3 -> L4
+ (offline-reproduction-gated; total 13 -> 14)
+
+Ran the standing ARC loop. lp85 advanced to a NEW reproduced level:
+solve_adaptered(lp85, target_level=4) via the OfflineSolver + learned verifier
+checkpoint reaches L4 -- full L1->L4 = 54 moves, 836 states, offline reproduction
+gate reproduced=True / claimed_level=4, DETERMINISTIC on re-run. The prior L3 was
+just the default target_level=3 cap, not a wall. Updated models/arc_verifier_lp85.json
+(self-improved checkpoint), the artifact, and the registry: lp85 levels_reproduced
+3->4, reproducible_total_levels 13->14 across 11 games.
+
+Sweep also tried 4 unsolved shallow candidates (vc33/dc22/g50t/sb26) adapter-free at
+the 12k discovery budget: NO L0 advance -- each needs per-game RE (consistent with
+the prior PHASE C sweep). Honest net: +1 reproduced level (lp85 L4), 0 new games.
+NO leaderboard submission (operator-only).
+---
+ models/arc_verifier_lp85.json    | 16 ++++++++--------
+ ops/arc_solve_registry.yaml      | 14 +++++++-------
+ results/arc_loop_solve_lp85.json | 12 ++++++------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/models/arc_verifier_lp85.json b/models/arc_verifier_lp85.json
+index 6899cb0167..727275c304 100644
+--- a/models/arc_verifier_lp85.json
++++ b/models/arc_verifier_lp85.json
+@@ -2,17 +2,17 @@
+   "schema": "carnot_arc_learned_verifier_v1",
+   "kind": "linear_value_head",
+   "weights": [
+-    0.4362052523832312,
+-    0.9828733944993935,
+-    -0.12307852537502048,
+-    0.020206606325121414,
+-    -1.8743681875730305,
+-    0.8914947930736384
++    0.19062416593586867,
++    1.681464817850983,
++    0.25304711429696825,
++    -0.11033794689950584,
++    0.7405049080040397,
++    -2.4219697258550132
+   ],
+   "feature_names": "adapter_featurize",
+   "trained_games": [
+     "lp85"
+   ],
+-  "n_samples": 38,
+-  "provenance": "arc_loop_solve lp85->L3"
++  "n_samples": 54,
++  "provenance": "arc_loop_solve lp85->L4"
+ }
+\ No newline at end of file
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 67af17db0e..e1ce69e90d 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -56,11 +56,11 @@ games:
+ 
+   - game: lp85
+     reproducibility: reproduced
+-    levels_reproduced: 3
++    levels_reproduced: 4   # 3 -> 4 (2026-06-17, standing loop adaptered path, target_level=4)
+     win_condition: "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
+     action_model: "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons)."
+-    solver: "scripts/arc3_lp85_offline_solver.py — reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves)."
+-    reproduce: "results/arc3_lp85_offline_resolve.json replays to L3 in the meta-harness."
++    solver: "scripts/arc3_lp85_offline_solver.py — reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves). L4 (2026-06-17): arc_loop_solve.solve_adaptered(lp85, target_level=4) via the OfflineSolver + learned verifier checkpoint (models/arc_verifier_lp85.json); full L1->L4 = 54 moves, 836 states. The prior L3 cap was just the default target_level=3, not a wall."
++    reproduce: "results/arc_loop_solve_lp85.json — offline reproduction gate (kit.reproduce) reproduced=True, claimed_level=4, deterministic on re-run. (results/arc3_lp85_offline_resolve.json replays to L3.)"
+     gotchas:
+       - "deepcopy-injection WORKS for lp85 (unlike sc25)."
+       - "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+@@ -164,11 +164,11 @@ games:
+   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
+ 
+ # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
+-#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 3 + cd82 1 + sp80 1 + su15 1
+-#   + tu93 1 = 10  across 8 games  (the 4 new games landed 2026-06-17 by the
+-#   adapter-free sweep, each independently re-gated reproduced=True; verify with
++#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
++#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 = 14  across 11 games  (lp85 L3->L4 landed
++#   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
+ #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
+-reproducible_total_levels: 13   # 6 -> 10 (+cd82,sp80,su15,tu93) -> 13 (+cn04,m0r0,sk48 via E1)
++reproducible_total_levels: 14   # 13 -> 14 (+lp85 L4 via standing loop, 2026-06-17)
+ reproducible_total_games: 11    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48
+ provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
+ 
+diff --git a/results/arc_loop_solve_lp85.json b/results/arc_loop_solve_lp85.json
+index 833d25154a..6c3eb63b6c 100644
+--- a/results/arc_loop_solve_lp85.json
++++ b/results/arc_loop_solve_lp85.json
+@@ -1,16 +1,16 @@
+ {
+   "game": "lp85",
+-  "reached_level": 3,
+-  "moves": 38,
+-  "states_expanded": 349,
++  "reached_level": 4,
++  "moves": 54,
++  "states_expanded": 836,
+   "verifier_src": "learned_checkpoint",
+   "offline_reproduced": true,
+-  "reproduced_levels": 3,
++  "reproduced_levels": 4,
+   "learned_verifier_checkpoint": "models/arc_verifier_lp85.json",
+   "reproduction_gate": {
+     "game": "lp85",
+-    "reached_level": 3,
+-    "claimed_level": 3,
++    "reached_level": 4,
++    "claimed_level": 4,
+     "reproduced": true,
+     "mode": "offline_reproduction_gate_no_quota"
+   },
+-- 
+2.55.0
+

@@ -1,0 +1,53 @@
+From 8d70b6865d3843eccb57c497f5f49ecfda79e4f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 06:37:42 -0400
+Subject: [PATCH 04165/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/supervisor-alerts.json   | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4549a3fc2c..6454752faa 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 254, "phase": "iteration_start", "last_beat": "2026-06-26T10:22:35Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 255, "phase": "iteration_start", "last_beat": "2026-06-26T10:37:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c20e068918..2e05cfe564 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9338,3 +9338,4 @@ The contro |
+ | 2026-06-26 09:43 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | OK | 88 passed, 1 warning in 10.96s |
+ | 2026-06-26 10:01 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 93 passed, 1 warning in 5.57s |
+ | 2026-06-26 10:20 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 92 passed, 1 warning in 10.02s |
++| 2026-06-26 10:35 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 5.90s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cd987f63de..0e46e64774 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 254, "phase": "iteration_start", "started_at": "2026-06-26T10:22:35Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 255, "phase": "iteration_start", "started_at": "2026-06-26T10:37:40Z"}
+\ No newline at end of file
+diff --git a/ops/supervisor-alerts.json b/ops/supervisor-alerts.json
+index 1031d77e01..b2113187bc 100644
+--- a/ops/supervisor-alerts.json
++++ b/ops/supervisor-alerts.json
+@@ -46,3 +46,4 @@
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-26T01:33:34Z", "task_id": "exp4752-a4", "deliverable": "results/experiment_4752_held_out_first_win_readiness.json", "exact_zero_deltas": [{"key": "first_win_delta_vs_baseline", "value": 0.0}, {"key": "held_out_proxy_summary.first_win_delta_vs_baseline", "value": 0.0}, {"key": "readiness_delta_vs_prior_milestone.first_win_rate_delta", "value": 0.0}, {"key": "readiness_delta_vs_prior_milestone.multi_level_deepen_rate_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4752-a4 reports parity-test outputs that are bit-identical or exactly zero across 4 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-26T05:15:52Z", "task_id": "exp4764-a4", "deliverable": "results/experiment_4764_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "heldout_first_win_delta_vs_prior_best", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4764-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-26T07:52:05Z", "task_id": "exp4774-a4", "deliverable": "results/experiment_4774_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "heldout_first_win_delta_vs_prior_best", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4774-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
++{"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-26T10:35:40Z", "task_id": "exp4784-a4", "deliverable": "results/experiment_4784_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "heldout_first_win_delta_vs_prior_best", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4784-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+-- 
+2.55.0
+

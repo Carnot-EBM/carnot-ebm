@@ -1,0 +1,687 @@
+From 1a639c327bd7a75a893f5acd227df012c9a851f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 11:06:49 -0400
+Subject: [PATCH 10770/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/llm-ebm-inference/spec.md    | 136 +++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ...7_three_family_relation_proposal_corpus.py | 491 ++++++++++++++++++
+ 5 files changed, 630 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py
+
+diff --git a/openspec/capabilities/llm-ebm-inference/spec.md b/openspec/capabilities/llm-ebm-inference/spec.md
+index 4ffadfe17a..b9be389bcb 100644
+--- a/openspec/capabilities/llm-ebm-inference/spec.md
++++ b/openspec/capabilities/llm-ebm-inference/spec.md
+@@ -3532,3 +3532,139 @@ record zero unrelated process signals.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-INFERENCE-6868 and SCENARIO-INFERENCE-6868-* | Planned (`python/carnot/experiment_6868_three_family_semantic_scoring_stream_v2.py`; `scripts/experiments/experiment_6868_three_family_semantic_scoring_stream_v2.py`) | Planned (`tests/python/test_experiment_6868_three_family_semantic_scoring_stream_v2.py`) |
++
++### REQ-INFERENCE-6887: Three-Family Anchored Relation Proposal Corpus
++
++Exp6887 SHALL call `cached_sota_pair()` before acquisition. It SHALL also use
++`resolve_cached_gguf()` for the dense extension. It SHALL require the Exp6886
++`relation_fixture_ready_score` to equal one. It SHALL require the exact three
++model repositories, their local GGUF files, the pinned Enoki encoder files,
++native GGUF tokenizer receipts, llama.cpp CUDA offload, task-owned GPU leases,
++and zero access to held formal sidecars. A failed precondition SHALL write a
++terminal `complete_blocked_three_family_relation_corpus` artifact. Its gate
++summary SHALL name each failed check, expected value, and observed value.
++
++Exp6887 SHALL use at least 90 frozen Exp6886 public source records. Every one
++of the five fixture families SHALL contribute at least 18 records. The three
++GGUF arms, pinned Enoki encoder arm, and deterministic rule arm SHALL receive
++the same records in the same order. GGUF cells SHALL share one prompt template,
++seed matrix, output budget, and stop policy. The prompt SHALL expose only the
++public source text, source identity, allowed predicate names, and a plain-text
++relation-line protocol. It SHALL not expose held labels, ASP programs, answer
++sets, solver receipts, exact target relations, sidecar paths, or hidden case
++names.
++
++The GGUF protocol SHALL use unconstrained plain-text generation. Exp6887 SHALL
++not use a grammar, JSON schema, constrained decoding, repair prompt, model
++judge, or external text scorer. Each GGUF SHALL use its tokenizer embedded in
++the resolved GGUF. A GGUF repository ID SHALL never be passed to
++`AutoTokenizer.from_pretrained()`. CPU-only fallback, absent owned CUDA
++residency, and missing GPU offload SHALL fail the headline acquisition.
++
++Exp6887 SHALL preserve one terminal cell for each arm and source record. Each
++cell SHALL retain the prompt hash, raw output and hash, native prompt and output
++token counts, latency, stop reason, timeout and truncation state, arm identity,
++source identity, family, task identity, seed, output budget, and runtime
++receipt. Parsing SHALL inspect surface text only. It SHALL preserve every valid
++span and tuple plus malformed, unsupported, duplicate, abstention, empty,
++timeout, and truncation rows. It SHALL not impute or drop a denominator row.
++
++Each GGUF process receipt SHALL record its PID, model hash, tokenizer evidence,
++GPU UUID, visible device, offload layers, context and output limits, VRAM
++samples, lease ownership, and bounded teardown. Cleanup SHALL signal only a
++matching task-owned server. It SHALL confirm process exit, process reap, port
++release, lease release, and zero unrelated process signals. Partial checkpoints
++SHALL bind all frozen input hashes and preserve completed terminal cells. A
++resume SHALL rerun only absent cell identities.
++
++The terminal artifact SHALL be
++`results/experiment_6887_three_family_relation_proposal_corpus.json`. It SHALL
++include `field_principles`, `preconditions_checked`, `inference_substrate`,
++`duration_s`, `source_artifact_hashes`, `relation_fixture_ready_score`,
++`model_specs`, `models_used`, `model_artifact_hashes`, `tokenizer_receipts`,
++`llama_cpp_receipts`, `gpu_lease_rows`, `enoki_asset_receipts`,
++`deterministic_rule_receipts`, `prompt_manifest`,
++`held_sidecar_access_count`, `rows`, `raw_output_manifest`,
++`parse_failure_rows`, `abstention_rows`, `truncation_rows`, `timeout_rows`,
++`per_arm_family_counts`, `server_lifecycle_rows`,
++`model_weight_mutation_count`, `external_text_scorer_call_count`,
++`constrained_schema_decode_count`, `random_seed`, `reproducibility_checksum`,
++`relation_corpus_complete_score`, `gate_check_summary`, `verifier_is_oracle`,
++`verdict_class`, and `honest_verdict`. Every required field, the incoming gate,
++and the outgoing gate SHALL have one entry in `field_principles`.
++`inference_substrate` SHALL equal
++`live_local_sota_gguf_cuda_plus_pinned_enoki_encoder`.
++`held_sidecar_access_count`, `model_weight_mutation_count`,
++`external_text_scorer_call_count`, and `constrained_schema_decode_count` SHALL
++all equal zero. `verifier_is_oracle` SHALL be false. `honest_verdict` SHALL
++start with `complete_`. `verdict_class` SHALL be one of `positive`,
++`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
++
++`relation_corpus_complete_score` SHALL be the bare integer one only when all
++five arms have authentic terminal cells for every frozen source record, every
++arm-family count meets its floor, raw rows and hashes replay, held-sidecar
++access is zero, GPU and tokenizer evidence passes for all GGUF arms, the pinned
++Enoki identity passes, and server teardown is clean. It SHALL not depend on
++proposal quality, parser success, abstention rate, timeout count, or truncation
++count. Otherwise it SHALL be zero.
++
++#### SCENARIO-INFERENCE-6887-PRECONDITIONS: Missing Or Drifted Inputs Block
++
++Given a missing model cache, changed Exp6886 gate or hash, changed Enoki
++revision, substituted tokenizer, CPU-only runtime, absent GPU offload, or lease
++failure,
++When Exp6887 checks acquisition inputs,
++Then acquisition SHALL not start and the complete blocked artifact SHALL retain
++the exact failed expectations and observations.
++
++#### SCENARIO-INFERENCE-6887-PROMPT-SEAL: Formal Authority Never Reaches An Arm
++
++Given public source views and sealed held authority,
++When Exp6887 builds any prompt or encoder input,
++Then no held label, hidden case, ASP program, answer set, solver receipt, exact
++target relation, or sidecar path SHALL appear and held-sidecar access SHALL
++remain zero.
++
++#### SCENARIO-INFERENCE-6887-PROTOCOL: Surface Parsing Preserves Failures
++
++Given valid lines, malformed lines, invalid UTF-8 spans, unsupported
++predicates, duplicate tuples, abstentions, and empty output,
++When Exp6887 parses a raw proposal,
++Then it SHALL preserve each input line or empty cell with a typed status and
++SHALL accept only exact source byte spans and protocol fields.
++
++#### SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION: Terminal Cells Stay Visible
++
++Given a timed-out request or output-budget stop,
++When Exp6887 records the cell,
++Then it SHALL keep the raw output received, mark the timeout or truncation, and
++retain the cell in every applicable denominator.
++
++#### SCENARIO-INFERENCE-6887-RESUME: Only Absent Cells Run Again
++
++Given a partial checkpoint with unchanged frozen input hashes,
++When Exp6887 resumes,
++Then verified terminal cells SHALL remain byte-identical and only absent cell
++identities SHALL run. Input or checkpoint hash drift SHALL fail closed.
++
++#### SCENARIO-INFERENCE-6887-TEARDOWN: Owned Servers Exit Cleanly
++
++Given one matching task-owned llama.cpp server and unrelated processes,
++When Exp6887 ends a GGUF phase,
++Then it SHALL stop and reap only the owned server, release its port and lease,
++and record zero unrelated process signals.
++
++#### SCENARIO-INFERENCE-6887-COMPLETION: Readiness Measures Acquisition Only
++
++Given all five arm-family matrices and their terminal raw cells,
++When Exp6887 computes its outgoing gate,
++Then complete authentic acquisition SHALL score one even when proposal rows are
++malformed, unsupported, duplicate, abstained, empty, timed out, or truncated.
++Missing cells, bad provenance, label access, or unclean teardown SHALL score
++zero.
++
++## Implementation Status (REQ-INFERENCE-6887)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-INFERENCE-6887 and SCENARIO-INFERENCE-6887-* | Planned (`python/carnot/experiment_6887_three_family_relation_proposal_corpus.py`; `scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py`) | Planned (`tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py`) |
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5869c1b5f1..c6fc18bf2d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 125, "phase": "iteration_start", "last_beat": "2026-09-02T14:45:13Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-09-02T15:06:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4c5f6af697..6a7529b40f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17072,3 +17072,4 @@ The l |
+ | 2026-09-02 13:32 UTC | Milestone 2026.09.603 activated | OK | 4 tasks queued |
+ | 2026-09-02 14:04 UTC | V603 executable manifest and branch isolation cont | OK | 127 passed, 1 warning in 8.66s |
+ | 2026-09-02 14:43 UTC | Enoki asset admission and exact relation fixture | OK | 132 passed, 1 warning in 9.81s |
++| 2026-09-02 15:06 UTC | Three family anchored relation proposal corpus | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (640s silence). Last out |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9284a4d12a..135927d3af 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 125, "phase": "iteration_start", "started_at": "2026-09-02T14:45:13Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 1, "phase": "iteration_start", "started_at": "2026-09-02T15:06:42Z"}
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py b/tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py
+new file mode 100644
+index 0000000000..4afcd388d3
+--- /dev/null
++++ b/tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py
+@@ -0,0 +1,491 @@
++"""Tests for the authentic five-arm relation proposal corpus.
++
++Spec refs: REQ-INFERENCE-6887 and SCENARIO-INFERENCE-6887-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6887_three_family_relation_proposal_corpus as mod
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _upstream() -> dict[str, Any]:
++    fixtures = mod.build_frozen_source_records()
++    return {
++        "relation_fixture_ready_score": 1,
++        "relation_schema_version": "anchored_relation_v1",
++        "rows": [
++            {
++                "row_type": "fixture",
++                "fixture_id": row["fixture_id"],
++                "group_id": row["group_id"],
++                "family": row["family"],
++                "split": row["split"],
++                "source_text_hash": row["source_text_hash"],
++                "prompt_view_hash": mod.sha256_json(row),
++            }
++            for row in fixtures
++        ],
++        "enoki_asset_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++    }
++
++
++def _models() -> list[dict[str, Any]]:
++    return [
++        {
++            "hf_id": hf_id,
++            "model_path": f"/cache/{index}.gguf",
++            "sha256": mod.EXPECTED_MODEL_BINDINGS[hf_id]["sha256"],
++            "snapshot_identity": mod.EXPECTED_MODEL_BINDINGS[hf_id]["snapshot_identity"],
++            "model_size_bytes": 100 + index,
++            "gpu": 0,
++        }
++        for index, hf_id in enumerate(mod.MODEL_SPECS)
++    ]
++
++
++def _tokenizers() -> list[dict[str, Any]]:
++    return [
++        {
++            "hf_id": hf_id,
++            "source": "native_embedded_gguf_llama_cpp_vocab_only",
++            "loadable": True,
++            "canonical_tokenizer_payload_sha256": mod.EXPECTED_TOKENIZER_HASHES[hf_id],
++            "probe_token_count": 4,
++        }
++        for hf_id in mod.MODEL_SPECS
++    ]
++
++
++def _preconditions() -> dict[str, Any]:
++    return mod.evaluate_preconditions(
++        upstream=_upstream(),
++        upstream_sha256=mod.EXPECTED_EXP6886_SHA256,
++        models=_models(),
++        tokenizer_receipts=_tokenizers(),
++        enoki_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++        cuda_supported=True,
++        gpu_offload_supported=True,
++        gpu_lease_available=True,
++        held_sidecar_access_count=0,
++    )
++
++
++def _runtime(arm: str) -> dict[str, Any]:
++    return {
++        "arm": arm,
++        "authentic": True,
++        "server_pid": 7000 if arm.startswith("gguf:") else None,
++        "gpu_uuid": "GPU-test" if arm.startswith("gguf:") else None,
++        "offload_layers": -1 if arm.startswith("gguf:") else None,
++        "owned_cuda_residency": arm.startswith("gguf:"),
++    }
++
++
++def _complete_cells() -> list[dict[str, Any]]:
++    rows = []
++    for source in mod.build_frozen_source_records():
++        for arm in mod.PROPOSAL_ARMS:
++            rows.append(
++                mod.build_terminal_cell(
++                    source=source,
++                    arm=arm,
++                    raw_output="",
++                    prompt=mod.build_prompt(source) if arm.startswith("gguf:") else "",
++                    prompt_token_count=12 if arm.startswith("gguf:") else 0,
++                    output_token_count=0,
++                    latency_s=0.01,
++                    stop_reason="stop",
++                    timed_out=False,
++                    truncated=False,
++                    runtime_receipt=_runtime(arm),
++                )
++            )
++    return rows
++
++
++def _clean_lifecycle() -> list[dict[str, Any]]:
++    return [
++        {
++            "arm": f"gguf:{hf_id}",
++            "process_exit_confirmed": True,
++            "process_reaped": True,
++            "port_release_confirmed": True,
++            "lease_released": True,
++            "unrelated_process_signal_count": 0,
++            "leak_free": True,
++        }
++        for hf_id in mod.MODEL_SPECS
++    ]
++
++
++def _acquisition() -> dict[str, Any]:
++    return {
++        "cells": _complete_cells(),
++        "llama_cpp_receipts": [
++            {
++                "hf_id": row["hf_id"],
++                "pid": 7000 + index,
++                "gpu_uuid": "GPU-test",
++                "offload_layers": -1,
++                "owned_cuda_residency": True,
++            }
++            for index, row in enumerate(_models())
++        ],
++        "gpu_lease_rows": [
++            {"hf_id": hf_id, "owned": True, "released": True} for hf_id in mod.MODEL_SPECS
++        ],
++        "enoki_asset_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++        "deterministic_rule_receipts": [{"version": mod.RULE_VERSION, "deterministic": True}],
++        "server_lifecycle_rows": _clean_lifecycle(),
++        "checkpoint_manifest": {"complete": True},
++    }
++
++
++def test_req_inference_6887_spec_owns_contract() -> None:
++    """REQ-INFERENCE-6887 declares every required scenario before code."""
++
++    text = (ROOT / "openspec/capabilities/llm-ebm-inference/spec.md").read_text()
++    section = text[text.index("### REQ-INFERENCE-6887") :]
++    for token in (
++        "SCENARIO-INFERENCE-6887-PRECONDITIONS",
++        "SCENARIO-INFERENCE-6887-PROMPT-SEAL",
++        "SCENARIO-INFERENCE-6887-PROTOCOL",
++        "SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION",
++        "SCENARIO-INFERENCE-6887-RESUME",
++        "SCENARIO-INFERENCE-6887-TEARDOWN",
++        "SCENARIO-INFERENCE-6887-COMPLETION",
++    ):
++        assert token in section
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= {
++        word.strip("`,.") for word in section.replace("\n", " ").split()
++    }
++
++
++def test_scenario_6887_preconditions_require_exact_resources() -> None:
++    """SCENARIO-INFERENCE-6887-PRECONDITIONS blocks each unsafe substitution."""
++
++    assert _preconditions()["gate_check_summary"]["passed"] is True
++    mutations = {
++        "missing_cache": lambda values: values["models"].pop(),
++        "revision_drift": lambda values: values["models"][0].update(snapshot_identity="drift"),
++        "tokenizer_substitution": lambda values: values["tokenizer_receipts"][0].update(
++            canonical_tokenizer_payload_sha256="sha256:wrong"
++        ),
++        "cpu_headline_fallback": lambda values: values.update(cuda_supported=False),
++        "gpu_offload_absent": lambda values: values.update(gpu_offload_supported=False),
++        "lease_absent": lambda values: values.update(gpu_lease_available=False),
++        "held_access": lambda values: values.update(held_sidecar_access_count=1),
++        "upstream_drift": lambda values: values.update(upstream_sha256="sha256:drift"),
++        "enoki_drift": lambda values: values["enoki_receipts"][0].update(revision="drift"),
++    }
++    for name, mutate in mutations.items():
++        values = {
++            "upstream": _upstream(),
++            "upstream_sha256": mod.EXPECTED_EXP6886_SHA256,
++            "models": _models(),
++            "tokenizer_receipts": _tokenizers(),
++            "enoki_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++            "cuda_supported": True,
++            "gpu_offload_supported": True,
++            "gpu_lease_available": True,
++            "held_sidecar_access_count": 0,
++        }
++        mutate(values)
++        report = mod.evaluate_preconditions(**values)
++        assert report["gate_check_summary"]["passed"] is False, name
++        failed = report["gate_check_summary"]["failed_checks"]
++        assert all({"check", "expected", "observed", "passed"} <= set(row) for row in failed)
++
++
++def test_scenario_6887_resolver_calls_pair_then_dense(tmp_path: Path) -> None:
++    """SCENARIO-INFERENCE-6887-PRECONDITIONS uses exact GGUF paths only."""
++
++    paths = []
++    for index in range(3):
++        path = tmp_path / f"model-{index}.gguf"
++        path.write_bytes(f"model-{index}".encode())
++        paths.append(path)
++    calls: list[str] = []
++
++    def pair_provider(**_: Any) -> list[dict[str, Any]]:
++        calls.append("pair")
++        return [
++            {"hf_id": mod.MODEL_SPECS[0], "model_path": str(paths[0]), "gpu": 0},
++            {"hf_id": mod.MODEL_SPECS[2], "model_path": str(paths[2]), "gpu": 1},
++        ]
++
++    def dense_resolver(hf_id: str, _: str) -> str:
++        calls.append(hf_id)
++        return str(paths[1])
++
++    rows = mod.resolve_three_models(pair_provider=pair_provider, dense_resolver=dense_resolver)
++    assert calls == ["pair", mod.MODEL_SPECS[1]]
++    assert [row["hf_id"] for row in rows] == list(mod.MODEL_SPECS)
++    assert all(row["model_path"].endswith(".gguf") for row in rows)
++
++
++def test_scenario_6887_prompt_uses_frozen_public_views_only() -> None:
++    """SCENARIO-INFERENCE-6887-PROMPT-SEAL keeps all formal authority hidden."""
++
++    sources = mod.select_source_records(_upstream())
++    assert len(sources) == 90
++    assert set(mod.FAMILIES) == {row["family"] for row in sources}
++    assert all(sum(row["family"] == family for row in sources) == 18 for family in mod.FAMILIES)
++    prompt = mod.build_prompt(sources[0])
++    assert sources[0]["source_text"] in prompt
++    assert mod.PROTOCOL_LINE in prompt
++    assert mod.audit_arm_input(prompt) == []
++    for forbidden in mod.FORBIDDEN_PROMPT_TOKENS:
++        assert forbidden not in prompt
++    leaked = prompt + "\nasp_program"
++    assert mod.audit_arm_input(leaked) == ["forbidden_prompt_token:asp_program"]
++
++
++def test_scenario_6887_protocol_preserves_surface_rows() -> None:
++    """SCENARIO-INFERENCE-6887-PROTOCOL keeps valid, bad, duplicate, and empty rows."""
++
++    source = mod.build_frozen_source_records()[0]
++    text = source["source_text"]
++    subject_start = len(text[: text.index("n0")].encode())
++    object_start = len(text[: text.index("red")].encode())
++    valid = (
++        f"REL\t{subject_start}\t{subject_start + 2}\thas_color\t"
++        f"{object_start}\t{object_start + 3}\tpositive"
++    )
++    raw = "\n".join(
++        [
++            valid,
++            valid,
++            valid.replace("has_color", "free_relation"),
++            "REL\tbad",
++            f"REL\t1\t2\thas_color\t{object_start}\t{object_start + 3}\tpositive",
++            "ABSTAIN",
++        ]
++    )
++    rows = mod.parse_relation_output(raw, source)
++    assert [row["status"] for row in rows] == [
++        "accepted",
++        "duplicate",
++        "unsupported",
++        "malformed",
++        "invalid_span",
++        "abstention",
++    ]
++    assert rows[0]["subject"]["text"] == "n0"
++    assert rows[0]["object"]["text"] == "red"
++    assert rows[0]["normalized_tuple"] == ["n0", "has_color", "red", "positive"]
++    empty = mod.parse_relation_output("", source)
++    assert empty == [{"line_index": 0, "raw_line": "", "status": "empty", "reason": "empty_output"}]
++
++
++def test_scenario_6887_timeout_and_truncation_are_terminal() -> None:
++    """SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION preserves raw terminal cells."""
++
++    source = mod.build_frozen_source_records()[0]
++    cell = mod.build_terminal_cell(
++        source=source,
++        arm=f"gguf:{mod.MODEL_SPECS[0]}",
++        raw_output="REL\tpartial",
++        prompt=mod.build_prompt(source),
++        prompt_token_count=40,
++        output_token_count=mod.OUTPUT_TOKEN_BUDGET,
++        latency_s=10.0,
++        stop_reason="length",
++        timed_out=True,
++        truncated=True,
++        runtime_receipt=_runtime(f"gguf:{mod.MODEL_SPECS[0]}"),
++    )
++    assert cell["timed_out"] is True
++    assert cell["truncated"] is True
++    assert cell["raw_output"] == "REL\tpartial"
++    assert cell["raw_output_sha256"] == mod.sha256_text("REL\tpartial")
++    assert cell["terminal"] is True
++    assert cell["parse_rows"][0]["status"] == "malformed"
++
++
++def test_scenario_6887_resume_only_returns_absent_cells(tmp_path: Path) -> None:
++    """SCENARIO-INFERENCE-6887-RESUME preserves completed cells and rejects drift."""
++
++    source = mod.build_frozen_source_records()[0]
++    expected = [
++        mod.cell_identity(arm, source["fixture_id"]) for arm in mod.PROPOSAL_ARMS[:2]
++    ]
++    cell = _complete_cells()[0]
++    checkpoint = mod.build_checkpoint("sha256:inputs", expected, [cell])
++    path = tmp_path / "checkpoint.json"
++    mod.write_json_atomic(path, checkpoint)
++    loaded = mod.load_checkpoint(path, input_checksum="sha256:inputs")
++    assert mod.pending_cell_identities(expected, loaded) == [expected[1]]
++    changed = deepcopy(checkpoint)
++    changed["input_checksum"] = "sha256:drift"
++    mod.write_json_atomic(path, changed)
++    with pytest.raises(mod.RelationCorpusError, match="checkpoint_input_hash_drift"):
++        mod.load_checkpoint(path, input_checksum="sha256:inputs")
++    changed = deepcopy(checkpoint)
++    changed["checkpoint_sha256"] = "sha256:drift"
++    mod.write_json_atomic(path, changed)
++    with pytest.raises(mod.RelationCorpusError, match="checkpoint_hash_invalid"):
++        mod.load_checkpoint(path, input_checksum="sha256:inputs")
++
++
++def test_scenario_6887_completion_ignores_proposal_quality() -> None:
++    """SCENARIO-INFERENCE-6887-COMPLETION gates acquisition, not extraction quality."""
++
++    cells = _complete_cells()
++    assert all(cell["parse_rows"][0]["status"] == "empty" for cell in cells)
++    assert mod.completion_score(
++        sources=mod.build_frozen_source_records(),
++        cells=cells,
++        tokenizer_receipts=_tokenizers(),
++        llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
++        gpu_lease_rows=_acquisition()["gpu_lease_rows"],
++        enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++        server_lifecycle_rows=_clean_lifecycle(),
++        held_sidecar_access_count=0,
++    ) == 1
++    assert mod.completion_score(
++        sources=mod.build_frozen_source_records(),
++        cells=cells[:-1],
++        tokenizer_receipts=_tokenizers(),
++        llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
++        gpu_lease_rows=_acquisition()["gpu_lease_rows"],
++        enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++        server_lifecycle_rows=_clean_lifecycle(),
++        held_sidecar_access_count=0,
++    ) == 0
++
++
++def test_scenario_6887_teardown_rejects_any_lifecycle_gap() -> None:
++    """SCENARIO-INFERENCE-6887-TEARDOWN requires reap, port, lease, and narrow signals."""
++
++    clean = _clean_lifecycle()[0]
++    assert mod.server_lifecycle_errors(clean) == []
++    for field in (
++        "process_exit_confirmed",
++        "process_reaped",
++        "port_release_confirmed",
++        "lease_released",
++        "leak_free",
++    ):
++        changed = deepcopy(clean)
++        changed[field] = False
++        assert field in mod.server_lifecycle_errors(changed)
++    changed = deepcopy(clean)
++    changed["unrelated_process_signal_count"] = 1
++    assert "unrelated_process_signal_count" in mod.server_lifecycle_errors(changed)
++
++
++def test_req_6887_artifact_replays_rows_and_required_fields() -> None:
++    """REQ-INFERENCE-6887 emits a stable complete artifact from raw cells."""
++
++    artifact = mod.build_artifact(
++        date="20260902",
++        duration_s=61.0,
++        upstream=_upstream(),
++        upstream_sha256=mod.EXPECTED_EXP6886_SHA256,
++        sources=mod.build_frozen_source_records(),
++        models=_models(),
++        tokenizer_receipts=_tokenizers(),
++        preconditions=_preconditions(),
++        acquisition=_acquisition(),
++    )
++    assert artifact["relation_corpus_complete_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("complete_")
++    assert len(artifact["raw_output_manifest"]) == 450
++    assert artifact["held_sidecar_access_count"] == 0
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert mod.validate_artifact(artifact) == []
++    changed = deepcopy(artifact)
++    changed["rows"][0]["raw_output"] = "changed"
++    assert "raw_output_hash" in mod.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["relation_corpus_complete_score"] = 0
++    assert "relation_corpus_complete_score" in mod.validate_artifact(changed)
++
++
++def test_req_6887_blocked_run_writes_complete_artifact(tmp_path: Path) -> None:
++    """REQ-INFERENCE-6887 writes a full blocked artifact when cache gates fail."""
++
++    result_path = tmp_path / "results" / "experiment_6887.json"
++
++    def blocked(_: Path) -> dict[str, Any]:
++        values = _preconditions()
++        values["gate_check_summary"] = mod.gate_summary(
++            [mod.gate_check("exact_model_caches", True, False)]
++        )
++        values.update(
++            {
++                "upstream": _upstream(),
++                "upstream_sha256": mod.EXPECTED_EXP6886_SHA256,
++                "models": _models()[:-1],
++                "tokenizer_receipts": _tokenizers(),
++                "enoki_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++            }
++        )
++        return values
++
++    artifact = mod.run(
++        date="20260902",
++        root=tmp_path,
++        result_path=result_path,
++        checkpoint_path=tmp_path / "checkpoint.json",
++        precondition_collector=blocked,
++    )
++    assert artifact["honest_verdict"] == "complete_blocked_three_family_relation_corpus"
++    assert artifact["relation_corpus_complete_score"] == 0
++    assert result_path.is_file()
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(json.loads(result_path.read_text()))
++
++
++def test_req_6887_injected_run_writes_only_requested_paths(tmp_path: Path) -> None:
++    """REQ-INFERENCE-6887 keeps tests away from the tracked research record."""
++
++    result_path = tmp_path / "results" / "experiment_6887.json"
++    checkpoint_path = tmp_path / "checkpoint.json"
++
++    def ready(_: Path) -> dict[str, Any]:
++        return {
++            **_preconditions(),
++            "upstream": _upstream(),
++            "upstream_sha256": mod.EXPECTED_EXP6886_SHA256,
++            "models": _models(),
++            "tokenizer_receipts": _tokenizers(),
++            "enoki_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
++        }
++
++    artifact = mod.run(
++        date="20260902",
++        root=tmp_path,
++        result_path=result_path,
++        checkpoint_path=checkpoint_path,
++        precondition_collector=ready,
++        acquisition_runner=lambda **_: _acquisition(),
++    )
++    assert artifact["relation_corpus_complete_score"] == 1
++    assert result_path.is_file()
++    assert not (ROOT / "experiment_6887_three_family_relation_proposal_corpus.py").exists()
++
++
++def test_req_6887_source_forbids_gguf_transformers_and_schema_decode() -> None:
++    """REQ-INFERENCE-6887 keeps GGUF tokenization native and decoding unconstrained."""
++
++    source = (ROOT / "python/carnot/experiment_6887_three_family_relation_proposal_corpus.py").read_text()
++    assert "cached_sota_pair(" in source
++    assert "resolve_cached_gguf(" in source
++    assert "AutoTokenizer.from_pretrained(hf_id" not in source
++    assert "grammar=" not in source
++    assert "response_format" not in source
++    assert "json_schema" not in source
++    wrapper = ROOT / "scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py"
++    assert wrapper.is_file()
+-- 
+2.55.0
+

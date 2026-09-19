@@ -1,0 +1,460 @@
+From 84f9fb8baf119844bb7354a5ae77a86f08bd6877 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 09:10:39 -0400
+Subject: [PATCH 11245/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-news-watch.md    |   2 +
+ .../arc-world-model-trust-energy/spec.md      |  91 ++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ ...periment_7019_arc_belief_stream_fixture.py | 296 ++++++++++++++++++
+ 6 files changed, 394 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_experiment_7019_arc_belief_stream_fixture.py
+
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index b03ac41e58..da8b02e28c 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -263,3 +263,5 @@ CHECK_TIMED_OUT
+ 
+ - On August 14, Kaggle staff acknowledged potential RTX 6000 pool capacity constraints and said they were working to release additional resources. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
+ 
++## 2026-09-05 13:09 UTC -- checked, nothing new
++
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index e4a2688866..c0e66ce69a 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -30063,3 +30063,94 @@ Implementation status: implemented 2026-09-04
+ (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
+ transform, `arc_supervisor_refinement.py`;
+ `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
++
++### REQ-ARC-WMTE-7019: Freeze a game-blind chronological belief stream
++
++The Exp7019 producer SHALL select provenance-complete live `make_carnot_agent` and
++`E3AgentPolicy` attempts before it reads any belief utility. It SHALL replay each source hash
++and reject an incomplete manifest, envelope, transition row, policy binding, factory binding,
++or duplicate transition. It SHALL not execute an induced engine, game adapter, environment,
++or public-game replay.
++
++The producer SHALL write
++`results/raw/experiment_7019_arc_belief_stream_fixture/transition_events.jsonl`. Each row
++SHALL have a stable event ID and row hash. Each row SHALL keep the pre-action view, action,
++next observation, observation-time contradiction, and mechanic signature in separate fields.
++Rows SHALL use the source attempt time and transition index for total ordering. A later
++attempt that repeats an earlier transition SHALL not create a second event.
++
++The updater-visible fixture SHALL omit game IDs, source paths, registry results, hidden rules,
++adapters, and held-future outcomes. Mechanic signatures SHALL use only the action type,
++observable state delta, object and spatial summaries, level boundary, and support available at
++observation time. Contradiction pairs and counterexample clusters SHALL use only these same
++observation-time features.
++
++Later outcomes SHALL be written only to a separate sealed JSONL sidecar. The updater loader
++SHALL reject the sidecar schema. Both JSONL files SHALL be content-addressed and read-only.
++A fresh process SHALL reproduce their hashes and the deterministic manifest content.
++
++The result artifact SHALL contain `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`, `attempt_manifest_rows`,
++`provenance_acceptance_rows`, `provenance_rejection_rows`, `chronology_rows`,
++`level_boundary_rows`, `pre_action_rows`, `next_observation_rows`,
++`mechanic_signature_rows`, `contradiction_pair_rows`, `counterexample_cluster_rows`,
++`sealed_future_rows`, `leakage_check_rows`, `fixture_path`, `held_future_sidecar_path`,
++`fixture_hash`, `held_future_sidecar_hash`, `fresh_process_replay_rows`, `rows`,
++`solve_provenance`, `arc_belief_stream_ready_score`, `random_seed`,
++`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. Every listed field SHALL have one scientific principle in
++`field_principles`.
++
++`arc_belief_stream_ready_score` SHALL equal one only when at least three mechanic groups are
++present, all accepted rows are chronological and complete, future leakage is zero, and the
++fresh-process hashes are stable. A blocked result SHALL use
++`honest_verdict: blocked_arc_belief_stream_fixture`. It SHALL name the first failed check,
++expected value, and observed value in `gate_check_summary`. A positive result SHALL make no
++game, level, leaderboard, or registry solve claim.
++
++#### SCENARIO-ARC-WMTE-7019-CHRONOLOGY-AND-DUPLICATES
++
++- GIVEN complete live attempts with repeated transition IDs
++- WHEN the fixture is frozen
++- THEN unique rows follow attempt time and transition index
++- AND every repeated transition receives one terminal rejection row.
++
++#### SCENARIO-ARC-WMTE-7019-TEMPORAL-ISOLATION
++
++- GIVEN one updater-visible event and its later held outcome
++- THEN the event separates pre-action, action, next observation, and contradiction fields
++- AND no held-future field is in the event
++- AND the updater loader rejects the sealed sidecar.
++
++#### SCENARIO-ARC-WMTE-7019-LEVEL-BOUNDARY
++
++- GIVEN the chronological stream enters a higher observed level
++- THEN the first event at that level records one boundary from the previous level
++- AND later events at the same level do not repeat that boundary.
++
++#### SCENARIO-ARC-WMTE-7019-PROVENANCE-REJECTION
++
++- GIVEN a manifest, envelope, transition row, or hash binding is absent or malformed
++- THEN that source row is rejected
++- AND no event from it enters the fixture.
++
++#### SCENARIO-ARC-WMTE-7019-GAME-BLIND-SIGNATURES
++
++- GIVEN two source attempts with different game or source identities but equal observations
++- THEN they produce equal mechanic signatures
++- AND the fixture, contradiction pairs, and clusters contain no game or source identity.
++
++#### SCENARIO-ARC-WMTE-7019-CONTRADICTIONS-AND-CLUSTERS
++
++- GIVEN equal observation-time hypothesis keys with different observed outcome keys
++- THEN the later event identifies the prior event as a contradiction
++- AND both events enter one counterexample cluster without a future field.
++
++#### SCENARIO-ARC-WMTE-7019-STABLE-HASHES
++
++- GIVEN equal source bytes in two processes
++- THEN fixture, sidecar, row, and deterministic manifest hashes are equal
++- AND a changed source observation changes the affected digest.
++
++Implementation status: specified 2026-09-05. The conductor owns later documentation and
++traceability reconciliation.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 914eb177c2..46488ac6f0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-09-05T12:44:21Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-09-05T13:10:28Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 81e1a2648f..2db6e9a531 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17339,3 +17339,6 @@ code |
+ | 2026-09-05 11:16 UTC | V615 source delta and exact task-contract prefligh | OK | 111 passed, 1 warning in 10.53s |
+ | 2026-09-05 11:50 UTC | Task-linked phase, GPU, and runner receipt contrac | OK | 109 passed, 1 warning in 10.90s |
+ | 2026-09-05 12:42 UTC | V615 recent-source ingestion and architecture map | OK | 129 passed, 1 warning in 7.92s |
++| 2026-09-05 13:08 UTC | Immutable ARC chronological belief-stream fixture | FAIL | Codex CLI error: Stalled after 600s silence. Last output: 
+++    assert artifa |
++| 2026-09-05 13:10 UTC | Conductor re-exec: fresh committed source | OK | 1be84f6514e7 -> 7b1fbd96fdb3; argv preserved |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4e23425931..6eed216e55 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 6, "phase": "iteration_start", "started_at": "2026-09-05T12:44:21Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 1, "phase": "iteration_start", "started_at": "2026-09-05T13:10:28Z"}
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_7019_arc_belief_stream_fixture.py b/tests/python/test_experiment_7019_arc_belief_stream_fixture.py
+new file mode 100644
+index 0000000000..bd28a534f7
+--- /dev/null
++++ b/tests/python/test_experiment_7019_arc_belief_stream_fixture.py
+@@ -0,0 +1,296 @@
++"""Tests for the frozen ARC belief stream.
++
++Spec refs: REQ-ARC-WMTE-7019 and SCENARIO-ARC-WMTE-7019-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_7019_arc_belief_stream_fixture as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++def _sha(marker: str) -> str:
++    return "sha256:" + marker * 64
++
++
++def _transition(
++    index: int,
++    *,
++    changed: tuple[tuple[int, int], ...] = ((1, 1),),
++    level: int = 0,
++    action_xy: tuple[int, int] = (1, 1),
++) -> dict:
++    grid = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
++    next_grid = deepcopy(grid)
++    for y, x in changed:
++        next_grid[y][x] = 1
++    row = {
++        "grid": grid,
++        "action": 6,
++        "data": {"x": action_xy[0], "y": action_xy[1]},
++        "next_grid": next_grid,
++        "index": index,
++        "level_before": level,
++        "level_after": level,
++    }
++    row["transition_id"] = exp.transition_id_for(row)
++    return row
++
++
++def _attempt(
++    key: str,
++    created_at: str,
++    transitions: list[dict],
++    *,
++    game: str = "source-game",
++    source_path: str = "/private/source/path",
++) -> dict:
++    return {
++        "source_run_id": f"run-{key}",
++        "source_game": game,
++        "source_path": source_path,
++        "created_at": created_at,
++        "published_at": created_at,
++        "manifest_index": 0,
++        "complete": True,
++        "policy": "e3",
++        "transition_source_kind": "live_agent_attempts",
++        "policy_hash": _sha("a"),
++        "factory_hash": _sha("b"),
++        "envelope_hash": _sha("c"),
++        "transition_file_hash": _sha("d"),
++        "source_hashes_replayed": True,
++        "solve_provenance": "live_agent_self_discovery",
++        "transitions": transitions,
++    }
++
++
++def test_req_arc_wmte_7019_spec_precedes_implementation() -> None:
++    """REQ-ARC-WMTE-7019 lists every fixture field and scenario."""
++    text = (REPO_ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text.split("### REQ-ARC-WMTE-7019", 1)[1]
++    for marker in (
++        "SCENARIO-ARC-WMTE-7019-CHRONOLOGY-AND-DUPLICATES",
++        "SCENARIO-ARC-WMTE-7019-TEMPORAL-ISOLATION",
++        "SCENARIO-ARC-WMTE-7019-LEVEL-BOUNDARY",
++        "SCENARIO-ARC-WMTE-7019-PROVENANCE-REJECTION",
++        "SCENARIO-ARC-WMTE-7019-GAME-BLIND-SIGNATURES",
++        "SCENARIO-ARC-WMTE-7019-CONTRADICTIONS-AND-CLUSTERS",
++        "SCENARIO-ARC-WMTE-7019-STABLE-HASHES",
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_7019_chronology_deduplicates_and_marks_boundaries() -> None:
++    """SCENARIO-ARC-WMTE-7019-CHRONOLOGY-AND-DUPLICATES keeps one total order."""
++    first = _transition(0)
++    late = _attempt("late", "20260905T020000_000000", [deepcopy(first), _transition(1)])
++    early = _attempt("early", "20260905T010000_000000", [first])
++    level_one = _attempt("level-one", "20260905T030000_000000", [_transition(0, level=1)])
++
++    frozen = exp.freeze_event_stream([late, level_one, early])
++
++    assert [row["stream_index"] for row in frozen["events"]] == [0, 1, 2]
++    assert [row["event_index"] for row in frozen["chronology_rows"]] == [0, 1, 0]
++    duplicate_rows = [
++        row for row in frozen["provenance_rejection_rows"] if row["reason"] == "duplicate_transition"
++    ]
++    assert len(duplicate_rows) == 1
++    assert duplicate_rows[0]["source_transition_id"] == first["transition_id"]
++    assert frozen["level_boundary_rows"] == [
++        {
++            "event_id": frozen["events"][2]["event_id"],
++            "stream_index": 2,
++            "from_level": 0,
++            "to_level": 1,
++            "kind": "between_attempts",
++        }
++    ]
++
++
++def test_scenario_7019_rejects_malformed_attempt_and_transition_provenance() -> None:
++    """SCENARIO-ARC-WMTE-7019-PROVENANCE-REJECTION fails closed."""
++    malformed_attempt = _attempt("bad", "20260905T010000_000000", [_transition(0)])
++    malformed_attempt["policy_hash"] = "not-a-hash"
++    bad_transition = _attempt("bad-row", "20260905T020000_000000", [_transition(0)])
++    bad_transition["transitions"][0]["transition_id"] = "0000000000000000"
++
++    frozen = exp.freeze_event_stream([malformed_attempt, bad_transition])
++
++    assert frozen["events"] == []
++    assert frozen["provenance_acceptance_rows"] == []
++    assert {row["reason"] for row in frozen["provenance_rejection_rows"]} == {
++        "incomplete_attempt_provenance",
++        "malformed_transition_provenance",
++    }
++    assert all(row["terminal"] is True for row in frozen["provenance_rejection_rows"])
++
++
++def test_scenario_7019_future_and_identity_are_absent_from_updater_surface(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7019-TEMPORAL-ISOLATION seals identity and later outcomes."""
++    row = _transition(0)
++    left = exp.freeze_event_stream([_attempt("x", "20260905T010000_000000", [row])])
++    right = exp.freeze_event_stream(
++        [
++            _attempt(
++                "x",
++                "20260905T010000_000000",
++                [row],
++                game="different-game",
++                source_path="/another/private/path",
++            )
++        ]
++    )
++    event = left["events"][0]
++    assert event["mechanic_signature"] == right["events"][0]["mechanic_signature"]
++    assert set(event) == set(exp.EVENT_FIELDS)
++    assert set(event["pre_action"]) == set(exp.PRE_ACTION_FIELDS)
++    assert set(event["next_observation"]) == set(exp.NEXT_OBSERVATION_FIELDS)
++    assert not exp.find_forbidden_identity_or_future_fields(left["events"])
++    assert not exp.find_forbidden_identity_or_future_fields(left["contradiction_pair_rows"])
++    assert not exp.find_forbidden_identity_or_future_fields(left["counterexample_cluster_rows"])
++
++    fixture = tmp_path / "events.jsonl"
++    sidecar = tmp_path / "sealed.jsonl"
++    exp.write_jsonl_immutable(fixture, left["events"])
++    exp.write_jsonl_immutable(sidecar, left["_sealed_sidecar_rows"])
++    assert exp.load_updater_events(fixture) == left["events"]
++    with pytest.raises(ValueError, match="updater cannot load sealed future rows"):
++        exp.load_updater_events(sidecar)
++
++
++def test_scenario_7019_contradictions_and_clusters_use_observation_time_only() -> None:
++    """SCENARIO-ARC-WMTE-7019-CONTRADICTIONS-AND-CLUSTERS groups observed conflicts."""
++    attempts = [
++        _attempt("a", "20260905T010000_000000", [_transition(0)]),
++        _attempt(
++            "b",
++            "20260905T020000_000000",
++            [_transition(0, changed=((1, 1), (1, 2)))],
++        ),
++    ]
++
++    frozen = exp.freeze_event_stream(attempts)
++
++    assert len(frozen["contradiction_pair_rows"]) == 1
++    pair = frozen["contradiction_pair_rows"][0]
++    assert pair["prior_event_id"] == frozen["events"][0]["event_id"]
++    assert pair["counterexample_event_id"] == frozen["events"][1]["event_id"]
++    assert len(frozen["counterexample_cluster_rows"]) == 1
++    cluster = frozen["counterexample_cluster_rows"][0]
++    assert cluster["support"] == 2
++    assert len(cluster["observed_outcome_keys"]) == 2
++    assert not exp.find_forbidden_identity_or_future_fields([pair, cluster])
++
++
++def test_scenario_7019_hashes_are_stable_and_sensitive(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7019-STABLE-HASHES is independent of output path."""
++    frozen = exp.freeze_event_stream(
++        [_attempt("a", "20260905T010000_000000", [_transition(0), _transition(1)])]
++    )
++    first_fixture = tmp_path / "one" / "events.jsonl"
++    first_sidecar = tmp_path / "one" / "sealed.jsonl"
++    second_fixture = tmp_path / "two" / "events.jsonl"
++    second_sidecar = tmp_path / "two" / "sealed.jsonl"
++    first = exp.write_fixture_bundle(
++        first_fixture,
++        first_sidecar,
++        frozen["events"],
++        frozen["_sealed_sidecar_rows"],
++    )
++    second = exp.write_fixture_bundle(
++        second_fixture,
++        second_sidecar,
++        frozen["events"],
++        frozen["_sealed_sidecar_rows"],
++    )
++    assert first == second
++    assert first_fixture.stat().st_mode & 0o222 == 0
++    assert first_sidecar.stat().st_mode & 0o222 == 0
++
++    changed = deepcopy(frozen["events"])
++    changed[0]["pre_action"]["grid"][0][0] = 9
++    changed[0]["row_hash"] = exp.event_row_hash(changed[0])
++    changed_fixture = tmp_path / "changed" / "events.jsonl"
++    changed_sidecar = tmp_path / "changed" / "sealed.jsonl"
++    changed_hashes = exp.write_fixture_bundle(
++        changed_fixture,
++        changed_sidecar,
++        changed,
++        frozen["_sealed_sidecar_rows"],
++    )
++    assert changed_hashes["fixture_hash"] != first["fixture_hash"]
++    assert changed_hashes["held_future_sidecar_hash"] == first["held_future_sidecar_hash"]
++
++
++def test_req_7019_real_artifact_is_ready_complete_and_reproducible(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-7019 freezes the provenance-complete live E3 corpus end to end."""
++    output = tmp_path / "experiment_7019.json"
++    raw_dir = tmp_path / "raw"
++
++    exit_code = exp.main(
++        [
++            "--date",
++            "20260905",
++            "--repo-root",
++            str(REPO_ROOT),
++            "--raw-dir",
++            str(raw_dir),
++            "--output",
++            str(output),
++        ]
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    assert exit_code == 0
++    assert exp.validate_artifact(artifact, repo_root=REPO_ROOT) == []
++    assert artifact["arc_belief_stream_ready_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("complete_positive_")
++    assert set(artifact["field_principles"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert len(artifact["chronology_rows"]) == 27
++    assert len(artifact["level_boundary_rows"]) == 2
++    assert len({row["mechanic_group"] for row in artifact["mechanic_signature_rows"]}) >= 3
++    assert all(row["solve_provenance"] == "live_agent_self_discovery" for row in artifact["provenance_acceptance_rows"])
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["fresh_process_replay_rows"][0]["passed"] is True
++    assert artifact["gate_check_summary"]["passed"] is True
++    assert Path(artifact["fixture_path"]).name == "transition_events.jsonl"
++    assert Path(artifact["held_future_sidecar_path"]).name == "sealed_held_future.jsonl"
++
++
++def test_req_7019_blocked_and_tampered_artifacts_fail_closed(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-7019 records the first failed precondition and rejects drift."""
++    root = tmp_path / "empty-repo"
++    root.mkdir()
++    artifact = exp.build_artifact(
++        run_date="20260905",
++        repo_root=root,
++        raw_dir=tmp_path / "blocked-raw",
++        fresh_process=False,
++    )
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_arc_belief_stream_fixture"
++    assert artifact["arc_belief_stream_ready_score"] == 0
++    assert artifact["gate_check_summary"]["passed"] is False
++    assert artifact["gate_check_summary"]["failed_check"]
++    assert artifact["gate_check_summary"]["expected_value"] is not None
++    assert artifact["gate_check_summary"]["observed_value"] is not None
++    assert exp.validate_artifact(artifact, repo_root=root) == []
++
++    tampered = deepcopy(artifact)
++    tampered["honest_verdict"] = "complete_positive_not_blocked"
++    tampered["reproducibility_checksum"] = exp.artifact_checksum(tampered)
++    errors = exp.validate_artifact(tampered, repo_root=root)
++    assert "verdict_prefix_mismatch" in errors
++
+-- 
+2.55.0
+

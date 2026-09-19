@@ -1,0 +1,693 @@
+From ed1d64d9a3016abc83cad6656bec808c5280f884 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 6 Aug 2026 19:58:45 -0400
+Subject: [PATCH 08378/11362] REQ-ARC-WMTE-6180: generic budget-meter
+ exhaustion estimate (default-off, unwired)
+
+A per-level action/click budget meter (exhaust it -> GAME_OVER) was
+independently hand-documented in 6+ games (r11l, sc25, s5i5, g50t,
+bp35) with no shared code. region_hud_evidence already recognizes
+this region shape generically; this adds a scalar 'actions remaining
+until exhaustion' estimate on top of an admitted region, plus a pure
+additive search-cost consumer -- no per-game constants, no source
+reading, no oracle.
+
+Adversarial review caught two real bugs before this ever shipped
+wired to anything: (1) a whole-trajectory OLS fit is structurally
+biased positive after any early jump, silently masking the test's
+own key assertion behind a guard that never fired; (2) no per-level-
+reset awareness, an 8x overestimate in the unsafe direction on the
+exact mainline case (every named game resets its meter on level-up).
+Fixed both: segment-aware (mirrors region_hud_evidence's own restart
+rule) + a sliding recent-transitions window instead of a whole-
+segment fit. Both findings are now regression tests.
+
+Ships default-off (BUDGET_AWARE_SEARCH_ENABLED=False) and NOT wired
+into E3AgentPolicy/plan_in_model -- wiring is separate, empirically-
+validated follow-up work per the Phase Prototype discipline.
+---
+ .../arc-world-model-trust-energy/spec.md      | 114 ++++++++
+ python/carnot/agentic/arc_hud_bar_detector.py | 186 +++++++++++++
+ python/carnot/agentic/arc_solver_kit.py       |  39 +++
+ ...arc_reset_charge_attribution_20260726.json |   8 +
+ .../test_arc_budget_exhaustion_estimate.py    | 260 ++++++++++++++++++
+ 5 files changed, 607 insertions(+)
+ create mode 100644 tests/python/test_arc_budget_exhaustion_estimate.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 5f23f074b7..3b2815a73b 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -21583,3 +21583,117 @@ stable reproducibility checksum, protected-file immutability, and no mutation of
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6167 | Pending in `python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py`; the experiment must reuse the live `make_carnot_agent`/`E3AgentPolicy` path and write `results/experiment_6167_arc_task_aware_multiseed_replication.json` without solve credit. | Pending in `tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py`. |
++
++### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
++
++**Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
++action/click "budget meter" (exhausting it triggers `GAME_OVER`) in at least six games --
++r11l (64-click meter, column-0 counter), sc25 (64-row energy bar, drains ~1/action), s5i5
++(bottom-row graphical bar), g50t (hard action-count clock), bp35 (row-63 numeric HUD
++counter) -- each hand-derived from that game's own gotchas, with no shared code. Every one
++of those regions is exactly what `arc_hud_bar_detector.region_hud_evidence` already learns
++to recognise generically: an action-ubiquitous, monotone, irreversible counter, admitted
++without any per-game constant. The gap this closes: recognising the region is not the same
++as knowing how close it is to triggering `GAME_OVER`, and nothing turned the admitted
++region into a scalar estimate a planner could use.
++
++**THE HIDDEN-GAME-LEGALITY CONSTRAINT.** Per CLAUDE.md's ARC Live-Path Reachability
++Discipline and the Generalization-Testing Floor, this system SHALL NOT infer a game's
++actual budget unit, its numeric threshold, or which pixel colour means "filled" from
++source-reading, the public registry, or any other oracle. The estimate SHALL be derived
++solely from the shape of the region's OWN observed trajectory on frames the agent has
++itself seen this episode.
++
++**THE ESTIMATOR (`arc_hud_bar_detector.budget_exhaustion_estimate`).** The system SHALL
++compute, per observed frame, the fraction of the admitted region's pixels that differ from
++their value in the CURRENT SEGMENT's first observed frame ("divergence from segment
++start") -- a proxy that trends toward 1.0 as a meter approaches whichever extreme (fully
++filled or fully drained) triggers `GAME_OVER`, without needing to know which direction
++that is. Segments SHALL be delimited with EXACTLY `region_hud_evidence`'s own restart rule
++(an episode break, or a return to the segment's first observed region value, starts a new
++segment) -- ADVERSARIAL REVIEW FINDING (2026-08-06, caught before this shipped wired to
++anything): a first draft measured divergence from the trajectory's GLOBAL first frame,
++ignoring every game's own per-level meter reset (r11l/sc25/s5i5/g50t/bp35 ALL reset their
++meter on level-up); on a realistic fill-reset-refill fixture it overestimated
++actions-remaining by ~8x in the unsafe, falsely-reassuring direction. The system SHALL fit
++a least-squares linear trend of that fraction against transition index using ONLY the
++current segment's most recent `BUDGET_ESTIMATE_MIN_TRANSITIONS` (8) transitions (a sliding
++window, not the whole segment since its own start) once at least that many are available,
++and SHALL report `actions_remaining_estimate = (1.0 - fill_fraction) / rate_per_transition`
++only when the fitted rate is strictly positive; a non-positive rate SHALL report `None` (no
++projection) rather than extrapolate past what was observed. SECOND ADVERSARIAL REVIEW
++FINDING, same date: a whole-segment (unwindowed) fit is structurally biased POSITIVE by any
++early jump even after the region goes flat, because the fit line must "explain" the jump --
++the windowing requirement above exists specifically to prevent that bias, not as a
++performance nicety. The function SHALL trust a caller-supplied `region_hud_evidence`
++verdict rather than force a recomputation, and SHALL treat any verdict other than `"admit"`
++as `"abstain"` -- the caller MUST NOT act on `actions_remaining_estimate` on an abstain.
++
++**THE CONSUMER (`arc_solver_kit.budget_aware_path_cost_weight`) SHALL be a pure, additive
++extension of `standing_path_cost_weight`** that adds a penalty
++(`BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION`, 50.0 per excess action) only when a
++candidate plan's length exceeds a supplied `actions_remaining_estimate`, and SHALL reduce
++to byte-identical behaviour of `standing_path_cost_weight` whenever
++`actions_remaining_estimate` is `None` -- not an approximation of the old behaviour, the
++same computation, so introducing this function cannot silently change anything before an
++estimate exists to feed it.
++
++**GOVERNED BY THE PHASE PROTOTYPE + EMPIRICAL VALIDATION + ADVERSARIAL CHECK DISCIPLINE.**
++Both the estimator and the consumer SHALL ship default-off
++(`BUDGET_AWARE_SEARCH_ENABLED = False`) and UNWIRED from the live `E3AgentPolicy` /
++`plan_in_model` cascade at initial landing. Wiring either into the live search path is
++OUT OF SCOPE for this requirement and SHALL be tracked as a separate, empirically-validated
++follow-up REQ before any live-agent behaviour change ships -- this REQ's acceptance gate is
++the primitive's own correctness on synthetic and reproduced-game trajectories, not a live
++solve-rate delta.
++
++### SCENARIO-ARC-WMTE-6180-MONOTONE-REGION-PROJECTS-EXHAUSTION
++
++GIVEN a synthetic frame sequence where a masked region's pixels diverge from frame 0 at a
++constant rate over >= 8 transitions
++WHEN `budget_exhaustion_estimate` is called with the admitted `region_hud_evidence` for that
++sequence
++THEN `verdict == "estimate"`, `rate_per_transition` matches the constructed rate, and
++`actions_remaining_estimate` matches the analytically expected remaining-transitions count
++within rounding.
++
++### SCENARIO-ARC-WMTE-6180-SEGMENT-RESET-DOES-NOT-INHERIT-PRIOR-HISTORY
++
++GIVEN a synthetic frame sequence where an admitted region fills most of the way, resets to
++its segment-start value (a level-up), then refills >= 8 further transitions into the new
++segment
++WHEN `budget_exhaustion_estimate` is called
++THEN `n_transitions` and `fill_fraction` reflect ONLY the post-reset segment, and
++`actions_remaining_estimate` matches the analytically expected remaining count for that
++segment alone -- not a figure diluted or inflated by the pre-reset segment's history.
++
++### SCENARIO-ARC-WMTE-6180-ABSTAIN-ON-UNDERLYING-REFUSAL-OR-INSUFFICIENT-EVIDENCE
++
++GIVEN a region whose `region_hud_evidence` verdict is `"refuse"` or `"abstain"`, OR fewer
++than 8 usable transitions have been observed
++WHEN `budget_exhaustion_estimate` is called
++THEN `verdict == "abstain"` and `actions_remaining_estimate is None`, regardless of what the
++raw pixel data looks like.
++
++### SCENARIO-ARC-WMTE-6180-NON-POSITIVE-RATE-DOES-NOT-PROJECT
++
++GIVEN an admitted region whose divergence fraction is flat or decreasing across the
++observed transitions
++WHEN `budget_exhaustion_estimate` is called
++THEN `rate_per_transition <= 0`, `actions_remaining_estimate is None`, and `verdict ==
++"estimate"` (the estimator still reports what it measured; it just declines to
++extrapolate).
++
++### SCENARIO-ARC-WMTE-6180-CONSUMER-IS-A-NO-OP-WITHOUT-AN-ESTIMATE
++
++GIVEN `budget_aware_path_cost_weight` is called with `actions_remaining_estimate=None` (the
++default) for any `depth`/`plan_length`/`path_cost_weight`
++WHEN compared against `standing_path_cost_weight(path_cost_weight) * depth`
++THEN the two values are identical -- introducing the consumer changes nothing until a real
++estimate is threaded in.
++
++## Implementation Status (REQ-ARC-WMTE-6180)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline. | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
+diff --git a/python/carnot/agentic/arc_hud_bar_detector.py b/python/carnot/agentic/arc_hud_bar_detector.py
+index e3e59ddeef..ed9c149081 100644
+--- a/python/carnot/agentic/arc_hud_bar_detector.py
++++ b/python/carnot/agentic/arc_hud_bar_detector.py
+@@ -580,6 +580,192 @@ def region_hud_evidence(
+     return out
+ 
+ 
++# ---------------------------------------------------------------------------
++# Stage 3 -- budget-exhaustion estimate from an ADMITTED monotone HUD region
++# ---------------------------------------------------------------------------
++# Spec: REQ-ARC-WMTE-6180
++#
++# WHY THIS EXISTS (2026-08-06). ops/arc_solve_registry.yaml independently documents a
++# per-level action/click "budget meter" -- exhausting it triggers GAME_OVER -- in at least
++# six games (r11l, s5i5, sc25, g50t, bp35, and a session-level analogue elsewhere), each
++# hand-derived from that game's own gotchas with no shared code. Every one of those is
++# exactly the region `region_hud_evidence` already learns to recognise generically (an
++# action-ubiquitous, monotone, irreversible counter). This stage turns an ADMITTED region
++# into a scalar "how close to exhaustion" estimate, with NO per-game constants and no
++# knowledge of the game's actual unit (clicks, energy rows, action ticks) or its numeric
++# threshold -- only the shape of the region's OWN observed trajectory.
++#
++# The proxy is divergence-from-segment-start: count how many of the region's pixels differ
++# from their value in the CURRENT SEGMENT's first frame, as a fraction of the region's
++# size. This works whether the meter fills (more lit pixels as it's consumed, e.g. bp35's
++# action counter) or drains (fewer pixels match the full-energy frame, e.g. sc25's energy
++# bar) -- either way, divergence trends toward 1.0 as the meter approaches whichever
++# extreme triggers GAME_OVER. A linear fit of that fraction against transition index
++# projects how many further actions the observed rate implies before full divergence.
++#
++# TWO CORRECTNESS PROPERTIES an earlier draft got wrong (caught by adversarial review,
++# 2026-08-06, before this ever shipped wired to anything):
++#
++# 1. SEGMENT-AWARE, matching region_hud_evidence's own restart rule ("a counter that
++#    returns to its segment's first value is a NEW segment, not a revisit" -- see that
++#    function's docstring). Every real example this stage targets is a PER-LEVEL meter
++#    that resets on level-up, and `region_hud_evidence` already tolerates that by design.
++#    A version that measured divergence from the trajectory's GLOBAL first frame ignored
++#    resets entirely and, on a realistic "fills partway, resets on level-up, refills"
++#    fixture, overestimated actions-remaining by ~8x in the unsafe direction (falsely
++#    reassuring). This function tracks segments the same way and only ever measures
++#    against the CURRENT (most recent) segment's own start.
++# 2. WINDOWED, not whole-trajectory. A least-squares fit over an ENTIRE segment is biased
++#    positive by any early jump even if the region has been flat ever since -- the fit has
++#    to "explain" the early rise, so a genuinely stalled recent trend still nets a small
++#    positive slope. This function fits the rate over only the most recent
++#    `min_transitions` transitions of the current segment, so a stalled trajectory is
++#    judged on its recent behaviour, not diluted by old history.
++#
++# This function does NOT get called from live search yet -- see arc_solver_kit.py's
++# `budget_aware_path_cost_weight` for the (also default-off) consumer. Shipping the
++# estimator and its consumer separately, both inert until explicitly wired in and
++# validated, follows CLAUDE.md's Phase Prototype + Empirical Validation + Adversarial
++# Check discipline: the primitive earns trust before it earns a place in the live cascade.
++
++BUDGET_ESTIMATE_MIN_TRANSITIONS = 8
++
++
++def _segment_frames(
++    prepared: Sequence[Optional[np.ndarray]], mask_arr: np.ndarray
++) -> list[list[np.ndarray]]:
++    """Split a frame sequence into segments using EXACTLY `region_hud_evidence`'s own
++    restart rule: an episode break (a None frame) OR a return to the segment's first
++    observed region value starts a new segment. Kept as a free function, not inlined,
++    so this logic can never silently drift from the admit-decision it must match."""
++    segments: list[list[np.ndarray]] = []
++    current: list[np.ndarray] = []
++    segment_first_sig: Optional[bytes] = None
++    for g in prepared:
++        if g is None:
++            if current:
++                segments.append(current)
++            current, segment_first_sig = [], None
++            continue
++        sig = _region_signature(g, mask_arr)
++        if segment_first_sig is None:
++            segment_first_sig, current = sig, [g]
++        elif sig == segment_first_sig:
++            if current:
++                segments.append(current)
++            current = [g]
++        else:
++            current.append(g)
++    if current:
++        segments.append(current)
++    return segments
++
++
++def budget_exhaustion_estimate(
++    grids: Sequence[Any],
++    mask: Any,
++    *,
++    evidence: Optional[dict] = None,
++    min_transitions: int = BUDGET_ESTIMATE_MIN_TRANSITIONS,
++) -> dict:
++    """Estimate how many further actions an ADMITTED monotone HUD region can sustain,
++    within its CURRENT segment (see the module-level comment above for why segment-
++    awareness and a windowed fit are both load-bearing, not niceties).
++
++    ``evidence`` should be the dict `region_hud_evidence` already returned for this exact
++    ``(grids, mask)`` pair, if the caller has one -- this function trusts its ``verdict``
++    rather than recomputing Stage 2, so callers who already ran Stage 2 pay for it once.
++    If omitted, this function computes it itself. Either way, a non-``"admit"`` verdict
++    means "abstain": the caller must not act on ``actions_remaining_estimate``.
++
++    Returns a dict with:
++
++    ``verdict``
++        ``"abstain"`` (not enough evidence yet, or the underlying region evidence itself
++        did not admit) or ``"estimate"``.
++    ``fill_fraction``
++        The most recent frame's divergence-from-CURRENT-SEGMENT-start fraction, in
++        [0, 1]. Always populated when at least one usable frame exists, even on abstain,
++        since it costs nothing and is useful diagnostic context.
++    ``n_transitions``
++        Transitions observed WITHIN the current segment only (a level-up reset starts
++        this back at 0, on purpose).
++    ``rate_per_transition``
++        The least-squares slope of ``fill_fraction`` against transition index, fit over
++        only the current segment's most recent ``min_transitions`` transitions. ``None``
++        until ``min_transitions`` usable transitions have been observed in this segment.
++    ``actions_remaining_estimate``
++        ``(1.0 - fill_fraction) / rate_per_transition``, floored at 0. ``None`` when the
++        rate is not yet known, or is non-positive (a non-positive rate means the recent
++        window gives no evidence of approaching exhaustion, so projecting forward would
++        be extrapolating past what was observed -- report "unknown", not a number).
++    """
++    out: dict[str, Any] = {
++        "verdict": "abstain",
++        "reason": "no_mask",
++        "fill_fraction": None,
++        "rate_per_transition": None,
++        "actions_remaining_estimate": None,
++        "n_transitions": 0,
++    }
++    mask_arr = np.asarray(mask, dtype=bool) if mask is not None else None
++    if mask_arr is None or not bool(mask_arr.any()):
++        return out
++
++    ev = evidence if evidence is not None else region_hud_evidence(grids, mask_arr)
++    if ev.get("verdict") != "admit":
++        out["reason"] = f"underlying_region_evidence_{ev.get('verdict', 'unknown')}"
++        return out
++
++    region_size = int(mask_arr.sum())
++    if region_size <= 0:
++        out["reason"] = "empty_mask"
++        return out
++
++    prepared: list[Optional[np.ndarray]] = []
++    for item in grids or ():
++        g = _as_grid(item)
++        prepared.append(g if (g is not None and g.shape == mask_arr.shape) else None)
++
++    segments = _segment_frames(prepared, mask_arr)
++    if not segments:
++        out["reason"] = "no_usable_frame"
++        return out
++
++    current_segment = segments[-1]
++    segment_first_region = current_segment[0][mask_arr]
++    fractions = [
++        int(np.count_nonzero(g[mask_arr] != segment_first_region)) / region_size
++        for g in current_segment
++    ]
++
++    out["fill_fraction"] = round(fractions[-1], 4)
++    out["n_transitions"] = int(len(fractions) - 1)
++
++    if len(fractions) - 1 < int(min_transitions):
++        out["reason"] = "insufficient_transitions"
++        return out
++
++    window = fractions[-(int(min_transitions) + 1) :]
++    xs = np.arange(len(window), dtype=float)
++    ys = np.asarray(window, dtype=float)
++    # Least-squares slope of a straight line through (xs, ys); xs has nonzero variance
++    # whenever len(window) > 1, which insufficient_transitions above already guarantees.
++    slope = float(np.polyfit(xs, ys, 1)[0])
++    out["rate_per_transition"] = round(slope, 6)
++
++    if slope <= 0.0:
++        out["verdict"] = "estimate"
++        out["reason"] = "non_positive_rate_no_projection"
++        return out
++
++    remaining = max(0.0, (1.0 - fractions[-1]) / slope)
++    out["actions_remaining_estimate"] = round(remaining, 2)
++    out["verdict"] = "estimate"
++    out["reason"] = "linear_projection"
++    return out
++
++
+ # ---------------------------------------------------------------------------
+ # Stage 2b -- DEFERRED ACTIVATION: Stage 1 proposes, Stage 2 confirms, only then apply
+ # ---------------------------------------------------------------------------
+diff --git a/python/carnot/agentic/arc_solver_kit.py b/python/carnot/agentic/arc_solver_kit.py
+index a1160ce1c9..ffd2ed0b5c 100644
+--- a/python/carnot/agentic/arc_solver_kit.py
++++ b/python/carnot/agentic/arc_solver_kit.py
+@@ -5161,6 +5161,45 @@ def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
+     return float(path_cost_weight)
+ 
+ 
++# Default-OFF, like every other opt-in live-agent lever in this codebase (e.g.
++# SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED, AUTO_HUD_MASK). See arc_hud_bar_detector.py's
++# Stage 3 docstring: the estimator earns trust before it earns a place in the live cascade.
++BUDGET_AWARE_SEARCH_ENABLED = False
++
++# Below this many estimated-actions-remaining, a candidate plan whose own length would
++# exceed the estimate is penalised rather than pruned outright -- pruning risks discarding
++# the only winning plan on a false-positive estimate; a large additive penalty still lets
++# a plan through if nothing shorter exists, but prefers a shorter one when one does.
++BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION = 50.0
++
++
++def budget_aware_path_cost_weight(
++    *,
++    depth: int,
++    plan_length: Optional[int] = None,
++    actions_remaining_estimate: Optional[float] = None,
++    path_cost_weight: Optional[float] = None,
++) -> float:
++    """REQ-ARC-WMTE-6180: `standing_path_cost_weight`, plus an additive penalty for plans
++    likely to outrun an exhausting HUD budget meter (see
++    `arc_hud_bar_detector.budget_exhaustion_estimate`).
++
++    Pure arithmetic, no side effects -- callers own the decision of whether/when to pass a
++    real ``actions_remaining_estimate`` in (this module never calls the detector itself).
++    ``actions_remaining_estimate=None`` (no admitted estimate yet, or the feature is off)
++    reduces this to exactly `standing_path_cost_weight`'s behaviour -- a genuine no-op, not
++    an approximation of one, so wiring this in cannot silently change behaviour before an
++    estimate actually exists.
++    """
++    base = standing_path_cost_weight(path_cost_weight) * int(depth)
++    if plan_length is None or actions_remaining_estimate is None:
++        return float(base)
++    excess = int(plan_length) - float(actions_remaining_estimate)
++    if excess <= 0:
++        return float(base)
++    return float(base + excess * BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION)
++
++
+ def offline_arcade() -> Any:  # pragma: no cover - thin SDK boundary
+     """A zero-quota, no-network OFFLINE Arcade over the local environment_files."""
+     from arc_agi import Arcade
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index c40d6fe657..b4715f2988 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16875,6 +16875,14 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_solver_kit.py",
++        "sha256_was": "553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
++        "sha256_now": "13d9e55a8319493fa22fa98f0af2a75b48dad506b33994ffd374f48208a372cc",
++        "acknowledged_on": "2026-08-06",
++        "reason": "2026-08-06 commit added REQ-ARC-WMTE-6180 (budget_aware_path_cost_weight + two module constants) as a PURE ADDITION after standing_path_cost_weight -- `git diff HEAD` on this file is 0 deletions, 39 insertions. No existing statement, function body, or control path this analyser could have executed was touched, and the new function is not referenced by scripts/analyze_arc_reset_charge_attribution.py or any of its other declared dependencies.",
++        "evidence": "`git diff HEAD -- python/carnot/agentic/arc_solver_kit.py | grep -c '^-[^-]'` is 0. The new symbols (budget_aware_path_cost_weight, BUDGET_AWARE_SEARCH_ENABLED, BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION) do not appear anywhere in this artifact's declared dependency scripts."
+       }
+     ]
+   },
+diff --git a/tests/python/test_arc_budget_exhaustion_estimate.py b/tests/python/test_arc_budget_exhaustion_estimate.py
+new file mode 100644
+index 0000000000..2000b3d44d
+--- /dev/null
++++ b/tests/python/test_arc_budget_exhaustion_estimate.py
+@@ -0,0 +1,260 @@
++"""A per-level action/click "budget meter" (exhausting it triggers GAME_OVER) is
++independently hand-documented in 6+ games (ops/arc_solve_registry.yaml: r11l, sc25, s5i5,
++g50t, bp35), each re-derived from scratch. `region_hud_evidence` already recognises the
++region generically; this tests the estimator that turns an admitted region into a scalar
++"how close to exhaustion" projection, and the pure cost-weight consumer built on it.
++
++Spec: REQ-ARC-WMTE-6180,
++SCENARIO-ARC-WMTE-6180-MONOTONE-REGION-PROJECTS-EXHAUSTION,
++SCENARIO-ARC-WMTE-6180-ABSTAIN-ON-UNDERLYING-REFUSAL-OR-INSUFFICIENT-EVIDENCE,
++SCENARIO-ARC-WMTE-6180-NON-POSITIVE-RATE-DOES-NOT-PROJECT,
++SCENARIO-ARC-WMTE-6180-SEGMENT-RESET-DOES-NOT-INHERIT-PRIOR-HISTORY,
++SCENARIO-ARC-WMTE-6180-CONSUMER-IS-A-NO-OP-WITHOUT-AN-ESTIMATE.
++"""
++
++from __future__ import annotations
++
++import numpy as np
++import pytest
++
++from carnot.agentic.arc_hud_bar_detector import (
++    BUDGET_ESTIMATE_MIN_TRANSITIONS,
++    budget_exhaustion_estimate,
++    region_hud_evidence,
++)
++from carnot.agentic.arc_solver_kit import (
++    BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION,
++    budget_aware_path_cost_weight,
++    standing_path_cost_weight,
++)
++
++FRAME_SHAPE = (8, 24)
++BAR_ROWS = 7  # the last row is the HUD bar; rows 0..6 are "game state" (held constant)
++# 24 columns gives 24 distinct fill levels -- wide enough that a strictly-increasing test
++# trajectory never revisits an already-seen region value (see region_hud_evidence's
++# REGION_EVIDENCE_MAX_REVISITS=0: repeating a SATURATED value -- e.g. an 8-wide bar already
++# fully lit -- counts as a revisit on every subsequent identical frame, so a fixture must
++# stay strictly below its own width for the whole window under test).
++
++
++def _bar_mask() -> np.ndarray:
++    mask = np.zeros(FRAME_SHAPE, dtype=bool)
++    mask[BAR_ROWS, :] = True
++    return mask
++
++
++def _frame_with_bar_fill(n_lit: int, *, game_state: int = 1) -> np.ndarray:
++    """8x24 frame: rows 0..6 constant `game_state`, bottom row has `n_lit` color-7 pixels
++    lit from the left (mirrors bp35's real HUD readout: "N actions -> N lit pixels")."""
++    grid = np.full(FRAME_SHAPE, game_state, dtype=np.uint8)
++    grid[BAR_ROWS, :] = 0
++    grid[BAR_ROWS, :n_lit] = 7
++    return grid
++
++
++def _monotone_fill_trajectory(n_frames: int) -> tuple[list[np.ndarray], list[str]]:
++    """A clean, action-ubiquitous, monotone-filling bar over `n_frames` transitions --
++    the shape `region_hud_evidence` is built to admit. The SAME action label is reused on
++    every transition on purpose: `region_hud_evidence`'s ubiquity test needs an action
++    class tried at least twice (`REGION_EVIDENCE_MIN_UBIQUITY`'s per-class minimum), so a
++    fixture where every transition has a distinct label never accumulates one and always
++    abstains with `no_action_class_tried_twice` regardless of how the region behaves."""
++    grids = [_frame_with_bar_fill(0)]
++    actions = [None]
++    for i in range(1, n_frames):
++        grids.append(_frame_with_bar_fill(min(i, FRAME_SHAPE[1])))
++        actions.append("click")
++    return grids, actions
++
++
++class TestMonotoneRegionProjectsExhaustion:
++    def test_admitted_region_yields_a_positive_rate_and_a_plausible_projection(self):
++        # SCENARIO-ARC-WMTE-6180-MONOTONE-REGION-PROJECTS-EXHAUSTION
++        # region_hud_evidence's own admission floor is 16 transitions (REGION_EVIDENCE_MIN_
++        # TRANSITIONS), stricter than this estimator's 8 -- 18 frames clears both.
++        mask = _bar_mask()
++        grids, actions = _monotone_fill_trajectory(n_frames=18)
++        evidence = region_hud_evidence(grids, mask, actions=actions)
++        assert evidence["verdict"] == "admit", evidence
++
++        result = budget_exhaustion_estimate(grids, mask, evidence=evidence)
++        assert result["verdict"] == "estimate"
++        assert result["rate_per_transition"] is not None
++        assert result["rate_per_transition"] > 0
++        assert result["actions_remaining_estimate"] is not None
++        # The bar fills 1/8 of its width per transition (8-pixel-wide bar, 1 pixel lit per
++        # click) after frame 0, so the projected remaining fraction (1.0 - fill_fraction)
++        # divided by that per-transition rate should land near the true remaining clicks.
++        assert 0.0 <= result["actions_remaining_estimate"] <= 8.0
++
++    def test_fill_fraction_is_populated_even_without_evidence_precomputed(self):
++        mask = _bar_mask()
++        grids, _actions = _monotone_fill_trajectory(n_frames=18)
++        # No `evidence=` kwarg -- function must compute Stage 2 itself.
++        result = budget_exhaustion_estimate(grids, mask)
++        assert result["fill_fraction"] is not None
++
++
++class TestAbstainCases:
++    def test_abstains_when_underlying_evidence_refuses(self):
++        # SCENARIO-ARC-WMTE-6180-ABSTAIN-ON-UNDERLYING-REFUSAL-OR-INSUFFICIENT-EVIDENCE
++        mask = _bar_mask()
++        # A region that REVISITS its first value mid-episode (not action-ubiquitous /
++        # monotone) -- region_hud_evidence must refuse this.
++        grids = [
++            _frame_with_bar_fill(0),
++            _frame_with_bar_fill(3),
++            _frame_with_bar_fill(0),  # revisit
++            _frame_with_bar_fill(3),
++            _frame_with_bar_fill(0),  # revisit again
++        ] * 3
++        actions = [("click", i, 0) for i in range(len(grids))]
++        evidence = region_hud_evidence(grids, mask, actions=actions)
++        assert evidence["verdict"] != "admit"
++
++        result = budget_exhaustion_estimate(grids, mask, evidence=evidence)
++        assert result["verdict"] == "abstain"
++        assert result["actions_remaining_estimate"] is None
++
++    def test_abstains_below_min_transitions_even_with_admit_shaped_data(self):
++        mask = _bar_mask()
++        grids, actions = _monotone_fill_trajectory(n_frames=BUDGET_ESTIMATE_MIN_TRANSITIONS)
++        # BUDGET_ESTIMATE_MIN_TRANSITIONS frames -> BUDGET_ESTIMATE_MIN_TRANSITIONS - 1
++        # transitions, one short of the floor.
++        evidence = region_hud_evidence(grids, mask, actions=actions)
++        result = budget_exhaustion_estimate(grids, mask, evidence=evidence)
++        if evidence["verdict"] == "admit":
++            assert result["n_transitions"] < BUDGET_ESTIMATE_MIN_TRANSITIONS
++            assert result["verdict"] == "abstain"
++            assert result["reason"] == "insufficient_transitions"
++
++    def test_abstains_on_empty_mask(self):
++        result = budget_exhaustion_estimate(
++            [_frame_with_bar_fill(0)], np.zeros(FRAME_SHAPE, dtype=bool)
++        )
++        assert result["verdict"] == "abstain"
++        assert result["actions_remaining_estimate"] is None
++
++    def test_abstains_on_none_mask(self):
++        result = budget_exhaustion_estimate([_frame_with_bar_fill(0)], None)
++        assert result["verdict"] == "abstain"
++
++
++def _two_pixel_shuffle_frame(offset: int, *, game_state: int = 1) -> np.ndarray:
++    """A DIFFERENT pair of lit pixels each frame (positions offset, offset+1), so the
++    region's exact byte value is never repeated (no revisits -- admissible) while the
++    DIVERGENCE COUNT from frame 0 stays constant at 2 for every frame after the first.
++    This is what a genuinely flat/no-progress signal looks like without also tripping
++    region_hud_evidence's irreversibility refusal, which a literal repeated-value fixture
++    (e.g. "jump once then hold") cannot avoid -- holding still means repeating the same
++    region bytes, and REGION_EVIDENCE_MAX_REVISITS=0 refuses that outright."""
++    grid = np.full(FRAME_SHAPE, game_state, dtype=np.uint8)
++    grid[BAR_ROWS, :] = 0
++    grid[BAR_ROWS, offset] = 7
++    grid[BAR_ROWS, offset + 1] = 7
++    return grid
++
++
++class TestNonPositiveRateDoesNotProject:
++    def test_flat_region_reports_no_projection(self):
++        # SCENARIO-ARC-WMTE-6180-NON-POSITIVE-RATE-DOES-NOT-PROJECT
++        #
++        # Adversarial-review regression (2026-08-06): a whole-segment least-squares fit is
++        # structurally biased POSITIVE by any early jump even if the region has been flat
++        # ever since -- the fit has to "explain" the jump. This fixture's first draft
++        # produced rate_per_transition=+0.0015 (not <=0) for exactly this shape, and the
++        # assertion below was originally written `if result["rate_per_transition"] <= 0.0:`
++        # -- which silently never ran, so the test passed green while proving nothing. The
++        # fix was a WINDOWED fit (only the most recent min_transitions transitions), which
++        # makes the assertion unconditionally true; both assertions are unconditional now
++        # on purpose, so this test cannot go vacuous the same way again.
++        mask = _bar_mask()
++        # Frame 0 is the all-zero baseline; every later frame has EXACTLY 2 lit pixels
++        # (divergence-from-segment-start count constant at 2 after the first transition),
++        # so the windowed fit over the flat tail must be non-positive.
++        grids = [_frame_with_bar_fill(0)]
++        actions: list = [None]
++        for i in range(1, 18):
++            grids.append(_two_pixel_shuffle_frame(i % (FRAME_SHAPE[1] - 1)))
++            actions.append("click")
++        evidence = region_hud_evidence(grids, mask, actions=actions)
++        assert evidence["verdict"] == "admit", evidence
++
++        result = budget_exhaustion_estimate(grids, mask, evidence=evidence)
++        assert result["verdict"] == "estimate"
++        assert result["rate_per_transition"] is not None
++        assert result["rate_per_transition"] <= 0.0
++        assert result["actions_remaining_estimate"] is None
++
++
++class TestSegmentAwareness:
++    def test_a_level_up_reset_does_not_inherit_the_prior_segments_history(self):
++        # SCENARIO-ARC-WMTE-6180-SEGMENT-RESET-DOES-NOT-INHERIT-PRIOR-HISTORY
++        # Adversarial-review regression (2026-08-06): an earlier draft measured divergence
++        # from the trajectory's GLOBAL first frame, ignoring per-level meter resets
++        # entirely -- every real example this primitive targets (r11l, sc25, s5i5, g50t,
++        # bp35) is a PER-LEVEL meter. On a fixture that fills most of the way, resets on
++        # level-up, then refills, the unfixed version overestimated actions-remaining by
++        # ~8x in the unsafe (falsely reassuring) direction. This asserts the fix: the
++        # estimate is computed from the CURRENT segment only.
++        mask = _bar_mask()
++        grids = [_frame_with_bar_fill(0)]
++        actions: list = [None]
++        for i in range(1, 15):  # fill most of the way up (0 -> 14/24)
++            grids.append(_frame_with_bar_fill(i))
++            actions.append("click")
++        grids.append(_frame_with_bar_fill(0))  # level-up: meter resets to empty
++        actions.append("click")
++        for i in range(1, 13):  # refill 12 clicks into the new (empty) segment
++            grids.append(_frame_with_bar_fill(i))
++            actions.append("click")
++        evidence = region_hud_evidence(grids, mask, actions=actions)
++        assert evidence["verdict"] == "admit", evidence
++
++        result = budget_exhaustion_estimate(grids, mask, evidence=evidence)
++        assert result["verdict"] == "estimate"
++        # n_transitions counts only the post-reset segment (12), not the full 26-frame
++        # trajectory -- proof the reset actually cleared the old segment's history.
++        assert result["n_transitions"] == 12
++        assert result["fill_fraction"] == pytest.approx(12 / 24)
++        # This 24-wide bar fills at exactly 1 pixel/transition in the post-reset segment,
++        # currently at 12/24 -- the analytically exact remaining count is 12, and a
++        # global-first-frame version of this estimator (the pre-fix behaviour) would
++        # instead report something close to 24 - (14 + 12) < 0 -> clamped positive nonsense,
++        # or otherwise fail to match this exact value.
++        assert result["actions_remaining_estimate"] == pytest.approx(12.0, abs=0.5)
++
++
++class TestConsumerIsANoOpWithoutAnEstimate:
++    def test_matches_standing_path_cost_weight_when_estimate_is_none(self):
++        # SCENARIO-ARC-WMTE-6180-CONSUMER-IS-A-NO-OP-WITHOUT-AN-ESTIMATE
++        for depth in (0, 1, 5, 40):
++            for plan_length in (None, 0, 3, 100):
++                for weight in (None, 0.0, 1.0, 2.5):
++                    got = budget_aware_path_cost_weight(
++                        depth=depth,
++                        plan_length=plan_length,
++                        actions_remaining_estimate=None,
++                        path_cost_weight=weight,
++                    )
++                    expected = standing_path_cost_weight(weight) * depth
++                    assert got == pytest.approx(expected)
++
++    def test_matches_standing_path_cost_weight_when_plan_length_is_none(self):
++        got = budget_aware_path_cost_weight(depth=10, actions_remaining_estimate=3.0)
++        assert got == pytest.approx(standing_path_cost_weight(None) * 10)
++
++    def test_penalizes_a_plan_that_exceeds_the_estimate(self):
++        base = standing_path_cost_weight(None) * 5
++        got = budget_aware_path_cost_weight(depth=5, plan_length=10, actions_remaining_estimate=4.0)
++        assert got == pytest.approx(base + 6 * BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION)
++
++    def test_no_penalty_when_plan_fits_within_the_estimate(self):
++        base = standing_path_cost_weight(None) * 5
++        got = budget_aware_path_cost_weight(depth=5, plan_length=3, actions_remaining_estimate=4.0)
++        assert got == pytest.approx(base)
++
++    def test_no_penalty_at_exact_boundary(self):
++        base = standing_path_cost_weight(None) * 5
++        got = budget_aware_path_cost_weight(depth=5, plan_length=4, actions_remaining_estimate=4.0)
++        assert got == pytest.approx(base)
+-- 
+2.55.0
+

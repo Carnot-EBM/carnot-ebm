@@ -1,0 +1,60 @@
+From fed4fd5e67666ae0117dec3d1fe56e4db7d4268a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 00:03:23 -0400
+Subject: [PATCH 08981/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index f16082a913..1095884588 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,572</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,579</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3c876d27e3..23b89cad16 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-13T03:36:45Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-13T03:59:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b59eecdd60..b0fbf9d4e7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15745,3 +15745,4 @@ code |
+ | 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |
+ | 2026-08-13 03:08 UTC | V548 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 8.34s |
+ | 2026-08-13 03:34 UTC | Three-model GGUF child failure forensics and obser | OK | 88 passed, 1 warning in 10.31s |
++| 2026-08-13 03:57 UTC | Gated repaired three-model live factor proposal au | OK | 89 passed, 1 warning in 8.60s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1dfba75c05..759a99bc65 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-13T03:36:45Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-13T03:59:27Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

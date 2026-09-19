@@ -1,0 +1,43 @@
+From c287801d9e89cdb59feb43dbb92ae95a27dbb39b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 13:20:38 -0400
+Subject: [PATCH 02584/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 215ba235a3..d639f98e1b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 104, "phase": "iteration_start", "last_beat": "2026-06-18T17:03:47Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 105, "phase": "iteration_start", "last_beat": "2026-06-18T17:20:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 57b5df53db..de63853b6f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8737,3 +8737,4 @@ c |
+ | 2026-06-18 16:24 UTC | Milestone 2026.06.406 activated | OK | 11 tasks queued |
+ | 2026-06-18 16:45 UTC | Archive .405 -> activate .406. Assert research-com | OK | 89 passed, 1 warning in 7.62s |
+ | 2026-06-18 17:01 UTC | PHASE A1 (HEADLINE; oracle-distinct LOCALIZER; ver | OK | 87 passed, 1 warning in 6.07s |
++| 2026-06-18 17:18 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | OK | 90 passed, 1 warning in 7.21s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e9c5bc3cb3..1ba8cf0955 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 104, "phase": "iteration_start", "started_at": "2026-06-18T17:03:47Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 105, "phase": "iteration_start", "started_at": "2026-06-18T17:20:36Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

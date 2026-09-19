@@ -1,0 +1,103 @@
+From 5ae56946a8a8ef31c2eaff9c2c081f948ad4333b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 10:33:10 -0400
+Subject: [PATCH 08643/11362] [conductor] Operational retrospective for
+ milestone 2026.08.539
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_539.json | 56 ++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_539.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index c8074cdcc4..c8f058e8fb 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6094,3 +6094,10 @@ The critical path for milestone .250:
+ - theme: exact-path capstone reconciliation concentrated runtime under coarse disk-time reconstruction
+ - key result: the compute-task GPU-idle classification is false, but the data cannot explain the longest task; parallel model loading is not documented, so runner selection cannot be judged
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.539
++
++- exp_range: no data available this milestone
++- theme: short compute and synthesis execution exposed phase and runner-attribution telemetry gaps
++- key result: compute work had no task-scoped GPU-idle finding, but the data cannot explain the compute durations or establish concurrent multi-model runner selection
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e9a6be5531..dbf12ac69f 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16612,3 +16612,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-09: Prospective admissible ARC depth portfolio or exact terminal skip (✅ Complete) — honest_verdict=complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load; results/experiment_6232_arc_admissible_depth_portfolio.json
+ - 2026-08-09: Activated mode-jump sampler quality, equivalence, and efficiency A/B (✅ Complete) — honest_verdict=complete_equivalence_supported: decision=equivalence_supported; activation=True; positive_control=True; default_off=True; hardware_claim_count=0; task_owned_failures=[]; results/experiment_6237_activated_mode_jump_sampler_ab.json
+ - 2026-08-09: V539 exact-path adversarial capstone and evidence reconciliation (⚠️ Blocked) — honest_verdict=complete: V539 exact-path capstone preserved missing blocked skipped flagged and not-ready states; no hardware ARC code CSL or runtime claim was promoted; results/experiment_6238_v539_adversarial_capstone.json
++- 2026-08-09: Operational retrospective for 2026.08.539: 12 experiments completed in 1.9 minutes, including 8 compute-bound experiments. The longest listed compute-bound experiment was the 0.48-minute llama-server diagnostic; the timing data does not provide a phase-level cause. Compute-bound GPU idle was false. No data available this milestone establishes concurrent loading of at least two models, so no missed DualGPURunner engagement can be claimed. Tooling should produce one experiment trace that joins monotonic stage durations, device samples, process identity, loaded-model count, and dispatcher choice. Estimated savings remain 0% because no measured comparison is available. Artifact: results/operational_retro_2026_08_539.json.
+diff --git a/results/operational_retro_2026_08_539.json b/results/operational_retro_2026_08_539.json
+new file mode 100644
+index 0000000000..0d511bf929
+--- /dev/null
++++ b/results/operational_retro_2026_08_539.json
+@@ -0,0 +1,56 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.539",
++  "generated_at": "2026-08-09T14:29:22Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 1.9,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 8,
++  "slowest_experiments": [
++    {
++      "experiment": "V539 exact-path adversarial capstone and evidence reconciliation",
++      "duration_minutes": 1.27,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Llama-server signal-sender and unbounded-wait diagnostic",
++      "duration_minutes": 0.48,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Exact terminal-boundary handoff from V538 into V539",
++      "duration_minutes": 0.12,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Post-V539-marker source delta and experimental-scope freeze",
++      "duration_minutes": 0.06,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Supervised three-family GGUF runtime endurance and recovery",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 12 experiments in 1.9 minutes, including 8 compute-bound experiments. The longest listed compute-bound experiment took 0.48 minutes, and the available data does not attribute its duration to a specific phase.",
++  "bottlenecks_identified": [
++    "Disk-modification-time reconstruction and coarse duration reporting do not provide phase-level causes for the compute-bound runtime ordering.",
++    "The supplied data does not record concurrent model count or runner selection, so it cannot establish whether any workload qualified for multi-GPU dispatch."
++  ],
++  "improvements_suggested": [
++    "Instrument launch, model loading, inference, shutdown, and reconciliation with monotonic clocks under one experiment identifier.",
++    "Sample device utilization, memory, and process identity throughout each compute-bound experiment and join those samples to its timing trace.",
++    "Log requested and loaded model counts with the dispatcher choice, and use both GPUs only for eligible concurrent-model work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Produce one monotonic stage timeline for every compute-bound experiment.",
++    "Tag continuous device and process samples with the active experiment identifier.",
++    "Persist loaded-model count and dispatcher choice before inference begins."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The data supports a non-idle compute classification but not a milestone-wide utilization grade or a causal explanation of the compute durations. No data available this milestone establishes a task with at least two models loaded concurrently, so no missed DualGPURunner engagement can be claimed."
++}
+-- 
+2.55.0
+

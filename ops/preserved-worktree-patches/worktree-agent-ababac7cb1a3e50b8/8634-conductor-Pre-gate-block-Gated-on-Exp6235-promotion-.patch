@@ -1,0 +1,86 @@
+From 0edc37786004e7c65fe18ea045667ce67320fd27 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 09:36:18 -0400
+Subject: [PATCH 08634/11362] [conductor] Pre-gate block: Gated on Exp6235
+ promotion: default-off online constraint-memory shadow consumer
+
+1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl.continuous_learning_promotion_ready_score (upstream artifact not found for task id 'exp6235-prospective-two-timescale-live-csl')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-leaderboard-technique-watch.md   | 2 ++
+ ops/.arc_leaderboard_technique_watch_state.json               | 4 ++--
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ ...eriment_6236_online_constraint_memory_shadow_consumer.json | 4 ++--
+ 6 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index e4929b0318..685c105df4 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -102,3 +102,5 @@ CHECK_TIMED_OUT
+ 
+ ## 2026-08-08 13:38 UTC -- checked, nothing new
+ 
++## 2026-08-09 13:36 UTC -- checked, nothing new
++
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+index 1c3d76cf1b..d6ddca6920 100644
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ b/ops/.arc_leaderboard_technique_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+   "last_findings": "- **New top-five entrant:** **Andy liu** (`codinggodandyliu`, `ichuqinggaove`) is **#2 at 1.69**. No public ARC-AGI-3 notebook, dataset, repository, discussion, or technique writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member code](https://www.kaggle.com/codinggodandyliu/code), [member code](https://www.kaggle.com/ichuqinggaove/code)\n\n- **New top-five entrant:** **GeniusYY** (`alexyy`) is **#4 at 1.64**. Its public notebooks are unrelated to ARC-AGI-3; no ARC agent code, dataset, repository, discussion, or technique writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)",
+-  "last_checked": "2026-08-08T13:38:18.687063+00:00",
+-  "history_count": 23
++  "last_checked": "2026-08-09T13:36:08.913169+00:00",
++  "history_count": 24
+ }
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bd9b17df1e..410bf396e3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-09T13:34:16Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-09T13:36:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3a347edd92..e7c26551e4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15560,3 +15560,5 @@ Still active  |
+ | 2026-08-09 13:30 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
+ | 2026-08-09 13:32 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
+ | 2026-08-09 13:34 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
++| 2026-08-09 13:34 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
++| 2026-08-09 13:36 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9027be7ff4..180fa55f70 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-09T13:34:16Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-09T13:36:18Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6236_online_constraint_memory_shadow_consumer.json b/results/experiment_6236_online_constraint_memory_shadow_consumer.json
+index fa07433198..d6d34eed7d 100644
+--- a/results/experiment_6236_online_constraint_memory_shadow_consumer.json
++++ b/results/experiment_6236_online_constraint_memory_shadow_consumer.json
+@@ -2,8 +2,8 @@
+   "experiment": 6236,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-09",
+-  "started_at": "2026-08-09T13:34:16.111052+00:00",
+-  "finished_at": "2026-08-09T13:34:16.111052+00:00",
++  "started_at": "2026-08-09T13:36:18.592365+00:00",
++  "finished_at": "2026-08-09T13:36:18.592365+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6235 promotion: default-off online constraint-memory shadow consumer",
+-- 
+2.55.0
+

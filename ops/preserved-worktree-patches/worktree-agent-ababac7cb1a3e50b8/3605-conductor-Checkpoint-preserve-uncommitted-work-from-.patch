@@ -1,0 +1,43 @@
+From ee07c242891552f0f601e7bfda8246325afcbbd3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 10:27:11 -0400
+Subject: [PATCH 03605/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 04e1bc53cf..0993cb64a2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-06-23T14:13:17Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-06-23T14:27:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4486f05616..7292210244 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9116,3 +9116,4 @@ c |
+ | 2026-06-23 13:16 UTC | PHASE E (CAPSTONE) -- the .426 scorecard: did A1 I | OK | 88 passed, 1 warning in 7.07s |
+ | 2026-06-23 14:09 UTC | Plan milestone 2026.06.427 | OK | 12 tasks proposed |
+ | 2026-06-23 14:11 UTC | Milestone 2026.06.427 activated | OK | 12 tasks queued |
++| 2026-06-23 14:25 UTC | PHASE 0 (TRANSITION) -- archive .426 -> activate . | OK | 86 passed, 1 warning in 5.16s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5774098054..246c77ce80 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 36, "phase": "iteration_start", "started_at": "2026-06-23T14:13:17Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 37, "phase": "iteration_start", "started_at": "2026-06-23T14:27:09Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

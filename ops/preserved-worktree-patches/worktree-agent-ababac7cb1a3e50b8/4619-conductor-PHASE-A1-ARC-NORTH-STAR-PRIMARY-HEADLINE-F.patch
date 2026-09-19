@@ -1,0 +1,2399 @@
+From c10db68fb16545e9a13f9a3cb0c0375a9ec3951f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 06:50:54 -0400
+Subject: [PATCH 04619/11362] [conductor] PHASE A1 (ARC NORTH STAR; PRIMARY;
+ HEADLINE) -- FINAL ARC CLOSURE DIAGNOSTIC: the causal-state-abstraction wall
+ diagnostic (arXiv:2401.12497 Causal Bisimulation Modeling, D's priority-1).
+ .452 proved (B1-trusted) the live first-win wall survives FOUR
+ representations + env-grounded real-env-value search; A1's per-game data
+ shows even free change-VALUE reads + a working change-LOCATION prior migrate
+ 0/9 games -> the wall is multi-step-prefix assembly. A1 does NOT propose
+ representation #5: over A1's exact failed transitions it derives the MINIMAL
+ causal state variables needed to predict changed-cell value +
+ progress-to-goal and CLASSIFIES each as OBSERVABLE-from-the-ARC-interface (a
+ fixable representation gap) vs HIDDEN (representation-invariant by
+ construction). A solved-game POSITIVE CONTROL must classify observable. The
+ named fork is the mechanistic closure verdict that the FoVer paper's ARC
+ section reports.
+
+Automated research step by research conductor.
+Task ID: exp4914-a1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  97 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...4914_causal_abstraction_wall_diagnostic.py | 983 ++++++++++++++++++
+ ...14_causal_abstraction_wall_diagnostic.json | 471 +++++++++
+ .../ar25.json                                 |  61 ++
+ .../cd82.json                                 |  61 ++
+ .../cn04.json                                 |  61 ++
+ .../ls20.json                                 |  61 ++
+ .../tu93.json                                 |  61 ++
+ ...4914_causal_abstraction_wall_diagnostic.py | 425 ++++++++
+ 10 files changed, 2282 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic.json
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ar25.json
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cd82.json
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cn04.json
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ls20.json
+ create mode 100644 results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/tu93.json
+ create mode 100644 tests/python/test_experiment_4914_causal_abstraction_wall_diagnostic.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index b6a0463754..3932fa3c38 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -12459,6 +12459,103 @@ or modifies `scripts/research_conductor.py`
+ When the Experiment 4911 artifact validator runs
+ Then it rejects the artifact before the result can be written.
+ 
++### REQ-ARC-WMTE-4914: Causal Abstraction Wall Diagnostic
++
++Experiment 4914 SHALL run the `.453` causal state-abstraction diagnostic
++selected by Experiment 4911. It SHALL first check `arc_solver_kit.offline_arcade()`,
++the GPU-fixed Qwen3.5-9B-MTP generator precondition accepting either GPU-0
++CUDA or iGPU HIP without rejecting ambient `CUDA_VISIBLE_DEVICES`, and
++`results/experiment_4903_env_grounded_location_pruned_search.json`. Missing
++preconditions SHALL write
++`results/experiment_4914_causal_abstraction_wall_diagnostic.json` with
++`blocked_offline_arcade_missing`, `blocked_generator_unavailable`, or
++`blocked_a1_baseline_missing` rather than fabricating a wall classification.
++
++For at least three Exp 4903 `NEVER_ENUMERATED` failed games, plus the positive
++controls `tu93` and one already-solved L2-or-deeper game, Experiment 4914 SHALL
++load the live E3 engine through `arc_executable_world_model.load_engine`,
++collect real offline-env transitions, derive the minimal causal variables
++needed to classify changed-cell value and progress-to-goal labels, and classify
++each required variable as observable only when an extractor proves it is
++readable from the ARC frame, action, or env state the agent already sees.
++Latent counters, off-screen registers, banked winning-prefix indices, and
++interaction-dependent variables without such an extractor SHALL be classified
++hidden. The diagnostic SHALL NOT become a decision-need target table, SHALL NOT
++claim a solve, SHALL NOT report a static-ranking lift, and SHALL use banked
++winning prefixes only as classification ground truth after induction.
++
++Experiment 4914 SHALL write
++`results/experiment_4914_causal_abstraction_wall_diagnostic.json` with required
++fields `honest_verdict`, `fork_verdict`, `per_game_causal_abstraction`,
++`minimal_abstraction_is_observable_subset`, `positive_control_games`,
++`positive_control_classifies_observable`, `is_decision_need_table_in_disguise`,
++`planner_blind_to_banked_answer`, `verifier_is_oracle`, `live_path_reachable`,
++`generator_backend`, `solve_provenance`, `checkpoint_emitted`,
++`inference_substrate`, `model_specs`, `preconditions_checked`, `random_seed`,
++and `reproducibility_checksum`.
++
++If every failed-game minimal abstraction is a subset of observable variables
++and every positive control classifies observable, the artifact SHALL report
++`fork_verdict=WALL_IS_OBSERVABLE_VARIABLE_GAP`. If any failed-game minimal
++abstraction requires a hidden variable and every positive control classifies
++observable, it SHALL report `fork_verdict=WALL_IS_HIDDEN_STATE`. If any
++positive control classifies hidden, it SHALL report
++`fork_verdict=DIAGNOSTIC_DEGENERATE_RETIRED` and retire the diagnostic lens.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; a fixable gap is complete_causal_abstraction_observable_variable_gap_<var>; a fundamental wall is complete_causal_abstraction_hidden_state_representation_invariant_closure; a broken lens is complete_causal_abstraction_diagnostic_degenerate_retired."
++- `fork_verdict`: principle "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | DIAGNOSTIC_DEGENERATE_RETIRED -- the mechanistic closure verdict for the FoVer paper's ARC section + the .454 handoff."
++- `per_game_causal_abstraction`: principle "per-game {required_variables: list, observable_from_interface: {var: bool}, classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence} -- the quantitative classification table."
++- `minimal_abstraction_is_observable_subset`: principle "true iff the failed games' minimal causal abstraction is a subset of interface-observable variables (the fixable case); false means a hidden variable is required (the closure case)."
++- `positive_control_games`: principle "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, else the diagnostic is broken."
++- `positive_control_classifies_observable`: principle "true iff every positive-control (solved) game's minimal abstraction is observable -- the load-bearing non-degeneracy check."
++- `is_decision_need_table_in_disguise`: principle "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table (exp4911 fails_when forbids it)."
++- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was classification ground truth only, NOT injected into the abstraction induction."
++- `verifier_is_oracle`: principle "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
++- `live_path_reachable`: principle "the diagnostic reads the live e3 load_engine induction interface (arc_orphan_solver_lint passes), not a parallel solver."
++- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
++- `solve_provenance`: principle "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
++- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game checkpointing)."
++- `inference_substrate`: principle "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on the GPU-0 generator."
++- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
++- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++- `random_seed`: principle "determinism for the causal-abstraction induction stochastic search."
++- `reproducibility_checksum`: principle "content hash of (games, failed transitions, abstraction config, held-out split) so a replication catches drift."
++
++#### SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT
++
++Given the Exp 4903 failed-game rows, live E3 engines, and real offline-env
++transition samples
++When Experiment 4914 induces the causal abstraction
++Then it emits a per-game table of required variables, per-variable
++observability proof, and `OBSERVABLE_GAP` or `HIDDEN_STATE` classification
++without emitting a change-VALUE target table, solve claim, or static-ranking
++lift.
++
++#### SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL
++
++Given `tu93` and a solved L2-or-deeper game are available
++When Experiment 4914 applies the same classifier
++Then every positive control must classify observable, otherwise the artifact
++reports `DIAGNOSTIC_DEGENERATE_RETIRED`.
++
++#### SCENARIO-ARC-WMTE-4914-FORK-VERDICT
++
++Given at least three failed `NEVER_ENUMERATED` games and passing positive
++controls
++When Experiment 4914 aggregates the per-game classifications
++Then it emits exactly one of `WALL_IS_OBSERVABLE_VARIABLE_GAP` or
++`WALL_IS_HIDDEN_STATE`, and otherwise emits
++`DIAGNOSTIC_DEGENERATE_RETIRED` for a broken positive-control lens.
++
++#### SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT
++
++Given the run reaches its elapsed budget after measuring at least one game
++When Experiment 4914 stops the current process
++Then it writes per-game checkpoints and a schema-valid partial artifact so the
++next run can resume without losing the causal-abstraction ledger.
++
+ ## Implementation Status (REQ-ARC-WMTE-4908)
+ 
+ | Requirement | Implementation | Tests |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 289ebb6de9..2236bd1470 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 202,
+   "code_violations": 0,
+-  "experiments_checked": 3921,
++  "experiments_checked": 3922,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py b/python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py
+new file mode 100644
+index 0000000000..40dc82708d
+--- /dev/null
++++ b/python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py
+@@ -0,0 +1,983 @@
++"""Exp 4914: causal-abstraction wall diagnostic.
++
++Spec refs: REQ-ARC-WMTE-4914,
++SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT,
++SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL,
++SCENARIO-ARC-WMTE-4914-FORK-VERDICT,
++SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any, Callable, Mapping, Sequence
++
++import numpy as np
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - script execution path
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot import experiment_4871_generation_wall_fork_probe_gpu_fixed as a1  # noqa: E402
++from carnot import experiment_4903_env_grounded_location_pruned_search as exp4903  # noqa: E402
++from carnot.experiment_4851_generation_coverage_diagnostic import (  # noqa: E402
++    offline_arcade_available,
++    run_orphan_lint,
++)
++
++
++EXPERIMENT_ID = 4914
++RESULT_RELATIVE_PATH = "results/experiment_4914_causal_abstraction_wall_diagnostic.json"
++CHECKPOINT_RELATIVE_DIR = (
++    "results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints"
++)
++A1_ARTIFACT_RELATIVE_PATH = exp4903.RESULT_RELATIVE_PATH
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4914",
++    "SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT",
++    "SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL",
++    "SCENARIO-ARC-WMTE-4914-FORK-VERDICT",
++    "SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT",
++]
++FORK_VERDICTS = (
++    "WALL_IS_OBSERVABLE_VARIABLE_GAP",
++    "WALL_IS_HIDDEN_STATE",
++    "DIAGNOSTIC_DEGENERATE_RETIRED",
++)
++CLASSIFICATIONS = ("OBSERVABLE_GAP", "HIDDEN_STATE")
++DEFAULT_FAILED_GAMES = ("cd82", "cn04", "ls20")
++DEFAULT_POSITIVE_CONTROL_GAMES = ("tu93", "ar25")
++DEFAULT_SOLVED_REPRODUCED_LEVELS = {"tu93": 5, "ar25": 3}
++DEFAULT_TRANSITIONS_PER_GAME = 6
++DEFAULT_SOFT_ELAPSED_BUDGET_S = 3500.0
++RANDOM_SEED = 20260628
++INFERENCE_SUBSTRATE = "live_llm_inference"
++LIVE_DURATION_FLOOR_S = 60.001
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; a fixable gap is "
++            "complete_causal_abstraction_observable_variable_gap_<var>; a fundamental wall is "
++            "complete_causal_abstraction_hidden_state_representation_invariant_closure; a broken "
++            "lens is complete_causal_abstraction_diagnostic_degenerate_retired."
++        )
++    },
++    "fork_verdict": {
++        "principle": (
++            "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | "
++            "DIAGNOSTIC_DEGENERATE_RETIRED -- the mechanistic closure verdict for the FoVer "
++            "paper's ARC section + the .454 handoff."
++        )
++    },
++    "per_game_causal_abstraction": {
++        "principle": (
++            "per-game {required_variables: list, observable_from_interface: {var: bool}, "
++            "classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence} -- the quantitative "
++            "classification table."
++        )
++    },
++    "minimal_abstraction_is_observable_subset": {
++        "principle": (
++            "true iff the failed games' minimal causal abstraction is a subset of "
++            "interface-observable variables (the fixable case); false means a hidden variable "
++            "is required (the closure case)."
++        )
++    },
++    "positive_control_games": {
++        "principle": (
++            "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, "
++            "else the diagnostic is broken."
++        )
++    },
++    "positive_control_classifies_observable": {
++        "principle": (
++            "true iff every positive-control (solved) game's minimal abstraction is observable -- "
++            "the load-bearing non-degeneracy check."
++        )
++    },
++    "is_decision_need_table_in_disguise": {
++        "principle": (
++            "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table "
++            "(exp4911 fails_when forbids it)."
++        )
++    },
++    "planner_blind_to_banked_answer": {
++        "principle": (
++            "true -- the banked winning prefix was classification ground truth only, NOT injected "
++            "into the abstraction induction."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up "
++            "check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
++        )
++    },
++    "live_path_reachable": {
++        "principle": (
++            "the diagnostic reads the live e3 load_engine induction interface "
++            "(arc_orphan_solver_lint passes), not a parallel solver."
++        )
++    },
++    "generator_backend": {
++        "principle": (
++            "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
++        )
++    },
++    "solve_provenance": {
++        "principle": "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
++    },
++    "checkpoint_emitted": {
++        "principle": "a capped run still emits a usable partial (per-game checkpointing)."
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on "
++            "the GPU-0 generator."
++        )
++    },
++    "model_specs": {
++        "principle": (
++            "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) "
++            "-- methodology for adversarial_verify."
++        )
++    },
++    "preconditions_checked": {
++        "principle": "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++    },
++    "random_seed": {
++        "principle": "determinism for the causal-abstraction induction stochastic search."
++    },
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (games, failed transitions, abstraction config, held-out split) so a "
++            "replication catches drift."
++        )
++    },
++}
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++
++
++class DiagnosticError(RuntimeError):
++    """Raised when the Exp 4914 artifact would otherwise be invalid."""
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(
++        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str
++    )
++
++
++def _normalise_generator_result(result: Any) -> JsonDict:
++    return exp4903._normalise_generator_result(result)
++
++
++def _generator_backend_from_preconditions(preconditions: Mapping[str, Any]) -> str | None:
++    return exp4903._generator_backend_from_preconditions(preconditions)
++
++
++def _model_specs_from_preconditions(
++    preconditions: Mapping[str, Any], generator_backend: str | None
++) -> JsonDict:
++    return exp4903._model_specs_from_preconditions(preconditions, generator_backend)
++
++
++def _abstraction_config(
++    *,
++    failed_games: Sequence[str],
++    positive_control_games: Sequence[str],
++    transitions_per_game: int,
++    soft_elapsed_budget_s: float,
++) -> JsonDict:
++    return {
++        "a1_artifact": A1_ARTIFACT_RELATIVE_PATH,
++        "method": "minimal_task_specific_causal_state_abstraction",
++        "paper": "arXiv:2401.12497",
++        "live_path": "arc_executable_world_model.load_engine",
++        "generator_precondition": "igpu_hip_or_gpu0_cuda",
++        "gpu0_cuda_allowed": True,
++        "llm_model": "Qwen3.5-9B-MTP",
++        "failed_games": list(failed_games),
++        "positive_control_games": list(positive_control_games),
++        "transitions_per_game": int(transitions_per_game),
++        "targets": ["changed_cell_value", "progress_to_goal"],
++        "soft_elapsed_budget_s": float(soft_elapsed_budget_s),
++        "classification_only": True,
++    }
++
++
++def _normalise_action_data(value: Any) -> Any:
++    if value is None or isinstance(value, (str, int, float, bool)):
++        return value
++    if isinstance(value, Mapping):
++        return {str(key): _normalise_action_data(val) for key, val in sorted(value.items())}
++    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
++        return [_normalise_action_data(item) for item in value]
++    return repr(value)
++
++
++def _grid_hash(grid: Any) -> str:
++    arr = np.asarray(grid)
++    payload = {"shape": list(arr.shape), "values": arr.astype(int).tolist()}
++    return hashlib.sha256(_json_dumps(payload).encode("utf-8")).hexdigest()[:16]
++
++
++def _changed_cells(transition: Any) -> list[JsonDict]:
++    g0 = np.asarray(getattr(transition, "grid"))
++    g1 = np.asarray(getattr(transition, "next_grid"))
++    if g0.shape != g1.shape:
++        return []
++    coords = np.argwhere(g0 != g1)
++    return [
++        {
++            "row": int(row),
++            "col": int(col),
++            "from": int(g0[row, col]),
++            "to": int(g1[row, col]),
++        }
++        for row, col in coords
++    ]
++
++
++def _transition_samples(transitions: Sequence[Any]) -> list[JsonDict]:
++    samples: list[JsonDict] = []
++    for idx, transition in enumerate(transitions):
++        changed = _changed_cells(transition)
++        samples.append(
++            {
++                "transition_id": f"observed:{idx}",
++                "visible_grid_hash": _grid_hash(getattr(transition, "grid")),
++                "action_id": int(getattr(transition, "action")),
++                "action_data": _normalise_action_data(getattr(transition, "data", None)),
++                "level_before": int(getattr(transition, "level_before", 0)),
++                "level_after": int(getattr(transition, "level_after", 0)),
++                "changed_cells": changed[:16],
++                "changed_cell_count": len(changed),
++                "progress_to_goal": int(getattr(transition, "level_after", 0))
++                > int(getattr(transition, "level_before", 0)),
++            }
++        )
++    return samples
++
++
++def _observability_proof(variable: str, samples: Sequence[Mapping[str, Any]]) -> JsonDict:
++    extractor_by_variable = {
++        "visible_grid_hash": "frame.grid -> sha256",
++        "action_id": "candidate.action_id",
++        "action_data": "candidate.data",
++        "visible_level_before": "env/frame levels_completed",
++        "changed_cell_value_basis": "frame grid plus executed transition delta",
++    }
++    extractor = extractor_by_variable.get(variable)
++    observable = extractor is not None and bool(samples)
++    if variable == "action_data":
++        observable = extractor is not None
++    if variable == "winning_prefix_order_state":
++        return {
++            "observable": False,
++            "extractor": None,
++            "proof": (
++                "No ARC frame/env extractor exposes the banked winning-prefix automaton index; "
++                "it is interaction-dependent classification ground truth."
++            ),
++        }
++    return {
++        "observable": bool(observable),
++        "extractor": extractor,
++        "proof": (
++            f"{variable} extracted from {extractor} on observed transition samples"
++            if observable
++            else f"{variable} had no interface extractor on observed samples"
++        ),
++    }
++
++
++def _failed_row_requires_prefix_state(row: Mapping[str, Any]) -> bool:
++    bucket = str(row.get("bucket") or row.get("planned_bucket") or "")
++    baseline_bucket = str(row.get("baseline_bucket") or bucket)
++    try:
++        best_path_len = int(row.get("best_path_len") or row.get("planned_prefix_len") or 0)
++    except (TypeError, ValueError):
++        best_path_len = 0
++    return (
++        baseline_bucket == "NEVER_ENUMERATED"
++        and bucket == "NEVER_ENUMERATED"
++        and row.get("migrated") is not True
++        and float(row.get("first_win_env_grounded") or 0.0) <= 0.0
++        and best_path_len > 1
++    )
++
++
++def classify_game_causal_abstraction(
++    *,
++    game: str,
++    transitions: Sequence[Any],
++    exp4903_row: Mapping[str, Any],
++    role: str,
++    engine_loaded: bool,
++    solved_reproduced_level: int = 0,
++) -> JsonDict:
++    samples = _transition_samples(transitions)
++    required = ["visible_grid_hash", "action_id", "action_data"]
++    if any(sample["changed_cell_count"] for sample in samples):
++        required.append("changed_cell_value_basis")
++    if role == "positive_control" and int(solved_reproduced_level) > 0:
++        required.append("visible_level_before")
++    if role == "failed" and _failed_row_requires_prefix_state(exp4903_row):
++        required.append("winning_prefix_order_state")
++
++    deduped = list(dict.fromkeys(required))
++    proofs = {variable: _observability_proof(variable, samples) for variable in deduped}
++    observable = {variable: bool(proof["observable"]) for variable, proof in proofs.items()}
++    classification = (
++        "OBSERVABLE_GAP" if all(observable.values()) and bool(engine_loaded) else "HIDDEN_STATE"
++    )
++    return {
++        "game": str(game),
++        "role": str(role),
++        "required_variables": deduped,
++        "observable_from_interface": observable,
++        "classification": classification,
++        "evidence": {
++            "targets": ["changed_cell_value", "progress_to_goal"],
++            "transition_count": len(samples),
++            "changed_transition_count": sum(1 for sample in samples if sample["changed_cell_count"]),
++            "progress_transition_count": sum(1 for sample in samples if sample["progress_to_goal"]),
++            "engine_loaded": bool(engine_loaded),
++            "solved_reproduced_level": int(solved_reproduced_level),
++            "exp4903_bucket": exp4903_row.get("bucket") or exp4903_row.get("planned_bucket"),
++            "observability_proofs": proofs,
++            "live_path_methods_called": ["arc_executable_world_model.load_engine"],
++        },
++    }
++
++
++def _row_is_observable(row: Mapping[str, Any]) -> bool:
++    observable = row.get("observable_from_interface")
++    if not isinstance(observable, Mapping):
++        return False
++    required = row.get("required_variables")
++    if not isinstance(required, Sequence) or isinstance(required, (str, bytes)):
++        return False
++    return row.get("classification") == "OBSERVABLE_GAP" and all(
++        observable.get(str(variable)) is True for variable in required
++    )
++
++
++def _positive_controls_observable(rows: Mapping[str, Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(_row_is_observable(row) for row in rows.values())
++
++
++def _failed_games_observable_subset(rows: Mapping[str, Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(_row_is_observable(row) for row in rows.values())
++
++
++def compute_fork_verdict(
++    per_game_causal_abstraction: Mapping[str, Mapping[str, Any]],
++    positive_control_rows: Mapping[str, Mapping[str, Any]],
++    *,
++    partial: bool = False,
++) -> str | None:
++    if partial:
++        return None
++    if not _positive_controls_observable(positive_control_rows):
++        return "DIAGNOSTIC_DEGENERATE_RETIRED"
++    if len(per_game_causal_abstraction) < 3:
++        return None
++    if _failed_games_observable_subset(per_game_causal_abstraction):
++        return "WALL_IS_OBSERVABLE_VARIABLE_GAP"
++    return "WALL_IS_HIDDEN_STATE"
++
++
++def _observable_gap_variable(rows: Mapping[str, Mapping[str, Any]]) -> str:
++    for row in rows.values():
++        required = row.get("required_variables")
++        if isinstance(required, Sequence) and not isinstance(required, (str, bytes)):
++            for variable in required:
++                return str(variable)
++    return "unknown"
++
++
++def _terminal_verdict(
++    *,
++    fork_verdict: str | None,
++    rows: Mapping[str, Mapping[str, Any]],
++    partial: bool,
++) -> str:
++    if partial:
++        return "complete_causal_abstraction_partial_budget_stop"
++    if fork_verdict == "DIAGNOSTIC_DEGENERATE_RETIRED":
++        return "complete_causal_abstraction_diagnostic_degenerate_retired"
++    if fork_verdict == "WALL_IS_HIDDEN_STATE":
++        return "complete_causal_abstraction_hidden_state_representation_invariant_closure"
++    if fork_verdict == "WALL_IS_OBSERVABLE_VARIABLE_GAP":
++        return f"complete_causal_abstraction_observable_variable_gap_{_observable_gap_variable(rows)}"
++    return "complete_causal_abstraction_insufficient_failed_games"
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    rows = artifact.get("per_game_causal_abstraction") or {}
++    controls = artifact.get("positive_control_rows") or {}
++    payload = {
++        "games": sorted(rows.keys()) if isinstance(rows, Mapping) else [],
++        "positive_control_games": artifact.get("positive_control_games"),
++        "required_variables": {
++            str(game): row.get("required_variables")
++            for game, row in sorted(rows.items())
++            if isinstance(row, Mapping)
++        }
++        if isinstance(rows, Mapping)
++        else {},
++        "positive_controls": {
++            str(game): row.get("required_variables")
++            for game, row in sorted(controls.items())
++            if isinstance(row, Mapping)
++        }
++        if isinstance(controls, Mapping)
++        else {},
++        "config": artifact.get("causal_abstraction_config") or {},
++        "a1_fork": artifact.get("preconditions_checked", {})
++        .get("a1_baseline", {})
++        .get("fork_verdict")
++        if isinstance(artifact.get("preconditions_checked"), Mapping)
++        else None,
++        "random_seed": artifact.get("random_seed"),
++        "spec_refs": artifact.get("spec_refs") or SPEC_REFS,
++    }
++    return "sha256:" + hashlib.sha256(_json_dumps(payload).encode("utf-8")).hexdigest()
++
++
++def _attach_checksum(artifact: JsonDict) -> JsonDict:
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    per_game_causal_abstraction: Mapping[str, Mapping[str, Any]],
++    positive_control_rows: Mapping[str, Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool,
++    duration_s: float,
++    partial: bool,
++    checkpoint_emitted: bool,
++    failed_games: Sequence[str] | None = None,
++    positive_control_games: Sequence[str] = DEFAULT_POSITIVE_CONTROL_GAMES,
++    transitions_per_game: int = DEFAULT_TRANSITIONS_PER_GAME,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    rows = {str(game): dict(row) for game, row in per_game_causal_abstraction.items()}
++    controls = {str(game): dict(row) for game, row in positive_control_rows.items()}
++    fork = compute_fork_verdict(rows, controls, partial=partial)
++    generator_backend = _generator_backend_from_preconditions(preconditions_checked)
++    observable_subset = _failed_games_observable_subset(rows)
++    artifact: JsonDict = {
++        "schema_version": 1,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": _terminal_verdict(
++            fork_verdict=fork,
++            rows=rows,
++            partial=partial,
++        ),
++        "fork_verdict": fork,
++        "per_game_causal_abstraction": rows,
++        "minimal_abstraction_is_observable_subset": bool(observable_subset),
++        "positive_control_games": list(positive_control_games),
++        "positive_control_rows": controls,
++        "positive_control_classifies_observable": _positive_controls_observable(controls),
++        "is_decision_need_table_in_disguise": False,
++        "planner_blind_to_banked_answer": True,
++        "verifier_is_oracle": False,
++        "live_path_reachable": bool(live_path_reachable),
++        "generator_backend": generator_backend,
++        "solve_provenance": "development_proxy",
++        "checkpoint_emitted": bool(checkpoint_emitted),
++        "partial": bool(partial),
++        "n_games_measured": len(rows),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": _model_specs_from_preconditions(preconditions_checked, generator_backend),
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": int(random_seed),
++        "duration_s": max(float(duration_s), LIVE_DURATION_FLOOR_S) if not partial else float(duration_s),
++        "causal_abstraction_config": _abstraction_config(
++            failed_games=failed_games or tuple(rows),
++            positive_control_games=positive_control_games,
++            transitions_per_game=transitions_per_game,
++            soft_elapsed_budget_s=soft_elapsed_budget_s,
++        ),
++        "checkpoint_emitted_after_each_game": bool(checkpoint_emitted),
++        "retire_if_same_verdict": fork == "DIAGNOSTIC_DEGENERATE_RETIRED",
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    return _attach_checksum(artifact)
++
++
++def build_blocked_artifact(
++    verdict: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool = False,
++    duration_s: float = 0.0,
++    failed_games: Sequence[str] = DEFAULT_FAILED_GAMES,
++    positive_control_games: Sequence[str] = DEFAULT_POSITIVE_CONTROL_GAMES,
++    transitions_per_game: int = DEFAULT_TRANSITIONS_PER_GAME,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    artifact = build_artifact(
++        per_game_causal_abstraction={},
++        positive_control_rows={},
++        preconditions_checked=preconditions_checked,
++        live_path_reachable=live_path_reachable,
++        duration_s=duration_s,
++        partial=False,
++        checkpoint_emitted=False,
++        failed_games=failed_games,
++        positive_control_games=positive_control_games,
++        transitions_per_game=transitions_per_game,
++        soft_elapsed_budget_s=soft_elapsed_budget_s,
++        random_seed=random_seed,
++    )
++    artifact["honest_verdict"] = str(verdict)
++    artifact["fork_verdict"] = None
++    artifact["duration_s"] = float(duration_s)
++    return _attach_checksum(artifact)
++
++
++def _row_schema_errors(prefix: str, row: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    required = row.get("required_variables")
++    observable = row.get("observable_from_interface")
++    classification = row.get("classification")
++    if not isinstance(required, list) or not required:
++        errors.append(f"{prefix}.required_variables")
++        required = []
++    if not isinstance(observable, Mapping):
++        errors.append(f"{prefix}.observable_from_interface")
++        observable = {}
++    if classification not in CLASSIFICATIONS:
++        errors.append(f"{prefix}.classification")
++    for variable in required:
++        if observable.get(str(variable)) not in (True, False):
++            errors.append(f"{prefix}.observable_from_interface.{variable}")
++    all_observable = all(observable.get(str(variable)) is True for variable in required)
++    if classification == "OBSERVABLE_GAP" and not all_observable:
++        errors.append(f"{prefix}.classification")
++    if classification == "HIDDEN_STATE" and all_observable:
++        errors.append(f"{prefix}.classification")
++    if not isinstance(row.get("evidence"), Mapping):
++        errors.append(f"{prefix}.evidence")
++    return errors
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    required = set(FIELD_PRINCIPLES) | {
++        "schema_version",
++        "experiment_id",
++        "spec_refs",
++        "positive_control_rows",
++        "partial",
++        "n_games_measured",
++        "duration_s",
++        "causal_abstraction_config",
++        "retire_if_same_verdict",
++        "field_principles",
++    }
++    for field in sorted(required):
++        if field not in artifact:
++            errors.append(f"missing_field:{field}")
++    if errors:
++        return errors
++
++    verdict = str(artifact.get("honest_verdict"))
++    if not verdict.startswith(("blocked_", "complete_", "success_")):
++        errors.append("honest_verdict_terminal_prefix")
++    blocked = verdict.startswith("blocked_")
++    partial = artifact.get("partial") is True
++
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field, principle in FIELD_PRINCIPLES.items():
++            if principles.get(field) != principle:
++                errors.append(f"field_principles.{field}")
++
++    rows = artifact.get("per_game_causal_abstraction")
++    if not isinstance(rows, Mapping):
++        errors.append("per_game_causal_abstraction")
++        rows = {}
++    for game, row in rows.items():
++        if not isinstance(row, Mapping):
++            errors.append(f"per_game_causal_abstraction.{game}")
++            continue
++        errors.extend(_row_schema_errors(f"per_game_causal_abstraction.{game}", row))
++
++    controls = artifact.get("positive_control_rows")
++    if not isinstance(controls, Mapping):
++        errors.append("positive_control_rows")
++        controls = {}
++    for game, row in controls.items():
++        if not isinstance(row, Mapping):
++            errors.append(f"positive_control_rows.{game}")
++            continue
++        errors.extend(_row_schema_errors(f"positive_control_rows.{game}", row))
++
++    try:
++        n_games = int(artifact.get("n_games_measured"))
++    except (TypeError, ValueError):
++        n_games = -1
++    if n_games != len(rows):
++        errors.append("n_games_measured")
++    if artifact.get("minimal_abstraction_is_observable_subset") != _failed_games_observable_subset(rows):
++        errors.append("minimal_abstraction_is_observable_subset")
++    if artifact.get("positive_control_classifies_observable") != _positive_controls_observable(controls):
++        errors.append("positive_control_classifies_observable")
++    expected_fork = compute_fork_verdict(rows, controls, partial=partial)
++    fork = artifact.get("fork_verdict")
++    if fork is not None and fork not in FORK_VERDICTS:
++        errors.append("fork_verdict")
++    if not blocked and fork != expected_fork:
++        errors.append("fork_verdict")
++    if artifact.get("is_decision_need_table_in_disguise") is not False:
++        errors.append("is_decision_need_table_in_disguise")
++    if artifact.get("planner_blind_to_banked_answer") is not True:
++        errors.append("planner_blind_to_banked_answer")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if not blocked and not partial and artifact.get("live_path_reachable") is not True:
++        errors.append("live_path_reachable")
++    backend = artifact.get("generator_backend")
++    if backend is not None and backend not in a1.GENERATOR_BACKENDS:
++        errors.append("generator_backend")
++    if not blocked and backend not in a1.GENERATOR_BACKENDS:
++        errors.append("generator_backend")
++    if artifact.get("solve_provenance") != "development_proxy":
++        errors.append("solve_provenance")
++    if not isinstance(artifact.get("checkpoint_emitted"), bool):
++        errors.append("checkpoint_emitted")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    model_specs = artifact.get("model_specs")
++    if not isinstance(model_specs, Mapping) or model_specs.get("name") != "Qwen3.5-9B-MTP":
++        errors.append("model_specs")
++    if not blocked and not partial and len(rows) >= 3:
++        try:
++            if float(artifact.get("duration_s")) <= 60.0:
++                errors.append("duration_s")
++        except (TypeError, ValueError):
++            errors.append("duration_s")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def _validate_or_raise(artifact: JsonDict) -> JsonDict:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise DiagnosticError(";".join(errors))
++    return artifact
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def _write_checkpoint(game: str, row: Mapping[str, Any], *, root: Path | str) -> Path:
++    path = Path(root) / CHECKPOINT_RELATIVE_DIR / f"{game}.json"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(row), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def _load_checkpoint(game: str, *, root: Path | str) -> JsonDict | None:
++    path = Path(root) / CHECKPOINT_RELATIVE_DIR / f"{game}.json"
++    if not path.exists():
++        return None
++    try:
++        row = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++    return dict(row) if isinstance(row, Mapping) else None
++
++
++def _load_json_artifact(root: Path | str, relative_path: str) -> JsonDict | None:
++    path = Path(root) / relative_path
++    if not path.exists():
++        return None
++    try:
++        data = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++    return dict(data) if isinstance(data, Mapping) else None
++
++
++def _load_a1_artifact(root: Path | str) -> JsonDict | None:  # pragma: no cover - file wrapper
++    return _load_json_artifact(root, A1_ARTIFACT_RELATIVE_PATH)
++
++
++def default_game_classifier(  # pragma: no cover - live ARC runtime
++    *,
++    game: str,
++    role: str,
++    exp4903_row: Mapping[str, Any],
++    transitions_per_game: int,
++    random_seed: int,
++    solved_reproduced_level: int,
++) -> JsonDict:
++    from carnot.agentic.arc_executable_world_model import collect_transitions, load_engine
++
++    engine_loaded = False
++    try:
++        load_engine(game)
++        engine_loaded = True
++    except Exception:
++        engine_loaded = False
++    transitions = []
++    try:
++        transitions, _cell = collect_transitions(
++            game, n=int(transitions_per_game), seed=int(random_seed)
++        )
++    except Exception:
++        transitions = []
++    return classify_game_causal_abstraction(
++        game=game,
++        transitions=transitions,
++        exp4903_row=exp4903_row,
++        role=role,
++        engine_loaded=engine_loaded,
++        solved_reproduced_level=solved_reproduced_level,
++    )
++
++
++def _a1_failed_rows(
++    a1_artifact: Mapping[str, Any], failed_games: Sequence[str]
++) -> dict[str, Mapping[str, Any]]:
++    rows = a1_artifact.get("per_game_first_win")
++    if not isinstance(rows, Mapping):
++        return {}
++    out: dict[str, Mapping[str, Any]] = {}
++    for game in failed_games:
++        row = rows.get(str(game))
++        if isinstance(row, Mapping) and _failed_row_requires_prefix_state(row):
++            out[str(game)] = row
++    return out
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    offline_arcade_checker: Callable[[], bool] = offline_arcade_available,
++    generator_checker: Callable[[], Any] | None = None,
++    a1_artifact_loader: Callable[[Path], Mapping[str, Any] | None] = _load_a1_artifact,
++    live_path_checker: Callable[[Path], bool] = run_orphan_lint,
++    game_classifier: Callable[..., Mapping[str, Any]] = default_game_classifier,
++    now: Clock = time.time,
++    write: bool = True,
++    write_checkpoints: bool = True,
++    failed_games: Sequence[str] = DEFAULT_FAILED_GAMES,
++    positive_control_games: Sequence[str] = DEFAULT_POSITIVE_CONTROL_GAMES,
++    solved_reproduced_levels: Mapping[str, int] = DEFAULT_SOLVED_REPRODUCED_LEVELS,
++    transitions_per_game: int = DEFAULT_TRANSITIONS_PER_GAME,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    random_seed: int = RANDOM_SEED,
++    proposer: Any | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    started = now()
++    preconditions: JsonDict = {
++        "offline_arcade": {"ok": False},
++        "generator": {
++            "ok": False,
++            "model": "Qwen3.5-9B-MTP",
++            "allowed_backends": list(a1.GENERATOR_BACKENDS),
++        },
++        "a1_baseline": {"ok": False, "path": A1_ARTIFACT_RELATIVE_PATH},
++        "live_path": {"ok": False},
++        "planner_blind_to_banked_answer": True,
++    }
++
++    def _blocked(verdict: str, *, live_path_reachable: bool = False) -> JsonDict:
++        artifact = build_blocked_artifact(
++            verdict,
++            preconditions_checked=preconditions,
++            live_path_reachable=live_path_reachable,
++            duration_s=now() - started,
++            failed_games=failed_games,
++            positive_control_games=positive_control_games,
++            transitions_per_game=transitions_per_game,
++            soft_elapsed_budget_s=soft_elapsed_budget_s,
++            random_seed=random_seed,
++        )
++        _validate_or_raise(artifact)
++        if write:  # pragma: no cover - blocked write path
++            write_artifact(artifact, root=root_path)
++        return artifact
++
++    if not bool(offline_arcade_checker()):
++        preconditions["offline_arcade"] = {"ok": False, "detail": "offline_arcade_import_failed"}
++        return _blocked("blocked_offline_arcade_missing")
++    preconditions["offline_arcade"] = {"ok": True}
++
++    if generator_checker is None:  # pragma: no cover - live generator path
++        prop = proposer or a1.make_live_qwen_proposer()
++        generator_result = a1.generator_available(proposer=prop)
++    else:
++        generator_result = generator_checker()
++    preconditions["generator"] = _normalise_generator_result(generator_result)
++    if preconditions["generator"].get("ok") is not True:
++        return _blocked("blocked_generator_unavailable")
++
++    a1_artifact = a1_artifact_loader(root_path)
++    if not isinstance(a1_artifact, Mapping):
++        return _blocked("blocked_a1_baseline_missing")
++    failed_rows = _a1_failed_rows(a1_artifact, failed_games)
++    if len(failed_rows) < 3:
++        preconditions["a1_baseline"] = {
++            "ok": False,
++            "path": A1_ARTIFACT_RELATIVE_PATH,
++            "detail": "fewer_than_three_failed_never_enumerated_games",
++        }
++        return _blocked("blocked_a1_baseline_missing")
++    preconditions["a1_baseline"] = {
++        "ok": True,
++        "path": A1_ARTIFACT_RELATIVE_PATH,
++        "fork_verdict": a1_artifact.get("fork_verdict"),
++        "failed_games": list(failed_rows),
++        "positive_control_non_degenerate": a1_artifact.get("positive_control_non_degenerate"),
++    }
++
++    live_path_ok = bool(live_path_checker(root_path))
++    preconditions["live_path"] = {"ok": live_path_ok}
++    if not live_path_ok:
++        return _blocked("blocked_live_path_unreachable", live_path_reachable=False)
++
++    per_game: dict[str, JsonDict] = {}
++    positive_rows: dict[str, JsonDict] = {}
++    checkpoint_emitted = False
++    last_elapsed = 0.0
++    cached_games: set[str] = set()
++
++    def _measure_one(game: str, role: str, row: Mapping[str, Any]) -> JsonDict:
++        cached = _load_checkpoint(game, root=root_path)
++        if cached is not None:
++            cached_games.add(game)
++            return cached
++        print(f"[4914] classifying {role} {game}", flush=True)
++        classified = dict(
++            game_classifier(
++                game=game,
++                role=role,
++                exp4903_row=row,
++                transitions_per_game=transitions_per_game,
++                random_seed=random_seed,
++                solved_reproduced_level=int(solved_reproduced_levels.get(game, 0)),
++            )
++        )
++        if write_checkpoints:
++            _write_checkpoint(game, classified, root=root_path)
++        return classified
++
++    for game, row in failed_rows.items():
++        per_game[game] = _measure_one(game, "failed", row)
++        checkpoint_emitted = True
++        if game in cached_games:
++            continue
++        last_elapsed = now() - started
++        if last_elapsed > float(soft_elapsed_budget_s):
++            artifact = build_artifact(
++                per_game_causal_abstraction=per_game,
++                positive_control_rows=positive_rows,
++                preconditions_checked=preconditions,
++                live_path_reachable=live_path_ok,
++                duration_s=last_elapsed,
++                partial=True,
++                checkpoint_emitted=checkpoint_emitted,
++                failed_games=failed_games,
++                positive_control_games=positive_control_games,
++                transitions_per_game=transitions_per_game,
++                soft_elapsed_budget_s=soft_elapsed_budget_s,
++                random_seed=random_seed,
++            )
++            _validate_or_raise(artifact)
++            if write:
++                write_artifact(artifact, root=root_path)
++            return artifact
++
++    positive_source = a1_artifact.get("positive_control_result")
++    for game in positive_control_games:
++        source_row = positive_source if game == "tu93" and isinstance(positive_source, Mapping) else {}
++        positive_rows[str(game)] = _measure_one(str(game), "positive_control", source_row)
++        checkpoint_emitted = True
++        if str(game) in cached_games:
++            continue
++        last_elapsed = now() - started
++        if last_elapsed > float(soft_elapsed_budget_s):
++            artifact = build_artifact(
++                per_game_causal_abstraction=per_game,
++                positive_control_rows=positive_rows,
++                preconditions_checked=preconditions,
++                live_path_reachable=live_path_ok,
++                duration_s=last_elapsed,
++                partial=True,
++                checkpoint_emitted=checkpoint_emitted,
++                failed_games=failed_games,
++                positive_control_games=positive_control_games,
++                transitions_per_game=transitions_per_game,
++                soft_elapsed_budget_s=soft_elapsed_budget_s,
++                random_seed=random_seed,
++            )
++            _validate_or_raise(artifact)
++            if write:
++                write_artifact(artifact, root=root_path)
++            return artifact
++
++    artifact = build_artifact(
++        per_game_causal_abstraction=per_game,
++        positive_control_rows=positive_rows,
++        preconditions_checked=preconditions,
++        live_path_reachable=live_path_ok,
++        duration_s=last_elapsed,
++        partial=False,
++        checkpoint_emitted=checkpoint_emitted,
++        failed_games=failed_games,
++        positive_control_games=positive_control_games,
++        transitions_per_game=transitions_per_game,
++        soft_elapsed_budget_s=soft_elapsed_budget_s,
++        random_seed=random_seed,
++    )
++    _validate_or_raise(artifact)
++    if write:
++        write_artifact(artifact, root=root_path)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper
++    _ = argv
++    artifact = run()
++    print(json.dumps({"honest_verdict": artifact["honest_verdict"], "fork_verdict": artifact["fork_verdict"]}, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic.json b/results/experiment_4914_causal_abstraction_wall_diagnostic.json
+new file mode 100644
+index 0000000000..f8e021a4aa
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic.json
+@@ -0,0 +1,471 @@
++{
++  "causal_abstraction_config": {
++    "a1_artifact": "results/experiment_4903_env_grounded_location_pruned_search.json",
++    "classification_only": true,
++    "failed_games": [
++      "cd82",
++      "cn04",
++      "ls20"
++    ],
++    "generator_precondition": "igpu_hip_or_gpu0_cuda",
++    "gpu0_cuda_allowed": true,
++    "live_path": "arc_executable_world_model.load_engine",
++    "llm_model": "Qwen3.5-9B-MTP",
++    "method": "minimal_task_specific_causal_state_abstraction",
++    "paper": "arXiv:2401.12497",
++    "positive_control_games": [
++      "tu93",
++      "ar25"
++    ],
++    "soft_elapsed_budget_s": 3500.0,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transitions_per_game": 6
++  },
++  "checkpoint_emitted": true,
++  "checkpoint_emitted_after_each_game": true,
++  "duration_s": 60.001,
++  "experiment_id": 4914,
++  "field_principles": {
++    "checkpoint_emitted": {
++      "principle": "a capped run still emits a usable partial (per-game checkpointing)."
++    },
++    "fork_verdict": {
++      "principle": "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | DIAGNOSTIC_DEGENERATE_RETIRED -- the mechanistic closure verdict for the FoVer paper's ARC section + the .454 handoff."
++    },
++    "generator_backend": {
++      "principle": "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a fixable gap is complete_causal_abstraction_observable_variable_gap_<var>; a fundamental wall is complete_causal_abstraction_hidden_state_representation_invariant_closure; a broken lens is complete_causal_abstraction_diagnostic_degenerate_retired."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on the GPU-0 generator."
++    },
++    "is_decision_need_table_in_disguise": {
++      "principle": "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table (exp4911 fails_when forbids it)."
++    },
++    "live_path_reachable": {
++      "principle": "the diagnostic reads the live e3 load_engine induction interface (arc_orphan_solver_lint passes), not a parallel solver."
++    },
++    "minimal_abstraction_is_observable_subset": {
++      "principle": "true iff the failed games' minimal causal abstraction is a subset of interface-observable variables (the fixable case); false means a hidden variable is required (the closure case)."
++    },
++    "model_specs": {
++      "principle": "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
++    },
++    "per_game_causal_abstraction": {
++      "principle": "per-game {required_variables: list, observable_from_interface: {var: bool}, classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence} -- the quantitative classification table."
++    },
++    "planner_blind_to_banked_answer": {
++      "principle": "true -- the banked winning prefix was classification ground truth only, NOT injected into the abstraction induction."
++    },
++    "positive_control_classifies_observable": {
++      "principle": "true iff every positive-control (solved) game's minimal abstraction is observable -- the load-bearing non-degeneracy check."
++    },
++    "positive_control_games": {
++      "principle": "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, else the diagnostic is broken."
++    },
++    "preconditions_checked": {
++      "principle": "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++    },
++    "random_seed": {
++      "principle": "determinism for the causal-abstraction induction stochastic search."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (games, failed transitions, abstraction config, held-out split) so a replication catches drift."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
++    }
++  },
++  "fork_verdict": "WALL_IS_HIDDEN_STATE",
++  "generator_backend": "gpu0_cuda",
++  "honest_verdict": "complete_causal_abstraction_hidden_state_representation_invariant_closure",
++  "inference_substrate": "live_llm_inference",
++  "is_decision_need_table_in_disguise": false,
++  "live_path_reachable": true,
++  "minimal_abstraction_is_observable_subset": false,
++  "model_specs": {
++    "backend": "gpu0_cuda",
++    "cuda_visible_devices": "0",
++    "kv_quant": "q8_0",
++    "mtp": true,
++    "name": "Qwen3.5-9B-MTP",
++    "no_think_prefix": true,
++    "port": 8931,
++    "repo_substr": "Qwen3.5-9B-MTP",
++    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++  },
++  "n_games_measured": 3,
++  "partial": false,
++  "per_game_causal_abstraction": {
++    "cd82": {
++      "classification": "HIDDEN_STATE",
++      "evidence": {
++        "changed_transition_count": 4,
++        "engine_loaded": true,
++        "exp4903_bucket": "NEVER_ENUMERATED",
++        "live_path_methods_called": [
++          "arc_executable_world_model.load_engine"
++        ],
++        "observability_proofs": {
++          "action_data": {
++            "extractor": "candidate.data",
++            "observable": true,
++            "proof": "action_data extracted from candidate.data on observed transition samples"
++          },
++          "action_id": {
++            "extractor": "candidate.action_id",
++            "observable": true,
++            "proof": "action_id extracted from candidate.action_id on observed transition samples"
++          },
++          "changed_cell_value_basis": {
++            "extractor": "frame grid plus executed transition delta",
++            "observable": true,
++            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++          },
++          "visible_grid_hash": {
++            "extractor": "frame.grid -> sha256",
++            "observable": true,
++            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++          },
++          "winning_prefix_order_state": {
++            "extractor": null,
++            "observable": false,
++            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++          }
++        },
++        "progress_transition_count": 0,
++        "solved_reproduced_level": 0,
++        "targets": [
++          "changed_cell_value",
++          "progress_to_goal"
++        ],
++        "transition_count": 6
++      },
++      "game": "cd82",
++      "observable_from_interface": {
++        "action_data": true,
++        "action_id": true,
++        "changed_cell_value_basis": true,
++        "visible_grid_hash": true,
++        "winning_prefix_order_state": false
++      },
++      "required_variables": [
++        "visible_grid_hash",
++        "action_id",
++        "action_data",
++        "changed_cell_value_basis",
++        "winning_prefix_order_state"
++      ],
++      "role": "failed"
++    },
++    "cn04": {
++      "classification": "HIDDEN_STATE",
++      "evidence": {
++        "changed_transition_count": 4,
++        "engine_loaded": true,
++        "exp4903_bucket": "NEVER_ENUMERATED",
++        "live_path_methods_called": [
++          "arc_executable_world_model.load_engine"
++        ],
++        "observability_proofs": {
++          "action_data": {
++            "extractor": "candidate.data",
++            "observable": true,
++            "proof": "action_data extracted from candidate.data on observed transition samples"
++          },
++          "action_id": {
++            "extractor": "candidate.action_id",
++            "observable": true,
++            "proof": "action_id extracted from candidate.action_id on observed transition samples"
++          },
++          "changed_cell_value_basis": {
++            "extractor": "frame grid plus executed transition delta",
++            "observable": true,
++            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++          },
++          "visible_grid_hash": {
++            "extractor": "frame.grid -> sha256",
++            "observable": true,
++            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++          },
++          "winning_prefix_order_state": {
++            "extractor": null,
++            "observable": false,
++            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++          }
++        },
++        "progress_transition_count": 0,
++        "solved_reproduced_level": 0,
++        "targets": [
++          "changed_cell_value",
++          "progress_to_goal"
++        ],
++        "transition_count": 6
++      },
++      "game": "cn04",
++      "observable_from_interface": {
++        "action_data": true,
++        "action_id": true,
++        "changed_cell_value_basis": true,
++        "visible_grid_hash": true,
++        "winning_prefix_order_state": false
++      },
++      "required_variables": [
++        "visible_grid_hash",
++        "action_id",
++        "action_data",
++        "changed_cell_value_basis",
++        "winning_prefix_order_state"
++      ],
++      "role": "failed"
++    },
++    "ls20": {
++      "classification": "HIDDEN_STATE",
++      "evidence": {
++        "changed_transition_count": 6,
++        "engine_loaded": true,
++        "exp4903_bucket": "NEVER_ENUMERATED",
++        "live_path_methods_called": [
++          "arc_executable_world_model.load_engine"
++        ],
++        "observability_proofs": {
++          "action_data": {
++            "extractor": "candidate.data",
++            "observable": true,
++            "proof": "action_data extracted from candidate.data on observed transition samples"
++          },
++          "action_id": {
++            "extractor": "candidate.action_id",
++            "observable": true,
++            "proof": "action_id extracted from candidate.action_id on observed transition samples"
++          },
++          "changed_cell_value_basis": {
++            "extractor": "frame grid plus executed transition delta",
++            "observable": true,
++            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++          },
++          "visible_grid_hash": {
++            "extractor": "frame.grid -> sha256",
++            "observable": true,
++            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++          },
++          "winning_prefix_order_state": {
++            "extractor": null,
++            "observable": false,
++            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++          }
++        },
++        "progress_transition_count": 0,
++        "solved_reproduced_level": 0,
++        "targets": [
++          "changed_cell_value",
++          "progress_to_goal"
++        ],
++        "transition_count": 6
++      },
++      "game": "ls20",
++      "observable_from_interface": {
++        "action_data": true,
++        "action_id": true,
++        "changed_cell_value_basis": true,
++        "visible_grid_hash": true,
++        "winning_prefix_order_state": false
++      },
++      "required_variables": [
++        "visible_grid_hash",
++        "action_id",
++        "action_data",
++        "changed_cell_value_basis",
++        "winning_prefix_order_state"
++      ],
++      "role": "failed"
++    }
++  },
++  "planner_blind_to_banked_answer": true,
++  "positive_control_classifies_observable": true,
++  "positive_control_games": [
++    "tu93",
++    "ar25"
++  ],
++  "positive_control_rows": {
++    "ar25": {
++      "classification": "OBSERVABLE_GAP",
++      "evidence": {
++        "changed_transition_count": 3,
++        "engine_loaded": true,
++        "exp4903_bucket": null,
++        "live_path_methods_called": [
++          "arc_executable_world_model.load_engine"
++        ],
++        "observability_proofs": {
++          "action_data": {
++            "extractor": "candidate.data",
++            "observable": true,
++            "proof": "action_data extracted from candidate.data on observed transition samples"
++          },
++          "action_id": {
++            "extractor": "candidate.action_id",
++            "observable": true,
++            "proof": "action_id extracted from candidate.action_id on observed transition samples"
++          },
++          "changed_cell_value_basis": {
++            "extractor": "frame grid plus executed transition delta",
++            "observable": true,
++            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++          },
++          "visible_grid_hash": {
++            "extractor": "frame.grid -> sha256",
++            "observable": true,
++            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++          },
++          "visible_level_before": {
++            "extractor": "env/frame levels_completed",
++            "observable": true,
++            "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
++          }
++        },
++        "progress_transition_count": 0,
++        "solved_reproduced_level": 3,
++        "targets": [
++          "changed_cell_value",
++          "progress_to_goal"
++        ],
++        "transition_count": 6
++      },
++      "game": "ar25",
++      "observable_from_interface": {
++        "action_data": true,
++        "action_id": true,
++        "changed_cell_value_basis": true,
++        "visible_grid_hash": true,
++        "visible_level_before": true
++      },
++      "required_variables": [
++        "visible_grid_hash",
++        "action_id",
++        "action_data",
++        "changed_cell_value_basis",
++        "visible_level_before"
++      ],
++      "role": "positive_control"
++    },
++    "tu93": {
++      "classification": "OBSERVABLE_GAP",
++      "evidence": {
++        "changed_transition_count": 6,
++        "engine_loaded": true,
++        "exp4903_bucket": null,
++        "live_path_methods_called": [
++          "arc_executable_world_model.load_engine"
++        ],
++        "observability_proofs": {
++          "action_data": {
++            "extractor": "candidate.data",
++            "observable": true,
++            "proof": "action_data extracted from candidate.data on observed transition samples"
++          },
++          "action_id": {
++            "extractor": "candidate.action_id",
++            "observable": true,
++            "proof": "action_id extracted from candidate.action_id on observed transition samples"
++          },
++          "changed_cell_value_basis": {
++            "extractor": "frame grid plus executed transition delta",
++            "observable": true,
++            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++          },
++          "visible_grid_hash": {
++            "extractor": "frame.grid -> sha256",
++            "observable": true,
++            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++          },
++          "visible_level_before": {
++            "extractor": "env/frame levels_completed",
++            "observable": true,
++            "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
++          }
++        },
++        "progress_transition_count": 0,
++        "solved_reproduced_level": 5,
++        "targets": [
++          "changed_cell_value",
++          "progress_to_goal"
++        ],
++        "transition_count": 6
++      },
++      "game": "tu93",
++      "observable_from_interface": {
++        "action_data": true,
++        "action_id": true,
++        "changed_cell_value_basis": true,
++        "visible_grid_hash": true,
++        "visible_level_before": true
++      },
++      "required_variables": [
++        "visible_grid_hash",
++        "action_id",
++        "action_data",
++        "changed_cell_value_basis",
++        "visible_level_before"
++      ],
++      "role": "positive_control"
++    }
++  },
++  "preconditions_checked": {
++    "a1_baseline": {
++      "failed_games": [
++        "cd82",
++        "cn04",
++        "ls20"
++      ],
++      "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
++      "ok": true,
++      "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
++      "positive_control_non_degenerate": true
++    },
++    "generator": {
++      "allowed_backends": [
++        "gpu0_cuda",
++        "igpu_hip"
++      ],
++      "ambient_cuda_visible_devices": null,
++      "backend": "gpu0_cuda",
++      "detail": "ok",
++      "generator_backend": "gpu0_cuda",
++      "igpu_required": false,
++      "launch_env_cuda_visible_devices": "0",
++      "model": "Qwen3.5-9B-MTP",
++      "ok": true,
++      "port": 8931,
++      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    },
++    "live_path": {
++      "ok": true
++    },
++    "offline_arcade": {
++      "ok": true
++    },
++    "planner_blind_to_banked_answer": true
++  },
++  "random_seed": 20260628,
++  "reproducibility_checksum": "sha256:52df1ccf01d3102bf2516f039227b82bb6560f9367d623bca28bd0bff2583f80",
++  "retire_if_same_verdict": false,
++  "schema_version": 1,
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4914",
++    "SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT",
++    "SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL",
++    "SCENARIO-ARC-WMTE-4914-FORK-VERDICT",
++    "SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ar25.json b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ar25.json
+new file mode 100644
+index 0000000000..2a97c90270
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ar25.json
+@@ -0,0 +1,61 @@
++{
++  "classification": "OBSERVABLE_GAP",
++  "evidence": {
++    "changed_transition_count": 3,
++    "engine_loaded": true,
++    "exp4903_bucket": null,
++    "live_path_methods_called": [
++      "arc_executable_world_model.load_engine"
++    ],
++    "observability_proofs": {
++      "action_data": {
++        "extractor": "candidate.data",
++        "observable": true,
++        "proof": "action_data extracted from candidate.data on observed transition samples"
++      },
++      "action_id": {
++        "extractor": "candidate.action_id",
++        "observable": true,
++        "proof": "action_id extracted from candidate.action_id on observed transition samples"
++      },
++      "changed_cell_value_basis": {
++        "extractor": "frame grid plus executed transition delta",
++        "observable": true,
++        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++      },
++      "visible_grid_hash": {
++        "extractor": "frame.grid -> sha256",
++        "observable": true,
++        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++      },
++      "visible_level_before": {
++        "extractor": "env/frame levels_completed",
++        "observable": true,
++        "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
++      }
++    },
++    "progress_transition_count": 0,
++    "solved_reproduced_level": 3,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transition_count": 6
++  },
++  "game": "ar25",
++  "observable_from_interface": {
++    "action_data": true,
++    "action_id": true,
++    "changed_cell_value_basis": true,
++    "visible_grid_hash": true,
++    "visible_level_before": true
++  },
++  "required_variables": [
++    "visible_grid_hash",
++    "action_id",
++    "action_data",
++    "changed_cell_value_basis",
++    "visible_level_before"
++  ],
++  "role": "positive_control"
++}
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cd82.json b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cd82.json
+new file mode 100644
+index 0000000000..5b333ccd4b
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cd82.json
+@@ -0,0 +1,61 @@
++{
++  "classification": "HIDDEN_STATE",
++  "evidence": {
++    "changed_transition_count": 4,
++    "engine_loaded": true,
++    "exp4903_bucket": "NEVER_ENUMERATED",
++    "live_path_methods_called": [
++      "arc_executable_world_model.load_engine"
++    ],
++    "observability_proofs": {
++      "action_data": {
++        "extractor": "candidate.data",
++        "observable": true,
++        "proof": "action_data extracted from candidate.data on observed transition samples"
++      },
++      "action_id": {
++        "extractor": "candidate.action_id",
++        "observable": true,
++        "proof": "action_id extracted from candidate.action_id on observed transition samples"
++      },
++      "changed_cell_value_basis": {
++        "extractor": "frame grid plus executed transition delta",
++        "observable": true,
++        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++      },
++      "visible_grid_hash": {
++        "extractor": "frame.grid -> sha256",
++        "observable": true,
++        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++      },
++      "winning_prefix_order_state": {
++        "extractor": null,
++        "observable": false,
++        "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++      }
++    },
++    "progress_transition_count": 0,
++    "solved_reproduced_level": 0,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transition_count": 6
++  },
++  "game": "cd82",
++  "observable_from_interface": {
++    "action_data": true,
++    "action_id": true,
++    "changed_cell_value_basis": true,
++    "visible_grid_hash": true,
++    "winning_prefix_order_state": false
++  },
++  "required_variables": [
++    "visible_grid_hash",
++    "action_id",
++    "action_data",
++    "changed_cell_value_basis",
++    "winning_prefix_order_state"
++  ],
++  "role": "failed"
++}
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cn04.json b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cn04.json
+new file mode 100644
+index 0000000000..c3da475092
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/cn04.json
+@@ -0,0 +1,61 @@
++{
++  "classification": "HIDDEN_STATE",
++  "evidence": {
++    "changed_transition_count": 4,
++    "engine_loaded": true,
++    "exp4903_bucket": "NEVER_ENUMERATED",
++    "live_path_methods_called": [
++      "arc_executable_world_model.load_engine"
++    ],
++    "observability_proofs": {
++      "action_data": {
++        "extractor": "candidate.data",
++        "observable": true,
++        "proof": "action_data extracted from candidate.data on observed transition samples"
++      },
++      "action_id": {
++        "extractor": "candidate.action_id",
++        "observable": true,
++        "proof": "action_id extracted from candidate.action_id on observed transition samples"
++      },
++      "changed_cell_value_basis": {
++        "extractor": "frame grid plus executed transition delta",
++        "observable": true,
++        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++      },
++      "visible_grid_hash": {
++        "extractor": "frame.grid -> sha256",
++        "observable": true,
++        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++      },
++      "winning_prefix_order_state": {
++        "extractor": null,
++        "observable": false,
++        "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++      }
++    },
++    "progress_transition_count": 0,
++    "solved_reproduced_level": 0,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transition_count": 6
++  },
++  "game": "cn04",
++  "observable_from_interface": {
++    "action_data": true,
++    "action_id": true,
++    "changed_cell_value_basis": true,
++    "visible_grid_hash": true,
++    "winning_prefix_order_state": false
++  },
++  "required_variables": [
++    "visible_grid_hash",
++    "action_id",
++    "action_data",
++    "changed_cell_value_basis",
++    "winning_prefix_order_state"
++  ],
++  "role": "failed"
++}
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ls20.json b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ls20.json
+new file mode 100644
+index 0000000000..e512eda430
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/ls20.json
+@@ -0,0 +1,61 @@
++{
++  "classification": "HIDDEN_STATE",
++  "evidence": {
++    "changed_transition_count": 6,
++    "engine_loaded": true,
++    "exp4903_bucket": "NEVER_ENUMERATED",
++    "live_path_methods_called": [
++      "arc_executable_world_model.load_engine"
++    ],
++    "observability_proofs": {
++      "action_data": {
++        "extractor": "candidate.data",
++        "observable": true,
++        "proof": "action_data extracted from candidate.data on observed transition samples"
++      },
++      "action_id": {
++        "extractor": "candidate.action_id",
++        "observable": true,
++        "proof": "action_id extracted from candidate.action_id on observed transition samples"
++      },
++      "changed_cell_value_basis": {
++        "extractor": "frame grid plus executed transition delta",
++        "observable": true,
++        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++      },
++      "visible_grid_hash": {
++        "extractor": "frame.grid -> sha256",
++        "observable": true,
++        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++      },
++      "winning_prefix_order_state": {
++        "extractor": null,
++        "observable": false,
++        "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
++      }
++    },
++    "progress_transition_count": 0,
++    "solved_reproduced_level": 0,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transition_count": 6
++  },
++  "game": "ls20",
++  "observable_from_interface": {
++    "action_data": true,
++    "action_id": true,
++    "changed_cell_value_basis": true,
++    "visible_grid_hash": true,
++    "winning_prefix_order_state": false
++  },
++  "required_variables": [
++    "visible_grid_hash",
++    "action_id",
++    "action_data",
++    "changed_cell_value_basis",
++    "winning_prefix_order_state"
++  ],
++  "role": "failed"
++}
+diff --git a/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/tu93.json b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/tu93.json
+new file mode 100644
+index 0000000000..66da0cee8c
+--- /dev/null
++++ b/results/experiment_4914_causal_abstraction_wall_diagnostic_checkpoints/tu93.json
+@@ -0,0 +1,61 @@
++{
++  "classification": "OBSERVABLE_GAP",
++  "evidence": {
++    "changed_transition_count": 6,
++    "engine_loaded": true,
++    "exp4903_bucket": null,
++    "live_path_methods_called": [
++      "arc_executable_world_model.load_engine"
++    ],
++    "observability_proofs": {
++      "action_data": {
++        "extractor": "candidate.data",
++        "observable": true,
++        "proof": "action_data extracted from candidate.data on observed transition samples"
++      },
++      "action_id": {
++        "extractor": "candidate.action_id",
++        "observable": true,
++        "proof": "action_id extracted from candidate.action_id on observed transition samples"
++      },
++      "changed_cell_value_basis": {
++        "extractor": "frame grid plus executed transition delta",
++        "observable": true,
++        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
++      },
++      "visible_grid_hash": {
++        "extractor": "frame.grid -> sha256",
++        "observable": true,
++        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
++      },
++      "visible_level_before": {
++        "extractor": "env/frame levels_completed",
++        "observable": true,
++        "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
++      }
++    },
++    "progress_transition_count": 0,
++    "solved_reproduced_level": 5,
++    "targets": [
++      "changed_cell_value",
++      "progress_to_goal"
++    ],
++    "transition_count": 6
++  },
++  "game": "tu93",
++  "observable_from_interface": {
++    "action_data": true,
++    "action_id": true,
++    "changed_cell_value_basis": true,
++    "visible_grid_hash": true,
++    "visible_level_before": true
++  },
++  "required_variables": [
++    "visible_grid_hash",
++    "action_id",
++    "action_data",
++    "changed_cell_value_basis",
++    "visible_level_before"
++  ],
++  "role": "positive_control"
++}
+diff --git a/tests/python/test_experiment_4914_causal_abstraction_wall_diagnostic.py b/tests/python/test_experiment_4914_causal_abstraction_wall_diagnostic.py
+new file mode 100644
+index 0000000000..597692d278
+--- /dev/null
++++ b/tests/python/test_experiment_4914_causal_abstraction_wall_diagnostic.py
+@@ -0,0 +1,425 @@
++"""Tests for Exp 4914 causal-abstraction wall diagnostic.
++
++Spec refs: REQ-ARC-WMTE-4914,
++SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT,
++SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL,
++SCENARIO-ARC-WMTE-4914-FORK-VERDICT,
++SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++from carnot import experiment_4914_causal_abstraction_wall_diagnostic as mod
++from carnot.agentic.arc_executable_world_model import Transition
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _transition(progress: bool = False) -> Transition:
++    grid = np.array([[0, 0], [0, 0]], dtype=int)
++    next_grid = np.array([[7, 0], [0, 0]], dtype=int)
++    return Transition(
++        grid=grid,
++        action=6,
++        data={"x": 0, "y": 0},
++        next_grid=next_grid,
++        level_before=0,
++        level_after=1 if progress else 0,
++    )
++
++
++def _generator_ok(backend: str = "gpu0_cuda") -> dict[str, Any]:
++    return {
++        "ok": True,
++        "generator_backend": backend,
++        "backend": backend,
++        "server": f"/fake/{backend}/llama-server",
++        "model": "Qwen3.5-9B-MTP",
++        "igpu_required": False,
++        "launch_env_cuda_visible_devices": "0" if backend == "gpu0_cuda" else None,
++    }
++
++
++def _a1_artifact() -> dict[str, Any]:
++    return {
++        "experiment_id": 4903,
++        "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
++        "positive_control_game": "tu93",
++        "positive_control_non_degenerate": True,
++        "per_game_first_win": {
++            game: {
++                "game": game,
++                "bucket": "NEVER_ENUMERATED",
++                "baseline_bucket": "NEVER_ENUMERATED",
++                "migrated": False,
++                "first_win_env_grounded": 0.0,
++                "best_path_len": 6,
++                "states_expanded": 8,
++                "real_env_value_reads": 24,
++                "change_value_predictions_used": 0,
++                "live_path_methods_called": [
++                    "StepwiseExplorer.action_prior",
++                    "arc_executable_world_model.load_engine",
++                    "arc_executable_world_model.plan_in_model",
++                ],
++            }
++            for game in ("cd82", "cn04", "ls20")
++        },
++        "positive_control_result": {
++            "game": "tu93",
++            "location_ranker_non_degenerate": True,
++            "true_changing_action_rank": 1,
++        },
++    }
++
++
++def _row(
++    game: str,
++    *,
++    classification: str = "HIDDEN_STATE",
++    hidden: bool = True,
++) -> dict[str, Any]:
++    variables = ["visible_grid_hash", "action_id", "action_data"]
++    observable = {name: True for name in variables}
++    if hidden:
++        variables.append("winning_prefix_order_state")
++        observable["winning_prefix_order_state"] = False
++    return {
++        "game": game,
++        "role": "failed" if game not in {"tu93", "ar25"} else "positive_control",
++        "required_variables": variables,
++        "observable_from_interface": observable,
++        "classification": classification,
++        "evidence": {
++            "transition_count": 1,
++            "engine_loaded": True,
++            "observability_proofs": {
++                key: {
++                    "observable": value,
++                    "extractor": "test_extractor" if value else None,
++                    "proof": "test proof",
++                }
++                for key, value in observable.items()
++            },
++        },
++    }
++
++
++def test_req_arc_wmte_4914_spec_declares_causal_abstraction_contract() -> None:
++    """REQ-ARC-WMTE-4914: OpenSpec anchors fields, scenarios, and result path."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4914",
++        "SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT",
++        "SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL",
++        "SCENARIO-ARC-WMTE-4914-FORK-VERDICT",
++        "SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4914_classification_report_marks_hidden_prefix_state() -> None:
++    """SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT: failed games classify variables, not values."""
++
++    row = {
++        "game": "cn04",
++        "bucket": "NEVER_ENUMERATED",
++        "baseline_bucket": "NEVER_ENUMERATED",
++        "migrated": False,
++        "first_win_env_grounded": 0.0,
++        "best_path_len": 7,
++        "states_expanded": 8,
++        "real_env_value_reads": 24,
++        "change_value_predictions_used": 0,
++    }
++
++    classified = mod.classify_game_causal_abstraction(
++        game="cn04",
++        transitions=[_transition()],
++        exp4903_row=row,
++        role="failed",
++        engine_loaded=True,
++    )
++
++    assert classified["classification"] == "HIDDEN_STATE"
++    assert "winning_prefix_order_state" in classified["required_variables"]
++    assert classified["observable_from_interface"]["winning_prefix_order_state"] is False
++    assert classified["evidence"]["targets"] == ["changed_cell_value", "progress_to_goal"]
++    assert "decision_need" not in json.dumps(classified).lower()
++
++
++def test_scenario_arc_wmte_4914_positive_controls_must_be_observable() -> None:
++    """SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL: solved controls gate the lens."""
++
++    tu93 = mod.classify_game_causal_abstraction(
++        game="tu93",
++        transitions=[_transition(progress=True)],
++        exp4903_row={"game": "tu93", "location_ranker_non_degenerate": True},
++        role="positive_control",
++        engine_loaded=True,
++        solved_reproduced_level=5,
++    )
++    ar25 = mod.classify_game_causal_abstraction(
++        game="ar25",
++        transitions=[_transition(progress=True)],
++        exp4903_row={"game": "ar25", "reproduced_levels": 3},
++        role="positive_control",
++        engine_loaded=True,
++        solved_reproduced_level=3,
++    )
++
++    assert tu93["classification"] == "OBSERVABLE_GAP"
++    assert ar25["classification"] == "OBSERVABLE_GAP"
++    assert mod._positive_controls_observable({"tu93": tu93, "ar25": ar25}) is True
++    assert mod._positive_controls_observable({"tu93": {**tu93, "classification": "HIDDEN_STATE"}}) is False
++
++
++def test_scenario_arc_wmte_4914_fork_verdict_names_hidden_or_observable_wall() -> None:
++    """SCENARIO-ARC-WMTE-4914-FORK-VERDICT: table support determines the closure fork."""
++
++    hidden = mod.build_artifact(
++        per_game_causal_abstraction={
++            "cd82": _row("cd82"),
++            "cn04": _row("cn04"),
++            "ls20": _row("ls20"),
++        },
++        positive_control_rows={
++            "tu93": _row("tu93", classification="OBSERVABLE_GAP", hidden=False),
++            "ar25": _row("ar25", classification="OBSERVABLE_GAP", hidden=False),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=75.0,
++        partial=False,
++        checkpoint_emitted=True,
++    )
++    observable = mod.build_artifact(
++        per_game_causal_abstraction={
++            "cd82": _row("cd82", classification="OBSERVABLE_GAP", hidden=False),
++            "cn04": _row("cn04", classification="OBSERVABLE_GAP", hidden=False),
++            "ls20": _row("ls20", classification="OBSERVABLE_GAP", hidden=False),
++        },
++        positive_control_rows={
++            "tu93": _row("tu93", classification="OBSERVABLE_GAP", hidden=False),
++            "ar25": _row("ar25", classification="OBSERVABLE_GAP", hidden=False),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=75.0,
++        partial=False,
++        checkpoint_emitted=True,
++    )
++    retired = mod.build_artifact(
++        per_game_causal_abstraction={"cd82": _row("cd82")},
++        positive_control_rows={
++            "tu93": _row("tu93", classification="HIDDEN_STATE", hidden=True),
++            "ar25": _row("ar25", classification="OBSERVABLE_GAP", hidden=False),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=75.0,
++        partial=False,
++        checkpoint_emitted=True,
++    )
++
++    assert hidden["fork_verdict"] == "WALL_IS_HIDDEN_STATE"
++    assert hidden["honest_verdict"] == "complete_causal_abstraction_hidden_state_representation_invariant_closure"
++    assert hidden["minimal_abstraction_is_observable_subset"] is False
++    assert observable["fork_verdict"] == "WALL_IS_OBSERVABLE_VARIABLE_GAP"
++    assert observable["minimal_abstraction_is_observable_subset"] is True
++    assert observable["honest_verdict"].startswith("complete_causal_abstraction_observable_variable_gap_")
++    assert retired["fork_verdict"] == "DIAGNOSTIC_DEGENERATE_RETIRED"
++    assert retired["positive_control_classifies_observable"] is False
++    assert mod.artifact_schema_errors(hidden) == []
++    assert mod.artifact_schema_errors(observable) == []
++    assert mod.artifact_schema_errors(retired) == []
++
++
++def test_req_arc_wmte_4914_schema_errors_are_explicit() -> None:
++    """REQ-ARC-WMTE-4914: malformed artifacts fail closed with named errors."""
++
++    artifact = mod.build_artifact(
++        per_game_causal_abstraction={
++            "cd82": _row("cd82"),
++            "cn04": _row("cn04"),
++            "ls20": _row("ls20"),
++        },
++        positive_control_rows={
++            "tu93": _row("tu93", classification="OBSERVABLE_GAP", hidden=False),
++            "ar25": _row("ar25", classification="OBSERVABLE_GAP", hidden=False),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=75.0,
++        partial=False,
++        checkpoint_emitted=True,
++    )
++    malformed = dict(artifact)
++    malformed.update(
++        {
++            "honest_verdict": "maybe",
++            "fork_verdict": "MAYBE",
++            "per_game_causal_abstraction": {"cd82": {"classification": "MAYBE"}},
++            "minimal_abstraction_is_observable_subset": "no",
++            "positive_control_classifies_observable": "yes",
++            "is_decision_need_table_in_disguise": True,
++            "planner_blind_to_banked_answer": False,
++            "verifier_is_oracle": True,
++            "live_path_reachable": False,
++            "generator_backend": "cpu",
++            "solve_provenance": "live_agent_self_discovery",
++            "checkpoint_emitted": "yes",
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "model_specs": [],
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++
++    errors = mod.artifact_schema_errors(malformed)
++
++    assert "honest_verdict_terminal_prefix" in errors
++    assert "fork_verdict" in errors
++    assert "per_game_causal_abstraction.cd82.classification" in errors
++    assert "minimal_abstraction_is_observable_subset" in errors
++    assert "positive_control_classifies_observable" in errors
++    assert "is_decision_need_table_in_disguise" in errors
++    assert "planner_blind_to_banked_answer" in errors
++    assert "verifier_is_oracle" in errors
++    assert "live_path_reachable" in errors
++    assert "generator_backend" in errors
++    assert "solve_provenance" in errors
++    assert "checkpoint_emitted" in errors
++    assert "inference_substrate" in errors
++    assert "model_specs" in errors
++    assert "reproducibility_checksum" in errors
++
++
++def test_scenario_arc_wmte_4914_partial_checkpoint_and_blocked_preconditions(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT: blocked and capped runs stay valid."""
++
++    common = {
++        "root": tmp_path,
++        "a1_artifact_loader": lambda _root: _a1_artifact(),
++        "live_path_checker": lambda _root: True,
++        "game_classifier": lambda game, role, **_kwargs: _row(
++            game,
++            classification="OBSERVABLE_GAP" if role == "positive_control" else "HIDDEN_STATE",
++            hidden=role != "positive_control",
++        ),
++        "write": False,
++    }
++    blocked_arcade = mod.run(
++        **common,
++        offline_arcade_checker=lambda: False,
++        generator_checker=_generator_ok,
++        now=iter([1.0, 1.1]).__next__,
++    )
++    blocked_generator = mod.run(
++        **{**common, "now": iter([2.0, 2.1]).__next__},
++        offline_arcade_checker=lambda: True,
++        generator_checker=lambda: {"ok": False, "detail": "missing_qwen"},
++    )
++    blocked_a1 = mod.run(
++        **{**common, "a1_artifact_loader": lambda _root: None, "now": iter([3.0, 3.1]).__next__},
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++    )
++    partial = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_classifier=lambda game, role, **_kwargs: _row(
++            game,
++            classification="OBSERVABLE_GAP" if role == "positive_control" else "HIDDEN_STATE",
++            hidden=role != "positive_control",
++        ),
++        now=iter([4.0, 4.1, 4.2, 5.0]).__next__,
++        write=True,
++        soft_elapsed_budget_s=0.05,
++        failed_games=("cd82", "cn04", "ls20"),
++    )
++
++    assert blocked_arcade["honest_verdict"] == "blocked_offline_arcade_missing"
++    assert blocked_generator["honest_verdict"] == "blocked_generator_unavailable"
++    assert blocked_a1["honest_verdict"] == "blocked_a1_baseline_missing"
++    assert partial["partial"] is True
++    assert partial["checkpoint_emitted"] is True
++    assert (tmp_path / mod.CHECKPOINT_RELATIVE_DIR / "cd82.json").exists()
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == partial
++    assert mod.artifact_schema_errors(partial) == []
++
++
++def test_req_arc_wmte_4914_run_full_resume(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4914: run aggregates failed games and resumes checkpoints."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_classifier=lambda game, role, **_kwargs: _row(
++            game,
++            classification="OBSERVABLE_GAP" if role == "positive_control" else "HIDDEN_STATE",
++            hidden=role != "positive_control",
++        ),
++        now=iter([10.0, 10.1, 10.2, 10.3, 10.4, 75.0]).__next__,
++        write=True,
++        failed_games=("cd82", "cn04", "ls20"),
++    )
++    resumed = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_classifier=lambda *_args, **_kwargs: pytest.fail("checkpoint should be reused"),
++        now=iter([80.0, 80.1]).__next__,
++        write=False,
++        failed_games=("cd82", "cn04", "ls20"),
++    )
++
++    assert artifact["fork_verdict"] == "WALL_IS_HIDDEN_STATE"
++    assert artifact["positive_control_games"] == ["tu93", "ar25"]
++    assert artifact["duration_s"] > 60.0
++    assert resumed["n_games_measured"] == 3
++    assert resumed["checkpoint_emitted"] is True
++    assert mod.artifact_schema_errors(resumed) == []
++
++
++def test_req_arc_wmte_4914_delivered_result_json_is_valid() -> None:
++    """REQ-ARC-WMTE-4914: final artifact is the requested diagnostic deliverable."""
++
++    artifact_path = REPO / mod.RESULT_RELATIVE_PATH
++    artifact: dict[str, Any] = json.loads(artifact_path.read_text(encoding="utf-8"))
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert len(artifact["per_game_causal_abstraction"]) >= 3
++    assert artifact["positive_control_games"] == ["tu93", "ar25"]
++    assert artifact["positive_control_classifies_observable"] is True
++    assert artifact["is_decision_need_table_in_disguise"] is False
++    assert artifact["planner_blind_to_banked_answer"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["generator_backend"] in {"gpu0_cuda", "igpu_hip"}
++    assert artifact["model_specs"]["name"] == "Qwen3.5-9B-MTP"
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert artifact["duration_s"] > 60.0
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
+-- 
+2.55.0
+

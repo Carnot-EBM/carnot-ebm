@@ -1,0 +1,1513 @@
+From ee3b321ec7e357f36a15b6da5937072e1653c8b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 13:24:51 -0400
+Subject: [PATCH 06606/11362] [conductor] Hardware receipt substrate
+ corrigendum
+
+Automated research step by research conductor.
+Task ID: exp5546-hardware-receipt-substrate-corrigendum
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  83 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._hardware_receipt_substrate_corrigendum.py | 587 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ardware_receipt_substrate_corrigendum.json | 231 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._hardware_receipt_substrate_corrigendum.py | 335 ++++++++++
+ 18 files changed, 1262 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py
+ create mode 100644 results/experiment_5546_hardware_receipt_substrate_corrigendum.json
+ create mode 100644 tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 2ff737f05d..1e53354100 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -29860,6 +29860,89 @@ SHALL write the same result path with
+ |---|---|---|
+ | REQ-VERIFY-5531 | Implemented (`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py`, `results/experiment_5531_sparse_repair_scaleup_ci.json`) | Implemented (`tests/python/test_experiment_5531_sparse_repair_scaleup_ci.py`) |
+ 
++### REQ-VERIFY-5546: Hardware Receipt Substrate Corrigendum
++
++The repository SHALL provide Exp 5546 at
++`python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py` and
++write `results/experiment_5546_hardware_receipt_substrate_corrigendum.json`
++without modifying `scripts/research_conductor.py`, without invoking an LLM,
++without including `model_specs` or `target_model`, without probing host
++`/dev/mmcblk*` or `/dev/disk` paths for KV260 evidence, without flashing any
++board, and without making a hardware speedup claim.
++
++Exp 5546 SHALL parse existing CPU, CUDA, PolarFire, KV260, and GateMate
++reachability receipts from prior hardware receipt artifacts when available.
++The parser SHALL prefer the repaired Exp 5532 receipt rows and SHALL fall back
++to Exp 5519 receipt rows only when a device row is absent. Each emitted device
++receipt row SHALL record the device name, status, parser outcome,
++classification, source artifact, source parser version, safe command kinds,
++device identities, and precise blocker if present. CUDA rows MAY identify CUDA
++hardware, drivers, or memory as hardware metadata, but SHALL NOT include
++LLM/GGUF/live-model markers or model specification fields.
++
++The Exp 5546 artifact SHALL derive `random_seed` and
++`reproducibility_checksum` from the canonical receipt inputs and parser version
++rather than from live model execution. `compute_bound_markers_absent` SHALL be
++true only when the emitted artifact contains no live-model, GGUF, target-model,
++or model-specification markers. KV260 evidence SHALL be accepted only from
++safe SSH, `xmutil`, or board-local `/dev/uio*` command kinds. Matched timing
++SHALL remain unavailable unless authenticated CPU and hardware timing receipts
++cover the same workload, and `hardware_speedup_claim` SHALL remain false in
++every valid Exp 5546 artifact.
++
++The terminal artifact SHALL include at minimum these top-level fields:
++`llm_invoked`, `no_model_specs_required`, `random_seed`,
++`reproducibility_checksum`, `compute_bound_markers_absent`,
++`device_receipts`, `parser_rows_valid`, `kv260_safe_path_used`, `blockers`,
++`matched_timing_available`, `hardware_speedup_claim`,
++`hardware_receipt_corrigendum_clean`, `tests_added_or_reused`,
++`field_principles`, `inference_substrate`, and `honest_verdict`.
++`llm_invoked` SHALL be false. `no_model_specs_required` SHALL be true.
++`inference_substrate` SHALL equal `hardware_receipt_methodology_no_llm`.
++`hardware_speedup_claim` SHALL be false.
++
++Required field principles:
++
++- `llm_invoked`: principle "Bare false records that this corrigendum reads receipts only and did not run an LLM."
++- `no_model_specs_required`: principle "Bare true prevents receipt-only hardware metadata from being mistaken for a model invocation."
++- `random_seed`: principle "Deterministic seed derived from receipt inputs and parser version anchors reproducibility without random execution."
++- `reproducibility_checksum`: principle "Content hash over receipt inputs and parser version catches future drift in the corrigendum source evidence."
++- `compute_bound_markers_absent`: principle "True only when live-model, target-model, and model-spec fields are absent from the emitted artifact."
++- `device_receipts`: principle "Flat per-device rows preserve identity, parser outcome, source artifact, and blocker evidence for CPU, CUDA, PolarFire, KV260, and GateMate."
++- `parser_rows_valid`: principle "Bare boolean proving every required device row was parsed into the corrigendum schema."
++- `kv260_safe_path_used`: principle "KV260 evidence must come only from SSH, xmutil, or board-local UIO command kinds."
++- `blockers`: principle "Explicit blockers prevent unreachable devices or missing matched timing from being laundered into speedup evidence."
++- `matched_timing_available`: principle "True only when authenticated matched CPU/device timing exists for the same workload."
++- `hardware_speedup_claim`: principle "Must remain false without matched authenticated timing."
++- `hardware_receipt_corrigendum_clean`: principle "Headline gate combining no-LLM, no-model-spec, parser-valid, safe-KV260, and no-speedup conditions."
++- `tests_added_or_reused`: principle "Names focused tests that assert the corrigendum schema and parser behavior."
++- `field_principles`: principle "One-line annotations explain why each headline and gate field exists."
++- `inference_substrate`: principle "Declares hardware_receipt_methodology_no_llm so receipt parsing is not treated as live inference."
++- `honest_verdict`: principle "Terminal summary states clean corrigendum status, blockers, and no speedup claim."
++
++### SCENARIO-VERIFY-5546: Receipt-Only Corrigendum Removes Live-Model Markers
++
++Given Exp 5532 and Exp 5519 hardware receipt artifacts exist locally, when Exp
++5546 builds its corrigendum, then it parses CPU, CUDA, PolarFire, KV260, and
++GateMate rows into a flat `device_receipts` list, records parser outcomes and
++blockers, derives seed and checksum from receipt inputs and parser version,
++sets `llm_invoked=false`, sets `no_model_specs_required=true`, sets
++`compute_bound_markers_absent=true`, sets `kv260_safe_path_used=true`, sets
++`matched_timing_available=false`, sets `hardware_speedup_claim=false`, and
++declares `inference_substrate=hardware_receipt_methodology_no_llm`.
++
++If a prior receipt row is malformed, missing, or uses an unsafe KV260 command
++kind, Exp 5546 SHALL record a precise blocker, set
++`parser_rows_valid=false` or `kv260_safe_path_used=false` as appropriate, keep
++`hardware_speedup_claim=false`, and refuse a clean
++`hardware_receipt_corrigendum_clean` gate.
++
++## Implementation Status (REQ-VERIFY-5546)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5546 | Planned (`python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py`, `results/experiment_5546_hardware_receipt_substrate_corrigendum.json`) | Planned (`tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py`) |
++
+ ### REQ-VERIFY-5532: Hardware Receipt Parser Repeatability Repair
+ 
+ The repository SHALL provide Exp 5532 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 28c953ad78..9226a31a67 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4500,
++  "experiments_checked": 4501,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py b/python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py
+new file mode 100644
+index 0000000000..aa6cf69ea2
+--- /dev/null
++++ b/python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py
+@@ -0,0 +1,587 @@
++#!/usr/bin/env python3
++"""Exp5546: hardware receipt substrate corrigendum.
++
++Spec refs: REQ-VERIFY-5546, SCENARIO-VERIFY-5546.
++
++This module reads prior hardware receipt artifacts and rewrites their evidence
++into a narrower no-LLM methodology artifact. The purpose is not to benchmark
++hardware. The purpose is to preserve reachability, parser outcomes, blockers,
++and the no-speedup boundary without live-model fields that make receipt-only
++work look like compute-bound inference.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5546_hardware_receipt_substrate_corrigendum.json"
++)
++SOURCE_RELATIVE_PATHS = (
++    Path("results/experiment_5532_hardware_receipt_parser_repeatability.json"),
++    Path("results/experiment_5519_hardware_continuity_methodology_receipts.json"),
++)
++
++EXPERIMENT = 5546
++EXPERIMENT_ID = "exp5546-hardware-receipt-substrate-corrigendum"
++MILESTONE = "2026.07.502"
++RUN_DATE = "2026-07-10"
++SCHEMA = "carnot.experiment_5546.hardware_receipt_substrate_corrigendum.v1"
++SPEC_REFS = ("REQ-VERIFY-5546", "SCENARIO-VERIFY-5546")
++INFERENCE_SUBSTRATE = "hardware_receipt_methodology_no_llm"
++PARSER_VERSION = "hardware_receipt_substrate_corrigendum.v1"
++DEVICE_ORDER = ("cpu", "cuda", "polarfire", "kv260", "gatemate")
++KV260_SAFE_COMMAND_KINDS = {
++    "kv260_ssh_identity",
++    "kv260_xmutil_listapps",
++    "kv260_remote_uio_list",
++}
++UNSAFE_KV260_MARKERS = ("mmcblk", "/dev/disk", "host_sdcard", "sdcard", "block")
++LIVE_MODEL_MARKERS = (
++    '"model_specs":',
++    '"target_model":',
++    "live_llm_inference",
++    "llama_cpp",
++    "transformers",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "llm_invoked": (
++        "Bare false records that this corrigendum reads receipts only and did not run an LLM."
++    ),
++    "no_model_specs_required": (
++        "Bare true prevents receipt-only hardware metadata from being mistaken for a model invocation."
++    ),
++    "random_seed": (
++        "Deterministic seed derived from receipt inputs and parser version anchors reproducibility without random execution."
++    ),
++    "reproducibility_checksum": (
++        "Content hash over receipt inputs and parser version catches future drift in the corrigendum source evidence."
++    ),
++    "compute_bound_markers_absent": (
++        "True only when live-model, target-model, and model-spec fields are absent from the emitted artifact."
++    ),
++    "device_receipts": (
++        "Flat per-device rows preserve identity, parser outcome, source artifact, and blocker evidence for CPU, CUDA, PolarFire, KV260, and GateMate."
++    ),
++    "parser_rows_valid": (
++        "Bare boolean proving every required device row was parsed into the corrigendum schema."
++    ),
++    "kv260_safe_path_used": (
++        "KV260 evidence must come only from SSH, xmutil, or board-local UIO command kinds."
++    ),
++    "blockers": (
++        "Explicit blockers prevent unreachable devices or missing matched timing from being laundered into speedup evidence."
++    ),
++    "matched_timing_available": (
++        "True only when authenticated matched CPU/device timing exists for the same workload."
++    ),
++    "hardware_speedup_claim": "Must remain false without matched authenticated timing.",
++    "hardware_receipt_corrigendum_clean": (
++        "Headline gate combining no-LLM, no-model-spec, parser-valid, safe-KV260, and no-speedup conditions."
++    ),
++    "tests_added_or_reused": (
++        "Names focused tests that assert the corrigendum schema and parser behavior."
++    ),
++    "field_principles": (
++        "One-line annotations explain why each headline and gate field exists."
++    ),
++    "inference_substrate": (
++        "Declares hardware_receipt_methodology_no_llm so receipt parsing is not treated as live inference."
++    ),
++    "honest_verdict": (
++        "Terminal summary states clean corrigendum status, blockers, and no speedup claim."
++    ),
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def canonical_json(payload: Any) -> str:
++    """Serialize JSON deterministically so hashes track content, not formatting."""
++
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_text(text: str) -> str:
++    """Hash text with the same SHA-256 shape used by prior receipt artifacts."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def sha256_json(payload: Any) -> str:
++    """Hash a JSON-compatible value after canonical serialization."""
++
++    return sha256_text(canonical_json(payload))
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while ignoring its self-referential checksum field."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def derive_random_seed(source_input_checksums: Sequence[Mapping[str, Any]], parser_version: str) -> int:
++    """Derive a deterministic integer seed from receipt inputs and parser version."""
++
++    digest = sha256_json(
++        {
++            "parser_version": parser_version,
++            "source_input_checksums": list(source_input_checksums),
++        }
++    )
++    return int(digest[:8], 16)
++
++
++def build_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    tests_added_or_reused: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build the Exp5546 artifact from local JSON receipts only."""
++
++    root_path = Path(root)
++    sources = load_source_inputs(root_path)
++    source_input_checksums = [
++        {
++            "source_artifact": source["source_artifact"],
++            "present": source["present"],
++            "sha256": source["sha256"],
++        }
++        for source in sources
++    ]
++    device_receipts = [
++        normalize_device_receipt(device=device, sources=sources) for device in DEVICE_ORDER
++    ]
++    blockers = collect_blockers(sources=sources, device_receipts=device_receipts)
++    parser_rows_valid = all(row["parser_outcome"] == "parsed" for row in device_receipts)
++    kv260_safe_path_used = kv260_receipt_uses_safe_path(device_receipts)
++    matched_timing_available = False
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "spec_refs": list(SPEC_REFS),
++        "parser_version": PARSER_VERSION,
++        "source_input_checksums": source_input_checksums,
++        "llm_invoked": False,
++        "no_model_specs_required": True,
++        "random_seed": derive_random_seed(source_input_checksums, PARSER_VERSION),
++        "reproducibility_checksum": "",
++        "compute_bound_markers_absent": True,
++        "device_receipts": device_receipts,
++        "parser_rows_valid": parser_rows_valid,
++        "kv260_safe_path_used": kv260_safe_path_used,
++        "blockers": blockers,
++        "matched_timing_available": matched_timing_available,
++        "hardware_speedup_claim": False,
++        "hardware_receipt_corrigendum_clean": False,
++        "tests_added_or_reused": normalize_tests(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": "",
++    }
++    artifact["compute_bound_markers_absent"] = compute_bound_markers_absent(artifact)
++    artifact["hardware_receipt_corrigendum_clean"] = hardware_receipt_corrigendum_clean(
++        artifact
++    )
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def load_source_inputs(root: Path) -> list[JsonDict]:
++    """Read prior receipt artifacts and preserve missing inputs as evidence."""
++
++    sources: list[JsonDict] = []
++    for relative_path in SOURCE_RELATIVE_PATHS:
++        path = root / relative_path
++        if not path.exists():
++            sources.append(
++                {
++                    "source_artifact": str(relative_path),
++                    "present": False,
++                    "sha256": None,
++                    "payload": None,
++                    "error": "source_missing",
++                }
++            )
++            continue
++        payload = json.loads(path.read_text(encoding="utf-8"))
++        if not isinstance(payload, dict):
++            sources.append(
++                {
++                    "source_artifact": str(relative_path),
++                    "present": False,
++                    "sha256": None,
++                    "payload": None,
++                    "error": "source_not_mapping",
++                }
++            )
++            continue
++        sources.append(
++            {
++                "source_artifact": str(relative_path),
++                "present": True,
++                "sha256": sha256_json(payload),
++                "payload": payload,
++                "error": None,
++            }
++        )
++    return sources
++
++
++def normalize_device_receipt(*, device: str, sources: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Convert one prior device receipt into the flat Exp5546 row shape."""
++
++    source, raw = find_source_receipt(device=device, sources=sources)
++    if source is None:
++        return missing_device_receipt(device)
++    if not isinstance(raw, Mapping):
++        return malformed_device_receipt(
++            device=device,
++            source=source,
++            raw={},
++            blocked_reason="receipt_not_mapping",
++        )
++    missing_fields = [
++        field for field in ("status", "classification", "command_kinds") if field not in raw
++    ]
++    if missing_fields:
++        return malformed_device_receipt(
++            device=device,
++            source=source,
++            raw=raw,
++            blocked_reason="missing_" + "_".join(missing_fields),
++        )
++    return parsed_device_receipt(device=device, source=source, raw=raw)
++
++
++def find_source_receipt(
++    *, device: str, sources: Sequence[Mapping[str, Any]]
++) -> tuple[Mapping[str, Any] | None, Any]:
++    """Find the preferred prior receipt row, falling back only when absent."""
++
++    for source in sources:
++        payload = source.get("payload")
++        if not isinstance(payload, Mapping):
++            continue
++        raw = receipt_from_payload(device=device, payload=payload)
++        if raw is not None:
++            return source, raw
++    return None, None
++
++
++def receipt_from_payload(*, device: str, payload: Mapping[str, Any]) -> Any:
++    """Return a device row from Exp5532 or an Exp5519-style individual field."""
++
++    device_receipts = payload.get("device_receipts")
++    if isinstance(device_receipts, Mapping) and device in device_receipts:
++        return device_receipts[device]
++    fallback_keys = {
++        "cpu": "cpu_receipt",
++        "cuda": "cuda_receipt",
++        "polarfire": "polar_fire_receipt",
++        "kv260": "kv260_receipt",
++        "gatemate": "gatemate_receipt",
++    }
++    return payload.get(fallback_keys[device])
++
++
++def missing_device_receipt(device: str) -> JsonDict:
++    """Create a blocked row when no prior source contains the required device."""
++
++    return {
++        "device": device,
++        "source_artifact": None,
++        "source_experiment_id": None,
++        "parser_outcome": "missing",
++        "status": "missing",
++        "classification": "parser_blocked",
++        "blocked_reason": "receipt_missing",
++        "source_parser_version": None,
++        "device_identities": [],
++        "driver_versions": {},
++        "memory": {},
++        "metadata": {},
++        "safe_command_kinds": [],
++    }
++
++
++def malformed_device_receipt(
++    *,
++    device: str,
++    source: Mapping[str, Any],
++    raw: Mapping[str, Any],
++    blocked_reason: str,
++) -> JsonDict:
++    """Create a blocked row when a prior receipt exists but lacks schema fields."""
++
++    return {
++        "device": device,
++        "source_artifact": source["source_artifact"],
++        "source_experiment_id": source_experiment_id(source),
++        "parser_outcome": "malformed",
++        "status": str(raw.get("status", "malformed")),
++        "classification": "parser_blocked",
++        "blocked_reason": blocked_reason,
++        "source_parser_version": raw.get("parser_version"),
++        "device_identities": list(raw.get("device_names", [])),
++        "driver_versions": dict(raw.get("driver_versions", {})),
++        "memory": dict(raw.get("memory", {})),
++        "metadata": dict(raw.get("metadata", {})),
++        "safe_command_kinds": list(raw.get("command_kinds", [])),
++    }
++
++
++def parsed_device_receipt(
++    *,
++    device: str,
++    source: Mapping[str, Any],
++    raw: Mapping[str, Any],
++) -> JsonDict:
++    """Create a valid Exp5546 row from a prior parser receipt."""
++
++    status = str(raw["status"])
++    blocked_reason = raw.get("blocked_reason")
++    return {
++        "device": device,
++        "source_artifact": source["source_artifact"],
++        "source_experiment_id": source_experiment_id(source),
++        "parser_outcome": "parsed",
++        "status": status,
++        "classification": str(raw["classification"]),
++        "blocked_reason": str(blocked_reason) if blocked_reason else None,
++        "source_parser_version": raw.get("parser_version"),
++        "device_identities": list(raw.get("device_names", [])),
++        "driver_versions": dict(raw.get("driver_versions", {})),
++        "memory": dict(raw.get("memory", {})),
++        "metadata": dict(raw.get("metadata", {})),
++        "safe_command_kinds": list(raw.get("command_kinds", [])),
++    }
++
++
++def source_experiment_id(source: Mapping[str, Any]) -> str | None:
++    """Extract the upstream experiment id from a loaded source payload."""
++
++    payload = source.get("payload")
++    if isinstance(payload, Mapping):
++        experiment_id = payload.get("experiment_id")
++        if experiment_id:
++            return str(experiment_id)
++    return None
++
++
++def collect_blockers(
++    *, sources: Sequence[Mapping[str, Any]], device_receipts: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Collect source, parser, device, KV260, and timing blockers."""
++
++    blockers: list[JsonDict] = []
++    for source in sources:
++        if not source.get("present"):
++            blockers.append(
++                {
++                    "kind": str(source.get("error") or "source_missing"),
++                    "source_artifact": source["source_artifact"],
++                }
++            )
++    for row in device_receipts:
++        if row.get("parser_outcome") != "parsed":
++            blockers.append(
++                {
++                    "kind": "parser_blocker",
++                    "device": row["device"],
++                    "blocked_reason": row["blocked_reason"],
++                    "source_artifact": row["source_artifact"],
++                }
++            )
++        if row.get("blocked_reason") and row.get("parser_outcome") == "parsed":
++            blockers.append(
++                {
++                    "kind": "device_blocker",
++                    "device": row["device"],
++                    "blocked_reason": row["blocked_reason"],
++                    "source_artifact": row["source_artifact"],
++                }
++            )
++    kv260_row = next(row for row in device_receipts if row["device"] == "kv260")
++    if not kv260_command_kinds_safe(kv260_row.get("safe_command_kinds", [])):
++        blockers.append(
++            {
++                "kind": "unsafe_kv260_command",
++                "device": "kv260",
++                "blocked_reason": "kv260_command_kinds_not_ssh_xmutil_or_uio",
++                "command_kinds": list(kv260_row.get("safe_command_kinds", [])),
++            }
++        )
++    blockers.append(
++        {
++            "kind": "matched_timing_missing",
++            "blocked_reason": (
++                "receipt-only inputs do not provide authenticated matched CPU/device timing"
++            ),
++        }
++    )
++    return blockers
++
++
++def kv260_receipt_uses_safe_path(device_receipts: Sequence[Mapping[str, Any]]) -> bool:
++    """Return true only when the KV260 row uses SSH, xmutil, or UIO evidence."""
++
++    kv260_rows = [row for row in device_receipts if row.get("device") == "kv260"]
++    return bool(kv260_rows) and kv260_command_kinds_safe(
++        kv260_rows[0].get("safe_command_kinds", [])
++    )
++
++
++def kv260_command_kinds_safe(command_kinds: Any) -> bool:
++    """Check the KV260 command-kind whitelist without using host storage probes."""
++
++    if not isinstance(command_kinds, Sequence) or isinstance(command_kinds, (str, bytes)):
++        return False
++    kinds = [str(kind) for kind in command_kinds]
++    if not kinds:
++        return False
++    if any(any(marker in kind.lower() for marker in UNSAFE_KV260_MARKERS) for kind in kinds):
++        return False
++    return all(kind in KV260_SAFE_COMMAND_KINDS for kind in kinds)
++
++
++def compute_bound_markers_absent(payload: Mapping[str, Any]) -> bool:
++    """Detect live-model markers that should never appear in this receipt artifact."""
++
++    if "model_specs" in payload or "target_model" in payload:
++        return False
++    text = canonical_json(payload)
++    return not any(marker in text for marker in LIVE_MODEL_MARKERS)
++
++
++def hardware_receipt_corrigendum_clean(payload: Mapping[str, Any]) -> bool:
++    """Combine the no-LLM, parser-valid, safe-KV260, and no-speedup gates."""
++
++    return bool(
++        payload.get("llm_invoked") is False
++        and payload.get("no_model_specs_required") is True
++        and payload.get("compute_bound_markers_absent") is True
++        and payload.get("parser_rows_valid") is True
++        and payload.get("kv260_safe_path_used") is True
++        and payload.get("hardware_speedup_claim") is False
++        and payload.get("inference_substrate") == INFERENCE_SUBSTRATE
++    )
++
++
++def honest_verdict(payload: Mapping[str, Any]) -> str:
++    """Summarize the methodology gate without converting blockers into speedups."""
++
++    blockers = list(payload.get("blockers", []))
++    if payload.get("hardware_receipt_corrigendum_clean") is True:
++        return (
++            "complete: no-LLM hardware receipt corrigendum clean; "
++            f"blockers_recorded={len(blockers)}; matched_timing_available=false; "
++            "hardware_speedup_claim=false"
++        )
++    return (
++        "blocked: hardware receipt corrigendum is not clean; "
++        f"blockers_recorded={len(blockers)}; matched_timing_available=false; "
++        "hardware_speedup_claim=false"
++    )
++
++
++def normalize_tests(tests_added_or_reused: Sequence[str] | None) -> list[str]:
++    """Record focused tests backing this parser."""
++
++    if tests_added_or_reused:
++        return [str(test) for test in tests_added_or_reused]
++    return ["tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py"]
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> None:
++    """Validate Exp5546 gates and checksum consistency."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            raise ValueError(f"missing required field: {field}")  # pragma: no cover
++    if payload.get("llm_invoked") is not False:
++        raise ValueError("llm_invoked must be false")
++    if payload.get("no_model_specs_required") is not True:
++        raise ValueError("no_model_specs_required must be true")  # pragma: no cover
++    if "model_specs" in payload:
++        raise ValueError("model_specs must be absent")
++    if "target_model" in payload:
++        raise ValueError("target_model must be absent")  # pragma: no cover
++    if payload.get("hardware_speedup_claim") is not False:
++        raise ValueError("hardware_speedup_claim must be false")
++    if payload.get("matched_timing_available") is not False:
++        raise ValueError("matched_timing_available must be false")  # pragma: no cover
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")  # pragma: no cover
++    device_receipts = payload.get("device_receipts")
++    if not isinstance(device_receipts, list):
++        raise ValueError("device_receipts must be a list")  # pragma: no cover
++    if [row.get("device") for row in device_receipts] != list(DEVICE_ORDER):
++        raise ValueError("device_receipts must cover required devices in order")  # pragma: no cover
++    parser_rows_valid = all(row.get("parser_outcome") == "parsed" for row in device_receipts)
++    if payload.get("parser_rows_valid") is not parser_rows_valid:
++        raise ValueError("parser_rows_valid mismatch")  # pragma: no cover
++    if payload.get("kv260_safe_path_used") is not kv260_receipt_uses_safe_path(device_receipts):
++        raise ValueError("kv260_safe_path_used mismatch")  # pragma: no cover
++    if payload.get("compute_bound_markers_absent") is not compute_bound_markers_absent(payload):
++        raise ValueError("compute_bound_markers_absent mismatch")
++    clean = hardware_receipt_corrigendum_clean(payload)
++    if payload.get("hardware_receipt_corrigendum_clean") is not clean:
++        raise ValueError("hardware_receipt_corrigendum_clean mismatch")  # pragma: no cover
++    source_checksums = payload.get("source_input_checksums")
++    if not isinstance(source_checksums, list):
++        raise ValueError("source_input_checksums must be a list")  # pragma: no cover
++    expected_seed = derive_random_seed(source_checksums, PARSER_VERSION)
++    if payload.get("random_seed") != expected_seed:
++        raise ValueError("random_seed mismatch")  # pragma: no cover
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def write_output(root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    """Write the terminal JSON artifact with deterministic formatting."""
++
++    output_path = Path(root) / RESULT_RELATIVE_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return output_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    tests_added_or_reused: Sequence[str] | None = None,
++) -> Path:
++    """Build, validate, and write the Exp5546 artifact."""
++
++    artifact = build_artifact(root=repo_root, tests_added_or_reused=tests_added_or_reused)
++    return write_output(repo_root, artifact)
++
++
++def main() -> int:  # pragma: no cover
++    """CLI entry point used by operators when emitting the artifact manually."""
++
++    run_experiment()
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 3ad13d39f6..d345ee4139 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:50.458153+00:00",
+-  "finished_at": "2026-07-10T17:06:50.485345+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-10T17:23:49.995012+00:00",
++  "finished_at": "2026-07-10T17:23:50.020025+00:00",
++  "duration_s": 0.025,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 94298f2206..0f3c7928a4 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T17:06:50Z",
++  "run_date": "2026-07-10T17:23:50Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 4299c7229b..28d469590a 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:52Z",
+-  "finished_at": "2026-07-10T17:06:52Z",
++  "started_at": "2026-07-10T17:23:51Z",
++  "finished_at": "2026-07-10T17:23:51Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 78aaf96782..ea2d271cff 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T17:06:52Z",
++  "run_date": "2026-07-10T17:23:51Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 1102156d35..67883a847e 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T17:06:52Z",
++  "run_date": "2026-07-10T17:23:51Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f1dd9313f8..f7df601ca8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.104520797729492,
++  "efficiency_gains_ms": 2.1605491638183594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index bff45ee0a8..415ff040e8 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:18Z",
+-  "finished_at": "2026-07-10T17:06:18Z",
++  "started_at": "2026-07-10T17:23:16Z",
++  "finished_at": "2026-07-10T17:23:16Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 49a81e7f88..8d20a6782f 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:53Z",
+-  "finished_at": "2026-07-10T17:06:53Z",
++  "started_at": "2026-07-10T17:23:52Z",
++  "finished_at": "2026-07-10T17:23:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.06341934204101562,
++  "latency_ms": 0.07653236389160156,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 63e429a3ad..3fba39cea2 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008500480651855469,
+-  "avg_eqm_time": 0.07044727325439454,
++  "avg_pem_time": 0.0009355449676513672,
++  "avg_eqm_time": 0.07182977199554444,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b6faed3750..4b13d58f1e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.0226150304079056e-05,
++  "duration_s": 4.171812906861305e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5546_hardware_receipt_substrate_corrigendum.json b/results/experiment_5546_hardware_receipt_substrate_corrigendum.json
+new file mode 100644
+index 0000000000..79a5fa5b88
+--- /dev/null
++++ b/results/experiment_5546_hardware_receipt_substrate_corrigendum.json
+@@ -0,0 +1,231 @@
++{
++  "blockers": [
++    {
++      "blocked_reason": "blocked_kv260_ssh_identity",
++      "device": "kv260",
++      "kind": "device_blocker",
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json"
++    },
++    {
++      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
++      "device": "gatemate",
++      "kind": "device_blocker",
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json"
++    },
++    {
++      "blocked_reason": "receipt-only inputs do not provide authenticated matched CPU/device timing",
++      "kind": "matched_timing_missing"
++    }
++  ],
++  "compute_bound_markers_absent": true,
++  "device_receipts": [
++    {
++      "blocked_reason": null,
++      "classification": "timing_blocked",
++      "device": "cpu",
++      "device_identities": [
++        "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
++      ],
++      "driver_versions": {},
++      "memory": {
++        "mem_available_kib": 80653292,
++        "mem_total_kib": 131157572
++      },
++      "metadata": {
++        "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++      },
++      "parser_outcome": "parsed",
++      "safe_command_kinds": [
++        "cpu_info"
++      ],
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
++      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
++      "status": "reachable"
++    },
++    {
++      "blocked_reason": null,
++      "classification": "workload_blocked",
++      "device": "cuda",
++      "device_identities": [
++        "NVIDIA GeForce RTX 3090",
++        "NVIDIA GeForce RTX 3090"
++      ],
++      "driver_versions": {
++        "nvidia_driver": "610.43.02"
++      },
++      "memory": {
++        "device_memory": [
++          {
++            "free_mib": 23858,
++            "index": 0,
++            "reserved_mib": 0,
++            "total_mib": 24123
++          },
++          {
++            "free_mib": 23858,
++            "index": 1,
++            "reserved_mib": 0,
++            "total_mib": 24123
++          }
++        ],
++        "nvidia_smi": [
++          {
++            "free_mib": 24120,
++            "index": 0,
++            "total_mib": 24576
++          },
++          {
++            "free_mib": 24120,
++            "index": 1,
++            "total_mib": 24576
++          }
++        ]
++      },
++      "metadata": {
++        "device_count": 2
++      },
++      "parser_outcome": "parsed",
++      "safe_command_kinds": [
++        "cuda_runtime_info",
++        "cuda_driver_info"
++      ],
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
++      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
++      "status": "reachable"
++    },
++    {
++      "blocked_reason": null,
++      "classification": "timing_blocked",
++      "device": "polarfire",
++      "device_identities": [
++        "Microchip PolarFire-SoC Discovery Kit"
++      ],
++      "driver_versions": {},
++      "memory": {},
++      "metadata": {
++        "board_identity": "polarfire",
++        "hostname": "mpfs-disco-kit",
++        "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
++        "machine": "riscv64",
++        "model": "Microchip PolarFire-SoC Discovery Kit"
++      },
++      "parser_outcome": "parsed",
++      "safe_command_kinds": [
++        "polarfire_ssh_identity"
++      ],
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
++      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
++      "status": "reachable"
++    },
++    {
++      "blocked_reason": "blocked_kv260_ssh_identity",
++      "classification": "identity_blocked",
++      "device": "kv260",
++      "device_identities": [],
++      "driver_versions": {},
++      "memory": {},
++      "metadata": {},
++      "parser_outcome": "parsed",
++      "safe_command_kinds": [
++        "kv260_ssh_identity"
++      ],
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
++      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
++      "status": "blocked_identity"
++    },
++    {
++      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
++      "classification": "identity_blocked",
++      "device": "gatemate",
++      "device_identities": [],
++      "driver_versions": {},
++      "memory": {},
++      "metadata": {
++        "detect_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++        "toolchain": {
++          "gmpack": {
++            "available": false,
++            "version_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024"
++          },
++          "nextpnr_himbaechel": {
++            "available": true,
++            "version_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++          },
++          "yosys": {
++            "available": true,
++            "version_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++          }
++        }
++      },
++      "parser_outcome": "parsed",
++      "safe_command_kinds": [
++        "gatemate_dirtyjtag_detect",
++        "gatemate_toolchain_yosys",
++        "gatemate_toolchain_nextpnr_himbaechel",
++        "gatemate_toolchain_gmpack"
++      ],
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
++      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
++      "status": "blocked_identity"
++    }
++  ],
++  "experiment": 5546,
++  "experiment_id": "exp5546-hardware-receipt-substrate-corrigendum",
++  "field_principles": {
++    "blockers": "Explicit blockers prevent unreachable devices or missing matched timing from being laundered into speedup evidence.",
++    "compute_bound_markers_absent": "True only when live-model, target-model, and model-spec fields are absent from the emitted artifact.",
++    "device_receipts": "Flat per-device rows preserve identity, parser outcome, source artifact, and blocker evidence for CPU, CUDA, PolarFire, KV260, and GateMate.",
++    "field_principles": "One-line annotations explain why each headline and gate field exists.",
++    "hardware_receipt_corrigendum_clean": "Headline gate combining no-LLM, no-model-spec, parser-valid, safe-KV260, and no-speedup conditions.",
++    "hardware_speedup_claim": "Must remain false without matched authenticated timing.",
++    "honest_verdict": "Terminal summary states clean corrigendum status, blockers, and no speedup claim.",
++    "inference_substrate": "Declares hardware_receipt_methodology_no_llm so receipt parsing is not treated as live inference.",
++    "kv260_safe_path_used": "KV260 evidence must come only from SSH, xmutil, or board-local UIO command kinds.",
++    "llm_invoked": "Bare false records that this corrigendum reads receipts only and did not run an LLM.",
++    "matched_timing_available": "True only when authenticated matched CPU/device timing exists for the same workload.",
++    "no_model_specs_required": "Bare true prevents receipt-only hardware metadata from being mistaken for a model invocation.",
++    "parser_rows_valid": "Bare boolean proving every required device row was parsed into the corrigendum schema.",
++    "random_seed": "Deterministic seed derived from receipt inputs and parser version anchors reproducibility without random execution.",
++    "reproducibility_checksum": "Content hash over receipt inputs and parser version catches future drift in the corrigendum source evidence.",
++    "tests_added_or_reused": "Names focused tests that assert the corrigendum schema and parser behavior."
++  },
++  "hardware_receipt_corrigendum_clean": true,
++  "hardware_speedup_claim": false,
++  "honest_verdict": "complete: no-LLM hardware receipt corrigendum clean; blockers_recorded=3; matched_timing_available=false; hardware_speedup_claim=false",
++  "inference_substrate": "hardware_receipt_methodology_no_llm",
++  "kv260_safe_path_used": true,
++  "llm_invoked": false,
++  "matched_timing_available": false,
++  "milestone": "2026.07.502",
++  "no_model_specs_required": true,
++  "parser_rows_valid": true,
++  "parser_version": "hardware_receipt_substrate_corrigendum.v1",
++  "random_seed": 3549630210,
++  "reproducibility_checksum": "eedc944f02839251c708c7ae79dbdf9accf57e908a44d162e8629620a2b53424",
++  "run_date": "2026-07-10",
++  "schema": "carnot.experiment_5546.hardware_receipt_substrate_corrigendum.v1",
++  "source_input_checksums": [
++    {
++      "present": true,
++      "sha256": "8a423360b0124c7c598a8f0e09e61eeae289db620dcaf16decdb9c68d2c136dc",
++      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json"
++    },
++    {
++      "present": true,
++      "sha256": "88c970559fd66970aaf4724263c6d262d169dba9b648e6d95acd2d52d96e5a70",
++      "source_artifact": "results/experiment_5519_hardware_continuity_methodology_receipts.json"
++    }
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5546",
++    "SCENARIO-VERIFY-5546"
++  ],
++  "tests_added_or_reused": [
++    "tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a907183ed8..70d25d78ad 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:00Z",
+-  "finished_at": "2026-07-10T17:06:00Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T17:22:58Z",
++  "finished_at": "2026-07-10T17:22:59Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 95d875067d..6a0458889f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:00Z",
+-  "finished_at": "2026-07-10T17:06:00Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-10T17:22:59Z",
++  "finished_at": "2026-07-10T17:22:59Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d70ba59a5e..ce17246260 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T17:06:00Z",
+-  "finished_at": "2026-07-10T17:06:00Z",
++  "started_at": "2026-07-10T17:22:59Z",
++  "finished_at": "2026-07-10T17:22:59Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py b/tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py
+new file mode 100644
+index 0000000000..5ac3c7f18f
+--- /dev/null
++++ b/tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py
+@@ -0,0 +1,335 @@
++"""Tests for Exp5546 hardware receipt substrate corrigendum.
++
++Spec refs: REQ-VERIFY-5546, SCENARIO-VERIFY-5546.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5546_hardware_receipt_substrate_corrigendum as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++TEST_PATH = Path(
++    "tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py"
++)
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
++
++
++def _receipt(
++    *,
++    device: str,
++    status: str = "reachable",
++    classification: str = "timing_blocked",
++    blocked_reason: str | None = None,
++    command_kinds: list[str] | None = None,
++    device_names: list[str] | None = None,
++    metadata: dict[str, object] | None = None,
++) -> dict[str, object]:
++    return {
++        "device": device,
++        "status": status,
++        "classification": classification,
++        "parseable": True,
++        "blocked_reason": blocked_reason,
++        "parser_version": "hardware_receipt_parser_repeatability.v1",
++        "device_names": device_names or [device],
++        "driver_versions": {"nvidia_driver": "610.43.02"} if device == "cuda" else {},
++        "runtime_versions": {"cuda": "12.8"} if device == "cuda" else {},
++        "versions": {"machine": "aarch64"} if device == "kv260" else {},
++        "memory": {"device_memory": [{"index": 0, "total_mib": 24576}]}
++        if device == "cuda"
++        else {},
++        "metadata": metadata or {},
++        "command_kinds": command_kinds or [f"{device}_identity"],
++    }
++
++
++def _clean_5532_payload() -> dict[str, object]:
++    return {
++        "experiment_id": "exp5532-hardware-receipt-parser-repeatability",
++        "run_date": "2026-07-10",
++        "inference_substrate": "hardware_receipt_parser_repeatability",
++        "matched_timing_available": False,
++        "hardware_speedup_claim": False,
++        "parser_failures": {},
++        "device_receipts": {
++            "cpu": _receipt(
++                device="cpu",
++                command_kinds=["cpu_info"],
++                device_names=["AMD Ryzen AI 9 HX 370"],
++            ),
++            "cuda": _receipt(
++                device="cuda",
++                classification="workload_blocked",
++                command_kinds=["cuda_runtime_info", "cuda_driver_info"],
++                device_names=["NVIDIA GeForce RTX 3090", "NVIDIA GeForce RTX 3090"],
++            ),
++            "polarfire": _receipt(
++                device="polarfire",
++                command_kinds=["polarfire_ssh_identity"],
++                device_names=["Microchip PolarFire-SoC Discovery Kit"],
++                metadata={"hostname": "mpfs-disco-kit", "machine": "riscv64"},
++            ),
++            "kv260": _receipt(
++                device="kv260",
++                status="blocked_identity",
++                classification="identity_blocked",
++                blocked_reason="blocked_kv260_ssh_identity",
++                command_kinds=["kv260_ssh_identity"],
++                device_names=[],
++            ),
++            "gatemate": _receipt(
++                device="gatemate",
++                status="blocked_identity",
++                classification="identity_blocked",
++                blocked_reason="blocked_gatemate_dirtyjtag_identity",
++                command_kinds=[
++                    "gatemate_dirtyjtag_detect",
++                    "gatemate_toolchain_yosys",
++                    "gatemate_toolchain_nextpnr_himbaechel",
++                    "gatemate_toolchain_gmpack",
++                ],
++                device_names=[],
++            ),
++        },
++    }
++
++
++def _fallback_5519_payload() -> dict[str, object]:
++    return {
++        "experiment_id": "exp5519-hardware-continuity-methodology-receipts",
++        "run_date": "2026-07-10",
++        "inference_substrate": "hardware_receipts",
++        "matched_timing_available": False,
++        "hardware_speedup_claim": False,
++        "cpu_receipt": _receipt(device="cpu", command_kinds=["cpu_info"]),
++        "cuda_receipt": _receipt(
++            device="cuda",
++            command_kinds=["cuda_runtime_info", "cuda_driver_info"],
++            device_names=["NVIDIA GeForce RTX 3090"],
++        ),
++        "polar_fire_receipt": _receipt(
++            device="polar_fire",
++            command_kinds=["polarfire_ssh_identity_hash"],
++            device_names=["Microchip PolarFire-SoC Discovery Kit"],
++        ),
++        "kv260_receipt": _receipt(
++            device="kv260",
++            status="blocked_identity",
++            classification="identity_blocked",
++            blocked_reason="blocked_kv260_ssh_identity",
++            command_kinds=["kv260_ssh_identity"],
++            device_names=[],
++        ),
++        "gatemate_receipt": _receipt(
++            device="gatemate",
++            status="blocked_identity",
++            classification="identity_blocked",
++            blocked_reason="blocked_gatemate_dirtyjtag_identity",
++            command_kinds=["gatemate_dirtyjtag_detect"],
++            device_names=[],
++        ),
++    }
++
++
++def _write_sources(root: Path, exp5532: dict[str, object] | None = None) -> None:
++    _write_json(
++        root / mod.SOURCE_RELATIVE_PATHS[0],
++        exp5532 if exp5532 is not None else _clean_5532_payload(),
++    )
++    _write_json(root / mod.SOURCE_RELATIVE_PATHS[1], _fallback_5519_payload())
++
++
++def test_req_verify_5546_spec_declares_no_llm_corrigendum_contract() -> None:
++    """REQ-VERIFY-5546: OpenSpec anchors fields, source parsing, and no-speedup."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5546") : spec.index("### REQ-VERIFY-5532")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "SCENARIO-VERIFY-5546",
++        str(mod.RESULT_RELATIVE_PATH),
++        "Exp 5532",
++        "Exp 5519",
++        "hardware_receipt_methodology_no_llm",
++        "`model_specs`",
++        "`target_model`",
++        "`/dev/mmcblk*`",
++        "`/dev/disk`",
++        "`xmutil`",
++        "`/dev/uio*`",
++        "hardware_speedup_claim",
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_verify_5546_builds_clean_no_llm_corrigendum(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5546: receipt parsing emits clean methodology gates."""
++
++    _write_sources(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    saved_path = mod.write_output(tmp_path, artifact)
++    saved = json.loads(saved_path.read_text(encoding="utf-8"))
++
++    assert saved == artifact
++    assert saved["llm_invoked"] is False
++    assert saved["no_model_specs_required"] is True
++    assert isinstance(saved["random_seed"], int)
++    assert saved["random_seed"] == mod.derive_random_seed(
++        saved["source_input_checksums"], mod.PARSER_VERSION
++    )
++    assert len(saved["reproducibility_checksum"]) == 64
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    assert saved["compute_bound_markers_absent"] is True
++    assert saved["parser_rows_valid"] is True
++    assert saved["kv260_safe_path_used"] is True
++    assert saved["matched_timing_available"] is False
++    assert saved["hardware_speedup_claim"] is False
++    assert saved["hardware_receipt_corrigendum_clean"] is True
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["honest_verdict"].startswith("complete:")
++    assert [row["device"] for row in saved["device_receipts"]] == list(mod.DEVICE_ORDER)
++    assert all(row["parser_outcome"] == "parsed" for row in saved["device_receipts"])
++    assert saved["device_receipts"][0]["source_artifact"] == str(mod.SOURCE_RELATIVE_PATHS[0])
++    assert saved["device_receipts"][1]["device_identities"] == [
++        "NVIDIA GeForce RTX 3090",
++        "NVIDIA GeForce RTX 3090",
++    ]
++    assert {
++        (row["device"], row["blocked_reason"])
++        for row in saved["blockers"]
++        if row["kind"] == "device_blocker"
++    } == {
++        ("kv260", "blocked_kv260_ssh_identity"),
++        ("gatemate", "blocked_gatemate_dirtyjtag_identity"),
++    }
++    assert any(row["kind"] == "matched_timing_missing" for row in saved["blockers"])
++
++    artifact_text = mod.canonical_json(saved)
++    for forbidden in ('"model_specs":', '"target_model":', "GGUF", "live_llm_inference"):
++        assert forbidden not in artifact_text
++    mod.validate_artifact(saved)
++
++
++def test_req_verify_5546_fallback_rows_and_unsafe_kv260_fail_closed(tmp_path: Path) -> None:
++    """REQ-VERIFY-5546: malformed rows and unsafe KV260 evidence are explicit blockers."""
++
++    exp5532 = _clean_5532_payload()
++    device_receipts = exp5532["device_receipts"]
++    assert isinstance(device_receipts, dict)
++    device_receipts.pop("cpu")
++    kv260 = device_receipts["kv260"]
++    assert isinstance(kv260, dict)
++    kv260["command_kinds"] = ["kv260_host_mmcblk_probe"]
++    kv260["status"] = "reachable"
++    kv260["classification"] = "workload_blocked"
++    kv260["blocked_reason"] = None
++    gatemate = device_receipts["gatemate"]
++    assert isinstance(gatemate, dict)
++    gatemate.pop("status")
++    _write_sources(tmp_path, exp5532)
++
++    artifact = mod.build_artifact(root=tmp_path, tests_added_or_reused=[TEST_PATH.as_posix()])
++
++    assert artifact["device_receipts"][0]["source_artifact"] == str(mod.SOURCE_RELATIVE_PATHS[1])
++    assert artifact["device_receipts"][0]["parser_outcome"] == "parsed"
++    assert artifact["device_receipts"][3]["parser_outcome"] == "parsed"
++    assert artifact["device_receipts"][4]["parser_outcome"] == "malformed"
++    assert artifact["parser_rows_valid"] is False
++    assert artifact["kv260_safe_path_used"] is False
++    assert artifact["hardware_speedup_claim"] is False
++    assert artifact["hardware_receipt_corrigendum_clean"] is False
++    assert any(row["kind"] == "unsafe_kv260_command" for row in artifact["blockers"])
++    assert any(row["kind"] == "parser_blocker" and row["device"] == "gatemate" for row in artifact["blockers"])
++    mod.validate_artifact(artifact)
++
++    speedup = deepcopy(artifact)
++    speedup["hardware_speedup_claim"] = True
++    speedup["reproducibility_checksum"] = mod.payload_checksum(speedup)
++    with pytest.raises(ValueError, match="hardware_speedup_claim"):
++        mod.validate_artifact(speedup)
++
++    model_specs = deepcopy(artifact)
++    model_specs["model_specs"] = {"headline_required_any_of": ["Qwen3.5-35B-A3B-GGUF"]}
++    model_specs["compute_bound_markers_absent"] = False
++    model_specs["reproducibility_checksum"] = mod.payload_checksum(model_specs)
++    with pytest.raises(ValueError, match="model_specs"):
++        mod.validate_artifact(model_specs)
++
++    llm = deepcopy(artifact)
++    llm["llm_invoked"] = True
++    llm["reproducibility_checksum"] = mod.payload_checksum(llm)
++    with pytest.raises(ValueError, match="llm_invoked"):
++        mod.validate_artifact(llm)
++
++    checksum = deepcopy(artifact)
++    checksum["reproducibility_checksum"] = "0" * 64
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(checksum)
++
++    marker = deepcopy(artifact)
++    marker["notes"] = "live_llm_inference"
++    marker["reproducibility_checksum"] = mod.payload_checksum(marker)
++    with pytest.raises(ValueError, match="compute_bound_markers_absent"):
++        mod.validate_artifact(marker)
++
++    assert mod.compute_bound_markers_absent({"target_model": "not-used"}) is False
++    assert mod.kv260_command_kinds_safe("kv260_ssh_identity") is False
++    assert mod.normalize_tests(None) == [TEST_PATH.as_posix()]
++
++    source_without_experiment_id = {
++        "source_artifact": "results/source.json",
++        "payload": {"device_receipts": {"cpu": "not-a-receipt"}},
++    }
++    assert mod.source_experiment_id(source_without_experiment_id) is None
++    assert mod.normalize_device_receipt(
++        device="cpu",
++        sources=[source_without_experiment_id],
++    )["blocked_reason"] == "receipt_not_mapping"
++
++
++def test_req_verify_5546_missing_sources_are_blocked_without_speedup(tmp_path: Path) -> None:
++    """REQ-VERIFY-5546: absent inputs create blocked parser rows, never speedup."""
++
++    _write_json(tmp_path / mod.SOURCE_RELATIVE_PATHS[0], [])
++    non_mapping_sources = mod.load_source_inputs(tmp_path)
++    assert non_mapping_sources[0]["error"] == "source_not_mapping"
++    (tmp_path / mod.SOURCE_RELATIVE_PATHS[0]).unlink()
++
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    saved = json.loads(artifact.read_text(encoding="utf-8"))
++
++    assert artifact == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert saved["parser_rows_valid"] is False
++    assert saved["hardware_receipt_corrigendum_clean"] is False
++    assert saved["hardware_speedup_claim"] is False
++    assert {row["parser_outcome"] for row in saved["device_receipts"]} == {"missing"}
++    assert {row["kind"] for row in saved["blockers"]} >= {
++        "source_missing",
++        "parser_blocker",
++        "matched_timing_missing",
++    }
++    mod.validate_artifact(saved)
+-- 
+2.55.0
+

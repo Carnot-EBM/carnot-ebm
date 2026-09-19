@@ -1,0 +1,100 @@
+From 81668bb078000fe149f9978f83df8608e3512cfb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 04:10:10 -0400
+Subject: [PATCH 10078/11362] [conductor] Operational retrospective for
+ milestone 2026.08.581
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 ++++
+ ops/changelog.md                           | 11 ++++++
+ results/operational_retro_2026_08_581.json | 43 ++++++++++++++++++++++
+ 3 files changed, 61 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_581.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 1324669a36..b83a9dfdbe 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6388,3 +6388,10 @@ The critical path for milestone .250:
+ - theme: short mixed execution exposed phase-timing and task-level accelerator attribution gaps
+ - key result: 12 experiments finished in 3.2 minutes with 4 compute-bound; compute-task GPU idle was false, while duration causes and concurrent-model runner eligibility have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.581
++
++- exp_range: no data available this milestone
++- theme: modification-time reconstruction concealed the execution shape of the trigger-switched fixture pair
++- key result: the compute entries share the 0.0-minute timing floor and the locked idle test is negative; the sources do not expose phase causality or a simultaneous-model launch
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e74dafe7c8..95bf4f48af 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17946,3 +17946,14 @@ parallel or a missed DualGPURunner dispatch. The next tooling priorities are
+ task-scoped phase and accelerator receipts, inference batching, and GPU-aware
+ cross-experiment scheduling. Estimated time savings is 0% because the supplied
+ data identifies no measured avoidable duration.
++
++## 2026-08-27 — Milestone 2026.08.581 operational retrospective
++
++Modification-time reconstruction assigned both compute jobs the same 0.0-minute
++value. The available clock cannot order the pair or locate time inside either
++execution. The locked classification rejects compute-task GPU idleness, and the
++monitor shows work on the active device. The blocks do not describe a concurrent
++model load, which leaves DualGPURunner applicability unknown. The next milestone
++needs monotonic phase receipts, capacity-aware dispatch for separate GPU jobs,
++and batched inference requests. With no measurable elapsed interval, projected
++savings remain 0%.
+diff --git a/results/operational_retro_2026_08_581.json b/results/operational_retro_2026_08_581.json
+new file mode 100644
+index 0000000000..8a7bd20f8b
+--- /dev/null
++++ b/results/operational_retro_2026_08_581.json
+@@ -0,0 +1,43 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.581",
++  "generated_at": "2026-08-27T08:06:10Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 2,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "Trigger-switched structured-tail fixture",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Three-family trigger-switched structured-tail A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The fallback clock assigns the same 0.0-minute duration to each compute-bound entry, so it cannot rank them or attribute phase costs. The locked GPU classification indicates no idle defect during compute work; the snapshot instead shows one device doing work while the other can accept a separate task.",
++  "bottlenecks_identified": [
++    "Modification timestamps collapse the milestone to a shared 0.0-minute reading, which removes the detail needed for causal performance analysis.",
++    "Receipts omit task phases, accelerator activity, batch size, model concurrency, and runner choice; this prevents attribution and a runner audit.",
++    "The monitor saw only one Python inference process; the supplied timing cannot show whether request batching would reduce elapsed time."
++  ],
++  "improvements_suggested": [
++    "Write monotonic task start, task end, and phase timestamps instead of relying on disk modification times.",
++    "Add task-scoped accelerator samples, model count, batch size, and runner choice to each execution receipt.",
++    "Schedule separate compute-bound experiments across available GPUs when the tasks are independent and each model fits on one device.",
++    "Batch multiple questions per forward pass on single-process inference paths."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Replace disk-mtime timing fallback with task-scoped monotonic phase receipts.",
++    "Add GPU-aware scheduling for independent compute-bound experiments.",
++    "Batch inference requests and record the batch size in the task receipt."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "With no elapsed minutes recorded, any positive savings percentage would be invented. The blocks do not say that multiple models ran together, so they cannot reveal a DualGPURunner miss."
++}
+-- 
+2.55.0
+

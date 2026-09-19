@@ -1,0 +1,43 @@
+From f080e57f7bbe6bb860fe20e3ef72945335a60d5d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 07:13:39 -0400
+Subject: [PATCH 10373/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 52d231f555..178923701e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-08-30T10:06:20Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-30T11:13:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5cd4e538b7..65398896e9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16823,3 +16823,4 @@ The l |
+ | 2026-08-30 09:15 UTC | Independent proof transport and localization audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environmen |
+ | 2026-08-30 09:18 UTC | Claim-localized prefix-backtracking repair A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6771-proof-transport-localization-audit,  |
+ | 2026-08-30 10:04 UTC | Task-owned SOTA memory lease and artifact contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6773_csl_own |
++| 2026-08-30 11:11 UTC | Task-owned SOTA memory lease and artifact contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6773_csl_own |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5340b50833..d938503657 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 15, "phase": "iteration_start", "started_at": "2026-08-30T10:06:20Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-30T11:13:31Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

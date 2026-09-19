@@ -1,0 +1,228 @@
+From 85dc5a5a85788170c00d23294fba7a703b63840f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 18 Aug 2026 22:44:38 -0400
+Subject: [PATCH 09314/11362] Probe both ends of a window for goal defects, and
+ keep the scored server log
+
+TWO CHANGES, both from tonight's A/B findings.
+
+THE GOAL PROBE READ THE WRONG END. `grids[:_GOAL_PROBE_MAX_GRIDS]` takes the first 12
+grids, which at (grid, next_grid) per transition is the first SIX transitions. Every
+window is built to END at its level flip, so the win frame is always the LAST grid, and
+the win was visible only for windows of six transitions or fewer. On longer ones a CORRECT
+predicate reads constant-False across everything the probe sees and is rejected, while one
+that fires early on a non-win frame reads non-constant and is kept -- the gate rejected
+correct predicates and rewarded false positives, on exactly the windows where induction is
+hardest. 7 of 13 games in window_meta.json exceed six transitions.
+
+The fix is not a bigger cap, which would repair the symptom until some window outgrew it
+while still pointing at the wrong end. `_goal_probe_sample` splits the same budget between
+head and tail, so the win frame is included at any length, early-frame coverage is kept,
+and cost is unchanged -- the cap is what bounds the hang exposure the caller documents.
+Windows at or under the cap probe exactly what they always did.
+
+THE SCORED SERVER LOG DIED WITH THE RUN. `_ensure_server` already writes llama.cpp's
+stderr under CARNOT_ARC_SERVER_LOG_DIR, but the default is the container's /tmp. The
+kernel now points it at /kaggle/working and the vLLM launch honours the same knob. Three
+failed scored runs were undiagnosable for exactly this reason until one log was copied out
+by hand. It also answers the open question behind tonight's timeout analysis -- real
+induce durations are recoverable from the server's own `eval time` lines, with no
+instrumentation of the Python at all.
+
+VERIFICATION, INCLUDING ITS LIMIT. 16 new tests cover the sampling directly, including the
+24-grid case that is the incident's exact shape. Against HEAD over the same selection:
+15 failed / 35 passed before, 15 failed / 51 passed after -- the same 15, plus these 16.
+Those 15 are a PRE-EXISTING red suite over the defect-gate reask wiring, filed separately.
+So regression coverage around this change is weaker than it looks: the wiring tests that
+would catch a break in the surrounding path are already failing and could not.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py     | 52 ++++++++++++-
+ scripts/kaggle/submission_kernel/main.py      |  8 ++
+ tests/python/test_arc_goal_probe_sample.py    | 76 +++++++++++++++++++
+ 3 files changed, 134 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_arc_goal_probe_sample.py
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index c274a9f250..cba2f37a38 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -4442,6 +4442,41 @@ _GOAL_PROBE_TIMEOUT_S = 10.0
+ _GOAL_PROBE_MAX_GRIDS = 12
+ 
+ 
++def _goal_probe_sample(grids: list) -> list:
++    """Grids to run the goal predicate on: HEAD AND TAIL, never the head alone.
++
++    WHY THIS EXISTS (REQ-ARC-WMTE-6530, 2026-08-18). The probe used to take
++    `grids[:_GOAL_PROBE_MAX_GRIDS]`, the first 12. Grids are appended (grid, next_grid) per
++    transition, so 12 grids is the first SIX transitions -- and every window is built to END at
++    its level flip, so the win frame is always the LAST grid. The win was therefore visible only
++    for windows of six transitions or fewer.
++
++    That inverts the check on longer windows. A CORRECT predicate -- one true only on win frames
++    -- reads constant-False across everything the probe can see, so it is rejected and re-asked,
++    while a predicate that fires early on a non-win frame reads non-constant and is kept. The
++    gate rejected correct predicates and rewarded false positives, on exactly the windows where
++    induction is hardest. Measured over `window_meta.json`: 7 of 13 games have more than six
++    transitions, and the builder caps windows at `WINDOW_K = 12` TRANSITIONS while this cap is 12
++    GRIDS -- the same number in two different units, so a capped window is exactly twice the
++    probe's reach and the probe read the half that can never hold the win.
++
++    The fix is not a bigger cap. A bigger number repairs the symptom until some window outgrows
++    it, and the probe would still be pointed at the wrong end. Sampling both ends fixes it for
++    any length at the same cost: the budget is split, the head keeps the early-frame coverage the
++    original had, and the tail guarantees the win frame is always included.
++
++    Cost is unchanged -- at most `_GOAL_PROBE_MAX_GRIDS` grids are returned, which is what bounds
++    the hang exposure the caller's docstring describes. Order is preserved and duplicates are
++    dropped, so a window at or under the cap probes exactly what it always did.
++    """
++    cap = _GOAL_PROBE_MAX_GRIDS
++    if len(grids) <= cap:
++        return list(grids)
++    head = cap // 2
++    tail = cap - head
++    return list(grids[:head]) + list(grids[-tail:])
++
++
+ class _GoalProbeTimeout(Exception):
+     """The goal probe exceeded its wall-clock ceiling. Deliberately NOT a defect verdict: a
+     probe that could not finish is an absence of evidence, and the caller converts it to
+@@ -6605,7 +6640,20 @@ class LocalGGUFProposer:
+         ]
+         self.last_launch_argv = list(args)
+         self.generator_server_path = f"vllm:{model_dir}"
+-        log_path = Path(tempfile.gettempdir()) / f"vllm_server_{self.port}.log"
++        # Honour CARNOT_ARC_SERVER_LOG_DIR, the same knob the llama.cpp launch below uses. On
++        # Kaggle the kernel points it at /kaggle/working so the server log survives the run --
++        # in /tmp it dies with the container, which is what made three failed scored runs
++        # undiagnosable until the log was copied out by hand.
++        import os as _os
++
++        log_path = (
++            Path(_os.environ.get("CARNOT_ARC_SERVER_LOG_DIR", tempfile.gettempdir()))
++            / f"vllm_server_{self.port}.log"
++        )
++        try:
++            log_path.parent.mkdir(parents=True, exist_ok=True)
++        except OSError:
++            log_path = Path(tempfile.gettempdir()) / f"vllm_server_{self.port}.log"
+         lf = open(log_path, "ab")
+         self._proc = subprocess.Popen(args, stdout=lf, stderr=subprocess.STDOUT)
+         # Weights (23 GB) + torch.compile + CUDA-graph capture: measured cold boots run minutes,
+@@ -7144,7 +7192,7 @@ class LocalGGUFProposer:
+             probe = ns.get("is_level_complete")
+             if probe is None:
+                 return sorted(set(defects))
+-            for g in grids[:_GOAL_PROBE_MAX_GRIDS]:
++            for g in _goal_probe_sample(grids):
+                 try:
+                     v = probe(np.asarray(g))
+                 except _GoalProbeTimeout:
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index 5117d68bef..abc871b328 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -586,6 +586,14 @@ if server and gguf:
+     # never wall clock. Timeout follows the same logic -- the worst measured Qwen3.8 induction is
+     # ~1053s on this card at one stream, and a timeout that fires degrades the agent to LLM-off
+     # silently, so it is set well clear of that rather than close to it.
++    # KEEP THE AGENT'S SERVER LOG. `_ensure_server()` already writes llama.cpp's stderr to a
++    # file under this directory, and `_ensure_vllm_server()` now honours the same knob -- but
++    # the default is the container's /tmp, so the log dies with the run. Three scored runs were
++    # undiagnosable for exactly that reason until one was copied out by hand. Pointing it at the
++    # output directory costs about a megabyte and makes every future run answerable from its own
++    # artifacts, including the question this was added for: how long real inductions actually
++    # take, which is recoverable from the server's own `eval time` lines.
++    os.environ.setdefault("CARNOT_ARC_SERVER_LOG_DIR", "/kaggle/working")
+     os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "131072")
+     os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "2400")
+     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
+diff --git a/tests/python/test_arc_goal_probe_sample.py b/tests/python/test_arc_goal_probe_sample.py
+new file mode 100644
+index 0000000000..5bdae72391
+--- /dev/null
++++ b/tests/python/test_arc_goal_probe_sample.py
+@@ -0,0 +1,76 @@
++"""REQ-ARC-WMTE-6530: the goal-defect probe must sample the TAIL of a window, not only the head.
++
++WHY THIS FILE EXISTS. Windows are built to END at their level flip, so the win frame is always
++the last grid. The probe took `grids[:12]` -- the first six transitions, since grids are appended
++(grid, next_grid) per transition -- so on any window longer than six transitions the win was
++invisible to it. A predicate that is correct (true only on win frames) then reads constant-False
++across everything the probe sees and is rejected, while a predicate that fires early on a non-win
++frame reads non-constant and is kept. The gate rejected correct predicates and rewarded false
++positives, on exactly the long windows where induction is hardest.
++
++Measured over `window_meta.json` at the time of the fix: 7 of 13 games exceed six transitions.
++
++Scenarios: SCENARIO-ARC-WMTE-6530-TAIL (the last grid is always probed),
++SCENARIO-ARC-WMTE-6530-BUDGET (the cap that bounds the hang exposure is preserved),
++SCENARIO-ARC-WMTE-6530-SHORT (windows at or under the cap are probed exactly as before).
++"""
++
++from __future__ import annotations
++
++import pytest
++
++from carnot.agentic import arc_executable_world_model as wm
++
++
++# SCENARIO-ARC-WMTE-6530-SHORT
++@pytest.mark.parametrize("n", [0, 1, 5, 11, 12])
++def test_windows_within_the_cap_are_unchanged(n: int) -> None:
++    """At or under the cap the sample is the whole list, so short windows behave exactly as they
++    did before the fix. This is what makes the change safe to ship: the games the gate already
++    handled correctly see no difference at all."""
++    grids = list(range(n))
++    assert wm._goal_probe_sample(grids) == grids
++
++
++# SCENARIO-ARC-WMTE-6530-TAIL
++@pytest.mark.parametrize("n", [13, 18, 24, 25, 66])
++def test_the_last_grid_is_always_sampled(n: int) -> None:
++    """The win frame is the last grid by construction, so a probe that can miss it is the bug.
++    24 is the real case: a window at the builder's `WINDOW_K = 12` transition cap is 24 grids,
++    exactly twice the probe's 12-grid reach, and the old head-only slice could never reach the
++    win. 66 is the 33-transition window the caller's docstring names."""
++    grids = list(range(n))
++    sample = wm._goal_probe_sample(grids)
++    assert grids[-1] in sample, "the win frame must be probed at every window length"
++    assert grids[0] in sample, "early-frame coverage from the original slice must be kept"
++
++
++# SCENARIO-ARC-WMTE-6530-BUDGET
++@pytest.mark.parametrize("n", [13, 24, 66, 500])
++def test_the_probe_budget_is_never_exceeded(n: int) -> None:
++    """The cap bounds the hang exposure described in `_goal_defects`' docstring -- a predicate
++    with an unbounded loop is executed once per sampled grid. Widening coverage must not widen
++    cost, or the fix trades one hazard for another."""
++    sample = wm._goal_probe_sample(list(range(n)))
++    assert len(sample) <= wm._GOAL_PROBE_MAX_GRIDS
++
++
++def test_sample_preserves_order_and_does_not_duplicate() -> None:
++    """Head and tail must not overlap into a repeated grid, which would silently spend budget
++    probing the same frame twice and reduce real coverage below the cap."""
++    grids = list(range(24))
++    sample = wm._goal_probe_sample(grids)
++    assert len(set(sample)) == len(sample), "no grid probed twice"
++    assert sample == sorted(sample), "original frame order preserved"
++    assert sample == list(range(6)) + list(range(18, 24))
++
++
++def test_the_regression_this_fixes_in_its_original_shape() -> None:
++    """The incident, reproduced. A 12-transition window is 24 grids with the win at index 23.
++    The old expression could not see it; the new one must. Written as the two expressions side
++    by side so the test states the defect rather than only the fix."""
++    grids = list(range(24))
++    win_frame = grids[-1]
++    old_slice = grids[: wm._GOAL_PROBE_MAX_GRIDS]
++    assert win_frame not in old_slice, "precondition: the old slice missed the win"
++    assert win_frame in wm._goal_probe_sample(grids)
+-- 
+2.55.0
+

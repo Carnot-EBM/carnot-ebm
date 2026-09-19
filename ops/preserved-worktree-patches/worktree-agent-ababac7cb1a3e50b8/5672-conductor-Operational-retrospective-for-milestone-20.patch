@@ -1,0 +1,77 @@
+From 4c87238e96ca9bb8b1d621838686ceab822e7d7d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 12:58:37 -0400
+Subject: [PATCH 05672/11362] [conductor] Operational retrospective for
+ milestone 2026.07.478
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_478.json | 30 ++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_478.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 7add76039d..d1cc1a6255 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5709,3 +5709,9 @@ The critical path for milestone .250:
+ - theme: operational retrospective for an empty milestone-scoped timing window
+ - key result: no data available this milestone; the timing source reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no longest compute-bound experiment, GPU-idle bug, or DualGPURunner miss can be derived
+ - acceptance: 0/0 criteria met -- no experiment criteria were available from the supplied timing data
++
++### Milestone 2026.07.478
++- exp_range: no data available this milestone
++- theme: operational retrospective for a milestone with no experiment commits in the authoritative timing window
++- key result: no data available this milestone; the timing source reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no compute-bound slowest experiment, GPU-idle bug, or DualGPURunner miss can be derived
++- acceptance: 0/0 criteria met -- no experiment criteria were available from the supplied timing data
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 2a85b1ae22..5c56dcad1d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10869,3 +10869,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-04: PHASE 3 KAN certificate pilot -- small PWA/MILP verifier bound for energy module (✅ Complete) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether a certificate was produced.","value":"success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision"}; status=<missing>; kan_certificate_produced.value=true; solver_status=optimal; bounded_monotonicity min_slope=0.22500000670552264; no_unsafe_decision certified_upper_bound=0.6249999962747077 vs threshold=0.7 with bound_tightness.value=0.07500000372529225; scope=tiny UnivariateKAEMLayer PWA fixture only; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5230_kan_milp_verifier_certificate_v478.json
+ - 2026-07-04: PHASE 3 hardware continuity -- KV260/PolarFire hashes and p-bit boundary plan without speedup claim (⚠️ Blocked) — honest_verdict=complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup; results/experiment_5231_hardware_continuity_pbit_boundary_v478.json
+ - 2026-07-04: PHASE 4 capstone -- reconcile .478 evidence, exclusions, specs, memory, and ops docs (⚠️ Blocked) — honest_verdict=complete: v478 reconciled with GAP-1 blocked, GAP-4 blocked, VerIbmc solver-feedback blocked, typed memory satisfied, ARC delta 0, KAN certificate produced, hardware continuity/no-speedup recorded, and flagged/gated artifacts excluded.; results/experiment_5232_capstone_v478.json
++- 2026-07-04: Operational retrospective for milestone 2026.07.478 (✅ Complete) — TIMING DATA reports no experiment commits since activation, checked by both live git-log and disk-mtime reconstruction; no data available this milestone for slowest-experiment or compute-bound sections. Locked fields remain total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null; no compute-bound slow-run, GPU-idle, or DualGPURunner finding is supportable. Next tooling change: add an empty-window sentinel before GPU or top-5 analysis. estimated_time_savings_pct=0; results/operational_retro_2026_07_478.json
+diff --git a/results/operational_retro_2026_07_478.json b/results/operational_retro_2026_07_478.json
+new file mode 100644
+index 0000000000..47c439d3d5
+--- /dev/null
++++ b/results/operational_retro_2026_07_478.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.478",
++  "generated_at": "2026-07-04T16:42:12Z",
++  "retro_type": "operational_in_progress",
++  "summary": "No data available this milestone for experiment timing beyond the locked empty-window fields: the authoritative timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, there is no basis to rank slow experiments, diagnose GPU efficiency, or evaluate DualGPURunner engagement.",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "slowest_experiments": [],
++  "bottlenecks_identified": [
++    "No data available this milestone for compute-bound wall-time bottlenecks because the timing data contains no experiment commits since activation.",
++    "GPU idle is not flagged as a bottleneck because the timing data contains 0 compute-bound experiments."
++  ],
++  "improvements_suggested": [
++    "Add a no-experiment-commits sentinel that causes operational retrospectives to emit the empty-window template immediately when both timing sources are empty.",
++    "Gate all GPU-idle and DualGPURunner recommendations on compute_bound timing entries rather than on a standalone GPU snapshot.",
++    "Require the timing assembler to provide either structured experiment entries or an explicit no-data marker before prompting for slowest-experiment analysis."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Short-circuit retrospective analysis when experiments_completed is 0 and compute_bound_experiments_count is 0.",
++    "Preserve the compute_bound gate for GPU utilization claims so synthesis-only or empty windows do not create false action items.",
++    "Make the no-data state explicit in the artifact and logs before scheduling any performance-tuning work."
++  ],
++  "compute_bound_experiments_count": 0,
++  "gpu_idle_on_compute_bound_tasks": null,
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The main risk in this retrospective is importing experiment IDs, durations, or metrics from adjacent repository records. The correct operational conclusion is no data available for compute-bound execution this milestone, so the idle GPU snapshot remains informational rather than actionable.",
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": false
++}
+\ No newline at end of file
+-- 
+2.55.0
+

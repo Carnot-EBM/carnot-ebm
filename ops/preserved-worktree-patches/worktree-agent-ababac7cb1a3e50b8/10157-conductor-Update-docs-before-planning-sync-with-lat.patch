@@ -1,0 +1,74 @@
+From 2809982eaea5bd1eb6d57620a32bfc44460c5b3d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:59:09 -0400
+Subject: [PATCH 10157/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 5 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 80a76b901e..b4fc26b656 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,845</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,849</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index e1a3f7e655..294941993b 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:51:09Z"
++ "last_scan_utc": "2026-08-28T06:53:12Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 66c3a57558..bb66f75252 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-08-28T06:51:09Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-28T06:53:12Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7a3c9d3d0f..df93a0ba60 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16692,3 +16692,5 @@ code |
+ | 2026-08-28 06:49 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+ | 2026-08-28 06:49 UTC | Prospective prequential online-energy A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.onlin |
+ | 2026-08-28 06:51 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
++| 2026-08-28 06:51 UTC | Prospective prequential online-energy A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.onlin |
++| 2026-08-28 06:53 UTC | Cold prequential, retention, and rollback audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6696-prequential-online-energy-ab) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1fff601e33..944b9792df 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 27, "phase": "iteration_start", "started_at": "2026-08-28T06:51:09Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-28T06:53:12Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

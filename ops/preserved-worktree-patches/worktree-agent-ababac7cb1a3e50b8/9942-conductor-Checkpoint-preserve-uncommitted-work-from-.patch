@@ -1,0 +1,56 @@
+From b91ac6b4617b5387d0f81cc8035d3401dc11af4e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 15:37:39 -0400
+Subject: [PATCH 09942/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index f5bc3b44c7..9499699e97 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -8,5 +8,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T19:23:26Z"
++ "last_scan_utc": "2026-08-25T19:37:35Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bf2ad0ed61..f3aba8e91a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-25T19:23:25Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-25T19:37:34Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 83079a4d1a..11fe39accf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16473,3 +16473,4 @@ code |
+ | 2026-08-25 19:17 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+ | 2026-08-25 19:19 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+ | 2026-08-25 19:21 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
++| 2026-08-25 19:35 UTC | Gemma 4 26B-A4B direct baseline headroom qualifica | OK | 102 passed, 1 warning in 16.24s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8317bf7c31..e85212b37a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-25T19:23:25Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-25T19:37:34Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

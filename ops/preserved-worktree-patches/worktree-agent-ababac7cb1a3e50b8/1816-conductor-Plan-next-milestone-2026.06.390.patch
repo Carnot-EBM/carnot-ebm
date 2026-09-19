@@ -1,0 +1,2049 @@
+From ca14e7ba4c950bc10c9f62ddefc7b6d93d6f2c93 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 15:55:18 -0400
+Subject: [PATCH 01816/11362] [conductor] Plan next milestone: 2026.06.390
+
+Planning agent proposed 12 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v390.md | 267 ++++++
+ ops/anomaly-escalations.md                    |  10 +
+ ops/docs_audit_report.md                      |  84 +-
+ research-references.md                        |  64 ++
+ research-roadmap-next.yaml                    | 798 ++++++++++++++++++
+ results/diffusiongemma_energy_prior_gguf.json |  12 +
+ results/diffusiongemma_energy_prior_gguf.log  |   1 +
+ results/diffusiongemma_energy_prior_gguf.pid  |   1 +
+ ...fusiongemma_energy_prior_transformers.json |  11 +
+ ...ffusiongemma_energy_prior_transformers.log |   3 +
+ ...ffusiongemma_energy_prior_transformers.pid |   1 +
+ results/diffusiongemma_energy_prior_vllm.json |  11 +
+ results/diffusiongemma_energy_prior_vllm.log  | 141 ++++
+ results/diffusiongemma_energy_prior_vllm.pid  |   1 +
+ results/diffusiongemma_gguf_download.log      |   1 +
+ results/diffusiongemma_gguf_download.pid      |   1 +
+ results/experiment_1861_equivalence.json      |  11 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ...iment_4184_archive_v387_activate_v388.json |  13 +-
+ results/llama_cpp_upgrade.log                 |   9 +
+ results/llama_cpp_upgrade.pid                 |   1 +
+ results/vllm_install.log                      | 277 ++++++
+ results/vllm_install.pid                      |   1 +
+ results/vllm_nightly_install.log              |  22 +
+ results/vllm_nightly_install.pid              |   1 +
+ 27 files changed, 1726 insertions(+), 49 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v390.md
+ create mode 100644 research-roadmap-next.yaml
+ create mode 100644 results/diffusiongemma_energy_prior_gguf.json
+ create mode 100644 results/diffusiongemma_energy_prior_gguf.log
+ create mode 100644 results/diffusiongemma_energy_prior_gguf.pid
+ create mode 100644 results/diffusiongemma_energy_prior_transformers.json
+ create mode 100644 results/diffusiongemma_energy_prior_transformers.log
+ create mode 100644 results/diffusiongemma_energy_prior_transformers.pid
+ create mode 100644 results/diffusiongemma_energy_prior_vllm.json
+ create mode 100644 results/diffusiongemma_energy_prior_vllm.log
+ create mode 100644 results/diffusiongemma_energy_prior_vllm.pid
+ create mode 100644 results/diffusiongemma_gguf_download.log
+ create mode 100644 results/diffusiongemma_gguf_download.pid
+ create mode 100644 results/llama_cpp_upgrade.log
+ create mode 100644 results/llama_cpp_upgrade.pid
+ create mode 100644 results/vllm_install.log
+ create mode 100644 results/vllm_install.pid
+ create mode 100644 results/vllm_nightly_install.log
+ create mode 100644 results/vllm_nightly_install.pid
+
+diff --git a/openspec/change-proposals/research-roadmap-v390.md b/openspec/change-proposals/research-roadmap-v390.md
+new file mode 100644
+index 0000000000..99e19ed107
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v390.md
+@@ -0,0 +1,267 @@
++# Research Roadmap — Milestone 2026.06.390
++
++**Author:** Claude Opus 4.8 (outer-loop planning agent)
++**Date:** 2026-06-14
++**Status:** proposed
++**Supersedes input:** `research-roadmap-v389.md` (the just-closed .389)
++**North star:** `ops/north-star.md` §0 (solve ARC-AGI-3, accurately + efficiently),
++§5 (energy VERIFIES, refinement GENERATES) — and the **2026-06-14 P0 operator
++directive ("2+3+1"): re-aim the verifier program at the ORACLE-DISTINCT frontier.**
++
++---
++
++## 0. One-paragraph thesis
++
++`.389 tried to run the de-confounded verifier-as-reward A-vs-B on code. The code
++operating point **CLEARED** (Phase-0 certification precision **0.956**, Youden
++**J=0.414**, training headroom **0.600**, corpora N-matched A=776 / B=776 / C=742) —
++but the **background** LoRA training process **exited before its first checkpoint**
++(exp4198 `blocked_training_process_exited_before_checkpoint`), so the decisive
++A-vs-B was never collected and the capstone, skipping four DURATION_TOO_SHORT-flagged
++artifacts, read "NO-OPERATING-POINT." That headline is an INFRA artifact, not a
++scientific one — it is the recurring *powering-run background mechanism fails*
++pattern (memory `incident_powering_run_background_mechanism_fails`). Meanwhile the
++operator's **newest** directive (2026-06-14) re-aims the program: the verifier's
++EXECUTION wins (code, ARC GAP-4) are CIRCULAR (verifier == the executable oracle) —
++valid, but NOT a moat and NOT headline/gate-eligible. The deep, defensible,
++still-UNPROVEN claim is an **oracle-DISTINCT** (learned/energy) verifier that
++captures headroom where execution is NOT trivially the oracle: closing the
++GAP-3-energy-ties-vote-on-ARC gap. So `.390 does two things at once. **HEADLINE
++(Phase A):** does a LEARNED (oracle-distinct) verifier — the in-repo V-STaR class
++(exp4176) applied to ARC — beat majority vote where execution is not the oracle,
++with a MATCHED no-verifier control (CI95-excl-0)? Framed by the freshly-ingested
++ARBITER ("wrong-majority failures": vote picks the largest BASIN, not the most
++accurate) and SCOPE (a fine-grained learned signal recovers minority-vote-correct
++answers). Plus the cheap **verifier-as-DETECTOR** measurement (detection AUROC where
++selection headroom is ~0). **OWED (Phase B):** FINISH the de-confounded
++verifier-as-reward A-vs-B on code by resuming the .389 checkpoint and running the
++3-arm LoRA-RFT **synchronously, resume-accumulate** (the infra fix). Then ARC
++north-star progress (Phase C) and the reserved infra/SOTA/hardware/capstone slots
++(Phase D).
++
++---
++
++## 1. What .389 produced (the inputs to this plan)
++
++| Result | Artifact | Status |
++|---|---|---|
++| **Verifier-as-reward code operating point CLEARED** — Phase-0 precision 0.956, Youden J 0.414, headroom 0.600, harness ready | exp4197 | ⚠️ flagged DURATION_TOO_SHORT (false-positive on a fast verifier-scoring step), but the numbers are the input to .390 |
++| **3-arm corpora built + N-matched** — A(certified)=776, B(random-label)=776, C(gold)=742, base_passrate=0.6 | exp4198 | ❌ **infra**: `blocked_training_process_exited_before_checkpoint` — the background LoRA process died before checkpoint. Stable checkpoint dir `code_verifier_reward_lora_rft_a83b52882c198954` exists on disk |
++| **Decisive A-vs-B** — never collected (gate-blocked on exp4198.training_launched=False) | exp4199 | ❌ blocked (downstream of the infra failure) |
++| **Certified ARC corpus** — 16 demo-perfect programs, certification precision 0.9375; in-context distill-lift uninformative (seeded checkpoint missing) | exp4200 | ⚠️ flagged; corpus jsonl on disk |
++| **ARC incremental** — no new solve (lp85 L4 no observed level-up candidate); held at total_levels=15 / total_games=13 | exp4201 | ✅ honest no-solve |
++| **ARC live solver vs floor** — efficiency-only "win" (5 vs 6 actions) but **0 levels completed** by either (score 0.0); NO accuracy win, NO leaderboard submission | exp4202 | ✅ grounding, weak |
++| **SOTA flagged for .390** = `non_qwen_same_generator_random_label_ablation_v390` | exp4203 | ✅ ingested, 8 methods |
++| **Hardware** — GateMate unreachable (blocked); PolarFire hash-verified CPU dispatch; KV260 terminal-confirmed via SSH | exp4205 | ✅ |
++| **Capstone** — headline = NO-OPERATING-POINT (artifact of skipping 4 flagged); ARC 15 levels | exp4206 | ✅ honest aggregation |
++
++**The honest read of .389:** the verifier-as-reward test is **90% done** and
++blocked ONLY on the background-training infra; the operating point is real. The
++operator's 2026-06-14 directive then re-aims the HEADLINE at oracle-distinct work.
++`.390 serves both.
++
++---
++
++## 2. The oracle-distinct frontier, made executable (why ARC, why V-STaR, why now)
++
++The 2026-06-14 P0 directive's three planner directions:
++
++1. **HEADLINE = an ORACLE-DISTINCT (learned/energy) verifier** that captures
++   ARC-class headroom where execution is NOT trivially the oracle — close the
++   GAP-3-energy-ties-vote-on-ARC gap. Every such task sets `verifier_is_oracle:
++   false` and reports a MATCHED no-verifier control with CI95-excl-0.
++2. **COMPLEMENTARY = the verifier-as-DETECTOR measurement** — detection AUROC where
++   SELECTION headroom is ~0 (`docs/research-notes/verifier-as-detector-measurement-spec.md`).
++3. **STOP re-running CIRCULAR confirmations** — code/HumanEval test-pass SELECTION,
++   efficiency-vs-LLM-judge on code, Sudoku-at-convergence (the lint WARNs them).
++
++**Why this is executable now, not aspirational:**
++
++- The oracle-distinct verifier CLASS already exists in-repo: the `.386 **V-STaR
++  learned selector** (exp4176, arXiv:2402.06457) trains on ACCEPTED + REJECTED
++  traces — a learned correctness boundary, not the execution oracle — and reached
++  AUROC 0.9792 on code. `.390 applies that class to the **ARC GAP-4 candidate pool**
++  (`results/arc3_trm_verifier_rerank.json`), where the question becomes oracle-distinct.
++- The literature freshly ingested (`research-references.md` `.390 sweep) tells us
++  WHERE the headroom is: **ARBITER (2605.26172)** "wrong-majority failures" — the
++  correct answer is in the pool but loses to a LARGER wrong basin; **SCOPE
++  (2512.15146)** recovers minority-vote-correct answers a flat vote discards. A
++  learned ARC verifier that recovers those is the oracle-distinct win.
++- The detector measurement is **cheap** (cached pools, no new generation/training;
++  `scripts/exp_verifier_detector_auroc.py` already exists) and decisive about the
++  OTHER axis of verifier value (flag/reject, abstention) that the selector metric
++  cannot see.
++
++**On the OWED verifier-as-reward (Phase B) vs the "stop circular" directive.** The
++de-confounded A-vs-B on code is the REWARD axis (does the execution LABEL *train* a
++better model), NOT the SELECTION axis the directive halts. It is the operator's own
++2026-06-11 pivot, it is HALF-DONE (operating point cleared, corpora built) and
++blocked only on infra, and it is the explicit SOTA-flagged-for-.390 work. It is
++honestly framed as `verifier_is_oracle: true` (execution oracle as reward — RLVR/
++RLEF; cf. ExecVerify 2603.11226, EVOM 2604.00442) and is NOT claimed as a moat.
++Finishing it converts a 90%-done decisive test into an answer; it does not compete
++with the oracle-distinct headline.
++
++---
++
++## 3. Architecture (what executes)
++
++```
++                    .390  ORACLE-DISTINCT FRONTIER  (Phase A — HEADLINE)
++   ┌──────────────────────────────────────────────────────────────────────┐
++   │  A1 detector AUROC (cached)        A2 build V-STaR-on-ARC (learned)    │
++   │  detection where headroom~0   ───▶ off-fold AUROC, verifier_is_oracle  │
++   │  (Sudoku/code/ARC/GSM8K)           =false   ──▶  A3 measure: does it    │
++   │  the OTHER axis of value                         beat vote OFF-ORACLE   │
++   │                                                  vs MATCHED control,    │
++   │                                                  CI95-excl-0 ?          │
++   └──────────────────────────────────────────────────────────────────────┘
++                    OWED  VERIFIER-AS-REWARD  (Phase B — self-learning)
++   ┌──────────────────────────────────────────────────────────────────────┐
++   │  B1 RESUME .389 checkpoint  ──SYNCHRONOUS, resume-accumulate──▶         │
++   │     3-arm LoRA-RFT on code: A(verifier-cert) vs B(same-gen random-label │
++   │     = Spurious-Rewards control) vs C(gold) vs D(cold); gold-control +   │
++   │     truncation guards; Youden-J; memorization-shortcut diagnostic       │
++   │  B2 certified-ARC-corpus distill-lift (Invisible-Leash latent/absent)   │
++   └──────────────────────────────────────────────────────────────────────┘
++                    NORTH-STAR ARC  (Phase C)        RESERVED  (Phase D)
++   ┌─────────────────────────────────────┐  ┌───────────────────────────────┐
++   │  C1 ARC incremental +1 (>=16)        │  │ D1 SOTA-ingestion (oracle-     │
++   │  C2 ARC live solver-vs-floor         │  │    distinct track)            │
++   │     (ACCURACY-seeking; no submit)    │  │ D2 registry+gaps hygiene      │
++   └─────────────────────────────────────┘  │ D3 hardware continuity        │
++                                            │ D4 capstone .390              │
++                                            └───────────────────────────────┘
++```
++
++Reused, not rebuilt: `results/experiment_4176_vstar_selector_model.json` +
++its trainer (V-STaR class); `python/carnot/agentic/arc_gap4_execution_verifier.py`
+++ `arc_agi3_world_model.py`; `results/arc3_trm_verifier_rerank.json` (ARC pool);
++`scripts/exp_verifier_detector_auroc.py`; `scripts/experiments/process_reward_weighted_sft_onpolicy_powered.py`
+++ the resumable checkpoint `code_verifier_reward_lora_rft_a83b52882c198954`;
++`scripts/gap4_program_induction_stack.py` + the certified corpus jsonl.
++
++---
++
++## 4. Phases & tasks (12 tasks)
++
++**Infra:** exp4207 archive .389 → activate .390.
++
++**Phase A — ORACLE-DISTINCT FRONTIER (headline, 2026-06-14 P0):**
++- exp4208 **[A1] verifier-as-DETECTOR measurement** (cheap, cached) — detection
++  AUROC per domain vs SELECTION headroom; declare `verifier_is_oracle` per domain.
++- exp4209 **[A2] BUILD the oracle-distinct learned ARC verifier** (V-STaR-on-ARC) —
++  train on accepted+rejected ARC candidate traces; off-fold AUROC; `verifier_is_oracle: false`.
++- exp4210 **[A3] MEASURE it beats vote OFF-ORACLE** (gated_on A2) — learned-verifier
++  rerank vs majority vote vs MATCHED no-verifier control on held-out ARC; CI95-excl-0;
++  `verifier_is_oracle: false`. The headline gate (close GAP-3-ties-vote).
++
++**Phase B — OWED verifier-as-reward + self-learning (2026-06-11 pivot):**
++- exp4211 **[B1] FINISH the de-confounded verifier-as-reward A-vs-B on code** —
++  RESUME `code_verifier_reward_lora_rft_a83b52882c198954`; run the 3-arm LoRA-RFT
++  **SYNCHRONOUSLY, resume-accumulate** with per-step progress prints (the infra fix);
++  A(certified) vs B(same-generator random-label) vs C(gold) vs D(cold); gold-control
++  + truncation guards; Youden-J; memorization-shortcut diagnostic. `verifier_is_oracle: true`
++  (honest — reward axis, not a moat). Self-learning / FR-11.
++- exp4212 **[B2] certified-ARC-corpus distill-lift** (Invisible-Leash latent-vs-absent)
++  — extend exp4200's certified corpus; cheap in-context lift of the LOCAL base's ARC
++  induction from certified exemplars. Self-learning / sovereignty.
++
++**Phase C — ARC north-star progress:**
++- exp4213 **[C1] ARC incremental +1** (monotonic; total_levels >= 16; hardened GAP-4).
++- exp4214 **[C2] ARC live solver-vs-floor, ACCURACY-seeking** (complete a level on an
++  easy live game vs the floor; NO leaderboard submission).
++
++**Phase D — reserved slots:**
++- exp4215 **[D1] SOTA-ingestion** (oracle-distinct learned-verifier track; flag for .391).
++- exp4216 **[D2] verifier-registry + gaps hygiene** (bit-exact GAP-4 regression replay;
++  record the .390 oracle-distinct + reward outcomes; open a GAP-ORACLE-DISTINCT entry).
++- exp4217 **[D3] hardware continuity** (GateMate + PolarFire drive-to-terminal; KV260
++  opportunistic; SSH/USB-detect preconditions only).
++- exp4218 **[D4] capstone .390** (UNGATED; headline = did the oracle-distinct learned
++  verifier beat vote on ARC?).
++
++---
++
++## 5. Dependency graph
++
++```
++exp4207 (archive/activate, runs first)
++exp4208 [A1 detector]              ── independent (cached)
++exp4209 [A2 build V-STaR-on-ARC]   ── independent (build)
++   └─▶ exp4210 [A3 measure beats-vote]   gated_on A2.selector_trained == true
++exp4211 [B1 verifier-as-reward]    ── resumes .389 checkpoint (synchronous)
++exp4212 [B2 ARC distill-lift]      ── resumes exp4200 corpus
++exp4213 [C1 ARC +1]                ── independent
++exp4214 [C2 ARC live]              ── independent (offline-validate first)
++exp4215 [D1 SOTA]  exp4216 [D2 registry]  exp4217 [D3 hardware]  ── independent
++exp4218 [D4 capstone]              ── UNGATED; reads all upstream, skips flagged
++```
++
++Only one structured `gated_on` (A3 on A2). Everything else is order-independent so a
++single blocked task cannot cascade the milestone.
++
++---
++
++## 6. Hardware & model requirements
++
++- **RTX 3090 (GPU rig):** B1 LoRA-RFT (small NON-Qwen base — gemma-4-E4B-it or
++  MiniCPM5-1B; **Qwen is FORBIDDEN as the trained base** per the Spurious-Rewards
++  confound arXiv:2506.10947, Qwen GGUF fine as an off-policy teacher only). A2 V-STaR
++  training (small MLP/probe on cached ARC candidate features — light). A1 detector is
++  CPU/GPU-light (cached scoring). The outer-loop owns any TRM training — **no .390 task
++  touches the TRM checkpoint** (val 0.8227, SIGTERM'd, conductor stood-down).
++- **SOTA local GGUF** (`cached_sota_pair()` / `.gguf` path, NOT AutoTokenizer):
++  Qwen3.6-35B-A3B-GGUF / gemma-4-31B-it-GGUF / gemma-4-26B-A4B-it-GGUF / gemma-4-12B-it.
++  B2's certified-corpus generation uses codex (induces 0.94) + the local GGUF for the
++  in-context lift base.
++- **FPGA boards (Phase D3):** GateMate (USB DirtyJTAG `--detect`), PolarFire (`ssh
++  polarfire`), KV260 (`ssh kria`, opportunistic/terminal). SSH/USB-detect preconditions
++  ONLY (KV260 SSH-Not-SD-Card Discipline).
++- **ARC-AGI-3 (Phase C):** offline fixtures (C1) + the live SDK anonymous key (C2,
++  `arc_agi` v0.9.8) — NO leaderboard submission (operator-only external publication).
++
++**Architecture freshness watch:** `_bmad/architecture.md` "Last Reconciled" =
++2026-05-16 (~29 days). Crossing the 30-day flag threshold next milestone — a
++reconciliation pass is due in .391 if not sooner.
++
++---
++
++## 7. What this milestone is NOT
++
++- **NOT a re-grind of circular SELECTION wins.** No code/HumanEval test-pass
++  selection, no efficiency-vs-LLM-judge on code, no Sudoku-at-convergence rerank
++  (2026-06-14 directive item 3; the lint WARNs them). The detector (A1) and reward
++  (B1) axes are DIFFERENT from selection; the ARC oracle-distinct test (A3) is
++  explicitly `verifier_is_oracle: false`.
++- **NOT a moat over-claim.** Every verifier-value task declares `verifier_is_oracle`
++  honestly; a circular (execution-oracle) result is labeled `execution_grounded` and
++  may NOT flip the DiffusionGemma gate (which stays STILL-PENDING until an
++  oracle-distinct win lands with a matched control — CLAUDE.md Circularity Discipline).
++- **NOT a background powering run.** B1 is SYNCHRONOUS, resume-accumulate, per-step
++  progress-printed (the .389 infra failure mode is banned).
++- **NOT a TRM-training task.** No task launches train.py, kills it, or writes
++  `results/trm_runs/sudoku_extreme_baseline/`.
++- **NOT an external publication.** ARC live (C2) submits NO scorecard.
++
++---
++
++## 8. Acceptance — the decision-grade questions
++
++1. **[A3, HEADLINE] Does a LEARNED (oracle-distinct) verifier beat majority vote on
++   ARC where execution is not the oracle, vs a matched control, CI95-excl-0?**
++   YES → the first oracle-distinct verifier win (the defensible moat; informs the
++   DiffusionGemma gate). TIE → honest null; the GAP-3-ties-vote frontier persists and
++   the detector axis (A1) becomes the honest reframing of "where the verifier adds value."
++2. **[B1, OWED] Does the verifier's execution LABEL carry training signal beyond the
++   spurious-reward confound — A(certified) vs B(same-generator random-label),
++   CI95-excl-0, with the gold-control + truncation guards passing?** The project's
++   first clean verifier-as-reward read, either way (REAL or distillation-null).
++3. **[A1] Where selection headroom is ~0, does the verifier still DETECT errors
++   (AUROC ≫ 0.5, CI95-excl)?** The orthogonal-value reframing.
++4. **[C] Does ARC progress advance (total_levels >= 16) and/or does the live solver
++   complete a level vs the floor?**
++
++A milestone that answers (1) or (2) decisively — positive OR honest-negative —
++advances the north star (north-star §0 rule). The capstone (exp4218) records the
++single headline read.
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 1ad49624f3..b0e6fdfea8 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -391,3 +391,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4200_certified_arc_corpus_distill_lift.json
++
++## diffusiongemma_energy_prior_gguf.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/diffusiongemma_energy_prior_gguf.json
++
++## experiment_4184_archive_v387_activate_v388.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['CIRCULAR_MOAT_OVERCLAIM'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_4184_archive_v387_activate_v388.json
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index db2f314777..c578e51065 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,67 +4,65 @@
+ # docs_audit_report — 2026-06-14
+ 
+ ## TL;DR (stranger's 30-second take)
+-A stranger gets a genuinely clear pitch ("catches arithmetic/reasoning errors your LLM is confident about") and then loses trust fast: the hero stat card walks back its own headline number ("Repinned from v2 0.9857"), the blog roll is four-of-seven confessions about the project catching *itself* fabricating results, and the evidence grid is a wall of insider acronyms with suspiciously perfect numbers (1.0, 60/60, "vs 0.125 baseline"). Net: clear product, but the page reads like it's apologizing for fake numbers — most skimmers close the tab at the stats bar or the blog.
++The hero hooks well — "catch the reasoning errors your LLM states with total confidence" plus `pip install carnot-ebm` tells me what it is and how to try it in five seconds. But the moment my eye drops to the headline stats it hits a wall of number-soup ("0.9131 AUROC… architecture-only 0.8947… Repinned from v2 0.9857"), and if I scroll to the blog the project is mostly writing about catching *itself* fabricating results and retracting claims. A skeptical stranger reads that as instability, not rigor, and is at real risk of closing the tab despite a strong top-of-page.
+ 
+ ## TOP 3 PROBLEMS
+-1. **The page advertises its own untrustworthiness** — hero "Repinned from v2 0.9857," a defensive "synthetic pilots… not headline claims" disclaimer over the results, and a blog roll led by "Caught Cheating / Two Retractions / Regex in an NTK Costume / Why We Report Two AUROCs." A stranger concludes the numbers are routinely fabricated/retracted.
+-2. **Results grid is un-skimmable jargon + perfect-looking numbers** ("EstimationVerifier SVAMP AUC 0.90 vs 0.125 FoVer baseline," "60/60 attacks," "GSM8K TP rate 0.5 → 1.0," "HalluGuard v3," "CCTU," "KV260") with progress bars whose widths encode nothing consistent.
+-3. **Vanity/internal metrics lead the page** — stats bar opens with "382 Completed milestones" and "3,516 Experiment runs" (meaningless to outsiders), and the one real number (0.9131 AUROC) is buried in "FoVer / 5-seed / dual-condition / architecture-only" jargon.
++1. **Number-soup in the hero stats card** — the "Recent progress" card wedged into the headline-stats row throws three different AUROCs (0.9131 / 0.8947 / 0.9857) plus "5-seed dual-condition" and "Repinned from v2" at a stranger in the single most-read spot on the page.
++2. **The Writing/blog section reads as a confession reel** — 5 of 7 posts are about the project catching itself cheating / faking / retracting ("Caught Cheating: 95 Microseconds on a 30B Model", "Regex in an NTK Costume", "Two Retractions and a Rescue"). Cold strangers read untrustworthy, not transparent.
++3. **The Evidence section's meter bars are meaningless and several numbers look rigged/perfect** — bar widths don't encode a consistent quantity, and cards cite "60/60", "0.5 → 1.0", and "vs 0.125 FoVer baseline" (a sub-random baseline) with no sample sizes.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- **Results grid** — 12 dense result cards — a stranger skims none; cut to the ~5 strongest, clearly-labeled rows.
+-- **"Seven capabilities" features section** — 7 cards, but only ~4 are user-checkable (Code, Math, Typed, Reasoning); "Research operations," "APIs & portable memory," and "TTC & PREM" are project/build features padding the count to a round seven.
+-- **Results intro paragraph** — ~55 words of defensive provenance hedging ("Synthetic pilots are included only when the card says so; they are not model-generation headline claims") — pre-emptive defensiveness reads as an admission.
+-- **Nav bar** — 12 text links + 2 buttons; cluttered for a landing page.
++- **Whole-page card density** — Nav (12 links) → Hero → Problem (2 cards) → How (4 cards) → Features (7 cards) → Evidence (12 cards) → Preprint → Quickstart → Writing (7 cards). ~32 content cards + 12 nav links. By raw word count almost every card is *under* the caps (e.g. "Why Energy-Based?" ≈72 words < 120; "Code" ≈60 words; "Recent progress" ≈47 words < 60), so this is **not** a per-card overflow problem — it's a **count/scroll** problem. A 30-second stranger skims none of 12 evidence cards. Suggested: trim Evidence to ~5–6 headline cards, collapse the rest behind the Technical Report link.
++- **Nav bar** — 12 text links + 2 buttons. Suggested cap: ~5–6 primary links; move Concepts/API/Report/Paper/Roadmap into a footer or a "Docs" dropdown.
++- **Features section over-promises count** — titled "Seven capabilities" under the label "What you can check," but 3 of 7 cards (Research operations, APIs & portable memory, TTC & PREM) are not things you check. Either reframe the label or drop to "four verification capabilities."
+ 
+ ### Internal jargon
+-- **Stats bar** — "382 Completed milestones" — a "milestone" is an internal dev-cadence unit; means nothing to a stranger and reads as busywork.
+-- **Hero "Recent progress" card** — "5-seed dual-condition," "architecture-only 0.8947," "Repinned from v2," "FoVer" — all unexplained insider terms in the first screenful.
+-- **Results cards** — "FoVer," "SVAMP," "CCTU," "PRM-BiasBench," "GSM8K," "CoT," "KV260," "Ising sampler," "k=5 ensemble," "publication gate," "EstimationVerifier," "HalluGuard v3," "VeriCoT" — a stranger can decode almost none of these in 30 seconds.
+-- **Features** — "TTC & PREM" card: "scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance… intrinsic motivation for continuous self-learning" — pure insider-speak, no concrete user benefit.
+-- **Preprint** — "paper-v6," "non-operator environment," "operator-initiated upload" — "operator" and version-tag jargon; also reveals the paper is *not actually on arXiv yet*.
+-- **Blog** — "NTK," "Deep Think Rounds," raw "arXiv:2601.18753."
++- **Hero "Recent progress" card** — `5-seed dual-condition`, `architecture-only 0.8947`, `Repinned from v2 0.9857`. A stranger does not know what "v2" was, what "repinned" means, or why three AUROCs appear in one card. This is internal status reporting in the hero.
++- **Headline stats** — `382 completed milestones`, `3,528 experiment runs`, `30,658 automated tests`. These are internal-cadence/activity metrics, not outcomes. "Milestones" leaks the project's internal loop vocabulary; a stranger asks "milestones of what, and do they mean anything?"
++- **Evidence cards — acronym soup, none expanded**: `FoVer` (used 4× across the page as if known), `CCTU`, `CRANE`, `VeriCoT`, `SVAMP`, `PRM-BiasBench`, `HalluGuard v3`, `GSM8K`. Also `publication gate` ("0.91 AUROC (publication gate)") and `k=5 ensemble` (flag/param syntax). A stranger can't tell which benchmarks are real/standard and which are internal.
++- **Features cards** — `VerdictRecord`, `SessionMemory`, `MCP server`, `AND-composed`, `PREM`/`Process-Reward Energy Model`, "intrinsic motivation for continuous self-learning" (vague hype). PREM/TTC are at least expanded; the rest are not glossed.
++- **Blog tags** — "Deep Think Rounds" used as a proper noun a stranger won't recognize.
+ 
+ ### Per-milestone narrative
+-- **Hero card** — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like an internal correction/commit note surfaced on the front door.
+-- **Stats bar** — "382 Completed milestones / 3,516 Experiment runs" is internal status reporting, not a value proposition.
++- Main body is mostly clean of `.NNN` milestone narrative — good. The remaining offenders are the hero card's "**Repinned from v2 0.9857 after pre-submission adversarial audit**" (reads like a changelog line) and the vanity stat "**382 completed milestones**." No raw `expNNNN` IDs found in the prose (a real improvement).
+ 
+ ### Inconsistencies
+-- **Arithmetic example contradicts itself** — intro, "Whole-answer check" card, and the code sample all use "47 + 28 = 76"; but the "One-word-at-a-time" card says "47 + 28 = 7." On a page whose pitch *is* catching arithmetic errors, an inconsistent arithmetic example is self-defeating.
+-- **Multiple AUROCs, easily conflated** — 0.9131 (headline), 0.8947 (architecture-only), 0.9857 (retracted), and 0.91 (prompt-injection, a *different* task). A skimmer can't tell which is "the" number.
+-- **"FoVer" used two incompatible ways** — the benchmark where Carnot scores 0.9131, *and* a "0.125 FoVer baseline" the SVAMP card claims to beat. (Also a cross-benchmark comparison: SVAMP 0.90 "vs" a FoVer baseline.)
+-- **Experiment counts** — hero "3,516 Experiment runs" vs blog "639 experiments." Different numbers, same page.
+-- **Section promise vs content** — header "What you can check / Seven capabilities" but lists non-checkable items (research loop, APIs, TTC).
++- **AUROC values collide**: hero stat `0.9131`; hero card `0.9131` + `0.8947` + `0.9857`; Evidence `0.91 AUROC (publication gate)` (a *different*, prompt-injection experiment); Preprint `0.9131`. Using near-identical "0.91 AUROC" for two unrelated results will make a skimmer think they're the same number or that the project rounds inconsistently.
++- **"FoVer" cited with four different numbers** (0.9131, 0.8947, 0.9857, and a "0.125 FoVer baseline") — no stranger can reconstruct which is *the* result.
++- **"five lines" vs "3 lines" vs ~10 lines** — Quickstart heading says "Install and verify in five lines," the code comment says "Verify any LLM output in 3 lines," and the snippet is ~10 lines.
++- **Solo maintainer vs. industrial-scale stats** — footer credits one person ("© 2026 Ian Blenke"), while the stats imply a large team (30,658 tests, 3,528 experiments). The "Research operations" card resolves this (an autonomous loop) but in doing so undercuts trust in the numbers (see below).
+ 
+ ### Missing essentials
+-- **Who maintains it** — footer shows only "© 2026 Ian Blenke"; no team, org, affiliation, or contributor count. For a project claiming 382 milestones, a single name with no "About" is a credibility gap.
+-- **Trust anchors on numbers** — result-card faces carry no sample sizes or confidence intervals; the perfect numbers especially have nothing to anchor belief.
+-- (Present and good: one-sentence "what it does," `pip install carnot-ebm`, Apache 2.0.)
++- **What it does / install / license / one-liner** — all present and good (hero sub, `pip install carnot-ebm`, Apache 2.0 badge + footer).
++- **Why trust the numbers** — partially addressed ("backed by a checked-in experiment artifact," provenance labels, external-reproducibility claim) but **no card links to its own artifact**, and almost **no sample sizes** are shown next to the perfect/near-perfect numbers.
++- **Who maintains it / is this production-ready** — one name in the footer; no "maturity," "stability," or "who's using it" signal. Combined with the blog's retraction theme, a stranger can't tell if this is a research toy or a dependable tool.
+ 
+ ### Fabrication signals
+-- **"GSM8K extraction TP rate: 0.5 → 1.0"** (Results) — perfect 1.0, no n/FPR.
+-- **"k=5 ensemble catches 60/60 attacks"** (Results) — 100% on n=60, no false-positive rate.
+-- **"0.90 AUC (vs 0.125 FoVer baseline)"** (Results) — a 0.125 AUC baseline is *below random* (0.5), so the comparator is anti-predictive — looks cherry-picked.
+-- **"Zero false positives"** + **"99.3% of wrong code flagged"** — near-perfect detection claims.
+-- **Meta-amplifier:** the blog itself ("Caught Cheating: 95 µs on a 30B model," "Why We Report Two AUROCs") trains the stranger to suspect *every* perfect number on the page.
+-- **Misleading meter bars** — widths don't encode a consistent quantity: "+3.0 pts" → 14.6% bar but "+4.9 pts" → 66.7% bar; "4% → 12%" shows a near-empty 12% bar. The bars distort rather than inform.
++- **"0.90 AUC (vs 0.125 FoVer baseline)"** — an AUC of 0.125 is *far below* random (0.5); beating a near-zero baseline reads as a strawman/rigged comparison and is the most damaging single number on the page.
++- **"k=5 ensemble catches 60/60 attacks"** — 100% on n=60, no FPR, no anchor.
++- **"GSM8K extraction TP rate: 0.5 → 1.0"** — perfect 1.0, no N.
++- **"2.0× speedup, identical losses"** — "identical" is an over-strong claim with no tolerance stated.
++- **"99.3% of wrong code flagged"** — high; plausible on HumanEval-164 but presented without FPR (a flag-everything classifier also "flags 99% of wrong code").
++- Meta-signal: the page itself advertises (in "Research operations" and 4 blog posts) that it runs an adversarial pass to catch *fabricated* artifacts — which invites the stranger to wonder how many uncaught ones are in these very cards.
++
++### Additional structural/polish issues (credibility)
++- **The "Recent progress" card is wedged inside `.stats-bar`** (a fl. row meant for big-number stats), uses an **undefined `.r-desc` class**, and is followed by an **orphan `</div>`**. On mobile this likely renders as a paragraph block jammed into the stat row. Looks unfinished.
++- **The "Test-Time Compute & PREM" card sits *outside* the `bento-grid`** (extra `</div>` before it), so the vaguest, most hype-laden card is the one that breaks the grid layout.
++- **Meter bars encode nothing consistent**: "+3.0 points" → 14.6% bar, but "+4.9 points" → 66.7% bar; some bars show an AUROC (91%), some an absolute pass-rate (84%), some a delta. The section's main visual device is decorative-to-misleading.
+ 
+ ## WHAT'S WORKING
+-- **Hero + the 47+28 example** clearly answers "what does this do?" in plain language — the single best thing on the page.
+-- **Quickstart (Python)** is clean, concrete, copy-pasteable, and internally consistent (76/75); "Extract → Check → Repair" gives a solid mental model.
++- **The hero is genuinely strong**: a concrete, jargon-free promise ("catch the reasoning errors your LLM states with total confidence"), a worked `47 + 28 = 76` example a non-specialist instantly gets, and `pip install carnot-ebm` + Apache 2.0 right up top.
++- **"How it works: Extract → Check → Repair"** is clean, three steps, no jargon, and the "Why Energy-Based?" card explains the physics framing in plain language. This is the model the rest of the page should follow.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Remove "Repinned from v2 0.9857…" from the hero card; state the current number with its CI only. Move the confessional blog posts (Caught Cheating, Two Retractions, Regex in an NTK Costume, Why Two AUROCs) off the front blog roll into a dedicated "Transparency" page; lead the roll with capability/insight posts.
+-2. Rebuild the results grid: cut to ~5 strongest rows, expand or drop internal names (EstimationVerifier/HalluGuard v3/VeriCoT/CCTU/SVAMP/PRM), add a sample-size or CI to each, remove/contextualize the perfect numbers and the 0.125-baseline comparison, and either fix the meter bars to a single consistent quantity or delete them.
+-3. Replace stats-bar vanity metrics ("382 milestones," "3,516 experiment runs") with outcome metrics a stranger cares about; de-jargon the AUROC label.
+-4. Fix the "47 + 28 = 7" → "76" inconsistency.
+-5. Reframe "Seven capabilities" to list only user-checkable checks (Code, Math, Typed, Reasoning); relocate Research-ops / APIs / TTC to a separate "how it's built / integrate" area, and de-jargon or cut the TTC & PREM card.
+-6. Add a who/why credibility anchor (contributors, affiliation, or an About link).
+-7. Fix the HTML nesting bugs that risk a visibly broken layout: the `r-card` nested inside `.stats-bar`, the stray `</div>` ejecting the TTC card from `.bento-grid`, and the extra `</div>` in `.problem-grid`.
+-8. Soften the defensive provenance paragraph and the "arXiv pending upload" note (or omit until actually posted).
+-
+-—
++1. **Rewrite the hero stats.** Replace the wedged "Recent progress" text card with the four stat columns only, and reduce to **one** AUROC headline with a single plain-language anchor (e.g. "0.91 AUROC catching math reasoning errors — 5 random seeds"). Move the 0.8947 / 0.9857 / "repinned" discussion off the landing page into the "Why Two AUROCs" blog post where it belongs.
++2. **Swap the vanity process stats** (382 milestones / 3,528 runs / 30,658 tests) for outcome stats a stranger values (e.g. benchmarks covered, "+X pass-rate on HumanEval", integration surfaces). At minimum drop "milestones."
++3. **Cut Evidence from 12 cards to ~5–6**, expand or remove every internal acronym (FoVer, CCTU, CRANE, VeriCoT, SVAMP, PRM-BiasBench, HalluGuard), add sample sizes, and **delete the "vs 0.125 baseline" comparison**. Either make the meter bars encode one consistent quantity or remove them.
++4. **Re-balance the Writing section.** Five of seven posts are self-caught-fabrication stories; lead instead with the theory/explainer posts ("Verifier Accuracy Paradox", "Why Energy-Based") and demote the cheating/retraction posts so the blog doesn't read as an instability log to a first-time visitor.
++5. **Fix the broken markup**: remove the orphan `</div>` after the hero card, define or drop `.r-desc`, and move the TTC/PREM card back inside `bento-grid` (or cut it — it's the vaguest card on the page).
++6. **Trim the nav** to ~5 primary links; relegate the rest to the footer.
++7. **Add a one-line maturity/maintainer signal** near the footer so the solo-maintainer + autonomous-loop reality is framed as a strength rather than discovered as a surprise.
+ 
+-Advisory only; per Public Documentation Discipline I made no edits to `docs/index.html` and propose none autonomously. Operator owns the page.
+\ No newline at end of file
++(Advisory only — no edits made to `docs/index.html`; per Public Documentation Discipline the operator owns this page.)
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 572367e454..e8d873e348 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -1,3 +1,67 @@
++## 2026-06-14 .390 planning sweep — the ORACLE-DISTINCT frontier (does a LEARNED verifier capture the WRONG-MAJORITY headroom where execution is NOT the oracle)
++
++Added by the `.390 planning sweep (Claude Opus 4.8, outer-loop). The `.390 headline takes the
++operator's **2026-06-14 P0 directive ("2+3+1"): re-aim the verifier program at the ORACLE-DISTINCT
++frontier.** `.389 proved (again) that Carnot's verifier wins everywhere it can EXECUTE (code, ARC
++GAP-4) — but those wins are CIRCULAR (verifier == executable oracle), valid but not a moat. The
++deep, defensible, still-UNPROVEN claim is an **oracle-DISTINCT** (learned/energy) verifier that
++captures headroom where execution is NOT trivially the oracle — concretely, closing the
++GAP-3-energy-ties-vote-on-ARC gap. The `.386 V-STaR learned selector (exp4176, arXiv:2402.06457,
++AUROC 0.9792 on code) is the oracle-distinct verifier CLASS that already exists in-repo; `.390
++applies it to ARC and asks whether it beats vote OFF-ORACLE with a matched no-verifier control
++(CI95-excl-0). The two load-bearing finds below frame the headroom precisely: vote loses to the
++LARGEST basin, not the most ACCURATE one (ARBITER), and a fine-grained learned signal recovers the
++minority-vote-correct answers vote discards (SCOPE).
++
++**The strongest methods mapped onto the `.390 oracle-distinct headline (each verified; real arXiv IDs):**
++
++- **ARBITER — "Reasoning Trajectory Basins and Majority Vote Failures in Test-Time Sampling"
++  (arXiv:2605.26172).** Identifies "wrong-majority failures": sampled trajectories cluster into
++  reasoning BASINS and majority vote picks the LARGEST basin, not the most accurate — the correct
++  answer is present in the pool but loses to a bigger wrong basin. This is EXACTLY the oracle-distinct
++  headroom Carnot's learned ARC verifier targets (recover the correct-but-outvoted answer). Their
++  Arbiter treats consensus as a PRIOR and overrides only on accumulated same-model evidence — a
++  conservative-override pattern worth mirroring in the `.390 ARC reranker (override vote only when the
++  learned verifier's margin is high). MAP: the A3 ARC-rerank gate IS the test of whether a learned
++  verifier recovers wrong-majority failures.
++- **SCOPE — "Beyond Majority Voting: Towards Fine-grained and More Reliable Reward Signal for
++  Test-Time RL" (arXiv:2512.15146).** Step-wise confidence weighting + Pareto-partitioned subgroups
++  recover minority-vote-correct answers that flat majority vote discards (fixes confirmation bias +
++  sparse reward). MAP: the fine-grained learned signal is the oracle-distinct discriminator; informs
++  the A2 V-STaR-on-ARC feature design (per-step / per-region confidence, not a single global vote).
++- **ThinkPRM — "Process Reward Models That Think" (arXiv:2504.16828).** A learned process verifier
++  (oracle-distinct) that beats baselines under best-of-N + reward-guided search on ProcessBench /
++  MATH-500 / AIME. Already in project memory (`reference_mai_thinking_1_hill_climbing`). MAP: the
++  learned-verifier-beats-vote precedent the A3 gate must match on ARC.
++- **V-STaR (arXiv:2402.06457).** Train the selector on ACCEPTED **and** REJECTED traces (learn a
++  correctness boundary, not imitate winners). Already implemented in-repo (exp4176). MAP: the A2 ARC
++  verifier reuses this class; the off-fold AUROC is the build deliverable.
++- **Calibrated Reasoning — "An Explanatory Verifier for Dynamic and Efficient Problem-Solving"
++  (arXiv:2509.19681).** A calibrated/explanatory learned verifier for abstention + efficiency. MAP:
++  the verifier-as-DETECTOR axis (A1) — detection AUROC + the accuracy-vs-coverage abstention curve.
++- **A Survey of Process Reward Models (arXiv:2510.08049).** Outcome→process supervision taxonomy.
++  MAP: situates the oracle-distinct learned-verifier program in the PRM landscape.
++- **ExecVerify — "White-Box RL with Verifiable Stepwise Rewards for Code Execution Reasoning"
++  (arXiv:2603.11226)** and **EVOM — "Execution-Verified RL for Optimization Modeling"
++  (arXiv:2604.00442).** Execution-feedback-as-reward, closed-loop, off-reference. MAP: the
++  verifier-as-REWARD-on-code finish (B1) — the RLVR/RLEF baselines a positive B1 must be framed
++  against (execution label as the reward channel; cf. the `.389 sweep's RLEF arXiv:2410.02089).
++- **"Knowing When Not to Answer: Evaluating Abstention in Multimodal Reasoning" (arXiv:2604.14799).**
++  Abstention evaluation beyond coarse unanswerable splits. MAP: the detector-axis (A1) abstention
++  framing — detection has value even where selection headroom is ~0.
++
++**Bottom line for the `.390 roadmap.** HEADLINE (Phase A) = does a LEARNED (oracle-distinct) verifier
++beat majority vote on ARC where execution is NOT the oracle, with a matched control (close
++GAP-3-ties-vote) — framed by ARBITER's wrong-majority-failures + SCOPE's minority-recovery, built on
++the in-repo V-STaR class, complemented by the cheap detector-AUROC measurement. OWED (Phase B) =
++finish the de-confounded verifier-as-reward A-vs-B on code (the `.389 operating point CLEARED:
++Phase-0 0.956, Youden-J 0.414, headroom 0.600, corpora N-matched A=776/B=776/C=742 — only the
++BACKGROUND training infra died; resume synchronous-accumulate). Flagged for `.391: whichever of
++{oracle-distinct-verifier-confirmation, learned-ARC-energy-distill, abstention-deployment} the `.390
++A3 result points toward.
++
++---
++
+ ## 2026-06-14 .389 planning sweep — verifier-as-REWARD (the de-confounded A-vs-B; the confound IS the ballgame)
+ 
+ Added by the `.389 planning sweep (Claude Opus 4.8, outer-loop). The `.389 headline
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..cde1c87a3d
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,798 @@
++milestone: 2026.06.390
++milestone_title: "RE-AIM AT THE ORACLE-DISTINCT FRONTIER — does a LEARNED (oracle-distinct) verifier beat majority vote on ARC where execution is NOT the oracle (close GAP-3-ties-vote), and FINISH the owed de-confounded verifier-as-reward A-vs-B on code (the .389 operating point CLEARED — only the BACKGROUND training infra died)"
++milestone_doc: openspec/change-proposals/research-roadmap-v390.md
++milestone_overview: |
++  .389 tried to run the de-confounded verifier-as-reward A-vs-B on CODE. The code operating point
++  CLEARED (exp4197: Phase-0 certification precision 0.956, Youden J=0.414, training headroom 0.600,
++  harness ready) and the 3-arm corpora were BUILT + N-matched (exp4198: A=776 certified, B=776
++  same-generator random-label, C=742 gold; base_passrate=0.6). But the BACKGROUND LoRA training
++  process EXITED before its first checkpoint (exp4198 blocked_training_process_exited_before_checkpoint),
++  so the decisive A-vs-B was never collected (exp4199 gate-blocked) and the capstone — skipping FOUR
++  DURATION_TOO_SHORT-flagged artifacts (exp4197/4198/4200/4204) — read "NO-OPERATING-POINT". That
++  headline is an INFRA artifact, NOT a scientific one: the operating point is real; the
++  *powering-run-background-mechanism-fails* pattern killed the run (memory
++  incident_powering_run_background_mechanism_fails). The stable checkpoint dir
++  code_verifier_reward_lora_rft_a83b52882c198954 + the N-matched corpora are intact on disk.
++  ARC held at total_levels_solved=15 / total_games_solved=13 (exp4201 no new solve); the live solver
++  beat the random/greedy floor on EFFICIENCY only (exp4202: 5 vs 6 actions) but completed 0 levels
++  (no accuracy win, no leaderboard submission). Hardware: GateMate unreachable, PolarFire hash-verified
++  CPU dispatch, KV260 terminal. SOTA flagged for .390 = non_qwen_same_generator_random_label_ablation.
++
++  Meanwhile the operator's NEWEST directive (2026-06-14 P0, "2+3+1") re-aims the verifier program at
++  the ORACLE-DISTINCT frontier: the verifier's EXECUTION wins (code, ARC GAP-4) are CIRCULAR (verifier
++  == executable oracle) — valid, but NOT a moat and NOT headline/gate-eligible. The deep, defensible,
++  still-UNPROVEN claim is an oracle-DISTINCT (learned/energy) verifier that captures headroom where
++  execution is NOT the oracle — closing GAP-3-energy-ties-vote-on-ARC. So .390 serves BOTH:
++    PHASE A -- THE ORACLE-DISTINCT FRONTIER (HEADLINE): A1 (exp4208) the cheap verifier-as-DETECTOR
++      measurement (detection AUROC where SELECTION headroom is ~0; the OTHER axis of value); A2
++      (exp4209) BUILD the oracle-distinct learned ARC verifier (reuse the .386 V-STaR class, exp4176,
++      arXiv:2402.06457, on the ARC GAP-4 pool; verifier_is_oracle=false); A3 (exp4210, gated_on A2)
++      MEASURE does it beat majority vote OFF-ORACLE vs a MATCHED no-verifier control, CI95-excl-0 --
++      framed by ARBITER's "wrong-majority failures" (arXiv:2605.26172). The headline gate.
++    PHASE B -- OWED verifier-as-reward + self-learning: B1 (exp4211) FINISH the de-confounded A-vs-B on
++      code -- RESUME the .389 checkpoint, run the 3-arm LoRA-RFT SYNCHRONOUSLY / resume-accumulate /
++      per-step progress prints (the infra fix); A(certified) vs B(same-generator random-label = the
++      Spurious-Rewards control arXiv:2506.10947) vs C(gold) vs D(cold); gold-control + truncation
++      guards; Youden-J; memorization-shortcut diagnostic (arXiv:2601.11061); verifier_is_oracle=true
++      (HONEST -- reward axis, not a moat). B2 (exp4212) certified-ARC-corpus distill-lift
++      (Invisible-Leash latent-vs-absent, arXiv:2507.14843).
++    PHASE C -- ARC NORTH-STAR: C1 (exp4213) monotonic ARC +1 (total_levels>=16); C2 (exp4214) the LIVE
++      solver-vs-floor probe, now ACCURACY-seeking (complete a level), NO leaderboard submission.
++    PHASE D -- reserved slots: D1 (exp4215) SOTA-ingestion (oracle-distinct track), D2 (exp4216)
++      registry+gaps hygiene, D3 (exp4217) hardware continuity, D4 (exp4218) capstone .390.
++
++  HARD RULE (every task): the TRM Sudoku checkpoint is DONE (val 0.8227, SIGTERM'd) and the conductor
++  stays stood-down. NO task may launch TRM training, run pkill/kill against train.py, or WRITE
++  results/trm_runs/sudoku_extreme_baseline/. Phase B trains a SEPARATE small NON-Qwen code base via
++  LoRA on the RTX 3090 rig -- it does NOT touch the TRM checkpoint. Qwen is FORBIDDEN as the TRAINED
++  base (Spurious-Rewards confound); Qwen GGUF as an off-policy teacher / certifier reference is fine.
++  DiffusionGemma stays GATED (STILL-PENDING; activate ONLY on an oracle-distinct win with a matched
++  control). Every verifier-value task MUST declare verifier_is_oracle honestly (Circularity Discipline).
++
++tasks:
++  - id: exp4207-archive-v389-activate-v390
++    milestone: 2026.06.390
++    title: "Archive .389 -> activate .390; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .389 close-state truthfully (verifier-as-reward code operating point CLEARED exp4197 phase0=0.956/J=0.414/headroom=0.600; corpora N-matched A=776/B=776/C=742 exp4198 BUT background training process EXITED before checkpoint -> decisive A-vs-B NEVER collected -- an INFRA failure, NOT NO-OPERATING-POINT; ARC total_levels=15/games=13; live solver efficiency-only-no-level exp4202; SOTA flagged=non_qwen_random_label_ablation)."
++    priority: critical
++    track: infra
++    max_turns: 100
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4196); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4207_archive_v389_activate_v390.json
++    prompt: |
++      CONTEXT: Close .389, activate .390. The outer-loop owns TRM training (DONE: val 0.8227,
++      SIGTERM'd) and the conductor stays stood-down on TRM training. This archive runs on CODEX
++      (mechanical). CRITICAL framing correction to record: .389's "NO-OPERATING-POINT" headline is an
++      INFRA artifact -- the code operating point CLEARED (Phase-0 0.956); the BACKGROUND training
++      process died before checkpoint. .390 RESUMES it synchronously.
++
++      EXISTING CODE TO READ FIRST:
++        - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check)
++        - results/experiment_4206_capstone_v389.json (the .389 close-state to record)
++        - results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json (operating point CLEARED)
++        - results/experiment_4198_verifier_reward_3arm_rft_launch.json (corpora N-matched; background process died)
++
++      TASK: archive .389, activate .390, record the .389 close-state truthfully.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS (check BEFORE any subsequent step):
++           a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
++           b. The smart-subset pre-test gate is green.
++           If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
++        1. Archive .389 into research-complete.yaml; activate .390.
++        2. Record the .389 close-state: verifier-as-reward code operating point CLEARED (exp4197
++           phase0_precision=0.956, Youden J=0.414, headroom=0.600, harness ready); corpora N-matched
++           (exp4198 A=776/B=776/C=742, base_passrate=0.6) BUT the background LoRA process EXITED before
++           checkpoint -> decisive A-vs-B NEVER collected (exp4199 gate-blocked). Frame this as an INFRA
++           failure to FIX in .390 (resume the stable checkpoint code_verifier_reward_lora_rft_a83b52882c198954
++           SYNCHRONOUSLY), NOT as NO-OPERATING-POINT. Also: ARC total_levels=15/games=13; live solver
++           efficiency-only-no-level (exp4202); SOTA flagged=non_qwen_random_label_ablation. Frame .390 as
++           "the ORACLE-DISTINCT frontier (headline) + FINISH the owed verifier-as-reward A-vs-B".
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
++        v389_close_state:
++          principle: "Honest record (operating point CLEARED; infra killed the background train; ARC 15; live efficiency-only) so the .390 planner/agents frame the milestone as oracle-distinct headline + verifier-as-reward FINISH, not a NO-OPERATING-POINT redo."
++        preconditions_checked:
++          principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
++      ACCEPTANCE: honest_verdict terminal-prefixed; .390 activated; close-state recorded truthfully.
++
++      Run: `python3 {project_root}/results/experiment_4207_archive_v389_activate_v390.py` (or your archive script).
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4208-verifier-as-detector-auroc
++    milestone: 2026.06.390
++    title: "PHASE A1 (HEADLINE-COMPLEMENTARY; cheap, cached) -- verifier-as-DETECTOR measurement. The 2026-06-14 P0 item 2: where SELECTION headroom is ~0, can the verifier still FLAG/REJECT a wrong output? Compute detection AUROC (verifier_score ranking is_correct) + precision@recall=0.9 + the accuracy-vs-coverage abstention curve across cached pools {Sudoku TRM snapshots, code HumanEval/MBPP, ARC GAP-4 pool, GSM8K}, and report it AGAINST each domain's SELECTION headroom (.387/.388). The headline is the DIVERGENCE: detection value where selection had none. Positive/negative controls (base rate + random-AUROC~0.5); sanity-check decoding before trusting any number; declare verifier_is_oracle per domain. NO new generation, NO training."
++    priority: high
++    track: verifier-oracle-distinct
++    max_turns: 60
++    agent_type: codex
++    model: gpt-5.5
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    deliverable: results/experiment_4208_verifier_as_detector_auroc.json
++    prompt: |
++      CONTEXT: The 2026-06-14 P0 directive's COMPLEMENTARY axis. The SELECTOR metric (oracle@K - vote)
++      only measures "can the verifier pick a better answer from a pool." It does NOT measure detection:
++      can the verifier correctly FLAG/REJECT a wrong output (for abstention / "I don't know" /
++      filtering). Detection has value EVEN where selection headroom is ~0 (e.g. Sudoku-at-convergence:
++      no recoverable alternative to select, but the verifier can still tell you the answer is wrong).
++      This isolates that axis. It is CHEAP -- uses data we ALREADY have, no new generation/training.
++
++      EXISTING CODE TO READ FIRST:
++        - docs/research-notes/verifier-as-detector-measurement-spec.md (THE SPEC -- follow it)
++        - scripts/exp_verifier_detector_auroc.py (the probe -- extend/reuse, do NOT rewrite)
++        - results/arc3_trm_verifier_rerank.json (ARC GAP-4 pool), results/experiment_4175_headroom_gate_executable_census.json (cached code/math pools + per-domain SELECTION headroom)
++        - results/trm_runs/snapshots/ (Sudoku checkpoints) + nano-trm/src/nn/sudoku_evaluator.py (check_sudoku_validity)
++        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" + "Adversarial Artifact Verification" (FALSE_NEGATIVE_RISK, the degenerate-detector trap)
++
++      TASK: detection AUROC per domain vs SELECTION headroom; report the divergence; controls + decode sanity.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS (check BEFORE any compute): the cached pools above are loadable
++           (`ls results/arc3_trm_verifier_rerank.json results/experiment_4175_headroom_gate_executable_census.json`)
++           AND scripts/exp_verifier_detector_auroc.py imports. If any missing -> honest_verdict
++           `blocked_detector_cached_pools_missing` and STOP. NO LLM generation in this task.
++        1. For each domain load (output, is_correct) + compute the verifier_score per output (Sudoku:
++           satisfied_constraints/total via check_sudoku_validity -- FIRST sanity-check that greedy exact
++           reproduces ~0.79 test before trusting AUROC; code/math: the executable verifier; ARC: the
++           GAP-4 demo-fit score).
++        2. Compute detection_auroc (verifier_score vs is_correct) with bootstrap CI95, Brier,
++           precision@recall=0.9, and the accuracy-vs-coverage abstention curve. CONTROLS: report the
++           base rate (fraction correct) AND a random-score AUROC~0.5 baseline; AUROC must beat 0.5
++           CI95-excl to count. On Sudoku ALSO report AUROC restricted to VALID-BUT-WRONG outputs (the
++           hard detection case -- avoid over-claiming on the trivial invalid-grid split).
++        3. Report per-domain {detection_auroc, selector_headroom (from .387/.388), n, verifier_is_oracle}.
++           The headline is the DIVERGENCE: a high detection AUROC where selection headroom ~0.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. A clean per-domain detector measurement (high AUROC where selection had none, OR AUROC~0.5 everywhere) is a COMPLETE, decision-grade result either way."
++        detection_auroc_by_domain:
++          principle: "BARE per-domain {domain: auroc} -- the detection axis the selector metric cannot see; value for abstention/precision even at zero selection headroom."
++        selector_headroom_by_domain:
++          principle: "BARE per-domain {domain: oracle@K - vote} from .387/.388 -- the contrast axis; the headline is detection >> 0.5 WHERE selector_headroom ~0."
++        verifier_is_oracle_by_domain:
++          principle: "Per-domain bool -- on code/Sudoku the executable check IS the oracle (circular/execution-grounded detector); declares honestly which domains' detection is oracle-distinct (Circularity Discipline)."
++        controls:
++          principle: "{base_rate, random_auroc, valid_but_wrong_auroc(Sudoku)} -- the positive/negative controls + the degenerate-detector guard that rule out a trivially-high AUROC (FALSE_NEGATIVE_RISK / the invalid-grid trap)."
++        random_seed:
++          principle: "Determinism precondition; the bootstrap AUROC must be reproducible."
++        reproducibility_checksum:
++          principle: "Hash of the cached pools scored; catches silent pool drift."
++      ACCEPTANCE GATE:
++        - condition: "detection_auroc_by_domain + selector_headroom_by_domain + controls all reported with bootstrap CI95 and decode sanity-checked, OR an honest blocked_* verdict"
++          principle: "The detector axis is decided on the merits (divergence from the selector axis) with controls that rule out the degenerate near-perfect-on-invalid-grids trap."
++
++      Run: `python3 {project_root}/results/experiment_4208_verifier_as_detector_auroc.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4209-oracle-distinct-arc-verifier-build
++    milestone: 2026.06.390
++    title: "PHASE A2 (HEADLINE BUILD) -- BUILD the ORACLE-DISTINCT learned ARC verifier. The 2026-06-14 P0 item 1: a LEARNED (not execution-oracle) verifier that scores ARC candidate solutions WITHOUT executing. REUSE the .386 V-STaR class (exp4176, arXiv:2402.06457: train on ACCEPTED + REJECTED traces -> a correctness boundary, not winner-imitation) on the ARC GAP-4 candidate pool (results/arc3_trm_verifier_rerank.json). Out-of-fold; report off-fold detection AUROC + the learned-verifier artifact path. verifier_is_oracle=false (it does NOT execute the demos). Deliverable consumed by A3. This is the oracle-distinct verifier CLASS the GAP-3 content energies lacked -- distilling the discriminating signal into a learned scorer."
++    priority: high
++    track: verifier-oracle-distinct
++    max_turns: 70
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct learned ARC verifier is MANDATED by the 2026-06-14 P0 directive (HEADLINE = an oracle-distinct learned/energy verifier closing GAP-3-ties-vote-on-ARC) -- false-positive scope-match vs the retired GAP-3 content-EBMs / prior V-STaR (exp4176); forward difference = the V-STaR learned-correctness-boundary class applied to the ARC GAP-4 pool, verifier_is_oracle=false, NOT a from-scratch content energy."
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    deliverable: results/experiment_4209_oracle_distinct_arc_verifier_build.json
++    prompt: |
++      CONTEXT: The 2026-06-14 P0 HEADLINE. Carnot's verifier wins everywhere it can EXECUTE (code, ARC
++      GAP-4) but those are CIRCULAR (verifier == executable oracle). The deep, defensible, UNPROVEN
++      claim is an ORACLE-DISTINCT verifier: a LEARNED scorer that captures the discriminating signal
++      WITHOUT executing -- generalizing off-oracle. The .386 V-STaR selector (exp4176, arXiv:2402.06457)
++      is exactly this class (trains on accepted+rejected traces = a correctness boundary), already at
++      AUROC 0.9792 on code. This task BUILDS the ARC version on the GAP-4 candidate pool; A3 measures
++      whether it beats vote off-oracle.
++
++      EXISTING CODE TO READ FIRST:
++        - results/experiment_4176_vstar_learned_selector.json + results/experiment_4176_vstar_selector_model.json (the V-STaR class + trainer to reuse)
++        - results/arc3_trm_verifier_rerank.json (the ARC GAP-4 candidate pool: per-task candidate programs/outputs + is_correct labels)
++        - python/carnot/agentic/arc_gap4_execution_verifier.py (the demo-fit/content-hash execution verifier -- its labels are the TRAINING TARGET, but the learned verifier must NOT call it at inference)
++        - research-references.md ".390 planning sweep" (ARBITER 2605.26172, SCOPE 2512.15146, ThinkPRM 2504.16828, V-STaR 2402.06457)
++        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle), "Principle-Annotated Artifact Fields"
++
++      TASK: train an oracle-distinct learned ARC verifier (V-STaR-on-ARC) out-of-fold; report off-fold AUROC + artifact path.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS (check BEFORE training): the ARC pool loads with candidate + is_correct labels
++           (`python3 -c "import json; d=json.load(open('results/arc3_trm_verifier_rerank.json')); assert d"`)
++           AND the V-STaR trainer is importable. If the pool lacks per-candidate correctness labels ->
++           honest_verdict `blocked_arc_pool_no_candidate_labels` and STOP. CUDA optional (a small
++           probe trains on CPU); if a GPU probe is used, `python3 -c "import torch; assert torch.cuda.is_available()"`.
++        1. Featurize the ARC candidates oracle-distinctly: features the verifier can compute WITHOUT
++           executing the demos at inference (e.g. learned embedding of the candidate program/output, grid
++           statistics, per-region confidence a la SCOPE arXiv:2512.15146, self-consistency margin). The
++           execution-verifier label (demo-fit) is the TRAINING TARGET only.
++        2. Train the V-STaR selector on ACCEPTED + REJECTED candidates OUT-OF-FOLD (k-fold or
++           held-out-task split so no task leaks train->test). Report off-fold detection AUROC + CI95.
++        3. Persist the learned verifier (weights/artifact path) for A3. Set selector_trained=true and
++           verifier_is_oracle=false. If the off-fold AUROC is ~0.5 (no learnable oracle-distinct signal)
++           report honest_verdict `complete_oracle_distinct_arc_verifier_no_learnable_signal_auroc<x>` and
++           still set the artifact path (A3 will read the null).
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. A trained off-fold verifier OR an honest 'no learnable oracle-distinct signal (AUROC~0.5)' is COMPLETE -- both feed A3."
++        selector_trained:
++          principle: "BARE bool: A3's gate compares this raw value (gated-fields-must-be-bare); true iff a learned ARC verifier artifact was persisted out-of-fold."
++        oracle_distinct_auroc:
++          principle: "BARE float: off-fold detection AUROC of the LEARNED verifier vs is_correct -- the oracle-distinct discrimination the GAP-3 content energies lacked; >0.5 CI95-excl is the precondition for an A3 beats-vote win."
++        verifier_is_oracle:
++          principle: "BARE bool=false -- the learned verifier scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A3 win headline/gate-eligible, unlike the circular execution verifier."
++        learned_verifier_path:
++          principle: "The persisted artifact A3 loads to rerank held-out ARC candidates; the build deliverable."
++        model_specs:
++          principle: "The V-STaR probe architecture + feature set + any base used; required methodology."
++        random_seed:
++          principle: "Determinism precondition; the fold split + probe init seeded so the AUROC is reproducible."
++        reproducibility_checksum:
++          principle: "Hash of the ARC pool + fold split + features; catches silent pool/feature drift before A3 measures."
++      ACCEPTANCE GATE:
++        - condition: "selector_trained true with oracle_distinct_auroc + learned_verifier_path reported AND verifier_is_oracle=false, OR an honest no-learnable-signal / blocked_* verdict"
++          principle: "A3 needs a persisted oracle-distinct verifier (or an honest null); a learned off-fold AUROC>0.5 is the precondition for testing whether it beats vote."
++
++      Run: `python3 {project_root}/results/experiment_4209_oracle_distinct_arc_verifier_build.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4210-oracle-distinct-arc-verifier-beats-vote
++    milestone: 2026.06.390
++    title: "PHASE A3 (THE HEADLINE GATE, gated_on A2 selector_trained) -- does the ORACLE-DISTINCT learned ARC verifier BEAT majority vote OFF-ORACLE? On a HELD-OUT ARC candidate pool, rerank with the A2 learned verifier (verifier_is_oracle=false; does NOT execute the demos) vs majority-vote vs a MATCHED no-verifier control (same candidates/budget) vs oracle@K (the positive-control ceiling). The LOAD-BEARING gate: verifier@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists (oracle@K >> vote). Framed by ARBITER (arXiv:2605.26172) 'wrong-majority failures' -- the correct answer is in the pool but loses to a bigger wrong basin; the oracle-distinct verifier's job is to recover it. YES -> the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate). TIE-with-headroom -> honest null (GAP-3 frontier persists). No-headroom -> uninformative."
++    priority: high
++    track: verifier-oracle-distinct
++    max_turns: 70
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct beats-vote measurement is MANDATED by the 2026-06-14 P0 directive (HEADLINE; verifier_is_oracle=false + MATCHED control + CI95-excl-0) -- false-positive scope-match vs retired GAP-3 rerank/selector exps; forward difference = a LEARNED oracle-distinct verifier (A2), not the execution oracle, with the matched-control de-confound the prior circular wins lacked."
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    deliverable: results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json
++    gated_on:
++      - upstream: exp4209-oracle-distinct-arc-verifier-build
++        artifact_field: selector_trained
++        op: '=='
++        value: true
++    prompt: |
++      CONTEXT: THE .390 headline gate. A2 built an oracle-distinct learned ARC verifier (V-STaR-on-ARC,
++      verifier_is_oracle=false). Now measure whether it BEATS majority vote on a HELD-OUT ARC pool --
++      the deep, defensible claim the circular execution wins cannot make. ARBITER (arXiv:2605.26172)
++      names the headroom precisely: "wrong-majority failures" -- sampled trajectories cluster into
++      basins and vote picks the LARGEST basin, not the most accurate, so the correct answer is in the
++      pool but loses. A learned verifier that recovers those is the oracle-distinct win. The MATCHED
++      no-verifier control (same candidates, same budget) is the de-confound the prior circular wins
++      lacked.
++
++      EXISTING CODE TO READ FIRST:
++        - results/experiment_4209_oracle_distinct_arc_verifier_build.json (learned_verifier_path, oracle_distinct_auroc, verifier_is_oracle=false)
++        - results/arc3_trm_verifier_rerank.json (the ARC candidate pool; use a HELD-OUT split disjoint from A2's training folds)
++        - scripts/adversarial_verify.py (run it on the artifact -- check_circular_moat_overclaim), scripts/summarize_artifact.py
++        - research-references.md ".390 sweep" (ARBITER 2605.26172 wrong-majority basins; SCOPE 2512.15146 minority-recovery; ThinkPRM 2504.16828 learned-verifier-beats-vote precedent)
++        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" + "Adversarial Artifact Verification" (FALSE_NEGATIVE_RISK positive control)
++
++      TASK: held-out ARC rerank -- learned verifier vs vote vs matched control vs oracle@K; the decisive CI95 gate.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS: A2 reported selector_trained=true with a readable learned_verifier_path. If
++           missing/false -> honest_verdict `complete_oracle_distinct_arc_gate_deferred_no_built_verifier`
++           and STOP.
++        1. On a HELD-OUT ARC split (disjoint from A2 folds, N as large as the pool allows; if N<30 note
++           the CLT-floor caveat), compute per-task: vote@1 (majority candidate), verifier@1 (candidate
++           maximizing the A2 LEARNED score -- NO demo execution at inference), oracle@K (any candidate
++           exactly correct = the POSITIVE CONTROL), and a MATCHED no-verifier control (same candidate
++           budget, random/first selection) so the comparison is budget-equal (arXiv:2511.02886).
++        2. POSITIVE CONTROL FIRST: if oracle@K ~= vote@1 (no recoverable headroom) the corpus is
++           ceiling-saturated -> the null is UNINFORMATIVE (FALSE_NEGATIVE_RISK) -> report
++           `complete_oracle_distinct_arc_no_headroom_uninformative`, do NOT claim the verifier fails.
++        3. THE GATE: verifier_minus_vote = verifier@1 - vote@1, task-level bootstrap CI95 (>=2000
++           resamples). Emit oracle_distinct_beats_vote BARE bool := (CI95 excludes 0 AND delta>0 AND
++           headroom exists). Run adversarial_verify.py (it must NOT raise CIRCULAR_MOAT_OVERCLAIM since
++           verifier_is_oracle=false). Honest headline: one of {oracle_distinct_verifier_beats_vote,
++           oracle_distinct_verifier_ties_vote_with_headroom, oracle_distinct_arc_no_headroom_uninformative}.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE, decision-grade -- the first clean read on the oracle-distinct frontier either way."
++        oracle_distinct_beats_vote:
++          principle: "BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (the GAP-3-ties-vote gap closed); NOT a circular execution result."
++        verifier_minus_vote_delta:
++          principle: "verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER) a flat vote discards."
++        verifier_minus_vote_ci95:
++          principle: "Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise."
++        oracle_at_k:
++          principle: "The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure."
++        matched_control_delta:
++          principle: "verifier@1 minus the budget-matched no-verifier control -- isolates the verifier's contribution from the candidate budget (arXiv:2511.02886)."
++        verifier_is_oracle:
++          principle: "BARE bool=false -- this measurement uses the LEARNED verifier (no demo execution); only this makes the result headline/gate-eligible (Circularity Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
++        random_seed:
++          principle: "Determinism precondition; the held-out split + bootstrap must be reproducible."
++        reproducibility_checksum:
++          principle: "Hash of the held-out pool + the learned verifier; lets a third party re-run the decisive gate."
++      ACCEPTANCE GATE:
++        - condition: "oracle_at_k reported (positive control) AND verifier_minus_vote_delta + verifier_minus_vote_ci95 + matched_control_delta reported with verifier_is_oracle=false, OR an honest no-headroom/deferred verdict"
++          principle: "Decisive only with the positive control (real headroom) + the matched control + the oracle-distinct (non-circular) verifier; otherwise honestly defer rather than emit an uninformative or circular result."
++
++      Run: `python3 {project_root}/results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4211-verifier-as-reward-finish-synchronous
++    milestone: 2026.06.390
++    title: "PHASE B1 (OWED; self-learning/FR-11) -- FINISH the de-confounded verifier-as-reward A-vs-B on CODE, infra-fixed. .389 CLEARED the operating point (Phase-0 0.956, J=0.414, headroom 0.600) and BUILT N-matched corpora (A=776 certified / B=776 same-generator random-label / C=742 gold) but the BACKGROUND training process died before checkpoint. FIX: RESUME the stable checkpoint code_verifier_reward_lora_rft_a83b52882c198954 and run the 3-arm LoRA-RFT SYNCHRONOUSLY in-process / resume-accumulate / per-step progress prints (NO background launch). The LOAD-BEARING gate is A(verifier-certified) vs B(same-generator random-label = the Spurious-Rewards control arXiv:2506.10947): held-out hidden-test pass@1 bootstrap CI95 excludes 0? gold-control (C>=base) + truncation guard (<5%) MUST pass or INVALID. Add Youden-J reporting (arXiv:2601.04411) + the memorization-shortcut diagnostic (arXiv:2601.11061). verifier_is_oracle=true (HONEST -- reward axis, not a moat). Apply the accumulate-floor (3 no-usable windows -> auto-retire). NO TRM."
++    priority: high
++    track: verifier-reward
++    max_turns: 80
++    agent_type: codex
++    model: gpt-5.5
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4211_verifier_as_reward_finish_synchronous.json
++    prior_failures:
++      - experiment_id: exp4198-verifier-reward-3arm-rft-launch
++        verdict: blocked_training_process_exited_before_checkpoint
++        addressed_by: "exp4198 BUILT the N-matched corpora (A=776/B=776/C=742) but the BACKGROUND-launched LoRA process exited before its first checkpoint (the powering-run-background-mechanism-fails pattern). This attempt RESUMES the same stable checkpoint code_verifier_reward_lora_rft_a83b52882c198954 and runs the training SYNCHRONOUSLY in-process with per-step progress prints (codex idle-timeout safe) -- single-synchronous-resume-accumulate, NOT background-launch-then-collect."
++        retire_if_same_verdict: true
++      - experiment_id: exp4199-verifier-reward-decisive-a-vs-b-collect
++        verdict: blocked_gate_check_failed
++        addressed_by: "exp4199 gate-blocked because exp4198.training_launched was False (the background train died upstream). This single task does BUILD-corpora(resume) + TRAIN(synchronous) + COLLECT(A-vs-B) in one in-process flow so there is no cross-task launch gate to fail; it accumulates onto the existing checkpoint."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT: FINISH the operator's 2026-06-11 verifier-as-reward pivot. The de-confounded A-vs-B on
++      code is 90% done: .389 CLEARED the operating point (Phase-0 0.956, Youden J=0.414, headroom 0.600)
++      and BUILT the N-matched corpora (A=776 certified, B=776 same-generator random-label, C=742 gold,
++      base_passrate 0.6) -- the stable checkpoint dir code_verifier_reward_lora_rft_a83b52882c198954 +
++      the corpora are intact on disk. The ONLY failure was infra: the BACKGROUND LoRA process exited
++      before checkpoint. The FIX (memory incident_powering_run_background_mechanism_fails): run the
++      training SYNCHRONOUSLY in-process, resume-accumulate, per-step progress print. The LOAD-BEARING
++      contrast is A vs B: B is the SAME generator's random-label traces (|B|=|A|) -- the Spurious-Rewards
++      control (arXiv:2506.10947: random labels recover ~74% of RLVR gains on Qwen). A>>B -> the
++      verifier's LABEL carries training signal; A~=B -> just distillation/spurious-reward.
++
++      EXISTING CODE TO READ FIRST:
++        - results/experiment_4198_verifier_reward_3arm_rft_launch.json (stable_checkpoint_path, arm_corpus_sizes A=776/B=776/C=742, base_passrate 0.6)
++        - results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json (the operating point + the 3-arm runner) AND results/experiment_4197_verifier_reward_code_lora_rft_3arm_smoke.json (smoke-ready runner)
++        - scripts/experiments/process_reward_weighted_sft_onpolicy_powered.py (the on-policy 3-arm runner -- run SYNCHRONOUS, NOT setsid-detached background)
++        - ops/known-issues.md: "POWERING RUNS MUST ACCUMULATE" (resume-not-restart, accumulate-floor 3 windows), GOLD-CONTROL GATE (Arm C >= base), TRUNCATION GUARD (<5%), STATISTICAL-POWER (>=100 eval Q, >=3 seeds)
++        - research-references.md ".389/.390 sweep": Youden-J arXiv:2601.04411, memorization-shortcut arXiv:2601.11061, RLEF arXiv:2410.02089
++        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle=true here -- honest reward axis)
++
++      TASK: resume the checkpoint, run the 3-arm LoRA-RFT SYNCHRONOUSLY, collect the de-confounded A-vs-B verdict.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS (check BEFORE training):
++           a. A NON-Qwen trainable base cached: `ls ~/.cache/huggingface/hub/models--google--gemma-4-E4B-it/`
++              (or gemma-4-12B-it, or openbmb/MiniCPM5-1B). Qwen is FORBIDDEN as the trained base. If NONE
++              cached -> honest_verdict `blocked_no_nonqwen_base_cached` and STOP.
++           b. CUDA available: `python3 -c "import torch; assert torch.cuda.is_available()"`. Else -> `blocked_cuda_unavailable`, STOP.
++           c. The stable checkpoint dir code_verifier_reward_lora_rft_a83b52882c198954 + the .389 corpora
++              are readable. If the corpora must be rebuilt, rebuild from the SAME operating point (K,
++              max_new_tokens) the .389 run used; |B|=|A| (size-matched random-label control).
++        1. RESUME the stable (corpus+base+config-keyed) checkpoint -> accumulate, do NOT restart. Seed
++           torch generation (reproducibility).
++        2. Run identical-config LoRA-SFT for arms A/B/C SYNCHRONOUSLY IN-PROCESS (NOT setsid-detached) +
++           Arm D cold base. PRINT per-step progress (step/loss/arm) at least every ~30s so codex does not
++           idle-timeout. Per-arm checkpoints. Held-out hidden-test eval (>=100 Q, >=3 seeds) with the
++           truncation guard. If the 80-min window ends before eval completes, checkpoint + report
++           accumulated-N (PROGRESS) -- UNLESS this is the 3rd consecutive no-usable-data window ->
++           `complete_verifier_reward_retired_substrate_cannot_power` and re-scope.
++        3. VALIDITY GATES FIRST (a FAILED gate INVALIDATES the headline): (a) gold-control: Arm C >= base
++           -- else TRAINING_INVALID, STOP; (b) truncation_rate < 5% on every arm -- else raise
++           max_new_tokens and re-run. THEN the A-vs-B gate: pass@1(A) - pass@1(B), task-level bootstrap
++           CI95 (>=2000 resamples) over seeds. Emit a_vs_b_delta + a_vs_b_ci95 + verifier_label_carries_signal
++           BARE bool (CI excludes 0 AND delta>0). Secondary: a_vs_c (label-free vs oracle), a_vs_d (vs
++           cold base). Report youden_j (exact execution label -> J>>0) + a memorization-shortcut
++           diagnostic (answer-token perplexity / wrong-label shortcut probe for A vs B). Run adversarial_verify.py.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. A clean 'label carries signal', a clean 'A~=B distillation null', and an honest 'accumulating/underpowered' are ALL COMPLETE -- the project's first clean verifier-as-reward read either way."
++        verifier_label_carries_signal:
++          principle: "BARE bool: a_vs_b_ci95 excludes 0 AND delta>0 -- the de-confounded answer to the operator's pivot. NOT a_vs_cold_base (that conflates the verifier's label with the spurious-reward confound)."
++        a_vs_b_delta:
++          principle: "pass@1(certified A) - pass@1(random-label B) on held-out hidden tests -- isolates the verifier's LABEL from the generator's intelligence (arXiv:2506.10947 / 2509.20837 open question)."
++        a_vs_b_ci95:
++          principle: "Task-level bootstrap CI95 of the A-vs-B delta -- excluding 0 distinguishes a real lift from the spurious-reward floor."
++        positive_control_confirmed:
++          principle: "BARE bool: gold-control (Arm C >= base) AND truncation_rate<5% on all arms -- without these the A-vs-B number is INVALID, not a finding."
++        youden_j:
++          principle: "BARE float TPR-FPR of the execution certifier vs hidden-pass -- the arXiv:2601.04411 precondition; an exact execution label should show J>>0."
++        accumulated_n:
++          principle: "Running total eval N across windows (resume-accumulate) -- a single window adding tasks is PROGRESS; the accumulate-floor auto-retires only after 3 no-usable windows."
++        verifier_is_oracle:
++          principle: "BARE bool=true -- HONEST: the reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim; declaring it true keeps the result out of the oracle-distinct headline lane (Circularity Discipline)."
++        model_specs:
++          principle: "The NON-Qwen base + the on-policy generator; required methodology for a live-LLM training artifact."
++        random_seed:
++          principle: "Determinism precondition; torch generation + LoRA init seeded so the run is reproducible across windows."
++        reproducibility_checksum:
++          principle: "Hash of the corpora + LoRA config; lets a third party confirm the same training inputs."
++      ACCEPTANCE GATE:
++        - condition: "positive_control_confirmed true AND a_vs_b_delta + a_vs_b_ci95 reported (verifier_label_carries_signal resolved), OR an honest accumulating/invalid/retired verdict"
++          principle: "Decisive only with the gold control + truncation guard passing and the de-confounded A-vs-B reported; otherwise honestly defer rather than emit an uninformative or invalid result."
++
++      Run: `python3 {project_root}/results/experiment_4211_verifier_as_reward_finish_synchronous.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4212-certified-arc-corpus-distill-lift
++    milestone: 2026.06.390
++    title: "PHASE B2 (self-learning / sovereignty; north-star) -- certified-ARC-corpus distill-lift (Invisible-Leash latent-vs-absent). RESUME + extend exp4200's GAP-4-certified ARC program corpus (16 demo-perfect, precision 0.9375): codex induces a LARGER induced-program pool -> the model-free GAP-4 graded gate certifies demo-perfect programs -> a bigger VERIFIER-CERTIFIED corpus (the automated ground-truth reward engine). Then the cheap test (arXiv:2507.14843 Invisible Leash): does seeding the LOCAL base (SOTA GGUF) with k verifier-certified exemplars in-context raise its ARC induction above the 0.23 ceiling (exp4188)? LATENT (lift CI excl 0) -> full LoRA-distill viable (.391); ABSENT -> need a stronger base. verifier_is_oracle=true (GAP-4 execution certifier). NO full fine-tune this milestone."
++    priority: medium
++    track: verifier-reward
++    max_turns: 70
++    agent_type: codex
++    model: gpt-5.5
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4212_certified_arc_corpus_distill_lift.json
++    prior_failures:
++      - experiment_id: exp4200-certified-arc-corpus-distill-lift
++        verdict: certified_arc_corpus_built_seeded_checkpoint_missing_corpus16_precision0.9375
++        addressed_by: "exp4200 built a 16-program certified corpus (precision 0.9375) but its in-context lift read was UNINFORMATIVE (seeded checkpoint missing -> flagged_adversarial). This attempt RESUMES + extends that corpus to a larger N and runs the in-context lift as a single synchronous read (cold induction vs certified-exemplar-seeded induction with a bootstrap CI), so the latent-vs-absent question is actually answered."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT: Carry the verifier-as-reward pivot to the north star + the sovereignty/self-learning axis
++      (the 2026-06-11 directive: "REFRAME decentralization AS the distillation problem"). The GAP-4
++      execution verifier is an un-hallucinating ground-truth engine -> use it to GENERATE a training
++      corpus, not to filter. exp4188's LOCAL generator under-induced (0.2258). DECOUPLE: codex GENERATES
++      (induces 0.94), the GAP-4 verifier CERTIFIES, and the cheap test is whether seeding the LOCAL base
++      with certified exemplars raises its induction (the Invisible-Leash latent-vs-absent question,
++      arXiv:2507.14843). Full LoRA-distill is .391; this builds the certified corpus + the cheap lift read.
++
++      EXISTING CODE TO READ FIRST:
++        - results/experiment_4200_certified_arc_corpus_distill_lift.json + ..._corpus.jsonl (the 16-example baseline + format to RESUME/extend)
++        - results/experiment_4187_gap4_graded_execution_gate_hardening.json (the hardened graded gate to certify with)
++        - scripts/gap4_program_induction_stack.py (induction + execution verification), results/arc3_gap4_induced_programs.json (the ARC-1 pool)
++        - scripts/experiment_template.py (cached_sota_pair() -> local GGUF model_path; GGUF tokenizer rule -- load via .gguf, NOT AutoTokenizer)
++        - research-references.md: arXiv:2507.14843 (Invisible Leash: distillation closes the gap iff the abstraction is latent)
++
++      TASK: extend the GAP-4-CERTIFIED ARC corpus (codex) + measure the local base's in-context induction lift.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS: `ls results/arc3_gap4_induced_programs.json` (the ARC-1 pool) AND a SOTA local
++           GGUF cached (`python3 -c "from scripts.experiment_template import cached_sota_pair; print(cached_sota_pair())"`).
++           If the pool is missing -> `blocked_gap4_arc1_pool_missing`; if no local GGUF -> `blocked_model_not_cached_sota_gguf`. STOP on either.
++        1. RESUME exp4200's corpus jsonl; extend it: codex induces `def transform(grid)` from demo pairs
++           across more ARC-1 tasks; the model-free GAP-4 graded gate (exp4187) certifies demo-perfect
++           programs that execute. Report certified_corpus_size (>= the prior 16) + certification_precision
++           (held-out-demo-perfect that also pass the test input).
++        2. Invisible-Leash in-context lift: for the LOCAL base (GGUF), measure induction rate (a) COLD
++           (no exemplars, the exp4188 0.2258 baseline) vs (b) seeded with k verifier-certified exemplars
++           in-context. Report local_induction_cold vs local_induction_with_certified_exemplars + the delta
++           + a bootstrap CI95.
++        3. Diagnose: lift CI excludes 0 -> the ARC-induction abstraction is LATENT in the local base ->
++           full LoRA-distillation viable (.391); flat -> ABSENT (Invisible Leash holds) -> a stronger base
++           is needed. Do NOT fine-tune the GGUF this milestone.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. A built certified corpus + an honest latent-or-absent in-context read is COMPLETE (it tells .391 whether to LoRA-distill or change base)."
++        certified_corpus_size:
++          principle: "Count of GAP-4-verified demo-perfect (demos->program) pairs -- the verifier-as-reward training corpus for the ARC sovereignty path (FR-11: the energy function is the ground-truth reward)."
++        certification_precision:
++          principle: "P(held-out-demo + test-pass | certified) -- the corpus is only useful training data if the certifier is precise (the Phase-0 analog for ARC)."
++        local_induction_with_certified_exemplars:
++          principle: "Local base induction rate seeded with certified exemplars -- vs the exp4188 cold 0.2258; the cheap latent-vs-absent read before a heavy .391 LoRA-distill."
++        distill_lift_ci95:
++          principle: "Bootstrap CI of (seeded - cold) local induction -- excluding 0 = abstraction LATENT (distillation viable); touching 0 = ABSENT (need a stronger base)."
++        verifier_is_oracle:
++          principle: "BARE bool=true -- the GAP-4 execution certifier IS the oracle (honest reward/data-generation axis, not an oracle-distinct moat claim)."
++        model_specs:
++          principle: "The codex generator + the local GGUF; required methodology for a live-LLM artifact."
++        random_seed:
++          principle: "Determinism precondition; the induction + certification must be reproducible."
++        reproducibility_checksum:
++          principle: "Hash of the task set + generator config; catches silent drift."
++      ACCEPTANCE GATE:
++        - condition: "certified_corpus_size (>=16) + certification_precision + local_induction_with_certified_exemplars + distill_lift_ci95 all reported, OR an honest blocked_* verdict"
++          principle: "The sovereignty-via-distillation question is decided on the merits (latent vs absent) with a precise certified corpus; an honest absent-abstraction read bounds the claim and is COMPLETE."
++
++      Run: `python3 {project_root}/results/experiment_4212_certified_arc_corpus_distill_lift.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4213-arc-incremental-progress
++    milestone: 2026.06.390
++    title: "PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first method, using the HARDENED GAP-4 stack (exp4187): bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper level of an already-solved game or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE. total_levels_solved must be >= 16."
++    priority: medium
++    track: arc
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline -- false-positive scope-match vs prior incremental-progress tasks (exp4201); forward difference = uses the hardened exp4187 graded GAP-4 gate; monotonic +1 from 15; honest no-solve is COMPLETE."
++    inference_substrate: offline_arc_explore_induce_verify
++    deliverable: results/experiment_4213_arc_incremental_progress.json
++    prompt: |
++      CONTEXT: Each milestone advances the solved-LEVEL count MONOTONICALLY by >=1 (ARC-AGI-3
++      Incremental-Progress Scoping). .389 held at total_levels_solved=15 (exp4201 found no new solve on
++      lp85 L4). Target the next deeper level of an already-solved game, or a spatial game's L1 if a
++      deeper level is structurally blocked. Use the HARDENED GAP-4 stack (exp4187) as the act-validation
++      verifier. OFFLINE/air-gapped only (online play stays operator-gated).
++
++      EXISTING CODE TO READ FIRST:
++        - results/arc3_win_condition_survey.json (the 25-game survey; per-game level structure)
++        - results/experiment_4201_arc_incremental_progress.json (.389: no new solve, total_levels=15, total_games=13)
++        - results/experiment_4187_gap4_graded_execution_gate_hardening.json (the hardened verifier to validate acts)
++        - python/carnot/agentic/arc_agi3_world_model.py + the OFFLINE/air-gapped ARC driver used by exp4201
++      TASK: bank +1 real level via explore -> induce -> hardened-GAP-4-verify -> act.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json` and the OFFLINE fixtures for the
++           target game exist. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
++        1. Pick the next-easiest unsolved LEVEL (prefer a deeper level of an already-solved game; if lp85
++           L4 is structurally blocked, switch to a different already-solved game's next level or a new
++           spatial L1).
++        2. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
++        3. Hardened GAP-4 verifier (exp4187) validates the induced rule on HELD-OUT transitions BEFORE
++           acting; act only on validated steps; STOP at the first level that fails.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection)."
++        total_levels_solved:
++          principle: "The monotonic progress metric; must be >= the prior milestone's count (15)."
++        levels_completed:
++          principle: "Real-env-confirmed level count this run; falsifiable evidence of an actual solve."
++        real_env_confirmed:
++          principle: "Only real-env solves raise the headline count; a synthetic-scaffold solve does not."
++      ACCEPTANCE GATE:
++        - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
++          principle: "Progress-not-perfection: banking +1 real level is the win; an honest no-solve is still COMPLETE."
++
++      Run: `python3 {project_root}/results/experiment_4213_arc_incremental_progress.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4214-arc-live-env-solver-accuracy
++    milestone: 2026.06.390
++    title: "PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking. .389's live solver beat the random/greedy floor on EFFICIENCY only (5 vs 6 actions) but completed 0 levels (no accuracy win). Now run the PROVEN explore-induce-verify solver against the LIVE env on ONE easy game with the goal of COMPLETING a level (levels_completed >= 1), and report accuracy (EnvironmentScore.score / levels_completed) AND efficiency (actions vs baseline_actions) vs the floor (exp4202). NO leaderboard submission (operator-only); bounded action budget; honest blocked_arc_live_* if access fails."
++    priority: medium
++    track: arc
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the live-env ACCURACY-seeking solver is the north-star §0 next step after exp4202's efficiency-only-no-level read -- false-positive scope-match vs exp4202; forward difference = targets COMPLETING a level (accuracy), not just action-efficiency, NO leaderboard submission, anonymous-key, bounded budget. Online play stays gated per arc3_online_gated_on_offline_beating_baselines (a solver-vs-floor probe is not a leaderboard submission)."
++    inference_substrate: arc_live_env_grounding_probe
++    deliverable: results/experiment_4214_arc_live_env_solver_accuracy.json
++    prior_failures:
++      - experiment_id: exp4202-arc-live-env-solver-vs-floor
++        verdict: solver_beats_floor_live_lp85-305b61c3_efficiency_only
++        addressed_by: "exp4202 beat the floor on EFFICIENCY (5 vs 6 actions) but completed 0 levels (score 0.0 both arms) -- no ACCURACY win. This attempt targets COMPLETING a level (levels_completed>=1) on an easy live game with a larger bounded budget / better goal-predicate induction, reporting accuracy AND efficiency vs the same floor. Still NO leaderboard submission."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT: north-star §0 -- the official SDK auto-issues an ANONYMOUS key and exposes 25 live
++      ARC-AGI-3 environments; exp4202 connected it and beat the random/greedy floor on EFFICIENCY but
++      completed 0 levels. The next grounding step is whether the verifier-routed explore-induce-verify
++      solver can COMPLETE a level on the REAL env (the accuracy axis). CRITICAL GATE: do NOT submit to
++      the official leaderboard (operator-only external publication); a solver-vs-floor probe under an
++      anonymous key is NOT a leaderboard submission, but keep the bounded budget and submit nothing
++      (memory arc3_online_gated_on_offline_beating_baselines).
++
++      EXISTING CODE TO READ FIRST:
++        - ops/north-star.md §0 (access is OPEN; the metric mapping; the sequence discipline)
++        - results/experiment_4202_arc_live_env_solver_vs_floor.json (the live adapter + the random/greedy floor + real_metric_mapping; efficiency-only-no-level)
++        - python/carnot/agentic/arc_agi3_world_model.py + the offline explore-induce-verify solver (exp4213/exp4201)
++        - results/arc_agi3_access_probe.json (SDK v0.9.8, anonymous key, 25 envs)
++      TASK: run the Carnot solver targeting a LEVEL COMPLETION on ONE live game; report accuracy + efficiency vs the floor; submit nothing.
++
++      CONCRETE STEPS:
++        0. PRECONDITIONS: `python3 -c "import arc_agi"` succeeds AND network reachable (`curl -sf -o
++           /dev/null https://three.arcprize.org` or the SDK health endpoint). If missing/unreachable ->
++           honest_verdict `blocked_arc_live_unreachable` and STOP.
++        1. Reuse exp4202's live adapter (offline-validate against a recorded fixture first -- it must
++           reproduce offline behavior). Pick ONE easy live env (a non-spatial game; prefer one where the
++           offline solver completes a level).
++        2. Run the PROVEN explore-induce-verify solver (hardened GAP-4 act-validation) against the LIVE
++           env with a bounded action budget SIZED to allow a level completion (do not cap below the
++           baseline_actions for level 1). Read EnvironmentScore.score / levels_completed (ACCURACY) and
++           actions-taken vs baseline_actions (EFFICIENCY).
++        3. Compare to exp4202's floor on the SAME env. Submit NO scorecard. Report solver_completes_level
++           (BARE bool) + solver_beats_floor {accuracy, efficiency} + no_leaderboard_submission=true.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. An honest 'solver completes 0 levels but is efficient' or 'blocked_arc_live_unreachable' is a COMPLETE grounding verdict."
++        solver_completes_level:
++          principle: "BARE bool: levels_completed>=1 on the live env -- the ACCURACY win exp4202 lacked; the north-star's primary axis."
++        solver_beats_floor:
++          principle: "{accuracy: solver_score vs floor_score, efficiency: solver_actions vs floor_actions} -- the real-env read on the two north-star axes vs the random floor."
++        live_env_metrics:
++          principle: "{score, levels_completed, actions_taken, baseline_actions} from the live EnvironmentScore -- falsifiable real-env evidence, not synthetic-scaffold."
++        no_leaderboard_submission:
++          principle: "BARE bool: zero scorecards submitted (Operator-Only External Publication; the online quota gate)."
++        preconditions_checked:
++          principle: "Records the SDK + network reachability checks; pre-empts the silent-missing-resource fabrication mode."
++      ACCEPTANCE GATE:
++        - condition: "live_env_metrics + solver_completes_level + solver_beats_floor reported (or an honest blocked_arc_live_unreachable) AND no_leaderboard_submission=true"
++          principle: "Grounding the solver's accuracy against the real floor (or honestly recording unreachable) is the deliverable; submission stays operator-only."
++
++      Run: `python3 {project_root}/results/experiment_4214_arc_live_env_solver_accuracy.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4215-sota-ingestion-oracle-distinct
++    milestone: 2026.06.390
++    title: "PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge ORACLE-DISTINCT verifier track). Ingest the .390 sweep mapped onto the oracle-distinct headline: ARBITER (arXiv:2605.26172, wrong-majority basins -- the headroom the learned verifier targets), SCOPE (2512.15146, fine-grained learned reward beats vote), ThinkPRM (2504.16828, learned process verifier beats vote), V-STaR (2402.06457, accepted+rejected boundary), Calibrated-Reasoning (2509.19681, explanatory/abstention verifier), PRM survey (2510.08049), ExecVerify (2603.11226) + EVOM (2604.00442, execution-reward baselines for the B1 framing). SOTA->experiment mapping note; flag the strongest for .391. Cite real arXiv IDs."
++    priority: medium
++    track: research
++    max_turns: 70
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline -- false-positive scope-match vs prior ingestion tasks (exp4203); structurally never a doomed rerun (fresh corpus each milestone)."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4215_sota_ingestion_oracle_distinct.json
++    prompt: |
++      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, the bleeding-edge ORACLE-DISTINCT verifier
++      headline reserves one ingestion task. The .390 planner filed the sweep in research-references.md
++      (".390 planning sweep"); this task ingests it into an actionable SOTA->experiment mapping and flags
++      the strongest for .391. The load-bearing finding to map: ARBITER's "wrong-majority failures" name
++      the exact headroom a LEARNED (oracle-distinct) verifier must recover, and SCOPE/ThinkPRM are the
++      learned-signal-beats-vote precedents the .390 A3 gate is testing.
++
++      EXISTING CODE TO READ FIRST:
++        - research-references.md (".390 planning sweep" section -- the candidate papers + IDs)
++        - results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json (the .390 A3 result to map against)
++        - results/experiment_4208_verifier_as_detector_auroc.json (the detector axis result)
++        - scripts/sweep_clusters.py / scripts/sweep_semscholar.py (the RELIABLE discovery channel)
++
++      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop; flag the strongest for .391.
++
++      CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research -- it rate-limited 4x/6M-tokens/zero-output):
++        0. Read the .390 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
++           sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
++        1. Map each method onto the Carnot stack: ARBITER/SCOPE -> how to strengthen the A2/A3
++           oracle-distinct ARC verifier (conservative-override on high learned-margin; per-region
++           confidence features); ThinkPRM/PRM-survey -> the learned-process-verifier recipe; V-STaR ->
++           the accepted+rejected boundary already in use; Calibrated-Reasoning/abstention -> the detector
++           axis; ExecVerify/EVOM -> the execution-reward baselines the B1 verifier-as-reward result must
++           be framed against. What each implies + where each fails.
++        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .391.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
++        methods_mapped:
++          principle: "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
++        flagged_for_v391:
++          principle: "Closes discover->ingest->plan: names the strongest method for the next planner (e.g. ARBITER conservative-override, or a learned-ARC-energy distill)."
++      ACCEPTANCE: a mapping note with >=3 sources each with a real arXiv ID/URL, one method flagged for .391.
++
++      Run: `python3 {project_root}/results/experiment_4215_sota_ingestion_oracle_distinct.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4216-verifier-registry-gaps-hygiene
++    milestone: 2026.06.390
++    title: "PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .390 state into ops/verifier_gaps.md: the ORACLE-DISTINCT A3 verdict (exp4210 oracle_distinct_beats_vote + delta/CI + verifier_is_oracle=false), the detector AUROCs (exp4208), the verifier-as-reward A-vs-B (exp4211 verifier_label_carries_signal + delta/CI), and the certified-ARC-corpus distill-lift (exp4212). Open/update a GAP-ORACLE-DISTINCT ledger entry (the open frontier: a learned verifier that beats vote where execution is not the oracle). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
++    priority: medium
++    track: infra
++    max_turns: 60
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard -- false-positive scope-match vs prior hygiene tasks (exp4204); structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    deliverable: results/experiment_4216_verifier_registry_gaps_hygiene.json
++    prompt: |
++      CONTEXT: Keep the verifier registry + gap ledger honest, catch a silent GAP-4 regression via a
++      bit-exact replay, and record the .390 oracle-distinct + reward outcomes (the program's first
++      oracle-distinct read).
++
++      EXISTING CODE TO READ FIRST:
++        - ops/verifier_registry.yaml, ops/verifier_gaps.md (GAP-1..GAP-5; GAP-MOAT; GAP-REWARD; the schema)
++        - the canonical GAP-4 ARC-1 cached candidate set + its prior numbers (vote 0.4516 -> gated 0.5806)
++        - results/experiment_4210_*.json (oracle-distinct A3), 4208_*.json (detector), 4211_*.json (verifier-as-reward A-vs-B), 4212_*.json (certified corpus)
++
++      TASK: regression-guard the GAP-4 numbers; record the .390 oracle-distinct + reward outcomes into the gap ledger.
++
++      CONCRETE STEPS:
++        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates
++           (zero codex/GGUF/GPU). READ-ONLY w.r.t. TRM training (do not touch the stable checkpoint).
++        2. RECORD into ops/verifier_gaps.md (append, never-prune): the ORACLE-DISTINCT A3 verdict (exp4210
++           oracle_distinct_beats_vote + delta + CI + verifier_is_oracle=false + oracle_distinct_auroc from
++           exp4209); the detector AUROCs per domain (exp4208); the verifier-as-reward A-vs-B (exp4211
++           verifier_label_carries_signal + delta + CI + Youden-J); the certified-ARC-corpus distill-lift
++           (exp4212 latent-vs-absent). Open/update a GAP-ORACLE-DISTINCT ledger entry (the open frontier:
++           a LEARNED verifier that beats vote where execution is not the oracle). Update GAP-MOAT/status
++           only as the .390 evidence warrants.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth."
++        regression_guard_passed:
++          principle: "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
++        gaps_updated:
++          principle: "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the detector + verifier-as-reward + certified-corpus notes)."
++      ACCEPTANCE: regression_guard_passed True; the oracle-distinct A3 + detector + verifier-as-reward + certified-corpus status recorded in the ledger.
++
++      Run: `python3 {project_root}/results/experiment_4216_verifier_registry_gaps_hygiene.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4217-hardware-continuity
++    milestone: 2026.06.390
++    title: "PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
++    priority: medium
++    track: hardware
++    max_turns: 70
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal -- false-positive scope-match vs retired hardware exps (exp4205); required forward work."
++    inference_substrate: hardware_smoke
++    deliverable: results/experiment_4217_hardware_continuity.json
++    prompt: |
++      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board.
++      KV260 is terminal; GateMate + PolarFire are not.
++
++      EXISTING CODE TO READ FIRST:
++        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4205_hardware_continuity.json (.389)
++        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions" hardware rows
++
++      TASK: per-board reachability + next concrete step, distinct timers, SSH/USB-detect preconditions only.
++
++      CONCRETE STEPS (DISTINCT wall-clock timers per board):
++        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired
++           per the KV260 SSH-Not-SD-Card Discipline):
++           - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
++           - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
++           - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
++           For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE.
++        1. GateMate: next concrete step toward the n=16 Ising tile flash.
++        2. PolarFire: next concrete step toward end-to-end Carnot dispatch with hash-match.
++        3. KV260: confirm terminal state via SSH.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. An honest blocked_<board> for an unreachable board is a COMPLETE verdict for that board."
++        per_board_status:
++          principle: "One reachability + next-step record per board so a board is never silently forgotten."
++        preconditions_checked:
++          principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card."
++      ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
++
++      Run: `python3 {project_root}/results/experiment_4217_hardware_continuity.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp4218-capstone-v390
++    milestone: 2026.06.390
++    title: "PHASE D4 -- Capstone .390 (UNGATED): headline question is DID A LEARNED (ORACLE-DISTINCT) VERIFIER BEAT VOTE ON ARC -- exp4210 oracle_distinct_beats_vote (verifier_is_oracle=false, matched control, CI95-excl-0): the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate) OR an honest ties-vote-with-headroom null. Aggregate: ORACLE-DISTINCT = exp4210 + exp4209 (off-fold AUROC) + exp4208 (detector divergence); VERIFIER-AS-REWARD = exp4211 (verifier_label_carries_signal + A-vs-B delta/CI + Youden-J + positive_control); SOVEREIGNTY-DISTILL = exp4212 (certified corpus + latent-vs-absent); ARC = exp4213 (total_levels) + exp4214 (live solver accuracy-vs-floor); SOTA = exp4215; registry = exp4216; hardware = exp4217. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on."
++    priority: high
++    track: infra
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation -- false-positive scope-match vs prior capstone-v* tasks (exp4206); structurally never a doomed rerun."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4218_capstone_v390.json
++    prompt: |
++      CONTEXT: Aggregate the .390 results into one honest decision-grade verdict on the 2026-06-14 P0
++      directive: did a LEARNED (oracle-distinct) verifier beat majority vote on ARC where execution is
++      NOT the oracle (the deep, defensible claim the circular execution wins cannot make)? Plus the OWED
++      verifier-as-reward A-vs-B read.
++
++      EXISTING CODE TO READ FIRST:
++        - results/experiment_4208_*.json (detector AUROC divergence), 4209_*.json (oracle-distinct verifier off-fold AUROC),
++          4210_*.json (THE oracle-distinct beats-vote gate), 4211_*.json (verifier-as-reward A-vs-B),
++          4212_*.json (certified corpus + latent-vs-absent), 4213_*.json (ARC +1), 4214_*.json (live solver accuracy),
++          4215_*.json (SOTA), 4216_*.json (registry), 4217_*.json (hardware)
++        - scripts/summarize_artifact.py (read each via this), scripts/adversarial_verify.py (CIRCULAR_MOAT_OVERCLAIM)
++        - ops/north-star.md §5 + ops/known-issues.md 2026-06-14 oracle-distinct P0 directive
++        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline"
++
++      TASK: one honest headline + the standing of the oracle-distinct frontier + the verifier-as-reward pivot after .390.
++
++      CONCRETE STEPS:
++        1. Read exp4208..4217. SKIP any flagged_adversarial=true. Cite each upstream sha256. HONOR
++           verifier_is_oracle: a circular (execution-oracle) result is labeled execution_grounded and may
++           NOT headline a moat or flip the DiffusionGemma gate.
++        2. Answer: (a) did exp4210 show oracle_distinct_beats_vote (verifier_is_oracle=false, matched
++           control, CI95-excl-0, headroom present)? (b) what off-fold AUROC did the learned ARC verifier
++           reach (exp4209)? (c) the detector-AUROC-vs-selection-headroom divergence (exp4208)? (d) did
++           exp4211 show verifier_label_carries_signal (A-vs-B CI excl 0) with positive_control_confirmed?
++           (e) certified-corpus latent-or-absent (exp4212)? (f) total ARC levels (exp4213) + did the live
++           solver complete a level (exp4214)? (g) strongest SOTA flagged for .391 (exp4215).
++        3. Honest headline: one of {oracle_distinct_verifier_beats_vote_first_moat,
++           oracle_distinct_verifier_ties_vote_with_headroom_null, oracle_distinct_no_headroom_or_no_learnable_signal,
++           verifier_reward_real_label_carries_signal, verifier_reward_null_distillation}. Whether the
++           DiffusionGemma gate is now resolvable (ONLY on an oracle-distinct win with a matched control).
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict:
++          principle: "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .391 whether the oracle-distinct frontier is reachable on ARC."
++        headline_outcome:
++          principle: "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot."
++        oracle_distinct_status:
++          principle: "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .390; a circular result does NOT count here."
++        verifier_as_reward_status:
++          principle: "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING -- the owed 2026-06-11 pivot's standing after .390."
++        diffusiongemma_gate_resolvable:
++          principle: "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING."
++        total_arc_levels_solved:
++          principle: "The monotonic ARC progress metric after .390 (must be >= 15)."
++        upstream_provenance:
++          principle: "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
++      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; verifier_is_oracle honored (no circular moat headline); the oracle-distinct + verifier-as-reward statuses explicitly decided.
++
++      Run: `python3 {project_root}/results/experiment_4218_capstone_v390.py`
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
+diff --git a/results/diffusiongemma_energy_prior_gguf.json b/results/diffusiongemma_energy_prior_gguf.json
+new file mode 100644
+index 0000000000..91eb470fc5
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_gguf.json
+@@ -0,0 +1,12 @@
++{
++  "experiment": "diffusiongemma_energy_prior_gguf",
++  "inference_substrate": "live_llm_inference",
++  "quant": "Q4_K_M_gguf",
++  "verifier_is_oracle": null,
++  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
++  "model_loaded": false,
++  "error": "ValueError('Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf')",
++  "traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/exp_diffusiongemma_energy_prior_gguf.py\", line 51, in main\n    llm = Llama(\n          ^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/llama_cpp/llama.py\", line 381, in __init__\n    internals.LlamaModel(\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/llama_cpp/_internals.py\", line 62, in __init__\n    raise ValueError(f\"Failed to load model from file: {path_model}\")\nValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf\n",
++  "honest_verdict": "blocked_gguf_load_failed",
++  "duration_s": 0.3
++}
+\ No newline at end of file
+diff --git a/results/diffusiongemma_energy_prior_gguf.log b/results/diffusiongemma_energy_prior_gguf.log
+new file mode 100644
+index 0000000000..a53f378c7d
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_gguf.log
+@@ -0,0 +1 @@
++[gguf probe] DONE verdict=blocked_gguf_load_failed -> /home/ianblenke/github.com/ianblenke/carnot/results/diffusiongemma_energy_prior_gguf.json
+diff --git a/results/diffusiongemma_energy_prior_gguf.pid b/results/diffusiongemma_energy_prior_gguf.pid
+new file mode 100644
+index 0000000000..fcef3d81a4
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_gguf.pid
+@@ -0,0 +1 @@
++878678
+diff --git a/results/diffusiongemma_energy_prior_transformers.json b/results/diffusiongemma_energy_prior_transformers.json
+new file mode 100644
+index 0000000000..6f448805c2
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_transformers.json
+@@ -0,0 +1,11 @@
++{
++  "experiment": "diffusiongemma_energy_prior_transformers",
++  "repo": "google/diffusiongemma-26B-A4B-it",
++  "inference_substrate": "live_llm_inference",
++  "verifier_is_oracle": null,
++  "model_loaded": false,
++  "error": "OutOfMemoryError('CUDA out of memory. Tried to allocate 968.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 166.31 MiB is free. Including non-PyTorch memory, this process has 23.39 GiB memory in use. Of the allocated memory 23.13 GiB is allocated by PyTorch, and 6.31 MiB is reserved by PyTo",
++  "traceback": "rmers/core_model_loading.py\", line 830, in convert\n    collected_tensors = self.materialize_tensors()\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 797, in materialize_tensors\n    tensors = [func() for func in tensors]\n               ^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 1005, in _job\n    return _materialize_copy(tensor, device, dtype)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 991, in _materialize_copy\n    tensor = tensor.to(device=device, dtype=dtype)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 968.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 166.31 MiB is free. Including non-PyTorch memory, this process has 23.39 GiB memory in use. Of the allocated memory 23.13 GiB is allocated by PyTorch, and 6.31 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n",
++  "honest_verdict": "blocked_diffusiongemma_load_failed",
++  "duration_s": 106.6
++}
+\ No newline at end of file
+diff --git a/results/diffusiongemma_energy_prior_transformers.log b/results/diffusiongemma_energy_prior_transformers.log
+new file mode 100644
+index 0000000000..c2667952ce
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_transformers.log
+@@ -0,0 +1,3 @@
++Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 19320.50it/s]
++Loading weights:   0%|          | 0/1047 [00:00<?, ?it/s]Loading weights:   0%|          | 1/1047 [00:00<09:57,  1.75it/s]Loading weights:   0%|          | 2/1047 [00:00<06:06,  2.85it/s]Loading weights:   0%|          | 3/1047 [00:01<06:26,  2.70it/s]Loading weights:   2%|▏         | 24/1047 [00:01<00:36, 27.87it/s]Loading weights:   3%|▎         | 28/1047 [00:01<00:49, 20.46it/s]Loading weights:   4%|▍         | 46/1047 [00:02<00:28, 34.84it/s]Loading weights:   5%|▍         | 51/1047 [00:02<00:38, 26.19it/s]Loading weights:   6%|▋         | 68/1047 [00:02<00:25, 37.66it/s]Loading weights:   7%|▋         | 73/1047 [00:03<00:34, 28.21it/s]Loading weights:   9%|▊         | 90/1047 [00:03<00:24, 38.91it/s]Loading weights:   9%|▉         | 95/1047 [00:04<00:58, 16.35it/s]Loading weights:  10%|█         | 108/1047 [00:04<00:38, 24.08it/s]Loading weights:  11%|█         | 115/1047 [00:05<00:49, 18.81it/s]Loading weights:  13%|█▎        | 133/1047 [00:05<00:32, 28.13it/s]Loading weights:  13%|█▎        | 139/1047 [00:05<00:37, 24.26it/s]Loading weights:  15%|█▍        | 155/1047 [00:06<00:27, 32.96it/s]Loading weights:  15%|█▌        | 161/1047 [00:06<00:32, 27.03it/s]Loading weights:  17%|█▋        | 177/1047 [00:06<00:24, 36.05it/s]Loading weights:  17%|█▋        | 182/1047 [00:07<00:30, 27.96it/s]Loading weights:  19%|█▉        | 199/1047 [00:07<00:22, 37.96it/s]Loading weights:  19%|█▉        | 204/1047 [00:08<00:48, 17.35it/s]Loading weights:  21%|██        | 217/1047 [00:08<00:32, 25.20it/s]Loading weights:  21%|██▏       | 224/1047 [00:09<00:42, 19.40it/s]Loading weights:  23%|██▎       | 243/1047 [00:09<00:27, 29.64it/s]Loading weights:  24%|██▍       | 249/1047 [00:10<00:31, 25.28it/s]Loading weights:  25%|██▌       | 264/1047 [00:10<00:23, 32.77it/s]Loading weights:  26%|██▌       | 270/1047 [00:10<00:28, 26.92it/s]Loading weights:  27%|██▋       | 286/1047 [00:10<00:21, 35.47it/s]Loading weights:  28%|██▊       | 291/1047 [00:13<01:09, 10.84it/s]Loading weights:  29%|██▉       | 304/1047 [00:13<00:45, 16.18it/s]Loading weights:  29%|██▉       | 308/1047 [00:14<00:35, 20.58it/s]
++[tf probe] DONE verdict=blocked_diffusiongemma_load_failed -> /home/ianblenke/github.com/ianblenke/carnot/results/diffusiongemma_energy_prior_transformers.json
+diff --git a/results/diffusiongemma_energy_prior_transformers.pid b/results/diffusiongemma_energy_prior_transformers.pid
+new file mode 100644
+index 0000000000..424aa16bd6
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_transformers.pid
+@@ -0,0 +1 @@
++886989
+diff --git a/results/diffusiongemma_energy_prior_vllm.json b/results/diffusiongemma_energy_prior_vllm.json
+new file mode 100644
+index 0000000000..078944faa3
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_vllm.json
+@@ -0,0 +1,11 @@
++{
++  "experiment": "diffusiongemma_energy_prior_vllm",
++  "repo": "google/diffusiongemma-26B-A4B-it",
++  "inference_substrate": "live_llm_inference",
++  "verifier_is_oracle": null,
++  "vllm_version": "0.23.0",
++  "load_attempt_bnb4bit_tp1_error": "RuntimeError('Engine core initialization failed. See root cause above. Failed core proc(s): {}')",
++  "load_attempt_fp8_tp2_error": "1 validation error for ParallelConfig\n  Value error, World size (2) is larger than the number of available GPUs (1) in this node. If this is intentional and you are using:\n- ray, set '--distributed-ex",
++  "model_loaded": false,
++  "honest_verdict": "blocked_vllm_load_failed"
++}
+\ No newline at end of file
+diff --git a/results/diffusiongemma_energy_prior_vllm.log b/results/diffusiongemma_energy_prior_vllm.log
+new file mode 100644
+index 0000000000..222affd338
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_vllm.log
+@@ -0,0 +1,141 @@
++INFO 06-14 15:46:08 [api_utils.py:273] non-default args: {'max_model_len': 1024, 'disable_log_stats': True, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'model': 'google/diffusiongemma-26B-A4B-it'}
++INFO 06-14 15:46:13 [model.py:611] Resolved architecture: TransformersMultiModalMoEForCausalLM
++INFO 06-14 15:46:13 [model.py:1745] Using max model len 1024
++INFO 06-14 15:46:13 [scheduler.py:239] Chunked prefill is enabled with max_num_batched_tokens=8192.
++INFO 06-14 15:46:13 [vllm.py:999] Asynchronous scheduling is enabled.
++WARNING 06-14 15:46:13 [vllm.py:1055] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
++WARNING 06-14 15:46:13 [vllm.py:1097] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
++INFO 06-14 15:46:13 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
++INFO 06-14 15:46:13 [vllm.py:1273] Cudagraph is disabled under eager mode
++INFO 06-14 15:46:13 [compilation.py:321] Enabled custom fusions: norm_quant, act_quant
++WARNING 06-14 15:46:15 [utils.py:192] TransformersMultiModalMoEForCausalLM has no vLLM implementation, falling back to Transformers implementation. Some features may not be supported and performance may not be optimal.
++(EngineCore pid=886410) INFO 06-14 15:46:31 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='google/diffusiongemma-26B-A4B-it', speculative_config=None, tokenizer='google/diffusiongemma-26B-A4B-it', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=1024, download_dir=None, load_format=bitsandbytes, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=bitsandbytes, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=google/diffusiongemma-26B-A4B-it, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
++(EngineCore pid=886410) INFO 06-14 15:46:31 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.51.32:46661 backend=nccl
++(EngineCore pid=886410) INFO 06-14 15:46:31 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank 0, EPLB rank N/A
++(EngineCore pid=886410) INFO 06-14 15:46:32 [topk_topp_sampler.py:55] Using FlashInfer for top-p & top-k sampling.
++(EngineCore pid=886410) INFO 06-14 15:46:32 [gpu_model_runner.py:5092] Starting to load model google/diffusiongemma-26B-A4B-it...
++(EngineCore pid=886410) INFO 06-14 15:46:32 [base.py:117] Using Transformers modeling backend.
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] EngineCore failed to start.
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] Traceback (most recent call last):
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1164, in run_engine_core
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 930, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super().__init__(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 122, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model_executor = executor_class(vllm_config)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._init_executor()
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 68, in _init_executor
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.driver_worker.load_model()
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 356, in load_model
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5108, in load_model
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model = model_loader.load_model(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                  ^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/base_loader.py", line 55, in load_model
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     model = initialize_model(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]             ^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/utils.py", line 61, in initialize_model
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     model = model_class(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/moe.py", line 128, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(MixtureOfExperts, self).__init__(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 271, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(SupportsMRoPE, self).__init__(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/causal.py", line 35, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(VllmModelForTextGeneration, self).__init__(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 167, in __init__
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._decorate_for_torch_compile(**from_config_kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 310, in _decorate_for_torch_compile
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super()._decorate_for_torch_compile(**kwargs)
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 285, in _decorate_for_torch_compile
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._decorate_cls_for_torch_compile(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 270, in _decorate_cls_for_torch_compile
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     support_torch_compile(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/compilation/decorators.py", line 235, in cls_decorator_helper
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     raise ValueError(
++(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] ValueError: Argument input_ids not found in the forward method of <class 'transformers.models.diffusion_gemma.modeling_diffusion_gemma.DiffusionGemmaDecoderModel'>
++(EngineCore pid=886410) Process EngineCore:
++(EngineCore pid=886410) Traceback (most recent call last):
++(EngineCore pid=886410)   File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
++(EngineCore pid=886410)     self.run()
++(EngineCore pid=886410)   File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/multiprocessing/process.py", line 108, in run
++(EngineCore pid=886410)     self._target(*self._args, **self._kwargs)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1199, in run_engine_core
++(EngineCore pid=886410)     raise e
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1164, in run_engine_core
++(EngineCore pid=886410)     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
++(EngineCore pid=886410)                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410)     return func(*args, **kwargs)
++(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 930, in __init__
++(EngineCore pid=886410)     super().__init__(
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 122, in __init__
++(EngineCore pid=886410)     self.model_executor = executor_class(vllm_config)
++(EngineCore pid=886410)                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410)     return func(*args, **kwargs)
++(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
++(EngineCore pid=886410)     self._init_executor()
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 68, in _init_executor
++(EngineCore pid=886410)     self.driver_worker.load_model()
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 356, in load_model
++(EngineCore pid=886410)     self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410)     return func(*args, **kwargs)
++(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5108, in load_model
++(EngineCore pid=886410)     self.model = model_loader.load_model(
++(EngineCore pid=886410)                  ^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410)     return func(*args, **kwargs)
++(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/base_loader.py", line 55, in load_model
++(EngineCore pid=886410)     model = initialize_model(
++(EngineCore pid=886410)             ^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
++(EngineCore pid=886410)     return func(*args, **kwargs)
++(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/utils.py", line 61, in initialize_model
++(EngineCore pid=886410)     model = model_class(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410)             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/moe.py", line 128, in __init__
++(EngineCore pid=886410)     super(MixtureOfExperts, self).__init__(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 271, in __init__
++(EngineCore pid=886410)     super(SupportsMRoPE, self).__init__(vllm_config=vllm_config, prefix=prefix)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/causal.py", line 35, in __init__
++(EngineCore pid=886410)     super(VllmModelForTextGeneration, self).__init__(
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 167, in __init__
++(EngineCore pid=886410)     self._decorate_for_torch_compile(**from_config_kwargs)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 310, in _decorate_for_torch_compile
++(EngineCore pid=886410)     super()._decorate_for_torch_compile(**kwargs)
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 285, in _decorate_for_torch_compile
++(EngineCore pid=886410)     self._decorate_cls_for_torch_compile(
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 270, in _decorate_cls_for_torch_compile
++(EngineCore pid=886410)     support_torch_compile(
++(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/compilation/decorators.py", line 235, in cls_decorator_helper
++(EngineCore pid=886410)     raise ValueError(
++(EngineCore pid=886410) ValueError: Argument input_ids not found in the forward method of <class 'transformers.models.diffusion_gemma.modeling_diffusion_gemma.DiffusionGemmaDecoderModel'>
++INFO 06-14 15:46:33 [api_utils.py:273] non-default args: {'max_model_len': 1024, 'tensor_parallel_size': 2, 'gpu_memory_utilization': 0.88, 'disable_log_stats': True, 'quantization': 'fp8', 'enforce_eager': True, 'model': 'google/diffusiongemma-26B-A4B-it'}
++INFO 06-14 15:46:33 [model.py:611] Resolved architecture: TransformersMultiModalMoEForCausalLM
++INFO 06-14 15:46:33 [model.py:1745] Using max model len 1024
++[vllm probe] DONE verdict=blocked_vllm_load_failed
+diff --git a/results/diffusiongemma_energy_prior_vllm.pid b/results/diffusiongemma_energy_prior_vllm.pid
+new file mode 100644
+index 0000000000..24dedea05e
+--- /dev/null
++++ b/results/diffusiongemma_energy_prior_vllm.pid
+@@ -0,0 +1 @@
++886210
+diff --git a/results/diffusiongemma_gguf_download.log b/results/diffusiongemma_gguf_download.log
+new file mode 100644
+index 0000000000..67e42d9f57
+--- /dev/null
++++ b/results/diffusiongemma_gguf_download.log
+@@ -0,0 +1 @@
++GGUF DOWNLOAD COMPLETE in 1.0 min -> /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf
+diff --git a/results/diffusiongemma_gguf_download.pid b/results/diffusiongemma_gguf_download.pid
+new file mode 100644
+index 0000000000..e561264792
+--- /dev/null
++++ b/results/diffusiongemma_gguf_download.pid
+@@ -0,0 +1 @@
++878050
+diff --git a/results/experiment_1861_equivalence.json b/results/experiment_1861_equivalence.json
+index 85975bbc35..bb81715942 100644
+--- a/results/experiment_1861_equivalence.json
++++ b/results/experiment_1861_equivalence.json
+@@ -3,5 +3,14 @@
+   "honest_verdict": "equivalence_verified",
+   "py_loss": 0.22222222222222232,
+   "rs_loss": 0.22222222222222232,
+-  "scores_match": true
++  "scores_match": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "py_loss=0.22222222222222232 and rs_loss=0.22222222222222232 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..69d52690ec 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 3b3fb22b07..54d7d31ce2 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,14 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.010138750076293945
++  "duration_s": 0.010138750076293945,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4184_archive_v387_activate_v388.json b/results/experiment_4184_archive_v387_activate_v388.json
+index 85206dd719..b404a23faf 100644
+--- a/results/experiment_4184_archive_v387_activate_v388.json
++++ b/results/experiment_4184_archive_v387_activate_v388.json
+@@ -104,5 +104,14 @@
+     "v388_planner_frame": "win the efficiency axis against an LLM-as-judge and harden the proven execution path; do not redo the code-domain accuracy moat proof",
+     "verifier_moat_status": "PROVEN-headroom-present",
+     "verifier_value_added": true
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "CIRCULAR_MOAT_OVERCLAIM",
++      "severity": "critical",
++      "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle=None (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/llama_cpp_upgrade.log b/results/llama_cpp_upgrade.log
+new file mode 100644
+index 0000000000..3e7c3a13e8
+--- /dev/null
++++ b/results/llama_cpp_upgrade.log
+@@ -0,0 +1,9 @@
++Requirement already satisfied: llama-cpp-python in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (0.3.29)
++Requirement already satisfied: typing-extensions>=4.5.0 in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (from llama-cpp-python) (4.15.0)
++Requirement already satisfied: numpy>=1.20.0 in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (from llama-cpp-python) (2.4.4)
++Requirement already satisfied: diskcache>=5.6.1 in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (from llama-cpp-python) (5.6.3)
++Requirement already satisfied: jinja2>=2.11.3 in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (from llama-cpp-python) (3.1.6)
++Requirement already satisfied: MarkupSafe>=2.0 in /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages (from jinja2>=2.11.3->llama-cpp-python) (3.0.3)
++
++[notice] A new release of pip is available: 25.0.1 -> 26.1.2
++[notice] To update, run: /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python -m pip install --upgrade pip
+diff --git a/results/llama_cpp_upgrade.pid b/results/llama_cpp_upgrade.pid
+new file mode 100644
+index 0000000000..c8f1781cdf
+--- /dev/null
++++ b/results/llama_cpp_upgrade.pid
+@@ -0,0 +1 @@
++879240
+diff --git a/results/vllm_install.log b/results/vllm_install.log
+new file mode 100644
+index 0000000000..940843a7be
+--- /dev/null
++++ b/results/vllm_install.log
+@@ -0,0 +1,277 @@
++Using CPython 3.12.13
++Creating virtual environment at: /home/ianblenke/.cache/vllm-venv
++Activate with: source /home/ianblenke/.cache/vllm-venv/bin/activate
++Using Python 3.12.13 environment at: /home/ianblenke/.cache/vllm-venv
++Resolved 190 packages in 1.12s
++Downloading triton (179.5MiB)
++Downloading nvidia-cudnn-cu13 (349.1MiB)
++Downloading openai (1.3MiB)
++Downloading numba (3.6MiB)
++Downloading nvidia-cutlass-dsl-libs-base (71.1MiB)
++Downloading nvidia-cusparselt-cu13 (162.0MiB)
++Downloading nvidia-cuda-cccl (3.3MiB)
++Downloading tokenspeed-triton (81.9MiB)
++Downloading nvidia-cublas (403.5MiB)
++Downloading nvidia-cutlass-dsl-libs-cu13 (75.1MiB)
++Downloading nvidia-cudnn-frontend (3.3MiB)
++Downloading outlines-core (2.2MiB)
++Downloading flashinfer-cubin (426.8MiB)
++Downloading flashinfer-python (13.3MiB)
++Downloading llvmlite (53.7MiB)
++Downloading torchaudio (1.7MiB)
++Downloading apache-tvm-ffi (2.2MiB)
++Downloading tilelang (43.3MiB)
++Downloading numpy (15.8MiB)
++Downloading openai-harmony (2.8MiB)
++Downloading llguidance (2.9MiB)
++Downloading opencv-python-headless (57.6MiB)
++Downloading nvidia-nccl-cu13 (187.4MiB)
++Downloading cuda-core (4.9MiB)
++Downloading tiktoken (1.1MiB)
++Downloading torch (506.1MiB)
++Downloading setuptools (1.0MiB)
++Downloading sentencepiece (1.3MiB)
++Downloading torchvision (7.2MiB)
++Downloading nvidia-nvvm (61.3MiB)
++Downloading mistral-common (6.2MiB)
++Downloading pycountry (7.7MiB)
++Downloading nvidia-cuda-nvcc (42.0MiB)
++Downloading nvidia-cuda-tileiras (35.3MiB)
++Downloading fastsafetensors (1.8MiB)
++Downloading xgrammar (42.5MiB)
++Downloading vllm (261.4MiB)
++Downloading grpcio (6.5MiB)
++Downloading z3-solver (27.9MiB)
++ Downloaded tiktoken
++ Downloaded sentencepiece
++ Downloaded torchaudio
++ Downloaded setuptools
++ Downloaded fastsafetensors
++ Downloaded outlines-core
++ Downloaded apache-tvm-ffi
++ Downloaded openai-harmony
++ Downloaded llguidance
++ Downloaded nvidia-cudnn-frontend
++ Downloaded numba
++ Downloaded openai
++ Downloaded nvidia-cuda-cccl
++ Downloaded cuda-core
++ Downloaded mistral-common
++ Downloaded grpcio
++ Downloaded torchvision
++ Downloaded pycountry
++ Downloaded flashinfer-python
++ Downloaded numpy
++ Downloaded z3-solver
++ Downloaded nvidia-cuda-tileiras
++ Downloaded nvidia-cuda-nvcc
++ Downloaded xgrammar
++ Downloaded tilelang
++ Downloaded llvmlite
++ Downloaded opencv-python-headless
++ Downloaded nvidia-nvvm
++ Downloaded nvidia-cutlass-dsl-libs-base
++ Downloaded nvidia-cutlass-dsl-libs-cu13
++ Downloaded tokenspeed-triton
++ Downloaded nvidia-cusparselt-cu13
++ Downloaded triton
++ Downloaded nvidia-nccl-cu13
++ Downloaded vllm
++ Downloaded nvidia-cudnn-cu13
++ Downloaded nvidia-cublas
++ Downloaded flashinfer-cubin
++ Downloaded torch
++Prepared 99 packages in 16.70s
++Installed 190 packages in 608ms
++ + aiohappyeyeballs==2.6.2
++ + aiohttp==3.14.1
++ + aiosignal==1.4.0
++ + annotated-doc==0.0.4
++ + annotated-types==0.7.0
++ + anthropic==0.109.1
++ + anyio==4.13.0
++ + apache-tvm-ffi==0.1.9
++ + astor==0.8.1
++ + attrs==26.1.0
++ + blake3==1.0.8
++ + cachetools==7.1.4
++ + cbor2==6.1.2
++ + certifi==2026.5.20
++ + cffi==2.0.0
++ + charset-normalizer==3.4.7
++ + click==8.4.1
++ + cloudpickle==3.1.2
++ + compressed-tensors==0.17.0
++ + cryptography==49.0.0
++ + cuda-bindings==13.3.1
++ + cuda-core==1.0.1
++ + cuda-pathfinder==1.5.5
++ + cuda-python==13.3.1
++ + cuda-tile==1.3.0
++ + cuda-toolkit==13.0.2
++ + depyf==0.20.0
++ + detect-installer==0.1.0
++ + dill==0.4.1
++ + diskcache==5.6.3
++ + distro==1.9.0
++ + dnspython==2.8.0
++ + docstring-parser==0.18.0
++ + einops==0.8.2
++ + email-validator==2.3.0
++ + fastapi==0.137.0
++ + fastapi-cli==0.0.24
++ + fastapi-cloud-cli==0.20.0
++ + fastar==0.11.0
++ + fastsafetensors==0.3.2
++ + filelock==3.29.4
++ + flashinfer-cubin==0.6.12
++ + flashinfer-python==0.6.12
++ + frozenlist==1.8.0
++ + fsspec==2026.4.0
++ + gguf==0.19.0
++ + googleapis-common-protos==1.75.0
++ + grpcio==1.81.1
++ + h11==0.16.0
++ + hf-xet==1.5.1
++ + httpcore==1.0.9
++ + httptools==0.8.0
++ + httpx==0.28.1
++ + httpx-sse==0.4.3
++ + huggingface-hub==1.19.0
++ + humming-kernels==0.1.4
++ + idna==3.18
++ + ijson==3.5.0
++ + interegular==0.3.3
++ + jinja2==3.1.6
++ + jiter==0.15.0
++ + jmespath==1.1.0
++ + jsonschema==4.26.0
++ + jsonschema-specifications==2025.9.1
++ + lark==1.2.2
++ + llguidance==1.7.6
++ + llvmlite==0.47.0
++ + lm-format-enforcer==0.11.3
++ + loguru==0.7.3
++ + markdown-it-py==4.2.0
++ + markupsafe==3.0.3
++ + mcp==1.27.2
++ + mdurl==0.1.2
++ + mistral-common==1.11.3
++ + ml-dtypes==0.5.4
++ + model-hosting-container-standards==0.1.15
++ + mpmath==1.3.0
++ + msgspec==0.21.1
++ + multidict==6.7.1
++ + networkx==3.6.1
++ + ninja==1.13.0
++ + numba==0.65.0
++ + numpy==2.3.5
++ + nvidia-cublas==13.1.0.3
++ + nvidia-cuda-cccl==13.3.3.3.1
++ + nvidia-cuda-crt==13.3.33
++ + nvidia-cuda-cupti==13.0.85
++ + nvidia-cuda-nvcc==13.2.78
++ + nvidia-cuda-nvrtc==13.0.88
++ + nvidia-cuda-runtime==13.0.96
++ + nvidia-cuda-tileiras==13.2.78
++ + nvidia-cudnn-cu13==9.19.0.56
++ + nvidia-cudnn-frontend==1.25.0
++ + nvidia-cufft==12.0.0.61
++ + nvidia-cufile==1.15.1.6
++ + nvidia-curand==10.4.0.35
++ + nvidia-cusolver==12.0.4.66
++ + nvidia-cusparse==12.6.3.3
++ + nvidia-cusparselt-cu13==0.8.0
++ + nvidia-cutlass-dsl==4.5.2
++ + nvidia-cutlass-dsl-libs-base==4.5.2
++ + nvidia-cutlass-dsl-libs-cu13==4.5.2
++ + nvidia-ml-py==13.610.43
++ + nvidia-nccl-cu13==2.28.9
++ + nvidia-nvjitlink==13.0.88
++ + nvidia-nvshmem-cu13==3.4.5
++ + nvidia-nvtx==13.0.85
++ + nvidia-nvvm==13.2.78
++ + openai==2.41.1
++ + openai-harmony==0.0.8
++ + opencv-python-headless==4.13.0.92
++ + opentelemetry-api==1.42.1
++ + opentelemetry-exporter-otlp==1.42.1
++ + opentelemetry-exporter-otlp-proto-common==1.42.1
++ + opentelemetry-exporter-otlp-proto-grpc==1.42.1
++ + opentelemetry-exporter-otlp-proto-http==1.42.1
++ + opentelemetry-proto==1.42.1
++ + opentelemetry-sdk==1.42.1
++ + opentelemetry-semantic-conventions==0.63b1
++ + opentelemetry-semantic-conventions-ai==0.5.1
++ + outlines-core==0.2.14
++ + packaging==26.2
++ + partial-json-parser==0.2.1.1.post7
++ + pillow==12.2.0
++ + prometheus-client==0.25.0
++ + prometheus-fastapi-instrumentator==8.0.0
++ + propcache==0.5.2
++ + protobuf==6.33.6
++ + psutil==7.2.2
++ + py-cpuinfo==9.0.0
++ + pybase64==1.4.3
++ + pycountry==26.2.16
++ + pycparser==3.0
++ + pydantic==2.13.4
++ + pydantic-core==2.46.4
++ + pydantic-extra-types==2.11.1
++ + pydantic-settings==2.14.1
++ + pyelftools==0.33
++ + pygments==2.20.0
++ + pyjwt==2.13.0
++ + python-dotenv==1.2.2
++ + python-json-logger==4.1.0
++ + python-multipart==0.0.32
++ + pyyaml==6.0.3
++ + pyzmq==27.1.0
++ + quack-kernels==0.5.0
++ + referencing==0.37.0
++ + regex==2026.5.9
++ + requests==2.34.2
++ + rich==15.0.0
++ + rich-toolkit==0.20.1
++ + rignore==0.7.6
++ + rpds-py==2026.5.1
++ + safetensors==0.8.0
++ + sentencepiece==0.2.1
++ + sentry-sdk==2.62.0
++ + setproctitle==1.3.7
++ + setuptools==80.10.2
++ + shellingham==1.5.4
++ + six==1.17.0
++ + sniffio==1.3.1
++ + sse-starlette==3.4.4
++ + starlette==1.3.1
++ + supervisor==4.3.0
++ + sympy==1.14.0
++ + tabulate==0.10.0
++ + tiktoken==0.13.0
++ + tilelang==0.1.9
++ + tokenizers==0.22.2
++ + tokenspeed-mla==0.1.2
++ + tokenspeed-triton==3.7.10.post20260531
++ + torch==2.11.0
++ + torch-c-dlpack-ext==0.1.5
++ + torchaudio==2.11.0
++ + torchvision==0.26.0
++ + tqdm==4.68.2
++ + transformers==5.12.0
++ + triton==3.6.0
++ + typer==0.25.1
++ + typing-extensions==4.15.0
++ + typing-inspection==0.4.2
++ + urllib3==2.7.0
++ + uvicorn==0.49.0
++ + uvloop==0.22.1
++ + vllm==0.23.0
++ + watchfiles==1.2.0
++ + websockets==16.0
++ + xgrammar==0.2.2
++ + yarl==1.24.2
++ + z3-solver==4.15.4.0
++VLLM_INSTALL_DONE
++vllm 0.23.0
+diff --git a/results/vllm_install.pid b/results/vllm_install.pid
+new file mode 100644
+index 0000000000..14819b51b6
+--- /dev/null
++++ b/results/vllm_install.pid
+@@ -0,0 +1 @@
++880957
+diff --git a/results/vllm_nightly_install.log b/results/vllm_nightly_install.log
+new file mode 100644
+index 0000000000..dfaac75b1b
+--- /dev/null
++++ b/results/vllm_nightly_install.log
+@@ -0,0 +1,22 @@
++Using Python 3.12.13 environment at: /home/ianblenke/.cache/vllm-venv
++Resolved 190 packages in 5.32s
++Downloading pydantic-core (2.0MiB)
++Downloading tokenizers (3.2MiB)
++ Downloaded pydantic-core
++ Downloaded tokenizers
++Prepared 5 packages in 117ms
++Uninstalled 5 packages in 7ms
++Installed 5 packages in 92ms
++ - mcp==1.27.2
++ + mcp==2.0.0a1
++ - pydantic==2.13.4
++ + pydantic==2.14.0a1
++ - pydantic-core==2.46.4
++ + pydantic-core==2.47.0
++ - sentry-sdk==2.62.0
++ + sentry-sdk==3.0.0a7
++ - tokenizers==0.22.2
++ + tokenizers==0.23.0rc0
++NIGHTLY_INSTALL_DONE
++vllm 0.23.0
++DiffusionGemma native: False
+diff --git a/results/vllm_nightly_install.pid b/results/vllm_nightly_install.pid
+new file mode 100644
+index 0000000000..9696f49697
+--- /dev/null
++++ b/results/vllm_nightly_install.pid
+@@ -0,0 +1 @@
++886586
+-- 
+2.55.0
+

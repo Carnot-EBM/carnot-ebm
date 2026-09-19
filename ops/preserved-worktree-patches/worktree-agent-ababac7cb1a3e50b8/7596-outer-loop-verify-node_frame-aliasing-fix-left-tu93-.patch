@@ -1,0 +1,97 @@
+From b72563bf20f046aed5153f6c8254689c22ec402b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 23:06:51 -0400
+Subject: [PATCH 07596/11362] [outer-loop] verify node_frame-aliasing fix left
+ tu93/HazardMovePruner clean
+
+Follow-up to the arc_solver_kit.py fix: checked whether the same bug
+had corrupted the one other cited move_pruner measurement,
+HazardMovePruner's tu93 numbers (CLAUDE.md: "states_expanded 2947 ->
+2859, -88").
+
+Re-ran both arms post-fix (arc_loop_solve.py --game tu93
+--target-level 3, with and without --no-hazard-prune): ON =
+states_expanded=2859 (pruned=88), OFF = states_expanded=2947, delta
+-88 -- an exact match to the historical numbers in every digit.
+tu93's specific measurement was never affected; its search apparently
+never hit the failure mode that corrupted lf52's. Closes the
+"not yet verified" caveat left by the prior fix with real
+verification rather than an assumption.
+
+results/arc_loop_solve_tu93.json (a shared, tracked per-game output)
+was restored to its pre-verification content afterward -- these were
+verification runs, not a new canonical measurement.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md  | 20 +++++++++++++-------
+ ops/verifier_gaps.md | 21 ++++++++++++++-------
+ 2 files changed, 27 insertions(+), 14 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 46d1506359..1bfdd057b8 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -221,13 +221,19 @@ ultimate null outcome. **Corrected picture: sc25 AND lf52 are now both clean, un
+ (more search budget would not have helped either); bp35 remains the one open, genuinely budget-bound
+ case.**
+ 
+-**Broader-impact caveat, honestly disclosed and NOT verified in this pass:** this bug lives in shared
+-`arc_solver_kit.py` infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1
+-candidate per node — e.g. `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited
+-in CLAUDE.md's ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859"). That specific
+-historical measurement was NOT re-verified as part of this fix (out of scope for this session); any
+-`move_pruner`-based numbers from before 2026-07-23 should be read with this caveat rather than assumed
+-unaffected.
++**Broader-impact caveat — VERIFIED CLEAN the same day (follow-up: "what next" → operator "yes" to
++checking tu93/HazardMovePruner).** This bug lives in shared `arc_solver_kit.py` infrastructure used by
++ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — the obvious other consumer
++to check was `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in CLAUDE.md's
++ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859"). Re-ran both arms post-fix via
++`scripts/arc_loop_solve.py --game tu93 --target-level 3` (hazard-prune ON, the default) and
++`--no-hazard-prune` (OFF): **ON = `states_expanded=2859`
++(`hazard_pruner_stats: {observed: 2859, pruned: 88, n_deaths: 6, lethal_mode: omni, trust: 1.0,
++specificity: 1.0}`), OFF = `states_expanded=2947`, delta = −88 — an EXACT match to the historical
++numbers in every digit.** tu93's specific measurement was never affected by the aliasing bug (its
++search apparently never hit the failure mode that corrupted lf52's). The shared, tracked per-game
++output file (`results/arc_loop_solve_tu93.json`) was restored to its pre-verification content via
++`git checkout --` afterward — these were verification runs, not a new canonical measurement.
+ 
+ **The live-path question, answered with existing data rather than a new build.** Investigating how to
+ "wire into live" led to `scripts/arc_leaderboard_eval.py` — the project's STANDING measurement engine
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 04f94c2426..7db6f122ec 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -3323,13 +3323,20 @@ its number). bp35 stayed budget-bound (300/300, up marginally from the buggy run
+ `max_nodes` by a rounding artifact of the bug — now exactly at budget). `levels_gained=0` on all three in
+ the corrected run too — the bug affected exploration DEPTH, not the ultimate null outcome.
+ 
+-**Broader impact caveat (honest, not yet verified):** this bug lives in shared `arc_solver_kit.py`
+-infrastructure used by ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — e.g.
+-`arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in CLAUDE.md's ARC Live-Path
+-Reachability Discipline, "states_expanded 2947 → 2859"). That specific historical measurement was NOT
+-re-verified as part of this fix (out of scope for this session); the fix is forward-looking, and any
+-`move_pruner`-based numbers from BEFORE 2026-07-23 should be read with this caveat rather than assumed
+-unaffected.
++**Broader impact caveat — VERIFIED CLEAN 2026-07-23 (same day, operator-directed follow-up: "what next" →
++"yes" to checking tu93/HazardMovePruner).** This bug lives in shared `arc_solver_kit.py` infrastructure
++used by ANY `OfflineSolver` search with a `move_pruner` and >1 candidate per node — the obvious other
++consumer to check was `arc_hazard_pruner.HazardMovePruner` (the tu93 hazard-pruning salvage cited in
++CLAUDE.md's ARC Live-Path Reachability Discipline, "states_expanded 2947 → 2859 (−88, the exact
++pruned-move count)"). Re-ran BOTH arms post-fix via `scripts/arc_loop_solve.py --game tu93
++--target-level 3` (hazard-prune ON, the default) and `--no-hazard-prune` (OFF): **ON =
++`states_expanded=2859` (`hazard_pruner_stats: {observed: 2859, pruned: 88, ...}`), OFF =
++`states_expanded=2947`, delta = −88 — an EXACT match to the historical numbers in every digit.** This
++confirms tu93's specific measurement was never affected by the aliasing bug (its search apparently never
++hit the failure mode that corrupted lf52's), closing the caveat with real verification rather than
++leaving it as an assumption. `results/arc_loop_solve_tu93.json` (a shared, tracked per-game output file)
++was restored to its pre-verification tracked content afterward via `git checkout --` — these were
++verification runs, not a new canonical measurement.
+ 
+ **Recalibration that changes how "conclusive" should be read here (found while preparing the large-budget
+ run, not known when the first budget was picked):** `ops/arc_solve_registry.yaml` shows all three games
+-- 
+2.55.0
+

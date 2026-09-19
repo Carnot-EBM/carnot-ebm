@@ -1,0 +1,95 @@
+From 0e25b7ad6c6419e12865955d8059514932bc95cd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 20 Jul 2026 04:14:24 -0400
+Subject: [PATCH 07363/11362] [conductor] Pre-gate block: Gated on Exp5746
+ readiness: measure SOTA proposal utility against exact controls
+
+3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.benchmark_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...747_sota_exact_proposal_utility_panel.json | 42 +++++++++++++++++++
+ 4 files changed, 45 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5747_sota_exact_proposal_utility_panel.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 95eb4f7f16..ad5b9c349e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-07-20T07:53:07Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 13, "phase": "iteration_start", "last_beat": "2026-07-20T08:14:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a52fb5e3ad..987c75fe2d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13826,3 +13826,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-20 07:06 UTC | Transition terminal .512 evidence, preserve mixed  | OK | 87 passed, 1 warning in 6.57s |
+ | 2026-07-20 07:29 UTC | Ingest post-V513 source deltas with honest bibliog | OK | 88 passed, 2 warnings in 8.78s |
+ | 2026-07-20 07:51 UTC | Normalize the Exp5740 ARC causal gate without chan | OK | 89 passed, 1 warning in 9.55s |
++| 2026-07-20 08:12 UTC | Build a disjoint dual-receipt exact benchmark for  | OK | 87 passed, 1 warning in 10.11s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8f082bc98b..2b5c7104a2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 12, "phase": "iteration_start", "started_at": "2026-07-20T07:53:07Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 13, "phase": "iteration_start", "started_at": "2026-07-20T08:14:24Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5747_sota_exact_proposal_utility_panel.json b/results/experiment_5747_sota_exact_proposal_utility_panel.json
+new file mode 100644
+index 0000000000..4dd296714c
+--- /dev/null
++++ b/results/experiment_5747_sota_exact_proposal_utility_panel.json
+@@ -0,0 +1,42 @@
++{
++  "experiment": 5747,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-20",
++  "started_at": "2026-07-20T08:14:24.310824+00:00",
++  "finished_at": "2026-07-20T08:14:24.310824+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5746 readiness: measure SOTA proposal utility against exact controls",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp5746-exact-proposal-utility-benchmark.benchmark_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5746-exact-proposal-utility-benchmark",
++      "artifact_field": "benchmark_ready_score",
++      "op": ">=",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "numeric comparison rejected because one side is None (actual=None, expected=1.0)"
++    },
++    {
++      "upstream": "exp5746-exact-proposal-utility-benchmark",
++      "artifact_field": "structure_receipt_failure_count",
++      "op": "==",
++      "expected": 0,
++      "actual": null,
++      "passed": false,
++      "reason": "actual=None == expected=0"
++    },
++    {
++      "upstream": "exp5746-exact-proposal-utility-benchmark",
++      "artifact_field": "validator_disagreement_count",
++      "op": "==",
++      "expected": 0,
++      "actual": null,
++      "passed": false,
++      "reason": "actual=None == expected=0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

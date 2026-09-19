@@ -1,0 +1,113 @@
+From df4b0b62f856b583fd4b08999666604bc159612a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 12:03:38 -0400
+Subject: [PATCH 01278/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._4047_decentralization_moe_base_build.json | 12 +++++-
+ ...entralization_moe_base_raw.checkpoint.json | 40 +++++++++++++++++++
+ 5 files changed, 53 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_4048_decentralization_moe_base_raw.checkpoint.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9866d2a528..9346d854b5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 77, "phase": "iteration_start", "last_beat": "2026-06-11T15:02:21Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 78, "phase": "iteration_start", "last_beat": "2026-06-11T16:03:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 93eb8d018a..47870b4ff1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8259,3 +8259,4 @@ c |
+ | 2026-06-11 14:27 UTC | OFF-ARC TRANSFER POWER + STRONGER DISCRIMINATOR -- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-11 14:43 UTC | OFF-ARC TRANSFER POWER -- COLLECT+VALIDATE (operat | OK | 136 passed in 5.54s |
+ | 2026-06-11 15:00 UTC | CLOSED-LOOP GROUNDED REPLANNING over the vc33 veri | OK | 89 passed in 5.33s |
++| 2026-06-11 16:01 UTC | DECENTRALIZATION on a TRACTABLE MoE base -- BUILD+ | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 420c2fc38c..6bb06ac702 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 77, "phase": "iteration_start", "started_at": "2026-06-11T15:02:21Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 78, "phase": "iteration_start", "started_at": "2026-06-11T16:03:37Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4047_decentralization_moe_base_build.json b/results/experiment_4047_decentralization_moe_base_build.json
+index ae8a685bd5..1de077237d 100644
+--- a/results/experiment_4047_decentralization_moe_base_build.json
++++ b/results/experiment_4047_decentralization_moe_base_build.json
+@@ -43,5 +43,13 @@
+   "smoke_best_of_n_coverage": 0.5,
+   "smoke_passed": true,
+   "smoke_per_task_seconds": 85.13,
+-  "title": "Decentralization MoE-base runner build and launch gate"
+-}
++  "title": "Decentralization MoE-base runner build and launch gate",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=10.37 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json b/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json
+new file mode 100644
+index 0000000000..81d2eba881
+--- /dev/null
++++ b/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json
+@@ -0,0 +1,40 @@
++{
++  "k_samples_per_task": 8,
++  "local_model_used": "Qwen3.6-35B-A3B",
++  "schema": "carnot.experiment_4048_decentralization_moe_base_raw.checkpoint.v1",
++  "tasks": {
++    "00576224": [
++      {
++        "code": "def transform(grid):\n    H, W = grid.shape\n    flipped = grid[:, ::-1]\n    result = np.zeros((3 * H, 3 * W), dtype=int)\n    for bi in range(3):\n        for bj in range(3):\n            if bi % 2 == 0:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = grid\n            else:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = flipped\n    return result",
++        "code_len": 382,
++        "demo_fit": 1.0,
++        "demo_perfect": true,
++        "draw_index": 0,
++        "local_s": 14.67,
++        "status": "graded",
++        "task": "00576224"
++      }
++    ],
++    "0b17323b": [
++      {
++        "code": null,
++        "demo_fit": 0.0,
++        "demo_perfect": false,
++        "draw_index": 0,
++        "local_s": 18.91,
++        "status": "no_code",
++        "task": "0b17323b"
++      },
++      {
++        "code": "import numpy as np\n\ndef transform(grid):\n    # Find coordinates of non-zero pixels\n    rows, cols = np.where(grid != 0)\n    points = list(zip(rows, cols))\n    \n    if len(points) < 2:\n        # Not enough points to determine a direction, or just one point?\n        # Based on demos, we have at least 3 points.\n        # If only 1 point, maybe no extension? Or maybe vector is undefined.\n        # Let's assume valid input based on demos.\n        return grid\n\n    # Sort points by row index (and column index just in case)\n    points.sort()\n    \n    # Determine the step vector\n    # We can take the difference between the first two points\n    # Or average of differences if there are more points to be robust\n    r1, c1 = points[0]\n    r2, c2 = points[1]\n    dr = r2 - r1\n    dc = c2 - c1\n    \n    # It's possible the points are not perfectly aligned or there's noise, \n    # but ARC tasks are usually clean. \n    # Let's verify if the vector is consistent for the first few points.\n    # Actually, just taking the first difference is likely sufficient.\n    \n    # Start extending from the last point\n    current_r, current_c = points[-1]\n    \n    # Create a copy of the grid to modify\n    output_grid = grid.copy()\n    \n    while True:\n        next_r = current_r + dr\n        next_c = current_c + dc\n        \n        if 0 <= next_r < output_grid.shape[0] and 0 <= next_c < output_grid.shape[1]:\n            output_grid[next_r, next_c] = 2\n            current_r, current_c = next_r, next_c\n        else:\n            break\n            \n    return output_grid",
++        "code_len": 1557,
++        "demo_fit": 1.0,
++        "demo_perfect": true,
++        "draw_index": 1,
++        "local_s": 19.12,
++        "status": "graded",
++        "task": "0b17323b"
++      }
++    ]
++  }
++}
+-- 
+2.55.0
+

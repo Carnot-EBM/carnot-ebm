@@ -1,0 +1,893 @@
+From bfa05420c6f26ffb743482d237203cea796e3c75 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 15:59:34 -0400
+Subject: [PATCH 11321/11362] Answer the adversarial review: per-entry marker
+ sweep, shape-keyed capstone recovery
+
+The review found two HIGH defects in the work committed as fb56cb8656.
+
+HIGH 1, mutation method. My table deleted three null spellings as ONE
+mutation and mutated `beats_majority_vote` nowhere. A grouped deletion
+goes RED if any one member is covered, so it says nothing about the
+others. A per-entry sweep found 8 of the 13 added marker entries
+decorative. Two were redundant by construction and are removed
+(`success_verifier_moat` in the relevance tuple, where `verifier_moat`
+always matches inside it; `does_not_beat_vote` in the null tuple, where
+`not_beat_vote` matches inside it). The other six now have an isolating
+test each, one parametrised per null spelling. The sweep reads 12 of 12
+RED against this commit.
+
+HIGH 2, the capstone lint exemption. Keyed on the literal "git", it
+exempted a rotter that merely mentions the word and refused a recoverer
+that reads an archive on disk. Recovery is now recognised by shape: a
+`return` between the milestone guard and the sibling `raise` is a
+fallback that can still succeed. The only name-keyed exemption left is
+the replay helper, which pins its input before the guard. Both
+counterexamples are fixtures. A `Return` requirement on the guard `if`
+was then found decorative by mutation and removed; the MILESTONE mention
+is what spares an ordinary schema guard, and that has a fixture in both
+shapes. C1 to C8 all RED with byte-identical restores.
+
+MEDIUM 3, section 3.5 of the note. "19 artifacts" did not reproduce, and
+its two exemplars were a tie (exp4221) and a blocked prompt (exp4272).
+Re-derived under a stated 31-marker set: 26, all summaries, paths and
+names. Recommendation 8.4 (add `experiment` and `title` as claim keys)
+is withdrawn: it would flag ties.
+
+MEDIUM 4: the gap statement now names the 3103 artifacts with no
+`inference_substrate` at all, the largest silent population.
+
+MEDIUM 5: the wrong "46" reached the `check_substrate_class` docstring in
+fb56cb8656, not only the note; corrected in 01fee333ab, recorded in the
+note's section 9.
+
+LOW 6: fb56cb8656's message says "none stamped"; read it as "none
+stamped BY THIS CHANGE", since exp5008 carries a historical stamp.
+
+LOW 7: SCENARIO-SUBSTRATE-CLASS-1 "SHALL NOT stamp" now has a test that
+runs the backfill with apply=True on a warn-only artifact and asserts
+the bytes are unchanged.
+
+Step 6 of the error lifecycle: the check that would have caught HIGH 1
+is the per-entry sweep itself (scratch script, one deletion per tuple
+entry, no groups). It is a method, recorded in the note, not a hook.
+Verified: 209 tests pass across the touched files; ruff clean; spec
+coverage OK; capstone lint OK on 142 modules.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ _bmad/traceability.md                         |   4 +-
+ ...te-class-and-moat-vocabulary-2026-09-05.md | 265 ++++++++++++------
+ .../capabilities/research-harnesses/spec.md   |  24 +-
+ ops/audit-findings-ledger.md                  |   2 +-
+ ops/changelog.md                              |   9 +
+ ops/status.md                                 |   9 +
+ scripts/adversarial_verify.py                 |  12 +-
+ scripts/capstone_milestone_rot_lint.py        |  92 ++++--
+ ...l_verify_moat_rigor_vocabulary_20260905.py |  37 +++
+ ...rsarial_verify_substrate_class_20260905.py |  22 ++
+ .../test_capstone_milestone_rot_lint.py       |  84 +++++-
+ 11 files changed, 426 insertions(+), 134 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index d084a5a07f..46943369ad 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2623,5 +2623,5 @@ legacy tests.
+ | REQ-CL-6798 | Byte-grounded CSL causal and safety cold audit independently replays canonical state bytes, exact actions and utilities, factor ablations, attacks, restart, and rollback without producer imports | Implemented (`python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`) | `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`: 17 passed; 658/658 statements covered (100%); artifact has 4,808 rows, 116 credited factors, zero admitted or influential poison, and `complete_positive` verdict |
+ | REQ-SUBSTRATE-CLASS-1 | A closed seven-value `inference_substrate_class`, keyed to the floors the gate applies, checked inside the fabrication gate (not a hook); absent class warns only where the name told the gate nothing; a present class is held to the enum, the blocked predicate, typed invocation evidence, and the class floor; a dict-shaped `inference_substrate` is malformed and read as missing | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `check_substrate_class`, `check_substrate_declaration_shape`, `_inference_substrate_text` shape fix; wired in `_verify_artifact_impl`). Measured: 0 corpus artifacts carry the field; shape fix adds no critical on 169 dict-shaped artifacts; 973 of 6022 would warn | `tests/python/test_adversarial_verify_substrate_class_20260905.py`; 12/12 mutations RED with byte-identical restores, call sites included |
+ | REQ-SUBSTRATE-FREEZE-1 | The four alias tuples and the ARC floor table are frozen by pinned lengths; the one duplicate is named, not removed | Implemented 2026-09-05 (a test, deliberately not a hook: 29 of 30 widenings arrived on hook-skipping commits) | `tests/python/test_substrate_tuples_pinned_20260905.py`; mutation E1 (one name appended) RED |
+-| REQ-VERIFY-7040 | The moat-rigor vocabulary matches the concept: `status` read; `moat_survives` / `beats_vote` claims; right token boundaries; null precedence; SC token on the full path; `MET_*`; untuned/vanilla naive; `success_moat` dropped | Implemented 2026-09-05 (`scripts/adversarial_verify.py` moat family). Corpus delta 14 artifacts, all legacy, none stamped; exp5008 loses its false critical | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py`; 14 mutations RED after three survivors across two passes exposed decorative entries (removed) |
+-| REQ-HARNESS-5945 | A capstone must not refuse when the live roadmap moves past its milestone; widened to the sibling-raise shape, with a mechanism-keyed recovery exemption and fail-closed reads | Implemented 2026-08-29; widened 2026-09-05 (`scripts/capstone_milestone_rot_lint.py`); exp6847 now recovers its roadmap and design from history (`_milestone_inputs`) | `tests/python/test_capstone_milestone_rot_lint.py` (12 tests) and `test_experiment_6847_v598_independent_capstone.py::test_scenario_research_6847_roadmap_recovery_from_git_history`; mutations C1-C6, D1-D2 RED |
++| REQ-VERIFY-7040 | The moat-rigor vocabulary matches the concept: `status` read; `moat_survives` / `beats_vote` claims; right token boundaries; null precedence; SC token on the full path; `MET_*`; untuned/vanilla naive; `success_moat` dropped | Implemented 2026-09-05 (`scripts/adversarial_verify.py` moat family). Corpus delta 14 artifacts, all legacy, none stamped; exp5008 loses its false critical | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py`; 20 mutations RED (12 per-entry deletions of every added marker, no groups, plus 8 rule mutations) after an adversarial review's per-entry sweep found 8 of 13 added entries decorative; two removed, six held by isolating tests |
++| REQ-HARNESS-5945 | A capstone must not refuse when the live roadmap moves past its milestone; widened to the sibling-raise shape, with recovery recognised by shape (a return between the guard and the raise), a replay-helper exemption, and fail-closed reads | Implemented 2026-08-29; widened 2026-09-05 (`scripts/capstone_milestone_rot_lint.py`); exp6847 now recovers its roadmap and design from history (`_milestone_inputs`) | `tests/python/test_capstone_milestone_rot_lint.py` (12 tests) and `test_experiment_6847_v598_independent_capstone.py::test_scenario_research_6847_roadmap_recovery_from_git_history`; mutations C1-C8, D1-D2 RED |
+diff --git a/docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md b/docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md
+index 8d85c62a8c..ec482c502b 100644
+--- a/docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md
++++ b/docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md
+@@ -23,10 +23,12 @@ corpus that changes 14 artifacts, all legacy, none in the backfill window. The c
+ rot lint now catches the sibling-raise shape, exempts recovery helpers by mechanism, and
+ fails closed on an unreadable module; exp6847 recovers its roadmap and design from git,
+ which fixes four tests that errored today. Every rule is proven by a mutation that bites
+-the call site: 36 distinct mutations RED, every one restored byte-identically, after three
+-survivors across two passes exposed decorative entries that were removed; one further
+-probe (not a proof) is RED. The CLAUDE.md table replacement is drafted in Appendix A and
+-not applied.
++the call site: 44 distinct mutations RED against the final code, every one restored
++byte-identically, after an adversarial review's per-entry deletion sweep found 8 of the 13
++marker entries this task added to be decorative (two removed, the rest held by their own
++tests) and found the capstone lint's exemption wrong in both directions (replaced by shape);
++one further probe (not a proof) is RED. The CLAUDE.md table replacement is drafted in
++Appendix A and not applied. Corrections made during the session are in section 9.
+ 
+ ## 1. Populations and method
+ 
+@@ -121,11 +123,14 @@ and left in place: removing it changes the 76 pin, which is the operator's call.
+ 
+ - `_MOAT_RIGOR_CLAIM_KEYS` gains `status`. `_claims_moat` reads `status` too.
+ - `_MOAT_HEADLINE_MARKERS` gains `moat_survives`, `beats_vote`, `beats_majority_vote`.
+-- Win markers gain `beats_vote`, `beats_majority_vote`, `moat_survives`. Null markers
+-  gain `does_not_beat_vote`, `not_beat_vote`, and the plural `not_beats_*` spellings
+-  (exp3996 writes `local_not_beats_vote`). The singular `beat_vote` was added and then
+-  removed: its only corpus spelling in any claim key is the negated `does_not_beat_vote`
+-  (exp5161; MEASURED over P-readable), and no test could isolate it (3.4, item 4).
++- Win markers gain `beats_vote`, `beats_majority_vote`, `moat_survives`. Null markers gain
++  `not_beat_vote` and the plural `not_beats_*` spellings (exp3996 writes
++  `local_not_beats_vote`); `does_not_beat_vote` (exp5161) is a relevance marker and is
++  read as a null through `not_beat_vote`. Three entries were added and then removed after a
++  per-entry deletion proved them decorative: the singular `beat_vote` (its only corpus
++  spelling is `does_not_beat_vote`), `success_verifier_moat` in the relevance tuple
++  (`verifier_moat` always matches inside it), and `does_not_beat_vote` in the null tuple
++  (double-covered by `not_beat_vote`). See 3.4 items 4 and 5.
+ - `success_moat` is gone from the relevance and win tuples; `success_verifier_moat` stays.
+ - Markers match on a RIGHT token boundary only (`_moat_marker_present`).
+ - `_moat_rigor_claims_win` returns False when a null marker is present.
+@@ -179,18 +184,46 @@ flags of a kind they already had, are not among the 14.
+    found one more survivor (`beat_vote`, singular, in the relevance tuple) and one wrong
+    expectation in my own status-only test (`delta_vs_sc` is in the naive-SC leaf set, so
+    the naive warn was correct and the test was not). Both fixed; the survivor removed.
+-
+-### 3.5 A real input the widened family still does NOT catch (MEASURED)
+-
+-Over P-readable, 19 artifacts carry a moat or beats marker in a top-level string field
+-that is NOT a claim key, and in no claim key. By key: `prior_milestone_verdicts_summary`
+-3, `note_path` 3, `experiment` 2, `title` 2, `methodology_note` 2, and seven singletons.
+-Two of those are claims in substance:
+-`experiment_4221_oracle_distinct_arc_verifier_beats_vote.json` states its claim in the
+-`experiment` name, and `experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json`
+-in `title`. Neither is read by the family. Adding `experiment` and `title` as claim keys
+-would also match names that merely mention a marker (`note_path` is a file path). Left
+-for the operator; see section 8.
++5. The adversarial review deleted every marker this task added ONE ENTRY AT A TIME and
++   found 8 of 13 decorative (review HIGH 1). The mechanism matters more than the count:
++   my B11 mutation deleted the three plural null spellings as a GROUP, and a group
++   deletion goes RED if any one member is covered, so it cannot show that the others are
++   untested; `beats_majority_vote` was mutated nowhere. Fixed by method: a per-entry sweep
++   (one deletion per tuple entry, no groups, failing tests named) now covers all 12 added
++   entries, 12 RED. Two entries were removed as redundant by construction
++   (`success_verifier_moat` in relevance; `does_not_beat_vote` in null); the six others
++   received an isolating test each, including a parametrised case per null spelling.
++6. The capstone-lint exemption keyed on the literal `"git"` was wrong in both directions
++   (review HIGH 2): it exempted a rotter that mentions the word for an unrelated reason and
++   refused a recoverer that reads an archive on disk with no version control at all.
++   Replaced by shape: a `return` between the milestone guard and the sibling `raise` is a
++   fallback that can still succeed. Both counterexamples are tests. A `Return` requirement
++   on the guard `if` was then found decorative by mutation and removed; the MILESTONE
++   mention is what protects an ordinary schema guard, and that now has its own fixture in
++   both shapes.
++
++### 3.5 Markers outside the claim keys, re-derived (MEASURED; corrected, see 9.6)
++
++Definition, stated. Over P-readable (6024 on the merged tree): an artifact whose claim keys
++(`_MOAT_RIGOR_CLAIM_KEYS` plus `headline_outcome` and `headline`) carry NO marker from the
++union of the four moat tuples (31 markers, matched by the gate's own `_moat_marker_present`
++on `_moat_rigor_norm(value)`), while some other top-level string field carries one.
++Count: 26. By key: `p0_1_v2_verdict` 3, `prior_milestone_verdicts_summary` 3, `note_path`
++3, `p0_1_v5_verdict` 2, `experiment` 2, `title` 2, and singletons (`key_finding`,
++`milestone_319_summary`, `p01_route2_verdict`, `p01_route2_fair_verdict`,
++`p0_1_v5_paragraph`, `p0_1_v5_summary`).
++
++A first draft reported 19 under a six-marker set and named exp4221 and exp4272 as claims
++in substance. Both were wrong on reading. exp4221's `honest_verdict` is
++`complete: oracle_distinct_verifier_ties_vote_with_headroom`, a TIE; only its `experiment`
++NAME says `beats_vote`. exp4272's `title` is a planner task prompt and its verdict is
++`blocked_gate_check_failed`. Reading the 26 by key: they are quoted verdicts of OTHER
++experiments carried by capstones and archive tasks (`p0_1_v2_verdict`,
++`prior_milestone_verdicts_summary`), file paths (`note_path`), and names. None is the
++artifact's own claim. So the honest statement is the opposite of the first draft's: adding
++`experiment` or `title` as claim keys would flag ties and blocked prompts. Recommendation
++8.4 is withdrawn. The residual the family still has is the general one in section 6: a
++claim that lives only in a key nobody has listed; no such key was found in this population.
+ 
+ ## 4. Part C: the two live defects
+ 
+@@ -209,8 +242,9 @@ roadmap and returns the first that holds it, reading the design document from th
+ commit (the loader validates the two against each other). Today that commit is
+ `c6d6645e52`, 18 back in the roadmap's history, and its design document reads
+ `**Milestone:** 2026.09.598`. The suite for the module is 22 passed. The new
+-`_milestone_inputs` has the sibling-raise shape, so the widened lint would refuse it
+-without the mechanism exemption; the exemption is exercised on it (section 5, C2, C4).
++`_milestone_inputs` has the guard-then-sibling-raise shape; the lint reads its `return
++archived, ...` inside the history walk as the fallback that makes it a recoverer, and a
++test asserts that reading is exercised on all three helpers (section 5, C4).
+ 
+ ### 4.2 exp5008: a CODE FIX for the false positive; the artifact is an ACCEPTED STATE
+ 
+@@ -227,58 +261,93 @@ stamp is that operator's call, not mine.
+ ## 5. Mutations
+ 
+ Every mutation was applied by text replacement to the live file, the named test target
+-was run, the file was restored from the pre-mutation bytes, and the SHA-256 was compared.
+-Every run restored byte-identically. The runner ran UNLOCKED:
+-`test_suite_mutation_check.py --mutation-begin` refuses inside a worktree while the same
+-lock blocks repo-wide. PYTHONPATH was pinned to this worktree's `python/`, and the runner
+-printed the imported paths of both `carnot` and `scripts.adversarial_verify` before the
+-first mutation; both resolve inside this worktree. The first pass used `-x`; the second
+-pass (B1, B2, B2b, B2c, B2d, B3, and the probe) named every failing test, so each RED
+-below is attributed to the mutation, not to a test that was failing already. Count: 36
+-distinct mutations RED (A 12, B 14, C 6, D 2, E 1, F 1); 3 survivors across the two passes
+-(B2 relevance copy, B2d, and B1 on the first pass) resolved by removing two decorative
+-entries and adding one isolating test; 1 probe RED.
+-
+-| id | mutation (call site or rule) | target | result |
+-|---|---|---|---|
+-| A1 | `check_substrate_class` call removed from `_verify_artifact_impl` | class tests | RED |
+-| A2 | `check_substrate_declaration_shape` call removed | class tests | RED |
+-| A3 | enum check dropped (`not in SUBSTRATE_CLASSES`) | class tests | RED |
+-| A4 | absent-class warn gate replaced by `False` | class tests | RED |
+-| A4b | absent-class warn fires on recognised names (`True`) | class tests | RED |
+-| A5 | `blocked_no_run` pairing rule disabled | class tests | RED |
+-| A6 | model-class-with-blocked-verdict rule disabled | class tests | RED |
+-| A7 | live-evidence contradiction disabled | class tests | RED |
+-| A8 | negative-evidence contradiction disabled | class tests | RED |
+-| A9 | class floor comparison disabled (`< 0`) | class tests | RED |
+-| A10 | shape fix reverted to the `"value" in value` form | class tests | RED |
+-| A11 | MALFORMED condition disabled | class tests | RED |
+-| B1 | `status` removed from the claim keys | vocabulary tests | first pass GREEN (double-covered), RED after the status-only `beats_sc` test |
+-| B2 | `moat_survives` removed from the relevance tuple | vocabulary tests | first pass GREEN (decorative); entry removed; replaced by B2, B2b, B2c, B2d below |
+-| B2 | `moat_survives` removed from the headline tuple | vocabulary tests | RED |
+-| B2b | `beats_vote` removed from the headline tuple | vocabulary tests | RED |
+-| B2c | `moat_survives` removed from the win tuple | vocabulary tests | RED |
+-| B2d | `beat_vote` removed from the relevance tuple | vocabulary tests | GREEN (survived); the entry was decorative and is removed from both tuples |
+-| B3 | `beats_vote` removed from the win tuple | vocabulary tests | RED |
+-| B4 | delta rule back to leaf-only | vocabulary tests | RED |
+-| B5 | `MET` exact token only | vocabulary tests | RED |
+-| B6 | null precedence removed | vocabulary tests | RED |
+-| B7 | right boundary removed from markers | vocabulary tests | RED |
+-| B8 | left boundary removed before `tuned_` | vocabulary tests | RED |
+-| B9 | `success_moat` marker restored | vocabulary tests | RED |
+-| B10 | `status` removed from `_claims_moat` keys | vocabulary tests | RED |
+-| B11 | plural null spellings removed | vocabulary tests | RED |
+-| B12 | both boundaries removed from the SC token | vocabulary tests | RED |
+-| C1 | sibling-raise walk removed | capstone-rot tests | RED |
+-| C2 | exemption call site removed | capstone-rot tests | RED (3 tests, including the three real capstones) |
+-| C3 | unreadable module back to fail-open | capstone-rot tests | RED |
+-| C4 | `"git"` literal recogniser removed | capstone-rot tests | RED |
+-| C5 | replay-helper recogniser removed | capstone-rot tests | RED |
+-| C6 | sibling rule inverted on the Return guard | capstone-rot tests | RED |
+-| D1 | exp6847 git fallback disabled | recovery test | RED |
+-| D2 | exp6847 design read from the live file | recovery test | RED |
+-| E1 | one name appended to `NO_LLM_SUBSTRATE_ALIASES` | pinned test | RED |
+-| F1 | census dict population taken from gate text again | census tests | RED |
++was run WITHOUT `-x` so every failing test is named, the file was restored from the
++pre-mutation bytes, and the SHA-256 was compared. Every run restored byte-identically. The
++runner ran UNLOCKED: `test_suite_mutation_check.py --mutation-begin` refuses inside a
++worktree while the same lock blocks repo-wide. PYTHONPATH was pinned to this worktree's
++`python/`, and the runner printed the imported paths of `carnot` and
++`scripts.adversarial_verify` before the first mutation; both resolve inside this worktree.
++
++Method correction after review (9.4): the first pass deleted three null spellings as ONE
++mutation, and one added entry was mutated nowhere. A grouped deletion goes RED if any one
++member is covered and says nothing about the others. A per-entry sweep (5.0b) replaced it.
++The count below is of distinct mutations RED against the FINAL code: 44 (A 12, B 20, C 8,
++D 2, E 1, F 1). Survivors found along the way, and what each led to, are in 9.4.
++
++### 5.0 Part A, the class check: 12 of 12 RED
++
++| id | mutation | result |
++|---|---|---|
++| A1 | `check_substrate_class` call removed from `_verify_artifact_impl` | RED |
++| A2 | `check_substrate_declaration_shape` call removed | RED |
++| A3 | enum check dropped | RED |
++| A4 | absent-class warn gate replaced by `False` | RED |
++| A4b | absent-class warn fires on recognised names (`True`) | RED |
++| A5 | `blocked_no_run` pairing rule disabled | RED |
++| A6 | model-class-with-blocked-verdict rule disabled | RED |
++| A7 | live-evidence contradiction disabled | RED |
++| A8 | negative-evidence contradiction disabled | RED |
++| A9 | class floor comparison disabled (`< 0`) | RED |
++| A10 | shape fix reverted to the `"value" in value` form | RED |
++| A11 | MALFORMED condition disabled | RED |
++
++### 5.0b Part B, per-entry deletion of every marker this task added: 12 of 12 RED
++
++| tuple | entry deleted | failing test(s) |
++|---|---|---|
++| `_MOAT_HEADLINE_MARKERS` | `moat_survives` | moat_survives spellings; ledger-named artifacts |
++| `_MOAT_HEADLINE_MARKERS` | `beats_vote` | beats_vote contract; ledger-named artifacts |
++| `_MOAT_HEADLINE_MARKERS` | `beats_majority_vote` | beats_majority_vote win |
++| `_MOAT_RIGOR_CLAIM_KEYS` | `status` | status-only claim reaches the win branch |
++| `_MOAT_RIGOR_RELEVANCE_MARKERS` | `does_not_beat_vote` | exp5161 shape |
++| `_MOAT_RIGOR_WIN_MARKERS` | `beats_vote` | beats_vote contract; ledger-named artifacts |
++| `_MOAT_RIGOR_WIN_MARKERS` | `beats_majority_vote` | beats_majority_vote win |
++| `_MOAT_RIGOR_WIN_MARKERS` | `moat_survives` | moat_survives with a positive delta |
++| `_MOAT_RIGOR_NULL_MARKERS` | `not_beat_vote` | exp5161 shape; parametrised null case |
++| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_sc` | parametrised null case |
++| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_self_consistency` | parametrised null case |
++| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_vote` | negated claim is null; parametrised null case |
++
++Entries added and then REMOVED because a per-entry deletion left the suite green and no
++test could isolate them: `moat_survives`, `beats_vote`, `beats_majority_vote` copies in the
++relevance tuple (the headline tuple is consulted first); `beat_vote` (singular; no positive
++corpus spelling); `success_verifier_moat` in relevance (`verifier_moat` always matches
++inside it); `does_not_beat_vote` in the null tuple (`not_beat_vote` matches inside it).
++
++### 5.0c Part B, rule mutations: 8 of 8 RED
++
++| id | mutation | result |
++|---|---|---|
++| B4 | delta rule back to leaf-only | RED |
++| B5 | `MET` exact token only | RED |
++| B6 | null precedence removed | RED |
++| B7 | right boundary removed from markers | RED |
++| B8 | left boundary removed before `tuned_` | RED |
++| B9 | `success_moat` marker restored | RED |
++| B10 | `status` removed from `_claims_moat` keys | RED |
++| B12 | both boundaries removed from the SC token | RED |
++
++### 5.0d The capstone lint: 8 of 8 RED
++
++| id | mutation | failing test(s) |
++|---|---|---|
++| C1 | sibling-raise walk removed | sibling-raise; incidental-git rotter; name-only helper |
++| C2 | replay exemption call site removed | replay fixture; live repository; three real capstones |
++| C3 | unreadable module back to fail-open | unreadable module |
++| C4 | fallback-return recognition removed | both git spellings; disk archive; live repository; three real capstones |
++| C5 | replay-helper recogniser removed | replay fixture; live repository; three real capstones |
++| C6 | sibling guard ignores the MILESTONE mention | schema guard; disk archive; live repository; three real capstones |
++| C7 | any `"git"` literal exempts again | incidental-git rotter |
++| C8 | inline rule ignores the MILESTONE mention | schema guard; live repository |
++
++### 5.0e exp6847, the pin, the census: 4 of 4 RED
++
++| id | mutation | result |
++|---|---|---|
++| D1 | exp6847 history fallback disabled | RED |
++| D2 | exp6847 design read from the live file | RED |
++| E1 | one name appended to `NO_LLM_SUBSTRATE_ALIASES` | RED |
++| F1 | census dict population taken from gate text again | RED |
+ 
+ ### 5.1 Probe result (MEASURED)
+ 
+@@ -325,12 +394,17 @@ expectation (3.4, item 4), fixed. Not run: the whole suite, about 62,000 tests.
+ The task asked for a real input each new check is supposed to catch and does not.
+ 
+ - Class check: an artifact with a RECOGNISED substrate name and no class draws nothing
+-  (2.3). An artifact declaring `hardware_board` draws no floor flag at any duration,
+-  because the gate has no hardware floor and I did not invent one.
++  (2.3). Larger, and omitted from the first draft (9.7): 3103 of 6024 readable artifacts
++  declare NO `inference_substrate` at all and draw no class flag either; the marker scan
++  governs them, and SCENARIO-SUBSTRATE-CLASS-2 codifies that silence on purpose. That is
++  the population where a class would matter most, and it is not nudged. An artifact
++  declaring `hardware_board` draws no floor flag at any duration, because the gate has no
++  hardware floor and I did not invent one.
+ - Moat family: a claim that lives only in `experiment` or `title` (exp4221, exp4272; 3.5).
+ - Capstone lint: a raise nested inside a LATER sibling block (`if`/`try`) after the guard
+-  `if`, not a bare sibling `Raise`, is not caught. A function that reads the live roadmap
+-  and mentions the literal `"git"` for an unrelated reason is exempted.
++  `if`, not a bare sibling `Raise`, is not caught. A rotter that returns from an
++  unrelated branch between its guard and its raise reads as a recoverer (the shape rule's
++  residual, 9.5).
+ - exp6847 recovery: a roadmap whose V598 commit is more than 400 roadmap-touching commits
+   back fails closed rather than recovering. Today it is 18 back.
+ 
+@@ -363,7 +437,9 @@ that encoded the old stringify behaviour.
+    re-pin 76 to 75. The test names it.
+ 3. Replace the CLAUDE.md "Inference-Substrate Declaration Discipline" table with
+    Appendix A, or edit it.
+-4. Decide whether `experiment` and `title` join the moat claim keys (3.5).
++4. WITHDRAWN 2026-09-05 after review: the measurement behind "add `experiment` and
++   `title` to the moat claim keys" did not reproduce, and its two exemplars are a tie and a
++   blocked prompt (3.5, 9.6). Adding those keys would flag ties. No decision to make.
+ 5. Decide the exp5008 corrigendum: the stamp is historical; the re-verified copy is clean.
+ 6. Decide whether the planner prompt names `inference_substrate_class`.
+ 7. The ledger rows I moved from ACCEPTED to FIXED, each with a dated note: `_claims_moat`,
+@@ -397,6 +473,35 @@ disagreed.
+    header regex missed most headers). Its numbers were discarded; the direct line counts
+    above were used. Recorded because an instrument built to check a count was wrong in
+    the same way the count was.
++4. Mutation METHOD (review HIGH 1). My table looked complete while carrying a grouped
++   deletion (B11: three null spellings in one mutation) and an entry mutated nowhere
++   (`beats_majority_vote`). A per-entry sweep found 8 of the 13 added entries decorative:
++   `beats_majority_vote` (two sites), `does_not_beat_vote` (two sites),
++   `success_verifier_moat`, `not_beat_vote`, `not_beats_sc`,
++   `not_beats_self_consistency`. Two were redundant by construction and were removed; the
++   rest got isolating tests; the sweep now reads 12 of 12 RED (5.0b). The earlier "36 RED"
++   was a true count of mutations and a false picture of coverage.
++5. The capstone-lint exemption (review HIGH 2): keyed on the literal `"git"`, it both
++   exempted a rotter that mentions the word and refused a recoverer that reads an archive
++   on disk. Replaced by shape (a return between the guard and the raise); the `Return`
++   requirement on the guard was then found decorative and removed; the MILESTONE mention
++   gained its own fixture (5.0d C6, C8).
++6. Section 3.5 (review MEDIUM 3): "19 artifacts" did not reproduce under any of six
++   marker readings, and both named exemplars were not claims (a tie; a blocked prompt).
++   Re-derived under a stated 31-marker set: 26, all summaries, paths and names.
++   Recommendation 8.4 withdrawn.
++7. The gap statement (review MEDIUM 4) named the smaller silent population and not the
++   larger: 3103 artifacts with no declaration at all. Added to section 6.
++8. The wrong "46" reached the docstring of `check_substrate_class` in `fb56cb8656` and the
++   SCENARIO-2 test comment, not only this note (review MEDIUM 5). Corrected in
++   `34d8298277` (note) and `01fee333ab` (docstring and comment). A number in a docstring is
++   read by people who never open a note.
++9. The commit message of `fb56cb8656` says "none stamped"; the qualifier is "none stamped
++   BY THIS CHANGE", since exp5008 carries a historical stamp (review LOW 6). History is not
++   rewritten; recorded here.
++10. SCENARIO-SUBSTRATE-CLASS-1's "SHALL NOT stamp" clause had no test (review LOW 7);
++    `test_the_absent_class_warn_never_stamps_even_through_the_backfill` runs the backfill
++    with `apply=True` on a warn-only artifact and asserts the bytes are unchanged.
+ 
+ ## Appendix A. Draft replacement for the CLAUDE.md table (operator edit; NOT applied)
+ 
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 1fb7fa4a7f..98c77a0388 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -11108,10 +11108,16 @@ Widened 2026-09-05 (ledger row `capstone_milestone_rot_lint.py`, SILENT_NON_FIRI
+ 1. The sibling-raise shape is a refusal: `if ... == MILESTONE: return payload` as a
+    guard, then a `raise` later in the same statement list. The old rule looked only
+    inside the `if` and exited 0 on it.
+-2. A function that recovers the roadmap from version-control history, or through
+-   `_replay_bytes` / `receipt_bytes`, is exempt. Such a helper cannot rot. The
+-   exemption is keyed on mechanism, never on a helper's name. It was deleted on
+-   2026-08-29 as decorative; the widening in item 1 makes it load-bearing.
++2. Recovery is recognised by SHAPE: a `return` anywhere between the milestone guard
++   and the sibling `raise` is a fallback path that can still succeed (a walk through
++   version-control history, an archived copy on disk, any second source), so the
++   function recovers rather than rots. The only name-keyed exemption is a replay
++   helper (`_replay_bytes` / `receipt_bytes`) that pins the input to the closing
++   commit BEFORE the guard, leaving no fallback to detect. A first draft keyed the
++   exemption on the literal `"git"`; an adversarial review showed that it both
++   exempted a rotter that merely mentions the word and refused a recoverer that reads
++   an archive file with no version control at all. Stated residual: a rotter that
++   returns from an unrelated branch after its guard reads as a recoverer.
+ 3. A module that cannot be read or parsed is a violation, not a pass.
+ 4. The hook does not see `[conductor]` commits.
+    `python/carnot/experiment_6847_v598_independent_capstone.py` landed on one
+@@ -11130,10 +11136,12 @@ and raises later in the same statement list, the lint SHALL refuse.
+ 
+ #### SCENARIO-HARNESS-5945-GIT-RECOVERY
+ 
+-Given the same shape in a function that calls version control (the literal `"git"`
+-inline in the call, or bound to a prefix and splatted) or `_replay_bytes` /
+-`receipt_bytes`, the lint SHALL pass. A function merely NAMED like a recovery helper
+-SHALL still be refused.
++Given the same shape with a fallback that can return between the guard and the raise
++(a version-control walk in either spelling, or an archive file on disk with no version
++control at all), or a `_replay_bytes` / `receipt_bytes` call, the lint SHALL pass. A
++function merely NAMED like a recovery helper SHALL still be refused, and so SHALL a
++rotter that merely mentions the literal `"git"`. An ordinary schema guard on the live
++roadmap that does not mention MILESTONE SHALL pass in both shapes.
+ 
+ #### SCENARIO-HARNESS-5945-UNREADABLE
+ 
+diff --git a/ops/audit-findings-ledger.md b/ops/audit-findings-ledger.md
+index ebf43d7c11..5096aff97e 100644
+--- a/ops/audit-findings-ledger.md
++++ b/ops/audit-findings-ledger.md
+@@ -52,7 +52,7 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
+ | 2026-08-28 | qa_layer_authenticity_audit | harness_integrity_lint.py | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-29 | experiment_claim_audit | experiment_6275_flagship_asp_constraint_verification_benchmark.json | CLAIM_REFUTED_BY_OWN_DATA | ACCEPTED | 2026-09-05 outer-loop triage. Finding correct, verified against the artifact. All 15 model-by-family semantic cells pair `energy_guided_repair` against `one_shot` at n=6. Nine cells report delta 0.0 with ci95 [0.0, 0.0]. The other six cross zero (best: gemma-4-31B non_monotonic_defaults +0.333, ci95 [-0.08, 0.75]). No cell excludes zero. `verifier_is_oracle: true` (principle: exact ASP solving is the correctness oracle), so a win would have been circular anyway. n=6 per cell is below the N>=30 floor CLAUDE.md sets for a percentage-point delta claim. What stands: an honest null on a tiny sample, plus real engineering receipts (three GGUF models live, 196 s, GPU offload receipts). What does not: any repair-adds-validity claim. The artifact also contradicts itself: `status: complete_ready` beside `honest_verdict: complete_partial: test_exit_codes`, with 1 of 6 `test_commands` carrying an exit code, and a `corrigendum_pending` NONTERMINAL_DECLARED_ARTIFACT critical preserved beside a 2026-08-29 `flagged_adversarial_cleared_note`. The live gate on a copy draws no flag today. CORRECT_THE_RECORD accepted as future work; artifact left unedited per never-prune. Prevention: a status-ready versus verdict-partial lint has exactly one hit in 7192 artifacts (this file), so it is not yet a class. Record and revisit if it recurs. CORRECTION 2026-09-05 (independent re-derivation after commit 81ed76b7cf): the note above says nine cells at ci95 [0.0, 0.0] and six crossing zero. Re-derived from `paired_intervals_and_sample_sizes`: TEN cells at [0.0, 0.0], FIVE crossing zero, and the best cell is a tie (gemma-4-31B non_monotonic_defaults and gemma-4-26B positive_negative_controls, both +0.333, ci95 [-0.08, 0.75]). Still no cell with a lower bound above zero, still n=6 everywhere. Conclusion and disposition unchanged; the counts were wrong. |
+ | 2026-08-29 | qa_layer_authenticity_audit | worktree_import_guard.py | SILENT_NON_FIRING | FIXED | 2026-09-05 outer-loop triage. Finding correct, and already fixed by commit 5d3f03326c (2026-09-05 00:15, REQ-WORKTREE-IMPORT-1): a root `tests/conftest.py` now wires the guard tree-wide, and `tests/python/test_worktree_guard_covers_tree_20260905.py` collects `tests/archive/test_weight_steering.py` against a foreign checkout and expects refusal. Verified against pytest's rules, not the report: a conftest loads only for its own directory and descendants, so `tests/python/conftest.py` never covered `tests/archive/`, and `pyproject.toml` addopts ignores that directory by default, which is why nothing noticed. Residual, recorded not fixed: the report's exact invocation (cwd inside checkout A, test path inside checkout B) still loads no conftest at all, because pytest ignores conftests outside its confcutdir. Closing that needs a plugin registered in addopts or a pytest11 entry point, not another conftest. Rare shape, and the collection header shows the wrong tree to a human. Leave unless it recurs. CORRECTION 2026-09-05 (worktree agent, measured with pytest 9.0.3 and `--collect-only -q --trace-config`): the residual as stated does not reproduce. In 13 cross-checkout configurations (cwd in the worktree with the test in main and the reverse; PYTHONPATH pinned and unset; `--rootdir`, `-c`, and `--confcutdir` each pointed at the OTHER checkout; an external non-nested copy of the checkout; `tests/archive/` files; `-o addopts=''`), pytest registered the TEST checkout's `tests/conftest.py` every time and the guard refused every foreign pairing. The confcutdir model is wrong: pytest's `_is_in_confcutdir` excludes only strict ancestors of confcutdir, and a sibling checkout's `tests/` directory is never an ancestor of the other checkout. The report's 08-29 counterexample (external worktree, `tests/archive/`, `-o addopts=''`) was real THEN, because no conftest sat above `tests/archive/`; on the current tree the same shape refuses (exit 4). The only no-conftest cases found are `--noconftest` and a checkout that predates 5d3f03326c. Real remaining gaps, none the stated residual: `--noconftest`; stale checkouts; 37 test files outside `tests/` under `python/` and `scripts/` that no conftest covers. Disposition FIXED stands. Probe table in ops/status.md 2026-09-05 18:50Z. SECOND CORRECTION 2026-09-05 19:20Z (same agent, after adversarial review): the sentence "The only no-conftest cases found are `--noconftest` and a checkout that predates 5d3f03326c" states a closed set and the set is not closed. My `--confcutdir` probe pointed at the checkout ROOT, the one direction that can never cut a conftest below it, so the sweep could not have found this. MEASURED: cwd in the main checkout, PYTHONPATH unset, a worktree test file, `--confcutdir=<worktree>/tests/python/verify` collects 10 tests with NO conftest registered and `carnot` resolving to the main checkout. A conftest AT the confcutdir still loads, so the hole is exactly the `tests/` subdirectories with no conftest of their own (`archive`, `fixtures`, `quarantine` at the time of writing; `tests/python/` and `tests/integration/` each carry their own guard call and are immune). Reachability is low: no file in either checkout passes `--confcutdir`. Disposition FIXED still stands for the ORIGINAL finding; this third case is recorded, not fixed. |
+-| 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | FIXED | 2026-09-05 outer-loop triage. Verified live, not from the report: I wrote the report's counterexample to a scratch file and ran the lint. The guard-clause shape (`if ... == MILESTONE: return` followed by a sibling `raise`) exits 0. The inverted shape (`if ... != MILESTONE: raise`) exits 1. `_refuses_on_milestone` walks only the `If` subtree for a `Raise`, so a raise that follows the `If` is invisible. Real SILENT_NON_FIRING. The widening is NOT free, and the report missed this: the blessed git-recovery helper `_roadmap_payload_for_milestone` in `experiment_6615_v576_independent_capstone.py` (lines 265-269) and `experiment_6659_v580_capstone.py` has exactly this sibling-raise shape. Confirmed with the lint's own recognisers: reads_roadmap True, refuses_line None, body ends `If, Raise`. The lint's docstring says no exemption is needed because that helper raises at function level, not inside an `if`. That is this blind spot described as a design property. Any widening that catches the missed input also catches both blessed helpers, so the deleted exemption must return with it (exempt a function whose roadmap bytes come through `_replay_bytes` or git). Regression tests: one named for the sibling-raise fixture, one asserting exp6615's helper stays clean. Also accepted: `except (OSError, SyntaxError): continue` is fail-open and cheap to flip. Side finding for the operator: the default glob is NOT clean today. `experiment_6847_v598_independent_capstone.py` `load_planned_tasks()` line 267 trips the existing rule; it landed in conductor commit 89ed3aef60 (2026-09-01), a path that skips hooks. Not fixed here. CORRECTION 2026-09-05 (independent re-derivation after commit 81ed76b7cf): the note above cites lines 265-269; `_roadmap_payload_for_milestone` starts at line 258 and the sibling-raise shape is lines 267-269. Citation only; nothing else changes. FIXED 2026-09-05 (REQ-HARNESS-5945 widened): the sibling-raise shape is caught; the recovery exemption is reinstated, keyed on mechanism (a `git` literal or `_replay_bytes`/`receipt_bytes`), and exercised on the V576, V580 and V598 helpers by a negative test; an unreadable module is a violation. The side finding is fixed too: exp6847 now recovers its roadmap and design from the commit that held V598 (4 tests errored today before the fix; the default glob is clean after it). A first draft of the exemption looked only inside Call nodes and missed the `git = ["git", ...]` prefix form in the very helper it was written for; found by running the lint. |
++| 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | FIXED | 2026-09-05 outer-loop triage. Verified live, not from the report: I wrote the report's counterexample to a scratch file and ran the lint. The guard-clause shape (`if ... == MILESTONE: return` followed by a sibling `raise`) exits 0. The inverted shape (`if ... != MILESTONE: raise`) exits 1. `_refuses_on_milestone` walks only the `If` subtree for a `Raise`, so a raise that follows the `If` is invisible. Real SILENT_NON_FIRING. The widening is NOT free, and the report missed this: the blessed git-recovery helper `_roadmap_payload_for_milestone` in `experiment_6615_v576_independent_capstone.py` (lines 265-269) and `experiment_6659_v580_capstone.py` has exactly this sibling-raise shape. Confirmed with the lint's own recognisers: reads_roadmap True, refuses_line None, body ends `If, Raise`. The lint's docstring says no exemption is needed because that helper raises at function level, not inside an `if`. That is this blind spot described as a design property. Any widening that catches the missed input also catches both blessed helpers, so the deleted exemption must return with it (exempt a function whose roadmap bytes come through `_replay_bytes` or git). Regression tests: one named for the sibling-raise fixture, one asserting exp6615's helper stays clean. Also accepted: `except (OSError, SyntaxError): continue` is fail-open and cheap to flip. Side finding for the operator: the default glob is NOT clean today. `experiment_6847_v598_independent_capstone.py` `load_planned_tasks()` line 267 trips the existing rule; it landed in conductor commit 89ed3aef60 (2026-09-01), a path that skips hooks. Not fixed here. CORRECTION 2026-09-05 (independent re-derivation after commit 81ed76b7cf): the note above cites lines 265-269; `_roadmap_payload_for_milestone` starts at line 258 and the sibling-raise shape is lines 267-269. Citation only; nothing else changes. FIXED 2026-09-05 (REQ-HARNESS-5945 widened): the sibling-raise shape is caught; the recovery exemption is reinstated, keyed on mechanism (a `git` literal or `_replay_bytes`/`receipt_bytes`), and exercised on the V576, V580 and V598 helpers by a negative test; an unreadable module is a violation. CORRECTION, same day, after adversarial review: the `git` literal was the wrong mechanism (it exempted a rotter that merely mentions the word and refused a recoverer that reads an archive on disk); recovery is now recognised by shape, a return between the guard and the raise, with the replay helper as the only name-keyed exemption. Both counterexamples are tests. The side finding is fixed too: exp6847 now recovers its roadmap and design from the commit that held V598 (4 tests errored today before the fix; the default glob is clean after it). A first draft of the exemption looked only inside Call nodes and missed the `git = ["git", ...]` prefix form in the very helper it was written for; found by running the lint. |
+ | 2026-08-30 | qa_layer_authenticity_audit | exclusion_manifest_lint.py | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-30 | qa_layer_authenticity_audit | adversarial_verify.py::_is_timestamp_field | SILENT_NON_FIRING | OPEN | |
+ | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_add_variant_denominators_from_value | SILENT_NON_FIRING | OPEN | |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8308fe0741..4e0a611cdf 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -79,6 +79,15 @@
+ - Records: specs appended (three files), ledger rows moved to FIXED with dated notes,
+   traceability rows, research note with the CLAUDE.md replacement draft (not applied).
+   No file under `results/` written; no GPU.
++- CORRECTION, same day, after adversarial review (two HIGH, three MEDIUM, two LOW): the
++  mutation table had a grouped deletion and an unmutated entry, so 8 of 13 added moat
++  markers were decorative; a per-entry sweep replaced it (12 of 12 RED after two removals
++  and six isolating tests). The capstone-lint exemption keyed on the literal `git` was
++  replaced by shape (a return between the guard and the raise). The `experiment`/`title`
++  claim-key recommendation was withdrawn (its 19 did not reproduce; exemplars were a tie
++  and a blocked prompt; re-derived: 26, all summaries and names). The 3103 no-declaration
++  artifacts are now named as the largest silent population. The wrong 46 had reached a
++  docstring, not only the note. 44 distinct mutations RED against the final code.
+ 
+ 
+ ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
+diff --git a/ops/status.md b/ops/status.md
+index 21342a307e..0adb5be26e 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -326,6 +326,15 @@ de-duplicate and re-pin 76 to 75; apply the CLAUDE.md draft; whether `experiment
+ corrigendum; whether the planner prompt names the class. Ledger rows flipped to FIXED are
+ listed in the note, section 8.
+ 
++**After adversarial review (same session).** Two HIGH findings, both fixed in code: a
++per-entry deletion sweep found 8 of the 13 moat marker entries decorative (a grouped
++mutation had hidden it; two entries removed, six held by isolating tests; 12 of 12 per-entry
++RED), and the capstone-lint exemption keyed on the literal `git` was wrong in both
++directions (replaced by shape; both counterexamples are tests). The `experiment`/`title`
++claim-key decision is WITHDRAWN: its measurement did not reproduce and its exemplars were a
++tie and a blocked prompt. The gap statement now names the 3103 artifacts with no substrate
++declaration. Total distinct mutations RED against the final code: 44. Note, section 9.
++
+ 
+ ## 2026-09-05 18:15Z — the attention line is now WRONG, not merely misleading
+ 
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 13d938576a..6a4e82e188 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -4088,7 +4088,9 @@ _MOAT_RIGOR_CLAIM_KEYS = (
+ # decorative (deleting it left the suite green), and a pattern nobody can prove is
+ # under test is the bug class this file's QA-layer audit hunts. The singular
+ # `beat_vote` is absent for the same reason: its only corpus spelling is the negated
+-# `does_not_beat_vote` (exp5161), which is a null marker below.
++# `does_not_beat_vote` (exp5161), listed below. `success_verifier_moat` is absent
++# here because `verifier_moat` always matches inside it (a per-entry deletion sweep
++# on 2026-09-05 found the copy decorative); it stays a WIN marker.
+ _MOAT_RIGOR_RELEVANCE_MARKERS = (
+     "beats_sc",
+     "beats_tuned_sc",
+@@ -4102,7 +4104,6 @@ _MOAT_RIGOR_RELEVANCE_MARKERS = (
+     "moat_retired",
+     "moat_won",
+     "moat_proven",
+-    "success_verifier_moat",
+     "verifier_moat",
+     "verifier_value_added",
+ )
+@@ -4120,14 +4121,17 @@ _MOAT_RIGOR_WIN_MARKERS = (
+     "success_verifier_moat",
+     "verifier_value_added_true",
+ )
++# `not_beat_vote` matches inside `does_not_beat_vote` (exp5161), so the longer form is
++# not repeated here: a per-entry deletion sweep on 2026-09-05 showed the pair
++# double-covered, and one of a double-covered pair can vanish without a test noticing.
+ _MOAT_RIGOR_NULL_MARKERS = (
+     "does_not_beat_sc",
+     "does_not_beat_self_consistency",
+-    "does_not_beat_vote",
+     "not_beat_sc",
+     "not_beat_self_consistency",
+     "not_beat_vote",
+-    # Plural spellings: exp3996 writes `local_not_beats_vote`.
++    # Plural spellings: exp3996 writes `local_not_beats_vote`. The SC plurals have no
++    # corpus instance yet; each is held by its own test so it cannot rot unseen.
+     "not_beats_sc",
+     "not_beats_self_consistency",
+     "not_beats_vote",
+diff --git a/scripts/capstone_milestone_rot_lint.py b/scripts/capstone_milestone_rot_lint.py
+index 7b2bd65084..cdcfc18094 100644
+--- a/scripts/capstone_milestone_rot_lint.py
++++ b/scripts/capstone_milestone_rot_lint.py
+@@ -45,16 +45,17 @@ REPO = Path(__file__).resolve().parents[1]
+ #: A module is a capstone-shaped candidate when it freezes a milestone constant.
+ MILESTONE_CONST = re.compile(r'^MILESTONE\s*=\s*["\']20\d\d\.\d\d\.\d+["\']', re.M)
+ 
+-# THE GIT-RECOVERY EXEMPTION IS BACK, AND IT IS NOW LOAD-BEARING (2026-09-05). It was deleted
+-# on 2026-08-29 because a mutation proof showed it decorative: the rule only looked INSIDE the
+-# `if ... != MILESTONE` for a raise, so a helper that raises at function level after the `if`
+-# never matched. That blind spot was the same shape as the rot itself. A QA-layer audit named
+-# the missed input: `if payload.get("milestone") == MILESTONE: return payload` followed by a
+-# sibling `raise` rots exactly like the inline form, and the lint exited 0 on it. The rule now
+-# catches that sibling-raise shape, which means both blessed recovery helpers (V576, V580)
+-# would be caught too. The exemption is keyed on MECHANISM, never on a helper's name: a
+-# function that gets its roadmap bytes from git, or through a replay helper that pins inputs
+-# to a closed commit, cannot rot, whatever shape its final raise takes. See commit history.
++# RECOVERY IS RECOGNISED BY SHAPE, NOT BY A NAME OR A LITERAL (2026-09-05). The 2026-08-29
++# rule only looked INSIDE the `if ... != MILESTONE` for a raise, so a helper that raises at
++# function level after the `if` never matched. A QA-layer audit named the missed input:
++# `if payload.get("milestone") == MILESTONE: return payload` followed by a sibling `raise`
++# rots exactly like the inline form. The rule now catches that shape -- UNLESS a fallback
++# path can still return between the guard and the raise (a git walk, an archive on disk,
++# any second source). A first draft exempted any function containing the literal "git";
++# an adversarial review showed that both misses a rotter that merely mentions "git" and
++# refuses a recoverer that reads an archive file with no git at all. The only name-keyed
++# exemption left is a replay helper that pins the input to the closing commit BEFORE the
++# guard, which leaves no fallback to detect. See commit history for both incidents.
+ _REPLAY_HELPERS = frozenset({"_replay_bytes", "receipt_bytes"})
+ 
+ 
+@@ -124,18 +125,54 @@ def _refuses_on_milestone(node: ast.AST) -> int | None:
+     # then a `raise` further down the same statement list. It refuses on a moved roadmap just
+     # like the inline form, but the raise sits BESIDE the `if`, not inside it, so the walk
+     # above never saw it. A QA-layer audit named this exact input; the lint exited 0 on it.
++    # A `return` anywhere BETWEEN the guard and that raise is a fallback path that can still
++    # succeed (an archived copy from git or from disk), so the function recovers, not rots.
+     for statements in _statement_lists(node):
+         for index, statement in enumerate(statements):
+-            if not (isinstance(statement, ast.If) and _mentions_milestone(statement.test)):
++            if not _is_milestone_guard(statement):
+                 continue
+-            if not any(isinstance(b, ast.Return) for b in ast.walk(statement)):
+-                continue
+-            for later in statements[index + 1 :]:
+-                if isinstance(later, ast.Raise):
+-                    return later.lineno
++            for later_index in range(index + 1, len(statements)):
++                later = statements[later_index]
++                if not isinstance(later, ast.Raise):
++                    continue
++                between = statements[index + 1 : later_index]
++                if any(isinstance(b, ast.Return) for s in between for b in ast.walk(s)):
++                    break  # recovery: something between the guard and the raise can return
++                return later.lineno
+     return None
+ 
+ 
++def _is_milestone_guard(statement: ast.stmt) -> bool:
++    """An `if` whose test mentions MILESTONE.
++
++    Whether its body returns is deliberately NOT required: a bare `raise` later in the same
++    statement list, with no return between, means the function cannot get past that point
++    without raising, whatever the `if` body did. A first draft required the return and a
++    mutation proof showed the clause decorative. What the MILESTONE mention protects is the
++    ordinary schema guard (`if not tasks: return ...` then `raise`), which is not the rot.
++    """
++
++    return isinstance(statement, ast.If) and any(
++        isinstance(c, ast.Name) and c.id == "MILESTONE" for c in ast.walk(statement.test)
++    )
++
++
++def _has_guard_then_sibling_raise(node: ast.AST) -> bool:
++    """Does the function hold a milestone guard with a raise later in the same list, at all?
++
++    Used by tests to prove the recovery reading is exercised: a helper that HAS this shape
++    and is still clean must have a fallback return between the two, or a replay helper.
++    """
++
++    for statements in _statement_lists(node):
++        for index, statement in enumerate(statements):
++            if _is_milestone_guard(statement) and any(
++                isinstance(later, ast.Raise) for later in statements[index + 1 :]
++            ):
++                return True
++    return False
++
++
+ def _statement_lists(node: ast.AST) -> list[list[ast.stmt]]:
+     """Every statement list inside a function: its body and each nested block."""
+ 
+@@ -149,23 +186,16 @@ def _statement_lists(node: ast.AST) -> list[list[ast.stmt]]:
+ 
+ 
+ def _recovers_from_history(node: ast.AST) -> bool:
+-    """Does this function get its roadmap bytes from git history, or a replay helper?
+-
+-    Such a helper reads the live file while it still matches and falls back to the archived
+-    copy afterwards, so it never rots, whatever shape its final raise takes. Recognised by
+-    mechanism, not by name: the string literal `"git"` anywhere in the function (a
+-    `subprocess.run(["git", ...])` argument, or a `git = ["git", "-C", root]` prefix that is
+-    splatted into the calls -- the first draft looked only inside Call nodes and missed the
+-    prefix form in the very helper it was written for), or a call to `_replay_bytes` /
+-    `receipt_bytes`, which pin inputs to the commit that closed the milestone. Residual,
+-    stated: a function that reads the live roadmap AND mentions the literal "git" for an
+-    unrelated reason is exempted too. Cheap to audit; a name allowlist was rejected because a
+-    future author must remember to join it.
++    """Does this function pin its roadmap bytes through a replay helper?
++
++    `_replay_bytes` / `receipt_bytes` read the input at the commit that closed the milestone,
++    BEFORE the guard, so there is no fallback path after it to detect; the name is the only
++    evidence. Every other recovery (git walk, archive on disk) is recognised by shape in
++    `_refuses_on_milestone`: a return between the guard and the raise. Residual, stated: a
++    rotter that returns from an unrelated branch after its guard reads as a recoverer.
+     """
+ 
+     for n in ast.walk(node):
+-        if isinstance(n, ast.Constant) and n.value == "git":
+-            return True
+         if isinstance(n, ast.Call):
+             func = n.func
+             name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", "")
+@@ -209,7 +239,7 @@ def violations(paths: list[Path]) -> list[tuple[Path, str]]:
+             if not _reads_roadmap(node, aliases):
+                 continue
+             if _recovers_from_history(node):
+-                continue  # a git / replay recovery helper cannot rot; see the note at the top
++                continue  # a replay-pinned helper cannot rot; see the note at the top
+             line = _refuses_on_milestone(node)
+             if line is not None:
+                 found.append(
+diff --git a/tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py b/tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py
+index 05572d34a7..674fd3636d 100644
+--- a/tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py
++++ b/tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py
+@@ -21,6 +21,8 @@ from __future__ import annotations
+ import sys
+ from pathlib import Path
+ 
++import pytest
++
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ sys.path.insert(0, str(REPO_ROOT / "scripts"))
+ 
+@@ -134,6 +136,41 @@ def test_met_is_recognised_as_a_leading_token_and_method_is_not() -> None:
+     )
+ 
+ 
++def test_beats_majority_vote_is_a_win_claim_in_its_own_spelling() -> None:
++    # SCENARIO-VERIFY-7040-2: the ledger asked for `majority_vote` explicitly. No corpus
++    # artifact spells it this way yet; the entry is held by this test so it cannot rot unseen.
++    d = {
++        "honest_verdict": "complete: arc_set_encoder_beats_majority_vote",
++        "verifier_is_oracle": False,
++        "set_encoder_minus_majority_vote_delta": 0.3,
++    }
++    assert av._moat_rigor_claims_relevant(d)
++    assert av._moat_rigor_claims_win(d)
++    assert _flags(d) == [(KIND, "critical"), (KIND, "critical")]
++
++
++def test_does_not_beat_vote_is_relevant_and_null_the_exp5161_shape() -> None:
++    # SCENARIO-VERIFY-7040-5: exp5161, `gap4_rule_exec_does_not_beat_vote_n2_...`. A null
++    # claim is still a moat claim, so it needs verifier_is_oracle; here it is undeclared.
++    d = {"honest_verdict": "complete: gap4_rule_exec_does_not_beat_vote_n2_vote_1.0"}
++    assert av._moat_rigor_claims_relevant(d)
++    assert av._moat_rigor_claims_null(d)
++    assert not av._moat_rigor_claims_win(d)
++    assert _flags(d) == [(KIND, "critical"), (KIND, "warn")]
++
++
++@pytest.mark.parametrize(
++    "marker",
++    ["not_beat_vote", "not_beats_vote", "not_beats_sc", "not_beats_self_consistency"],
++)
++def test_each_null_spelling_is_held_by_its_own_case(marker: str) -> None:
++    # SCENARIO-VERIFY-7040-5, one case per null marker this task added, so a per-entry
++    # deletion of any one of them goes RED on its own (a grouped mutation cannot show that).
++    d = {"honest_verdict": f"complete: hybrid_{marker}_on_gsm8k", "delta_vs_sc": 0.02}
++    assert av._moat_rigor_claims_null(d), marker
++    assert not av._moat_rigor_claims_win(d), marker
++
++
+ def test_a_negated_claim_is_a_null_not_a_win() -> None:
+     # SCENARIO-VERIFY-7040-5: `does_not_beat_self_consistency` contains the win token
+     # `beat_self_consistency`; null markers take precedence.
+diff --git a/tests/python/test_adversarial_verify_substrate_class_20260905.py b/tests/python/test_adversarial_verify_substrate_class_20260905.py
+index 4cee9ecd29..60a8b35950 100644
+--- a/tests/python/test_adversarial_verify_substrate_class_20260905.py
++++ b/tests/python/test_adversarial_verify_substrate_class_20260905.py
+@@ -209,6 +209,28 @@ def _write(path: Path, payload: dict) -> Path:
+     return path
+ 
+ 
++def test_the_absent_class_warn_never_stamps_even_through_the_backfill(tmp_path: Path) -> None:
++    # SCENARIO-SUBSTRATE-CLASS-1, the "SHALL NOT stamp" clause. The conductor stamps on a
++    # critical only, and so does the backfill; a warn-only artifact must come back untouched.
++    path = _write(
++        tmp_path / "experiment_9994_unrecognised_name.json",
++        {
++            "experiment": 9994,
++            "honest_verdict": "complete: ok",
++            "inference_substrate": "brand_new_name_nobody_reviewed_v3",
++            "duration_s": 0.5,
++        },
++    )
++    before = path.read_bytes()
++    report = av.verify_artifact(path)
++    assert [f["kind"] for f in report["flags"] if f["kind"] == MISSING] == [MISSING]
++    assert all(f["severity"] != "critical" for f in report["flags"])
++    records = av.backfill_stamps([path], apply=True)
++    assert records == []
++    assert path.read_bytes() == before
++    assert "flagged_adversarial" not in json.loads(before)
++
++
+ def test_wired_into_the_full_verifier_and_a_wrapped_class_unwraps(tmp_path: Path) -> None:
+     # SCENARIO-SUBSTRATE-CLASS-8
+     base = {
+diff --git a/tests/python/test_capstone_milestone_rot_lint.py b/tests/python/test_capstone_milestone_rot_lint.py
+index 61c6a89d64..8c48003126 100644
+--- a/tests/python/test_capstone_milestone_rot_lint.py
++++ b/tests/python/test_capstone_milestone_rot_lint.py
+@@ -115,6 +115,48 @@ def _milestone_inputs(repo_root):
+     raise ValueError("expected roadmap milestone")
+ """
+ 
++# Recovery from an archive on disk, with no git anywhere (the reviewer's counterexample: a
++# first draft of the exemption keyed on the literal "git" and REFUSED this correct code).
++DISK_ARCHIVE_RECOVERY = """
++def _roadmap_payload_for_milestone(repo_root):
++    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
++    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
++        return payload
++    archive = repo_root / "ops" / "roadmap-archive" / f"{MILESTONE}.yaml"
++    if archive.exists():
++        return yaml.safe_load(archive.read_text())
++    raise ValueError("expected roadmap milestone")
++"""
++
++# The rot, plus an incidental "git" string that has nothing to do with recovery. The same
++# first draft EXEMPTED this on the literal alone.
++ROT_WITH_INCIDENTAL_GIT = """
++def _roadmap_payload_for_milestone(repo_root):
++    provenance = {"vcs": "git", "path": str(ROADMAP_RELATIVE_PATH)}
++    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
++    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
++        return payload
++    raise ValueError(f"expected roadmap milestone; provenance={provenance}")
++"""
++
++# An ordinary schema guard on the live roadmap, in both the inline and the sibling shape.
++# Neither mentions MILESTONE, so neither is the rot: the V598 loader does exactly this.
++SCHEMA_GUARD_INLINE = """
++def load_roadmap(repo_root):
++    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
++    if not isinstance(payload.get("tasks"), list):
++        raise ValueError("roadmap must be a mapping with tasks")
++    return payload
++"""
++
++SCHEMA_GUARD_SIBLING = """
++def load_roadmap(repo_root):
++    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
++    if isinstance(payload, dict) and payload.get("tasks"):
++        return payload
++    raise ValueError("roadmap has no tasks")
++"""
++
+ # Recovery through a replay helper that pins inputs to the closing commit (the V576 form).
+ REPLAY_RECOVERY = """
+ def _roadmap_payload_for_milestone(repo_root):
+@@ -180,6 +222,26 @@ def test_replay_recovery_is_exempt(tmp_path) -> None:
+     assert not _lint().violations([_write(tmp_path, REPLAY_RECOVERY)])
+ 
+ 
++def test_recovery_from_an_archive_on_disk_is_exempt_without_any_git(tmp_path) -> None:
++    """SCENARIO-HARNESS-5945-GIT-RECOVERY: recovery is a SHAPE (a return between the guard and
++    the raise), not the word git. The reviewer's counterexample: correct code that a
++    literal-keyed exemption refused."""
++    assert not _lint().violations([_write(tmp_path, DISK_ARCHIVE_RECOVERY)])
++
++
++def test_a_schema_guard_on_the_live_roadmap_is_not_the_rot(tmp_path) -> None:
++    """The MILESTONE mention is what separates rot from an ordinary schema check, in both the
++    inline and the sibling shape. Without this fixture that condition is untested."""
++    assert not _lint().violations([_write(tmp_path, SCHEMA_GUARD_INLINE)])
++    assert not _lint().violations([_write(tmp_path, SCHEMA_GUARD_SIBLING)])
++
++
++def test_the_rot_is_still_caught_when_git_is_merely_mentioned(tmp_path) -> None:
++    """SCENARIO-HARNESS-5945-SIBLING-RAISE: an incidental "git" literal buys no exemption."""
++    found = _lint().violations([_write(tmp_path, ROT_WITH_INCIDENTAL_GIT)])
++    assert len(found) == 1
++
++
+ def test_the_exemption_is_keyed_on_mechanism_not_on_the_helper_name(tmp_path) -> None:
+     """A function NAMED like the blessed helper, with no recovery inside, is still the rot."""
+     renamed = SIBLING_RAISE.replace("_roadmap_payload_for_milestone", "load_roadmap")
+@@ -204,10 +266,12 @@ RECOVERY_CAPSTONES = (
+ )
+ 
+ 
+-def test_the_three_recovery_capstones_stay_clean_and_the_exemption_is_exercised() -> None:
+-    """SCENARIO-HARNESS-5945-LIVE-REPOSITORY: the widened rule would catch all three blessed
+-    helpers (they are the sibling-raise shape) unless the exemption fires. Assert both halves:
+-    no violation, AND each module holds a roadmap-reading function the exemption recognises."""
++def test_the_three_recovery_capstones_stay_clean_and_the_recovery_reading_is_exercised() -> None:
++    """SCENARIO-HARNESS-5945-LIVE-REPOSITORY: all three blessed helpers HAVE the guard-then-
++    sibling-raise shape, so the widened rule would catch them unless recovery is recognised.
++    Assert both halves: no violation, AND each module holds a roadmap-reading function with
++    that shape that is clean because of a fallback return (V580, V598) or a replay helper
++    (V576)."""
+     import ast
+ 
+     lint = _lint()
+@@ -217,14 +281,18 @@ def test_the_three_recovery_capstones_stay_clean_and_the_exemption_is_exercised(
+     for path in paths:
+         tree = ast.parse(path.read_text(encoding="utf-8"))
+         aliases = lint._roadmap_alias_names(tree)
+-        exempted = [
+-            node.name
++        shaped = [
++            node
+             for node in ast.walk(tree)
+             if isinstance(node, ast.FunctionDef)
+             and lint._reads_roadmap(node, aliases)
+-            and lint._recovers_from_history(node)
++            and lint._has_guard_then_sibling_raise(node)
+         ]
+-        assert exempted, path.name
++        assert shaped, path.name
++        assert all(
++            lint._recovers_from_history(node) or lint._refuses_on_milestone(node) is None
++            for node in shaped
++        ), path.name
+ 
+ 
+ def test_an_assert_rots_exactly_like_a_raise(tmp_path) -> None:
+-- 
+2.55.0
+

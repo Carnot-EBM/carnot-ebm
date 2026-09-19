@@ -1,0 +1,347 @@
+From 986b07a804f9c0e2f0058bd5e8c0af29d063eb86 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 21:03:52 -0400
+Subject: [PATCH 02433/11362] [outer-loop] tr87 extended to L3: greedy
+ multi-glyph-LHS rewrite matcher
+
+Operator: push on to L3. RE'd the L3 delta from internal state + the win predicate.
+
+L3 is again NOT a translation flag (alter_rules/tree/double all None at L3). It
+generalizes the rewrite to MANY-to-many: rules now have multi-glyph LHS
+([C3,C3]->[A6,A1], [C1,C5,C1]->[A6], [C7,C7]->[A3]). Reading the win predicate
+(bsqsshqpox) shows it is a GREEDY left-to-right matcher: scan the target, take the
+FIRST rule whose LHS is a prefix of the remaining target, emit its RHS, advance
+both pointers. required_editable now implements exactly that greedy matcher --
+ONE function that subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many).
+
+- solve_adaptered('tr87',3) -> reached_level=3, offline_reproduced=True (60 actions,
+  234 states). cyclic-distance verifier + fresh_env (from L2) carry over unchanged.
+- 8 adapter unit tests (L1/L2/L3 rewrite cases, cyclic-distance, unmatchable-target
+  -> 1000, length-gap bound, fresh_env); all pass.
+- metaharness 60-action replay -> L3; aggregate now 29 levels / 16 games (was 28/16).
+- registry: greedy-matcher mechanic + the L4 boundary recorded (greedy gives a
+  same-length req at L4 that does NOT win -> a tree/double_translation RHS
+  re-expansion twist; verifier returns None->1000 or reaches 0 without a level-up,
+  so the search stops at L3 with no false claim).
+
+L4 RE (the second-level RHS re-expansion, the tree_translation branch in
+bsqsshqpox) is the documented next step.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/arc_solve_registry.yaml                  | 28 +++---
+ python/carnot/agentic/arc_game_adapters.py   | 27 ++++--
+ results/arc3_replay_aggregate_scorecard.json |  8 +-
+ results/arc_loop_solve_tr87.json             | 96 ++++++++++++++++++--
+ tests/python/test_arc_tr87_adapter.py        | 39 ++++++--
+ 5 files changed, 159 insertions(+), 39 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 71d524f623..79a03c12a8 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -205,20 +205,20 @@ games:
+       - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
+ 
+   - game: tr87
+-    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-substitution RE (L1-L2, reproduction-gated)
++    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-rewrite RE (L1-L3, reproduction-gated)
+     mechanic_class: config_substitution  # strategy-router class: configure-to-target via a visible rewrite rule
+-    levels_reproduced: 2
+-    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the REWRITE of the TARGET sequence through the visible reference grid. L1: 1-to-1 (each target glyph -> 1 editable, A4->B3). L2: 1-to-MANY expansion (each target glyph -> a SEQUENCE, B3->[C1,C5,C1]); the required editable sequence is the concat of the rule RHS over the target sequence."
+-    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions / 94 states. L2: 25-action suffix (39 total) / 152 states (verifier-routed)."
+-    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the rule-EXPANDED target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
+-    reproduce: "re-gated reproduced=True L2 (kit.reproduce, claimed_level=2, 39-action path); verifier-routed 152 states vs blind BFS exhausting 52k+ without even L1."
++    levels_reproduced: 3
++    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (a set of rules LHS->RHS, LHS over the target series, RHS over the editable series). Win predicate = scan the target left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1: 1-to-1 (A4->[B3]). L2: 1-to-MANY (B3->[C1,C5,C1]). L3: MANY-to-many ([C3,C3]->[A6,A1], multi-glyph LHS)."
++    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions/94 states. L2: +25 (39 total)/152. L3: +21 (60 total)/234 (verifier-routed)."
++    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the GREEDY-rewritten target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
++    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, 60-action path); verifier-routed 234 states vs blind BFS exhausting 52k+ without even L1."
+     gotchas:
+-      - "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable glyph must equal rule_expand[target glyph], not the target's raw value."
+-      - "L2 generalizes the rule to 1-to-MANY: a target glyph expands to a SEQUENCE of editable glyphs (B3->[C1,C5,C1]). required_editable = concat of rule RHS over the target sequence; this subsumes L1 (RHS length 1). NOT alter_rules (that flag is None at L2 -- it appears at deeper levels)."
+-      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L2 in 152 states."
++      - "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values."
++      - "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance both pointers. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many, B3->[C1,C5,C1]) AND L3 (many-to-many, [C3,C3]->[A6,A1]). NONE of L1-L3 set alter_rules/tree_translation/double_translation (all None); those appear at L4+."
++      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L3 in 234 states."
+       - "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct."
+       - "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions)."
+-      - "L3+ add a tree_translation / double_translation twist where the EDITABLE glyphs ALSO expand (editable n=7 != expansion n=10 at L3). The L1/L2 formula leaves a >=7 residual there, so the search stops at L2 rather than false-claiming the unmodelled twist -- a clean honest boundary. L3 RE = decode the editable-side expansion."
++      - "L4+ boundary: the greedy matcher produces a same-length req at L4 but it does NOT win (level does not advance) -- L4 adds a tree_translation / double_translation / alter_rules twist that re-expands the RHS through the rules again (the win predicate's tree/double branches). The verifier returns None->1000 when no LHS matches, OR reaches 0 without a level-up at L4, so the search stops at L3 with NO false claim. L4 RE = decode the second-level RHS re-expansion (the tree_translation branch in bsqsshqpox)."
+ 
+   # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
+   # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
+@@ -236,11 +236,11 @@ games:
+ 
+ # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
+ #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
+-#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 2 = 28 across 16 games  (tr87
+-#   L1->L2 landed 2026-06-17 via the GameAdapter _tr87 glyph-substitution RE + verifier-routed search:
+-#   L1 1-to-1 rewrite, L2 1-to-many expansion; offline-reproduction-gated; verify with
++#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 3 = 29 across 16 games  (tr87
++#   L1->L3 landed 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
++#   1-to-1, L2 1-to-many, L3 many-to-many greedy rewrite; offline-reproduction-gated; verify with
+ #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
+-reproducible_total_levels: 28   # ... -> 27 (+tr87 L1) -> 28 (+tr87 L2 1-to-many rewrite expansion, 2026-06-17)
++reproducible_total_levels: 29   # ... -> 28 (+tr87 L2) -> 29 (+tr87 L3 many-to-many greedy rewrite, 2026-06-17)
+ reproducible_total_games: 16    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36, tr87
+ provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
+ 
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index a78dce44a1..65e67bb1cf 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -179,18 +179,31 @@ def _tr87():
+         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
+ 
+     def _required_editable(game):
+-        # The visible reference grid is a REWRITE rule: each target-series glyph (rule LHS) expands to a
+-        # SEQUENCE of editable-series glyphs (rule RHS). The required editable sequence is the concat of
+-        # the RHS over the target sequence. Handles 1-to-1 (L1: every RHS length 1, e.g. A4->[B3]) AND
+-        # 1-to-many (L2: B3->[C1,C5,C1]) expansion uniformly.
+-        rule = {int(lhs[0].name[-1]): [int(s.name[-1]) for s in rhs] for lhs, rhs in game.cifzvbcuwqe}
++        # GREEDY multi-glyph-LHS rewrite matcher -- mirrors the game's bsqsshqpox win predicate. The
++        # visible reference grid is a rewrite rule LHS->RHS (LHS over the TARGET series, RHS over the
++        # EDITABLE series). Scan the target left-to-right; at each position take the FIRST rule whose LHS
++        # (by glyph name) is a prefix of the remaining target, emit that rule's RHS values, advance both
++        # pointers. Uniformly handles L1 (1-to-1, A4->[B3]), L2 (1-to-many, B3->[C1,C5,C1]) AND L3
++        # (many-to-many, [C3,C3]->[A6,A1]). Returns None if no rule matches a position (a deeper
++        # tree_translation / double_translation / alter_rules twist the base matcher does not model).
++        rules = [([s.name for s in lhs], [int(s.name[-1]) for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
++        target = [s.name for s in game.zvojhrjxxm]
+         req: list = []
+-        for t in game.zvojhrjxxm:
+-            req.extend(rule.get(int(t.name[-1]), []))
++        pos = 0
++        while pos < len(target):
++            for lhs_names, rhs_vals in rules:
++                if target[pos:pos + len(lhs_names)] == lhs_names:
++                    req.extend(rhs_vals)
++                    pos += len(lhs_names)
++                    break
++            else:
++                return None      # unmodelled twist -> verifier returns large, search stops (no false claim)
+         return req
+ 
+     def _distance(game):
+         req = _required_editable(game)
++        if req is None:
++            return 1000.0                                 # unmodelled twist -> search stops, no false win
+         cur = [_val(s) for s in game.ztgmtnnufb]          # current editable values
+         n = min(len(cur), len(req))
+ 
+diff --git a/results/arc3_replay_aggregate_scorecard.json b/results/arc3_replay_aggregate_scorecard.json
+index a276629a4b..c9eea68648 100644
+--- a/results/arc3_replay_aggregate_scorecard.json
++++ b/results/arc3_replay_aggregate_scorecard.json
+@@ -1,6 +1,6 @@
+ {
+-  "scorecard_id": "67055494-4a30-454c-a6e2-889f012f4f30",
+-  "total_levels": 28,
++  "scorecard_id": "ac678f83-14f7-440c-8df4-5d984997f392",
++  "total_levels": 29,
+   "per_game": [
+     {
+       "game": "r11l",
+@@ -94,8 +94,8 @@
+     },
+     {
+       "game": "tr87",
+-      "actions_replayed": 39,
+-      "levels_completed": 2,
++      "actions_replayed": 60,
++      "levels_completed": 3,
+       "start": 0
+     }
+   ],
+diff --git a/results/arc_loop_solve_tr87.json b/results/arc_loop_solve_tr87.json
+index 12e0a62258..377b237539 100644
+--- a/results/arc_loop_solve_tr87.json
++++ b/results/arc_loop_solve_tr87.json
+@@ -1,16 +1,16 @@
+ {
+   "game": "tr87",
+-  "reached_level": 2,
+-  "moves": 39,
+-  "states_expanded": 152,
++  "reached_level": 3,
++  "moves": 60,
++  "states_expanded": 234,
+   "verifier_src": "hand_verifier_cold_start",
+   "offline_reproduced": true,
+-  "reproduced_levels": 2,
++  "reproduced_levels": 3,
+   "learned_verifier_checkpoint": null,
+   "reproduction_gate": {
+     "game": "tr87",
+-    "reached_level": 2,
+-    "claimed_level": 2,
++    "reached_level": 3,
++    "claimed_level": 3,
+     "reproduced": true,
+     "mode": "offline_reproduction_gate_no_quota"
+   },
+@@ -53,6 +53,27 @@
+     "{\"action\": 1}",
+     "{\"action\": 3}",
+     "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 3}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 3}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 3}",
++    "{\"action\": 1}",
++    "{\"action\": 1}",
++    "{\"action\": 1}",
++    "{\"action\": 3}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 3}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 2}",
++    "{\"action\": 3}",
++    "{\"action\": 2}",
+     "{\"action\": 2}"
+   ],
+   "solution": [
+@@ -170,6 +191,69 @@
+     {
+       "action": 2
+     },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
+     {
+       "action": 2
+     }
+diff --git a/tests/python/test_arc_tr87_adapter.py b/tests/python/test_arc_tr87_adapter.py
+index 07b3fe3bce..a26654aef1 100644
+--- a/tests/python/test_arc_tr87_adapter.py
++++ b/tests/python/test_arc_tr87_adapter.py
+@@ -18,20 +18,23 @@ class _Sprite:
+ 
+ 
+ class _Game:
+-    """Synthetic tr87 game state. `rules` is [(lhs_val, [rhs_vals...])] -- the visible rewrite grid that
+-    maps each TARGET-series glyph to a SEQUENCE of editable-series glyphs (1-to-1 at L1, 1-to-many at L2).
+-    `current`/`target` are the editable/target value lists."""
++    """Synthetic tr87 game state. `rules` is [([lhs_vals...], [rhs_vals...])] -- the visible rewrite grid,
++    LHS over the TARGET series, RHS over the EDITABLE series (1-to-1 at L1, 1-to-many at L2, many-to-many
++    at L3). `current`/`target` are the editable/target value lists."""
+ 
+     def __init__(self, current, target, rules):
+-        self.cifzvbcuwqe = [([_Sprite(f"nxX{lhs}")], [_Sprite(f"nxY{v}") for v in rhs]) for lhs, rhs in rules]
++        self.cifzvbcuwqe = [([_Sprite(f"nxX{v}") for v in lhs], [_Sprite(f"nxY{v}") for v in rhs])
++                            for lhs, rhs in rules]
+         self.ztgmtnnufb = [_Sprite(f"nxY{v}") for v in current]     # current editable values
+         self.zvojhrjxxm = [_Sprite(f"nxX{v}") for v in target]      # target values
+ 
+ 
+-# L1 rule map (1-to-1): A4->[3], A2->[2], A3->[6], A5->[5], A1->[1]
+-_L1_RULES = [(4, [3]), (2, [2]), (3, [6]), (5, [5]), (1, [1])]
+-# L2 rule map (1-to-many expansion): B1->[3], B3->[1,5,1], B5->[2,2], B7->[7]
+-_L2_RULES = [(1, [3]), (3, [1, 5, 1]), (5, [2, 2]), (7, [7])]
++# L1 rule map (1-to-1): 4->[3], 2->[2], 3->[6], 5->[5], 1->[1]
++_L1_RULES = [([4], [3]), ([2], [2]), ([3], [6]), ([5], [5]), ([1], [1])]
++# L2 rule map (1-to-many expansion): 1->[3], 3->[1,5,1], 5->[2,2], 7->[7]
++_L2_RULES = [([1], [3]), ([3], [1, 5, 1]), ([5], [2, 2]), ([7], [7])]
++# L3 rule map (many-to-many greedy): [6]->[4], [3,3]->[6,1], [4]->[7,7], [7,7]->[3], [1,5,1]->[6], [2]->[5]
++_L3_RULES = [([6], [4]), ([3, 3], [6, 1]), ([4], [7, 7]), ([7, 7], [3]), ([1, 5, 1], [6]), ([2], [5])]
+ 
+ 
+ def test_tr87_registered_and_structural():
+@@ -78,6 +81,26 @@ def test_tr87_hand_verifier_l2_one_to_many_expansion():
+     assert ad.hand_verifier(one_off) == 1.0    # 6 -> 7 is one cyclic step
+ 
+ 
++def test_tr87_hand_verifier_l3_greedy_multi_glyph_lhs():
++    ad = adapters.get_adapter("tr87")
++    # L3 (many-to-many): target [6,1,5,1,4,2,3,3] greedily parses as
++    #   [6]->[4], [1,5,1]->[6], [4]->[7,7], [2]->[5], [3,3]->[6,1]  => required [4,6,7,7,5,6,1]
++    target = [6, 1, 5, 1, 4, 2, 3, 3]
++    solved = _Game(current=[4, 6, 7, 7, 5, 6, 1], target=target, rules=_L3_RULES)
++    assert ad.hand_verifier(solved) == 0.0     # editable == greedy-rewritten target -> win
++
++    start = _Game(current=[3, 4, 4, 5, 1, 4, 6], target=target, rules=_L3_RULES)   # the real L3 start
++    # cyclic dists: |3->4|=1,|4->6|=2,|4->7|=3,|5->7|=2,|1->5|=3,|4->6|=2,|6->1|=2  => 15
++    assert ad.hand_verifier(start) == 15.0
++
++
++def test_tr87_hand_verifier_unmatchable_target_returns_large():
++    ad = adapters.get_adapter("tr87")
++    # a target position no rule LHS matches (an unmodelled tree/double/alter twist) -> large, search stops
++    g = _Game(current=[1, 1], target=[9, 9], rules=_L1_RULES)
++    assert ad.hand_verifier(g) >= 1000.0
++
++
+ def test_tr87_hand_verifier_length_gap_bounds_unmodelled_levels():
+     ad = adapters.get_adapter("tr87")
+     # L3+ (the editable ALSO expands): editable count < expansion count -> a >=7 residual the L1/L2
+-- 
+2.55.0
+

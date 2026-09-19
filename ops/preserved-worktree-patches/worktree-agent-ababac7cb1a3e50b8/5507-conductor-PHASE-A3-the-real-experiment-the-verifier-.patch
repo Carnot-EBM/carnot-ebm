@@ -1,0 +1,1185 @@
+From 81ed3f6bb01c2576ef0893e4e5a6a34cce5cbef7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 19:42:42 -0400
+Subject: [PATCH 05507/11362] [conductor] PHASE A3 the real experiment the
+ verifier-moat arc has been building toward -- DiffusionGemma energy-guided
+ discrete diffusion pilot
+
+Automated research step by research conductor.
+Task ID: exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  75 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...emma_energy_guided_diffusion_pilot_v474.py | 542 ++++++++++++++++++
+ ...ma_energy_guided_diffusion_pilot_v474.json | 127 ++++
+ ...emma_energy_guided_diffusion_pilot_v474.py | 377 ++++++++++++
+ 5 files changed, 1122 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+ create mode 100644 results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+ create mode 100644 tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 08e7cdb144..96fc747cb2 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -24518,3 +24518,78 @@ keeps `verifier_is_oracle=false`, and does not regenerate candidates.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5163 | Implemented (`python/carnot/experiment_5163_mmlu_pro_verifier_rescale_v473.py`, `results/experiment_5163_mmlu_pro_verifier_rescale_v473.json`) | Implemented (`tests/python/test_experiment_5163_mmlu_pro_verifier_rescale_v473.py`) |
++
++### REQ-VERIFY-5173: DiffusionGemma Energy-Guided Diffusion Pilot V474
++
++The repository SHALL provide Exp 5173 at
++`python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`
++to write
++`results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`
++without modifying `scripts/research_conductor.py`. The runner SHALL first read
++`results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json` and
++stop with `honest_verdict=blocked_upstream_gate_not_passed` unless
++`gate_passed=true`.
++
++When the upstream gate passes, the runner SHALL record that GPU-1 availability
++was checked and SHALL stop with `honest_verdict=blocked_gpu1_busy` rather than
++contending if GPU 1 has a conflicting workload. It SHALL also record the
++DiffusionGemma runtime smoke result from the confirmed 4-bit NF4
++`device_map="auto"` two-GPU load path against
++`google/diffusiongemma-26B-A4B-it`. If the known
++`Tensor.item() cannot be called on meta tensors` failure is not resolved, it
++SHALL stop with
++`honest_verdict=blocked_diffusiongemma_meta_tensor_bug_unresolved` and record
++what was tried in `meta_tensor_bug_resolution`.
++
++When the smoke is resolved, the pilot SHALL compare three arms on the same
++HumanEval/MBPP executable-code subset: unguided DiffusionGemma diffusion,
++energy-guided DiffusionGemma diffusion, and a best-of-N autoregressive control
++using `unsloth/gemma-4-26B-A4B-it-GGUF`. The guidance design SHALL document
++the exact in-denoising mechanism, including whether it uses logit reweighting,
++resample-on-energy-increase, or another reproducible rule. The executable
++verifier ensemble SHALL be declared as the oracle
++(`verifier_is_oracle=true`), because executable tests define correctness for
++this code-domain pilot.
++
++The terminal artifact SHALL include principle-annotated top-level fields
++`meta_tensor_bug_resolution`, `guidance_mechanism_design`,
++`pass_at_1_unguided`, `pass_at_1_guided`, `pass_at_1_ar_baseline`,
++`guided_vs_unguided_delta_ci95`, `guided_vs_ar_delta_ci95`,
++`compute_cost_per_arm`, `verifier_is_oracle`, `random_seed`,
++`reproducibility_checksum`, `gpu1_availability_checked`, and
++`honest_verdict`. The required field principles SHALL include:
++`meta_tensor_bug_resolution` = `Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.`;
++`guidance_mechanism_design` = `The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.`;
++`pass_at_1_unguided` = `Executable pass@1 for the unguided DiffusionGemma diffusion baseline.`;
++`pass_at_1_guided` = `Executable pass@1 for energy-guided DiffusionGemma diffusion.`;
++`pass_at_1_ar_baseline` = `Executable pass@1 for the best-of-N autoregressive Gemma control.`;
++`guided_vs_unguided_delta_ci95` = `Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.`;
++`guided_vs_ar_delta_ci95` = `Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.`;
++`compute_cost_per_arm` = `The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.`;
++`verifier_is_oracle` = `The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.`;
++`random_seed` = `Seed used for task ordering, sampling, and bootstrap.`;
++`reproducibility_checksum` = `Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.`;
++`gpu1_availability_checked` = `True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.`;
++`honest_verdict` = `Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether energy guidance helped, hurt, or made no difference.`
++
++### SCENARIO-VERIFY-5173-GATED: Upstream Gate And GPU Preconditions Stop Honestly
++
++Given Exp 5171 is missing or has `gate_passed=false`, or GPU 1 is busy, when
++Exp 5173 runs, then it writes the terminal blocked verdict, preserves the
++required principle fields, records `gpu1_availability_checked` truthfully, and
++does not run the full pilot.
++
++### SCENARIO-VERIFY-5173-PILOT: Three-Arm Pilot Reports Accuracy And Cost
++
++Given Exp 5171 passed, GPU 1 is available, and the DiffusionGemma smoke is
++resolved, when Exp 5173 evaluates the executable-code subset, then it computes
++pass@1 for unguided, guided, and AR arms, computes both CI95 deltas over
++task-level outcomes, records per-arm wall-clock seconds and GPU counts, sets
++`verifier_is_oracle=true`, and frames the result as execution-grounded rather
++than oracle-distinct.
++
++## Implementation Status (REQ-VERIFY-5173)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5173 | Implemented (`python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`, `results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`) | Implemented (`tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3b18c8791f..60c6ac97b8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4161,
++  "experiments_checked": 4162,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py b/python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+new file mode 100644
+index 0000000000..6ddc3d118d
+--- /dev/null
++++ b/python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+@@ -0,0 +1,542 @@
++"""Exp 5173 DiffusionGemma energy-guided diffusion pilot.
++
++Spec refs: REQ-VERIFY-5173, SCENARIO-VERIFY-5173-GATED,
++SCENARIO-VERIFY-5173-PILOT.
++
++This module keeps the experiment report honest when the heavyweight GPU path is
++available, blocked, or only partially debugged. The executable-code verifier is
++the correctness oracle for HumanEval/MBPP, so any completed result is framed as
++execution-grounded guidance evidence, not an oracle-distinct moat claim.
++"""
++
++from __future__ import annotations
++
++from dataclasses import asdict, dataclass
++import hashlib
++import json
++import random
++import time
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474"
++MILESTONE = "2026.07.474"
++RESULT_RELATIVE_PATH = (
++    "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json"
++)
++EXP5171_RELATIVE_PATH = (
++    "results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json"
++)
++SPEC_REFS = [
++    "REQ-VERIFY-5173",
++    "SCENARIO-VERIFY-5173-GATED",
++    "SCENARIO-VERIFY-5173-PILOT",
++]
++RANDOM_SEED = 5173
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_", "blocked_")
++ARMS = ("unguided_diffusion", "guided_diffusion", "ar_best_of_n")
++PASS_FIELDS = {
++    "unguided_diffusion": "unguided_passed",
++    "guided_diffusion": "guided_passed",
++    "ar_best_of_n": "ar_passed",
++}
++GUIDANCE_MECHANISM_DESIGN = (
++    "Per denoising step, score the current token-candidate slate with the native "
++    "DiffusionGemma logits and an executable-verifier energy. The composed score "
++    "for token t at position i is logit_model(i,t) - lambda_energy * "
++    "verifier_energy(partial_canvas with t inserted). Sampling/commit uses the "
++    "same low-entropy DiffusionGemma commit order after this reweighting; no "
++    "post-hoc reranking of completed samples is counted as guided diffusion."
++)
++
++FIELD_PRINCIPLES = {
++    "meta_tensor_bug_resolution": (
++        "Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried."
++    ),
++    "guidance_mechanism_design": (
++        "The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce."
++    ),
++    "pass_at_1_unguided": (
++        "Executable pass@1 for the unguided DiffusionGemma diffusion baseline."
++    ),
++    "pass_at_1_guided": "Executable pass@1 for energy-guided DiffusionGemma diffusion.",
++    "pass_at_1_ar_baseline": (
++        "Executable pass@1 for the best-of-N autoregressive Gemma control."
++    ),
++    "guided_vs_unguided_delta_ci95": (
++        "Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas."
++    ),
++    "guided_vs_ar_delta_ci95": (
++        "Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas."
++    ),
++    "compute_cost_per_arm": (
++        "The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win."
++    ),
++    "verifier_is_oracle": (
++        "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven."
++    ),
++    "random_seed": "Seed used for task ordering, sampling, and bootstrap.",
++    "reproducibility_checksum": (
++        "Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict."
++    ),
++    "gpu1_availability_checked": (
++        "True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path."
++    ),
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether energy guidance helped, hurt, or made no difference."
++    ),
++}
++
++REQUIRED_PRINCIPLED_FIELDS = tuple(
++    field for field in FIELD_PRINCIPLES if field != "honest_verdict"
++)
++REQUIRED_TOP_LEVEL_FIELDS = frozenset(
++    {
++        "schema",
++        "experiment",
++        "experiment_id",
++        "milestone",
++        "spec_refs",
++        "result_path",
++        "field_principles",
++        "inference_substrate",
++        "preconditions",
++        "arm_rows",
++        "duration_s",
++        "tests_run",
++        *REQUIRED_PRINCIPLED_FIELDS,
++    }
++)
++
++
++@dataclass(frozen=True)
++class GpuAvailability:
++    """Result of the required GPU-1 preflight check."""
++
++    checked: bool
++    gpu1_available: bool
++    detail: str
++
++
++@dataclass(frozen=True)
++class SmokeResult:
++    """Result of the tiny DiffusionGemma load/forward smoke."""
++
++    attempted: bool
++    success: bool
++    load_mode: str
++    model_class: str
++    resolution: str
++    tried: list[str]
++    error: str | None = None
++
++
++def _principled(field: str, value: Any) -> dict[str, Any]:
++    return {"value": value, "principle": FIELD_PRINCIPLES[field]}
++
++
++def _json_default(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, (GpuAvailability, SmokeResult)):
++        return asdict(value)
++    raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
++
++
++def stable_checksum(payload: Any) -> str:
++    """Return a stable checksum for the auditable experiment inputs."""
++
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=_json_default)
++    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def load_json(path: Path) -> dict[str, Any]:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def reweight_logits_with_verifier_energy(
++    logits: list[float] | tuple[float, ...],
++    verifier_energy: list[float] | tuple[float, ...],
++    *,
++    lambda_energy: float,
++) -> list[float]:
++    """Compose model logits with executable-verifier energy for one token slate."""
++
++    if len(logits) != len(verifier_energy):
++        raise ValueError("logits and verifier_energy must have the same length")
++    if lambda_energy < 0:
++        raise ValueError("lambda_energy must be non-negative")
++    return [float(logit) - lambda_energy * float(energy) for logit, energy in zip(logits, verifier_energy)]
++
++
++def pass_at_1(rows: list[dict[str, Any]], field: str) -> float:
++    if not rows:
++        return 0.0
++    return sum(1 for row in rows if row.get(field) is True) / len(rows)
++
++
++def _paired_deltas(rows: list[dict[str, Any]], left_field: str, right_field: str) -> list[float]:
++    return [
++        (1.0 if row.get(left_field) is True else 0.0)
++        - (1.0 if row.get(right_field) is True else 0.0)
++        for row in rows
++    ]
++
++
++def bootstrap_mean_ci(
++    values: list[float],
++    *,
++    seed: int = RANDOM_SEED,
++    resamples: int = 2000,
++) -> list[float]:
++    """Bootstrap a mean CI over task-level values without external dependencies."""
++
++    if not values:
++        return [0.0, 0.0]
++    if resamples <= 0:
++        raise ValueError("resamples must be positive")
++    if len(values) == 1:
++        return [round(values[0], 10), round(values[0], 10)]
++
++    rng = random.Random(seed)
++    n = len(values)
++    estimates: list[float] = []
++    for _ in range(resamples):
++        sample = [values[rng.randrange(n)] for _ in range(n)]
++        estimates.append(sum(sample) / n)
++    estimates.sort()
++    lo_index = int(0.025 * (resamples - 1))
++    hi_index = int(0.975 * (resamples - 1))
++    return [round(estimates[lo_index], 10), round(estimates[hi_index], 10)]
++
++
++def _default_compute_costs() -> dict[str, dict[str, float | int]]:
++    return {
++        "unguided_diffusion": {"wall_clock_s": 0.0, "gpu_count": 2},
++        "guided_diffusion": {"wall_clock_s": 0.0, "gpu_count": 2},
++        "ar_best_of_n": {"wall_clock_s": 0.0, "gpu_count": 1},
++    }
++
++
++def _normalized_compute_costs(
++    compute_cost_per_arm: dict[str, dict[str, float | int]] | None,
++) -> dict[str, dict[str, float | int]]:
++    costs = _default_compute_costs()
++    for arm, row in (compute_cost_per_arm or {}).items():
++        costs[arm] = {
++            "wall_clock_s": round(float(row.get("wall_clock_s", 0.0)), 4),
++            "gpu_count": int(row.get("gpu_count", 0)),
++        }
++    return costs
++
++
++def _as_smoke_dict(smoke: SmokeResult | None) -> dict[str, Any]:
++    if smoke is None:
++        return {
++            "attempted": False,
++            "success": False,
++            "load_mode": "4bit_nf4_devmap_auto_2gpu",
++            "model_class": "DiffusionGemmaForBlockDiffusion",
++            "resolution": "not_attempted",
++            "tried": [],
++            "error": None,
++        }
++    return asdict(smoke)
++
++
++def _as_gpu_dict(gpu_availability: GpuAvailability | None) -> dict[str, Any]:
++    if gpu_availability is None:
++        return {"checked": False, "gpu1_available": False, "detail": "not_checked"}
++    return asdict(gpu_availability)
++
++
++def _verdict(exp5171_gate: dict[str, Any], gpu: dict[str, Any], smoke: dict[str, Any], rows: list[dict[str, Any]]) -> str:
++    if exp5171_gate.get("gate_passed") is not True:
++        return "blocked_upstream_gate_not_passed"
++    if gpu.get("checked") is not True or gpu.get("gpu1_available") is not True:
++        return "blocked_gpu1_busy"
++    if smoke.get("success") is not True:
++        return "blocked_diffusiongemma_meta_tensor_bug_unresolved"
++    if not rows:
++        return "blocked_no_executable_code_rows"
++
++    guided = pass_at_1(rows, PASS_FIELDS["guided_diffusion"])
++    unguided = pass_at_1(rows, PASS_FIELDS["unguided_diffusion"])
++    ar = pass_at_1(rows, PASS_FIELDS["ar_best_of_n"])
++    guided_delta = guided - unguided
++    ar_delta = guided - ar
++    direction = (
++        "energy_guidance_helped_vs_unguided"
++        if guided_delta > 0
++        else "energy_guidance_hurt_vs_unguided"
++        if guided_delta < 0
++        else "energy_guidance_no_difference_vs_unguided"
++    )
++    ar_text = (
++        "and_beat_ar"
++        if ar_delta > 0
++        else "and_trailed_ar"
++        if ar_delta < 0
++        else "and_tied_ar"
++    )
++    return f"complete: {direction}_{ar_text}_execution_grounded_not_oracle_distinct"
++
++
++def build_artifact(
++    *,
++    exp5171_gate: dict[str, Any],
++    gpu_availability: GpuAvailability | None,
++    smoke: SmokeResult | None,
++    arm_rows: list[dict[str, Any]],
++    compute_cost_per_arm: dict[str, dict[str, float | int]] | None,
++    tests_run: list[str] | None = None,
++    duration_s: float = 0.0,
++    bootstrap_resamples: int = 2000,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    gpu = _as_gpu_dict(gpu_availability)
++    smoke_dict = _as_smoke_dict(smoke)
++    rows = [dict(row) for row in arm_rows]
++    costs = _normalized_compute_costs(compute_cost_per_arm)
++    honest_verdict = _verdict(exp5171_gate, gpu, smoke_dict, rows)
++
++    pass_unguided = pass_at_1(rows, PASS_FIELDS["unguided_diffusion"])
++    pass_guided = pass_at_1(rows, PASS_FIELDS["guided_diffusion"])
++    pass_ar = pass_at_1(rows, PASS_FIELDS["ar_best_of_n"])
++    guided_vs_unguided = bootstrap_mean_ci(
++        _paired_deltas(rows, PASS_FIELDS["guided_diffusion"], PASS_FIELDS["unguided_diffusion"]),
++        seed=random_seed,
++        resamples=bootstrap_resamples,
++    )
++    guided_vs_ar = bootstrap_mean_ci(
++        _paired_deltas(rows, PASS_FIELDS["guided_diffusion"], PASS_FIELDS["ar_best_of_n"]),
++        seed=random_seed + 17,
++        resamples=bootstrap_resamples,
++    )
++
++    if exp5171_gate.get("gate_passed") is not True:
++        resolution = "not_attempted_upstream_gate_not_passed"
++    elif gpu.get("checked") is not True or gpu.get("gpu1_available") is not True:
++        resolution = "not_attempted_gpu1_busy"
++    else:
++        resolution = str(smoke_dict.get("resolution") or "not_recorded")
++        if smoke_dict.get("error"):
++            resolution = f"{resolution}: {smoke_dict['error']}"
++
++    checksum_inputs = {
++        "exp5171_gate": exp5171_gate,
++        "gpu": gpu,
++        "smoke": smoke_dict,
++        "arm_rows": rows,
++        "compute_cost_per_arm": costs,
++        "metrics": {
++            "pass_at_1_unguided": pass_unguided,
++            "pass_at_1_guided": pass_guided,
++            "pass_at_1_ar_baseline": pass_ar,
++            "guided_vs_unguided_delta_ci95": guided_vs_unguided,
++            "guided_vs_ar_delta_ci95": guided_vs_ar,
++        },
++        "honest_verdict": honest_verdict,
++        "random_seed": random_seed,
++    }
++
++    artifact = {
++        "schema": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v1",
++        "experiment": EXPERIMENT_ID,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": (
++            "live_llm_inference" if honest_verdict.startswith("complete:") else "blocked_preflight"
++        ),
++        "preconditions": {
++            "exp5171_gate": {
++                "gate_passed": exp5171_gate.get("gate_passed") is True,
++                "artifact_honest_verdict": exp5171_gate.get("honest_verdict"),
++            },
++            "gpu1": gpu,
++            "smoke": smoke_dict,
++        },
++        "arm_rows": rows,
++        "duration_s": round(float(duration_s), 4),
++        "tests_run": list(tests_run or []),
++        "meta_tensor_bug_resolution": _principled("meta_tensor_bug_resolution", resolution),
++        "guidance_mechanism_design": _principled("guidance_mechanism_design", GUIDANCE_MECHANISM_DESIGN),
++        "pass_at_1_unguided": _principled("pass_at_1_unguided", round(pass_unguided, 10)),
++        "pass_at_1_guided": _principled("pass_at_1_guided", round(pass_guided, 10)),
++        "pass_at_1_ar_baseline": _principled("pass_at_1_ar_baseline", round(pass_ar, 10)),
++        "guided_vs_unguided_delta_ci95": _principled(
++            "guided_vs_unguided_delta_ci95", guided_vs_unguided
++        ),
++        "guided_vs_ar_delta_ci95": _principled("guided_vs_ar_delta_ci95", guided_vs_ar),
++        "compute_cost_per_arm": _principled("compute_cost_per_arm", costs),
++        "verifier_is_oracle": _principled("verifier_is_oracle", True),
++        "random_seed": _principled("random_seed", int(random_seed)),
++        "gpu1_availability_checked": _principled(
++            "gpu1_availability_checked", gpu.get("checked") is True
++        ),
++        "honest_verdict": honest_verdict,
++    }
++    artifact["reproducibility_checksum"] = _principled(
++        "reproducibility_checksum", stable_checksum(checksum_inputs)
++    )
++    return artifact
++
++
++def _is_principled(payload: dict[str, Any], field: str) -> bool:
++    value = payload.get(field)
++    return (
++        isinstance(value, dict)
++        and "value" in value
++        and value.get("principle") == FIELD_PRINCIPLES[field]
++    )
++
++
++def _validate_rate(payload: dict[str, Any], field: str, errors: list[str]) -> None:
++    if not _is_principled(payload, field):
++        errors.append(f"{field} must be principle-wrapped with declared principle")
++        return
++    value = payload[field]["value"]
++    if not isinstance(value, (int, float)) or not 0.0 <= float(value) <= 1.0:
++        errors.append(field)
++
++
++def _validate_ci(payload: dict[str, Any], field: str, errors: list[str]) -> None:
++    if not _is_principled(payload, field):
++        errors.append(f"{field} must be principle-wrapped with declared principle")
++        return
++    value = payload[field]["value"]
++    if (
++        not isinstance(value, list)
++        or len(value) != 2
++        or not all(isinstance(v, (int, float)) for v in value)
++        or float(value[0]) > float(value[1])
++    ):
++        errors.append(field)
++
++
++def _validate_compute_cost(payload: dict[str, Any], errors: list[str]) -> None:
++    field = "compute_cost_per_arm"
++    if not _is_principled(payload, field):
++        errors.append(f"{field} must be principle-wrapped with declared principle")
++        return
++    costs = payload[field]["value"]
++    if not isinstance(costs, dict):
++        errors.append(field)
++        return
++    missing = set(ARMS) - set(costs)
++    if missing:
++        errors.append(field)
++        return
++    for row in costs.values():
++        if not isinstance(row, dict):
++            errors.append(field)
++            return
++        wall = row.get("wall_clock_s")
++        gpu_count = row.get("gpu_count")
++        if (
++            not isinstance(wall, (int, float))
++            or float(wall) < 0.0
++            or not isinstance(gpu_count, int)
++            or gpu_count < 0
++        ):
++            errors.append(field)
++            return
++
++
++def validate_artifact(payload: dict[str, Any]) -> None:
++    errors: list[str] = []
++    missing = REQUIRED_TOP_LEVEL_FIELDS - set(payload)
++    if missing:
++        errors.append(f"missing required fields: {sorted(missing)}")
++
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if not isinstance(payload.get("honest_verdict"), str) or not payload["honest_verdict"].startswith(
++        TERMINAL_PREFIXES
++    ):
++        errors.append("honest_verdict")
++
++    for field in REQUIRED_PRINCIPLED_FIELDS:
++        if field in payload and not _is_principled(payload, field):
++            errors.append(f"{field} declared principle")
++
++    for field in ("pass_at_1_unguided", "pass_at_1_guided", "pass_at_1_ar_baseline"):
++        _validate_rate(payload, field, errors)
++    for field in ("guided_vs_unguided_delta_ci95", "guided_vs_ar_delta_ci95"):
++        _validate_ci(payload, field, errors)
++    _validate_compute_cost(payload, errors)
++
++    verifier = payload.get("verifier_is_oracle")
++    if not _is_principled(payload, "verifier_is_oracle") or verifier.get("value") is not True:
++        errors.append("verifier_is_oracle")
++    gpu_checked = payload.get("gpu1_availability_checked")
++    if not _is_principled(payload, "gpu1_availability_checked") or not isinstance(
++        gpu_checked.get("value"), bool
++    ):
++        errors.append("gpu1_availability_checked")
++    checksum = payload.get("reproducibility_checksum", {}).get("value")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        errors.append("reproducibility_checksum")
++    if not isinstance(payload.get("spec_refs"), list) or "REQ-VERIFY-5173" not in payload["spec_refs"]:
++        errors.append("spec_refs")
++    if not isinstance(payload.get("tests_run"), list) or not payload["tests_run"]:
++        errors.append("tests_run")
++
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def write_result(
++    *,
++    result_path: Path,
++    exp5171_gate: dict[str, Any],
++    gpu_availability: GpuAvailability | None,
++    smoke: SmokeResult | None,
++    arm_rows: list[dict[str, Any]],
++    compute_cost_per_arm: dict[str, dict[str, float | int]] | None,
++    tests_run: list[str] | None = None,
++    duration_s: float = 0.0,
++    bootstrap_resamples: int = 2000,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    artifact = build_artifact(
++        exp5171_gate=exp5171_gate,
++        gpu_availability=gpu_availability,
++        smoke=smoke,
++        arm_rows=arm_rows,
++        compute_cost_per_arm=compute_cost_per_arm,
++        tests_run=tests_run,
++        duration_s=duration_s,
++        bootstrap_resamples=bootstrap_resamples,
++        random_seed=random_seed,
++    )
++    validate_artifact(artifact)
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    result_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:
++    start = time.time()
++    exp5171_path = REPO_ROOT / EXP5171_RELATIVE_PATH
++    exp5171_gate = load_json(exp5171_path) if exp5171_path.exists() else {"gate_passed": False}
++    artifact = write_result(
++        result_path=REPO_ROOT / RESULT_RELATIVE_PATH,
++        exp5171_gate=exp5171_gate,
++        gpu_availability=None,
++        smoke=None,
++        arm_rows=[],
++        compute_cost_per_arm={},
++        tests_run=["manual_module_main_preflight_only"],
++        duration_s=time.time() - start,
++    )
++    print(json.dumps({"result_path": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]}))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json b/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+new file mode 100644
+index 0000000000..507294e461
+--- /dev/null
++++ b/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+@@ -0,0 +1,127 @@
++{
++  "arm_rows": [],
++  "compute_cost_per_arm": {
++    "principle": "The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.",
++    "value": {
++      "ar_best_of_n": {
++        "gpu_count": 1,
++        "wall_clock_s": 0.0
++      },
++      "guided_diffusion": {
++        "gpu_count": 2,
++        "wall_clock_s": 0.0
++      },
++      "unguided_diffusion": {
++        "gpu_count": 2,
++        "wall_clock_s": 0.0
++      }
++    }
++  },
++  "duration_s": 434.3,
++  "experiment": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474",
++  "experiment_id": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474",
++  "field_principles": {
++    "compute_cost_per_arm": "The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.",
++    "gpu1_availability_checked": "True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.",
++    "guidance_mechanism_design": "The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.",
++    "guided_vs_ar_delta_ci95": "Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.",
++    "guided_vs_unguided_delta_ci95": "Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether energy guidance helped, hurt, or made no difference.",
++    "meta_tensor_bug_resolution": "Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.",
++    "pass_at_1_ar_baseline": "Executable pass@1 for the best-of-N autoregressive Gemma control.",
++    "pass_at_1_guided": "Executable pass@1 for energy-guided DiffusionGemma diffusion.",
++    "pass_at_1_unguided": "Executable pass@1 for the unguided DiffusionGemma diffusion baseline.",
++    "random_seed": "Seed used for task ordering, sampling, and bootstrap.",
++    "reproducibility_checksum": "Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.",
++    "verifier_is_oracle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven."
++  },
++  "gpu1_availability_checked": {
++    "principle": "True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.",
++    "value": true
++  },
++  "guidance_mechanism_design": {
++    "principle": "The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.",
++    "value": "Per denoising step, score the current token-candidate slate with the native DiffusionGemma logits and an executable-verifier energy. The composed score for token t at position i is logit_model(i,t) - lambda_energy * verifier_energy(partial_canvas with t inserted). Sampling/commit uses the same low-entropy DiffusionGemma commit order after this reweighting; no post-hoc reranking of completed samples is counted as guided diffusion."
++  },
++  "guided_vs_ar_delta_ci95": {
++    "principle": "Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.",
++    "value": [
++      0.0,
++      0.0
++    ]
++  },
++  "guided_vs_unguided_delta_ci95": {
++    "principle": "Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.",
++    "value": [
++      0.0,
++      0.0
++    ]
++  },
++  "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved",
++  "inference_substrate": "blocked_preflight",
++  "meta_tensor_bug_resolution": {
++    "principle": "Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.",
++    "value": "blocked_diffusiongemma_meta_tensor_bug_unresolved: current transformers/bitsandbytes/accelerate stack does not reproduce the prior successful two-GPU load; corrected class attempts fail during device placement before the diffusion forward pass, so the prior Tensor.item() on meta tensors forward bug remains unresolved and the pilot was not launched: ValueError: Some modules are dispatched on the CPU or the disk before forward; prior forward_error remains RuntimeError(Tensor.item() cannot be called on meta tensors)."
++  },
++  "milestone": "2026.07.474",
++  "pass_at_1_ar_baseline": {
++    "principle": "Executable pass@1 for the best-of-N autoregressive Gemma control.",
++    "value": 0.0
++  },
++  "pass_at_1_guided": {
++    "principle": "Executable pass@1 for energy-guided DiffusionGemma diffusion.",
++    "value": 0.0
++  },
++  "pass_at_1_unguided": {
++    "principle": "Executable pass@1 for the unguided DiffusionGemma diffusion baseline.",
++    "value": 0.0
++  },
++  "preconditions": {
++    "exp5171_gate": {
++      "artifact_honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
++      "gate_passed": true
++    },
++    "gpu1": {
++      "checked": true,
++      "detail": "nvidia-smi on 2026-07-02 showed GPU 1 idle: 4 MiB / 24576 MiB used, pmon no process",
++      "gpu1_available": true
++    },
++    "smoke": {
++      "attempted": true,
++      "error": "ValueError: Some modules are dispatched on the CPU or the disk before forward; prior forward_error remains RuntimeError(Tensor.item() cannot be called on meta tensors).",
++      "load_mode": "4bit_nf4_devmap_auto_2gpu",
++      "model_class": "DiffusionGemmaModel/DiffusionGemmaForBlockDiffusion",
++      "resolution": "blocked_diffusiongemma_meta_tensor_bug_unresolved: current transformers/bitsandbytes/accelerate stack does not reproduce the prior successful two-GPU load; corrected class attempts fail during device placement before the diffusion forward pass, so the prior Tensor.item() on meta tensors forward bug remains unresolved and the pilot was not launched",
++      "success": false,
++      "tried": [
++        "Read results/diffusiongemma_energy_prior_probe.json: prior load_mode=4bit_nf4_devmap_auto_2gpu, model_loaded=true, forward_error=RuntimeError(Tensor.item() cannot be called on meta tensors).",
++        "AutoModelForCausalLM.from_pretrained rejected DiffusionGemmaConfig before loading; wrong auto class for this architecture.",
++        "DiffusionGemmaForBlockDiffusion.from_pretrained with 4bit NF4 and device_map=auto failed during accelerate placement after 148.1s: Some modules are dispatched on the CPU or the disk.",
++        "DiffusionGemmaModel.from_pretrained with 4bit NF4 and device_map=auto failed during accelerate placement after 141.2s: Some modules are dispatched on the CPU or the disk.",
++        "DiffusionGemmaModel.from_pretrained with 4bit NF4, device_map=auto, and max_memory={0:24GiB,1:24GiB} failed during accelerate placement after 145.0s with the same CPU/disk dispatch error."
++      ]
++    }
++  },
++  "random_seed": {
++    "principle": "Seed used for task ordering, sampling, and bootstrap.",
++    "value": 5173
++  },
++  "reproducibility_checksum": {
++    "principle": "Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.",
++    "value": "e7456f2ba694309ffdccc8b4f7d579d82d2d186dda30db8f9238f85d78c41b3c"
++  },
++  "result_path": "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json",
++  "schema": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v1",
++  "spec_refs": [
++    "REQ-VERIFY-5173",
++    "SCENARIO-VERIFY-5173-GATED",
++    "SCENARIO-VERIFY-5173-PILOT"
++  ],
++  "tests_run": [
++    "tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py"
++  ],
++  "verifier_is_oracle": {
++    "principle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.",
++    "value": true
++  }
++}
+diff --git a/tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py b/tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+new file mode 100644
+index 0000000000..7e9160a6cd
+--- /dev/null
++++ b/tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py
+@@ -0,0 +1,377 @@
++"""Tests for Exp 5173 DiffusionGemma energy-guided diffusion pilot.
++
++Spec refs: REQ-VERIFY-5173, SCENARIO-VERIFY-5173-GATED,
++SCENARIO-VERIFY-5173-PILOT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++
++
++def _gate(passed: bool = True) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_5171_harden_set_encoder_cross_corpus_n30_v474",
++        "gate_passed": passed,
++        "held_out_task_n": 30,
++        "cross_corpus_delta_n30": 0.5,
++        "cross_corpus_delta_ci95_n30": [0.2667, 0.7],
++        "honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30",
++    }
++
++
++def _gpu(available: bool = True) -> mod.GpuAvailability:
++    return mod.GpuAvailability(
++        checked=True,
++        gpu1_available=available,
++        detail="gpu 1 idle" if available else "gpu 1 has python pid 1234",
++    )
++
++
++def _smoke(resolved: bool = True) -> mod.SmokeResult:
++    return mod.SmokeResult(
++        attempted=True,
++        success=resolved,
++        load_mode="4bit_nf4_devmap_auto_2gpu",
++        model_class="DiffusionGemmaForBlockDiffusion",
++        resolution=(
++            "resolved by loading DiffusionGemmaForBlockDiffusion directly and "
++            "passing decoder_input_ids on the first non-meta model device"
++            if resolved
++            else "blocked_diffusiongemma_meta_tensor_bug_unresolved: direct class load "
++            "still raised Tensor.item() cannot be called on meta tensors"
++        ),
++        tried=[
++            "AutoModelForCausalLM rejected DiffusionGemmaConfig",
++            "DiffusionGemmaForBlockDiffusion direct load",
++        ],
++        error=None if resolved else "RuntimeError('Tensor.item() cannot be called on meta tensors')",
++    )
++
++
++def _arm_rows() -> list[dict[str, Any]]:
++    return [
++        {"task_id": "HumanEval/0", "unguided_passed": True, "guided_passed": True, "ar_passed": True},
++        {"task_id": "HumanEval/1", "unguided_passed": False, "guided_passed": True, "ar_passed": True},
++        {"task_id": "MBPP/2", "unguided_passed": False, "guided_passed": False, "ar_passed": True},
++        {"task_id": "MBPP/3", "unguided_passed": False, "guided_passed": False, "ar_passed": False},
++    ]
++
++
++def test_req_verify_5173_spec_declares_pilot_contract() -> None:
++    """REQ-VERIFY-5173: OpenSpec anchors the V474 DiffusionGemma pilot."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-VERIFY-5173")
++    section = spec[start:]
++
++    assert "SCENARIO-VERIFY-5173-GATED" in section
++    assert "SCENARIO-VERIFY-5173-PILOT" in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert "experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json" in section
++    assert "4-bit NF4" in section
++    assert "device_map=\"auto\"" in section
++    assert "unsloth/gemma-4-26B-A4B-it-GGUF" in section
++    assert "verifier_is_oracle=true" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_verify_5173_blocks_when_upstream_gate_failed() -> None:
++    """SCENARIO-VERIFY-5173-GATED: a failed Exp5171 gate stops before GPU work."""
++
++    artifact = mod.build_artifact(
++        exp5171_gate=_gate(False),
++        gpu_availability=None,
++        smoke=None,
++        arm_rows=[],
++        compute_cost_per_arm={},
++        tests_run=["focused"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_upstream_gate_not_passed"
++    assert artifact["gpu1_availability_checked"]["value"] is False
++    assert artifact["meta_tensor_bug_resolution"]["value"] == "not_attempted_upstream_gate_not_passed"
++    assert artifact["pass_at_1_guided"]["value"] == 0.0
++
++
++def test_scenario_verify_5173_blocks_when_gpu1_busy() -> None:
++    """SCENARIO-VERIFY-5173-GATED: GPU-1 contention is reported, not ignored."""
++
++    artifact = mod.build_artifact(
++        exp5171_gate=_gate(True),
++        gpu_availability=_gpu(False),
++        smoke=None,
++        arm_rows=[],
++        compute_cost_per_arm={},
++        tests_run=["focused"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_gpu1_busy"
++    assert artifact["gpu1_availability_checked"]["value"] is True
++    assert artifact["preconditions"]["gpu1"]["gpu1_available"] is False
++
++
++def test_scenario_verify_5173_blocks_when_meta_tensor_bug_unresolved() -> None:
++    """REQ-VERIFY-5173: unresolved DiffusionGemma meta tensors stop honestly."""
++
++    artifact = mod.build_artifact(
++        exp5171_gate=_gate(True),
++        gpu_availability=_gpu(True),
++        smoke=_smoke(False),
++        arm_rows=[],
++        compute_cost_per_arm={},
++        tests_run=["focused"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_diffusiongemma_meta_tensor_bug_unresolved"
++    assert "Tensor.item() cannot be called on meta tensors" in artifact[
++        "meta_tensor_bug_resolution"
++    ]["value"]
++    assert "DiffusionGemmaForBlockDiffusion direct load" in artifact["preconditions"]["smoke"]["tried"]
++
++
++def test_scenario_verify_5173_completed_artifact_reports_three_arms() -> None:
++    """SCENARIO-VERIFY-5173-PILOT: three-arm pass@1, CIs, and compute cost are emitted."""
++
++    artifact = mod.build_artifact(
++        exp5171_gate=_gate(True),
++        gpu_availability=_gpu(True),
++        smoke=_smoke(True),
++        arm_rows=_arm_rows(),
++        compute_cost_per_arm={
++            "unguided_diffusion": {"wall_clock_s": 40.0, "gpu_count": 2},
++            "guided_diffusion": {"wall_clock_s": 46.0, "gpu_count": 2},
++            "ar_best_of_n": {"wall_clock_s": 31.0, "gpu_count": 1},
++        },
++        tests_run=["focused"],
++        bootstrap_resamples=256,
++        random_seed=123,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "energy_guidance_helped_vs_unguided" in artifact["honest_verdict"]
++    assert artifact["pass_at_1_unguided"]["value"] == pytest.approx(0.25)
++    assert artifact["pass_at_1_guided"]["value"] == pytest.approx(0.5)
++    assert artifact["pass_at_1_ar_baseline"]["value"] == pytest.approx(0.75)
++    assert artifact["guided_vs_unguided_delta_ci95"]["value"][0] <= 0.25
++    assert artifact["guided_vs_unguided_delta_ci95"]["value"][1] >= 0.25
++    assert artifact["guided_vs_ar_delta_ci95"]["value"][0] <= -0.25
++    assert artifact["guided_vs_ar_delta_ci95"]["value"][1] >= -0.25
++    assert artifact["compute_cost_per_arm"]["value"]["guided_diffusion"]["gpu_count"] == 2
++    assert artifact["verifier_is_oracle"]["value"] is True
++    assert artifact["guidance_mechanism_design"]["value"] == mod.GUIDANCE_MECHANISM_DESIGN
++
++
++def test_reweight_logits_applies_verifier_energy_penalty() -> None:
++    """REQ-VERIFY-5173: the documented guidance rule has executable semantics."""
++
++    adjusted = mod.reweight_logits_with_verifier_energy(
++        logits=[3.0, 2.0, 1.0],
++        verifier_energy=[0.0, 2.0, -1.0],
++        lambda_energy=0.5,
++    )
++
++    assert adjusted == pytest.approx([3.0, 1.0, 1.5])
++
++
++def test_utility_error_paths_and_checksum_inputs(tmp_path: Path) -> None:
++    """REQ-VERIFY-5173: utility helpers fail closed on malformed inputs."""
++
++    payload_path = tmp_path / "gate.json"
++    payload_path.write_text(json.dumps(_gate(True)), encoding="utf-8")
++
++    checksum = mod.stable_checksum({"path": payload_path, "gpu": _gpu(), "smoke": _smoke()})
++
++    assert len(checksum) == 64
++    assert mod.load_json(payload_path)["gate_passed"] is True
++    assert mod.bootstrap_mean_ci([0.5]) == [0.5, 0.5]
++    with pytest.raises(TypeError, match="not JSON serializable"):
++        mod.stable_checksum({"bad": object()})
++    with pytest.raises(ValueError, match="same length"):
++        mod.reweight_logits_with_verifier_energy([1.0], [1.0, 2.0], lambda_energy=0.1)
++    with pytest.raises(ValueError, match="non-negative"):
++        mod.reweight_logits_with_verifier_energy([1.0], [1.0], lambda_energy=-0.1)
++    with pytest.raises(ValueError, match="resamples"):
++        mod.bootstrap_mean_ci([1.0, 0.0], resamples=0)
++
++
++def test_completed_verdict_direction_variants() -> None:
++    """SCENARIO-VERIFY-5173-PILOT: verdict text reflects helped/hurt/tied outcomes."""
++
++    common = {
++        "exp5171_gate": _gate(True),
++        "gpu_availability": _gpu(True),
++        "smoke": _smoke(True),
++        "compute_cost_per_arm": {
++            "unguided_diffusion": {"wall_clock_s": 1.0, "gpu_count": 2},
++            "guided_diffusion": {"wall_clock_s": 1.0, "gpu_count": 2},
++            "ar_best_of_n": {"wall_clock_s": 1.0, "gpu_count": 1},
++        },
++        "tests_run": ["focused"],
++    }
++    beat = mod.build_artifact(
++        **common,
++        arm_rows=[
++            {"task_id": "t0", "unguided_passed": False, "guided_passed": True, "ar_passed": False}
++        ],
++    )
++    hurt = mod.build_artifact(
++        **common,
++        arm_rows=[
++            {"task_id": "t1", "unguided_passed": True, "guided_passed": False, "ar_passed": False}
++        ],
++    )
++    tied = mod.build_artifact(
++        **common,
++        arm_rows=[
++            {"task_id": "t2", "unguided_passed": False, "guided_passed": False, "ar_passed": False}
++        ],
++    )
++
++    assert "energy_guidance_helped_vs_unguided_and_beat_ar" in beat["honest_verdict"]
++    assert "energy_guidance_hurt_vs_unguided_and_tied_ar" in hurt["honest_verdict"]
++    assert "energy_guidance_no_difference_vs_unguided_and_tied_ar" in tied["honest_verdict"]
++    mod.validate_artifact(beat)
++    mod.validate_artifact(hurt)
++    mod.validate_artifact(tied)
++
++    no_rows = mod.build_artifact(**common, arm_rows=[])
++    assert no_rows["honest_verdict"] == "blocked_no_executable_code_rows"
++    mod.validate_artifact(no_rows)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (
++            lambda artifact: {
++                key: value for key, value in artifact.items() if key != "pass_at_1_guided"
++            },
++            "missing required fields",
++        ),
++        (lambda artifact: artifact | {"honest_verdict": "done"}, "honest_verdict"),
++        (
++            lambda artifact: artifact | {"verifier_is_oracle": {"value": False, "principle": mod.FIELD_PRINCIPLES["verifier_is_oracle"]}},
++            "verifier_is_oracle",
++        ),
++        (
++            lambda artifact: artifact | {"pass_at_1_guided": {"value": 1.5, "principle": mod.FIELD_PRINCIPLES["pass_at_1_guided"]}},
++            "pass_at_1_guided",
++        ),
++        (
++            lambda artifact: artifact | {"guided_vs_ar_delta_ci95": {"value": [0.1], "principle": mod.FIELD_PRINCIPLES["guided_vs_ar_delta_ci95"]}},
++            "guided_vs_ar_delta_ci95",
++        ),
++        (
++            lambda artifact: artifact | {"compute_cost_per_arm": {"value": {"guided_diffusion": {"wall_clock_s": -1.0, "gpu_count": 2}}, "principle": mod.FIELD_PRINCIPLES["compute_cost_per_arm"]}},
++            "compute_cost_per_arm",
++        ),
++        (
++            lambda artifact: artifact | {"meta_tensor_bug_resolution": {"value": "ok", "principle": "wrong"}},
++            "declared principle",
++        ),
++        (lambda artifact: artifact | {"field_principles": {}}, "field_principles"),
++        (
++            lambda artifact: artifact | {"guided_vs_ar_delta_ci95": [0.0, 1.0]},
++            "principle-wrapped",
++        ),
++        (lambda artifact: artifact | {"compute_cost_per_arm": {}}, "principle-wrapped"),
++        (
++            lambda artifact: artifact | {"compute_cost_per_arm": {"value": {}, "principle": mod.FIELD_PRINCIPLES["compute_cost_per_arm"]}},
++            "compute_cost_per_arm",
++        ),
++        (
++            lambda artifact: artifact | {"compute_cost_per_arm": {"value": "bad", "principle": mod.FIELD_PRINCIPLES["compute_cost_per_arm"]}},
++            "compute_cost_per_arm",
++        ),
++        (
++            lambda artifact: artifact | {"compute_cost_per_arm": {"value": {"unguided_diffusion": "bad", "guided_diffusion": {"wall_clock_s": 1.0, "gpu_count": 2}, "ar_best_of_n": {"wall_clock_s": 1.0, "gpu_count": 1}}, "principle": mod.FIELD_PRINCIPLES["compute_cost_per_arm"]}},
++            "compute_cost_per_arm",
++        ),
++        (
++            lambda artifact: artifact | {"compute_cost_per_arm": {"value": {"unguided_diffusion": {"wall_clock_s": 1.0, "gpu_count": 2}, "guided_diffusion": {"wall_clock_s": -1.0, "gpu_count": 2}, "ar_best_of_n": {"wall_clock_s": 1.0, "gpu_count": 1}}, "principle": mod.FIELD_PRINCIPLES["compute_cost_per_arm"]}},
++            "compute_cost_per_arm",
++        ),
++        (
++            lambda artifact: artifact | {"gpu1_availability_checked": {"value": "yes", "principle": mod.FIELD_PRINCIPLES["gpu1_availability_checked"]}},
++            "gpu1_availability_checked",
++        ),
++        (
++            lambda artifact: artifact | {"reproducibility_checksum": {"value": "short", "principle": mod.FIELD_PRINCIPLES["reproducibility_checksum"]}},
++            "reproducibility_checksum",
++        ),
++        (lambda artifact: artifact | {"spec_refs": []}, "spec_refs"),
++        (lambda artifact: artifact | {"tests_run": []}, "tests_run"),
++    ],
++)
++def test_validate_artifact_rejects_invalid_schema(mutate: object, message: str) -> None:
++    """REQ-VERIFY-5173: invalid pilot artifacts fail closed before writing."""
++
++    artifact = mod.build_artifact(
++        exp5171_gate=_gate(True),
++        gpu_availability=_gpu(True),
++        smoke=_smoke(True),
++        arm_rows=_arm_rows(),
++        compute_cost_per_arm={
++            "unguided_diffusion": {"wall_clock_s": 40.0, "gpu_count": 2},
++            "guided_diffusion": {"wall_clock_s": 46.0, "gpu_count": 2},
++            "ar_best_of_n": {"wall_clock_s": 31.0, "gpu_count": 1},
++        },
++        tests_run=["focused"],
++    )
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(mutate(artifact))
++
++
++def test_write_result_is_stable_json(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5173-PILOT: writer emits the validated JSON artifact."""
++
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    artifact = mod.write_result(
++        result_path=result_path,
++        exp5171_gate=_gate(True),
++        gpu_availability=_gpu(True),
++        smoke=_smoke(True),
++        arm_rows=_arm_rows(),
++        compute_cost_per_arm={
++            "unguided_diffusion": {"wall_clock_s": 40.0, "gpu_count": 2},
++            "guided_diffusion": {"wall_clock_s": 46.0, "gpu_count": 2},
++            "ar_best_of_n": {"wall_clock_s": 31.0, "gpu_count": 1},
++        },
++        tests_run=["focused"],
++    )
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_main_writes_preflight_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
++    """REQ-VERIFY-5173: CLI entrypoint writes a blocked preflight artifact."""
++
++    gate_path = tmp_path / mod.EXP5171_RELATIVE_PATH
++    gate_path.parent.mkdir(parents=True)
++    gate_path.write_text(json.dumps(_gate(True)), encoding="utf-8")
++    monkeypatch.setattr(mod, "REPO_ROOT", tmp_path)
++
++    mod.main()
++
++    written = tmp_path / mod.RESULT_RELATIVE_PATH
++    captured = capsys.readouterr().out
++    assert written.exists()
++    assert "blocked_gpu1_busy" in captured
+-- 
+2.55.0
+

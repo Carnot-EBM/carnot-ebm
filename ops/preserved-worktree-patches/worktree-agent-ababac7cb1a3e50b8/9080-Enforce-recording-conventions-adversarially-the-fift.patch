@@ -1,0 +1,669 @@
+From 737360e1ab7799203b2fa2ab068abc5a4fe1a7f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 17:39:20 -0400
+Subject: [PATCH 09080/11362] Enforce recording conventions adversarially: the
+ fifth audit reviews ARTIFACTS, not code
+
+REQ-OPS-ARTIFACT-CONVENTION-6264. Operator: "it sounds like we need to enforce
+conventions with our adversarial agent." Correct, and placement matters, so this
+ships in two halves.
+
+PREVENTION, planner-side, no LLM. Two conventions added to the REQUIRED ARTIFACT
+FIELDS guidance beside solve_provenance: per_unit_rows for any comparative claim
+(57 of the 60 most recent artifacts carry none), and blocked_reason for any
+blocked_* verdict (37 of 58 record nothing, and all 31 carrying
+blocked_gate_check_failed say nothing about which gate failed). A convention in
+the task spec changes what gets WRITTEN; an audit can only notice afterwards that
+it was not.
+
+DETECTION, adversarial, milestone close. artifact_convention_audit.py is the FIFTH
+audit, beside four that already run -- and all four of those review CODE or DOCS.
+None reviewed the ARTIFACTS, which are the research record every downstream claim
+rests on. It asks one question: could a stranger CHECK this claim, or must they
+trust it? Reuses the siblings' audit-integrity guard so a verdict quoting absent
+evidence is downgraded rather than acted on. Never edits, never blocks, bounded
+with --recent 8.
+
+Adversarial rather than another lint on the evidence, not on preference:
+verdict_row_consistency_lint tried pattern matching on this same problem and
+needed five rounds of widening, each a real gap, and still misses cases and emits
+noise. The pattern-narrower-than-its-concept failure recurred five times inside
+the tool built to catch it. "Is this claim checkable" is semantic; a reviewer
+needs the question, not every artifact shape.
+
+First live run earned its place. It flagged experiment_3392 AGGREGATE_ONLY: the
+artifact claims the archive is complete and activation ready, backed by counts,
+while recording nothing about WHICH upstream artifacts were checked or what each
+produced. Its missing-check statement is exactly right and no pattern list would
+have produced it. Quoted fields are genuinely present so the integrity guard
+passed it as real. It marked two others CHECKABLE, so it is not flagging
+everything.
+
+One bug recorded rather than quietly fixed: the first wiring gated on
+AUDIT_ENABLED, a name I invented that exists nowhere in the file. It compiled
+because the guard is only evaluated at runtime, and would have raised NameError at
+the first milestone close, taking the retrospective with it. Now gated on
+`not dry_run`, the same condition as its siblings.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   | 158 ++++++++++++
+ ops/artifact_convention_audit_report.md       |  61 +++++
+ ops/known-issues.md                           |  54 +++++
+ scripts/artifact_convention_audit.py          | 227 ++++++++++++++++++
+ scripts/research_conductor.py                 |  54 +++++
+ 5 files changed, 554 insertions(+)
+ create mode 100644 ops/artifact_convention_audit_report.md
+ create mode 100644 scripts/artifact_convention_audit.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index cd603bdc1a..933890aac6 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -4420,6 +4420,128 @@ null, and `verifier_is_oracle` is false.
+ |---|---|---|
+ | REQ-INFRA-6391 | Planned: `python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py`. |
+ 
++## REQ-INFRA-6404: V551 Handoff SHALL Preserve V550 Evidence And Fail Closed On Queue Mismatch
++
++Carnot SHALL build Exp6404 as a bounded V550-to-V551 evidence handoff over
++Exp6391 through Exp6403. The handoff SHALL hash the active roadmap, optional
++next roadmap, milestone document, conductor log, conductor source, exclusion
++manifest, known issues, ARC solve registry, claims ledger, and every expected
++V550 terminal artifact before it imports artifact fields. It SHALL invoke
++`scripts/summarize_artifact.py` for Exp6391 through Exp6403 and preserve clean,
++partial, null, blocked, skipped, absent, flagged, and retired states without
++filling gaps.
++
++Exp6404 SHALL keep artifact verdicts, conductor outcomes, adversarial findings,
++public-claim decisions, and per-task durations as separate facts. It SHALL
++derive each duration from the matching terminal artifact receipt. It SHALL not
++copy one aggregate milestone duration onto tasks. If a repeated unresolved
++handoff mismatch is present, the handoff SHALL record the retirement trigger
++instead of resolving it silently.
++
++Exp6404 SHALL record the factor boundary exactly: four Exp6395 licenses, Qwen
++abstention, two rejected Gemma cells, Exp6396 through Exp6398 positive internal
++factor results, Exp6399 public-factor block, and no universal support. It SHALL
++record the ARC boundary exactly: Exp6400 shadow readiness, Exp6401 positive
++causal progress, Exp6402 clean provenance audit with public ineligibility, no
++solve, and zero actual route promotion.
++
++Exp6404 SHALL validate the V551 queue without changing the active roadmap or
++the conductor. It SHALL require twelve unique V551 task IDs, unique result JSON
++deliverables, ascending execution order, structured gates, required upstream
++gate fields, complete prior-failure entries, no retired-ID reuse, no retired
++dependency chain, valid exclusion-manifest state, valid memory gates, and valid
++ARC gates before activation. If the audited queue contains fewer than the
++twelve proposal tasks, Exp6404 SHALL fail closed in its status and verdict
++while preserving all evidence facts.
++
++Exp6404 SHALL render each prompt with the conductor-compatible `{project_root}`
++and `{date}` values before checking it. Every rendered prompt SHALL include
++`CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, `CONCRETE STEPS`, the project
++root, planning date `20260813`, a `Run command:` line, and the final line
++`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Every task SHALL
++use `agent_type=codex` and `model=gpt-5.5`. Every LLM task SHALL name
++`MODEL_SPECS`, `cached_sota_pair()`, at least one mandated GGUF ID, embedded
++GGUF tokenizers, no `AutoTokenizer`, real GPU receipts, and no legacy headline
++cell.
++
++The Exp6404 artifact SHALL be written atomically to
++`results/experiment_6404_v551_terminal_handoff_and_queue_preflight.json` with
++`inference_substrate=aggregation_from_upstream_artifacts` and
++`verifier_is_oracle=false`. The artifact SHALL include these required fields:
++`status`, `v550_active_roadmap_path_and_hash`, `v550_task_ids`,
++`v550_terminal_artifacts_by_task`, `v550_artifact_verdicts`,
++`v550_conductor_outcomes`, `v550_adversarial_findings`,
++`v550_duration_receipts_by_task`, `v550_factor_boundary`,
++`v550_arc_boundary`, `v551_milestone_doc_and_queue_hashes`,
++`v551_task_ids`, `v551_id_and_deliverable_checks`,
++`v551_dependency_and_gate_checks`,
++`v551_gate_field_cross_reference_checks`, `v551_prior_failure_checks`,
++`v551_exclusion_manifest_checks`,
++`v551_agent_model_and_llm_policy_checks`, `prompt_contract_checks`,
++`active_roadmap_modified`, `conductor_modified`, `solve_registry_modified`,
++`claims_ledger_modified`, `protected_files_unchanged`,
++`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
++`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
++`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
++
++### SCENARIO-INFRA-6404-1: V550 Evidence Classes Stay Separate
++
++GIVEN V550 produced positive, null, complete, clean, flagged, skipped, blocked,
++absent, retired, and partial-capability evidence classes
++WHEN Exp6404 builds its terminal matrix
++THEN artifact verdicts, conductor outcomes, adversarial findings, public-claim
++decisions, and per-task durations are recorded in separate fields and no
++missing artifact is invented.
++
++### SCENARIO-INFRA-6404-2: Factor Boundary Preserves Partial Capability
++
++GIVEN Exp6395 issued four narrow licenses while Qwen abstained
++WHEN Exp6404 summarizes factor evidence
++THEN the four licensed cells, the two rejected Gemma cells, the three Qwen
++abstentions, Exp6396 through Exp6398 positive internal results, Exp6399 public
++block, and the absence of universal support remain explicit.
++
++### SCENARIO-INFRA-6404-3: ARC Boundary Preserves Internal Progress Only
++
++GIVEN Exp6400 through Exp6402 produced internal ARC readiness and causal
++progress evidence
++WHEN Exp6404 summarizes ARC evidence
++THEN shadow readiness, positive causal progress, clean provenance, public
++ineligibility, no solve, and zero actual route promotion remain explicit.
++
++### SCENARIO-INFRA-6404-4: V551 Queue Mismatch Fails Closed
++
++GIVEN the V551 proposal contains twelve tasks
++WHEN the audited roadmap contains fewer than twelve V551 task IDs
++THEN Exp6404 records the missing IDs, leaves the roadmap and conductor
++unchanged, and emits a terminal fail-closed handoff verdict.
++
++### SCENARIO-INFRA-6404-5: Prompt And LLM Policy Contracts Validate
++
++GIVEN V551 prompts use `{project_root}` and `{date}` placeholders
++WHEN Exp6404 validates rendered prompt contracts
++THEN it checks all required prompt sections, run commands, final prohibition,
++agent/model pairs, model specs, cached SOTA access, mandated GGUF IDs,
++embedded-tokenizer rules, no-`AutoTokenizer` rules, real GPU receipts, and no
++legacy headline cell.
++
++### SCENARIO-INFRA-6404-6: Artifact Is Annotated, Checksummed, And Non-Mutating
++
++GIVEN precondition hashes, summary receipts, queue checks, and command receipts
++are assembled
++WHEN Exp6404 writes its artifact
++THEN every required field and structured gate has a principle, every required
++field has provenance classified as measured, derived, constant, or upstream,
++the solve registry and claims ledger remain byte-identical, protected files
++remain byte-identical, the checksum matches, `random_seed` is null, and
++`verifier_is_oracle` is false.
++
++## Implementation Status (REQ-INFRA-6404)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6404 | Planned: `python/carnot/experiment_6404_v551_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6404_v551_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6404_v551_terminal_handoff_and_queue_preflight.py`. |
++
+ ## REQ-INFRA-6379: Canonical Factor-Edit Transport Contract SHALL Use One Source
+ 
+ Carnot SHALL build Exp6379 as deterministic transport infrastructure for the
+@@ -5033,3 +5155,39 @@ messages SHALL remain separate.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-OPS-RECURRING-BLOCKER-6263 | `scripts/recurring_blocker_ledger.py`. | `tests/python/test_recurring_blocker_ledger.py` (6/6, pinning both under- and over-collapse of the normaliser). First run escalated `blocked_gate_check_failed` x31 into `ops/known-issues.md`. |
++
++### REQ-OPS-ARTIFACT-CONVENTION-6264: Recording Conventions Are Enforced Adversarially
++
++**Origin:** 2026-08-13 operator directive, "it sounds like we need to enforce conventions with
++our adversarial agent." Four adversarial audits already ran at milestone close and all four
++reviewed CODE or DOCS; none reviewed the ARTIFACTS.
++
++Two conventions SHALL be stated in the planner's REQUIRED ARTIFACT FIELDS guidance
++(prevention): `per_unit_rows` for any comparative claim, and `blocked_reason` for any
++`blocked_*` verdict.
++
++`scripts/artifact_convention_audit.py` SHALL review recent artifacts adversarially and return
++one of `CHECKABLE | AGGREGATE_ONLY | BLOCKED_WITHOUT_DIAGNOSTIC | CANNOT_DETERMINE`, asking
++whether a reader who was not present could CHECK the claim from what is recorded.
++
++It SHALL apply the audit-integrity guard: a flagged verdict whose quoted evidence does not
++appear in the artifact SHALL be downgraded to `CANNOT_DETERMINE`. It SHALL never edit an
++artifact and SHALL never block. It SHALL be bounded (`--recent`) so a milestone close stays
++cheap.
++
++#### SCENARIO-OPS-ARTIFACT-CONVENTION-6264-AGGREGATE-ONLY-IS-FLAGGED
++
++Given an artifact asserting a comparative or readiness claim backed only by counts, with no
++per-unit record of which units were checked or what each produced, the verdict SHALL be
++`AGGREGATE_ONLY`.
++
++#### SCENARIO-OPS-ARTIFACT-CONVENTION-6264-NO-CLAIM-IS-NOT-A-PROBLEM
++
++Given an artifact that makes no comparative claim and is not blocked, the verdict SHALL be
++`CHECKABLE`; the audit SHALL NOT invent a problem.
++
++## Implementation Status (REQ-OPS-ARTIFACT-CONVENTION-6264)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-OPS-ARTIFACT-CONVENTION-6264 | `scripts/artifact_convention_audit.py`, wired as the fifth milestone-close audit in `research_conductor.py`; conventions added to the planner's REQUIRED ARTIFACT FIELDS guidance. | First live run flagged `experiment_3392_archive_v311_activate_v312.json` AGGREGATE_ONLY with a correct missing-check statement, and correctly passed two others as CHECKABLE. |
+diff --git a/ops/artifact_convention_audit_report.md b/ops/artifact_convention_audit_report.md
+new file mode 100644
+index 0000000000..d4fefefabb
+--- /dev/null
++++ b/ops/artifact_convention_audit_report.md
+@@ -0,0 +1,61 @@
++# Artifact convention audit
++
++Can a stranger CHECK each artifact's claim, or must they trust it? Two conventions:
++a comparative claim records PER-UNIT ROWS; a blocked verdict records WHY.
++
++This audit never edits an artifact and never blocks anything. It surfaces; the operator
++decides. Verdicts downgraded to CANNOT_DETERMINE by the audit-integrity guard rest on
++evidence the reviewer could not have read -- do NOT act on them.
++
++| verdict | count |
++|---|---|
++| CHECKABLE | 2 |
++| AGGREGATE_ONLY | 1 |
++
++## experiment_3392_archive_v311_activate_v312.json
++
++**AGGREGATE_ONLY**
++
++## VERDICT
++AGGREGATE_ONLY
++
++## WHAT THE CLAIM IS
++The artifact claims archive v311 is complete and activation of v312 is ready.
++
++## WHAT IS MISSING
++Per-artifact rows/checks behind `"completed_artifacts"`, `"blocked_artifacts"`, `"missing_artifacts"`, `"duration_flagged_artifacts"`, and `"archive_v311_activate_v312_ready"`.
++
++## THE CHECK A READER CANNOT DO
++Which upstream artifacts were actually checked, and what result did each one produce before declaring the archive complete?
++
++## experiment_833_constraint_delta_root_cause.json
++
++**CHECKABLE**
++
++## VERDICT
++CHECKABLE
++
++## WHAT THE CLAIM IS
++The headline claim is that the root cause was `write_path_missing`.
++
++## WHAT IS MISSING
++nothing
++
++## THE CHECK A READER CANNOT DO
++none
++
++## experiment_6260_goal_only_induction_ab.json
++
++**CHECKABLE**
++
++## VERDICT
++CHECKABLE
++
++## WHAT THE CLAIM IS
++Goal-only beat the combined call on the gate: 1 of 4 goal-only predicates fired on a real win where 0 of 4 combined-call predicates did, with the gain on `ls20`.
++
++## WHAT IS MISSING
++nothing
++
++## THE CHECK A READER CANNOT DO
++none
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 12ed8dd242..f575b829a9 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17840,3 +17840,57 @@ the unattended failure mode: a failure nobody reads never gets fixed.
+ 
+ Investigate the highest-count blocker first: diagnose the root cause, then either fix it
+ or record why the block is correct and expected. Do NOT simply re-run the task.
++
++## 2026-08-13 REQ-OPS-ARTIFACT-CONVENTION-6264: conventions enforced by the adversarial agent
++
++Operator: "it sounds like we need to enforce conventions with our adversarial agent." Correct,
++and the placement matters, so this shipped in two halves.
++
++**PREVENTION (planner-side, no LLM).** Two conventions added to the planner's REQUIRED ARTIFACT
++FIELDS guidance in `research_conductor.py`, alongside `solve_provenance`:
++
++- `per_unit_rows` on any task making a COMPARATIVE claim. Measured: 57 of the 60 most recent
++  artifacts carry none, only aggregates and receipts.
++- `blocked_reason` whenever `honest_verdict` starts `blocked_*`. Measured: 37 of 58 blocked
++  artifacts record no reason, and all 31 carrying `blocked_gate_check_failed` say nothing about
++  which gate failed.
++
++This is the cheap half. A convention in the task spec changes what gets WRITTEN; an audit can
++only notice afterwards that it was not.
++
++**DETECTION (adversarial, milestone close).** `scripts/artifact_convention_audit.py` is the
++FIFTH adversarial audit, wired beside the four that already run. The existing four review
++landing-page copy, verifier code, QA-layer guards and ARC solve provenance -- **all four review
++CODE or DOCS. None reviewed the ARTIFACTS**, which are the research record and the thing every
++downstream claim rests on. That was the gap.
++
++It asks one question per artifact: *could a stranger CHECK this claim, or must they trust it?*
++Verdicts: `CHECKABLE | AGGREGATE_ONLY | BLOCKED_WITHOUT_DIAGNOSTIC | CANNOT_DETERMINE`. It reuses
++the siblings' audit-integrity guard (Layer 1.5): a flagged verdict quoting evidence absent from
++the artifact is downgraded rather than acted on. It never edits and never blocks.
++
++**Why adversarial and not another lint -- this is the evidence, not a preference.**
++`verdict_row_consistency_lint.py` tried the pattern-matching route on the same problem and
++needed FIVE rounds of widening, each round a real gap, and still misses cases and emits noise.
++The pattern-narrower-than-its-concept failure recurred five times inside the tool built to catch
++that failure. "Is this claim checkable" is a semantic question; a reviewer does not need to be
++taught every artifact shape, only the question.
++
++**First real run, 3 artifacts, and it earned its place.** It flagged
++`experiment_3392_archive_v311_activate_v312.json` AGGREGATE_ONLY: the artifact claims the
++archive is complete and v312 activation is ready, backed by counts
++(`completed_artifacts`, `blocked_artifacts`, `missing_artifacts`) but records nothing about
++WHICH upstream artifacts were checked or what each produced. Its stated missing check --
++*"Which upstream artifacts were actually checked, and what result did each one produce before
++declaring the archive complete?"* -- is exactly right, and no pattern list would have produced
++it. The quoted fields are genuinely present, so the integrity guard passed it as real evidence.
++It correctly marked exp6260 and exp833 CHECKABLE, so it is not simply flagging everything.
++
++**Bounded on purpose.** `--recent 8` at milestone close, one call per artifact. The siblings are
++bounded the same way; an unbounded audit over a 6300-file corpus would be its own kind of churn.
++
++**One bug worth recording.** The first wiring gated on `AUDIT_ENABLED`, a name I invented that
++exists nowhere in the file. It compiled, because the guard is only evaluated at runtime — it
++would have raised `NameError` at the first milestone close and taken the retrospective path with
++it. Now gated on `not dry_run`, the same condition as its four siblings. Reading what the
++neighbours do beats assuming a symbol exists.
+diff --git a/scripts/artifact_convention_audit.py b/scripts/artifact_convention_audit.py
+new file mode 100644
+index 0000000000..f3506d5c46
+--- /dev/null
++++ b/scripts/artifact_convention_audit.py
+@@ -0,0 +1,227 @@
++#!/usr/bin/env python3
++"""Adversarial audit: can a stranger CHECK this artifact's claim, or must they trust it?
++
++WHY A FIFTH AUDIT, AND WHY ADVERSARIAL RATHER THAN A LINT. Four adversarial audits already run
++at milestone close -- landing page, verifier authenticity, QA-layer guards, ARC solve provenance.
++Every one of them audits CODE or DOCS. None audits the ARTIFACTS, which are the research record
++and the thing every downstream claim is built on.
++
++The gap was found the hard way. `scripts/verdict_row_consistency_lint.py` was written to catch
++verdicts contradicted by their own rows. It took FIVE rounds -- it scanned only top-level keys
++and missed its own founding case, discarded a metric because an exclusion matched `_n` mid-name,
++printed "OK" while skipping 57 of 60 artifacts, could not see booleans, then manufactured noise
++when booleans were added. The pattern-narrower-than-its-concept failure recurred five times
++inside the tool built to catch that failure. That is the signature of a problem a pattern list
++cannot solve: judging whether a claim is CHECKABLE is semantic, not syntactic.
++
++An adversarial reviewer does not need to be taught every artifact shape. It needs one question:
++**could someone who was not there verify this claim from what is written down?**
++
++WHAT IT CHECKS. Two conventions, both measured, both already in the planner's REQUIRED ARTIFACT
++FIELDS guidance (prevention) -- this is the detection half:
++
++  1. A COMPARATIVE claim must record PER-UNIT ROWS. Measured 2026-08-13: 57 of the 60 most
++     recent artifacts carry no per-unit rows at all, only aggregates and receipts. A headline
++     computed from a pooled mean alone cannot be rechecked without re-running the task.
++  2. A BLOCKED verdict must record WHY. Measured: 37 of 58 blocked artifacts record no reason,
++     and all 31 carrying `blocked_gate_check_failed` say nothing about which gate failed. That
++     one blocker stopped 31 tasks across 14 milestones precisely because it could not be
++     diagnosed from the record.
++
++WHAT IT NEVER DOES. It never edits an artifact, never blocks a commit, and never fails the
++conductor. Same contract as its four siblings: it surfaces, the operator decides. A convention
++audit with teeth would reward writing fields that satisfy a checker rather than fields that let
++a reader check the work -- which is the failure this whole line of work is trying to avoid.
++
++THE AUDIT-INTEGRITY GUARD (Layer 1.5) applies here as it does to the siblings. A hostile
++reviewer can invent its smoking gun, so any flagged verdict whose quoted high-specificity
++evidence does not literally appear in the audited artifact is downgraded to CANNOT_DETERMINE
++rather than acted on.
++
++Usage:
++    python3 scripts/artifact_convention_audit.py --recent 12
++    python3 scripts/artifact_convention_audit.py --recent 12 --agent-type codex
++    python3 scripts/artifact_convention_audit.py --recent 12 --dry-run   # no LLM call
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import re
++import subprocess
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[1]
++REPORT = REPO / "ops" / "artifact_convention_audit_report.md"
++
++VERDICTS = ("CHECKABLE", "AGGREGATE_ONLY", "BLOCKED_WITHOUT_DIAGNOSTIC", "CANNOT_DETERMINE")
++
++PROMPT = """\
++You are a HOSTILE RESEARCH AUDITOR. You did not run this experiment and you cannot re-run it.
++You have only the artifact below.
++
++Answer ONE question: could you CHECK this artifact's headline claim from what is written down,
++or would you have to TRUST it?
++
++Two specific failures to hunt for.
++
++1. AGGREGATE_ONLY. The artifact makes a COMPARATIVE claim (arm A beat arm B, a gate was met, a
++   pooled mean improved) but records only aggregate numbers -- no per-unit rows giving the metric
++   for each game, seed, cell or condition. Without rows, nobody can tell whether a pooled mean
++   came from a broad effect or one outlier, whether a control was degenerate, or whether half
++   the units had no headroom to move. Real examples from this corpus: a gate reported MET while
++   the control arm was byte-identical to the baseline on 20 of 25 rows; another reported MET on
++   one win, one loss and two units pinned at a floor and ceiling.
++
++2. BLOCKED_WITHOUT_DIAGNOSTIC. The verdict says the task was blocked or gated, but the artifact
++   does not record WHICH check failed and what value it saw. Such a blocker cannot be
++   investigated without re-running the task, so it recurs. One message in this corpus blocked 31
++   tasks across 14 milestones for exactly this reason.
++
++An artifact that records NO comparative claim and is NOT blocked is CHECKABLE by default -- do
++not invent a problem. An honest null with per-unit rows is CHECKABLE. A scaffolding or receipt
++artifact making no claim is CHECKABLE.
++
++Reply in this exact format:
++
++## VERDICT
++<one of: CHECKABLE | AGGREGATE_ONLY | BLOCKED_WITHOUT_DIAGNOSTIC | CANNOT_DETERMINE>
++
++## WHAT THE CLAIM IS
++<one sentence: the artifact's headline claim, or "no claim">
++
++## WHAT IS MISSING
++<the exact field(s) a reader would need and cannot find. Quote field names that ARE present to
++show what you looked at. If nothing is missing, write "nothing">
++
++## THE CHECK A READER CANNOT DO
++<one concrete question a reader cannot answer from this artifact. If none, write "none">
++"""
++
++
++def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
++    """Invoke the configured reviewer CLI. Mirrors the sibling audits' shape."""
++    cmds = {
++        "codex": ["codex", "exec", "--model", model, "-"],
++        "claude": ["claude", "-p", "--model", model],
++        "gemini": ["gemini", "-m", model, "-p", "-"],
++    }
++    cmd = cmds.get(agent)
++    if not cmd:
++        return False, f"unknown agent type {agent!r}"
++    try:
++        r = subprocess.run(
++            cmd,
++            input=f"{prompt}\n\n---ARTIFACT---\n{body}",
++            capture_output=True,
++            text=True,
++            timeout=300,
++            check=False,
++        )
++        return (r.returncode == 0, r.stdout or r.stderr)
++    except Exception as exc:  # noqa: BLE001
++        return False, repr(exc)[:200]
++
++
++def parse_verdict(report: str) -> str:
++    m = re.search(r"##\s*VERDICT\s*\n+\s*([A-Z_]+)", report)
++    v = (m.group(1) if m else "").strip()
++    return v if v in VERDICTS else "UNKNOWN"
++
++
++def verify_quoted_evidence(report: str, body: str) -> list[str]:
++    """Return quoted field names the artifact does NOT contain.
++
++    The audit-integrity guard (Layer 1.5). A hostile reviewer can invent the field it claims to
++    have looked for, so a flagged verdict resting on invented evidence must be downgraded rather
++    than acted on. Only the WHAT IS MISSING section is swept: the other sections are asked to
++    describe what is ABSENT, and absent things are correctly not in the body.
++    """
++    sec = re.search(r"##\s*WHAT IS MISSING\s*\n(.*?)(?=\n##|\Z)", report, re.S)
++    if not sec:
++        return []
++    bad = []
++    for tok in re.findall(r"`([a-z_][a-z0-9_]{4,})`", sec.group(1)):
++        # Only PRESENT-tense claims are checkable: the reviewer was asked to quote fields that
++        # ARE present to show what it read. A field named as missing is expected to be absent.
++        if tok in body:
++            continue
++        bad.append(tok)
++    return bad
++
++
++def _artifacts(n: int) -> list[Path]:
++    res = REPO / "results"
++    return sorted(res.glob("experiment_*.json"), key=lambda p: p.stat().st_mtime)[-n:]
++
++
++def main(argv: list[str]) -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--recent", type=int, default=12)
++    ap.add_argument("--agent-type", default="codex")
++    ap.add_argument("--model-name", default="gpt-5.5")
++    ap.add_argument("--dry-run", action="store_true", help="list targets; make no LLM call")
++    args = ap.parse_args(argv)
++
++    targets = _artifacts(args.recent)
++    if args.dry_run:
++        print(f"artifact-convention-audit: {len(targets)} target(s)")
++        for p in targets:
++            print(f"  {p.name}")
++        return 0
++
++    rows, counts = [], dict.fromkeys((*VERDICTS, "UNKNOWN"), 0)
++    for p in targets:
++        try:
++            body = p.read_text()[:60000]
++        except Exception as exc:  # noqa: BLE001
++            rows.append((p.name, "CANNOT_DETERMINE", f"unreadable: {exc!r}"[:120], []))
++            counts["CANNOT_DETERMINE"] += 1
++            continue
++        ok, report = _call(args.agent_type, args.model_name, PROMPT, body)
++        if not ok:
++            rows.append((p.name, "CANNOT_DETERMINE", "reviewer call failed", []))
++            counts["CANNOT_DETERMINE"] += 1
++            continue
++        verdict = parse_verdict(report)
++        invented = verify_quoted_evidence(report, body) if verdict in VERDICTS[1:3] else []
++        if invented:
++            verdict = "CANNOT_DETERMINE"
++        counts[verdict] = counts.get(verdict, 0) + 1
++        rows.append((p.name, verdict, report, invented))
++        print(f"  [{verdict:26}] {p.name}")
++
++    lines = [
++        "# Artifact convention audit",
++        "",
++        "Can a stranger CHECK each artifact's claim, or must they trust it? Two conventions:",
++        "a comparative claim records PER-UNIT ROWS; a blocked verdict records WHY.",
++        "",
++        "This audit never edits an artifact and never blocks anything. It surfaces; the operator",
++        "decides. Verdicts downgraded to CANNOT_DETERMINE by the audit-integrity guard rest on",
++        "evidence the reviewer could not have read -- do NOT act on them.",
++        "",
++        "| verdict | count |",
++        "|---|---|",
++    ]
++    lines += [f"| {k} | {v} |" for k, v in counts.items() if v]
++    lines.append("")
++    for name, verdict, report, invented in rows:
++        lines += [f"## {name}", "", f"**{verdict}**", ""]
++        if invented:
++            lines += [
++                f"> Audit-integrity guard: quoted field(s) {invented} do not appear in the "
++                "artifact, so this verdict was downgraded and must not be acted on.",
++                "",
++            ]
++        lines += [report.strip(), ""]
++    REPORT.write_text("\n".join(lines), encoding="utf-8")
++    print(f"\nartifact-convention-audit: wrote {REPORT.relative_to(REPO)}")
++    print(f"  {counts}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 87b2c7c691..854da0e7a4 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -4188,6 +4188,29 @@ def _plan_next_milestone(push: bool = True) -> bool:
+         f"    from HARD to WARNING. REQUIRES_RETIRED_EXP (a `requires:` chain\n"
+         f"    referencing a retired upstream exp_id) has NO override path —\n"
+         f"    rewrite the chain instead.\n\n"
++        f"  per_unit_rows: [REQUIRED on any task making a COMPARATIVE claim]\n"
++        f"    Measured 2026-08-13: of the 60 most recent artifacts, 57 carry NO\n"
++        f"    per-unit rows -- only aggregates, receipts and gate tallies. A\n"
++        f"    headline computed from aggregates alone is UNFALSIFIABLE from the\n"
++        f"    artifact: nobody can check it later without re-running the task,\n"
++        f"    and three artifacts in two days had headlines their own rows\n"
++        f"    contradicted (a control identical to its baseline on 20 of 25\n"
++        f"    rows; a gate met on 1 win, 1 loss and 2 rows with no headroom;\n"
++        f"    every row null from a store-path bug). Any task comparing arms,\n"
++        f"    games, seeds or conditions MUST emit a per-unit list (the corpus\n"
++        f"    convention is `per_game_results` or `rows`) carrying the metric\n"
++        f"    for EACH unit, not only the pooled number. See\n"
++        f"    scripts/verdict_row_consistency_lint.py.\n"
++        f"  blocked_reason: [REQUIRED whenever honest_verdict starts blocked_*]\n"
++        f"    Measured 2026-08-13: 37 of 58 blocked artifacts record no reason\n"
++        f"    at all, and all 31 carrying `blocked_gate_check_failed` record\n"
++        f"    NOTHING about which gate failed or why. That single blocker\n"
++        f"    stopped 31 tasks across 14 milestones and could not be\n"
++        f"    investigated without re-running them -- which is exactly how a\n"
++        f"    blocker recurs indefinitely under unattended operation. A blocked\n"
++        f"    verdict MUST record which check failed and the observed value, in\n"
++        f"    `blocked_reason` or `failed_gates`. See\n"
++        f"    scripts/recurring_blocker_ledger.py.\n"
+         f"  solve_provenance: [REQUIRED in REQUIRED ARTIFACT FIELDS on any ARC\n"
+         f"    task that claims a game LEVEL solve]\n"
+         f"    Per CLAUDE.md 'ARC Live-Path Reachability Discipline' (the\n"
+@@ -4780,6 +4803,37 @@ def research_step(
+                 except Exception as _e:
+                     logger.warning("QA-layer authenticity audit failed (non-fatal): %s", _e)
+ 
++            # Artifact convention audit (2026-08-13). The four audits above review CODE and
++            # DOCS; none reviews the ARTIFACTS, which ARE the research record. Asks one
++            # question per artifact: could a stranger CHECK this claim, or must they trust it?
++            # Two conventions, both measured -- a comparative claim records per-unit rows (57 of
++            # 60 recent artifacts did not), and a blocked verdict records why (37 of 58 did
++            # not, and one undiagnosable blocker stopped 31 tasks across 14 milestones).
++            #
++            # Adversarial rather than a lint on purpose: verdict_row_consistency_lint.py tried
++            # the pattern-matching route and needed five rounds of widening while still missing
++            # cases, because "is this claim checkable" is semantic. Bounded with --recent so a
++            # milestone close stays cheap. Never edits, never blocks; the operator decides.
++            if not dry_run:
++                try:
++                    subprocess.run(
++                        [
++                            sys.executable,
++                            str(PROJECT_ROOT / "scripts" / "artifact_convention_audit.py"),
++                            "--recent",
++                            "8",
++                            "--agent-type",
++                            AGENT_TYPE_AUDIT,
++                            "--model-name",
++                            AGENT_MODEL_AUDIT,
++                        ],
++                        cwd=PROJECT_ROOT,
++                        timeout=900,
++                        check=False,
++                    )
++                except Exception as _e:
++                    logger.warning("Artifact convention audit failed (non-fatal): %s", _e)
++
+             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
+             # recurrence: "aggressively caught and stopped"). Hostile review that the
+             # recent ARC work made the LIVE agent better at self-discovering
+-- 
+2.55.0
+

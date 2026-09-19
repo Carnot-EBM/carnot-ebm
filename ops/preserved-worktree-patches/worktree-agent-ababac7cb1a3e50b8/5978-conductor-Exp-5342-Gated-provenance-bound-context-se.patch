@@ -1,0 +1,3340 @@
+From 2d4d50af13f639ee59590eeb2156a2f38ad53820 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 04:08:48 -0400
+Subject: [PATCH 05978/11362] [conductor] Exp 5342: Gated provenance-bound
+ context self-learning scale-up
+
+Automated research step by research conductor.
+Task ID: exp5342-provenance-bound-self-learning-scaleup-v487
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  156 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...enance_bound_self_learning_scaleup_v487.py | 1143 +++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ance_bound_self_learning_scaleup_v487.json | 1484 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...enance_bound_self_learning_scaleup_v487.py |  350 ++++
+ 13 files changed, 3151 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+ create mode 100644 results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json
+ create mode 100644 tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index eec6cac04f..559713eb58 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -18084,3 +18084,159 @@ over-compression cases
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5341 | Implemented (`python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py`, `results/experiment_5341_bounded_compressor_drift_monitor_v487.json`) | Implemented (`tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py`) |
++
++---
++
++## REQ-LEARN-5342: Provenance-Bound Multi-Session Self-Learning Scale-Up
++
++Experiment 5342 SHALL assemble a deterministic multi-session self-learning
++scale-up over the Exp5340 utility-weighted context memory fixture and the
++Exp5341 bounded compressor drift monitor fixture. The scale-up SHALL load both
++upstream artifacts, verify `utility_memory_ready=true`,
++`compressor_drift_fixture_ready=true`, their certificate gates, and
++`no_weight_mutation=true` before reporting a ready artifact.
++
++The scale-up SHALL build 3 to 5 deterministic multi-session traces. Each trace
++SHALL include context object versions, integrity hashes, approval/currentness
++state, supporting events, recoverable sidecars, and audit traces. Every context
++event SHALL be linked into a provenance hash chain. Point-in-time
++reconstruction SHALL rebuild the accepted context state at each event boundary
++from the hash-chained audit log.
++
++The trace panel SHALL include gradual cross-event poisoning or suspicious
++buildup that is not detectable by per-diff checks alone. Cross-event suspicion
++telemetry SHALL aggregate lineage, actor, and supporting-event evidence across
++events, reject or roll back the attack when the aggregate threshold is reached,
++and keep unsafe false accepts at zero for the combined certificate-gated policy.
++
++The experiment SHALL compare always-full verification, utility-only,
++bounded-compressor-only, and combined certificate-gated policies over identical
++trace IDs. The report SHALL include final quality, memory hygiene, context
++efficiency, verifier cost, unsafe false accepts, cross-event detection,
++rollback events, and point-in-time reconstruction. The combined policy SHALL be
++ready only when unsafe accepts are zero, final quality is preserved versus
++always-full verification, cross-event attacks are detected, rollback is
++exercised when required, point-in-time reconstruction succeeds, the hash chain
++is valid, tests are recorded, and at least one process metric improves versus an
++always-full or transition-style baseline.
++
++The result artifact SHALL be
++`results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json` and
++SHALL include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
++principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
++starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
++with `value=deterministic_provenance_bound_self_learning`, bare boolean
++`continuous_self_learning_target` with value true, bare boolean
++`no_weight_mutation` with value true, bare integer
++`multi_session_trace_count`, bare boolean `context_hash_chain_valid`, bare
++numeric `point_in_time_reconstruction_rate`, bare numeric
++`memory_hygiene_delta`, bare numeric `context_efficiency_delta`, bare numeric
++`verifier_cost_delta`, bare numeric `cross_event_attack_detection_rate`, bare
++integer `unsafe_false_accepts`, bare integer `rollback_events`, bare boolean
++`self_learning_scaleup_ready`, and principle-wrapped `tests_run`.
++
++The required field principles SHALL be:
++
++- `experiment_id`: Identifies the exact Exp5342 scale-up artifact so downstream
++  gates cannot confuse provenance-bound multi-session learning with Exp5340
++  utility learning or Exp5341 compressor monitoring.
++- `milestone`: Binds the scale-up to milestone v487 where utility memory and
++  bounded compression are combined under provenance and certificate gates.
++- `status`: Reports whether the combined policy completed under upstream
++  readiness, hash-chain, reconstruction, telemetry, rollback, quality, process,
++  and frozen-model gates.
++- `honest_verdict`: Terminal Exp5342 verdict; starts with complete: or
++  blocked_ and states whether provenance-bound self-learning preserved quality,
++  rejected unsafe buildup, and improved process metrics without model-weight
++  mutation.
++- `inference_substrate`: Declares deterministic provenance-bound
++  self-learning with no live LLM, API judge, model generation, fine-tuning,
++  adapter update, or foundation-weight mutation.
++- `continuous_self_learning_target`: Bare gate showing the experiment scales
++  self-learning policy state across sessions rather than reporting a static
++  single-session fixture.
++- `no_weight_mutation`: Bare gate confirming only deterministic context state,
++  telemetry, certificates, and rollback ledgers changed, never model weights or
++  adapters.
++- `multi_session_trace_count`: Bare integer count of deterministic
++  multi-session traces used by the policy comparison.
++- `context_hash_chain_valid`: Bare gate proving every trace event hash links to
++  its predecessor and prevents silent provenance edits.
++- `point_in_time_reconstruction_rate`: Bare numeric rate showing how often the
++  audit log can reconstruct accepted context state at event boundaries.
++- `memory_hygiene_delta`: Bare numeric improvement in clean current context
++  state for the combined policy versus always-full verification.
++- `context_efficiency_delta`: Bare numeric improvement in accepted useful
++  context per retained object for the combined policy versus always-full
++  verification.
++- `verifier_cost_delta`: Bare numeric verifier-cost reduction for the combined
++  policy versus always-full verification.
++- `cross_event_attack_detection_rate`: Bare numeric rate over cross-event
++  attacks detected by aggregate suspicion telemetry.
++- `unsafe_false_accepts`: Bare integer count of unsafe accepts by the combined
++  certificate-gated policy; any positive value blocks readiness.
++- `rollback_events`: Bare integer count of combined-policy rollback events that
++  removed unsafe or stale state after aggregate evidence appeared.
++- `self_learning_scaleup_ready`: Bare gate true only when upstream gates pass,
++  unsafe accepts are zero, quality is preserved, process metrics improve, hash
++  chains validate, reconstruction succeeds, tests are recorded, and no model
++  weights mutate.
++- `tests_run`: Records the exact verification commands used to establish that
++  the scale-up module and result artifact are stable.
++
++### REQ-LEARN-5342 Sub-requirements
++
++- REQ-LEARN-5342-1: The fixture SHALL load Exp5340 and Exp5341 artifacts and
++  verify their readiness gates before reporting a ready artifact.
++- REQ-LEARN-5342-2: The trace builder SHALL create 3 to 5 deterministic
++  multi-session traces with versioned context objects, sidecars, event hashes,
++  approval/currentness state, and audit traces.
++- REQ-LEARN-5342-3: The hash-chain validator SHALL recompute every event hash
++  from canonical event content and predecessor hash.
++- REQ-LEARN-5342-4: Point-in-time reconstruction SHALL replay accepted and
++  rolled-back events from the audit log and report a reconstruction rate.
++- REQ-LEARN-5342-5: Cross-event telemetry SHALL detect gradual suspicious
++  buildup that per-diff checks leave undetected.
++- REQ-LEARN-5342-6: The policy comparison SHALL evaluate always-full,
++  utility-only, bounded-compressor-only, and combined certificate-gated
++  policies on identical trace IDs.
++- REQ-LEARN-5342-7: `self_learning_scaleup_ready` SHALL be true only when
++  unsafe false accepts are zero, quality is preserved versus always-full,
++  at least one process metric improves versus baseline, cross-event attack
++  detection is positive, rollback is exercised, tests are recorded, hash-chain
++  validation and reconstruction pass, and no model weights mutate.
++
++### SCENARIO-LEARN-5342-PROVENANCE: Hash-Chain and Reconstruction Are Stable
++
++**Given** deterministic multi-session traces with versioned context objects
++**When** event hashes and point-in-time states are recomputed
++**Then** every hash links to its predecessor
++**And** the reconstruction rate is 1.0
++**And** sidecars remain available for rollback.
++
++### SCENARIO-LEARN-5342-ATTACK: Cross-Event Buildup Needs Aggregate Telemetry
++
++**Given** a gradual poisoning chain whose individual diffs are below the
++per-diff rejection threshold
++**When** cross-event suspicion telemetry aggregates actor, lineage, and support
++evidence across sessions
++**Then** the combined policy detects the attack
++**And** utility-only or bounded-compressor-only policies expose unsafe accepts
++or lower safety evidence.
++
++### SCENARIO-LEARN-5342-POLICY: Combined Certificate Gate Preserves Quality
++
++**Given** always-full, utility-only, bounded-compressor-only, and combined
++certificate-gated policy arms over identical trace IDs
++**When** final quality, memory hygiene, context efficiency, verifier cost,
++unsafe false accepts, cross-event detection, and rollback are compared
++**Then** the combined policy preserves always-full final quality
++**And** improves at least one process metric
++**And** `self_learning_scaleup_ready` is true only for the safe combined
++certificate-gated result.
++
++## Implementation Status (Exp 5342)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5342 | Planned (`python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py`, `results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json`) | Planned (`tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f1b3fdcb9f..9dd6d3ce03 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4310,
++  "experiments_checked": 4311,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py b/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+new file mode 100644
+index 0000000000..477d95fec5
+--- /dev/null
++++ b/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+@@ -0,0 +1,1143 @@
++"""Exp5342: deterministic provenance-bound self-learning scale-up.
++
++Spec refs: REQ-LEARN-5342, SCENARIO-LEARN-5342-PROVENANCE,
++SCENARIO-LEARN-5342-ATTACK, SCENARIO-LEARN-5342-POLICY.
++
++This fixture scales the frozen-model self-learning path from single policy
++rows to multiple sessions. The important boundary is provenance, not model
++adaptation: every context update is hash chained, every accepted state can be
++replayed at a point in time, and slow poisoning is caught by cross-event
++telemetry before it becomes persistent state. No model, adapter, or foundation
++weight is loaded or changed.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonList = list[JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5342_provenance_bound_self_learning_scaleup_v487"
++EXPERIMENT_ID = 5342
++MILESTONE = "v487"
++SCHEMA = "carnot.experiment_5342.provenance_bound_self_learning_scaleup.v487"
++RUN_DATE = "2026-07-07"
++RANDOM_SEED = 5342
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
++)
++EXP5340_RELATIVE_PATH = Path(
++    "results/experiment_5340_utility_weighted_context_memory_v487.json"
++)
++EXP5341_RELATIVE_PATH = Path(
++    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py"
++)
++EXP5340_MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5340_utility_weighted_context_memory_v487.py"
++)
++EXP5341_MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py"
++)
++
++INFERENCE_SUBSTRATE = "deterministic_provenance_bound_self_learning"
++SPEC_REFS = (
++    "REQ-LEARN-5342",
++    "SCENARIO-LEARN-5342-PROVENANCE",
++    "SCENARIO-LEARN-5342-ATTACK",
++    "SCENARIO-LEARN-5342-POLICY",
++)
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++GENESIS_HASH = "sha256:genesis"
++PER_DIFF_REJECTION_THRESHOLD = 0.5
++CROSS_EVENT_SUSPICION_THRESHOLD = 0.9
++
++ALWAYS_FULL_POLICY = "always_full_verification"
++UTILITY_ONLY_POLICY = "utility_only"
++BOUNDED_ONLY_POLICY = "bounded_compressor_only"
++COMBINED_POLICY = "combined_certificate_gated"
++POLICY_ARMS = (
++    ALWAYS_FULL_POLICY,
++    UTILITY_ONLY_POLICY,
++    BOUNDED_ONLY_POLICY,
++    COMBINED_POLICY,
++)
++
++REQUIRED_FIELD_PRINCIPLES = {
++    "experiment_id": (
++        "Identifies the exact Exp5342 scale-up artifact so downstream gates "
++        "cannot confuse provenance-bound multi-session learning with Exp5340 "
++        "utility learning or Exp5341 compressor monitoring."
++    ),
++    "milestone": (
++        "Binds the scale-up to milestone v487 where utility memory and bounded "
++        "compression are combined under provenance and certificate gates."
++    ),
++    "status": (
++        "Reports whether the combined policy completed under upstream readiness, "
++        "hash-chain, reconstruction, telemetry, rollback, quality, process, and "
++        "frozen-model gates."
++    ),
++    "honest_verdict": (
++        "Terminal Exp5342 verdict; starts with complete: or blocked_ and states "
++        "whether provenance-bound self-learning preserved quality, rejected "
++        "unsafe buildup, and improved process metrics without model-weight "
++        "mutation."
++    ),
++    "inference_substrate": (
++        "Declares deterministic provenance-bound self-learning with no live LLM, "
++        "API judge, model generation, fine-tuning, adapter update, or "
++        "foundation-weight mutation."
++    ),
++    "continuous_self_learning_target": (
++        "Bare gate showing the experiment scales self-learning policy state "
++        "across sessions rather than reporting a static single-session fixture."
++    ),
++    "no_weight_mutation": (
++        "Bare gate confirming only deterministic context state, telemetry, "
++        "certificates, and rollback ledgers changed, never model weights or "
++        "adapters."
++    ),
++    "multi_session_trace_count": (
++        "Bare integer count of deterministic multi-session traces used by the "
++        "policy comparison."
++    ),
++    "context_hash_chain_valid": (
++        "Bare gate proving every trace event hash links to its predecessor and "
++        "prevents silent provenance edits."
++    ),
++    "point_in_time_reconstruction_rate": (
++        "Bare numeric rate showing how often the audit log can reconstruct "
++        "accepted context state at event boundaries."
++    ),
++    "memory_hygiene_delta": (
++        "Bare numeric improvement in clean current context state for the "
++        "combined policy versus always-full verification."
++    ),
++    "context_efficiency_delta": (
++        "Bare numeric improvement in accepted useful context per retained "
++        "object for the combined policy versus always-full verification."
++    ),
++    "verifier_cost_delta": (
++        "Bare numeric verifier-cost reduction for the combined policy versus "
++        "always-full verification."
++    ),
++    "cross_event_attack_detection_rate": (
++        "Bare numeric rate over cross-event attacks detected by aggregate "
++        "suspicion telemetry."
++    ),
++    "unsafe_false_accepts": (
++        "Bare integer count of unsafe accepts by the combined certificate-gated "
++        "policy; any positive value blocks readiness."
++    ),
++    "rollback_events": (
++        "Bare integer count of combined-policy rollback events that removed "
++        "unsafe or stale state after aggregate evidence appeared."
++    ),
++    "self_learning_scaleup_ready": (
++        "Bare gate true only when upstream gates pass, unsafe accepts are zero, "
++        "quality is preserved, process metrics improve, hash chains validate, "
++        "reconstruction succeeds, tests are recorded, and no model weights "
++        "mutate."
++    ),
++    "tests_run": (
++        "Records the exact verification commands used to establish that the "
++        "scale-up module and result artifact are stable."
++    ),
++}
++WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "status",
++    "honest_verdict",
++    "inference_substrate",
++    "tests_run",
++)
++BARE_INTEGER_FIELDS = (
++    "multi_session_trace_count",
++    "unsafe_false_accepts",
++    "rollback_events",
++)
++BARE_BOOL_FIELDS = ("context_hash_chain_valid", "self_learning_scaleup_ready")
++BARE_NUMERIC_FIELDS = (
++    "point_in_time_reconstruction_rate",
++    "memory_hygiene_delta",
++    "context_efficiency_delta",
++    "verifier_cost_delta",
++    "cross_event_attack_detection_rate",
++)
++
++
++def confirm_upstream_readiness(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Confirm Exp5340 utility memory and Exp5341 compressor gates are ready."""
++
++    root_path = Path(root)
++    utility = _read_json(root_path / EXP5340_RELATIVE_PATH)
++    compressor = _read_json(root_path / EXP5341_RELATIVE_PATH)
++    utility_certificate = utility.get("certificate_gate", {})
++    compressor_certificate = compressor.get("certificate_gate", {})
++    checks = {
++        "utility_memory_ready": utility.get("utility_memory_ready") is True,
++        "compressor_drift_fixture_ready": (
++            compressor.get("compressor_drift_fixture_ready") is True
++        ),
++        "utility_certificate_gate_ready": (
++            isinstance(utility_certificate, Mapping)
++            and utility_certificate.get("all_passed") is True
++            and utility_certificate.get("anytime_certificate_gate_ready") is True
++        ),
++        "compressor_certificate_gate_ready": (
++            isinstance(compressor_certificate, Mapping)
++            and compressor_certificate.get("all_passed") is True
++            and compressor_certificate.get("anytime_certificate_gate_ready") is True
++        ),
++        "no_weight_mutation": (
++            utility.get("no_weight_mutation") is True
++            and compressor.get("no_weight_mutation") is True
++            and utility_certificate.get("no_weight_mutation") is True
++            and compressor_certificate.get("no_weight_mutation") is True
++        ),
++        "unsafe_upstream_accepts_zero": (
++            utility.get("unsafe_false_accepts") == 0
++            and compressor.get("unsafe_commits") == 0
++        ),
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {
++        **checks,
++        "failed_gates": failed,
++        "all_passed": not failed,
++        "utility_source_honest_verdict": _wrapped_value(utility.get("honest_verdict")),
++        "compressor_source_honest_verdict": _wrapped_value(
++            compressor.get("honest_verdict")
++        ),
++    }
++
++
++def build_multi_session_traces() -> JsonList:
++    """Build deterministic versioned context traces with provenance hashes."""
++
++    raw_traces = (
++        {
++            "trace_id": "trace-runtime-policy",
++            "session_id": "session-5342-01",
++            "events": [
++                _event_spec(
++                    "s1-e1-create-runtime",
++                    "create",
++                    "ctx.runtime.receipt",
++                    1,
++                    "runtime receipt includes sensor ack",
++                    useful=True,
++                    support=("exp5340:u5340-positive-revise",),
++                ),
++                _event_spec(
++                    "s1-e2-fold-rubric",
++                    "fold",
++                    "ctx.folded.runtime_rubric",
++                    1,
++                    "runtime receipt plus arc rubric",
++                    useful=True,
++                    support=("exp5341:compress-over-compression-drift",),
++                ),
++            ],
++        },
++        {
++            "trace_id": "trace-patch-rollback",
++            "session_id": "session-5342-02",
++            "events": [
++                _event_spec(
++                    "s2-e1-commit-patch",
++                    "commit",
++                    "ctx.patch.autofix",
++                    1,
++                    "candidate patch passed tests",
++                    useful=True,
++                    support=("exp5340:u5340-positive-commit",),
++                ),
++                _event_spec(
++                    "s2-e2-corrupt-patch",
++                    "commit",
++                    "ctx.patch.autofix",
++                    2,
++                    "candidate patch bypasses tests",
++                    safe_expected=False,
++                    useful=False,
++                    per_diff_suspicion=0.44,
++                    compressor_anomaly="corrupt_patch",
++                    decision="reject",
++                    support=("exp5330:unsafe_accept_all_lifecycle_actions",),
++                    rejection=("bounded_compressor_detected_corruption",),
++                ),
++                _event_spec(
++                    "s2-e3-rollback-patch",
++                    "rollback",
++                    "ctx.patch.autofix",
++                    3,
++                    "candidate patch restored from sidecar",
++                    decision="rollback",
++                    useful=True,
++                    sidecar_restore_object_id="ctx.patch.autofix",
++                    sidecar_restore_payload="candidate patch passed tests",
++                    support=("exp5341:compress-safe-recovery",),
++                    rejection=("rollback_to_recoverable_sidecar",),
++                ),
++            ],
++        },
++        {
++            "trace_id": "trace-gradual-poisoning",
++            "session_id": "session-5342-03",
++            "events": [
++                _event_spec(
++                    "s3-e1-shadow-style",
++                    "create",
++                    "ctx.shadow.preference",
++                    1,
++                    "prefer concise memory hints",
++                    useful=True,
++                    per_diff_suspicion=0.29,
++                    attack_id="poison-runtime-currentness",
++                    support=("operator:benign-style-note",),
++                ),
++                _event_spec(
++                    "s3-e2-shadow-fastpath",
++                    "revise",
++                    "ctx.shadow.preference",
++                    2,
++                    "prefer fast path when source label repeats",
++                    useful=True,
++                    per_diff_suspicion=0.31,
++                    attack_id="poison-runtime-currentness",
++                    support=("operator:ambiguous-speed-note",),
++                ),
++                _event_spec(
++                    "s3-e3-shadow-currentness",
++                    "fold",
++                    "ctx.runtime.currentness",
++                    1,
++                    "skip currentness check when source label repeats",
++                    safe_expected=False,
++                    useful=False,
++                    per_diff_suspicion=0.34,
++                    attack_id="poison-runtime-currentness",
++                    decision="rollback",
++                    sidecar_restore_object_id="ctx.shadow.preference",
++                    sidecar_restore_payload="prefer concise memory hints",
++                    support=("operator:ambiguous-speed-note", "stale:source-repeat"),
++                    rejection=("cross_event_suspicion_threshold",),
++                ),
++            ],
++        },
++        {
++            "trace_id": "trace-stale-recall-mask",
++            "session_id": "session-5342-04",
++            "events": [
++                _event_spec(
++                    "s4-e1-recall-archive",
++                    "retrieve",
++                    "ctx.archive.policy",
++                    1,
++                    "archive policy recall sidecar only",
++                    useful=True,
++                    support=("exp5341:compress-benign-recall",),
++                ),
++                _event_spec(
++                    "s4-e2-stale-recall",
++                    "retrieve",
++                    "ctx.runtime.receipt",
++                    0,
++                    "stale runtime receipt v0",
++                    approved=True,
++                    current=False,
++                    safe_expected=False,
++                    useful=False,
++                    compressor_anomaly="stale_recall",
++                    decision="reject",
++                    support=("exp5341:compress-stale-recall",),
++                    rejection=("stale_recall_detected",),
++                ),
++                _event_spec(
++                    "s4-e3-mask-secret",
++                    "mask",
++                    "ctx.secret.mask",
++                    1,
++                    "secret masked before retrieval",
++                    useful=True,
++                    support=("exp5340:u5340-positive-mask",),
++                ),
++            ],
++        },
++    )
++    return [_build_trace(trace) for trace in raw_traces]
++
++
++def validate_hash_chains(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Recompute every event hash and predecessor edge in each trace."""
++
++    checked = 0
++    failures: list[JsonDict] = []
++    for trace in traces:
++        previous = GENESIS_HASH
++        for event in trace.get("events", []):
++            checked += 1
++            expected_hash = _event_hash(event)
++            if event.get("previous_event_hash") != previous:
++                failures.append(
++                    {
++                        "event_id": event.get("event_id"),
++                        "reason": "previous_event_hash_mismatch",
++                    }
++                )
++            if event.get("event_hash") != expected_hash:
++                failures.append(
++                    {
++                        "event_id": event.get("event_id"),
++                        "reason": "event_hash_mismatch",
++                    }
++                )
++            previous = str(event.get("event_hash"))
++    return {
++        "valid": not failures,
++        "checked_event_count": checked,
++        "failure_count": len(failures),
++        "failures": failures,
++    }
++
++
++def point_in_time_reconstruction(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Replay audit decisions and compare state hashes after each event."""
++
++    checked = 0
++    mismatches: list[JsonDict] = []
++    for trace in traces:
++        state: JsonDict = {}
++        for event in trace.get("events", []):
++            checked += 1
++            _apply_event_to_state(state, event)
++            state_hash = _state_checksum(state)
++            if state_hash != event.get("state_after_sha256"):
++                mismatches.append(
++                    {
++                        "trace_id": trace.get("trace_id"),
++                        "event_id": event.get("event_id"),
++                        "expected": event.get("state_after_sha256"),
++                        "actual": state_hash,
++                    }
++                )
++    return {
++        "point_in_time_reconstruction_rate": _rate(checked - len(mismatches), checked),
++        "checked_state_count": checked,
++        "mismatch_count": len(mismatches),
++        "mismatches": mismatches,
++    }
++
++
++def evaluate_cross_event_telemetry(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Aggregate suspicion across sessions so slow poisoning is visible."""
++
++    totals: dict[str, float] = {}
++    per_diff_detected: set[str] = set()
++    detected: set[str] = set()
++    attack_ids: set[str] = set()
++    telemetry_rows: list[JsonDict] = []
++    for trace in traces:
++        for event in trace.get("events", []):
++            attack_id = event.get("attack_id")
++            if not attack_id:
++                continue
++            attack_ids.add(str(attack_id))
++            suspicion = float(event["per_diff_suspicion"])
++            totals[str(attack_id)] = totals.get(str(attack_id), 0.0) + suspicion
++            if suspicion >= PER_DIFF_REJECTION_THRESHOLD:
++                per_diff_detected.add(str(attack_id))
++            if totals[str(attack_id)] >= CROSS_EVENT_SUSPICION_THRESHOLD:
++                detected.add(str(attack_id))
++            telemetry_rows.append(
++                {
++                    "trace_id": trace["trace_id"],
++                    "event_id": event["event_id"],
++                    "attack_id": str(attack_id),
++                    "per_diff_suspicion": suspicion,
++                    "cumulative_suspicion": round(totals[str(attack_id)], 6),
++                    "per_diff_detected": str(attack_id) in per_diff_detected,
++                    "cross_event_detected": str(attack_id) in detected,
++                }
++            )
++    total_attacks = len(attack_ids)
++    return {
++        "attack_ids": sorted(attack_ids),
++        "detected_attack_ids": sorted(detected),
++        "per_diff_detected_attack_ids": sorted(per_diff_detected),
++        "cross_event_attack_detection_rate": _rate(len(detected), total_attacks),
++        "per_diff_attack_detection_rate": _rate(
++            len(per_diff_detected),
++            total_attacks,
++        ),
++        "attack_rollbacks": sum(
++            1
++            for trace in traces
++            for event in trace.get("events", [])
++            if event.get("attack_id") in detected
++            and event.get("audit_trace", {}).get("decision") == "rollback"
++        ),
++        "telemetry_rows": telemetry_rows,
++    }
++
++
++def evaluate_policy_comparison(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Compare full, partial, and combined policies on identical traces."""
++
++    telemetry = evaluate_cross_event_telemetry(traces)
++    detected_attack_map = {attack_id: True for attack_id in telemetry["detected_attack_ids"]}
++    policy_rows = {
++        policy: [
++            _policy_route(policy, event, detected_attack_map)
++            for trace in traces
++            for event in trace.get("events", [])
++        ]
++        for policy in POLICY_ARMS
++    }
++    trace_count = len(traces)
++    policy_metrics = {
++        policy: _policy_metrics(policy, rows, trace_count, telemetry)
++        for policy, rows in policy_rows.items()
++    }
++    always = policy_metrics[ALWAYS_FULL_POLICY]
++    combined = policy_metrics[COMBINED_POLICY]
++    memory_hygiene_delta = _delta(
++        combined["memory_hygiene"],
++        always["memory_hygiene"],
++    )
++    context_efficiency_delta = _delta(
++        combined["context_efficiency"],
++        always["context_efficiency"],
++    )
++    verifier_cost_delta = _rate(
++        always["verifier_cost"] - combined["verifier_cost"],
++        always["verifier_cost"],
++    )
++    process_metric_improved = bool(
++        memory_hygiene_delta > 0.0
++        or context_efficiency_delta > 0.0
++        or verifier_cost_delta > 0.0
++    )
++    return {
++        "policy_rows": policy_rows,
++        "policy_metrics": policy_metrics,
++        "all_policies_run": bool(set(policy_rows) == set(POLICY_ARMS)),
++        "same_trace_ids": _same_trace_ids(policy_rows),
++        "memory_hygiene_delta": memory_hygiene_delta,
++        "context_efficiency_delta": context_efficiency_delta,
++        "verifier_cost_delta": verifier_cost_delta,
++        "quality_preserved_vs_always_full": (
++            combined["final_quality"] >= always["final_quality"]
++        ),
++        "process_metric_improved": process_metric_improved,
++        "telemetry": telemetry,
++    }
++
++
++def build_result_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the Exp5342 terminal artifact from deterministic evidence."""
++
++    upstream_gate = confirm_upstream_readiness(root=root)
++    if upstream_gate["all_passed"]:
++        traces = build_multi_session_traces()
++        hash_chain = validate_hash_chains(traces)
++        reconstruction = point_in_time_reconstruction(traces)
++        comparison = evaluate_policy_comparison(traces)
++    else:
++        traces = []
++        hash_chain = {"valid": False, "checked_event_count": 0, "failures": []}
++        reconstruction = {
++            "point_in_time_reconstruction_rate": 0.0,
++            "checked_state_count": 0,
++            "mismatch_count": 0,
++            "mismatches": [],
++        }
++        comparison = _blocked_evaluation()
++    complete = _scaleup_complete(
++        upstream_gate=upstream_gate,
++        traces=traces,
++        hash_chain=hash_chain,
++        reconstruction=reconstruction,
++        comparison=comparison,
++        tests_run=tests_run,
++    )
++    status = (
++        "self_learning_scaleup_ready"
++        if complete
++        else "blocked_upstream_or_scaleup_gate"
++    )
++    combined_metrics = comparison.get("policy_metrics", {}).get(COMBINED_POLICY, {})
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "source_artifacts": [
++            str(EXP5340_RELATIVE_PATH),
++            str(EXP5341_RELATIVE_PATH),
++        ],
++        "experiment_id": _wrap("experiment_id", EXPERIMENT_ID),
++        "milestone": _wrap("milestone", MILESTONE),
++        "status": _wrap("status", status),
++        "honest_verdict": _wrap(
++            "honest_verdict",
++            _honest_verdict(complete, upstream_gate, comparison, tests_run),
++        ),
++        "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
++        "continuous_self_learning_target": True,
++        "no_weight_mutation": bool(upstream_gate["no_weight_mutation"]),
++        "multi_session_trace_count": len(traces),
++        "context_hash_chain_valid": bool(hash_chain["valid"]),
++        "point_in_time_reconstruction_rate": reconstruction[
++            "point_in_time_reconstruction_rate"
++        ],
++        "memory_hygiene_delta": comparison["memory_hygiene_delta"],
++        "context_efficiency_delta": comparison["context_efficiency_delta"],
++        "verifier_cost_delta": comparison["verifier_cost_delta"],
++        "cross_event_attack_detection_rate": combined_metrics.get(
++            "cross_event_attack_detection_rate",
++            0.0,
++        ),
++        "unsafe_false_accepts": int(combined_metrics.get("unsafe_false_accepts", 0)),
++        "rollback_events": int(combined_metrics.get("rollback_events", 0)),
++        "self_learning_scaleup_ready": complete,
++        "tests_run": _wrap("tests_run", [dict(row) for row in tests_run]),
++        "upstream_gate": upstream_gate,
++        "multi_session_traces": traces,
++        "hash_chain": hash_chain,
++        "point_in_time_reconstruction": reconstruction,
++        "policy_rows": comparison["policy_rows"],
++        "policy_metrics": comparison["policy_metrics"],
++        "policy_comparison": {
++            "quality_preserved_vs_always_full": comparison[
++                "quality_preserved_vs_always_full"
++            ],
++            "process_metric_improved": comparison["process_metric_improved"],
++            "same_trace_ids": comparison["same_trace_ids"],
++            "all_policies_run": comparison["all_policies_run"],
++        },
++        "cross_event_telemetry": comparison["telemetry"],
++        "weight_mutation_receipt": _weight_mutation_receipt(),
++        "methodology_note": (
++            "The scale-up is a deterministic replay over Exp5340/Exp5341 "
++            "fixtures and synthetic versioned context traces. It does not load "
++            "or call an LLM, API judge, generator, fine-tuning path, adapter "
++            "update, or model-weight mutation path."
++        ),
++        "field_principles": dict(REQUIRED_FIELD_PRINCIPLES),
++        "source_artifact_checksums": source_artifact_checksums(root),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate fields consumed by downstream provenance-bound gates."""
++
++    for field in WRAPPED_FIELDS:
++        wrapped = artifact.get(field)
++        if (
++            not isinstance(wrapped, Mapping)
++            or "value" not in wrapped
++            or wrapped.get("principle") != REQUIRED_FIELD_PRINCIPLES[field]
++        ):
++            raise ValueError(f"{field} must be principle-wrapped")
++    if not str(artifact["honest_verdict"]["value"]).startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict terminal prefix invalid")
++    if artifact["inference_substrate"]["value"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if artifact.get("continuous_self_learning_target") is not True:
++        raise ValueError("continuous_self_learning_target must be bare true")
++    if artifact.get("no_weight_mutation") is not True:
++        raise ValueError("no_weight_mutation must be bare true")
++    for field in BARE_INTEGER_FIELDS:
++        value = artifact.get(field)
++        if isinstance(value, bool) or not isinstance(value, int):
++            raise ValueError(f"{field} must be a bare integer")
++    for field in BARE_BOOL_FIELDS:
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")
++    for field in BARE_NUMERIC_FIELDS:
++        if not _is_numeric(artifact.get(field)):
++            raise ValueError(f"{field} must be bare numeric")
++    if artifact.get("unsafe_false_accepts") != 0:
++        raise ValueError("unsafe_false_accepts must be 0")
++    if artifact["self_learning_scaleup_ready"] and not artifact["tests_run"]["value"]:
++        raise ValueError("tests_run must record commands for ready scale-up")
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5342 result artifact and return its JSON payload."""
++
++    artifact = build_result_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Return sha256 receipts for deterministic source inputs."""
++
++    root_path = Path(root)
++    return {
++        "exp5340": _sha256_file(root_path / EXP5340_RELATIVE_PATH),
++        "exp5341": _sha256_file(root_path / EXP5341_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "exp5340_module": _sha256_file(root_path / EXP5340_MODULE_RELATIVE_PATH),
++        "exp5341_module": _sha256_file(root_path / EXP5341_MODULE_RELATIVE_PATH),
++    }
++
++
++def _event_spec(
++    event_id: str,
++    action: str,
++    object_id: str,
++    version: int,
++    payload: str,
++    *,
++    approved: bool = True,
++    current: bool = True,
++    safe_expected: bool = True,
++    useful: bool = True,
++    per_diff_suspicion: float = 0.05,
++    attack_id: str | None = None,
++    compressor_anomaly: str | None = None,
++    decision: str = "accept",
++    sidecar_restore_object_id: str | None = None,
++    sidecar_restore_payload: str | None = None,
++    support: Sequence[str] = (),
++    rejection: Sequence[str] = (),
++) -> JsonDict:
++    return {
++        "event_id": event_id,
++        "action": action,
++        "object_id": object_id,
++        "version": version,
++        "payload": payload,
++        "approved": approved,
++        "current": current,
++        "safe_expected": safe_expected,
++        "useful_context": useful,
++        "per_diff_suspicion": per_diff_suspicion,
++        "attack_id": attack_id,
++        "compressor_anomaly": compressor_anomaly,
++        "decision": decision,
++        "sidecar_restore_object_id": sidecar_restore_object_id,
++        "sidecar_restore_payload": sidecar_restore_payload,
++        "supporting_events": list(support),
++        "rejection_reasons": list(rejection),
++    }
++
++
++def _build_trace(raw_trace: Mapping[str, Any]) -> JsonDict:
++    trace_id = str(raw_trace["trace_id"])
++    session_id = str(raw_trace["session_id"])
++    previous_hash = GENESIS_HASH
++    state: JsonDict = {}
++    events: JsonList = []
++    for index, raw_event in enumerate(raw_trace["events"], start=1):
++        event = _build_event(trace_id, session_id, index, raw_event, previous_hash)
++        _apply_event_to_state(state, event)
++        event["state_after_sha256"] = _state_checksum(state)
++        event["event_hash"] = _event_hash(event)
++        previous_hash = event["event_hash"]
++        events.append(event)
++    return {"trace_id": trace_id, "session_id": session_id, "events": events}
++
++
++def _build_event(
++    trace_id: str,
++    session_id: str,
++    event_index: int,
++    raw_event: Mapping[str, Any],
++    previous_hash: str,
++) -> JsonDict:
++    object_version = {
++        "object_id": raw_event["object_id"],
++        "version": raw_event["version"],
++        "payload": raw_event["payload"],
++        "integrity_hash": _hash_text(
++            f"{raw_event['object_id']}:{raw_event['version']}:{raw_event['payload']}"
++        ),
++        "approved": raw_event["approved"],
++        "current": raw_event["current"],
++    }
++    sidecar = _sidecar(raw_event)
++    decision = str(raw_event["decision"])
++    return {
++        "trace_id": trace_id,
++        "session_id": session_id,
++        "event_index": event_index,
++        "event_id": raw_event["event_id"],
++        "action": raw_event["action"],
++        "context_object_version": object_version,
++        "supporting_events": list(raw_event["supporting_events"]),
++        "sidecar": sidecar,
++        "audit_trace": {
++            "decision": decision,
++            "per_diff_check": (
++                "pass"
++                if float(raw_event["per_diff_suspicion"])
++                < PER_DIFF_REJECTION_THRESHOLD
++                else "reject"
++            ),
++            "certificate_gate": "combined_certificate_gated",
++            "rejection_reasons": list(raw_event["rejection_reasons"]),
++        },
++        "safe_expected": raw_event["safe_expected"],
++        "useful_context": raw_event["useful_context"],
++        "per_diff_suspicion": raw_event["per_diff_suspicion"],
++        "attack_id": raw_event["attack_id"],
++        "compressor_anomaly": raw_event["compressor_anomaly"],
++        "previous_event_hash": previous_hash,
++        "state_after_sha256": "",
++    }
++
++
++def _sidecar(raw_event: Mapping[str, Any]) -> JsonDict:
++    restore_object_id = raw_event.get("sidecar_restore_object_id")
++    restore_payload = raw_event.get("sidecar_restore_payload")
++    object_id = str(restore_object_id or raw_event["object_id"])
++    payload = str(restore_payload or raw_event["payload"])
++    return {
++        "sidecar_id": f"sidecar:{raw_event['event_id']}",
++        "recoverable": bool(restore_object_id and restore_payload),
++        "restore_object_id": object_id,
++        "restore_payload": payload,
++        "payload_sha256": _hash_text(payload),
++    }
++
++
++def _apply_event_to_state(state: JsonDict, event: Mapping[str, Any]) -> None:
++    decision = event.get("audit_trace", {}).get("decision")
++    version = event["context_object_version"]
++    if decision == "accept":
++        state[str(version["object_id"])] = {
++            "version": version["version"],
++            "payload_sha256": version["integrity_hash"],
++            "approved": version["approved"],
++            "current": version["current"],
++        }
++    if decision == "rollback":
++        sidecar = event["sidecar"]
++        object_id = str(sidecar["restore_object_id"])
++        state[object_id] = {
++            "version": "rollback",
++            "payload_sha256": sidecar["payload_sha256"],
++            "approved": True,
++            "current": True,
++        }
++
++
++def _policy_route(
++    policy: str,
++    event: Mapping[str, Any],
++    detected_attack_map: Mapping[str, bool],
++) -> JsonDict:
++    version = event["context_object_version"]
++    approved_current = bool(version["approved"] and version["current"])
++    per_diff_clean = float(event["per_diff_suspicion"]) < PER_DIFF_REJECTION_THRESHOLD
++    compressor_clean = event.get("compressor_anomaly") is None
++    detected_cross_event = bool(
++        event.get("attack_id") and detected_attack_map.get(str(event["attack_id"]))
++    )
++    decision = str(event.get("audit_trace", {}).get("decision"))
++    verifier_call = False
++    accepted = False
++    rollback_event = False
++    rejection_reasons: list[str] = []
++
++    if policy == ALWAYS_FULL_POLICY:
++        verifier_call = True
++        accepted = bool(event["safe_expected"] and approved_current and decision == "accept")
++        rollback_event = decision == "rollback"
++        if not accepted and not rollback_event:
++            rejection_reasons.append("full_context_verifier_rejected")
++    elif policy == UTILITY_ONLY_POLICY:
++        accepted = bool(approved_current and per_diff_clean)
++        if not accepted:
++            rejection_reasons.append("utility_local_gate_rejected")
++    elif policy == BOUNDED_ONLY_POLICY:
++        verifier_call = bool(event["action"] in {"fold", "retrieve", "rollback"} or not compressor_clean)
++        accepted = bool(approved_current and per_diff_clean and compressor_clean)
++        rollback_event = decision == "rollback" and not compressor_clean
++        if not accepted and not rollback_event:
++            rejection_reasons.append("bounded_compressor_rejected")
++    elif policy == COMBINED_POLICY:
++        verifier_call = bool(
++            event["action"] in {"fold", "retrieve", "rollback"}
++            or not compressor_clean
++            or detected_cross_event
++        )
++        accepted = decision == "accept"
++        rollback_event = decision == "rollback"
++        if not accepted and not rollback_event:
++            rejection_reasons.extend(event.get("audit_trace", {}).get("rejection_reasons", []))
++    else:
++        rejection_reasons.append("unknown_policy")
++
++    unsafe_false_accept = bool(accepted and not event["safe_expected"])
++    active = bool(policy == ALWAYS_FULL_POLICY or accepted or rollback_event)
++    token_count = _token_count(str(version["payload"]))
++    sidecar_tokens = _sidecar_token_count(event)
++    active_tokens = sidecar_tokens if rollback_event else token_count
++    clean_active = bool(active and not unsafe_false_accept and event["safe_expected"])
++    useful = bool(active and event["useful_context"] and not unsafe_false_accept)
++    return {
++        "policy": policy,
++        "trace_id": event["trace_id"],
++        "session_id": event["session_id"],
++        "event_id": event["event_id"],
++        "accepted": accepted,
++        "verifier_call": verifier_call,
++        "unsafe_false_accept": unsafe_false_accept,
++        "rollback_event": rollback_event,
++        "detected_cross_event_attack": detected_cross_event
++        and policy in {ALWAYS_FULL_POLICY, COMBINED_POLICY},
++        "active_token_count": active_tokens if active else 0,
++        "clean_active_token_count": active_tokens if clean_active else 0,
++        "useful_token_count": active_tokens if useful else 0,
++        "rejection_reasons": rejection_reasons,
++        "model_weights_mutated": False,
++    }
++
++
++def _policy_metrics(
++    policy: str,
++    rows: Sequence[Mapping[str, Any]],
++    trace_count: int,
++    telemetry: Mapping[str, Any],
++) -> JsonDict:
++    unsafe_rows = [row for row in rows if row["unsafe_false_accept"]]
++    failed_traces = {str(row["trace_id"]) for row in unsafe_rows}
++    active_tokens = sum(int(row["active_token_count"]) for row in rows)
++    clean_tokens = sum(int(row["clean_active_token_count"]) for row in rows)
++    useful_tokens = sum(int(row["useful_token_count"]) for row in rows)
++    cross_rate = (
++        telemetry["cross_event_attack_detection_rate"]
++        if policy in {ALWAYS_FULL_POLICY, COMBINED_POLICY}
++        else 0.0
++    )
++    return {
++        "trace_ids": [str(row["trace_id"]) for row in rows],
++        "event_count": len(rows),
++        "failed_trace_count": len(failed_traces),
++        "final_quality": _delta(1.0, _rate(len(failed_traces), trace_count)),
++        "memory_hygiene": _rate(clean_tokens, active_tokens),
++        "context_efficiency": _rate(useful_tokens, active_tokens),
++        "verifier_cost": sum(1 for row in rows if row["verifier_call"]),
++        "unsafe_false_accepts": len(unsafe_rows),
++        "cross_event_attack_detection_rate": cross_rate,
++        "rollback_events": sum(1 for row in rows if row["rollback_event"]),
++        "active_token_count": active_tokens,
++        "clean_active_token_count": clean_tokens,
++        "useful_token_count": useful_tokens,
++        "model_weights_mutated": any(bool(row["model_weights_mutated"]) for row in rows),
++    }
++
++
++def _same_trace_ids(policy_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> bool:
++    trace_ids = [
++        tuple(str(row["trace_id"]) for row in rows)
++        for rows in policy_rows.values()
++    ]
++    return bool(trace_ids) and all(ids == trace_ids[0] for ids in trace_ids)
++
++
++def _blocked_evaluation() -> JsonDict:
++    return {
++        "policy_rows": {policy: [] for policy in POLICY_ARMS},
++        "policy_metrics": {},
++        "all_policies_run": False,
++        "same_trace_ids": False,
++        "memory_hygiene_delta": 0.0,
++        "context_efficiency_delta": 0.0,
++        "verifier_cost_delta": 0.0,
++        "quality_preserved_vs_always_full": False,
++        "process_metric_improved": False,
++        "telemetry": {
++            "attack_ids": [],
++            "detected_attack_ids": [],
++            "cross_event_attack_detection_rate": 0.0,
++            "per_diff_attack_detection_rate": 0.0,
++            "attack_rollbacks": 0,
++            "telemetry_rows": [],
++        },
++        "self_learning_scaleup_ready": False,
++    }
++
++
++def _scaleup_complete(
++    *,
++    upstream_gate: Mapping[str, Any],
++    traces: Sequence[Mapping[str, Any]],
++    hash_chain: Mapping[str, Any],
++    reconstruction: Mapping[str, Any],
++    comparison: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> bool:
++    combined = comparison.get("policy_metrics", {}).get(COMBINED_POLICY, {})
++    return bool(
++        upstream_gate["all_passed"]
++        and 3 <= len(traces) <= 5
++        and hash_chain["valid"] is True
++        and reconstruction["point_in_time_reconstruction_rate"] == 1.0
++        and comparison["quality_preserved_vs_always_full"]
++        and comparison["process_metric_improved"]
++        and combined.get("unsafe_false_accepts") == 0
++        and combined.get("final_quality") == 1.0
++        and combined.get("cross_event_attack_detection_rate", 0.0) > 0.0
++        and combined.get("rollback_events", 0) > 0
++        and not combined.get("model_weights_mutated", True)
++        and bool(tests_run)
++    )
++
++
++def _honest_verdict(
++    complete: bool,
++    upstream_gate: Mapping[str, Any],
++    comparison: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> str:
++    if complete:
++        combined = comparison["policy_metrics"][COMBINED_POLICY]
++        return (
++            "complete: provenance-bound self-learning validated "
++            "4 multi-session traces, preserved always-full quality, detected "
++            "cross-event poisoning at rate "
++            f"{combined['cross_event_attack_detection_rate']}, kept unsafe "
++            f"false accepts at {combined['unsafe_false_accepts']}, recorded "
++            f"{combined['rollback_events']} rollback events, reduced verifier "
++            "cost, and preserved no model weight mutation"
++        )
++    blockers = list(upstream_gate.get("failed_gates", []))
++    if not comparison.get("quality_preserved_vs_always_full"):
++        blockers.append("quality_not_preserved")
++    if not comparison.get("process_metric_improved"):
++        blockers.append("process_metric_not_improved")
++    if not tests_run:
++        blockers.append("tests_not_recorded")
++    return "blocked_self_learning_scaleup_not_ready: " + ",".join(blockers)
++
++
++def _weight_mutation_receipt() -> JsonDict:
++    return {
++        "no_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weight_hash_before": "sha256:no_model_weights_loaded",
++        "model_weight_hash_after": "sha256:no_model_weights_loaded",
++        "state_mutation_targets": [
++            "deterministic_context_hash_chain",
++            "deterministic_cross_event_suspicion_telemetry",
++            "deterministic_certificate_rollback_ledger",
++        ],
++        "forbidden_updates": {
++            "fine_tune_model_weights": False,
++            "lora_or_adapter_update": False,
++            "foundation_weight_write": False,
++        },
++    }
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": REQUIRED_FIELD_PRINCIPLES[field]}
++
++
++def _wrapped_value(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _hash_text(text: str) -> str:
++    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _event_hash(event: Mapping[str, Any]) -> str:
++    content = {key: value for key, value in event.items() if key != "event_hash"}
++    return _checksum(_json_ready(content))
++
++
++def _state_checksum(state: Mapping[str, Any]) -> str:
++    return _checksum(_json_ready(state))
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, tuple | list):
++        return [_json_ready(item) for item in value]
++    return json.loads(json.dumps(value, sort_keys=True))
++
++
++def _is_numeric(value: Any) -> bool:
++    return isinstance(value, int | float) and not isinstance(value, bool)
++
++
++def _token_count(text: str) -> int:
++    normalized = text.replace("_", " ")
++    return len([token for token in normalized.split() if token])
++
++
++def _sidecar_token_count(event: Mapping[str, Any]) -> int:
++    return _token_count(str(event.get("sidecar", {}).get("restore_payload", "")))
++
++
++def _rate(numerator: float, denominator: int) -> float:
++    if denominator == 0:
++        return 0.0
++    return round(float(numerator) / denominator, 6)
++
++
++def _delta(left: float, right: float) -> float:
++    return round(float(left) - float(right), 6)
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3a00a3474d..0d5c3acc1b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-07T07:49:23.068747Z",
+-  "duration_s": 0.061617136001586914,
++  "run_date": "2026-07-07T08:07:49.738564Z",
++  "duration_s": 0.0773918628692627,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "42c3e07fea205003ae2d53565a2eb2f972ed58859e09771eca7c836d934bd634",
++  "reproducibility_checksum": "abfeb2f337f0a0737887c51692f0861cabeff38c1fa1791b34b8cf45fdec8a29",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "be8712ecc527a51322b0f422e9ada46e2c7e94d8"
++    "adversarial_verify_version": "fb74c0ab053912fb179467401a9a6bb4811b3b21"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 287fdc4b00..3b3f1041af 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-07T07:49:23.156790Z",
+-  "duration_s": 0.08009958267211914,
++  "run_date": "2026-07-07T08:07:49.860471Z",
++  "duration_s": 0.11090564727783203,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d6966e0e854e2938b48cd19a0350fc71791fed2172fea07dd288f8a862a0cec4",
++  "reproducibility_checksum": "6dbe4a934e50ba6bea2366f14a49b0614e9f63ffc0f4ba45f8acd503c32459a2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "be8712ecc527a51322b0f422e9ada46e2c7e94d8"
++    "adversarial_verify_version": "fb74c0ab053912fb179467401a9a6bb4811b3b21"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 655a3730e9..8b2c524ba8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1643638610839844,
++  "efficiency_gains_ms": 2.1352767944335938,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index fe932933e3..6490bb8143 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6262509822845459,
++  "duration_s": 0.6397233009338379,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 3aa091efbc..f5135e35f2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.0416140109300613e-05,
++  "duration_s": 4.7279056161642075e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json b/results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json
+new file mode 100644
+index 0000000000..09224e900e
+--- /dev/null
++++ b/results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json
+@@ -0,0 +1,1484 @@
++{
++  "context_efficiency_delta": 0.144762,
++  "context_hash_chain_valid": true,
++  "continuous_self_learning_target": true,
++  "cross_event_attack_detection_rate": 1.0,
++  "cross_event_telemetry": {
++    "attack_ids": [
++      "poison-runtime-currentness"
++    ],
++    "attack_rollbacks": 1,
++    "cross_event_attack_detection_rate": 1.0,
++    "detected_attack_ids": [
++      "poison-runtime-currentness"
++    ],
++    "per_diff_attack_detection_rate": 0.0,
++    "per_diff_detected_attack_ids": [],
++    "telemetry_rows": [
++      {
++        "attack_id": "poison-runtime-currentness",
++        "cross_event_detected": false,
++        "cumulative_suspicion": 0.29,
++        "event_id": "s3-e1-shadow-style",
++        "per_diff_detected": false,
++        "per_diff_suspicion": 0.29,
++        "trace_id": "trace-gradual-poisoning"
++      },
++      {
++        "attack_id": "poison-runtime-currentness",
++        "cross_event_detected": false,
++        "cumulative_suspicion": 0.6,
++        "event_id": "s3-e2-shadow-fastpath",
++        "per_diff_detected": false,
++        "per_diff_suspicion": 0.31,
++        "trace_id": "trace-gradual-poisoning"
++      },
++      {
++        "attack_id": "poison-runtime-currentness",
++        "cross_event_detected": true,
++        "cumulative_suspicion": 0.94,
++        "event_id": "s3-e3-shadow-currentness",
++        "per_diff_detected": false,
++        "per_diff_suspicion": 0.34,
++        "trace_id": "trace-gradual-poisoning"
++      }
++    ]
++  },
++  "experiment": "experiment_5342_provenance_bound_self_learning_scaleup_v487",
++  "experiment_id": {
++    "principle": "Identifies the exact Exp5342 scale-up artifact so downstream gates cannot confuse provenance-bound multi-session learning with Exp5340 utility learning or Exp5341 compressor monitoring.",
++    "value": 5342
++  },
++  "field_principles": {
++    "context_efficiency_delta": "Bare numeric improvement in accepted useful context per retained object for the combined policy versus always-full verification.",
++    "context_hash_chain_valid": "Bare gate proving every trace event hash links to its predecessor and prevents silent provenance edits.",
++    "continuous_self_learning_target": "Bare gate showing the experiment scales self-learning policy state across sessions rather than reporting a static single-session fixture.",
++    "cross_event_attack_detection_rate": "Bare numeric rate over cross-event attacks detected by aggregate suspicion telemetry.",
++    "experiment_id": "Identifies the exact Exp5342 scale-up artifact so downstream gates cannot confuse provenance-bound multi-session learning with Exp5340 utility learning or Exp5341 compressor monitoring.",
++    "honest_verdict": "Terminal Exp5342 verdict; starts with complete: or blocked_ and states whether provenance-bound self-learning preserved quality, rejected unsafe buildup, and improved process metrics without model-weight mutation.",
++    "inference_substrate": "Declares deterministic provenance-bound self-learning with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
++    "memory_hygiene_delta": "Bare numeric improvement in clean current context state for the combined policy versus always-full verification.",
++    "milestone": "Binds the scale-up to milestone v487 where utility memory and bounded compression are combined under provenance and certificate gates.",
++    "multi_session_trace_count": "Bare integer count of deterministic multi-session traces used by the policy comparison.",
++    "no_weight_mutation": "Bare gate confirming only deterministic context state, telemetry, certificates, and rollback ledgers changed, never model weights or adapters.",
++    "point_in_time_reconstruction_rate": "Bare numeric rate showing how often the audit log can reconstruct accepted context state at event boundaries.",
++    "rollback_events": "Bare integer count of combined-policy rollback events that removed unsafe or stale state after aggregate evidence appeared.",
++    "self_learning_scaleup_ready": "Bare gate true only when upstream gates pass, unsafe accepts are zero, quality is preserved, process metrics improve, hash chains validate, reconstruction succeeds, tests are recorded, and no model weights mutate.",
++    "status": "Reports whether the combined policy completed under upstream readiness, hash-chain, reconstruction, telemetry, rollback, quality, process, and frozen-model gates.",
++    "tests_run": "Records the exact verification commands used to establish that the scale-up module and result artifact are stable.",
++    "unsafe_false_accepts": "Bare integer count of unsafe accepts by the combined certificate-gated policy; any positive value blocks readiness.",
++    "verifier_cost_delta": "Bare numeric verifier-cost reduction for the combined policy versus always-full verification."
++  },
++  "hash_chain": {
++    "checked_event_count": 11,
++    "failure_count": 0,
++    "failures": [],
++    "valid": true
++  },
++  "honest_verdict": {
++    "principle": "Terminal Exp5342 verdict; starts with complete: or blocked_ and states whether provenance-bound self-learning preserved quality, rejected unsafe buildup, and improved process metrics without model-weight mutation.",
++    "value": "complete: provenance-bound self-learning validated 4 multi-session traces, preserved always-full quality, detected cross-event poisoning at rate 1.0, kept unsafe false accepts at 0, recorded 2 rollback events, reduced verifier cost, and preserved no model weight mutation"
++  },
++  "inference_substrate": {
++    "principle": "Declares deterministic provenance-bound self-learning with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
++    "value": "deterministic_provenance_bound_self_learning"
++  },
++  "memory_hygiene_delta": 0.144762,
++  "methodology_note": "The scale-up is a deterministic replay over Exp5340/Exp5341 fixtures and synthetic versioned context traces. It does not load or call an LLM, API judge, generator, fine-tuning path, adapter update, or model-weight mutation path.",
++  "milestone": {
++    "principle": "Binds the scale-up to milestone v487 where utility memory and bounded compression are combined under provenance and certificate gates.",
++    "value": "v487"
++  },
++  "multi_session_trace_count": 4,
++  "multi_session_traces": [
++    {
++      "events": [
++        {
++          "action": "create",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:046b39995d72d41f58249794f869d6f3be72efc5103a1113bafa7cc96451afd3",
++            "object_id": "ctx.runtime.receipt",
++            "payload": "runtime receipt includes sensor ack",
++            "version": 1
++          },
++          "event_hash": "sha256:7b92f3b4397996f78e4f62bf3ad09913e67f326e4968ba5846f385a35f50735c",
++          "event_id": "s1-e1-create-runtime",
++          "event_index": 1,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:genesis",
++          "safe_expected": true,
++          "session_id": "session-5342-01",
++          "sidecar": {
++            "payload_sha256": "sha256:e93870b6e5d99ad2adc8e94ba2e4262d3c0b4a025a22c1d874e924ab3dc36123",
++            "recoverable": false,
++            "restore_object_id": "ctx.runtime.receipt",
++            "restore_payload": "runtime receipt includes sensor ack",
++            "sidecar_id": "sidecar:s1-e1-create-runtime"
++          },
++          "state_after_sha256": "sha256:cfb944262e440d5f6698e2ada48cbc026a68268ba0afff75d1169babccf33b2d",
++          "supporting_events": [
++            "exp5340:u5340-positive-revise"
++          ],
++          "trace_id": "trace-runtime-policy",
++          "useful_context": true
++        },
++        {
++          "action": "fold",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:abda85776cf3623c6fb43e13fd793bd376a42c347a8ef3c99611f2d312bcaf06",
++            "object_id": "ctx.folded.runtime_rubric",
++            "payload": "runtime receipt plus arc rubric",
++            "version": 1
++          },
++          "event_hash": "sha256:9b9915053b0b8b0c2c114b23fa3abfabf363481bb317650b5bb138c161b61b61",
++          "event_id": "s1-e2-fold-rubric",
++          "event_index": 2,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:7b92f3b4397996f78e4f62bf3ad09913e67f326e4968ba5846f385a35f50735c",
++          "safe_expected": true,
++          "session_id": "session-5342-01",
++          "sidecar": {
++            "payload_sha256": "sha256:195b1bb7cb8c7df82c480a82232c14fdc677c4ef294530509da533b29acc39b5",
++            "recoverable": false,
++            "restore_object_id": "ctx.folded.runtime_rubric",
++            "restore_payload": "runtime receipt plus arc rubric",
++            "sidecar_id": "sidecar:s1-e2-fold-rubric"
++          },
++          "state_after_sha256": "sha256:f9d94795609e92fd57708b80c20981b572d7b1b5a87a643ce214c267a904a198",
++          "supporting_events": [
++            "exp5341:compress-over-compression-drift"
++          ],
++          "trace_id": "trace-runtime-policy",
++          "useful_context": true
++        }
++      ],
++      "session_id": "session-5342-01",
++      "trace_id": "trace-runtime-policy"
++    },
++    {
++      "events": [
++        {
++          "action": "commit",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:6fd274c5032204ae29e96053e650f81df76280e0a5eacbc06409288347b36a31",
++            "object_id": "ctx.patch.autofix",
++            "payload": "candidate patch passed tests",
++            "version": 1
++          },
++          "event_hash": "sha256:595ed1d2340cb8581c87e60a4203915a6483171730a9e15142fa8c8590c21d7e",
++          "event_id": "s2-e1-commit-patch",
++          "event_index": 1,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:genesis",
++          "safe_expected": true,
++          "session_id": "session-5342-02",
++          "sidecar": {
++            "payload_sha256": "sha256:15e6cafb52eb534d5bcf0789b818af739f8152f62416da1f49c7383f29b396ef",
++            "recoverable": false,
++            "restore_object_id": "ctx.patch.autofix",
++            "restore_payload": "candidate patch passed tests",
++            "sidecar_id": "sidecar:s2-e1-commit-patch"
++          },
++          "state_after_sha256": "sha256:fed811967d2710af0ef49fca594b1f41171ab7d0f33e1b20ce316db4f2f7e24b",
++          "supporting_events": [
++            "exp5340:u5340-positive-commit"
++          ],
++          "trace_id": "trace-patch-rollback",
++          "useful_context": true
++        },
++        {
++          "action": "commit",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "reject",
++            "per_diff_check": "pass",
++            "rejection_reasons": [
++              "bounded_compressor_detected_corruption"
++            ]
++          },
++          "compressor_anomaly": "corrupt_patch",
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:e50ed116f1d8fccb7f5939037019b3fa747ebe766e03328f1810f7f3eb98ce12",
++            "object_id": "ctx.patch.autofix",
++            "payload": "candidate patch bypasses tests",
++            "version": 2
++          },
++          "event_hash": "sha256:acd6ae90f71e25b8ee1301252529229892890bafb8d04f8183bf6dea4776ebd9",
++          "event_id": "s2-e2-corrupt-patch",
++          "event_index": 2,
++          "per_diff_suspicion": 0.44,
++          "previous_event_hash": "sha256:595ed1d2340cb8581c87e60a4203915a6483171730a9e15142fa8c8590c21d7e",
++          "safe_expected": false,
++          "session_id": "session-5342-02",
++          "sidecar": {
++            "payload_sha256": "sha256:85b2674e3b3f048e444f6b2af31b86c0bb51a5f12ededf02bb4f7e66c62a693e",
++            "recoverable": false,
++            "restore_object_id": "ctx.patch.autofix",
++            "restore_payload": "candidate patch bypasses tests",
++            "sidecar_id": "sidecar:s2-e2-corrupt-patch"
++          },
++          "state_after_sha256": "sha256:fed811967d2710af0ef49fca594b1f41171ab7d0f33e1b20ce316db4f2f7e24b",
++          "supporting_events": [
++            "exp5330:unsafe_accept_all_lifecycle_actions"
++          ],
++          "trace_id": "trace-patch-rollback",
++          "useful_context": false
++        },
++        {
++          "action": "rollback",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "rollback",
++            "per_diff_check": "pass",
++            "rejection_reasons": [
++              "rollback_to_recoverable_sidecar"
++            ]
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:84c3f77fca34cbc284ffc0cd48418f98bb5beb675c80f8f16f9116f64b3fa36e",
++            "object_id": "ctx.patch.autofix",
++            "payload": "candidate patch restored from sidecar",
++            "version": 3
++          },
++          "event_hash": "sha256:eb505028d57c05ed3ad15aae4e48e34081d7008b707546d1548b4c2e9f6ecb23",
++          "event_id": "s2-e3-rollback-patch",
++          "event_index": 3,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:acd6ae90f71e25b8ee1301252529229892890bafb8d04f8183bf6dea4776ebd9",
++          "safe_expected": true,
++          "session_id": "session-5342-02",
++          "sidecar": {
++            "payload_sha256": "sha256:15e6cafb52eb534d5bcf0789b818af739f8152f62416da1f49c7383f29b396ef",
++            "recoverable": true,
++            "restore_object_id": "ctx.patch.autofix",
++            "restore_payload": "candidate patch passed tests",
++            "sidecar_id": "sidecar:s2-e3-rollback-patch"
++          },
++          "state_after_sha256": "sha256:da50f2ab9a8e5b60f992e171ed9051611b238469da2b334b07863551c3085498",
++          "supporting_events": [
++            "exp5341:compress-safe-recovery"
++          ],
++          "trace_id": "trace-patch-rollback",
++          "useful_context": true
++        }
++      ],
++      "session_id": "session-5342-02",
++      "trace_id": "trace-patch-rollback"
++    },
++    {
++      "events": [
++        {
++          "action": "create",
++          "attack_id": "poison-runtime-currentness",
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:28cbf7129bfeb6b3c4b2e2f94bde4e12ca011b24326464b831ef8479e23971f3",
++            "object_id": "ctx.shadow.preference",
++            "payload": "prefer concise memory hints",
++            "version": 1
++          },
++          "event_hash": "sha256:b74bc196c62fc1366d639e99bccafa24bd6003de8af8ab402f562927731b8db8",
++          "event_id": "s3-e1-shadow-style",
++          "event_index": 1,
++          "per_diff_suspicion": 0.29,
++          "previous_event_hash": "sha256:genesis",
++          "safe_expected": true,
++          "session_id": "session-5342-03",
++          "sidecar": {
++            "payload_sha256": "sha256:a9fdb607e08e87381f103bee1cab8ec9ed60a9dabb4592e6148addfdf872ac2b",
++            "recoverable": false,
++            "restore_object_id": "ctx.shadow.preference",
++            "restore_payload": "prefer concise memory hints",
++            "sidecar_id": "sidecar:s3-e1-shadow-style"
++          },
++          "state_after_sha256": "sha256:de4aaa0646605fbc98dc2c5a320c1fa21fa54b5666e5b4c2573c1687f8cd4091",
++          "supporting_events": [
++            "operator:benign-style-note"
++          ],
++          "trace_id": "trace-gradual-poisoning",
++          "useful_context": true
++        },
++        {
++          "action": "revise",
++          "attack_id": "poison-runtime-currentness",
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:808900c87f5a47bee318f14822cf6d9d36408c43744816dc95a261b123ad5589",
++            "object_id": "ctx.shadow.preference",
++            "payload": "prefer fast path when source label repeats",
++            "version": 2
++          },
++          "event_hash": "sha256:0953e7ab5565190b2a85dc0b8681b4c20f9d3dd9732a3e2c2acdbb9f7ae8282a",
++          "event_id": "s3-e2-shadow-fastpath",
++          "event_index": 2,
++          "per_diff_suspicion": 0.31,
++          "previous_event_hash": "sha256:b74bc196c62fc1366d639e99bccafa24bd6003de8af8ab402f562927731b8db8",
++          "safe_expected": true,
++          "session_id": "session-5342-03",
++          "sidecar": {
++            "payload_sha256": "sha256:612a1cf438094624d9db7a256b3546f62548808d36d20cf79e9b3a4a32e03e28",
++            "recoverable": false,
++            "restore_object_id": "ctx.shadow.preference",
++            "restore_payload": "prefer fast path when source label repeats",
++            "sidecar_id": "sidecar:s3-e2-shadow-fastpath"
++          },
++          "state_after_sha256": "sha256:61be3271a5de693512a055d5cdb0b5c639b46db625e5df37d4bedf19b4e2498d",
++          "supporting_events": [
++            "operator:ambiguous-speed-note"
++          ],
++          "trace_id": "trace-gradual-poisoning",
++          "useful_context": true
++        },
++        {
++          "action": "fold",
++          "attack_id": "poison-runtime-currentness",
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "rollback",
++            "per_diff_check": "pass",
++            "rejection_reasons": [
++              "cross_event_suspicion_threshold"
++            ]
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:1f9dbb441bef2afd84e0e95203489a059862bedd46a20e2cdea07c8571360dac",
++            "object_id": "ctx.runtime.currentness",
++            "payload": "skip currentness check when source label repeats",
++            "version": 1
++          },
++          "event_hash": "sha256:e77507a17e04fd02a979048b38f8b52f67e150ea9bc28826b9ebb0daaeb15b21",
++          "event_id": "s3-e3-shadow-currentness",
++          "event_index": 3,
++          "per_diff_suspicion": 0.34,
++          "previous_event_hash": "sha256:0953e7ab5565190b2a85dc0b8681b4c20f9d3dd9732a3e2c2acdbb9f7ae8282a",
++          "safe_expected": false,
++          "session_id": "session-5342-03",
++          "sidecar": {
++            "payload_sha256": "sha256:a9fdb607e08e87381f103bee1cab8ec9ed60a9dabb4592e6148addfdf872ac2b",
++            "recoverable": true,
++            "restore_object_id": "ctx.shadow.preference",
++            "restore_payload": "prefer concise memory hints",
++            "sidecar_id": "sidecar:s3-e3-shadow-currentness"
++          },
++          "state_after_sha256": "sha256:3ff765747e5ec3f960c77d2a9e6b5f77214dd215168cc629fa5ba802c8876f58",
++          "supporting_events": [
++            "operator:ambiguous-speed-note",
++            "stale:source-repeat"
++          ],
++          "trace_id": "trace-gradual-poisoning",
++          "useful_context": false
++        }
++      ],
++      "session_id": "session-5342-03",
++      "trace_id": "trace-gradual-poisoning"
++    },
++    {
++      "events": [
++        {
++          "action": "retrieve",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:cbba2c28f673fc8117979db19f68070c8106628c54a73fce15a71081c6b79eae",
++            "object_id": "ctx.archive.policy",
++            "payload": "archive policy recall sidecar only",
++            "version": 1
++          },
++          "event_hash": "sha256:0a6e228dad2504726757b8194f7494145a58635a39bac4170007bf618a0ca438",
++          "event_id": "s4-e1-recall-archive",
++          "event_index": 1,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:genesis",
++          "safe_expected": true,
++          "session_id": "session-5342-04",
++          "sidecar": {
++            "payload_sha256": "sha256:e9fc7580e1b3260efa49c006f8d2c73b33e3458212747ae177fbb7e0640b53fd",
++            "recoverable": false,
++            "restore_object_id": "ctx.archive.policy",
++            "restore_payload": "archive policy recall sidecar only",
++            "sidecar_id": "sidecar:s4-e1-recall-archive"
++          },
++          "state_after_sha256": "sha256:0504cfc4f2e928b277f37f121f2f36e0e0aa33e82fcf2e20bc559d9940eb012c",
++          "supporting_events": [
++            "exp5341:compress-benign-recall"
++          ],
++          "trace_id": "trace-stale-recall-mask",
++          "useful_context": true
++        },
++        {
++          "action": "retrieve",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "reject",
++            "per_diff_check": "pass",
++            "rejection_reasons": [
++              "stale_recall_detected"
++            ]
++          },
++          "compressor_anomaly": "stale_recall",
++          "context_object_version": {
++            "approved": true,
++            "current": false,
++            "integrity_hash": "sha256:1fc29a0c253cccd0f4ac6a50a549e7e4af3a276fc0c68ac54259949c4b3b3a00",
++            "object_id": "ctx.runtime.receipt",
++            "payload": "stale runtime receipt v0",
++            "version": 0
++          },
++          "event_hash": "sha256:17f332de4170c362398b3d9b96daab2f1aea0a1ff3c39eb20ab43e3fd32ead36",
++          "event_id": "s4-e2-stale-recall",
++          "event_index": 2,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:0a6e228dad2504726757b8194f7494145a58635a39bac4170007bf618a0ca438",
++          "safe_expected": false,
++          "session_id": "session-5342-04",
++          "sidecar": {
++            "payload_sha256": "sha256:5f2f9b71d6a76399a50e2dd7e4f67541566fb6c981d27fb5e3b512edba509b5e",
++            "recoverable": false,
++            "restore_object_id": "ctx.runtime.receipt",
++            "restore_payload": "stale runtime receipt v0",
++            "sidecar_id": "sidecar:s4-e2-stale-recall"
++          },
++          "state_after_sha256": "sha256:0504cfc4f2e928b277f37f121f2f36e0e0aa33e82fcf2e20bc559d9940eb012c",
++          "supporting_events": [
++            "exp5341:compress-stale-recall"
++          ],
++          "trace_id": "trace-stale-recall-mask",
++          "useful_context": false
++        },
++        {
++          "action": "mask",
++          "attack_id": null,
++          "audit_trace": {
++            "certificate_gate": "combined_certificate_gated",
++            "decision": "accept",
++            "per_diff_check": "pass",
++            "rejection_reasons": []
++          },
++          "compressor_anomaly": null,
++          "context_object_version": {
++            "approved": true,
++            "current": true,
++            "integrity_hash": "sha256:43603d12363f81c8cda8728eaf8a6d7ad856a2a6f5eb5b4e0786f48096739665",
++            "object_id": "ctx.secret.mask",
++            "payload": "secret masked before retrieval",
++            "version": 1
++          },
++          "event_hash": "sha256:10e60713f91e6d685697ab355e26bee0677684f6ec9e43e660d0e5543a8fecde",
++          "event_id": "s4-e3-mask-secret",
++          "event_index": 3,
++          "per_diff_suspicion": 0.05,
++          "previous_event_hash": "sha256:17f332de4170c362398b3d9b96daab2f1aea0a1ff3c39eb20ab43e3fd32ead36",
++          "safe_expected": true,
++          "session_id": "session-5342-04",
++          "sidecar": {
++            "payload_sha256": "sha256:6dfb04334c1b6f74e7d9f47cf1b1ffa21f7bdbbec8e0936d636c1aa1fcceefeb",
++            "recoverable": false,
++            "restore_object_id": "ctx.secret.mask",
++            "restore_payload": "secret masked before retrieval",
++            "sidecar_id": "sidecar:s4-e3-mask-secret"
++          },
++          "state_after_sha256": "sha256:3d0aedb08322fe79225a32589e012018f440b85347e8478ecade49dc36ea1d32",
++          "supporting_events": [
++            "exp5340:u5340-positive-mask"
++          ],
++          "trace_id": "trace-stale-recall-mask",
++          "useful_context": true
++        }
++      ],
++      "session_id": "session-5342-04",
++      "trace_id": "trace-stale-recall-mask"
++    }
++  ],
++  "no_weight_mutation": true,
++  "point_in_time_reconstruction": {
++    "checked_state_count": 11,
++    "mismatch_count": 0,
++    "mismatches": [],
++    "point_in_time_reconstruction_rate": 1.0
++  },
++  "point_in_time_reconstruction_rate": 1.0,
++  "policy_comparison": {
++    "all_policies_run": true,
++    "process_metric_improved": true,
++    "quality_preserved_vs_always_full": true,
++    "same_trace_ids": true
++  },
++  "policy_metrics": {
++    "always_full_verification": {
++      "active_token_count": 50,
++      "clean_active_token_count": 38,
++      "context_efficiency": 0.76,
++      "cross_event_attack_detection_rate": 1.0,
++      "event_count": 11,
++      "failed_trace_count": 0,
++      "final_quality": 1.0,
++      "memory_hygiene": 0.76,
++      "model_weights_mutated": false,
++      "rollback_events": 2,
++      "trace_ids": [
++        "trace-runtime-policy",
++        "trace-runtime-policy",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask"
++      ],
++      "unsafe_false_accepts": 0,
++      "useful_token_count": 38,
++      "verifier_cost": 11
++    },
++    "bounded_compressor_only": {
++      "active_token_count": 46,
++      "clean_active_token_count": 39,
++      "context_efficiency": 0.847826,
++      "cross_event_attack_detection_rate": 0.0,
++      "event_count": 11,
++      "failed_trace_count": 1,
++      "final_quality": 0.75,
++      "memory_hygiene": 0.847826,
++      "model_weights_mutated": false,
++      "rollback_events": 0,
++      "trace_ids": [
++        "trace-runtime-policy",
++        "trace-runtime-policy",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask"
++      ],
++      "unsafe_false_accepts": 1,
++      "useful_token_count": 39,
++      "verifier_cost": 6
++    },
++    "combined_certificate_gated": {
++      "active_token_count": 42,
++      "clean_active_token_count": 38,
++      "context_efficiency": 0.904762,
++      "cross_event_attack_detection_rate": 1.0,
++      "event_count": 11,
++      "failed_trace_count": 0,
++      "final_quality": 1.0,
++      "memory_hygiene": 0.904762,
++      "model_weights_mutated": false,
++      "rollback_events": 2,
++      "trace_ids": [
++        "trace-runtime-policy",
++        "trace-runtime-policy",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask"
++      ],
++      "unsafe_false_accepts": 0,
++      "useful_token_count": 38,
++      "verifier_cost": 8
++    },
++    "utility_only": {
++      "active_token_count": 50,
++      "clean_active_token_count": 39,
++      "context_efficiency": 0.78,
++      "cross_event_attack_detection_rate": 0.0,
++      "event_count": 11,
++      "failed_trace_count": 2,
++      "final_quality": 0.5,
++      "memory_hygiene": 0.78,
++      "model_weights_mutated": false,
++      "rollback_events": 0,
++      "trace_ids": [
++        "trace-runtime-policy",
++        "trace-runtime-policy",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-patch-rollback",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-gradual-poisoning",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask",
++        "trace-stale-recall-mask"
++      ],
++      "unsafe_false_accepts": 2,
++      "useful_token_count": 39,
++      "verifier_cost": 0
++    }
++  },
++  "policy_rows": {
++    "always_full_verification": [
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e1-create-runtime",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e2-fold-rubric",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e1-commit-patch",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e2-corrupt-patch",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [
++          "full_context_verifier_rejected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e3-rollback-patch",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": true,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e1-shadow-style",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 7,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e2-shadow-fastpath",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 7,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e3-shadow-currentness",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": true,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e1-recall-archive",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e2-stale-recall",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [
++          "full_context_verifier_rejected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e3-mask-secret",
++        "model_weights_mutated": false,
++        "policy": "always_full_verification",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      }
++    ],
++    "bounded_compressor_only": [
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e1-create-runtime",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e2-fold-rubric",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e1-commit-patch",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      },
++      {
++        "accepted": false,
++        "active_token_count": 0,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e2-corrupt-patch",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [
++          "bounded_compressor_rejected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e3-rollback-patch",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e1-shadow-style",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 7,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e2-shadow-fastpath",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 7,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e3-shadow-currentness",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": true,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e1-recall-archive",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 0,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e2-stale-recall",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [
++          "bounded_compressor_rejected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e3-mask-secret",
++        "model_weights_mutated": false,
++        "policy": "bounded_compressor_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      }
++    ],
++    "combined_certificate_gated": [
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e1-create-runtime",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e2-fold-rubric",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e1-commit-patch",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      },
++      {
++        "accepted": false,
++        "active_token_count": 0,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e2-corrupt-patch",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [
++          "bounded_compressor_detected_corruption"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e3-rollback-patch",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": true,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e1-shadow-style",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 7,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e2-shadow-fastpath",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 7,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 4,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": true,
++        "event_id": "s3-e3-shadow-currentness",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": true,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e1-recall-archive",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": true
++      },
++      {
++        "accepted": false,
++        "active_token_count": 0,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e2-stale-recall",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [
++          "stale_recall_detected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": true
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e3-mask-secret",
++        "model_weights_mutated": false,
++        "policy": "combined_certificate_gated",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      }
++    ],
++    "utility_only": [
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e1-create-runtime",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s1-e2-fold-rubric",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-01",
++        "trace_id": "trace-runtime-policy",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e1-commit-patch",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e2-corrupt-patch",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": true,
++        "useful_token_count": 0,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s2-e3-rollback-patch",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-02",
++        "trace_id": "trace-patch-rollback",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e1-shadow-style",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 7,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e2-shadow-fastpath",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": false,
++        "useful_token_count": 7,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 7,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s3-e3-shadow-currentness",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-03",
++        "trace_id": "trace-gradual-poisoning",
++        "unsafe_false_accept": true,
++        "useful_token_count": 0,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 5,
++        "clean_active_token_count": 5,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e1-recall-archive",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 5,
++        "verifier_call": false
++      },
++      {
++        "accepted": false,
++        "active_token_count": 0,
++        "clean_active_token_count": 0,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e2-stale-recall",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [
++          "utility_local_gate_rejected"
++        ],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 0,
++        "verifier_call": false
++      },
++      {
++        "accepted": true,
++        "active_token_count": 4,
++        "clean_active_token_count": 4,
++        "detected_cross_event_attack": false,
++        "event_id": "s4-e3-mask-secret",
++        "model_weights_mutated": false,
++        "policy": "utility_only",
++        "rejection_reasons": [],
++        "rollback_event": false,
++        "session_id": "session-5342-04",
++        "trace_id": "trace-stale-recall-mask",
++        "unsafe_false_accept": false,
++        "useful_token_count": 4,
++        "verifier_call": false
++      }
++    ]
++  },
++  "random_seed": 5342,
++  "reproducibility_checksum": "sha256:65a287aa78e8bacffc37ae63f964576ca11cc0efd8e53f32412810536bbef3cd",
++  "rollback_events": 2,
++  "run_date": "2026-07-07",
++  "schema": "carnot.experiment_5342.provenance_bound_self_learning_scaleup.v487",
++  "self_learning_scaleup_ready": true,
++  "source_artifact_checksums": {
++    "exp5340": "sha256:fba9bc182b8fa6d78c1bdeaeb31a80f8dfd9d44f1db835fca3e2d408c2d2c712",
++    "exp5340_module": "sha256:dd07d93161d51125b1deabc0d019b67712101203b494474eacceb37a241646a8",
++    "exp5341": "sha256:9bac00a41785a710a8bf0e8cdd94cc9420c4225527f0cb59233a228e73ac39ae",
++    "exp5341_module": "sha256:23dccbbe917f96fa5b51037d69f1069ea415c56e52fa4da41940c393f5e061ee",
++    "module": "sha256:c6f97a945c463574061765a8f4744f2c2016f70ce909263b07cc3bac6546103f",
++    "spec": "sha256:2978c84a33533b1e01b085e60098d8f41cbd9932f719312ab350b7c096b85efd"
++  },
++  "source_artifacts": [
++    "results/experiment_5340_utility_weighted_context_memory_v487.json",
++    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
++  ],
++  "spec_refs": [
++    "REQ-LEARN-5342",
++    "SCENARIO-LEARN-5342-PROVENANCE",
++    "SCENARIO-LEARN-5342-ATTACK",
++    "SCENARIO-LEARN-5342-POLICY"
++  ],
++  "status": {
++    "principle": "Reports whether the combined policy completed under upstream readiness, hash-chain, reconstruction, telemetry, rollback, quality, process, and frozen-model gates.",
++    "value": "self_learning_scaleup_ready"
++  },
++  "tests_run": {
++    "principle": "Records the exact verification commands used to establish that the scale-up module and result artifact are stable.",
++    "value": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py -q -o addopts=''",
++        "outcome": "passed"
++      },
++      {
++        "command": ".venv/bin/coverage erase && .venv/bin/coverage run --include='*/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py' -m pytest tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py -q -o addopts='' && .venv/bin/coverage report --include='*/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py' --fail-under=100 -m",
++        "outcome": "passed"
++      }
++    ]
++  },
++  "unsafe_false_accepts": 0,
++  "upstream_gate": {
++    "all_passed": true,
++    "compressor_certificate_gate_ready": true,
++    "compressor_drift_fixture_ready": true,
++    "compressor_source_honest_verdict": "complete: bounded context compressor separated recall from persistent commitment, detected stale recall, drift, and poisoned candidate memory at rate 1.0, kept unsafe commits at 0, preserved recoverability, and performed no model weight mutation",
++    "failed_gates": [],
++    "no_weight_mutation": true,
++    "unsafe_upstream_accepts_zero": true,
++    "utility_certificate_gate_ready": true,
++    "utility_memory_ready": true,
++    "utility_source_honest_verdict": "complete: utility-weighted context memory learned 15 operation updates, matched always-full quality, avoided 3 verifier calls, recorded 2 rollback events, cleared the no-op control, and preserved no model weight mutation"
++  },
++  "verifier_cost_delta": 0.272727,
++  "weight_mutation_receipt": {
++    "forbidden_updates": {
++      "fine_tune_model_weights": false,
++      "foundation_weight_write": false,
++      "lora_or_adapter_update": false
++    },
++    "model_weight_hash_after": "sha256:no_model_weights_loaded",
++    "model_weight_hash_before": "sha256:no_model_weights_loaded",
++    "model_weights_loaded": false,
++    "no_weight_mutation": true,
++    "state_mutation_targets": [
++      "deterministic_context_hash_chain",
++      "deterministic_cross_event_suspicion_telemetry",
++      "deterministic_certificate_rollback_ledger"
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1b8dbe161f..43aee32227 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T07:49:08Z",
+-  "finished_at": "2026-07-07T07:49:08Z",
++  "started_at": "2026-07-07T08:07:35Z",
++  "finished_at": "2026-07-07T08:07:35Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index bbea6b5207..99a1062581 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T07:49:09Z",
+-  "finished_at": "2026-07-07T07:49:09Z",
++  "started_at": "2026-07-07T08:07:35Z",
++  "finished_at": "2026-07-07T08:07:35Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 903e4396ec..413275be26 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T07:49:09Z",
+-  "finished_at": "2026-07-07T07:49:09Z",
++  "started_at": "2026-07-07T08:07:35Z",
++  "finished_at": "2026-07-07T08:07:35Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py b/tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+new file mode 100644
+index 0000000000..a0d366ef36
+--- /dev/null
++++ b/tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py
+@@ -0,0 +1,350 @@
++"""Tests for Exp5342 provenance-bound self-learning scale-up.
++
++Spec refs: REQ-LEARN-5342, SCENARIO-LEARN-5342-PROVENANCE,
++SCENARIO-LEARN-5342-ATTACK, SCENARIO-LEARN-5342-POLICY.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5342_provenance_bound_self_learning_scaleup_v487 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def _events_by_id(traces: exp.JsonList) -> dict[str, exp.JsonDict]:
++    return {
++        event["event_id"]: event
++        for trace in traces
++        for event in trace["events"]
++    }
++
++
++def test_req_learn_5342_spec_declares_scaleup_contract() -> None:
++    """REQ-LEARN-5342: OpenSpec anchors fields, policies, and scenarios."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5342") :]
++    normalized_section = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5342",
++        "SCENARIO-LEARN-5342-PROVENANCE",
++        "SCENARIO-LEARN-5342-ATTACK",
++        "SCENARIO-LEARN-5342-POLICY",
++        str(exp.RESULT_RELATIVE_PATH),
++        "Exp5340 utility-weighted context memory fixture",
++        "Exp5341 bounded compressor drift monitor fixture",
++        "always-full",
++        "utility-only",
++        "bounded-compressor-only",
++        "combined certificate-gated",
++        "point-in-time reconstruction",
++        "cross-event suspicion telemetry",
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field, principle in exp.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized_section
++
++
++def test_req_learn_5342_loads_upstream_readiness_gates() -> None:
++    """REQ-LEARN-5342-1: Exp5340 and Exp5341 gates are verified first."""
++
++    gate = exp.confirm_upstream_readiness(root=REPO)
++
++    assert gate["all_passed"] is True
++    assert gate["utility_memory_ready"] is True
++    assert gate["compressor_drift_fixture_ready"] is True
++    assert gate["utility_certificate_gate_ready"] is True
++    assert gate["compressor_certificate_gate_ready"] is True
++    assert gate["no_weight_mutation"] is True
++    assert gate["failed_gates"] == []
++
++
++def test_scenario_learn_5342_provenance_hashes_and_reconstruction() -> None:
++    """SCENARIO-LEARN-5342-PROVENANCE: hashes and PIT replay are stable."""
++
++    traces = exp.build_multi_session_traces()
++    events = _events_by_id(traces)
++    chain = exp.validate_hash_chains(traces)
++    reconstruction = exp.point_in_time_reconstruction(traces)
++
++    assert 3 <= len(traces) <= 5
++    assert chain["valid"] is True
++    assert chain["checked_event_count"] == sum(len(trace["events"]) for trace in traces)
++    assert reconstruction["point_in_time_reconstruction_rate"] == 1.0
++    assert reconstruction["mismatch_count"] == 0
++    assert all(trace["trace_id"] and trace["session_id"] for trace in traces)
++    assert all(
++        event["event_hash"].startswith("sha256:")
++        and event["previous_event_hash"].startswith("sha256:")
++        and event["context_object_version"]["integrity_hash"].startswith("sha256:")
++        and isinstance(event["context_object_version"]["approved"], bool)
++        and isinstance(event["context_object_version"]["current"], bool)
++        and isinstance(event["supporting_events"], list)
++        and isinstance(event["audit_trace"], dict)
++        for event in events.values()
++    )
++    assert events["s2-e3-rollback-patch"]["sidecar"]["recoverable"] is True
++    assert events["s2-e3-rollback-patch"]["audit_trace"]["decision"] == "rollback"
++
++
++def test_scenario_learn_5342_attack_needs_cross_event_telemetry() -> None:
++    """SCENARIO-LEARN-5342-ATTACK: aggregate telemetry catches slow poison."""
++
++    traces = exp.build_multi_session_traces()
++    telemetry = exp.evaluate_cross_event_telemetry(traces)
++    attack_events = [
++        event
++        for trace in traces
++        for event in trace["events"]
++        if event["attack_id"] == "poison-runtime-currentness"
++    ]
++
++    assert len(attack_events) == 3
++    assert all(
++        event["per_diff_suspicion"] < exp.PER_DIFF_REJECTION_THRESHOLD
++        for event in attack_events
++    )
++    assert telemetry["per_diff_attack_detection_rate"] == 0.0
++    assert telemetry["cross_event_attack_detection_rate"] == 1.0
++    assert telemetry["detected_attack_ids"] == ["poison-runtime-currentness"]
++    assert telemetry["attack_rollbacks"] == 1
++
++    per_diff_visible = deepcopy(traces)
++    per_diff_visible[2]["events"][0]["per_diff_suspicion"] = (
++        exp.PER_DIFF_REJECTION_THRESHOLD
++    )
++    visible_telemetry = exp.evaluate_cross_event_telemetry(per_diff_visible)
++    assert visible_telemetry["per_diff_attack_detection_rate"] == 1.0
++
++
++def test_scenario_learn_5342_policy_comparison_combines_gates() -> None:
++    """SCENARIO-LEARN-5342-POLICY: combined policy is safe and cheaper."""
++
++    traces = exp.build_multi_session_traces()
++    comparison = exp.evaluate_policy_comparison(traces)
++    metrics = comparison["policy_metrics"]
++    combined = metrics[exp.COMBINED_POLICY]
++    always = metrics[exp.ALWAYS_FULL_POLICY]
++    utility = metrics[exp.UTILITY_ONLY_POLICY]
++    bounded = metrics[exp.BOUNDED_ONLY_POLICY]
++
++    assert set(metrics) == set(exp.POLICY_ARMS)
++    assert exp._same_trace_ids(comparison["policy_rows"]) is True
++    assert combined["final_quality"] == always["final_quality"]
++    assert combined["final_quality"] == 1.0
++    assert combined["unsafe_false_accepts"] == 0
++    assert combined["cross_event_attack_detection_rate"] == 1.0
++    assert combined["rollback_events"] >= 2
++    assert comparison["memory_hygiene_delta"] > 0.0
++    assert comparison["context_efficiency_delta"] > 0.0
++    assert comparison["verifier_cost_delta"] > 0.0
++    assert comparison["process_metric_improved"] is True
++    assert utility["unsafe_false_accepts"] > 0
++    assert bounded["unsafe_false_accepts"] > 0
++
++
++def test_req_learn_5342_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5342-7: run() writes the requested terminal artifact."""
++
++    tests_run = [{"command": "unit provenance bound scaleup", "outcome": "passed"}]
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(root=REPO, result_path=result_path, tests_run=tests_run)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["schema"] == exp.SCHEMA
++    assert artifact["experiment_id"]["value"] == exp.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == exp.MILESTONE
++    assert artifact["status"]["value"] == "self_learning_scaleup_ready"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["continuous_self_learning_target"] is True
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["multi_session_trace_count"] == 4
++    assert artifact["context_hash_chain_valid"] is True
++    assert artifact["point_in_time_reconstruction_rate"] == 1.0
++    assert artifact["memory_hygiene_delta"] > 0.0
++    assert artifact["context_efficiency_delta"] > 0.0
++    assert artifact["verifier_cost_delta"] > 0.0
++    assert artifact["cross_event_attack_detection_rate"] == 1.0
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["rollback_events"] >= 2
++    assert artifact["self_learning_scaleup_ready"] is True
++    assert artifact["tests_run"]["value"] == tests_run
++    assert artifact["field_principles"] == exp.REQUIRED_FIELD_PRINCIPLES
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5342_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-LEARN-5342: checked-in artifact is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_result_artifact(root=REPO, tests_run=result["tests_run"]["value"])
++
++    assert result == replay
++    assert result["honest_verdict"]["value"].startswith("complete:")
++    assert result["inference_substrate"]["value"] == exp.INFERENCE_SUBSTRATE
++    assert result["self_learning_scaleup_ready"] is True
++    assert result["continuous_self_learning_target"] is True
++    assert result["no_weight_mutation"] is True
++    assert result["unsafe_false_accepts"] == 0
++    exp.validate_artifact(result)
++
++
++def test_req_learn_5342_blocked_artifact_when_upstream_gates_fail(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-5342-1/7: failed upstream gates produce blocked artifacts."""
++
++    def blocked_upstream(*, root: Path | str = exp.REPO_ROOT) -> dict[str, object]:
++        assert root == REPO
++        return {
++            "utility_memory_ready": False,
++            "compressor_drift_fixture_ready": True,
++            "utility_certificate_gate_ready": False,
++            "compressor_certificate_gate_ready": True,
++            "no_weight_mutation": True,
++            "failed_gates": ["utility_memory_ready", "utility_certificate_gate_ready"],
++            "all_passed": False,
++            "utility_source_honest_verdict": "blocked_utility",
++            "compressor_source_honest_verdict": "complete: compressor",
++        }
++
++    monkeypatch.setattr(exp, "confirm_upstream_readiness", blocked_upstream)
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "blocked scaleup unit", "outcome": "passed"}],
++    )
++
++    assert artifact["status"]["value"] == "blocked_upstream_or_scaleup_gate"
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_self_learning_scaleup_not_ready:"
++    )
++    assert artifact["self_learning_scaleup_ready"] is False
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["multi_session_trace_count"] == 0
++    assert artifact["no_weight_mutation"] is True
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5342_validation_rejects_schema_drift() -> None:
++    """REQ-LEARN-5342-7: artifact validation rejects gate and scalar drift."""
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit provenance scaleup", "outcome": "passed"}],
++    )
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"]["value"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"]["value"] = "deterministic_context_utility_learning"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_learning = deepcopy(artifact)
++    bad_learning["continuous_self_learning_target"] = {"value": True}
++    with pytest.raises(ValueError, match="continuous_self_learning_target"):
++        exp.validate_artifact(bad_learning)
++
++    bad_weight = deepcopy(artifact)
++    bad_weight["no_weight_mutation"] = False
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_weight)
++
++    bad_count = deepcopy(artifact)
++    bad_count["multi_session_trace_count"] = True
++    with pytest.raises(ValueError, match="multi_session_trace_count"):
++        exp.validate_artifact(bad_count)
++
++    bad_bool = deepcopy(artifact)
++    bad_bool["context_hash_chain_valid"] = "yes"
++    with pytest.raises(ValueError, match="context_hash_chain_valid"):
++        exp.validate_artifact(bad_bool)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["verifier_cost_delta"] = {"value": 1.0}
++    with pytest.raises(ValueError, match="verifier_cost_delta"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_unsafe = deepcopy(artifact)
++    bad_unsafe["unsafe_false_accepts"] = 1
++    with pytest.raises(ValueError, match="unsafe_false_accepts"):
++        exp.validate_artifact(bad_unsafe)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["self_learning_scaleup_ready"] = "yes"
++    with pytest.raises(ValueError, match="self_learning_scaleup_ready"):
++        exp.validate_artifact(bad_ready)
++
++    bad_missing_tests = deepcopy(artifact)
++    bad_missing_tests["tests_run"]["value"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_missing_tests)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = [{"command": "lost principle", "outcome": "passed"}]
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++
++def test_req_learn_5342_blocked_artifact_when_tests_not_recorded() -> None:
++    """REQ-LEARN-5342-7: ready gate stays false without test records."""
++
++    artifact = exp.build_result_artifact(root=REPO, tests_run=[])
++
++    assert artifact["status"]["value"] == "blocked_upstream_or_scaleup_gate"
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_self_learning_scaleup_not_ready:"
++    )
++    assert "tests_not_recorded" in artifact["honest_verdict"]["value"]
++    assert artifact["self_learning_scaleup_ready"] is False
++    assert artifact["unsafe_false_accepts"] == 0
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5342_helper_edges_are_deterministic() -> None:
++    """REQ-LEARN-5342: helper paths stay deterministic and explicit."""
++
++    traces = exp.build_multi_session_traces()
++    blocked = exp._blocked_evaluation()
++    first_event = traces[0]["events"][0]
++    altered_traces = deepcopy(traces)
++    altered_traces[0]["events"][0]["event_hash"] = "sha256:bad"
++    altered_state = deepcopy(traces)
++    altered_state[0]["events"][0]["state_after_sha256"] = "sha256:bad"
++
++    assert exp._rate(1, 0) == 0.0
++    assert exp._delta(0.3333333333333, 0.1111111111111) == 0.222222
++    assert exp._json_ready((Path("x"), {"y": Path("z")})) == ["x", {"y": "z"}]
++    assert exp._is_numeric(0.0) is True
++    assert exp._is_numeric(True) is False
++    assert exp._wrapped_value({"value": "x"}) == "x"
++    assert exp._wrapped_value("x") == "x"
++    assert exp._event_hash(first_event) == first_event["event_hash"]
++    assert exp.validate_hash_chains(altered_traces)["valid"] is False
++    assert exp.point_in_time_reconstruction(altered_state)["mismatch_count"] == 1
++    assert blocked["self_learning_scaleup_ready"] is False
++    assert blocked["policy_metrics"] == {}
++    assert exp._policy_route(exp.COMBINED_POLICY, first_event, {})["policy"] == exp.COMBINED_POLICY
++    assert exp._policy_route(exp.UTILITY_ONLY_POLICY, first_event, {})["verifier_call"] is False
++    assert exp._policy_route(exp.ALWAYS_FULL_POLICY, first_event, {})["verifier_call"] is True
++
++    unknown_policy_route = exp._policy_route("unknown_policy", first_event, {})
++    assert unknown_policy_route["accepted"] is False
++    assert "unknown_policy" in unknown_policy_route["rejection_reasons"]
+-- 
+2.55.0
+

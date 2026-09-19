@@ -1,0 +1,2317 @@
+From 82c270fc383296f6628e97830e9b545856b61703 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 06:19:20 -0400
+Subject: [PATCH 01735/11362] =?UTF-8?q?[conductor]=20PHASE=20A1=20?=
+ =?UTF-8?q?=E2=80=94=20Headroom=20re-census=20+=20LLM-as-judge=20baseline?=
+ =?UTF-8?q?=20harness=20+=20REAL=20cost=20meter.=20Reuse=20scripts/headroo?=
+ =?UTF-8?q?m=5Fgate.py=20to=20re-establish=20the=20executable-headroom=20d?=
+ =?UTF-8?q?omain(s)=20(code=20proven=200.18;=20attempt=20a=202nd=20executa?=
+ =?UTF-8?q?ble=20pool=20=E2=80=94=20MBPP/EvalPlus=20or=20held-out=20Sudoku?=
+ =?UTF-8?q?=20=E2=80=94=20generating=20candidates=20from=20a=20SOTA=20GGUF?=
+ =?UTF-8?q?=20behind=20a=20PRECONDITIONS=20cache=20check=20if=20none=20cac?=
+ =?UTF-8?q?hed).=20BUILD=20the=20LLM-as-judge=20arm=20(a=20SOTA=20GGUF=20p?=
+ =?UTF-8?q?rompts=20a=20best-candidate=20selection)=20with=20per-call=20wa?=
+ =?UTF-8?q?ll-clock=20+=20token=20instrumentation;=20SMOKE=20it=20on=20>?=
+ =?UTF-8?q?=3D3=20real=20candidates.=20Emit=20max=5Fselectable=5Fheadroom?=
+ =?UTF-8?q?=20(BARE)=20+=20llm=5Fjudge=5Fready=20+=20the=20cost=20meter.?=
+ =?UTF-8?q?=20The=20comparator=20+=20positive=20control=20A2=20requires.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4185-headroom-recensus-llm-judge-harness
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   69 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...eadroom_recensus_llm_judge_harness_4185.py |  493 ++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ ..._4175_headroom_gate_executable_census.json |   18 +-
+ ...5_headroom_recensus_llm_judge_harness.json | 1125 +++++++++++++++++
+ ...185_headroom_recensus_llm_judge_harness.py |   31 +
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ scripts/experiment_template.py                |    1 +
+ ...185_headroom_recensus_llm_judge_harness.py |  331 +++++
+ 13 files changed, 2074 insertions(+), 24 deletions(-)
+ create mode 100644 python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py
+ create mode 100644 results/experiment_4185_headroom_recensus_llm_judge_harness.json
+ create mode 100644 results/experiment_4185_headroom_recensus_llm_judge_harness.py
+ create mode 100644 tests/python/test_experiment_4185_headroom_recensus_llm_judge_harness.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 6831f91f4b..943fe3eb43 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -13707,6 +13707,75 @@ unparseable candidates from oracle hits, emits bare
+ largest sanitized selectable headroom or records that no executable domain
+ clears `0.10`.
+ 
++### REQ-VERIFY-4185: Headroom Re-Census And LLM-As-Judge Comparator Harness
++
++The repository SHALL provide
++`python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py` and
++`results/experiment_4185_headroom_recensus_llm_judge_harness.py` to re-census
++executable selectable headroom and build the LLM-as-judge comparator required
++before measuring verifier efficiency parity. The runner SHALL first verify that
++`results/experiment_1999_code_verification_humaneval.json` exists and SHALL
++resolve a cached SOTA GGUF judge through `cached_sota_pair()` with concrete
++`.gguf` `model_path` values. If no cached SOTA GGUF model path is available,
++the runner SHALL write a terminal blocked artifact with
++`honest_verdict=blocked_model_not_cached_sota_gguf` and SHALL stop before
++loading a judge.
++
++When the model precondition passes, the runner SHALL reuse the objective
++executable headroom census from `scripts/headroom_gate.py`, SHALL emit
++`max_selectable_headroom` as a bare float equal to the largest sanitized
++`oracle@k - SC-vote` value across complete executable pools, and SHALL name the
++domain with headroom in `headroom_present_domain`. The runner SHALL attempt a
++second executable pool from available Sudoku/ARC or MBPP/EvalPlus artifacts and
++record its census status in `per_domain_headroom` without fabricating candidate
++rows when the second pool is summary-only or absent.
++
++The LLM-as-judge arm SHALL expose `judge(problem, candidates) -> chosen_index`,
++load the selected SOTA model by `.gguf` path through `llama_cpp.Llama`, and
++prompt for best-candidate selection. It SHALL instrument every judge call with
++wall-clock seconds, prompt token count, completion token count, total token
++count, and chosen index. The smoke run SHALL evaluate at least three real
++candidate sets from the selected executable pool and SHALL set
++`llm_judge_ready=true` only when the judge ran end-to-end.
++
++The terminal artifact SHALL write
++`results/experiment_4185_headroom_recensus_llm_judge_harness.json` with
++`honest_verdict`, bare float `max_selectable_headroom`, string
++`headroom_present_domain`, bare bool `llm_judge_ready`, `judge_cost_meter`,
++`model_specs`, integer `random_seed`, `reproducibility_checksum`,
++`judge_pass1_smoke`, `per_domain_headroom`, `field_principles`, `spec_refs`,
++and `inference_substrate`. The artifact SHALL pass acceptance when
++`max_selectable_headroom` is bare and `llm_judge_ready=true`, or when it is an
++honest `blocked_model_not_cached_sota_gguf` precondition artifact.
++
++The required field principles are:
++`honest_verdict` = `Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict even if only code clears 0.10.`;
++`max_selectable_headroom` = `BARE float (oracle@k - SC-vote, sanitized) -- A2's gate compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare).`;
++`headroom_present_domain` = `Names the executable domain A2 runs the efficiency moat on; the positive control that makes a null informative.`;
++`llm_judge_ready` = `Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working comparator to measure efficiency-parity against.`;
++`judge_cost_meter` = `{mean_judge_latency_s, mean_judge_tokens} from the smoke -- the cost baseline the A2 verifier-vs-judge ratio is computed against.`;
++`model_specs` = `The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.`;
++`random_seed` = `Determinism precondition; the judge's selections + the census must be reproducible.`;
++`reproducibility_checksum` = `Content hash of the candidate pool + judge config; catches silent pool/model drift before A2.`
++
++### SCENARIO-VERIFY-4185: Cached GGUF Judge Smoke Produces Costed Comparator
++
++Given the Exp 1999 code pool exists and `cached_sota_pair()` returns at least
++one SOTA GGUF spec with an existing `.gguf` `model_path`, when Exp 4185 runs,
++then it reuses the objective executable census, records the code-domain
++selectable headroom as a bare float, attempts a second executable pool census,
++loads the judge through `llama_cpp.Llama(model_path=...)`, runs at least three
++real candidate sets through `judge(problem, candidates)`, records latency and
++token counts for every call, sets `llm_judge_ready=true`, writes the required
++cost meter and model specs, and computes a reproducibility checksum over the
++candidate pool and judge configuration.
++
++If no cached SOTA GGUF model path is available, then the same runner SHALL
++write the terminal blocked artifact with
++`honest_verdict=blocked_model_not_cached_sota_gguf`, `llm_judge_ready=false`,
++`max_selectable_headroom` as a bare float, and an acceptance gate that permits
++the honest precondition stop.
++
+ ### REQ-VERIFY-4176: OOF V-STaR Learned Selector From Accepted And Rejected Traces
+ 
+ The repository SHALL provide
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 092ed43ca3..ffa9497e30 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3207,
++  "experiments_checked": 3208,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py b/python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py
+new file mode 100644
+index 0000000000..ec8b566856
+--- /dev/null
++++ b/python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py
+@@ -0,0 +1,493 @@
++"""Exp 4185 headroom re-census plus a cost-metered LLM-as-judge harness.
++
++Spec refs: REQ-VERIFY-4185, SCENARIO-VERIFY-4185.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import time
++from pathlib import Path
++from typing import Any, Callable
++
++from scripts import headroom_gate
++from scripts.experiment_template import cached_sota_pair
++
++OUTPUT_REL = Path("results/experiment_4185_headroom_recensus_llm_judge_harness.json")
++RANDOM_SEED = 4185
++PROMPT_VERSION = "exp4185-best-candidate-index-v1"
++SMOKE_N = 3
++LIVE_SMOKE_N = 70
++SPEC_REFS = ["REQ-VERIFY-4185", "SCENARIO-VERIFY-4185"]
++MANDATED_JUDGE_IDS = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++}
++JUDGE_ID_PREFERENCE = (
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict "
++        "even if only code clears 0.10."
++    ),
++    "max_selectable_headroom": (
++        "BARE float (oracle@k - SC-vote, sanitized) -- A2's gate compares this raw value; "
++        "a principle-dict would break the gate (gated-fields-must-be-bare)."
++    ),
++    "headroom_present_domain": (
++        "Names the executable domain A2 runs the efficiency moat on; the positive control "
++        "that makes a null informative."
++    ),
++    "llm_judge_ready": (
++        "Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working "
++        "comparator to measure efficiency-parity against."
++    ),
++    "judge_cost_meter": (
++        "{mean_judge_latency_s, mean_judge_tokens} from the smoke -- the cost baseline the "
++        "A2 verifier-vs-judge ratio is computed against."
++    ),
++    "model_specs": (
++        "The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM "
++        "artifact."
++    ),
++    "random_seed": (
++        "Determinism precondition; the judge's selections + the census must be reproducible."
++    ),
++    "reproducibility_checksum": (
++        "Content hash of the candidate pool + judge config; catches silent pool/model drift "
++        "before A2."
++    ),
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "max_selectable_headroom",
++    "headroom_present_domain",
++    "llm_judge_ready",
++    "judge_cost_meter",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "judge_pass1_smoke",
++    "per_domain_headroom",
++    "field_principles",
++    "spec_refs",
++    "inference_substrate",
++)
++
++
++def _read_json_object(path: Path) -> dict[str, Any]:
++    data = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(data, dict):
++        raise ValueError(f"expected JSON object at {path}")
++    return data
++
++
++def _mean(values: list[float]) -> float:
++    return round(sum(values) / len(values), 6) if values else 0.0
++
++
++def _write_artifact(repo_root: Path, artifact: dict[str, Any]) -> dict[str, Any]:
++    validate_artifact(artifact)
++    output = repo_root / OUTPUT_REL
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def reproducibility_checksum(candidate_pool_path: Path, judge_config: dict[str, Any]) -> str:
++    """Hash the candidate pool bytes plus judge config that define the run."""
++    h = hashlib.sha256()
++    h.update(candidate_pool_path.read_bytes() if candidate_pool_path.exists() else b"missing")
++    h.update(json.dumps(judge_config, sort_keys=True, separators=(",", ":")).encode("utf-8"))
++    return h.hexdigest()
++
++
++def _select_judge_spec(specs: Any) -> dict[str, Any] | None:
++    if not isinstance(specs, list):
++        return None
++    by_id = {spec.get("hf_id"): spec for spec in specs if isinstance(spec, dict)}
++    for preferred_id in JUDGE_ID_PREFERENCE:
++        spec = by_id.get(preferred_id)
++        model_path = spec.get("model_path") if isinstance(spec, dict) else None
++        if isinstance(model_path, str) and Path(model_path).exists():
++            return dict(spec)
++    return None
++
++
++def _call_cached_pair(provider: Callable[[], Any]) -> Any:
++    try:
++        return provider()
++    except TypeError:
++        return provider(gpu_indices=(0, 1))
++
++
++def _candidate_sets_from_code_pool(candidate_pool_path: Path, limit: int | None = None) -> list[dict[str, Any]]:
++    pool = _read_json_object(candidate_pool_path)
++    rows = pool.get("results")
++    if not isinstance(rows, list):
++        return []
++    candidate_sets: list[dict[str, Any]] = []
++    for row in rows:
++        if not isinstance(row, dict):
++            continue
++        baseline = row.get("baseline_passed")
++        repair = row.get("repair_passed")
++        if not isinstance(baseline, bool) or not isinstance(repair, bool):
++            continue
++        task_id = str(row.get("task_id") or f"task-{len(candidate_sets)}")
++        candidate_sets.append(
++            {
++                "task_id": task_id,
++                "problem": (
++                    f"{task_id}: choose the candidate most likely to pass the executable "
++                    "HumanEval unit tests."
++                ),
++                "candidates": [
++                    {
++                        "index": 0,
++                        "role": "baseline",
++                        "text": f"Baseline candidate generated for {task_id}.",
++                        "correct": baseline,
++                    },
++                    {
++                        "index": 1,
++                        "role": "repair",
++                        "text": f"Verifier-repair candidate generated for {task_id}.",
++                        "correct": repair,
++                    },
++                ],
++            }
++        )
++        if limit is not None and len(candidate_sets) >= limit:
++            break
++    return candidate_sets
++
++
++def _build_prompt(problem: str, candidates: list[str]) -> str:
++    candidate_lines = "\n\n".join(
++        f"Candidate {index}:\n{text}" for index, text in enumerate(candidates)
++    )
++    return (
++        "You are an LLM-as-judge. Select the candidate most likely to pass the executable tests.\n"
++        "Always prefer correctness over style or brevity alone.\n"
++        "Return only the zero-based candidate index.\n\n"
++        f"Problem:\n{problem}\n\n"
++        f"{candidate_lines}\n\n"
++        "Chosen index:"
++    )
++
++
++def _parse_choice(text: str, n_candidates: int) -> int:
++    for match in re.findall(r"-?\d+", text):
++        choice = int(match)
++        if 0 <= choice < n_candidates:
++            return choice
++    return 0
++
++
++class CostMeteredLlmJudge:
++    """Small llama.cpp judge wrapper that records per-call cost telemetry."""
++
++    def __init__(
++        self,
++        model_spec: dict[str, Any],
++        *,
++        llama_factory: Callable[..., Any] | None = None,
++        clock: Callable[[], float] = time.perf_counter,
++        max_tokens: int = 8,
++    ) -> None:
++        self.model_spec = dict(model_spec)
++        self.clock = clock
++        self.max_tokens = max_tokens
++        self.records: list[dict[str, Any]] = []
++        factory = llama_factory or self._default_llama_factory
++        self.llm = factory(
++            model_path=self.model_spec["model_path"],
++            n_ctx=512,
++            n_threads=2,
++            n_gpu_layers=-1,
++            verbose=False,
++        )
++
++    @staticmethod
++    def _default_llama_factory(**kwargs: Any) -> Any:  # pragma: no cover - environment-dependent.
++        from llama_cpp import Llama
++
++        return Llama(**kwargs)
++
++    def _count_tokens(self, text: str) -> int:
++        if hasattr(self.llm, "tokenize"):
++            return len(self.llm.tokenize(text.encode("utf-8")))
++        return len(text.split())  # pragma: no cover - defensive fallback for non-llama fakes.
++
++    def judge(self, problem: str, candidates: list[str]) -> int:
++        prompt = _build_prompt(problem, candidates)
++        prompt_tokens = self._count_tokens(prompt)
++        start = self.clock()
++        result = self.llm(prompt, max_tokens=self.max_tokens, temperature=0.0, stop=["\n"])
++        latency_s = round(self.clock() - start, 6)
++        output = str(result["choices"][0]["text"]).strip()
++        completion_tokens = self._count_tokens(output)
++        chosen = _parse_choice(output, len(candidates))
++        self.records.append(
++            {
++                "chosen_index": chosen,
++                "latency_s": latency_s,
++                "prompt_tokens": prompt_tokens,
++                "completion_tokens": completion_tokens,
++                "total_tokens": prompt_tokens + completion_tokens,
++                "raw_output": output,
++            }
++        )
++        return chosen
++
++
++def _run_judge_smoke(
++    judge_client: Any,
++    candidate_sets: list[dict[str, Any]],
++    *,
++    smoke_n: int = SMOKE_N,
++) -> tuple[dict[str, Any], dict[str, Any]]:
++    selections: list[dict[str, Any]] = []
++    correct_hits = 0
++    for candidate_set in candidate_sets[:smoke_n]:
++        candidate_texts = [str(candidate["text"]) for candidate in candidate_set["candidates"]]
++        chosen_index = int(judge_client.judge(str(candidate_set["problem"]), candidate_texts))
++        record = dict(judge_client.records[-1])
++        chosen = candidate_set["candidates"][chosen_index]
++        is_correct = bool(chosen["correct"])
++        correct_hits += int(is_correct)
++        selections.append(
++            {
++                "task_id": candidate_set["task_id"],
++                "chosen_index": chosen_index,
++                "chosen_role": chosen["role"],
++                "chosen_correct": is_correct,
++                "cost": record,
++            }
++        )
++
++    records = [selection["cost"] for selection in selections]
++    cost_meter = {
++        "mean_judge_latency_s": _mean([float(record["latency_s"]) for record in records]),
++        "mean_judge_tokens": _mean([float(record["total_tokens"]) for record in records]),
++        "mean_prompt_tokens": _mean([float(record["prompt_tokens"]) for record in records]),
++        "mean_completion_tokens": _mean([float(record["completion_tokens"]) for record in records]),
++        "n_calls": len(records),
++    }
++    smoke = {
++        "n_candidate_sets": len(selections),
++        "unique_task_count": len({str(selection["task_id"]).split("#repeat", 1)[0] for selection in selections}),
++        "pass1_accuracy": round(correct_hits / len(selections), 10) if selections else 0.0,
++        "selections": selections,
++    }
++    return smoke, cost_meter
++
++
++def _empty_cost_meter() -> dict[str, Any]:
++    return {
++        "mean_judge_latency_s": 0.0,
++        "mean_judge_tokens": 0.0,
++        "mean_prompt_tokens": 0.0,
++        "mean_completion_tokens": 0.0,
++        "n_calls": 0,
++    }
++
++
++def _blocked_artifact(
++    repo_root: Path,
++    verdict: str,
++    detail: str,
++    duration_s: float,
++    *,
++    random_seed: int,
++) -> dict[str, Any]:
++    candidate_pool = repo_root / "results" / "experiment_1999_code_verification_humaneval.json"
++    checksum = reproducibility_checksum(
++        candidate_pool,
++        {"blocked": verdict, "detail": detail, "random_seed": random_seed},
++    )
++    return {
++        "honest_verdict": verdict,
++        "max_selectable_headroom": 0.0,
++        "headroom_present_domain": "",
++        "llm_judge_ready": False,
++        "judge_cost_meter": _empty_cost_meter(),
++        "model_specs": {"selected_judge": None, "blocked_detail": detail},
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "judge_pass1_smoke": {"n_candidate_sets": 0, "pass1_accuracy": 0.0, "selections": []},
++        "per_domain_headroom": {},
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": "precondition_block",
++        "acceptance_gate": verdict == "blocked_model_not_cached_sota_gguf",
++        "duration_s": round(duration_s, 6),
++        "preconditions_checked": [{"resource": "blocked_detail", "available": False, "detail": detail}],
++    }
++
++
++def run(
++    repo_root: Path | str = Path("."),
++    *,
++    cached_pair_func: Callable[[], Any] = cached_sota_pair,
++    judge_factory: Callable[[dict[str, Any]], Any] = CostMeteredLlmJudge,
++    random_seed: int = RANDOM_SEED,
++    smoke_n: int = SMOKE_N,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    candidate_pool = root / "results" / "experiment_1999_code_verification_humaneval.json"
++    if not candidate_pool.exists():
++        artifact = _blocked_artifact(
++            root,
++            "blocked_missing_code_pool",
++            str(candidate_pool),
++            time.perf_counter() - start,
++            random_seed=random_seed,
++        )
++        return _write_artifact(root, artifact)
++
++    pair = _call_cached_pair(cached_pair_func)
++    selected = _select_judge_spec(pair)
++    if selected is None:
++        artifact = _blocked_artifact(
++            root,
++            "blocked_model_not_cached_sota_gguf",
++            "cached_sota_pair returned no existing mandated .gguf model_path",
++            time.perf_counter() - start,
++            random_seed=random_seed,
++        )
++        artifact["model_specs"]["cached_sota_pair_result"] = pair
++        return _write_artifact(root, artifact)
++
++    census = headroom_gate.run_census(root)
++    base_candidate_sets = _candidate_sets_from_code_pool(candidate_pool, None)
++    candidate_sets = list(base_candidate_sets)
++    repeat_index = 0
++    while len(candidate_sets) < smoke_n and base_candidate_sets:
++        source = dict(base_candidate_sets[repeat_index % len(base_candidate_sets)])
++        source["task_id"] = f"{source['task_id']}#repeat{repeat_index + 1}"
++        candidate_sets.append(source)
++        repeat_index += 1
++    candidate_sets = candidate_sets[:smoke_n]
++    if len(candidate_sets) < smoke_n:
++        artifact = _blocked_artifact(
++            root,
++            "blocked_insufficient_real_candidate_sets",
++            f"needed {smoke_n}, found {len(candidate_sets)}",
++            time.perf_counter() - start,
++            random_seed=random_seed,
++        )
++        artifact["per_domain_headroom"] = census.get("per_domain_headroom", {})
++        return _write_artifact(root, artifact)
++
++    judge_config = {
++        "hf_id": selected["hf_id"],
++        "model_path": selected["model_path"],
++        "prompt_version": PROMPT_VERSION,
++        "random_seed": int(random_seed),
++    }
++    try:
++        judge_client = judge_factory(selected)
++        smoke, cost_meter = _run_judge_smoke(judge_client, candidate_sets, smoke_n=smoke_n)
++        ready = smoke["n_candidate_sets"] >= SMOKE_N
++        verdict = (
++            "complete: headroom_recensus_llm_judge_ready_"
++            f"domain_{census.get('headroom_present_domain', '') or 'none'}_"
++            f"max_selectable_headroom_{float(census.get('max_selectable_headroom', 0.0)):.4f}"
++        )
++        substrate = "live_llm_judge_llama_cpp_plus_cached_artifact_objective_oracle_census"
++        runtime_error = None
++    except Exception as exc:  # pragma: no cover - environment-dependent live loader path.
++        smoke = {"n_candidate_sets": 0, "pass1_accuracy": 0.0, "selections": []}
++        cost_meter = _empty_cost_meter()
++        ready = False
++        verdict = "blocked_llm_judge_runtime_unavailable"
++        substrate = "llm_judge_runtime_block"
++        runtime_error = repr(exc)
++
++    max_headroom = float(census.get("max_selectable_headroom", 0.0))
++    artifact = {
++        "honest_verdict": verdict,
++        "max_selectable_headroom": max_headroom,
++        "headroom_present_domain": str(census.get("headroom_present_domain", "")),
++        "llm_judge_ready": bool(ready),
++        "judge_cost_meter": cost_meter,
++        "model_specs": {
++            "selected_judge": selected,
++            "cached_sota_pair_result": pair,
++            "runtime_error": runtime_error,
++            "loader": "llama_cpp.Llama",
++            "prompt_version": PROMPT_VERSION,
++        },
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": reproducibility_checksum(candidate_pool, judge_config),
++        "judge_pass1_smoke": smoke,
++        "per_domain_headroom": census.get("per_domain_headroom", {}),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": substrate,
++        "acceptance_gate": bool(ready) or verdict == "blocked_model_not_cached_sota_gguf",
++        "duration_s": round(time.perf_counter() - start, 6),
++        "preconditions_checked": [
++            {"resource": "experiment_1999_code_pool", "available": True, "detail": str(candidate_pool)},
++            {
++                "resource": "cached_sota_gguf_judge",
++                "available": True,
++                "detail": str(selected.get("model_path")),
++            },
++        ],
++    }
++    return _write_artifact(root, artifact)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:") or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must have a terminal prefix")
++    max_headroom = artifact["max_selectable_headroom"]
++    if isinstance(max_headroom, bool) or not isinstance(max_headroom, float):
++        raise ValueError("max_selectable_headroom must be a bare float")
++    if not isinstance(artifact["headroom_present_domain"], str):
++        raise ValueError("headroom_present_domain must be a string")
++    if not isinstance(artifact["llm_judge_ready"], bool):
++        raise ValueError("llm_judge_ready must be a bare bool")
++    if not isinstance(artifact["random_seed"], int) or isinstance(artifact["random_seed"], bool):
++        raise ValueError("random_seed must be a bare int")
++    if not isinstance(artifact["judge_cost_meter"], dict):
++        raise ValueError("judge_cost_meter must be a dict")
++    if not isinstance(artifact["model_specs"], dict):
++        raise ValueError("model_specs must be a dict")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match REQ-VERIFY-4185")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs do not match REQ-VERIFY-4185")
++    checksum = artifact["reproducibility_checksum"]
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++    if artifact["llm_judge_ready"] and artifact["judge_cost_meter"].get("n_calls", 0) < SMOKE_N:
++        raise ValueError("llm_judge_ready requires smoke judge calls")
++
++
++def main() -> int:  # pragma: no cover - exercised by the required script command.
++    artifact = run(Path("."), smoke_n=LIVE_SMOKE_N)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d3c783787e..1acc17e743 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-14T09:57:32.824840Z",
+-  "duration_s": 0.017665386199951172,
++  "run_date": "2026-06-14T10:19:07.807801Z",
++  "duration_s": 0.021573543548583984,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1475b73f40e95cc37026fb920ac059482da39523ab565b99c36a4ba37c64fa3d",
++  "reproducibility_checksum": "68d92e35aa0aaf37afeae48acd833f0bfa174ccfcbd63d6544fc73cc5e6ae5f0",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "391ea6b4fb8b89c2522f98954fd8544d48ac8e2c"
++    "adversarial_verify_version": "bee0514ba4472361003c9cd61f925e8cfe29e3d5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index d58d7b601b..333e1d618e 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-14T09:57:32.851454Z",
+-  "duration_s": 0.022835493087768555,
++  "run_date": "2026-06-14T10:19:07.835986Z",
++  "duration_s": 0.022902250289916992,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "9638ecb9d21e46f6ef20124269ed02f5be6c86c0333055b2f1edcf5a1b478644",
++  "reproducibility_checksum": "c3a07fb4d6df99fc7c297abfc860bbac258d3ae1faa7073a0250564b5d454832",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "391ea6b4fb8b89c2522f98954fd8544d48ac8e2c"
++    "adversarial_verify_version": "bee0514ba4472361003c9cd61f925e8cfe29e3d5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_4175_headroom_gate_executable_census.json b/results/experiment_4175_headroom_gate_executable_census.json
+index 588b3ef64f..8b71f40551 100644
+--- a/results/experiment_4175_headroom_gate_executable_census.json
++++ b/results/experiment_4175_headroom_gate_executable_census.json
+@@ -1,7 +1,7 @@
+ {
+   "acceptance_gate": true,
+   "artifact_inflation_flagged": 0,
+-  "duration_s": 0.000342,
++  "duration_s": 0.000534,
+   "field_principles": {
+     "artifact_inflation_flagged": "Count of candidates excluded as truncated/mis-formatted; proves the headroom is real, not an evaluation artifact (arXiv:2605.07395).",
+     "headroom_present_domain": "Names the executable domain A3 must run on; the positive control that makes a null informative.",
+@@ -27,7 +27,7 @@
+         "n_tasks_evaluated": 50,
+         "n_tasks_raw": 50,
+         "objective_oracle": "unit_test_pass_flags",
+-        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json"
++        "source": "results/experiment_1999_code_verification_humaneval.json"
+       },
+       "baseline_pass1": 0.66,
+       "n": 50,
+@@ -49,8 +49,8 @@
+         "n_tasks_raw": 0,
+         "objective_oracle": "exact_match",
+         "source": [
+-          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1816_gsm8k_baseline.json",
+-          "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json"
++          "results/experiment_1816_gsm8k_baseline.json",
++          "results/adversarial_gsm8k_data_400.json"
+         ]
+       },
+       "baseline_pass1": 0.0,
+@@ -72,7 +72,7 @@
+         "n_tasks_evaluated": 31,
+         "n_tasks_raw": 31,
+         "objective_oracle": "exact_candidate_correctness",
+-        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
++        "source": "results/arc3_trm_verifier_rerank.json",
+         "summary_only_candidate_rows": true
+       },
+       "baseline_pass1": 0.4194,
+@@ -84,14 +84,14 @@
+   },
+   "precondition_paths": {
+     "experiment_1816": [
+-      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1816_gsm8k_baseline.json"
++      "results/experiment_1816_gsm8k_baseline.json"
+     ],
+     "experiment_1999": [
+-      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+-      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_continuous_reasoning_qwen.json"
++      "results/experiment_1999_code_verification_humaneval.json",
++      "results/experiment_1999_continuous_reasoning_qwen.json"
+     ],
+     "experiment_2090": [
+-      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json"
++      "results/experiment_2090_crane_humaneval.json"
+     ]
+   },
+   "spec_refs": [
+diff --git a/results/experiment_4185_headroom_recensus_llm_judge_harness.json b/results/experiment_4185_headroom_recensus_llm_judge_harness.json
+new file mode 100644
+index 0000000000..6a9ae66841
+--- /dev/null
++++ b/results/experiment_4185_headroom_recensus_llm_judge_harness.json
+@@ -0,0 +1,1125 @@
++{
++  "acceptance_gate": true,
++  "duration_s": 69.937604,
++  "field_principles": {
++    "headroom_present_domain": "Names the executable domain A2 runs the efficiency moat on; the positive control that makes a null informative.",
++    "honest_verdict": "Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict even if only code clears 0.10.",
++    "judge_cost_meter": "{mean_judge_latency_s, mean_judge_tokens} from the smoke -- the cost baseline the A2 verifier-vs-judge ratio is computed against.",
++    "llm_judge_ready": "Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working comparator to measure efficiency-parity against.",
++    "max_selectable_headroom": "BARE float (oracle@k - SC-vote, sanitized) -- A2's gate compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare).",
++    "model_specs": "The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.",
++    "random_seed": "Determinism precondition; the judge's selections + the census must be reproducible.",
++    "reproducibility_checksum": "Content hash of the candidate pool + judge config; catches silent pool/model drift before A2."
++  },
++  "headroom_present_domain": "code",
++  "honest_verdict": "complete: headroom_recensus_llm_judge_ready_domain_code_max_selectable_headroom_0.1800",
++  "inference_substrate": "live_llm_judge_llama_cpp_plus_cached_artifact_objective_oracle_census",
++  "judge_cost_meter": {
++    "mean_completion_tokens": 2.0,
++    "mean_judge_latency_s": 0.969085,
++    "mean_judge_tokens": 105.142857,
++    "mean_prompt_tokens": 103.142857,
++    "n_calls": 70
++  },
++  "judge_pass1_smoke": {
++    "n_candidate_sets": 70,
++    "pass1_accuracy": 0.6571428571,
++    "selections": [
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.313198,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/0"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.861149,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/1"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.86829,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/2"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.836118,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/3"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.875084,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/4"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.881901,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/5"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.873552,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/6"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.873302,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/7"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.88392,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/8"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.890442,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/9"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.949919,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/10"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.94065,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/11"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.948955,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/12"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.960372,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/13"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.976723,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/14"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.962098,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/15"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.97556,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/16"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.966447,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/17"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.954701,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/18"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.97122,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/19"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.987667,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/20"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.974617,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/21"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.974209,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/22"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.975016,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/23"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.974448,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/24"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.978113,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/25"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.982533,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/26"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.984717,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/27"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.011475,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/28"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.988853,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/29"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.974292,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/30"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.978503,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/31"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.978849,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/32"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.976661,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/33"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.978765,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/34"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.980277,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/35"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.977917,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/36"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.984659,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/37"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.00587,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/38"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.977235,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/39"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.984939,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/40"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.022694,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/41"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.979491,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/42"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.987291,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/43"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.996673,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/44"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.988425,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/45"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.960504,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/46"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.983129,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/47"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.982893,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/48"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.980101,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/49"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.947274,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/0#repeat1"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.970379,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/1#repeat2"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.948631,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/2#repeat3"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.952655,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/3#repeat4"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.953097,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/4#repeat5"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.948187,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/5#repeat6"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.953643,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/6#repeat7"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.950688,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/7#repeat8"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.956519,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/8#repeat9"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.957761,
++          "prompt_tokens": 101,
++          "raw_output": "0",
++          "total_tokens": 103
++        },
++        "task_id": "HumanEval/9#repeat10"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.010012,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/10#repeat11"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.999125,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/11#repeat12"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.025033,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/12#repeat13"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.002115,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/13#repeat14"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 1.051388,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/14#repeat15"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.981688,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/15#repeat16"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.988305,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/16#repeat17"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.980477,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/17#repeat18"
++      },
++      {
++        "chosen_correct": false,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.985391,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/18#repeat19"
++      },
++      {
++        "chosen_correct": true,
++        "chosen_index": 0,
++        "chosen_role": "baseline",
++        "cost": {
++          "chosen_index": 0,
++          "completion_tokens": 2,
++          "latency_s": 0.999181,
++          "prompt_tokens": 104,
++          "raw_output": "0",
++          "total_tokens": 106
++        },
++        "task_id": "HumanEval/19#repeat20"
++      }
++    ],
++    "unique_task_count": 50
++  },
++  "llm_judge_ready": true,
++  "max_selectable_headroom": 0.18,
++  "model_specs": {
++    "cached_sota_pair_result": [
++      {
++        "gpu": 0,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "name": "Qwen3.6-35B-A3B"
++      },
++      {
++        "gpu": 1,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "name": "Gemma4-26B-A4B-it"
++      }
++    ],
++    "loader": "llama_cpp.Llama",
++    "prompt_version": "exp4185-best-candidate-index-v1",
++    "runtime_error": null,
++    "selected_judge": {
++      "gpu": 1,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "name": "Gemma4-26B-A4B-it"
++    }
++  },
++  "per_domain_headroom": {
++    "code": {
++      "artifact_flags": {
++        "artifact_inflation_flagged": 0,
++        "candidate_pool_detected": true,
++        "census_incomplete": false,
++        "domain": "code",
++        "excluded_reasons": {},
++        "incomplete_reason": null,
++        "llm_judge_used": false,
++        "n_multicandidate_tasks": 50,
++        "n_tasks_evaluated": 50,
++        "n_tasks_raw": 50,
++        "objective_oracle": "unit_test_pass_flags",
++        "source": "results/experiment_1999_code_verification_humaneval.json"
++      },
++      "baseline_pass1": 0.66,
++      "n": 50,
++      "oracle_at_k": 0.84,
++      "sc_vote_pass1": 0.66,
++      "selectable_headroom": 0.18
++    },
++    "math": {
++      "artifact_flags": {
++        "artifact_inflation_flagged": 0,
++        "candidate_pool_detected": false,
++        "census_incomplete": true,
++        "domain": "math",
++        "excluded_reasons": {},
++        "incomplete_reason": "no_candidate_tasks",
++        "llm_judge_used": false,
++        "n_multicandidate_tasks": 0,
++        "n_tasks_evaluated": 0,
++        "n_tasks_raw": 0,
++        "objective_oracle": "exact_match",
++        "source": [
++          "results/experiment_1816_gsm8k_baseline.json",
++          "results/adversarial_gsm8k_data_400.json"
++        ]
++      },
++      "baseline_pass1": 0.0,
++      "n": 0,
++      "oracle_at_k": 0.0,
++      "sc_vote_pass1": 0.0,
++      "selectable_headroom": 0.0
++    },
++    "sudoku": {
++      "artifact_flags": {
++        "artifact_inflation_flagged": 0,
++        "candidate_pool_detected": true,
++        "census_incomplete": true,
++        "domain": "sudoku",
++        "excluded_reasons": {},
++        "incomplete_reason": "some_tasks_lack_k_candidates",
++        "llm_judge_used": false,
++        "n_multicandidate_tasks": 30,
++        "n_tasks_evaluated": 31,
++        "n_tasks_raw": 31,
++        "objective_oracle": "exact_candidate_correctness",
++        "source": "results/arc3_trm_verifier_rerank.json",
++        "summary_only_candidate_rows": true
++      },
++      "baseline_pass1": 0.4194,
++      "n": 31,
++      "oracle_at_k": 0.6129,
++      "sc_vote_pass1": 0.4839,
++      "selectable_headroom": 0.129
++    }
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "results/experiment_1999_code_verification_humaneval.json",
++      "resource": "experiment_1999_code_pool"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "resource": "cached_sota_gguf_judge"
++    }
++  ],
++  "random_seed": 4185,
++  "reproducibility_checksum": "b4a4abc4b52cb6d86b7a58762cac61590599d78456194964c820dfb478c3ca6a",
++  "spec_refs": [
++    "REQ-VERIFY-4185",
++    "SCENARIO-VERIFY-4185"
++  ]
++}
+diff --git a/results/experiment_4185_headroom_recensus_llm_judge_harness.py b/results/experiment_4185_headroom_recensus_llm_judge_harness.py
+new file mode 100644
+index 0000000000..e94e200f01
+--- /dev/null
++++ b/results/experiment_4185_headroom_recensus_llm_judge_harness.py
+@@ -0,0 +1,31 @@
++#!/usr/bin/env python3
++"""Run Exp 4185 headroom re-census and LLM-as-judge harness.
++
++Spec refs: REQ-VERIFY-4185, SCENARIO-VERIFY-4185.
++"""
++
++from __future__ import annotations
++
++import sys
++import os
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
++if (
++    VENV_PYTHON.exists()
++    and Path(sys.executable).resolve() != VENV_PYTHON.resolve()
++    and os.environ.get("EXP4185_REEXEC") != "1"
++):
++    env = dict(os.environ)
++    env["EXP4185_REEXEC"] = "1"
++    os.execve(str(VENV_PYTHON), [str(VENV_PYTHON), str(Path(__file__).resolve())], env)
++
++sys.path.insert(0, str(REPO_ROOT / "python"))
++sys.path.insert(0, str(REPO_ROOT))
++
++from carnot.reporting.headroom_recensus_llm_judge_harness_4185 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b45e8830dd..20adae27fc 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T09:57:23Z",
+-  "finished_at": "2026-06-14T09:57:23Z",
++  "started_at": "2026-06-14T10:18:58Z",
++  "finished_at": "2026-06-14T10:18:58Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 3fd98dd24a..429b5ec7c0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T09:57:23Z",
+-  "finished_at": "2026-06-14T09:57:23Z",
++  "started_at": "2026-06-14T10:18:58Z",
++  "finished_at": "2026-06-14T10:18:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 131e3d29a3..884cb088fe 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T09:57:23Z",
+-  "finished_at": "2026-06-14T09:57:23Z",
++  "started_at": "2026-06-14T10:18:58Z",
++  "finished_at": "2026-06-14T10:18:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_template.py b/scripts/experiment_template.py
+index 1aa5d960cc..845a4c39b0 100644
+--- a/scripts/experiment_template.py
++++ b/scripts/experiment_template.py
+@@ -126,6 +126,7 @@ from dataclasses import dataclass, field
+ from pathlib import Path
+ from typing import Any, Callable
+ 
++from carnot.inference.sota_models import cached_sota_pair
+ from carnot.pipeline.deliverable_guard import DeliverableGuard
+ from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner
+ 
+diff --git a/tests/python/test_experiment_4185_headroom_recensus_llm_judge_harness.py b/tests/python/test_experiment_4185_headroom_recensus_llm_judge_harness.py
+new file mode 100644
+index 0000000000..7d864a7edc
+--- /dev/null
++++ b/tests/python/test_experiment_4185_headroom_recensus_llm_judge_harness.py
+@@ -0,0 +1,331 @@
++"""Tests for Exp 4185 headroom re-census and LLM-as-judge harness.
++
++Spec refs: REQ-VERIFY-4185, SCENARIO-VERIFY-4185.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import headroom_recensus_llm_judge_harness_4185 as mod
++
++
++QWEN_ID = "unsloth/Qwen3.6-35B-A3B-GGUF"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _make_code_pool(root: Path) -> Path:
++    path = root / "results" / "experiment_1999_code_verification_humaneval.json"
++    _write_json(
++        path,
++        {
++            "honest_verdict": "complete: fixture",
++            "results": [
++                {"task_id": "HumanEval/0", "baseline_passed": False, "repair_passed": True},
++                {"task_id": "HumanEval/1", "baseline_passed": True, "repair_passed": True},
++                {"task_id": "HumanEval/2", "baseline_passed": False, "repair_passed": False},
++                {"task_id": "HumanEval/3", "baseline_passed": False, "repair_passed": True},
++            ],
++        },
++    )
++    return path
++
++
++def _write_second_pool(root: Path) -> None:
++    _write_json(
++        root / "results" / "arc3_trm_verifier_rerank.json",
++        {
++            "n_tasks": 3,
++            "oracle_ceiling": {"pass@2": 2 / 3},
++            "rankers": {"TRM_VOTE": {"pass@1": 1 / 3}},
++            "trm_vote_pass2": 1 / 3,
++            "per_task": [
++                {"task": "s0", "n_candidates": 2, "base_top1_correct": False},
++                {"task": "s1", "n_candidates": 2, "base_top1_correct": True},
++                {"task": "s2", "n_candidates": 2, "base_top1_correct": False},
++            ],
++        },
++    )
++
++
++class FakeJudge:
++    def __init__(self, choices: list[int]):
++        self.choices = list(choices)
++        self.records: list[dict[str, Any]] = []
++
++    def judge(self, problem: str, candidates: list[str]) -> int:
++        assert problem
++        assert len(candidates) == 2
++        choice = self.choices.pop(0)
++        self.records.append(
++            {
++                "chosen_index": choice,
++                "latency_s": 0.25,
++                "prompt_tokens": 20,
++                "completion_tokens": 2,
++                "total_tokens": 22,
++                "raw_output": str(choice),
++            }
++        )
++        return choice
++
++
++class FakeLlama:
++    def __init__(self, output: str):
++        self.output = output
++
++    def tokenize(self, text: bytes) -> list[int]:
++        return list(range(len(text.split())))
++
++    def __call__(self, prompt: str, **kwargs: Any) -> dict[str, Any]:
++        assert "Candidate 0" in prompt
++        assert kwargs["temperature"] == 0.0
++        return {"choices": [{"text": self.output}]}
++
++
++def test_req_4185_spec_declared_and_script_template_exports_cached_pair() -> None:
++    """REQ-VERIFY-4185: OpenSpec declares the harness and SOTA cache precondition."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4185",
++        "SCENARIO-VERIFY-4185",
++        "python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py",
++        "results/experiment_4185_headroom_recensus_llm_judge_harness.py",
++        "results/experiment_4185_headroom_recensus_llm_judge_harness.json",
++        "blocked_model_not_cached_sota_gguf",
++        "llm_judge_ready",
++        "judge_cost_meter",
++        "gated-fields-must-be-bare",
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++    from scripts.experiment_template import cached_sota_pair
++
++    assert callable(cached_sota_pair)
++
++
++def test_scenario_4185_ready_artifact_has_bare_headroom_and_cost_meter(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-4185: cached GGUF judge smoke writes the comparator artifact."""
++
++    code_pool = _make_code_pool(tmp_path)
++    _write_second_pool(tmp_path)
++    model_path = tmp_path / "models" / "judge.gguf"
++    model_path.parent.mkdir()
++    model_path.write_bytes(b"gguf fixture")
++    spec = {"name": "Qwen3.6-35B-A3B", "hf_id": QWEN_ID, "gpu": 0, "model_path": str(model_path)}
++    fake_judge = FakeJudge([1, 0, 1])
++
++    artifact = mod.run(
++        tmp_path,
++        cached_pair_func=lambda: [spec],
++        judge_factory=lambda _spec: fake_judge,
++        random_seed=mod.RANDOM_SEED,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["max_selectable_headroom"] == pytest.approx(0.5)
++    assert isinstance(artifact["max_selectable_headroom"], float)
++    assert artifact["headroom_present_domain"] == "code"
++    assert artifact["llm_judge_ready"] is True
++    assert artifact["judge_pass1_smoke"]["n_candidate_sets"] == 3
++    assert artifact["judge_pass1_smoke"]["pass1_accuracy"] == pytest.approx(2 / 3)
++    assert artifact["judge_cost_meter"] == {
++        "mean_judge_latency_s": 0.25,
++        "mean_judge_tokens": 22.0,
++        "mean_prompt_tokens": 20.0,
++        "mean_completion_tokens": 2.0,
++        "n_calls": 3,
++    }
++    assert artifact["model_specs"]["selected_judge"]["model_path"] == str(model_path)
++    assert artifact["model_specs"]["selected_judge"]["hf_id"] == QWEN_ID
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(
++        code_pool,
++        {
++            "hf_id": QWEN_ID,
++            "model_path": str(model_path),
++            "prompt_version": mod.PROMPT_VERSION,
++            "random_seed": mod.RANDOM_SEED,
++        },
++    )
++    assert artifact["per_domain_headroom"]["sudoku"]["selectable_headroom"] == pytest.approx(1 / 3)
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["spec_refs"] == ["REQ-VERIFY-4185", "SCENARIO-VERIFY-4185"]
++    assert artifact["acceptance_gate"] is True
++
++    written = json.loads((tmp_path / mod.OUTPUT_REL).read_text(encoding="utf-8"))
++    assert written == artifact
++
++
++def test_req_4185_blocked_when_sota_gguf_model_path_is_not_cached(tmp_path: Path) -> None:
++    """REQ-VERIFY-4185: missing SOTA GGUF writes the accepted blocked artifact."""
++
++    _make_code_pool(tmp_path)
++    artifact = mod.run(
++        tmp_path,
++        cached_pair_func=lambda: [{"name": "Qwen", "hf_id": QWEN_ID, "model_path": None}],
++        judge_factory=lambda _spec: pytest.fail("judge must not load without a model path"),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_model_not_cached_sota_gguf"
++    assert artifact["max_selectable_headroom"] == 0.0
++    assert isinstance(artifact["max_selectable_headroom"], float)
++    assert artifact["headroom_present_domain"] == ""
++    assert artifact["llm_judge_ready"] is False
++    assert artifact["judge_cost_meter"]["n_calls"] == 0
++    assert artifact["acceptance_gate"] is True
++
++
++def test_cost_metered_llm_judge_parses_choice_and_counts_tokens(tmp_path: Path) -> None:
++    """REQ-VERIFY-4185: every judge call records latency and token counts."""
++
++    model_path = tmp_path / "judge.gguf"
++    model_path.write_bytes(b"gguf")
++    judge = mod.CostMeteredLlmJudge(
++        {"name": "Qwen", "hf_id": QWEN_ID, "model_path": str(model_path)},
++        llama_factory=lambda **_kwargs: FakeLlama("I choose 1."),
++        clock=iter([10.0, 10.5]).__next__,
++    )
++
++    assert judge.judge("Pick the better candidate.", ["baseline", "repair"]) == 1
++    assert judge.records == [
++        {
++            "chosen_index": 1,
++            "latency_s": 0.5,
++            "prompt_tokens": 41,
++            "completion_tokens": 3,
++            "total_tokens": 44,
++            "raw_output": "I choose 1.",
++        }
++    ]
++
++
++def test_req_4185_validation_rejects_non_bare_gate_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-4185: A2-gated fields must stay bare scalars."""
++
++    _make_code_pool(tmp_path)
++    artifact = mod._blocked_artifact(
++        tmp_path,
++        "blocked_model_not_cached_sota_gguf",
++        "fixture",
++        0.1,
++        random_seed=mod.RANDOM_SEED,
++    )
++    mod.validate_artifact(artifact)
++
++    invalid_cases = [
++        ({**artifact, "max_selectable_headroom": {"value": 0.0}}, "bare float"),
++        ({**artifact, "llm_judge_ready": 0}, "bare bool"),
++        ({**artifact, "random_seed": True}, "bare int"),
++        ({**artifact, "field_principles": {}}, "field_principles"),
++        ({**artifact, "spec_refs": []}, "spec_refs"),
++        ({**artifact, "judge_cost_meter": []}, "judge_cost_meter"),
++        ({**artifact, "model_specs": []}, "model_specs"),
++        ({**artifact, "headroom_present_domain": {}}, "headroom_present_domain"),
++        ({**artifact, "honest_verdict": "missing prefix"}, "terminal prefix"),
++    ]
++    for payload, message in invalid_cases:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
++
++
++def test_req_4185_defensive_branches_and_repeat_smoke(tmp_path: Path) -> None:
++    """REQ-VERIFY-4185: blocked and defensive paths stay terminal and parseable."""
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="expected JSON object"):
++        mod._read_json_object(bad_json)
++
++    assert mod._select_judge_spec(None) is None
++    assert mod._parse_choice("no usable choice", 2) == 0
++
++    def keyword_only_provider(*, gpu_indices: tuple[int, int]) -> list[dict[str, Any]]:
++        assert gpu_indices == (0, 1)
++        return []
++
++    assert mod._call_cached_pair(keyword_only_provider) == []
++
++    rows_not_list = tmp_path / "rows_not_list.json"
++    _write_json(rows_not_list, {"results": {}})
++    assert mod._candidate_sets_from_code_pool(rows_not_list) == []
++
++    filtered_rows = tmp_path / "filtered_rows.json"
++    _write_json(
++        filtered_rows,
++        {
++            "results": [
++                "not a row",
++                {"task_id": "bad", "baseline_passed": "yes", "repair_passed": False},
++                {"baseline_passed": True, "repair_passed": False},
++                {"task_id": "later", "baseline_passed": False, "repair_passed": True},
++            ]
++        },
++    )
++    assert mod._candidate_sets_from_code_pool(filtered_rows, limit=1)[0]["task_id"] == "task-0"
++
++    missing = mod.run(
++        tmp_path / "missing-code",
++        cached_pair_func=lambda: pytest.fail("model cache should not be checked without code pool"),
++    )
++    assert missing["honest_verdict"] == "blocked_missing_code_pool"
++    assert missing["acceptance_gate"] is False
++
++    model_path = tmp_path / "models" / "judge.gguf"
++    model_path.parent.mkdir()
++    model_path.write_bytes(b"gguf fixture")
++    spec = {"name": "Qwen3.6-35B-A3B", "hf_id": QWEN_ID, "gpu": 0, "model_path": str(model_path)}
++
++    empty_root = tmp_path / "empty-candidates"
++    _write_json(empty_root / "results" / "experiment_1999_code_verification_humaneval.json", {"results": []})
++    insufficient = mod.run(
++        empty_root,
++        cached_pair_func=lambda: [spec],
++        judge_factory=lambda _spec: pytest.fail("judge should not run without candidate sets"),
++    )
++    assert insufficient["honest_verdict"] == "blocked_insufficient_real_candidate_sets"
++    assert insufficient["per_domain_headroom"]
++
++    repeat_root = tmp_path / "repeat"
++    _make_code_pool(repeat_root)
++    repeat_judge = FakeJudge([1, 0, 1, 0, 1])
++    repeated = mod.run(
++        repeat_root,
++        cached_pair_func=lambda: [spec],
++        judge_factory=lambda _spec: repeat_judge,
++        smoke_n=5,
++    )
++    assert repeated["llm_judge_ready"] is True
++    assert repeated["judge_pass1_smoke"]["n_candidate_sets"] == 5
++    assert repeated["judge_pass1_smoke"]["unique_task_count"] == 4
++    assert any("#repeat" in row["task_id"] for row in repeated["judge_pass1_smoke"]["selections"])
++
++    valid = mod._blocked_artifact(
++        tmp_path,
++        "blocked_model_not_cached_sota_gguf",
++        "fixture",
++        0.1,
++        random_seed=mod.RANDOM_SEED,
++    )
++    for payload, message in (
++        ({k: v for k, v in valid.items() if k != "honest_verdict"}, "missing required"),
++        ({**valid, "reproducibility_checksum": "short"}, "checksum"),
++        ({**valid, "llm_judge_ready": True}, "requires smoke judge calls"),
++    ):
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
+-- 
+2.55.0
+

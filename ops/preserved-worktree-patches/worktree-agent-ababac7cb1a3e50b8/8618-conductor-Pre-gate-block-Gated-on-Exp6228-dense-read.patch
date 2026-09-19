@@ -1,0 +1,77 @@
+From 628a3cbf97b93d066ca2f8e69db5b19d684368fc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 08:53:38 -0400
+Subject: [PATCH 08618/11362] [conductor] Pre-gate block: Gated on Exp6228
+ dense readiness: de-confounded Gemma think determination
+
+1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-endurance.gemma_4_31b_runtime_ready_score (actual=None == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._6229_arc_gemma31_think_determination.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6229_arc_gemma31_think_determination.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 296462ba44..4a12493c45 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-09T12:05:56Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-09T12:53:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e8c24482cf..8b489dc805 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15542,3 +15542,4 @@ Still active  |
+ | 2026-08-09 11:28 UTC | Llama-server signal-sender and unbounded-wait diag | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:   }
+ +          |
+ | 2026-08-09 12:03 UTC | Llama-server signal-sender and unbounded-wait diag | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-09 12:51 UTC | Supervised three-family GGUF runtime endurance and | OK | 90 passed, 1 warning in 9.34s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5b2bd36bd6..2e1e9b9776 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-09T12:05:56Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-09T12:53:38Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6229_arc_gemma31_think_determination.json b/results/experiment_6229_arc_gemma31_think_determination.json
+new file mode 100644
+index 0000000000..9fff874436
+--- /dev/null
++++ b/results/experiment_6229_arc_gemma31_think_determination.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6229,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-09",
++  "started_at": "2026-08-09T12:53:38.749505+00:00",
++  "finished_at": "2026-08-09T12:53:38.749505+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6228 dense readiness: de-confounded Gemma think determination",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-endurance.gemma_4_31b_runtime_ready_score (actual=None == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6228-supervised-three-family-runtime-endurance",
++      "artifact_field": "gemma_4_31b_runtime_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": null,
++      "passed": false,
++      "reason": "actual=None == expected=1"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

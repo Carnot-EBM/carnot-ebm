@@ -1,0 +1,1900 @@
+From 8ad9dfd962feb106d81dda49292cd0bd0f3077dd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 03:48:36 -0400
+Subject: [PATCH 11188/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.arc_bench_rotation.json              |   2 +-
+ ops/arc_bench_latest.json                 |  68 +--
+ ops/arc_flag_ledger.yaml                  |   4 +
+ ops/arc_self_solve_audit_report.md        |  25 +-
+ ops/artifact_convention_audit_report.md   | 128 +----
+ ops/conductor-heartbeat.json              |   2 +-
+ ops/conductor-log.md                      |   2 +
+ ops/conductor-state.json                  |   2 +-
+ ops/experiment_claim_audit_report.md      | 227 +++-----
+ ops/qa_layer_authenticity_audit_report.md | 484 ++++++++--------
+ ops/verifier_authenticity_audit_report.md | 653 ++++++----------------
+ 11 files changed, 544 insertions(+), 1053 deletions(-)
+
+diff --git a/ops/.arc_bench_rotation.json b/ops/.arc_bench_rotation.json
+index 03032af463..b3acc66918 100644
+--- a/ops/.arc_bench_rotation.json
++++ b/ops/.arc_bench_rotation.json
+@@ -1,4 +1,4 @@
+ {
+   "roster_signature": "cfc9b7268c8eeff9",
+-  "offset": 10
++  "offset": 18
+ }
+\ No newline at end of file
+diff --git a/ops/arc_bench_latest.json b/ops/arc_bench_latest.json
+index 26b12b7b98..7c973e0ef6 100644
+--- a/ops/arc_bench_latest.json
++++ b/ops/arc_bench_latest.json
+@@ -9,83 +9,83 @@
+   "held_out_caveat": "These are the 25 PUBLIC games with their hand-written GameAdapter bypassed. Disabling the adapter removes the hand-written route, not the knowledge that produced it, so this is a proxy for hidden-game performance and not a hidden-game result.",
+   "per_game_rows": [
+     {
+-      "game": "cd82",
++      "game": "ls20",
+       "adapter_used": false,
+       "levels_cleared": 1,
+-      "actions_spent": 3199,
+-      "solution_len": 5,
+-      "wall_s": 1.38,
++      "actions_spent": 17197,
++      "solution_len": 13,
++      "wall_s": 11.35,
+       "error": null
+     },
+     {
+-      "game": "cn04",
++      "game": "m0r0",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 12477,
++      "actions_spent": 22624,
+       "solution_len": 0,
+-      "wall_s": 3.28,
++      "wall_s": 5.71,
+       "error": null
+     },
+     {
+-      "game": "dc22",
++      "game": "r11l",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 11737,
++      "actions_spent": 8155,
+       "solution_len": 0,
+-      "wall_s": 5.28,
++      "wall_s": 3.58,
+       "error": null
+     },
+     {
+-      "game": "ft09",
++      "game": "re86",
+       "adapter_used": false,
+-      "levels_cleared": 1,
+-      "actions_spent": 8768,
+-      "solution_len": 4,
+-      "wall_s": 3.17,
++      "levels_cleared": 0,
++      "actions_spent": 16555,
++      "solution_len": 0,
++      "wall_s": 4.41,
+       "error": null
+     },
+     {
+-      "game": "g50t",
++      "game": "s5i5",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 74700,
++      "actions_spent": 15051,
+       "solution_len": 0,
+-      "wall_s": 42.47,
++      "wall_s": 3.45,
+       "error": null
+     },
+     {
+-      "game": "ka59",
++      "game": "sb26",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 13855,
++      "actions_spent": 11804,
+       "solution_len": 0,
+-      "wall_s": 4.29,
++      "wall_s": 8.34,
+       "error": null
+     },
+     {
+-      "game": "lf52",
++      "game": "sc25",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 16693,
++      "actions_spent": 24,
+       "solution_len": 0,
+-      "wall_s": 13.33,
++      "wall_s": 0.08,
+       "error": null
+     },
+     {
+-      "game": "lp85",
++      "game": "sk48",
+       "adapter_used": false,
+-      "levels_cleared": 1,
+-      "actions_spent": 1159,
+-      "solution_len": 5,
+-      "wall_s": 0.4,
++      "levels_cleared": 0,
++      "actions_spent": 17897,
++      "solution_len": 0,
++      "wall_s": 6.26,
+       "error": null
+     }
+   ],
+   "games_run": 8,
+   "games_errored": 0,
+-  "games_cleared_at_least_one_level": 3,
+-  "total_levels_cleared": 3,
+-  "total_actions_spent": 142588,
+-  "clear_rate": 0.375,
+-  "actions_per_level_cleared": 47529.3
++  "games_cleared_at_least_one_level": 1,
++  "total_levels_cleared": 1,
++  "total_actions_spent": 109307,
++  "clear_rate": 0.125,
++  "actions_per_level_cleared": 109307.0
+ }
+\ No newline at end of file
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index 259cdac20c..4b1a3d237d 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -198,6 +198,10 @@ flags:
+     discovered: '2026-08-14'
+     evidence: []
+     state: unevaluated
++  CARNOT_ARC_EVAL_LEASE_JSON:
++    discovered: '2026-09-05'
++    evidence: []
++    state: unevaluated
+   CARNOT_ARC_EXPLORE_DIVERSITY:
+     discovered: '2026-08-14'
+     evidence: []
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index e1b00e617f..871479d2c9 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
+ ### Live-path reachability
+ ```
+ (exit 0)
+-OK: all solver-like ARC modules are reachable from the live agent path (84 modules in the live closure).
++OK: all solver-like ARC modules are reachable from the live agent path (85 modules in the live closure).
+ ```
+ 
+ ### Recent solve artifacts -- mechanical findings
+@@ -16,13 +16,16 @@ OK: all solver-like ARC modules are reachable from the live agent path (84 modul
+ 
+ ## Hostile LLM review
+ 
+-**TL;DR: REJECT — `DUPLICATE`, with clear `OUTER_LOOP_RE` provenance laundering. Zero live-agent capability advance.**
+-
+-### `results/arc_loop_solve_r11l.json`
+-
+-- **Verdict:** `DUPLICATE`
+-- **Evidence:** Claims only r11l L1 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)), while the registry already records a reproduced six-level full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Its reachable generator uses `offline_arcade()` and blind graph/BFS exploration ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:252)), expressly forbidden outer-loop methodology. The evidence is merely a three-action offline trajectory—no live attempt/observation transcript—while the code hard-codes `live_agent_self_discovery` ([provenance assignment](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:349)). Git history originally introduced this solve under an `[outer-loop]` commit.
+-- **Recommended action:** Award zero capability credit. Relabel `OUTER_LOOP_RE`/`development_proxy`; do not promote. Require a replayable live-agent receipt showing autonomous progress beyond registered L6.
+-
+-**Pattern watch:** A nominally reachable entrypoint is laundering offline BFS into “live self-discovery.” Reachability, adapter-freedom, and a hard-coded provenance string prove nothing; promotion must require live execution receipts and a positive registry delta.
+-
++(LLM review unavailable: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhigh
++reasoning summaries: none
++session id: 01a07083-f06d-75f3-84a3-2e768eae546f
++--------
++user
++You are a HOSTILE revie)
+diff --git a/ops/artifact_convention_audit_report.md b/ops/artifact_convention_audit_report.md
+index 3124773d76..3d192c8729 100644
+--- a/ops/artifact_convention_audit_report.md
++++ b/ops/artifact_convention_audit_report.md
+@@ -9,134 +9,52 @@ evidence the reviewer could not have read -- do NOT act on them.
+ 
+ | verdict | count |
+ |---|---|
+-| CHECKABLE | 5 |
+-| AGGREGATE_ONLY | 1 |
+-| CANNOT_DETERMINE | 2 |
++| CANNOT_DETERMINE | 8 |
+ 
+-## experiment_6995_v612_capstone.json
+-
+-**CHECKABLE**
+-
+-## VERDICT
+-CHECKABLE
+-
+-## WHAT THE CLAIM IS
+-The roadmap gate audit passed, with blocked tasks carrying explicit diagnostics and no model-quality or solve claim being made.
+-
+-## WHAT IS MISSING
+-nothing
+-
+-## THE CHECK A READER CANNOT DO
+-none
+-
+-## experiment_6996_v613_source_contract_preflight.json
+-
+-**CHECKABLE**
+-
+-## VERDICT
+-CHECKABLE
+-
+-## WHAT THE CLAIM IS
+-The V613 source delta is complete and its 13-task contract conforms.
+-
+-## WHAT IS MISSING
+-nothing
+-
+-## THE CHECK A READER CANNOT DO
+-none
+-
+-## experiment_6997_authority_sidecar_rebuild.json
+-
+-**CHECKABLE**
+-
+-## VERDICT
+-CHECKABLE
+-
+-## WHAT THE CLAIM IS
+-The recorded integrity checks passed and the blinded learner view is ready.
+-
+-## WHAT IS MISSING
+-nothing
+-
+-## THE CHECK A READER CANNOT DO
+-none
+-
+-## experiment_6998_three_family_commitment_controls.json
++## experiment_6968_arc_post_refit_induction_audit.json
+ 
+ **CANNOT_DETERMINE**
+ 
+-## VERDICT
+-CANNOT_DETERMINE
+-
+-## WHAT THE CLAIM IS
+-The visible portion claims pooled mean effects of −0.02778 for `true_provenance_hint_minus_clean` and +0.01736 for `permuted_decoy_hint_minus_clean`.
+-
+-## WHAT IS MISSING
+-The artifact is truncated mid-`choice_flip_rows`, so its verdict and any later per-unit rows underlying `bootstrap_interval_rows.mean` are unavailable; the visible `choice_flip_rows` records only `choice_flip_count` and does not link that metric to the reported means.
+-
+-## THE CHECK A READER CANNOT DO
+-A reader cannot recompute the two pooled means from all 36 unit-level observations or determine whether omitted rows make the comparison checkable.
+-
+-## experiment_6999_blinded_feature_cold_audit.json
+-
+-**CHECKABLE**
++reviewer call failed
+ 
+-## VERDICT
+-CHECKABLE
++## experiment_7009_v614_source_contract_preflight.json
+ 
+-## WHAT THE CLAIM IS
+-The artifact records a `blinded_feature_bank_ready_score` of 0.
+-
+-## WHAT IS MISSING
+-nothing
++**CANNOT_DETERMINE**
+ 
+-## THE CHECK A READER CANNOT DO
+-none
++reviewer call failed
+ 
+-## experiment_7000_certified_blinded_pwa_kan.json
++## experiment_7010_arc_eval_provenance_contract.json
+ 
+-**CHECKABLE**
++**CANNOT_DETERMINE**
+ 
+-## VERDICT
+-CHECKABLE
++reviewer call failed
+ 
+-## WHAT THE CLAIM IS
+-The experiment was blocked because `exp6999-blinded-feature-cold-audit.blinded_feature_bank_ready_score` was 0 but was required to equal 1.
++## experiment_7011_v614_sota_ingestion.json
+ 
+-## WHAT IS MISSING
+-nothing
++**CANNOT_DETERMINE**
+ 
+-## THE CHECK A READER CANNOT DO
+-none
++reviewer call failed
+ 
+-## experiment_7005_arc_live_envelope_audit.json
++## experiment_7012_exact_intervention_pair_fixture.json
+ 
+ **CANNOT_DETERMINE**
+ 
+-## VERDICT
+-CANNOT_DETERMINE
++reviewer call failed
+ 
+-## WHAT THE CLAIM IS
+-`bootstrap_interval_rows` claims the engine improved mean paired error versus two controls.
++## experiment_7013_three_family_intervention_surface.json
+ 
+-## WHAT IS MISSING
+-The artifact is truncated inside `engine_score_rows`; the complete per-transition control scores or paired-error rows, plus any final verdict or `gate_check_summary`, cannot be found.
++**CANNOT_DETERMINE**
+ 
+-## THE CHECK A READER CANNOT DO
+-Were the reported mean improvements broad across transitions, or driven by one outlier?
++reviewer call failed
+ 
+-## experiment_7008_v613_capstone.json
++## experiment_7014_causal_feature_cold_audit.json
+ 
+-**AGGREGATE_ONLY**
++**CANNOT_DETERMINE**
+ 
+-## VERDICT
+-AGGREGATE_ONLY
++reviewer call failed
+ 
+-## WHAT THE CLAIM IS
+-The V613 capstone is a complete null with no oracle-distinct science-positive result, including the claim that the ARC engine did not beat both controls.
++## experiment_7015_pair_centered_pwa_kan.json
+ 
+-## WHAT IS MISSING
+-Per-transition or per-unit metric rows underlying the aggregate `"arc_quality_rows"` and `"commitment_control_rows"`; only summary fields such as `"exact_next_frame_accuracy"`, `"calibrated_frame_error"`, `"mean"`, and `"sample_count"` are present.
++**CANNOT_DETERMINE**
+ 
+-## THE CHECK A READER CANNOT DO
+-Were the comparative null results broad across held-out transitions and samples, or caused by a few outliers, degenerate controls, or units with no headroom?
++reviewer call failed
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1bab6f1f35..2c5d25c0bc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-09-05T07:33:29Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-09-05T07:44:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e41f4dcb88..d5d61c41c1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17313,3 +17313,5 @@ code |
+ | 2026-09-05 07:26 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
+ | 2026-09-05 07:28 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
+ | 2026-09-05 07:31 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
++| 2026-09-05 07:38 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
++| 2026-09-05 07:42 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0458cb9e52..3a3856d309 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 7, "phase": "iteration_start", "started_at": "2026-09-05T07:33:29Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 8, "phase": "iteration_start", "started_at": "2026-09-05T07:44:36Z"}
+\ No newline at end of file
+diff --git a/ops/experiment_claim_audit_report.md b/ops/experiment_claim_audit_report.md
+index e08e5b5e91..8359389e0a 100644
+--- a/ops/experiment_claim_audit_report.md
++++ b/ops/experiment_claim_audit_report.md
+@@ -11,181 +11,100 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
+ 
+ | verdict | count |
+ |---|---|
+-| CLAIM_SUPPORTED | 6 |
+-| NO_CLAIM | 2 |
++| CANNOT_DETERMINE | 8 |
+ 
+-## experiment_6995_v612_capstone.json
++## experiment_6968_arc_post_refit_induction_audit.json
+ 
+-**CLAIM_SUPPORTED**
++**CANNOT_DETERMINE**
+ 
+-## VERDICT
+-CLAIM_SUPPORTED
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## THE HEADLINE CLAIM
+-The V612 capstone is complete but contains no cold-audited scientific positive.
++## experiment_7009_v614_source_contract_preflight.json
+ 
+-## WHAT WOULD REFUTE IT
+-Any eligible branch showing both a positive learned result and its required cold audit confirmed, producing a science-positive score of 1, would refute the claim.
++**CANNOT_DETERMINE**
+ 
+-## WAS THAT CHECKED
+-Yes. The capstone’s explicit cold-audited science-positive gate checked all 12 terminal tasks and failed with an observed score of 0; branch rows also record absent cold-audit confirmation and no science positive. Circular oracle-derived positives were correctly denied science credit.
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## EVIDENCE
+-`honest_verdict` `complete_null_v612_capstone_no_cold_audited_science_positive` `v612_capstone_complete_score` `1` `v612_science_positive_score` `0` `failed_check` `cold_audited_v612_science_positive` `expected_value` `1` `observed_value` `0` `passed` `false` `terminal_task_count` `12` `science_positive` `false` `required_cold_audit_confirmed` `false` `verifier_is_oracle` `true` `science_credit` `false` `verdict_class` `null`
++## experiment_7010_arc_eval_provenance_contract.json
+ 
+-## RECOMMENDATION
+-KEEP
++**CANNOT_DETERMINE**
+ 
+-## experiment_6996_v613_source_contract_preflight.json
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-**CLAIM_SUPPORTED**
++## experiment_7011_v614_sota_ingestion.json
+ 
+-## VERDICT
+-CLAIM_SUPPORTED
++**CANNOT_DETERMINE**
+ 
+-## THE HEADLINE CLAIM
+-All requested V613 source routes produced terminal receipts, and the 13-task Markdown/YAML contract and gate producers conform.
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## WHAT WOULD REFUTE IT
+-A requested source route lacking a terminal receipt, or any mismatch in task count, order, identity, deliverable, title, gate contract, or gate producer resolution would falsify the claim.
++## experiment_7012_exact_intervention_pair_fixture.json
+ 
+-## WAS THAT CHECKED
+-Yes. Terminal status was recorded per source route, while contract parity and gate resolution were checked per task and summarized by the two completion scores. This supports receipt completeness, not successful retrieval from every source or literature-search exhaustiveness.
++**CANNOT_DETERMINE**
+ 
+-## EVIDENCE
+-`v613_source_delta_complete_score` is `1`; `v613_task_contract_conforms_score` is `1`; `expected_task_count` and `observed_task_count` are both `13`; `failed_check` is `null`; `verifier_is_oracle` is `false`. The artifact also openly records `outcome` as `http_error` while `terminal` is `true`, confirming that source completeness means terminal receipts rather than universal retrieval success.
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## RECOMMENDATION
+-KEEP
++## experiment_7013_three_family_intervention_surface.json
+ 
+-## experiment_6997_authority_sidecar_rebuild.json
++**CANNOT_DETERMINE**
+ 
+-**NO_CLAIM**
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## VERDICT
+-NO_CLAIM
++## experiment_7014_causal_feature_cold_audit.json
+ 
+-## THE HEADLINE CLAIM
+-no claim
++**CANNOT_DETERMINE**
+ 
+-## WHAT WOULD REFUTE IT
+-For the limited completion receipt, fewer than 138 candidates or 414 source rows, a failed gate, incomplete family views, or learner access to authority sidecars would refute successful rebuilding.
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+ 
+-## WAS THAT CHECKED
+-Yes. Candidate and source counts, gate results, family completeness, file-access boundaries, and terminal candidate rows were checked. No comparative performance or verifier-value claim was made.
++## experiment_7015_pair_centered_pwa_kan.json
+ 
+-## EVIDENCE
+-`honest_verdict` `circular_positive: authority_sidecar_rebuild_complete` `expected_candidate_count` `138` `observed_candidate_count` `138` `expected_source_row_count` `414` `observed_source_row_count` `414` `observed_value` `all checks pass` `sidecar_rebuild_complete_score` `1` `gguf_inference_performed` `false` `verifier_fit_performed` `false` `verifier_is_oracle` `true` `deterministic_feature_sidecar_transform_no_llm`
++**CANNOT_DETERMINE**
+ 
+-## RECOMMENDATION
+-KEEP
+-
+-## experiment_6998_three_family_commitment_controls.json
+-
+-**CLAIM_SUPPORTED**
+-
+-## VERDICT
+-CLAIM_SUPPORTED
+-
+-## THE HEADLINE CLAIM
+-Across three model families, shortcut commitment from true provenance hints was not detected.
+-
+-## WHAT WOULD REFUTE IT
+-A reliably negative true-provenance-hint-minus-clean commitment-latency effect—ideally with its entire confidence interval below zero—while the permuted-decoy control did not show the same effect.
+-
+-## WAS THAT CHECKED
+-Yes. The artifact reports paired bootstrap intervals across all families and separately by model family; none of the true-provenance intervals is entirely below zero.
+-
+-## EVIDENCE
+-`honest_verdict`: `complete_null_shortcut_commitment_not_detected`; `comparison`: `true_provenance_hint_minus_clean`; `mean`: `-0.027777777777777776`; `ci_low`: `-0.0798611111111111`; `ci_high`: `0.024305555555555556`; `sample_count`: `36`; `comparison`: `permuted_decoy_hint_minus_clean`; `mean`: `0.017361111111111112`; `ci_low`: `-0.027777777777777776`; `ci_high`: `0.0625`; `verifier_is_oracle`: `false`; `learner_feature_allowed`: `false`; `verifier_fit_performed`: `False`; `joined_after_all_model_processes_exit`: `true`.
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## experiment_6999_blinded_feature_cold_audit.json
+-
+-**CLAIM_SUPPORTED**
+-
+-## VERDICT
+-CLAIM_SUPPORTED
+-
+-## THE HEADLINE CLAIM
+-The blinded feature bank is disqualified because at least one prohibited shortcut exceeds the readiness threshold.
+-
+-## WHAT WOULD REFUTE IT
+-Every prohibited shortcut probe passing the preregistered gate, particularly the mutation-metadata probe having its shortcut AUROC and confidence interval below the 0.8 threshold, would refute the disqualification.
+-
+-## WAS THAT CHECKED
+-Yes. The artifact evaluates prohibited shortcut probes against the explicit threshold, and the mutation-metadata probe fails with even its confidence-interval lower bound above that threshold.
+-
+-## EVIDENCE
+-`honest_verdict`: `complete_disqualified_blinded_feature_shortcut_gate`; `blinded_feature_bank_ready_score`: `0`; `probe_name`: `mutation_metadata_only`; `prohibited`: `true`; `shortcut_auroc`: `0.9540740740740741`; `ci95_lower`: `0.859375`; `threshold`: `0.8`; `gate_passed`: `false`; `verdict_class`: `disqualified`
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## experiment_7000_certified_blinded_pwa_kan.json
+-
+-**NO_CLAIM**
+-
+-## VERDICT
+-NO_CLAIM
+-
+-## THE HEADLINE CLAIM
+-no claim
+-
+-## WHAT WOULD REFUTE IT
+-There is no substantive claim to falsify; any implied ranking-value claim would require the method to tie or lose against a serious baseline on valid blinded held-out rows.
+-
+-## WAS THAT CHECKED
+-No. The experiment was blocked before execution at the conductor pre-gate, so no method or comparator results were produced.
+-
+-## EVIDENCE
+-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## experiment_7005_arc_live_envelope_audit.json
+-
+-**CLAIM_SUPPORTED**
+-
+-## VERDICT
+-CLAIM_SUPPORTED
+-
+-## THE HEADLINE CLAIM
+-The live-envelope engine does not beat both controls on held-out transition prediction.
+-
+-## WHAT WOULD REFUTE IT
+-Positive paired error improvement over both frozen controls, with each 95% interval entirely above zero and no loss of transition coverage.
+-
+-## WAS THAT CHECKED
+-Yes. Held-out paired metrics and grouped bootstrap intervals compare the engine against both the inert control and the serious pre-engine observed-action-delta baseline. The inert-control interval crosses zero, so the refutation did not occur.
+-
+-## EVIDENCE
+-`honest_verdict`: `complete_null_arc_live_envelope_engine_does_not_beat_both_controls`; `arc_engine_quality_positive_score`: `0`; `control`: `inert_no_change`; `interval_low`: `-0.0001220703125`; `interval_high`: `0.000244140625`; `control`: `observed_action_delta_hypothesis`; `interval_low`: `0.000244140625`; `interval_high`: `0.00152587890625`; `stratum`: `heldout`; `transition_coverage`: `1.0`; `verifier_is_oracle`: `false`; `development_fixture_used_for_quality`: `false`.
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## experiment_7008_v613_capstone.json
+-
+-**CLAIM_SUPPORTED**
+-
+-## VERDICT
+-CLAIM_SUPPORTED
+-
+-## THE HEADLINE CLAIM
+-The completed V613 capstone contains no eligible oracle-distinct science-positive result.
+-
+-## WHAT WOULD REFUTE IT
+-An eligible, noncircular oracle-distinct selection result with `science_positive` true, a confirmed certificate, and a nonzero capstone science-positive score would falsify the claim.
+-
+-## WAS THAT CHECKED
+-Yes. The capstone explicitly checked the oracle-distinct selection gate, science qualification, eligibility, and circularity classifications. The relevant experiment was missing, so this supports only the narrow inventory claim that no positive result exists—not a broader claim that the method was empirically shown to fail.
+-
+-## EVIDENCE
+-`honest_verdict`: `complete_null_v613_capstone_no_oracle_distinct_science_positive`; `v613_science_positive_score`: `0`; `failed_check`: `oracle_distinct_selection_positive`; `observed_value`: `0`; `selection_positive_score`: `0`; `qualified_science_positive_score`: `0`; `certificate_confirmed_score`: `0`; `artifact_present`: `false`; `eligible_for_positive`: `false`; `state`: `missing`; `verifier_is_oracle`: `true`; `science_positive`: `false`; `verdict_class`: `null`.
+-
+-## RECOMMENDATION
+-KEEP
++reviewer call failed: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: workspace-write
+diff --git a/ops/qa_layer_authenticity_audit_report.md b/ops/qa_layer_authenticity_audit_report.md
+index 1f9cd1bbaf..ddb391cb01 100644
+--- a/ops/qa_layer_authenticity_audit_report.md
++++ b/ops/qa_layer_authenticity_audit_report.md
+@@ -1,11 +1,9 @@
+-<!-- generated by scripts/qa_layer_authenticity_audit.py — 2026-09-04 -->
++<!-- generated by scripts/qa_layer_authenticity_audit.py — 2026-09-05 -->
+ <!-- per CLAUDE.md 'QA-Layer Authenticity Discipline' — advisory only -->
+ 
+-# qa_layer_authenticity_audit_report — 2026-09-04
++# qa_layer_authenticity_audit_report — 2026-09-05
+ 
+-Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+-
+-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
++Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+ 
+ ## Summary
+ 
+@@ -14,263 +12,229 @@ Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
+ | `CLEAN` | 0 |
+ | `MINOR_RISK` | 0 |
+ | `REAL_BUG` | 0 |
+-| `SILENT_NON_FIRING` | 5 |
++| `SILENT_NON_FIRING` | 0 |
+ | `CANNOT_DETERMINE` | 0 |
+ | `NEEDS_REDESIGN` | 0 |
+-| `UNKNOWN` | 0 |
+-
+-### MISSED INPUTS — a real input each guard does NOT catch
+-The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
+-- `test_suite_mutation_check.py` — output/kanele_synth/post_synth.dcp dirty at baseline, overwritten again by the test run, and still reported by Git as ` M`.
+-- `operator_curated_docs_lint.py` — README.md` staged as `M README.md` with subject `[conductor] Checkpoint: preserve uncommitted work from interrupted run`, committed through `git commit --no-verify`.
+-- `operator_curated_doc_guard.py` — docs/blog/caught-cheating.html, presented by the os.remove audit event as the fd-relative bare basename caught-cheating.html with a descriptor for the repository’s docs/blog directory.
+-- `child_results_guard.py` — results/experiment_1736_kanele_synth.json` deleted by `Path.unlink()` inside a Python subprocess.
+-- `artifact_freshness_lint.py` — results/outer_loop_arc_gateway_accurate_rescore_20260726.json` overwritten with a prior-build `provenance.code[0].sha256` while `scripts/analyze_arc_gateway_accurate_rescore.py` remains unchanged at HEAD.
+-
+-### FLAGGED — operator action recommended
+-- `test_suite_mutation_check.py` — **SILENT_NON_FIRING**
+-- `operator_curated_docs_lint.py` — **SILENT_NON_FIRING**
+-- `operator_curated_doc_guard.py` — **SILENT_NON_FIRING**
+-- `child_results_guard.py` — **SILENT_NON_FIRING**
+-- `artifact_freshness_lint.py` — **SILENT_NON_FIRING**
++| `UNKNOWN` | 20 |
+ 
+ ---
+ 
+-## test_suite_mutation_check.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent test runs and mutation-proof sessions from silently altering or publishing tracked repository state without an interlock refusal.
+-
+-## FINDINGS
+-1. The stated concept is broader than “a previously clean path became dirty”: it asks whether running tests modified tracked files and whether a mutation proof was restored cleanly.
+-
+-2. Silent non-firing: line 498 uses `return sorted(p for p in now if p not in baseline)`. If a tracked file is dirty before the run and the test overwrites it again, the path remains present in both dictionaries and is excluded without comparing content or status transitions. Even an observed write cannot rescue this because attribution is consulted only after `mutations()` returns a path; `cmd_run` and `arm_from_pytest` consequently take their clean branches, create no marker, and can print `test-suite-mutation-check: OK -- no tracked file was modified by the run`.
+-
+-3. Pattern audit:
+-   - `("R", "C")` is a definition from Git porcelain, although only the destination of a rename is retained.
+-   - `"wxa+"` and `("os.rename", "os.replace")` are samples of filesystem mutation operations, not definitions. They omit descriptor-based writes, deletion, truncation, link creation, and permission-bit changes; this weakens attribution but not the broad dirty-tree alarm.
+-   - `"patch*"`, `"diff --git a/"`, `" b/"`, newest-patch-only selection, and the 15-minute cutoff are heuristic samples of a current pre-commit stash. Another repository’s newer cache patch, a hook sequence lasting over 15 minutes, an unreadable cache, or a quoted Git path makes the active stash invisible.
+-   - `_MARKER_SCAN_SUFFIXES` is plainly a sample of runnable source types. It omits Makefile, extensionless executables, and Go, Java, Ruby, Perl, Lua, JSX, TSX, C, and C++ sources; line 1237 silently executes `continue`.
+-   - `_MARKER_SCAN_EXEMPT` defines two intended documentation-bearing files, but exempts each entire executable file. A newly introduced real marker in either file is skipped too.
+-   - `MUTATION_MARKER`, the environment-variable names, and the state-file names are protocol definitions. `PATH_LOADED_ACK_ENV` is decorative: it is defined but never read.
+-   - The 2 MB scan limit fails closed by reporting an unscanned file; the seven-day debris policy never deletes pending markers.
+-
+-4. Scope holes: the primary detector covers every directory but only Git-visible tracked dirt. Untracked files are deliberately excluded; clean-to-modified, deleted, staged-added, and rename destinations are detected, but rename sources are swallowed. It cannot see a run that commits its rewrite and leaves a clean working tree, a second rewrite of baseline dirt, a killed bare pytest session, a non-pytest run that bypasses `--run`, or any run whose pytest integration fails before arming. The file explicitly names the staged-results content lint as partial coverage, but that does not cover arbitrary changes under docs, output, or openspec.
+-
+-5. Ordinary bypasses include running pytest outside the wrapper and killing it before session finish, committing with `--no-verify`, clearing the ignored marker directory during cache cleanup, committing changes from inside the wrapped command, or using `git add -A` after an already-dirty artifact was overwritten again. During pre-commit, a newer unrelated cache patch or a current stash older than 15 minutes can also make `prune_stale_markers` delete the live marker.
+-
+-6. The suite codifies the main defect as expected behavior: its dirty-before-run tests never modify the same file a second time. The suffix test exercises only Python and shell; removing `.pyi`, `.rs`, `.bash`, `.js`, or `.ts` individually should leave the suite green. `PATH_LOADED_ACK_ENV`, both `_MARKER_SCAN_EXEMPT` members, the in-process `os.rename` and `os.replace` attribution branches, active stashes older than 15 minutes, multiple concurrent cache patches, and the begin-time Git-failure branch also lack direct tests.
+-
+-7. No hardcoded absolute write target exists. `REPO = Path(__file__).resolve().parents[1]` derives checkout-local state, while the proof lock derives the shared Git directory. Absolute target paths stored in lock payloads come from runtime arguments rather than baked operator paths.
+-
+-8. Failure modes:
+-   - Git failures in the normal CLI, missing/invalid snapshots, and unreadable or invalid pending-marker JSON generally fail closed.
+-   - Stash inspection fails open: both `except OSError:` branches return `set()`, which can make a stash-hidden rewrite appear resolved and cause marker deletion.
+-   - Proof begin fails open on `rev-parse`: `except GitError:` assigns `head = ""`; line 1281 then returns no committed paths, contrary to the comment claiming the error is reported at close.
+-   - `_sha256` returns `None` on read failure, but line 1496 checks `held.get("target_sha")` before comparing, so a skipped-suffix or exempt unreadable target receives no byte-identity check.
+-   - The documented pytest adapter catches broad exceptions around baseline collection and arming. A Git or marker-write failure there leaves the suite green and the gate unarmed.
+-
+-   8b. The default recognizer branch for targets outside python returns `True` even when the code says their loading route cannot be resolved and the installed package points at another checkout. The supposedly required `PATH_LOADED_ACK_ENV` acknowledgment is never checked, so a worktree scripts/test target is approved unverified. Separately, reaching the end of `main` with no recognized mode prints help and returns zero without performing any check.
+-
+-   8c. No duration, count, or size purporting to measure completed work is computed before that work. Baseline hashes and timestamps are intentionally pre-operation measurements.
+-
+-9. The guard intentionally writes snapshots, pending markers, and observation logs beneath `RUNS`, backups beneath `BACKUP`, and a proof lock beneath the Git common directory; `--restore` also rewrites tracked files explicitly. These state paths are ignored rather than historical artifacts, but backups use a fixed destination per repository path and can overwrite an earlier recovery copy. The unit fixture redirects module-level paths into a throwaway repository, although normal pytest integration still writes ignored observation state in the real ops tree; no current test fixture shown overwrites a committed results, openspec, output, or operator-curated file.
+-
+-## COUNTEREXAMPLE
+-Start with output/kanele_synth/post_synth.dcp already reported as ` M` because it contains an operator edit. Take the baseline, then let a test overwrite it with newly generated checkpoint bytes; afterward Git still reports the same path as ` M`. The baseline and final dictionaries contain the same key, so `mutations()` returns an empty list, no pending marker is written, and the gate reports OK.
+-
+-## MISSED INPUT
+-output/kanele_synth/post_synth.dcp dirty at baseline, overwritten again by the test run, and still reported by Git as ` M`.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-Dirty-path membership cannot answer whether an already-dirty file changed again, so the core all-clear is unsound despite the limitation being documented. The baseline needs content identities and HEAD identity, with observed-write evidence used to distinguish second writes, while stash discovery and mutation-marker scanning must fail closed instead of relying on newest-file, age, suffix, and whole-file-exemption heuristics.
+-
+-
+-## operator_curated_docs_lint.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent autonomous conductor activity from committing changes to operator-curated public documentation without operator authorization.
+-
+-## FINDINGS
+-
+-1. The implementation uses commit-message text as a proxy for whether an edit originated from the autonomous conductor.
+-
+-2. Central silent non-firing: the source acknowledges `--no-verify` at line 28, which prevents Git from invoking `main()` at all. This is the conductor’s normal commit path, so the guard is structurally unreachable for the producer it exists to constrain. Separately, operator-curated prose in the technical report is absent from `OPERATOR_CURATED_PATHS`; matching falls through after line 133, leaving no violations and reaching `return 0` at lines 160–161.
+-
+-3. `OPERATOR_CURATED_PATHS` is presented as a definition of the whole-file protected set, not a sample. It cannot represent the discipline’s partially protected documents: technical-report Markdown and HTML permit numerical table updates but forbid autonomous prose edits. `CONDUCTOR_SUBJECT_PREFIXES` is only a sample/proxy for autonomous origin; omitted forms include conductor-watchdog subjects, conventional-commit prefixes, reused subjects, and empty messages. The configurable Git comment marker is also reduced to `line.startswith("#")`. Finally, `docs/blog/**/*.html` is behaviorally redundant because `fnmatch.fnmatchcase(path, pat)` lets the `*` in `docs/blog/*.html` cross directory separators.
+-
+-4. Scope is limited to the staged index returned using `--cached`. Unstaged rewrites, runtime writes, absent or bypassed hooks, and paths outside the tuple are invisible. Added, modified, deleted, copied, and renamed staged paths are otherwise covered, including both rename sides. No secondary enforcement is imported or invoked by this file.
+-
+-5. Ordinary automation defeats the guard by using `--no-verify`, invoking Git plumbing directly, amending with an existing unmarked subject, or generating any autonomous subject that does not begin with `[conductor]`. A test can overwrite a protected file without detection until it is staged; a subsequent no-verify checkpoint then publishes it.
+-
+-6. The targeted suite passes 46 tests and covers every literal path, subject case-folding, basic allow/refuse decisions, comments, mixed paths, and rename sources. It never exercises the real `_staged_files` subprocess, so removing `--cached`, changing its repository context, or breaking subprocess wiring would leave those tests green. `if not staged:` is deletable because `if not violations:` already returns the same result; the blank-line branch in the status parser is likewise behaviorally redundant. The recursive blog pattern is not uniquely exercised, although a separate tuple-equality test prevents deleting it from only this copy.
+-
+-7. No hardcoded absolute filesystem path exists, and this guard has no write target.
+-
+-8. Missing invocation arguments and missing message files explicitly fail open with `return 0` at lines 144 and 149. In contrast, read/decode failures and a non-zero Git subprocess raise uncaught exceptions, so they fail closed. There is no JSON parsing.
+-
+-9. The default subject-classification branch disables checking: anything not recognized by `CONDUCTOR_SUBJECT_PREFIXES` reaches `return 0` at lines 152–153 and is treated as operator-authorized rather than unverified. Unmatched paths similarly fall through the matcher and are permitted, which silently exempts partially protected technical-report prose.
+-
+-10. No duration, count, size, or other work metric is consumed or computed.
+-
+-11. The guard itself writes no tracked state. Its tests write commit-message fixtures under temporary paths and mock staged-file discovery; they do not write fixed paths under results, openspec, output, ops, or operator-curated documentation.
+-
+-## COUNTEREXAMPLE
+-Commit message: `[conductor] Refresh technical report narrative`; staged status: `M docs/technical-report.md`; diff: an autonomous rewrite of the Abstract with no separately forbidden phrase. `_is_conductor_commit()` succeeds, `_staged_files()` returns the path, `_matches_operator_curated()` implicitly returns false because the path is absent, `violations` is empty, and `main()` exits 0.
+-
+-## MISSED INPUT
+-`README.md` staged as `M README.md` with subject `[conductor] Checkpoint: preserve uncommitted work from interrupted run`, committed through `git commit --no-verify`.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-The normal conductor commit path skips this guard entirely, and a protected README edit has already passed through that exact route. Even when invoked, the path-only and marker-default models approve partially protected prose and unrecognized autonomous subjects. Enforcement must move to a non-skippable conductor, push, or server-side boundary and treat unverified attribution as failure.
+-
+-
+-## operator_curated_doc_guard.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent any in-process test-suite mutation of operator-curated documents in the repository.
+-
+-## FINDINGS
+-1. Silent non-firing: an fd-relative removal of a protected blog post succeeds. For a real directory descriptor, line 393 makes `is_cwd_relative` false; line 289 then rejects the bare filename because it is absent from `_WATCHED_BASENAMES` and `"blog" not in path`, returning no violation. Even without that prefilter, lines 292–293 discard every relative path associated with a real descriptor.
+-
+-2. Pattern lists: `OPERATOR_CURATED_PATHS` is intended as the definition of the wholly protected file set, while `__all__`, `"wxa+"`, and `write_bits` are closed API/mode definitions. The audit-event tuples are only samples: they omit directory removal and other filesystem mutation events, and they model rename/move destinations but not protected sources. The basename optimization is also a sample of path spellings: glob members become the literal basename `"*.html"`, so fd-relative or symlinked spellings without “blog” evade it. The wider documentation discipline also contains operator-curated prose in technical-report files, which this whole-file list cannot represent.
+-
+-3. Scope holes: subprocess writes are explicitly unguarded; direct or integration-suite execution that never calls `install()` is also unguarded. Outside-repository paths and non-curated results/openspec files are deliberately excluded. The file names the commit-time lint, mutation check, and git status as backstops, but none provides this guard’s synchronous refusal or attribution.
+-
+-4. Bypass: ordinary cleanup using shutil.rmtree on the repository blog directory produces fd-relative bare-name removal events and deletes protected posts silently. A backup operation that renames README.md to README.md.bak also succeeds because line 379 checks only `args[1]`, the destination; the protected source is never inspected. Running the same writer through a child Python process or shell redirection bypasses the hook entirely.
+-
+-5. Untested patterns: tests cover ordinary opens, destination replacement, default-directory-descriptor unlink, and the decision not to fire on a real descriptor. They do not require refusal for a real descriptor pointing inside the repository, a protected rename source, shutil move/copy destinations, or positive truncate/removal paths. The `"shutil.copy2"` recognizer is deletable with the suite still green because CPython emits shutil.copyfile and shutil.copystat for that operation, not a shutil.copy2 audit event. Also, `docs/blog/**/*.html` is behaviorally redundant because fnmatch’s star already matches directory separators, although the list-equality test pins its presence.
+-
+-6. Hardcoded absolute write target: none. `_REPO_ROOT` is derived with `Path(__file__).resolve().parents[3]`; the absolute paths in the docstring are explanatory and perform no write.
+-
+-7. Failure mode on error: mixed, but path-classification failures are open. Lines 298–299 use `except (OSError, ValueError, RuntimeError):` followed by `return None`; bytes-decoding failure and unsupported path types also return permission. In contrast, `_is_write_intent` uses `return True` for an unknown mode shape, and uncaught installation or ledger errors abort the operation.
+-
+-8. Default branch: `_audit_hook` has no rejecting default after its recognized event chains. An unrecognized mutation event such as shutil.rmtree falls through as approved; its subsequent fd-relative removal events are also discarded, so the combination exempts an entire real input class.
+-
+-9. Metric timing: none. The guard consumes synchronous audit-event arguments and no duration, count, or size measurement.
+-
+-10. Tracked-state side effects: the guard writes only its in-memory violation ledger. Its current tests redirect live syscall probes to temporary paths and only read the real README, so no fixed tracked artifact is overwritten by the guard suite itself.
+-
+-## COUNTEREXAMPLE
+-From the repository root: `fd = os.open("docs/blog", os.O_RDONLY); os.unlink("caught-cheating.html", dir_fd=fd)`. The file is deleted, no exception is raised, and `recorded_violations()` remains empty.
+-
+-## MISSED INPUT
+-docs/blog/caught-cheating.html, presented by the os.remove audit event as the fd-relative bare basename caught-cheating.html with a descriptor for the repository’s docs/blog directory.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-The guard equates an unresolved fd-relative path with a path outside the repository and also ignores protected rename sources. Both are real in-process mutations that complete without an exception or ledger entry, so a green run does not establish that the curated set remained untouched. Descriptor-aware resolution and operation-complete mutation modeling are required.
+-
+-
+-## child_results_guard.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent test-spawned Python child processes from mutating the repository’s tracked results evidence by isolating those mutations in a temporary artifact tree.
+-
+-## FINDINGS
+-1. The guard’s concept is mutation prevention, but L194-L198 interpose only `builtins.open`, `io.open`, `os.open`, `os.rename`, and `os.replace`. Deletion and truncation operations remain untouched.
+-
+-2. L194-L198 are the silent non-firing point: Path.unlink reaches the original deletion implementation and removes tracked evidence without redirecting or alarming. L189 also checks only `_target(dst)`, so moving a tracked source outside the tree can delete it from the repository.
+-
+-3. Pattern classification: the environment-variable names and `__all__` are definitions; the `results` directory is the intended scope; `"wxa+"` and the flag bits at L164 define write intent for the APIs they cover. The API list is only a sample of mutation mechanisms, omitting remove, unlink, truncate, hard-link, and source-side rename operations. The `"results" not in text` prefilter at L144 is also a sample of path spellings: a symlink alias without that token bypasses resolution even when it points into the protected tree. The documented `-S` and `-E` list omits isolated mode, `-I`. The three determination-field names are illustrative rather than operative, so omitted fields such as inference_substrate_correction_note do not independently weaken this path-level guard.
+-
+-4. Scope holes are explicitly broad: non-Python children, shell redirects, `os.system`, exec/spawn paths, interpreters suppressing startup customization, grandchildren replacing `PYTHONPATH`, writes outside `results`, direct script runs without `install()`, and operations performed before installation. The guard inspects no Git diff, so staged additions, deletions, or renames receive no independent review. The file names `scripts/test_suite_mutation_check.py` and `git status` as backstops, but neither is invoked or verified here; the in-process sibling is expressly not inherited by children.
+-
+-5. Ordinary bypasses include a fixed-output script run outside pytest, a child deletion or truncation, a shell redirection, isolated Python startup, or an environment containing a stale repository root because L267 uses `base.setdefault(CHILD_REPO_ROOT_ENV, str(_REPO_ROOT))`. A subsequent git add-all can stage the damage without this runtime guard participating. Additionally, L172 redirects only writes, so the claim that untouched reads see the child’s bytes is false: read-after-write observes the old tracked artifact.
+-
+-6. Dedicated tests cover environment construction, deduplication, one `open` write using mode `w`, one outside-tree write, and the live signature index. They do not exercise `io.open`, `os.open`, any individual flag at L164, `os.rename`, `os.replace`, deletion, truncation, symlinks, directory-relative paths, read-after-write, redirect failure, shim-install failure, chained startup customization, or the branches of `install()`. The L144 textual prefilter is deletable with the tests still green because L150’s resolved containment check already covers ordinary paths; removing it would also close the alias bypass. The `x`, `a`, and `+` tokens and every non-`builtins.open` wrapper likewise lack individual tests.
+-
+-7. No hardcoded absolute write target exists. L86 derives the repository from `_REPO_ROOT = Path(__file__).resolve().parents[3]`, while L244-L246 create the shim beneath a unique temporary directory.
+-
+-8. Failure mode is open. L156-L157 use `except OSError:` followed by `return None`, after which L176 writes the original path; L203-L206 swallow complete shim-installation failure with `except Exception:` and `pass`; and L305-L306 silently launch an unprotected child if environment injection fails.
+-   - 8b. There is no substrate-style recognizer chain, but equivalent disabling defaults exist: missing roots cause bare `return` at L132-L133 or `return False` at L281-L283, while every `_target` error returns `None` and callers treat that as permission to use the original path.
+-   - 8c. No duration, count, size, or other work metric is consumed or computed.
+-
+-9. The guard does not write tracked project state. Its generated shim is written under `tempfile.mkdtemp`, and the dedicated tests use temporary fixture trees rather than fixed paths under `results`, `openspec`, `output`, `ops`, or operator-curated documentation.
+-
+-## COUNTEREXAMPLE
+-With the guard installed, run a Python child from the repository root containing `from pathlib import Path; Path("results/experiment_1736_kanele_synth.json").unlink()`. The child exits successfully, the tracked artifact disappears, and the redirect directory remains empty.
+-
+-## MISSED INPUT
+-`results/experiment_1736_kanele_synth.json` deleted by `Path.unlink()` inside a Python subprocess.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-The guard silently permits destructive child mutations inside the exact tree it claims to protect. Its finite interposition list, path-spelling prefilter, and swallowed setup failures all convert unrecognized or broken protection into access to the original tracked target. The child needs comprehensive mutation interception plus a fail-closed verification that isolation was actually installed.
+-
+-
+-## artifact_freshness_lint.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent commits from presenting an analyser-produced artifact as current when its bytes were not produced from the current declared code and row inputs, while ensuring relevant changes invoke the check.
+-
+-## FINDINGS
+-1. Artifact-side regression is falsely classified as inherited backlog. `drift_is_pre_existing` rereads the working-tree artifact, takes its possibly rewritten hash through `rec = entry.get("sha256")`, and blocks only on `if head == rec:`. If an old artifact replaces a fresh one, the dependency at HEAD differs from that old recorded hash, so execution reaches `return saw_drift`; the artifact enters `backlog`, is removed from the blocking set, and the run prints `artifact-freshness-lint: OK`.
+-
+-2. Two further silent non-firings exist. First, changing artifact payload fields while leaving matching provenance untouched reaches `return ("fresh", detail, cmd)` because only `now != entry.get("sha256")` is checked; no rebuild or output-identity comparison occurs. Second, `p = Path(str(entry.get("path", "")))` followed by `now = _sha256(p)` hashes an absolute path from the builder’s checkout directly: in a worktree, an edit in the active checkout is invisible when the original checkout still matches the recorded hash.
+-
+-3. Pattern inventory: `STATIC_TRIGGER_PATTERNS` is a sample, not the concept. `scripts/analyze_.*\.py` omits newly introduced analysers named as builders, experiment scripts, package modules, or British-spelled analyse scripts; `results/.*\.json` omits non-JSON result formats and registered artifacts outside results; and the tuple omits `.pre-commit-config.yaml` plus registered row sources outside results. The provenance keys, status vocabulary, CLI flags, Git commands, `HOOK_ID`, and repository-override set are closed protocol definitions. The acknowledgement field set is intended as a definition but is incomplete: the docstring requires `sha256_was`, while `if not (path and len(now) == 64 and reason and evidence):` accepts an entry without it and never checks that the claimed prior hash equals the dependency’s recorded hash.
+-
+-4. Scope holes: unregistered artifacts are invisible; registered row sources outside results do not become triggers; payload-only corruption is unchecked; deleted registered artifacts reach `continue`; and added unregistered artifacts are ignored. Renaming a registered artifact leaves the old indexed path absent and skipped. Editing only `.pre-commit-config.yaml` need not invoke this hook, so its own trigger can be narrowed or removed without its runtime coverage check executing. Runs that do not stage a matching path and commits using `--no-verify` are entirely outside the guard; no fallback exists in this file.
+-
+-5. Ordinary bypasses include a test overwriting a fixed result path followed by git-add-all, a provenance refresher updating dependency hashes without rebuilding calculated fields, running from a worktree whose artifact names another checkout, forgetting registration, or supplying a custom `--index`. Restoring superficially plausible provenance is sufficient because the mutable artifact attests to its own freshness.
+-
+-6. Focused tests cover ordinary dependency drift, row drift, acknowledgements, dynamic code-trigger coverage, and dependency-side backlog classification. They do not rewrite an artifact to an older provenance state, mutate payload while preserving provenance, or exercise absolute provenance through `check_artifact` from another checkout. Every member of `STATIC_TRIGGER_PATTERNS`, the quoted-value stripping branch, the missing-hook approval branch, and the index-analyser belt-and-braces addition are deletable with the focused suite still green; the latter is presently duplicated by all indexed analysers also appearing in artifact provenance. Corrupt index/artifact handling, missing registered artifacts, and both CLI-only modes also lack focused branch tests.
+-
+-7. There is no hardcoded absolute write target in source: `REPO = Path(__file__).resolve().parents[1]` derives the active checkout, and the guard performs no filesystem writes. Nevertheless, absolute paths stored in provenance cause the wrong-tree read described above; there is no wrong-tree write consequence because this guard is read-only.
+-
+-8. Error handling is predominantly fail-open. `_sha256` uses `except OSError:` and `return None`; that becomes `unverifiable`, but only `if status == "stale":` enters the refusal set. Artifact JSON failure returns `("unreadable", ...)` and likewise ends in success. Missing, unreadable, non-dictionary, or empty indexes return success; `registered_dependency_paths` uses `except Exception:` followed by `return out`, and unreadable registered artifacts are silently skipped from trigger generation. `if configured is None:` returns `return (True, [], generated)`, approving a missing or unparsable hook configuration. Git failure during backlog proof is the notable fail-closed exception.
+-
+-9. Default branches disable checks. `_rows_source_entries` uses `if not isinstance(group, list):` followed by `continue`, so an unrecognized row-source shape contributes no dependency. A valid YAML representation not recognized by the line scanner reaches `return None`, which coverage interprets as approval. Any non-default index takes `else (True, [], "")`, disabling hook-coverage validation without error.
+-
+-10. No premature duration, count, or size metric is consumed. Hashes are measured when checked, although their authority is undermined by wrong-checkout resolution and mutable self-attestation.
+-
+-11. The guard itself is read-only, and its tests do not overwrite fixed files in results, specifications, outputs, operational records, or curated documentation. One backlog test transiently appends to a real tracked Python dependency and restores it in a finally block; interruption by process termination can still leave that tracked source dirty, but it does not overwrite a historical artifact.
+-
+-## COUNTEREXAMPLE
+-At HEAD, `results/outer_loop_arc_gateway_accurate_rescore_20260726.json` records hash H1 for `scripts/analyze_arc_gateway_accurate_rescore.py`, whose HEAD and working-tree bytes also hash to H1. A test overwrites that fixed result path with an older saved artifact recording H0, then `git add -A` stages it while the analyser remains H1. The hook sees a mismatch, but its backlog test compares dependency HEAD H1 against the rewritten working-artifact record H0, declares the staleness pre-existing, exits zero, and prints OK.
+-
+-## MISSED INPUT
+-`results/outer_loop_arc_gateway_accurate_rescore_20260726.json` overwritten with a prior-build `provenance.code[0].sha256` while `scripts/analyze_arc_gateway_accurate_rescore.py` remains unchanged at HEAD.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-The guard trusts mutable provenance inside the artifact and determines historical freshness using the working artifact rather than the artifact stored at HEAD. It can therefore approve both an artifact-side rollback and arbitrary payload corruption, while absolute provenance can redirect checking to another checkout. Repair requires comparing the complete artifact-to-dependency relation at HEAD, resolving repository dependencies against the active checkout, binding output bytes to a rebuild receipt, and failing closed when registry or hook analysis cannot run.
+-
++## arc_artifact_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## arc_count_integrity_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## arc_llm_on_liveness_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## verifier_authenticity_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## arc_orphan_solver_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## tracked_results_guard.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## research_complete_ledger_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## mutation_marker_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## audit_findings_ledger.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## run_stop_authority.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## exclusion_manifest_lint.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## in_process_doc_reconcile.py
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_declares_terminal_artifact_readiness
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::check_terminal_artifact_readiness
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_flag_summary
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_is_finite_number
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_numeric_pairs
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_name_tokens
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_is_count_field
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
++
++## adversarial_verify.py::_is_timestamp_field
++
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index 716dd06cd9..a6f39a132a 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -1,559 +1,240 @@
+-<!-- generated by scripts/verifier_authenticity_audit.py — 2026-09-04 -->
++<!-- generated by scripts/verifier_authenticity_audit.py — 2026-09-05 -->
+ <!-- per CLAUDE.md 'Verifier Authenticity Discipline' — advisory only -->
+ 
+-# verifier_authenticity_audit_report — 2026-09-04
++# verifier_authenticity_audit_report — 2026-09-05
+ 
+ ## Summary
+ 
+ | Verdict | Count |
+ |---|---|
+-| `AUTHENTIC` | 13 |
+-| `HONEST_HEURISTIC` | 4 |
+-| `DISHONEST_NAMING` | 2 |
+-| `ADVERSARIAL_GAMING` | 1 |
++| `AUTHENTIC` | 0 |
++| `HONEST_HEURISTIC` | 0 |
++| `DISHONEST_NAMING` | 0 |
++| `ADVERSARIAL_GAMING` | 0 |
+ | `CANNOT_DETERMINE` | 0 |
+-| `UNKNOWN` | 0 |
++| `UNKNOWN` | 20 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+-### FLAGGED — operator action recommended
+-- `python/carnot/verify/arc_gap1_registry_promotion_decision.py` — **DISHONEST_NAMING**
+-- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
+-- `python/carnot/verify/beaver_lite.py` — **DISHONEST_NAMING**
+-
+ ---
+ 
+ Scanned 20 verifier file(s) with codex as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“Verifiable reasoning: constraints as energy terms + landscape certification.” No paper, learned model, live-inference, or compute-substrate claim is made.
+-
+-## IMPLEMENTATION_REALITY
+-This is a package export module, not a verifier implementation. It imports and exposes constraint, certification, calibration, and verifier classes; it performs no text scoring or model invocation itself.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The docstring accurately describes the exported verification package without pretending this file implements a paper or learned model. The repeated `ConformalCalibrationVerifier` imports are sloppy, but they are not evidence of dishonest naming or adversarial-check gaming.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“The v14 rerun proved the local GGUF path was real”; “raw model text did not honor the strict verifier-output contract”; “adds the Exp 3286 calibrated policy around it”; and “records a repair-gate-ready artifact only when coverage is non-trivial and exact-authority scoring still finds zero false accepts.”
+-
+-## IMPLEMENTATION_REALITY
+-The default runner loads a real local GGUF with `llama_cpp.Llama`, requests full GPU offload via `n_gpu_layers=-1`, and invokes `create_chat_completion` for every evaluation row using a constrained `ACCEPT|REJECT|ABSTAIN` grammar. It also checks CUDA/llama.cpp GPU support and gathers `nvidia-smi` telemetry.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is genuine model inference, not regex or arithmetic masquerading as a learned verifier. Dependency-injected runners can fake test executions, but the production default performs llama.cpp inference and readiness remains gated on model availability, evaluation results, coverage, zero false accepts, and GPU telemetry.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
+-
+-## VERDICT
+-HONEST_HEURISTIC
+-
+-## CLAIMS
+-“Compute a lightweight ACSE-style semantic entropy proxy.” The docstring explicitly states: “ACSE uses semantic dispersion over multiple generations,” but this corpus “has fixed verifier rows rather than fresh generations,” so it instead uses “the variance of the top-k token logprob alternatives and the variance across verifier scores.”
+-
+-## IMPLEMENTATION_REALITY
+-The code performs deterministic lexical prompt classification, numerical variance calculations over supplied logprobs and verifier scores, group-conditional score calibration, Fisher combination, and AUROC evaluation. It invokes no model and imports no model-serving framework; NumPy and scikit-learn handle the statistics.
+-
+-## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is not ACSE itself, but the docstring plainly admits that and precisely describes the substitute computation. There is no fake model claim, concealed regex masquerading as inference, sleep-padding, score-capping, or random feature fabrication.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and explicitly denies model authority: “it never lets an EBM score, LLM response, or receipt become answer authority.”
+-
+-## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, estimates call counts and risk, and writes a policy artifact. It invokes no model and explicitly records zero live model, verifier-scoring, or repair calls.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation does exactly what the docstring claims: offline deterministic scheduling, not model-based verification. It makes no fraudulent paper, learned-model, GPU, or live-inference claim; however, this policy simulation is not itself a scoring verifier and must not be counted as an AUROC-contributing ensemble member.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“Exp 3643 additive second-pair-of-eyes remeasurement.” No paper, learned model, GPU, live-inference, or kernel-based claim appears. The code explicitly describes its substrate as “scores cached corpora; no LLM load.”
+-
+-## IMPLEMENTATION_REALITY
+-The module loads cached experiment artifacts, delegates detector scoring to `corrected_cross_domain_remeasurement_v4`, and computes fixed-FPR recall, McNemar significance, Wilson intervals, calibration, fusion, and AUROC. It contains no direct model invocation, consistent with its explicit no-live-LLM scope.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is an evaluation and aggregation module, not a fake model-backed verifier: it makes no paper or neural-compute claim and openly says it uses cached corpora. The actual ensemble scorers live in the imported Exp 3642 module, so their authenticity cannot be audited from this file, but this module itself does not misrepresent what it does or game the named adversarial checks.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“This module is a gate audit, not a verifier rerun.” It also explicitly declares “aggregation and lint only,” `executes_models: False`, and `no_live_llm_inference: True`. No paper, learned model, GPU, or live-inference capability is claimed.
+-
+-## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON and repository files, computes checksums, audits evidence metadata, and emits a corrigendum artifact. It imports no ML framework and invokes no model or inference API.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none; the duration is measured with `time.perf_counter()`, and the `DURATION`/`TOO`/`SHORT` tokens classify historical audit flags rather than evade checks.
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation does exactly what the docstring claims: local evidence aggregation and authenticity auditing without live inference. It is not a scoring verifier and therefore should not itself contribute to headline AUROC numbers, but there is no dishonest naming or adversarial gaming here.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
+-
+-## VERDICT
+-HONEST_HEURISTIC
+-
+-## CLAIMS
+-“SemEnergy uses its proxy scorer.”  
+-“SOSKANEnergyV3 requires a feature vector in [-1, 1]^3” and, after feature extraction, “scores with the model.”  
+-“This helper is headline-ineligible until a real trained/live verification substrate replaces the current advisory defaults.”
+-
+-## IMPLEMENTATION_REALITY
+-The harness invokes Carnot verifier classes, including `SOSKANEnergyV3`, but its default SOSKAN adapter is untrained and always returns `0.5`; its inputs are three crude text statistics. SemEnergy is explicitly called through a proxy method, while the remaining adapters delegate to their respective verifier implementations.
+-
+-## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is not pretending to be a production verifier: it repeatedly labels itself advisory, explicitly identifies the proxy and neutral model behavior, and sets `HEADLINE_ELIGIBLE = False`. The fail-open exception handling and permanently neutral default SOSKAN signal make it unfit for headline AUROC or serious enforcement, but that deficiency is disclosed rather than fraudulently concealed.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
+-
+-## VERDICT
+-HONEST_HEURISTIC
+-
+-## CLAIMS
+-“This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM.” It instead claims “a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool” and that “gold labels are used only for offline evaluation of the searched subset.”
+-
+-## IMPLEMENTATION_REALITY
+-The implementation performs deterministic, pure-Python grid-statistical scoring using handcrafted adjacency, position, histogram, centroid, and run-length features. It makes no model or API invocation; seeded randomness is used only to construct distractor candidates and split evaluation pools.
+-
+-## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The module explicitly disclaims AutoPyVerifier’s LLM synthesis and accurately describes its cheap deterministic substitute. Its implementation matches that description, and it contains no sleep-padding, score-capping, adversarial-check token dodges, or random-feature classification.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
+ 
+-**Verdict:** `DISHONEST_NAMING`
+-
+-## VERDICT
+-DISHONEST_NAMING
+-
+-## CLAIMS
+-No paper, model, or compute-substrate claim. The docstring instead claims: “decides whether the GAP-1 set verifier is ready to become a frozen registry entry.”
+-
+-## IMPLEMENTATION_REALITY
+-The code only parses JSON, scans registry YAML with regex, and writes an artifact and ops documentation. Worse, `_decision()` can never return `"promoted"`: even when every gate passes, it returns `"blocked_missing_evidence"`.
+-
+-## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
+-
+-## RATIONALE
+-This is honestly described as evidence-only, but its central claimed decision is rigged: promotion is unreachable and the registry audit does not affect the decision. It is not a functioning verifier or promotion decision and must not contribute to production-ensemble AUROC numbers.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also explicitly states the substrate is cached-candidate evaluation with “no live LLM inference.”
+-
+-## IMPLEMENTATION_REALITY
+-The code performs deterministic subset search, grouped train/held-out splitting, cached-artifact validation, and statistical evaluation through `pilot` discriminators. It invokes no model framework or inference API; `random.Random` is used only for seeded group splitting.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The module does not pretend to implement a paper, learned model, or live inference system. Its implementation matches its narrow experimental claim, and it explicitly says not to promote the result to the registry.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-No claims about a paper, learned model, or specialized compute substrate. The docstring accurately claims: “It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
+-
+-## IMPLEMENTATION_REALITY
+-The code reads two JSON artifacts, applies explicit deterministic stability and leakage checks, audits a YAML registry using regex, and writes JSON and documentation updates. It performs no model inference and never claims to.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation does exactly the deterministic artifact-analysis job described by the docstring. There is no paper-name laundering, fake model invocation, sleep-padding, random feature generation, score-capping, or adversarial-check token dodging.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“The adapter…repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.” It also claims: “Token logprobs and top-k alternatives are treated as research diagnostics only.”
+-
+-## IMPLEMENTATION_REALITY
+-The default path delegates to Carnot’s `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses actual token logprobs and top-k alternatives from its manifest. It computes diagnostic correlations/AUROC while preserving deterministic validator decisions as final authority.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is an orchestration adapter around a separate llama.cpp telemetry module, not regex masquerading as inference. It explicitly labels the model-derived signals diagnostic-only and refuses readiness unless live inference, logprobs, top-k data, and focused tests are reported; its diagnostic AUROC must remain non-headline unless the imported telemetry path is separately verified.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
+-
+-## VERDICT
+-ADVERSARIAL_GAMING
+-
+-## CLAIMS
+-“Exp 1542 ARM/EBT soft-value diagnostic.” It claims to compare “explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.” It also reports `live_sota_model_inference_used` against three named model specifications.
+-
+-## IMPLEMENTATION_REALITY
+-The module invokes no model and imports no ML framework; it only reads precomputed JSON/JSONL fields and calculates correlations and AUC. Worse, for runtime-contract and BEAVER cases it fabricates “Carnot energy” directly from the target label: `0.0 if deterministic_accept else 1.0`.
+-
+-## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
+-
+-## GAMING_PATTERNS
+-- Target leakage: the purported energy feature is copied from the ground-truth accept/reject label, manufacturing perfect separation.
+-- `routing_score` incorporates that label-derived “energy,” contaminating routing AUC.
+-- `live_sota_model_inference_used` can become true merely because a row names a model in `MODEL_SPECS`; no inference is demonstrated.
+-- No sleep-padding, random features, explicit perfect-score capping, or named adversarial-check token dodges.
+-
+-## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
+-
+-## RATIONALE
+-This is an artifact aggregator masquerading as an ARM/EBT diagnostic. Calling the target label “Carnot energy” makes its correlation and routing AUC circular, so those numbers are worthless and must not enter production or headline results. Real measured energies and provenance-backed logprobs are required before this verifier is credible.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-None. The docstring explicitly claims an AST-and-heuristic implementation: “Python-looking text is checked with ``ast.parse`` plus bracket balance” and “General prose is checked with cheap structural heuristics.”
+-
+-## IMPLEMENTATION_REALITY
+-The code uses `ast.parse`, regular expressions, bracket-stack validation, and simple prose statistics exactly as documented. It invokes no learned model and imports no ML framework.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The verifier accurately names and describes its actual syntactic checks. Its `[0, 1]` clamps are ordinary range enforcement and still permit perfect endpoint scores; they are not adversarial perfect-dodging.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
+-
+-## VERDICT
+-HONEST_HEURISTIC
+-
+-## CLAIMS
+-“Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints.”  
+-“This module does not implement that frontier proof. It implements a bounded-prefix feasibility probe.”  
+-“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated.”
+-
+-## IMPLEMENTATION_REALITY
+-The code uses regex extraction, AST-based arithmetic evaluation, prefix slicing, and file-backed top-k logprob statistics. It performs no live model inference and imports no ML framework or model client.
+-
+-## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation is a narrow text-statistical heuristic, but the docstring explicitly admits that it is not exact BEAVER and lacks the required frontier proof. It also truthfully limits EPR features to previously observed telemetry and refuses to fabricate missing logprobs, so its AUROC is acceptable only when labeled explicitly as proxy performance.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.”  
+-“The reported frontier is the first text prefix that ends at a solver-proved false completed equality.”  
+-“This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
+-
+-## IMPLEMENTATION_REALITY
+-The implementation imports `z3`, constructs exact rational arithmetic expressions, submits equality constraints to `z3.Solver()`, and uses SAT/UNSAT results. Regex is used only to extract candidate equalities; the advertised full BEAVER machinery is explicitly absent.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The narrow Z3 claim is real, and the code repeatedly enforces the boundary between local arithmetic checking and full BEAVER. Deterministic random sampling only selects examples; it does not fabricate features or scores. No sleep-padding, score-capping, or adversarial-check token dodging appears.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/beaver_lite.py
+ 
+-**Verdict:** `DISHONEST_NAMING`
+-
+-## VERDICT
+-DISHONEST_NAMING
+-
+-## CLAIMS
+-“BEAVER-lite probability-mass certificates for arithmetic answer constraints.”  
+-“llama.cpp logits-backed top-K prefix enumerator.”  
+-“Return empirical and BEAVER-lite probability-mass violation bounds.”
+-
+-## IMPLEMENTATION_REALITY
+-The optional GGUF path performs real `llama_cpp.Llama` inference and reads logits, while the default and all failure paths use explicitly labeled deterministic mock completions. More seriously, the alleged `upper_bound` merely sums unsafe mass inside a truncated top-K beam and ignores all unexplored probability mass, so it is not an upper bound on total unsafe probability.
+-
+-## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
+-
+-## RATIONALE
+-The model substrate is real and the mock fallback is honestly disclosed, but the central certificate claim is mathematically false: truncated unsafe mass is generally a lower bound unless residual frontier mass is included. `bound_is_sound` then compares that mass with an unrelated count-based empirical rate, and the equal-mass mock is constructed to make this check pass; this must not contribute to headline AUROC results.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“BEAVER-lite live-or-Zipf logprob workflow for Exp 1158.”  
+-“llama.cpp completion provider that uses generated-token logprobs.”  
+-“Select a live llama.cpp bounder or the honest Zipf fallback.”
+-
+-## IMPLEMENTATION_REALITY
+-The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it for completions, extracts `token_logprobs`, and sums them. When live inference is unavailable or fails, it uses deterministic Zipf-distributed mock logprobs and explicitly records that fallback in the artifact.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-This is not regex wearing a model’s name: it contains a real llama.cpp model invocation and consumes actual generated-token logprobs. The synthetic path is plainly named, provenance is emitted through `mock_logprobs_used`, `zipf_mock_used`, and `logprobs_source`, and no sleep-padding, score-capping, randomness-based classification, or adversarial-check token dodging appears.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” It explicitly describes “a bounded prefix frontier over the canonical contract JSON” producing “structural risk signals”; it makes no paper, learned-model, or live-compute claim.
+-
+-## IMPLEMENTATION_REALITY
+-The code performs deterministic JSON canonicalization, trie-based prefix checks, and a target-length arithmetic bound over previously generated decoder rows. It invokes no model and imports no ML framework; model IDs and the live-inference flag are merely copied from source artifacts.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none; the `max(0.0, min(1.0, upper_bound))` expression is ordinary range enforcement, not perfect-score dodging
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation does exactly the structural prefix audit the docstring describes and openly places it below the deterministic validators. It also reports unavailable logprobs/top-k data as blockers instead of pretending that structural arithmetic is model inference.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+ 
+-**Verdict:** `AUTHENTIC`
+-
+-## VERDICT
+-AUTHENTIC
+-
+-## CLAIMS
+-“This is a deterministic pilot, not a production VeriCoT verifier.”  
+-“No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
+-
+-## IMPLEMENTATION_REALITY
+-The code deterministically reads checked-in JSON artifacts, canonicalizes answers, compares labels and ledger evidence, hashes files, and emits a replay report. It imports and invokes no model, ML framework, solver, API, or hardware-backed inference system.
+-
+-## CLAIM_VS_REALITY_GAP
+-NONE
+-
+-## GAMING_PATTERNS
+-none
+-
+-## RECOMMENDATION
+-KEEP
+-
+-## RATIONALE
+-The implementation does exactly what the docstring admits: deterministic artifact replay with no fresh inference or solving. It is unsuitable for production-ensemble or headline-AUROC attribution because it explicitly disclaims being a production verifier, but its naming and substrate disclosures are honest.
+-
++(audit call failed: codex exit 1: OpenAI Codex v0.149.1
++--------
++workdir: /home/ianblenke/github.com/ianblenke/carnot
++model: gpt-6-astra
++provider: openai
++approval: never
++sandbox: danger-full-access
++reasoning effort: xhig)
+-- 
+2.55.0
+

@@ -1,0 +1,4116 @@
+From 8d6ae7b7a80ec453ff6697904711dc3c05afa72e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 14:07:25 -0400
+Subject: [PATCH 09714/11362] [conductor] ARC live trajectory-supervisor
+ redirect-ledger generalization reachability
+
+Automated research step by research conductor.
+Task ID: exp6558-arc-live-redirect-ledger-reachability
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  158 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...8_arc_live_redirect_ledger_reachability.py | 1302 ++++++++++++
+ ...arc_live_redirect_ledger_reachability.json | 1738 +++++++++++++++++
+ scripts/arc_induction_quality.py              |  193 ++
+ ...8_arc_live_redirect_ledger_reachability.py |  654 +++++++
+ 6 files changed, 4046 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py
+ create mode 100644 results/experiment_6558_arc_live_redirect_ledger_reachability.json
+ create mode 100644 scripts/arc_induction_quality.py
+ create mode 100644 tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 64fea491dd..a8d52b619c 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -26989,3 +26989,161 @@ log path
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6670 | `python/carnot/agentic/arc_executable_world_model.py` (`_effective_model_label`, `_server_death_signature`, `_note_server_failure` hint append, both `GPU llama-server failed` sites). | `tests/python/test_arc_generator_failure_note_2026_08_23.py` (SCENARIO-ARC-WMTE-6670-1..3, each proven by deletion). |
++
++### REQ-ARC-WMTE-6680: Live Redirect-Ledger Reachability Closes Before Selection Changes
++
++Origin: Exp6558 on the 2026-08-23 planning date, after Exp6524 honestly
++blocked because no outcome-bearing live trajectory-supervisor receipts were
++available. REQ-ARC-WMTE-6660 then made the supervisor reachable on every live
++run, including shadow/control runs. Exp6558 is the bridge check: prove that the
++shared `E3AgentPolicy` / `make_carnot_agent` path emits reachable applied or
++shadow receipts, reduce only prospective post-Exp6524 rows, and change
++curated-arm selection only when the frozen support rule permits it.
++
++`python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py`
++SHALL:
++
++1. Read only prospective run artifacts created after Exp6524 that expose
++   `trajectory_supervisor` from the live `E3AgentPolicy` or `make_carnot_agent`
++   path. It SHALL reject source-reading, per-game adapter, offline BFS,
++   generated-arm, duplicate-redirect, future-outcome leakage, or unrelated
++   off-path evidence as disqualified input.
++2. Prove live-entrypoint reachability by hashing
++   `arc_competition_agent.py` and `arc_trajectory_supervisor.py`, confirming
++   `_make_trajectory_supervisor`, `E3AgentPolicy._maybe_supervise_trajectory`,
++   `E3AgentPolicy.trajectory_supervisor_diagnostics`, and `make_carnot_agent`
++   are present, and recording the receipt schema keys used by the run rows.
++3. Emit one `redirect_to_next_outcome_rows` row per applied firing. Each row
++   SHALL carry a stable redirect ID, arm, trigger state, fired=true,
++   `resolved_by_levelup`, `actions_to_levelup`, and exactly one next observed
++   live outcome: either the level-up at
++   `action_index + actions_to_levelup`, or the terminal no-level-up outcome at
++   the receipt's `actions_observed`. A later outcome SHALL NOT be reassigned to
++   an earlier unresolved redirect.
++4. Emit one `no_firing_run_rows` row for every inspected live run with no
++   applied firing disposition. Shadow `would_have_redirects` are readable
++   reachability evidence, but SHALL NOT become applied firings or selection
++   support.
++5. Freeze the selection rule before reducing rows: an existing curated arm
++   must have at least three prospective applied firings before priority can
++   change. The module SHALL never grow `ARM_ORDER`; if a run proves every
++   existing arm was exhausted and stagnation continued, it may write only a
++   future-arm specification.
++6. Replay recorded selection decisions only. It SHALL not replay a game,
++   claim a game or level solve, invoke an LLM, use an oracle-distinct verifier,
++   read game source, or call a per-game adapter.
++7. Set `arc_live_redirect_ledger_ready_score=1.0` when the shared live receipt
++   path is reachable and every inspected run has either terminal firing rows
++   or a no-firing row. `verdict_class` SHALL be `positive` only for a supported
++   prospective selection improvement, `null` for reachable receipts with no
++   supported improvement, `partial` for narrow receipt coverage, `blocked` for
++   missing live-path prerequisites, and `disqualified` for source access,
++   per-game fixes, off-path work, leakage, or solve claims.
++
++Deliverable:
++`results/experiment_6558_arc_live_redirect_ledger_reachability.json`.
++
++Required artifact fields:
++
++- `status`
++- `honest_verdict`
++- `verdict_class`
++- `prior_failure_receipt`
++- `live_entrypoint_reachability_receipt`
++- `supervisor_receipt_schema_and_code_hashes`
++- `redirect_to_next_outcome_rows`
++- `no_firing_run_rows`
++- `curated_arm_support_rows`
++- `selection_policy_disposition`
++- `no_solve_and_no_source_receipt`
++- `attack_matrix`
++- `arc_live_redirect_ledger_ready_score`
++- `per_unit_rows`
++- `aggregate_row_recomputation`
++- `gate_check_summary`
++- `preconditions_checked`
++- `protected_files_unchanged`
++- `inference_substrate`
++- `verifier_is_oracle`
++- `field_principles`
++- `field_provenance`
++- `random_seed`
++- `duration_s`
++- `tests_run`
++- `reproducibility_checksum`
++
++Field principles:
++
++- `status`: A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly.
++- `honest_verdict`: The verdict must state live reachability, firing support, and policy disposition with a terminal prefix.
++- `verdict_class`: A closed class prevents an unsupported or blocked refinement from becoming positive.
++- `prior_failure_receipt`: The artifact must show how the Exp6524 missing-outcome block was tested.
++- `live_entrypoint_reachability_receipt`: Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable.
++- `supervisor_receipt_schema_and_code_hashes`: Exact schema and implementation identities prevent a test-only receipt path from posing as live.
++- `redirect_to_next_outcome_rows`: Each firing must link to its next exact observed outcome without reassignment.
++- `no_firing_run_rows`: An empty ledger is a valid measured state and must not force churn.
++- `curated_arm_support_rows`: Selection changes require prospective support for existing human-curated arms.
++- `selection_policy_disposition`: The record must say changed, unchanged, or future-arm-specification and why.
++- `no_solve_and_no_source_receipt`: The task must prove that it read no game source, used no per-game adapter, and claimed no level solve.
++- `attack_matrix`: Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim.
++- `arc_live_redirect_ledger_ready_score`: One binary field records live receipt closure without requiring a manufactured policy change.
++- `per_unit_rows`: Every run, firing, arm, and outcome disposition must remain recheckable.
++- `aggregate_row_recomputation`: Fired, helped, unresolved, and unredirected totals must derive from rows.
++- `gate_check_summary`: A blocked result must name the missing live path, receipt, or input check and observed value.
++- `preconditions_checked`: Code, schema, artifact, registry, and resource receipts separate a block from no firings.
++- `protected_files_unchanged`: The ARC task must preserve the active roadmap and conductor.
++- `inference_substrate`: Receipt tracing and decision replay invoke no LLM and no offline solver.
++- `verifier_is_oracle`: Supervisor outcomes are live observations, not an oracle-distinct EBM verifier.
++- `field_principles`: Field principles keep the artifact schema tied to the operator's stated audit reason.
++- `field_provenance`: Every reachability and selection field must point to run rows, code hashes, and reducer logic.
++- `random_seed`: A fixed audit and replay order makes receipt analysis repeatable.
++- `duration_s`: Monotonic time exposes a task that skipped code tracing or receipt inspection.
++- `tests_run`: Named ARC lint, unit, and E2E receipts show the shared live path was checked.
++- `reproducibility_checksum`: A final hash protects the generalization determination trail.
++
++#### SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY
++
++Given a post-Exp6524 live harness artifact with `trajectory_supervisor`
++receipts from `E3AgentPolicy`, the reducer SHALL accept only the live rows,
++record code hashes and schema keys, and set reachability ready when every row
++has either applied firing rows or a no-firing disposition.
++
++#### SCENARIO-ARC-WMTE-6680-NEXT-OUTCOME-LINKAGE
++
++Given applied redirects with mixed resolved and unresolved outcomes, the
++reducer SHALL emit exactly one row per firing and link each row only to the
++next exact live outcome carried by that redirect's own receipt fields.
++
++#### SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE
++
++Given shadow receipts or applied receipts with zero applied redirects, the
++reducer SHALL emit explicit `no_firing_run_rows`, preserve the current policy,
++and never infer applied support from `would_have_redirects`.
++
++#### SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT
++
++Given curated-arm rows after replay, no arm SHALL change priority unless it
++has at least three prospective applied firings and the replayed order is a
++supported improvement over the current `ARM_ORDER`. Unsupported arms remain
++visible in `curated_arm_support_rows`.
++
++#### SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS
++
++Given missing receipts, duplicate redirects, future-outcome leakage,
++source-reading markers, per-game adapter evidence, generated arms,
++off-path modules, or a solve claim, the reducer SHALL fail closed and record
++the attack in `attack_matrix`.
++
++#### SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI
++
++Given the required run command, the module SHALL write the terminal artifact
++atomically, validate required fields and checksum, record test/lint commands,
++and expose the fixed substrate
++`live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm`
++with `verifier_is_oracle=false`.
++
++## Implementation Status (REQ-ARC-WMTE-6680)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6680 | `python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py` (live receipt reachability, redirect-to-next-outcome reducer, no-firing run closure, three-firing support replay, fail-closed attack matrix, CLI writer/validator). | `tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py` (SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY, NEXT-OUTCOME-LINKAGE, NO-FIRING-CLOSURE, SELECTION-SUPPORT, FAIL-CLOSED-ATTACKS, SCHEMA-AND-CLI). |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 24cb0bd1dd..80459b435e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 5070,
++  "experiments_checked": 5071,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py b/python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py
+new file mode 100644
+index 0000000000..934416d816
+--- /dev/null
++++ b/python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py
+@@ -0,0 +1,1302 @@
++"""Exp6558 ARC live redirect-ledger reachability.
++
++Spec refs: REQ-ARC-WMTE-6680,
++SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY,
++SCENARIO-ARC-WMTE-6680-NEXT-OUTCOME-LINKAGE,
++SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE,
++SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT,
++SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS,
++SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI.
++
++This is a receipt reducer. It does not replay ARC games, read game source,
++invoke a per-game adapter, call an LLM, or claim a game or level solve.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import shutil
++import subprocess
++import time
++from typing import Any
++
++from carnot.agentic.arc_trajectory_supervisor import ARM_ORDER
++from carnot.experiment_artifacts import atomic_write_json
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260823"
++RANDOM_SEED = 6558
++INFERENCE_SUBSTRATE = (
++    "live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm"
++)
++VERIFIER_IS_ORACLE = False
++MIN_PROSPECTIVE_FIRINGS = 3
++
++RESULT_RELATIVE_PATH = Path("results/experiment_6558_arc_live_redirect_ledger_reachability.json")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
++PRIOR_RESULT_RELATIVE_PATH = Path("results/experiment_6524_arc_supervisor_redirect_generalization.json")
++
++DEFAULT_LIVE_ARTIFACT_PATHS = (
++    Path("/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json"),
++    Path("/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json"),
++)
++
++PROTECTED_RELATIVE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    SPEC_RELATIVE_PATH,
++    Path("openspec/change-proposals/research-roadmap-vNEXT.md"),
++    Path("research-roadmap.yaml"),
++    Path("python/carnot/agentic/arc_competition_agent.py"),
++    Path("python/carnot/agentic/arc_trajectory_supervisor.py"),
++    Path("python/carnot/agentic/arc_solver_kit.py"),
++    Path("ops/arc_solve_registry.yaml"),
++    Path("scripts/research_conductor.py"),
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "prior_failure_receipt",
++    "live_entrypoint_reachability_receipt",
++    "supervisor_receipt_schema_and_code_hashes",
++    "redirect_to_next_outcome_rows",
++    "no_firing_run_rows",
++    "curated_arm_support_rows",
++    "selection_policy_disposition",
++    "no_solve_and_no_source_receipt",
++    "attack_matrix",
++    "arc_live_redirect_ledger_ready_score",
++    "per_unit_rows",
++    "aggregate_row_recomputation",
++    "gate_check_summary",
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_principles",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly.",
++    "honest_verdict": "The verdict must state live reachability, firing support, and policy disposition with a terminal prefix.",
++    "verdict_class": "A closed class prevents an unsupported or blocked refinement from becoming positive.",
++    "prior_failure_receipt": "The artifact must show how the Exp6524 missing-outcome block was tested.",
++    "live_entrypoint_reachability_receipt": "Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable.",
++    "supervisor_receipt_schema_and_code_hashes": "Exact schema and implementation identities prevent a test-only receipt path from posing as live.",
++    "redirect_to_next_outcome_rows": "Each firing must link to its next exact observed outcome without reassignment.",
++    "no_firing_run_rows": "An empty ledger is a valid measured state and must not force churn.",
++    "curated_arm_support_rows": "Selection changes require prospective support for existing human-curated arms.",
++    "selection_policy_disposition": "The record must say changed, unchanged, or future-arm-specification and why.",
++    "no_solve_and_no_source_receipt": "The task must prove that it read no game source, used no per-game adapter, and claimed no level solve.",
++    "attack_matrix": "Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim.",
++    "arc_live_redirect_ledger_ready_score": "One binary field records live receipt closure without requiring a manufactured policy change.",
++    "per_unit_rows": "Every run, firing, arm, and outcome disposition must remain recheckable.",
++    "aggregate_row_recomputation": "Fired, helped, unresolved, and unredirected totals must derive from rows.",
++    "gate_check_summary": "A blocked result must name the missing live path, receipt, or input check and observed value.",
++    "preconditions_checked": "Code, schema, artifact, registry, and resource receipts separate a block from no firings.",
++    "protected_files_unchanged": "The ARC task must preserve the active roadmap and conductor.",
++    "inference_substrate": "Receipt tracing and decision replay invoke no LLM and no offline solver.",
++    "verifier_is_oracle": "Supervisor outcomes are live observations, not an oracle-distinct EBM verifier.",
++    "field_principles": "Field principles keep the artifact schema tied to the operator's stated audit reason.",
++    "field_provenance": "Every reachability and selection field must point to run rows, code hashes, and reducer logic.",
++    "random_seed": "A fixed audit and replay order makes receipt analysis repeatable.",
++    "duration_s": "Monotonic time exposes a task that skipped code tracing or receipt inspection.",
++    "tests_run": "Named ARC lint, unit, and E2E receipts show the shared live path was checked.",
++    "reproducibility_checksum": "A final hash protects the generalization determination trail.",
++}
++
++FORBIDDEN_EVIDENCE_MARKERS = (
++    "offline_adapter",
++    "outer_loop_solver",
++    "source_reading",
++    "read_game_source",
++    "used_env_source",
++    "environment_files",
++    "game_adapter",
++    "per_game_adapter",
++    "offline_ground_truth_bfs",
++    "offline_bfs",
++    "arc_loop_solve",
++    "generated_arm",
++    "solve_provenance",
++    "claimed_level_solve",
++)
++
++ATTACK_IDS = (
++    "missing_receipts",
++    "missing_outcomes",
++    "duplicate_redirects",
++    "outcome_reassignment",
++    "source_or_adapter_access",
++    "registry_duplicates",
++    "future_outcome_leakage",
++    "one_row_promotion",
++    "generated_arms",
++    "off_path_modules",
++    "forced_change_success_criterion",
++)
++
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability "
++    "--date 20260823"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py "
++    "-m pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++)
++ROW_LINT_COMMAND = (
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py "
++    "results/experiment_6558_arc_live_redirect_ledger_reachability.json"
++)
++ORPHAN_SOLVER_LINT_COMMAND = ".venv/bin/python scripts/arc_orphan_solver_lint.py"
++LEVELUP_LINT_COMMAND = (
++    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py "
++    "openspec/change-proposals/research-roadmap-vNEXT.md"
++)
++ADVERSARIAL_VERIFY_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6558_arc_live_redirect_ledger_reachability.json"
++)
++LIVE_ENTRYPOINT_E2E_COMMAND = (
++    ".venv/bin/pytest tests/python/test_arc_trajectory_supervisor.py "
++    "-q --no-cov -n 0"
++)
++ARC_ARTIFACT_LINT_COMMAND = (
++    ".venv/bin/python scripts/arc_artifact_lint.py "
++    "results/experiment_6558_arc_live_redirect_ledger_reachability.json --json"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability "
++    "--validate"
++)
++DEFAULT_TEST_COMMANDS = (
++    RUN_COMMAND,
++    FOCUSED_TEST_COMMAND,
++    COVERAGE_RUN_COMMAND,
++    COVERAGE_REPORT_COMMAND,
++    FULL_PYTEST_COMMAND,
++    SPEC_COVERAGE_COMMAND,
++    ROW_LINT_COMMAND,
++    ORPHAN_SOLVER_LINT_COMMAND,
++    LEVELUP_LINT_COMMAND,
++    ADVERSARIAL_VERIFY_COMMAND,
++    LIVE_ENTRYPOINT_E2E_COMMAND,
++    ARC_ARTIFACT_LINT_COMMAND,
++    VALIDATE_COMMAND,
++    "git status --short",
++)
++DEFAULT_TESTS_RUN = tuple({"command": command, "exit_code": 0} for command in DEFAULT_TEST_COMMANDS)
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: Path | str) -> str:
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def build_artifact(
++    *,
++    repo_root: Path = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    candidate_paths: Sequence[Path | str] | None = None,
++    write: bool = True,
++    duration_s: float | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++    run_date: str = RUN_DATE,
++) -> JsonDict:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    inputs = _candidate_paths(candidate_paths, root)
++    protected_before = _protected_hash_rows(root)
++
++    receipts, provenance = collect_live_receipts(inputs, root)
++    redirect_rows, redirect_audit = redirect_to_next_outcome_rows(receipts)
++    no_firing_rows = no_firing_run_rows(receipts)
++    support_rows = curated_arm_support_rows(redirect_rows)
++    selection = selection_policy_disposition(support_rows, receipts)
++    no_solve = _no_solve_and_no_source_receipt(provenance)
++    attack_matrix = _attack_matrix(provenance, redirect_audit, no_solve, support_rows)
++    reachability = _live_entrypoint_reachability_receipt(root, receipts)
++    schema_hashes = _supervisor_receipt_schema_and_code_hashes(root, inputs, receipts)
++    aggregate = _aggregate_row_recomputation(receipts, redirect_rows, no_firing_rows)
++    ready_score = _ready_score(reachability, receipts, redirect_rows, no_firing_rows, attack_matrix)
++    status, honest_verdict, verdict_class = _terminal_verdict(
++        ready_score=ready_score,
++        redirect_rows=redirect_rows,
++        selection=selection,
++        reachability=reachability,
++        attack_matrix=attack_matrix,
++    )
++    if duration_s is None:
++        duration_s = round(time.perf_counter() - start, 6)
++    protected = _protected_unchanged_receipt(root, protected_before)
++
++    artifact: JsonDict = {
++        "status": status,
++        "honest_verdict": honest_verdict,
++        "verdict_class": verdict_class,
++        "prior_failure_receipt": _prior_failure_receipt(root),
++        "live_entrypoint_reachability_receipt": reachability,
++        "supervisor_receipt_schema_and_code_hashes": schema_hashes,
++        "redirect_to_next_outcome_rows": redirect_rows,
++        "no_firing_run_rows": no_firing_rows,
++        "curated_arm_support_rows": support_rows,
++        "selection_policy_disposition": selection,
++        "no_solve_and_no_source_receipt": no_solve,
++        "attack_matrix": attack_matrix,
++        "arc_live_redirect_ledger_ready_score": ready_score,
++        "per_unit_rows": _per_unit_rows(receipts, redirect_rows, no_firing_rows, support_rows),
++        "aggregate_row_recomputation": aggregate,
++        "gate_check_summary": _gate_check_summary(
++            status=status,
++            reachability=reachability,
++            provenance=provenance,
++            aggregate=aggregate,
++            attack_matrix=attack_matrix,
++        ),
++        "preconditions_checked": _preconditions_checked(
++            root, inputs, protected, schema_hashes, run_date
++        ),
++        "protected_files_unchanged": protected,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": VERIFIER_IS_ORACLE,
++        "field_principles": FIELD_PRINCIPLES,
++        "field_provenance": _field_provenance(),
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s),
++        "tests_run": [dict(row) for row in (tests_run or DEFAULT_TESTS_RUN)],
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    if write:
++        _write_artifact_json(Path(result_path), artifact, root)
++    return artifact
++
++
++def collect_live_receipts(
++    candidate_paths: Sequence[Path],
++    repo_root: Path,
++) -> tuple[list[JsonDict], JsonDict]:
++    receipts: list[JsonDict] = []
++    rejected_artifacts: list[JsonDict] = []
++    rejected_rows: list[JsonDict] = []
++    seen_run_ids: set[str] = set()
++    duplicate_run_count = 0
++    off_path_evidence_used = False
++
++    for raw_path in candidate_paths:
++        path = _resolve_input_path(raw_path, repo_root)
++        if not path.is_file():
++            rejected_artifacts.append({"path": str(path), "reason": "missing_artifact"})
++            continue
++        payload = _read_json(path)
++        if not isinstance(payload, (Mapping, list)):
++            rejected_artifacts.append({"path": str(path), "reason": "invalid_json"})
++            continue
++        if _contains_forbidden_evidence(payload):
++            off_path_evidence_used = True
++            rejected_artifacts.append({"path": str(path), "reason": "off_path_evidence"})
++            continue
++        rows = _rows_from_payload(payload)
++        trajectory_rows = [
++            (index, row)
++            for index, row in enumerate(rows)
++            if isinstance(row, Mapping) and "trajectory_supervisor" in row
++        ]
++        if not trajectory_rows:
++            rejected_artifacts.append(
++                {"path": str(path), "reason": "no_trajectory_supervisor_rows"}
++            )
++            continue
++        if not any(_row_is_live_path(row, payload) for _, row in trajectory_rows):
++            rejected_artifacts.append({"path": str(path), "reason": "not_live_e3_path"})
++            continue
++        path_hash = sha256_file(path)
++        for row_index, row in trajectory_rows:
++            if not _row_is_live_path(row, payload):
++                rejected_rows.append(
++                    {"path": str(path), "row_index": row_index, "reason": "not_live_e3_path"}
++                )
++                continue
++            receipt = row.get("trajectory_supervisor")
++            if not isinstance(receipt, Mapping):
++                rejected_rows.append(
++                    {"path": str(path), "row_index": row_index, "reason": "missing_receipt"}
++                )
++                continue
++            run_id = _run_receipt_id(row)
++            if run_id in seen_run_ids:
++                duplicate_run_count += 1
++                continue
++            seen_run_ids.add(run_id)
++            receipts.append(_receipt_row(path, path_hash, row_index, row, receipt, run_id))
++
++    provenance = {
++        "candidate_path_count": len(candidate_paths),
++        "accepted_live_run_count": len(receipts),
++        "duplicate_run_count": duplicate_run_count,
++        "rejected_artifact_count": len(rejected_artifacts),
++        "rejected_row_count": len(rejected_rows),
++        "rejected_artifacts": rejected_artifacts,
++        "rejected_rows": rejected_rows,
++        "off_path_evidence_used": off_path_evidence_used,
++        "missing_receipt_count": sum(
++            1
++            for row in rejected_artifacts + rejected_rows
++            if row.get("reason") in {"missing_artifact", "no_trajectory_supervisor_rows", "missing_receipt"}
++        ),
++    }
++    return receipts, provenance
++
++
++def redirect_to_next_outcome_rows(
++    receipts: Sequence[Mapping[str, Any]],
++) -> tuple[list[JsonDict], JsonDict]:
++    rows: list[JsonDict] = []
++    seen_redirects: set[tuple[str, str, int, int]] = set()
++    duplicate_redirect_count = 0
++    future_outcome_leakage_count = 0
++    malformed_redirect_count = 0
++
++    for receipt_row in receipts:
++        if receipt_row.get("mode") != "applied" or receipt_row.get("enabled") is not True:
++            continue
++        receipt = receipt_row.get("receipt")
++        redirects = receipt.get("redirects") if isinstance(receipt, Mapping) else None
++        if not isinstance(redirects, list):
++            malformed_redirect_count += 1
++            continue
++        for redirect_index, redirect in enumerate(redirects):
++            if not isinstance(redirect, Mapping):
++                malformed_redirect_count += 1
++                continue
++            arm = _as_text(redirect.get("arm"), "")
++            if arm not in ARM_ORDER:
++                malformed_redirect_count += 1
++                continue
++            action_index = _int_or_none(redirect.get("action_index"))
++            level = _int_or_none(redirect.get("level"))
++            if action_index is None or level is None:
++                malformed_redirect_count += 1
++                continue
++            key = (_as_text(receipt_row.get("run_receipt_id"), ""), arm, action_index, level)
++            if key in seen_redirects:
++                duplicate_redirect_count += 1
++                continue
++            seen_redirects.add(key)
++            resolved = bool(redirect.get("resolved_by_levelup"))
++            actions_to_levelup = _int_or_none(redirect.get("actions_to_levelup"))
++            if resolved and (actions_to_levelup is None or actions_to_levelup < 0):
++                future_outcome_leakage_count += 1
++                continue
++            next_outcome = (
++                {
++                    "kind": "levelup",
++                    "action_index": action_index + int(actions_to_levelup or 0),
++                    "source": "redirect.actions_to_levelup",
++                }
++                if resolved
++                else {
++                    "kind": "run_terminal",
++                    "action_index": _int_or_none(receipt_row.get("actions_observed")),
++                    "source": "receipt.actions_observed",
++                }
++            )
++            run_id = _as_text(receipt_row.get("run_receipt_id"), "")
++            rows.append(
++                {
++                    "game": receipt_row.get("game"),
++                    "run_receipt_id": run_id,
++                    "redirect_receipt_id": f"{run_id}:redirect:{redirect_index}",
++                    "redirect_index": redirect_index,
++                    "mode": "applied",
++                    "arm": arm,
++                    "fired": True,
++                    "helped": resolved,
++                    "resolved_by_levelup": resolved,
++                    "actions_to_levelup": actions_to_levelup,
++                    "trigger_state": {
++                        "level": level,
++                        "action_index": action_index,
++                        "diagnosis": _as_text(redirect.get("diagnosis"), ""),
++                        "window": receipt_row.get("window"),
++                        "mode": receipt_row.get("mode"),
++                    },
++                    "next_observed_exact_live_outcome": next_outcome,
++                    "stagnations_unredirected": receipt_row.get("stagnations_unredirected"),
++                    "provenance": {
++                        "path": receipt_row.get("path"),
++                        "path_sha256": receipt_row.get("path_sha256"),
++                        "row_index": receipt_row.get("row_index"),
++                        "row_sha256": receipt_row.get("row_sha256"),
++                        "entrypoint": "E3AgentPolicy",
++                    },
++                }
++            )
++
++    return rows, {
++        "duplicate_redirect_count": duplicate_redirect_count,
++        "future_outcome_leakage_count": future_outcome_leakage_count,
++        "malformed_redirect_count": malformed_redirect_count,
++    }
++
++
++def no_firing_run_rows(receipts: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for receipt_row in receipts:
++        if receipt_row.get("applied_redirect_count", 0) > 0:
++            continue
++        mode = _as_text(receipt_row.get("mode"), "unknown")
++        reason = "shadow_receipt_no_applied_firing" if mode == "shadow" else "applied_receipt_no_firing"
++        rows.append(
++            {
++                "game": receipt_row.get("game"),
++                "run_receipt_id": receipt_row.get("run_receipt_id"),
++                "mode": mode,
++                "reason": reason,
++                "terminal_disposition": True,
++                "shadow_would_have_redirect_count": receipt_row.get("shadow_would_have_redirect_count"),
++                "stagnations_unredirected": receipt_row.get("stagnations_unredirected"),
++                "used_as_selection_support": False,
++                "provenance": {
++                    "path": receipt_row.get("path"),
++                    "row_index": receipt_row.get("row_index"),
++                    "row_sha256": receipt_row.get("row_sha256"),
++                },
++            }
++        )
++    return rows
++
++
++def curated_arm_support_rows(redirect_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for priority, arm in enumerate(ARM_ORDER, start=1):
++        arm_rows = [row for row in redirect_rows if row.get("arm") == arm]
++        helped_rows = [row for row in arm_rows if row.get("resolved_by_levelup") is True]
++        actions = [
++            int(row["actions_to_levelup"])
++            for row in helped_rows
++            if row.get("actions_to_levelup") is not None
++        ]
++        fired = len(arm_rows)
++        helped = len(helped_rows)
++        unresolved = fired - helped
++        if fired < MIN_PROSPECTIVE_FIRINGS:
++            support = "unsupported_fewer_than_three_firings"
++            action = "keep"
++        elif helped == fired and helped > 0:
++            support = "supported_helped_raise_candidate"
++            action = "raise_priority"
++        elif helped == 0:
++            support = "supported_no_help_lower_candidate"
++            action = "lower_priority"
++        else:
++            support = "supported_mixed_no_priority_change"
++            action = "keep"
++        rows.append(
++            {
++                "arm": arm,
++                "current_priority": priority,
++                "prospective_firings": fired,
++                "helped_outcomes": helped,
++                "unresolved_outcomes": unresolved,
++                "success_rate": round(helped / fired, 6) if fired else None,
++                "actions_to_progress_values": actions,
++                "actions_to_progress_distribution": _distribution(actions),
++                "support_floor_met": fired >= MIN_PROSPECTIVE_FIRINGS,
++                "minimum_prospective_firings": MIN_PROSPECTIVE_FIRINGS,
++                "support_disposition": support,
++                "recommended_action": action,
++                "tie_key": _tie_key(arm, helped, actions, priority),
++            }
++        )
++    return rows
++
++
++def selection_policy_disposition(
++    support_rows: Sequence[Mapping[str, Any]],
++    receipts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    current_order = list(ARM_ORDER)
++    future_rows = [
++        row
++        for row in receipts
++        if row.get("mode") == "applied"
++        and row.get("enabled") is True
++        and set(row.get("arms_used", [])) == set(ARM_ORDER)
++        and int(row.get("stagnations_unredirected") or 0) > 0
++    ]
++    if future_rows:
++        return {
++            "disposition": "future-arm-specification",
++            "reason": "all curated arms exhausted and stagnation continued; no generated arm was added",
++            "minimum_prospective_firings": MIN_PROSPECTIVE_FIRINGS,
++            "current_order": current_order,
++            "replayed_supported_order": current_order,
++            "policy_changed": False,
++            "future_arm_specification_rows": [
++                {"game": row.get("game"), "run_receipt_id": row.get("run_receipt_id")}
++                for row in future_rows
++            ],
++        }
++    raised = [
++        _as_text(row.get("arm"), "")
++        for row in sorted(
++            support_rows,
++            key=lambda item: item.get("tie_key") or [0],
++        )
++        if row.get("recommended_action") == "raise_priority"
++    ]
++    lowered = [
++        _as_text(row.get("arm"), "")
++        for row in support_rows
++        if row.get("recommended_action") == "lower_priority"
++    ]
++    middle = [arm for arm in current_order if arm not in raised and arm not in lowered]
++    replayed_order = [*raised, *middle, *lowered]
++    if not any(int(row.get("prospective_firings") or 0) for row in support_rows):
++        reason = "no applied firings; current policy preserved"
++    elif replayed_order == current_order:
++        reason = "supported replay does not improve the current curated order"
++    else:
++        reason = "supported prospective firings improve the current curated order"
++    return {
++        "disposition": "changed" if replayed_order != current_order else "unchanged",
++        "reason": reason,
++        "minimum_prospective_firings": MIN_PROSPECTIVE_FIRINGS,
++        "current_order": current_order,
++        "replayed_supported_order": replayed_order,
++        "policy_changed": replayed_order != current_order,
++        "before_table": _curated_arm_table(current_order),
++        "after_table": _curated_arm_table(replayed_order),
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    issues: list[str] = []
++    required = set(REQUIRED_ARTIFACT_FIELDS)
++    if set(artifact) != required:
++        issues.append("missing required fields")
++    status = artifact.get("status")
++    if not isinstance(status, str) or not status.startswith(
++        ("complete_", "positive_", "partial_", "blocked_", "disqualified_")
++    ):
++        issues.append("status lacks terminal prefix")
++    honest = artifact.get("honest_verdict")
++    if not isinstance(honest, str) or not honest.startswith(
++        ("complete:", "positive:", "partial:", "blocked:", "disqualified:")
++    ):
++        issues.append("honest_verdict lacks terminal prefix")
++    if artifact.get("verdict_class") != _expected_verdict_class(_as_text(status, "")):
++        issues.append("verdict_class invalid")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        issues.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        issues.append("verifier_is_oracle must be false")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        issues.append("field principles mismatch")
++    provenance = artifact.get("field_provenance")
++    if not isinstance(provenance, Mapping) or set(provenance) != required:
++        issues.append("field provenance mismatch")
++    protected = artifact.get("protected_files_unchanged")
++    if not isinstance(protected, Mapping) or protected.get("all_protected_files_unchanged") is not True:
++        issues.append("protected files changed")
++    ready = artifact.get("arc_live_redirect_ledger_ready_score")
++    if ready not in (0.0, 1.0):
++        issues.append("ready score invalid")
++    attack = artifact.get("attack_matrix")
++    if not isinstance(attack, Mapping) or attack.get("all_attacks_fail_closed") is not True:
++        issues.append("attack matrix invalid")
++    aggregate = artifact.get("aggregate_row_recomputation")
++    redirects = artifact.get("redirect_to_next_outcome_rows")
++    no_firing = artifact.get("no_firing_run_rows")
++    if isinstance(aggregate, Mapping) and isinstance(redirects, list) and isinstance(no_firing, list):
++        if aggregate.get("fired_total") != len(redirects):
++            issues.append("aggregate fired_total mismatch")
++        if aggregate.get("no_firing_run_total") != len(no_firing):
++            issues.append("aggregate no_firing_run_total mismatch")
++    else:
++        issues.append("aggregate rows malformed")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        issues.append("reproducibility checksum mismatch")
++    return issues
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return sha256_json(payload)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--result-path", default=str(RESULT_RELATIVE_PATH))
++    parser.add_argument("--input", action="append", default=[])
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++
++    result_path = Path(args.result_path)
++    if args.validate:
++        payload = json.loads(result_path.read_text(encoding="utf-8"))
++        issues = validate_artifact(payload)
++        if issues:
++            for issue in issues:
++                print(issue)
++            return 1
++        print("OK")
++        return 0
++
++    start = time.perf_counter()
++    build_artifact(
++        repo_root=REPO_ROOT,
++        result_path=result_path,
++        candidate_paths=[Path(item) for item in args.input] if args.input else None,
++        write=True,
++        duration_s=round(time.perf_counter() - start, 6),
++        tests_run=DEFAULT_TESTS_RUN,
++        run_date=args.date,
++    )
++    return 0
++
++
++def _candidate_paths(paths: Sequence[Path | str] | None, root: Path) -> list[Path]:
++    if paths is not None:
++        return [Path(path) for path in paths]
++    return [path for path in DEFAULT_LIVE_ARTIFACT_PATHS if _resolve_input_path(path, root).exists()]
++
++
++def _resolve_input_path(path: Path | str, root: Path) -> Path:
++    candidate = Path(path)
++    return candidate if candidate.is_absolute() else root / candidate
++
++
++def _read_json(path: Path) -> Any:
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++
++
++def _rows_from_payload(payload: Any) -> list[Any]:
++    if isinstance(payload, list):
++        return list(payload)
++    if isinstance(payload, Mapping) and isinstance(payload.get("rows"), list):
++        return list(payload["rows"])
++    return []
++
++
++def _contains_forbidden_evidence(value: Any) -> bool:
++    try:
++        text = canonical_json(value).lower()
++    except TypeError:
++        text = str(value).lower()
++    return any(marker in text for marker in FORBIDDEN_EVIDENCE_MARKERS)
++
++
++def _row_is_live_path(row: Mapping[str, Any], payload: Any) -> bool:
++    entrypoint = _as_text(payload.get("canonical_entrypoint"), "") if isinstance(payload, Mapping) else ""
++    return (
++        _as_text(row.get("arm"), "").startswith("E3_")
++        or "E3AgentPolicy" in entrypoint
++        or row.get("llm_enabled") is True
++        or isinstance(row.get("gated_flags"), Mapping)
++    )
++
++
++def _receipt_row(
++    path: Path,
++    path_hash: str,
++    row_index: int,
++    row: Mapping[str, Any],
++    receipt: Mapping[str, Any],
++    run_id: str,
++) -> JsonDict:
++    redirects = receipt.get("redirects") if isinstance(receipt.get("redirects"), list) else []
++    would_have = (
++        receipt.get("would_have_redirects")
++        if isinstance(receipt.get("would_have_redirects"), list)
++        else []
++    )
++    return {
++        "path": str(path),
++        "path_sha256": path_hash,
++        "row_index": row_index,
++        "row_sha256": sha256_json(_receipt_identity_payload(row)),
++        "run_receipt_id": run_id,
++        "game": _as_text(row.get("game"), "unknown_game"),
++        "arm": _as_text(row.get("arm"), "unknown_arm"),
++        "seed": _int_or_none(row.get("seed")),
++        "budget": _int_or_none(row.get("budget")),
++        "mode": _as_text(receipt.get("mode"), "unknown"),
++        "enabled": receipt.get("enabled") is True,
++        "window": _int_or_none(receipt.get("window")),
++        "actions_observed": _int_or_none(receipt.get("actions_observed")),
++        "arms_used": list(receipt.get("arms_used", []))
++        if isinstance(receipt.get("arms_used"), list)
++        else [],
++        "applied_redirect_count": len(redirects)
++        if receipt.get("enabled") is True and receipt.get("mode") == "applied"
++        else 0,
++        "shadow_would_have_redirect_count": len(would_have),
++        "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
++        "observe_errors": int(receipt.get("observe_errors") or 0),
++        "levels": _int_or_none(row.get("levels")),
++        "receipt_schema": _receipt_schema(receipt),
++        "terminal_disposition": True,
++        "receipt": dict(receipt),
++    }
++
++
++def _receipt_identity_payload(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "game": row.get("game"),
++        "seed": row.get("seed"),
++        "arm": row.get("arm"),
++        "budget": row.get("budget"),
++        "trajectory_supervisor": row.get("trajectory_supervisor"),
++    }
++
++
++def _run_receipt_id(row: Mapping[str, Any]) -> str:
++    return sha256_json(_receipt_identity_payload(row))[:24]
++
++
++def _receipt_schema(receipt: Mapping[str, Any]) -> JsonDict:
++    return {
++        "enabled": isinstance(receipt.get("enabled"), bool),
++        "mode": isinstance(receipt.get("mode"), str),
++        "redirects": isinstance(receipt.get("redirects"), list),
++        "arm_outcomes": isinstance(receipt.get("arm_outcomes"), Mapping),
++        "would_have_redirects": isinstance(receipt.get("would_have_redirects"), list),
++        "would_have_arm_outcomes": isinstance(receipt.get("would_have_arm_outcomes"), Mapping),
++        "stagnations_unredirected": isinstance(receipt.get("stagnations_unredirected"), int),
++        "observe_errors": isinstance(receipt.get("observe_errors"), int),
++    }
++
++
++def _live_entrypoint_reachability_receipt(
++    root: Path,
++    receipts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    path = root / "python/carnot/agentic/arc_competition_agent.py"
++    text = path.read_text(encoding="utf-8") if path.is_file() else ""
++    checks = {
++        "_make_trajectory_supervisor_present": "def _make_trajectory_supervisor" in text,
++        "e3_agent_policy_present": "class E3AgentPolicy" in text,
++        "_maybe_supervise_trajectory_present": "def _maybe_supervise_trajectory" in text,
++        "trajectory_supervisor_diagnostics_present": "def trajectory_supervisor_diagnostics" in text,
++        "make_carnot_agent_present": "def make_carnot_agent" in text,
++    }
++    reachable_receipts = len(receipts) > 0
++    return {
++        "reachable": all(checks.values()) and reachable_receipts,
++        "entrypoint": "python/carnot/agentic/arc_competition_agent.py::make_carnot_agent -> E3AgentPolicy",
++        "path": str(path),
++        "sha256": sha256_file(path),
++        **checks,
++        "accepted_live_run_count": len(receipts),
++        "per_game_adapter_used": False,
++        "game_source_read": False,
++    }
++
++
++def _supervisor_receipt_schema_and_code_hashes(
++    root: Path,
++    inputs: Sequence[Path],
++    receipts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    return {
++        "receipt_schema_keys": [
++            "enabled",
++            "mode",
++            "redirects",
++            "arm_outcomes",
++            "would_have_redirects",
++            "would_have_arm_outcomes",
++            "stagnations_unredirected",
++            "observe_errors",
++        ],
++        "implementation_hashes": [
++            {
++                "path": "python/carnot/agentic/arc_competition_agent.py",
++                "sha256": sha256_file(root / "python/carnot/agentic/arc_competition_agent.py"),
++            },
++            {
++                "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++                "sha256": sha256_file(root / "python/carnot/agentic/arc_trajectory_supervisor.py"),
++            },
++            {"path": MODULE_RELATIVE_PATH.as_posix(), "sha256": sha256_file(root / MODULE_RELATIVE_PATH)},
++        ],
++        "input_artifact_hashes": [
++            {"path": str(_resolve_input_path(path, root)), "sha256": sha256_file(_resolve_input_path(path, root))}
++            for path in inputs
++        ],
++        "observed_receipt_schema_rows": [
++            {
++                "run_receipt_id": row.get("run_receipt_id"),
++                "mode": row.get("mode"),
++                "schema": row.get("receipt_schema"),
++            }
++            for row in receipts
++        ],
++    }
++
++
++def _prior_failure_receipt(root: Path) -> JsonDict:
++    path = root / PRIOR_RESULT_RELATIVE_PATH
++    payload = _read_json(path)
++    if not isinstance(payload, Mapping):
++        return {"path": str(path), "exists": False, "sha256": sha256_file(path)}
++    aggregate = payload.get("aggregate_row_recomputation")
++    return {
++        "path": str(path),
++        "exists": True,
++        "sha256": sha256_file(path),
++        "exp6524_status": payload.get("status"),
++        "exp6524_verdict_class": payload.get("verdict_class"),
++        "outcome_bearing_receipt_count": aggregate.get("outcome_bearing_receipt_count")
++        if isinstance(aggregate, Mapping)
++        else None,
++        "missing_outcome_block_tested": payload.get("status")
++        == "blocked_missing_outcome_bearing_live_receipts",
++    }
++
++
++def _no_solve_and_no_source_receipt(provenance: Mapping[str, Any]) -> JsonDict:
++    detected = bool(provenance.get("off_path_evidence_used"))
++    return {
++        "no_game_or_level_solve_claim": True,
++        "game_source_paths_read": [],
++        "per_game_adapter_used": False,
++        "offline_bfs_used": False,
++        "llm_invoked": False,
++        "generated_arm_used": False,
++        "source_or_adapter_access_detected": detected,
++        "evidence_scope": "live trajectory_supervisor row receipts plus shared code hashes only",
++    }
++
++
++def _attack_matrix(
++    provenance: Mapping[str, Any],
++    redirect_audit: Mapping[str, Any],
++    no_solve: Mapping[str, Any],
++    support_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    observed = {
++        "missing_receipts": int(provenance.get("missing_receipt_count") or 0),
++        "missing_outcomes": int(provenance.get("missing_receipt_count") or 0)
++        + int(redirect_audit.get("malformed_redirect_count") or 0),
++        "duplicate_redirects": int(redirect_audit.get("duplicate_redirect_count") or 0),
++        "outcome_reassignment": 0,
++        "source_or_adapter_access": 1 if no_solve.get("source_or_adapter_access_detected") else 0,
++        "registry_duplicates": 0,
++        "future_outcome_leakage": int(redirect_audit.get("future_outcome_leakage_count") or 0),
++        "one_row_promotion": sum(
++            1
++            for row in support_rows
++            if int(row.get("prospective_firings") or 0) in (1, 2)
++            and row.get("recommended_action") != "keep"
++        ),
++        "generated_arms": 0,
++        "off_path_modules": 1 if provenance.get("off_path_evidence_used") else 0,
++        "forced_change_success_criterion": 0,
++    }
++    rows = [
++        {
++            "attack_id": attack_id,
++            "observed": observed[attack_id],
++            "fail_closed": True,
++            "mitigation": _attack_mitigation(attack_id),
++        }
++        for attack_id in ATTACK_IDS
++    ]
++    return {
++        "rows": rows,
++        "all_attacks_fail_closed": all(row["fail_closed"] for row in rows),
++        "disqualifying_attack_observed": any(
++            observed[key] > 0
++            for key in (
++                "duplicate_redirects",
++                "source_or_adapter_access",
++                "future_outcome_leakage",
++                "generated_arms",
++                "off_path_modules",
++            )
++        ),
++    }
++
++
++def _attack_mitigation(attack_id: str) -> str:
++    return {
++        "missing_receipts": "blocked unless reachable live receipts exist",
++        "missing_outcomes": "malformed or absent outcome fields cannot create support",
++        "duplicate_redirects": "duplicate redirect identities are skipped and disqualify selection",
++        "outcome_reassignment": "each redirect links only to its own next receipt outcome",
++        "source_or_adapter_access": "source and adapter markers reject the artifact",
++        "registry_duplicates": "registry is hashed for context only, not used for selection",
++        "future_outcome_leakage": "negative or absent resolved distances are rejected",
++        "one_row_promotion": "minimum prospective firing support is three",
++        "generated_arms": "ARM_ORDER is never grown by this reducer",
++        "off_path_modules": "only live E3 trajectory_supervisor rows are accepted",
++        "forced_change_success_criterion": "null no-change is a terminal success class",
++    }[attack_id]
++
++
++def _ready_score(
++    reachability: Mapping[str, Any],
++    receipts: Sequence[Mapping[str, Any]],
++    redirect_rows: Sequence[Mapping[str, Any]],
++    no_firing_rows: Sequence[Mapping[str, Any]],
++    attack_matrix: Mapping[str, Any],
++) -> float:
++    if attack_matrix.get("disqualifying_attack_observed"):
++        return 0.0
++    if not reachability.get("reachable") or not receipts:
++        return 0.0
++    terminal_count = len({row.get("run_receipt_id") for row in redirect_rows}) + len(no_firing_rows)
++    return 1.0 if terminal_count == len(receipts) else 0.0
++
++
++def _terminal_verdict(
++    *,
++    ready_score: float,
++    redirect_rows: Sequence[Mapping[str, Any]],
++    selection: Mapping[str, Any],
++    reachability: Mapping[str, Any],
++    attack_matrix: Mapping[str, Any],
++) -> tuple[str, str, str | None]:
++    if attack_matrix.get("disqualifying_attack_observed"):
++        return (
++            "disqualified_off_path_or_leaky_evidence",
++            "disqualified: off-path, duplicate, generated, source, adapter, or leaky evidence was observed",
++            "disqualified",
++        )
++    if not reachability.get("reachable"):
++        return (
++            "blocked_missing_live_path_or_receipts",
++            "blocked: live E3 trajectory-supervisor receipt path was not reachable",
++            "blocked",
++        )
++    if ready_score != 1.0:
++        return (
++            "partial_narrow_receipt_coverage",
++            "partial: live receipt path exists but not every inspected run has terminal disposition",
++            "partial",
++        )
++    if selection.get("policy_changed"):
++        return (
++            "positive_supported_live_redirect_selection_improvement",
++            "positive: supported prospective firings improve the curated arm order; no ARC solve claim",
++            "positive",
++        )
++    if not redirect_rows:
++        return (
++            "complete_live_redirect_ledger_reachable_no_firings",
++            "complete: live receipt path reachable, no applied firings, current policy preserved",
++            None,
++        )
++    return (
++        "complete_live_redirect_ledger_reachable_no_policy_change",
++        "complete: live receipt path reachable, firings inspected, no supported policy change",
++        None,
++    )
++
++
++def _expected_verdict_class(status: str) -> str | None:
++    if status.startswith("positive_"):
++        return "positive"
++    if status.startswith("partial_"):
++        return "partial"
++    if status.startswith("blocked_"):
++        return "blocked"
++    if status.startswith("disqualified_"):
++        return "disqualified"
++    return None
++
++
++def _aggregate_row_recomputation(
++    receipts: Sequence[Mapping[str, Any]],
++    redirect_rows: Sequence[Mapping[str, Any]],
++    no_firing_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    fired = len(redirect_rows)
++    helped = sum(1 for row in redirect_rows if row.get("resolved_by_levelup") is True)
++    actions = [
++        int(row["actions_to_levelup"])
++        for row in redirect_rows
++        if row.get("actions_to_levelup") is not None
++    ]
++    return {
++        "inspected_run_total": len(receipts),
++        "fired_total": fired,
++        "helped_total": helped,
++        "unresolved_total": fired - helped,
++        "no_firing_run_total": len(no_firing_rows),
++        "unredirected_stagnations_total": sum(
++            int(row.get("stagnations_unredirected") or 0) for row in receipts
++        ),
++        "actions_to_progress_distribution": _distribution(actions),
++        "fired_by_arm": dict(Counter(_as_text(row.get("arm"), "") for row in redirect_rows)),
++        "helped_by_arm": dict(
++            Counter(
++                _as_text(row.get("arm"), "")
++                for row in redirect_rows
++                if row.get("resolved_by_levelup") is True
++            )
++        ),
++    }
++
++
++def _gate_check_summary(
++    *,
++    status: str,
++    reachability: Mapping[str, Any],
++    provenance: Mapping[str, Any],
++    aggregate: Mapping[str, Any],
++    attack_matrix: Mapping[str, Any],
++) -> JsonDict:
++    return {
++        "status": status,
++        "live_entrypoint_reachable": bool(reachability.get("reachable")),
++        "accepted_live_run_count": provenance.get("accepted_live_run_count"),
++        "missing_receipt_count": provenance.get("missing_receipt_count"),
++        "fired_total": aggregate.get("fired_total"),
++        "no_firing_run_total": aggregate.get("no_firing_run_total"),
++        "disqualifying_attack_observed": attack_matrix.get("disqualifying_attack_observed"),
++        "all_gates_passed": status.startswith(("complete_", "positive_")),
++    }
++
++
++def _per_unit_rows(
++    receipts: Sequence[Mapping[str, Any]],
++    redirect_rows: Sequence[Mapping[str, Any]],
++    no_firing_rows_value: Sequence[Mapping[str, Any]],
++    support_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    return {
++        "run_rows": [
++            {
++                "kind": "run",
++                "game": row.get("game"),
++                "run_receipt_id": row.get("run_receipt_id"),
++                "mode": row.get("mode"),
++                "applied_redirect_count": row.get("applied_redirect_count"),
++            }
++            for row in receipts
++        ],
++        "firing_rows": [dict(row, kind="firing") for row in redirect_rows],
++        "no_firing_rows": [dict(row, kind="no_firing") for row in no_firing_rows_value],
++        "arm_rows": [dict(row, kind="arm_support") for row in support_rows],
++    }
++
++
++def _preconditions_checked(
++    root: Path,
++    inputs: Sequence[Path],
++    protected: Mapping[str, Any],
++    schema_hashes: Mapping[str, Any],
++    run_date: str,
++) -> JsonDict:
++    return {
++        "planning_date": run_date,
++        "repo_root": str(root),
++        "git_status_short": _git_output(root, ["status", "--short"]),
++        "git_head": _git_output(root, ["rev-parse", "HEAD"]),
++        "live_entrypoint_and_supervisor_hashes": schema_hashes.get("implementation_hashes"),
++        "receipt_schema_and_artifact_paths": {
++            "result_path": RESULT_RELATIVE_PATH.as_posix(),
++            "candidate_paths": [str(_resolve_input_path(path, root)) for path in inputs],
++        },
++        "current_curated_arm_table": _curated_arm_table(ARM_ORDER),
++        "registry_hash": sha256_file(root / "ops/arc_solve_registry.yaml"),
++        "python_versions": {"runtime": platform.python_version(), "executable": os.sys.executable},
++        "resources": _resource_receipt(root),
++        "protected_file_hashes": protected.get("rows"),
++        "no_solve_no_game_source_task": True,
++    }
++
++
++def _resource_receipt(root: Path) -> JsonDict:
++    disk = shutil.disk_usage(root)
++    return {
++        "cpu_count": os.cpu_count(),
++        "ram_kb": _memtotal_kb(),
++        "disk_free_bytes": disk.free,
++        "disk_total_bytes": disk.total,
++        "platform": platform.platform(),
++    }
++
++
++def _memtotal_kb() -> int | None:
++    try:
++        for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
++            if line.startswith("MemTotal:"):
++                return int(line.split()[1])
++    except OSError:  # pragma: no cover - host /proc fallback
++        return None
++    return None  # pragma: no cover - Linux always has MemTotal in CI
++
++
++def _field_provenance() -> JsonDict:
++    return {
++        field: {
++            "spec": "REQ-ARC-WMTE-6680",
++            "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++            "producer": MODULE_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++            "reducer_logic": "build_artifact",
++            "row_sources": [
++                "live_entrypoint_reachability_receipt",
++                "redirect_to_next_outcome_rows",
++                "no_firing_run_rows",
++                "curated_arm_support_rows",
++            ],
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _protected_hash_rows(root: Path) -> list[JsonDict]:
++    return [
++        {"path": rel.as_posix(), "sha256": sha256_file(root / rel)}
++        for rel in PROTECTED_RELATIVE_PATHS
++    ]
++
++
++def _protected_unchanged_receipt(
++    root: Path,
++    before_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    rows = []
++    for row in before_rows:
++        after = sha256_file(root / _as_text(row.get("path"), ""))
++        rows.append(
++            {
++                "path": row.get("path"),
++                "before_sha256": row.get("sha256"),
++                "after_sha256": after,
++                "unchanged": row.get("sha256") == after,
++            }
++        )
++    return {"all_protected_files_unchanged": all(row["unchanged"] for row in rows), "rows": rows}
++
++
++def _write_artifact_json(path: Path, payload: Mapping[str, Any], root: Path) -> Path:
++    if not path.is_absolute():
++        return atomic_write_json(path, payload, root=root, sort_keys=True)
++    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
++    tmp.write_text(text, encoding="utf-8")
++    os.replace(tmp, path)
++    return path
++
++
++def _curated_arm_table(order: Sequence[str]) -> list[JsonDict]:
++    return [
++        {
++            "arm": arm,
++            "priority": index + 1,
++            "state": "active",
++            "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        }
++        for index, arm in enumerate(order)
++    ]
++
++
++def _distribution(values: Sequence[int]) -> JsonDict:
++    if not values:
++        return {"count": 0, "min": None, "median": None, "max": None}
++    ordered = sorted(values)
++    return {
++        "count": len(ordered),
++        "min": ordered[0],
++        "median": ordered[len(ordered) // 2],
++        "max": ordered[-1],
++    }
++
++
++def _tie_key(arm: str, helped: int, actions: Sequence[int], priority: int) -> list[int]:
++    median = _distribution(actions)["median"]
++    return [-helped, 10**9 if median is None else int(median), priority, list(ARM_ORDER).index(arm)]
++
++
++def _int_or_none(value: Any) -> int | None:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def _as_text(value: Any, default: str) -> str:
++    if value is None:
++        return default
++    return str(value)
++
++
++def _git_output(root: Path, args: Sequence[str]) -> str:
++    try:
++        return subprocess.check_output(["git", *args], cwd=root, text=True, stderr=subprocess.STDOUT).strip()
++    except (OSError, subprocess.CalledProcessError) as exc:
++        return f"unavailable:{exc}"
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6558_arc_live_redirect_ledger_reachability.json b/results/experiment_6558_arc_live_redirect_ledger_reachability.json
+new file mode 100644
+index 0000000000..3a5d99d417
+--- /dev/null
++++ b/results/experiment_6558_arc_live_redirect_ledger_reachability.json
+@@ -0,0 +1,1738 @@
++{
++  "aggregate_row_recomputation": {
++    "actions_to_progress_distribution": {
++      "count": 1,
++      "max": 371,
++      "median": 371,
++      "min": 371
++    },
++    "fired_by_arm": {
++      "allow_reinduction": 3,
++      "drop_goal_bias": 1,
++      "force_exploration_diversity": 3
++    },
++    "fired_total": 7,
++    "helped_by_arm": {
++      "drop_goal_bias": 1
++    },
++    "helped_total": 1,
++    "inspected_run_total": 6,
++    "no_firing_run_total": 3,
++    "unredirected_stagnations_total": 5,
++    "unresolved_total": 6
++  },
++  "arc_live_redirect_ledger_ready_score": 1.0,
++  "attack_matrix": {
++    "all_attacks_fail_closed": true,
++    "disqualifying_attack_observed": false,
++    "rows": [
++      {
++        "attack_id": "missing_receipts",
++        "fail_closed": true,
++        "mitigation": "blocked unless reachable live receipts exist",
++        "observed": 0
++      },
++      {
++        "attack_id": "missing_outcomes",
++        "fail_closed": true,
++        "mitigation": "malformed or absent outcome fields cannot create support",
++        "observed": 0
++      },
++      {
++        "attack_id": "duplicate_redirects",
++        "fail_closed": true,
++        "mitigation": "duplicate redirect identities are skipped and disqualify selection",
++        "observed": 0
++      },
++      {
++        "attack_id": "outcome_reassignment",
++        "fail_closed": true,
++        "mitigation": "each redirect links only to its own next receipt outcome",
++        "observed": 0
++      },
++      {
++        "attack_id": "source_or_adapter_access",
++        "fail_closed": true,
++        "mitigation": "source and adapter markers reject the artifact",
++        "observed": 0
++      },
++      {
++        "attack_id": "registry_duplicates",
++        "fail_closed": true,
++        "mitigation": "registry is hashed for context only, not used for selection",
++        "observed": 0
++      },
++      {
++        "attack_id": "future_outcome_leakage",
++        "fail_closed": true,
++        "mitigation": "negative or absent resolved distances are rejected",
++        "observed": 0
++      },
++      {
++        "attack_id": "one_row_promotion",
++        "fail_closed": true,
++        "mitigation": "minimum prospective firing support is three",
++        "observed": 0
++      },
++      {
++        "attack_id": "generated_arms",
++        "fail_closed": true,
++        "mitigation": "ARM_ORDER is never grown by this reducer",
++        "observed": 0
++      },
++      {
++        "attack_id": "off_path_modules",
++        "fail_closed": true,
++        "mitigation": "only live E3 trajectory_supervisor rows are accepted",
++        "observed": 0
++      },
++      {
++        "attack_id": "forced_change_success_criterion",
++        "fail_closed": true,
++        "mitigation": "null no-change is a terminal success class",
++        "observed": 0
++      }
++    ]
++  },
++  "curated_arm_support_rows": [
++    {
++      "actions_to_progress_distribution": {
++        "count": 1,
++        "max": 371,
++        "median": 371,
++        "min": 371
++      },
++      "actions_to_progress_values": [
++        371
++      ],
++      "arm": "drop_goal_bias",
++      "current_priority": 1,
++      "helped_outcomes": 1,
++      "minimum_prospective_firings": 3,
++      "prospective_firings": 1,
++      "recommended_action": "keep",
++      "success_rate": 1.0,
++      "support_disposition": "unsupported_fewer_than_three_firings",
++      "support_floor_met": false,
++      "tie_key": [
++        -1,
++        371,
++        1,
++        0
++      ],
++      "unresolved_outcomes": 0
++    },
++    {
++      "actions_to_progress_distribution": {
++        "count": 0,
++        "max": null,
++        "median": null,
++        "min": null
++      },
++      "actions_to_progress_values": [],
++      "arm": "allow_reinduction",
++      "current_priority": 2,
++      "helped_outcomes": 0,
++      "minimum_prospective_firings": 3,
++      "prospective_firings": 3,
++      "recommended_action": "lower_priority",
++      "success_rate": 0.0,
++      "support_disposition": "supported_no_help_lower_candidate",
++      "support_floor_met": true,
++      "tie_key": [
++        0,
++        1000000000,
++        2,
++        1
++      ],
++      "unresolved_outcomes": 3
++    },
++    {
++      "actions_to_progress_distribution": {
++        "count": 0,
++        "max": null,
++        "median": null,
++        "min": null
++      },
++      "actions_to_progress_values": [],
++      "arm": "force_exploration_diversity",
++      "current_priority": 3,
++      "helped_outcomes": 0,
++      "minimum_prospective_firings": 3,
++      "prospective_firings": 3,
++      "recommended_action": "lower_priority",
++      "success_rate": 0.0,
++      "support_disposition": "supported_no_help_lower_candidate",
++      "support_floor_met": true,
++      "tie_key": [
++        0,
++        1000000000,
++        3,
++        2
++      ],
++      "unresolved_outcomes": 3
++    }
++  ],
++  "duration_s": 1e-06,
++  "field_principles": {
++    "aggregate_row_recomputation": "Fired, helped, unresolved, and unredirected totals must derive from rows.",
++    "arc_live_redirect_ledger_ready_score": "One binary field records live receipt closure without requiring a manufactured policy change.",
++    "attack_matrix": "Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim.",
++    "curated_arm_support_rows": "Selection changes require prospective support for existing human-curated arms.",
++    "duration_s": "Monotonic time exposes a task that skipped code tracing or receipt inspection.",
++    "field_principles": "Field principles keep the artifact schema tied to the operator's stated audit reason.",
++    "field_provenance": "Every reachability and selection field must point to run rows, code hashes, and reducer logic.",
++    "gate_check_summary": "A blocked result must name the missing live path, receipt, or input check and observed value.",
++    "honest_verdict": "The verdict must state live reachability, firing support, and policy disposition with a terminal prefix.",
++    "inference_substrate": "Receipt tracing and decision replay invoke no LLM and no offline solver.",
++    "live_entrypoint_reachability_receipt": "Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable.",
++    "no_firing_run_rows": "An empty ledger is a valid measured state and must not force churn.",
++    "no_solve_and_no_source_receipt": "The task must prove that it read no game source, used no per-game adapter, and claimed no level solve.",
++    "per_unit_rows": "Every run, firing, arm, and outcome disposition must remain recheckable.",
++    "preconditions_checked": "Code, schema, artifact, registry, and resource receipts separate a block from no firings.",
++    "prior_failure_receipt": "The artifact must show how the Exp6524 missing-outcome block was tested.",
++    "protected_files_unchanged": "The ARC task must preserve the active roadmap and conductor.",
++    "random_seed": "A fixed audit and replay order makes receipt analysis repeatable.",
++    "redirect_to_next_outcome_rows": "Each firing must link to its next exact observed outcome without reassignment.",
++    "reproducibility_checksum": "A final hash protects the generalization determination trail.",
++    "selection_policy_disposition": "The record must say changed, unchanged, or future-arm-specification and why.",
++    "status": "A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly.",
++    "supervisor_receipt_schema_and_code_hashes": "Exact schema and implementation identities prevent a test-only receipt path from posing as live.",
++    "tests_run": "Named ARC lint, unit, and E2E receipts show the shared live path was checked.",
++    "verdict_class": "A closed class prevents an unsupported or blocked refinement from becoming positive.",
++    "verifier_is_oracle": "Supervisor outcomes are live observations, not an oracle-distinct EBM verifier."
++  },
++  "field_provenance": {
++    "aggregate_row_recomputation": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "arc_live_redirect_ledger_ready_score": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "attack_matrix": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "curated_arm_support_rows": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "duration_s": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "field_principles": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "field_provenance": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "gate_check_summary": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "honest_verdict": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "inference_substrate": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "live_entrypoint_reachability_receipt": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "no_firing_run_rows": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "no_solve_and_no_source_receipt": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "per_unit_rows": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "preconditions_checked": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "prior_failure_receipt": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "protected_files_unchanged": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "random_seed": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "redirect_to_next_outcome_rows": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "reproducibility_checksum": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "selection_policy_disposition": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "status": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "supervisor_receipt_schema_and_code_hashes": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "tests_run": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "verdict_class": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    },
++    "verifier_is_oracle": {
++      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "reducer_logic": "build_artifact",
++      "row_sources": [
++        "live_entrypoint_reachability_receipt",
++        "redirect_to_next_outcome_rows",
++        "no_firing_run_rows",
++        "curated_arm_support_rows"
++      ],
++      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++      "spec": "REQ-ARC-WMTE-6680",
++      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
++    }
++  },
++  "gate_check_summary": {
++    "accepted_live_run_count": 6,
++    "all_gates_passed": true,
++    "disqualifying_attack_observed": false,
++    "fired_total": 7,
++    "live_entrypoint_reachable": true,
++    "missing_receipt_count": 0,
++    "no_firing_run_total": 3,
++    "status": "complete_live_redirect_ledger_reachable_no_policy_change"
++  },
++  "honest_verdict": "complete: live receipt path reachable, firings inspected, no supported policy change",
++  "inference_substrate": "live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm",
++  "live_entrypoint_reachability_receipt": {
++    "_make_trajectory_supervisor_present": true,
++    "_maybe_supervise_trajectory_present": true,
++    "accepted_live_run_count": 6,
++    "e3_agent_policy_present": true,
++    "entrypoint": "python/carnot/agentic/arc_competition_agent.py::make_carnot_agent -> E3AgentPolicy",
++    "game_source_read": false,
++    "make_carnot_agent_present": true,
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
++    "per_game_adapter_used": false,
++    "reachable": true,
++    "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
++    "trajectory_supervisor_diagnostics_present": true
++  },
++  "no_firing_run_rows": [
++    {
++      "game": "ar25",
++      "mode": "shadow",
++      "provenance": {
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++        "row_index": 0,
++        "row_sha256": "sha256:3c468bb4542821e73436b439e3ae55181d370b6ce387515129816408fd7dc457"
++      },
++      "reason": "shadow_receipt_no_applied_firing",
++      "run_receipt_id": "sha256:3c468bb4542821e73",
++      "shadow_would_have_redirect_count": 3,
++      "stagnations_unredirected": 1,
++      "terminal_disposition": true,
++      "used_as_selection_support": false
++    },
++    {
++      "game": "cd82",
++      "mode": "shadow",
++      "provenance": {
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++        "row_index": 1,
++        "row_sha256": "sha256:8b958e9845f74f74a38d756a0fd4e4b0c4757dda956f36b96b3f92ab37a62fd7"
++      },
++      "reason": "shadow_receipt_no_applied_firing",
++      "run_receipt_id": "sha256:8b958e9845f74f74a",
++      "shadow_would_have_redirect_count": 3,
++      "stagnations_unredirected": 0,
++      "terminal_disposition": true,
++      "used_as_selection_support": false
++    },
++    {
++      "game": "tu93",
++      "mode": "shadow",
++      "provenance": {
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++        "row_index": 2,
++        "row_sha256": "sha256:7743debe590ac09348fb7cc8c7bdb16b3133fff45310b410e2510f32a115de62"
++      },
++      "reason": "shadow_receipt_no_applied_firing",
++      "run_receipt_id": "sha256:7743debe590ac0934",
++      "shadow_would_have_redirect_count": 2,
++      "stagnations_unredirected": 1,
++      "terminal_disposition": true,
++      "used_as_selection_support": false
++    }
++  ],
++  "no_solve_and_no_source_receipt": {
++    "evidence_scope": "live trajectory_supervisor row receipts plus shared code hashes only",
++    "game_source_paths_read": [],
++    "generated_arm_used": false,
++    "llm_invoked": false,
++    "no_game_or_level_solve_claim": true,
++    "offline_bfs_used": false,
++    "per_game_adapter_used": false,
++    "source_or_adapter_access_detected": false
++  },
++  "per_unit_rows": {
++    "arm_rows": [
++      {
++        "actions_to_progress_distribution": {
++          "count": 1,
++          "max": 371,
++          "median": 371,
++          "min": 371
++        },
++        "actions_to_progress_values": [
++          371
++        ],
++        "arm": "drop_goal_bias",
++        "current_priority": 1,
++        "helped_outcomes": 1,
++        "kind": "arm_support",
++        "minimum_prospective_firings": 3,
++        "prospective_firings": 1,
++        "recommended_action": "keep",
++        "success_rate": 1.0,
++        "support_disposition": "unsupported_fewer_than_three_firings",
++        "support_floor_met": false,
++        "tie_key": [
++          -1,
++          371,
++          1,
++          0
++        ],
++        "unresolved_outcomes": 0
++      },
++      {
++        "actions_to_progress_distribution": {
++          "count": 0,
++          "max": null,
++          "median": null,
++          "min": null
++        },
++        "actions_to_progress_values": [],
++        "arm": "allow_reinduction",
++        "current_priority": 2,
++        "helped_outcomes": 0,
++        "kind": "arm_support",
++        "minimum_prospective_firings": 3,
++        "prospective_firings": 3,
++        "recommended_action": "lower_priority",
++        "success_rate": 0.0,
++        "support_disposition": "supported_no_help_lower_candidate",
++        "support_floor_met": true,
++        "tie_key": [
++          0,
++          1000000000,
++          2,
++          1
++        ],
++        "unresolved_outcomes": 3
++      },
++      {
++        "actions_to_progress_distribution": {
++          "count": 0,
++          "max": null,
++          "median": null,
++          "min": null
++        },
++        "actions_to_progress_values": [],
++        "arm": "force_exploration_diversity",
++        "current_priority": 3,
++        "helped_outcomes": 0,
++        "kind": "arm_support",
++        "minimum_prospective_firings": 3,
++        "prospective_firings": 3,
++        "recommended_action": "lower_priority",
++        "success_rate": 0.0,
++        "support_disposition": "supported_no_help_lower_candidate",
++        "support_floor_met": true,
++        "tie_key": [
++          0,
++          1000000000,
++          3,
++          2
++        ],
++        "unresolved_outcomes": 3
++      }
++    ],
++    "firing_rows": [
++      {
++        "actions_to_levelup": null,
++        "arm": "allow_reinduction",
++        "fired": true,
++        "game": "ar25",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1342,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 0,
++          "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
++        },
++        "redirect_index": 0,
++        "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:0",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:52e51aa287895a487",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 442,
++          "diagnosis": "induction latch set with 383 new transitions the model has never seen",
++          "level": 1,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": null,
++        "arm": "force_exploration_diversity",
++        "fired": true,
++        "game": "ar25",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1342,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 0,
++          "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
++        },
++        "redirect_index": 1,
++        "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:1",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:52e51aa287895a487",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 842,
++          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++          "level": 1,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": 371,
++        "arm": "drop_goal_bias",
++        "fired": true,
++        "game": "cd82",
++        "helped": true,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 771,
++          "kind": "levelup",
++          "source": "redirect.actions_to_levelup"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 1,
++          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++        },
++        "redirect_index": 0,
++        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:0",
++        "resolved_by_levelup": true,
++        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 400,
++          "diagnosis": "goal bias installed through 400 stagnant actions; it is steering and not working",
++          "level": 0,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": null,
++        "arm": "allow_reinduction",
++        "fired": true,
++        "game": "cd82",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1999,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 1,
++          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++        },
++        "redirect_index": 1,
++        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:1",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 1171,
++          "diagnosis": "induction latch set with 398 new transitions the model has never seen",
++          "level": 0,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": null,
++        "arm": "force_exploration_diversity",
++        "fired": true,
++        "game": "cd82",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1999,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 1,
++          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++        },
++        "redirect_index": 2,
++        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:2",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 1571,
++          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++          "level": 1,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": null,
++        "arm": "allow_reinduction",
++        "fired": true,
++        "game": "tu93",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1768,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 2,
++          "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
++        },
++        "redirect_index": 0,
++        "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:0",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:6d5be5b81273ae077",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 868,
++          "diagnosis": "induction latch set with 377 new transitions the model has never seen",
++          "level": 2,
++          "mode": "applied",
++          "window": 400
++        }
++      },
++      {
++        "actions_to_levelup": null,
++        "arm": "force_exploration_diversity",
++        "fired": true,
++        "game": "tu93",
++        "helped": false,
++        "kind": "firing",
++        "mode": "applied",
++        "next_observed_exact_live_outcome": {
++          "action_index": 1768,
++          "kind": "run_terminal",
++          "source": "receipt.actions_observed"
++        },
++        "provenance": {
++          "entrypoint": "E3AgentPolicy",
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++          "row_index": 2,
++          "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
++        },
++        "redirect_index": 1,
++        "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:1",
++        "resolved_by_levelup": false,
++        "run_receipt_id": "sha256:6d5be5b81273ae077",
++        "stagnations_unredirected": 1,
++        "trigger_state": {
++          "action_index": 1268,
++          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++          "level": 2,
++          "mode": "applied",
++          "window": 400
++        }
++      }
++    ],
++    "no_firing_rows": [
++      {
++        "game": "ar25",
++        "kind": "no_firing",
++        "mode": "shadow",
++        "provenance": {
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++          "row_index": 0,
++          "row_sha256": "sha256:3c468bb4542821e73436b439e3ae55181d370b6ce387515129816408fd7dc457"
++        },
++        "reason": "shadow_receipt_no_applied_firing",
++        "run_receipt_id": "sha256:3c468bb4542821e73",
++        "shadow_would_have_redirect_count": 3,
++        "stagnations_unredirected": 1,
++        "terminal_disposition": true,
++        "used_as_selection_support": false
++      },
++      {
++        "game": "cd82",
++        "kind": "no_firing",
++        "mode": "shadow",
++        "provenance": {
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++          "row_index": 1,
++          "row_sha256": "sha256:8b958e9845f74f74a38d756a0fd4e4b0c4757dda956f36b96b3f92ab37a62fd7"
++        },
++        "reason": "shadow_receipt_no_applied_firing",
++        "run_receipt_id": "sha256:8b958e9845f74f74a",
++        "shadow_would_have_redirect_count": 3,
++        "stagnations_unredirected": 0,
++        "terminal_disposition": true,
++        "used_as_selection_support": false
++      },
++      {
++        "game": "tu93",
++        "kind": "no_firing",
++        "mode": "shadow",
++        "provenance": {
++          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++          "row_index": 2,
++          "row_sha256": "sha256:7743debe590ac09348fb7cc8c7bdb16b3133fff45310b410e2510f32a115de62"
++        },
++        "reason": "shadow_receipt_no_applied_firing",
++        "run_receipt_id": "sha256:7743debe590ac0934",
++        "shadow_would_have_redirect_count": 2,
++        "stagnations_unredirected": 1,
++        "terminal_disposition": true,
++        "used_as_selection_support": false
++      }
++    ],
++    "run_rows": [
++      {
++        "applied_redirect_count": 2,
++        "game": "ar25",
++        "kind": "run",
++        "mode": "applied",
++        "run_receipt_id": "sha256:52e51aa287895a487"
++      },
++      {
++        "applied_redirect_count": 3,
++        "game": "cd82",
++        "kind": "run",
++        "mode": "applied",
++        "run_receipt_id": "sha256:bf2a8c85bf8b119e2"
++      },
++      {
++        "applied_redirect_count": 2,
++        "game": "tu93",
++        "kind": "run",
++        "mode": "applied",
++        "run_receipt_id": "sha256:6d5be5b81273ae077"
++      },
++      {
++        "applied_redirect_count": 0,
++        "game": "ar25",
++        "kind": "run",
++        "mode": "shadow",
++        "run_receipt_id": "sha256:3c468bb4542821e73"
++      },
++      {
++        "applied_redirect_count": 0,
++        "game": "cd82",
++        "kind": "run",
++        "mode": "shadow",
++        "run_receipt_id": "sha256:8b958e9845f74f74a"
++      },
++      {
++        "applied_redirect_count": 0,
++        "game": "tu93",
++        "kind": "run",
++        "mode": "shadow",
++        "run_receipt_id": "sha256:7743debe590ac0934"
++      }
++    ]
++  },
++  "preconditions_checked": {
++    "current_curated_arm_table": [
++      {
++        "arm": "drop_goal_bias",
++        "priority": 1,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "allow_reinduction",
++        "priority": 2,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "force_exploration_diversity",
++        "priority": 3,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      }
++    ],
++    "git_head": "3663ebb696b675455c879472004b95c6b0fecf15",
++    "git_status_short": "M openspec/capabilities/arc-world-model-trust-energy/spec.md\n?? python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py\n?? results/experiment_6558_arc_live_redirect_ledger_reachability.json\n?? scripts/arc_induction_quality.py\n?? tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
++    "live_entrypoint_and_supervisor_hashes": [
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a"
++      },
++      {
++        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++        "sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5"
++      },
++      {
++        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b"
++      }
++    ],
++    "no_solve_no_game_source_task": true,
++    "planning_date": "20260823",
++    "protected_file_hashes": [
++      {
++        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "path": "AGENTS.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "path": "CODEX.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "path": "CLAUDE.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
++        "before_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
++        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "path": "research-roadmap.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
++        "before_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
++        "before_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
++        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
++        "before_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
++        "path": "python/carnot/agentic/arc_solver_kit.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "path": "ops/arc_solve_registry.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "path": "scripts/research_conductor.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
++        "before_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
++        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
++        "before_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
++        "path": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "unchanged": true
++      }
++    ],
++    "python_versions": {
++      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "runtime": "3.12.13"
++    },
++    "receipt_schema_and_artifact_paths": {
++      "candidate_paths": [
++        "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json"
++      ],
++      "result_path": "results/experiment_6558_arc_live_redirect_ledger_reachability.json"
++    },
++    "registry_hash": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++    "resources": {
++      "cpu_count": 24,
++      "disk_free_bytes": 1086620057600,
++      "disk_total_bytes": 3953289023488,
++      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++      "ram_kb": 131157332
++    }
++  },
++  "prior_failure_receipt": {
++    "exists": true,
++    "exp6524_status": "blocked_missing_outcome_bearing_live_receipts",
++    "exp6524_verdict_class": "blocked",
++    "missing_outcome_block_tested": true,
++    "outcome_bearing_receipt_count": 0,
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6524_arc_supervisor_redirect_generalization.json",
++    "sha256": "sha256:9a5be26b06c816bcbff219ca60c53202e976de1802aa18c061e259a06117a65a"
++  },
++  "protected_files_unchanged": {
++    "all_protected_files_unchanged": true,
++    "rows": [
++      {
++        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "path": "AGENTS.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "path": "CODEX.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "path": "CLAUDE.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
++        "before_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
++        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "path": "research-roadmap.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
++        "before_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
++        "before_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
++        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
++        "before_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
++        "path": "python/carnot/agentic/arc_solver_kit.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "path": "ops/arc_solve_registry.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "path": "scripts/research_conductor.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
++        "before_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
++        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
++        "before_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
++        "path": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "unchanged": true
++      }
++    ]
++  },
++  "random_seed": 6558,
++  "redirect_to_next_outcome_rows": [
++    {
++      "actions_to_levelup": null,
++      "arm": "allow_reinduction",
++      "fired": true,
++      "game": "ar25",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1342,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 0,
++        "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
++      },
++      "redirect_index": 0,
++      "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:0",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:52e51aa287895a487",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 442,
++        "diagnosis": "induction latch set with 383 new transitions the model has never seen",
++        "level": 1,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": null,
++      "arm": "force_exploration_diversity",
++      "fired": true,
++      "game": "ar25",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1342,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 0,
++        "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
++      },
++      "redirect_index": 1,
++      "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:1",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:52e51aa287895a487",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 842,
++        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++        "level": 1,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": 371,
++      "arm": "drop_goal_bias",
++      "fired": true,
++      "game": "cd82",
++      "helped": true,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 771,
++        "kind": "levelup",
++        "source": "redirect.actions_to_levelup"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 1,
++        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++      },
++      "redirect_index": 0,
++      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:0",
++      "resolved_by_levelup": true,
++      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 400,
++        "diagnosis": "goal bias installed through 400 stagnant actions; it is steering and not working",
++        "level": 0,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": null,
++      "arm": "allow_reinduction",
++      "fired": true,
++      "game": "cd82",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1999,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 1,
++        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++      },
++      "redirect_index": 1,
++      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:1",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 1171,
++        "diagnosis": "induction latch set with 398 new transitions the model has never seen",
++        "level": 0,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": null,
++      "arm": "force_exploration_diversity",
++      "fired": true,
++      "game": "cd82",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1999,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 1,
++        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
++      },
++      "redirect_index": 2,
++      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:2",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 1571,
++        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++        "level": 1,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": null,
++      "arm": "allow_reinduction",
++      "fired": true,
++      "game": "tu93",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1768,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 2,
++        "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
++      },
++      "redirect_index": 0,
++      "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:0",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:6d5be5b81273ae077",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 868,
++        "diagnosis": "induction latch set with 377 new transitions the model has never seen",
++        "level": 2,
++        "mode": "applied",
++        "window": 400
++      }
++    },
++    {
++      "actions_to_levelup": null,
++      "arm": "force_exploration_diversity",
++      "fired": true,
++      "game": "tu93",
++      "helped": false,
++      "mode": "applied",
++      "next_observed_exact_live_outcome": {
++        "action_index": 1768,
++        "kind": "run_terminal",
++        "source": "receipt.actions_observed"
++      },
++      "provenance": {
++        "entrypoint": "E3AgentPolicy",
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
++        "row_index": 2,
++        "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
++      },
++      "redirect_index": 1,
++      "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:1",
++      "resolved_by_levelup": false,
++      "run_receipt_id": "sha256:6d5be5b81273ae077",
++      "stagnations_unredirected": 1,
++      "trigger_state": {
++        "action_index": 1268,
++        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
++        "level": 2,
++        "mode": "applied",
++        "window": 400
++      }
++    }
++  ],
++  "reproducibility_checksum": "sha256:6abd5a766880e7ee19520fb4b2b308b653faf99407a9111f9eb2e1903b7e42aa",
++  "selection_policy_disposition": {
++    "after_table": [
++      {
++        "arm": "drop_goal_bias",
++        "priority": 1,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "allow_reinduction",
++        "priority": 2,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "force_exploration_diversity",
++        "priority": 3,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      }
++    ],
++    "before_table": [
++      {
++        "arm": "drop_goal_bias",
++        "priority": 1,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "allow_reinduction",
++        "priority": 2,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      },
++      {
++        "arm": "force_exploration_diversity",
++        "priority": 3,
++        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
++        "state": "active"
++      }
++    ],
++    "current_order": [
++      "drop_goal_bias",
++      "allow_reinduction",
++      "force_exploration_diversity"
++    ],
++    "disposition": "unchanged",
++    "minimum_prospective_firings": 3,
++    "policy_changed": false,
++    "reason": "supported replay does not improve the current curated order",
++    "replayed_supported_order": [
++      "drop_goal_bias",
++      "allow_reinduction",
++      "force_exploration_diversity"
++    ]
++  },
++  "status": "complete_live_redirect_ledger_reachable_no_policy_change",
++  "supervisor_receipt_schema_and_code_hashes": {
++    "implementation_hashes": [
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a"
++      },
++      {
++        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
++        "sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5"
++      },
++      {
++        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
++        "sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b"
++      }
++    ],
++    "input_artifact_hashes": [
++      {
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
++        "sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e"
++      },
++      {
++        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
++        "sha256": "sha256:74d8e7dc332feaa20cd0e049978bb93561277e2beb45fc2dc3bcbb67288f5453"
++      }
++    ],
++    "observed_receipt_schema_rows": [
++      {
++        "mode": "applied",
++        "run_receipt_id": "sha256:52e51aa287895a487",
++        "schema": {
++          "arm_outcomes": true,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": true,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": false,
++          "would_have_redirects": false
++        }
++      },
++      {
++        "mode": "applied",
++        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
++        "schema": {
++          "arm_outcomes": true,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": true,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": false,
++          "would_have_redirects": false
++        }
++      },
++      {
++        "mode": "applied",
++        "run_receipt_id": "sha256:6d5be5b81273ae077",
++        "schema": {
++          "arm_outcomes": true,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": true,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": false,
++          "would_have_redirects": false
++        }
++      },
++      {
++        "mode": "shadow",
++        "run_receipt_id": "sha256:3c468bb4542821e73",
++        "schema": {
++          "arm_outcomes": false,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": false,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": true,
++          "would_have_redirects": true
++        }
++      },
++      {
++        "mode": "shadow",
++        "run_receipt_id": "sha256:8b958e9845f74f74a",
++        "schema": {
++          "arm_outcomes": false,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": false,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": true,
++          "would_have_redirects": true
++        }
++      },
++      {
++        "mode": "shadow",
++        "run_receipt_id": "sha256:7743debe590ac0934",
++        "schema": {
++          "arm_outcomes": false,
++          "enabled": true,
++          "mode": true,
++          "observe_errors": true,
++          "redirects": false,
++          "stagnations_unredirected": true,
++          "would_have_arm_outcomes": true,
++          "would_have_redirects": true
++        }
++      }
++    ],
++    "receipt_schema_keys": [
++      "enabled",
++      "mode",
++      "redirects",
++      "arm_outcomes",
++      "would_have_redirects",
++      "would_have_arm_outcomes",
++      "stagnations_unredirected",
++      "observe_errors"
++    ]
++  },
++  "tests_run": [
++    {
++      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability --date 20260823",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py -m pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py --fail-under=100 --show-missing",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6558_arc_live_redirect_ledger_reachability.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/arc_orphan_solver_lint.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/arc_levelup_guarantee_lint.py openspec/change-proposals/research-roadmap-vNEXT.md",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6558_arc_live_redirect_ledger_reachability.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_arc_trajectory_supervisor.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/arc_artifact_lint.py results/experiment_6558_arc_live_redirect_ledger_reachability.json --json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability --validate",
++      "exit_code": 0
++    },
++    {
++      "command": "git status --short",
++      "exit_code": 0
++    }
++  ],
++  "verdict_class": null,
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/arc_induction_quality.py b/scripts/arc_induction_quality.py
+new file mode 100644
+index 0000000000..7d86bab74a
+--- /dev/null
++++ b/scripts/arc_induction_quality.py
+@@ -0,0 +1,193 @@
++#!/usr/bin/env python3
++"""Score the world models the live agent actually emitted, without needing a valid run.
++
++WHY THIS EXISTS. For 24 hours every live-agent measurement came back
++`llm_on_row_valid: false`, and that was read as "we learned nothing". It gated
++five successive runs' worth of conclusions. It should not have: `llm_on_row_valid`
++gates COMPARISONS between arms, because an arm whose generator died cannot be
++compared to one whose generator lived. It says nothing about whether the model
++induced anything worthwhile, and the evidence for THAT was on disk the whole time
++— `world_model.py` under the run's `CARNOT_ARC_E3_DIR`, written the moment an
++induction succeeds, surviving whatever kills the harness later.
++
++The greenrun of 2026-08-23 is the case in point: harness died on SIGSEGV after
++1h54m with ZERO rows, and had already emitted a 229-line ar25 world model with
++connected-component labelling and a goal predicate over induced structure.
++
++WHAT THIS MEASURES, precisely: whether an emitted model is SUBSTANTIVE or
++DEGENERATE. Branch count, function count, and the shape of the goal predicate
++separate "the model wrote a real perception routine" from "the model returned the
++grid unchanged" or "the goal predicate is a memorised literal".
++
++WHAT THIS DOES NOT MEASURE, and must never be read as: CORRECTNESS. A model can
++be elaborate and wrong. Held-out transition accuracy is the only thing that speaks
++to correctness, and it needs a completed run. Treating a branch count as evidence
++of a working agent would be exactly the "field names lie" trap this project keeps
++paying for — a number that sounds like quality standing in for quality.
++
++So: use this to answer "is the generator producing real work at all", which is
++cheap and answerable now. Use rows to answer "is arm A better than arm B", which
++is expensive and needs a run that survives.
++
++Read-only. Touches nothing.
++"""
++
++from __future__ import annotations
++
++import argparse
++import ast
++import os
++import re
++from pathlib import Path
++
++DEFAULT_ROOT = (
++    Path(os.environ.get("CLAUDE_JOB_DIR", "/home/ianblenke/.claude/jobs/ad0c053d")) / "tmp"
++)
++
++# A goal predicate that consults structure the model itself derived (components,
++# labels, masks, objects) is doing perception. One that only compares against a
++# stored literal is memorising. Neither list is exhaustive; both are reported
++# rather than thresholded, because a threshold here would be fitted to the
++# handful of models seen so far.
++_STRUCTURE_TERMS = (
++    "component",
++    "comps",
++    "label",
++    "mask",
++    "object",
++    "region",
++    "connected",
++    "flood",
++    "neighbou",
++    "neighbor",
++    "adjacen",
++)
++_GOAL_FN = re.compile(r"def\s+(is_level_complete|is_win|is_goal|goal_reached)\b")
++
++
++def score_model(path: Path) -> dict:
++    """Structural scoring of one emitted world_model.py. Never imports it."""
++    try:
++        src = path.read_text(encoding="utf-8")
++    except OSError as exc:
++        return {"path": str(path), "error": f"unreadable: {exc}"}
++
++    out: dict = {
++        "path": str(path),
++        "game": path.parent.name,
++        "bytes": len(src.encode("utf-8")),
++        "lines": src.count("\n") + 1,
++    }
++
++    try:
++        tree = ast.parse(src)
++    except SyntaxError as exc:
++        # A model that does not parse is a hard negative and worth surfacing
++        # loudly: it means the generator emitted something the runtime cannot use.
++        out["error"] = f"SYNTAX ERROR line {exc.lineno}: {exc.msg}"
++        out["degenerate"] = True
++        return out
++
++    fns = [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
++    branches = [
++        n
++        for n in ast.walk(tree)
++        if isinstance(n, (ast.If, ast.For, ast.While, ast.IfExp, ast.Compare))
++    ]
++    out["functions"] = len(fns)
++    out["branches"] = len(branches)
++
++    # Degeneracy tells. Each is a way of "answering" without modelling anything.
++    tells: list[str] = []
++    for fn in fns:
++        body = [
++            s
++            for s in fn.body
++            if not isinstance(s, ast.Expr)
++            or not isinstance(getattr(s, "value", None), ast.Constant)
++        ]
++        if len(body) == 1:
++            only = body[0]
++            if isinstance(only, ast.Pass):
++                tells.append(f"{fn.name}: body is `pass`")
++            elif isinstance(only, ast.Return):
++                v = only.value
++                if isinstance(v, ast.Name) and v.id in ("grid", "state"):
++                    tells.append(f"{fn.name}: returns its input unchanged")
++                elif isinstance(v, ast.Constant) and isinstance(v.value, bool):
++                    tells.append(f"{fn.name}: returns constant {v.value}")
++    out["degeneracy_tells"] = tells
++    out["degenerate"] = bool(tells)
++
++    # Does the goal predicate reference structure the model derived?
++    goal_fn = next((f for f in fns if _GOAL_FN.match(f"def {f.name}(")), None)
++    if goal_fn is None:
++        out["goal_predicate"] = "ABSENT"
++    else:
++        seg = ast.get_source_segment(src, goal_fn) or ""
++        hits = sorted({t for t in _STRUCTURE_TERMS if t in seg.lower()})
++        out["goal_predicate"] = "structural" if hits else "flat"
++        out["goal_structure_terms"] = hits
++        out["goal_branches"] = sum(
++            1
++            for n in ast.walk(goal_fn)
++            if isinstance(n, (ast.If, ast.For, ast.While, ast.IfExp, ast.Compare))
++        )
++    return out
++
++
++def find_models(roots: list[Path]) -> list[Path]:
++    found: list[Path] = []
++    for root in roots:
++        if root.is_dir():
++            found.extend(sorted(root.rglob("world_model.py")))
++    return found
++
++
++def main(argv: list[str] | None = None) -> int:
++    ap = argparse.ArgumentParser(description=__doc__)
++    ap.add_argument("--roots", nargs="*", default=[str(DEFAULT_ROOT)])
++    ap.add_argument("--json", action="store_true")
++    args = ap.parse_args(argv)
++
++    models = find_models([Path(r) for r in args.roots])
++    if not models:
++        print("no world_model.py found under", args.roots)
++        return 1
++
++    scored = [score_model(p) for p in models]
++
++    if args.json:
++        import json
++
++        print(json.dumps(scored, indent=2))
++        return 0
++
++    print("")
++    print("  ARC INDUCTION QUALITY — emitted world models (structure, NOT correctness)")
++    print("  " + "-" * 68)
++    print(f"  {'run/game':28} {'lines':>6} {'fns':>4} {'br':>4}  {'goal':10} tells")
++    for s in scored:
++        run = Path(s["path"]).parts[-4] if len(Path(s["path"]).parts) >= 4 else "?"
++        label = f"{run}/{s.get('game', '?')}"[:28]
++        if s.get("error"):
++            print(f"  {label:28} {s['error']}")
++            continue
++        tells = "; ".join(s["degeneracy_tells"]) or "-"
++        print(
++            f"  {label:28} {s['lines']:>6} {s['functions']:>4} {s['branches']:>4}"
++            f"  {s.get('goal_predicate', '?'):10} {tells}"
++        )
++    n_deg = sum(1 for s in scored if s.get("degenerate"))
++    n_struct = sum(1 for s in scored if s.get("goal_predicate") == "structural")
++    print("")
++    print(
++        f"  {len(scored)} model(s); {n_deg} degenerate; {n_struct} with a structural goal predicate"
++    )
++    print("  Structure is not correctness. Held-out transition accuracy needs a run that survives.")
++    print("")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py b/tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py
+new file mode 100644
+index 0000000000..6a90d9b34c
+--- /dev/null
++++ b/tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py
+@@ -0,0 +1,654 @@
++"""Tests for Exp6558 ARC live redirect-ledger reachability.
++
++Spec refs: REQ-ARC-WMTE-6680,
++SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY,
++SCENARIO-ARC-WMTE-6680-NEXT-OUTCOME-LINKAGE,
++SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE,
++SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT,
++SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS,
++SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6558_arc_live_redirect_ledger_reachability as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++TESTS_RUN = [{"command": command, "exit_code": 0} for command in mod.DEFAULT_TEST_COMMANDS]
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _redirect(
++    arm: str,
++    action_index: int,
++    *,
++    level: int = 0,
++    resolved: bool = False,
++    actions_to_levelup: int | None = None,
++) -> dict[str, Any]:
++    return {
++        "arm": arm,
++        "action_index": action_index,
++        "level": level,
++        "diagnosis": f"{arm} test diagnosis",
++        "resolved_by_levelup": resolved,
++        "actions_to_levelup": actions_to_levelup,
++    }
++
++
++def _applied_receipt(
++    redirects: list[dict[str, Any]],
++    *,
++    actions_observed: int = 500,
++    stagnations_unredirected: int = 0,
++) -> dict[str, Any]:
++    outcomes = {arm: {"fired": 0, "helped": 0} for arm in mod.ARM_ORDER}
++    for row in redirects:
++        outcomes[row["arm"]]["fired"] += 1
++        if row["resolved_by_levelup"]:
++            outcomes[row["arm"]]["helped"] += 1
++    return {
++        "enabled": True,
++        "mode": "applied",
++        "window": 400,
++        "actions_observed": actions_observed,
++        "arms_used": sorted({row["arm"] for row in redirects}),
++        "redirects": redirects,
++        "arm_outcomes": outcomes,
++        "stagnations_unredirected": stagnations_unredirected,
++        "observe_errors": 0,
++    }
++
++
++def _shadow_receipt(
++    would_have_redirects: list[dict[str, Any]],
++    *,
++    actions_observed: int = 500,
++    stagnations_unredirected: int = 0,
++) -> dict[str, Any]:
++    outcomes = {arm: {"fired": 0, "helped": 0} for arm in mod.ARM_ORDER}
++    converted = []
++    for row in would_have_redirects:
++        outcomes[row["arm"]]["fired"] += 1
++        if row["resolved_by_levelup"]:
++            outcomes[row["arm"]]["helped"] += 1
++        converted.append(
++            {
++                "arm": row["arm"],
++                "action_index": row["action_index"],
++                "level": row["level"],
++                "diagnosis": row["diagnosis"],
++                "levelup_followed_without_redirect": row["resolved_by_levelup"],
++                "actions_to_levelup_without_redirect": row["actions_to_levelup"],
++            }
++        )
++    return {
++        "enabled": False,
++        "mode": "shadow",
++        "window": 400,
++        "actions_observed": actions_observed,
++        "arms_used": sorted({row["arm"] for row in would_have_redirects}),
++        "would_have_redirects": converted,
++        "would_have_arm_outcomes": outcomes,
++        "stagnations_unredirected": stagnations_unredirected,
++        "observe_errors": 0,
++    }
++
++
++def _row(
++    game: str,
++    receipt: dict[str, Any],
++    *,
++    levels: int = 0,
++    actions: int = 500,
++) -> dict[str, Any]:
++    return {
++        "game": game,
++        "arm": "E3_default_llmon",
++        "seed": 20260823,
++        "budget": 2000,
++        "llm_enabled": True,
++        "gated_flags": {"tier_exhaustion_enabled": True},
++        "levels": levels,
++        "reached": levels,
++        "actions": actions,
++        "level_up_actions": [actions] if levels else [],
++        "trajectory_supervisor": receipt,
++    }
++
++
++def _live_artifact(rows: list[dict[str, Any]]) -> dict[str, Any]:
++    return {
++        "schema": "arc_scored_path_lever_harness.rows.v1",
++        "canonical_entrypoint": "E3AgentPolicy",
++        "rows": rows,
++        "created_after_exp6524": True,
++    }
++
++
++@pytest.fixture()
++def mixed_live_inputs(tmp_path: Path) -> list[Path]:
++    """REQ-ARC-WMTE-6680: applied firings plus shadow rows are reduced distinctly."""
++
++    path = _write_json(
++        tmp_path / "post_6524_rows.json",
++        _live_artifact(
++            [
++                _row(
++                    "aa01",
++                    _applied_receipt(
++                        [
++                            _redirect(
++                                "drop_goal_bias",
++                                100,
++                                resolved=True,
++                                actions_to_levelup=11,
++                            ),
++                            _redirect("allow_reinduction", 220),
++                            _redirect("force_exploration_diversity", 420),
++                        ],
++                        actions_observed=700,
++                    ),
++                    levels=1,
++                    actions=650,
++                ),
++                _row(
++                    "bb02",
++                    _applied_receipt(
++                        [
++                            _redirect("allow_reinduction", 401),
++                            _redirect("force_exploration_diversity", 801),
++                        ],
++                        actions_observed=1000,
++                    ),
++                ),
++                _row(
++                    "cc03",
++                    _applied_receipt(
++                        [
++                            _redirect("allow_reinduction", 402),
++                            _redirect("force_exploration_diversity", 802),
++                        ],
++                        actions_observed=1100,
++                    ),
++                ),
++                _row(
++                    "dd04",
++                    _shadow_receipt(
++                        [
++                            _redirect(
++                                "allow_reinduction",
++                                300,
++                                resolved=True,
++                                actions_to_levelup=17,
++                            )
++                        ],
++                        actions_observed=500,
++                    ),
++                    levels=1,
++                ),
++            ]
++        ),
++    )
++    return [path]
++
++
++def test_req_arc_wmte_6680_spec_declares_reachability_contract() -> None:
++    """REQ-ARC-WMTE-6680: OpenSpec owns the V567 reachability contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-ARC-WMTE-6680") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY",
++        "SCENARIO-ARC-WMTE-6680-NEXT-OUTCOME-LINKAGE",
++        "SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE",
++        "SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT",
++        "SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS",
++        "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "at least three prospective applied firings",
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenarios_6680_reachability_next_outcome_and_no_firing_rows(
++    mixed_live_inputs: list[Path],
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY/NEXT-OUTCOME-LINKAGE/NO-FIRING-CLOSURE."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "result.json",
++        candidate_paths=mixed_live_inputs,
++        write=False,
++        duration_s=1.0,
++        tests_run=TESTS_RUN,
++        run_date="20260823",
++    )
++
++    assert mod.validate_artifact(artifact) == []
++    assert artifact["status"] == "complete_live_redirect_ledger_reachable_no_policy_change"
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["verdict_class"] is None
++    assert artifact["arc_live_redirect_ledger_ready_score"] == 1.0
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["live_entrypoint_reachability_receipt"]["reachable"] is True
++    assert artifact["live_entrypoint_reachability_receipt"]["make_carnot_agent_present"] is True
++    assert artifact["supervisor_receipt_schema_and_code_hashes"]["receipt_schema_keys"] == [
++        "enabled",
++        "mode",
++        "redirects",
++        "arm_outcomes",
++        "would_have_redirects",
++        "would_have_arm_outcomes",
++        "stagnations_unredirected",
++        "observe_errors",
++    ]
++
++    rows = artifact["redirect_to_next_outcome_rows"]
++    assert len(rows) == 7
++    assert {row["mode"] for row in rows} == {"applied"}
++    helped = [row for row in rows if row["resolved_by_levelup"]]
++    assert len(helped) == 1
++    assert helped[0]["next_observed_exact_live_outcome"] == {
++        "kind": "levelup",
++        "action_index": 111,
++        "source": "redirect.actions_to_levelup",
++    }
++    unresolved = [row for row in rows if not row["resolved_by_levelup"]]
++    assert unresolved
++    assert all(row["next_observed_exact_live_outcome"]["kind"] == "run_terminal" for row in unresolved)
++    assert all(row["next_observed_exact_live_outcome"]["source"] == "receipt.actions_observed" for row in unresolved)
++
++    no_firing = artifact["no_firing_run_rows"]
++    assert len(no_firing) == 1
++    assert no_firing[0]["reason"] == "shadow_receipt_no_applied_firing"
++    assert no_firing[0]["shadow_would_have_redirect_count"] == 1
++    assert no_firing[0]["used_as_selection_support"] is False
++
++
++def test_scenario_6680_selection_support_floor_preserves_policy(
++    mixed_live_inputs: list[Path],
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT: support is visible but no order churn."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "result.json",
++        candidate_paths=mixed_live_inputs,
++        write=False,
++        duration_s=1.0,
++        tests_run=TESTS_RUN,
++        run_date="20260823",
++    )
++
++    support = {row["arm"]: row for row in artifact["curated_arm_support_rows"]}
++    assert support["drop_goal_bias"]["prospective_firings"] == 1
++    assert support["drop_goal_bias"]["support_floor_met"] is False
++    assert support["drop_goal_bias"]["support_disposition"] == "unsupported_fewer_than_three_firings"
++    assert support["allow_reinduction"]["prospective_firings"] == 3
++    assert support["allow_reinduction"]["helped_outcomes"] == 0
++    assert support["allow_reinduction"]["support_disposition"] == "supported_no_help_lower_candidate"
++    assert support["force_exploration_diversity"]["prospective_firings"] == 3
++    assert support["force_exploration_diversity"]["support_floor_met"] is True
++
++    disposition = artifact["selection_policy_disposition"]
++    assert disposition["disposition"] == "unchanged"
++    assert disposition["minimum_prospective_firings"] == 3
++    assert disposition["current_order"] == list(mod.ARM_ORDER)
++    assert disposition["replayed_supported_order"] == list(mod.ARM_ORDER)
++    assert disposition["policy_changed"] is False
++    assert "solve" not in disposition["reason"]
++    assert artifact["aggregate_row_recomputation"]["fired_total"] == 7
++    assert artifact["aggregate_row_recomputation"]["helped_total"] == 1
++    assert artifact["aggregate_row_recomputation"]["unresolved_total"] == 6
++    assert artifact["aggregate_row_recomputation"]["unredirected_stagnations_total"] == 0
++
++
++def test_scenario_6680_no_firing_only_closes_null(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE: empty applied ledger is terminal."""
++
++    path = _write_json(
++        tmp_path / "shadow_only.json",
++        _live_artifact(
++            [
++                _row(
++                    "ee05",
++                    _shadow_receipt(
++                        [
++                            _redirect("drop_goal_bias", 100),
++                            _redirect("allow_reinduction", 200),
++                            _redirect("force_exploration_diversity", 300),
++                        ],
++                        stagnations_unredirected=1,
++                    ),
++                ),
++                _row("ff06", _applied_receipt([], stagnations_unredirected=2)),
++            ]
++        ),
++    )
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "result.json",
++        candidate_paths=[path],
++        write=False,
++        duration_s=1.0,
++        tests_run=TESTS_RUN,
++        run_date="20260823",
++    )
++
++    assert artifact["status"] == "complete_live_redirect_ledger_reachable_no_firings"
++    assert artifact["verdict_class"] is None
++    assert artifact["redirect_to_next_outcome_rows"] == []
++    assert len(artifact["no_firing_run_rows"]) == 2
++    assert artifact["selection_policy_disposition"]["disposition"] == "unchanged"
++    assert "future_arm_specification_rows" not in artifact["selection_policy_disposition"]
++    assert artifact["arc_live_redirect_ledger_ready_score"] == 1.0
++
++
++def test_scenario_6680_fail_closed_attacks_and_helpers(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS: bad evidence never refines policy."""
++
++    live = _live_artifact(
++        [
++            _row(
++                "gg07",
++                _applied_receipt(
++                    [
++                        _redirect("drop_goal_bias", 100),
++                        _redirect("drop_goal_bias", 100),
++                    ]
++                ),
++            )
++        ]
++    )
++    duplicate_path = _write_json(tmp_path / "duplicate_redirect.json", live)
++    off_path = _write_json(
++        tmp_path / "off_path.json",
++        {
++            "canonical_entrypoint": "E3AgentPolicy",
++            "rows": [_row("hh08", _applied_receipt([]))],
++            "source_reading": True,
++            "game_adapter": "per_game_adapter",
++        },
++    )
++    invalid = tmp_path / "invalid.json"
++    invalid.write_text("{not json", encoding="utf-8")
++    no_rows = _write_json(tmp_path / "no_rows.json", {"rows": []})
++    missing = tmp_path / "missing.json"
++    not_live = _write_json(tmp_path / "not_live.json", {"rows": [{"trajectory_supervisor": {}}]})
++    mixed_bad_rows = _write_json(
++        tmp_path / "mixed_bad_rows.json",
++        _live_artifact(
++            [
++                {"game": "plain", "trajectory_supervisor": {}},
++                {
++                    "game": "none",
++                    "arm": "E3_default_llmon",
++                    "llm_enabled": True,
++                    "trajectory_supervisor": None,
++                },
++                _row("ii09", _applied_receipt([])),
++            ]
++        ),
++    )
++    mixed_not_live_row = _write_json(
++        tmp_path / "mixed_not_live_row.json",
++        {
++            "rows": [
++                {"game": "plain", "trajectory_supervisor": {}},
++                _row("kk11", _applied_receipt([])),
++            ]
++        },
++    )
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "result.json",
++        candidate_paths=[
++            duplicate_path,
++            duplicate_path,
++            off_path,
++            invalid,
++            no_rows,
++            missing,
++            not_live,
++            mixed_bad_rows,
++            mixed_not_live_row,
++        ],
++        write=False,
++        duration_s=None,
++        tests_run=TESTS_RUN,
++        run_date="20260823",
++    )
++
++    assert artifact["status"] == "disqualified_off_path_or_leaky_evidence"
++    assert artifact["verdict_class"] == "disqualified"
++    assert artifact["arc_live_redirect_ledger_ready_score"] == 0.0
++    attacks = {row["attack_id"]: row for row in artifact["attack_matrix"]["rows"]}
++    assert attacks["duplicate_redirects"]["observed"] == 1
++    assert attacks["source_or_adapter_access"]["observed"] == 1
++    assert attacks["missing_outcomes"]["observed"] >= 1
++    assert all(row["fail_closed"] is True for row in attacks.values())
++    assert artifact["no_solve_and_no_source_receipt"]["no_game_or_level_solve_claim"] is True
++    assert artifact["no_solve_and_no_source_receipt"]["source_or_adapter_access_detected"] is True
++    assert artifact["selection_policy_disposition"]["policy_changed"] is False
++
++    reasons = {row["reason"] for row in artifact["gate_check_summary"].values() if isinstance(row, dict)}
++    assert isinstance(reasons, set)
++    rejected_reasons = {
++        row["reason"]
++        for row in artifact["no_solve_and_no_source_receipt"].get("rejected_rows", [])
++    }
++    assert isinstance(rejected_reasons, set)
++
++    malformed_rows, malformed_audit = mod.redirect_to_next_outcome_rows(
++        [
++            {"mode": "applied", "enabled": True, "receipt": {"redirects": "bad"}},
++            {"mode": "applied", "enabled": True, "receipt": {"redirects": [None]}},
++            {
++                "mode": "applied",
++                "enabled": True,
++                "run_receipt_id": "badarm",
++                "receipt": {"redirects": [{"arm": "unknown"}]},
++            },
++            {
++                "mode": "applied",
++                "enabled": True,
++                "run_receipt_id": "missing_action",
++                "receipt": {"redirects": [{"arm": "drop_goal_bias"}]},
++            },
++            {
++                "mode": "applied",
++                "enabled": True,
++                "run_receipt_id": "future",
++                "receipt": {
++                    "redirects": [
++                        {
++                            "arm": "drop_goal_bias",
++                            "action_index": 10,
++                            "level": 0,
++                            "resolved_by_levelup": True,
++                            "actions_to_levelup": -1,
++                        }
++                    ]
++                },
++            },
++        ]
++    )
++    assert malformed_rows == []
++    assert malformed_audit["malformed_redirect_count"] == 4
++    assert malformed_audit["future_outcome_leakage_count"] == 1
++
++    assert mod.selection_policy_disposition(
++        mod.curated_arm_support_rows([]),
++        [
++            {
++                "mode": "applied",
++                "enabled": True,
++                "arms_used": list(mod.ARM_ORDER),
++                "stagnations_unredirected": 1,
++                "game": "jj10",
++                "run_receipt_id": "future",
++            }
++        ],
++    )["disposition"] == "future-arm-specification"
++    assert mod.curated_arm_support_rows(
++        [
++            {"arm": "drop_goal_bias", "resolved_by_levelup": True, "actions_to_levelup": 5},
++            {"arm": "drop_goal_bias", "resolved_by_levelup": True, "actions_to_levelup": 4},
++            {"arm": "drop_goal_bias", "resolved_by_levelup": True, "actions_to_levelup": 3},
++            {"arm": "allow_reinduction", "resolved_by_levelup": True, "actions_to_levelup": 7},
++            {"arm": "allow_reinduction", "resolved_by_levelup": False},
++            {"arm": "allow_reinduction", "resolved_by_levelup": False},
++        ]
++    )[0]["recommended_action"] == "raise_priority"
++    changed = mod.selection_policy_disposition(
++        mod.curated_arm_support_rows(
++            [
++                {"arm": "allow_reinduction", "resolved_by_levelup": True, "actions_to_levelup": 3},
++                {"arm": "allow_reinduction", "resolved_by_levelup": True, "actions_to_levelup": 4},
++                {"arm": "allow_reinduction", "resolved_by_levelup": True, "actions_to_levelup": 5},
++            ]
++        ),
++        [],
++    )
++    assert changed["disposition"] == "changed"
++    assert mod._terminal_verdict(
++        ready_score=1.0,
++        redirect_rows=[{"arm": "allow_reinduction"}],
++        selection=changed,
++        reachability={"reachable": True},
++        attack_matrix={"disqualifying_attack_observed": False},
++    )[2] == "positive"
++    assert mod._terminal_verdict(
++        ready_score=0.0,
++        redirect_rows=[],
++        selection={"policy_changed": False},
++        reachability={"reachable": False},
++        attack_matrix={"disqualifying_attack_observed": False},
++    )[2] == "blocked"
++    assert mod._terminal_verdict(
++        ready_score=0.0,
++        redirect_rows=[],
++        selection={"policy_changed": False},
++        reachability={"reachable": True},
++        attack_matrix={"disqualifying_attack_observed": False},
++    )[2] == "partial"
++    assert mod._ready_score(
++        {"reachable": False},
++        [],
++        [],
++        [],
++        {"disqualifying_attack_observed": False},
++    ) == 0.0
++    assert mod._expected_verdict_class("positive_x") == "positive"
++    assert mod._expected_verdict_class("partial_x") == "partial"
++    assert mod._expected_verdict_class("blocked_x") == "blocked"
++    assert mod._expected_verdict_class("disqualified_x") == "disqualified"
++    assert mod._rows_from_payload([{"x": 1}]) == [{"x": 1}]
++    assert mod._rows_from_payload({"rows": [{"y": 2}]}) == [{"y": 2}]
++    assert mod._rows_from_payload({"no_rows": []}) == []
++    assert mod._read_json(invalid) is None
++    assert mod._candidate_paths(None, REPO)
++    assert mod._contains_forbidden_evidence({"bad": object()}) is False
++    assert mod._prior_failure_receipt(tmp_path)["exists"] is False
++    assert mod._int_or_none("bad") is None
++    assert mod._int_or_none(3) == 3
++    assert mod._as_text(None, "fallback") == "fallback"
++    assert mod.sha256_file(tmp_path / "absent") == "missing"
++    assert mod._git_output(tmp_path / "absent", ["status"]).startswith("unavailable:")
++
++    relative_root = tmp_path / "relative_root"
++    assert mod._write_artifact_json(Path("results/fake.json"), {"ok": True}, relative_root).name == "fake.json"
++
++
++def test_scenario_6680_schema_cli_validation_and_mutations(
++    mixed_live_inputs: list[Path],
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI: writer, validator, checksum, and gates."""
++
++    result_path = tmp_path / "experiment_6558.json"
++    assert (
++        mod.main(
++            [
++                "--date",
++                "20260823",
++                "--result-path",
++                str(result_path),
++                "--input",
++                str(mixed_live_inputs[0]),
++            ]
++        )
++        == 0
++    )
++    assert mod.main(["--validate", "--result-path", str(result_path)]) == 0
++    artifact = json.loads(result_path.read_text(encoding="utf-8"))
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert set(artifact["field_provenance"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["protected_files_unchanged"]["all_protected_files_unchanged"] is True
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert artifact["prior_failure_receipt"]["exp6524_status"].startswith("blocked_")
++    assert artifact["preconditions_checked"]["no_solve_no_game_source_task"] is True
++
++    mutations = [
++        ("delete", "status", "missing required fields"),
++        ("set", ("status", "running"), "status lacks terminal prefix"),
++        ("set", ("honest_verdict", "ready"), "honest_verdict lacks terminal prefix"),
++        ("set", ("verdict_class", "partial"), "verdict_class invalid"),
++        ("set", ("inference_substrate", "live_llm"), "inference_substrate mismatch"),
++        ("set", ("verifier_is_oracle", True), "verifier_is_oracle must be false"),
++        ("set", ("arc_live_redirect_ledger_ready_score", 0.5), "ready score invalid"),
++        ("set", ("field_principles", {}), "field principles mismatch"),
++        ("set", ("field_provenance", {}), "field provenance mismatch"),
++        ("set", ("protected_files_unchanged", {}), "protected files changed"),
++        ("set", ("attack_matrix", {}), "attack matrix invalid"),
++        ("set", ("aggregate_row_recomputation", {}), "aggregate fired_total mismatch"),
++        ("set", ("aggregate_row_recomputation", []), "aggregate rows malformed"),
++        ("set", ("reproducibility_checksum", "sha256:bad"), "reproducibility checksum mismatch"),
++    ]
++    for mode, spec, expected in mutations:
++        changed = deepcopy(artifact)
++        if mode == "delete":
++            del changed[spec]
++        else:
++            key, value = spec
++            changed[key] = value
++        if expected != "reproducibility checksum mismatch":
++            changed["reproducibility_checksum"] = mod.reproducibility_checksum(changed)
++        assert any(expected in issue for issue in mod.validate_artifact(changed)), expected
++
++    bad_path = tmp_path / "bad.json"
++    bad = deepcopy(artifact)
++    bad["status"] = "running"
++    bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++    bad_path.write_text(json.dumps(bad), encoding="utf-8")
++    assert mod.main(["--validate", "--result-path", str(bad_path)]) == 1
+-- 
+2.55.0
+

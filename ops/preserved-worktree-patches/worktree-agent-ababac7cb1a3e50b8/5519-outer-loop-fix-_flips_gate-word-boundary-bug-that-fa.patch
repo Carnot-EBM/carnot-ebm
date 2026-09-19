@@ -1,0 +1,270 @@
+From b773e0e900f47645dd7e03db4abc864d9f91f458 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 21:00:10 -0400
+Subject: [PATCH 05519/11362] [outer-loop] fix _flips_gate word-boundary bug
+ that falsely flagged exp5173's blocked DiffusionGemma pilot
+
+User: 'dig into it' (the CIRCULAR_MOAT_OVERCLAIM flag on .474's DiffusionGemma pilot).
+
+results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json was
+CRITICAL-flagged (CIRCULAR_MOAT_OVERCLAIM, MOAT_CLAIM_RIGOR) despite its own
+honest_verdict correctly starting with blocked_ -- the pilot never ran (arm_rows=[],
+every pass_at_1_* field is a degenerate 0.0 placeholder, the smoke test itself
+failed on a device-placement error before any arm could execute).
+
+Root cause: _flips_gate() did a plain 'diffusiongemma_met' in honest_verdict.lower()
+substring check. The verdict text 'blocked_diffusiongemma_meta_tensor_bug_unresolved'
+contains 'diffusiongemma_meta_tensor' -- 'meta' starts with 'met', a pure substring
+coincidence with nothing to do with any gate being MET (meta tensor is a real
+PyTorch term for placeholder tensors during device-mapped model loading). The
+artifact never claimed anything; the linter manufactured a claim from a technical
+term.
+
+Fixed with word-boundary-aware regexes (_GATE_MET_RE, _DIFFUSIONGEMMA_MET_RE)
+requiring 'met' not be immediately followed by another lowercase letter/digit --
+excludes meta/method/metric/metadata while still matching the genuine word 'met'
+at a token boundary (followed by '_' or end-of-string). Verified against real
+corpus patterns before committing: the genuine 'gate_MET' usages in
+experiment_4347/4346 (the moat-replicated/leak-robust archive and capstone
+artifacts) still detect correctly.
+
+11 new tests (tests/python/test_adversarial_verify_flips_gate_word_boundary.py):
+unit coverage of the word-boundary edge cases (meta/method/metric exclusions,
+genuine matches at underscore and string-end boundaries, the dict-form
+diffusiongemma_gate checks) plus an exact reproduction of the exp5173
+false-positive now clean, plus a regression guard confirming a genuinely
+circular gate-flip claim is still caught. Full existing suite (234 tests)
+stays green. Live re-check on exp5173 itself: 0 flags (was 2 CRITICAL).
+Scanned all 48 directly-relevant diffusiongemma/moat-named artifacts: only 2
+remain flagged, both pre-existing WARN-severity (the check's intended,
+non-blocking behavior), no CRITICAL false positives left.
+
+exp5173's own substance is unchanged by this correction: the pilot is still
+genuinely blocked on the June-14-vintage meta-tensor loading bug, which
+requires DiffusionGemma's dedicated diffusion API (not the standard
+causal-LM forward interface) to actually run.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ ...ma_energy_guided_diffusion_pilot_v474.json |  24 +++-
+ scripts/adversarial_verify.py                 |  27 ++++-
+ ...rsarial_verify_flips_gate_word_boundary.py | 113 ++++++++++++++++++
+ 3 files changed, 156 insertions(+), 8 deletions(-)
+ create mode 100644 tests/python/test_adversarial_verify_flips_gate_word_boundary.py
+
+diff --git a/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json b/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+index ec29289e0c..89f2808357 100644
+--- a/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
++++ b/results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json
+@@ -124,7 +124,7 @@
+     "principle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.",
+     "value": true
+   },
+-  "flagged_adversarial": true,
++  "flagged_adversarial": false,
+   "corrigendum_pending": [
+     {
+       "kind": "CIRCULAR_MOAT_OVERCLAIM",
+@@ -136,5 +136,25 @@
+       "severity": "critical",
+       "detail": "Moat/verifier-value claim has verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True}. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+     }
+-  ]
++  ],
++  "linter_flag_corrigendum": {
++    "filed_at": "2026-07-02T",
++    "filed_by": "outer-loop (Claude Sonnet 5), user asked to dig into the flag",
++    "original_flags": [
++      {
++        "kind": "CIRCULAR_MOAT_OVERCLAIM",
++        "severity": "critical",
++        "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True} (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
++      },
++      {
++        "kind": "MOAT_CLAIM_RIGOR",
++        "severity": "critical",
++        "detail": "Moat/verifier-value claim has verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True}. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++      }
++    ],
++    "root_cause": "_flips_gate() did a plain `'diffusiongemma_met' in honest_verdict.lower()` substring check. This artifact's honest_verdict, 'blocked_diffusiongemma_meta_tensor_bug_unresolved', contains 'diffusiongemma_meta_tensor' -- 'meta' starts with 'met', so the substring check matched purely by coincidence. The artifact never claimed a gate was met; it honestly reported the pilot was blocked before any arm ran (arm_rows=[], all pass_at_1_* fields are degenerate 0.0 placeholders, not real measurements).",
++    "fix": "scripts/adversarial_verify.py: _flips_gate() now uses word-boundary-aware regexes (_GATE_MET_RE, _DIFFUSIONGEMMA_MET_RE) requiring 'met' not be immediately followed by another lowercase letter/digit -- excludes meta/method/metric/metadata while still matching the genuine word 'met' at a token boundary. 11 new tests (tests/python/test_adversarial_verify_flips_gate_word_boundary.py), full 234-test suite green, live re-check on this exact artifact confirms 0 flags.",
++    "fresh_recheck_result": "0 flags (was 2 CRITICAL: CIRCULAR_MOAT_OVERCLAIM, MOAT_CLAIM_RIGOR).",
++    "underlying_finding_preserved": "This correction does not change the artifact's substance: honest_verdict stays blocked_diffusiongemma_meta_tensor_bug_unresolved. The June-14-vintage meta-tensor loading bug that blocks DiffusionGemma scoring is still unresolved and needs a real fix (the model's dedicated diffusion API, not the standard causal-LM forward interface) before any scaling pilot can actually run."
++  }
+ }
+\ No newline at end of file
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index b0daadd495..b032393608 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -2388,8 +2388,23 @@ def _claims_moat(d: dict[str, Any]) -> bool:
+     return False
+ 
+ 
++_GATE_MET_RE = re.compile(r"(?<![a-z0-9])gate_met(?![a-z0-9])")
++_DIFFUSIONGEMMA_MET_RE = re.compile(r"diffusiongemma_met(?![a-z0-9])")
++
++
+ def _flips_gate(d: dict[str, Any]) -> bool:
+-    """True if the artifact asserts a (DiffusionGemma) gate is MET / flipped."""
++    """True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.
++
++    2026-07-02: exp5173's honest_verdict `blocked_diffusiongemma_meta_tensor_bug_
++    unresolved` false-triggered CIRCULAR_MOAT_OVERCLAIM -- a plain `"diffusiongemma_met"
++    in hv.lower()` substring check matched inside "diffusiongemma_META_tensor" (a
++    PyTorch technical term for placeholder tensors, unrelated to a gate being MET). The
++    artifact was honestly BLOCKED (nothing ran: empty arm_rows, all-zero pass@1s) yet
++    got flagged as if it had flipped a circular gate. Fixed with negative-lookahead
++    word-boundary regexes so "met" must not be immediately followed by another
++    lowercase letter/digit (excludes meta/method/metric/metadata/etc colliding with
++    "met"), while still matching the genuine word "met" followed by "_" or end-of-string.
++    """
+     v = d.get("diffusiongemma_gate_status")
+     if isinstance(v, str) and v.strip().upper() == "MET":
+         return True
+@@ -2399,8 +2414,10 @@ def _flips_gate(d: dict[str, Any]) -> bool:
+     ):
+         return True
+     hv = d.get("honest_verdict")
+-    if isinstance(hv, str) and ("gate_met" in hv.lower() or "diffusiongemma_met" in hv.lower()):
+-        return True
++    if isinstance(hv, str):
++        hv_lower = hv.lower()
++        if _GATE_MET_RE.search(hv_lower) or _DIFFUSIONGEMMA_MET_RE.search(hv_lower):
++            return True
+     return False
+ 
+ 
+@@ -4189,9 +4206,7 @@ def _has_qd_context(d: dict[str, Any]) -> bool:
+         return False
+     text = _qd_first_party_claim_text(d)
+     arc_context = _is_arc_artifact(d) or _has_first_party_qd_result_field(d)
+-    return arc_context and (
+-        _has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",))
+-    )
++    return arc_context and (_has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",)))
+ 
+ 
+ def _claims_qd_energy_fitness_claim(d: dict[str, Any]) -> bool:
+diff --git a/tests/python/test_adversarial_verify_flips_gate_word_boundary.py b/tests/python/test_adversarial_verify_flips_gate_word_boundary.py
+new file mode 100644
+index 0000000000..801ca5ad25
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_flips_gate_word_boundary.py
+@@ -0,0 +1,113 @@
++"""Tests for adversarial_verify.py's _flips_gate word-boundary fix.
++
++Origin: 2026-07-02. exp5173's honest_verdict `blocked_diffusiongemma_meta_tensor_bug_
++unresolved` falsely triggered CIRCULAR_MOAT_OVERCLAIM. `_flips_gate` did a plain
++`"diffusiongemma_met" in hv.lower()` substring check, which matched inside
++"diffusiongemma_META_tensor" (a PyTorch technical term for placeholder tensors during
++device-mapped model loading -- unrelated to any gate being MET). The artifact was
++honestly BLOCKED (empty arm_rows, all-zero pass@1s, verdict correctly prefixed
++`blocked_`) yet got CRITICAL-flagged as if it had flipped a circular
++(verifier_is_oracle=True) moat gate.
++
++Fixed with negative-lookahead regexes (`_GATE_MET_RE`, `_DIFFUSIONGEMMA_MET_RE`)
++requiring "met" not be immediately followed by another lowercase letter/digit --
++excludes "meta"/"method"/"metric"/"metadata" while still matching the genuine word
++"met" at a token boundary (followed by "_" or end-of-string).
++
++Spec refs: none (operational lint fix, no OpenSpec capability).
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import scripts.adversarial_verify as av
++
++
++def _write_payload(tmp_path: Path, payload: dict[str, Any]) -> Path:
++    path = tmp_path / "artifact.json"
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _report_for_payload(tmp_path: Path, payload: dict[str, Any]) -> dict[str, Any]:
++    return av.verify_artifact(_write_payload(tmp_path, payload))
++
++
++def _flag_kinds(report: dict[str, Any]) -> set[str]:
++    return {flag["kind"] for flag in report["flags"]}
++
++
++class TestFlipsGateWordBoundary:
++    """Unit tests for the pure detection function."""
++
++    def test_meta_tensor_does_not_false_positive(self) -> None:
++        d = {"honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved"}
++        assert av._flips_gate(d) is False
++
++    def test_method_does_not_false_positive(self) -> None:
++        d = {"honest_verdict": "blocked_diffusiongemma_method_lookup_failed"}
++        assert av._flips_gate(d) is False
++
++    def test_metric_does_not_false_positive_on_gate_met(self) -> None:
++        d = {"honest_verdict": "complete_gate_metric_recorded_no_decision"}
++        assert av._flips_gate(d) is False
++
++    def test_genuine_diffusiongemma_met_at_underscore_boundary_still_detected(self) -> None:
++        d = {"honest_verdict": "success_diffusiongemma_met_gate_condition"}
++        assert av._flips_gate(d) is True
++
++    def test_genuine_diffusiongemma_met_at_string_end_still_detected(self) -> None:
++        d = {"honest_verdict": "success_the_diffusiongemma_met"}
++        assert av._flips_gate(d) is True
++
++    def test_genuine_gate_met_still_detected(self) -> None:
++        d = {
++            "honest_verdict": "success_archived_v401_v402_active_moat_replicated_leak_robust_gate_MET_arc21"
++        }
++        assert av._flips_gate(d) is True
++
++    def test_dict_diffusiongemma_gate_status_still_detected(self) -> None:
++        d = {"diffusiongemma_gate_status": "MET"}
++        assert av._flips_gate(d) is True
++
++    def test_dict_diffusiongemma_gate_object_still_detected(self) -> None:
++        d = {"diffusiongemma_gate": {"met": True}}
++        assert av._flips_gate(d) is True
++
++    def test_no_verdict_field_returns_false(self) -> None:
++        assert av._flips_gate({}) is False
++
++
++class TestExp5173IncidentReproduction:
++    """End-to-end reproduction of the exact exp5173 false-positive, verified fixed."""
++
++    def test_blocked_diffusiongemma_pilot_no_longer_flags_circular_moat_overclaim(
++        self, tmp_path: Path
++    ) -> None:
++        payload = {
++            "experiment": "exp5173_repro",
++            "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved",
++            "verifier_is_oracle": True,
++            "arm_rows": [],
++            "pass_at_1_ar_baseline": 0.0,
++            "pass_at_1_guided": 0.0,
++            "pass_at_1_unguided": 0.0,
++            "inference_substrate": "blocked_preflight",
++        }
++        report = _report_for_payload(tmp_path, payload)
++        assert "CIRCULAR_MOAT_OVERCLAIM" not in _flag_kinds(report)
++
++    def test_genuinely_circular_gate_flip_is_still_caught(self, tmp_path: Path) -> None:
++        """Regression guard: the fix must not weaken the check -- a real circular
++        gate-flip claim (verifier_is_oracle=True, honest_verdict genuinely says the
++        diffusiongemma gate is MET) must still be caught."""
++        payload = {
++            "experiment": "exp_genuinely_circular",
++            "honest_verdict": "success_diffusiongemma_met_gate_condition_moat_proven",
++            "verifier_is_oracle": True,
++        }
++        report = _report_for_payload(tmp_path, payload)
++        assert "CIRCULAR_MOAT_OVERCLAIM" in _flag_kinds(report)
+-- 
+2.55.0
+

@@ -1,0 +1,41 @@
+From b951207363dc94c79ae757bba49e916177bb38d5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 05:30:10 -0400
+Subject: [PATCH 01106/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20GAP-4=20conductor=5Ffollowup=20#1=20=E2=80=94=20DE-SELECTI?=
+ =?UTF-8?q?ON=20COVERAGE=20RUN=20(re-run=20of=20the=20poison-skipped=20.36?=
+ =?UTF-8?q?9=20exp3987):=20run=20k=3D2=20FRESH=20<=3D3-iteration=20600s=20?=
+ =?UTF-8?q?codex=20chains=20on=20the=2011=20NEVER-CHAINED=20ARC-2=20pool?=
+ =?UTF-8?q?=20tasks=20(the=20complement=20of=20the=2012=20probe-chain-feas?=
+ =?UTF-8?q?ible=20tasks=20in=20results/arc3=5Fgap4=5Farc2=5Feval=5Fpool.js?=
+ =?UTF-8?q?on.gz),=20transcripts=20archived,=20gold-leak=20audit=20with=20?=
+ =?UTF-8?q?the=20validated=20word-boundary=20detector,=20gold=20used=20POS?=
+ =?UTF-8?q?T-HOC=20for=20scoring=20only.=20This=20de-biases=20the=200.8333?=
+ =?UTF-8?q?=20fresh-chain=20demo-perfect=20coverage=20estimate=20(it=20was?=
+ =?UTF-8?q?=20measured=20on=20chain-feasible=20tasks=20only).=20Report=20t?=
+ =?UTF-8?q?he=20demo-perfect=20rate=20honestly=20whatever=20it=20is=20?=
+ =?UTF-8?q?=E2=80=94=20NO=20all-gold=20bar.=20Per=20the=20handoff=20hygien?=
+ =?UTF-8?q?e=20rules:=20commit=20artifacts=20at=20landing,=20archive=20eve?=
+ =?UTF-8?q?ry=20transcript,=20>=3D600s=20codex=20timeouts,=20never=20cite?=
+ =?UTF-8?q?=20P(gold|agree)=20without=20n+CI.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3f479954ef..188fb5c991 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8879,3 +8879,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - **Headline finding — `detector_gap_suspected=true`, SIXTH consecutive false zero (.363/.365/.366/.367/.368/.369).** The zero is a known milestone->commit detector artifact, NOT an empty milestone: the .369 changelog window shows ~10 committed artifacts — the GAP-4 verifier program arms (de-selection coverage, precision confirmation, feedback-vs-redraw, harness registration, local-generator), the ARC-AGI-3 incremental-levels + fourth-game + ArcMemo solve-transfer solves, hardware continuity, and the capstone exp3996 (range exp3987-exp3996).
+ - **Meta-finding:** exp3984 landed `complete: retro_commit_detector_fixed_backfill_counts_restored` in .368, yet THIS .369 retro still received a zero timing block — so the fix is still NOT verified end-to-end on the live retro-timing feed. Top-3 highest-leverage actions: (1) repair the detector/windowing and prove it end-to-end on .369 (must report ~10, not 0); (2) add a detector-independent glob fallback (results/experiment_*.json since the activation SHA) + a loud self-check that fails when count==0 but artifacts exist; (3) emit a zero-count reason code (capstone_aggregation_only | all_tasks_blocked | window_misaligned | genuinely_idle).
+ - Appended the .369 narrative to `docs/research-log.md`. No edits to operator-curated docs (roadmap.md, index.html, README.md), research_conductor.py, or research-roadmap.yaml.
++- 2026-06-10: GAP-4 conductor_followup #1 — DE-SELECTION COVERAGE RUN (re-run of the poison-skipped .369 exp3987): run k=2 FRESH <=3-iteration 600s codex chains on the 11 NEVER-CHAINED ARC-2 pool tasks (the complement of the 12 probe-chain-feasible tasks in results/arc3_gap4_arc2_eval_pool.json.gz), transcripts archived, gold-leak audit with the validated word-boundary detector, gold used POST-HOC for scoring only. This de-biases the 0.8333 fresh-chain demo-perfect coverage estimate (it was measured on chain-feasible tasks only). Report the demo-perfect rate honestly whatever it is — NO all-gold bar. Per the handoff hygiene rules: commit artifacts at landing, archive every transcript, >=600s codex timeouts, never cite P(gold|agree) without n+CI. (✅ Complete) — honest_verdict=complete: gap4_deselection_coverage_0.4091_n11; results/experiment_3998_gap4_deselection_coverage.json
+-- 
+2.55.0
+

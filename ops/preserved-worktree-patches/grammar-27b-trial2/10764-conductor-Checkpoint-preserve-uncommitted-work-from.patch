@@ -1,0 +1,43 @@
+From a1dadd73584454eb81853c6351f86b80b507fad2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 10:06:51 -0400
+Subject: [PATCH 10764/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ef283df4fc..de7c67a964 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 123, "phase": "iteration_start", "last_beat": "2026-09-02T13:34:54Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 124, "phase": "iteration_start", "last_beat": "2026-09-02T14:06:44Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ef762ac9d0..c14ed7cf05 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17070,3 +17070,4 @@ The l |
+ | 2026-09-02 12:04 UTC | Independent held relational-fact qualification | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6876-three-family-relational-fact-corpus, |
+ | 2026-09-02 13:29 UTC | Plan milestone 2026.09.603 | OK | 4 tasks proposed |
+ | 2026-09-02 13:32 UTC | Milestone 2026.09.603 activated | OK | 4 tasks queued |
++| 2026-09-02 14:04 UTC | V603 executable manifest and branch isolation cont | OK | 127 passed, 1 warning in 8.66s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2a6b193cf1..3413f0ec46 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 123, "phase": "iteration_start", "started_at": "2026-09-02T13:34:54Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 124, "phase": "iteration_start", "started_at": "2026-09-02T14:06:44Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

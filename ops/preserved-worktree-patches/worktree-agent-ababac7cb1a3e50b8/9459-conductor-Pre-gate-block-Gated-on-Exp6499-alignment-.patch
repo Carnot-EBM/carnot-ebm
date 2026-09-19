@@ -1,0 +1,61 @@
+From 6d6f3bb2b00fa3ab2feab61f3211b25249fd6ab0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 16:13:44 -0400
+Subject: [PATCH 09459/11362] [conductor] Pre-gate block: Gated on Exp6499
+ alignment: default-off live ARC energy-shield policy A/B
+
+1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_energy_alignment_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_6500_gated_default_off_live_arc_policy_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 97672f8346..73f4dfcc9c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 159, "phase": "iteration_start", "last_beat": "2026-08-21T20:11:41Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 160, "phase": "iteration_start", "last_beat": "2026-08-21T20:13:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1f4b3e7b39..43bb905aac 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16253,3 +16253,4 @@ code |
+ | 2026-08-21 19:50 UTC | Independent continuous-learning action, evidence,  | OK | 87 passed, 1 warning in 12.40s |
+ | 2026-08-21 20:07 UTC | ARC conservative prefix-energy alignment with late | OK | 86 passed, 1 warning in 9.94s |
+ | 2026-08-21 20:09 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
++| 2026-08-21 20:11 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index af4619e684..77c306c91d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 159, "phase": "iteration_start", "started_at": "2026-08-21T20:11:41Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 160, "phase": "iteration_start", "started_at": "2026-08-21T20:13:43Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6500_gated_default_off_live_arc_policy_ab.json b/results/experiment_6500_gated_default_off_live_arc_policy_ab.json
+index 03abb34c1a..bab6153375 100644
+--- a/results/experiment_6500_gated_default_off_live_arc_policy_ab.json
++++ b/results/experiment_6500_gated_default_off_live_arc_policy_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6500,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-21",
+-  "started_at": "2026-08-21T20:11:41.359842+00:00",
+-  "finished_at": "2026-08-21T20:11:41.359842+00:00",
++  "started_at": "2026-08-21T20:13:43.860832+00:00",
++  "finished_at": "2026-08-21T20:13:43.860832+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6499 alignment: default-off live ARC energy-shield policy A/B",
+-- 
+2.55.0
+

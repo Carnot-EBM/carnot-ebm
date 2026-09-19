@@ -1,0 +1,61 @@
+From add0f53dc84f5ef022c344af2bbf3ed2274ed7a5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 01:27:13 -0400
+Subject: [PATCH 08267/11362] [conductor] Pre-gate block: Gated on Exp6128
+ readiness: sealed held Phase-D pool and headroom audit v2
+
+1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_d_calibration_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                      | 2 +-
+ ops/conductor-log.md                              | 1 +
+ ops/conductor-state.json                          | 2 +-
+ results/experiment_6129_phase_d_held_pool_v2.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 185cef5ac8..4983b8eefc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 56532, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-05T05:25:09Z"}
+\ No newline at end of file
++{"pid": 56532, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-05T05:27:12Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6f1861f099..1eafdfc061 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15337,3 +15337,4 @@ No output thi |
+ | 2026-08-05 04:06 UTC | Gated on Exp6126 justification: model-native Phase | OK | cache hit: 87 passed, 1 warning in 28.15s |
+ | 2026-08-05 05:21 UTC | Gated on Exp6127 readiness: model-native Phase-D c | OK | 88 passed, 1 warning in 100.36s (0:01:40) |
+ | 2026-08-05 05:23 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |
++| 2026-08-05 05:25 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d60e3321dd..5ca12016a9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 56532, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-05T05:25:09Z"}
+\ No newline at end of file
++{"pid": 56532, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-05T05:27:12Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6129_phase_d_held_pool_v2.json b/results/experiment_6129_phase_d_held_pool_v2.json
+index b839f57573..5b84123236 100644
+--- a/results/experiment_6129_phase_d_held_pool_v2.json
++++ b/results/experiment_6129_phase_d_held_pool_v2.json
+@@ -2,8 +2,8 @@
+   "experiment": 6129,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-05",
+-  "started_at": "2026-08-05T05:25:10.062845+00:00",
+-  "finished_at": "2026-08-05T05:25:10.062845+00:00",
++  "started_at": "2026-08-05T05:27:12.972919+00:00",
++  "finished_at": "2026-08-05T05:27:12.972919+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6128 readiness: sealed held Phase-D pool and headroom audit v2",
+-- 
+2.55.0
+

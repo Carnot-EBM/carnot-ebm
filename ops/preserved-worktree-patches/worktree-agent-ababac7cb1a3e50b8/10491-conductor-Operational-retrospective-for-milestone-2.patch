@@ -1,0 +1,104 @@
+From 71aef6a012ef88e8510b4c197f3900b5ab63d8b3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 01:32:00 -0400
+Subject: [PATCH 10491/11362] [conductor] Operational retrospective for
+ milestone 2026.08.594
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 ++++
+ ops/changelog.md                           | 14 +++++++
+ results/operational_retro_2026_08_594.json | 43 ++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_594.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index a071aa3c63..c0b6fb294e 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6479,3 +6479,10 @@ The critical path for milestone .250:
+ - theme: a compute-heavy execution tail exposed missing phase and accelerator attribution
+ - key result: honest operational negative — accelerator activity was present, but the data cannot explain the longest compute run or establish a parallel multi-model runner miss
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.594
++
++- exp_range: no data available this milestone
++- theme: a sub-minute mixed milestone exposed the limits of fallback timing and task-scoped accelerator attribution
++- key result: honest operational negative — the only compute task reached the timing floor without a compute-idle finding, while its phase cause and parallel-model runner applicability remain unknown
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c29a8336b6..91aac09857 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18353,4 +18353,18 @@ run or a missed DualGPURunner launch. Add task-phase timing and task-window GPU
+ receipts. Add 8-16 question batching when one model serves multiple prompts.
+ The estimated milestone savings remains 0% because the evidence does not show
+ how much of the slow run can use batching.
++
+ - 2026-08-31: Typed operational-obligation automaton v2 (⚠️ Blocked) — honest_verdict=complete_blocked_operational_obligation_automaton; results/experiment_6802_operational_obligation_automaton_v2.json
++
++## 2026-08-31 — Milestone 2026.08.594 operational retrospective
++
++The milestone recorded 2 experiments in 0.3 minutes, including 1 compute-bound
++entry. Three-model operational-handoff proposal corpus was the only, and thus
++longest, compute task at 0.0 minutes; no data available this milestone explains
++its phase costs. The locked compute-task GPU-idle indicator is false. No data
++available this milestone establishes that 2 or more models were loaded in
++parallel or that an eligible task missed DualGPURunner. The next tooling change
++is configurable batches of 8-16 questions per forward pass, backed by
++task-owned phase timing, GPU samples, model-concurrency metadata, and runner
++identity. Estimated milestone-wide savings is 0% because the supplied evidence
++does not measure the batched share of execution.
+diff --git a/results/operational_retro_2026_08_594.json b/results/operational_retro_2026_08_594.json
+new file mode 100644
+index 0000000000..9dce3de9e0
+--- /dev/null
++++ b/results/operational_retro_2026_08_594.json
+@@ -0,0 +1,43 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.594",
++  "generated_at": "2026-08-31T05:29:04Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.3,
++  "experiments_completed": 2,
++  "compute_bound_experiments_count": 1,
++  "slowest_experiments": [
++    {
++      "experiment": "Typed operational-obligation automaton v2",
++      "duration_minutes": 0.34,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Three-model operational-handoff proposal corpus",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone recorded 2 completed experiments in 0.3 minutes, with 1 compute-bound experiment. The compute entry is at the timing floor, while the protected compute-task GPU-idle indicator is false.",
++  "bottlenecks_identified": [
++    "Disk-mtime reconstruction placed the compute-bound experiment at 0.0 minutes, so no data available this milestone identifies which execution phase consumed its time.",
++    "The point-in-time GPU state is not joined to experiment phase boundaries, leaving task-scoped accelerator attribution unavailable.",
++    "No data available this milestone records whether 2 or more models were loaded in parallel or which runner handled them."
++  ],
++  "improvements_suggested": [
++    "Add automatic batches of 8-16 questions per forward pass to the single-process inference path and measure the realized throughput change.",
++    "Write monotonic queue, load, inference, verification, and artifact-write timestamps into each experiment receipt.",
++    "Attach experiment identity and start/end boundaries to GPU utilization samples.",
++    "Record loaded-model count and parallel-versus-sequential mode, selecting DualGPURunner only when 2 or more models are loaded in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Introduce configurable 8-16 question batching for inference.",
++    "Replace disk-mtime-only diagnosis with task-owned monotonic phase receipts.",
++    "Persist task-window GPU samples, loaded-model concurrency, and runner selection together."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence excludes a locked compute-idle finding but cannot explain the compute task's phase costs or establish a missed parallel-model runner dispatch. Batching is the clearest measured tooling hypothesis; milestone-wide savings remain unquantified, so the estimate stays at 0%."
++}
+-- 
+2.55.0
+

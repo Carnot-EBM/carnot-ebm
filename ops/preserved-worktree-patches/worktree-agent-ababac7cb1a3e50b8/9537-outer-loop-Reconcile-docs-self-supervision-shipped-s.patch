@@ -1,0 +1,170 @@
+From 8209700c136841f28a7fc78dcfd1440f98989efe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 16:23:25 -0400
+Subject: [PATCH 09537/11362] [outer-loop] Reconcile docs: self-supervision
+ shipped, spec status Implemented
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Implementation Status rows for REQ-CONDUCTOR-SENTINEL-1/2/3 and
+REQ-OPS-AUDIT-LEDGER-1 filled with mutation evidence. status.md and
+changelog.md gain the session record (additive; nothing removed).
+Note: staged changelog/status content may include the live conductor's
+own concurrent doc-recon lines — both files are append-oriented and
+the sweep preserves them.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  8 +--
+ ops/changelog.md                              | 38 ++++++++++++
+ ops/status.md                                 | 62 ++++++++++++++++++-
+ 3 files changed, 103 insertions(+), 5 deletions(-)
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index a8a8c6470d..054618e9ed 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -8404,7 +8404,7 @@ emit no escalation for it and SHALL leave the row untouched.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-CONDUCTOR-SENTINEL-1 | Pending | Pending |
+-| REQ-CONDUCTOR-SENTINEL-2 | Pending | Pending |
+-| REQ-CONDUCTOR-SENTINEL-3 | Pending | Pending |
+-| REQ-OPS-AUDIT-LEDGER-1 | Pending | Pending |
++| REQ-CONDUCTOR-SENTINEL-1 | Implemented (`scripts/conductor_run_sentinel.py`: /proc discovery, rows via the liveness lint's `check_row`, server-log scan; validated against the REAL 2026-08-22 incident bytes — rows CRITICAL 3/3, failing server log 3 hits) | Implemented (`tests/python/test_conductor_run_sentinel.py`; mutations: streak threshold disabled -> RED, server patterns neutered -> RED) |
++| REQ-CONDUCTOR-SENTINEL-2 | Implemented (same file: stranded-VRAM vs compute-apps, orphan = reparented + port unreferenced, wrong-model vs the imported live pin; live-box measure: 4/15 MiB unaccounted, zero findings) | Implemented (same file; mutations: VRAM slack absurd -> RED, orphan ppid condition broken -> RED) |
++| REQ-CONDUCTOR-SENTINEL-3 | Implemented (same file: `escalate()` — log_step-format rows, known-issues sections for CRITICAL, fingerprint dedupe with 14-day re-arm, `last_scan_utc` receipt on every run; wired in `research_step` via `_run_audit_with_receipt` + the orphan-cleanup janitor above its conductor-liveness early-exit) | Implemented (same file + `tests/python/test_conductor_sentinel_wiring.py`; mutations: dedupe disabled -> RED, sentinel call unwired -> RED) |
++| REQ-OPS-AUDIT-LEDGER-1 | Implemented (`scripts/audit_findings_ledger.py`: append-only `ops/audit-findings-ledger.md`, 7-day aging, weekly re-bucket escalation, unrecognized dispositions fail closed; wired at milestone close after the claim audit with its own state-file receipt; E2E ingested the two real 2026-08-22 CLAIM_OVERSTATED findings) | Implemented (`tests/python/test_audit_findings_ledger.py`; mutations: idempotence broken -> RED, aging threshold absurd -> RED, week bucket frozen -> RED) |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0495f6dddb..4b88148d1e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,43 @@
+ # Carnot — Changelog
+ 
++## 2026-08-22 (outer-loop, conductor self-supervision: run sentinel + audit-findings ledger)
++
++Operator directive: "the goal here is to eventually remove the need for an
++outer loop to constantly keep the conductor and experiments in check."
++Origin incident, same day: a supervisor A/B ran 2.5 hours with every row
++`llm_on_row_valid: false` (llama-server allocation failure mid-run, a
++stranded 3,744 MiB VRAM fragment) and nothing read the stamp until a human
++did. The unifying defect: the system writes validity signals and never
++reads them while the run is alive.
++
++- **Design note**: `docs/research-notes/conductor-self-supervision-2026-08-22.md`.
++- **REQ-CONDUCTOR-SENTINEL-1/2/3** (`scripts/conductor_run_sentinel.py` +
++  `tests/python/test_conductor_run_sentinel.py`, 22 tests): in-flight row
++  validity via the liveness lint's own `check_row` (>=2 consecutive
++  invalid LLM-on rows escalates; all-invalid is CRITICAL), llama-server
++  stderr allocation-failure scan (CRITICAL), stranded-VRAM / orphaned-
++  server / wrong-model checks from `/proc` + nvidia-smi, durable deduped
++  escalation to `ops/conductor-log.md` (+ known-issues for CRITICAL) with
++  a `last_scan_utc` receipt on every run. Never kills; checks that cannot
++  run say so (`GPU_CHECK_UNAVAILABLE`, `PIN_CHECK_UNAVAILABLE`).
++- **REQ-OPS-AUDIT-LEDGER-1** (`scripts/audit_findings_ledger.py` +
++  `tests/python/test_audit_findings_ledger.py`, 10 tests): flagged
++  claim-audit verdicts become append-only OPEN ledger rows that age and
++  escalate weekly until a human writes a disposition; typo'd dispositions
++  fail closed. E2E ingested today's two real CLAIM_OVERSTATED findings
++  (exp6478, exp6497).
++- **Wiring** (`scripts/research_conductor.py`, janitor,
++  `tests/python/test_conductor_sentinel_wiring.py`): sentinel per
++  `research_step` iteration via `_run_audit_with_receipt`; ledger at
++  milestone close after the claim audit; janitor invocation above the
++  conductor-liveness early-exit so outer-loop runs are covered when the
++  conductor is dead.
++- **Validation**: replay on the REAL incident bytes (rows CRITICAL 3/3,
++  failing server log 3 hits); corpus FP measure over 401 files: 0
++  CRITICAL, 3 WARN all inside the documented 2026-07-26 fault corpus;
++  live-box scan clean. 9 mutations RED->GREEN. Commits cb6684fac8,
++  c29766d286, and the wiring commit following them.
++
+ ## 2026-08-22 (outer-loop, supervisor redirect ledger measurable, commits c6cb2614fd + 9da8b39042)
+ 
+ Team-lead directive: make the ARC trajectory supervisor's redirects
+diff --git a/ops/status.md b/ops/status.md
+index f5bce6c532..54146ec8df 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,19 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-08-21 (test regression fix: `simulation` and other recognized no-LLM
++**Last Updated:** 2026-08-22 (conductor self-supervision shipped: the run sentinel
++reads live-run validity signals in flight — invalid-row streaks via the liveness
++lint's own `check_row`, llama-server allocation failures, stranded VRAM, orphaned
++servers, wrong loaded model — and escalates durably with dedupe and a state-file
++receipt. It never kills work. The audit-findings ledger turns flagged claim-audit
++verdicts into OPEN rows that age and escalate weekly until a human writes a
++disposition; it ingested today's two real CLAIM_OVERSTATED findings (exp6478,
++exp6497). Wired: `research_step` per iteration + the orphan-cleanup janitor
++(covers outer-loop runs when the conductor is dead) + milestone close. Validated
++on the REAL 2026-08-22 incident bytes; corpus FP measure: 0 CRITICAL, 3 WARN all
++in the documented 2026-07-26 fault corpus. REQ-CONDUCTOR-SENTINEL-1/2/3,
++REQ-OPS-AUDIT-LEDGER-1. See "Session 2026-08-22 — conductor self-supervision".)
++
++Prior: 2026-08-21 (test regression fix: `simulation` and other recognized no-LLM
+ substrate aliases now receive a nonzero JSON-work floor instead of
+ `SUBSTRATE_HAS_NO_DURATION_FLOOR`; `deterministic_pipeline_integration_no_llm`
+ uses the deterministic-verifier floor. Focused regressions pass: adversarial
+@@ -52,6 +65,53 @@ GATEWAY CHARGE, READ IT: the "gateway-accurate"
+ 3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
+ median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
+ 
++## Session 2026-08-22 — conductor self-supervision (outer-loop)
++
++Operator goal: "eventually remove the need for an outer loop to constantly
++keep the conductor and experiments in check." The unifying defect: the
++system writes validity signals and never reads them while a run is alive
++(the 2026-08-22 A/B burned 2.5 hours with every row `llm_on_row_valid:
++false`; only a human reading the field prevented a wrong conclusion about
++the supervisor mechanism itself).
++
++Shipped, spec-anchored (REQ-CONDUCTOR-SENTINEL-1/2/3, REQ-OPS-AUDIT-LEDGER-1;
++design note `docs/research-notes/conductor-self-supervision-2026-08-22.md`):
++
++- `scripts/conductor_run_sentinel.py` — discovers live ARC harness runs from
++  `/proc` cmdline (the trustworthy source), evaluates their rows with the
++  SAME `check_row` the post-hoc liveness lint uses (no second pattern list),
++  scans llama-server stderr logs for unambiguous allocation failures, and
++  checks GPU health (stranded VRAM vs compute apps, orphaned servers with
++  port-reference exoneration, wrong loaded model vs the imported live pin).
++  Escalation: log_step-format `OPERATOR-ATTENTION` rows in
++  `ops/conductor-log.md`, known-issues sections for CRITICAL, fingerprint
++  dedupe (14-day re-arm), `last_scan_utc` receipt written on EVERY run.
++  It never kills a process (source-level test enforces no kill primitive).
++- `scripts/audit_findings_ledger.py` — flagged claim-audit verdicts enter
++  `ops/audit-findings-ledger.md` as append-only OPEN rows; OPEN rows older
++  than 7 days escalate weekly until a human writes ACCEPTED/FIXED/WONTFIX.
++  Unrecognized dispositions fail closed. E2E: ingested the two real
++  CLAIM_OVERSTATED findings from today's report (exp6478, exp6497).
++- Wiring: `research_step` runs the sentinel every iteration through
++  `_run_audit_with_receipt` (receipt = the sentinel's state file); the
++  orphan-cleanup janitor runs it ABOVE its conductor-liveness early-exit
++  (outer-loop-launched runs are the class the conductor cannot see);
++  milestone close runs the ledger right after the claim audit with its own
++  receipt. Conductor picks the change up at its next restart.
++- Validation: incident replay on the REAL bytes (rows -> CRITICAL 3/3;
++  failing server log -> 3 pattern hits). Historical corpus (401 files):
++  0 CRITICAL, 3 WARN — all in the documented 2026-07-26 contention fault
++  corpus (true positives); 100 witness-missing hits confined to the single
++  2026-07-27 first-win control corpus (WARN-only). Live box: 0 findings.
++  9 mutations proven RED then GREEN; 49 tests pass across the new and
++  adjacent conductor suites.
++
++Deliberately NOT built: auto-kill of any process (escalate-only; a false
++stop is worse than a slow human), a new daemon, ledger ingestion of the
++other five audit reports (v1 proves the disposition shape on one), systemd
++unit changes. Still human: ledger dispositions, acting on escalations,
++judging slow-but-valid runs.
++
+ ## Session 2026-08-10 - Milestone 2026.08.542 Research Planning
+ 
+ ### What's Working
+-- 
+2.55.0
+

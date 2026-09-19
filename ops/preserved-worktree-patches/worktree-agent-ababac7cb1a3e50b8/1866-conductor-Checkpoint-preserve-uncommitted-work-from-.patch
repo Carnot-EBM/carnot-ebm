@@ -1,0 +1,65 @@
+From 990d16a6a83d6293bc0982d955355a521b41086e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 21:56:42 -0400
+Subject: [PATCH 01866/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...0_oracle_distinct_arc_verifier_build_labeled.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4ecc8a38b0..98df1ca1e5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-15T01:37:23Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-06-15T01:56:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5ca7f7c42b..90bcdee3fb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8511,3 +8511,4 @@ c |
+ | 2026-06-15 01:16 UTC | Plan milestone 2026.06.391 | OK | 11 tasks proposed |
+ | 2026-06-15 01:18 UTC | Milestone 2026.06.391 activated | OK | 11 tasks queued |
+ | 2026-06-15 01:35 UTC | Archive .390 -> activate .391; KEEP the hardened g | OK | 91 passed, 1 warning in 4.74s |
++| 2026-06-15 01:54 UTC | PHASE A1 (HEADLINE BUILD; the de-risked retry) --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2100c41647..ea2ba35c1d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-15T01:37:23Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 12, "phase": "iteration_start", "started_at": "2026-06-15T01:56:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json b/results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
+index 9c2b906166..b15398b246 100644
+--- a/results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
++++ b/results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
+@@ -91,5 +91,13 @@
+   ],
+   "stratified_task_n": 14,
+   "verifier_is_oracle": false,
+-  "wrong_majority_n": 5
+-}
++  "wrong_majority_n": 5,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "detector_row_n=8041.0 and raw_candidate_n=8041.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

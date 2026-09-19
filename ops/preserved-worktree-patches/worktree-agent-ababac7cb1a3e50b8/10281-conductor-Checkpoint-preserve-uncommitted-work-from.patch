@@ -1,0 +1,76 @@
+From 64aaf4bb5f265bb231853fa3557da83953e17d8b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 07:04:13 -0400
+Subject: [PATCH 10281/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...hermalizer_factor_trajectory_fidelity.json | 23 +++++++++++++++++--
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c5760b0f0f..5e52e302b6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-08-29T10:42:10Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-08-29T11:04:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 71c62180c1..7cff535ca0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16764,3 +16764,4 @@ The l |
+ | 2026-08-29 10:02 UTC | Read-only episode and atomic constraint-memory com | OK | 104 passed, 1 warning in 8.68s |
+ | 2026-08-29 10:21 UTC | Prospective support-preserving transactional self- | OK | 105 passed, 1 warning in 8.80s |
+ | 2026-08-29 10:40 UTC | Cold transactional self-learning durability and po | OK | 173 passed, 1 warning in 11.60s |
++| 2026-08-29 11:02 UTC | Thermalizers-style factor-to-trajectory compiler f | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4c9edd6e9f..366d38d867 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 31, "phase": "iteration_start", "started_at": "2026-08-29T10:42:10Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 32, "phase": "iteration_start", "started_at": "2026-08-29T11:04:09Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json b/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
+index 03937da532..89c8285d21 100644
+--- a/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
++++ b/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
+@@ -11865,5 +11865,24 @@
+     }
+   ],
+   "verdict_class": "positive",
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-08-29T11:02:09Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
++      "severity": "warn",
++      "detail": "inference_substrate='simulator_only_exact_enumeration_no_physical_tsu' matches no duration-floor recognizer, so duration_s=5.13896010402823 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
++    },
++    {
++      "kind": "VERDICT_CLASS_MISMATCH",
++      "severity": "critical",
++      "detail": "verdict_class=positive but verifier_is_oracle=True: a circular (verifier==oracle) result must declare circular_positive so the circularity travels WITH the claim into capstones and headline aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness Discipline'."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

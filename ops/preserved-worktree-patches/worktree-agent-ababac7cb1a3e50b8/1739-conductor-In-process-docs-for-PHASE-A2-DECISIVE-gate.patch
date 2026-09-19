@@ -1,0 +1,38 @@
+From ef03246b8d170e09e1c4548939a89c0a36c084c1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 06:37:11 -0400
+Subject: [PATCH 01739/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20A2=20(DECISIVE,=20gated=5Fon=20A1=20headroom>=3D0.?=
+ =?UTF-8?q?10)=20=E2=80=94=20the=20EFFICIENCY=20moat:=20Carnot=20executabl?=
+ =?UTF-8?q?e/energy=20verifier=20+=20V-STaR=20selector=20(ARM=20A)=20vs=20?=
+ =?UTF-8?q?LLM-as-judge=20(ARM=20J)=20vs=20SC-vote=20(ARM=20B)=20vs=20orac?=
+ =?UTF-8?q?le,=20on=20the=20headroom-present=20executable=20domain.=20Repo?=
+ =?UTF-8?q?rt=20accuracy=20parity=20(bootstrap=20CI95=20on=20pass@1(A)-pas?=
+ =?UTF-8?q?s@1(J))=20AND=20the=20REAL=20cost=20ratio=20(verifier=20wall-cl?=
+ =?UTF-8?q?ock/tokens=20/=20judge=20wall-clock/tokens).=20verifier=5Feffic?=
+ =?UTF-8?q?iency=5Fwin=20:=3D=20A=20within-CI=20of=20J=20on=20accuracy=20A?=
+ =?UTF-8?q?ND=20>=3D10x=20cheaper=20(or=20strict=20Pareto-dominance).=20Re?=
+ =?UTF-8?q?solves=20the=20north-star=20=C2=A75=20efficiency-parity=20quest?=
+ =?UTF-8?q?ion=20with=20REAL=20cost=20(fixes=20the=20.387=20abstract-cost-?=
+ =?UTF-8?q?unit=20caveat).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e5e29d63ab..ce5db68994 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9093,3 +9093,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-14: OPERATIONAL RETROSPECTIVE 2026.06.387 — the milestone-scoped timing detector again reported a FALSE-ZERO (0 experiment commits / 0 wall-time / 0 compute-bound), the recurring observability gap documented across .363–.386. On-disk git (diff since activation ffea13829) + ops/changelog.md confirm .387 actually ran exp4175–exp4183 (phases A1–D4) and committed the capstone exp4183 (honest_verdict=complete): MOAT PROVEN (verifier adds value where headroom exists, on the A1-established headroom_present positive control), DiffusionGemma gate NOW MET, GAP-3 Stage-1 bounded honest-negative, ARC +1 (lp85→L2, total 14), 0 flagged-skipped. Locked retro fields stay 0 (what the broken detector saw); the single bottleneck is observability, not execution. Highest-leverage fix: repair the timing detector's milestone↔commit association (11+ consecutive false-zeros) + add a changelog/results-scan fallback so retros self-populate. results/operational_retro_2026_06_387.json
+ - 2026-06-14: Archive .387 -> activate .388; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .387 close-state (verifier moat PROVEN-headroom-present on code, exp4177 verifier_value_added=true delta +0.18 CI95[0.08,0.30] but efficiency_parity=false; GAP-3 Stage-1 BOUNDED exp4178; DiffusionGemma gate MET; ARC total_levels_solved=14/total_games_solved=13). (⚠️ Research Finding) — honest_verdict=success: archived_v387_v388_active_moat_PROVEN_headroom_present_code_delta_0.18_efficiency_unwon_gap3_BOUNDED_diffusiongemma_MET_arc_levels14_games13; results/experiment_4184_archive_v387_activate_v388.json
+ - 2026-06-14: PHASE A1 — Headroom re-census + LLM-as-judge baseline harness + REAL cost meter. Reuse scripts/headroom_gate.py to re-establish the executable-headroom domain(s) (code proven 0.18; attempt a 2nd executable pool — MBPP/EvalPlus or held-out Sudoku — generating candidates from a SOTA GGUF behind a PRECONDITIONS cache check if none cached). BUILD the LLM-as-judge arm (a SOTA GGUF prompts a best-candidate selection) with per-call wall-clock + token instrumentation; SMOKE it on >=3 real candidates. Emit max_selectable_headroom (BARE) + llm_judge_ready + the cost meter. The comparator + positive control A2 requires. (✅ Complete) — honest_verdict=complete: headroom_recensus_llm_judge_ready_domain_code_max_selectable_headroom_0.1800; results/experiment_4185_headroom_recensus_llm_judge_harness.json
++- 2026-06-14: PHASE A2 (DECISIVE, gated_on A1 headroom>=0.10) — the EFFICIENCY moat: Carnot executable/energy verifier + V-STaR selector (ARM A) vs LLM-as-judge (ARM J) vs SC-vote (ARM B) vs oracle, on the headroom-present executable domain. Report accuracy parity (bootstrap CI95 on pass@1(A)-pass@1(J)) AND the REAL cost ratio (verifier wall-clock/tokens / judge wall-clock/tokens). verifier_efficiency_win := A within-CI of J on accuracy AND >=10x cheaper (or strict Pareto-dominance). Resolves the north-star §5 efficiency-parity question with REAL cost (fixes the .387 abstract-cost-unit caveat). (✅ Complete) — honest_verdict=complete: verifier_efficiency_win_true_delta_0.1800; results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json
+-- 
+2.55.0
+

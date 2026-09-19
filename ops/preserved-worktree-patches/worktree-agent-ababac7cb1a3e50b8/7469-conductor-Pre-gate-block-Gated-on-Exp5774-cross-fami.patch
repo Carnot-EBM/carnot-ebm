@@ -1,0 +1,62 @@
+From f8265a16658e6d1ff0926daa0679c8363441d272 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 23:13:50 -0400
+Subject: [PATCH 07469/11362] [conductor] Pre-gate block: Gated on Exp5774
+ cross-family transfer: wire a disabled online constraint-sidecar shadow path
+
+5 of 5 gate(s) failed; first failure: exp5774-constraint-transfer-forgetting-audit.cross_family_transfer_ready_score (upstream artifact not found for task id 'exp5774-constraint-transfer-forgetting-audit')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_5775_constraint_sidecar_shadow_integration.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 13e060f9ce..980ffb2b9d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 212, "phase": "iteration_start", "last_beat": "2026-07-22T03:11:47Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 213, "phase": "iteration_start", "last_beat": "2026-07-22T03:13:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e7163c4d8c..86a52c4dec 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14074,3 +14074,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 03:09 UTC | Gated on Exp5773 credited learning: test leave-one | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5773-prospective-constraint-acquisition-a |
+ | 2026-07-22 03:09 UTC | Gated on Exp5774 cross-family transfer: wire a dis | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5774-constraint-transfer-forgetting-aud |
+ | 2026-07-22 03:11 UTC | Gated on Exp5773 credited learning: test leave-one | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5773-prospective-constraint-acquisition-a |
++| 2026-07-22 03:11 UTC | Gated on Exp5774 cross-family transfer: wire a dis | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5774-constraint-transfer-forgetting-aud |
++| 2026-07-22 03:13 UTC | Gated on Exp5773 credited learning: test leave-one | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5773-prospective-constraint-acquisition-a |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9e4c898df6..1bec673931 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 212, "phase": "iteration_start", "started_at": "2026-07-22T03:11:47Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 213, "phase": "iteration_start", "started_at": "2026-07-22T03:13:49Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5775_constraint_sidecar_shadow_integration.json b/results/experiment_5775_constraint_sidecar_shadow_integration.json
+index 12f162463d..aa3c4ad84b 100644
+--- a/results/experiment_5775_constraint_sidecar_shadow_integration.json
++++ b/results/experiment_5775_constraint_sidecar_shadow_integration.json
+@@ -2,8 +2,8 @@
+   "experiment": 5775,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-22",
+-  "started_at": "2026-07-22T03:11:47.480801+00:00",
+-  "finished_at": "2026-07-22T03:11:47.480801+00:00",
++  "started_at": "2026-07-22T03:13:49.995884+00:00",
++  "finished_at": "2026-07-22T03:13:49.995884+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5774 cross-family transfer: wire a disabled online constraint-sidecar shadow path",
+-- 
+2.55.0
+

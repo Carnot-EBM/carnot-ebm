@@ -1,0 +1,1145 @@
+From 5b36afaa4c1f4b990b3a63f9a3e68be33e66f7b0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 20:40:31 -0400
+Subject: [PATCH 05132/11362] [conductor] PHASE A1 preflight -- split SOTA
+ model readiness, judge/confidence readiness, and tool-first verifier
+ readiness so downstream D1/D6 tasks skip cheaply instead of wasting a full
+ synthesis call.
+
+Automated research step by research conductor.
+Task ID: exp5057-gate-state-preflight
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  75 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_5057_gate_state_preflight_v465.py | 415 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...riment_5057_gate_state_preflight_v465.json | 137 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   8 +-
+ results/experiment_638_tier1_fr11_relay.json  |   8 +-
+ results/experiment_645_tier1_fr11_relay.json  |   8 +-
+ ...periment_5057_gate_state_preflight_v465.py | 308 +++++++++++++
+ 12 files changed, 958 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_5057_gate_state_preflight_v465.py
+ create mode 100644 results/experiment_5057_gate_state_preflight_v465.json
+ create mode 100644 tests/python/test_experiment_5057_gate_state_preflight_v465.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a71c24cc60..9c82f1f65e 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -22045,6 +22045,81 @@ then the artifact verdict starts with `complete_sota_gguf_judge_preflight_ready`
+ |---|---|---|
+ | REQ-VERIFY-5043 | Proposed (`python/carnot/experiment_5043_sota_gguf_judge_preflight.py`, `results/experiment_5043_sota_gguf_judge_preflight.json`) | Proposed (`tests/python/test_experiment_5043_sota_gguf_judge_preflight.py`) |
+ 
++### REQ-VERIFY-5057: Split Gate-State Preflight For Downstream SOTA Work
++
++The repository SHALL provide Exp 5057 at
++`python/carnot/experiment_5057_gate_state_preflight_v465.py` to write a
++reusable gate-state artifact at
++`results/experiment_5057_gate_state_preflight_v465.json` for downstream D1/D6
++tasks that need separate readiness fields rather than a single brittle judge
++gate.
++
++The runner SHALL resolve all mandated local SOTA GGUF model specs exactly:
++`flagship_moe=unsloth/Qwen3.6-35B-A3B-GGUF`,
++`flagship_dense=unsloth/gemma-4-31B-it-GGUF`, and
++`middle_moe=unsloth/gemma-4-26B-A4B-it-GGUF`. Resolution SHALL use the cached
++SOTA GGUF path pattern from `scripts/experiment_template.py` /
++`python/carnot/inference/sota_models.py`, SHALL NOT call
++`AutoTokenizer.from_pretrained` on a GGUF repo, and SHALL record either the
++exact resolved `.gguf` path or a missing diagnostic for every mandated role.
++
++The runner SHALL probe local llama.cpp-compatible completion endpoints only
++when reachable, SHALL record completion and confidence/top-logprob telemetry
++readiness separately, and SHALL NOT fabricate a server result when no endpoint
++is live. It SHALL also run a deterministic tool-first verifier smoke path for
++JSON parse, constraint, and evidence checks without depending on live LLM
++inference.
++
++The terminal artifact MUST include `honest_verdict`, `model_specs`,
++`usable_sota_models`, `sota_models_ready`, `sota_judge_ready`,
++`top_logprob_or_confidence_ready`, `tool_first_verifier_ready`,
++`endpoint_summary`, `skip_reasons`, and `legacy_models_smoke_only`. It SHOULD
++also include schema metadata, `spec_refs`, `result_path`, `duration_s`,
++`field_principles`, `tool_first_verifier_summary`, and a reproducibility
++checksum. `sota_models_ready` SHALL be true iff at least one mandated SOTA
++GGUF path resolves locally. `sota_judge_ready` SHALL be true iff at least one
++mandated SOTA GGUF is locally usable and a live endpoint completes with
++top-logprob or confidence telemetry. `top_logprob_or_confidence_ready` SHALL
++represent telemetry readiness independently of model-cache readiness.
++`tool_first_verifier_ready` SHALL be true only when deterministic JSON,
++constraint, and evidence smoke checks pass. `legacy_models_smoke_only` SHALL
++always be true because legacy small models are never headline evidence.
++
++Its `field_principles` SHALL include:
++`honest_verdict` = `terminal prefix for the split readiness report: complete_gate_state_preflight_all_ready, complete_gate_state_preflight_partial_ready, or blocked_gate_state_preflight_no_ready_paths.`;
++`model_specs` = `all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths or missing diagnostics.`;
++`usable_sota_models` = `the subset of mandated SOTA GGUF roles resolved to local .gguf paths.`;
++`sota_models_ready` = `true iff at least one mandated SOTA GGUF path resolves locally.`;
++`sota_judge_ready` = `true iff a mandated SOTA GGUF is usable and a local endpoint completes with top-logprob or confidence telemetry.`;
++`top_logprob_or_confidence_ready` = `true iff the endpoint telemetry probe exposes top-logprob or confidence telemetry, independent of model cache readiness.`;
++`tool_first_verifier_ready` = `true iff deterministic JSON, constraint, and evidence smoke checks pass without live LLM inference.`;
++`endpoint_summary` = `machine-readable completion and telemetry diagnostics for each probed llama.cpp-compatible endpoint.`;
++`skip_reasons` = `machine-readable reasons for every false readiness lane.`;
++`legacy_models_smoke_only` = `true; legacy small models are smoke-only and never headline evidence.`
++
++### SCENARIO-VERIFY-5057: Models, Judge Telemetry, And Tool Verifier Are Split
++
++Given the three mandated local SOTA GGUF repositories may or may not be cached
++and the local judge endpoint may or may not be live, when Exp 5057 runs, then
++it writes a stable JSON artifact that lists exact paths or missing diagnostics
++for all three model roles, records the usable SOTA subset, separately records
++completion readiness, confidence/top-logprob readiness, SOTA judge readiness,
++and deterministic tool-first verifier readiness, and emits skip reasons for
++every false readiness field without treating a missing endpoint as fabricated
++success.
++
++If at least one mandated SOTA GGUF is cached but no endpoint is live, then
++`sota_models_ready=true`, `sota_judge_ready=false`,
++`top_logprob_or_confidence_ready=false`, `tool_first_verifier_ready=true`, and
++`skip_reasons` SHALL name the absent endpoint or telemetry rather than
++collapsing the artifact into an unusable blocked judge gate.
++
++## Implementation Status (REQ-VERIFY-5057)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5057 | Proposed (`python/carnot/experiment_5057_gate_state_preflight_v465.py`, `results/experiment_5057_gate_state_preflight_v465.json`) | Proposed (`tests/python/test_experiment_5057_gate_state_preflight_v465.py`) |
++
+ ### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
+ 
+ The repository SHALL provide Exp 5044 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ef58c675b4..2bddc40521 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4061,
++  "experiments_checked": 4062,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5057_gate_state_preflight_v465.py b/python/carnot/experiment_5057_gate_state_preflight_v465.py
+new file mode 100644
+index 0000000000..1b568313f4
+--- /dev/null
++++ b/python/carnot/experiment_5057_gate_state_preflight_v465.py
+@@ -0,0 +1,415 @@
++#!/usr/bin/env python3
++"""Exp 5057: split gate-state preflight for downstream SOTA work.
++
++Spec refs: REQ-VERIFY-5057, SCENARIO-VERIFY-5057.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++import os
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.experiment_5043_sota_gguf_judge_preflight import probe_endpoints  # noqa: E402
++from carnot.inference.sota_models import resolve_cached_gguf  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++EndpointProbe = Callable[[list[str], float], JsonDict]
++Clock = Callable[[], float]
++
++EXPERIMENT_ID = 5057
++EXPERIMENT_NAME = "experiment_5057_gate_state_preflight_v465"
++MODULE_RELATIVE_PATH = "python/carnot/experiment_5057_gate_state_preflight_v465.py"
++RESULT_RELATIVE_PATH = "results/experiment_5057_gate_state_preflight_v465.json"
++SCHEMA = "carnot.experiment_5057_gate_state_preflight_v465.v1"
++SPEC_REFS = ["REQ-VERIFY-5057", "SCENARIO-VERIFY-5057"]
++DEFAULT_ENDPOINTS = ("http://127.0.0.1:8080",)
++DEFAULT_PREFERRED_QUANT = "Q4_K_M"
++
++MANDATED_MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "role": "flagship_moe",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "preferred_quant": DEFAULT_PREFERRED_QUANT,
++    },
++    {
++        "role": "flagship_dense",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "preferred_quant": DEFAULT_PREFERRED_QUANT,
++    },
++    {
++        "role": "middle_moe",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "preferred_quant": DEFAULT_PREFERRED_QUANT,
++    },
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix for the split readiness report: "
++            "complete_gate_state_preflight_all_ready, "
++            "complete_gate_state_preflight_partial_ready, or "
++            "blocked_gate_state_preflight_no_ready_paths."
++        )
++    },
++    "model_specs": {
++        "principle": (
++            "all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths "
++            "or missing diagnostics."
++        )
++    },
++    "usable_sota_models": {
++        "principle": "the subset of mandated SOTA GGUF roles resolved to local .gguf paths."
++    },
++    "sota_models_ready": {
++        "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
++    },
++    "sota_judge_ready": {
++        "principle": (
++            "true iff a mandated SOTA GGUF is usable and a local endpoint completes "
++            "with top-logprob or confidence telemetry."
++        )
++    },
++    "top_logprob_or_confidence_ready": {
++        "principle": (
++            "true iff the endpoint telemetry probe exposes top-logprob or confidence "
++            "telemetry, independent of model cache readiness."
++        )
++    },
++    "tool_first_verifier_ready": {
++        "principle": (
++            "true iff deterministic JSON, constraint, and evidence smoke checks pass "
++            "without live LLM inference."
++        )
++    },
++    "endpoint_summary": {
++        "principle": (
++            "machine-readable completion and telemetry diagnostics for each probed "
++            "llama.cpp-compatible endpoint."
++        )
++    },
++    "skip_reasons": {
++        "principle": "machine-readable reasons for every false readiness lane."
++    },
++    "legacy_models_smoke_only": {
++        "principle": "true; legacy small models are smoke-only and never headline evidence."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "duration_s",
++    "field_principles",
++    "tool_first_verifier_summary",
++    "reproducibility_checksum",
++)
++
++ALLOWED_VERDICTS = {
++    "complete_gate_state_preflight_all_ready",
++    "complete_gate_state_preflight_partial_ready",
++    "blocked_gate_state_preflight_no_ready_paths",
++}
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _default_endpoint_list() -> list[str]:  # pragma: no cover - environment shim.
++    raw = (
++        os.environ.get("CARNOT_5057_ENDPOINTS")
++        or os.environ.get("CARNOT_JUDGE_ENDPOINTS")
++        or os.environ.get("CARNOT_LLAMA_ENDPOINTS")
++        or os.environ.get("CARNOT_JUDGE_SERVER_URL")
++        or ""
++    )
++    endpoints = [part.strip().rstrip("/") for part in raw.split(",") if part.strip()]
++    return endpoints or list(DEFAULT_ENDPOINTS)
++
++
++def normalize_endpoints(endpoints: Sequence[str] | None) -> list[str]:
++    raw = list(endpoints) if endpoints is not None else _default_endpoint_list()
++    normalized: list[str] = []
++    for endpoint in raw:
++        value = str(endpoint).strip().rstrip("/")
++        if value and value not in normalized:
++            normalized.append(value)
++    return normalized or list(DEFAULT_ENDPOINTS)
++
++
++def resolve_model_specs(
++    *,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    preferred_quant: str = DEFAULT_PREFERRED_QUANT,
++) -> tuple[JsonDict, list[JsonDict]]:
++    model_specs: JsonDict = {}
++    usable: list[JsonDict] = []
++    for spec in MANDATED_MODEL_SPECS:
++        role = str(spec["role"])
++        hf_id = str(spec["hf_id"])
++        quant = str(spec.get("preferred_quant") or preferred_quant)
++        path = model_resolver(hf_id, quant)
++        model_specs[role] = {
++            "hf_id": hf_id,
++            "preferred_quant": quant,
++            "resolved_path": str(path) if path else None,
++            "missing_diagnostic": None if path else f"missing cached GGUF for {hf_id}",
++        }
++        if path:
++            usable.append({"role": role, "hf_id": hf_id, "model_path": str(path)})
++    return model_specs, usable
++
++
++def run_tool_first_verifier_smoke() -> JsonDict:
++    parsed = json.loads('{"answer":"OK","confidence":0.75}')
++    json_ready = parsed == {"answer": "OK", "confidence": 0.75}
++    constraint_ready = (2 + 2 == 4) and (3 * 3 >= 9)
++    evidence_payload = _json_dumps({"claim": "2+2=4", "evidence": [2, 2, 4]})
++    evidence_hash = hashlib.sha256(evidence_payload.encode("utf-8")).hexdigest()
++    evidence_ready = evidence_hash == hashlib.sha256(evidence_payload.encode("utf-8")).hexdigest()
++    checks = [
++        {
++            "name": "json_parse_check",
++            "ready": json_ready,
++            "detail": "parsed JSON object with answer and confidence",
++        },
++        {
++            "name": "constraint_check",
++            "ready": constraint_ready,
++            "detail": "deterministic arithmetic constraints satisfied",
++        },
++        {
++            "name": "evidence_check",
++            "ready": evidence_ready,
++            "detail": f"evidence sha256={evidence_hash}",
++        },
++    ]
++    return {"ready": all(bool(check["ready"]) for check in checks), "checks": checks}
++
++
++def _skip_reasons(
++    *,
++    sota_models_ready: bool,
++    completion_ready: bool,
++    telemetry_ready: bool,
++    sota_judge_ready: bool,
++    tool_first_verifier_ready: bool,
++) -> list[str]:
++    reasons: list[str] = []
++    if not sota_models_ready:
++        reasons.append("sota_models_unavailable")
++    if not completion_ready:
++        reasons.append("endpoint_completion_unavailable")
++    if not telemetry_ready:
++        reasons.append("top_logprob_or_confidence_unavailable")
++    if not sota_judge_ready:
++        reasons.append("sota_judge_unavailable")
++    if not tool_first_verifier_ready:
++        reasons.append("tool_first_verifier_unavailable")
++    return reasons
++
++
++def _verdict(
++    *,
++    sota_judge_ready: bool,
++    tool_first_verifier_ready: bool,
++    any_readiness: bool,
++) -> str:
++    if sota_judge_ready and tool_first_verifier_ready:
++        return "complete_gate_state_preflight_all_ready"
++    if any_readiness:
++        return "complete_gate_state_preflight_partial_ready"
++    return "blocked_gate_state_preflight_no_ready_paths"
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    basis = {
++        "experiment_id": payload.get("experiment_id"),
++        "honest_verdict": payload.get("honest_verdict"),
++        "model_specs": payload.get("model_specs"),
++        "endpoint_summary": payload.get("endpoint_summary"),
++        "skip_reasons": payload.get("skip_reasons"),
++        "tool_first_verifier_ready": payload.get("tool_first_verifier_ready"),
++    }
++    return hashlib.sha256(_json_dumps(basis).encode("utf-8")).hexdigest()
++
++
++def build_artifact(
++    *,
++    model_specs: JsonDict,
++    usable_sota_models: list[JsonDict],
++    endpoint_summary: JsonDict,
++    tool_first_verifier_summary: JsonDict,
++    duration_s: float,
++    result_path: Path,
++) -> JsonDict:
++    sota_models_ready = bool(usable_sota_models)
++    completion_ready = bool(endpoint_summary.get("completion_ready"))
++    telemetry_ready = bool(
++        endpoint_summary.get("top_logprob_ready") or endpoint_summary.get("confidence_ready")
++    )
++    tool_first_verifier_ready = bool(tool_first_verifier_summary.get("ready"))
++    sota_judge_ready = bool(sota_models_ready and completion_ready and telemetry_ready)
++    skip_reasons = _skip_reasons(
++        sota_models_ready=sota_models_ready,
++        completion_ready=completion_ready,
++        telemetry_ready=telemetry_ready,
++        sota_judge_ready=sota_judge_ready,
++        tool_first_verifier_ready=tool_first_verifier_ready,
++    )
++    any_readiness = bool(
++        sota_models_ready or completion_ready or telemetry_ready or tool_first_verifier_ready
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(result_path),
++        "honest_verdict": _verdict(
++            sota_judge_ready=sota_judge_ready,
++            tool_first_verifier_ready=tool_first_verifier_ready,
++            any_readiness=any_readiness,
++        ),
++        "model_specs": model_specs,
++        "usable_sota_models": usable_sota_models,
++        "sota_models_ready": sota_models_ready,
++        "sota_judge_ready": sota_judge_ready,
++        "top_logprob_or_confidence_ready": telemetry_ready,
++        "tool_first_verifier_ready": tool_first_verifier_ready,
++        "endpoint_summary": endpoint_summary,
++        "skip_reasons": skip_reasons,
++        "legacy_models_smoke_only": True,
++        "duration_s": round(max(0.0, float(duration_s)), 6),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "tool_first_verifier_summary": tool_first_verifier_summary,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing field: {field}")
++    for field in (
++        "sota_models_ready",
++        "sota_judge_ready",
++        "top_logprob_or_confidence_ready",
++        "tool_first_verifier_ready",
++    ):
++        if field in artifact and not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be a bool")
++    if artifact.get("legacy_models_smoke_only") is not True:
++        errors.append("legacy_models_smoke_only must be true")
++    model_specs = artifact.get("model_specs")
++    if isinstance(model_specs, Mapping):
++        for spec in MANDATED_MODEL_SPECS:
++            role = str(spec["role"])
++            entry = model_specs.get(role)
++            if not isinstance(entry, Mapping):
++                errors.append(f"model_specs.{role} missing")
++            elif entry.get("hf_id") != spec["hf_id"]:
++                errors.append(f"model_specs.{role}.hf_id mismatch")
++            elif not entry.get("resolved_path") and not entry.get("missing_diagnostic"):
++                errors.append(f"model_specs.{role} needs resolved_path or missing_diagnostic")
++    else:
++        errors.append("model_specs must be a mapping")
++    endpoint_summary = artifact.get("endpoint_summary")
++    if not isinstance(endpoint_summary, Mapping):
++        errors.append("endpoint_summary must be a mapping")
++    elif not isinstance(endpoint_summary.get("probes"), list):
++        errors.append("endpoint_summary.probes must be a list")
++    if not isinstance(artifact.get("skip_reasons"), list):
++        errors.append("skip_reasons must be a list")
++    if artifact.get("honest_verdict") not in ALLOWED_VERDICTS:
++        errors.append(f"unexpected honest_verdict: {artifact.get('honest_verdict')!r}")
++    if artifact.get("sota_judge_ready") and not artifact.get(
++        "top_logprob_or_confidence_ready"
++    ):
++        errors.append("sota_judge_ready requires top_logprob_or_confidence_ready")
++    return errors
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    endpoint_probe: EndpointProbe = probe_endpoints,
++    endpoints: Sequence[str] | None = None,
++    preferred_quant: str = DEFAULT_PREFERRED_QUANT,
++    timeout_s: float = 2.0,
++    now: Clock = time.monotonic,
++    write: bool = True,
++) -> JsonDict:
++    start = now()
++    result_path = artifact_path if artifact_path is not None else root / RESULT_RELATIVE_PATH
++    model_specs, usable = resolve_model_specs(
++        model_resolver=model_resolver,
++        preferred_quant=preferred_quant,
++    )
++    endpoint_summary = endpoint_probe(normalize_endpoints(endpoints), timeout_s)
++    artifact = build_artifact(
++        model_specs=model_specs,
++        usable_sota_models=usable,
++        endpoint_summary=endpoint_summary,
++        tool_first_verifier_summary=run_tool_first_verifier_smoke(),
++        duration_s=now() - start,
++        result_path=result_path,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        artifact["schema_errors"] = errors
++    if write:
++        write_json(result_path, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    _ = argv
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "result_path": artifact["result_path"],
++                "honest_verdict": artifact["honest_verdict"],
++                "sota_models_ready": artifact["sota_models_ready"],
++                "sota_judge_ready": artifact["sota_judge_ready"],
++                "top_logprob_or_confidence_ready": artifact[
++                    "top_logprob_or_confidence_ready"
++                ],
++                "tool_first_verifier_ready": artifact["tool_first_verifier_ready"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI entrypoint.
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 728fe21b06..c1b6d4f645 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-30T22:37:54.548165Z",
+-  "duration_s": 0.09719681739807129,
++  "run_date": "2026-07-01T00:39:10.600249Z",
++  "duration_s": 0.06742644309997559,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "9e0846a219595595e59a74b03f227d5fa7d14f8e05d3bb5053e5ca6691ea0913",
++  "reproducibility_checksum": "8dcdc656637a5a67e25949ddf434c59bd9aae9f98b5aef08f059df8b81dc4f78",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ec407cc38e320aea9c1c8d23e81cf7feab39207c"
++    "adversarial_verify_version": "01d9e07e35cb00907c35c0feaf62cf64c3ebdbd3"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 71fcee9aeb..6fb376437b 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-30T22:37:54.703410Z",
+-  "duration_s": 0.14014792442321777,
++  "run_date": "2026-07-01T00:39:10.781551Z",
++  "duration_s": 0.17008638381958008,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "8f748e012d65faaa79baa39b8b7b991333284b7480c51d00c4a755343131be06",
++  "reproducibility_checksum": "f8daee3a9ac789dabe9cce3fa8a51132c2a245a3baf7dafda88c52ba12adf088",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ec407cc38e320aea9c1c8d23e81cf7feab39207c"
++    "adversarial_verify_version": "01d9e07e35cb00907c35c0feaf62cf64c3ebdbd3"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9bc734ac9e..43fef5a7f7 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1162033081054688,
++  "efficiency_gains_ms": 2.14385986328125,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ee1196c378..533b64c53f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.978400491178036e-05,
++  "duration_s": 4.358193837106228e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5057_gate_state_preflight_v465.json b/results/experiment_5057_gate_state_preflight_v465.json
+new file mode 100644
+index 0000000000..c04709d9b4
+--- /dev/null
++++ b/results/experiment_5057_gate_state_preflight_v465.json
+@@ -0,0 +1,137 @@
++{
++  "duration_s": 0.009395,
++  "endpoint_summary": {
++    "candidate_endpoints": [
++      "http://127.0.0.1:8080"
++    ],
++    "completion_ready": false,
++    "confidence_ready": false,
++    "probes": [
++      {
++        "completion_probe": {
++          "detail": "http://127.0.0.1:8080/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:8080/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
++          "ready": false,
++          "status": null
++        },
++        "endpoint": "http://127.0.0.1:8080",
++        "telemetry_probe": {
++          "detail": "skipped: completion probe failed",
++          "ready": false,
++          "status": null
++        }
++      }
++    ],
++    "selected_endpoint": null,
++    "telemetry_signal": null,
++    "top_logprob_ready": false
++  },
++  "experiment": "experiment_5057_gate_state_preflight_v465",
++  "experiment_id": 5057,
++  "field_principles": {
++    "endpoint_summary": {
++      "principle": "machine-readable completion and telemetry diagnostics for each probed llama.cpp-compatible endpoint."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix for the split readiness report: complete_gate_state_preflight_all_ready, complete_gate_state_preflight_partial_ready, or blocked_gate_state_preflight_no_ready_paths."
++    },
++    "legacy_models_smoke_only": {
++      "principle": "true; legacy small models are smoke-only and never headline evidence."
++    },
++    "model_specs": {
++      "principle": "all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths or missing diagnostics."
++    },
++    "skip_reasons": {
++      "principle": "machine-readable reasons for every false readiness lane."
++    },
++    "sota_judge_ready": {
++      "principle": "true iff a mandated SOTA GGUF is usable and a local endpoint completes with top-logprob or confidence telemetry."
++    },
++    "sota_models_ready": {
++      "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
++    },
++    "tool_first_verifier_ready": {
++      "principle": "true iff deterministic JSON, constraint, and evidence smoke checks pass without live LLM inference."
++    },
++    "top_logprob_or_confidence_ready": {
++      "principle": "true iff the endpoint telemetry probe exposes top-logprob or confidence telemetry, independent of model cache readiness."
++    },
++    "usable_sota_models": {
++      "principle": "the subset of mandated SOTA GGUF roles resolved to local .gguf paths."
++    }
++  },
++  "honest_verdict": "complete_gate_state_preflight_partial_ready",
++  "legacy_models_smoke_only": true,
++  "model_specs": {
++    "flagship_dense": {
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "missing_diagnostic": null,
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++    },
++    "flagship_moe": {
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "missing_diagnostic": null,
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++    },
++    "middle_moe": {
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "missing_diagnostic": null,
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++    }
++  },
++  "reproducibility_checksum": "3d1aec502330a325fbb0626b7aa805bab0ac7fb1e45e2ae5efc3422d90409e07",
++  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5057_gate_state_preflight_v465.json",
++  "schema": "carnot.experiment_5057_gate_state_preflight_v465.v1",
++  "skip_reasons": [
++    "endpoint_completion_unavailable",
++    "top_logprob_or_confidence_unavailable",
++    "sota_judge_unavailable"
++  ],
++  "sota_judge_ready": false,
++  "sota_models_ready": true,
++  "spec_refs": [
++    "REQ-VERIFY-5057",
++    "SCENARIO-VERIFY-5057"
++  ],
++  "tool_first_verifier_ready": true,
++  "tool_first_verifier_summary": {
++    "checks": [
++      {
++        "detail": "parsed JSON object with answer and confidence",
++        "name": "json_parse_check",
++        "ready": true
++      },
++      {
++        "detail": "deterministic arithmetic constraints satisfied",
++        "name": "constraint_check",
++        "ready": true
++      },
++      {
++        "detail": "evidence sha256=0eacfc37d1193c830c08d1304c6df7b9ed5d3e2f3a0a29d87a27f3db4500a258",
++        "name": "evidence_check",
++        "ready": true
++      }
++    ],
++    "ready": true
++  },
++  "top_logprob_or_confidence_ready": false,
++  "usable_sota_models": [
++    {
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "role": "flagship_moe"
++    },
++    {
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "role": "flagship_dense"
++    },
++    {
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "role": "middle_moe"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c08ce7e5c8..3882b5871e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260630",
+-  "started_at": "2026-06-30T22:37:36Z",
+-  "finished_at": "2026-06-30T22:37:36Z",
+-  "duration_s": 0.004,
++  "run_date": "20260701",
++  "started_at": "2026-07-01T00:38:50Z",
++  "finished_at": "2026-07-01T00:38:50Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index dddd41b5df..2d41f23e13 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260630",
+-  "started_at": "2026-06-30T22:37:36Z",
+-  "finished_at": "2026-06-30T22:37:36Z",
+-  "duration_s": 0.002,
++  "run_date": "20260701",
++  "started_at": "2026-07-01T00:38:50Z",
++  "finished_at": "2026-07-01T00:38:50Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f2d5127464..8db5ac9159 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260630",
+-  "started_at": "2026-06-30T22:37:36Z",
+-  "finished_at": "2026-06-30T22:37:36Z",
+-  "duration_s": 0.002,
++  "run_date": "20260701",
++  "started_at": "2026-07-01T00:38:50Z",
++  "finished_at": "2026-07-01T00:38:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5057_gate_state_preflight_v465.py b/tests/python/test_experiment_5057_gate_state_preflight_v465.py
+new file mode 100644
+index 0000000000..60f62d11d9
+--- /dev/null
++++ b/tests/python/test_experiment_5057_gate_state_preflight_v465.py
+@@ -0,0 +1,308 @@
++"""Tests for Exp 5057 split gate-state preflight.
++
++Spec refs: REQ-VERIFY-5057, SCENARIO-VERIFY-5057.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5057_gate_state_preflight_v465 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def test_req_verify_5057_spec_declares_split_gate_contract() -> None:
++    """REQ-VERIFY-5057: OpenSpec anchors the split gate-state artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    module_text = (REPO / mod.MODULE_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-5057",
++        "SCENARIO-VERIFY-5057",
++        "experiment_5057_gate_state_preflight_v465.py",
++        "results/experiment_5057_gate_state_preflight_v465.json",
++        "sota_models_ready",
++        "sota_judge_ready",
++        "top_logprob_or_confidence_ready",
++        "tool_first_verifier_ready",
++        "skip_reasons",
++        "legacy_models_smoke_only",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "AutoTokenizer.from_pretrained",
++    ):
++        assert marker in spec
++    assert "AutoTokenizer.from_pretrained" not in module_text
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def _one_model_resolver(hf_id: str, preferred_quant: str) -> str | None:
++    assert preferred_quant == "Q4_K_M"
++    if hf_id == "unsloth/Qwen3.6-35B-A3B-GGUF":
++        return "/models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++    return None
++
++
++def _no_model_resolver(_hf_id: str, _preferred_quant: str) -> str | None:
++    return None
++
++
++def _blocked_endpoint_probe(_endpoints: list[str], _timeout_s: float) -> dict[str, Any]:
++    return {
++        "candidate_endpoints": ["http://127.0.0.1:8080"],
++        "selected_endpoint": None,
++        "completion_ready": False,
++        "top_logprob_ready": False,
++        "confidence_ready": False,
++        "telemetry_signal": None,
++        "probes": [
++            {
++                "endpoint": "http://127.0.0.1:8080",
++                "completion_probe": {
++                    "ready": False,
++                    "status": None,
++                    "detail": "URLError: connection refused",
++                },
++                "telemetry_probe": {
++                    "ready": False,
++                    "status": None,
++                    "detail": "skipped: completion probe failed",
++                },
++            }
++        ],
++    }
++
++
++def _telemetry_ready_endpoint_probe(_endpoints: list[str], _timeout_s: float) -> dict[str, Any]:
++    return {
++        "candidate_endpoints": ["http://127.0.0.1:8080"],
++        "selected_endpoint": "http://127.0.0.1:8080",
++        "completion_ready": True,
++        "top_logprob_ready": True,
++        "confidence_ready": False,
++        "telemetry_signal": "top_logprobs",
++        "probes": [
++            {
++                "endpoint": "http://127.0.0.1:8080",
++                "completion_probe": {
++                    "ready": True,
++                    "status": 200,
++                    "detail": "completion returned non-empty content",
++                },
++                "telemetry_probe": {
++                    "ready": True,
++                    "status": 200,
++                    "detail": "top-logprob telemetry present",
++                    "signal": "top_logprobs",
++                },
++            }
++        ],
++    }
++
++
++def test_scenario_verify_5057_cached_model_without_endpoint_stays_reusable(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5057: missing judge server does not erase SOTA cache readiness."""
++
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=artifact_path,
++        model_resolver=_one_model_resolver,
++        endpoint_probe=_blocked_endpoint_probe,
++        endpoints=["http://127.0.0.1:8080"],
++        now=lambda: 100.0,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "complete_gate_state_preflight_partial_ready"
++    assert artifact["sota_models_ready"] is True
++    assert artifact["sota_judge_ready"] is False
++    assert artifact["top_logprob_or_confidence_ready"] is False
++    assert artifact["tool_first_verifier_ready"] is True
++    assert artifact["legacy_models_smoke_only"] is True
++    assert artifact["usable_sota_models"] == [
++        {
++            "role": "flagship_moe",
++            "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "model_path": "/models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        }
++    ]
++    assert artifact["model_specs"]["flagship_moe"]["resolved_path"].endswith(".gguf")
++    assert artifact["model_specs"]["flagship_moe"]["missing_diagnostic"] is None
++    assert artifact["model_specs"]["flagship_dense"]["resolved_path"] is None
++    assert "endpoint_completion_unavailable" in artifact["skip_reasons"]
++    assert "top_logprob_or_confidence_unavailable" in artifact["skip_reasons"]
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_scenario_verify_5057_telemetry_field_is_independent_of_model_cache(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5057: telemetry readiness is not hidden by missing models."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        model_resolver=_no_model_resolver,
++        endpoint_probe=_telemetry_ready_endpoint_probe,
++        endpoints=["http://127.0.0.1:8080"],
++        now=lambda: 200.0,
++        write=False,
++    )
++
++    assert artifact["honest_verdict"] == "complete_gate_state_preflight_partial_ready"
++    assert artifact["sota_models_ready"] is False
++    assert artifact["top_logprob_or_confidence_ready"] is True
++    assert artifact["sota_judge_ready"] is False
++    assert artifact["tool_first_verifier_ready"] is True
++    assert artifact["usable_sota_models"] == []
++    assert "sota_models_unavailable" in artifact["skip_reasons"]
++    assert "sota_judge_unavailable" in artifact["skip_reasons"]
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_verify_5057_tool_first_smoke_and_schema_errors_are_deterministic(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-5057: JSON, constraint, and evidence checks gate tool readiness."""
++
++    smoke = mod.run_tool_first_verifier_smoke()
++    assert smoke["ready"] is True
++    assert {check["name"] for check in smoke["checks"]} == {
++        "json_parse_check",
++        "constraint_check",
++        "evidence_check",
++    }
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        model_resolver=_one_model_resolver,
++        endpoint_probe=_telemetry_ready_endpoint_probe,
++        endpoints=["http://127.0.0.1:8080"],
++        now=lambda: 300.0,
++        write=False,
++    )
++    assert artifact["honest_verdict"] == "complete_gate_state_preflight_all_ready"
++    assert artifact["sota_judge_ready"] is True
++    assert artifact["skip_reasons"] == []
++
++    broken = dict(artifact)
++    broken.pop("skip_reasons")
++    broken["legacy_models_smoke_only"] = False
++    broken["tool_first_verifier_ready"] = "true"
++    broken["model_specs"] = {}
++    errors = mod.artifact_schema_errors(broken)
++    assert "missing field: skip_reasons" in errors
++    assert "legacy_models_smoke_only must be true" in errors
++    assert "tool_first_verifier_ready must be a bool" in errors
++    assert "model_specs.flagship_moe missing" in errors
++
++
++def test_req_verify_5057_validation_branches_fail_closed(tmp_path: Path) -> None:
++    """REQ-VERIFY-5057: malformed readiness artifacts expose exact schema errors."""
++
++    empty_endpoint = {
++        "candidate_endpoints": ["http://127.0.0.1:8080"],
++        "selected_endpoint": None,
++        "completion_ready": False,
++        "top_logprob_ready": False,
++        "confidence_ready": False,
++        "telemetry_signal": None,
++        "probes": [],
++    }
++    no_readiness = mod.build_artifact(
++        model_specs={
++            "flagship_moe": {
++                "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++                "preferred_quant": "Q4_K_M",
++                "resolved_path": None,
++                "missing_diagnostic": "missing",
++            },
++            "flagship_dense": {
++                "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++                "preferred_quant": "Q4_K_M",
++                "resolved_path": None,
++                "missing_diagnostic": "missing",
++            },
++            "middle_moe": {
++                "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++                "preferred_quant": "Q4_K_M",
++                "resolved_path": None,
++                "missing_diagnostic": "missing",
++            },
++        },
++        usable_sota_models=[],
++        endpoint_summary=empty_endpoint,
++        tool_first_verifier_summary={"ready": False, "checks": []},
++        duration_s=-1.0,
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++    )
++    assert no_readiness["honest_verdict"] == "blocked_gate_state_preflight_no_ready_paths"
++    assert "tool_first_verifier_unavailable" in no_readiness["skip_reasons"]
++    assert no_readiness["duration_s"] == 0.0
++    assert mod.artifact_schema_errors(no_readiness) == []
++
++    wrong_hf = dict(no_readiness)
++    wrong_hf["model_specs"] = dict(no_readiness["model_specs"])
++    wrong_hf["model_specs"]["flagship_moe"] = dict(wrong_hf["model_specs"]["flagship_moe"])
++    wrong_hf["model_specs"]["flagship_moe"]["hf_id"] = "wrong/model-GGUF"
++    assert "model_specs.flagship_moe.hf_id mismatch" in mod.artifact_schema_errors(wrong_hf)
++
++    no_path_or_diag = dict(no_readiness)
++    no_path_or_diag["model_specs"] = dict(no_readiness["model_specs"])
++    no_path_or_diag["model_specs"]["flagship_moe"] = dict(
++        no_path_or_diag["model_specs"]["flagship_moe"]
++    )
++    no_path_or_diag["model_specs"]["flagship_moe"]["missing_diagnostic"] = None
++    assert "model_specs.flagship_moe needs resolved_path or missing_diagnostic" in (
++        mod.artifact_schema_errors(no_path_or_diag)
++    )
++
++    not_mapping = dict(no_readiness, model_specs=[])
++    assert "model_specs must be a mapping" in mod.artifact_schema_errors(not_mapping)
++
++    bad_endpoint_mapping = dict(no_readiness, endpoint_summary=[])
++    assert "endpoint_summary must be a mapping" in mod.artifact_schema_errors(
++        bad_endpoint_mapping
++    )
++
++    bad_endpoint_probes = dict(no_readiness, endpoint_summary={"probes": "not-list"})
++    assert "endpoint_summary.probes must be a list" in mod.artifact_schema_errors(
++        bad_endpoint_probes
++    )
++
++    bad_verdict = dict(no_readiness, honest_verdict="draft")
++    assert "unexpected honest_verdict: 'draft'" in mod.artifact_schema_errors(bad_verdict)
++
++    bad_judge_implication = dict(
++        no_readiness,
++        sota_judge_ready=True,
++        top_logprob_or_confidence_ready=False,
++    )
++    assert "sota_judge_ready requires top_logprob_or_confidence_ready" in (
++        mod.artifact_schema_errors(bad_judge_implication)
++    )
++
++    written_bad = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        model_resolver=_one_model_resolver,
++        endpoint_probe=lambda _endpoints, _timeout_s: {"probes": "not-list"},
++        endpoints=["http://127.0.0.1:8080"],
++        now=lambda: 400.0,
++        write=False,
++    )
++    assert written_bad["schema_errors"] == ["endpoint_summary.probes must be a list"]
+-- 
+2.55.0
+

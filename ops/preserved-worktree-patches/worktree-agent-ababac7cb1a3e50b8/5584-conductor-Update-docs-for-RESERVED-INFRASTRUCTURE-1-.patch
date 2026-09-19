@@ -1,0 +1,77 @@
+From fbec56d6d33279e2ec09a53cb8c4fe32f7a9af49 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 17:14:16 -0400
+Subject: [PATCH 05584/11362] [conductor] Update docs for RESERVED
+ INFRASTRUCTURE 1/2 -- reconcile the 48+-day-stale _bmad/architecture.md with
+ the ARC-AGI-3 pivot, the PHASE D lifecycle (commissioned through retired),
+ the hidden-state-verifier program, and current hardware/verifier-tier state
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 3 +++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 6 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 69c3731001..7b1e55cb10 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1830,3 +1830,6 @@ legacy tests.
+ | REQ-REPORT-5200 | Exp 5200 hidden-state verifier v2 MMLU-Pro | Implemented-Partial | `python/carnot/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`; `tests/python/test_experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`; `results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether the trained probe beats tuned SC and all three zero-training controls.","value":"complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"}; probe_accuracy=0.100, tuned_sc_accuracy=0.075, clue_accuracy=0.100, radial_consensus_score_accuracy=0.100; trained probe did not beat all required controls, so no completed verifier win is claimed. |
+ | SCENARIO-REPORT-5200 | MMLU-Pro hidden-state probe compared to four controls | Implemented-Partial | Artifact records zero-shot MMLU-Pro n_questions=40, final-layer-only llama.cpp embeddings, verifier_is_oracle=false, probe=0.100 vs tuned_sc=0.075/self=0.075/clue=0.100/RCS=0.100, probe_vs_rcs_delta_ci95=[-0.075,0.075]. |
+ | SCENARIO-REPORT-5200-BLOCKED-PRECONDITION | Missing pool or GGUF blocks honestly | Scaffolding | Spec/test path covers blocked preconditions; completed artifact followed the feasible hidden-state path with status=<missing>, headroom_present=true, and no retro_* flags. |
++| REQ-REPORT-5202 | Architecture.md reconciliation for ARC-AGI-3, Phase D, hidden-state verifiers, and hardware | Implemented | `python/carnot/experiment_5202_architecture_md_reconciliation_v476.py`; `tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py`; `results/experiment_5202_architecture_md_reconciliation_v476.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; failed_preconditions=[]; traceability_md_updated=false in artifact because post-experiment reconciliation owns this append. |
++| SCENARIO-REPORT-5202 | Architecture reconciliation adds current ARC and verifier architecture without deleting legacy sections | Implemented | Artifact records missing_legacy_headings=[], missing_new_sections=[], required_topic_markers_missing=[], and new sections present: ARC-AGI-3 Harness Architecture, PHASE D Lifecycle And Retirement, Hidden-State Verifier Research Frontier, 2026-07-03 Hardware Continuity Update. |
++| SCENARIO-REPORT-5202-BLOCKED-PRECONDITION | Missing architecture inputs block without fabrication | Implemented | Focused tests cover missing or malformed input blocked paths; completed artifact followed the clean path with failed_preconditions=[] and status=<missing>. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d5fb22c5fd..0bbae03a5c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10838,3 +10838,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-03: PHASE B1 re-attempt (never ran in .475, poison-test cascade) -- attack the GAP-4891 ARC trajectory-enumeration wall with a MAP-style map-then-act landmark pre-stage, 3-arm falsifiable gate (✅ Complete) — honest_verdict=complete: MAP landmark prestage did not bank a new reproduction-gated level over pruner-only; the GAP-4891 enumeration wall persists under this lever too.; results/experiment_5198_map_landmark_prestage_prototype_v476.json
+ - 2026-07-03: PHASE C1 re-attempt (never ran in .475, poison-test cascade) -- hidden-state verifier v2 on the zero-shot MMLU-Pro headroom pool, PHSV-style trained probe vs THREE zero-training baselines including Radial Consensus Score; this milestone's continuous self-learning experiment (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether the trained probe beats tuned SC and all three zero-training controls.","value":"complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"}; status=<missing>; no retro_* flags recorded; probe_accuracy=0.100; tuned_sc_accuracy=0.075; self_certainty_accuracy=0.075; clue_accuracy=0.100; radial_consensus_score_accuracy=0.100; probe_vs_sc_delta_ci95=[0.0,0.075]; probe_vs_rcs_delta_ci95=[-0.075,0.075]; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
+ - 2026-07-03: PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reachability smoke, and a 3rd-consecutive- milestone genuine root-cause diagnostic for GateMate's DirtyJTAG IDCODE regression (⚠️ Blocked) — honest_verdict=complete_hardware_continuity_gatemate_diagnostic_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire:reachable_no_speedup_claim; results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json
++- 2026-07-03: RESERVED INFRASTRUCTURE 1/2 -- reconcile stale _bmad/architecture.md with ARC-AGI-3 pivot, PHASE D lifecycle, hidden-state-verifier program, and hardware/verifier-tier state (✅ Complete) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; status=<missing>; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; missing_new_sections=0; required_topic_markers_missing=0; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5202_architecture_md_reconciliation_v476.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 81586a8d93..975e9fbdac 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-07-03T20:45:58Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-07-03T21:11:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 90e57e93a3..f0498fdc57 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10245,3 +10245,4 @@ web search: |
+ | 2026-07-03 20:02 UTC | PHASE B2 live level-up attempt using the MAP lever | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5198-map-landmark-prestage-prototype-v4 |
+ | 2026-07-03 20:23 UTC | PHASE C1 re-attempt (never ran in .475, poison-tes | OK | 90 passed, 1 warning in 10.57s |
+ | 2026-07-03 20:43 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | OK | 123 passed, 1 warning in 8.06s |
++| 2026-07-03 21:09 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48+-d | OK | 89 passed, 1 warning in 7.92s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 57142074c2..ba92afbaee 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 10, "phase": "iteration_start", "started_at": "2026-07-03T20:45:58Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 11, "phase": "iteration_start", "started_at": "2026-07-03T21:11:38Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index 905286203e..c62cb73631 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5775,3 +5775,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-03 | Exp 5193: PHASE 0 transition -- archive .475 truth and activate .476 | ✅ Complete | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete_archive_475_closed_476_active_precise_handoff_clean"}; status=<missing>; clean_handoff=true; roadmap_activation_check.activated=true; failed_preconditions=[]; exclusion_manifest_confirmed_clean.value=true; v475_summary=2_of_12_real_artifacts_and_exp5183_exp5192_missing_after_poison_test_cascade; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5193, SCENARIO-REPORT-5193, SCENARIO-REPORT-5193-BLOCKED-PRECONDITION | results/experiment_5193_archive_475_activate_476.json |
+ | 2026-07-03 | Exp 5194: PHASE INFRA-CRITICAL 1/2 -- standalone poison-test-cascade pretest-triage module | ✅ Complete | honest_verdict={"value":"complete_pretest_triage_module_ready_and_tested_wiring_documented_conductor_not_yet_patched_1of4_exact_signature","principle":"Must start with complete:/complete_/success:/success_. Must NOT claim the conductor's pretest gate is actually patched -- only that a ready, tested triage module (scripts/pretest_triage.py, 100% covered, 32 passing regression tests) plus documented in-file wiring instructions now exist. Same limitation class as scripts/retro_timing_fallback.py's own patch-prep precedent: the module is import-ready for research_conductor.py::run_tests to call, but this task did NOT edit research_conductor.py (confirmed via git) and the wiring is left for the operator/outer-loop to apply."}; status=null; module_verification.tests_passed=32; module_verification.tests_failed=0; module_verification.new_module_coverage_pct=100.0; regression_tests_added=32; research_conductor_modified=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-AUTO-5194, SCENARIO-AUTO-5194-PRIMARY, SCENARIO-AUTO-5194-PRECISION, SCENARIO-AUTO-5194-HISTORICAL | results/experiment_5194_poison_test_cascade_triage_module_v476.json |
+ | 2026-07-03 | Exp 5200: PHASE C1 hidden-state verifier v2 MMLU-Pro | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether the trained probe beats tuned SC and all three zero-training controls.","value":"complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"}; status=<missing>; no retro_* flags recorded; probe_accuracy=0.100 vs tuned_sc_accuracy=0.075, self_certainty_accuracy=0.075, clue_accuracy=0.100, radial_consensus_score_accuracy=0.100; trained probe did not beat all required controls and ties CLUE/RCS; probe_vs_sc_delta_ci95=[0.0,0.075]; probe_vs_sc_mcnemar_p=1.0; probe_vs_rcs_delta_ci95=[-0.075,0.075]; n_questions=40; layer_sweep_attempted=false final-layer-only; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5200, SCENARIO-REPORT-5200, SCENARIO-REPORT-5200-BLOCKED-PRECONDITION | results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json |
++| 2026-07-03 | Exp 5202: RESERVED INFRASTRUCTURE 1/2 -- architecture.md reconciliation for ARC-AGI-3, PHASE D, hidden-state verifiers, and hardware | ✅ Complete | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; status=<missing>; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; missing_legacy_headings=0; missing_new_sections=0; required_topic_markers_missing=0; failed_preconditions=[]; traceability_md_updated=false by post-experiment carve-out; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5202, SCENARIO-REPORT-5202, SCENARIO-REPORT-5202-BLOCKED-PRECONDITION | results/experiment_5202_architecture_md_reconciliation_v476.json |
+-- 
+2.55.0
+

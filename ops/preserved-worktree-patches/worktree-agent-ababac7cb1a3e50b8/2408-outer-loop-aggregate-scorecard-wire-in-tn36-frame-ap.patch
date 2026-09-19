@@ -1,0 +1,100 @@
+From fe17ca2fef291f9b4e005cf261fe038e9457a69b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 18:52:00 -0400
+Subject: [PATCH 02408/11362] =?UTF-8?q?[outer-loop]=20aggregate=20scorecar?=
+ =?UTF-8?q?d:=20wire=20in=20tn36=20(frame=20approach,=20+7)=20+=20ar25=20+?=
+ =?UTF-8?q?=20ka59=20=E2=80=94=2013=20->=2022=20levels?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The replay meta-harness was stale: missing tn36 entirely (the program-editor
+class solved FRAME-ONLY end-to-end, L1-L7), plus the ar25/ka59 E3 world-model
+solves. Cycling all banked solves into one offline scorecard now reports 22
+levels across 15 games (was 13/12).
+
+The frame approach is the standout: tn36 replays cleanly to L7 — 7 of the 22
+levels, more than the next six games combined (the rest are graph-explore L1
+first-solves; lp85 L3). Added load_actions support for the E3
+plan_executed_detail.plan_result.executed_steps path so ar25/ka59 replay.
+
+Known remaining undercounts vs the registry's 24: sc25 replays to L0 (its
+cast-grid string encoding + first-step warmup aren't handled by the generic
+replay) and lp85 shows L3 not L4 (the L4 action list isn't stored flat) — both
+need custom per-game replay handling, separate from the frame-approach question.
+Offline, air-gapped, zero quota, nothing submitted.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_replay_aggregate_scorecard.json | 22 ++++++++++++++++++--
+ scripts/arc3_replay_scorecard_metaharness.py |  9 +++++++-
+ 2 files changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/results/arc3_replay_aggregate_scorecard.json b/results/arc3_replay_aggregate_scorecard.json
+index ab50c8a192..7b98f3fc39 100644
+--- a/results/arc3_replay_aggregate_scorecard.json
++++ b/results/arc3_replay_aggregate_scorecard.json
+@@ -1,6 +1,6 @@
+ {
+-  "scorecard_id": "96649fa3-ad6f-4f83-8668-8282a62dc11d",
+-  "total_levels": 13,
++  "scorecard_id": "67d5d33f-c822-4565-b2a6-c1d5c1edfd24",
++  "total_levels": 22,
+   "per_game": [
+     {
+       "game": "r11l",
+@@ -73,6 +73,24 @@
+       "actions_replayed": 14,
+       "levels_completed": 1,
+       "start": 0
++    },
++    {
++      "game": "tn36",
++      "actions_replayed": 102,
++      "levels_completed": 7,
++      "start": 0
++    },
++    {
++      "game": "ar25",
++      "actions_replayed": 15,
++      "levels_completed": 1,
++      "start": 0
++    },
++    {
++      "game": "ka59",
++      "actions_replayed": 11,
++      "levels_completed": 1,
++      "start": 0
+     }
+   ],
+   "mode": "offline_replay_no_quota"
+diff --git a/scripts/arc3_replay_scorecard_metaharness.py b/scripts/arc3_replay_scorecard_metaharness.py
+index ef40a28bbf..86f7ef6185 100644
+--- a/scripts/arc3_replay_scorecard_metaharness.py
++++ b/scripts/arc3_replay_scorecard_metaharness.py
+@@ -37,6 +37,12 @@ GAME_ARTIFACTS = {
+     "cn04": "results/arc_explore_trajectory_cn04.json",                          # L1
+     "m0r0": "results/arc_explore_trajectory_m0r0.json",                          # L1
+     "sk48": "results/arc_explore_trajectory_sk48.json",                          # L1
++    # PROGRAM-EDITOR class solved FRAME-ONLY (the frame approach: detect->route->perceive->plan->
++    # solve; full frame-only maze solve L6/L7, 2026-06-17). tn36 is the deepest single-game solve.
++    "tn36": "results/arc_explore_trajectory_tn36.json",                          # L7 (frame approach)
++    # E3 explore-verify-plan world-model solves (executed_steps under plan_executed_detail)
++    "ar25": "results/experiment_4339_e3_explore_verify_plan_ar25.json",          # L1
++    "ka59": "results/experiment_4350_e3_explore_verify_plan_ka59.json",          # L1
+ }
+ 
+ # from-scratch OFFLINE re-solves (these replay deterministically on the offline
+@@ -48,7 +54,8 @@ RESOLVED_ARTIFACTS = {
+ 
+ def load_actions(path: str) -> list[dict]:
+     d = json.load(open(REPO / path))
+-    for keys in (("solution",), ("trajectory",), ("solve_trace", "actions"), ("solver_trace", "actions")):
++    for keys in (("solution",), ("trajectory",), ("solve_trace", "actions"), ("solver_trace", "actions"),
++                 ("plan_executed_detail", "plan_result", "executed_steps")):
+         cur = d
+         for k in keys:
+             cur = cur.get(k) if isinstance(cur, dict) else None
+-- 
+2.55.0
+

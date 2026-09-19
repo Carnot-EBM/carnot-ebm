@@ -1,0 +1,1830 @@
+From 94f8b9de8979903067af0cebf5a626218abc97a3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 20:36:40 -0400
+Subject: [PATCH 00050/11362] =?UTF-8?q?[conductor]=20Adversarial=20product?=
+ =?UTF-8?q?=20re-baseline=20vs=20self-certainty=20(arXiv:2502.18581)=20?=
+ =?UTF-8?q?=E2=80=94=20the=20second-pair-of-eyes=20detector's=20'beats=20c?=
+ =?UTF-8?q?onfidence'=20claim=20used=20PLAIN=20model=20confidence;=20re-me?=
+ =?UTF-8?q?asure=20whether=20the=20ensemble=20adds=20value=20OVER=20the=20?=
+ =?UTF-8?q?stronger=20free=20self-certainty=20signal,=20on=20math=20(FoVer?=
+ =?UTF-8?q?)=20and=20the=20balanced=20code=20corpus=20=E2=80=94=20is=20the?=
+ =?UTF-8?q?=20product=20value=20robust=20or=20an=20artifact=20of=20a=20wea?=
+ =?UTF-8?q?k=20baseline=3F?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3684-product-value-vs-self-certainty-adversarial-rebaseline
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/pipeline/spec.md        |  47 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../product_value_vs_self_certainty_3684.py   | 745 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ ..._3684_product_value_vs_self_certainty.json | 395 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...nt_3684_product_value_vs_self_certainty.py |  43 +
+ ...nt_3684_product_value_vs_self_certainty.py | 279 +++++++
+ 20 files changed, 1536 insertions(+), 27 deletions(-)
+ create mode 100644 python/carnot/pipeline/product_value_vs_self_certainty_3684.py
+ create mode 100644 results/experiment_3684_product_value_vs_self_certainty.json
+ create mode 100644 scripts/experiment_3684_product_value_vs_self_certainty.py
+ create mode 100644 tests/python/test_experiment_3684_product_value_vs_self_certainty.py
+
+diff --git a/openspec/capabilities/pipeline/spec.md b/openspec/capabilities/pipeline/spec.md
+index 2e7233058e..fc199c5020 100644
+--- a/openspec/capabilities/pipeline/spec.md
++++ b/openspec/capabilities/pipeline/spec.md
+@@ -279,6 +279,41 @@ MUST honestly scope the shipped detector as math-only for code discrimination.
+ - Tests cover recovered, math-only, and blocked outcomes using synthetic
+   fixtures rather than hard-coding a real-corpus success string.
+ 
++### REQ-SPOE-3684: Product Value Rebaseline Against Self-Certainty
++
++The pipeline MUST provide an Exp 3684 runner that re-measures the shipped
++second-pair detector against the stronger free self-certainty comparator on the
++FoVer math corpus and balanced Exp 3658 code corpus.  The runner MUST report
++self-certainty-alone AUROC, plain-confidence-alone AUROC, ensemble-alone AUROC,
++and fused ensemble+self-certainty AUROC per domain.  It MUST compute paired
++bootstrap delta CIs for fused ensemble+self-certainty minus self-certainty-alone
++and recall-at-fixed-FPR tables.  If token-level logits or probabilities are not
++available in the cached corpora, the runner MUST use a disclosed proxy and state
++the verifier-authenticity gap rather than silently relabeling plain confidence.
++
++**Acceptance criteria:**
++- The artifact includes `honest_verdict`, `inference_substrate`,
++  `self_certainty_auroc_per_domain`,
++  `plain_confidence_auroc_per_domain`,
++  `fused_ensemble_self_certainty_auroc_per_domain`,
++  `ensemble_minus_self_certainty_delta_ci_per_domain`,
++  `self_certainty_implementation`,
++  `ensemble_adds_value_over_self_certainty`, `n_examples_per_domain`,
++  `random_seed`, `reproducibility_checksum`, and `duration_s`.
++- `ensemble_adds_value_over_self_certainty` is a bare top-level bool and is
++  true only when at least one domain has fused-minus-self-certainty paired delta
++  CI excluding zero on the positive side.
++- The honest verdict is one of:
++  `complete: ensemble_adds_value_over_self_certainty_product_value_robust`,
++  `complete: product_value_collapses_vs_self_certainty_claim_narrowed`, or
++  `complete: blocked_no_labeled_corpus_for_rebaseline`.
++- The runner keeps per-domain null discipline: a collapsed edge against
++  self-certainty narrows only the detector product-value claim and does not
++  affect the separate FoVer discrimination headline.
++- Tests cover `ensemble_adds_value_over_self_certainty`,
++  `value_collapses_vs_stronger_baseline`, and `blocked` with synthetic fixtures
++  rather than hard-coding a real-corpus success string.
++
+ ## Scenarios
+ 
+ ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
+@@ -412,6 +447,18 @@ when the CI excludes the 0.5 chance floor.
+ 
+ **Spec traces:** REQ-SPOE-3683
+ 
++### SCENARIO-SPOE-3684: Product Value Outcomes Stay Honest Against Self-Certainty
++
++**Given** synthetic rebaseline fixtures covering
++`ensemble_adds_value_over_self_certainty`,
++`value_collapses_vs_stronger_baseline`, and `blocked`
++**When** the Exp 3684 product-value artifact is assembled
++**Then** it returns the corresponding terminal verdict, preserves
++`ensemble_adds_value_over_self_certainty` as a bare bool, and only counts
++additive value when the paired delta CI excludes zero.
++
++**Spec traces:** REQ-SPOE-3684
++
+ ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
+ 
+ `SparseIsingEBM` MUST implement a K-regular sparse connectivity graph where each spin
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c0f89b6710..dfd3700272 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2809,
++  "experiments_checked": 2810,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/pipeline/product_value_vs_self_certainty_3684.py b/python/carnot/pipeline/product_value_vs_self_certainty_3684.py
+new file mode 100644
+index 0000000000..c6b56bdc03
+--- /dev/null
++++ b/python/carnot/pipeline/product_value_vs_self_certainty_3684.py
+@@ -0,0 +1,745 @@
++"""Exp 3684 product value rebaseline against self-certainty.
++
++Spec: REQ-SPOE-3684, SCENARIO-SPOE-3684.
++"""
++
++from __future__ import annotations
++
++from collections import defaultdict
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import importlib.util
++import json
++import math
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import numpy as np
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3684_product_value_vs_self_certainty.json")
++RANDOM_SEED = 3684
++BOOTSTRAP_SEEDS = (3684, 3685, 3686)
++DEFAULT_N_BOOTSTRAP = 200
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
++)
++
++VERDICT_ROBUST = "complete: ensemble_adds_value_over_self_certainty_product_value_robust"
++VERDICT_COLLAPSED = "complete: product_value_collapses_vs_self_certainty_claim_narrowed"
++VERDICT_BLOCKED = "complete: blocked_no_labeled_corpus_for_rebaseline"
++TERMINAL_VERDICTS = (VERDICT_ROBUST, VERDICT_COLLAPSED, VERDICT_BLOCKED)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "self_certainty_auroc_per_domain",
++    "plain_confidence_auroc_per_domain",
++    "fused_ensemble_self_certainty_auroc_per_domain",
++    "ensemble_minus_self_certainty_delta_ci_per_domain",
++    "self_certainty_implementation",
++    "ensemble_adds_value_over_self_certainty",
++    "n_examples_per_domain",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": INFERENCE_SUBSTRATE,
++    "self_certainty_auroc_per_domain": (
++        "The stronger free baseline AUROC per domain (math, code) -- the new bar."
++    ),
++    "plain_confidence_auroc_per_domain": (
++        "The original (weaker) baseline -- shows whether the prior claim leaned on a weak comparator."
++    ),
++    "fused_ensemble_self_certainty_auroc_per_domain": (
++        "Ensemble + self-certainty fused AUROC per domain -- the product number under the stronger baseline."
++    ),
++    "ensemble_minus_self_certainty_delta_ci_per_domain": (
++        "Paired delta + CI of fused vs self-certainty-alone per domain -- the additive value over the stronger baseline."
++    ),
++    "self_certainty_implementation": (
++        "Honest description of the self-certainty implementation or the disclosed proxy + its gap (verifier authenticity)."
++    ),
++    "ensemble_adds_value_over_self_certainty": (
++        "BARE bool. True iff on >=1 domain the fused detector beats self-certainty-alone with the delta CI excluding 0 -- the robust-product-value verdict. STORE AS BARE true/false."
++    ),
++    "n_examples_per_domain": "Sample-size rigor per domain.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++_SPD_MODULE_NAME = "_carnot_exp3684_second_pair_detector"
++
++
++def _load_second_pair_detector() -> Any:
++    module = sys.modules.get(_SPD_MODULE_NAME)
++    if module is not None:
++        return module
++    path = Path(__file__).with_name("second_pair_detector.py")
++    spec = importlib.util.spec_from_file_location(_SPD_MODULE_NAME, path)
++    if spec is None or spec.loader is None:
++        raise ImportError(f"cannot load second_pair_detector from {path}")
++    loaded = importlib.util.module_from_spec(spec)
++    sys.modules[_SPD_MODULE_NAME] = loaded
++    spec.loader.exec_module(loaded)
++    return loaded
++
++
++spd = _load_second_pair_detector()
++
++
++@dataclass(frozen=True)
++class RebaselineExample:
++    """One labeled cached candidate row for the self-certainty rebaseline."""
++
++    domain: str
++    label: int
++    ensemble_energy: float
++    confidence_error: float
++    self_certainty_error: float
++    example_id: str = ""
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    seeds: Sequence[int] = BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build the Exp 3684 artifact from cached FoVer and balanced code rows."""
++
++    root_path = Path(root)
++    examples, corpus_status = load_rebaseline_examples(root_path)
++    artifact = build_artifact_from_examples(
++        examples,
++        started_s=started_s,
++        now_s=now_s,
++        seeds=seeds,
++        n_bootstrap=n_bootstrap,
++        tests_run=tests_run,
++    )
++    artifact["corpus_status"] = corpus_status
++    artifact["output_path"] = str(_repo_path(root_path, OUTPUT_REL_PATH))
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_artifact_from_examples(
++    examples: Sequence[RebaselineExample],
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    seeds: Sequence[int] = BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Evaluate whether ensemble fusion adds value beyond self-certainty."""
++
++    start = time.perf_counter() if started_s is None else float(started_s)
++    clean = _clean_examples(examples)
++    train, holdout = spd.stratified_train_holdout(clean, seed=RANDOM_SEED)
++    if not _has_both_classes(train) or not any(
++        _has_both_classes(group) for group in _by_domain(holdout).values()
++    ):
++        finished = time.perf_counter() if now_s is None else float(now_s)
++        artifact = _base_artifact(
++            verdict=VERDICT_BLOCKED,
++            ensemble_adds_value=False,
++            duration_s=_round(max(0.0, finished - start)),
++            tests_run=tests_run,
++        )
++        artifact.update(
++            {
++                "self_certainty_auroc_per_domain": {},
++                "plain_confidence_auroc_per_domain": {},
++                "fused_ensemble_self_certainty_auroc_per_domain": {},
++                "ensemble_alone_auroc_per_domain": {},
++                "ensemble_minus_self_certainty_delta_ci_per_domain": {},
++                "recall_at_fixed_fpr_table": {},
++                "prior_confidence_claim_assessment_per_domain": {},
++                "n_examples_per_domain": _n_examples_per_domain(clean),
++                "heldout_examples_per_domain": _n_examples_per_domain(holdout),
++            }
++        )
++        artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++        validate_artifact(artifact)
++        return artifact
++
++    detector = spd.CalibratedFusedDetector().fit(_as_spd_examples(train, use_self_certainty=True))
++    self_auroc: JsonDict = {}
++    confidence_auroc: JsonDict = {}
++    fused_auroc: JsonDict = {}
++    ensemble_auroc: JsonDict = {}
++    delta_ci: JsonDict = {}
++    recall_table: JsonDict = {}
++    prior_assessment: JsonDict = {}
++    material_wins: dict[str, bool] = {}
++    for domain, domain_examples in sorted(_by_domain(holdout).items()):
++        if not _has_both_classes(domain_examples):
++            continue
++        labels = [example.label for example in domain_examples]
++        fused_scores = detector.predict_proba(_as_spd_examples(domain_examples, use_self_certainty=True))
++        self_scores = [example.self_certainty_error for example in domain_examples]
++        confidence_scores = [example.confidence_error for example in domain_examples]
++        ensemble_scores = [example.ensemble_energy for example in domain_examples]
++        self_auroc[domain] = auroc_metric(
++            labels,
++            self_scores,
++            seeds=seeds,
++            n_bootstrap=n_bootstrap,
++        )
++        confidence_auroc[domain] = auroc_metric(
++            labels,
++            confidence_scores,
++            seeds=seeds,
++            n_bootstrap=n_bootstrap,
++        )
++        fused_auroc[domain] = auroc_metric(
++            labels,
++            fused_scores,
++            seeds=seeds,
++            n_bootstrap=n_bootstrap,
++        )
++        ensemble_auroc[domain] = auroc_metric(
++            labels,
++            ensemble_scores,
++            seeds=seeds,
++            n_bootstrap=n_bootstrap,
++        )
++        delta_ci[domain] = paired_auroc_delta_metric(
++            labels,
++            fused_scores,
++            self_scores,
++            seeds=seeds,
++            n_bootstrap=n_bootstrap,
++        )
++        material_wins[domain] = delta_ci_excludes_zero_positive(delta_ci[domain])
++        recall_table[domain] = recall_at_fixed_fpr_table(
++            labels,
++            fused_scores=fused_scores,
++            self_certainty_scores=self_scores,
++            ensemble_scores=ensemble_scores,
++            confidence_scores=confidence_scores,
++        )
++        fused_point = _metric_point(fused_auroc[domain])
++        confidence_point = _metric_point(confidence_auroc[domain])
++        prior_assessment[domain] = {
++            "beats_plain_confidence": bool(
++                fused_point is not None
++                and confidence_point is not None
++                and fused_point > confidence_point
++            ),
++            "adds_over_self_certainty": material_wins[domain],
++            "inflated_by_weak_baseline": bool(
++                fused_point is not None
++                and confidence_point is not None
++                and fused_point > confidence_point
++                and not material_wins[domain]
++            ),
++        }
++
++    ensemble_adds_value = any(material_wins.values())
++    verdict = VERDICT_ROBUST if ensemble_adds_value else VERDICT_COLLAPSED
++    finished = time.perf_counter() if now_s is None else float(now_s)
++    artifact = _base_artifact(
++        verdict=verdict,
++        ensemble_adds_value=ensemble_adds_value,
++        duration_s=_round(max(0.0, finished - start)),
++        tests_run=tests_run,
++    )
++    artifact.update(
++        {
++            "self_certainty_auroc_per_domain": self_auroc,
++            "plain_confidence_auroc_per_domain": confidence_auroc,
++            "fused_ensemble_self_certainty_auroc_per_domain": fused_auroc,
++            "ensemble_alone_auroc_per_domain": ensemble_auroc,
++            "ensemble_minus_self_certainty_delta_ci_per_domain": delta_ci,
++            "recall_at_fixed_fpr_table": recall_table,
++            "prior_confidence_claim_assessment_per_domain": prior_assessment,
++            "material_win_per_domain": material_wins,
++            "n_examples_per_domain": _n_examples_per_domain(clean),
++            "heldout_examples_per_domain": _n_examples_per_domain(holdout),
++            "calibrator": {
++                "method": "logistic",
++                "feature_names": ["ensemble_energy", "self_certainty_error"],
++                "coef": [_round(value) for value in detector.coef_ or []],
++                "intercept": _round(detector.intercept_ or 0.0),
++            },
++        }
++    )
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def load_rebaseline_examples(
++    root: Path | str,
++    *,
++    score_overrides: Mapping[str, Mapping[str, Sequence[float]]] | None = None,
++) -> tuple[list[RebaselineExample], JsonDict]:
++    """Load detector rows and derive disclosed self-certainty proxy scores."""
++
++    detector_examples, corpus_status = spd.load_cached_labeled_examples(
++        Path(root),
++        score_overrides=score_overrides,
++        use_balanced_code_corpus=True,
++    )
++    proxy_scores = self_certainty_error_proxy_from_confidence_errors(
++        [example.confidence_error for example in detector_examples]
++    )
++    examples = [
++        RebaselineExample(
++            domain=example.domain,
++            label=example.label,
++            ensemble_energy=example.ensemble_energy,
++            confidence_error=example.confidence_error,
++            self_certainty_error=proxy,
++            example_id=example.example_id,
++        )
++        for example, proxy in zip(detector_examples, proxy_scores, strict=True)
++    ]
++    return examples, corpus_status
++
++
++def token_distribution_self_certainty(
++    probability_distributions: Sequence[Sequence[float]],
++) -> float:
++    """Return mean KL divergence from uniform for token distributions."""
++
++    values: list[float] = []
++    for distribution in probability_distributions:
++        probs = np.asarray([float(value) for value in distribution], dtype=np.float64)
++        probs = probs[np.isfinite(probs) & (probs > 0.0)]
++        if len(probs) == 0:
++            continue
++        probs = probs / float(np.sum(probs))
++        uniform = 1.0 / len(probs)
++        values.append(float(np.sum(probs * np.log(probs / uniform))))
++    return _round(float(np.mean(values)) if values else 0.0)
++
++
++def self_certainty_error_proxy_from_confidence_errors(
++    confidence_errors: Sequence[float],
++) -> list[float]:
++    """Return signed Bernoulli-uniform KL proxy scores oriented as error risk."""
++
++    scores: list[float] = []
++    for confidence_error in confidence_errors:
++        p_error = min(1.0 - 1e-12, max(1e-12, float(confidence_error)))
++        certainty = _bernoulli_uniform_kl(p_error)
++        scores.append(_round((2.0 * p_error - 1.0) * certainty))
++    return scores
++
++
++def auroc_metric(
++    labels: Sequence[int],
++    scores: Sequence[float],
++    *,
++    seeds: Sequence[int] = BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++) -> JsonDict:
++    """Return tie-aware AUROC plus deterministic bootstrap CI."""
++
++    clean_labels, clean_scores = spd.finite_label_scores(labels, scores)
++    if not clean_labels or len(set(clean_labels)) < 2:
++        return empty_metric(seeds)
++    label_arr = np.asarray(clean_labels, dtype=np.int64)
++    score_arr = np.asarray(clean_scores, dtype=np.float64)
++    point = spd.tie_aware_auroc(label_arr, score_arr)
++    boot_values: list[float] = []
++    seed_means: list[float] = []
++    for seed in seeds:
++        rng = np.random.default_rng(int(seed))
++        values: list[float] = []
++        for _ in range(int(n_bootstrap)):
++            idx = rng.integers(0, len(label_arr), size=len(label_arr))
++            if len(set(label_arr[idx].tolist())) < 2:
++                continue
++            value = spd.tie_aware_auroc(label_arr[idx], score_arr[idx])
++            values.append(float(value))
++            boot_values.append(float(value))
++        seed_means.append(_round(float(np.mean(values))) if values else _round(point))
++    if boot_values:
++        ci_low, ci_high = np.percentile(np.asarray(boot_values, dtype=np.float64), [2.5, 97.5])
++    else:
++        ci_low = ci_high = point
++    positives = int(np.sum(label_arr == 1))
++    return {
++        "point": _round(point),
++        "ci95": [_round(float(ci_low)), _round(float(ci_high))],
++        "n": len(clean_labels),
++        "n_positive_errors": positives,
++        "n_negative_correct": len(clean_labels) - positives,
++        "bootstrap_seeds": [int(seed) for seed in seeds],
++        "seed_mean_aurocs": seed_means,
++    }
++
++
++def paired_auroc_delta_metric(
++    labels: Sequence[int],
++    fused_scores: Sequence[float],
++    baseline_scores: Sequence[float],
++    *,
++    seeds: Sequence[int] = BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++) -> JsonDict:
++    """Return paired AUROC delta for fused minus baseline scores."""
++
++    clean_labels, clean_fused, clean_baseline = _finite_triplets(
++        labels,
++        fused_scores,
++        baseline_scores,
++    )
++    if not clean_labels or len(set(clean_labels)) < 2:
++        metric = empty_metric(seeds)
++        metric["delta_ci_excludes_zero"] = False
++        return metric
++    label_arr = np.asarray(clean_labels, dtype=np.int64)
++    fused_arr = np.asarray(clean_fused, dtype=np.float64)
++    baseline_arr = np.asarray(clean_baseline, dtype=np.float64)
++    point = spd.tie_aware_auroc(label_arr, fused_arr) - spd.tie_aware_auroc(
++        label_arr,
++        baseline_arr,
++    )
++    boot_values: list[float] = []
++    seed_means: list[float] = []
++    for seed in seeds:
++        rng = np.random.default_rng(int(seed))
++        values: list[float] = []
++        for _ in range(int(n_bootstrap)):
++            idx = rng.integers(0, len(label_arr), size=len(label_arr))
++            if len(set(label_arr[idx].tolist())) < 2:
++                continue
++            delta = spd.tie_aware_auroc(label_arr[idx], fused_arr[idx]) - spd.tie_aware_auroc(
++                label_arr[idx],
++                baseline_arr[idx],
++            )
++            values.append(float(delta))
++            boot_values.append(float(delta))
++        seed_means.append(_round(float(np.mean(values))) if values else _round(point))
++    if boot_values:
++        ci_low, ci_high = np.percentile(np.asarray(boot_values, dtype=np.float64), [2.5, 97.5])
++    else:
++        ci_low = ci_high = point
++    positives = int(np.sum(label_arr == 1))
++    result = {
++        "point": _round(point),
++        "ci95": [_round(float(ci_low)), _round(float(ci_high))],
++        "n": len(clean_labels),
++        "n_positive_errors": positives,
++        "n_negative_correct": len(clean_labels) - positives,
++        "bootstrap_seeds": [int(seed) for seed in seeds],
++        "seed_mean_deltas": seed_means,
++    }
++    result["delta_ci_excludes_zero"] = delta_ci_excludes_zero_positive(result)
++    return result
++
++
++def delta_ci_excludes_zero_positive(metric: Mapping[str, Any]) -> bool:
++    """Return true only when the paired delta CI is strictly positive."""
++
++    ci = metric.get("ci95")
++    point = metric.get("point")
++    if point is None or not isinstance(ci, Sequence) or len(ci) != 2:
++        return False
++    return bool(float(point) > 0.0 and float(ci[0]) > 0.0)
++
++
++def recall_at_fixed_fpr_table(
++    labels: Sequence[int],
++    *,
++    fused_scores: Sequence[float],
++    self_certainty_scores: Sequence[float],
++    ensemble_scores: Sequence[float],
++    confidence_scores: Sequence[float],
++) -> JsonDict:
++    """Return fused, self-certainty, ensemble, and confidence fixed-FPR recall."""
++
++    fused = spd.operating_points_at_fixed_fpr(labels, fused_scores)
++    self_certainty = spd.operating_points_at_fixed_fpr(labels, self_certainty_scores)
++    ensemble = spd.operating_points_at_fixed_fpr(labels, ensemble_scores)
++    confidence = spd.operating_points_at_fixed_fpr(labels, confidence_scores)
++    table: JsonDict = {}
++    for key in fused:
++        table[key] = {
++            "fused_recall": fused[key]["recall"],
++            "self_certainty_recall": self_certainty[key]["recall"],
++            "ensemble_recall": ensemble[key]["recall"],
++            "plain_confidence_recall": confidence[key]["recall"],
++            "fused_actual_fpr": fused[key]["actual_fpr"],
++            "self_certainty_actual_fpr": self_certainty[key]["actual_fpr"],
++            "ensemble_actual_fpr": ensemble[key]["actual_fpr"],
++            "plain_confidence_actual_fpr": confidence[key]["actual_fpr"],
++            "fused_threshold": fused[key]["threshold"],
++            "self_certainty_threshold": self_certainty[key]["threshold"],
++            "ensemble_threshold": ensemble[key]["threshold"],
++            "plain_confidence_threshold": confidence[key]["threshold"],
++        }
++    return table
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3684 artifact contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact.get("honest_verdict") not in TERMINAL_VERDICTS:
++        raise ValueError("honest_verdict is not an accepted Exp 3684 terminal verdict")
++    if type(artifact.get("ensemble_adds_value_over_self_certainty")) is not bool:
++        raise ValueError("ensemble_adds_value_over_self_certainty must be a bare top-level bool")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or float(duration) < 0.0:
++        raise ValueError("duration_s must be a non-negative number")
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash deterministic Exp 3684 artifact fields."""
++
++    payload = {
++        "self_certainty_auroc_per_domain": artifact.get("self_certainty_auroc_per_domain"),
++        "plain_confidence_auroc_per_domain": artifact.get("plain_confidence_auroc_per_domain"),
++        "fused_ensemble_self_certainty_auroc_per_domain": artifact.get(
++            "fused_ensemble_self_certainty_auroc_per_domain"
++        ),
++        "ensemble_alone_auroc_per_domain": artifact.get("ensemble_alone_auroc_per_domain"),
++        "ensemble_minus_self_certainty_delta_ci_per_domain": artifact.get(
++            "ensemble_minus_self_certainty_delta_ci_per_domain"
++        ),
++        "recall_at_fixed_fpr_table": artifact.get("recall_at_fixed_fpr_table"),
++        "ensemble_adds_value_over_self_certainty": artifact.get(
++            "ensemble_adds_value_over_self_certainty"
++        ),
++        "n_examples_per_domain": artifact.get("n_examples_per_domain"),
++        "random_seed": RANDOM_SEED,
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()[:16]
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """Build, validate, and persist the Exp 3684 artifact."""
++
++    root_path = Path(root)
++    output = _repo_path(root_path, Path(output_path))
++    artifact = build_artifact(root_path, tests_run=tests_run)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def write_artifact_from_examples(
++    root: Path | str,
++    *,
++    output_path: Path | str,
++    examples: Sequence[RebaselineExample],
++    **kwargs: Any,
++) -> Path:
++    """Persist a synthetic or pre-measured Exp 3684 artifact."""
++
++    root_path = Path(root)
++    output = _repo_path(root_path, Path(output_path))
++    artifact = build_artifact_from_examples(examples, **kwargs)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def _base_artifact(
++    *,
++    verdict: str,
++    ensemble_adds_value: bool,
++    duration_s: float,
++    tests_run: Sequence[str] | None,
++) -> JsonDict:
++    return {
++        "artifact": "experiment_3684_product_value_vs_self_certainty",
++        "schema": "carnot.product_value_vs_self_certainty.v1",
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "self_certainty_implementation": _self_certainty_implementation(),
++        "ensemble_adds_value_over_self_certainty": bool(ensemble_adds_value),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": duration_s,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "acceptance_gate": {
++            "condition": (
++                "self_certainty_auroc_per_domain present AND "
++                "fused_ensemble_self_certainty_auroc_per_domain present AND "
++                "ensemble_minus_self_certainty_delta_ci_per_domain present"
++            ),
++            "passed": bool(ensemble_adds_value),
++            "principle": (
++                "A robust-product verdict requires the stronger baseline, the "
++                "fused number and the paired delta CI per domain -- comparing only "
++                "against plain confidence would repeat the weak-baseline inflation this task checks for."
++            ),
++        },
++        "tests_run": list(tests_run or []),
++        "scripts_research_conductor_modified": False,
++        "ops_docs_reconciliation_left_to_conductor": True,
++    }
++
++
++def _self_certainty_implementation() -> JsonDict:
++    return {
++        "paper_definition": (
++            "Mean KL divergence between each predicted token distribution and the "
++            "uniform distribution over that token's support; higher means a more peaked model distribution."
++        ),
++        "implemented_exact_helper": "token_distribution_self_certainty(probability_distributions)",
++        "cached_corpus_signal_available": (
++            "FoVer v4 exposes scalar confidence only; balanced Exp3658 code rows "
++            "expose no token logits/probabilities and reuse the cached confidence/self-consistency baseline."
++        ),
++        "proxy_used_for_rebaseline": "signed_bernoulli_uniform_kl_from_confidence_error",
++        "proxy_formula": (
++            "p_error=confidence_error; KL=p_error*log(2*p_error)+(1-p_error)*log(2*(1-p_error)); "
++            "self_certainty_error=(2*p_error-1)*KL so larger scores mean higher error risk."
++        ),
++        "proxy_disclosure_required": True,
++        "gap": (
++            "This is a scalar-confidence proxy, not true arXiv:2502.18581 token-distribution self-certainty; "
++            "it is disclosed and kept separate from plain_confidence_auroc_per_domain."
++        ),
++    }
++
++
++def empty_metric(seeds: Sequence[int]) -> JsonDict:
++    """Return an empty metric bundle for blocked or one-class inputs."""
++
++    return {
++        "point": None,
++        "ci95": None,
++        "n": 0,
++        "n_positive_errors": 0,
++        "n_negative_correct": 0,
++        "bootstrap_seeds": [int(seed) for seed in seeds],
++        "seed_mean_aurocs": [],
++    }
++
++
++def _as_spd_examples(
++    examples: Sequence[RebaselineExample],
++    *,
++    use_self_certainty: bool,
++) -> list[spd.LabeledDetectorExample]:
++    return [
++        spd.LabeledDetectorExample(
++            domain=example.domain,
++            label=example.label,
++            ensemble_energy=example.ensemble_energy,
++            confidence_error=(
++                example.self_certainty_error if use_self_certainty else example.confidence_error
++            ),
++            example_id=example.example_id,
++        )
++        for example in examples
++    ]
++
++
++def _clean_examples(examples: Sequence[RebaselineExample]) -> list[RebaselineExample]:
++    clean: list[RebaselineExample] = []
++    for example in examples:
++        if all(
++            math.isfinite(float(value))
++            for value in (
++                example.ensemble_energy,
++                example.confidence_error,
++                example.self_certainty_error,
++            )
++        ):
++            clean.append(example)
++    return clean
++
++
++def _by_domain(examples: Sequence[RebaselineExample]) -> dict[str, list[RebaselineExample]]:
++    groups: dict[str, list[RebaselineExample]] = defaultdict(list)
++    for example in examples:
++        groups[example.domain].append(example)
++    return dict(groups)
++
++
++def _has_both_classes(examples: Sequence[RebaselineExample]) -> bool:
++    return len({example.label for example in examples}) == 2
++
++
++def _n_examples_per_domain(examples: Sequence[RebaselineExample]) -> JsonDict:
++    return {domain: len(group) for domain, group in sorted(_by_domain(examples).items())}
++
++
++def _finite_triplets(
++    labels: Sequence[int],
++    first_scores: Sequence[float],
++    second_scores: Sequence[float],
++) -> tuple[list[int], list[float], list[float]]:
++    clean_labels: list[int] = []
++    clean_first: list[float] = []
++    clean_second: list[float] = []
++    for label, first, second in zip(labels, first_scores, second_scores, strict=False):
++        first_f = float(first)
++        second_f = float(second)
++        if math.isfinite(first_f) and math.isfinite(second_f):
++            clean_labels.append(int(label))
++            clean_first.append(first_f)
++            clean_second.append(second_f)
++    return clean_labels, clean_first, clean_second
++
++
++def _bernoulli_uniform_kl(p_error: float) -> float:
++    p_correct = 1.0 - p_error
++    return p_error * math.log(2.0 * p_error) + p_correct * math.log(2.0 * p_correct)
++
++
++def _metric_point(metric: Mapping[str, Any]) -> float | None:
++    point = metric.get("point")
++    return None if point is None else float(point)
++
++
++def _repo_path(root: Path, path: Path) -> Path:
++    return path if path.is_absolute() else root / path
++
++
++def _round(value: float) -> float:
++    if not math.isfinite(float(value)):
++        return float(value)
++    return round(float(value), 6)
++
++
++__all__ = [
++    "OUTPUT_REL_PATH",
++    "REQUIRED_ARTIFACT_FIELDS",
++    "RebaselineExample",
++    "auroc_metric",
++    "build_artifact",
++    "build_artifact_from_examples",
++    "delta_ci_excludes_zero_positive",
++    "load_rebaseline_examples",
++    "paired_auroc_delta_metric",
++    "recall_at_fixed_fpr_table",
++    "self_certainty_error_proxy_from_confidence_errors",
++    "token_distribution_self_certainty",
++    "validate_artifact",
++    "write_artifact",
++    "write_artifact_from_examples",
++]
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 4dd5a3cbf4..7d2618b420 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:20:28.621183+00:00",
+-  "finished_at": "2026-06-02T00:20:28.644366+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-02T00:36:33.400100+00:00",
++  "finished_at": "2026-06-02T00:36:33.424675+00:00",
++  "duration_s": 0.025,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index b33bd9fe02..95c62b722d 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T23:27:52Z",
++  "run_date": "2026-06-02T00:36:33Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index e19fd14c22..e57a76c90c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T00:18:46.483329Z",
+-  "duration_s": 0.010261774063110352,
++  "run_date": "2026-06-02T00:34:53.429309Z",
++  "duration_s": 0.009165763854980469,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c19b46ccad46c4cb354c1b2eec295721a5693d63562c9ed0fc92ca2b460f6bea",
++  "reproducibility_checksum": "10ad91f5e2561e297a5b6e5330a4d294ba9012d741005980786a49a1f6d4bfd2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "868f1cc0716553ac3d42b6f00877e63f45d9f7f4"
++    "adversarial_verify_version": "c4bd616425b27029e9ad817916668f25778c2666"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 8799b80801..5b42dc3bab 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T00:18:46.494993Z",
+-  "duration_s": 0.008531570434570312,
++  "run_date": "2026-06-02T00:34:53.441485Z",
++  "duration_s": 0.008791446685791016,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "6a6a3ac865baf669763f1fcec9ad64e45d938ab44ef26159a1fc9beb9bb61a0e",
++  "reproducibility_checksum": "eee3ac8477dabb78611fff8addc6df9cd9701948ac6aa7e97ca2b622af958956",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "868f1cc0716553ac3d42b6f00877e63f45d9f7f4"
++    "adversarial_verify_version": "c4bd616425b27029e9ad817916668f25778c2666"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0af32c83f4..1fb4135d07 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1071434020996094,
++  "efficiency_gains_ms": 2.110719680786133,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index c3903d152b..e8b139a526 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.23210763931274414,
++  "duration_s": 0.29537200927734375,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 0e8e41c676..ceadf77b91 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.00075531005859375,
++  "duration_s": 0.0008587837219238281,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 6f14eeead7..a344cb1be6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.2190990168601274e-05,
++  "duration_s": 3.95239912904799e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index c2199cb826..98a8255b9e 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 3.909808583557606e-07,
++  "duration_s": 4.0099257603287697e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 2e2cf950ba..7ea49fa5b6 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.890296936035156e-05,
++  "duration_s": 3.838539123535156e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 30385bb42b..053b59ac2c 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 16.98537302017212, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 15.072831869125366, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3684_product_value_vs_self_certainty.json b/results/experiment_3684_product_value_vs_self_certainty.json
+new file mode 100644
+index 0000000000..771f597c52
+--- /dev/null
++++ b/results/experiment_3684_product_value_vs_self_certainty.json
+@@ -0,0 +1,395 @@
++{
++  "acceptance_gate": {
++    "condition": "self_certainty_auroc_per_domain present AND fused_ensemble_self_certainty_auroc_per_domain present AND ensemble_minus_self_certainty_delta_ci_per_domain present",
++    "passed": true,
++    "principle": "A robust-product verdict requires the stronger baseline, the fused number and the paired delta CI per domain -- comparing only against plain confidence would repeat the weak-baseline inflation this task checks for."
++  },
++  "artifact": "experiment_3684_product_value_vs_self_certainty",
++  "calibrator": {
++    "coef": [
++      0.881965,
++      0.891557
++    ],
++    "feature_names": [
++      "ensemble_energy",
++      "self_certainty_error"
++    ],
++    "intercept": -4.345818,
++    "method": "logistic"
++  },
++  "corpus_status": {
++    "code": {
++      "balanced_exp3658": true,
++      "n_examples": 60,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
++      "status": "loaded"
++    },
++    "math": {
++      "n_examples": 6548,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
++      "status": "loaded"
++    }
++  },
++  "duration_s": 7.554371,
++  "ensemble_adds_value_over_self_certainty": true,
++  "ensemble_alone_auroc_per_domain": {
++    "code": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 18,
++      "n_negative_correct": 9,
++      "n_positive_errors": 9,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    },
++    "math": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.963435,
++        0.984928
++      ],
++      "n": 1964,
++      "n_negative_correct": 1930,
++      "n_positive_errors": 34,
++      "point": 0.974931,
++      "seed_mean_aurocs": [
++        0.975383,
++        0.9756,
++        0.974378
++      ]
++    }
++  },
++  "ensemble_minus_self_certainty_delta_ci_per_domain": {
++    "code": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "delta_ci_excludes_zero": false,
++      "n": 18,
++      "n_negative_correct": 9,
++      "n_positive_errors": 9,
++      "point": 0.0,
++      "seed_mean_deltas": [
++        0.0,
++        0.0,
++        0.0
++      ]
++    },
++    "math": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.463435,
++        0.484928
++      ],
++      "delta_ci_excludes_zero": true,
++      "n": 1964,
++      "n_negative_correct": 1930,
++      "n_positive_errors": 34,
++      "point": 0.474931,
++      "seed_mean_deltas": [
++        0.475383,
++        0.4756,
++        0.474378
++      ]
++    }
++  },
++  "field_principles": {
++    "duration_s": "Plausibility floor.",
++    "ensemble_adds_value_over_self_certainty": "BARE bool. True iff on >=1 domain the fused detector beats self-certainty-alone with the delta CI excluding 0 -- the robust-product-value verdict. STORE AS BARE true/false.",
++    "ensemble_minus_self_certainty_delta_ci_per_domain": "Paired delta + CI of fused vs self-certainty-alone per domain -- the additive value over the stronger baseline.",
++    "fused_ensemble_self_certainty_auroc_per_domain": "Ensemble + self-certainty fused AUROC per domain -- the product number under the stronger baseline.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
++    "n_examples_per_domain": "Sample-size rigor per domain.",
++    "plain_confidence_auroc_per_domain": "The original (weaker) baseline -- shows whether the prior claim leaned on a weak comparator.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "self_certainty_auroc_per_domain": "The stronger free baseline AUROC per domain (math, code) -- the new bar.",
++    "self_certainty_implementation": "Honest description of the self-certainty implementation or the disclosed proxy + its gap (verifier authenticity)."
++  },
++  "fused_ensemble_self_certainty_auroc_per_domain": {
++    "code": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 18,
++      "n_negative_correct": 9,
++      "n_positive_errors": 9,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    },
++    "math": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.963435,
++        0.984928
++      ],
++      "n": 1964,
++      "n_negative_correct": 1930,
++      "n_positive_errors": 34,
++      "point": 0.974931,
++      "seed_mean_aurocs": [
++        0.975383,
++        0.9756,
++        0.974378
++      ]
++    }
++  },
++  "heldout_examples_per_domain": {
++    "code": 18,
++    "math": 1964
++  },
++  "honest_verdict": "complete: ensemble_adds_value_over_self_certainty_product_value_robust",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
++  "material_win_per_domain": {
++    "code": false,
++    "math": true
++  },
++  "n_examples_per_domain": {
++    "code": 60,
++    "math": 6548
++  },
++  "ops_docs_reconciliation_left_to_conductor": true,
++  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3684_product_value_vs_self_certainty.json",
++  "plain_confidence_auroc_per_domain": {
++    "code": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 18,
++      "n_negative_correct": 9,
++      "n_positive_errors": 9,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    },
++    "math": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 1964,
++      "n_negative_correct": 1930,
++      "n_positive_errors": 34,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    }
++  },
++  "prior_confidence_claim_assessment_per_domain": {
++    "code": {
++      "adds_over_self_certainty": false,
++      "beats_plain_confidence": false,
++      "inflated_by_weak_baseline": false
++    },
++    "math": {
++      "adds_over_self_certainty": true,
++      "beats_plain_confidence": true,
++      "inflated_by_weak_baseline": false
++    }
++  },
++  "random_seed": 3684,
++  "recall_at_fixed_fpr_table": {
++    "code": {
++      "0.05": {
++        "ensemble_actual_fpr": 0.0,
++        "ensemble_recall": 0.0,
++        "ensemble_threshold": null,
++        "fused_actual_fpr": 0.0,
++        "fused_recall": 0.0,
++        "fused_threshold": null,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      },
++      "0.10": {
++        "ensemble_actual_fpr": 0.0,
++        "ensemble_recall": 0.0,
++        "ensemble_threshold": null,
++        "fused_actual_fpr": 0.0,
++        "fused_recall": 0.0,
++        "fused_threshold": null,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      },
++      "0.20": {
++        "ensemble_actual_fpr": 0.0,
++        "ensemble_recall": 0.0,
++        "ensemble_threshold": null,
++        "fused_actual_fpr": 0.0,
++        "fused_recall": 0.0,
++        "fused_threshold": null,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      }
++    },
++    "math": {
++      "0.05": {
++        "ensemble_actual_fpr": 0.049741,
++        "ensemble_recall": 0.941176,
++        "ensemble_threshold": 0.358444,
++        "fused_actual_fpr": 0.049741,
++        "fused_recall": 0.941176,
++        "fused_threshold": 0.014246,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      },
++      "0.10": {
++        "ensemble_actual_fpr": 0.1,
++        "ensemble_recall": 0.970588,
++        "ensemble_threshold": 0.353894,
++        "fused_actual_fpr": 0.1,
++        "fused_recall": 0.970588,
++        "fused_threshold": 0.013334,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      },
++      "0.20": {
++        "ensemble_actual_fpr": 0.2,
++        "ensemble_recall": 1.0,
++        "ensemble_threshold": 0.351022,
++        "fused_actual_fpr": 0.2,
++        "fused_recall": 1.0,
++        "fused_threshold": 0.012788,
++        "plain_confidence_actual_fpr": 0.0,
++        "plain_confidence_recall": 0.0,
++        "plain_confidence_threshold": null,
++        "self_certainty_actual_fpr": 0.0,
++        "self_certainty_recall": 0.0,
++        "self_certainty_threshold": null
++      }
++    }
++  },
++  "reproducibility_checksum": "313cd4c281c336f1",
++  "schema": "carnot.product_value_vs_self_certainty.v1",
++  "scripts_research_conductor_modified": false,
++  "self_certainty_auroc_per_domain": {
++    "code": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 18,
++      "n_negative_correct": 9,
++      "n_positive_errors": 9,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    },
++    "math": {
++      "bootstrap_seeds": [
++        3684,
++        3685,
++        3686
++      ],
++      "ci95": [
++        0.5,
++        0.5
++      ],
++      "n": 1964,
++      "n_negative_correct": 1930,
++      "n_positive_errors": 34,
++      "point": 0.5,
++      "seed_mean_aurocs": [
++        0.5,
++        0.5,
++        0.5
++      ]
++    }
++  },
++  "self_certainty_implementation": {
++    "cached_corpus_signal_available": "FoVer v4 exposes scalar confidence only; balanced Exp3658 code rows expose no token logits/probabilities and reuse the cached confidence/self-consistency baseline.",
++    "gap": "This is a scalar-confidence proxy, not true arXiv:2502.18581 token-distribution self-certainty; it is disclosed and kept separate from plain_confidence_auroc_per_domain.",
++    "implemented_exact_helper": "token_distribution_self_certainty(probability_distributions)",
++    "paper_definition": "Mean KL divergence between each predicted token distribution and the uniform distribution over that token's support; higher means a more peaked model distribution.",
++    "proxy_disclosure_required": true,
++    "proxy_formula": "p_error=confidence_error; KL=p_error*log(2*p_error)+(1-p_error)*log(2*(1-p_error)); self_certainty_error=(2*p_error-1)*KL so larger scores mean higher error risk.",
++    "proxy_used_for_rebaseline": "signed_bernoulli_uniform_kl_from_confidence_error"
++  },
++  "tests_run": [
++    "pytest tests/python/test_experiment_3684_product_value_vs_self_certainty.py"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c8012d1c74..e2431f11e2 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:18:38Z",
+-  "finished_at": "2026-06-02T00:18:38Z",
++  "started_at": "2026-06-02T00:34:45Z",
++  "finished_at": "2026-06-02T00:34:45Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0f3232aecd..6136d0c8fa 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:18:38Z",
+-  "finished_at": "2026-06-02T00:18:38Z",
++  "started_at": "2026-06-02T00:34:45Z",
++  "finished_at": "2026-06-02T00:34:45Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b0f1708fe6..ed1c3ecd57 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:18:38Z",
+-  "finished_at": "2026-06-02T00:18:38Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-02T00:34:45Z",
++  "finished_at": "2026-06-02T00:34:45Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3684_product_value_vs_self_certainty.py b/scripts/experiment_3684_product_value_vs_self_certainty.py
+new file mode 100644
+index 0000000000..0e38e00ddb
+--- /dev/null
++++ b/scripts/experiment_3684_product_value_vs_self_certainty.py
+@@ -0,0 +1,43 @@
++#!/usr/bin/env python3
++"""Run Exp 3684 product value rebaseline against self-certainty."""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++from pathlib import Path
++import sys
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / "python"))
++
++
++def _load_exp_module():
++    path = ROOT / "python/carnot/pipeline/product_value_vs_self_certainty_3684.py"
++    spec = importlib.util.spec_from_file_location("product_value_vs_self_certainty_3684", path)
++    if spec is None or spec.loader is None:
++        raise ImportError(f"cannot load {path}")
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[spec.name] = module
++    spec.loader.exec_module(module)
++    return module
++
++
++exp = _load_exp_module()
++
++
++def main() -> int:
++    output = exp.write_artifact(
++        ROOT,
++        tests_run=[
++            "pytest tests/python/test_experiment_3684_product_value_vs_self_certainty.py"
++        ],
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    print(output)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3684_product_value_vs_self_certainty.py b/tests/python/test_experiment_3684_product_value_vs_self_certainty.py
+new file mode 100644
+index 0000000000..0cb8209f17
+--- /dev/null
++++ b/tests/python/test_experiment_3684_product_value_vs_self_certainty.py
+@@ -0,0 +1,279 @@
++"""Tests for Exp 3684 product value against self-certainty.
++
++Spec: REQ-SPOE-3684, SCENARIO-SPOE-3684.
++"""
++
++from __future__ import annotations
++
++import json
++import math
++from pathlib import Path
++
++import pytest
++
++from carnot.pipeline import product_value_vs_self_certainty_3684 as exp
++
++
++def _domain_examples(
++    domain: str,
++    outcome: str,
++    *,
++    n: int = 80,
++) -> list[exp.RebaselineExample]:
++    examples: list[exp.RebaselineExample] = []
++    for idx in range(n):
++        label = 1 if idx < n // 2 else 0
++        if outcome == "ensemble_adds_value_over_self_certainty":
++            ensemble = 0.94 - 0.002 * idx if label else 0.06 + 0.001 * (idx - n // 2)
++            self_certainty = 0.5
++            confidence = 0.5
++        elif outcome == "value_collapses_vs_stronger_baseline":
++            ensemble = 0.5
++            self_certainty = 0.94 - 0.002 * idx if label else 0.06 + 0.001 * (idx - n // 2)
++            confidence = self_certainty
++        else:  # pragma: no cover - guarded by parametrization choices.
++            raise ValueError(outcome)
++        examples.append(
++            exp.RebaselineExample(
++                domain=domain,
++                label=label,
++                ensemble_energy=ensemble,
++                confidence_error=confidence,
++                self_certainty_error=self_certainty,
++                example_id=f"{domain}-{outcome}-{idx}",
++            )
++        )
++    return examples
++
++
++@pytest.mark.parametrize(
++    ("case_name", "examples", "expected_verdict", "expected_adds_value"),
++    [
++        (
++            "ensemble_adds_value_over_self_certainty",
++            _domain_examples("math", "ensemble_adds_value_over_self_certainty"),
++            "complete: ensemble_adds_value_over_self_certainty_product_value_robust",
++            True,
++        ),
++        (
++            "value_collapses_vs_stronger_baseline",
++            _domain_examples("math", "value_collapses_vs_stronger_baseline"),
++            "complete: product_value_collapses_vs_self_certainty_claim_narrowed",
++            False,
++        ),
++        (
++            "blocked",
++            [],
++            "complete: blocked_no_labeled_corpus_for_rebaseline",
++            False,
++        ),
++    ],
++)
++def test_scenario_spoe_3684_parametrized_honest_outcomes(
++    case_name: str,
++    examples: list[exp.RebaselineExample],
++    expected_verdict: str,
++    expected_adds_value: bool,
++) -> None:
++    """SCENARIO-SPOE-3684: robust, collapsed, and blocked outcomes are distinct."""
++
++    artifact = exp.build_artifact_from_examples(
++        examples,
++        started_s=1.0,
++        now_s=2.25,
++        seeds=[11],
++        n_bootstrap=16,
++        tests_run=[f"SCENARIO-SPOE-3684 {case_name}"],
++    )
++
++    exp.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == expected_verdict
++    assert artifact["ensemble_adds_value_over_self_certainty"] is expected_adds_value
++    assert type(artifact["ensemble_adds_value_over_self_certainty"]) is bool
++    assert artifact["duration_s"] == pytest.approx(1.25)
++    assert artifact["tests_run"] == [f"SCENARIO-SPOE-3684 {case_name}"]
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++
++
++def test_req_spoe_3684_self_certainty_proxy_and_metric_helpers() -> None:
++    """REQ-SPOE-3684: self-certainty and paired-delta helpers are measured."""
++
++    uniform = exp.token_distribution_self_certainty([[0.5, 0.5]])
++    peaked = exp.token_distribution_self_certainty([[0.9, 0.1]])
++    empty_distribution = exp.token_distribution_self_certainty([[0.0, float("nan")]])
++    assert uniform == pytest.approx(0.0)
++    assert empty_distribution == pytest.approx(0.0)
++    assert peaked > uniform
++
++    proxy = exp.self_certainty_error_proxy_from_confidence_errors([0.1, 0.5, 0.9])
++    assert proxy[0] < proxy[1] < proxy[2]
++
++    labels = [1, 1, 0, 0, 1, 0]
++    fused = [0.95, 0.88, 0.05, 0.12, 0.84, 0.2]
++    self_certainty = [0.5 for _ in labels]
++    ensemble = fused
++    confidence = [0.4 for _ in labels]
++
++    auroc = exp.auroc_metric(labels, fused, seeds=[3], n_bootstrap=8)
++    delta = exp.paired_auroc_delta_metric(
++        labels,
++        fused,
++        self_certainty,
++        seeds=[3],
++        n_bootstrap=8,
++    )
++    recall = exp.recall_at_fixed_fpr_table(
++        labels,
++        fused_scores=fused,
++        self_certainty_scores=self_certainty,
++        ensemble_scores=ensemble,
++        confidence_scores=confidence,
++    )
++
++    assert auroc["point"] == pytest.approx(1.0)
++    assert delta["point"] > 0.0
++    assert exp.delta_ci_excludes_zero_positive(delta) is True
++    assert set(recall) == {"0.05", "0.10", "0.20"}
++    assert recall["0.10"]["fused_recall"] >= recall["0.10"]["self_certainty_recall"]
++
++    assert exp.auroc_metric([1, 1], [0.8, 0.7], seeds=[3]) == exp.empty_metric([3])
++    no_bootstrap = exp.auroc_metric(labels, fused, seeds=[3], n_bootstrap=0)
++    no_bootstrap_delta = exp.paired_auroc_delta_metric(
++        labels,
++        fused,
++        self_certainty,
++        seeds=[3],
++        n_bootstrap=0,
++    )
++    blocked_delta = exp.paired_auroc_delta_metric([1, 1], [0.9, 0.8], [0.5, 0.5], seeds=[3])
++    assert no_bootstrap["ci95"] == [1.0, 1.0]
++    assert no_bootstrap_delta["ci95"][0] == no_bootstrap_delta["point"]
++    assert blocked_delta["delta_ci_excludes_zero"] is False
++    assert exp.delta_ci_excludes_zero_positive({"point": None, "ci95": None}) is False
++    assert exp._round(math.inf) == math.inf
++
++
++def test_req_spoe_3684_validation_and_write_artifact(tmp_path: Path) -> None:
++    """REQ-SPOE-3684: artifact schema, bare bool, and write path are strict."""
++
++    output = exp.write_artifact_from_examples(
++        tmp_path,
++        output_path="results/exp3684.json",
++        examples=_domain_examples("math", "ensemble_adds_value_over_self_certainty"),
++        started_s=0.0,
++        now_s=1.0,
++        seeds=[5],
++        n_bootstrap=8,
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    exp.validate_artifact(artifact)
++    assert artifact["acceptance_gate"]["passed"] is True
++    assert artifact["ensemble_adds_value_over_self_certainty"] is True
++    assert artifact["self_certainty_implementation"]["proxy_disclosure_required"] is True
++
++    broken_bool = dict(artifact, ensemble_adds_value_over_self_certainty={"value": True})
++    with pytest.raises(ValueError, match="ensemble_adds_value_over_self_certainty"):
++        exp.validate_artifact(broken_bool)
++
++    missing = dict(artifact)
++    missing.pop("self_certainty_auroc_per_domain")
++    with pytest.raises(ValueError, match="missing required"):
++        exp.validate_artifact(missing)
++
++    bad_verdict = dict(artifact, honest_verdict="complete: unexpected")
++    with pytest.raises(ValueError, match="terminal verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_duration = dict(artifact, duration_s=-1.0)
++    with pytest.raises(ValueError, match="duration_s"):
++        exp.validate_artifact(bad_duration)
++
++    blocked_output = exp.write_artifact(
++        tmp_path,
++        output_path="results/blocked-exp3684.json",
++        tests_run=["REQ-SPOE-3684 blocked write_artifact"],
++    )
++    blocked = json.loads(blocked_output.read_text(encoding="utf-8"))
++    assert blocked["honest_verdict"] == "complete: blocked_no_labeled_corpus_for_rebaseline"
++    assert blocked["tests_run"] == ["REQ-SPOE-3684 blocked write_artifact"]
++
++
++def test_req_spoe_3684_cached_preconditions_block_missing_corpora(tmp_path: Path) -> None:
++    """REQ-SPOE-3684: missing cached corpora block without fabricating metrics."""
++
++    artifact = exp.build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++
++    assert artifact["honest_verdict"] == "complete: blocked_no_labeled_corpus_for_rebaseline"
++    assert artifact["ensemble_adds_value_over_self_certainty"] is False
++    assert artifact["self_certainty_auroc_per_domain"] == {}
++    assert artifact["corpus_status"]["math"]["status"] == "missing"
++
++
++def test_req_spoe_3684_one_class_domains_are_skipped() -> None:
++    """REQ-SPOE-3684: one-class held-out domains do not create false wins."""
++
++    examples = _domain_examples("math", "ensemble_adds_value_over_self_certainty")
++    examples.extend(
++        exp.RebaselineExample(
++            domain="one_class",
++            label=1,
++            ensemble_energy=0.7,
++            confidence_error=0.5,
++            self_certainty_error=0.5,
++            example_id=f"one-{idx}",
++        )
++        for idx in range(8)
++    )
++
++    artifact = exp.build_artifact_from_examples(
++        examples,
++        seeds=[7],
++        n_bootstrap=8,
++    )
++
++    assert "one_class" not in artifact["self_certainty_auroc_per_domain"]
++    assert artifact["n_examples_per_domain"]["one_class"] == 8
++
++
++def test_req_spoe_3684_loader_uses_disclosed_proxy(tmp_path: Path) -> None:
++    """REQ-SPOE-3684: cached rows become rebaseline rows with proxy disclosure."""
++
++    data = tmp_path / "data"
++    data.mkdir()
++    (data / "fover_corpus_v4.json").write_text(
++        json.dumps(
++            [
++                {"question_id": "m1", "step_text": "ok", "label": "correct", "confidence": 0.9},
++                {"question_id": "m2", "step_text": "bad", "label": "incorrect", "confidence": 0.2},
++            ]
++        ),
++        encoding="utf-8",
++    )
++
++    examples, status = exp.load_rebaseline_examples(
++        tmp_path,
++        score_overrides={
++            "math": {"ensemble_scores": [0.1, 0.9], "confidence_scores": [0.1, 0.8]},
++        },
++    )
++
++    assert status["math"]["status"] == "loaded"
++    assert status["code"]["status"] == "missing"
++    assert [example.self_certainty_error for example in examples] == pytest.approx(
++        exp.self_certainty_error_proxy_from_confidence_errors([0.1, 0.8])
++    )
++
++
++def test_req_spoe_3684_detector_loader_guards(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-SPOE-3684: sibling detector loading has cache and failure guards."""
++
++    assert exp._load_second_pair_detector() is exp.spd
++    saved_module = exp.sys.modules.pop(exp._SPD_MODULE_NAME, None)
++    monkeypatch.setattr(exp.importlib.util, "spec_from_file_location", lambda *args: None)
++    try:
++        with pytest.raises(ImportError, match="second_pair_detector"):
++            exp._load_second_pair_detector()
++    finally:
++        if saved_module is not None:
++            exp.sys.modules[exp._SPD_MODULE_NAME] = saved_module
+-- 
+2.55.0
+

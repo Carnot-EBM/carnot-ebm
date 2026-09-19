@@ -1,0 +1,77 @@
+From 4ba5d2a4f632404f8f8b8a1348929b9b7eff241a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 18:48:04 -0400
+Subject: [PATCH 06630/11362] [conductor] Pre-gate block: Gated GBNF-forced
+ SOTA row smoke
+
+1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-receipt.automaton_row_completion_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...5553_gated_gbnf_forced_sota_row_smoke.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 606f5d2af6..bcf6df88b7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 477, "phase": "iteration_start", "last_beat": "2026-07-10T22:31:18Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 478, "phase": "iteration_start", "last_beat": "2026-07-10T22:48:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1ea7d14eec..8f7ccdbc5a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10742,3 +10742,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-10 21:48 UTC | Transition .502 outcomes into .503 execution conte | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: DUCTOR_RELATIV |
+ | 2026-07-10 22:14 UTC | Transition .502 outcomes into .503 execution conte | OK | 87 passed, 1 warning in 10.54s |
+ | 2026-07-10 22:29 UTC | Execution-time V503 source delta and experiment ma | OK | 87 passed, 1 warning in 10.29s |
++| 2026-07-10 22:46 UTC | Automaton schema row-completion receipt | OK | 88 passed, 1 warning in 11.14s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 80f79836e9..c415b77bff 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 477, "phase": "iteration_start", "started_at": "2026-07-10T22:31:18Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 478, "phase": "iteration_start", "started_at": "2026-07-10T22:48:04Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json b/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
+new file mode 100644
+index 0000000000..f37e912b3e
+--- /dev/null
++++ b/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5553,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-10",
++  "started_at": "2026-07-10T22:48:04.610996+00:00",
++  "finished_at": "2026-07-10T22:48:04.610996+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated GBNF-forced SOTA row smoke",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-receipt.automaton_row_completion_ready (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5552-automaton-schema-row-completion-receipt",
++      "artifact_field": "automaton_row_completion_ready",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

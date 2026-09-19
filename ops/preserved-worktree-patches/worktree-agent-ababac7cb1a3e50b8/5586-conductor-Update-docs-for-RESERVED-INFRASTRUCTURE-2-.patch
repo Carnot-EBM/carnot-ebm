@@ -1,0 +1,75 @@
+From 1de128e328bcc9872b865debb361efb439365995 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 17:31:02 -0400
+Subject: [PATCH 05586/11362] [conductor] Update docs for RESERVED
+ INFRASTRUCTURE 2/2 -- prepare operator-facing remediation options for the two
+ DISHONEST_NAMING verifiers the 2026-07-01 authenticity audit flagged
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 2 ++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 6 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 7b1e55cb10..6e7cb179c8 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1833,3 +1833,5 @@ legacy tests.
+ | REQ-REPORT-5202 | Architecture.md reconciliation for ARC-AGI-3, Phase D, hidden-state verifiers, and hardware | Implemented | `python/carnot/experiment_5202_architecture_md_reconciliation_v476.py`; `tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py`; `results/experiment_5202_architecture_md_reconciliation_v476.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; failed_preconditions=[]; traceability_md_updated=false in artifact because post-experiment reconciliation owns this append. |
+ | SCENARIO-REPORT-5202 | Architecture reconciliation adds current ARC and verifier architecture without deleting legacy sections | Implemented | Artifact records missing_legacy_headings=[], missing_new_sections=[], required_topic_markers_missing=[], and new sections present: ARC-AGI-3 Harness Architecture, PHASE D Lifecycle And Retirement, Hidden-State Verifier Research Frontier, 2026-07-03 Hardware Continuity Update. |
+ | SCENARIO-REPORT-5202-BLOCKED-PRECONDITION | Missing architecture inputs block without fabrication | Implemented | Focused tests cover missing or malformed input blocked paths; completed artifact followed the clean path with failed_preconditions=[] and status=<missing>. |
++| REQ-VERIFY-5203 | Verifier authenticity remediation options for the two DISHONEST_NAMING verifiers from the 2026-07-01 audit | Implemented | `python/carnot/experiment_5203_verifier_authenticity_remediation_options_v476.py`; `tests/python/test_experiment_5203_verifier_authenticity_remediation_options_v476.py`; `ops/verifier_remediation_options_v476.md`; `results/experiment_5203_verifier_authenticity_remediation_options_v476.json`; honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: verifier_authenticity_remediation_options_v476_ready"}; status=<missing>; audit_findings_independently_reconfirmed.value=true; no_verifier_modified_this_task.value=true; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields. |
++| SCENARIO-VERIFY-5203 | Operator gets all three options for each flagged verifier | Implemented | Artifact records AND-composition and claim-isolation router remediation groups with recommendation, reimplement, rename, and retire entries; remediation document is `ops/verifier_remediation_options_v476.md`; focused tests cover the artifact/document generation path. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0bbae03a5c..c6011240ac 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10839,3 +10839,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-03: PHASE C1 re-attempt (never ran in .475, poison-test cascade) -- hidden-state verifier v2 on the zero-shot MMLU-Pro headroom pool, PHSV-style trained probe vs THREE zero-training baselines including Radial Consensus Score; this milestone's continuous self-learning experiment (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether the trained probe beats tuned SC and all three zero-training controls.","value":"complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"}; status=<missing>; no retro_* flags recorded; probe_accuracy=0.100; tuned_sc_accuracy=0.075; self_certainty_accuracy=0.075; clue_accuracy=0.100; radial_consensus_score_accuracy=0.100; probe_vs_sc_delta_ci95=[0.0,0.075]; probe_vs_rcs_delta_ci95=[-0.075,0.075]; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
+ - 2026-07-03: PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reachability smoke, and a 3rd-consecutive- milestone genuine root-cause diagnostic for GateMate's DirtyJTAG IDCODE regression (⚠️ Blocked) — honest_verdict=complete_hardware_continuity_gatemate_diagnostic_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire:reachable_no_speedup_claim; results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json
+ - 2026-07-03: RESERVED INFRASTRUCTURE 1/2 -- reconcile stale _bmad/architecture.md with ARC-AGI-3 pivot, PHASE D lifecycle, hidden-state-verifier program, and hardware/verifier-tier state (✅ Complete) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; status=<missing>; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; missing_new_sections=0; required_topic_markers_missing=0; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5202_architecture_md_reconciliation_v476.json
++- 2026-07-03: RESERVED INFRASTRUCTURE 2/2 -- prepare operator-facing remediation options for the two DISHONEST_NAMING verifiers the 2026-07-01 authenticity audit flagged (✅ Complete) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: verifier_authenticity_remediation_options_v476_ready"}; status=<missing>; remediation_doc_path=ops/verifier_remediation_options_v476.md; each flagged verifier records recommendation plus reimplement/rename/retire remediation options; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5203_verifier_authenticity_remediation_options_v476.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 975e9fbdac..42ca69e99a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-07-03T21:11:38Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-07-03T21:28:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f0498fdc57..2a991fd8cf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10246,3 +10246,4 @@ web search: |
+ | 2026-07-03 20:23 UTC | PHASE C1 re-attempt (never ran in .475, poison-tes | OK | 90 passed, 1 warning in 10.57s |
+ | 2026-07-03 20:43 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | OK | 123 passed, 1 warning in 8.06s |
+ | 2026-07-03 21:09 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48+-d | OK | 89 passed, 1 warning in 7.92s |
++| 2026-07-03 21:26 UTC | RESERVED INFRASTRUCTURE 2/2 -- prepare operator-fa | OK | 86 passed, 1 warning in 9.45s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ba92afbaee..c2c6cf86f6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 11, "phase": "iteration_start", "started_at": "2026-07-03T21:11:38Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 12, "phase": "iteration_start", "started_at": "2026-07-03T21:28:17Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index c62cb73631..90274ee5ee 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5776,3 +5776,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-03 | Exp 5194: PHASE INFRA-CRITICAL 1/2 -- standalone poison-test-cascade pretest-triage module | ✅ Complete | honest_verdict={"value":"complete_pretest_triage_module_ready_and_tested_wiring_documented_conductor_not_yet_patched_1of4_exact_signature","principle":"Must start with complete:/complete_/success:/success_. Must NOT claim the conductor's pretest gate is actually patched -- only that a ready, tested triage module (scripts/pretest_triage.py, 100% covered, 32 passing regression tests) plus documented in-file wiring instructions now exist. Same limitation class as scripts/retro_timing_fallback.py's own patch-prep precedent: the module is import-ready for research_conductor.py::run_tests to call, but this task did NOT edit research_conductor.py (confirmed via git) and the wiring is left for the operator/outer-loop to apply."}; status=null; module_verification.tests_passed=32; module_verification.tests_failed=0; module_verification.new_module_coverage_pct=100.0; regression_tests_added=32; research_conductor_modified=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-AUTO-5194, SCENARIO-AUTO-5194-PRIMARY, SCENARIO-AUTO-5194-PRECISION, SCENARIO-AUTO-5194-HISTORICAL | results/experiment_5194_poison_test_cascade_triage_module_v476.json |
+ | 2026-07-03 | Exp 5200: PHASE C1 hidden-state verifier v2 MMLU-Pro | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether the trained probe beats tuned SC and all three zero-training controls.","value":"complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100"}; status=<missing>; no retro_* flags recorded; probe_accuracy=0.100 vs tuned_sc_accuracy=0.075, self_certainty_accuracy=0.075, clue_accuracy=0.100, radial_consensus_score_accuracy=0.100; trained probe did not beat all required controls and ties CLUE/RCS; probe_vs_sc_delta_ci95=[0.0,0.075]; probe_vs_sc_mcnemar_p=1.0; probe_vs_rcs_delta_ci95=[-0.075,0.075]; n_questions=40; layer_sweep_attempted=false final-layer-only; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5200, SCENARIO-REPORT-5200, SCENARIO-REPORT-5200-BLOCKED-PRECONDITION | results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json |
+ | 2026-07-03 | Exp 5202: RESERVED INFRASTRUCTURE 1/2 -- architecture.md reconciliation for ARC-AGI-3, PHASE D, hidden-state verifiers, and hardware | ✅ Complete | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"}; status=<missing>; sections_added=4; sections_preserved_verbatim=30; last_reconciled_date_updated=true; missing_legacy_headings=0; missing_new_sections=0; required_topic_markers_missing=0; failed_preconditions=[]; traceability_md_updated=false by post-experiment carve-out; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5202, SCENARIO-REPORT-5202, SCENARIO-REPORT-5202-BLOCKED-PRECONDITION | results/experiment_5202_architecture_md_reconciliation_v476.json |
++| 2026-07-03 | Exp 5203: RESERVED INFRASTRUCTURE 2/2 -- verifier authenticity remediation options | ✅ Complete | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_.","value":"complete: verifier_authenticity_remediation_options_v476_ready"}; status=<missing>; remediation_doc_path=ops/verifier_remediation_options_v476.md; audit_findings_independently_reconfirmed.value=true; no_verifier_modified_this_task.value=true; each flagged verifier records recommendation plus reimplement/rename/retire remediation options; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5203, SCENARIO-VERIFY-5203 | results/experiment_5203_verifier_authenticity_remediation_options_v476.json |
+-- 
+2.55.0
+

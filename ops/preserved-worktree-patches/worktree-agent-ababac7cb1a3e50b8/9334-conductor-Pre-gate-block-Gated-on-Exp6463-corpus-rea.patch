@@ -1,0 +1,104 @@
+From 86f54860b6cd0255aa3136c8e01a280bf3f37a99 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 19 Aug 2026 13:14:35 -0400
+Subject: [PATCH 09334/11362] [conductor] Pre-gate block: Gated on Exp6463
+ corpus readiness: fixed-slot grounding and exact logic A/B
+
+1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...4_fixed_slot_grounding_exact_logic_ab.json | 51 +++++++++++++++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 451077dcca..fd447c4c2a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-19T15:55:33Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-19T17:14:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f18ed7f424..9aeea30c95 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16057,3 +16057,4 @@ code |
+ | 2026-08-19 14:50 UTC | V555 terminal handoff and V556 queue integrity | OK | 87 passed, 1 warning in 65.45s (0:01:05) |
+ | 2026-08-19 15:17 UTC | V556 primary-source freshness receipt | OK | 88 passed, 1 warning in 7.26s |
+ | 2026-08-19 15:53 UTC | SOTA raw persistence and unique-event canary | OK | 86 passed, 1 warning in 15.47s |
++| 2026-08-19 17:12 UTC | Gated on Exp6462 canary readiness: provenance-comp | OK | 88 passed, 1 warning in 92.39s (0:01:32) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 42e1fc71a3..ad8d1d8e85 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-19T15:55:33Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-19T17:14:35Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json b/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+new file mode 100644
+index 0000000000..6348efd2af
+--- /dev/null
++++ b/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6464,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-19",
++  "started_at": "2026-08-19T17:14:35.343052+00:00",
++  "finished_at": "2026-08-19T17:14:35.343052+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0.0 == expected=1.0",
++  "failed_upstream": "exp6463-sota-fixed-policy-candidate-corpus-v2",
++  "failed_field": "sota_corpus_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1.0,
++  "failed_expected_type": "float",
++  "failed_observed": 0.0,
++  "failed_observed_type": "float",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
++  "failed_evidence_sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0.0 == expected=1.0",
++    "failed_upstream": "exp6463-sota-fixed-policy-candidate-corpus-v2",
++    "failed_field": "sota_corpus_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1.0,
++    "failed_expected_type": "float",
++    "failed_observed": 0.0,
++    "failed_observed_type": "float",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
++    "failed_evidence_sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6463-sota-fixed-policy-candidate-corpus-v2",
++      "artifact_field": "sota_corpus_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "expected_type": "float",
++      "actual": 0.0,
++      "actual_type": "float",
++      "passed": false,
++      "reason": "actual=0.0 == expected=1.0",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
++      "artifact_sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

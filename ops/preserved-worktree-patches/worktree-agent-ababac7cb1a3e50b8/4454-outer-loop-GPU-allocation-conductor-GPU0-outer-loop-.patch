@@ -1,0 +1,59 @@
+From afe6bd81b1df1494af1ec2cf311a551f9911e6aa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 09:06:20 -0400
+Subject: [PATCH 04454/11362] [outer-loop] GPU allocation: conductor->GPU0,
+ outer-loop->GPU1 (operator directive 2026-06-27)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator directive: the conductor should control the first 3090 (GPU 0) and the
+outer loop the second (GPU 1) — stops contention and frees the outer loop from
+always falling back to the slow (~4 tok/s) iGPU.
+
+Implemented:
+- Conductor: systemd drop-in 40-arc-generator-3090-20260619.conf flipped
+  CARNOT_ARC_GENERATOR_CUDA_GPU 1->0; daemon-reload + restart (resumed from
+  checkpoint); verified the live env now pins the generator to GPU 0.
+- Outer loop: uses CUDA_VISIBLE_DEVICES=1 (GPU 1) for its own GPU work.
+
+CLAUDE.md: clarified that the sprint's "generator on iGPU, NEVER the 3090s" rule
+is KAGGLE-PARITY for the LIVE submission stack ONLY — it does NOT govern OFFLINE
+induction, which now uses the allocated 3090s. PLANNER CONSEQUENCE: offline
+induction tasks must NOT hardcode igpu_required / cuda_3090_generator_disallowed
+(that was over-applying rule 4 and blocked the conductor's own GPU-0 generator —
+cf. the .448 exp4861 fork-probe non-test that this fixes going forward).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ CLAUDE.md | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index abfef820fa..d07883b047 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -2985,6 +2985,20 @@ planner MUST, every milestone:
+    Kaggle engine = the CUDA-12.8 `llama-server` binary (NOT a wheel — MTP is in libllama-common). Planner
+    tasks build ON this stack; do not re-litigate model selection (settled 2026-06-19).
+ 
++**GPU allocation — the "iGPU NEVER 3090s" rule applies to the LIVE submission stack ONLY (operator
++directive 2026-06-27).** The iGPU-only constraint in rule 4 above exists for KAGGLE-PARITY: the scored
++eval is iGPU/~16GB-class, so the LIVE submission generator must run there. It does NOT govern OFFLINE /
++dev induction (fork probes, generic-solve world-model induction, the LocalGGUFProposer at dev time). Per
++the 2026-06-27 operator allocation, the two discrete RTX 3090s are dedicated: **the CONDUCTOR owns GPU 0**
++(its offline ARC generator runs there via `CARNOT_ARC_GENERATOR_CUDA_GPU=0`, the systemd drop-in
++`40-arc-generator-3090-20260619.conf`), and **the OUTER LOOP owns GPU 1** (`CUDA_VISIBLE_DEVICES=1` for its
++own experiments). This stops GPU contention and removes the ~4 tok/s iGPU throughput bottleneck for novel
++induction. **PLANNER CONSEQUENCE:** offline induction tasks must NOT hardcode an `igpu_required: True` /
++`cuda_3090_generator_disallowed` precondition — that was sourced from rule 4's live-stack constraint and
++WRONGLY blocks the conductor's own dedicated GPU-0 generator (cf. the `.448` exp4861 fork-probe non-test).
++Offline induction uses GPU 0 (conductor) / GPU 1 (outer loop); only the LIVE submission generator is
++iGPU-pinned.
++
+ **Reserved slots still apply.** The 2 infra slots, 1-per-attached-board hardware-continuity slot, and the
+ SOTA-ingestion slot are still reserved each milestone (those disciplines are not suspended) — the
+ "majority" in rule 1 is of the REMAINING slots.
+-- 
+2.55.0
+

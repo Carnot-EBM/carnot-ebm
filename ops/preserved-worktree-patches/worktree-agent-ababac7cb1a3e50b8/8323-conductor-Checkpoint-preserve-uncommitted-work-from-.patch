@@ -1,0 +1,43 @@
+From bdb81a1e5152bf28c57c34588a7d310cd9ecec9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 22:53:59 -0400
+Subject: [PATCH 08323/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e8bdf105b9..ab7150463d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-08-06T02:43:22Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-06T02:53:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c5cf078a9c..fbaef2f949 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15385,3 +15385,4 @@ No output thi |
+ | 2026-08-06 00:44 UTC | Gated on Exp6152 IR readiness: software thermaliza | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  terminal summ |
+ | 2026-08-06 01:18 UTC | Gated on Exp6152 IR readiness: software thermaliza | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6153_thermal |
+ | 2026-08-06 02:41 UTC | ARC live-path adapter-disabled task-aware energy g | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "registry_leve |
++| 2026-08-06 02:51 UTC | ARC live-path adapter-disabled task-aware energy g | OK | 108 passed, 1 warning in 22.31s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bb221ad07a..0f6dd2b381 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 27, "phase": "iteration_start", "started_at": "2026-08-06T02:43:22Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-06T02:53:56Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

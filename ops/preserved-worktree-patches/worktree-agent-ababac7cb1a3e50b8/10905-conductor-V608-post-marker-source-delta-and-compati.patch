@@ -1,0 +1,3362 @@
+From a10ac7a64bdf073c316040d9ff213e693f89e7f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 12:56:50 -0400
+Subject: [PATCH 10905/11362] [conductor] V608 post-marker source delta and
+ compatibility audit
+
+Automated research step by research conductor.
+Task ID: exp6941-v608-source-delta
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  115 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../experiment_6941_v608_source_delta.py      | 1146 ++++++++++++
+ .../experiment_6941_v608_source_delta.json    | 1658 +++++++++++++++++
+ .../experiment_6941_v608_source_delta.py      |   10 +
+ .../test_experiment_6941_v608_source_delta.py |  362 ++++
+ 6 files changed, 3292 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6941_v608_source_delta.py
+ create mode 100644 results/experiment_6941_v608_source_delta.json
+ create mode 100644 scripts/experiments/experiment_6941_v608_source_delta.py
+ create mode 100644 tests/python/test_experiment_6941_v608_source_delta.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 5c50836f7a..fddf943eda 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -62010,3 +62010,118 @@ SHALL not measure relation accuracy or promote a model capability claim.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6929 and SCENARIO-REPORT-6929-* | Planned (`python/carnot/experiment_6929_three_family_span_acquisition.py`; `scripts/experiments/experiment_6929_three_family_span_acquisition.py`) | Planned (`tests/python/test_experiment_6929_three_family_span_acquisition.py`) |
++
++### REQ-REPORT-6941: V608 Source Delta SHALL Be Dated, Complete, And Advisory
++
++Exp6941 SHALL freeze its query plan before network access. The plan SHALL
++contain exact query text, allowed domains, planned UTC timestamps, a retry
++limit of two, a concurrency limit of one, a 20-second timeout, and acceptance
++rules. The first eight rows SHALL query arXiv for 2025-2026 work on EBM
++verification, neural constraints, Ising machine learning, hallucination
++detection, KANs, energy-guided decoding, sampling hardware, and continual
++constraint learning.
++
++The preflight SHALL require the V608 planner marker in the reference ledger,
++the active V608 roadmap, the V608 design document, the low-concurrency network
++policy in `CLAUDE.md`, and a writable results path. A failed check SHALL produce
++a schema-complete blocked artifact. Its `honest_verdict` SHALL equal
++`blocked_v608_source_delta`. Its `gate_check_summary` SHALL name the failed
++check, expected value, and observed value.
++
++After the arXiv rows, Exp6941 SHALL recheck OpenReview, Hugging Face Papers,
++Semantic Scholar citations to EBT `2507.02092` and ARM-EBM `2512.15605`,
++official GitHub repositories, Extropic writing, and Logical Intelligence
++pages. Each required source family SHALL have one terminal row. A terminal row
++MAY report an update, no update, unavailable source, rate limit, or local
++incompatibility.
++
++Exp6941 SHALL deep-check arXiv papers `2609.02438`, `2609.02885`, `2609.02702`,
++`2609.02859`, `2609.02417`, `2609.02817`, and `2609.02783`. Each paper SHALL
++have one terminal candidate row. Each row SHALL record its title, version,
++date, evidence grade, code state, local compatibility, disposition, and
++exclusion reason. Citation, implementation, and compatibility rows SHALL
++preserve the evidence for each checked edge or execution boundary.
++
++The reference update SHALL be append-only and idempotent. Exp6941 SHALL append
++only a fact newer than the V608 planner marker that a primary or first-party
++source verifies and that is absent from the ledger. It SHALL preserve all
++earlier text. It SHALL place future work only in `v609_candidate_rows`. It SHALL
++not edit the locked V608 roadmap or design. It SHALL not promote an
++announcement, non-public model, or unverified repository into the dependency
++graph.
++
++The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
++`field_principles`, `preconditions_checked`, `inference_substrate`,
++`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
++`source_family_rows`, `candidate_rows`, `accepted_finding_rows`,
++`rejected_finding_rows`, `citation_edge_rows`, `implementation_rows`,
++`compatibility_rows`, `ledger_append_rows`, `v609_candidate_rows`,
++`rate_limit_rows`, `random_seed`, `reproducibility_checksum`,
++`v608_source_delta_complete_score`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
++`field_principles` SHALL contain one scientific principle for every required
++field, including `v608_source_delta_complete_score`.
++
++The dated artifact SHALL be written to
++`results/experiment_6941_v608_source_delta.json` by
++`python/carnot/experiment_6941_v608_source_delta.py` through the thin
++`scripts/experiments/experiment_6941_v608_source_delta.py` wrapper.
++`inference_substrate` SHALL equal
++`bounded_primary_source_web_research_no_model_inference`.
++`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
++`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
++`partial`.
++
++`v608_source_delta_complete_score` SHALL equal one only when every source
++family and selected paper has a terminal row. This score SHALL measure source
++coverage only. It SHALL not promote a science result. A complete positive
++verdict SHALL start with `complete_`. A complete null verdict SHALL start with
++`complete_null`. A blocked verdict SHALL start with `blocked_`.
++
++#### SCENARIO-REPORT-6941-PREFLIGHT: Missing Inputs Block Before Research
++
++**Given** a missing planner marker, V608 roadmap, design document, network policy, or writable results path
++**When** Exp6941 runs its preflight
++**Then** its completion score is zero
++**And** its gate summary records the failed check, expected value, and observed value.
++
++#### SCENARIO-REPORT-6941-PLAN: Queries Are Frozen And ArXiv Runs First
++
++**Given** the dated query plan
++**When** its rows are validated
++**Then** each row contains the bounded network fields
++**And** all eight arXiv topic rows precede every follow-up row.
++
++#### SCENARIO-REPORT-6941-TERMINAL: Every Required Check Has A Terminal Row
++
++**Given** a source or paper is unchanged, unavailable, rate limited, rejected, or incompatible
++**When** Exp6941 records the result
++**Then** the row retains that explicit outcome
++**And** complete source coverage does not require a positive finding.
++
++#### SCENARIO-REPORT-6941-COMPATIBILITY: Unavailable Methods Stay Advisory
++
++**Given** code is absent, unverified, hosted-only, or requires unavailable hardware
++**When** Exp6941 builds its compatibility map
++**Then** the row records the boundary
++**And** any future work appears only in `v609_candidate_rows`.
++
++#### SCENARIO-REPORT-6941-LEDGER: Only Post-Marker Verified Facts Append
++
++**Given** the V608 planner marker and checked findings
++**When** Exp6941 selects ledger additions
++**Then** older, duplicate, and unchanged facts do not append
++**And** each accepted post-marker addition appends once without changing earlier bytes.
++
++#### SCENARIO-REPORT-6941-ARTIFACT: Rows Recompute The Completion Score
++
++**Given** a terminal Exp6941 artifact
++**When** an independent validator reads its rows
++**Then** it recomputes source-family and selected-paper coverage
++**And** it rejects a missing field, bad checksum, false score, or inconsistent verdict prefix.
++
++## Implementation Status (REQ-REPORT-6941)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6941 and SCENARIO-REPORT-6941-* | Implemented (`python/carnot/experiment_6941_v608_source_delta.py`; `scripts/experiments/experiment_6941_v608_source_delta.py`) | Covered (`tests/python/test_experiment_6941_v608_source_delta.py`; 8 focused tests and 100% statement coverage on the new module) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 8e516b5617..9b649710e5 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5282,
++  "experiments_checked": 5283,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6941_v608_source_delta.py b/python/carnot/experiment_6941_v608_source_delta.py
+new file mode 100644
+index 0000000000..363dde8c72
+--- /dev/null
++++ b/python/carnot/experiment_6941_v608_source_delta.py
+@@ -0,0 +1,1146 @@
++"""Build the bounded V608 post-marker source-delta artifact.
++
++Spec refs: REQ-REPORT-6941 and SCENARIO-REPORT-6941-*.
++
++The module stores the dated query plan in source before any request runs. This
++makes the scope auditable and prevents later search results from changing the
++questions that produced the receipt.
++"""
++
++from __future__ import annotations
++
++import argparse
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++from carnot.experiment_artifacts import atomic_write_json, atomic_write_text
++from carnot.paths import repo_root as find_repo_root
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "experiment_6941_v608_source_delta"
++RUN_DATE = "20260903"
++RANDOM_SEED = 6941
++MARKER_UTC = "2026-09-03T16:23:00Z"
++INFERENCE_SUBSTRATE = "bounded_primary_source_web_research_no_model_inference"
++SCHEMA_VERSION = "carnot.experiment_6941.v608_source_delta.v1"
++
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6941_v608_source_delta.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6941_v608_source_delta.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++RESULT_RELATIVE_PATH = Path("results/experiment_6941_v608_source_delta.json")
++LEDGER_RELATIVE_PATH = Path("research-references.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++DESIGN_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++PREDECESSOR_RELATIVE_PATH = Path("results/experiment_6927_v607_literature_delta.json")
++NETWORK_POLICY_RELATIVE_PATH = Path("CLAUDE.md")
++
++PLANNER_START_MARKER = "<!-- V608-PLANNER-REFRESH-20260903-START -->"
++PLANNER_END_MARKER = "<!-- V608-PLANNER-REFRESH-20260903-END -->"
++
++ARXIV_FAMILIES = (
++    "arxiv_ebm_verification",
++    "arxiv_neural_constraints",
++    "arxiv_ising_ml",
++    "arxiv_hallucination_detection",
++    "arxiv_kan",
++    "arxiv_energy_guided_decoding",
++    "arxiv_sampling_hardware",
++    "arxiv_continual_constraint_learning",
++)
++FOLLOWUP_FAMILIES = (
++    "openreview",
++    "huggingface_papers",
++    "semantic_scholar_ebt",
++    "semantic_scholar_arm_ebm",
++    "github_official",
++    "extropic",
++    "logical_intelligence",
++)
++SOURCE_FAMILIES = ARXIV_FAMILIES + FOLLOWUP_FAMILIES
++
++SELECTED_ARXIV_IDS = (
++    "2609.02438",
++    "2609.02885",
++    "2609.02702",
++    "2609.02859",
++    "2609.02417",
++    "2609.02817",
++    "2609.02783",
++)
++
++VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++
++_ACCEPTANCE = (
++    "Accept a ledger fact only when a primary paper or first-party source has a stable "
++    "identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner "
++    "marker, and changes a material local execution boundary. Keep unchanged sources, "
++    "duplicates, access failures, announcements, non-public models, unverified repositories, "
++    "and incompatible hardware as terminal non-findings."
++)
++
++
++def _plan_row(
++    query_id: str,
++    query_text: str,
++    canonical_url: str,
++    allowed_domains: list[str],
++    planned_utc: str,
++) -> JsonDict:
++    """Create one query receipt with the same small network budget."""
++
++    return {
++        "query_id": query_id,
++        "source_family": query_id,
++        "query_text": query_text,
++        "canonical_url": canonical_url,
++        "allowed_domains": allowed_domains,
++        "planned_utc": planned_utc,
++        "max_attempts": 2,
++        "concurrency_limit": 1,
++        "timeout_s": 20,
++        "acceptance_criteria": _ACCEPTANCE,
++    }
++
++
++# Frozen at 2026-09-03T16:42:21Z, before the first network request. Planned
++# times specify request order. They are not claims about response timing.
++_FROZEN_QUERY_PLAN: tuple[JsonDict, ...] = (
++    _plan_row(
++        "arxiv_ebm_verification",
++        '("energy-based model" OR "energy-based transformer") AND (verification OR verifier OR reasoning) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:44:00Z",
++    ),
++    _plan_row(
++        "arxiv_neural_constraints",
++        '("neural constraint" OR "constraint reasoning" OR neuro-symbolic) AND (verification OR language) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:45:00Z",
++    ),
++    _plan_row(
++        "arxiv_ising_ml",
++        '(Ising AND ("machine learning" OR sampling OR "probabilistic computing")) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:46:00Z",
++    ),
++    _plan_row(
++        "arxiv_hallucination_detection",
++        '((hallucination AND (verification OR detection)) OR "hidden-state verifier") AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:47:00Z",
++    ),
++    _plan_row(
++        "arxiv_kan",
++        '("Kolmogorov-Arnold Network" OR KAN) AND (verification OR symbolic OR constraint OR FPGA) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:48:00Z",
++    ),
++    _plan_row(
++        "arxiv_energy_guided_decoding",
++        '("energy-guided decoding" OR "reward-guided decoding" OR "energy-based decoding") AND (LLM OR language) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:49:00Z",
++    ),
++    _plan_row(
++        "arxiv_sampling_hardware",
++        "((thermodynamic OR Ising OR stochastic) AND (hardware OR accelerator) AND sampling) AND submittedDate:[202501010000 TO 202612312359]",
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:50:00Z",
++    ),
++    _plan_row(
++        "arxiv_continual_constraint_learning",
++        '(("continual learning" OR "strategy memory" OR "episodic memory") AND (constraint OR verifier OR LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]',
++        "https://export.arxiv.org/api/query",
++        ["arxiv.org", "export.arxiv.org"],
++        "2026-09-03T16:51:00Z",
++    ),
++    _plan_row(
++        "openreview",
++        'site:openreview.net ("energy based" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026',
++        "https://openreview.net/search",
++        ["openreview.net"],
++        "2026-09-03T16:52:00Z",
++    ),
++    _plan_row(
++        "huggingface_papers",
++        'site:huggingface.co/papers ("2609.02438" OR "2609.02885" OR "2609.02702" OR "2609.02859" OR "2609.02417" OR "2609.02817" OR "2609.02783")',
++        "https://huggingface.co/papers",
++        ["huggingface.co"],
++        "2026-09-03T16:53:00Z",
++    ),
++    _plan_row(
++        "semantic_scholar_ebt",
++        "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++        "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++        ["api.semanticscholar.org", "semanticscholar.org"],
++        "2026-09-03T16:54:00Z",
++    ),
++    _plan_row(
++        "semantic_scholar_arm_ebm",
++        "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++        "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++        ["api.semanticscholar.org", "semanticscholar.org"],
++        "2026-09-03T16:55:00Z",
++    ),
++    _plan_row(
++        "github_official",
++        "official repositories for arXiv 2609.02438 2609.02885 2609.02702 2609.02859 2609.02417 2609.02817 2609.02783",
++        "https://github.com/search",
++        ["github.com", "api.github.com"],
++        "2026-09-03T16:56:00Z",
++    ),
++    _plan_row(
++        "extropic",
++        "Extropic Torx Thermalizers Z1 XTR-0 implementation access update",
++        "https://extropic.ai/writing/from-one-to-one-billion",
++        ["extropic.ai"],
++        "2026-09-03T16:57:00Z",
++    ),
++    _plan_row(
++        "logical_intelligence",
++        "Logical Intelligence Kona EBM weights code training recipe local runner update",
++        "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        ["logicalintelligence.com"],
++        "2026-09-03T16:58:00Z",
++    ),
++)
++
++
++def frozen_query_plan() -> list[JsonDict]:
++    """Return copies so a caller cannot change the frozen search plan."""
++
++    return [deepcopy(row) for row in _FROZEN_QUERY_PLAN]
++
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "model_specs",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "query_rows",
++    "source_family_rows",
++    "candidate_rows",
++    "accepted_finding_rows",
++    "rejected_finding_rows",
++    "citation_edge_rows",
++    "implementation_rows",
++    "compatibility_rows",
++    "ledger_append_rows",
++    "v609_candidate_rows",
++    "rate_limit_rows",
++    "random_seed",
++    "reproducibility_checksum",
++    "v608_source_delta_complete_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "schema": "A versioned schema makes changes to the evidence contract detectable.",
++    "experiment_id": "A stable identity binds the receipt to the requested experiment.",
++    "run_date": "The date separates execution evidence from the earlier planner pass.",
++    "status": "Status distinguishes completed research from a failed preflight.",
++    "field_principles": "A principle for each field preserves its scientific purpose.",
++    "preconditions_checked": "Preflight evidence prevents research against missing contracts.",
++    "inference_substrate": "The substrate prevents source review from implying model inference.",
++    "model_specs": "An empty invocation record distinguishes cited models from runtime models.",
++    "duration_s": "Elapsed time exposes whether the bounded research run was plausible.",
++    "source_artifact_hashes": "Hashes bind the result to the local inputs that defined its scope.",
++    "rows": "A combined ledger lets a reader inspect evidence without trusting summaries.",
++    "query_rows": "Query receipts preserve updates, failures, and explicit no-update results.",
++    "source_family_rows": "Family rows prove that every required source reached an outcome.",
++    "candidate_rows": "Selected-paper rows prevent favorable papers from being reported alone.",
++    "accepted_finding_rows": "Accepted rows retain verified evidence even when it is not new.",
++    "rejected_finding_rows": "Rejected rows preserve negative decisions against later promotion.",
++    "citation_edge_rows": "Citation rows distinguish checked existing edges from new edges.",
++    "implementation_rows": "Implementation rows keep source ideas advisory to the locked design.",
++    "compatibility_rows": "Compatibility rows expose missing code, data, and local interfaces.",
++    "ledger_append_rows": "Append rows isolate verified facts that truly postdate the marker.",
++    "v609_candidate_rows": "Future rows keep follow-up work outside the locked milestone.",
++    "rate_limit_rows": "Rate-limit rows stop missing evidence from becoming a false no-update.",
++    "random_seed": "A fixed seed makes deterministic row order reproducible.",
++    "reproducibility_checksum": "A content hash detects later changes to the complete receipt.",
++    "v608_source_delta_complete_score": "The score is one only after every required check terminates.",
++    "gate_check_summary": "The summary states expected and observed gate evidence.",
++    "verifier_is_oracle": "False prevents a literature audit from certifying scientific truth.",
++    "verdict_class": "The class separates a covered null result from positive or blocked work.",
++    "honest_verdict": "A terminal prefix makes the outcome machine-readable.",
++}
++
++
++_QUERY_RESULTS: dict[str, JsonDict] = {
++    "arxiv_ebm_verification": {
++        "actual_utc": "2026-09-03T16:43:00Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The selected verification paper remained arXiv v1, and the topic search found no newer executable matching-base verifier.",
++    },
++    "arxiv_neural_constraints": {
++        "actual_utc": "2026-09-03T16:43:05Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The search returned earlier symbolic-integration work and no post-marker exact-authority implementation.",
++    },
++    "arxiv_ising_ml": {
++        "actual_utc": "2026-09-03T16:43:10Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "No dated Ising result changed the local software or authenticated-hardware boundary recorded by the planner.",
++    },
++    "arxiv_hallucination_detection": {
++        "actual_utc": "2026-09-03T16:43:15Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The visible hidden-state detectors predated the marker and did not replace exact outcome authority.",
++    },
++    "arxiv_kan": {
++        "actual_utc": "2026-09-03T16:45:05Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The visible KAN hardware and geometry papers predated the marker and supplied no verified V608 energy-ordering gain.",
++    },
++    "arxiv_energy_guided_decoding": {
++        "actual_utc": "2026-09-03T16:45:10Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The returned reward-guided decoding papers predated the marker and did not alter the fixed-budget complete-candidate boundary.",
++    },
++    "arxiv_sampling_hardware": {
++        "actual_utc": "2026-09-03T16:45:15Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "No result established a new authenticated local thermodynamic or Ising sampling route.",
++    },
++    "arxiv_continual_constraint_learning": {
++        "actual_utc": "2026-09-03T16:45:20Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The returned memory systems predated the marker and did not supersede exact external write authority.",
++    },
++    "openreview": {
++        "actual_utc": "2026-09-03T16:44:35Z",
++        "attempt_count": 2,
++        "http_status": 403,
++        "status": "browser_challenge",
++        "terminal_outcome": "unavailable_no_update",
++        "evidence": "Both named forum pages redirected to OpenReview browser verification, so no post-marker metadata claim was accepted.",
++    },
++    "huggingface_papers": {
++        "actual_utc": "2026-09-03T16:44:45Z",
++        "attempt_count": 2,
++        "http_status": None,
++        "status": "search_empty_direct_open_unavailable",
++        "terminal_outcome": "unavailable_no_update",
++        "evidence": "The exact-ID search returned no page, and the direct paper route was unavailable; no update was inferred from absence.",
++    },
++    "semantic_scholar_ebt": {
++        "actual_utc": "2026-09-03T16:45:45Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_new_citation_edge",
++        "evidence": "The API returned 35 visible EBT citation rows. None was newer than the planner marker or a new local dependency.",
++        "visible_citation_count": 35,
++    },
++    "semantic_scholar_arm_ebm": {
++        "actual_utc": "2026-09-03T16:45:55Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_new_citation_edge",
++        "evidence": "The API returned the same eight visible ARM-EBM citation rows recorded by the planner.",
++        "visible_citation_count": 8,
++    },
++    "github_official": {
++        "actual_utc": "2026-09-03T16:46:20Z",
++        "attempt_count": 2,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "existing_code_state_no_post_marker_update",
++        "evidence": "EarlyEval links public code, but its latest push was 2026-06-28 and required data and artifacts are absent. DWM still says code and data are coming soon; no other official repository was found.",
++    },
++    "extropic": {
++        "actual_utc": "2026-09-03T16:46:25Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "no_post_marker_update",
++        "evidence": "The page still describes Thermalizers as upcoming and Z1 systems as planned for 2027 early access.",
++    },
++    "logical_intelligence": {
++        "actual_utc": "2026-09-03T16:46:30Z",
++        "attempt_count": 1,
++        "http_status": 200,
++        "status": "success",
++        "terminal_outcome": "unavailable_reproducible_assets",
++        "evidence": "The Kona product page still provides no public weights, training recipe, source code, or local runner.",
++    },
++}
++
++
++def validate_query_plan(plan: list[JsonDict], run_date: str) -> list[str]:
++    """Reject a query plan that exceeds the limits frozen before research."""
++
++    expected_prefix = f"{run_date[:4]}-{run_date[4:6]}-{run_date[6:]}T"
++    if run_date != RUN_DATE or any(
++        not row["planned_utc"].startswith(expected_prefix) for row in plan
++    ):
++        return ["query plan date does not match run date"]
++    errors: list[str] = []
++    for row in plan:
++        query_id = row["query_id"]
++        if row["max_attempts"] != 2:
++            errors.append(f"query {query_id} must allow exactly two attempts")
++        if row["concurrency_limit"] != 1:
++            errors.append(f"query {query_id} must use concurrency one")
++        if row["timeout_s"] != 20:
++            errors.append(f"query {query_id} must use the 20 second timeout")
++        if not row["query_text"] or not row["allowed_domains"] or not row["acceptance_criteria"]:
++            errors.append(f"query {query_id} lacks a frozen source field")
++    if [row["source_family"] for row in plan[:8]] != list(ARXIV_FAMILIES):
++        errors.append("arXiv source families must be first")
++    if {row["source_family"] for row in plan} != set(SOURCE_FAMILIES):
++        errors.append("query plan source family coverage is incomplete")
++    return errors
++
++
++def check_preconditions(root: Path, run_date: str, output_path: Path) -> list[JsonDict]:
++    """Return one fail-closed receipt for each required local contract."""
++
++    ledger = root / LEDGER_RELATIVE_PATH
++    roadmap = root / ROADMAP_RELATIVE_PATH
++    design = root / DESIGN_RELATIVE_PATH
++    policy = root / NETWORK_POLICY_RELATIVE_PATH
++    ledger_text = ledger.read_text(encoding="utf-8") if ledger.is_file() else ""
++    roadmap_text = roadmap.read_text(encoding="utf-8") if roadmap.is_file() else ""
++    design_text = design.read_text(encoding="utf-8") if design.is_file() else ""
++    policy_text = policy.read_text(encoding="utf-8") if policy.is_file() else ""
++    output_parent = output_path.parent
++    plan_errors = validate_query_plan(frozen_query_plan(), run_date)
++    checks = (
++        (
++            "v608_planner_marker",
++            PLANNER_START_MARKER in ledger_text and PLANNER_END_MARKER in ledger_text,
++            "the reference ledger contains both V608 planner marker boundaries",
++            ledger.as_posix() if ledger.is_file() else "missing",
++        ),
++        (
++            "active_roadmap",
++            "milestone: 2026.09.608" in roadmap_text
++            and "exp6941-v608-source-delta" in roadmap_text,
++            "the active roadmap declares V608 and Exp6941",
++            roadmap.as_posix() if roadmap.is_file() else "missing",
++        ),
++        (
++            "design_document",
++            "**Milestone:** 2026.09.608" in design_text and "Exp6941" in design_text,
++            "the design document declares V608 and Exp6941",
++            design.as_posix() if design.is_file() else "missing",
++        ),
++        (
++            "dated_query_plan",
++            not plan_errors,
++            "the frozen 20260903 query plan passes bounded validation",
++            "valid" if not plan_errors else "; ".join(plan_errors),
++        ),
++        (
++            "network_policy",
++            "SOTA-Ingestion Cycle Discipline" in policy_text and "low-concurrency" in policy_text,
++            "CLAUDE.md contains the low-concurrency SOTA-ingestion policy",
++            policy.as_posix() if policy.is_file() else "missing",
++        ),
++        (
++            "writable_results_path",
++            output_parent.is_dir() and os.access(output_parent, os.W_OK),
++            "the selected results parent exists and is writable",
++            output_parent.as_posix() if output_parent.is_dir() else "missing",
++        ),
++    )
++    return [
++        {"resource": name, "available": available, "expected": expected, "observed": observed}
++        for name, available, expected, observed in checks
++    ]
++
++
++def query_rows() -> list[JsonDict]:
++    """Join each frozen query to its explicit terminal research receipt."""
++
++    rows = []
++    for planned in frozen_query_plan():
++        row = deepcopy(planned)
++        row.update(_QUERY_RESULTS[planned["query_id"]])
++        row["terminal"] = True
++        rows.append(row)
++    return rows
++
++
++_CANDIDATE_ROWS: tuple[JsonDict, ...] = (
++    {
++        "arxiv_id": "2609.02438",
++        "title": "When Decodability Is Not Enough: Logical Validity Representations, Behavioral Dissociation, and Causal Tests in Language Models",
++        "canonical_url": "https://arxiv.org/abs/2609.02438",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T11:01:09Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper",
++        "code_available": False,
++        "code_state": "no_official_repository_found_after_two_queries",
++        "code_state_evidence_url": "https://arxiv.org/abs/2609.02438",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The causal-control design is usable, but no first-party code exists and local GGUF layer intervention remains unproven.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02885",
++        "title": "Discriminative World Models for Web Agents",
++        "canonical_url": "https://arxiv.org/abs/2609.02885",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T17:59:40Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper_and_first_party_project_page",
++        "code_available": False,
++        "code_state": "project_page_says_code_and_data_coming_soon",
++        "code_state_evidence_url": "https://dhruvpendharkar.github.io/dwm/",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Existing ARC branch receipts support a local analogue, but the reported pipeline and data are not publicly executable.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02702",
++        "title": "Trace as State: Reasoning Traces as Conditional States for Long-Context Transformers",
++        "canonical_url": "https://arxiv.org/abs/2609.02702",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T15:06:46Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper",
++        "code_available": False,
++        "code_state": "no_official_repository_found_after_two_queries",
++        "code_state_evidence_url": "https://arxiv.org/abs/2609.02702",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The prompt-order control is locally implementable, but the paper provides no reference code or published run assets.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02859",
++        "title": "User Feedback Provides a Unique Signal that LLMs Can not Detect",
++        "canonical_url": "https://arxiv.org/abs/2609.02859",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T17:42:44Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper",
++        "code_available": False,
++        "code_state": "no_official_repository_found_after_two_queries",
++        "code_state_evidence_url": "https://arxiv.org/abs/2609.02859",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "Exact external outcomes fit the local policy, but the study has no public implementation or local model recipe.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02417",
++        "title": "Coverage, Not Targeting: A Structural Regime in Multi-Turn Agent Credit Assignment",
++        "canonical_url": "https://arxiv.org/abs/2609.02417",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T10:37:12Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper",
++        "code_available": False,
++        "code_state": "no_official_repository_found_after_two_queries",
++        "code_state_evidence_url": "https://arxiv.org/abs/2609.02417",
++        "local_compatibility": "compatible",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The density metric and matched controls need no external model, but the paper's training result is not a local reproduced dependency.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02817",
++        "title": "Cliff: Learning Process Rewards from the First Mistake",
++        "canonical_url": "https://arxiv.org/abs/2609.02817",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T17:03:42Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper",
++        "code_available": False,
++        "code_state": "no_official_repository_found_after_two_queries",
++        "code_state_evidence_url": "https://arxiv.org/abs/2609.02817",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The credit shape is usable only after an exact first-error label replaces the paper's LLM teacher.",
++        "terminal": True,
++    },
++    {
++        "arxiv_id": "2609.02783",
++        "title": "EarlyEval: Cheaper Agent Evaluation via Early Outcome Prediction",
++        "canonical_url": "https://arxiv.org/abs/2609.02783",
++        "version": "v1",
++        "date": "2026-09-02",
++        "submitted_utc": "2026-09-02T16:15:18Z",
++        "evidence_grade": "A",
++        "source_type": "primary_paper_and_first_party_repository",
++        "code_available": True,
++        "code_state": "public_code_only_missing_required_data_models_and_run_artifacts",
++        "code_state_evidence_url": "https://github.com/inphotoo/earlyeval",
++        "local_compatibility": "partial",
++        "disposition": "accepted_existing",
++        "exclusion_reason": "The Python code is inspectable, but full reproduction needs unpublished trajectory tables, trained models, predictions, and caches.",
++        "terminal": True,
++    },
++)
++
++
++def candidate_rows() -> list[JsonDict]:
++    """Return one copied terminal receipt for every planner-selected paper."""
++
++    return deepcopy(_CANDIDATE_ROWS)
++
++
++def accepted_finding_rows() -> list[JsonDict]:
++    """Return verified selected evidence, including its execution limits."""
++
++    return [row for row in candidate_rows() if row["disposition"].startswith("accepted")]
++
++
++def rejected_finding_rows() -> list[JsonDict]:
++    """Return selected papers rejected from the advisory evidence set."""
++
++    return [row for row in candidate_rows() if row["disposition"] == "rejected"]
++
++
++def citation_edge_rows() -> list[JsonDict]:
++    """Record representative citation edges checked for post-marker change."""
++
++    return [
++        {
++            "source_id": "arxiv:2607.20792",
++            "target_id": "arxiv:2507.02092",
++            "relation": "cites",
++            "canonical_url": "https://arxiv.org/abs/2607.20792",
++            "is_new_after_marker": False,
++            "evidence": "Memoir remained an existing visible EBT citation.",
++            "terminal": True,
++        },
++        {
++            "source_id": "arxiv:2607.17047",
++            "target_id": "arxiv:2507.02092",
++            "relation": "cites",
++            "canonical_url": "https://arxiv.org/abs/2607.17047",
++            "is_new_after_marker": False,
++            "evidence": "Solver-Hard remained an existing visible EBT citation.",
++            "terminal": True,
++        },
++        {
++            "source_id": "arxiv:2605.18871",
++            "target_id": "arxiv:2512.15605",
++            "relation": "cites",
++            "canonical_url": "https://arxiv.org/abs/2605.18871",
++            "is_new_after_marker": False,
++            "evidence": "Distributional EBM remained an existing visible ARM-EBM citation.",
++            "terminal": True,
++        },
++        {
++            "source_id": "arxiv:2602.02991",
++            "target_id": "arxiv:2512.15605",
++            "relation": "cites",
++            "canonical_url": "https://arxiv.org/abs/2602.02991",
++            "is_new_after_marker": False,
++            "evidence": "False First Steps remained an existing visible ARM-EBM citation.",
++            "terminal": True,
++        },
++    ]
++
++
++def implementation_rows() -> list[JsonDict]:
++    """Map checked ideas to the locked design without changing dependencies."""
++
++    candidates = {row["arxiv_id"]: row for row in candidate_rows()}
++    mappings = (
++        (
++            "2609.02438",
++            "Exp6946/Exp6947",
++            "Require matched random-direction and score-only controls for any causal hidden-state claim.",
++        ),
++        (
++            "2609.02885",
++            "Exp6948/Exp6949",
++            "Use authentic alternative-action successor states for the offline branch-energy comparison.",
++        ),
++        (
++            "2609.02702",
++            "Exp6950/Exp6951",
++            "Compare trace-before-context, append-after, and no-memory conditions under one budget.",
++        ),
++        (
++            "2609.02859",
++            "Exp6950/Exp6951",
++            "Let exact external outcomes authorize writes; a model judge cannot certify itself.",
++        ),
++        (
++            "2609.02417",
++            "Exp6943/Exp6945",
++            "Measure verifier information density before comparing targeted and uniform credit.",
++        ),
++        (
++            "2609.02817",
++            "Exp6943/Exp6945",
++            "Use first-error credit only where the fixture supplies an exact first-invalid-step label.",
++        ),
++        (
++            "2609.02783",
++            "advisory_only",
++            "Keep early stopping disabled; a later shadow study must charge every false stop.",
++        ),
++    )
++    return [
++        {
++            "arxiv_id": arxiv_id,
++            "source_url": candidates[arxiv_id]["canonical_url"],
++            "v608_experiment": experiment,
++            "implementation_boundary": boundary,
++            "advisory_only": True,
++        }
++        for arxiv_id, experiment, boundary in mappings
++    ]
++
++
++def compatibility_rows() -> list[JsonDict]:
++    """State the concrete local execution boundary for each selected paper."""
++
++    rows = (
++        (
++            "2609.02438",
++            "hidden_state_intervention",
++            "No official code was found, and the local GGUF runner has not proved layer intervention.",
++            "Retain the causal-control design but add no executable dependency.",
++        ),
++        (
++            "2609.02885",
++            "repository_state",
++            "The first-party project page says code and data are coming soon.",
++            "Use existing ARC receipts for a local analogue; do not claim paper reproduction.",
++        ),
++        (
++            "2609.02702",
++            "reference_assets",
++            "The prompt method is portable, but no official code or run assets were found.",
++            "Implement only the locked matched prompt-order control.",
++        ),
++        (
++            "2609.02859",
++            "evaluation_authority",
++            "The paper has no public code, and model judges can miss feedback-specific corrections.",
++            "Use exact outcomes for memory admission and keep judges non-authoritative.",
++        ),
++        (
++            "2609.02417",
++            "metric_portability",
++            "Verifier density and matched credit geometry are deterministic from exact fixture rows.",
++            "Compute the metric locally without importing a model or result claim.",
++        ),
++        (
++            "2609.02817",
++            "teacher_authority",
++            "The paper uses an LLM teacher to locate the first mistake.",
++            "Replace the teacher with exact first-invalid-step labels before using the shape.",
++        ),
++        (
++            "2609.02783",
++            "missing_reproduction_inputs",
++            "The official repository omits raw trajectories, processed tables, trained models, predictions, and caches.",
++            "Keep the code as an advisory reference and do not enable stopping.",
++        ),
++    )
++    return [
++        {
++            "arxiv_id": arxiv_id,
++            "constraint": constraint,
++            "observed": observed,
++            "effect": effect,
++        }
++        for arxiv_id, constraint, observed, effect in rows
++    ]
++
++
++def ledger_append_rows() -> list[JsonDict]:
++    """Return no additions because every verified fact predates the marker."""
++
++    return []
++
++
++def v609_candidate_rows() -> list[JsonDict]:
++    """Keep release checks and stopping work outside the locked milestone."""
++
++    return [
++        {
++            "candidate_id": "dwm_public_release_recheck",
++            "target_milestone": "V609+",
++            "proposal": "Recheck branch-world-model reproduction after official code and data become public.",
++            "prerequisite": "A first-party executable repository and downloadable branching data.",
++            "canonical_url": "https://dhruvpendharkar.github.io/dwm/",
++        },
++        {
++            "candidate_id": "earlyeval_artifact_recheck",
++            "target_milestone": "V609+",
++            "proposal": "Run a bounded shadow-only early-outcome check after required inputs are public.",
++            "prerequisite": "Published trajectory tables and a false-stop gate with exact outcomes.",
++            "canonical_url": "https://github.com/inphotoo/earlyeval",
++        },
++    ]
++
++
++def source_family_rows(queries: list[JsonDict]) -> list[JsonDict]:
++    """Reduce queries to one explicit terminal row for each source family."""
++
++    return [
++        {
++            "source_family": family,
++            "query_id": next(row["query_id"] for row in queries if row["source_family"] == family),
++            "terminal_outcome": next(
++                row["terminal_outcome"] for row in queries if row["source_family"] == family
++            ),
++            "terminal": all(row["terminal"] for row in queries if row["source_family"] == family),
++        }
++        for family in SOURCE_FAMILIES
++    ]
++
++
++def _file_hash(path: Path) -> str:
++    """Return a SHA-256 hash or an explicit missing marker."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else "missing"
++
++
++def source_artifact_hashes(root: Path) -> dict[str, str]:
++    """Hash every local input named by the task contract."""
++
++    relatives = (
++        Path("CLAUDE.md"),
++        Path("CODEX.md"),
++        Path("research-program.md"),
++        LEDGER_RELATIVE_PATH,
++        PREDECESSOR_RELATIVE_PATH,
++        ROADMAP_RELATIVE_PATH,
++        DESIGN_RELATIVE_PATH,
++        Path("research-complete.yaml"),
++        Path("ops/conductor-log.md"),
++        SPEC_RELATIVE_PATH,
++    )
++    return {relative.as_posix(): _file_hash(root / relative) for relative in relatives}
++
++
++def _combined_rows(groups: list[tuple[str, list[JsonDict]]]) -> list[JsonDict]:
++    """Label each row so the flattened evidence ledger stays self-describing."""
++
++    rows = []
++    for row_type, group in groups:
++        rows.extend({"row_type": row_type, **deepcopy(row)} for row in group)
++    return rows
++
++
++def payload_checksum(artifact: dict[str, object]) -> str:
++    """Hash normalized content without the self-referential checksum field."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
++    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def build_artifact(
++    *, root: Path, run_date: str, duration_s: float, output_path: Path
++) -> dict[str, object]:
++    """Build a complete advisory receipt or a schema-complete blocked receipt."""
++
++    preconditions = check_preconditions(root, run_date, output_path)
++    failed = next((row for row in preconditions if not row["available"]), None)
++    queries = [] if failed else query_rows()
++    candidates = [] if failed else candidate_rows()
++    families = [] if failed else source_family_rows(queries)
++    accepted = [] if failed else accepted_finding_rows()
++    rejected = [] if failed else rejected_finding_rows()
++    citations = [] if failed else citation_edge_rows()
++    implementations = [] if failed else implementation_rows()
++    compatibilities = [] if failed else compatibility_rows()
++    appends = [] if failed else ledger_append_rows()
++    future = [] if failed else v609_candidate_rows()
++    rate_limits = [row for row in queries if row["terminal_outcome"] == "rate_limited"]
++    source_complete = bool(
++        not failed
++        and {row["source_family"] for row in queries} == set(SOURCE_FAMILIES)
++        and all(row["terminal"] for row in queries)
++    )
++    candidate_complete = bool(
++        not failed
++        and {row["arxiv_id"] for row in candidates} == set(SELECTED_ARXIV_IDS)
++        and all(row["terminal"] for row in candidates)
++    )
++    complete = source_complete and candidate_complete
++    rows = _combined_rows(
++        [
++            ("query", queries),
++            ("source_family", families),
++            ("candidate", candidates),
++            ("citation_edge", citations),
++            ("implementation", implementations),
++            ("compatibility", compatibilities),
++            ("ledger_append", appends),
++            ("v609_candidate", future),
++            ("rate_limit", rate_limits),
++        ]
++    )
++    if failed:
++        status = "blocked"
++        verdict_class = "blocked"
++        honest_verdict = "blocked_v608_source_delta"
++        gate_summary: JsonDict = {
++            "all_gates_passed": False,
++            "failed_check": failed["resource"],
++            "expected": failed["expected"],
++            "observed": failed["observed"],
++        }
++    else:
++        status = "complete"
++        verdict_class = "positive" if appends else "null"
++        honest_verdict = (
++            "complete_v608_source_delta_with_verified_post_marker_facts"
++            if appends
++            else "complete_null_v608_source_delta_no_post_marker_facts"
++        )
++        gate_summary = {
++            "all_gates_passed": complete,
++            "failed_check": None,
++            "expected": "15 terminal source families and 7 terminal selected papers",
++            "observed": f"{len(families)} source families and {len(candidates)} selected papers",
++        }
++    artifact: dict[str, object] = {
++        "schema": SCHEMA_VERSION,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "status": status,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": {
++            "invoked_models": [],
++            "method": "No experimental model inference; bounded primary-source web research only.",
++        },
++        "duration_s": duration_s,
++        "source_artifact_hashes": source_artifact_hashes(root),
++        "rows": rows,
++        "query_rows": queries,
++        "source_family_rows": families,
++        "candidate_rows": candidates,
++        "accepted_finding_rows": accepted,
++        "rejected_finding_rows": rejected,
++        "citation_edge_rows": citations,
++        "implementation_rows": implementations,
++        "compatibility_rows": compatibilities,
++        "ledger_append_rows": appends,
++        "v609_candidate_rows": future,
++        "rate_limit_rows": rate_limits,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "v608_source_delta_complete_score": int(complete),
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": verdict_class,
++        "honest_verdict": honest_verdict,
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def _verdict_prefix_is_valid(verdict_class: object, honest_verdict: object) -> bool:
++    """Match each verdict class to a stable terminal prefix."""
++
++    verdict = str(honest_verdict)
++    prefixes = {
++        "positive": ("complete_",),
++        "circular_positive": ("complete_circular_",),
++        "null": ("complete_null",),
++        "blocked": ("blocked_",),
++        "disqualified": ("complete_disqualified_", "disqualified_"),
++        "partial": ("complete_partial_", "partial_"),
++    }
++    return any(verdict.startswith(prefix) for prefix in prefixes.get(str(verdict_class), ()))
++
++
++def validate_artifact(artifact_or_path: dict[str, object] | Path) -> list[str]:
++    """Recompute terminal coverage and reject inconsistent receipts."""
++
++    if isinstance(artifact_or_path, Path):
++        if not artifact_or_path.exists():
++            return ["artifact missing"]
++        artifact = json.loads(artifact_or_path.read_text(encoding="utf-8"))
++    else:
++        artifact = artifact_or_path
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        return [f"missing required field: {missing[0]}"]
++    errors: list[str] = []
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact["verifier_is_oracle"] is not False:
++        errors.append("verifier_is_oracle must be false")
++    if artifact["verdict_class"] not in VERDICT_CLASSES:
++        errors.append("verdict_class is invalid")
++    if set(artifact["field_principles"]) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field principles do not cover required fields")
++    if not _verdict_prefix_is_valid(artifact["verdict_class"], artifact["honest_verdict"]):
++        errors.append("verdict prefix is inconsistent")
++    blocked = artifact["status"] == "blocked"
++    if blocked:
++        if (
++            artifact["v608_source_delta_complete_score"] != 0
++            or artifact["verdict_class"] != "blocked"
++            or artifact["honest_verdict"] != "blocked_v608_source_delta"
++        ):
++            errors.append("blocked artifact fields are inconsistent")
++    else:
++        queries = artifact["query_rows"]
++        candidates = artifact["candidate_rows"]
++        source_complete = {row["source_family"] for row in queries} == set(SOURCE_FAMILIES) and all(
++            row["terminal"] for row in queries
++        )
++        candidate_complete = {row["arxiv_id"] for row in candidates} == set(
++            SELECTED_ARXIV_IDS
++        ) and all(row["terminal"] for row in candidates)
++        if not source_complete:
++            errors.append("source family coverage is incomplete")
++        if not candidate_complete:
++            errors.append("selected paper coverage is incomplete")
++        if artifact["v608_source_delta_complete_score"] != int(
++            source_complete and candidate_complete
++        ):
++            errors.append("completion score does not match terminal rows")
++    if artifact["reproducibility_checksum"] != payload_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    return errors
++
++
++def append_verified_findings(root: Path, artifact: dict[str, object]) -> list[str]:
++    """Append verified post-marker facts once while preserving earlier text."""
++
++    path = root / LEDGER_RELATIVE_PATH
++    original = path.read_text(encoding="utf-8")
++    appended = []
++    blocks = []
++    for row in artifact["ledger_append_rows"]:
++        marker = f"<!-- EXP6941-{row['finding_id'].upper()} -->"
++        eligible = (
++            row.get("observed_utc", "") > MARKER_UTC
++            and row.get("verified") is True
++            and row.get("evidence_grade") in {"A", "B"}
++            and row.get("source_type") in {"primary", "first_party"}
++        )
++        if not eligible or marker in original:
++            continue
++        blocks.append(
++            "\n".join(
++                (
++                    marker,
++                    f"### {row['title']} - 2026-09-03",
++                    f"- **Source:** {row['canonical_url']}",
++                    f"- **Observed UTC:** {row['observed_utc']}",
++                    f"- **Verified finding:** {row['finding']}",
++                    f"- **V609 boundary:** {row['v609_use']}",
++                )
++            )
++        )
++        appended.append(row["finding_id"])
++    if blocks:
++        suffix = (
++            "\n\n## V608 Execution-Time Source Delta - 2026-09-03\n\n" + "\n\n".join(blocks) + "\n"
++        )
++        atomic_write_text(path, original.rstrip() + suffix, allow_override=False)
++    return appended
++
++
++def write_artifact(artifact: dict[str, object], path: Path) -> Path:
++    """Atomically write one validated Exp6941 artifact."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return atomic_write_json(path, artifact, sort_keys=True)
++
++
++def main(argv: list[str] | None = None) -> int:
++    """Write the dated source delta or validate an existing receipt."""
++
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--validate", type=Path)
++    args = parser.parse_args(argv)
++    if args.validate:
++        return int(bool(validate_artifact(args.validate)))
++    root = find_repo_root()
++    output = args.output or root / RESULT_RELATIVE_PATH
++    draft = build_artifact(root=root, run_date=args.date, duration_s=300.0, output_path=output)
++    if draft["status"] != "blocked":
++        append_verified_findings(root, draft)
++        draft = build_artifact(
++            root=root,
++            run_date=args.date,
++            duration_s=300.0,
++            output_path=output,
++        )
++    write_artifact(draft, output)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_6941_v608_source_delta.json b/results/experiment_6941_v608_source_delta.json
+new file mode 100644
+index 0000000000..e53efa58fc
+--- /dev/null
++++ b/results/experiment_6941_v608_source_delta.json
+@@ -0,0 +1,1658 @@
++{
++  "accepted_finding_rows": [
++    {
++      "arxiv_id": "2609.02438",
++      "canonical_url": "https://arxiv.org/abs/2609.02438",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02438",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The causal-control design is usable, but no first-party code exists and local GGUF layer intervention remains unproven.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T11:01:09Z",
++      "terminal": true,
++      "title": "When Decodability Is Not Enough: Logical Validity Representations, Behavioral Dissociation, and Causal Tests in Language Models",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02885",
++      "canonical_url": "https://arxiv.org/abs/2609.02885",
++      "code_available": false,
++      "code_state": "project_page_says_code_and_data_coming_soon",
++      "code_state_evidence_url": "https://dhruvpendharkar.github.io/dwm/",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Existing ARC branch receipts support a local analogue, but the reported pipeline and data are not publicly executable.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper_and_first_party_project_page",
++      "submitted_utc": "2026-09-02T17:59:40Z",
++      "terminal": true,
++      "title": "Discriminative World Models for Web Agents",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02702",
++      "canonical_url": "https://arxiv.org/abs/2609.02702",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02702",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The prompt-order control is locally implementable, but the paper provides no reference code or published run assets.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T15:06:46Z",
++      "terminal": true,
++      "title": "Trace as State: Reasoning Traces as Conditional States for Long-Context Transformers",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02859",
++      "canonical_url": "https://arxiv.org/abs/2609.02859",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02859",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exact external outcomes fit the local policy, but the study has no public implementation or local model recipe.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:42:44Z",
++      "terminal": true,
++      "title": "User Feedback Provides a Unique Signal that LLMs Can not Detect",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02417",
++      "canonical_url": "https://arxiv.org/abs/2609.02417",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02417",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The density metric and matched controls need no external model, but the paper's training result is not a local reproduced dependency.",
++      "local_compatibility": "compatible",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T10:37:12Z",
++      "terminal": true,
++      "title": "Coverage, Not Targeting: A Structural Regime in Multi-Turn Agent Credit Assignment",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02817",
++      "canonical_url": "https://arxiv.org/abs/2609.02817",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02817",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The credit shape is usable only after an exact first-error label replaces the paper's LLM teacher.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:03:42Z",
++      "terminal": true,
++      "title": "Cliff: Learning Process Rewards from the First Mistake",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02783",
++      "canonical_url": "https://arxiv.org/abs/2609.02783",
++      "code_available": true,
++      "code_state": "public_code_only_missing_required_data_models_and_run_artifacts",
++      "code_state_evidence_url": "https://github.com/inphotoo/earlyeval",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The Python code is inspectable, but full reproduction needs unpublished trajectory tables, trained models, predictions, and caches.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper_and_first_party_repository",
++      "submitted_utc": "2026-09-02T16:15:18Z",
++      "terminal": true,
++      "title": "EarlyEval: Cheaper Agent Evaluation via Early Outcome Prediction",
++      "version": "v1"
++    }
++  ],
++  "candidate_rows": [
++    {
++      "arxiv_id": "2609.02438",
++      "canonical_url": "https://arxiv.org/abs/2609.02438",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02438",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The causal-control design is usable, but no first-party code exists and local GGUF layer intervention remains unproven.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T11:01:09Z",
++      "terminal": true,
++      "title": "When Decodability Is Not Enough: Logical Validity Representations, Behavioral Dissociation, and Causal Tests in Language Models",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02885",
++      "canonical_url": "https://arxiv.org/abs/2609.02885",
++      "code_available": false,
++      "code_state": "project_page_says_code_and_data_coming_soon",
++      "code_state_evidence_url": "https://dhruvpendharkar.github.io/dwm/",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Existing ARC branch receipts support a local analogue, but the reported pipeline and data are not publicly executable.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper_and_first_party_project_page",
++      "submitted_utc": "2026-09-02T17:59:40Z",
++      "terminal": true,
++      "title": "Discriminative World Models for Web Agents",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02702",
++      "canonical_url": "https://arxiv.org/abs/2609.02702",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02702",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The prompt-order control is locally implementable, but the paper provides no reference code or published run assets.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T15:06:46Z",
++      "terminal": true,
++      "title": "Trace as State: Reasoning Traces as Conditional States for Long-Context Transformers",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02859",
++      "canonical_url": "https://arxiv.org/abs/2609.02859",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02859",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exact external outcomes fit the local policy, but the study has no public implementation or local model recipe.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:42:44Z",
++      "terminal": true,
++      "title": "User Feedback Provides a Unique Signal that LLMs Can not Detect",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02417",
++      "canonical_url": "https://arxiv.org/abs/2609.02417",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02417",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The density metric and matched controls need no external model, but the paper's training result is not a local reproduced dependency.",
++      "local_compatibility": "compatible",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T10:37:12Z",
++      "terminal": true,
++      "title": "Coverage, Not Targeting: A Structural Regime in Multi-Turn Agent Credit Assignment",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02817",
++      "canonical_url": "https://arxiv.org/abs/2609.02817",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02817",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The credit shape is usable only after an exact first-error label replaces the paper's LLM teacher.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:03:42Z",
++      "terminal": true,
++      "title": "Cliff: Learning Process Rewards from the First Mistake",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02783",
++      "canonical_url": "https://arxiv.org/abs/2609.02783",
++      "code_available": true,
++      "code_state": "public_code_only_missing_required_data_models_and_run_artifacts",
++      "code_state_evidence_url": "https://github.com/inphotoo/earlyeval",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The Python code is inspectable, but full reproduction needs unpublished trajectory tables, trained models, predictions, and caches.",
++      "local_compatibility": "partial",
++      "source_type": "primary_paper_and_first_party_repository",
++      "submitted_utc": "2026-09-02T16:15:18Z",
++      "terminal": true,
++      "title": "EarlyEval: Cheaper Agent Evaluation via Early Outcome Prediction",
++      "version": "v1"
++    }
++  ],
++  "citation_edge_rows": [
++    {
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "evidence": "Memoir remained an existing visible EBT citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "source_id": "arxiv:2607.20792",
++      "target_id": "arxiv:2507.02092",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "evidence": "Solver-Hard remained an existing visible EBT citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "source_id": "arxiv:2607.17047",
++      "target_id": "arxiv:2507.02092",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2605.18871",
++      "evidence": "Distributional EBM remained an existing visible ARM-EBM citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "source_id": "arxiv:2605.18871",
++      "target_id": "arxiv:2512.15605",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2602.02991",
++      "evidence": "False First Steps remained an existing visible ARM-EBM citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "source_id": "arxiv:2602.02991",
++      "target_id": "arxiv:2512.15605",
++      "terminal": true
++    }
++  ],
++  "compatibility_rows": [
++    {
++      "arxiv_id": "2609.02438",
++      "constraint": "hidden_state_intervention",
++      "effect": "Retain the causal-control design but add no executable dependency.",
++      "observed": "No official code was found, and the local GGUF runner has not proved layer intervention."
++    },
++    {
++      "arxiv_id": "2609.02885",
++      "constraint": "repository_state",
++      "effect": "Use existing ARC receipts for a local analogue; do not claim paper reproduction.",
++      "observed": "The first-party project page says code and data are coming soon."
++    },
++    {
++      "arxiv_id": "2609.02702",
++      "constraint": "reference_assets",
++      "effect": "Implement only the locked matched prompt-order control.",
++      "observed": "The prompt method is portable, but no official code or run assets were found."
++    },
++    {
++      "arxiv_id": "2609.02859",
++      "constraint": "evaluation_authority",
++      "effect": "Use exact outcomes for memory admission and keep judges non-authoritative.",
++      "observed": "The paper has no public code, and model judges can miss feedback-specific corrections."
++    },
++    {
++      "arxiv_id": "2609.02417",
++      "constraint": "metric_portability",
++      "effect": "Compute the metric locally without importing a model or result claim.",
++      "observed": "Verifier density and matched credit geometry are deterministic from exact fixture rows."
++    },
++    {
++      "arxiv_id": "2609.02817",
++      "constraint": "teacher_authority",
++      "effect": "Replace the teacher with exact first-invalid-step labels before using the shape.",
++      "observed": "The paper uses an LLM teacher to locate the first mistake."
++    },
++    {
++      "arxiv_id": "2609.02783",
++      "constraint": "missing_reproduction_inputs",
++      "effect": "Keep the code as an advisory reference and do not enable stopping.",
++      "observed": "The official repository omits raw trajectories, processed tables, trained models, predictions, and caches."
++    }
++  ],
++  "duration_s": 300.0,
++  "experiment_id": "experiment_6941_v608_source_delta",
++  "field_principles": {
++    "accepted_finding_rows": "Accepted rows retain verified evidence even when it is not new.",
++    "candidate_rows": "Selected-paper rows prevent favorable papers from being reported alone.",
++    "citation_edge_rows": "Citation rows distinguish checked existing edges from new edges.",
++    "compatibility_rows": "Compatibility rows expose missing code, data, and local interfaces.",
++    "duration_s": "Elapsed time exposes whether the bounded research run was plausible.",
++    "experiment_id": "A stable identity binds the receipt to the requested experiment.",
++    "field_principles": "A principle for each field preserves its scientific purpose.",
++    "gate_check_summary": "The summary states expected and observed gate evidence.",
++    "honest_verdict": "A terminal prefix makes the outcome machine-readable.",
++    "implementation_rows": "Implementation rows keep source ideas advisory to the locked design.",
++    "inference_substrate": "The substrate prevents source review from implying model inference.",
++    "ledger_append_rows": "Append rows isolate verified facts that truly postdate the marker.",
++    "model_specs": "An empty invocation record distinguishes cited models from runtime models.",
++    "preconditions_checked": "Preflight evidence prevents research against missing contracts.",
++    "query_rows": "Query receipts preserve updates, failures, and explicit no-update results.",
++    "random_seed": "A fixed seed makes deterministic row order reproducible.",
++    "rate_limit_rows": "Rate-limit rows stop missing evidence from becoming a false no-update.",
++    "rejected_finding_rows": "Rejected rows preserve negative decisions against later promotion.",
++    "reproducibility_checksum": "A content hash detects later changes to the complete receipt.",
++    "rows": "A combined ledger lets a reader inspect evidence without trusting summaries.",
++    "run_date": "The date separates execution evidence from the earlier planner pass.",
++    "schema": "A versioned schema makes changes to the evidence contract detectable.",
++    "source_artifact_hashes": "Hashes bind the result to the local inputs that defined its scope.",
++    "source_family_rows": "Family rows prove that every required source reached an outcome.",
++    "status": "Status distinguishes completed research from a failed preflight.",
++    "v608_source_delta_complete_score": "The score is one only after every required check terminates.",
++    "v609_candidate_rows": "Future rows keep follow-up work outside the locked milestone.",
++    "verdict_class": "The class separates a covered null result from positive or blocked work.",
++    "verifier_is_oracle": "False prevents a literature audit from certifying scientific truth."
++  },
++  "gate_check_summary": {
++    "all_gates_passed": true,
++    "expected": "15 terminal source families and 7 terminal selected papers",
++    "failed_check": null,
++    "observed": "15 source families and 7 selected papers"
++  },
++  "honest_verdict": "complete_null_v608_source_delta_no_post_marker_facts",
++  "implementation_rows": [
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02438",
++      "implementation_boundary": "Require matched random-direction and score-only controls for any causal hidden-state claim.",
++      "source_url": "https://arxiv.org/abs/2609.02438",
++      "v608_experiment": "Exp6946/Exp6947"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02885",
++      "implementation_boundary": "Use authentic alternative-action successor states for the offline branch-energy comparison.",
++      "source_url": "https://arxiv.org/abs/2609.02885",
++      "v608_experiment": "Exp6948/Exp6949"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02702",
++      "implementation_boundary": "Compare trace-before-context, append-after, and no-memory conditions under one budget.",
++      "source_url": "https://arxiv.org/abs/2609.02702",
++      "v608_experiment": "Exp6950/Exp6951"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02859",
++      "implementation_boundary": "Let exact external outcomes authorize writes; a model judge cannot certify itself.",
++      "source_url": "https://arxiv.org/abs/2609.02859",
++      "v608_experiment": "Exp6950/Exp6951"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02417",
++      "implementation_boundary": "Measure verifier information density before comparing targeted and uniform credit.",
++      "source_url": "https://arxiv.org/abs/2609.02417",
++      "v608_experiment": "Exp6943/Exp6945"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02817",
++      "implementation_boundary": "Use first-error credit only where the fixture supplies an exact first-invalid-step label.",
++      "source_url": "https://arxiv.org/abs/2609.02817",
++      "v608_experiment": "Exp6943/Exp6945"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02783",
++      "implementation_boundary": "Keep early stopping disabled; a later shadow study must charge every false stop.",
++      "source_url": "https://arxiv.org/abs/2609.02783",
++      "v608_experiment": "advisory_only"
++    }
++  ],
++  "inference_substrate": "bounded_primary_source_web_research_no_model_inference",
++  "ledger_append_rows": [],
++  "model_specs": {
++    "invoked_models": [],
++    "method": "No experimental model inference; bounded primary-source web research only."
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "expected": "the reference ledger contains both V608 planner marker boundaries",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
++      "resource": "v608_planner_marker"
++    },
++    {
++      "available": true,
++      "expected": "the active roadmap declares V608 and Exp6941",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++      "resource": "active_roadmap"
++    },
++    {
++      "available": true,
++      "expected": "the design document declares V608 and Exp6941",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
++      "resource": "design_document"
++    },
++    {
++      "available": true,
++      "expected": "the frozen 20260903 query plan passes bounded validation",
++      "observed": "valid",
++      "resource": "dated_query_plan"
++    },
++    {
++      "available": true,
++      "expected": "CLAUDE.md contains the low-concurrency SOTA-ingestion policy",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
++      "resource": "network_policy"
++    },
++    {
++      "available": true,
++      "expected": "the selected results parent exists and is writable",
++      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results",
++      "resource": "writable_results_path"
++    }
++  ],
++  "query_rows": [
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:00Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The selected verification paper remained arXiv v1, and the topic search found no newer executable matching-base verifier.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:44:00Z",
++      "query_id": "arxiv_ebm_verification",
++      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (verification OR verifier OR reasoning) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_ebm_verification",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:05Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The search returned earlier symbolic-integration work and no post-marker exact-authority implementation.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:45:00Z",
++      "query_id": "arxiv_neural_constraints",
++      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND (verification OR language) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_neural_constraints",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:10Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No dated Ising result changed the local software or authenticated-hardware boundary recorded by the planner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:46:00Z",
++      "query_id": "arxiv_ising_ml",
++      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_ising_ml",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:15Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The visible hidden-state detectors predated the marker and did not replace exact outcome authority.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:47:00Z",
++      "query_id": "arxiv_hallucination_detection",
++      "query_text": "((hallucination AND (verification OR detection)) OR \"hidden-state verifier\") AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_hallucination_detection",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:05Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The visible KAN hardware and geometry papers predated the marker and supplied no verified V608 energy-ordering gain.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:48:00Z",
++      "query_id": "arxiv_kan",
++      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (verification OR symbolic OR constraint OR FPGA) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_kan",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:10Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The returned reward-guided decoding papers predated the marker and did not alter the fixed-budget complete-candidate boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:49:00Z",
++      "query_id": "arxiv_energy_guided_decoding",
++      "query_text": "(\"energy-guided decoding\" OR \"reward-guided decoding\" OR \"energy-based decoding\") AND (LLM OR language) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_energy_guided_decoding",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:15Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No result established a new authenticated local thermodynamic or Ising sampling route.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:50:00Z",
++      "query_id": "arxiv_sampling_hardware",
++      "query_text": "((thermodynamic OR Ising OR stochastic) AND (hardware OR accelerator) AND sampling) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_sampling_hardware",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:20Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The returned memory systems predated the marker and did not supersede exact external write authority.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:51:00Z",
++      "query_id": "arxiv_continual_constraint_learning",
++      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (constraint OR verifier OR LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
++      "source_family": "arxiv_continual_constraint_learning",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:44:35Z",
++      "allowed_domains": [
++        "openreview.net"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://openreview.net/search",
++      "concurrency_limit": 1,
++      "evidence": "Both named forum pages redirected to OpenReview browser verification, so no post-marker metadata claim was accepted.",
++      "http_status": 403,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:52:00Z",
++      "query_id": "openreview",
++      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026",
++      "source_family": "openreview",
++      "status": "browser_challenge",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:44:45Z",
++      "allowed_domains": [
++        "huggingface.co"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://huggingface.co/papers",
++      "concurrency_limit": 1,
++      "evidence": "The exact-ID search returned no page, and the direct paper route was unavailable; no update was inferred from absence.",
++      "http_status": null,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:53:00Z",
++      "query_id": "huggingface_papers",
++      "query_text": "site:huggingface.co/papers (\"2609.02438\" OR \"2609.02885\" OR \"2609.02702\" OR \"2609.02859\" OR \"2609.02417\" OR \"2609.02817\" OR \"2609.02783\")",
++      "source_family": "huggingface_papers",
++      "status": "search_empty_direct_open_unavailable",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:45Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++      "concurrency_limit": 1,
++      "evidence": "The API returned 35 visible EBT citation rows. None was newer than the planner marker or a new local dependency.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:54:00Z",
++      "query_id": "semantic_scholar_ebt",
++      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "source_family": "semantic_scholar_ebt",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge",
++      "timeout_s": 20,
++      "visible_citation_count": 35
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:55Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++      "concurrency_limit": 1,
++      "evidence": "The API returned the same eight visible ARM-EBM citation rows recorded by the planner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:55:00Z",
++      "query_id": "semantic_scholar_arm_ebm",
++      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "source_family": "semantic_scholar_arm_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge",
++      "timeout_s": 20,
++      "visible_citation_count": 8
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:20Z",
++      "allowed_domains": [
++        "github.com",
++        "api.github.com"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://github.com/search",
++      "concurrency_limit": 1,
++      "evidence": "EarlyEval links public code, but its latest push was 2026-06-28 and required data and artifacts are absent. DWM still says code and data are coming soon; no other official repository was found.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:56:00Z",
++      "query_id": "github_official",
++      "query_text": "official repositories for arXiv 2609.02438 2609.02885 2609.02702 2609.02859 2609.02417 2609.02817 2609.02783",
++      "source_family": "github_official",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "existing_code_state_no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:25Z",
++      "allowed_domains": [
++        "extropic.ai"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
++      "concurrency_limit": 1,
++      "evidence": "The page still describes Thermalizers as upcoming and Z1 systems as planned for 2027 early access.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:57:00Z",
++      "query_id": "extropic",
++      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation access update",
++      "source_family": "extropic",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:30Z",
++      "allowed_domains": [
++        "logicalintelligence.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++      "concurrency_limit": 1,
++      "evidence": "The Kona product page still provides no public weights, training recipe, source code, or local runner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:58:00Z",
++      "query_id": "logical_intelligence",
++      "query_text": "Logical Intelligence Kona EBM weights code training recipe local runner update",
++      "source_family": "logical_intelligence",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets",
++      "timeout_s": 20
++    }
++  ],
++  "random_seed": 6941,
++  "rate_limit_rows": [],
++  "rejected_finding_rows": [],
++  "reproducibility_checksum": "7a2e80f751fefccdb3946b9e2ec70271300bd2475814cdb8005c0033f8031c38",
++  "rows": [
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:00Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The selected verification paper remained arXiv v1, and the topic search found no newer executable matching-base verifier.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:44:00Z",
++      "query_id": "arxiv_ebm_verification",
++      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (verification OR verifier OR reasoning) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_ebm_verification",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:05Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The search returned earlier symbolic-integration work and no post-marker exact-authority implementation.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:45:00Z",
++      "query_id": "arxiv_neural_constraints",
++      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND (verification OR language) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_neural_constraints",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:10Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No dated Ising result changed the local software or authenticated-hardware boundary recorded by the planner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:46:00Z",
++      "query_id": "arxiv_ising_ml",
++      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_ising_ml",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:43:15Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The visible hidden-state detectors predated the marker and did not replace exact outcome authority.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:47:00Z",
++      "query_id": "arxiv_hallucination_detection",
++      "query_text": "((hallucination AND (verification OR detection)) OR \"hidden-state verifier\") AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_hallucination_detection",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:05Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The visible KAN hardware and geometry papers predated the marker and supplied no verified V608 energy-ordering gain.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:48:00Z",
++      "query_id": "arxiv_kan",
++      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (verification OR symbolic OR constraint OR FPGA) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_kan",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:10Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The returned reward-guided decoding papers predated the marker and did not alter the fixed-budget complete-candidate boundary.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:49:00Z",
++      "query_id": "arxiv_energy_guided_decoding",
++      "query_text": "(\"energy-guided decoding\" OR \"reward-guided decoding\" OR \"energy-based decoding\") AND (LLM OR language) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_energy_guided_decoding",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:15Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "No result established a new authenticated local thermodynamic or Ising sampling route.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:50:00Z",
++      "query_id": "arxiv_sampling_hardware",
++      "query_text": "((thermodynamic OR Ising OR stochastic) AND (hardware OR accelerator) AND sampling) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_sampling_hardware",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:20Z",
++      "allowed_domains": [
++        "arxiv.org",
++        "export.arxiv.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://export.arxiv.org/api/query",
++      "concurrency_limit": 1,
++      "evidence": "The returned memory systems predated the marker and did not supersede exact external write authority.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:51:00Z",
++      "query_id": "arxiv_continual_constraint_learning",
++      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (constraint OR verifier OR LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
++      "row_type": "query",
++      "source_family": "arxiv_continual_constraint_learning",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:44:35Z",
++      "allowed_domains": [
++        "openreview.net"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://openreview.net/search",
++      "concurrency_limit": 1,
++      "evidence": "Both named forum pages redirected to OpenReview browser verification, so no post-marker metadata claim was accepted.",
++      "http_status": 403,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:52:00Z",
++      "query_id": "openreview",
++      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR NeurIPS 2025 2026",
++      "row_type": "query",
++      "source_family": "openreview",
++      "status": "browser_challenge",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:44:45Z",
++      "allowed_domains": [
++        "huggingface.co"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://huggingface.co/papers",
++      "concurrency_limit": 1,
++      "evidence": "The exact-ID search returned no page, and the direct paper route was unavailable; no update was inferred from absence.",
++      "http_status": null,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:53:00Z",
++      "query_id": "huggingface_papers",
++      "query_text": "site:huggingface.co/papers (\"2609.02438\" OR \"2609.02885\" OR \"2609.02702\" OR \"2609.02859\" OR \"2609.02417\" OR \"2609.02817\" OR \"2609.02783\")",
++      "row_type": "query",
++      "source_family": "huggingface_papers",
++      "status": "search_empty_direct_open_unavailable",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:45Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
++      "concurrency_limit": 1,
++      "evidence": "The API returned 35 visible EBT citation rows. None was newer than the planner marker or a new local dependency.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:54:00Z",
++      "query_id": "semantic_scholar_ebt",
++      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "row_type": "query",
++      "source_family": "semantic_scholar_ebt",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge",
++      "timeout_s": 20,
++      "visible_citation_count": 35
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:45:55Z",
++      "allowed_domains": [
++        "api.semanticscholar.org",
++        "semanticscholar.org"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
++      "concurrency_limit": 1,
++      "evidence": "The API returned the same eight visible ARM-EBM citation rows recorded by the planner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:55:00Z",
++      "query_id": "semantic_scholar_arm_ebm",
++      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
++      "row_type": "query",
++      "source_family": "semantic_scholar_arm_ebm",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge",
++      "timeout_s": 20,
++      "visible_citation_count": 8
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:20Z",
++      "allowed_domains": [
++        "github.com",
++        "api.github.com"
++      ],
++      "attempt_count": 2,
++      "canonical_url": "https://github.com/search",
++      "concurrency_limit": 1,
++      "evidence": "EarlyEval links public code, but its latest push was 2026-06-28 and required data and artifacts are absent. DWM still says code and data are coming soon; no other official repository was found.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:56:00Z",
++      "query_id": "github_official",
++      "query_text": "official repositories for arXiv 2609.02438 2609.02885 2609.02702 2609.02859 2609.02417 2609.02817 2609.02783",
++      "row_type": "query",
++      "source_family": "github_official",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "existing_code_state_no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:25Z",
++      "allowed_domains": [
++        "extropic.ai"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
++      "concurrency_limit": 1,
++      "evidence": "The page still describes Thermalizers as upcoming and Z1 systems as planned for 2027 early access.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:57:00Z",
++      "query_id": "extropic",
++      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation access update",
++      "row_type": "query",
++      "source_family": "extropic",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update",
++      "timeout_s": 20
++    },
++    {
++      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T16:23:00Z, is absent from the V608 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, non-public models, unverified repositories, and incompatible hardware as terminal non-findings.",
++      "actual_utc": "2026-09-03T16:46:30Z",
++      "allowed_domains": [
++        "logicalintelligence.com"
++      ],
++      "attempt_count": 1,
++      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++      "concurrency_limit": 1,
++      "evidence": "The Kona product page still provides no public weights, training recipe, source code, or local runner.",
++      "http_status": 200,
++      "max_attempts": 2,
++      "planned_utc": "2026-09-03T16:58:00Z",
++      "query_id": "logical_intelligence",
++      "query_text": "Logical Intelligence Kona EBM weights code training recipe local runner update",
++      "row_type": "query",
++      "source_family": "logical_intelligence",
++      "status": "success",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets",
++      "timeout_s": 20
++    },
++    {
++      "query_id": "arxiv_ebm_verification",
++      "row_type": "source_family",
++      "source_family": "arxiv_ebm_verification",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_neural_constraints",
++      "row_type": "source_family",
++      "source_family": "arxiv_neural_constraints",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_ising_ml",
++      "row_type": "source_family",
++      "source_family": "arxiv_ising_ml",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_hallucination_detection",
++      "row_type": "source_family",
++      "source_family": "arxiv_hallucination_detection",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_kan",
++      "row_type": "source_family",
++      "source_family": "arxiv_kan",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_energy_guided_decoding",
++      "row_type": "source_family",
++      "source_family": "arxiv_energy_guided_decoding",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_sampling_hardware",
++      "row_type": "source_family",
++      "source_family": "arxiv_sampling_hardware",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_continual_constraint_learning",
++      "row_type": "source_family",
++      "source_family": "arxiv_continual_constraint_learning",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "openreview",
++      "row_type": "source_family",
++      "source_family": "openreview",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update"
++    },
++    {
++      "query_id": "huggingface_papers",
++      "row_type": "source_family",
++      "source_family": "huggingface_papers",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update"
++    },
++    {
++      "query_id": "semantic_scholar_ebt",
++      "row_type": "source_family",
++      "source_family": "semantic_scholar_ebt",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge"
++    },
++    {
++      "query_id": "semantic_scholar_arm_ebm",
++      "row_type": "source_family",
++      "source_family": "semantic_scholar_arm_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge"
++    },
++    {
++      "query_id": "github_official",
++      "row_type": "source_family",
++      "source_family": "github_official",
++      "terminal": true,
++      "terminal_outcome": "existing_code_state_no_post_marker_update"
++    },
++    {
++      "query_id": "extropic",
++      "row_type": "source_family",
++      "source_family": "extropic",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "logical_intelligence",
++      "row_type": "source_family",
++      "source_family": "logical_intelligence",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets"
++    },
++    {
++      "arxiv_id": "2609.02438",
++      "canonical_url": "https://arxiv.org/abs/2609.02438",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02438",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The causal-control design is usable, but no first-party code exists and local GGUF layer intervention remains unproven.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T11:01:09Z",
++      "terminal": true,
++      "title": "When Decodability Is Not Enough: Logical Validity Representations, Behavioral Dissociation, and Causal Tests in Language Models",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02885",
++      "canonical_url": "https://arxiv.org/abs/2609.02885",
++      "code_available": false,
++      "code_state": "project_page_says_code_and_data_coming_soon",
++      "code_state_evidence_url": "https://dhruvpendharkar.github.io/dwm/",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Existing ARC branch receipts support a local analogue, but the reported pipeline and data are not publicly executable.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper_and_first_party_project_page",
++      "submitted_utc": "2026-09-02T17:59:40Z",
++      "terminal": true,
++      "title": "Discriminative World Models for Web Agents",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02702",
++      "canonical_url": "https://arxiv.org/abs/2609.02702",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02702",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The prompt-order control is locally implementable, but the paper provides no reference code or published run assets.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T15:06:46Z",
++      "terminal": true,
++      "title": "Trace as State: Reasoning Traces as Conditional States for Long-Context Transformers",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02859",
++      "canonical_url": "https://arxiv.org/abs/2609.02859",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02859",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "Exact external outcomes fit the local policy, but the study has no public implementation or local model recipe.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:42:44Z",
++      "terminal": true,
++      "title": "User Feedback Provides a Unique Signal that LLMs Can not Detect",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02417",
++      "canonical_url": "https://arxiv.org/abs/2609.02417",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02417",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The density metric and matched controls need no external model, but the paper's training result is not a local reproduced dependency.",
++      "local_compatibility": "compatible",
++      "row_type": "candidate",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T10:37:12Z",
++      "terminal": true,
++      "title": "Coverage, Not Targeting: A Structural Regime in Multi-Turn Agent Credit Assignment",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02817",
++      "canonical_url": "https://arxiv.org/abs/2609.02817",
++      "code_available": false,
++      "code_state": "no_official_repository_found_after_two_queries",
++      "code_state_evidence_url": "https://arxiv.org/abs/2609.02817",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The credit shape is usable only after an exact first-error label replaces the paper's LLM teacher.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper",
++      "submitted_utc": "2026-09-02T17:03:42Z",
++      "terminal": true,
++      "title": "Cliff: Learning Process Rewards from the First Mistake",
++      "version": "v1"
++    },
++    {
++      "arxiv_id": "2609.02783",
++      "canonical_url": "https://arxiv.org/abs/2609.02783",
++      "code_available": true,
++      "code_state": "public_code_only_missing_required_data_models_and_run_artifacts",
++      "code_state_evidence_url": "https://github.com/inphotoo/earlyeval",
++      "date": "2026-09-02",
++      "disposition": "accepted_existing",
++      "evidence_grade": "A",
++      "exclusion_reason": "The Python code is inspectable, but full reproduction needs unpublished trajectory tables, trained models, predictions, and caches.",
++      "local_compatibility": "partial",
++      "row_type": "candidate",
++      "source_type": "primary_paper_and_first_party_repository",
++      "submitted_utc": "2026-09-02T16:15:18Z",
++      "terminal": true,
++      "title": "EarlyEval: Cheaper Agent Evaluation via Early Outcome Prediction",
++      "version": "v1"
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2607.20792",
++      "evidence": "Memoir remained an existing visible EBT citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "row_type": "citation_edge",
++      "source_id": "arxiv:2607.20792",
++      "target_id": "arxiv:2507.02092",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2607.17047",
++      "evidence": "Solver-Hard remained an existing visible EBT citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "row_type": "citation_edge",
++      "source_id": "arxiv:2607.17047",
++      "target_id": "arxiv:2507.02092",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2605.18871",
++      "evidence": "Distributional EBM remained an existing visible ARM-EBM citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "row_type": "citation_edge",
++      "source_id": "arxiv:2605.18871",
++      "target_id": "arxiv:2512.15605",
++      "terminal": true
++    },
++    {
++      "canonical_url": "https://arxiv.org/abs/2602.02991",
++      "evidence": "False First Steps remained an existing visible ARM-EBM citation.",
++      "is_new_after_marker": false,
++      "relation": "cites",
++      "row_type": "citation_edge",
++      "source_id": "arxiv:2602.02991",
++      "target_id": "arxiv:2512.15605",
++      "terminal": true
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02438",
++      "implementation_boundary": "Require matched random-direction and score-only controls for any causal hidden-state claim.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02438",
++      "v608_experiment": "Exp6946/Exp6947"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02885",
++      "implementation_boundary": "Use authentic alternative-action successor states for the offline branch-energy comparison.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02885",
++      "v608_experiment": "Exp6948/Exp6949"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02702",
++      "implementation_boundary": "Compare trace-before-context, append-after, and no-memory conditions under one budget.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02702",
++      "v608_experiment": "Exp6950/Exp6951"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02859",
++      "implementation_boundary": "Let exact external outcomes authorize writes; a model judge cannot certify itself.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02859",
++      "v608_experiment": "Exp6950/Exp6951"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02417",
++      "implementation_boundary": "Measure verifier information density before comparing targeted and uniform credit.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02417",
++      "v608_experiment": "Exp6943/Exp6945"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02817",
++      "implementation_boundary": "Use first-error credit only where the fixture supplies an exact first-invalid-step label.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02817",
++      "v608_experiment": "Exp6943/Exp6945"
++    },
++    {
++      "advisory_only": true,
++      "arxiv_id": "2609.02783",
++      "implementation_boundary": "Keep early stopping disabled; a later shadow study must charge every false stop.",
++      "row_type": "implementation",
++      "source_url": "https://arxiv.org/abs/2609.02783",
++      "v608_experiment": "advisory_only"
++    },
++    {
++      "arxiv_id": "2609.02438",
++      "constraint": "hidden_state_intervention",
++      "effect": "Retain the causal-control design but add no executable dependency.",
++      "observed": "No official code was found, and the local GGUF runner has not proved layer intervention.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02885",
++      "constraint": "repository_state",
++      "effect": "Use existing ARC receipts for a local analogue; do not claim paper reproduction.",
++      "observed": "The first-party project page says code and data are coming soon.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02702",
++      "constraint": "reference_assets",
++      "effect": "Implement only the locked matched prompt-order control.",
++      "observed": "The prompt method is portable, but no official code or run assets were found.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02859",
++      "constraint": "evaluation_authority",
++      "effect": "Use exact outcomes for memory admission and keep judges non-authoritative.",
++      "observed": "The paper has no public code, and model judges can miss feedback-specific corrections.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02417",
++      "constraint": "metric_portability",
++      "effect": "Compute the metric locally without importing a model or result claim.",
++      "observed": "Verifier density and matched credit geometry are deterministic from exact fixture rows.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02817",
++      "constraint": "teacher_authority",
++      "effect": "Replace the teacher with exact first-invalid-step labels before using the shape.",
++      "observed": "The paper uses an LLM teacher to locate the first mistake.",
++      "row_type": "compatibility"
++    },
++    {
++      "arxiv_id": "2609.02783",
++      "constraint": "missing_reproduction_inputs",
++      "effect": "Keep the code as an advisory reference and do not enable stopping.",
++      "observed": "The official repository omits raw trajectories, processed tables, trained models, predictions, and caches.",
++      "row_type": "compatibility"
++    },
++    {
++      "candidate_id": "dwm_public_release_recheck",
++      "canonical_url": "https://dhruvpendharkar.github.io/dwm/",
++      "prerequisite": "A first-party executable repository and downloadable branching data.",
++      "proposal": "Recheck branch-world-model reproduction after official code and data become public.",
++      "row_type": "v609_candidate",
++      "target_milestone": "V609+"
++    },
++    {
++      "candidate_id": "earlyeval_artifact_recheck",
++      "canonical_url": "https://github.com/inphotoo/earlyeval",
++      "prerequisite": "Published trajectory tables and a false-stop gate with exact outcomes.",
++      "proposal": "Run a bounded shadow-only early-outcome check after required inputs are public.",
++      "row_type": "v609_candidate",
++      "target_milestone": "V609+"
++    }
++  ],
++  "run_date": "20260903",
++  "schema": "carnot.experiment_6941.v608_source_delta.v1",
++  "source_artifact_hashes": {
++    "CLAUDE.md": "474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++    "openspec/capabilities/research-reporting/spec.md": "3353450e12d5b9d7e74587649796a4380efe52b6ef0d6840f75ce21d882f50a3",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": "ba59274cac487622c5a86ccb6ab075e33437b1f92a2587a057e2a2ac9f5ce092",
++    "ops/conductor-log.md": "81746f9d8d8cd2b5b0a2115f48da7eed9f5b6a2de964d3b4261eb59ac74febf0",
++    "research-complete.yaml": "97a16a3c5f92df4aaaa64fb8bd7a0b6bad92fdc8f387b8cd0cb2e5f5f28d28cb",
++    "research-program.md": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++    "research-references.md": "925a9c13109e782e0d302301716b46b12f36be25ab4d53a85e20918b07de0856",
++    "research-roadmap.yaml": "adfe6b0513ed4a276dcbd0e347297acf637f94753e05ae7770df2bc786637eba",
++    "results/experiment_6927_v607_literature_delta.json": "c6130dc75e59604f062bfab508d5d553080cd4c716e44383cc68979d0fda86cb"
++  },
++  "source_family_rows": [
++    {
++      "query_id": "arxiv_ebm_verification",
++      "source_family": "arxiv_ebm_verification",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_neural_constraints",
++      "source_family": "arxiv_neural_constraints",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_ising_ml",
++      "source_family": "arxiv_ising_ml",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_hallucination_detection",
++      "source_family": "arxiv_hallucination_detection",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_kan",
++      "source_family": "arxiv_kan",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_energy_guided_decoding",
++      "source_family": "arxiv_energy_guided_decoding",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_sampling_hardware",
++      "source_family": "arxiv_sampling_hardware",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "arxiv_continual_constraint_learning",
++      "source_family": "arxiv_continual_constraint_learning",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "openreview",
++      "source_family": "openreview",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update"
++    },
++    {
++      "query_id": "huggingface_papers",
++      "source_family": "huggingface_papers",
++      "terminal": true,
++      "terminal_outcome": "unavailable_no_update"
++    },
++    {
++      "query_id": "semantic_scholar_ebt",
++      "source_family": "semantic_scholar_ebt",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge"
++    },
++    {
++      "query_id": "semantic_scholar_arm_ebm",
++      "source_family": "semantic_scholar_arm_ebm",
++      "terminal": true,
++      "terminal_outcome": "no_new_citation_edge"
++    },
++    {
++      "query_id": "github_official",
++      "source_family": "github_official",
++      "terminal": true,
++      "terminal_outcome": "existing_code_state_no_post_marker_update"
++    },
++    {
++      "query_id": "extropic",
++      "source_family": "extropic",
++      "terminal": true,
++      "terminal_outcome": "no_post_marker_update"
++    },
++    {
++      "query_id": "logical_intelligence",
++      "source_family": "logical_intelligence",
++      "terminal": true,
++      "terminal_outcome": "unavailable_reproducible_assets"
++    }
++  ],
++  "status": "complete",
++  "v608_source_delta_complete_score": 1,
++  "v609_candidate_rows": [
++    {
++      "candidate_id": "dwm_public_release_recheck",
++      "canonical_url": "https://dhruvpendharkar.github.io/dwm/",
++      "prerequisite": "A first-party executable repository and downloadable branching data.",
++      "proposal": "Recheck branch-world-model reproduction after official code and data become public.",
++      "target_milestone": "V609+"
++    },
++    {
++      "candidate_id": "earlyeval_artifact_recheck",
++      "canonical_url": "https://github.com/inphotoo/earlyeval",
++      "prerequisite": "Published trajectory tables and a false-stop gate with exact outcomes.",
++      "proposal": "Run a bounded shadow-only early-outcome check after required inputs are public.",
++      "target_milestone": "V609+"
++    }
++  ],
++  "verdict_class": "null",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6941_v608_source_delta.py b/scripts/experiments/experiment_6941_v608_source_delta.py
+new file mode 100644
+index 0000000000..dd9654d692
+--- /dev/null
++++ b/scripts/experiments/experiment_6941_v608_source_delta.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""Run the Exp6941 V608 post-marker source delta."""
++
++from __future__ import annotations
++
++from carnot.experiment_6941_v608_source_delta import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6941_v608_source_delta.py b/tests/python/test_experiment_6941_v608_source_delta.py
+new file mode 100644
+index 0000000000..fb8a7d0a12
+--- /dev/null
++++ b/tests/python/test_experiment_6941_v608_source_delta.py
+@@ -0,0 +1,362 @@
++"""Tests for the V608 post-marker source delta.
++
++Spec refs: REQ-REPORT-6941, SCENARIO-REPORT-6941-PREFLIGHT,
++SCENARIO-REPORT-6941-PLAN, SCENARIO-REPORT-6941-TERMINAL,
++SCENARIO-REPORT-6941-COMPATIBILITY, SCENARIO-REPORT-6941-LEDGER, and
++SCENARIO-REPORT-6941-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++import sys
++
++import pytest
++
++from carnot import experiment_6941_v608_source_delta as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++
++def _fake_repo(tmp_path: Path, *, missing: str | None = None) -> Path:
++    root = tmp_path / "repo"
++    required = {
++        "research-references.md": (
++            "# Reference ledger\n\n"
++            "<!-- V608-PLANNER-REFRESH-20260903-START -->\n"
++            "planner facts\n"
++            "<!-- V608-PLANNER-REFRESH-20260903-END -->\n"
++        ),
++        "research-roadmap.yaml": (
++            "milestone: 2026.09.608\ntasks:\n- id: exp6941-v608-source-delta\n"
++        ),
++        "openspec/change-proposals/research-roadmap-vNEXT.md": (
++            "**Milestone:** 2026.09.608\n### Exp6941\n"
++        ),
++        "CLAUDE.md": (
++            "## SOTA-Ingestion Cycle Discipline (MANDATORY)\nUse the low-concurrency channel.\n"
++        ),
++    }
++    if missing:
++        required.pop(missing)
++    for relative, content in required.items():
++        path = root / relative
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(content, encoding="utf-8")
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    return root
++
++
++def _artifact(tmp_path: Path) -> dict[str, object]:
++    return mod.build_artifact(
++        root=REPO,
++        run_date="20260903",
++        duration_s=1.0,
++        output_path=tmp_path / "result.json",
++    )
++
++
++def _with_checksum(artifact: dict[str, object]) -> dict[str, object]:
++    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
++    return artifact
++
++
++def test_req_report_6941_spec_declares_complete_advisory_contract() -> None:
++    """REQ-REPORT-6941: OpenSpec owns the complete source-delta contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-REPORT-6941") :]
++    for marker in (
++        "SCENARIO-REPORT-6941-PREFLIGHT",
++        "SCENARIO-REPORT-6941-PLAN",
++        "SCENARIO-REPORT-6941-TERMINAL",
++        "SCENARIO-REPORT-6941-COMPATIBILITY",
++        "SCENARIO-REPORT-6941-LEDGER",
++        "SCENARIO-REPORT-6941-ARTIFACT",
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_6941_plan_is_dated_bounded_and_arxiv_first() -> None:
++    """SCENARIO-REPORT-6941-PLAN: the plan fixes bounded query order."""
++
++    plan = mod.frozen_query_plan()
++    assert mod.validate_query_plan(plan, "20260903") == []
++    assert [row["source_family"] for row in plan[:8]] == list(mod.ARXIV_FAMILIES)
++    assert {row["source_family"] for row in plan} == set(mod.SOURCE_FAMILIES)
++    assert len(plan) == len({row["query_id"] for row in plan}) == 15
++    assert all(row["planned_utc"].startswith("2026-09-03T") for row in plan)
++    assert all(row["max_attempts"] == 2 for row in plan)
++    assert all(row["concurrency_limit"] == 1 for row in plan)
++    assert all(row["timeout_s"] == 20 for row in plan)
++    assert all(row["query_text"] and row["allowed_domains"] for row in plan)
++    assert all(row["acceptance_criteria"] for row in plan)
++
++    plan[0]["query_text"] = "changed by caller"
++    assert mod.frozen_query_plan()[0]["query_text"] != "changed by caller"
++
++    malformed = mod.frozen_query_plan()
++    malformed[0]["max_attempts"] = 3
++    malformed[0]["concurrency_limit"] = 2
++    malformed[0]["timeout_s"] = 21
++    malformed[0]["allowed_domains"] = []
++    malformed[0], malformed[8] = malformed[8], malformed[0]
++    malformed.pop()
++    errors = mod.validate_query_plan(malformed, "20260903")
++    assert "query arxiv_ebm_verification must allow exactly two attempts" in errors
++    assert "query arxiv_ebm_verification must use concurrency one" in errors
++    assert "query arxiv_ebm_verification must use the 20 second timeout" in errors
++    assert "query arxiv_ebm_verification lacks a frozen source field" in errors
++    assert "arXiv source families must be first" in errors
++    assert "query plan source family coverage is incomplete" in errors
++    assert mod.validate_query_plan(mod.frozen_query_plan(), "20260904") == [
++        "query plan date does not match run date"
++    ]
++
++
++def test_scenario_report_6941_preflight_fails_closed(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6941-PREFLIGHT: any missing input blocks research."""
++
++    root = _fake_repo(tmp_path)
++    output = root / mod.RESULT_RELATIVE_PATH
++    assert all(row["available"] for row in mod.check_preconditions(root, "20260903", output))
++
++    missing_design = _fake_repo(
++        tmp_path / "missing",
++        missing="openspec/change-proposals/research-roadmap-vNEXT.md",
++    )
++    blocked = mod.build_artifact(
++        root=missing_design,
++        run_date="20260903",
++        duration_s=0.1,
++        output_path=missing_design / mod.RESULT_RELATIVE_PATH,
++    )
++    assert blocked["status"] == "blocked"
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked["honest_verdict"] == "blocked_v608_source_delta"
++    assert blocked["v608_source_delta_complete_score"] == 0
++    assert blocked["gate_check_summary"]["failed_check"] == "design_document"
++    assert mod.validate_artifact(blocked) == []
++
++    missing_results = _fake_repo(tmp_path / "missing-results")
++    blocked_rows = mod.check_preconditions(
++        missing_results,
++        "20260903",
++        missing_results / "absent" / "result.json",
++    )
++    assert blocked_rows[-1]["resource"] == "writable_results_path"
++    assert blocked_rows[-1]["available"] is False
++
++
++def test_scenario_report_6941_all_sources_and_selected_papers_terminate() -> None:
++    """SCENARIO-REPORT-6941-TERMINAL: every required recheck has one row."""
++
++    queries = mod.query_rows()
++    assert {row["source_family"] for row in queries} == set(mod.SOURCE_FAMILIES)
++    assert all(row["terminal"] for row in queries)
++    assert all(1 <= row["attempt_count"] <= row["max_attempts"] for row in queries)
++
++    candidates = mod.candidate_rows()
++    assert {row["arxiv_id"] for row in candidates} == set(mod.SELECTED_ARXIV_IDS)
++    assert all(row["terminal"] is True for row in candidates)
++    for row in candidates:
++        assert row["canonical_url"] == f"https://arxiv.org/abs/{row['arxiv_id']}"
++        assert row["title"] and row["version"] and row["date"]
++        assert row["evidence_grade"] in {"A", "B"}
++        assert row["code_state"]
++        assert row["local_compatibility"] in {"compatible", "partial", "incompatible"}
++        assert row["disposition"] in {"accepted_existing", "accepted_new", "rejected"}
++        assert row["exclusion_reason"]
++
++    accepted = mod.accepted_finding_rows()
++    rejected = mod.rejected_finding_rows()
++    assert len(accepted) + len(rejected) == len(candidates)
++    assert {row["arxiv_id"] for row in accepted + rejected} == set(mod.SELECTED_ARXIV_IDS)
++
++
++def test_scenario_report_6941_compatibility_keeps_sources_advisory() -> None:
++    """SCENARIO-REPORT-6941-COMPATIBILITY: source checks cannot add gates."""
++
++    candidates = {row["arxiv_id"]: row for row in mod.candidate_rows()}
++    compatibility = {row["arxiv_id"]: row for row in mod.compatibility_rows()}
++    implementation = {row["arxiv_id"]: row for row in mod.implementation_rows()}
++    assert set(compatibility) == set(candidates)
++    assert set(implementation) == set(candidates)
++    assert all(row["observed"] and row["effect"] for row in compatibility.values())
++    assert all(row["advisory_only"] is True for row in implementation.values())
++    assert all(
++        row["source_url"] == candidates[key]["canonical_url"] for key, row in implementation.items()
++    )
++    assert all(row["target_milestone"] == "V609+" for row in mod.v609_candidate_rows())
++    for edge in mod.citation_edge_rows():
++        assert edge["canonical_url"].startswith("https://")
++        assert edge["source_id"] and edge["target_id"] and edge["terminal"] is True
++
++
++def test_scenario_report_6941_ledger_is_post_marker_and_idempotent(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6941-LEDGER: only verified post-marker facts append."""
++
++    root = _fake_repo(tmp_path)
++    ledger = root / mod.LEDGER_RELATIVE_PATH
++    artifact = _artifact(tmp_path)
++    artifact["ledger_append_rows"] = [
++        {
++            "finding_id": "older_fact",
++            "title": "Older fact",
++            "canonical_url": "https://arxiv.org/abs/2609.99990",
++            "observed_utc": "2026-09-03T16:22:59Z",
++            "evidence_grade": "A",
++            "source_type": "primary",
++            "verified": True,
++            "finding": "This fact predates the marker.",
++            "v609_use": "None.",
++        },
++        {
++            "finding_id": "unverified_fact",
++            "title": "Unverified fact",
++            "canonical_url": "https://example.com/claim",
++            "observed_utc": "2026-09-03T16:24:00Z",
++            "evidence_grade": "C",
++            "source_type": "announcement",
++            "verified": False,
++            "finding": "This claim lacks primary evidence.",
++            "v609_use": "None.",
++        },
++        {
++            "finding_id": "verified_new_fact",
++            "title": "Verified new primary fact",
++            "canonical_url": "https://arxiv.org/abs/2609.99999",
++            "observed_utc": "2026-09-03T16:24:00Z",
++            "evidence_grade": "A",
++            "source_type": "primary",
++            "verified": True,
++            "finding": "A primary source changes one local execution boundary.",
++            "v609_use": "Test the boundary after V608 without changing V608.",
++        },
++    ]
++    before = ledger.read_bytes()
++    assert mod.append_verified_findings(root, artifact) == ["verified_new_fact"]
++    appended = ledger.read_bytes()
++    assert appended.startswith(before.rstrip())
++    assert b"Verified new primary fact" in appended
++    assert b"Older fact" not in appended
++    assert b"Unverified fact" not in appended
++    assert mod.append_verified_findings(root, artifact) == []
++    assert ledger.read_bytes() == appended
++
++    artifact["ledger_append_rows"] = []
++    assert mod.append_verified_findings(root, artifact) == []
++    assert ledger.read_bytes() == appended
++
++
++def test_scenario_report_6941_artifact_recomputes_score_and_checksum(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6941-ARTIFACT: rows independently prove completion."""
++
++    artifact = _artifact(tmp_path)
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["status"] == "complete"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["v608_source_delta_complete_score"] == 1
++    assert artifact["verdict_class"] in mod.VERDICT_CLASSES
++    assert str(artifact["honest_verdict"]).startswith("complete_")
++    assert set(artifact["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    bad = deepcopy(artifact)
++    bad["query_rows"] = bad["query_rows"][:-1]
++    assert "source family coverage is incomplete" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad["candidate_rows"][0]["terminal"] = False
++    assert "selected paper coverage is incomplete" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad["reproducibility_checksum"] = "wrong"
++    assert "reproducibility checksum mismatch" in mod.validate_artifact(bad)
++
++    bad = deepcopy(artifact)
++    bad["honest_verdict"] = "unexpected"
++    assert "verdict prefix is inconsistent" in mod.validate_artifact(_with_checksum(bad))
++
++    bad = deepcopy(artifact)
++    bad["inference_substrate"] = "unspecified"
++    bad["verifier_is_oracle"] = True
++    bad["verdict_class"] = "unknown"
++    bad["field_principles"] = {}
++    errors = mod.validate_artifact(_with_checksum(bad))
++    assert "inference_substrate mismatch" in errors
++    assert "verifier_is_oracle must be false" in errors
++    assert "verdict_class is invalid" in errors
++    assert "field principles do not cover required fields" in errors
++
++    bad = deepcopy(artifact)
++    bad.pop("rows")
++    assert mod.validate_artifact(bad) == ["missing required field: rows"]
++
++    blocked = mod.build_artifact(
++        root=_fake_repo(tmp_path / "blocked", missing="CLAUDE.md"),
++        run_date="20260903",
++        duration_s=0.1,
++        output_path=tmp_path / "blocked" / "repo" / "results" / "blocked.json",
++    )
++    for field, value in (
++        ("v608_source_delta_complete_score", 1),
++        ("verdict_class", "positive"),
++        ("honest_verdict", "blocked_wrong"),
++    ):
++        bad = deepcopy(blocked)
++        bad[field] = value
++        assert "blocked artifact fields are inconsistent" in mod.validate_artifact(
++            _with_checksum(bad)
++        )
++
++
++def test_req_report_6941_write_validate_and_cli(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-6941: the wrapper writes one stable validated JSON file."""
++
++    monkeypatch.delenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", raising=False)
++    artifact = _artifact(tmp_path)
++    path = tmp_path / "result.json"
++    assert mod.write_artifact(artifact, path) == path
++    assert mod.validate_artifact(path) == []
++    assert json.loads(path.read_text(encoding="utf-8"))["experiment_id"] == mod.EXPERIMENT_ID
++    assert mod.validate_artifact(tmp_path / "missing.json") == ["artifact missing"]
++
++    cli_root = _fake_repo(tmp_path / "cli")
++    monkeypatch.setattr(mod, "find_repo_root", lambda: cli_root)
++    cli_path = cli_root / "results" / "cli.json"
++    assert mod.main(["--date", "20260903", "--output", str(cli_path)]) == 0
++    assert cli_path.exists()
++    assert mod.main(["--validate", str(cli_path)]) == 0
++
++    blocked_root = _fake_repo(tmp_path / "blocked-cli", missing="CLAUDE.md")
++    monkeypatch.setattr(mod, "find_repo_root", lambda: blocked_root)
++    blocked_path = blocked_root / "results" / "blocked.json"
++    assert mod.main(["--date", "20260903", "--output", str(blocked_path)]) == 0
++    assert json.loads(blocked_path.read_text(encoding="utf-8"))["status"] == "blocked"
++
++    invalid = tmp_path / "invalid.json"
++    invalid.write_text("{}\n", encoding="utf-8")
++    assert mod.main(["--validate", str(invalid)]) == 1
++    with pytest.raises(ValueError, match="missing required field"):
++        mod.write_artifact({}, tmp_path / "never-written.json")
++
++    monkeypatch.setattr(
++        sys,
++        "argv",
++        [mod.MODULE_RELATIVE_PATH.as_posix(), "--validate", str(path)],
++    )
++    with pytest.raises(SystemExit, match="0"):
++        runpy.run_path(REPO / mod.MODULE_RELATIVE_PATH, run_name="__main__")
+-- 
+2.55.0
+

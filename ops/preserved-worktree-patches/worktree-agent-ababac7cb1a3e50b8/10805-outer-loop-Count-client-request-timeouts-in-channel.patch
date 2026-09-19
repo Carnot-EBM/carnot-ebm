@@ -1,0 +1,209 @@
+From 93004edfdb2468d2181605ddd43b1ae6b856a17e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 17:23:20 -0400
+Subject: [PATCH 10805/11362] [outer-loop] Count client request timeouts in
+ channel_totals (REQ-ARC-WMTE-6890)
+
+The 2026-09-02 gate run lost two 2400s timeouts to the record: channel_totals
+stayed ALL ZERO and last_generated_tokens=-1, indistinguishable from a run
+that never called the generator, while the server log held the real numbers
+(24,942 / 26,563 tokens, truncated=0). New request_timeouts key in
+_EMPTY_CHANNEL_TOTALS, incremented at both request-failure seams (generate()
+and complete_text) when the exception is timeout-shaped (_is_timeout_error:
+bare TimeoutError, or URLError wrapping one -- both observed shapes).
+Non-timeout failures do not increment it (n_server_failures already counts
+those; SCENARIO-6890-B pins the distinction).
+
+Mutation-proven: neutering the generate()-seam increment turns both
+parametrized generate tests RED; restored byte-identical (cmp), 5/5 green.
+The teardown memory-watchdog error in test_arc_induction_diagnosis_6710 is
+pre-existing (reproduces against HEAD's unmodified module) and unrelated.
+
+Mutation-gate marker 2f1d7b1fb25a deleted deliberately: every listed path was
+tagged NOT-this-run -- my own uncommitted spec/module edits (authored, the
+content of THIS commit) plus two results/ files from the conductor's in-flight
+work, untouched here. The tests fake urlopen and write nothing tracked.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 26 ++++++
+ .../agentic/arc_executable_world_model.py     | 20 +++++
+ ...st_arc_request_timeout_counter_20260902.py | 83 +++++++++++++++++++
+ 3 files changed, 129 insertions(+)
+ create mode 100644 tests/python/test_arc_request_timeout_counter_20260902.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index a961b231ef..3b2a444552 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -28907,3 +28907,29 @@ swamps the per-layer credit (18030 vs 18183), so the credit constant is a bounde
+ Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py` Qwen38 constants
+ + `_predicted_generator_vram_mib` switch; `tests/python/test_arc_qwen38_vram_envelope_20260902.py`;
+ `tests/python/test_arc_generator_vram_guard.py` re-anchored to the measured Qwen footprints).
++
++### REQ-ARC-WMTE-6890: A timed-out generator request is visible in the record
++
++A client-side request timeout in `generate()` or `complete_text` SHALL increment
++`channel_totals["request_timeouts"]`, so an artifact can distinguish "timed out mid-generation"
++from "never called". Non-timeout request failures SHALL NOT increment it (they are already
++counted by `n_server_failures`).
++
++#### SCENARIO-ARC-WMTE-6890-A: a timeout reaches the artifact
++- GIVEN a generator request that raises a timeout (bare `TimeoutError`, or `URLError` wrapping one)
++- WHEN `generate()` or `complete_text` returns its failure
++- THEN `channel_totals["request_timeouts"]` has incremented by one
++
++#### SCENARIO-ARC-WMTE-6890-B: a non-timeout failure does not masquerade as one
++- GIVEN a request that fails with a non-timeout error (for example connection refused)
++- THEN `request_timeouts` is unchanged
++
++Rationale: 2026-09-02 gate run. Two 2400s timeouts left `channel_totals` ALL ZERO and
++`last_generated_tokens=-1` — indistinguishable from a run that never called the generator. The
++server log held the real numbers (24,942 and 26,563 tokens processed, `truncated=0`); the
++artifact held nothing. Reconstructing that from the server log is exactly the re-derivation this
++counter prevents.
++
++Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
++`_is_timeout_error` + both request-failure seams + the `_EMPTY_CHANNEL_TOTALS` key;
++`tests/python/test_arc_request_timeout_counter_20260902.py`).
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 87417fde09..167ee8e765 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -6037,9 +6037,23 @@ _EMPTY_CHANNEL_TOTALS: dict[str, int] = {
+     "chars_reasoning": 0,
+     "reasoning_only": 0,
+     "both_channels_empty": 0,
++    # Client-side request timeouts (REQ-ARC-WMTE-6890). Without this, a timed-out generation
++    # leaves every counter above at zero and last_generated_tokens at -1 -- indistinguishable
++    # from a run that never called the generator. The 2026-09-02 gate run lost two 2400s
++    # timeouts (24,942 and 26,563 server-side tokens) to exactly that blindness.
++    "request_timeouts": 0,
+ }
+ 
+ 
++def _is_timeout_error(e: BaseException) -> bool:
++    """True when a request failure is a CLIENT TIMEOUT (REQ-ARC-WMTE-6890).
++
++    socket.timeout IS TimeoutError since Python 3.10; urllib wraps it as
++    URLError(reason=timeout). Both shapes were observed in the 2026-09-02 gate run.
++    """
++    return isinstance(e, TimeoutError) or isinstance(getattr(e, "reason", None), TimeoutError)
++
++
+ @dataclass
+ class LocalGGUFProposer:
+     """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
+@@ -7897,6 +7911,9 @@ class LocalGGUFProposer:
+                     text = _response.get("content", "")
+             except Exception as e:
+                 msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
++                if _is_timeout_error(e):
++                    # REQ-ARC-WMTE-6890: make the timeout visible in the record.
++                    self.channel_totals["request_timeouts"] += 1
+                 self._note_server_failure(msg)
+                 return False, msg
+             self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
+@@ -8098,6 +8115,9 @@ class LocalGGUFProposer:
+                     _response = _json.load(r)
+         except Exception as e:
+             msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
++            if _is_timeout_error(e):
++                # REQ-ARC-WMTE-6890: make the timeout visible in the record.
++                self.channel_totals["request_timeouts"] += 1
+             self._note_server_failure(msg)
+             return False, msg
+         self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
+diff --git a/tests/python/test_arc_request_timeout_counter_20260902.py b/tests/python/test_arc_request_timeout_counter_20260902.py
+new file mode 100644
+index 0000000000..09047606f5
+--- /dev/null
++++ b/tests/python/test_arc_request_timeout_counter_20260902.py
+@@ -0,0 +1,83 @@
++"""REQ-ARC-WMTE-6890: a timed-out generator request is visible in the record.
++
++Origin: the 2026-09-02 chars_final gate run. Two 2400s client timeouts left
++`channel_totals` ALL ZERO and `last_generated_tokens=-1` -- indistinguishable, from the
++artifact, from a run that never called the generator. The server log held the real numbers
++(24,942 and 26,563 tokens processed, `truncated=0`); the artifact held nothing.
++
++Spec refs: REQ-ARC-WMTE-6890, SCENARIO-ARC-WMTE-6890-A, SCENARIO-ARC-WMTE-6890-B.
++"""
++
++from __future__ import annotations
++
++import urllib.error
++import urllib.request
++
++import pytest
++
++from carnot.agentic import arc_executable_world_model as awm
++from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++
++def _proposer(monkeypatch: pytest.MonkeyPatch) -> LocalGGUFProposer:
++    # Raw-completion path (think OFF): both transports share the same failure seam, and the
++    # raw path needs no chat-shape normalizer in the fake.
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_TOOL_LOOP", raising=False)
++    p = LocalGGUFProposer(
++        repo_substr="X",
++        model_path="/x.gguf",
++        port=59995,
++        no_think_prefix="/no_think\n",
++        max_tokens=64,
++        tries=1,
++    )
++    monkeypatch.setattr(p, "_ensure_server", lambda: True)
++    return p
++
++
++def _raise_on_request(monkeypatch: pytest.MonkeyPatch, exc: BaseException) -> None:
++    def fake(req, timeout=None):  # noqa: ANN001
++        raise exc
++
++    monkeypatch.setattr(urllib.request, "urlopen", fake)
++
++
++@pytest.mark.parametrize(
++    "exc",
++    [TimeoutError("timed out"), urllib.error.URLError(TimeoutError("timed out"))],
++    ids=["bare_timeout", "urlerror_wrapped_timeout"],
++)
++def test_generate_counts_a_timeout(monkeypatch, exc) -> None:
++    """SCENARIO-ARC-WMTE-6890-A, both observed shapes."""
++    p = _proposer(monkeypatch)
++    _raise_on_request(monkeypatch, exc)
++    ok, msg = p.generate("prompt", ("engine",))
++    assert ok is False
++    assert p.channel_totals["request_timeouts"] == 1, p.channel_totals
++
++
++def test_complete_text_counts_a_timeout(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-6890-A on the second seam."""
++    p = _proposer(monkeypatch)
++    _raise_on_request(monkeypatch, urllib.error.URLError(TimeoutError("timed out")))
++    ok, _ = p.complete_text("prompt")
++    assert ok is False
++    assert p.channel_totals["request_timeouts"] == 1, p.channel_totals
++
++
++def test_a_non_timeout_failure_does_not_masquerade(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-6890-B: connection-refused is a server failure, not a timeout."""
++    p = _proposer(monkeypatch)
++    _raise_on_request(monkeypatch, urllib.error.URLError(ConnectionRefusedError(111, "refused")))
++    ok, _ = p.generate("prompt", ("engine",))
++    assert ok is False
++    assert p.channel_totals["request_timeouts"] == 0, p.channel_totals
++
++
++def test_fresh_proposers_carry_the_key_at_zero() -> None:
++    """The counter must exist from construction, so an artifact reading the dict can rely on
++    the key being present rather than absent-means-zero (the field-names-lie trap)."""
++    assert awm._EMPTY_CHANNEL_TOTALS["request_timeouts"] == 0
+-- 
+2.55.0
+

@@ -1,0 +1,1648 @@
+From d7a3ba2eba58f126ca788544fb1b6bfb1572119f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 04:40:17 -0400
+Subject: [PATCH 09635/11362] [outer-loop] Preserve milestone-565 audit output
+ and sentinel state
+
+Conductor-generated output from the 2026.08.565 close, uncommitted until now.
+Committed rather than left loose per the commit-first discipline: an
+uncommitted report is one pre-commit stash window away from looking reverted,
+and these are the evidence that tonight's two audit fixes are holding.
+
+What the content shows, verified by reading it rather than by mtime (all six
+files carry the same 08:36Z mtime, which is a pre-commit stash/restore from an
+earlier commit touching every unstaged file -- not six audits finishing at
+once):
+
+- experiment_claim_audit_report.md now covers exp6522..6530, the 565 window.
+  That is the SECOND consecutive close it has run on. It missed three closes
+  before the milestone-close wiring went live with the conductor restart.
+- qa_layer_authenticity_audit_report.md reports "Scanned 4 of 20" and the
+  rotation state advanced 5 -> 9 of 176 units. Before the timeout fix
+  (REQ-CONDUCTOR-RECEIPT-2, commit a76b5f03f8) this audit was dying at the
+  caller's 900s kill with no report at all, and its rotation sat at 5.
+- verifier, convention, landing-page and ARC self-solve reports all
+  regenerated on the same close.
+
+Deliberately NOT staged: the four guard widenings in flight from the QA-layer
+SILENT_NON_FIRING findings (operator_curated_docs_lint.py,
+operator_curated_doc_guard.py, substrate_alias_evidence_lint.py,
+test_suite_mutation_check.py and their tests). Those belong to their author's
+commit with their own mutation evidence.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/.arc_bench_rotation.json              |   2 +-
+ ops/.audit_findings_ledger_state.json     |   2 +-
+ ops/.run_sentinel_state.json              |   2 +-
+ ops/anomaly-escalations.md                |   5 +
+ ops/arc_bench_latest.json                 |  64 +++----
+ ops/arc_self_solve_audit_report.md        |   8 +-
+ ops/artifact_convention_audit_report.md   |  82 ++++-----
+ ops/docs_audit_report.md                  | 118 ++++++-------
+ ops/experiment_claim_audit_report.md      | 112 +++++++-----
+ ops/qa_layer_authenticity_audit_report.md | 203 +++++++++-------------
+ ops/verifier_authenticity_audit_report.md | 181 +++++++++----------
+ 11 files changed, 374 insertions(+), 405 deletions(-)
+
+diff --git a/ops/.arc_bench_rotation.json b/ops/.arc_bench_rotation.json
+index 3976e4ae08..03032af463 100644
+--- a/ops/.arc_bench_rotation.json
++++ b/ops/.arc_bench_rotation.json
+@@ -1,4 +1,4 @@
+ {
+   "roster_signature": "cfc9b7268c8eeff9",
+-  "offset": 2
++  "offset": 10
+ }
+\ No newline at end of file
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index a51dfde2bb..b28b98a722 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T05:26:01Z"
++ "last_scan_utc": "2026-08-23T08:36:38Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index af00afddbf..e34bc78727 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -3,5 +3,5 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T07:37:58Z"
++ "last_scan_utc": "2026-08-23T08:23:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 479c400421..9fd1979c09 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1459,3 +1459,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_6512_branch_dataset_independent_audit.json
++
++## experiment_6530_external_constraint_corpus_audit.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6530_external_constraint_corpus_audit.json
+diff --git a/ops/arc_bench_latest.json b/ops/arc_bench_latest.json
+index defc4ab5ce..0f6713eeec 100644
+--- a/ops/arc_bench_latest.json
++++ b/ops/arc_bench_latest.json
+@@ -9,75 +9,75 @@
+   "held_out_caveat": "These are the 25 PUBLIC games with their hand-written GameAdapter bypassed. Disabling the adapter removes the hand-written route, not the knowledge that produced it, so this is a proxy for hidden-game performance and not a hidden-game result.",
+   "per_game_rows": [
+     {
+-      "game": "su15",
++      "game": "cd82",
+       "adapter_used": false,
+       "levels_cleared": 1,
+-      "actions_spent": 10045,
+-      "solution_len": 7,
+-      "wall_s": 5.81,
++      "actions_spent": 3199,
++      "solution_len": 5,
++      "wall_s": 1.97,
+       "error": null
+     },
+     {
+-      "game": "tn36",
++      "game": "cn04",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 10179,
++      "actions_spent": 12477,
+       "solution_len": 0,
+-      "wall_s": 6.32,
++      "wall_s": 4.28,
+       "error": null
+     },
+     {
+-      "game": "tr87",
++      "game": "dc22",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 18384,
++      "actions_spent": 11737,
+       "solution_len": 0,
+-      "wall_s": 11.52,
++      "wall_s": 7.17,
+       "error": null
+     },
+     {
+-      "game": "tu93",
++      "game": "ft09",
+       "adapter_used": false,
+       "levels_cleared": 1,
+-      "actions_spent": 28096,
+-      "solution_len": 18,
+-      "wall_s": 9.54,
++      "actions_spent": 8768,
++      "solution_len": 4,
++      "wall_s": 4.15,
+       "error": null
+     },
+     {
+-      "game": "vc33",
++      "game": "g50t",
+       "adapter_used": false,
+-      "levels_cleared": 1,
+-      "actions_spent": 232,
+-      "solution_len": 3,
+-      "wall_s": 0.11,
++      "levels_cleared": 0,
++      "actions_spent": 74700,
++      "solution_len": 0,
++      "wall_s": 56.63,
+       "error": null
+     },
+     {
+-      "game": "wa30",
++      "game": "ka59",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 20310,
++      "actions_spent": 13855,
+       "solution_len": 0,
+-      "wall_s": 5.82,
++      "wall_s": 5.53,
+       "error": null
+     },
+     {
+-      "game": "ar25",
++      "game": "lf52",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 15539,
++      "actions_spent": 16693,
+       "solution_len": 0,
+-      "wall_s": 7.66,
++      "wall_s": 17.91,
+       "error": null
+     },
+     {
+-      "game": "bp35",
++      "game": "lp85",
+       "adapter_used": false,
+-      "levels_cleared": 0,
+-      "actions_spent": 8432,
+-      "solution_len": 0,
+-      "wall_s": 22.25,
++      "levels_cleared": 1,
++      "actions_spent": 1159,
++      "solution_len": 5,
++      "wall_s": 0.48,
+       "error": null
+     }
+   ],
+@@ -85,7 +85,7 @@
+   "games_errored": 0,
+   "games_cleared_at_least_one_level": 3,
+   "total_levels_cleared": 3,
+-  "total_actions_spent": 111217,
++  "total_actions_spent": 142588,
+   "clear_rate": 0.375,
+-  "actions_per_level_cleared": 37072.3
++  "actions_per_level_cleared": 47529.3
+ }
+\ No newline at end of file
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index b1cff9bb1f..018831ab35 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -16,11 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (80 modul
+ 
+ ## Hostile LLM review
+ 
+-**TL;DR: NO ADVANCE DEMONSTRATED — zero recent solve artifacts exist; reachability passes, but proves neither autonomous discovery nor hidden-game solving.**
++TL;DR: No recent solve artifacts exist, so there is **no evidence of either self-discovery progress or prohibited outer-loop solving**. Reachability passes, but proves only wiring—not live capability.
+ 
+-Per-artifact review: none (0 artifacts in the last 7 days).
++Per-artifact: None in the last 7 days.
+ 
+-**Recommended action:** Produce runtime artifacts tied to a live entrypoint that record the agent’s observations, attempts, inferred mechanics, and successful trajectory. Provenance must exclude source inspection, offline ground-truth search, and hand-built per-game logic.
++Recommended action: Produce live-run artifacts that record the entrypoint, agent attempts, observations, runtime reverse-engineering, and resulting hidden-game solve. Reject artifacts lacking that provenance.
+ 
+-**Pattern watch:** No artifact-level outer-loop drift is visible because there are no artifacts. Do not misrepresent “80 modules reachable” as evidence of live solving—the lint establishes wiring only, not autonomous capability.
++Pattern watch: No current drift can be evaluated. Do not mistake “80 reachable modules” for proof that the live agent independently discovers solves.
+ 
+diff --git a/ops/artifact_convention_audit_report.md b/ops/artifact_convention_audit_report.md
+index 8b94ab13f1..5589444bfa 100644
+--- a/ops/artifact_convention_audit_report.md
++++ b/ops/artifact_convention_audit_report.md
+@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
+ 
+ | verdict | count |
+ |---|---|
+-| CHECKABLE | 4 |
+-| AGGREGATE_ONLY | 4 |
++| CHECKABLE | 5 |
++| AGGREGATE_ONLY | 3 |
+ 
+-## experiment_6519_structural_headroom_certificate.json
++## experiment_6522_chronological_conflict_self_learning.json
+ 
+ **AGGREGATE_ONLY**
+ 
+@@ -20,31 +20,31 @@ evidence the reviewer could not have read -- do NOT act on them.
+ AGGREGATE_ONLY
+ 
+ ## WHAT THE CLAIM IS
+-The artifact claims `static_analytical` is the best arm, saving 667 held charged-work units versus `native_dynamic`, and that all certification gates were met.
++Valid reuse delivered positive charged held-future benefit beyond scratch and frozen controls while preserving exact-answer safety, earning a candidate score of 1.0.
+ 
+ ## WHAT IS MISSING
+-Actual `"per_unit_rows"` containing each unit’s arm-level charged-work metric and paired native-versus-arm effect are missing; only aggregates such as `"held_total_charged_work_units_by_arm"` and replay booleans in `"exact_receipt_replay_rows"` are present.
++The actual per-arm, per-event benefit outcomes—described as `"per_game_results"`, `"immediate_metric_rows"`, and `"held_future_support_rows"`—are missing; only aggregate conclusions appear in `"aggregate_row_recomputation"`, while `"exact_answer_equality_rows"` covers safety and `"chronological_stream_commitment.stream_rows"` records planned event benefit scores rather than observed arm comparisons.
+ 
+ ## THE CHECK A READER CANNOT DO
+-Was the 667-unit advantage broadly distributed across held units, or driven by a small number of extreme wins while most units tied or lost?
++Was the claimed advantage over scratch and frozen controls broad across held-future events and chains, or driven by one outlier while most units showed no improvement?
+ 
+-## experiment_6520_safety_net_branch_router_ab.json
++## experiment_6523_adaptive_validation_csl_audit.json
+ 
+-**AGGREGATE_ONLY**
++**CHECKABLE**
+ 
+ ## VERDICT
+-AGGREGATE_ONLY
++CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The learned `linear_router_seed_6520002` arm met the positive/ready gates with 695 held charged-benefit units, outperforming the upstream best structural arm by 28 units.
++The independent full audit supports continuous self-learning, while adaptive validation reduces charged checks from 180 to 108 without changing the full-set winner or decision.
+ 
+ ## WHAT IS MISSING
+-Per-unit held-evaluation rows containing each `unit_id` or problem seed, arm-level charged work, native/control charged work, and resulting benefit; only aggregate fields such as `"held_total_charged_work_units"`, `"held_charged_benefit_units"`, `"held_win_count"`, and `"held_loss_count"` are present, while `"candidate_preservation_rows"` contain no outcome metric.
++nothing; the artifact includes unit-level evidence in `"final_full_audit_rows"`, `"inclusion_probability_rows"`, `"exact_sentinel_rows"`, and `"adaptive_attack_matrix.rows"`, plus comparative summaries in `"cost_and_decision_agreement_rows"` and diagnostics in `"gate_check_summary"`.
+ 
+ ## THE CHECK A READER CANNOT DO
+-Was the claimed 28-unit advantage broad across held units, or produced by one outlier while most units tied, lost, or had no headroom?
++none
+ 
+-## experiment_6521_transactional_refinement_conflict_memory.json
++## experiment_6524_arc_supervisor_redirect_generalization.json
+ 
+ **CHECKABLE**
+ 
+@@ -52,7 +52,7 @@ Was the claimed 28-unit advantage broad across held units, or produced by one ou
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The transactional refinement conflict memory passed all readiness gates, including exact replay, refinement gating, transactions, rollback, quarantine, fallback, and CPU mapping, with zero unsafe admissions or uses.
++Supervisor refinement was blocked because there were zero outcome-bearing live trajectory-supervisor receipts.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -60,55 +60,55 @@ nothing
+ ## THE CHECK A READER CANNOT DO
+ none
+ 
+-## experiment_6522_chronological_conflict_self_learning.json
++## experiment_6525_gatemate_changed_state_continuity.json
+ 
+-**AGGREGATE_ONLY**
++**CHECKABLE**
+ 
+ ## VERDICT
+-AGGREGATE_ONLY
++CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-Continuous self-learning achieved positive charged held-future benefit beyond the scratch and frozen-memory controls while preserving exact-answer safety.
++The task was blocked because no valid operator-authored, dated GateMate physical-state receipt newer than Exp6325 was found, so zero hardware commands ran.
+ 
+ ## WHAT IS MISSING
+-Populated `"per_game_results"` or `"per_unit_rows"` containing the observed benefit metric for every `"arm"` and `"event_id"`; the artifact shows aggregate booleans such as `"benefit_beyond_scratch_and_frozen_controls"` and `"charged_held_future_benefit_positive"`, while `"exact_answer_equality_rows"` only establish answer equality and `"chronological_stream_commitment.stream_rows"` record planned stream benefit scores rather than observed arm comparisons.
++nothing
+ 
+ ## THE CHECK A READER CANNOT DO
+-Was the claimed held-future advantage broad across events and chains, or produced by one outlier while the scratch and frozen controls were otherwise identical or had no headroom?
++none
+ 
+-## experiment_6523_adaptive_validation_csl_audit.json
++## experiment_6526_v564_independent_capstone.json
+ 
+-**CHECKABLE**
++**AGGREGATE_ONLY**
+ 
+ ## VERDICT
+-CHECKABLE
++AGGREGATE_ONLY
+ 
+ ## WHAT THE CLAIM IS
+-The independent full audit supports continuous self-learning, and adaptive validation saves charged checks while preserving the full-set decision.
++Structural headroom, learned routing, continuous self-learning, and adaptive validation produced positive comparative benefits, while ARC and GateMate remained blocked.
+ 
+ ## WHAT IS MISSING
+-nothing
++The actual per-game/per-seed/per-condition arm metrics underlying the positive comparisons are missing; `"comparative_claim_rows"` and `"per_unit_rows"` contain only claim summaries and `"row_support"` counts pointing to external containers such as `"per_game_results"` and `"independent_csl_row_recomputation"`, not those rows themselves.
+ 
+ ## THE CHECK A READER CANNOT DO
+-none
++Were the reported comparative benefits broad across units, or driven by a few outliers or units with unequal/no headroom?
+ 
+-## experiment_6524_arc_supervisor_redirect_generalization.json
++## experiment_6527_v565_evidence_eligibility_corrigendum.json
+ 
+-**CHECKABLE**
++**AGGREGATE_ONLY**
+ 
+ ## VERDICT
+-CHECKABLE
++AGGREGATE_ONLY
+ 
+ ## WHAT THE CLAIM IS
+-The supervisor-refinement task was blocked because none of the three accepted live receipts was outcome-bearing.
++The V565 evidence root is eligible because the adopted structural-headroom, learned-router, conflict-memory, continuous-self-learning, and adaptive-validation claims are ready.
+ 
+ ## WHAT IS MISSING
+-nothing; `"honest_verdict"`, `"status"`, `"no_firings_receipt"`, `"gate_check_summary"`, and the three `"live_path_receipts"` identify the blocker and record the observed outcome-bearing receipt count as 0.
++The underlying per-game/per-seed arm metrics from the referenced `"per_game_results"` and `"per_unit_rows"` containers are missing; the present `"per_unit_rows"` contains only task summaries, eligibility rows, attacks, receipts, and hashes such as `"observed_value": 1.0` and `"row_count"`, not the experimental measurements supporting the comparative claims.
+ 
+ ## THE CHECK A READER CANNOT DO
+-none
++Did the learned router beat structural headroom broadly across games and seeds, or was the reported advantage caused by outliers, degenerate controls, or units without headroom?
+ 
+-## experiment_6525_gatemate_changed_state_continuity.json
++## experiment_6528_v565_source_model_method_contract.json
+ 
+ **CHECKABLE**
+ 
+@@ -116,26 +116,26 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The task was blocked because no operator-authored, dated GateMate physical-state receipt newer than Exp6325 was found, so zero hardware commands ran.
++The V565 source-model method contract is blocked because required OpenReview primary sources could not be verified.
+ 
+ ## WHAT IS MISSING
+-nothing
++nothing; `"gate_check_summary.failed_checks"` identifies `"required_primary_sources_verified"` as false and records the affected source IDs, expected condition, and observed retrieval values.
+ 
+ ## THE CHECK A READER CANNOT DO
+ none
+ 
+-## experiment_6526_v564_independent_capstone.json
++## experiment_6530_external_constraint_corpus_audit.json
+ 
+-**AGGREGATE_ONLY**
++**CHECKABLE**
+ 
+ ## VERDICT
+-AGGREGATE_ONLY
++CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-Structural headroom, learned routing, continuous self-learning, and adaptive validation produced positive comparative benefits, while ARC generalization and GateMate continuity remained blocked.
++The external-constraint corpus audit was blocked because seven named prerequisites failed.
+ 
+ ## WHAT IS MISSING
+-The actual per-game, per-seed, per-cell, or per-condition arm metrics are missing; `"row_support"` only names external containers and counts, while the included `"per_unit_rows"` contains summary `"comparative_claim"`, `"task_inventory"`, `"gate_contract"`, and audit rows rather than unit-level measurements.
++nothing
+ 
+ ## THE CHECK A READER CANNOT DO
+-Were the reported benefits broad across units, or driven by a few outliers, degenerate controls, or units with no headroom?
++none
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 08afb91af2..d650156149 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,81 +4,81 @@
+ # docs_audit_report — 2026-08-23
+ 
+ ## TL;DR (stranger's 30-second take)
+-I would close the tab after the hero. Carnot’s purpose is understandable, but the contradictory license, insider-heavy evidence wall, and suspiciously perfect unaudited numbers make the page feel like an internal research dashboard rather than a trustworthy product landing page.
++I would probably close the tab. The opening explains Carnot clearly, but it immediately collapses into benchmark soup, internal research bookkeeping, unsupported precision, and a license contradiction.
+ 
+ ## TOP 3 PROBLEMS
+-1. The project cannot state its own license consistently — “MIT-0” in the hero and metadata vs “Apache 2.0” in the footer.
+-2. “What we measured” dumps 12 incomparable results without sample sizes, confidence intervals, models, dates, or direct artifact links.
+-3. The page buries a simple product story beneath 33 card-like blocks, 14 navigation choices, research-operation trivia, and unexplained acronyms.
++1. The evidence looks unauditable and occasionally unbelievable — “What we measured” and “Recent progress”
++2. Internal lab-notebook language overwhelms the product story — hero statistics, capabilities, results, and preprint
++3. Basic facts contradict the page’s promises — MIT-0 vs Apache 2.0 and the non-installing “Quick Start”
+ 
+ ## DETAILED FINDINGS
+ ### Bloat
+-- Entire page — 33 card-like blocks plus four headline statistics — cap the landing page at roughly 12–16 and move the rest into the report or blog.
+-- Navigation — 12 navigation links plus two external buttons — cap at 5–7 primary choices.
+-- Evidence — 12 cards spanning code, safety, hardware, training, math, decoding, routing, and tool use — cap at 3–5 representative outcomes.
+-- Writing — seven blog cards — cap at three; this is a landing page, not the blog index.
+-- Hero statistics — four vanity counters plus a “Recent progress” result card — retain one credible product metric and one trust link.
+-- Capabilities — seven cards, including “Research operations,” which is not a user capability — cap at four or five customer-facing capabilities.
+-- “Why Energy-Based?” — approximately 72 words, below the 120-word hard limit but too long and speculative for its role; cap near 50–60 words.
+-- Individual bento/result/footer bodies — none clearly exceeds the stated 120/60/100-word limits — the problem is cumulative volume and fragmentation.
++- Entire page — 33 content cards plus four statistic blocks — reduce to roughly 12–18 primary landing-page items and move the rest to evidence/blog pages
++- Navigation — 14 destinations — cap at roughly 6–8; this is a sitemap crammed into a navbar
++- Hero — four statistics plus a roughly 50-word “Recent progress” card beneath three CTAs — cap at two or three proof points and one primary CTA
++- Evidence — 12 unrelated result cards — cap at four to six representative results; the current wall makes every number easier to ignore
++- Writing — seven article cards — cap at three featured posts
++- Individual copy limits — longest bento body is approximately 72 words, result cards remain below 60 words, and the footer is approximately eight words — no individual hard word cap is breached; the bloat is cumulative and structural
++- Capabilities — seven cards is reasonable numerically, but “Research operations” and “TTC & PREM” expand the section beyond its stated job of explaining “what you can check”
+ 
+ ### Internal jargon
+-- Hero statistics and “Recent progress” — `AUROC`, `FoVer`, `5-seed dual-condition`, `architecture-only`, `Repinned from v2` — a conference visitor cannot interpret the benchmark, conditions, or version history.
+-- “Why Energy-Based?” — `gradient`, `FPGA Ising machines`, `thermodynamic samplers` — jumps from a simple verifier explanation into unexplained hardware research.
+-- “Multi-step reasoning” — `ensemble`, `symbolic`, `energy-based`, `consistency-based`, `AND-composed` — implementation vocabulary presented as a benefit.
+-- “APIs & portable memory” — `MCP`, `VerdictRecord`, `SessionMemory`, `candidate-level reranking` — raw API identifiers without explanation.
+-- “Test-Time Compute (TTC) & PREM” — `TTC`, `Process-Reward Energy Model`, `PREM variance`, `intrinsic motivation` — nearly pure research jargon.
+-- Evidence cards — `KV260`, `Ising`, `SVAMP`, `FoVer`, `CRANE`, `VeriCoT`, `CoT`, `GSM8K`, `TP rate`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, `pp` — an acronym wall with no glossary or plain-language interpretation.
+-- Preprint — `paper-v6`, `checked-in experiment artifacts`, `non-operator environment`, `operator-initiated upload` — repository-process language, not public-facing copy.
+-- Blog cards — `NTK`, `arXiv:2601.18753`, `30B`, `dogfooding` — assumes research and project context the visitor does not have.
++- Hero statistics and Recent progress — “AUROC,” “FoVer,” “5-seed dual-condition,” “architecture-only,” and “Repinned from v2” — this reads like a model card changelog, not evidence a conference visitor can interpret
++- How it works — “gradient,” “FPGA Ising machines,” and “thermodynamic samplers” — unexplained hardware and optimization claims distract from the basic verification workflow
++- Typed constraints — “CCTU constrained tool-use micro-benchmark” — neither the acronym nor the benchmark’s relevance is explained
++- Multi-step reasoning — “verified-fact memory” and “AND-composed” — internal architecture vocabulary with no user-facing consequence
++- APIs & portable memory — “MCP,” `VerdictRecord`, and `SessionMemory` — implementation types are presented before a stranger understands the integration contract
++- TTC & PREM — “Test-Time Compute,” “Process-Reward Energy Model variance,” and “intrinsic motivation for continuous self-learning” — acronym expansion does not make this comprehensible
++- Results — “KV260,” “SVAMP,” “EstimationVerifier,” “FoVer,” “CRANE,” “VeriCoT,” “CoT,” “GSM8K,” “TP,” “PRM-BiasBench,” “k=5,” “HalluGuard v3,” “pp,” and “CCTU” — virtually every card requires prior project or benchmark knowledge
++- Preprint — “paper-v6,” “clean continuous-integration checkout,” “non-operator environment,” and “operator-initiated upload” — internal release machinery replaces a publication status a stranger could understand
++- No raw `Exp ####` identifiers, flag syntax, or dotted milestone numbers appear, but the page substitutes equally opaque benchmark and pipeline shorthand
+ 
+ ### Per-milestone narrative
+-- Hero statistics — “382 Completed milestones” is an internal throughput counter with no value to a prospective user.
+-- “Recent progress” — “Repinned from v2 0.9857 after pre-submission adversarial audit” reads like a release-note entry pasted into the hero.
+-- Preprint — “paper-v6,” “landed within the published confidence interval,” and “pending operator-initiated upload” are internal status-report phrases.
+-- “Research operations” — the planner/inner-agent/adversarial-pass/JSON-artifact story describes project administration, not what Carnot does for users.
+-- Blog summaries — repeated “detector we shipped” and “three-layer defense we shipped” language extends the internal retrospective into the landing page.
+-- No raw `Exp ####` or `.###` milestone identifiers appear, but the version and closeout narrative has the same insider-only effect.
++- Hero statistics — “382 Completed milestones” — an internal productivity counter with no relationship to product quality
++- Recent progress — “Repinned from v2 0.9857 after pre-submission adversarial audit” — sounds copied from a closeout note
++- Preprint — “paper-v6” and “prepared but pending operator-initiated upload” — internal draft and operator status reporting
++- Research operations — planner proposals, an “inner agent,” adversarial verification, and artifact storage — development-process narration presented as a customer capability
++- Writing — “three-layer defense we shipped” and “seven-rule detector we shipped” — retrospective release-note language dominates the featured articles
+ 
+ ### Inconsistencies
+-- “MIT-0 · Open Source” and the MIT-0 metadata description vs “Apache 2.0 License” in the footer.
+-- “Install and verify in five lines” vs the Rust tab, which contains no installation command and does not verify or repair LLM output; it only constructs and samples an Ising model.
+-- Hero promise of checking “internal consistency” vs feature claims covering factual citations, code behavior, units, prompt injection, and tool-use compliance; the actual product boundary is unclear.
+-- HumanEval claims of `+3.0` points, `+18pp`, and `+15pp` appear in different cards without prominent explanation that they concern different subsets or methods.
+-- “EstimationVerifier SVAMP AUC: 0.90” is compared with a “0.125 FoVer baseline”; the labels appear to refer to different benchmarks, making the comparison unintelligible or invalid.
+-- “Externally reproducible” vs evidence described only as a run in a “non-operator environment”; that is not clearly independent external reproduction.
++- “MIT-0 · Open Source” in the hero and MIT-0 in metadata vs “Apache 2.0 License” in the footer
++- “Install and verify in five lines” vs neither tab containing an installation command
++- The Rust “Quick Start” vs a low-level Ising sampler example that never verifies or repairs an LLM response and uses undefined `activations`
++- “What you can check” vs cards about autonomous research operations and compute-budget control, neither of which is an output type a user can check
++- `+3.0 points` shown with a 14.6% meter vs `+4.9 points` shown with a 66.7% meter; “live on silicon” and “2.0× speedup” both receive 100% meters — the bars have no consistent scale
++- Headline FoVer AUROC 0.9131 vs architecture-only 0.8947 vs prior 0.9857 vs a result card reporting 0.90 AUC against a “0.125 FoVer baseline” — these may be different experiments, but the page does not reconcile them
++- The seventh capability, “TTC & PREM,” sits outside the capability grid because the grid closes early; stray closing `div` elements also make the intended page structure unreliable
+ 
+ ### Missing essentials
+-- The hero does provide a useful one-sentence description, but it does not clarify whether Carnot verifies truth, logical consistency, executable behavior, or all three.
+-- Trust evidence is inadequate: result cards lack sample sizes, models, baselines, seeds, uncertainty, dates, failure cases, and direct links to their claimed artifacts.
+-- Python installation is visible, but dependencies, hardware requirements, model setup, and a genuinely minimal runnable example are unclear.
+-- Rust installation is missing entirely, and its example is not equivalent to the Python product workflow.
+-- The license is not missing; it is worse—two incompatible answers are given.
+-- “Ian Blenke” appears in a copyright line, but the page never explicitly identifies the maintainer, team, governance model, or contact channel.
++- What Carnot does is present and unusually clear in the hero, but the page never defines the boundary between internal consistency checking, formal validation, and external factual verification
++- Trust is not established: cards lack direct artifact links, sample sizes, model versions, dataset splits, confidence intervals, denominators, and evaluation dates
++- “Independently re-computed” is not credible attribution without naming who reproduced it or linking their procedure and result
++- Python installation appears only inline in the hero; the section called “Install” omits `pip install carnot-ebm`, prerequisites, and a runnable shell command
++- No Rust installation instructions accompany the Rust tab
++- The license is effectively missing because the two visible declarations contradict each other
++- “© Ian Blenke” is copyright attribution, not an explicit maintainer statement; there is no maintainer role, team information, contact route, or governance link
+ 
+ ### Fabrication signals
+-- `GSM8K extraction TP rate: 0.5 → 1.0` — perfect endpoint with no sample size or held-out evaluation.
+-- `k=5 ensemble catches 60/60 attacks` — perfect score on a small, possibly designed-for-the-system attack set.
+-- `2.0× speedup, identical losses` — implausibly exact scaling and equality without tolerances or run details.
+-- `0.0pp accuracy delta with 4.4% cost savings` — exact zero degradation without uncertainty.
+-- `99.3% of wrong code flagged` — suspicious precision without the number of wrong programs or false-positive rate.
+-- `0.9131 AUROC` — four-decimal precision from a five-seed result, yet no confidence interval is displayed beside it.
+-- `0.125 FoVer baseline` — dramatically worse than random for an AUC-like metric and unexplained.
+-- “Zero false positives” across 639 dogfooding experiments — perfect operational claim relegated to a blog teaser without methodology.
+-- Three 100%-filled result bars visually amplify perfect-result claims that already lack credibility anchors.
++- “GSM8K extraction TP rate: 0.5 → 1.0” — perfect score with no sample count, denominator, or uncertainty
++- “k=5 ensemble catches 60/60 attacks” — perfect result on a small, apparently project-controlled attack set with no protocol link
++- “2.0× speedup, identical losses” — suspiciously exact performance and equality claims without measurements or tolerances
++- “99.3% of wrong code flagged” on a 164-problem benchmark — false precision without the number of wrong programs or a confidence interval
++- “Zero false positives” across 639 self-verified experiments — self-evaluation plus perfection is a major credibility warning
++- “0.0pp accuracy delta” — a perfectly null result without sample size or uncertainty
++- 0.9131 AUROC — four-decimal precision from a five-seed result while the confidence interval is not displayed
++- 100%-filled meters for “live on silicon,” perfect extraction, 60/60 attacks, and two-GPU training — decorative bars visually imply comparable perfection where no shared metric exists
+ 
+ ## WHAT'S WORKING
+-- The hero plainly says Carnot checks an LLM answer and can suggest a repair, with a concrete arithmetic example.
+-- The page is unusually candid about the AUROC revision and hostile audit; that transparency could build trust if paired with directly inspectable evidence.
++- The hero gives a concrete one-sentence explanation, a memorable arithmetic example, and an immediately visible pip package.
++- Public discussion of retractions and adversarial audits shows unusual transparency, even though featuring so much of it on the landing page currently undermines confidence.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Resolve the MIT-0 vs Apache 2.0 contradiction everywhere.
+-2. Reduce the navigation to the few paths a new visitor actually needs.
+-3. Replace vanity counters and “Recent progress” with one independently understandable outcome and one evidence link.
+-4. Cut the evidence wall to 3–5 results; give each result its model, dataset, sample size, baseline, uncertainty, date, provenance, and direct artifact link.
+-5. Move hardware, autonomous research operations, TTC/PREM, and most blog retrospectives to secondary pages.
+-6. Rewrite or define every acronym and remove internal phrases such as `paper-v6`, `repinned`, and `non-operator environment`.
+-7. State the product boundary explicitly: consistency checking, factual verification, executable testing, or whichever subset is genuinely supported.
+-8. Make the Rust quickstart perform the same user-facing task as Python, or stop presenting the tabs as equivalent.
+-9. Add denominators, confidence intervals, held-out conditions, and failure cases beside every perfect or near-perfect number.
+-10. Explicitly identify the maintainer, contribution/governance path, contact channel, and authoritative license.
+\ No newline at end of file
++1. Resolve the MIT-0/Apache 2.0 contradiction everywhere before making any other copy change.
++2. Reduce the hero to the plain-language value proposition, one installation CTA, and at most three externally meaningful proof points.
++3. Cut the evidence section to four or five results and link each directly to its artifact, methodology, denominator, model, baseline, confidence interval, and limitations.
++4. Remove milestone counts, experiment counts, draft versions, repinning history, and operator workflow from the landing page.
++5. Translate or remove benchmark and architecture jargon; explain every remaining acronym at the point of use.
++6. Rebuild “Capabilities” around user problems. Move research operations, hardware, and TTC/PREM to technical or research pages.
++7. Make Quick Start truthful: include the actual pip command and a runnable Python example; either provide equivalent Rust verification/install instructions or remove the Rust tab.
++8. Replace arbitrary meters with labeled tables or plain numbers using consistent units.
++9. Add an explicit maintainer/team statement and contact or governance link.
++10. Fix the premature grid closure and stray closing elements, then verify the page layout at desktop and mobile widths.
+\ No newline at end of file
+diff --git a/ops/experiment_claim_audit_report.md b/ops/experiment_claim_audit_report.md
+index 8ea0c5fb93..9a7727aed2 100644
+--- a/ops/experiment_claim_audit_report.md
++++ b/ops/experiment_claim_audit_report.md
+@@ -12,12 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
+ | verdict | count |
+ |---|---|
+ | CLAIM_SUPPORTED | 3 |
+-| CLAIM_OVERSTATED | 1 |
+-| NO_CLAIM | 2 |
++| NO_CLAIM | 4 |
+ | CANNOT_DETERMINE | 1 |
+-| SKIPPED_ALREADY_FLAGGED | 1 |
+ 
+-## experiment_6519_structural_headroom_certificate.json
++## experiment_6522_chronological_conflict_self_learning.json
+ 
+ **CLAIM_SUPPORTED**
+ 
+@@ -25,47 +23,67 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
+ CLAIM_SUPPORTED
+ 
+ ## THE HEADLINE CLAIM
+-Independent row recomputation certifies real structural-control headroom: static analytical control reduces charged work while preserving correctness, live influence, breadth, and replay validity.
++Chronological exact-conflict memory produced positive charged held-future benefit over scratch and frozen-empty controls while preserving exact answers, prefix support, and safe operation.
+ 
+ ## WHAT WOULD REFUTE IT
+-The static analytical arm tying or exceeding native dynamic—or the serious analytical-enumeration baseline—in held charged work, losing correctness, showing no live decision influence, or depending on censored/invalid rows would refute the claim.
++Both valid-reuse arms tying or exceeding the scratch and frozen-empty held-future charged cost—making their charged benefit nonpositive—would refute the claimed benefit.
+ 
+ ## WAS THAT CHECKED
+-Yes. The held charged-cost comparison includes native dynamic and analytical enumeration; the certificate also gates correctness, exact replay, live influence, breadth, censoring, and row recomputation. Static analytical wins rather than ties, including against the serious analytical-enumeration baseline.
++Yes. The held-future support rows directly compare both valid-reuse arms against scratch and frozen-empty controls under matched dose; both reuse arms had substantially lower charged cost and positive benefit. Sequential access, exact equality, retention, and unsafe operations were also checked.
+ 
+ ## EVIDENCE
+-`best_arm`: `static_analytical`; `best_arm_held_charged_benefit_units`: `667`; `held_total_charged_work_units_by_arm`; `static_analytical`: `3313`; `analytical_enumeration`: `3366`; `native_dynamic`: `3980`; `correctness_discrepancy_count`: `0`; `live_influence_passed`: `true`; `exact_replay_passed`: `true`; `uncensored_held_rows`: `42`; `worst_case_missing_rows`: `0`; `censored_count`: `0`; `timeout_count`: `0`; `best_arm_support_family_count`: `3`; `best_arm_support_seed_count`: `3`; `certification_conditions_met`: `true`.
++`benefit_beyond_scratch_and_frozen_controls`: `true`; `matched_dose`: `true`; `valid_unbounded_reuse`; `charged_cost`: `40`; `charged_benefit_vs_scratch`: `84`; `charged_benefit_vs_frozen_empty`: `84`; `valid_bounded_reuse`; `charged_cost`: `44`; `charged_benefit_vs_scratch`: `80`; `charged_benefit_vs_frozen_empty`: `80`; `scratch`; `charged_cost`: `124`; `frozen_empty_memory`; `charged_cost`: `124`; `held_future_unread_until_boundary`: `true`; `decisions_use_only_prior_store_hash`: `true`; `verifier_is_oracle`: `false`; `exact_answer_equality`: `true`; `unsafe_use_count`: `0`; `unsafe_write_count`: `0`; `prefix_retention_within_margin`: `true`
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+-## experiment_6520_safety_net_branch_router_ab.json
++## experiment_6523_adaptive_validation_csl_audit.json
++
++**CANNOT_DETERMINE**
++
++> Audit-integrity guard: quoted evidence ['; under ', ', both have ', '. Nevertheless, ', ' is reported as ', ' has ', ', versus ', ', with '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
++
++## VERDICT
++CLAIM_REFUTED_BY_OWN_DATA
++
++## THE HEADLINE CLAIM
++The independent full audit supports continuous self-learning, while adaptive validation saves checks without changing the full-set decision.
++
++## WHAT WOULD REFUTE IT
++A serious comparator matching the claimed learning method’s held-future benefit and charged cost would refute added value; the restart arm does exactly that, tying valid unbounded reuse.
++
++## WAS THAT CHECKED
++Yes. The final full held-set audit evaluated every candidate, and the held-future support audit reports both the method and restart in the winner tie set. Adaptive validation itself was given a real chance to fail through decision disagreement or failure to save checks, but neither occurred.
++
++## EVIDENCE
++The `winner_tie_set` contains `valid_unbounded_reuse` and `restart`. Under `benefit_vs_scratch`, both have `84`; under `charged_cost_totals`, both have `40.0`. Nevertheless, `full_audit_winner` is reported as `valid_unbounded_reuse`. For validation cost, `variance_weighted_adaptive` has `charged_checks` of `108`, versus `132` for `fixed_subset` and `180` for `full_set`, with `decision_agreement_with_full` equal to `true`.
+ 
+-**SKIPPED_ALREADY_FLAGGED**
++## RECOMMENDATION
++NARROW_CLAIM
+ 
+-## experiment_6521_transactional_refinement_conflict_memory.json
++## experiment_6524_arc_supervisor_redirect_generalization.json
+ 
+-**CLAIM_OVERSTATED**
++**NO_CLAIM**
+ 
+ ## VERDICT
+-CLAIM_OVERSTATED
++NO_CLAIM
+ 
+ ## THE HEADLINE CLAIM
+-The transactional exact-conflict memory is ready because refinement gating and exact replay produced zero unsafe admissions or uses while all lifecycle and recovery checks passed.
++no claim
+ 
+ ## WHAT WOULD REFUTE IT
+-An independent correctness oracle finding that a verifier-accepted record was unsafe—especially one admitted or used after passing exact replay—would refute the readiness claim.
++An accepted live receipt marked outcome-bearing, with redirect or arm-outcome data, would refute the artifact’s stated reason for being blocked; a supervisor-value or generalization claim would additionally require outcome-bearing comparisons against a serious baseline.
+ 
+ ## WAS THAT CHECKED
+-No. Invalid-reuse and failure-path rows were exercised, but correctness was defined by the same exact-replay verifier that gates acceptance; no independent oracle could disagree with it.
++Yes. The accepted live receipts were individually classified, the outcome-bearing count was recomputed, and the redirect-outcome table was inspected; all three receipts were disabled and non-outcome-bearing. Thus the blocked status had a real chance to be contradicted, but no comparative supervisor claim was tested.
+ 
+ ## EVIDENCE
+-`verifier_is_oracle` `true` `verdict_class` `circular_positive` `exact_replay_required_before_use` `true` `exact_replay_required_before_write` `true` `unsafe_admission_count` `0` `unsafe_use_count` `0` `complete_transactional_refinement_conflict_memory_ready`
++`honest_verdict`: `blocked: missing outcome-bearing live trajectory-supervisor receipts`; `verdict_class`: `blocked`; `outcome_bearing_receipt_count`: `0`; `live_receipt_count`: `3`; `disabled_receipt_count`: `3`; `outcome_bearing`: `false`; `arm_outcomes_present`: `false`; `redirect_outcome_rows`: `[]`; `solve_credit_claimed`: `false`; `arc_generalization_slot_complete_score`: `0.0`
+ 
+ ## RECOMMENDATION
+-ADD_MISSING_CONTROL
++KEEP
+ 
+-## experiment_6522_chronological_conflict_self_learning.json
++## experiment_6525_gatemate_changed_state_continuity.json
+ 
+ **CLAIM_SUPPORTED**
+ 
+@@ -73,45 +91,43 @@ ADD_MISSING_CONTROL
+ CLAIM_SUPPORTED
+ 
+ ## THE HEADLINE CLAIM
+-Chronological exact-conflict self-learning reduces charged held-future cost versus scratch and frozen-empty controls while preserving exact answers, prefix support, and safe operation.
++No qualifying post-Exp6325 physical-state receipt existed, so no hardware command ran and Exp3866 remained excluded.
+ 
+ ## WHAT WOULD REFUTE IT
+-A valid reuse arm tying or exceeding the controls’ held-future charged cost—making its charged benefit zero or negative—or any exact-answer mismatch, unsafe reuse/write, or prefix-retention failure would falsify the claim.
++A candidate row marked valid for a post-Exp6325 operator-authored material physical-state change, any executed hardware-command row, or evidence that Exp3866 was not excluded.
+ 
+ ## WAS THAT CHECKED
+-Yes. Matched-dose scratch and frozen-empty arms provide direct cost comparators; held-future rows measure both unbounded and bounded reuse against them. Separate rows check exact answers, unsafe activity, prefix retention, chronology, and terminal completeness.
++Yes. The receipt candidates were individually evaluated, command rows and counts were recorded, and the Exp3866 exclusion state was checked.
+ 
+ ## EVIDENCE
+-`valid_unbounded_reuse` has `charged_cost` `40` and `charged_benefit_vs_scratch` `84`; `valid_bounded_reuse` has `charged_cost` `44` and `charged_benefit_vs_scratch` `80`. Both `scratch` and `frozen_empty_memory` have `charged_cost` `124`. The artifact records `matched_dose` as `true`, `held_future_unread_until_boundary` as `true`, `thresholds_frozen_before_execution` as `true`, `uses_future_outcomes_for_stream` as `false`, `exact_answer_equality` as `true`, `unsafe_use_count` as `0`, `unsafe_write_count` as `0`, `prefix_retention_within_margin` as `true`, and `all_planned_rows_terminal` as `true`.
++`"receipt_candidate_count": 24`, `"valid_receipt_count": 0`, `"new_post_exp6325_physical_receipt_found": false`, `"command_rows": []`, `"hardware_command_count": 0`, `"exp3866_clean_terminal_evidence_excluded": true`, `"verdict_class": "blocked"`, `"verifier_is_oracle": false`
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+-## experiment_6523_adaptive_validation_csl_audit.json
+-
+-**CANNOT_DETERMINE**
++## experiment_6526_v564_independent_capstone.json
+ 
+-> Audit-integrity guard: quoted evidence ['; under ', ', both have ', '. Nevertheless, ', ', versus ', ', with '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
++**CLAIM_SUPPORTED**
+ 
+ ## VERDICT
+-CLAIM_OVERSTATED
++CLAIM_SUPPORTED
+ 
+ ## THE HEADLINE CLAIM
+-The independent full audit supports CSL, while adaptive validation reduces checks without changing the full-set decision.
++Held, oracle-distinct rows support structural headroom, learned-router, continuous-self-learning, and adaptive-validation benefits, while ARC generalization and GateMate continuity remain blocked.
+ 
+ ## WHAT WOULD REFUTE IT
+-A serious comparator tying or beating the claimed CSL winner on held-future benefit and charged cost would refute the implied added-value claim; adaptive validation would be refuted by a different decision or no check savings.
++A held comparison showing the learned router tied or lost to the best structural arm after charged costs—for example, zero held-benefit units—would refute the router component of the headline claim.
+ 
+ ## WAS THAT CHECKED
+-Yes. The final full audit compared all candidate arms and found that `restart` exactly tied `valid_unbounded_reuse`. The adaptive arm was separately compared with full-set validation and did save checks while agreeing, so only that narrower result survives.
++Yes. The learned-router comparison used the best structural arm and reports 28 held-benefit units, candidate preservation, exact-solver release authority, and held-contamination checks. The artifact also demonstrates that adverse outcomes could survive aggregation by retaining the ARC and GateMate lineages as blocked.
+ 
+ ## EVIDENCE
+-The `winner_tie_set` contains `valid_unbounded_reuse` and `restart`. Under `benefit_vs_scratch`, both have `84`; under `charged_cost_totals`, both have `40.0`. Nevertheless, `full_audit_winner` is `valid_unbounded_reuse` and `verdict_class` is `positive`. For validation cost, `variance_weighted_adaptive` has `charged_checks` of `108`, versus `180` for `full_set`, with `decision_agreement_with_full` equal to `true`.
++`verdict_class`: `partial`; `authority`: `oracle_distinct_row_reduction`; `held_benefit_beyond_best_structural_units`: `28`; `charged_cost_accounting_passed`: `true`; `candidate_preservation_passed`: `true`; `held_contamination_free`: `true`; `adaptive_charged_checks`: `108`; `full_set_charged_checks`: `180`; `adaptive_decision_agreement`: `true`; `oracle_distinct_held_future_benefit`: `true`; `blocked_lineage_count`: `2`; `outcome_bearing_receipt_count`: `0`; `hardware_command_count`: `0`; `verifier_is_oracle`: `false`
+ 
+ ## RECOMMENDATION
+-NARROW_CLAIM
++KEEP
+ 
+-## experiment_6524_arc_supervisor_redirect_generalization.json
++## experiment_6527_v565_evidence_eligibility_corrigendum.json
+ 
+ **NO_CLAIM**
+ 
+@@ -122,18 +138,18 @@ NO_CLAIM
+ no claim
+ 
+ ## WHAT WOULD REFUTE IT
+-Not applicable: the artifact makes no positive comparative or value claim; outcome-bearing live receipts would be required to test whether any supervisor arm improves outcomes.
++Not applicable; this is a governance/eligibility receipt, not a comparative value claim. A scientific claim would require outcome rows showing the adopted method ties or loses to a serious baseline.
+ 
+ ## WAS THAT CHECKED
+-No. All three accepted receipts were non-outcome-bearing, and there were no redirect outcome rows; the artifact correctly reports itself as blocked.
++No; the artifact replays eligibility, hashes, rows, and command receipts but does not test a new comparative claim.
+ 
+ ## EVIDENCE
+-`honest_verdict` `blocked: missing outcome-bearing live trajectory-supervisor receipts` `outcome_bearing_receipt_count` `0` `redirect_outcome_rows` `[]` `solve_credit_claimed` `false` `verdict_class` `blocked`
++`complete_v565_evidence_root_eligible`, `verdict_class`, `null`, `verifier_is_oracle`, `true`, `immutable_v564_row_replay_and_live_validation_no_llm`, `verifier_is_oracle is only for hash, row, and command receipts`, `verdict_class_null_governance_root`
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+-## experiment_6525_gatemate_changed_state_continuity.json
++## experiment_6528_v565_source_model_method_contract.json
+ 
+ **NO_CLAIM**
+ 
+@@ -144,35 +160,35 @@ NO_CLAIM
+ no claim
+ 
+ ## WHAT WOULD REFUTE IT
+-No comparative claim is made; operationally, a valid post-Exp6325 physical-state receipt or any executed hardware command would contradict the reported blocked status.
++There is no comparative or value claim to falsify. Treating the blocked status as an operational assertion, verification of every required primary source—including the OpenReview sources with matching dates—would refute it.
+ 
+ ## WAS THAT CHECKED
+-Yes. The receipt audit examined 24 candidates, found zero valid receipts, and the command rows recorded zero commands.
++Yes. `gate_check_summary` checks required primary-source verification and records the two OpenReview failures; no experimental method comparison was run.
+ 
+ ## EVIDENCE
+-`hardware_speedup_claim`: `false`; `no_performance_or_availability_claim`: `true`; `receipt_candidate_count`: `24`; `valid_receipt_count`: `0`; `command_row_count`: `0`; `status`: `blocked_missing_new_physical_receipt`; `verdict_class`: `blocked`
++`blocked_v565_source_model_method_contract`, `partial`, `required_primary_sources_verified`, `false`, `all_gates_passed`, `false`, `v565_method_contract_ready_score`, `0.0`, `model_loaded_or_run`, `false`, `low_concurrency_primary_source_and_cache_preflight_no_experimental_llm`, `No upstream aggregate or run database result transfers.`
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+-## experiment_6526_v564_independent_capstone.json
++## experiment_6530_external_constraint_corpus_audit.json
+ 
+-**CLAIM_SUPPORTED**
++**NO_CLAIM**
+ 
+ ## VERDICT
+-CLAIM_SUPPORTED
++NO_CLAIM
+ 
+ ## THE HEADLINE CLAIM
+-Four row-supported lineages are positive, while ARC generalization and GateMate continuity remain blocked.
++no claim
+ 
+ ## WHAT WOULD REFUTE IT
+-A held-row recomputation in which the best certified structural arm tied or beat the learned router would refute the router component—and therefore the composite headline.
++There is no comparative or value claim to falsify; treating the blocked status as an operational claim, it would be refuted if the required corpus inputs existed and all audit gates passed.
+ 
+ ## WAS THAT CHECKED
+-Yes. The learned-router comparison used the best structural arm and reports 28 held units of additional benefit, with held contamination excluded. The decision process also preserved two failed lineages instead of forcing every lineage positive.
++Yes. The existence receipts, gate summary, empty audit rows, and recomputed readiness explicitly check those conditions and report failure rather than success.
+ 
+ ## EVIDENCE
+-`held_benefit_beyond_best_structural_units`: `28`; `held_contamination_free`: `true`; `authority`: `oracle_distinct_row_reduction`; `positive_lineage_count`: `4`; `blocked_lineage_count`: `2`; `blocked_lineages`: `arc_generalization`, `hardware_continuity`; `outcome_bearing_receipt_count`: `0`; `new_post_exp6325_physical_receipt_found`: `false`; `verifier_is_oracle`: `false`
++`status` `blocked_external_constraint_corpus_audit` `verdict_class` `blocked` `all_gates_passed` `false` `fixture_row_count` `0` `blocked_preconditions` `true` `external_constraint_corpus_audited_ready_score` `0.0` `verifier_is_oracle` `true`
+ 
+ ## RECOMMENDATION
+ KEEP
+diff --git a/ops/qa_layer_authenticity_audit_report.md b/ops/qa_layer_authenticity_audit_report.md
+index 3b2fedb468..60d404e4d7 100644
+--- a/ops/qa_layer_authenticity_audit_report.md
++++ b/ops/qa_layer_authenticity_audit_report.md
+@@ -3,9 +3,9 @@
+ 
+ # qa_layer_authenticity_audit_report — 2026-08-23
+ 
+-Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (13): substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
++Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (13): substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+ 
+-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
++**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+ 
+ ## Summary
+ 
+@@ -14,127 +14,78 @@ Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (13)
+ | `CLEAN` | 0 |
+ | `MINOR_RISK` | 0 |
+ | `REAL_BUG` | 0 |
+-| `SILENT_NON_FIRING` | 4 |
++| `SILENT_NON_FIRING` | 3 |
+ | `CANNOT_DETERMINE` | 0 |
+ | `NEEDS_REDESIGN` | 0 |
+ | `UNKNOWN` | 1 |
+ 
+ ### MISSED INPUTS — a real input each guard does NOT catch
+ The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
+-- `substrate_alias_evidence_lint.py` — The new allowlist value `local_python_no_llm` when written as the single-quoted literal `'local_python_no_llm'`.
+-- `test_suite_mutation_check.py` — output/kanele_synth/post_synth.dcp` — an unresolved unstaged test rewrite temporarily hidden while pre-commit runs the gate.
+-- `operator_curated_docs_lint.py` — The protected source path `README.md` in the staged rename `R100 README.md docs/archive/project-intro.md`.
+-- `operator_curated_doc_guard.py` — README.md as the CWD-relative destination of an atomic replacement with destination directory descriptor -1.
++- `arc_artifact_lint.py` — results/experiment_5836_frontier_discipline_ab.json` with verdict `partial_frontier_discipline_ab_smoke_scale_25games_budget2000_not_full_spec_graft_new_wins_4_control_new_wins_4`.
++- `arc_count_integrity_lint.py` — A missing `ops/arc_solve_registry.yaml`, or a submission package that repeats the same `sc25` replay row and counts its reproduced level twice.
++- `arc_llm_on_liveness_lint.py` — An LLM-on row with `generator_healthy_after: false`, `llm_on_row_valid: true`, and a nonempty `liveness_witness_error`; the early witness-unavailable return reduces the conclusive dead-generator evidence to a warning.
+ 
+ ### FLAGGED — operator action recommended
+-- `substrate_alias_evidence_lint.py` — **SILENT_NON_FIRING**
+-- `test_suite_mutation_check.py` — **SILENT_NON_FIRING**
+-- `operator_curated_docs_lint.py` — **SILENT_NON_FIRING**
+-- `operator_curated_doc_guard.py` — **SILENT_NON_FIRING**
++- `arc_artifact_lint.py` — **SILENT_NON_FIRING**
++- `arc_count_integrity_lint.py` — **SILENT_NON_FIRING**
++- `arc_llm_on_liveness_lint.py` — **SILENT_NON_FIRING**
+ 
+ ---
+ 
+-## substrate_alias_evidence_lint.py
+-
+-**Verdict:** `SILENT_NON_FIRING`
+-
+-## VERDICT
+-SILENT_NON_FIRING
+-
+-## CONCEPT
+-Prevent any staged widening of the fabrication gate’s no-LLM substrate allowlist unless the commit includes meaningful test or operator-acknowledgement evidence.
+-
+-## FINDINGS
+-1. The intended concept is allowlist membership widening, regardless of how the new Python value is spelled or expressed.
+-
+-2. Alias detection is narrower than that concept. `ALIAS_RE = re.compile(r'"([a-z0-9_]*_no_llm)"')` recognizes only double-quoted, lowercase literals ending with the prescribed suffix; single-quoted literals, other valid names, and references to constants are invisible to `for alias in ALIAS_RE.findall(line):`. The allowing branch is `if not aliases:` followed by `return 0`.
+-
+-3. `ALIAS_RE` is a sample, not a definition of tuple membership. Omitted members include single-quoted strings, uppercase or hyphenated values, names without the suffix, imported values, and previously declared constants. The diff prefixes `+` and `+++` define unified-diff syntax correctly; `GATE_FILE`, `ACK_FILE`, and `TEST_DIR` define intended locations, although the fixed gate location creates the relocation hole below. The `*.py` pattern excludes any non-Python test representation. Evidence matching is also semantically weak: `if alias in ack_text:` and `if alias in body:` accept substrings anywhere, including comments, longer alias names, undated acknowledgements, and text that explains why an alias should not be accepted.
+-
+-4. `_run_git(["diff", "--cached", "-U0", "--", GATE_FILE])` inspects only added staged text in one path. It cannot see runtime tuple construction, an allowlist moved to another module, widening performed solely through an imported constant, or an execution with no staged changes; nothing in this file covers those cases. Evidence is read from the live working tree rather than the index, so the evidence being inspected need not be included in the commit.
+-
+-5. Ordinary automation can defeat the guard by leaving an untracked test file containing the alias, leaving an acknowledgement unstaged, mentioning the alias only in a comment, invoking the script with filenames when nothing is staged, or committing with no-verify. A previously existing literal also creates a bypass because `already = set(ALIAS_RE.findall(head_text))` scans the entire file rather than the allowlist; later adding that value to the tuple is suppressed by `if alias not in already and alias not in added:`.
+-
+-6. Test coverage cannot be determined because no tests were supplied. No individual branch can honestly be claimed suite-deletable from this source alone.
+-
+-7. There is no hardcoded absolute filesystem target. `PROJECT_ROOT = Path(__file__).resolve().parents[1]` derives the checkout correctly, and the guard performs no writes.
+-
+-8. Git failures fail closed through `except GitUnavailable as exc:` and `return 1`. Evidence-read failures also effectively fail closed: `except OSError:` either skips the unreadable test or substitutes empty acknowledgement text, leaving the alias unsupported. The terminal `return None` in evidence lookup is treated as refusal, not permission; however, unrecognized alias spellings are silently converted into an empty alias list earlier. No duration, count, or size metric is consumed, so the premature-measurement failure mode does not apply.
+-
+-9. The guard itself performs no tracked-state writes: it runs read-only Git operations and calls `read_text`. Test or fixture mutation cannot be assessed without the test suite, but this implementation does not require writing a fixed result, specification, output, operations, or documentation path.
+-
+-## COUNTEREXAMPLE
+-A staged widening with no test or acknowledgement:
+-
+-```diff
+- NO_LLM_SUBSTRATE_ALIASES = (
+-+    'local_python_no_llm',
+- )
+-```
+-
+-This is valid Python and widens the actual allowlist, but the double-quote-only regex finds no alias, so the guard returns success.
+-
+-## MISSED INPUT
+-The new allowlist value `local_python_no_llm` when written as the single-quoted literal `'local_python_no_llm'`.
+-
+-## RECOMMENDATION
+-NEEDS_REDESIGN
+-
+-## RATIONALE
+-The detector does not compare actual allowlist membership; it scans text for one narrow spelling and then accepts unstructured substrings from live, potentially unstaged files. Parse and compare the allowlist values from HEAD and the staged file, then validate evidence from the index with exact alias boundaries and acknowledgement structure.
+-
+-
+-## determination_preservation_lint.py
++## artifact_freshness_lint.py
+ 
+ (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+ 
+-## test_suite_mutation_check.py
++## arc_artifact_lint.py
+ 
+ **Verdict:** `SILENT_NON_FIRING`
+ 
+ ## VERDICT
++
+ SILENT_NON_FIRING
+ 
+ ## CONCEPT
+-Prevent a test run from silently changing any existing tracked file and later allowing that unresolved rewrite to be committed.
+ 
+-## FINDINGS
+-1. The central silent non-firing is marker retirement during pre-commit’s temporary unstaged-change stash. At lines 782–796, `prune_stale_markers()` treats absence from the temporary `dirty_tracked()` result as proof of restoration: `if any(f in still_dirty for f in listed):` falls through to `p.unlink(missing_ok=True)`. Pre-commit then restores the unstaged rewrite, but lines 990–992 have already taken `if not blocking:` and `return 0`.
++Prevent ARC solve/scoring artifacts from being accepted unless they declare a canonical inference substrate and sufficient duration, explicitly allow-list live LLM use, and carry a terminal honest verdict.
+ 
+-2. A second direct false negative is deliberate baseline subtraction. Line 442, `return sorted(p for p in now if p not in baseline)`, silently ignores every subsequent overwrite of a file that was already dirty when the run began. A hand edit to an artifact followed by a test replacing that entire artifact therefore produces the clean message at lines 949–952.
++## FINDINGS
+ 
+-3. The Git-status tuple `("R", "C")` defines the paired-record statuses rather than sampling an open domain. The observation patterns are samples: `"wxa+"` and `("os.rename", "os.replace")` omit fd-based writes, truncation, unlinking, links, memory-mapped writes, metadata mutations, non-Python writers, and killed processes. Those omissions weaken attribution and automatic restoration, although final Git comparison still refuses when a valid baseline survives.
++1. L95-L96 silently executes `continue` when candidate recognition fails, so validation never runs. The committed artifact in COUNTEREXAMPLE is concrete proof: directory discovery omits it and explicit-path linting returns no issues despite its non-terminal verdict.
+ 
+-4. Directory and file-type scope is otherwise broad: all tracked paths are considered, including staged additions, deletions, and rename destinations; `-uno` deliberately excludes new untracked artifacts. Execution scope is not broad: unwrapped commands, killed bare pytest runs before `pytest_sessionfinish`, disabled conftest loading, initial baseline failures, and commits performed without hooks create no marker. Nothing visible here covers arbitrary tracked files in those paths; the named sibling content guard is limited to staged results JSON regressions.
++2. `PATH_MARKERS`, `METADATA_KEYS`, and `ARC_SOLVE_EVIDENCE_KEYS` are samples, not definitions. Omitted path concepts include induction, frontier, predicate, replay, score, and hyphenated config-rule; omitted metadata/evidence include `inference_substrate`, `honest_verdict`, solve_provenance, arc_solve_claim, reproduction_gate, verifier_is_oracle, title, roster, and experiment_name. `_has_arc_token` is likewise heuristic and misses suffixed compounds such as offarc; the `archive` exception only defines one exclusion. The `partial:`/`partial_` tuple defines diagnostic spellings, while the JSON report fields and `#` comment marker are closed-format definitions.
+ 
+-5. Ordinary bypasses are realistic. An unrelated selective commit can trigger the pre-commit stash escape above; the project’s conductor also commits with no verification, bypassing `--gate` entirely. Deleting ignored operational state, killing bare pytest, renaming a marked dirty path, or running a test/experiment outside `--run` likewise leaves the gate with no surviving marker.
++3. Default discovery examines only `results` files matching `experiment_*.json`; other names, uppercase extensions, YAML, deleted files, and unstaged rewrites are outside it. The pre-commit hook is narrower still: metadata-only ARC artifacts whose filenames lack its fixed markers never invoke this script, and renames away from those markers escape. Nothing in this file establishes coverage for those holes.
+ 
+-6. Tests cover ordinary modification, restoration, corrupt state, Git failure, rename parsing, concurrency, attribution, and retention, but they do not exercise pre-commit’s temporary hiding of unstaged damage. The suite explicitly asserts that an already-dirty path produces no marker, thereby pinning the second false negative. The `C` half of `("R", "C")`, the second-status-column rename/copy branch, and observer byte-path handling appear deletable with the current suite still green.
++4. Ordinary automation defeats the guard by writing a semantically ARC artifact under a generic experiment name, storing ARC identity in an omitted field, running from a directory where the default `results` path is absent, renaming a matched artifact, or committing with no hook execution. A careless generic-name experiment followed by git add is sufficient; no malicious input is required.
+ 
+-7. No hardcoded absolute filesystem write target exists. `REPO = Path(__file__).resolve().parents[1]` derives snapshots, markers, logs, and backups from the checked-out file, so worktrees and fresh clones target themselves.
++5. The focused suite does not protect most recognizer members. An in-memory mutation retaining only `config_rule` in `PATH_MARKERS`, only `tags` in `METADATA_KEYS`, only `grounded_win_condition` in `ARC_SOLVE_EVIDENCE_KEYS`, exact `arc` matching, and only `honest_verdict` plus `partial:` relabeling still passed all 12 tests. Therefore `solve`, `scoring`, `world_model`, five metadata keys, every individually double-covered evidence key, the prefix/non-`archive` token arm, `verdict`, `partial_`, and the special `LIVE_LLM_NOT_ALLOWLISTED` detail override are deletable with the suite green; corrupt-JSON and human-output branches are explicitly `pragma: no cover`.
+ 
+-8. CLI Git and state-reading errors mostly fail closed: `_git` raises, `_read_baseline` returns `None` and checking refuses, corrupt markers remain blocking, and `read_observed` losing its log only makes mutations unattributed. The bare-pytest integration described in the file is fail open because its caller uses `try/except Exception`; an import, baseline, flush, or session-finish failure leaves no marker for `--gate` to find.
++6. No hardcoded absolute filesystem path or write target exists. However, the relative `results` default is working-directory-dependent, and the missing-directory behavior converts a wrong invocation location into a clean pass.
+ 
+-9. The default dispatch is permissive. If no mode flag matches, lines 1097–1098 execute `ap.print_help()` followed by `return 0`, so an automation invocation missing `--gate`, `--run`, `--snapshot`, or `--check` performs no check and succeeds.
++7. Errors fail open in candidate discovery: L60-L61 uses `return []` when the results root is absent. L219-L223 catches `except (OSError, json.JSONDecodeError):` and uses `return {}`; path-marked files then fail schema validation, but metadata-only files become invisible and pass. A missing allow-list file uses `except OSError:` followed by `continue`, which is stricter rather than permissive because live artifacts remain unallow-listed.
+ 
+-10. No duration, count, or size purporting to measure the guarded run is computed before the work. The child finishes before `mutations(baseline)` is evaluated.
++8. The default recognizer branch disables checking: `_value_marks_candidate` ends in `return False`, `_metadata_marks_candidate` falls through to one narrow payload shape, and L95-L96 treats false as permission to skip. The exempted class is semantically ARC work identified only by unlisted fields or vocabulary. No duration is computed here, so there is no demonstrated pre-work timing bug in this file; the guard merely trusts the supplied duration and cannot distinguish a real measurement from a constant.
+ 
+-11. Normal operation writes ignored state beneath ops and explicit `--restore` rewrites tracked paths by request. The natural tests redirect module state into a throwaway repository and include an escape check, so no fixed committed results, OpenSpec, output, or curated-document target is overwritten merely by running these tests. The fixed `BACKUP / p` destination can overwrite an earlier recovery copy on a later restore, but it is ignored guard state rather than the historical record.
++9. The guard performs no tracked-state writes; it only calls `read_text` and `print`. The inspected tests write fixtures under temporary directories and only read committed artifacts, so no fixed historical result, specification, operations document, or operator-curated document is overwritten.
+ 
+ ## COUNTEREXAMPLE
+-A wrapped test rewrites `output/kanele_synth/post_synth.dcp` and arms a marker. The operator stages only an unrelated `ops/changelog.md` edit and commits; pre-commit temporarily restores the unstaged DCP file, the gate deletes the apparently stale marker and exits zero, then pre-commit reapplies the DCP rewrite. A later `git add -A && git commit` has no marker left to stop publication.
++
++`results/experiment_5836_frontier_discipline_ab.json` contains `honest_verdict="partial_frontier_discipline_ab_smoke_scale_25games_budget2000_not_full_spec_graft_new_wins_4_control_new_wins_4"`, `inference_substrate="offline_arcade_live_agent_runtime_self_discovery_no_llm"`, `solve_provenance="development_proxy"`, and ARC reproduction evidence. Its generic filename and uninspected metadata make both candidate recognizers false, so `lint_paths([path])` returns `[]`.
+ 
+ ## MISSED INPUT
+-`output/kanele_synth/post_synth.dcp` — an unresolved unstaged test rewrite temporarily hidden while pre-commit runs the gate.
++
++`results/experiment_5836_frontier_discipline_ab.json` with verdict `partial_frontier_discipline_ab_smoke_scale_25games_budget2000_not_full_spec_graft_new_wins_4_control_new_wins_4`.
+ 
+ ## RECOMMENDATION
++
+ NEEDS_REDESIGN
+ 
+ ## RATIONALE
+-The gate confuses “not dirty in this temporary hook worktree” with “damage permanently undone,” allowing pre-commit itself to erase the refusal and then restore the damage. It also deliberately ignores further writes to initially dirty files, while the autonomous no-verification commit path bypasses the interlock entirely. Marker retirement must become explicit or stash-independent, and baselines must retain content identities rather than path membership alone.
+ 
++A real committed ARC artifact already demonstrates that semantic candidacy can live entirely outside the sampled markers, producing a clean result without validation. Adding another token would repeat the same open-ended failure mode. Require an explicit ARC artifact schema/class marker or fail closed on unclassified staged result artifacts, and invoke the hook for every experiment JSON rather than pre-filtering by filename vocabulary.
+ 
+-## operator_curated_docs_lint.py
++
++## arc_count_integrity_lint.py
+ 
+ **Verdict:** `SILENT_NON_FIRING`
+ 
+@@ -142,49 +93,45 @@ The gate confuses “not dirty in this temporary hook worktree” with “damage
+ SILENT_NON_FIRING
+ 
+ ## CONCEPT
+-Prevent autonomous conductor commits from altering or removing any operator-curated public documentation.
++Prevent ARC reproduced-level totals and submission-package claims from being accepted unless they are structurally valid, non-duplicative, and supported by replay evidence.
+ 
+ ## FINDINGS
+-1. Silent non-firing: line 100 uses `["git", "diff", "--cached", "--name-only"]`, which reports only the destination when Git detects a rename. Line 141 then applies `violations = [p for p in staged if _matches_operator_curated(p)]` only to that destination, never examining the protected source path.
+-
+-2. Pattern lists: `OPERATOR_CURATED_PATHS` is intended as the definition of the curated set; no current omitted member was found, although duplication requires synchronization when the governing set changes. `CONDUCTOR_SUBJECT_PREFIXES` defines the official marker but is only a sample of autonomous provenance: conventional-commit prefixes, replacement markers, and missing markers silently classify conductor work as operator work. The comment marker in `line.startswith("#")` is likewise narrower than Git configuration because another configured comment character is not skipped.
++1. Duplicate game rows silently inflate both totals. The registry uses `expected_total = sum(_as_int(entry.get("levels_reproduced")) for entry in entries)`, while the package uses `valid_total += counted`; neither checks game uniqueness, so duplicating a valid row doubles its contribution and its identical replay succeeds twice.
+ 
+-3. Pattern redundancy: Python `fnmatch` allows a star to span path separators, so `docs/blog/*.html` already matches nested HTML paths. Therefore `docs/blog/**/*.html` is decorative. Other blog extensions are omitted, although the stated curated set does not establish that they should be protected.
++2. The exact registry/package filenames and schema field names define the two intended artifact schemas. However, `DEFAULT_REGISTRY_REPLAY_SPOT_CHECK = 3` is explicitly a sample rather than the full concept and omits every registry claim after the third selected row. The `{"ops", "results"}` parent set is a repository-layout sample, while `sc25` is a single-game special diagnostic; other games omit that diagnostic, although the generic total-mismatch rule still refuses their inflation.
+ 
+-4. Scope holes: exact-path additions, modifications, and deletions are caught, as are renames whose destination is protected. Protected rename sources are missed. Unstaged rewrites, untracked changes, runs that never commit, commits made without the hook, and paths absent from `OPERATOR_CURATED_PATHS` are outside its reach; this file provides no secondary coverage.
++3. `lint_paths` recognizes only `path.name == REGISTRY_RELATIVE_PATH.name` and `path.name == SUBMISSION_PACKAGE_RELATIVE_PATH.name`. It ignores renamed artifacts, other ARC claim artifacts, and every unrecognized path without an issue; it also reads the working-tree file rather than the staged blob and has no added/deleted/renamed-diff handling. Nothing in this file covers those holes.
+ 
+-5. Accidental bypass: ordinary `git add -A` can cause Git to coalesce a deletion and addition into a rename, triggering the source-path hole. Commit tooling that omits or moves `[conductor]`, calls `main()` without its hook argument, or uses the documented `--no-verify` option also bypasses enforcement.
++4. Ordinary automation can bypass replay with `--skip-replay`, `--max-registry-replays` set to zero, or `--max-package-replays` set to zero. A deletion or malformed registry is even worse: the failed read becomes an empty mapping, which is accepted as a zero-total registry.
+ 
+-6. Test coverage: current tests exercise every literal protected path, blog matching, case-insensitive subjects, comment skipping, authorization branches, and the two deliberate malformed-input paths. They do not exercise the real subprocess command, rename-source handling, empty staged output, read failures, or Git failures. Deleting `docs/blog/**/*.html` leaves the suite green because the preceding pattern subsumes it; deleting `if not staged:` is also behaviorally invisible because an empty list produces no violations and reaches `if not violations:`.
++5. No tests were supplied, so exact suite coverage cannot be established. At the binary enforcement level, `_sc25_transition_issues` is decorative because whenever `SC25_PROVISIONAL_COUNTED_AS_REPRODUCED` is emitted, the earlier `REGISTRY_TOTAL_MISMATCH` or provisional classification has already made the guard fail. Also, production `SUBMISSION_ACTION_SEQUENCE_MISMATCH` is inert: `_default_submission_replay` obtains `sequence = _action_sequence(row)` and then sets `result["expected_action_sequence"] = list(sequence)`, so the later comparison checks the row against itself; only an injected callback can exercise that branch.
+ 
+-7. Hardcoded absolute write target: none. The source contains no absolute filesystem target and performs no filesystem writes.
++6. No hardcoded absolute filesystem path exists. `REPO_ROOT = Path(__file__).resolve().parents[1]` correctly derives the checkout location.
+ 
+-8. Failure behavior is mixed. `if len(sys.argv) < 2:` and `if not msg_path.exists():` explicitly return success, so malformed invocation fails open. Message-reading errors and subprocess failures are uncaught, while `check=True` makes Git failures terminate non-zero, so those failures are closed.
++7. Registry reading fails open. `_read_yaml_mapping` catches `except (OSError, yaml.YAMLError):` and executes `return {}`; a non-mapping document also becomes `return {}`. The empty registry then has zero expected and actual totals and produces no issue. `_as_int` likewise converts malformed counts through `return 0`. Package read failures do produce metadata issues, and replay exceptions produce `REGISTRY_REPLAY_EXCEPTION` or `SUBMISSION_REPLAY_EXCEPTION`, so those paths fail closed.
+ 
+-9. Default-disabled check: any unrecognized or empty subject reaches `return 0  # not a conductor commit — irrelevant`. Autonomous work lacking the exact recognized prefix is therefore approved rather than reported as unverifiable.
++8. There are two no-check defaults. The `if`/`elif` path dispatcher has no rejecting `else`, so any unrecognized filename is approved without inspection. Separately, registry replay executes `if replay is None:` followed by `continue`, while package replay only validates when `if replay is not None:`; a callback returning no result therefore means permission, not unverified failure.
+ 
+-10. Pre-work metrics: none. The guard consumes no duration, count, or size field.
++9. No duration or other before-work measurement is computed or consumed here.
+ 
+-11. Tracked-state mutation: none. The guard reads the commit message and staged diff and only writes diagnostics to stderr; its tests use temporary commit-message files rather than tracked project state.
++10. This file contains no direct tracked-state write or fixed output target. Its call to `arc_solver_kit.reproduce` could have external side effects, but that cannot be determined from the supplied source.
+ 
+ ## COUNTEREXAMPLE
+-Subject: `[conductor] reorganize public docs`
+-
+-Staged diff: `R100 README.md docs/archive/project-intro.md`
++Delete `ops/arc_solve_registry.yaml`, then call `lint_paths(["ops/arc_solve_registry.yaml"])`. The read raises `OSError`, becomes `{}`, produces zero entries and zero totals, and returns no issues.
+ 
+-With rename detection enabled, the name-only command returns only `docs/archive/project-intro.md`. That path is unprotected, so the hook returns success even though `README.md` was removed.
++A second passing input is a submission package containing two identical otherwise-valid rows with `game: sc25` and `reproduced_levels: 1`, declaring `total_reproduced_levels_in_package: 2`; both copies are counted independently.
+ 
+ ## MISSED INPUT
+-The protected source path `README.md` in the staged rename `R100 README.md docs/archive/project-intro.md`.
++A missing `ops/arc_solve_registry.yaml`, or a submission package that repeats the same `sc25` replay row and counts its reproduced level twice.
+ 
+ ## RECOMMENDATION
+ NEEDS_REDESIGN
+ 
+ ## RATIONALE
+-A protected document can disappear while the hook examines only the rename destination, making this a concrete silent non-firing. The guard should parse staged name-status data, inspect both rename endpoints, and add a real-Git rename regression test. Malformed hook inputs and unrecognized provenance should also refuse or explicitly alarm instead of returning success.
++The guard can report success after failing to read the registry and can validate duplicated claims as separate reproduced levels. These are silent acceptance failures at the center of its count-integrity responsibility, compounded by filename dispatch and replay-result defaults that treat “not checked” as approval.
+ 
+ 
+-## operator_curated_doc_guard.py
++## arc_llm_on_liveness_lint.py
+ 
+ **Verdict:** `SILENT_NON_FIRING`
+ 
+@@ -192,47 +139,61 @@ A protected document can disappear while the hook examines only the rename desti
+ SILENT_NON_FIRING
+ 
+ ## CONCEPT
+-Prevent test-suite activity from creating, replacing, deleting, or otherwise mutating any operator-curated document in the repository.
++Prevent an ARC row from being accepted as LLM-on evidence when its instrumentation shows that the generator was dead, materially unavailable, produced no usable completions, or disagreed with the row’s validity stamp.
+ 
+ ## FINDINGS
+-1. Silent non-firing: atomic-write destinations are passed to `_violation_for(args[1], allow_relative=False)`. The condition `if not allow_relative and not os.path.isabs(path):` then executes `return None` for every relative destination, including an ordinary CWD-relative replacement of the real README; no exception or ledger entry results.
++1. The validity-disagreement rule silently fails whenever any warning already exists. The stated rule is “no FAIL condition,” but the permitting line is `if stamp is False and not findings:`. A partial-failure row receives `GENERATOR_PARTIAL_FAILURES`, making that condition false, so `STAMP_FALSE_UNEXPLAINED` is never emitted and the gate exits successfully despite `llm_on_row_valid` being false.
+ 
+-2. Pattern lists: `OPERATOR_CURATED_PATHS` is explicitly the definition of the protected set, not a sample; no current member is omitted. `__all__`, `"wxa+"`, and `os.O_WRONLY | os.O_RDWR | os.O_APPEND | os.O_CREAT | os.O_TRUNC` define the public API and recognized write intent. The audit-event tuples are only samples of mutation mechanisms: they omit hard-link and symlink creation, writes through descriptors opened before installation, and child-process mutations. The `blog` prefilter is also narrower than future glob-shaped members of `OPERATOR_CURATED_PATHS`: a new wildcard outside that directory would fail `_WATCHED_BASENAMES`. Finally, `docs/blog/**/*.html` is behaviorally redundant because `fnmatch.fnmatch` lets the preceding `docs/blog/*.html` span directory separators.
++2. `if sentinel or witness_error:` immediately returns only `WITNESS_UNAVAILABLE`. Because this precedes `if healthy_after is False:` and `if storm is True:`, a failed counter witness masks independently conclusive evidence of a dead generator, a server storm, or a lying true stamp. The analogous `WITNESS_MISSING` early return also masks zero responses, recorded errors, and storm evidence whenever both primary witness fields are absent.
+ 
+-3. Scope holes: subprocesses are explicitly unprotected. Relative rename, replace, remove, unlink, and truncate operations escape; rename checks only `args[1]`, so moving a protected source to an unprotected destination also escapes. Unrecognized mutators, hard-link aliases, already-open writable descriptors, and executions that never call `install()` are outside its reach. `_REPO_ROOT` follows the checkout supplying `__file__`, so a worktree importing this module from another checkout protects the wrong tree. The file names `scripts/operator_curated_docs_lint.py`, `scripts/test_suite_mutation_check.py`, and `git status` as backstops, but none provides synchronous prevention here.
++3. The pattern inventory is narrower than the concept:
++   - `FAIL_CODES` and `WARN_CODES` look like definitions but are unused; `WARN_CODES` also omits the emitted `STAMP_FALSE_UNAUDITABLE`.
++   - The row recognizers—`llm_enabled`, `induction_attempts_llm_reached`, and `induction_attempts` combined with `game` or `actions`—are samples. They omit rows identified solely by `llm_tier_operational`, `llm_on_row_valid`, `generator_valid`, or `terminal_state`.
++   - The generator-failure field set is also a sample: the source itself names `generator_valid` and `terminal_state` as recorded reasons, but neither affects the verdict.
++   - `ORIGIN_DEAD_CELLS` and `ORIGIN_CONTROL_CELLS` are appropriately samples, not concept definitions.
++   - The baseline identity of `file`, `json_path`, and `code` is a definition, but it omits artifact content, run identity, and primitive values.
+ 
+-4. Accidental bypass: an ordinary atomic writer creates a temporary sibling and performs a relative replacement from the repository root. Audit events already supply directory-descriptor arguments, but `_audit_hook` ignores them and rejects all relative mutation paths as ambiguous. Child Python processes and shell redirects bypass the guard exactly as its documentation admits.
++4. Scope is limited by default to `results`, and directory expansion includes only `*.json`. It does not inspect other artifact directories, non-JSON formats, or the staged Git blob. Added files are checked only when supplied; deleted or missing paths become unreadable and pass, while renames are assessed only at their new path. The only other path named in this file is the conductor integration, which is explicitly advisory.
+ 
+-5. Untested and decorative rules: positive tests cover ordinary open writes, one absolute replacement, and one blog path. There is no positive test for protected removal, truncation, relative replacement, moving a protected source away, or link creation. On CPython, `os.replace` emits `os.rename`, `os.unlink` emits `os.remove`, and `shutil.copy2` emits `shutil.copyfile`; therefore the named `os.replace`, `os.unlink`, and `shutil.copy2` event entries are decorative and deletable with the suite still green. `shutil.move` and `shutil.copyfile` are generally double-covered by subsequent rename or open events. The tests also do not independently exercise `os.O_APPEND`, `os.O_CREAT`, or `os.O_TRUNC`; the existing creation case remains true through `os.O_WRONLY`.
++5. The baseline is bypassable through an ordinary fixed-path rerun. `_finding_key` ignores the row’s content and detail, so overwriting a grandfathered artifact at the same path and JSON location with a new bad run producing the same finding code remains grandfathered. Automation can also disable enforcement through `--warn-only`, regenerate exemptions through `--write-baseline`, or bypass pre-commit entirely with no verification.
+ 
+-6. Hardcoded absolute write target: none. `_canonical_repo_root()` derives its root through `Path(__file__).resolve().parents[3]`; the literal `/home/ianblenke/github.com/ianblenke/carnot` appears only in explanatory text. The guard itself has no filesystem write target.
++6. The supplied `self_test` leaves several branches deletable while remaining green: `FAIL_CODES`, `WARN_CODES`, `WITNESS_UNAVAILABLE`, `STAMP_FALSE_UNAUDITABLE`, both pre-instrumentation row recognizers, the `llm_tier_operational` override, unreadable-file handling, and all baseline loading/writing behavior. The `calls` total override is also unproven because both tested mixed-result rows have calls equal to responses plus errors. No test combines a false validity stamp with `GENERATOR_PARTIAL_FAILURES`, which is the central counterexample.
+ 
+-7. Failure mode: path-classification errors fail open. Both `except Exception:` and `except (OSError, ValueError, RuntimeError):` execute `return None`, allowing the operation to proceed unchecked. Short audit argument tuples and unsupported path objects also return silently. By contrast, failure of `sys.addaudithook(_audit_hook)` propagates within this file.
++7. There is no hardcoded absolute filesystem path. However, `DEFAULT_BASELINE` and the default results path are relative to the current working directory rather than the script location, so launching elsewhere can scan or write the wrong tree; it does not have the specific worktree-to-original-checkout absolute-path defect.
+ 
+-8. Default-disabled check: `_audit_hook` implicitly returns for every event outside its two hardcoded mutation groups. Unrecognized filesystem mutations such as link or symlink creation are therefore treated as permission rather than as unverified operations.
++8. Artifact read errors fail open. `except Exception:` performs `unreadable.append(f)` followed by `continue`; `files_unreadable` is only reported and never contributes to `blocking`. Malformed JSON, permission failures, directories passed as files, and vanished paths can therefore produce exit zero without being checked. Baseline read errors, by contrast, clear the exemptions and fail closed.
+ 
+-9. Metric timing: none. The guard consumes no duration, count, or size measurement.
++9. There are two default-branch disabling paths. `_is_row` ends in `return False`, so a row carrying only `llm_tier_operational` and failure primitives is never checked. Separately, an explicit false `llm_tier_operational` with no positive calls or responses returns false from the claim recognizer, even if other primitives report errors or a dead generator.
+ 
+-10. Tracked-state mutation: the guard itself writes only to the in-memory `_violations` ledger. Its tests, however, attempt writes and replacement against the real tracked `README.md` and have no restoration path if the expected guard exception is absent. A regression or mutation-test survivor can therefore overwrite the document before the assertion fails; the blog test can similarly leave its fixed probe file behind.
++10. No duration, count, or size is computed before the work it purports to measure in this guard. It consumes `calls`, `responses`, and `errors` from artifacts; their producer timing cannot be established from this file.
+ 
+-## COUNTEREXAMPLE
+-```python
+-import os
+-from pathlib import Path
++11. Normal scanning and `self_test` do not mutate tracked artifacts. The explicit `--write-baseline` path does overwrite the fixed tracked baseline selected by `DEFAULT_BASELINE` and exits successfully; a test exercising that branch without supplying an isolated path or temporary working directory would mutate operator-curated state.
+ 
+-os.chdir("/home/ianblenke/github.com/ianblenke/carnot")
+-Path(".README.md.tmp").write_text("replacement")
+-os.replace(".README.md.tmp", "README.md")
++## COUNTEREXAMPLE
++```json
++{
++  "llm_enabled": true,
++  "llm_tier_operational": true,
++  "llm": {
++    "calls": 10,
++    "responses": 8,
++    "errors": 2,
++    "content_failures": 0
++  },
++  "generator_healthy_after": true,
++  "server_storm_suspected": false,
++  "llm_on_row_valid": false
++}
+ ```
+ 
+-CPython reports the replacement as an `os.rename` audit event with relative paths and CWD directory descriptors of `-1`. The guard discards those descriptors, classifies the destination as outside checking, and records no violation.
++This produces only a warning for partial generator failures. Because the warning makes the findings list nonempty, the false validity stamp never produces a blocking disagreement.
+ 
+ ## MISSED INPUT
+-README.md as the CWD-relative destination of an atomic replacement with destination directory descriptor -1.
++An LLM-on row with `generator_healthy_after: false`, `llm_on_row_valid: true`, and a nonempty `liveness_witness_error`; the early witness-unavailable return reduces the conclusive dead-generator evidence to a warning.
+ 
+ ## RECOMMENDATION
+ NEEDS_REDESIGN
+ 
+ ## RATIONALE
+-The guard claims to cover atomic replacement, but `allow_relative=False` exempts its most common form. It must interpret directory-descriptor metadata, inspect both rename endpoints, cover creation-style mutators, and move destructive tests onto an isolated repository root. The documented subprocess limitation remains a separate containment gap.
++The guard has multiple independent silent-admission paths: warnings suppress validity disagreement, witness errors mask conclusive failure primitives, and unreadable artifacts are accepted. Its location-only baseline also cannot distinguish preserved historical evidence from a newly overwritten bad run at the same location, so adding one field token would not repair the underlying gate semantics.
+ 
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index 41ffd8c273..6a4bbb60b4 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -7,17 +7,15 @@
+ 
+ | Verdict | Count |
+ |---|---|
+-| `AUTHENTIC` | 12 |
+-| `HONEST_HEURISTIC` | 4 |
++| `AUTHENTIC` | 11 |
++| `HONEST_HEURISTIC` | 6 |
+ | `DISHONEST_NAMING` | 1 |
+-| `ADVERSARIAL_GAMING` | 3 |
+-| `CANNOT_DETERMINE` | 0 |
++| `ADVERSARIAL_GAMING` | 1 |
++| `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+ ### FLAGGED — operator action recommended
+-- `python/carnot/verify/abstention_calibrated_clean_verifier_v15.py` — **ADVERSARIAL_GAMING**
+-- `python/carnot/verify/arc_gap1_autopyverifier_pilot.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/beaver_lite.py` — **DISHONEST_NAMING**
+ 
+@@ -27,16 +25,16 @@ Scanned 20 verifier file(s) with codex as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-AUTHENTIC
++CANNOT_DETERMINE
+ 
+ ## CLAIMS
+-“Verifiable reasoning: constraints as energy terms + landscape certification.” No paper, model, learned representation, live inference, or compute-substrate claim is made.
++“Verifiable reasoning: constraints as energy terms + landscape certification.” No paper, model, learned representation, live inference, or compute-substrate claim appears.
+ 
+ ## IMPLEMENTATION_REALITY
+-This is a package initializer that imports and re-exports constraint-energy, convergence, and landscape-certification APIs. It performs no scoring or inference itself.
++This is a package export file, not a verifier implementation. It imports and re-exports verifier classes and utilities; the repeated `ConformalCalibrationVerifier` imports are sloppy duplication, but no scoring logic is present to audit.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -48,35 +46,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring accurately describes the package surface and does not pretend this initializer implements a paper or invokes a model. The repeated `ConformalCalibrationVerifier` imports are sloppy duplication, but they are not authenticity fraud or adversarial-check gaming.
++There is no regex masquerading as a cited model here because there is no verifier algorithm here at all. Authenticity and production-ensemble eligibility can only be judged by inspecting the imported verifier modules; treating this export shim as evidence for their behavior would be incompetent.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++AUTHENTIC
+ 
+ ## CLAIMS
+-“The v14 rerun proved the local GGUF path was real” and “Run llama.cpp with grammar-constrained verifier decisions.”
++“The v14 rerun proved the local GGUF path was real” and “the raw model text did not honor the strict verifier-output contract.” The code further claims: “Run llama.cpp with grammar-constrained verifier decisions” and “Check that this Python can see CUDA and llama.cpp GPU offload.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The default path genuinely loads a local GGUF through `llama_cpp.Llama`, requests GPU offload, and invokes `create_chat_completion` for every row with constrained decoding. It then parses decisions and computes exact-label error and abstention rates.
++The default execution path loads a real local GGUF through `llama_cpp.Llama`, requests full GPU offload with `n_gpu_layers=-1`, and invokes `create_chat_completion` for every evaluation row using a `LlamaGrammar`. It also probes PyTorch CUDA visibility, llama.cpp GPU-offload support, model-file existence, and NVIDIA memory telemetry.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-- `validate_artifact` requires `honest_verdict` to begin with a success-style prefix.
+-- `honest_verdict` labels zero-evaluation skips and failed readiness as `"complete:"`, disguising failure states as terminal success.
+-- GPU usage is measured as absolute memory consumption, not model-attributable memory delta, so unrelated GPU allocations can satisfy the 512 MiB gate.
++none
+ 
+ ## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
++KEEP
+ 
+ ## RATIONALE
+-The model invocation is real, so this is not a regex verifier wearing a model’s name. But coercing every outcome—including “not ready” and “gated skip”—into a success token is explicit status-check gaming; it must not contribute to headline AUROC until failure states remain failures and compute evidence is attributable.
++This is actual model-backed verification, not regex and arithmetic wearing a research-method costume. The strict parser and result aggregation are ordinary post-processing around genuine llama.cpp inference, and the code contains no sleep-padding, score-capping, random-feature classification, or named adversarial-check dodges.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+@@ -87,10 +83,10 @@ The model invocation is real, so this is not a regex verifier wearing a model’
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“Compute a lightweight ACSE-style semantic entropy proxy.” The docstring explicitly states that genuine “ACSE uses semantic dispersion over multiple generations,” while this implementation instead uses “the variance of the top-k token logprob alternatives and the variance across verifier scores.”
++“Compute a lightweight ACSE-style semantic entropy proxy.” The docstring explicitly says: “ACSE uses semantic dispersion over multiple generations,” but this corpus lacks fresh generations, so “this proxy uses two local uncertainty signals”: top-k token-logprob variance and verifier-score variance.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic lexical prompt classification, NumPy variance calculations over supplied logprobs and verifier scores, and sklearn-based calibration/AUROC evaluation. It invokes no model and imports no torch, transformers, JAX, llama_cpp, or OpenAI client.
++The code performs lexical prompt classification, NumPy variance calculations over supplied logprobs and verifier scores, sklearn train/test splitting and AUROC evaluation, plus group-score calibration. It invokes no model and imports no torch, transformers, JAX, llama_cpp, OpenAI, or Carnot inference module.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -102,7 +98,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is explicitly labeled a lightweight proxy and plainly discloses that it lacks ACSE’s multiple-generation semantic dispersion. The implementation matches that limited claim; its clipping is ordinary train-range normalization, not perfect-score dodging, and it neither pads runtime nor manufactures random features.
++This is not ACSE itself, but the code does not pretend otherwise: the approximation and missing multiple-generation substrate are explicitly disclosed. There is no sleep-padding, score-capping, fabricated random feature generation, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -113,10 +109,10 @@ This is explicitly labeled a lightweight proxy and plainly discloses that it lac
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and explicitly denies EBM, LLM, or receipt authority. It makes no paper, learned-model, or live-inference claim.
++“The policy is a deterministic scheduler over evidence that already exists in the repo.” It also explicitly claims that it “never lets an EBM score, LLM response, or receipt become answer authority.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, hashes sources, and writes a policy-simulation artifact. It imports no ML framework and performs no model or API invocation, exactly as disclosed.
++The code reads checked-in JSON artifacts, extracts simple fields, applies a deterministic rule table, calculates call-count/risk summaries, and writes a policy artifact. It invokes no model and explicitly records zero live model, verifier-scoring, or repair calls.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -128,7 +124,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches its narrow claim: it is an offline deterministic scheduler, not a learned verifier. It explicitly records zero live calls and forbids promotion, so it should remain infrastructure and must not be misrepresented as a scoring verifier contributing independent AUROC evidence.
++The docstring makes no fraudulent paper, learned-model, kernel, embedding, or live-inference claim. The implementation matches its narrow claim as an offline deterministic scheduler, although it is not itself a scoring verifier and must not be presented as contributing verifier AUROC.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+@@ -139,10 +135,10 @@ The implementation matches its narrow claim: it is an offline deterministic sche
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“Exp 3643 additive second-pair-of-eyes remeasurement.” The compute substrate is explicitly described as “scores cached corpora; no LLM load.”
++No paper, model, or compute-substrate claim appears in the module docstring. Elsewhere the code explicitly states: “scores cached corpora; no LLM load.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code loads cached experiment rows, delegates ensemble and confidence scoring to the Exp 3642 module, then computes fixed-FPR recall, conditional catch rates, McNemar significance, calibrated fusion AUROC, and reproducibility metadata. It makes no direct model invocation, exactly as disclosed.
++The module loads cached experiment artifacts, delegates score generation to Exp 3642, and computes fixed-FPR thresholds, conditional catch rates, McNemar significance, calibrated fusion, AUROC, and reproducibility metadata. It performs no live model invocation, exactly as disclosed.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -154,7 +150,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This module claims to perform a cached-score remeasurement, not neural inference or a paper-specific algorithm, and its implementation does that. Duration is genuinely measured without sleep-padding, scores are not capped, and the random-seed constant does not generate fabricated features.
++This is honestly named as a remeasurement module, not falsely advertised as a paper-derived or model-backed verifier. Duration is measured from actual elapsed time without sleep-padding, scores are not capped to dodge perfection checks, and no random fake features are generated.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -165,10 +161,10 @@ This module claims to perform a cached-score remeasurement, not neural inference
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This module is a gate audit, not a verifier rerun.” It claims only to read checked-in evidence and distinguish exact-replay recovery from unsupported live-inference claims; it makes no paper, model, GPU, or live-inference claim.
++“This module is a gate audit, not a verifier rerun.” It explicitly distinguishes checked-in “deterministic exact-replay recovery” from “live-inference claims whose authenticity evidence is incomplete.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads local JSON/Markdown/Python artifacts, computes checksums, classifies evidence flags, and emits a corrigendum. It imports no ML framework or model client and performs no inference, exactly as disclosed.
++The code performs local JSON/Markdown evidence aggregation, checksum generation, provenance checks, and rule-based gate auditing. It invokes no model and explicitly reports `executes_models: False` and `no_live_llm_inference: True`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -180,7 +176,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches its narrowly stated role as an evidence-audit module. It neither masquerades text heuristics as a published verifier nor pads timing, caps scores, generates random features, or dodges adversarial checks. It is not itself an ensemble verifier and should not independently contribute to AUROC numbers.
++The implementation matches its narrow claim: it audits existing evidence and refuses to trust inadequately documented live-inference metrics. It is not a verifier scorer and therefore must not contribute directly to production-ensemble predictions or headline AUROC numbers.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -191,13 +187,10 @@ The implementation matches its narrowly stated role as an evidence-audit module.
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer.”  
+-“A future headline verifier must wire real trained/live verification substrates.”  
+-“SOSKANEnergyV3 requires a feature vector in [-1, 1]^3.”  
+-“This helper is headline-ineligible until a real trained/live verification substrate replaces the current advisory defaults.”
++“SemEnergy uses its proxy scorer.” “The default SOSKAN adapter is neutral until trained.” “This adapter uses the text-feature extraction from Exp 1108 to build the feature vector, then scores with the model.” “A future headline verifier must wire real trained/live verification substrates.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The harness invokes Carnot verifier classes and can train and execute `SOSKANEnergyV3`, but its default SOSKAN path always returns 0.5. Its SOSKAN inputs are three crude text statistics—length, numeric-token density, and vocabulary richness—and all adapter exceptions are silently converted into passing scores.
++The harness invokes five Carnot verifier/model adapters; SOSKAN calls `SOSKANEnergyV3.fit()` and `energy()` only after training, while its default score is a constant `0.5`. SemEnergy is explicitly a proxy, SOSKAN features are simple length/numeric-density/vocabulary statistics, and adapter failures are converted to passing `0.0` scores.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -209,38 +202,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The code is not a production verifier, but it repeatedly and explicitly admits that fact, labels itself headline-ineligible, and identifies its proxy and untrained paths. Keep it only as diagnostic infrastructure; its neutral model output and fail-open exception handling make it unfit to contribute to headline AUROC numbers.
++The module bluntly admits that its default configuration is advisory, untrained, proxy-based, fail-open, and unsuitable for headline results. It enforces that disclosure with `HEADLINE_ELIGIBLE = False`; therefore the weak default behavior is not being laundered into production AUROC claims.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”  
+-“The scoring functions see only train pairs plus a candidate grid, so gold labels are used only for offline evaluation of the searched subset.”  
+-“It does not synthesize verifier code with an LLM.”
++“This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM.” It instead claims “a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
+ 
+ ## IMPLEMENTATION_REALITY
+-There is no model invocation or ML-library import; the verifier exhaustively searches hand-authored grid histograms and adjacency counters. It does not load the claimed cached candidate pool: it merely checks the source artifact’s existence, then uses gold ARC solutions and seeded randomness to manufacture random, blank, perturbed-gold, wrong-dimension, and transposed-gold candidates.
++The code performs deterministic, hand-authored grid-statistical feature scoring and exhaustive subset search over cached/generated ARC candidates. It invokes no model and imports no ML inference framework or API client.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-UNDISCLOSED_PROXY
++DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+-- Random and gold-derived synthetic negatives are injected into the evaluated candidate pool.
+-- Trivial negatives dilute the orientation test, while pass@2 can succeed by ranking both gold and its transpose in the top two.
+-- `duration_s` can be supplied by the caller, and the default timer stops before subset search and scoring, allowing false runtime reporting.
+-- No score capping, sleep-padding, or named-check references.
++none
+ 
+ ## RECOMMENDATION
+-RETIRE
++KEEP
+ 
+ ## RATIONALE
+-The AutoPyVerifier limitation is disclosed, but the claimed cached inference substrate is false: the cache is never loaded and the evaluation pool is reconstructed from gold answers. The pass@2 setup evades the very gold-versus-transpose distinction the experiment claims to test, while its runtime field is externally forgeable and excludes the main computation. This must not contribute to production or headline metrics.
++The docstring explicitly disclaims AutoPyVerifier’s LLM synthesis and accurately describes the cheap deterministic substitute. Randomness is seeded and used to construct distractors, not to fabricate classified features; there is no sleep-padding, score-capping, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
+@@ -251,10 +239,10 @@ The AutoPyVerifier limitation is disclosed, but the claimed cached inference sub
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“No paper, model, or live-compute claim. The docstring explicitly states: “This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact…”
++“This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact” and uses the compute substrate `"deterministic_verifier_registry"`. It makes no paper, learned-model, GPU, embedding, logits, or live-inference claim.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads JSON and registry documentation, validates deterministic fields, makes a registry-promotion decision, and writes an evidence artifact. It invokes no model and imports no ML framework, exactly as its evidence-only description implies.
++The code deterministically parses JSON and registry text, applies boolean gate logic, and writes an artifact plus an operations-document update. It invokes no model and imports no ML framework, exactly as its evidence-only description implies.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -266,7 +254,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is openly an artifact-processing and registry-decision module, not a disguised neural verifier. Its implementation matches that narrow claim, and it contains no sleep-padding, score-capping, random features, or named adversarial-check dodges.
++The naming is honest: this is an evidence and registry-promotion decision module, not a claimed neural verifier disguised as regex. However, `_decision()` can never return `"promoted"` even when every gate passes; that is a substantive logic defect, and this administrative module should not itself contribute to headline AUROC numbers.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
+@@ -277,10 +265,10 @@ This is openly an artifact-processing and registry-decision module, not a disgui
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also explicitly declares: “no live LLM inference.”
++“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” No paper, learned-model, GPU, or live-inference claim is made.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic subset search and grouped holdout evaluation over cached ARC candidate pools using discriminators imported from `arc_gap1_autopyverifier_pilot`. It invokes no learned model and does not claim to.
++The code loads cached artifacts, delegates deterministic candidate scoring to `arc_gap1_autopyverifier_pilot`, performs grouped holdout subset selection, and computes pass@2 statistics and confidence intervals. It invokes no live model and imports no ML inference framework.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -292,7 +280,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches its narrow claim: this is an offline holdout-hardening experiment over cached candidates, not a paper-backed neural verifier. The seeded randomness only creates reproducible train/held-out splits; it does not fabricate classifier features or scores. The module explicitly says “no live LLM inference” and “do not promote to registry here,” so it should remain excluded from production-ensemble and headline-AUROC contributions.
++The implementation does exactly the offline holdout-hardening evaluation the docstring claims. Deterministic seeded shuffling is used only for data splitting, not fake feature generation, and there is no sleep-padding, score-capping, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+@@ -303,10 +291,10 @@ The implementation matches its narrow claim: this is an offline holdout-hardenin
+ AUTHENTIC
+ 
+ ## CLAIMS
+-No claims about a paper, learned model, model inference, or accelerated compute substrate. The docstring accurately claims it “reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
++No paper, model, or specialized compute claims. The docstring accurately claims: “It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads two JSON artifacts, applies deterministic validation and stability rules, audits a YAML registry using regex, and writes a decision artifact plus an optional documentation update. It imports no ML framework or model client because it claims no model-based computation.
++The code reads JSON evidence, applies deterministic threshold and leakage rules, audits a YAML registry using regex, and writes JSON/Markdown artifacts. It invokes no model and imports no ML framework, consistent with its stated purpose.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -318,7 +306,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly the deterministic artifact-analysis job described by the docstring. There is no fake paper attribution, disguised heuristic, model theater, sleep-padding, score-capping, random classification, or adversarial-check token dodging.
++This is plainly an experiment decision-and-reporting module, not a paper-backed or learned verifier pretending to perform inference. Its deterministic substrate is explicit, and there is no sleep-padding, score-capping, random feature generation, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -329,10 +317,11 @@ The implementation does exactly the deterministic artifact-analysis job describe
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The adapter … repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.” “Token logprobs and top-k alternatives are treated as research diagnostics only.” The declared models are Qwen3.6 and Gemma 4 GGUF variants.
++“The adapter ... repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.”  
++“Token logprobs and top-k alternatives are treated as research diagnostics only.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The default execution path calls Carnot’s `build_telemetry_artifact` with `generation_source="live_sota_llamacpp"`, then consumes actual token-logprob and top-k telemetry. This module delegates inference rather than directly importing `llama_cpp`, and refuses to report readiness unless the delegated artifact confirms live inference and the telemetry exists.
++The default runtime path delegates live inference to Carnot’s `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses actual token logprobs and top-k alternatives from its manifest. It explicitly prevents those soft signals from overriding deterministic validator decisions.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -344,7 +333,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is a real telemetry adapter, not regex dressed up as model inference. It explicitly confines logprobs to diagnostics, preserves deterministic validators as final authority, and blocks readiness when live inference or telemetry is absent.
++This is an adapter around a separate llama.cpp telemetry runner, not regex masquerading as inference. It validates that live inference and both telemetry channels were available before declaring readiness, and it honestly limits their role to diagnostics rather than claiming they make acceptance decisions.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+@@ -355,26 +344,24 @@ This is a real telemetry adapter, not regex dressed up as model inference. It ex
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-“The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.” It also records named model specifications and a `live_sota_model_inference_used` claim, although the docstring does not claim this module performs inference itself.
++“Exp 1542 ARM/EBT soft-value diagnostic.” It claims to compare “explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The module loads existing JSON/JSONL artifacts, copies or averages precomputed score fields, and computes Pearson correlation and ROC AUC using pure Python. It invokes no model and imports no ML framework; worse, for runtime-contract and BEAVER cases it fabricates `carnot_energy_score` directly from the deterministic label: `0.0 if deterministic_accept else 1.0`.
++The module invokes no model and imports no ML framework; it reads precomputed JSON/JSONL fields and computes correlations and AUROC. Worse, for runtime-contract and BEAVER cases it fabricates `carnot_energy_score` directly from the deterministic label: `0.0 if deterministic_accept else 1.0`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-NONE
++OUTRIGHT_FAKE
+ 
+ ## GAMING_PATTERNS
+-- Direct label leakage: deterministic accept/reject labels are converted into “Carnot energy” scores, guaranteeing perfect separation for those rows.
+-- The contaminated energy is reused in `routing_score`, making reported routing AUC circular.
+-- `live_sota_model_inference_used` can become true merely because a row names one of `MODEL_SPECS`, without evidence of actual inference.
+-- `_authority_or_weight_mutation_blocked()` is hardcoded to `False`, making the readiness safeguard cosmetic.
+-- No sleep-padding, score-capping, random-data generation, or named adversarial-check token dodges.
++- Target-label leakage: the purported energy score is constructed from `deterministic_accept`, then evaluated against `reject_label`, which is constructed from the same value.
++- Live-inference metadata laundering: `live_sota_model_inference_used` can become true merely because a row contains a matching `model_hf_id`; no inference evidence is required.
++- No sleep-padding, randomness, named-check dodges, or suspicious perfect-score capping found.
+ 
+ ## RECOMMENDATION
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-The docstring is reasonably honest that this is an artifact-level diagnostic, not live model inference. But the evaluation is poisoned by constructing the supposed energy signal from the ground-truth decision and then reporting correlation and AUROC against that same decision; those metrics are worthless and must not contribute to production or headline results.
++A deterministic ground-truth label is not “explicit Carnot energy,” and using it as the routing feature makes the resulting AUROC circular and worthless. Although the docstring honestly says the diagnostic consumes existing cases and optional proxies, it never discloses that two source families replace missing energy with the answer key. This module must not contribute to production or headline AUROC numbers.
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -385,10 +372,10 @@ The docstring is reasonably honest that this is an artifact-level diagnostic, no
+ AUTHENTIC
+ 
+ ## CLAIMS
+-No paper, learned model, or compute-substrate claims. The docstring accurately states: “Python-looking text is checked with ``ast.parse`` plus bracket balance” and “General prose is checked with cheap structural heuristics.”
++“Python-looking text is checked with ``ast.parse`` plus bracket balance.” “General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries.” “The kernel is syntactic structure, not token-level statistical fluency.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code invokes `ast.parse` for Python-like input and uses regex, character scanning, and sentence-boundary heuristics for other text. It imports no ML framework or model module because none is claimed.
++The code invokes Python’s real AST parser for Python-like input and otherwise computes explicit bracket and prose-structure heuristics using regexes and string operations. This exactly matches the documented scope.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -400,7 +387,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring advertises: syntax parsing and cheap structural checks. The `[0, 1]` clamp enforces the documented score range and still permits boundary scores; it is not perfect-dodging.
++The docstring makes no paper, learned-model, GPU, or live-inference claim. It openly describes a syntactic verifier built from `ast.parse` and cheap heuristics, which is precisely what the implementation provides; the score clamping is ordinary range enforcement, not adversarial perfect-dodging.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -412,11 +399,11 @@ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+ “Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints.”  
+-“This module does not implement that frontier proof. It implements a bounded-prefix feasibility probe.”  
+-“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated.”
++“BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact.”  
++“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses regex matching plus AST/Decimal arithmetic evaluation to detect false equalities in text prefixes. It performs no live model inference; EPR-style entropy features are computed only from top-k logprobs loaded from existing local JSON telemetry.
++The code uses regex extraction plus AST/Decimal arithmetic evaluation to detect false equalities in text prefixes. It performs no model inference; its EPR-style features are computed only from top-k logprobs loaded from existing JSON/JSONL telemetry.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -428,7 +415,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module repeatedly and explicitly denies implementing exact BEAVER, identifies the missing frontier proof, and labels its output as a proxy. The implementation matches that limited description, does not fabricate unavailable model telemetry, and uses actual measured wall time without padding or score manipulation.
++The implementation is only a text-statistical bounded-prefix proxy, but the docstring states that limitation bluntly and explicitly denies implementing BEAVER’s required frontier proof. It also refuses to fabricate missing logprobs, records `beaver_exact: False`, and contains no sleep-padding, score-capping, random features, or named adversarial-check dodges.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -440,11 +427,10 @@ AUTHENTIC
+ 
+ ## CLAIMS
+ “Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.”  
+-“The reported frontier is the first text prefix that ends at a solver-proved false completed equality.”  
+ “This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code extracts completed arithmetic equalities with regex, parses them into a restricted AST, converts them to Z3 expressions, and invokes `z3.Solver().check()`. The separate Exp 2858 text-statistical proxy is clearly labeled and only compared against the local solver result.
++The code extracts completed arithmetic equalities with regex, parses them into restricted ASTs, converts them to exact Z3 real arithmetic, and invokes `z3.Solver().check()`. It explicitly keeps the separate text-statistical proxy labeled as a comparison baseline.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -456,7 +442,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation performs the narrowly claimed Z3-backed ground-arithmetic check and makes no false claim of model inference or full BEAVER verification. Its limitations and proxy boundary are unusually explicit; there is no sleep-padding, score-capping, synthetic feature generation, or adversarial-check token dodging.
++The implementation performs the narrowly claimed Z3-backed computation and makes no false claim of model inference or full BEAVER verification. Randomness only reproducibly samples qualifying corpus rows; it does not fabricate features or scores, and duration is measured without sleep-padding or score manipulation.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -469,10 +455,10 @@ DISHONEST_NAMING
+ ## CLAIMS
+ “BEAVER-lite probability-mass certificates for arithmetic answer constraints.”  
+ “llama.cpp logits-backed top-K prefix enumerator.”  
+-“Return empirical and BEAVER-lite probability-mass violation bounds.”
++“Enumerate prefixes and bound unsafe probability mass for final answers.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The optional provider performs real llama.cpp inference and computes token log-probabilities; otherwise it openly uses deterministic mock completions. However, the alleged upper bound sums only the unsafe probability mass found in a truncated beam frontier and ignores all unenumerated mass.
++The live provider genuinely invokes `llama_cpp.Llama` and derives token log-probabilities from model logits; otherwise it uses an explicitly labeled deterministic mock. However, summing unsafe mass only across truncated top-K beams does not upper-bound total unsafe probability—the omitted probability mass may also be unsafe.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ OUTRIGHT_FAKE
+@@ -484,7 +470,7 @@ none
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-The live model path is authentic, and the mock fallback is explicitly disclosed. The certificate is not: unsafe mass observed within top-K search is generally a lower bound on total unsafe mass, not an upper bound, unless the omitted probability mass is conservatively included. Calling `upper_bound >= empirical_rate` “sound” merely compares probability-weighted and count-weighted statistics over the same selected candidates; it proves nothing about the model’s full completion distribution.
++The model substrate is real and the mock fallback is honestly disclosed, but the central “certificate” is mathematically invalid. The reported `upper_bound` is merely observed unsafe mass within a pruned search frontier and is generally a lower bound on total unsafe mass, unless all omitted mass is conservatively counted as unsafe. Calling it a sound probability-mass upper bound is dishonest naming and it must not contribute to headline AUROC numbers.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -500,7 +486,7 @@ AUTHENTIC
+ “Run Exp 1170 and write the required llama.cpp logprob artifact.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The live path imports and instantiates `llama_cpp.Llama` with `logits_all=True`, invokes it for completions, extracts `token_logprobs`, and sums them into candidate log probabilities. When live inference is unavailable or fails, it uses a deterministic Zipf mock and explicitly records that fallback in the artifact.
++The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it, and sums returned token logprobs. When live inference is unavailable or fails, it uses a deterministic Zipf mock that is explicitly labeled in provider attributes and output artifacts.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -512,7 +498,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex masquerading as model inference: it contains a real optional llama.cpp invocation and consumes actual generated-token logprobs. The mock path is conspicuously labeled through class names, provenance fields, `logprobs_source`, and `honest_verdict`; no sleep-padding, score-capping, random features, or adversarial-check token dodges appear.
++This is a real model-backed implementation with an openly disclosed mock fallback, not regex wearing a research-method costume. Only artifacts reporting `mock_logprobs_used: false` and a live llama.cpp source should contribute to headline production metrics; the Zipf fallback is test scaffolding, not evidence of verifier performance.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+@@ -523,13 +509,13 @@ This is not regex masquerading as model inference: it contains a real optional l
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” The docstring explicitly limits the method to “a bounded prefix frontier over the canonical contract JSON” producing “structural risk signals” and states that “every false-accept number still comes from the Exp 1520 validator ledger.” It makes no paper, live-model-inference, learned-feature, or compute-substrate claim.
++“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” It explicitly claims only that it “builds a bounded prefix frontier over the canonical contract JSON” and reports “structural risk signals”; it makes no paper, live-model, learned-feature, GPU, or inference claim.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs character-level JSON-prefix comparison using a trie, string lengths, manifest lookups, and deterministic ledger calculations. It invokes no model and imports no ML framework; the only Carnot dependency is a deterministic runtime-contract harness.
++The code performs offline JSON parsing, character-prefix trie checks, string-length arithmetic, and deterministic ledger aggregation. It imports no ML framework and invokes no model; it also explicitly records unavailable logprobs and marks the fallback as `structural_bound_simulation`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-NONE
++DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+ none
+@@ -538,24 +524,25 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring says: a lightweight structural prefix audit over previously generated decoder rows. It does not pretend to perform BEAVER model inference, and it explicitly records unavailable logprobs, structural simulation, blockers, and deterministic-validator authority.
++The “BEAVER-lite” label is potentially grandiose, but the docstring immediately defines the implementation as a bounded structural audit subordinate to deterministic validators. The code matches that limited claim and does not pretend that manifest model IDs or inherited inference metadata constitute live model execution. It is suitable as an audit/routing heuristic, not as an independent learned verifier contributing headline AUROC.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-AUTHENTIC
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“This is a deterministic pilot, not a production VeriCoT verifier.” “No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
++“This is a deterministic pilot, not a production VeriCoT verifier.”  
++“No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code deterministically reads checked-in JSON artifacts, canonicalizes answers, replays premise and ledger evidence, and writes a validated summary artifact. It imports and invokes no model, solver, ML framework, inference API, or GPU substrate.
++The code performs deterministic local JSON replay, exact canonicalization, dictionary lookups, ledger comparisons, hashing, and arithmetic. It invokes no model or solver and imports no ML framework, API client, or Carnot model module.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-NONE
++DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+ none
+@@ -564,5 +551,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches its narrow artifact-replay claims and explicitly disclaims production verifier status and live inference. It must not be presented as a model-backed verifier or included as an independent production-ensemble signal, but there is no dishonest naming or adversarial-check gaming here.
++The implementation matches its deliberately limited compute-substrate claims and explicitly disclaims being a production VeriCoT verifier. Keep it as an artifact-replay regression pilot, but do not misrepresent it as model-backed verification or use it as evidence of production ensemble capability.
+ 
+-- 
+2.55.0
+

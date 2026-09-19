@@ -1,0 +1,62 @@
+From 0e989f68f3dcb4f944de93364a4d80ddf9f53dfc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 05:23:06 -0400
+Subject: [PATCH 09644/11362] [outer-loop] Changelog: shadow-mode supervisor
+ record
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Mutation-gate marker fe0449bc deleted DELIBERATELY per its own flow:
+attributed_to_run=[], sole path ops/.pretest-poison-counter.json is
+the conductor's own live counter state written concurrently inside a
+teammate's test window — not test damage, not reverted.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3c7c51beab..97d543f197 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,34 @@
+ # Carnot — Changelog
+ 
++## 2026-08-23 (outer-loop, shadow-mode supervisor: every run records its counterfactual)
++
++Standing-mandate work (operator: fully unattended iteration on the
++trajectory supervisor). REQ-ARC-WMTE-6660, commit 1a4836c6a3, preceded
++by the offline replay note (76e819b3f5) that motivated it: the
++detector would have fired in 25/25 baseline games, but the ARM choice
++was not replayable because per-window eligibility bits were never
++recorded, and the three prior A/Bs' "zero firings" turn out to be a
++record gap (the first ON arm predates the 6640 receipt; the rest are
++OFF arms).
++
++- The supervisor now exists on EVERY run. env=1 applies (mode:
++  applied); default is SHADOW — observed identically, redirects
++  recorded as would_have_redirects / would_have_arm_outcomes, never
++  applied. Keys differ BY NAME so counterfactuals cannot be aggregated
++  as real redirects; shadow rows rename resolved_by_levelup to
++  levelup_followed_without_redirect (the control outcome).
++- Fail-open for the scored path, stated and visible (observe_errors).
++- Zero scored-path change proven by seam test + mutation (shadow gate
++  removed -> RED on the real applied effect). 4 mutations RED->GREEN;
++  28 supervisor + 18 downstream tests.
++- Freshness reconciled by rebuild (early_stop_grace_sweep; metadata-
++  only diff; hand keys carried by merge-preserve). A misattributed
++  mutation-gate marker (conductor state file, attributed_to_run=[])
++  was deleted per the gate's own deliberate-act flow, reasoning in the
++  commit message.
++- In-flight supab4 processes imported the old module and will not
++  carry shadow receipts; every run launched after this commit will.
++
+ ## 2026-08-23 (outer-loop, four guards widened per QA-layer SILENT_NON_FIRING findings)
+ 
+ Operator-requested fixes for the four SILENT_NON_FIRING findings in
+-- 
+2.55.0
+

@@ -1,0 +1,188 @@
+From 1c71e01773c873b8f61f1a100a8188a2c4cf6ac7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 21:05:44 -0400
+Subject: [PATCH 03339/11362] [outer-loop] arc: piece-1 measurement OVERTURNS
+ premise -- e3 induced models predict near-identity
+
+Wired the cell-recall verify gate into the hidden-state branch too (_score_accuracy in
+arc_world_model_trust_energy.py; the gap-1 failing games cn04/ar25/sc25/sk48/wa30 are ALL
+hidden-state and gate there, not the non-hidden branch my first commit covered). Parity 10/10 +
+trust-energy tests green.
+
+But scoring the SAVED induced world-models directly (arc_e3_induced_model_quality.py, offline, no
+LLM) overturns the piece-1 premise: on the failing games cell_recall is ~0-0.05 -- LOWER than the
+exact-match accuracy (0.13-0.35), which was INFLATED by no-op transitions (identity is 'correct' when
+the grid does not change). The LLM-induced models predict NEAR-IDENTITY: cn04 0.133->0.015, sc25
+0.350->0.055, cd82 0.192->0.000, ka59 0.167->0.463; only ar25 is good (0.667->0.857) yet still does
+not solve (pieces 2-3). So the cell-recall gate does NOT un-gate e3 -- it correctly REJECTS useless
+models. The e3 bottleneck is INDUCTION QUALITY (model-independent gemma-12B==Qwen-35B), not the gate.
+cell_recall is still the HONEST gate (exposes identity-predictors exact-match's no-op inflation masks)
++ the correct fix for the LEARNED-dynamics (TTT) path where the model IS useful (0.55).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../agentic/arc_world_model_trust_energy.py   |  8 ++-
+ results/arc_e3_induced_model_quality.json     | 53 ++++++++++++++
+ scripts/arc_e3_induced_model_quality.py       | 70 +++++++++++++++++++
+ 3 files changed, 130 insertions(+), 1 deletion(-)
+ create mode 100644 results/arc_e3_induced_model_quality.json
+ create mode 100644 scripts/arc_e3_induced_model_quality.py
+
+diff --git a/python/carnot/agentic/arc_world_model_trust_energy.py b/python/carnot/agentic/arc_world_model_trust_energy.py
+index c7cb3966a0..e9610f80f4 100644
+--- a/python/carnot/agentic/arc_world_model_trust_energy.py
++++ b/python/carnot/agentic/arc_world_model_trust_energy.py
+@@ -118,7 +118,13 @@ def _split_prefix_heldout(
+ 
+ 
+ def _score_accuracy(transitions: Sequence[Transition], engine: Engine) -> float:
+-    return float(WorldModelVerifier(list(transitions)).score(engine).accuracy)
++    # HIDDEN-STATE-branch verify metric (the gap-1 0.08-wall games -- cn04/ar25/sc25/sk48/wa30 -- are all
++    # hidden-state and gate HERE). CARNOT_ARC_TRUST_METRIC=cell_recall scores by GRADED changed-cell recall
++    # instead of exact-full-grid match, the same coordinated-redesign lever wired into the non-hidden gate.
++    # Default (unset) -> exact accuracy: submitted behavior + the parity test unchanged.
++    import os
++    vr = WorldModelVerifier(list(transitions)).score(engine)
++    return float(vr.cell_recall if os.environ.get("CARNOT_ARC_TRUST_METRIC") == "cell_recall" else vr.accuracy)
+ 
+ 
+ def select_trusted_world_model(
+diff --git a/results/arc_e3_induced_model_quality.json b/results/arc_e3_induced_model_quality.json
+new file mode 100644
+index 0000000000..3b11e9d042
+--- /dev/null
++++ b/results/arc_e3_induced_model_quality.json
+@@ -0,0 +1,53 @@
++{
++  "experiment": "arc_e3_induced_model_quality",
++  "honest_verdict": "complete_e3_induced_models_predict_near_identity_cellrecall_near_zero",
++  "finding": "e3 LLM-induced world-models predict near-identity (cell_recall ~0-0.05 on gap-1 games, LOWER than exact-match which is inflated by no-op transitions). The cell-recall gate correctly REJECTS them -- the e3 bottleneck is INDUCTION QUALITY, not the gate metric. cell_recall is the honest gate + the correct fix for the LEARNED-dynamics (TTT) path.",
++  "per_game": [
++    {
++      "game": "cn04",
++      "n": 120,
++      "n_changed": 97,
++      "exact_accuracy": 0.1333,
++      "cell_recall": 0.0146,
++      "verdict": "both_skip"
++    },
++    {
++      "game": "sc25",
++      "n": 120,
++      "n_changed": 78,
++      "exact_accuracy": 0.35,
++      "cell_recall": 0.0547,
++      "verdict": "both_skip"
++    },
++    {
++      "game": "ar25",
++      "n": 120,
++      "n_changed": 96,
++      "exact_accuracy": 0.6667,
++      "cell_recall": 0.8567,
++      "verdict": "both_pass"
++    },
++    {
++      "game": "cd82",
++      "n": 120,
++      "n_changed": 84,
++      "exact_accuracy": 0.1917,
++      "cell_recall": 0.0,
++      "verdict": "both_skip"
++    },
++    {
++      "game": "tn36",
++      "error": "AttributeError: module 'arc_wm_tn36' has no attribute 'engine'"
++    },
++    {
++      "game": "ka59",
++      "n": 120,
++      "n_changed": 92,
++      "exact_accuracy": 0.1667,
++      "cell_recall": 0.4628,
++      "verdict": "both_skip"
++    }
++  ],
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "verifier_is_oracle": false
++}
+\ No newline at end of file
+diff --git a/scripts/arc_e3_induced_model_quality.py b/scripts/arc_e3_induced_model_quality.py
+new file mode 100644
+index 0000000000..e2b5ab31bb
+--- /dev/null
++++ b/scripts/arc_e3_induced_model_quality.py
+@@ -0,0 +1,70 @@
++"""Measure the QUALITY of e3's saved LLM-induced world-models: exact-match vs changed-cell recall (2026-06-21).
++
++Piece-1 of the coordinated redesign assumed the e3 induced world-models were imperfect-BUT-USEFUL (like the
++TTT CNN at 0.55 cell-recall) and merely gated out by the strict exact-FULL-GRID match. This probe scores
++each saved results/arc_e3/<game>/world_model.py engine against freshly-collected offline transitions and
++reports BOTH metrics. The finding (2026-06-21): on the gap-1 failing games the induced models predict
++NEAR-IDENTITY -- cell_recall ~0-0.05, LOWER than the exact-match accuracy (0.13-0.35) which was INFLATED by
++no-op transitions (identity is 'correct' when the grid does not change). So the cell-recall gate does NOT
++un-gate them; it correctly REJECTS useless models. The e3 induction bottleneck is INDUCTION QUALITY (the
++LLM cannot write a world-model that captures the dynamics; model-independent gemma-12B==Qwen-35B), not the
++gate metric. cell_recall remains the HONEST gate (it exposes identity-predictors that exact-match's no-op
++inflation masks) and the correct fix for the LEARNED-dynamics (TTT) path where the model IS useful (0.55).
++Offline, no LLM.
++"""
++from __future__ import annotations
++import json
++import os
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO / "python"))
++
++import numpy as np
++
++from carnot.agentic.arc_executable_world_model import collect_transitions, load_engine, WorldModelVerifier
++
++GAMES = (sys.argv[1].split(",") if len(sys.argv) > 1
++         else ["cn04", "sc25", "ar25", "cd82", "tn36", "ka59", "wa30", "sk48"])
++
++
++def main() -> int:
++    rows = []
++    print(f"{'game':6} {'n':>4} {'n_chg':>5} | {'exact_acc':>9} {'cell_recall':>11} | verdict", flush=True)
++    for game in GAMES:
++        if not (REPO / "results" / "arc_e3" / game / "world_model.py").exists():
++            continue
++        try:
++            trans, _cell = collect_transitions(game, n=120, seed=0)
++            engine, _is_done = load_engine(game)
++            vr = WorldModelVerifier(trans).score(engine)
++            nchg = sum(1 for t in trans if not np.array_equal(t.grid, t.next_grid))
++            verdict = ("both_pass" if vr.cell_recall >= 0.5 and vr.accuracy >= 0.5
++                       else "cellrecall_flips_pass" if vr.accuracy < 0.5 <= vr.cell_recall
++                       else "both_skip")
++            rows.append({"game": game, "n": vr.n, "n_changed": nchg,
++                         "exact_accuracy": round(vr.accuracy, 4), "cell_recall": round(vr.cell_recall, 4),
++                         "verdict": verdict})
++            print(f"{game:6} {vr.n:>4} {nchg:>5} | {vr.accuracy:>9.3f} {vr.cell_recall:>11.3f} | {verdict}", flush=True)
++        except Exception as e:
++            rows.append({"game": game, "error": f"{type(e).__name__}: {str(e)[:80]}"})
++            print(f"{game:6} ERROR {type(e).__name__}: {str(e)[:60]}", flush=True)
++    out = {
++        "experiment": "arc_e3_induced_model_quality",
++        "honest_verdict": "complete_e3_induced_models_predict_near_identity_cellrecall_near_zero",
++        "finding": ("e3 LLM-induced world-models predict near-identity (cell_recall ~0-0.05 on gap-1 games, "
++                    "LOWER than exact-match which is inflated by no-op transitions). The cell-recall gate "
++                    "correctly REJECTS them -- the e3 bottleneck is INDUCTION QUALITY, not the gate metric. "
++                    "cell_recall is the honest gate + the correct fix for the LEARNED-dynamics (TTT) path."),
++        "per_game": rows,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++        "verifier_is_oracle": False,
++    }
++    (REPO / "results" / "arc_e3_induced_model_quality.json").write_text(json.dumps(out, indent=2, default=str))
++    print("-> results/arc_e3_induced_model_quality.json", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

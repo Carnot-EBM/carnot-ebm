@@ -1,0 +1,141 @@
+From 3c721292dec5a787fe9563fa9b689d255972fd9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 23:01:49 -0400
+Subject: [PATCH 05155/11362] [outer-loop] correct stale 34x scipy claim +
+ draft ARC value-head energy-distillation task
+
+Operator asked whether ARC energy work is properly GPU-offloaded. Investigation: zero
+torch/CUDA anywhere in the ARC value/search path (arc_value_learner.py,
+arc_graph_explore.py, arc_competition_agent.py) -- correctly so, the per-node work is
+small sequential numpy/scipy ops on tiny grids, the wrong shape for GPU (kernel-launch
+overhead would dominate; the value head itself is a logistic regression).
+
+Digging further surfaced an unverified live-Kaggle risk flagged in the code's own
+docstring: a scipy.ndimage.label fast path vs a pure-python fallback 'the live Kaggle
+kernel may lack it', claimed ~34x faster, never actually checked on the real sandbox.
+Verified directly (carnot-arc-scipy-diag Kaggle kernel, real hardware):
+  - scipy 1.16.3 IS present -- the fallback risk is CLOSED, not live.
+  - The docstring's '~34x faster' claim was WRONG -- real measured difference is 1.41x
+    (663us/call scipy path vs 936us/call fallback). Corrected the docstring in
+    arc_value_learner.py to cite the real measurement instead of the stale claim.
+
+ops/known-issues.md: drafted a precondition-gated, prototype-first task to attack the
+CONFIRMED compute-cost bottleneck (exp4616: value-guided search wins at equal nodes,
+loses at equal wall-clock) via energy distillation -- explicitly NOT re-proposing
+representation (done, 0.725 AUROC), distribution-shift (exp4665 DAgger fix nulled
+anyway), calibration (exp4616 ruled out), or call-frequency reduction (exp4652 lazy
+top-k nulled). Anchored to the real 663us/call baseline instead of a hypothetical
+number; requires an offline speedup+fidelity bar before any live A/B is attempted.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ ops/known-issues.md                        | 67 ++++++++++++++++++++++
+ python/carnot/agentic/arc_value_learner.py | 14 +++--
+ 2 files changed, 77 insertions(+), 4 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e1cfc58e55..8c8ddf6e4c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1280,6 +1280,73 @@ tasks are not.
+ 
+ ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+ 
++### ARC VALUE-HEAD ENERGY DISTILLATION 2026-06-30 (operator-directed investigation) — attack the CONFIRMED compute-cost bottleneck, not representation/distribution-shift/calibration (already ruled out)
++
++**Do NOT re-propose:** representation improvement (0.725 LOO-AUROC already achieved,
++`docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`), distribution-shift correction
++(exp4665 DAgger fix drove the shift metric to ~0, `first_win_rate_delta` still 0.0), calibration
++(exp4616: rank-to-cost monotonicity 1.0, recalibration doesn't change routing), or call-frequency
++reduction (exp4652 lazy top-k: `delta 0.0`). All FOUR are tested and closed on this exact value-head.
++
++**What's confirmed and still open:** exp4616's disambiguation is clean — `compute_cost_evidence.binds:
++true` (value-guided search wins at equal NODES, 7.6x expansion speedup, but LOSES at equal WALL-CLOCK:
++bare BFS solves 8/N vs value-head 6/N in the same time budget). The one compute-cost fix already tried
++(exp4652, reducing HOW OFTEN the value head is called) nulled. **Reducing HOW EXPENSIVE each call is —
++via distillation/compression into a cheap closed-form energy — is untested and structurally different.**
++
++**Real baseline (measured 2026-06-30, `carnot-arc-scipy-diag` Kaggle kernel, actual sandbox CPU, not a
++dev-box estimate):** `_component_stats_from_grid` (one sub-step of `cross_game_features_v3`, called at
++least twice per node — current + previous frame) costs **663us/call** via the scipy path (confirmed
++present, scipy 1.16.3 — the "may lack it" fallback risk is CLOSED, not live). That's ONE sub-step; the
++full `cross_game_features_v3` also does an O(components^2) greedy frame-matching loop
++(`_object_relational_features`) and pairwise-distance calc NOT yet measured end-to-end. (Also corrected
++in the same investigation: `arc_value_learner.py`'s docstring claimed the scipy path is "~34x faster"
++than the fallback — measured on real hardware it's 1.41x. Stale claim fixed in commit alongside this.)
++
++**Task (precondition-gated, prototype-first per CLAUDE.md "Phase Prototype + Validation" discipline):**
++```
++PRECONDITIONS:
++  a. Measure the FULL cross_game_features_v3 per-call latency end-to-end on the real Kaggle sandbox
++     (not just _component_stats_from_grid) -- extend the carnot-arc-scipy-diag kernel pattern. This is
++     the true "must beat this" baseline the distilled energy needs to undercut.
++  b. Confirm (from exp4616/live search logs) an estimate of nodes-evaluated-per-episode under the
++     wall-clock budget, so the aggregate overhead (per-call cost x nodes) is quantified, not assumed.
++CONCRETE STEPS:
++  1. OFFLINE ONLY first: distill the existing (0.725 LOO-AUROC) value function into a cheap closed-form
++     energy -- e.g. a small linear/quadratic function over a compact, CHEAP-TO-COMPUTE feature subset
++     (avoid recomputing the O(components^2) greedy match every node; consider incremental/cached updates
++     between adjacent search states instead of from-scratch recomputation). Train via knowledge
++     distillation FROM the existing value head's own predictions on held-out states (oracle-distinct:
++     no ground-truth answer-key dependency, no induced-engine leakage -- verifier_is_oracle=false).
++  2. Measure the distilled energy's (a) per-call latency vs the step-0(a) baseline, (b) ranking-quality
++     retention (correlation/AUROC vs the original value head, NOT vs ground truth -- distillation
++     fidelity, not a new discrimination claim).
++  3. ONLY if (a) shows a large, real speedup (order-of-magnitude, not marginal -- the exp4652 lazy-top-k
++     null shows a small win doesn't move live outcomes) AND (b) retains most ranking quality: re-run the
++     exp4616-style equal-wall-clock A/B (distilled-energy-guided search vs bare BFS) to test whether
++     compute-cost reduction alone unlocks the live lift, or whether a 5th cause is hiding beneath these
++     four. Report HONESTLY either way -- a null here, after this much has already nulled, is a real and
++     valuable result (closes the value-head/selection axis entirely, redirects effort fully to the
++     generation axis).
++REQUIRED ARTIFACT FIELDS:
++  baseline_full_feature_latency_us: {value: float, principle: "the true must-beat-this number (step 0a);
++    citing only the component-stats sub-step (663us) would understate the real per-node cost."}
++  distilled_latency_us: {value: float, principle: "the distilled energy's measured per-call cost on the
++    SAME real hardware as the baseline -- a dev-box number would not be comparable."}
++  speedup_factor: {value: float, principle: "distilled vs baseline_full_feature_latency_us; must be
++    large (order-of-magnitude) to plausibly move a wall-clock-bounded search, per exp4616's evidence."}
++  ranking_fidelity: {value: float, principle: "correlation/AUROC of distilled energy vs the ORIGINAL
++    value head's own predictions (distillation fidelity) -- not a new ground-truth discrimination claim."}
++  verifier_is_oracle: {value: false, principle: "distilled FROM the existing learned value head's own
++    predictions, not from ground-truth answer keys or induced-engine leakage -- oracle-distinct."}
++  live_equal_wallclock_delta: {value: "float or null", principle: "only populate if steps 1-2 clear the
++    speedup+fidelity bar; a null distillation result should NOT proceed to a live A/B and fabricate one."}
++```
++`track: hardware` does NOT apply here (this is pure software/CPU, not a board task) — use the normal
++ARC-solving reserved slot per the Incremental-Progress Scoping discipline; this is a SELECTION-axis
++efficiency task, distinct from the currently-active GENERATION-axis (L1-first-contact) work — both may
++run in the same milestone without conflict.
++
+ ### KV260 FOLLOW-UP 2026-06-30 (operator "a + b" on arXiv:2606.25313) — measure our sampler's residual-energy decay exponent
+ 
+ **Literature basis:** "Programmable Probabilistic Computer with 1,000,000 p-bits" (Aadit/Camsari group,
+diff --git a/python/carnot/agentic/arc_value_learner.py b/python/carnot/agentic/arc_value_learner.py
+index d2868b25e4..871269fde7 100644
+--- a/python/carnot/agentic/arc_value_learner.py
++++ b/python/carnot/agentic/arc_value_learner.py
+@@ -171,10 +171,16 @@ def _grid2d(frame: Any) -> np.ndarray:
+ 
+ def _component_stats_from_grid(g: np.ndarray) -> list[dict[str, float]]:
+     """4-connectivity non-background components -> per-component stats (centroid / area / dominant color /
+-    bbox). ``scipy.ndimage.label`` fast path (~34x faster than the pure-python flood fill it replaces);
+-    falls back to the original flood fill when scipy is absent (the live Kaggle kernel may lack it). The
+-    downstream features are order-invariant (min/mean/max/std + all-pairs), so only the SET of component
+-    stats must match -- verified identical over 40 random grids (2026-06-23)."""
++    bbox). ``scipy.ndimage.label`` fast path; falls back to the original flood fill when scipy is absent.
++    CORRECTED 2026-06-30: the original "~34x faster" claim was never measured on real target hardware and
++    was wrong. Verified on the actual Kaggle sandbox (carnot-arc-scipy-diag kernel, scipy 1.16.3 confirmed
++    present): scipy path 663us/call vs pure-python fallback 936us/call -- a 1.41x difference, not 34x.
++    The fallback risk itself is CLOSED (scipy confirmed present on Kaggle; the slow path never triggers
++    live), but neither path is a large lever on its own -- see ops/known-issues.md "energy distillation"
++    task for where the real per-node cost is (the O(components^2) greedy frame-matching loop on top of
++    this, not the labeling step itself). The downstream features are order-invariant (min/mean/max/std +
++    all-pairs), so only the SET of component stats must match -- verified identical over 40 random grids
++    (2026-06-23)."""
+     vals, counts = np.unique(g, return_counts=True)
+     bg = float(vals[counts.argmax()]) if vals.size else 0.0
+     mask = g != bg
+-- 
+2.55.0
+

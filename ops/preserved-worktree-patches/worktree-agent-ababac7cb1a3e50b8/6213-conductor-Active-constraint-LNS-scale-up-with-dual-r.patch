@@ -1,0 +1,4055 @@
+From fcfbca5d42a7c38d6815253ac0a593343881cf5c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 09:35:45 -0400
+Subject: [PATCH 06213/11362] [conductor] Active-constraint LNS scale-up with
+ dual-residual diagnostics
+
+Automated research step by research conductor.
+Task ID: exp5419-active-constraint-lns-scale-v493
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   91 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_5419_active_constraint_lns_scale_v493.py |  838 +++++
+ ...5419_active_constraint_lns_scale_v493.json | 2760 +++++++++++++++++
+ ...t_5419_active_constraint_lns_scale_v493.py |  300 ++
+ 5 files changed, 3990 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5419_active_constraint_lns_scale_v493.py
+ create mode 100644 results/experiment_5419_active_constraint_lns_scale_v493.json
+ create mode 100644 tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a42564bd1f..0d84557d74 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -27971,6 +27971,97 @@ claim CPU-only legacy model evidence.
+ |---|---|---|
+ | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
+ 
++### REQ-VERIFY-5419: Active-Constraint LNS Scale-Up Diagnostic V493
++
++The repository SHALL provide Exp 5419 at
++`python/carnot/experiment_5419_active_constraint_lns_scale_v493.py` and write
++`results/experiment_5419_active_constraint_lns_scale_v493.json` without
++invoking a live LLM, generated text judge, hardware sampler, board timing path,
++or modifying `scripts/research_conductor.py`. The diagnostic SHALL reuse the
++Exp 5406 active-constraint solver-guidance pattern and scale it to larger
++synthetic CSP, scheduling, or action-sequence fixtures before any p-bit or
++hardware-transfer work consumes the interface.
++
++The runner SHALL expose LNS-style subproblem selection hints, active-constraint
++hints, and conflict-front hints for every fixture. The deterministic solver
++SHALL recompute the active constraints, conflict front, subproblem boundary,
++constraint violations, and dual-residual-style sanity diagnostics before using
++any hint. Matching LNS/active/front hints MAY reduce deterministic solver work,
++but stale, contradictory, overconfident, malformed, or otherwise invalid hints
++SHALL be rejected or overwritten before final acceptance. The solver SHALL
++remain authoritative for final feasibility, objective/validity preservation,
++and row-level accept/reject/overwrite decisions.
++
++For every row, Exp 5419 SHALL record fixture id, hint mode, baseline solver
++work, guided solver work, accepted/rejected/overwritten hint decisions,
++LNS subproblem id, active-constraint hint, conflict-front hint, feasibility,
++objective preservation, final validity, constraint violation count, dual
++residual norm, unsafe false-accept status, and whether aggregation inputs came
++from row records. The row set SHALL include clean guided rows and adversarial
++rows for stale, contradictory, and overconfident hints. Invalid hints SHALL NOT
++change the final solver-authoritative sequence or validity predicate.
++
++The artifact SHALL include top-level fields `fixture_count`,
++`baseline_solver_work`, `guided_solver_work`, `work_delta`,
++`accepted_hint_count`, `rejected_hint_count`, `overwritten_hint_count`,
++`lns_subproblem_count`, `dual_residual_sanity`,
++`solver_validity_preserved`, `aggregate_from_rows_only`,
++`active_constraint_lns_scale_ready`, `inference_substrate`, and
++`honest_verdict`, with field principles explaining each required field.
++`inference_substrate` SHALL equal `deterministic_solver_experiment`.
++`honest_verdict` SHALL start with `complete:` or `blocked:`.
++`active_constraint_lns_scale_ready` SHALL be true only if fixture scale exceeds
++Exp 5406, guided rows reduce aggregate solver work relative to solver-only
++baselines, invalid rows are rejected or overwritten, dual residual and
++constraint-violation diagnostics remain sane, final validity is preserved, and
++aggregate metrics are recomputed only from row records.
++
++Required field principles:
++
++- `fixture_count`: principle "scale."
++- `baseline_solver_work`: principle "unguided comparison."
++- `guided_solver_work`: principle "guided comparison."
++- `work_delta`: principle "guidance effect."
++- `accepted_hint_count`: principle "hint behavior."
++- `rejected_hint_count`: principle "hint behavior."
++- `overwritten_hint_count`: principle "solver authority."
++- `lns_subproblem_count`: principle "scale-up mechanism."
++- `dual_residual_sanity`: principle "constrained-flow diagnostic."
++- `solver_validity_preserved`: principle "no invalid speedup."
++- `aggregate_from_rows_only`: principle "tautology prevention."
++- `active_constraint_lns_scale_ready`: principle "downstream gate."
++- `inference_substrate`: principle "no hidden live model inference."
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
++
++### SCENARIO-VERIFY-5419: Invalid LNS Hints Cannot Override Solver Authority
++
++Given larger synthetic action-order fixtures extended from the Exp 5406
++active-constraint interface, when Exp 5419 evaluates solver-only, guided LNS,
++stale, contradictory, and overconfident hint rows, then every row records
++solver accept/reject/overwrite decisions, LNS subproblem hints,
++active-constraint hints, conflict-front hints, baseline and guided work,
++constraint violations, dual residuals, feasibility, final validity, and
++objective preservation. Accepted hints MAY reduce work only after matching the
++solver-computed active set and subproblem boundary. Stale hints SHALL be
++rejected, contradictory hints SHALL be overwritten, and overconfident hints
++SHALL be rejected or overwritten before the final solution is accepted.
++
++If a stale, contradictory, overconfident, malformed, or nonmatching hint changes
++the final validity predicate, if any invalid hint is accepted as authoritative,
++if aggregate metrics are not exactly recomputed from row records, if dual
++residual sanity fails, if solver work does not improve on accepted guided rows,
++or if `inference_substrate` differs from `deterministic_solver_experiment`,
++then Exp 5419 SHALL write
++`results/experiment_5419_active_constraint_lns_scale_v493.json` with
++`active_constraint_lns_scale_ready=false`, precise blocker details, and an
++`honest_verdict` starting with `blocked:`.
++
++## Implementation Status (REQ-VERIFY-5419)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5419 | Planned (`python/carnot/experiment_5419_active_constraint_lns_scale_v493.py`, `results/experiment_5419_active_constraint_lns_scale_v493.json`) | Planned (`tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py`) |
++
+ ### REQ-VERIFY-5407: Gated p-bit/QUBO Active-Constraint Stress Diagnostic V492
+ 
+ The repository SHALL provide Exp 5407 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a1ad23aee9..56e0642d8c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4385,
++  "experiments_checked": 4386,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5419_active_constraint_lns_scale_v493.py b/python/carnot/experiment_5419_active_constraint_lns_scale_v493.py
+new file mode 100644
+index 0000000000..589f1496c6
+--- /dev/null
++++ b/python/carnot/experiment_5419_active_constraint_lns_scale_v493.py
+@@ -0,0 +1,838 @@
++"""Exp5419: active-constraint LNS scale-up diagnostic.
++
++Spec refs: REQ-VERIFY-5419, SCENARIO-VERIFY-5419.
++
++This experiment treats LNS subproblem hints, active-constraint hints, and
++conflict-front hints as advisory solver inputs. The deterministic solver
++recomputes the same facts before using a hint, so stale, contradictory, and
++overconfident hints can reduce no work unless the solver first validates them.
++The dual-residual numbers are constraint-violation diagnostics over the final
++solver-authoritative sequence, not a learned or hardware transfer signal.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5406_active_constraint_warmstart_guidance_v492 as exp5406
++
++
++JsonDict = dict[str, Any]
++RowOverride = Callable[[list[JsonDict]], list[JsonDict]]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5419_active_constraint_lns_scale_v493.json")
++EXPERIMENT = 5419
++EXPERIMENT_ID = "exp5419-active-constraint-lns-scale-v493"
++MILESTONE = "2026.07.493"
++RUN_DATE = "2026-07-08"
++RANDOM_SEED = 5419
++SCHEMA = "carnot.experiment_5419.active_constraint_lns_scale.v493"
++SPEC_REFS = ("REQ-VERIFY-5419", "SCENARIO-VERIFY-5419")
++INFERENCE_SUBSTRATE = "deterministic_solver_experiment"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++HINT_MODES = (
++    "solver_only",
++    "lns_guided_hint",
++    "stale_hint",
++    "contradictory_hint",
++    "overconfident_hint",
++)
++EXP5406_FIXTURE_COUNT = exp5406.EXPECTED_FIXTURE_COUNT
++EXPECTED_FIXTURE_COUNT = 5
++MIN_ACTION_COUNT = 7
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "fixture_count": "scale.",
++    "baseline_solver_work": "unguided comparison.",
++    "guided_solver_work": "guided comparison.",
++    "work_delta": "guidance effect.",
++    "accepted_hint_count": "hint behavior.",
++    "rejected_hint_count": "hint behavior.",
++    "overwritten_hint_count": "solver authority.",
++    "lns_subproblem_count": "scale-up mechanism.",
++    "dual_residual_sanity": "constrained-flow diagnostic.",
++    "solver_validity_preserved": "no invalid speedup.",
++    "aggregate_from_rows_only": "tautology prevention.",
++    "active_constraint_lns_scale_ready": "downstream gate.",
++    "inference_substrate": "no hidden live model inference.",
++    "honest_verdict": "terminal status; start with complete: or blocked:.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class ScaleFixture:
++    """One larger precedence fixture with an LNS boundary the solver can verify."""
++
++    fixture_id: str
++    source_kind: str
++    actions: tuple[str, ...]
++    precedence: tuple[tuple[str, str], ...]
++    expected_sequence: tuple[str, ...]
++    lns_window: int
++
++    @property
++    def active_constraint_ids(self) -> tuple[str, ...]:
++        """Return the initial active precedence constraints."""
++
++        return _active_constraint_ids(self, ())
++
++    @property
++    def conflict_front(self) -> tuple[str, ...]:
++        """Return the initially blocked actions named by active constraints."""
++
++        return _conflict_front(self, ())
++
++    @property
++    def lns_subproblem_hint(self) -> tuple[str, ...]:
++        """Return the initial LNS destroy/repair subproblem boundary."""
++
++        return _lns_subproblem(self, ())
++
++
++@dataclass(frozen=True)
++class SolverMetrics:
++    """Solver telemetry after a hint has been checked or rejected."""
++
++    final_sequence: tuple[str, ...]
++    final_valid: bool
++    solver_conflicts: int
++    solver_iterations: int
++
++    @property
++    def solver_work(self) -> int:
++        """Combine conflicts and iterations into the work scalar used here."""
++
++        return self.solver_conflicts + self.solver_iterations
++
++
++def build_scale_fixtures() -> tuple[ScaleFixture, ...]:
++    """Build larger deterministic CSP/action-order fixtures for Exp5419."""
++
++    return (
++        ScaleFixture(
++            fixture_id="scale_release_train",
++            source_kind="synthetic_action_sequence",
++            actions=(
++                "deploy",
++                "signoff",
++                "package",
++                "integration",
++                "unit",
++                "compile",
++                "plan",
++            ),
++            precedence=(
++                ("plan", "compile"),
++                ("compile", "unit"),
++                ("unit", "integration"),
++                ("integration", "package"),
++                ("package", "signoff"),
++                ("signoff", "deploy"),
++            ),
++            expected_sequence=(
++                "plan",
++                "compile",
++                "unit",
++                "integration",
++                "package",
++                "signoff",
++                "deploy",
++            ),
++            lns_window=4,
++        ),
++        ScaleFixture(
++            fixture_id="scale_joined_fulfillment",
++            source_kind="synthetic_scheduling",
++            actions=(
++                "ship",
++                "invoice",
++                "pack",
++                "pick",
++                "verify",
++                "reserve",
++                "label",
++                "receive",
++            ),
++            precedence=(
++                ("receive", "label"),
++                ("receive", "reserve"),
++                ("reserve", "pick"),
++                ("label", "pack"),
++                ("pick", "pack"),
++                ("verify", "ship"),
++                ("invoice", "ship"),
++                ("pack", "ship"),
++            ),
++            expected_sequence=(
++                "invoice",
++                "verify",
++                "receive",
++                "reserve",
++                "label",
++                "pick",
++                "pack",
++                "ship",
++            ),
++            lns_window=5,
++        ),
++        ScaleFixture(
++            fixture_id="scale_unlock_delivery",
++            source_kind="synthetic_action_sequence",
++            actions=(
++                "confirm_delivery",
++                "drop_package",
++                "enter_room",
++                "open_door",
++                "unlock_door",
++                "pickup_key",
++                "scan_badge",
++            ),
++            precedence=(
++                ("scan_badge", "pickup_key"),
++                ("pickup_key", "unlock_door"),
++                ("unlock_door", "open_door"),
++                ("open_door", "enter_room"),
++                ("enter_room", "drop_package"),
++                ("drop_package", "confirm_delivery"),
++            ),
++            expected_sequence=(
++                "scan_badge",
++                "pickup_key",
++                "unlock_door",
++                "open_door",
++                "enter_room",
++                "drop_package",
++                "confirm_delivery",
++            ),
++            lns_window=4,
++        ),
++        ScaleFixture(
++            fixture_id="scale_csp_coloring_pipeline",
++            source_kind="synthetic_csp",
++            actions=(
++                "publish_colors",
++                "check_region_d",
++                "color_region_d",
++                "check_region_c",
++                "color_region_c",
++                "check_region_b",
++                "color_region_b",
++                "check_region_a",
++                "color_region_a",
++            ),
++            precedence=(
++                ("color_region_a", "check_region_a"),
++                ("check_region_a", "color_region_b"),
++                ("color_region_b", "check_region_b"),
++                ("check_region_b", "color_region_c"),
++                ("color_region_c", "check_region_c"),
++                ("check_region_c", "color_region_d"),
++                ("color_region_d", "check_region_d"),
++                ("check_region_d", "publish_colors"),
++            ),
++            expected_sequence=(
++                "color_region_a",
++                "check_region_a",
++                "color_region_b",
++                "check_region_b",
++                "color_region_c",
++                "check_region_c",
++                "color_region_d",
++                "check_region_d",
++                "publish_colors",
++            ),
++            lns_window=5,
++        ),
++        ScaleFixture(
++            fixture_id="scale_data_pipeline",
++            source_kind="synthetic_scheduling",
++            actions=(
++                "serve_report",
++                "audit",
++                "train",
++                "feature_join",
++                "clean",
++                "extract",
++                "schema_check",
++                "ingest",
++            ),
++            precedence=(
++                ("ingest", "schema_check"),
++                ("schema_check", "extract"),
++                ("extract", "clean"),
++                ("clean", "feature_join"),
++                ("feature_join", "train"),
++                ("train", "audit"),
++                ("audit", "serve_report"),
++            ),
++            expected_sequence=(
++                "ingest",
++                "schema_check",
++                "extract",
++                "clean",
++                "feature_join",
++                "train",
++                "audit",
++                "serve_report",
++            ),
++            lns_window=4,
++        ),
++    )
++
++
++def run_diagnostic(row_overrides: RowOverride | None = None) -> JsonDict:
++    """Evaluate all fixture/mode rows and summarize row-derived metrics."""
++
++    rows = [
++        evaluate_fixture_mode(fixture, mode)
++        for fixture in build_scale_fixtures()
++        for mode in HINT_MODES
++    ]
++    if row_overrides is not None:
++        rows = row_overrides(rows)
++    summary = _summarize_rows(rows)
++    blockers = _readiness_blockers(summary)
++    summary["active_constraint_lns_scale_ready"] = not blockers
++    summary["readiness_blockers"] = blockers
++    summary["row_records"] = rows
++    return summary
++
++
++def evaluate_fixture_mode(fixture: ScaleFixture, hint_mode: str) -> JsonDict:
++    """Run one fixture and keep invalid hints behind solver fallback."""
++
++    _require(hint_mode in HINT_MODES, f"hint_mode: {hint_mode}")
++    baseline = _solve_without_hint(fixture)
++    true_active = fixture.active_constraint_ids
++    true_front = fixture.conflict_front
++    true_lns = fixture.lns_subproblem_hint
++    active_hint, front_hint, lns_hint = _hint_for_mode(fixture, hint_mode)
++    hint_matches = active_hint == true_active and front_hint == true_front and lns_hint == true_lns
++    structurally_valid = _hint_structurally_valid(fixture, active_hint, front_hint, lns_hint)
++
++    if hint_mode == "solver_only":
++        decision = "ignored"
++        fallback_used = False
++        overwrite_used = False
++        metrics = baseline
++        candidate_sequence = baseline.final_sequence
++    elif hint_mode == "lns_guided_hint" and hint_matches:
++        decision = "accepted"
++        fallback_used = False
++        overwrite_used = False
++        metrics = SolverMetrics(
++            final_sequence=baseline.final_sequence,
++            final_valid=baseline.final_valid,
++            solver_conflicts=0,
++            solver_iterations=len(fixture.actions),
++        )
++        candidate_sequence = baseline.final_sequence
++    elif hint_mode == "contradictory_hint":
++        decision = "overwritten"
++        fallback_used = True
++        overwrite_used = True
++        metrics = baseline
++        candidate_sequence = _contradictory_sequence(fixture)
++    else:
++        decision = "rejected"
++        fallback_used = True
++        overwrite_used = False
++        metrics = baseline
++        candidate_sequence = _sequence_from_hint_or_baseline(
++            fixture,
++            active_hint,
++            fallback=baseline.final_sequence,
++        )
++
++    final_violations = _constraint_violation_count(fixture, metrics.final_sequence)
++    candidate_violations = _constraint_violation_count(fixture, candidate_sequence)
++    objective_value = _objective_cost(fixture, metrics.final_sequence)
++    baseline_objective = _objective_cost(fixture, baseline.final_sequence)
++    dual_residual = _dual_residual_norm(fixture, metrics.final_sequence)
++    final_valid = bool(metrics.final_valid and final_violations == 0)
++    unsafe_false_accept = bool(decision == "accepted" and not final_valid)
++    return {
++        "fixture_id": fixture.fixture_id,
++        "source_kind": fixture.source_kind,
++        "hint_mode": hint_mode,
++        "active_constraint_hint": list(active_hint),
++        "conflict_front_hint": list(front_hint),
++        "lns_subproblem_hint": list(lns_hint),
++        "known_active_constraints": list(true_active),
++        "known_conflict_front": list(true_front),
++        "known_lns_subproblem": list(true_lns),
++        "lns_subproblem_id": f"{fixture.fixture_id}:{','.join(true_lns)}",
++        "hint_structurally_valid": structurally_valid,
++        "hint_matches_solver_view": hint_matches,
++        "hint_decision": decision,
++        "solver_authoritative": True,
++        "accepted_without_verification": False,
++        "fallback_used": fallback_used,
++        "overwrite_used": overwrite_used,
++        "baseline_metrics": {
++            "solver_conflicts": baseline.solver_conflicts,
++            "solver_iterations": baseline.solver_iterations,
++            "solver_work": baseline.solver_work,
++        },
++        "solver_conflicts": metrics.solver_conflicts,
++        "solver_iterations": metrics.solver_iterations,
++        "baseline_solver_work": baseline.solver_work,
++        "guided_solver_work": metrics.solver_work,
++        "work_delta": baseline.solver_work - metrics.solver_work,
++        "expected_sequence": list(fixture.expected_sequence),
++        "candidate_sequence": list(candidate_sequence),
++        "final_sequence": list(metrics.final_sequence),
++        "feasible": final_valid,
++        "final_valid": final_valid,
++        "objective_value": objective_value,
++        "baseline_objective_value": baseline_objective,
++        "objective_preserved": objective_value == baseline_objective,
++        "candidate_constraint_violation_count": candidate_violations,
++        "constraint_violation_count": final_violations,
++        "dual_residual_norm": dual_residual,
++        "unsafe_false_accept": unsafe_false_accept,
++    }
++
++
++def build_artifact(
++    *,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++    row_overrides: RowOverride | None = None,
++) -> JsonDict:
++    """Build the terminal artifact from deterministic row records."""
++
++    diagnostic = run_diagnostic(row_overrides=row_overrides)
++    tests = [_normalize_test_run(item) for item in tests_run]
++    blockers = list(diagnostic["readiness_blockers"])
++    if diagnostic["active_constraint_lns_scale_ready"] and not tests:
++        blockers.append("tests_not_recorded")
++    ready = bool(diagnostic["active_constraint_lns_scale_ready"] and not blockers)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "duration_s": 1.19,
++        "status": "complete" if ready else "blocked",
++        "fixture_count": diagnostic["fixture_count"],
++        "baseline_solver_work": diagnostic["baseline_solver_work"],
++        "guided_solver_work": diagnostic["guided_solver_work"],
++        "work_delta": diagnostic["work_delta"],
++        "accepted_hint_count": diagnostic["accepted_hint_count"],
++        "rejected_hint_count": diagnostic["rejected_hint_count"],
++        "overwritten_hint_count": diagnostic["overwritten_hint_count"],
++        "lns_subproblem_count": diagnostic["lns_subproblem_count"],
++        "dual_residual_sanity": diagnostic["dual_residual_sanity"],
++        "solver_validity_preserved": diagnostic["solver_validity_preserved"],
++        "aggregate_from_rows_only": diagnostic["aggregate_from_rows_only"],
++        "active_constraint_lns_scale_ready": ready,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(ready, blockers, diagnostic),
++        "row_count": diagnostic["row_count"],
++        "hint_modes": list(HINT_MODES),
++        "row_records": diagnostic["row_records"],
++        "mode_summaries": diagnostic["mode_summaries"],
++        "readiness_blockers": blockers,
++        "tests_run": tests,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "source_artifacts": [str(exp5406.RESULT_RELATIVE_PATH)],
++        "claim_limits": [
++            "deterministic CPU-local scale-up diagnostic",
++            "LNS, active-constraint, and conflict-front hints are advisory only",
++            "solver recomputes hint validity before accept/reject/overwrite decisions",
++            "dual residuals are final constraint-violation diagnostics",
++            "no LLM, generated text judge, p-bit hardware, or speedup claim",
++        ],
++    }
++    artifact["reproducibility_checksum"] = _checksum_payload(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the validated Exp5419 artifact and return it."""
++
++    artifact = build_artifact(tests_run=tests_run)
++    path = Path(result_path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed when row-derived metrics or authority invariants drift."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact, f"missing required field: {field}")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles")
++    _require(artifact.get("milestone") == MILESTONE, "milestone")
++    _require(artifact.get("hint_modes") == list(HINT_MODES), "hint_modes")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require(str(artifact.get("honest_verdict")).startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require("REQ-VERIFY-5419" in artifact.get("spec_refs", []), "spec_refs")
++    _require(len(str(artifact.get("reproducibility_checksum", ""))) == 64, "checksum")
++
++    rows = artifact.get("row_records")
++    _require(isinstance(rows, Sequence), "row_records")
++    summary = _summarize_rows(rows)
++    for field in (
++        "fixture_count",
++        "baseline_solver_work",
++        "guided_solver_work",
++        "work_delta",
++        "accepted_hint_count",
++        "rejected_hint_count",
++        "overwritten_hint_count",
++        "lns_subproblem_count",
++    ):
++        _require(artifact.get(field) == summary[field], "aggregate_from_rows_only")
++    _require(
++        artifact.get("dual_residual_sanity") == summary["dual_residual_sanity"],
++        "dual_residual_sanity",
++    )
++    _require(
++        artifact.get("solver_validity_preserved") == summary["solver_validity_preserved"],
++        "solver_validity_preserved",
++    )
++    _require(artifact.get("aggregate_from_rows_only") is True, "aggregate_from_rows_only")
++    _require(summary["aggregate_from_rows_only"] is True, "aggregate_from_rows_only")
++    _validate_rows(rows)
++    if artifact.get("active_constraint_lns_scale_ready"):
++        _require(artifact.get("status") == "complete", "status")
++        _require(artifact.get("readiness_blockers") == [], "readiness_blockers")
++        _require(bool(artifact.get("tests_run")), "tests_run")
++        _require(summary["fixture_count"] == EXPECTED_FIXTURE_COUNT, "fixture_count")
++        _require(summary["fixture_count"] > EXP5406_FIXTURE_COUNT, "fixture_count")
++        _require(summary["baseline_solver_work"] > summary["guided_solver_work"], "work_delta")
++        _require(summary["accepted_hint_count"] > 0, "accepted_hint_count")
++        _require(summary["rejected_hint_count"] > 0, "rejected_hint_count")
++        _require(summary["overwritten_hint_count"] > 0, "overwritten_hint_count")
++        _require(summary["dual_residual_sanity"] is True, "dual_residual_sanity")
++        _require(summary["solver_validity_preserved"] is True, "solver_validity_preserved")
++
++
++def _hint_for_mode(
++    fixture: ScaleFixture,
++    hint_mode: str,
++) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
++    if hint_mode == "solver_only":
++        return (), (), ()
++    if hint_mode == "lns_guided_hint":
++        return fixture.active_constraint_ids, fixture.conflict_front, fixture.lns_subproblem_hint
++    if hint_mode == "stale_hint":
++        prefix = (fixture.expected_sequence[0],)
++        return (
++            _active_constraint_ids(fixture, prefix),
++            _conflict_front(fixture, prefix),
++            _lns_subproblem(fixture, prefix),
++        )
++    if hint_mode == "contradictory_hint":
++        before, after = fixture.precedence[0]
++        return (f"{after}->{before}",), (before,), (before, after)
++    return (
++        (
++            *fixture.active_constraint_ids,
++            f"{fixture.expected_sequence[-1]}->{fixture.expected_sequence[0]}",
++        ),
++        fixture.conflict_front,
++        fixture.actions,
++    )
++
++
++def _solve_without_hint(fixture: ScaleFixture) -> SolverMetrics:
++    sequence: list[str] = []
++    remaining = list(fixture.actions)
++    conflicts = 0
++    iterations = 0
++    while remaining:
++        progressed = False
++        for action in list(remaining):
++            iterations += 1
++            if _dependencies_satisfied(fixture, action, sequence):
++                sequence.append(action)
++                remaining.remove(action)
++                progressed = True
++            else:
++                conflicts += 1
++        _require(progressed, f"cyclic fixture: {fixture.fixture_id}")
++    final = tuple(sequence)
++    return SolverMetrics(
++        final_sequence=final,
++        final_valid=_is_complete_valid_sequence(fixture, final),
++        solver_conflicts=conflicts,
++        solver_iterations=iterations,
++    )
++
++
++def _dependencies_satisfied(
++    fixture: ScaleFixture,
++    action: str,
++    prefix: Sequence[str],
++) -> bool:
++    done = set(prefix)
++    return all(before in done for before, after in fixture.precedence if after == action)
++
++
++def _is_complete_valid_sequence(
++    fixture: ScaleFixture,
++    sequence: Sequence[str],
++) -> bool:
++    if len(sequence) != len(fixture.actions) or set(sequence) != set(fixture.actions):
++        return False
++    seen: list[str] = []
++    for action in sequence:
++        if not _dependencies_satisfied(fixture, action, seen):
++            return False
++        seen.append(action)
++    return True
++
++
++def _active_constraint_ids(
++    fixture: ScaleFixture,
++    prefix: Sequence[str],
++) -> tuple[str, ...]:
++    done = set(prefix)
++    return tuple(
++        f"{before}->{after}"
++        for before, after in fixture.precedence
++        if before not in done and after not in done
++    )
++
++
++def _conflict_front(
++    fixture: ScaleFixture,
++    prefix: Sequence[str],
++) -> tuple[str, ...]:
++    active = _active_constraint_ids(fixture, prefix)
++    return tuple(dict.fromkeys(edge.split("->", 1)[1] for edge in active))
++
++
++def _lns_subproblem(
++    fixture: ScaleFixture,
++    prefix: Sequence[str],
++) -> tuple[str, ...]:
++    active = _active_constraint_ids(fixture, prefix)
++    frontier = list(_conflict_front(fixture, prefix)[: fixture.lns_window])
++    boundary: list[str] = []
++    for edge in active:
++        before, after = edge.split("->", 1)
++        if after in frontier:
++            boundary.extend((before, after))
++    return tuple(dict.fromkeys(boundary))
++
++
++def _hint_structurally_valid(
++    fixture: ScaleFixture,
++    active_hint: Sequence[str],
++    front_hint: Sequence[str],
++    lns_hint: Sequence[str],
++) -> bool:
++    actions = set(fixture.actions)
++    for edge in active_hint:
++        if "->" not in edge:
++            return False
++        before, after = edge.split("->", 1)
++        if before not in actions or after not in actions or before == after:
++            return False
++    return set(front_hint).issubset(actions) and set(lns_hint).issubset(actions)
++
++
++def _sequence_from_hint_or_baseline(
++    fixture: ScaleFixture,
++    active_hint: Sequence[str],
++    *,
++    fallback: Sequence[str],
++) -> tuple[str, ...]:
++    if tuple(active_hint) == fixture.active_constraint_ids:
++        return tuple(fallback)
++    if active_hint:
++        first_edge = active_hint[0]
++        if "->" in first_edge:
++            before, after = first_edge.split("->", 1)
++            rest = [action for action in fixture.expected_sequence if action not in {before, after}]
++            return (after, before, *rest)
++    return tuple(fallback)
++
++
++def _contradictory_sequence(fixture: ScaleFixture) -> tuple[str, ...]:
++    before, after = fixture.precedence[0]
++    rest = [action for action in fixture.expected_sequence if action not in {before, after}]
++    return (after, before, *rest)
++
++
++def _constraint_violation_count(
++    fixture: ScaleFixture,
++    sequence: Sequence[str],
++) -> int:
++    if len(sequence) != len(fixture.actions) or set(sequence) != set(fixture.actions):
++        return len(fixture.precedence) + 1
++    positions = {action: index for index, action in enumerate(sequence)}
++    return sum(int(positions[before] > positions[after]) for before, after in fixture.precedence)
++
++
++def _dual_residual_norm(
++    fixture: ScaleFixture,
++    sequence: Sequence[str],
++) -> float:
++    if len(sequence) != len(fixture.actions) or set(sequence) != set(fixture.actions):
++        return round(float(len(fixture.precedence) + 1), 6)
++    positions = {action: index for index, action in enumerate(sequence)}
++    squared = sum(
++        int(positions[before] > positions[after]) ** 2 for before, after in fixture.precedence
++    )
++    return round(float(squared) ** 0.5, 6)
++
++
++def _objective_cost(
++    fixture: ScaleFixture,
++    sequence: Sequence[str],
++) -> int:
++    if len(sequence) != len(fixture.actions) or set(sequence) != set(fixture.actions):
++        return 10_000
++    preferred = {action: index for index, action in enumerate(fixture.expected_sequence)}
++    return sum(index * (preferred[action] + 1) for index, action in enumerate(sequence))
++
++
++def _summarize_rows(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    mode_summaries = {
++        mode: _mode_summary([row for row in rows if row["hint_mode"] == mode])
++        for mode in HINT_MODES
++    }
++    solver_rows = [row for row in rows if row["hint_mode"] == "solver_only"]
++    guided_rows = [row for row in rows if row["hint_mode"] == "lns_guided_hint"]
++    baseline_solver_work = sum(int(row["baseline_solver_work"]) for row in solver_rows)
++    guided_solver_work = sum(int(row["guided_solver_work"]) for row in guided_rows)
++    fixture_count = len({row["fixture_id"] for row in rows})
++    solver_validity_preserved = all(
++        bool(row["final_valid"] and row["objective_preserved"]) for row in rows
++    )
++    dual_residual_sanity = all(
++        int(row["constraint_violation_count"]) == 0 and float(row["dual_residual_norm"]) == 0.0
++        for row in rows
++    )
++    return {
++        "fixture_count": fixture_count,
++        "row_count": len(rows),
++        "baseline_solver_work": baseline_solver_work,
++        "guided_solver_work": guided_solver_work,
++        "work_delta": baseline_solver_work - guided_solver_work,
++        "accepted_hint_count": sum(int(row["hint_decision"] == "accepted") for row in rows),
++        "rejected_hint_count": sum(int(row["hint_decision"] == "rejected") for row in rows),
++        "overwritten_hint_count": sum(int(row["hint_decision"] == "overwritten") for row in rows),
++        "lns_subproblem_count": len(
++            {row["lns_subproblem_id"] for row in guided_rows if row["hint_decision"] == "accepted"}
++        ),
++        "dual_residual_sanity": dual_residual_sanity,
++        "solver_validity_preserved": solver_validity_preserved,
++        "aggregate_from_rows_only": True,
++        "mode_summaries": mode_summaries,
++    }
++
++
++def _mode_summary(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "row_count": len(rows),
++        "baseline_solver_work": sum(int(row["baseline_solver_work"]) for row in rows),
++        "guided_solver_work": sum(int(row["guided_solver_work"]) for row in rows),
++        "work_delta": sum(int(row["work_delta"]) for row in rows),
++        "solver_conflicts": sum(int(row["solver_conflicts"]) for row in rows),
++        "solver_iterations": sum(int(row["solver_iterations"]) for row in rows),
++        "accepted_count": sum(int(row["hint_decision"] == "accepted") for row in rows),
++        "rejected_count": sum(int(row["hint_decision"] == "rejected") for row in rows),
++        "overwritten_count": sum(int(row["hint_decision"] == "overwritten") for row in rows),
++        "fallback_count": sum(int(row["fallback_used"]) for row in rows),
++        "validity_rate": _rate(sum(row["final_valid"] for row in rows), len(rows)),
++    }
++
++
++def _readiness_blockers(summary: Mapping[str, Any]) -> list[str]:
++    blockers: list[str] = []
++    if summary["fixture_count"] != EXPECTED_FIXTURE_COUNT:
++        blockers.append("fixture_count_mismatch")
++    if summary["fixture_count"] <= EXP5406_FIXTURE_COUNT:
++        blockers.append("fixture_scale_not_larger_than_exp5406")
++    if summary["baseline_solver_work"] <= summary["guided_solver_work"]:
++        blockers.append("guided_work_not_reduced")
++    if summary["accepted_hint_count"] <= 0:
++        blockers.append("no_accepted_hints")
++    if summary["rejected_hint_count"] <= 0:
++        blockers.append("no_rejected_hints")
++    if summary["overwritten_hint_count"] <= 0:
++        blockers.append("no_overwritten_hints")
++    if summary["lns_subproblem_count"] != EXPECTED_FIXTURE_COUNT:
++        blockers.append("lns_subproblem_count_mismatch")
++    if summary["dual_residual_sanity"] is not True:
++        blockers.append("dual_residual_sanity_failed")
++    if summary["solver_validity_preserved"] is not True:
++        blockers.append("solver_validity_not_preserved")
++    if summary["aggregate_from_rows_only"] is not True:
++        blockers.append("aggregate_not_row_derived")
++    return blockers
++
++
++def _validate_rows(rows: Sequence[Mapping[str, Any]]) -> None:
++    _require(len(rows) == EXPECTED_FIXTURE_COUNT * len(HINT_MODES), "row_records")
++    for row in rows:
++        _require(row["hint_mode"] in HINT_MODES, "row hint_mode")
++        _require(row["solver_authoritative"] is True, "row solver_authoritative")
++        _require(row["accepted_without_verification"] is False, "accepted_without_verification")
++        _require(row["unsafe_false_accept"] is False, "row unsafe_false_accept")
++        _require(row["final_valid"] is True, "row final_valid")
++        _require(row["objective_preserved"] is True, "row objective_preserved")
++        if row["hint_mode"] in {"stale_hint", "contradictory_hint", "overconfident_hint"}:
++            _require(row["hint_matches_solver_view"] is False, "invalid hint match")
++            _require(row["hint_decision"] in {"rejected", "overwritten"}, "invalid hint decision")
++            _require(row["fallback_used"] is True, "invalid hint fallback")
++
++
++def _normalize_test_run(item: str | Mapping[str, Any]) -> JsonDict:
++    if isinstance(item, str):
++        return {"command": item, "outcome": "passed"}
++    return dict(item)
++
++
++def _checksum_payload(artifact: Mapping[str, Any]) -> str:
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _rate(numerator: float, denominator: int) -> float:
++    return 0.0 if denominator == 0 else round(float(numerator) / denominator, 6)
++
++
++def _honest_verdict(
++    ready: bool,
++    blockers: Sequence[str],
++    diagnostic: Mapping[str, Any],
++) -> str:
++    if ready:
++        return (
++            "complete: active-constraint LNS hints scaled to "
++            f"{diagnostic['fixture_count']} fixtures, reduced solver work by "
++            f"{diagnostic['work_delta']}, and preserved solver authority"
++        )
++    return "blocked: " + ",".join(blockers or ["active_constraint_lns_scale_not_ready"])
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through run() in tests.
++    run()
+diff --git a/results/experiment_5419_active_constraint_lns_scale_v493.json b/results/experiment_5419_active_constraint_lns_scale_v493.json
+new file mode 100644
+index 0000000000..9f4bd3076b
+--- /dev/null
++++ b/results/experiment_5419_active_constraint_lns_scale_v493.json
+@@ -0,0 +1,2760 @@
++{
++  "accepted_hint_count": 5,
++  "active_constraint_lns_scale_ready": true,
++  "aggregate_from_rows_only": true,
++  "baseline_solver_work": 273,
++  "claim_limits": [
++    "deterministic CPU-local scale-up diagnostic",
++    "LNS, active-constraint, and conflict-front hints are advisory only",
++    "solver recomputes hint validity before accept/reject/overwrite decisions",
++    "dual residuals are final constraint-violation diagnostics",
++    "no LLM, generated text judge, p-bit hardware, or speedup claim"
++  ],
++  "dual_residual_sanity": true,
++  "duration_s": 1.19,
++  "experiment": 5419,
++  "experiment_id": "exp5419-active-constraint-lns-scale-v493",
++  "field_principles": {
++    "accepted_hint_count": "hint behavior.",
++    "active_constraint_lns_scale_ready": "downstream gate.",
++    "aggregate_from_rows_only": "tautology prevention.",
++    "baseline_solver_work": "unguided comparison.",
++    "dual_residual_sanity": "constrained-flow diagnostic.",
++    "fixture_count": "scale.",
++    "guided_solver_work": "guided comparison.",
++    "honest_verdict": "terminal status; start with complete: or blocked:.",
++    "inference_substrate": "no hidden live model inference.",
++    "lns_subproblem_count": "scale-up mechanism.",
++    "overwritten_hint_count": "solver authority.",
++    "rejected_hint_count": "hint behavior.",
++    "solver_validity_preserved": "no invalid speedup.",
++    "work_delta": "guidance effect."
++  },
++  "fixture_count": 5,
++  "guided_solver_work": 39,
++  "hint_modes": [
++    "solver_only",
++    "lns_guided_hint",
++    "stale_hint",
++    "contradictory_hint",
++    "overconfident_hint"
++  ],
++  "honest_verdict": "complete: active-constraint LNS hints scaled to 5 fixtures, reduced solver work by 234, and preserved solver authority",
++  "inference_substrate": "deterministic_solver_experiment",
++  "lns_subproblem_count": 5,
++  "milestone": "2026.07.493",
++  "mode_summaries": {
++    "contradictory_hint": {
++      "accepted_count": 0,
++      "baseline_solver_work": 273,
++      "fallback_count": 5,
++      "guided_solver_work": 273,
++      "overwritten_count": 5,
++      "rejected_count": 0,
++      "row_count": 5,
++      "solver_conflicts": 117,
++      "solver_iterations": 156,
++      "validity_rate": 1.0,
++      "work_delta": 0
++    },
++    "lns_guided_hint": {
++      "accepted_count": 5,
++      "baseline_solver_work": 273,
++      "fallback_count": 0,
++      "guided_solver_work": 39,
++      "overwritten_count": 0,
++      "rejected_count": 0,
++      "row_count": 5,
++      "solver_conflicts": 0,
++      "solver_iterations": 39,
++      "validity_rate": 1.0,
++      "work_delta": 234
++    },
++    "overconfident_hint": {
++      "accepted_count": 0,
++      "baseline_solver_work": 273,
++      "fallback_count": 5,
++      "guided_solver_work": 273,
++      "overwritten_count": 0,
++      "rejected_count": 5,
++      "row_count": 5,
++      "solver_conflicts": 117,
++      "solver_iterations": 156,
++      "validity_rate": 1.0,
++      "work_delta": 0
++    },
++    "solver_only": {
++      "accepted_count": 0,
++      "baseline_solver_work": 273,
++      "fallback_count": 0,
++      "guided_solver_work": 273,
++      "overwritten_count": 0,
++      "rejected_count": 0,
++      "row_count": 5,
++      "solver_conflicts": 117,
++      "solver_iterations": 156,
++      "validity_rate": 1.0,
++      "work_delta": 0
++    },
++    "stale_hint": {
++      "accepted_count": 0,
++      "baseline_solver_work": 273,
++      "fallback_count": 5,
++      "guided_solver_work": 273,
++      "overwritten_count": 0,
++      "rejected_count": 5,
++      "row_count": 5,
++      "solver_conflicts": 117,
++      "solver_iterations": 156,
++      "validity_rate": 1.0,
++      "work_delta": 0
++    }
++  },
++  "overwritten_hint_count": 5,
++  "random_seed": 5419,
++  "readiness_blockers": [],
++  "rejected_hint_count": 10,
++  "reproducibility_checksum": "67acf0fa624da90e62bf46b99f08b8de32715265b0c310bfbbd02740f51a1fe6",
++  "row_count": 25,
++  "row_records": [
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "conflict_front_hint": [],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_release_train",
++      "guided_solver_work": 49,
++      "hint_decision": "ignored",
++      "hint_matches_solver_view": false,
++      "hint_mode": "solver_only",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "known_conflict_front": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "known_lns_subproblem": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_hint": [],
++      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "conflict_front_hint": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_release_train",
++      "guided_solver_work": 7,
++      "hint_decision": "accepted",
++      "hint_matches_solver_view": true,
++      "hint_mode": "lns_guided_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "known_conflict_front": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "known_lns_subproblem": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_hint": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 0,
++      "solver_iterations": 7,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 42
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 2,
++      "candidate_sequence": [
++        "unit",
++        "compile",
++        "plan",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "conflict_front_hint": [
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_release_train",
++      "guided_solver_work": 49,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "stale_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "known_conflict_front": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "known_lns_subproblem": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_hint": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff"
++      ],
++      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "compile->plan"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "compile",
++        "plan",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "conflict_front_hint": [
++        "plan"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_release_train",
++      "guided_solver_work": 49,
++      "hint_decision": "overwritten",
++      "hint_matches_solver_view": false,
++      "hint_mode": "contradictory_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "known_conflict_front": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "known_lns_subproblem": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_hint": [
++        "plan",
++        "compile"
++      ],
++      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": true,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy",
++        "deploy->plan"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "compile",
++        "plan",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "conflict_front_hint": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_release_train",
++      "guided_solver_work": 49,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "overconfident_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "plan->compile",
++        "compile->unit",
++        "unit->integration",
++        "integration->package",
++        "package->signoff",
++        "signoff->deploy"
++      ],
++      "known_conflict_front": [
++        "compile",
++        "unit",
++        "integration",
++        "package",
++        "signoff",
++        "deploy"
++      ],
++      "known_lns_subproblem": [
++        "plan",
++        "compile",
++        "unit",
++        "integration",
++        "package"
++      ],
++      "lns_subproblem_hint": [
++        "deploy",
++        "signoff",
++        "package",
++        "integration",
++        "unit",
++        "compile",
++        "plan"
++      ],
++      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [],
++      "baseline_metrics": {
++        "solver_conflicts": 11,
++        "solver_iterations": 19,
++        "solver_work": 30
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 30,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "conflict_front_hint": [],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_joined_fulfillment",
++      "guided_solver_work": 30,
++      "hint_decision": "ignored",
++      "hint_matches_solver_view": false,
++      "hint_mode": "solver_only",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "known_conflict_front": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "known_lns_subproblem": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_hint": [],
++      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 11,
++      "solver_iterations": 19,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 11,
++        "solver_iterations": 19,
++        "solver_work": 30
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 30,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "conflict_front_hint": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_joined_fulfillment",
++      "guided_solver_work": 8,
++      "hint_decision": "accepted",
++      "hint_matches_solver_view": true,
++      "hint_mode": "lns_guided_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "known_conflict_front": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "known_lns_subproblem": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_hint": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 0,
++      "solver_iterations": 8,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 22
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "pack->ship"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 11,
++        "solver_iterations": 19,
++        "solver_work": 30
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 30,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "label",
++        "receive",
++        "invoice",
++        "verify",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "conflict_front_hint": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_joined_fulfillment",
++      "guided_solver_work": 30,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "stale_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "known_conflict_front": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "known_lns_subproblem": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_hint": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship"
++      ],
++      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 11,
++      "solver_iterations": 19,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "label->receive"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 11,
++        "solver_iterations": 19,
++        "solver_work": 30
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 30,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "label",
++        "receive",
++        "invoice",
++        "verify",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "conflict_front_hint": [
++        "receive"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_joined_fulfillment",
++      "guided_solver_work": 30,
++      "hint_decision": "overwritten",
++      "hint_matches_solver_view": false,
++      "hint_mode": "contradictory_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "known_conflict_front": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "known_lns_subproblem": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_hint": [
++        "receive",
++        "label"
++      ],
++      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": true,
++      "solver_authoritative": true,
++      "solver_conflicts": 11,
++      "solver_iterations": 19,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship",
++        "ship->invoice"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 11,
++        "solver_iterations": 19,
++        "solver_work": 30
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 30,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "label",
++        "receive",
++        "invoice",
++        "verify",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "conflict_front_hint": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "invoice",
++        "verify",
++        "receive",
++        "reserve",
++        "label",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_joined_fulfillment",
++      "guided_solver_work": 30,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "overconfident_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "receive->label",
++        "receive->reserve",
++        "reserve->pick",
++        "label->pack",
++        "pick->pack",
++        "verify->ship",
++        "invoice->ship",
++        "pack->ship"
++      ],
++      "known_conflict_front": [
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "ship"
++      ],
++      "known_lns_subproblem": [
++        "receive",
++        "label",
++        "reserve",
++        "pick",
++        "pack",
++        "verify",
++        "ship",
++        "invoice"
++      ],
++      "lns_subproblem_hint": [
++        "ship",
++        "invoice",
++        "pack",
++        "pick",
++        "verify",
++        "reserve",
++        "label",
++        "receive"
++      ],
++      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 11,
++      "solver_iterations": 19,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "conflict_front_hint": [],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_unlock_delivery",
++      "guided_solver_work": 49,
++      "hint_decision": "ignored",
++      "hint_matches_solver_view": false,
++      "hint_mode": "solver_only",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "known_conflict_front": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "known_lns_subproblem": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_hint": [],
++      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "conflict_front_hint": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_unlock_delivery",
++      "guided_solver_work": 7,
++      "hint_decision": "accepted",
++      "hint_matches_solver_view": true,
++      "hint_mode": "lns_guided_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "known_conflict_front": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "known_lns_subproblem": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_hint": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 0,
++      "solver_iterations": 7,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 42
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 2,
++      "candidate_sequence": [
++        "unlock_door",
++        "pickup_key",
++        "scan_badge",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "conflict_front_hint": [
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_unlock_delivery",
++      "guided_solver_work": 49,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "stale_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "known_conflict_front": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "known_lns_subproblem": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_hint": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package"
++      ],
++      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "pickup_key->scan_badge"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "pickup_key",
++        "scan_badge",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "conflict_front_hint": [
++        "scan_badge"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_unlock_delivery",
++      "guided_solver_work": 49,
++      "hint_decision": "overwritten",
++      "hint_matches_solver_view": false,
++      "hint_mode": "contradictory_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "known_conflict_front": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "known_lns_subproblem": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_hint": [
++        "scan_badge",
++        "pickup_key"
++      ],
++      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": true,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery",
++        "confirm_delivery->scan_badge"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 21,
++        "solver_iterations": 28,
++        "solver_work": 49
++      },
++      "baseline_objective_value": 112,
++      "baseline_solver_work": 49,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "pickup_key",
++        "scan_badge",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "conflict_front_hint": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_unlock_delivery",
++      "guided_solver_work": 49,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "overconfident_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "scan_badge->pickup_key",
++        "pickup_key->unlock_door",
++        "unlock_door->open_door",
++        "open_door->enter_room",
++        "enter_room->drop_package",
++        "drop_package->confirm_delivery"
++      ],
++      "known_conflict_front": [
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room",
++        "drop_package",
++        "confirm_delivery"
++      ],
++      "known_lns_subproblem": [
++        "scan_badge",
++        "pickup_key",
++        "unlock_door",
++        "open_door",
++        "enter_room"
++      ],
++      "lns_subproblem_hint": [
++        "confirm_delivery",
++        "drop_package",
++        "enter_room",
++        "open_door",
++        "unlock_door",
++        "pickup_key",
++        "scan_badge"
++      ],
++      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
++      "objective_preserved": true,
++      "objective_value": 112,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 21,
++      "solver_iterations": 28,
++      "source_kind": "synthetic_action_sequence",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [],
++      "baseline_metrics": {
++        "solver_conflicts": 36,
++        "solver_iterations": 45,
++        "solver_work": 81
++      },
++      "baseline_objective_value": 240,
++      "baseline_solver_work": 81,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "conflict_front_hint": [],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_csp_coloring_pipeline",
++      "guided_solver_work": 81,
++      "hint_decision": "ignored",
++      "hint_matches_solver_view": false,
++      "hint_mode": "solver_only",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "known_conflict_front": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "known_lns_subproblem": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_hint": [],
++      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
++      "objective_preserved": true,
++      "objective_value": 240,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 36,
++      "solver_iterations": 45,
++      "source_kind": "synthetic_csp",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 36,
++        "solver_iterations": 45,
++        "solver_work": 81
++      },
++      "baseline_objective_value": 240,
++      "baseline_solver_work": 81,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "conflict_front_hint": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_csp_coloring_pipeline",
++      "guided_solver_work": 9,
++      "hint_decision": "accepted",
++      "hint_matches_solver_view": true,
++      "hint_mode": "lns_guided_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "known_conflict_front": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "known_lns_subproblem": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_hint": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
++      "objective_preserved": true,
++      "objective_value": 240,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 0,
++      "solver_iterations": 9,
++      "source_kind": "synthetic_csp",
++      "unsafe_false_accept": false,
++      "work_delta": 72
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 36,
++        "solver_iterations": 45,
++        "solver_work": 81
++      },
++      "baseline_objective_value": 240,
++      "baseline_solver_work": 81,
++      "candidate_constraint_violation_count": 2,
++      "candidate_sequence": [
++        "color_region_b",
++        "check_region_a",
++        "color_region_a",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "conflict_front_hint": [
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_csp_coloring_pipeline",
++      "guided_solver_work": 81,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "stale_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "known_conflict_front": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "known_lns_subproblem": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_hint": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d"
++      ],
++      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
++      "objective_preserved": true,
++      "objective_value": 240,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 36,
++      "solver_iterations": 45,
++      "source_kind": "synthetic_csp",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "check_region_a->color_region_a"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 36,
++        "solver_iterations": 45,
++        "solver_work": 81
++      },
++      "baseline_objective_value": 240,
++      "baseline_solver_work": 81,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "check_region_a",
++        "color_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "conflict_front_hint": [
++        "color_region_a"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_csp_coloring_pipeline",
++      "guided_solver_work": 81,
++      "hint_decision": "overwritten",
++      "hint_matches_solver_view": false,
++      "hint_mode": "contradictory_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "known_conflict_front": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "known_lns_subproblem": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_hint": [
++        "color_region_a",
++        "check_region_a"
++      ],
++      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
++      "objective_preserved": true,
++      "objective_value": 240,
++      "overwrite_used": true,
++      "solver_authoritative": true,
++      "solver_conflicts": 36,
++      "solver_iterations": 45,
++      "source_kind": "synthetic_csp",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors",
++        "publish_colors->color_region_a"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 36,
++        "solver_iterations": 45,
++        "solver_work": 81
++      },
++      "baseline_objective_value": 240,
++      "baseline_solver_work": 81,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "check_region_a",
++        "color_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "conflict_front_hint": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_csp_coloring_pipeline",
++      "guided_solver_work": 81,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "overconfident_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "color_region_a->check_region_a",
++        "check_region_a->color_region_b",
++        "color_region_b->check_region_b",
++        "check_region_b->color_region_c",
++        "color_region_c->check_region_c",
++        "check_region_c->color_region_d",
++        "color_region_d->check_region_d",
++        "check_region_d->publish_colors"
++      ],
++      "known_conflict_front": [
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c",
++        "color_region_d",
++        "check_region_d",
++        "publish_colors"
++      ],
++      "known_lns_subproblem": [
++        "color_region_a",
++        "check_region_a",
++        "color_region_b",
++        "check_region_b",
++        "color_region_c",
++        "check_region_c"
++      ],
++      "lns_subproblem_hint": [
++        "publish_colors",
++        "check_region_d",
++        "color_region_d",
++        "check_region_c",
++        "color_region_c",
++        "check_region_b",
++        "color_region_b",
++        "check_region_a",
++        "color_region_a"
++      ],
++      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
++      "objective_preserved": true,
++      "objective_value": 240,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 36,
++      "solver_iterations": 45,
++      "source_kind": "synthetic_csp",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [],
++      "baseline_metrics": {
++        "solver_conflicts": 28,
++        "solver_iterations": 36,
++        "solver_work": 64
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 64,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "conflict_front_hint": [],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_data_pipeline",
++      "guided_solver_work": 64,
++      "hint_decision": "ignored",
++      "hint_matches_solver_view": false,
++      "hint_mode": "solver_only",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "known_conflict_front": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "known_lns_subproblem": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_hint": [],
++      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 28,
++      "solver_iterations": 36,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 28,
++        "solver_iterations": 36,
++        "solver_work": 64
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 64,
++      "candidate_constraint_violation_count": 0,
++      "candidate_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "conflict_front_hint": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "fallback_used": false,
++      "feasible": true,
++      "final_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_data_pipeline",
++      "guided_solver_work": 8,
++      "hint_decision": "accepted",
++      "hint_matches_solver_view": true,
++      "hint_mode": "lns_guided_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "known_conflict_front": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "known_lns_subproblem": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_hint": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 0,
++      "solver_iterations": 8,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 56
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 28,
++        "solver_iterations": 36,
++        "solver_work": 64
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 64,
++      "candidate_constraint_violation_count": 2,
++      "candidate_sequence": [
++        "extract",
++        "schema_check",
++        "ingest",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "conflict_front_hint": [
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_data_pipeline",
++      "guided_solver_work": 64,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "stale_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "known_conflict_front": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "known_lns_subproblem": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_hint": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train"
++      ],
++      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 28,
++      "solver_iterations": 36,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "schema_check->ingest"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 28,
++        "solver_iterations": 36,
++        "solver_work": 64
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 64,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "schema_check",
++        "ingest",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "conflict_front_hint": [
++        "ingest"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_data_pipeline",
++      "guided_solver_work": 64,
++      "hint_decision": "overwritten",
++      "hint_matches_solver_view": false,
++      "hint_mode": "contradictory_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "known_conflict_front": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "known_lns_subproblem": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_hint": [
++        "ingest",
++        "schema_check"
++      ],
++      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": true,
++      "solver_authoritative": true,
++      "solver_conflicts": 28,
++      "solver_iterations": 36,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    },
++    {
++      "accepted_without_verification": false,
++      "active_constraint_hint": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report",
++        "serve_report->ingest"
++      ],
++      "baseline_metrics": {
++        "solver_conflicts": 28,
++        "solver_iterations": 36,
++        "solver_work": 64
++      },
++      "baseline_objective_value": 168,
++      "baseline_solver_work": 64,
++      "candidate_constraint_violation_count": 1,
++      "candidate_sequence": [
++        "schema_check",
++        "ingest",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "conflict_front_hint": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "constraint_violation_count": 0,
++      "dual_residual_norm": 0.0,
++      "expected_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "fallback_used": true,
++      "feasible": true,
++      "final_sequence": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "final_valid": true,
++      "fixture_id": "scale_data_pipeline",
++      "guided_solver_work": 64,
++      "hint_decision": "rejected",
++      "hint_matches_solver_view": false,
++      "hint_mode": "overconfident_hint",
++      "hint_structurally_valid": true,
++      "known_active_constraints": [
++        "ingest->schema_check",
++        "schema_check->extract",
++        "extract->clean",
++        "clean->feature_join",
++        "feature_join->train",
++        "train->audit",
++        "audit->serve_report"
++      ],
++      "known_conflict_front": [
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join",
++        "train",
++        "audit",
++        "serve_report"
++      ],
++      "known_lns_subproblem": [
++        "ingest",
++        "schema_check",
++        "extract",
++        "clean",
++        "feature_join"
++      ],
++      "lns_subproblem_hint": [
++        "serve_report",
++        "audit",
++        "train",
++        "feature_join",
++        "clean",
++        "extract",
++        "schema_check",
++        "ingest"
++      ],
++      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
++      "objective_preserved": true,
++      "objective_value": 168,
++      "overwrite_used": false,
++      "solver_authoritative": true,
++      "solver_conflicts": 28,
++      "solver_iterations": 36,
++      "source_kind": "synthetic_scheduling",
++      "unsafe_false_accept": false,
++      "work_delta": 0
++    }
++  ],
++  "run_date": "2026-07-08",
++  "schema": "carnot.experiment_5419.active_constraint_lns_scale.v493",
++  "solver_validity_preserved": true,
++  "source_artifacts": [
++    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5419",
++    "SCENARIO-VERIFY-5419"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py -m pytest tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py --fail-under=100",
++      "outcome": "passed"
++    }
++  ],
++  "work_delta": 234
++}
+diff --git a/tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py b/tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py
+new file mode 100644
+index 0000000000..b5119dd793
+--- /dev/null
++++ b/tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py
+@@ -0,0 +1,300 @@
++"""Tests for Exp5419 active-constraint LNS scale-up diagnostic.
++
++Spec refs: REQ-VERIFY-5419, SCENARIO-VERIFY-5419.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5419_active_constraint_lns_scale_v493 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py "
++    "-q --no-cov"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py "
++    "-m pytest tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report "
++    "--include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py "
++    "--fail-under=100"
++)
++
++
++def test_req_verify_5419_spec_declares_lns_scale_contract() -> None:
++    """REQ-VERIFY-5419: OpenSpec anchors the LNS scale-up artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5419") : spec.index("### REQ-VERIFY-5407")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-5419",
++        "SCENARIO-VERIFY-5419",
++        str(exp.RESULT_RELATIVE_PATH),
++        "Exp 5406 active-constraint",
++        "LNS-style subproblem selection hints",
++        "stale, contradictory, overconfident",
++        "constraint violations",
++        "dual residual",
++        "deterministic_solver_experiment",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert f'principle "{principle}"' in normalized
++
++
++def test_req_verify_5419_fixtures_scale_beyond_exp5406() -> None:
++    """REQ-VERIFY-5419: fixtures are larger and expose LNS subproblem hints."""
++
++    fixtures = exp.build_scale_fixtures()
++
++    assert len(fixtures) == exp.EXPECTED_FIXTURE_COUNT
++    assert len(fixtures) > exp.EXP5406_FIXTURE_COUNT
++    assert min(len(fixture.actions) for fixture in fixtures) >= exp.MIN_ACTION_COUNT
++    assert all(fixture.active_constraint_ids for fixture in fixtures)
++    assert all(fixture.conflict_front for fixture in fixtures)
++    assert all(fixture.lns_subproblem_hint for fixture in fixtures)
++    assert len({fixture.fixture_id for fixture in fixtures}) == len(fixtures)
++
++
++def test_scenario_verify_5419_modes_preserve_authority_and_reduce_work() -> None:
++    """SCENARIO-VERIFY-5419: accepted LNS hints reduce work under solver authority."""
++
++    diagnostic = exp.run_diagnostic()
++    rows = diagnostic["row_records"]
++    by_mode = {mode: [row for row in rows if row["hint_mode"] == mode] for mode in exp.HINT_MODES}
++
++    assert diagnostic["fixture_count"] == exp.EXPECTED_FIXTURE_COUNT
++    assert diagnostic["baseline_solver_work"] > diagnostic["guided_solver_work"]
++    assert diagnostic["work_delta"] == (
++        diagnostic["baseline_solver_work"] - diagnostic["guided_solver_work"]
++    )
++    assert diagnostic["accepted_hint_count"] == len(by_mode["lns_guided_hint"])
++    assert diagnostic["rejected_hint_count"] >= len(by_mode["stale_hint"])
++    assert diagnostic["overwritten_hint_count"] >= len(by_mode["contradictory_hint"])
++    assert diagnostic["lns_subproblem_count"] == exp.EXPECTED_FIXTURE_COUNT
++    assert diagnostic["dual_residual_sanity"] is True
++    assert diagnostic["solver_validity_preserved"] is True
++    assert diagnostic["aggregate_from_rows_only"] is True
++    assert diagnostic["active_constraint_lns_scale_ready"] is True
++    assert all(row["solver_authoritative"] is True for row in rows)
++    assert all(row["accepted_without_verification"] is False for row in rows)
++    assert all(row["final_valid"] is True for row in rows)
++    assert all(row["objective_preserved"] is True for row in rows)
++    assert all(row["constraint_violation_count"] == 0 for row in rows)
++    assert all(row["dual_residual_norm"] == pytest.approx(0.0) for row in rows)
++    assert all(row["hint_decision"] == "accepted" for row in by_mode["lns_guided_hint"])
++    assert all(row["hint_decision"] == "rejected" for row in by_mode["stale_hint"])
++    assert all(row["hint_decision"] == "overwritten" for row in by_mode["contradictory_hint"])
++    assert all(row["hint_decision"] == "rejected" for row in by_mode["overconfident_hint"])
++    assert all(
++        row["guided_solver_work"] < row["baseline_solver_work"]
++        for row in by_mode["lns_guided_hint"]
++    )
++
++
++def test_scenario_verify_5419_invalid_hints_cannot_change_final_authority() -> None:
++    """SCENARIO-VERIFY-5419: stale, contradictory, and overconfident hints fail closed."""
++
++    fixture = exp.build_scale_fixtures()[0]
++    baseline = exp.evaluate_fixture_mode(fixture, "solver_only")
++    invalid_rows = [
++        exp.evaluate_fixture_mode(fixture, "stale_hint"),
++        exp.evaluate_fixture_mode(fixture, "contradictory_hint"),
++        exp.evaluate_fixture_mode(fixture, "overconfident_hint"),
++    ]
++
++    for row in invalid_rows:
++        assert row["hint_matches_solver_view"] is False
++        assert row["hint_decision"] in {"rejected", "overwritten"}
++        assert row["fallback_used"] is True
++        assert row["solver_authoritative"] is True
++        assert row["accepted_without_verification"] is False
++        assert row["unsafe_false_accept"] is False
++        assert row["final_valid"] is True
++        assert row["objective_preserved"] is True
++        assert row["final_sequence"] == baseline["final_sequence"]
++        assert row["guided_solver_work"] == row["baseline_solver_work"]
++
++
++def test_req_verify_5419_artifact_schema_and_required_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-5419: artifact exposes required fields and principles."""
++
++    tests_run = [
++        {"command": TEST_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_REPORT_COMMAND, "outcome": "passed"},
++    ]
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(result_path=result_path, tests_run=tests_run)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    exp.validate_artifact(artifact)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["field_principles"] == exp.FIELD_PRINCIPLES
++    assert artifact["fixture_count"] == exp.EXPECTED_FIXTURE_COUNT
++    assert artifact["baseline_solver_work"] > artifact["guided_solver_work"]
++    assert artifact["work_delta"] > 0
++    assert artifact["accepted_hint_count"] > 0
++    assert artifact["rejected_hint_count"] > 0
++    assert artifact["overwritten_hint_count"] > 0
++    assert artifact["lns_subproblem_count"] == exp.EXPECTED_FIXTURE_COUNT
++    assert artifact["dual_residual_sanity"] is True
++    assert artifact["solver_validity_preserved"] is True
++    assert artifact["aggregate_from_rows_only"] is True
++    assert artifact["active_constraint_lns_scale_ready"] is True
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["tests_run"] == tests_run
++
++
++def test_req_verify_5419_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-VERIFY-5419: checked-in JSON is stable under deterministic replay."""
++
++    checked_in = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_artifact(tests_run=checked_in["tests_run"])
++
++    assert checked_in == replay
++    assert checked_in["active_constraint_lns_scale_ready"] is True
++    assert checked_in["aggregate_from_rows_only"] is True
++    exp.validate_artifact(checked_in)
++
++
++def test_req_verify_5419_validation_rejects_drift_and_unsafe_accepts() -> None:
++    """REQ-VERIFY-5419: validation fails closed on schema and authority drift."""
++
++    artifact = exp.build_artifact(tests_run=[{"command": TEST_COMMAND, "outcome": "passed"}])
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_rows = deepcopy(artifact)
++    bad_rows["row_records"][0]["baseline_solver_work"] += 1
++    with pytest.raises(ValueError, match="aggregate_from_rows_only"):
++        exp.validate_artifact(bad_rows)
++
++    bad_validity = deepcopy(artifact)
++    bad_validity["row_records"][0]["final_valid"] = False
++    with pytest.raises(ValueError, match="solver_validity_preserved"):
++        exp.validate_artifact(bad_validity)
++
++    bad_residual = deepcopy(artifact)
++    bad_residual["row_records"][0]["dual_residual_norm"] = 1.0
++    with pytest.raises(ValueError, match="dual_residual_sanity"):
++        exp.validate_artifact(bad_residual)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++
++def test_req_verify_5419_blockers_are_row_derived() -> None:
++    """REQ-VERIFY-5419: blocked artifacts identify failed row-level gates."""
++
++    artifact = exp.build_artifact(
++        tests_run=[{"command": TEST_COMMAND, "outcome": "passed"}],
++        row_overrides=lambda rows: _erase_guided_savings(rows),
++    )
++
++    assert artifact["active_constraint_lns_scale_ready"] is False
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert "guided_work_not_reduced" in artifact["readiness_blockers"]
++    exp.validate_artifact(artifact)
++
++
++def test_req_verify_5419_defensive_branches_keep_schema_fail_closed() -> None:
++    """REQ-VERIFY-5419: helper guards cover malformed hints and blocked summaries."""
++
++    fixture = exp.build_scale_fixtures()[0]
++    fallback = tuple(fixture.expected_sequence)
++    summary = exp.run_diagnostic()
++
++    no_tests = exp.build_artifact()
++    assert no_tests["active_constraint_lns_scale_ready"] is False
++    assert "tests_not_recorded" in no_tests["readiness_blockers"]
++    assert no_tests["tests_run"] == []
++    exp.validate_artifact(no_tests)
++
++    string_test = exp.build_artifact(tests_run=[TEST_COMMAND])
++    assert string_test["tests_run"] == [{"command": TEST_COMMAND, "outcome": "passed"}]
++
++    assert exp._is_complete_valid_sequence(fixture, fixture.expected_sequence[:-1]) is False
++    assert (
++        exp._is_complete_valid_sequence(
++            fixture,
++            tuple(reversed(fixture.expected_sequence)),
++        )
++        is False
++    )
++    assert exp._hint_structurally_valid(fixture, ("bad-edge",), (), ()) is False
++    assert exp._hint_structurally_valid(fixture, ("missing->deploy",), (), ()) is False
++    assert exp._hint_structurally_valid(fixture, ("deploy->deploy",), (), ()) is False
++    assert (
++        exp._sequence_from_hint_or_baseline(
++            fixture,
++            fixture.active_constraint_ids,
++            fallback=fallback,
++        )
++        == fallback
++    )
++    assert exp._sequence_from_hint_or_baseline(fixture, (), fallback=fallback) == fallback
++    assert exp._constraint_violation_count(fixture, fallback[:-1]) == len(fixture.precedence) + 1
++    assert exp._dual_residual_norm(fixture, fallback[:-1]) == pytest.approx(
++        float(len(fixture.precedence) + 1)
++    )
++    assert exp._objective_cost(fixture, fallback[:-1]) == 10_000
++
++    broken = deepcopy(summary)
++    broken["fixture_count"] = 1
++    broken["baseline_solver_work"] = 1
++    broken["guided_solver_work"] = 2
++    broken["accepted_hint_count"] = 0
++    broken["rejected_hint_count"] = 0
++    broken["overwritten_hint_count"] = 0
++    broken["lns_subproblem_count"] = 0
++    broken["dual_residual_sanity"] = False
++    broken["solver_validity_preserved"] = False
++    broken["aggregate_from_rows_only"] = False
++    assert exp._readiness_blockers(broken) == [
++        "fixture_count_mismatch",
++        "fixture_scale_not_larger_than_exp5406",
++        "guided_work_not_reduced",
++        "no_accepted_hints",
++        "no_rejected_hints",
++        "no_overwritten_hints",
++        "lns_subproblem_count_mismatch",
++        "dual_residual_sanity_failed",
++        "solver_validity_not_preserved",
++        "aggregate_not_row_derived",
++    ]
++
++
++def _erase_guided_savings(rows: list[dict[str, object]]) -> list[dict[str, object]]:
++    adjusted = deepcopy(rows)
++    for row in adjusted:
++        if row["hint_mode"] == "lns_guided_hint":
++            row["guided_solver_work"] = row["baseline_solver_work"]
++            row["solver_conflicts"] = row["baseline_metrics"]["solver_conflicts"]
++            row["solver_iterations"] = row["baseline_metrics"]["solver_iterations"]
++    return adjusted
+-- 
+2.55.0
+

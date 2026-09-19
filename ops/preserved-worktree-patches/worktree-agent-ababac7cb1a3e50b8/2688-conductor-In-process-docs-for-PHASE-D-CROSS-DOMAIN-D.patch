@@ -1,0 +1,61 @@
+From 4881ba0b90d595b1005bf702c03b21d0e442b247 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 22:17:44 -0400
+Subject: [PATCH 02688/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20D=20(CROSS-DOMAIN=20DETECTION=20CALIBRATION=20REPA?=
+ =?UTF-8?q?IR;=20complementary;=20cached;=20verifier=5Fis=5Foracle=3Dfalse?=
+ =?UTF-8?q?)=20--=20SteerConf=20steered-confidence=20elicitation=20(arXiv:?=
+ =?UTF-8?q?2503.02863)=20to=20rescue=20code=5Fhumaneval=20DETECTION=20wher?=
+ =?UTF-8?q?e=20the=20.407=20semantic-confidence-aggregation=20could=20not.?=
+ =?UTF-8?q?=20.407=20(exp4408)=20reported=20detection=5Fcalibrated=5Fmulti?=
+ =?UTF-8?q?=5Fdomain=3Dfalse:=20code=5Fhumaneval=20detection=20AUROC=200.5?=
+ =?UTF-8?q?77=20(CI95=20[0.46,0.69],=20n=3D539)=20--=20AT=20CHANCE=20--=20?=
+ =?UTF-8?q?even=20after=20proper=20pools=20(n>=3D300)=20+=20semantic-confi?=
+ =?UTF-8?q?dence=20aggregation=20+=20base-rate=20separation,=20while=20FoV?=
+ =?UTF-8?q?er=20detects=20at=200.918.=20The=20verifier=20is=20DOMAIN-BOUND?=
+ =?UTF-8?q?.=20STATED=20forward=20difference=20(SteerConf,=20arXiv:2503.02?=
+ =?UTF-8?q?863):=20add=20CONSERVATIVE/OPTIMISTIC=20steering=20probes=20+?=
+ =?UTF-8?q?=20confidence-CONSISTENCY=20features=20(does=20the=20candidate'?=
+ =?UTF-8?q?s=20correctness=20signal=20survive=20a=20conservative=20vs=20op?=
+ =?UTF-8?q?timistic=20steer=3F)=20BESIDE=20the=20verifier=20score,=20then?=
+ =?UTF-8?q?=20fit=20domain-wise=20calibration=20with=20leave-domain-out=20?=
+ =?UTF-8?q?+=20a=20random-score=20control=20--=20testing=20whether=20STEER?=
+ =?UTF-8?q?ED=20confidence=20consistency=20rescues=20code=5Fhumaneval=20wh?=
+ =?UTF-8?q?ere=20the=20.407=20static=20aggregation=20could=20not,=20WITHOU?=
+ =?UTF-8?q?T=20degrading=20FoVer/GAP/GSM.=20Emit=20detection=5Fcalibrated?=
+ =?UTF-8?q?=5Fmulti=5Fdomain=20BARE=20bool=20:=3D=20(detection=20AUROC=20C?=
+ =?UTF-8?q?I95=20lower=20bound=20>=200.5=20on=20>=3D2=20NON-FoVer=20domain?=
+ =?UTF-8?q?s=20AND=20leave-one-domain-out=20calibration=20keeps=20ECE=20be?=
+ =?UTF-8?q?low=20the=20uncalibrated=20baseline=20on=20the=20held-out=20dom?=
+ =?UTF-8?q?ain).=20verifier=5Fis=5Foracle=3Dfalse.=20A=20win=20=3D=20a=20d?=
+ =?UTF-8?q?eployable=20multi-domain=20detector=20contract=20(the=20verifie?=
+ =?UTF-8?q?r-domain-expansion=20step,=20north-star=20=C2=A70=20step=202);?=
+ =?UTF-8?q?=20a=20domain=20STILL=20at=20chance=20is=20LOGGED=20as=20a=20do?=
+ =?UTF-8?q?main-bound=20missing-verifier=20gap.=20This=20is=20cross-domain?=
+ =?UTF-8?q?=20DETECTION=20(AUROC),=20NOT=20the=20RETIRED=20cross-domain=20?=
+ =?UTF-8?q?SELECTION=20axis=20(exp4314).=20Cached=20candidates,=20CPU,=20z?=
+ =?UTF-8?q?ero=20quota.=20NO=20new=20live=20inference=20(the=20steering=20?=
+ =?UTF-8?q?probes=20are=20over=20CACHED=20candidate=20logits/scores=20wher?=
+ =?UTF-8?q?e=20available,=20else=20cached=20candidate=20features);=20NO=20?=
+ =?UTF-8?q?TRM=20training.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 383310cbee..22855dada0 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9345,3 +9345,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-19: PHASE B1 (ORACLE-DISTINCT FRONTIER; operator P0; DEFINITIVE FALSIFICATION; verifier_is_oracle=false) -- Hidden-state first-error localization AUDIT (arXiv:2605.13772 GeoReason hidden-state transport, the .407 SOTA-ingestion method). The TEXT first-error localizer is RETIRED (.407 exp4403: on FoVer the content-blind POSITION-ONLY baseline F1=1.0 -- first-error onset is near-deterministic in POSITION, ~zero CONTENT headroom in text; the real-intervention localizer tied it, delta_vs_position_only=0.0; retire_if_same_verdict fired). This is the ONE remaining oracle-distinct first-error question worth a SINGLE bounded shot: does the signal exist OFF-TEXT -- does a model HIDDEN-STATE transport margin carry ANY recoverable NON-position first-error signal that text position alone does not? A DIAGNOSTIC FALSIFICATION (NOT a redeployable localizer): (1) capture per-step hidden states from a LOCAL open model over the cached FoVer step-labeled traces; (2) compute a hidden-state transport/margin feature per step; (3) compare its first-error localization F1 against the content-blind position-only baseline on a held-out split, n>=1000. Emit hidden_state_localizer_has_nonposition_signal BARE bool := (the hidden-state localizer beats the position-only baseline, delta CI95-excl-0). A CLEAN NULL conclusively CLOSES the entire first-error-localizer program (text AND hidden-state both position-bound -- do not revisit). A weak signal is LOGGED as a missing-verifier gap (the off-text discriminator), NOT redeployed as a headline. verifier_is_oracle=false (a learned probe over hidden states; the reference prefix-check defines correctness). Cached corpus; the hidden-state capture is a single bounded forward pass; NO live training, NO generator SFT, NO TRM training. (✅ Complete) — honest_verdict=complete: clean_powered_null_position_only_not_beaten; results/experiment_4416_hidden_state_localizer_falsification_audit.json
+ - 2026-06-19: PHASE B2 (verifier-earns-its-place; SOVEREIGNTY tier; verifier_is_oracle=true) -- GAP-4 rule-execution verifier with a LOCAL open-weight generator arm + a graded execution-energy gate (the GAP-4 forward protocol's decentralization tier, ops/verifier_gaps.md GAP-4). The GAP-4 rule-execution verifier (induce def transform(grid) from demos, demo-perfect program reranks the TRM pool) landed a positive on ARC-1 with codex/gpt-5.5, but it is contaminated (30/31 tasks in public training) AND the generator is closed (a decentralization gap -- CLAUDE.md Rule 1). north-star §5's win-condition is the verifier earning its place. THE STEP: re-run the GAP-4 gate with a LOCAL open-weight generator (Gemma-4/Qwen3.6 GGUF, cached) as the program inducer + the graded min-hamming gate (tau=0.005, vote-aware guard) + k-consistency agreement, and measure pass@2 on the cached TRM rerank pool vs the matched no-verifier (vote) control. .407-prior local-MoE attempts (exp4069) found a local generator surfaced demo-perfect programs at only ~0.23 coverage; STATED forward difference: the graded execution-energy gate (tau-relaxed near-miss promotion) + k-consistency agreement + a stronger/cached candidate pool, measuring the GATE's pass@2 effect (not just raw coverage). Emit sovereign_gap4_gate_holds BARE bool := (a LOCAL-generator demo-fit gate holds pass@2 >= vote with 0 pass@2 losses on the matched pool, CI95). verifier_is_oracle=true (the execution gate IS the oracle -- this is the SOVEREIGNTY/decentralization question, NOT an oracle-distinct moat headline). A clean null (the local generator cannot drive the gate) is LOGGED as a decentralization gap (the product backlog). Cached pool + cached GGUF; CPU/iGPU; NO TRM training; NO leaderboard submission. (⚠️ Research Finding) — honest_verdict=complete: sovereign_gap4_local_gate_holds_flat_cov_0.2333_fires_0_lost_0; results/experiment_4417_gap4_local_generator_sovereign_arm.json
+ - 2026-06-19: PHASE C (CONTINUOUS SELF-LEARNING; mandated per research-program.md; verifier_is_oracle=false) -- Config-rule VOCABULARY transfer from previously-seen games (the operator's 'derive config-rules from previously-seen games' direction). .407's self-learning line is dead: the localizer-compounding axis saturated (exp4407 F1=1.0 flat) because the position-bound localizer had no headroom. The NEW substrate WITH real headroom: the 9 toggle/config games and their GROUNDED win-rules. THE STEP: build a config-rule VOCABULARY of RELATIONAL primitives (count-equality, position-match, glyph-map, symmetry, region-match, ...) extracted from the GROUNDED win-rules of solved config games (ka59 editable-count==reference-count; tr87 glyph-rewrite; tn36 program-editor; sc25 cast-grid; + any new exp4414 groundings), then measure whether SEEDING the scaffolded inducer with the vocabulary (offer the primitives as candidate relation templates) raises the win-rule GROUNDING rate on HELD-OUT config games vs COLD-START (no vocabulary). Emit config_rule_vocabulary_transfers BARE bool := (the vocabulary-seeded grounding rate EXCEEDS the cold-start grounding rate on held-out config games, delta CI95-excl-0, with a leave-one-game-out control). verifier_is_oracle=false (the transfer object is a learned config-rule vocabulary; grounding is execution but the COMPOUNDING claim is about the learned vocabulary). A win = the verifier-grounded config-rule program COMPOUNDS via transfer (the self-learning headline on the axis that now has real headroom); a clean null (the vocabulary does not transfer -- config-game win-rules are too heterogeneous) is decision-grade (the registry already refuted GENERIC-grid-feature cross-game transfer for the NAV hard tail; this tests RELATIONAL config-rule vocabulary, a different object). Cached/local; the inducer is the local gemma-12B on the iGPU; zero quota; NO TRM training. NOT gated. (⚠️ Blocked) — honest_verdict=blocked_local_model_unavailable; results/experiment_4418_config_rule_vocabulary_transfer.json
++- 2026-06-19: PHASE D (CROSS-DOMAIN DETECTION CALIBRATION REPAIR; complementary; cached; verifier_is_oracle=false) -- SteerConf steered-confidence elicitation (arXiv:2503.02863) to rescue code_humaneval DETECTION where the .407 semantic-confidence-aggregation could not. .407 (exp4408) reported detection_calibrated_multi_domain=false: code_humaneval detection AUROC 0.577 (CI95 [0.46,0.69], n=539) -- AT CHANCE -- even after proper pools (n>=300) + semantic-confidence aggregation + base-rate separation, while FoVer detects at 0.918. The verifier is DOMAIN-BOUND. STATED forward difference (SteerConf, arXiv:2503.02863): add CONSERVATIVE/OPTIMISTIC steering probes + confidence-CONSISTENCY features (does the candidate's correctness signal survive a conservative vs optimistic steer?) BESIDE the verifier score, then fit domain-wise calibration with leave-domain-out + a random-score control -- testing whether STEERED confidence consistency rescues code_humaneval where the .407 static aggregation could not, WITHOUT degrading FoVer/GAP/GSM. Emit detection_calibrated_multi_domain BARE bool := (detection AUROC CI95 lower bound > 0.5 on >=2 NON-FoVer domains AND leave-one-domain-out calibration keeps ECE below the uncalibrated baseline on the held-out domain). verifier_is_oracle=false. A win = a deployable multi-domain detector contract (the verifier-domain-expansion step, north-star §0 step 2); a domain STILL at chance is LOGGED as a domain-bound missing-verifier gap. This is cross-domain DETECTION (AUROC), NOT the RETIRED cross-domain SELECTION axis (exp4314). Cached candidates, CPU, zero quota. NO new live inference (the steering probes are over CACHED candidate logits/scores where available, else cached candidate features); NO TRM training. (✅ Complete) — honest_verdict=complete: clean_null_steered_confidence_does_not_rescue_code_detector; results/experiment_4419_steerconf_code_detection_calibration_repair.json
+-- 
+2.55.0
+

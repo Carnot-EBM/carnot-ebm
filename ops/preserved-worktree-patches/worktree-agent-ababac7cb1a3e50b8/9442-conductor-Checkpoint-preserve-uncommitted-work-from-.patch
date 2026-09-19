@@ -1,0 +1,44 @@
+From 80497f48478038a8fae78cca5c23dda9e93b5dab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 14:39:25 -0400
+Subject: [PATCH 09442/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 287e13998e..c6dbe968d1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 152, "phase": "iteration_start", "last_beat": "2026-08-21T18:37:18Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 153, "phase": "iteration_start", "last_beat": "2026-08-21T18:39:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 174ca97d13..36c68f2a90 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16243,3 +16243,5 @@ code |
+ | 2026-08-21 18:31 UTC | Exact executed-replay audit of atomic factor causa | OK | 87 passed, 1 warning in 12.63s |
+ | 2026-08-21 18:33 UTC | Gated on Exp6490 and Exp6492 positive signal: deco | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6490-leakage-neutral-trajectory-energy- |
+ | 2026-08-21 18:35 UTC | Gated on Exp6490 and Exp6492 positive signal: deco | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6490-leakage-neutral-trajectory-energy- |
++| 2026-08-21 18:37 UTC | Gated on Exp6490 and Exp6492 positive signal: deco | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6490-leakage-neutral-trajectory-energy- |
++| 2026-08-21 18:39 UTC | Gated on Exp6493 readiness: exact-checker compleme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6493-gated-decomposed-trajectory-energy-a |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a89db1e95b..4ccb568068 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 152, "phase": "iteration_start", "started_at": "2026-08-21T18:37:18Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 153, "phase": "iteration_start", "started_at": "2026-08-21T18:39:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

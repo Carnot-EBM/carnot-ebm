@@ -1,0 +1,94 @@
+From 8847441d0aaf1e1b3fbc5e17dddbbb8420e7da10 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 03:47:18 -0400
+Subject: [PATCH 09632/11362] [conductor] Operational retrospective for
+ milestone 2026.08.565
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 ++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_565.json | 47 ++++++++++++++++++++++
+ 3 files changed, 55 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_565.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index f1654a4665..14ad0b85d7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6276,3 +6276,10 @@ The critical path for milestone .250:
+ - theme: brief synthesis-only closeout exposed a timing-provenance gap without an accelerator bottleneck
+ - key result: no compute-bound work ran, so idle GPUs were correct and no concurrent-model runner requirement arose
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.565
++
++- exp_range: no data available this milestone
++- theme: contract and provenance synthesis formed a short milestone with only file-timestamp reconstruction
++- key result: the evidence contains no compute work, so accelerator efficiency and concurrent-model dispatch have no applicable task
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d0fee83be8..e160312157 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17321,3 +17321,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-23: Execution-time V565 source, model, and method contract (⚠️ Research Finding) — honest_verdict=blocked_v565_source_model_method_contract: unavailable_required_channels=openreview; results/experiment_6528_v565_source_model_method_contract.json
+ - 2026-08-23: Execution-time V565 source, model, and method contract (⚠️ Research Finding) — honest_verdict=blocked_v565_source_model_method_contract: unavailable_required_channels=openreview; results/experiment_6528_v565_source_model_method_contract.json
+ - 2026-08-23: Independent external-corpus provenance, replay, and split audit (⚠️ Blocked) — honest_verdict=blocked_external_constraint_corpus_audit: failed_checks=exp6529_artifact_exists,fixture_exists,pinned_source_root_exists,revision_is_immutable,license_verified,schema_verified,corruption_boundary_text_verified; results/experiment_6530_external_constraint_corpus_audit.json
++- 2026-08-23: Operational retrospective for 2026.08.565: the locked record contains 3 synthesis-only experiments across 0.8 reconstructed minutes. The 0.77-minute contract task formed the visible tail. Compute-path GPU efficiency and parallel-runner selection did not apply because the compute-bound count was zero. Add steady-clock phase probes, content-hash reuse, and task dispatch receipts. The savings estimate stays at 0% because the data supplies no optimization benchmark. Artifact: results/operational_retro_2026_08_565.json.
+diff --git a/results/operational_retro_2026_08_565.json b/results/operational_retro_2026_08_565.json
+new file mode 100644
+index 0000000000..9dc0a72d5a
+--- /dev/null
++++ b/results/operational_retro_2026_08_565.json
+@@ -0,0 +1,47 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.565",
++  "generated_at": "2026-08-23T07:41:44Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.8,
++  "experiments_completed": 3,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "Execution-time V565 source, model, and method contract",
++      "duration_minutes": 0.77,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V565 activation manifest and V564 evidence eligibility corrigendum",
++      "duration_minutes": 0.03,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Independent external-corpus provenance, replay, and split audit",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The locked record contains 3 synthesis-only experiments across 0.8 minutes. Compute-path GPU efficiency and parallel-runner selection cannot be graded because the compute-bound count is zero.",
++  "bottlenecks_identified": [
++    "Compute execution contributed no delay because the locked compute-bound count is zero.",
++    "The 0.77-minute execution-time source, model, and method contract consumed most of the 0.8-minute window, but the supplied timing data does not expose phase-level causes.",
++    "Fallback file timestamps show ordering and totals, not internal phase costs; no live commit timing existed."
++  ],
++  "improvements_suggested": [
++    "Attach steady-clock timestamps to task entry, task exit, and each internal phase.",
++    "Persist content hashes for contract inputs and skip unchanged contract sections.",
++    "Write a dispatch receipt with workload class, concurrent model count, accelerator assignment, and selected runner."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add steady-clock phase probes to the execution-time contract path.",
++    "Use content hashes to reuse unchanged contract sections.",
++    "Persist one dispatch receipt for every task."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "GPU snapshots do not diagnose this milestone's work because the recorded tasks had no accelerator path. Measure the internal stages of the 0.77-minute contract task before assigning a nonzero savings estimate."
++}
+-- 
+2.55.0
+

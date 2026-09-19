@@ -1,0 +1,2456 @@
+From 5d10f43209976f58595c6b7f81e483b28a640e32 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 08:14:02 -0400
+Subject: [PATCH 07059/11362] [conductor] Operational retrospective for
+ milestone 2026.07.507
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                               |    2 +-
+ docs/research-log.md                          |    6 +
+ .../arc-human-replay-frame-change/spec.md     |  129 ++
+ ops/changelog.md                              |    1 +
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ops/verifier_gaps.md                          |   64 +
+ ...ent_5702_dynamics_gate_pass_rate_survey.py |  254 ++++
+ ...03_sp80_candidate_stack_mechanism_trace.py |  361 ++++++
+ ...t_5702_dynamics_gate_pass_rate_survey.json |   69 ++
+ ..._sp80_candidate_stack_mechanism_trace.json | 1048 +++++++++++++++++
+ results/operational_retro_2026_07_507.json    |   59 +
+ ...ent_5702_dynamics_gate_pass_rate_survey.py |  145 +++
+ ...03_sp80_candidate_stack_mechanism_trace.py |  166 +++
+ 15 files changed, 2306 insertions(+), 3 deletions(-)
+ create mode 100644 python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py
+ create mode 100644 python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py
+ create mode 100644 results/experiment_5702_dynamics_gate_pass_rate_survey.json
+ create mode 100644 results/experiment_5703_sp80_candidate_stack_mechanism_trace.json
+ create mode 100644 results/operational_retro_2026_07_507.json
+ create mode 100644 tests/python/test_experiment_5702_dynamics_gate_pass_rate_survey.py
+ create mode 100644 tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
+
+diff --git a/docs/index.html b/docs/index.html
+index ebb2d25014..c2d6dc3e8c 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,015</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,031</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 4916fd14e9..023af62640 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5913,3 +5913,9 @@ The critical path for milestone .250:
+ - theme: capstone closeout dominated the recorded compute-bound runtime
+ - key result: honest operational result -- the compute-bound capstone and reconciliation was the longest recorded experiment at 24.95 minutes; the locked task-level idle indicator rules out an idle-GPU bottleneck, while the evidence includes no concurrent multi-model run to evaluate runner selection
+ - acceptance: no data available this milestone
++
++### Milestone 2026.07.507
++- exp_range: no data available this milestone
++- theme: CUDA certification and closeout reconciliation led the recorded operational runtime
++- key result: honest operational result -- the supplied evidence identifies the longest compute-bound paths but does not establish an idle-GPU bottleneck, a causal phase breakdown, or a concurrent multi-model DualGPURunner miss
++- acceptance: no data available this milestone
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index c9c0136faa..0057f019c8 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -3558,6 +3558,135 @@ game, so the resulting `honest_verdict` (tie, win, loss, or efficiency-only
+ edge) rests on multiple independent games' worth of real signal rather than
+ one game's floor-effect tie
+ 
++### REQ-ARC-FCP-5703: Mechanism-Level Diagnosis of the sp80 Candidate-Scoring-Stack Regression
++
++exp5701 found `sp80` was the one game (of 5 with measured headroom) where
++`bare_control` beat `full_stack` by a level. Restating the number is not a
++diagnosis -- `python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py`
++SHALL directly instrument all three mechanisms that differ between the arms
++(`candidate_router`, `goal_bias`, `goal_candidate_guidance`) during a real
++sp80 replay of both arms, to determine whether any of them ACTIVELY steered
++`full_stack` toward a worse choice, or whether the regression's cause lies
++elsewhere in the stack.
++
++The artifact SHALL report, per mechanism: whether it was present, how many
++times it was genuinely invoked, and whether it ever changed the outcome it
++influences (`candidate_router_changed_order_count` for candidate reordering;
++`goal_bias_score_variance` across every real frontier-node scoring call for
++the goal-energy bias). `inert_mechanisms` SHALL list any mechanism confirmed
++structurally incapable of having caused the regression this run.
++
++**RESOLUTION (2026-07-14).** Replayed sp80 under both arms, budget=500,
++offline (no LLM). Regression reproduced (`full_stack.levels_gained=0` vs
++`bare_control.levels_gained=1`, `bare_control` reaching L1 in 425 actions).
++**All three learned mechanisms were confirmed structurally inert this run:**
++`goal_bias` (`arc_goal_energy_live.GoalSatisfactionEnergy`, source
++`exp4020_graded_goal_satisfaction_energy`) scored EXACTLY `1.0` on all 771
++real frontier-node invocations (`goal_bias_score_variance=0.0`) -- a
++mathematical proof it could not have influenced the A*-style frontier
++ordering, since a constant score maps to a constant sort key
++(`_goal_bias_key`). `goal_candidate_guidance` (the same energy source
++applied to the immediate candidate pool) also scored uniformly and
++correctly self-detected its own degeneracy (`arms_non_degenerate=False`)
++via its existing audit, falling back to the unranked candidate order by
++design. `candidate_router` was genuinely invoked 33 times but never once
++changed the candidate ordering it was given
++(`candidate_router_changed_order_count=0`).
++
++**Honest conclusion: the sp80 regression is NOT caused by a bad learned
++signal actively misleading search -- it is structurally impossible for
++these three mechanisms to be the cause here, since two contribute a
++provable no-op and the third self-audited its own uselessness and
++correctly disengaged.** The real cause must trace to one of the other
++differing knobs (`value_weight`/DAgger value head, `navigation_cost_
++tiebreak`, `action_effect_expansion_prior`) -- not further isolated in
++this investigation's scope. Separately, this run surfaced a genuine,
++independently-useful finding: `GoalSatisfactionEnergy`'s frame-state
++extraction is structurally blind on sp80 (falls to its constant-1.0
++default because `visible_state()` cannot parse sp80's placement mechanic
++into a target-fraction), corroborating `ops/verifier_gaps.md` GAP-4891's
++independent finding (via a completely different code path -- the offline
++self-induction operator, not the live goal-bias stack) that sp80's goal is
++spatial/placement and not discriminable by the count/generic-fraction
++features these mechanisms use. Logged as GAP-5703 (`ops/verifier_gaps.md`)
++per the Missing-Verifier Gap Logging discipline, with a concrete,
++general-purpose fix recommendation: give `goal_bias`'s frontier scoring the
++same degenerate-score self-audit `goal_candidate_guidance` already has.
++
++Required field principles:
++
++- `goal_bias_score_variance`: principle "zero variance across every real invocation is direct, mechanical proof the goal-energy source could not have influenced frontier ordering on this game, independent of any post-hoc narrative."
++- `candidate_router_changed_order_count`: principle "counts how many of the router's real invocations actually altered the candidate ordering it was given -- distinguishes 'present and consulted' from 'present and load-bearing'."
++- `prior_result`: principle "CLAUDE.md Failed-Experiment Rerun Discipline analog for a diagnostic task -- names the exp5701 finding this investigates so the connection is traceable."
++
++#### SCENARIO-ARC-FCP-5703-MECHANISM-INERT-OR-IMPLICATED
++
++Given a real replay of the sp80 regression with all three learned
++candidate-scoring mechanisms instrumented for actual influence (not just
++presence)
++When the regression reproduces
++Then `inert_mechanisms` correctly distinguishes mechanisms that were merely
++present from mechanisms that measurably changed a decision, so the
++diagnosis names what did NOT cause the regression with the same rigor as
++what might have
++
++### REQ-ARC-WMTE-5593-4: Real-World Pass-Rate Survey of the `min_heldout_accuracy=1.0` Dynamics Gate
++
++REQ-ARC-WMTE-5593-3's live-integration follow-up found both arms failing at
++the pre-existing dynamics gate before the goal-consistency veto was ever
++reached in its first real attempt, and disclosed this as a
++`dynamics_gate_finding` rather than investigating further.
++`python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py` SHALL
++follow up: aggregate every real `heldout_accuracy` value recorded across the
++checked-in corpus of `inference_substrate == "live_llm_inference"` result
++artifacts (excluding exp5700, which deliberately bypassed the gate for an
++unrelated isolation test) to estimate how often a real induction round
++actually clears the live call site's own threshold of `1.0`.
++
++The artifact SHALL report `pass_rate_at_live_threshold`, `exact_zero_rate`,
++`mean`/`median`, a `threshold_sweep` across common alternative bars, and
++`cited_upstream_artifacts` (CLAUDE.md Inference-Substrate Declaration
++Discipline audit trail -- every row must trace back to the real artifact
++that measured it).
++
++**RESOLUTION (2026-07-14).** Aggregated 95 real round-level
++`heldout_accuracy` values across 12 real `live_llm_inference` artifacts.
++**`pass_rate_at_live_threshold=0.1263`** (12.6% of real induction rounds
++ever reach the exact `1.0` bar the live pipeline enforces).
++`exact_zero_rate=0.4737` (47.4% of real rounds score a complete `0.0`).
++`mean=0.3069`, `median=0.12` -- a strongly right-skewed, mostly-poor
++distribution, not a narrow miss clustered just below the bar.
++
++**Honest conclusion and limitation.** This measures the PER-ROW pass rate,
++not the bounded 3-round retry loop's eventual within-budget success rate --
++the checked-in corpus does not contain enough same-attempt multi-round
++traces to reconstruct that distinct statistic (most artifacts in this
++corpus measure first-shot induction quality, not a full bounded-retry
++trace). The per-row rate is still the direct, real answer to "how strict is
++`1.0` in practice": across a large, diverse, real historical corpus, the
++overwhelming majority of individual real induction attempts miss the live
++threshold entirely. This corroborates, with corpus-scale evidence, task 8's
++single-attempt observation that the dynamics gate is "frequently the
++dominant blocker" -- and raises a genuine calibration question (not
++resolved here) of whether a graduated-trust tier, mirroring
++`GoalEnergyCandidateGuidance`'s own degenerate-score self-audit pattern
++(REQ-ARC-FCP-5703 above), could safely make use of a "good but imperfect"
++induced model instead of an all-or-nothing accept/reject at `1.0`.
++
++Required field principles:
++
++- `pass_rate_at_live_threshold`: principle "the direct answer to task 11's question -- how often a real induction round clears the exact threshold (1.0) the live call site enforces."
++- `excluded_artifacts`: principle "exp5700 deliberately set min_heldout_accuracy=0.0 to isolate an unrelated veto test; including its rows would understate how strict the REAL live threshold is by mixing in rows collected under a different, lower bar."
++
++#### SCENARIO-ARC-WMTE-5593-4-CORPUS-PASS-RATE
++
++Given the full checked-in corpus of real `live_llm_inference` artifacts,
++excluding any artifact that deliberately used a non-default gate threshold
++When every real round-level `heldout_accuracy` value is aggregated
++Then the resulting `pass_rate_at_live_threshold` reflects only genuine
++real-world attempts at the live pipeline's actual configured threshold, with
++a full audit trail (`cited_upstream_artifacts`) back to the source artifacts
++
+ ### REQ-ARC-WMTE-5593: Goal-Predicate Consistency Against Real Observed Level-Progress
+ 
+ `ops/known-issues.md`'s 2026-07-11 task 11 entry (hallucination-consistency
+diff --git a/ops/changelog.md b/ops/changelog.md
+index af1b938045..c7d7ab7960 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11523,3 +11523,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-14: cDLS exact small-state target, detailed-balance, and quality-gate audit (✅ Complete) — honest_verdict=complete: corrected cDLS exact kernel audit ready; biased uncorrected kernel blocks timing unless the corrected kernel is used; results/experiment_5622_cdls_exact_kernel_audit.json
+ - 2026-07-14: Gated on Exp5622 exactness: corrected cDLS multi-seed matched CPU-CUDA crossover (⚠️ Blocked) — honest_verdict=complete: no quality-matched crossover pairs entered speedups; blocked_reasons=0; no-crossover evidence is terminal for this run; results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json
+ - 2026-07-14: V507 capstone, promotion-retirement ledger, and spec-ops reconciliation (✅ Complete) — honest_verdict=complete: .507 capstone aggregated 14 readable artifact files across Exp5613-Exp5623; native_runtime_certificate=False; exact_fixture=True; critical_duration_map=True; predictive_kan_promoted=False; arc_registry_delta=0; cdls_exact=True; cdls_crossover=False; results/experiment_5624_v507_capstone_reconciliation.json
++- 2026-07-14: Operational retrospective for milestone 2026.07.507 (Complete) -- 12 experiments used 159.6 minutes, including 6 compute-bound experiments; the longest compute-bound paths were the 28.4-minute native llama.cpp three-GGUF CUDA certificate, the 27.22-minute capstone/reconciliation, and the 21.38-minute ARC transition-cycle verifier. The locked compute-task idle indicator is false, the idle GPU snapshot is not task-correlated, and no concurrent multi-model DualGPURunner miss is established. Recommended tooling: task-correlated GPU and model-concurrency telemetry, phase-level timing receipts, and manifest-driven DualGPURunner selection; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_507.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 991e3daf01..1340d51e1d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 150, "phase": "iteration_start", "last_beat": "2026-07-14T11:38:15Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 151, "phase": "iteration_start", "last_beat": "2026-07-14T12:05:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5696059e50..ddf3ff7519 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11732,3 +11732,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 10:54 UTC | ARC-AGI-3 unconditional rotated live-agent plus-on | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-07-14 11:10 UTC | cDLS exact small-state target, detailed-balance, a | OK | 86 passed, 1 warning in 13.67s |
+ | 2026-07-14 11:36 UTC | Gated on Exp5622 exactness: corrected cDLS multi-s | OK | 93 passed, 1 warning in 10.63s |
++| 2026-07-14 12:03 UTC | V507 capstone, promotion-retirement ledger, and sp | OK | 87 passed, 1 warning in 10.04s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 64b9fc68a4..84bea708ee 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 150, "phase": "iteration_start", "started_at": "2026-07-14T11:38:15Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 151, "phase": "iteration_start", "started_at": "2026-07-14T12:05:24Z"}
+\ No newline at end of file
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index c996ccf732..4452450987 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2884,3 +2884,67 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   discipline — not an all-no-op degenerate test). The check ITSELF is now demonstrated working on
+   real induced output, not just synthetic fixtures; still NOT wired into any live decision
+   (vetoing a goal predicate before planning) — that remains a distinct, separately-scoped step.
++
++### GAP-5703: `GoalSatisfactionEnergy` (Exp4020) is structurally blind on sp80 — constant score, zero variance, live path (not just offline self-induction)
++- status: open
++- evidence: `results/experiment_5703_sp80_candidate_stack_mechanism_trace.json` (2026-07-14,
++  outer-loop, task 10 — follow-up to exp5701's finding that sp80 was the one game where
++  `bare_control` beat `full_stack` by a level in the candidate-scoring-stack ablation). Directly
++  instrumented all three "richer stack" mechanisms live during a real sp80 episode
++  (`E3AgentPolicy(game)`, budget=500, offline_arcade substrate, no LLM): `goal_bias`
++  (`arc_goal_energy_live.GoalSatisfactionEnergy`, source `exp4020_graded_goal_satisfaction_energy`)
++  scored **every one of 771 real frontier-node invocations at exactly 1.0** (`goal_bias_score_
++  variance=0.0`); `goal_candidate_guidance` (the same energy source, applied to the immediate
++  14-candidate pool) also scored uniformly (`score_min=score_max=1.0`) and correctly self-detected
++  its own degeneracy (`arms_non_degenerate=False`) and no-op'd (`candidate_pool_differs_from_
++  baseline=False`, by the existing design in `arc_goal_energy_live.py:274-275`); `candidate_router`
++  was genuinely invoked 33 times but never once changed the candidate ordering it was given
++  (`candidate_router_changed_order_count=0`). adversarial_verify clean.
++- failure mode: `GoalSatisfactionEnergy.__call__` (`arc_goal_energy_live.py:338-353`) falls back to
++  a constant `1.0` ("totally unsatisfied") whenever `visible_state(value)` returns `None` or the
++  extracted state's `total_targets <= 0.0`. A constant score across an entire real episode means
++  `_state_from_visible()` extracts no usable target-state from sp80's frames at all — the energy
++  source has literally zero information about sp80's spill-splitter/placement mechanic, not just
++  weak/noisy information. Since `_goal_bias_key` maps a constant score to a constant sort key
++  (`arc_competition_agent.py:1139-1144`), this is not merely a weak signal, it is a mathematically
++  guaranteed no-op on frontier ordering — confirmed by direct instrumentation, not inferred.
++- **corroborates GAP-4891 via an independent code path.** GAP-4891 (above) found the SAME
++  underlying problem — sp80's goal is SPATIAL/placement, not discriminable by
++  object-count/colour-count style features — via the OFFLINE self-induction operator
++  (`induce_goal_energy_*` in `arc_agi3_goal_induction.py`), a completely different module from
++  `GoalSatisfactionEnergy`/`arc_goal_energy_live.py`. This entry shows the SAME game's SAME class
++  of failure also reaches the LIVE submitted agent's own search behavior (`goal_bias` +
++  `goal_candidate_guidance`, both wired into `E3AgentPolicy`'s default "full stack" per
++  `SUBMITTED_AGENT_CONFIG`) — not just an offline diagnostic tool. The gap is broader and more
++  load-bearing than GAP-4891 alone suggested: it affects what the scored agent actually does on
++  this game class, not only a research-side self-induction experiment.
++- missing discriminator: a placement/spatial-aware `visible_state()` extraction (or an alternate
++  goal-energy source entirely) that can represent progress toward a target CONFIGURATION — cell
++  values/positions matching an induced or hard-coded target — for games whose win condition is
++  "put things in the right place" rather than "make a count/fraction go to zero." The relational
++  target-match representation GAP-4891's UPDATE-2 already built and validated
++  (`induce_goal_energy_relational`, separates sp80's win from every non-win, `winE=0, nonE=3.27`)
++  is a candidate signal source that could replace or supplement `GoalSatisfactionEnergy` for games
++  in this class — it already exists and is proven to discriminate on this exact game, just not
++  wired into the LIVE `goal_bias`/`goal_candidate_guidance` path.
++- candidate design: (a) a degenerate-score self-audit on `goal_bias`'s frontier-node scoring,
++  mirroring the audit `goal_candidate_guidance` already has (`arms_non_degenerate`) — so a
++  zero-variance goal-energy source safely falls back to no-goal-bias search instead of silently
++  contributing an inert-but-unaudited key, closing the asymmetry this investigation found between
++  the two mechanisms; (b) route `goal_bias`/`goal_candidate_guidance` through GAP-4891's
++  already-validated relational target-match energy on games flagged as placement/spatial-class
++  (the mechanic-class routing infrastructure already exists per `arc_solve_learning.recommend_
++  approach` / `_recommend_live_approach`), rather than the generic Exp4020 predicate-fraction
++  formula.
++- what does NOT explain the sp80 regression: since all three learned mechanisms are proven inert
++  on this game (constant score / no reordering / self-audited no-op), they cannot be the cause of
++  `full_stack` losing a level to `bare_control` there. The regression's real cause is one of the
++  remaining differing knobs (`value_weight`/DAgger value head, `navigation_cost_tiebreak`,
++  `action_effect_expansion_prior`) — NOT further isolated in exp5703's scope; a natural follow-up
++  if sp80 specifically becomes headline-relevant.
++- priority: medium — real and load-bearing for the live agent's search quality on placement-class
++  games (not just a research diagnostic), but the exp5701 sweep found sp80 is the ONLY game (of 5
++  with measured headroom) where this class of degeneracy corresponded to a measured regression;
++  candidate design (a) is cheap and should be paired with any future goal_bias work regardless of
++  priority tier, since it is a general robustness fix (fail-safe on ANY out-of-distribution game),
++  not sp80-specific.
+diff --git a/python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py b/python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py
+new file mode 100644
+index 0000000000..8b58a8fc38
+--- /dev/null
++++ b/python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py
+@@ -0,0 +1,254 @@
++"""Experiment 5702: real-world pass-rate survey of the live pipeline's
++`min_heldout_accuracy=1.0` dynamics gate (task 11 -- follow-up to task 8's
++REQ-ARC-WMTE-5593-3 finding that "in practice, on real first-shot LLM induction,
++the already-strict min_heldout_accuracy=1.0 dynamics gate is frequently the
++dominant blocker").
++
++Aggregates every real `heldout_accuracy` value recorded across the checked-in
++corpus of `inference_substrate == "live_llm_inference"` result artifacts (real
++GPU-backed induction rounds, not synthetic fixtures) to estimate: how often does
++a real induction round actually clear the live call site's own threshold of 1.0?
++
++This is NOT a new live episode -- it is an honest aggregation over already-real,
++already-adversarially-verified upstream artifacts (each of which independently
++paid its own real GPU cost when it was produced). `exp5700`'s own rows are
++excluded: that experiment deliberately set `min_heldout_accuracy=0.0` to bypass
++the gate for an unrelated isolation test, so its rows are not representative of
++real-world pass-rate at the live threshold.
++
++Spec refs: REQ-ARC-WMTE-5593-3 (extends, task-8 dynamics-gate-dominance finding).
++"""
++
++from __future__ import annotations
++
++import glob
++import hashlib
++import json
++import statistics
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "experiment_5702_dynamics_gate_pass_rate_survey"
++RESULT_RELATIVE_PATH = "results/experiment_5702_dynamics_gate_pass_rate_survey.json"
++SCHEMA = "carnot.exp5702.dynamics_gate_pass_rate_survey.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 5702
++LIVE_THRESHOLD = 1.0
++EXCLUDED_EXPERIMENT_SUBSTRINGS = ("5700",)  # deliberately-bypassed-threshold isolation test
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "live_threshold",
++    "n_rows",
++    "n_source_files",
++    "mean",
++    "median",
++    "pass_rate_at_live_threshold",
++    "exact_zero_rate",
++    "threshold_sweep",
++    "cited_upstream_artifacts",
++    "excluded_artifacts",
++    "solve_provenance",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": "terminal-prefixed; a low pass rate is a real, citable finding about gate calibration, not a failure of this survey"
++    },
++    "pass_rate_at_live_threshold": {
++        "principle": "the direct answer to task 11's question -- how often a real induction round clears the exact threshold (1.0) the live call site enforces"
++    },
++    "excluded_artifacts": {
++        "principle": "exp5700 deliberately set min_heldout_accuracy=0.0 to isolate an unrelated veto test; including its rows would understate how strict the REAL live threshold is by mixing in rows collected under a different, lower bar"
++    },
++    "cited_upstream_artifacts": {
++        "principle": "CLAUDE.md Inference-Substrate Declaration Discipline -- this is an aggregation_from_upstream_artifacts run; the audit trail must trace every row back to the real artifact that measured it"
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility"},
++    "reproducibility_checksum": {"principle": "content hash catches silent drift on replay"},
++}
++
++
++def preconditions(root: Path = REPO_ROOT) -> JsonDict:
++    checks: dict[str, bool] = {}
++    results_dir = root / "results"
++    checks["results_dir_present"] = results_dir.is_dir()
++    checks["ok"] = all(checks.values())
++    return checks
++
++
++def _first_precondition_miss(preconds: JsonDict) -> str | None:
++    for key, value in preconds.items():
++        if key == "ok":
++            continue
++        if not value:
++            return key
++    return None
++
++
++def _checksum(payload: JsonDict) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
++    ).hexdigest()
++
++
++def _walk_heldout_accuracy_rows(obj: Any, out: list[float]) -> None:
++    if isinstance(obj, dict):
++        val = obj.get("heldout_accuracy")
++        if isinstance(val, (int, float)) and not isinstance(val, bool):
++            out.append(float(val))
++        for v in obj.values():
++            _walk_heldout_accuracy_rows(v, out)
++    elif isinstance(obj, list):
++        for v in obj:
++            _walk_heldout_accuracy_rows(v, out)
++
++
++def collect_rows(root: Path = REPO_ROOT) -> tuple[list[float], list[str], list[str]]:
++    """Returns (values, cited_files, excluded_files)."""
++
++    values: list[float] = []
++    cited: list[str] = []
++    excluded: list[str] = []
++    for path_str in sorted(glob.glob(str(root / "results" / "*.json"))):
++        rel = str(Path(path_str).relative_to(root))
++        try:
++            data = json.loads(Path(path_str).read_text(encoding="utf-8"))
++        except Exception:
++            continue
++        if not isinstance(data, dict):
++            continue
++        if data.get("inference_substrate") != "live_llm_inference":
++            continue
++        if any(token in rel for token in EXCLUDED_EXPERIMENT_SUBSTRINGS):
++            excluded.append(rel)
++            continue
++        rows: list[float] = []
++        _walk_heldout_accuracy_rows(data, rows)
++        if rows:
++            values.extend(rows)
++            cited.append(rel)
++    return values, cited, excluded
++
++
++def build_artifact(*, root: Path = REPO_ROOT) -> JsonDict:
++    started = time.monotonic()
++    preconds = preconditions(root)
++    miss = _first_precondition_miss(preconds)
++    if miss:
++        artifact: JsonDict = {
++            "experiment": EXPERIMENT_ID,
++            "schema": SCHEMA,
++            "result_path": RESULT_RELATIVE_PATH,
++            "honest_verdict": f"complete: blocked_{miss}",
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "field_principles": FIELD_PRINCIPLES,
++            "live_threshold": LIVE_THRESHOLD,
++            "n_rows": 0,
++            "n_source_files": 0,
++            "mean": None,
++            "median": None,
++            "pass_rate_at_live_threshold": None,
++            "exact_zero_rate": None,
++            "threshold_sweep": {},
++            "cited_upstream_artifacts": [],
++            "excluded_artifacts": [],
++            "solve_provenance": "development_proxy",
++            "random_seed": RANDOM_SEED,
++            "reproducibility_checksum": "",
++            "duration_s": round(time.monotonic() - started, 6),
++            "preconditions_checked": preconds,
++        }
++        artifact["reproducibility_checksum"] = _checksum(
++            {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++        )
++        return artifact
++
++    values, cited, excluded = collect_rows(root)
++    n = len(values)
++
++    if n == 0:
++        verdict = "complete: no_real_induction_rows_found"
++        mean = median = pass_rate = exact_zero_rate = None
++        sweep: JsonDict = {}
++    else:
++        mean = round(statistics.mean(values), 4)
++        median = round(statistics.median(values), 4)
++        passed = sum(1 for v in values if v >= LIVE_THRESHOLD)
++        pass_rate = round(passed / n, 4)
++        exact_zero_rate = round(sum(1 for v in values if v == 0.0) / n, 4)
++        sweep = {
++            str(t): round(sum(1 for v in values if v >= t) / n, 4)
++            for t in (1.0, 0.9, 0.8, 0.75, 0.7, 0.5, 0.3)
++        }
++        if pass_rate < 0.25:
++            verdict = f"complete: dynamics_gate_strict_low_pass_rate_{int(pass_rate * 100)}pct"
++        elif pass_rate < 0.5:
++            verdict = (
++                f"complete: dynamics_gate_moderately_strict_pass_rate_{int(pass_rate * 100)}pct"
++            )
++        else:
++            verdict = f"complete: dynamics_gate_pass_rate_{int(pass_rate * 100)}pct_not_clearly_over_strict"
++
++    artifact = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "live_threshold": LIVE_THRESHOLD,
++        "n_rows": n,
++        "n_source_files": len(cited),
++        "mean": mean,
++        "median": median,
++        "pass_rate_at_live_threshold": pass_rate,
++        "exact_zero_rate": exact_zero_rate,
++        "threshold_sweep": sweep,
++        "cited_upstream_artifacts": cited,
++        "excluded_artifacts": excluded,
++        "methodology_note": (
++            "Corpus is round-level heldout_accuracy snapshots from real live_llm_inference "
++            "artifacts. This measures the PER-ROW pass rate at the live threshold, not the "
++            "bounded 3-round retry loop's eventual within-budget success rate -- the checked-in "
++            "corpus does not contain enough same-attempt multi-round traces to reconstruct that "
++            "distinct statistic. The per-row rate is still the right first-order answer to "
++            "'how strict is 1.0 in practice': a low per-row rate means most individual real "
++            "induction attempts miss the bar, which is the direct evidence for whether the gate "
++            "is calibrated tightly or loosely against real model output quality."
++        ),
++        "solve_provenance": "development_proxy",
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.monotonic() - started, 6),
++        "preconditions_checked": preconds,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _checksum(
++        {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++    )
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper, exercised manually
++    artifact = build_artifact()
++    out_path = REPO_ROOT / RESULT_RELATIVE_PATH
++    out_path.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
++    print(f"wrote {out_path} -- honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py b/python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py
+new file mode 100644
+index 0000000000..0c393deed1
+--- /dev/null
++++ b/python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py
+@@ -0,0 +1,361 @@
++"""Experiment 5703: mechanism-level trace of WHY the full candidate-scoring stack
++lost a level to bare control on sp80 (task 10 -- follow-up to exp5701's finding
++that sp80 was the one game where bare_control beat full_stack).
++
++Replays sp80 under both E3AgentPolicy arms (identical construction to exp5592/
++exp5701's BARE_CONTROL_KWARGS vs the real unmodified default) with instrumentation
++around each of the THREE "richer stack" mechanisms that differ between the arms
++(`candidate_router`, `goal_bias`, `goal_candidate_guidance`) to determine whether
++any of them actively steered the full-stack arm toward a worse choice, or whether
++they were structurally inert.
++
++Spec refs: REQ-ARC-FCP-5701-HEADROOM-RESCOPE (extends, sp80 regression follow-up).
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import statistics
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "experiment_5703_sp80_candidate_stack_mechanism_trace"
++RESULT_RELATIVE_PATH = "results/experiment_5703_sp80_candidate_stack_mechanism_trace.json"
++SCHEMA = "carnot.exp5703.sp80_candidate_stack_mechanism_trace.v1"
++INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++RANDOM_SEED = 5703
++TARGET_GAME = "sp80"
++BUDGET = 500
++BARE_CONTROL_KWARGS: dict[str, Any] = {
++    "target_levels": 1,
++    "value_weight": 0.0,
++    "candidate_router": None,
++    "navigation_cost_tiebreak": False,
++    "action_effect_expansion_prior": False,
++    "goal_bias": None,
++    "goal_candidate_guidance": False,
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "target_game",
++    "budget",
++    "full_stack",
++    "bare_control",
++    "goal_bias_score_variance",
++    "goal_bias_n_scored",
++    "candidate_router_changed_order_count",
++    "inert_mechanisms",
++    "prior_result",
++    "solve_provenance",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": "terminal-prefixed; distinguishes 'a learned mechanism actively misled search' from 'the richer mechanisms were inert and something else caused the divergence' -- these have very different implications for whether the stack is unsafe or just unhelpful here"
++    },
++    "goal_bias_score_variance": {
++        "principle": "zero variance across every real invocation is direct, mechanical proof the goal-energy source could not have influenced frontier ordering on this game, independent of any post-hoc narrative"
++    },
++    "candidate_router_changed_order_count": {
++        "principle": "counts how many of the router's real invocations actually altered the candidate ordering it was given -- distinguishes 'present and consulted' from 'present and load-bearing'"
++    },
++    "prior_result": {
++        "principle": "CLAUDE.md Failed-Experiment Rerun Discipline analog for a diagnostic task -- names the exp5701 finding this investigates so the connection is traceable"
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility"},
++    "reproducibility_checksum": {"principle": "content hash catches silent drift on replay"},
++}
++
++
++def preconditions(root: Path = REPO_ROOT) -> JsonDict:
++    checks: dict[str, bool] = {}
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        arc = kit.offline_arcade()
++        checks["offline_arcade_importable"] = True
++        checks["offline_arcade_makes_env"] = False
++        try:
++            env = arc.make(TARGET_GAME, scorecard_id=arc.open_scorecard())
++            env.reset()
++            checks["offline_arcade_makes_env"] = True
++        except Exception:
++            pass
++    except Exception:
++        checks["offline_arcade_importable"] = False
++    try:
++        from carnot.agentic.arc_competition_agent import (  # noqa: F401
++            E3AgentPolicy,
++            StepwiseExplorer,
++        )
++
++        checks["e3_policy_import"] = True
++    except Exception:
++        checks["e3_policy_import"] = False
++    checks["ok"] = all(checks.values())
++    return checks
++
++
++def _first_precondition_miss(preconds: JsonDict) -> str | None:
++    for key, value in preconds.items():
++        if key == "ok":
++            continue
++        if not value:
++            return key
++    return None
++
++
++def _checksum(payload: JsonDict) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
++    ).hexdigest()
++
++
++def _play_traced(game: str, *, arm: str, budget: int) -> JsonDict:
++    from arcengine import GameAction
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++    from arc_leaderboard_eval import _baseline_actions, _level_of
++
++    os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    _baseline_actions(env, game)
++
++    if arm == "bare_control":
++        policy = E3AgentPolicy(game, **BARE_CONTROL_KWARGS)
++    else:
++        policy = E3AgentPolicy(game)
++
++    router_calls = {"n": 0, "changed_order_count": 0}
++    real_router = policy.explorer.candidate_router
++    if real_router is not None:
++
++        def _counting_router(candidates, *a, **kw):
++            router_calls["n"] += 1
++            before = [c.get("id") if isinstance(c, dict) else c for c in candidates]
++            result = real_router(candidates, *a, **kw)
++            after = [c.get("id") if isinstance(c, dict) else c for c in result]
++            if before != after:
++                router_calls["changed_order_count"] += 1
++            return result
++
++        policy.explorer.candidate_router = _counting_router
++
++    goal_bias_scores: list[float] = []
++    if policy.explorer.goal_bias is not None:
++        real_goal_bias = policy.explorer.goal_bias
++
++        def _traced_goal_bias(frame):
++            v = real_goal_bias(frame)
++            goal_bias_scores.append(float(v))
++            return v
++
++        policy.explorer.goal_bias = _traced_goal_bias
++
++    frames, latest, actions = [], None, 0
++    start, best = None, None
++    action_sequence: list[Any] = []
++    for _ in range(budget):
++        if policy.is_done(frames, latest):
++            break
++        kind, data = policy.next_move(frames, latest)
++        if kind == "RESET":
++            latest = env.reset()
++            action_sequence.append("RESET")
++        elif kind is None:
++            break
++        else:
++            latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
++            actions += 1
++            action_sequence.append(kind)
++        if start is None:
++            start = _level_of(latest)
++            best = start
++        lvl = _level_of(latest)
++        if best is not None and lvl > best:
++            best = lvl
++        frames.append(latest)
++        if latest is None:
++            break
++
++    reached = _level_of(latest)
++    levels_gained = max(0, reached - (start or 0))
++
++    return {
++        "arm": arm,
++        "start_level": start,
++        "reached_level": reached,
++        "levels_gained": levels_gained,
++        "total_actions": actions,
++        "action_sequence": action_sequence,
++        "candidate_router_present": real_router is not None,
++        "candidate_router_calls": router_calls["n"],
++        "candidate_router_changed_order_count": router_calls["changed_order_count"],
++        "goal_bias_present": policy.explorer.goal_bias is not None,
++        "goal_bias_n_scored": len(goal_bias_scores),
++        "goal_bias_score_variance": round(statistics.pvariance(goal_bias_scores), 8)
++        if len(goal_bias_scores) > 1
++        else 0.0,
++        "goal_bias_score_min": min(goal_bias_scores) if goal_bias_scores else None,
++        "goal_bias_score_max": max(goal_bias_scores) if goal_bias_scores else None,
++        "goal_candidate_guidance_diagnostics": (
++            policy.explorer.goal_candidate_guidance_diagnostics()
++            if hasattr(policy.explorer, "goal_candidate_guidance_diagnostics")
++            else None
++        ),
++    }
++
++
++def build_artifact(*, root: Path = REPO_ROOT, budget: int = BUDGET) -> JsonDict:
++    started = time.monotonic()
++    preconds = preconditions(root)
++    miss = _first_precondition_miss(preconds)
++
++    prior_result = {
++        "experiment_id": 5701,
++        "finding": (
++            "sp80 was the one game (of 5 with headroom, 22-game adaptered roster) where "
++            "bare_control beat full_stack by 1 level (bare_control reached L1, full_stack did "
++            "not, within the same budget=500)"
++        ),
++    }
++
++    if miss:
++        artifact: JsonDict = {
++            "experiment": EXPERIMENT_ID,
++            "schema": SCHEMA,
++            "result_path": RESULT_RELATIVE_PATH,
++            "honest_verdict": f"complete: blocked_{miss}",
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "field_principles": FIELD_PRINCIPLES,
++            "target_game": TARGET_GAME,
++            "budget": int(budget),
++            "full_stack": {},
++            "bare_control": {},
++            "goal_bias_score_variance": None,
++            "goal_bias_n_scored": 0,
++            "candidate_router_changed_order_count": 0,
++            "inert_mechanisms": [],
++            "prior_result": prior_result,
++            "solve_provenance": "development_proxy",
++            "random_seed": RANDOM_SEED,
++            "reproducibility_checksum": "",
++            "duration_s": round(time.monotonic() - started, 3),
++            "preconditions_checked": preconds,
++        }
++        artifact["reproducibility_checksum"] = _checksum(
++            {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++        )
++        return artifact
++
++    full_stack = _play_traced(TARGET_GAME, arm="full_stack", budget=budget)
++    bare_control = _play_traced(TARGET_GAME, arm="bare_control", budget=budget)
++
++    inert_mechanisms = []
++    gcg = full_stack.get("goal_candidate_guidance_diagnostics") or {}
++    if (
++        full_stack["candidate_router_present"]
++        and full_stack["candidate_router_changed_order_count"] == 0
++    ):
++        inert_mechanisms.append("candidate_router")
++    if full_stack["goal_bias_present"] and full_stack["goal_bias_score_variance"] == 0.0:
++        inert_mechanisms.append("goal_bias")
++    if gcg.get("enabled") and gcg.get("arms_non_degenerate") is False:
++        inert_mechanisms.append("goal_candidate_guidance")
++
++    reproduces_regression = full_stack["levels_gained"] < bare_control["levels_gained"]
++    if not reproduces_regression:
++        verdict = "complete: sp80_regression_did_not_reproduce_this_run"
++    elif len(inert_mechanisms) == 3:
++        verdict = (
++            "complete: regression_reproduced_but_all_three_learned_mechanisms_inert_"
++            "cause_is_elsewhere_in_stack"
++        )
++    elif inert_mechanisms:
++        verdict = "complete: regression_reproduced_some_learned_mechanisms_inert_partial_diagnosis"
++    else:
++        verdict = "complete: regression_reproduced_learned_mechanisms_active_and_implicated"
++
++    artifact = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "target_game": TARGET_GAME,
++        "budget": int(budget),
++        "full_stack": full_stack,
++        "bare_control": bare_control,
++        "goal_bias_score_variance": full_stack["goal_bias_score_variance"],
++        "goal_bias_n_scored": full_stack["goal_bias_n_scored"],
++        "candidate_router_changed_order_count": full_stack["candidate_router_changed_order_count"],
++        "inert_mechanisms": inert_mechanisms,
++        "diagnosis_note": (
++            "goal_bias and goal_candidate_guidance both source from "
++            "arc_goal_energy_live.GoalSatisfactionEnergy (Exp4020's induced goal predicate + a "
++            "satisfied/total-targets fraction). A constant score across every real invocation "
++            "means GoalSatisfactionEnergy.visible_state()/_state_from_visible() extracts no "
++            "usable target-state from sp80's frames (falls to the total<=0 or state-is-None "
++            "default of 1.0 every time) -- the goal-energy source is structurally blind on this "
++            "game's specific spill-splitter/placement mechanic. This corroborates "
++            "ops/verifier_gaps.md GAP-4891 (a DIFFERENT mechanism -- the offline self-induction "
++            "operator -- independently found sp80's goal is SPATIAL/placement and not "
++            "discriminable by count/generic features) via a completely separate code path (the "
++            "LIVE goal_bias/goal_candidate_guidance stack), extending that gap's scope from an "
++            "offline diagnostic to the live submitted agent's own search behavior. Separately: "
++            "goal_candidate_guidance already self-detects this degeneracy and falls back to the "
++            "unranked candidate order (arms_non_degenerate=False -> no-op, by design in "
++            "arc_goal_energy_live.py); goal_bias's frontier-node scoring has NO equivalent "
++            "self-audit -- it silently contributes a constant (hence inert but not necessarily "
++            "harmless-by-design) key to every node's sort tuple. The regression itself, given "
++            "all three learned mechanisms are confirmed inert, must trace to one of the OTHER "
++            "differing knobs (value_weight/DAgger value head, navigation_cost_tiebreak, "
++            "action_effect_expansion_prior) -- not further isolated in this investigation; a "
++            "natural next step if this specific game matters for a headline claim."
++        ),
++        "prior_result": prior_result,
++        "solve_provenance": "development_proxy",
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.monotonic() - started, 3),
++        "preconditions_checked": preconds,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _checksum(
++        {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++    )
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper, exercised manually
++    artifact = build_artifact()
++    out_path = REPO_ROOT / RESULT_RELATIVE_PATH
++    out_path.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
++    print(f"wrote {out_path} -- honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_5702_dynamics_gate_pass_rate_survey.json b/results/experiment_5702_dynamics_gate_pass_rate_survey.json
+new file mode 100644
+index 0000000000..88e8826cd6
+--- /dev/null
++++ b/results/experiment_5702_dynamics_gate_pass_rate_survey.json
+@@ -0,0 +1,69 @@
++{
++  "experiment": "experiment_5702_dynamics_gate_pass_rate_survey",
++  "schema": "carnot.exp5702.dynamics_gate_pass_rate_survey.v1",
++  "result_path": "results/experiment_5702_dynamics_gate_pass_rate_survey.json",
++  "honest_verdict": "complete: dynamics_gate_strict_low_pass_rate_12pct",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal-prefixed; a low pass rate is a real, citable finding about gate calibration, not a failure of this survey"
++    },
++    "pass_rate_at_live_threshold": {
++      "principle": "the direct answer to task 11's question -- how often a real induction round clears the exact threshold (1.0) the live call site enforces"
++    },
++    "excluded_artifacts": {
++      "principle": "exp5700 deliberately set min_heldout_accuracy=0.0 to isolate an unrelated veto test; including its rows would understate how strict the REAL live threshold is by mixing in rows collected under a different, lower bar"
++    },
++    "cited_upstream_artifacts": {
++      "principle": "CLAUDE.md Inference-Substrate Declaration Discipline -- this is an aggregation_from_upstream_artifacts run; the audit trail must trace every row back to the real artifact that measured it"
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility"
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash catches silent drift on replay"
++    }
++  },
++  "live_threshold": 1.0,
++  "n_rows": 95,
++  "n_source_files": 12,
++  "mean": 0.3069,
++  "median": 0.12,
++  "pass_rate_at_live_threshold": 0.1263,
++  "exact_zero_rate": 0.4737,
++  "threshold_sweep": {
++    "1.0": 0.1263,
++    "0.9": 0.1263,
++    "0.8": 0.1895,
++    "0.75": 0.1895,
++    "0.7": 0.1895,
++    "0.5": 0.3368,
++    "0.3": 0.4421
++  },
++  "cited_upstream_artifacts": [
++    "results/experiment_4557_executable_world_model_proposer.json",
++    "results/experiment_4676_hierarchical_subgoal_search_live.json",
++    "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
++    "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
++    "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
++    "results/experiment_5594_think_mode_induction_quality_ab.json",
++    "results/experiment_5596_generator_size_ab_gemma31b_vs_current.json",
++    "results/experiment_5597_generator_size_ab_qwen35b_moe_vs_current.json",
++    "results/experiment_5598_generator_size_multiseed_ab.json",
++    "results/experiment_5599_reinduction_ab_lp85_levelup.json",
++    "results/proto_l2_measure_fixstack.json",
++    "results/proto_l2_measure_fixstack_v2_with_split.json"
++  ],
++  "excluded_artifacts": [
++    "results/experiment_5700_goal_predicate_veto_live_integration.json"
++  ],
++  "methodology_note": "Corpus is round-level heldout_accuracy snapshots from real live_llm_inference artifacts. This measures the PER-ROW pass rate at the live threshold, not the bounded 3-round retry loop's eventual within-budget success rate -- the checked-in corpus does not contain enough same-attempt multi-round traces to reconstruct that distinct statistic. The per-row rate is still the right first-order answer to 'how strict is 1.0 in practice': a low per-row rate means most individual real induction attempts miss the bar, which is the direct evidence for whether the gate is calibrated tightly or loosely against real model output quality.",
++  "solve_provenance": "development_proxy",
++  "random_seed": 5702,
++  "duration_s": 2.651124,
++  "preconditions_checked": {
++    "results_dir_present": true,
++    "ok": true
++  },
++  "reproducibility_checksum": "433591fd08c776380ce6309293e5e5fd57e3deb884958384aabc3d37426dc4d7"
++}
+\ No newline at end of file
+diff --git a/results/experiment_5703_sp80_candidate_stack_mechanism_trace.json b/results/experiment_5703_sp80_candidate_stack_mechanism_trace.json
+new file mode 100644
+index 0000000000..8761ebedb6
+--- /dev/null
++++ b/results/experiment_5703_sp80_candidate_stack_mechanism_trace.json
+@@ -0,0 +1,1048 @@
++{
++  "experiment": "experiment_5703_sp80_candidate_stack_mechanism_trace",
++  "schema": "carnot.exp5703.sp80_candidate_stack_mechanism_trace.v1",
++  "result_path": "results/experiment_5703_sp80_candidate_stack_mechanism_trace.json",
++  "honest_verdict": "complete: regression_reproduced_but_all_three_learned_mechanisms_inert_cause_is_elsewhere_in_stack",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal-prefixed; distinguishes 'a learned mechanism actively misled search' from 'the richer mechanisms were inert and something else caused the divergence' -- these have very different implications for whether the stack is unsafe or just unhelpful here"
++    },
++    "goal_bias_score_variance": {
++      "principle": "zero variance across every real invocation is direct, mechanical proof the goal-energy source could not have influenced frontier ordering on this game, independent of any post-hoc narrative"
++    },
++    "candidate_router_changed_order_count": {
++      "principle": "counts how many of the router's real invocations actually altered the candidate ordering it was given -- distinguishes 'present and consulted' from 'present and load-bearing'"
++    },
++    "prior_result": {
++      "principle": "CLAUDE.md Failed-Experiment Rerun Discipline analog for a diagnostic task -- names the exp5701 finding this investigates so the connection is traceable"
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility"
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash catches silent drift on replay"
++    }
++  },
++  "target_game": "sp80",
++  "budget": 500,
++  "full_stack": {
++    "arm": "full_stack",
++    "start_level": 0,
++    "reached_level": 0,
++    "levels_gained": 0,
++    "total_actions": 484,
++    "action_sequence": [
++      "RESET",
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      "RESET",
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      5,
++      2,
++      4,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      1,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      4,
++      2,
++      3,
++      4,
++      1,
++      1,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      "RESET",
++      4,
++      3,
++      3,
++      1,
++      4,
++      1,
++      5,
++      2,
++      4,
++      1,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      2,
++      5,
++      1,
++      3,
++      5,
++      4,
++      4,
++      5,
++      3,
++      3,
++      3,
++      4,
++      3,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      4,
++      3,
++      3,
++      2,
++      3,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      2,
++      3,
++      1,
++      1,
++      3,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      1,
++      4,
++      1,
++      5,
++      4,
++      4,
++      3,
++      4,
++      1,
++      5,
++      2,
++      2,
++      1,
++      "RESET",
++      3,
++      2,
++      1,
++      4,
++      4,
++      4,
++      1,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      2,
++      6,
++      2,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      3,
++      5,
++      4,
++      4,
++      4,
++      4,
++      5,
++      3,
++      2,
++      5,
++      3,
++      3,
++      5,
++      3,
++      4,
++      3,
++      3,
++      6,
++      6,
++      6,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      3,
++      2,
++      1,
++      2,
++      5,
++      1,
++      1,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      4,
++      1,
++      1,
++      5,
++      4,
++      4,
++      4,
++      4,
++      3,
++      4,
++      1,
++      "RESET",
++      4,
++      2,
++      4,
++      3,
++      4,
++      1,
++      2,
++      5,
++      1,
++      1,
++      5,
++      2,
++      2,
++      3,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      4,
++      4,
++      6,
++      6,
++      "RESET",
++      3,
++      2,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      2,
++      3,
++      4,
++      1,
++      "RESET",
++      3,
++      2,
++      2,
++      5,
++      4,
++      1,
++      4,
++      2,
++      3,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      4,
++      1,
++      4,
++      2,
++      1,
++      2,
++      5,
++      3,
++      1,
++      3,
++      3,
++      1
++    ],
++    "candidate_router_present": true,
++    "candidate_router_calls": 33,
++    "candidate_router_changed_order_count": 0,
++    "goal_bias_present": true,
++    "goal_bias_n_scored": 771,
++    "goal_bias_score_variance": 0.0,
++    "goal_bias_score_min": 1.0,
++    "goal_bias_score_max": 1.0,
++    "goal_candidate_guidance_diagnostics": {
++      "enabled": true,
++      "source": "goal_energy_candidate_generation_guidance",
++      "verifier_is_oracle": false,
++      "candidate_count": 14,
++      "candidate_states_scored": 14,
++      "candidate_states_scored_total": 461,
++      "prediction_errors": 0,
++      "prediction_errors_total": 0,
++      "scoring_errors": 0,
++      "scoring_errors_total": 0,
++      "real_candidate_state_evidence": false,
++      "goal_energy_score_variance": 0.0,
++      "candidate_pool_differs_from_baseline": false,
++      "arms_non_degenerate": false,
++      "cpu_scoring_ms_per_candidate": 0.001804142292322857,
++      "score_min": 1.0,
++      "score_max": 1.0
++    }
++  },
++  "bare_control": {
++    "arm": "bare_control",
++    "start_level": 0,
++    "reached_level": 1,
++    "levels_gained": 1,
++    "total_actions": 425,
++    "action_sequence": [
++      "RESET",
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      5,
++      3,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      1,
++      3,
++      3,
++      3,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      4,
++      4,
++      4,
++      4,
++      "RESET",
++      1,
++      5,
++      2,
++      2,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      6,
++      6,
++      1,
++      4,
++      2,
++      4,
++      6,
++      6,
++      1,
++      3,
++      2,
++      5,
++      "RESET",
++      3,
++      5,
++      4,
++      4,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      5,
++      3,
++      2,
++      3,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      2,
++      4,
++      3,
++      5,
++      4,
++      4,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      4,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      2,
++      5,
++      "RESET",
++      3,
++      1,
++      5,
++      2,
++      4,
++      4,
++      1,
++      3,
++      2,
++      4,
++      1,
++      4,
++      3,
++      5,
++      2,
++      4,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      4,
++      5,
++      3,
++      2,
++      3,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      "RESET",
++      2,
++      2,
++      4,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      3,
++      5,
++      1,
++      1,
++      3,
++      3,
++      4,
++      3,
++      5,
++      2,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      3,
++      3,
++      2,
++      3,
++      6,
++      6,
++      6,
++      1,
++      3,
++      4,
++      2,
++      4,
++      3,
++      5,
++      1,
++      4,
++      4,
++      4,
++      4,
++      4,
++      2,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      "RESET",
++      4,
++      4,
++      4,
++      3,
++      4,
++      4,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      6,
++      1,
++      2,
++      2,
++      6,
++      6,
++      "RESET",
++      4,
++      4,
++      4,
++      5
++    ],
++    "candidate_router_present": false,
++    "candidate_router_calls": 0,
++    "candidate_router_changed_order_count": 0,
++    "goal_bias_present": false,
++    "goal_bias_n_scored": 0,
++    "goal_bias_score_variance": 0.0,
++    "goal_bias_score_min": null,
++    "goal_bias_score_max": null,
++    "goal_candidate_guidance_diagnostics": {
++      "enabled": false
++    }
++  },
++  "goal_bias_score_variance": 0.0,
++  "goal_bias_n_scored": 771,
++  "candidate_router_changed_order_count": 0,
++  "inert_mechanisms": [
++    "candidate_router",
++    "goal_bias",
++    "goal_candidate_guidance"
++  ],
++  "diagnosis_note": "goal_bias and goal_candidate_guidance both source from arc_goal_energy_live.GoalSatisfactionEnergy (Exp4020's induced goal predicate + a satisfied/total-targets fraction). A constant score across every real invocation means GoalSatisfactionEnergy.visible_state()/_state_from_visible() extracts no usable target-state from sp80's frames (falls to the total<=0 or state-is-None default of 1.0 every time) -- the goal-energy source is structurally blind on this game's specific spill-splitter/placement mechanic. This corroborates ops/verifier_gaps.md GAP-4891 (a DIFFERENT mechanism -- the offline self-induction operator -- independently found sp80's goal is SPATIAL/placement and not discriminable by count/generic features) via a completely separate code path (the LIVE goal_bias/goal_candidate_guidance stack), extending that gap's scope from an offline diagnostic to the live submitted agent's own search behavior. Separately: goal_candidate_guidance already self-detects this degeneracy and falls back to the unranked candidate order (arms_non_degenerate=False -> no-op, by design in arc_goal_energy_live.py); goal_bias's frontier-node scoring has NO equivalent self-audit -- it silently contributes a constant (hence inert but not necessarily harmless-by-design) key to every node's sort tuple. The regression itself, given all three learned mechanisms are confirmed inert, must trace to one of the OTHER differing knobs (value_weight/DAgger value head, navigation_cost_tiebreak, action_effect_expansion_prior) -- not further isolated in this investigation; a natural next step if this specific game matters for a headline claim.",
++  "prior_result": {
++    "experiment_id": 5701,
++    "finding": "sp80 was the one game (of 5 with headroom, 22-game adaptered roster) where bare_control beat full_stack by 1 level (bare_control reached L1, full_stack did not, within the same budget=500)"
++  },
++  "solve_provenance": "development_proxy",
++  "random_seed": 5703,
++  "duration_s": 12.402,
++  "preconditions_checked": {
++    "offline_arcade_importable": true,
++    "offline_arcade_makes_env": true,
++    "e3_policy_import": true,
++    "ok": true
++  },
++  "reproducibility_checksum": "8f9a682d44524e15c6a8deb9876bde6f4bb38f5f00a9d533d9517635a940a148"
++}
+\ No newline at end of file
+diff --git a/results/operational_retro_2026_07_507.json b/results/operational_retro_2026_07_507.json
+new file mode 100644
+index 0000000000..a19f8b051f
+--- /dev/null
++++ b/results/operational_retro_2026_07_507.json
+@@ -0,0 +1,59 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.507",
++  "generated_at": "2026-07-14T12:09:33Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 159.6,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 6,
++  "slowest_experiments": [
++    {
++      "experiment": "Native llama.cpp three-GGUF CUDA offload and response-runtime certificate",
++      "duration_minutes": 28.4,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V507 capstone, promotion-retirement ledger, and spec-ops reconciliation",
++      "duration_minutes": 27.22,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated on Exp5617 nondegenerate duration map: predictive-window KAN continuous se",
++      "duration_minutes": 25.9,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5616 exact fixture: KAN retention-adaptation Critical Task Duration ",
++      "duration_minutes": 22.6,
++      "compute_bound": false
++    },
++    {
++      "experiment": "ARC own-observation forward-inverse transition-cycle verifier prototype",
++      "duration_minutes": 21.38,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 12 experiments in 159.6 minutes, including 6 compute-bound experiments. The longest recorded runs were the 28.4-minute native llama.cpp three-GGUF CUDA certificate and the 27.22-minute capstone/reconciliation, while the locked task-level indicator does not identify GPU idle on compute-bound tasks. The data does not establish that any task ran at least two models concurrently or missed DualGPURunner.",
++  "bottlenecks_identified": [
++    "Native llama.cpp three-GGUF CUDA offload and response-runtime certification was the longest recorded compute-bound path at 28.4 minutes; the supplied data identifies its scope but contains no phase-level timing breakdown from which to assign a narrower cause.",
++    "The V507 capstone, promotion-retirement ledger, and spec-ops reconciliation was the next-longest compute-bound path at 27.22 minutes, making closeout and reconciliation a long operational path without establishing which component dominated it.",
++    "The ARC own-observation forward-inverse transition-cycle verifier was the third compute-bound path visible in the slowest set at 21.38 minutes; its title establishes scope but the supplied data does not establish a causal timing breakdown.",
++    "The gated predictive-window KAN and Critical Task Duration synthesis-only paths took 25.9 and 22.6 minutes; their CPU-only execution is correct, and the supplied data does not isolate dependency wait time from synthesis work.",
++    "The supplied GPU report is an idle snapshot rather than a task-correlated trace, so it cannot explain utilization during the compute-bound runs; this is a measurement gap, not a finding that synthesis-only work should have used a GPU."
++  ],
++  "improvements_suggested": [
++    "Add per-experiment GPU telemetry bounded by task start and end, including utilization, memory, assigned device, model count, and whether models execute concurrently.",
++    "Emit phase-level timings for model loading, CUDA offload, inference, certificate generation, ledger work, and spec-ops reconciliation so the longest paths have causal timing breakdowns.",
++    "Route tasks to DualGPURunner only when their execution manifest declares at least two models running in parallel; retain one-GPU execution for single-model tasks and CPU execution for synthesis-only tasks."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Instrument task-correlated GPU utilization and model-concurrency telemetry.",
++    "Persist phase-level timing receipts for the CUDA certificate and capstone/reconciliation paths.",
++    "Add manifest-driven DualGPURunner selection for confirmed parallel multi-model tasks."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The available data supports duration ranking but not causal attribution because it lacks phase-level timings and task-correlated GPU traces. A zero savings estimate is retained rather than inventing an unmeasured counterfactual, and future retrospectives should record model concurrency before assessing DualGPURunner engagement."
++}
+diff --git a/tests/python/test_experiment_5702_dynamics_gate_pass_rate_survey.py b/tests/python/test_experiment_5702_dynamics_gate_pass_rate_survey.py
+new file mode 100644
+index 0000000000..4194321916
+--- /dev/null
++++ b/tests/python/test_experiment_5702_dynamics_gate_pass_rate_survey.py
+@@ -0,0 +1,145 @@
++"""Tests for Exp 5702: real-world pass-rate survey of the live pipeline's
++min_heldout_accuracy=1.0 dynamics gate (task 11 completion).
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5702_dynamics_gate_pass_rate_survey as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_arc_wmte_5593_4_spec_declares_pass_rate_survey() -> None:
++    """REQ-ARC-WMTE-5593-4: OpenSpec declares the corpus-wide pass-rate survey and its
++    real result, including the honest per-row-vs-bounded-retry-loop limitation."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-WMTE-5593-4") :]
++    section = section[: section.index("### REQ-ARC-WMTE-5593:")]
++
++    for marker in (
++        "SCENARIO-ARC-WMTE-5593-4-CORPUS-PASS-RATE",
++        "pass_rate_at_live_threshold=0.1263",
++        "Honest conclusion and limitation",
++    ):
++        assert marker in section
++
++
++def test_first_precondition_miss_reports_failing_key() -> None:
++    assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
++    assert mod._first_precondition_miss({"ok": True}) is None
++
++
++def test_walk_heldout_accuracy_rows_finds_nested_values() -> None:
++    out: list[float] = []
++    mod._walk_heldout_accuracy_rows(
++        {
++            "rounds": [
++                {"round": 1, "heldout_accuracy": 0.5},
++                {"round": 2, "heldout_accuracy": 1.0},
++            ],
++            "nested": {"heldout_accuracy": 0.25},
++            "not_a_number": {"heldout_accuracy": "n/a"},
++            "boolean_should_not_count": {"heldout_accuracy": True},
++        },
++        out,
++    )
++    assert sorted(out) == [0.25, 0.5, 1.0]
++
++
++def test_collect_rows_excludes_configured_substrings(tmp_path) -> None:
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_1_x.json").write_text(
++        json.dumps(
++            {
++                "inference_substrate": "live_llm_inference",
++                "rounds": [{"heldout_accuracy": 0.4}],
++            }
++        )
++    )
++    (results / "experiment_5700_excluded.json").write_text(
++        json.dumps(
++            {
++                "inference_substrate": "live_llm_inference",
++                "rounds": [{"heldout_accuracy": 1.0}],
++            }
++        )
++    )
++    (results / "experiment_2_wrong_substrate.json").write_text(
++        json.dumps(
++            {
++                "inference_substrate": "aggregation_from_upstream_artifacts",
++                "rounds": [{"heldout_accuracy": 1.0}],
++            }
++        )
++    )
++    values, cited, excluded = mod.collect_rows(root=tmp_path)
++    assert values == [0.4]
++    assert cited == ["results/experiment_1_x.json"]
++    assert excluded == ["results/experiment_5700_excluded.json"]
++
++
++def test_build_artifact_blocked_when_results_dir_missing(tmp_path) -> None:
++    artifact = mod.build_artifact(root=tmp_path)
++    assert artifact["honest_verdict"] == "complete: blocked_results_dir_present"
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++    assert len(artifact["reproducibility_checksum"]) == 64
++
++
++def test_build_artifact_no_rows_found_is_reported_honestly(tmp_path) -> None:
++    (tmp_path / "results").mkdir()
++    artifact = mod.build_artifact(root=tmp_path)
++    assert artifact["honest_verdict"] == "complete: no_real_induction_rows_found"
++    assert artifact["n_rows"] == 0
++
++
++def test_build_artifact_computes_pass_rate_and_sweep(tmp_path) -> None:
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_1_x.json").write_text(
++        json.dumps(
++            {
++                "inference_substrate": "live_llm_inference",
++                "rounds": [
++                    {"heldout_accuracy": 1.0},
++                    {"heldout_accuracy": 0.0},
++                    {"heldout_accuracy": 0.0},
++                    {"heldout_accuracy": 0.5},
++                ],
++            }
++        )
++    )
++    artifact = mod.build_artifact(root=tmp_path)
++    assert artifact["n_rows"] == 4
++    assert artifact["pass_rate_at_live_threshold"] == 0.25
++    assert artifact["exact_zero_rate"] == 0.5
++    assert artifact["threshold_sweep"]["1.0"] == 0.25
++    assert artifact["threshold_sweep"]["0.5"] == 0.5
++    assert "dynamics_gate_moderately_strict_pass_rate" in artifact["honest_verdict"]
++
++
++def test_req_arc_wmte_5593_3_repository_artifact_is_a_real_measured_survey() -> None:
++    """The checked-in real survey aggregated the actual corpus of live_llm_inference
++    artifacts and found a low real-world pass rate at the live threshold -- a
++    genuine, citable finding about gate calibration, not a synthetic fixture."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert result["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert result["n_rows"] > 50
++    assert result["n_source_files"] > 5
++    assert result["pass_rate_at_live_threshold"] is not None
++    assert result["pass_rate_at_live_threshold"] < 0.3
++    assert not any("5700" in f for f in result["cited_upstream_artifacts"])
++    assert any("5700" in f for f in result["excluded_artifacts"])
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in result
++    assert len(result["reproducibility_checksum"]) == 64
+diff --git a/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py b/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
+new file mode 100644
+index 0000000000..c9d1ce128f
+--- /dev/null
++++ b/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
+@@ -0,0 +1,166 @@
++"""Tests for Exp 5703: mechanism-level trace of the sp80 candidate-scoring-stack
++regression found by exp5701 (task 10 completion).
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5703_sp80_candidate_stack_mechanism_trace as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_first_precondition_miss_reports_failing_key() -> None:
++    assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
++    assert mod._first_precondition_miss({"ok": True}) is None
++
++
++def test_build_artifact_blocked_when_precondition_missing(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(
++        mod,
++        "preconditions",
++        lambda root=mod.REPO_ROOT: {"e3_policy_import": False, "ok": False},
++    )
++
++    def _fail_if_called(*_args, **_kwargs):
++        raise AssertionError("_play_traced must not run when a precondition is missing")
++
++    monkeypatch.setattr(mod, "_play_traced", _fail_if_called)
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["honest_verdict"] == "complete: blocked_e3_policy_import"
++    assert artifact["full_stack"] == {}
++    assert artifact["bare_control"] == {}
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert artifact["prior_result"]["experiment_id"] == 5701
++
++
++def _ok_preconds(root=mod.REPO_ROOT):
++    return {"e3_policy_import": True, "ok": True}
++
++
++def _fake_trace(
++    *,
++    levels_gained,
++    router_changed=0,
++    goal_bias_var=0.0,
++    gcg_enabled=True,
++    gcg_non_degenerate=False,
++):
++    return {
++        "levels_gained": levels_gained,
++        "total_actions": 100,
++        "action_sequence": [],
++        "candidate_router_present": True,
++        "candidate_router_calls": 10,
++        "candidate_router_changed_order_count": router_changed,
++        "goal_bias_present": True,
++        "goal_bias_n_scored": 50,
++        "goal_bias_score_variance": goal_bias_var,
++        "goal_bias_score_min": 1.0,
++        "goal_bias_score_max": 1.0,
++        "goal_candidate_guidance_diagnostics": {
++            "enabled": gcg_enabled,
++            "arms_non_degenerate": gcg_non_degenerate,
++        },
++    }
++
++
++def test_build_artifact_all_inert_reproduces_regression(monkeypatch, tmp_path) -> None:
++    """Mirrors the real sp80 finding: regression reproduces, all three learned
++    mechanisms are confirmed structurally inert."""
++
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++
++    def _fake_play(game, *, arm, budget):
++        if arm == "full_stack":
++            return _fake_trace(levels_gained=0, router_changed=0, goal_bias_var=0.0)
++        return {
++            **_fake_trace(levels_gained=1),
++            "candidate_router_present": False,
++            "goal_bias_present": False,
++        }
++
++    monkeypatch.setattr(mod, "_play_traced", _fake_play)
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["inert_mechanisms"] == [
++        "candidate_router",
++        "goal_bias",
++        "goal_candidate_guidance",
++    ]
++    assert (
++        artifact["honest_verdict"]
++        == "complete: regression_reproduced_but_all_three_learned_mechanisms_inert_cause_is_elsewhere_in_stack"
++    )
++
++
++def test_build_artifact_active_mechanism_is_implicated(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++
++    def _fake_play(game, *, arm, budget):
++        if arm == "full_stack":
++            return _fake_trace(
++                levels_gained=0, router_changed=5, goal_bias_var=0.3, gcg_non_degenerate=True
++            )
++        return {
++            **_fake_trace(levels_gained=1),
++            "candidate_router_present": False,
++            "goal_bias_present": False,
++        }
++
++    monkeypatch.setattr(mod, "_play_traced", _fake_play)
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["inert_mechanisms"] == []
++    assert (
++        artifact["honest_verdict"]
++        == "complete: regression_reproduced_learned_mechanisms_active_and_implicated"
++    )
++
++
++def test_build_artifact_no_regression_this_run_is_reported_honestly(monkeypatch, tmp_path) -> None:
++    monkeypatch.setattr(mod, "preconditions", _ok_preconds)
++    monkeypatch.setattr(
++        mod,
++        "_play_traced",
++        lambda game, *, arm, budget: _fake_trace(levels_gained=1),
++    )
++
++    artifact = mod.build_artifact(root=tmp_path)
++
++    assert artifact["honest_verdict"] == "complete: sp80_regression_did_not_reproduce_this_run"
++
++
++def test_req_arc_fcp_5701_repository_artifact_is_a_real_measured_trace() -> None:
++    """The checked-in real trace reproduced exp5701's sp80 regression and confirmed
++    all three learned candidate-scoring mechanisms were structurally inert on this
++    game (goal_bias: 0 variance across every real invocation; candidate_router:
++    present but never reordered; goal_candidate_guidance: self-detected its own
++    degeneracy and correctly no-op'd). Adversarially clean."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert result["target_game"] == "sp80"
++    assert result["full_stack"]["levels_gained"] < result["bare_control"]["levels_gained"]
++    assert result["goal_bias_score_variance"] == 0.0
++    assert result["goal_bias_n_scored"] > 0
++    assert result["candidate_router_changed_order_count"] == 0
++    assert set(result["inert_mechanisms"]) == {
++        "candidate_router",
++        "goal_bias",
++        "goal_candidate_guidance",
++    }
++    assert result["prior_result"]["experiment_id"] == 5701
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in result
++    assert len(result["reproducibility_checksum"]) == 64
+-- 
+2.55.0
+

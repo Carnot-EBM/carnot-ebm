@@ -1,0 +1,3449 @@
+From 1d09f5311e37f7e58f030d6455bd00a416ef7ced Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 19:26:58 -0400
+Subject: [PATCH 02658/11362] [conductor] PHASE E4 (CAPSTONE .407) -- the
+ milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did the
+ oracle-distinct first-error LOCALIZER GRADUATE from 'position-bias artifact'
+ (the .406 quarantine) to a GENUINE cross-domain localizer: did the
+ REAL-intervention localizer beat the content-blind position-only baseline on
+ a held-out-family REAL split (exp4403
+ localizer_genuinely_beats_position_only), and GENERALIZE cross-domain + agree
+ with an independent typed-taxonomy monitor (exp4404
+ localizer_generalizes_typed)? -> localizer_state (one of:
+ localizes_genuine_cross_domain / localizes_fover_bound /
+ position_bound_retired). (2) did the localizer COMPOUND via ACTIVE selection
+ where size-only growth saturated (exp4407 localizer_compounds)? (3) did
+ cross-domain detection become a CALIBRATED multi-domain contract on
+ de-confounded proper pools (exp4408 detection_calibrated_multi_domain), or
+ are domains at chance (logged gaps)? (4) ARC north star: the new
+ reproducible_total_levels (>=34?) across exp4405 (deeper + per-mechanic unit
+ tests) + exp4406 (ar25/ka59/ft09 L2); how many NEW levels/games. Aggregate
+ (SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle -- a
+ circular/execution-grounded ARC solve is NOT a moat). Emit
+ verifier_thesis_state (one honest string) + localizer_state +
+ localizer_compounds + detection_calibrated_multi_domain +
+ reproducible_total_levels. Compute the G1-G4 publication gate via
+ publication_gate.py. Use the robust aggregate-available-report-gaps helper
+ (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the durable
+ exp4355 stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO
+ gated_on.
+
+Automated research step by research conductor.
+Task ID: exp4412-capstone-v407
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/anomaly-escalations.md                    |    5 +
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ python/carnot/reporting/capstone_v407_4412.py |  881 ++++++++
+ results/_diff_prompt.txt                      |   43 -
+ results/experiment_4412_capstone_v407.json    | 1982 +++++++++++++++++
+ results/experiment_4412_capstone_v407.py      |   22 +
+ .../test_experiment_4412_capstone_v407.py     |  371 +++
+ 11 files changed, 3268 insertions(+), 46 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v407_4412.py
+ delete mode 100644 results/_diff_prompt.txt
+ create mode 100644 results/experiment_4412_capstone_v407.json
+ create mode 100644 results/experiment_4412_capstone_v407.py
+ create mode 100644 tests/python/test_experiment_4412_capstone_v407.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 33ec690526..2d303d486f 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -124,3 +124,6 @@
+ - REQ-CAPSTONE-4401: The .406 capstone must aggregate existing upstream artifacts exp4392, exp4393, exp4394, exp4395, exp4396, and exp4397 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` or live-critical before importing metrics, report missing upstreams as per-axis gaps instead of defaulting unrelated axes false, compute G1-G4 through `scripts/publication_gate.py --json`, read `ops/arc_solve_registry.yaml` as the authoritative ARC reproducible total, honor `verifier_is_oracle:false` for oracle-distinct localizer and detection reads, declare `inference_substrate=aggregation_from_upstream_artifacts`, and produce an honest `blocked_publication_gate_unrunnable` verdict without further aggregation if the publication gate is missing or cannot run.
+ - SCENARIO-CAPSTONE-4401: The capstone artifact `results/experiment_4401_capstone_v406.json` must emit principle-annotated top-level fields for `honest_verdict`, `localizer_state`, bare boolean `localizer_compounds`, bare boolean `detection_calibrated_multi_domain`, bare integer `reproducible_total_levels`, `verifier_thesis_state`, `publication_gate`, bare boolean `verifier_is_oracle`, `cited_upstream_artifacts`, `preconditions_checked`, and `inference_substrate`; the default .406 read must define `localizes_cross_domain_genuine` only from clean Exp 4392 `localizer_beats_ensemble_baseline==true` plus clean Exp 4393 `localizer_win_is_genuine==true`, define `localizes_but_not_genuine` when Exp 4392 beats baseline but Exp 4393 does not validate the win as genuine, define `detects_but_not_localizes` when Exp 4392 is a clean null, import Exp 4396 `localizer_compounds`, import Exp 4397 `detection_calibrated_multi_domain` and `detection_by_domain`, import the registry reproducible total, cite included upstream fields, and stamp `verifier_is_oracle=false` so `scripts/adversarial_verify.py` does not fire `CIRCULAR_MOAT_OVERCLAIM`.
+ - SCENARIO-CAPSTONE-4401-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. The .406 scorecard string (whether the detector became a genuine cross-domain localizer, whether it compounds, whether detection is calibrated multi-domain, the ARC reproducible-total)."; `localizer_state` = "One of localizes_cross_domain_genuine / localizes_but_not_genuine / detects_but_not_localizes -- the headline decision: did the verifier graduate from 'detects but cannot localize' (.405 F1 0.096) to an actionable cross-domain first-error localizer, genuinely (not template-leak/position/overfit)?"; `localizer_compounds` = "BARE bool: did the localizer self-improve as first-error labels accumulate (exp4396) -- the mandated continuous-self-learning reading on the live vehicle where headroom is real?"; `detection_calibrated_multi_domain` = "BARE bool: did cross-domain detection become a calibrated multi-domain contract (exp4397) -- the verifier-domain-expansion reading -- or are domains at chance (logged gaps)?"; `reproducible_total_levels` = "BARE int: the ARC reproducible-level count after .406 (>= the prior 34) -- the monotonic north-star accuracy signal."; `verifier_thesis_state` = "One honest string summarizing where the verifier-moat thesis stands after .406 (localizer-genuine / localizer-not-genuine / detects-but-not-localizes / localizer-compounds / detection-calibrated-multi-domain / etc.)."; `publication_gate` = "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable finish line (north-star §2)."; `verifier_is_oracle` = "BARE bool=false for the oracle-distinct localizer/detection reads (the durable exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."; `cited_upstream_artifacts` = "list of {experiment_id, fields_imported} -- the audit trail so the capstone numbers trace to real measurements."; `preconditions_checked` = "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode."; `inference_substrate` = "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output."
++- REQ-CAPSTONE-4412: The .407 capstone must aggregate existing upstream artifacts exp4403, exp4404, exp4405, exp4406, exp4407, and exp4408 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` or live-critical before importing metrics, report missing upstreams as per-axis gaps instead of defaulting unrelated axes false, compute G1-G4 through `scripts/publication_gate.py --json` when runnable and record a gap rather than hard-blocking the scorecard when it is not runnable, read `ops/arc_solve_registry.yaml` as the authoritative ARC reproducible total, honor each upstream `verifier_is_oracle` declaration so execution-grounded ARC E3 solves are ARC progress rather than a moat claim, declare `inference_substrate=aggregation_from_upstream_artifacts`, run a live adversarial re-check on the emitted capstone, and write `results/experiment_4412_capstone_v407.json`.
++- SCENARIO-CAPSTONE-4412: The capstone artifact `results/experiment_4412_capstone_v407.json` must emit principle-annotated top-level fields for `honest_verdict`, `localizer_state`, bare boolean `localizer_compounds`, bare boolean `detection_calibrated_multi_domain`, bare integer `reproducible_total_levels`, `verifier_thesis_state`, `publication_gate`, bare boolean `verifier_is_oracle`, `cited_upstream_artifacts`, `preconditions_checked`, `random_seed`, `reproducibility_checksum`, and `inference_substrate`; the default .407 read must define `localizes_genuine_cross_domain` only from clean Exp 4403 `localizer_genuinely_beats_position_only==true` plus clean Exp 4404 `localizer_generalizes_typed==true`, define `localizes_fover_bound` when Exp 4403 is genuine but Exp 4404 does not generalize, define `position_bound_retired` when Exp 4403 ties position-only or fails the genuine test, import Exp 4407 `localizer_compounds`, import Exp 4408 `detection_calibrated_multi_domain` and `detection_by_domain`, import the registry reproducible total, cite included upstream fields with sha256, stamp `verifier_is_oracle=false`, carry upstream oracle declarations, and avoid `CIRCULAR_MOAT_OVERCLAIM` on a live adversarial re-check.
++- SCENARIO-CAPSTONE-4412-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. The .407 scorecard string (localizer genuine cross-domain? compounds? calibrated multi-domain? the ARC reproducible-total)."; `localizer_state` = "One of localizes_genuine_cross_domain / localizes_fover_bound / position_bound_retired -- the headline decision: did the oracle-distinct first-error localizer graduate from the .406 position-bias quarantine to a genuine cross-domain capability, stay FoVer-bound, or retire as position-bound?"; `localizer_compounds` = "BARE bool: did the localizer self-improve via ACTIVE selection where size-only growth saturated (exp4407) -- the mandated continuous-self-learning reading on the real-headroom axis?"; `detection_calibrated_multi_domain` = "BARE bool: did cross-domain detection become a calibrated multi-domain contract on de-confounded proper pools (exp4408), or are domains at chance (logged gaps)?"; `reproducible_total_levels` = "BARE int: the ARC reproducible-level count after .407 (>= the prior 34) -- the monotonic north-star accuracy signal (from the authoritative registry)."; `verifier_thesis_state` = "One honest string summarizing where the verifier-as-the-value-add stands after .407 (localizer genuine/bound/retired; compounding; multi-domain calibration; ARC progress)."; `publication_gate` = "The G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py -- the FROZEN FoVer headline (0.9131) gate, carried not re-litigated."; `verifier_is_oracle` = "BARE bool: the capstone's own aggregation is oracle-distinct=false; it HONORS each upstream's verifier_is_oracle (ARC E3 solves are execution-grounded=true=NOT a moat) so it does not trip CIRCULAR_MOAT_OVERCLAIM."; `cited_upstream_artifacts` = "list of {experiment_id, fields_imported, sha256} -- the audit trail so the capstone numbers trace to real measurements."; `preconditions_checked` = "Records the upstream artifacts + registry + publication_gate loaded; pre-empts the silent-missing-resource fabrication mode."; `random_seed` = "Determinism precondition for the aggregation ordering."; `reproducibility_checksum` = "Hash of the aggregated upstream set + the gate computation; lets a third party re-run the scorecard."; `inference_substrate` = "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output."
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 96ff902da9..7805e662be 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -496,3 +496,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['CIRCULAR_MOAT_OVERCLAIM'] on a non-negative verdict
+ - artifact: results/experiment_4347_archive_v401_activate_v402.json
++
++## experiment_4410_registry_gaps_hygiene_gap4_guard.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_4410_registry_gaps_hygiene_gap4_guard.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1410c8fcca..0639d11ca8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 126, "phase": "iteration_start", "last_beat": "2026-06-18T23:05:00Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 127, "phase": "iteration_start", "last_beat": "2026-06-18T23:14:41Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4f7a953a1e..ec54feea18 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8759,3 +8759,4 @@ c |
+ | 2026-06-18 22:23 UTC | PHASE D (CROSS-DOMAIN DETECTION CALIBRATION; compl | OK | 88 passed, 1 warning in 8.96s |
+ | 2026-06-18 22:43 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 106 passed, 1 warning in 7.50s |
+ | 2026-06-18 23:03 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 88 passed, 1 warning in 5.71s |
++| 2026-06-18 23:12 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 86 passed, 1 warning in 9.92s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 60ea6a41c1..564fe6368e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 126, "phase": "iteration_start", "started_at": "2026-06-18T23:05:00Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 127, "phase": "iteration_start", "started_at": "2026-06-18T23:14:41Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 633e37b52e..ea7859fd29 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3424,
++  "experiments_checked": 3425,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v407_4412.py b/python/carnot/reporting/capstone_v407_4412.py
+new file mode 100644
+index 0000000000..6270fda0c6
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v407_4412.py
+@@ -0,0 +1,881 @@
++"""Build the Exp 4412 v407 verifier localizer scorecard capstone.
++
++Spec refs: REQ-CAPSTONE-4412, SCENARIO-CAPSTONE-4412.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot.reporting import capstone_aggregate_available as aggregate
++from carnot.reporting import capstone_v400_4335 as base
++from carnot.reporting import capstone_v405_4390 as v405
++
++
++JsonDict = dict[str, Any]
++LiveFlagRunner = Callable[[Path], list[dict[str, Any]]]
++SummarizeRunner = Callable[[Path, Path], int]
++PublicationGateRunner = Callable[[Path], JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4412_capstone_v407.json")
++EXPERIMENT_ID = 4412
++RANDOM_SEED = 4412
++SCHEMA = "carnot.capstone_v407_4412.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = ["REQ-CAPSTONE-4412", "SCENARIO-CAPSTONE-4412"]
++REGISTRY_REL_PATH = v405.REGISTRY_REL_PATH
++PUBLICATION_GATE_REL_PATH = v405.PUBLICATION_GATE_REL_PATH
++PRIOR_REPRODUCIBLE_TOTAL_LEVELS = 34
++
++LOCALIZER_STATES = {
++    "localizes_genuine_cross_domain",
++    "localizes_fover_bound",
++    "position_bound_retired",
++}
++
++
++@dataclass(frozen=True)
++class Upstream:
++    experiment_id: int
++    path: Path
++
++
++DEFAULT_UPSTREAMS: Mapping[str, Upstream] = {
++    "4403_localizer": Upstream(
++        4403,
++        Path("results/experiment_4403_real_intervention_localizer_deconfound.json"),
++    ),
++    "4404_typed_generalization": Upstream(
++        4404,
++        Path("results/experiment_4404_localizer_typed_taxonomy_cross_domain.json"),
++    ),
++    "4405_e3_deeper": Upstream(
++        4405,
++        Path("results/experiment_4405_e3_deeper_mechanic_unit_tests.json"),
++    ),
++    "4406_e3_blocked": Upstream(
++        4406,
++        Path("results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json"),
++    ),
++    "4407_compounds": Upstream(
++        4407,
++        Path("results/experiment_4407_active_learning_self_learning_compounds.json"),
++    ),
++    "4408_calibration": Upstream(
++        4408,
++        Path("results/experiment_4408_cross_domain_detection_calibration_repair.json"),
++    ),
++}
++
++ARTIFACT_EXPERIMENT_IDS = {
++    key: upstream.experiment_id for key, upstream in DEFAULT_UPSTREAMS.items()
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "localizer_state",
++    "localizer_compounds",
++    "detection_calibrated_multi_domain",
++    "reproducible_total_levels",
++    "verifier_thesis_state",
++    "publication_gate",
++    "verifier_is_oracle",
++    "cited_upstream_artifacts",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. The .407 scorecard string (localizer genuine "
++        "cross-domain? compounds? calibrated multi-domain? the ARC "
++        "reproducible-total)."
++    ),
++    "localizer_state": (
++        "One of localizes_genuine_cross_domain / localizes_fover_bound / "
++        "position_bound_retired -- the headline decision: did the oracle-distinct "
++        "first-error localizer graduate from the .406 position-bias quarantine to "
++        "a genuine cross-domain capability, stay FoVer-bound, or retire as "
++        "position-bound?"
++    ),
++    "localizer_compounds": (
++        "BARE bool: did the localizer self-improve via ACTIVE selection where "
++        "size-only growth saturated (exp4407) -- the mandated continuous-self-"
++        "learning reading on the real-headroom axis?"
++    ),
++    "detection_calibrated_multi_domain": (
++        "BARE bool: did cross-domain detection become a calibrated multi-domain "
++        "contract on de-confounded proper pools (exp4408), or are domains at "
++        "chance (logged gaps)?"
++    ),
++    "reproducible_total_levels": (
++        "BARE int: the ARC reproducible-level count after .407 (>= the prior 34) "
++        "-- the monotonic north-star accuracy signal (from the authoritative "
++        "registry)."
++    ),
++    "verifier_thesis_state": (
++        "One honest string summarizing where the verifier-as-the-value-add stands "
++        "after .407 (localizer genuine/bound/retired; compounding; multi-domain "
++        "calibration; ARC progress)."
++    ),
++    "publication_gate": (
++        "The G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py "
++        "-- the FROZEN FoVer headline (0.9131) gate, carried not re-litigated."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool: the capstone's own aggregation is oracle-distinct=false; it "
++        "HONORS each upstream's verifier_is_oracle (ARC E3 solves are "
++        "execution-grounded=true=NOT a moat) so it does not trip "
++        "CIRCULAR_MOAT_OVERCLAIM."
++    ),
++    "cited_upstream_artifacts": (
++        "list of {experiment_id, fields_imported, sha256} -- the audit trail so "
++        "the capstone numbers trace to real measurements."
++    ),
++    "preconditions_checked": (
++        "Records the upstream artifacts + registry + publication_gate loaded; "
++        "pre-empts the silent-missing-resource fabrication mode."
++    ),
++    "random_seed": "Determinism precondition for the aggregation ordering.",
++    "reproducibility_checksum": (
++        "Hash of the aggregated upstream set + the gate computation; lets a third "
++        "party re-run the scorecard."
++    ),
++    "inference_substrate": (
++        "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, "
++        "the ARC registry, and publication_gate.py output."
++    ),
++}
++
++IMPORTED_FIELDS: Mapping[str, list[str]] = {
++    "4403_localizer": [
++        "localizer_genuinely_beats_position_only",
++        "beats_position_only_baseline",
++        "position_only_baseline_f1",
++        "localization_f1_by_domain",
++        "template_family_holdout_drop",
++        "verifier_is_oracle",
++    ],
++    "4404_typed_generalization": [
++        "localizer_generalizes_typed",
++        "typed_taxonomy_agreement_above_chance",
++        "non_fover_domain_delta_ci95",
++        "status",
++        "gate_check_summary",
++        "gates_evaluated",
++        "verifier_is_oracle",
++    ],
++    "4405_e3_deeper": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle",
++    ],
++    "4406_e3_blocked": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_game_scorecard",
++        "verifier_is_oracle",
++    ],
++    "4407_compounds": [
++        "localizer_compounds",
++        "active_vs_random_learning_curve",
++        "compounding_delta_ci95",
++        "gate_summary",
++        "positive_control_passed",
++        "verifier_is_oracle",
++    ],
++    "4408_calibration": [
++        "detection_calibrated_multi_domain",
++        "detection_by_domain",
++        "domains_at_chance",
++        "unavailable_domains",
++        "verifier_is_oracle",
++    ],
++}
++
++read_registry_progress = v405.read_registry_progress
++arc_progress_read = v405.arc_progress_read
++arc_e3_summary = v405.arc_e3_summary
++
++
++def _thesis_states() -> set[str]:
++    localizer_parts = {
++        "localizes_genuine_cross_domain": "localizer_genuine_cross_domain",
++        "localizes_fover_bound": "localizer_fover_bound",
++        "position_bound_retired": "localizer_position_bound_retired",
++    }
++    compound_parts = {
++        True: "localizer_compounds",
++        False: "localizer_compounding_open",
++    }
++    calibration_parts = {
++        True: "detection_calibrated_multi_domain",
++        False: "detection_not_calibrated_multi_domain",
++    }
++    states = set()
++    for localizer in localizer_parts.values():
++        for compound in compound_parts.values():
++            for calibration in calibration_parts.values():
++                for total in (0, PRIOR_REPRODUCIBLE_TOTAL_LEVELS):
++                    states.add(f"{localizer}_{compound}_{calibration}_arc_progress_{total}")
++    return states
++
++
++THESIS_STATES = _thesis_states()
++
++
++def _selected_paths(root: Path) -> dict[str, Path]:
++    return {key: root / upstream.path for key, upstream in DEFAULT_UPSTREAMS.items()}
++
++
++def _fields_for_payload(key: str, skipped: bool) -> list[str]:
++    return [] if skipped else list(IMPORTED_FIELDS[key])
++
++
++def _skipped_payload(payload: JsonDict) -> JsonDict:
++    skipped = dict(payload)
++    skipped["flagged_adversarial"] = True
++    return skipped
++
++
++def _read_inputs(
++    root: Path,
++    live_flag_runner: LiveFlagRunner,
++    summarize_runner: SummarizeRunner,
++) -> tuple[dict[str, Any], list[JsonDict], list[JsonDict]]:
++    raw_artifacts: dict[str, Any] = {}
++    provenance: list[JsonDict] = []
++    exclusions: list[JsonDict] = []
++
++    for key, path in _selected_paths(root).items():
++        upstream = DEFAULT_UPSTREAMS[key]
++        if not path.exists():
++            raw_artifacts[key] = None
++            continue
++        sha = base.sha256_file(path)
++        summarize_exit_code, summarize_error = base._safe_summarize(  # noqa: SLF001
++            path,
++            root,
++            summarize_runner,
++        )
++        live_flags = base._safe_live_flags(path, live_flag_runner)  # noqa: SLF001
++        critical = base.live_has_critical(live_flags)
++        payload: JsonDict | None = None
++        parse_error = ""
++        try:
++            payload = base.read_json_object(path)
++        except (OSError, json.JSONDecodeError, ValueError) as exc:  # pragma: no cover
++            parse_error = f"{type(exc).__name__}: {exc}"
++
++        stamped = payload.get("flagged_adversarial") is True if payload is not None else False
++        skipped = stamped or critical or payload is None
++        raw_artifacts[key] = (
++            _skipped_payload(payload) if payload is not None and skipped else payload
++        )
++        provenance_row = {
++            "artifact_key": key,
++            "experiment_id": upstream.experiment_id,
++            "path": str(upstream.path),
++            "sha256": sha,
++            "payload_reproducibility_checksum": base.sha_from_payload_checksum(payload or {}),
++            "summarize_exit_code": summarize_exit_code,
++            "summarize_error": summarize_error,
++            "live_adversarial_flags": live_flags,
++            "stamped_flagged_adversarial": stamped,
++            "live_critical": critical,
++            "parse_error": parse_error,
++            "skipped": skipped,
++            "fields_imported": _fields_for_payload(key, skipped),
++        }
++        provenance.append(provenance_row)
++        if skipped:
++            exclusions.append(
++                {
++                    "artifact_key": key,
++                    "experiment_id": upstream.experiment_id,
++                    "path": str(upstream.path),
++                    "sha256": sha,
++                    "stamped_flagged_adversarial": stamped,
++                    "live_critical": critical,
++                    "parse_error": parse_error,
++                    "live_critical_flags": [
++                        flag
++                        for flag in live_flags
++                        if str(flag.get("severity", "")).lower() == "critical"
++                    ],
++                    "reason": base._exclusion_reason(stamped, critical, parse_error),  # noqa: SLF001
++                }
++            )
++    return raw_artifacts, provenance, exclusions
++
++
++def real_intervention_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    genuine = (
++        base.bool_metric(payload, "localizer_genuinely_beats_position_only") is True
++        and base.bool_metric(payload, "verifier_is_oracle") is False
++    )
++    return {
++        "status": "genuine" if genuine else "position_only_tied",
++        "localizer_genuinely_beats_position_only": genuine,
++        "reported_localizer_genuinely_beats_position_only": base.bool_metric(
++            payload,
++            "localizer_genuinely_beats_position_only",
++        ),
++        "beats_position_only_baseline": base.bool_metric(
++            payload,
++            "beats_position_only_baseline",
++        ),
++        "position_only_baseline_f1": base.float_metric(payload, "position_only_baseline_f1"),
++        "localization_f1_by_domain": dict(payload.get("localization_f1_by_domain", {})),
++        "template_family_holdout_drop": base.float_metric(
++            payload,
++            "template_family_holdout_drop",
++        ),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def typed_generalization_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    generalizes = (
++        base.bool_metric(payload, "localizer_generalizes_typed") is True
++        and base.bool_metric(payload, "verifier_is_oracle") is False
++    )
++    return {
++        "status": "generalizes" if generalizes else "not_generalized",
++        "localizer_generalizes_typed": generalizes,
++        "reported_localizer_generalizes_typed": base.bool_metric(
++            payload,
++            "localizer_generalizes_typed",
++        ),
++        "typed_taxonomy_agreement_above_chance": base.bool_metric(
++            payload,
++            "typed_taxonomy_agreement_above_chance",
++        ),
++        "non_fover_domain_delta_ci95": base.list_metric(
++            payload,
++            "non_fover_domain_delta_ci95",
++        ),
++        "artifact_status": base.str_metric(payload, "status"),
++        "gate_check_summary": base.str_metric(payload, "gate_check_summary"),
++        "gates_evaluated": base.list_metric(payload, "gates_evaluated"),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def decide_localizer_state(
++    real_intervention: Mapping[str, Any],
++    typed_generalization: Mapping[str, Any],
++) -> str:
++    if (
++        real_intervention.get("localizer_genuinely_beats_position_only") is True
++        and typed_generalization.get("localizer_generalizes_typed") is True
++    ):
++        return "localizes_genuine_cross_domain"
++    if real_intervention.get("localizer_genuinely_beats_position_only") is True:
++        return "localizes_fover_bound"
++    return "position_bound_retired"
++
++
++def self_learning_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    compounds = (
++        base.bool_metric(payload, "localizer_compounds") is True
++        and base.bool_metric(payload, "verifier_is_oracle") is False
++    )
++    return {
++        "status": "compounds" if compounds else "does_not_compound",
++        "localizer_compounds": compounds,
++        "reported_localizer_compounds": base.bool_metric(payload, "localizer_compounds"),
++        "active_vs_random_learning_curve": base.list_metric(
++            payload,
++            "active_vs_random_learning_curve",
++        ),
++        "compounding_delta_ci95": base.list_metric(payload, "compounding_delta_ci95"),
++        "gate_summary": dict(payload.get("gate_summary", {}))
++        if isinstance(payload.get("gate_summary"), Mapping)
++        else {},
++        "positive_control_passed": base.bool_metric(payload, "positive_control_passed"),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def calibration_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    calibrated = (
++        base.bool_metric(payload, "detection_calibrated_multi_domain") is True
++        and base.bool_metric(payload, "verifier_is_oracle") is False
++    )
++    return {
++        "status": "calibrated_multi_domain" if calibrated else "not_calibrated_multi_domain",
++        "detection_calibrated_multi_domain": calibrated,
++        "reported_detection_calibrated_multi_domain": base.bool_metric(
++            payload,
++            "detection_calibrated_multi_domain",
++        ),
++        "detection_by_domain": base.list_metric(payload, "detection_by_domain"),
++        "domains_at_chance": base.list_metric(payload, "domains_at_chance"),
++        "unavailable_domains": base.list_metric(payload, "unavailable_domains"),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def _axis_specs() -> list[aggregate.AxisSpec]:
++    return [
++        aggregate.AxisSpec(
++            name="localizer",
++            required_keys=("4403_localizer", "4404_typed_generalization"),
++            verdict_fn=lambda present: decide_localizer_state(
++                real_intervention_read(present.get("4403_localizer"), False),
++                typed_generalization_read(
++                    present.get("4404_typed_generalization"),
++                    False,
++                ),
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="self_learning",
++            required_keys=("4407_compounds",),
++            verdict_fn=lambda present: self_learning_read(
++                present.get("4407_compounds"),
++                False,
++            )["localizer_compounds"],
++        ),
++        aggregate.AxisSpec(
++            name="calibration",
++            required_keys=("4408_calibration",),
++            verdict_fn=lambda present: calibration_read(
++                present.get("4408_calibration"),
++                False,
++            )["detection_calibrated_multi_domain"],
++        ),
++        aggregate.AxisSpec(
++            name="arc",
++            required_keys=("4405_e3_deeper", "4406_e3_blocked"),
++            verdict_fn=lambda present: arc_e3_summary(
++                arc_progress_read(
++                    present.get("4405_e3_deeper"),
++                    False,
++                    "per_target_scorecard",
++                ),
++                arc_progress_read(
++                    present.get("4406_e3_blocked"),
++                    False,
++                    "per_game_scorecard",
++                ),
++            )["new_levels_reproduced_from_artifacts"],
++        ),
++    ]
++
++
++def verifier_thesis_state(
++    localizer_state: str,
++    localizer_compounds: bool,
++    detection_calibrated_multi_domain: bool,
++    reproducible_total_levels: int,
++) -> str:
++    localizer_parts = {
++        "localizes_genuine_cross_domain": "localizer_genuine_cross_domain",
++        "localizes_fover_bound": "localizer_fover_bound",
++        "position_bound_retired": "localizer_position_bound_retired",
++    }
++    compound = "localizer_compounds" if localizer_compounds else "localizer_compounding_open"
++    calibration = (
++        "detection_calibrated_multi_domain"
++        if detection_calibrated_multi_domain
++        else "detection_not_calibrated_multi_domain"
++    )
++    localizer = localizer_parts.get(localizer_state, "localizer_position_bound_retired")
++    return f"{localizer}_{compound}_{calibration}_arc_progress_{reproducible_total_levels}"
++
++
++def _honest_verdict(
++    localizer_state: str,
++    localizer_compounds: bool,
++    detection_calibrated_multi_domain: bool,
++    total_levels: int,
++    publication_gate_available: bool,
++    paper_ready: bool,
++) -> str:
++    if publication_gate_available:
++        paper = "publication_ready" if paper_ready else "publication_not_ready"
++    else:
++        paper = "publication_gate_gap"
++    compounds = "true" if localizer_compounds else "false"
++    calibrated = "true" if detection_calibrated_multi_domain else "false"
++    return (
++        f"complete: v407_localizer_{localizer_state}_compounds_{compounds}_"
++        f"calibrated_{calibrated}_arc_levels_{total_levels}_{paper}"
++    )
++
++
++def _publication_gate_or_gap(
++    root: Path,
++    runner: PublicationGateRunner,
++) -> tuple[JsonDict, JsonDict, list[JsonDict]]:
++    publication_gate, check = v405._publication_gate_check(root, runner)  # noqa: SLF001
++    if publication_gate is not None:
++        return publication_gate, check, []
++    return (
++        {
++            "paper_ready": False,
++            "gates": {},
++            "unmet_gates": ["publication_gate_unrunnable"],
++            "error": str(check.get("error", "unrunnable")),
++        },
++        check,
++        [
++            {
++                "axis": "publication_gate",
++                "artifact_key": "publication_gate",
++                "reason": "unrunnable",
++            }
++        ],
++    )
++
++
++def checksum_from_inputs(
++    provenance: list[Mapping[str, Any]],
++    publication_gate: Mapping[str, Any],
++) -> str:
++    payload = {
++        "publication_gate": publication_gate,
++        "upstream_sha256_set": sorted(str(row["sha256"]) for row in provenance),
++    }
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(blob).hexdigest()
++
++
++def _field_provenance(satisfied_by: str) -> dict[str, JsonDict]:
++    return {
++        field: {"principle": principle, "satisfied_by": satisfied_by}
++        for field, principle in FIELD_PRINCIPLES.items()
++    }
++
++
++def _cited_upstream_artifacts(provenance: list[JsonDict]) -> list[JsonDict]:
++    cited: list[JsonDict] = []
++    for row in provenance:
++        if row.get("skipped") is True:
++            continue
++        fields = row.get("fields_imported")
++        if not isinstance(fields, list) or not fields:
++            continue
++        cited.append(
++            {
++                "artifact_key": row["artifact_key"],
++                "experiment_id": row["experiment_id"],
++                "path": row["path"],
++                "sha256": row["sha256"],
++                "fields_imported": fields,
++            }
++        )
++    return cited
++
++
++def _preconditions_checked(
++    root: Path,
++    publication_gate_check: Mapping[str, Any],
++    provenance: list[JsonDict],
++    registry: Mapping[str, Any],
++) -> JsonDict:
++    provenance_by_key = {row["artifact_key"]: row for row in provenance}
++    upstreams: list[JsonDict] = []
++    for key, path in _selected_paths(root).items():
++        upstream = DEFAULT_UPSTREAMS[key]
++        row = provenance_by_key.get(key)
++        upstreams.append(
++            {
++                "artifact_key": key,
++                "experiment_id": upstream.experiment_id,
++                "path": str(upstream.path),
++                "exists": path.exists(),
++                "summarize_exit_code": row.get("summarize_exit_code") if row else None,
++                "skipped": row.get("skipped") if row else None,
++            }
++        )
++    return {
++        "publication_gate": dict(publication_gate_check),
++        "upstream_artifacts": upstreams,
++        "arc_registry": dict(registry),
++    }
++
++
++def _oracle_declarations(provenance: list[JsonDict], clean: Mapping[str, JsonDict | None]) -> list[JsonDict]:
++    declarations: list[JsonDict] = []
++    for row in provenance:
++        key = str(row["artifact_key"])
++        payload = clean.get(key)
++        declarations.append(
++            {
++                "artifact_key": key,
++                "experiment_id": row["experiment_id"],
++                "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++                "skipped": row["skipped"],
++            }
++        )
++    return declarations
++
++
++def _capstone_recheck_status(flags: list[dict[str, Any]]) -> JsonDict:
++    circular = any(flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM" for flag in flags)
++    critical = base.live_has_critical(flags)
++    return {
++        "status": "critical_flags" if critical else "clean",
++        "flags": flags,
++        "circular_moat_overclaim": circular,
++    }
++
++
++def build_artifact(
++    root: Path = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    live_flag_runner: LiveFlagRunner = base.run_live_flags,
++    summarize_runner: SummarizeRunner = base.run_summarize_artifact,
++    publication_gate_runner: PublicationGateRunner = base.run_publication_gate,
++) -> JsonDict:
++    start = time.time() if started_s is None else started_s
++    publication_gate, publication_gate_check, publication_gate_gaps = _publication_gate_or_gap(
++        root,
++        publication_gate_runner,
++    )
++    raw_artifacts, provenance, exclusions = _read_inputs(root, live_flag_runner, summarize_runner)
++    availability_report = aggregate.aggregate_available_report_gaps(
++        raw_artifacts,
++        _axis_specs(),
++        artifact_experiment_ids=ARTIFACT_EXPERIMENT_IDS,
++    )
++    skipped = {row["artifact_key"]: bool(row["skipped"]) for row in provenance}
++    clean = {
++        key: base.clean_payload(
++            raw_artifacts.get(key) if isinstance(raw_artifacts.get(key), dict) else None,
++            skipped.get(key, False),
++        )
++        for key in DEFAULT_UPSTREAMS
++    }
++
++    real_intervention = real_intervention_read(
++        clean["4403_localizer"],
++        skipped.get("4403_localizer", False),
++    )
++    typed_generalization = typed_generalization_read(
++        clean["4404_typed_generalization"],
++        skipped.get("4404_typed_generalization", False),
++    )
++    localizer_state = decide_localizer_state(real_intervention, typed_generalization)
++    self_learning = self_learning_read(
++        clean["4407_compounds"],
++        skipped.get("4407_compounds", False),
++    )
++    calibration = calibration_read(
++        clean["4408_calibration"],
++        skipped.get("4408_calibration", False),
++    )
++    deeper = arc_progress_read(
++        clean["4405_e3_deeper"],
++        skipped.get("4405_e3_deeper", False),
++        "per_target_scorecard",
++    )
++    blocked = arc_progress_read(
++        clean["4406_e3_blocked"],
++        skipped.get("4406_e3_blocked", False),
++        "per_game_scorecard",
++    )
++    arc_e3 = arc_e3_summary(deeper, blocked)
++    registry = read_registry_progress(root)
++    compounds = self_learning.get("localizer_compounds") is True
++    calibrated = calibration.get("detection_calibrated_multi_domain") is True
++    total_levels = int(registry.get("reproducible_total_levels") or 0)
++    paper_ready = bool(publication_gate.get("paper_ready"))
++    publication_available = bool(publication_gate_check.get("runnable"))
++    thesis = verifier_thesis_state(localizer_state, compounds, calibrated, total_levels)
++    end = time.time() if now_s is None else now_s
++    per_axis_gaps = list(availability_report.get("missing_upstream_artifacts", []))
++    per_axis_gaps.extend(publication_gate_gaps)
++
++    return {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(end - start, 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(
++            localizer_state,
++            compounds,
++            calibrated,
++            total_levels,
++            publication_available,
++            paper_ready,
++        ),
++        "localizer_state": localizer_state,
++        "localizer": {
++            "status": localizer_state,
++            "real_intervention": real_intervention,
++            "typed_generalization": typed_generalization,
++        },
++        "localizer_compounds": compounds,
++        "self_learning": self_learning,
++        "detection_calibrated_multi_domain": calibrated,
++        "calibration": calibration,
++        "reproducible_total_levels": total_levels,
++        "arc_reproducible_progress": registry,
++        "arc_e3_outcomes": arc_e3,
++        "verifier_thesis_state": thesis,
++        "publication_gate": publication_gate,
++        "paper_ready": paper_ready,
++        "unmet_gates": base.list_metric(publication_gate, "unmet_gates"),
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_honored": True,
++        "upstream_oracle_declarations": _oracle_declarations(provenance, clean),
++        "cited_upstream_artifacts": _cited_upstream_artifacts(provenance),
++        "preconditions_checked": _preconditions_checked(
++            root,
++            publication_gate_check,
++            provenance,
++            registry,
++        ),
++        "per_axis_gaps": per_axis_gaps,
++        "flagged_artifacts_excluded": exclusions,
++        "availability_report": availability_report,
++        "upstream_provenance": provenance,
++        "upstream_sha256_set": sorted(str(row["sha256"]) for row in provenance),
++        "publication_gate_checksum": hashlib.sha256(
++            json.dumps(publication_gate, sort_keys=True).encode("utf-8")
++        ).hexdigest(),
++        "reproducibility_checksum": checksum_from_inputs(provenance, publication_gate),
++        "capstone_live_adversarial_recheck": {"status": "not_run_until_write"},
++        "required_artifact_fields": list(REQUIRED_ARTIFACT_FIELDS),
++        "field_principles": FIELD_PRINCIPLES,
++        "field_provenance": _field_provenance("aggregation logic"),
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:  # pragma: no cover
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(("complete:", "blocked:")):
++        raise ValueError("honest_verdict must be terminal-prefixed")  # pragma: no cover
++    if artifact.get("localizer_state") not in LOCALIZER_STATES:
++        raise ValueError("localizer_state is not recognized")  # pragma: no cover
++    if not isinstance(artifact.get("localizer_compounds"), bool):
++        raise ValueError("localizer_compounds must be a bare bool")  # pragma: no cover
++    if not isinstance(artifact.get("detection_calibrated_multi_domain"), bool):
++        raise ValueError("detection_calibrated_multi_domain must be a bare bool")  # pragma: no cover
++    total = artifact.get("reproducible_total_levels")
++    if not isinstance(total, int) or isinstance(total, bool):
++        raise ValueError("reproducible_total_levels must be a bare int")  # pragma: no cover
++    if not isinstance(artifact.get("verifier_thesis_state"), str):
++        raise ValueError("verifier_thesis_state must be a string")  # pragma: no cover
++    if not isinstance(artifact.get("publication_gate"), Mapping):
++        raise ValueError("publication_gate must be an object")  # pragma: no cover
++    if artifact.get("verifier_is_oracle") is not False:
++        raise ValueError("verifier_is_oracle must be bare false")  # pragma: no cover
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        raise ValueError("cited_upstream_artifacts must be a list")  # pragma: no cover
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        raise ValueError("preconditions_checked must be an object")  # pragma: no cover
++    if artifact.get("random_seed") != RANDOM_SEED:
++        raise ValueError("random_seed does not match experiment")  # pragma: no cover
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")  # pragma: no cover
++    checksum = str(artifact.get("reproducibility_checksum", "")).removeprefix("sha256:")
++    if not base.is_sha256(checksum):
++        raise ValueError("reproducibility_checksum must be sha256-prefixed")  # pragma: no cover
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match")  # pragma: no cover
++    provenance = artifact.get("upstream_provenance")
++    if not isinstance(provenance, list):
++        raise ValueError("upstream_provenance must be a list")  # pragma: no cover
++    for row in provenance:
++        if not isinstance(row, Mapping):  # pragma: no cover
++            raise ValueError("upstream provenance row must be an object")
++        if not base.is_sha256(row.get("sha256")):
++            raise ValueError("upstream provenance row has invalid sha256")  # pragma: no cover
++        if row.get("skipped") is True and row.get("fields_imported") != []:
++            raise ValueError("skipped upstreams must not import fields")  # pragma: no cover
++    expected = checksum_from_inputs(provenance, artifact["publication_gate"])
++    if artifact.get("reproducibility_checksum") != expected:
++        raise ValueError("reproducibility_checksum does not match inputs")  # pragma: no cover
++
++
++def write_artifact(
++    root: Path = REPO_ROOT,
++    *,
++    output_path: Path = OUTPUT_REL_PATH,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    live_flag_runner: LiveFlagRunner = base.run_live_flags,
++    summarize_runner: SummarizeRunner = base.run_summarize_artifact,
++    publication_gate_runner: PublicationGateRunner = base.run_publication_gate,
++    capstone_live_flag_runner: LiveFlagRunner = base.run_live_flags,
++) -> Path:
++    artifact = build_artifact(
++        root,
++        started_s=started_s,
++        now_s=now_s,
++        live_flag_runner=live_flag_runner,
++        summarize_runner=summarize_runner,
++        publication_gate_runner=publication_gate_runner,
++    )
++    validate_artifact(artifact)
++    path = root / output_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    artifact["capstone_live_adversarial_recheck"] = _capstone_recheck_status(
++        capstone_live_flag_runner(path)
++    )
++    validate_artifact(artifact)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _parse_args() -> JsonDict:  # pragma: no cover
++    import argparse
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", type=Path, default=OUTPUT_REL_PATH)
++    args = parser.parse_args()
++    return {"output": args.output}
++
++
++def main() -> int:  # pragma: no cover
++    args = _parse_args()
++    output = write_artifact(REPO_ROOT, output_path=args["output"])
++    print(output.read_text(encoding="utf-8"), end="")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/_diff_prompt.txt b/results/_diff_prompt.txt
+deleted file mode 100644
+index 14481785e0..0000000000
+--- a/results/_diff_prompt.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-You are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle ('tn36'). I have already
+-done the hard perception work for you -- you do NOT need to read a full 64x64 grid. Reason ONLY over the
+-small extracted regions below.
+-
+-The player edits the EDITABLE region: rows 1..1, cols 2..61 (background colour=5).
+-The level COMPLETES when the editable region's values satisfy a rule defined by the static REFERENCE
+-region elsewhere in the scene.
+-
+-EDITABLE region in the WINNING configuration (exact values + per-colour counts; do NOT re-count by eye):
+-  WIN: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3]  counts={3: 6, 9: 54}
+-
+-EDITABLE region in NON-winning configurations:
+-  NON-WIN 1: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3]  counts={3: 1, 9: 59}
+-  NON-WIN 2: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 11, 9: 49}
+-  NON-WIN 3: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 21, 9: 39}
+-  NON-WIN 4: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 31, 9: 29}
+-  NON-WIN 5: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 41, 9: 19}
+-
+-The static REFERENCE region (the 'rule area'); it does not change as the player edits:
+-reference region rows 8..59, cols 13..50 (component coords are RELATIVE to r8,c13):
+-  colour 0: total_cells=353, components=1 (r0-42,c0-37,n353)
+-  colour 1: total_cells=18, components=6 (r34-34,c12-14,n3) (r34-34,c22-24,n3) (r34-34,c27-29,n3) (r36-38,c13-13,n3) (r36-38,c23-23,n3) (r36-38,c28-28,n3)
+-  colour 4: total_cells=550, components=36 (r1-4,c5-8,n16) (r1-4,c13-16,n16) (r1-4,c21-24,n16) (r1-4,c29-32,n16) (r5-8,c1-4,n16) (r5-8,c9-12,n16)
+-  colour 9: total_cells=69, components=1 (r43-51,c19-27,n69)
+-  colour 11: total_cells=30, components=2 (r5-8,c17-20,n14) (r25-29,c16-21,n16)
+-
+-Write a Python predicate that recomputes the rule and returns True ONLY for winning configurations:
+-
+-    import numpy as np
+-    def is_win(grid):
+-        # grid: 64x64 numpy int array.
+-        e = grid[1:2, 2:62]   # the editable region
+-        # Return True iff e satisfies the win rule implied by the reference region.
+-        ...
+-
+-Rules:
+-- Derive a RELATION between the editable region and the reference region (e.g. e equals / mirrors /
+-  encodes / counts the reference). Do NOT hardcode the literal winning array -- that will not generalize
+-  to other levels and is wrong.
+-- Use ONLY numpy + stdlib. Make is_win deterministic. Start immediately with `import numpy as np`.
+-
+-Return ONLY one ```python code block with def is_win.
+-```python
+diff --git a/results/experiment_4412_capstone_v407.json b/results/experiment_4412_capstone_v407.json
+new file mode 100644
+index 0000000000..7a488d2c42
+--- /dev/null
++++ b/results/experiment_4412_capstone_v407.json
+@@ -0,0 +1,1982 @@
++{
++  "arc_e3_outcomes": {
++    "blocked_mechanics": {
++      "games_with_new_reproducible_levels": [],
++      "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
++      "new_levels_reproduced": 0,
++      "per_game_scorecard": [
++        {
++          "checkpoint_status": "honest_partial_register_tests_passed_reproduction_not_proven",
++          "game": "ar25",
++          "lookahead_fidelity": 0.733333,
++          "lookahead_fidelity_per_round": [
++            0.733333,
++            0.733333,
++            0.733333,
++            0.733333
++          ],
++          "named_register": "action7_undo_stack",
++          "new_reproduced_level": 1,
++          "object_relevance_discriminator": null,
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 1,
++          "register_unit_test_pass_rate": 1.0,
++          "register_unit_test_passed": true,
++          "register_unit_tests": [
++            {
++              "expected": [
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ]
++              ],
++              "game": "ar25",
++              "name": "ar25_register_unit",
++              "observed": [
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  5,
++                  5,
++                  5,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ],
++                [
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9,
++                  9
++                ]
++              ],
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4406_e3_blocked_mechanic_tails_unit_tests.py",
++              "transition": "ar25:L2:action7_undo_stack_restore",
++              "world_model_path": "results/arc_e3/ar25/world_model.py"
++            }
++          ],
++          "register_unit_tests_passed": 1,
++          "register_unit_tests_total": 1,
++          "reproduce_result": {
++            "claimed_level": 2,
++            "game": "ar25",
++            "mode": "per_register_tests_passed_no_replayable_l2_plan",
++            "reached_level": 1,
++            "reproduced": false
++          },
++          "residual_gap_class": "ar25_l2_action7_undo_stack_plan_not_reproduced_after_register_test",
++          "solver_path": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
++          "target_level": 2,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.90625,
++          "verifier_accuracy_per_round": [
++            0.833333,
++            0.90625,
++            0.885417,
++            0.90625
++          ],
++          "world_model_path": "results/arc_e3/ar25/world_model.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_register_tests_passed_reproduction_not_proven",
++          "game": "ka59",
++          "lookahead_fidelity": 0.112281,
++          "lookahead_fidelity_per_round": [
++            0.112281,
++            0.112281,
++            0.112281,
++            0.112281
++          ],
++          "named_register": "object_relevant_step_counter_hud",
++          "new_reproduced_level": 1,
++          "object_relevance_discriminator": {
++            "active_object_candidates": [
++              "selected_block",
++              "second_movable_block",
++              "agent_plus_second_movable_block",
++              "all_piece_objects"
++            ],
++            "blocker_class": "object_relevance_not_clicks_or_multi_object_push",
++            "provenance_commits": [
++              "f0b078247",
++              "6fba583c7"
++            ],
++            "relevant_object_ids": [
++              "agent",
++              "pushed_block"
++            ],
++            "selected_object_hypothesis": "agent_plus_second_movable_block"
++          },
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 1,
++          "register_unit_test_pass_rate": 1.0,
++          "register_unit_test_passed": true,
++          "register_unit_tests": [
++            {
++              "expected": {
++                "irrelevant_hud_count": 5,
++                "relevant_hud_count": 4
++              },
++              "game": "ka59",
++              "name": "ka59_register_unit",
++              "object_relevance_discriminator": {
++                "active_object_candidates": [
++                  "selected_block",
++                  "second_movable_block",
++                  "agent_plus_second_movable_block",
++                  "all_piece_objects"
++                ],
++                "blocker_class": "object_relevance_not_clicks_or_multi_object_push",
++                "provenance_commits": [
++                  "f0b078247",
++                  "6fba583c7"
++                ],
++                "relevant_object_ids": [
++                  "agent",
++                  "pushed_block"
++                ],
++                "selected_object_hypothesis": "agent_plus_second_movable_block"
++              },
++              "observed": {
++                "irrelevant_hud_count": 5,
++                "relevant_hud_count": 4
++              },
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4406_e3_blocked_mechanic_tails_unit_tests.py",
++              "transition": "ka59:L2:object_relevant_hud_tick",
++              "world_model_path": "results/arc_e3/ka59/world_model.py"
++            }
++          ],
++          "register_unit_tests_passed": 1,
++          "register_unit_tests_total": 1,
++          "reproduce_result": {
++            "claimed_level": 2,
++            "game": "ka59",
++            "mode": "per_register_tests_passed_no_replayable_l2_plan",
++            "reached_level": 1,
++            "reproduced": false
++          },
++          "residual_gap_class": "ka59_l2_object_relevance_step_counter_hud_register_gap",
++          "solver_path": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
++          "target_level": 2,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.125,
++          "verifier_accuracy_per_round": [
++            0.114583,
++            0.104167,
++            0.125,
++            0.09375
++          ],
++          "world_model_path": "results/arc_e3/ka59/world_model.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_register_tests_passed_reproduction_not_proven",
++          "game": "ft09",
++          "lookahead_fidelity": 0.347518,
++          "lookahead_fidelity_per_round": [
++            0.347518,
++            0.347518,
++            0.347518,
++            0.347518
++          ],
++          "named_register": "coverage_balanced_residual_world_model",
++          "new_reproduced_level": 1,
++          "object_relevance_discriminator": null,
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 1,
++          "register_unit_test_pass_rate": 1.0,
++          "register_unit_test_passed": true,
++          "register_unit_tests": [
++            {
++              "expected": [
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  8,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ]
++              ],
++              "game": "ft09",
++              "name": "ft09_register_unit",
++              "observed": [
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  9,
++                  9,
++                  9,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  8,
++                  0
++                ],
++                [
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0,
++                  0
++                ]
++              ],
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4406_e3_blocked_mechanic_tails_unit_tests.py",
++              "transition": "ft09:L2:component_click_residual",
++              "world_model_path": "results/arc_e3/ft09/world_model.py"
++            }
++          ],
++          "register_unit_tests_passed": 1,
++          "register_unit_tests_total": 1,
++          "reproduce_result": {
++            "claimed_level": 2,
++            "game": "ft09",
++            "mode": "per_register_tests_passed_no_replayable_l2_plan",
++            "reached_level": 1,
++            "reproduced": false
++          },
++          "residual_gap_class": "ft09_l2_residual_world_model_mismatch_gap_after_component_transition",
++          "solver_path": "python/carnot/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.py",
++          "target_level": 2,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.166667,
++          "verifier_accuracy_per_round": [
++            0.145833,
++            0.166667,
++            0.166667,
++            0.166667
++          ],
++          "world_model_path": "results/arc_e3/ft09/world_model.py"
++        }
++      ],
++      "reproducible_total_levels_reported": 34,
++      "status": "partial",
++      "verifier_is_oracle": true
++    },
++    "deeper_high_headroom": {
++      "games_with_new_reproducible_levels": [],
++      "honest_verdict": "complete_e3_deeper_partial",
++      "new_levels_reproduced": 0,
++      "per_target_scorecard": [
++        {
++          "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
++          "game": "lp85",
++          "lookahead_fidelity": 0.833333,
++          "lookahead_fidelity_per_round": [
++            0.833333
++          ],
++          "mechanic_unit_test_pass_rate": 1.0,
++          "mechanic_unit_tests": [
++            {
++              "expected": [
++                "slot2",
++                "bghvgbtwcb",
++                "slot3",
++                "fdgmtkfrxl"
++              ],
++              "game": "lp85",
++              "name": "lp85_mechanic_transition_unit",
++              "observed": [
++                "slot2",
++                "bghvgbtwcb",
++                "slot3",
++                "fdgmtkfrxl"
++              ],
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
++              "transition": "lp85:L6:button_permutation_slot_mapping",
++              "world_model_path": "results/arc_e3/lp85/world_model.py"
++            }
++          ],
++          "mechanic_unit_tests_passed": 1,
++          "mechanic_unit_tests_total": 1,
++          "new_reproduced_level": 5,
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 5,
++          "reproduce_result": {
++            "claimed_level": 6,
++            "game": "lp85",
++            "reached_level": 5,
++            "reason": "no_offline_reproduction_runner_configured_for_exp4405",
++            "reproduced": false
++          },
++          "residual_failing_mechanic": "lp85_l6_permutation_bfs_reproduction_not_proven_after_unit_transition",
++          "solver_path": "python/carnot/agentic/arc_game_adapters.py",
++          "target_level": 6,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.833333,
++          "verifier_accuracy_per_round": [
++            0.833333
++          ],
++          "world_model_path": "results/arc_e3/lp85/world_model.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
++          "game": "tu93",
++          "lookahead_fidelity": 0.8,
++          "lookahead_fidelity_per_round": [
++            0.8
++          ],
++          "mechanic_unit_test_pass_rate": 1.0,
++          "mechanic_unit_tests": [
++            {
++              "expected": "BranchState(player=(3, 2), goal=(4, 2), reset_parity=0)",
++              "game": "tu93",
++              "name": "tu93_mechanic_transition_unit",
++              "observed": "BranchState(player=(3, 2), goal=(4, 2), reset_parity=0)",
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
++              "transition": "tu93:L5:fresh_env_branch_move",
++              "world_model_path": "results/arc_e3/tu93/world_model.py"
++            }
++          ],
++          "mechanic_unit_tests_passed": 1,
++          "mechanic_unit_tests_total": 1,
++          "new_reproduced_level": 4,
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 4,
++          "reproduce_result": {
++            "claimed_level": 5,
++            "game": "tu93",
++            "reached_level": 4,
++            "reason": "no_offline_reproduction_runner_configured_for_exp4405",
++            "reproduced": false
++          },
++          "residual_failing_mechanic": "tu93_l5_fresh_env_branch_mode_reproduction_not_proven_after_unit_transition",
++          "solver_path": "python/carnot/agentic/arc_game_adapters.py",
++          "target_level": 5,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.8,
++          "verifier_accuracy_per_round": [
++            0.8
++          ],
++          "world_model_path": "results/arc_e3/tu93/world_model.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
++          "game": "tn36",
++          "lookahead_fidelity": 0.875,
++          "lookahead_fidelity_per_round": [
++            0.875
++          ],
++          "mechanic_unit_test_pass_rate": 1.0,
++          "mechanic_unit_tests": [
++            {
++              "expected": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
++              "game": "tn36",
++              "name": "tn36_mechanic_transition_unit",
++              "observed": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
++              "transition": "tn36:L8:sxhtkytekm_program_editor_run",
++              "world_model_path": "results/arc_e3/tn36/world_model.py"
++            }
++          ],
++          "mechanic_unit_tests_passed": 1,
++          "mechanic_unit_tests_total": 1,
++          "new_reproduced_level": 7,
++          "offline_reproduced": false,
++          "plan": [
++            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
++          ],
++          "prior_best_level": 7,
++          "reproduce_result": {
++            "claimed_level": 8,
++            "game": "tn36",
++            "reached_level": 7,
++            "reason": "no_offline_reproduction_runner_configured_for_exp4405",
++            "reproduced": false
++          },
++          "residual_failing_mechanic": "tn36_l8_sxhtkytekm_palette_population_reproduction_not_proven_after_unit_transition",
++          "solver_path": "scripts/arc3_tn36_offline_solver.py",
++          "target_level": 8,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.875,
++          "verifier_accuracy_per_round": [
++            0.875
++          ],
++          "world_model_path": "results/arc_e3/tn36/world_model.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
++          "game": "tr87",
++          "lookahead_fidelity": 0.857143,
++          "lookahead_fidelity_per_round": [
++            0.857143
++          ],
++          "mechanic_unit_test_pass_rate": 1.0,
++          "mechanic_unit_tests": [
++            {
++              "expected": [
++                "C6",
++                "C1"
++              ],
++              "game": "tr87",
++              "name": "tr87_mechanic_transition_unit",
++              "observed": [
++                "C6",
++                "C1"
++              ],
++              "passed": true,
++              "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
++              "transition": "tr87:L7:two_pass_greedy_rewrite",
++              "world_model_path": "results/arc_e3/tr87/world_model.py"
++            }
++          ],
++          "mechanic_unit_tests_passed": 1,
++          "mechanic_unit_tests_total": 1,
++          "new_reproduced_level": 6,
++          "offline_reproduced": false,
++          "plan": [],
++          "prior_best_level": 6,
++          "reproduce_result": {
++            "claimed_level": 7,
++            "game": "tr87",
++            "reached_level": 6,
++            "reason": "no_offline_reproduction_runner_configured_for_exp4405",
++            "reproduced": false
++          },
++          "residual_failing_mechanic": "tr87_l7_no_offline_level_available_after_two_pass_rewrite_unit_transition",
++          "solver_path": "python/carnot/agentic/arc_game_adapters.py",
++          "target_level": 7,
++          "target_wall_time_s": 30.0,
++          "verifier_accuracy": 0.857143,
++          "verifier_accuracy_per_round": [
++            0.857143
++          ],
++          "world_model_path": "results/arc_e3/tr87/world_model.py"
++        }
++      ],
++      "reproducible_total_levels_reported": 34,
++      "status": "partial",
++      "verifier_is_oracle": true
++    },
++    "execution_grounded": true,
++    "games_with_new_reproducible_levels": [],
++    "new_levels_reproduced_from_artifacts": 0,
++    "status": "partial"
++  },
++  "arc_reproducible_progress": {
++    "new_games_since_prior": 0,
++    "new_levels_since_prior": 0,
++    "path": "ops/arc_solve_registry.yaml",
++    "prior_reproducible_total_games": 17,
++    "prior_reproducible_total_levels": 34,
++    "reproducible_total_games": 17,
++    "reproducible_total_levels": 34,
++    "status": "loaded"
++  },
++  "availability_report": {
++    "available_artifact_keys": [
++      "4403_localizer",
++      "4404_typed_generalization",
++      "4405_e3_deeper",
++      "4406_e3_blocked",
++      "4407_compounds",
++      "4408_calibration"
++    ],
++    "axes": {
++      "arc": {
++        "available_artifact_keys": [
++          "4405_e3_deeper",
++          "4406_e3_blocked"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": 0
++      },
++      "calibration": {
++        "available_artifact_keys": [
++          "4408_calibration"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "localizer": {
++        "available_artifact_keys": [
++          "4403_localizer",
++          "4404_typed_generalization"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": "position_bound_retired"
++      },
++      "self_learning": {
++        "available_artifact_keys": [
++          "4407_compounds"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      }
++    },
++    "flagged_artifacts_excluded": [],
++    "missing_upstream_artifacts": []
++  },
++  "calibration": {
++    "detection_by_domain": [
++      {
++        "answer_cardinality": {
++          "max": 5,
++          "mean": 3.36875,
++          "median": 4.0,
++          "min": 1
++        },
++        "auroc_ci95": [
++          0.461255,
++          0.692756
++        ],
++        "base_rate": 0.90167,
++        "claim_scope": "proper_pool_n>=300",
++        "detection_auroc": 0.577374,
++        "domain": "code_humaneval",
++        "ece_lodo_calibrated": 0.062172,
++        "ece_uncalibrated": 0.071429,
++        "n": 539,
++        "platt_scaler": {
++          "bias": -2.83269,
++          "mean": 0.209395,
++          "n_train": 38872,
++          "scale": 0.353053,
++          "trained_on_domains": [
++            "fover",
++            "gap4_arc",
++            "gsm8k"
++          ],
++          "weight": 2.847515
++        },
++        "random_score_control": {
++          "auroc": 0.504817,
++          "replicates": 128,
++          "seed": 4408
++        },
++        "raw_base_rate": 0.646905,
++        "raw_n": 2294,
++        "risk_coverage": [
++          {
++            "accuracy": 0.90167,
++            "coverage": 1.0,
++            "n_kept": 539,
++            "risk": 0.09833,
++            "threshold": 0.882728
++          },
++          {
++            "accuracy": 0.946392,
++            "coverage": 0.9,
++            "n_kept": 485,
++            "risk": 0.053608,
++            "threshold": 0.963825
++          },
++          {
++            "accuracy": 0.935644,
++            "coverage": 0.75,
++            "n_kept": 404,
++            "risk": 0.064356,
++            "threshold": 0.964796
++          },
++          {
++            "accuracy": 0.907063,
++            "coverage": 0.5,
++            "n_kept": 269,
++            "risk": 0.092937,
++            "threshold": 0.966508
++          },
++          {
++            "accuracy": 0.813433,
++            "coverage": 0.25,
++            "n_kept": 134,
++            "risk": 0.186567,
++            "threshold": 0.967257
++          }
++        ],
++        "score_orientation": "higher_verifier_score_means_more_likely_correct"
++      },
++      {
++        "answer_cardinality": {
++          "max": 2,
++          "mean": 1.07697,
++          "median": 1.0,
++          "min": 1
++        },
++        "auroc_ci95": [
++          0.90944,
++          0.926582
++        ],
++        "base_rate": 0.812097,
++        "claim_scope": "proper_pool_n>=300",
++        "detection_auroc": 0.918304,
++        "domain": "fover",
++        "ece_lodo_calibrated": 0.134538,
++        "ece_uncalibrated": 0.122522,
++        "n": 8829,
++        "platt_scaler": {
++          "bias": -4.200009,
++          "mean": 0.055921,
++          "n_train": 30582,
++          "scale": 0.203627,
++          "trained_on_domains": [
++            "code_humaneval",
++            "gap4_arc",
++            "gsm8k"
++          ],
++          "weight": 1.467421
++        },
++        "random_score_control": {
++          "auroc": 0.498654,
++          "replicates": 128,
++          "seed": 4408
++        },
++        "raw_base_rate": 0.812097,
++        "raw_n": 8829,
++        "risk_coverage": [
++          {
++            "accuracy": 0.812097,
++            "coverage": 1.0,
++            "n_kept": 8829,
++            "risk": 0.187903,
++            "threshold": 0.009922
++          },
++          {
++            "accuracy": 0.876793,
++            "coverage": 0.9,
++            "n_kept": 7946,
++            "risk": 0.123207,
++            "threshold": 0.362238
++          },
++          {
++            "accuracy": 0.968585,
++            "coverage": 0.75,
++            "n_kept": 6621,
++            "risk": 0.031415,
++            "threshold": 0.664878
++          },
++          {
++            "accuracy": 0.984368,
++            "coverage": 0.5,
++            "n_kept": 4414,
++            "risk": 0.015632,
++            "threshold": 0.830062
++          },
++          {
++            "accuracy": 0.972361,
++            "coverage": 0.25,
++            "n_kept": 2207,
++            "risk": 0.027639,
++            "threshold": 0.855844
++          }
++        ],
++        "score_orientation": "higher_verifier_score_means_more_likely_correct"
++      },
++      {
++        "answer_cardinality": {
++          "max": 2003,
++          "mean": 546.980769,
++          "median": 520.5,
++          "min": 4
++        },
++        "auroc_ci95": [
++          0.921708,
++          0.9912
++        ],
++        "base_rate": 0.001688,
++        "claim_scope": "proper_pool_n>=300",
++        "detection_auroc": 0.963006,
++        "domain": "gap4_arc",
++        "ece_lodo_calibrated": 0.0055,
++        "ece_uncalibrated": 0.01145,
++        "n": 28443,
++        "platt_scaler": {
++          "bias": 1.652507,
++          "mean": 0.755874,
++          "n_train": 10968,
++          "scale": 0.240239,
++          "trained_on_domains": [
++            "code_humaneval",
++            "fover",
++            "gsm8k"
++          ],
++          "weight": 2.585288
++        },
++        "random_score_control": {
++          "auroc": 0.501353,
++          "replicates": 128,
++          "seed": 4408
++        },
++        "raw_base_rate": 0.001688,
++        "raw_n": 28443,
++        "risk_coverage": [
++          {
++            "accuracy": 0.001688,
++            "coverage": 1.0,
++            "n_kept": 28443,
++            "risk": 0.998312,
++            "threshold": 0.001529
++          },
++          {
++            "accuracy": 0.001875,
++            "coverage": 0.9,
++            "n_kept": 25598,
++            "risk": 0.998125,
++            "threshold": 0.001529
++          },
++          {
++            "accuracy": 0.00225,
++            "coverage": 0.75,
++            "n_kept": 21332,
++            "risk": 0.99775,
++            "threshold": 0.001529
++          },
++          {
++            "accuracy": 0.003305,
++            "coverage": 0.5,
++            "n_kept": 14221,
++            "risk": 0.996695,
++            "threshold": 0.001529
++          },
++          {
++            "accuracy": 0.00647,
++            "coverage": 0.25,
++            "n_kept": 7110,
++            "risk": 0.99353,
++            "threshold": 0.001543
++          }
++        ],
++        "score_orientation": "higher_verifier_score_means_more_likely_correct"
++      },
++      {
++        "answer_cardinality": {
++          "max": 1,
++          "mean": 1.0,
++          "median": 1.0,
++          "min": 1
++        },
++        "auroc_ci95": [
++          0.98463,
++          0.994989
++        ],
++        "base_rate": 0.51,
++        "claim_scope": "proper_pool_n>=300",
++        "detection_auroc": 0.990196,
++        "domain": "gsm8k",
++        "ece_lodo_calibrated": 0.029442,
++        "ece_uncalibrated": 0.0725,
++        "n": 1600,
++        "platt_scaler": {
++          "bias": -2.859809,
++          "mean": 0.207667,
++          "n_train": 37811,
++          "scale": 0.354006,
++          "trained_on_domains": [
++            "code_humaneval",
++            "fover",
++            "gap4_arc"
++          ],
++          "weight": 2.806668
++        },
++        "random_score_control": {
++          "auroc": 0.499475,
++          "replicates": 128,
++          "seed": 4408
++        },
++        "raw_base_rate": 0.51,
++        "raw_n": 1600,
++        "risk_coverage": [
++          {
++            "accuracy": 0.51,
++            "coverage": 1.0,
++            "n_kept": 1600,
++            "risk": 0.49,
++            "threshold": 0.020392
++          },
++          {
++            "accuracy": 0.564583,
++            "coverage": 0.9,
++            "n_kept": 1440,
++            "risk": 0.435417,
++            "threshold": 0.020392
++          },
++          {
++            "accuracy": 0.673333,
++            "coverage": 0.75,
++            "n_kept": 1200,
++            "risk": 0.326667,
++            "threshold": 0.023813
++          },
++          {
++            "accuracy": 1.0,
++            "coverage": 0.5,
++            "n_kept": 800,
++            "risk": 0.0,
++            "threshold": 0.932719
++          },
++          {
++            "accuracy": 1.0,
++            "coverage": 0.25,
++            "n_kept": 400,
++            "risk": 0.0,
++            "threshold": 0.953719
++          }
++        ],
++        "score_orientation": "higher_verifier_score_means_more_likely_correct"
++      }
++    ],
++    "detection_calibrated_multi_domain": false,
++    "domains_at_chance": [
++      "code_humaneval"
++    ],
++    "honest_verdict": "complete: calibrated_multi_domain_contract_false_deconfounded",
++    "reported_detection_calibrated_multi_domain": false,
++    "status": "not_calibrated_multi_domain",
++    "unavailable_domains": [],
++    "verifier_is_oracle": false
++  },
++  "capstone_live_adversarial_recheck": {
++    "circular_moat_overclaim": false,
++    "flags": [],
++    "status": "clean"
++  },
++  "cited_upstream_artifacts": [
++    {
++      "artifact_key": "4403_localizer",
++      "experiment_id": 4403,
++      "fields_imported": [
++        "localizer_genuinely_beats_position_only",
++        "beats_position_only_baseline",
++        "position_only_baseline_f1",
++        "localization_f1_by_domain",
++        "template_family_holdout_drop",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4403_real_intervention_localizer_deconfound.json",
++      "sha256": "fe872c319031dbe81518ebb3ccd4655dfb3cc3a5c81d64ca1a47d6882e505eb2"
++    },
++    {
++      "artifact_key": "4404_typed_generalization",
++      "experiment_id": 4404,
++      "fields_imported": [
++        "localizer_generalizes_typed",
++        "typed_taxonomy_agreement_above_chance",
++        "non_fover_domain_delta_ci95",
++        "status",
++        "gate_check_summary",
++        "gates_evaluated",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4404_localizer_typed_taxonomy_cross_domain.json",
++      "sha256": "253e5b26668f891d4058e1d723f7fa2b93d277ad949a8467a5de68ea13660bde"
++    },
++    {
++      "artifact_key": "4405_e3_deeper",
++      "experiment_id": 4405,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
++      "sha256": "215b78efb94a34314854285be89ff7979c07621305cced43bea4f542be8357df"
++    },
++    {
++      "artifact_key": "4406_e3_blocked",
++      "experiment_id": 4406,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_game_scorecard",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
++      "sha256": "21db4fd3ca611a9e4de310436c1afd27d0362d89fa957419755247b607ca1984"
++    },
++    {
++      "artifact_key": "4407_compounds",
++      "experiment_id": 4407,
++      "fields_imported": [
++        "localizer_compounds",
++        "active_vs_random_learning_curve",
++        "compounding_delta_ci95",
++        "gate_summary",
++        "positive_control_passed",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4407_active_learning_self_learning_compounds.json",
++      "sha256": "a686495e85751e5b4b154d45b63c05aa9c455055822b095a007546203186e324"
++    },
++    {
++      "artifact_key": "4408_calibration",
++      "experiment_id": 4408,
++      "fields_imported": [
++        "detection_calibrated_multi_domain",
++        "detection_by_domain",
++        "domains_at_chance",
++        "unavailable_domains",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4408_cross_domain_detection_calibration_repair.json",
++      "sha256": "836bdfa6d03b3bad42f2aee7848b7ebf04d3c0cd6ac40d1cd2d533dc9ce214f9"
++    }
++  ],
++  "detection_calibrated_multi_domain": false,
++  "duration_s": 0.308789,
++  "experiment": 4412,
++  "field_principles": {
++    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256} -- the audit trail so the capstone numbers trace to real measurements.",
++    "detection_calibrated_multi_domain": "BARE bool: did cross-domain detection become a calibrated multi-domain contract on de-confounded proper pools (exp4408), or are domains at chance (logged gaps)?",
++    "honest_verdict": "Terminal-prefixed. The .407 scorecard string (localizer genuine cross-domain? compounds? calibrated multi-domain? the ARC reproducible-total).",
++    "inference_substrate": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output.",
++    "localizer_compounds": "BARE bool: did the localizer self-improve via ACTIVE selection where size-only growth saturated (exp4407) -- the mandated continuous-self-learning reading on the real-headroom axis?",
++    "localizer_state": "One of localizes_genuine_cross_domain / localizes_fover_bound / position_bound_retired -- the headline decision: did the oracle-distinct first-error localizer graduate from the .406 position-bias quarantine to a genuine cross-domain capability, stay FoVer-bound, or retire as position-bound?",
++    "preconditions_checked": "Records the upstream artifacts + registry + publication_gate loaded; pre-empts the silent-missing-resource fabrication mode.",
++    "publication_gate": "The G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py -- the FROZEN FoVer headline (0.9131) gate, carried not re-litigated.",
++    "random_seed": "Determinism precondition for the aggregation ordering.",
++    "reproducibility_checksum": "Hash of the aggregated upstream set + the gate computation; lets a third party re-run the scorecard.",
++    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after .407 (>= the prior 34) -- the monotonic north-star accuracy signal (from the authoritative registry).",
++    "verifier_is_oracle": "BARE bool: the capstone's own aggregation is oracle-distinct=false; it HONORS each upstream's verifier_is_oracle (ARC E3 solves are execution-grounded=true=NOT a moat) so it does not trip CIRCULAR_MOAT_OVERCLAIM.",
++    "verifier_thesis_state": "One honest string summarizing where the verifier-as-the-value-add stands after .407 (localizer genuine/bound/retired; compounding; multi-domain calibration; ARC progress)."
++  },
++  "field_provenance": {
++    "cited_upstream_artifacts": {
++      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail so the capstone numbers trace to real measurements.",
++      "satisfied_by": "aggregation logic"
++    },
++    "detection_calibrated_multi_domain": {
++      "principle": "BARE bool: did cross-domain detection become a calibrated multi-domain contract on de-confounded proper pools (exp4408), or are domains at chance (logged gaps)?",
++      "satisfied_by": "aggregation logic"
++    },
++    "honest_verdict": {
++      "principle": "Terminal-prefixed. The .407 scorecard string (localizer genuine cross-domain? compounds? calibrated multi-domain? the ARC reproducible-total).",
++      "satisfied_by": "aggregation logic"
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output.",
++      "satisfied_by": "aggregation logic"
++    },
++    "localizer_compounds": {
++      "principle": "BARE bool: did the localizer self-improve via ACTIVE selection where size-only growth saturated (exp4407) -- the mandated continuous-self-learning reading on the real-headroom axis?",
++      "satisfied_by": "aggregation logic"
++    },
++    "localizer_state": {
++      "principle": "One of localizes_genuine_cross_domain / localizes_fover_bound / position_bound_retired -- the headline decision: did the oracle-distinct first-error localizer graduate from the .406 position-bias quarantine to a genuine cross-domain capability, stay FoVer-bound, or retire as position-bound?",
++      "satisfied_by": "aggregation logic"
++    },
++    "preconditions_checked": {
++      "principle": "Records the upstream artifacts + registry + publication_gate loaded; pre-empts the silent-missing-resource fabrication mode.",
++      "satisfied_by": "aggregation logic"
++    },
++    "publication_gate": {
++      "principle": "The G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py -- the FROZEN FoVer headline (0.9131) gate, carried not re-litigated.",
++      "satisfied_by": "aggregation logic"
++    },
++    "random_seed": {
++      "principle": "Determinism precondition for the aggregation ordering.",
++      "satisfied_by": "aggregation logic"
++    },
++    "reproducibility_checksum": {
++      "principle": "Hash of the aggregated upstream set + the gate computation; lets a third party re-run the scorecard.",
++      "satisfied_by": "aggregation logic"
++    },
++    "reproducible_total_levels": {
++      "principle": "BARE int: the ARC reproducible-level count after .407 (>= the prior 34) -- the monotonic north-star accuracy signal (from the authoritative registry).",
++      "satisfied_by": "aggregation logic"
++    },
++    "verifier_is_oracle": {
++      "principle": "BARE bool: the capstone's own aggregation is oracle-distinct=false; it HONORS each upstream's verifier_is_oracle (ARC E3 solves are execution-grounded=true=NOT a moat) so it does not trip CIRCULAR_MOAT_OVERCLAIM.",
++      "satisfied_by": "aggregation logic"
++    },
++    "verifier_thesis_state": {
++      "principle": "One honest string summarizing where the verifier-as-the-value-add stands after .407 (localizer genuine/bound/retired; compounding; multi-domain calibration; ARC progress).",
++      "satisfied_by": "aggregation logic"
++    }
++  },
++  "flagged_artifacts_excluded": [],
++  "honest_verdict": "complete: v407_localizer_position_bound_retired_compounds_false_calibrated_false_arc_levels_34_publication_ready",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "localizer": {
++    "real_intervention": {
++      "beats_position_only_baseline": false,
++      "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
++      "localization_f1_by_domain": {
++        "FoVer": {
++          "beats_position_only_baseline": false,
++          "delta_ci95": [
++            0.0,
++            0.0
++          ],
++          "delta_vs_ensemble_0096": 0.904,
++          "delta_vs_ensemble_ci95": [
++            0.904,
++            0.904
++          ],
++          "delta_vs_position_only": 0.0,
++          "ensemble_baseline_0096": 0.096,
++          "exact_match_count": 947,
++          "n_error_traces": 947,
++          "n_traces": 8013,
++          "position_only_baseline": 1.0,
++          "real_intervention_localizer": 1.0,
++          "template_family_holdout_drop": 0.0
++        },
++        "GAP-4 ARC": {
++          "delta_ci95": [
++            -0.134615,
++            0.173077
++          ],
++          "delta_vs_ensemble_0096": 0.711692,
++          "delta_vs_ensemble_ci95": [
++            0.596308,
++            0.807846
++          ],
++          "delta_vs_position_only": 0.019231,
++          "ensemble_baseline_0096": 0.096,
++          "exact_match_count": 42,
++          "n_error_traces": 52,
++          "n_traces": 52,
++          "position_only_baseline": 0.788462,
++          "real_intervention_localizer": 0.807692,
++          "split_note": "cached GAP-4 ARC candidate process proxy",
++          "template_family_holdout_drop": 0.0
++        }
++      },
++      "localizer_genuinely_beats_position_only": false,
++      "position_only_baseline_f1": 1.0,
++      "reported_localizer_genuinely_beats_position_only": false,
++      "status": "position_only_tied",
++      "template_family_holdout_drop": 0.0,
++      "verifier_is_oracle": false
++    },
++    "status": "position_bound_retired",
++    "typed_generalization": {
++      "artifact_status": "blocked",
++      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconfound.localizer_genuinely_beats_position_only (actual=False == expected=True)",
++      "gates_evaluated": [
++        {
++          "actual": false,
++          "artifact_field": "localizer_genuinely_beats_position_only",
++          "expected": true,
++          "op": "==",
++          "passed": false,
++          "reason": "actual=False == expected=True",
++          "upstream": "exp4403-real-intervention-localizer-deconfound"
++        }
++      ],
++      "honest_verdict": "blocked_gate_check_failed",
++      "localizer_generalizes_typed": false,
++      "non_fover_domain_delta_ci95": [],
++      "reported_localizer_generalizes_typed": null,
++      "status": "not_generalized",
++      "typed_taxonomy_agreement_above_chance": null,
++      "verifier_is_oracle": null
++    }
++  },
++  "localizer_compounds": false,
++  "localizer_state": "position_bound_retired",
++  "paper_ready": true,
++  "per_axis_gaps": [],
++  "preconditions_checked": {
++    "arc_registry": {
++      "new_games_since_prior": 0,
++      "new_levels_since_prior": 0,
++      "path": "ops/arc_solve_registry.yaml",
++      "prior_reproducible_total_games": 17,
++      "prior_reproducible_total_levels": 34,
++      "reproducible_total_games": 17,
++      "reproducible_total_levels": 34,
++      "status": "loaded"
++    },
++    "publication_gate": {
++      "exists": true,
++      "paper_ready": true,
++      "path": "scripts/publication_gate.py",
++      "runnable": true,
++      "unmet_gates": []
++    },
++    "upstream_artifacts": [
++      {
++        "artifact_key": "4403_localizer",
++        "exists": true,
++        "experiment_id": 4403,
++        "path": "results/experiment_4403_real_intervention_localizer_deconfound.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4404_typed_generalization",
++        "exists": true,
++        "experiment_id": 4404,
++        "path": "results/experiment_4404_localizer_typed_taxonomy_cross_domain.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4405_e3_deeper",
++        "exists": true,
++        "experiment_id": 4405,
++        "path": "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4406_e3_blocked",
++        "exists": true,
++        "experiment_id": 4406,
++        "path": "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4407_compounds",
++        "exists": true,
++        "experiment_id": 4407,
++        "path": "results/experiment_4407_active_learning_self_learning_compounds.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4408_calibration",
++        "exists": true,
++        "experiment_id": 4408,
++        "path": "results/experiment_4408_cross_domain_detection_calibration_repair.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      }
++    ]
++  },
++  "publication_gate": {
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "publication_gate_checksum": "7647fd5ba3275c5994bf046360095a1511d7a0b5abd8bcdcd8c367fa1db3f9ac",
++  "random_seed": 4412,
++  "reproducibility_checksum": "sha256:e800ffb660ffb9d6c9ba4eab6046d0d494855eaa65d6f7edaf61574c03341cc5",
++  "reproducible_total_levels": 34,
++  "required_artifact_fields": [
++    "honest_verdict",
++    "localizer_state",
++    "localizer_compounds",
++    "detection_calibrated_multi_domain",
++    "reproducible_total_levels",
++    "verifier_thesis_state",
++    "publication_gate",
++    "verifier_is_oracle",
++    "cited_upstream_artifacts",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "inference_substrate"
++  ],
++  "schema": "carnot.capstone_v407_4412.v1",
++  "self_learning": {
++    "active_vs_random_learning_curve": [
++      {
++        "corpus_size": 51,
++        "f1_active": 1.0,
++        "f1_positive_control_ceiling": 1.0,
++        "f1_random": 1.0,
++        "position_only_floor": 1.0
++      },
++      {
++        "corpus_size": 128,
++        "f1_active": 1.0,
++        "f1_positive_control_ceiling": 1.0,
++        "f1_random": 1.0,
++        "position_only_floor": 1.0
++      },
++      {
++        "corpus_size": 256,
++        "f1_active": 1.0,
++        "f1_positive_control_ceiling": 1.0,
++        "f1_random": 1.0,
++        "position_only_floor": 1.0
++      },
++      {
++        "corpus_size": 512,
++        "f1_active": 1.0,
++        "f1_positive_control_ceiling": 1.0,
++        "f1_random": 1.0,
++        "position_only_floor": 1.0
++      }
++    ],
++    "compounding_delta_ci95": [
++      0.0,
++      0.0
++    ],
++    "gate_summary": {
++      "active_rises_beyond_random": false,
++      "delta_ci95_excludes_zero": false,
++      "localizer_compounds": false,
++      "position_only_control_beaten": false,
++      "positive_control_headroom": false
++    },
++    "honest_verdict": "complete: clean_null_position_bound_or_saturated",
++    "localizer_compounds": false,
++    "positive_control_passed": false,
++    "reported_localizer_compounds": false,
++    "status": "does_not_compound",
++    "verifier_is_oracle": false
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4412",
++    "SCENARIO-CAPSTONE-4412"
++  ],
++  "unmet_gates": [],
++  "upstream_oracle_declarations": [
++    {
++      "artifact_key": "4403_localizer",
++      "experiment_id": 4403,
++      "skipped": false,
++      "verifier_is_oracle": false
++    },
++    {
++      "artifact_key": "4404_typed_generalization",
++      "experiment_id": 4404,
++      "skipped": false,
++      "verifier_is_oracle": null
++    },
++    {
++      "artifact_key": "4405_e3_deeper",
++      "experiment_id": 4405,
++      "skipped": false,
++      "verifier_is_oracle": true
++    },
++    {
++      "artifact_key": "4406_e3_blocked",
++      "experiment_id": 4406,
++      "skipped": false,
++      "verifier_is_oracle": true
++    },
++    {
++      "artifact_key": "4407_compounds",
++      "experiment_id": 4407,
++      "skipped": false,
++      "verifier_is_oracle": false
++    },
++    {
++      "artifact_key": "4408_calibration",
++      "experiment_id": 4408,
++      "skipped": false,
++      "verifier_is_oracle": false
++    }
++  ],
++  "upstream_provenance": [
++    {
++      "artifact_key": "4403_localizer",
++      "experiment_id": 4403,
++      "fields_imported": [
++        "localizer_genuinely_beats_position_only",
++        "beats_position_only_baseline",
++        "position_only_baseline_f1",
++        "localization_f1_by_domain",
++        "template_family_holdout_drop",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4403_real_intervention_localizer_deconfound.json",
++      "payload_reproducibility_checksum": "b192f37de25b584bbecd7d33b6754ea30c23d22224ddec585d1ec18e4f11254f",
++      "sha256": "fe872c319031dbe81518ebb3ccd4655dfb3cc3a5c81d64ca1a47d6882e505eb2",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4404_typed_generalization",
++      "experiment_id": 4404,
++      "fields_imported": [
++        "localizer_generalizes_typed",
++        "typed_taxonomy_agreement_above_chance",
++        "non_fover_domain_delta_ci95",
++        "status",
++        "gate_check_summary",
++        "gates_evaluated",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4404_localizer_typed_taxonomy_cross_domain.json",
++      "payload_reproducibility_checksum": "",
++      "sha256": "253e5b26668f891d4058e1d723f7fa2b93d277ad949a8467a5de68ea13660bde",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4405_e3_deeper",
++      "experiment_id": 4405,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
++      "payload_reproducibility_checksum": "6bcd4562dcdddace73f107eda92b6f4b08a1cb625117c0d380dcc0ef9fb14f18",
++      "sha256": "215b78efb94a34314854285be89ff7979c07621305cced43bea4f542be8357df",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4406_e3_blocked",
++      "experiment_id": 4406,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_game_scorecard",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
++      "payload_reproducibility_checksum": "46173cd66fc468dbddb51b1c4954457dcd6c621104b7a3c5e699342769b22214",
++      "sha256": "21db4fd3ca611a9e4de310436c1afd27d0362d89fa957419755247b607ca1984",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4407_compounds",
++      "experiment_id": 4407,
++      "fields_imported": [
++        "localizer_compounds",
++        "active_vs_random_learning_curve",
++        "compounding_delta_ci95",
++        "gate_summary",
++        "positive_control_passed",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4407_active_learning_self_learning_compounds.json",
++      "payload_reproducibility_checksum": "0037c29853f24aa0dc00f2626b1cbc3c495ed5fa212054ab636531230a5cf463",
++      "sha256": "a686495e85751e5b4b154d45b63c05aa9c455055822b095a007546203186e324",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4408_calibration",
++      "experiment_id": 4408,
++      "fields_imported": [
++        "detection_calibrated_multi_domain",
++        "detection_by_domain",
++        "domains_at_chance",
++        "unavailable_domains",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4408_cross_domain_detection_calibration_repair.json",
++      "payload_reproducibility_checksum": "7d9b8ac98fc17e3fd4bc328af1cd7e74e76b81fc3e9d0c4c2466b93a2c0a437d",
++      "sha256": "836bdfa6d03b3bad42f2aee7848b7ebf04d3c0cd6ac40d1cd2d533dc9ce214f9",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    }
++  ],
++  "upstream_sha256_set": [
++    "215b78efb94a34314854285be89ff7979c07621305cced43bea4f542be8357df",
++    "21db4fd3ca611a9e4de310436c1afd27d0362d89fa957419755247b607ca1984",
++    "253e5b26668f891d4058e1d723f7fa2b93d277ad949a8467a5de68ea13660bde",
++    "836bdfa6d03b3bad42f2aee7848b7ebf04d3c0cd6ac40d1cd2d533dc9ce214f9",
++    "a686495e85751e5b4b154d45b63c05aa9c455055822b095a007546203186e324",
++    "fe872c319031dbe81518ebb3ccd4655dfb3cc3a5c81d64ca1a47d6882e505eb2"
++  ],
++  "verifier_is_oracle": false,
++  "verifier_is_oracle_honored": true,
++  "verifier_thesis_state": "localizer_position_bound_retired_localizer_compounding_open_detection_not_calibrated_multi_domain_arc_progress_34"
++}
+diff --git a/results/experiment_4412_capstone_v407.py b/results/experiment_4412_capstone_v407.py
+new file mode 100644
+index 0000000000..cf47685a9a
+--- /dev/null
++++ b/results/experiment_4412_capstone_v407.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Run Exp 4412 v407 verifier localizer scorecard capstone.
++
++Spec refs: REQ-CAPSTONE-4412, SCENARIO-CAPSTONE-4412.
++"""
++
++# ruff: noqa: E402,I001
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.capstone_v407_4412 import write_artifact  # noqa: E402
++
++
++if __name__ == "__main__":
++    output = write_artifact(REPO_ROOT)
++    print(output.read_text(encoding="utf-8"), end="")
+diff --git a/tests/python/test_experiment_4412_capstone_v407.py b/tests/python/test_experiment_4412_capstone_v407.py
+new file mode 100644
+index 0000000000..d6520bc162
+--- /dev/null
++++ b/tests/python/test_experiment_4412_capstone_v407.py
+@@ -0,0 +1,371 @@
++"""Tests for Exp 4412 .407 milestone capstone.
++
++Spec refs: REQ-CAPSTONE-4412, SCENARIO-CAPSTONE-4412.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot.reporting import capstone_v407_4412 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_support_files(root: Path, total: int = 34, games: int = 17) -> None:
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "publication_gate.py").write_text("# fixture\n", encoding="utf-8")
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "arc_solve_registry.yaml").write_text(
++        yaml.safe_dump(
++            {
++                "schema_version": 1,
++                "reproducible_total_levels": total,
++                "reproducible_total_games": games,
++            },
++            sort_keys=False,
++        ),
++        encoding="utf-8",
++    )
++
++
++def _clean_live_flags(_: Path) -> list[dict[str, str]]:
++    return []
++
++
++def _summarize_zero(_: Path, __: Path) -> int:
++    return 0
++
++
++def _publication_gate(paper_ready: bool = True) -> JsonDict:
++    return {
++        "paper_ready": paper_ready,
++        "gates": {
++            "G1": {"pass": True, "detail": "fixture"},
++            "G2": {"pass": paper_ready, "detail": "fixture"},
++            "G3": {"pass": True, "detail": "fixture"},
++            "G4": {"pass": True, "detail": "fixture"},
++        },
++        "unmet_gates": [] if paper_ready else ["G2"],
++    }
++
++
++def _fixture_payloads(
++    *,
++    genuine: bool = False,
++    generalizes: bool = False,
++    compounds: bool = False,
++    calibrated: bool = False,
++    e3_new_levels: int = 0,
++) -> dict[str, JsonDict]:
++    return {
++        "4403_localizer": {
++            "honest_verdict": (
++                "success: localizer_genuinely_beats_position_only"
++                if genuine
++                else "complete: clean_powered_null_position_only_not_beaten"
++            ),
++            "localizer_genuinely_beats_position_only": genuine,
++            "beats_position_only_baseline": genuine,
++            "position_only_baseline_f1": 0.42 if genuine else 1.0,
++            "localization_f1_by_domain": {
++                "fover": {
++                    "domain": "fover",
++                    "position_only_baseline_f1": 0.42 if genuine else 1.0,
++                    "real_intervention_localizer_f1": 0.73 if genuine else 1.0,
++                    "delta_vs_position_only": 0.31 if genuine else 0.0,
++                }
++            },
++            "template_family_holdout_drop": 0.01,
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "a" * 64,
++        },
++        "4404_typed_generalization": {
++            "honest_verdict": (
++                "success: localizer_generalizes_typed"
++                if generalizes
++                else "blocked_gate_check_failed"
++            ),
++            "status": "success" if generalizes else "blocked",
++            "localizer_generalizes_typed": generalizes,
++            "typed_taxonomy_agreement_above_chance": generalizes,
++            "non_fover_domain_delta_ci95": [0.08, 0.19] if generalizes else [0.0, 0.0],
++            "gate_check_summary": "fixture",
++            "gates_evaluated": [{"passed": generalizes}],
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "b" * 64,
++        },
++        "4405_e3_deeper": {
++            "honest_verdict": "complete_e3_deeper_partial",
++            "new_levels_reproduced": e3_new_levels,
++            "reproducible_total_levels": 34 + e3_new_levels,
++            "per_target_scorecard": [
++                {
++                    "game": "tn36",
++                    "new_reproduced_level": 8,
++                    "offline_reproduced": e3_new_levels > 0,
++                    "prior_best_level": 7,
++                    "residual_win_mechanic_gap_class": "fixture_gap",
++                }
++            ],
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "sha256:" + "c" * 64,
++        },
++        "4406_e3_blocked": {
++            "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
++            "new_levels_reproduced": 0,
++            "reproducible_total_levels": 34,
++            "per_game_scorecard": [
++                {
++                    "game": "ar25",
++                    "new_reproduced_level": 1,
++                    "offline_reproduced": False,
++                    "prior_best_level": 1,
++                    "residual_gap_class": "fixture_gap",
++                }
++            ],
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "sha256:" + "d" * 64,
++        },
++        "4407_compounds": {
++            "honest_verdict": (
++                "success: localizer_compounds_active_selection"
++                if compounds
++                else "complete: clean_null_position_bound_or_saturated"
++            ),
++            "localizer_compounds": compounds,
++            "active_vs_random_learning_curve": [
++                {"train_corpus_size": 512, "active_f1": 0.41, "random_f1": 0.4},
++                {"train_corpus_size": 4096, "active_f1": 0.56 if compounds else 0.41, "random_f1": 0.4},
++            ],
++            "compounding_delta_ci95": [0.03, 0.12] if compounds else [0.0, 0.0],
++            "gate_summary": {
++                "localizer_compounds": compounds,
++                "position_only_control_beaten": compounds,
++                "positive_control_headroom": compounds,
++            },
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "e" * 64,
++        },
++        "4408_calibration": {
++            "honest_verdict": (
++                "success: calibrated_multi_domain_contract_deconfounded"
++                if calibrated
++                else "complete: calibrated_multi_domain_contract_false_deconfounded"
++            ),
++            "detection_calibrated_multi_domain": calibrated,
++            "detection_by_domain": [
++                {
++                    "domain": "fover",
++                    "detection_auroc": 0.918304,
++                    "auroc_ci95": [0.90944, 0.926582],
++                    "ece_lodo_calibrated": 0.02 if calibrated else 0.134538,
++                    "n": 8829,
++                },
++                {
++                    "domain": "gap4_arc",
++                    "detection_auroc": 0.963006,
++                    "auroc_ci95": [0.921708, 0.9912],
++                    "ece_lodo_calibrated": 0.01 if calibrated else 0.0055,
++                    "n": 28443,
++                },
++            ],
++            "domains_at_chance": [] if calibrated else ["code_humaneval"],
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "f" * 64,
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[str, JsonDict]) -> None:
++    for key, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAMS[key].path, payload)
++
++
++def test_req_capstone_4412_spec_anchor_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4412: OpenSpec declares the .407 scorecard contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4412" in spec
++    assert "SCENARIO-CAPSTONE-4412" in spec
++    assert "experiment_4412_capstone_v407.json" in spec
++    assert "publication_gate.py --json" in spec
++    assert "CIRCULAR_MOAT_OVERCLAIM" in spec
++    assert "aggregation_from_upstream_artifacts" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert mod.FIELD_PRINCIPLES[field] in spec
++
++
++def test_scenario_capstone_4412_current_artifacts_report_headline_decision() -> None:
++    """SCENARIO-CAPSTONE-4412: current .407 artifacts report the honest scorecard."""
++
++    artifact = mod.build_artifact(
++        Path.cwd(),
++        started_s=1.0,
++        now_s=1.5,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == (
++        "complete: v407_localizer_position_bound_retired_compounds_false_"
++        "calibrated_false_arc_levels_34_publication_ready"
++    )
++    assert artifact["localizer_state"] == "position_bound_retired"
++    assert artifact["localizer"]["real_intervention"]["localizer_genuinely_beats_position_only"] is False
++    assert artifact["localizer"]["real_intervention"]["position_only_baseline_f1"] == pytest.approx(1.0)
++    assert artifact["localizer"]["typed_generalization"]["status"] == "not_generalized"
++    assert "actual=False" in artifact["localizer"]["typed_generalization"]["gate_check_summary"]
++    assert artifact["localizer_compounds"] is False
++    assert artifact["self_learning"]["compounding_delta_ci95"] == pytest.approx([0.0, 0.0])
++    assert artifact["detection_calibrated_multi_domain"] is False
++    assert artifact["calibration"]["domains_at_chance"] == ["code_humaneval"]
++    assert artifact["reproducible_total_levels"] == 34
++    assert artifact["arc_e3_outcomes"]["execution_grounded"] is True
++    assert artifact["arc_e3_outcomes"]["new_levels_reproduced_from_artifacts"] == 0
++    assert artifact["verifier_thesis_state"] == (
++        "localizer_position_bound_retired_localizer_compounding_open_"
++        "detection_not_calibrated_multi_domain_arc_progress_34"
++    )
++    assert artifact["publication_gate"]["paper_ready"] is True
++    assert artifact["publication_gate"]["unmet_gates"] == []
++    assert all(gate["pass"] is True for gate in artifact["publication_gate"]["gates"].values())
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["verifier_is_oracle_honored"] is True
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert {row["experiment_id"] for row in artifact["cited_upstream_artifacts"]} == {
++        4403,
++        4404,
++        4405,
++        4406,
++        4407,
++        4408,
++    }
++    assert all("sha256" in row and row["fields_imported"] for row in artifact["cited_upstream_artifacts"])
++
++
++def test_scenario_capstone_4412_positive_fixture_graduates_and_records_gate_gap(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4412: genuine plus typed generalization graduates localizer."""
++
++    _write_support_files(tmp_path, total=38, games=17)
++    _write_default_artifacts(
++        tmp_path,
++        _fixture_payloads(genuine=True, generalizes=True, compounds=True, calibrated=True, e3_new_levels=2),
++    )
++
++    def broken_publication_gate(_: Path) -> JsonDict:
++        raise RuntimeError("fixture gate down")
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=2.0,
++        now_s=3.25,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=broken_publication_gate,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["localizer_state"] == "localizes_genuine_cross_domain"
++    assert artifact["localizer_compounds"] is True
++    assert artifact["detection_calibrated_multi_domain"] is True
++    assert artifact["reproducible_total_levels"] == 38
++    assert artifact["arc_reproducible_progress"]["new_levels_since_prior"] == 4
++    assert artifact["publication_gate"]["paper_ready"] is False
++    assert artifact["publication_gate"]["unmet_gates"] == ["publication_gate_unrunnable"]
++    assert artifact["preconditions_checked"]["publication_gate"]["runnable"] is False
++    assert artifact["per_axis_gaps"] == [
++        {
++            "axis": "publication_gate",
++            "artifact_key": "publication_gate",
++            "reason": "unrunnable",
++        }
++    ]
++    assert artifact["honest_verdict"].endswith("arc_levels_38_publication_gate_gap")
++
++
++def test_req_capstone_4412_flagged_inputs_are_skipped_and_not_cited(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4412: flagged upstreams are excluded before metrics are imported."""
++
++    _write_support_files(tmp_path, total=35, games=17)
++    payloads = _fixture_payloads(genuine=True, generalizes=True, compounds=True, calibrated=True)
++    payloads["4407_compounds"]["flagged_adversarial"] = True
++    _write_default_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=4.0,
++        now_s=5.0,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["localizer_state"] == "localizes_genuine_cross_domain"
++    assert artifact["localizer_compounds"] is False
++    assert artifact["self_learning"]["status"] == "excluded_flagged_adversarial"
++    assert artifact["flagged_artifacts_excluded"] == [
++        {
++            "artifact_key": "4407_compounds",
++            "experiment_id": 4407,
++            "path": "results/experiment_4407_active_learning_self_learning_compounds.json",
++            "sha256": artifact["upstream_provenance"][4]["sha256"],
++            "stamped_flagged_adversarial": True,
++            "live_critical": False,
++            "parse_error": "",
++            "live_critical_flags": [],
++            "reason": "flagged_adversarial",
++        }
++    ]
++    assert 4407 not in {row["experiment_id"] for row in artifact["cited_upstream_artifacts"]}
++    assert artifact["availability_report"]["axes"]["self_learning"]["flagged_artifacts"] == [
++        {
++            "axis": "self_learning",
++            "artifact_key": "4407_compounds",
++            "experiment_id": 4407,
++            "reason": "flagged_adversarial",
++        }
++    ]
++
++
++def test_scenario_capstone_4412_write_artifact_records_clean_live_recheck(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4412: written capstone carries the live adversarial re-check."""
++
++    _write_support_files(tmp_path, total=34, games=17)
++    _write_default_artifacts(tmp_path, _fixture_payloads())
++
++    output = mod.write_artifact(
++        tmp_path,
++        started_s=6.0,
++        now_s=7.0,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++        capstone_live_flag_runner=_clean_live_flags,
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    assert output == tmp_path / mod.OUTPUT_REL_PATH
++    assert artifact["capstone_live_adversarial_recheck"] == {
++        "status": "clean",
++        "flags": [],
++        "circular_moat_overclaim": False,
++    }
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++    assert artifact["verifier_is_oracle"] is False
+-- 
+2.55.0
+

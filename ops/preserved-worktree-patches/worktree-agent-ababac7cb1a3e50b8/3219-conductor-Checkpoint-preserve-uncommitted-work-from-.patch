@@ -1,0 +1,70 @@
+From ad36c966c743775d38c70d495c1aaf9713e890da Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 08:38:26 -0400
+Subject: [PATCH 03219/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...xperiment_4544_llm_proposer_reinduction.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 46bbc68d41..9dde497bfa 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 158, "phase": "iteration_start", "last_beat": "2026-06-21T12:06:38Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 159, "phase": "iteration_start", "last_beat": "2026-06-21T12:38:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9c1673c99b..ac67fa78bd 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9012,3 +9012,4 @@ c |
+ | 2026-06-21 11:49 UTC | Milestone 2026.06.420 activated | OK | 12 tasks queued |
+ | 2026-06-21 11:52 UTC | PHASE 0 (TRANSITION) -- archive .419 -> activate . | FAIL | No file changes produced |
+ | 2026-06-21 12:04 UTC | PHASE 0 (TRANSITION) -- archive .419 -> activate . | OK | 88 passed, 1 warning in 5.89s |
++| 2026-06-21 12:36 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 568583b755..42904871df 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 158, "phase": "iteration_start", "started_at": "2026-06-21T12:06:38Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 159, "phase": "iteration_start", "started_at": "2026-06-21T12:38:24Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4544_llm_proposer_reinduction.json b/results/experiment_4544_llm_proposer_reinduction.json
+index f394982343..f5c5e0c892 100644
+--- a/results/experiment_4544_llm_proposer_reinduction.json
++++ b/results/experiment_4544_llm_proposer_reinduction.json
+@@ -1781,5 +1781,18 @@
+     "value_weight": 0.0,
+     "world_model_dsl_wired": true
+   },
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "efficiency_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

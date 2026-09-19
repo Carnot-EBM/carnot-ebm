@@ -1,0 +1,98 @@
+From 4dd069e12cff3dcd9779e52d0c38e8613df3f199 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 15:01:49 -0400
+Subject: [PATCH 09840/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json | 2 +-
+ ops/.run_sentinel_state.json          | 2 +-
+ ops/.stop_authority_state.json        | 2 +-
+ ops/conductor-heartbeat.json          | 2 +-
+ ops/conductor-log.md                  | 2 ++
+ ops/conductor-state.json              | 2 +-
+ results/experiment_1822_rtl_synth.log | 4 ++--
+ 7 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index c38059efdb..7b13b4fba8 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T17:16:14Z"
++ "last_scan_utc": "2026-08-24T18:47:51Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 8e07f9bdaf..a2645f2fe5 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T17:38:36Z"
++ "last_scan_utc": "2026-08-24T19:01:44Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 840cae1217..79dbee84cb 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T17:16:13Z",
++ "last_scan_utc": "2026-08-24T18:47:51Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a446922718..e954331ce8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-08-24T17:38:35Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-08-24T19:01:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 221863de3a..94009ca9ad 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16416,3 +16416,5 @@ code |
+ | 2026-08-24 16:10 UTC | Qwen3.6 one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6581_qwen36_ |
+ | 2026-08-24 16:49 UTC | Gemma-4-31B one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6582_gemma4_ |
+ | 2026-08-24 17:36 UTC | Gemma-4-31B one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6582_gemma4_ |
++| 2026-08-24 18:59 UTC | Gemma-4-31B one-family flagship source shard | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ssert mod.fami |
++| 2026-08-24 19:01 UTC | Gemma-4-31B one-family flagship source shard | OK | Excluded by manifest: exp_id=6582 in manifest |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8f375d55e6..76814ae07f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 31, "phase": "iteration_start", "started_at": "2026-08-24T17:38:35Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 32, "phase": "iteration_start", "started_at": "2026-08-24T19:01:43Z"}
+\ No newline at end of file
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 61d3c27cec..ae629e96bb 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.58s, user: 2.30s, system: 0.21s, MEM: 115.97 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.78s, user: 2.47s, system: 0.23s, MEM: 114.96 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (1 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 75% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
+-- 
+2.55.0
+

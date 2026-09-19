@@ -1,0 +1,215 @@
+From f0b07824713a3c23440f2211301bc461abcc189d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 12:06:23 -0400
+Subject: [PATCH 02568/11362] [outer-loop] click-capable exploration: built +
+ correct; ka59 blocker is object-RELEVANCE, not clicks
+
+Added click-capable exploration for the push/click class: clicks on PIECE-object centroids (bounded
+~#pieces, not every pixel), enabled on the escalated pieces-key pass + the solve. ka59's win setup
+needs a click (C:1), so this was the named next gap.
+
+RESULT (results/arc3_test_time_goal_induction.json, fully first-contact, no banked solve):
+  sp80/cn04/ar25: still solve on the AGENT pass (4/14/15 actions) -- NO regression (clicks only
+    activate on the escalated pass).
+  ka59: still NOT stumbled, even with click-capable + multi-object escalation at 15k expansions.
+
+ROOT CAUSE (debugged, not guessed): ka59's pieces-key tracks SEVEN objects and ALL 9 candidates
+change the state, so the search space is ~positions^7 x click-branching -- an 11-action win is
+intractable for brute BFS at any reasonable budget. The clicks and multi-object state are CORRECT;
+the combinatorics defeat brute search. Tracking 7 objects is OVER-fragmentation (only 1-2 are
+relevant to the win).
+
+THE REAL BINDING CONSTRAINT (sharpened): object RELEVANCE, not search mechanics. Track just the agent
+-> too few (misses the block); track all 7 pieces -> too many (intractable). The unlock is RELEVANCE
+FILTERING: track only the agent + the 1-2 objects the win actually depends on -- which requires
+understanding the win condition at the object level (goal-induction depth), NOT more brute force.
+
+NET: all the MECHANICS are now in place (clicks, multi-object state, adaptive escalation), 3/4 games
+solve first-contact with no regression, and ka59's residual gap is precisely characterized as
+object-relevance filtering -- a goal-induction problem, not an exploration-budget problem.
+Adversarial-verify: clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_test_time_goal_induction.json    |  6 ++-
+ .../arc3_test_time_goal_induction.py          | 54 ++++++++++++++-----
+ 2 files changed, 47 insertions(+), 13 deletions(-)
+
+diff --git a/results/arc3_test_time_goal_induction.json b/results/arc3_test_time_goal_induction.json
+index efea15eb59..7486b5c4e7 100644
+--- a/results/arc3_test_time_goal_induction.json
++++ b/results/arc3_test_time_goal_induction.json
+@@ -19,6 +19,7 @@
+       "agent": {
+         "color": 9
+       },
++      "clicks_used": false,
+       "movers": [
+         9
+       ],
+@@ -38,6 +39,7 @@
+       "agent": {
+         "color": 0
+       },
++      "clicks_used": false,
+       "movers": [
+         0,
+         0,
+@@ -59,6 +61,7 @@
+       "agent": {
+         "color": 4
+       },
++      "clicks_used": false,
+       "movers": [
+         4,
+         5,
+@@ -76,10 +79,11 @@
+     {
+       "game": "ka59",
+       "explore_mode": "curious_adaptive_bfs",
+-      "state_key_used": "pieces_escalated",
++      "state_key_used": "pieces_clicks_escalated",
+       "agent": {
+         "color": 14
+       },
++      "clicks_used": true,
+       "movers": [
+         14,
+         0
+diff --git a/scripts/experiments/arc3_test_time_goal_induction.py b/scripts/experiments/arc3_test_time_goal_induction.py
+index e941c5b9ad..4c3d1012c2 100644
+--- a/scripts/experiments/arc3_test_time_goal_induction.py
++++ b/scripts/experiments/arc3_test_time_goal_induction.py
+@@ -48,6 +48,26 @@ def _kbd(frame, GameAction):
+     return [(a,) for a in av] or [(a,) for a in (1, 2, 3, 4, 5)]
+ 
+ 
++def _click_capable(frame, GameAction, min_size=4, max_size=30):
++    """Keyboard actions PLUS clicks on PIECE-object centroids (bounded ~#pieces, not every pixel),
++    so a setup click like ka59's C:1 becomes reachable without exploding the action space."""
++    cands = list(_kbd(frame, GameAction))
++    av = list(getattr(frame, "available_actions", []) or [])
++    grid = np.asarray(grid_of(frame))
++    if 6 in av and grid.size > 0:
++        from carnot.agentic.arc_world_model_dsl import _color_components, _background
++        bg = _background(grid)
++        seen = set()
++        for color in set(int(v) for v in np.unique(grid)) - {bg}:
++            for comp in _color_components(grid, color):
++                if min_size <= len(comp) <= max_size:
++                    ys = [y for y, _ in comp]; xs = [x for _, x in comp]
++                    k = (6, int(round(float(np.mean(xs)))), int(round(float(np.mean(ys)))))
++                    if k not in seen:
++                        seen.add(k); cands.append(k)
++    return cands
++
++
+ def explore_for_win(arc, game, GameAction, budget, seed, episode_len=25):
+     """EPISODIC random exploration until a level-up is stumbled: take short random walks from reset
+     (many short episodes from a fresh start hit a short win far more often than one long drifting
+@@ -129,7 +149,7 @@ def _pieces_key(grid, min_size=4, max_size=30):
+ 
+ 
+ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None,
+-                            key_mode="agent"):
++                            key_mode="agent", clicks=False):
+     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
+     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
+     For navigation/movement games the agent position is the state variable that matters, so covering
+@@ -160,6 +180,7 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
+                 return ("p", int(round(ac[0])), int(round(ac[1])))
+         return ("g", frame_hash(np.asarray(grid)))
+ 
++    cand_fn = _click_capable if clicks else _kbd
+     frontier = deque([(env0, f0)])
+     visited = {key(grid_of(f0))}
+     expansions = 0
+@@ -168,9 +189,10 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
+         grid = np.asarray(grid_of(f))
+         if grid.size == 0:
+             continue
+-        for c in _kbd(f, GameAction):
++        for c in cand_fn(f, GameAction):
+             e2 = _copy.deepcopy(env)
+-            nf = e2.step(_game_action(GameAction, c[0]), data=None)
++            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
++            nf = e2.step(_game_action(GameAction, c[0]), data=data)
+             expansions += 1
+             if nf is None:
+                 continue
+@@ -213,9 +235,10 @@ def agent_to_color_dist(grid, agent, G, H):
+     return float(np.min(np.abs(cells[:, 0] - ac[0]) + np.abs(cells[:, 1] - ac[1])))
+ 
+ 
+-def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5000):
++def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5000, clicks=False):
+     """best_first_search over deepcopied real envs, guided by agent-to-colour-G distance (the INDUCED
+-    goal -- no banked target), searching for a real level-up."""
++    goal -- no banked target), searching for a real level-up. clicks=True adds piece-centroid click
++    candidates (needed for games whose win setup requires a click, e.g. ka59's C:1)."""
+     import copy as _copy
+     from carnot.agentic.arc_heuristic_search_over_verified_wm import best_first_search
+     env0 = arc.make(game, scorecard_id=arc.open_scorecard())
+@@ -234,15 +257,18 @@ def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5
+     def heuristic(s):
+         return float(s["h"])
+ 
++    cand_fn = _click_capable if clicks else _kbd
++
+     def next_states(s):
+         cur = reg.get(s["gh"])
+         if cur is None:
+             return []
+         env, frame = cur
+         out = []
+-        for c in _kbd(frame, GameAction):
++        for c in cand_fn(frame, GameAction):
+             e2 = _copy.deepcopy(env)
+-            nf = e2.step(_game_action(GameAction, c[0]), data=None)
++            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
++            nf = e2.step(_game_action(GameAction, c[0]), data=data)
+             if nf is None:
+                 continue
+             g = np.asarray(grid_of(nf))
+@@ -270,21 +296,24 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
+     agent = H.identify_agent(explore_trans)
+     movers = identify_movers(explore_trans)
+     key_used = None
++    clicks_used = False
+     if curious:
+-        # ADAPTIVE granularity: try the minimal AGENT-position key first (right for navigation, no
+-        # over-fragmentation); only if it dries up, ESCALATE to the multi-object PIECES key (push games).
++        # ADAPTIVE: minimal AGENT-position key + keyboard first (navigation, no over-fragmentation);
++        # if it dries up, ESCALATE to the multi-object PIECES key WITH piece-centroid CLICKS (the
++        # push/click class, e.g. ka59 whose win setup needs a C:1 click).
+         prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
+                                          max_expansions=explore_budget, key_mode="agent")
+         key_used = "agent"
+         if prewin is None:
+             prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
+-                                             max_expansions=explore_budget, key_mode="pieces")
+-            key_used = "pieces_escalated"
++                                             max_expansions=explore_budget, key_mode="pieces", clicks=True)
++            key_used, clicks_used = "pieces_clicks_escalated", True
+     else:
+         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
+     rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
+            "state_key_used": key_used,
+            "agent": (None if agent is None else {"color": agent["color"]}),
++           "clicks_used": clicks_used,
+            "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
+     if prewin is None or agent is None:
+         rec["verdict"] = "no_win_stumbled_or_no_agent_cannot_induce_goal"
+@@ -294,7 +323,8 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
+     if G is None:
+         rec["verdict"] = "win_stumbled_but_no_goal_object_induced"
+         return rec
+-    sol = solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=max_exp)
++    sol = solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=max_exp,
++                                  clicks=clicks_used)
+     rec["induced_goal_solve"] = sol
+     rec["solves_first_contact"] = bool(sol["solved"])
+     return rec
+-- 
+2.55.0
+

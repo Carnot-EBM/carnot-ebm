@@ -1,0 +1,161 @@
+From 70e74432ca9cb3f41c5a753816e45715b9f2b17e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 10:24:49 -0400
+Subject: [PATCH 09682/11362] [outer-loop] Docs: llama-server reaper resolved
+ (kill_gpu_zombies min-across-GPUs sweep)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Known-issues: full resolution entry closing the five 2026-08-09 reaper
+entries — mechanism, kill timeline vs conductor steps, why the SIGINT-only
+auditd trace missed it (signal is SIGTERM), why isolation tests correlated
+with the conductor, and what stays open (orphaned servers now belong to the
+disarmed stop authority, not blunt sweeps).
+Changelog + status: session summary; supab5 retired-pin hypothesis refuted,
+label fix REQ-ARC-WMTE-6670, sweep fix REQ-INFRA-079.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md    | 28 +++++++++++++++++++++
+ ops/known-issues.md | 59 +++++++++++++++++++++++++++++++++++++++++++++
+ ops/status.md       | 20 ++++++++++++++-
+ 3 files changed, 106 insertions(+), 1 deletion(-)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index cd680680f6..6f9965d82a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17430,3 +17430,31 @@ markers already in the suite.
+ - 2026-08-23: SMT-conflict inference-cost stress and exact-tool guard on mandated SOTA GGUFs (✅ Complete) — honest_verdict=complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families; results/experiment_6546_smt_cost_guard_sota.json
+ - 2026-08-23: Independent external router and SOTA cost-guard audit (✅ Complete) — honest_verdict=complete_external_transfer_independent_audit_clean: router=adopted_passed; cost_guard=adopted_passed; results/experiment_6547_external_transfer_independent_audit.json
+ - 2026-08-23: Operational retrospective for 2026.08.566: 7 experiments completed in 6.6 reconstructed minutes, including 3 compute-bound tasks. The 5.53-minute SMT-conflict inference-cost stress and exact-tool guard formed the critical path. The locked compute-task GPU-idle field is false; the idle monitor snapshot has no task-window attribution. No data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement. Add phase-timed model-cache and dependency preflight, task-linked GPU samples, and model-count and runner receipts. Estimated savings: 0% because the data has no measured faster path. Artifact: results/operational_retro_2026_08_566.json.
++
++## 2026-08-23 (outer loop, split-induce-fix agent): the llama-server reaper was our own zombie sweep — found, fixed, proven
++
++Assignment: the supab5 A/B's 6/6 `llm_on_row_valid: false` rows, all noting
++"split induce: engine failed: GPU llama-server failed for Qwen3.5-9B-MTP".
++The tasked hypothesis (split-induce resolving the retired 9B pin) is REFUTED:
++split induce uses the same proposer and server as the main path, and the 27B
++override loaded and served. Two real defects found instead:
++
++1. LABEL: `generate()`/`complete_text()` failure strings named `repo_substr`
++   (the harness's deliberately frozen 9B pin) instead of the effective
++   `model_path`. Fixed (REQ-ARC-WMTE-6670): `_effective_model_label()` +
++   `_note_server_failure` now appends the server stderr tail's
++   external-termination signature, so a killed server names its killer in the
++   row note. Commit 7f7f6497dc.
++2. KILLER: `ExperimentTemplate.kill_gpu_zombies()`'s nvidia-smi fallback
++   gated kills on MIN utilization across ALL GPUs, no server exemption, runs
++   in every `setup()` including pytest imports — SIGTERMing busy llama-servers
++   whenever GPU 0 idled. This closes the standing 2026-08-09 reaper mystery
++   (see ops/known-issues.md 2026-08-23 resolution entry; live RED repro at
++   97% GPU util, live GREEN survival after fix, 5 deletion mutations RED).
++   Fixed (REQ-INFRA-079) in experiment_template.py, gpu_zombie_killer.py,
++   expanded_gpu_reaper.py; work swept into conductor commits 1dbf57eda1 /
++   78ad772f6a / 010cf5d4f2 by its checkpoint auto-commit mid-session.
++
++Verification: 3-game live re-run (ar25,cd82,tu93, budget 2000, --no-spawn,
++Qwen3.8-27B on GPU 1) in flight at write time; result recorded in
++ops/test-results.md by the same session.
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index a0c3ada5fc..3d42d4a74a 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -18352,3 +18352,62 @@ Scope: pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json
+ 2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
+ 
+ Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
++
++## 2026-08-23 llama-server reaper RESOLVED: ExperimentTemplate.kill_gpu_zombies() min-across-GPUs SIGTERM sweep (live-reproduced, fixed, mutation-proven)
++
++The standing unsolved reaper (five 2026-08-09 entries above, plus the 2026-08-22/23 sentinel
++escalations) is closed. The killer is this project's own code.
++
++**Mechanism.** `ExperimentTemplate.kill_gpu_zombies()` (`scripts/experiment_template.py`)
++SIGTERMs every GPU process holding >=1000 MB when its utilization gate reads below 5%.
++pynvml is not installed in either venv, so the nvidia-smi fallback always ran — and that
++fallback took the MINIMUM utilization across ALL GPUs "as a conservative idle signal."
++An idle GPU 0 dragged the gate to 0% and the sweep killed a llama-server on GPU 1 that
++was decoding at full speed. The sweep runs unconditionally in `ExperimentTemplate.setup()`
++— including at pytest IMPORT time (experiment modules with module-level `tmpl.setup()`),
++so the conductor's step-end test phase re-fired it on a schedule. The only exemption was
++training entrypoints (the 2026-06-13 incident's fix); servers had none.
++
++**Evidence.**
++- supab5 A/B (2026-08-23): both arms' servers died mid-generation at 34-35 tok/s
++  ("cleaning up before exit... Received second interrupt" in both stderr logs), at
++  11:23:47Z and 12:18:22Z — each 40-90 s before a conductor step-OK line (11:25, 12:19),
++  and each ~20 s before a conductor-side port-8919 launch attempt. All 6 rows
++  `llm_on_row_valid: false`.
++- Live RED repro: gemma-4-12B llama-server on GPU 1 at 97% utilization, decoding at
++  81 tok/s; `kill_gpu_zombies()` killed it logging `gpu_util=0.0%`. Full transcript:
++  the outer-loop job dir `tmp/reaper_repro/EVIDENCE.md` (2026-08-23 session).
++- Why the 2026-08-09 auditd trace found nothing: the rule was armed on SIGINT
++  (`a1=0x2`); this code sends SIGTERM. The "SIGINT signature" in the earlier entries was
++  an inference from llama-server's "interrupt" wording, which it prints for SIGTERM too.
++- Why the isolation tests correlated with the conductor: no conductor steps means no
++  experiment `setup()` calls and no step-end pytest imports, so no sweeps.
++- The 2026-08-23 dry-run drop-in for `preflight_gpu_reap` (ExpandedGPUReaper) did NOT
++  stop the kills — that reaper was a second, independent hazard (SIGKILL, no util gate),
++  not this killer. It is now also server-exempt.
++
++**Fix (REQ-INFRA-079, openspec/capabilities/pipeline/spec.md).** Three sweeps changed:
++1. `scripts/experiment_template.py` fallback: per-GPU utilization attribution via
++   `gpu_uuid` join; a candidate whose GPU cannot be attributed is SKIPPED (fail toward
++   not killing); llama-server/vLLM cmdlines exempt in both the pynvml and fallback paths.
++2. `python/carnot/pipeline/gpu_zombie_killer.py`: server exemption + a
++   `pids_skipped_protected` result field (this SIGKILL variant leaves no victim-side log,
++   matching the 2026-08-09 ka59 "zero-response, unreachable-all-window" signature).
++3. `python/carnot/pipeline/expanded_gpu_reaper.py`: server skip with reason
++   `protected_server`.
++Live GREEN: an idle real server on an idle GPU (the old code's instant-kill case)
++survives with `killed_pids=[]` and a logged skip. Five deletion mutations each turned
++the suite RED (tests/python/test_gpu_zombie_server_exemption_2026_08_23.py).
++
++**Sibling fix (REQ-ARC-WMTE-6670).** The failure note that misdirected this
++investigation — `GPU llama-server failed for Qwen3.5-9B-MTP` while Qwen3.8-27B was what
++had loaded (the harness's frozen repo pin is a label; `CARNOT_ARC_GGUF_PATH` wins) — now
++names the effective model, and `_note_server_failure` appends the server's own
++external-termination signature when the stderr tail shows one.
++
++**Still open.** A genuinely dead/orphaned llama-server is now cleaned only by
++`scripts/run_stop_authority.py` (ownership-checked, currently disarmed) or by hand — the
++blunt sweeps no longer touch servers by design. If orphaned servers accumulate, arm the
++stop authority rather than widening the sweeps. The operator may also remove the
++2026-08-23 `50-reaper-dryrun-20260823.conf` drop-in once comfortable: the reaper it
++muzzles is now server-exempt in code.
+diff --git a/ops/status.md b/ops/status.md
+index da3a291948..18ae160b59 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,24 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-08-23 (Exp6528 V565 source/model/method contract test
++**Last Updated:** 2026-08-23, later (llama-server reaper RESOLVED: the standing
++2026-08-09 mystery was `ExperimentTemplate.kill_gpu_zombies()` — its nvidia-smi
++fallback gated kills on MIN utilization across ALL GPUs, had no server
++exemption, and fires in every `setup()` including pytest imports, so the
++conductor's step-end test phase SIGTERMed busy GPU-1 llama-servers whenever
++GPU 0 idled. Live-reproduced at 97% GPU util, fixed per REQ-INFRA-079
++(per-GPU gpu_uuid attribution, fail-toward-not-killing, llama-server/vLLM
++exemption in all three sweeps), live GREEN survival + 5 deletion mutations RED.
++Sibling REQ-ARC-WMTE-6670: generator failure notes now name the effective
++model — not the harness's frozen 9B label that misdirected the supab5 triage —
++and carry the server stderr tail's external-kill signature. The supab5
++"split induce retired-pin" hypothesis is refuted; rows were invalid because the
++server was killed externally. Known-issues 2026-08-23 resolution entry has the
++full evidence chain; 3-game live verification run result lands in
++ops/test-results.md. NEXT: consider arming run_stop_authority for orphaned
++servers now that blunt sweeps are server-exempt; operator may drop the
++50-reaper-dryrun-20260823.conf drop-in.)
++
++Prior: 2026-08-23 (Exp6528 V565 source/model/method contract test
+ regression fixed: blocked artifacts now name unavailable required channels or
+ cache contracts in `honest_verdict`; OpenSpec, traceability, tests, and
+ `results/experiment_6528_v565_source_model_method_contract.json` are
+-- 
+2.55.0
+

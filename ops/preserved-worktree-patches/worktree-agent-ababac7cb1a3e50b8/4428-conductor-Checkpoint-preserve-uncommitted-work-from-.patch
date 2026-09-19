@@ -1,0 +1,70 @@
+From 2d3ff612d80feba8acc799427c77c0aed402dbaa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 06:21:43 -0400
+Subject: [PATCH 04428/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...eriment_4861_generation_wall_fork_probe.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b6d0d4438e..a6fa4cbe34 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 346, "phase": "iteration_start", "last_beat": "2026-06-27T09:54:16Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 347, "phase": "iteration_start", "last_beat": "2026-06-27T10:21:41Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 69cd23682f..29959e35c2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9439,3 +9439,4 @@ The contro |
+ | 2026-06-27 09:31 UTC | Plan milestone 2026.06.448 | OK | 10 tasks proposed |
+ | 2026-06-27 09:33 UTC | Milestone 2026.06.448 activated | OK | 10 tasks queued |
+ | 2026-06-27 09:52 UTC | PHASE 0 (TRANSITION) -- archive .447 -> activate . | OK | 85 passed, 1 warning in 7.71s |
++| 2026-06-27 10:19 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GE | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4e884ec744..f26e8bdd5b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 346, "phase": "iteration_start", "started_at": "2026-06-27T09:54:16Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 347, "phase": "iteration_start", "started_at": "2026-06-27T10:21:41Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4861_generation_wall_fork_probe.json b/results/experiment_4861_generation_wall_fork_probe.json
+index 2527cb2e78..4699831caa 100644
+--- a/results/experiment_4861_generation_wall_fork_probe.json
++++ b/results/experiment_4861_generation_wall_fork_probe.json
+@@ -124,5 +124,18 @@
+     "SCENARIO-ARC-WMTE-4861-JOINT-FORK",
+     "SCENARIO-ARC-WMTE-4861-PARTIAL-CHECKPOINT"
+   ],
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.5617976188659668 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

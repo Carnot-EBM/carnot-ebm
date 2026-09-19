@@ -1,0 +1,61 @@
+From 59be376cba37aced71d66ea706d61310a1b1b6c2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 19 Aug 2026 13:18:40 -0400
+Subject: [PATCH 09336/11362] [conductor] Pre-gate block: Gated on Exp6463
+ corpus readiness: fixed-slot grounding and exact logic A/B
+
+1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_6464_fixed_slot_grounding_exact_logic_ab.json  | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index aaab6d5d34..efe936533a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-19T17:16:37Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-19T17:18:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b4d0becf00..cd05a7e143 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16059,3 +16059,4 @@ code |
+ | 2026-08-19 15:53 UTC | SOTA raw persistence and unique-event canary | OK | 86 passed, 1 warning in 15.47s |
+ | 2026-08-19 17:12 UTC | Gated on Exp6462 canary readiness: provenance-comp | OK | 88 passed, 1 warning in 92.39s (0:01:32) |
+ | 2026-08-19 17:14 UTC | Gated on Exp6463 corpus readiness: fixed-slot grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus |
++| 2026-08-19 17:16 UTC | Gated on Exp6463 corpus readiness: fixed-slot grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e00335dc67..2adcd1ffab 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-19T17:16:37Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-19T17:18:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json b/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+index d17f7120fd..f986639f56 100644
+--- a/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++++ b/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6464,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-19",
+-  "started_at": "2026-08-19T17:16:37.888380+00:00",
+-  "finished_at": "2026-08-19T17:16:37.888380+00:00",
++  "started_at": "2026-08-19T17:18:40.697759+00:00",
++  "finished_at": "2026-08-19T17:18:40.697759+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B",
+-- 
+2.55.0
+

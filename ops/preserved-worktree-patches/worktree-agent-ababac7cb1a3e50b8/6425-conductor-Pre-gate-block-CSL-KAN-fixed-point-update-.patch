@@ -1,0 +1,63 @@
+From 85944ae129fa642fbdc2d5d78c89ce91e753c6a9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 09:54:36 -0400
+Subject: [PATCH 06425/11362] [conductor] Pre-gate block: CSL KAN fixed-point
+ update ledger for hardware-compatible self-learning
+
+1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498.csl_latent_replay_ready (upstream artifact not found for task id 'exp5488-csl-latent-exploration-replay-v498')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 3 +++
+ ops/conductor-state.json                                      | 2 +-
+ ...xperiment_5490_csl_kan_fixed_point_update_ledger_v498.json | 4 ++--
+ 4 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3e684389ba..0fed2f90b3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 389, "phase": "iteration_start", "last_beat": "2026-07-09T13:52:33Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 390, "phase": "iteration_start", "last_beat": "2026-07-09T13:54:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 58fa08eeab..26f966bf5f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10647,3 +10647,6 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-09 13:50 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.95s |
+ | 2026-07-09 13:52 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
+ | 2026-07-09 13:52 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
++| 2026-07-09 13:52 UTC | CSL KAN fixed-point update ledger for hardware-com | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |
++| 2026-07-09 13:54 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
++| 2026-07-09 13:54 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 28b13515b0..e23ef80f3f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 389, "phase": "iteration_start", "started_at": "2026-07-09T13:52:33Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 390, "phase": "iteration_start", "started_at": "2026-07-09T13:54:36Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json b/results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json
+index 44b3ccb8b7..18b4f02760 100644
+--- a/results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json
++++ b/results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json
+@@ -2,8 +2,8 @@
+   "experiment": 5490,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-09",
+-  "started_at": "2026-07-09T13:52:33.892868+00:00",
+-  "finished_at": "2026-07-09T13:52:33.892868+00:00",
++  "started_at": "2026-07-09T13:54:36.898029+00:00",
++  "finished_at": "2026-07-09T13:54:36.898029+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "CSL KAN fixed-point update ledger for hardware-compatible self-learning",
+-- 
+2.55.0
+

@@ -1,0 +1,129 @@
+From a6839337b4bba231d509c22e3d21e0d5dfdc90a3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 16:54:04 -0400
+Subject: [PATCH 09469/11362] [outer-loop] Docs: reconcile spec status,
+ changelog, status, traceability, metrics for conductor self-improvement 1-4
+
+Implementation Status tables for REQ-CONDUCTOR-ARCHIVE-1 / STALL-1 /
+RECEIPT-1 / VERDICT-1 flipped to Implemented with test names and
+mutation evidence. Additive only; no existing content removed.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ _bmad/traceability.md                         |  4 +++
+ .../capabilities/research-harnesses/spec.md   |  8 ++---
+ ops/changelog.md                              |  2 ++
+ ops/metrics.md                                |  1 +
+ ops/status.md                                 | 30 +++++++++++++++++++
+ 5 files changed, 41 insertions(+), 4 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 85e3dcfb6f..0d1c3b3324 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2438,3 +2438,7 @@ legacy tests.
+ | SCENARIO-ARC-WMTE-6047-E-4 | The change is inert for every consumer: 0 return-value differences over 600 differential cases vs the git-HEAD module, with a vacuity guard proving the corpus exercises the change | Implemented | `results/arc_plan_in_model_depth_20260731/inertness_differential.json` + `results/arc_plan_in_model_depth_20260731/harness/inertness_differential.py` |
+ | SCENARIO-ARC-WMTE-6047-E-5 | `depth_truncated_nodes` is present on every exit that ran a search, including `plan_found` — a sometimes-present counter turns "not measured" into "measured zero" under `.get(k, 0)` | Implemented | `::test_depth_truncated_nodes_is_always_populated_on_both_loops` (this test found the omission in the first draft) |
+ | REQ-ARC-LINT-6054 | `scripts/arc_orphan_solver_lint.py` SHALL detect INDUCE-PATH GATING modules (`validate_engine_code` / `repair_prompt_block`), not only solver-shaped ones. Before this the lint returned a clean bill on `arc_engine_static_validation.py`, which is genuinely unreachable from BOTH live entrypoints — a false negative in the guard that exists to stop silent off-path work. The module stays deliberately unwired, but as an ALLOW-LISTED decision with a stated reason rather than an invisible gap | Implemented (`_is_solver_like` new branch + `ALLOWLIST` entry) | `tests/python/test_arc_orphan_lint_detects_induce_gating_2026_07_31.py` — 5 tests: the module is detected; it is genuinely outside the live import closure (so the allow-list entry is not decorative, and this test FAILS when it is eventually wired, which is the reminder to remove the entry); removing the entry makes the lint flag exactly this module; the new rule matches exactly one module (no false-positive sweep); and the lint passes as shipped |
++| REQ-CONDUCTOR-ARCHIVE-1 | Milestone archival derives each task result from evidence (conductor log rows + deliverable existence) and refuses duplicate milestone appends | Implemented (`scripts/research_conductor.py`) | `tests/python/test_conductor_truthful_archival.py` |
++| REQ-CONDUCTOR-STALL-1 | Activation refusal triggers a bounded replan with the guard's verbatim report, then parks; guard unchanged | Implemented (`scripts/research_conductor.py`) | `tests/python/test_conductor_guard_stall_recovery.py` |
++| REQ-CONDUCTOR-RECEIPT-1 | Audit invocations verify a fresh receipt; consumption state advances only with the receipt; QA audit honors a wall-clock budget | Implemented (`scripts/research_conductor.py`, `scripts/qa_layer_authenticity_audit.py`) | `tests/python/test_audit_run_receipts.py` |
++| REQ-CONDUCTOR-VERDICT-1 | Closed verdict_class enum cross-checked structurally in adversarial_verify; no fifth token list | Implemented (`scripts/adversarial_verify.py`) | `tests/python/test_verdict_class_consistency.py` |
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index ab52d9ad0b..32cada80e4 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -7584,7 +7584,7 @@ for M.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-CONDUCTOR-ARCHIVE-1 | Pending | Pending |
++| REQ-CONDUCTOR-ARCHIVE-1 | Implemented (`scripts/research_conductor.py`: `derive_task_result`, `_statuses_since_last_activation`, duplicate-append refusal in `_archive_current_milestone`, both definitions) | Implemented (`tests/python/test_conductor_truthful_archival.py`, 12 tests; mutations: OK-literal restored -> RED, dedup disabled -> RED) |
+ 
+ ## REQ-CONDUCTOR-STALL-1: Activation Refusal SHALL Trigger A Bounded Replan With The Guard's Verbatim Report, Then Park
+ 
+@@ -7642,7 +7642,7 @@ replan budget.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-CONDUCTOR-STALL-1 | Pending | Pending |
++| REQ-CONDUCTOR-STALL-1 | Implemented (`scripts/research_conductor.py`: `_handle_activation_refusal`, `_activation_refusal_parked`, replan-context prompt in the live `_plan_next_milestone`, wiring at both refusal sites + research_step parked short-circuit; state in `ops/.activation_replan_state.json`) | Implemented (`tests/python/test_conductor_guard_stall_recovery.py`, 5 tests; mutations: cap disabled -> RED, verbatim report dropped -> RED) |
+ 
+ ## REQ-CONDUCTOR-RECEIPT-1: Audit Invocations SHALL Verify A Fresh Receipt And Consumption State SHALL Advance Only With The Receipt
+ 
+@@ -7702,7 +7702,7 @@ report file.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-CONDUCTOR-RECEIPT-1 | Pending | Pending |
++| REQ-CONDUCTOR-RECEIPT-1 | Implemented (`scripts/research_conductor.py`: `_run_audit_with_receipt` over all nine milestone-close audit invocations; `scripts/qa_layer_authenticity_audit.py`: `--budget-seconds`, PARTIAL header, rotation state written only after the report, advanced by completed units) | Implemented (`tests/python/test_audit_run_receipts.py`, 8 tests; mutations: receipt check believes exit code -> RED, rotation advances by limit -> RED, state written before report -> RED) |
+ 
+ ## REQ-CONDUCTOR-VERDICT-1: Artifacts MAY Declare A Closed Verdict Class, Cross-Checked Structurally
+ 
+@@ -7757,4 +7757,4 @@ SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-CONDUCTOR-VERDICT-1 | Pending | Pending |
++| REQ-CONDUCTOR-VERDICT-1 | Implemented (`scripts/adversarial_verify.py`: `check_verdict_class_consistency` + `_VERDICT_CLASSES`, wired into `verify_artifact`; planner-prompt `verdict_class` field in the live `_plan_next_milestone`) | Implemented (`tests/python/test_verdict_class_consistency.py`, 7 tests; mutations: oracle cross-check disabled -> RED, enum opened -> RED) |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 9f9988b5ce..4c6bc2489c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17088,3 +17088,5 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-21: Independent continuous-learning action, evidence, dose, and future-support replay audit (❌ Failed) — honest_verdict=complete_independent_audit: row replay validated; continuous-learning claim remains ineligible because held_future_benefit failed; results/experiment_6498_csl_independent_audit.json
+ - 2026-08-21: ARC conservative prefix-energy alignment with later live-agent progress diagnostic (✅ Complete) — honest_verdict=complete_null; results/experiment_6499_arc_energy_progress_alignment.json
+ - 2026-08-21: V560 independent adversarial capstone and V561 evidence handoff (✅ Complete) — honest_verdict=complete: V560 capstone classified every upstream outcome; trajectory_energy_claim_eligible=false; continuous_learning_claim_eligible=false; arc_policy_claim_eligible=false; hardware_claim_eligible=false; results/experiment_6501_v560_capstone.json
++- 2026-08-21: Operational retrospective for 2026.08.560: 11 experiments completed in 1 minute, including 2 compute-bound tasks. The named compute-bound leader took 1 minute, but fallback timing does not explain its phase costs. The locked field reports no compute-task GPU-idle fault, and no data available this milestone establishes parallel model loading or runner selection. Add live task and phase timing plus task-linked GPU, model-count, and runner receipts. Estimated savings: 0%, because no measured counterfactual is available. Artifact: results/operational_retro_2026_08_560.json.
++- 2026-08-21: [outer-loop] Conductor self-improvement mechanisms 1-4 (docs/research-notes/conductor-self-improvement-2026-08-21.md) shipped: truthful archival (REQ-CONDUCTOR-ARCHIVE-1 — task results derive from the conductor log + deliverable existence; duplicate milestone appends refused), guard-stall recovery (REQ-CONDUCTOR-STALL-1 — bounded replan with the verbatim lint report, then park with OPERATOR-ATTENTION; guard unchanged), audit run receipts (REQ-CONDUCTOR-RECEIPT-1 — callers verify report freshness, QA audit gets a wall-clock budget + PARTIAL reports, rotation advances only with the receipt), and the closed verdict-class enum (REQ-CONDUCTOR-VERDICT-1 — structural cross-check, no fifth token list). Conductor-side changes take effect on its next natural restart. Commits 302f6e2f78, 87f209cdcf, 40346a55f6, deff0b847d, c340cb16e2, af1a9241c4 (mechanism-4 content swept into the conductor's docs commit by its own add -A during a concurrent iteration).
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 4cfe527267..fb7b5cbf6e 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3327,3 +3327,4 @@ roadmap without changing the active roadmap, conductor, or remote state.
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-08-10T19:26:12Z | PENDING | Read the required project and V541 evidence, searched the requested primary and secondary sources, appended the V542 reference refresh, designed milestone 2026.08.542 with 13 tasks across four phases, staged the vNEXT document and conductor YAML, reconciled planning status and changelog, and ran schema, gate, exclusion, prompt, model, collision, root-clutter, focused-test, and spec-coverage checks. | TBD |
++| outer-loop | 2026-08-21T20:17:59Z | 2026-08-21T21:35:00Z | Team-lead directive: implement conductor self-improvement mechanisms 1-4 per docs/research-notes/conductor-self-improvement-2026-08-21.md (truthful archival, guard-stall recovery, run receipts, verdict-class enum) with spec entries, tests, and mutation evidence; two concurrent-loss incidents (conductor agent reverted in-flight edits) recovered by re-apply-and-commit-in-one-window. | TBD |
+diff --git a/ops/status.md b/ops/status.md
+index d3cefdb669..a6b03c40c2 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -8429,3 +8429,33 @@ All work this turn committed and pushed. Freshness/determination-preservation/ad
+ lints clean at each commit. Two premises checked before building (4a's trust-gate claim, 4b's
+ internal-heldout-check hypothesis) and both found not to hold — consistent with this session's
+ running theme of verifying plan-doc premises against current code before spending build effort.
++
++## 2026-08-21 outer-loop session: conductor self-improvement mechanisms 1-4
++
++What shipped (design: docs/research-notes/conductor-self-improvement-2026-08-21.md):
++
++- Truthful archival: `_archive_current_milestone` derives each task result from the
++  conductor log plus `Path(deliverable).exists()`; a missing deliverable can never
++  archive as OK (`OK_NO_DELIVERABLE` fires at archive time). Duplicate milestone
++  appends are refused — the 684-copies-of-.510 loop cannot recur.
++- Guard-stall recovery: an activation refusal now quarantines the roadmap, replans
++  ONCE with the guard's verbatim violation report in the planner prompt, caps at 2
++  replans (state survives restarts), then parks with a BLOCK line in the conductor
++  log and a dated known-issues entry. The guard itself is unchanged. An operator
++  edit to research-roadmap-next.yaml unparks with a fresh budget.
++- Run receipts: every milestone-close audit call goes through
++  `_run_audit_with_receipt`; a stale/missing report writes a durable BLOCK line.
++  The QA-layer audit takes `--budget-seconds 750`, writes PARTIAL reports, and its
++  rotation offset moves only after the report lands, by the units actually reviewed
++  — ending the 23-day silent-death + phantom-coverage state.
++- Verdict class: artifacts may declare a CLOSED `verdict_class` enum;
++  `adversarial_verify.py` cross-checks it structurally (oracle-circular results
++  cannot carry `positive`). Absent declaration draws no flag; the planner prompt
++  asks new tasks to declare it. Legacy token-list retirement is deferred until the
++  corpus adopts the enum.
++
++NOTE: the running conductor picks up the research_conductor.py changes on its next
++natural restart (not restarted by this session). adversarial_verify.py and
++qa_layer_authenticity_audit.py changes are live on their next subprocess invocation.
++Historical research-complete.yaml repair (dedup of 1,841 duplicate entries,
++re-stamping 57 phantom OKs) is deliberately NOT done — operator decision required.
+-- 
+2.55.0
+

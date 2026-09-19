@@ -1,0 +1,1213 @@
+From b4a195ae17aaf554740fc3b6d1224a3655eed6e5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 12:32:12 -0400
+Subject: [PATCH 11061/11362] Fail at commit time when an eval-run consumer
+ reads a field nothing emits (REQ-ARC-WMTE-6642/6643)
+
+Three consumers in three days ran against eval-run fields no artifact
+recorded (trajectory_supervisor, generator_channels, the
+induction_attempts round provenance exp6968 blocks on), each found only
+after the GPU-hours were spent. Three changes close the class:
+
+1. scripts/eval_run_consumer_field_lint.py: every tracked .py naming
+   results/arc_leaderboard_eval_runs must declare EVAL_RUN_FIELDS_READ,
+   and every declared field must exist in a real artifact or in producer
+   source. Fails closed with no artifacts; always prints populations so
+   zero findings is distinguishable from never-looked. Wired as the
+   eval-run-consumer-field-lint pre-commit hook and registered in
+   GUARD_TARGETS (the sealed-file edit is declared under scope id
+   eval-run-field-join-20260904). Declarations seeded in all 6 existing
+   consumers. Born-firing check: it flagged exactly the three unemitted
+   provenance fields before change 2 wired them.
+
+2. REQ-ARC-WMTE-6643: round rows now carry engine_emitted_at and
+   prompt_sha256 (from the attempt archiver, which now returns
+   ts/sha256_full/prompt_sha256), and induce rounds persist a
+   transition-source file (rows, shown/held-out split, engine-binding
+   hash) whose path lands on the row. This is what exp6968 needs to
+   resolve an engine without the manifest fallback that breaks on the
+   first deduplicated re-emission. Refactor rounds stay unrecorded --
+   their feedback rows have no stable identity yet; stated in the spec.
+
+3. exp6968's early-return sentinel no longer reports a hardcoded-False
+   immutable_transition_source: it names the upstream gates that
+   actually failed (same class as REQ-CONDUCTOR-VERDICT-3).
+
+Mutation-proven, all three: lint neither-place branch softened -> RED,
+restored byte-identically -> GREEN; row wiring dropped -> RED, induce
+branch disabled -> RED, restored -> GREEN; sentinel reverted -> RED,
+restored -> GREEN. 30 tests pass across the three touched suites.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .pre-commit-config.yaml                       |  15 ++
+ .../arc-world-model-trust-energy/spec.md      |  90 +++++++
+ .../agentic/arc_executable_world_model.py     | 123 ++++++++-
+ python/carnot/agentic/arc_llm_reinduction.py  |  23 ++
+ ...t_6843_live_arc_evidence_stratum_freeze.py |   3 +
+ ...ment_6845_tool_gap_causal_support_audit.py |   3 +
+ ...nt_6857_dynamic_live_arc_receipt_router.py |  10 +
+ ...21_arc_dynamic_supervisor_banked_credit.py |   3 +
+ ...ent_6968_arc_post_refit_induction_audit.py |  34 ++-
+ scripts/eval_run_consumer_field_lint.py       | 240 ++++++++++++++++++
+ scripts/outer_loop_dashboard.py               |   3 +
+ scripts/qa_layer_authenticity_audit.py        |   8 +
+ .../test_arc_round_emission_provenance.py     | 235 +++++++++++++++++
+ .../test_eval_run_consumer_field_lint.py      | 131 ++++++++++
+ ...ent_6968_arc_post_refit_induction_audit.py |  26 ++
+ 15 files changed, 941 insertions(+), 6 deletions(-)
+ create mode 100644 scripts/eval_run_consumer_field_lint.py
+ create mode 100644 tests/python/test_arc_round_emission_provenance.py
+ create mode 100644 tests/python/test_eval_run_consumer_field_lint.py
+
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index 9d1ddef447..84daca271c 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -353,6 +353,21 @@ repos:
+         files: ^scripts/adversarial_verify\.py$
+         pass_filenames: false
+ 
++      - id: eval-run-consumer-field-lint
++        name: An eval-run consumer's declared fields are emitted somewhere real (REQ-ARC-WMTE-6642)
++        # Three consumers in three days ran against fields no eval-run artifact
++        # recorded (trajectory_supervisor, generator_channels, induction_attempts
++        # provenance), each discovered only after the GPU-hours were spent. This
++        # join fails at commit time instead: a consumer naming the runs directory
++        # must declare EVAL_RUN_FIELDS_READ, and every declared field must exist
++        # in a real artifact or in producer source. Scoped to the .py trees where
++        # a consumer or producer can appear; stdlib-only, so python3 suffices,
++        # but the venv interpreter keeps parity with sibling hooks.
++        entry: .venv/bin/python scripts/eval_run_consumer_field_lint.py
++        language: system
++        files: ^(scripts/.*\.py|python/carnot/.*\.py)$
++        pass_filenames: false
++
+       - id: determination-preservation-lint
+         name: Fabrication-gate determinations are not silently dropped
+         # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 87916b60dd..f89351b977 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -29329,3 +29329,93 @@ false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
+ 
+ Implementation status: specified 2026-09-04. The conductor owns later documentation and
+ traceability reconciliation.
++
++## REQ-ARC-WMTE-6642: A Consumer Of Eval-Run Artifacts SHALL Declare The Fields It Requires, And Each SHALL Be Emitted Somewhere Real
++
++Three consumers in three days ran against `results/arc_leaderboard_eval_runs/`
++artifacts and failed on a field no run ever recorded: `trajectory_supervisor`
++(a 13.8h run the refinement ledger could not read), `generator_channels`
++(11 artifacts that could not answer the n_ctx question), and the
++`induction_attempts` round provenance exp6968 blocks on. Each gap surfaced only
++after the GPU-hours were spent. The join below fails at commit time instead.
++
++### SCENARIO-ARC-WMTE-6642-DECLARE: A new consumer without a declaration fails
++
++- GIVEN a tracked .py file under scripts/ or python/ whose source names
++  `arc_leaderboard_eval_runs` and that is not the producer, the lint, or a test
++- WHEN `scripts/eval_run_consumer_field_lint.py` runs
++- THEN the lint SHALL fail unless the file declares a module-level
++  `EVAL_RUN_FIELDS_READ` tuple of field names.
++
++### SCENARIO-ARC-WMTE-6642-JOIN: A declared field nobody emits fails
++
++- GIVEN a declared field name
++- WHEN the lint joins it against every artifact in the runs directory (any
++  nesting depth) and against every string literal in the producer surface
++  (`scripts/arc_leaderboard_eval.py` plus `python/carnot/agentic/`)
++- THEN a field present in an artifact SHALL pass silently
++- AND a field present only in producer source SHALL pass with a notice
++  ("wired but not yet observed"), because a run may not have landed since wiring
++- AND a field present in neither SHALL fail.
++
++### SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: The lint cannot answer clean without looking
++
++- GIVEN a missing runs directory or zero readable artifacts
++- THEN the lint SHALL fail rather than pass
++- AND every run SHALL print its population counts (consumers, artifacts,
++  distinct keys, producer files), so a zero-findings result is distinguishable
++  from a scan that never executed.
++
++**Stated limit.** The declaration is the scoping filter: an UNDECLARED read is
++invisible to the join. The declaration-presence rule bounds that gap to fields
++within a known consumer, not to whole consumers.
++
++## Implementation Status (REQ-ARC-WMTE-6642)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
++
++## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
++
++exp6968 resolves an archived engine to the run that produced it using
++`engine_source_sha256`, `engine_emitted_at`, `prompt_sha256`, and
++`transition_source_path` on the refinement-round row. Before this requirement
++only the sha was recorded; `engine_emitted_at` was recoverable solely through a
++manifest fallback that breaks on the first deduplicated re-emission, and the
++other two existed nowhere in the runtime.
++
++### SCENARIO-ARC-WMTE-6643-ROUND-PROVENANCE: A successful proposer round records what produced the engine
++
++- GIVEN a refinement round whose proposer call succeeded and archived its engine
++- WHEN the round row is written
++- THEN the row SHALL carry `engine_emitted_at` (the archive timestamp) and
++  `prompt_sha256` (the SHA-256 of the last generation prompt)
++- AND an induce round SHALL additionally carry `transition_source_path`, the
++  repo-relative path of a persisted transition-source file.
++
++### SCENARIO-ARC-WMTE-6643-TRANSITION-SOURCE: The induce round persists its evidence
++
++- GIVEN an induce round with archiving enabled
++- WHEN the transition source is persisted under the game's `attempts/` directory
++- THEN the file SHALL carry `rows` (each with `index`, `transition_id`, `action`,
++  `grid`, `next_grid`), `prompt_row_ids` (the rows shown in the prompt),
++  `repair_feedback_row_ids` (empty on induce, true by construction),
++  `prompt_sha256`, and `attempt_engine_sha256` (the full SHA-256 of the engine
++  bytes, matching the archived engine file)
++- AND a failed write SHALL NOT fail the induction (fail-open past the test
++  guard, same direction as the engine archiver).
++
++**Stated limits.** Refactor rounds do not yet record `transition_source_path`:
++their counterexample-feedback rows carry no stable identity to reference, and
++recording an empty feedback list for a round that HAD feedback would be a false
++record. Scope deliberately matches what can be recorded honestly. Second limit:
++a split induce makes several generation calls before one engine write, and
++`prompt_sha256` records the LAST call's prompt — the write path has no other
++single prompt to name.
++
++## Implementation Status (REQ-ARC-WMTE-6643)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6643 | `python/carnot/agentic/arc_executable_world_model.py` (`_archive_engine_attempt` returns `ts`/`sha256_full`/`prompt_sha256`; `generate()` records `last_prompt_sha256`; `_archive_transition_source`); `python/carnot/agentic/arc_llm_reinduction.py` (round-row wiring) | `tests/python/test_arc_round_emission_provenance.py` |
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 9ec2d8e521..d8d34d857a 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -139,7 +139,13 @@ def attempt_archive_enabled() -> bool:
+ 
+ 
+ def _archive_engine_attempt(
+-    game: str, code: str, *, writer: str, model: str = "", note: str = ""
++    game: str,
++    code: str,
++    *,
++    writer: str,
++    model: str = "",
++    note: str = "",
++    prompt_sha256: str | None = None,
+ ) -> dict:
+     """Archive one produced engine under `E3_DIR/<game>/attempts/` (REQ-ARC-WMTE-6690).
+ 
+@@ -163,7 +169,8 @@ def _archive_engine_attempt(
+         from datetime import UTC, datetime
+ 
+         raw = code.encode("utf-8", "replace")
+-        sha = hashlib.sha256(raw).hexdigest()[:16]
++        sha_full = hashlib.sha256(raw).hexdigest()
++        sha = sha_full[:16]
+         adir.mkdir(parents=True, exist_ok=True)
+         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f")
+         dedup = bool(next(iter(adir.glob(f"wm_*__{sha}.py")), None))
+@@ -179,10 +186,102 @@ def _archive_engine_attempt(
+             "note": note[:200],
+             "deduplicated": dedup,
+             "file": None if dedup else fname,
++            # REQ-ARC-WMTE-6643: which prompt produced these bytes. None when the
++            # writer had no prompt in hand (the dev-only codex path).
++            "prompt_sha256": prompt_sha256,
+         }
+         with (adir / "manifest.jsonl").open("a", encoding="utf-8") as fh:
+             fh.write(json.dumps(line, sort_keys=True) + "\n")
+-        info.update({"archived": True, "deduplicated": dedup, "sha256_16": sha})
++        # REQ-ARC-WMTE-6643: ts/sha256_full/prompt_sha256 let a round row record its
++        # own emission provenance instead of a manifest fallback that breaks on the
++        # first deduplicated re-emission.
++        info.update(
++            {
++                "archived": True,
++                "deduplicated": dedup,
++                "sha256_16": sha,
++                "ts": stamp,
++                "sha256_full": sha_full,
++                "prompt_sha256": prompt_sha256,
++            }
++        )
++    except Exception as exc:  # noqa: BLE001 - fail-open past the guard, see docstring
++        info["error"] = repr(exc)[:200]
++    return info
++
++
++def _archive_transition_source(
++    game: str,
++    rows: Sequence[Any],
++    *,
++    shown_rows: Sequence[Any],
++    prompt_sha256: str | None,
++    attempt_engine_sha256: str | None,
++) -> dict:
++    """Persist the transitions an induce round was built from (REQ-ARC-WMTE-6643).
++
++    Without this file, an audit (exp6968) cannot re-derive the shown/held-out split the
++    engine was accepted on. Same directory, guard, and fail-open direction as
++    `_archive_engine_attempt`: a failed write must never fail the induction, and a test
++    reaching the tracked store must blow up loudly.
++    """
++    info: dict = {"enabled": attempt_archive_enabled(), "archived": False, "path": None}
++    if not info["enabled"]:
++        return info
++    adir = Path(E3_DIR) / game / "attempts"
++    _guard_engine_write(adir)  # fail-closed: tests may not write the tracked store
++    try:
++        import hashlib
++        from datetime import UTC, datetime
++
++        shown_ids = {id(row) for row in shown_rows}
++        out_rows: list[dict] = []
++        prompt_row_ids: list[str] = []
++        for index, row in enumerate(rows):
++            grid = np.asarray(getattr(row, "grid")).astype(int).tolist()
++            next_grid = np.asarray(getattr(row, "next_grid")).astype(int).tolist()
++            action = int(getattr(row, "action", -1))
++            ident = json.dumps([index, action, grid, next_grid], sort_keys=True)
++            tid = hashlib.sha256(ident.encode("utf-8")).hexdigest()[:16]
++            out_rows.append(
++                {
++                    "index": index,
++                    "transition_id": tid,
++                    "action": action,
++                    "grid": grid,
++                    "next_grid": next_grid,
++                    "level_before": int(getattr(row, "level_before", -1)),
++                    "level_after": int(getattr(row, "level_after", -1)),
++                }
++            )
++            if id(row) in shown_ids:
++                prompt_row_ids.append(tid)
++        payload = {
++            "schema": "carnot.arc.transition_source.v1",
++            "game": game,
++            "rows": out_rows,
++            "prompt_row_ids": prompt_row_ids,
++            # Empty is TRUE on an induce round: no counterexample feedback exists yet.
++            # Refactor rounds do not write this file at all -- see REQ-ARC-WMTE-6643's
++            # stated limit -- so this list can never silently under-report feedback.
++            "repair_feedback_row_ids": [],
++            "prompt_sha256": prompt_sha256,
++            "attempt_engine_sha256": attempt_engine_sha256,
++        }
++        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f")
++        suffix = (attempt_engine_sha256 or "unknown")[:16]
++        fname = f"tr_{stamp}__{suffix}.json"
++        adir.mkdir(parents=True, exist_ok=True)
++        (adir / fname).write_text(json.dumps(payload, sort_keys=True))
++        full = adir / fname
++        # A repo-relative path is what the audit's path-safety check accepts; an
++        # absolute one (a redirected store, e.g. under a test tmp_path) is recorded
++        # as-is so the record still says where the bytes went.
++        try:
++            rel = str(full.relative_to(Path(__file__).resolve().parents[3]))
++        except ValueError:
++            rel = str(full)
++        info.update({"archived": True, "path": rel, "rows": len(out_rows)})
+     except Exception as exc:  # noqa: BLE001 - fail-open past the guard, see docstring
+         info["error"] = repr(exc)[:200]
+     return info
+@@ -7717,10 +7816,15 @@ class LocalGGUFProposer:
+         defective candidate as success, `missing_return` being the single largest kind.
+         """
+         import ast
++        import hashlib as _hashlib
+         import json as _json
+         import os
+         import urllib.request
+ 
++        # REQ-ARC-WMTE-6643: remember which prompt this generation ran, so the archive
++        # write that follows a successful call can bind engine bytes to their prompt.
++        # For a split induce the LAST call's prompt wins -- stated in the spec's limit.
++        self.last_prompt_sha256 = _hashlib.sha256(prompt.encode("utf-8", "replace")).hexdigest()
+         self.n_completion_calls += 1
+         if not self._ensure_server():
+             msg = (
+@@ -8159,7 +8263,11 @@ class LocalGGUFProposer:
+             (E3_DIR / game / "world_model.py").write_text(code)
+             # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+             self.last_attempt_archive = _archive_engine_attempt(
+-                game, code, writer="gen_to_file", model=self._effective_model_label()
++                game,
++                code,
++                writer="gen_to_file",
++                model=self._effective_model_label(),
++                prompt_sha256=getattr(self, "last_prompt_sha256", None),
+             )
+             return True, "local gguf (GPU server) wrote world_model.py"
+         return False, code
+@@ -8175,7 +8283,12 @@ class LocalGGUFProposer:
+         (E3_DIR / game / "world_model.py").write_text(code)
+         # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+         self.last_attempt_archive = _archive_engine_attempt(
+-            game, code, writer="write_world_model", model=self._effective_model_label(), note=note
++            game,
++            code,
++            writer="write_world_model",
++            model=self._effective_model_label(),
++            note=note,
++            prompt_sha256=getattr(self, "last_prompt_sha256", None),
+         )
+         msg = "local gguf (GPU server) wrote world_model.py"
+         return True, (f"{msg} ({note})" if note else msg)
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index 93af9bafb1..ba7fbb0865 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -23,6 +23,7 @@ from carnot.agentic.arc_executable_world_model import (
+     INDUCE_FAILURE_NOTE_CLIP,
+     Transition,
+     WorldModelVerifier,
++    _archive_transition_source,
+     score_goal_predicate_consistency,
+ )
+ from carnot.agentic.arc_world_model_trust_energy import (
+@@ -1768,6 +1769,28 @@ def execute_bounded_llm_reinduction(
+             skipped = "proposer_failed"
+             break
+ 
++        # REQ-ARC-WMTE-6643: emission provenance on the round row. The archive entry
++        # was written by THIS round's successful proposer call; the sha16 cross-check
++        # refuses a stale entry rather than attribute an old emission to this round.
++        _archive_info = getattr(proposer, "last_attempt_archive", None)
++        if isinstance(_archive_info, dict) and _archive_info.get("archived"):
++            _fp = _engine_source_fingerprint(game)
++            if _fp is not None and _fp.get("sha256_16") == _archive_info.get("sha256_16"):
++                row["engine_emitted_at"] = _archive_info.get("ts")
++                row["prompt_sha256"] = _archive_info.get("prompt_sha256")
++                if action == "induce":
++                    # Induce only: the shown/held-out evidence file. Refactor rounds
++                    # carry feedback with no stable row identity yet -- spec limit.
++                    _tr = _archive_transition_source(
++                        game,
++                        list(transitions),
++                        shown_rows=induction_evidence,
++                        prompt_sha256=_archive_info.get("prompt_sha256"),
++                        attempt_engine_sha256=_archive_info.get("sha256_full"),
++                    )
++                    if _tr.get("archived"):
++                        row["transition_source_path"] = _tr.get("path")
++
+         try:
+             engine, goal = load_engine(game)
+             candidates = _normalise_candidates(candidate_provider(engine, goal), engine, goal)
+diff --git a/python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py b/python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py
+index 3d52e9fdcd..296b149b10 100644
+--- a/python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py
++++ b/python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py
+@@ -29,6 +29,9 @@ JsonDict = dict[str, Any]
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
+ MODULE_PATH = Path("python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py")
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = ("complete", "honest_verdict")
+ WRAPPER_PATH = Path("scripts/experiments/experiment_6843_live_arc_evidence_stratum_freeze.py")
+ OUTPUT_PATH = Path("results/experiment_6843_live_arc_evidence_stratum_freeze.json")
+ SCHEMA = "carnot.experiment_6843.live_arc_evidence_stratum_freeze.v1"
+diff --git a/python/carnot/experiment_6845_tool_gap_causal_support_audit.py b/python/carnot/experiment_6845_tool_gap_causal_support_audit.py
+index a5be102136..de672cb232 100644
+--- a/python/carnot/experiment_6845_tool_gap_causal_support_audit.py
++++ b/python/carnot/experiment_6845_tool_gap_causal_support_audit.py
+@@ -31,6 +31,9 @@ JsonDict = dict[str, Any]
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
+ MODULE_PATH = Path("python/carnot/experiment_6845_tool_gap_causal_support_audit.py")
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = ("honest_verdict",)
+ WRAPPER_PATH = Path("scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py")
+ OUTPUT_PATH = Path("results/experiment_6845_tool_gap_causal_support_audit.json")
+ SCHEMA = "carnot.experiment_6845.tool_gap_causal_support_audit.v1"
+diff --git a/python/carnot/experiment_6857_dynamic_live_arc_receipt_router.py b/python/carnot/experiment_6857_dynamic_live_arc_receipt_router.py
+index 6cb4e3ee09..c6ebde556c 100644
+--- a/python/carnot/experiment_6857_dynamic_live_arc_receipt_router.py
++++ b/python/carnot/experiment_6857_dynamic_live_arc_receipt_router.py
+@@ -27,6 +27,16 @@ JsonDict = dict[str, Any]
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
+ OUTPUT_PATH = Path("results/experiment_6857_dynamic_live_arc_receipt_router.json")
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = (
++    "experiment",
++    "policy",
++    "per_game",
++    "honest_verdict",
++    "generator_provenance",
++    "completions_consumed",
++)
+ V599_PATH = Path("results/experiment_6848_v599_method_change_evidence_contract.json")
+ REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
+ FLAG_LEDGER_PATH = Path("ops/arc_flag_ledger.yaml")
+diff --git a/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py b/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
+index 9e20741d23..8db9e54f7c 100644
+--- a/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
++++ b/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
+@@ -42,6 +42,9 @@ JsonDict = dict[str, Any]
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ SPEC_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
+ OUTPUT_PATH = Path("results/experiment_6921_arc_dynamic_supervisor_banked_credit.json")
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = ("per_game", "game", "complete", "honest_verdict", "trajectory_supervisor")
+ LEDGER_PATH = Path("ops/arc_supervisor_refinement_ledger.json")
+ REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
+ SCORED_PATH_RUN_DIRECTORY = Path("results/arc_leaderboard_eval_runs")
+diff --git a/python/carnot/experiment_6968_arc_post_refit_induction_audit.py b/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
+index 0ff8e2e73c..28521bd55a 100644
+--- a/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
++++ b/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
+@@ -40,6 +40,24 @@ SCORER_PATH = Path("scripts/arc_e3_induced_model_quality.py")
+ STRUCTURAL_SCORER_PATH = Path("python/carnot/agentic/arc_executable_world_model.py")
+ REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
+ RUNS_PATH = Path("results/arc_leaderboard_eval_runs")
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = (
++    "complete",
++    "policy",
++    "per_game",
++    "game",
++    "generator_provenance",
++    "n_ctx",
++    "policy_diagnostics",
++    "induction_attempts",
++    "refinement_rounds",
++    "engine_source_sha256",
++    "sha256_16",
++    "engine_emitted_at",
++    "prompt_sha256",
++    "transition_source_path",
++)
+ ATTEMPTS_PATH = Path("results/arc_e3/r11l/attempts")
+ OUTPUT_PATH = Path("results/experiment_6968_arc_post_refit_induction_audit.json")
+ 
+@@ -955,7 +973,21 @@ def build_artifact(
+         ),
+     ]
+     if selected is None or engine_path is None or _failed_gates(checks):
+-        checks.append(_gate("immutable_transition_source", True, False))
++        # Sentinel split (2026-09-04, same class as REQ-CONDUCTOR-VERDICT-3): this gate
++        # was NOT evaluated -- an upstream gate failed and the transition source is read
++        # only after selection. The old hardcoded False sent a reader to investigate
++        # transition-source immutability, which was never involved. The observed value
++        # now names the gates that actually failed, so the sentinel says it is one.
++        upstream = [str(row["failed_check"]) for row in _failed_gates(checks)]
++        reason = ",".join(upstream) if upstream else "no_run_selected_or_engine_unresolved"
++        checks.append(
++            _gate(
++                "immutable_transition_source",
++                True,
++                f"not_evaluated_upstream_gate_failed:{reason}",
++                passed=False,
++            )
++        )
+         return _finish_blocked(artifact, checks, started)
+ 
+     transition_path = _safe_relative_source(repo_root, selected.get("transition_source_path"))
+diff --git a/scripts/eval_run_consumer_field_lint.py b/scripts/eval_run_consumer_field_lint.py
+new file mode 100644
+index 0000000000..f20479de7a
+--- /dev/null
++++ b/scripts/eval_run_consumer_field_lint.py
+@@ -0,0 +1,240 @@
++#!/usr/bin/env python3
++"""Refuse a consumer that reads an eval-run field nothing emits (REQ-ARC-WMTE-6642).
++
++WHY THIS EXISTS (2026-09-04). Three times in three days a consumer of
++`results/arc_leaderboard_eval_runs/` artifacts ran, failed, and only then did
++anyone learn the field it needed was never recorded: `trajectory_supervisor`
++(a 13.8h run the refinement ledger could not read), `generator_channels`
++(11 artifacts that could not answer the n_ctx question), and
++`induction_attempts` round provenance (exp6968 blocked with zero engine
++candidates). The runtime object HAD the data each time. The live path recorded
++nothing, and the gap surfaced only when a consumer came back empty — after the
++GPU-hours were spent.
++
++WHAT THIS CHECK IS. A mechanical join, no model involved:
++
++1. Every tracked .py file under scripts/ or python/ that names the eval-runs
++   directory is a CONSUMER. A consumer MUST declare a module-level
++   `EVAL_RUN_FIELDS_READ` tuple naming the fields it requires eval-run
++   artifacts to contain. A new consumer without the declaration FAILS — that
++   is the moment the contract is cheap to state, not months later.
++2. Every declared field must appear as a dict key somewhere in some artifact
++   in the runs directory (`observed`), or at least as a string literal in the
++   producer surface (`wired_unobserved` — wired but no run has landed since).
++   A field found in NEITHER place fails: that is a consumer written against a
++   field nobody emits, which is the incident class verbatim.
++WHAT IT DELIBERATELY DOES NOT DO. It does not auto-extract every `.get()` key
++from consumer source: consumers read many dicts that are not eval-run rows,
++and the noise would train people to bypass the check. The declaration is the
++scoping filter; its price, stated plainly, is that an UNDECLARED read is
++invisible here. The declaration-presence rule bounds that gap to fields, not
++to whole consumers.
++
++Fail direction: FAIL CLOSED on a missing runs directory or an unparseable
++consumer — a check that returns clean when it could not look is the state
++this project's guard incidents keep re-teaching (see the QA-Layer discipline).
++Population counts are always printed so "0 findings" is distinguishable from
++"never looked" — the guarded-hasattr no-op of 2026-09-04 is the incident.
++"""
++
++from __future__ import annotations
++
++import argparse
++import ast
++import json
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parent.parent
++RUNS_DIR = REPO_ROOT / "results" / "arc_leaderboard_eval_runs"
++FLAT_EVAL = REPO_ROOT / "results" / "arc_leaderboard_eval.json"
++DECLARATION_NAME = "EVAL_RUN_FIELDS_READ"
++DIR_MARKER = "arc_leaderboard_eval_runs"
++
++# The producer surface: the eval harness itself plus the agentic runtime whose
++# objects the harness serializes into rows. A directory, not a hand list of
++# files, so a new row-field helper is covered without editing this lint
++# (a hand list narrower than the concept is the class-B guard failure).
++PRODUCER_SURFACE = (
++    REPO_ROOT / "scripts" / "arc_leaderboard_eval.py",
++    REPO_ROOT / "python" / "carnot" / "agentic",
++)
++
++# Not consumers for this contract, with reasons:
++# - the producer emits the fields rather than requiring them;
++# - this lint names the directory in its own source;
++# - tests construct their own fixture rows, so key-containment over real
++#   artifacts says nothing about what a test needs.
++EXCLUDED_CONSUMERS = frozenset(
++    {
++        "scripts/arc_leaderboard_eval.py",
++        "scripts/eval_run_consumer_field_lint.py",
++    }
++)
++
++
++def find_consumers(repo_root: Path) -> list[Path]:
++    """Tracked .py files that name the runs directory and are not excluded."""
++    out: list[Path] = []
++    for base in ("scripts", "python"):
++        root = repo_root / base
++        if not root.is_dir():
++            continue
++        for path in sorted(root.rglob("*.py")):
++            rel = path.relative_to(repo_root).as_posix()
++            if rel in EXCLUDED_CONSUMERS or rel.startswith("tests/"):
++                continue
++            try:
++                text = path.read_text(encoding="utf-8", errors="replace")
++            except OSError:
++                continue
++            if DIR_MARKER in text:
++                out.append(path)
++    return out
++
++
++def declared_fields(path: Path) -> list[str] | None:
++    """The module-level declaration. None when absent — the caller treats that
++    as a failure, not as an empty declaration."""
++    tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
++    fields: list[str] | None = None
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Assign) and any(
++            isinstance(t, ast.Name) and t.id == DECLARATION_NAME for t in node.targets
++        ):
++            value = node.value
++            if isinstance(value, (ast.Tuple, ast.List)):
++                fields = [
++                    e.value
++                    for e in value.elts
++                    if isinstance(e, ast.Constant) and isinstance(e.value, str)
++                ]
++    return fields
++
++
++def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[set[str], int]:
++    """Every dict key, at any depth, across every artifact. Plus the file count."""
++    keys: set[str] = set()
++    n = 0
++
++    def walk(value: object) -> None:
++        if isinstance(value, dict):
++            for k, v in value.items():
++                keys.add(str(k))
++                walk(v)
++        elif isinstance(value, list):
++            for v in value:
++                walk(v)
++
++    files = sorted(runs_dir.glob("*.json")) if runs_dir.is_dir() else []
++    files += [p for p in extra_files if p.is_file()]
++    for path in files:
++        try:
++            walk(json.loads(path.read_text(encoding="utf-8", errors="replace")))
++            n += 1
++        except (OSError, json.JSONDecodeError):
++            continue
++    return keys, n
++
++
++def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
++    """Every string literal in the producer surface. Plus the file count."""
++    literals: set[str] = set()
++    files: list[Path] = []
++    for entry in surface:
++        if entry.is_dir():
++            files.extend(sorted(entry.rglob("*.py")))
++        elif entry.is_file():
++            files.append(entry)
++    for path in files:
++        try:
++            tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
++        except (OSError, SyntaxError):
++            continue
++        for node in ast.walk(tree):
++            if isinstance(node, ast.Constant) and isinstance(node.value, str):
++                literals.add(node.value)
++    return literals, len(files)
++
++
++def run_lint(
++    repo_root: Path = REPO_ROOT,
++    runs_dir: Path = RUNS_DIR,
++    flat_eval: Path = FLAT_EVAL,
++    producer_surface: tuple[Path, ...] = PRODUCER_SURFACE,
++) -> tuple[list[str], list[str]]:
++    """Returns (failures, notices). Empty failures means the contract holds."""
++    failures: list[str] = []
++    notices: list[str] = []
++    consumers = find_consumers(repo_root)
++    if not runs_dir.is_dir():
++        # Fail closed: with no artifacts the join cannot run, and a clean exit
++        # here would be indistinguishable from a real pass.
++        failures.append(f"runs directory missing, join cannot run: {runs_dir}")
++        return failures, notices
++    keys, n_artifacts = artifact_keys(runs_dir, (flat_eval,))
++    emitted, n_producer_files = producer_literals(producer_surface)
++    notices.append(
++        f"population: {len(consumers)} consumer(s), {n_artifacts} artifact(s), "
++        f"{len(keys)} distinct artifact keys, {n_producer_files} producer file(s)"
++    )
++    if n_artifacts == 0:
++        failures.append(f"no readable artifacts under {runs_dir}; join cannot run")
++        return failures, notices
++    for consumer in consumers:
++        rel = consumer.relative_to(repo_root).as_posix()
++        try:
++            fields = declared_fields(consumer)
++        except SyntaxError as exc:
++            failures.append(f"{rel}: unparseable ({exc})")
++            continue
++        if fields is None:
++            failures.append(
++                f"{rel}: reads {DIR_MARKER} but declares no {DECLARATION_NAME}. "
++                f"Add a module-level tuple naming the fields it requires eval-run "
++                f"artifacts to contain (REQ-ARC-WMTE-6642)."
++            )
++            continue
++        for field in fields:
++            if field in keys:
++                continue
++            if field in emitted:
++                notices.append(
++                    f"{rel}: {field!r} is wired in the producer surface but observed "
++                    f"in no artifact yet — expected only between wiring and the next run."
++                )
++                continue
++            failures.append(
++                f"{rel}: requires field {field!r}, which appears in NO eval-run "
++                f"artifact and NO producer source. A run cannot satisfy this "
++                f"consumer; wire the field before the GPU-hours are spent "
++                f"(REQ-ARC-WMTE-6642)."
++            )
++    return failures, notices
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--runs-dir", type=Path, default=None)
++    args = parser.parse_args(argv)
++    repo_root = args.repo_root.resolve()
++    runs_dir = args.runs_dir or (repo_root / "results" / "arc_leaderboard_eval_runs")
++    flat = repo_root / "results" / "arc_leaderboard_eval.json"
++    surface = (
++        repo_root / "scripts" / "arc_leaderboard_eval.py",
++        repo_root / "python" / "carnot" / "agentic",
++    )
++    failures, notices = run_lint(repo_root, runs_dir, flat, surface)
++    for line in notices:
++        print(f"NOTE: {line}")
++    for line in failures:
++        print(f"FAIL: {line}")
++    if failures:
++        return 1
++    print("OK: every declared eval-run consumer field is emitted somewhere real.")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/scripts/outer_loop_dashboard.py b/scripts/outer_loop_dashboard.py
+index 401bc5d596..333c5ca3b0 100755
+--- a/scripts/outer_loop_dashboard.py
++++ b/scripts/outer_loop_dashboard.py
+@@ -24,6 +24,9 @@ from datetime import UTC, datetime
+ from pathlib import Path
+ 
+ REPO = Path(__file__).resolve().parents[1]
++# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
++# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
++EVAL_RUN_FIELDS_READ = ("per_game", "policy", "game", "levels")
+ 
+ 
+ def _run(*args: str) -> str:
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index 57f9b9f707..0636d79a5e 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -186,6 +186,14 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
+         "else, which is how a change makes itself pass; note it reads the WORKING TREE for "
+         "seals rather than the index, so its blind spots are not the usual staged-diff ones",
+     ),
++    (
++        PROJECT_ROOT / "scripts" / "eval_run_consumer_field_lint.py",
++        "decides whether a consumer of eval-run artifacts may land while reading a field "
++        "nothing emits; a silent non-firing here re-opens the 2026-09-04 class where a "
++        "multi-hour live run produced rows that could not answer their question, and an "
++        "absent field read with a default flips a conclusion (the 2026-08-21 wrong-A/B "
++        "day) -- so its silence can reach a claim, not just waste compute",
++    ),
+     (
+         PROJECT_ROOT / "scripts" / "substrate_alias_evidence_lint.py",
+         "decides whether a commit may WIDEN adversarial_verify's no-LLM allowlist, and "
+diff --git a/tests/python/test_arc_round_emission_provenance.py b/tests/python/test_arc_round_emission_provenance.py
+new file mode 100644
+index 0000000000..2cf88321ce
+--- /dev/null
++++ b/tests/python/test_arc_round_emission_provenance.py
+@@ -0,0 +1,235 @@
++"""Round rows carry emission provenance an audit can resolve (REQ-ARC-WMTE-6643).
++
++SCENARIO-ARC-WMTE-6643-ROUND-PROVENANCE: a successful proposer round records
++`engine_emitted_at` and `prompt_sha256`; the induce round also records
++`transition_source_path`.
++SCENARIO-ARC-WMTE-6643-TRANSITION-SOURCE: the persisted file carries the rows,
++the shown/held-out split, and the engine binding hash.
++
++Origin: exp6968 blocked with zero resolvable engine candidates because the round
++rows carried only a sha16 — no timestamp, no prompt hash, no transition source.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_executable_world_model as e3
++from carnot.agentic.arc_executable_world_model import Transition
++from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
++
++# Not because these tests leak: the first reinduction call in a fresh worker pays the
++# heavy module import, same as test_arc_gateway_card_ground_truth.py (its precedent).
++pytestmark = pytest.mark.memory_watchdog_skip
++
++GAME = "prov"
++ACTIONS = [1, 3, 0, 2, 1, 3, 0, 2, 3]
++_MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
++
++ENGINE_SRC = """
++import numpy as np
++
++_MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
++
++
++def engine(grid, action, data):
++    g = np.asarray(grid).copy()
++    pos = np.argwhere(g == 3)
++    if len(pos) == 0:
++        return g
++    r, c = int(pos[0][0]), int(pos[0][1])
++    dr, dc = _MOVES.get(int(action) % 4, (0, 0))
++    g[r, c] = 0
++    g[(r + dr) % g.shape[0], (c + dc) % g.shape[1]] = 3
++    return g
++
++
++def is_level_complete(grid):
++    return False
++"""
++
++
++def _true_next(grid: np.ndarray, action: int) -> np.ndarray:
++    g = np.asarray(grid).copy()
++    pos = np.argwhere(g == 3)
++    r, c = int(pos[0][0]), int(pos[0][1])
++    dr, dc = _MOVES[int(action) % 4]
++    g[r, c] = 0
++    g[(r + dr) % g.shape[0], (c + dc) % g.shape[1]] = 3
++    return g
++
++
++def _corpus() -> tuple[list[Transition], np.ndarray]:
++    grid = np.zeros((6, 6), dtype=int)
++    grid[2, 2] = 3
++    root = grid.copy()
++    rows: list[Transition] = []
++    for action in ACTIONS:
++        nxt = _true_next(grid, action)
++        rows.append(
++            Transition(
++                grid=grid.copy(),
++                action=action,
++                data=None,
++                next_grid=nxt.copy(),
++                level_before=0,
++                level_after=0,
++            )
++        )
++        grid = nxt
++    return rows, root
++
++
++class _ArchivingProposer:
++    """A scripted proposer that archives through the REAL attempt archiver,
++    exactly as `_write_world_model` does on the live path."""
++
++    model_specs = "provenance-test-proposer"
++
++    def __init__(self, store: Path, game: str, source: str) -> None:
++        self.store = Path(store)
++        self.game = game
++        self.source = source
++        self.last_prompt_sha256 = hashlib.sha256(b"the induce prompt").hexdigest()
++
++    def induce(self, game, trans, cell, *, previous_level_complete_grid=None):
++        path = self.store / self.game / "world_model.py"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(self.source)
++        self.last_attempt_archive = e3._archive_engine_attempt(
++            game,
++            self.source,
++            writer="test",
++            prompt_sha256=self.last_prompt_sha256,
++        )
++        return True, "wrote"
++
++    def refactor(self, game, vr):  # pragma: no cover - single-round test
++        return False, "no refactor in this test"
++
++
++def _run(monkeypatch, tmp_path, proposer):
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    transitions, root = _corpus()
++    result = execute_bounded_llm_reinduction(
++        game=GAME,
++        transitions=transitions,
++        cell=1,
++        root_grid=root,
++        proposer=proposer,
++        candidate_provider=lambda engine, goal: [("loaded_world_model.py", engine, goal)],
++        load_engine=e3.load_engine,
++        plan_in_model=lambda engine, goal, grid: None,
++        max_rounds=1,
++        min_heldout_accuracy=1.0,
++    )
++    return result, transitions
++
++
++def test_round_row_carries_emission_provenance(monkeypatch, tmp_path) -> None:
++    """SCENARIO-ARC-WMTE-6643-ROUND-PROVENANCE, positive path."""
++
++    proposer = _ArchivingProposer(tmp_path, GAME, ENGINE_SRC)
++    result, transitions = _run(monkeypatch, tmp_path, proposer)
++
++    row = result.rounds[0]
++    assert row["action"] == "induce"
++    assert row["engine_emitted_at"], "archive timestamp must reach the round row"
++    assert row["prompt_sha256"] == proposer.last_prompt_sha256
++    assert row["transition_source_path"], "induce round must persist its evidence"
++
++
++def test_transition_source_file_schema_and_binding(monkeypatch, tmp_path) -> None:
++    """SCENARIO-ARC-WMTE-6643-TRANSITION-SOURCE: the file re-derives the split."""
++
++    proposer = _ArchivingProposer(tmp_path, GAME, ENGINE_SRC)
++    result, transitions = _run(monkeypatch, tmp_path, proposer)
++
++    recorded = result.rounds[0]["transition_source_path"]
++    # A redirected store records an absolute path; the live store records repo-relative.
++    path = Path(recorded)
++    if not path.is_absolute():
++        path = Path(__file__).resolve().parents[2] / path
++    payload = json.loads(path.read_text())
++
++    rows = payload["rows"]
++    assert len(rows) == len(transitions)
++    ids = [row["transition_id"] for row in rows]
++    assert len(ids) == len(set(ids)), "transition ids must be unique"
++    for row in rows:
++        assert np.asarray(row["grid"]).ndim == 2
++        assert np.asarray(row["next_grid"]).ndim == 2
++    shown = payload["prompt_row_ids"]
++    assert 0 < len(shown) < len(rows), "shown prefix must be a strict subset"
++    assert set(shown) <= set(ids)
++    assert payload["repair_feedback_row_ids"] == []
++    assert payload["prompt_sha256"] == proposer.last_prompt_sha256
++    # The binding hash is the full digest of the engine bytes, matching the
++    # archived engine file byte-for-byte (exp6968's transition_source_engine_hash gate).
++    expected = hashlib.sha256(ENGINE_SRC.encode("utf-8", "replace")).hexdigest()
++    assert payload["attempt_engine_sha256"] == expected
++    archived = next((tmp_path / GAME / "attempts").glob("wm_*.py"))
++    assert hashlib.sha256(archived.read_bytes()).hexdigest() == expected
++
++
++def test_stale_archive_entry_is_refused(monkeypatch, tmp_path) -> None:
++    """A stale archive entry (sha mismatch) must not be attributed to this round."""
++
++    class _StaleProposer(_ArchivingProposer):
++        def induce(self, game, trans, cell, *, previous_level_complete_grid=None):
++            path = self.store / self.game / "world_model.py"
++            path.parent.mkdir(parents=True, exist_ok=True)
++            path.write_text(self.source)
++            # A leftover entry from some EARLIER emission: wrong sha16 on purpose.
++            self.last_attempt_archive = {
++                "archived": True,
++                "sha256_16": "0" * 16,
++                "ts": "20260101T000000_000000",
++                "prompt_sha256": self.last_prompt_sha256,
++            }
++            return True, "wrote"
++
++    proposer = _StaleProposer(tmp_path, GAME, ENGINE_SRC)
++    result, _ = _run(monkeypatch, tmp_path, proposer)
++
++    row = result.rounds[0]
++    assert "engine_emitted_at" not in row
++    assert "transition_source_path" not in row
++
++
++def test_archiver_returns_provenance_fields(monkeypatch, tmp_path) -> None:
++    """The archive info and manifest line both carry ts / full sha / prompt sha."""
++
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    prompt_sha = hashlib.sha256(b"p").hexdigest()
++    info = e3._archive_engine_attempt(GAME, "x = 1\n", writer="test", prompt_sha256=prompt_sha)
++
++    assert info["archived"] is True
++    assert info["ts"]
++    assert info["sha256_full"] == hashlib.sha256(b"x = 1\n").hexdigest()
++    assert info["sha256_16"] == info["sha256_full"][:16]
++    assert info["prompt_sha256"] == prompt_sha
++    manifest = (tmp_path / GAME / "attempts" / "manifest.jsonl").read_text().splitlines()
++    assert json.loads(manifest[-1])["prompt_sha256"] == prompt_sha
++
++
++def test_generate_records_prompt_sha(monkeypatch) -> None:
++    """`generate()` pins the prompt hash before any transport can fail."""
++
++    proposer = object.__new__(e3.LocalGGUFProposer)
++    proposer.n_completion_calls = 0
++    monkeypatch.setattr(type(proposer), "_ensure_server", lambda self: False, raising=False)
++    monkeypatch.setattr(
++        type(proposer), "_effective_model_label", lambda self: "stub", raising=False
++    )
++    monkeypatch.setattr(
++        type(proposer), "_note_server_failure", lambda self, msg: None, raising=False
++    )
++    ok, _msg = proposer.generate("PROMPT BYTES")
++    assert ok is False
++    assert proposer.last_prompt_sha256 == hashlib.sha256(b"PROMPT BYTES").hexdigest()
+diff --git a/tests/python/test_eval_run_consumer_field_lint.py b/tests/python/test_eval_run_consumer_field_lint.py
+new file mode 100644
+index 0000000000..e9b0f87907
+--- /dev/null
++++ b/tests/python/test_eval_run_consumer_field_lint.py
+@@ -0,0 +1,131 @@
++"""The eval-run consumer/producer field join (REQ-ARC-WMTE-6642).
++
++SCENARIO-ARC-WMTE-6642-DECLARE: a consumer without EVAL_RUN_FIELDS_READ fails.
++SCENARIO-ARC-WMTE-6642-JOIN: observed passes; wired-unobserved notices; neither fails.
++SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: no runs dir / no artifacts fails; populations print.
++
++Origin: three consumers in three days ran against fields no artifact recorded
++(trajectory_supervisor, generator_channels, induction_attempts provenance).
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++import sys
++from pathlib import Path
++
++_SPEC = importlib.util.spec_from_file_location(
++    "eval_run_consumer_field_lint",
++    Path(__file__).resolve().parents[2] / "scripts" / "eval_run_consumer_field_lint.py",
++)
++lint = importlib.util.module_from_spec(_SPEC)
++sys.modules["eval_run_consumer_field_lint"] = lint
++_SPEC.loader.exec_module(lint)
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _fake_repo(tmp_path: Path, *, consumer_body: str, artifact: dict | None) -> Path:
++    root = tmp_path / "repo"
++    (root / "scripts").mkdir(parents=True)
++    (root / "python" / "carnot" / "agentic").mkdir(parents=True)
++    runs = root / "results" / "arc_leaderboard_eval_runs"
++    runs.mkdir(parents=True)
++    (root / "scripts" / "consumer.py").write_text(consumer_body)
++    # The producer surface: the eval harness emits "wired_field" as a literal.
++    (root / "scripts" / "arc_leaderboard_eval.py").write_text('ROW = {"wired_field": 1}\n')
++    (root / "python" / "carnot" / "agentic" / "runtime.py").write_text("x = 1\n")
++    if artifact is not None:
++        (runs / "run.json").write_text(json.dumps(artifact))
++    return root
++
++
++def _run(root: Path):
++    return lint.run_lint(
++        root,
++        root / "results" / "arc_leaderboard_eval_runs",
++        root / "results" / "arc_leaderboard_eval.json",
++        (root / "scripts" / "arc_leaderboard_eval.py", root / "python" / "carnot" / "agentic"),
++    )
++
++
++def test_consumer_without_declaration_fails(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-DECLARE."""
++
++    root = _fake_repo(
++        tmp_path,
++        consumer_body='d = "arc_leaderboard_eval_runs"\n',
++        artifact={"per_game": []},
++    )
++    failures, _ = _run(root)
++    assert any("EVAL_RUN_FIELDS_READ" in f for f in failures)
++
++
++def test_join_observed_wired_and_missing(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-JOIN: all three verdicts from one consumer."""
++
++    body = (
++        'd = "arc_leaderboard_eval_runs"\n'
++        'EVAL_RUN_FIELDS_READ = ("observed_field", "wired_field", "ghost_field")\n'
++    )
++    root = _fake_repo(
++        tmp_path,
++        consumer_body=body,
++        artifact={"per_game": [{"observed_field": 3}]},
++    )
++    failures, notices = _run(root)
++    assert any("ghost_field" in f and "NO eval-run artifact" in f for f in failures)
++    assert not any("observed_field" in f for f in failures)
++    assert not any("wired_field" in f for f in failures)
++    assert any("wired_field" in n and "wired" in n for n in notices)
++
++
++def test_nested_keys_count_as_observed(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-JOIN: containment is any-depth, matching real rows."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("deep_field",)\n'
++    root = _fake_repo(
++        tmp_path,
++        consumer_body=body,
++        artifact={"per_game": [{"diag": {"attempts": [{"deep_field": 1}]}}]},
++    )
++    failures, _ = _run(root)
++    assert failures == []
++
++
++def test_fails_closed_without_artifacts(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED, both halves."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("f",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact=None)
++    failures, _ = _run(root)
++    assert any("join cannot run" in f for f in failures)
++
++    import shutil
++
++    shutil.rmtree(root / "results" / "arc_leaderboard_eval_runs")
++    failures, _ = _run(root)
++    assert any("runs directory missing" in f for f in failures)
++
++
++def test_population_note_always_printed(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: a zero-findings run names its populations."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("per_game",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact={"per_game": []})
++    failures, notices = _run(root)
++    assert failures == []
++    assert any("population:" in n for n in notices)
++
++
++def test_real_repo_contract_holds() -> None:
++    """The live checkout passes: every seeded declaration is emitted somewhere real.
++
++    This is the wiring test — if a consumer is added without a declaration, or a
++    declared field stops being emitted, this test goes RED with the suite.
++    """
++
++    failures, notices = lint.run_lint()
++    assert failures == [], failures
++    assert any("population:" in n for n in notices)
+diff --git a/tests/python/test_experiment_6968_arc_post_refit_induction_audit.py b/tests/python/test_experiment_6968_arc_post_refit_induction_audit.py
+index 23d8671a65..5c1ffd9fa9 100644
+--- a/tests/python/test_experiment_6968_arc_post_refit_induction_audit.py
++++ b/tests/python/test_experiment_6968_arc_post_refit_induction_audit.py
+@@ -508,3 +508,29 @@ def test_req_arc_wmte_6968_relative_main_output_stays_below_repo(
+ 
+     assert exp.main(["--date", "20260904", "--output", "relative.json"]) == 1
+     assert (tmp_path / "relative.json").is_file()
++
++
++def test_req_arc_wmte_6968_sentinel_names_the_gate_that_actually_failed(
++    tmp_path: Path,
++) -> None:
++    """The early-return sentinel says it was not evaluated and names the real failure.
++
++    Origin (2026-09-04 known-issues): the hardcoded-False sentinel reported
++    `failed_check: immutable_transition_source` on a run where the transition source
++    was never read, sending a reader down a wrong hypothesis — same class as
++    REQ-CONDUCTOR-VERDICT-3's `artifact_not_updated_past_bootstrap`.
++    """
++
++    # An empty checkout: zero candidates, so every upstream selection gate fails.
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++
++    sentinel = next(
++        row
++        for row in artifact["gate_check_summary"]
++        if row["failed_check"] == "immutable_transition_source"
++    )
++    observed = str(sentinel["observed_value"])
++    assert observed.startswith("not_evaluated_upstream_gate_failed:"), observed
++    # The named cause is a REAL upstream gate, not the sentinel's own name.
++    assert "immutable_transition_source" not in observed.split(":", 1)[1]
++    assert observed.split(":", 1)[1], "the sentinel must name at least one cause"
+-- 
+2.55.0
+

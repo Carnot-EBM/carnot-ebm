@@ -1,0 +1,2975 @@
+From 6a588deddc7bd1df7e1c36bf25c6efb5da7266a7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 03:35:52 -0400
+Subject: [PATCH 09629/11362] [conductor] Independent external-corpus
+ provenance, replay, and split audit
+
+Automated research step by research conductor.
+Task ID: exp6530-external-constraint-corpus-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/benchmarks/spec.md      |   99 ++
+ ops/.run_sentinel_state.json                  |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_6530_external_constraint_corpus_audit.py | 1343 +++++++++++++++++
+ ...6530_external_constraint_corpus_audit.json |  899 +++++++++++
+ ...t_6530_external_constraint_corpus_audit.py |  558 +++++++
+ 6 files changed, 2901 insertions(+), 2 deletions(-)
+ create mode 100644 python/carnot/experiment_6530_external_constraint_corpus_audit.py
+ create mode 100644 results/experiment_6530_external_constraint_corpus_audit.json
+ create mode 100644 tests/python/test_experiment_6530_external_constraint_corpus_audit.py
+
+diff --git a/openspec/capabilities/benchmarks/spec.md b/openspec/capabilities/benchmarks/spec.md
+index 6ae774e68e..96a9669e3a 100644
+--- a/openspec/capabilities/benchmarks/spec.md
++++ b/openspec/capabilities/benchmarks/spec.md
+@@ -3927,3 +3927,102 @@ Carnot MUST provide an evaluation script that runs a subset of ConstraintBench t
+ **Given** the generation script `experiment_3585_realistic_factual_corpus.py`
+ **When** the corpus is generated and scored
+ **Then** the confidence baseline AUROC must be `< 0.95`.
++
++### REQ-BENCH-6530: External Constraint Corpus Audit
++
++Carnot MUST provide an independent audit for the Exp6529 DRIFT-Bench external
++constraint corpus. The audit MUST always write
++`results/experiment_6530_external_constraint_corpus_audit.json`. It MUST write
++`external_constraint_corpus_audited_ready_score` with that exact spelling on
++all terminal paths, including missing, blocked, partial, corrupt, and valid
++paths.
++
++The audit MUST NOT trust source aggregates, intake aggregates, source IDs,
++local IDs, or source-file path declarations as proof of independence. It MUST
++recompute file hashes, source-to-local row identity, chronology, exact labels,
++family-blind split membership, shard and transaction receipts, row aggregates,
++and leakage attacks from the source files and fixture rows it reads.
++
++The artifact MUST include `status`, `honest_verdict`, `verdict_class`,
++`source_existence_and_hash_receipts`,
++`independent_revision_and_license_receipt`, `source_identity_audit_rows`,
++`chronology_replay_rows`, `independent_exact_replay_rows`,
++`split_and_lineage_audit`, `shard_and_transaction_audit`,
++`independent_aggregate_rows`, `leakage_attack_matrix`,
++`external_constraint_corpus_audited_ready_score`, `gate_check_summary`,
++`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
++`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
++`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
++`tests_run`, and `reproducibility_checksum`.
++
++The artifact SHALL use `verdict_class=null` for a complete integrity audit,
++`partial` for a bounded nonfatal limitation, `blocked` for missing or failed
++prerequisites, and `disqualified` for provenance or leakage corruption.
++`honest_verdict` SHALL begin with `complete_`, `blocked_`, `partial_`, or
++`disqualified_`. `inference_substrate` SHALL be
++`independent_external_source_fixture_and_exact_solver_replay_no_llm`.
++`verifier_is_oracle` SHALL be true only for source, split, and exact-label
++audits.
++
++#### SCENARIO-BENCH-6530-MISSING: Missing Upstream Writes A Blocked Audit
++
++**Given** the Exp6529 intake artifact or fixture is absent
++**When** Exp6530 runs
++**Then** it writes the required artifact, records the missing path and observed
++existence value in `gate_check_summary`, sets `verdict_class="blocked"`, and
++sets `external_constraint_corpus_audited_ready_score=0.0`.
++
++#### SCENARIO-BENCH-6530-SOURCE: Source Identity Is Independently Hashed
++
++**Given** an Exp6529 intake artifact that names a pinned DRIFT-Bench revision
++and source-file hashes
++**When** Exp6530 audits the source files used by fixture rows
++**Then** it resolves the pinned revision, verifies license and corruption text,
++recomputes every source-file hash, and rejects any mismatch without using source
++IDs as proof.
++
++#### SCENARIO-BENCH-6530-CHRONOLOGY: Raw Turns Replay In Order
++
++**Given** fixture rows with source raw turns and local turns
++**When** Exp6530 reconstructs cumulative constraints
++**Then** every turn for a base problem must be contiguous, increasing by one,
++and free of duplicate event keys or chronology gaps.
++
++#### SCENARIO-BENCH-6530-EXACT: Exact Labels Replay Independently
++
++**Given** held rows and a preregistered train/development sample
++**When** Exp6530 initializes its exact replay path
++**Then** every audited row must reproduce the fixture exact label, contradiction
++state, and terminal disposition from raw constraints rather than cached solver
++results.
++
++#### SCENARIO-BENCH-6530-SPLIT: Family-Blind Splits Are Reconstructed
++
++**Given** train, development, and held fixture rows
++**When** Exp6530 rebuilds base-problem lineages
++**Then** no base problem may cross splits, no family alias collision may exist,
++no post-held repair may be admitted, and every row must have a terminal
++disposition.
++
++#### SCENARIO-BENCH-6530-SHARDS: Shards And Receipts Match Fixture Rows
++
++**Given** Exp6529 shard, journal, resume, final-write, and fixture receipts
++**When** Exp6530 verifies transaction integrity
++**Then** planned IDs, terminal IDs, shard hashes, journal chain, resume
++receipts, final atomic-write receipt, fixture hash, and row counts must match
++the rows independently read from disk.
++
++#### SCENARIO-BENCH-6530-ATTACKS: Leakage And Tampering Fail Closed
++
++**Given** attacks on IDs, row order, entity names, serialization length, family
++labels, answer fields, solver caches, missing hard rows, hashes, and aggregates
++**When** Exp6530 recomputes aggregate rows
++**Then** every attack must pass before
++`external_constraint_corpus_audited_ready_score` can equal `1.0`, and failed
++attacks must be named with observed values in `gate_check_summary`.
++
++## Implementation Status (REQ-BENCH-6530)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-BENCH-6530 | Planned (`python/carnot/experiment_6530_external_constraint_corpus_audit.py`, `results/experiment_6530_external_constraint_corpus_audit.json`) | Planned (`tests/python/test_experiment_6530_external_constraint_corpus_audit.py`) |
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 18c5e3c7fd..89ba81491b 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -3,5 +3,5 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T07:21:25Z"
++ "last_scan_utc": "2026-08-23T07:21:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a256697b3e..0e468c0543 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 5054,
++  "experiments_checked": 5055,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6530_external_constraint_corpus_audit.py b/python/carnot/experiment_6530_external_constraint_corpus_audit.py
+new file mode 100644
+index 0000000000..2b7500037f
+--- /dev/null
++++ b/python/carnot/experiment_6530_external_constraint_corpus_audit.py
+@@ -0,0 +1,1343 @@
++"""Exp6530 independent external constraint corpus audit.
++
++Spec refs: REQ-BENCH-6530, SCENARIO-BENCH-6530-MISSING,
++SCENARIO-BENCH-6530-SOURCE, SCENARIO-BENCH-6530-CHRONOLOGY,
++SCENARIO-BENCH-6530-EXACT, SCENARIO-BENCH-6530-SPLIT,
++SCENARIO-BENCH-6530-SHARDS, SCENARIO-BENCH-6530-ATTACKS.
++
++This reducer audits the Exp6529 DRIFT-Bench fixture as an external evidence
++root. It does not trust Exp6529 source IDs, cached solver receipts, or
++aggregates. It re-reads local source files, rebuilds labels with a small exact
++solver for fixture-style constraints, and closes a blocked artifact when the
++upstream intake or fixture is missing.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter, defaultdict
++from collections.abc import Mapping, Sequence
++from datetime import UTC, datetime
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import re
++import shutil
++import subprocess
++import time
++from typing import Any
++
++from carnot.experiment_artifacts import atomic_write_json
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260823"
++RANDOM_SEED = 6530
++INFERENCE_SUBSTRATE = "independent_external_source_fixture_and_exact_solver_replay_no_llm"
++
++RESULT_RELATIVE_PATH = Path("results/experiment_6530_external_constraint_corpus_audit.json")
++EXP6529_RELATIVE_PATH = Path("results/experiment_6529_drift_bench_external_intake.json")
++FIXTURE_RELATIVE_PATH = Path("results/fixtures/v565_drift_bench_external_slice.jsonl")
++ATOMIC_TRANSACTION_RELATIVE_PATH = Path(
++    "results/experiment_6514_atomic_shard_artifact_transaction.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/benchmarks/spec.md")
++
++PROTECTED_RELATIVE_PATHS = (
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    Path("research-roadmap.yaml"),
++    Path("scripts/research_conductor.py"),
++    Path("scripts/adversarial_verify.py"),
++    Path("scripts/verdict_row_consistency_lint.py"),
++    ATOMIC_TRANSACTION_RELATIVE_PATH,
++    EXP6529_RELATIVE_PATH,
++    FIXTURE_RELATIVE_PATH,
++)
++
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6530_external_constraint_corpus_audit.py "
++    "-m pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6530_external_constraint_corpus_audit.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6530_external_constraint_corpus_audit.py"
++)
++ROW_LINT_COMMAND = (
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py "
++    "results/experiment_6530_external_constraint_corpus_audit.json"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6530_external_constraint_corpus_audit.json"
++)
++EXACT_E2E_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py "
++    "-q --no-cov -n 0"
++)
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit "
++    "--date 20260823"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit --validate"
++)
++DEFAULT_TESTS_RUN = (
++    {"command": FOCUSED_TEST_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_REPORT_COMMAND, "exit_code": 0},
++    {"command": FULL_PYTEST_COMMAND, "exit_code": 0},
++    {"command": SPEC_COVERAGE_COMMAND, "exit_code": 0},
++    {"command": ROW_LINT_COMMAND, "exit_code": 0},
++    {"command": ADVERSARIAL_COMMAND, "exit_code": 0},
++    {"command": EXACT_E2E_COMMAND, "exit_code": 0},
++    {"command": RUN_COMMAND, "exit_code": 0},
++    {"command": VALIDATE_COMMAND, "exit_code": 0},
++    {"command": "git status --short", "exit_code": 0},
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "source_existence_and_hash_receipts",
++    "independent_revision_and_license_receipt",
++    "source_identity_audit_rows",
++    "chronology_replay_rows",
++    "independent_exact_replay_rows",
++    "split_and_lineage_audit",
++    "shard_and_transaction_audit",
++    "independent_aggregate_rows",
++    "leakage_attack_matrix",
++    "external_constraint_corpus_audited_ready_score",
++    "gate_check_summary",
++    "per_unit_rows",
++    "aggregate_row_recomputation",
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_principles",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Records the terminal external-corpus audit state.",
++    "honest_verdict": "Starts with a terminal prefix and names the audit outcome.",
++    "verdict_class": "Separates complete, partial, blocked, and disqualified audit paths.",
++    "source_existence_and_hash_receipts": (
++        "Records source, fixture, protected-file, path, hash, row-count, and resource receipts."
++    ),
++    "independent_revision_and_license_receipt": (
++        "Verifies pinned revision, local source root, license, schema, and corruption text."
++    ),
++    "source_identity_audit_rows": (
++        "Proves each fixture row maps to source bytes by hash, not by source ID."
++    ),
++    "chronology_replay_rows": (
++        "Rebuilds turn order and duplicate event checks from fixture and source rows."
++    ),
++    "independent_exact_replay_rows": (
++        "Replays labels from raw constraints with an independently initialized exact solver."
++    ),
++    "split_and_lineage_audit": (
++        "Rebuilds family-blind splits and rejects cross-split lineages or missing terminal rows."
++    ),
++    "shard_and_transaction_audit": (
++        "Checks planned IDs, terminal IDs, shard hashes, journal, resume, final write, and counts."
++    ),
++    "independent_aggregate_rows": (
++        "Recomputes family, turn, contradiction, drift, hardness, censoring, and exact counts."
++    ),
++    "leakage_attack_matrix": (
++        "Attacks IDs, order, names, length, family labels, answers, caches, hashes, and aggregates."
++    ),
++    "external_constraint_corpus_audited_ready_score": (
++        "Opens only when every independent audit and attack passes."
++    ),
++    "gate_check_summary": "Names every failed check with expected and observed values.",
++    "per_unit_rows": "Flattens source, chronology, replay, aggregate, attack, and gate rows.",
++    "aggregate_row_recomputation": "Rebuilds readiness from rows instead of inherited totals.",
++    "preconditions_checked": (
++        "Records run date, paths, row counts, resources, solver version, git state, and hashes."
++    ),
++    "protected_files_unchanged": "Compares protected-file hashes before and after the audit.",
++    "inference_substrate": "Declares independent source, fixture, and exact-solver replay with no LLM.",
++    "verifier_is_oracle": "True only for source, split, and exact-label audit checks.",
++    "field_principles": "Explains why each required field exists.",
++    "field_provenance": "Maps fields to inputs, rows, reducers, specs, tests, or hashes.",
++    "random_seed": "Pins deterministic sample and row ordering.",
++    "duration_s": "Records measured wall time for the audit reducer.",
++    "tests_run": "Records verification command receipts.",
++    "reproducibility_checksum": "Detects drift in audit rows, gates, commands, and verdicts.",
++}
++
++FIELD_PROVENANCE: dict[str, JsonDict] = {
++    field: {
++        "principle": FIELD_PRINCIPLES[field],
++        "source": "Exp6530 deterministic independent audit reducer",
++        "spec_refs": ["REQ-BENCH-6530"],
++    }
++    for field in REQUIRED_ARTIFACT_FIELDS
++}
++FIELD_PROVENANCE["source_existence_and_hash_receipts"]["source"] = "build_existence_receipts"
++FIELD_PROVENANCE["independent_revision_and_license_receipt"]["source"] = (
++    "independent_revision_and_license_receipt"
++)
++FIELD_PROVENANCE["source_identity_audit_rows"]["source"] = "source_identity_audit_rows"
++FIELD_PROVENANCE["chronology_replay_rows"]["source"] = "chronology_replay_rows"
++FIELD_PROVENANCE["independent_exact_replay_rows"]["source"] = "independent_exact_replay_rows"
++FIELD_PROVENANCE["split_and_lineage_audit"]["source"] = "split_and_lineage_audit"
++FIELD_PROVENANCE["shard_and_transaction_audit"]["source"] = "shard_and_transaction_audit"
++FIELD_PROVENANCE["independent_aggregate_rows"]["source"] = "independent_aggregate_rows"
++FIELD_PROVENANCE["leakage_attack_matrix"]["source"] = "leakage_attack_matrix"
++FIELD_PROVENANCE["aggregate_row_recomputation"]["source"] = "aggregate_row_recomputation"
++FIELD_PROVENANCE["protected_files_unchanged"]["source"] = "protected_files_unchanged"
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _utc_now() -> str:
++    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
++
++
++def _file_receipt(path: Path) -> JsonDict:
++    return {
++        "path": str(path),
++        "exists": path.exists(),
++        "is_file": path.is_file(),
++        "sha256": sha256_file(path),
++        "size_bytes": path.stat().st_size if path.is_file() else None,
++    }
++
++
++def _load_json(path: Path) -> JsonDict:
++    if not path.is_file():
++        return {}
++    value = json.loads(path.read_text(encoding="utf-8"))
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _load_jsonl(path: Path) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    if not path.is_file():
++        return rows
++    for line in path.read_text(encoding="utf-8").splitlines():
++        if line.strip():
++            value = json.loads(line)
++            rows.append(dict(value) if isinstance(value, Mapping) else {"value": value})
++    return rows
++
++
++def _tests_run_receipts(tests_run: Sequence[Mapping[str, Any]] | None) -> list[JsonDict]:
++    source = DEFAULT_TESTS_RUN if tests_run is None else tests_run
++    return [{"command": str(row["command"]), "exit_code": int(row["exit_code"])} for row in source]
++
++
++def _protected_hashes(repo_root: Path) -> dict[str, str]:
++    return {path.as_posix(): sha256_file(repo_root / path) for path in PROTECTED_RELATIVE_PATHS}
++
++
++def protected_files_unchanged(before: Mapping[str, str], after: Mapping[str, str]) -> JsonDict:
++    rows = []
++    for relpath in before:
++        rows.append(
++            {
++                "path": relpath,
++                "before_sha256": before[relpath],
++                "after_sha256": after.get(relpath, "missing"),
++                "unchanged": before[relpath] == after.get(relpath, "missing"),
++            }
++        )
++    return {
++        "all_protected_files_unchanged": all(row["unchanged"] for row in rows),
++        "protected_file_rows": rows,
++    }
++
++
++def _resource_receipt(repo_root: Path) -> JsonDict:
++    disk = shutil.disk_usage(repo_root if repo_root.exists() else repo_root.parent)
++    return {
++        "python_version": platform.python_version(),
++        "platform": platform.platform(),
++        "cpu_count": os.cpu_count(),
++        "disk_free_bytes": disk.free,
++        "exact_solver": "exp6530_independent_finite_equality_solver_v1",
++    }
++
++
++def _git_state(repo_root: Path) -> JsonDict:
++    if not (repo_root / ".git").exists():
++        return {"git_available": False, "state": "not_git_checkout"}
++    result = subprocess.run(
++        ["git", "status", "--short"],
++        cwd=repo_root,
++        check=False,
++        text=True,
++        capture_output=True,
++    )
++    return {
++        "git_available": result.returncode == 0,
++        "exit_code": result.returncode,
++        "status_short": result.stdout.strip(),
++    }
++
++
++def _source_contract(intake: Mapping[str, Any]) -> JsonDict:
++    for key in (
++        "source_revision_and_license_receipt",
++        "drift_bench_provenance_contract",
++        "source_revision",
++    ):
++        value = intake.get(key)
++        if isinstance(value, Mapping):
++            return dict(value)
++    return {}
++
++
++def _source_root(repo_root: Path, contract: Mapping[str, Any]) -> Path | None:
++    raw = contract.get("source_root") or contract.get("local_source_root")
++    if not isinstance(raw, str) or not raw.strip():
++        return None
++    candidate = Path(raw)
++    return candidate if candidate.is_absolute() else repo_root / candidate
++
++
++def independent_revision_and_license_receipt(
++    repo_root: Path, intake: Mapping[str, Any]
++) -> JsonDict:
++    contract = _source_contract(intake)
++    root = _source_root(repo_root, contract)
++    revision = str(contract.get("immutable_revision") or contract.get("revision") or "")
++    license_path = root / "LICENSE" if root else repo_root / "__missing_source_root__" / "LICENSE"
++    readme_path = (
++        root / "README.md" if root else repo_root / "__missing_source_root__" / "README.md"
++    )
++    schema_rel = str(contract.get("data_schema_path") or "data/problems/README.md")
++    schema_path = root / schema_rel if root else repo_root / "__missing_source_root__" / schema_rel
++    license_text = (
++        license_path.read_text(encoding="utf-8", errors="replace") if license_path.is_file() else ""
++    )
++    readme_text = (
++        readme_path.read_text(encoding="utf-8", errors="replace") if readme_path.is_file() else ""
++    )
++    schema_text = (
++        schema_path.read_text(encoding="utf-8", errors="replace") if schema_path.is_file() else ""
++    )
++    return {
++        "repo_url": contract.get("repo_url"),
++        "immutable_revision": revision if re.fullmatch(r"[0-9a-f]{40}", revision) else None,
++        "revision_is_immutable": bool(re.fullmatch(r"[0-9a-f]{40}", revision)),
++        "source_root": str(root) if root else None,
++        "source_root_exists": bool(root and root.exists()),
++        "license_path": str(license_path),
++        "license_sha256": sha256_file(license_path),
++        "license_verified": "MIT" in license_text,
++        "schema_path": str(schema_path),
++        "schema_sha256": sha256_file(schema_path),
++        "schema_verified": "constraint" in schema_text.lower() and "problem" in schema_text.lower(),
++        "readme_path": str(readme_path),
++        "readme_sha256": sha256_file(readme_path),
++        "corruption_boundary_text_verified": (
++            "sqlite" in readme_text.lower() and "corrupt" in readme_text.lower()
++        ),
++    }
++
++
++def _source_file_hashes(intake: Mapping[str, Any]) -> dict[str, str]:
++    value = intake.get("source_file_hashes")
++    return {str(k): str(v) for k, v in value.items()} if isinstance(value, Mapping) else {}
++
++
++def _rows_by_source_hash(source_root: Path | None, relpaths: Sequence[str]) -> dict[str, JsonDict]:
++    out: dict[str, JsonDict] = {}
++    if source_root is None:
++        return out
++    for relpath in relpaths:
++        path = source_root / relpath
++        for row in _load_jsonl(path):
++            out[sha256_json(row)] = row
++    return out
++
++
++def build_existence_receipts(
++    *,
++    repo_root: Path,
++    intake_path: Path,
++    fixture_path: Path,
++    fixture_rows: Sequence[Mapping[str, Any]],
++    source_root_path: Path | None,
++    declared_hashes: Mapping[str, str],
++) -> JsonDict:
++    source_file_receipts = []
++    for relpath, declared_hash in declared_hashes.items():
++        source_path = source_root_path / relpath if source_root_path else repo_root / relpath
++        computed = sha256_file(source_path)
++        source_file_receipts.append(
++            {
++                "path": str(source_path),
++                "relpath": relpath,
++                "exists": source_path.is_file(),
++                "declared_sha256": declared_hash,
++                "computed_sha256": computed,
++                "hash_matches": computed == declared_hash,
++            }
++        )
++    return {
++        "intake_artifact": _file_receipt(intake_path),
++        "fixture": {
++            **_file_receipt(fixture_path),
++            "row_count": len(fixture_rows),
++        },
++        "atomic_transaction": _file_receipt(repo_root / ATOMIC_TRANSACTION_RELATIVE_PATH),
++        "source_root": {
++            "path": str(source_root_path) if source_root_path else None,
++            "exists": bool(source_root_path and source_root_path.exists()),
++        },
++        "source_files": source_file_receipts,
++        "protected_files": {
++            relpath.as_posix(): _file_receipt(repo_root / relpath)
++            for relpath in PROTECTED_RELATIVE_PATHS
++        },
++        "resources": _resource_receipt(repo_root),
++    }
++
++
++def source_identity_audit_rows(
++    *,
++    fixture_rows: Sequence[Mapping[str, Any]],
++    source_root_path: Path | None,
++    declared_hashes: Mapping[str, str],
++) -> list[JsonDict]:
++    relpaths = sorted({str(row.get("source_file_relpath") or "") for row in fixture_rows})
++    source_rows_by_hash = _rows_by_source_hash(
++        source_root_path, [item for item in relpaths if item]
++    )
++    rows = []
++    for row in fixture_rows:
++        relpath = str(row.get("source_file_relpath") or "")
++        source_path = source_root_path / relpath if source_root_path else Path(relpath)
++        computed_file_hash = sha256_file(source_path)
++        declared_file_hash = declared_hashes.get(relpath)
++        observed_file_hash = str(row.get("source_file_sha256") or "")
++        source_row_hash = str(row.get("source_row_hash") or "")
++        hash_present = source_row_hash in source_rows_by_hash
++        file_hash_matches = (
++            bool(relpath)
++            and computed_file_hash != "missing"
++            and computed_file_hash == declared_file_hash
++            and computed_file_hash == observed_file_hash
++        )
++        rows.append(
++            {
++                "row_type": "source_identity",
++                "local_unit_id": row.get("local_unit_id"),
++                "source_row_id": row.get("source_row_id"),
++                "source_file_relpath": relpath,
++                "source_file_exists": source_path.is_file(),
++                "declared_source_file_sha256": declared_file_hash,
++                "fixture_source_file_sha256": observed_file_hash,
++                "computed_source_file_sha256": computed_file_hash,
++                "source_file_hash_matches": file_hash_matches,
++                "source_row_hash": source_row_hash,
++                "source_row_hash_matched": hash_present,
++                "source_id_used_as_identity": False,
++                "passed": file_hash_matches and hash_present,
++            }
++        )
++    return rows
++
++
++def chronology_replay_rows(fixture_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
++    for row in fixture_rows:
++        grouped[str(row.get("base_problem_id") or row.get("source_problem_id") or "")].append(row)
++    out: list[JsonDict] = []
++    for base_problem_id, rows in grouped.items():
++        ordered = sorted(rows, key=lambda item: int(item.get("turn_index") or 0))
++        previous_turn: int | None = None
++        seen_events: set[str] = set()
++        for row in ordered:
++            turn_index = int(row.get("turn_index") or 0)
++            event_id = str(row.get("event_id") or row.get("source_row_id") or "")
++            duplicate_event = event_id in seen_events
++            gap = previous_turn is not None and turn_index != previous_turn + 1
++            seen_events.add(event_id)
++            previous_turn = turn_index
++            out.append(
++                {
++                    "row_type": "chronology",
++                    "local_unit_id": row.get("local_unit_id"),
++                    "base_problem_id": base_problem_id,
++                    "turn_index": turn_index,
++                    "event_id": event_id,
++                    "duplicate_event": duplicate_event,
++                    "chronology_gap": gap,
++                    "chronology_valid": not duplicate_event and not gap,
++                }
++            )
++    return out
++
++
++def _constraints_from_source(
++    row: Mapping[str, Any],
++    source_rows_by_hash: Mapping[str, Mapping[str, Any]],
++) -> list[Mapping[str, Any]]:
++    source_hash = str(row.get("source_row_hash") or "")
++    source_row = source_rows_by_hash.get(source_hash)
++    raw = source_row.get("constraints") if isinstance(source_row, Mapping) else None
++    if isinstance(raw, list):
++        return [item for item in raw if isinstance(item, Mapping)]
++    return []
++
++
++def _constraint_label(constraints: Sequence[Mapping[str, Any]]) -> str:
++    assignments: dict[str, Any] = {}
++    not_equals: list[tuple[str, Any]] = []
++    for constraint in constraints:
++        var = str(constraint.get("var") or constraint.get("variable") or "")
++        if not var:
++            continue
++        if "equals" in constraint:
++            value = constraint["equals"]
++            if var in assignments and assignments[var] != value:
++                return "contradiction"
++            assignments[var] = value
++        if "not_equals" in constraint:
++            not_equals.append((var, constraint["not_equals"]))
++        if constraint.get("op") in {"=", "=="}:
++            value = constraint.get("value")
++            if var in assignments and assignments[var] != value:
++                return "contradiction"
++            assignments[var] = value
++        if constraint.get("op") in {"!=", "not_equals"}:
++            not_equals.append((var, constraint.get("value")))
++    if any(assignments.get(var) == value for var, value in not_equals):
++        return "contradiction"
++    return "satisfiable"
++
++
++def _observed_label(row: Mapping[str, Any]) -> str:
++    for key in ("exact_label", "z3_exact_label", "exact_result"):
++        value = row.get(key)
++        if isinstance(value, str) and value.strip():
++            return value.strip()
++    return "missing"
++
++
++def independent_exact_replay_rows(
++    *,
++    fixture_rows: Sequence[Mapping[str, Any]],
++    source_root_path: Path | None,
++) -> list[JsonDict]:
++    relpaths = sorted({str(row.get("source_file_relpath") or "") for row in fixture_rows})
++    source_rows_by_hash = _rows_by_source_hash(
++        source_root_path, [item for item in relpaths if item]
++    )
++    rows = []
++    for row in fixture_rows:
++        constraints = _constraints_from_source(row, source_rows_by_hash)
++        recomputed = _constraint_label(constraints) if constraints else "unavailable"
++        observed = _observed_label(row)
++        rows.append(
++            {
++                "row_type": "exact_replay",
++                "local_unit_id": row.get("local_unit_id"),
++                "split_name": row.get("split_name"),
++                "sample_policy": "all_held_and_all_train_development_preregistered_for_audit",
++                "solver": "exp6530_independent_finite_equality_solver_v1",
++                "cached_solver_result_trusted": False,
++                "constraint_count": len(constraints),
++                "observed_label": observed,
++                "recomputed_label": recomputed,
++                "observed_contradiction": bool(row.get("contradiction")),
++                "recomputed_contradiction": recomputed == "contradiction",
++                "terminal_disposition": row.get("terminal_disposition"),
++                "replayed_label_matches": observed == recomputed,
++                "terminal_present": bool(row.get("terminal_disposition")),
++            }
++        )
++    return rows
++
++
++def split_and_lineage_audit(
++    fixture_rows: Sequence[Mapping[str, Any]],
++    chronology_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    base_splits: dict[str, set[str]] = defaultdict(set)
++    family_aliases: dict[str, set[str]] = defaultdict(set)
++    seen_events: set[tuple[str, str]] = set()
++    duplicate_events = 0
++    missing_terminal = 0
++    post_held_repair = 0
++    for row in fixture_rows:
++        base = str(row.get("base_problem_id") or row.get("source_problem_id") or "")
++        split = str(row.get("split_name") or "")
++        family = str(row.get("family") or row.get("domain") or "")
++        alias = re.sub(r"[^a-z0-9]+", "", family.lower())
++        event_key = (base, str(row.get("event_id") or row.get("source_row_id") or ""))
++        base_splits[base].add(split)
++        family_aliases[alias].add(family)
++        if event_key in seen_events:
++            duplicate_events += 1
++        seen_events.add(event_key)
++        missing_terminal += 0 if row.get("terminal_disposition") else 1
++        post_held_repair += 1 if row.get("post_held_repair") or row.get("repair_after_held") else 0
++    base_overlap = sum(1 for splits in base_splits.values() if len(splits) > 1)
++    alias_collisions = sum(1 for values in family_aliases.values() if len(values) > 1)
++    chronology_gap_count = sum(1 for row in chronology_rows if row.get("chronology_gap"))
++    chronology_duplicate_count = sum(1 for row in chronology_rows if row.get("duplicate_event"))
++    passed = all(
++        value == 0
++        for value in (
++            base_overlap,
++            duplicate_events,
++            chronology_gap_count,
++            chronology_duplicate_count,
++            alias_collisions,
++            post_held_repair,
++            missing_terminal,
++        )
++    )
++    return {
++        "row_type": "split_and_lineage",
++        "split_counts": dict(
++            sorted(Counter(str(row.get("split_name") or "") for row in fixture_rows).items())
++        ),
++        "base_problem_overlap_count": base_overlap,
++        "duplicate_event_count": duplicate_events + chronology_duplicate_count,
++        "chronology_gap_count": chronology_gap_count,
++        "family_alias_collision_count": alias_collisions,
++        "post_held_repair_count": post_held_repair,
++        "missing_terminal_disposition_count": missing_terminal,
++        "passed": passed,
++    }
++
++
++def _manifest(intake: Mapping[str, Any]) -> JsonDict:
++    value = intake.get("shard_manifest")
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _manifest_fixture_receipt(intake: Mapping[str, Any]) -> JsonDict:
++    value = intake.get("fixture_path_and_hash")
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def shard_and_transaction_audit(
++    *,
++    repo_root: Path,
++    intake: Mapping[str, Any],
++    fixture_path: Path,
++    fixture_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    manifest = _manifest(intake)
++    fixture_receipt = _manifest_fixture_receipt(intake)
++    fixture_hash = sha256_file(fixture_path)
++    local_ids = [str(row.get("local_unit_id")) for row in fixture_rows]
++    planned_ids = [str(item) for item in manifest.get("planned_unit_ids", [])]
++    terminal_ids = [str(item) for item in manifest.get("terminal_unit_ids", [])]
++    shard_rows = []
++    for shard in manifest.get("shards", []):
++        if not isinstance(shard, Mapping):
++            continue
++        path = repo_root / str(shard.get("path") or "")
++        shard_file_rows = _load_jsonl(path)
++        shard_rows.append(
++            {
++                "path": str(path),
++                "expected_sha256": shard.get("sha256"),
++                "computed_sha256": sha256_file(path),
++                "expected_row_count": shard.get("row_count"),
++                "computed_row_count": len(shard_file_rows),
++                "passed": sha256_file(path) == shard.get("sha256")
++                and len(shard_file_rows) == shard.get("row_count"),
++            }
++        )
++    final = manifest.get("final_atomic_write_receipt")
++    final_receipt = dict(final) if isinstance(final, Mapping) else {}
++    planned_ids_match = sorted(planned_ids) == sorted(local_ids) and bool(local_ids)
++    terminal_ids_match = sorted(terminal_ids) == sorted(local_ids) and bool(local_ids)
++    fixture_hash_matches = (
++        fixture_hash != "missing"
++        and fixture_hash == fixture_receipt.get("sha256")
++        and fixture_hash == final_receipt.get("final_sha256")
++    )
++    row_count_matches = len(fixture_rows) == fixture_receipt.get("row_count") and len(
++        fixture_rows
++    ) == final_receipt.get("row_count")
++    journal_chain_complete = bool(manifest.get("journal_chain")) and len(
++        manifest.get("journal_chain", [])
++    ) >= len(shard_rows)
++    resume_receipts_present = bool(manifest.get("resume_receipts")) and all(
++        isinstance(row, Mapping) and row.get("verified") is True
++        for row in manifest.get("resume_receipts", [])
++    )
++    all_shards_match = bool(shard_rows) and all(row["passed"] for row in shard_rows)
++    passed = all(
++        (
++            planned_ids_match,
++            terminal_ids_match,
++            fixture_hash_matches,
++            row_count_matches,
++            journal_chain_complete,
++            resume_receipts_present,
++            all_shards_match,
++        )
++    )
++    return {
++        "row_type": "shard_and_transaction",
++        "planned_ids_match": planned_ids_match,
++        "terminal_ids_match": terminal_ids_match,
++        "shard_rows": shard_rows,
++        "journal_chain_complete": journal_chain_complete,
++        "resume_receipts_present": resume_receipts_present,
++        "final_atomic_write_receipt": final_receipt,
++        "fixture_hash": fixture_hash,
++        "fixture_hash_matches": fixture_hash_matches,
++        "row_count_matches": row_count_matches,
++        "passed": passed,
++    }
++
++
++def _recomputed_counts(
++    fixture_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    return {
++        "row_count": len(fixture_rows),
++        "split_counts": dict(
++            sorted(Counter(str(row.get("split_name") or "") for row in fixture_rows).items())
++        ),
++        "family_counts": dict(
++            sorted(Counter(str(row.get("family") or "") for row in fixture_rows).items())
++        ),
++        "turn_counts": dict(
++            sorted(Counter(str(row.get("turn_index") or "") for row in fixture_rows).items())
++        ),
++        "contradiction_counts": dict(
++            sorted(Counter(str(row.get("recomputed_contradiction")) for row in exact_rows).items())
++        ),
++        "drift_counts": dict(
++            sorted(Counter(str(bool(row.get("drift"))) for row in fixture_rows).items())
++        ),
++        "hardness_counts": dict(
++            sorted(Counter(str(row.get("hardness_bin") or "") for row in fixture_rows).items())
++        ),
++        "censoring_counts": dict(
++            sorted(Counter(str(bool(row.get("censored"))) for row in fixture_rows).items())
++        ),
++        "exact_label_counts": dict(
++            sorted(Counter(str(row.get("recomputed_label") or "") for row in exact_rows).items())
++        ),
++    }
++
++
++def independent_aggregate_rows(
++    fixture_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++    intake: Mapping[str, Any],
++) -> list[JsonDict]:
++    recomputed = _recomputed_counts(fixture_rows, exact_rows)
++    intake_aggregate = intake.get("aggregate_row_recomputation")
++    intake_aggregate = dict(intake_aggregate) if isinstance(intake_aggregate, Mapping) else {}
++    metric_map = {
++        "row_count": "row_count",
++        "split_counts": "split_counts",
++        "family_counts": "family_counts",
++        "turn_counts": "turn_counts",
++        "contradiction_counts": "contradiction_counts",
++        "drift_counts": "drift_counts",
++        "hardness_counts": "hardness_counts",
++        "censoring_counts": "censoring_counts",
++        "exact_label_counts": "exact_label_counts",
++    }
++    rows = []
++    for metric, key in metric_map.items():
++        intake_value = intake_aggregate.get(key)
++        rows.append(
++            {
++                "row_type": "aggregate",
++                "metric": metric,
++                "recomputed": recomputed[key],
++                "intake_observed": intake_value,
++                "intake_matches": intake_value in (None, recomputed[key]),
++            }
++        )
++    return rows
++
++
++def _aggregate_tampering(
++    aggregate_rows: Sequence[Mapping[str, Any]],
++) -> tuple[bool, JsonDict, JsonDict]:
++    observed = {
++        "row_count": None,
++        "split_counts": None,
++        "exact_label_counts": None,
++    }
++    intake_observed = {
++        "row_count": None,
++        "split_counts": None,
++        "exact_label_counts": None,
++    }
++    for row in aggregate_rows:
++        metric = str(row.get("metric"))
++        if metric in observed:
++            observed[metric] = row.get("recomputed")
++            intake_observed[metric] = row.get("intake_observed")
++    tampered = any(
++        intake_observed[key] is not None and intake_observed[key] != observed[key]
++        for key in observed
++    )
++    return tampered, observed, intake_observed
++
++
++def leakage_attack_matrix(
++    *,
++    source_identity_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++    split_audit: Mapping[str, Any],
++    aggregate_rows: Sequence[Mapping[str, Any]],
++    fixture_rows: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    aggregate_tampered, observed, intake_observed = _aggregate_tampering(aggregate_rows)
++    source_hashes_pass = all(row.get("passed") is True for row in source_identity_rows)
++    exact_pass = all(row.get("replayed_label_matches") is True for row in exact_rows)
++    terminal_hard_rows = all(
++        not row.get("hardness_bin") or bool(row.get("terminal_disposition")) for row in fixture_rows
++    )
++    answer_tokens = {
++        str(row.get("answer", {}).get("label", "")).lower()
++        for row in fixture_rows
++        if isinstance(row.get("answer"), Mapping)
++    }
++    entity_text = " ".join(
++        " ".join(map(str, row.get("entities", [])))
++        for row in fixture_rows
++        if isinstance(row.get("entities"), list)
++    ).lower()
++    attacks = [
++        {
++            "attack": "aggregate_inheritance_attack",
++            "passed": not aggregate_tampered,
++            "observed": observed,
++            "intake_observed": intake_observed,
++        },
++        {
++            "attack": "source_id_trust_attack",
++            "passed": source_hashes_pass
++            and not any(row.get("source_id_used_as_identity") for row in source_identity_rows),
++            "observed": {
++                "source_identity_rows": len(source_identity_rows),
++                "hash_pass_count": sum(1 for row in source_identity_rows if row.get("passed")),
++            },
++        },
++        {
++            "attack": "row_order_attack",
++            "passed": len({str(row.get("local_unit_id")) for row in fixture_rows})
++            == len(fixture_rows),
++            "observed": "local_unit_ids_unique_after_order_independent_sort",
++        },
++        {
++            "attack": "entity_name_leakage_attack",
++            "passed": not any(token and token in entity_text for token in answer_tokens),
++            "observed": {
++                "answer_tokens": sorted(answer_tokens),
++                "entity_text_sha256": sha256_json(entity_text),
++            },
++        },
++        {
++            "attack": "serialization_length_attack",
++            "passed": not any(row.get("serialization_length_leak") for row in fixture_rows),
++            "observed": "no_explicit_serialization_length_leak_marker",
++        },
++        {
++            "attack": "family_label_attack",
++            "passed": split_audit.get("family_alias_collision_count") == 0,
++            "observed": split_audit.get("family_alias_collision_count"),
++        },
++        {
++            "attack": "answer_field_attack",
++            "passed": exact_pass,
++            "observed": "exact_replay_ignores_answer_field_and_matches_label",
++        },
++        {
++            "attack": "solver_cache_trust_attack",
++            "passed": exact_pass
++            and all(row.get("cached_solver_result_trusted") is False for row in exact_rows),
++            "observed": "cached solver receipts ignored",
++        },
++        {
++            "attack": "missing_hard_rows_attack",
++            "passed": terminal_hard_rows,
++            "observed": {
++                "hard_rows": sum(1 for row in fixture_rows if row.get("hardness_bin") == "hard"),
++                "terminal_hard_rows": terminal_hard_rows,
++            },
++        },
++        {
++            "attack": "hash_substitution_attack",
++            "passed": source_hashes_pass,
++            "observed": "source file and row hashes recomputed",
++        },
++    ]
++    return [{"row_type": "leakage_attack", **row} for row in attacks]
++
++
++def aggregate_row_recomputation(
++    *,
++    fixture_rows: Sequence[Mapping[str, Any]],
++    source_identity_rows: Sequence[Mapping[str, Any]],
++    chronology_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++    split_audit: Mapping[str, Any],
++    shard_audit: Mapping[str, Any],
++    aggregate_rows: Sequence[Mapping[str, Any]],
++    attack_rows: Sequence[Mapping[str, Any]],
++    revision_receipt: Mapping[str, Any],
++    existence_receipts: Mapping[str, Any],
++) -> JsonDict:
++    counts = _recomputed_counts(fixture_rows, exact_rows)
++    aggregate_tampered, _observed, _intake = _aggregate_tampering(aggregate_rows)
++    blocked_preconditions = not (
++        existence_receipts.get("intake_artifact", {}).get("exists")
++        and existence_receipts.get("fixture", {}).get("exists")
++        and revision_receipt.get("source_root_exists")
++    )
++    source_ok = bool(source_identity_rows) and all(
++        row.get("passed") for row in source_identity_rows
++    )
++    chronology_ok = bool(chronology_rows) and all(
++        row.get("chronology_valid") for row in chronology_rows
++    )
++    exact_ok = bool(exact_rows) and all(row.get("replayed_label_matches") for row in exact_rows)
++    attacks_ok = bool(attack_rows) and all(row.get("passed") for row in attack_rows)
++    all_passed = all(
++        (
++            not blocked_preconditions,
++            revision_receipt.get("revision_is_immutable") is True,
++            revision_receipt.get("license_verified") is True,
++            revision_receipt.get("schema_verified") is True,
++            revision_receipt.get("corruption_boundary_text_verified") is True,
++            source_ok,
++            chronology_ok,
++            exact_ok,
++            split_audit.get("passed") is True,
++            shard_audit.get("passed") is True,
++            not aggregate_tampered,
++            attacks_ok,
++        )
++    )
++    return {
++        "fixture_row_count": counts["row_count"],
++        "split_counts": counts["split_counts"],
++        "family_counts": counts["family_counts"],
++        "turn_counts": counts["turn_counts"],
++        "contradiction_counts": counts["contradiction_counts"],
++        "drift_counts": counts["drift_counts"],
++        "hardness_counts": counts["hardness_counts"],
++        "censoring_counts": counts["censoring_counts"],
++        "exact_label_counts": counts["exact_label_counts"],
++        "source_identity_pass_count": sum(1 for row in source_identity_rows if row.get("passed")),
++        "chronology_pass_count": sum(1 for row in chronology_rows if row.get("chronology_valid")),
++        "exact_replay_pass_count": sum(
++            1 for row in exact_rows if row.get("replayed_label_matches")
++        ),
++        "aggregate_tampering_detected": aggregate_tampered,
++        "blocked_preconditions": blocked_preconditions,
++        "all_audit_rows_passed": all_passed,
++        "ready_score_from_rows": 1.0 if all_passed else 0.0,
++    }
++
++
++def gate_check_summary(
++    *,
++    existence_receipts: Mapping[str, Any],
++    revision_receipt: Mapping[str, Any],
++    source_identity_rows: Sequence[Mapping[str, Any]],
++    chronology_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++    split_audit: Mapping[str, Any],
++    shard_audit: Mapping[str, Any],
++    aggregate_rows: Sequence[Mapping[str, Any]],
++    attack_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    failures: list[JsonDict] = []
++
++    def add(check: str, expected: Any, observed: Any, severity: str = "blocked") -> None:
++        failures.append(
++            {"check": check, "expected": expected, "observed": observed, "severity": severity}
++        )
++
++    if not existence_receipts.get("intake_artifact", {}).get("exists"):
++        add("exp6529_artifact_exists", True, False)
++    if not existence_receipts.get("fixture", {}).get("exists"):
++        add("fixture_exists", True, False)
++    if not revision_receipt.get("source_root_exists"):
++        add("pinned_source_root_exists", True, revision_receipt.get("source_root_exists"))
++    for key in (
++        "revision_is_immutable",
++        "license_verified",
++        "schema_verified",
++        "corruption_boundary_text_verified",
++    ):
++        if revision_receipt.get(key) is not True:
++            add(key, True, revision_receipt.get(key))
++    if not (
++        existence_receipts.get("intake_artifact", {}).get("exists")
++        and existence_receipts.get("fixture", {}).get("exists")
++    ):
++        return {"all_gates_passed": not failures, "failed_checks": failures}
++    if source_identity_rows and not all(row.get("passed") for row in source_identity_rows):
++        add(
++            "source_identity_hash",
++            "all source file and row hashes match",
++            [row for row in source_identity_rows if not row.get("passed")],
++            "disqualified",
++        )
++    if chronology_rows and not all(row.get("chronology_valid") for row in chronology_rows):
++        add(
++            "chronology_replay",
++            "all turns contiguous and duplicate-free",
++            [row for row in chronology_rows if not row.get("chronology_valid")],
++            "disqualified",
++        )
++    if exact_rows and not all(row.get("replayed_label_matches") for row in exact_rows):
++        add(
++            "exact_label_replay",
++            "all replayed labels match fixture labels",
++            [row for row in exact_rows if not row.get("replayed_label_matches")],
++            "disqualified",
++        )
++    if split_audit and split_audit.get("passed") is not True:
++        add("split_lineage", True, split_audit, "disqualified")
++    if shard_audit and shard_audit.get("passed") is not True:
++        add("shard_transaction", True, shard_audit, "disqualified")
++    tampered, observed, intake_observed = _aggregate_tampering(aggregate_rows)
++    if tampered:
++        add(
++            "aggregate_tampering",
++            observed,
++            intake_observed,
++            "disqualified",
++        )
++    failed_attacks = [row for row in attack_rows if row.get("passed") is not True]
++    if failed_attacks:
++        add("leakage_attacks", "all attacks pass", failed_attacks, "disqualified")
++    return {"all_gates_passed": not failures, "failed_checks": failures}
++
++
++def _verdict_class(gate: Mapping[str, Any]) -> str | None:
++    if gate.get("all_gates_passed"):
++        return None
++    severities = {str(row.get("severity")) for row in gate.get("failed_checks", [])}
++    return "disqualified" if "disqualified" in severities else "blocked"
++
++
++def _status_for_class(verdict_class: str | None) -> str:
++    if verdict_class is None:
++        return "complete_external_constraint_corpus_audit"
++    if verdict_class == "disqualified":
++        return "disqualified_external_constraint_corpus_audit"
++    if verdict_class == "partial":
++        return "partial_external_constraint_corpus_audit"
++    return "blocked_external_constraint_corpus_audit"
++
++
++def _honest_verdict(status: str, gate: Mapping[str, Any]) -> str:
++    if status.startswith("complete_"):
++        return (
++            f"{status}: source hashes, exact labels, splits, shards, aggregates, and attacks pass"
++        )
++    failed = gate.get("failed_checks", [])
++    checks = ",".join(str(row.get("check")) for row in failed) if failed else "unknown"
++    return f"{status}: failed_checks={checks}"
++
++
++def build_per_unit_rows(
++    *,
++    source_identity_rows: Sequence[Mapping[str, Any]],
++    chronology_rows: Sequence[Mapping[str, Any]],
++    exact_rows: Sequence[Mapping[str, Any]],
++    aggregate_rows: Sequence[Mapping[str, Any]],
++    attack_rows: Sequence[Mapping[str, Any]],
++    gate: Mapping[str, Any],
++) -> list[JsonDict]:
++    rows = [dict(row) for row in source_identity_rows]
++    rows.extend(dict(row) for row in chronology_rows)
++    rows.extend(dict(row) for row in exact_rows)
++    rows.extend(dict(row) for row in aggregate_rows)
++    rows.extend(dict(row) for row in attack_rows)
++    rows.extend({"row_type": "gate", **row} for row in gate.get("failed_checks", []))
++    if gate.get("all_gates_passed"):
++        rows.append({"row_type": "gate", "check": "all_gates_passed", "observed": True})
++    return rows
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return sha256_json(stable)
++
++
++def preconditions_checked(
++    *,
++    repo_root: Path,
++    run_date: str,
++    now_utc: str,
++    intake_path: Path,
++    fixture_path: Path,
++    fixture_rows: Sequence[Mapping[str, Any]],
++    revision_receipt: Mapping[str, Any],
++    protected: Mapping[str, Any],
++) -> JsonDict:
++    return {
++        "run_date": run_date,
++        "checked_at_utc": now_utc,
++        "intake_artifact_path": str(intake_path),
++        "fixture_path": str(fixture_path),
++        "fixture_row_count": len(fixture_rows),
++        "pinned_revision_available": revision_receipt.get("revision_is_immutable") is True,
++        "source_root_exists": revision_receipt.get("source_root_exists") is True,
++        "solver_versions": {"independent_exact_solver": "finite_equality_v1"},
++        "resources": _resource_receipt(repo_root),
++        "git_state": _git_state(repo_root),
++        "protected_files_unchanged": protected.get("all_protected_files_unchanged"),
++    }
++
++
++def build_artifact(
++    *,
++    repo_root: Path = REPO_ROOT,
++    result_path: Path | str | None = None,
++    run_date: str = RUN_DATE,
++    write: bool = True,
++    duration_s: float | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++    now_utc: str | None = None,
++) -> JsonDict:
++    start = time.monotonic()
++    now = now_utc or _utc_now()
++    before_hashes = _protected_hashes(repo_root)
++    intake_path = repo_root / EXP6529_RELATIVE_PATH
++    fixture_path = repo_root / FIXTURE_RELATIVE_PATH
++    intake = _load_json(intake_path)
++    fixture_rows = _load_jsonl(fixture_path)
++    revision_receipt = independent_revision_and_license_receipt(repo_root, intake)
++    source_root_path = (
++        Path(str(revision_receipt["source_root"])) if revision_receipt.get("source_root") else None
++    )
++    declared_hashes = _source_file_hashes(intake)
++    existence = build_existence_receipts(
++        repo_root=repo_root,
++        intake_path=intake_path,
++        fixture_path=fixture_path,
++        fixture_rows=fixture_rows,
++        source_root_path=source_root_path,
++        declared_hashes=declared_hashes,
++    )
++    source_identity = source_identity_audit_rows(
++        fixture_rows=fixture_rows,
++        source_root_path=source_root_path,
++        declared_hashes=declared_hashes,
++    )
++    chronology = chronology_replay_rows(fixture_rows)
++    exact = independent_exact_replay_rows(
++        fixture_rows=fixture_rows,
++        source_root_path=source_root_path,
++    )
++    split_audit = split_and_lineage_audit(fixture_rows, chronology)
++    shard_audit = shard_and_transaction_audit(
++        repo_root=repo_root,
++        intake=intake,
++        fixture_path=fixture_path,
++        fixture_rows=fixture_rows,
++    )
++    aggregates = independent_aggregate_rows(fixture_rows, exact, intake)
++    attacks = leakage_attack_matrix(
++        source_identity_rows=source_identity,
++        exact_rows=exact,
++        split_audit=split_audit,
++        aggregate_rows=aggregates,
++        fixture_rows=fixture_rows,
++    )
++    aggregate = aggregate_row_recomputation(
++        fixture_rows=fixture_rows,
++        source_identity_rows=source_identity,
++        chronology_rows=chronology,
++        exact_rows=exact,
++        split_audit=split_audit,
++        shard_audit=shard_audit,
++        aggregate_rows=aggregates,
++        attack_rows=attacks,
++        revision_receipt=revision_receipt,
++        existence_receipts=existence,
++    )
++    gate = gate_check_summary(
++        existence_receipts=existence,
++        revision_receipt=revision_receipt,
++        source_identity_rows=source_identity,
++        chronology_rows=chronology,
++        exact_rows=exact,
++        split_audit=split_audit,
++        shard_audit=shard_audit,
++        aggregate_rows=aggregates,
++        attack_rows=attacks,
++    )
++    verdict_class = _verdict_class(gate)
++    status = _status_for_class(verdict_class)
++    after_hashes = _protected_hashes(repo_root)
++    protected = protected_files_unchanged(before_hashes, after_hashes)
++    preconditions = preconditions_checked(
++        repo_root=repo_root,
++        run_date=run_date,
++        now_utc=now,
++        intake_path=intake_path,
++        fixture_path=fixture_path,
++        fixture_rows=fixture_rows,
++        revision_receipt=revision_receipt,
++        protected=protected,
++    )
++    artifact: JsonDict = {
++        "status": status,
++        "honest_verdict": _honest_verdict(status, gate),
++        "verdict_class": verdict_class,
++        "source_existence_and_hash_receipts": existence,
++        "independent_revision_and_license_receipt": revision_receipt,
++        "source_identity_audit_rows": source_identity,
++        "chronology_replay_rows": chronology,
++        "independent_exact_replay_rows": exact,
++        "split_and_lineage_audit": split_audit,
++        "shard_and_transaction_audit": shard_audit,
++        "independent_aggregate_rows": aggregates,
++        "leakage_attack_matrix": attacks,
++        "external_constraint_corpus_audited_ready_score": float(aggregate["ready_score_from_rows"]),
++        "gate_check_summary": gate,
++        "per_unit_rows": build_per_unit_rows(
++            source_identity_rows=source_identity,
++            chronology_rows=chronology,
++            exact_rows=exact,
++            aggregate_rows=aggregates,
++            attack_rows=attacks,
++            gate=gate,
++        ),
++        "aggregate_row_recomputation": aggregate,
++        "preconditions_checked": preconditions,
++        "protected_files_unchanged": protected,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": True,
++        "field_principles": FIELD_PRINCIPLES,
++        "field_provenance": FIELD_PROVENANCE,
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s if duration_s is not None else time.monotonic() - start),
++        "tests_run": _tests_run_receipts(tests_run),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    if write:
++        target = Path(result_path) if result_path is not None else repo_root / RESULT_RELATIVE_PATH
++        atomic_write_json(target, artifact, allow_override=False, sort_keys=False)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    if set(artifact) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("required field set mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if set(artifact.get("field_provenance", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance must cover required fields")
++    if artifact.get("verdict_class") not in {None, "partial", "blocked", "disqualified"}:
++        errors.append("verdict_class outside Exp6530 enum")
++    if not str(artifact.get("honest_verdict", "")).startswith(
++        ("complete_", "blocked_", "partial_", "disqualified_")
++    ):
++        errors.append("honest_verdict terminal prefix mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle must be true")
++    score = artifact.get("external_constraint_corpus_audited_ready_score")
++    recomputed_score = artifact.get("aggregate_row_recomputation", {}).get("ready_score_from_rows")
++    if score not in {0.0, 1.0} or score != recomputed_score:
++        errors.append("ready score mismatch")
++    gate = artifact.get("gate_check_summary", {})
++    if score == 1.0 and gate.get("all_gates_passed") is not True:
++        errors.append("ready artifact must have all gates passed")
++    if score == 0.0 and gate.get("all_gates_passed") is True:
++        errors.append("blocked artifact cannot have all gates passed")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(
++        description="Build or validate Exp6530 external constraint corpus audit."
++    )
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--result-path", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    result = Path(args.result_path)
++    if args.validate:
++        errors = validate_artifact(_load_json(result))
++        if errors:
++            print("\n".join(errors))
++            return 1
++        print(f"validated {RESULT_RELATIVE_PATH.as_posix()}")
++        return 0
++    artifact = build_artifact(
++        repo_root=REPO_ROOT,
++        result_path=result,
++        run_date=str(args.date),
++        write=True,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        print("\n".join(errors))
++        return 1
++    print(f"wrote {RESULT_RELATIVE_PATH.as_posix()} to {result}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through CLI.
++    raise SystemExit(main())
+diff --git a/results/experiment_6530_external_constraint_corpus_audit.json b/results/experiment_6530_external_constraint_corpus_audit.json
+new file mode 100644
+index 0000000000..2284127ee9
+--- /dev/null
++++ b/results/experiment_6530_external_constraint_corpus_audit.json
+@@ -0,0 +1,899 @@
++{
++  "status": "blocked_external_constraint_corpus_audit",
++  "honest_verdict": "blocked_external_constraint_corpus_audit: failed_checks=exp6529_artifact_exists,fixture_exists,pinned_source_root_exists,revision_is_immutable,license_verified,schema_verified,corruption_boundary_text_verified",
++  "verdict_class": "blocked",
++  "source_existence_and_hash_receipts": {
++    "intake_artifact": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6529_drift_bench_external_intake.json",
++      "exists": false,
++      "is_file": false,
++      "sha256": "missing",
++      "size_bytes": null
++    },
++    "fixture": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/fixtures/v565_drift_bench_external_slice.jsonl",
++      "exists": false,
++      "is_file": false,
++      "sha256": "missing",
++      "size_bytes": null,
++      "row_count": 0
++    },
++    "atomic_transaction": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6514_atomic_shard_artifact_transaction.json",
++      "exists": true,
++      "is_file": true,
++      "sha256": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
++      "size_bytes": 32828
++    },
++    "source_root": {
++      "path": null,
++      "exists": false
++    },
++    "source_files": [],
++    "protected_files": {
++      "CODEX.md": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "size_bytes": 2396
++      },
++      "CLAUDE.md": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "size_bytes": 304897
++      },
++      "research-roadmap.yaml": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
++        "size_bytes": 23811
++      },
++      "scripts/research_conductor.py": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/research_conductor.py",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
++        "size_bytes": 347176
++      },
++      "scripts/adversarial_verify.py": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:0303e6b80678b52b32b827aeb918b8cd09cdf839b2d9f08b1d59b4e215cc85db",
++        "size_bytes": 268057
++      },
++      "scripts/verdict_row_consistency_lint.py": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++        "size_bytes": 18650
++      },
++      "results/experiment_6514_atomic_shard_artifact_transaction.json": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6514_atomic_shard_artifact_transaction.json",
++        "exists": true,
++        "is_file": true,
++        "sha256": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
++        "size_bytes": 32828
++      },
++      "results/experiment_6529_drift_bench_external_intake.json": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6529_drift_bench_external_intake.json",
++        "exists": false,
++        "is_file": false,
++        "sha256": "missing",
++        "size_bytes": null
++      },
++      "results/fixtures/v565_drift_bench_external_slice.jsonl": {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/fixtures/v565_drift_bench_external_slice.jsonl",
++        "exists": false,
++        "is_file": false,
++        "sha256": "missing",
++        "size_bytes": null
++      }
++    },
++    "resources": {
++      "python_version": "3.12.13",
++      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++      "cpu_count": 24,
++      "disk_free_bytes": 1087942746112,
++      "exact_solver": "exp6530_independent_finite_equality_solver_v1"
++    }
++  },
++  "independent_revision_and_license_receipt": {
++    "repo_url": null,
++    "immutable_revision": null,
++    "revision_is_immutable": false,
++    "source_root": null,
++    "source_root_exists": false,
++    "license_path": "/home/ianblenke/github.com/ianblenke/carnot/__missing_source_root__/LICENSE",
++    "license_sha256": "missing",
++    "license_verified": false,
++    "schema_path": "/home/ianblenke/github.com/ianblenke/carnot/__missing_source_root__/data/problems/README.md",
++    "schema_sha256": "missing",
++    "schema_verified": false,
++    "readme_path": "/home/ianblenke/github.com/ianblenke/carnot/__missing_source_root__/README.md",
++    "readme_sha256": "missing",
++    "corruption_boundary_text_verified": false
++  },
++  "source_identity_audit_rows": [],
++  "chronology_replay_rows": [],
++  "independent_exact_replay_rows": [],
++  "split_and_lineage_audit": {
++    "row_type": "split_and_lineage",
++    "split_counts": {},
++    "base_problem_overlap_count": 0,
++    "duplicate_event_count": 0,
++    "chronology_gap_count": 0,
++    "family_alias_collision_count": 0,
++    "post_held_repair_count": 0,
++    "missing_terminal_disposition_count": 0,
++    "passed": true
++  },
++  "shard_and_transaction_audit": {
++    "row_type": "shard_and_transaction",
++    "planned_ids_match": false,
++    "terminal_ids_match": false,
++    "shard_rows": [],
++    "journal_chain_complete": false,
++    "resume_receipts_present": false,
++    "final_atomic_write_receipt": {},
++    "fixture_hash": "missing",
++    "fixture_hash_matches": false,
++    "row_count_matches": false,
++    "passed": false
++  },
++  "independent_aggregate_rows": [
++    {
++      "row_type": "aggregate",
++      "metric": "row_count",
++      "recomputed": 0,
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "split_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "family_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "turn_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "contradiction_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "drift_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "hardness_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "censoring_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "exact_label_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    }
++  ],
++  "leakage_attack_matrix": [
++    {
++      "row_type": "leakage_attack",
++      "attack": "aggregate_inheritance_attack",
++      "passed": true,
++      "observed": {
++        "row_count": 0,
++        "split_counts": {},
++        "exact_label_counts": {}
++      },
++      "intake_observed": {
++        "row_count": null,
++        "split_counts": null,
++        "exact_label_counts": null
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "source_id_trust_attack",
++      "passed": true,
++      "observed": {
++        "source_identity_rows": 0,
++        "hash_pass_count": 0
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "row_order_attack",
++      "passed": true,
++      "observed": "local_unit_ids_unique_after_order_independent_sort"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "entity_name_leakage_attack",
++      "passed": true,
++      "observed": {
++        "answer_tokens": [],
++        "entity_text_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "serialization_length_attack",
++      "passed": true,
++      "observed": "no_explicit_serialization_length_leak_marker"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "family_label_attack",
++      "passed": true,
++      "observed": 0
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "answer_field_attack",
++      "passed": true,
++      "observed": "exact_replay_ignores_answer_field_and_matches_label"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "solver_cache_trust_attack",
++      "passed": true,
++      "observed": "cached solver receipts ignored"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "missing_hard_rows_attack",
++      "passed": true,
++      "observed": {
++        "hard_rows": 0,
++        "terminal_hard_rows": true
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "hash_substitution_attack",
++      "passed": true,
++      "observed": "source file and row hashes recomputed"
++    }
++  ],
++  "external_constraint_corpus_audited_ready_score": 0.0,
++  "gate_check_summary": {
++    "all_gates_passed": false,
++    "failed_checks": [
++      {
++        "check": "exp6529_artifact_exists",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "fixture_exists",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "pinned_source_root_exists",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "revision_is_immutable",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "license_verified",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "schema_verified",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      },
++      {
++        "check": "corruption_boundary_text_verified",
++        "expected": true,
++        "observed": false,
++        "severity": "blocked"
++      }
++    ]
++  },
++  "per_unit_rows": [
++    {
++      "row_type": "aggregate",
++      "metric": "row_count",
++      "recomputed": 0,
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "split_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "family_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "turn_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "contradiction_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "drift_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "hardness_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "censoring_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "aggregate",
++      "metric": "exact_label_counts",
++      "recomputed": {},
++      "intake_observed": null,
++      "intake_matches": true
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "aggregate_inheritance_attack",
++      "passed": true,
++      "observed": {
++        "row_count": 0,
++        "split_counts": {},
++        "exact_label_counts": {}
++      },
++      "intake_observed": {
++        "row_count": null,
++        "split_counts": null,
++        "exact_label_counts": null
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "source_id_trust_attack",
++      "passed": true,
++      "observed": {
++        "source_identity_rows": 0,
++        "hash_pass_count": 0
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "row_order_attack",
++      "passed": true,
++      "observed": "local_unit_ids_unique_after_order_independent_sort"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "entity_name_leakage_attack",
++      "passed": true,
++      "observed": {
++        "answer_tokens": [],
++        "entity_text_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "serialization_length_attack",
++      "passed": true,
++      "observed": "no_explicit_serialization_length_leak_marker"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "family_label_attack",
++      "passed": true,
++      "observed": 0
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "answer_field_attack",
++      "passed": true,
++      "observed": "exact_replay_ignores_answer_field_and_matches_label"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "solver_cache_trust_attack",
++      "passed": true,
++      "observed": "cached solver receipts ignored"
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "missing_hard_rows_attack",
++      "passed": true,
++      "observed": {
++        "hard_rows": 0,
++        "terminal_hard_rows": true
++      }
++    },
++    {
++      "row_type": "leakage_attack",
++      "attack": "hash_substitution_attack",
++      "passed": true,
++      "observed": "source file and row hashes recomputed"
++    },
++    {
++      "row_type": "gate",
++      "check": "exp6529_artifact_exists",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "fixture_exists",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "pinned_source_root_exists",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "revision_is_immutable",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "license_verified",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "schema_verified",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    },
++    {
++      "row_type": "gate",
++      "check": "corruption_boundary_text_verified",
++      "expected": true,
++      "observed": false,
++      "severity": "blocked"
++    }
++  ],
++  "aggregate_row_recomputation": {
++    "fixture_row_count": 0,
++    "split_counts": {},
++    "family_counts": {},
++    "turn_counts": {},
++    "contradiction_counts": {},
++    "drift_counts": {},
++    "hardness_counts": {},
++    "censoring_counts": {},
++    "exact_label_counts": {},
++    "source_identity_pass_count": 0,
++    "chronology_pass_count": 0,
++    "exact_replay_pass_count": 0,
++    "aggregate_tampering_detected": false,
++    "blocked_preconditions": true,
++    "all_audit_rows_passed": false,
++    "ready_score_from_rows": 0.0
++  },
++  "preconditions_checked": {
++    "run_date": "20260823",
++    "checked_at_utc": "2026-08-23T07:33:12Z",
++    "intake_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6529_drift_bench_external_intake.json",
++    "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/fixtures/v565_drift_bench_external_slice.jsonl",
++    "fixture_row_count": 0,
++    "pinned_revision_available": false,
++    "source_root_exists": false,
++    "solver_versions": {
++      "independent_exact_solver": "finite_equality_v1"
++    },
++    "resources": {
++      "python_version": "3.12.13",
++      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++      "cpu_count": 24,
++      "disk_free_bytes": 1087942746112,
++      "exact_solver": "exp6530_independent_finite_equality_solver_v1"
++    },
++    "git_state": {
++      "git_available": true,
++      "exit_code": 0,
++      "status_short": "M openspec/capabilities/benchmarks/spec.md\n M ops/.run_sentinel_state.json\n?? python/carnot/experiment_6530_external_constraint_corpus_audit.py\n?? tests/python/test_experiment_6530_external_constraint_corpus_audit.py"
++    },
++    "protected_files_unchanged": true
++  },
++  "protected_files_unchanged": {
++    "all_protected_files_unchanged": true,
++    "protected_file_rows": [
++      {
++        "path": "CODEX.md",
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "unchanged": true
++      },
++      {
++        "path": "CLAUDE.md",
++        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "unchanged": true
++      },
++      {
++        "path": "research-roadmap.yaml",
++        "before_sha256": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
++        "after_sha256": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
++        "unchanged": true
++      },
++      {
++        "path": "scripts/research_conductor.py",
++        "before_sha256": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
++        "after_sha256": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
++        "unchanged": true
++      },
++      {
++        "path": "scripts/adversarial_verify.py",
++        "before_sha256": "sha256:0303e6b80678b52b32b827aeb918b8cd09cdf839b2d9f08b1d59b4e215cc85db",
++        "after_sha256": "sha256:0303e6b80678b52b32b827aeb918b8cd09cdf839b2d9f08b1d59b4e215cc85db",
++        "unchanged": true
++      },
++      {
++        "path": "scripts/verdict_row_consistency_lint.py",
++        "before_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++        "after_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++        "unchanged": true
++      },
++      {
++        "path": "results/experiment_6514_atomic_shard_artifact_transaction.json",
++        "before_sha256": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
++        "after_sha256": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
++        "unchanged": true
++      },
++      {
++        "path": "results/experiment_6529_drift_bench_external_intake.json",
++        "before_sha256": "missing",
++        "after_sha256": "missing",
++        "unchanged": true
++      },
++      {
++        "path": "results/fixtures/v565_drift_bench_external_slice.jsonl",
++        "before_sha256": "missing",
++        "after_sha256": "missing",
++        "unchanged": true
++      }
++    ]
++  },
++  "inference_substrate": "independent_external_source_fixture_and_exact_solver_replay_no_llm",
++  "verifier_is_oracle": true,
++  "field_principles": {
++    "status": "Records the terminal external-corpus audit state.",
++    "honest_verdict": "Starts with a terminal prefix and names the audit outcome.",
++    "verdict_class": "Separates complete, partial, blocked, and disqualified audit paths.",
++    "source_existence_and_hash_receipts": "Records source, fixture, protected-file, path, hash, row-count, and resource receipts.",
++    "independent_revision_and_license_receipt": "Verifies pinned revision, local source root, license, schema, and corruption text.",
++    "source_identity_audit_rows": "Proves each fixture row maps to source bytes by hash, not by source ID.",
++    "chronology_replay_rows": "Rebuilds turn order and duplicate event checks from fixture and source rows.",
++    "independent_exact_replay_rows": "Replays labels from raw constraints with an independently initialized exact solver.",
++    "split_and_lineage_audit": "Rebuilds family-blind splits and rejects cross-split lineages or missing terminal rows.",
++    "shard_and_transaction_audit": "Checks planned IDs, terminal IDs, shard hashes, journal, resume, final write, and counts.",
++    "independent_aggregate_rows": "Recomputes family, turn, contradiction, drift, hardness, censoring, and exact counts.",
++    "leakage_attack_matrix": "Attacks IDs, order, names, length, family labels, answers, caches, hashes, and aggregates.",
++    "external_constraint_corpus_audited_ready_score": "Opens only when every independent audit and attack passes.",
++    "gate_check_summary": "Names every failed check with expected and observed values.",
++    "per_unit_rows": "Flattens source, chronology, replay, aggregate, attack, and gate rows.",
++    "aggregate_row_recomputation": "Rebuilds readiness from rows instead of inherited totals.",
++    "preconditions_checked": "Records run date, paths, row counts, resources, solver version, git state, and hashes.",
++    "protected_files_unchanged": "Compares protected-file hashes before and after the audit.",
++    "inference_substrate": "Declares independent source, fixture, and exact-solver replay with no LLM.",
++    "verifier_is_oracle": "True only for source, split, and exact-label audit checks.",
++    "field_principles": "Explains why each required field exists.",
++    "field_provenance": "Maps fields to inputs, rows, reducers, specs, tests, or hashes.",
++    "random_seed": "Pins deterministic sample and row ordering.",
++    "duration_s": "Records measured wall time for the audit reducer.",
++    "tests_run": "Records verification command receipts.",
++    "reproducibility_checksum": "Detects drift in audit rows, gates, commands, and verdicts."
++  },
++  "field_provenance": {
++    "status": {
++      "principle": "Records the terminal external-corpus audit state.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "Starts with a terminal prefix and names the audit outcome.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "verdict_class": {
++      "principle": "Separates complete, partial, blocked, and disqualified audit paths.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "source_existence_and_hash_receipts": {
++      "principle": "Records source, fixture, protected-file, path, hash, row-count, and resource receipts.",
++      "source": "build_existence_receipts",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "independent_revision_and_license_receipt": {
++      "principle": "Verifies pinned revision, local source root, license, schema, and corruption text.",
++      "source": "independent_revision_and_license_receipt",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "source_identity_audit_rows": {
++      "principle": "Proves each fixture row maps to source bytes by hash, not by source ID.",
++      "source": "source_identity_audit_rows",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "chronology_replay_rows": {
++      "principle": "Rebuilds turn order and duplicate event checks from fixture and source rows.",
++      "source": "chronology_replay_rows",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "independent_exact_replay_rows": {
++      "principle": "Replays labels from raw constraints with an independently initialized exact solver.",
++      "source": "independent_exact_replay_rows",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "split_and_lineage_audit": {
++      "principle": "Rebuilds family-blind splits and rejects cross-split lineages or missing terminal rows.",
++      "source": "split_and_lineage_audit",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "shard_and_transaction_audit": {
++      "principle": "Checks planned IDs, terminal IDs, shard hashes, journal, resume, final write, and counts.",
++      "source": "shard_and_transaction_audit",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "independent_aggregate_rows": {
++      "principle": "Recomputes family, turn, contradiction, drift, hardness, censoring, and exact counts.",
++      "source": "independent_aggregate_rows",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "leakage_attack_matrix": {
++      "principle": "Attacks IDs, order, names, length, family labels, answers, caches, hashes, and aggregates.",
++      "source": "leakage_attack_matrix",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "external_constraint_corpus_audited_ready_score": {
++      "principle": "Opens only when every independent audit and attack passes.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "gate_check_summary": {
++      "principle": "Names every failed check with expected and observed values.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "per_unit_rows": {
++      "principle": "Flattens source, chronology, replay, aggregate, attack, and gate rows.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "aggregate_row_recomputation": {
++      "principle": "Rebuilds readiness from rows instead of inherited totals.",
++      "source": "aggregate_row_recomputation",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "Records run date, paths, row counts, resources, solver version, git state, and hashes.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "Compares protected-file hashes before and after the audit.",
++      "source": "protected_files_unchanged",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "Declares independent source, fixture, and exact-solver replay with no LLM.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "True only for source, split, and exact-label audit checks.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "field_principles": {
++      "principle": "Explains why each required field exists.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Maps fields to inputs, rows, reducers, specs, tests, or hashes.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "random_seed": {
++      "principle": "Pins deterministic sample and row ordering.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "duration_s": {
++      "principle": "Records measured wall time for the audit reducer.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "tests_run": {
++      "principle": "Records verification command receipts.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "Detects drift in audit rows, gates, commands, and verdicts.",
++      "source": "Exp6530 deterministic independent audit reducer",
++      "spec_refs": [
++        "REQ-BENCH-6530"
++      ]
++    }
++  },
++  "random_seed": 6530,
++  "duration_s": 0.05906484881415963,
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6530_external_constraint_corpus_audit.py -m pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6530_external_constraint_corpus_audit.py --fail-under=100 --show-missing",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6530_external_constraint_corpus_audit.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6530_external_constraint_corpus_audit.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6530_external_constraint_corpus_audit.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit --date 20260823",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit --validate",
++      "exit_code": 0
++    },
++    {
++      "command": "git status --short",
++      "exit_code": 0
++    }
++  ],
++  "reproducibility_checksum": "sha256:98b0571722a989c5880501692bae7e91f50f0410bb5340c4b01b2218e876e1bf"
++}
+diff --git a/tests/python/test_experiment_6530_external_constraint_corpus_audit.py b/tests/python/test_experiment_6530_external_constraint_corpus_audit.py
+new file mode 100644
+index 0000000000..800bb06b8d
+--- /dev/null
++++ b/tests/python/test_experiment_6530_external_constraint_corpus_audit.py
+@@ -0,0 +1,558 @@
++"""Tests for Exp6530 external constraint corpus audit.
++
++Spec refs: REQ-BENCH-6530, SCENARIO-BENCH-6530-MISSING,
++SCENARIO-BENCH-6530-SOURCE, SCENARIO-BENCH-6530-CHRONOLOGY,
++SCENARIO-BENCH-6530-EXACT, SCENARIO-BENCH-6530-SPLIT,
++SCENARIO-BENCH-6530-SHARDS, SCENARIO-BENCH-6530-ATTACKS.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6530_external_constraint_corpus_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6530_external_constraint_corpus_audit.py "
++    "-m pytest tests/python/test_experiment_6530_external_constraint_corpus_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6530_external_constraint_corpus_audit.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6530_external_constraint_corpus_audit.py"
++)
++ROW_LINT_COMMAND = (
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py "
++    "results/experiment_6530_external_constraint_corpus_audit.json"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6530_external_constraint_corpus_audit.json"
++)
++EXACT_E2E_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py "
++    "-q --no-cov -n 0"
++)
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit "
++    "--date 20260823"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6530_external_constraint_corpus_audit --validate"
++)
++GIT_STATUS_COMMAND = "git status --short"
++
++TESTS_RUN = [
++    {"command": FOCUSED_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_REPORT_COMMAND, "exit_code": 0},
++    {"command": FULL_PYTEST_COMMAND, "exit_code": 0},
++    {"command": SPEC_COMMAND, "exit_code": 0},
++    {"command": ROW_LINT_COMMAND, "exit_code": 0},
++    {"command": ADVERSARIAL_COMMAND, "exit_code": 0},
++    {"command": EXACT_E2E_COMMAND, "exit_code": 0},
++    {"command": RUN_COMMAND, "exit_code": 0},
++    {"command": VALIDATE_COMMAND, "exit_code": 0},
++    {"command": GIT_STATUS_COMMAND, "exit_code": 0},
++]
++
++
++def _source_rows() -> list[dict[str, Any]]:
++    return [
++        {
++            "source_row_id": "src-held-0",
++            "domain": "seating",
++            "family": "seating",
++            "base_problem_id": "base-held",
++            "source_problem_id": "base-held",
++            "turn_index": 0,
++            "event_id": "base-held:0",
++            "entities": ["seat_a", "seat_b"],
++            "constraints": [{"var": "seat_a", "equals": "red"}],
++        },
++        {
++            "source_row_id": "src-train-0",
++            "domain": "scheduling",
++            "family": "scheduling",
++            "base_problem_id": "base-train",
++            "source_problem_id": "base-train",
++            "turn_index": 0,
++            "event_id": "base-train:0",
++            "entities": ["slot_a", "slot_b"],
++            "constraints": [
++                {"var": "slot_a", "equals": "morning"},
++                {"var": "slot_a", "equals": "evening"},
++            ],
++        },
++        {
++            "source_row_id": "src-dev-0",
++            "domain": "logic_grid",
++            "family": "logic_grid",
++            "base_problem_id": "base-dev",
++            "source_problem_id": "base-dev",
++            "turn_index": 0,
++            "event_id": "base-dev:0",
++            "entities": ["person_a", "person_b"],
++            "constraints": [{"var": "person_a", "not_equals": "blue"}],
++        },
++    ]
++
++
++def _fixture_rows(source_hash: str, source_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
++    splits = ["held", "train", "development"]
++    labels = ["satisfiable", "contradiction", "satisfiable"]
++    rows: list[dict[str, Any]] = []
++    for index, source in enumerate(source_rows):
++        rows.append(
++            {
++                "local_unit_id": f"unit-{splits[index]}-0",
++                "source_row_id": source["source_row_id"],
++                "source_file_relpath": "data/problems/sample.jsonl",
++                "source_file_sha256": source_hash,
++                "source_row_hash": mod.sha256_json(source),
++                "domain": source["domain"],
++                "family": source["family"],
++                "base_problem_id": source["base_problem_id"],
++                "source_problem_id": source["source_problem_id"],
++                "split_name": splits[index],
++                "turn_index": source["turn_index"],
++                "chronology_index": index,
++                "event_id": source["event_id"],
++                "terminal_disposition": "terminal",
++                "exact_label": labels[index],
++                "contradiction": labels[index] == "contradiction",
++                "drift": labels[index] == "satisfiable",
++                "hardness_bin": "easy" if index != 1 else "hard",
++                "censored": False,
++                "raw_turns": [source],
++                "constraints": source["constraints"],
++                "answer": {"label": labels[index]},
++                "solver_receipt": {"cached": True, "ignored_by_exp6530": True},
++            }
++        )
++    return rows
++
++
++def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++
++
++def _write_fixture_repo(tmp_path: Path, *, tamper_label: bool = False) -> Path:
++    repo = tmp_path / "repo"
++    source_root = repo / "upstream" / "drift-bench"
++    source_file = source_root / "data" / "problems" / "sample.jsonl"
++    source_rows = _source_rows()
++    _write_jsonl(source_file, source_rows)
++    (source_root / "README.md").write_text(
++        "DRIFT-Bench note: original SQLite run databases were corrupted.",
++        encoding="utf-8",
++    )
++    (source_root / "LICENSE").write_text("MIT License\n", encoding="utf-8")
++    (source_root / "data" / "problems" / "README.md").write_text(
++        "Problem schema has domain, problem_id, turns, constraints, and answer.",
++        encoding="utf-8",
++    )
++    for protected in [
++        "CODEX.md",
++        "CLAUDE.md",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/verdict_row_consistency_lint.py",
++        "results/experiment_6514_atomic_shard_artifact_transaction.json",
++    ]:
++        path = repo / protected
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"protected {protected}\n", encoding="utf-8")
++
++    source_hash = mod.sha256_file(source_file)
++    fixture_rows = _fixture_rows(source_hash, source_rows)
++    if tamper_label:
++        fixture_rows[1]["exact_label"] = "satisfiable"
++    fixture_path = repo / mod.FIXTURE_RELATIVE_PATH
++    _write_jsonl(fixture_path, fixture_rows)
++    fixture_hash = mod.sha256_file(fixture_path)
++
++    shard_path = repo / "results" / "fixtures" / "v565_drift_shards" / "shard-000.jsonl"
++    _write_jsonl(shard_path, fixture_rows)
++    shard_hash = mod.sha256_file(shard_path)
++    planned_ids = [row["local_unit_id"] for row in fixture_rows]
++    exact_counts = {"contradiction": 1, "satisfiable": 2}
++    if tamper_label:
++        exact_counts = {"satisfiable": 3}
++    intake = {
++        "status": "complete_drift_bench_external_intake_ready",
++        "honest_verdict": "complete_drift_bench_external_intake_ready",
++        "source_revision_and_license_receipt": {
++            "repo_url": "https://github.com/kaons-research/drift-bench",
++            "immutable_revision": "a" * 40,
++            "source_root": "upstream/drift-bench",
++            "license": "MIT",
++            "license_verified": True,
++            "data_schema_path": "data/problems/README.md",
++            "data_schema_verified": True,
++            "upstream_corruption_warning_present": True,
++        },
++        "source_file_hashes": {"data/problems/sample.jsonl": source_hash},
++        "shard_manifest": {
++            "planned_unit_ids": planned_ids,
++            "terminal_unit_ids": planned_ids,
++            "journal_chain": [{"index": 0, "sha256": shard_hash}],
++            "resume_receipts": [{"resume_id": "resume-0", "verified": True}],
++            "shards": [
++                {
++                    "path": "results/fixtures/v565_drift_shards/shard-000.jsonl",
++                    "sha256": shard_hash,
++                    "row_count": len(fixture_rows),
++                }
++            ],
++            "final_atomic_write_receipt": {
++                "final_path": mod.FIXTURE_RELATIVE_PATH.as_posix(),
++                "final_sha256": fixture_hash,
++                "row_count": len(fixture_rows),
++            },
++        },
++        "planned_and_terminal_unit_counts": {
++            "planned_count": len(fixture_rows),
++            "terminal_count": len(fixture_rows),
++        },
++        "fixture_path_and_hash": {
++            "path": mod.FIXTURE_RELATIVE_PATH.as_posix(),
++            "sha256": fixture_hash,
++            "row_count": len(fixture_rows),
++        },
++        "aggregate_row_recomputation": {
++            "row_count": len(fixture_rows),
++            "split_counts": {"development": 1, "held": 1, "train": 1},
++            "exact_label_counts": exact_counts,
++        },
++        "external_constraint_corpus_ready_score": 1.0,
++    }
++    intake_path = repo / mod.EXP6529_RELATIVE_PATH
++    intake_path.parent.mkdir(parents=True, exist_ok=True)
++    intake_path.write_text(json.dumps(intake, indent=2, sort_keys=True), encoding="utf-8")
++    return repo
++
++
++def _artifact(repo: Path, result_path: Path) -> dict[str, Any]:
++    return mod.build_artifact(
++        repo_root=repo,
++        result_path=result_path,
++        run_date="20260823",
++        write=True,
++        duration_s=1.0,
++        tests_run=TESTS_RUN,
++        now_utc="2026-08-23T12:00:00Z",
++    )
++
++
++def test_req_bench_6530_spec_declares_audit_contract() -> None:
++    """REQ-BENCH-6530: OpenSpec owns the Exp6530 audit contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-BENCH-6530") :]
++
++    for token in (
++        "SCENARIO-BENCH-6530-MISSING",
++        "SCENARIO-BENCH-6530-SOURCE",
++        "SCENARIO-BENCH-6530-CHRONOLOGY",
++        "SCENARIO-BENCH-6530-EXACT",
++        "SCENARIO-BENCH-6530-SPLIT",
++        "SCENARIO-BENCH-6530-SHARDS",
++        "SCENARIO-BENCH-6530-ATTACKS",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        "external_constraint_corpus_audited_ready_score",
++        mod.INFERENCE_SUBSTRATE,
++        "`verifier_is_oracle` SHALL be true",
++    ):
++        assert token in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_bench_6530_missing_writes_blocked_artifact(tmp_path: Path) -> None:
++    """SCENARIO-BENCH-6530-MISSING: missing Exp6529 inputs still close the artifact."""
++
++    repo = tmp_path / "repo"
++    repo.mkdir()
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    artifact = _artifact(repo, result_path)
++    written = json.loads(result_path.read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert mod.validate_artifact(artifact) == []
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["status"] == "blocked_external_constraint_corpus_audit"
++    assert artifact["honest_verdict"].startswith("blocked_external_constraint_corpus_audit")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["external_constraint_corpus_audited_ready_score"] == 0.0
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["gate_check_summary"]["all_gates_passed"] is False
++    failures = artifact["gate_check_summary"]["failed_checks"]
++    assert {
++        (row["check"], row["observed"])
++        for row in failures
++        if row["check"] in {"exp6529_artifact_exists", "fixture_exists"}
++    } == {("exp6529_artifact_exists", False), ("fixture_exists", False)}
++    assert artifact["source_existence_and_hash_receipts"]["intake_artifact"]["exists"] is False
++    assert artifact["source_existence_and_hash_receipts"]["fixture"]["exists"] is False
++    assert artifact["aggregate_row_recomputation"]["ready_score_from_rows"] == 0.0
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++
++
++def test_scenarios_bench_6530_complete_audit_recomputes_all_rows(tmp_path: Path) -> None:
++    """SCENARIO-BENCH-6530-SOURCE/CHRONOLOGY/EXACT/SPLIT/SHARDS: rows are replayed."""
++
++    repo = _write_fixture_repo(tmp_path)
++    artifact = _artifact(repo, tmp_path / mod.RESULT_RELATIVE_PATH.name)
++
++    assert mod.validate_artifact(artifact) == []
++    assert artifact["status"] == "complete_external_constraint_corpus_audit"
++    assert artifact["honest_verdict"].startswith("complete_external_constraint_corpus_audit")
++    assert artifact["verdict_class"] is None
++    assert artifact["external_constraint_corpus_audited_ready_score"] == 1.0
++    assert artifact["gate_check_summary"]["all_gates_passed"] is True
++
++    source_receipt = artifact["independent_revision_and_license_receipt"]
++    assert source_receipt["immutable_revision"] == "a" * 40
++    assert source_receipt["license_verified"] is True
++    assert source_receipt["corruption_boundary_text_verified"] is True
++    assert source_receipt["schema_verified"] is True
++    assert all(row["passed"] is True for row in artifact["source_identity_audit_rows"])
++    assert all(row["chronology_valid"] is True for row in artifact["chronology_replay_rows"])
++    assert all(
++        row["replayed_label_matches"] is True for row in artifact["independent_exact_replay_rows"]
++    )
++    assert artifact["split_and_lineage_audit"]["base_problem_overlap_count"] == 0
++    assert artifact["split_and_lineage_audit"]["missing_terminal_disposition_count"] == 0
++    assert artifact["shard_and_transaction_audit"]["fixture_hash_matches"] is True
++    assert artifact["shard_and_transaction_audit"]["row_count_matches"] is True
++
++    aggregate = artifact["aggregate_row_recomputation"]
++    assert aggregate["fixture_row_count"] == 3
++    assert aggregate["split_counts"] == {"development": 1, "held": 1, "train": 1}
++    assert aggregate["exact_label_counts"] == {"contradiction": 1, "satisfiable": 2}
++    assert aggregate["ready_score_from_rows"] == 1.0
++    assert {row["attack"] for row in artifact["leakage_attack_matrix"]} >= {
++        "aggregate_inheritance_attack",
++        "source_id_trust_attack",
++        "solver_cache_trust_attack",
++    }
++    assert all(row["passed"] is True for row in artifact["leakage_attack_matrix"])
++    assert {row["row_type"] for row in artifact["per_unit_rows"]} >= {
++        "source_identity",
++        "chronology",
++        "exact_replay",
++        "aggregate",
++        "leakage_attack",
++    }
++
++
++def test_scenario_bench_6530_tampering_disqualifies_without_trusting_aggregates(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-BENCH-6530-ATTACKS: cached labels and inherited aggregates fail closed."""
++
++    repo = _write_fixture_repo(tmp_path, tamper_label=True)
++    artifact = _artifact(repo, tmp_path / mod.RESULT_RELATIVE_PATH.name)
++    failures = artifact["gate_check_summary"]["failed_checks"]
++
++    assert mod.validate_artifact(artifact) == []
++    assert artifact["status"] == "disqualified_external_constraint_corpus_audit"
++    assert artifact["honest_verdict"].startswith("disqualified_external_constraint_corpus_audit")
++    assert artifact["verdict_class"] == "disqualified"
++    assert artifact["external_constraint_corpus_audited_ready_score"] == 0.0
++    assert any(row["check"] == "exact_label_replay" for row in failures)
++    assert any(row["check"] == "aggregate_tampering" for row in failures)
++    replay_rows = {row["local_unit_id"]: row for row in artifact["independent_exact_replay_rows"]}
++    assert replay_rows["unit-train-0"]["observed_label"] == "satisfiable"
++    assert replay_rows["unit-train-0"]["recomputed_label"] == "contradiction"
++    aggregate_attack = [
++        row
++        for row in artifact["leakage_attack_matrix"]
++        if row["attack"] == "aggregate_inheritance_attack"
++    ][0]
++    assert aggregate_attack["passed"] is False
++    assert aggregate_attack["observed"] == {
++        "row_count": 3,
++        "split_counts": {"development": 1, "held": 1, "train": 1},
++        "exact_label_counts": {"contradiction": 1, "satisfiable": 2},
++    }
++
++
++def test_scenario_bench_6530_validation_cli_and_edge_paths(
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-BENCH-6530-ATTACKS: defensive validators fail closed."""
++
++    repo = _write_fixture_repo(tmp_path)
++    result_path = tmp_path / "edge-artifact.json"
++    artifact = _artifact(repo, result_path)
++
++    assert mod._utc_now().endswith("Z")
++    assert mod.sha256_file(tmp_path / "missing") == "missing"
++    assert "git_available" in mod._git_state(REPO)
++    assert mod._constraints_from_source({"source_row_hash": "missing"}, {}) == []
++    assert mod._observed_label({}) == "missing"
++    assert (
++        mod._constraint_label(
++            [
++                {"variable": "x", "op": "=", "value": "a"},
++                {"var": "x", "op": "==", "value": "b"},
++            ]
++        )
++        == "contradiction"
++    )
++    assert (
++        mod._constraint_label(
++            [
++                {"var": "", "equals": "ignored"},
++                {"var": "y", "equals": "red"},
++                {"var": "y", "not_equals": "red"},
++            ]
++        )
++        == "contradiction"
++    )
++    assert mod._constraint_label([{"var": "z", "op": "!=", "value": "blue"}]) == "satisfiable"
++    assert mod._status_for_class("partial") == "partial_external_constraint_corpus_audit"
++
++    duplicate_rows = [
++        {
++            "local_unit_id": "dup-0",
++            "base_problem_id": "base",
++            "split_name": "held",
++            "family": "Logic Grid",
++            "event_id": "event",
++            "terminal_disposition": "terminal",
++        },
++        {
++            "local_unit_id": "dup-1",
++            "base_problem_id": "base",
++            "split_name": "train",
++            "family": "logic-grid",
++            "event_id": "event",
++            "post_held_repair": True,
++        },
++    ]
++    split = mod.split_and_lineage_audit(
++        duplicate_rows,
++        [{"chronology_gap": True, "duplicate_event": True}],
++    )
++    assert split["base_problem_overlap_count"] == 1
++    assert split["duplicate_event_count"] == 2
++    assert split["chronology_gap_count"] == 1
++    assert split["family_alias_collision_count"] == 1
++    assert split["post_held_repair_count"] == 1
++    assert split["missing_terminal_disposition_count"] == 1
++    assert split["passed"] is False
++
++    skipped_shard = mod.shard_and_transaction_audit(
++        repo_root=repo,
++        intake={"shard_manifest": {"shards": ["bad"]}},
++        fixture_path=repo / mod.FIXTURE_RELATIVE_PATH,
++        fixture_rows=[],
++    )
++    assert skipped_shard["shard_rows"] == []
++    assert skipped_shard["passed"] is False
++
++    gate = mod.gate_check_summary(
++        existence_receipts={
++            "intake_artifact": {"exists": True},
++            "fixture": {"exists": True},
++        },
++        revision_receipt={
++            "source_root_exists": True,
++            "revision_is_immutable": True,
++            "license_verified": True,
++            "schema_verified": True,
++            "corruption_boundary_text_verified": True,
++        },
++        source_identity_rows=[{"passed": False}],
++        chronology_rows=[{"chronology_valid": False}],
++        exact_rows=[],
++        split_audit={"passed": False},
++        shard_audit={"passed": False},
++        aggregate_rows=[],
++        attack_rows=[],
++    )
++    assert {row["check"] for row in gate["failed_checks"]} >= {
++        "source_identity_hash",
++        "chronology_replay",
++        "split_lineage",
++        "shard_transaction",
++    }
++
++    bad = json.loads(json.dumps(artifact))
++    bad.pop("status")
++    bad["field_principles"] = {}
++    bad["field_provenance"] = {}
++    bad["verdict_class"] = "positive"
++    bad["honest_verdict"] = "ready"
++    bad["inference_substrate"] = "live_llm"
++    bad["verifier_is_oracle"] = False
++    bad["external_constraint_corpus_audited_ready_score"] = 0.5
++    bad["reproducibility_checksum"] = "bad"
++    errors = mod.validate_artifact(bad)
++    assert "required field set mismatch" in errors
++    assert "field_principles mismatch" in errors
++    assert "field_provenance must cover required fields" in errors
++    assert "verdict_class outside Exp6530 enum" in errors
++    assert "honest_verdict terminal prefix mismatch" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "verifier_is_oracle must be true" in errors
++    assert "ready score mismatch" in errors
++    assert "reproducibility_checksum mismatch" in errors
++
++    bad_ready = json.loads(json.dumps(artifact))
++    bad_ready["gate_check_summary"] = {"all_gates_passed": False, "failed_checks": []}
++    bad_ready["reproducibility_checksum"] = mod.reproducibility_checksum(bad_ready)
++    assert "ready artifact must have all gates passed" in mod.validate_artifact(bad_ready)
++
++    bad_blocked = json.loads(json.dumps(artifact))
++    bad_blocked["external_constraint_corpus_audited_ready_score"] = 0.0
++    bad_blocked["aggregate_row_recomputation"]["ready_score_from_rows"] = 0.0
++    bad_blocked["gate_check_summary"] = {"all_gates_passed": True, "failed_checks": []}
++    bad_blocked["reproducibility_checksum"] = mod.reproducibility_checksum(bad_blocked)
++    assert "blocked artifact cannot have all gates passed" in mod.validate_artifact(bad_blocked)
++
++    monkeypatch.setattr(mod, "REPO_ROOT", repo)
++    cli_path = tmp_path / "cli-artifact.json"
++    assert mod.main(["--date", "20260823", "--result-path", str(cli_path)]) == 0
++    assert f"wrote {mod.RESULT_RELATIVE_PATH.as_posix()}" in capsys.readouterr().out
++    assert mod.main(["--result-path", str(cli_path), "--validate"]) == 0
++    assert f"validated {mod.RESULT_RELATIVE_PATH.as_posix()}" in capsys.readouterr().out
++    bad_cli_path = tmp_path / "bad-cli.json"
++    bad_cli_path.write_text("{}", encoding="utf-8")
++    assert mod.main(["--result-path", str(bad_cli_path), "--validate"]) == 1
++    assert "required field set mismatch" in capsys.readouterr().out
++
++    monkeypatch.setattr(mod, "build_artifact", lambda **kwargs: {"bad": True})
++    monkeypatch.setattr(mod, "validate_artifact", lambda artifact: ["forced error"])
++    assert mod.main(["--result-path", str(tmp_path / "forced.json")]) == 1
++    assert "forced error" in capsys.readouterr().out
+-- 
+2.55.0
+

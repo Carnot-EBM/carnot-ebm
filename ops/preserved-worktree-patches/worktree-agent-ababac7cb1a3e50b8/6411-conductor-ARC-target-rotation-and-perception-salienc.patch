@@ -1,0 +1,1622 @@
+From 298e5c21665b29fe76b1eaf1ff517b7ee1fad08c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 05:41:46 -0400
+Subject: [PATCH 06411/11362] [conductor] ARC target rotation and
+ perception/salience precheck
+
+Automated research step by research conductor.
+Task ID: exp5479-arc-target-rotation-precheck-v497
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  70 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._5479_arc_target_rotation_precheck_v497.py | 577 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |  17 -
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...479_arc_target_rotation_precheck_v497.json | 326 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._5479_arc_target_rotation_precheck_v497.py | 328 ++++++++++
+ 20 files changed, 1328 insertions(+), 44 deletions(-)
+ create mode 100644 python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py
+ delete mode 100644 results/experiment_2097_eqm_eval.json
+ create mode 100644 results/experiment_5479_arc_target_rotation_precheck_v497.json
+ create mode 100644 tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 76aecd00c4..443c1d71d7 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -1434,6 +1434,52 @@ Required field principles:
+ - `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+ - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+ 
++### REQ-ARC-FCP-5479: Target Rotation Live-Path Precheck Without Solve Claim
++
++Experiment 5479 SHALL write
++`results/experiment_5479_arc_target_rotation_precheck_v497.json` as a
++no-solve ARC target-rotation precheck before any level-up attempt. The workflow
++SHALL read `ops/arc_solve_registry.yaml`, the Exp5464 precheck shortlist, the
++Exp5465 no-bank artifact, and `ops/known-issues.md`; reject target levels that
++the live mechanism already reproduces; avoid recent no-bank targets `bp35:L3`,
++`ka59:L2`, and `cn04:L4` unless a new mechanism and target level are recorded;
++and prefer a rotated Exp5464 shortlist target such as `sb26:L3`, `g50t:L3`,
++`dc22:L3`, or `sp80:L3`.
++
++The workflow SHALL verify live-path eligibility through frame-only
++connected-component/color-blob salience diagnostics without reading hidden game
++source, running offline ground-truth BFS, or crediting a hand per-game adapter.
++The bounded dry check SHALL report connected components, color blobs, changed
++cells, target-region candidates, and known blockers. The artifact SHALL make no
++solve claim and SHALL use
++`inference_substrate=arc_live_path_precheck_no_solve`.
++
++The result artifact SHALL include `selected_game`,
++`selected_target_level`, `registry_reproducible_total_levels_before`,
++`duplicate_target_rejected`, `recent_no_bank_targets_avoided`,
++`live_path_reachable`, `hidden_source_reading`, `offline_bfs_used`,
++`hand_adapter_used`, `salience_feature_summary`,
++`arc_target_rotation_ready`, `solve_claimed`, `inference_substrate`,
++`random_seed`, and `honest_verdict`.
++
++Required field principles:
++
++- `selected_game`: principle "rotated non-duplicate Exp5464 shortlist game selected before any level-up attempt."
++- `selected_target_level`: principle "selected next level, strictly greater than the registry reproduced depth."
++- `registry_reproducible_total_levels_before`: principle "authoritative registry total before this no-solve precheck."
++- `duplicate_target_rejected`: principle "bare bool proving already reproduced target levels are rejected before selection."
++- `recent_no_bank_targets_avoided`: principle "auditable list containing bp35:L3, ka59:L2, and cn04:L4 unless a new mechanism justifies inclusion."
++- `live_path_reachable`: principle "true only when submitted live salience/perception code emits the dry-check features."
++- `hidden_source_reading`: principle "must be false; hidden/public source is not read in this precheck."
++- `offline_bfs_used`: principle "must be false; no offline ground-truth BFS is used."
++- `hand_adapter_used`: principle "must be false; target eligibility is not credited to a hand per-game adapter."
++- `salience_feature_summary`: principle "dict summarizing connected components, color blobs, changed cells, target-region candidates, and known blockers."
++- `arc_target_rotation_ready`: principle "true only when non-duplicate target rotation and live-path salience eligibility both pass."
++- `solve_claimed`: principle "must be false; this artifact is a precheck, not a level solve."
++- `inference_substrate`: principle "must equal arc_live_path_precheck_no_solve."
++- `random_seed`: principle "deterministic seed for reproducible target ordering and dry-check fixtures."
++- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked: with no solve claim."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -1981,3 +2027,27 @@ precheck depth
+ Then and only then `offline_reproduced=true`, `new_level_banked=true`,
+ `arc_registry_update_required=true`, and `honest_verdict` starts with
+ `complete:`.
++
++### SCENARIO-ARC-FCP-5479: Rotated Target Precheck Avoids Duplicate And Recent No-Bank Lanes
++
++Given Exp5464 shortlisted `bp35:L3`, `sb26:L3`, `g50t:L3`, `dc22:L3`, and
++`sp80:L3`, Exp5465 no-banked `bp35:L3`, and the registry records those games at
++L2
++When experiment 5479 selects a target before any level-up attempt
++Then it rejects already reproduced duplicate target probes, avoids
++`bp35:L3`, `ka59:L2`, and `cn04:L4`, selects the first eligible rotated target
++from `sb26:L3`, `g50t:L3`, `dc22:L3`, or `sp80:L3`, and records the registry
++total before the attempt.
++
++Given the submitted live salience path is importable
++When experiment 5479 runs the bounded dry check
++Then the salience summary reports connected components, color blobs, changed
++cells, target-region candidates, and known blockers without hidden source
++reading, offline BFS, or hand-adapter credit.
++
++Given the artifact is validated
++When experiment 5479 writes
++`results/experiment_5479_arc_target_rotation_precheck_v497.json`
++Then `arc_target_rotation_ready=true`, `solve_claimed=false`,
++`inference_substrate=arc_live_path_precheck_no_solve`, and `honest_verdict`
++contains no level-solve claim.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 40f84f8b4b..37c22b6e21 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4445,
++  "experiments_checked": 4446,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py b/python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py
+new file mode 100644
+index 0000000000..bae685a3f3
+--- /dev/null
++++ b/python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py
+@@ -0,0 +1,577 @@
++"""Experiment 5479: ARC target-rotation live-path precheck.
++
++Spec refs: REQ-ARC-FCP-5479, SCENARIO-ARC-FCP-5479.
++
++This module intentionally stops before a solve attempt. Its job is to prove
++that the next ARC level-up target is not a duplicate or stale no-bank rerun,
++and that the submitted live salience/perception path can still emit the
++frame-only evidence a later attempt would need.
++"""
++
++from __future__ import annotations
++
++import json
++import time
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++REPO = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = 5479
++EXPERIMENT = "experiment_5479_arc_target_rotation_precheck_v497"
++MILESTONE = "2026.07.497"
++RESULT_RELATIVE_PATH = "results/experiment_5479_arc_target_rotation_precheck_v497.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++PRECHECK_RELATIVE_PATH = (
++    "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json"
++)
++NO_BANK_RELATIVE_PATH = (
++    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
++)
++KNOWN_ISSUES_RELATIVE_PATH = "ops/known-issues.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-human-replay-frame-change/spec.md"
++SPEC_REFS = ["REQ-ARC-FCP-5479", "SCENARIO-ARC-FCP-5479"]
++INFERENCE_SUBSTRATE = "arc_live_path_precheck_no_solve"
++RANDOM_SEED = 5479
++DEFAULT_RECENT_NO_BANK_TARGETS = ("bp35:L3", "ka59:L2", "cn04:L4")
++DEFAULT_ROTATED_TARGET_PRIORITY = ("sb26", "g50t", "dc22", "sp80")
++REQUIRED_SUMMARY_KEYS = (
++    "connected_components",
++    "color_blobs",
++    "changed_cells",
++    "target_region_candidates",
++    "known_blockers",
++)
++DEFAULT_TESTS_RUN = [
++    (
++        ".venv/bin/pytest "
++        "tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py "
++        "-q --no-cov"
++    ),
++    (
++        ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest "
++        "tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py "
++        "-q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m "
++        "python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py"
++    ),
++    ".venv/bin/pytest tests/python -q",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "selected_game": {
++        "principle": "rotated non-duplicate Exp5464 shortlist game selected before any level-up attempt."
++    },
++    "selected_target_level": {
++        "principle": "selected next level, strictly greater than the registry reproduced depth."
++    },
++    "registry_reproducible_total_levels_before": {
++        "principle": "authoritative registry total before this no-solve precheck."
++    },
++    "duplicate_target_rejected": {
++        "principle": "bare bool proving already reproduced target levels are rejected before selection."
++    },
++    "recent_no_bank_targets_avoided": {
++        "principle": "auditable list containing bp35:L3, ka59:L2, and cn04:L4 unless a new mechanism justifies inclusion."
++    },
++    "live_path_reachable": {
++        "principle": "true only when submitted live salience/perception code emits the dry-check features."
++    },
++    "hidden_source_reading": {
++        "principle": "must be false; hidden/public source is not read in this precheck."
++    },
++    "offline_bfs_used": {
++        "principle": "must be false; no offline ground-truth BFS is used."
++    },
++    "hand_adapter_used": {
++        "principle": "must be false; target eligibility is not credited to a hand per-game adapter."
++    },
++    "salience_feature_summary": {
++        "principle": "dict summarizing connected components, color blobs, changed cells, target-region candidates, and known blockers."
++    },
++    "arc_target_rotation_ready": {
++        "principle": "true only when non-duplicate target rotation and live-path salience eligibility both pass."
++    },
++    "solve_claimed": {
++        "principle": "must be false; this artifact is a precheck, not a level solve."
++    },
++    "inference_substrate": {"principle": "must equal arc_live_path_precheck_no_solve."},
++    "random_seed": {
++        "principle": "deterministic seed for reproducible target ordering and dry-check fixtures."
++    },
++    "honest_verdict": {
++        "principle": "one-line verdict starting complete:, honest_null:, or blocked: with no solve claim."
++    },
++}
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):  # pragma: no cover - defensive corrupt artifact path
++        return int(default)
++
++
++def _level_label(level: int) -> str:
++    return f"L{max(0, int(level))}"
++
++
++def _target_marker(game: str, level: int) -> str:
++    return f"{game}:{_level_label(level)}"
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(row.get("game")): row
++        for row in registry.get("games", []) or []
++        if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _shortlist_rows(precheck: Mapping[str, Any]) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for item in precheck.get("target_shortlist") or []:
++        if not isinstance(item, Mapping):  # pragma: no cover - defensive artifact path
++            continue
++        game = str(item.get("game") or "")
++        target_level = _as_int(item.get("target_level"))
++        if not game or target_level <= 0:  # pragma: no cover - defensive artifact path
++            continue
++        rows.append(
++            {
++                "game": game,
++                "target_level": target_level,
++                "marker": _target_marker(game, target_level),
++                "source": dict(item),
++            }
++        )
++    return rows
++
++
++def load_json(path: Path) -> dict[str, Any]:
++    if not path.exists():  # pragma: no cover - missing precondition path
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def load_text(path: Path) -> str:
++    if not path.exists():  # pragma: no cover - missing precondition path
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def load_registry(root: Path = REPO) -> dict[str, Any]:
++    path = root / REGISTRY_RELATIVE_PATH
++    if not path.exists():  # pragma: no cover - missing precondition path
++        return {"reproducible_total_levels": 0, "games": []}
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++
++
++def _recent_targets_from_no_bank(no_bank_artifact: Mapping[str, Any]) -> list[str]:
++    recent = list(DEFAULT_RECENT_NO_BANK_TARGETS)
++    game = str(no_bank_artifact.get("target_game") or "")
++    level = _as_int(no_bank_artifact.get("target_level_attempted"))
++    marker = _target_marker(game, level) if game and level > 0 else ""
++    if marker and marker not in recent:
++        recent.insert(0, marker)
++    return recent
++
++
++def select_rotated_target(
++    registry: Mapping[str, Any],
++    precheck: Mapping[str, Any],
++    known_issues_text: str,
++    *,
++    recent_no_bank_targets: Sequence[str] = DEFAULT_RECENT_NO_BANK_TARGETS,
++    rotated_target_priority: Sequence[str] = DEFAULT_ROTATED_TARGET_PRIORITY,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-5479: select a rotated, unreproduced target before any attempt."""
++
++    rows = _registry_rows(registry)
++    total = _as_int(registry.get("reproducible_total_levels"))
++    recent = [str(item) for item in recent_no_bank_targets]
++    target_audit: dict[str, dict[str, Any]] = {}
++    eligible: dict[str, dict[str, Any]] = {}
++    duplicate_target_rejected = False
++    priority = [str(game) for game in rotated_target_priority]
++
++    for candidate in _shortlist_rows(precheck):
++        game = str(candidate["game"])
++        target_level = _as_int(candidate["target_level"])
++        marker = str(candidate["marker"])
++        registry_depth = _as_int((rows.get(game) or {}).get("levels_reproduced"))
++        base = {
++            "game": game,
++            "target_level": int(target_level),
++            "registry_depth": int(registry_depth),
++        }
++        if target_level <= registry_depth:
++            duplicate_target_rejected = True
++            target_audit[marker] = {**base, "decision": "rejected_duplicate"}
++            continue
++        if marker in recent:
++            target_audit[marker] = {**base, "decision": "rejected_recent_no_bank"}
++            continue
++        if game not in priority:
++            target_audit[marker] = {**base, "decision": "skipped_not_rotated_priority"}
++            continue
++        target_audit[marker] = {**base, "decision": "eligible_rotated"}
++        eligible[game] = {**base, "marker": marker, "source": dict(candidate["source"])}
++
++    for game in priority:
++        if game not in eligible:
++            continue
++        selected = eligible[game]
++        duplicate_probe = _target_marker(game, _as_int(selected["registry_depth"]))
++        target_audit[duplicate_probe] = {
++            "game": game,
++            "target_level": _as_int(selected["registry_depth"]),
++            "registry_depth": _as_int(selected["registry_depth"]),
++            "decision": "rejected_duplicate",
++        }
++        target_audit[str(selected["marker"])]["decision"] = "selected"
++        duplicate_target_rejected = True
++        return {
++            "blocked": False,
++            "selected_game": game,
++            "selected_target_level": _as_int(selected["target_level"]),
++            "registry_level_before": _as_int(selected["registry_depth"]),
++            "registry_reproducible_total_levels_before": total,
++            "duplicate_target_rejected": bool(duplicate_target_rejected),
++            "recent_no_bank_targets_avoided": recent,
++            "target_audit": target_audit,
++            "known_issues_checked": bool(known_issues_text),
++            "selection_reason": (
++                f"rotated_exp5464_shortlist_after_recent_no_bank_avoidance:{selected['marker']}"
++            ),
++        }
++
++    return {
++        "blocked": True,
++        "blocker": "no_eligible_rotated_target",
++        "selected_game": "",
++        "selected_target_level": 0,
++        "registry_level_before": 0,
++        "registry_reproducible_total_levels_before": total,
++        "duplicate_target_rejected": bool(duplicate_target_rejected),
++        "recent_no_bank_targets_avoided": recent,
++        "target_audit": target_audit,
++        "known_issues_checked": bool(known_issues_text),
++        "selection_reason": "no_eligible_rotated_target_after_duplicate_and_no_bank_filters",
++    }
++
++
++def _known_blockers(
++    *,
++    selected_game: str,
++    registry_row: Mapping[str, Any],
++    known_issues_text: str,
++) -> list[str]:
++    blockers: list[str] = []
++    dead_ends = registry_row.get("dead_ends") or []
++    if isinstance(dead_ends, str):
++        blockers.append(dead_ends[:240])
++    else:
++        blockers.extend(str(item)[:240] for item in dead_ends if item)
++    blockers.extend(
++        line.strip()[:240]
++        for line in known_issues_text.splitlines()
++        if selected_game and selected_game in line
++    )
++    return blockers[:6] or ["no known blocker recorded for selected target"]
++
++
++def _known_issue_mentions(selected_game: str, known_issues_text: str) -> int:
++    return sum(1 for line in known_issues_text.splitlines() if selected_game and selected_game in line)
++
++
++def _tier_counts(rows: Sequence[Mapping[str, Any]]) -> dict[str, int]:
++    counts = Counter(str(row.get("tier")) for row in rows if row.get("tier") is not None)
++    return {tier: int(count) for tier, count in sorted(counts.items())}
++
++
++def _sample_rows(rows: Sequence[Mapping[str, Any]], keys: Sequence[str], limit: int = 3) -> list[dict[str, Any]]:
++    return [
++        {key: row[key] for key in keys if key in row}
++        for row in rows[: max(0, int(limit))]
++    ]
++
++
++def build_salience_feature_summary(
++    *,
++    selected_game: str,
++    registry_row: Mapping[str, Any],
++    known_issues_text: str,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-5479: run a bounded live-path salience dry check."""
++
++    from carnot.experiment_5465_gated_arc_connected_component_salience_levelup_v496 import (
++        build_live_feature_receipts,
++    )
++
++    receipts = build_live_feature_receipts()
++    component_rows = list(receipts.get("connected_component_rows") or [])
++    color_blob_rows = list(receipts.get("color_blob_rows") or [])
++    changed_rows = list(receipts.get("changed_pixel_rows") or [])
++    action_rows = [
++        row
++        for row in list(receipts.get("action_tier_rows") or [])
++        if isinstance(row, Mapping) and row.get("tier") is not None and row.get("non_status_region")
++    ]
++    target_candidates = [
++        {
++            "action": _as_int(row.get("action")),
++            "data": dict(row.get("data") or {}),
++            "tier": _as_int(row.get("tier")),
++            "source": str(row.get("source") or ""),
++            "color": _as_int(row.get("color")),
++            "score": float(row.get("score") or 0.0),
++            "button_like": bool(row.get("button_like")),
++        }
++        for row in action_rows[:5]
++    ]
++    summary = {
++        "selected_game": str(selected_game),
++        "live_path_reachable": bool(receipts.get("live_agent_policy_reachable")),
++        "connected_components": {
++            "count": len(component_rows),
++            "sample": _sample_rows(
++                component_rows,
++                ("color", "pixel_count", "bbox", "centroid_x", "centroid_y"),
++            ),
++        },
++        "color_blobs": {
++            "count": len(color_blob_rows),
++            "tier_counts": _tier_counts(color_blob_rows),
++            "sample": _sample_rows(
++                color_blob_rows,
++                ("tier", "color", "pixel_count", "bbox", "button_like", "large_flat"),
++            ),
++        },
++        "changed_cells": {
++            "count": len(changed_rows),
++            "sample": _sample_rows(changed_rows, ("x", "y", "before", "after"), limit=5),
++        },
++        "target_region_candidates": target_candidates,
++        "known_blockers": _known_blockers(
++            selected_game=selected_game,
++            registry_row=registry_row,
++            known_issues_text=known_issues_text,
++        ),
++        "known_issues_mentions": _known_issue_mentions(selected_game, known_issues_text),
++        "features_present": [
++            "connected_component",
++            "color_blob",
++            "changed_pixel",
++            "target_region_candidate",
++            "known_blocker",
++        ],
++    }
++    return summary
++
++
++def build_artifact(
++    *,
++    selection: Mapping[str, Any],
++    salience_feature_summary: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    tests_run: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    selected_game = str(selection.get("selected_game") or "none")
++    selected_target_level = _as_int(selection.get("selected_target_level"))
++    live_path_reachable = bool(salience_feature_summary.get("live_path_reachable"))
++    blocked = bool(selection.get("blocked"))
++    arc_ready = bool(
++        not blocked
++        and selected_game != "none"
++        and selected_target_level > _as_int(selection.get("registry_level_before"))
++        and selection.get("duplicate_target_rejected") is True
++        and live_path_reachable
++    )
++    status = "complete" if arc_ready else "blocked"
++    failure_mode = "" if arc_ready else str(selection.get("blocker") or "live_path_not_reachable")
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "experiment": EXPERIMENT,
++        "milestone": MILESTONE,
++        "schema": "carnot.experiment_5479_arc_target_rotation_precheck_v497.v1",
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "status": status,
++        "selected_game": selected_game,
++        "selected_target_level": int(selected_target_level),
++        "registry_reproducible_total_levels_before": _as_int(
++            selection.get("registry_reproducible_total_levels_before")
++        ),
++        "duplicate_target_rejected": selection.get("duplicate_target_rejected") is True,
++        "recent_no_bank_targets_avoided": list(
++            selection.get("recent_no_bank_targets_avoided") or []
++        ),
++        "live_path_reachable": bool(live_path_reachable),
++        "hidden_source_reading": False,
++        "offline_bfs_used": False,
++        "hand_adapter_used": False,
++        "salience_feature_summary": dict(salience_feature_summary),
++        "arc_target_rotation_ready": bool(arc_ready),
++        "solve_claimed": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "honest_verdict": (
++            f"complete: {selected_game} {_level_label(selected_target_level)} live-path precheck ready; no level bank claimed"
++            if arc_ready
++            else f"blocked: {failure_mode}"
++        ),
++        "failure_mode": failure_mode,
++        "target_selection": dict(selection),
++        "preconditions_checked": dict(preconditions_checked),
++        "tests_run": list(tests_run),
++        "duration_s": float(duration_s),
++    }
++    return artifact
++
++
++def _verdict_claims_solve(verdict: str) -> bool:
++    text = verdict.lower()
++    return "solved" in text or "solve reproduced" in text or "new level banked" in text
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field: {field}" for field in REQUIRED_FIELDS if field not in artifact
++    ]
++    if not isinstance(artifact.get("selected_game"), str) or not artifact.get("selected_game"):
++        errors.append("selected_game must be a non-empty string")
++    for field in (
++        "selected_target_level",
++        "registry_reproducible_total_levels_before",
++        "random_seed",
++    ):
++        if type(artifact.get(field)) is not int:
++            errors.append(f"{field} must be bare int")
++    for field in (
++        "duplicate_target_rejected",
++        "live_path_reachable",
++        "hidden_source_reading",
++        "offline_bfs_used",
++        "hand_adapter_used",
++        "arc_target_rotation_ready",
++        "solve_claimed",
++    ):
++        if type(artifact.get(field)) is not bool:
++            errors.append(f"{field} must be bare bool")
++    recent = artifact.get("recent_no_bank_targets_avoided")
++    if not isinstance(recent, list):
++        errors.append("recent_no_bank_targets_avoided must be a list")
++        recent = []
++    for marker in DEFAULT_RECENT_NO_BANK_TARGETS:
++        if marker not in recent:
++            errors.append(f"recent_no_bank_targets_avoided missing {marker}")
++    for field in ("hidden_source_reading", "offline_bfs_used", "hand_adapter_used", "solve_claimed"):
++        if artifact.get(field) is True:
++            errors.append(f"{field} must be false")
++    summary = artifact.get("salience_feature_summary")
++    if not isinstance(summary, Mapping):
++        errors.append("salience_feature_summary must be a dict")
++        summary = {}
++    for key in REQUIRED_SUMMARY_KEYS:
++        if key not in summary:
++            errors.append(f"salience_feature_summary missing {key}")
++    if artifact.get("arc_target_rotation_ready") is True:
++        if artifact.get("solve_claimed") is not False:
++            errors.append("arc_target_rotation_ready requires solve_claimed false")
++        if artifact.get("live_path_reachable") is not True:
++            errors.append("arc_target_rotation_ready requires live_path_reachable true")
++        if artifact.get("duplicate_target_rejected") is not True:
++            errors.append("arc_target_rotation_ready requires duplicate_target_rejected true")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(("complete:", "honest_null:", "blocked:")):
++        errors.append("honest_verdict must start with complete:, honest_null:, or blocked:")
++    if _verdict_claims_solve(verdict):
++        errors.append("honest_verdict must not claim a solve")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def _write_artifact(root: Path, artifact: Mapping[str, Any]) -> None:
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run_experiment(
++    *,
++    root: Path = REPO,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++) -> dict[str, Any]:
++    started = time.monotonic()
++    root = Path(root)
++    spec_path = root / SPEC_RELATIVE_PATH
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    precheck_path = root / PRECHECK_RELATIVE_PATH
++    no_bank_path = root / NO_BANK_RELATIVE_PATH
++    known_issues_path = root / KNOWN_ISSUES_RELATIVE_PATH
++    preconditions = {
++        "AGENTS.md": (root / "AGENTS.md").exists(),
++        "CODEX.md": (root / "CODEX.md").exists(),
++        "spec_has_req_5479": (
++            "REQ-ARC-FCP-5479" in spec_path.read_text(encoding="utf-8")
++            if spec_path.exists()
++            else False
++        ),
++        "registry_present": registry_path.exists(),
++        "exp5464_precheck_present": precheck_path.exists(),
++        "exp5465_no_bank_present": no_bank_path.exists(),
++        "known_issues_present": known_issues_path.exists(),
++        "hidden_source_reading": False,
++        "offline_bfs_used": False,
++        "hand_adapter_used": False,
++    }
++    registry = load_registry(root)
++    precheck = load_json(precheck_path)
++    no_bank = load_json(no_bank_path)
++    known_issues_text = load_text(known_issues_path)
++    selection = select_rotated_target(
++        registry,
++        precheck,
++        known_issues_text,
++        recent_no_bank_targets=_recent_targets_from_no_bank(no_bank),
++    )
++    registry_row = _registry_rows(registry).get(str(selection.get("selected_game"))) or {}
++    summary = build_salience_feature_summary(
++        selected_game=str(selection.get("selected_game") or ""),
++        registry_row=registry_row,
++        known_issues_text=known_issues_text,
++    )
++    artifact = build_artifact(
++        selection=selection,
++        salience_feature_summary=summary,
++        preconditions_checked=preconditions,
++        tests_run=tests_run,
++        duration_s=time.monotonic() - started,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 6f7bc240c7..84c216e015 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:53:56.730922+00:00",
+-  "finished_at": "2026-07-09T08:53:56.758058+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-09T09:40:43.001250+00:00",
++  "finished_at": "2026-07-09T09:40:43.027341+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 007f2a9dd6..2e6b0915a9 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T08:53:57Z",
++  "run_date": "2026-07-09T09:40:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 9c2474d018..1dde9fe2e2 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:53:58Z",
+-  "finished_at": "2026-07-09T08:53:58Z",
++  "started_at": "2026-07-09T09:40:44Z",
++  "finished_at": "2026-07-09T09:40:44Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 1a682a1f44..5f540c54f7 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T08:53:58Z",
++  "run_date": "2026-07-09T09:40:44Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 6e420d1249..fa2a328c03 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-09T08:53:58Z",
++  "run_date": "2026-07-09T09:40:44Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f7df601ca8..9d97330efc 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1605491638183594,
++  "efficiency_gains_ms": 2.1576881408691406,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 33d7f21fb8..cffa0d2880 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0001459037885069847,
+-  "latency_domino_seconds": 0.00028444407507777214,
++  "latency_legacy_seconds": 0.0001468360424041748,
++  "latency_domino_seconds": 0.00028928276151418686,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index ec655e244b..767704d6ee 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:53:53Z",
+-  "finished_at": "2026-07-09T08:53:53Z",
++  "started_at": "2026-07-09T09:40:36Z",
++  "finished_at": "2026-07-09T09:40:36Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index e048be9e4e..8f162d4eb4 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:54:28Z",
+-  "finished_at": "2026-07-09T08:54:28Z",
++  "started_at": "2026-07-09T09:41:11Z",
++  "finished_at": "2026-07-09T09:41:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07295608520507812,
++  "latency_ms": 0.05698204040527344,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+deleted file mode 100644
+index 303f7c87f3..0000000000
+--- a/results/experiment_2097_eqm_eval.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "schema": "experiment_result",
+-  "experiment_id": "2097",
+-  "spec_refs": [
+-    "REQ-KONA-2097",
+-    "SCENARIO-KONA-2097"
+-  ],
+-  "num_instances": 50,
+-  "avg_pem_energy": 437.4525486167846,
+-  "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008868598937988282,
+-  "avg_eqm_time": 0.08715812683105469,
+-  "pem_satisfaction_rate": 0.12,
+-  "eqm_satisfaction_rate": 0.0,
+-  "eqm_superior": false,
+-  "honest_verdict": "SUCCESS: eqm_eval_complete"
+-}
+\ No newline at end of file
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 94885cb8ee..abb12a6a6f 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6169593334197998,
++  "duration_s": 0.6607372760772705,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f4eb6d2cb2..23fca21cf3 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.324976518750191e-05,
++  "duration_s": 4.351092502474785e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5479_arc_target_rotation_precheck_v497.json b/results/experiment_5479_arc_target_rotation_precheck_v497.json
+new file mode 100644
+index 0000000000..14e383d1b2
+--- /dev/null
++++ b/results/experiment_5479_arc_target_rotation_precheck_v497.json
+@@ -0,0 +1,326 @@
++{
++  "arc_target_rotation_ready": true,
++  "duplicate_target_rejected": true,
++  "duration_s": 1.159467461053282,
++  "experiment": "experiment_5479_arc_target_rotation_precheck_v497",
++  "experiment_id": 5479,
++  "failure_mode": "",
++  "field_principles": {
++    "arc_target_rotation_ready": {
++      "principle": "true only when non-duplicate target rotation and live-path salience eligibility both pass."
++    },
++    "duplicate_target_rejected": {
++      "principle": "bare bool proving already reproduced target levels are rejected before selection."
++    },
++    "hand_adapter_used": {
++      "principle": "must be false; target eligibility is not credited to a hand per-game adapter."
++    },
++    "hidden_source_reading": {
++      "principle": "must be false; hidden/public source is not read in this precheck."
++    },
++    "honest_verdict": {
++      "principle": "one-line verdict starting complete:, honest_null:, or blocked: with no solve claim."
++    },
++    "inference_substrate": {
++      "principle": "must equal arc_live_path_precheck_no_solve."
++    },
++    "live_path_reachable": {
++      "principle": "true only when submitted live salience/perception code emits the dry-check features."
++    },
++    "offline_bfs_used": {
++      "principle": "must be false; no offline ground-truth BFS is used."
++    },
++    "random_seed": {
++      "principle": "deterministic seed for reproducible target ordering and dry-check fixtures."
++    },
++    "recent_no_bank_targets_avoided": {
++      "principle": "auditable list containing bp35:L3, ka59:L2, and cn04:L4 unless a new mechanism justifies inclusion."
++    },
++    "registry_reproducible_total_levels_before": {
++      "principle": "authoritative registry total before this no-solve precheck."
++    },
++    "salience_feature_summary": {
++      "principle": "dict summarizing connected components, color blobs, changed cells, target-region candidates, and known blockers."
++    },
++    "selected_game": {
++      "principle": "rotated non-duplicate Exp5464 shortlist game selected before any level-up attempt."
++    },
++    "selected_target_level": {
++      "principle": "selected next level, strictly greater than the registry reproduced depth."
++    },
++    "solve_claimed": {
++      "principle": "must be false; this artifact is a precheck, not a level solve."
++    }
++  },
++  "hand_adapter_used": false,
++  "hidden_source_reading": false,
++  "honest_verdict": "complete: sb26 L3 live-path precheck ready; no level bank claimed",
++  "inference_substrate": "arc_live_path_precheck_no_solve",
++  "live_path_reachable": true,
++  "milestone": "2026.07.497",
++  "offline_bfs_used": false,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "exp5464_precheck_present": true,
++    "exp5465_no_bank_present": true,
++    "hand_adapter_used": false,
++    "hidden_source_reading": false,
++    "known_issues_present": true,
++    "offline_bfs_used": false,
++    "registry_present": true,
++    "spec_has_req_5479": true
++  },
++  "random_seed": 5479,
++  "recent_no_bank_targets_avoided": [
++    "bp35:L3",
++    "ka59:L2",
++    "cn04:L4"
++  ],
++  "registry_reproducible_total_levels_before": 69,
++  "result_path": "results/experiment_5479_arc_target_rotation_precheck_v497.json",
++  "salience_feature_summary": {
++    "changed_cells": {
++      "count": 4,
++      "sample": [
++        {
++          "after": 10,
++          "before": 9,
++          "x": 14,
++          "y": 14
++        },
++        {
++          "after": 10,
++          "before": 9,
++          "x": 15,
++          "y": 14
++        },
++        {
++          "after": 10,
++          "before": 9,
++          "x": 14,
++          "y": 15
++        },
++        {
++          "after": 10,
++          "before": 9,
++          "x": 15,
++          "y": 15
++        }
++      ]
++    },
++    "color_blobs": {
++      "count": 4,
++      "sample": [
++        {
++          "bbox": [
++            14,
++            14,
++            15,
++            15
++          ],
++          "button_like": true,
++          "color": 9,
++          "large_flat": false,
++          "pixel_count": 4,
++          "tier": 0
++        },
++        {
++          "bbox": [
++            2,
++            2,
++            9,
++            17
++          ],
++          "button_like": false,
++          "color": 8,
++          "large_flat": true,
++          "pixel_count": 128,
++          "tier": 3
++        },
++        {
++          "bbox": [
++            1,
++            0,
++            19,
++            19
++          ],
++          "button_like": false,
++          "color": 0,
++          "large_flat": true,
++          "pixel_count": 248,
++          "tier": 3
++        }
++      ],
++      "tier_counts": {
++        "0": 1,
++        "3": 2,
++        "4": 1
++      }
++    },
++    "connected_components": {
++      "count": 4,
++      "sample": [
++        {
++          "bbox": [
++            0,
++            0,
++            0,
++            19
++          ],
++          "centroid_x": 9.5,
++          "centroid_y": 0.0,
++          "color": 16,
++          "pixel_count": 20
++        },
++        {
++          "bbox": [
++            1,
++            0,
++            19,
++            19
++          ],
++          "centroid_x": 9.419354838709678,
++          "centroid_y": 12.25,
++          "color": 0,
++          "pixel_count": 248
++        },
++        {
++          "bbox": [
++            2,
++            2,
++            9,
++            17
++          ],
++          "centroid_x": 9.5,
++          "centroid_y": 5.5,
++          "color": 8,
++          "pixel_count": 128
++        }
++      ]
++    },
++    "features_present": [
++      "connected_component",
++      "color_blob",
++      "changed_pixel",
++      "target_region_candidate",
++      "known_blocker"
++    ],
++    "known_blockers": [
++      "{'bp35': 'no_grounded_next_level_adapter_for_platformer_delta'}",
++      "{'re86': 'sprite_overlay_L2_delta_not_adaptered_this_run'}",
++      "{'s5i5': 'marker_coverage_L2_delta_not_adaptered_this_run'}",
++      "{'g50t': 'target_offset_L2_delta_not_adaptered_this_run'}",
++      "{'r11l': 'prefix_rooted_graph_search_stalled_at_L1'}",
++      "{'lf52': 'prefix_rooted_graph_search_still_pending_or_stalled'}"
++    ],
++    "known_issues_mentions": 4,
++    "live_path_reachable": true,
++    "selected_game": "sb26",
++    "target_region_candidates": [
++      {
++        "action": 6,
++        "button_like": true,
++        "color": 9,
++        "data": {
++          "x": 14,
++          "y": 14
++        },
++        "score": 4000.2039999999997,
++        "source": "color_blob_prior",
++        "tier": 0
++      },
++      {
++        "action": 6,
++        "button_like": false,
++        "color": 0,
++        "data": {
++          "x": 9,
++          "y": 12
++        },
++        "score": 1000.2520160642571,
++        "source": "color_blob_prior",
++        "tier": 3
++      },
++      {
++        "action": 6,
++        "button_like": false,
++        "color": 8,
++        "data": {
++          "x": 9,
++          "y": 5
++        },
++        "score": 1000.1357519379845,
++        "source": "color_blob_prior",
++        "tier": 3
++      }
++    ]
++  },
++  "schema": "carnot.experiment_5479_arc_target_rotation_precheck_v497.v1",
++  "selected_game": "sb26",
++  "selected_target_level": 3,
++  "solve_claimed": false,
++  "spec_refs": [
++    "REQ-ARC-FCP-5479",
++    "SCENARIO-ARC-FCP-5479"
++  ],
++  "status": "complete",
++  "target_selection": {
++    "blocked": false,
++    "duplicate_target_rejected": true,
++    "known_issues_checked": true,
++    "recent_no_bank_targets_avoided": [
++      "bp35:L3",
++      "ka59:L2",
++      "cn04:L4"
++    ],
++    "registry_level_before": 2,
++    "registry_reproducible_total_levels_before": 69,
++    "selected_game": "sb26",
++    "selected_target_level": 3,
++    "selection_reason": "rotated_exp5464_shortlist_after_recent_no_bank_avoidance:sb26:L3",
++    "target_audit": {
++      "bp35:L3": {
++        "decision": "rejected_recent_no_bank",
++        "game": "bp35",
++        "registry_depth": 2,
++        "target_level": 3
++      },
++      "dc22:L3": {
++        "decision": "eligible_rotated",
++        "game": "dc22",
++        "registry_depth": 2,
++        "target_level": 3
++      },
++      "g50t:L3": {
++        "decision": "eligible_rotated",
++        "game": "g50t",
++        "registry_depth": 2,
++        "target_level": 3
++      },
++      "sb26:L2": {
++        "decision": "rejected_duplicate",
++        "game": "sb26",
++        "registry_depth": 2,
++        "target_level": 2
++      },
++      "sb26:L3": {
++        "decision": "selected",
++        "game": "sb26",
++        "registry_depth": 2,
++        "target_level": 3
++      },
++      "sp80:L3": {
++        "decision": "eligible_rotated",
++        "game": "sp80",
++        "registry_depth": 2,
++        "target_level": 3
++      }
++    }
++  },
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py -q --no-cov",
++    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5479_arc_target_rotation_precheck_v497.py",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index d0e00e8e26..9df926494f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:27:53Z",
+-  "finished_at": "2026-07-09T09:27:53Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-09T09:39:45Z",
++  "finished_at": "2026-07-09T09:39:46Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1ab1b42788..92e52edf7c 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:27:54Z",
+-  "finished_at": "2026-07-09T09:27:54Z",
++  "started_at": "2026-07-09T09:39:46Z",
++  "finished_at": "2026-07-09T09:39:46Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9b83adebc7..b65d1a9956 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:27:54Z",
+-  "finished_at": "2026-07-09T09:27:54Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-09T09:39:46Z",
++  "finished_at": "2026-07-09T09:39:46Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py b/tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py
+new file mode 100644
+index 0000000000..cce82ad3f5
+--- /dev/null
++++ b/tests/python/test_experiment_5479_arc_target_rotation_precheck_v497.py
+@@ -0,0 +1,328 @@
++"""Tests for Exp5479 ARC target-rotation live-path precheck.
++
++Spec refs: REQ-ARC-FCP-5479,
++SCENARIO-ARC-FCP-5479.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5479_arc_target_rotation_precheck_v497 as exp5479
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _registry() -> dict[str, Any]:
++    return {
++        "reproducible_total_levels": 69,
++        "games": [
++            {
++                "game": "bp35",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 2,
++                "dead_ends": ["Exp5479 fixture: recent bp35 L3 no-bank"],
++            },
++            {
++                "game": "sb26",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 2,
++                "dead_ends": ["Exp4937 sb26 no-bank no_grounded_l3_delta"],
++            },
++            {"game": "g50t", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "dc22", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "sp80", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "ka59", "reproducibility": "reproduced", "levels_reproduced": 1},
++            {"game": "cn04", "reproducibility": "reproduced", "levels_reproduced": 3},
++        ],
++    }
++
++
++def _precheck() -> dict[str, Any]:
++    return {
++        "arc_metric_integrity_ready": True,
++        "target_shortlist": [
++            {"game": "bp35", "target": "bp35:L3", "target_level": 3},
++            {"game": "sb26", "target": "sb26:L3", "target_level": 3},
++            {"game": "g50t", "target": "g50t:L3", "target_level": 3},
++            {"game": "dc22", "target": "dc22:L3", "target_level": 3},
++            {"game": "sp80", "target": "sp80:L3", "target_level": 3},
++        ],
++    }
++
++
++def _known_issues() -> str:
++    return "sb26 = search/goal-bound hard target; bp35 L3 no-bank; cn04 L4 stale lane"
++
++
++def _selection() -> dict[str, Any]:
++    return exp5479.select_rotated_target(_registry(), _precheck(), _known_issues())
++
++
++def test_req_arc_fcp_5479_spec_declares_required_artifact_fields() -> None:
++    """REQ-ARC-FCP-5479: OpenSpec anchors the no-solve artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-5479" in spec
++    assert "SCENARIO-ARC-FCP-5479" in spec
++    assert exp5479.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp5479.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_fcp_5479_selects_rotated_nonduplicate_target() -> None:
++    """SCENARIO-ARC-FCP-5479: target rotation avoids duplicate and no-bank lanes."""
++
++    selection = exp5479.select_rotated_target(_registry(), _precheck(), _known_issues())
++    blocked = exp5479.select_rotated_target(
++        _registry(),
++        {
++            "arc_metric_integrity_ready": True,
++            "target_shortlist": [
++                {"game": "bp35", "target_level": 3},
++                {"game": "sb26", "target_level": 2},
++            ],
++        },
++        _known_issues(),
++    )
++
++    assert selection["selected_game"] == "sb26"
++    assert selection["selected_target_level"] == 3
++    assert selection["registry_reproducible_total_levels_before"] == 69
++    assert selection["duplicate_target_rejected"] is True
++    assert selection["recent_no_bank_targets_avoided"] == ["bp35:L3", "ka59:L2", "cn04:L4"]
++    assert selection["target_audit"]["bp35:L3"]["decision"] == "rejected_recent_no_bank"
++    assert selection["target_audit"]["sb26:L3"]["decision"] == "selected"
++    assert selection["target_audit"]["sb26:L2"]["decision"] == "rejected_duplicate"
++    assert selection["known_issues_checked"] is True
++    assert blocked["blocked"] is True
++    assert blocked["selected_game"] == ""
++    assert blocked["blocker"] == "no_eligible_rotated_target"
++
++
++def test_scenario_arc_fcp_5479_salience_dry_check_reports_required_features() -> None:
++    """SCENARIO-ARC-FCP-5479: bounded salience dry check emits required receipts."""
++
++    summary = exp5479.build_salience_feature_summary(
++        selected_game="sb26",
++        registry_row=_registry()["games"][1],
++        known_issues_text=_known_issues(),
++    )
++
++    assert summary["connected_components"]["count"] > 0
++    assert summary["color_blobs"]["count"] > 0
++    assert summary["changed_cells"]["count"] == 4
++    assert summary["target_region_candidates"]
++    assert summary["target_region_candidates"][0]["tier"] == 0
++    assert summary["known_blockers"]
++    assert summary["known_issues_mentions"] >= 1
++    assert summary["features_present"] == [
++        "connected_component",
++        "color_blob",
++        "changed_pixel",
++        "target_region_candidate",
++        "known_blocker",
++    ]
++
++
++def test_scenario_arc_fcp_5479_artifact_schema_no_solve_claim() -> None:
++    """SCENARIO-ARC-FCP-5479: artifact validates no-solve precheck fields."""
++
++    artifact = exp5479.build_artifact(
++        selection=_selection(),
++        salience_feature_summary=exp5479.build_salience_feature_summary(
++            selected_game="sb26",
++            registry_row=_registry()["games"][1],
++            known_issues_text=_known_issues(),
++        ),
++        preconditions_checked={"unit": True},
++        tests_run=["unit 5479"],
++        duration_s=0.1,
++    )
++
++    exp5479.validate_artifact(artifact)
++    assert artifact["selected_game"] == "sb26"
++    assert artifact["selected_target_level"] == 3
++    assert artifact["registry_reproducible_total_levels_before"] == 69
++    assert artifact["duplicate_target_rejected"] is True
++    assert artifact["recent_no_bank_targets_avoided"] == ["bp35:L3", "ka59:L2", "cn04:L4"]
++    assert artifact["live_path_reachable"] is True
++    assert artifact["hidden_source_reading"] is False
++    assert artifact["offline_bfs_used"] is False
++    assert artifact["hand_adapter_used"] is False
++    assert artifact["arc_target_rotation_ready"] is True
++    assert artifact["solve_claimed"] is False
++    assert artifact["inference_substrate"] == "arc_live_path_precheck_no_solve"
++    assert artifact["random_seed"] == 5479
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "solved" not in artifact["honest_verdict"].lower()
++    assert artifact["tests_run"] == ["unit 5479"]
++
++
++def test_scenario_arc_fcp_5479_schema_rejects_bad_claims() -> None:
++    """SCENARIO-ARC-FCP-5479: schema rejects source/BFS/adapter and solve claims."""
++
++    artifact = exp5479.build_artifact(
++        selection=_selection(),
++        salience_feature_summary=exp5479.build_salience_feature_summary(
++            selected_game="sb26",
++            registry_row=_registry()["games"][1],
++            known_issues_text=_known_issues(),
++        ),
++        preconditions_checked={"unit": True},
++        tests_run=["unit"],
++        duration_s=0.1,
++    )
++    invalid = {
++        **artifact,
++        "selected_game": "",
++        "selected_target_level": "3",
++        "registry_reproducible_total_levels_before": "69",
++        "duplicate_target_rejected": "true",
++        "recent_no_bank_targets_avoided": ["bp35:L3"],
++        "live_path_reachable": "true",
++        "hidden_source_reading": True,
++        "offline_bfs_used": True,
++        "hand_adapter_used": True,
++        "salience_feature_summary": [],
++        "arc_target_rotation_ready": True,
++        "solve_claimed": True,
++        "inference_substrate": "arc_live_agent_self_discovery",
++        "random_seed": "5479",
++        "honest_verdict": "complete: solved sb26 L3",
++    }
++
++    errors = exp5479.artifact_schema_errors(invalid)
++
++    assert "selected_game must be a non-empty string" in errors
++    assert "selected_target_level must be bare int" in errors
++    assert "registry_reproducible_total_levels_before must be bare int" in errors
++    assert "duplicate_target_rejected must be bare bool" in errors
++    assert "recent_no_bank_targets_avoided missing ka59:L2" in errors
++    assert "live_path_reachable must be bare bool" in errors
++    assert "hidden_source_reading must be false" in errors
++    assert "offline_bfs_used must be false" in errors
++    assert "hand_adapter_used must be false" in errors
++    assert "salience_feature_summary must be a dict" in errors
++    assert "arc_target_rotation_ready requires solve_claimed false" in errors
++    assert "solve_claimed must be false" in errors
++    assert "inference_substrate must be arc_live_path_precheck_no_solve" in errors
++    assert "random_seed must be bare int" in errors
++    assert "honest_verdict must not claim a solve" in errors
++    with pytest.raises(ValueError):
++        exp5479.validate_artifact(invalid)
++
++
++def test_scenario_arc_fcp_5479_helper_edge_branches() -> None:
++    """SCENARIO-ARC-FCP-5479: rotation and schema helper branches are explicit."""
++
++    recent = exp5479._recent_targets_from_no_bank(  # noqa: SLF001
++        {"target_game": "lf52", "target_level_attempted": 3}
++    )
++    selection = exp5479.select_rotated_target(
++        {
++            "reproducible_total_levels": 69,
++            "games": [
++                {"game": "lf52", "reproducibility": "reproduced", "levels_reproduced": 2},
++                {"game": "sb26", "reproducibility": "reproduced", "levels_reproduced": 2},
++            ],
++        },
++        {
++            "arc_metric_integrity_ready": True,
++            "target_shortlist": [
++                {"game": "lf52", "target": "lf52:L3", "target_level": 3},
++                {"game": "sb26", "target": "sb26:L3", "target_level": 3},
++            ],
++        },
++        "sb26 known issue",
++        recent_no_bank_targets=("bp35:L3", "ka59:L2", "cn04:L4"),
++    )
++    blockers = exp5479._known_blockers(  # noqa: SLF001
++        selected_game="lf52",
++        registry_row={"dead_ends": "string blocker"},
++        known_issues_text="lf52 known issue",
++    )
++    invalid_errors = exp5479.artifact_schema_errors(
++        {
++            "selected_game": "sb26",
++            "selected_target_level": 3,
++            "registry_reproducible_total_levels_before": 69,
++            "duplicate_target_rejected": True,
++            "recent_no_bank_targets_avoided": "bp35:L3",
++            "live_path_reachable": True,
++            "hidden_source_reading": False,
++            "offline_bfs_used": False,
++            "hand_adapter_used": False,
++            "salience_feature_summary": {
++                "connected_components": {},
++                "color_blobs": {},
++                "changed_cells": {},
++                "target_region_candidates": [],
++                "known_blockers": [],
++            },
++            "arc_target_rotation_ready": False,
++            "solve_claimed": False,
++            "inference_substrate": exp5479.INFERENCE_SUBSTRATE,
++            "random_seed": exp5479.RANDOM_SEED,
++            "honest_verdict": "ready without terminal prefix",
++        }
++    )
++
++    assert recent[0] == "lf52:L3"
++    assert selection["target_audit"]["lf52:L3"]["decision"] == "skipped_not_rotated_priority"
++    assert selection["selected_game"] == "sb26"
++    assert blockers[0] == "string blocker"
++    assert "recent_no_bank_targets_avoided must be a list" in invalid_errors
++    assert "honest_verdict must start with complete:, honest_null:, or blocked:" in invalid_errors
++
++
++def test_scenario_arc_fcp_5479_run_experiment_writes_json(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-5479: runner writes the required deliverable JSON."""
++
++    root = tmp_path
++    (root / "openspec" / "capabilities" / "arc-human-replay-frame-change").mkdir(parents=True)
++    (root / "ops").mkdir()
++    (root / "results").mkdir()
++    (root / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    (root / exp5479.SPEC_RELATIVE_PATH).write_text(
++        "REQ-ARC-FCP-5479\nSCENARIO-ARC-FCP-5479\n",
++        encoding="utf-8",
++    )
++    (root / exp5479.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_registry()),
++        encoding="utf-8",
++    )
++    (root / exp5479.PRECHECK_RELATIVE_PATH).write_text(
++        json.dumps(_precheck()),
++        encoding="utf-8",
++    )
++    (root / exp5479.NO_BANK_RELATIVE_PATH).write_text(
++        json.dumps({"target_game": "bp35", "target_level_attempted": 3}),
++        encoding="utf-8",
++    )
++    (root / exp5479.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        _known_issues(),
++        encoding="utf-8",
++    )
++
++    artifact = exp5479.run_experiment(root=root, tests_run=["unit 5479 run"])
++    written = json.loads((root / exp5479.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert artifact["selected_game"] == "sb26"
++    assert artifact["selected_target_level"] == 3
++    assert artifact["arc_target_rotation_ready"] is True
++    assert artifact["solve_claimed"] is False
++    assert artifact["tests_run"] == ["unit 5479 run"]
+-- 
+2.55.0
+

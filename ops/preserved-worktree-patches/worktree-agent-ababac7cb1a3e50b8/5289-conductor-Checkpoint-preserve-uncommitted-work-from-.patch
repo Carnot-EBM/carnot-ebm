@@ -1,0 +1,73 @@
+From 7b6fc438b9b51239e655f84d7ac4902f632f7672 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 10:39:22 -0400
+Subject: [PATCH 05289/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                        |  2 +-
+ ops/conductor-log.md                                |  1 +
+ ops/conductor-state.json                            |  2 +-
+ ...nstrained_decoding_semantic_risk_audit_v468.json | 13 ++++++++++---
+ 4 files changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8cf18d1e09..23e91619cb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 92, "phase": "iteration_start", "last_beat": "2026-07-01T14:24:47Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 93, "phase": "iteration_start", "last_beat": "2026-07-01T14:39:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 92d8a2e898..249fd2a581 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9757,3 +9757,4 @@ web search: |
+ | 2026-07-01 13:57 UTC | PHASE B1 evidence energy -- distinguish contradict | OK | 102 passed, 1 warning in 7.47s |
+ | 2026-07-01 14:09 UTC | PHASE B2 high-order energy -- direct HUBO/p-spin c | OK | 99 passed, 1 warning in 33.91s |
+ | 2026-07-01 14:22 UTC | PHASE B3 adaptive solver help -- TACO-style test-t | OK | 101 passed, 1 warning in 6.90s |
++| 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4bd6b336b1..9debadddcc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 92, "phase": "iteration_start", "started_at": "2026-07-01T14:24:47Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 93, "phase": "iteration_start", "started_at": "2026-07-01T14:39:20Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json b/results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json
+index 6e6fe4d851..3c8eae5733 100644
+--- a/results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json
++++ b/results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json
+@@ -81,7 +81,7 @@
+       "why": "the audit must be independent of GGUF tokenizer merges"
+     }
+   },
+-  "flagged_adversarial": false,
++  "flagged_adversarial": true,
+   "grammar_baseline": {
+     "available": true,
+     "backend": "llama_cpp_gbnf",
+@@ -311,5 +311,12 @@
+     "invalid_syntax_mass": 0.083333,
+     "semantic_validity_rate": 0.4,
+     "syntax_validity_rate": 0.916667
+-  }
+-}
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=54.29845 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,106 @@
+From c3d03fb95fba2efa8f97a51ed8719100e25ddb98 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 6 Aug 2026 16:45:04 -0400
+Subject: [PATCH 08372/11362] [conductor] Operational retrospective for
+ milestone 2026.08.534
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_534.json | 60 ++++++++++++++++++++++
+ 3 files changed, 67 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_534.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 6acf5aeae7..27f32c96fa 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6075,3 +6075,9 @@ The critical path for milestone .250:
+ - theme: dependency-gated flagship corpus execution and tracked-result isolation concentrated the operational tail
+ - key result: bounded conclusion -- the readiness gate labels the 19-minute compute leader, the task-aware idle flag remains false, and the evidence never specifies simultaneous model loads or runner dispatch
+ - acceptance: 4/4 operational questions answered
++
++### Milestone 2026.08.534
++- exp_range: exp6159-exp6159 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
++- theme: synthesis refresh latency and readiness-gated flagship compute concentrated the operational tail
++- key result: honest operational limitation -- the compute-task idle classification is false, while missing phase attribution and concurrent-model evidence prevent stronger utilization or runner conclusions
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 9491e27b3c..7cebb6f551 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16514,3 +16514,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-06: Mode-jumping CNCE for nonzero-error typed-factor thermalization (⚠️ Blocked) — honest_verdict=blocked: mode jumping improved but nonzero_test_commands; results/experiment_6166_mode_jumping_factor_thermalization.json
+ - 2026-08-06: ARC live-path task-aware admission replication across games and seeds, no solve (✅ Complete) — honest_verdict=complete_positive: fixed_task_aware_multiseed_generalizes_lower_ci_0.038998_no_solve_claim; results/experiment_6167_arc_task_aware_multiseed_replication.json
+ - 2026-08-06: Branch-independent .534 capstone, adversarial verification, and reconciliation (✅ Complete) — honest_verdict=complete: .534 reconciled with missing isolation artifact, conductor skips, mandatory CSL internal block, flagged decision artifacts, software-only stochastic block, and ARC no-solve positive preserved; results/experiment_6168_v534_capstone_reconciliation.json
++- 2026-08-06: Operational efficiency closeout for 2026.08.534: 33.6 minutes covered 10 completions, including 3 compute-bound tasks. The 22.0-minute synthesis-only evidence refresh dominated elapsed time; the longest listed compute task was the 9.84-minute Exp6159-readiness-gated flagship-GGUF corpus. The task-conditioned GPU-idle classification was false, and no concurrent multi-model runner miss was established. Next-cycle priorities are incremental evidence receipts, dependency preflight, conditional staging overlap, and task-linked GPU, lifecycle, concurrency, and runner telemetry; the bounded scheduling upper-limit estimate is 29%. Artifact: results/operational_retro_2026_08_534.json.
+diff --git a/results/operational_retro_2026_08_534.json b/results/operational_retro_2026_08_534.json
+new file mode 100644
+index 0000000000..fa1c75041d
+--- /dev/null
++++ b/results/operational_retro_2026_08_534.json
+@@ -0,0 +1,60 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.534",
++  "generated_at": "2026-08-06T20:40:15Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 33.6,
++  "experiments_completed": 10,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Reliable dated evidence refresh after the V534 planner marker",
++      "duration_minutes": 22.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp6159 readiness: fresh flagship-GGUF decision-calibration corpus",
++      "duration_minutes": 9.84,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Exact terminal-boundary handoff from .533 into .534",
++      "duration_minutes": 1.59,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Mode-jumping CNCE for nonzero-error typed-factor thermalization",
++      "duration_minutes": 0.1,
++      "compute_bound": false
++    },
++    {
++      "experiment": "ARC live-path task-aware admission replication across games and seeds, no solve",
++      "duration_minutes": 0.05,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Milestone 2026.08.534 completed 10 experiments in 33.6 minutes, including 3 compute-bound experiments. The 22.0-minute synthesis-only evidence refresh dominated elapsed time; the longest listed compute-bound task was the 9.84-minute readiness-gated flagship-GGUF corpus, and the locked task-conditioned GPU-idle classification is false.",
++  "bottlenecks_identified": [
++    "The 22.0-minute synthesis-only dated-evidence refresh was the largest recorded interval. Its CPU-only execution is correct, so GPU inactivity during that task is not treated as a fault.",
++    "The 9.84-minute flagship-GGUF corpus was gated on Exp6159 readiness, but the bounded data does not separate dependency wait, setup, inference, or teardown; no more specific cause is available this milestone.",
++    "Only the longest listed compute-bound task has a per-task duration in the supplied top-five data; no data available this milestone for the remaining compute-bound task durations or causes.",
++    "The GPU snapshot is not phase-correlated with the experiment ledger, so it cannot establish lifetime utilization or a concurrent multi-model dispatch; the locked compute-task idle classification remains false."
++  ],
++  "improvements_suggested": [
++    "Cache dated-evidence receipts and use hash-based incremental refreshes after planner markers, with a full-refresh fallback.",
++    "Add a readiness preflight that stages prerequisites and model assets before the flagship-GGUF task starts, and record dependency wait, setup, inference, and teardown separately.",
++    "When the dependency graph permits, overlap compute staging with the independent synthesis refresh instead of serializing both intervals.",
++    "Emit task-linked GPU and process telemetry with model-concurrency and runner-selection receipts; select DualGPURunner only for concurrent multi-model execution.",
++    "After a task-scoped ownership and liveness check, automatically tear down inactive model processes when their owning task exits."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Make dated-evidence refresh incremental and receipt-driven so unchanged sources do not require a full refresh.",
++    "Preflight dependency readiness and conditionally overlap model staging with independent synthesis work.",
++    "Add phase-linked GPU, process-lifecycle, model-concurrency, and runner-selection telemetry."
++  ],
++  "estimated_time_savings_pct": 29,
++  "meta_reflection": "The 29% estimate is a bounded scheduling upper limit obtained by fully avoiding or overlapping the 9.84-minute compute interval against 33.6 minutes of wall time. The data provides no phase breakdown or confirmed concurrent model load, so realized savings and any DualGPURunner opportunity must be measured next milestone."
++}
+-- 
+2.55.0
+

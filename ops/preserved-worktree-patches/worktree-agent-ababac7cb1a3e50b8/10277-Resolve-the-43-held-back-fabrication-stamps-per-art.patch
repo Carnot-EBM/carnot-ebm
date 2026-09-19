@@ -1,0 +1,199 @@
+From c073905fb179ce596e63c94e6976eeb44c61c132 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 06:44:41 -0400
+Subject: [PATCH 10277/11362] Resolve the 43 held-back fabrication stamps per
+ artifact, and correct two I mis-targeted
+
+The operator's instruction was to refactor these rather than sweep them, and the
+distinction turned out to be load-bearing. Re-judged with the live gate, ALL 43
+draw no critical flag -- which is exactly what a sweep would rest on, and it is
+not sufficient. Three of the nine "no reason" stamps have substantive findings
+that live in COMMIT MESSAGES, where no consumer of the fabrication gate reads
+them:
+
+  exp3929 -- action_efficiency_ratio=1.959 is CIRCULAR. task_potential() reads
+    oracle goal fields the synthetic env exposes by construction, then plants a
+    fixed string ("...actually inconsistent."); the energy verifier detects the
+    contradiction it was handed. `if 'inconsistent' in step_text` reproduces the
+    identical 1.96x.
+  exp3959 -- claimed 24.662x with the verifier NEVER IN THE LOOP: both arms are
+    simulate_geometric() draws from assumed probabilities, object-vs-pixel search
+    geometry, despite inference_substrate claiming "real games".
+  exp3405 -- carries an adversarial-verify corrigendum recorded at commit time.
+
+Clearing those would have re-admitted results a human review deliberately
+quarantined. The gate changing its mind is not the same as the finding being
+wrong.
+
+So the defect is not the stale stamps. It is that a determination is stored as a
+bare boolean with its reason somewhere no reader will look, while
+conductor_gates.py keys off the field's presence. The refactor is to make each
+determination self-describing:
+
+  9 KEPT, each now carrying flagged_adversarial_reason. Three hold the recovered
+    findings above; six record that the declared state is itself the reason --
+    two `disqualified:` verdicts, a vivado_simulated_success, an auroc=0.0000
+    capstone, a write_path_missing, and one artifact whose status is
+    preconditions_recorded with no honest_verdict at all.
+  34 CLEARED, each with flagged_adversarial_cleared_note beside a field set
+    false and never removed.
+
+Every artifact was re-verified INDIVIDUALLY at write time rather than on the
+strength of the analysis table; a live CRITICAL would have aborted that artifact
+and none did.
+
+THE CORRECTION. The applier resolved an experiment id with
+`sorted(glob("experiment_<id>_*.json"))[0]`, which picks alphabetically. Two ids
+own several files, so each got the decision meant for a sibling: 1736 went to
+_ebt_gradient_refinement instead of _kanele_synth, and 6275 to the
+.formal_sidecar instead of the benchmark. The 1736 case is the serious
+direction -- it ADDED a quarantine stamp to an artifact that had never carried
+one and that no gate had ever flagged. A fabricated quarantine is the same
+defect as a fabricated result, pointed the other way.
+
+Caught by a cross-check of modified-versus-intended paths. That check had
+already reported "zero strays" once, wrongly, because it re-derived the paths
+with the same broken glob instead of comparing against the authored list -- a
+verification that reproduces the bug it is checking for. An id is not a path in
+a corpus with sidecars and same-numbered siblings.
+
+Both wrong writes were corrected THROUGH determination_preservation_lint.py
+rather than around it. The lint refused the obvious fix -- restoring the files
+to field-absent -- and it was right to: it cannot tell a mistaken determination
+from a real one, and that is the property that makes it useful. The erroneous
+fields are set false with a note saying plainly they were never real
+determinations, rather than deleted, because erasing them would erase the
+evidence of the error.
+
+Verified after writing: 43/43 artifacts carry the intended state, flagged_
+adversarial absent from 0, 0 corrigendum fields lost, determination-preservation
+-lint OK, and the modified path list matches the authored list exactly.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...held-back-fabrication-stamps-2026-08-29.md | 48 +++++++++++++++++++
+ ...periment_1736_ebt_gradient_refinement.json |  5 +-
+ results/experiment_1736_kanele_synth.json     |  3 +-
+ ...verification_benchmark.formal_sidecar.json |  2 +-
+ ...asp_constraint_verification_benchmark.json |  7 +--
+ 5 files changed, 58 insertions(+), 7 deletions(-)
+
+diff --git a/docs/research-notes/held-back-fabrication-stamps-2026-08-29.md b/docs/research-notes/held-back-fabrication-stamps-2026-08-29.md
+index c974253a2b..fbbfee6c80 100644
+--- a/docs/research-notes/held-back-fabrication-stamps-2026-08-29.md
++++ b/docs/research-notes/held-back-fabrication-stamps-2026-08-29.md
+@@ -100,3 +100,51 @@ INDIVIDUALLY at write time rather than trusting this table, and `corrigendum_pen
+ 
+ `results/arc_e3`, `results/arc_logo_snapshot` and `results/arc_e3_origin_fixtures` are evidence and
+ are not touched by any of this.
++
++## Executed 2026-08-29
++
++All 43 acted on individually. Each was re-verified with the live gate at write time rather than
++on the strength of the table above; a live CRITICAL flag would have aborted that artifact, and
++none did.
++
++- **9 stamps kept**, each now carrying `flagged_adversarial_reason` in the artifact. Three hold
++  the findings recovered from commit messages (exp3929's circular 1.96x, exp3959's
++  verifier-never-in-the-loop 24.7x, exp3405's recorded corrigendum). Six record that the declared
++  state is itself the reason: two `disqualified:` verdicts, a `vivado_simulated_success`, an
++  `auroc=0.0000` capstone, a `write_path_missing`, and one artifact whose `status` is
++  `preconditions_recorded` with no `honest_verdict` at all.
++- **34 stamps cleared**, each with `flagged_adversarial_cleared_note` beside a field that was set
++  false and never removed.
++
++Verified after writing: `flagged_adversarial` absent from 0 artifacts, 0 corrigendum fields lost,
++`determination-preservation-lint` OK, and every modified path checked against the intended list —
++zero strays, which matters because the index is shared with a running conductor.
++
++The lasting change is not the 34 clearances. It is that a determination on these artifacts now
++carries its own reason, so the next reader does not face the choice this note had to resolve from
++commit archaeology.
++
++### Correction, same day: two artifacts were written by path-resolution bug
++
++The applier resolved an experiment id with `sorted(glob("experiment_<id>_*.json"))[0]`, which
++picks ALPHABETICALLY. Two ids own several files, so each received the decision intended for a
++sibling:
++
++| intended | actually written |
++|---|---|
++| `experiment_1736_kanele_synth.json` | `experiment_1736_ebt_gradient_refinement.json` |
++| `experiment_6275_..._benchmark.json` | `experiment_6275_..._benchmark.formal_sidecar.json` |
++
++The `1736` case is the serious direction: it ADDED a `flagged_adversarial: true` quarantine stamp
++to an artifact that had never carried one and that no gate had ever flagged. A fabricated
++quarantine is the same defect as a fabricated result, pointed the other way.
++
++Caught by a cross-check comparing the modified file list against the intended list — the same
++check that found "zero strays" and would have said so again had it compared against the authored
++paths rather than a re-derived glob. **An id is not a path when a corpus has sidecars and
++same-numbered siblings.** Both wrong writes were corrected, and both corrections went through
++`determination_preservation_lint.py` rather than around it: the erroneous fields are set false
++with a note explaining they were never real determinations, not deleted, because erasing them
++would erase the evidence of the error.
++
++41 of 43 were resolved correctly and are unaffected.
+diff --git a/results/experiment_1736_ebt_gradient_refinement.json b/results/experiment_1736_ebt_gradient_refinement.json
+index c6ce37654d..7755878c60 100644
+--- a/results/experiment_1736_ebt_gradient_refinement.json
++++ b/results/experiment_1736_ebt_gradient_refinement.json
+@@ -21,6 +21,7 @@
+     }
+   ],
+   "blocked_at_layer": "conductor_pre_gate",
+-  "flagged_adversarial": true,
+-  "flagged_adversarial_reason": "Kept 2026-08-29. The declared state is itself the reason: verdict itself is the reason (simulated / missing write path / degenerate metric). Re-judged with the live gate it draws no critical flag, but the gate changing its mind is not the same as the finding being wrong. Recorded here so the determination is self-describing rather than a bare boolean."
++  "flagged_adversarial": false,
++  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: THIS STAMP WAS NEVER A REAL DETERMINATION. It was written onto this artifact in error by a path-resolution bug in the 43-held-back-stamp pass: the applier resolved an experiment id with `sorted(glob('experiment_<id>_*.json'))[0]`, which picks alphabetically, so two ids with several files each received the decision intended for a SIBLING artifact. The intended targets were experiment_1736_kanele_synth.json and experiment_6275_flagship_asp_constraint_verification_benchmark.json, which have since been handled correctly. No adversarial gate ever flagged this file, and nothing about its contents was judged. The field is set false with this note rather than deleted, because determination_preservation_lint.py is correct to refuse a silent drop even when the determination being dropped was mistaken -- and because erasing it would erase the evidence of the error. See commit 5b163b017e for the erroneous write.",
++  "flagged_adversarial_reason": "SUPERSEDED 2026-08-29, same day: this reason was written onto the wrong artifact by a path-resolution bug (see flagged_adversarial_cleared_note beside it). It describes a decision intended for a sibling file and states nothing about this artifact. Kept rather than deleted per CLAUDE.md never-prune -- a mistaken record is corrected in place, not erased."
+ }
+diff --git a/results/experiment_1736_kanele_synth.json b/results/experiment_1736_kanele_synth.json
+index 777f043f29..437ab9ed27 100644
+--- a/results/experiment_1736_kanele_synth.json
++++ b/results/experiment_1736_kanele_synth.json
+@@ -17,5 +17,6 @@
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1736_kanele_synth.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ]
++  ],
++  "flagged_adversarial_reason": "Kept 2026-08-29. The declared state is itself the reason: honest_verdict is 'vivado_simulated_success' -- a SIMULATED result declaring success, which is not a live hardware measurement. Re-judged with the live gate it draws no critical flag, but the gate changing its mind is not the same as the finding being wrong. Recorded here so the determination is self-describing rather than a bare boolean."
+ }
+diff --git a/results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json b/results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
+index d56038b9f4..faaf823566 100644
+--- a/results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
++++ b/results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
+@@ -2488,5 +2488,5 @@
+   },
+   "schema": "carnot.exp6275.hidden_formal_sidecar.v1",
+   "flagged_adversarial": false,
+-  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
++  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: THIS STAMP WAS NEVER A REAL DETERMINATION. It was written onto this artifact in error by a path-resolution bug in the 43-held-back-stamp pass: the applier resolved an experiment id with `sorted(glob('experiment_<id>_*.json'))[0]`, which picks alphabetically, so two ids with several files each received the decision intended for a SIBLING artifact. The intended targets were experiment_1736_kanele_synth.json and experiment_6275_flagship_asp_constraint_verification_benchmark.json, which have since been handled correctly. No adversarial gate ever flagged this file, and nothing about its contents was judged. The field is set false with this note rather than deleted, because determination_preservation_lint.py is correct to refuse a silent drop even when the determination being dropped was mistaken -- and because erasing it would erase the evidence of the error. See commit 5b163b017e for the erroneous write."
+ }
+diff --git a/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json b/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json
+index 1a8a09ec82..b1a836547d 100644
+--- a/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json
++++ b/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json
+@@ -6709,12 +6709,13 @@
+   },
+   "verifier_is_oracle": true,
+   "weight_mutation_count": 0,
+-  "flagged_adversarial": true,
++  "flagged_adversarial": false,
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json; classification=partial; reason=partial marker present"
+     }
+-  ]
+-}
+\ No newline at end of file
++  ],
++  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result (complete_partial: test_exit_codes). The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
++}
+-- 
+2.55.0
+

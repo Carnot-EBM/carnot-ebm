@@ -1,0 +1,1182 @@
+From d789a0386f92f9b0b8efe9427fdf23603eae9857 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 01:43:59 -0400
+Subject: [PATCH 04104/11362] [conductor] PHASE B2 (INFRA reserved slot 2;
+ DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the Kaggle ARC-AGI-3
+ agent package builds + the frozen Qwen3.5-9B-MTP stack loads under the ~16GB
+ constraint; checklist for the operator (operator-only submission).
+
+Automated research step by research conductor.
+Task ID: exp4766-b2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_4766_submission_package_harden.py | 617 ++++++++++++++++++
+ ...riment_4766_submission_package_harden.json | 146 +++++
+ ...periment_4766_submission_package_harden.py | 347 ++++++++++
+ 5 files changed, 1115 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4766_submission_package_harden.py
+ create mode 100644 results/experiment_4766_submission_package_harden.json
+ create mode 100644 tests/python/test_experiment_4766_submission_package_harden.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index b32424ea65..8575c887cc 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -382,6 +382,10 @@
+ - SCENARIO-CAPSTONE-4756: The artifact `results/experiment_4756_submission_package_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `package_builds`, `submission_package_ready`, and `operator_checklist`; it must also include `package_manifest`, `requirements_check`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, `spec_refs`, `random_seed`, `duration_s`, and a stable checksum. `submission_package_ready` may be true only when the GGUF and binary preconditions pass, package assembly passes, the entrypoint compiles, manifest and requirements checks pass, and the clean-env smoke succeeds.
+ - SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION: If the Qwen3.5-9B-MTP GGUF cache is missing, the `llama-server` binary is missing, the submission kernel files are missing, the manifest or requirements are incomplete, package assembly fails, or the clean-env smoke fails, Experiment 4756 must write a terminal `blocked_<resource>` or `complete_package_not_ready_<resource>` artifact, set `submission_package_ready=false`, set `submitted_to_leaderboard=false`, preserve an operator checklist, and avoid any solve or submission claim.
+ - SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a package-ready run is success_/passed_."; `inference_substrate` = "aggregation_from_upstream_artifacts; 100us floor."; `preconditions_checked` = "records the GGUF/binary checks."; `package_builds` = "the package assembles + the entrypoint smoke-runs offline -- the readiness gate."; `submission_package_ready` = "True only if OPERATOR-ready; this task NEVER submits (operator-only external publication)."; `operator_checklist` = "the steps the OPERATOR performs to submit -- the task ends at the checklist, not the submission."
++- REQ-CAPSTONE-4766: The deadline-critical ARC-AGI-3 Kaggle submission-package hardening workflow SHALL verify the submission packaging scripts and `arc_competition_agent` are present, dry-build the package without submitting, verify the frozen `SUBMITTED_AGENT_CONFIG` resolves to Qwen3.5-9B-MTP with MTP, q8 KV, `/no_think`, the CUDA-12.8 `llama-server`, and concrete model/server paths, estimate the full VRAM footprint against the approximately 16GB Kaggle constraint including KV cache and headroom, and write `results/experiment_4766_submission_package_harden.json`. The workflow SHALL be operator-only and SHALL NOT submit to Kaggle or any external leaderboard.
++- SCENARIO-CAPSTONE-4766: The artifact `results/experiment_4766_submission_package_harden.json` must emit principle-annotated top-level fields for `honest_verdict`, `submission_package_ready`, `vram_estimate_gb`, and `inference_substrate`; it must also include `preconditions_checked`, `package_builds`, `agent_config_resolution`, `model_path_resolution`, `vram_breakdown`, `operator_checklist`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, `spec_refs`, `random_seed`, `duration_s`, and a stable checksum. `submission_package_ready` may be true only when package dry-builds, frozen config/path resolution passes, and `vram_estimate_gb < 16.0` with positive headroom.
++- SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION: If the submission package scripts, `arc_competition_agent`, frozen config, GGUF path, CUDA `llama-server`, package dry-build, or VRAM gate fails, Experiment 4766 must write a terminal `complete_package_not_ready_<resource>` artifact, set `submission_package_ready=false`, set `submitted_to_leaderboard=false`, preserve an operator checklist, and avoid any external submission claim.
++- SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; package builds is success_/complete_."; `submission_package_ready` = "True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only)."; `vram_estimate_gb` = "must fit the ~16GB Kaggle constraint with KV + headroom -- the deployment gate."; `inference_substrate` = "aggregation_from_upstream_artifacts; 0.0001s floor."
+ - REQ-CAPSTONE-4744: The submission-package readiness workflow SHALL validate, without submitting externally, that `make_carnot_agent` imports and constructs the shipped `E3AgentPolicy`, that `SUBMITTED_AGENT_CONFIG` is guarded by the frozen Qwen3.5-9B-MTP live-proposer stack (MTP enabled, q8 KV, `n_predict>=2048`, `/no_think`, non-colliding/free port with `/props` verification intent, never gemma-8919 and never the 3090s), that the Kaggle package manifest names required model files, the CUDA-12.8 `llama-server` binary path, shared-library expectations, and the entrypoint, that an offline smoke episode runs within the action/RPM budget, and that `tests/python/test_arc_submitted_agent_parity.py` is green. It SHALL write `results/experiment_4744_submission_package_readiness.json`, set `submitted_to_leaderboard=false`, and mark `submission_package_ready=true` only when every checklist item passes; missing dependencies or resources SHALL yield an honest terminal `blocked_<resource>` verdict and per-item blocked checklist entries without solve claims.
+ - SCENARIO-CAPSTONE-4744: The artifact `results/experiment_4744_submission_package_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `submission_package_ready`, `readiness_checklist`, `frozen_generator_confirmed`, `parity_test_green`, `verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `package_manifest`, `entrypoint_validation`, `frozen_generator_config`, `smoke_episode`, `parity_test`, `submitted_agent_config`, `submitted_to_leaderboard=false`, and `operator_only=true`. The smoke episode is a packaging validation only and must not make any solve claim.
+ - SCENARIO-CAPSTONE-4744-BLOCKED-PRECONDITION: If `arc_competition_agent` is not importable, `make_carnot_agent` cannot construct, `arc_solver_kit.offline_arcade()` is not importable, the frozen generator wiring is not Qwen3.5-9B-MTP with MTP/q8/no_think/n_predict guards, the manifest lacks model or binary resources, the offline smoke cannot run, or the parity test fails, the workflow must write a terminal `blocked_<resource>` artifact with `submission_package_ready=false`, `frozen_generator_confirmed=false` unless the generator guard itself passed, `parity_test_green=false` unless the parity command passed, a blocked checklist item for the failed resource, `submitted_to_leaderboard=false`, and a stable checksum.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 84f23b0f7a..c622918a90 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 192,
+   "code_violations": 0,
+-  "experiments_checked": 3774,
++  "experiments_checked": 3775,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4766_submission_package_harden.py b/python/carnot/experiment_4766_submission_package_harden.py
+new file mode 100644
+index 0000000000..5fee7a9d32
+--- /dev/null
++++ b/python/carnot/experiment_4766_submission_package_harden.py
+@@ -0,0 +1,617 @@
++"""Experiment 4766: ARC-AGI-3 Kaggle submission-package hardening.
++
++Spec refs: REQ-CAPSTONE-4766, SCENARIO-CAPSTONE-4766,
++SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import glob
++import hashlib
++import json
++import os
++from pathlib import Path
++import py_compile
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard.
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++
++JsonDict = dict[str, Any]
++PreconditionsChecker = Callable[[Path], Mapping[str, Any]]
++PackageBuilder = Callable[[Path], Mapping[str, Any]]
++AgentConfigResolver = Callable[[], Mapping[str, Any]]
++ModelPathResolver = Callable[[], Mapping[str, Any]]
++VramEstimator = Callable[[Mapping[str, Any], Mapping[str, Any]], Mapping[str, Any]]
++
++EXPERIMENT = "experiment_4766_submission_package_harden"
++SCHEMA = "carnot.exp4766.submission_package_harden.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4766_submission_package_harden.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++KERNEL_RELATIVE_DIR = "scripts/kaggle/submission_kernel"
++KERNEL_MAIN = "main.py"
++KERNEL_METADATA = "kernel-metadata.json"
++AGENT_RELATIVE_PATH = "python/carnot/agentic/arc_competition_agent.py"
++RANDOM_SEED = 4766
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts; 0.0001s floor."
++VRAM_LIMIT_GB = 16.0
++RUNTIME_OVERHEAD_GB = 0.7
++REQUIRED_HEADROOM_GB = 1.5
++KV_LAYERS = 36
++KV_EMBEDDING_DIM = 1024
++CONTEXT_TOKENS = 16_384
++BYTES_PER_GB = 1_000_000_000
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4766",
++    "SCENARIO-CAPSTONE-4766",
++    "SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES",
++]
++TERMINAL_PREFIXES = ("success_", "complete_")
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; package builds is success_/complete_."
++    },
++    "submission_package_ready": {
++        "principle": (
++            "True iff ready for the OPERATOR to submit; the task itself NEVER submits "
++            "(operator-only)."
++        )
++    },
++    "vram_estimate_gb": {
++        "principle": (
++            "must fit the ~16GB Kaggle constraint with KV + headroom -- the deployment gate."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "preconditions_checked",
++    "package_builds",
++    "agent_config_resolution",
++    "model_path_resolution",
++    "vram_breakdown",
++    "operator_checklist",
++    "submitted_to_leaderboard",
++    "operator_only",
++    "field_principles",
++    "spec_refs",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _file_sha256(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _default_gguf_finder() -> list[str]:  # pragma: no cover - local filesystem boundary.
++    candidates: list[str] = []
++    env_path = os.environ.get("CARNOT_ARC_GGUF_PATH")
++    if env_path and Path(env_path).is_file():
++        candidates.append(env_path)
++    pattern = (
++        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/"
++        "snapshots/*/Qwen3.5-9B-Q4_K_M.gguf"
++    )
++    candidates.extend(glob.glob(os.path.expanduser(pattern)))
++    return sorted(dict.fromkeys(candidates))
++
++
++def _default_llama_server_finder() -> list[str]:  # pragma: no cover - local filesystem boundary.
++    candidates: list[str] = []
++    env_path = os.environ.get("CARNOT_LLAMA_SERVER")
++    if env_path and Path(env_path).is_file():
++        candidates.append(env_path)
++    home = Path.home()
++    for path in (
++        home / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server",
++        home / ".cache" / "llama.cpp-master" / "build-hip" / "bin" / "llama-server",
++        REPO_ROOT / "build" / "bin" / "llama-server",
++        REPO_ROOT / "build-hip" / "bin" / "llama-server",
++    ):
++        if path.is_file():
++            candidates.append(str(path))
++    return sorted(dict.fromkeys(candidates))
++
++
++def _default_cuda_inspector(path: Path) -> bool:  # pragma: no cover - binary/linker boundary.
++    directory = path.parent
++    if any(child.name.startswith("libggml-cuda") for child in directory.glob("libggml-cuda*")):
++        return True
++    try:
++        completed = subprocess.run(
++            ["ldd", str(path)],
++            text=True,
++            capture_output=True,
++            timeout=10,
++            check=False,
++        )
++    except Exception:
++        return False
++    return "libggml-cuda" in completed.stdout or "libcudart" in completed.stdout
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    kernel_dir = root_path / KERNEL_RELATIVE_DIR
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4766": "REQ-CAPSTONE-4766" in spec_text,
++        "submission_kernel_present": (kernel_dir / KERNEL_MAIN).exists()
++        and (kernel_dir / KERNEL_METADATA).exists(),
++        "arc_competition_agent_present": (root_path / AGENT_RELATIVE_PATH).exists(),
++    }
++    required = (
++        "agents_md_read",
++        "codex_or_opencode_md_read",
++        "spec_has_req_4766",
++        "submission_kernel_present",
++        "arc_competition_agent_present",
++    )
++    checks["ok"] = all(bool(checks[key]) for key in required)
++    if checks["ok"] is not True:
++        checks["blocked_resource"] = next(
++            (key for key in required if not checks.get(key)),
++            "precondition",
++        )
++    return checks
++
++
++def dry_build_package(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    kernel_dir = root_path / KERNEL_RELATIVE_DIR
++    try:
++        with tempfile.TemporaryDirectory(prefix="carnot_exp4766_") as tmp:
++            tmp_path = Path(tmp)
++            files: list[str] = []
++            hashes: dict[str, str] = {}
++            for name in (KERNEL_METADATA, KERNEL_MAIN):
++                src = kernel_dir / name
++                dst = tmp_path / name
++                shutil.copy2(src, dst)
++                files.append(name)
++                hashes[name] = _file_sha256(dst)
++            py_compile.compile(str(tmp_path / KERNEL_MAIN), doraise=True)
++            return {
++                "dry_build_ran": True,
++                "package_builds": True,
++                "entrypoint_compiles": True,
++                "manifest_present": True,
++                "kernel_main_present": True,
++                "submitted_to_leaderboard": False,
++                "blocked_resource": "",
++                "files": files,
++                "file_hashes": hashes,
++                "package_sha256": "sha256:"
++                + hashlib.sha256(_stable_json(hashes).encode("utf-8")).hexdigest(),
++            }
++    except Exception as exc:  # pragma: no cover - defensive filesystem failure path.
++        return {
++            "dry_build_ran": True,
++            "package_builds": False,
++            "entrypoint_compiles": False,
++            "manifest_present": (kernel_dir / KERNEL_METADATA).exists(),
++            "kernel_main_present": (kernel_dir / KERNEL_MAIN).exists(),
++            "submitted_to_leaderboard": False,
++            "blocked_resource": "dry_build",
++            "files": [],
++            "file_hashes": {},
++            "package_sha256": "",
++            "error": repr(exc)[:500],
++        }
++
++
++def resolve_agent_config(submitted_config: Mapping[str, Any]) -> JsonDict:
++    frozen = dict(submitted_config.get("frozen_generator") or {})
++    checks = {
++        "submitted_policy_e3": submitted_config.get("policy") == "E3AgentPolicy",
++        "submitted_cascade": submitted_config.get("cascade") is True,
++        "model_is_qwen35_mtp": frozen.get("model_id") == "unsloth/Qwen3.5-9B-MTP-GGUF"
++        and frozen.get("repo_substr") == "Qwen3.5-9B-MTP",
++        "model_filename": frozen.get("model_filename") == "Qwen3.5-9B-Q4_K_M.gguf",
++        "mtp_enabled": frozen.get("mtp") is True and frozen.get("spec_type") == "draft-mtp",
++        "q8_kv": frozen.get("kv_quant") == "q8_0",
++        "no_think": frozen.get("no_think_prefix") == "/no_think\n",
++        "n_predict_floor": int(frozen.get("max_tokens") or 0)
++        >= int(frozen.get("n_predict_min") or 0)
++        >= 2048,
++        "cuda_128_server": frozen.get("llama_server_kind") == "cuda-12.8-binary",
++        "binary_not_wheel": frozen.get("binary_not_wheel") is True
++        and frozen.get("wheel_fallback_allowed") is False,
++    }
++    resolved = all(checks.values())
++    return {
++        "resolved": resolved,
++        "checks": checks,
++        "blocked_resource": "" if resolved else "agent_config",
++        "model_id": str(frozen.get("model_id") or ""),
++        "repo_substr": str(frozen.get("repo_substr") or ""),
++        "model_filename": str(frozen.get("model_filename") or ""),
++        "mtp": bool(frozen.get("mtp")),
++        "spec_type": str(frozen.get("spec_type") or ""),
++        "kv_quant": str(frozen.get("kv_quant") or ""),
++        "max_tokens": int(frozen.get("max_tokens") or 0),
++        "n_predict_min": int(frozen.get("n_predict_min") or 0),
++        "llama_server_kind": str(frozen.get("llama_server_kind") or ""),
++        "model_path_env": str(frozen.get("model_path_env") or "CARNOT_ARC_GGUF_PATH"),
++        "server_path_env": str(frozen.get("server_path_env") or "CARNOT_LLAMA_SERVER"),
++    }
++
++
++def _runtime_agent_config() -> JsonDict:  # pragma: no cover - import boundary.
++    from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
++
++    return resolve_agent_config(SUBMITTED_AGENT_CONFIG)
++
++
++def resolve_model_paths(
++    *,
++    gguf_paths: Sequence[str] | None = None,
++    llama_server_paths: Sequence[str] | None = None,
++    cuda_inspector: Callable[[Path], bool] = _default_cuda_inspector,
++    model_size_bytes: int | None = None,
++) -> JsonDict:
++    gguf_candidates = list(_default_gguf_finder() if gguf_paths is None else gguf_paths)
++    server_candidates = list(
++        _default_llama_server_finder() if llama_server_paths is None else llama_server_paths
++    )
++    gguf_path = next((Path(item) for item in gguf_candidates if Path(item).is_file()), None)
++    server_path: Path | None = None
++    cuda_capable = False
++    server_checks: list[JsonDict] = []
++    for candidate in server_candidates:
++        path = Path(candidate)
++        present = path.is_file()
++        candidate_cuda = bool(present and cuda_inspector(path))
++        server_checks.append(
++            {
++                "path": str(path),
++                "present": present,
++                "cuda_12_8_capable": candidate_cuda,
++            }
++        )
++        if server_path is None and present:
++            server_path = path
++            cuda_capable = candidate_cuda
++        if candidate_cuda:
++            server_path = path
++            cuda_capable = True
++            break
++    gguf_present = gguf_path is not None and gguf_path.is_file()
++    server_present = server_path is not None and server_path.is_file()
++    size_bytes = int(model_size_bytes if model_size_bytes is not None else 0)
++    if model_size_bytes is None and gguf_present:
++        size_bytes = int(gguf_path.stat().st_size)
++    resolved = bool(gguf_present and server_present and cuda_capable and size_bytes > 0)
++    return {
++        "resolved": resolved,
++        "blocked_resource": "" if resolved else "model_paths",
++        "gguf": {
++            "path": str(gguf_path or ""),
++            "filename": gguf_path.name if gguf_path is not None else "",
++            "present": gguf_present,
++            "size_bytes": size_bytes,
++            "size_gb": round(size_bytes / BYTES_PER_GB, 6),
++        },
++        "llama_server": {
++            "path": str(server_path or ""),
++            "filename": server_path.name if server_path is not None else "",
++            "present": server_present,
++            "cuda_12_8_capable": cuda_capable,
++            "kind": "cuda-12.8-binary",
++        },
++        "all_gguf_candidates": [str(item) for item in gguf_candidates],
++        "all_llama_server_candidates": [str(item) for item in server_candidates],
++        "llama_server_candidate_checks": server_checks,
++    }
++
++
++def estimate_vram(
++    *,
++    model_size_bytes: int,
++    mtp_enabled: bool,
++    kv_quant: str,
++    context_tokens: int = CONTEXT_TOKENS,
++    limit_gb: float = VRAM_LIMIT_GB,
++) -> JsonDict:
++    model_gb = float(model_size_bytes) / BYTES_PER_GB
++    model_copies = 2 if mtp_enabled else 1
++    draft_model_gb = model_gb if mtp_enabled else 0.0
++    kv_bytes_per_value = 1 if kv_quant == "q8_0" else 2
++    kv_cache_gb = (
++        KV_LAYERS
++        * int(context_tokens)
++        * KV_EMBEDDING_DIM
++        * 2
++        * kv_bytes_per_value
++        / BYTES_PER_GB
++    )
++    total_with_headroom = (
++        model_gb * model_copies + kv_cache_gb + RUNTIME_OVERHEAD_GB + REQUIRED_HEADROOM_GB
++    )
++    remaining = float(limit_gb) - total_with_headroom
++    estimate = {
++        "vram_estimate_gb": round(total_with_headroom, 3),
++        "fits_16gb": remaining > 0,
++        "limit_gb": float(limit_gb),
++        "remaining_headroom_gb": round(remaining, 3),
++        "model_copies": model_copies,
++        "model_weights_gb": round(model_gb, 3),
++        "draft_model_weights_gb": round(draft_model_gb, 3),
++        "kv_cache_gb": round(kv_cache_gb, 3),
++        "kv_quant": kv_quant,
++        "context_tokens": int(context_tokens),
++        "runtime_overhead_gb": RUNTIME_OVERHEAD_GB,
++        "required_headroom_gb": REQUIRED_HEADROOM_GB,
++        "total_with_headroom_gb": round(total_with_headroom, 3),
++    }
++    return estimate
++
++
++def _runtime_vram_estimate(paths: Mapping[str, Any], config: Mapping[str, Any]) -> JsonDict:
++    return estimate_vram(
++        model_size_bytes=int(paths.get("gguf", {}).get("size_bytes") or 0),
++        mtp_enabled=bool(config.get("mtp")),
++        kv_quant=str(config.get("kv_quant") or "q8_0"),
++        context_tokens=CONTEXT_TOKENS,
++    )
++
++
++def _package_ready(
++    preconditions_checked: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++    agent_config_resolution: Mapping[str, Any],
++    model_path_resolution: Mapping[str, Any],
++    vram_breakdown: Mapping[str, Any],
++) -> bool:
++    return bool(
++        preconditions_checked.get("ok") is True
++        and package_builds.get("package_builds") is True
++        and package_builds.get("entrypoint_compiles") is True
++        and package_builds.get("manifest_present") is True
++        and package_builds.get("kernel_main_present") is True
++        and package_builds.get("submitted_to_leaderboard") is False
++        and agent_config_resolution.get("resolved") is True
++        and model_path_resolution.get("resolved") is True
++        and vram_breakdown.get("fits_16gb") is True
++        and float(vram_breakdown.get("vram_estimate_gb") or 0.0) < VRAM_LIMIT_GB
++    )
++
++
++def _blocked_resource(
++    preconditions_checked: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++    agent_config_resolution: Mapping[str, Any],
++    model_path_resolution: Mapping[str, Any],
++    vram_breakdown: Mapping[str, Any],
++) -> str:
++    if preconditions_checked.get("ok") is not True:
++        return str(preconditions_checked.get("blocked_resource") or "precondition")
++    if package_builds.get("package_builds") is not True:
++        return str(package_builds.get("blocked_resource") or "dry_build")
++    if agent_config_resolution.get("resolved") is not True:
++        return "agent_config"
++    if model_path_resolution.get("resolved") is not True:
++        return "model_paths"
++    if (
++        vram_breakdown.get("fits_16gb") is not True
++        or float(vram_breakdown.get("vram_estimate_gb") or 0.0) >= VRAM_LIMIT_GB
++    ):
++        return "vram"
++    return "unknown"
++
++
++def _operator_checklist(package_ready: bool, vram_estimate_gb: float) -> list[str]:
++    readiness = "ready" if package_ready else "blocked until this JSON reports success_"
++    return [
++        (
++            "OPERATOR-CHECK: Confirm "
++            f"{RESULT_RELATIVE_PATH} is {readiness}, submitted_to_leaderboard=false, "
++            "and operator_only=true."
++        ),
++        (
++            "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission "
++            "with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached."
++        ),
++        (
++            "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and "
++            "carnot-qwen35-9b-mtp-gguf before Save & Run."
++        ),
++        (
++            "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp, "
++            "q8_0 KV, and the CUDA-12.8 llama-server."
++        ),
++        (
++            "OPERATOR-CHECK: Verify VRAM estimate "
++            f"{vram_estimate_gb:.3f}GB is below the ~16GB Kaggle budget with headroom."
++        ),
++        (
++            "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; "
++            "this task never submits."
++        ),
++    ]
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    package_builds: Mapping[str, Any],
++    agent_config_resolution: Mapping[str, Any],
++    model_path_resolution: Mapping[str, Any],
++    vram_breakdown: Mapping[str, Any],
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    ready = _package_ready(
++        preconditions_checked,
++        package_builds,
++        agent_config_resolution,
++        model_path_resolution,
++        vram_breakdown,
++    )
++    blocked = _blocked_resource(
++        preconditions_checked,
++        package_builds,
++        agent_config_resolution,
++        model_path_resolution,
++        vram_breakdown,
++    )
++    vram_estimate_gb = float(vram_breakdown.get("vram_estimate_gb") or 0.0)
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "honest_verdict": (
++            "success_package_builds_vram_gate_green"
++            if ready
++            else f"complete_package_not_ready_{blocked}"
++        ),
++        "submission_package_ready": ready,
++        "vram_estimate_gb": vram_estimate_gb,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "package_builds": dict(package_builds),
++        "agent_config_resolution": dict(agent_config_resolution),
++        "model_path_resolution": dict(model_path_resolution),
++        "vram_breakdown": dict(vram_breakdown),
++        "operator_checklist": _operator_checklist(ready, vram_estimate_gb),
++        "submitted_to_leaderboard": False,
++        "operator_only": True,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "random_seed": int(random_seed),
++        "duration_s": max(0.0001, round(float(duration_s), 6)),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard")
++    if artifact.get("operator_only") is not True:
++        errors.append("operator_only")
++    checklist = artifact.get("operator_checklist")
++    if not (
++        isinstance(checklist, list)
++        and checklist
++        and all(isinstance(step, str) and step.startswith("OPERATOR-CHECK:") for step in checklist)
++    ):
++        errors.append("operator_checklist")
++    expected_ready = _package_ready(
++        artifact.get("preconditions_checked", {}),
++        artifact.get("package_builds", {}),
++        artifact.get("agent_config_resolution", {}),
++        artifact.get("model_path_resolution", {}),
++        artifact.get("vram_breakdown", {}),
++    )
++    if artifact.get("submission_package_ready") is not expected_ready:
++        errors.append("submission_package_ready_gate")
++    if artifact.get("package_builds", {}).get("submitted_to_leaderboard") is not False:
++        errors.append("package_builds_submitted_to_leaderboard")
++    if artifact.get("vram_estimate_gb") != artifact.get("vram_breakdown", {}).get(
++        "vram_estimate_gb"
++    ):
++        errors.append("vram_estimate_gb")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    preconditions_checker: PreconditionsChecker = check_preconditions,
++    package_builder: PackageBuilder = dry_build_package,
++    agent_config_resolver: AgentConfigResolver = _runtime_agent_config,
++    model_path_resolver: ModelPathResolver = resolve_model_paths,
++    vram_estimator: VramEstimator = _runtime_vram_estimate,
++    write: bool = True,
++    now: Callable[[], float] = time.monotonic,
++) -> JsonDict:
++    root_path = Path(root)
++    start = now()
++    preconditions = dict(preconditions_checker(root_path))
++    package_builds = dict(package_builder(root_path))
++    agent_config = dict(agent_config_resolver())
++    model_paths = dict(model_path_resolver())
++    vram = dict(vram_estimator(model_paths, agent_config))
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        package_builds=package_builds,
++        agent_config_resolution=agent_config,
++        model_path_resolution=model_paths,
++        vram_breakdown=vram,
++        duration_s=now() - start,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:  # pragma: no cover - defensive guard; schema is tested directly.
++        raise ValueError(f"invalid {EXPERIMENT} artifact: {errors}")
++    if write:
++        _write_json(root_path / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run(REPO_ROOT)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_4766_submission_package_harden.json b/results/experiment_4766_submission_package_harden.json
+new file mode 100644
+index 0000000000..382038db39
+--- /dev/null
++++ b/results/experiment_4766_submission_package_harden.json
+@@ -0,0 +1,146 @@
++{
++  "agent_config_resolution": {
++    "blocked_resource": "",
++    "checks": {
++      "binary_not_wheel": true,
++      "cuda_128_server": true,
++      "model_filename": true,
++      "model_is_qwen35_mtp": true,
++      "mtp_enabled": true,
++      "n_predict_floor": true,
++      "no_think": true,
++      "q8_kv": true,
++      "submitted_cascade": true,
++      "submitted_policy_e3": true
++    },
++    "kv_quant": "q8_0",
++    "llama_server_kind": "cuda-12.8-binary",
++    "max_tokens": 2560,
++    "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
++    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++    "model_path_env": "CARNOT_ARC_GGUF_PATH",
++    "mtp": true,
++    "n_predict_min": 2048,
++    "repo_substr": "Qwen3.5-9B-MTP",
++    "resolved": true,
++    "server_path_env": "CARNOT_LLAMA_SERVER",
++    "spec_type": "draft-mtp"
++  },
++  "duration_s": 0.987299,
++  "experiment": "experiment_4766_submission_package_harden",
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal prefix; package builds is success_/complete_."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
++    },
++    "submission_package_ready": {
++      "principle": "True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only)."
++    },
++    "vram_estimate_gb": {
++      "principle": "must fit the ~16GB Kaggle constraint with KV + headroom -- the deployment gate."
++    }
++  },
++  "honest_verdict": "success_package_builds_vram_gate_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts; 0.0001s floor.",
++  "model_path_resolution": {
++    "all_gguf_candidates": [
++      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++    ],
++    "all_llama_server_candidates": [
++      "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
++      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    ],
++    "blocked_resource": "",
++    "gguf": {
++      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
++      "present": true,
++      "size_bytes": 5868826976,
++      "size_gb": 5.868827
++    },
++    "llama_server": {
++      "cuda_12_8_capable": true,
++      "filename": "llama-server",
++      "kind": "cuda-12.8-binary",
++      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++      "present": true
++    },
++    "llama_server_candidate_checks": [
++      {
++        "cuda_12_8_capable": false,
++        "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
++        "present": true
++      },
++      {
++        "cuda_12_8_capable": true,
++        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++        "present": true
++      }
++    ],
++    "resolved": true
++  },
++  "operator_checklist": [
++    "OPERATOR-CHECK: Confirm results/experiment_4766_submission_package_harden.json is ready, submitted_to_leaderboard=false, and operator_only=true.",
++    "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached.",
++    "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf before Save & Run.",
++    "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp, q8_0 KV, and the CUDA-12.8 llama-server.",
++    "OPERATOR-CHECK: Verify VRAM estimate 15.146GB is below the ~16GB Kaggle budget with headroom.",
++    "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; this task never submits."
++  ],
++  "operator_only": true,
++  "package_builds": {
++    "blocked_resource": "",
++    "dry_build_ran": true,
++    "entrypoint_compiles": true,
++    "file_hashes": {
++      "kernel-metadata.json": "sha256:40629bd0ded774706e3356cddeb0e62d11178ab0f7e64f71e517296c423b6cc4",
++      "main.py": "sha256:893d9c196473c07ed99242494213dab4fa62f507a2173f30591d90065b56a03f"
++    },
++    "files": [
++      "kernel-metadata.json",
++      "main.py"
++    ],
++    "kernel_main_present": true,
++    "manifest_present": true,
++    "package_builds": true,
++    "package_sha256": "sha256:900bd246f3c61ee8710ce53c2d9d0ff66a936459bcf76ce0e5b4958be55184c6",
++    "submitted_to_leaderboard": false
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arc_competition_agent_present": true,
++    "codex_or_opencode_md_read": true,
++    "ok": true,
++    "spec_has_req_4766": true,
++    "submission_kernel_present": true
++  },
++  "random_seed": 4766,
++  "reproducibility_checksum": "sha256:38ccc02fa1109b607c9aef76ca098bdb7993e967f7480a0bbd575c5ea8dd6d36",
++  "schema": "carnot.exp4766.submission_package_harden.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4766",
++    "SCENARIO-CAPSTONE-4766",
++    "SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES"
++  ],
++  "submission_package_ready": true,
++  "submitted_to_leaderboard": false,
++  "vram_breakdown": {
++    "context_tokens": 16384,
++    "draft_model_weights_gb": 5.869,
++    "fits_16gb": true,
++    "kv_cache_gb": 1.208,
++    "kv_quant": "q8_0",
++    "limit_gb": 16.0,
++    "model_copies": 2,
++    "model_weights_gb": 5.869,
++    "remaining_headroom_gb": 0.854,
++    "required_headroom_gb": 1.5,
++    "runtime_overhead_gb": 0.7,
++    "total_with_headroom_gb": 15.146,
++    "vram_estimate_gb": 15.146
++  },
++  "vram_estimate_gb": 15.146
++}
+diff --git a/tests/python/test_experiment_4766_submission_package_harden.py b/tests/python/test_experiment_4766_submission_package_harden.py
+new file mode 100644
+index 0000000000..8f036acad4
+--- /dev/null
++++ b/tests/python/test_experiment_4766_submission_package_harden.py
+@@ -0,0 +1,347 @@
++"""Tests for Exp 4766 ARC-AGI-3 submission-package hardening.
++
++Spec refs: REQ-CAPSTONE-4766, SCENARIO-CAPSTONE-4766,
++SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4766_submission_package_harden as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++MODEL_BYTES = 5_868_826_976
++
++
++SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
++    "policy": "E3AgentPolicy",
++    "cascade": True,
++    "frozen_generator": {
++        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++        "repo_substr": "Qwen3.5-9B-MTP",
++        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
++        "model_path_env": "CARNOT_ARC_GGUF_PATH",
++        "server_path_env": "CARNOT_LLAMA_SERVER",
++        "llama_server_kind": "cuda-12.8-binary",
++        "binary_not_wheel": True,
++        "required_shared_libraries": [
++            "libllama-common",
++            "libllama",
++            "libggml",
++            "libggml-cuda",
++        ],
++        "mtp": True,
++        "spec_type": "draft-mtp",
++        "kv_quant": "q8_0",
++        "no_think_prefix": "/no_think\n",
++        "max_tokens": 2560,
++        "n_predict_min": 2048,
++        "port_strategy": "free_non_8919",
++        "props_verify_endpoint": "/props",
++        "wheel_fallback_allowed": False,
++        "forbidden_models": ["gemma-8919"],
++        "forbidden_gpu_targets": ["3090"],
++        "gpu_target": "kaggle_cuda_gpu_not_3090",
++    },
++}
++
++
++def _write_submission_kernel(root: Path) -> None:
++    kernel = root / "scripts" / "kaggle" / "submission_kernel"
++    kernel.mkdir(parents=True)
++    (kernel / "kernel-metadata.json").write_text(
++        json.dumps(
++            {
++                "code_file": "main.py",
++                "kernel_type": "script",
++                "enable_gpu": True,
++                "enable_internet": False,
++                "dataset_sources": [
++                    "iancblenke/carnot-agent-code",
++                    "iancblenke/carnot-llamacpp-mtp-binary",
++                    "iancblenke/carnot-qwen35-9b-mtp-gguf",
++                ],
++                "competition_sources": ["arc-prize-2026-arc-agi-3"],
++            }
++        ),
++        encoding="utf-8",
++    )
++    (kernel / "main.py").write_text(
++        "\n".join(
++            [
++                "print('CARNOT_LLAMA_SERVER CARNOT_ARC_GGUF_PATH')",
++                "print('Qwen3.5-9B-Q4_K_M.gguf --spec-type draft-mtp --model-draft')",
++                "print('--cache-type-k q8_0 --cache-type-v q8_0 llama-server')",
++            ]
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++
++def _write_repo_preconditions(root: Path) -> None:
++    (root / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec = root / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec.parent.mkdir(parents=True)
++    spec.write_text("REQ-CAPSTONE-4766\n", encoding="utf-8")
++    agent = root / "python" / "carnot" / "agentic" / "arc_competition_agent.py"
++    agent.parent.mkdir(parents=True)
++    agent.write_text("SUBMITTED_AGENT_CONFIG = {}\n", encoding="utf-8")
++    _write_submission_kernel(root)
++
++
++def _preconditions(ok: bool = True) -> JsonDict:
++    return {
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4766": True,
++        "submission_kernel_present": True,
++        "arc_competition_agent_present": True,
++        "ok": ok,
++        **({} if ok else {"blocked_resource": "arc_competition_agent"}),
++    }
++
++
++def _package_builds(ok: bool = True) -> JsonDict:
++    return {
++        "dry_build_ran": ok,
++        "package_builds": ok,
++        "entrypoint_compiles": ok,
++        "manifest_present": ok,
++        "kernel_main_present": ok,
++        "submitted_to_leaderboard": False,
++        "blocked_resource": "" if ok else "dry_build",
++        "package_sha256": "sha256:abc" if ok else "",
++        "files": ["kernel-metadata.json", "main.py"] if ok else [],
++    }
++
++
++def _config_resolution(ok: bool = True) -> JsonDict:
++    config = mod.resolve_agent_config(SUBMITTED_AGENT_CONFIG_FIXTURE)
++    if ok:
++        return config
++    broken = dict(config)
++    broken["resolved"] = False
++    broken["checks"] = {**config["checks"], "mtp_enabled": False}
++    broken["blocked_resource"] = "agent_config"
++    return broken
++
++
++def _model_resolution(tmp_path: Path, ok: bool = True) -> JsonDict:
++    gguf = tmp_path / "Qwen3.5-9B-Q4_K_M.gguf"
++    server = tmp_path / "llama-server"
++    gguf.write_text("fixture\n", encoding="utf-8")
++    server.write_text("server\n", encoding="utf-8")
++    paths = mod.resolve_model_paths(
++        gguf_paths=[str(gguf)] if ok else [],
++        llama_server_paths=[str(server)],
++        cuda_inspector=lambda _path: True,
++        model_size_bytes=MODEL_BYTES,
++    )
++    if ok:
++        return paths
++    assert paths["resolved"] is False
++    return paths
++
++
++def test_req_capstone_4766_spec_declares_hardening_contract() -> None:
++    """REQ-CAPSTONE-4766: OpenSpec declares the package hardening contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4766",
++        "SCENARIO-CAPSTONE-4766",
++        "SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION",
++        "SCENARIO-CAPSTONE-4766-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4766_preconditions_and_dry_build(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4766: package scripts and agent file dry-build cleanly."""
++
++    _write_repo_preconditions(tmp_path)
++
++    preconditions = mod.check_preconditions(tmp_path)
++    package_builds = mod.dry_build_package(tmp_path)
++
++    assert preconditions["ok"] is True
++    assert preconditions["arc_competition_agent_present"] is True
++    assert package_builds["package_builds"] is True
++    assert package_builds["entrypoint_compiles"] is True
++    assert package_builds["submitted_to_leaderboard"] is False
++    assert package_builds["package_sha256"].startswith("sha256:")
++
++
++def test_scenario_capstone_4766_resolves_frozen_config_and_paths(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4766: frozen Qwen/MTP/q8/CUDA path contract resolves."""
++
++    config = mod.resolve_agent_config(SUBMITTED_AGENT_CONFIG_FIXTURE)
++    paths = _model_resolution(tmp_path, ok=True)
++
++    assert config["resolved"] is True
++    assert config["checks"]["model_is_qwen35_mtp"] is True
++    assert config["checks"]["mtp_enabled"] is True
++    assert config["checks"]["q8_kv"] is True
++    assert config["checks"]["cuda_128_server"] is True
++    assert paths["resolved"] is True
++    assert paths["gguf"]["filename"] == "Qwen3.5-9B-Q4_K_M.gguf"
++    assert paths["gguf"]["size_bytes"] == MODEL_BYTES
++    assert paths["llama_server"]["cuda_12_8_capable"] is True
++
++
++def test_scenario_capstone_4766_vram_gate_fits_16gb_with_headroom() -> None:
++    """SCENARIO-CAPSTONE-4766: VRAM estimate includes MTP copy, q8 KV, and headroom."""
++
++    estimate = mod.estimate_vram(
++        model_size_bytes=MODEL_BYTES,
++        mtp_enabled=True,
++        kv_quant="q8_0",
++        context_tokens=16_384,
++    )
++
++    assert estimate["fits_16gb"] is True
++    assert estimate["model_copies"] == 2
++    assert estimate["model_weights_gb"] > 5.0
++    assert estimate["draft_model_weights_gb"] > 5.0
++    assert estimate["kv_cache_gb"] > 1.0
++    assert estimate["total_with_headroom_gb"] == estimate["vram_estimate_gb"]
++    assert 14.0 < estimate["vram_estimate_gb"] < 16.0
++    assert estimate["remaining_headroom_gb"] > 0.0
++
++
++def test_scenario_capstone_4766_ready_artifact_is_operator_only(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4766: green hardening gate marks operator-ready only."""
++
++    vram = mod.estimate_vram(model_size_bytes=MODEL_BYTES, mtp_enabled=True, kv_quant="q8_0")
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_builds=_package_builds(True),
++        agent_config_resolution=_config_resolution(True),
++        model_path_resolution=_model_resolution(tmp_path, ok=True),
++        vram_breakdown=vram,
++        duration_s=0.0,
++    )
++
++    assert artifact["honest_verdict"] == "success_package_builds_vram_gate_green"
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts; 0.0001s floor."
++    assert artifact["submission_package_ready"] is True
++    assert artifact["vram_estimate_gb"] == vram["vram_estimate_gb"]
++    assert artifact["vram_estimate_gb"] < 16.0
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["operator_only"] is True
++    assert all(step.startswith("OPERATOR-CHECK:") for step in artifact["operator_checklist"])
++    assert any("submit" in step.lower() for step in artifact["operator_checklist"])
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4766_blocks_vram_or_missing_paths(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4766-BLOCKED-PRECONDITION: failed gates do not claim readiness."""
++
++    too_large_vram = mod.estimate_vram(
++        model_size_bytes=MODEL_BYTES * 2,
++        mtp_enabled=True,
++        kv_quant="q8_0",
++    )
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_builds=_package_builds(True),
++        agent_config_resolution=_config_resolution(True),
++        model_path_resolution=_model_resolution(tmp_path, ok=True),
++        vram_breakdown=too_large_vram,
++        duration_s=0.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete_package_not_ready_vram"
++    assert artifact["submission_package_ready"] is False
++    assert artifact["vram_breakdown"]["fits_16gb"] is False
++    assert mod.artifact_schema_errors(artifact) == []
++
++    missing_paths = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_builds=_package_builds(True),
++        agent_config_resolution=_config_resolution(True),
++        model_path_resolution=_model_resolution(tmp_path, ok=False),
++        vram_breakdown=mod.estimate_vram(
++            model_size_bytes=MODEL_BYTES,
++            mtp_enabled=True,
++            kv_quant="q8_0",
++        ),
++        duration_s=0.0,
++    )
++    assert missing_paths["honest_verdict"] == "complete_package_not_ready_model_paths"
++    assert missing_paths["submission_package_ready"] is False
++
++
++def test_req_capstone_4766_schema_rejects_false_ready_and_submission(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4766: schema guards terminal verdict, readiness, and operator-only fields."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(True),
++        package_builds=_package_builds(True),
++        agent_config_resolution=_config_resolution(True),
++        model_path_resolution=_model_resolution(tmp_path, ok=True),
++        vram_breakdown=mod.estimate_vram(
++            model_size_bytes=MODEL_BYTES,
++            mtp_enabled=True,
++            kv_quant="q8_0",
++        ),
++        duration_s=0.0,
++    )
++
++    for field, bad_value, expected in (
++        ("honest_verdict", "ready", "honest_verdict"),
++        ("inference_substrate", "live_llm_inference", "inference_substrate"),
++        ("field_principles", {}, "field_principles"),
++        ("submitted_to_leaderboard", True, "submitted_to_leaderboard"),
++        ("operator_only", False, "operator_only"),
++    ):
++        malformed = dict(artifact, **{field: bad_value})
++        malformed["reproducibility_checksum"] = mod.payload_checksum(malformed)
++        assert expected in mod.artifact_schema_errors(malformed)
++
++    false_ready = dict(artifact, vram_breakdown={**artifact["vram_breakdown"], "fits_16gb": False})
++    false_ready["reproducibility_checksum"] = mod.payload_checksum(false_ready)
++    assert "submission_package_ready_gate" in mod.artifact_schema_errors(false_ready)
++
++    drifted = dict(artifact, duration_s=9.0)
++    assert "reproducibility_checksum" in mod.artifact_schema_errors(drifted)
++
++
++def test_scenario_capstone_4766_runner_writes_requested_result(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4766: runner writes the stable deliverable JSON."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions(True),
++        package_builder=lambda _root: _package_builds(True),
++        agent_config_resolver=lambda: _config_resolution(True),
++        model_path_resolver=lambda: _model_resolution(tmp_path, ok=True),
++        vram_estimator=lambda paths, config: mod.estimate_vram(
++            model_size_bytes=paths["gguf"]["size_bytes"],
++            mtp_enabled=config["mtp"],
++            kv_quant=config["kv_quant"],
++        ),
++        write=True,
++        now=lambda: 10.0,
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert written["submission_package_ready"] is True
++    assert written["reproducibility_checksum"] == mod.payload_checksum(written)
++    assert mod.artifact_schema_errors(written) == []
+-- 
+2.55.0
+

@@ -1,0 +1,488 @@
+From 1845c9e7db2b81df614eac13daee0c19b5c96896 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 21:40:33 -0400
+Subject: [PATCH 10194/11362] Close two evidence holes in the REQ-HARNESS-5920
+ node-id delta
+
+Both were demonstrated by execution before anything was written, and both are
+the same shape the module's own commit message warned about: an unmeasured
+failure reading as a clean delta.
+
+1. An ABORTED suite passed as ready. The 2026-08-27 collection abort prints
+   zero FAILED lines, so the stdout path parsed an empty failure set and
+   delta() answered ready_allowed=True with a delta of -1,726 -- a suite that
+   never ran read as cleaner than baseline. Verified live before the fix.
+
+2. A new setup ERROR was invisible. The parser read only FAILED lines; a
+   change that turns a passing test into a setup error introduces no FAILED
+   node id and passed the delta. This is the exact suppression that
+   contaminated two full-suite runs (failures became setup errors and the
+   count DROPPED).
+
+The fix adds one evidence gate, observed_suite_evidence(stdout, exit_code):
+None when the run aborted (Interrupted / error during collection /
+INTERNALERROR), and None when a nonzero exit is explained by no parsed node.
+None fails closed in exp6682's caller, which now routes its stdout path
+through the gate.
+
+ERROR nodes get their own parser and their own ledger, deliberately separate:
+the committed baseline records 1,726 FAILED nodes and NOT the 143 ERROR nodes
+its run also saw, so enforcing errors against an empty set would refuse every
+honest run -- a check that cries wolf trains people to bypass it. Enforcement
+activates only when the baseline records baseline_error_node_ids AND the
+caller measured this run's; until then delta() reports
+error_nodes_assessed=false out loud instead of claiming clean. The next
+re-baseline should record the error ledger.
+
+Mutation-proved: deleting the abort rule, the unexplained-exit rule, the
+new-error veto, or the ERROR parser each turns the new suite RED (1-2 tests),
+and reverting exp6682's caller to the naive parse turns its regression test
+RED. Module restored byte-identical after each proof. Focused suites: 14/14
+and 16/16.
+
+The module had NO dedicated tests when it shipped; tests/python/
+test_global_suite_baseline.py now pins every rule, including the fail-toward-
+not-ready direction on an unreadable baseline and the count/list consistency
+of the committed ledger.
+
+Two test-suite mutation markers were deleted deliberately rather than
+resolved by checkout: both flagged only [NOT this run] paths
+(python/carnot/agentic/arc_induction_tools.py and arc_induction_tool_loop.py)
+-- a concurrent agent's in-flight authored work observed during this session's
+pytest window, not test damage. Reverting them is the exact destroy-authored-
+work failure the marker text itself warns about.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...ment_6682_arc_held_family_supervisor_ab.py |  11 +-
+ python/carnot/global_suite_baseline.py        |  99 +++++++++-
+ ...ment_6682_arc_held_family_supervisor_ab.py |  69 +++++++
+ tests/python/test_global_suite_baseline.py    | 178 ++++++++++++++++++
+ 4 files changed, 353 insertions(+), 4 deletions(-)
+ create mode 100644 tests/python/test_global_suite_baseline.py
+
+diff --git a/python/carnot/experiment_6682_arc_held_family_supervisor_ab.py b/python/carnot/experiment_6682_arc_held_family_supervisor_ab.py
+index 231bca5cf5..ea62e65be0 100644
+--- a/python/carnot/experiment_6682_arc_held_family_supervisor_ab.py
++++ b/python/carnot/experiment_6682_arc_held_family_supervisor_ab.py
+@@ -142,7 +142,7 @@ COVERAGE_REPORT_COMMAND = (
+ from carnot.global_suite_baseline import (
+     baseline_node_ids,
+     delta as global_suite_delta,
+-    failure_node_ids_from_pytest_output,
++    observed_suite_evidence,
+ )
+ 
+ #: Recorded in a receipt's `failure_node_ids` to state, auditably, that the observed global
+@@ -225,7 +225,14 @@ def _global_failure_node_ids(
+         return baseline_node_ids()
+     stdout = measured.get("stdout")
+     if isinstance(stdout, str) and stdout:
+-        return failure_node_ids_from_pytest_output(stdout)
++        # NOT a bare FAILED-line parse (2026-08-29). An ABORTED run prints zero FAILED lines,
++        # so parsing it naively reads "1,726 failures fixed" -- ready_allowed on a suite that
++        # never ran. Same for a nonzero exit whose output explains nothing. Both return None
++        # here, and None fails closed below.
++        evidence = observed_suite_evidence(stdout, int(measured.get("exit_code", 1)))
++        if evidence is None:
++            return None
++        return evidence["failure_node_ids"]
+     if int(measured.get("exit_code", 0)) == 0:
+         return []
+     return None
+diff --git a/python/carnot/global_suite_baseline.py b/python/carnot/global_suite_baseline.py
+index 5929ceaa52..cf0f01d8c4 100644
+--- a/python/carnot/global_suite_baseline.py
++++ b/python/carnot/global_suite_baseline.py
+@@ -54,7 +54,30 @@ def baseline_node_ids(*, root: Path | None = None) -> list[str]:
+     return [str(n) for n in nodes] if isinstance(nodes, list) else []
+ 
+ 
+-def delta(after_node_ids: Sequence[str], *, root: Path | None = None) -> dict[str, Any]:
++def baseline_error_node_ids(*, root: Path | None = None) -> list[str] | None:
++    """The recorded pre-existing ERROR nodes, or None when the baseline does not record them.
++
++    None here means "this ledger predates error tracking", not "zero errors". The 2026-08-29
++    baseline records 1,726 FAILED nodes and its run also saw 143 ERROR nodes that were never
++    written down. Until a re-baseline records them, error enforcement stays advisory --
++    enforcing against an empty set would refuse every honest run, and a check that cries wolf
++    trains people to bypass it.
++    """
++    base = Path(root) if root is not None else REPO_ROOT
++    try:
++        payload = json.loads((base / BASELINE_RELATIVE_PATH).read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++    nodes = payload.get("baseline_error_node_ids") if isinstance(payload, Mapping) else None
++    return [str(n) for n in nodes] if isinstance(nodes, list) else None
++
++
++def delta(
++    after_node_ids: Sequence[str],
++    *,
++    after_error_node_ids: Sequence[str] | None = None,
++    root: Path | None = None,
++) -> dict[str, Any]:
+     """Compare an observed failure set against the baseline.
+ 
+     `ready_allowed` is true only when NO new node id appears AND the total did not grow. Both
+@@ -64,6 +87,19 @@ def delta(after_node_ids: Sequence[str], *, root: Path | None = None) -> dict[st
+     baseline = baseline_node_ids(root=root)
+     before, observed = set(baseline), {str(n) for n in after_node_ids}
+     new_nodes = sorted(observed - before)
++
++    # ERROR nodes are a separate ledger from FAILED nodes, because the recorded baseline may
++    # predate error tracking. Enforcement activates only when BOTH sides are known: the
++    # baseline records its error nodes AND the caller measured this run's. Anything less is
++    # reported honestly as not assessed, never silently treated as clean.
++    error_ledger = baseline_error_node_ids(root=root)
++    errors_assessed = error_ledger is not None and after_error_node_ids is not None
++    new_error_nodes: list[str] = []
++    if errors_assessed:
++        new_error_nodes = sorted(
++            {str(n) for n in after_error_node_ids or []} - set(error_ledger or [])
++        )
++
+     return {
+         "command": GLOBAL_PYTEST_COMMAND,
+         "source": BASELINE_RELATIVE_PATH.as_posix(),
+@@ -72,7 +108,9 @@ def delta(after_node_ids: Sequence[str], *, root: Path | None = None) -> dict[st
+         "new_node_ids": new_nodes,
+         "resolved_node_ids": sorted(before - observed),
+         "global_suite_failure_delta": len(observed) - len(before),
+-        "ready_allowed": not new_nodes and len(observed) <= len(before),
++        "error_nodes_assessed": errors_assessed,
++        "new_error_node_ids": new_error_nodes,
++        "ready_allowed": not new_nodes and not new_error_nodes and len(observed) <= len(before),
+         "unrelated_debt_preserved_by_exact_node_id": True,
+         "global_suite_zero_required": False,
+         "principle": (
+@@ -90,3 +128,60 @@ def failure_node_ids_from_pytest_output(text: str) -> list[str]:
+         if line.startswith("FAILED ")
+     }
+     return sorted(n for n in nodes if n)
++
++
++def error_node_ids_from_pytest_output(text: str) -> list[str]:
++    """The ERROR node ids in a `-q` pytest run's output, deduplicated and sorted.
++
++    A setup or collection failure prints `ERROR <node>` in the short summary, not `FAILED`.
++    A delta that reads only FAILED lines cannot see a change that turns a passing test into
++    a setup error. That exact suppression contaminated two full-suite runs on 2026-08-28.
++    """
++    nodes = set()
++    for line in (text or "").splitlines():
++        if not line.startswith("ERROR "):
++            continue
++        node = line[len("ERROR ") :].split(" - ", 1)[0].strip()
++        # The summary can print a bare "ERROR" banner line; a node id always names a path.
++        if node and ("/" in node or node.endswith(".py") or "::" in node):
++            nodes.add(node)
++    return sorted(nodes)
++
++
++#: Lines that mean pytest DID NOT finish. A truncated run's failure list is incomplete, so a
++#: delta computed from it launders unknown breakage into "cleaner than baseline".
++_ABORT_MARKERS = (
++    "!! Interrupted",
++    "Interrupted: ",
++    "error during collection",
++    "INTERNALERROR",
++)
++
++
++def pytest_run_aborted(text: str) -> bool:
++    """True when the output shows pytest stopped before running the whole suite."""
++    body = text or ""
++    return any(marker in body for marker in _ABORT_MARKERS)
++
++
++def observed_suite_evidence(stdout: str, exit_code: int) -> dict[str, list[str]] | None:
++    """Parse one run's stdout into node-id evidence, or None when it cannot be trusted.
++
++    None is NOT "no failures" and callers must fail closed on it. Two cases return None:
++
++    1. The run ABORTED (collection error, internal error, interrupt). Its failure list is
++       incomplete, so any delta over it is meaningless. The 2026-08-27 incident is the shape:
++       one stale capstone aborted 57,917 collected tests, zero FAILED lines were printed,
++       and a naive delta read that as 1,726 failures fixed.
++    2. The run exited nonzero and the output explains NOTHING (no FAILED node, no ERROR
++       node). We know it failed and we do not know what failed.
++
++    A zero exit with no parsed nodes is a genuinely clean run and returns empty evidence.
++    """
++    failures = failure_node_ids_from_pytest_output(stdout)
++    errors = error_node_ids_from_pytest_output(stdout)
++    if pytest_run_aborted(stdout):
++        return None
++    if int(exit_code) != 0 and not failures and not errors:
++        return None
++    return {"failure_node_ids": failures, "error_node_ids": errors}
+diff --git a/tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py b/tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py
+index 4c72b11380..98fa01a32e 100644
+--- a/tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py
++++ b/tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py
+@@ -582,6 +582,75 @@ def test_req_6682_failed_mandatory_verification_keeps_readiness_false(tmp_path:
+     assert exp.validate_artifact(artifact) == []
+ 
+ 
++def test_req_6682_aborted_suite_stdout_never_reads_as_ready(tmp_path: Path):
++    """REGRESSION (2026-08-28, demonstrated): an ABORTED suite prints zero FAILED lines.
++
++    Parsing that output naively yields an empty failure set, which the delta reads as
++    "1,726 failures fixed" and readiness goes True on a suite that never ran. The stdout
++    path must treat an abort -- and any nonzero exit the output does not explain -- as
++    evidence that CANNOT be computed, which fails closed.
++    """
++
++    aborted_stdout = (
++        "collected 57917 items / 1 error\n"
++        "ERROR tests/python/test_experiment_6659_v580_capstone.py - RuntimeError: rot\n"
++        "!!!!!!!! Interrupted: 1 error during collection !!!!!!!!\n"
++        "1 error in 42.31s\n"
++    )
++    artifact = exp.build_artifact(
++        repo_root=tmp_path,
++        result_path=tmp_path / "aborted.json",
++        preconditions=_passing_preconditions(),
++        run_manifest=_manifest(),
++        per_unit_rows=_rows(),
++        test_results={
++            exp.FULL_TEST_COMMAND: {
++                "exit_code": 2,
++                "summary": "collection abort",
++                "stdout": aborted_stdout,
++            }
++        },
++        duration_s=0.01,
++    )
++    assert artifact["arc_supervisor_ab_ready"] is False
++    assert (
++        artifact["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
++            "ready_allowed"
++        ]
++        is False
++    )
++    assert (
++        artifact["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
++            "new_node_ids"
++        ]
++        is None
++    )
++
++    # A nonzero exit whose stdout explains nothing is the same shape: unknown, not clean.
++    unexplained = exp.build_artifact(
++        repo_root=tmp_path,
++        result_path=tmp_path / "unexplained.json",
++        preconditions=_passing_preconditions(),
++        run_manifest=_manifest(),
++        per_unit_rows=_rows(),
++        test_results={
++            exp.FULL_TEST_COMMAND: {
++                "exit_code": 4,
++                "summary": "usage error",
++                "stdout": "no tests ran in 0.01s\n",
++            }
++        },
++        duration_s=0.01,
++    )
++    assert unexplained["arc_supervisor_ab_ready"] is False
++    assert (
++        unexplained["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
++            "ready_allowed"
++        ]
++        is False
++    )
++
++
+ def test_req_6682_artifact_validator_rejects_each_claim_axis(tmp_path: Path):
+     """REQ-ARC-WMTE-6682 validates schema, claims, hashes, attacks, and readiness."""
+ 
+diff --git a/tests/python/test_global_suite_baseline.py b/tests/python/test_global_suite_baseline.py
+new file mode 100644
+index 0000000000..6a73768c51
+--- /dev/null
++++ b/tests/python/test_global_suite_baseline.py
+@@ -0,0 +1,178 @@
++"""REQ-HARNESS-5920: the shared node-id delta must not launder unmeasured breakage.
++
++This module had NO dedicated tests when it shipped (2026-08-28). Two holes were then
++demonstrated by execution the same day:
++
++1. An ABORTED suite (`Interrupted: 1 error during collection`, zero FAILED lines,
++   nonzero exit) parsed to an empty failure set, and `delta()` returned
++   `ready_allowed: True` with a delta of -1,726. A suite that never ran read as
++   cleaner than baseline.
++2. A change whose only breakage is a setup ERROR prints `ERROR <node>` in the short
++   summary, not `FAILED <node>`. The FAILED-only parser could not see it, so the
++   regression passed the delta. This is the same suppression that contaminated two
++   full-suite measurement runs on 2026-08-28 (failures became setup errors and the
++   failure count DROPPED).
++
++Every test here pins one rule of the fix. Deleting a rule from the module must turn
++at least one of these RED -- that is the mutation proof this file exists to hold.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot.global_suite_baseline import (
++    BASELINE_RELATIVE_PATH,
++    baseline_error_node_ids,
++    baseline_node_ids,
++    delta,
++    error_node_ids_from_pytest_output,
++    failure_node_ids_from_pytest_output,
++    observed_suite_evidence,
++    pytest_run_aborted,
++)
++
++# The incident shape from 2026-08-27: one stale capstone aborted collection for
++# 57,917 tests. Zero FAILED lines. Any delta over this output is meaningless.
++ABORTED_RUN = """collected 57917 items / 1 error
++==================================== ERRORS ====================================
++ERROR tests/python/test_experiment_6659_v580_capstone.py - RuntimeError: rot
++!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
++=========================== short test summary info ============================
++ERROR tests/python/test_experiment_6659_v580_capstone.py
++1 error in 42.31s
++"""
++
++COMPLETE_RUN = """FAILED tests/python/test_a.py::test_one - AssertionError: boom
++FAILED tests/python/test_a.py::test_two
++ERROR tests/python/test_b.py::test_three - fixture 'gone' not found
++2 failed, 1 error, 5 passed in 3.2s
++"""
++
++
++def _write_baseline(root: Path, nodes: list[str], errors: list[str] | None = None) -> None:
++    payload: dict[str, object] = {"baseline_node_ids": nodes}
++    if errors is not None:
++        payload["baseline_error_node_ids"] = errors
++    target = root / BASELINE_RELATIVE_PATH
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def test_failed_parser_strips_reasons_and_sorts() -> None:
++    nodes = failure_node_ids_from_pytest_output(COMPLETE_RUN)
++    assert nodes == [
++        "tests/python/test_a.py::test_one",
++        "tests/python/test_a.py::test_two",
++    ]
++
++
++def test_error_parser_sees_setup_errors_the_failed_parser_cannot() -> None:
++    # SCENARIO: a change turns a passing test into a setup error. FAILED-only
++    # parsing is blind to it; the error parser is the closing of that hole.
++    assert error_node_ids_from_pytest_output(COMPLETE_RUN) == ["tests/python/test_b.py::test_three"]
++    assert "tests/python/test_b.py::test_three" not in failure_node_ids_from_pytest_output(
++        COMPLETE_RUN
++    )
++
++
++def test_error_parser_ignores_bare_banner_lines() -> None:
++    assert error_node_ids_from_pytest_output("ERROR \nERROR something without a path\n") == []
++
++
++def test_aborted_run_is_detected() -> None:
++    assert pytest_run_aborted(ABORTED_RUN) is True
++    assert pytest_run_aborted(COMPLETE_RUN) is False
++    assert pytest_run_aborted("INTERNALERROR> boom") is True
++
++
++def test_aborted_run_yields_no_evidence_even_with_parsed_nodes() -> None:
++    # REGRESSION (2026-08-28, demonstrated): an aborted run parsed to [] and the
++    # delta reported ready_allowed True with delta -1726. Aborts must yield None,
++    # and None must never be fed to delta() as if it were a clean empty set.
++    assert observed_suite_evidence(ABORTED_RUN, exit_code=2) is None
++    # Even if an abort somehow exits 0, the truncated output stays untrusted.
++    assert observed_suite_evidence(ABORTED_RUN, exit_code=0) is None
++
++
++def test_nonzero_exit_with_no_parsed_nodes_yields_no_evidence() -> None:
++    # A nonzero exit the output does not explain: we know it failed and we do not
++    # know what failed. Treating it as "zero failures" is the laundering the spec
++    # forbids.
++    assert observed_suite_evidence("no tests ran in 0.01s", exit_code=4) is None
++    assert observed_suite_evidence("", exit_code=1) is None
++
++
++def test_clean_zero_exit_yields_empty_evidence() -> None:
++    evidence = observed_suite_evidence("5 passed in 1.0s", exit_code=0)
++    assert evidence == {"failure_node_ids": [], "error_node_ids": []}
++
++
++def test_complete_run_yields_both_node_kinds() -> None:
++    evidence = observed_suite_evidence(COMPLETE_RUN, exit_code=1)
++    assert evidence is not None
++    assert evidence["failure_node_ids"] == [
++        "tests/python/test_a.py::test_one",
++        "tests/python/test_a.py::test_two",
++    ]
++    assert evidence["error_node_ids"] == ["tests/python/test_b.py::test_three"]
++
++
++def test_delta_new_node_blocks_and_baseline_equal_allows(tmp_path: Path) -> None:
++    _write_baseline(tmp_path, ["t.py::old_a", "t.py::old_b"])
++    same = delta(["t.py::old_a", "t.py::old_b"], root=tmp_path)
++    assert same["ready_allowed"] is True
++    assert same["global_suite_failure_delta"] == 0
++
++    worse = delta(["t.py::old_a", "t.py::brand_new"], root=tmp_path)
++    assert worse["ready_allowed"] is False
++    assert worse["new_node_ids"] == ["t.py::brand_new"]
++
++
++def test_delta_unreadable_baseline_counts_every_failure_as_new(tmp_path: Path) -> None:
++    # No baseline file under this root: [] baseline, every failure new, not ready.
++    # Failing toward "not ready" is the safe direction and must stay that way.
++    result = delta(["t.py::anything"], root=tmp_path)
++    assert result["ready_allowed"] is False
++    assert result["baseline_node_count"] == 0
++
++
++def test_delta_error_ledger_enforces_when_both_sides_known(tmp_path: Path) -> None:
++    _write_baseline(tmp_path, ["t.py::old"], errors=["t.py::known_error"])
++    ok = delta(["t.py::old"], after_error_node_ids=["t.py::known_error"], root=tmp_path)
++    assert ok["error_nodes_assessed"] is True
++    assert ok["ready_allowed"] is True
++
++    bad = delta(["t.py::old"], after_error_node_ids=["t.py::NEW_error"], root=tmp_path)
++    assert bad["ready_allowed"] is False
++    assert bad["new_error_node_ids"] == ["t.py::NEW_error"]
++
++
++def test_delta_without_error_ledger_says_so_instead_of_claiming_clean(tmp_path: Path) -> None:
++    # The 2026-08-29 baseline predates error tracking. Until a re-baseline records
++    # the error nodes, the delta must SAY errors were not assessed -- visible
++    # honesty, not silent cleanliness, and not a refusal that would fire on every
++    # honest run either.
++    _write_baseline(tmp_path, ["t.py::old"])
++    result = delta(["t.py::old"], after_error_node_ids=["t.py::err"], root=tmp_path)
++    assert result["error_nodes_assessed"] is False
++    assert result["ready_allowed"] is True
++
++
++def test_real_repo_baseline_reads_and_matches_its_count() -> None:
++    nodes = baseline_node_ids()
++    assert len(nodes) >= 1, "the committed baseline must be readable from the repo root"
++    payload = json.loads((Path(__file__).resolve().parents[2] / BASELINE_RELATIVE_PATH).read_text())
++    assert payload["baseline_node_count"] == len(nodes), (
++        "baseline_node_count must equal the id list it describes; a mismatch means the "
++        "ledger was hand-edited without re-deriving the count"
++    )
++    assert len(set(nodes)) == len(nodes), "baseline node ids must be unique"
++
++
++def test_real_repo_error_ledger_absent_is_none_not_empty() -> None:
++    # None means "predates error tracking"; [] would mean "zero errors recorded",
++    # which is a claim the 2026-08-29 run (143 ERROR nodes) cannot support.
++    ledger = baseline_error_node_ids()
++    assert ledger is None or isinstance(ledger, list)
+-- 
+2.55.0
+

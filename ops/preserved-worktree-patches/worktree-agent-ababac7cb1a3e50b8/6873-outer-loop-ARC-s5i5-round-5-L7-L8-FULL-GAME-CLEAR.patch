@@ -1,0 +1,176 @@
+From 22124b467c219413547a28326a056c88172e47f7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 09:27:40 -0400
+Subject: [PATCH 06873/11362] [outer-loop] ARC s5i5 round-5: L7->L8, FULL GAME
+ CLEAR
+
+Round-5 claude-fable-5 attempt on s5i5 solved L8, the final level of the
+game. Executes round-4's decoded controls (paired 9/7 reshapes the upper
+carriage, 8/A reshapes the lower carriage, E lowers the diamond carrier
+and extends the chamber's E arm, B rotates the four-color chamber cross)
+and finds the missing piece: an arm aimed through the bottom opening may
+continue extending OFF-SCREEN after its visible pixels reach row 62,
+letting E carry the diamond all the way to the lower socket.
+
+Won live at action 382; fresh reproduce() confirmed reached_level=8,
+completing the game's 8 win levels. Independently re-verified by the
+outer loop: 5x fresh env.reset() + replay via a new resolver priority
+branch, all 5 confirmed level=8, state=GameState.WIN.
+
+reproducible_total_levels 153 -> 154 (15th full game clear).
+arc_count_integrity_lint.py exit 0.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   | 24 +++++++++++--
+ ...experiment_4460_submission_package_prep.py | 25 +++++++++++++
+ results/outer_loop_fable5_s5i5_probe.json     | 35 +++++++++----------
+ 3 files changed, 63 insertions(+), 21 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index c627a26385..151dae19f9 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -1578,7 +1578,9 @@ games:
+     maze/grab-tick interception). levels_reproduced bumped 8 -> 9 (FULL CLEAR).'
+ - game: s5i5
+   reproducibility: reproduced
+-  levels_reproduced: 7
++  levels_reproduced: 8
++  full_game_clear: true
++  final_game_state: 'GameState.WIN'
+   mechanic_class: config_toggle_marker_coverage
+   win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target. L3
+     (2026-07-11, claude-fable-5): a linkage machine of six two-half shrink/grow
+@@ -1706,6 +1708,24 @@ games:
+     controls with the residual budget, stopped at 670/700 total calls with
+     30 remaining, insufficient for a solve attempt or gate. Frontier stays
+     at level 7.'
++  - 'L8 SOLVED, FULL GAME CLEAR round 5 (2026-07-12, claude-fable-5, first
++    fable-5 leg of the campaign, results/outer_loop_fable5_s5i5_probe.json):
++    directly executes round 4''s decoded L8 controls -- couples EVERY
++    same-colored structure on the board: the paired 9/7 controls reshape
++    the upper carriage, 8/A reshape the lower carriage, and E
++    simultaneously lowers the diamond carrier and extends the chamber''s E
++    arm. The central B glyph rotates the four-color chamber cross, and a
++    remote move is globally blocked unless that color''s chamber arm has
++    clearance. Key discovery: an arm aimed through the bottom opening may
++    continue extending OFF-SCREEN after its visible pixels reach row 62,
++    letting E carry the diamond all the way to the lower socket (this
++    off-screen continuation is what round 4 had not yet found). Won live
++    at action 382 (311-action prefix + 71 exploration/solve steps); a
++    fresh reproduce() replay of the full 382-action sequence reached
++    claimed_level=8, completing the game''s 8 win levels. Independently
++    re-verified by the outer loop: 5x fresh env.reset() + replay via a new
++    resolver priority branch, all 5 confirmed level=8, state=GameState.WIN
++    -- the game''s full 8 levels are now cleared.'
+   dead_ends:
+   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
+   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
+@@ -4121,7 +4141,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 153
++reproducible_total_levels: 154
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 7778cb4648..d0c0e8894a 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -241,7 +241,32 @@ def resolve_replay_plan(
+     """SCENARIO-REPORT-4460: find the banked labels and apply function for one game."""
+ 
+     game = str(entry.get("game") or "")
++    if game == "s5i5" and _as_int(entry.get("levels_reproduced")) >= 8:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_fable5_s5i5_probe.json"
++        artifact = _load_json(root / rel_path)
++        raw_labels = artifact.get("action_sequence") or []
++        if adapter is None:
++            raise RuntimeError("s5i5 adapter missing")
++        labels = [
++            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
++            for label in raw_labels
++        ]
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "s5i5" and _as_int(entry.get("levels_reproduced")) >= 7:
++        # NOTE: results/outer_loop_fable5_s5i5_probe.json was overwritten by
++        # the round-5 (>=8) attempt at this same path; this branch is
++        # unreachable for the live registry entry (which is >=8) and is
++        # retained only as historical dead code documenting the round-4
++        # (level-7) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_fable5_s5i5_probe.json b/results/outer_loop_fable5_s5i5_probe.json
+index 0228ea0a7a..c93832c56e 100644
+--- a/results/outer_loop_fable5_s5i5_probe.json
++++ b/results/outer_loop_fable5_s5i5_probe.json
+@@ -1,10 +1,10 @@
+ {
+   "game": "s5i5",
+   "model": "claude-fable-5",
+-  "starting_level": 4,
+-  "max_level_reached": 7,
+-  "total_env_steps_used": 670,
+-  "reproduction_verified": false,
++  "starting_level": 7,
++  "max_level_reached": 8,
++  "total_env_steps_used": 764,
++  "reproduction_verified": true,
+   "action_sequence": [
+     {
+       "action": 6,
+@@ -2182,25 +2182,22 @@
+         "x": 31,
+         "y": 58
+       }
+-    }
++    },
++    {"action":6,"data":{"x":43,"y":4}}, {"action":6,"data":{"x":26,"y":56}}, {"action":6,"data":{"x":11,"y":56}}, {"action":6,"data":{"x":43,"y":11}}, {"action":6,"data":{"x":57,"y":11}}, {"action":6,"data":{"x":57,"y":4}}, {"action":6,"data":{"x":11,"y":56}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":28,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":40,"y":4}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":40,"y":4}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":40,"y":11}}, {"action":6,"data":{"x":40,"y":11}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}
+   ],
+   "levels_won_this_session": [
+-    5,
+-    6,
+-    7
++    8
+   ],
+-  "novel_mechanics_found": "Level 5's apparent C/9 crossing deadlock is broken by temporarily growing E through the upper F-wall gap to lift the 9 rail: once the attached 1-column retracts above the isolated F block, 9 can retract four horizontal bands past C. E can then retract, C lowers the narrow diamond carrier below both F walls, and E regrows into the lower socket. Level 6 adds active small-glyph 90-degree joint rotators above telescoping controls; folding the E/B/9 arm into E-left, B-down, 9-right routes it through the wall corridor. Level 7 is a four-link articulated maze plus a separate A/8 clearance coupling: B-down, E-left along row 40, a temporarily horizontal 9 segment past the x=15 wall, then 9-up through the x=6-8 gap and C-right reaches the socket. Level 8 couples a movable upper carriage (9 vertical, 7 horizontal), the E diamond carrier, and a B-rotated chamber cross.",
+-  "narrative": "Replayed the resolver's exact 120-action prefix twice from fresh resets and confirmed frame.levels_completed=4. Solved Level 5 live by lifting and retracting the 9 rail around the F stop, then solved Level 6 as a telescoping three-link arm; reproduce() passed on the exact 202-action prefix with reached_level=6. Solved Level 7 live at session step 431 after routing its articulated chain through the lower-left wall gap; the exact 311-action from-reset candidate is recorded, but gating it would have exceeded the 700-step cap, so the overall reproduction_verified flag is honestly false. Used the residual budget to decode Level 8's coupled carriage/chamber controls and stopped at 670 total calls because 30 remaining calls were not enough to solve that finale-like level or gate a 311+ action line.",
++  "novel_mechanics_found": "Level 8 couples every same-colored structure across the board: the paired 9/7 controls reshape the upper carriage, 8/A reshape the lower carriage, and E simultaneously lowers the diamond carrier and extends the chamber's E arm. The central B glyph rotates the four-color chamber cross, and a remote move is globally blocked unless that color's chamber arm has clearance. Crucially, an arm aimed through the bottom opening may continue extending off-screen after its visible pixels reach row 62, allowing E to carry the diamond all the way to the lower socket.",
++  "narrative": "Freshly replayed the resolver's exact 311-action prefix and confirmed frame.levels_completed=7. On Level 8, mapped both directional halves of the paired controls, rotated the chamber cross to make clearance for each coupled move, retracted the upper 7 span and lower A span to clear the diamond's x=18-20 lane, then pointed E through the chamber's bottom opening and extended it until the diamond reached the lower socket. The live run won Level 8 at action 382. A fresh reproduce() replay of the same 382-action full sequence reached claimed_level=8, completing the game's 8 win levels; total budget use was 311 live-prefix steps + 71 exploration/solve steps + 382 gate steps = 764.",
+   "gotchas": [
+-    "Budget accounting includes 240 calls for two 120-action starting-prefix replays, 191 subsequent live calls through Level 7 and into Level 8, 202 calls for the successful claimed_level=6 reproduce() gate, and 37 final Level 8 probes: 670 total.",
+-    "Level 5 clean mechanism: retract A enough to clear the rail; C-down x3 and E-grow x4 put the E diamond in the upper F gap and lift the 9 rail; with the 1-column now above the isolated F block, 9-retract until the rail and column clear C; E-retract x4; C-down x6; E-grow x4 into the lower socket; restore A into its original socket.",
+-    "Level 5's 9 retraction really is blocked while the attached vertical 1-column overlaps the isolated F block. Raising the rail shortens that column above F; the same 9 button then succeeds several more times. This timing/order dependency was the hidden escape from the prior dead end.",
+-    "Level 6 small glyphs at y=48 rotate the correspondingly colored links by 90 degrees; the large paired buttons telescope them. Collapse links before rotating to avoid wall collisions. The winning pose extends E left to x=15-17, B down to row 34, and 9 right to the socket.",
+-    "Level 7 uses the narrow x=6-8 gap, not merely the tempting x=30-32 gap. Lower B so E lies at row 40, rotate 9 horizontal to pass the x=15-17 wall, extend E left until the 9 anchor is at x=6-8, rotate 9 upward, extend it to row 16, extend C right six bands into the socket, and restore A after rotating 8 away.",
+-    "The exact 311-action Level 7 candidate includes probes and no-ops but was observed live advancing levels_completed from 6 to 7. Its first 202 actions independently reproduced Level 6 in a fresh environment; Level 7 itself was not self-gated solely because 431+311 would exceed the 700-call cap.",
+-    "Level 8 preliminary map: top 9 controls vertical motion of the upper 7/1/9 carriage; bottom 7 controls its horizontal motion; E moves the top diamond vertically but is globally blocked when the chamber's E arm lacks clearance; the central B glyph rotates the chamber cross; A, C, and 8 each move coupled lower/chamber structures.",
+-    "Every rejected click consumes the row-63 meter, approximately one pixel per two clicks. Several apparent no-ops report only a meter-pixel change, so compare the non-meter grid before assuming a mechanism moved."
++    "Budget accounting is exactly 311 steps for the required live prefix, 71 further live Level-8 actions, and 382 steps for the successful fresh reproduction gate: 764 total.",
++    "The large control boxes contain two directional click regions; for example, Level 8's 7 control uses approximately x=22 to retract the upper span and x=28 to extend it, while A uses x=9 to retract and x=15 to extend.",
++    "The chamber cross's B rotation can require multiple repeated clicks to finish a 90-degree turn, and it cannot rotate while an arm remains extended through the bottom wall opening.",
++    "To clear the top diamond lane, point chamber 9 through the bottom opening before raising the upper carriage enough to clear its wall stop, then retract 7 until the upper left column sits right of x=20.",
++    "To clear the lower lane, point chamber 8 through the bottom opening, raise the lower assembly until its right column clears the isolated wall, then retract A until that column sits left of x=18; retract chamber 8 before rotating again.",
++    "Visible screen bounds are not a collision boundary for the chamber arm: after E reaches row 62, further E clicks can show changes only in the remote top diamond until the win.",
++    "Rejected clicks still consume the row-63 meter; compare rows 0-62 when deciding whether a mechanism actually moved."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+-
+-- 
+2.55.0
+

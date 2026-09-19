@@ -1,0 +1,162 @@
+From b5c37e435914412f5ffbf320aef7d86ac1937274 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 20:40:44 -0400
+Subject: [PATCH 09859/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/research-reporting/spec.md            | 3 +++
+ ops/.audit_findings_ledger_state.json                       | 2 +-
+ ops/.run_sentinel_state.json                                | 6 ++++--
+ ops/.stop_authority_state.json                              | 2 +-
+ ops/conductor-heartbeat.json                                | 2 +-
+ ops/conductor-log.md                                        | 1 +
+ ops/conductor-state.json                                    | 2 +-
+ .../experiment_6584_three_family_source_receipt_audit.py    | 6 +++++-
+ results/experiment_1822_rtl_synth.log                       | 4 ++--
+ ...est_experiment_6584_three_family_source_receipt_audit.py | 2 ++
+ 10 files changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 92f2a63549..c4ad0ff4a6 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -55281,6 +55281,9 @@ SHALL NOT import a family aggregate or readiness value into its reducer.
+   coverage row SHALL keep every expected source-family pair explicit. The
+   audit SHALL require identical frozen source units, prompt, unit order,
+   budgets, and the prescribed seed contract, except for model identity.
++  The audit SHALL report the observed seed value for each family. It SHALL
++  report whether those values are identical without replacing them with an
++  inferred or missing value.
+   Each observed family SHALL use one distinct fresh process.
+ - REQ-REPORT-6584-RAW-FIRST: Where checkpoint and monotonic receipts exist,
+   the audit SHALL verify that raw response storage precedes the derived parser
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 73397da272..ccede86bf9 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T22:55:50Z"
++ "last_scan_utc": "2026-08-25T00:27:52Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index cee65a4f1b..8bc3136306 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -5,6 +5,8 @@
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z",
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+- "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T23:17:13Z"
++ "last_scan_notes": [
++  "pid 218052 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supon/rows.json: out file missing, run unsupervisable this cycle"
++ ],
++ "last_scan_utc": "2026-08-25T00:40:36Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 06b95f5f27..806fe096ee 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T22:55:50Z",
++ "last_scan_utc": "2026-08-25T00:27:52Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5c469e81d9..fed8ddb1d4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-24T23:17:12Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-25T00:40:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9edfef98c4..158fef572e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16423,3 +16423,4 @@ code |
+ | 2026-08-24 19:33 UTC | Gemma-4-26B-A4B one-family flagship source shard | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-24 21:53 UTC | JANITOR: conductor auto-start | WARN | conductor PID 3237266 not alive; unit was inactive; started (REQ-CONDUCTOR-RESTART-1) |
+ | 2026-08-24 23:15 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ntinel_state.j |
++| 2026-08-25 00:38 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: tifact(artifac |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d4f05d06cf..67ab4d211c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-24T23:17:12Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-25T00:40:35Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6584_three_family_source_receipt_audit.py b/python/carnot/experiment_6584_three_family_source_receipt_audit.py
+index 8af50288af..ae7c0363e5 100644
+--- a/python/carnot/experiment_6584_three_family_source_receipt_audit.py
++++ b/python/carnot/experiment_6584_three_family_source_receipt_audit.py
+@@ -427,6 +427,7 @@ def _protocol_checks(
+         "failure_retention": contract.get("failure_retention_required") is True,
+         "fresh_process": contract.get("fresh_process_per_family") is True,
+     }
++    observed_seed_values = [row.get("observed_seed") for row in family_contract_rows]
+     return {
+         "checks": checks,
+         "passed": all(checks.values()),
+@@ -437,7 +438,9 @@ def _protocol_checks(
+         "budget_sha256": sha256_json(budget),
+         "manifest_hash": manifest.get("manifest_hash") if isinstance(manifest, Mapping) else None,
+         "family_contract_rows": family_contract_rows,
+-        "seed_values_identical": len({row.get("seed") for row in family_contract_rows}) == 1,
++        "observed_seed_values": observed_seed_values,
++        "seed_values_identical": bool(observed_seed_values)
++        and len(set(observed_seed_values)) == 1,
+         "seed_contract_mode": "one prescribed deterministic seed per family task",
+     }
+ 
+@@ -1266,6 +1269,7 @@ def build_audit(
+             == [row.get("unit_id") for row in sorted(units, key=lambda row: units.index(row))],
+             "budget_identical": protocol_result["checks"]["family_contracts"],
+             "prescribed_seeds_match": protocol_result["checks"]["family_contracts"],
++            "observed_seed_values": protocol_result["observed_seed_values"],
+             "seed_values_identical": protocol_result["seed_values_identical"],
+             "model_identity_only_runtime_difference_required": True,
+         },
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 298b804d91..3ec05970f7 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.02s, user: 2.72s, system: 0.23s, MEM: 116.04 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.60s, user: 3.26s, system: 0.24s, MEM: 116.09 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (2 sec), 10% 1x synth_xilinx (0 sec), ...
++Time spent: 76% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
+diff --git a/tests/python/test_experiment_6584_three_family_source_receipt_audit.py b/tests/python/test_experiment_6584_three_family_source_receipt_audit.py
+index 2176a5355e..50d1b91d97 100644
+--- a/tests/python/test_experiment_6584_three_family_source_receipt_audit.py
++++ b/tests/python/test_experiment_6584_three_family_source_receipt_audit.py
+@@ -490,6 +490,8 @@ def test_clean_three_family_replay_merges_rows_and_recomputes_every_aggregate(
+         artifact["preconditions_checked"]["source_manifest_hash"]
+         == protocol["source_unit_manifest"]["manifest_hash"]
+     )
++    assert aggregate["protocol_comparison"]["observed_seed_values"] == [6581, 6582, 6583]
++    assert aggregate["protocol_comparison"]["seed_values_identical"] is False
+     assert artifact["reproducibility_checksum"] == exp.artifact_checksum(artifact)
+     assert exp.validate_artifact(artifact) == []
+ 
+-- 
+2.55.0
+

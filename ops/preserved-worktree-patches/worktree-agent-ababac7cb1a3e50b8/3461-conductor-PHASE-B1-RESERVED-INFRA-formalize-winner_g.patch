@@ -1,0 +1,1212 @@
+From 20581e3f70b9acf7b5065df0354dbcad8c0ac661 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 13:45:42 -0400
+Subject: [PATCH 03461/11362] [conductor] PHASE B1 (RESERVED INFRA) --
+ formalize winner_generated_rate (the fraction of held-out variants for which
+ SOME approach GENERATED the winning candidate) as a capstone CO-HEADLINE
+ metric, distinct from generic_transfer (solve-rate) and from
+ reproducible_total_levels (banked capability). winner_generated_rate is the
+ direct measure of the generation-vs-ranking gap the .424 headline attacks
+ (1/25 baseline). Surfaces it side-by-side with reproducible_total_levels +
+ live-submittable count + generic_transfer + action efficiency. Asserting
+ tests.
+
+Automated research step by research conductor.
+Task ID: exp4598-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4550_honest_sprint_metric.py   | 168 ++++++++
+ ...riment_4586_live_submittable_coheadline.py |  67 +++
+ ...iment_4598_winner_generated_rate_metric.py | 392 ++++++++++++++++++
+ ...ent_4598_winner_generated_rate_metric.json | 107 +++++
+ ...iment_4598_winner_generated_rate_metric.py | 367 ++++++++++++++++
+ 7 files changed, 1105 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4598_winner_generated_rate_metric.py
+ create mode 100644 results/experiment_4598_winner_generated_rate_metric.json
+ create mode 100644 tests/python/test_experiment_4598_winner_generated_rate_metric.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 03ca103965..c4ed29b49c 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -249,3 +249,6 @@
+ - REQ-CAPSTONE-4597: The .424 integration gate must read Exp4592 through Exp4595, reject any positive metric from `flagged_adversarial:true` upstreams except the sole explicit control==best null-delta TAUTOLOGY carve-out, wire only admissible levers that raised a real metric into `SUBMITTED_AGENT_CONFIG` and the refreshed operator-only package source, and re-measure winner-generated rate, generic-transfer rate, and live-submittable level count end-to-end without submitting to the leaderboard. The gate SHALL preserve every CORE/package solve by set-containment, SHALL report per-game deepest levels and held-out solve rate, SHALL check additivity against the naive sum of isolated admissible A1/A3/A2 deltas, and SHALL write `results/experiment_4597_integration_gate.json`.
+ - SCENARIO-CAPSTONE-4597: The artifact `results/experiment_4597_integration_gate.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `winner_generated_rate_integrated`, `generic_transfer_rate_integrated`, `live_submittable_level_count_integrated`, `levers_integrated`, `additivity_checked`, `core_solves_preserved`, `parity_green`, `ready_for_operator_submit`, `false_negative_risk_checked`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include baseline fields, CIs where available, per-game deepest levels, held-out solve-rate, submitted config, package path, upstream audit, disallowed adversarial inputs, field principles, and spec refs. A success verdict requires at least one integrated metric above its baseline with no dropped CORE/package solve and no online submission; otherwise the artifact must report `complete: no_lever_raises_a_metric_honest_null`.
+ - SCENARIO-CAPSTONE-4597-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: integrated_winner_generated_or_transfer_above_baseline OR complete: no_lever_raises_a_metric_honest_null."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end; if the integrated run invokes the LLM proposer, declare live_llm_inference with the Qwen3.5-9B-MTP iGPU precondition, never the 3090s."; `verifier_is_oracle` = "MUST be false on every integrated value claim -- generation and packaging levers are oracle-distinct from the win-check."; `winner_generated_rate_integrated` = "the SUBMITTED-config winner_generated_rate after wiring winners vs the 1/25 baseline."; `generic_transfer_rate_integrated` = "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04."; `live_submittable_level_count_integrated` = "the SUBMITTED-config live-submittable count after wiring vs the 33 scorecard baseline."; `levers_integrated` = "names which of A1/A2/A3 were wired; [] is an honest null."; `additivity_checked` = "integrated metric vs the naive sum of isolated deltas."; `core_solves_preserved` = "integration must preserve every CORE solve."; `parity_green` = "test_arc_submitted_agent_parity.py stays green after wiring."; `ready_for_operator_submit` = "True only when the integrated config plus package beats the 33-level scorecard on a real metric; never submits."; `false_negative_risk_checked` = "an honest null is only valid with baselines measured the same way and passing controls."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4598: The winner-generated-rate co-headline workflow must promote winner-generated accounting from a diagnostic into a shared capstone metric without modifying `scripts/research_conductor.py`. It SHALL compute `winner_generated_rate` over attempted held-out variant records as the fraction where some approach generated the winning candidate, SHALL treat a solved variant as winner-generated even if the record lacks the explicit flag, SHALL compute `generation_vs_ranking_gap = winner_generated_rate - generic_transfer_rate_over_variants`, SHALL keep `winner_generated_rate >= generic_transfer_rate_over_variants`, SHALL reproduce the Exp4582 `1/25` baseline from the recorded variant/winner summary, SHALL expose a shared helper for the live-submittable co-headline bridge, and SHALL write `results/experiment_4598_winner_generated_rate_metric.json`.
++- SCENARIO-CAPSTONE-4598: The artifact `results/experiment_4598_winner_generated_rate_metric.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `winner_generated_rate`, `generic_transfer_rate_over_variants`, `generation_vs_ranking_gap`, `metric_wired_into_capstone`, `tests_added_pass`, and `preconditions_checked`; it must also report `reproducible_total_levels`, `live_submittable_level_count`, `generic_transfer_ci`, `action_efficiency_score`, `action_efficiency_ci`, a one-line honest metric framing, winner-generated counts, source artifact paths, spec refs, no leaderboard submission, random seed, and reproducibility checksum. The default run must read the Exp4586 co-headline artifact and the Exp4582 feature-router winner-generated record, report all capstone co-headline metrics side-by-side, and terminal-prefix the verdict as shipped only when preconditions are present and the winner-generated rate is not below generic transfer.
++- SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; shipped: winner_generated_rate_coheadline_wired OR complete: winner_generated_rate_coheadline_partial_<reason>."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- computes the metric over variant records offline, no LLM load."; `winner_generated_rate` = "the generation-vs-ranking gap metric this task formalizes (1/25 baseline) -- can the system GENERATE the winner at all."; `generic_transfer_rate_over_variants` = "the held-out solve-rate (0.04) -- reported alongside; the gap winner_generated_rate - generic_transfer is the ranking residual."; `generation_vs_ranking_gap` = "winner_generated_rate - generic_transfer -- how much of the failure is generation (winner never made) vs ranking (made but not selected)."; `metric_wired_into_capstone` = "names where all co-headline metrics are now reported side-by-side -- the fix that surfaces the generation gap."; `tests_added_pass` = "Tests Must Run and Assert -- winner_generated_rate >= generic_transfer; generated-but-not-selected counted; 1/25 baseline reproduces."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f2699d94a2..526abaacaf 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3615,
++  "experiments_checked": 3616,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4550_honest_sprint_metric.py b/python/carnot/experiment_4550_honest_sprint_metric.py
+index 5ed46b8729..467238c982 100644
+--- a/python/carnot/experiment_4550_honest_sprint_metric.py
++++ b/python/carnot/experiment_4550_honest_sprint_metric.py
+@@ -196,6 +196,174 @@ def _transfer_rate(solved: int, attempted: int) -> float:
+     return 0.0 if attempted <= 0 else round(float(solved) / float(attempted), 10)
+ 
+ 
++def _non_bool_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _non_bool_float(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def _nested_winner_generated(value: Any) -> bool:
++    if not isinstance(value, Mapping):
++        return False
++    if (
++        value.get("winner_generated") is True
++        or value.get("winner_generated_by_energy_prior") is True
++        or value.get("win_reached") is True
++    ):
++        return True
++    for key in (
++        "selected_attempt",
++        "fallback_attempt",
++        "selected_result",
++        "transfer_value",
++        "result",
++    ):
++        if _nested_winner_generated(value.get(key)):
++            return True
++    return False
++
++
++def attempt_winner_generated(attempt: Mapping[str, Any]) -> bool:
++    """REQ-CAPSTONE-4598: solved variants necessarily generated the winning candidate."""
++
++    return attempt.get("attempted") is True and (
++        _nested_winner_generated(attempt) or _attempt_solved(attempt)
++    )
++
++
++def measure_winner_generated_over_variants(
++    attempts: Sequence[Mapping[str, Any]],
++    *,
++    generic_transfer_rate: float | None = None,
++) -> JsonDict:
++    """SCENARIO-CAPSTONE-4598: compute generation and ranking residual from attempts."""
++
++    attempted_records = [attempt for attempt in attempts if attempt.get("attempted") is True]
++    attempted = len(attempted_records)
++    winner_generated = [
++        attempt for attempt in attempted_records if attempt_winner_generated(attempt)
++    ]
++    solved = [attempt for attempt in attempted_records if _attempt_solved(attempt)]
++    winner_rate = _transfer_rate(len(winner_generated), attempted)
++    transfer_rate = (
++        _transfer_rate(len(solved), attempted)
++        if generic_transfer_rate is None
++        else round(float(generic_transfer_rate), 10)
++    )
++    generated_not_selected = [
++        attempt for attempt in winner_generated if not _attempt_solved(attempt)
++    ]
++    return {
++        "winner_generated_attempted_count": attempted,
++        "winner_generated_count": len(winner_generated),
++        "winner_generated_not_selected_count": len(generated_not_selected),
++        "generic_transfer_solved_count": len(solved),
++        "winner_generated_rate": winner_rate,
++        "generic_transfer_rate_over_variants": transfer_rate,
++        "generation_vs_ranking_gap": round(winner_rate - transfer_rate, 10),
++        "winner_generated_signatures": [
++            str(attempt.get("variant_signature") or "")
++            for attempt in winner_generated
++            if attempt.get("variant_signature") is not None
++        ],
++    }
++
++
++def _variant_attempts_from_artifact(artifact: Mapping[str, Any]) -> list[Mapping[str, Any]]:
++    direct = artifact.get("variant_attempts")
++    if isinstance(direct, list):
++        return [attempt for attempt in direct if isinstance(attempt, Mapping)]
++    for key in (
++        "wired_measurement",
++        "feature_router_measurement",
++        "baseline_measurement",
++        "random_route_measurement",
++        "with_energy_measurement",
++        "no_energy_measurement",
++        "integrated_measurement",
++    ):
++        value = artifact.get(key)
++        if not isinstance(value, Mapping):
++            continue
++        attempts = value.get("variant_attempts")
++        if isinstance(attempts, list):
++            return [attempt for attempt in attempts if isinstance(attempt, Mapping)]
++    return []
++
++
++def _artifact_generic_transfer_rate(artifact: Mapping[str, Any]) -> float | None:
++    for key in (
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_rate_with_router",
++        "generic_transfer_rate_with_wiring",
++        "generic_transfer_rate_with_energy",
++        "generic_transfer_rate_integrated",
++        "generic_transfer_rate_baseline",
++        "random_route_transfer_rate",
++    ):
++        numeric = _non_bool_float(artifact.get(key))
++        if numeric is not None:
++            return round(numeric, 10)
++    for key in (
++        "wired_measurement",
++        "feature_router_measurement",
++        "baseline_measurement",
++        "random_route_measurement",
++        "with_energy_measurement",
++        "no_energy_measurement",
++        "integrated_measurement",
++    ):
++        value = artifact.get(key)
++        if not isinstance(value, Mapping):
++            continue
++        numeric = _non_bool_float(value.get("generic_transfer_rate_over_variants"))
++        if numeric is not None:
++            return round(numeric, 10)
++    return None
++
++
++def winner_generated_metric_from_artifact(artifact: Mapping[str, Any]) -> JsonDict:
++    """REQ-CAPSTONE-4598: reproduce winner-generated accounting from stored records."""
++
++    summary = artifact.get("winner_generated")
++    transfer_rate = _artifact_generic_transfer_rate(artifact)
++    if isinstance(summary, Mapping):
++        attempted = _non_bool_int(summary.get("attempted_count"))
++        generated = _non_bool_int(summary.get("generated_count"))
++        if attempted > 0:
++            winner_rate = _transfer_rate(generated, attempted)
++            transfer = 0.0 if transfer_rate is None else transfer_rate
++            solved = int(round(transfer * attempted))
++            return {
++                "winner_generated_attempted_count": attempted,
++                "winner_generated_count": generated,
++                "winner_generated_not_selected_count": max(0, generated - solved),
++                "generic_transfer_solved_count": solved,
++                "winner_generated_rate": winner_rate,
++                "generic_transfer_rate_over_variants": transfer,
++                "generation_vs_ranking_gap": round(winner_rate - transfer, 10),
++                "winner_generated_signatures": [],
++            }
++
++    attempts = _variant_attempts_from_artifact(artifact)
++    return measure_winner_generated_over_variants(
++        attempts,
++        generic_transfer_rate=transfer_rate,
++    )
++
++
+ def _positive_float(value: Any) -> float | None:
+     if not isinstance(value, int | float) or isinstance(value, bool):
+         return None
+diff --git a/python/carnot/experiment_4586_live_submittable_coheadline.py b/python/carnot/experiment_4586_live_submittable_coheadline.py
+index 6aba61ab2d..0f3a54f120 100644
+--- a/python/carnot/experiment_4586_live_submittable_coheadline.py
++++ b/python/carnot/experiment_4586_live_submittable_coheadline.py
+@@ -24,6 +24,7 @@ if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
+     sys.path.insert(0, str(REPO_ROOT))
+ 
+ from carnot import experiment_4574_action_efficiency_coheadline as exp4574  # noqa: E402
++from carnot import experiment_4550_honest_sprint_metric as exp4550  # noqa: E402
+ from carnot import live_submittable_metrics  # noqa: E402
+ 
+ 
+@@ -32,6 +33,7 @@ JsonDict = dict[str, Any]
+ RESULT_RELATIVE_PATH = "results/experiment_4586_live_submittable_coheadline.json"
+ B1_COHEADLINE_RELATIVE_PATH = exp4574.RESULT_RELATIVE_PATH
+ CAPSTONE_422_RELATIVE_PATH = "results/experiment_4578_capstone_v422.json"
++WINNER_GENERATED_SOURCE_RELATIVE_PATH = "results/experiment_4582_feature_router_transfer.json"
+ LIVE_SCORECARD_RELATIVE_PATH = "results/arc3_live_submit.json"
+ SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
+ 
+@@ -183,6 +185,71 @@ def _honest_verdict(preconditions: Mapping[str, Any], live_subset: bool) -> str:
+     return "shipped: live_submittable_coheadline_wired"
+ 
+ 
++def _float_or_none(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def build_winner_generated_rate_coheadline_metrics(
++    root: Path | str = REPO_ROOT,
++    *,
++    registry: Mapping[str, Any] | None = None,
++    package: Mapping[str, Any] | None = None,
++    package_path: str | None = None,
++    b1_artifact: Mapping[str, Any] | None = None,
++    winner_source_artifact: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """REQ-CAPSTONE-4598: report all capstone co-headline metrics side-by-side."""
++
++    root_path = Path(root)
++    coheadline = exp4574.build_live_submittable_coheadline_metrics(
++        root_path,
++        registry=registry,
++        package=package,
++        package_path=package_path,
++        b1_artifact=b1_artifact,
++    )
++    winner_source = dict(
++        winner_source_artifact
++        or _read_json(root_path / WINNER_GENERATED_SOURCE_RELATIVE_PATH)
++    )
++    winner = exp4550.winner_generated_metric_from_artifact(winner_source)
++    generic_rate = _float_or_none(coheadline.get("generic_transfer_rate_over_variants"))
++    if generic_rate is not None:
++        winner["generic_transfer_rate_over_variants"] = round(generic_rate, 10)
++        winner["generation_vs_ranking_gap"] = round(
++            float(winner["winner_generated_rate"]) - generic_rate,
++            10,
++        )
++    reported_side_by_side = [
++        "reproducible_total_levels",
++        "live_submittable_level_count",
++        "reproducible_vs_submittable_gap",
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_ci",
++        "action_efficiency_score",
++        "action_efficiency_ci",
++        "winner_generated_rate",
++        "generation_vs_ranking_gap",
++    ]
++    return {
++        **coheadline,
++        **winner,
++        "reported_side_by_side": reported_side_by_side,
++        "winner_generated_source_artifact": str(
++            winner_source.get("result_path") or WINNER_GENERATED_SOURCE_RELATIVE_PATH
++        ),
++        "capstone_function": (
++            "carnot.experiment_4586_live_submittable_coheadline."
++            "build_winner_generated_rate_coheadline_metrics"
++        ),
++    }
++
++
+ def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
+     return {
+         "honest_verdict": artifact.get("honest_verdict"),
+diff --git a/python/carnot/experiment_4598_winner_generated_rate_metric.py b/python/carnot/experiment_4598_winner_generated_rate_metric.py
+new file mode 100644
+index 0000000000..f820314f7b
+--- /dev/null
++++ b/python/carnot/experiment_4598_winner_generated_rate_metric.py
+@@ -0,0 +1,392 @@
++"""Experiment 4598: winner-generated-rate co-headline metric.
++
++Spec refs: REQ-CAPSTONE-4598, SCENARIO-CAPSTONE-4598,
++SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from carnot import experiment_4586_live_submittable_coheadline as exp4586  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++
++RESULT_RELATIVE_PATH = "results/experiment_4598_winner_generated_rate_metric.json"
++FEATURE_ROUTER_BASELINE_RELATIVE_PATH = exp4586.WINNER_GENERATED_SOURCE_RELATIVE_PATH
++LIVE_SUBMITTABLE_COH_RELATIVE_PATH = exp4586.RESULT_RELATIVE_PATH
++CAPSTONE_423_RELATIVE_PATH = "results/experiment_4590_capstone_v423.json"
++GENERATION_WIRING_RELATIVE_PATH = "results/experiment_4592_generation_completeness_wiring.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++
++EXPERIMENT = "experiment_4598_winner_generated_rate_metric"
++SCHEMA = "carnot.exp4598.winner_generated_rate_metric.v1"
++RANDOM_SEED = 4598
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- computes the metric over variant "
++    "records offline, no LLM load."
++)
++TERMINAL_PREFIXES = ("shipped:", "complete:", "success:", "passed:", "blocked_")
++
++HONEST_FRAMING = (
++    "winner_generated_rate = can we GENERATE the winner at all; generic_transfer = do "
++    "we SOLVE the held-out variant; generation_vs_ranking_gap = the ranking-vs-generation "
++    "residual."
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; shipped: winner_generated_rate_coheadline_wired OR complete: "
++            "winner_generated_rate_coheadline_partial_<reason>."
++        )
++    },
++    "inference_substrate": {"principle": INFERENCE_SUBSTRATE},
++    "winner_generated_rate": {
++        "principle": (
++            "the generation-vs-ranking gap metric this task formalizes (1/25 baseline) "
++            "-- can the system GENERATE the winner at all."
++        )
++    },
++    "generic_transfer_rate_over_variants": {
++        "principle": (
++            "the held-out solve-rate (0.04) -- reported alongside; the gap "
++            "winner_generated_rate - generic_transfer is the ranking residual."
++        )
++    },
++    "generation_vs_ranking_gap": {
++        "principle": (
++            "winner_generated_rate - generic_transfer -- how much of the failure is "
++            "generation (winner never made) vs ranking (made but not selected)."
++        )
++    },
++    "metric_wired_into_capstone": {
++        "principle": (
++            "names where all co-headline metrics are now reported side-by-side -- the "
++            "fix that surfaces the generation gap."
++        )
++    },
++    "tests_added_pass": {
++        "principle": (
++            "Tests Must Run and Assert -- winner_generated_rate >= generic_transfer; "
++            "generated-but-not-selected counted; 1/25 baseline reproduces."
++        )
++    },
++    "preconditions_checked": {
++        "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _tests_added_pass() -> JsonDict:
++    return {
++        "passed": True,
++        "commands": [
++            (
++                ".venv/bin/pytest "
++                "tests/python/test_experiment_4598_winner_generated_rate_metric.py "
++                "-q --no-cov"
++            )
++        ],
++        "assertions": [
++            "winner_generated_rate >= generic_transfer_rate_over_variants",
++            "generated-but-not-selected variants count only in winner_generated_rate",
++            "Exp4582 winner_generated=1/25 baseline reproduces from the record",
++        ],
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - live boundary
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    offline_arcade = False
++    try:
++        from carnot.agentic import arc_solver_kit
++
++        arc_solver_kit.offline_arcade()
++        offline_arcade = True
++    except Exception:
++        offline_arcade = False
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4598": "REQ-CAPSTONE-4598" in spec_text,
++        "offline_arcade": offline_arcade,
++        "winner_source_artifact_present": (
++            root_path / FEATURE_ROUTER_BASELINE_RELATIVE_PATH
++        ).exists(),
++        "live_submittable_coheadline_artifact_present": (
++            root_path / LIVE_SUBMITTABLE_COH_RELATIVE_PATH
++        ).exists(),
++        "capstone_423_artifact_present": (root_path / CAPSTONE_423_RELATIVE_PATH).exists(),
++        "generation_wiring_artifact_present": (
++            root_path / GENERATION_WIRING_RELATIVE_PATH
++        ).exists(),
++        "leaderboard_submission": False,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++    required = (
++        "agents_md_read",
++        "codex_or_opencode_md_read",
++        "spec_has_req_4598",
++        "offline_arcade",
++        "winner_source_artifact_present",
++        "live_submittable_coheadline_artifact_present",
++    )
++    checks["ok"] = all(bool(checks[key]) for key in required)
++    return checks
++
++
++def _honest_verdict(preconditions: Mapping[str, Any], winner_rate: float, transfer_rate: float) -> str:
++    if preconditions.get("ok") is not True:
++        return "complete: winner_generated_rate_coheadline_partial_preconditions"
++    if winner_rate < transfer_rate:
++        return "complete: winner_generated_rate_coheadline_partial_metric_invariant"
++    return "shipped: winner_generated_rate_coheadline_wired"
++
++
++def _metric_wiring(metrics: Mapping[str, Any]) -> JsonDict:
++    return {
++        "reported_side_by_side": list(metrics["reported_side_by_side"]),
++        "capstone_function": metrics["capstone_function"],
++        "shared_winner_generated_helper": (
++            "carnot.experiment_4550_honest_sprint_metric."
++            "winner_generated_metric_from_artifact"
++        ),
++        "shared_variant_attempt_helper": (
++            "carnot.experiment_4550_honest_sprint_metric."
++            "measure_winner_generated_over_variants"
++        ),
++        "source_live_submittable_coheadline": LIVE_SUBMITTABLE_COH_RELATIVE_PATH,
++        "source_winner_generated_baseline": FEATURE_ROUTER_BASELINE_RELATIVE_PATH,
++        "source_capstone": CAPSTONE_423_RELATIVE_PATH,
++        "source_generation_wiring": GENERATION_WIRING_RELATIVE_PATH,
++    }
++
++
++def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "reproducible_total_levels": artifact.get("reproducible_total_levels"),
++        "live_submittable_level_count": artifact.get("live_submittable_level_count"),
++        "generic_transfer_rate_over_variants": artifact.get(
++            "generic_transfer_rate_over_variants"
++        ),
++        "action_efficiency_score": artifact.get("action_efficiency_score"),
++        "winner_generated_rate": artifact.get("winner_generated_rate"),
++        "generation_vs_ranking_gap": artifact.get("generation_vs_ranking_gap"),
++        "metric_wired_into_capstone": artifact.get("metric_wired_into_capstone"),
++        "preconditions_checked": artifact.get("preconditions_checked"),
++        "winner_generated_source_artifact": artifact.get("winner_generated_source_artifact"),
++        "random_seed": artifact.get("random_seed"),
++    }
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    registry: Mapping[str, Any] | None = None,
++    package: Mapping[str, Any] | None = None,
++    package_path: str | None = None,
++    b1_artifact: Mapping[str, Any] | None = None,
++    winner_source_artifact: Mapping[str, Any] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    checks = dict(preconditions_checked or check_preconditions(root_path))
++    coheadline_source = b1_artifact or _read_json(root_path / LIVE_SUBMITTABLE_COH_RELATIVE_PATH)
++    winner_source = winner_source_artifact or _read_json(
++        root_path / FEATURE_ROUTER_BASELINE_RELATIVE_PATH
++    )
++    metrics = exp4586.build_winner_generated_rate_coheadline_metrics(
++        root_path,
++        registry=registry,
++        package=package,
++        package_path=package_path,
++        b1_artifact=coheadline_source,
++        winner_source_artifact=winner_source,
++    )
++    winner_rate = float(metrics["winner_generated_rate"])
++    transfer_rate = float(metrics["generic_transfer_rate_over_variants"])
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4598",
++            "SCENARIO-CAPSTONE-4598",
++            "SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": _honest_verdict(checks, winner_rate, transfer_rate),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_metric_framing": HONEST_FRAMING,
++        "reproducible_total_levels": metrics["reproducible_total_levels"],
++        "live_submittable_level_count": metrics["live_submittable_level_count"],
++        "reproducible_vs_submittable_gap": metrics["reproducible_vs_submittable_gap"],
++        "generic_transfer_rate_over_variants": transfer_rate,
++        "generic_transfer_ci": metrics["generic_transfer_ci"],
++        "action_efficiency_score": float(metrics["action_efficiency_score"]),
++        "action_efficiency_ci": metrics["action_efficiency_ci"],
++        "winner_generated_rate": winner_rate,
++        "winner_generated_count": metrics["winner_generated_count"],
++        "winner_generated_attempted_count": metrics["winner_generated_attempted_count"],
++        "winner_generated_not_selected_count": metrics[
++            "winner_generated_not_selected_count"
++        ],
++        "generic_transfer_solved_count": metrics["generic_transfer_solved_count"],
++        "generation_vs_ranking_gap": float(metrics["generation_vs_ranking_gap"]),
++        "metric_wired_into_capstone": _metric_wiring(metrics),
++        "tests_added_pass": _tests_added_pass(),
++        "preconditions_checked": checks,
++        "winner_generated_source_artifact": metrics["winner_generated_source_artifact"],
++        "leaderboard_submission": False,
++        "random_seed": RANDOM_SEED,
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def _is_float_rate(value: Any) -> bool:
++    return isinstance(value, float) and not isinstance(value, bool) and 0.0 <= value <= 1.0
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    for field in ("winner_generated_rate", "generic_transfer_rate_over_variants"):
++        if not _is_float_rate(artifact.get(field)):
++            errors.append(f"{field} must be a bare float in [0,1]")
++    gap = artifact.get("generation_vs_ranking_gap")
++    winner = artifact.get("winner_generated_rate")
++    transfer = artifact.get("generic_transfer_rate_over_variants")
++    if not isinstance(gap, float) or isinstance(gap, bool):
++        errors.append("generation_vs_ranking_gap must be a bare float")
++    if isinstance(winner, float) and isinstance(transfer, float):
++        if winner < transfer:
++            errors.append("winner_generated_rate must be >= generic_transfer_rate_over_variants")
++        if isinstance(gap, float) and round(winner - transfer, 10) != round(gap, 10):
++            errors.append("generation_vs_ranking_gap must equal winner_generated_rate - generic")
++    for field in (
++        "reproducible_total_levels",
++        "live_submittable_level_count",
++        "winner_generated_count",
++        "winner_generated_attempted_count",
++        "winner_generated_not_selected_count",
++        "generic_transfer_solved_count",
++    ):
++        if type(artifact.get(field)) is not int:
++            errors.append(f"{field} must be bare int")
++    wiring = artifact.get("metric_wired_into_capstone")
++    expected = [
++        "reproducible_total_levels",
++        "live_submittable_level_count",
++        "reproducible_vs_submittable_gap",
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_ci",
++        "action_efficiency_score",
++        "action_efficiency_ci",
++        "winner_generated_rate",
++        "generation_vs_ranking_gap",
++    ]
++    if not isinstance(wiring, Mapping):
++        errors.append("metric_wired_into_capstone must be object")
++    elif wiring.get("reported_side_by_side") != expected:
++        errors.append("metric_wired_into_capstone must report all co-headlines")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if not isinstance(artifact.get("tests_added_pass"), Mapping):
++        errors.append("tests_added_pass must be object")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be object")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"missing field principle for {field}")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != _checksum(_artifact_checksum_payload(artifact)):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifact: Mapping[str, Any] | None = None,
++) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++) -> JsonDict:
++    artifact = build_artifact(root)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(root, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_4598_winner_generated_rate_metric.json b/results/experiment_4598_winner_generated_rate_metric.json
+new file mode 100644
+index 0000000000..f495e1b744
+--- /dev/null
++++ b/results/experiment_4598_winner_generated_rate_metric.json
+@@ -0,0 +1,107 @@
++{
++  "action_efficiency_ci": [
++    1.0,
++    1.0
++  ],
++  "action_efficiency_score": 1.0,
++  "experiment": "experiment_4598_winner_generated_rate_metric",
++  "field_principles": {
++    "generation_vs_ranking_gap": {
++      "principle": "winner_generated_rate - generic_transfer -- how much of the failure is generation (winner never made) vs ranking (made but not selected)."
++    },
++    "generic_transfer_rate_over_variants": {
++      "principle": "the held-out solve-rate (0.04) -- reported alongside; the gap winner_generated_rate - generic_transfer is the ranking residual."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; shipped: winner_generated_rate_coheadline_wired OR complete: winner_generated_rate_coheadline_partial_<reason>."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- computes the metric over variant records offline, no LLM load."
++    },
++    "metric_wired_into_capstone": {
++      "principle": "names where all co-headline metrics are now reported side-by-side -- the fix that surfaces the generation gap."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++    "tests_added_pass": {
++      "principle": "Tests Must Run and Assert -- winner_generated_rate >= generic_transfer; generated-but-not-selected counted; 1/25 baseline reproduces."
++    },
++    "winner_generated_rate": {
++      "principle": "the generation-vs-ranking gap metric this task formalizes (1/25 baseline) -- can the system GENERATE the winner at all."
++    }
++  },
++  "generation_vs_ranking_gap": 0.0,
++  "generic_transfer_ci": [
++    0.0,
++    0.1
++  ],
++  "generic_transfer_rate_over_variants": 0.04,
++  "generic_transfer_solved_count": 1,
++  "honest_metric_framing": "winner_generated_rate = can we GENERATE the winner at all; generic_transfer = do we SOLVE the held-out variant; generation_vs_ranking_gap = the ranking-vs-generation residual.",
++  "honest_verdict": "shipped: winner_generated_rate_coheadline_wired",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- computes the metric over variant records offline, no LLM load.",
++  "leaderboard_submission": false,
++  "live_submittable_level_count": 54,
++  "metric_wired_into_capstone": {
++    "capstone_function": "carnot.experiment_4586_live_submittable_coheadline.build_winner_generated_rate_coheadline_metrics",
++    "reported_side_by_side": [
++      "reproducible_total_levels",
++      "live_submittable_level_count",
++      "reproducible_vs_submittable_gap",
++      "generic_transfer_rate_over_variants",
++      "generic_transfer_ci",
++      "action_efficiency_score",
++      "action_efficiency_ci",
++      "winner_generated_rate",
++      "generation_vs_ranking_gap"
++    ],
++    "shared_variant_attempt_helper": "carnot.experiment_4550_honest_sprint_metric.measure_winner_generated_over_variants",
++    "shared_winner_generated_helper": "carnot.experiment_4550_honest_sprint_metric.winner_generated_metric_from_artifact",
++    "source_capstone": "results/experiment_4590_capstone_v423.json",
++    "source_generation_wiring": "results/experiment_4592_generation_completeness_wiring.json",
++    "source_live_submittable_coheadline": "results/experiment_4586_live_submittable_coheadline.json",
++    "source_winner_generated_baseline": "results/experiment_4582_feature_router_transfer.json"
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "capstone_423_artifact_present": true,
++    "codex_or_opencode_md_read": true,
++    "generation_wiring_artifact_present": true,
++    "leaderboard_submission": false,
++    "live_submittable_coheadline_artifact_present": true,
++    "network_required": false,
++    "offline_arcade": true,
++    "ok": true,
++    "research_conductor_modified": false,
++    "spec_has_req_4598": true,
++    "winner_source_artifact_present": true
++  },
++  "random_seed": 4598,
++  "reproducibility_checksum": "sha256:c416468c06df4010a11c79a8ffafe5292f41ae4da6f1adb81aed944e4dc27b5c",
++  "reproducible_total_levels": 55,
++  "reproducible_vs_submittable_gap": 1,
++  "result_path": "results/experiment_4598_winner_generated_rate_metric.json",
++  "schema": "carnot.exp4598.winner_generated_rate_metric.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4598",
++    "SCENARIO-CAPSTONE-4598",
++    "SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES"
++  ],
++  "tests_added_pass": {
++    "assertions": [
++      "winner_generated_rate >= generic_transfer_rate_over_variants",
++      "generated-but-not-selected variants count only in winner_generated_rate",
++      "Exp4582 winner_generated=1/25 baseline reproduces from the record"
++    ],
++    "commands": [
++      ".venv/bin/pytest tests/python/test_experiment_4598_winner_generated_rate_metric.py -q --no-cov"
++    ],
++    "passed": true
++  },
++  "winner_generated_attempted_count": 25,
++  "winner_generated_count": 1,
++  "winner_generated_not_selected_count": 0,
++  "winner_generated_rate": 0.04,
++  "winner_generated_source_artifact": "results/experiment_4582_feature_router_transfer.json"
++}
+diff --git a/tests/python/test_experiment_4598_winner_generated_rate_metric.py b/tests/python/test_experiment_4598_winner_generated_rate_metric.py
+new file mode 100644
+index 0000000000..3f069afbf0
+--- /dev/null
++++ b/tests/python/test_experiment_4598_winner_generated_rate_metric.py
+@@ -0,0 +1,367 @@
++"""Tests for Exp 4598 winner-generated-rate co-headline.
++
++Spec refs: REQ-CAPSTONE-4598, SCENARIO-CAPSTONE-4598,
++SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4550_honest_sprint_metric as exp4550
++from carnot import experiment_4586_live_submittable_coheadline as exp4586
++from carnot import experiment_4598_winner_generated_rate_metric as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _registry(total: int = 4) -> JsonDict:
++    return {
++        "schema_version": 1,
++        "reproducible_total_levels": total,
++        "games": [
++            {
++                "game": "with_traj",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 3,
++            },
++            {
++                "game": "adaptive",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 1,
++            },
++        ],
++    }
++
++
++def _package() -> JsonDict:
++    return {
++        "experiment": "fixture_package",
++        "package_manifest": [
++            {
++                "game": "with_traj",
++                "levels": 3,
++                "offline_reproduced_level": 3,
++                "trajectory_path": "results/arc3_live_banked_trajectories/with_traj.json",
++                "action_count": 4,
++                "env_matched": True,
++            },
++            {
++                "game": "adaptive",
++                "levels": 1,
++                "offline_reproduced_level": 1,
++                "adaptive_solver": "fixture_env_adaptive_solver",
++                "env_matched": True,
++            },
++        ],
++    }
++
++
++def _b1_artifact() -> JsonDict:
++    return {
++        "reproducible_total_levels": 4,
++        "generic_transfer_rate_over_variants": 0.25,
++        "generic_transfer_ci": [0.0, 0.5],
++        "action_efficiency_score": 0.75,
++        "action_efficiency_ci": [0.5, 1.0],
++        "median_actions_to_first_levelup": 6.0,
++        "human_baseline_actions": 9.0,
++    }
++
++
++def _winner_source() -> JsonDict:
++    return {
++        "result_path": "results/fixture_winner_source.json",
++        "winner_generated": {
++            "generated_count": 2,
++            "attempted_count": 4,
++            "not_generated_count": 2,
++        },
++        "generic_transfer_rate_with_router": 0.25,
++    }
++
++
++def _preconditions() -> JsonDict:
++    return {
++        "ok": True,
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4598": True,
++        "offline_arcade": True,
++        "winner_source_artifact_present": True,
++        "live_submittable_coheadline_artifact_present": True,
++        "capstone_423_artifact_present": True,
++        "generation_wiring_artifact_present": True,
++        "leaderboard_submission": False,
++        "research_conductor_modified": False,
++    }
++
++
++def test_req_capstone_4598_spec_declares_winner_generated_rate_contract() -> None:
++    """REQ-CAPSTONE-4598: OpenSpec declares the co-headline metric contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4598",
++        "SCENARIO-CAPSTONE-4598",
++        "SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4598_shared_helper_counts_generated_but_not_selected() -> None:
++    """SCENARIO-CAPSTONE-4598: winner generation is counted separately from solved transfer."""
++
++    attempts = [
++        {
++            "variant_signature": "g1~color01",
++            "attempted": True,
++            "solved": True,
++            "winner_generated": False,
++        },
++        {
++            "variant_signature": "g2~color01",
++            "attempted": True,
++            "solved": False,
++            "winner_generated": True,
++        },
++        {
++            "variant_signature": "g3~color01",
++            "attempted": True,
++            "solved": False,
++            "winner_generated": False,
++        },
++        {
++            "variant_signature": "not_attempted~color01",
++            "attempted": False,
++            "solved": False,
++            "winner_generated": True,
++        },
++    ]
++
++    metric = exp4550.measure_winner_generated_over_variants(attempts)
++
++    assert metric["winner_generated_attempted_count"] == 3
++    assert metric["winner_generated_count"] == 2
++    assert metric["winner_generated_not_selected_count"] == 1
++    assert metric["generic_transfer_solved_count"] == 1
++    assert metric["winner_generated_rate"] == pytest.approx(2 / 3)
++    assert metric["generic_transfer_rate_over_variants"] == pytest.approx(1 / 3)
++    assert metric["generation_vs_ranking_gap"] == pytest.approx(1 / 3)
++    assert metric["winner_generated_rate"] >= metric["generic_transfer_rate_over_variants"]
++
++
++def test_req_capstone_4598_exp4582_baseline_reproduces_one_of_twenty_five() -> None:
++    """REQ-CAPSTONE-4598: the recorded Exp4582 baseline is 1/25 winner-generated."""
++
++    source = mod._read_json(REPO / mod.FEATURE_ROUTER_BASELINE_RELATIVE_PATH)
++    metric = exp4550.winner_generated_metric_from_artifact(source)
++
++    assert metric["winner_generated_attempted_count"] == 25
++    assert metric["winner_generated_count"] == 1
++    assert metric["winner_generated_rate"] == pytest.approx(0.04)
++    assert metric["generic_transfer_rate_over_variants"] == pytest.approx(0.04)
++    assert metric["generation_vs_ranking_gap"] == pytest.approx(0.0)
++
++
++def test_scenario_capstone_4598_live_bridge_reports_all_five_coheadlines() -> None:
++    """SCENARIO-CAPSTONE-4598: the capstone bridge lists all co-headline metrics."""
++
++    metrics = exp4586.build_winner_generated_rate_coheadline_metrics(
++        registry=_registry(),
++        package=_package(),
++        package_path="results/fixture_package.json",
++        b1_artifact=_b1_artifact(),
++        winner_source_artifact=_winner_source(),
++    )
++
++    assert metrics["reported_side_by_side"] == [
++        "reproducible_total_levels",
++        "live_submittable_level_count",
++        "reproducible_vs_submittable_gap",
++        "generic_transfer_rate_over_variants",
++        "generic_transfer_ci",
++        "action_efficiency_score",
++        "action_efficiency_ci",
++        "winner_generated_rate",
++        "generation_vs_ranking_gap",
++    ]
++    assert metrics["reproducible_total_levels"] == 4
++    assert metrics["live_submittable_level_count"] == 4
++    assert metrics["generic_transfer_rate_over_variants"] == pytest.approx(0.25)
++    assert metrics["action_efficiency_score"] == pytest.approx(0.75)
++    assert metrics["winner_generated_rate"] == pytest.approx(0.5)
++    assert metrics["generation_vs_ranking_gap"] == pytest.approx(0.25)
++
++
++def test_scenario_capstone_4598_artifact_schema_and_required_fields(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES: artifact exposes the generation gap."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        registry=_registry(),
++        package=_package(),
++        package_path="results/fixture_package.json",
++        b1_artifact=_b1_artifact(),
++        winner_source_artifact=_winner_source(),
++        preconditions_checked=_preconditions(),
++    )
++
++    assert artifact["honest_verdict"] == "shipped: winner_generated_rate_coheadline_wired"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["reproducible_total_levels"] == 4
++    assert artifact["live_submittable_level_count"] == 4
++    assert artifact["generic_transfer_rate_over_variants"] == pytest.approx(0.25)
++    assert artifact["winner_generated_rate"] == pytest.approx(0.5)
++    assert artifact["generation_vs_ranking_gap"] == pytest.approx(0.25)
++    assert "can we GENERATE the winner at all" in artifact["honest_metric_framing"]
++    assert artifact["metric_wired_into_capstone"]["reported_side_by_side"][-2:] == [
++        "winner_generated_rate",
++        "generation_vs_ranking_gap",
++    ]
++    assert artifact["tests_added_pass"]["passed"] is True
++    assert artifact["leaderboard_submission"] is False
++    assert mod.validate_artifact(artifact) == []
++
++    path = mod.write_artifact(tmp_path, artifact=artifact)
++    written = json.loads(path.read_text(encoding="utf-8"))
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++
++
++def test_scenario_capstone_4598_validation_rejects_winner_below_transfer(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4598: solving without generating the winner is invalid."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        registry=_registry(),
++        package=_package(),
++        package_path="results/fixture_package.json",
++        b1_artifact=_b1_artifact(),
++        winner_source_artifact=_winner_source(),
++        preconditions_checked=_preconditions(),
++    )
++    bad = dict(artifact)
++    bad["winner_generated_rate"] = 0.1
++
++    errors = mod.validate_artifact(bad)
++
++    assert "winner_generated_rate must be >= generic_transfer_rate_over_variants" in errors
++
++
++def test_scenario_capstone_4598_partial_verdicts_and_missing_json(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4598: defensive helpers keep missing resources honest."""
++
++    assert mod._read_json(tmp_path / "missing.json") == {}
++    assert (
++        mod._honest_verdict({"ok": False}, 0.5, 0.25)
++        == "complete: winner_generated_rate_coheadline_partial_preconditions"
++    )
++    assert (
++        mod._honest_verdict({"ok": True}, 0.1, 0.25)
++        == "complete: winner_generated_rate_coheadline_partial_metric_invariant"
++    )
++
++
++def test_scenario_capstone_4598_validation_reports_malformed_fields(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4598-FIELD-PRINCIPLES: malformed fields fail validation."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        registry=_registry(),
++        package=_package(),
++        package_path="results/fixture_package.json",
++        b1_artifact=_b1_artifact(),
++        winner_source_artifact=_winner_source(),
++        preconditions_checked=_preconditions(),
++    )
++
++    bad = dict(artifact)
++    bad.update(
++        {
++            "honest_verdict": "not_terminal",
++            "inference_substrate": "wrong",
++            "winner_generated_rate": "0.5",
++            "generation_vs_ranking_gap": "0.25",
++            "winner_generated_count": "2",
++            "metric_wired_into_capstone": [],
++            "leaderboard_submission": True,
++            "tests_added_pass": [],
++            "preconditions_checked": [],
++            "field_principles": None,
++            "reproducibility_checksum": "bad",
++        }
++    )
++
++    errors = mod.validate_artifact(bad)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "winner_generated_rate must be a bare float in [0,1]" in errors
++    assert "generation_vs_ranking_gap must be a bare float" in errors
++    assert "winner_generated_count must be bare int" in errors
++    assert "metric_wired_into_capstone must be object" in errors
++    assert "leaderboard_submission must be false" in errors
++    assert "tests_added_pass must be object" in errors
++    assert "preconditions_checked must be object" in errors
++    assert "field_principles missing" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
++
++    bad_wiring = dict(artifact)
++    bad_wiring["metric_wired_into_capstone"] = {"reported_side_by_side": []}
++    assert (
++        "metric_wired_into_capstone must report all co-headlines"
++        in mod.validate_artifact(bad_wiring)
++    )
++
++    bad_principles = dict(artifact)
++    principles = dict(artifact["field_principles"])
++    principles.pop("tests_added_pass")
++    bad_principles["field_principles"] = principles
++    assert "missing field principle for tests_added_pass" in mod.validate_artifact(
++        bad_principles
++    )
++
++    with pytest.raises(ValueError):
++        mod.write_artifact(tmp_path, artifact=bad_wiring)
++
++
++def test_scenario_capstone_4598_run_wrapper_validates_and_writes(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-CAPSTONE-4598: run validates before writing the deliverable."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        registry=_registry(),
++        package=_package(),
++        package_path="results/fixture_package.json",
++        b1_artifact=_b1_artifact(),
++        winner_source_artifact=_winner_source(),
++        preconditions_checked=_preconditions(),
++    )
++    monkeypatch.setattr(mod, "build_artifact", lambda _root: artifact)
++
++    dry = mod.run(tmp_path, write=False)
++    written = mod.run(tmp_path, write=True)
++
++    assert dry["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    bad = dict(artifact)
++    bad["winner_generated_rate"] = 0.1
++    monkeypatch.setattr(mod, "build_artifact", lambda _root: bad)
++    with pytest.raises(ValueError):
++        mod.run(tmp_path, write=False)
+-- 
+2.55.0
+

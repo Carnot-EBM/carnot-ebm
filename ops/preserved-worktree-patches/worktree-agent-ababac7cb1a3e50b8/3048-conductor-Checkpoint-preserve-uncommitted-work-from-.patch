@@ -1,0 +1,65 @@
+From b805aff9ab4f804935d636fadaebbfc0bd95e883 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 07:58:18 -0400
+Subject: [PATCH 03048/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                        |  2 +-
+ ops/conductor-log.md                                |  1 +
+ ops/conductor-state.json                            |  2 +-
+ results/experiment_4500_value_weight_remeasure.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 561de4dc70..ef7ab07090 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 96, "phase": "iteration_start", "last_beat": "2026-06-20T11:39:54Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 97, "phase": "iteration_start", "last_beat": "2026-06-20T11:58:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a1b788afff..60a30d69a3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8946,3 +8946,4 @@ c |
+ | 2026-06-20 11:03 UTC | PHASE E (CAPSTONE .415) -- Capstone v415: frame-ch | OK | 88 passed, 1 warning in 6.97s |
+ | 2026-06-20 11:35 UTC | Plan milestone 2026.06.416 | OK | 10 tasks proposed |
+ | 2026-06-20 11:37 UTC | Milestone 2026.06.416 activated | OK | 10 tasks queued |
++| 2026-06-20 11:56 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e3c237e06e..e18a5fc130 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 96, "phase": "iteration_start", "started_at": "2026-06-20T11:39:54Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 97, "phase": "iteration_start", "started_at": "2026-06-20T11:58:16Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4500_value_weight_remeasure.json b/results/experiment_4500_value_weight_remeasure.json
+index 6eea562848..80b856e5d2 100644
+--- a/results/experiment_4500_value_weight_remeasure.json
++++ b/results/experiment_4500_value_weight_remeasure.json
+@@ -659,5 +659,13 @@
+     2.0,
+     5.0
+   ],
+-  "wall_budget_s": 390.0
+-}
++  "wall_budget_s": 390.0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "eval_budget_median_wall_s=390.0 and wall_budget_s=390.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

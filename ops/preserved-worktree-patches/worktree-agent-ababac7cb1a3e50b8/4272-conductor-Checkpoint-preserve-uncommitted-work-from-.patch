@@ -1,0 +1,43 @@
+From d608fb872583e5c0d838af94339a8fae5148fb58 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 15:01:01 -0400
+Subject: [PATCH 04272/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 79b5e1804a..1647b2a4d1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 291, "phase": "iteration_start", "last_beat": "2026-06-26T18:58:18Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 292, "phase": "iteration_start", "last_beat": "2026-06-26T19:00:59Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3f0475aa69..c8ffc0da04 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9375,3 +9375,4 @@ The contro |
+ | 2026-06-26 18:41 UTC | PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUD | OK | 87 passed, 1 warning in 7.95s |
+ | 2026-06-26 18:53 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT | OK | 88 passed, 1 warning in 9.41s |
+ | 2026-06-26 18:56 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | FAIL | No file changes produced |
++| 2026-06-26 18:58 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | FAIL | No file changes produced |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e6019ed819..12575d95d2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 291, "phase": "iteration_start", "started_at": "2026-06-26T18:58:18Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 292, "phase": "iteration_start", "started_at": "2026-06-26T19:00:59Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From c6c0061741739cae8f36b47303145aba587e9330 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 3 Aug 2026 18:32:56 -0400
+Subject: [PATCH 08166/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9b6f91242c..757f067b29 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2989570, "iteration": 157, "phase": "iteration_start", "last_beat": "2026-08-03T22:15:20Z"}
+\ No newline at end of file
++{"pid": 2989570, "iteration": 158, "phase": "iteration_start", "last_beat": "2026-08-03T22:32:53Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6f83ce7620..fea0317908 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15283,3 +15283,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-08-03 21:55 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |
+ | 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |
+ | 2026-08-03 22:13 UTC | Delayed-commit transactional memory fixture over A | OK | 87 passed, 1 warning in 8.45s |
++| 2026-08-03 22:30 UTC | Gated on Exp5967 ready: prospective delayed-commit | OK | 87 passed, 1 warning in 9.75s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 812c66988c..9e837562fb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2989570, "iteration": 157, "phase": "iteration_start", "started_at": "2026-08-03T22:15:20Z"}
+\ No newline at end of file
++{"pid": 2989570, "iteration": 158, "phase": "iteration_start", "started_at": "2026-08-03T22:32:53Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

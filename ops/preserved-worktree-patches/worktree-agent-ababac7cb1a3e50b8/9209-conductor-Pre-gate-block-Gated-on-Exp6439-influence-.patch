@@ -1,0 +1,79 @@
+From 6d70b8b2748ac04e75871a7622d62134033a62cf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 00:34:41 -0400
+Subject: [PATCH 09209/11362] [conductor] Pre-gate block: Gated on Exp6439
+ influence: held factor revocation and binding-shift A/B
+
+1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_influence_ready_score (upstream artifact not found for task id 'exp6439-factor-clause-influence-ab')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  3 +++
+ ops/conductor-state.json                      |  2 +-
+ ...ld_factor_revocation_binding_shift_ab.json | 24 +++++++++++++++++++
+ 4 files changed, 29 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6440_held_factor_revocation_binding_shift_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 858e23a71e..97a87a5d0c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 180, "phase": "iteration_start", "last_beat": "2026-08-15T04:32:38Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 181, "phase": "iteration_start", "last_beat": "2026-08-15T04:34:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 088c981028..eb8e2739be 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16002,3 +16002,6 @@ code |
+ | 2026-08-15 04:26 UTC | V553 terminal handoff and V554 queue preflight | OK | 88 passed, 1 warning in 29.23s |
+ | 2026-08-15 04:28 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
+ | 2026-08-15 04:30 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
++| 2026-08-15 04:32 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
++| 2026-08-15 04:34 UTC | Gated on Exp6437 readiness: powered verification-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
++| 2026-08-15 04:34 UTC | Gated on Exp6437 readiness: active, ablated, tombs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 61d496c5fa..75835bbe7f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 180, "phase": "iteration_start", "started_at": "2026-08-15T04:32:38Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 181, "phase": "iteration_start", "started_at": "2026-08-15T04:34:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6440_held_factor_revocation_binding_shift_ab.json b/results/experiment_6440_held_factor_revocation_binding_shift_ab.json
+new file mode 100644
+index 0000000000..7e047006e0
+--- /dev/null
++++ b/results/experiment_6440_held_factor_revocation_binding_shift_ab.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6440,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-15",
++  "started_at": "2026-08-15T04:34:40.923599+00:00",
++  "finished_at": "2026-08-15T04:34:40.923599+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6439 influence: held factor revocation and binding-shift A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_influence_ready_score (upstream artifact not found for task id 'exp6439-factor-clause-influence-ab')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6439-factor-clause-influence-ab",
++      "artifact_field": "factor_influence_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6439-factor-clause-influence-ab'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

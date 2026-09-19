@@ -1,0 +1,65 @@
+From 9456e1f429a5f92632a6355300f2e452197d684f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 12:31:44 -0400
+Subject: [PATCH 06599/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ..._5543_retrieval_warmed_csl_five_arm_ablation.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f745e594a8..450c94e0b1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 464, "phase": "iteration_start", "last_beat": "2026-07-10T16:17:36Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 465, "phase": "iteration_start", "last_beat": "2026-07-10T16:31:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1b22586957..1b791f3930 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10728,3 +10728,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-10 15:48 UTC | Gated SOTA hard-soft live panel v3 | OK | 89 passed, 1 warning in 11.98s |
+ | 2026-07-10 16:02 UTC | LLM-FSM inspired exact finite-state fixture | OK | 87 passed, 1 warning in 12.29s |
+ | 2026-07-10 16:15 UTC | CSL residue metric independence corrigendum | OK | 85 passed, 1 warning in 12.60s |
++| 2026-07-10 16:29 UTC | Gated retrieval-warmed CSL five-arm ablation | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c37869c86c..f81d99d375 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 464, "phase": "iteration_start", "started_at": "2026-07-10T16:17:36Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 465, "phase": "iteration_start", "started_at": "2026-07-10T16:31:42Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json b/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+index 3c64c78b05..9309434225 100644
+--- a/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
++++ b/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+@@ -822,5 +822,13 @@
+     "before_hash": "sha256:4e2b34ecae2ce4af9ec65f2014ea95222ee414b73840ea45938c2f11467a1166",
+     "mutated_paths": [],
+     "no_weight_mutation": true
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "best_constant_score=0.0833333333 and per_query_random_score=0.0833333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

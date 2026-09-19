@@ -1,0 +1,1997 @@
+From fd36ec582935e729032f174b2113a8fa35549cdc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 05:28:51 -0400
+Subject: [PATCH 06408/11362] [conductor] Gated hardware boundary-exchange
+ receipts after Exp5477
+
+Automated research step by research conductor.
+Task ID: exp5478-gated-hardware-receipts-v497
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  79 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5478_hardware_receipts_v497.py | 912 ++++++++++++++++++
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...xperiment_5478_hardware_receipts_v497.json | 383 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._experiment_5478_hardware_receipts_v497.py | 449 +++++++++
+ 12 files changed, 1837 insertions(+), 14 deletions(-)
+ create mode 100644 python/carnot/experiment_5478_hardware_receipts_v497.py
+ create mode 100644 results/experiment_5478_hardware_receipts_v497.json
+ create mode 100644 tests/python/test_experiment_5478_hardware_receipts_v497.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index db10152f28..ab5b111b33 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -28197,6 +28197,85 @@ artifact rather than upgrading it to solved.
+ |---|---|---|
+ | REQ-VERIFY-5476 | Planned (`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py`, `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`) | Planned (`tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py`) |
+ 
++### REQ-VERIFY-5478: Exp5477 Hardware Receipt Collection V497
++
++The repository SHALL provide Exp 5478 at
++`python/carnot/experiment_5478_hardware_receipts_v497.py` and write
++`results/experiment_5478_hardware_receipts_v497.json` without invoking a live
++LLM, generated-text judge, destructive board command, hardware speedup claim,
++or modifying `scripts/research_conductor.py`. Exp 5478 SHALL collect CPU and
++reachable-board receipts for the exact Exp5477 workload hashes and SHALL keep
++all acceleration claims receipt-bound.
++
++The runner SHALL load the checked-in Exp5477 artifact and the canonical
++Exp5477 workload definitions, verify that the upstream workload hashes match,
++and compute repeated local CPU reference result hashes for every Exp5477
++workload hash. CPU reference hashes SHALL be derived from deterministic
++fixture-local exact results, not from timing, command transcripts, or the
++output artifact checksum.
++
++The runner SHALL probe KV260 by SSH reachability only. It SHALL probe
++PolarFire by SSH reachability and, when reachable, execute only a bounded safe
++board-local Python replay for the Exp5477 workload hashes. GateMate SHALL be diagnostic-only
++unless a current physical/JTAG evidence source is explicitly
++available in repository artifacts or docs; diagnostic GateMate state SHALL NOT
++be treated as a workload receipt. For every board that runs a workload, the
++artifact SHALL record board identity, command, workload hash, result hash,
++repeat count, timing distribution, stdout checksum, and stderr checksum.
++
++The artifact SHALL include top-level fields `upstream_workload_hashes`,
++`cpu_reference_hashes`, `reachable_boards`, `unreachable_boards`,
++`board_receipts`, `repeat_count`, `timing_summary`, `result_hash_match_rate`,
++`hardware_receipts_ready`, `hardware_speedup_claim`, `inference_substrate`, and
++`honest_verdict`, with field principles explaining each required field.
++`inference_substrate` SHALL equal
++`local_cpu_and_reachable_board_receipts`. `hardware_speedup_claim` SHALL be
++false unless repeated matched board-local timing honestly supports a different
++claim; the default and doubt-resolving value SHALL remain false.
++`honest_verdict` SHALL start with `complete:` or `blocked:`.
++
++Required field principles:
++
++- `upstream_workload_hashes`: principle "Exp5477 workload identity"
++- `cpu_reference_hashes`: principle "local CPU correctness receipts"
++- `reachable_boards`: principle "boards that accepted safe workload receipts"
++- `unreachable_boards`: principle "boards blocked or diagnostic-only"
++- `board_receipts`: principle "board-local command and hash receipts"
++- `repeat_count`: principle "repeatability support"
++- `timing_summary`: principle "receipt timing distribution"
++- `result_hash_match_rate`: principle "matched hashes before claims"
++- `hardware_receipts_ready`: principle "receipt readiness"
++- `hardware_speedup_claim`: principle "receipt-bound acceleration claim"
++- `inference_substrate`: principle "explicit local CPU and board substrate"
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
++
++### SCENARIO-VERIFY-5478: Exp5477 Board Receipts Stay Hash-Bound
++
++Given the checked-in Exp5477 artifact exposes stable workload hashes, when
++Exp5478 runs, then it recomputes those hashes from canonical fixture content,
++repeats the local CPU reference for each workload hash, probes boards through
++safe reachability commands, and runs the bounded board-local replay only for
++reachable workload-capable boards. Each board receipt records the same Exp5477
++workload hashes as the CPU reference, result hashes that match the CPU
++reference, repeat timing distribution, command text, stdout checksum, stderr
++checksum, and board identity.
++
++If Exp5477 workload hashes drift, if CPU reference hashes are unstable, if no
++reachable board runs a workload, if a board returns a mismatched result hash,
++if a diagnostic-only board is promoted into workload evidence, if
++`inference_substrate` differs from
++`local_cpu_and_reachable_board_receipts`, or if `hardware_speedup_claim` is
++true without repeated matched board-local timing evidence, then Exp5478 SHALL
++write `results/experiment_5478_hardware_receipts_v497.json` with precise
++blockers, `hardware_speedup_claim=false`, and an `honest_verdict` starting with
++`blocked:`.
++
++## Implementation Status (REQ-VERIFY-5478)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5478 | Planned (`python/carnot/experiment_5478_hardware_receipts_v497.py`, `results/experiment_5478_hardware_receipts_v497.json`) | Planned (`tests/python/test_experiment_5478_hardware_receipts_v497.py`) |
++
+ ### REQ-VERIFY-5477: p-dit LNS Boundary-Exchange Accounting V497
+ 
+ The repository SHALL provide Exp 5477 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 363b528097..40f84f8b4b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4444,
++  "experiments_checked": 4445,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5478_hardware_receipts_v497.py b/python/carnot/experiment_5478_hardware_receipts_v497.py
+new file mode 100644
+index 0000000000..c780842fb2
+--- /dev/null
++++ b/python/carnot/experiment_5478_hardware_receipts_v497.py
+@@ -0,0 +1,912 @@
++#!/usr/bin/env python3
++"""Exp5478: Exp5477 CPU and reachable-board hardware receipts.
++
++Spec refs: REQ-VERIFY-5478, SCENARIO-VERIFY-5478.
++
++This runner is a continuity receipt, not an acceleration benchmark. It reloads
++the Exp5477 workload hashes, recomputes local CPU reference hashes, probes only
++SSH-reachable workload boards, and records board-local hash receipts without
++turning timing into a speedup claim.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import itertools
++import json
++from pathlib import Path
++import statistics
++import subprocess
++import sys
++import time
++from typing import Any
++
++from carnot import experiment_5420_pbit_hardware_transfer_preflight_v493 as exp5420
++from carnot import experiment_5477_pdit_lns_boundary_exchange_v497 as exp5477
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++CommandProbe = exp5420.CommandProbe
++CommandRunner = Callable[[tuple[str, ...], float], CommandProbe]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5478_hardware_receipts_v497.json")
++UPSTREAM_EXP5477_RELATIVE_PATH = exp5477.RESULT_RELATIVE_PATH
++
++EXPERIMENT = 5478
++EXPERIMENT_ID = "exp5478-hardware-receipts-v497"
++MILESTONE = "2026.07.497"
++RUN_DATE = "20260709"
++RANDOM_SEED = 5478
++SCHEMA = "carnot.experiment_5478.hardware_receipts.v497"
++SPEC_REFS = ("REQ-VERIFY-5478", "SCENARIO-VERIFY-5478")
++INFERENCE_SUBSTRATE = "local_cpu_and_reachable_board_receipts"
++REPEAT_TARGET = 3
++EXPECTED_WORKLOAD_COUNT = exp5477.EXPECTED_FIXTURE_COUNT
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SSH_TIMEOUT_S = 5.0
++LOCAL_TIMEOUT_S = 10.0
++KV260_SSH_COMMAND = exp5420.KV260_SSH_COMMAND
++POLARFIRE_STATUS_COMMAND = exp5420.POLARFIRE_STATUS_COMMAND
++WORKLOAD_BOARDS = ("kv260", "polarfire")
++GATEMATE_DIAGNOSTIC_REASON = "diagnostic_only_no_exp5477_workload_receipt"
++FORBIDDEN_COMMAND_TERMS = ("rm -rf", "mkfs", "dd ", "--write", "program", "flash")
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "upstream_workload_hashes": "Exp5477 workload identity",
++    "cpu_reference_hashes": "local CPU correctness receipts",
++    "reachable_boards": "boards that accepted safe workload receipts",
++    "unreachable_boards": "boards blocked or diagnostic-only",
++    "board_receipts": "board-local command and hash receipts",
++    "repeat_count": "repeatability support",
++    "timing_summary": "receipt timing distribution",
++    "result_hash_match_rate": "matched hashes before claims",
++    "hardware_receipts_ready": "receipt readiness",
++    "hardware_speedup_claim": "receipt-bound acceleration claim",
++    "inference_substrate": "explicit local CPU and board substrate",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def canonical_json(payload: Any) -> str:
++    """Serialize JSON deterministically so hashes are host-independent."""
++
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_text(text: str) -> str:
++    """Hash text receipts, command strings, and compact JSON payloads."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def sha256_json(payload: Any) -> str:
++    """Hash a JSON value after canonical serialization."""
++
++    return sha256_text(canonical_json(payload))
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while ignoring its self-referential checksum."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def aggregate_result_hash(result_hashes: Sequence[str]) -> str:
++    """Collapse per-workload result hashes into one repeat-level receipt hash."""
++
++    return sha256_json({"result_hashes": list(result_hashes)})
++
++
++def command_to_string(command: Sequence[str]) -> str:
++    """Render commands the same way the existing hardware receipt helpers do."""
++
++    return exp5420.command_to_string(tuple(command))
++
++
++def run_command(command: tuple[str, ...], timeout_s: float = LOCAL_TIMEOUT_S) -> CommandProbe:
++    """Run one bounded command and turn expected board failures into receipts."""
++
++    started = time.perf_counter()
++    try:
++        result = subprocess.run(
++            list(command),
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=int(result.returncode),
++            stdout=result.stdout,
++            stderr=result.stderr,
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++    except FileNotFoundError as exc:
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=127,
++            stderr=str(exc),
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++    except subprocess.TimeoutExpired as exc:
++        stdout = exc.stdout if isinstance(exc.stdout, str) else ""
++        stderr = exc.stderr if isinstance(exc.stderr, str) else "timeout"
++        return CommandProbe(
++            command=tuple(command),
++            exit_code=124,
++            stdout=stdout,
++            stderr=stderr,
++            duration_s=round(time.perf_counter() - started, 6),
++        )
++
++
++def load_exp5477_workloads(root: str | Path = REPO_ROOT) -> JsonDict:
++    """Load Exp5477 hashes and rebuild their canonical CPU reference payloads."""
++
++    upstream = json.loads(
++        (Path(root) / UPSTREAM_EXP5477_RELATIVE_PATH).read_text(encoding="utf-8")
++    )
++    fixtures = exp5477.build_boundary_fixtures()
++    fixture_payloads = []
++    for fixture in fixtures:
++        payload = exp5477.fixture_workload_payload(fixture)
++        payload["workload_hash"] = exp5477.workload_hash(fixture)
++        fixture_payloads.append(payload)
++    workload_hashes = [str(payload["workload_hash"]) for payload in fixture_payloads]
++    cpu_reference_hashes = [
++        reference_result_hash(payload) for payload in fixture_payloads
++    ]
++    return {
++        "source_artifact": str(UPSTREAM_EXP5477_RELATIVE_PATH),
++        "source_experiment_id": str(upstream.get("experiment_id", "")),
++        "source_reproducibility_checksum": str(
++            upstream.get("reproducibility_checksum", "")
++        ),
++        "upstream_workload_hashes": list(upstream.get("workload_hashes", [])),
++        "workload_hashes": workload_hashes,
++        "upstream_hash_match": workload_hashes == list(upstream.get("workload_hashes", [])),
++        "fixture_payloads": fixture_payloads,
++        "cpu_reference_hashes": cpu_reference_hashes,
++    }
++
++
++def result_payload_from_workload(workload: Mapping[str, Any]) -> JsonDict:
++    """Compute the exact reference result for one serialized Exp5477 workload."""
++
++    family = str(workload["fixture_family"])
++    if family == "sat":
++        label, solution, objective_value = _solve_sat_payload(workload)
++    elif family == "maxcut":
++        label, solution, objective_value = _solve_maxcut_payload(workload)
++    else:
++        label, solution, objective_value = _solve_assignment_payload(workload)
++    return {
++        "fixture_id": str(workload["fixture_id"]),
++        "fixture_family": family,
++        "workload_hash": str(workload["workload_hash"]),
++        "exact_label": label,
++        "exact_solution": list(solution),
++        "exact_objective_value": objective_value,
++    }
++
++
++def reference_result_hash(workload: Mapping[str, Any]) -> str:
++    """Hash one exact result independently from timing receipts."""
++
++    return sha256_json(result_payload_from_workload(workload))
++
++
++def _solve_sat_payload(workload: Mapping[str, Any]) -> tuple[str, list[bool], int]:
++    preferred = list(workload["preferred_solution"])
++    best = min(
++        (
++            candidate
++            for candidate in itertools.product((False, True), repeat=len(workload["variables"]))
++            if all(_clause_satisfied(candidate, clause) for clause in workload["clauses"])
++        ),
++        key=lambda candidate: sum(
++            int(bool(candidate[index]) != bool(preferred[index]))
++            for index in range(len(candidate))
++        ),
++    )
++    objective = sum(
++        int(bool(best[index]) != bool(preferred[index])) for index in range(len(best))
++    )
++    return "sat", [bool(value) for value in best], objective
++
++
++def _solve_maxcut_payload(workload: Mapping[str, Any]) -> tuple[str, list[int], int]:
++    best = max(
++        itertools.product((0, 1), repeat=len(workload["variables"])),
++        key=lambda candidate: (
++            _cut_weight(workload, candidate),
++            tuple(-int(value) for value in candidate),
++        ),
++    )
++    weight = _cut_weight(workload, best)
++    return f"maxcut_weight={weight}", [int(value) for value in best], -weight
++
++
++def _solve_assignment_payload(workload: Mapping[str, Any]) -> tuple[str, list[str], int]:
++    best = min(
++        itertools.permutations(tuple(workload["assignment_domain"])),
++        key=lambda candidate: (_assignment_cost(workload, candidate), tuple(candidate)),
++    )
++    cost = _assignment_cost(workload, best)
++    return f"assignment_cost={cost}", [str(value) for value in best], cost
++
++
++def _clause_satisfied(candidate: Sequence[Any], clause: Sequence[int]) -> bool:
++    return any(bool(candidate[abs(int(literal)) - 1]) == (int(literal) > 0) for literal in clause)
++
++
++def _cut_weight(workload: Mapping[str, Any], candidate: Sequence[Any]) -> int:
++    assignment = {
++        str(name): int(candidate[index]) for index, name in enumerate(workload["variables"])
++    }
++    return sum(
++        int(weight)
++        for left, right, weight in workload["maxcut_edges"]
++        if assignment[str(left)] != assignment[str(right)]
++    )
++
++
++def _assignment_cost(workload: Mapping[str, Any], candidate: Sequence[Any]) -> int:
++    assignment = {
++        str(worker): str(candidate[index])
++        for index, worker in enumerate(workload["variables"])
++    }
++    cost_lookup = {
++        (str(worker), str(job)): int(cost)
++        for worker, job, cost in workload["assignment_costs"]
++    }
++    total = sum(
++        cost_lookup[(str(worker), assignment[str(worker)])]
++        for worker in workload["variables"]
++    )
++    for left_worker, left_job, right_worker, right_job, cost in workload["pairwise_costs"]:
++        if (
++            assignment[str(left_worker)] == str(left_job)
++            and assignment[str(right_worker)] == str(right_job)
++        ):
++            total += int(cost)
++    return total
++
++
++def timing_distribution(values: Sequence[float]) -> JsonDict:
++    """Summarize repeat timings with count, extrema, mean, median, and variance."""
++
++    timings = [float(value) for value in values]
++    if not timings:
++        return {
++            "count": 0,
++            "min_s": 0.0,
++            "max_s": 0.0,
++            "mean_s": 0.0,
++            "median_s": 0.0,
++            "variance_s2": 0.0,
++        }
++    variance = statistics.pvariance(timings) if len(timings) > 1 else 0.0
++    return {
++        "count": len(timings),
++        "min_s": round(min(timings), 9),
++        "max_s": round(max(timings), 9),
++        "mean_s": round(sum(timings) / len(timings), 9),
++        "median_s": round(float(statistics.median(timings)), 9),
++        "variance_s2": round(float(variance), 12),
++    }
++
++
++def cpu_reference_receipt(
++    workload: Mapping[str, Any],
++    *,
++    repeat_count: int = REPEAT_TARGET,
++    clock: Clock = time.perf_counter,
++) -> JsonDict:
++    """Repeat local Exp5477 exact references and record timing variance."""
++
++    timings: list[float] = []
++    repeats: list[JsonDict] = []
++    for repeat_index in range(repeat_count):
++        started = clock()
++        result_hashes = [
++            reference_result_hash(payload) for payload in workload["fixture_payloads"]
++        ]
++        elapsed = round(max(clock() - started, 0.0), 9)
++        timings.append(elapsed)
++        repeats.append(
++            {
++                "repeat_index": repeat_index + 1,
++                "workload_hashes": list(workload["workload_hashes"]),
++                "result_hashes": result_hashes,
++                "aggregate_result_hash": aggregate_result_hash(result_hashes),
++                "wall_time_s": elapsed,
++                "matches_expected": result_hashes == workload["cpu_reference_hashes"],
++            }
++        )
++    return {
++        "kind": "cpu_reference",
++        "substrate": "local_cpu_exp5477_exact_reference",
++        "workload_hashes": list(workload["workload_hashes"]),
++        "result_hashes": list(workload["cpu_reference_hashes"]),
++        "aggregate_result_hash": aggregate_result_hash(workload["cpu_reference_hashes"]),
++        "repeat_count": repeat_count,
++        "repeat_timings_s": timings,
++        "timing_distribution": timing_distribution(timings),
++        "stable_result_hashes": all(repeat["matches_expected"] is True for repeat in repeats),
++        "repeats": repeats,
++    }
++
++
++def _remote_workload_source(board: str, workload: Mapping[str, Any]) -> str:
++    payload = {
++        "board_identity": board,
++        "fixture_payloads": workload["fixture_payloads"],
++    }
++    payload_json = json.dumps(payload, sort_keys=True)
++    return "\n".join(
++        [
++            "import hashlib,itertools,json,time",
++            f"payload=json.loads({payload_json!r})",
++            "started=time.perf_counter()",
++            "def canon(obj): return json.dumps(obj,sort_keys=True,separators=(',',':'),ensure_ascii=True)",
++            "def h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()",
++            "def clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)",
++            "def cut_weight(w,c):",
++            "    assign={str(name):int(c[i]) for i,name in enumerate(w['variables'])}",
++            "    return sum(int(weight) for left,right,weight in w['maxcut_edges'] if assign[str(left)]!=assign[str(right)])",
++            "def assignment_cost(w,c):",
++            "    assign={str(worker):str(c[i]) for i,worker in enumerate(w['variables'])}",
++            "    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['assignment_costs']}",
++            "    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['variables'])",
++            "    for lw,lj,rw,rj,cost in w['pairwise_costs']:",
++            "        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)",
++            "    return total",
++            "def result(w):",
++            "    fam=str(w['fixture_family'])",
++            "    if fam=='sat':",
++            "        pref=list(w['preferred_solution'])",
++            "        best=min((c for c in itertools.product((False,True), repeat=len(w['variables'])) if all(clause_ok(c,cl) for cl in w['clauses'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))",
++            "        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='sat'",
++            "    elif fam=='maxcut':",
++            "        best=max(itertools.product((0,1), repeat=len(w['variables'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))",
++            "        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='maxcut_weight='+str(weight)",
++            "    else:",
++            "        best=min(itertools.permutations(tuple(w['assignment_domain'])), key=lambda c: (assignment_cost(w,c), tuple(c)))",
++            "        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='assignment_cost='+str(cost)",
++            "    return {'fixture_id':str(w['fixture_id']),'fixture_family':fam,'workload_hash':str(w['workload_hash']),'exact_label':label,'exact_solution':sol,'exact_objective_value':obj}",
++            "workload_hashes=[str(w['workload_hash']) for w in payload['fixture_payloads']]",
++            "result_hashes=[h(result(w)) for w in payload['fixture_payloads']]",
++            "receipt={'aggregate_result_hash':h({'result_hashes':result_hashes}),'board_identity':payload['board_identity'],'board_local':True,'result_hashes':result_hashes,'wall_time_s':round(time.perf_counter()-started,9),'workload_hashes':workload_hashes}",
++            "print(json.dumps(receipt,sort_keys=True))",
++        ]
++    )
++
++
++def board_workload_command(board: str, workload: Mapping[str, Any]) -> tuple[str, ...]:
++    """Build the SSH command for one safe board-local Exp5477 replay."""
++
++    target = {"kv260": "kria", "polarfire": "polarfire"}[board]
++    remote = "python3 - <<'PY'\n" + _remote_workload_source(board, workload) + "\nPY"
++    return (
++        "ssh",
++        "-o",
++        "ConnectTimeout=5",
++        "-o",
++        "BatchMode=yes",
++        target,
++        remote,
++    )
++
++
++def parse_board_workload_stdout(
++    stdout: str,
++    workload: Mapping[str, Any],
++    board: str,
++) -> tuple[JsonDict | None, str | None]:
++    """Parse and validate one board-local Exp5477 receipt."""
++
++    parsed: Any | None = None
++    for line in stdout.splitlines():
++        candidate = line.strip()
++        if not candidate:
++            continue
++        try:
++            parsed = json.loads(candidate)
++        except json.JSONDecodeError:
++            continue
++        if isinstance(parsed, Mapping):
++            break
++    if not isinstance(parsed, Mapping):
++        return None, "workload stdout is not valid JSON"
++    receipt = dict(parsed)
++    errors: list[str] = []
++    if receipt.get("board_identity") != board:
++        errors.append("board_identity mismatch")
++    if receipt.get("workload_hashes") != workload["workload_hashes"]:
++        errors.append("workload_hashes mismatch")
++    if receipt.get("result_hashes") != workload["cpu_reference_hashes"]:
++        errors.append("result_hashes mismatch")
++    if receipt.get("aggregate_result_hash") != aggregate_result_hash(
++        workload["cpu_reference_hashes"]
++    ):
++        errors.append("aggregate_result_hash mismatch")
++    if receipt.get("board_local") is not True:
++        errors.append("board_local missing")
++    if not isinstance(receipt.get("wall_time_s"), int | float) or receipt["wall_time_s"] < 0:
++        errors.append("wall_time_s invalid")
++    return receipt, "; ".join(errors) if errors else None
++
++
++def command_receipt(
++    probe: CommandProbe,
++    *,
++    kind: str,
++    timeout_s: float,
++    outcome: str,
++) -> JsonDict:
++    """Build the same compact command receipt shape as existing hardware tasks."""
++
++    return exp5420.command_receipt(probe, kind=kind, timeout_s=timeout_s, outcome=outcome)
++
++
++def _collect_one_board(
++    board: str,
++    *,
++    workload: Mapping[str, Any],
++    repeat_count: int,
++    status_probe: CommandProbe,
++    command_runner: CommandRunner,
++) -> tuple[JsonDict | None, list[JsonDict], JsonDict]:
++    reachable = status_probe.exit_code == 0
++    if not reachable:
++        return None, [], _unreachable_entry(board, status_probe)
++    command = board_workload_command(board, workload)
++    attempts: list[JsonDict] = []
++    command_receipts: list[JsonDict] = []
++    stdout_combined = ""
++    stderr_combined = ""
++    for repeat_index in range(repeat_count):
++        probe = command_runner(command, SSH_TIMEOUT_S)
++        stdout_combined += probe.stdout
++        stderr_combined += probe.stderr
++        receipt, parse_error = parse_board_workload_stdout(probe.stdout, workload, board)
++        valid = probe.exit_code == 0 and receipt is not None and parse_error is None
++        matched = valid and receipt.get("result_hashes") == workload["cpu_reference_hashes"]
++        attempts.append(
++            {
++                "repeat_index": repeat_index + 1,
++                "valid": valid,
++                "matched": matched,
++                "parse_error": parse_error,
++                "receipt": receipt,
++                "wall_time_s": receipt.get("wall_time_s") if isinstance(receipt, Mapping) else None,
++            }
++        )
++        command_receipts.append(
++            command_receipt(
++                probe,
++                kind=f"{board}_exp5477_workload_repeat_{repeat_index + 1}",
++                timeout_s=SSH_TIMEOUT_S,
++                outcome="valid_repeat" if valid else "invalid_repeat",
++            )
++        )
++    timings = [
++        float(attempt["wall_time_s"])
++        for attempt in attempts
++        if attempt["valid"] is True and isinstance(attempt.get("wall_time_s"), int | float)
++    ]
++    matched_count = sum(int(attempt["matched"] is True) for attempt in attempts)
++    first_receipt = next(
++        (attempt["receipt"] for attempt in attempts if isinstance(attempt["receipt"], Mapping)),
++        {},
++    )
++    command_text = command_to_string(command)
++    board_receipt = {
++        "board_identity": board,
++        "command": command_text,
++        "command_sha256": sha256_text(command_text),
++        "workload_hashes": list(first_receipt.get("workload_hashes", [])),
++        "result_hashes": list(first_receipt.get("result_hashes", [])),
++        "aggregate_result_hash": str(first_receipt.get("aggregate_result_hash", "")),
++        "repeat_count": len(attempts),
++        "matched_repeat_count": matched_count,
++        "invalid_repeat_count": len(attempts) - sum(int(attempt["valid"] is True) for attempt in attempts),
++        "timing_distribution": timing_distribution(timings),
++        "stdout_sha256": sha256_text(stdout_combined),
++        "stderr_sha256": sha256_text(stderr_combined),
++        "stdout_combined": stdout_combined,
++        "stderr_combined": stderr_combined,
++        "attempts": attempts,
++    }
++    return board_receipt, command_receipts, {
++        "board_identity": board,
++        "reachable": True,
++        "workload_execution_attempted": True,
++        "blocked_reason": None,
++    }
++
++
++def _unreachable_entry(board: str, status_probe: CommandProbe | None = None) -> JsonDict:
++    reason = f"blocked_{board}_ssh"
++    return {
++        "board_identity": board,
++        "reachable": False,
++        "workload_execution_attempted": False,
++        "blocked_reason": reason,
++        "status_exit_code": None if status_probe is None else int(status_probe.exit_code),
++    }
++
++
++def gate_mate_diagnostic_entry() -> JsonDict:
++    """Record GateMate as diagnostic-only, not an Exp5477 workload substrate."""
++
++    return {
++        "board_identity": "gatemate",
++        "reachable": False,
++        "workload_execution_attempted": False,
++        "diagnostic_only": True,
++        "blocked_reason": GATEMATE_DIAGNOSTIC_REASON,
++    }
++
++
++def collect_board_receipts(
++    *,
++    workload: Mapping[str, Any],
++    repeat_count: int,
++    command_runner: CommandRunner,
++) -> JsonDict:
++    """Collect KV260 and PolarFire SSH-safe workload receipts when reachable."""
++
++    command_receipts: list[JsonDict] = []
++    board_receipts: list[JsonDict] = []
++    reachable_boards: list[str] = []
++    unreachable_boards: list[JsonDict] = []
++
++    probes = (
++        ("kv260", KV260_SSH_COMMAND, "kv260_ssh_reachability"),
++        ("polarfire", POLARFIRE_STATUS_COMMAND, "polarfire_ssh_reachability"),
++    )
++    for board, status_command, kind in probes:
++        status_probe = command_runner(status_command, SSH_TIMEOUT_S)
++        command_receipts.append(
++            command_receipt(
++                status_probe,
++                kind=kind,
++                timeout_s=SSH_TIMEOUT_S,
++                outcome="reachable" if status_probe.exit_code == 0 else "blocked",
++            )
++        )
++        board_receipt, repeat_command_receipts, status = _collect_one_board(
++            board,
++            workload=workload,
++            repeat_count=repeat_count,
++            status_probe=status_probe,
++            command_runner=command_runner,
++        )
++        command_receipts.extend(repeat_command_receipts)
++        if board_receipt is None:
++            unreachable_boards.append(status)
++        else:
++            reachable_boards.append(board)
++            board_receipts.append(board_receipt)
++    unreachable_boards.append(gate_mate_diagnostic_entry())
++    return {
++        "reachable_boards": reachable_boards,
++        "unreachable_boards": unreachable_boards,
++        "board_receipts": board_receipts,
++        "command_receipts": command_receipts,
++    }
++
++
++def result_hash_match_rate(board_receipts: Sequence[Mapping[str, Any]]) -> float:
++    """Return the fraction of board repeats whose hashes matched CPU references."""
++
++    total = sum(int(receipt.get("repeat_count", 0)) for receipt in board_receipts)
++    if total == 0:
++        return 0.0
++    matched = sum(int(receipt.get("matched_repeat_count", 0)) for receipt in board_receipts)
++    return round(matched / total, 6)
++
++
++def readiness_blockers(
++    *,
++    cpu_stable: bool,
++    reachable_workload_count: int,
++    match_rate: float,
++    upstream_hash_match: bool = True,
++) -> list[str]:
++    """Explain why Exp5478 receipts are not ready."""
++
++    blockers: list[str] = []
++    if not upstream_hash_match:
++        blockers.append("upstream_workload_hash_mismatch")
++    if not cpu_stable:
++        blockers.append("cpu_reference_unstable")
++    if reachable_workload_count == 0:
++        blockers.append("no_reachable_workload_board")
++    elif match_rate < 1.0:
++        blockers.append("board_hash_mismatch")
++    return blockers
++
++
++def honest_verdict(ready: bool, blockers: Sequence[str]) -> str:
++    """Return the terminal receipt verdict while refusing speedup claims."""
++
++    if ready:
++        return (
++            "complete: Exp5477 CPU and reachable-board workload hashes matched "
++            "with repeated local receipts; hardware_speedup_claim=false"
++        )
++    joined = ",".join(blockers) if blockers else "hardware_receipts_not_ready"
++    return f"blocked: {joined}; hardware_speedup_claim=false"
++
++
++def default_tests_run() -> list[JsonDict]:
++    """Keep CLI artifacts schema-valid before external test metadata is attached."""
++
++    return [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++
++
++def _normalize_tests(tests_run: Sequence[Mapping[str, Any]] | None) -> list[JsonDict]:
++    return [dict(item) for item in (tests_run if tests_run is not None else default_tests_run())]
++
++
++def build_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Build the Exp5478 artifact from CPU and reachable-board receipts."""
++
++    started = clock()
++    workload = load_exp5477_workloads(root)
++    cpu_receipt = cpu_reference_receipt(workload, repeat_count=REPEAT_TARGET, clock=clock)
++    boards = collect_board_receipts(
++        workload=workload,
++        repeat_count=REPEAT_TARGET,
++        command_runner=command_runner,
++    )
++    match_rate = result_hash_match_rate(boards["board_receipts"])
++    blockers = readiness_blockers(
++        cpu_stable=bool(cpu_receipt["stable_result_hashes"]),
++        reachable_workload_count=len(boards["board_receipts"]),
++        match_rate=match_rate,
++        upstream_hash_match=bool(workload["upstream_hash_match"]),
++    )
++    ready = not blockers
++    timing_summary = {"cpu": cpu_receipt["timing_distribution"]}
++    for board in WORKLOAD_BOARDS:
++        receipt = next(
++            (item for item in boards["board_receipts"] if item["board_identity"] == board),
++            None,
++        )
++        timing_summary[board] = (
++            receipt["timing_distribution"] if receipt is not None else timing_distribution([])
++        )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(clock() - started, 0.0), 6),
++        "commit": commit,
++        "source_artifact": str(UPSTREAM_EXP5477_RELATIVE_PATH),
++        "source_experiment_id": workload["source_experiment_id"],
++        "source_reproducibility_checksum": workload["source_reproducibility_checksum"],
++        "upstream_workload_hashes": list(workload["upstream_workload_hashes"]),
++        "cpu_reference_hashes": list(workload["cpu_reference_hashes"]),
++        "reachable_boards": boards["reachable_boards"],
++        "unreachable_boards": boards["unreachable_boards"],
++        "board_receipts": boards["board_receipts"],
++        "repeat_count": REPEAT_TARGET,
++        "timing_summary": timing_summary,
++        "result_hash_match_rate": match_rate,
++        "hardware_receipts_ready": ready,
++        "hardware_speedup_claim": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict(ready, blockers),
++        "readiness_blockers": blockers,
++        "cpu_reference_receipt": cpu_receipt,
++        "command_receipts": boards["command_receipts"],
++        "selected_workload": {
++            "workload_hashes": list(workload["workload_hashes"]),
++            "upstream_hash_match": bool(workload["upstream_hash_match"]),
++            "expected_workload_count": EXPECTED_WORKLOAD_COUNT,
++        },
++        "claim_limits": [
++            "Exp5477 workload hashes only",
++            "CPU and board result hashes must match before timing facts matter",
++            "GateMate is diagnostic-only for this artifact",
++            "no hardware speedup claim",
++        ],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "tests_run": _normalize_tests(tests_run),
++        "research_conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _command_is_destructive(command_text: str) -> bool:
++    lowered = command_text.lower()
++    return any(term in lowered for term in FORBIDDEN_COMMAND_TERMS)
++
++
++def _validate_tests_run(tests_run: Any) -> None:
++    _require(isinstance(tests_run, list) and tests_run, "tests_run")
++    for item in tests_run:
++        _require(isinstance(item, Mapping), "tests_run")
++        _require(isinstance(item.get("command"), str) and item["command"], "tests_run")
++        _require(isinstance(item.get("outcome"), str) and item["outcome"], "tests_run")
++
++
++def _validate_board_receipts(artifact: Mapping[str, Any]) -> None:
++    receipts = artifact.get("board_receipts")
++    _require(isinstance(receipts, list), "board_receipts")
++    for receipt in receipts:
++        _require(isinstance(receipt, Mapping), "board_receipts")
++        _require(receipt.get("board_identity") != "gatemate", "diagnostic-only board promoted")
++        command = receipt.get("command")
++        _require(isinstance(command, str) and command, "board command")
++        _require(not _command_is_destructive(command), "destructive command")
++        _require(receipt.get("command_sha256") == sha256_text(command), "command_sha256")
++        _require(
++            receipt.get("workload_hashes") == artifact.get("upstream_workload_hashes"),
++            "workload_hashes",
++        )
++        _require(
++            isinstance(receipt.get("result_hashes"), list)
++            and len(receipt["result_hashes"]) == EXPECTED_WORKLOAD_COUNT,
++            "result_hashes",
++        )
++        _require(
++            receipt.get("stdout_sha256") == sha256_text(str(receipt.get("stdout_combined", ""))),
++            "stdout_sha256",
++        )
++        _require(
++            receipt.get("stderr_sha256") == sha256_text(str(receipt.get("stderr_combined", ""))),
++            "stderr_sha256",
++        )
++        _require(
++            isinstance(receipt.get("timing_distribution"), Mapping),
++            "timing_distribution",
++        )
++    _require("gatemate" not in artifact.get("reachable_boards", []), "diagnostic-only board promoted")
++
++
++def _validate_command_receipts(receipts: Any) -> None:
++    _require(isinstance(receipts, list) and receipts, "command_receipts")
++    for receipt in receipts:
++        _require(isinstance(receipt, Mapping), "command_receipts")
++        command = receipt.get("command")
++        _require(isinstance(command, str) and command, "command_receipts")
++        _require(not _command_is_destructive(command), "destructive command")
++        _require(receipt.get("command_sha256") == sha256_text(command), "command_receipts")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed on schema drift, mismatched hashes, or unsupported claims."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact, f"missing required field: {field}")
++    _require(artifact.get("schema") == SCHEMA, "schema")
++    _require(artifact.get("experiment_id") == EXPERIMENT_ID, "experiment_id")
++    _require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles")
++    _require(
++        isinstance(artifact.get("upstream_workload_hashes"), list)
++        and len(artifact["upstream_workload_hashes"]) == EXPECTED_WORKLOAD_COUNT,
++        "upstream_workload_hashes",
++    )
++    _require(
++        isinstance(artifact.get("cpu_reference_hashes"), list)
++        and len(artifact["cpu_reference_hashes"]) == EXPECTED_WORKLOAD_COUNT,
++        "cpu_reference_hashes",
++    )
++    _require(isinstance(artifact.get("reachable_boards"), list), "reachable_boards")
++    _require(isinstance(artifact.get("unreachable_boards"), list), "unreachable_boards")
++    _require(artifact.get("repeat_count") == REPEAT_TARGET, "repeat_count")
++    _require(isinstance(artifact.get("timing_summary"), Mapping), "timing_summary")
++    _require(isinstance(artifact.get("result_hash_match_rate"), int | float), "result_hash_match_rate")
++    _require(artifact.get("hardware_speedup_claim") is False, "hardware_speedup_claim")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    verdict = artifact.get("honest_verdict")
++    _require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require("hardware_speedup_claim=false" in verdict, "honest_verdict")
++    _require(artifact.get("research_conductor_modified") is False, "research_conductor_modified")
++    _validate_tests_run(artifact.get("tests_run"))
++    _validate_board_receipts(artifact)
++    _validate_command_receipts(artifact.get("command_receipts"))
++    _require(artifact.get("result_hash_match_rate") == result_hash_match_rate(artifact["board_receipts"]), "result_hash_match_rate")
++    _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "checksum")
++    if artifact.get("hardware_receipts_ready") is True:
++        _require(artifact.get("result_hash_match_rate") == 1.0, "result_hash_match_rate")
++        _require(artifact.get("board_receipts"), "board_receipts")
++        _require(not artifact.get("readiness_blockers"), "readiness_blockers")
++        _require(str(verdict).startswith("complete:"), "honest_verdict")
++    else:
++        _require(str(verdict).startswith("blocked:"), "honest_verdict")
++
++
++def write_output(root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    """Write the terminal artifact under ``root`` and return the path."""
++
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    workload_root: str | Path | None = None,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> Path:
++    """Build, validate, and write Exp5478's JSON deliverable."""
++
++    artifact = build_artifact(
++        root=workload_root if workload_root is not None else repo_root,
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit,
++        tests_run=tests_run,
++    )
++    return write_output(repo_root, artifact)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output-root", default=str(REPO_ROOT))
++    parser.add_argument("--workload-root", default=None)
++    parser.add_argument("--test-run", action="append", default=[])
++    args = parser.parse_args(argv)
++    tests = [{"command": command, "outcome": "passed"} for command in args.test_run] or None
++    run_experiment(
++        repo_root=args.output_root,
++        workload_root=args.workload_root,
++        tests_run=tests,
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI entrypoint
++    raise SystemExit(_main(sys.argv[1:]))
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 27a596b0a6..f7df601ca8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.137422561645508,
++  "efficiency_gains_ms": 2.1605491638183594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index e147925c64..33d7f21fb8 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00014536315575242043,
+-  "latency_domino_seconds": 0.0002865279093384743,
++  "latency_legacy_seconds": 0.0001459037885069847,
++  "latency_domino_seconds": 0.00028444407507777214,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index d22244e268..94885cb8ee 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5724086761474609,
++  "duration_s": 0.6169593334197998,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index efa6d2f2bd..f4eb6d2cb2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.333117976784706e-05,
++  "duration_s": 5.324976518750191e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5478_hardware_receipts_v497.json b/results/experiment_5478_hardware_receipts_v497.json
+new file mode 100644
+index 0000000000..e3756e05d5
+--- /dev/null
++++ b/results/experiment_5478_hardware_receipts_v497.json
+@@ -0,0 +1,383 @@
++{
++  "board_receipts": [
++    {
++      "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++      "attempts": [
++        {
++          "matched": true,
++          "parse_error": null,
++          "receipt": {
++            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++            "board_identity": "polarfire",
++            "board_local": true,
++            "result_hashes": [
++              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++            ],
++            "wall_time_s": 0.006167039,
++            "workload_hashes": [
++              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++            ]
++          },
++          "repeat_index": 1,
++          "valid": true,
++          "wall_time_s": 0.006167039
++        },
++        {
++          "matched": true,
++          "parse_error": null,
++          "receipt": {
++            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++            "board_identity": "polarfire",
++            "board_local": true,
++            "result_hashes": [
++              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++            ],
++            "wall_time_s": 0.006212039,
++            "workload_hashes": [
++              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++            ]
++          },
++          "repeat_index": 2,
++          "valid": true,
++          "wall_time_s": 0.006212039
++        },
++        {
++          "matched": true,
++          "parse_error": null,
++          "receipt": {
++            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++            "board_identity": "polarfire",
++            "board_local": true,
++            "result_hashes": [
++              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++            ],
++            "wall_time_s": 0.006156039,
++            "workload_hashes": [
++              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++            ]
++          },
++          "repeat_index": 3,
++          "valid": true,
++          "wall_time_s": 0.006156039
++        }
++      ],
++      "board_identity": "polarfire",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
++      "invalid_repeat_count": 0,
++      "matched_repeat_count": 3,
++      "repeat_count": 3,
++      "result_hashes": [
++        "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++        "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++        "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++      ],
++      "stderr_combined": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_combined": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006167039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006212039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006156039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n",
++      "stdout_sha256": "7840eceee8b3e718cb026752c9e20bb24fc1fad03efdff92868e2378d7343e2f",
++      "timing_distribution": {
++        "count": 3,
++        "max_s": 0.006212039,
++        "mean_s": 0.006178372,
++        "median_s": 0.006167039,
++        "min_s": 0.006156039,
++        "variance_s2": 5.87e-10
++      },
++      "workload_hashes": [
++        "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++        "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++        "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++      ]
++    }
++  ],
++  "claim_limits": [
++    "Exp5477 workload hashes only",
++    "CPU and board result hashes must match before timing facts matter",
++    "GateMate is diagnostic-only for this artifact",
++    "no hardware speedup claim"
++  ],
++  "command_receipts": [
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "command_sha256": "dfcb05ec95a68b9ca25ea5227c0ff787385cda524db9d23617679e6cf2f2d0f4",
++      "duration_s": 5.007705,
++      "exit_code": 124,
++      "kind": "kv260_ssh_reachability",
++      "outcome": "blocked",
++      "stderr_excerpt": "timeout",
++      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++      "command_sha256": "b9e814f65c86bee7dd7fe7a7d7944e2e76fdcd1330e6f7f0cb813bcf9cd690aa",
++      "duration_s": 0.903556,
++      "exit_code": 0,
++      "kind": "polarfire_ssh_reachability",
++      "outcome": "reachable",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
++      "duration_s": 1.353082,
++      "exit_code": 0,
++      "kind": "polarfire_exp5477_workload_repeat_1",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
++      "stdout_sha256": "961e195e719ff469f0dd1be4cde70618e0d98dbcc73b657523fa99759f25fd49",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
++      "duration_s": 1.33836,
++      "exit_code": 0,
++      "kind": "polarfire_exp5477_workload_repeat_2",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
++      "stdout_sha256": "588740b5f2f92732622cb97efeb30a7ad636900d1a9361a09eed342ecfeb1cfb",
++      "timeout_s": 5.0
++    },
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
++      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
++      "duration_s": 1.377038,
++      "exit_code": 0,
++      "kind": "polarfire_exp5477_workload_repeat_3",
++      "outcome": "valid_repeat",
++      "stderr_excerpt": "",
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
++      "stdout_sha256": "775ee2bef5bacd5b973bd751ea0cfafd362d9487b6d4288e5c4362e08a02e978",
++      "timeout_s": 5.0
++    }
++  ],
++  "commit": "unknown",
++  "cpu_reference_hashes": [
++    "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++    "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++    "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++  ],
++  "cpu_reference_receipt": {
++    "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++    "kind": "cpu_reference",
++    "repeat_count": 3,
++    "repeat_timings_s": [
++      0.000119063,
++      0.000104225,
++      9.3516e-05
++    ],
++    "repeats": [
++      {
++        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++        "matches_expected": true,
++        "repeat_index": 1,
++        "result_hashes": [
++          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++        ],
++        "wall_time_s": 0.000119063,
++        "workload_hashes": [
++          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        ]
++      },
++      {
++        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++        "matches_expected": true,
++        "repeat_index": 2,
++        "result_hashes": [
++          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++        ],
++        "wall_time_s": 0.000104225,
++        "workload_hashes": [
++          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        ]
++      },
++      {
++        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
++        "matches_expected": true,
++        "repeat_index": 3,
++        "result_hashes": [
++          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++        ],
++        "wall_time_s": 9.3516e-05,
++        "workload_hashes": [
++          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        ]
++      }
++    ],
++    "result_hashes": [
++      "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
++      "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
++      "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
++    ],
++    "stable_result_hashes": true,
++    "substrate": "local_cpu_exp5477_exact_reference",
++    "timing_distribution": {
++      "count": 3,
++      "max_s": 0.000119063,
++      "mean_s": 0.000105601,
++      "median_s": 0.000104225,
++      "min_s": 9.3516e-05,
++      "variance_s2": 1.1e-10
++    },
++    "workload_hashes": [
++      "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++      "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++      "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    ]
++  },
++  "duration_s": 9.982516,
++  "experiment": 5478,
++  "experiment_id": "exp5478-hardware-receipts-v497",
++  "field_principles": {
++    "board_receipts": "board-local command and hash receipts",
++    "cpu_reference_hashes": "local CPU correctness receipts",
++    "hardware_receipts_ready": "receipt readiness",
++    "hardware_speedup_claim": "receipt-bound acceleration claim",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++    "inference_substrate": "explicit local CPU and board substrate",
++    "reachable_boards": "boards that accepted safe workload receipts",
++    "repeat_count": "repeatability support",
++    "result_hash_match_rate": "matched hashes before claims",
++    "timing_summary": "receipt timing distribution",
++    "unreachable_boards": "boards blocked or diagnostic-only",
++    "upstream_workload_hashes": "Exp5477 workload identity"
++  },
++  "hardware_receipts_ready": true,
++  "hardware_speedup_claim": false,
++  "honest_verdict": "complete: Exp5477 CPU and reachable-board workload hashes matched with repeated local receipts; hardware_speedup_claim=false",
++  "inference_substrate": "local_cpu_and_reachable_board_receipts",
++  "milestone": "2026.07.497",
++  "random_seed": 5478,
++  "reachable_boards": [
++    "polarfire"
++  ],
++  "readiness_blockers": [],
++  "repeat_count": 3,
++  "reproducibility_checksum": "fbb6ea3531ea38ecfd89c4ff8c0b49b8b2f20894a173c090bc312c8149b9f8f3",
++  "research_conductor_modified": false,
++  "result_hash_match_rate": 1.0,
++  "run_date": "20260709",
++  "schema": "carnot.experiment_5478.hardware_receipts.v497",
++  "selected_workload": {
++    "expected_workload_count": 3,
++    "upstream_hash_match": true,
++    "workload_hashes": [
++      "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++      "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++      "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    ]
++  },
++  "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
++  "source_experiment_id": "exp5477-pdit-lns-boundary-exchange-v497",
++  "source_reproducibility_checksum": "ce4ca63b3fa6126deb2b346f34942baf2e5010a5ed9fd25acafd498ac0b16451",
++  "spec_refs": [
++    "REQ-VERIFY-5478",
++    "SCENARIO-VERIFY-5478"
++  ],
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5478_hardware_receipts_v497.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5478_hardware_receipts_v497.py -m pytest tests/python/test_experiment_5478_hardware_receipts_v497.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5478_hardware_receipts_v497.py --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    },
++    {
++      "command": "ops/e2e-test-plan.md review: Exp5478 collects local CPU and SSH-safe reachable-board receipts only; no live training, PyO3, or destructive hardware path applies",
++      "outcome": "not_applicable"
++    }
++  ],
++  "timing_summary": {
++    "cpu": {
++      "count": 3,
++      "max_s": 0.000119063,
++      "mean_s": 0.000105601,
++      "median_s": 0.000104225,
++      "min_s": 9.3516e-05,
++      "variance_s2": 1.1e-10
++    },
++    "kv260": {
++      "count": 0,
++      "max_s": 0.0,
++      "mean_s": 0.0,
++      "median_s": 0.0,
++      "min_s": 0.0,
++      "variance_s2": 0.0
++    },
++    "polarfire": {
++      "count": 3,
++      "max_s": 0.006212039,
++      "mean_s": 0.006178372,
++      "median_s": 0.006167039,
++      "min_s": 0.006156039,
++      "variance_s2": 5.87e-10
++    }
++  },
++  "unreachable_boards": [
++    {
++      "blocked_reason": "blocked_kv260_ssh",
++      "board_identity": "kv260",
++      "reachable": false,
++      "status_exit_code": 124,
++      "workload_execution_attempted": false
++    },
++    {
++      "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
++      "board_identity": "gatemate",
++      "diagnostic_only": true,
++      "reachable": false,
++      "workload_execution_attempted": false
++    }
++  ],
++  "upstream_workload_hashes": [
++    "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++    "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++    "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 45dfc1ff3f..d0e00e8e26 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:13:07Z",
+-  "finished_at": "2026-07-09T09:13:07Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-09T09:27:53Z",
++  "finished_at": "2026-07-09T09:27:53Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ca5ed0ca6c..1ab1b42788 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:13:07Z",
+-  "finished_at": "2026-07-09T09:13:07Z",
++  "started_at": "2026-07-09T09:27:54Z",
++  "finished_at": "2026-07-09T09:27:54Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 5f594a39f8..9b83adebc7 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T09:13:07Z",
+-  "finished_at": "2026-07-09T09:13:07Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-09T09:27:54Z",
++  "finished_at": "2026-07-09T09:27:54Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5478_hardware_receipts_v497.py b/tests/python/test_experiment_5478_hardware_receipts_v497.py
+new file mode 100644
+index 0000000000..e81f4388dc
+--- /dev/null
++++ b/tests/python/test_experiment_5478_hardware_receipts_v497.py
+@@ -0,0 +1,449 @@
++"""Tests for Exp5478 Exp5477 hardware receipts.
++
++Spec refs: REQ-VERIFY-5478, SCENARIO-VERIFY-5478.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5478_hardware_receipts_v497 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5478_hardware_receipts_v497.py -q --no-cov"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5478_hardware_receipts_v497.py "
++    "-m pytest tests/python/test_experiment_5478_hardware_receipts_v497.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report "
++    "--include=python/carnot/experiment_5478_hardware_receipts_v497.py "
++    "--fail-under=100"
++)
++FULL_SUITE_COMMAND = ".venv/bin/pytest tests/python -q"
++E2E_COMMAND = (
++    "ops/e2e-test-plan.md review: Exp5478 collects local CPU and SSH-safe "
++    "reachable-board receipts only; no live training, PyO3, or destructive "
++    "hardware path applies"
++)
++
++
++class RecordingRunner:
++    """SCENARIO-VERIFY-5478 fake runner preserving exact command order."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class VariableClock:
++    """Deterministic nonzero clock so timing distributions have variance."""
++
++    def __init__(self) -> None:
++        self.value = 5478.0
++        self.increments = [0.00021 + 0.00001 * index for index in range(80)]
++        self.index = 0
++
++    def __call__(self) -> float:
++        increment = self.increments[self.index % len(self.increments)]
++        self.index += 1
++        self.value += increment
++        return self.value
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [
++        {"command": TEST_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_REPORT_COMMAND, "outcome": "passed"},
++        {"command": FULL_SUITE_COMMAND, "outcome": "passed"},
++        {"command": E2E_COMMAND, "outcome": "not_applicable"},
++    ]
++
++
++def _board_stdout(
++    board: str,
++    workload: dict[str, object],
++    *,
++    result_hashes: list[str] | None = None,
++    workload_hashes: list[str] | None = None,
++    wall_time_s: float = 0.25,
++) -> str:
++    hashes = result_hashes or list(workload["cpu_reference_hashes"])
++    payload = {
++        "aggregate_result_hash": mod.aggregate_result_hash(hashes),
++        "board_identity": board,
++        "board_local": True,
++        "result_hashes": hashes,
++        "wall_time_s": wall_time_s,
++        "workload_hashes": workload_hashes or workload["workload_hashes"],
++    }
++    return json.dumps(payload, sort_keys=True) + "\n"
++
++
++def _runner(
++    *,
++    kv260_reachable: bool = False,
++    polarfire_reachable: bool = True,
++    kv260_outputs: list[str] | None = None,
++    polarfire_outputs: list[str] | None = None,
++) -> RecordingRunner:
++    workload = mod.load_exp5477_workloads(REPO)
++    kv_command = mod.board_workload_command("kv260", workload)
++    pf_command = mod.board_workload_command("polarfire", workload)
++    probes: dict[tuple[str, ...], list[mod.CommandProbe]] = {
++        mod.KV260_SSH_COMMAND: [
++            _probe(
++                mod.KV260_SSH_COMMAND,
++                exit_code=0 if kv260_reachable else 255,
++                stdout="kv260 reachable\n" if kv260_reachable else "",
++                stderr="" if kv260_reachable else "ssh: no route to host\n",
++            )
++        ],
++        mod.POLARFIRE_STATUS_COMMAND: [
++            _probe(
++                mod.POLARFIRE_STATUS_COMMAND,
++                exit_code=0 if polarfire_reachable else 255,
++                stdout="polarfire reachable\n" if polarfire_reachable else "",
++                stderr="" if polarfire_reachable else "ssh: no route to host\n",
++            )
++        ],
++    }
++    if kv260_reachable:
++        outputs = kv260_outputs or [
++            _board_stdout("kv260", workload, wall_time_s=0.33 + 0.001 * index)
++            for index in range(mod.REPEAT_TARGET)
++        ]
++        probes[kv_command] = [_probe(kv_command, stdout=stdout) for stdout in outputs]
++    if polarfire_reachable:
++        outputs = polarfire_outputs or [
++            _board_stdout("polarfire", workload, wall_time_s=0.43 + 0.001 * index)
++            for index in range(mod.REPEAT_TARGET)
++        ]
++        probes[pf_command] = [_probe(pf_command, stdout=stdout) for stdout in outputs]
++    return RecordingRunner(probes)
++
++
++def test_req_verify_5478_spec_declares_exp5477_hardware_receipt_contract() -> None:
++    """REQ-VERIFY-5478: OpenSpec anchors Exp5477 receipt collection."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5478") : spec.index("### REQ-VERIFY-5477")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-5478",
++        "SCENARIO-VERIFY-5478",
++        str(mod.RESULT_RELATIVE_PATH),
++        "Exp5477 workload hashes",
++        "KV260 by SSH reachability only",
++        "PolarFire by SSH reachability",
++        "GateMate SHALL be diagnostic-only",
++        mod.INFERENCE_SUBSTRATE,
++        "hardware_speedup_claim",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert f'principle "{principle}"' in normalized
++
++
++def test_req_verify_5478_loads_exp5477_hashes_and_cpu_reference_hashes() -> None:
++    """REQ-VERIFY-5478: CPU hashes are stable and tied to Exp5477 workloads."""
++
++    workload = mod.load_exp5477_workloads(REPO)
++    second = mod.load_exp5477_workloads(REPO)
++    cpu = mod.cpu_reference_receipt(workload, repeat_count=mod.REPEAT_TARGET, clock=VariableClock())
++
++    assert workload == second
++    assert workload["workload_hashes"] == workload["upstream_workload_hashes"]
++    assert len(workload["workload_hashes"]) == mod.EXPECTED_WORKLOAD_COUNT
++    assert len(workload["cpu_reference_hashes"]) == mod.EXPECTED_WORKLOAD_COUNT
++    assert all(len(item) == 64 for item in workload["workload_hashes"])
++    assert all(len(item) == 64 for item in workload["cpu_reference_hashes"])
++    assert cpu["result_hashes"] == workload["cpu_reference_hashes"]
++    assert cpu["repeat_count"] == mod.REPEAT_TARGET
++    assert cpu["stable_result_hashes"] is True
++    assert cpu["timing_distribution"]["count"] == mod.REPEAT_TARGET
++
++
++def test_scenario_verify_5478_polarfire_receipts_match_cpu_hashes(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5478: reachable board receipts match CPU before readiness."""
++
++    runner = _runner(kv260_reachable=False, polarfire_reachable=True)
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=runner,
++        clock=VariableClock(),
++        run_date="20260709",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    out_path = mod.write_output(tmp_path, artifact)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++    workload = mod.load_exp5477_workloads(REPO)
++    pf_command = mod.board_workload_command("polarfire", workload)
++
++    assert runner.commands == [
++        mod.KV260_SSH_COMMAND,
++        mod.POLARFIRE_STATUS_COMMAND,
++        *([pf_command] * mod.REPEAT_TARGET),
++    ]
++    assert saved["upstream_workload_hashes"] == workload["workload_hashes"]
++    assert saved["cpu_reference_hashes"] == workload["cpu_reference_hashes"]
++    assert saved["reachable_boards"] == ["polarfire"]
++    assert {item["board_identity"] for item in saved["unreachable_boards"]} == {
++        "kv260",
++        "gatemate",
++    }
++    assert len(saved["board_receipts"]) == 1
++    receipt = saved["board_receipts"][0]
++    assert receipt["board_identity"] == "polarfire"
++    assert receipt["workload_hashes"] == workload["workload_hashes"]
++    assert receipt["result_hashes"] == workload["cpu_reference_hashes"]
++    assert receipt["repeat_count"] == mod.REPEAT_TARGET
++    assert receipt["timing_distribution"]["count"] == mod.REPEAT_TARGET
++    assert receipt["stdout_sha256"]
++    assert receipt["stderr_sha256"] == mod.sha256_text("")
++    assert saved["repeat_count"] == mod.REPEAT_TARGET
++    assert saved["timing_summary"]["cpu"]["count"] == mod.REPEAT_TARGET
++    assert saved["timing_summary"]["polarfire"]["count"] == mod.REPEAT_TARGET
++    assert saved["result_hash_match_rate"] == pytest.approx(1.0)
++    assert saved["hardware_receipts_ready"] is True
++    assert saved["hardware_speedup_claim"] is False
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["research_conductor_modified"] is False
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    mod.validate_artifact(saved)
++
++
++def test_req_verify_5478_unreachable_boards_keep_cpu_receipts() -> None:
++    """REQ-VERIFY-5478: unreachable boards block readiness without losing CPU receipts."""
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=_runner(kv260_reachable=False, polarfire_reachable=False),
++        clock=VariableClock(),
++        run_date="20260709",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert artifact["cpu_reference_hashes"] == mod.load_exp5477_workloads(REPO)[
++        "cpu_reference_hashes"
++    ]
++    assert artifact["reachable_boards"] == []
++    assert {item["board_identity"] for item in artifact["unreachable_boards"]} == {
++        "kv260",
++        "polarfire",
++        "gatemate",
++    }
++    assert artifact["board_receipts"] == []
++    assert artifact["result_hash_match_rate"] == 0.0
++    assert artifact["hardware_receipts_ready"] is False
++    assert "no_reachable_workload_board" in artifact["readiness_blockers"]
++    assert artifact["honest_verdict"].startswith("blocked:")
++    mod.validate_artifact(artifact)
++
++
++def test_req_verify_5478_hash_mismatch_blocks_receipt_readiness() -> None:
++    """REQ-VERIFY-5478: board result drift blocks readiness and speedup claims."""
++
++    workload = mod.load_exp5477_workloads(REPO)
++    outputs = [
++        _board_stdout("polarfire", workload, wall_time_s=0.43 + 0.001 * index)
++        for index in range(mod.REPEAT_TARGET)
++    ]
++    bad_hashes = list(workload["cpu_reference_hashes"])
++    bad_hashes[1] = "1" * 64
++    outputs[1] = _board_stdout("polarfire", workload, result_hashes=bad_hashes, wall_time_s=0.44)
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=_runner(kv260_reachable=False, polarfire_outputs=outputs),
++        clock=VariableClock(),
++        run_date="20260709",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert artifact["reachable_boards"] == ["polarfire"]
++    assert artifact["board_receipts"][0]["matched_repeat_count"] == mod.REPEAT_TARGET - 1
++    assert artifact["result_hash_match_rate"] == pytest.approx(2 / 3)
++    assert artifact["hardware_receipts_ready"] is False
++    assert artifact["hardware_speedup_claim"] is False
++    assert "board_hash_mismatch" in artifact["readiness_blockers"]
++    assert artifact["honest_verdict"].startswith("blocked:")
++    mod.validate_artifact(artifact)
++
++
++def test_req_verify_5478_validation_rejects_unsafe_schema_drift() -> None:
++    """REQ-VERIFY-5478: validator fails closed on unsafe receipt drift."""
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        command_runner=_runner(kv260_reachable=False, polarfire_reachable=True),
++        clock=VariableClock(),
++        run_date="20260709",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    mod.validate_artifact(artifact)
++
++    missing = deepcopy(artifact)
++    missing.pop("cpu_reference_hashes")
++    with pytest.raises(ValueError, match="missing required field"):
++        mod.validate_artifact(missing)
++
++    speedup = deepcopy(artifact)
++    speedup["hardware_speedup_claim"] = True
++    with pytest.raises(ValueError, match="hardware_speedup_claim"):
++        mod.validate_artifact(speedup)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "hardware_sampler"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    promoted_gatemate = deepcopy(artifact)
++    promoted_gatemate["board_receipts"][0]["board_identity"] = "gatemate"
++    promoted_gatemate["reachable_boards"] = ["gatemate"]
++    promoted_gatemate["hardware_receipts_ready"] = False
++    with pytest.raises(ValueError, match="diagnostic-only"):
++        mod.validate_artifact(promoted_gatemate)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["board_receipts"][0]["stdout_sha256"] = "2" * 64
++    bad_checksum["hardware_receipts_ready"] = False
++    with pytest.raises(ValueError, match="stdout_sha256"):
++        mod.validate_artifact(bad_checksum)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    bad_tests["hardware_receipts_ready"] = False
++    with pytest.raises(ValueError, match="tests_run"):
++        mod.validate_artifact(bad_tests)
++
++
++def test_req_verify_5478_helpers_writer_and_repository_artifact(tmp_path: Path) -> None:
++    """REQ-VERIFY-5478: helpers, writer, and checked-in artifact stay valid."""
++
++    workload = mod.load_exp5477_workloads(REPO)
++    command = mod.board_workload_command("polarfire", workload)
++    ok = mod.run_command(("sh", "-lc", "printf ok"), timeout_s=1.0)
++    missing = mod.run_command(("definitely_missing_carnot_5478",), timeout_s=0.1)
++    timeout = mod.run_command(("sh", "-lc", "sleep 0.2"), timeout_s=0.01)
++
++    assert ok.exit_code == 0
++    assert ok.stdout == "ok"
++    assert missing.exit_code == 127
++    assert timeout.exit_code == 124
++    assert command[0] == "ssh"
++    assert mod.timing_distribution([]) == {
++        "count": 0,
++        "min_s": 0.0,
++        "max_s": 0.0,
++        "mean_s": 0.0,
++        "median_s": 0.0,
++        "variance_s2": 0.0,
++    }
++    assert mod.parse_board_workload_stdout("\nnot json\n[]\n", workload, "polarfire") == (
++        None,
++        "workload stdout is not valid JSON",
++    )
++
++    bad_payload = json.loads(_board_stdout("polarfire", workload))
++    bad_payload.update(
++        {
++            "aggregate_result_hash": "4" * 64,
++            "board_identity": "wrong",
++            "board_local": False,
++            "result_hashes": ["2" * 64],
++            "wall_time_s": -0.1,
++            "workload_hashes": ["3" * 64],
++        }
++    )
++    _, parse_error = mod.parse_board_workload_stdout(
++        json.dumps(bad_payload, sort_keys=True),
++        workload,
++        "polarfire",
++    )
++    assert parse_error is not None
++    for marker in (
++        "board_identity mismatch",
++        "workload_hashes mismatch",
++        "result_hashes mismatch",
++        "aggregate_result_hash mismatch",
++        "board_local missing",
++        "wall_time_s invalid",
++    ):
++        assert marker in parse_error
++
++    assert mod.readiness_blockers(
++        cpu_stable=False,
++        reachable_workload_count=0,
++        match_rate=0.0,
++    ) == ["cpu_reference_unstable", "no_reachable_workload_board"]
++    assert mod.readiness_blockers(
++        cpu_stable=True,
++        reachable_workload_count=1,
++        match_rate=1.0,
++        upstream_hash_match=False,
++    ) == ["upstream_workload_hash_mismatch"]
++    assert mod.default_tests_run()[0]["outcome"] == "pending_external_test_run"
++
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        workload_root=REPO,
++        command_runner=_runner(kv260_reachable=False, polarfire_reachable=False),
++        clock=VariableClock(),
++        run_date="20260709",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert saved["spec_refs"] == list(mod.SPEC_REFS)
++    assert saved["hardware_speedup_claim"] is False
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    mod.validate_artifact(saved)
++
++    if RESULT_PATH.exists():
++        checked_in = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++        assert checked_in["experiment_id"] == mod.EXPERIMENT_ID
++        assert checked_in["reproducibility_checksum"] == mod.payload_checksum(checked_in)
++        assert checked_in["hardware_speedup_claim"] is False
++        mod.validate_artifact(checked_in)
+-- 
+2.55.0
+

@@ -1,0 +1,23 @@
+From 2ac92361182bd456aefe15c6f36324ac9427b11b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 01:39:36 -0400
+Subject: [PATCH 07877/11362] [conductor] In-process docs for Gated on Exp5907
+ replay: VeriSynth-style decomposition and retrieval fixture
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0f02496301..c0d2e40960 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11874,3 +11874,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-25: Exact terminal-boundary handoff from .524 into .525 (⚠️ Blocked) — honest_verdict=blocked: Exp5905 transition preconditions failed; results/experiment_5905_transition_v525.json
+ - 2026-07-25: Dated evidence refresh after the V525 planner marker (✅ Complete) — honest_verdict=complete_null: no accepted post-V525 source deltas; references unchanged; results/experiment_5906_v525_source_delta_ingestion.json
+ - 2026-07-25: Canonical producer-consumer replay contract for typed ConstraintIR (✅ Complete) — honest_verdict=complete_ready: ConstraintIR replay contract is shared, row-bound, and tamper-rejecting; results/experiment_5907_constraint_ir_replay_contract.json
++- 2026-07-25: Gated on Exp5907 replay: VeriSynth-style decomposition and retrieval fixture (✅ Complete) — honest_verdict=ready: deterministic ConstraintIR decomposition and retrieval plans replay exactly; results/experiment_5908_verisynth_constraint_fixture.json
+-- 
+2.55.0
+

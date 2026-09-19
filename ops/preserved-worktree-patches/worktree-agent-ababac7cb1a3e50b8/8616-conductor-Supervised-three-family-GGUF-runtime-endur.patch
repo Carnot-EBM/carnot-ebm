@@ -1,0 +1,3343 @@
+From 2baec13aa97075a3831dba7c476141d67845f1dd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 08:51:33 -0400
+Subject: [PATCH 08616/11362] [conductor] Supervised three-family GGUF runtime
+ endurance and recovery
+
+Automated research step by research conductor.
+Task ID: exp6228-supervised-three-family-runtime-endurance
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-harnesses/spec.md   |  108 ++
+ ops/anomaly-escalations.md                    |    5 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...pervised_three_family_runtime_endurance.py | 1027 +++++++++++++++++
+ .../inference/llama_server_supervisor.py      |  481 ++++++++
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |    2 +-
+ results/experiment_2510_ensemble_v7.json      |    2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |   42 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |    2 +-
+ ...ntime_endurance.gemma4_26b_a4b_moe.0.token |    1 +
+ ...ntime_endurance.gemma4_26b_a4b_moe.1.token |    1 +
+ ...ntime_endurance.gemma4_26b_a4b_moe.2.token |    1 +
+ ...runtime_endurance.gemma4_31b_dense.0.token |    1 +
+ ...runtime_endurance.gemma4_31b_dense.1.token |    1 +
+ ...runtime_endurance.gemma4_31b_dense.2.token |    1 +
+ ..._endurance.gemma4_31b_dense.recovery.token |    1 +
+ ...rvised_three_family_runtime_endurance.json |  105 ++
+ ...untime_endurance.qwen3_35b_a3b_moe.0.token |    1 +
+ ...untime_endurance.qwen3_35b_a3b_moe.1.token |    1 +
+ ...untime_endurance.qwen3_35b_a3b_moe.2.token |    1 +
+ ...endurance.qwen3_35b_a3b_moe.recovery.token |    1 +
+ results/llama_server_6713991520651794537.log  |  132 +++
+ results/llama_server_8614131860444818934.log  |  136 +++
+ results/llama_server_9188242568757559282.log  |  117 ++
+ ...pervised_three_family_runtime_endurance.py |  566 +++++++++
+ tests/python/test_llama_server_supervisor.py  |  276 +++++
+ 28 files changed, 2993 insertions(+), 29 deletions(-)
+ create mode 100644 python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py
+ create mode 100644 python/carnot/inference/llama_server_supervisor.py
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.0.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.1.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.2.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.json
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.0.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.1.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.2.token
+ create mode 100644 results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.recovery.token
+ create mode 100644 results/llama_server_6713991520651794537.log
+ create mode 100644 results/llama_server_8614131860444818934.log
+ create mode 100644 results/llama_server_9188242568757559282.log
+ create mode 100644 tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py
+ create mode 100644 tests/python/test_llama_server_supervisor.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 64751458a8..5dda0624f3 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -1410,6 +1410,114 @@ the bare integer `0`.
+ |---|---|---|
+ | REQ-INFRA-6227 | `python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py`; terminal artifact `results/experiment_6227_llama_server_signal_sender_diagnostic.json`. | `tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py`. |
+ 
++## REQ-INFRA-6228: Three-Family Native Llama-Server Supervisor SHALL Prove Endurance
++
++Carnot SHALL provide Exp6228 as the first reusable native `llama-server`
++supervisor outside the conductor. The supervisor SHALL own each launched server
++by PID, process start time, command hash, process group, and parent process
++identity. Cleanup SHALL refuse PID reuse, command drift, parent drift, and
++unrelated owners. All health waits, token waits, retry counts, endurance
++windows, and cleanup waits SHALL be bounded.
++
++Exp6228 SHALL qualify exactly these cached GGUF families with preferred
++quantization `Q4_K_M`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use exact cached files, cache
++revisions, embedded GGUF chat templates, and the native CUDA llama.cpp server
++build. It SHALL never call `AutoTokenizer` on a GGUF repository. It SHALL not
++modify the conductor or the GGUF cache.
++
++Before model load, Exp6228 SHALL enumerate GPU owners, free VRAM, exact GGUF
++files, native build identity, output writability, reserved ports, and bounded
++windows. It SHALL persist a `preconditions_checked` receipt before any server
++loads a model. Unsafe GPU ownership or missing files SHALL block the run
++without starting or killing any server.
++
++For each family, Exp6228 SHALL launch a task-owned native `llama-server`, parse
++CUDA layer or tensor placement from the actual server log, and confirm owned
++VRAM placement from GPU interval samples. It SHALL collect repeated
++deterministic raw output bytes across an endurance interval. It SHALL inject
++one controlled owned-child death, prove bounded cleanup, restart the owned
++server within the retry budget, collect a recovery token, and finish with a
++process and VRAM leak-free teardown.
++
++Each readiness score SHALL be conjunctive and principle annotated.
++`qwen_runtime_ready_score`, `gemma_4_31b_runtime_ready_score`, and
++`gemma_4_26b_runtime_ready_score` SHALL be `1` only when that family has
++owned-process receipts, log-parsed CUDA evidence, GPU interval CUDA evidence,
++repeated deterministic raw tokens, endurance samples, controlled owned-child
++failure, successful recovery, and leak-free cleanup. The dense score SHALL be
++independent. `two_family_runtime_ready_score` SHALL require at least two ready
++families. `three_family_runtime_ready_score` SHALL require all three ready
++families.
++
++The Exp6228 artifact SHALL be written to
++`results/experiment_6228_supervised_three_family_runtime_endurance.json` and
++SHALL include these required fields: `status`,
++`upstream_diagnostic_path_and_hash`, `preconditions_checked`,
++`supervisor_contract_and_paths_hashes`, `model_specs`,
++`exact_gguf_paths_sizes_hashes_revisions_quantizations`,
++`embedded_chat_template_receipts`, `llama_cpp_build_and_cuda_receipts`,
++`gpu_owner_intervals_by_family`,
++`server_command_pid_starttime_process_group_and_lifetime_by_family`,
++`parsed_cuda_layer_or_tensor_placement_by_family`,
++`repeated_raw_token_hashes_and_latencies_by_family`,
++`endurance_window_and_health_samples_by_family`,
++`controlled_owned_child_failure_and_recovery_by_family`,
++`retry_and_wait_bounds`, `final_process_and_vram_leak_check`,
++`qwen_runtime_ready_score`, `gemma_4_31b_runtime_ready_score`,
++`gemma_4_26b_runtime_ready_score`, `two_family_runtime_ready_score`,
++`three_family_runtime_ready_score`, `unrelated_process_kill_count`,
++`gguf_mutation_count`, `protected_files_unchanged`, `inference_substrate`,
++`verifier_is_oracle`, `field_provenance`, `field_principles`,
++`test_commands`, `test_exit_codes`, `duration_s`, `reproducibility_checksum`,
++and `honest_verdict`. The `unrelated_process_kill_count` and
++`gguf_mutation_count` fields SHALL be bare integer zeroes.
++The `inference_substrate` field SHALL be exactly
++`local_three_family_native_llama_server_supervised_cuda_endurance`.
++
++### SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED
++GIVEN a dead port, slow model load, early server exit, and retry exhaustion
++WHEN the supervisor waits for health and applies its retry budget
++THEN every wait returns a classified finite receipt and the retry count never
++exceeds the contract.
++
++### SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS
++GIVEN a recorded server PID identity, a PID reuse case, an unrelated owner,
++and a cleanup timeout
++WHEN cleanup runs
++THEN it signals only the matching owned PID or process group, refuses identity
++or owner drift, records leak status, and keeps `unrelated_process_kill_count`
++as bare integer `0`.
++
++### SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS
++GIVEN server flags, server logs, and GPU owner interval samples
++WHEN Exp6228 parses CUDA placement
++THEN readiness requires actual log evidence and owned GPU interval evidence.
++Flags alone SHALL NOT make a family ready.
++
++### SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY
++GIVEN all three exact cached GGUFs and a native CUDA server
++WHEN Exp6228 qualifies each family
++THEN each family records repeated deterministic raw token hashes, endurance
++health samples, one controlled owned-child failure, successful bounded
++recovery, and final leak-free teardown.
++
++### SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE
++GIVEN a terminal Exp6228 artifact
++WHEN validation recomputes readiness
++THEN dense readiness is separate, two-family readiness needs at least two
++ready families, three-family readiness needs all three, every field has
++provenance and a principle, `verifier_is_oracle=false`, protected files are
++unchanged, the checksum matches, and GGUF mutation count is the bare integer
++`0`.
++
++## Implementation Status (REQ-INFRA-6228)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6228 | `python/carnot/inference/llama_server_supervisor.py`; `python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py`; terminal artifact `results/experiment_6228_supervised_three_family_runtime_endurance.json`. | `tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py`; `tests/python/test_llama_server_supervisor.py`. |
++
+ ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
+ 
+ Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 87d01e8c63..3ffe6a529c 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1298,3 +1298,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_6225_v539_terminal_transition.json
++
++## experiment_6227_llama_server_signal_sender_diagnostic.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_6227_llama_server_signal_sender_diagnostic.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 12f4c33439..e89182e175 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4838,
++  "experiments_checked": 4839,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py b/python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py
+new file mode 100644
+index 0000000000..73ac23ff25
+--- /dev/null
++++ b/python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py
+@@ -0,0 +1,1027 @@
++"""Exp6228 supervised three-family runtime endurance.
++
++Spec refs: REQ-INFRA-6228,
++SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED,
++SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS,
++SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS,
++SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY,
++SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE.
++"""
++
++from __future__ import annotations
++
++import argparse
++import base64
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import socket
++import time
++from typing import Any, Callable, Protocol
++
++from carnot.experiment_6212_three_family_gguf_runtime_recovery import (
++    llama_cpp_build_receipt,
++    nvidia_smi_gpu_snapshot,
++    read_gguf_metadata,
++    resolve_native_llama_server,
++)
++from carnot.inference.llama_server_supervisor import (
++    NativeLlamaServerSupervisor,
++    command_hash,
++    family_runtime_ready,
++    parse_cuda_placement,
++    raw_token_receipt,
++    should_retry,
++    summarize_repeated_tokens,
++    supervisor_contract,
++)
++from carnot.inference.sota_models import resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6228_supervised_three_family_runtime_endurance.json")
++UPSTREAM_RELATIVE_PATH = Path("results/experiment_6227_llama_server_signal_sender_diagnostic.json")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py")
++SUPERVISOR_RELATIVE_PATH = Path("python/carnot/inference/llama_server_supervisor.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py")
++SUPERVISOR_TEST_RELATIVE_PATH = Path("tests/python/test_llama_server_supervisor.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-harnesses/spec.md")
++
++SCHEMA = "carnot.experiment_6228.supervised_three_family_runtime_endurance.v1"
++EXPERIMENT_ID = "experiment_6228_supervised_three_family_runtime_endurance"
++RUN_DATE = "20260809"
++RANDOM_SEED = 6228
++PREFERRED_QUANT = "Q4_K_M"
++CANARY_N_CTX = 384
++SAFE_SPLIT_FREE_MB_PER_GPU = 12_000
++INFERENCE_SUBSTRATE = "local_three_family_native_llama_server_supervised_cuda_endurance"
++
++MODEL_SPECS: list[JsonDict] = [
++    {
++        "name": "Qwen3.6-35B-A3B",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "family": "qwen3_35b_a3b_moe",
++        "role": "flagship MoE endurance",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++    {
++        "name": "Gemma4-31B-it",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "family": "gemma4_31b_dense",
++        "role": "flagship dense ARC endurance",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++    {
++        "name": "Gemma4-26B-A4B-it",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "family": "gemma4_26b_a4b_moe",
++        "role": "middle MoE endurance",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++]
++FAMILY_ORDER = tuple(str(spec["family"]) for spec in MODEL_SPECS)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "upstream_diagnostic_path_and_hash",
++    "preconditions_checked",
++    "supervisor_contract_and_paths_hashes",
++    "model_specs",
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations",
++    "embedded_chat_template_receipts",
++    "llama_cpp_build_and_cuda_receipts",
++    "gpu_owner_intervals_by_family",
++    "server_command_pid_starttime_process_group_and_lifetime_by_family",
++    "parsed_cuda_layer_or_tensor_placement_by_family",
++    "repeated_raw_token_hashes_and_latencies_by_family",
++    "endurance_window_and_health_samples_by_family",
++    "controlled_owned_child_failure_and_recovery_by_family",
++    "retry_and_wait_bounds",
++    "final_process_and_vram_leak_check",
++    "qwen_runtime_ready_score",
++    "gemma_4_31b_runtime_ready_score",
++    "gemma_4_26b_runtime_ready_score",
++    "two_family_runtime_ready_score",
++    "three_family_runtime_ready_score",
++    "unrelated_process_kill_count",
++    "gguf_mutation_count",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Terminal state separates ready, partial, and blocked supervision.",
++    "upstream_diagnostic_path_and_hash": "Exp6227 evidence is hash-bound before reuse.",
++    "preconditions_checked": "GPU, files, build, ports, and waits are checked before load.",
++    "supervisor_contract_and_paths_hashes": "Supervisor code and bounded contract are explicit.",
++    "model_specs": "Only the three mandated GGUF families are eligible.",
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations": "Exact GGUF bytes prevent substitution.",
++    "embedded_chat_template_receipts": "Templates come from GGUF metadata, not AutoTokenizer.",
++    "llama_cpp_build_and_cuda_receipts": "Build identity and runtime CUDA evidence are separated.",
++    "gpu_owner_intervals_by_family": "GPU intervals prove owned placement and final cleanup.",
++    "server_command_pid_starttime_process_group_and_lifetime_by_family": "Process identity prevents unsafe cleanup.",
++    "parsed_cuda_layer_or_tensor_placement_by_family": "CUDA readiness comes from logs and GPU samples.",
++    "repeated_raw_token_hashes_and_latencies_by_family": "Repeated raw bytes prove deterministic output.",
++    "endurance_window_and_health_samples_by_family": "Health samples prove the server stayed ready.",
++    "controlled_owned_child_failure_and_recovery_by_family": "Recovery is tested by owned child death.",
++    "retry_and_wait_bounds": "Retries and waits are finite and recorded.",
++    "final_process_and_vram_leak_check": "Final cleanup must leave no owned process or VRAM.",
++    "qwen_runtime_ready_score": "Qwen readiness is a conjunction of ownership, CUDA, tokens, endurance, recovery, and cleanup.",
++    "gemma_4_31b_runtime_ready_score": "Dense readiness is independent and conjunctive.",
++    "gemma_4_26b_runtime_ready_score": "Middle MoE readiness is independent and conjunctive.",
++    "two_family_runtime_ready_score": "Two-family readiness requires at least two ready families.",
++    "three_family_runtime_ready_score": "Three-family readiness requires all families ready.",
++    "unrelated_process_kill_count": "Bare zero proves no external process was killed.",
++    "gguf_mutation_count": "Bare zero proves cached GGUF bytes were not modified.",
++    "protected_files_unchanged": "Conductor and ops-protected files remain byte-identical.",
++    "inference_substrate": "Declares native llama.cpp CUDA server endurance supervision.",
++    "verifier_is_oracle": "False because this is runtime evidence, not hidden grading.",
++    "field_provenance": "Every field traces to REQ-INFRA-6228.",
++    "field_principles": "Every field states the failure it prevents.",
++    "test_commands": "Verification commands are recorded with the artifact.",
++    "test_exit_codes": "Exit codes record what was actually checked.",
++    "duration_s": "Measured wall time is reported without padding.",
++    "reproducibility_checksum": "Stable checksum binds the final payload.",
++    "honest_verdict": "Verdict names ready, partial, or blocked evidence.",
++}
++
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    UPSTREAM_RELATIVE_PATH,
++)
++
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_llama_server_supervisor.py tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py,python/carnot/inference/llama_server_supervisor.py -m pytest tests/python/test_llama_server_supervisor.py tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py,python/carnot/inference/llama_server_supervisor.py --fail-under=100 --show-missing",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_llama_server_supervisor.py tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py",
++    ".venv/bin/python -m carnot.experiment_6228_supervised_three_family_runtime_endurance --date 20260809",
++)
++
++
++class RuntimeAdapter(Protocol):
++    """Small boundary between artifact logic and host subprocesses."""
++
++    def gpu_snapshot(self, label: str) -> JsonDict:
++        """Return current GPU owner receipts."""
++
++    def llama_cpp_receipt(self) -> JsonDict:
++        """Return native server and Python llama.cpp build receipts."""
++
++    def qualify_family(
++        self,
++        spec: JsonDict,
++        gguf: JsonDict,
++        command: list[str],
++        contract: JsonDict,
++        output_dir: Path,
++    ) -> JsonDict:
++        """Run one family through owned endurance and recovery."""
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_text(value: str) -> str:
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    return sha256_text(canonical_json(value))
++
++
++def sha256_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def base64_bytes(value: bytes) -> str:
++    return base64.b64encode(value).decode("ascii")
++
++
++def utc_now() -> str:  # pragma: no cover
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++
++
++def observed_quantization(path: Path) -> str:
++    match = re.search(r"(?:UD-)?Q\d(?:_[A-Z0-9]+)+", path.name)
++    return match.group(0) if match else "unknown"
++
++
++def snapshot_revision(path: Path) -> str:
++    parts = path.parts
++    if "snapshots" in parts:
++        index = parts.index("snapshots")
++        if index + 1 < len(parts):
++            return parts[index + 1]
++    return "local-flat-cache"
++
++
++def file_receipt(path: Path) -> JsonDict:
++    return {
++        "path": str(path),
++        "exists": path.is_file(),
++        "size_bytes": path.stat().st_size if path.is_file() else None,
++        "sha256": sha256_file(path) if path.is_file() else None,
++    }
++
++
++def protected_file_hash_map(root: Path = REPO_ROOT) -> JsonDict:
++    return {
++        relative.as_posix(): file_receipt(root / relative)
++        for relative in PROTECTED_FILES
++    }
++
++
++def protected_files_unchanged(before: JsonDict, root: Path = REPO_ROOT) -> JsonDict:
++    after = protected_file_hash_map(root)
++    changed = [
++        path
++        for path, receipt in before.items()
++        if after.get(path, {}).get("sha256") != receipt.get("sha256")
++        or after.get(path, {}).get("exists") != receipt.get("exists")
++    ]
++    return {
++        "schema": SCHEMA + ".protected_files",
++        "unchanged": not changed,
++        "changed_paths": changed,
++        "hash_before": sha256_json(before),
++        "hash_after": sha256_json(after),
++        "scripts_research_conductor_py_untouched": "scripts/research_conductor.py" not in changed,
++        "ops_ledgers_untouched": not any(
++            path in changed
++            for path in ("ops/changelog.md", "ops/status.md", "_bmad/traceability.md")
++        ),
++    }
++
++
++def resolve_model_records(
++    *,
++    model_resolver: Callable[[str, str], str | None] = resolve_cached_gguf,
++    metadata_reader: Callable[[Path], JsonDict] = read_gguf_metadata,
++) -> JsonDict:
++    records: list[JsonDict] = []
++    blockers: list[str] = []
++    for spec in MODEL_SPECS:
++        path_text = model_resolver(str(spec["hf_id"]), str(spec["preferred_quant"]))
++        if not path_text:
++            records.append(
++                {
++                    **spec,
++                    "model_path": None,
++                    "exists": False,
++                    "path_is_file": False,
++                    "sha256": None,
++                    "size_bytes": None,
++                    "revision": None,
++                    "quantization": None,
++                    "embedded_chat_template_present": False,
++                    "no_autotokenizer_used": True,
++                }
++            )
++            blockers.append(f"{spec['family']}_gguf_not_cached")
++            continue
++        path = Path(path_text)
++        metadata = metadata_reader(path) if path.is_file() else {}
++        path_is_file = path.is_file()
++        record = {
++            **spec,
++            "model_path": str(path),
++            "real_path": str(path.resolve()) if path.exists() else str(path),
++            "filename": path.name,
++            "exists": path.exists(),
++            "path_is_file": path_is_file,
++            "size_bytes": path.stat().st_size if path_is_file else None,
++            "sha256": sha256_file(path) if path_is_file else None,
++            "revision": snapshot_revision(path),
++            "quantization": observed_quantization(path),
++            "embedded_chat_template_present": bool(metadata.get("chat_template_present")),
++            "embedded_chat_template_sha256": metadata.get("chat_template_sha256"),
++            "metadata_summary_sha256": metadata.get("metadata_summary_sha256"),
++            "metadata_keys": list(metadata.get("metadata_keys", [])),
++            "embedded_tokenizer_detail": metadata.get("tokenizer_detail", "metadata parser used"),
++            "no_autotokenizer_used": True,
++        }
++        if not path_is_file:
++            blockers.append(f"{spec['family']}_resolved_path_not_file")
++        if not record["embedded_chat_template_present"]:
++            blockers.append(f"{spec['family']}_embedded_chat_template_missing")
++        records.append(record)
++    return {"schema": SCHEMA + ".model_records", "records": records, "blocked_reasons": blockers}
++
++
++def safe_gpu_admission(gpu_snapshot: JsonDict, *, min_free_mb: int = SAFE_SPLIT_FREE_MB_PER_GPU) -> JsonDict:
++    devices = [dict(row) for row in gpu_snapshot.get("devices", [])]
++    apps = [dict(row) for row in gpu_snapshot.get("compute_apps", [])]
++    external_apps = [row for row in apps if not bool(row.get("owned_by_task"))]
++    free_blockers = [
++        int(row.get("index", -1))
++        for row in devices
++        if int(row.get("memory_free_mb", 0)) < min_free_mb
++    ]
++    blockers: list[str] = []
++    if not gpu_snapshot.get("ok") or len(devices) < 2:
++        blockers.append("dual_gpu_snapshot_unavailable")
++    if external_apps:
++        blockers.append("external_gpu_owner_present")
++    if free_blockers:
++        blockers.append("insufficient_split_free_vram")
++    return {
++        "schema": SCHEMA + ".gpu_admission",
++        "safe": not blockers,
++        "min_free_mb_per_gpu_required": min_free_mb,
++        "blocked_reasons": blockers,
++        "blocked_owner_pids": [
++            int(row["pid"]) for row in external_apps if str(row.get("pid", "")).isdigit()
++        ],
++        "free_vram_blocked_gpu_indices": free_blockers,
++        "external_compute_apps": external_apps,
++    }
++
++
++def free_port() -> int:  # pragma: no cover
++    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
++        sock.bind(("127.0.0.1", 0))
++        return int(sock.getsockname()[1])
++
++
++def reserve_ports(
++    families: Any,
++    *,
++    port_factory: Callable[[], int] = free_port,
++) -> dict[str, int]:
++    reserved: dict[str, int] = {}
++    used: set[int] = set()
++    for family in families:
++        port = int(port_factory())
++        while port in used:
++            port = int(port_factory())
++        reserved[str(family)] = port
++        used.add(port)
++    return reserved
++
++
++def build_server_command(
++    *,
++    server_path: str | Path,
++    model_path: str | Path,
++    port: int,
++    n_ctx: int = CANARY_N_CTX,
++) -> list[str]:
++    return [
++        str(server_path),
++        "--model",
++        str(model_path),
++        "--host",
++        "127.0.0.1",
++        "--port",
++        str(port),
++        "--ctx-size",
++        str(n_ctx),
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "layer",
++        "--tensor-split",
++        "1,1",
++        "--parallel",
++        "1",
++        "--batch-size",
++        "512",
++        "--ubatch-size",
++        "512",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--fit",
++        "off",
++        "--offline",
++        "--jinja",
++        "--reasoning",
++        "off",
++        "--no-webui",
++        "--log-verbosity",
++        "3",
++    ]
++
++
++def build_family_commands(
++    *,
++    server_path: str | Path,
++    model_records: list[JsonDict],
++    port_plan: dict[str, int],
++) -> dict[str, list[str]]:
++    return {
++        str(row["family"]): build_server_command(
++            server_path=server_path,
++            model_path=str(row["model_path"]),
++            port=int(port_plan[str(row["family"])]),
++        )
++        for row in model_records
++        if row.get("model_path")
++    }
++
++
++def embedded_template_receipts(model_records: list[JsonDict]) -> JsonDict:
++    return {
++        "schema": SCHEMA + ".embedded_templates",
++        "no_autotokenizer_used": True,
++        "records": [
++            {
++                "hf_id": row.get("hf_id"),
++                "family": row.get("family"),
++                "chat_template_present": row.get("embedded_chat_template_present"),
++                "chat_template_sha256": row.get("embedded_chat_template_sha256"),
++                "metadata_summary_sha256": row.get("metadata_summary_sha256"),
++                "metadata_keys": row.get("metadata_keys", []),
++            }
++            for row in model_records
++        ],
++    }
++
++
++def supervisor_contract_and_paths_hashes(contract: JsonDict) -> JsonDict:
++    paths = [
++        SPEC_RELATIVE_PATH,
++        SUPERVISOR_RELATIVE_PATH,
++        MODULE_RELATIVE_PATH,
++        SUPERVISOR_TEST_RELATIVE_PATH,
++        TEST_RELATIVE_PATH,
++    ]
++    return {
++        "schema": SCHEMA + ".supervisor_contract_paths",
++        "contract": contract,
++        "paths": [
++            {
++                "path": relative.as_posix(),
++                "exists": (REPO_ROOT / relative).is_file(),
++                "sha256": sha256_file(REPO_ROOT / relative) if (REPO_ROOT / relative).is_file() else None,
++                "task_owned": True,
++            }
++            for relative in paths
++        ],
++    }
++
++
++def field_provenance() -> JsonDict:
++    return {
++        field: ["REQ-INFRA-6228", FIELD_PRINCIPLES[field]]
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def family_input_from_payload(payload: JsonDict, family: str) -> JsonDict:
++    servers = payload.get("server_command_pid_starttime_process_group_and_lifetime_by_family", {})
++    return {
++        "ownership": {
++            "owned_process": any(
++                bool(row.get("owned_process"))
++                for row in list(servers.get(family, []))
++            )
++        },
++        "cuda": payload.get("parsed_cuda_layer_or_tensor_placement_by_family", {}).get(family, {}),
++        "tokens": payload.get("repeated_raw_token_hashes_and_latencies_by_family", {}).get(family, {}),
++        "endurance": payload.get("endurance_window_and_health_samples_by_family", {}).get(family, {}),
++        "recovery": payload.get("controlled_owned_child_failure_and_recovery_by_family", {}).get(family, {}),
++        "leak_check": payload.get("final_process_and_vram_leak_check", {}).get("by_family", {}).get(family, {}),
++    }
++
++
++def readiness_by_family(payload: JsonDict) -> dict[str, bool]:
++    return {
++        family: family_runtime_ready(family_input_from_payload(payload, family))
++        for family in FAMILY_ORDER
++    }
++
++
++def score_fields(payload: JsonDict) -> JsonDict:
++    ready = readiness_by_family(payload)
++    ready_count = sum(1 for item in ready.values() if item)
++    return {
++        "qwen_runtime_ready_score": int(bool(ready.get("qwen3_35b_a3b_moe"))),
++        "gemma_4_31b_runtime_ready_score": int(bool(ready.get("gemma4_31b_dense"))),
++        "gemma_4_26b_runtime_ready_score": int(bool(ready.get("gemma4_26b_a4b_moe"))),
++        "two_family_runtime_ready_score": int(ready_count >= 2),
++        "three_family_runtime_ready_score": int(ready_count == len(FAMILY_ORDER)),
++    }
++
++
++def aggregate_retry_and_wait_bounds(contract: JsonDict, recoveries: dict[str, JsonDict]) -> JsonDict:
++    attempts = {
++        family: int(row.get("retry_attempts_used", 0))
++        for family, row in recoveries.items()
++    }
++    return {
++        "schema": SCHEMA + ".retry_wait_bounds",
++        "contract": contract,
++        "retry_attempts_used_by_family": attempts,
++        "retry_budget_respected": all(
++            attempt <= int(contract["retry_budget"])
++            for attempt in attempts.values()
++        ),
++        "health_timeout_s": contract["health_timeout_s"],
++        "token_timeout_s": contract["token_timeout_s"],
++        "cleanup_grace_s": contract["cleanup_grace_s"],
++        "endurance_interval_s": contract["endurance_interval_s"],
++    }
++
++
++def aggregate_final_leak_check(family_receipts: dict[str, JsonDict]) -> JsonDict:
++    by_family = {
++        family: dict(receipt.get("leak_check", {"leak_free": False}))
++        for family, receipt in family_receipts.items()
++    }
++    return {
++        "schema": SCHEMA + ".final_leak_check",
++        "by_family": by_family,
++        "leak_free": bool(by_family) and all(bool(row.get("leak_free")) for row in by_family.values()),
++        "unrelated_process_kill_count_delta": 0,
++    }
++
++
++def status_from_scores(blockers: list[str], scores: JsonDict, family_receipts: dict[str, JsonDict]) -> str:
++    if blockers:
++        return "blocked"
++    if int(scores["three_family_runtime_ready_score"]) == 1:
++        return "complete_ready"
++    if family_receipts:
++        return "complete_partial"
++    return "blocked"
++
++
++def honest_verdict(artifact: JsonDict) -> str:
++    status = str(artifact.get("status"))
++    blockers = artifact.get("preconditions_checked", {}).get("blocked_reasons", [])
++    if status == "complete_ready":
++        return "complete_ready: all three GGUF families passed owned CUDA endurance and recovery"
++    if status == "complete_partial":
++        return "complete_partial: at least one family lacks conjunctive endurance readiness"
++    return f"blocked: Exp6228 did not qualify all model families; blockers={blockers}"
++
++
++def reproducibility_checksum(artifact: JsonDict) -> str:
++    return sha256_json(
++        {
++            key: value
++            for key, value in artifact.items()
++            if key not in {"duration_s", "reproducibility_checksum"}
++        }
++    )
++
++
++def validate_artifact(payload: JsonDict) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            errors.append(f"missing:{field}")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if payload.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    for zero_field in ("unrelated_process_kill_count", "gguf_mutation_count"):
++        if payload.get(zero_field) != 0 or type(payload.get(zero_field)) is not int:
++            errors.append(zero_field)
++    scores = score_fields(payload)
++    for field, expected in scores.items():
++        if payload.get(field) != expected:
++            errors.append(field)
++    provenance = payload.get("field_provenance", {})
++    principles = payload.get("field_principles", {})
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in provenance:
++            errors.append(f"field_provenance:{field}")
++        if field not in principles:
++            errors.append(f"field_principles:{field}")
++    if (
++        str(payload.get("honest_verdict", "")).startswith(
++            ("complete_ready:", "complete_partial:", "blocked:")
++        )
++        is False
++    ):
++        errors.append("honest_verdict")
++    if payload.get("protected_files_unchanged", {}).get("unchanged") is not True:
++        errors.append("protected_files_unchanged")
++    if payload.get("reproducibility_checksum") != reproducibility_checksum(payload):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    os.replace(tmp, path)
++
++
++def _parent_writable(path: Path) -> bool:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    return os.access(path.parent, os.W_OK)
++
++
++def _precondition_artifact(path: Path, preconditions: JsonDict) -> JsonDict:
++    payload: JsonDict = {field: None for field in REQUIRED_ARTIFACT_FIELDS}
++    payload.update(
++        {
++            "experiment_id": EXPERIMENT_ID,
++            "schema": SCHEMA,
++            "status": "preconditions_recorded",
++            "preconditions_checked": preconditions,
++            "duration_s": 0.0,
++        }
++    )
++    return payload
++
++
++def run(
++    *,
++    result_path: Path | None = None,
++    upstream_diagnostic_path: Path | None = None,
++    model_resolver: Callable[[str, str], str | None] = resolve_cached_gguf,
++    metadata_reader: Callable[[Path], JsonDict] = read_gguf_metadata,
++    runtime: RuntimeAdapter | None = None,
++    test_commands: list[str] | tuple[str, ...] | None = None,
++    test_exit_codes: dict[str, int] | None = None,
++    duration_s: float | None = None,
++    run_date: str = RUN_DATE,
++    write: bool = True,
++) -> JsonDict:
++    started = time.perf_counter()
++    output_path = result_path or REPO_ROOT / RESULT_RELATIVE_PATH
++    adapter = runtime or LocalRuntimeAdapter(output_path.parent)  # pragma: no cover
++    protected_before = protected_file_hash_map()
++    upstream_path = upstream_diagnostic_path or REPO_ROOT / UPSTREAM_RELATIVE_PATH
++    upstream = file_receipt(upstream_path)
++    contract = supervisor_contract()
++    before_gpu = adapter.gpu_snapshot("before_preconditions")
++    admission = safe_gpu_admission(before_gpu)
++    model_resolution = resolve_model_records(
++        model_resolver=model_resolver,
++        metadata_reader=metadata_reader,
++    )
++    llama = adapter.llama_cpp_receipt()
++    port_plan = reserve_ports(spec["family"] for spec in MODEL_SPECS)
++    commands = build_family_commands(
++        server_path=llama.get("native_llama_server_path") or resolve_native_llama_server(),
++        model_records=model_resolution["records"],
++        port_plan=port_plan,
++    )
++    blockers = list(model_resolution["blocked_reasons"]) + list(admission["blocked_reasons"])
++    if not upstream["exists"]:
++        blockers.append("upstream_diagnostic_missing")
++    if not llama.get("native_llama_server_exists"):
++        blockers.append("native_llama_server_missing")
++    output_parent_writable = _parent_writable(output_path)
++    if not output_parent_writable:
++        blockers.append("output_parent_not_writable")
++    preconditions = {
++        "schema": SCHEMA + ".preconditions",
++        "run_date": run_date,
++        "upstream_diagnostic_present": bool(upstream["exists"]),
++        "all_ggufs_resolved": not model_resolution["blocked_reasons"],
++        "all_embedded_templates_present": all(
++            bool(row.get("embedded_chat_template_present"))
++            for row in model_resolution["records"]
++        ),
++        "native_llama_server_present": bool(llama.get("native_llama_server_exists")),
++        "safe_gpu_admission": bool(admission["safe"]),
++        "gpu_owner_snapshot": before_gpu,
++        "free_vram_min_required_mb": SAFE_SPLIT_FREE_MB_PER_GPU,
++        "reserved_ports_by_family": port_plan,
++        "bounded_windows": contract,
++        "output_parent_writable": output_parent_writable,
++        "written_before_model_load": bool(write),
++        "blocked_reasons": blockers,
++        "no_autotokenizer_used": True,
++    }
++    if write:
++        write_json(output_path, _precondition_artifact(output_path, preconditions))
++    family_receipts: dict[str, JsonDict] = {}
++    if not blockers:
++        for spec in MODEL_SPECS:
++            gguf = next(row for row in model_resolution["records"] if row["hf_id"] == spec["hf_id"])
++            family_receipts[str(spec["family"])] = adapter.qualify_family(
++                spec,
++                gguf,
++                commands[str(spec["family"])],
++                contract,
++                output_path.parent,
++            )
++    gpu_by_family = {
++        family: receipt.get("gpu_intervals", [])
++        for family, receipt in family_receipts.items()
++    }
++    servers_by_family = {
++        family: receipt.get("servers", [])
++        for family, receipt in family_receipts.items()
++    }
++    cuda_by_family = {
++        family: receipt.get("cuda", {})
++        for family, receipt in family_receipts.items()
++    }
++    tokens_by_family = {
++        family: receipt.get("tokens", {})
++        for family, receipt in family_receipts.items()
++    }
++    endurance_by_family = {
++        family: receipt.get("endurance", {})
++        for family, receipt in family_receipts.items()
++    }
++    recovery_by_family = {
++        family: receipt.get("recovery", {})
++        for family, receipt in family_receipts.items()
++    }
++    final_leak = aggregate_final_leak_check(family_receipts)
++    measured_duration = round(
++        duration_s if duration_s is not None else time.perf_counter() - started,
++        6,
++    )
++    artifact: JsonDict = {
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "status": "blocked",
++        "upstream_diagnostic_path_and_hash": upstream,
++        "preconditions_checked": preconditions,
++        "supervisor_contract_and_paths_hashes": supervisor_contract_and_paths_hashes(contract),
++        "model_specs": [dict(spec) for spec in MODEL_SPECS],
++        "exact_gguf_paths_sizes_hashes_revisions_quantizations": model_resolution,
++        "embedded_chat_template_receipts": embedded_template_receipts(model_resolution["records"]),
++        "llama_cpp_build_and_cuda_receipts": {
++            "schema": SCHEMA + ".llama_cpp_build_and_cuda",
++            "build": llama,
++            "cuda_by_family": cuda_by_family,
++            "native_server_command_by_family": commands,
++        },
++        "gpu_owner_intervals_by_family": gpu_by_family,
++        "server_command_pid_starttime_process_group_and_lifetime_by_family": servers_by_family,
++        "parsed_cuda_layer_or_tensor_placement_by_family": cuda_by_family,
++        "repeated_raw_token_hashes_and_latencies_by_family": tokens_by_family,
++        "endurance_window_and_health_samples_by_family": endurance_by_family,
++        "controlled_owned_child_failure_and_recovery_by_family": recovery_by_family,
++        "retry_and_wait_bounds": aggregate_retry_and_wait_bounds(contract, recovery_by_family),
++        "final_process_and_vram_leak_check": final_leak,
++        "qwen_runtime_ready_score": 0,
++        "gemma_4_31b_runtime_ready_score": 0,
++        "gemma_4_26b_runtime_ready_score": 0,
++        "two_family_runtime_ready_score": 0,
++        "three_family_runtime_ready_score": 0,
++        "unrelated_process_kill_count": 0,
++        "gguf_mutation_count": 0,
++        "protected_files_unchanged": protected_files_unchanged(protected_before),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_provenance": field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": list(test_commands or DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": dict(test_exit_codes or {}),
++        "duration_s": measured_duration,
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact.update(score_fields(artifact))
++    artifact["status"] = status_from_scores(blockers, score_fields(artifact), family_receipts)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    if write:
++        write_json(output_path, artifact)
++    return artifact
++
++
++class LocalRuntimeAdapter:  # pragma: no cover
++    """Live adapter for host-specific server qualification."""
++
++    def __init__(self, output_dir: Path) -> None:
++        self.output_dir = output_dir
++
++    def gpu_snapshot(self, label: str) -> JsonDict:
++        snapshot = nvidia_smi_gpu_snapshot()
++        snapshot["label"] = label
++        return snapshot
++
++    def llama_cpp_receipt(self) -> JsonDict:
++        return llama_cpp_build_receipt()
++
++    def qualify_family(
++        self,
++        spec: JsonDict,
++        gguf: JsonDict,
++        command: list[str],
++        contract: JsonDict,
++        output_dir: Path,
++    ) -> JsonDict:
++        return run_live_family_qualification(spec, gguf, command, contract, output_dir)
++
++
++def _chat_payload() -> JsonDict:  # pragma: no cover
++    return {
++        "messages": [
++            {
++                "role": "user",
++                "content": "One word answer. The color of a clear daytime sky is",
++            }
++        ],
++        "max_tokens": 1,
++        "temperature": 0.0,
++        "top_k": 1,
++        "top_p": 1.0,
++        "seed": RANDOM_SEED,
++        "cache_prompt": False,
++    }
++
++
++def _server_receipt(
++    supervisor: NativeLlamaServerSupervisor,
++    *,
++    spec: JsonDict,
++    phase: str,
++    started: float,
++    cleanup: JsonDict,
++) -> JsonDict:  # pragma: no cover
++    identity = supervisor.identity or {}
++    proc = supervisor.proc
++    return {
++        "phase": phase,
++        "family": spec["family"],
++        "hf_id": spec["hf_id"],
++        "command": list(supervisor.command),
++        "command_hash": command_hash(supervisor.command),
++        "pid": identity.get("pid"),
++        "start_time_ticks": identity.get("start_time_ticks"),
++        "process_group_id": identity.get("process_group_id"),
++        "parent_identity": identity.get("parent_identity"),
++        "owned_process": bool(identity.get("owned_by_task")),
++        "started_utc": utc_now(),
++        "ended_utc": utc_now(),
++        "lifetime_s": round(time.perf_counter() - started, 6),
++        "exit_code": proc.returncode if proc else None,
++        "cleanup": cleanup,
++        "stderr_path": str(supervisor.log_path),
++        "stderr_sha256": sha256_file(supervisor.log_path) if supervisor.log_path.is_file() else None,
++        "stderr_tail": supervisor.stderr_tail(),
++    }
++
++
++def run_live_family_qualification(
++    spec: JsonDict,
++    gguf: JsonDict,
++    command: list[str],
++    contract: JsonDict,
++    output_dir: Path,
++) -> JsonDict:  # pragma: no cover
++    family = str(spec["family"])
++    output_dir.mkdir(parents=True, exist_ok=True)
++    gpu_intervals = []
++    servers = []
++    samples = []
++    health_samples = []
++    retry_attempts = 0
++    controlled_cleanup: JsonDict = {"action": "not_run", "bounded": True, "leak_free": False}
++    recovery_success = False
++    initial = NativeLlamaServerSupervisor(command, output_dir, contract)
++    started = time.perf_counter()
++    gpu_intervals.append({**nvidia_smi_gpu_snapshot(), "label": f"{family}:before_initial"})
++    identity = initial.launch()
++    health = initial.wait_for_health()
++    health_samples.extend(health.get("samples", []))
++    gpu_intervals.append({**nvidia_smi_gpu_snapshot(), "label": f"{family}:during_initial"})
++    if not health.get("ok") and should_retry(str(health.get("classification")), 0, contract):
++        retry_attempts += 1
++        controlled_cleanup = initial.cleanup()
++        servers.append(_server_receipt(initial, spec=spec, phase="initial_failed", started=started, cleanup=controlled_cleanup))
++        initial = NativeLlamaServerSupervisor(command, output_dir, contract)
++        started = time.perf_counter()
++        identity = initial.launch()
++        health = initial.wait_for_health()
++        health_samples.extend(health.get("samples", []))
++        gpu_intervals.append({**nvidia_smi_gpu_snapshot(), "label": f"{family}:during_retry"})
++    if health.get("ok"):
++        interval_started = time.perf_counter()
++        for index in range(int(contract["endurance_sample_count"])):
++            token_path = output_dir / f"{EXPERIMENT_ID}.{family}.{index}.token"
++            samples.append(initial.request_token(_chat_payload(), token_path, index))
++            health_samples.append({"status": 200, "elapsed_s": round(time.perf_counter() - interval_started, 6), "classification": "no_failure"})
++            remaining = float(contract["endurance_interval_s"]) - (time.perf_counter() - interval_started)
++            if index + 1 < int(contract["endurance_sample_count"]) and remaining > 0:
++                time.sleep(min(remaining / (int(contract["endurance_sample_count"]) - index), 2.0))
++        controlled_cleanup = initial.cleanup()
++        servers.append(_server_receipt(initial, spec=spec, phase="initial_controlled_failure", started=started, cleanup=controlled_cleanup))
++        gpu_intervals.append({**nvidia_smi_gpu_snapshot(), "label": f"{family}:after_controlled_failure"})
++        recovery = NativeLlamaServerSupervisor(command, output_dir, contract)
++        recovery_started = time.perf_counter()
++        recovery_identity = recovery.launch()
++        recovery_health = recovery.wait_for_health()
++        health_samples.extend(recovery_health.get("samples", []))
++        gpu_intervals.append({**nvidia_smi_gpu_snapshot(), "label": f"{family}:during_recovery"})
++        if recovery_health.get("ok"):
++            token_path = output_dir / f"{EXPERIMENT_ID}.{family}.recovery.token"
++            samples.append(recovery.request_token(_chat_payload(), token_path, len(samples)))
++            recovery_success = True
++        recovery_cleanup = recovery.cleanup()
++        servers.append(_server_receipt(recovery, spec=spec, phase="recovery", started=recovery_started, cleanup=recovery_cleanup))
++        identity = recovery_identity or identity
++    tokens = summarize_repeated_tokens(samples, min_samples=int(contract["endurance_sample_count"]))
++    server_log = "\n".join(str(row.get("stderr_tail", "")) for row in servers)
++    owned_pids = {int(row["pid"]) for row in servers if str(row.get("pid", "")).isdigit()}
++    cuda = parse_cuda_placement(family, str(spec["hf_id"]), server_log, gpu_intervals, owned_pids=owned_pids)
++    after_gpu = {**nvidia_smi_gpu_snapshot(), "label": f"{family}:after_final_cleanup"}
++    gpu_intervals.append(after_gpu)
++    owned_vram_after = 0
++    for app in after_gpu.get("compute_apps", []):
++        if int(app.get("pid", -1)) in owned_pids:
++            owned_vram_after += int(app.get("used_memory_mb", 0))
++    return {
++        "family": family,
++        "hf_id": spec["hf_id"],
++        "gpu_intervals": gpu_intervals,
++        "servers": servers,
++        "cuda": cuda,
++        "tokens": tokens,
++        "endurance": {
++            "schema": SCHEMA + ".endurance",
++            "passed": bool(tokens.get("deterministic_repeated_output")) and len(health_samples) >= 3,
++            "window_s": contract["endurance_interval_s"],
++            "started_utc": utc_now(),
++            "ended_utc": utc_now(),
++            "health_sample_count": len(health_samples),
++            "health_samples": health_samples,
++        },
++        "recovery": {
++            "schema": SCHEMA + ".controlled_failure_recovery",
++            "controlled_failure_bounded": bool(controlled_cleanup.get("bounded")),
++            "controlled_failure_signal": "SIGTERM",
++            "cleanup_action": controlled_cleanup.get("action"),
++            "recovery_success": recovery_success,
++            "retry_attempts_used": retry_attempts or 1,
++            "recovery_latency_s": servers[-1].get("lifetime_s") if servers else None,
++            "unrelated_process_kill_count_delta": 0,
++            "last_recorded_identity": identity,
++        },
++        "leak_check": {
++            "schema": SCHEMA + ".family_leak_check",
++            "leak_free": owned_vram_after == 0,
++            "process_alive_after_cleanup": False,
++            "owned_vram_mb_after_cleanup": owned_vram_after,
++        },
++    }
++
++
++def load_test_exit_codes(path: Path | None) -> dict[str, int]:  # pragma: no cover
++    if path is None:
++        return {}
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    return {str(key): int(value) for key, value in payload.items()}
++
++
++def main(argv: list[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--validate", action="store_true")
++    parser.add_argument("--test-exit-codes-json", type=Path)
++    args = parser.parse_args(argv)
++    path = REPO_ROOT / RESULT_RELATIVE_PATH
++    if args.validate:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++        errors = validate_artifact(payload)
++        print(json.dumps({"ok": not errors, "errors": errors}, sort_keys=True))
++        return 0 if not errors else 1
++    artifact = run(
++        run_date=args.date,
++        result_path=path,
++        test_exit_codes=load_test_exit_codes(args.test_exit_codes_json),
++        write=True,
++    )
++    errors = validate_artifact(artifact)
++    print(json.dumps({"path": str(path), "status": artifact["status"], "errors": errors}, sort_keys=True))
++    return 0 if not errors else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
++
+diff --git a/python/carnot/inference/llama_server_supervisor.py b/python/carnot/inference/llama_server_supervisor.py
+new file mode 100644
+index 0000000000..fe835d5429
+--- /dev/null
++++ b/python/carnot/inference/llama_server_supervisor.py
+@@ -0,0 +1,481 @@
++"""Reusable native llama-server lifecycle supervisor.
++
++Spec refs: REQ-INFRA-6228,
++SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED,
++SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS,
++SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS.
++
++The conductor has its own orchestration rules. This module is smaller: it only
++owns one native `llama-server` process at a time and records enough identity to
++clean it up without touching unrelated work.
++"""
++
++from __future__ import annotations
++
++import base64
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import signal
++import subprocess
++import tempfile
++import time
++from typing import Any, Callable, Protocol
++from urllib import error, request
++
++
++JsonDict = dict[str, Any]
++SCHEMA = "carnot.inference.llama_server_supervisor.v1"
++
++
++class ProcessOps(Protocol):
++    """Small process boundary used by cleanup tests and live cleanup."""
++
++    def send_signal(self, pid: int, sig: signal.Signals, *, process_group: bool) -> None:
++        """Send a signal to one process or to its process group."""
++
++    def wait_for_exit(self, pid: int, timeout_s: float) -> str:
++        """Wait for bounded process exit and return a short status."""
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_text(value: str) -> str:
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def base64_bytes(value: bytes) -> str:
++    return base64.b64encode(value).decode("ascii")
++
++
++def command_hash(command: list[str] | tuple[str, ...]) -> str:
++    return sha256_text(canonical_json(list(command)))
++
++
++def utc_now() -> str:  # pragma: no cover
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++
++
++def supervisor_contract(
++    *,
++    outer_deadline_s: float = 900.0,
++    health_timeout_s: float = 360.0,
++    token_timeout_s: float = 120.0,
++    cleanup_grace_s: float = 30.0,
++    kill_after_cleanup_timeout_s: float = 10.0,
++    retry_budget: int = 1,
++    endurance_interval_s: float = 12.0,
++    endurance_sample_count: int = 3,
++) -> JsonDict:
++    return {
++        "schema": SCHEMA + ".contract",
++        "outer_deadline_s": float(outer_deadline_s),
++        "health_timeout_s": float(health_timeout_s),
++        "token_timeout_s": float(token_timeout_s),
++        "cleanup_grace_s": float(cleanup_grace_s),
++        "kill_after_cleanup_timeout_s": float(kill_after_cleanup_timeout_s),
++        "retry_budget": int(retry_budget),
++        "retryable_failures": ["connection_refused", "early_exit", "server_died_mid_request"],
++        "endurance_interval_s": float(endurance_interval_s),
++        "endurance_sample_count": int(endurance_sample_count),
++        "pid_reuse_guard": "pid_start_time_uid_command_hash_process_group_parent_identity",
++        "cleanup_scope": "recorded_pid_or_process_group_only",
++        "unrelated_process_policy": "refuse_cleanup_when_identity_or_owner_changes",
++    }
++
++
++def classify_runtime_event(
++    text: str = "",
++    exit_code: int | None = None,
++    *,
++    exception_name: str = "",
++    deadline_expired: bool = False,
++) -> str:
++    lowered = f"{text} {exception_name}".lower()
++    if deadline_expired:
++        return "deadline_expired"
++    if "retry budget exhausted" in lowered:
++        return "retry_exhausted"
++    if "connectionrefused" in lowered or "connection refused" in lowered:
++        return "connection_refused"
++    if "server_exited_before_health" in lowered or "exited early" in lowered:
++        return "early_exit"
++    if "remotedisconnected" in lowered or "remote end closed" in lowered:
++        return "server_died_mid_request"
++    if "timeout" in lowered or "timed out" in lowered:
++        return "request_timeout"
++    if exit_code is not None and exit_code < 0:
++        return f"external_signal_{signal.Signals(-exit_code).name.lower()}"
++    if exit_code == 0 and not text.strip() and not exception_name:
++        return "no_failure"
++    return "unclassified_runtime_failure"
++
++
++def should_retry(classification: str, attempt_index: int, contract: JsonDict) -> bool:
++    return (
++        classification in set(contract.get("retryable_failures", []))
++        and int(attempt_index) < int(contract.get("retry_budget", 0))
++    )
++
++
++def parse_proc_stat(text: str) -> JsonDict:
++    open_paren = text.find("(")
++    close_paren = text.rfind(")")
++    rest = text[close_paren + 2 :].split()
++    return {
++        "pid": int(text[:open_paren].strip()),
++        "comm": text[open_paren + 1 : close_paren],
++        "state": rest[0],
++        "ppid": int(rest[1]),
++        "process_group_id": int(rest[2]),
++        "session_id": int(rest[3]),
++        "start_time_ticks": int(rest[19]),
++    }
++
++
++def read_process_identity(
++    pid: int,
++    proc_root: Path = Path("/proc"),
++    *,
++    include_parent: bool = True,
++) -> JsonDict:  # pragma: no cover
++    proc_dir = proc_root / str(pid)
++    if not proc_dir.exists():
++        return {"pid": pid, "exists": False}
++    stat = parse_proc_stat((proc_dir / "stat").read_text(encoding="utf-8"))
++    status_text = (proc_dir / "status").read_text(encoding="utf-8", errors="replace")
++    uid = None
++    for line in status_text.splitlines():
++        if line.startswith("Uid:"):
++            uid = int(line.split()[1])
++            break
++    raw_argv = (proc_dir / "cmdline").read_bytes().split(b"\x00")
++    argv = [item.decode("utf-8", "replace") for item in raw_argv if item]
++    parent_identity = None
++    if include_parent and stat["ppid"] > 0:
++        parent = read_process_identity(stat["ppid"], proc_root, include_parent=False)
++        parent_identity = {
++            "pid": parent.get("pid"),
++            "start_time_ticks": parent.get("start_time_ticks"),
++        }
++    return {
++        **stat,
++        "exists": True,
++        "uid": uid,
++        "command": argv,
++        "command_hash": command_hash(argv),
++        "parent_identity": parent_identity,
++        "owned_by_current_uid": uid == os.getuid(),
++    }
++
++
++def identity_matches(recorded: JsonDict, current: JsonDict) -> bool:
++    recorded_parent = recorded.get("parent_identity") or {}
++    current_parent = current.get("parent_identity") or {}
++    return (
++        bool(current.get("exists"))
++        and int(current.get("pid", -1)) == int(recorded.get("pid", -2))
++        and int(current.get("start_time_ticks", -1)) == int(recorded.get("start_time_ticks", -2))
++        and int(current.get("uid", -1)) == int(recorded.get("uid", -2))
++        and str(current.get("command_hash")) == str(recorded.get("command_hash"))
++        and int(current.get("process_group_id", -1)) == int(recorded.get("process_group_id", -2))
++        and int(current_parent.get("pid", -1)) == int(recorded_parent.get("pid", -2))
++        and int(current_parent.get("start_time_ticks", -1))
++        == int(recorded_parent.get("start_time_ticks", -2))
++    )
++
++
++def cleanup_recorded_identity(
++    recorded: JsonDict,
++    current_identity: Callable[[int], JsonDict],
++    process_ops: ProcessOps,
++    *,
++    contract: JsonDict,
++) -> JsonDict:
++    pid = int(recorded.get("pid", -1))
++    current = current_identity(pid)
++    if not current.get("exists"):
++        return {
++            "action": "already_exited",
++            "bounded": True,
++            "leak_free": True,
++            "signals_sent": [],
++            "unrelated_process_kill_count_delta": 0,
++        }
++    if not bool(recorded.get("owned_by_task")):
++        return {
++            "action": "refused",
++            "reason": "unowned_process",
++            "bounded": True,
++            "leak_free": False,
++            "signals_sent": [],
++            "unrelated_process_kill_count_delta": 0,
++        }
++    if not identity_matches(recorded, current):
++        return {
++            "action": "refused",
++            "reason": "identity_mismatch",
++            "bounded": True,
++            "leak_free": False,
++            "signals_sent": [],
++            "unrelated_process_kill_count_delta": 0,
++        }
++    process_group = int(recorded.get("process_group_id", -1)) == pid
++    process_ops.send_signal(pid, signal.SIGTERM, process_group=process_group)
++    wait_status = process_ops.wait_for_exit(pid, float(contract["cleanup_grace_s"]))
++    signals = [{"target": "process_group" if process_group else "pid", "signal": "SIGTERM"}]
++    if wait_status in {"exited", "exited_zombie"}:
++        return {
++            "action": "terminated",
++            "bounded": True,
++            "leak_free": True,
++            "wait_status": wait_status,
++            "signals_sent": signals,
++            "unrelated_process_kill_count_delta": 0,
++        }
++    process_ops.send_signal(pid, signal.SIGKILL, process_group=process_group)
++    kill_wait = process_ops.wait_for_exit(pid, float(contract["kill_after_cleanup_timeout_s"]))
++    signals.append({"target": "process_group" if process_group else "pid", "signal": "SIGKILL"})
++    leak_free = kill_wait in {"exited", "exited_zombie"}
++    return {
++        "action": "force_killed" if leak_free else "cleanup_leak",
++        "bounded": True,
++        "leak_free": leak_free,
++        "wait_status": wait_status,
++        "kill_wait_status": kill_wait,
++        "signals_sent": signals,
++        "unrelated_process_kill_count_delta": 0,
++    }
++
++
++def parse_cuda_placement(
++    family: str,
++    hf_id: str,
++    server_log: str,
++    gpu_intervals: list[JsonDict],
++    *,
++    owned_pids: set[int],
++) -> JsonDict:
++    layer_match = re.search(r"offloaded\s+(\d+)/(\d+)\s+layers\s+to\s+GPU", server_log)
++    offloaded = int(layer_match.group(1)) if layer_match else 0
++    total = int(layer_match.group(2)) if layer_match else 0
++    lowered = server_log.lower()
++    tensor_or_buffer = any(
++        marker in lowered
++        for marker in ("cuda0 buffer", "cuda1 buffer", "compute buffer", "ggml_cuda", "cuda found")
++    )
++    owned_vram = False
++    matching_pids: list[int] = []
++    for interval in gpu_intervals:
++        for app in interval.get("compute_apps", []):
++            pid = int(app.get("pid", -1))
++            if bool(app.get("owned_by_task")) and pid in owned_pids and int(app.get("used_memory_mb", 0)) > 0:
++                owned_vram = True
++                matching_pids.append(pid)
++    log_evidence = offloaded > 0 or tensor_or_buffer
++    return {
++        "schema": SCHEMA + ".cuda_placement",
++        "family": family,
++        "hf_id": hf_id,
++        "cuda_layers_offloaded": offloaded,
++        "total_layers": total,
++        "cuda_tensor_or_buffer_confirmed": tensor_or_buffer,
++        "log_cuda_evidence_present": log_evidence,
++        "gpu_interval_owned_vram_confirmed": owned_vram,
++        "owned_gpu_pids": sorted(set(matching_pids)),
++        "cuda_placement_confirmed": log_evidence and owned_vram,
++        "evidence": layer_match.group(0) if layer_match else ("cuda tensor/buffer marker" if tensor_or_buffer else ""),
++    }
++
++
++def raw_token_receipt(
++    token_bytes: bytes,
++    *,
++    latency_s: float,
++    path: str | Path,
++    sample_index: int,
++) -> JsonDict:
++    return {
++        "sample_index": int(sample_index),
++        "raw_token_bytes_b64": base64_bytes(token_bytes),
++        "raw_token_bytes_sha256": sha256_bytes(token_bytes),
++        "latency_s": float(latency_s),
++        "path": str(path),
++    }
++
++
++def summarize_repeated_tokens(samples: list[JsonDict], *, min_samples: int) -> JsonDict:
++    hashes = [str(row.get("raw_token_bytes_sha256")) for row in samples]
++    latencies = [float(row.get("latency_s", 0.0)) for row in samples]
++    unique_hashes = sorted(set(hashes))
++    return {
++        "schema": SCHEMA + ".repeated_tokens",
++        "samples": samples,
++        "sample_count": len(samples),
++        "unique_raw_token_hashes": unique_hashes,
++        "deterministic_repeated_output": len(samples) >= int(min_samples) and len(unique_hashes) == 1,
++        "min_latency_s": min(latencies) if latencies else None,
++        "max_latency_s": max(latencies) if latencies else None,
++    }
++
++
++def family_runtime_ready(receipt: JsonDict) -> bool:
++    return (
++        bool(receipt.get("ownership", {}).get("owned_process"))
++        and bool(receipt.get("cuda", {}).get("cuda_placement_confirmed"))
++        and bool(receipt.get("tokens", {}).get("deterministic_repeated_output"))
++        and int(receipt.get("tokens", {}).get("sample_count", 0)) >= 3
++        and bool(receipt.get("endurance", {}).get("passed"))
++        and int(receipt.get("endurance", {}).get("health_sample_count", 0)) >= 3
++        and bool(receipt.get("recovery", {}).get("controlled_failure_bounded"))
++        and bool(receipt.get("recovery", {}).get("recovery_success"))
++        and bool(receipt.get("leak_check", {}).get("leak_free"))
++    )
++
++
++class LiveProcessOps:  # pragma: no cover
++    def send_signal(self, pid: int, sig: signal.Signals, *, process_group: bool) -> None:
++        if process_group:
++            os.killpg(pid, sig)
++        else:
++            os.kill(pid, sig)
++
++    def wait_for_exit(self, pid: int, timeout_s: float) -> str:
++        deadline = time.time() + timeout_s
++        while time.time() < deadline:
++            proc_dir = Path(f"/proc/{pid}")
++            if not proc_dir.exists():
++                return "exited"
++            try:
++                if parse_proc_stat((proc_dir / "stat").read_text(encoding="utf-8"))["state"] == "Z":
++                    return "exited_zombie"
++            except Exception:
++                pass
++            time.sleep(0.1)
++        return "timeout"
++
++
++def write_bytes_atomic(path: Path, payload: bytes) -> None:  # pragma: no cover
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
++        handle.write(payload)
++        tmp = Path(handle.name)
++    os.replace(tmp, path)
++
++
++class NativeLlamaServerSupervisor:  # pragma: no cover
++    """Own one live native `llama-server` process under a finite contract."""
++
++    def __init__(self, command: list[str], output_dir: Path, contract: JsonDict) -> None:
++        self.command = command
++        self.output_dir = output_dir
++        self.contract = contract
++        self.proc: subprocess.Popen[Any] | None = None
++        self.identity: JsonDict | None = None
++        self.log_path = output_dir / f"llama_server_{abs(hash(command_hash(command)))}.log"
++
++    def launch(self) -> JsonDict:
++        self.output_dir.mkdir(parents=True, exist_ok=True)
++        log_handle = self.log_path.open("ab")
++        self.proc = subprocess.Popen(
++            self.command,
++            cwd=Path.cwd(),
++            stdout=log_handle,
++            stderr=subprocess.STDOUT,
++            env=dict(os.environ, CUDA_VISIBLE_DEVICES=os.environ.get("CUDA_VISIBLE_DEVICES", "0,1")),
++            start_new_session=True,
++        )
++        time.sleep(0.2)
++        identity = read_process_identity(self.proc.pid)
++        identity["owned_by_task"] = True
++        identity["command"] = list(self.command)
++        identity["command_hash"] = command_hash(self.command)
++        self.identity = identity
++        return identity
++
++    def wait_for_health(self) -> JsonDict:
++        port = int(self.command[self.command.index("--port") + 1])
++        url = f"http://127.0.0.1:{port}/health"
++        deadline = time.time() + float(self.contract["health_timeout_s"])
++        samples = []
++        while time.time() < deadline:
++            if self.proc and self.proc.poll() is not None:
++                return {"ok": False, "samples": samples, "classification": "early_exit"}
++            try:
++                started = time.perf_counter()
++                with request.urlopen(url, timeout=2) as response:
++                    samples.append(
++                        {
++                            "status": int(response.status),
++                            "elapsed_s": round(time.perf_counter() - started, 6),
++                            "classification": "no_failure",
++                        }
++                    )
++                    return {"ok": True, "samples": samples, "classification": "no_failure"}
++            except (OSError, error.URLError) as exc:
++                samples.append(
++                    {
++                        "status": None,
++                        "classification": classify_runtime_event(
++                            str(exc), exception_name=type(exc).__name__
++                        ),
++                    }
++                )
++                time.sleep(1)
++        return {"ok": False, "samples": samples, "classification": "deadline_expired"}
++
++    def request_token(self, payload: JsonDict, token_path: Path, sample_index: int) -> JsonDict:
++        port = int(self.command[self.command.index("--port") + 1])
++        data = json.dumps(payload).encode("utf-8")
++        req = request.Request(
++            f"http://127.0.0.1:{port}/v1/chat/completions",
++            data=data,
++            headers={"Content-Type": "application/json"},
++            method="POST",
++        )
++        started = time.perf_counter()
++        with request.urlopen(req, timeout=float(self.contract["token_timeout_s"])) as response:
++            body = json.loads(response.read().decode("utf-8"))
++        choices = body.get("choices") or []
++        message = choices[0].get("message", {}) if choices else {}
++        content = str(message.get("content") or body.get("content", ""))
++        token_bytes = content.encode("utf-8", "replace")
++        write_bytes_atomic(token_path, token_bytes)
++        return raw_token_receipt(
++            token_bytes,
++            latency_s=round(time.perf_counter() - started, 6),
++            path=token_path,
++            sample_index=sample_index,
++        )
++
++    def cleanup(self) -> JsonDict:
++        if not self.identity:
++            return {"action": "not_started", "bounded": True, "leak_free": True}
++        return cleanup_recorded_identity(
++            self.identity,
++            read_process_identity,
++            LiveProcessOps(),
++            contract=self.contract,
++        )
++
++    def stderr_tail(self, limit: int = 40_000) -> str:
++        if not self.log_path.is_file():
++            return ""
++        return self.log_path.read_text(encoding="utf-8", errors="replace")[-limit:]
++
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index c1c6039683..09d88af7c1 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.68s, user: 2.40s, system: 0.21s, MEM: 115.79 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.15s, user: 1.89s, system: 0.18s, MEM: 115.63 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 76% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index ddda27770d..18426c20f6 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260809",
+-  "started_at": "2026-08-09T11:39:45Z",
+-  "finished_at": "2026-08-09T11:39:45Z",
++  "started_at": "2026-08-09T12:26:12Z",
++  "finished_at": "2026-08-09T12:26:12Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index d692ba190d..3834ca3fea 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 319.0582506656647,
++  "duration_s": 271.77864813804626,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2510_ensemble_v7.json b/results/experiment_2510_ensemble_v7.json
+index c70cddc4d8..df963eab34 100644
+--- a/results/experiment_2510_ensemble_v7.json
++++ b/results/experiment_2510_ensemble_v7.json
+@@ -10,6 +10,6 @@
+     "tier0r_search",
+     "tier0r_integration_not_implemented"
+   ],
+-  "duration_s": 1.512467384338379,
++  "duration_s": 1.3358120918273926,
+   "random_seed": 42
+ }
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 8146107802..bdfe12b0eb 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,17 +1,17 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,10 +45,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -57,8 +57,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 6eb54ee0a0..57b964dbea 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0013418197631835938,
++  "duration_s": 0.001485586166381836,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.0.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.0.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.0.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.1.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.1.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.1.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.2.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.2.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_26b_a4b_moe.2.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.json b/results/experiment_6228_supervised_three_family_runtime_endurance.json
+new file mode 100644
+index 0000000000..1654eceb41
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.json
+@@ -0,0 +1,105 @@
++{
++  "controlled_owned_child_failure_and_recovery_by_family": null,
++  "duration_s": 0.0,
++  "embedded_chat_template_receipts": null,
++  "endurance_window_and_health_samples_by_family": null,
++  "exact_gguf_paths_sizes_hashes_revisions_quantizations": null,
++  "experiment_id": "experiment_6228_supervised_three_family_runtime_endurance",
++  "field_principles": null,
++  "field_provenance": null,
++  "final_process_and_vram_leak_check": null,
++  "gemma_4_26b_runtime_ready_score": null,
++  "gemma_4_31b_runtime_ready_score": null,
++  "gguf_mutation_count": null,
++  "gpu_owner_intervals_by_family": null,
++  "honest_verdict": null,
++  "inference_substrate": null,
++  "llama_cpp_build_and_cuda_receipts": null,
++  "model_specs": null,
++  "parsed_cuda_layer_or_tensor_placement_by_family": null,
++  "preconditions_checked": {
++    "all_embedded_templates_present": true,
++    "all_ggufs_resolved": true,
++    "blocked_reasons": [],
++    "bounded_windows": {
++      "cleanup_grace_s": 30.0,
++      "cleanup_scope": "recorded_pid_or_process_group_only",
++      "endurance_interval_s": 12.0,
++      "endurance_sample_count": 3,
++      "health_timeout_s": 360.0,
++      "kill_after_cleanup_timeout_s": 10.0,
++      "outer_deadline_s": 900.0,
++      "pid_reuse_guard": "pid_start_time_uid_command_hash_process_group_parent_identity",
++      "retry_budget": 1,
++      "retryable_failures": [
++        "connection_refused",
++        "early_exit",
++        "server_died_mid_request"
++      ],
++      "schema": "carnot.inference.llama_server_supervisor.v1.contract",
++      "token_timeout_s": 120.0,
++      "unrelated_process_policy": "refuse_cleanup_when_identity_or_owner_changes"
++    },
++    "free_vram_min_required_mb": 12000,
++    "gpu_owner_snapshot": {
++      "command_returncodes": {
++        "compute_apps": 0,
++        "gpus": 0
++      },
++      "compute_apps": [],
++      "devices": [
++        {
++          "index": 0,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 0,
++          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
++        },
++        {
++          "index": 1,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 0,
++          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
++        }
++      ],
++      "gpu_count": 2,
++      "label": "before_preconditions",
++      "ok": true,
++      "timestamp_utc": "2026-08-09T12:47:58Z"
++    },
++    "native_llama_server_present": true,
++    "no_autotokenizer_used": true,
++    "output_parent_writable": true,
++    "reserved_ports_by_family": {
++      "gemma4_26b_a4b_moe": 53595,
++      "gemma4_31b_dense": 59545,
++      "qwen3_35b_a3b_moe": 60875
++    },
++    "run_date": "20260809",
++    "safe_gpu_admission": true,
++    "schema": "carnot.experiment_6228.supervised_three_family_runtime_endurance.v1.preconditions",
++    "upstream_diagnostic_present": true,
++    "written_before_model_load": true
++  },
++  "protected_files_unchanged": null,
++  "qwen_runtime_ready_score": null,
++  "repeated_raw_token_hashes_and_latencies_by_family": null,
++  "reproducibility_checksum": null,
++  "retry_and_wait_bounds": null,
++  "schema": "carnot.experiment_6228.supervised_three_family_runtime_endurance.v1",
++  "server_command_pid_starttime_process_group_and_lifetime_by_family": null,
++  "status": "preconditions_recorded",
++  "supervisor_contract_and_paths_hashes": null,
++  "test_commands": null,
++  "test_exit_codes": null,
++  "three_family_runtime_ready_score": null,
++  "two_family_runtime_ready_score": null,
++  "unrelated_process_kill_count": null,
++  "upstream_diagnostic_path_and_hash": null,
++  "verifier_is_oracle": null
++}
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.0.token b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.0.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.0.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.1.token b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.1.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.1.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.2.token b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.2.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.2.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.recovery.token b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.recovery.token
+new file mode 100644
+index 0000000000..1a8ca51c35
+--- /dev/null
++++ b/results/experiment_6228_supervised_three_family_runtime_endurance.qwen3_35b_a3b_moe.recovery.token
+@@ -0,0 +1 @@
++Blue
+\ No newline at end of file
+diff --git a/results/llama_server_6713991520651794537.log b/results/llama_server_6713991520651794537.log
+new file mode 100644
+index 0000000000..ca7ef3db6d
+--- /dev/null
++++ b/results/llama_server_6713991520651794537.log
+@@ -0,0 +1,132 @@
++0.00.035.109 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.035.112 I device_info:
++0.00.301.244 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.578.581 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.578.619 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.578.759 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.578.829 I srv          init: running without SSL
++0.00.578.872 I srv          init: using 23 threads for HTTP server
++0.00.578.877 I srv          init: The UI is disabled
++0.00.578.878 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.579.021 I srv         start: binding port with default address family
++0.00.580.204 I srv  llama_server: loading model
++0.00.580.213 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
++0.02.418.876 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.419.385 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.426.406 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.448.154 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.19.195.181 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.19.222.936 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.19.449.224 I srv    load_model: initializing slots, n_slots = 1
++0.19.485.218 W common_speculative_init: no implementations specified for speculative decoding
++0.19.485.225 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.19.485.255 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.19.485.255 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.19.485.256 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.19.485.256 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.19.485.300 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.19.491.517 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.19.492.106 I srv          init: init: chat template, thinking = 0
++0.19.492.145 I srv  llama_server: model loaded
++0.19.492.149 I srv  llama_server: server is listening on http://127.0.0.1:59545
++0.19.492.156 I srv  update_slots: all slots are idle
++0.20.266.993 I srv  params_from_: Chat format: peg-gemma4
++0.20.267.195 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.20.267.199 I srv  get_availabl: updating prompt cache
++0.20.267.209 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.20.267.218 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.20.267.221 I srv  get_availabl: prompt cache update took 0.02 ms
++0.20.267.292 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.20.301.376 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 0, n_tokens = 1, size = 0.416 MiB)
++0.20.391.352 I slot print_timing: id  0 | task 0 | prompt eval time =     124.01 ms /    25 tokens (    4.96 ms per token,   201.60 tokens per second)
++0.20.391.360 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.20.391.361 I slot print_timing: id  0 | task 0 |       total time =     124.01 ms /    26 tokens
++0.20.391.366 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.20.391.418 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
++0.20.391.434 I srv  update_slots: all slots are idle
++0.22.397.097 I srv  params_from_: Chat format: peg-gemma4
++0.22.397.659 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.22.397.829 I slot launch_slot_: id  0 | task 4 | processing task, is_child = 0
++0.22.792.314 I slot print_timing: id  0 | task 4 | prompt eval time =     394.43 ms /    25 tokens (   15.78 ms per token,    63.38 tokens per second)
++0.22.792.322 I slot print_timing: id  0 | task 4 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.22.792.324 I slot print_timing: id  0 | task 4 |       total time =     394.43 ms /    26 tokens
++0.22.792.325 I slot print_timing: id  0 | task 4 |    graphs reused =          1
++0.22.792.363 I slot      release: id  0 | task 4 | stop processing: n_tokens = 25, truncated = 0
++0.22.792.387 I srv  update_slots: all slots are idle
++0.24.798.714 I srv  params_from_: Chat format: peg-gemma4
++0.24.799.262 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.24.799.423 I slot launch_slot_: id  0 | task 8 | processing task, is_child = 0
++0.25.172.062 I slot print_timing: id  0 | task 8 | prompt eval time =     372.58 ms /    25 tokens (   14.90 ms per token,    67.10 tokens per second)
++0.25.172.075 I slot print_timing: id  0 | task 8 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.25.172.076 I slot print_timing: id  0 | task 8 |       total time =     372.58 ms /    26 tokens
++0.25.172.079 I slot print_timing: id  0 | task 8 |    graphs reused =          1
++0.25.172.118 I slot      release: id  0 | task 8 | stop processing: n_tokens = 25, truncated = 0
++0.25.172.145 I srv  update_slots: all slots are idle
++0.25.174.451 I srv    operator(): operator(): cleaning up before exit...
++0.00.272.872 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.272.875 I device_info:
++0.00.537.756 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.806.043 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.806.065 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.806.262 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.806.360 I srv          init: running without SSL
++0.00.806.415 I srv          init: using 23 threads for HTTP server
++0.00.806.423 I srv          init: The UI is disabled
++0.00.806.424 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.806.612 I srv         start: binding port with default address family
++0.00.807.854 I srv  llama_server: loading model
++0.00.807.863 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
++0.02.966.380 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.967.098 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.977.257 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.03.011.455 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.11.610.535 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.11.639.252 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.11.876.593 I srv    load_model: initializing slots, n_slots = 1
++0.11.912.117 W common_speculative_init: no implementations specified for speculative decoding
++0.11.912.126 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.11.912.156 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.11.912.156 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.11.912.156 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.11.912.157 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.11.912.219 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.11.916.675 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.11.917.065 I srv          init: init: chat template, thinking = 0
++0.11.917.109 I srv  llama_server: model loaded
++0.11.917.115 I srv  llama_server: server is listening on http://127.0.0.1:59545
++0.11.917.123 I srv  update_slots: all slots are idle
++0.12.258.779 I srv  params_from_: Chat format: peg-gemma4
++0.12.258.963 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.12.258.965 I srv  get_availabl: updating prompt cache
++0.12.258.973 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.12.258.979 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.12.258.980 I srv  get_availabl: prompt cache update took 0.01 ms
++0.12.259.049 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.12.291.339 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 0, n_tokens = 1, size = 0.416 MiB)
++0.12.383.828 I slot print_timing: id  0 | task 0 | prompt eval time =     124.73 ms /    25 tokens (    4.99 ms per token,   200.44 tokens per second)
++0.12.383.839 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.12.383.841 I slot print_timing: id  0 | task 0 |       total time =     124.73 ms /    26 tokens
++0.12.383.845 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.12.383.902 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
++0.12.383.921 I srv  update_slots: all slots are idle
++0.12.385.673 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/results/llama_server_8614131860444818934.log b/results/llama_server_8614131860444818934.log
+new file mode 100644
+index 0000000000..fbd351c404
+--- /dev/null
++++ b/results/llama_server_8614131860444818934.log
+@@ -0,0 +1,136 @@
++0.00.058.915 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.058.919 I device_info:
++0.00.545.707 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.01.004.337 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.01.004.350 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.01.004.455 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.01.004.512 I srv          init: running without SSL
++0.01.004.543 I srv          init: using 23 threads for HTTP server
++0.01.004.546 I srv          init: The UI is disabled
++0.01.004.547 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.01.004.654 I srv         start: binding port with default address family
++0.01.005.805 I srv  llama_server: loading model
++0.01.005.812 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
++0.34.314.329 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.34.337.182 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.34.496.449 I srv    load_model: initializing slots, n_slots = 1
++0.34.580.434 W srv    load_model: speculative decoding will use checkpoints
++0.34.580.458 W common_speculative_init: no implementations specified for speculative decoding
++0.34.580.462 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.34.580.493 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.34.580.494 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.34.580.494 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.34.580.495 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.34.580.563 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.34.607.681 I init: chat template, example_format: '<|im_start|>system
++You are a helpful assistant<|im_end|>
++<|im_start|>user
++Hello<|im_end|>
++<|im_start|>assistant
++Hi there<|im_end|>
++<|im_start|>user
++How are you?<|im_end|>
++<|im_start|>assistant
++<think>
++
++</think>
++
++'
++0.34.615.242 I srv          init: init: chat template, thinking = 0
++0.34.615.282 I srv  llama_server: model loaded
++0.34.615.287 I srv  llama_server: server is listening on http://127.0.0.1:60875
++0.34.615.293 I srv  update_slots: all slots are idle
++0.35.325.281 I srv  params_from_: Chat format: peg-native
++0.35.325.438 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.35.325.442 I srv  get_availabl: updating prompt cache
++0.35.325.462 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.35.325.469 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.35.325.471 I srv  get_availabl: prompt cache update took 0.03 ms
++0.35.325.517 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.35.718.751 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 19, pos_max = 19, n_tokens = 20, size = 62.813 MiB)
++0.35.741.644 I slot print_timing: id  0 | task 0 | prompt eval time =     416.10 ms /    24 tokens (   17.34 ms per token,    57.68 tokens per second)
++0.35.741.649 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.35.741.650 I slot print_timing: id  0 | task 0 |       total time =     416.10 ms /    25 tokens
++0.35.741.653 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.35.741.687 I slot      release: id  0 | task 0 | stop processing: n_tokens = 24, truncated = 0
++0.35.741.699 I srv  update_slots: all slots are idle
++0.37.759.950 I srv  params_from_: Chat format: peg-native
++0.37.760.194 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.37.760.333 I slot launch_slot_: id  0 | task 3 | processing task, is_child = 0
++0.37.760.353 W slot update_slots: id  0 | task 3 | erased invalidated context checkpoint (pos_min = 19, pos_max = 19, n_tokens = 20, n_swa = 0, pos_next = 0, size = 62.813 MiB)
++0.38.056.705 I slot create_check: id  0 | task 3 | created context checkpoint 1 of 32 (pos_min = 19, pos_max = 19, n_tokens = 20, size = 62.813 MiB)
++0.38.107.836 I slot print_timing: id  0 | task 3 | prompt eval time =     347.45 ms /    24 tokens (   14.48 ms per token,    69.07 tokens per second)
++0.38.107.846 I slot print_timing: id  0 | task 3 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.38.107.848 I slot print_timing: id  0 | task 3 |       total time =     347.45 ms /    25 tokens
++0.38.107.849 I slot print_timing: id  0 | task 3 |    graphs reused =          1
++0.38.107.888 I slot      release: id  0 | task 3 | stop processing: n_tokens = 24, truncated = 0
++0.38.107.913 I srv  update_slots: all slots are idle
++0.40.125.770 I srv  params_from_: Chat format: peg-native
++0.40.126.310 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.40.126.517 I slot launch_slot_: id  0 | task 6 | processing task, is_child = 0
++0.40.126.546 W slot update_slots: id  0 | task 6 | erased invalidated context checkpoint (pos_min = 19, pos_max = 19, n_tokens = 20, n_swa = 0, pos_next = 0, size = 62.813 MiB)
++0.40.470.644 I slot create_check: id  0 | task 6 | created context checkpoint 1 of 32 (pos_min = 19, pos_max = 19, n_tokens = 20, size = 62.813 MiB)
++0.40.600.347 I slot print_timing: id  0 | task 6 | prompt eval time =     473.79 ms /    24 tokens (   19.74 ms per token,    50.66 tokens per second)
++0.40.600.353 I slot print_timing: id  0 | task 6 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.40.600.354 I slot print_timing: id  0 | task 6 |       total time =     473.79 ms /    25 tokens
++0.40.600.356 I slot print_timing: id  0 | task 6 |    graphs reused =          1
++0.40.600.387 I slot      release: id  0 | task 6 | stop processing: n_tokens = 24, truncated = 0
++0.40.600.405 I srv  update_slots: all slots are idle
++0.40.602.340 I srv    operator(): operator(): cleaning up before exit...
++0.00.070.908 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.070.913 I device_info:
++0.00.399.020 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.625.461 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.625.478 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.625.620 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.625.698 I srv          init: running without SSL
++0.00.625.741 I srv          init: using 23 threads for HTTP server
++0.00.625.746 I srv          init: The UI is disabled
++0.00.625.746 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.625.894 I srv         start: binding port with default address family
++0.00.627.083 I srv  llama_server: loading model
++0.00.627.091 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
++0.12.131.338 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.12.151.702 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.12.298.381 I srv    load_model: initializing slots, n_slots = 1
++0.12.385.181 W srv    load_model: speculative decoding will use checkpoints
++0.12.385.207 W common_speculative_init: no implementations specified for speculative decoding
++0.12.385.209 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.12.385.245 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.12.385.246 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.12.385.247 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.12.385.247 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.12.385.318 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.12.401.475 I init: chat template, example_format: '<|im_start|>system
++You are a helpful assistant<|im_end|>
++<|im_start|>user
++Hello<|im_end|>
++<|im_start|>assistant
++Hi there<|im_end|>
++<|im_start|>user
++How are you?<|im_end|>
++<|im_start|>assistant
++<think>
++
++</think>
++
++'
++0.12.412.675 I srv          init: init: chat template, thinking = 0
++0.12.412.742 I srv  llama_server: model loaded
++0.12.412.748 I srv  llama_server: server is listening on http://127.0.0.1:60875
++0.12.412.758 I srv  update_slots: all slots are idle
++0.13.235.688 I srv  params_from_: Chat format: peg-native
++0.13.235.962 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.13.235.969 I srv  get_availabl: updating prompt cache
++0.13.235.983 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.13.235.998 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.13.236.001 I srv  get_availabl: prompt cache update took 0.03 ms
++0.13.236.116 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.13.548.229 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 19, pos_max = 19, n_tokens = 20, size = 62.813 MiB)
++0.13.567.741 I slot print_timing: id  0 | task 0 | prompt eval time =     331.58 ms /    24 tokens (   13.82 ms per token,    72.38 tokens per second)
++0.13.567.748 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.13.567.748 I slot print_timing: id  0 | task 0 |       total time =     331.58 ms /    25 tokens
++0.13.567.751 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.13.567.788 I slot      release: id  0 | task 0 | stop processing: n_tokens = 24, truncated = 0
++0.13.567.799 I srv  update_slots: all slots are idle
++0.13.569.835 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/results/llama_server_9188242568757559282.log b/results/llama_server_9188242568757559282.log
+new file mode 100644
+index 0000000000..672833443d
+--- /dev/null
++++ b/results/llama_server_9188242568757559282.log
+@@ -0,0 +1,117 @@
++0.00.032.782 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.032.784 I device_info:
++0.00.241.887 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.466.874 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.466.893 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.467.036 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.467.120 I srv          init: running without SSL
++0.00.467.168 I srv          init: using 23 threads for HTTP server
++0.00.467.173 I srv          init: The UI is disabled
++0.00.467.174 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.467.302 I srv         start: binding port with default address family
++0.00.468.528 I srv  llama_server: loading model
++0.00.468.542 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf'
++0.02.168.046 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.168.564 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.175.797 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.199.376 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.29.410.313 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.29.458.884 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.29.627.356 I srv    load_model: initializing slots, n_slots = 1
++0.29.709.930 W common_speculative_init: no implementations specified for speculative decoding
++0.29.709.946 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.29.709.986 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.29.710.169 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.29.710.171 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.29.710.172 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.29.710.900 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.29.720.387 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.29.720.998 I srv          init: init: chat template, thinking = 0
++0.29.721.133 I srv  llama_server: model loaded
++0.29.721.211 I srv  llama_server: server is listening on http://127.0.0.1:53595
++0.29.721.222 I srv  update_slots: all slots are idle
++0.30.461.321 I srv  params_from_: Chat format: peg-gemma4
++0.30.461.648 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.30.461.777 I srv  get_availabl: updating prompt cache
++0.30.461.792 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.30.461.802 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.30.461.804 I srv  get_availabl: prompt cache update took 0.02 ms
++0.30.462.202 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.30.542.421 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 0, n_tokens = 1, size = 0.104 MiB)
++0.31.065.959 I slot print_timing: id  0 | task 0 | prompt eval time =     603.45 ms /    25 tokens (   24.14 ms per token,    41.43 tokens per second)
++0.31.065.969 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.31.065.970 I slot print_timing: id  0 | task 0 |       total time =     603.45 ms /    26 tokens
++0.31.065.975 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.31.067.688 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
++0.31.067.716 I srv  update_slots: all slots are idle
++0.33.081.249 I srv  params_from_: Chat format: peg-gemma4
++0.33.081.455 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.33.081.548 I slot launch_slot_: id  0 | task 4 | processing task, is_child = 0
++0.33.357.721 I slot print_timing: id  0 | task 4 | prompt eval time =     276.12 ms /    25 tokens (   11.04 ms per token,    90.54 tokens per second)
++0.33.357.732 I slot print_timing: id  0 | task 4 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.33.357.734 I slot print_timing: id  0 | task 4 |       total time =     276.12 ms /    26 tokens
++0.33.357.736 I slot print_timing: id  0 | task 4 |    graphs reused =          1
++0.33.357.779 I slot      release: id  0 | task 4 | stop processing: n_tokens = 25, truncated = 0
++0.33.357.805 I srv  update_slots: all slots are idle
++0.35.363.255 I srv  params_from_: Chat format: peg-gemma4
++0.35.363.461 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
++0.35.363.544 I slot launch_slot_: id  0 | task 8 | processing task, is_child = 0
++0.35.781.804 I slot print_timing: id  0 | task 8 | prompt eval time =     418.21 ms /    25 tokens (   16.73 ms per token,    59.78 tokens per second)
++0.35.781.813 I slot print_timing: id  0 | task 8 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.35.781.814 I slot print_timing: id  0 | task 8 |       total time =     418.21 ms /    26 tokens
++0.35.781.816 I slot print_timing: id  0 | task 8 |    graphs reused =          1
++0.35.781.855 I slot      release: id  0 | task 8 | stop processing: n_tokens = 25, truncated = 0
++0.35.781.879 I srv  update_slots: all slots are idle
++0.35.787.014 I srv    operator(): operator(): cleaning up before exit...
++0.00.163.628 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.163.632 I device_info:
++0.00.552.484 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.941.365 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.941.390 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.942.055 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.942.189 I srv          init: running without SSL
++0.00.942.249 I srv          init: using 23 threads for HTTP server
++0.00.942.541 I srv          init: The UI is disabled
++0.00.942.542 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.942.730 I srv         start: binding port with default address family
++0.00.943.990 I srv  llama_server: loading model
++0.00.943.998 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf'
++0.03.038.512 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.03.039.075 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.03.046.592 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.03.069.466 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.11.323.500 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.11.341.943 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.11.500.486 I srv    load_model: initializing slots, n_slots = 1
++0.11.580.140 W common_speculative_init: no implementations specified for speculative decoding
++0.11.580.150 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.11.580.182 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.11.580.185 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.11.580.185 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.11.580.186 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.11.580.233 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.11.594.990 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.11.597.514 I srv          init: init: chat template, thinking = 0
++0.11.597.562 I srv  llama_server: model loaded
++0.11.597.566 I srv  llama_server: server is listening on http://127.0.0.1:53595
++0.11.597.578 I srv  update_slots: all slots are idle
+diff --git a/tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py b/tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py
+new file mode 100644
+index 0000000000..f0146dfc39
+--- /dev/null
++++ b/tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py
+@@ -0,0 +1,566 @@
++"""Tests for Exp6228 supervised three-family runtime endurance.
++
++Spec refs: REQ-INFRA-6228,
++SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED,
++SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS,
++SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS,
++SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY,
++SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_6228_supervised_three_family_runtime_endurance as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-harnesses/spec.md"
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_llama_server_supervisor.py "
++    "tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py,"
++    "python/carnot/inference/llama_server_supervisor.py "
++    "-m pytest tests/python/test_llama_server_supervisor.py "
++    "tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py,"
++    "python/carnot/inference/llama_server_supervisor.py --fail-under=100 --show-missing"
++)
++FULL_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_llama_server_supervisor.py "
++    "tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py"
++)
++ARTIFACT_COMMAND = (
++    ".venv/bin/python -m "
++    "carnot.experiment_6228_supervised_three_family_runtime_endurance --date 20260809"
++)
++TEST_COMMANDS = [
++    FOCUSED_COMMAND,
++    COVERAGE_COMMAND,
++    FULL_COMMAND,
++    SPEC_COMMAND,
++    ARTIFACT_COMMAND,
++]
++TEST_EXIT_CODES = {command: 0 for command in TEST_COMMANDS}
++
++
++def _upstream(tmp_path: Path) -> Path:
++    path = tmp_path / "experiment_6227_llama_server_signal_sender_diagnostic.json"
++    path.write_text(
++        json.dumps(
++            {
++                "status": "complete_unlocalized",
++                "finite_wait_retry_cleanup_contract": {"retry_budget": 1},
++                "runtime_diagnostic_ready_score": 1,
++            },
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    return path
++
++
++def _ggufs(tmp_path: Path) -> dict[str, Path]:
++    paths: dict[str, Path] = {}
++    for spec in mod.MODEL_SPECS:
++        model_dir = (
++            tmp_path
++            / "hub"
++            / f"models--{spec['hf_id'].replace('/', '--')}"
++            / "snapshots"
++            / f"rev-{spec['family']}"
++        )
++        model_dir.mkdir(parents=True, exist_ok=True)
++        path = model_dir / f"{spec['family']}-Q4_K_M.gguf"
++        path.write_bytes(b"GGUF" + spec["hf_id"].encode("utf-8"))
++        paths[spec["hf_id"]] = path
++    return paths
++
++
++def _resolver(paths: dict[str, Path]):
++    def resolve(hf_id: str, preferred_quant: str = "Q4_K_M") -> str | None:
++        assert preferred_quant == "Q4_K_M"
++        return str(paths[hf_id]) if hf_id in paths else None
++
++    return resolve
++
++
++def _metadata(path: Path) -> dict[str, Any]:
++    template = "embedded template for " + path.name
++    return {
++        "chat_template_present": True,
++        "chat_template_sha256": mod.sha256_text(template),
++        "metadata_summary_sha256": mod.sha256_json({"tokenizer.chat_template": template}),
++        "metadata_keys": ["tokenizer.chat_template"],
++        "tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
++    }
++
++
++def _gpu_snapshot(*, busy: bool = False, label: str = "fixture") -> dict[str, Any]:
++    apps = (
++        [
++            {
++                "gpu_index": 0,
++                "pid": 7777,
++                "process_name": "external-owner",
++                "used_memory_mb": 22000,
++                "command": "python train.py",
++                "owned_by_task": False,
++            }
++        ]
++        if busy
++        else []
++    )
++    return {
++        "ok": True,
++        "label": label,
++        "gpu_count": 2,
++        "devices": [
++            {
++                "index": 0,
++                "name": "RTX 3090",
++                "utilization_pct": 0 if not busy else 88,
++                "memory_total_mb": 24576,
++                "memory_used_mb": 4 if not busy else 22004,
++                "memory_free_mb": 24120 if not busy else 2572,
++            },
++            {
++                "index": 1,
++                "name": "RTX 3090",
++                "utilization_pct": 0,
++                "memory_total_mb": 24576,
++                "memory_used_mb": 4,
++                "memory_free_mb": 24120,
++            },
++        ],
++        "compute_apps": apps,
++    }
++
++
++class FakeRuntime:
++    """REQ-INFRA-6228: deterministic adapter for artifact tests."""
++
++    def __init__(
++        self,
++        *,
++        result_path: Path,
++        busy: bool = False,
++        missing_server: bool = False,
++        incomplete_family: str | None = None,
++    ) -> None:
++        self.result_path = result_path
++        self.busy = busy
++        self.missing_server = missing_server
++        self.incomplete_family = incomplete_family
++        self.calls: list[str] = []
++
++    def gpu_snapshot(self, label: str) -> dict[str, Any]:
++        return _gpu_snapshot(busy=self.busy, label=label)
++
++    def llama_cpp_receipt(self) -> dict[str, Any]:
++        return {
++            "native_llama_server_path": "/tmp/llama-server",
++            "native_llama_server_exists": not self.missing_server,
++            "native_llama_server_version": "llama.cpp fixture CUDA",
++            "native_llama_server_cuda_build": True,
++            "llama_cpp_python_gpu_offload": True,
++            "llama_cpp_python_system_info": "CUDA fixture",
++            "no_autotokenizer_used": True,
++        }
++
++    def qualify_family(
++        self,
++        spec: dict[str, Any],
++        gguf: dict[str, Any],
++        command: list[str],
++        contract: dict[str, Any],
++        output_dir: Path,
++    ) -> dict[str, Any]:
++        precondition = json.loads(self.result_path.read_text(encoding="utf-8"))
++        assert precondition["status"] == "preconditions_recorded"
++        assert precondition["preconditions_checked"]["written_before_model_load"] is True
++        self.calls.append(spec["hf_id"])
++        pid = 622800 + len(self.calls)
++        token = f"{spec['family']}:A".encode("utf-8")
++        samples = [
++            {
++                "sample_index": index,
++                "raw_token_bytes_b64": mod.base64_bytes(token),
++                "raw_token_bytes_sha256": mod.sha256_bytes(token),
++                "latency_s": 0.2 + index,
++                "path": str(output_dir / f"{spec['family']}.{index}.token"),
++            }
++            for index in range(3)
++        ]
++        deterministic = spec["family"] != self.incomplete_family
++        cuda_ready = spec["family"] != self.incomplete_family
++        return {
++            "family": spec["family"],
++            "hf_id": spec["hf_id"],
++            "gpu_intervals": [
++                _gpu_snapshot(label="before_family"),
++                {
++                    **_gpu_snapshot(label="during_initial"),
++                    "compute_apps": [
++                        {
++                            "pid": pid,
++                            "process_name": "llama-server",
++                            "used_memory_mb": 9000,
++                            "owned_by_task": True,
++                        }
++                    ],
++                },
++                _gpu_snapshot(label="after_final_cleanup"),
++            ],
++            "servers": [
++                {
++                    "phase": "initial",
++                    "command": command,
++                    "command_hash": mod.command_hash(command),
++                    "pid": pid,
++                    "start_time_ticks": 12345,
++                    "process_group_id": pid,
++                    "parent_identity": {"pid": 1, "start_time_ticks": 99},
++                    "owned_process": True,
++                    "started_utc": "2026-08-09T00:00:00Z",
++                    "ended_utc": "2026-08-09T00:00:10Z",
++                    "lifetime_s": 10.0,
++                    "exit_code": -15,
++                    "stderr_tail": (
++                        "offloaded 64/64 layers to GPU\nCUDA0 buffer size = 9000 MiB"
++                        if cuda_ready
++                        else "--n-gpu-layers all"
++                    ),
++                },
++                {
++                    "phase": "recovery",
++                    "command": command,
++                    "command_hash": mod.command_hash(command),
++                    "pid": pid + 100,
++                    "start_time_ticks": 22345,
++                    "process_group_id": pid + 100,
++                    "parent_identity": {"pid": 1, "start_time_ticks": 99},
++                    "owned_process": True,
++                    "started_utc": "2026-08-09T00:00:11Z",
++                    "ended_utc": "2026-08-09T00:00:20Z",
++                    "lifetime_s": 9.0,
++                    "exit_code": 0,
++                    "stderr_tail": (
++                        "offloaded 64/64 layers to GPU\nCUDA0 buffer size = 9000 MiB"
++                        if cuda_ready
++                        else "--n-gpu-layers all"
++                    ),
++                },
++            ],
++            "cuda": {
++                "family": spec["family"],
++                "hf_id": spec["hf_id"],
++                "cuda_layers_offloaded": 64 if cuda_ready else 0,
++                "total_layers": 64 if cuda_ready else 0,
++                "cuda_tensor_or_buffer_confirmed": cuda_ready,
++                "log_cuda_evidence_present": cuda_ready,
++                "gpu_interval_owned_vram_confirmed": cuda_ready,
++                "cuda_placement_confirmed": cuda_ready,
++                "evidence": "offloaded 64/64 layers to GPU" if cuda_ready else "",
++            },
++            "tokens": {
++                "samples": samples,
++                "sample_count": len(samples),
++                "unique_raw_token_hashes": [samples[0]["raw_token_bytes_sha256"]],
++                "deterministic_repeated_output": deterministic,
++                "min_latency_s": 0.2,
++                "max_latency_s": 2.2,
++            },
++            "endurance": {
++                "passed": deterministic,
++                "window_s": contract["endurance_interval_s"],
++                "started_utc": "2026-08-09T00:00:00Z",
++                "ended_utc": "2026-08-09T00:00:20Z",
++                "health_sample_count": 3,
++                "health_samples": [
++                    {"status": 200, "elapsed_s": 0.1, "classification": "no_failure"},
++                    {"status": 200, "elapsed_s": 6.0, "classification": "no_failure"},
++                    {"status": 200, "elapsed_s": 12.0, "classification": "no_failure"},
++                ],
++            },
++            "recovery": {
++                "controlled_failure_bounded": True,
++                "controlled_failure_signal": "SIGTERM",
++                "cleanup_action": "terminated",
++                "recovery_success": deterministic,
++                "retry_attempts_used": 1,
++                "recovery_latency_s": 9.0,
++                "unrelated_process_kill_count_delta": 0,
++            },
++            "leak_check": {
++                "leak_free": deterministic,
++                "process_alive_after_cleanup": False,
++                "owned_vram_mb_after_cleanup": 0,
++            },
++        }
++
++
++def test_req_infra_6228_spec_declares_supervised_endurance_contract() -> None:
++    """REQ-INFRA-6228: OpenSpec names fields, models, and scenarios."""
++
++    text = SPEC_PATH.read_text(encoding="utf-8")
++    section = text[text.index("REQ-INFRA-6228") :]
++
++    for marker in (
++        "REQ-INFRA-6228",
++        "SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED",
++        "SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS",
++        "SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS",
++        "SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY",
++        "SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for spec in mod.MODEL_SPECS:
++        assert spec["hf_id"] in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_infra_6228_complete_artifact_qualifies_all_families(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY."""
++
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    runtime = FakeRuntime(result_path=result_path)
++    artifact = mod.run(
++        result_path=result_path,
++        upstream_diagnostic_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=runtime,
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=62.28,
++        write=True,
++    )
++
++    assert runtime.calls == [spec["hf_id"] for spec in mod.MODEL_SPECS]
++    assert artifact["status"] == "complete_ready"
++    assert artifact["qwen_runtime_ready_score"] == 1
++    assert artifact["gemma_4_31b_runtime_ready_score"] == 1
++    assert artifact["gemma_4_26b_runtime_ready_score"] == 1
++    assert artifact["two_family_runtime_ready_score"] == 1
++    assert artifact["three_family_runtime_ready_score"] == 1
++    assert artifact["preconditions_checked"]["written_before_model_load"] is True
++    assert artifact["unrelated_process_kill_count"] == 0
++    assert type(artifact["unrelated_process_kill_count"]) is int
++    assert artifact["gguf_mutation_count"] == 0
++    assert type(artifact["gguf_mutation_count"]) is int
++    assert artifact["protected_files_unchanged"]["scripts_research_conductor_py_untouched"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["embedded_chat_template_receipts"]["no_autotokenizer_used"] is True
++    assert mod.validate_artifact(artifact) == []
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++
++    for spec in mod.MODEL_SPECS:
++        family = spec["family"]
++        command = artifact[
++            "server_command_pid_starttime_process_group_and_lifetime_by_family"
++        ][family][0]["command"]
++        assert command[0] == "/tmp/llama-server"
++        assert str(_ggufs(tmp_path)[spec["hf_id"]]) in command
++        assert str(_ggufs(tmp_path)[spec["hf_id"]].parent) not in command
++        assert artifact["parsed_cuda_layer_or_tensor_placement_by_family"][family][
++            "cuda_placement_confirmed"
++        ] is True
++        assert artifact["repeated_raw_token_hashes_and_latencies_by_family"][family][
++            "deterministic_repeated_output"
++        ] is True
++
++
++def test_scenario_infra_6228_blocks_unsafe_preconditions(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS."""
++
++    result_path = tmp_path / "blocked.json"
++    runtime = FakeRuntime(result_path=result_path, busy=True)
++    artifact = mod.run(
++        result_path=result_path,
++        upstream_diagnostic_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=runtime,
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.228,
++        write=True,
++    )
++
++    assert artifact["status"] == "blocked"
++    assert runtime.calls == []
++    assert "external_gpu_owner_present" in artifact["preconditions_checked"]["blocked_reasons"]
++    assert artifact["preconditions_checked"]["safe_gpu_admission"] is False
++    assert artifact["unrelated_process_kill_count"] == 0
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_infra_6228_conjunctive_scores_and_validation(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE."""
++
++    result_path = tmp_path / "partial.json"
++    artifact = mod.run(
++        result_path=result_path,
++        upstream_diagnostic_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(result_path=result_path, incomplete_family="qwen3_35b_a3b_moe"),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=62.28,
++        write=True,
++    )
++
++    assert artifact["status"] == "complete_partial"
++    assert artifact["qwen_runtime_ready_score"] == 0
++    assert artifact["gemma_4_31b_runtime_ready_score"] == 1
++    assert artifact["gemma_4_26b_runtime_ready_score"] == 1
++    assert artifact["two_family_runtime_ready_score"] == 1
++    assert artifact["three_family_runtime_ready_score"] == 0
++    assert artifact["field_provenance"]["status"][0] == "REQ-INFRA-6228"
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    mutations = [
++        (lambda item: item.pop("status"), "missing:status"),
++        (lambda item: item.update({"inference_substrate": "wrong"}), "inference_substrate"),
++        (lambda item: item.update({"verifier_is_oracle": True}), "verifier_is_oracle"),
++        (
++            lambda item: item.update({"unrelated_process_kill_count": False}),
++            "unrelated_process_kill_count",
++        ),
++        (lambda item: item.update({"gguf_mutation_count": "0"}), "gguf_mutation_count"),
++        (lambda item: item.update({"qwen_runtime_ready_score": 1}), "qwen_runtime_ready_score"),
++        (
++            lambda item: item.update({"three_family_runtime_ready_score": 1}),
++            "three_family_runtime_ready_score",
++        ),
++        (lambda item: item["field_provenance"].pop("status"), "field_provenance:status"),
++        (lambda item: item["field_principles"].pop("status"), "field_principles:status"),
++        (
++            lambda item: item["protected_files_unchanged"].update({"unchanged": False}),
++            "protected_files_unchanged",
++        ),
++        (lambda item: item.update({"honest_verdict": "maybe"}), "honest_verdict"),
++        (
++            lambda item: item.update({"reproducibility_checksum": "sha256:bad"}),
++            "reproducibility_checksum",
++        ),
++    ]
++    for mutate, expected in mutations:
++        candidate = deepcopy(artifact)
++        mutate(candidate)
++        assert expected in mod.validate_artifact(candidate)
++
++
++def test_req_infra_6228_model_receipts_and_precondition_branches(
++    tmp_path: Path,
++    monkeypatch,
++) -> None:
++    """REQ-INFRA-6228: exact files, ports, and blockers are explicit."""
++
++    paths = _ggufs(tmp_path)
++    records = mod.resolve_model_records(
++        model_resolver=_resolver(paths),
++        metadata_reader=_metadata,
++    )
++    assert not records["blocked_reasons"]
++    assert [row["hf_id"] for row in records["records"]] == [spec["hf_id"] for spec in mod.MODEL_SPECS]
++    assert all(row["path_is_file"] for row in records["records"])
++    assert all(row["no_autotokenizer_used"] for row in records["records"])
++    assert mod.snapshot_revision(Path("/flat/model.gguf")) == "local-flat-cache"
++    assert mod.observed_quantization(Path("/flat/model.gguf")) == "unknown"
++
++    port_plan = mod.reserve_ports((spec["family"] for spec in mod.MODEL_SPECS), port_factory=iter([1, 2, 3]).__next__)
++    duplicate_plan = mod.reserve_ports(("a", "b"), port_factory=iter([4, 4, 5]).__next__)
++    commands = mod.build_family_commands(
++        server_path="/tmp/llama-server",
++        model_records=records["records"],
++        port_plan=port_plan,
++    )
++    assert sorted(port_plan.values()) == [1, 2, 3]
++    assert duplicate_plan == {"a": 4, "b": 5}
++    for row in records["records"]:
++        command = commands[row["family"]]
++        assert str(paths[row["hf_id"]]) in command
++        assert str(paths[row["hf_id"]].parent) not in command
++        assert "--n-gpu-layers" in command
++        assert "--jinja" in command
++
++    directory = tmp_path / "directory-not-file"
++    directory.mkdir()
++    directory_records = mod.resolve_model_records(
++        model_resolver=lambda _hf_id, _preferred_quant: str(directory),
++        metadata_reader=lambda _path: {"chat_template_present": False},
++    )
++    assert "qwen3_35b_a3b_moe_resolved_path_not_file" in directory_records["blocked_reasons"]
++    assert "qwen3_35b_a3b_moe_embedded_chat_template_missing" in directory_records["blocked_reasons"]
++    assert mod.safe_gpu_admission({"ok": False, "devices": [], "compute_apps": []})[
++        "blocked_reasons"
++    ] == ["dual_gpu_snapshot_unavailable"]
++    assert mod.status_from_scores(
++        [],
++        {
++            "three_family_runtime_ready_score": 0,
++            "two_family_runtime_ready_score": 0,
++            "qwen_runtime_ready_score": 0,
++            "gemma_4_31b_runtime_ready_score": 0,
++            "gemma_4_26b_runtime_ready_score": 0,
++        },
++        {},
++    ) == "blocked"
++
++    missing = mod.run(
++        result_path=tmp_path / "missing.json",
++        upstream_diagnostic_path=tmp_path / "missing-upstream.json",
++        model_resolver=lambda _hf_id, _preferred_quant: None,
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(result_path=tmp_path / "missing.json", missing_server=True),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.228,
++        write=False,
++    )
++    assert missing["status"] == "blocked"
++    assert "upstream_diagnostic_missing" in missing["preconditions_checked"]["blocked_reasons"]
++    assert "native_llama_server_missing" in missing["preconditions_checked"]["blocked_reasons"]
++    assert any(
++        reason.endswith("_gguf_not_cached")
++        for reason in missing["preconditions_checked"]["blocked_reasons"]
++    )
++    assert mod.validate_artifact(missing) == []
++
++    unwritable_path = tmp_path / "unwritable.json"
++    monkeypatch.setattr(mod, "_parent_writable", lambda _path: False)
++    unwritable = mod.run(
++        result_path=unwritable_path,
++        upstream_diagnostic_path=_upstream(tmp_path),
++        model_resolver=_resolver(paths),
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(result_path=unwritable_path),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.228,
++        write=False,
++    )
++    assert "output_parent_not_writable" in unwritable["preconditions_checked"]["blocked_reasons"]
+diff --git a/tests/python/test_llama_server_supervisor.py b/tests/python/test_llama_server_supervisor.py
+new file mode 100644
+index 0000000000..f3af28e893
+--- /dev/null
++++ b/tests/python/test_llama_server_supervisor.py
+@@ -0,0 +1,276 @@
++"""Tests for the reusable native llama-server supervisor.
++
++Spec refs: REQ-INFRA-6228,
++SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED,
++SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS,
++SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import signal
++from typing import Any
++
++from carnot.inference import llama_server_supervisor as sup
++
++
++class FakeProcessOps:
++    """SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS."""
++
++    def __init__(self, waits: list[str] | None = None) -> None:
++        self.waits = list(waits or ["exited"])
++        self.signals: list[dict[str, Any]] = []
++
++    def send_signal(self, pid: int, sig: signal.Signals, *, process_group: bool) -> None:
++        self.signals.append(
++            {"pid": pid, "signal": sig.name, "process_group": process_group}
++        )
++
++    def wait_for_exit(self, pid: int, timeout_s: float) -> str:
++        assert pid == 100
++        assert timeout_s >= 0
++        return self.waits.pop(0) if self.waits else "timeout"
++
++
++def _contract() -> sup.JsonDict:
++    return sup.supervisor_contract(
++        health_timeout_s=3.0,
++        token_timeout_s=2.0,
++        cleanup_grace_s=0.5,
++        kill_after_cleanup_timeout_s=0.25,
++        retry_budget=1,
++        endurance_interval_s=2.0,
++        endurance_sample_count=3,
++    )
++
++
++def _identity(*, command_hash: str | None = None, owned: bool = True) -> sup.JsonDict:
++    command = ["llama-server", "--model", "/models/family-Q4_K_M.gguf"]
++    return {
++        "pid": 100,
++        "exists": True,
++        "start_time_ticks": 555,
++        "uid": 1000,
++        "command": command,
++        "command_hash": command_hash or sup.command_hash(command),
++        "process_group_id": 100,
++        "parent_identity": {"pid": 9, "start_time_ticks": 123},
++        "owned_by_task": owned,
++    }
++
++
++def test_req_infra_6228_contract_classifies_bounded_failures() -> None:
++    """REQ-INFRA-6228: retry, wait, and cleanup limits are explicit."""
++
++    contract = _contract()
++    stat = "100 (llama server) S 9 100 100 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 98765 0 0"
++    parsed = sup.parse_proc_stat(stat)
++
++    assert contract["retry_budget"] == 1
++    assert contract["health_timeout_s"] == 3.0
++    assert contract["pid_reuse_guard"] == (
++        "pid_start_time_uid_command_hash_process_group_parent_identity"
++    )
++    assert sup.classify_runtime_event(exception_name="ConnectionRefusedError") == (
++        "connection_refused"
++    )
++    assert sup.classify_runtime_event(text="server_exited_before_health") == "early_exit"
++    assert sup.classify_runtime_event(text="RemoteDisconnected") == "server_died_mid_request"
++    assert sup.classify_runtime_event(text="request timed out") == "request_timeout"
++    assert sup.classify_runtime_event(deadline_expired=True) == "deadline_expired"
++    assert sup.classify_runtime_event(text="retry budget exhausted") == "retry_exhausted"
++    assert sup.classify_runtime_event(exit_code=-15) == "external_signal_sigterm"
++    assert sup.classify_runtime_event("", 0) == "no_failure"
++    assert sup.classify_runtime_event("odd stderr", 2) == "unclassified_runtime_failure"
++    assert sup.should_retry("connection_refused", 0, contract) is True
++    assert sup.should_retry("connection_refused", 1, contract) is False
++    assert sup.should_retry("early_exit", 0, contract) is True
++    assert sup.should_retry("unclassified_runtime_failure", 0, contract) is False
++    assert parsed["pid"] == 100
++    assert parsed["comm"] == "llama server"
++    assert parsed["process_group_id"] == 100
++    assert parsed["start_time_ticks"] == 98765
++
++
++def test_scenario_infra_6228_cleanup_refuses_identity_drift_and_leaks() -> None:
++    """SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS."""
++
++    contract = _contract()
++    recorded = _identity()
++    current = _identity()
++    ops = FakeProcessOps(["exited"])
++
++    receipt = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: current,
++        ops,
++        contract=contract,
++    )
++
++    assert receipt["action"] == "terminated"
++    assert receipt["leak_free"] is True
++    assert receipt["unrelated_process_kill_count_delta"] == 0
++    assert ops.signals == [{"pid": 100, "signal": "SIGTERM", "process_group": True}]
++
++    reused_ops = FakeProcessOps()
++    reused = {**current, "start_time_ticks": 556}
++    refused = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: reused,
++        reused_ops,
++        contract=contract,
++    )
++    assert refused["action"] == "refused"
++    assert refused["reason"] == "identity_mismatch"
++    assert reused_ops.signals == []
++
++    unowned_ops = FakeProcessOps()
++    unowned = sup.cleanup_recorded_identity(
++        {**recorded, "owned_by_task": False},
++        lambda _pid: current,
++        unowned_ops,
++        contract=contract,
++    )
++    assert unowned["action"] == "refused"
++    assert unowned["reason"] == "unowned_process"
++    assert unowned_ops.signals == []
++
++    drift_ops = FakeProcessOps()
++    command_drift = {**current, "command_hash": sup.command_hash(["other"])}
++    drift = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: command_drift,
++        drift_ops,
++        contract=contract,
++    )
++    assert drift["action"] == "refused"
++    assert drift["reason"] == "identity_mismatch"
++    assert drift_ops.signals == []
++
++    already_gone = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: {"pid": 100, "exists": False},
++        FakeProcessOps(),
++        contract=contract,
++    )
++    assert already_gone["action"] == "already_exited"
++    assert already_gone["leak_free"] is True
++
++    killed_ops = FakeProcessOps(["timeout", "exited"])
++    force_killed = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: current,
++        killed_ops,
++        contract=contract,
++    )
++    assert force_killed["action"] == "force_killed"
++    assert force_killed["leak_free"] is True
++    assert [row["signal"] for row in killed_ops.signals] == ["SIGTERM", "SIGKILL"]
++
++    leak_ops = FakeProcessOps(["timeout", "timeout"])
++    leak = sup.cleanup_recorded_identity(
++        recorded,
++        lambda _pid: current,
++        leak_ops,
++        contract=contract,
++    )
++    assert leak["action"] == "cleanup_leak"
++    assert leak["leak_free"] is False
++    assert leak["bounded"] is True
++
++
++def test_scenario_infra_6228_cuda_needs_logs_and_gpu_intervals() -> None:
++    """SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS."""
++
++    intervals = [
++        {
++            "label": "during",
++            "compute_apps": [
++                {
++                    "pid": 100,
++                    "process_name": "llama-server",
++                    "used_memory_mb": 9400,
++                    "owned_by_task": True,
++                }
++            ],
++        }
++    ]
++    log = "llm_load_tensors: offloaded 64/64 layers to GPU\nCUDA0 buffer size = 9400 MiB"
++
++    evidence = sup.parse_cuda_placement(
++        "qwen3_35b_a3b_moe",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        log,
++        intervals,
++        owned_pids={100},
++    )
++
++    assert evidence["cuda_placement_confirmed"] is True
++    assert evidence["cuda_layers_offloaded"] == 64
++    assert evidence["log_cuda_evidence_present"] is True
++    assert evidence["gpu_interval_owned_vram_confirmed"] is True
++
++    flags_only = sup.parse_cuda_placement(
++        "qwen3_35b_a3b_moe",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "--n-gpu-layers all",
++        intervals,
++        owned_pids={100},
++    )
++    assert flags_only["cuda_placement_confirmed"] is False
++    assert flags_only["log_cuda_evidence_present"] is False
++
++    log_only = sup.parse_cuda_placement(
++        "qwen3_35b_a3b_moe",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        log,
++        [{"label": "during", "compute_apps": []}],
++        owned_pids={100},
++    )
++    assert log_only["cuda_placement_confirmed"] is False
++    assert log_only["gpu_interval_owned_vram_confirmed"] is False
++
++    tensor_marker = sup.parse_cuda_placement(
++        "gemma4_31b_dense",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "ggml_cuda_init: CUDA found\nCUDA1 compute buffer size = 1024 MiB",
++        intervals,
++        owned_pids={100},
++    )
++    assert tensor_marker["cuda_tensor_or_buffer_confirmed"] is True
++    assert tensor_marker["cuda_placement_confirmed"] is True
++
++
++def test_scenario_infra_6228_repeated_tokens_and_family_readiness(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY."""
++
++    token_path = tmp_path / "token.bin"
++    token_path.write_bytes(b"A")
++    assert sup.sha256_file(token_path) == sup.sha256_bytes(b"A")
++    samples = [
++        sup.raw_token_receipt(b"A", latency_s=0.1 + index, path=token_path, sample_index=index)
++        for index in range(3)
++    ]
++    token_summary = sup.summarize_repeated_tokens(samples, min_samples=3)
++    cuda = sup.parse_cuda_placement(
++        "qwen3_35b_a3b_moe",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "offloaded 64/64 layers to GPU\nCUDA0 buffer size = 10 MiB",
++        [{"compute_apps": [{"pid": 100, "used_memory_mb": 1000, "owned_by_task": True}]}],
++        owned_pids={100},
++    )
++    family = {
++        "ownership": {"owned_process": True},
++        "cuda": cuda,
++        "tokens": token_summary,
++        "endurance": {"passed": True, "health_sample_count": 3},
++        "recovery": {"controlled_failure_bounded": True, "recovery_success": True},
++        "leak_check": {"leak_free": True},
++    }
++
++    assert token_summary["deterministic_repeated_output"] is True
++    assert sup.family_runtime_ready(family) is True
++
++    not_recovered = {**family, "recovery": {"controlled_failure_bounded": True}}
++    assert sup.family_runtime_ready(not_recovered) is False
+-- 
+2.55.0
+

@@ -1,0 +1,462 @@
+From 6c66b02fb7e53a175544df4c97a2470e3b05c45f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 19:59:28 -0400
+Subject: [PATCH 02425/11362] [conductor] Operational retrospective for
+ milestone 2026.06.402
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                               |  2 +-
+ docs/research-log.md                          |  6 ++
+ ops/arc_solve_registry.yaml                   | 16 +++--
+ ops/changelog.md                              |  1 +
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ python/carnot/agentic/arc_game_adapters.py    | 20 +++---
+ python/carnot/agentic/arc_solver_kit.py       | 64 ++++++++++++++++++-
+ results/arc_loop_solve_tu93.json              | 18 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |  4 +-
+ results/experiment_638_tier1_fr11_relay.json  |  4 +-
+ results/experiment_645_tier1_fr11_relay.json  |  4 +-
+ results/operational_retro_2026_06_402.json    | 29 +++++++++
+ scripts/arc_loop_solve.py                     | 17 +++++
+ .../python/test_arc_solver_kit_branch_mode.py | 57 +++++++++++++++++
+ 16 files changed, 222 insertions(+), 25 deletions(-)
+ create mode 100644 results/arc_loop_solve_tu93.json
+ create mode 100644 results/operational_retro_2026_06_402.json
+
+diff --git a/docs/index.html b/docs/index.html
+index 61997dca93..a0e92f6b11 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">3,682</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">3,700</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 163e092146..8b75473c86 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5301,3 +5301,9 @@ The critical path for milestone .250:
+ - theme: SETTLE the in-generation oracle-distinct moat with a LEAK-ROBUST partial-state scorer (replicate-or-retire the DiffusionGemma gate) + land the FIRST E3 ARC solves + action-role cross-game self-learning, on an operationally clean run.
+ - key result: Honest negative on the retro's OWN authoritative timing data (0 experiment commits attributed since activation; both RTX 3090s idle at the 19:35Z snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). On-disk ground truth (capstone exp4346, honest_verdict=complete, read this turn) records a headline POSITIVE: the in-generation moat REPLICATED with the leak-robust scorer -> the DiffusionGemma gate FLIPPED MET (oracle-distinct, leak-robust, replicated), ARC at 17 reproducible levels, E3 reproduced 2, self-learning open, hygiene passed. So the zero retro-timing is a detector artifact (detector_gap_suspected=true); the recurring OPERATIONAL failure is observability, not execution.
+ - acceptance: UNGATED capstone (no gated_on); retro-data 0/0 (false-zero detector gap). Highest-leverage operational action = repair the milestone-scoped timing detector (mtime scan + changelog-window fallback) + write-time duration_s/compute_bound stamping + emit detector_gap_suspected when artifacts exist on disk but the detector reports 0, so retros stop false-zeroing.
++
++### Milestone 2026.06.402
++- exp_range: exp4347-exp4357 (per on-disk results/experiment_4347..4357_*.json mtimes 2026-06-17 16:35->19:44Z, ~3h wall, + the ops/changelog window read this turn; the authoritative milestone-scoped timing detector again falsely reported 0 commits since activation -- the recurring false-zero gap documented across .363-.401, now extending to .402)
++- theme: PHASE E4 verifier scorecard + the HEADLINE DECISION -- did S3 stratified verifier-guided search convert the proven oracle-distinct moat into a fixed-NFE GENERATION gain; the new ARC reproducible_total_levels; did the learned action-cost heuristic lower held-out env-actions (north-star efficiency axis).
++- key result: Honest negative on the retro's OWN authoritative timing data (0 experiment commits attributed since activation; both RTX 3090s idle at the 23:52Z snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). On-disk ground truth (capstone exp4357, honest_verdict=complete, read this turn) records: the verifier moat stays PROVEN-leak-robust but its IN-GENERATION utility is OPEN -- S3 stratified verifier-guided search did NOT this milestone convert the oracle-distinct moat into a fixed-NFE generation gain (s3_moat_utility=open; verifier_thesis_state=moat_proven_leak_robust_but_s3_utility_open; verifier_is_oracle=false, correctly stamped via the exp4355 fix so the capstone does not trip CIRCULAR_MOAT_OVERCLAIM). ARC north star advanced to reproducible_total_levels=23; self-learning landed a POSITIVE -- the learned action-cost heuristic LOWERED held-out env-actions-to-solve (action_efficiency_improves=true); paper_ready=true (G1-G4 PASS, unmet_gates=[]). So the zero retro-timing is a detector artifact (detector_gap_suspected=true); the recurring operational failure is observability, not execution.
++- acceptance: UNGATED capstone (no gated_on); retro-data 0/0 (false-zero detector gap). Headline: S3 in-generation moat-utility OPEN (exp4348/4349 -> s3_moat_utility=open, neither a useful generation gain nor a powered null), the moat itself PROVEN-leak-robust (verifier_is_oracle=false); ARC reproducible_total_levels=23; self-learning WIN action_efficiency_improves=true (exp4353 learned action-cost heuristic); paper_ready=true (G1-G4 PASS, unmet_gates=[]); capstone exp4357 clean/unflagged. Highest-leverage operational action (recurring) = repair the milestone-scoped timing detector (mtime scan + changelog-window fallback) + write-time duration_s/compute_bound stamping + emit detector_gap_suspected when artifacts exist on disk but the detector reports 0, so retros stop false-zeroing.
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index da8e48ae27..596d41bae0 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -30,6 +30,8 @@ general_gotchas:
+     note: "live-coupled hardcoded coords miss the offline layout; discover from env."
+   - id: state_dependent_controls_and_animations
+     note: "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
++  - id: non_idempotent_reset
++    note: "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+ 
+ games:
+   - game: r11l
+@@ -118,13 +120,15 @@ games:
+ 
+   - game: tu93
+     reproducibility: reproduced
+-    levels_reproduced: 2   # 1 -> 2 (2026-06-17 forward-progress sweep: graph_explore_solve_v2 from L1 -> L2)
+-    win_condition: "L1+L2 adapter-free keyboard navigation (maze/path); L2 reached by graph-exploring from the replayed L1 state."
+-    action_model: "keyboard-only [ACTION1-4 directional]; L1 18-step path, then L2 via graph_explore_solve_v2 (43 actions total)."
+-    solver: "results/arc_explore_trajectory_tu93.json (graph_explore_solve_v2, L1->L2, 43 actions)."
+-    reproduce: "re-gated reproduced=True L2 (kit.reproduce, claimed_level=2, full L1+L2 path)."
++    levels_reproduced: 3   # 2 -> 3 (2026-06-17: GameAdapter + OfflineSolver branch_mode='fresh_env', reproduction-gated)
++    mechanic_class: graph_explore   # 4-direction keyboard maze; frame-based RE (player=colour-9, goal=static colour-14)
++    win_condition: "L1-L3 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
++    action_model: "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states)."
++    solver: "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json."
++    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, full 47-action path); states_expanded=5903."
+     gotchas:
+-      - "earlier routing flagged tu93 ~ wa30/ls20 family; the systematic explorer cracked it without an adapter."
++      - "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2."
++      - "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+ 
+   - game: tn36
+     reproducibility: reproduced   # SOLVED 2026-06-17 via program-editor RE (L1-L6, reproduction-gated)
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0264a9a3c9..8930af3515 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9271,3 +9271,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-17: PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene + GAP-4 regression guard + FIX the .401 capstone verifier_is_oracle stamping bug. (1) Reconcile ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the .402 outcomes (S3 moat-utility, new ARC levels, the action-cost heuristic, any new missing-verifier gaps logged by exp4350-4353). (2) Run the GAP-4 regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress). (3) FIX the capstone-stamping bug: the .401 capstone (exp4346) carried a CIRCULAR_MOAT_OVERCLAIM critical flag because it OMITTED verifier_is_oracle (set None, not false) even though the underlying moat (exp4338) is correctly oracle-distinct -- the capstone aggregation must PROPAGATE verifier_is_oracle from the moat artifact it reads, so the .402 capstone (exp4357) does NOT recur the flag. Verify the fix by re-running adversarial_verify.py on a stamped sample capstone. NO production verifier edits (audit-only per Verifier Authenticity Discipline). (✅ Complete) — honest_verdict=complete: registry_gaps_arc_reconciled_to_v402_truth_gap4_guard_passed_True_capstone_stamp_fix_verified_True; results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+ - 2026-06-17: PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic per north-star §3) -- KV260 SSH-reachability + loaded-bitstream continuity check. Per north-star §3, KV260 is THE sovereignty story (drive to terminal, then freeze); GateMate/PolarFire are opportunistic-only. SSH-reachability precondition ONLY (NEVER a host SD-card precondition per KV260 SSH-Not-SD-Card Discipline). If the board is reachable, record the loaded overlay (xmutil listapps) + a lightweight liveness check (the carnot_ising bitstream UIO device present); if it is the terminal board-latency transcript, capture it. If unreachable -> honest_verdict blocked_kv260_ssh_unreachable (a clean documented skip, NOT a fabrication). This keeps the board visible in the milestone retro without burning a deep task slot. NO host SD-card-device precondition (the retired mechanism). NO TRM training. (⚠️ Research Finding) — honest_verdict=success_kv260_continuity_terminal_reached; results/experiment_4356_hardware_continuity_kv260.json
+ - 2026-06-17: PHASE E4 (CAPSTONE .402) -- the milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did S3 stratified verifier-guided search CONVERT the proven oracle-distinct moat into a fixed-NFE GENERATION GAIN (exp4348 s3_guided_beats_control + the exp4349 reward-state-alignment validation)? -> the moat graduates 'exists'->'useful' (Pareto-improves generation), or a powered null retires the in-generation scale-up direction. (2) ARC north star: the new reproducible_total_levels (>=21?) across exp4350 (ka59) + exp4351 (sc25 L2+/ar25 L2/tn36 L7) + exp4352 (tr87+ft09); how many NEW levels/games. (3) self-learning: did the learned action-cost heuristic (exp4353) lower held-out env-actions-to-solve (north-star efficiency axis)? Aggregate (SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle -- a circular/execution-grounded win is NOT a moat). Emit verifier_thesis_state (one honest string) + s3_moat_utility (one of: useful_generation_gain / proven_but_not_useful / open) + reproducible_total_levels + action_efficiency_improves. Compute the G1-G4 publication gate via publication_gate.py. Use the robust aggregate-available-report-gaps helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the exp4355 stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO gated_on. (✅ Complete) — honest_verdict=complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready; results/experiment_4357_capstone_v402.json
++- 2026-06-17: Operational retrospective for milestone 2026.06.402 (PHASE E4 capstone). The retro's authoritative milestone-scoped timing detector again attributed 0 experiment commits / 0 compute-bound tasks / 0 wall-time minutes since activation, while the .402 phase artifacts exp4347-exp4357 exist on disk (mtimes 16:35->19:44Z, ~3h wall; capstone exp4357 clean, paper_ready=true). GPU idle NOT flagged as a bottleneck (0 compute-bound tasks attributed -> gpu_idle_on_compute_bound_tasks=null; idle GPUs at the 23:52Z post-capstone snapshot are correct). Recurring false-zero detector gap (.363->.402); highest-leverage fix = mtime + changelog-window fallback for the detector + write-time duration_s/compute_bound stamping + a detector_gap_suspected self-flag. results/operational_retro_2026_06_402.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 10b6004399..fe5d0830cc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-06-17T23:31:40Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 54, "phase": "iteration_start", "last_beat": "2026-06-17T23:49:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1a33b17225..3e2dc545b7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8685,3 +8685,4 @@ c |
+ | 2026-06-17 22:54 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 106 passed, 1 warning in 5.05s |
+ | 2026-06-17 23:14 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 89 passed, 1 warning in 6.35s |
+ | 2026-06-17 23:29 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 111 passed, 1 warning in 6.65s |
++| 2026-06-17 23:47 UTC | PHASE E4 (CAPSTONE .402) -- the milestone scorecar | OK | 110 passed, 1 warning in 7.19s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 61a6fa4e93..8d707d382c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 53, "phase": "iteration_start", "started_at": "2026-06-17T23:31:40Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 54, "phase": "iteration_start", "started_at": "2026-06-17T23:49:21Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index fc722510a6..e92e243949 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -78,14 +78,17 @@ def _tu93():
+     motion: only colour-9 + the colour-4 key drift across moves; colour-14 is static). The
+     hand_verifier is the player->goal Manhattan distance (goal-distance-routed best-first search).
+ 
+-    VALIDATED: solves L1 reproducibly (18 moves, offline_reproduced=True). KNOWN LIMITATION at L2+: tu93
+-    carries HIDDEN/RNG state (beyond the rendered grid) that the OfflineSolver's REUSED single env
+-    accumulates across the search, so a verifier-found L2 path does NOT reproduce on a fresh env (the
+-    reproduction gate correctly rejects it -- no false claim). graph_explore avoids this by DEEPCOPYING
+-    the env per node; the OfflineSolver does not. Deep-solving tu93 via this adapter therefore needs a
+-    deepcopy-per-node (fresh-env) mode in arc_solver_kit.OfflineSolver -- a kit-level change, not an
+-    adapter fix. featurize is None (the learned verifier is fed env._game internals via
+-    collect_trajectory_data, which this frame-based RE doesn't read)."""
++    branch_mode='fresh_env' is LOAD-BEARING here (gotcha #7): tu93's env.reset() is NON-IDEMPOTENT --
++    it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). The
++    default reuse-one-env 'replay' search therefore detects parity-CONTINGENT 'wins' that fail the
++    fresh-env reproduction gate (the gate correctly rejects them -- no false claim), so 'replay' only
++    reproduces L1. Evaluating EVERY candidate on a brand-new env (fresh_env mode) makes each see the
++    same pristine parity-0 the gate uses, so found paths reproduce. (deepcopy mode does NOT work for
++    tu93 -- its env._game is not deepcopy-injectable, gotcha #3, like sc25.)
++
++    VALIDATED 2026-06-17: with branch_mode='fresh_env' the adapter DEEP-SOLVES to L3 reproducibly
++    (47 moves, offline_reproduced=True), vs L1 under replay. featurize is None (the learned verifier
++    is fed env._game internals via collect_trajectory_data, which this frame-based RE doesn't read)."""
+     import numpy as np
+     from carnot.agentic.arc_agi3_world_model import grid_of
+     from carnot.agentic.arc_agi3_live_adapter import _game_action
+@@ -134,6 +137,7 @@ def _tu93():
+         game="tu93", action_labels=action_labels, apply=apply, state_key=state_key,
+         featurize=None, hand_verifier=hand_verifier, warmup_label=None,
+         depth_caps={1: 40, 2: 60, 3: 80, 4: 90, 5: 90},
++        branch_mode="fresh_env",   # gotcha #7: tu93 reset is non-idempotent -> fresh env per node
+     )
+ 
+ 
+diff --git a/python/carnot/agentic/arc_solver_kit.py b/python/carnot/agentic/arc_solver_kit.py
+index e760be6044..67ece7728e 100644
+--- a/python/carnot/agentic/arc_solver_kit.py
++++ b/python/carnot/agentic/arc_solver_kit.py
+@@ -97,9 +97,19 @@ class OfflineSolver:
+         #             the EXACT env state rather than reconstructing it. Use for games where
+         #             replay-from-reset does not faithfully reproduce the searched state (the verifier
+         #             then finds a path that fails the reproduction gate). Costs a deepcopy per node;
+-        #             requires env._game to be deepcopy-able + injectable (works for tu93; the
+-        #             deepcopy-injection gotcha #3 means it is NOT universal — keep "replay" the default).
++        #             requires env._game to be deepcopy-able + injectable — the deepcopy-injection
++        #             gotcha #3 means it is NOT universal (works for lp85, BROKEN for sc25/tu93).
++        #   "fresh_env": make a BRAND-NEW env (env_factory, default a fresh arc.make of game_id) for
++        #             EVERY candidate evaluation and replay prefix+path from reset on it. The fix for a
++        #             game whose env.reset() is NON-IDEMPOTENT (gotcha #7: tu93's reset leaves a
++        #             parity-toggling hidden state, so the reuse-one-env search detects parity-contingent
++        #             "wins" that fail the fresh-env reproduction gate). A fresh env always starts at the
++        #             SAME pristine parity the gate uses, so found paths reproduce. Costs a fresh env +
++        #             full replay per evaluation — slower, so reserve it for non-idempotent-reset games.
+         self.branch_mode = branch_mode
++        self.env_factory = env_factory       # () -> fresh env, for branch_mode="fresh_env"
++        self._fresh_arcade: Any = None       # lazily-cached arcade + scorecard for the default factory
++        self._fresh_scorecard: Any = None
+         # VERIFIER-ROUTED SEARCH (the north-star efficiency loop): a score on a
+         # state (LOWER = closer to the win, an energy/goal-distance). When given,
+         # the search is best-first ordered by it, so it expands promising branches
+@@ -152,6 +162,8 @@ class OfflineSolver:
+         plain BFS when no verifier). Returns (extension_path, states_expanded)."""
+         if self.branch_mode == "deepcopy":
+             return self._solve_level_deepcopy(env, start_level, prefix, depth_cap)
++        if self.branch_mode == "fresh_env":
++            return self._solve_level_fresh(env, start_level, prefix, depth_cap)
+         self._replay(env, list(prefix))
+         seen = {self._call_state_key(env)}
+         counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
+@@ -214,6 +226,54 @@ class OfflineSolver:
+         self.last_states_expanded = nodes
+         return None, nodes
+ 
++    def _fresh_env(self) -> Any:
++        """A BRAND-NEW env for branch_mode='fresh_env' — pristine reset parity. Default: a fresh
++        arc.make of self.game_id over a lazily-cached offline arcade + scorecard."""
++        if self.env_factory is not None:
++            return self.env_factory()
++        if self._fresh_arcade is None:
++            self._fresh_arcade = offline_arcade()
++            self._fresh_scorecard = self._fresh_arcade.open_scorecard()
++        return self._fresh_arcade.make(self.game_id, scorecard_id=self._fresh_scorecard)
++
++    def _solve_level_fresh(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
++        """FRESH-ENV-PER-NODE variant of solve_level. EVERY candidate is evaluated on a BRAND-NEW env
++        (replay prefix+path from reset), so each evaluation sees the same pristine reset parity the
++        reproduction gate uses — the fix for non-idempotent-reset games (gotcha #7: a game whose
++        env.reset() leaves parity-toggling hidden state, where the reuse-one-env search detects
++        parity-contingent wins that fail the fresh-env gate). The `env` arg is unused — the factory
++        mints fresh envs. Slower (a fresh env + full replay per evaluation); reserve for such games."""
++
++        def at(path: Sequence[str]):
++            e = self._fresh_env()
++            self._replay(e, list(prefix) + list(path))   # reset+replay on the fresh env; sets last_frame
++            return e
++
++        e0 = at([])
++        seen = {self._call_state_key(e0)}
++        counter = itertools.count()
++        heap = [(self._priority(e0, []), next(counter), [])]
++        nodes = 0
++        while heap and nodes < self.max_nodes:
++            _, _, path = heapq.heappop(heap)
++            if len(path) >= depth_cap:
++                continue
++            e_node = at(path)                             # fresh env at the node (for action_labels)
++            for label in self._call_action_labels(e_node, path):
++                e_child = at(path + [label])
++                f2 = self.last_frame
++                nodes += 1
++                if frame_level(f2) > start_level:
++                    self.last_states_expanded = nodes
++                    return path + [label], nodes
++                k = self._call_state_key(e_child)
++                if k not in seen:
++                    seen.add(k)
++                    heapq.heappush(heap, (self._priority(e_child, path + [label]),
++                                          next(counter), path + [label]))
++        self.last_states_expanded = nodes
++        return None, nodes
++
+     def solve(self, env: Any, target_level: int, depth_cap: int = 30):
+         """Chain levels from reset to target_level; return the full action path + reached level."""
+         f = self._replay(env, [])
+diff --git a/results/arc_loop_solve_tu93.json b/results/arc_loop_solve_tu93.json
+new file mode 100644
+index 0000000000..e7d9216e5d
+--- /dev/null
++++ b/results/arc_loop_solve_tu93.json
+@@ -0,0 +1,18 @@
++{
++  "game": "tu93",
++  "reached_level": 3,
++  "moves": 47,
++  "states_expanded": 5903,
++  "verifier_src": "hand_verifier_cold_start",
++  "offline_reproduced": true,
++  "reproduced_levels": 3,
++  "learned_verifier_checkpoint": null,
++  "reproduction_gate": {
++    "game": "tu93",
++    "reached_level": 3,
++    "claimed_level": 3,
++    "reproduced": true,
++    "mode": "offline_reproduction_gate_no_quota"
++  },
++  "mode": "standing_arc_loop_offline_no_quota"
++}
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index fdabad2c19..7c2768a22f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:45:42Z",
+-  "finished_at": "2026-06-17T23:45:42Z",
++  "started_at": "2026-06-17T23:49:47Z",
++  "finished_at": "2026-06-17T23:49:47Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7343486c4d..e07c0bb720 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:45:42Z",
+-  "finished_at": "2026-06-17T23:45:42Z",
++  "started_at": "2026-06-17T23:49:47Z",
++  "finished_at": "2026-06-17T23:49:47Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 07e89bee03..6d51c116da 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:45:42Z",
+-  "finished_at": "2026-06-17T23:45:42Z",
++  "started_at": "2026-06-17T23:49:47Z",
++  "finished_at": "2026-06-17T23:49:48Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/operational_retro_2026_06_402.json b/results/operational_retro_2026_06_402.json
+new file mode 100644
+index 0000000000..8fbb1f045c
+--- /dev/null
++++ b/results/operational_retro_2026_06_402.json
+@@ -0,0 +1,29 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.402",
++  "generated_at": "2026-06-17T23:52:58Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "PHASE E4 capstone milestone. The retro's authoritative milestone-scoped timing detector attributed 0 experiment commits, 0 compute-bound tasks and 0 wall-time minutes since activation; with 0 compute-bound tasks attributed, the two idle RTX 3090s (0% util, 4MB each at the 23:52Z snapshot) are correct behaviour, so gpu_idle_on_compute_bound_tasks=null and GPU idle is NOT flagged. However the .402 phase artifacts (archive/activate exp4347 through capstone exp4357) are present on disk with mtimes spanning 16:35->19:44Z (~3h), and capstone exp4357 landed clean (paper_ready=true, unmet_gates=[]). So the milestone executed to completion and the 0/0/0 is the recurring false-zero milestone-scoped-timing-detector gap documented across .363-.401, now extending to .402, not an idle or failed run.",
++  "bottlenecks_identified": [
++    "RECURRING false-zero milestone-scoped timing detector: it attributed 0 experiment commits since activation while artifacts exp4347-exp4357 demonstrably exist on disk (mtimes 16:35->19:44Z, ~3h wall, capstone exp4357 clean). This is the same observability gap documented across .363-.401; the operational failure this milestone is observability, not execution.",
++    "GPU idle is NOT a bottleneck this milestone: with 0 compute-bound tasks attributed, gpu_idle_on_compute_bound_tasks=null and idle GPUs at the post-capstone snapshot are correct per the GPU IDLE INTERPRETATION RULE (no compute-bound GPU code path attributed to evaluate; the GPU-using S3-search phase finished ~4h before the 23:52Z snapshot)."
++  ],
++  "improvements_suggested": [
++    "Repair the milestone-scoped timing detector: when git-commit attribution returns 0, fall back to a results/ mtime scan bounded by the ops/changelog activation window, so the retro stops false-zeroing on milestones whose artifacts exist on disk.",
++    "Stamp duration_s plus a compute_bound flag onto every experiment artifact at write time, so slowest_experiments and compute_bound_experiments_count are computed from ground-truth artifacts rather than from commit attribution.",
++    "Emit detector_gap_suspected=true whenever artifacts for the active milestone exist on disk but the detector reports 0 commits, so the false-zero self-flags instead of being re-diagnosed by hand each milestone.",
++    "Tag aggregation/capstone milestones in the retro pipeline so a low compute-bound count reads as expected-for-aggregation rather than anomalous."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Fix the milestone-scoped timing detector (mtime + changelog-window fallback) -- the single recurring operational defect from .363 through .402, and the only thing blocking accurate efficiency retros.",
++    "Stamp duration_s + compute_bound on artifacts at emit time so slowest_experiments and compute_bound_experiments_count populate from ground truth.",
++    "Self-flag the gap (detector_gap_suspected) when on-disk artifacts contradict a 0-commit attribution, eliminating the per-milestone manual re-diagnosis."
++  ],
++  "estimated_time_savings_pct": 5,
++  "meta_reflection": "The milestone executed cleanly end-to-end (capstone exp4357 paper_ready=true, unmet_gates=[]); the only operational defect is the now-chronic false-zero timing detector, which has recurred .363->.402 without a code fix. Re-documenting the gap each milestone is itself wasted effort -- the highest-value move is to land the detector fix so future retros measure real per-experiment timing instead of re-deriving 'the artifacts are on disk' by hand."
++}
+diff --git a/scripts/arc_loop_solve.py b/scripts/arc_loop_solve.py
+index 775b9a668e..7f26a8131f 100644
+--- a/scripts/arc_loop_solve.py
++++ b/scripts/arc_loop_solve.py
+@@ -41,6 +41,17 @@ def _ckpt_path(game: str) -> Path:
+     return CKPT_DIR / f"arc_verifier_{game}.json"
+ 
+ 
++def _label_to_action(label: str) -> dict:
++    """Normalize an adapter's opaque action LABEL to a metaharness-replayable action dict.
++    Adapter labels are JSON ({"action": N} for keyboard games, {"x": X, "y": Y} for click games);
++    the metaharness's normalize() reads either shape. Falls back to {"raw": label} for non-JSON."""
++    try:
++        d = json.loads(label)
++        return d if isinstance(d, dict) else {"action": d}
++    except (ValueError, TypeError):
++        return {"raw": label}
++
++
+ def solve_adaptered(game: str, target_level: int) -> dict:
+     ad = adapters.get_adapter(game)
+     arc = kit.offline_arcade()
+@@ -90,6 +101,12 @@ def solve_adaptered(game: str, target_level: int) -> dict:
+         "offline_reproduced": bool(gate["reproduced"]), "reproduced_levels": cur,
+         "learned_verifier_checkpoint": ckpt_written,
+         "reproduction_gate": gate,
++        # PERSIST the winning action path (not just the verdict) so it is replay-gateable by the
++        # offline metaharness / a third party -- per the ARC Solve Reproducibility discipline
++        # (capture the winning condition, not a brittle one-off). Labels are the adapter's opaque
++        # strings; "solution" normalizes them to metaharness-compatible action dicts.
++        "solution_labels": list(full),
++        "solution": [_label_to_action(lbl) for lbl in full],
+         "mode": "standing_arc_loop_offline_no_quota",
+     }
+ 
+diff --git a/tests/python/test_arc_solver_kit_branch_mode.py b/tests/python/test_arc_solver_kit_branch_mode.py
+index ff531f5c68..1b52ad4a39 100644
+--- a/tests/python/test_arc_solver_kit_branch_mode.py
++++ b/tests/python/test_arc_solver_kit_branch_mode.py
+@@ -79,3 +79,60 @@ def test_deepcopy_mode_matches_replay_and_reproduces():
+     assert rep_win == 1 and dc_win == 1                 # both reach the win, reproducibly
+     assert rep_path == ["R", "R", "R"]                  # verifier-routed shortest path
+     assert dc_path == rep_path                          # deepcopy branching == replay branching
++
++
++# ---- fresh_env mode: the fix for a NON-IDEMPOTENT reset (gotcha #7, tu93) ----
++class _PFrame:
++    def __init__(self, pos, win):
++        self.pos = pos
++        self.levels_completed = 1 if win else 0
++
++
++class _PGame:
++    __slots__ = ("pos",)
++
++    def __init__(self, pos=0):
++        self.pos = pos
++
++
++class _PristineEnv:
++    """Toy whose reset() is NON-IDEMPOTENT: each reset increments n_resets, and a win (pos>=2) only
++    registers while the env is PRISTINE (n_resets==1). A reuse-one-env 'replay' search resets repeatedly
++    (n_resets climbs past 1) so it can NEVER observe the win; a 'fresh_env' search evaluates each
++    candidate on a brand-new env (n_resets==1) so it finds -- and reproduces -- the win. This is the
++    unit-test analogue of tu93's parity-toggling reset (gotcha #7)."""
++
++    def __init__(self):
++        self._game = _PGame(0)
++        self.n_resets = 0
++
++    def reset(self):
++        self._game = _PGame(0)
++        self.n_resets += 1
++        return _PFrame(0, False)
++
++    def step(self, label, **kw):
++        self._game.pos = max(0, self._game.pos + (1 if label == "R" else -1))
++        return _PFrame(self._game.pos, self._game.pos >= 2 and self.n_resets == 1)
++
++
++def _solve_pristine(mode):
++    # env_factory mints pristine envs for fresh_env mode (the default factory is offline_arcade, which
++    # only knows real games); replay/deepcopy ignore it and reuse the passed env.
++    solver = OfflineSolver("pristine", _labels, _apply, _state_key, verifier=_verifier,
++                           branch_mode=mode, env_factory=_PristineEnv)
++    path, _ = solver.solve_level(_PristineEnv(), 0, [], depth_cap=6)
++    g = _PristineEnv()                              # reproduction gate: replay on a brand-new env
++    f = g.reset()
++    for lab in (path or []):
++        f = _apply(g, lab, f)
++    return path, f.levels_completed
++
++
++def test_fresh_env_mode_solves_nonidempotent_reset_game():
++    # replay reuses one env -> reset count climbs past 1 -> the pristine-only win is never observable
++    rep_path, rep_win = _solve_pristine("replay")
++    assert rep_path is None and rep_win == 0
++    # fresh_env evaluates each candidate on a brand-new env -> finds AND reproduces the win
++    fe_path, fe_win = _solve_pristine("fresh_env")
++    assert fe_win == 1 and fe_path == ["R", "R"]
+-- 
+2.55.0
+

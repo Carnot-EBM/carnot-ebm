@@ -1,0 +1,190 @@
+From 39f420fbfbff97b77946ba7e8d23082e3f553be2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 10:25:36 -0400
+Subject: [PATCH 10529/11362] [conductor] V595 evidence synthesis and branch
+ disposition
+
+Automated research step by research conductor.
+Task ID: exp6823-v595-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |  2 +-
+ results/arc_e3/sp80/attempts/manifest.jsonl   |  1 +
+ ...0260831T140945_233191__526e13d310f41227.py | 38 +++++++++
+ results/arc_e3/sp80/world_model.py            | 79 ++++++++-----------
+ ...periment_6823_v595_branch_disposition.json |  2 +-
+ 5 files changed, 74 insertions(+), 48 deletions(-)
+ create mode 100644 results/arc_e3/sp80/attempts/manifest.jsonl
+ create mode 100644 results/arc_e3/sp80/attempts/wm_20260831T140945_233191__526e13d310f41227.py
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 747e367813..9969cdc4d7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5206,
++  "experiments_checked": 5207,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/arc_e3/sp80/attempts/manifest.jsonl b/results/arc_e3/sp80/attempts/manifest.jsonl
+new file mode 100644
+index 0000000000..c6341dbc5a
+--- /dev/null
++++ b/results/arc_e3/sp80/attempts/manifest.jsonl
+@@ -0,0 +1 @@
++{"bytes": 1302, "deduplicated": false, "file": "wm_20260831T140945_233191__526e13d310f41227.py", "model": "Qwen3.8-27B", "note": "tool loop: early_stop_non_improving, 4 turns, 2 visible mismatches", "sha256_16": "526e13d310f41227", "ts": "20260831T140945_233191", "writer": "write_world_model"}
+diff --git a/results/arc_e3/sp80/attempts/wm_20260831T140945_233191__526e13d310f41227.py b/results/arc_e3/sp80/attempts/wm_20260831T140945_233191__526e13d310f41227.py
+new file mode 100644
+index 0000000000..1430713737
+--- /dev/null
++++ b/results/arc_e3/sp80/attempts/wm_20260831T140945_233191__526e13d310f41227.py
+@@ -0,0 +1,38 @@
++import numpy as np
++
++MOVE = {1: (-4, 0), 2: (4, 0), 3: (0, -4), 4: (0, 4)}
++
++def _find_block(grid, color):
++    mask = grid == color
++    rows = np.where(mask.any(axis=1))[0]
++    cols = np.where(mask.any(axis=0))[0]
++    if len(rows) == 0 or len(cols) == 0:
++        return None
++    r0, r1 = int(rows[0]), int(rows[-1])
++    c0, c1 = int(cols[0]), int(cols[-1])
++    if not mask[r0:r1 + 1, c0:c1 + 1].all():
++        return None
++    return r0, c0, r1 - r0 + 1, c1 - c0 + 1
++
++def engine(grid, action, data):
++    g = np.array(grid, dtype=np.int64).copy()
++    h, w = g.shape
++    # 1) the 9-block moves by 4 cells in the action direction (1 up, 2 down, 3 left, 4 right)
++    if action in MOVE:
++        blk = _find_block(g, 9)
++        if blk is not None:
++            r0, c0, bh, bw = blk
++            dr, dc = MOVE[action]
++            nr0, nc0 = r0 + dr, c0 + dc
++            if 0 <= nr0 and 0 <= nc0 and nr0 + bh <= h and nc0 + bw <= w:
++                g[r0:r0 + bh, c0:c0 + bw] = 12
++                g[nr0:nr0 + bh, nc0:nc0 + bw] = 9
++    # 2) the top bar (row 0, color 14) erodes from the right by 2 cells each step
++    if h > 0 and (g[0] == 14).any():
++        cols = np.where(g[0] == 14)[0]
++        c1 = int(cols[-1])
++        g[0, max(0, c1 - 1):c1 + 1] = 0
++    return g
++
++def is_level_complete(grid):
++    return False
+diff --git a/results/arc_e3/sp80/world_model.py b/results/arc_e3/sp80/world_model.py
+index f19443d6c0..1430713737 100644
+--- a/results/arc_e3/sp80/world_model.py
++++ b/results/arc_e3/sp80/world_model.py
+@@ -1,51 +1,38 @@
+ import numpy as np
+ 
++MOVE = {1: (-4, 0), 2: (4, 0), 3: (0, -4), 4: (0, 4)}
++
++def _find_block(grid, color):
++    mask = grid == color
++    rows = np.where(mask.any(axis=1))[0]
++    cols = np.where(mask.any(axis=0))[0]
++    if len(rows) == 0 or len(cols) == 0:
++        return None
++    r0, r1 = int(rows[0]), int(rows[-1])
++    c0, c1 = int(cols[0]), int(cols[-1])
++    if not mask[r0:r1 + 1, c0:c1 + 1].all():
++        return None
++    return r0, c0, r1 - r0 + 1, c1 - c0 + 1
++
+ def engine(grid, action, data):
+-    """
+-    World model for ARC-AGI game 'sp80'.
+-    Induces transition rules based on observed movements and state changes.
+-    """
+-    new_grid = grid.copy()
+-    
+-    if action == 4:
+-        # Move the color 9 object to the right by 4 units.
+-        coords = np.argwhere(grid == 9)
+-        if coords.size > 0:
+-            y_min, x_min = coords.min(axis=0)
+-            y_max, x_max = coords.max(axis=0)
+-            # The background color is typically 12 in this region.
+-            # Fill the leftmost 4 columns of the original object with background.
+-            new_grid[y_min : y_max + 1, x_min : x_min + 4] = 12
+-            # Extend the rightmost edge by 4 columns with color 9.
+-            new_grid[y_min : y_max + 1, x_max + 1 : x_max + 5] = 9
+-            
+-        # Reduce the top bar (color 14) from the right end by 2 cells.
+-        top_bar_len = np.sum(grid[0, :] == 14)
+-        if top_bar_len >= 2:
+-            # Replace the last two cells of the current color 14 segment with color 0.
+-            new_grid[0, top_bar_len - 2 : top_bar_len] = 0
+-            
+-    elif action == 5:
+-        # ACTION5 triggers a win if specific conditions are met.
+-        coords = np.argwhere(grid == 9)
+-        if coords.size > 0:
+-            _, x_min = coords.min(axis=0)
+-            top_bar_len = np.sum(grid[0, :] == 14)
+-            # Win condition: Object 9 shifted to x=24 and top bar reduced to length 58.
+-            if x_min == 24 and top_bar_len == 58:
+-                # The winning transition re-lays out the board for the next level.
+-                # We simulate this by creating a state that is_level_complete recognizes as a win.
+-                win_grid = new_grid.copy()
+-                # Based on observed transitions, row 63 becomes all color 14 in the next layout.
+-                win_grid[63, :] = 14
+-                return win_grid
+-                
+-    return new_grid
++    g = np.array(grid, dtype=np.int64).copy()
++    h, w = g.shape
++    # 1) the 9-block moves by 4 cells in the action direction (1 up, 2 down, 3 left, 4 right)
++    if action in MOVE:
++        blk = _find_block(g, 9)
++        if blk is not None:
++            r0, c0, bh, bw = blk
++            dr, dc = MOVE[action]
++            nr0, nc0 = r0 + dr, c0 + dc
++            if 0 <= nr0 and 0 <= nc0 and nr0 + bh <= h and nc0 + bw <= w:
++                g[r0:r0 + bh, c0:c0 + bw] = 12
++                g[nr0:nr0 + bh, nc0:nc0 + bw] = 9
++    # 2) the top bar (row 0, color 14) erodes from the right by 2 cells each step
++    if h > 0 and (g[0] == 14).any():
++        cols = np.where(g[0] == 14)[0]
++        c1 = int(cols[-1])
++        g[0, max(0, c1 - 1):c1 + 1] = 0
++    return g
+ 
+ def is_level_complete(grid):
+-    """
+-    Determines if the current grid represents a completed level.
+-    Based on observations, the completion trigger results in a board where row 63 is color 14.
+-    """
+-    # Check if the bottom row has been transformed into the target color (14).
+-    return np.all(grid[63, :] == 14)
+\ No newline at end of file
++    return False
+diff --git a/results/experiment_6823_v595_branch_disposition.json b/results/experiment_6823_v595_branch_disposition.json
+index 44259b1136..291b5dc6fa 100644
+--- a/results/experiment_6823_v595_branch_disposition.json
++++ b/results/experiment_6823_v595_branch_disposition.json
+@@ -66,7 +66,7 @@
+     "retire",
+     "blocked"
+   ],
+-  "duration_s": 0.9588388910051435,
++  "duration_s": 0.8863936130073853,
+   "field_principles": {
+     "adversarial_findings": "Validator findings remain visible and cannot be laundered away.",
+     "contract_owner_map": "Existing specifications keep authority with the contract that owns it.",
+-- 
+2.55.0
+

@@ -1,0 +1,70 @@
+From 2ca49689f4de16e055e5244e0a3a1b8633c27db8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 09:59:38 -0400
+Subject: [PATCH 04822/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                    | 2 +-
+ ops/conductor-log.md                                            | 1 +
+ ops/conductor-state.json                                        | 2 +-
+ .../distributional_energy_verifier_musr_checkpoints/q0003.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0004.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0005.json  | 1 +
+ 6 files changed, 6 insertions(+), 2 deletions(-)
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0003.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0004.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0005.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6526d46aa8..9e3161ad5f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 131, "phase": "iteration_start", "last_beat": "2026-06-29T13:41:16Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 132, "phase": "iteration_start", "last_beat": "2026-06-29T13:59:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a26888a81d..c59a885857 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9579,3 +9579,4 @@ The contro |
+ | 2026-06-29 12:48 UTC | PHASE 0 (TRANSITION) -- archive .457 -> activate . | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: gistry_unloada |
+ | 2026-06-29 13:13 UTC | PHASE 0 (TRANSITION) -- archive .457 -> activate . | OK | 88 passed, 1 warning in 6.94s |
+ | 2026-06-29 13:39 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK ATTE | OK | 94 passed, 1 warning in 10.35s |
++| 2026-06-29 13:57 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 91 passed, 1 warning in 12.47s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1fd808c2aa..eb2bc41e74 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 131, "phase": "iteration_start", "started_at": "2026-06-29T13:41:16Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 132, "phase": "iteration_start", "started_at": "2026-06-29T13:59:35Z"}
+\ No newline at end of file
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0003.json b/results/distributional_energy_verifier_musr_checkpoints/q0003.json
+new file mode 100644
+index 0000000000..70467f9430
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0003.json
+@@ -0,0 +1 @@
++{"q": 3, "gold": "Rosemary", "n_choices": 2, "sc_answer": "Rosemary", "energy_answer": "Harry", "energy_pure_answer": "Harry", "judge_answer": "Rosemary", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 7, "answers": ["Rosemary", "Harry", null, "Harry", "Harry", "Rosemary", "Rosemary", "Rosemary"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0004.json b/results/distributional_energy_verifier_musr_checkpoints/q0004.json
+new file mode 100644
+index 0000000000..2e70fa050b
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0004.json
+@@ -0,0 +1 @@
++{"q": 4, "gold": "Amelia", "n_choices": 2, "sc_answer": "Emma", "energy_answer": "Emma", "energy_pure_answer": "Amelia", "judge_answer": "Amelia", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Amelia", "Emma", "Amelia", "Emma", "Emma", "Emma", "Emma", "Emma"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0005.json b/results/distributional_energy_verifier_musr_checkpoints/q0005.json
+new file mode 100644
+index 0000000000..cbcf896133
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0005.json
+@@ -0,0 +1 @@
++{"q": 5, "gold": "Emma", "n_choices": 2, "sc_answer": "Emma", "energy_answer": "Emma", "energy_pure_answer": "Emma", "judge_answer": "Emma", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Emma", "Amelia", "Amelia", "Emma", "Amelia", "Emma", "Emma", "Emma"], "energy_abstained": false}
+-- 
+2.55.0
+

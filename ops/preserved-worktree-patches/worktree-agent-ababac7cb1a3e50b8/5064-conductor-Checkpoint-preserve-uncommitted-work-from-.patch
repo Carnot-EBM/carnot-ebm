@@ -1,0 +1,43 @@
+From 8902076f4f7d6ef7c6bede45e52efced966c855b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 13:23:52 -0400
+Subject: [PATCH 05064/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c415db92cc..9c8cf94b04 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-30T17:13:26Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-30T17:23:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 734112d40c..b6da8e6540 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9660,3 +9660,4 @@ The contro |
+ | 2026-06-30 16:36 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | OK | 88 passed, 1 warning in 7.06s |
+ | 2026-06-30 16:53 UTC | PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATI | OK | 86 passed, 1 warning in 7.07s |
+ | 2026-06-30 17:11 UTC | PHASE D5 (VERIFIER MOAT; the falsifiable GATE + Di | OK | 87 passed, 1 warning in 8.20s |
++| 2026-06-30 17:21 UTC | PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- K | OK | 86 passed, 1 warning in 8.11s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2bdbe17f04..4d419cdebf 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-30T17:13:26Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-30T17:23:50Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,61 @@
+From dbc12974f80ccfd3a84fbeeb189d1a405368422f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 00:32:38 -0400
+Subject: [PATCH 09208/11362] [conductor] Pre-gate block: Gated on Exp6436
+ readiness: generation-to-verdict receipt and replay contract
+
+1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-preflight.v554_queue_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...nt_6437_generation_to_verdict_receipt_replay_contract.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6f7b2d6049..858e23a71e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 179, "phase": "iteration_start", "last_beat": "2026-08-15T04:30:36Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 180, "phase": "iteration_start", "last_beat": "2026-08-15T04:32:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 688f32214d..088c981028 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16001,3 +16001,4 @@ code |
+ | 2026-08-15 03:55 UTC | Milestone 2026.08.554 activated | OK | 9 tasks queued |
+ | 2026-08-15 04:26 UTC | V553 terminal handoff and V554 queue preflight | OK | 88 passed, 1 warning in 29.23s |
+ | 2026-08-15 04:28 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
++| 2026-08-15 04:30 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2613987fd1..61d496c5fa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 179, "phase": "iteration_start", "started_at": "2026-08-15T04:30:36Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 180, "phase": "iteration_start", "started_at": "2026-08-15T04:32:38Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json b/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json
+index 3cfd012761..cf4e793374 100644
+--- a/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json
++++ b/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json
+@@ -2,8 +2,8 @@
+   "experiment": 6437,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-15",
+-  "started_at": "2026-08-15T04:30:36.147589+00:00",
+-  "finished_at": "2026-08-15T04:30:36.147589+00:00",
++  "started_at": "2026-08-15T04:32:38.545015+00:00",
++  "finished_at": "2026-08-15T04:32:38.545015+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6436 readiness: generation-to-verdict receipt and replay contract",
+-- 
+2.55.0
+

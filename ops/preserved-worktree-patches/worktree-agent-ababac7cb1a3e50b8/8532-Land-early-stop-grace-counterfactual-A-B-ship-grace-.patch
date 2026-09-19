@@ -1,0 +1,1430 @@
+From a68336e207e6eb33eb7503101c62e91377ed4448 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 13:45:54 -0400
+Subject: [PATCH 08532/11362] Land early-stop-grace counterfactual A/B, ship
+ grace=1300 (REQ-ARC-WMTE-6220)
+
+exp6214: replays the exact recorded level_up_actions sequences from
+results/early_stop_sweep_20260726/rows_*.json (null-grace rows, so
+nothing was ever truncated) against candidate grace values, across all
+25 public games x 3 seeds (75 rows) at the shipped MAX_ACTIONS=2000
+budget. This is an EXACT counterfactual, not an approximation -- the
+grace mechanism (is_done(), arc_competition_agent.py:4439-4449) cannot
+change agent behavior before the moment it fires, so a run recorded with
+grace off already contains the ground truth needed to compute what any
+candidate value would have done. adversarial_verify.py: 0 flags.
+
+Result: grace=400 and grace=800 both cost 4 of the baseline's 40 total
+levels (cd82, tu93 -- confirming the earlier chat-audit finding at full
+25-game scale) while saving 17,435-28,937 actions. The largest value
+that costs ZERO levels against this data is 1204 -- but that is exactly
+tu93's measured gap, a fit to the observed sample rather than a
+safety-margined threshold. 1300 gives the same zero-level-cost guarantee
+with a 96-action margin, saving ~4,753 of 145,614 total actions (~3.3%).
+Operator directive: ship 1300, choosing margin over the sample-fit value.
+
+The honest bottom line, recorded in REQ-ARC-WMTE-6220's spec entry: a
+genuinely safe grace value does not buy much here -- ~3.3%, not the
+~20% the original (wrong) "no score cost" framing implied.
+
+SUBMITTED_EARLY_STOP_GRACE: None -> 1300. Third dated correction comment
+on this constant this session (first: the wiring was dead; second: the
+"no score cost" premise was false; third: this A/B's actual number).
+
+11 results/*.json artifacts get a freshness_acknowledgements entry:
+every one was generated under a prior value (off, or 400 for the brief
+window it shipped), never under 1300, so this affects future runs only.
+One second-order cascade resolved the same way.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  16 +
+ .../carnot/agentic/arc_competition_agent.py   |  12 +-
+ ...6214_early_stop_grace_counterfactual_ab.py | 211 +++++
+ ...rc_gateway_card_ground_truth_20260727.json |   8 +
+ ..._per_level_reset_attribution_20260726.json |   8 +
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...14_early_stop_grace_counterfactual_ab.json | 856 ++++++++++++++++++
+ ...p_arc_early_stop_grace_sweep_20260726.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...arc_gateway_accurate_rescore_20260726.json |  16 +
+ ...ter_loop_arc_gateway_rescore_20260726.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ ...arc_reset_charge_attribution_20260726.json |   8 +
+ 16 files changed, 1198 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6214_early_stop_grace_counterfactual_ab.py
+ create mode 100644 results/experiment_6214_early_stop_grace_counterfactual_ab.json
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index fa96d9d565..968abba529 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22559,6 +22559,22 @@ budget. `cd82` shows the same shape on 1 of 3 seeds. `SUBMITTED_EARLY_STOP_GRACE
+ is pulled back, pending an A/B measuring total levels reached (grace on vs off) across the full
+ game roster.
+ 
++**FOLLOW-UP (2026-08-08, same day): the A/B.** `experiment_6214_early_stop_grace_counterfactual_ab.json`
++replays the exact recorded `level_up_actions` sequences from the null-grace sweep rows against
++candidate grace values, across all 25 public games x 3 seeds (75 rows), at the shipped budget. This
++is an EXACT counterfactual, not an approximation, because the grace mechanism cannot change any
++agent behavior before the moment it fires. Result: grace=400 and grace=800 both cost 4 of the
++baseline's 40 total levels (in `cd82` and `tu93`, confirming the chat-audit finding at full-corpus
++scale) while saving 17,435-28,937 actions. The largest grace value that costs ZERO levels against
++this exact data is 1204 (saves 6,199 actions, ~4.3%) — but 1204 is precisely `tu93`'s measured
++gap, so it is a fit to the observed sample, not a safety-margined threshold; a slightly different
++seed or an unmeasured 26th game could plausibly have a gap of 1205 and get cut. 1300 gives the
++same zero-level-cost guarantee against this data with a 96-action margin, saving 4,753 actions
++(~3.3%). Either way, the SAFE savings are far smaller than 400's ~20% — the wall-clock benefit
++this REQ originally justified with "no score cost" does not really exist at a grace value that is
++actually safe. `SUBMITTED_EARLY_STOP_GRACE` is set to 1300 (operator directive, choosing the
++margined value over the sample-fit one) — a real but modest win, not the win originally claimed.
++
+ ## Implementation Status (REQ-ARC-WMTE-6220)
+ 
+ | REQ | Implementation | Tests |
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 6e9ba35560..7e58fbb162 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -174,7 +174,17 @@ SUBMITTED_TARGET_LEVELS = 8
+ # 3 seeds (1038-action gap). So the value is back to `None` (off) until an A/B measures total
+ # levels reached, grace on vs off, across the full roster -- the wiring fix above stays; only
+ # the shipped VALUE is reverted.
+-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
++#
++# THIRD CORRECTION (2026-08-08, same day, the A/B). experiment_6214_early_stop_grace_
++# counterfactual_ab.json replays the recorded level-up sequences from the null-grace sweep rows
++# against candidate grace values, across all 25 public games x 3 seeds. Result: 1204 (tu93's
++# exact measured gap) is the largest value that costs zero levels against this data, but it is a
++# fit to the observed sample, not a safety-margined threshold -- an unmeasured game or a
++# different seed could plausibly land at 1205 and get cut. 1300 gives the same zero-level-cost
++# guarantee with a 96-action margin, saving ~4753 of 145614 total actions (~3.3%) -- real but far
++# smaller than 400's ~20%, because a genuinely safe grace value does not buy much here. Set to
++# 1300 (operator directive, margin over sample-fit).
++SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 1300
+ SUBMITTED_SEARCH_MODE = "depth_first_ride"
+ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+ SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
+diff --git a/python/carnot/experiment_6214_early_stop_grace_counterfactual_ab.py b/python/carnot/experiment_6214_early_stop_grace_counterfactual_ab.py
+new file mode 100644
+index 0000000000..69aefdae0b
+--- /dev/null
++++ b/python/carnot/experiment_6214_early_stop_grace_counterfactual_ab.py
+@@ -0,0 +1,211 @@
++"""Experiment 6214: early-stop-grace counterfactual A/B, replayed against real recorded data.
++
++WHY THIS IS NOT A LIVE RE-RUN. The grace mechanism (StepwiseExplorer.is_done(),
++arc_competition_agent.py:4439-4449) makes exactly one decision: once at least one level has been
++reached, if `early_stop_grace` actions pass with no NEW level-up, stop. It does not change any
++exploration behavior BEFORE that decision point -- the agent's action sequence up to the moment
++grace would fire is identical regardless of the grace value. That means a recorded run with grace
++OFF (so nothing was ever cut short) already contains the exact ground truth needed to compute,
++for any candidate grace value G, whether that G would have cut the run short and what it would
++have cost. Replaying the existing null-grace rows in results/early_stop_sweep_20260726/rows_*.json
++against candidate G values is therefore an EXACT counterfactual, not an approximation -- and it
++needs no new game runs, no GPU, and no wall-clock cost beyond reading JSON.
++
++Spec ref: REQ-ARC-WMTE-6220 (the safety revert this experiment follows up on).
++
++Origin: 2026-08-08 operator directive ("yes" to running the grace A/B), after an ad-hoc audit in
++this session's own chat found tu93 and cd82 both hit inter-level-up gaps exceeding 400 actions.
++This experiment formalizes that audit across the FULL public-game roster (25 games x 3 seeds,
++not just the 12 games spot-checked in chat) and sweeps multiple candidate grace values instead of
++only checking whether 400 is broken.
++
++METHODOLOGY. For each (game, seed) row at budget=2000 with early_stop_grace=None (so
++`level_up_actions` and `actions` are the TRUE, uncut values): for each candidate grace value G,
++walk the recorded level-up action indices L[0..n-1]. Before L[0], grace cannot fire (no level
++reached yet). For each consecutive pair, if L[i+1]-L[i] > G, the simulated run stops at L[i]+G,
++banking i+1 levels and never reaching L[i+1] -- this is the DOWNSIDE (a real level lost). If every
++transition survives, and the tail after the last level-up (actions - L[n-1]) exceeds G, the
++simulated run stops at L[n-1]+G with ALL n levels still banked -- this is the UPSIDE (wall-clock
++saved, and per the is_done() code's own 2026-07-26 correction comment, a not-yet-completed tail
++scores 0 regardless of length, so cutting it costs nothing). Rows with n=0 (no level ever reached)
++are unaffected by any G (grace only activates once >=1 level is banked).
++"""
++
++from __future__ import annotations
++
++import glob
++import json
++import sys
++from pathlib import Path
++from typing import Any, Optional
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++for _p in (REPO_ROOT / "python", REPO_ROOT):
++    if str(_p) not in sys.path:  # pragma: no cover - direct script guard
++        sys.path.insert(0, str(_p))
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "experiment_6214_early_stop_grace_counterfactual_ab"
++RESULT_RELATIVE_PATH = "results/experiment_6214_early_stop_grace_counterfactual_ab.json"
++SCHEMA = "carnot.exp6214.early_stop_grace_counterfactual_ab.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++SWEEP_GLOB = "results/early_stop_sweep_20260726/rows_*.json"
++TARGET_BUDGET = 2000  # the shipped MAX_ACTIONS as of this session
++CANDIDATE_GRACE_VALUES: tuple[Optional[int], ...] = (None, 400, 800, 1204, 1300, 1600, 2000)
++
++
++def _load_null_grace_rows(root: Path = REPO_ROOT) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for fpath in sorted(glob.glob(str(root / SWEEP_GLOB))):
++        d = json.loads(Path(fpath).read_text(encoding="utf-8"))
++        for r in d.get("rows", []):
++            if r.get("early_stop_grace") is not None:
++                continue
++            if r.get("budget") != TARGET_BUDGET:
++                continue
++            rows.append(
++                {
++                    "game": r.get("game"),
++                    "seed": r.get("seed"),
++                    "source_file": Path(fpath).name,
++                    "level_up_actions": list(r.get("level_up_actions") or []),
++                    "actions": r.get("actions"),
++                    "levels": r.get("levels"),
++                }
++            )
++    return rows
++
++
++def _simulate_one(row: JsonDict, grace: Optional[int]) -> JsonDict:
++    """Replay one null-grace row's TRUE level-up sequence against a candidate grace value.
++
++    Returns the simulated (levels_reached, actions_used, stopped_by_grace, cost_a_level)."""
++    ups: list[int] = row["level_up_actions"]
++    true_actions: int = row["actions"]
++    if grace is None or not ups:
++        # grace off, or the run never reached a level at all -- grace cannot fire either way.
++        return {
++            "levels_reached": row["levels"],
++            "actions_used": true_actions,
++            "stopped_by_grace": False,
++            "cost_a_level": False,
++        }
++    for i in range(len(ups) - 1):
++        gap = ups[i + 1] - ups[i]
++        if gap > grace:
++            return {
++                "levels_reached": i + 1,
++                "actions_used": ups[i] + grace,
++                "stopped_by_grace": True,
++                "cost_a_level": (i + 1) < row["levels"],
++            }
++    tail = true_actions - ups[-1]
++    if tail > grace:
++        return {
++            "levels_reached": len(ups),
++            "actions_used": ups[-1] + grace,
++            "stopped_by_grace": True,
++            "cost_a_level": False,  # the tail is, by construction, not a completed level
++        }
++    return {
++        "levels_reached": row["levels"],
++        "actions_used": true_actions,
++        "stopped_by_grace": False,
++        "cost_a_level": False,
++    }
++
++
++def build_artifact(root: Path = REPO_ROOT) -> JsonDict:
++    rows = _load_null_grace_rows(root)
++    games = sorted({r["game"] for r in rows})
++
++    per_grace: dict[str, JsonDict] = {}
++    for grace in CANDIDATE_GRACE_VALUES:
++        key = "off" if grace is None else str(grace)
++        sims = [dict(r, sim=_simulate_one(r, grace)) for r in rows]
++        levels_lost_rows = [s for s in sims if s["sim"]["cost_a_level"]]
++        per_grace[key] = {
++            "grace": grace,
++            "n_rows": len(sims),
++            "total_levels_reached": sum(s["sim"]["levels_reached"] for s in sims),
++            "total_actions_used": sum(s["sim"]["actions_used"] for s in sims),
++            "n_rows_stopped_by_grace": sum(1 for s in sims if s["sim"]["stopped_by_grace"]),
++            "n_rows_that_lost_a_real_level": len(levels_lost_rows),
++            "games_that_lost_a_level": sorted({s["game"] for s in levels_lost_rows}),
++            "per_row_detail": [
++                {
++                    "game": s["game"],
++                    "seed": s["seed"],
++                    "levels_reached": s["sim"]["levels_reached"],
++                    "actions_used": s["sim"]["actions_used"],
++                    "cost_a_level": s["sim"]["cost_a_level"],
++                }
++                for s in sims
++                if s["sim"]["cost_a_level"] or s["sim"]["stopped_by_grace"]
++            ],
++        }
++
++    baseline = per_grace["off"]
++    baseline_levels = baseline["total_levels_reached"]
++    baseline_actions = baseline["total_actions_used"]
++
++    comparison = []
++    for grace in CANDIDATE_GRACE_VALUES:
++        key = "off" if grace is None else str(grace)
++        entry = per_grace[key]
++        comparison.append(
++            {
++                "grace": grace,
++                "total_levels_reached": entry["total_levels_reached"],
++                "levels_delta_vs_off": entry["total_levels_reached"] - baseline_levels,
++                "total_actions_used": entry["total_actions_used"],
++                "actions_saved_vs_off": baseline_actions - entry["total_actions_used"],
++                "games_that_lost_a_level": entry["games_that_lost_a_level"],
++            }
++        )
++
++    # The recommended value: the largest candidate that costs ZERO levels vs baseline, for the
++    # biggest defensible action-savings. If every non-zero candidate costs a level, recommend off.
++    zero_cost = [c for c in comparison if c["grace"] is not None and c["levels_delta_vs_off"] == 0]
++    recommended = max(zero_cost, key=lambda c: c["actions_saved_vs_off"]) if zero_cost else None
++
++    honest_verdict = (
++        f"complete: grace_{recommended['grace']}_recommended_saves_{recommended['actions_saved_vs_off']}_actions_zero_level_cost"
++        if recommended
++        else "complete: no_candidate_grace_value_avoids_level_cost_recommend_off"
++    )
++
++    return {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "result_path": RESULT_RELATIVE_PATH,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict,
++        "target_budget": TARGET_BUDGET,
++        "candidate_grace_values": list(CANDIDATE_GRACE_VALUES),
++        "games_covered": games,
++        "n_games_covered": len(games),
++        "n_rows_total": len(rows),
++        "comparison": comparison,
++        "recommended_grace": recommended["grace"] if recommended else None,
++        "per_grace_detail": per_grace,
++        "cited_upstream_artifacts": sorted({r["source_file"] for r in rows}),
++        "methodology_note": (
++            "Exact replay of recorded level_up_actions sequences from null-grace sweep rows "
++            "against candidate grace thresholds; not a live re-run. See module docstring for "
++            "why this is exact rather than approximate."
++        ),
++    }
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper, exercised manually
++    artifact = build_artifact()
++    out = REPO_ROOT / RESULT_RELATIVE_PATH
++    out.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
++    print(f"wrote {out} -- honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 292da387ca..beaf38edd8 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2758,6 +2758,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index a2426e45b0..bfafb5e436 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1363,6 +1363,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index c765009e56..18b4006fd3 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52780,6 +52780,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 29b9acbc6a..47bb55aa1e 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -264,6 +264,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 0ccc47d05c..8934e00e3d 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8806,6 +8806,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6214_early_stop_grace_counterfactual_ab.json b/results/experiment_6214_early_stop_grace_counterfactual_ab.json
+new file mode 100644
+index 0000000000..f3e61c2ce7
+--- /dev/null
++++ b/results/experiment_6214_early_stop_grace_counterfactual_ab.json
+@@ -0,0 +1,856 @@
++{
++  "experiment": "experiment_6214_early_stop_grace_counterfactual_ab",
++  "schema": "carnot.exp6214.early_stop_grace_counterfactual_ab.v1",
++  "result_path": "results/experiment_6214_early_stop_grace_counterfactual_ab.json",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "honest_verdict": "complete: grace_1204_recommended_saves_6199_actions_zero_level_cost",
++  "target_budget": 2000,
++  "candidate_grace_values": [
++    null,
++    400,
++    800,
++    1204,
++    1300,
++    1600,
++    2000
++  ],
++  "games_covered": [
++    "ar25",
++    "bp35",
++    "cd82",
++    "cn04",
++    "dc22",
++    "ft09",
++    "g50t",
++    "ka59",
++    "lf52",
++    "lp85",
++    "ls20",
++    "m0r0",
++    "r11l",
++    "re86",
++    "s5i5",
++    "sb26",
++    "sc25",
++    "sk48",
++    "sp80",
++    "su15",
++    "tn36",
++    "tr87",
++    "tu93",
++    "vc33",
++    "wa30"
++  ],
++  "n_games_covered": 25,
++  "n_rows_total": 75,
++  "comparison": [
++    {
++      "grace": null,
++      "total_levels_reached": 40,
++      "levels_delta_vs_off": 0,
++      "total_actions_used": 145614,
++      "actions_saved_vs_off": 0,
++      "games_that_lost_a_level": []
++    },
++    {
++      "grace": 400,
++      "total_levels_reached": 36,
++      "levels_delta_vs_off": -4,
++      "total_actions_used": 116677,
++      "actions_saved_vs_off": 28937,
++      "games_that_lost_a_level": [
++        "cd82",
++        "tu93"
++      ]
++    },
++    {
++      "grace": 800,
++      "total_levels_reached": 36,
++      "levels_delta_vs_off": -4,
++      "total_actions_used": 128179,
++      "actions_saved_vs_off": 17435,
++      "games_that_lost_a_level": [
++        "cd82",
++        "tu93"
++      ]
++    },
++    {
++      "grace": 1204,
++      "total_levels_reached": 40,
++      "levels_delta_vs_off": 0,
++      "total_actions_used": 139415,
++      "actions_saved_vs_off": 6199,
++      "games_that_lost_a_level": []
++    },
++    {
++      "grace": 1300,
++      "total_levels_reached": 40,
++      "levels_delta_vs_off": 0,
++      "total_actions_used": 140861,
++      "actions_saved_vs_off": 4753,
++      "games_that_lost_a_level": []
++    },
++    {
++      "grace": 1600,
++      "total_levels_reached": 40,
++      "levels_delta_vs_off": 0,
++      "total_actions_used": 144297,
++      "actions_saved_vs_off": 1317,
++      "games_that_lost_a_level": []
++    },
++    {
++      "grace": 2000,
++      "total_levels_reached": 40,
++      "levels_delta_vs_off": 0,
++      "total_actions_used": 145614,
++      "actions_saved_vs_off": 0,
++      "games_that_lost_a_level": []
++    }
++  ],
++  "recommended_grace": 1204,
++  "per_grace_detail": {
++    "off": {
++      "grace": null,
++      "n_rows": 75,
++      "total_levels_reached": 40,
++      "total_actions_used": 145614,
++      "n_rows_stopped_by_grace": 0,
++      "n_rows_that_lost_a_real_level": 0,
++      "games_that_lost_a_level": [],
++      "per_row_detail": []
++    },
++    "400": {
++      "grace": 400,
++      "n_rows": 75,
++      "total_levels_reached": 36,
++      "total_actions_used": 116677,
++      "n_rows_stopped_by_grace": 29,
++      "n_rows_that_lost_a_real_level": 4,
++      "games_that_lost_a_level": [
++        "cd82",
++        "tu93"
++      ],
++      "per_row_detail": [
++        {
++          "game": "cd82",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1141,
++          "cost_a_level": true
++        },
++        {
++          "game": "lf52",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1187,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 855,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1161,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 995,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 754,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 864,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 734,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260724,
++          "levels_reached": 2,
++          "actions_used": 457,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 589,
++          "cost_a_level": false
++        },
++        {
++          "game": "ft09",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 815,
++          "cost_a_level": false
++        },
++        {
++          "game": "lf52",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1189,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 854,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1165,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1542,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 639,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 959,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 734,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260725,
++          "levels_reached": 2,
++          "actions_used": 532,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1293,
++          "cost_a_level": false
++        },
++        {
++          "game": "ft09",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1669,
++          "cost_a_level": false
++        },
++        {
++          "game": "lf52",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1114,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 468,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1168,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1458,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 427,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 848,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 734,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260726,
++          "levels_reached": 2,
++          "actions_used": 745,
++          "cost_a_level": false
++        }
++      ]
++    },
++    "800": {
++      "grace": 800,
++      "n_rows": 75,
++      "total_levels_reached": 36,
++      "total_actions_used": 128179,
++      "n_rows_stopped_by_grace": 28,
++      "n_rows_that_lost_a_real_level": 4,
++      "games_that_lost_a_level": [
++        "cd82",
++        "tu93"
++      ],
++      "per_row_detail": [
++        {
++          "game": "cd82",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1541,
++          "cost_a_level": true
++        },
++        {
++          "game": "lf52",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1587,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1255,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1561,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1395,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1154,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1264,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1134,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260724,
++          "levels_reached": 2,
++          "actions_used": 857,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 989,
++          "cost_a_level": false
++        },
++        {
++          "game": "ft09",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1215,
++          "cost_a_level": false
++        },
++        {
++          "game": "lf52",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1589,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1254,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1565,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1942,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1039,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1359,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1134,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260725,
++          "levels_reached": 2,
++          "actions_used": 932,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1693,
++          "cost_a_level": false
++        },
++        {
++          "game": "lf52",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1514,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 868,
++          "cost_a_level": false
++        },
++        {
++          "game": "r11l",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1568,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1858,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 827,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1248,
++          "cost_a_level": false
++        },
++        {
++          "game": "tu93",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1134,
++          "cost_a_level": true
++        },
++        {
++          "game": "vc33",
++          "seed": 20260726,
++          "levels_reached": 2,
++          "actions_used": 1145,
++          "cost_a_level": false
++        }
++      ]
++    },
++    "1204": {
++      "grace": 1204,
++      "n_rows": 75,
++      "total_levels_reached": 40,
++      "total_actions_used": 139415,
++      "n_rows_stopped_by_grace": 16,
++      "n_rows_that_lost_a_real_level": 0,
++      "games_that_lost_a_level": [],
++      "per_row_detail": [
++        {
++          "game": "lp85",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1659,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1799,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1558,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1668,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260724,
++          "levels_reached": 2,
++          "actions_used": 1261,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1393,
++          "cost_a_level": false
++        },
++        {
++          "game": "ft09",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1619,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1658,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1443,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1763,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260725,
++          "levels_reached": 2,
++          "actions_used": 1336,
++          "cost_a_level": false
++        },
++        {
++          "game": "lf52",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1918,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1272,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1231,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1652,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260726,
++          "levels_reached": 2,
++          "actions_used": 1549,
++          "cost_a_level": false
++        }
++      ]
++    },
++    "1300": {
++      "grace": 1300,
++      "n_rows": 75,
++      "total_levels_reached": 40,
++      "total_actions_used": 140861,
++      "n_rows_stopped_by_grace": 15,
++      "n_rows_that_lost_a_real_level": 0,
++      "games_that_lost_a_level": [],
++      "per_row_detail": [
++        {
++          "game": "lp85",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1755,
++          "cost_a_level": false
++        },
++        {
++          "game": "s5i5",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1895,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1654,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260724,
++          "levels_reached": 1,
++          "actions_used": 1764,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260724,
++          "levels_reached": 2,
++          "actions_used": 1357,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1489,
++          "cost_a_level": false
++        },
++        {
++          "game": "ft09",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1715,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1754,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1539,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1859,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260725,
++          "levels_reached": 2,
++          "actions_used": 1432,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1368,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1327,
++          "cost_a_level": false
++        },
++        {
++          "game": "su15",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1748,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260726,
++          "levels_reached": 2,
++          "actions_used": 1645,
++          "cost_a_level": false
++        }
++      ]
++    },
++    "1600": {
++      "grace": 1600,
++      "n_rows": 75,
++      "total_levels_reached": 40,
++      "total_actions_used": 144297,
++      "n_rows_stopped_by_grace": 6,
++      "n_rows_that_lost_a_real_level": 0,
++      "games_that_lost_a_level": [],
++      "per_row_detail": [
++        {
++          "game": "vc33",
++          "seed": 20260724,
++          "levels_reached": 2,
++          "actions_used": 1657,
++          "cost_a_level": false
++        },
++        {
++          "game": "cd82",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1789,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260725,
++          "levels_reached": 1,
++          "actions_used": 1839,
++          "cost_a_level": false
++        },
++        {
++          "game": "vc33",
++          "seed": 20260725,
++          "levels_reached": 2,
++          "actions_used": 1732,
++          "cost_a_level": false
++        },
++        {
++          "game": "lp85",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1668,
++          "cost_a_level": false
++        },
++        {
++          "game": "sp80",
++          "seed": 20260726,
++          "levels_reached": 1,
++          "actions_used": 1627,
++          "cost_a_level": false
++        }
++      ]
++    },
++    "2000": {
++      "grace": 2000,
++      "n_rows": 75,
++      "total_levels_reached": 40,
++      "total_actions_used": 145614,
++      "n_rows_stopped_by_grace": 0,
++      "n_rows_that_lost_a_real_level": 0,
++      "games_that_lost_a_level": [],
++      "per_row_detail": []
++    }
++  },
++  "cited_upstream_artifacts": [
++    "rows_b2000.json"
++  ],
++  "methodology_note": "Exact replay of recorded level_up_actions sequences from null-grace sweep rows against candidate grace thresholds; not a live re-run. See module docstring for why this is exact rather than approximate."
++}
+\ No newline at end of file
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 4f4471d304..b87a1591ef 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5441,6 +5441,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 0706936b30..7d625491c6 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3564,6 +3564,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index 39111bb9c5..9f99005628 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3348,6 +3348,22 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Second-order cascade from the SUBMITTED_EARLY_STOP_GRACE safety revert (400 -> None) same day as REQ-ARC-WMTE-6220. Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
+         "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++        "sha256_was": "2ca3ea131791fcdad46c4f6946b794eeacc6ca6d2fac74cf1d53c01c213c5316",
++        "sha256_now": "ebfc2ee66e5d0e2431d6f9a3289c6e79d1eb8a0c2ca8ebefc7905f98bb1966e1",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from the SUBMITTED_EARLY_STOP_GRACE=1300 commit (REQ-ARC-WMTE-6220's exp6214 A/B result). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/arc_per_level_reset_attribution_20260726.json",
++        "sha256_was": "609d4a33eb56ade8426af892d0565644ddcf1dcf3d96bd8531df5a785b94f96c",
++        "sha256_now": "dcc33d9391357230733a26303cd1f8b0e4e68bab78cad0807dc2ba0f61d8cca4",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from the SUBMITTED_EARLY_STOP_GRACE=1300 commit (REQ-ARC-WMTE-6220's exp6214 A/B result). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 19b280e208..b7b32b0f07 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1166,6 +1166,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 01e636b261..32a835ef4d 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1213,6 +1213,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 35364a9eb4..bf9cba0371 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -440,6 +440,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index cedb469b79..c85634b8f0 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16955,6 +16955,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
++        "acknowledged_on": "2026-08-08",
++        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
++        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+       }
+     ]
+   },
+-- 
+2.55.0
+

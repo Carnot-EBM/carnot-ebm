@@ -1,0 +1,43 @@
+From e63f97508a74e610e73186cedc04d7968558cc55 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 09:53:21 -0400
+Subject: [PATCH 07516/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a7690b8758..f1bc46121b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 236, "phase": "iteration_start", "last_beat": "2026-07-22T13:27:26Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 237, "phase": "iteration_start", "last_beat": "2026-07-22T13:53:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 531709ef88..789eb5b504 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14106,3 +14106,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 13:23 UTC | Gated on Exp5792 selector benefit: measure selecte | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.sele |
+ | 2026-07-22 13:25 UTC | Frozen calibration chooser over immutable simulato | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5791-arc-sota-independent-hypothesis-pane |
+ | 2026-07-22 13:25 UTC | Gated on Exp5792 selector benefit: measure selecte | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.sele |
++| 2026-07-22 13:51 UTC | Board-state hash ledger and operator handoff packe | OK | 91 passed, 1 warning in 10.48s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e3b14e67e5..0481e1782d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 236, "phase": "iteration_start", "started_at": "2026-07-22T13:27:26Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 237, "phase": "iteration_start", "started_at": "2026-07-22T13:53:18Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

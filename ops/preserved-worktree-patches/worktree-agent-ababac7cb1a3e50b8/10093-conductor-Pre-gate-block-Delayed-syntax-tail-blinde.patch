@@ -1,0 +1,150 @@
+From ef6618c25c9ba6204232975af4fa2dcf540dd5e5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 09:41:16 -0400
+Subject: [PATCH 10093/11362] [conductor] Pre-gate block: Delayed syntax-tail
+ blinded row audit
+
+1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.triggered_tail_ab_ready (actual=False in expected=[True])
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-agi3-leaderboard-technique-watch.md   |  4 ++
+ ...arc_leaderboard_technique_watch_state.json |  6 +-
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...6677_triggered_tail_independent_audit.json | 57 +++++++++++++++++++
+ 7 files changed, 68 insertions(+), 6 deletions(-)
+ create mode 100644 results/experiment_6677_triggered_tail_independent_audit.json
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index 201c4f88cc..2b7fbcea7b 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -212,3 +212,7 @@ CHECK_TIMED_OUT
+ 
+ - **New top-five entrant:** **Tony G** (`junvalue`) is now **#5 at 3.17**. No submission-linked public code, notebook, dataset, discussion, repository, or writeup was found. **Exploit/general-purpose classification: unknown**; no Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/junvalue/code)
+ 
++## 2026-08-27 13:39 UTC -- NEW
++
++- **New top-five entrant:** **rfbr** (`romainfabre`) is now **#5 at 3.37**, displacing Tony G to #6. No attributable public code, notebook, discussion, repository, or technique writeup was found. **Exploit/general-purpose classification: unknown**; no **POSSIBLE CARNOT LEVER** can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/romainfabre/code)
++
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+index 66201ad8d7..25d55bff8f 100644
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ b/ops/.arc_leaderboard_technique_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- **New top-five entrant:** **Tony G** (`junvalue`) is now **#5 at 3.17**. No submission-linked public code, notebook, dataset, discussion, repository, or writeup was found. **Exploit/general-purpose classification: unknown**; no Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/junvalue/code)",
+-  "last_checked": "2026-08-26T13:33:28.112165+00:00",
+-  "history_count": 38
++  "last_findings": "- **New top-five entrant:** **rfbr** (`romainfabre`) is now **#5 at 3.37**, displacing Tony G to #6. No attributable public code, notebook, discussion, repository, or technique writeup was found. **Exploit/general-purpose classification: unknown**; no **POSSIBLE CARNOT LEVER** can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/romainfabre/code)",
++  "last_checked": "2026-08-27T13:39:15.020305+00:00",
++  "history_count": 39
+ }
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index d614946b34..bb36f8673d 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T13:30:37Z"
++ "last_scan_utc": "2026-08-27T13:41:15Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index eb44975835..d571b3eeda 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 76, "phase": "iteration_start", "last_beat": "2026-08-27T13:30:36Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 77, "phase": "iteration_start", "last_beat": "2026-08-27T13:41:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7f664ed3ed..2c29c1f080 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16620,3 +16620,4 @@ code |
+ | 2026-08-27 10:58 UTC | V582 document-to-manifest parity contract | OK | 91 passed, 1 warning in 47.59s |
+ | 2026-08-27 12:05 UTC | Triggered-tail task-owned verification receipt | OK | 130 passed, 1 warning in 10.85s |
+ | 2026-08-27 13:28 UTC | Three-family delayed syntax-tail A/B | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  changed["gate |
++| 2026-08-27 13:39 UTC | Three-family delayed syntax-tail A/B | OK | 115 passed, 1 warning in 10.60s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 027a1de77b..fe9050d771 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 76, "phase": "iteration_start", "started_at": "2026-08-27T13:30:36Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 77, "phase": "iteration_start", "started_at": "2026-08-27T13:41:15Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6677_triggered_tail_independent_audit.json b/results/experiment_6677_triggered_tail_independent_audit.json
+new file mode 100644
+index 0000000000..dd18a142c3
+--- /dev/null
++++ b/results/experiment_6677_triggered_tail_independent_audit.json
+@@ -0,0 +1,57 @@
++{
++  "experiment": 6677,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-27",
++  "started_at": "2026-08-27T13:41:15.916969+00:00",
++  "finished_at": "2026-08-27T13:41:15.916969+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Delayed syntax-tail blinded row audit",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=False in expected=[True]",
++  "failed_upstream": "exp6676-three-family-triggered-tail-ab",
++  "failed_field": "triggered_tail_ab_ready",
++  "failed_operator": "in",
++  "failed_expected": [
++    true
++  ],
++  "failed_expected_type": "list",
++  "failed_observed": false,
++  "failed_observed_type": "bool",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6676_three_family_triggered_tail_ab.json",
++  "failed_evidence_sha256": "sha256:ee25c52474e361ce89f9510309f8f9cf9c2d1bf59964b0a09f53806df1894792",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=False in expected=[True]",
++    "failed_upstream": "exp6676-three-family-triggered-tail-ab",
++    "failed_field": "triggered_tail_ab_ready",
++    "failed_operator": "in",
++    "failed_expected": [
++      true
++    ],
++    "failed_expected_type": "list",
++    "failed_observed": false,
++    "failed_observed_type": "bool",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6676_three_family_triggered_tail_ab.json",
++    "failed_evidence_sha256": "sha256:ee25c52474e361ce89f9510309f8f9cf9c2d1bf59964b0a09f53806df1894792"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.triggered_tail_ab_ready (actual=False in expected=[True])",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6676-three-family-triggered-tail-ab",
++      "artifact_field": "triggered_tail_ab_ready",
++      "op": "in",
++      "expected": [
++        true
++      ],
++      "expected_type": "list",
++      "actual": false,
++      "actual_type": "bool",
++      "passed": false,
++      "reason": "actual=False in expected=[True]",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6676_three_family_triggered_tail_ab.json",
++      "artifact_sha256": "sha256:ee25c52474e361ce89f9510309f8f9cf9c2d1bf59964b0a09f53806df1894792"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

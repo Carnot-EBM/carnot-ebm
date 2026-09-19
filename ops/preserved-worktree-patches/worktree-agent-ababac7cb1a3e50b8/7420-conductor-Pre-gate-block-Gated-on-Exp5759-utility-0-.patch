@@ -1,0 +1,61 @@
+From d572a006aaeb15fe70819a71cf95e3c42d52e1cb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 08:54:24 -0400
+Subject: [PATCH 07420/11362] [conductor] Pre-gate block: Gated on Exp5759
+ utility>0: allocate exact conflict feedback to recoverable proposal states
+
+2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel.proposal_utility_lcb (actual=-0.045291796847 > expected=0.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                 | 2 +-
+ ops/conductor-log.md                                         | 1 +
+ ops/conductor-state.json                                     | 2 +-
+ results/experiment_5760_selective_exact_feedback_search.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index de80f26ef9..013c493fd2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2707542, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-07-21T12:52:22Z"}
+\ No newline at end of file
++{"pid": 2707542, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-07-21T12:54:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e861e36f4a..272726e6e9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13853,3 +13853,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-21 11:50 UTC | Build a lossless bare-scalar bridge for the ready  | OK | 86 passed, 1 warning in 9.20s |
+ | 2026-07-21 12:07 UTC | Build a lossless bare-scalar bridge for repaired R | OK | 86 passed, 1 warning in 8.19s |
+ | 2026-07-21 12:50 UTC | Gated on Exp5757 scalar readiness: measure SOTA pr | OK | 88 passed, 1 warning in 13.70s |
++| 2026-07-21 12:52 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b65c8f5f38..30fd2d90b1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2707542, "iteration": 4, "phase": "iteration_start", "started_at": "2026-07-21T12:52:22Z"}
+\ No newline at end of file
++{"pid": 2707542, "iteration": 5, "phase": "iteration_start", "started_at": "2026-07-21T12:54:24Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5760_selective_exact_feedback_search.json b/results/experiment_5760_selective_exact_feedback_search.json
+index f3a01a2909..436e45d2bc 100644
+--- a/results/experiment_5760_selective_exact_feedback_search.json
++++ b/results/experiment_5760_selective_exact_feedback_search.json
+@@ -2,8 +2,8 @@
+   "experiment": 5760,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-21",
+-  "started_at": "2026-07-21T12:52:22.098321+00:00",
+-  "finished_at": "2026-07-21T12:52:22.098321+00:00",
++  "started_at": "2026-07-21T12:54:24.578497+00:00",
++  "finished_at": "2026-07-21T12:54:24.578497+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5759 utility>0: allocate exact conflict feedback to recoverable proposal states",
+-- 
+2.55.0
+

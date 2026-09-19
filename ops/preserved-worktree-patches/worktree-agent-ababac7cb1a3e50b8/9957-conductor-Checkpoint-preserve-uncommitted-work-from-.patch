@@ -1,0 +1,56 @@
+From c588c2ff742145d66fad63a223e353103df8f893 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 18:20:36 -0400
+Subject: [PATCH 09957/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 323729d750..f029810505 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -8,5 +8,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T21:33:19Z"
++ "last_scan_utc": "2026-08-25T22:20:32Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 57a3d325c5..33a6d933f2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-08-25T21:33:19Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-25T22:20:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 57931f043a..5cf73cefb4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16483,3 +16483,4 @@ code |
+ | 2026-08-25 20:45 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
+ | 2026-08-25 21:31 UTC | Frustrated spectral k-block scale and Rust parity | OK | 119 passed, 1 warning in 13.74s |
+ | 2026-08-25 21:33 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
++| 2026-08-25 22:18 UTC | Verifier-governed invariant-memory lifecycle confo | OK | 102 passed, 1 warning in 10.75s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f365bce39d..8c3909c420 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 15, "phase": "iteration_start", "started_at": "2026-08-25T21:33:19Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-25T22:20:31Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

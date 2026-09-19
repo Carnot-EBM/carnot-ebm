@@ -1,0 +1,1918 @@
+From 5a8ef259f2965432a5622cf3cb2b84248999db29 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 05:40:49 -0400
+Subject: [PATCH 05638/11362] [conductor] PHASE 0 transition -- archive .477
+ truth and activate .478
+
+Automated research step by research conductor.
+Task ID: exp5220-archive-477-activate-478
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  95 +++
+ ops/dogfood-memory.json                       |   4 +-
+ ...xperiment_5220_archive_477_activate_478.py | 803 ++++++++++++++++++
+ research-roadmap.yaml                         |   2 +-
+ ...eriment_5220_archive_477_activate_478.json | 290 +++++++
+ ...xperiment_5220_archive_477_activate_478.py | 648 ++++++++++++++
+ 6 files changed, 1839 insertions(+), 3 deletions(-)
+ create mode 100644 python/carnot/experiment_5220_archive_477_activate_478.py
+ create mode 100644 results/experiment_5220_archive_477_activate_478.json
+ create mode 100644 tests/python/test_experiment_5220_archive_477_activate_478.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 788794b036..2c7b30d32d 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -33671,6 +33671,101 @@ does not claim the `.477` handoff is clean.
+ |---|---|---|
+ | REQ-REPORT-5207 | Implemented (`python/carnot/experiment_5207_archive_476_activate_477.py`, `results/experiment_5207_archive_476_activate_477.json`) | Implemented (`tests/python/test_experiment_5207_archive_476_activate_477.py`) |
+ 
++### REQ-REPORT-5220: Archive .477, Activate .478, And Preserve The Flagged-Gate Handoff Truth
++
++The Exp 5220 workflow SHALL archive milestone `2026.07.477`, confirm milestone
++`2026.07.478` is active in `research-roadmap.yaml`, and write
++`results/experiment_5220_archive_477_activate_478.json`. It SHALL read the
++active roadmap, `openspec/change-proposals/research-roadmap-vNEXT.md`,
++`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, `ops/status.md`,
++`ops/changelog.md`, and the Exp 5207 through Exp 5219 result artifacts,
++focusing on Exp 5209, Exp 5210, Exp 5211, Exp 5212, Exp 5214, Exp 5215,
++Exp 5216, Exp 5217, Exp 5218, and Exp 5219. It SHALL run no live model work and
++SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
++
++The archive summary SHALL state the `.477` facts needed by downstream `.478`
++tasks without rounding blocked or flagged outcomes into progress: Exp 5209 found
++GAP-1 set-search remained positive on held-out grouped splits
++(`heldout_pass_at_2_mean=0.189584`) with a positive paired delta CI but
++`best_subset_stable=false`; Exp 5210 blocked registry promotion at the conductor
++pre-gate because the gate compared expected bare `true` with the principle-
++wrapped `gap1_hardened_positive` object; Exp 5211 produced a 120-row GAP-4
++candidate pool but was adversarially flagged for tautology, duration, and missing
++methodology issues; Exp 5212 scored zero GAP-4 rows because all 120 rows missed
++the established protocol pass@2 fields, carried adversarial flags, and did not
++cross the unchanged six-discordant-win floor; Exp 5213 retired the MMLU-Pro
++hidden-state path; Exp 5214 wrote durable verifier memory with one promotion and
++one rollback; Exp 5215 found PAW amortization not viable and must not be used as
++an ARC solve claim; Exp 5216 banked zero reproduction-gated ARC levels; Exp
++5217 confirmed KV260 and PolarFire reachable while GateMate remained blocked at
++the physical/JTAG cable-or-port boundary with no speedup claim; Exp 5218 applied
++verifier-authenticity registry flags and kept modules headline-ineligible until
++real verification; and Exp 5219 reconciled `.477` as GAP-1 building, GAP-4
++blocked, hidden-state MMLU retired, self-learning satisfied, zero ARC delta, and
++flagged artifacts excluded.
++
++The workflow SHALL activate `.478` by copying `research-roadmap-next.yaml` over
++`research-roadmap.yaml` when the next-file exists. If `research-roadmap.yaml`
++already names milestone `2026.07.478` and contains the Exp 5220 onward task set
++while the root `research-roadmap-next.yaml` is absent, the workflow SHALL record
++that already-active fallback explicitly rather than claiming a copy occurred.
++After activation it SHALL run available roadmap checks against
++`research-roadmap.yaml`, including `scripts/exclusion_manifest_lint.py` and
++`scripts/validate_prior_failures.py` when present, and SHALL confirm
++`scripts/research_conductor.py` was not modified.
++
++The artifact SHALL include principle-annotated fields `v477_summary`,
++`research_roadmap_yaml_activated`, `exclusion_manifest_confirmed_clean`,
++`validation_commands_run`, `ops_docs_updated`,
++`research_conductor_py_untouched_confirmed`, `inference_substrate`, and
++`honest_verdict`. It SHOULD also include source artifact checksums, a roadmap
++activation audit, whether `research-roadmap-next.yaml` was copied or the
++already-active fallback was used, tests run, and a reproducibility checksum.
++
++Required field principles:
++
++- `v477_summary`: principle "Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads."
++- `research_roadmap_yaml_activated`: principle "Downstream conductor execution depends on `research-roadmap.yaml` naming `.478` and containing the Exp 5220 onward task set."
++- `exclusion_manifest_confirmed_clean`: principle "The activated .478 roadmap must pass the exclusion-manifest gate without hard retired-scope violations."
++- `validation_commands_run`: principle "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection."
++- `ops_docs_updated`: principle "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid when the conductor stop rule defers ops reconciliation."
++- `research_conductor_py_untouched_confirmed`: principle "The transition must not modify scripts/research_conductor.py."
++- `inference_substrate`: principle "This archive reads upstream artifacts and activation checks only."
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must state whether .478 was activated."
++
++#### SCENARIO-REPORT-5220: The Archive Preserves The Precise .477 Outcomes
++
++**Given** Exp 5207 through Exp 5219 artifacts are readable,
++`research-roadmap.yaml` is active for `2026.07.478`, the `.478` design document
++is present, the exclusion-manifest lint exits cleanly or with override-only
++warnings, available prior-failure validation exits zero, and
++`scripts/research_conductor.py` is unchanged
++**When** the Exp 5220 workflow runs
++**Then** it writes
++`results/experiment_5220_archive_477_activate_478.json`, records the exact
++Exp 5209, Exp 5210, Exp 5211, Exp 5212, Exp 5214, Exp 5216, Exp 5217, and
++Exp 5219 outcomes in `v477_summary`, sets
++`research_roadmap_yaml_activated=true`, sets
++`exclusion_manifest_confirmed_clean=true`, records every validation command and
++pass/fail result, declares `aggregation_from_upstream_artifacts`, and emits an
++honest verdict stating that `.478` was activated.
++
++#### SCENARIO-REPORT-5220-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Clean Activation Claims
++
++**Given** a required `.477` artifact is missing, the active roadmap is not
++`.478`, a required validation command fails, or `scripts/research_conductor.py`
++has been modified
++**When** the Exp 5220 workflow runs
++**Then** it writes a terminal artifact whose `honest_verdict` starts with a
++complete-path blocking phrase, records the failed precondition explicitly, and
++does not claim the `.478` handoff is clean.
++
++## Implementation Status (REQ-REPORT-5220)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5220 | Implemented (`python/carnot/experiment_5220_archive_477_activate_478.py`, `results/experiment_5220_archive_477_activate_478.json`) | Implemented (`tests/python/test_experiment_5220_archive_477_activate_478.py`) |
++
+ ### REQ-REPORT-5208: V477 Reserved SOTA Ingestion Refresh
+ 
+ The Exp 5208 workflow SHALL produce
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0365e5cc3b..dcd85b9406 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 209,
++  "brace_fixes": 210,
+   "code_violations": 0,
+-  "experiments_checked": 4195,
++  "experiments_checked": 4196,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5220_archive_477_activate_478.py b/python/carnot/experiment_5220_archive_477_activate_478.py
+new file mode 100644
+index 0000000000..2415d9d0e6
+--- /dev/null
++++ b/python/carnot/experiment_5220_archive_477_activate_478.py
+@@ -0,0 +1,803 @@
++"""Exp 5220: archive .477 and activate .478.
++
++Spec refs: REQ-REPORT-5220, SCENARIO-REPORT-5220,
++SCENARIO-REPORT-5220-BLOCKED-PRECONDITION.
++
++This transition module reads already-written `.477` artifacts, verifies the
++active `.478` roadmap state, runs the available activation checks, and writes
++the handoff artifact for the conductor. It intentionally performs no live model
++work and it does not modify `scripts/research_conductor.py`.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++from datetime import date
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5220_archive_477_activate_478.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++
++EXPERIMENT = "experiment_5220_archive_477_activate_478"
++EXPERIMENT_ID = "exp5220-archive-477-activate-478"
++ARCHIVED_MILESTONE = "2026.07.477"
++MILESTONE = "2026.07.478"
++SCHEMA = "carnot.experiment_5220_archive_477_activate_478.v1"
++RANDOM_SEED = 5220
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++COMPLETE_VERDICT = (
++    "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive "
++    "but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, "
++    "self-learning memory written, ARC zero-delta, hardware reachability, and "
++    "verifier-authenticity registry flags."
++)
++BLOCKED_VERDICT = "complete: .477 archive recorded but .478 activation blocked_precondition"
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++
++SPEC_REFS = [
++    "REQ-REPORT-5220",
++    "SCENARIO-REPORT-5220",
++    "SCENARIO-REPORT-5220-BLOCKED-PRECONDITION",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "v477_summary": (
++        "Downstream task context depends on this summary being exact, especially nulls, "
++        "flags, and retired threads."
++    ),
++    "research_roadmap_yaml_activated": (
++        "Downstream conductor execution depends on `research-roadmap.yaml` naming `.478` "
++        "and containing the Exp 5220 onward task set."
++    ),
++    "exclusion_manifest_confirmed_clean": (
++        "The activated .478 roadmap must pass the exclusion-manifest gate without hard "
++        "retired-scope violations."
++    ),
++    "validation_commands_run": (
++        "Activation claims must be backed by named commands with pass/fail outcomes, "
++        "not by implied manual inspection."
++    ),
++    "ops_docs_updated": (
++        "Records whether this task changed ops/status.md or ops/changelog.md; a false "
++        "value is valid when the conductor stop rule defers ops reconciliation."
++    ),
++    "research_conductor_py_untouched_confirmed": (
++        "The transition must not modify scripts/research_conductor.py."
++    ),
++    "inference_substrate": "This archive reads upstream artifacts and activation checks only.",
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ and must state whether "
++        ".478 was activated."
++    ),
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "archived_milestone",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "duration_s",
++    "random_seed",
++    "source_artifacts",
++    "missing_artifacts",
++    "archived_research_roadmap_yaml",
++    "roadmap_activation_check",
++    "validation_checks",
++    "failed_preconditions",
++    "clean_handoff",
++    "tests_run",
++    "reproducibility_checksum",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++
++DEFAULT_TESTS_RUN = [
++    ".venv/bin/pytest tests/python/test_experiment_5220_archive_477_activate_478.py -q -o addopts=''",
++    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5220_archive_477_activate_478.py' -m pytest tests/python/test_experiment_5220_archive_477_activate_478.py -q --no-cov -o addopts=''",
++    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5220_archive_477_activate_478.py' --fail-under=100",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5220_archive_477_activate_478.py",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One `.477` result artifact required for a clean transition archive."""
++
++    experiment_number: int
++    task_id: str
++    relative_path: Path
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured result from an activation-validation command."""
++
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str
++    stderr: str = ""
++
++
++UPSTREAM_SOURCES: tuple[UpstreamSource, ...] = (
++    UpstreamSource(
++        5207,
++        "exp5207-archive-476-activate-477",
++        Path("results/experiment_5207_archive_476_activate_477.json"),
++    ),
++    UpstreamSource(
++        5208,
++        "exp5208-sota-ingestion-v477",
++        Path("results/experiment_5208_sota_ingestion_v477.json"),
++    ),
++    UpstreamSource(
++        5209,
++        "exp5209-gap1-set-search-holdout-hardening-v477",
++        Path("results/experiment_5209_gap1_set_search_holdout_hardening_v477.json"),
++    ),
++    UpstreamSource(
++        5210,
++        "exp5210-gap1-registry-promotion-gated-v477",
++        Path("results/experiment_5210_gap1_registry_promotion_gated_v477.json"),
++    ),
++    UpstreamSource(
++        5211,
++        "exp5211-gap4-sota-local-candidate-expansion-v477",
++        Path("results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"),
++    ),
++    UpstreamSource(
++        5212,
++        "exp5212-gap4-scale-validation-gated-v477",
++        Path("results/experiment_5212_gap4_scale_validation_gated_v477.json"),
++    ),
++    UpstreamSource(
++        5213,
++        "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477",
++        Path("results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json"),
++    ),
++    UpstreamSource(
++        5214,
++        "exp5214-continuous-self-learning-verifier-memory-v477",
++        Path("results/experiment_5214_continuous_self_learning_verifier_memory_v477.json"),
++    ),
++    UpstreamSource(
++        5215,
++        "exp5215-arc-paw-amortization-gate-v477",
++        Path("results/experiment_5215_arc_paw_amortization_gate_v477.json"),
++    ),
++    UpstreamSource(
++        5216,
++        "exp5216-arc-frontier-continuity-landmark-decomposition-v477",
++        Path("results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json"),
++    ),
++    UpstreamSource(
++        5217,
++        "exp5217-hardware-continuity-v477",
++        Path("results/experiment_5217_hardware_continuity_v477.json"),
++    ),
++    UpstreamSource(
++        5218,
++        "exp5218-verifier-authenticity-remediation-apply-v477",
++        Path("results/experiment_5218_verifier_authenticity_remediation_apply_v477.json"),
++    ),
++    UpstreamSource(
++        5219, "exp5219-capstone-v477", Path("results/experiment_5219_capstone_v477.json")
++    ),
++)
++
++REQUIRED_478_TASK_PREFIXES = tuple(f"exp{exp_id}" for exp_id in range(5220, 5233))
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value_of(value["value"])
++    return value
++
++
++def _number(value: Any) -> float | None:
++    raw = value_of(value)
++    if isinstance(raw, bool) or raw is None:
++        return None
++    try:
++        return float(raw)
++    except (TypeError, ValueError):
++        return None
++
++
++def _int(value: Any) -> int:
++    number = _number(value)
++    return int(number) if number is not None else 0
++
++
++def _bool(value: Any) -> bool | None:
++    raw = value_of(value)
++    return raw if isinstance(raw, bool) else None
++
++
++def _string(value: Any) -> str:
++    raw = value_of(value)
++    return raw if isinstance(raw, str) else str(raw if raw is not None else "")
++
++
++def _list(value: Any) -> list[Any]:
++    raw = value_of(value)
++    return raw if isinstance(raw, list) else []
++
++
++def _mapping(value: Any) -> JsonDict:
++    raw = value_of(value)
++    return dict(raw) if isinstance(raw, Mapping) else {}
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def file_sha256(path: Path) -> str | None:
++    if not path.is_file():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def text_sha256(text: str) -> str:
++    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return {}, {
++            "exists": True,
++            "loadable": False,
++            "error": "malformed_json",
++            "sha256": file_sha256(path),
++        }
++    if not isinstance(parsed, Mapping):
++        return {}, {
++            "exists": True,
++            "loadable": False,
++            "error": "not_json_object",
++            "sha256": file_sha256(path),
++        }
++    return dict(parsed), {
++        "exists": True,
++        "loadable": True,
++        "error": None,
++        "sha256": file_sha256(path),
++    }
++
++
++def load_upstream_artifacts(root: Path) -> tuple[dict[int, JsonDict], list[JsonDict], list[str]]:
++    artifacts: dict[int, JsonDict] = {}
++    rows: list[JsonDict] = []
++    missing: list[str] = []
++    for source in UPSTREAM_SOURCES:
++        data, meta = read_json_mapping(root / source.relative_path)
++        if meta.get("loadable") is True:
++            artifacts[source.experiment_number] = data
++        else:
++            missing.append(f"missing_artifact_exp{source.experiment_number}")
++        rows.append(
++            {
++                "experiment_number": source.experiment_number,
++                "task_id": source.task_id,
++                "relative_path": str(source.relative_path),
++                "exists": meta.get("exists") is True,
++                "loadable": meta.get("loadable") is True,
++                "sha256": meta.get("sha256"),
++                "error": meta.get("error"),
++                "honest_verdict": _string(data.get("honest_verdict")) if data else "",
++            }
++        )
++    return artifacts, rows, missing
++
++
++def _roadmap_data(text: str) -> JsonDict:
++    try:
++        parsed = yaml.safe_load(text) or {}
++    except yaml.YAMLError:
++        return {}
++    return dict(parsed) if isinstance(parsed, Mapping) else {}
++
++
++def _task_ids(roadmap: JsonMap) -> list[str]:
++    tasks = roadmap.get("tasks")
++    if not isinstance(tasks, list):
++        return []
++    return [str(task.get("id", "")) for task in tasks if isinstance(task, Mapping)]
++
++
++def _roadmap_archive(text: str) -> JsonDict:
++    roadmap = _roadmap_data(text)
++    task_ids = _task_ids(roadmap)
++    return {
++        "path": str(ROADMAP_RELATIVE_PATH),
++        "milestone": roadmap.get("milestone"),
++        "task_count": len(task_ids),
++        "task_ids": task_ids,
++        "content_sha256": text_sha256(text),
++        "content_before_activation": text,
++    }
++
++
++def activate_roadmap(root: Path) -> JsonDict:
++    roadmap_path = root / ROADMAP_RELATIVE_PATH
++    next_path = root / ROADMAP_NEXT_RELATIVE_PATH
++    before_text = roadmap_path.read_text(encoding="utf-8") if roadmap_path.exists() else ""
++    archived = _roadmap_archive(before_text)
++    copied = False
++    activation_source = "research-roadmap-next.yaml_missing"
++    if next_path.exists():
++        next_text = next_path.read_text(encoding="utf-8")
++        roadmap_path.write_text(next_text, encoding="utf-8")
++        copied = True
++        activation_source = "copied_research-roadmap-next.yaml"
++    after_text = roadmap_path.read_text(encoding="utf-8") if roadmap_path.exists() else ""
++    after = _roadmap_data(after_text)
++    task_ids = _task_ids(after)
++    missing_prefixes = [
++        prefix
++        for prefix in REQUIRED_478_TASK_PREFIXES
++        if not any(task_id.startswith(prefix) for task_id in task_ids)
++    ]
++    activated = after.get("milestone") == MILESTONE and not missing_prefixes
++    if not copied and activated:
++        activation_source = "research-roadmap.yaml_already_active"
++    return {
++        "exists": roadmap_path.exists(),
++        "parses": bool(after),
++        "path": str(ROADMAP_RELATIVE_PATH),
++        "milestone": after.get("milestone"),
++        "task_ids": task_ids,
++        "missing_task_prefixes": missing_prefixes,
++        "activated": activated,
++        "activation_source": activation_source,
++        "roadmap_next_present": next_path.exists(),
++        "copied_research_roadmap_next": copied,
++        "pre_activation_milestone": archived.get("milestone"),
++        "pre_activation_content_sha256": archived.get("content_sha256"),
++        "post_activation_content_sha256": text_sha256(after_text) if after_text else None,
++    }
++
++
++def validation_commands(root: Path) -> list[tuple[str, ...]]:
++    commands: list[tuple[str, ...]] = []
++    exclusion = root / "scripts" / "exclusion_manifest_lint.py"
++    prior = root / "scripts" / "validate_prior_failures.py"
++    if exclusion.exists():
++        commands.append((sys.executable, str(exclusion), str(root / ROADMAP_RELATIVE_PATH)))
++    if prior.exists():
++        commands.append((sys.executable, str(prior), str(root / ROADMAP_RELATIVE_PATH)))
++    return commands
++
++
++def run_command(command: tuple[str, ...], root: Path) -> CommandResult:
++    completed = subprocess.run(command, cwd=root, check=False, capture_output=True, text=True)
++    return CommandResult(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def run_validation_commands(root: Path) -> list[CommandResult]:
++    return [run_command(command, root) for command in validation_commands(root)]
++
++
++def _command_label(command: str) -> str:
++    if "exclusion_manifest_lint.py" in command:
++        return "scripts/exclusion_manifest_lint.py"
++    if "validate_prior_failures.py" in command:
++        return "scripts/validate_prior_failures.py"
++    return command.split()[0] if command.split() else "unknown_command"
++
++
++def validation_rows(results: Sequence[CommandResult]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for result in results:
++        command_text = " ".join(result.command)
++        rows.append(
++            {
++                "command": command_text,
++                "command_label": _command_label(command_text),
++                "exit_code": result.exit_code,
++                "passed": result.exit_code == 0,
++                "stdout": result.stdout,
++                "stderr": result.stderr,
++            }
++        )
++    return rows
++
++
++def exclusion_manifest_clean(rows: Sequence[JsonMap]) -> bool:
++    for row in rows:
++        if row.get("command_label") == "scripts/exclusion_manifest_lint.py":
++            text = f"{row.get('stdout', '')}\n{row.get('stderr', '')}"
++            return row.get("passed") is True and "HARD" not in text
++    return False
++
++
++def research_conductor_untouched(root: Path) -> bool:
++    path = root / CONDUCTOR_RELATIVE_PATH
++    if not path.exists():
++        return False
++    if not (root / ".git").exists():
++        return True
++    diff = subprocess.run(
++        ["git", "diff", "--quiet", "--", str(CONDUCTOR_RELATIVE_PATH)], cwd=root, check=False
++    )
++    status = subprocess.run(
++        ["git", "status", "--short", "--", str(CONDUCTOR_RELATIVE_PATH)],
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return diff.returncode == 0 and status.stdout.strip() == ""
++
++
++def _fmt_float(value: float | None, digits: int = 6) -> str:
++    return "unknown" if value is None else f"{value:.{digits}f}"
++
++
++def _fmt_p(value: float | None) -> str:
++    return "unknown" if value is None else f"{value:g}"
++
++
++def _flag_kinds(flags: Any) -> str:
++    if not isinstance(flags, list):
++        return "none"
++    kinds = sorted({str(item.get("kind")) for item in flags if isinstance(item, Mapping)})
++    return "/".join(kinds) if kinds else "none"
++
++
++def _status_summary(value: Any, verdict: str, token: str, fallback: str) -> str:
++    raw = value_of(value)
++    if isinstance(raw, Mapping):
++        if raw.get("summary"):
++            return str(raw["summary"])
++        if raw.get("status"):
++            return str(raw["status"])
++        if raw.get("reachable") is True:
++            return "reachable"
++    if raw:
++        return str(raw)
++    return fallback if token in verdict else "unknown"
++
++
++def build_v477_summary(artifacts: JsonMap) -> str:
++    exp5209 = artifacts.get(5209, {})
++    exp5210 = artifacts.get(5210, {})
++    exp5211 = artifacts.get(5211, {})
++    exp5212 = artifacts.get(5212, {})
++    exp5213 = artifacts.get(5213, {})
++    exp5214 = artifacts.get(5214, {})
++    exp5215 = artifacts.get(5215, {})
++    exp5216 = artifacts.get(5216, {})
++    exp5217 = artifacts.get(5217, {})
++    exp5218 = artifacts.get(5218, {})
++    exp5219 = artifacts.get(5219, {})
++
++    heldout = _number(exp5209.get("heldout_pass_at_2_mean"))
++    always = _number(exp5209.get("baseline_always_on_pass_at_2_mean"))
++    single = _number(exp5209.get("single_refuted_directional_pass_at_2_mean"))
++    ci = _string(exp5209.get("paired_delta_ci95")) or "unknown"
++    grouped = _int(exp5209.get("n_grouped_splits"))
++    stable = _bool(exp5209.get("best_subset_stable"))
++    gate_summary = _string(exp5210.get("gate_check_summary")) or _string(
++        exp5210.get("honest_verdict")
++    )
++
++    pool_n = _int(exp5211.get("candidate_pool_n"))
++    gap4_flags = _flag_kinds(exp5211.get("corrigendum_pending"))
++    n_scored = _int(exp5212.get("n_scored"))
++    excluded_protocol = _mapping(exp5212.get("exclusion_summary")).get(
++        "missing_protocol_pass2_fields", "unknown"
++    )
++    wins = _int(exp5212.get("exact_test_discordant_wins"))
++    losses = _int(exp5212.get("exact_test_discordant_losses"))
++    p_value = _number(exp5212.get("exact_test_p_value_two_sided"))
++    exp5212_flags = _flag_kinds(exp5212.get("corrigendum_pending"))
++
++    probe = _number(exp5213.get("best_probe_accuracy"))
++    tuned_sc = _number(exp5213.get("tuned_sc_accuracy"))
++    clue = _number(exp5213.get("clue_accuracy"))
++    rcs = _number(exp5213.get("radial_consensus_score_accuracy"))
++    mmlu_retired = _bool(exp5213.get("retire_mmlu_hidden_state_path"))
++
++    memory_path = _string(exp5214.get("memory_artifact_path")) or "unknown"
++    promotions = _int(exp5214.get("promotions"))
++    rollbacks = _int(exp5214.get("rollbacks"))
++    entries = _int(exp5214.get("memory_entries_written"))
++
++    paw_viable = _bool(exp5215.get("paw_amortization_viable"))
++    break_even = _number(exp5215.get("break_even_remaining_actions"))
++    median_actions = _number(exp5215.get("median_remaining_actions"))
++    p75_actions = _number(exp5215.get("p75_remaining_actions"))
++
++    level_delta = _int(exp5216.get("reproducible_total_levels_delta"))
++    levels_banked = len(_list(exp5216.get("new_levels_banked")))
++    provenance = _string(exp5216.get("solve_provenance")) or "unknown"
++
++    hardware_verdict = _string(exp5217.get("honest_verdict"))
++    kv260 = _status_summary(
++        exp5217.get("kv260_status"), hardware_verdict, "kv260:reachable", "reachable"
++    )
++    polarfire = _status_summary(
++        exp5217.get("polarfire_status"), hardware_verdict, "polarfire:reachable", "reachable"
++    )
++    gatemate = _status_summary(
++        exp5217.get("gatemate_status"), hardware_verdict, "gatemate:blocked", "blocked"
++    )
++    narrowed = _string(exp5217.get("gatemate_diagnostic_narrowed_to")) or "unknown"
++
++    remediation_type = _string(exp5218.get("remediation_type")) or "unknown"
++    headline_ineligible = _bool(exp5218.get("headline_ineligible_until_real_verification"))
++
++    gap1_final = _string(exp5219.get("gap1_final_status")) or "unknown"
++    gap4_final = _string(exp5219.get("gap4_final_status")) or "unknown"
++    capstone_arc_delta = _int(exp5219.get("reproducible_total_levels_delta"))
++    flagged_excluded = _bool(exp5219.get("flagged_adversarial_artifacts_excluded"))
++    capstone_verdict = _string(exp5219.get("honest_verdict"))
++
++    return (
++        ".477 closed as a flagged-gate handoff milestone: exp5209 kept GAP-1 set-search positive "
++        f"with heldout pass@2 {_fmt_float(heldout)} versus always-on {_fmt_float(always)} and "
++        f"single-refuted {_fmt_float(single)}, paired_delta_ci95={ci}, n_grouped_splits={grouped}, "
++        f"and best_subset_stable={str(stable).lower() if stable is not None else 'unknown'}; "
++        "exp5210 did not promote to the registry because the conductor pre-gate compared expected "
++        f"bare true with a principle-wrapped gate object ({gate_summary}); exp5211 built a "
++        f"{pool_n}-row GAP-4 candidate pool but it was adversarially flagged "
++        f"({gap4_flags}) and cannot headline .478 without provenance repair; exp5212 scored "
++        f"n_scored={n_scored} because {excluded_protocol} rows lacked missing_protocol_pass2_fields, "
++        f"recorded {wins}/{losses} discordant wins/losses, p={_fmt_p(p_value)}, carried flags "
++        f"{exp5212_flags}, and did not cross the unchanged six-discordant-win floor; exp5213 "
++        f"retired the MMLU-Pro hidden-state path with best_probe_accuracy={_fmt_float(probe, 3)} "
++        f"versus tuned_sc={_fmt_float(tuned_sc, 3)}, CLUE={_fmt_float(clue, 3)}, "
++        f"RCS={_fmt_float(rcs, 3)}, retire_mmlu_hidden_state_path={str(mmlu_retired).lower()}; "
++        f"exp5214 wrote continuous self-learning memory at {memory_path} with {entries} entries, "
++        f"one promotion and one rollback, and no registry claim; exp5215 found PAW not viable "
++        f"(paw_amortization_viable={str(paw_viable).lower() if paw_viable is not None else 'unknown'}, "
++        f"break_even_remaining_actions={_fmt_float(break_even)}, median={_fmt_float(median_actions)}, "
++        f"p75={_fmt_float(p75_actions)}) and made no ARC solve claim; exp5216 attempted live-path "
++        f"integration but banked zero reproduction-gated ARC levels with reproducible_total_levels_delta="
++        f"{level_delta}, new_levels_banked={levels_banked}, solve_provenance={provenance}; exp5217 kept "
++        f"hardware continuity with KV260=reachable ({kv260}), PolarFire=reachable ({polarfire}), "
++        f"GateMate={narrowed} ({gatemate}), and no speedup claim; exp5218 verifier-authenticity "
++        f"registry flags applied via remediation_type={remediation_type}, headline_ineligible_until_real_"
++        f"verification={str(headline_ineligible).lower() if headline_ineligible is not None else 'unknown'}; "
++        f"exp5219 reconciled GAP-1 {gap1_final}, GAP-4 {gap4_final}, MMLU-Pro hidden-state path retired, "
++        f"continuous self-learning satisfied, ARC delta {capstone_arc_delta}, and flagged artifacts "
++        f"excluded={str(flagged_excluded).lower() if flagged_excluded is not None else 'unknown'} "
++        f"({capstone_verdict})."
++    )
++
++
++def _failed_preconditions(
++    *,
++    missing_artifacts: Sequence[str],
++    roadmap_activation: JsonMap,
++    validation: Sequence[JsonMap],
++    conductor_clean: bool,
++    vnext_present: bool,
++) -> list[str]:
++    failures = list(missing_artifacts)
++    if not roadmap_activation.get("activated"):
++        failures.append("research_roadmap_yaml_not_active_for_478")
++    for row in validation:
++        if row.get("passed") is not True:
++            failures.append(f"validation_failed_{row.get('command_label')}")
++    if not validation:
++        failures.append("validation_commands_missing")
++    if not conductor_clean:
++        failures.append("scripts_research_conductor_py_modified")
++    if not vnext_present:
++        failures.append("research_roadmap_vnext_doc_missing")
++    return failures
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str | None = None,
++    duration_s: float | None = None,
++    validation_results: Sequence[CommandResult] | None = None,
++    conductor_untouched: bool | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    pre_activation_text = (
++        (root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8")
++        if (root / ROADMAP_RELATIVE_PATH).exists()
++        else ""
++    )
++    archived_roadmap = _roadmap_archive(pre_activation_text)
++    roadmap_activation = activate_roadmap(root)
++    artifacts, sources, missing = load_upstream_artifacts(root)
++    command_results = (
++        list(validation_results)
++        if validation_results is not None
++        else run_validation_commands(root)
++    )
++    validation = validation_rows(command_results)
++    conductor_clean = (
++        research_conductor_untouched(root) if conductor_untouched is None else conductor_untouched
++    )
++    vnext_present = (root / VNEXT_RELATIVE_PATH).exists()
++    exclusion_clean = exclusion_manifest_clean(validation)
++    failures = _failed_preconditions(
++        missing_artifacts=missing,
++        roadmap_activation=roadmap_activation,
++        validation=validation,
++        conductor_clean=conductor_clean,
++        vnext_present=vnext_present,
++    )
++    clean_handoff = not failures
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "run_date": run_date or date.today().strftime("%Y%m%d"),
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
++        ),
++        "random_seed": RANDOM_SEED,
++        "source_artifacts": sources,
++        "missing_artifacts": list(missing),
++        "archived_research_roadmap_yaml": archived_roadmap,
++        "roadmap_activation_check": roadmap_activation,
++        "validation_checks": validation,
++        "failed_preconditions": failures,
++        "clean_handoff": clean_handoff,
++        "tests_run": list(tests_run if tests_run is not None else DEFAULT_TESTS_RUN),
++        "v477_summary": _principled("v477_summary", build_v477_summary(artifacts)),
++        "research_roadmap_yaml_activated": _principled(
++            "research_roadmap_yaml_activated", bool(roadmap_activation.get("activated"))
++        ),
++        "exclusion_manifest_confirmed_clean": _principled(
++            "exclusion_manifest_confirmed_clean", exclusion_clean
++        ),
++        "validation_commands_run": _principled("validation_commands_run", validation),
++        "ops_docs_updated": _principled("ops_docs_updated", False),
++        "research_conductor_py_untouched_confirmed": _principled(
++            "research_conductor_py_untouched_confirmed", conductor_clean
++        ),
++        "inference_substrate": _principled("inference_substrate", INFERENCE_SUBSTRATE),
++        "honest_verdict": _principled(
++            "honest_verdict", COMPLETE_VERDICT if clean_handoff else BLOCKED_VERDICT
++        ),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if payload.get("schema") != SCHEMA or payload.get("experiment_id") != EXPERIMENT_ID:
++        raise ValueError("schema or experiment_id mismatch")
++    if (
++        payload.get("milestone") != MILESTONE
++        or payload.get("archived_milestone") != ARCHIVED_MILESTONE
++    ):
++        raise ValueError("milestone mismatch")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field principle mismatch")
++    for field, principle in FIELD_PRINCIPLES.items():
++        wrapped = payload.get(field)
++        if not isinstance(wrapped, Mapping):
++            raise ValueError(f"{field} must be principle-wrapped")
++        if wrapped.get("principle") != principle:
++            raise ValueError(f"{field} principle mismatch")
++        if "value" not in wrapped:
++            raise ValueError(f"{field} missing value")
++    verdict = _string(payload["honest_verdict"])
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must have a terminal prefix")
++    if value_of(payload["inference_substrate"]) != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if not isinstance(value_of(payload["research_roadmap_yaml_activated"]), bool):
++        raise ValueError("research_roadmap_yaml_activated must be bool")
++    if not isinstance(value_of(payload["exclusion_manifest_confirmed_clean"]), bool):
++        raise ValueError("exclusion_manifest_confirmed_clean must be bool")
++    if not isinstance(value_of(payload["ops_docs_updated"]), bool):
++        raise ValueError("ops_docs_updated must be bool")
++    if not isinstance(value_of(payload["research_conductor_py_untouched_confirmed"]), bool):
++        raise ValueError("research_conductor_py_untouched_confirmed must be bool")
++    commands = value_of(payload["validation_commands_run"])
++    if not isinstance(commands, list):
++        raise ValueError("validation_commands_run must be a list")
++    if payload.get("clean_handoff") is True and payload.get("failed_preconditions"):
++        raise ValueError("clean_handoff cannot have failed_preconditions")
++    if not payload.get("tests_run"):
++        raise ValueError("tests_run must record verification commands")
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str | None = None,
++    duration_s: float | None = None,
++    validation_results: Sequence[CommandResult] | None = None,
++    conductor_untouched: bool | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    payload = build_artifact(
++        root=root,
++        run_date=run_date,
++        duration_s=duration_s,
++        validation_results=validation_results,
++        conductor_untouched=conductor_untouched,
++        tests_run=tests_run,
++    )
++    out_path = root / RESULT_RELATIVE_PATH
++    write_json(out_path, payload)
++    return out_path
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - direct CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--date", dest="run_date", default=None)
++    args = parser.parse_args(argv)
++    print(run(root=args.root, run_date=args.run_date))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index bcfa98e492..ba5cc43e28 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -125,7 +125,7 @@ tasks:
+       new_references_added:
+         value: int
+       sota_to_experiment_mapping:
+-        value: "list of {source, mapped_task_or_defer, reason}"
++        value: "list of {{source, mapped_task_or_defer, reason}}"
+       ebt_semantic_scholar_citation_count:
+         value: "int or blocked"
+       arm_ebm_semantic_scholar_status:
+diff --git a/results/experiment_5220_archive_477_activate_478.json b/results/experiment_5220_archive_477_activate_478.json
+new file mode 100644
+index 0000000000..a9ba5156b8
+--- /dev/null
++++ b/results/experiment_5220_archive_477_activate_478.json
+@@ -0,0 +1,290 @@
++{
++  "archived_milestone": "2026.07.477",
++  "archived_research_roadmap_yaml": {
++    "content_before_activation": "milestone: 2026.07.478\nmilestone_title: GAP-1 REGISTRY PROMOTION + GAP-4 PROVENANCE REPAIR + CONTINUOUS MEMORY + ARC SKILL GATES\nmilestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md\ntasks:\n\n- id: exp5220-archive-477-activate-478\n  milestone: 2026.07.478\n  title: \"PHASE 0 transition -- archive .477 truth and activate .478\"\n  priority: critical\n  track: planning\n  deliverable: results/experiment_5220_archive_477_activate_478.json\n  operator_override: \"2026-05-29 operator directive: routine milestone-transition task; false-positive scope-match against prior archive/activate tasks is expected and authorized.\"\n  prior_failures:\n  - experiment_id: exp5207-archive-476-activate-477\n    verdict: \"complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts.\"\n    addressed_by: \"Routine milestone handoff for a new predecessor/successor pair (.477->.478); the deliverable is the current milestone archive and activation, not a rerun of .476->.477.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 30\n  estimated_wall_time_min: 25\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. All tasks in milestone 2026.07.477 have completed.\n    This is the standard transition task: archive .477 accurately, activate .478 by copying\n    research-roadmap-next.yaml into research-roadmap.yaml, and update operational docs. Do not round .477\n    into a cleaner story than the artifacts support.\n\n    EXISTING CODE TO READ FIRST:\n    - research-roadmap.yaml (the .477 plan).\n    - openspec/change-proposals/research-roadmap-vNEXT.md (the .478 design doc).\n    - ops/conductor-log.md (the 2026-07-04 .477 run).\n    - ops/status.md and ops/changelog.md.\n    - results/experiment_5207_archive_476_activate_477.json through results/experiment_5219_capstone_v477.json, focusing on exp5209, exp5210, exp5211, exp5212, exp5214, exp5215, exp5216, exp5217, exp5218, and exp5219.\n    - ops/exclusion_manifest.yaml.\n\n    TASK:\n    Write a precise .477 archive summary, activate the .478 roadmap, and leave the repo ready for the\n    conductor to execute exp5221 onward.\n\n    CONCRETE STEPS:\n    1. Read the .477 artifacts directly. Summarize the facts that matter for .478: GAP-1 hardening positive\n       but registry promotion blocked by a gate-field shape; GAP-4 candidate expansion/validation flagged\n       and protocol-blocked; MMLU-Pro hidden-state path retired; continuous self-learning memory written;\n       PAW not viable; ARC zero-level delta; KV260/PolarFire reachable; GateMate still physical/JTAG\n       blocked; verifier-authenticity registry flags applied.\n    2. Copy research-roadmap-next.yaml into research-roadmap.yaml exactly after preserving the old .477 plan\n       facts in the artifact summary.\n    3. Run the available roadmap activation checks against the activated research-roadmap.yaml, including\n       scripts/exclusion_manifest_lint.py and scripts/validate_prior_failures.py if present.\n    4. Update ops/status.md and ops/changelog.md with an append-only transition entry. Do not rewrite old\n       entries.\n    5. Confirm scripts/research_conductor.py was not modified.\n\n    REQUIRED ARTIFACT FIELDS:\n      v477_summary:\n        value: \"one paragraph with explicit exp5209/5210/5211/5212/5214/5216/5217/5219 outcomes\"\n        principle: \"Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads.\"\n      research_roadmap_yaml_activated:\n        value: bool\n      exclusion_manifest_confirmed_clean:\n        value: bool\n      validation_commands_run:\n        value: \"list of commands and pass/fail\"\n      ops_docs_updated:\n        value: bool\n      research_conductor_py_untouched_confirmed:\n        value: bool\n      inference_substrate:\n        value: aggregation_from_upstream_artifacts\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and must state whether .478 was activated.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5221-sota-ingestion-v478\n  milestone: 2026.07.478\n  title: \"PHASE 0 SOTA ingestion -- refresh 2025-2026 verifier, constraint, memory, hardware, and citation trail before execution\"\n  priority: high\n  track: research\n  deliverable: results/experiment_5221_sota_ingestion_v478.json\n  operator_override: \"CLAUDE.md SOTA-ingestion standing rule: every bleeding-edge milestone reserves a SOTA-ingestion slot; recurrence is expected and authorized.\"\n  prior_failures:\n  - experiment_id: exp5208-sota-ingestion-v477\n    verdict: \"complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred.\"\n    addressed_by: \"This is the required fresh .478 SOTA refresh after .477 completed, with a different emphasis on VerIbmc, P-GCD/STATIC, AutoMem/MHM/SkillCoach, and retryable Semantic Scholar citation checks.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 45\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. The planning pass appended a V478 section to\n    research-references.md, but this reserved SOTA-ingestion task must re-check the freshest frontier\n    immediately before execution. Do not use /deep-research. Prefer primary sources: arXiv, OpenReview\n    pages, official project docs/repos, Extropic writing, Logical Intelligence posts, Hugging Face Papers,\n    GitHub repos, and Semantic Scholar metadata.\n\n    EXISTING CODE TO READ FIRST:\n    - research-references.md (V477 and V478 sections).\n    - openspec/change-proposals/research-roadmap-vNEXT.md (SOTA findings and phase plan).\n    - research-program.md (Continuous Self-Learning section).\n    - ops/exclusion_manifest.yaml and ops/known-issues.md (retired scopes that must not be reopened).\n\n    TASK:\n    Produce a short SOTA-to-experiment mapping note and update research-references.md only if new,\n    genuinely actionable findings appear after the planning-time V478 section.\n\n    CONCRETE STEPS:\n    1. Re-check arXiv/OpenReview/Hugging Face Papers for 2025-2026 work on EBMs for verification,\n       constraint satisfaction, Ising/hardware sampling, hallucination mitigation, KANs, constrained or\n       energy-guided decoding, and continual/self-learning for constraints.\n    2. Retry the Semantic Scholar citation checks for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605.\n       If still rate-limited, record the exact response and do not infer citation counts.\n    3. Re-check Extropic writing, Logical Intelligence posts, and relevant GitHub repos for updates that\n       change the .478 plan.\n    4. Map every actionable new finding to an existing .478 task or to \"defer/no action.\" Do not add a task\n       or modify research-roadmap.yaml.\n    5. Append to research-references.md only for new actionable findings, with source URLs.\n\n    REQUIRED ARTIFACT FIELDS:\n      sources_checked:\n        value: \"list of source groups checked\"\n      new_references_added:\n        value: int\n      sota_to_experiment_mapping:\n        value: \"list of {source, mapped_task_or_defer, reason}\"\n      ebt_semantic_scholar_citation_count:\n        value: \"int or blocked\"\n      arm_ebm_semantic_scholar_status:\n        value: \"citation_count int or rate_limited/error\"\n      retired_scope_reopened:\n        value: false\n        principle: \"A SOTA citation cannot override the exclusion manifest by implication.\"\n      inference_substrate:\n        value: literature_ingestion\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5222-gap1-gate-field-and-registry-promotion-v478\n  milestone: 2026.07.478\n  title: \"PHASE 1 GAP-1 registry decision -- repair gate-field shape and promote or explicitly block set verifier\"\n  priority: critical\n  track: verification\n  deliverable: results/experiment_5222_gap1_gate_field_registry_promotion_v478.json\n  prior_failures:\n  - experiment_id: exp5210-gap1-registry-promotion-gated-v477\n    verdict: blocked_gate_check_failed\n    addressed_by: \"This task does not depend on the failed conductor gate; it directly reads exp5209's principle-wrapped gap1_hardened_positive.value field, emits bare registry decision fields, and either promotes with tests or records an explicit instability block.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp5209-gap1-set-search-holdout-hardening-v477\n    verdict: \"complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here\"\n    addressed_by: \"This task is a registry decision and implementation task, not another holdout sweep; it must resolve the unstable-subset warning by freezing an allowed subset or refusing promotion.\"\n    retire_if_same_verdict: true\n  - experiment_id: arc3-trm-verifier-rerank-gap1-20260609\n    verdict: complete_refuted_directional_adjacency_degraded_hybrid_pass2_0.452_to_0.419_captured_0_of_2\n    addressed_by: \"This task does not resurrect the refuted single directional-adjacency invariant; it only considers the compact multi-invariant set-search result hardened in exp5209.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 45\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. GAP-1 has the strongest .477 positive signal:\n    exp5209 reported held-out pass@2 0.1896 versus always-on 0.0890 and the refuted single-invariant\n    baseline 0.1478, with paired delta CI excluding zero. exp5210 failed only because the conductor gate\n    looked for a bare boolean while exp5209 stored gap1_hardened_positive.value. However, exp5209 also\n    warned that the best subset was not stable and said not to promote inside that task.\n\n    EXISTING CODE TO READ FIRST:\n    - results/experiment_5209_gap1_set_search_holdout_hardening_v477.json.\n    - results/experiment_5210_gap1_registry_promotion_gated_v477.json.\n    - ops/verifier_gaps.md GAP-1 section.\n    - python/carnot/verify/ and python/carnot/arc/ modules that register ARC grid/object verifiers.\n    - tests touching verifier registry, ARC grid verifiers, and registry metadata.\n    - openspec/capabilities/*/spec.md for verifier registry and ARC verifier requirements.\n\n    TASK:\n    Make a registry-grade GAP-1 decision. If the exp5209 result is strong enough and the subset can be\n    frozen without leakage, promote the set verifier with tests and docs. If the instability warning makes\n    promotion scientifically unsafe, write an explicit blocked decision and a follow-up criterion instead\n    of pretending the gate failure was the only issue.\n\n    CONCRETE STEPS:\n    1. Parse exp5209 directly and treat gap1_hardened_positive.value as the upstream scientific gate.\n    2. Audit whether the selected subset can be frozen without held-out tuning. Do not run another broad\n       search unless it is only used to support a block reason.\n    3. If promoting, add or update the verifier registry entry with provenance back to exp5209, exclusion of\n       the refuted directional-adjacency single invariant, and clear \"building\" or \"production\" status.\n    4. Add or update tests that prove the registry entry loads, the promoted subset is deterministic, and\n       no test-output-derived features enter the decision path.\n    5. Update ops/verifier_gaps.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md as needed.\n    6. Emit bare top-level fields gap1_registry_promoted and gap1_registry_decision for downstream use.\n\n    REQUIRED ARTIFACT FIELDS:\n      gap1_registry_promoted:\n        value: bool\n        principle: \"BARE top-level boolean. True only if implementation, tests, and docs support registry promotion.\"\n      gap1_registry_decision:\n        value: \"promoted|blocked_instability|blocked_leakage|blocked_missing_evidence\"\n      promoted_registry_path:\n        value: \"path or null\"\n      frozen_subset:\n        value: \"list of invariant names or null\"\n      exp5209_gate_parsed_from_value:\n        value: bool\n      refuted_single_invariant_excluded:\n        value: bool\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      ops_docs_updated:\n        value: bool\n      inference_substrate:\n        value: deterministic_verifier_registry\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was promoted or explicitly blocked.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5223-gap4-flagged-pool-authenticity-audit-v478\n  milestone: 2026.07.478\n  title: \"PHASE 1 GAP-4 authenticity audit -- quarantine flagged pool and define canonical protocol fields\"\n  priority: critical\n  track: verification\n  deliverable: results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json\n  prior_failures:\n  - experiment_id: exp5211-gap4-sota-local-candidate-expansion-v477\n    verdict: complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212\n    addressed_by: \"The prior artifact was adversarially flagged for tautology/too-fast generation and models_used=[]; this task audits and quarantines it rather than treating it as usable evidence.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp5212-gap4-scale-validation-gated-v477\n    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked\n    addressed_by: \"The prior validation had n_scored=0 because protocol pass fields were missing; this task defines and enforces those fields before any new validation.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 45\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. GAP-4 was blocked in .477 because exp5211 and exp5212\n    were adversarially flagged: candidate generation looked tautological/too short, models_used was empty,\n    random_seed was missing, and the validation had zero scored rows due missing protocol pass@2 fields.\n    This task is an audit and guardrail task. It must not create headline GAP-4 evidence.\n\n    EXISTING CODE TO READ FIRST:\n    - results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json and any checkpoint beside it.\n    - results/experiment_5212_gap4_scale_validation_gated_v477.json.\n    - scripts/adversarial_verify.py and scripts/conductor_gates.py.\n    - GAP-4 sections in ops/verifier_gaps.md, ops/status.md, and openspec/change-proposals/research-roadmap-vNEXT.md.\n    - Any GAP-4 candidate-pool generation or validation scripts in scripts/ and python/carnot/.\n\n    TASK:\n    Quarantine the flagged GAP-4 artifacts, define the canonical candidate-pool schema/protocol fields, and\n    add a preflight guard that future GAP-4 validation cannot pass with models_used=[], missing seed, missing\n    protocol pass fields, or suspiciously short generation.\n\n    CONCRETE STEPS:\n    1. Inspect exp5211 and exp5212 artifacts and record exactly why they are not headline-eligible.\n    2. Define a canonical GAP-4 candidate record schema with at least: candidate_id, source_task_id, model_id,\n       model_path_or_digest, prompt_digest, random_seed, generation_started_at, generation_duration_s,\n       decoding_protocol, pass_at_1_fields, pass_at_2_fields, validation_inputs_digest, and provenance_kind.\n    3. Add tests or a linter helper that rejects missing/empty model provenance, missing random_seed, missing\n       pass@2 protocol fields, n_scored=0, and tautology-shaped \"pool ready\" artifacts.\n    4. Write or update docs explaining that exp5211/exp5212 are quarantined unless a later canonical-pool\n       builder repairs or regenerates the pool.\n    5. Emit bare top-level fields for the next task: gap4_pool_repairable, validated_pool_n, and\n       protocol_fields_complete.\n\n    REQUIRED ARTIFACT FIELDS:\n      gap4_pool_repairable:\n        value: bool\n        principle: \"BARE top-level boolean. True only if existing rows can be repaired without inventing model/protocol provenance.\"\n      validated_pool_n:\n        value: int\n      protocol_fields_complete:\n        value: bool\n      quarantined_artifacts:\n        value: \"list of flagged artifact paths\"\n      canonical_schema_path:\n        value: \"path\"\n      guard_tests_added:\n        value: bool\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      inference_substrate:\n        value: artifact_provenance_audit\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether the old GAP-4 pool is repairable or must be regenerated.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5224-gap4-canonical-pool-builder-v478\n  milestone: 2026.07.478\n  title: \"PHASE 1 GAP-4 canonical pool builder -- repair when possible, otherwise constrained SOTA regeneration\"\n  priority: high\n  track: verification\n  deliverable: results/experiment_5224_gap4_canonical_pool_builder_v478.json\n  requires_gpu: true\n  prior_failures:\n  - experiment_id: exp5211-gap4-sota-local-candidate-expansion-v477\n    verdict: complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212\n    addressed_by: \"The prior expansion did not prove real model/protocol provenance; this task either repairs verifiable rows only or regenerates through a constrained protocol using mandated SOTA GGUF model specs.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp5212-gap4-scale-validation-gated-v477\n    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked\n    addressed_by: \"The prior validation had no scored rows; this task produces a canonical pool with complete pass@1/pass@2 protocol fields before validation can run.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 90\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. exp5223 should have defined the canonical GAP-4 schema\n    and audited whether old rows are repairable. This task creates exactly one canonical GAP-4 candidate\n    pool for downstream validation. If exp5223 proves old rows are repairable without inventing provenance,\n    repair those rows. Otherwise regenerate with constrained local SOTA GGUF inference.\n\n    EXISTING CODE TO READ FIRST:\n    - results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json.\n    - The canonical schema or linter path produced by exp5223.\n    - scripts/experiment_template.py, especially the cached_sota_pair() docstring.\n    - GAP-4 candidate generation/validation scripts from .476/.477.\n    - research-references.md V478 constrained generation notes for P-GCD, STATIC, and ProvenanceGuard.\n\n    MODEL_SPECS:\n    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; headline candidate if it fits).\n    - unsloth/gemma-4-31B-it-GGUF (flagship dense).\n    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).\n    Use scripts/experiment_template.py and cached_sota_pair() for local model resolution. Legacy small\n    models are permitted only for CPU smoke tests and must not be used for headline GAP-4 rows.\n\n    TASK:\n    Build a canonical GAP-4 pool of at least 120 rows with complete provenance, protocol pass fields, and\n    adversarial-verification readiness. Do not run the scale-validation statistical claim here.\n\n    CONCRETE STEPS:\n    1. Load exp5223's audit artifact and canonical schema.\n    2. If exp5223 gap4_pool_repairable is true, repair only fields that can be recovered from existing\n       source artifacts or logs. Do not fabricate model IDs, seeds, or durations.\n    3. If fewer than 120 rows survive repair, regenerate the missing rows with at least one mandated local\n       SOTA GGUF model. Use a structured/constrained decoding protocol inspired by P-GCD/STATIC: deterministic\n       prompt template, recorded seed, schema validation, and explicit pass@1/pass@2 fields.\n    4. Run the exp5223 guard/linter and adversarial_verify on the canonical pool artifact.\n    5. Emit bare top-level fields gap4_canonical_pool_usable and canonical_pool_n for exp5225 gating.\n\n    REQUIRED ARTIFACT FIELDS: gap4_canonical_pool_usable, canonical_pool_n\n      gap4_canonical_pool_usable:\n        value: bool\n        principle: \"BARE top-level boolean. True only if the canonical pool passes schema/provenance/adversarial guards.\"\n      canonical_pool_n:\n        value: int\n      canonical_pool_path:\n        value: \"path\"\n      repaired_rows:\n        value: int\n      regenerated_rows:\n        value: int\n      model_specs:\n        value: \"list including at least one mandated SOTA GGUF when regenerated_rows > 0\"\n      models_used:\n        value: \"list of concrete model ids/paths actually used, or [] only when all rows were repaired from verified provenance\"\n      random_seed:\n        value: int\n      protocol_fields_complete:\n        value: bool\n      adversarial_verify_passed:\n        value: bool\n      inference_substrate:\n        value: local_sota_gguf_constrained_generation_or_verified_repair\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether the canonical GAP-4 pool is usable for validation.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5225-gap4-clean-scale-validation-gated-v478\n  milestone: 2026.07.478\n  title: \"PHASE 1 gated on exp5224 canonical pool usable -- GAP-4 clean scale validation\"\n  priority: high\n  track: verification\n  deliverable: results/experiment_5225_gap4_clean_scale_validation_gated_v478.json\n  gated_on:\n  - upstream: exp5224-gap4-canonical-pool-builder-v478\n    artifact_field: gap4_canonical_pool_usable\n    op: \"==\"\n    value: true\n  - upstream: exp5224-gap4-canonical-pool-builder-v478\n    artifact_field: canonical_pool_n\n    op: \">=\"\n    value: 120\n  prior_failures:\n  - experiment_id: exp5212-gap4-scale-validation-gated-v477\n    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked\n    addressed_by: \"This validation is gated on a canonical pool with nonzero rows and complete pass@2/provenance fields; it does not reuse the protocol-empty exp5212 input.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 60\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. This task should only run if exp5224 emitted\n    gap4_canonical_pool_usable == true and canonical_pool_n >= 120. The goal is a clean validation decision,\n    not a forced positive result.\n\n    EXISTING CODE TO READ FIRST:\n    - results/experiment_5224_gap4_canonical_pool_builder_v478.json.\n    - The canonical pool path from exp5224.\n    - results/experiment_5212_gap4_scale_validation_gated_v477.json (blocked prior).\n    - GAP-4 validation scripts and tests.\n    - ops/verifier_gaps.md GAP-4 section.\n\n    TASK:\n    Run GAP-4 validation on the canonical pool with no flagged/protocol-empty rows. Report exact statistics\n    and update docs with either a clean positive, clean null, or explicit block.\n\n    CONCRETE STEPS:\n    1. Re-run the protocol/schema linter on the canonical pool before scoring.\n    2. Score every eligible row and record n_scored. n_scored must be greater than zero and should match the\n       canonical pool count unless rows are excluded for documented reasons.\n    3. Compare against the agreed baseline using exact/binomial or paired tests appropriate to the existing\n       GAP-4 validation code. Avoid p-hacking or changing the decision rule after seeing results.\n    4. Run adversarial_verify on the artifact and exclude any flagged rows from headline metrics.\n    5. Update ops/verifier_gaps.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md if the GAP-4\n       status changes.\n\n    REQUIRED ARTIFACT FIELDS:\n      gap4_clean_validation_complete:\n        value: bool\n      n_scored:\n        value: int\n      wins:\n        value: int\n      losses:\n        value: int\n      ties:\n        value: int\n      exact_test_p_value:\n        value: float\n      exact_test_passes_min6_rule:\n        value: bool\n      effect_direction:\n        value: \"positive|null|negative|blocked\"\n      canonical_pool_path:\n        value: \"path\"\n      adversarial_verify_passed:\n        value: bool\n      inference_substrate:\n        value: deterministic_validation_over_canonical_pool\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state the clean GAP-4 validation decision.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5226-veribmc-local-solver-feedback-pilot-v478\n  milestone: 2026.07.478\n  title: \"PHASE 2 VerIbmc-style local solver feedback -- SOTA GGUF invariant/formalization pilot\"\n  priority: high\n  track: verification\n  deliverable: results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json\n  requires_gpu: true\n  prior_failures:\n  - experiment_id: exp2084-code-verification-live-gpu\n    verdict: OK (conductor)\n    addressed_by: \"This is not a broad HumanEval code-verification pipeline; it is a small VerIbmc-style invariant/formalization pilot with deterministic solver feedback and mandated local SOTA GGUF model specs.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp2079-llm-as-extractor\n    verdict: OK (conductor)\n    addressed_by: \"The prior LLM-as-extractor path did not center solver counterexample feedback; this task compares solver-only, LLM-only, and solver-feedback loops on a bounded set.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 90\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. The V478 SOTA scan added VerIbmc and VERGE as\n    directly actionable verifier-guided formalization ideas. Carnot should test the core pattern locally:\n    local SOTA GGUF proposes a small invariant/formal constraint, a deterministic solver checks it, and the\n    model receives structured counterexample feedback for a bounded retry.\n\n    EXISTING CODE TO READ FIRST:\n    - research-references.md V478 VerIbmc/VERGE entries.\n    - scripts/experiment_template.py, especially cached_sota_pair().\n    - Existing SMT/Z3/ESBMC/code-verification helpers in scripts/ and python/carnot/.\n    - openspec/capabilities/*/spec.md for verification/formalization capabilities.\n    - Relevant tests for SMT extraction, verifier registry, and code verification.\n\n    MODEL_SPECS:\n    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE).\n    - unsloth/gemma-4-31B-it-GGUF (flagship dense).\n    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).\n    Use scripts/experiment_template.py and cached_sota_pair(). Legacy small models are permitted only as\n    CPU smoke tests and cannot be used for the headline solver-feedback result.\n\n    TASK:\n    Build and run a bounded VerIbmc-style pilot: deterministic solver-only baseline, local SOTA LLM-only\n    proposal, and local SOTA LLM plus solver-feedback retry. The deliverable is the measured uplift or a\n    clean null, not a broad benchmark claim.\n\n    CONCRETE STEPS:\n    1. Choose a tiny existing verification set from repo artifacts or create a proper test fixture under\n       tests/python/ if needed. Do not create root scratch files.\n    2. Implement or wire a deterministic checker using existing Z3/SMT/ESBMC-compatible helpers where\n       available. If ESBMC is not installed, use Z3/SMT and record the substrate honestly.\n    3. Resolve at least one mandated local SOTA GGUF through cached_sota_pair() and record model paths.\n    4. Run three arms on the same examples: solver-only, LLM-only proposal, and LLM plus solver feedback.\n    5. Compare accepted invariant/formalization count, counterexample use, runtime, and failure modes.\n    6. Update docs only if the pilot changes verifier strategy.\n\n    REQUIRED ARTIFACT FIELDS:\n      solver_feedback_pilot_complete:\n        value: bool\n      n_examples:\n        value: int\n      solver_only_solved:\n        value: int\n      llm_only_solved:\n        value: int\n      llm_solver_feedback_solved:\n        value: int\n      solver_feedback_uplift:\n        value: float\n      accepted_invariants_or_constraints:\n        value: \"list or count\"\n      model_specs:\n        value: \"list including at least one mandated SOTA GGUF\"\n      models_used:\n        value: \"list of concrete model ids/paths\"\n      checker_substrate:\n        value: \"z3|smt|esbmc|other\"\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      inference_substrate:\n        value: local_sota_gguf_plus_deterministic_solver_feedback\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether solver feedback improved over baselines.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5227-continuous-self-learning-multihead-memory-v478\n  milestone: 2026.07.478\n  title: \"PHASE 2 Continuous Self-Learning -- typed multi-head verifier memory with promotion and rollback\"\n  priority: critical\n  track: self_learning\n  deliverable: results/experiment_5227_continuous_self_learning_multihead_memory_v478.json\n  prior_failures:\n  - experiment_id: exp5214-continuous-self-learning-verifier-memory-v477\n    verdict: \"complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim\"\n    addressed_by: \"The prior task wrote a shallow memory ledger; this task turns it into typed multi-head memory with retention, promotion, rollback, and consumer-ready APIs.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp1328-continuous-self-learning-memory-promotion-v2\n    verdict: OK (conductor)\n    addressed_by: \"This attempt is scoped to verifier/ARC typed memory informed by AutoMem/MHM/SkillCoach, not a generic memory-promotion rerun.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp2224-semantic-memory-pruning\n    verdict: OK (conductor)\n    addressed_by: \"This task avoids broad semantic-pruning claims and instead uses typed heads for constraint, provenance, failure, and skill memories with explicit rollback tests.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 60\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. research-program.md requires continuous self-learning.\n    exp5214 satisfied the previous milestone by writing memory entries, but the PRD wants a loop that can\n    change future verifier/agent behavior. V478 references AutoMem, Multi-Head Recurrent Memory Agents,\n    SkillCoach, AgenticSTS, and Denser Is Not Better. Keep this to verified memory operations; do not propose\n    broad self-distillation or model fine-tuning.\n\n    EXISTING CODE TO READ FIRST:\n    - research-program.md Continuous Self-Learning section.\n    - results/experiment_5214_continuous_self_learning_verifier_memory_v477.json.\n    - Existing memory/ledger modules under python/carnot/ and ops/.\n    - _bmad/prd.md FR-11 and FR-12.\n    - tests for memory, registry, verifier gaps, and traceability.\n\n    TASK:\n    Implement or upgrade typed multi-head verifier memory with promotion, rollback, retention checks, and\n    consumer-ready summaries for GAP-1, GAP-4, and ARC. This is the mandatory continuous self-learning task\n    for .478.\n\n    CONCRETE STEPS:\n    1. Define memory heads for constraints, provenance, failures, and skills/rubrics. Use a small schema\n       rather than an open-ended text blob.\n    2. Import exp5214 promotions/rollbacks and add .477 outcomes: GAP-1 positive-but-unpromoted, GAP-4\n       quarantined, hidden-state MMLU retired, ARC zero-level delta, hardware no-speedup.\n    3. Add promotion and rollback rules with tests: a promoted entry must cite artifact evidence; a rollback\n       must cite the artifact or exclusion reason that invalidated it.\n    4. Add a retention/nonforgetting check that proves older critical retirements are still returned when\n       relevant.\n    5. Provide a small API or data file that exp5228 can consume for ARC rubric setup.\n    6. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md if implementation changes.\n\n    REQUIRED ARTIFACT FIELDS:\n      continuous_self_learning_task:\n        value: true\n        principle: \"This field proves the milestone includes the required continuous self-learning experiment.\"\n      typed_memory_heads:\n        value: \"list of memory heads\"\n      memory_entries_written:\n        value: int\n      promotions:\n        value: int\n      rollbacks:\n        value: int\n      retention_check_passed:\n        value: bool\n      consumer_ready_path:\n        value: \"path\"\n      broad_self_distillation_used:\n        value: false\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      inference_substrate:\n        value: verified_typed_memory_no_model_training\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether typed memory is consumer-ready.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5228-arc-provenance-skill-rubric-gate-v478\n  milestone: 2026.07.478\n  title: \"PHASE 3 ARC live-path diagnosis -- provenance and SkillCoach-style rubric gate\"\n  priority: high\n  track: arc\n  deliverable: results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json\n  prior_failures:\n  - experiment_id: exp5216-arc-frontier-continuity-landmark-decomposition-v477\n    verdict: \"complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.\"\n    addressed_by: \"This task is not another frontier-continuity/landmark decomposition solve attempt; it diagnoses live-agent process failures with provenance and a rubric before any level-up patch runs.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp5215-arc-paw-amortization-gate-v477\n    verdict: complete_paw_amortization_gate_not_viable_no_arc_solve_claim\n    addressed_by: \"The new task does not use PAW amortization; it derives skill-selection/following/composition/reflection rubrics from live-path traces and typed memory.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 60\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. The ARC north star is live hidden-game self-discovery.\n    .477 banked zero new levels, and the architecture explicitly distinguishes offline development twin from\n    scored live E3AgentPolicy. This task must not solve a level by outer-loop source reading, offline BFS, or\n    a hand GameAdapter. Its job is to build a process rubric and gate for a later live-path patch.\n\n    EXISTING CODE TO READ FIRST:\n    - ops/north-star.md.\n    - _bmad/architecture.md ARC sections.\n    - ops/arc_solve_registry.yaml and scripts/arc_loop_solve.py.\n    - python/carnot/arc/ live-agent policy code, especially E3AgentPolicy and OfflineSolver boundaries.\n    - results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json.\n    - results/experiment_5227_continuous_self_learning_multihead_memory_v478.json and its consumer-ready path.\n    - research-references.md V478 AutoMem/MHM/SkillCoach/ProvenanceGuard entries.\n\n    TASK:\n    Build an ARC live-path provenance and process-rubric gate that can decide whether a specific live-agent\n    patch is worth attempting in exp5229. The rubric should score skill selection, skill following, skill\n    composition, reflection/retry quality, and provenance validity from live traces.\n\n    CONCRETE STEPS:\n    1. Precheck ops/arc_solve_registry.yaml. Do not propose re-solving a level already reproduced by the live\n       mechanism.\n    2. Identify a small set of existing live-path traces or generate new live traces without reading hidden\n       game source or running offline BFS.\n    3. Define rubric fields inspired by SkillCoach: process quality independent of final reward, plus\n       provenance fields that distinguish live_agent_self_discovery from development_proxy and outer_loop_re.\n    4. Use typed memory from exp5227 to ensure known retirements and .477 nulls are not forgotten.\n    5. Recommend at most one concrete live-agent patch for exp5229. If no credible patch exists, set\n       recommended_live_patch_available to false and explain why.\n\n    REQUIRED ARTIFACT FIELDS: arc_skill_rubric_usable, recommended_live_patch_available\n      arc_skill_rubric_usable:\n        value: bool\n        principle: \"BARE top-level boolean. True only if the rubric is grounded in live-path traces and has usable scoring fields.\"\n      recommended_live_patch_available:\n        value: bool\n        principle: \"BARE top-level boolean. True only if exp5229 has a concrete live-path patch to attempt.\"\n      recommended_patch_summary:\n        value: \"string or null\"\n      registry_precheck_done:\n        value: bool\n      duplicate_solve_target_avoided:\n        value: bool\n      provenance_fields:\n        value: \"list\"\n      rubric_path:\n        value: \"path\"\n      no_outer_loop_re_used:\n        value: bool\n      inference_substrate:\n        value: live_trace_process_rubric\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether a gated live patch is available.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5229-arc-gated-live-levelup-from-rubric-v478\n  milestone: 2026.07.478\n  title: \"PHASE 3 gated on exp5228 rubric and patch -- ARC live-agent level-up attempt\"\n  priority: high\n  track: arc\n  deliverable: results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json\n  requires_gpu: true\n  gated_on:\n  - upstream: exp5228-arc-provenance-skill-rubric-gate-v478\n    artifact_field: arc_skill_rubric_usable\n    op: \"==\"\n    value: true\n  - upstream: exp5228-arc-provenance-skill-rubric-gate-v478\n    artifact_field: recommended_live_patch_available\n    op: \"==\"\n    value: true\n  prior_failures:\n  - experiment_id: exp5216-arc-frontier-continuity-landmark-decomposition-v477\n    verdict: \"complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.\"\n    addressed_by: \"This task is gated on a process-rubric patch from exp5228 and does not repeat frontier continuity or landmark decomposition as the main mechanism.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp5215-arc-paw-amortization-gate-v477\n    verdict: complete_paw_amortization_gate_not_viable_no_arc_solve_claim\n    addressed_by: \"This task does not use PAW or episode compilation; it attempts only the live-agent patch recommended by the rubric gate.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 90\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. This task should run only if exp5228 produced a usable\n    ARC process rubric and a concrete recommended live-agent patch. The ARC deliverable is live\n    self-discovery from the agent's own attempts and runtime reverse engineering. Offline ground-truth BFS,\n    hidden source reading, and hand-built per-game adapters are not acceptable solve paths.\n\n    EXISTING CODE TO READ FIRST:\n    - results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json.\n    - ops/arc_solve_registry.yaml.\n    - ops/arc-live-agent-canonical-path.md if present.\n    - python/carnot/arc/ live E3AgentPolicy code and tests.\n    - scripts/arc_loop_solve.py and any live runner scripts used by prior ARC tasks.\n    - scripts/experiment_template.py, especially cached_sota_pair(), if the live patch invokes an LLM proposer.\n\n    MODEL_SPECS:\n    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE).\n    - unsloth/gemma-4-31B-it-GGUF (flagship dense).\n    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).\n    If the recommended live patch uses any LLM proposer, resolve at least one mandated local SOTA GGUF\n    through cached_sota_pair() and record model_specs/models_used. If the patch is deterministic and uses no\n    LLM, record models_used=[] and explain why no LLM was invoked.\n\n    TASK:\n    Apply the single live-agent patch recommended by exp5228, run a bounded live-path level-up attempt, and\n    bank a level only if it satisfies ARC live-path provenance and registry rules.\n\n    CONCRETE STEPS:\n    1. Precheck ops/arc_solve_registry.yaml and choose only a target not already reached by the live\n       mechanism. Do not duplicate a registered solve.\n    2. Apply the recommended patch narrowly. Do not add a broad new offline solver or source-specific adapter.\n    3. Run the live agent with bounded attempts and record traces, actions, verifier decisions, and rubric\n       scores.\n    4. If a level is solved, validate that solve_provenance is live_agent_self_discovery. If provenance is\n       development_proxy or outer_loop_re, do not headline or registry-bank it.\n    5. Update ops/arc_solve_registry.yaml only for a reproducible live-agent solve. Otherwise update docs with\n       the null and the next bottleneck.\n\n    REQUIRED ARTIFACT FIELDS:\n      solve_provenance:\n        value: \"live_agent_self_discovery|development_proxy|outer_loop_re\"\n        principle: \"ARC level solve claims must use live_agent_self_discovery. development_proxy and outer_loop_re are not headline deliverables.\"\n      registry_precheck_done:\n        value: bool\n      duplicate_solve_target_avoided:\n        value: bool\n      live_patch_applied:\n        value: bool\n      new_levels_banked:\n        value: \"list\"\n      reproducible_total_levels_delta:\n        value: int\n      live_agent_self_discovery_claimed:\n        value: bool\n      model_specs:\n        value: \"list including at least one mandated SOTA GGUF if an LLM proposer was used\"\n      models_used:\n        value: \"list of concrete model ids/paths or [] for deterministic no-LLM patch\"\n      no_outer_loop_re_used:\n        value: bool\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      inference_substrate:\n        value: arc_live_agent_self_discovery\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether any level was banked through live_agent_self_discovery.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5230-kan-milp-verifier-certificate-v478\n  milestone: 2026.07.478\n  title: \"PHASE 3 KAN certificate pilot -- small PWA/MILP verifier bound for energy module\"\n  priority: medium\n  track: verification\n  deliverable: results/experiment_5230_kan_milp_verifier_certificate_v478.json\n  prior_failures:\n  - experiment_id: exp2082-kan-milp-translation\n    verdict: OK (conductor)\n    addressed_by: \"This task is not another translation-only scaffold; it must produce or explicitly fail to produce a small certificate artifact tied to a Carnot energy/verifier module.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp2052-kan-z3-solver-integration\n    verdict: OK (conductor)\n    addressed_by: \"The prior integration showed solver wiring; this task focuses on certificate production, bound tightness, and doc alignment with Optimal KAN abstraction references.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 60\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. V478 references Optimal KAN abstractions and GRS-KAN.\n    Carnot already has prior KAN/PWA/MILP scaffolding, but the next useful step is a small certificate\n    tied to a real energy or verifier module, with clear limits.\n\n    EXISTING CODE TO READ FIRST:\n    - research-references.md V478 KAN entries.\n    - Existing KAN/KAEM/PWA/MILP modules under python/carnot/ and scripts/.\n    - results/experiment_2082_kan_milp.json and results/experiment_2052_kan_z3.json if present.\n    - openspec/capabilities/*/spec.md for energy/verifier requirements.\n    - tests covering KAN, KAEMEnergy, Z3, or MILP verification.\n\n    TASK:\n    Produce a small PWA/MILP certificate pilot for a Carnot KAN/KAEM-style energy or verifier module, or\n    explicitly block with the missing prerequisite. Do not claim broad KAN verification.\n\n    CONCRETE STEPS:\n    1. Select the smallest existing KAN/KAEM/verifier component that can be abstracted without inventing a\n       new research stack.\n    2. Reuse existing PWA/MILP/Z3 helpers where possible. Add only narrowly scoped code/tests.\n    3. Check one or two properties, such as bounded monotonicity, sign stability, or no unsafe decision\n       under a tiny input box.\n    4. Write a certificate artifact or a precise block reason with missing prerequisites.\n    5. Update ops/status.md, ops/changelog.md, _bmad/traceability.md, and specs only if implementation or\n       capability status changes.\n\n    REQUIRED ARTIFACT FIELDS:\n      kan_certificate_produced:\n        value: bool\n      certificate_path:\n        value: \"path or null\"\n      target_module:\n        value: \"path or name\"\n      properties_checked:\n        value: \"list\"\n      bound_tightness:\n        value: \"numeric summary or null\"\n      reused_existing_helpers:\n        value: bool\n      tests_run:\n        value: \"list of commands and pass/fail\"\n      inference_substrate:\n        value: deterministic_pwa_milp_certificate\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state whether a certificate was produced.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5231-hardware-continuity-pbit-boundary-v478\n  milestone: 2026.07.478\n  title: \"PHASE 3 hardware continuity -- KV260/PolarFire hashes and p-bit boundary plan without speedup claim\"\n  priority: high\n  track: hardware\n  deliverable: results/experiment_5231_hardware_continuity_pbit_boundary_v478.json\n  operator_override: \"CLAUDE.md hardware-continuity standing rule: recurring hardware reachability tasks are expected, but must avoid retired wrong-mechanism preconditions and speedup claims.\"\n  prior_failures:\n  - experiment_id: exp5217-hardware-continuity-v477\n    verdict: complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim\n    addressed_by: \"This is the next continuity check with the same no-speedup discipline plus a p-bit boundary-exchange design note; it does not pretend the GateMate physical/JTAG block is resolved.\"\n    retire_if_same_verdict: true\n  - experiment_id: exp1929-p-bit-ising-v3\n    verdict: OK (conductor)\n    addressed_by: \"This task does not re-run p-bit accounting; it writes a boundary-exchange timing-ratio plan informed by new p-bit/Ising literature and current board reachability.\"\n    retire_if_same_verdict: true\n  agent_type: claude\n  model: opus\n  max_turns: 100\n  estimated_wall_time_min: 90\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. Hardware remains a correctness/reachability track.\n    .477 confirmed KV260 and PolarFire reachability, and narrowed GateMate to a physical/JTAG block with\n    raw IDCODE 0xffffffff. V478 references one-million p-bit probabilistic computers, FPGA Ising\n    decomposition, and Extropic TSU/XTR-0 writing. Do not claim speedup.\n\n    EXISTING CODE TO READ FIRST:\n    - research-hardware-wishlist.md.\n    - results/experiment_5217_hardware_continuity_v477.json.\n    - hardware docs/scripts for KV260, PolarFire, GateMate, and p-bit samplers.\n    - research-references.md V478 hardware entries.\n    - CLAUDE.md hardware/GateMate/KV260 rules.\n\n    TASK:\n    Run bounded hardware continuity checks and write a p-bit boundary-exchange timing-ratio plan for future\n    sampler work. Do not modify scripts/research_conductor.py, do not use host /dev/mmcblk preconditions for\n    KV260, and do not claim a benchmark speedup.\n\n    CONCRETE STEPS:\n    1. KV260: use SSH-only reachability, e.g. ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'. Do not\n       inspect host /dev/mmcblk as a KV260 prerequisite.\n    2. PolarFire: run the existing reachability/hash smoke if available.\n    3. GateMate: only recheck IDCODE if the operator has changed cable/port/board setup; otherwise preserve\n       the physical/JTAG block and write the next physical action needed.\n    4. Write a short p-bit boundary-exchange timing-ratio plan that names the future workload, partitions,\n       hash/correctness checks, and what measurement would be needed before any speedup claim.\n    5. Update research-hardware-wishlist.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md only\n       with factual changes.\n\n    REQUIRED ARTIFACT FIELDS:\n      kv260_reachable:\n        value: bool\n      kv260_check_method:\n        value: \"ssh_only\"\n      polarfire_reachable:\n        value: bool\n      gatemate_status:\n        value: \"reachable|blocked_physical_jtag|not_checked\"\n      gatemate_idcode_raw:\n        value: \"string or null\"\n      pbit_boundary_plan_path:\n        value: \"path\"\n      speedup_claimed:\n        value: false\n        principle: \"No .478 hardware task may claim speedup without a real end-to-end workload.\"\n      hardware_docs_updated:\n        value: bool\n      inference_substrate:\n        value: hardware_reachability_and_sampler_boundary_plan\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state reachability plus no-speedup status.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n\n- id: exp5232-capstone-v478\n  milestone: 2026.07.478\n  title: \"PHASE 4 capstone -- reconcile .478 evidence, exclusions, specs, memory, and ops docs\"\n  priority: critical\n  track: planning\n  deliverable: results/experiment_5232_capstone_v478.json\n  operator_override: \"2026-05-29 operator directive: recurring milestone capstone tasks are expected and authorized when they summarize a new milestone's artifacts.\"\n  prior_failures:\n  - experiment_id: exp5219-capstone-v477\n    verdict: \"complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded.\"\n    addressed_by: \"This is the .478 capstone over a new artifact set; it must report registry/provenance/memory/ARC/hardware outcomes and exclude any flagged or gated artifacts.\"\n    retire_if_same_verdict: true\n  agent_type: codex\n  model: gpt-5.5\n  max_turns: 50\n  estimated_wall_time_min: 45\n  prompt: |\n    CONTEXT:\n    Repo at {project_root}, run on or after {date}. This is the .478 capstone. Do not make the milestone\n    sound better than the artifacts support. Flagged, blocked, or gated-out artifacts cannot become headline\n    claims.\n\n    EXISTING CODE TO READ FIRST:\n    - research-roadmap.yaml (the activated .478 plan).\n    - openspec/change-proposals/research-roadmap-vNEXT.md.\n    - ops/conductor-log.md entries for exp5220 through exp5231.\n    - results/experiment_5220_archive_477_activate_478.json through results/experiment_5231_hardware_continuity_pbit_boundary_v478.json.\n    - research-references.md V478 section.\n    - ops/status.md, ops/changelog.md, ops/verifier_gaps.md, ops/arc_solve_registry.yaml, ops/exclusion_manifest.yaml.\n    - _bmad/traceability.md and relevant openspec/capabilities/*/spec.md files.\n\n    TASK:\n    Reconcile the milestone: summarize what changed, what remains blocked, what must be retired or excluded,\n    and whether the continuous self-learning mandate was met.\n\n    CONCRETE STEPS:\n    1. Read every .478 result artifact directly. Do not infer success from task title.\n    2. Identify headline-eligible claims only when artifacts passed gates and adversarial checks.\n    3. Record GAP-1 status, GAP-4 status, VerIbmc solver-feedback status, typed-memory status, ARC status,\n       KAN certificate status, and hardware status.\n    4. Update openspec, _bmad/traceability.md, ops/status.md, ops/changelog.md, ops/verifier_gaps.md, and\n       research-references.md as needed.\n    5. Run relevant lint/spec-coverage/unit checks and record pass/fail honestly.\n    6. Confirm scripts/research_conductor.py was not modified.\n\n    REQUIRED ARTIFACT FIELDS:\n      gap1_final_status:\n        value: \"promoted|blocked|unchanged\"\n      gap4_final_status:\n        value: \"clean_positive|clean_null|blocked|unchanged\"\n      solver_feedback_status:\n        value: \"positive|null|blocked|not_run\"\n      continuous_self_learning_satisfied:\n        value: bool\n      arc_new_levels_banked:\n        value: \"list\"\n      arc_reproducible_total_levels_delta:\n        value: int\n      kan_certificate_status:\n        value: \"produced|blocked|not_run\"\n      hardware_status:\n        value: \"one-line summary\"\n      flagged_artifacts_excluded:\n        value: bool\n      docs_reconciled:\n        value: bool\n      validation_commands_run:\n        value: \"list of commands and pass/fail\"\n      research_conductor_py_untouched_confirmed:\n        value: bool\n      inference_substrate:\n        value: aggregation_from_milestone_artifacts\n      honest_verdict:\n        principle: \"Must start with complete:/complete_/success:/success_ and state the true .478 outcome without laundering flagged or gated artifacts.\"\n\n    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n",
++    "content_sha256": "sha256:e5f27834b31e85c65b5b160bc66015a6b677ac64f897c433ea34cf0b5c37ef71",
++    "milestone": "2026.07.478",
++    "path": "research-roadmap.yaml",
++    "task_count": 13,
++    "task_ids": [
++      "exp5220-archive-477-activate-478",
++      "exp5221-sota-ingestion-v478",
++      "exp5222-gap1-gate-field-and-registry-promotion-v478",
++      "exp5223-gap4-flagged-pool-authenticity-audit-v478",
++      "exp5224-gap4-canonical-pool-builder-v478",
++      "exp5225-gap4-clean-scale-validation-gated-v478",
++      "exp5226-veribmc-local-solver-feedback-pilot-v478",
++      "exp5227-continuous-self-learning-multihead-memory-v478",
++      "exp5228-arc-provenance-skill-rubric-gate-v478",
++      "exp5229-arc-gated-live-levelup-from-rubric-v478",
++      "exp5230-kan-milp-verifier-certificate-v478",
++      "exp5231-hardware-continuity-pbit-boundary-v478",
++      "exp5232-capstone-v478"
++    ]
++  },
++  "clean_handoff": true,
++  "duration_s": 7.0964,
++  "exclusion_manifest_confirmed_clean": {
++    "principle": "The activated .478 roadmap must pass the exclusion-manifest gate without hard retired-scope violations.",
++    "value": true
++  },
++  "experiment": "experiment_5220_archive_477_activate_478",
++  "experiment_id": "exp5220-archive-477-activate-478",
++  "failed_preconditions": [],
++  "field_principles": {
++    "exclusion_manifest_confirmed_clean": "The activated .478 roadmap must pass the exclusion-manifest gate without hard retired-scope violations.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and must state whether .478 was activated.",
++    "inference_substrate": "This archive reads upstream artifacts and activation checks only.",
++    "ops_docs_updated": "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid when the conductor stop rule defers ops reconciliation.",
++    "research_conductor_py_untouched_confirmed": "The transition must not modify scripts/research_conductor.py.",
++    "research_roadmap_yaml_activated": "Downstream conductor execution depends on `research-roadmap.yaml` naming `.478` and containing the Exp 5220 onward task set.",
++    "v477_summary": "Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads.",
++    "validation_commands_run": "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection."
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete:/complete_/success:/success_ and must state whether .478 was activated.",
++    "value": "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, self-learning memory written, ARC zero-delta, hardware reachability, and verifier-authenticity registry flags."
++  },
++  "inference_substrate": {
++    "principle": "This archive reads upstream artifacts and activation checks only.",
++    "value": "aggregation_from_upstream_artifacts"
++  },
++  "milestone": "2026.07.478",
++  "missing_artifacts": [],
++  "ops_docs_updated": {
++    "principle": "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid when the conductor stop rule defers ops reconciliation.",
++    "value": false
++  },
++  "random_seed": 5220,
++  "reproducibility_checksum": "sha256:62cb904dc9d8505a75f6f93def83ba4728a30ed694c12b989616d77524bb7872",
++  "research_conductor_py_untouched_confirmed": {
++    "principle": "The transition must not modify scripts/research_conductor.py.",
++    "value": true
++  },
++  "research_roadmap_yaml_activated": {
++    "principle": "Downstream conductor execution depends on `research-roadmap.yaml` naming `.478` and containing the Exp 5220 onward task set.",
++    "value": true
++  },
++  "result_path": "results/experiment_5220_archive_477_activate_478.json",
++  "roadmap_activation_check": {
++    "activated": true,
++    "activation_source": "research-roadmap.yaml_already_active",
++    "copied_research_roadmap_next": false,
++    "exists": true,
++    "milestone": "2026.07.478",
++    "missing_task_prefixes": [],
++    "parses": true,
++    "path": "research-roadmap.yaml",
++    "post_activation_content_sha256": "sha256:e5f27834b31e85c65b5b160bc66015a6b677ac64f897c433ea34cf0b5c37ef71",
++    "pre_activation_content_sha256": "sha256:e5f27834b31e85c65b5b160bc66015a6b677ac64f897c433ea34cf0b5c37ef71",
++    "pre_activation_milestone": "2026.07.478",
++    "roadmap_next_present": false,
++    "task_ids": [
++      "exp5220-archive-477-activate-478",
++      "exp5221-sota-ingestion-v478",
++      "exp5222-gap1-gate-field-and-registry-promotion-v478",
++      "exp5223-gap4-flagged-pool-authenticity-audit-v478",
++      "exp5224-gap4-canonical-pool-builder-v478",
++      "exp5225-gap4-clean-scale-validation-gated-v478",
++      "exp5226-veribmc-local-solver-feedback-pilot-v478",
++      "exp5227-continuous-self-learning-multihead-memory-v478",
++      "exp5228-arc-provenance-skill-rubric-gate-v478",
++      "exp5229-arc-gated-live-levelup-from-rubric-v478",
++      "exp5230-kan-milp-verifier-certificate-v478",
++      "exp5231-hardware-continuity-pbit-boundary-v478",
++      "exp5232-capstone-v478"
++    ]
++  },
++  "run_date": "20260704",
++  "schema": "carnot.experiment_5220_archive_477_activate_478.v1",
++  "source_artifacts": [
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5207,
++      "honest_verdict": "complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts.",
++      "loadable": true,
++      "relative_path": "results/experiment_5207_archive_476_activate_477.json",
++      "sha256": "sha256:ff4967c177def2e18ead12fe1103873ad3625223c4ca0009b7d67714c6cf4061",
++      "task_id": "exp5207-archive-476-activate-477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5208,
++      "honest_verdict": "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred.",
++      "loadable": true,
++      "relative_path": "results/experiment_5208_sota_ingestion_v477.json",
++      "sha256": "sha256:85bd2986baac59dc005609ad9dee1646780207fb9aaea0d1eb0d6068fa25d662",
++      "task_id": "exp5208-sota-ingestion-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5209,
++      "honest_verdict": "complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here",
++      "loadable": true,
++      "relative_path": "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
++      "sha256": "sha256:b1a6da69d8809dce9d43ed1fa0acdf7553f74fab8f6245ffa710630690a837ac",
++      "task_id": "exp5209-gap1-set-search-holdout-hardening-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5210,
++      "honest_verdict": "blocked_gate_check_failed",
++      "loadable": true,
++      "relative_path": "results/experiment_5210_gap1_registry_promotion_gated_v477.json",
++      "sha256": "sha256:2d7dc36393bf116250109d79569dff3bb44d0f3d99fcbe1897d0b821394a3fc7",
++      "task_id": "exp5210-gap1-registry-promotion-gated-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5211,
++      "honest_verdict": "complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212",
++      "loadable": true,
++      "relative_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
++      "sha256": "sha256:215696583c73c1522e16f80ea70cbebdd62180193b4419949b68e7674cf85bd6",
++      "task_id": "exp5211-gap4-sota-local-candidate-expansion-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5212,
++      "honest_verdict": "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked",
++      "loadable": true,
++      "relative_path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
++      "sha256": "sha256:a7e891099934edbbb823338eeb091e03ea80969c5662c6edd13d729ee423e3d8",
++      "task_id": "exp5212-gap4-scale-validation-gated-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5213,
++      "honest_verdict": "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025",
++      "loadable": true,
++      "relative_path": "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
++      "sha256": "sha256:ffe4793fd977544bc4c913f971b3c6381b7aee8d1dd6c21ad4a9a24188445727",
++      "task_id": "exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5214,
++      "honest_verdict": "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
++      "sha256": "sha256:36ac3f01739ec0e3970f6fc365fc8107c51a29c093ccd43757809f5283652e6f",
++      "task_id": "exp5214-continuous-self-learning-verifier-memory-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5215,
++      "honest_verdict": "complete_paw_amortization_gate_not_viable_no_arc_solve_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5215_arc_paw_amortization_gate_v477.json",
++      "sha256": "sha256:49431a8fb27809f470aecc0bc5de038a62b7a10428b030b780abea51b5f87981",
++      "task_id": "exp5215-arc-paw-amortization-gate-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5216,
++      "honest_verdict": "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.",
++      "loadable": true,
++      "relative_path": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
++      "sha256": "sha256:59746646bee387467cfc52410e7bdf9a8f8563c64835bc358e82389e3449263b",
++      "task_id": "exp5216-arc-frontier-continuity-landmark-decomposition-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5217,
++      "honest_verdict": "complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim",
++      "loadable": true,
++      "relative_path": "results/experiment_5217_hardware_continuity_v477.json",
++      "sha256": "sha256:a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9",
++      "task_id": "exp5217-hardware-continuity-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5218,
++      "honest_verdict": "complete: dishonest-naming risk reduced by registry flags; modules remain headline-ineligible until real verification",
++      "loadable": true,
++      "relative_path": "results/experiment_5218_verifier_authenticity_remediation_apply_v477.json",
++      "sha256": "sha256:b327d69ae9b3eaf6463df1e1cefe941afc318ecda35cac26694ad50a2e354202",
++      "task_id": "exp5218-verifier-authenticity-remediation-apply-v477"
++    },
++    {
++      "error": null,
++      "exists": true,
++      "experiment_number": 5219,
++      "honest_verdict": "complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded.",
++      "loadable": true,
++      "relative_path": "results/experiment_5219_capstone_v477.json",
++      "sha256": "sha256:99f23fa0a4c58a077f31a110aaaa4e80830c308dcea636f22ad6912e390270f5",
++      "task_id": "exp5219-capstone-v477"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5220",
++    "SCENARIO-REPORT-5220",
++    "SCENARIO-REPORT-5220-BLOCKED-PRECONDITION"
++  ],
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5220_archive_477_activate_478.py -q -o addopts='' -- PASS (7 passed)",
++    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5220_archive_477_activate_478.py' -m pytest tests/python/test_experiment_5220_archive_477_activate_478.py -q --no-cov -o addopts='' && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5220_archive_477_activate_478.py' --fail-under=100 -- PASS (100% coverage on new code)",
++    ".venv/bin/ruff check python/carnot/experiment_5220_archive_477_activate_478.py tests/python/test_experiment_5220_archive_477_activate_478.py -- PASS",
++    ".venv/bin/ruff format --check python/carnot/experiment_5220_archive_477_activate_478.py tests/python/test_experiment_5220_archive_477_activate_478.py -- PASS",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5220_archive_477_activate_478.py -- PASS",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml -- PASS",
++    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml -- PASS",
++    ".venv/bin/pytest tests/python -q -- FAIL/INTERRUPTED after 26:47 (170 failed, 22108 passed, 89 skipped, 1 error; worker crashes in Z3/JAX paths and KeyboardInterrupt after material failures)"
++  ],
++  "v477_summary": {
++    "principle": "Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads.",
++    "value": ".477 closed as a flagged-gate handoff milestone: exp5209 kept GAP-1 set-search positive with heldout pass@2 0.189584 versus always-on 0.088976 and single-refuted 0.147787, paired_delta_ci95=[0.023148, 0.060446], n_grouped_splits=20, and best_subset_stable=false; exp5210 did not promote to the registry because the conductor pre-gate compared expected bare true with a principle-wrapped gate object (1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening-v477.gap1_hardened_positive (actual={'principle': 'BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.', 'value': True} == expected=True)); exp5211 built a 120-row GAP-4 candidate pool but it was adversarially flagged (DURATION_TOO_SHORT/METHODOLOGY_MISSING/TAUTOLOGY) and cannot headline .478 without provenance repair; exp5212 scored n_scored=0 because 120 rows lacked missing_protocol_pass2_fields, recorded 0/0 discordant wins/losses, p=1, carried flags IMPLAUSIBLE_PERFECT/TAUTOLOGY, and did not cross the unchanged six-discordant-win floor; exp5213 retired the MMLU-Pro hidden-state path with best_probe_accuracy=0.075 versus tuned_sc=0.075, CLUE=0.025, RCS=0.025, retire_mmlu_hidden_state_path=true; exp5214 wrote continuous self-learning memory at results/verifier_memory_v477.json with 2 entries, one promotion and one rollback, and no registry claim; exp5215 found PAW not viable (paw_amortization_viable=false, break_even_remaining_actions=45.748641, median=29.500000, p75=43.750000) and made no ARC solve claim; exp5216 attempted live-path integration but banked zero reproduction-gated ARC levels with reproducible_total_levels_delta=0, new_levels_banked=0, solve_provenance=development_proxy; exp5217 kept hardware continuity with KV260=reachable (reachable + hash-verified smoke workload_hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32), PolarFire=reachable (reachable + hash-verified smoke workload_hash=9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967; polarfire_workload_validated=false (terminal bar is an end-to-end dispatch run)), GateMate=cable_or_port (blocked_gatemate_dirtyjtag_idcode_unresolved_v477), and no speedup claim; exp5218 verifier-authenticity registry flags applied via remediation_type=registry_flag, headline_ineligible_until_real_verification=true; exp5219 reconciled GAP-1 building, GAP-4 blocked, MMLU-Pro hidden-state path retired, continuous self-learning satisfied, ARC delta 0, and flagged artifacts excluded=true (complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded.)."
++  },
++  "validation_checks": [
++    {
++      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++      "command_label": "scripts/exclusion_manifest_lint.py",
++      "exit_code": 0,
++      "passed": true,
++      "stderr": "",
++      "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
++    },
++    {
++      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++      "command_label": "scripts/validate_prior_failures.py",
++      "exit_code": 0,
++      "passed": true,
++      "stderr": "",
++      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n"
++    }
++  ],
++  "validation_commands_run": {
++    "principle": "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection.",
++    "value": [
++      {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++        "command_label": "scripts/exclusion_manifest_lint.py",
++        "exit_code": 0,
++        "passed": true,
++        "stderr": "",
++        "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
++      },
++      {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++        "command_label": "scripts/validate_prior_failures.py",
++        "exit_code": 0,
++        "passed": true,
++        "stderr": "",
++        "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n"
++      }
++    ]
++  }
++}
+diff --git a/tests/python/test_experiment_5220_archive_477_activate_478.py b/tests/python/test_experiment_5220_archive_477_activate_478.py
+new file mode 100644
+index 0000000000..e9a30b89dd
+--- /dev/null
++++ b/tests/python/test_experiment_5220_archive_477_activate_478.py
+@@ -0,0 +1,648 @@
++"""Tests for Exp 5220 archive .477 / activate .478.
++
++Spec refs: REQ-REPORT-5220, SCENARIO-REPORT-5220,
++SCENARIO-REPORT-5220-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5220_archive_477_activate_478 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _roadmap(milestone: str, start: int, stop: int) -> str:
++    return yaml.safe_dump(
++        {
++            "milestone": milestone,
++            "milestone_title": f"fixture {milestone}",
++            "tasks": [
++                {
++                    "id": f"exp{idx}-fixture-v{milestone.split('.')[-1]}",
++                    "title": f"fixture task {idx}",
++                    "agent_type": "codex",
++                    "prompt": "fixture",
++                }
++                for idx in range(start, stop + 1)
++            ],
++        },
++        sort_keys=False,
++    )
++
++
++def _payloads() -> dict[int, dict[str, Any]]:
++    return {
++        5207: {
++            "experiment": "experiment_5207_archive_476_activate_477",
++            "honest_verdict": _wrap(
++                "complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts."
++            ),
++        },
++        5208: {
++            "experiment_id": "exp5208-sota-ingestion-v477",
++            "honest_verdict": _wrap(
++                "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
++            ),
++        },
++        5209: {
++            "experiment_id": 5209,
++            "honest_verdict": _wrap(
++                "complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here"
++            ),
++            "gap1_hardened_positive": _wrap(True),
++            "heldout_pass_at_2_mean": _wrap(0.189584),
++            "baseline_always_on_pass_at_2_mean": _wrap(0.088976),
++            "single_refuted_directional_pass_at_2_mean": _wrap(0.147787),
++            "delta_over_always_on": _wrap(0.100608),
++            "delta_over_single_refuted": _wrap(0.041797),
++            "paired_delta_ci95": _wrap("[0.023148, 0.060446]"),
++            "best_subset_stable": _wrap(False),
++            "leakage_audit_passed": _wrap(True),
++            "n_grouped_splits": _wrap(20),
++        },
++        5210: {
++            "experiment": 5210,
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening-v477.gap1_hardened_positive (actual={'principle': 'BARE top-level boolean', 'value': True} == expected=True)",
++            "gates_evaluated": [
++                {
++                    "artifact_field": "gap1_hardened_positive",
++                    "expected": True,
++                    "actual": {"principle": "BARE top-level boolean", "value": True},
++                    "passed": False,
++                }
++            ],
++        },
++        5211: {
++            "experiment_id": 5211,
++            "honest_verdict": "complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212",
++            "candidate_pool_n": 120,
++            "source_task_count": 180,
++            "accepted_rows": 120,
++            "gap4_expansion_usable": True,
++            "flagged_adversarial": True,
++            "leakage_audit_passed": True,
++            "corrigendum_pending": [
++                {"kind": "TAUTOLOGY", "severity": "critical"},
++                {"kind": "DURATION_TOO_SHORT", "severity": "critical"},
++                {"kind": "METHODOLOGY_MISSING", "severity": "warn"},
++            ],
++            "generation_errors": ["ValueError:Requested tokens exceed context window"],
++        },
++        5212: {
++            "experiment_id": 5212,
++            "honest_verdict": "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked",
++            "flagged_adversarial": True,
++            "failure_mode": "missing_protocol_pass2_fields",
++            "gap4_status_recommendation": _wrap("blocked"),
++            "exp5211_candidate_pool_n": 120,
++            "exp5211_gap4_expansion_usable": True,
++            "exact_test_discordant_wins": _wrap(0),
++            "exact_test_discordant_losses": _wrap(0),
++            "exact_test_passes_min6_rule": _wrap(False),
++            "n_scored": _wrap(0),
++            "exclusion_summary": {"missing_protocol_pass2_fields": 120},
++            "corrigendum_pending": [
++                {"kind": "TAUTOLOGY", "severity": "critical"},
++                {"kind": "IMPLAUSIBLE_PERFECT", "severity": "info"},
++            ],
++        },
++        5213: {
++            "experiment_id": 5213,
++            "honest_verdict": _wrap(
++                "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
++            ),
++            "best_probe_accuracy": _wrap(0.075),
++            "tuned_sc_accuracy": _wrap(0.075),
++            "self_certainty_accuracy": _wrap(0.075),
++            "clue_accuracy": _wrap(0.025),
++            "radial_consensus_score_accuracy": _wrap(0.025),
++            "beats_all_controls": _wrap(False),
++            "retire_mmlu_hidden_state_path": _wrap(True),
++        },
++        5214: {
++            "experiment_id": 5214,
++            "honest_verdict": _wrap(
++                "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim"
++            ),
++            "continuous_self_learning_task": _wrap(True),
++            "memory_artifact_path": _wrap("results/verifier_memory_v477.json"),
++            "memory_entries_written": _wrap(2),
++            "promotions": _wrap(1),
++            "rollbacks": _wrap(1),
++            "memory_summary": _wrap(
++                {
++                    "promoted_memory_ids": ["verifier-memory:fdd0d952dbf7f33e"],
++                    "rolled_back_memory_ids": ["verifier-memory:d7f9fad14ee64512"],
++                }
++            ),
++            "heldout_gate_required_for_promotion": _wrap(True),
++        },
++        5215: {
++            "experiment": "experiment_5215_arc_paw_amortization_gate_v477",
++            "honest_verdict": _wrap("complete_paw_amortization_gate_not_viable_no_arc_solve_claim"),
++            "paw_amortization_viable": _wrap(False),
++            "flagged_adversarial": True,
++            "level_solve_claimed": False,
++            "median_remaining_actions": _wrap(29.5),
++            "p75_remaining_actions": _wrap(43.75),
++            "compile_wall_clock_s": _wrap(236.068201),
++            "break_even_remaining_actions": _wrap(45.748641),
++            "arc_registry_modified": _wrap(False),
++        },
++        5216: {
++            "experiment_id": "exp5216-arc-frontier-continuity-landmark-decomposition-v477",
++            "honest_verdict": "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.",
++            "duplicate_registry_precheck_passed": True,
++            "live_path_integration_attempted": True,
++            "solve_provenance": "development_proxy",
++            "offline_ground_truth_bfs": False,
++            "read_game_source": False,
++            "new_levels_banked": [],
++            "reproducible_total_levels_delta": 0,
++            "frontier_continuity_lift": {"bp35": {"reproduced_level_delta": 0}},
++            "landmark_decomposition_lift": {"cd82": {"reproduced_level_delta": 0}},
++            "orphan_lint_result": "pass: OK: all solver-like ARC modules are reachable",
++        },
++        5217: {
++            "experiment_id": "exp5217-hardware-continuity-v477",
++            "honest_verdict": "complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim",
++            "kv260_status": "reachable + hash-verified smoke workload_hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32",
++            "polarfire_status": {
++                "summary": "reachable + hash-verified smoke workload_hash=9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967",
++                "reachable": True,
++            },
++            "gatemate_status": {
++                "status": "blocked_gatemate_dirtyjtag_idcode_unresolved_v477",
++                "narrowed_to": "cable_or_port",
++                "leading_untested_hypothesis": "physical_board",
++            },
++            "gatemate_diagnostic_narrowed_to": "cable_or_port",
++            "new_diagnostic_angles_tried_this_milestone": [
++                {"angle": "debug_level_raw_idcode_capture"}
++            ],
++            "hardware_speedup_claimed": False,
++        },
++        5218: {
++            "experiment_id": "exp5218-verifier-authenticity-remediation-apply-v477",
++            "honest_verdict": _wrap(
++                "complete: dishonest-naming risk reduced by registry flags; modules remain headline-ineligible until real verification"
++            ),
++            "remediation_applied": _wrap(True),
++            "remediated_modules": _wrap(
++                [
++                    "python/carnot/verify/and_composition_verifier.py",
++                    "python/carnot/verify/claim_isolation_uncertainty_router.py",
++                ]
++            ),
++            "remediation_type": _wrap("registry_flag"),
++            "headline_ineligible_until_real_verification": _wrap(True),
++            "no_research_conductor_change": _wrap(True),
++        },
++        5219: {
++            "experiment_id": "exp5219-capstone-v477",
++            "honest_verdict": "complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded.",
++            "gap1_final_status": _wrap("building"),
++            "gap4_final_status": _wrap("blocked"),
++            "hidden_state_path_decision": _wrap("retire_mmlu_path"),
++            "continuous_self_learning_satisfied": _wrap(True),
++            "new_levels_banked": _wrap([]),
++            "reproducible_total_levels_delta": _wrap(0),
++            "hardware_final_state": _wrap(
++                "KV260=reachable; PolarFire=reachable; GateMate=cable_or_port; no speedup claim"
++            ),
++            "flagged_adversarial_artifacts_excluded": _wrap(True),
++            "status_decisions": {
++                "gap1": "Exp5210 blocked before registry promotion; GAP-1 remains building",
++                "gap4": "Exp5211 expansion and Exp5212 validation artifacts are flagged",
++                "arc": "new_levels_banked=[], reproducible_total_levels_delta=0",
++                "authenticity": "Exp5218 remediation applied and headline-ineligible flags preserved",
++            },
++        },
++    }
++
++
++def _make_repo(
++    root: Path, *, active: bool = True, next_file: bool = False, omit: set[int] | None = None
++) -> Path:
++    omit = omit or set()
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / "research-roadmap.yaml").write_text(
++        _roadmap(
++            "2026.07.478" if active else "2026.07.477",
++            5220 if active else 5207,
++            5232 if active else 5219,
++        ),
++        encoding="utf-8",
++    )
++    if next_file:
++        (root / "research-roadmap-next.yaml").write_text(
++            _roadmap("2026.07.478", 5220, 5232), encoding="utf-8"
++        )
++    (root / "openspec/change-proposals" / "research-roadmap-vNEXT.md").write_text(
++        "# Research Roadmap vNEXT: 2026.07.478\n\nStatus: proposed for activation after milestone `2026.07.477`\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "conductor-log.md").write_text(
++        "| 2026-07-04 08:59 UTC | Milestone 2026.07.478 activated | OK | 13 tasks queued |\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "status.md").write_text("| status fixture |\n", encoding="utf-8")
++    (root / "ops" / "changelog.md").write_text("- changelog fixture\n", encoding="utf-8")
++    (root / "ops" / "exclusion_manifest.yaml").write_text("retired_extras: []\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor fixture\n", encoding="utf-8"
++    )
++    payloads = _payloads()
++    for source in mod.UPSTREAM_SOURCES:
++        if source.experiment_number not in omit:
++            _write_json(root / source.relative_path, payloads[source.experiment_number])
++    return root
++
++
++def _clean_validation_results() -> list[mod.CommandResult]:
++    return [
++        mod.CommandResult(
++            command=(
++                ".venv/bin/python",
++                "scripts/exclusion_manifest_lint.py",
++                "research-roadmap.yaml",
++            ),
++            exit_code=0,
++            stdout="Exclusion-manifest lint clean: research-roadmap.yaml",
++            stderr="",
++        ),
++        mod.CommandResult(
++            command=(
++                ".venv/bin/python",
++                "scripts/validate_prior_failures.py",
++                "research-roadmap.yaml",
++            ),
++            exit_code=0,
++            stdout="[OK] research-roadmap.yaml -- no schema errors, no prior_failures violations",
++            stderr="",
++        ),
++    ]
++
++
++def test_req_report_5220_spec_declares_archive_contract() -> None:
++    """REQ-REPORT-5220: OpenSpec anchors the .477 archive and .478 activation contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5220") : spec.index("REQ-REPORT-5208")]
++
++    for marker in (
++        "REQ-REPORT-5220",
++        "SCENARIO-REPORT-5220",
++        "SCENARIO-REPORT-5220-BLOCKED-PRECONDITION",
++        str(mod.RESULT_RELATIVE_PATH),
++        "v477_summary",
++        "validation_commands_run",
++        "aggregation_from_upstream_artifacts",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5220_already_active_preserves_precise_v477_truth(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5220: already-active .478 handoff records exact .477 facts."""
++
++    artifact = mod.build_artifact(
++        root=_make_repo(tmp_path, active=True),
++        run_date="20260704",
++        duration_s=1.25,
++        validation_results=_clean_validation_results(),
++        conductor_untouched=True,
++        tests_run=["focused"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["archived_milestone"] == "2026.07.477"
++    assert artifact["milestone"] == "2026.07.478"
++    assert artifact["research_roadmap_yaml_activated"]["value"] is True
++    assert (
++        artifact["roadmap_activation_check"]["activation_source"]
++        == "research-roadmap.yaml_already_active"
++    )
++    assert artifact["exclusion_manifest_confirmed_clean"]["value"] is True
++    assert artifact["ops_docs_updated"]["value"] is False
++    assert artifact["research_conductor_py_untouched_confirmed"]["value"] is True
++    assert artifact["inference_substrate"]["value"] == "aggregation_from_upstream_artifacts"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert ".478 activated" in artifact["honest_verdict"]["value"]
++
++    summary = artifact["v477_summary"]["value"]
++    for required in (
++        "exp5209",
++        "heldout pass@2 0.189584",
++        "best_subset_stable=false",
++        "exp5210",
++        "principle-wrapped",
++        "exp5211",
++        "120-row GAP-4 candidate pool",
++        "adversarially flagged",
++        "exp5212",
++        "n_scored=0",
++        "missing_protocol_pass2_fields",
++        "six-discordant-win",
++        "exp5214",
++        "one promotion and one rollback",
++        "results/verifier_memory_v477.json",
++        "exp5216",
++        "zero reproduction-gated ARC levels",
++        "exp5217",
++        "KV260=reachable",
++        "PolarFire=reachable",
++        "GateMate=cable_or_port",
++        "exp5219",
++        "GAP-1 building",
++        "GAP-4 blocked",
++        "flagged artifacts excluded",
++        "PAW not viable",
++        "verifier-authenticity registry flags applied",
++        "MMLU-Pro hidden-state path retired",
++    ):
++        assert required in summary
++
++    commands = artifact["validation_commands_run"]["value"]
++    assert [row["passed"] for row in commands] == [True, True]
++    assert "exclusion_manifest_lint.py" in commands[0]["command"]
++    assert "validate_prior_failures.py" in commands[1]["command"]
++    assert artifact["failed_preconditions"] == []
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_scenario_report_5220_copies_next_roadmap_exactly_when_present(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5220: activation copies research-roadmap-next.yaml exactly."""
++
++    root = _make_repo(tmp_path, active=False, next_file=True)
++    next_text = (root / "research-roadmap-next.yaml").read_text(encoding="utf-8")
++    artifact = mod.build_artifact(
++        root=root,
++        run_date="20260704",
++        duration_s=0.5,
++        validation_results=_clean_validation_results(),
++        conductor_untouched=True,
++        tests_run=["focused"],
++    )
++
++    assert (root / "research-roadmap.yaml").read_text(encoding="utf-8") == next_text
++    assert (
++        artifact["roadmap_activation_check"]["activation_source"]
++        == "copied_research-roadmap-next.yaml"
++    )
++    assert artifact["roadmap_activation_check"]["copied_research_roadmap_next"] is True
++    assert artifact["archived_research_roadmap_yaml"]["milestone"] == "2026.07.477"
++    assert artifact["archived_research_roadmap_yaml"]["task_count"] == 13
++    assert artifact["research_roadmap_yaml_activated"]["value"] is True
++
++
++def test_scenario_report_5220_blocked_preconditions_are_visible(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5220-BLOCKED-PRECONDITION: dirty inputs block clean claims."""
++
++    bad_validation = [
++        mod.CommandResult(
++            command=(
++                ".venv/bin/python",
++                "scripts/exclusion_manifest_lint.py",
++                "research-roadmap.yaml",
++            ),
++            exit_code=1,
++            stdout="HARD violation",
++            stderr="",
++        )
++    ]
++    artifact = mod.build_artifact(
++        root=_make_repo(tmp_path, active=True, omit={5219}),
++        run_date="20260704",
++        duration_s=0.75,
++        validation_results=bad_validation,
++        conductor_untouched=False,
++        tests_run=["focused"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["clean_handoff"] is False
++    assert artifact["honest_verdict"]["value"] == mod.BLOCKED_VERDICT
++    assert artifact["exclusion_manifest_confirmed_clean"]["value"] is False
++    assert artifact["research_conductor_py_untouched_confirmed"]["value"] is False
++    assert "missing_artifact_exp5219" in artifact["failed_preconditions"]
++    assert (
++        "validation_failed_scripts/exclusion_manifest_lint.py" in artifact["failed_preconditions"]
++    )
++    assert "scripts_research_conductor_py_modified" in artifact["failed_preconditions"]
++
++    with pytest.raises(ValueError, match="terminal"):
++        mod.validate_artifact(
++            artifact | {"honest_verdict": _wrap("done", mod.FIELD_PRINCIPLES["honest_verdict"])}
++        )
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "inference_substrate": _wrap(
++                    "live_llm_inference", mod.FIELD_PRINCIPLES["inference_substrate"]
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="tests_run"):
++        mod.validate_artifact(artifact | {"tests_run": []})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(artifact | {"reproducibility_checksum": "sha256:bad"})
++
++
++def test_req_report_5220_run_writes_valid_artifact(tmp_path: Path) -> None:
++    """REQ-REPORT-5220: run writes the terminal JSON artifact."""
++
++    root = _make_repo(tmp_path, active=True)
++    out = mod.run(
++        root=root,
++        run_date="20260704",
++        duration_s=0.25,
++        validation_results=_clean_validation_results(),
++        conductor_untouched=True,
++        tests_run=["focused"],
++    )
++
++    assert out == root / mod.RESULT_RELATIVE_PATH
++    saved = json.loads(out.read_text(encoding="utf-8"))
++    mod.validate_artifact(saved)
++    assert saved["tests_run"] == ["focused"]
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++
++
++def test_req_report_5220_helper_edges_and_default_validation_path(tmp_path: Path) -> None:
++    """REQ-REPORT-5220: helper edges keep blocked artifacts explicit instead of crashing."""
++
++    assert mod.value_of({"value": {"value": "nested"}}) == "nested"
++    assert mod._number(True) is None
++    assert mod._number("not-a-number") is None
++    assert mod._int("bad") == 0
++    assert mod._bool("true") is None
++    assert mod._list("not-list") == []
++    assert mod.file_sha256(tmp_path / "missing") is None
++    assert mod._roadmap_data("bad: [") == {}
++    assert mod._task_ids({"tasks": "not-list"}) == []
++    assert mod._command_label("") == "unknown_command"
++    assert mod._command_label("custom --flag") == "custom"
++    assert mod.exclusion_manifest_clean([]) is False
++    assert mod._fmt_float(None) == "unknown"
++    assert mod._fmt_p(None) == "unknown"
++    assert mod._status_summary({"summary": "reachable smoke"}, "", "", "") == "reachable smoke"
++    assert mod._status_summary({"status": "blocked_idcode"}, "", "", "") == "blocked_idcode"
++    assert mod._status_summary({"reachable": True}, "", "", "") == "reachable"
++    assert mod._status_summary("", "kv260:reachable", "kv260:reachable", "reachable") == "reachable"
++    assert (
++        mod._flag_kinds([{"kind": "TAUTOLOGY"}, {"kind": "DURATION_TOO_SHORT"}])
++        == "DURATION_TOO_SHORT/TAUTOLOGY"
++    )
++    assert mod._flag_kinds("not-list") == "none"
++
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
++    array_json = tmp_path / "array.json"
++    array_json.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(array_json)[1]["error"] == "not_json_object"
++
++    missing_root = tmp_path / "missing-root"
++    missing_root.mkdir()
++    assert mod.activate_roadmap(missing_root)["activated"] is False
++    assert mod.research_conductor_untouched(missing_root) is False
++    (missing_root / "scripts").mkdir()
++    (missing_root / "scripts" / "research_conductor.py").write_text("# fixture\n", encoding="utf-8")
++    assert mod.research_conductor_untouched(missing_root) is True
++    assert mod.research_conductor_untouched(Path.cwd()) is True
++
++    failures = mod._failed_preconditions(
++        missing_artifacts=["missing_artifact_exp5219"],
++        roadmap_activation={"activated": False},
++        validation=[],
++        conductor_clean=False,
++        vnext_present=False,
++    )
++    assert failures == [
++        "missing_artifact_exp5219",
++        "research_roadmap_yaml_not_active_for_478",
++        "validation_commands_missing",
++        "scripts_research_conductor_py_modified",
++        "research_roadmap_vnext_doc_missing",
++    ]
++
++    root = _make_repo(tmp_path / "default-run", active=True)
++    (root / "scripts" / "exclusion_manifest_lint.py").write_text(
++        "print('Exclusion-manifest lint clean: research-roadmap.yaml')\n",
++        encoding="utf-8",
++    )
++    (root / "scripts" / "validate_prior_failures.py").write_text(
++        "print('[OK] research-roadmap.yaml -- no schema errors, no prior_failures violations')\n",
++        encoding="utf-8",
++    )
++    artifact = mod.build_artifact(root=root)
++    assert artifact["clean_handoff"] is True
++    assert artifact["tests_run"] == mod.DEFAULT_TESTS_RUN
++    assert [row["passed"] for row in artifact["validation_checks"]] == [True, True]
++
++    blocked_summary = mod.build_v477_summary({5209: {"heldout_pass_at_2_mean": "bad"}, 5219: {}})
++    assert "heldout pass@2 unknown" in blocked_summary
++    assert "p=unknown" in blocked_summary
++
++
++def test_req_report_5220_validation_rejects_schema_and_type_errors(tmp_path: Path) -> None:
++    """REQ-REPORT-5220: artifact validation rejects schema drift and overclaims."""
++
++    artifact = mod.build_artifact(
++        root=_make_repo(tmp_path, active=True),
++        run_date="20260704",
++        duration_s=1.0,
++        validation_results=_clean_validation_results(),
++        conductor_untouched=True,
++        tests_run=["focused"],
++    )
++
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact({key: value for key, value in artifact.items() if key != "schema"})
++    with pytest.raises(ValueError, match="schema"):
++        mod.validate_artifact(artifact | {"schema": "wrong"})
++    with pytest.raises(ValueError, match="milestone"):
++        mod.validate_artifact(artifact | {"milestone": "2026.07.477"})
++    with pytest.raises(ValueError, match="field principle"):
++        mod.validate_artifact(
++            artifact
++            | {"field_principles": artifact["field_principles"] | {"honest_verdict": "wrong"}}
++        )
++    with pytest.raises(ValueError, match="principle-wrapped"):
++        mod.validate_artifact(artifact | {"v477_summary": "not-wrapped"})
++    with pytest.raises(ValueError, match="principle mismatch"):
++        mod.validate_artifact(artifact | {"v477_summary": _wrap("summary")})
++    with pytest.raises(ValueError, match="missing value"):
++        mod.validate_artifact(
++            artifact | {"v477_summary": {"principle": mod.FIELD_PRINCIPLES["v477_summary"]}}
++        )
++    with pytest.raises(ValueError, match="research_roadmap_yaml_activated"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "research_roadmap_yaml_activated": _wrap(
++                    "yes", mod.FIELD_PRINCIPLES["research_roadmap_yaml_activated"]
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="exclusion_manifest_confirmed_clean"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "exclusion_manifest_confirmed_clean": _wrap(
++                    "yes", mod.FIELD_PRINCIPLES["exclusion_manifest_confirmed_clean"]
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="ops_docs_updated"):
++        mod.validate_artifact(
++            artifact | {"ops_docs_updated": _wrap("no", mod.FIELD_PRINCIPLES["ops_docs_updated"])}
++        )
++    with pytest.raises(ValueError, match="research_conductor"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "research_conductor_py_untouched_confirmed": _wrap(
++                    "yes", mod.FIELD_PRINCIPLES["research_conductor_py_untouched_confirmed"]
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="validation_commands_run"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "validation_commands_run": _wrap(
++                    "not-list", mod.FIELD_PRINCIPLES["validation_commands_run"]
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="clean_handoff"):
++        mod.validate_artifact(artifact | {"failed_preconditions": ["x"]})
+-- 
+2.55.0
+

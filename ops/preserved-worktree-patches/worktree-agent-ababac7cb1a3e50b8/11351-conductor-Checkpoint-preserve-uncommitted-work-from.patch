@@ -1,0 +1,72 @@
+From cdb4a6c15fbd01a0999fba2fb00ace9a053ae6ef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 21:27:48 -0400
+Subject: [PATCH 11351/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                   |  2 +-
+ ops/conductor-log.md                           |  2 ++
+ ops/conductor-state.json                       |  2 +-
+ ...iment_7039_v617_model_report_forensics.json | 18 ++++++++++++++++--
+ 4 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fa0be551bc..987fd0d05a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-09-06T00:58:16Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-09-06T01:27:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9e840a07ba..fe2f680921 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17369,3 +17369,5 @@ code |
+ | 2026-09-05 23:54 UTC | Plan milestone 2026.09.617 | OK | 12 tasks proposed |
+ | 2026-09-05 23:57 UTC | Milestone 2026.09.617 activated | OK | 12 tasks queued |
+ | 2026-09-06 00:56 UTC | V617 active-roadmap and design-document contract p | OK | 104 passed, 1 warning in 12.69s |
++| 2026-09-06 01:25 UTC | Official-live llama.cpp model report-channel foren | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-09-06 01:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 745995 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a72f322ca9..50eeb38bae 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 24, "phase": "iteration_start", "started_at": "2026-09-06T00:58:16Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 25, "phase": "iteration_start", "started_at": "2026-09-06T01:27:39Z"}
+\ No newline at end of file
+diff --git a/results/experiment_7039_v617_model_report_forensics.json b/results/experiment_7039_v617_model_report_forensics.json
+index 104409299d..bb9cb05842 100644
+--- a/results/experiment_7039_v617_model_report_forensics.json
++++ b/results/experiment_7039_v617_model_report_forensics.json
+@@ -1038,5 +1038,19 @@
+     "tests/python/test_experiment_7039_v617_model_report_forensics.py": "sha256:845f80c04fa0b5003c2e9435c09c6736f1c534b4d4619e6aab9cb83a4869421d"
+   },
+   "verdict_class": "positive",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "853e8f674f123925bf7a063055176eb29932305235b459b945a23c2de9079841",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-06T01:25:39Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=46.968453163979575 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

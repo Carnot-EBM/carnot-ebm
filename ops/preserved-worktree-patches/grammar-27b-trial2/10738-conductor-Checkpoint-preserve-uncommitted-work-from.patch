@@ -1,0 +1,76 @@
+From 34fcd0fca81b3c225dd2437b0a93c0b3d20c28c5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 04:40:59 -0400
+Subject: [PATCH 10738/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...rvable_reliability_opportunity_stream.json | 23 +++++++++++++++++--
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ff7d3fa152..e5f94fae27 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 113, "phase": "iteration_start", "last_beat": "2026-09-02T08:02:01Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 114, "phase": "iteration_start", "last_beat": "2026-09-02T08:40:52Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 12dec3e555..72fcd92906 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17056,3 +17056,4 @@ The l |
+ | 2026-09-02 07:57 UTC | Calibration-only paired semantic rule | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-09-02 08:00 UTC | Sealed independent semantic compatibility audit | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp6869-calibration-onl |
+ | 2026-09-02 08:26 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 727762: ppid=1, non-service cgroup, port 8919 referenced by no live process, |
++| 2026-09-02 08:38 UTC | Observable reliability opportunity stream | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3ae4d5108b..ce72b6f5c2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 113, "phase": "iteration_start", "started_at": "2026-09-02T08:02:01Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 114, "phase": "iteration_start", "started_at": "2026-09-02T08:40:52Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6871_observable_reliability_opportunity_stream.json b/results/experiment_6871_observable_reliability_opportunity_stream.json
+index 85384ae9a0..a7c9078106 100644
+--- a/results/experiment_6871_observable_reliability_opportunity_stream.json
++++ b/results/experiment_6871_observable_reliability_opportunity_stream.json
+@@ -140169,5 +140169,24 @@
+     }
+   ],
+   "verdict_class": "positive",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-02T08:38:52Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=2.469508 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

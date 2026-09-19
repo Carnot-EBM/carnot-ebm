@@ -1,0 +1,3491 @@
+From 6298a979b850ebd1829e430b55bcf89d8ef093be Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 06:13:16 -0400
+Subject: [PATCH 01108/11362] =?UTF-8?q?[conductor]=20GAP-4=20conductor=5Ff?=
+ =?UTF-8?q?ollowup=20#2=20=E2=80=94=20PRE-REGISTERED=20PRECISION=20CONFIRM?=
+ =?UTF-8?q?ATION=20v2=20(re-run=20of=20the=20poison-skipped=20.369=20exp39?=
+ =?UTF-8?q?88;=20THE=20confirmatory=20experiment):=20k=3D3=20ALL-FRESH=20c?=
+ =?UTF-8?q?hains=20(no=20probe/stale=20arms),=20equal=20600s=20timeouts,?=
+ =?UTF-8?q?=20on=20NEW=20clean=20chain-feasible=20ARC-2=20tasks,=20protoco?=
+ =?UTF-8?q?l=20committed=20BEFORE=20any=20call.=20PRIMARY=20gate=20=3D=20b?=
+ =?UTF-8?q?inomial=20critical-value=20rule:=20n>=3D19=20agreement=20events?=
+ =?UTF-8?q?,=20reject=20H0=20p=3D0.52=20if=20>=3D14=20gold=20(size=200.046?=
+ =?UTF-8?q?,=20power=200.837=20at=20p=3D0.80).=20SECONDARY=20=3D=20precisi?=
+ =?UTF-8?q?on=20vs=20the=20in-run=20fresh-arm=20base=20rate=20(~0.73).=20T?=
+ =?UTF-8?q?ERTIARY=20(the=20GAP-5=20tripwire)=20=3D=20task-level=20unanimi?=
+ =?UTF-8?q?ty-with-abstention=20on=20sibling-input=20disagreement=20(post-?=
+ =?UTF-8?q?hoc=205/5=20gold=20last=20round;=20needs=20fresh=20confirmation?=
+ =?UTF-8?q?).=20One=20event=20per=20task=20where=20possible=20or=20pre-reg?=
+ =?UTF-8?q?istered=20cluster=20collapse.=20Honest=20verdict=20either=20way?=
+ =?UTF-8?q?;=20retire=5Fif=5Fsame=5Fverdict=20on=20the=20precision-uplift?=
+ =?UTF-8?q?=20claim=20(if=20the=20agreement=20signal=20AGAIN=20fails=20to?=
+ =?UTF-8?q?=20beat=200.52=20with=20power,=20the=20agreement-as-selector=20?=
+ =?UTF-8?q?claim=20is=20retired=20and=20agreement=20is=20logged=20as=20a?=
+ =?UTF-8?q?=20confidence-label-only=20signal).=20EXCLUDE=20the=20flagged?=
+ =?UTF-8?q?=20reuse=20tasks=20aa4ec2a5/16b78196=20from=20the=20clean=20set?=
+ =?UTF-8?q?.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3999-gap4-precision-confirmation-v2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  46 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         | 370 +++++-----
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   6 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  24 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   4 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ ...t_3999_gap4_precision_confirmation_v2.json |  78 ++
+ .../arm1/28a6681f_iter0.txt                   | 118 +++
+ .../arm1/2c181942_iter0.txt                   | 320 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |  17 +-
+ ...iment_833_constraint_delta_root_cause.json |   8 +-
+ ...ent_3999_gap4_precision_confirmation_v2.py | 677 ++++++++++++++++++
+ ...ent_3999_gap4_precision_confirmation_v2.py | 366 ++++++++++
+ 63 files changed, 1897 insertions(+), 323 deletions(-)
+ create mode 100644 results/experiment_3999_gap4_precision_confirmation_v2.json
+ create mode 100644 results/experiment_3999_gap4_precision_transcripts/arm1/28a6681f_iter0.txt
+ create mode 100644 results/experiment_3999_gap4_precision_transcripts/arm1/2c181942_iter0.txt
+ create mode 100644 scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py
+ create mode 100644 tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 7777f5dc27..25698e0aa2 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -11793,3 +11793,49 @@ that denominator with the selected-task fresh-chain denominator from
+ iter0-vs-chain-final decomposition, sets `leak_clean=true` only when every
+ archived transcript passes the word-boundary leak audit, and emits an
+ `honest_verdict` beginning with `complete:` regardless of the measured rate.
++
++### REQ-VERIFY-3999: GAP-4 Precision Confirmation v2
++
++The repository SHALL provide Exp 3999 at
++`scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py` to
++pre-register and run the GAP-4 k=3 all-fresh precision confirmation on new
++clean ARC-2 chain-feasible tasks. Before any Codex call, the runner SHALL
++verify that `codex` is available and that
++`results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON, select only
++tasks not used in `results/arc3_gap4_arc2_chain_ensemble.json`, exclude
++`aa4ec2a5` and `16b78196`, and write a preregistered artifact containing the
++committed task set, primary binomial gate (`n>=19`, `>=14` gold), secondary
++fresh-arm-base comparator, tertiary sibling-input unanimity-with-abstention
++tripwire, and `protocol_preregistered=true`.
++
++A blocked precondition SHALL write a terminal artifact with
++`honest_verdict=blocked_codex_unavailable` or
++`honest_verdict=blocked_eval_pool_unreadable`, zero Codex calls, and no
++fabricated agreement metrics.
++
++For a complete run, the runner SHALL run k=3 fresh Codex chains with equal
++timeouts, show the generator only ARC demo pairs and the test input, archive
++all transcripts, compute agreement events only when at least two
++demo-perfect fresh programs emit the same test output, score gold only
++post-hoc, compute the in-run fresh-arm base rate, compute the primary,
++secondary, and tertiary gates, and write
++`results/experiment_3999_gap4_precision_confirmation_v2.json` with bare
++top-level fields `protocol_preregistered`, `n_agreement_events`,
++`n_gold_given_agreement`, `primary_gate_passed`,
++`precision_vs_fresharm_base`, `sibling_disagreement_tripwire_gold_rate`,
++`agreement_is_selector_not_label`, `missing_verifier_gaps`,
++`total_codex_calls`, `total_codex_seconds`, `leak_clean`, `random_seed`,
++`honest_verdict`, `duration_s`, and `inference_substrate`.
++
++### SCENARIO-VERIFY-3999: Precision Confirmation Reports Selector Or Retirement
++
++Given the Codex CLI and ARC-2 pool are available, when Exp 3999 runs, then it
++writes the preregistered task set before invoking induction, runs three
++fresh chains per selected task, treats each majority-equal demo-perfect
++output as one agreement event, sets `primary_gate_passed=true` only when
++`n_agreement_events>=19` and `n_gold_given_agreement>=14`, sets
++`agreement_is_selector_not_label` to the same powered primary decision,
++reports `success: gap4_precision_confirmed_<gold>of<events>_gold` only for a
++passing primary gate, otherwise reports
++`complete: gap4_agreement_confidence_label_only_<gold>of<events>`, and records
++residual wrong-agreement cases in `missing_verifier_gaps`.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index a4a9466420..038c2d50bf 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -346,5 +346,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index aa351a0b9a..3f6561f9bb 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 161,
+   "code_violations": 0,
+-  "experiments_checked": 3032,
++  "experiments_checked": 3033,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 6b5e6dabb7..85e5a34ea9 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7842,5 +7842,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 5d7516484d..6438b525e3 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T07:08:07.501690+00:00",
+-  "finished_at": "2026-06-10T07:08:07.524774+00:00",
++  "started_at": "2026-06-10T09:44:05.332121+00:00",
++  "finished_at": "2026-06-10T09:44:05.355286+00:00",
+   "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 21f61ef22e..fc1e2f9a6c 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-10T07:08:07Z",
++  "run_date": "2026-06-10T09:44:05Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index bc13578d7e..1b046d6f39 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T07:08:08Z",
+-  "finished_at": "2026-06-10T07:08:08Z",
++  "started_at": "2026-06-10T09:44:06Z",
++  "finished_at": "2026-06-10T09:44:06Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 7c3592f092..bbf2b2798d 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-10T07:08:08Z",
++  "run_date": "2026-06-10T09:44:06Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index bb4baf03f3..6f8cb48998 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-10T07:08:08Z",
++  "run_date": "2026-06-10T09:44:06Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 984eefda17..4323046533 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-10T09:28:52.878559Z",
+-  "duration_s": 0.10743284225463867,
++  "run_date": "2026-06-10T09:42:42.109176Z",
++  "duration_s": 0.11879324913024902,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8011825488e4f783f46884d9e10ff6e215e16489de4c2efd1a66d7fe53133907",
++  "reproducibility_checksum": "c090021f433397e5d3b8d90a316d04c6bce29c10f186c28ccbc67a226cb8fc9e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ce79188f80a619c6d822d1f9e081353f1c9b486a"
++    "adversarial_verify_version": "dc4dd1032680ef29b3b691b048efbd15dee135e1"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 7fce911970..80323bcab0 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-10T05:15:22.107868Z",
+-  "duration_s": 26.26772975921631,
++  "run_date": "2026-06-10T09:44:28.074166Z",
++  "duration_s": 22.260257959365845,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 08290e6b63..039356e35c 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-10T05:15:41.282841+00:00",
+-  "duration_s": 0.0032172203063964844,
++  "run_date": "2026-06-10T09:44:45.933132+00:00",
++  "duration_s": 0.0020554065704345703,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3e29a64c84..1c9c0afac9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-10T09:28:53.085955Z",
+-  "duration_s": 0.09941482543945312,
++  "run_date": "2026-06-10T09:42:42.215231Z",
++  "duration_s": 0.07145452499389648,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "58c4c26e48d7f17c2c86382550a36790c101b47f97bf622a417f227dea08f45a",
++  "reproducibility_checksum": "713c4e58d3ade242ce986a9a7acc8b0c3ec0821b31c6ba5e9f153d99a1dc97b5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ce79188f80a619c6d822d1f9e081353f1c9b486a"
++    "adversarial_verify_version": "dc4dd1032680ef29b3b691b048efbd15dee135e1"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 3edafebb33..f854e29601 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -4,7 +4,7 @@
+  |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+  |  Distributed under an ISC-like license, type "license" to see terms        |
+  \----------------------------------------------------------------------------/
+- Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]
++ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ 
+ -- Parsing `rtl/potts_machine_v2.v' using frontend ` -vlog2k' --
+ 
+@@ -17,8 +17,8 @@ Successfully finished Verilog frontend.
+ 
+ 2. Executing SYNTH_XILINX pass.
+ 
+-2.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/cells_sim.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/cells_sim.v' to AST representation.
++2.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_sim.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_sim.v' to AST representation.
+ Generating RTLIL representation for module `\VCC'.
+ Generating RTLIL representation for module `\GND'.
+ Generating RTLIL representation for module `\IBUF'.
+@@ -120,8 +120,8 @@ Generating RTLIL representation for module `\RAMB18E1'.
+ Generating RTLIL representation for module `\RAMB36E1'.
+ Successfully finished Verilog frontend.
+ 
+-2.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/cells_xtra.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/cells_xtra.v' to AST representation.
++2.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_xtra.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_xtra.v' to AST representation.
+ Generating RTLIL representation for module `\RAMB4_S1'.
+ Generating RTLIL representation for module `\RAMB4_S2'.
+ Generating RTLIL representation for module `\RAMB4_S4'.
+@@ -512,40 +512,36 @@ Cleaned up 2 empty switches.
+ Optimizing module potts_machine_v2.
+ <suppressed ~5 debug messages>
+ 
+-2.6. Executing CHECK pass (checking for obvious problems).
+-Checking module potts_machine_v2...
+-Found and reported 0 problems.
++2.6. Executing FLATTEN pass (flatten design).
+ 
+-2.7. Executing FLATTEN pass (flatten design).
++2.7. Executing TRIBUF pass.
+ 
+-2.8. Executing TRIBUF pass.
++2.8. Executing DEMINOUT pass (demote inout ports to input or output).
+ 
+-2.9. Executing DEMINOUT pass (demote inout ports to input or output).
+-
+-2.10. Executing OPT_EXPR pass (perform const folding).
++2.9. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.11. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ Removed 3 unused cells and 11 unused wires.
+ <suppressed ~4 debug messages>
+ 
+-2.12. Executing CHECK pass (checking for obvious problems).
++2.11. Executing CHECK pass (checking for obvious problems).
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-2.13. Executing OPT pass (performing simple optimizations).
++2.12. Executing OPT pass (performing simple optimizations).
+ 
+-2.13.1. Executing OPT_EXPR pass (perform const folding).
++2.12.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.13.2. Executing OPT_MERGE pass (detect identical cells).
++2.12.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 9 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.12.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -553,57 +549,57 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~4 debug messages>
+ 
+-2.13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.12.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.13.5. Executing OPT_MERGE pass (detect identical cells).
++2.12.5. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 9 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.13.6. Executing OPT_DFF pass (perform DFF optimizations).
++2.12.6. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.12.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.13.8. Executing OPT_EXPR pass (perform const folding).
++2.12.8. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.13.9. Finished fast OPT passes. (There is nothing left to do.)
++2.12.9. Finished fast OPT passes. (There is nothing left to do.)
+ 
+-2.14. Executing FSM pass (extract and optimize FSM).
++2.13. Executing FSM pass (extract and optimize FSM).
+ 
+-2.14.1. Executing FSM_DETECT pass (finding FSMs in design).
++2.13.1. Executing FSM_DETECT pass (finding FSMs in design).
+ 
+-2.14.2. Executing FSM_EXTRACT pass (extracting FSM from design).
++2.13.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+ 
+-2.14.3. Executing FSM_OPT pass (simple optimizations of FSMs).
++2.13.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+ 
+-2.14.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.13.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.14.5. Executing FSM_OPT pass (simple optimizations of FSMs).
++2.13.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+ 
+-2.14.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
++2.13.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+ 
+-2.14.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
++2.13.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+ 
+-2.14.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
++2.13.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+ 
+-2.15. Executing OPT pass (performing simple optimizations).
++2.14. Executing OPT pass (performing simple optimizations).
+ 
+-2.15.1. Executing OPT_EXPR pass (perform const folding).
++2.14.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.15.2. Executing OPT_MERGE pass (detect identical cells).
++2.14.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 9 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -611,30 +607,30 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~4 debug messages>
+ 
+-2.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.15.5. Executing OPT_MERGE pass (detect identical cells).
++2.14.5. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 9 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.15.6. Executing OPT_DFF pass (perform DFF optimizations).
++2.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+ Adding EN signal on $procdff$1117 ($adff) from module potts_machine_v2 (D = $add$rtl/potts_machine_v2.v:50$1103_Y, Q = \step_ctr).
+ 
+-2.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ Removed 1 unused cells and 1 unused wires.
+ <suppressed ~2 debug messages>
+ 
+-2.15.8. Executing OPT_EXPR pass (perform const folding).
++2.14.8. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.15.9. Rerunning OPT passes. (Maybe there is more to do..)
++2.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+ 
+-2.15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -642,77 +638,77 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~2 debug messages>
+ 
+-2.15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.15.12. Executing OPT_MERGE pass (detect identical cells).
++2.14.12. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 8 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.15.13. Executing OPT_DFF pass (perform DFF optimizations).
++2.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.15.15. Executing OPT_EXPR pass (perform const folding).
++2.14.15. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.15.16. Finished fast OPT passes. (There is nothing left to do.)
++2.14.16. Finished fast OPT passes. (There is nothing left to do.)
+ 
+-2.16. Executing WREDUCE pass (reducing word size of cells).
++2.15. Executing WREDUCE pass (reducing word size of cells).
+ Removed top 7 bits (of 8) from port B of cell potts_machine_v2.$add$rtl/potts_machine_v2.v:50$1103 ($add).
+ 
+-2.17. Executing PEEPOPT pass (run peephole optimizers).
++2.16. Executing PEEPOPT pass (run peephole optimizers).
+ 
+-2.18. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.19. Executing PMUX2SHIFTX pass.
++2.18. Executing PMUX2SHIFTX pass.
+ 
+-2.20. Executing SORT pass.
++2.19. Executing SORT pass.
+ 
+-2.21. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
++2.20. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+ 
+-2.22. Executing TECHMAP pass (map to technology primitives).
++2.21. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.22.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/mul2dsp.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/mul2dsp.v' to AST representation.
++2.21.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/mul2dsp.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/mul2dsp.v' to AST representation.
+ Generating RTLIL representation for module `\_80_mul'.
+ Generating RTLIL representation for module `\_90_soft_mul'.
+ Successfully finished Verilog frontend.
+ 
+-2.22.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/xc7_dsp_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/xc7_dsp_map.v' to AST representation.
++2.21.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/xc7_dsp_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/xc7_dsp_map.v' to AST representation.
+ Generating RTLIL representation for module `$__MUL25X18'.
+ Successfully finished Verilog frontend.
+ 
+-2.22.3. Continuing TECHMAP pass.
++2.21.3. Continuing TECHMAP pass.
+ No more expansions possible.
+ <suppressed ~5 debug messages>
+ 
+-2.23. Executing OPT_EXPR pass (perform const folding).
++2.22. Executing OPT_EXPR pass (perform const folding).
+ 
+-2.24. Executing WREDUCE pass (reducing word size of cells).
++2.23. Executing WREDUCE pass (reducing word size of cells).
+ 
+-2.25. Executing XILINX_DSP pass (pack resources into DSPs).
++2.24. Executing XILINX_DSP pass (pack resources into DSPs).
+ 
+-2.26. Executing TECHMAP pass (map to technology primitives).
++2.25. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.26.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/cmp2lut.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/cmp2lut.v' to AST representation.
++2.25.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/cmp2lut.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/cmp2lut.v' to AST representation.
+ Generating RTLIL representation for module `\_90_lut_cmp_'.
+ Successfully finished Verilog frontend.
+ 
+-2.26.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/cmp2lcu.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/cmp2lcu.v' to AST representation.
++2.25.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/cmp2lcu.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/cmp2lcu.v' to AST representation.
+ Generating RTLIL representation for module `\_80_lcu_cmp_'.
+ Generating RTLIL representation for module `$__CMP2LCU'.
+ Successfully finished Verilog frontend.
+ 
+-2.26.3. Continuing TECHMAP pass.
++2.25.3. Continuing TECHMAP pass.
+ Using template $paramod$de9eb661e6eee7b880f5d9b83a9fb917fccaa3ea\_80_lcu_cmp_ for cells of type $lt.
+ Using template $paramod$cf90b866369198bde670e455171bc4a6ccc82456\_80_lcu_cmp_ for cells of type $gt.
+ Using template $paramod$d77dc0297f06d6a7135b58ab87b8d64621a87bf3$__CMP2LCU for cells of type $__CMP2LCU.
+@@ -728,28 +724,28 @@ Using template $paramod$450c268c12fc6efbfb4aeeb63d5fb4806d4fba29$__CMP2LCU for c
+ No more expansions possible.
+ <suppressed ~311 debug messages>
+ 
+-2.27. Executing ALUMACC pass (create $alu and $macc cells).
++2.26. Executing ALUMACC pass (create $alu and $macc cells).
+ Extracting $alu and $macc cells in module potts_machine_v2:
+   creating $macc model for $add$rtl/potts_machine_v2.v:50$1103 ($add).
+   creating $alu model for $macc $add$rtl/potts_machine_v2.v:50$1103.
+   creating $alu cell for $add$rtl/potts_machine_v2.v:50$1103: $auto$alumacc.cc:512:replace_alu$1182
+   created 1 $alu and 0 $macc cells.
+ 
+-2.28. Executing SHARE pass (SAT-based resource sharing).
++2.27. Executing SHARE pass (SAT-based resource sharing).
+ 
+-2.29. Executing OPT pass (performing simple optimizations).
++2.28. Executing OPT pass (performing simple optimizations).
+ 
+-2.29.1. Executing OPT_EXPR pass (perform const folding).
++2.28.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ <suppressed ~21 debug messages>
+ 
+-2.29.2. Executing OPT_MERGE pass (detect identical cells).
++2.28.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.29.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.28.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -757,29 +753,29 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~2 debug messages>
+ 
+-2.29.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.28.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.29.5. Executing OPT_MERGE pass (detect identical cells).
++2.28.5. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.29.6. Executing OPT_DFF pass (perform DFF optimizations).
++2.28.6. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.29.7. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.28.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ Removed 0 unused cells and 111 unused wires.
+ <suppressed ~1 debug messages>
+ 
+-2.29.8. Executing OPT_EXPR pass (perform const folding).
++2.28.8. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.29.9. Rerunning OPT passes. (Maybe there is more to do..)
++2.28.9. Rerunning OPT passes. (Maybe there is more to do..)
+ 
+-2.29.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.28.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -787,62 +783,62 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~2 debug messages>
+ 
+-2.29.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.28.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.29.12. Executing OPT_MERGE pass (detect identical cells).
++2.28.12. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.29.13. Executing OPT_DFF pass (perform DFF optimizations).
++2.28.13. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.29.14. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.28.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.29.15. Executing OPT_EXPR pass (perform const folding).
++2.28.15. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.29.16. Finished fast OPT passes. (There is nothing left to do.)
++2.28.16. Finished fast OPT passes. (There is nothing left to do.)
+ 
+-2.30. Executing MEMORY pass.
++2.29. Executing MEMORY pass.
+ 
+-2.30.1. Executing OPT_MEM pass (optimize memories).
++2.29.1. Executing OPT_MEM pass (optimize memories).
+ Performed a total of 0 transformations.
+ 
+-2.30.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
++2.29.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+ Performed a total of 0 transformations.
+ 
+-2.30.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
++2.29.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+ 
+-2.30.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
++2.29.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+ 
+-2.30.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
++2.29.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+ 
+-2.30.6. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.29.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.30.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
++2.29.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+ 
+-2.30.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
++2.29.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+ Performed a total of 0 transformations.
+ 
+-2.30.9. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.29.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.30.10. Executing MEMORY_COLLECT pass (generating $mem cells).
++2.29.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+ 
+-2.31. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.30. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.32. Executing MEMORY_LIBMAP pass (mapping memories to cells).
++2.31. Executing MEMORY_LIBMAP pass (mapping memories to cells).
+ 
+-2.33. Executing TECHMAP pass (map to technology primitives).
++2.32. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.33.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/lutrams_xc5v_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/lutrams_xc5v_map.v' to AST representation.
++2.32.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/lutrams_xc5v_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/lutrams_xc5v_map.v' to AST representation.
+ Generating RTLIL representation for module `$__XILINX_LUTRAM_SP_'.
+ Generating RTLIL representation for module `$__XILINX_LUTRAM_DP_'.
+ Generating RTLIL representation for module `$__XILINX_LUTRAM_QP_'.
+@@ -852,54 +848,54 @@ Generating RTLIL representation for module `$__XILINX_LUTRAM_64X8SW_'.
+ Generating RTLIL representation for module `$__XILINX_LUTRAM_32X16DR8_'.
+ Successfully finished Verilog frontend.
+ 
+-2.33.2. Continuing TECHMAP pass.
++2.32.2. Continuing TECHMAP pass.
+ No more expansions possible.
+ <suppressed ~9 debug messages>
+ 
+-2.34. Executing TECHMAP pass (map to technology primitives).
++2.33. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.34.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/brams_xc6v_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/brams_xc6v_map.v' to AST representation.
++2.33.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/brams_xc6v_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/brams_xc6v_map.v' to AST representation.
+ Generating RTLIL representation for module `$__XILINX_BLOCKRAM_TDP_'.
+ Generating RTLIL representation for module `$__XILINX_BLOCKRAM_SDP_'.
+ Successfully finished Verilog frontend.
+ 
+-2.34.2. Continuing TECHMAP pass.
++2.33.2. Continuing TECHMAP pass.
+ No more expansions possible.
+ <suppressed ~4 debug messages>
+ 
+-2.35. Executing OPT pass (performing simple optimizations).
++2.34. Executing OPT pass (performing simple optimizations).
+ 
+-2.35.1. Executing OPT_EXPR pass (perform const folding).
++2.34.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.35.2. Executing OPT_MERGE pass (detect identical cells).
++2.34.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.35.3. Executing OPT_DFF pass (perform DFF optimizations).
++2.34.3. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.35.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.34.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.35.5. Finished fast OPT passes.
++2.34.5. Finished fast OPT passes.
+ 
+-2.36. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
++2.35. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+ 
+-2.37. Executing OPT pass (performing simple optimizations).
++2.36. Executing OPT pass (performing simple optimizations).
+ 
+-2.37.1. Executing OPT_EXPR pass (perform const folding).
++2.36.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.37.2. Executing OPT_MERGE pass (detect identical cells).
++2.36.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.37.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
++2.36.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+ Running muxtree optimizer on module \potts_machine_v2..
+   Creating internal representation of mux trees.
+   Evaluating internal representation of mux trees.
+@@ -907,34 +903,34 @@ Running muxtree optimizer on module \potts_machine_v2..
+ Removed 0 multiplexer ports.
+ <suppressed ~2 debug messages>
+ 
+-2.37.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
++2.36.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+   Optimizing cells in module \potts_machine_v2.
+ Performed a total of 0 changes.
+ 
+-2.37.5. Executing OPT_MERGE pass (detect identical cells).
++2.36.5. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 34 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+ Removed a total of 0 cells.
+ 
+-2.37.6. Executing OPT_SHARE pass.
++2.36.6. Executing OPT_SHARE pass.
+ 
+-2.37.7. Executing OPT_DFF pass (perform DFF optimizations).
++2.36.7. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.37.8. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.36.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ 
+-2.37.9. Executing OPT_EXPR pass (perform const folding).
++2.36.9. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.37.10. Finished fast OPT passes. (There is nothing left to do.)
++2.36.10. Finished fast OPT passes. (There is nothing left to do.)
+ 
+-2.38. Executing XILINX_SRL pass (Xilinx shift register extraction).
++2.37. Executing XILINX_SRL pass (Xilinx shift register extraction).
+ 
+-2.39. Executing TECHMAP pass (map to technology primitives).
++2.38. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.39.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
++2.38.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/techmap.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/techmap.v' to AST representation.
+ Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+ Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+ Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+@@ -956,19 +952,20 @@ Generating RTLIL representation for module `$__div_mod_floor'.
+ Generating RTLIL representation for module `\_90_divfloor'.
+ Generating RTLIL representation for module `\_90_modfloor'.
+ Generating RTLIL representation for module `\_90_pow'.
++Generating RTLIL representation for module `\_90_pmux'.
+ Generating RTLIL representation for module `\_90_demux'.
+ Generating RTLIL representation for module `\_90_lut'.
+ Generating RTLIL representation for module `$connect'.
+ Generating RTLIL representation for module `$input_port'.
+ Successfully finished Verilog frontend.
+ 
+-2.39.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/arith_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/arith_map.v' to AST representation.
++2.38.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/arith_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/arith_map.v' to AST representation.
+ Generating RTLIL representation for module `\_80_xilinx_lcu'.
+ Generating RTLIL representation for module `\_80_xilinx_alu'.
+ Successfully finished Verilog frontend.
+ 
+-2.39.3. Continuing TECHMAP pass.
++2.38.3. Continuing TECHMAP pass.
+ Using template $paramod$2e6fa573ec247c71d1c073ac74c0c20475cdfbce\_80_xilinx_alu for cells of type $alu.
+ Using extmapper simplemap for cells of type $adffe.
+ Using extmapper simplemap for cells of type $not.
+@@ -983,13 +980,13 @@ Using extmapper simplemap for cells of type $xor.
+ No more expansions possible.
+ <suppressed ~260 debug messages>
+ 
+-2.40. Executing OPT pass (performing simple optimizations).
++2.39. Executing OPT pass (performing simple optimizations).
+ 
+-2.40.1. Executing OPT_EXPR pass (perform const folding).
++2.39.1. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ <suppressed ~30 debug messages>
+ 
+-2.40.2. Executing OPT_MERGE pass (detect identical cells).
++2.39.2. Executing OPT_MERGE pass (detect identical cells).
+ Finding identical cells in module `\potts_machine_v2'.
+ Computing hashes of 198 cells of `\potts_machine_v2'.
+ Finding duplicate cells in `\potts_machine_v2'.
+@@ -998,25 +995,25 @@ Finding duplicate cells in `\potts_machine_v2'.
+ <suppressed ~51 debug messages>
+ Removed a total of 17 cells.
+ 
+-2.40.3. Executing OPT_DFF pass (perform DFF optimizations).
++2.39.3. Executing OPT_DFF pass (perform DFF optimizations).
+ 
+-2.40.4. Executing OPT_CLEAN pass (remove unused cells and wires).
++2.39.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+ Finding unused cells or wires in module \potts_machine_v2..
+ Removed 2 unused cells and 46 unused wires.
+ <suppressed ~3 debug messages>
+ 
+-2.40.5. Finished fast OPT passes.
++2.39.5. Finished fast OPT passes.
+ 
+-2.41. Executing IOPADMAP pass (mapping inputs/outputs to IO-PAD cells).
++2.40. Executing IOPADMAP pass (mapping inputs/outputs to IO-PAD cells).
+ Mapping port potts_machine_v2.clk using IBUF.
+ Mapping port potts_machine_v2.ready using OBUF.
+ Mapping port potts_machine_v2.rst_n using IBUF.
+ Mapping port potts_machine_v2.spin_out using OBUF.
+ 
+-2.42. Executing TECHMAP pass (map to technology primitives).
++2.41. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.42.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
++2.41.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/techmap.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/techmap.v' to AST representation.
+ Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+ Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+ Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+@@ -1038,37 +1035,38 @@ Generating RTLIL representation for module `$__div_mod_floor'.
+ Generating RTLIL representation for module `\_90_divfloor'.
+ Generating RTLIL representation for module `\_90_modfloor'.
+ Generating RTLIL representation for module `\_90_pow'.
++Generating RTLIL representation for module `\_90_pmux'.
+ Generating RTLIL representation for module `\_90_demux'.
+ Generating RTLIL representation for module `\_90_lut'.
+ Generating RTLIL representation for module `$connect'.
+ Generating RTLIL representation for module `$input_port'.
+ Successfully finished Verilog frontend.
+ 
+-2.42.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/cells_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/cells_map.v' to AST representation.
++2.41.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v' to AST representation.
+ Generating RTLIL representation for module `$__SHREG_'.
+ Generating RTLIL representation for module `$__XILINX_SHREG_'.
+ Generating RTLIL representation for module `$__XILINX_MUXF78'.
+ Successfully finished Verilog frontend.
+ 
+-2.42.3. Continuing TECHMAP pass.
++2.41.3. Continuing TECHMAP pass.
+ No more expansions possible.
+ <suppressed ~80 debug messages>
+ Removed 0 unused cells and 1 unused wires.
+ 
+-2.43. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
++2.42. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+ 
+-2.44. Executing OPT_EXPR pass (perform const folding).
++2.43. Executing OPT_EXPR pass (perform const folding).
+ Optimizing module potts_machine_v2.
+ 
+-2.45. Executing ABC pass (technology mapping using ABC).
++2.44. Executing ABC pass (technology mapping using ABC).
+ 
+-2.45.1. Extracting gate netlist of module `\potts_machine_v2' to `<abc-temp-dir>/input.blif'..
++2.44.1. Extracting gate netlist of module `\potts_machine_v2' to `<abc-temp-dir>/input.blif'..
+ 
+-2.45.1.1. Executed ABC.
++2.44.1.1. Executed ABC.
+ Extracted 177 gates and 191 wires to a netlist network with 13 inputs and 141 outputs.
+ Running ABC script: <abc-temp-dir>/abc.script
+-ABC: UC Berkeley, ABC 1.01 (compiled Jun  8 2026 20:35:47)
++ABC: UC Berkeley, ABC 1.01 (compiled Apr 24 2026 04:14:48)
+ ABC: abc 01> empty
+ ABC: abc 01> source <abc-temp-dir>/abc.script
+ ABC: + read_blif <abc-temp-dir>/input.blif 
+@@ -1089,7 +1087,7 @@ ABC: + write_blif <abc-temp-dir>/output.blif
+ ABC: 
+ ABC: YOSYS_ABC_DONE 
+ 
+-2.45.1.2. Re-integrating ABC results.
++2.44.1.2. Re-integrating ABC results.
+ ABC RESULTS:              $lut cells:      141
+ ABC RESULTS:        internal signals:       37
+ ABC RESULTS:           input signals:       13
+@@ -1098,10 +1096,10 @@ Removing temp directory.
+ Removing global temp directory.
+ Removed 0 unused cells and 186 unused wires.
+ 
+-2.46. Executing TECHMAP pass (map to technology primitives).
++2.45. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.46.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/ff_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/ff_map.v' to AST representation.
++2.45.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/ff_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/ff_map.v' to AST representation.
+ Generating RTLIL representation for module `$_DFFE_NP0P_'.
+ Generating RTLIL representation for module `$_DFFE_PP0P_'.
+ Generating RTLIL representation for module `$_DFFE_NP1P_'.
+@@ -1120,28 +1118,28 @@ Generating RTLIL representation for module `$_DLATCH_NPP_'.
+ Generating RTLIL representation for module `$_DLATCH_PPP_'.
+ Successfully finished Verilog frontend.
+ 
+-2.46.2. Continuing TECHMAP pass.
++2.45.2. Continuing TECHMAP pass.
+ Using template $paramod$_DFFE_PP0P_\_TECHMAP_WIREINIT_Q_=1'x for cells of type $_DFFE_PP0P_.
+ No more expansions possible.
+ <suppressed ~165 debug messages>
+ 
+-2.47. Executing XILINX_SRL pass (Xilinx shift register extraction).
++2.46. Executing XILINX_SRL pass (Xilinx shift register extraction).
+ 
+-2.48. Executing TECHMAP pass (map to technology primitives).
++2.47. Executing TECHMAP pass (map to technology primitives).
+ 
+-2.48.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/lut_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/lut_map.v' to AST representation.
++2.47.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/lut_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/lut_map.v' to AST representation.
+ Generating RTLIL representation for module `$lut'.
+ Successfully finished Verilog frontend.
+ 
+-2.48.2. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/xilinx/cells_map.v
+-Parsing Verilog input from `/usr/bin/../share/yosys/xilinx/cells_map.v' to AST representation.
++2.47.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v
++Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v' to AST representation.
+ Generating RTLIL representation for module `$__SHREG_'.
+ Generating RTLIL representation for module `$__XILINX_SHREG_'.
+ Generating RTLIL representation for module `$__XILINX_MUXF78'.
+ Successfully finished Verilog frontend.
+ 
+-2.48.3. Continuing TECHMAP pass.
++2.47.3. Continuing TECHMAP pass.
+ Using template $paramod$lut\WIDTH=32'00000000000000000000000000000001\LUT=2'01 for cells of type $lut.
+ Using template $paramod$bea2a60a3047d5ddeaf57b1bb32ef334b3079a9e$lut for cells of type $lut.
+ Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01110000 for cells of type $lut.
+@@ -1158,33 +1156,33 @@ Using template $paramod$692927e279b3d5c42ee4aacb287247c0b34943ed$lut for cells o
+ No more expansions possible.
+ <suppressed ~328 debug messages>
+ 
+-2.49. Executing XILINX_DFFOPT pass (optimize FF control signal usage).
++2.48. Executing XILINX_DFFOPT pass (optimize FF control signal usage).
+ Optimizing FFs in potts_machine_v2.
+ 
+-2.50. Executing OPT_LUT_INS pass (discard unused LUT inputs).
++2.49. Executing OPT_LUT_INS pass (discard unused LUT inputs).
+ Optimizing LUTs in potts_machine_v2.
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2204.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2207.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2207.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2204.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2204.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
+-  Optimizing lut $abc$2202$auto$blifparse.cc:557:parse_blif$2207.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
+-
+-2.51. Executing CLKBUFMAP pass (inserting clock buffers).
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
++  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
++
++2.50. Executing CLKBUFMAP pass (inserting clock buffers).
+ Inserting BUFG on potts_machine_v2.$iopadmap$clk[0].
+ Removed 0 unused cells and 1128 unused wires.
+ 
+-2.52. Executing HIERARCHY pass (managing design hierarchy).
++2.51. Executing HIERARCHY pass (managing design hierarchy).
+ Attribute `top' found on module `potts_machine_v2'. Setting top module to potts_machine_v2.
+ 
+-2.52.1. Analyzing design hierarchy..
++2.51.1. Analyzing design hierarchy..
+ Top module:  \potts_machine_v2
+ 
+-2.52.2. Analyzing design hierarchy..
++2.51.2. Analyzing design hierarchy..
+ Top module:  \potts_machine_v2
+ Removed 0 unused modules.
+ 
+-2.53. Printing statistics.
++2.52. Printing statistics.
+ 
+ === potts_machine_v2 ===
+ 
+@@ -1243,10 +1241,10 @@ Removed 0 unused modules.
+ 
+    Estimated number of LCs:          4
+ 
+-2.54. Executing CHECK pass (checking for obvious problems).
++2.53. Executing CHECK pass (checking for obvious problems).
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: a99df40fee, time: 2.21s, user: 1.93s, system: 0.17s, MEM: 124.81 MB peak
+-Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]
+-Time spent: 73% 19x read_verilog (1 sec), 10% 1x synth_xilinx (0 sec), ...
++End of script. Logfile hash: 1855ef30ab, time: 3.29s, user: 3.03s, system: 0.17s, MEM: 115.98 MB peak
++Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
++Time spent: 84% 19x read_verilog (2 sec), 6% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index 79876af71c..b5eea2f6d0 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.071516036987305,
++    "latency_ms": 10.100364685058594,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0139059e6c..cd130a9f08 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.141237258911133,
++  "efficiency_gains_ms": 2.116680145263672,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 5f13077b50..81f4fd6bab 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-10T05:15:56.490578Z",
++  "run_date": "2026-06-10T09:45:03.194846Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index f708382ee4..d459cb19a5 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757112
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index e435efe9c2..da0b677e5b 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0001707200426608324,
+-  "latency_domino_seconds": 0.0003094010171480477,
++  "latency_legacy_seconds": 0.0001815810101106763,
++  "latency_domino_seconds": 0.00031408003997057676,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 874be5b494..cdcacdadf7 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T05:16:22Z",
+-  "finished_at": "2026-06-10T05:16:22Z",
++  "started_at": "2026-06-10T09:45:29Z",
++  "finished_at": "2026-06-10T09:45:29Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index 4773dec2be..62909e6391 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.0009908676147460938,
++  "execution_time_s": 0.0010273456573486328,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index bc357ba5bb..7f16fcaa5d 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,14 +3,5 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 86bb2ef821..7ddc88364e 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T05:17:02Z",
+-  "finished_at": "2026-06-10T05:17:03Z",
+-  "duration_s": 0.01,
++  "started_at": "2026-06-10T09:46:08Z",
++  "finished_at": "2026-06-10T09:46:09Z",
++  "duration_s": 0.009,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.09560585021972656,
++  "latency_ms": 0.11610984802246094,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index b19bf6bea5..ee1271cec4 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0009485244750976563,
+-  "avg_eqm_time": 0.08157390594482422,
++  "avg_pem_time": 0.0009235811233520508,
++  "avg_eqm_time": 0.07848239421844483,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index d7a1249a4d..a320a2ca50 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -5,7 +5,7 @@
+   "flip_flop_count": 0,
+   "synthesis_warnings": 0,
+   "synthesis_errors": 1,
+-  "yosys_version": "Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]",
++  "yosys_version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+   "rtl_files_synthesized": [
+     "ising_sampler_v1.v",
+     "ising_sampler_128_sparse.v",
+@@ -29,9 +29,9 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 329.17359495162964,
++  "duration_s": 301.80111265182495,
+   "preconditions_checked": [
+-    "yosys installed: Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]",
++    "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+   ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index f2df26873f..77e7f08604 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.019579172134399414,
++  "duration_s": 0.02009129524230957,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 6f6343737a..8ff88a0a77 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-10T05:20:05Z",
++  "run_date": "2026-06-10T09:48:55Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 921ee4ea28..3badd20145 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000426292419434,
++  "duration_s": 5.000097036361694,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 4c01626a3e..84ddff17e8 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000386238098145,
++  "duration_s": 10.00009799003601,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index cbf46d06c0..11b9573f79 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27015042304992676,
++  "duration_s": 0.2669074535369873,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 7008bad03e..4c30add41c 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.06737730902386829,
++  "duration_s": 0.061499951989389956,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 8146107802..3b2c5fef4c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -23,10 +23,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -35,8 +35,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,10 +45,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -57,8 +57,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 4afefd55c8..d8f6d4ebf6 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0010995864868164062,
++  "duration_s": 0.0009047985076904297,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 570524b635..9422d611fa 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.361300332471728e-05,
++  "duration_s": 2.9726012144237757e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index d664d47ccd..cd0f102e94 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.209585651755333e-07,
++  "duration_s": 1.0420335456728935e-06,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index f489fef4de..e84a443c60 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.029273986816406e-05,
++  "duration_s": 7.05718994140625e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index bd5855c73c..1fb2f574bc 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 23.41777539253235, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 16.79949927330017, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 656092f125..de35285613 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.009917273178696633,
++  "nonforgetting_metric_random": 0.010012520719319582,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 1c60d1dcc3..0b83e71040 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,8 +2,8 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T05:16:19Z",
+-  "finished_at": "2026-06-10T05:16:19Z",
++  "started_at": "2026-06-10T09:45:30Z",
++  "finished_at": "2026-06-10T09:45:30Z",
+   "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index f6ead9cc86..38a77d77ee 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 22.436820030212402, "autoregressive_time_to_solution": 336.55230045318604, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 19.376442432403564, "autoregressive_time_to_solution": 290.64663648605347, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index ebdea61b3f..789edffeae 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 7.239601109176874e-05,
++  "duration_s": 6.761698750779033e-05,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-10T05:17:11Z",
++  "generated_at": "2026-06-10T09:46:16Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 23703f4938..40a0fa7a43 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-10T05:17:11Z
++experiment_3420 started_at=2026-06-10T09:46:16Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 28fa16edf6..2a72f60e9b 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.05099756899289787,
++  "duration_s": 0.06481372000416741,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index 775be502dd..486b047106 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 5.626678466796875e-05
++  "duration_s": 4.3392181396484375e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index f3722266ac..0a3220b681 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,14 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.011847972869873047,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "duration_s": 0.011014699935913086
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index a1386b50f1..4bcb3d5c8f 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "38c4111bc59587b0428d830b7b2bcb707e3661d3e8c95eb3e5ee6c3dc9b301b2"
++    "c72bf85571cbd65396cc62e9963d24817d746f7698f0c202a1c03f9515465786"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00022172927856445312
++  "duration_s": 0.00023102760314941406
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 53a0934d07..41f3b1d20e 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.08498692512512207,
+-  "reproducibility_checksum": "d454eafbce32a855eb0b44b0042712c8"
++  "duration_s": 0.07861971855163574,
++  "reproducibility_checksum": "8446141cdde51cf3095c393b09c2e92e"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index f30673cd66..a796ba34e0 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.00032973289489746094
++  "duration_s": 0.00023317337036132812
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 7b82b96581..7bcd9e1d2f 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 2.0860345363616943,
+-  "reproducibility_checksum": "901e3008e0e89166259b3c1c44b04ab924730c5b07db4a9e35e88b3ea45ef0bd"
++  "duration_s": 1.9818439483642578,
++  "reproducibility_checksum": "aee8b93537c8b396b740d923d6b04b6e5943e5cf9ab86c97dd2fa0f017267c37"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index 78b83e044c..089f0f98eb 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-10",
+-  "started_at": "2026-06-10T02:52:38.738699+00:00",
+-  "finished_at": "2026-06-10T02:52:38.738699+00:00",
++  "started_at": "2026-06-10T09:59:03.333461+00:00",
++  "finished_at": "2026-06-10T09:59:03.333461+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000095367431641
++  "duration_s": 0.10000166893005372
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 84aeacfe2e..62c2edc933 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.007310390472412109,
+-  "reproducibility_checksum": "f7cc9007da38ea576a801dd51bd911da2b83ae7625ecd8bb6d17c387ab933647"
++  "duration_s": 0.008008718490600586,
++  "reproducibility_checksum": "5def6d02653c4f5a306e5a1103b724ffcfeecf59697042f5888d7719a619b4b3"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index 740a5f2687..f2d19df8c5 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.32
++  "duration_s": 0.3
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index 949347d89b..ea1c91d788 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.020505666732788086,
++  "duration_s": 0.021173715591430664,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "6dd3b51b54cecaa89f1544f31d103328be24016a86341d92cd005e9ef155a5cf"
++  "reproducibility_checksum": "35bb8ed662552c3c82576017a758fff6ef6f069d6b9ff4365e48706feace6a9c"
+ }
+diff --git a/results/experiment_3999_gap4_precision_confirmation_v2.json b/results/experiment_3999_gap4_precision_confirmation_v2.json
+new file mode 100644
+index 0000000000..dfa3c740a9
+--- /dev/null
++++ b/results/experiment_3999_gap4_precision_confirmation_v2.json
+@@ -0,0 +1,78 @@
++{
++  "agreement_is_selector_not_label": false,
++  "duration_s": 1.0,
++  "experiment": "experiment_3999_gap4_precision_confirmation_v2",
++  "field_principles": {
++    "agreement_is_selector_not_label": "BARE BOOL - true only when the powered primary selector gate passes.",
++    "duration_s": "Wall-clock seconds for this runner.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "inference_substrate": "Codex program induction substrate and post-hoc scoring mode.",
++    "leak_clean": "BARE BOOL - every archived transcript passed the leak audit.",
++    "missing_verifier_gaps": "Residual wrong-agreement cases for missing-verifier logging.",
++    "n_agreement_events": "BARE INT - agreement events observed; the binomial n.",
++    "n_gold_given_agreement": "BARE INT - gold agreement events; the binomial successes.",
++    "precision_vs_fresharm_base": "BARE FLOAT - agreement precision minus fresh-arm base rate.",
++    "primary_gate_passed": "BARE BOOL - n>=19 and gold>=14.",
++    "protocol_preregistered": "BARE BOOL - the gate + task set were committed before any codex call.",
++    "random_seed": "Shared GAP-4 substrate seed.",
++    "sibling_disagreement_tripwire_gold_rate": "BARE FLOAT - gold rate after unanimity/sibling-disagreement abstention.",
++    "total_codex_calls": "Total Codex induction calls recorded by fresh chains.",
++    "total_codex_seconds": "Total Codex wall seconds recorded by fresh chains."
++  },
++  "honest_verdict": "complete: protocol_preregistered_pending_execution",
++  "inference_substrate": "codex_program_induction_all_fresh_k3_posthoc_arc2_gold_scoring",
++  "leak_clean": false,
++  "missing_verifier_gaps": [],
++  "n_agreement_events": 0,
++  "n_gold_given_agreement": 0,
++  "precision_vs_fresharm_base": 0.0,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "resource": "codex"
++    },
++    {
++      "available": true,
++      "resource": "eval_pool"
++    }
++  ],
++  "preregistration": {
++    "committed_event_capacity_entries": 13,
++    "excluded_reuse_tasks": [
++      "aa4ec2a5",
++      "16b78196"
++    ],
++    "n_fresh_chains": 3,
++    "powered_target_reachable_from_committed_pool": false,
++    "primary_binomial_gate": {
++      "min_agreement_events": 19,
++      "min_gold_given_agreement": 14,
++      "null_precision": 0.52,
++      "size": 0.046
++    },
++    "registered_before_codex_call": true,
++    "secondary": "agreement precision minus in-run fresh-arm gold rate",
++    "selection_rule": "all tasks in the ARC-2 GAP-4 eval pool not used in the prior chain-ensemble round, excluding flagged reuse contamination",
++    "task_set": [
++      "21897d95",
++      "269e22fb",
++      "28a6681f",
++      "2c181942",
++      "3a25b0d8",
++      "3dc255db",
++      "a6f40cea",
++      "b9e38dc0",
++      "dd6b8c4b"
++    ],
++    "tertiary": "task-level unanimity-with-abstention sibling-input tripwire",
++    "timeout_s_per_chain": 600
++  },
++  "primary_gate_passed": false,
++  "protocol_preregistered": true,
++  "random_seed": 12345,
++  "schema": "carnot.experiment_3999_gap4_precision_confirmation_v2.v1",
++  "sibling_disagreement_tripwire_gold_rate": 0.0,
++  "title": "GAP-4 k=3 all-fresh agreement precision confirmation v2",
++  "total_codex_calls": 0,
++  "total_codex_seconds": 0.0
++}
+diff --git a/results/experiment_3999_gap4_precision_transcripts/arm1/28a6681f_iter0.txt b/results/experiment_3999_gap4_precision_transcripts/arm1/28a6681f_iter0.txt
+new file mode 100644
+index 0000000000..2ca184057f
+--- /dev/null
++++ b/results/experiment_3999_gap4_precision_transcripts/arm1/28a6681f_iter0.txt
+@@ -0,0 +1,118 @@
++===== PROMPT =====
++You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
++
++Demo 1 INPUT (10x10):
++[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
++ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
++ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
++ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
++Demo 1 OUTPUT (10x10):
++[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
++ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
++ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
++ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
++ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
++ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
++
++Demo 2 INPUT (10x10):
++[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
++ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
++ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
++ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
++ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
++ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
++ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
++ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
++ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
++Demo 2 OUTPUT (10x10):
++[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
++ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
++ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
++ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
++ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
++ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
++ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
++
++Demo 3 INPUT (10x10):
++[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
++ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
++ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
++ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
++ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
++ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
++ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
++ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
++ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
++ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
++Demo 3 OUTPUT (10x10):
++[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
++ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
++ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
++ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
++ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
++ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
++ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
++ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
++ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
++ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
++
++TEST INPUT (10x10):
++[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
++ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
++ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
++ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
++ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
++ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
++ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
++ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
++ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
++ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
++
++Write exactly one Python function:
++    def transform(grid):
++        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
++        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
++Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
++===== RAW OUTPUT =====
++```python
++def transform(grid):
++    g = np.array(grid, copy=True)
++    h, w = g.shape
++    fill = 1
++    count = int(np.sum(g == fill))
++
++    candidates = set(zip(*np.where(g == fill)))
++
++    for r in range(h):
++        nonzero_cols = [c for c in range(w) if g[r, c] != 0]
++        for a, b in zip(nonzero_cols, nonzero_cols[1:]):
++            left = g[r, a]
++            right = g[r, b]
++            if b > a + 1 and (left == right or left == fill or right == fill):
++                for c in range(a + 1, b):
++                    if g[r, c] == 0:
++                        candidates.add((r, c))
++
++    out = g.copy()
++    out[out == fill] = 0
++
++    for r, c in sorted(candidates, key=lambda p: (-p[0], p[1]))[:count]:
++        if out[r, c] == 0:
++            out[r, c] = fill
++
++    return out
++```
+diff --git a/results/experiment_3999_gap4_precision_transcripts/arm1/2c181942_iter0.txt b/results/experiment_3999_gap4_precision_transcripts/arm1/2c181942_iter0.txt
+new file mode 100644
+index 0000000000..e8d0ab02a6
+--- /dev/null
++++ b/results/experiment_3999_gap4_precision_transcripts/arm1/2c181942_iter0.txt
+@@ -0,0 +1,320 @@
++===== PROMPT =====
++You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
++
++Demo 1 INPUT (23x20):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 2, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 3, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 3, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8, 8, 8, 8],
++ [8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 3, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++Demo 1 OUTPUT (23x20):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 3, 3, 8, 8, 6, 6, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 3, 3, 3, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 3, 3, 3, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 3, 3, 8, 8, 1, 1, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++
++Demo 2 INPUT (18x21):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 8, 8, 3, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 1, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 1, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8],
++ [8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++Demo 2 OUTPUT (18x21):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 3, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 1, 1, 8, 8, 3, 3, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 1, 1, 1, 1, 8, 8, 2, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 1, 1, 1, 1, 8, 8, 2, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 1, 1, 8, 8, 4, 4, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++
++Demo 3 INPUT (20x25):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8],
++ [8, 8, 8, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8],
++ [8, 8, 2, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 7, 8, 8, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 8, 8, 8],
++ [8, 8, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++Demo 3 OUTPUT (20x25):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 1, 1, 8, 8, 7, 7, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 3, 3, 8, 8, 7, 7, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++
++TEST INPUT (24x26):
++[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 2, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 8, 8, 4, 8, 8],
++ [8, 8, 8, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
++ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
++
++Write exactly one Python function:
++    def transform(grid):
++        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
++        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
++Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
++===== RAW OUTPUT =====
++```python
++def transform(grid):
++    bg = int(np.bincount(grid.ravel()).argmax())
++    h, w = grid.shape
++
++    comp_id = -np.ones((h, w), dtype=int)
++    comps = []
++    cid = 0
++
++    for r in range(h):
++        for c in range(w):
++            if grid[r, c] == bg or comp_id[r, c] != -1:
++                continue
++            color = int(grid[r, c])
++            stack = [(r, c)]
++            comp_id[r, c] = cid
++            cells = []
++            while stack:
++                x, y = stack.pop()
++                cells.append((x, y))
++                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                    nx, ny = x + dx, y + dy
++                    if 0 <= nx < h and 0 <= ny < w and comp_id[nx, ny] == -1 and grid[nx, ny] == color:
++                        comp_id[nx, ny] = cid
++                        stack.append((nx, ny))
++            comps.append({"color": color, "cells": cells})
++            cid += 1
++
++    def same_two(cells):
++        ids = [comp_id[x, y] for x, y in cells]
++        if ids[0] < 0 or ids[0] != ids[1]:
++            return None
++        if len(comps[ids[0]]["cells"]) != 2:
++            return None
++        return ids[0]
++
++    anchor = None
++    for r in range(h - 3):
++        for c in range(w - 3):
++            top = same_two([(r, c + 1), (r, c + 2)])
++            left = same_two([(r + 1, c), (r + 2, c)])
++            right = same_two([(r + 1, c + 3), (r + 2, c + 3)])
++            bottom = same_two([(r + 3, c + 1), (r + 3, c + 2)])
++            ids = [top, left, right, bottom]
++            if None in ids or len(set(ids)) != 4:
++                continue
++            if all(grid[x, y] == bg for x, y in ((r + 1, c + 1), (r + 1, c + 2), (r + 2, c + 1), (r + 2, c + 2))):
++                anchor = {
++                    "top": top,
++                    "left": left,
++                    "right": right,
++                    "bottom": bottom,
++                    "r": r,
++                    "c": c,
++                }
++                break
++        if anchor is not None:
++            break
++
++    out = np.full_like(grid, bg)
++    if anchor is None:
++        return out
++
++    side_info = {
++        "top": ((anchor["r"], anchor["c"] + 1), (anchor["r"], anchor["c"] + 2)),
++        "left": ((anchor["r"] + 1, anchor["c"]), (anchor["r"] + 2, anchor["c"])),
++        "right": ((anchor["r"] + 1, anchor["c"] + 3), (anchor["r"] + 2, anchor["c"] + 3)),
++        "bottom": ((anchor["r"] + 3, anchor["c"] + 1), (anchor["r"] + 3, anchor["c"] + 2)),
++    }
++
++    for side, marker_id in anchor.items():
++        if side in ("r", "c"):
++            continue
++        color = comps[marker_id]["color"]
++        for x, y in comps[marker_id]["cells"]:
++            out[x, y] = color
++
++    def mask_for(comp):
++        cells = comp["cells"]
++        minr = min(x for x, _ in cells)
++        minc = min(y for _, y in cells)
++        maxr = max(x for x, _ in cells)
++        maxc = max(y for _, y in cells)
++        m = np.zeros((maxr - minr + 1, maxc - minc + 1), dtype=bool)
++        for x, y in cells:
++            m[x - minr, y - minc] = True
++        return m
++
++    def best_rotation(mask, side):
++        best = None
++        for k in range(4):
++            m = np.rot90(mask, k)
++            mh, mw = m.shape
++            if side == "top":
++                vals = np.where(m[-1, :])[0]
++                dim = mw
++            elif side == "bottom":
++                vals = np.where(m[0, :])[0]
++                dim = mw
++            elif side == "left":
++                vals = np.where(m[:, -1])[0]
++                dim = mh
++            else:
++                vals = np.where(m[:, 0])[0]
++                dim = mh
++
++            if len(vals) == 0:
++                score = (99, 99, 99, k)
++            else:
++                span = int(vals[-1] - vals[0] + 1)
++                center_err = abs(int(vals[0] + vals[-1]) - (dim - 1))
++                score = (abs(len(vals) - 2), span - len(vals), center_err, k)
++
++            if best is None or score < best[0]:
++                best = (score, m, vals)
++        return best[1], best[2]
++
++    for side in ("top", "left", "right", "bottom"):
++        marker_id = anchor[side]
++        color = comps[marker_id]["color"]
++        others = [i for i, comp in enumerate(comps) if i != marker_id and comp["color"] == color]
++        if not others:
++            continue
++
++        comp = max((comps[i] for i in others), key=lambda x: len(x["cells"]))
++        m = mask_for(comp)
++        m, vals = best_rotation(m, side)
++        mh, mw = m.shape
++
++        a, b = side_info[side]
++        if side in ("top", "bottom"):
++            marker_cols = sorted([a[1], b[1]])
++            if len(vals):
++                left_col = marker_cols[0] - int(vals[0])
++            else:
++                left_col = marker_cols[0]
++            top_row = a[0] - mh if side == "top" else a[0] + 1
++        else:
++            marker_rows = sorted([a[0], b[0]])
++            if len(vals):
++                top_row = marker_rows[0] - int(vals[0])
++            else:
++                top_row = marker_rows[0]
++            left_col = a[1] - mw if side == "left" else a[1] + 1
++
++        for rr in range(mh):
++            for cc in range(mw):
++                if m[rr, cc]:
++                    x, y = top_row + rr, left_col + cc
++                    if 0 <= x < h and 0 <= y < w:
++                        out[x, y] = color
++
++    return out
++```
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0032168fab..9a599ee074 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T09:28:27Z",
+-  "finished_at": "2026-06-10T09:28:27Z",
++  "started_at": "2026-06-10T09:56:58Z",
++  "finished_at": "2026-06-10T09:56:58Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f9e864a235..155ef338fb 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T09:28:27Z",
+-  "finished_at": "2026-06-10T09:28:27Z",
++  "started_at": "2026-06-10T09:56:58Z",
++  "finished_at": "2026-06-10T09:56:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0d81a9f632..a337d34b96 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T09:28:27Z",
+-  "finished_at": "2026-06-10T09:28:27Z",
++  "started_at": "2026-06-10T09:56:58Z",
++  "finished_at": "2026-06-10T09:56:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 9621852131..4d1ac413d3 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -2,9 +2,9 @@
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T02:59:05Z",
+-  "finished_at": "2026-06-10T02:59:05Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-10T10:00:06Z",
++  "finished_at": "2026-06-10T10:00:06Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -100,14 +100,5 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": [],
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "invariant_violations": []
+ }
+\ No newline at end of file
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index b5a3632709..5627a5b467 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+-  "run_date": "20260609",
+-  "started_at": "2026-06-09T20:54:00Z",
+-  "finished_at": "2026-06-09T20:54:01Z",
+-  "duration_s": 1.008,
++  "run_date": "20260610",
++  "started_at": "2026-06-10T09:55:04Z",
++  "finished_at": "2026-06-10T09:55:05Z",
++  "duration_s": 1.07,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py b/scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py
+new file mode 100644
+index 0000000000..f2c11fa6ca
+--- /dev/null
++++ b/scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py
+@@ -0,0 +1,677 @@
++"""Exp 3999 GAP-4 precision confirmation v2.
++
++This is the pre-registered follow-up to the k=3 chain-arms ARC-2 round. It
++uses only all-fresh Codex chains, commits the task set and gates to the output
++artifact before the first Codex call, then scores agreement precision post-hoc.
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import json
++import shutil
++import time
++from collections import Counter
++from concurrent.futures import ThreadPoolExecutor
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++
++from arc3_gap3_stage2_transition_ebm import SEED, ghash
++from arc3_gap4_rule_exec_verifier import demo_fit, induce_program, safe_transform_from_code
++from experiment_3998_gap4_deselection_coverage import (
++    audit_transcripts,
++    gold_for,
++    load_json,
++    transcript_paths,
++)
++
++
++REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
++ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
++CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
++OUTPUT = REPO_ROOT / "results" / "experiment_3999_gap4_precision_confirmation_v2.json"
++TRANSCRIPTS_DIR = REPO_ROOT / "results" / "experiment_3999_gap4_precision_transcripts"
++CHALLENGES = Path("/home/ianblenke/trm_src/kaggle/combined/arc-agi_evaluation2_challenges.json")
++SOLUTIONS = Path("/home/ianblenke/trm_src/kaggle/combined/arc-agi_evaluation2_solutions.json")
++INFERENCE_SUBSTRATE = "codex_program_induction_all_fresh_k3_posthoc_arc2_gold_scoring"
++EXCLUDED_REUSE_TASKS = ("aa4ec2a5", "16b78196")
++
++REQUIRED_FIELDS = [
++    "protocol_preregistered",
++    "n_agreement_events",
++    "n_gold_given_agreement",
++    "primary_gate_passed",
++    "precision_vs_fresharm_base",
++    "sibling_disagreement_tripwire_gold_rate",
++    "agreement_is_selector_not_label",
++    "missing_verifier_gaps",
++    "total_codex_calls",
++    "total_codex_seconds",
++    "leak_clean",
++    "random_seed",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "protocol_preregistered": (
++        "BARE BOOL - the gate + task set were committed before any codex call."
++    ),
++    "n_agreement_events": "BARE INT - agreement events observed; the binomial n.",
++    "n_gold_given_agreement": "BARE INT - gold agreement events; the binomial successes.",
++    "primary_gate_passed": "BARE BOOL - n>=19 and gold>=14.",
++    "precision_vs_fresharm_base": "BARE FLOAT - agreement precision minus fresh-arm base rate.",
++    "sibling_disagreement_tripwire_gold_rate": (
++        "BARE FLOAT - gold rate after unanimity/sibling-disagreement abstention."
++    ),
++    "agreement_is_selector_not_label": (
++        "BARE BOOL - true only when the powered primary selector gate passes."
++    ),
++    "missing_verifier_gaps": "Residual wrong-agreement cases for missing-verifier logging.",
++    "total_codex_calls": "Total Codex induction calls recorded by fresh chains.",
++    "total_codex_seconds": "Total Codex wall seconds recorded by fresh chains.",
++    "leak_clean": "BARE BOOL - every archived transcript passed the leak audit.",
++    "random_seed": "Shared GAP-4 substrate seed.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "duration_s": "Wall-clock seconds for this runner.",
++    "inference_substrate": "Codex program induction substrate and post-hoc scoring mode.",
++}
++
++
++def load_eval_pool(path: Path) -> dict[str, Any]:
++    with gzip.open(path, "rt", encoding="utf-8") as handle:
++        return json.load(handle)
++
++
++def selected_tasks_from_chain_artifact(artifact: dict[str, Any]) -> list[str]:
++    prereg = artifact.get("preregistration", {})
++    tasks = prereg.get("tasks")
++    if tasks:
++        return sorted(str(task) for task in tasks)
++    return sorted(str(row["task"]) for row in artifact.get("per_task", []))
++
++
++def clean_new_tasks(
++    entries: list[dict[str, Any]],
++    chain_artifact: dict[str, Any],
++    excluded: tuple[str, ...] = EXCLUDED_REUSE_TASKS,
++) -> list[str]:
++    selected = set(selected_tasks_from_chain_artifact(chain_artifact))
++    blocked = set(excluded)
++    return sorted(
++        {
++            str(entry["task"])
++            for entry in entries
++            if str(entry["task"]) not in selected and str(entry["task"]) not in blocked
++        }
++    )
++
++
++def primary_gate_passed(n_gold: int, n_events: int) -> bool:
++    return n_events >= 19 and n_gold >= 14
++
++
++def verdict_for(n_gold: int, n_events: int, primary_passed: bool) -> str:
++    if primary_passed:
++        return f"success: gap4_precision_confirmed_{n_gold}of{n_events}_gold"
++    return f"complete: gap4_agreement_confidence_label_only_{n_gold}of{n_events}"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def check_preconditions(
++    pool_path: Path,
++    codex_available_override: bool | None = None,
++) -> list[dict[str, Any]]:
++    codex_available = (
++        bool(codex_available_override)
++        if codex_available_override is not None
++        else shutil.which("codex") is not None
++    )
++    try:
++        load_eval_pool(pool_path)
++        pool_available = True
++    except Exception:
++        pool_available = False
++    return [
++        {"resource": "codex", "available": codex_available},
++        {"resource": "eval_pool", "available": pool_available},
++    ]
++
++
++def blocker_from_preconditions(preconditions: list[dict[str, Any]]) -> str | None:
++    by_resource = {row["resource"]: bool(row["available"]) for row in preconditions}
++    if not by_resource.get("codex", False):
++        return "blocked_codex_unavailable"
++    if not by_resource.get("eval_pool", False):
++        return "blocked_eval_pool_unreadable"
++    return None
++
++
++def _base_artifact(
++    honest_verdict: str,
++    duration_s: float,
++    protocol_preregistered: bool,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_3999_gap4_precision_confirmation_v2",
++        "schema": "carnot.experiment_3999_gap4_precision_confirmation_v2.v1",
++        "title": "GAP-4 k=3 all-fresh agreement precision confirmation v2",
++        "protocol_preregistered": protocol_preregistered,
++        "n_agreement_events": 0,
++        "n_gold_given_agreement": 0,
++        "primary_gate_passed": False,
++        "precision_vs_fresharm_base": 0.0,
++        "sibling_disagreement_tripwire_gold_rate": 0.0,
++        "agreement_is_selector_not_label": False,
++        "missing_verifier_gaps": [],
++        "total_codex_calls": 0,
++        "total_codex_seconds": 0.0,
++        "leak_clean": False,
++        "random_seed": SEED,
++        "honest_verdict": honest_verdict,
++        "duration_s": round(duration_s, 1),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++    }
++
++
++def blocked_artifact(
++    verdict: str,
++    preconditions: list[dict[str, Any]],
++    duration_s: float,
++) -> dict[str, Any]:
++    artifact = _base_artifact(verdict, duration_s, protocol_preregistered=False)
++    artifact["preconditions_checked"] = preconditions
++    validate_artifact(artifact)
++    return artifact
++
++
++def preregistered_artifact(
++    tasks: list[str],
++    entries_by_task: dict[str, list[dict[str, Any]]],
++    preconditions: list[dict[str, Any]],
++    started_s: float,
++    n_fresh: int,
++    timeout: int,
++) -> dict[str, Any]:
++    n_entries = sum(len(entries_by_task[task]) for task in tasks)
++    artifact = _base_artifact(
++        "complete: protocol_preregistered_pending_execution",
++        time.time() - started_s,
++        protocol_preregistered=True,
++    )
++    artifact.update(
++        {
++            "preregistration": {
++                "registered_before_codex_call": True,
++                "task_set": tasks,
++                "excluded_reuse_tasks": list(EXCLUDED_REUSE_TASKS),
++                "selection_rule": (
++                    "all tasks in the ARC-2 GAP-4 eval pool not used in the prior "
++                    "chain-ensemble round, excluding flagged reuse contamination"
++                ),
++                "primary_binomial_gate": {
++                    "min_agreement_events": 19,
++                    "min_gold_given_agreement": 14,
++                    "null_precision": 0.52,
++                    "size": 0.046,
++                },
++                "secondary": "agreement precision minus in-run fresh-arm gold rate",
++                "tertiary": "task-level unanimity-with-abstention sibling-input tripwire",
++                "n_fresh_chains": n_fresh,
++                "timeout_s_per_chain": timeout,
++                "committed_event_capacity_entries": n_entries,
++                "powered_target_reachable_from_committed_pool": n_entries >= 19,
++            },
++            "preconditions_checked": preconditions,
++        }
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def _group_entries_by_task(entries: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
++    grouped: dict[str, list[dict[str, Any]]] = {}
++    for entry in entries:
++        grouped.setdefault(str(entry["task"]), []).append(entry)
++    return grouped
++
++
++def _grid_hash(grid: Any) -> str:
++    return ghash(np.asarray(grid, dtype=np.int64))
++
++
++def _score_grid(pred_grid: Any, target: np.ndarray | None) -> bool:
++    return target is not None and pred_grid is not None and np.array_equal(
++        np.asarray(pred_grid, dtype=np.int64), target
++    )
++
++
++def _gold_from_entry_candidates(entry: dict[str, Any]) -> np.ndarray | None:
++    for candidate in entry.get("candidates", []):
++        if candidate.get("correct") is True and "grid" in candidate:
++            return np.asarray(candidate["grid"], dtype=np.int64)
++    return None
++
++
++def gold_for_entry(
++    entry: dict[str, Any],
++    challenges: dict[str, Any],
++    solutions: dict[str, Any],
++) -> np.ndarray | None:
++    task = str(entry["task"])
++    target = gold_for(task, entry["test_input"], challenges, solutions)
++    if target is not None:
++        return target
++    return _gold_from_entry_candidates(entry)
++
++
++def _history_iter0_demo_perfect(history: list[dict[str, Any]]) -> bool:
++    for row in history:
++        if int(row.get("iter", -1)) == 0 and row.get("status") == "graded":
++            return float(row.get("demo_fit", 0.0)) >= 1.0
++    return False
++
++
++def _chain_task(
++    task: str,
++    entries: list[dict[str, Any]],
++    transcripts_dir: Path,
++    n_fresh: int,
++    iters: int,
++    timeout: int,
++) -> dict[str, Any]:
++    arms = []
++    demos = entries[0]["demos"]
++    for arm_idx in range(1, n_fresh + 1):
++        arm_name = f"fresh_chain{arm_idx}"
++        arm_dir = transcripts_dir / f"arm{arm_idx}"
++        arm_dir.mkdir(parents=True, exist_ok=True)
++        rec = induce_program(
++            task,
++            demos,
++            entries[0]["test_input"],
++            iters=iters,
++            timeout=timeout,
++            transcripts_dir=str(arm_dir),
++        )
++        fn = safe_transform_from_code(rec["code"]) if rec.get("code") else None
++        demo_score = demo_fit(fn, demos) if fn else 0.0
++        demo_perfect = bool(fn and demo_score >= 1.0)
++        predictions = []
++        for input_idx, entry in enumerate(entries):
++            pred = fn(entry["test_input"]) if demo_perfect else None
++            predictions.append(
++                {
++                    "input_idx": input_idx,
++                    "pred_hash": _grid_hash(pred) if pred is not None else None,
++                    "pred_grid": pred.tolist() if pred is not None else None,
++                }
++            )
++        arms.append(
++            {
++                "source": arm_name,
++                "code": rec.get("code"),
++                "demo_fit": round(demo_score, 4),
++                "demo_perfect": demo_perfect,
++                "n_calls": int(rec.get("n_calls", 0)),
++                "codex_seconds": round(float(rec.get("codex_seconds", 0.0)), 1),
++                "history": rec.get("history", []),
++                "iter0_demo_perfect": _history_iter0_demo_perfect(rec.get("history", [])),
++                "predictions": predictions,
++            }
++        )
++    return {
++        "task": task,
++        "arms": arms,
++        "n_calls": sum(arm["n_calls"] for arm in arms),
++        "codex_seconds": round(sum(float(arm["codex_seconds"]) for arm in arms), 1),
++    }
++
++
++def _agreement_for_input(
++    task: str,
++    input_idx: int,
++    arms: list[dict[str, Any]],
++    target: np.ndarray | None,
++) -> dict[str, Any]:
++    outputs = []
++    for arm in arms:
++        if not arm.get("demo_perfect"):
++            continue
++        pred = arm["predictions"][input_idx]
++        if pred.get("pred_hash") is None:
++            continue
++        outputs.append((str(pred["pred_hash"]), pred["pred_grid"], str(arm["source"])))
++    counts = Counter(row[0] for row in outputs)
++    agreed_hash = None
++    n_matching = 0
++    if counts:
++        agreed_hash, n_matching = counts.most_common(1)[0]
++    agreement = bool(agreed_hash is not None and n_matching >= 2)
++    agreed_pred = None
++    agreeing_sources: list[str] = []
++    if agreement:
++        for pred_hash, pred_grid, source in outputs:
++            if pred_hash == agreed_hash:
++                agreed_pred = pred_grid
++                agreeing_sources.append(source)
++    n_outputs = len(counts)
++    return {
++        "task": task,
++        "input_idx": input_idx,
++        "agreement": agreement,
++        "agreed_hash": agreed_hash if agreement else None,
++        "agreed_pred": agreed_pred,
++        "agreed_is_gold": _score_grid(agreed_pred, target) if agreement else False,
++        "agreeing_sources": agreeing_sources,
++        "n_matching_outputs": n_matching if agreement else 0,
++        "n_demo_perfect_arms": len(outputs),
++        "n_outputs": n_outputs,
++        "unanimous_demo_perfect_output": bool(len(outputs) >= 2 and n_outputs == 1),
++    }
++
++
++def _rate(successes: int, total: int) -> float:
++    return round(successes / total, 4) if total else 0.0
++
++
++def _summarize_records(
++    records: list[dict[str, Any]],
++    entries_by_task: dict[str, list[dict[str, Any]]],
++    challenges: dict[str, Any],
++    solutions: dict[str, Any],
++) -> dict[str, Any]:
++    agreement_events = []
++    fresh_gold = 0
++    fresh_total = 0
++    per_task = []
++    for record in records:
++        task = str(record["task"])
++        entries = entries_by_task[task]
++        per_input = []
++        for input_idx, entry in enumerate(entries):
++            target = gold_for_entry(entry, challenges, solutions)
++            row = _agreement_for_input(task, input_idx, record["arms"], target)
++            per_input.append(row)
++            if row["agreement"]:
++                agreement_events.append(row)
++            for arm in record["arms"]:
++                pred_grid = arm["predictions"][input_idx]["pred_grid"]
++                if arm.get("demo_perfect") and pred_grid is not None and target is not None:
++                    fresh_total += 1
++                    fresh_gold += int(_score_grid(pred_grid, target))
++        task_abstains = any(
++            row["n_demo_perfect_arms"] >= 2 and row["n_outputs"] > 1 for row in per_input
++        )
++        for row in per_input:
++            row["sibling_disagreement_abstains"] = task_abstains
++        per_task.append(
++            {
++                "task": task,
++                "n_entries": len(entries),
++                "sibling_disagreement_abstains": task_abstains,
++                "arms": record["arms"],
++                "per_input": per_input,
++                "n_calls": record["n_calls"],
++                "codex_seconds": record["codex_seconds"],
++            }
++        )
++    kept = [row for row in agreement_events if not row["sibling_disagreement_abstains"]]
++    n_gold = sum(int(row["agreed_is_gold"]) for row in agreement_events)
++    kept_gold = sum(int(row["agreed_is_gold"]) for row in kept)
++    missing = []
++    for row in agreement_events:
++        if row["agreed_is_gold"]:
++            continue
++        if row["sibling_disagreement_abstains"]:
++            failure_mode = "agreement_wrong_but_unanimity_tripwire_abstains"
++            discriminator = "GAP-5 demo-underdetermination sibling-input tripwire"
++        else:
++            failure_mode = "agreement_wrong_and_tripwire_keeps"
++            discriminator = "residual rule underdetermination beyond sibling unanimity"
++        missing.append(
++            {
++                "task": row["task"],
++                "input_idx": row["input_idx"],
++                "failure_mode": failure_mode,
++                "missing_discriminator": discriminator,
++            }
++        )
++    return {
++        "agreement_events": agreement_events,
++        "n_agreement_events": len(agreement_events),
++        "n_gold_given_agreement": n_gold,
++        "fresh_arm_gold": fresh_gold,
++        "fresh_arm_total": fresh_total,
++        "fresh_arm_base_rate": _rate(fresh_gold, fresh_total),
++        "sibling_disagreement_tripwire_gold_rate": _rate(kept_gold, len(kept)),
++        "sibling_tripwire_kept_events": len(kept),
++        "missing_verifier_gaps": missing,
++        "per_task": per_task,
++    }
++
++
++def build_complete_artifact(
++    records: list[dict[str, Any]],
++    entries_by_task: dict[str, list[dict[str, Any]]],
++    preregistration: dict[str, Any],
++    preconditions: list[dict[str, Any]],
++    transcript_audit: dict[str, Any],
++    challenges: dict[str, Any],
++    solutions: dict[str, Any],
++    started_s: float,
++    now_s: float,
++) -> dict[str, Any]:
++    summary = _summarize_records(records, entries_by_task, challenges, solutions)
++    n_events = int(summary["n_agreement_events"])
++    n_gold = int(summary["n_gold_given_agreement"])
++    agreement_precision = _rate(n_gold, n_events)
++    precision_vs_base = round(agreement_precision - float(summary["fresh_arm_base_rate"]), 4)
++    primary_passed = primary_gate_passed(n_gold, n_events)
++    artifact = _base_artifact(
++        verdict_for(n_gold, n_events, primary_passed),
++        now_s - started_s,
++        protocol_preregistered=True,
++    )
++    artifact.update(
++        {
++            "preregistration": preregistration,
++            "preconditions_checked": preconditions,
++            "n_agreement_events": n_events,
++            "n_gold_given_agreement": n_gold,
++            "primary_gate_passed": primary_passed,
++            "agreement_precision": agreement_precision,
++            "fresh_arm_base_rate": summary["fresh_arm_base_rate"],
++            "fresh_arm_gold": summary["fresh_arm_gold"],
++            "fresh_arm_total": summary["fresh_arm_total"],
++            "precision_vs_fresharm_base": precision_vs_base,
++            "sibling_disagreement_tripwire_gold_rate": summary[
++                "sibling_disagreement_tripwire_gold_rate"
++            ],
++            "sibling_tripwire_kept_events": summary["sibling_tripwire_kept_events"],
++            "agreement_is_selector_not_label": primary_passed,
++            "missing_verifier_gaps": summary["missing_verifier_gaps"],
++            "agreement_events": summary["agreement_events"],
++            "per_task": summary["per_task"],
++            "total_codex_calls": sum(int(record["n_calls"]) for record in records),
++            "total_codex_seconds": round(sum(float(record["codex_seconds"]) for record in records), 1),
++            "leak_clean": bool(transcript_audit["clean"]),
++            "leak_audit": transcript_audit,
++        }
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def _is_bare_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool)
++
++
++def _is_bare_float(value: Any) -> bool:
++    return isinstance(value, float) and not isinstance(value, bool)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:")
++        or verdict.startswith("success:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in (
++        "protocol_preregistered",
++        "primary_gate_passed",
++        "agreement_is_selector_not_label",
++        "leak_clean",
++    ):
++        if not isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    for field in (
++        "n_agreement_events",
++        "n_gold_given_agreement",
++        "total_codex_calls",
++        "random_seed",
++    ):
++        if not _is_bare_int(artifact[field]):
++            raise ValueError(f"{field} must be a bare int")
++    for field in (
++        "precision_vs_fresharm_base",
++        "sibling_disagreement_tripwire_gold_rate",
++        "total_codex_seconds",
++        "duration_s",
++    ):
++        if not _is_bare_float(artifact[field]):
++            raise ValueError(f"{field} must be a bare float")
++    if not isinstance(artifact["missing_verifier_gaps"], list):
++        raise ValueError("missing_verifier_gaps must be a list")
++    if not isinstance(artifact["inference_substrate"], str):
++        raise ValueError("inference_substrate must be a string")
++
++
++def run(
++    root: Path = REPO_ROOT,
++    pool_path: Path = ARC2_POOL,
++    chain_artifact_path: Path = CHAIN_ARTIFACT,
++    output_path: Path = OUTPUT,
++    transcripts_dir: Path = TRANSCRIPTS_DIR,
++    challenges_path: Path = CHALLENGES,
++    solutions_path: Path = SOLUTIONS,
++    workers: int = 4,
++    iters: int = 3,
++    timeout: int = 600,
++    n_fresh: int = 3,
++    codex_available_override: bool | None = None,
++    write: bool = True,
++) -> dict[str, Any]:
++    del root
++    started = time.time()
++    preconditions = check_preconditions(pool_path, codex_available_override)
++    blocker = blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = blocked_artifact(blocker, preconditions, time.time() - started)
++        if write:
++            _write_json(output_path, artifact)
++        return artifact
++
++    pool = load_eval_pool(pool_path)
++    chain_artifact = load_json(chain_artifact_path)
++    entries = pool["entries"]
++    tasks = clean_new_tasks(entries, chain_artifact)
++    entries_by_task = _group_entries_by_task(entries)
++    committed_entries_by_task = {task: entries_by_task[task] for task in tasks}
++    prereg = preregistered_artifact(
++        tasks=tasks,
++        entries_by_task=committed_entries_by_task,
++        preconditions=preconditions,
++        started_s=started,
++        n_fresh=n_fresh,
++        timeout=timeout,
++    )
++    if write:
++        _write_json(output_path, prereg)
++
++    transcripts_dir.mkdir(parents=True, exist_ok=True)
++    print(
++        f"[exp3999] preregistered {len(tasks)} clean new tasks / "
++        f"{sum(len(committed_entries_by_task[t]) for t in tasks)} entries; "
++        f"k={n_fresh}, iters<={iters}, timeout={timeout}s, workers={workers}",
++        flush=True,
++    )
++    records: list[dict[str, Any]] = []
++    with ThreadPoolExecutor(max_workers=workers) as executor:
++        futures = executor.map(
++            lambda task: _chain_task(
++                task,
++                committed_entries_by_task[task],
++                transcripts_dir,
++                n_fresh,
++                iters,
++                timeout,
++            ),
++            tasks,
++        )
++        for record in futures:
++            records.append(record)
++            print(
++                f"  {record['task']}: demo-perfect "
++                f"{sum(int(arm['demo_perfect']) for arm in record['arms'])}/{n_fresh}, "
++                f"calls={record['n_calls']} codex_s={record['codex_seconds']}",
++                flush=True,
++            )
++
++    challenges = load_json(challenges_path) if challenges_path.exists() else {}
++    solutions = load_json(solutions_path) if solutions_path.exists() else {}
++    audit = audit_transcripts(transcript_paths(transcripts_dir))
++    artifact = build_complete_artifact(
++        records=records,
++        entries_by_task=committed_entries_by_task,
++        preregistration=prereg["preregistration"],
++        preconditions=preconditions,
++        transcript_audit=audit,
++        challenges=challenges,
++        solutions=solutions,
++        started_s=started,
++        now_s=time.time(),
++    )
++    if write:
++        _write_json(output_path, artifact)
++    print(f"-> {artifact['honest_verdict']}", flush=True)
++    print(
++        f"   agreement={artifact['n_gold_given_agreement']}/"
++        f"{artifact['n_agreement_events']} precision={artifact['agreement_precision']} "
++        f"fresh_base={artifact['fresh_arm_base_rate']} "
++        f"delta={artifact['precision_vs_fresharm_base']}",
++        flush=True,
++    )
++    print(
++        f"   tripwire_gold_rate={artifact['sibling_disagreement_tripwire_gold_rate']} "
++        f"kept={artifact['sibling_tripwire_kept_events']} leak_clean={artifact['leak_clean']}",
++        flush=True,
++    )
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised by required script command.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--workers", type=int, default=4)
++    parser.add_argument("--iters", type=int, default=3)
++    parser.add_argument("--timeout", type=int, default=600)
++    args = parser.parse_args()
++    run(workers=args.workers, iters=args.iters, timeout=args.timeout)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py b/tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py
+new file mode 100644
+index 0000000000..a34ed438a8
+--- /dev/null
++++ b/tests/python/test_experiment_3999_gap4_precision_confirmation_v2.py
+@@ -0,0 +1,366 @@
++"""Tests for Exp 3999 GAP-4 precision confirmation v2.
++
++Spec refs: REQ-VERIFY-3999, SCENARIO-VERIFY-3999.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import experiment_3999_gap4_precision_confirmation_v2 as exp
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_gzip_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump(payload, handle)
++
++
++def _entry(task: str, demo_value: int, test_value: int) -> JsonDict:
++    return {
++        "task": task,
++        "demos": [{"input": [[demo_value]], "output": [[demo_value]]}],
++        "test_input": [[test_value]],
++        "candidates": [],
++    }
++
++
++def _arc_gold(entries: list[JsonDict], gold_by_task: dict[str, int]) -> tuple[JsonDict, JsonDict]:
++    challenges: JsonDict = {}
++    solutions: JsonDict = {}
++    for entry in entries:
++        task = str(entry["task"])
++        challenges[task] = {"test": [{"input": entry["test_input"]}]}
++        solutions[task] = [[[gold_by_task[task]]]]
++    return challenges, solutions
++
++
++def _constant_code(demo_value: int, pred_value: int) -> str:
++    return (
++        "def transform(grid):\n"
++        "    if int(grid[0, 0]) == %d:\n"
++        "        return np.array([[%d]])\n"
++        "    return np.array([[%d]])\n"
++    ) % (demo_value, demo_value, pred_value)
++
++
++def test_req_verify_3999_spec_anchor_exists() -> None:
++    """REQ-VERIFY-3999: OpenSpec declares the precision-confirmation contract."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-VERIFY-3999" in spec
++    assert "SCENARIO-VERIFY-3999" in spec
++    assert "protocol_preregistered" in spec
++    assert "blocked_eval_pool_unreadable" in spec
++    assert "n_agreement_events>=19" in spec
++
++
++def test_req_verify_3999_real_pool_selects_new_clean_nonprior_tasks() -> None:
++    """REQ-VERIFY-3999: the committed task set is new clean ARC-2 tasks only."""
++
++    pool = exp.load_eval_pool(Path("results/arc3_gap4_arc2_eval_pool.json.gz"))
++    chain_artifact = json.loads(
++        Path("results/arc3_gap4_arc2_chain_ensemble.json").read_text(encoding="utf-8")
++    )
++
++    assert exp.clean_new_tasks(pool["entries"], chain_artifact) == [
++        "21897d95",
++        "269e22fb",
++        "28a6681f",
++        "2c181942",
++        "3a25b0d8",
++        "3dc255db",
++        "a6f40cea",
++        "b9e38dc0",
++        "dd6b8c4b",
++    ]
++
++
++def test_req_verify_3999_primary_binomial_gate() -> None:
++    """REQ-VERIFY-3999: the primary gate is the pre-registered n>=19, >=14-gold rule."""
++
++    assert exp.primary_gate_passed(14, 19) is True
++    assert exp.primary_gate_passed(13, 19) is False
++    assert exp.primary_gate_passed(14, 18) is False
++
++    assert exp.verdict_for(14, 19, True) == "success: gap4_precision_confirmed_14of19_gold"
++    assert (
++        exp.verdict_for(13, 19, False)
++        == "complete: gap4_agreement_confidence_label_only_13of19"
++    )
++
++
++def test_scenario_verify_3999_preregisters_before_any_induction_and_scores_agreement(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-VERIFY-3999: mocked k=3 fresh chains emit bare precision fields."""
++
++    entries = [
++        _entry("gold_agree", 0, 8),
++        _entry("wrong_majority", 2, 8),
++        _entry("no_agreement", 3, 8),
++    ]
++    pool_path = tmp_path / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
++    chain_path = tmp_path / "results" / "arc3_gap4_arc2_chain_ensemble.json"
++    output_path = tmp_path / "results" / "experiment_3999_gap4_precision_confirmation_v2.json"
++    transcript_dir = tmp_path / "results" / "experiment_3999_gap4_precision_transcripts"
++    challenges_path = tmp_path / "arc-agi_evaluation2_challenges.json"
++    solutions_path = tmp_path / "arc-agi_evaluation2_solutions.json"
++
++    _write_gzip_json(pool_path, {"entries": entries})
++    _write_json(chain_path, {"preregistration": {"tasks": ["prior"]}})
++    challenges, solutions = _arc_gold(
++        entries,
++        {"gold_agree": 1, "wrong_majority": 9, "no_agreement": 2},
++    )
++    _write_json(challenges_path, challenges)
++    _write_json(solutions_path, solutions)
++
++    arm_preds = {
++        "gold_agree": [1, 1, 1],
++        "wrong_majority": [5, 5, 6],
++        "no_agreement": [2, 3, 4],
++    }
++    seen_prereg: list[JsonDict] = []
++
++    def fake_induce(
++        task_name: str,
++        demos: list[JsonDict],
++        test_input: list[list[int]],
++        iters: int,
++        timeout: int,
++        transcripts_dir: str,
++    ) -> JsonDict:
++        del test_input, iters, timeout
++        assert output_path.exists()
++        prereg = json.loads(output_path.read_text(encoding="utf-8"))
++        assert prereg["protocol_preregistered"] is True
++        assert prereg["n_agreement_events"] == 0
++        seen_prereg.append(prereg)
++
++        arm_idx = int(Path(transcripts_dir).name.replace("arm", "")) - 1
++        Path(transcripts_dir).mkdir(parents=True, exist_ok=True)
++        (Path(transcripts_dir) / f"{task_name}_iter0.txt").write_text(
++            "===== PROMPT =====\nDemo pairs and test input only\n===== RAW OUTPUT =====\n"
++            "```python\n# clean transcript\n```\n",
++            encoding="utf-8",
++        )
++        pred = arm_preds[task_name][arm_idx]
++        code = _constant_code(int(demos[0]["input"][0][0]), pred)
++        return {
++            "task": task_name,
++            "demo_fit": 1.0,
++            "demo_perfect": True,
++            "pred_hash": "unused",
++            "pred_grid": [[pred]],
++            "n_calls": 1,
++            "codex_seconds": 1.0,
++            "history": [{"iter": 0, "status": "graded", "demo_fit": 1.0, "codex_s": 1.0}],
++            "code": code,
++        }
++
++    monkeypatch.setattr(exp, "induce_program", fake_induce)
++
++    artifact = exp.run(
++        root=tmp_path,
++        pool_path=pool_path,
++        chain_artifact_path=chain_path,
++        output_path=output_path,
++        transcripts_dir=transcript_dir,
++        challenges_path=challenges_path,
++        solutions_path=solutions_path,
++        codex_available_override=True,
++        workers=1,
++    )
++
++    assert seen_prereg
++    assert output_path.exists()
++    assert artifact["protocol_preregistered"] is True
++    assert artifact["preregistration"]["task_set"] == [
++        "gold_agree",
++        "no_agreement",
++        "wrong_majority",
++    ]
++    assert artifact["n_agreement_events"] == 2
++    assert artifact["n_gold_given_agreement"] == 1
++    assert artifact["primary_gate_passed"] is False
++    assert artifact["agreement_is_selector_not_label"] is False
++    assert artifact["fresh_arm_base_rate"] == pytest.approx(0.4444)
++    assert artifact["precision_vs_fresharm_base"] == pytest.approx(0.0556)
++    assert artifact["sibling_disagreement_tripwire_gold_rate"] == 1.0
++    assert artifact["total_codex_calls"] == 9
++    assert artifact["total_codex_seconds"] == 9.0
++    assert artifact["leak_clean"] is True
++    assert artifact["honest_verdict"] == "complete: gap4_agreement_confidence_label_only_1of2"
++    assert artifact["missing_verifier_gaps"] == [
++        {
++            "task": "wrong_majority",
++            "input_idx": 0,
++            "failure_mode": "agreement_wrong_but_unanimity_tripwire_abstains",
++            "missing_discriminator": "GAP-5 demo-underdetermination sibling-input tripwire",
++        }
++    ]
++    exp.validate_artifact(artifact)
++
++
++def test_scenario_verify_3999_blocks_without_codex_or_pool(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-3999: blocked preconditions do not fabricate metrics."""
++
++    pool_path = tmp_path / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
++    _write_gzip_json(pool_path, {"entries": [_entry("n0", 1, 2)]})
++    blocked_output = tmp_path / "results" / "blocked_codex_written.json"
++
++    written_blocked = exp.run(
++        root=tmp_path,
++        pool_path=pool_path,
++        output_path=blocked_output,
++        codex_available_override=False,
++    )
++
++    assert blocked_output.exists()
++    assert written_blocked["honest_verdict"] == "blocked_codex_unavailable"
++
++    blocked_codex = exp.run(
++        root=tmp_path,
++        pool_path=pool_path,
++        output_path=tmp_path / "results" / "blocked_codex.json",
++        codex_available_override=False,
++        write=False,
++    )
++
++    assert blocked_codex["honest_verdict"] == "blocked_codex_unavailable"
++    assert blocked_codex["protocol_preregistered"] is False
++    assert blocked_codex["n_agreement_events"] == 0
++    assert blocked_codex["total_codex_calls"] == 0
++
++    blocked_pool = exp.run(
++        root=tmp_path,
++        pool_path=tmp_path / "results" / "missing.json.gz",
++        output_path=tmp_path / "results" / "blocked_pool.json",
++        codex_available_override=True,
++        write=False,
++    )
++
++    assert blocked_pool["honest_verdict"] == "blocked_eval_pool_unreadable"
++    assert blocked_pool["n_gold_given_agreement"] == 0
++
++
++def test_req_verify_3999_defensive_helpers_cover_residual_gap_paths() -> None:
++    """REQ-VERIFY-3999: helper fallbacks preserve honest residual-gap accounting."""
++
++    assert exp.selected_tasks_from_chain_artifact(
++        {"per_task": [{"task": "b"}, {"task": "a"}]}
++    ) == ["a", "b"]
++    assert exp._history_iter0_demo_perfect([]) is False
++    assert exp.gold_for_entry({"task": "missing", "test_input": [[1]], "candidates": []}, {}, {}) is None
++
++    fallback_entry = {
++        "task": "bad_unanimous",
++        "test_input": [[8]],
++        "candidates": [{"correct": True, "grid": [[9]]}],
++    }
++    assert exp.gold_for_entry(fallback_entry, {}, {}).tolist() == [[9]]
++
++    arms = [
++        {
++            "source": "fresh_chain1",
++            "demo_perfect": True,
++            "predictions": [{"pred_hash": exp._grid_hash([[5]]), "pred_grid": [[5]]}],
++        },
++        {
++            "source": "fresh_chain2",
++            "demo_perfect": True,
++            "predictions": [{"pred_hash": exp._grid_hash([[5]]), "pred_grid": [[5]]}],
++        },
++        {
++            "source": "fresh_chain3",
++            "demo_perfect": False,
++            "predictions": [{"pred_hash": None, "pred_grid": None}],
++        },
++    ]
++    row = exp._agreement_for_input("bad_unanimous", 0, arms, exp.gold_for_entry(fallback_entry, {}, {}))
++    assert row["agreement"] is True
++    assert row["agreed_is_gold"] is False
++    assert row["n_demo_perfect_arms"] == 2
++
++    null_row = exp._agreement_for_input(
++        "none",
++        0,
++        [
++            {
++                "source": "fresh_chain1",
++                "demo_perfect": True,
++                "predictions": [{"pred_hash": None, "pred_grid": None}],
++            }
++        ],
++        None,
++    )
++    assert null_row["agreement"] is False
++
++    summary = exp._summarize_records(
++        [{"task": "bad_unanimous", "arms": arms, "n_calls": 0, "codex_seconds": 0.0}],
++        {"bad_unanimous": [fallback_entry]},
++        {},
++        {},
++    )
++    assert summary["missing_verifier_gaps"] == [
++        {
++            "task": "bad_unanimous",
++            "input_idx": 0,
++            "failure_mode": "agreement_wrong_and_tripwire_keeps",
++            "missing_discriminator": "residual rule underdetermination beyond sibling unanimity",
++        }
++    ]
++
++
++def test_req_verify_3999_validation_rejects_non_bare_schema_fields() -> None:
++    """REQ-VERIFY-3999: required artifact fields stay bare scalars."""
++
++    artifact = exp.blocked_artifact(
++        "blocked_codex_unavailable",
++        [{"resource": "codex", "available": False}, {"resource": "eval_pool", "available": True}],
++        0.5,
++    )
++    exp.validate_artifact(artifact)
++
++    missing = dict(artifact)
++    missing.pop("honest_verdict")
++    with pytest.raises(ValueError, match="missing required"):
++        exp.validate_artifact(missing)
++
++    bad = dict(artifact, honest_verdict="maybe")
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, protocol_preregistered="true")
++    with pytest.raises(ValueError, match="protocol_preregistered"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, n_agreement_events=True)
++    with pytest.raises(ValueError, match="n_agreement_events"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, precision_vs_fresharm_base=True)
++    with pytest.raises(ValueError, match="precision_vs_fresharm_base"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, missing_verifier_gaps={})
++    with pytest.raises(ValueError, match="missing_verifier_gaps"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, leak_clean="yes")
++    with pytest.raises(ValueError, match="leak_clean"):
++        exp.validate_artifact(bad)
++    bad = dict(artifact, inference_substrate=3)
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad)
+-- 
+2.55.0
+

@@ -1,0 +1,3725 @@
+From 3876d8d73bbc0f10d955f2102eba25e3ead62043 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 02:03:10 -0400
+Subject: [PATCH 05622/11362] [conductor] PHASE B2 ARC GAP-4891 frontier
+ continuity plus landmark decomposition live-path attempt
+
+Automated research step by research conductor.
+Task ID: exp5216-arc-frontier-continuity-landmark-decomposition-v477
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |   65 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../arc_frontier_continuity_landmarks.py      |  327 +++
+ ..._continuity_landmark_decomposition_v477.py |  468 ++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ontinuity_landmark_decomposition_v477.json | 2289 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ..._continuity_landmark_decomposition_v477.py |  368 +++
+ 13 files changed, 3536 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_frontier_continuity_landmarks.py
+ create mode 100644 python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+ create mode 100644 results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json
+ create mode 100644 tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 16fac946b1..788794b036 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -33756,6 +33756,71 @@ or reopen a retired scope.
+ |---|---|---|
+ | REQ-REPORT-5208 | Implemented (`python/carnot/experiment_5208_sota_ingestion_v477.py`, `results/experiment_5208_sota_ingestion_v477.json`) | Implemented (`tests/python/test_experiment_5208_sota_ingestion_v477.py`) |
+ 
++### REQ-REPORT-5216: ARC Frontier Continuity And Landmark Decomposition Pilot
++
++The Exp 5216 workflow SHALL write
++`results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json`
++for a bounded public-game GAP-4891 pilot. It SHALL registry-precheck the target
++games before any level claim, SHALL NOT read game source, SHALL NOT run
++exhaustive offline ground-truth BFS, and SHALL declare whether any solve claim
++came from `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`.
++Only `live_agent_self_discovery` or `development_proxy` claims that pass
++`arc_solver_kit.reproduce()` are allowed to increase
++`reproducible_total_levels_delta`; `outer_loop_re` is not headline-eligible.
++
++The pilot SHALL compare flat/pruner-only control rows against frontier
++continuity and landmark-decomposition rows on at least two public
++deepened-but-stuck games when available. Frontier continuity SHALL seed a new
++search from structurally compatible prior frontier states/actions observed by
++the agent at runtime instead of cold-restarting. Landmark decomposition SHALL
++induce intermediate landmarks from the agent's own transition logs and run
++reach-landmark then reach-goal subsearches under the same expansion budget as
++the flat control.
++
++The artifact SHALL include top-level fields `target_games`,
++`duplicate_registry_precheck_passed`, `live_path_integration_attempted`,
++`solve_provenance`, `offline_ground_truth_bfs`, `read_game_source`,
++`new_levels_banked`, `reproducible_total_levels_delta`,
++`frontier_continuity_lift`, `landmark_decomposition_lift`,
++`orphan_lint_result`, `inference_substrate`, and `honest_verdict`.
++
++Required field principles:
++
++- `solve_provenance`: principle "Any level solve claim must declare provenance; outer_loop_re is not headline-eligible."
++- `offline_ground_truth_bfs`: principle "Must remain false; the pilot may use bounded runtime observations only."
++- `read_game_source`: principle "Must remain false; no game source may be inspected for the pilot."
++- `new_levels_banked`: principle "Each claimed level must name game, level, solve_provenance, and reproduction-gate evidence."
++- `frontier_continuity_lift`: principle "Per-game delta versus the flat/pruner-only control under the same expansion budget."
++- `landmark_decomposition_lift`: principle "Per-game delta versus the flat/pruner-only control under the same expansion budget."
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must not claim a level bank without reproduction-gate evidence."
++
++#### SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS: Runtime Logs Seed Structured Subsearches
++
++**Given** a bounded transition log collected from the agent/runtime environment
++without game-source reads or exhaustive BFS
++**When** Exp 5216 builds a frontier-continuity and landmark-decomposition seed
++bank
++**Then** structurally compatible root/frontier states expose replayable
++continuity sequences, induced landmark states expose reach-landmark then
++reach-goal sequences, and the graph-search hook consumes those sequences within
++the same expansion budget used by the flat control.
++
++#### SCENARIO-REPORT-5216-ARTIFACT-GATE: Artifact Does Not Fabricate New Levels
++
++**Given** candidate public games already have registry depths
++**When** Exp 5216 builds its terminal artifact
++**Then** duplicate registry depths are not counted as new banked levels,
++`offline_ground_truth_bfs=false`, `read_game_source=false`,
++`orphan_lint_result` records `scripts/arc_orphan_solver_lint.py`, and
++`reproducible_total_levels_delta` equals only the count of
++reproduction-gated new levels above the registry precheck.
++
++## Implementation Status (REQ-REPORT-5216)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5216 | Implemented (`python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`, `python/carnot/agentic/arc_frontier_continuity_landmarks.py`, `results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json`) | Implemented (`tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`) |
++
+ ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
+ 
+ The Exp 5162 workflow SHALL produce
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d81fc9978b..7f78048922 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 209,
+   "code_violations": 0,
+-  "experiments_checked": 4191,
++  "experiments_checked": 4192,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_frontier_continuity_landmarks.py b/python/carnot/agentic/arc_frontier_continuity_landmarks.py
+new file mode 100644
+index 0000000000..6724e598f8
+--- /dev/null
++++ b/python/carnot/agentic/arc_frontier_continuity_landmarks.py
+@@ -0,0 +1,327 @@
++"""Runtime-log frontier continuity and landmark seeds for ARC graph search.
++
++Spec refs: REQ-REPORT-5216, SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS.
++
++The objects here are deliberately observation-only. They accept frames and
++action paths already collected by the agent/runtime environment, then expose
++replayable seed sequences through `graph_explore_solve_v2`'s existing
++`frontier_seed_bank` hook. They do not inspect game source and they do not run
++an exhaustive ground-truth search.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass, field
++from typing import Any, Callable, Mapping, Sequence
++
++import numpy as np
++
++from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of as default_grid_of
++
++
++ActionStep = dict[str, Any]
++
++
++def _grid2d(frame: Any, grid_of: Callable[[Any], Any]) -> np.ndarray | None:
++    try:
++        grid = np.asarray(grid_of(frame))
++    except Exception:
++        return None
++    if grid.ndim == 3 and grid.shape[0] == 1:
++        grid = grid[0]
++    return grid if grid.ndim == 2 else None
++
++
++def _data_key(data: Any) -> Any:
++    if data is None:
++        return None
++    if isinstance(data, Mapping):
++        return tuple(sorted((str(k), _data_key(v)) for k, v in data.items()))
++    if isinstance(data, list | tuple):
++        return tuple(_data_key(v) for v in data)
++    if isinstance(data, str | int | float | bool):
++        return data
++    return repr(data)
++
++
++def _action_key(action: Any, data: Any = None) -> tuple[int, Any]:
++    if isinstance(action, Mapping):
++        return int(action.get("action", 0) or 0), _data_key(action.get("data"))
++    return int(action), _data_key(data)
++
++
++def _clean_step(step: Mapping[str, Any] | Any) -> ActionStep:
++    if isinstance(step, Mapping):
++        return {"action": int(step.get("action", 0) or 0), "data": step.get("data")}
++    return {"action": int(step), "data": None}
++
++
++def _clean_path(path: Sequence[Any] | None) -> list[ActionStep]:
++    return [_clean_step(step) for step in list(path or []) if step is not None]
++
++
++def _path_signature(path: Sequence[Mapping[str, Any]]) -> tuple[tuple[int, Any], ...]:
++    return tuple(_action_key(step) for step in path)
++
++
++def _path_suffix(path: Sequence[ActionStep], prefix: Sequence[ActionStep]) -> list[ActionStep]:
++    path_rows = _clean_path(path)
++    prefix_rows = _clean_path(prefix)
++    if _path_signature(path_rows[: len(prefix_rows)]) == _path_signature(prefix_rows):
++        return [dict(step) for step in path_rows[len(prefix_rows) :]]
++    return [dict(step) for step in path_rows]
++
++
++def _structural_signature(grid: np.ndarray) -> tuple[Any, ...]:
++    vals, counts = np.unique(grid, return_counts=True)
++    palette = tuple(sorted((int(v), int(c)) for v, c in zip(vals.tolist(), counts.tolist())))
++    nonzero = int(np.count_nonzero(grid))
++    return (tuple(int(v) for v in grid.shape), len(vals), nonzero, palette[:16])
++
++
++def _compatible_signature(left: tuple[Any, ...], right: tuple[Any, ...]) -> bool:
++    if not left or not right:
++        return False
++    if left[0] != right[0]:
++        return False
++    # Exact palette matches are strongest. If palette differs, still allow a
++    # same-shape/same-palette-size match so a later level can reuse the same
++    # action structure when colors or object positions drift.
++    return left[3] == right[3] or left[1] == right[1]
++
++
++def _energy(goal_energy: Callable[[Any], float] | None, frame: Any) -> float | None:
++    if goal_energy is None:
++        return None
++    try:
++        return float(goal_energy(frame))
++    except Exception:
++        return None
++
++
++def _level(row: Mapping[str, Any], key: str, frame_key: str) -> int:
++    if key in row:
++        return int(row.get(key) or 0)
++    frame = row.get(frame_key)
++    return int(getattr(frame, "levels_completed", 0) or 0)
++
++
++def _candidate_keys(candidates: Sequence[Any]) -> set[tuple[int, Any]]:
++    keys: set[tuple[int, Any]] = set()
++    for candidate in candidates:
++        if hasattr(candidate, "action_id"):
++            keys.add(_action_key(candidate.action_id, getattr(candidate, "data", None)))
++        elif isinstance(candidate, Mapping):
++            keys.add(_action_key(candidate))
++    return keys
++
++
++def _first_action_allowed(sequence: Sequence[ActionStep], candidates: Sequence[Any]) -> bool:
++    if not sequence:
++        return False
++    keys = _candidate_keys(candidates)
++    return not keys or _action_key(sequence[0]) in keys
++
++
++def _unique_sequences(sequences: Sequence[Sequence[ActionStep]], limit: int) -> list[list[ActionStep]]:
++    seen: set[tuple[tuple[int, Any], ...]] = set()
++    out: list[list[ActionStep]] = []
++    for sequence in sequences:
++        rows = [dict(step) for step in sequence if step.get("action") is not None]
++        signature = _path_signature(rows)
++        if not rows or signature in seen:
++            continue
++        seen.add(signature)
++        out.append(rows)
++        if len(out) >= int(limit):
++            break
++    return out
++
++
++@dataclass(frozen=True)
++class LandmarkSeed:
++    """A two-stage seed: first reach a landmark, then continue toward a level-up."""
++
++    landmark_hash: str
++    landmark_signature: tuple[Any, ...]
++    reach_sequence: list[ActionStep]
++    goal_sequence: list[ActionStep]
++    score: float
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "landmark_hash": self.landmark_hash,
++            "reach_len": len(self.reach_sequence),
++            "goal_len": len(self.goal_sequence),
++            "score": round(float(self.score), 4),
++        }
++
++
++@dataclass
++class FrontierContinuityLandmarkBank:
++    """Seed-bank consumed by `graph_explore_solve_v2(frontier_seed_bank=...)`."""
++
++    root_signature: tuple[Any, ...]
++    root_hash: str
++    continuity_sequences: list[list[ActionStep]] = field(default_factory=list)
++    landmarks: list[LandmarkSeed] = field(default_factory=list)
++    grid_of: Callable[[Any], Any] = default_grid_of
++    max_sequences_per_node: int = 4
++    enable_frontier_continuity: bool = True
++    enable_landmark_decomposition: bool = True
++
++    verifier_is_oracle = False
++
++    def _frame_facts(self, frame: Any) -> tuple[str, tuple[Any, ...]] | None:
++        grid = _grid2d(frame, self.grid_of)
++        if grid is None:
++            return None
++        return frame_hash(grid), _structural_signature(grid)
++
++    def frontier_seed_sequences(
++        self,
++        frame: Any,
++        candidates: Sequence[Any],
++        *,
++        path: list[ActionStep] | None = None,
++        root_path_length: int = 0,
++        goal_energy: Callable[[Any], float] | None = None,
++    ) -> list[list[ActionStep]]:
++        """Return replayable sequences for compatible root or landmark states."""
++
++        facts = self._frame_facts(frame)
++        if facts is None:
++            return []
++        current_hash, current_signature = facts
++        path_len = len(path or [])
++        sequences: list[list[ActionStep]] = []
++
++        if (
++            path_len <= int(root_path_length)
++            and _compatible_signature(current_signature, self.root_signature)
++        ):
++            if self.enable_frontier_continuity:
++                sequences.extend(self.continuity_sequences)
++            if self.enable_landmark_decomposition:
++                sequences.extend(seed.reach_sequence for seed in self.landmarks)
++
++        if self.enable_landmark_decomposition:
++            for seed in self.landmarks:
++                if current_hash == seed.landmark_hash and seed.goal_sequence:
++                    sequences.append(seed.goal_sequence)
++
++        allowed = [
++            sequence for sequence in sequences if _first_action_allowed(sequence, list(candidates))
++        ]
++        return _unique_sequences(allowed, self.max_sequences_per_node)
++
++    def diagnostics(self) -> dict[str, Any]:
++        return {
++            "root_hash": self.root_hash,
++            "continuity_sequence_count": len(self.continuity_sequences),
++            "landmark_count": len(self.landmarks),
++            "max_sequences_per_node": int(self.max_sequences_per_node),
++            "enable_frontier_continuity": bool(self.enable_frontier_continuity),
++            "enable_landmark_decomposition": bool(self.enable_landmark_decomposition),
++            "verifier_is_oracle": False,
++        }
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            **self.diagnostics(),
++            "continuity_sequences": [
++                [dict(step) for step in sequence] for sequence in self.continuity_sequences[:8]
++            ],
++            "landmarks": [seed.as_dict() for seed in self.landmarks[:8]],
++        }
++
++
++def build_frontier_continuity_landmark_bank(
++    *,
++    root_frame: Any,
++    transition_logs: Sequence[Mapping[str, Any]],
++    grid_of: Callable[[Any], Any] = default_grid_of,
++    goal_energy: Callable[[Any], float] | None = None,
++    max_sequences: int = 8,
++    max_sequence_len: int = 16,
++    enable_frontier_continuity: bool = True,
++    enable_landmark_decomposition: bool = True,
++) -> FrontierContinuityLandmarkBank:
++    """Build a seed bank from runtime transition logs only."""
++
++    root_grid = _grid2d(root_frame, grid_of)
++    root_hash = frame_hash(root_grid) if root_grid is not None else ""
++    root_signature = _structural_signature(root_grid) if root_grid is not None else ()
++
++    levelup_paths: list[list[ActionStep]] = []
++    for row in transition_logs:
++        after_level = _level(row, "level_after", "frame_after")
++        before_level = _level(row, "level_before", "frame_before")
++        if after_level > before_level:
++            levelup_paths.append(_clean_path(row.get("path_after")))
++
++    continuity: list[list[ActionStep]] = []
++    landmark_candidates: list[LandmarkSeed] = []
++    for row in transition_logs:
++        before = row.get("frame_before")
++        after = row.get("frame_after")
++        before_grid = _grid2d(before, grid_of)
++        after_grid = _grid2d(after, grid_of)
++        if before_grid is None or after_grid is None:
++            continue
++        before_signature = _structural_signature(before_grid)
++        path_before = _clean_path(row.get("path_before"))
++        path_after = _clean_path(row.get("path_after"))
++
++        if _compatible_signature(root_signature, before_signature):
++            for full_path in levelup_paths:
++                suffix = _path_suffix(full_path, path_before)
++                if 0 < len(suffix) <= int(max_sequence_len):
++                    continuity.append(suffix)
++
++        before_energy = _energy(goal_energy, before)
++        after_energy = _energy(goal_energy, after)
++        energy_drop = (
++            max(0.0, before_energy - after_energy)
++            if before_energy is not None and after_energy is not None
++            else 0.0
++        )
++        changed = (
++            int(np.count_nonzero(before_grid != after_grid))
++            if before_grid.shape == after_grid.shape
++            else 0
++        )
++        if not enable_landmark_decomposition or (energy_drop <= 0.0 and changed <= 0):
++            continue
++        reach = _path_suffix(path_after, path_before)
++        if not reach or len(reach) > int(max_sequence_len):
++            continue
++        for full_path in levelup_paths:
++            if _path_signature(full_path[: len(path_after)]) != _path_signature(path_after):
++                continue
++            goal = _path_suffix(full_path, path_after)
++            if not goal or len(goal) > int(max_sequence_len):
++                continue
++            score = float(energy_drop) + 0.01 * float(changed)
++            landmark_candidates.append(
++                LandmarkSeed(
++                    landmark_hash=frame_hash(after_grid),
++                    landmark_signature=_structural_signature(after_grid),
++                    reach_sequence=reach,
++                    goal_sequence=goal,
++                    score=score,
++                )
++            )
++            break
++
++    landmark_candidates.sort(key=lambda seed: (-seed.score, len(seed.reach_sequence)))
++    return FrontierContinuityLandmarkBank(
++        root_signature=root_signature,
++        root_hash=root_hash,
++        continuity_sequences=_unique_sequences(continuity, max_sequences),
++        landmarks=landmark_candidates[: int(max_sequences)],
++        grid_of=grid_of,
++        max_sequences_per_node=max(1, int(max_sequences)),
++        enable_frontier_continuity=bool(enable_frontier_continuity),
++        enable_landmark_decomposition=bool(enable_landmark_decomposition),
++    )
+diff --git a/python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py b/python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+new file mode 100644
+index 0000000000..93c9e23812
+--- /dev/null
++++ b/python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+@@ -0,0 +1,468 @@
++"""Exp 5216: ARC frontier continuity plus landmark decomposition pilot.
++
++Spec refs: REQ-REPORT-5216, SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS,
++SCENARIO-REPORT-5216-ARTIFACT-GATE.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import subprocess
++import sys
++import time
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++
++RESULT_RELATIVE_PATH = (
++    "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json"
++)
++EXPERIMENT_ID = "experiment_5216_arc_frontier_continuity_landmark_decomposition_v477"
++TARGET_GAMES = ("bp35", "cd82")
++ARMS = ("flat_control", "frontier_continuity", "landmark_decomposition", "combined")
++MAX_EXPANSIONS = 128
++RANDOM_SEED = 20260704
++INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++SOLVE_PROVENANCE = "development_proxy"
++REQUIRED_ARTIFACT_FIELDS = (
++    "target_games",
++    "duplicate_registry_precheck_passed",
++    "live_path_integration_attempted",
++    "solve_provenance",
++    "offline_ground_truth_bfs",
++    "read_game_source",
++    "new_levels_banked",
++    "reproducible_total_levels_delta",
++    "frontier_continuity_lift",
++    "landmark_decomposition_lift",
++    "orphan_lint_result",
++    "inference_substrate",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES = {
++    "solve_provenance": (
++        "Any level solve claim must declare provenance; outer_loop_re is not headline-eligible."
++    ),
++    "offline_ground_truth_bfs": (
++        "Must remain false; the pilot may use bounded runtime observations only."
++    ),
++    "read_game_source": "Must remain false; no game source may be inspected for the pilot.",
++    "new_levels_banked": (
++        "Each claimed level must name game, level, solve_provenance, and reproduction-gate evidence."
++    ),
++    "frontier_continuity_lift": (
++        "Per-game delta versus the flat/pruner-only control under the same expansion budget."
++    ),
++    "landmark_decomposition_lift": (
++        "Per-game delta versus the flat/pruner-only control under the same expansion budget."
++    ),
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ and must not claim a level "
++        "bank without reproduction-gate evidence."
++    ),
++}
++
++
++def _json_checksum(payload: Any) -> str:
++    return "sha256:" + hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode()
++    ).hexdigest()
++
++
++def _artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _json_checksum(payload)
++
++
++def _orphan_result_string(orphan_lint: Mapping[str, Any]) -> str:
++    status = "pass" if orphan_lint.get("passed") else "fail"
++    output = str(orphan_lint.get("stdout_tail") or orphan_lint.get("stderr_tail") or "").strip()
++    return f"{status}: {output}"
++
++
++def _arm(row: Mapping[str, Any], arm: str) -> Mapping[str, Any]:
++    return (row.get("arms") or {}).get(arm) or {}
++
++
++def _reproduced_level(data: Mapping[str, Any]) -> int:
++    gate = data.get("reproduction_gate") or {}
++    if not isinstance(gate, Mapping) or not bool(gate.get("reproduced")):
++        return 0
++    return int(gate.get("reached_level", data.get("reached_level", 0)) or 0)
++
++
++def _new_levels(
++    per_game: Sequence[Mapping[str, Any]], registry_depths: Mapping[str, int]
++) -> list[dict[str, Any]]:
++    out: list[dict[str, Any]] = []
++    seen: set[tuple[str, int]] = set()
++    for row in per_game:
++        game = str(row.get("game") or "")
++        registry_depth = int(row.get("registry_depth", registry_depths.get(game, 0)) or 0)
++        for arm_name in ARMS:
++            data = _arm(row, arm_name)
++            reached = _reproduced_level(data)
++            if reached <= registry_depth or (game, reached) in seen:
++                continue
++            provenance = str(data.get("solve_provenance") or SOLVE_PROVENANCE)
++            if provenance == "outer_loop_re":
++                continue
++            seen.add((game, reached))
++            out.append({"game": game, "level": reached, "solve_provenance": provenance})
++    return out
++
++
++def _lift_for(
++    per_game: Sequence[Mapping[str, Any]],
++    treatment: str,
++) -> dict[str, dict[str, int]]:
++    out: dict[str, dict[str, int]] = {}
++    for row in per_game:
++        game = str(row.get("game") or "")
++        flat = _arm(row, "flat_control")
++        arm = _arm(row, treatment)
++        flat_states = int(flat.get("states_expanded", 0) or 0)
++        arm_states = int(arm.get("states_expanded", 0) or 0)
++        out[game] = {
++            "reached_level_delta": int(arm.get("reached_level", 0) or 0)
++            - int(flat.get("reached_level", 0) or 0),
++            "states_expanded_delta": flat_states - arm_states,
++            "reproduced_level_delta": _reproduced_level(arm) - _reproduced_level(flat),
++        }
++    return out
++
++
++def _per_arm_results(per_game: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
++    results: dict[str, dict[str, Any]] = {}
++    for row in per_game:
++        game = str(row.get("game") or "")
++        results[game] = {}
++        for arm_name in ARMS:
++            data = _arm(row, arm_name)
++            results[game][arm_name] = {
++                "reached_level": int(data.get("reached_level", 0) or 0),
++                "states_expanded": int(data.get("states_expanded", 0) or 0),
++                "offline_reproduced_level": _reproduced_level(data),
++            }
++    return results
++
++
++def build_artifact(
++    *,
++    per_game: Sequence[Mapping[str, Any]],
++    registry_depths: Mapping[str, int],
++    orphan_lint: Mapping[str, Any],
++    duration_s: float,
++    live_path_integration_attempted: bool = True,
++    solve_provenance: str = SOLVE_PROVENANCE,
++    max_expansions: int = MAX_EXPANSIONS,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    """Build the terminal Exp 5216 artifact without fabricating solve claims."""
++
++    target_games = [str(row.get("game") or "") for row in per_game]
++    new_levels = _new_levels(per_game, registry_depths)
++    duplicate_precheck = all(
++        int(item["level"]) > int(registry_depths.get(str(item["game"]), 0) or 0)
++        for item in new_levels
++    )
++    total_delta = len(new_levels)
++    if total_delta:
++        honest_verdict = (
++            "success: frontier continuity plus landmark decomposition banked "
++            f"{total_delta} reproduction-gated new public-game level(s) above registry depth."
++        )
++    else:
++        honest_verdict = (
++            "complete: frontier continuity plus landmark decomposition did not bank a "
++            "new reproduction-gated level above the registry precheck in this bounded pilot."
++        )
++
++    artifact: dict[str, Any] = {
++        "experiment": EXPERIMENT_ID,
++        "schema": "carnot.experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.v1",
++        "spec_refs": [
++            "REQ-REPORT-5216",
++            "SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS",
++            "SCENARIO-REPORT-5216-ARTIFACT-GATE",
++        ],
++        "target_games": target_games,
++        "duplicate_registry_precheck_passed": bool(duplicate_precheck),
++        "live_path_integration_attempted": bool(live_path_integration_attempted),
++        "solve_provenance": str(solve_provenance),
++        "offline_ground_truth_bfs": False,
++        "read_game_source": False,
++        "new_levels_banked": new_levels,
++        "reproducible_total_levels_delta": int(total_delta),
++        "frontier_continuity_lift": _lift_for(per_game, "frontier_continuity"),
++        "landmark_decomposition_lift": _lift_for(per_game, "landmark_decomposition"),
++        "orphan_lint_result": _orphan_result_string(orphan_lint),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "per_arm_results": _per_arm_results(per_game),
++        "per_game": list(per_game),
++        "registry_depths": {str(k): int(v) for k, v in registry_depths.items()},
++        "max_expansions": int(max_expansions),
++        "random_seed": int(random_seed),
++        "duration_s": round(float(duration_s), 2),
++        "solve_claim_policy": (
++            "Only reproduced levels strictly above the registry precheck count; "
++            "outer_loop_re rows are excluded from headline claims."
++        ),
++        "control_description": "flat/pruner-only control is flat graph search with no seed bank.",
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    return artifact
++
++
++def _python_bin(root: Path) -> str:  # pragma: no cover
++    candidate = root / ".venv" / "bin" / "python"
++    return str(candidate) if candidate.exists() else sys.executable
++
++
++def _pytest_bin(root: Path) -> list[str]:  # pragma: no cover
++    candidate = root / ".venv" / "bin" / "pytest"
++    if candidate.exists():
++        return [str(candidate)]
++    return [sys.executable, "-m", "pytest"]
++
++
++def _run_command(argv: Sequence[str], *, cwd: Path) -> dict[str, Any]:  # pragma: no cover
++    started = time.time()
++    completed = subprocess.run(
++        list(argv),
++        cwd=str(cwd),
++        text=True,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.PIPE,
++        check=False,
++    )
++    return {
++        "command": list(argv),
++        "returncode": int(completed.returncode),
++        "passed": completed.returncode == 0,
++        "duration_s": round(time.time() - started, 2),
++        "stdout_tail": completed.stdout[-4000:],
++        "stderr_tail": completed.stderr[-4000:],
++    }
++
++
++def run_arc_orphan_solver_lint(root: Path) -> dict[str, Any]:  # pragma: no cover
++    return _run_command([_python_bin(root), "scripts/arc_orphan_solver_lint.py"], cwd=root)
++
++
++def check_unit_tests(root: Path) -> dict[str, Any]:  # pragma: no cover
++    return _run_command(
++        [
++            *_pytest_bin(root),
++            "tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py",
++            "-q",
++            "--no-cov",
++        ],
++        cwd=root,
++    )
++
++
++def _apply_json_action(env: Any, label: str, frame: Any) -> Any:  # pragma: no cover
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    step = json.loads(label)
++    return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
++
++
++def _load_prefix(root: Path, game: str) -> tuple[list[dict[str, Any]], int]:  # pragma: no cover
++    path = root / "results" / f"arc_loop_solve_{game}.json"
++    data = json.loads(path.read_text(encoding="utf-8"))
++    solution = list(data.get("solution") or [])
++    level = int(data.get("reproduced_levels", data.get("reached_level", 0)) or 0)
++    if not solution or level <= 0:
++        raise RuntimeError(f"{game} has no reproduced prefix in {path}")
++    return solution, level
++
++
++def _collect_transition_logs(
++    env: Any,
++    prefix: Sequence[Mapping[str, Any]],
++) -> tuple[Any, list[dict[str, Any]]]:  # pragma: no cover
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
++
++    frame = env.reset()
++    logs: list[dict[str, Any]] = []
++    path_before: list[dict[str, Any]] = []
++    for step in prefix:
++        before = frame
++        action = {"action": int(step["action"]), "data": step.get("data")}
++        frame = env.step(_game_action(GameAction, action["action"]), data=action.get("data"))
++        path_after = [*path_before, action]
++        logs.append(
++            {
++                "frame_before": before,
++                "frame_after": frame,
++                "path_before": list(path_before),
++                "path_after": list(path_after),
++                "action": dict(action),
++                "level_before": _levels_completed(before),
++                "level_after": _levels_completed(frame),
++            }
++        )
++        path_before = path_after
++    return frame, logs
++
++
++def _run_arm(
++    game: str,
++    prefix: Sequence[Mapping[str, Any]],
++    prefix_level: int,
++    *,
++    arm: str,
++    max_expansions: int,
++    transition_logs: Sequence[Mapping[str, Any]],
++    root_frame: Any,
++) -> dict[str, Any]:  # pragma: no cover
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_frontier_continuity_landmarks import (
++        build_frontier_continuity_landmark_bank,
++    )
++    from carnot.agentic.arc_graph_explore import graph_explore_solve_v2, trajectory_labels
++
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    frontier_seed_bank = None
++    if arm != "flat_control":
++        frontier_seed_bank = build_frontier_continuity_landmark_bank(
++            root_frame=root_frame,
++            transition_logs=transition_logs,
++            enable_frontier_continuity=arm in {"frontier_continuity", "combined"},
++            enable_landmark_decomposition=arm in {"landmark_decomposition", "combined"},
++        )
++    stats: dict[str, Any] = {}
++    traj, reached = graph_explore_solve_v2(
++        env,
++        int(prefix_level),
++        prefix=list(prefix),
++        max_expansions=int(max_expansions),
++        max_depth=max(8, int(max_expansions)),
++        frontier_seed_bank=frontier_seed_bank,
++        stats=stats,
++    )
++    gate: dict[str, Any] | None = None
++    if traj is not None and int(reached) > int(prefix_level):
++        gate = kit.reproduce(
++            game,
++            trajectory_labels(traj),
++            _apply_json_action,
++            claimed_level=int(reached),
++        )
++    return {
++        "arm": arm,
++        "reached_level": int(reached),
++        "states_expanded": int(stats.get("expansions", 0) or 0),
++        "traj_len": len(traj or []),
++        "solve_provenance": SOLVE_PROVENANCE,
++        "reproduction_gate": gate,
++        "stats": stats,
++        "seed_bank_diagnostics": (
++            frontier_seed_bank.as_dict() if frontier_seed_bank is not None else None
++        ),
++    }
++
++
++def run_experiment(
++    *,
++    root: Path,
++    games: Sequence[str] = TARGET_GAMES,
++    max_expansions: int = MAX_EXPANSIONS,
++    run_unit_tests: bool = True,
++    run_lint: bool = True,
++) -> dict[str, Any]:  # pragma: no cover
++    from carnot.agentic import arc_solver_kit as kit
++
++    started = time.time()
++    unit = check_unit_tests(root) if run_unit_tests else {"passed": True, "skipped": True}
++    lint = run_arc_orphan_solver_lint(root) if run_lint else {"passed": True, "skipped": True}
++    arc = kit.offline_arcade()
++    per_game: list[dict[str, Any]] = []
++    registry_depths: dict[str, int] = {}
++    for game in games:
++        prefix, prefix_level = _load_prefix(root, game)
++        registry_depths[game] = int(prefix_level)
++        log_env = arc.make(game, scorecard_id=arc.open_scorecard())
++        root_frame, transition_logs = _collect_transition_logs(log_env, prefix)
++        arms = {
++            arm: _run_arm(
++                game,
++                prefix,
++                prefix_level,
++                arm=arm,
++                max_expansions=int(max_expansions),
++                transition_logs=transition_logs,
++                root_frame=root_frame,
++            )
++            for arm in ARMS
++        }
++        per_game.append(
++            {
++                "game": game,
++                "registry_depth": int(prefix_level),
++                "runtime_transition_log_rows": len(transition_logs),
++                "arms": arms,
++            }
++        )
++        print(
++            f"[{game}] "
++            + " | ".join(
++                f"{arm}=L{arms[arm]['reached_level']} exp={arms[arm]['states_expanded']}"
++                for arm in ARMS
++            ),
++            flush=True,
++        )
++
++    artifact = build_artifact(
++        per_game=per_game,
++        registry_depths=registry_depths,
++        orphan_lint=lint,
++        duration_s=time.time() - started,
++        max_expansions=int(max_expansions),
++    )
++    artifact["unit_tests"] = unit
++    artifact["orphan_lint"] = lint
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    return artifact
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:  # pragma: no cover
++    out = root / RESULT_RELATIVE_PATH
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
++    parser.add_argument("--games", default=",".join(TARGET_GAMES))
++    parser.add_argument("--max-expansions", type=int, default=MAX_EXPANSIONS)
++    parser.add_argument("--skip-unit-tests", action="store_true")
++    parser.add_argument("--skip-lint", action="store_true")
++    args = parser.parse_args(argv)
++    artifact = run_experiment(
++        root=args.root,
++        games=tuple(game.strip() for game in args.games.split(",") if game.strip()),
++        max_expansions=int(args.max_expansions),
++        run_unit_tests=not args.skip_unit_tests,
++        run_lint=not args.skip_lint,
++    )
++    out = write_artifact(args.root, artifact)
++    print(f"=== VERDICT: {artifact['honest_verdict']}")
++    print(f"-> {out}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2b558ccc81..74f184cb5d 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-04T05:41:41.186407Z",
+-  "duration_s": 0.06933808326721191,
++  "run_date": "2026-07-04T06:01:57.767187Z",
++  "duration_s": 0.0649411678314209,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "d6938467e0781ed6e25bf747cf86c206b7902e7976a4fc5ed4b827423da65002",
++  "reproducibility_checksum": "0b989df690ae63f356867e136b1b45f39343ffb055790fbb60ba8ccdedf1fed2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "f9e463cf1a9446f907f8607cb846f91036710e76"
++    "adversarial_verify_version": "8795979dc142015cc513b3d24764aae9135214b6"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 16cb3f5168..8262308b7b 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-04T05:41:41.297430Z",
+-  "duration_s": 0.1010739803314209,
++  "run_date": "2026-07-04T06:01:57.868484Z",
++  "duration_s": 0.09424567222595215,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3cbffb47b2e6654cc91c89b411b0f74c2bb426e1484b7cec83a249ba45b09ff9",
++  "reproducibility_checksum": "016b8c94fc60e82add26ea08c0b80540587f3ac86942bd9c395cc313083b4019",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "f9e463cf1a9446f907f8607cb846f91036710e76"
++    "adversarial_verify_version": "8795979dc142015cc513b3d24764aae9135214b6"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 76c6994900..d1219c28ee 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1140575408935547,
++  "efficiency_gains_ms": 2.1178722381591797,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a75d52cf9c..754165cc03 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.936312325298786e-05,
++  "duration_s": 5.3270021453499794e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json b/results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json
+new file mode 100644
+index 0000000000..5544c44e48
+--- /dev/null
++++ b/results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json
+@@ -0,0 +1,2289 @@
++{
++  "control_description": "flat/pruner-only control is flat graph search with no seed bank.",
++  "duplicate_registry_precheck_passed": true,
++  "duration_s": 35.57,
++  "experiment": "experiment_5216_arc_frontier_continuity_landmark_decomposition_v477",
++  "field_principles": {
++    "frontier_continuity_lift": "Per-game delta versus the flat/pruner-only control under the same expansion budget.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and must not claim a level bank without reproduction-gate evidence.",
++    "landmark_decomposition_lift": "Per-game delta versus the flat/pruner-only control under the same expansion budget.",
++    "new_levels_banked": "Each claimed level must name game, level, solve_provenance, and reproduction-gate evidence.",
++    "offline_ground_truth_bfs": "Must remain false; the pilot may use bounded runtime observations only.",
++    "read_game_source": "Must remain false; no game source may be inspected for the pilot.",
++    "solve_provenance": "Any level solve claim must declare provenance; outer_loop_re is not headline-eligible."
++  },
++  "frontier_continuity_lift": {
++    "bp35": {
++      "reached_level_delta": 0,
++      "reproduced_level_delta": 0,
++      "states_expanded_delta": -16
++    },
++    "cd82": {
++      "reached_level_delta": 0,
++      "reproduced_level_delta": 0,
++      "states_expanded_delta": 0
++    }
++  },
++  "honest_verdict": "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot.",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "landmark_decomposition_lift": {
++    "bp35": {
++      "reached_level_delta": 0,
++      "reproduced_level_delta": 0,
++      "states_expanded_delta": -1
++    },
++    "cd82": {
++      "reached_level_delta": 0,
++      "reproduced_level_delta": 0,
++      "states_expanded_delta": 0
++    }
++  },
++  "live_path_integration_attempted": true,
++  "max_expansions": 128,
++  "new_levels_banked": [],
++  "offline_ground_truth_bfs": false,
++  "orphan_lint": {
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "scripts/arc_orphan_solver_lint.py"
++    ],
++    "duration_s": 0.82,
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
++  },
++  "orphan_lint_result": "pass: OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).",
++  "per_arm_results": {
++    "bp35": {
++      "combined": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 118
++      },
++      "flat_control": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 102
++      },
++      "frontier_continuity": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 118
++      },
++      "landmark_decomposition": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 103
++      }
++    },
++    "cd82": {
++      "combined": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 128
++      },
++      "flat_control": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 128
++      },
++      "frontier_continuity": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 128
++      },
++      "landmark_decomposition": {
++        "offline_reproduced_level": 0,
++        "reached_level": 2,
++        "states_expanded": 128
++      }
++    }
++  },
++  "per_game": [
++    {
++      "arms": {
++        "combined": {
++          "arm": "combined",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 8,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": true,
++            "enable_landmark_decomposition": true,
++            "landmark_count": 8,
++            "landmarks": [
++              {
++                "goal_len": 4,
++                "landmark_hash": "adaa0e20c146f8af",
++                "reach_len": 1,
++                "score": 17.58
++              },
++              {
++                "goal_len": 5,
++                "landmark_hash": "6c06d219452639bb",
++                "reach_len": 1,
++                "score": 13.83
++              },
++              {
++                "goal_len": 5,
++                "landmark_hash": "bf982d1f8a0a06bd",
++                "reach_len": 1,
++                "score": 13.61
++              },
++              {
++                "goal_len": 12,
++                "landmark_hash": "710f680f4e31858d",
++                "reach_len": 1,
++                "score": 13.43
++              },
++              {
++                "goal_len": 16,
++                "landmark_hash": "85f9b3c6a34ee0a0",
++                "reach_len": 1,
++                "score": 13.07
++              },
++              {
++                "goal_len": 16,
++                "landmark_hash": "3b6c1a1c3382a37d",
++                "reach_len": 1,
++                "score": 12.99
++              },
++              {
++                "goal_len": 2,
++                "landmark_hash": "41483dab52a5cf0c",
++                "reach_len": 1,
++                "score": 12.0
++              },
++              {
++                "goal_len": 13,
++                "landmark_hash": "78370a82e6b50460",
++                "reach_len": 1,
++                "score": 11.41
++              }
++            ],
++            "max_sequences_per_node": 8,
++            "root_hash": "943833aaced6919d",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 118,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 118,
++            "frontier_seed_actions_injected": 16,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 8,
++              "enable_frontier_continuity": true,
++              "enable_landmark_decomposition": true,
++              "landmark_count": 8,
++              "max_sequences_per_node": 8,
++              "root_hash": "943833aaced6919d",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 1,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 2
++          },
++          "traj_len": 0
++        },
++        "flat_control": {
++          "arm": "flat_control",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": null,
++          "solve_provenance": "development_proxy",
++          "states_expanded": 102,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 102,
++            "frontier_seed_actions_injected": 0,
++            "frontier_seed_enabled": false,
++            "frontier_seed_sequences_injected": 0,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 2
++          },
++          "traj_len": 0
++        },
++        "frontier_continuity": {
++          "arm": "frontier_continuity",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 8,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": true,
++            "enable_landmark_decomposition": false,
++            "landmark_count": 0,
++            "landmarks": [],
++            "max_sequences_per_node": 8,
++            "root_hash": "943833aaced6919d",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 118,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 118,
++            "frontier_seed_actions_injected": 16,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 8,
++              "enable_frontier_continuity": true,
++              "enable_landmark_decomposition": false,
++              "landmark_count": 0,
++              "max_sequences_per_node": 8,
++              "root_hash": "943833aaced6919d",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 1,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 2
++          },
++          "traj_len": 0
++        },
++        "landmark_decomposition": {
++          "arm": "landmark_decomposition",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 8,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 42,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 24,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ],
++              [
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 36
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 18,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 6,
++                  "data": {
++                    "x": 30,
++                    "y": 30
++                  }
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": false,
++            "enable_landmark_decomposition": true,
++            "landmark_count": 8,
++            "landmarks": [
++              {
++                "goal_len": 4,
++                "landmark_hash": "adaa0e20c146f8af",
++                "reach_len": 1,
++                "score": 17.58
++              },
++              {
++                "goal_len": 5,
++                "landmark_hash": "6c06d219452639bb",
++                "reach_len": 1,
++                "score": 13.83
++              },
++              {
++                "goal_len": 5,
++                "landmark_hash": "bf982d1f8a0a06bd",
++                "reach_len": 1,
++                "score": 13.61
++              },
++              {
++                "goal_len": 12,
++                "landmark_hash": "710f680f4e31858d",
++                "reach_len": 1,
++                "score": 13.43
++              },
++              {
++                "goal_len": 16,
++                "landmark_hash": "85f9b3c6a34ee0a0",
++                "reach_len": 1,
++                "score": 13.07
++              },
++              {
++                "goal_len": 16,
++                "landmark_hash": "3b6c1a1c3382a37d",
++                "reach_len": 1,
++                "score": 12.99
++              },
++              {
++                "goal_len": 2,
++                "landmark_hash": "41483dab52a5cf0c",
++                "reach_len": 1,
++                "score": 12.0
++              },
++              {
++                "goal_len": 13,
++                "landmark_hash": "78370a82e6b50460",
++                "reach_len": 1,
++                "score": 11.41
++              }
++            ],
++            "max_sequences_per_node": 8,
++            "root_hash": "943833aaced6919d",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 103,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 103,
++            "frontier_seed_actions_injected": 1,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 8,
++              "enable_frontier_continuity": false,
++              "enable_landmark_decomposition": true,
++              "landmark_count": 8,
++              "max_sequences_per_node": 8,
++              "root_hash": "943833aaced6919d",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 1,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 2
++          },
++          "traj_len": 0
++        }
++      },
++      "game": "bp35",
++      "registry_depth": 2,
++      "runtime_transition_log_rows": 57
++    },
++    {
++      "arms": {
++        "combined": {
++          "arm": "combined",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 1,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 5,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": true,
++            "enable_landmark_decomposition": true,
++            "landmark_count": 4,
++            "landmarks": [
++              {
++                "goal_len": 4,
++                "landmark_hash": "9126ea70be7e0c8f",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 2,
++                "landmark_hash": "02bbeb58f076f9d6",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 1,
++                "landmark_hash": "bc9a29f5cd453cb6",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 3,
++                "landmark_hash": "cbb5ff002ba0b721",
++                "reach_len": 1,
++                "score": 2.0
++              }
++            ],
++            "max_sequences_per_node": 8,
++            "root_hash": "0340c6d167be764b",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 128,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 128,
++            "frontier_seed_actions_injected": 8,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 1,
++              "enable_frontier_continuity": true,
++              "enable_landmark_decomposition": true,
++              "landmark_count": 4,
++              "max_sequences_per_node": 8,
++              "root_hash": "0340c6d167be764b",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 4,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 25
++          },
++          "traj_len": 0
++        },
++        "flat_control": {
++          "arm": "flat_control",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": null,
++          "solve_provenance": "development_proxy",
++          "states_expanded": 128,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 128,
++            "frontier_seed_actions_injected": 0,
++            "frontier_seed_enabled": false,
++            "frontier_seed_sequences_injected": 0,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 24
++          },
++          "traj_len": 0
++        },
++        "frontier_continuity": {
++          "arm": "frontier_continuity",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 1,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 5,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": true,
++            "enable_landmark_decomposition": false,
++            "landmark_count": 0,
++            "landmarks": [],
++            "max_sequences_per_node": 8,
++            "root_hash": "0340c6d167be764b",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 128,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 128,
++            "frontier_seed_actions_injected": 5,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 1,
++              "enable_frontier_continuity": true,
++              "enable_landmark_decomposition": false,
++              "landmark_count": 0,
++              "max_sequences_per_node": 8,
++              "root_hash": "0340c6d167be764b",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 1,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 25
++          },
++          "traj_len": 0
++        },
++        "landmark_decomposition": {
++          "arm": "landmark_decomposition",
++          "reached_level": 2,
++          "reproduction_gate": null,
++          "seed_bank_diagnostics": {
++            "continuity_sequence_count": 1,
++            "continuity_sequences": [
++              [
++                {
++                  "action": 4,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 2,
++                  "data": null
++                },
++                {
++                  "action": 3,
++                  "data": null
++                },
++                {
++                  "action": 5,
++                  "data": null
++                }
++              ]
++            ],
++            "enable_frontier_continuity": false,
++            "enable_landmark_decomposition": true,
++            "landmark_count": 4,
++            "landmarks": [
++              {
++                "goal_len": 4,
++                "landmark_hash": "9126ea70be7e0c8f",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 2,
++                "landmark_hash": "02bbeb58f076f9d6",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 1,
++                "landmark_hash": "bc9a29f5cd453cb6",
++                "reach_len": 1,
++                "score": 2.01
++              },
++              {
++                "goal_len": 3,
++                "landmark_hash": "cbb5ff002ba0b721",
++                "reach_len": 1,
++                "score": 2.0
++              }
++            ],
++            "max_sequences_per_node": 8,
++            "root_hash": "0340c6d167be764b",
++            "verifier_is_oracle": false
++          },
++          "solve_provenance": "development_proxy",
++          "states_expanded": 128,
++          "stats": {
++            "action_effect_expansion_prior_enabled": false,
++            "expansion_priority_enabled": false,
++            "expansions": 128,
++            "frontier_seed_actions_injected": 3,
++            "frontier_seed_diagnostics": {
++              "continuity_sequence_count": 1,
++              "enable_frontier_continuity": false,
++              "enable_landmark_decomposition": true,
++              "landmark_count": 4,
++              "max_sequences_per_node": 8,
++              "root_hash": "0340c6d167be764b",
++              "verifier_is_oracle": false
++            },
++            "frontier_seed_enabled": true,
++            "frontier_seed_sequences_injected": 3,
++            "goal_energy_alpha": 0.0,
++            "goal_energy_beta": 0.0,
++            "goal_energy_enabled": false,
++            "goal_predicate_gate_enabled": false,
++            "goal_predicate_plan_emitted": false,
++            "max_expansions": 128,
++            "move_pruned": 0,
++            "move_pruner_enabled": false,
++            "proposal_prior_enabled": false,
++            "qd_actions_injected": 0,
++            "qd_generation_enabled": false,
++            "qd_sequences_injected": 0,
++            "states": 24
++          },
++          "traj_len": 0
++        }
++      },
++      "game": "cd82",
++      "registry_depth": 2,
++      "runtime_transition_log_rows": 20
++    }
++  ],
++  "random_seed": 20260704,
++  "read_game_source": false,
++  "registry_depths": {
++    "bp35": 2,
++    "cd82": 2
++  },
++  "reproducibility_checksum": "sha256:fd26b3d730c65b3f851256d56d311bfb3cd3341dcaba9c2402935bf89af0698e",
++  "reproducible_total_levels_delta": 0,
++  "schema": "carnot.experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.v1",
++  "solve_claim_policy": "Only reproduced levels strictly above the registry precheck count; outer_loop_re rows are excluded from headline claims.",
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-REPORT-5216",
++    "SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS",
++    "SCENARIO-REPORT-5216-ARTIFACT-GATE"
++  ],
++  "target_games": [
++    "bp35",
++    "cd82"
++  ],
++  "unit_tests": {
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
++      "tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py",
++      "-q",
++      "--no-cov"
++    ],
++    "duration_s": 7.48,
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 6.33s ===============================\n"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3ffd961223..28930b16e9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T05:41:27Z",
+-  "finished_at": "2026-07-04T05:41:27Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-04T06:01:43Z",
++  "finished_at": "2026-07-04T06:01:43Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2f6a3202c9..8464969aa7 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T05:41:27Z",
+-  "finished_at": "2026-07-04T05:41:27Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-04T06:01:43Z",
++  "finished_at": "2026-07-04T06:01:43Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c2c1a6c57c..70f2ea179d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260704",
+-  "started_at": "2026-07-04T05:41:28Z",
+-  "finished_at": "2026-07-04T05:41:28Z",
++  "started_at": "2026-07-04T06:01:43Z",
++  "finished_at": "2026-07-04T06:01:43Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py b/tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+new file mode 100644
+index 0000000000..28e7b5dd8f
+--- /dev/null
++++ b/tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py
+@@ -0,0 +1,368 @@
++"""Tests for Exp 5216 ARC frontier continuity plus landmark decomposition.
++
++Spec refs: REQ-REPORT-5216, SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS,
++SCENARIO-REPORT-5216-ARTIFACT-GATE.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_5216_arc_frontier_continuity_landmark_decomposition_v477 as mod
++from carnot.agentic import arc_frontier_continuity_landmarks as lm
++from carnot.agentic.arc_frontier_continuity_landmarks import (
++    build_frontier_continuity_landmark_bank,
++)
++from carnot.agentic.arc_graph_explore import graph_explore_solve_v2
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++class _LandmarkToyEnv:
++    def __init__(self) -> None:
++        self.state = "root"
++
++    def reset(self) -> Any:
++        self.state = "root"
++        return self._frame()
++
++    def _frame(self) -> Any:
++        grids = {
++            "root": np.array([[0, 0, 0]], dtype=np.int16),
++            "bad": np.array([[9, 0, 0]], dtype=np.int16),
++            "landmark": np.array([[0, 4, 0]], dtype=np.int16),
++            "win": np.array([[0, 4, 8]], dtype=np.int16),
++        }
++        return SimpleNamespace(
++            frame=grids[self.state],
++            levels_completed=1 if self.state == "win" else 0,
++            available_actions=[] if self.state == "win" else [1, 2],
++        )
++
++    @staticmethod
++    def _action_id(action: Any) -> int:
++        if hasattr(action, "value"):
++            return int(action.value)
++        text = str(action)
++        if "ACTION" in text:
++            return int(text.rsplit("ACTION", 1)[-1])
++        return int(action)
++
++    def step(self, action: Any, data: Any = None, reasoning: Any = None) -> Any:
++        aid = self._action_id(action)
++        transitions = {
++            ("root", 1): "bad",
++            ("root", 2): "landmark",
++            ("bad", 1): "bad",
++            ("bad", 2): "bad",
++            ("landmark", 1): "win",
++            ("landmark", 2): "landmark",
++        }
++        self.state = transitions[(self.state, aid)]
++        return self._frame()
++
++
++def _grid_of(frame: Any) -> np.ndarray:
++    return np.asarray(frame.frame)
++
++
++def _energy(frame: Any) -> float:
++    return float(np.count_nonzero(_grid_of(frame) != np.array([[0, 4, 8]], dtype=np.int16)))
++
++
++def _step(action: int) -> dict[str, Any]:
++    return {"action": int(action), "data": None}
++
++
++def _runtime_log() -> list[dict[str, Any]]:
++    root = SimpleNamespace(frame=np.array([[0, 0, 0]], dtype=np.int16), levels_completed=0)
++    landmark = SimpleNamespace(frame=np.array([[0, 4, 0]], dtype=np.int16), levels_completed=0)
++    win = SimpleNamespace(frame=np.array([[0, 4, 8]], dtype=np.int16), levels_completed=1)
++    return [
++        {
++            "frame_before": root,
++            "frame_after": landmark,
++            "path_before": [],
++            "path_after": [_step(2)],
++            "action": _step(2),
++            "level_before": 0,
++            "level_after": 0,
++        },
++        {
++            "frame_before": landmark,
++            "frame_after": win,
++            "path_before": [_step(2)],
++            "path_after": [_step(2), _step(1)],
++            "action": _step(1),
++            "level_before": 0,
++            "level_after": 1,
++        },
++    ]
++
++
++def _arm(
++    *,
++    reached: int,
++    states: int,
++    reproduced: bool = False,
++    provenance: str = "development_proxy",
++) -> dict[str, Any]:
++    return {
++        "reached_level": int(reached),
++        "states_expanded": int(states),
++        "solve_provenance": provenance,
++        "reproduction_gate": {
++            "game": "bp35",
++            "reached_level": int(reached),
++            "claimed_level": int(reached),
++            "reproduced": bool(reproduced),
++        },
++    }
++
++
++def test_req_report_5216_spec_declares_required_schema() -> None:
++    """REQ-REPORT-5216: OpenSpec declares the required Exp 5216 artifact schema."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-5216" in spec
++    assert "SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS" in spec
++    assert "SCENARIO-REPORT-5216-ARTIFACT-GATE" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    assert "outer_loop_re is not headline-eligible" in spec
++
++
++def test_scenario_report_5216_landmark_subsearch_uses_same_budget() -> None:
++    """SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS: split search reaches the induced landmark first."""
++
++    baseline_stats: dict[str, Any] = {}
++    baseline, baseline_level = graph_explore_solve_v2(
++        _LandmarkToyEnv(),
++        0,
++        max_expansions=4,
++        max_depth=4,
++        heuristic=lambda _frame: 0.0,
++        stats=baseline_stats,
++    )
++    bank = build_frontier_continuity_landmark_bank(
++        root_frame=_LandmarkToyEnv().reset(),
++        transition_logs=_runtime_log(),
++        grid_of=_grid_of,
++        goal_energy=_energy,
++        enable_frontier_continuity=False,
++        enable_landmark_decomposition=True,
++    )
++    seeded_stats: dict[str, Any] = {}
++    seeded, seeded_level = graph_explore_solve_v2(
++        _LandmarkToyEnv(),
++        0,
++        max_expansions=4,
++        max_depth=4,
++        heuristic=lambda _frame: 0.0,
++        frontier_seed_bank=bank,
++        stats=seeded_stats,
++    )
++
++    assert baseline is None
++    assert baseline_level == 0
++    assert baseline_stats["expansions"] == 4
++    assert seeded == [_step(2), _step(1)]
++    assert seeded_level == 1
++    assert seeded_stats["expansions"] == 4
++    assert seeded_stats["frontier_seed_sequences_injected"] == 2
++    assert seeded_stats["frontier_seed_actions_injected"] == 2
++    assert bank.diagnostics()["landmark_count"] == 1
++
++
++def test_scenario_report_5216_frontier_continuity_seeds_compatible_root() -> None:
++    """SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS: compatible prior frontiers seed the new root."""
++
++    bank = build_frontier_continuity_landmark_bank(
++        root_frame=_LandmarkToyEnv().reset(),
++        transition_logs=_runtime_log(),
++        grid_of=_grid_of,
++        goal_energy=_energy,
++        enable_frontier_continuity=True,
++        enable_landmark_decomposition=False,
++    )
++    stats: dict[str, Any] = {}
++    seeded, seeded_level = graph_explore_solve_v2(
++        _LandmarkToyEnv(),
++        0,
++        max_expansions=2,
++        max_depth=4,
++        heuristic=lambda _frame: 0.0,
++        frontier_seed_bank=bank,
++        stats=stats,
++    )
++
++    assert seeded == [_step(2), _step(1)]
++    assert seeded_level == 1
++    assert stats["frontier_seed_sequences_injected"] == 1
++    assert stats["frontier_seed_actions_injected"] == 2
++    assert bank.diagnostics()["continuity_sequence_count"] == 1
++
++
++def test_scenario_report_5216_artifact_gate_counts_only_new_reproduced_levels() -> None:
++    """SCENARIO-REPORT-5216-ARTIFACT-GATE: duplicate registry depths are not banked."""
++
++    rows = [
++        {
++            "game": "bp35",
++            "registry_depth": 2,
++            "arms": {
++                "flat_control": _arm(reached=2, states=64),
++                "frontier_continuity": _arm(reached=2, states=64),
++                "landmark_decomposition": _arm(reached=3, states=48, reproduced=False),
++            },
++        },
++        {
++            "game": "dc22",
++            "registry_depth": 3,
++            "arms": {
++                "flat_control": _arm(reached=3, states=64, reproduced=True),
++                "frontier_continuity": _arm(reached=3, states=60, reproduced=True),
++                "landmark_decomposition": _arm(reached=4, states=40, reproduced=True),
++            },
++        },
++    ]
++
++    artifact = mod.build_artifact(
++        per_game=rows,
++        registry_depths={"bp35": 2, "dc22": 3},
++        orphan_lint={"passed": True, "stdout_tail": "OK: all solver-like ARC modules are reachable"},
++        duration_s=1.25,
++    )
++
++    assert artifact["target_games"] == ["bp35", "dc22"]
++    assert artifact["duplicate_registry_precheck_passed"] is True
++    assert artifact["offline_ground_truth_bfs"] is False
++    assert artifact["read_game_source"] is False
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["new_levels_banked"] == [
++        {"game": "dc22", "level": 4, "solve_provenance": "development_proxy"}
++    ]
++    assert artifact["reproducible_total_levels_delta"] == 1
++    assert artifact["frontier_continuity_lift"]["dc22"]["states_expanded_delta"] == 4
++    assert artifact["landmark_decomposition_lift"]["dc22"]["reached_level_delta"] == 1
++    assert artifact["orphan_lint_result"].startswith("pass:")
++    assert artifact["honest_verdict"].startswith("success:")
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++
++
++def test_req_report_5216_defensive_normalization_and_zero_bank_paths() -> None:
++    """REQ-REPORT-5216: defensive branches keep schema honest without solve fabrication."""
++
++    frame3d = SimpleNamespace(frame=np.array([[[1, 2]]], dtype=np.int16), levels_completed=2)
++    bad_frame = SimpleNamespace(frame="bad")
++    assert lm._grid2d(frame3d, _grid_of).shape == (1, 2)
++    assert lm._grid2d(bad_frame, lambda _frame: (_ for _ in ()).throw(ValueError("bad"))) is None
++    assert lm._data_key({"b": [object()], "a": True})[0] == ("a", True)
++    assert lm._data_key(3.5) == 3.5
++    assert lm._clean_step(4) == {"action": 4, "data": None}
++    assert lm._path_suffix([_step(1)], [_step(2)]) == [_step(1)]
++    root_sig = lm._structural_signature(np.array([[0]], dtype=np.int16))
++    other_shape = lm._structural_signature(np.array([[0, 0]], dtype=np.int16))
++    assert lm._compatible_signature((), root_sig) is False
++    assert lm._compatible_signature(root_sig, other_shape) is False
++    assert lm._energy(None, frame3d) is None
++    assert lm._energy(lambda _frame: (_ for _ in ()).throw(RuntimeError("bad")), frame3d) is None
++    assert lm._level({"frame_after": frame3d}, "level_after", "frame_after") == 2
++    assert lm._candidate_keys([{"action": 6, "data": {"x": 1, "y": 2}}]) == {
++        (6, (("x", 1), ("y", 2)))
++    }
++    assert lm._first_action_allowed([], []) is False
++    assert lm._unique_sequences([[_step(1)], [_step(1)], [_step(2)], [_step(3)]], 2) == [
++        [_step(1)],
++        [_step(2)],
++    ]
++
++    bank = build_frontier_continuity_landmark_bank(
++        root_frame=_LandmarkToyEnv().reset(),
++        transition_logs=[
++            {"frame_before": bad_frame, "frame_after": bad_frame, "path_after": [_step(9)]},
++            *_runtime_log(),
++        ],
++        grid_of=lambda frame: np.asarray(frame.frame),
++        goal_energy=_energy,
++        max_sequences=2,
++    )
++    assert bank._frame_facts(bad_frame) is None
++    assert bank.frontier_seed_sequences(bad_frame, []) == []
++    assert bank.as_dict()["landmarks"][0]["goal_len"] == 1
++
++    mismatch_bank = build_frontier_continuity_landmark_bank(
++        root_frame=_LandmarkToyEnv().reset(),
++        transition_logs=[
++            {
++                "frame_before": SimpleNamespace(
++                    frame=np.array([[0, 0, 0]], dtype=np.int16), levels_completed=0
++                ),
++                "frame_after": SimpleNamespace(
++                    frame=np.array([[0, 0, 8]], dtype=np.int16), levels_completed=1
++                ),
++                "path_before": [],
++                "path_after": [_step(1)],
++                "level_before": 0,
++                "level_after": 1,
++            },
++            _runtime_log()[0],
++        ],
++        grid_of=_grid_of,
++        goal_energy=_energy,
++        max_sequence_len=0,
++    )
++    assert mismatch_bank.landmarks == []
++
++    prefix_mismatch_bank = build_frontier_continuity_landmark_bank(
++        root_frame=_LandmarkToyEnv().reset(),
++        transition_logs=[
++            {
++                "frame_before": SimpleNamespace(
++                    frame=np.array([[0, 0, 0]], dtype=np.int16), levels_completed=0
++                ),
++                "frame_after": SimpleNamespace(
++                    frame=np.array([[0, 0, 8]], dtype=np.int16), levels_completed=1
++                ),
++                "path_before": [],
++                "path_after": [_step(1)],
++                "level_before": 0,
++                "level_after": 1,
++            },
++            _runtime_log()[0],
++        ],
++        grid_of=_grid_of,
++        goal_energy=_energy,
++    )
++    assert prefix_mismatch_bank.landmarks == []
++
++    artifact = mod.build_artifact(
++        per_game=[
++            {
++                "game": "bp35",
++                "registry_depth": 2,
++                "arms": {
++                    "flat_control": _arm(reached=2, states=10),
++                    "frontier_continuity": _arm(
++                        reached=3, states=9, reproduced=True, provenance="outer_loop_re"
++                    ),
++                    "landmark_decomposition": _arm(reached=2, states=8),
++                },
++            }
++        ],
++        registry_depths={"bp35": 2},
++        orphan_lint={"passed": False, "stderr_tail": "lint failed"},
++        duration_s=0.1,
++    )
++    assert artifact["new_levels_banked"] == []
++    assert artifact["reproducible_total_levels_delta"] == 0
++    assert artifact["orphan_lint_result"] == "fail: lint failed"
++    assert artifact["honest_verdict"].startswith("complete:")
+-- 
+2.55.0
+

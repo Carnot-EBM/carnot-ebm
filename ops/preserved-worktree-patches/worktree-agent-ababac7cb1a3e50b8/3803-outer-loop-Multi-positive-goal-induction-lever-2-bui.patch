@@ -1,0 +1,134 @@
+From 946eafe2f3644a9bb27266eaea698913c35c0a54 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 24 Jun 2026 09:08:21 -0400
+Subject: [PATCH 03803/11362] [outer-loop] Multi-positive goal induction (lever
+ #2): built; re-reaching mechanism DEAD (ARC wins are canonical)
+
+Operator-authorized multi-hour build. Built the full machinery (induce-path win_state_set extension +
+gather + cross-positive invariant + discriminative leave-one-out gate; plumbing verified end-to-end on a
+mock proposer -- the gate correctly rejects literal-match via perturbation). Decisive CPU finding (no LLM):
+ARC-AGI-3 wins are CANONICAL -- re-reaching L1 across diversity-on per-seed paths yields distinct_wins=1 on
+EVERY game (lp85/sc25/tu93/vc33), so the "re-reach K times" gather can't produce distinct positives. The
+judge's failure-mode-1 is universal -> multi-positive-via-re-reaching is structurally dead.
+
+The K=1 richer-single-encoding fallback (start+delta+invariant+directive vs .430 win-only) hit Qwen
+server failures (HTTP 400 / timeout; prompt ~2.8k tokens, not an overflow) -> inconclusive, not worth more
+cycles. The canonical-win structure REDIRECTS to lever #4 (mechanic-template): a deterministic goal-predicate
+template keyed on the per-game canonical mechanic fits a canonical win far better than fuzzy multi-example
+induction; the extension + gate built here are reusable for #4.
+
+Build lives on branch outer-loop/multiwin-goal (commit 6c3e78d64). Note:
+docs/research-notes/multiwin-goal-induction-2026-06-24.md.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../multiwin-goal-induction-2026-06-24.md     | 64 +++++++++++++++++++
+ results/proto_multiwin_goal.json              | 24 +++++++
+ 2 files changed, 88 insertions(+)
+ create mode 100644 docs/research-notes/multiwin-goal-induction-2026-06-24.md
+ create mode 100644 results/proto_multiwin_goal.json
+
+diff --git a/docs/research-notes/multiwin-goal-induction-2026-06-24.md b/docs/research-notes/multiwin-goal-induction-2026-06-24.md
+new file mode 100644
+index 0000000000..89487ed407
+--- /dev/null
++++ b/docs/research-notes/multiwin-goal-induction-2026-06-24.md
+@@ -0,0 +1,64 @@
++# Multi-positive win-set L2 goal induction (lever #2): built, and the re-reaching mechanism is structurally dead — ARC wins are canonical (outer-loop, 2026-06-24)
++
++Operator-authorized multi-hour build of lever #2 (the adversarial design panel's sharpest attack on the
++`.430 "single-exemplar goal induction insufficient" residual). Built fully, verified the plumbing end-to-end,
++and a cheap CPU probe delivered a **decisive structural result before spending headline LLM time.**
++
++## The build (committed `6c3e78d64`, branch `outer-loop/multiwin-goal`)
++
++Extended the induce path (`arc_executable_world_model.py`: `_transitions_block` → new `_win_state_set_block`,
++`induce_prompt`, both `induce` methods) to accept `win_state_set` (K `(start, win, delta)` positives) +
++`win_invariant_hint` — additive, default `None` = current behavior (parity-safe). New prototype
++`scripts/experiments/proto_multiwin_goal.py`:
++1. **GATHER** K L1 positives by re-reaching L1 with `CARNOT_ARC_EXPLORE_DIVERSITY=1` + per-run `random.Random`
++   seeds injected into `policy.explorer._div_rng`.
++2. **INVARIANT** — precompute cross-positive structural features (True in every win, False in every start).
++3. **INDUCE** is_level_complete + engine via the real Qwen, with the WIN-STATE SET block.
++4. **DISCRIMINATIVE GATE** — accept only if True on all K wins, False on all K starts + distractors, AND robust
++   to a non-delta-cell perturbation (the leave-one-out anti-memorization test the `.430 gate lacked).
++5. **PLAN** — `plan_in_model` → reaches_goal? (the field that was 0/False in `.430).
++
++**Plumbing verified end-to-end** (mock proposer): `win_state_set` threads through; the gate correctly
++**rejects** a literal-grid-match predicate via the perturbation test (`robust_to_nondelta_perturb=False`).
++
++## DECISIVE FINDING: ARC-AGI-3 wins are CANONICAL → re-reaching cannot yield distinct positives
++
++A CPU probe (no LLM) re-reached L1 across diversity-on, per-seed-distinct exploration paths on
++**lp85, sc25, tu93, vc33**. Every game: **`distinct_wins = 1`** — every seed converges to the *identical* win
++grid (`win_changed_cells` lp85=1487, sc25=359, tu93=711, vc33=2364, byte-identical across seeds).
++Level-completion converges to ONE solved configuration, so **re-exploring the same level always produces the
++same win grid.** The judge's failure-mode-1 ("K positives nearly identical") is therefore **universal, not
++occasional** — the "re-reach K times" gather mechanism is structurally dead. K>1 degenerates to K=1; the
++precomputed invariant degenerates to "the win is this grid" (memorization).
++
++## The K=1 richer-encoding fallback: inconclusive (Qwen server failures)
++
++What survives re-reaching's death is the **richer single-win encoding** (start + delta + invariant +
++discriminative directive vs `.430's win-grid-only). On lp85+sc25 K=1 the real Qwen induce **failed at the
++server** (`HTTPError 400` on lp85, `TimeoutError` on sc25; prompt ≈ 2.8k tokens, well under the 16k context —
++NOT an overflow). The `.430 reinduction uses the same proposer config successfully, so these are
++proposer/server-tier flakiness, not a goal-quality result — the K=1 fallback is **inconclusive**, and not
++worth more cycles given the decisive finding above.
++
++## Where this redirects: lever #4 (mechanic-template)
++
++The canonical-win structure that **kills** multi-positive is exactly what **favors** lever #4: each game's win
++is a *clean canonical mechanic* (lp85 align-pieces, sc25 toggle-then-reach-exit, tu93 reach-color14-goal, tn36
++match-5-attributes — a small enumerable set). A **deterministic goal-predicate template keyed on the detected
++mechanic** fits a canonical win far better than fuzzy multi-example induction. The extension (`win_state_set`
++plumbing) + the discriminative gate built here are reusable for #4.
++
++**Salvage paths for multi-positive (if pursued, both another build):**
++- **Cross-game same-mechanic positives** — wins from DIFFERENT games sharing a mechanic class. Limited: per-game
++  mechanics differ, so few same-mechanic games exist.
++- **Augmentation** — synthetic transforms (translate/reflect) of the one canonical win, forcing a
++  *transform-invariant* (structural) goal that still holds on the original engine output. Speculative; needs
++  consistency with the engine's output space.
++
++## Honest bottom line
++
++The multi-hour build did its job: it **falsified the re-reaching multi-positive mechanism cheaply** (canonical
++wins, CPU probe, no headline LLM burn) and sharpened the path. Multi-positive-via-re-reaching is dead; the
++remaining live, well-motivated lever is **#4 mechanic-template**, which the canonical-win finding supports.
++Cross-refs: `arc-l2-goal-induction-levers` workflow (the ranked panel), `multi-level-deepening-diagnostic-2026-06-23.md`
++(the diagnosis), branch `outer-loop/multiwin-goal` (the build), `results/proto_multiwin_goal.json`.
+diff --git a/results/proto_multiwin_goal.json b/results/proto_multiwin_goal.json
+new file mode 100644
+index 0000000000..d9611a9eef
+--- /dev/null
++++ b/results/proto_multiwin_goal.json
+@@ -0,0 +1,24 @@
++{
++  "games": [
++    "lp85"
++  ],
++  "Ks": [
++    1
++  ],
++  "results": [
++    {
++      "game": "lp85",
++      "K": 1,
++      "n_positives": 1,
++      "n_distinct_wins": 1,
++      "canonical_win": true,
++      "induce_ok": false,
++      "induce_msg": "local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>",
++      "invariant_hint": "in EVERY win these cells hold the WIN value (and the START value in every start): cell(r1,c10): 5->14 in every win, cell(r1,c11): 5->14 in every win, cell(r1,c12): 5->14 in every win, cell(r1,c13): 5-",
++      "induce_s": 0.1,
++      "VERDICT": "proposer_failed"
++    }
++  ],
++  "any_reachable": false,
++  "any_satisfiable": false
++}
+\ No newline at end of file
+-- 
+2.55.0
+

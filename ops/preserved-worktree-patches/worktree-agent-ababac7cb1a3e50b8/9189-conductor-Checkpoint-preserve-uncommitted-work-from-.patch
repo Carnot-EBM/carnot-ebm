@@ -1,0 +1,70 @@
+From 9a2ae0a8c94ae932b456d20f4e4fe9d3561f6523 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 14:44:12 -0400
+Subject: [PATCH 09189/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...d_shift_process_restart_csl_replication.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9a61daed76..a4ca2dc360 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-14T18:25:13Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-14T18:44:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9637ad025f..c3c1a83dc1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15832,3 +15832,4 @@ code |
+ | 2026-08-14 17:36 UTC | Gated on Exp6427 clean corpus: constraint saturati | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-14 17:59 UTC | Gated on Exp6428 positive admission: prospective w | OK | 88 passed, 1 warning in 12.80s |
+ | 2026-08-14 18:23 UTC | Gated on Exp6430 prospective stream: controlled me | OK | 88 passed, 1 warning in 15.52s |
++| 2026-08-14 18:42 UTC | Gated on Exp6430 and Exp6431: held-shift process-r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 618538389c..13b8fbfb04 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-14T18:25:13Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-14T18:44:09Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6432_held_shift_process_restart_csl_replication.json b/results/experiment_6432_held_shift_process_restart_csl_replication.json
+index cb3c5249f9..b231d73eaf 100644
+--- a/results/experiment_6432_held_shift_process_restart_csl_replication.json
++++ b/results/experiment_6432_held_shift_process_restart_csl_replication.json
+@@ -11604,5 +11604,18 @@
+       "protected_retention_checker"
+     ],
+     "value": true
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "negative_transfer_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.25486198 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 12a2f7f3f9a8b87d89ff1acaeba53ec004df80f4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 17:02:00 -0400
+Subject: [PATCH 04017/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0ca75770d8..cda9e5a42f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 198, "phase": "iteration_start", "last_beat": "2026-06-25T20:46:57Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 199, "phase": "iteration_start", "last_beat": "2026-06-25T21:01:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 96f66fc2ec..5f8f8bdd2c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9282,3 +9282,4 @@ The contro |
+ | 2026-06-25 20:10 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- VALID-TEST E | OK | 106 passed, 1 warning in 8.52s |
+ | 2026-06-25 20:29 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 92 passed, 1 warning in 6.92s |
+ | 2026-06-25 20:44 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 9.30s |
++| 2026-06-25 20:59 UTC | PHASE A5 (ARC NORTH STAR; persist + cross-game tra | OK | 108 passed, 1 warning in 7.05s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3637c82c05..edff39d5a8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 198, "phase": "iteration_start", "started_at": "2026-06-25T20:46:57Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 199, "phase": "iteration_start", "started_at": "2026-06-25T21:01:58Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,70 @@
+From 9d87402c83d90f9da650b2655316c95316b31589 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 01:27:29 -0400
+Subject: [PATCH 08988/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...49_terminal_handoff_and_queue_preflight.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a08b915eff..a6bf1176e7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-13T04:54:32Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-13T05:27:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ea5f2533bf..2d229bfbf0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15748,3 +15748,4 @@ code |
+ | 2026-08-13 03:57 UTC | Gated repaired three-model live factor proposal au | OK | 89 passed, 1 warning in 8.60s |
+ | 2026-08-13 04:50 UTC | Plan milestone 2026.08.549 | OK | 14 tasks proposed |
+ | 2026-08-13 04:52 UTC | Milestone 2026.08.549 activated | OK | 14 tasks queued |
++| 2026-08-13 05:25 UTC | V548 terminal evidence handoff and V549 queue pref | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 48f4c02d57..d026e9fb29 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-13T04:54:32Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-13T05:27:26Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json b/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json
+index 13bad2f0e0..8411ea2ed3 100644
+--- a/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json
++++ b/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json
+@@ -878,5 +878,18 @@
+     "exp6389-arc-default-off-active-goal-shadow",
+     "exp6390-v549-adversarial-capstone"
+   ],
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.017283038935 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,424 @@
+From ecb2b7bf95e476b7964c37a4432b07043ac4bdf4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 10:07:55 -0400
+Subject: [PATCH 06880/11362] [outer-loop] wire live behavioral mechanic-class
+ inference into E3AgentPolicy
+
+Closes the gap operator identified: "make sure we have that wiring in the
+live agent" for genre/rule-kind inference to prioritize moves, not
+per-game memorization.
+
+arc_solve_learning.extract_early_play_signature() and
+classify_early_play_mechanic() already existed and were already reachable
+from the live import closure, but the scored E3AgentPolicy never fed them
+a real early_play_signature -- _feature_router_payload always returned
+enabled=False, reason=early_play_signature_not_supplied in practice. This
+was pure behavioral dead code: click/keyboard effect density, avatar
+motion detection, cell-connect detection, hidden-carry-state detection,
+and config-toggle detection, computed with zero game-identity lookup and
+zero use of the executable win-check.
+
+New: _early_play_rows() converts E3AgentPolicy.transitions (this game's
+OWN observed transitions, real hidden games included) into the row shape
+the classifier expects. _maybe_route_from_transitions() fires once per
+game after 8 transitions accumulate (matching
+extract_early_play_signature's own k), classifies the behavioral
+signature, and -- above a confidence floor -- biases
+uses_goal_distance_heuristic (and the derived explore budget), mirroring
+the existing _maybe_route_from_frame precedent. self.feature_router is
+always populated for observability even below the confidence floor.
+
+Deliberately conservative: results/experiment_4582_feature_router_
+transfer.json already measured the closely-related idea of switching the
+entire offline solver by classified mechanic and found no value
+(transfer_delta=0.0, did not beat a random-route control). What's wired
+here is narrower -- it never swaps solvers, only adjusts one existing
+budget-sizing flag inside the same E3AgentPolicy cascade -- but inherits
+the same classifier, so it's gated behind
+_FEATURE_ROUTER_MIN_CONFIDENCE=0.5 and treated as provisional until it
+has its own controlled measurement, not assumed to move the scored win
+rate.
+
+Verified: scripts/arc_orphan_solver_lint.py passes (49 live-reachable
+modules), live end-to-end smoke test against the offline arcade (tn36,
+real transitions, no crashes, correct classification + confidence-gate
+suppression), full existing arc_competition_agent/arc_solve_learning test
+suite still green (54 passed pre-existing + 3 pre-existing unrelated
+failures reproduced identically on unmodified HEAD), new 7-test
+regression file (tests/python/test_experiment_4582_live_feature_router_
+wiring.py) covers row conversion, once-per-game firing, game-identity
+independence, and both sides of the confidence gate.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../carnot/agentic/arc_competition_agent.py   | 124 +++++++++++-
+ ...eriment_4582_live_feature_router_wiring.py | 191 ++++++++++++++++++
+ 2 files changed, 312 insertions(+), 3 deletions(-)
+ create mode 100644 tests/python/test_experiment_4582_live_feature_router_wiring.py
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 6d0264f160..cb007d8bc2 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -228,11 +228,26 @@ def _route_explore_budget(route: dict[str, Any]) -> int:
+     return SUBMITTED_GRAPH_EXPLORE_BUDGET
+ 
+ 
+-def _recommend_live_approach(game_id: str, *, mechanic: Optional[str] = None) -> dict[str, Any]:
+-    """Return the solve-learning recommendation, falling back to the lightweight strategy router."""
++def _recommend_live_approach(
++    game_id: str,
++    *,
++    mechanic: Optional[str] = None,
++    early_play_signature: Any = None,
++) -> dict[str, Any]:
++    """Return the solve-learning recommendation, falling back to the lightweight strategy router.
++
++    `early_play_signature` (a list of {action_id, data, before, after} rows built purely from this
++    game's OWN observed transitions, no game-identity lookup) threads through to
++    `arc_solve_learning.recommend_approach`'s behavioral `feature_router` payload — this is the
++    genre/mechanic-class-from-play-experience signal, distinct from (and available even when) the
++    identity-keyed `mechanic=` hint and the games-registry similarity engine are both blind to a
++    truly hidden game.
++    """
+ 
+     try:
+-        rec = arc_solve_learning.recommend_approach(game_id, mechanic=mechanic)
++        rec = arc_solve_learning.recommend_approach(
++            game_id, mechanic=mechanic, early_play_signature=early_play_signature
++        )
+         if isinstance(rec, dict) and isinstance(rec.get("strategy"), dict):
+             return rec
+     except Exception as exc:
+@@ -243,6 +258,40 @@ def _recommend_live_approach(game_id: str, *, mechanic: Optional[str] = None) ->
+     return {"strategy": arc_strategy_router.route_for_game(game_id, mechanic=mechanic)}
+ 
+ 
++# REQ-CAPSTONE-4582 (live wiring): how many of the game's OWN early observed transitions to
++# summarize into a behavioral mechanic-class signature before biasing the live search. Matches
++# `arc_solve_learning.extract_early_play_signature`'s own default `k`.
++_FEATURE_ROUTER_EARLY_PLAY_K = 8
++
++# Minimum `feature_router.confidence` (learned win-rate margin for the routed approach, from
++# `arc_solve_learning.learn_feature_router_policy`) required before the classified mechanic is
++# allowed to change live search behavior. Below this it is observational only (still stored on
++# `self.feature_router`). Conservative given exp4582's null on the closely-related full-solver-swap
++# version of this idea -- see `_maybe_route_from_transitions`'s docstring.
++_FEATURE_ROUTER_MIN_CONFIDENCE = 0.5
++
++
++def _early_play_rows(
++    transitions: Any, *, k: int = _FEATURE_ROUTER_EARLY_PLAY_K
++) -> list[dict[str, Any]]:
++    """Convert this game's own collected `Transition`s into the row shape
++    `arc_solve_learning.extract_early_play_signature` expects. Purely behavioral: uses only the
++    grids/actions this specific live play session has already observed, never a game-identity
++    lookup and never the executable win-check."""
++
++    rows: list[dict[str, Any]] = []
++    for transition in list(transitions)[:k]:
++        rows.append(
++            {
++                "action_id": getattr(transition, "action", None),
++                "data": getattr(transition, "data", None),
++                "before": getattr(transition, "grid", None),
++                "after": getattr(transition, "next_grid", None),
++            }
++        )
++    return rows
++
++
+ def _load_submitted_candidate_router() -> Any | None:
+     """Load the Exp4545 v3 discriminative router as a safe candidate-order tie-breaker."""
+ 
+@@ -2251,6 +2300,8 @@ class E3AgentPolicy:
+         )
+         self.approach_recommendation["strategy"] = self.strategy_route
+         self._route_from_frame_checked = False
++        self._feature_router_checked = False
++        self.feature_router: dict[str, Any] | None = None
+         self.mechanic_detector = mechanic_detector or _frame_only_mechanic_hint
+         self.dsl_model = ObjectDeltaModel(self.short)
+         self.dsl_energy: Optional[dict[str, Any]] = None
+@@ -2394,6 +2445,72 @@ class E3AgentPolicy:
+             self.approach_recommendation = recommendation
+             self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
+ 
++    def _maybe_route_from_transitions(self) -> None:
++        """REQ-CAPSTONE-4582 (live wiring): once enough of THIS game's own transitions have been
++        observed, classify their behavioral signature (avatar motion / click-connect / config-toggle
++        / hidden-carry-state / keyboard-vs-click effect density -- see
++        `arc_solve_learning.extract_early_play_signature`) and use it to bias search the same way
++        `_maybe_route_from_frame`'s frame-only hint already does: by adjusting whether the
++        goal-distance heuristic portfolio applies and re-deriving the explore budget from it.
++
++        This infers a KIND of game from how it has behaved so far in THIS live session -- never a
++        game-identity lookup, never the executable win-check, never a per-game answer -- and is a
++        strict prioritization signal over the explorer's own existing candidate generation, not a
++        replacement for it. Fires once per game, guarded by `_feature_router_checked`.
++
++        HONEST PRIOR RESULT (do not silently contradict it): `results/experiment_4582_feature_router_
++        transfer.json` measured the CLOSELY-RELATED idea of switching the entire offline solver
++        approach by classified mechanic and found NO value on the public held-out-variant methodology
++        (transfer_delta=0.0, did not beat a random-route positive control; chosen_submitted_config:
++        unchanged). What this method wires is narrower -- it never swaps solvers, it only adjusts one
++        existing budget-sizing flag inside the SAME unified E3AgentPolicy cascade -- but it inherits
++        the same classifier, so it is gated on `_FEATURE_ROUTER_MIN_CONFIDENCE` and treated as
++        provisional/observational (always populates `self.feature_router` for visibility) rather than
++        trusted to move the scored win rate until it has its own controlled measurement."""
++
++        if self._feature_router_checked:
++            return
++        if len(self.transitions) < _FEATURE_ROUTER_EARLY_PLAY_K:
++            return
++        self._feature_router_checked = True
++        try:
++            rows = _early_play_rows(self.transitions)
++            recommendation = _recommend_live_approach(self.short, early_play_signature=rows)
++        except Exception:
++            return
++        feature_router = (
++            recommendation.get("feature_router") if isinstance(recommendation, dict) else None
++        )
++        if not isinstance(feature_router, dict) or not feature_router.get("enabled"):
++            return
++        self.feature_router = feature_router
++        mechanic_class = str(feature_router.get("mechanic_class") or "")
++        approach = str(feature_router.get("approach") or "")
++        confidence = float(feature_router.get("confidence") or 0.0)
++        if not mechanic_class or mechanic_class == "unknown" or not approach:
++            return
++        if confidence < _FEATURE_ROUTER_MIN_CONFIDENCE:
++            # Classified, stored on self.feature_router for observability, but not confident
++            # enough to change live search behavior -- see the confidence-gate rationale above.
++            return
++        # The behavioral 7-class taxonomy (avatar_navigation / click_connect / config_toggle /
++        # hidden_carry_state / keyboard_graph / click_graph) is deliberately NOT the same vocabulary
++        # as arc_strategy_router's 5 STRATEGY_CLASSES (program_editor / graph_explore / ...) -- an
++        # unrecognized mechanic name there silently no-ops to the graph_explore default. The one
++        # concrete, already-load-bearing knob both sides share is `uses_goal_distance_heuristic`
++        # (it gates the explore-budget portfolio in `_route_explore_budget`); only
++        # `goal_distance_astar` genuinely implies avatar/goal-distance structure is present.
++        wants_goal_distance = approach == "goal_distance_astar"
++        if bool(self.strategy_route.get("uses_goal_distance_heuristic")) != wants_goal_distance:
++            routed = dict(self.strategy_route)
++            routed["uses_goal_distance_heuristic"] = wants_goal_distance
++            routed["feature_router_mechanic_class"] = mechanic_class
++            routed["feature_router_approach"] = approach
++            self.strategy_route = routed
++            recommendation["strategy"] = routed
++            self.approach_recommendation = recommendation
++            self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
++
+     def _fit_dsl_model(self) -> None:
+         active = self._active_dsl_transitions()
+         if not active:
+@@ -2747,6 +2864,7 @@ class E3AgentPolicy:
+             self.transitions.append(transition)
+             self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+             self._observe_active_probe_transition(transition)
++            self._maybe_route_from_transitions()
+         boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
+         if boundary_events and latest is not None:
+             try:
+diff --git a/tests/python/test_experiment_4582_live_feature_router_wiring.py b/tests/python/test_experiment_4582_live_feature_router_wiring.py
+new file mode 100644
+index 0000000000..a17b9d7e39
+--- /dev/null
++++ b/tests/python/test_experiment_4582_live_feature_router_wiring.py
+@@ -0,0 +1,191 @@
++"""Tests for the LIVE-agent wiring of the REQ-CAPSTONE-4582 feature router.
++
++Why this file exists: `arc_solve_learning.extract_early_play_signature` /
++`classify_early_play_mechanic` / `route_feature_approach` were built and unit-tested
++(`test_experiment_4582_feature_router_transfer.py`), and even imported by
++`arc_competition_agent.py`, but the scored `E3AgentPolicy` never actually fed them live
++transitions -- `_feature_router_payload` always returned `enabled: False,
++reason: "early_play_signature_not_supplied"` in practice. These tests pin the fix: a
++purely behavioral (no game-identity, no win-check, no LLM) mechanic classification built
++from `E3AgentPolicy`'s OWN collected transitions, fired once per game, that only changes
++live search behavior above a confidence floor (kept conservative given
++`results/experiment_4582_feature_router_transfer.json`'s honest null on the closely
++related full-solver-swap version of this idea).
++
++Spec refs: REQ-CAPSTONE-4582, SCENARIO-CAPSTONE-4582.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from typing import Any
++
++from carnot.agentic import arc_competition_agent as agent
++from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++
++@dataclass
++class _FakeTransition:
++    grid: Any
++    action: int
++    data: Any
++    next_grid: Any
++    level_before: int = 0
++    level_after: int = 0
++
++
++def _click_transitions(n: int) -> list[_FakeTransition]:
++    """n click transitions, each changing one cell -- classifies as click_graph."""
++
++    out = []
++    for i in range(n):
++        before = ((0, 0), (0, 0))
++        after = ((i % 9 + 1, 0), (0, 0))
++        out.append(_FakeTransition(before, 6, {"x": i, "y": 0}, after))
++    return out
++
++
++def test_req_capstone_4582_early_play_rows_reads_transition_fields() -> None:
++    """_early_play_rows converts Transition-shaped objects using only the fields it needs,
++    never a game-identity lookup."""
++
++    transitions = _click_transitions(3)
++    rows = agent._early_play_rows(transitions, k=8)
++
++    assert len(rows) == 3
++    assert rows[0]["action_id"] == 6
++    assert rows[0]["data"] == {"x": 0, "y": 0}
++    assert rows[0]["before"] == ((0, 0), (0, 0))
++    assert rows[0]["after"] == ((1, 0), (0, 0))
++
++
++def test_req_capstone_4582_early_play_rows_caps_at_k() -> None:
++    transitions = _click_transitions(20)
++    rows = agent._early_play_rows(transitions, k=8)
++    assert len(rows) == 8
++
++
++def test_scenario_capstone_4582_route_from_transitions_fires_once_after_k() -> None:
++    """SCENARIO-CAPSTONE-4582: the live check is a no-op before k transitions, fires exactly
++    once at k, and is idempotent afterward -- it never re-fires or re-queries every step."""
++
++    policy = E3AgentPolicy("livewiretest", proposer=None, value_head=lambda _f: 0.0)
++    assert policy.feature_router is None
++    assert policy._feature_router_checked is False
++
++    # Below the k=8 threshold: no-op every time.
++    for i in range(agent._FEATURE_ROUTER_EARLY_PLAY_K - 1):
++        policy.transitions.append(_click_transitions(1)[0])
++        policy._maybe_route_from_transitions()
++        assert policy._feature_router_checked is False
++        assert policy.feature_router is None
++
++    # Crossing k: fires exactly once.
++    policy.transitions.append(_click_transitions(1)[0])
++    policy._maybe_route_from_transitions()
++    assert policy._feature_router_checked is True
++    first_result = policy.feature_router
++    assert isinstance(first_result, dict)
++    assert first_result.get("enabled") is True
++    assert first_result.get("mechanic_class") == "click_graph"
++
++    # Idempotent: calling again (e.g. next action) does not re-query or change the result.
++    policy.transitions.append(_click_transitions(1)[0])
++    policy._maybe_route_from_transitions()
++    assert policy.feature_router is first_result
++
++
++def test_req_capstone_4582_never_uses_game_identity_or_win_check() -> None:
++    """The classification is purely behavioral: an UNKNOWN, made-up game id (guaranteed not
++    in the public survey / registry) still produces a real classification, because
++    extract_early_play_signature/classify_early_play_mechanic never consult game identity or
++    frame.levels_completed."""
++
++    policy = E3AgentPolicy(
++        "totally-unseen-hidden-game-id-9999", proposer=None, value_head=lambda _f: 0.0
++    )
++    for t in _click_transitions(agent._FEATURE_ROUTER_EARLY_PLAY_K):
++        policy.transitions.append(t)
++    policy._maybe_route_from_transitions()
++
++    assert policy.feature_router is not None
++    assert policy.feature_router["mechanic_class"] == "click_graph"
++    assert policy.feature_router["signature"]["llm_used"] is False
++
++
++def test_scenario_capstone_4582_low_confidence_does_not_change_strategy(monkeypatch) -> None:
++    """SCENARIO-CAPSTONE-4582: a classified-but-low-confidence route is stored for
++    observability but must NOT change live search behavior (the confidence gate)."""
++
++    def _fake_recommend(game_id, *, mechanic=None, early_play_signature=None):
++        return {
++            "strategy": {"name": "graph_explore", "uses_goal_distance_heuristic": True},
++            "feature_router": {
++                "enabled": True,
++                "mechanic_class": "avatar_navigation",
++                "approach": "goal_distance_astar",
++                "confidence": agent._FEATURE_ROUTER_MIN_CONFIDENCE - 0.01,
++            },
++        }
++
++    monkeypatch.setattr(agent, "_recommend_live_approach", _fake_recommend)
++    policy = E3AgentPolicy("lowconftest", proposer=None, value_head=lambda _f: 0.0)
++    original_route = dict(policy.strategy_route)
++    for t in _click_transitions(agent._FEATURE_ROUTER_EARLY_PLAY_K):
++        policy.transitions.append(t)
++
++    policy._maybe_route_from_transitions()
++
++    assert policy.feature_router is not None  # observability still populated
++    assert policy.strategy_route == original_route  # but behavior unchanged
++
++
++def test_scenario_capstone_4582_high_confidence_avatar_navigation_biases_goal_distance(
++    monkeypatch,
++) -> None:
++    """SCENARIO-CAPSTONE-4582: a high-confidence avatar_navigation classification (whose
++    routed approach is goal_distance_astar) DOES flip uses_goal_distance_heuristic and
++    re-derives the explore budget -- the one concrete live prioritization effect."""
++
++    def _fake_recommend(game_id, *, mechanic=None, early_play_signature=None):
++        return {
++            "strategy": {"name": "graph_explore", "uses_goal_distance_heuristic": False},
++            "feature_router": {
++                "enabled": True,
++                "mechanic_class": "avatar_navigation",
++                "approach": "goal_distance_astar",
++                "confidence": 0.9,
++            },
++        }
++
++    monkeypatch.setattr(agent, "_recommend_live_approach", _fake_recommend)
++    policy = E3AgentPolicy("highconftest", proposer=None, value_head=lambda _f: 0.0)
++    policy.strategy_route = {"name": "graph_explore", "uses_goal_distance_heuristic": False}
++    for t in _click_transitions(agent._FEATURE_ROUTER_EARLY_PLAY_K):
++        policy.transitions.append(t)
++
++    policy._maybe_route_from_transitions()
++
++    assert policy.strategy_route.get("uses_goal_distance_heuristic") is True
++    assert policy.strategy_route.get("feature_router_mechanic_class") == "avatar_navigation"
++    assert policy.strategy_route.get("feature_router_approach") == "goal_distance_astar"
++
++
++def test_req_capstone_4582_recommend_live_approach_threads_early_play_signature(
++    monkeypatch,
++) -> None:
++    """_recommend_live_approach forwards early_play_signature through to
++    arc_solve_learning.recommend_approach (not silently dropped)."""
++
++    captured: dict[str, Any] = {}
++
++    def _fake_recommend_approach(game_id, *, mechanic=None, early_play_signature=None):
++        captured["early_play_signature"] = early_play_signature
++        return {"strategy": {"name": "graph_explore"}}
++
++    monkeypatch.setattr(agent.arc_solve_learning, "recommend_approach", _fake_recommend_approach)
++    rows = [{"action_id": 6, "data": {"x": 1, "y": 1}, "before": (), "after": ()}]
++
++    agent._recommend_live_approach("anygame", early_play_signature=rows)
++
++    assert captured["early_play_signature"] == rows
+-- 
+2.55.0
+

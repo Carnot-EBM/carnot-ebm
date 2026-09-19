@@ -1,0 +1,61 @@
+From 95a04894affaba15e5456cef02d026100738a4f7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 16:51:15 -0400
+Subject: [PATCH 10309/11362] [conductor] Pre-gate block: Environment-indexed
+ proof grammar runtime fixture
+
+1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.environment_grammar_targetable_rows (actual=21 >= expected=24)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...riment_6756_environment_indexed_proof_grammar_fixture.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 22d9f5fcf1..6022bafb59 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-08-29T20:49:11Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 45, "phase": "iteration_start", "last_beat": "2026-08-29T20:51:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7631d39f9c..f921bb7b98 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16779,3 +16779,4 @@ The l |
+ | 2026-08-29 20:10 UTC | Milestone 2026.08.589 activated | OK | 13 tasks queued |
+ | 2026-08-29 20:45 UTC | Lossless GGUF output boundary and 216-row reparse | OK | 106 passed, 1 warning in 237.95s (0:03:57) |
+ | 2026-08-29 20:47 UTC | Environment-indexed proof grammar runtime fixture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.envir |
++| 2026-08-29 20:49 UTC | Environment-indexed proof grammar runtime fixture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.envir |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cc5f58f3a4..e8ae16cccb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 44, "phase": "iteration_start", "started_at": "2026-08-29T20:49:11Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 45, "phase": "iteration_start", "started_at": "2026-08-29T20:51:14Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6756_environment_indexed_proof_grammar_fixture.json b/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+index eb41fa2009..1d99a0aa08 100644
+--- a/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
++++ b/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+@@ -2,8 +2,8 @@
+   "experiment": 6756,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-29",
+-  "started_at": "2026-08-29T20:49:12.237763+00:00",
+-  "finished_at": "2026-08-29T20:49:12.237763+00:00",
++  "started_at": "2026-08-29T20:51:15.409890+00:00",
++  "finished_at": "2026-08-29T20:51:15.409890+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Environment-indexed proof grammar runtime fixture",
+-- 
+2.55.0
+

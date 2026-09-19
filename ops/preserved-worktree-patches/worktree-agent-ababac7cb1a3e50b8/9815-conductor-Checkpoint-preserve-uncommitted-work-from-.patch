@@ -1,0 +1,56 @@
+From eaa4caf2947fe9a0e2a8a8fafd7e53b184fe776a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 10:28:47 -0400
+Subject: [PATCH 09815/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 221ac2feed..01b123e7e3 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T14:11:49Z"
++ "last_scan_utc": "2026-08-24T14:28:43Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f2e6f513b4..55aa17f5f0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-24T14:10:21Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-24T14:28:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f9230ebe6e..809bbbc151 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16409,3 +16409,4 @@ code |
+ | 2026-08-24 13:32 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+ | 2026-08-24 13:32 UTC | Milestone 2026.08.572 activated | OK | 6 tasks queued |
+ | 2026-08-24 14:08 UTC | V572 terminal recovery and decomposed flagship con | OK | 95 passed, 1 warning in 20.78s |
++| 2026-08-24 14:26 UTC | V572 SOTA source and joint-proof method protocol | OK | 88 passed, 1 warning in 12.01s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f164b97fa2..0f6561323e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-24T14:10:21Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-24T14:28:42Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

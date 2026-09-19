@@ -1,0 +1,106 @@
+From 2e6aad84c60300100e7e5ebfbae303f03845e9ef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 17:09:16 -0400
+Subject: [PATCH 09197/11362] [conductor] Operational retrospective for
+ milestone 2026.08.553
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_553.json | 59 ++++++++++++++++++++++
+ 3 files changed, 67 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_553.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 4be77441e7..8d0ab69c3e 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6192,3 +6192,10 @@ The critical path for milestone .250:
+ - theme: authenticated receipt and receipt-gated work concentrated the compute-bound execution tail
+ - key result: the records rank the compute tail but do not explain its phases, establish a compute-task GPU-idle fault, or show a missed parallel multi-model runner dispatch
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.553
++
++- exp_range: exp6426-exp6426 (only identifier present in the authoritative timing data; the complete milestone range is not available)
++- theme: wall time concentrated in a synthesis-only reachability and roster pass rather than accelerator work
++- key result: the first compute row was readiness-dependent; neither in-task accelerator duty cycle nor eligibility for the dual-GPU runner is observable
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index dd16fe2c3f..13f1cb02d1 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16761,3 +16761,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-14: Gated on Exp6430 and Exp6431: held-shift process-restart CSL replication (✅ Complete) — honest_verdict=complete: held-shift process-restart replication improved future exact yield; results/experiment_6432_held_shift_process_restart_csl_replication.json
+ - 2026-08-14: Independent V553 CSL row-recomputation and safety audit (✅ Complete) — honest_verdict=complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible; results/experiment_6433_csl_row_recomputation_safety_audit.json
+ - 2026-08-14: V553 adversarial capstone, claim decision, and documentation reconciliation (⚠️ Blocked) — honest_verdict=complete_blocked: V553 narrow factor evidence is eligible, while verification-cost, prospective CSL, ARC reachability, public ARC, and hardware claims remain blocked by flagged, underpowered, missing, or unauthenticated evidence; results/experiment_6435_v553_adversarial_capstone.json
++- 2026-08-14: Operational retrospective for 2026.08.553: execution accounting covers 12 completions across 86 minutes, divided into 6 compute-bound and 6 synthesis-only experiments. The readiness-dependent constraint-saturation factor task heads the shown compute rows at 1 minute, but its internal timing is unavailable. The idle device snapshot does not override the locked false task-idle indicator, so compute-period utilization cannot be scored; loaded-model concurrency is also absent, preventing a DualGPURunner determination. The highest-leverage tooling change is deterministic CPU sharding with phase checkpoints for the long synthesis workflow, accompanied by task-linked device and dispatch receipts. Estimated savings is 0% without a measured alternate run. Artifact: results/operational_retro_2026_08_553.json.
+diff --git a/results/operational_retro_2026_08_553.json b/results/operational_retro_2026_08_553.json
+new file mode 100644
+index 0000000000..ac99013b0b
+--- /dev/null
++++ b/results/operational_retro_2026_08_553.json
+@@ -0,0 +1,59 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.553",
++  "generated_at": "2026-08-14T21:02:23Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 85.8,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 6,
++  "slowest_experiments": [
++    {
++      "experiment": "ARC generic state-key reachability invariant and full-roster A/B",
++      "duration_minutes": 84.63,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp6426 readiness: fresh row-recomputable constraint-saturation factor ",
++      "duration_minutes": 0.77,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Task-scoped runtime, GPU, concurrency, and runner receipt contract",
++      "duration_minutes": 0.24,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Independent V553 CSL row-recomputation and safety audit",
++      "duration_minutes": 0.08,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V553 adversarial capstone, claim decision, and documentation reconciliation",
++      "duration_minutes": 0.05,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The locked timing record covers 12 experiments split evenly between compute-bound and synthesis-only work. Its duration is concentrated in one synthesis-only entry; compute-period GPU duty cycle and parallel-runner eligibility remain unobservable.",
++  "bottlenecks_identified": [
++    "The synthesis-only ARC generic state-key reachability invariant and full-roster A/B forms the dominant wall-time concentration, with no internal stage timings to localize its cost.",
++    "The displayed compute-bound order is the Exp6426-readiness-gated constraint-saturation factor task, the task-scoped runtime receipt contract, then the V553 capstone. Readiness is the only recorded context for the leader; its active-time cause is absent.",
++    "The device monitor captured an idle instant while the locked task-level idle indicator is false. Without synchronized samples across task lifetimes, accelerator duty cycle cannot be measured.",
++    "No data available this milestone states loaded-model concurrency or runner selection, leaving no factual basis for a DualGPURunner failure finding."
++  ],
++  "improvements_suggested": [
++    "Add monotonic phase timing, resumable checkpoints, and a deterministic CPU sharding-and-merge path for independent cases in the long synthesis invariant and roster A/B workflow.",
++    "Capture task-correlated GPU utilization throughout every compute-bound task, with timestamps tied to task start and finish.",
++    "Emit loaded-model concurrency and runner-selection receipts, selecting DualGPURunner only for simultaneous multi-model execution.",
++    "Record readiness-gate wait separately from active execution so dependency delay is not conflated with compute time."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Instrument and checkpoint the synthesis-only ARC reachability and full-roster A/B phases, then shard independent cases across CPU workers.",
++    "Persist task-scoped GPU samples across each compute-bound execution window.",
++    "Persist model-concurrency and runner-dispatch receipts, with conditional DualGPURunner routing for parallel multi-model tasks."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence is sufficient to locate wall-time concentration but insufficient to assign its internal cause or score accelerator use. A future record should separate gate wait from execution and align phase, device, concurrency, and dispatch events on one task timeline."
++}
+-- 
+2.55.0
+

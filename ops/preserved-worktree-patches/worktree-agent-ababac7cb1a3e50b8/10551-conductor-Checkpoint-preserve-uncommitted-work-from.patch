@@ -1,0 +1,594 @@
+From 27b8c10706782d4f810be7f505e465f6403f365a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 15:49:42 -0400
+Subject: [PATCH 10551/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/continuous-learning/spec.md  | 161 ++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ...28_residual_pressure_verified_memory_ab.py | 373 ++++++++++++++++++
+ 5 files changed, 537 insertions(+), 2 deletions(-)
+ create mode 100644 tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+
+diff --git a/openspec/capabilities/continuous-learning/spec.md b/openspec/capabilities/continuous-learning/spec.md
+index 82bddf9079..0e22196e0d 100644
+--- a/openspec/capabilities/continuous-learning/spec.md
++++ b/openspec/capabilities/continuous-learning/spec.md
+@@ -8907,3 +8907,164 @@ And SHALL not imply that the stream verifier is an oracle.
+ | Requirement | Implementation | Verification |
+ |---|---|---|
+ | REQ-CL-6827 and SCENARIO-CL-6827-* | Implemented: `python/carnot/experiment_6827_chronological_causal_edge_memory_stream.py`, task-owned wrapper, and terminal artifact. | Implemented: 107-test conductor-equivalent shard passes; Exp6827 module and wrapper have 514/514 statements covered; focused spec coverage, artifact validation, adversarial verification, verdict-row lint, Ruff, format, mypy, and root-clutter checks pass. |
++
++## REQ-CL-6828: Residual-Pressure Verified-Memory A/B
++
++Exp6828 SHALL compare four equal-capacity external-memory arms over the full
++Exp6827 stream. The arms SHALL be frozen memory, finite-gain residual pressure,
++raw signed-violation accumulation, and seeded random exact-valid updates. The
++experiment SHALL use all five frozen orders and all frozen development and
++held-future events. It SHALL not invoke an LLM or change a GGUF weight. It SHALL
++write `results/experiment_6828_residual_pressure_verified_memory_ab.json`
++through
++`scripts/experiments/experiment_6828_residual_pressure_verified_memory_ab.py`.
++The implementation SHALL live in
++`python/carnot/experiment_6828_residual_pressure_verified_memory_ab.py`.
++
++Before evaluation, Exp6828 SHALL require
++`verified_memory_stream_ready=true`, complete order and split manifests,
++positive finite headroom, admissible and rejected operations, later reads, one
++canonical serializer, and sufficient disk and RAM. It SHALL also require the
++Exp6827 source hash. A failed check SHALL stop the complete stream. The blocked
++artifact SHALL use `complete_blocked_residual_pressure_verified_memory_ab`,
++contain no rows or transactions, set `route_learning_ab_complete=false`, and
++keep each failed check, expected value, and observed value in
++`gate_check_summary`. It SHALL not shrink or replace the stream.
++
++Exp6828 SHALL freeze capacity, gains, decay, update cadence, proposals,
++eviction, five order hashes, seeds, and all acceptance thresholds before the
++first event. Public constants SHALL use development rows only. Each active
++episode SHALL select an action from one immutable snapshot. The exact local
++receipt SHALL become visible only after the action. A memory proposal SHALL
++occur only after the episode ends. A commit SHALL occur only after the proposal
++passes its exact receipt and the external sealed support harness.
++
++The residual arm SHALL update projected pressure with a finite gain and decay.
++The raw arm SHALL accumulate the frozen signed violation signal without a
++decay term. The random arm SHALL use only seeded exact-valid proposals. The
++frozen arm SHALL not write. Every arm SHALL declare the same finite capacity,
++cadence, proposal budget, eviction rule, and action threshold. The active
++episode SHALL reject every write attempt.
++
++Before each commit, the sealed harness SHALL check current utility, protected
++retention anchors, hard cases, and held-future reachable support. It SHALL
++return only accept or reject to the learner. A rejected update SHALL preserve
++the parent bytes. Threshold harm after a tentative commit SHALL restore the
++exact parent bytes and parent action. Held-future fields, exact future
++receipts, family-oracle fields, and final acceptance SHALL never enter a public
++decision snapshot.
++
++Every transaction SHALL preserve canonical parent and new bytes, their hashes,
++the predecessor receipt, arm, order, event, operation diff, pressure state,
++residual state, and exact admission receipt. Task-owned checkpoints SHALL bind
++complete frozen boundaries. A restarted store SHALL recover the same bytes,
++next action, and predecessor. Rollback SHALL restore the exact parent bytes.
++
++Exp6828 SHALL test credited write-read-action-outcome edges by removing,
++substituting, and reordering them. Causal credit SHALL require an admitted
++write, an actual later retrieval, a changed action, and a nonzero exact outcome
++effect. An operation without this full chain SHALL remain uncredited.
++
++The positive gate SHALL require a paired held-future lower confidence bound
++above zero, no support contraction, no protected-retention harm, no hard-case
++harm, nonzero causal-factor witnesses, stale-pressure release, and complete
++transaction bytes. `route_learning_ab_complete` SHALL depend only on complete
++rows, transactions, checkpoints, and teardown. It SHALL not depend on effect
++sign. This field is the exact completion input for Exp6829 and Exp6830.
++
++The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
++`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
++`inference_substrate`, `duration_s`, `random_seed`,
++`reproducibility_checksum`, `continuous_self_learning_task`, `MODEL_SPECS`,
++`model_weight_immutability_receipt`, `source_artifact_hashes`,
++`frozen_manifest`, `arm_definitions`, `residual_update_contract`,
++`checkpoint_receipts`, `rows`, `transaction_schema`,
++`transaction_receipts`, `commits_by_arm`, `rejects_by_arm`,
++`later_reads_by_arm`, `action_influence_by_arm`, `exact_utility_by_arm`,
++`held_future_support_by_arm`, `retention_by_arm`,
++`hard_case_effect_by_arm`, `stale_pressure_release_by_arm`,
++`causal_edge_counterfactuals`, `paired_residual_deltas`,
++`causal_factor_witnesses`, `rollback_receipts`,
++`acceptance_gate_positive`, `route_learning_ab_complete`,
++`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. `field_principles` SHALL contain one principle for every
++top-level field. `inference_substrate` SHALL equal
++`CPU external program learning over frozen authentic outputs`. `MODEL_SPECS`
++SHALL contain the three source GGUF families. `verifier_is_oracle` SHALL be
++false. `verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
++`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use an approved
++terminal prefix and SHALL agree with row-derived gates.
++
++### SCENARIO-CL-6828-PRECONDITIONS: An Owned Failure Stops The Full Stream
++
++Given one readiness, order, split, headroom, operation, read, serializer,
++source-hash, disk, or RAM check fails,
++When Exp6828 evaluates preconditions,
++Then it SHALL write the complete blocked artifact without rows or transactions
++And the gate summary SHALL preserve the failed check and its observed value.
++
++### SCENARIO-CL-6828-UPDATES: Residual And Raw Pressure Stay Distinct
++
++Given the same frozen signed receipt sequence,
++When the two learning arms update pressure,
++Then residual pressure SHALL use the finite-gain projection and decay
++And raw pressure SHALL use cumulative signed violations without decay.
++
++### SCENARIO-CL-6828-EPISODES: Active Episodes Are Read-Only
++
++Given one arm has frozen its episode snapshot,
++When any code attempts a memory write before the exact outcome is revealed,
++Then the store SHALL reject that write
++And its canonical state bytes SHALL remain unchanged.
++
++### SCENARIO-CL-6828-ADMISSION: Commits Follow Exact And Sealed Receipts
++
++Given an episode has ended and its exact local receipt is available,
++When an arm proposes a memory operation,
++Then commit SHALL require exact-valid operation bytes and sealed support
++acceptance
++And a rejected or harmful proposal SHALL preserve or restore its parent bytes.
++
++### SCENARIO-CL-6828-CAPACITY: All Arms Have One Frozen Budget
++
++Given the four arm definitions,
++When Exp6828 creates isolated order stores,
++Then every store SHALL use the same capacity, cadence, proposal limit, and
++eviction rule
++And the random arm SHALL never bypass exact admission.
++
++### SCENARIO-CL-6828-TRANSACTIONS: Canonical Lineage Survives Recovery
++
++Given one admitted operation and one frozen checkpoint boundary,
++When the store restarts or rolls back,
++Then parent and new bytes SHALL match their hashes and predecessor
++And rollback SHALL restore the exact parent bytes and next action.
++
++### SCENARIO-CL-6828-FUTURE-SEAL: Future Fields Cannot Guide An Action
++
++Given a public event snapshot,
++When the action policy reads its keys,
++Then no denied future, outcome, support, audit, or acceptance key SHALL exist
++And the sealed harness SHALL return only one acceptance bit to the learner.
++
++### SCENARIO-CL-6828-CAUSAL-CREDIT: Credit Needs The Complete Later Chain
++
++Given an admitted write is read by a later event,
++When remove, substitute, and reorder counterfactuals run,
++Then credit SHALL require a changed action and a nonzero exact outcome effect
++And every incomplete chain SHALL remain uncredited.
++
++### SCENARIO-CL-6828-VERDICT: Completion Does Not Depend On Effect Sign
++
++Given all order-arm-event rows, transactions, checkpoints, and teardown
++receipts are complete,
++When Exp6828 computes its terminal fields,
++Then `route_learning_ab_complete` SHALL be true for positive or null effects
++And positive SHALL require every predeclared gain, support, safety, causal,
++release, and byte-completeness gate.
++
++## Implementation Status (REQ-CL-6828)
++
++| Requirement | Implementation | Verification |
++|---|---|---|
++| REQ-CL-6828 and SCENARIO-CL-6828-* | Planned: Exp6828 module, task-owned wrapper, and terminal artifact. | Planned: focused tests and full Python suite. |
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 32ae2b65d9..9c79a5f263 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 50, "phase": "iteration_start", "last_beat": "2026-08-31T19:23:55Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-08-31T19:49:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b795c2c733..c496919704 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16930,3 +16930,4 @@ The l |
+ | 2026-08-31 18:00 UTC | Selective-arbiter authority attack shard | OK | 111 passed, 1 warning in 15.75s |
+ | 2026-08-31 18:28 UTC | Sealed selective-arbiter adoption receipt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
++| 2026-08-31 19:47 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: xp.SCRIPT_RELATIVE_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9a9741c5b1..b12f97edee 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 50, "phase": "iteration_start", "started_at": "2026-08-31T19:23:55Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 51, "phase": "iteration_start", "started_at": "2026-08-31T19:49:36Z"}
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py b/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+new file mode 100644
+index 0000000000..8fd427f4d5
+--- /dev/null
++++ b/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+@@ -0,0 +1,373 @@
++"""Tests for residual-pressure verified-memory learning.
++
++Spec refs: REQ-CL-6828, SCENARIO-CL-6828-PRECONDITIONS,
++SCENARIO-CL-6828-UPDATES, SCENARIO-CL-6828-EPISODES,
++SCENARIO-CL-6828-ADMISSION, SCENARIO-CL-6828-CAPACITY,
++SCENARIO-CL-6828-TRANSACTIONS, SCENARIO-CL-6828-FUTURE-SEAL,
++SCENARIO-CL-6828-CAUSAL-CREDIT, and SCENARIO-CL-6828-VERDICT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++
++import pytest
++
++from carnot import experiment_6828_residual_pressure_verified_memory_ab as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SOURCE_PATH = REPO_ROOT / exp.SOURCE_RELATIVE_PATH
++
++
++@pytest.fixture(scope="module")
++def source() -> dict:
++    """Load the frozen stream once because every test uses the same bytes."""
++
++    return exp.load_source(SOURCE_PATH)
++
++
++@pytest.fixture(scope="module")
++def artifact(source: dict, tmp_path_factory: pytest.TempPathFactory) -> dict:
++    """Build one full comparison for all row-derived assertions."""
++
++    return exp.build_artifact(
++        source,
++        source_path=SOURCE_PATH,
++        state_root=tmp_path_factory.mktemp("exp6828-state"),
++        run_date="20260831",
++        duration_s=0.25,
++    )
++
++
++def _proposal(
++    proposal_id: str,
++    key: str,
++    value: dict,
++    parent_sha256: str,
++) -> exp.MemoryProposal:
++    """Build one exact add proposal for the transaction tests."""
++
++    return exp.MemoryProposal(
++        proposal_id=proposal_id,
++        kind="upsert",
++        key=key,
++        value=value,
++        expected_parent_sha256=parent_sha256,
++    )
++
++
++def test_req_cl_6828_spec_precedes_implementation() -> None:
++    """REQ-CL-6828 owns every path, field, and public scenario."""
++
++    spec = (REPO_ROOT / exp.SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    section = spec.split("## REQ-CL-6828", 1)[1]
++    for requirement_id in exp.OPEN_SPEC_IDS[1:]:
++        assert requirement_id in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++    for path in (exp.MODULE_RELATIVE_PATH, exp.SCRIPT_RELATIVE_PATH, exp.RESULT_RELATIVE_PATH):
++        assert path.as_posix() in section
++
++
++def test_scenario_cl_6828_preconditions_accept_complete_stream(source: dict) -> None:
++    """SCENARIO-CL-6828-PRECONDITIONS accepts every owned source gate."""
++
++    summary = exp.check_preconditions(
++        source,
++        SOURCE_PATH,
++        resource_overrides={"disk_free_bytes": 10**9, "ram_available_bytes": 10**9},
++    )
++    assert summary["passed"] is True
++    assert summary["failed_checks"] == []
++    assert all(check["passed"] for check in summary["checks"])
++
++
++@pytest.mark.parametrize(
++    ("fault", "failed_check"),
++    [
++        ("ready", "verified_memory_stream_ready"),
++        ("orders", "complete_five_orders"),
++        ("splits", "complete_splits"),
++        ("headroom", "measurable_headroom"),
++        ("admitted", "admissible_operations"),
++        ("rejected", "rejected_operations"),
++        ("reads", "later_reads"),
++        ("serializer", "canonical_serializer"),
++        ("disk", "sufficient_disk"),
++        ("ram", "sufficient_ram"),
++    ],
++)
++def test_scenario_cl_6828_preconditions_fail_closed(
++    source: dict,
++    tmp_path: Path,
++    fault: str,
++    failed_check: str,
++) -> None:
++    """SCENARIO-CL-6828-PRECONDITIONS keeps exact failed-gate evidence."""
++
++    changed = deepcopy(source)
++    overrides = {"disk_free_bytes": 10**9, "ram_available_bytes": 10**9}
++    if fault == "ready":
++        changed["verified_memory_stream_ready"] = False
++    elif fault == "orders":
++        changed["order_hashes"].pop("order_5")
++    elif fault == "splits":
++        changed["split_manifest"]["held_future_count_per_family"] = 0
++    elif fault == "headroom":
++        changed["headroom_metrics"]["capacity_pressure_case_count"] = 0
++    elif fault == "admitted":
++        changed["admissible_operation_count"] = 0
++    elif fault == "rejected":
++        changed["rejected_operation_count"] = 0
++    elif fault == "reads":
++        changed["later_read_opportunity_count"] = 0
++    elif fault == "serializer":
++        changed["operation_schema"]["canonical_encoding"] = "platform JSON"
++    elif fault == "disk":
++        overrides["disk_free_bytes"] = 0
++    else:
++        overrides["ram_available_bytes"] = 0
++
++    summary = exp.check_preconditions(changed, SOURCE_PATH, resource_overrides=overrides)
++    failed = next(check for check in summary["checks"] if check["check"] == failed_check)
++    assert summary["passed"] is False
++    assert failed["passed"] is False
++    assert "expected" in failed and "observed" in failed
++
++    blocked = exp.build_artifact(
++        changed,
++        source_path=SOURCE_PATH,
++        state_root=tmp_path,
++        run_date="20260831",
++        duration_s=0.25,
++        resource_overrides=overrides,
++    )
++    assert blocked["status"] == exp.BLOCKED_STATUS
++    assert blocked["rows"] == []
++    assert blocked["transaction_receipts"] == []
++    assert blocked["route_learning_ab_complete"] is False
++    assert blocked["verdict_class"] == "blocked"
++    assert failed_check in blocked["gate_check_summary"]["failed_checks"]
++
++
++def test_scenario_cl_6828_pressure_updates_have_finite_gain_and_release() -> None:
++    """SCENARIO-CL-6828-UPDATES separates finite gain from raw accumulation."""
++
++    residual = exp.residual_pressure_update(0.8, -0.25, gain=0.75, decay=0.25, ceiling=2.0)
++    raw = exp.raw_pressure_update(0.8, -0.25, ceiling=2.0)
++    assert residual == pytest.approx(0.0125)
++    assert raw == pytest.approx(0.55)
++    assert exp.residual_pressure_update(1.9, 1.0, gain=0.75, decay=1.0, ceiling=2.0) == 2.0
++    assert exp.raw_pressure_update(1.9, 1.0, ceiling=2.0) == 2.0
++    assert exp.residual_pressure_update(0.1, -1.0, gain=0.75, decay=0.25, ceiling=2.0) == 0.0
++    assert exp.raw_pressure_update(0.1, -1.0, ceiling=2.0) == 0.0
++
++
++def test_scenario_cl_6828_episode_commit_restart_and_rollback(tmp_path: Path) -> None:
++    """SCENARIO-CL-6828-EPISODES and TRANSACTIONS preserve exact bytes."""
++
++    store = exp.VerifiedMemoryStore(tmp_path / "store", arm="residual_pressure", order_id="o1")
++    snapshot = store.begin_episode("event-1")
++    parent = store.state_bytes()
++    proposal = _proposal(
++        "proposal-1",
++        "revise",
++        {"pressure": 0.75, "residual": 1.0},
++        snapshot.state_sha256,
++    )
++    with pytest.raises(exp.ReadOnlyEpisodeError):
++        store.commit(
++            proposal,
++            event_id="event-1",
++            exact_receipt={"accepted": False, "reason": "stale_revision"},
++            sealed_accept=True,
++        )
++    assert store.state_bytes() == parent
++
++    store.end_episode()
++    receipt = store.commit(
++        proposal,
++        event_id="event-1",
++        exact_receipt={"accepted": False, "reason": "stale_revision"},
++        sealed_accept=True,
++    )
++    assert receipt["accepted"] is True
++    assert exp.decode_bytes(receipt["parent_state_bytes"]) == parent
++    assert exp.sha256_bytes(exp.decode_bytes(receipt["new_state_bytes"])) == receipt[
++        "new_state_sha256"
++    ]
++    assert receipt["receipt_sha256"] == exp.transaction_sha256(receipt)
++
++    restarted = exp.VerifiedMemoryStore(
++        tmp_path / "store", arm="residual_pressure", order_id="o1"
++    )
++    restart = restarted.restart_receipt("boundary-1", receipt["new_state_sha256"])
++    assert restart["bytes_identity"] is True
++    assert restarted.state_bytes() == exp.decode_bytes(receipt["new_state_bytes"])
++
++    rollback = restarted.rollback(receipt)
++    assert rollback["restored_parent_bytes"] is True
++    assert restarted.state_bytes() == parent
++
++
++def test_scenario_cl_6828_admission_rejects_stale_capacity_and_support(tmp_path: Path) -> None:
++    """SCENARIO-CL-6828-ADMISSION rejects unsafe writes without byte changes."""
++
++    store = exp.VerifiedMemoryStore(
++        tmp_path / "store", arm="raw_violation_accumulation", order_id="o1", capacity=1
++    )
++    first = store.commit(
++        _proposal("p1", "a", {"pressure": 1.0}, store.state_hash()),
++        event_id="e1",
++        exact_receipt={"accepted": False},
++        sealed_accept=True,
++    )
++    parent = store.state_bytes()
++    rejected = [
++        store.commit(
++            _proposal("p2", "b", {"pressure": 1.0}, store.state_hash()),
++            event_id="e2",
++            exact_receipt={"accepted": False},
++            sealed_accept=True,
++        ),
++        store.commit(
++            _proposal("p3", "a", {"pressure": 0.0}, "sha256:stale"),
++            event_id="e3",
++            exact_receipt={"accepted": True},
++            sealed_accept=True,
++        ),
++        store.commit(
++            _proposal("p4", "a", {"pressure": 0.0}, store.state_hash()),
++            event_id="e4",
++            exact_receipt={"accepted": True},
++            sealed_accept=False,
++        ),
++    ]
++    assert first["accepted"] is True
++    assert {receipt["reason"] for receipt in rejected} == {
++        "capacity_exceeded",
++        "stale_parent",
++        "sealed_support_rejected",
++    }
++    assert all(receipt["accepted"] is False for receipt in rejected)
++    assert all(receipt["parent_state_bytes"] == receipt["new_state_bytes"] for receipt in rejected)
++    assert store.state_bytes() == parent
++
++
++def test_scenario_cl_6828_future_fields_are_denied(source: dict) -> None:
++    """SCENARIO-CL-6828-FUTURE-SEAL exposes only the public event allowlist."""
++
++    event = exp.stream_events(source)[0]
++    public = exp.public_event(event)
++    assert set(public) == set(exp.EVENT_FEATURE_ALLOWLIST)
++    assert set(public).isdisjoint(exp.FUTURE_FIELD_DENYLIST)
++    with pytest.raises(ValueError, match="denied future field"):
++        exp.public_event({**event, "final_acceptance": True})
++
++
++def test_scenario_cl_6828_equal_capacity_and_complete_rows(artifact: dict) -> None:
++    """SCENARIO-CL-6828-CAPACITY gives all four arms the same frozen budget."""
++
++    arms = artifact["arm_definitions"]
++    assert set(arms) == set(exp.ARM_NAMES)
++    assert {arm["capacity"] for arm in arms.values()} == {exp.MEMORY_CAPACITY}
++    assert {arm["proposal_cadence"] for arm in arms.values()} == {exp.PROPOSAL_CADENCE}
++    assert {arm["eviction"] for arm in arms.values()} == {exp.EVICTION_RULE}
++    assert len(artifact["rows"]) == exp.ORDER_COUNT * exp.EVENT_COUNT * len(exp.ARM_NAMES)
++    assert {
++        (row["order_id"], row["arm"], row["event_id"]) for row in artifact["rows"]
++    } == {
++        (row["order_id"], row["arm"], row["event_id"])
++        for row in artifact["rows"]
++    }
++    assert all(row["active_episode_write_count"] == 0 for row in artifact["rows"])
++
++
++def test_scenario_cl_6828_transactions_and_causal_credit_are_exact(artifact: dict) -> None:
++    """SCENARIO-CL-6828-CAUSAL-CREDIT requires a later changed action."""
++
++    assert artifact["transaction_receipts"]
++    for receipt in artifact["transaction_receipts"]:
++        parent = exp.decode_bytes(receipt["parent_state_bytes"])
++        new = exp.decode_bytes(receipt["new_state_bytes"])
++        assert exp.sha256_bytes(parent) == receipt["parent_state_sha256"]
++        assert exp.sha256_bytes(new) == receipt["new_state_sha256"]
++        assert receipt["receipt_sha256"] == exp.transaction_sha256(receipt)
++    assert {row["kind"] for row in artifact["causal_edge_counterfactuals"]} == {
++        "remove",
++        "substitute",
++        "reorder",
++    }
++    assert artifact["causal_factor_witnesses"]
++    assert all(
++        witness["write"]
++        and witness["later_read"]
++        and witness["action_changed"]
++        and witness["outcome_delta"] != 0
++        for witness in artifact["causal_factor_witnesses"]
++    )
++
++
++def test_scenario_cl_6828_verdict_and_required_fields_are_row_derived(artifact: dict) -> None:
++    """SCENARIO-CL-6828-VERDICT separates completion from positive effect."""
++
++    assert set(artifact) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["route_learning_ab_complete"] is True
++    assert artifact["continuous_self_learning_task"] is True
++    assert artifact["MODEL_SPECS"] == list(exp.MODEL_SPECS)
++    assert artifact["model_weight_immutability_receipt"]["all_source_hashes_unchanged"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["verdict_class"] in exp.VERDICT_CLASSES
++    assert artifact["reproducibility_checksum"] == exp.reproducibility_checksum(artifact)
++    assert exp.validate_artifact(artifact) == []
++
++    null_copy = deepcopy(artifact)
++    null_copy["acceptance_gate_positive"]["passed"] = False
++    null_copy["verdict_class"] = "null"
++    null_copy["honest_verdict"] = "complete_null: comparison completed without a positive gate"
++    null_copy["reproducibility_checksum"] = exp.reproducibility_checksum(null_copy)
++    assert null_copy["route_learning_ab_complete"] is True
++    assert exp.validate_artifact(null_copy) == []
++
++
++def test_validation_write_and_entry_points(
++    artifact: dict,
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CL-6828 validates stable output and both command entry points."""
++
++    changed = deepcopy(artifact)
++    changed.pop("rows")
++    assert "required field set mismatch" in exp.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["field_principles"].pop("rows")
++    assert "field_principles coverage mismatch" in exp.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["inference_substrate"] = "LLM"
++    assert "inference_substrate mismatch" in exp.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["verdict_class"] = "invented"
++    assert "verdict_class outside closed enum" in exp.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["reproducibility_checksum"] = "sha256:wrong"
++    assert "reproducibility_checksum mismatch" in exp.validate_artifact(changed)
++
++    result_path = tmp_path / "artifact.json"
++    exp.write_artifact(result_path, artifact)
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert exp.main(["--validate", "--result-path", str(result_path)]) == 0
++
++    script = REPO_ROOT / exp.SCRIPT_RELATIVE_PATH
++    monkeypatch.setattr(
++        "sys.argv",
++        [script.name, "--validate", "--result-path", str(result_path)],
++    )
++    with pytest.raises(SystemExit) as stopped:
++        runpy.run_path(str(script), run_name="__main__")
++    assert stopped.value.code == 0
+-- 
+2.55.0
+

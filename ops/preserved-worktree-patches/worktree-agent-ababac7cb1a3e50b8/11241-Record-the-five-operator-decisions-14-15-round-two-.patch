@@ -1,0 +1,79 @@
+From a804b477a192888947edf29f688c04e12cc3fec0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:53:22 -0400
+Subject: [PATCH 11241/11362] Record the five operator decisions (14, 15, round
+ two, memory index, 10)
+
+A decision that lives only in a chat transcript is one the next session
+re-litigates. All five are now in the handoff document with what was decided and
+what it does not cover, including the two items still open behind them and the
+unidentified-authorship question that is not a decision.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 8611b4e017..28f8938257 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -2,6 +2,54 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++## 2026-09-05 12:53Z — OPERATOR DECIDED all five open items
++
++The operator ruled on the whole open list in one turn. Recorded here because a decision that
++lives only in a chat transcript is a decision the next session re-litigates.
++
++**DECISION 14 — RESOLVED: bind it for everyone.** The `PostToolUse` hook stays in the TRACKED
++`.claude/settings.json`, so it applies to every session working in this repo. No move to
++`.claude/settings.local.json`. No file change was needed; the hook was already there. It is
++read-only and fail-open, and it found a real defect within minutes of landing.
++
++**DECISION 15 — RESOLVED: approved, and SHIPPED as REQ-INFRA-6977** (commit `840ef0dd4e`).
++The middle form: the checkpoint proceeds, but withholds any path named by an open mutation
++proof. Two staging paths needed it because they share no code — `git_commit_and_push` goes
++through `_stage_all_except_claimed`, while the interrupted-run checkpoint in `research_step`
++stages file-by-file and never reaches it. Fail directions differ deliberately: reading the lock
++fails OPEN (preserving in-flight work beats withholding a revertible broken file), the
++empty-checkpoint case fails CLOSED (nothing to preserve, and the only alternative is publishing
++the broken file). Honest limit, stated in the spec: this cannot protect a file mutated without
++taking the lock, and the single line in `research_step` that calls the helper is not covered by
++a test — the decision was extracted out of that function so the logic itself is provable.
++
++**Round-two branch — RESOLVED: another round, not a merge.** `worktree-agent-a83acaaa5293c1b8f`
++stays unmerged. A fresh agent has the corrected brief: the exhaustion cell must be evaluated on
++the same axis the arms reset on (per level), and zero emitted cells is an acceptable answer.
++
++**The two memory-index calls — RESOLVED: do both.** The 51 unindexed files get lines, with the
++judgment left to the agent that has read them — a stale file may be left out WITH its reason
++written down, but never silently skipped and never deleted. `_DEMOTE_ORDER` is confirmed as
++`reference, project, incident, feedback, user`; it is now operator-confirmed rather than
++provisional. Note the envelope: 51 lines at ~170 units is ~8,700 units against a 24,000 budget
++currently at ~20,100, so most must land in tier-2 group files. This is the first real exercise
++of the `--demote` mechanism.
++
++**DECISION 10 — RESOLVED: keep the envelopes.** The redundant provenance stamps stay, for the
++fields the conductor's own record omits.
++
++**Still open, unchanged:** the 43 stale quarantine stamps (exp6172 makes reopening
++operator-only); exp6979's substrate name; stamp order in `_log_experiment_completion`; the ARC
++floor lint WARN-to-hard-gate promotion.
++
++**New, not a decision — an unanswered question.** An unidentified process edited
++`scripts/memory_index_drift.py` and its test between 12:15:44Z and 12:25:05Z. The window is
++bounded from pre-commit stash patches, which hold exactly the unstaged set at each commit; the
++codex child visible at the time started 12:25:07Z and is therefore ruled out. The edit was
++cosmetic and is committed with its authorship stated as unknown (`ed77b95d8a`, corrected by
++`e0b6c154e7`). If that was not one of the operator's own sessions, a conductor task has
++drive-by write access to other agents' in-flight files.
++
+ ## 2026-09-05 12:34Z — Memory pointer routing regression closed; Exp7018 preserved
+ 
+ - `resolved_index_file` now owns the REQ-INFRA-6976 routing decision: use the
+-- 
+2.55.0
+

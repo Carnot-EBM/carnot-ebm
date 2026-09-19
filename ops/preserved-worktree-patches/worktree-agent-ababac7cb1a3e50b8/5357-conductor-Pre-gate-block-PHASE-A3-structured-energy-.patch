@@ -1,0 +1,109 @@
+From 453db49ca2adfbd4eb370e04667e8fe26d0d84de Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 18:25:15 -0400
+Subject: [PATCH 05357/11362] [conductor] Pre-gate block: PHASE A3 structured
+ energy audit -- gated on positive Exp5126 delta and receipt-backed provenance
+
+1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470.distributional_energy_delta (actual=0.0 > expected=0.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...126_distributional_energy_ranker_v470.json | 22 +++++++++++++++--
+ ...uctured_energy_adversarial_audit_v470.json | 24 +++++++++++++++++++
+ 5 files changed, 47 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_5127_structured_energy_adversarial_audit_v470.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6f7f539733..25694eb496 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 120, "phase": "iteration_start", "last_beat": "2026-07-01T22:05:33Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 121, "phase": "iteration_start", "last_beat": "2026-07-01T22:25:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7e23725422..0a707143ca 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9792,3 +9792,4 @@ web search: |
+ | 2026-07-01 21:20 UTC | PHASE R1 source/scope audit -- verify V470 referen | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-01 21:40 UTC | PHASE A0 runtime gate -- clean local SOTA GGUF com | OK | 86 passed, 1 warning in 7.02s |
+ | 2026-07-01 22:03 UTC | PHASE A1 structured pool -- non-FoVer exact-constr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-01 22:23 UTC | PHASE A2 structured energy -- Distributional-EBM r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 86ae26c95f..0eb0ce25bf 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 120, "phase": "iteration_start", "started_at": "2026-07-01T22:05:33Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 121, "phase": "iteration_start", "started_at": "2026-07-01T22:25:15Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5126_distributional_energy_ranker_v470.json b/results/experiment_5126_distributional_energy_ranker_v470.json
+index 0f85bb7462..11cd903480 100644
+--- a/results/experiment_5126_distributional_energy_ranker_v470.json
++++ b/results/experiment_5126_distributional_energy_ranker_v470.json
+@@ -208,5 +208,23 @@
+     ".venv/bin/pytest tests/python -q"
+   ],
+   "uncertainty_abstention_rule": "Rank by mean decomposed energy over the shape-score ensemble. Abstain when the selected candidate has any deterministic constraint penalty or when ensemble spread exceeds the calibrated train-positive threshold; abstentions count as not-correct for accuracy@1.",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "distributional_energy_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.20110498601570725 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_5127_structured_energy_adversarial_audit_v470.json b/results/experiment_5127_structured_energy_adversarial_audit_v470.json
+new file mode 100644
+index 0000000000..591bfdbfcf
+--- /dev/null
++++ b/results/experiment_5127_structured_energy_adversarial_audit_v470.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5127,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-01",
++  "started_at": "2026-07-01T22:25:15.614528+00:00",
++  "finished_at": "2026-07-01T22:25:15.614528+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE A3 structured energy audit -- gated on positive Exp5126 delta and receipt-backed provenance",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470.distributional_energy_delta (actual=0.0 > expected=0.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5126-distributional-energy-ranker-v470",
++      "artifact_field": "distributional_energy_delta",
++      "op": ">",
++      "expected": 0.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 > expected=0.0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,2659 @@
+From be4b83e02b0132a5626c0831671044a354c08b46 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 18:07:18 -0400
+Subject: [PATCH 10447/11362] [conductor] V592 branch disposition and PRD
+ reconciliation
+
+Automated research step by research conductor.
+Task ID: exp6795-v592-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   60 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...experiment_6795_v592_branch_disposition.py |  976 ++++++++++++++
+ research-complete.yaml                        |   54 +
+ ...periment_6795_v592_branch_disposition.json | 1192 +++++++++++++++++
+ ...experiment_6795_v592_branch_disposition.py |   10 +
+ ...experiment_6795_v592_branch_disposition.py |  287 ++++
+ 7 files changed, 2580 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6795_v592_branch_disposition.py
+ create mode 100644 results/experiment_6795_v592_branch_disposition.json
+ create mode 100644 scripts/experiments/experiment_6795_v592_branch_disposition.py
+ create mode 100644 tests/python/test_experiment_6795_v592_branch_disposition.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 916d3d704d..b6364b2f54 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -4254,3 +4254,63 @@ records, and reproducibility checksum are present and internally consistent.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CAPSTONE-6560 | Planned (`python/carnot/experiment_6560_v567_independent_capstone.py`, `results/experiment_6560_v567_independent_capstone.json`) | Planned (`tests/python/test_experiment_6560_v567_independent_capstone.py`) |
++
++- REQ-CAPSTONE-6795: The V592 branch-disposition workflow SHALL run without
++  upstream science gates after the V592 design and active roadmap parse. It
++  SHALL load each expected Exp6784 through Exp6794 artifact by exact task ID,
++  preserve missing and unreadable inputs as evidence states, hash every present
++  source, and write `results/experiment_6795_v592_branch_disposition.json`
++  without running new science or changing the active roadmap or conductor.
++- The workflow SHALL independently recompute the fixed-point, continuous
++  self-learning, and temporal-exchange comparison claims from per-unit rows.
++  It SHALL prefer the corresponding cold audit when an audit disagrees with a
++  source claim, record every disagreement, classify infrastructure separately
++  from science, and never pool metrics across branches.
++- The required artifact fields are `field_principles`,
++  `inference_substrate`, `duration_s`, `random_seed`,
++  `reproducibility_checksum`, `expected_task_ids`, `artifact_inventory`,
++  `source_artifact_hashes`, `rows`, `branch_decisions`,
++  `infrastructure_disposition`, `fixed_point_disposition`,
++  `csl_disposition`, `temporal_exchange_disposition`,
++  `source_audit_disagreements`, `prior_verdict_recurrences`,
++  `retirement_recommendations`, `prd_gap_reconciliation`,
++  `next_prerequisites`, `pooled_score_computed`, `docs_updated`,
++  `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++  `honest_verdict`. `pooled_score_computed` and `verifier_is_oracle` SHALL both
++  be false. `verdict_class` SHALL use the closed project enum and
++  `honest_verdict` SHALL start with a terminal prefix.
++- SCENARIO-CAPSTONE-6795-PRECONDITIONS: Given a readable V592 design and
++  active roadmap, when a source artifact or the inactive next-roadmap path is
++  absent or unreadable, then the capstone SHALL continue and record that
++  absence. If the design or active roadmap is unreadable, it SHALL emit
++  `complete_blocked_v592_disposition` and name the failed check and observed
++  value in `gate_check_summary`.
++- SCENARIO-CAPSTONE-6795-ROWS: Given the available V592 artifacts, when the
++  capstone runs, then it SHALL emit one task row and one branch-claim row for
++  each claim it adjudicates. Fixed-point exact-valid effects, self-learning
++  writes, reads, action changes and held-future effects, and temporal sampler
++  efficiency and target-law gates SHALL derive from rows rather than copied
++  headline values.
++- SCENARIO-CAPSTONE-6795-BRANCHES: Given mixed V592 evidence, when branch
++  decisions are written, then dispatch and durable-checkpoint readiness SHALL
++  not become scientific wins; fixed-point superiority SHALL require matched
++  controls and no oracle leakage; self-learning promotion SHALL require
++  auditable write/read/action causality and a positive held-future lower bound;
++  and temporal exchange SHALL require target-law preservation under matched
++  work. Each branch SHALL retain its own verdict class, claim boundary,
++  adoption or retirement decision, and exact next prerequisite.
++- SCENARIO-CAPSTONE-6795-RETIREMENT: Given roadmap `prior_failures`, when a
++  V592 task repeats a prior outcome under the same method scope, then the
++  artifact SHALL propose an exclusion-manifest entry and SHALL stop
++  recommending that unchanged method. Historical artifacts, the active
++  roadmap, and the active exclusion manifest SHALL remain unchanged.
++- SCENARIO-CAPSTONE-6795-PRD: Given PRD FR11 and FR12, when the capstone
++  reconciles the three named V592 gaps, then it SHALL state the smallest
++  justified next prerequisite or retirement condition for every open gap and
++  SHALL not compute a pooled milestone score.
++
++## Implementation Status (REQ-CAPSTONE-6795)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAPSTONE-6795 | Implemented (`python/carnot/experiment_6795_v592_branch_disposition.py`, `results/experiment_6795_v592_branch_disposition.json`) | Covered (`tests/python/test_experiment_6795_v592_branch_disposition.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 48a7bc1349..cb333f398f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5190,
++  "experiments_checked": 5191,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6795_v592_branch_disposition.py b/python/carnot/experiment_6795_v592_branch_disposition.py
+new file mode 100644
+index 0000000000..00c4a6f7ec
+--- /dev/null
++++ b/python/carnot/experiment_6795_v592_branch_disposition.py
+@@ -0,0 +1,976 @@
++"""Build the ungated V592 branch disposition from stored evidence.
++
++This reducer reads receipts and per-unit rows. It does not run a model,
++sampler, learner, or hardware command. Comparative claims are recalculated
++locally, and a cold audit has authority over its source experiment.
++
++Spec refs: REQ-CAPSTONE-6795 and SCENARIO-CAPSTONE-6795-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import defaultdict
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import statistics
++import tempfile
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MILESTONE = "2026.08.592"
++PLANNING_DATE = "20260830"
++RANDOM_SEED = 6795
++INFERENCE_SUBSTRATE = "receipt-only local synthesis, no inference model"
++OUTPUT_PATH = Path("results/experiment_6795_v592_branch_disposition.json")
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++ROADMAP_PATH = Path("research-roadmap.yaml")
++NEXT_ROADMAP_PATH = Path("research-roadmap-next.yaml")
++
++EXPECTED_TASK_IDS = (
++    "exp6784-agent-model-dispatch-contract",
++    "exp6785-durable-row-checkpoint-contract",
++    "exp6786-constraint-dependency-hard-negative-fixture",
++    "exp6787-group-aware-soft-fixed-point",
++    "exp6788-soft-fixed-point-structural-control-ab",
++    "exp6789-soft-fixed-point-cold-authority-audit",
++    "exp6790-chronological-constraint-routing-stream",
++    "exp6791-compositional-online-constraint-routing-ab",
++    "exp6792-csl-causal-safety-cold-audit",
++    "exp6793-temporal-exchange-ising-ab",
++    "exp6794-temporal-exchange-cold-hardware-audit",
++)
++
++TASK_PATHS = {
++    "exp6784-agent-model-dispatch-contract": "results/experiment_6784_agent_model_dispatch_contract.json",
++    "exp6785-durable-row-checkpoint-contract": "results/experiment_6785_durable_row_checkpoint_contract.json",
++    "exp6786-constraint-dependency-hard-negative-fixture": "results/experiment_6786_constraint_dependency_hard_negative_fixture.json",
++    "exp6787-group-aware-soft-fixed-point": "results/experiment_6787_group_aware_soft_fixed_point.json",
++    "exp6788-soft-fixed-point-structural-control-ab": "results/experiment_6788_soft_fixed_point_structural_control_ab.json",
++    "exp6789-soft-fixed-point-cold-authority-audit": "results/experiment_6789_soft_fixed_point_cold_authority_audit.json",
++    "exp6790-chronological-constraint-routing-stream": "results/experiment_6790_chronological_constraint_routing_stream.json",
++    "exp6791-compositional-online-constraint-routing-ab": "results/experiment_6791_compositional_online_constraint_routing_ab.json",
++    "exp6792-csl-causal-safety-cold-audit": "results/experiment_6792_csl_causal_safety_cold_audit.json",
++    "exp6793-temporal-exchange-ising-ab": "results/experiment_6793_temporal_exchange_ising_ab.json",
++    "exp6794-temporal-exchange-cold-hardware-audit": "results/experiment_6794_temporal_exchange_cold_hardware_audit.json",
++}
++
++CLOSED_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++REQUIRED_FIELDS = {
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "expected_task_ids",
++    "artifact_inventory",
++    "source_artifact_hashes",
++    "rows",
++    "branch_decisions",
++    "infrastructure_disposition",
++    "fixed_point_disposition",
++    "csl_disposition",
++    "temporal_exchange_disposition",
++    "source_audit_disagreements",
++    "prior_verdict_recurrences",
++    "retirement_recommendations",
++    "prd_gap_reconciliation",
++    "next_prerequisites",
++    "pooled_score_computed",
++    "docs_updated",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++}
++
++FIELD_PRINCIPLES = {
++    "field_principles": "States why every required capstone field exists.",
++    "inference_substrate": "Separates receipt synthesis from model inference or new science.",
++    "duration_s": "Records measured reducer wall time.",
++    "random_seed": "Pins deterministic receipt reduction.",
++    "reproducibility_checksum": "Binds source hashes and recomputed decisions.",
++    "expected_task_ids": "Keeps every upstream V592 task visible.",
++    "artifact_inventory": "Preserves presence, readability, source class, row count, and hash.",
++    "source_artifact_hashes": "Makes every imported receipt content-addressable.",
++    "rows": "Provides one task row and one row for every branch claim.",
++    "branch_decisions": "Keeps incomparable infrastructure and science outcomes separate.",
++    "infrastructure_disposition": "Treats dispatch and checkpoint readiness as infrastructure only.",
++    "fixed_point_disposition": "Requires matched row effects and an oracle-free cold audit.",
++    "csl_disposition": "Requires write, read, action, held-future, and cold causal evidence.",
++    "temporal_exchange_disposition": "Requires matched-work efficiency and target-law preservation.",
++    "source_audit_disagreements": "Gives independent audits authority over source claims.",
++    "prior_verdict_recurrences": "Applies each declared retire-if-same rule.",
++    "retirement_recommendations": "Stops unchanged methods after repeated or decisive null evidence.",
++    "prd_gap_reconciliation": "Maps only V592 evidence to the three named PRD gaps.",
++    "next_prerequisites": "Names the smallest evidence needed to reopen each branch.",
++    "pooled_score_computed": "Prevents incomparable metrics from becoming a milestone score.",
++    "docs_updated": "Records capstone-owned edits and reconciliation deferred to the conductor.",
++    "gate_check_summary": "Names failed checks, expected values, and observed values.",
++    "verifier_is_oracle": "States that receipt auditing does not create a scientific oracle.",
++    "verdict_class": "Uses the closed outcome vocabulary.",
++    "honest_verdict": "Provides a terminal summary without hiding mixed branch outcomes.",
++}
++
++
++def canonical_json(value: Any) -> bytes:
++    """Encode stable JSON for content hashes."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def sha256_file(path: Path) -> str | None:
++    """Return a prefixed SHA-256 for one present file."""
++
++    if not path.is_file():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def mean_ci95(values: Sequence[float]) -> JsonDict:
++    """Return a row-derived normal 95 percent interval for paired effects."""
++
++    clean = [float(value) for value in values if math.isfinite(float(value))]
++    if not clean:
++        return {"mean": None, "lower": None, "upper": None, "n": 0}
++    mean = statistics.fmean(clean)
++    if len(clean) == 1:
++        lower = upper = mean
++    else:
++        margin = 1.96 * statistics.stdev(clean) / math.sqrt(len(clean))
++        lower, upper = mean - margin, mean + margin
++    return {"mean": mean, "lower": lower, "upper": upper, "n": len(clean)}
++
++
++def _row_rate(row: Mapping[str, Any]) -> tuple[int, int, float, float]:
++    outcomes = [item for item in row.get("exact_outcomes", []) if isinstance(item, Mapping)]
++    valid = sum(item.get("exact_valid") is True for item in outcomes)
++    count = len(outcomes)
++    violations = sum(float(item.get("dependency_violation_count") or 0) for item in outcomes)
++    distances = [float(item.get("distance_to_nearest_valid") or 0) for item in outcomes]
++    nearest = min(distances) if distances else float(row.get("nearest_valid_distance") or 0)
++    return valid, count, violations, nearest
++
++
++def recompute_fixed_point(
++    source_rows: Sequence[Mapping[str, Any]], audit_rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    """Recompute the grouped-versus-flat fixed-point claim from candidate rows."""
++
++    cold_rows = [row for row in audit_rows if row.get("row_type") == "source_recompute"]
++    selected = cold_rows or list(source_rows)
++    authority = "independent_audit_rows" if cold_rows else "source_rows"
++    pairs: dict[str, dict[str, Mapping[str, Any]]] = defaultdict(dict)
++    for row in selected:
++        arm = str(row.get("arm") or "")
++        key = str(row.get("paired_key") or "")
++        if arm in {"grouped_fixed_point", "flat_recurrent_control"} and key:
++            pairs[key][arm] = row
++
++    effects: list[float] = []
++    held_effects: list[float] = []
++    arm_valid = defaultdict(int)
++    arm_candidates = defaultdict(int)
++    arm_violations = defaultdict(float)
++    arm_distances: dict[str, list[float]] = defaultdict(list)
++    arm_runtime = defaultdict(float)
++    arm_converged = defaultdict(int)
++    support: dict[str, set[str]] = defaultdict(set)
++    parameter_counts: dict[str, set[int]] = defaultdict(set)
++    work_counts: dict[str, set[tuple[int, int]]] = defaultdict(set)
++    oracle_checks: list[bool] = []
++
++    for arms in pairs.values():
++        if set(arms) != {"grouped_fixed_point", "flat_recurrent_control"}:
++            continue
++        local_rates = {}
++        for arm, row in arms.items():
++            valid, count, violations, nearest = _row_rate(row)
++            local_rates[arm] = valid / count if count else 0.0
++            arm_valid[arm] += valid
++            arm_candidates[arm] += count
++            arm_violations[arm] += violations
++            arm_distances[arm].append(nearest)
++            arm_runtime[arm] += float(row.get("runtime_s") or 0)
++            arm_converged[arm] += row.get("stop_reason") == "converged"
++            parameter_counts[arm].add(int(row.get("parameter_count") or 0))
++            work_counts[arm].add(
++                (
++                    int(row.get("candidate_budget") or count),
++                    int(row.get("optimizer_update_count") or 0),
++                )
++            )
++            for outcome in row.get("exact_outcomes", []):
++                if isinstance(outcome, Mapping) and outcome.get("exact_valid") is True:
++                    support[arm].add(str(outcome.get("candidate_hash") or ""))
++            if authority == "independent_audit_rows":
++                oracle_checks.append(row.get("exact_checker_after_candidate_freeze") is True)
++            else:
++                receipt = row.get("exact_evaluation_receipt") or {}
++                oracle_checks.append(
++                    receipt.get("evaluated_after_proposal") is True
++                    and receipt.get("model_feedback_applied") is False
++                    and receipt.get("candidate_hashes_before")
++                    == receipt.get("candidate_hashes_after")
++                )
++        effect = local_rates["grouped_fixed_point"] - local_rates["flat_recurrent_control"]
++        effects.append(effect)
++        if arms["grouped_fixed_point"].get("split") == "held_topology_test":
++            held_effects.append(effect)
++
++    grouped = "grouped_fixed_point"
++    control = "flat_recurrent_control"
++    overall = mean_ci95(effects)
++    held = mean_ci95(held_effects)
++    matched_parameters = (
++        bool(parameter_counts[grouped]) and parameter_counts[grouped] == parameter_counts[control]
++    )
++    matched_work = bool(work_counts[grouped]) and work_counts[grouped] == work_counts[control]
++    no_convergence_harm = arm_converged[grouped] >= arm_converged[control]
++    no_support_harm = len(support[grouped]) >= len(support[control])
++    oracle_free = bool(oracle_checks) and all(oracle_checks)
++    positive = bool(
++        overall["lower"] is not None
++        and overall["lower"] > 0
++        and held["lower"] is not None
++        and held["lower"] > 0
++        and matched_parameters
++        and matched_work
++        and no_convergence_harm
++        and no_support_harm
++        and oracle_free
++    )
++    rates = {
++        arm: arm_valid[arm] / arm_candidates[arm] if arm_candidates[arm] else None
++        for arm in (grouped, control)
++    }
++    return {
++        "evidence_authority": authority,
++        "paired_key_count": len(effects),
++        "exact_valid_rate_by_arm": rates,
++        "paired_exact_valid_delta": overall,
++        "held_topology_exact_valid_delta": held,
++        "dependency_violation_rate_by_arm": {
++            arm: arm_violations[arm] / arm_candidates[arm] if arm_candidates[arm] else None
++            for arm in (grouped, control)
++        },
++        "nearest_valid_distance_mean_by_arm": {
++            arm: statistics.fmean(arm_distances[arm]) if arm_distances[arm] else None
++            for arm in (grouped, control)
++        },
++        "runtime_s_by_arm": dict(arm_runtime),
++        "valid_support_by_arm": {arm: len(support[arm]) for arm in (grouped, control)},
++        "matched_parameter_counts": matched_parameters,
++        "matched_candidate_work": matched_work,
++        "no_convergence_harm": no_convergence_harm,
++        "no_support_harm": no_support_harm,
++        "oracle_leakage_free": oracle_free,
++        "positive_gate": positive,
++    }
++
++
++def recompute_csl(source_rows: Sequence[Mapping[str, Any]], audit: Mapping[str, Any]) -> JsonDict:
++    """Recompute prospective CSL activity and enforce cold-audit authority."""
++
++    held: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
++    online_rows = []
++    for row in source_rows:
++        arm = str(row.get("arm") or "")
++        order = str(row.get("order_id") or "")
++        if row.get("held_future") is True:
++            held[arm][order].append(float(row.get("route_utility") or 0))
++        if arm == "compositional_online":
++            online_rows.append(row)
++
++    order_effects = []
++    placebo_effects = []
++    for order in sorted(held["compositional_online"]):
++        online = statistics.fmean(held["compositional_online"][order])
++        frozen_values = held["frozen_controller"].get(order, [])
++        placebo_values = held["random_update_placebo"].get(order, [])
++        if frozen_values:
++            order_effects.append(online - statistics.fmean(frozen_values))
++        if placebo_values:
++            placebo_effects.append(online - statistics.fmean(placebo_values))
++
++    writes = sum(
++        int(row.get("memory_write_count") or 0)
++        for row in online_rows
++        if (row.get("transaction") or {}).get("committed") is True
++    )
++    reads = sum(int(row.get("memory_read_count") or 0) for row in online_rows)
++    actions = sum(row.get("selected_action") != row.get("baseline_action") for row in online_rows)
++    activity = writes > 0 and reads > 0 and actions > 0
++    effect = mean_ci95(order_effects)
++    placebo = mean_ci95(placebo_effects)
++    positive_lcb = effect["lower"] is not None and effect["lower"] > 0
++    cold_passed = bool(
++        audit.get("verdict_class") == "positive"
++        and audit.get("csl_causal_audit_completed") is True
++        and audit.get("source_verdict_supported") is True
++        and audit.get("rows")
++    )
++    return {
++        "evidence_authority": "source_rows_bounded_by_independent_audit",
++        "held_future_online_minus_frozen": effect,
++        "held_future_online_minus_placebo": placebo,
++        "order_effects": order_effects,
++        "writes": writes,
++        "later_reads": reads,
++        "action_changes": actions,
++        "prospective_causal_activity": activity,
++        "positive_held_future_lcb": positive_lcb,
++        "cold_causal_audit_passed": cold_passed,
++        "audit_verdict_class": audit.get("verdict_class", "blocked"),
++        "audit_blocker": audit.get("honest_verdict"),
++        "promotion_gate": bool(activity and positive_lcb and cold_passed),
++    }
++
++
++def _attempted_updates(row: Mapping[str, Any]) -> int:
++    accounting = row.get("update_accounting") or {}
++    return int(row.get("update_count") or accounting.get("attempted_conditional_updates") or 0)
++
++
++def _efficiency(row: Mapping[str, Any]) -> float:
++    return float(
++        row.get(
++            "energy_effective_samples_per_attempted_update",
++            row.get("effective_samples_per_update", 0),
++        )
++    )
++
++
++def recompute_temporal_exchange(
++    source_rows: Sequence[Mapping[str, Any]], audit_rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    """Recompute sampler efficiency and target-law gates at matched work."""
++
++    cold_rows = [row for row in audit_rows if row.get("row_kind") == "source_recomputation"]
++    selected = cold_rows or list(source_rows)
++    authority = "independent_audit_rows" if cold_rows else "source_rows"
++    paired: dict[tuple[str, float, int], dict[str, Mapping[str, Any]]] = defaultdict(dict)
++    for row in selected:
++        arm = str(row.get("arm") or "")
++        if arm in {"ordinary_gibbs", "temporal_exchange", "temporal_exchange_zero_coupling"}:
++            key = (
++                str(row.get("graph_id") or ""),
++                float(row.get("temperature") or 0),
++                int(row.get("seed") or 0),
++            )
++            paired[key][arm] = row
++
++    efficiency_by_stratum: dict[tuple[str, float], list[float]] = defaultdict(list)
++    target_by_stratum: dict[tuple[str, float], list[float]] = defaultdict(list)
++    matched_work = []
++    zero_control_equal = []
++    for (graph_id, temperature, _seed), arms in paired.items():
++        if "ordinary_gibbs" not in arms or "temporal_exchange" not in arms:
++            continue
++        ordinary = arms["ordinary_gibbs"]
++        temporal = arms["temporal_exchange"]
++        stratum = (graph_id, temperature)
++        efficiency_by_stratum[stratum].append(_efficiency(temporal) - _efficiency(ordinary))
++        target_by_stratum[stratum].append(
++            float(temporal.get("target_total_variation") or 0)
++            - float(ordinary.get("target_total_variation") or 0)
++        )
++        matched_work.append(_attempted_updates(temporal) == _attempted_updates(ordinary))
++        zero = arms.get("temporal_exchange_zero_coupling")
++        if zero is not None:
++            zero_control_equal.append(
++                _efficiency(zero) == _efficiency(ordinary)
++                and float(zero.get("target_total_variation") or 0)
++                == float(ordinary.get("target_total_variation") or 0)
++            )
++
++    efficiency_rows = []
++    target_rows = []
++    for graph_id, temperature in sorted(efficiency_by_stratum):
++        interval = mean_ci95(efficiency_by_stratum[(graph_id, temperature)])
++        efficiency_rows.append(
++            {
++                "graph_id": graph_id,
++                "temperature": temperature,
++                **interval,
++                "lcb_above_zero": interval["lower"] > 0,
++            }
++        )
++        target = mean_ci95(target_by_stratum[(graph_id, temperature)])
++        target_rows.append(
++            {
++                "graph_id": graph_id,
++                "temperature": temperature,
++                **target,
++                "margin": 0.03,
++                "ucb_within_margin": target["upper"] <= 0.03,
++            }
++        )
++    efficiency_gate = bool(efficiency_rows) and all(
++        row["lcb_above_zero"] for row in efficiency_rows
++    )
++    target_gate = bool(target_rows) and all(row["ucb_within_margin"] for row in target_rows)
++    work_gate = bool(matched_work) and all(matched_work)
++    return {
++        "evidence_authority": authority,
++        "paired_seed_count": len(matched_work),
++        "efficiency_by_stratum": efficiency_rows,
++        "target_law_by_stratum": target_rows,
++        "matched_attempted_updates": work_gate,
++        "zero_coupling_control_equal": bool(zero_control_equal) and all(zero_control_equal),
++        "efficiency_gate_passed": efficiency_gate,
++        "target_law_gate_passed": target_gate,
++        "positive_gate": bool(work_gate and efficiency_gate and target_gate),
++    }
++
++
++def _load_preconditions(root: Path) -> tuple[JsonDict | None, list[JsonDict], JsonDict]:
++    failures = []
++    design = root / DESIGN_PATH
++    design_text = design.read_text() if design.is_file() else ""
++    if not design_text.strip():
++        failures.append(
++            {
++                "check": "v592_design_nonempty",
++                "expected": "nonempty markdown",
++                "observed": len(design_text),
++            }
++        )
++    roadmap: JsonDict | None = None
++    roadmap_path = root / ROADMAP_PATH
++    try:
++        parsed = yaml.safe_load(roadmap_path.read_text())
++        if isinstance(parsed, dict) and parsed.get("milestone") == MILESTONE:
++            roadmap = parsed
++        else:
++            failures.append(
++                {"check": "v592_roadmap_mapping", "expected": MILESTONE, "observed": parsed}
++            )
++    except (OSError, yaml.YAMLError) as exc:
++        failures.append(
++            {
++                "check": "v592_roadmap_mapping",
++                "expected": MILESTONE,
++                "observed": f"{type(exc).__name__}: {exc}",
++            }
++        )
++    next_path = root / NEXT_ROADMAP_PATH
++    observation = {
++        "check": "inactive_next_roadmap",
++        "blocking": False,
++        "path": NEXT_ROADMAP_PATH.as_posix(),
++        "observed": "present" if next_path.is_file() else "missing",
++    }
++    return roadmap, failures, observation
++
++
++def _load_inventory(
++    root: Path, roadmap: Mapping[str, Any]
++) -> tuple[list[JsonDict], dict[str, JsonDict]]:
++    planned = {
++        str(task.get("id")): task for task in roadmap.get("tasks", []) if isinstance(task, Mapping)
++    }
++    inventory = []
++    payloads = {}
++    for task_id in EXPECTED_TASK_IDS:
++        task = planned.get(task_id, {})
++        relative = str(task.get("deliverable") or TASK_PATHS[task_id])
++        path = root / relative
++        digest = sha256_file(path)
++        state = "present" if digest else "missing"
++        payload = None
++        error = None
++        if digest:
++            try:
++                value = json.loads(path.read_text())
++                if not isinstance(value, dict):
++                    raise ValueError("top level is not an object")
++                payload = value
++            except (OSError, json.JSONDecodeError, ValueError) as exc:
++                state = "unreadable"
++                error = f"{type(exc).__name__}: {exc}"
++        source_class = payload.get("verdict_class") if payload else None
++        evidence_state = source_class if source_class in CLOSED_CLASSES else state
++        row = {
++            "task_id": task_id,
++            "path": relative,
++            "roadmap_task_present": task_id in planned,
++            "artifact_state": state,
++            "evidence_state": evidence_state,
++            "verdict_class": source_class if source_class in CLOSED_CLASSES else "blocked",
++            "honest_verdict": payload.get("honest_verdict") if payload else None,
++            "row_count": len(payload.get("rows", [])) if payload else 0,
++            "sha256": digest,
++            "read_error": error,
++        }
++        inventory.append(row)
++        if payload is not None:
++            payloads[task_id] = payload
++    return inventory, payloads
++
++
++def _blocked_source_checks(
++    inventory: Sequence[Mapping[str, Any]], payloads: Mapping[str, JsonDict]
++) -> list[JsonDict]:
++    out = []
++    for row in inventory:
++        if row.get("verdict_class") != "blocked":
++            continue
++        task_id = str(row["task_id"])
++        summary = payloads.get(task_id, {}).get("gate_check_summary") or {}
++        checks = summary.get("checks", []) if isinstance(summary, Mapping) else []
++        failed = [
++            check for check in checks if isinstance(check, Mapping) and check.get("passed") is False
++        ]
++        if not failed and isinstance(summary, Mapping) and summary.get("passed") is False:
++            failed = [summary]
++        if not failed:
++            failed = [
++                {
++                    "check": "artifact_availability",
++                    "expected": "readable terminal artifact",
++                    "observed": row.get("artifact_state"),
++                }
++            ]
++        for check in failed:
++            out.append(
++                {
++                    "task_id": task_id,
++                    "failed_check": check.get("check", check.get("failed_check")),
++                    "expected": check.get("expected"),
++                    "observed": check.get("observed"),
++                }
++            )
++    return out
++
++
++def _infrastructure(payloads: Mapping[str, JsonDict]) -> JsonDict:
++    dispatch = payloads.get(EXPECTED_TASK_IDS[0], {})
++    checkpoint = payloads.get(EXPECTED_TASK_IDS[1], {})
++    dispatch_ready = dispatch.get("dispatch_contract_ready") is True
++    checkpoint_ready = checkpoint.get("durable_checkpoint_ready") is True
++    verdict = (
++        "positive"
++        if dispatch_ready and checkpoint_ready
++        else "partial"
++        if dispatch_ready or checkpoint_ready
++        else "blocked"
++    )
++    return {
++        "branch": "infrastructure",
++        "verdict_class": verdict,
++        "evidence": {
++            "dispatch_contract_ready": dispatch_ready,
++            "durable_checkpoint_ready": checkpoint_ready,
++            "prefix_rows_preserved": (checkpoint.get("prefix_rows_preserved") or {}).get("count"),
++            "fresh_resume_rows": len(
++                (checkpoint.get("fresh_process_resume_rows") or {}).get("row_ids", [])
++            ),
++        },
++        "claim_boundary": "Operational readiness only; neither contract is a scientific win.",
++        "decision": "adopt durable checkpoint contract; keep dispatch activation blocked",
++        "exact_next_prerequisite": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++    }
++
++
++def _fixed_disposition(recomputed: JsonDict, audit: Mapping[str, Any]) -> JsonDict:
++    supported = (
++        audit.get("source_verdict_supported") is True
++        and audit.get("fixed_point_audit_completed") is True
++    )
++    verdict = "positive" if recomputed.get("positive_gate") and supported else "partial"
++    return {
++        "branch": "fixed_point",
++        "verdict_class": verdict,
++        "evidence": recomputed,
++        "claim_boundary": "Positive only for the synthetic exact-enumerable CPU fixture; all runs hit the iteration cap, nearest-valid distance and runtime remain tradeoffs, and no production output claim is made.",
++        "decision": "adopt experiment-only as a bounded neural constraint-dynamics bridge",
++        "exact_next_prerequisite": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++    }
++
++
++def _csl_disposition(recomputed: JsonDict) -> JsonDict:
++    if recomputed.get("promotion_gate"):
++        verdict = "positive"
++        decision = "adopt experiment-only causal routing controller"
++    elif recomputed.get("prospective_causal_activity") and recomputed.get(
++        "positive_held_future_lcb"
++    ):
++        verdict = "partial"
++        decision = "withhold FR11 credit and production adoption"
++    else:
++        verdict = "blocked"
++        decision = "keep branch blocked"
++    return {
++        "branch": "continuous_self_learning",
++        "verdict_class": verdict,
++        "evidence": recomputed,
++        "claim_boundary": "Source rows show prospective writes, later reads, action changes, and held-future lift; missing parent and new canonical state bytes prevent cold causal, restart, rollback, poison, and retention credit.",
++        "decision": decision,
++        "exact_next_prerequisite": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++    }
++
++
++def _temporal_disposition(recomputed: JsonDict, audit: Mapping[str, Any]) -> JsonDict:
++    audit_complete = audit.get("temporal_exchange_audit_completed") is True
++    verdict = (
++        "positive"
++        if recomputed.get("positive_gate") and audit_complete
++        else "null"
++        if recomputed.get("paired_seed_count")
++        else "blocked"
++    )
++    return {
++        "branch": "temporal_exchange",
++        "verdict_class": verdict,
++        "evidence": recomputed,
++        "claim_boundary": "CPU Ising simulation and static cost accounting only; no FPGA, TSU, latency, throughput, power, or physical-hardware claim.",
++        "decision": "retire the unchanged temporal-coupling schedule and do not start hardware work",
++        "exact_next_prerequisite": "Reopen only with a target-invariant temporal kernel, a preregistered work denominator, and a matched-work law-preservation proof before any new simulation or hardware study.",
++    }
++
++
++def _verdict_identity(text: str) -> str:
++    value = text.lower().strip()
++    for prefix in TERMINAL_PREFIXES:
++        if value.startswith(prefix):
++            value = value[len(prefix) :]
++            break
++    return value.split(":", 1)[0].strip().replace("-", "_").replace(" ", "_")
++
++
++def _prior_recurrences(
++    roadmap: Mapping[str, Any], inventory: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    current = {str(row["task_id"]): str(row.get("honest_verdict") or "") for row in inventory}
++    current["exp6795-v592-branch-disposition"] = "complete_partial: V592 mixed branch disposition"
++    out = []
++    for task in roadmap.get("tasks", []):
++        if not isinstance(task, Mapping):
++            continue
++        task_id = str(task.get("id") or "")
++        for prior in task.get("prior_failures") or []:
++            if not isinstance(prior, Mapping) or prior.get("retire_if_same_verdict") is not True:
++                continue
++            prior_verdict = str(prior.get("verdict") or "")
++            now = current.get(task_id, "")
++            if now and _verdict_identity(prior_verdict) == _verdict_identity(now):
++                out.append(
++                    {
++                        "task_id": task_id,
++                        "prior_experiment_id": prior.get("experiment_id"),
++                        "prior_verdict": prior_verdict,
++                        "current_verdict": now,
++                        "repeated_outcome": now.split(":", 1)[0],
++                        "retire_if_same_verdict": True,
++                        "disposition": "retire_unchanged_method_scope",
++                    }
++                )
++    return out
++
++
++def _retirements(recurrences: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    proposed = []
++    for row in recurrences:
++        proposed.append(
++            {
++                "branch": "capstone_aggregation",
++                "reason": "The normalized complete_partial outcome repeated Exp6780 under retire_if_same_verdict=true.",
++                "recommendation": "stop recommending another aggregation-only capstone as the way to close unchanged evidence gaps",
++                "proposed_exclusion_manifest_entry": {
++                    "id": "exp6780_mixed_capstone_repeat_retired_v592",
++                    "scope_key": "aggregation_only_capstone_complete_partial_repeat_v592",
++                    "experiment_scope": "Another branch-disposition capstone without new prerequisite evidence for the open V592 gaps",
++                    "experiment_ids": [row.get("prior_experiment_id"), row.get("task_id")],
++                    "retired_milestone": MILESTONE,
++                    "retire_if_same_verdict": True,
++                    "operator_reopen_required": True,
++                    "reopen_requires": "New dispatch-matrix, CSL byte-snapshot audit, or target-invariant sampler evidence rather than another synthesis pass.",
++                },
++                "active_exclusion_manifest_modified": False,
++            }
++        )
++    proposed.append(
++        {
++            "branch": "temporal_exchange",
++            "reason": "Matched-row recomputation and the cold audit both support the source null, including target-law and efficiency gate failures.",
++            "recommendation": "retire the unchanged temporal coupling schedule",
++            "proposed_exclusion_manifest_entry": None,
++            "active_exclusion_manifest_modified": False,
++        }
++    )
++    return proposed
++
++
++def _checksum(artifact: Mapping[str, Any]) -> str:
++    body = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "reproducibility_checksum"}
++    }
++    return "sha256:" + hashlib.sha256(canonical_json(body)).hexdigest()
++
++
++def _blocked_artifact(date: str, failures: list[JsonDict], duration_s: float) -> JsonDict:
++    blocked_branch = {
++        "verdict_class": "blocked",
++        "evidence": {},
++        "claim_boundary": "No branch claim is available because a capstone precondition failed.",
++        "decision": "blocked",
++        "exact_next_prerequisite": "Repair the unreadable V592 design or active roadmap, then rerun receipt synthesis.",
++    }
++    artifact: JsonDict = {
++        "schema": "carnot.v592_branch_disposition.v1",
++        "experiment_id": "experiment_6795_v592_branch_disposition",
++        "run_date": date,
++        "milestone": MILESTONE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "expected_task_ids": list(EXPECTED_TASK_IDS),
++        "artifact_inventory": [],
++        "source_artifact_hashes": {},
++        "rows": [],
++        "branch_decisions": [],
++        "infrastructure_disposition": {"branch": "infrastructure", **blocked_branch},
++        "fixed_point_disposition": {"branch": "fixed_point", **blocked_branch},
++        "csl_disposition": {"branch": "continuous_self_learning", **blocked_branch},
++        "temporal_exchange_disposition": {"branch": "temporal_exchange", **blocked_branch},
++        "source_audit_disagreements": [],
++        "prior_verdict_recurrences": [],
++        "retirement_recommendations": [],
++        "prd_gap_reconciliation": [],
++        "next_prerequisites": {},
++        "pooled_score_computed": False,
++        "docs_updated": {"capstone_spec": True, "conductor_reconciliation_deferred": True},
++        "gate_check_summary": {"passed": False, "failed_checks": failures},
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "complete_blocked_v592_disposition",
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def build_disposition(root: Path, date: str) -> JsonDict:
++    """Build the complete V592 disposition from artifacts already on disk."""
++
++    started = time.monotonic()
++    roadmap, failures, next_observation = _load_preconditions(root)
++    if failures or roadmap is None:
++        return _blocked_artifact(date, failures, time.monotonic() - started)
++
++    inventory, payloads = _load_inventory(root, roadmap)
++    fixed_source = payloads.get(EXPECTED_TASK_IDS[4], {})
++    fixed_audit = payloads.get(EXPECTED_TASK_IDS[5], {})
++    csl_source = payloads.get(EXPECTED_TASK_IDS[7], {})
++    csl_audit = payloads.get(EXPECTED_TASK_IDS[8], {})
++    temporal_source = payloads.get(EXPECTED_TASK_IDS[9], {})
++    temporal_audit = payloads.get(EXPECTED_TASK_IDS[10], {})
++
++    fixed = recompute_fixed_point(fixed_source.get("rows", []), fixed_audit.get("rows", []))
++    csl = recompute_csl(csl_source.get("rows", []), csl_audit)
++    temporal = recompute_temporal_exchange(
++        temporal_source.get("rows", []), temporal_audit.get("rows", [])
++    )
++    infrastructure_disposition = _infrastructure(payloads)
++    fixed_disposition = _fixed_disposition(fixed, fixed_audit)
++    csl_disposition = _csl_disposition(csl)
++    temporal_disposition = _temporal_disposition(temporal, temporal_audit)
++    decisions = [
++        infrastructure_disposition,
++        fixed_disposition,
++        csl_disposition,
++        temporal_disposition,
++    ]
++    recurrences = _prior_recurrences(roadmap, inventory)
++    disagreements = []
++    if (
++        csl_source.get("verdict_class") == "positive"
++        and csl_audit.get("source_verdict_supported") is not True
++    ):
++        disagreements.append(
++            {
++                "branch": "continuous_self_learning",
++                "source_task_id": EXPECTED_TASK_IDS[7],
++                "audit_task_id": EXPECTED_TASK_IDS[8],
++                "source_claim": csl_source.get("honest_verdict"),
++                "audit_claim": csl_audit.get("honest_verdict"),
++                "authority_applied": "independent_audit",
++                "disposition": "source positive is bounded to partial; FR11 credit withheld",
++            }
++        )
++
++    prd_gaps = [
++        {
++            "gap": "fail_closed_dispatch_and_durable_checkpoints",
++            "prd_refs": ["FR11"],
++            "verdict_class": infrastructure_disposition["verdict_class"],
++            "reconciliation": "Durable row resume is ready, but the dispatch compatibility matrix is absent; infrastructure is not a scientific win.",
++            "smallest_next_step_or_retirement": infrastructure_disposition[
++                "exact_next_prerequisite"
++            ],
++        },
++        {
++            "gap": "validated_neural_constraint_dynamics_bridge",
++            "prd_refs": ["FR12"],
++            "verdict_class": fixed_disposition["verdict_class"],
++            "reconciliation": "Grouped fixed-point proposals beat the matched flat control under cold exact audit without oracle feedback, closing only the synthetic experimental slice of FR12.",
++            "smallest_next_step_or_retirement": fixed_disposition["exact_next_prerequisite"],
++        },
++        {
++            "gap": "self_learning_causal_credit",
++            "prd_refs": ["FR11"],
++            "verdict_class": csl_disposition["verdict_class"],
++            "reconciliation": "Positive source rows do not close FR11 because the independent audit lacks canonical transaction bytes for causal and safety replay.",
++            "smallest_next_step_or_retirement": csl_disposition["exact_next_prerequisite"],
++        },
++    ]
++    source_hashes = {str(row["task_id"]): row.get("sha256") for row in inventory}
++    task_rows = [{"row_type": "task", **row} for row in inventory]
++    branch_rows = [
++        {
++            "row_type": "branch_claim",
++            "branch": decision["branch"],
++            "verdict_class": decision["verdict_class"],
++            "evidence": decision["evidence"],
++            "claim_boundary": decision["claim_boundary"],
++            "decision": decision["decision"],
++            "exact_next_prerequisite": decision["exact_next_prerequisite"],
++        }
++        for decision in decisions
++    ]
++    elapsed = time.monotonic() - started
++    artifact: JsonDict = {
++        "schema": "carnot.v592_branch_disposition.v1",
++        "experiment_id": "experiment_6795_v592_branch_disposition",
++        "run_date": date,
++        "milestone": MILESTONE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(elapsed, 6),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "expected_task_ids": list(EXPECTED_TASK_IDS),
++        "artifact_inventory": inventory,
++        "source_artifact_hashes": source_hashes,
++        "rows": task_rows + branch_rows,
++        "branch_decisions": decisions,
++        "infrastructure_disposition": infrastructure_disposition,
++        "fixed_point_disposition": fixed_disposition,
++        "csl_disposition": csl_disposition,
++        "temporal_exchange_disposition": temporal_disposition,
++        "source_audit_disagreements": disagreements,
++        "prior_verdict_recurrences": recurrences,
++        "retirement_recommendations": _retirements(recurrences),
++        "prd_gap_reconciliation": prd_gaps,
++        "next_prerequisites": {
++            decision["branch"]: decision["exact_next_prerequisite"] for decision in decisions
++        },
++        "pooled_score_computed": False,
++        "docs_updated": {
++            "openspec/capabilities/capstone/spec.md": "REQ-CAPSTONE-6795 added",
++            "research-complete.yaml": "V592 receipt row added by this task",
++            "deferred_to_conductor": ["_bmad/traceability.md", "ops/status.md", "ops/changelog.md"],
++        },
++        "gate_check_summary": {
++            "passed": True,
++            "capstone_failed_checks": [],
++            "blocked_source_checks": _blocked_source_checks(inventory, payloads),
++            "nonblocking_observations": [next_observation],
++        },
++        "verifier_is_oracle": False,
++        "verdict_class": "partial",
++        "honest_verdict": "complete_partial: V592 has checkpoint and bounded fixed-point evidence, but dispatch and cold CSL causality remain incomplete and temporal exchange is null; no branch metrics were pooled.",
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return all capstone schema and determination defects."""
++
++    findings = []
++    if REQUIRED_FIELDS - set(artifact):
++        findings.append("required_fields")
++    if artifact.get("verdict_class") not in CLOSED_CLASSES:
++        findings.append("verdict_class")
++    if not str(artifact.get("honest_verdict") or "").startswith(TERMINAL_PREFIXES):
++        findings.append("terminal_prefix")
++    if artifact.get("pooled_score_computed") is not False:
++        findings.append("pooled_score_computed")
++    if artifact.get("verifier_is_oracle") is not False:
++        findings.append("verifier_is_oracle")
++    if artifact.get("reproducibility_checksum") != _checksum(artifact):
++        findings.append("reproducibility_checksum")
++    return findings
++
++
++def atomic_write_json(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Publish JSON only after complete bytes are flushed to disk."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    descriptor, temporary = tempfile.mkstemp(
++        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
++    )
++    try:
++        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
++            json.dump(artifact, handle, indent=2, sort_keys=True)
++            handle.write("\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++    finally:
++        if os.path.exists(temporary):
++            os.unlink(temporary)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Build, validate, and atomically write the V592 disposition."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=PLANNING_DATE)
++    parser.add_argument("--repo", type=Path, default=REPO_ROOT)
++    args = parser.parse_args(list(argv) if argv is not None else None)
++    root = args.repo.resolve()
++    artifact = build_disposition(root, args.date)
++    findings = validate_artifact(artifact)
++    if findings:
++        raise ValueError(f"invalid V592 disposition: {findings}")
++    output = root / OUTPUT_PATH
++    atomic_write_json(output, artifact)
++    print(output)
++    return 0
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 34a9d36444..8fe9d86721 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -84160,3 +84160,57 @@ milestones:
+     title: Owned three-model exact proof-generation A/B
+     deliverable: results/experiment_6783_owned_proof_generation_ab.json
+     result: OK_DELIVERABLE_ONLY
++- id: 2026.08.592
++  title: Independent infrastructure, soft fixed-point, continuous self-learning, and temporal Ising branches
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-30'
++  finding: See the ungated Exp6795 branch disposition; branch metrics were not pooled.
++  tasks:
++  - id: exp6784-agent-model-dispatch-contract
++    title: Fail-closed roadmap agent-model dispatch contract
++    deliverable: results/experiment_6784_agent_model_dispatch_contract.json
++    result: GATE_BLOCKED
++  - id: exp6785-durable-row-checkpoint-contract
++    title: Parent-owned durable row checkpoint and resume contract
++    deliverable: results/experiment_6785_durable_row_checkpoint_contract.json
++    result: OK
++  - id: exp6786-constraint-dependency-hard-negative-fixture
++    title: Exact constraint-dependency graph and hard-negative fixture
++    deliverable: results/experiment_6786_constraint_dependency_hard_negative_fixture.json
++    result: OK
++  - id: exp6787-group-aware-soft-fixed-point
++    title: Group-aware soft fixed-point proposer
++    deliverable: results/experiment_6787_group_aware_soft_fixed_point.json
++    result: OK
++  - id: exp6788-soft-fixed-point-structural-control-ab
++    title: Group-aware fixed point versus parameter-matched flat control
++    deliverable: results/experiment_6788_soft_fixed_point_structural_control_ab.json
++    result: OK
++  - id: exp6789-soft-fixed-point-cold-authority-audit
++    title: Cold fixed-point authority and shortcut audit
++    deliverable: results/experiment_6789_soft_fixed_point_cold_authority_audit.json
++    result: OK
++  - id: exp6790-chronological-constraint-routing-stream
++    title: Chronological constraint-routing opportunity stream
++    deliverable: results/experiment_6790_chronological_constraint_routing_stream.json
++    result: OK
++  - id: exp6791-compositional-online-constraint-routing-ab
++    title: Compositional online constraint-routing comparison
++    deliverable: results/experiment_6791_compositional_online_constraint_routing_ab.json
++    result: OK
++  - id: exp6792-csl-causal-safety-cold-audit
++    title: Cold causal-use, forgetting, poison, restart, and rollback audit
++    deliverable: results/experiment_6792_csl_causal_safety_cold_audit.json
++    result: OK_DELIVERABLE_ONLY
++  - id: exp6793-temporal-exchange-ising-ab
++    title: Temporal coupling sampler target-law study
++    deliverable: results/experiment_6793_temporal_exchange_ising_ab.json
++    result: OK_DELIVERABLE_ONLY
++  - id: exp6794-temporal-exchange-cold-hardware-audit
++    title: Temporal coupling target-law recomputation and cost audit
++    deliverable: results/experiment_6794_temporal_exchange_cold_hardware_audit.json
++    result: OK_DELIVERABLE_ONLY
++  - id: exp6795-v592-branch-disposition
++    title: V592 branch disposition and PRD gap reconciliation
++    deliverable: results/experiment_6795_v592_branch_disposition.json
++    result: OK_DELIVERABLE_ONLY
+diff --git a/results/experiment_6795_v592_branch_disposition.json b/results/experiment_6795_v592_branch_disposition.json
+new file mode 100644
+index 0000000000..cf8fe1e6b2
+--- /dev/null
++++ b/results/experiment_6795_v592_branch_disposition.json
+@@ -0,0 +1,1192 @@
++{
++  "artifact_inventory": [
++    {
++      "artifact_state": "present",
++      "evidence_state": "blocked",
++      "honest_verdict": "complete_blocked_dispatch_contract",
++      "path": "results/experiment_6784_agent_model_dispatch_contract.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 0,
++      "sha256": "sha256:d99422e5fb123c9ef3498789c16b00bd315999bee2ab8ebd7ac858acfec3ab84",
++      "task_id": "exp6784-agent-model-dispatch-contract",
++      "verdict_class": "blocked"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed",
++      "path": "results/experiment_6785_durable_row_checkpoint_contract.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 25,
++      "sha256": "sha256:32462c34d87fe69dadaff5d11f74bd4962fee397b0c35f1db556ceb083b907ff",
++      "task_id": "exp6785-durable-row-checkpoint-contract",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: constraint dependency graph fixture ready with 96 units and 192 cold-replayed negative rows; this is not a model-quality claim",
++      "path": "results/experiment_6786_constraint_dependency_hard_negative_fixture.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 192,
++      "sha256": "sha256:f3780c85e29cda8dbd897b6c43a0ce3c938252625e823e54107f918d2052514a",
++      "task_id": "exp6786-constraint-dependency-hard-negative-fixture",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: bounded group-aware soft fixed-point proposer is mechanism-ready; candidate correctness and superiority were not tested",
++      "path": "results/experiment_6787_group_aware_soft_fixed_point.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 320,
++      "sha256": "sha256:161214c61401ebdb6a5ec11ea02eb520c341bc14f7831379d19651511f32a37d",
++      "task_id": "exp6787-group-aware-soft-fixed-point",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: grouped fixed-point proposal has a positive paired structural effect",
++      "path": "results/experiment_6788_soft_fixed_point_structural_control_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 640,
++      "sha256": "sha256:71feb075e5606891c857e6698f4d43b11fcaad2bfc82d1f21e99584aedad565f",
++      "task_id": "exp6788-soft-fixed-point-structural-control-ab",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: cold destructive audit supports the V592 grouped fixed-point verdict",
++      "path": "results/experiment_6789_soft_fixed_point_cold_authority_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 3200,
++      "sha256": "sha256:101487f224e5926d519b3db94c6a8ce12910c26ff1e711936216762398fc4748",
++      "task_id": "exp6789-soft-fixed-point-cold-authority-audit",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: chronological constraint-routing stream ready with 240 events, five orders, held-future isolation, poison, and non-saturated headroom; this is not an online-learning gain claim",
++      "path": "results/experiment_6790_chronological_constraint_routing_stream.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 1200,
++      "sha256": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++      "task_id": "exp6790-chronological-constraint-routing-stream",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete_positive: compositional online routing beat frozen and matched placebo with no preregistered harm",
++      "path": "results/experiment_6791_compositional_online_constraint_routing_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 4800,
++      "sha256": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99",
++      "task_id": "exp6791-compositional-online-constraint-routing-ab",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "blocked",
++      "honest_verdict": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++      "path": "results/experiment_6792_csl_causal_safety_cold_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 0,
++      "sha256": "sha256:9ecf6fa613b319f1fcd5671e7223b442fcf0bdf0abbf8906e979c121de6097ed",
++      "task_id": "exp6792-csl-causal-safety-cold-audit",
++      "verdict_class": "blocked"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "null",
++      "honest_verdict": "complete: temporal exchange did not pass both the paired efficiency and target-law gates; CPU simulation only",
++      "path": "results/experiment_6793_temporal_exchange_ising_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 360,
++      "sha256": "sha256:86f06a189823e474830c1f7ca130a7abb275a5d550487e2aa57903dff79ca251",
++      "task_id": "exp6793-temporal-exchange-ising-ab",
++      "verdict_class": "null"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "null",
++      "honest_verdict": "complete: cold replay supports the source null; temporal overhead and stationary-law sensitivity remain explicit; no hardware invoked",
++      "path": "results/experiment_6794_temporal_exchange_cold_hardware_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 390,
++      "sha256": "sha256:8b9248f0045d17d683517979e11ec66ebff37645011b0768b62760941ed5c511",
++      "task_id": "exp6794-temporal-exchange-cold-hardware-audit",
++      "verdict_class": "null"
++    }
++  ],
++  "branch_decisions": [
++    {
++      "branch": "infrastructure",
++      "claim_boundary": "Operational readiness only; neither contract is a scientific win.",
++      "decision": "adopt durable checkpoint contract; keep dispatch activation blocked",
++      "evidence": {
++        "dispatch_contract_ready": false,
++        "durable_checkpoint_ready": true,
++        "fresh_resume_rows": 15,
++        "prefix_rows_preserved": 9
++      },
++      "exact_next_prerequisite": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++      "verdict_class": "partial"
++    },
++    {
++      "branch": "fixed_point",
++      "claim_boundary": "Positive only for the synthetic exact-enumerable CPU fixture; all runs hit the iteration cap, nearest-valid distance and runtime remain tradeoffs, and no production output claim is made.",
++      "decision": "adopt experiment-only as a bounded neural constraint-dynamics bridge",
++      "evidence": {
++        "dependency_violation_rate_by_arm": {
++          "flat_recurrent_control": 0.5947916666666667,
++          "grouped_fixed_point": 0.4125
++        },
++        "evidence_authority": "independent_audit_rows",
++        "exact_valid_rate_by_arm": {
++          "flat_recurrent_control": 0.565625,
++          "grouped_fixed_point": 0.6677083333333333
++        },
++        "held_topology_exact_valid_delta": {
++          "lower": 0.0510251308751085,
++          "mean": 0.08541666666666667,
++          "n": 160,
++          "upper": 0.11980820245822484
++        },
++        "matched_candidate_work": true,
++        "matched_parameter_counts": true,
++        "nearest_valid_distance_mean_by_arm": {
++          "flat_recurrent_control": 0.0,
++          "grouped_fixed_point": 0.05625
++        },
++        "no_convergence_harm": true,
++        "no_support_harm": true,
++        "oracle_leakage_free": true,
++        "paired_exact_valid_delta": {
++          "lower": 0.07987159822732764,
++          "mean": 0.10208333333333335,
++          "n": 320,
++          "upper": 0.12429506843933905
++        },
++        "paired_key_count": 320,
++        "positive_gate": true,
++        "runtime_s_by_arm": {
++          "flat_recurrent_control": 0.18932899999999991,
++          "grouped_fixed_point": 0.598373
++        },
++        "valid_support_by_arm": {
++          "flat_recurrent_control": 58,
++          "grouped_fixed_point": 115
++        }
++      },
++      "exact_next_prerequisite": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++      "verdict_class": "positive"
++    },
++    {
++      "branch": "continuous_self_learning",
++      "claim_boundary": "Source rows show prospective writes, later reads, action changes, and held-future lift; missing parent and new canonical state bytes prevent cold causal, restart, rollback, poison, and retention credit.",
++      "decision": "withhold FR11 credit and production adoption",
++      "evidence": {
++        "action_changes": 721,
++        "audit_blocker": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++        "audit_verdict_class": "blocked",
++        "cold_causal_audit_passed": false,
++        "evidence_authority": "source_rows_bounded_by_independent_audit",
++        "held_future_online_minus_frozen": {
++          "lower": 0.3424984376627265,
++          "mean": 0.35,
++          "n": 5,
++          "upper": 0.3575015623372735
++        },
++        "held_future_online_minus_placebo": {
++          "lower": 0.33181915426461556,
++          "mean": 0.353125,
++          "n": 5,
++          "upper": 0.3744308457353845
++        },
++        "later_reads": 3132,
++        "order_effects": [
++          0.359375,
++          0.359375,
++          0.34375,
++          0.34375,
++          0.34375
++        ],
++        "positive_held_future_lcb": true,
++        "promotion_gate": false,
++        "prospective_causal_activity": true,
++        "writes": 1063
++      },
++      "exact_next_prerequisite": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++      "verdict_class": "partial"
++    },
++    {
++      "branch": "temporal_exchange",
++      "claim_boundary": "CPU Ising simulation and static cost accounting only; no FPGA, TSU, latency, throughput, power, or physical-hardware claim.",
++      "decision": "retire the unchanged temporal-coupling schedule and do not start hardware work",
++      "evidence": {
++        "efficiency_by_stratum": [
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lcb_above_zero": true,
++            "lower": 0.005570039993135166,
++            "mean": 0.009241955547248064,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.012913871101360962
++          },
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lcb_above_zero": false,
++            "lower": -0.008845480582044471,
++            "mean": -0.00475655920002565,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": -0.0006676378180068285
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lcb_above_zero": true,
++            "lower": 0.0032939284134466656,
++            "mean": 0.008328110108894858,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.01336229180434305
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lcb_above_zero": false,
++            "lower": -0.003972143493586997,
++            "mean": -0.0015455726129751171,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": 0.000880998267636763
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lcb_above_zero": true,
++            "lower": 0.0017461486415903033,
++            "mean": 0.004754091228223149,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.007762033814855995
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lcb_above_zero": false,
++            "lower": -0.004777723772678485,
++            "mean": -0.002640823235644939,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": -0.0005039226986113935
++          }
++        ],
++        "efficiency_gate_passed": false,
++        "evidence_authority": "independent_audit_rows",
++        "matched_attempted_updates": true,
++        "paired_seed_count": 120,
++        "positive_gate": false,
++        "target_law_by_stratum": [
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lower": -4.579418375688302e-05,
++            "margin": 0.03,
++            "mean": 0.008444947145384159,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": true,
++            "upper": 0.0169356884745252
++          },
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lower": 0.0003002339318799517,
++            "margin": 0.03,
++            "mean": 0.004038349035190604,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.007776464138501256
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lower": -0.003146481135244571,
++            "margin": 0.03,
++            "mean": 0.004215305216629131,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": true,
++            "upper": 0.011577091568502833
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lower": -0.004471948796594589,
++            "margin": 0.03,
++            "mean": -4.6006612293648244e-05,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.004379935572007292
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lower": 0.007055787513973035,
++            "margin": 0.03,
++            "mean": 0.01878462137650505,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": false,
++            "upper": 0.030513455239037066
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lower": -0.006872139573739526,
++            "margin": 0.03,
++            "mean": -0.0026853480290584012,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.0015014435156227232
++          }
++        ],
++        "target_law_gate_passed": false,
++        "zero_coupling_control_equal": true
++      },
++      "exact_next_prerequisite": "Reopen only with a target-invariant temporal kernel, a preregistered work denominator, and a matched-work law-preservation proof before any new simulation or hardware study.",
++      "verdict_class": "null"
++    }
++  ],
++  "csl_disposition": {
++    "branch": "continuous_self_learning",
++    "claim_boundary": "Source rows show prospective writes, later reads, action changes, and held-future lift; missing parent and new canonical state bytes prevent cold causal, restart, rollback, poison, and retention credit.",
++    "decision": "withhold FR11 credit and production adoption",
++    "evidence": {
++      "action_changes": 721,
++      "audit_blocker": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++      "audit_verdict_class": "blocked",
++      "cold_causal_audit_passed": false,
++      "evidence_authority": "source_rows_bounded_by_independent_audit",
++      "held_future_online_minus_frozen": {
++        "lower": 0.3424984376627265,
++        "mean": 0.35,
++        "n": 5,
++        "upper": 0.3575015623372735
++      },
++      "held_future_online_minus_placebo": {
++        "lower": 0.33181915426461556,
++        "mean": 0.353125,
++        "n": 5,
++        "upper": 0.3744308457353845
++      },
++      "later_reads": 3132,
++      "order_effects": [
++        0.359375,
++        0.359375,
++        0.34375,
++        0.34375,
++        0.34375
++      ],
++      "positive_held_future_lcb": true,
++      "promotion_gate": false,
++      "prospective_causal_activity": true,
++      "writes": 1063
++    },
++    "exact_next_prerequisite": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++    "verdict_class": "partial"
++  },
++  "docs_updated": {
++    "deferred_to_conductor": [
++      "_bmad/traceability.md",
++      "ops/status.md",
++      "ops/changelog.md"
++    ],
++    "openspec/capabilities/capstone/spec.md": "REQ-CAPSTONE-6795 added",
++    "research-complete.yaml": "V592 receipt row added by this task"
++  },
++  "duration_s": 0.481802,
++  "expected_task_ids": [
++    "exp6784-agent-model-dispatch-contract",
++    "exp6785-durable-row-checkpoint-contract",
++    "exp6786-constraint-dependency-hard-negative-fixture",
++    "exp6787-group-aware-soft-fixed-point",
++    "exp6788-soft-fixed-point-structural-control-ab",
++    "exp6789-soft-fixed-point-cold-authority-audit",
++    "exp6790-chronological-constraint-routing-stream",
++    "exp6791-compositional-online-constraint-routing-ab",
++    "exp6792-csl-causal-safety-cold-audit",
++    "exp6793-temporal-exchange-ising-ab",
++    "exp6794-temporal-exchange-cold-hardware-audit"
++  ],
++  "experiment_id": "experiment_6795_v592_branch_disposition",
++  "field_principles": {
++    "artifact_inventory": "Preserves presence, readability, source class, row count, and hash.",
++    "branch_decisions": "Keeps incomparable infrastructure and science outcomes separate.",
++    "csl_disposition": "Requires write, read, action, held-future, and cold causal evidence.",
++    "docs_updated": "Records capstone-owned edits and reconciliation deferred to the conductor.",
++    "duration_s": "Records measured reducer wall time.",
++    "expected_task_ids": "Keeps every upstream V592 task visible.",
++    "field_principles": "States why every required capstone field exists.",
++    "fixed_point_disposition": "Requires matched row effects and an oracle-free cold audit.",
++    "gate_check_summary": "Names failed checks, expected values, and observed values.",
++    "honest_verdict": "Provides a terminal summary without hiding mixed branch outcomes.",
++    "inference_substrate": "Separates receipt synthesis from model inference or new science.",
++    "infrastructure_disposition": "Treats dispatch and checkpoint readiness as infrastructure only.",
++    "next_prerequisites": "Names the smallest evidence needed to reopen each branch.",
++    "pooled_score_computed": "Prevents incomparable metrics from becoming a milestone score.",
++    "prd_gap_reconciliation": "Maps only V592 evidence to the three named PRD gaps.",
++    "prior_verdict_recurrences": "Applies each declared retire-if-same rule.",
++    "random_seed": "Pins deterministic receipt reduction.",
++    "reproducibility_checksum": "Binds source hashes and recomputed decisions.",
++    "retirement_recommendations": "Stops unchanged methods after repeated or decisive null evidence.",
++    "rows": "Provides one task row and one row for every branch claim.",
++    "source_artifact_hashes": "Makes every imported receipt content-addressable.",
++    "source_audit_disagreements": "Gives independent audits authority over source claims.",
++    "temporal_exchange_disposition": "Requires matched-work efficiency and target-law preservation.",
++    "verdict_class": "Uses the closed outcome vocabulary.",
++    "verifier_is_oracle": "States that receipt auditing does not create a scientific oracle."
++  },
++  "fixed_point_disposition": {
++    "branch": "fixed_point",
++    "claim_boundary": "Positive only for the synthetic exact-enumerable CPU fixture; all runs hit the iteration cap, nearest-valid distance and runtime remain tradeoffs, and no production output claim is made.",
++    "decision": "adopt experiment-only as a bounded neural constraint-dynamics bridge",
++    "evidence": {
++      "dependency_violation_rate_by_arm": {
++        "flat_recurrent_control": 0.5947916666666667,
++        "grouped_fixed_point": 0.4125
++      },
++      "evidence_authority": "independent_audit_rows",
++      "exact_valid_rate_by_arm": {
++        "flat_recurrent_control": 0.565625,
++        "grouped_fixed_point": 0.6677083333333333
++      },
++      "held_topology_exact_valid_delta": {
++        "lower": 0.0510251308751085,
++        "mean": 0.08541666666666667,
++        "n": 160,
++        "upper": 0.11980820245822484
++      },
++      "matched_candidate_work": true,
++      "matched_parameter_counts": true,
++      "nearest_valid_distance_mean_by_arm": {
++        "flat_recurrent_control": 0.0,
++        "grouped_fixed_point": 0.05625
++      },
++      "no_convergence_harm": true,
++      "no_support_harm": true,
++      "oracle_leakage_free": true,
++      "paired_exact_valid_delta": {
++        "lower": 0.07987159822732764,
++        "mean": 0.10208333333333335,
++        "n": 320,
++        "upper": 0.12429506843933905
++      },
++      "paired_key_count": 320,
++      "positive_gate": true,
++      "runtime_s_by_arm": {
++        "flat_recurrent_control": 0.18932899999999991,
++        "grouped_fixed_point": 0.598373
++      },
++      "valid_support_by_arm": {
++        "flat_recurrent_control": 58,
++        "grouped_fixed_point": 115
++      }
++    },
++    "exact_next_prerequisite": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++    "verdict_class": "positive"
++  },
++  "gate_check_summary": {
++    "blocked_source_checks": [
++      {
++        "expected": {
++          "exists": true,
++          "parses_as": "YAML mapping",
++          "path": "research-roadmap-next.yaml"
++        },
++        "failed_check": "next_roadmap_exists_and_parses",
++        "observed": {
++          "exists": false,
++          "parses_as": null,
++          "path": "research-roadmap-next.yaml"
++        },
++        "task_id": "exp6784-agent-model-dispatch-contract"
++      },
++      {
++        "expected": {
++          "byte_hash_matches": 3189,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 3189,
++          "parent_byte_snapshots": 3189
++        },
++        "failed_check": "transaction_byte_snapshots",
++        "observed": {
++          "byte_hash_matches": 0,
++          "committed_receipts": 3189,
++          "new_state_byte_snapshots": 0,
++          "parent_byte_snapshots": 0
++        },
++        "task_id": "exp6792-csl-causal-safety-cold-audit"
++      }
++    ],
++    "capstone_failed_checks": [],
++    "nonblocking_observations": [
++      {
++        "blocking": false,
++        "check": "inactive_next_roadmap",
++        "observed": "missing",
++        "path": "research-roadmap-next.yaml"
++      }
++    ],
++    "passed": true
++  },
++  "honest_verdict": "complete_partial: V592 has checkpoint and bounded fixed-point evidence, but dispatch and cold CSL causality remain incomplete and temporal exchange is null; no branch metrics were pooled.",
++  "inference_substrate": "receipt-only local synthesis, no inference model",
++  "infrastructure_disposition": {
++    "branch": "infrastructure",
++    "claim_boundary": "Operational readiness only; neither contract is a scientific win.",
++    "decision": "adopt durable checkpoint contract; keep dispatch activation blocked",
++    "evidence": {
++      "dispatch_contract_ready": false,
++      "durable_checkpoint_ready": true,
++      "fresh_resume_rows": 15,
++      "prefix_rows_preserved": 9
++    },
++    "exact_next_prerequisite": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++    "verdict_class": "partial"
++  },
++  "milestone": "2026.08.592",
++  "next_prerequisites": {
++    "continuous_self_learning": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++    "fixed_point": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++    "infrastructure": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++    "temporal_exchange": "Reopen only with a target-invariant temporal kernel, a preregistered work denominator, and a matched-work law-preservation proof before any new simulation or hardware study."
++  },
++  "pooled_score_computed": false,
++  "prd_gap_reconciliation": [
++    {
++      "gap": "fail_closed_dispatch_and_durable_checkpoints",
++      "prd_refs": [
++        "FR11"
++      ],
++      "reconciliation": "Durable row resume is ready, but the dispatch compatibility matrix is absent; infrastructure is not a scientific win.",
++      "smallest_next_step_or_retirement": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++      "verdict_class": "partial"
++    },
++    {
++      "gap": "validated_neural_constraint_dynamics_bridge",
++      "prd_refs": [
++        "FR12"
++      ],
++      "reconciliation": "Grouped fixed-point proposals beat the matched flat control under cold exact audit without oracle feedback, closing only the synthetic experimental slice of FR12.",
++      "smallest_next_step_or_retirement": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++      "verdict_class": "positive"
++    },
++    {
++      "gap": "self_learning_causal_credit",
++      "prd_refs": [
++        "FR11"
++      ],
++      "reconciliation": "Positive source rows do not close FR11 because the independent audit lacks canonical transaction bytes for causal and safety replay.",
++      "smallest_next_step_or_retirement": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++      "verdict_class": "partial"
++    }
++  ],
++  "prior_verdict_recurrences": [
++    {
++      "current_verdict": "complete_partial: V592 mixed branch disposition",
++      "disposition": "retire_unchanged_method_scope",
++      "prior_experiment_id": "exp6780-v590-branch-disposition",
++      "prior_verdict": "complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.",
++      "repeated_outcome": "complete_partial",
++      "retire_if_same_verdict": true,
++      "task_id": "exp6795-v592-branch-disposition"
++    }
++  ],
++  "random_seed": 6795,
++  "reproducibility_checksum": "sha256:c28fe25e8c4938911501ca999e467129a4e47240f1fb07e6ee8c3265e445575a",
++  "retirement_recommendations": [
++    {
++      "active_exclusion_manifest_modified": false,
++      "branch": "capstone_aggregation",
++      "proposed_exclusion_manifest_entry": {
++        "experiment_ids": [
++          "exp6780-v590-branch-disposition",
++          "exp6795-v592-branch-disposition"
++        ],
++        "experiment_scope": "Another branch-disposition capstone without new prerequisite evidence for the open V592 gaps",
++        "id": "exp6780_mixed_capstone_repeat_retired_v592",
++        "operator_reopen_required": true,
++        "reopen_requires": "New dispatch-matrix, CSL byte-snapshot audit, or target-invariant sampler evidence rather than another synthesis pass.",
++        "retire_if_same_verdict": true,
++        "retired_milestone": "2026.08.592",
++        "scope_key": "aggregation_only_capstone_complete_partial_repeat_v592"
++      },
++      "reason": "The normalized complete_partial outcome repeated Exp6780 under retire_if_same_verdict=true.",
++      "recommendation": "stop recommending another aggregation-only capstone as the way to close unchanged evidence gaps"
++    },
++    {
++      "active_exclusion_manifest_modified": false,
++      "branch": "temporal_exchange",
++      "proposed_exclusion_manifest_entry": null,
++      "reason": "Matched-row recomputation and the cold audit both support the source null, including target-law and efficiency gate failures.",
++      "recommendation": "retire the unchanged temporal coupling schedule"
++    }
++  ],
++  "rows": [
++    {
++      "artifact_state": "present",
++      "evidence_state": "blocked",
++      "honest_verdict": "complete_blocked_dispatch_contract",
++      "path": "results/experiment_6784_agent_model_dispatch_contract.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 0,
++      "row_type": "task",
++      "sha256": "sha256:d99422e5fb123c9ef3498789c16b00bd315999bee2ab8ebd7ac858acfec3ab84",
++      "task_id": "exp6784-agent-model-dispatch-contract",
++      "verdict_class": "blocked"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed",
++      "path": "results/experiment_6785_durable_row_checkpoint_contract.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 25,
++      "row_type": "task",
++      "sha256": "sha256:32462c34d87fe69dadaff5d11f74bd4962fee397b0c35f1db556ceb083b907ff",
++      "task_id": "exp6785-durable-row-checkpoint-contract",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: constraint dependency graph fixture ready with 96 units and 192 cold-replayed negative rows; this is not a model-quality claim",
++      "path": "results/experiment_6786_constraint_dependency_hard_negative_fixture.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 192,
++      "row_type": "task",
++      "sha256": "sha256:f3780c85e29cda8dbd897b6c43a0ce3c938252625e823e54107f918d2052514a",
++      "task_id": "exp6786-constraint-dependency-hard-negative-fixture",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: bounded group-aware soft fixed-point proposer is mechanism-ready; candidate correctness and superiority were not tested",
++      "path": "results/experiment_6787_group_aware_soft_fixed_point.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 320,
++      "row_type": "task",
++      "sha256": "sha256:161214c61401ebdb6a5ec11ea02eb520c341bc14f7831379d19651511f32a37d",
++      "task_id": "exp6787-group-aware-soft-fixed-point",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: grouped fixed-point proposal has a positive paired structural effect",
++      "path": "results/experiment_6788_soft_fixed_point_structural_control_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 640,
++      "row_type": "task",
++      "sha256": "sha256:71feb075e5606891c857e6698f4d43b11fcaad2bfc82d1f21e99584aedad565f",
++      "task_id": "exp6788-soft-fixed-point-structural-control-ab",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: cold destructive audit supports the V592 grouped fixed-point verdict",
++      "path": "results/experiment_6789_soft_fixed_point_cold_authority_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 3200,
++      "row_type": "task",
++      "sha256": "sha256:101487f224e5926d519b3db94c6a8ce12910c26ff1e711936216762398fc4748",
++      "task_id": "exp6789-soft-fixed-point-cold-authority-audit",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete: chronological constraint-routing stream ready with 240 events, five orders, held-future isolation, poison, and non-saturated headroom; this is not an online-learning gain claim",
++      "path": "results/experiment_6790_chronological_constraint_routing_stream.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 1200,
++      "row_type": "task",
++      "sha256": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++      "task_id": "exp6790-chronological-constraint-routing-stream",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "positive",
++      "honest_verdict": "complete_positive: compositional online routing beat frozen and matched placebo with no preregistered harm",
++      "path": "results/experiment_6791_compositional_online_constraint_routing_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 4800,
++      "row_type": "task",
++      "sha256": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99",
++      "task_id": "exp6791-compositional-online-constraint-routing-ab",
++      "verdict_class": "positive"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "blocked",
++      "honest_verdict": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++      "path": "results/experiment_6792_csl_causal_safety_cold_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 0,
++      "row_type": "task",
++      "sha256": "sha256:9ecf6fa613b319f1fcd5671e7223b442fcf0bdf0abbf8906e979c121de6097ed",
++      "task_id": "exp6792-csl-causal-safety-cold-audit",
++      "verdict_class": "blocked"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "null",
++      "honest_verdict": "complete: temporal exchange did not pass both the paired efficiency and target-law gates; CPU simulation only",
++      "path": "results/experiment_6793_temporal_exchange_ising_ab.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 360,
++      "row_type": "task",
++      "sha256": "sha256:86f06a189823e474830c1f7ca130a7abb275a5d550487e2aa57903dff79ca251",
++      "task_id": "exp6793-temporal-exchange-ising-ab",
++      "verdict_class": "null"
++    },
++    {
++      "artifact_state": "present",
++      "evidence_state": "null",
++      "honest_verdict": "complete: cold replay supports the source null; temporal overhead and stationary-law sensitivity remain explicit; no hardware invoked",
++      "path": "results/experiment_6794_temporal_exchange_cold_hardware_audit.json",
++      "read_error": null,
++      "roadmap_task_present": true,
++      "row_count": 390,
++      "row_type": "task",
++      "sha256": "sha256:8b9248f0045d17d683517979e11ec66ebff37645011b0768b62760941ed5c511",
++      "task_id": "exp6794-temporal-exchange-cold-hardware-audit",
++      "verdict_class": "null"
++    },
++    {
++      "branch": "infrastructure",
++      "claim_boundary": "Operational readiness only; neither contract is a scientific win.",
++      "decision": "adopt durable checkpoint contract; keep dispatch activation blocked",
++      "evidence": {
++        "dispatch_contract_ready": false,
++        "durable_checkpoint_ready": true,
++        "fresh_resume_rows": 15,
++        "prefix_rows_preserved": 9
++      },
++      "exact_next_prerequisite": "Create and audit the agent/model compatibility matrix from the active V592 roadmap, while treating an absent inactive next-roadmap file as nonblocking.",
++      "row_type": "branch_claim",
++      "verdict_class": "partial"
++    },
++    {
++      "branch": "fixed_point",
++      "claim_boundary": "Positive only for the synthetic exact-enumerable CPU fixture; all runs hit the iteration cap, nearest-valid distance and runtime remain tradeoffs, and no production output claim is made.",
++      "decision": "adopt experiment-only as a bounded neural constraint-dynamics bridge",
++      "evidence": {
++        "dependency_violation_rate_by_arm": {
++          "flat_recurrent_control": 0.5947916666666667,
++          "grouped_fixed_point": 0.4125
++        },
++        "evidence_authority": "independent_audit_rows",
++        "exact_valid_rate_by_arm": {
++          "flat_recurrent_control": 0.565625,
++          "grouped_fixed_point": 0.6677083333333333
++        },
++        "held_topology_exact_valid_delta": {
++          "lower": 0.0510251308751085,
++          "mean": 0.08541666666666667,
++          "n": 160,
++          "upper": 0.11980820245822484
++        },
++        "matched_candidate_work": true,
++        "matched_parameter_counts": true,
++        "nearest_valid_distance_mean_by_arm": {
++          "flat_recurrent_control": 0.0,
++          "grouped_fixed_point": 0.05625
++        },
++        "no_convergence_harm": true,
++        "no_support_harm": true,
++        "oracle_leakage_free": true,
++        "paired_exact_valid_delta": {
++          "lower": 0.07987159822732764,
++          "mean": 0.10208333333333335,
++          "n": 320,
++          "upper": 0.12429506843933905
++        },
++        "paired_key_count": 320,
++        "positive_gate": true,
++        "runtime_s_by_arm": {
++          "flat_recurrent_control": 0.18932899999999991,
++          "grouped_fixed_point": 0.598373
++        },
++        "valid_support_by_arm": {
++          "flat_recurrent_control": 58,
++          "grouped_fixed_point": 115
++        }
++      },
++      "exact_next_prerequisite": "Before wider adoption, test frozen grouped proposals on real structured constraint outputs with the same post-proposal exact checker, matched work, convergence reporting, and independent cold audit.",
++      "row_type": "branch_claim",
++      "verdict_class": "positive"
++    },
++    {
++      "branch": "continuous_self_learning",
++      "claim_boundary": "Source rows show prospective writes, later reads, action changes, and held-future lift; missing parent and new canonical state bytes prevent cold causal, restart, rollback, poison, and retention credit.",
++      "decision": "withhold FR11 credit and production adoption",
++      "evidence": {
++        "action_changes": 721,
++        "audit_blocker": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++        "audit_verdict_class": "blocked",
++        "cold_causal_audit_passed": false,
++        "evidence_authority": "source_rows_bounded_by_independent_audit",
++        "held_future_online_minus_frozen": {
++          "lower": 0.3424984376627265,
++          "mean": 0.35,
++          "n": 5,
++          "upper": 0.3575015623372735
++        },
++        "held_future_online_minus_placebo": {
++          "lower": 0.33181915426461556,
++          "mean": 0.353125,
++          "n": 5,
++          "upper": 0.3744308457353845
++        },
++        "later_reads": 3132,
++        "order_effects": [
++          0.359375,
++          0.359375,
++          0.34375,
++          0.34375,
++          0.34375
++        ],
++        "positive_held_future_lcb": true,
++        "promotion_gate": false,
++        "prospective_causal_activity": true,
++        "writes": 1063
++      },
++      "exact_next_prerequisite": "Emit parent and new canonical state-byte snapshots for every committed transaction, verify each hash, then rerun only the Exp6792 cold causal and safety audit.",
++      "row_type": "branch_claim",
++      "verdict_class": "partial"
++    },
++    {
++      "branch": "temporal_exchange",
++      "claim_boundary": "CPU Ising simulation and static cost accounting only; no FPGA, TSU, latency, throughput, power, or physical-hardware claim.",
++      "decision": "retire the unchanged temporal-coupling schedule and do not start hardware work",
++      "evidence": {
++        "efficiency_by_stratum": [
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lcb_above_zero": true,
++            "lower": 0.005570039993135166,
++            "mean": 0.009241955547248064,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.012913871101360962
++          },
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lcb_above_zero": false,
++            "lower": -0.008845480582044471,
++            "mean": -0.00475655920002565,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": -0.0006676378180068285
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lcb_above_zero": true,
++            "lower": 0.0032939284134466656,
++            "mean": 0.008328110108894858,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.01336229180434305
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lcb_above_zero": false,
++            "lower": -0.003972143493586997,
++            "mean": -0.0015455726129751171,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": 0.000880998267636763
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lcb_above_zero": true,
++            "lower": 0.0017461486415903033,
++            "mean": 0.004754091228223149,
++            "n": 20,
++            "temperature": 0.75,
++            "upper": 0.007762033814855995
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lcb_above_zero": false,
++            "lower": -0.004777723772678485,
++            "mean": -0.002640823235644939,
++            "n": 20,
++            "temperature": 2.0,
++            "upper": -0.0005039226986113935
++          }
++        ],
++        "efficiency_gate_passed": false,
++        "evidence_authority": "independent_audit_rows",
++        "matched_attempted_updates": true,
++        "paired_seed_count": 120,
++        "positive_gate": false,
++        "target_law_by_stratum": [
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lower": -4.579418375688302e-05,
++            "margin": 0.03,
++            "mean": 0.008444947145384159,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": true,
++            "upper": 0.0169356884745252
++          },
++          {
++            "graph_id": "ferromagnetic_ring_n6",
++            "lower": 0.0003002339318799517,
++            "margin": 0.03,
++            "mean": 0.004038349035190604,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.007776464138501256
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lower": -0.003146481135244571,
++            "margin": 0.03,
++            "mean": 0.004215305216629131,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": true,
++            "upper": 0.011577091568502833
++          },
++          {
++            "graph_id": "frustrated_odd_cycle_n7",
++            "lower": -0.004471948796594589,
++            "margin": 0.03,
++            "mean": -4.6006612293648244e-05,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.004379935572007292
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lower": 0.007055787513973035,
++            "margin": 0.03,
++            "mean": 0.01878462137650505,
++            "n": 20,
++            "temperature": 0.75,
++            "ucb_within_margin": false,
++            "upper": 0.030513455239037066
++          },
++          {
++            "graph_id": "mixed_sparse_n8",
++            "lower": -0.006872139573739526,
++            "margin": 0.03,
++            "mean": -0.0026853480290584012,
++            "n": 20,
++            "temperature": 2.0,
++            "ucb_within_margin": true,
++            "upper": 0.0015014435156227232
++          }
++        ],
++        "target_law_gate_passed": false,
++        "zero_coupling_control_equal": true
++      },
++      "exact_next_prerequisite": "Reopen only with a target-invariant temporal kernel, a preregistered work denominator, and a matched-work law-preservation proof before any new simulation or hardware study.",
++      "row_type": "branch_claim",
++      "verdict_class": "null"
++    }
++  ],
++  "run_date": "20260830",
++  "schema": "carnot.v592_branch_disposition.v1",
++  "source_artifact_hashes": {
++    "exp6784-agent-model-dispatch-contract": "sha256:d99422e5fb123c9ef3498789c16b00bd315999bee2ab8ebd7ac858acfec3ab84",
++    "exp6785-durable-row-checkpoint-contract": "sha256:32462c34d87fe69dadaff5d11f74bd4962fee397b0c35f1db556ceb083b907ff",
++    "exp6786-constraint-dependency-hard-negative-fixture": "sha256:f3780c85e29cda8dbd897b6c43a0ce3c938252625e823e54107f918d2052514a",
++    "exp6787-group-aware-soft-fixed-point": "sha256:161214c61401ebdb6a5ec11ea02eb520c341bc14f7831379d19651511f32a37d",
++    "exp6788-soft-fixed-point-structural-control-ab": "sha256:71feb075e5606891c857e6698f4d43b11fcaad2bfc82d1f21e99584aedad565f",
++    "exp6789-soft-fixed-point-cold-authority-audit": "sha256:101487f224e5926d519b3db94c6a8ce12910c26ff1e711936216762398fc4748",
++    "exp6790-chronological-constraint-routing-stream": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
++    "exp6791-compositional-online-constraint-routing-ab": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99",
++    "exp6792-csl-causal-safety-cold-audit": "sha256:9ecf6fa613b319f1fcd5671e7223b442fcf0bdf0abbf8906e979c121de6097ed",
++    "exp6793-temporal-exchange-ising-ab": "sha256:86f06a189823e474830c1f7ca130a7abb275a5d550487e2aa57903dff79ca251",
++    "exp6794-temporal-exchange-cold-hardware-audit": "sha256:8b9248f0045d17d683517979e11ec66ebff37645011b0768b62760941ed5c511"
++  },
++  "source_audit_disagreements": [
++    {
++      "audit_claim": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
++      "audit_task_id": "exp6792-csl-causal-safety-cold-audit",
++      "authority_applied": "independent_audit",
++      "branch": "continuous_self_learning",
++      "disposition": "source positive is bounded to partial; FR11 credit withheld",
++      "source_claim": "complete_positive: compositional online routing beat frozen and matched placebo with no preregistered harm",
++      "source_task_id": "exp6791-compositional-online-constraint-routing-ab"
++    }
++  ],
++  "temporal_exchange_disposition": {
++    "branch": "temporal_exchange",
++    "claim_boundary": "CPU Ising simulation and static cost accounting only; no FPGA, TSU, latency, throughput, power, or physical-hardware claim.",
++    "decision": "retire the unchanged temporal-coupling schedule and do not start hardware work",
++    "evidence": {
++      "efficiency_by_stratum": [
++        {
++          "graph_id": "ferromagnetic_ring_n6",
++          "lcb_above_zero": true,
++          "lower": 0.005570039993135166,
++          "mean": 0.009241955547248064,
++          "n": 20,
++          "temperature": 0.75,
++          "upper": 0.012913871101360962
++        },
++        {
++          "graph_id": "ferromagnetic_ring_n6",
++          "lcb_above_zero": false,
++          "lower": -0.008845480582044471,
++          "mean": -0.00475655920002565,
++          "n": 20,
++          "temperature": 2.0,
++          "upper": -0.0006676378180068285
++        },
++        {
++          "graph_id": "frustrated_odd_cycle_n7",
++          "lcb_above_zero": true,
++          "lower": 0.0032939284134466656,
++          "mean": 0.008328110108894858,
++          "n": 20,
++          "temperature": 0.75,
++          "upper": 0.01336229180434305
++        },
++        {
++          "graph_id": "frustrated_odd_cycle_n7",
++          "lcb_above_zero": false,
++          "lower": -0.003972143493586997,
++          "mean": -0.0015455726129751171,
++          "n": 20,
++          "temperature": 2.0,
++          "upper": 0.000880998267636763
++        },
++        {
++          "graph_id": "mixed_sparse_n8",
++          "lcb_above_zero": true,
++          "lower": 0.0017461486415903033,
++          "mean": 0.004754091228223149,
++          "n": 20,
++          "temperature": 0.75,
++          "upper": 0.007762033814855995
++        },
++        {
++          "graph_id": "mixed_sparse_n8",
++          "lcb_above_zero": false,
++          "lower": -0.004777723772678485,
++          "mean": -0.002640823235644939,
++          "n": 20,
++          "temperature": 2.0,
++          "upper": -0.0005039226986113935
++        }
++      ],
++      "efficiency_gate_passed": false,
++      "evidence_authority": "independent_audit_rows",
++      "matched_attempted_updates": true,
++      "paired_seed_count": 120,
++      "positive_gate": false,
++      "target_law_by_stratum": [
++        {
++          "graph_id": "ferromagnetic_ring_n6",
++          "lower": -4.579418375688302e-05,
++          "margin": 0.03,
++          "mean": 0.008444947145384159,
++          "n": 20,
++          "temperature": 0.75,
++          "ucb_within_margin": true,
++          "upper": 0.0169356884745252
++        },
++        {
++          "graph_id": "ferromagnetic_ring_n6",
++          "lower": 0.0003002339318799517,
++          "margin": 0.03,
++          "mean": 0.004038349035190604,
++          "n": 20,
++          "temperature": 2.0,
++          "ucb_within_margin": true,
++          "upper": 0.007776464138501256
++        },
++        {
++          "graph_id": "frustrated_odd_cycle_n7",
++          "lower": -0.003146481135244571,
++          "margin": 0.03,
++          "mean": 0.004215305216629131,
++          "n": 20,
++          "temperature": 0.75,
++          "ucb_within_margin": true,
++          "upper": 0.011577091568502833
++        },
++        {
++          "graph_id": "frustrated_odd_cycle_n7",
++          "lower": -0.004471948796594589,
++          "margin": 0.03,
++          "mean": -4.6006612293648244e-05,
++          "n": 20,
++          "temperature": 2.0,
++          "ucb_within_margin": true,
++          "upper": 0.004379935572007292
++        },
++        {
++          "graph_id": "mixed_sparse_n8",
++          "lower": 0.007055787513973035,
++          "margin": 0.03,
++          "mean": 0.01878462137650505,
++          "n": 20,
++          "temperature": 0.75,
++          "ucb_within_margin": false,
++          "upper": 0.030513455239037066
++        },
++        {
++          "graph_id": "mixed_sparse_n8",
++          "lower": -0.006872139573739526,
++          "margin": 0.03,
++          "mean": -0.0026853480290584012,
++          "n": 20,
++          "temperature": 2.0,
++          "ucb_within_margin": true,
++          "upper": 0.0015014435156227232
++        }
++      ],
++      "target_law_gate_passed": false,
++      "zero_coupling_control_equal": true
++    },
++    "exact_next_prerequisite": "Reopen only with a target-invariant temporal kernel, a preregistered work denominator, and a matched-work law-preservation proof before any new simulation or hardware study.",
++    "verdict_class": "null"
++  },
++  "verdict_class": "partial",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6795_v592_branch_disposition.py b/scripts/experiments/experiment_6795_v592_branch_disposition.py
+new file mode 100644
+index 0000000000..ca07b606ae
+--- /dev/null
++++ b/scripts/experiments/experiment_6795_v592_branch_disposition.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""Run the V592 ungated branch-disposition reducer."""
++
++from __future__ import annotations
++
++from carnot.experiment_6795_v592_branch_disposition import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6795_v592_branch_disposition.py b/tests/python/test_experiment_6795_v592_branch_disposition.py
+new file mode 100644
+index 0000000000..20950465fa
+--- /dev/null
++++ b/tests/python/test_experiment_6795_v592_branch_disposition.py
+@@ -0,0 +1,287 @@
++"""Tests for REQ-CAPSTONE-6795 and its named scenarios."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++import carnot.experiment_6795_v592_branch_disposition as disposition_module
++from carnot.experiment_6795_v592_branch_disposition import (
++    EXPECTED_TASK_IDS,
++    REQUIRED_FIELDS,
++    build_disposition,
++    main,
++    mean_ci95,
++    recompute_csl,
++    recompute_fixed_point,
++    recompute_temporal_exchange,
++)
++
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _fixed_row(arm: str, key: str, valid: int) -> dict:
++    return {
++        "arm": arm,
++        "paired_key": key,
++        "split": "held_topology_test",
++        "topology_family": "cycle",
++        "candidate_budget": 3,
++        "parameter_count": 10,
++        "optimizer_update_count": 6,
++        "stop_reason": "iteration_cap",
++        "runtime_s": 0.1 if arm == "grouped_fixed_point" else 0.05,
++        "exact_outcomes": [
++            {
++                "candidate_hash": f"{arm}-{key}-{index}",
++                "exact_valid": index < valid,
++                "dependency_violation_count": 0 if index < valid else 1,
++                "distance_to_nearest_valid": 0 if index < valid else 1,
++            }
++            for index in range(3)
++        ],
++        "exact_evaluation_receipt": {
++            "evaluated_after_proposal": True,
++            "model_feedback_applied": False,
++            "candidate_hashes_before": ["a", "b", "c"],
++            "candidate_hashes_after": ["a", "b", "c"],
++        },
++    }
++
++
++def _csl_rows() -> list[dict]:
++    rows = []
++    for order in range(1, 6):
++        order_id = f"order_{order}"
++        for arm, utility, selected in (
++            ("compositional_online", 1.0, "learned"),
++            ("frozen_controller", 0.0, "baseline"),
++            ("random_update_placebo", 0.2, "placebo"),
++            ("retrieval_disabled_online", 0.1, "disabled"),
++        ):
++            rows.append(
++                {
++                    "arm": arm,
++                    "order_id": order_id,
++                    "held_future": True,
++                    "route_utility": utility,
++                    "memory_write_count": int(arm != "frozen_controller"),
++                    "memory_read_count": int(
++                        arm in {"compositional_online", "random_update_placebo"}
++                    ),
++                    "baseline_action": "baseline",
++                    "selected_action": selected,
++                    "transaction": {"committed": arm != "frozen_controller"},
++                    "retrieved_factor_ids": ["factor"] if arm == "compositional_online" else [],
++                }
++            )
++    return rows
++
++
++def _temporal_rows(audit: bool = False) -> list[dict]:
++    rows = []
++    for seed in (1, 2, 3):
++        for arm, efficiency, tv in (
++            ("ordinary_gibbs", 0.5, 0.1),
++            ("temporal_exchange", 0.4, 0.2),
++            ("temporal_exchange_zero_coupling", 0.5, 0.1),
++        ):
++            row = {
++                "arm": arm,
++                "graph_id": "mixed_sparse_n8",
++                "temperature": 0.75,
++                "seed": seed,
++                "target_total_variation": tv,
++                "update_count": 100,
++            }
++            if audit:
++                row.update(
++                    row_kind="source_recomputation",
++                    energy_effective_samples_per_attempted_update=efficiency,
++                )
++            else:
++                row["effective_samples_per_update"] = efficiency
++            rows.append(row)
++    return rows
++
++
++def test_mean_ci95_handles_singleton_and_variable_rows() -> None:
++    """SCENARIO-CAPSTONE-6795-ROWS: measured bounds derive from row values."""
++    assert mean_ci95([0.5]) == {"mean": 0.5, "lower": 0.5, "upper": 0.5, "n": 1}
++    interval = mean_ci95([0.0, 1.0, 2.0])
++    assert interval["mean"] == 1.0
++    assert interval["lower"] < 1.0 < interval["upper"]
++    assert mean_ci95([]) == {"mean": None, "lower": None, "upper": None, "n": 0}
++
++
++def test_fixed_point_recomputation_requires_matched_non_oracle_rows() -> None:
++    """REQ-CAPSTONE-6795: grouped fixed points must beat a matched control."""
++    source_rows = []
++    audit_rows = []
++    for key in ("u1", "u2", "u3"):
++        source_rows.extend(
++            [
++                _fixed_row("grouped_fixed_point", key, 3),
++                _fixed_row("flat_recurrent_control", key, 1),
++            ]
++        )
++        for row in source_rows[-2:]:
++            audited = {**row, "row_type": "source_recompute"}
++            audited.pop("exact_evaluation_receipt")
++            audited["exact_checker_after_candidate_freeze"] = True
++            audit_rows.append(audited)
++
++    result = recompute_fixed_point(source_rows, audit_rows)
++
++    assert result["evidence_authority"] == "independent_audit_rows"
++    assert result["paired_exact_valid_delta"]["mean"] == 2 / 3
++    assert result["paired_exact_valid_delta"]["lower"] > 0
++    assert result["matched_parameter_counts"] is True
++    assert result["matched_candidate_work"] is True
++    assert result["oracle_leakage_free"] is True
++    assert result["positive_gate"] is True
++
++    source_result = recompute_fixed_point(
++        source_rows + [_fixed_row("grouped_fixed_point", "orphan", 3)], []
++    )
++    assert source_result["evidence_authority"] == "source_rows"
++    assert source_result["oracle_leakage_free"] is True
++
++
++def test_csl_recomputation_stops_at_blocked_cold_audit() -> None:
++    """SCENARIO-CAPSTONE-6795-BRANCHES: source lift cannot replace cold causality."""
++    result = recompute_csl(
++        _csl_rows(),
++        {"verdict_class": "blocked", "csl_causal_audit_completed": False, "rows": []},
++    )
++
++    assert result["held_future_online_minus_frozen"]["lower"] > 0
++    assert result["writes"] == 5
++    assert result["later_reads"] == 5
++    assert result["action_changes"] == 5
++    assert result["prospective_causal_activity"] is True
++    assert result["cold_causal_audit_passed"] is False
++    assert result["promotion_gate"] is False
++
++
++def test_temporal_recomputation_uses_audit_and_rejects_failed_law() -> None:
++    """SCENARIO-CAPSTONE-6795-BRANCHES: matched work also needs target-law fidelity."""
++    result = recompute_temporal_exchange(_temporal_rows(), _temporal_rows(audit=True))
++
++    assert result["evidence_authority"] == "independent_audit_rows"
++    assert result["matched_attempted_updates"] is True
++    assert result["efficiency_gate_passed"] is False
++    assert result["target_law_gate_passed"] is False
++    assert result["positive_gate"] is False
++
++    incomplete = _temporal_rows() + [
++        {
++            "arm": "ordinary_gibbs",
++            "graph_id": "orphan",
++            "temperature": 1.0,
++            "seed": 9,
++            "effective_samples_per_update": 0.1,
++        }
++    ]
++    assert recompute_temporal_exchange(incomplete, [])["evidence_authority"] == "source_rows"
++
++
++def test_real_v592_build_has_complete_ungated_inventory() -> None:
++    """REQ-CAPSTONE-6795: the real capstone reads every exact V592 task artifact."""
++    artifact = build_disposition(REPO, "20260830")
++
++    assert REQUIRED_FIELDS <= artifact.keys()
++    assert artifact["expected_task_ids"] == list(EXPECTED_TASK_IDS)
++    assert len(artifact["artifact_inventory"]) == len(EXPECTED_TASK_IDS)
++    assert {row["artifact_state"] for row in artifact["artifact_inventory"]} == {"present"}
++    assert artifact["fixed_point_disposition"]["verdict_class"] == "positive"
++    assert artifact["csl_disposition"]["verdict_class"] == "partial"
++    assert artifact["temporal_exchange_disposition"]["verdict_class"] == "null"
++    assert artifact["pooled_score_computed"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["honest_verdict"].startswith("complete_partial:")
++    assert artifact["prior_verdict_recurrences"][0]["repeated_outcome"] == "complete_partial"
++    assert artifact["retirement_recommendations"][0]["proposed_exclusion_manifest_entry"]
++
++
++def test_unreadable_design_emits_complete_blocked_artifact(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-6795-PRECONDITIONS: unreadable design blocks honestly."""
++    (tmp_path / "openspec/change-proposals").mkdir(parents=True)
++    (tmp_path / "openspec/change-proposals/research-roadmap-vNEXT.md").write_text("")
++    (tmp_path / "research-roadmap.yaml").write_text("milestone: 2026.08.592\ntasks: []\n")
++
++    artifact = build_disposition(tmp_path, "20260830")
++
++    assert REQUIRED_FIELDS <= artifact.keys()
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "complete_blocked_v592_disposition"
++    assert artifact["gate_check_summary"]["failed_checks"][0]["check"] == "v592_design_nonempty"
++
++
++def test_invalid_roadmap_and_unreadable_sources_remain_data(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-6795-PRECONDITIONS: only design and active roadmap block."""
++    design = tmp_path / "openspec/change-proposals/research-roadmap-vNEXT.md"
++    design.parent.mkdir(parents=True)
++    design.write_text("V592 design")
++    (tmp_path / "research-roadmap.yaml").write_text("milestone: wrong\ntasks: []\n")
++    blocked = build_disposition(tmp_path, "20260830")
++    assert blocked["gate_check_summary"]["failed_checks"][0]["check"] == "v592_roadmap_mapping"
++
++    (tmp_path / "research-roadmap.yaml").write_text(
++        "milestone: 2026.08.592\ntasks:\n  - ignored\n  - id: noop\n"
++        "    prior_failures:\n      - null\n      - retire_if_same_verdict: false\n"
++    )
++    first = tmp_path / disposition_module.TASK_PATHS[EXPECTED_TASK_IDS[0]]
++    second = tmp_path / disposition_module.TASK_PATHS[EXPECTED_TASK_IDS[1]]
++    first.parent.mkdir(parents=True)
++    first.write_text("[]")
++    second.write_text("{bad json")
++    artifact = build_disposition(tmp_path, "20260830")
++    assert artifact["artifact_inventory"][0]["artifact_state"] == "unreadable"
++    assert artifact["artifact_inventory"][1]["artifact_state"] == "unreadable"
++    assert artifact["artifact_inventory"][2]["artifact_state"] == "missing"
++    assert disposition_module.sha256_file(tmp_path / "absent") is None
++
++
++def test_disposition_and_validation_failure_branches(
++    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """REQ-CAPSTONE-6795: closed classes and atomic writes fail closed."""
++    assert (
++        disposition_module._csl_disposition({"promotion_gate": True})["verdict_class"] == "positive"
++    )
++    assert disposition_module._csl_disposition({})["verdict_class"] == "blocked"
++
++    findings = disposition_module.validate_artifact({})
++    assert set(findings) == {
++        "required_fields",
++        "verdict_class",
++        "terminal_prefix",
++        "pooled_score_computed",
++        "verifier_is_oracle",
++        "reproducibility_checksum",
++    }
++
++    target = tmp_path / "failed.json"
++    monkeypatch.setattr(
++        disposition_module.os, "replace", lambda *_args: (_ for _ in ()).throw(RuntimeError("stop"))
++    )
++    with pytest.raises(RuntimeError, match="stop"):
++        disposition_module.atomic_write_json(target, {"ok": True})
++    assert list(tmp_path.iterdir()) == []
++
++    monkeypatch.setattr(disposition_module, "build_disposition", lambda *_args: {})
++    with pytest.raises(ValueError, match="invalid V592 disposition"):
++        disposition_module.main(["--date", "20260830", "--repo", str(tmp_path)])
++
++
++def test_main_writes_stable_json_to_requested_repo(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-6795: the CLI atomically writes the declared deliverable."""
++    assert main(["--date", "20260830", "--repo", str(tmp_path)]) == 0
++    output = tmp_path / "results/experiment_6795_v592_branch_disposition.json"
++    artifact = json.loads(output.read_text())
++    assert artifact["honest_verdict"] == "complete_blocked_v592_disposition"
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
+-- 
+2.55.0
+

@@ -1,0 +1,84 @@
+From 03b0fbd7790066f39dd382ec7219ad096af0a74a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 15:15:38 -0400
+Subject: [PATCH 01811/11362] [outer-loop] probe fixes: energy-prior loads
+ 4-bit across 2 GPUs; detector token=digit+2 decode
+
+energy-prior: model LOADS (4bit nf4, device_map auto across both 3090s, max_memory) -- the
+hard part works, confirms DiffusionGemma is usable on our hardware. Score extraction still
+needs the diffusion-specific forward API (plain model(**enc) hit meta-tensor offload +
+DiffusionGemmaModel base class) -> focused follow-up.
+detector: the built-in gold-label sanity check caught a decode bug (Sudoku token=digit+2,
+labels {3..11}); fixed -> re-running. (Validity-over-speed: the sanity check prevented an
+invalid AUROC=0.5 from being read as 'verifier can't detect'.)
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/exp_diffusiongemma_energy_prior_probe.py | 14 ++++++++++++--
+ scripts/exp_verifier_detector_auroc.py           |  8 ++++++--
+ 2 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/exp_diffusiongemma_energy_prior_probe.py b/scripts/exp_diffusiongemma_energy_prior_probe.py
+index 0d00f23352..f24387f221 100644
+--- a/scripts/exp_diffusiongemma_energy_prior_probe.py
++++ b/scripts/exp_diffusiongemma_energy_prior_probe.py
+@@ -48,11 +48,21 @@ def main() -> None:
+                 load_in_4bit=True,
+                 bnb_4bit_compute_dtype=torch.bfloat16,
+                 bnb_4bit_quant_type="nf4",
++                llm_int8_enable_fp32_cpu_offload=True,
+             )
++            # 4-bit of this 26B MoE is ~22GB -> spread across BOTH visible GPUs (+CPU
++            # overflow) via explicit max_memory, which also sidesteps the single-GPU OOM.
++            n_gpu = torch.cuda.device_count()
++            max_mem = {i: "20GiB" for i in range(n_gpu)}
++            max_mem["cpu"] = "80GiB"
+             model = AutoModel.from_pretrained(
+-                REPO, quantization_config=bnb, device_map={"": 0}, trust_remote_code=False
++                REPO,
++                quantization_config=bnb,
++                device_map="auto",
++                max_memory=max_mem,
++                trust_remote_code=False,
+             )
+-            load_mode = "4bit_nf4_gpu0"
++            load_mode = f"4bit_nf4_devmap_auto_{n_gpu}gpu"
+         except Exception as e_bnb:
+             rep["bnb_fallback_reason"] = repr(e_bnb)[:200]
+             model = AutoModel.from_pretrained(
+diff --git a/scripts/exp_verifier_detector_auroc.py b/scripts/exp_verifier_detector_auroc.py
+index 3ae8b7e3d9..ad9f356953 100644
+--- a/scripts/exp_verifier_detector_auroc.py
++++ b/scripts/exp_verifier_detector_auroc.py
+@@ -33,6 +33,10 @@ sys.path.insert(0, NANO_TRM)
+ from src.nn.sudoku_evaluator import SudokuEvaluator  # noqa: E402
+ from src.nn.utils.constants import IGNORE_LABEL_ID  # noqa: E402
+ 
++# Sudoku-Extreme token encoding: token = digit + 2 (labels are {3..11} for digits 1..9;
++# input token 2 = blank). Decode digit = token - TOKEN_OFFSET before constraint checks.
++TOKEN_OFFSET = 2
++
+ STABLE = "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+ DATA_DIR = f"{NANO_TRM}/data/sudoku_extreme_1k_aug_1k"
+ OUT = Path("/home/ianblenke/github.com/ianblenke/carnot/results/verifier_detector_auroc.json")
+@@ -97,7 +101,7 @@ def main() -> None:
+     lab0 = first["output"][:16]
+     gv = 0
+     for i in range(lab0.shape[0]):
+-        g = lab0[i].reshape(n, n)
++        g = lab0[i].reshape(n, n).long() - TOKEN_OFFSET
+         if constraint_sat_fraction(g, n) == 1.0:
+             gv += 1
+     sanity["gold_valid_frac"] = gv / lab0.shape[0]
+@@ -125,7 +129,7 @@ def main() -> None:
+             lab = label[i]
+             mk = mask[i]
+             is_corr = bool(((p == lab) | (~mk)).all().item())
+-            grid = p.reshape(n, n).clamp(0, n)  # decode tokens->digits (identity per sanity)
++            grid = p.reshape(n, n).long() - TOKEN_OFFSET  # decode tokens->digits (token=digit+2)
+             vscore = constraint_sat_fraction(grid, n)
+             scores.append(vscore)
+             labels.append(1 if is_corr else 0)
+-- 
+2.55.0
+

@@ -1,0 +1,59 @@
+From 20f890e289c01eb9a5a3232b743792dd44b58a84 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 21:44:30 -0400
+Subject: [PATCH 09581/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 4 ++--
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index cfc3e53ab9..612c78b3db 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -3,7 +3,7 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
+  },
+  "last_scan_notes": [
+-  "pid 2686546 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_on.json: out file missing, run unsupervisable this cycle"
++  "pid 2919949 /home/ianblenke/.claude/jobs/ad0c053d/tmp/baseline25/rows.json: out file missing, run unsupervisable this cycle"
+  ],
+- "last_scan_utc": "2026-08-23T01:12:49Z"
++ "last_scan_utc": "2026-08-23T01:43:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d9cae437d8..a9b173f02a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-23T01:21:38Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-23T01:44:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 75fc7d785b..ceeed7bdea 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16298,3 +16298,4 @@ code |
+ | 2026-08-23 00:40 UTC | Execution-time literature delta for adaptive valid | OK | 99 passed, 1 warning in 9.52s |
+ | 2026-08-23 00:59 UTC | Bounded exact branch-counterfactual pilot with tra | OK | 88 passed, 1 warning in 13.95s |
+ | 2026-08-23 01:19 UTC | Independent integrity review of the transactional  | OK | 101 passed, 1 warning in 17.58s |
++| 2026-08-23 01:42 UTC | Matched exact structural-control headroom comparis | OK | 89 passed, 1 warning in 13.26s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a17b7a876f..87e3cb76b1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-23T01:21:38Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-23T01:44:27Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

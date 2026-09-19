@@ -1,0 +1,2357 @@
+From f7489a63d64d729e6baeac3aa7c5dc69b2c37704 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 19:14:51 -0400
+Subject: [PATCH 02415/11362] [conductor] PHASE E2 (INFRA/HYGIENE) --
+ registry/gaps hygiene + GAP-4 regression guard + FIX the .401 capstone
+ verifier_is_oracle stamping bug. (1) Reconcile ops/verifier_registry.yaml +
+ ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the .402 outcomes (S3
+ moat-utility, new ARC levels, the action-cost heuristic, any new
+ missing-verifier gaps logged by exp4350-4353). (2) Run the GAP-4 regression
+ guard (the ARC oracle-distinct verifier-beats-vote result must not silently
+ regress). (3) FIX the capstone-stamping bug: the .401 capstone (exp4346)
+ carried a CIRCULAR_MOAT_OVERCLAIM critical flag because it OMITTED
+ verifier_is_oracle (set None, not false) even though the underlying moat
+ (exp4338) is correctly oracle-distinct -- the capstone aggregation must
+ PROPAGATE verifier_is_oracle from the moat artifact it reads, so the .402
+ capstone (exp4357) does NOT recur the flag. Verify the fix by re-running
+ adversarial_verify.py on a stamped sample capstone. NO production verifier
+ edits (audit-only per Verifier Authenticity Discipline).
+
+Automated research step by research conductor.
+Task ID: exp4355-registry-gaps-hygiene-capstone-stamp-fix
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   71 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ops/verifier_gaps.md                          |   61 +-
+ ops/verifier_registry.yaml                    |   68 ++
+ ...egistry_gaps_hygiene_capstone_stamp_fix.py |   10 +
+ python/carnot/reporting/capstone_v401_4346.py |   29 +
+ ...ry_gaps_hygiene_capstone_stamp_fix_4355.py | 1001 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...istry_gaps_hygiene_capstone_stamp_fix.json |  260 +++++
+ ...egistry_gaps_hygiene_capstone_stamp_fix.py |   22 +
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...egistry_gaps_hygiene_capstone_stamp_fix.py |  552 +++++++++
+ 17 files changed, 2085 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+ create mode 100644 python/carnot/reporting/verifier_registry_gaps_hygiene_capstone_stamp_fix_4355.py
+ create mode 100644 results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+ create mode 100644 results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+ create mode 100644 tests/python/test_experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index ff875471ae..a711e523d6 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -18730,6 +18730,77 @@ reproducibility checksum over the reconciled registry, gaps, and manifest
+ files. If the registry, gaps, or manifest cannot parse, then it writes
+ `honest_verdict=blocked_<file>_unparseable` and stops without reconciliation.
+ 
++### REQ-VERIFY-4355: Registry/Gaps Hygiene And Capstone Oracle Stamp For .402 Truth
++
++The repository SHALL provide Exp 4355 at
++`python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py` and
++`results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py` to reconcile
++`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
++`ops/arc_solve_registry.yaml` to the `.402` verifier and ARC outcomes. Before
++mutating ledgers, the runner SHALL parse `ops/verifier_registry.yaml` and
++`ops/arc_solve_registry.yaml` with YAML-safe loading and SHALL read
++`ops/verifier_gaps.md` as Markdown text. If any required file is unreadable or
++unparseable, the runner SHALL write
++`honest_verdict=blocked_<file>_unreadable`, bare bool
++`gap4_regression_guard_passed=false`, bare bool
++`capstone_stamp_fix_verified=false`, bare bool `registries_reconciled=false`,
++and SHALL stop without mutating the registry or gap ledgers.
++
++When preconditions hold, the runner SHALL run the Exp 4344 GAP-4 regression
++guard and require that the ARC oracle-distinct verifier-beats-vote result has
++not regressed. The runner SHALL record the `.402` outcomes in the registry and
++gap ledgers: Exp 4348's S3 moat-utility result is recorded as
++`controls_differentiated=false`, `s3_guided_beats_control=false`, and
++`flagged_adversarial=true`; Exp 4350's ka59 L1 reproduction is recorded without
++claiming the remaining `hidden_step_counter_hud_gap` is solved; Exp 4351's
++deeper ARC reproduction state is recorded with `reproducible_total_levels=23`
++and tn36 L7 reproduced; Exp 4352's tr87/ft09 partial world models are recorded
++as open residual gaps; and Exp 4353's action-cost heuristic is recorded as an
++oracle-distinct action-efficiency result with `action_efficiency_improves=true`,
++`held_out_actions_baseline=25`, and `held_out_actions_learned=16`. The runner
++SHALL never prune old entries; prior gaps that are actually filled SHALL move to
++`status: filled (...)`, and residual or newly exposed missing-verifier classes
++SHALL remain open with explicit evidence.
++
++The capstone aggregation code SHALL propagate a top-level
++`verifier_is_oracle: bool` from the moat artifact(s) it imports. For the
++oracle-distinct in-generation moat replicated by Exp 4338, a gate-flipping
++capstone SHALL carry `verifier_is_oracle=false` so
++`scripts/adversarial_verify.py:check_circular_moat_overclaim` does not emit
++`CIRCULAR_MOAT_OVERCLAIM` on a correct oracle-distinct capstone. Exp 4355 SHALL
++verify this by running `scripts/adversarial_verify.py` on a stamped sample
++capstone artifact.
++
++The terminal artifact SHALL write
++`results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json` with
++`honest_verdict`, bare bool `gap4_regression_guard_passed`, bare bool
++`capstone_stamp_fix_verified`, bare bool `registries_reconciled`,
++`preconditions_checked`, `reproducibility_checksum`, `v402_outcomes`,
++`registry_reconciliation`, `gap4_regression_guard`, `capstone_stamp_fix`,
++`random_seed`, `model_specs`, `field_principles`, `spec_refs`, `duration_s`,
++and `inference_substrate`. Its field principles SHALL include:
++`honest_verdict` = `Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified.`;
++`gap4_regression_guard_passed` = `BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.`;
++`capstone_stamp_fix_verified` = `BARE bool: the capstone aggregation now propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py no longer fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone.`;
++`registries_reconciled` = `BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .402 outcomes (never-prune).`;
++`preconditions_checked` = `Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.`
++
++### SCENARIO-VERIFY-4355: .402 Hygiene Guards GAP-4 And Fixes Capstone Stamp
++
++Given `ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
++`ops/arc_solve_registry.yaml` parse, the `.402` artifacts from Exp 4348, Exp
++4350, Exp 4351, Exp 4352, and Exp 4353 are present, and the Exp 4344 GAP-4
++guard inputs are present, when Exp 4355 runs, then it records the S3
++controls-not-differentiated result, the ka59 and tn36 reproduced ARC state, the
++tr87/ft09 partial residuals, the oracle-distinct action-cost heuristic win, and
++any new residual missing-verifier gaps; preserves the GAP-4 regression guard as
++passed; verifies that a gate-flipping capstone sample carries
++`verifier_is_oracle=false` and has no `CIRCULAR_MOAT_OVERCLAIM`; writes
++`gap4_regression_guard_passed=true`, `capstone_stamp_fix_verified=true`, and
++`registries_reconciled=true`; and emits a terminal `honest_verdict`. If any
++required registry/gap file is unreadable or unparseable, then it writes
++`honest_verdict=blocked_<file>_unreadable` and stops without reconciliation.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d50bdf2ddf..ad411e3bf7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3371,
++  "experiments_checked": 3372,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 14a3ba2f2a..54c8adfd5e 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -1207,12 +1207,12 @@ registry version that closed them when a new verifier captures a previously-open
+ <!-- exp4333-gap-e3-world-model-rule-ar25-4327:end -->
+ 
+ <!-- exp4333-gap-e3-world-model-rule-ka59-4328:start -->
+-### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4333 .400 verifier gap update
+-- status: open
+-- evidence: results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6.
+-- failure mode: E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment
+-- missing discriminator: ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6
+-- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
++### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4355 .402 filled verifier gap update
++- status: filled (exp4350_ka59_l1_world_model)
++- evidence: results/experiment_4350_e3_explore_verify_plan_ka59.json; offline_reproduced=True; reproduced_levels=1; verifier_best_accuracy=0.6375; world_model_path=results/arc_e3/ka59/world_model.py.
++- failure mode: the prior ka59 action-rule blocker no longer prevents an offline reproduced L1 solve.
++- missing discriminator: none for the L1 push-through-wall action plan; the remaining hidden HUD residual is tracked separately as GAP-E3-WORLD-MODEL-RULE-KA59-4350.
++- candidate design: preserve the Exp 4350 adaptive transition tests and reproduce() gate for ka59 L1.
+ - priority: high
+ <!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->
+ 
+@@ -1501,3 +1501,52 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ - Reproducibility checksum: `88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28`
+ - Gap: bounded explore-verify-plan did not satisfy the offline reproduced L1 gate.
+ 
++<!-- exp4355-gap-e3-world-model-rule-ka59-4350:start -->
++### GAP-E3-WORLD-MODEL-RULE-KA59-4350: Exp 4355 .402 verifier gap update
++- status: open_residual_after_l1_reproduction
++- evidence: results/experiment_4350_e3_explore_verify_plan_ka59.json; offline_reproduced=True; reproduced_levels=1; verifier_best_accuracy=0.6375; residual_mismatch_class=hidden_step_counter_hud_gap.
++- failure mode: ka59 L1 now reproduces, but the executable world model still has residual mismatch hidden_step_counter_hud_gap
++- missing discriminator: ka59 hidden StepCounter HUD dynamics
++- candidate design: model the hidden bottom-row HUD counter separately from win-state movement so exact transition tests can pass without corrupting L1 solve logic
++- priority: high
++<!-- exp4355-gap-e3-world-model-rule-ka59-4350:end -->
++
++<!-- exp4355-gap-e3-world-model-rule-sc25-l2-4351:start -->
++### GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351: Exp 4355 .402 verifier gap update
++- status: open_deeper_level_residual
++- evidence: results/experiment_4351_e3_deeper_solved_games.json; game=sc25; offline_reproduced=False; new_reproduced_level=1; residual=sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap.
++- failure mode: sc25 deeper level remains unreproduced due to sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
++- missing discriminator: sc25 executable rule coverage for sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
++- candidate design: mine divergent deeper-level traces, add the missing executable transition cases, and keep reproduce() as the only solved-level gate
++- priority: high
++<!-- exp4355-gap-e3-world-model-rule-sc25-l2-4351:end -->
++
++<!-- exp4355-gap-e3-world-model-rule-ar25-l2-4351:start -->
++### GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351: Exp 4355 .402 verifier gap update
++- status: open_deeper_level_residual
++- evidence: results/experiment_4351_e3_deeper_solved_games.json; game=ar25; offline_reproduced=False; new_reproduced_level=1; residual=ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap.
++- failure mode: ar25 deeper level remains unreproduced due to ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
++- missing discriminator: ar25 executable rule coverage for ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
++- candidate design: mine divergent deeper-level traces, add the missing executable transition cases, and keep reproduce() as the only solved-level gate
++- priority: high
++<!-- exp4355-gap-e3-world-model-rule-ar25-l2-4351:end -->
++
++<!-- exp4355-gap-e3-world-model-rule-tr87-4352:start -->
++### GAP-E3-WORLD-MODEL-RULE-TR87-4352: Exp 4355 .402 verifier gap update
++- status: open
++- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_3_4.
++- failure mode: tr87 E3 world model remains partial: missing_world_model_rule_gap_actions_1_2_3_4
++- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_3_4
++- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
++- priority: high
++<!-- exp4355-gap-e3-world-model-rule-tr87-4352:end -->
++
++<!-- exp4355-gap-e3-world-model-rule-ft09-4352:start -->
++### GAP-E3-WORLD-MODEL-RULE-FT09-4352: Exp 4355 .402 verifier gap update
++- status: open
++- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.05; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
++- failure mode: ft09 E3 world model remains partial: missing_world_model_rule_gap_actions_6
++- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
++- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
++- priority: high
++<!-- exp4355-gap-e3-world-model-rule-ft09-4352:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 38435fc998..9cd71fb34c 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -708,6 +708,36 @@ verifiers:
+     exp4344_e3_sc25_reproduced_levels: 1
+     exp4344_e3_sc25_residual_mismatch_class: none
+     exp4344_e3_sc25_verifier_best_accuracy: 1.0
++    eval_exp_4355: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
++    exp4355_gap4_regression_guard_passed: true
++    exp4355_arc1_rule_exec_vote_pass2: 0.4516
++    exp4355_arc1_rule_exec_gated_pass2: 0.5806
++    exp4355_arc1_headroom_recovered: 4
++    exp4355_arc1_vote_wins_lost: 0
++    exp4355_v402_state: s3_controls_not_differentiated__arc_total_23__ka59_tn36_reproduced__tr87_ft09_partial__action_cost_improves
++    exp4355_s3_artifact: results/experiment_4348_s3_stratified_verifier_guided_search.json
++    exp4355_s3_controls_differentiated: false
++    exp4355_s3_guided_beats_control: false
++    exp4355_s3_flagged_adversarial: true
++    exp4355_arc_reproducible_total_levels: 23
++    exp4355_ka59_offline_reproduced: true
++    exp4355_ka59_reproduced_levels: 1
++    exp4355_ka59_residual_mismatch_class: hidden_step_counter_hud_gap
++    exp4355_tn36_reproduced_level: 7
++    exp4355_tr87_residual_mismatch_class: missing_world_model_rule_gap_actions_1_2_3_4
++    exp4355_ft09_residual_mismatch_class: missing_world_model_rule_gap_actions_6
++    exp4355_action_efficiency_improves: true
++    exp4355_action_cost_baseline_actions: 25
++    exp4355_action_cost_learned_actions: 16
++    exp4355_action_cost_verifier_is_oracle: false
++    exp4355_filled_gaps:
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
++    exp4355_gaps_logged:
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4350
++    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351
++    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351
++    - GAP-E3-WORLD-MODEL-RULE-TR87-4352
++    - GAP-E3-WORLD-MODEL-RULE-FT09-4352
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -4648,3 +4678,41 @@ verifiers:
+     filled_gap_ids:
+     - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
+     eval_exp_4344: results/experiment_4344_verifier_registry_gaps_hygiene.json
++  - role_id: oracle_distinct_v402_registry_gaps_hygiene_4355
++    experiment: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
++    role: registry_gaps_arc_hygiene_v402
++    status: v402_outcomes_recorded_with_capstone_stamp_fix
++    v402_state: s3_controls_not_differentiated__arc_total_23__ka59_tn36_reproduced__tr87_ft09_partial__action_cost_improves
++    s3_controls_differentiated: false
++    arc_reproducible_total_levels: 23
++    ka59_offline_reproduced: true
++    action_efficiency_improves: true
++    gap_ids_logged:
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4350
++    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351
++    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351
++    - GAP-E3-WORLD-MODEL-RULE-TR87-4352
++    - GAP-E3-WORLD-MODEL-RULE-FT09-4352
++    filled_gap_ids:
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
++    eval_exp_4355: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
++- verifier_id: arc_agi3_learned_action_cost_heuristic_4353
++  domain: arc_agi3_interactive
++  version: 1
++  kind: search_heuristic
++  code_commit: HEAD
++  code_path: python/carnot/experiment_4353_learned_action_cost_heuristic_efficiency.py
++  label_source: offline_reproduced_solve_traces
++  eval:
++    metric: held_out_actions_to_solve
++    eval_exp_4353: results/experiment_4353_learned_action_cost_heuristic_efficiency.json
++    eval_exp_4355: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
++    action_efficiency_improves: true
++    held_out_actions_baseline: 25
++    held_out_actions_learned: 16
++    positive_control_passed: true
++    reproduction_gated: true
++    verifier_is_oracle: false
++  status: candidate
++  notes: 'Oracle-distinct learned action-cost heuristic: reduces held-out lp85 L3
++    actions from 25 to 16 under reproduction gate.'
+diff --git a/python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py b/python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+new file mode 100644
+index 0000000000..212edbb7e4
+--- /dev/null
++++ b/python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+@@ -0,0 +1,10 @@
++"""Run Exp 4355 registry/gaps hygiene and capstone stamp fix.
++
++Spec refs: REQ-VERIFY-4355, SCENARIO-VERIFY-4355.
++"""
++
++from carnot.reporting.verifier_registry_gaps_hygiene_capstone_stamp_fix_4355 import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/python/carnot/reporting/capstone_v401_4346.py b/python/carnot/reporting/capstone_v401_4346.py
+index 246e689e3a..3ae78ccc48 100644
+--- a/python/carnot/reporting/capstone_v401_4346.py
++++ b/python/carnot/reporting/capstone_v401_4346.py
+@@ -128,6 +128,11 @@ FIELD_PRINCIPLES = {
+         "verifier_is_oracle=false (the E3 solves are reported as execution-grounded "
+         "ARC progress, NOT moats)."
+     ),
++    "verifier_is_oracle": (
++        "BARE bool propagated from the imported moat artifact when the capstone "
++        "headlines or flips a verifier gate; false means the gate-eligible moat "
++        "is oracle-distinct."
++    ),
+     "per_axis_gaps": (
+         "List of .401 axes whose artifact was MISSING (reported as a gap, NOT "
+         "defaulted False) -- the robust-aggregator fix (no exp4301-style all-False)."
+@@ -572,6 +577,25 @@ def verifier_thesis_state(
+     return "verifier_domain_bound_self_learning_open"
+ 
+ 
++def propagated_verifier_is_oracle(
++    gate_status: str,
++    in_generation: Mapping[str, Any],
++    self_learning: Mapping[str, Any],
++) -> bool | None:
++    """REQ-VERIFY-4355: stamp capstones with the imported moat oracle status."""
++    if (
++        gate_status == GATE_MET
++        or in_generation.get("in_generation_moat_replicates_headline") is True
++        or in_generation.get("reported_in_generation_moat_replicates") is True
++    ):
++        value = in_generation.get("verifier_is_oracle")
++        return value if isinstance(value, bool) else None
++    if self_learning.get("reported_learned_encoder_transfer_helps") is True:
++        value = self_learning.get("verifier_is_oracle")
++        return value if isinstance(value, bool) else None
++    return False
++
++
+ def _oracle_violations(
+     scorer: Mapping[str, Any],
+     in_generation: Mapping[str, Any],
+@@ -780,6 +804,11 @@ def build_artifact(
+         "arc_registry": registry,
+         "verifier_thesis_state": thesis,
+         "verifier_is_oracle_honored": not violations,
++        "verifier_is_oracle": propagated_verifier_is_oracle(
++            gate_status,
++            in_generation,
++            self_learning,
++        ),
+         "oracle_distinct_violations": violations,
+         "per_axis_gaps": list(availability_report.get("missing_upstream_artifacts", [])),
+         "flagged_artifacts_excluded": exclusions,
+diff --git a/python/carnot/reporting/verifier_registry_gaps_hygiene_capstone_stamp_fix_4355.py b/python/carnot/reporting/verifier_registry_gaps_hygiene_capstone_stamp_fix_4355.py
+new file mode 100644
+index 0000000000..d3921d78bc
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_gaps_hygiene_capstone_stamp_fix_4355.py
+@@ -0,0 +1,1001 @@
++"""Exp 4355 registry/gaps hygiene and capstone stamp fix for .402.
++
++Spec refs: REQ-VERIFY-4355, SCENARIO-VERIFY-4355.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any, Callable, Mapping
++
++import yaml
++
++from carnot.reporting import capstone_v401_4346
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as base
++from carnot.reporting import verifier_registry_gaps_hygiene_4344 as exp4344
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RANDOM_SEED = 4355
++INFERENCE_SUBSTRATE = "cached_registry_reconciliation_and_capstone_stamp_audit"
++
++EXP4355_ARTIFACT_PATH = (
++    "results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json"
++)
++REGISTRY_PATH = base.REGISTRY_PATH
++GAPS_PATH = base.GAPS_PATH
++ARC_REGISTRY_PATH = "ops/arc_solve_registry.yaml"
++GAP4_VERIFIER_ID = base.GAP4_VERIFIER_ID
++ACTION_COST_VERIFIER_ID = "arc_agi3_learned_action_cost_heuristic_4353"
++
++EXP4348_PATH = "results/experiment_4348_s3_stratified_verifier_guided_search.json"
++EXP4350_PATH = "results/experiment_4350_e3_explore_verify_plan_ka59.json"
++EXP4351_PATH = "results/experiment_4351_e3_deeper_solved_games.json"
++EXP4352_PATH = "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json"
++EXP4353_PATH = "results/experiment_4353_learned_action_cost_heuristic_efficiency.json"
++
++V402_ROLE_ID = "oracle_distinct_v402_registry_gaps_hygiene_4355"
++V402_STATE = (
++    "s3_controls_not_differentiated__arc_total_23__ka59_tn36_reproduced__"
++    "tr87_ft09_partial__action_cost_improves"
++)
++
++GAP_E3_WORLD_MODEL_RULE_KA59_4328 = "GAP-E3-WORLD-MODEL-RULE-KA59-4328"
++GAP_E3_WORLD_MODEL_RULE_KA59_4350 = "GAP-E3-WORLD-MODEL-RULE-KA59-4350"
++GAP_E3_WORLD_MODEL_RULE_SC25_L2_4351 = "GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351"
++GAP_E3_WORLD_MODEL_RULE_AR25_L2_4351 = "GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351"
++GAP_E3_WORLD_MODEL_RULE_TR87_4352 = "GAP-E3-WORLD-MODEL-RULE-TR87-4352"
++GAP_E3_WORLD_MODEL_RULE_FT09_4352 = "GAP-E3-WORLD-MODEL-RULE-FT09-4352"
++
++SPEC_REFS = ["REQ-VERIFY-4355", "SCENARIO-VERIFY-4355"]
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "gap4_regression_guard_passed",
++    "capstone_stamp_fix_verified",
++    "registries_reconciled",
++    "preconditions_checked",
++    "reproducibility_checksum",
++    "v402_outcomes",
++    "registry_reconciliation",
++    "gap4_regression_guard",
++    "capstone_stamp_fix",
++    "random_seed",
++    "model_specs",
++    "field_principles",
++    "spec_refs",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified."
++    ),
++    "gap4_regression_guard_passed": (
++        "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not "
++        "silently regressed."
++    ),
++    "capstone_stamp_fix_verified": (
++        "BARE bool: the capstone aggregation now propagates verifier_is_oracle "
++        "(false for an oracle-distinct moat) -> adversarial_verify.py no longer "
++        "fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone."
++    ),
++    "registries_reconciled": (
++        "BARE bool: verifier_registry.yaml + verifier_gaps.md + "
++        "arc_solve_registry.yaml updated with the .402 outcomes (never-prune)."
++    ),
++    "preconditions_checked": (
++        "Records the registry/gaps file readability; pre-empts the "
++        "silent-missing-resource fabrication mode."
++    ),
++}
++
++Gap4GuardRunner = Callable[[Path], dict[str, Any]]
++CapstoneStampRunner = Callable[[Path], dict[str, Any]]
++
++
++def _json_hash(payload: Mapping[str, Any]) -> str:
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
++    return "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _load_optional_json(repo_root: Path, rel_path: str) -> tuple[dict[str, Any] | None, str]:
++    path = repo_root / rel_path
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError) as exc:
++        return None, f"{type(exc).__name__}: {exc}"
++    if not isinstance(loaded, dict):
++        return None, "top-level JSON is not an object"
++    return loaded, ""
++
++
++def _bool(payload: Mapping[str, Any] | None, key: str) -> bool | None:
++    if not isinstance(payload, Mapping):
++        return None
++    value = payload.get(key)
++    return value if isinstance(value, bool) else None
++
++
++def _int(payload: Mapping[str, Any] | None, key: str) -> int:
++    if not isinstance(payload, Mapping):
++        return 0
++    value = payload.get(key)
++    if isinstance(value, int) and not isinstance(value, bool):
++        return value
++    return 0
++
++
++def _float(payload: Mapping[str, Any] | None, key: str) -> float | None:
++    if not isinstance(payload, Mapping):
++        return None
++    value = payload.get(key)
++    if isinstance(value, int | float) and not isinstance(value, bool):
++        return float(value)
++    return None
++
++
++def _str(payload: Mapping[str, Any] | None, key: str) -> str:
++    if not isinstance(payload, Mapping):
++        return ""
++    value = payload.get(key)
++    return value if isinstance(value, str) else ""
++
++
++def _list(payload: Mapping[str, Any] | None, key: str) -> list[Any]:
++    if not isinstance(payload, Mapping):
++        return []
++    value = payload.get(key)
++    return list(value) if isinstance(value, list) else []
++
++
++def check_preconditions(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4355: read ledgers before any mutation."""
++    checks: dict[str, dict[str, Any]] = {}
++    blocked_file: str | None = None
++
++    for key, rel_path in (
++        ("verifier_registry", REGISTRY_PATH),
++        ("arc_solve_registry", ARC_REGISTRY_PATH),
++    ):
++        path = repo_root / rel_path
++        try:
++            loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++            ok = isinstance(loaded, dict)
++            error = "" if ok else "top-level YAML is not a mapping"
++        except (OSError, yaml.YAMLError) as exc:
++            ok = False
++            error = f"{type(exc).__name__}: {exc}"
++        checks[key] = {"path": rel_path, "readable": ok, "error": error}
++        if not ok and blocked_file is None:
++            blocked_file = key
++
++    gaps_path = repo_root / GAPS_PATH
++    try:
++        gaps_path.read_text(encoding="utf-8")
++        gaps_ok = True
++        gaps_error = ""
++    except OSError as exc:
++        gaps_ok = False
++        gaps_error = f"{type(exc).__name__}: {exc}"
++    checks["verifier_gaps"] = {
++        "path": GAPS_PATH,
++        "readable": gaps_ok,
++        "error": gaps_error,
++    }
++    if not gaps_ok and blocked_file is None:
++        blocked_file = "verifier_gaps"
++
++    return {
++        "ok": blocked_file is None,
++        "blocked_file": blocked_file,
++        "files": checks,
++    }
++
++
++def run_gap4_regression_guard(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4355: reuse the Exp 4344 GAP-4 regression guard."""
++    return exp4344.run_gap4_regression_guard(repo_root)
++
++
++def _read_s3(payload: dict[str, Any] | None, error: str) -> dict[str, Any]:
++    if payload is None:
++        return {"artifact_path": EXP4348_PATH, "available": False, "error": error}
++    return {
++        "artifact_path": EXP4348_PATH,
++        "available": True,
++        "honest_verdict": _str(payload, "honest_verdict"),
++        "acceptance_gate": _bool(payload, "acceptance_gate"),
++        "s3_guided_beats_control": _bool(payload, "s3_guided_beats_control"),
++        "controls_differentiated": _bool(payload, "controls_differentiated"),
++        "s3_gain_ci95": _list(payload, "s3_gain_ci95"),
++        "benchmark_n": _int(payload, "benchmark_n"),
++        "flagged_adversarial": _bool(payload, "flagged_adversarial") is True,
++        "verifier_is_oracle": _bool(payload, "verifier_is_oracle"),
++        "reproducibility_checksum": _str(payload, "reproducibility_checksum"),
++    }
++
++
++def _read_ka59(payload: dict[str, Any] | None, error: str) -> dict[str, Any]:
++    if payload is None:
++        return {"artifact_path": EXP4350_PATH, "game": "ka59", "available": False, "error": error}
++    return {
++        "artifact_path": EXP4350_PATH,
++        "game": _str(payload, "game") or "ka59",
++        "available": True,
++        "honest_verdict": _str(payload, "honest_verdict"),
++        "offline_reproduced": _bool(payload, "offline_reproduced") is True,
++        "reproduced_levels": _int(payload, "reproduced_levels"),
++        "residual_mismatch_class": _str(payload, "residual_mismatch_class"),
++        "verifier_best_accuracy": _float(payload, "verifier_best_accuracy"),
++        "world_model_path": _str(payload, "world_model_path"),
++        "world_model_sha256": _str(payload, "world_model_sha256"),
++        "verifier_is_oracle": _bool(payload, "verifier_is_oracle"),
++        "reproducibility_checksum": _str(payload, "reproducibility_checksum"),
++    }
++
++
++def _read_deeper(payload: dict[str, Any] | None, error: str) -> dict[str, Any]:
++    if payload is None:
++        return {"artifact_path": EXP4351_PATH, "available": False, "error": error, "targets": {}}
++    targets: dict[str, dict[str, Any]] = {}
++    for row in _list(payload, "per_target_scorecard"):
++        if not isinstance(row, Mapping):
++            continue
++        game = str(row.get("game", ""))
++        if not game:
++            continue
++        targets[game] = {
++            "game": game,
++            "offline_reproduced": row.get("offline_reproduced") is True,
++            "new_reproduced_level": row.get("new_reproduced_level"),
++            "residual_win_mechanic_gap_class": str(
++                row.get("residual_win_mechanic_gap_class", "")
++            ),
++            "world_model_path": str(row.get("world_model_path", "")),
++        }
++    return {
++        "artifact_path": EXP4351_PATH,
++        "available": True,
++        "honest_verdict": _str(payload, "honest_verdict"),
++        "new_levels_reproduced": _int(payload, "new_levels_reproduced"),
++        "reproducible_total_levels": _int(payload, "reproducible_total_levels"),
++        "verifier_is_oracle": _bool(payload, "verifier_is_oracle"),
++        "targets": targets,
++        "reproducibility_checksum": _str(payload, "reproducibility_checksum"),
++    }
++
++
++def _read_partial_games(payload: dict[str, Any] | None, error: str) -> dict[str, Any]:
++    if payload is None:
++        return {"artifact_path": EXP4352_PATH, "available": False, "error": error, "games": {}}
++    games: dict[str, dict[str, Any]] = {}
++    for row in _list(payload, "per_game_scorecard"):
++        if not isinstance(row, Mapping):
++            continue
++        game = str(row.get("game", ""))
++        if not game:
++            continue
++        games[game] = {
++            "game": game,
++            "offline_reproduced": row.get("offline_reproduced") is True,
++            "reproduced_levels": row.get("reproduced_levels"),
++            "residual_mismatch_class": str(row.get("residual_mismatch_class", "")),
++            "verifier_accuracy": row.get("verifier_accuracy"),
++            "world_model_path": str(row.get("world_model_path", "")),
++        }
++    return {
++        "artifact_path": EXP4352_PATH,
++        "available": True,
++        "honest_verdict": _str(payload, "honest_verdict"),
++        "new_levels_reproduced": _int(payload, "new_levels_reproduced"),
++        "verifier_is_oracle": _bool(payload, "verifier_is_oracle"),
++        "games": games,
++        "reproducibility_checksum": _str(payload, "reproducibility_checksum"),
++    }
++
++
++def _read_action_cost(payload: dict[str, Any] | None, error: str) -> dict[str, Any]:
++    if payload is None:
++        return {"artifact_path": EXP4353_PATH, "available": False, "error": error}
++    return {
++        "artifact_path": EXP4353_PATH,
++        "available": True,
++        "honest_verdict": _str(payload, "honest_verdict"),
++        "acceptance_gate_passed": _bool(payload, "acceptance_gate_passed") is True,
++        "action_efficiency_improves": _bool(payload, "action_efficiency_improves") is True,
++        "held_out_actions_baseline": _int(payload, "held_out_actions_baseline"),
++        "held_out_actions_learned": _int(payload, "held_out_actions_learned"),
++        "positive_control_passed": _bool(payload, "positive_control_passed") is True,
++        "reproduction_gated": _bool(payload, "reproduction_gated") is True,
++        "missing_verifier_gaps": _list(payload, "missing_verifier_gaps"),
++        "verifier_is_oracle": _bool(payload, "verifier_is_oracle"),
++        "reproducibility_checksum": _str(payload, "reproducibility_checksum"),
++    }
++
++
++def load_v402_outcomes(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4355: read .402 outcomes without fabricating missing artifacts."""
++    s3_payload, s3_error = _load_optional_json(repo_root, EXP4348_PATH)
++    ka59_payload, ka59_error = _load_optional_json(repo_root, EXP4350_PATH)
++    deeper_payload, deeper_error = _load_optional_json(repo_root, EXP4351_PATH)
++    partial_payload, partial_error = _load_optional_json(repo_root, EXP4352_PATH)
++    action_payload, action_error = _load_optional_json(repo_root, EXP4353_PATH)
++    return {
++        "s3_moat_utility": _read_s3(s3_payload, s3_error),
++        "arc_e3": {
++            "ka59": _read_ka59(ka59_payload, ka59_error),
++            "deeper": _read_deeper(deeper_payload, deeper_error),
++            "partial_tr87_ft09": _read_partial_games(partial_payload, partial_error),
++        },
++        "action_cost_heuristic": _read_action_cost(action_payload, action_error),
++    }
++
++
++def _gap_entry(
++    gap_id: str,
++    *,
++    status: str,
++    evidence: str,
++    failure_mode: str,
++    missing_discriminator: str,
++    candidate_design: str,
++    priority: str = "high",
++) -> dict[str, Any]:
++    return {
++        "gap_id": gap_id,
++        "status": status,
++        "evidence": evidence,
++        "failure_mode": failure_mode,
++        "missing_discriminator": missing_discriminator,
++        "candidate_design": candidate_design,
++        "priority": priority,
++    }
++
++
++def build_gap_entries(outcomes: Mapping[str, Any]) -> list[dict[str, Any]]:
++    """REQ-VERIFY-4355: collect the .402 missing-verifier gaps to append."""
++    arc = outcomes["arc_e3"]
++    gaps: list[dict[str, Any]] = []
++
++    ka59 = arc["ka59"]
++    if ka59.get("available") and ka59.get("residual_mismatch_class"):
++        gaps.append(
++            _gap_entry(
++                GAP_E3_WORLD_MODEL_RULE_KA59_4350,
++                status="open_residual_after_l1_reproduction",
++                evidence=(
++                    f"{EXP4350_PATH}; offline_reproduced={ka59.get('offline_reproduced')}; "
++                    f"reproduced_levels={ka59.get('reproduced_levels')}; "
++                    f"verifier_best_accuracy={ka59.get('verifier_best_accuracy')}; "
++                    f"residual_mismatch_class={ka59.get('residual_mismatch_class')}"
++                ),
++                failure_mode=(
++                    "ka59 L1 now reproduces, but the executable world model still "
++                    f"has residual mismatch {ka59.get('residual_mismatch_class')}"
++                ),
++                missing_discriminator="ka59 hidden StepCounter HUD dynamics",
++                candidate_design=(
++                    "model the hidden bottom-row HUD counter separately from win-state "
++                    "movement so exact transition tests can pass without corrupting L1 solve logic"
++                ),
++            )
++        )
++
++    deeper = arc["deeper"]["targets"]
++    for game, gap_id in (
++        ("sc25", GAP_E3_WORLD_MODEL_RULE_SC25_L2_4351),
++        ("ar25", GAP_E3_WORLD_MODEL_RULE_AR25_L2_4351),
++    ):
++        row = deeper.get(game, {})
++        residual = str(row.get("residual_win_mechanic_gap_class", ""))
++        if row and residual and residual != "none" and row.get("offline_reproduced") is not True:
++            gaps.append(
++                _gap_entry(
++                    gap_id,
++                    status="open_deeper_level_residual",
++                    evidence=(
++                        f"{EXP4351_PATH}; game={game}; offline_reproduced="
++                        f"{row.get('offline_reproduced')}; new_reproduced_level="
++                        f"{row.get('new_reproduced_level')}; residual={residual}"
++                    ),
++                    failure_mode=f"{game} deeper level remains unreproduced due to {residual}",
++                    missing_discriminator=f"{game} executable rule coverage for {residual}",
++                    candidate_design=(
++                        "mine divergent deeper-level traces, add the missing executable "
++                        "transition cases, and keep reproduce() as the only solved-level gate"
++                    ),
++                )
++            )
++
++    partial = arc["partial_tr87_ft09"]["games"]
++    for game, gap_id in (
++        ("tr87", GAP_E3_WORLD_MODEL_RULE_TR87_4352),
++        ("ft09", GAP_E3_WORLD_MODEL_RULE_FT09_4352),
++    ):
++        row = partial.get(game, {})
++        residual = str(row.get("residual_mismatch_class", ""))
++        if row and residual and row.get("offline_reproduced") is not True:
++            gaps.append(
++                _gap_entry(
++                    gap_id,
++                    status="open",
++                    evidence=(
++                        f"{EXP4352_PATH}; game={game}; offline_reproduced=False; "
++                        f"reproduced_levels={row.get('reproduced_levels')}; "
++                        f"verifier_accuracy={row.get('verifier_accuracy')}; "
++                        f"residual_mismatch_class={residual}"
++                    ),
++                    failure_mode=f"{game} E3 world model remains partial: {residual}",
++                    missing_discriminator=f"{game} executable world-model rule coverage for {residual}",
++                    candidate_design=(
++                        "continue explore-verify-plan only after the mechanic checks "
++                        "pass; add transition tests for the named action residual"
++                    ),
++                )
++            )
++
++    deduped: dict[str, dict[str, Any]] = {}
++    for gap in gaps:
++        deduped[gap["gap_id"]] = gap
++    return list(deduped.values())
++
++
++def _gap_entry_block(gap: Mapping[str, Any]) -> str:
++    return (
++        f"### {gap['gap_id']}: Exp 4355 .402 verifier gap update\n"
++        f"- status: {gap.get('status', 'open')}\n"
++        f"- evidence: {gap.get('evidence', '')}.\n"
++        f"- failure mode: {gap.get('failure_mode', '')}\n"
++        f"- missing discriminator: {gap.get('missing_discriminator', '')}\n"
++        f"- candidate design: {gap.get('candidate_design', '')}\n"
++        f"- priority: {gap.get('priority', 'high')}\n"
++    )
++
++
++def _filled_ka59_4328_block(outcomes: Mapping[str, Any]) -> str:
++    ka59 = outcomes["arc_e3"]["ka59"]
++    return (
++        "### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4355 .402 filled verifier gap update\n"
++        "- status: filled (exp4350_ka59_l1_world_model)\n"
++        f"- evidence: {EXP4350_PATH}; offline_reproduced={ka59.get('offline_reproduced')}; "
++        f"reproduced_levels={ka59.get('reproduced_levels')}; "
++        f"verifier_best_accuracy={ka59.get('verifier_best_accuracy')}; "
++        f"world_model_path={ka59.get('world_model_path')}.\n"
++        "- failure mode: the prior ka59 action-rule blocker no longer prevents an "
++        "offline reproduced L1 solve.\n"
++        "- missing discriminator: none for the L1 push-through-wall action plan; the "
++        "remaining hidden HUD residual is tracked separately as GAP-E3-WORLD-MODEL-RULE-KA59-4350.\n"
++        "- candidate design: preserve the Exp 4350 adaptive transition tests and "
++        "reproduce() gate for ka59 L1.\n"
++        "- priority: high\n"
++    )
++
++
++def _ensure_gap4_eval(
++    registry: dict[str, Any],
++    guard: Mapping[str, Any],
++    outcomes: Mapping[str, Any],
++    gap_entries: list[dict[str, Any]],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    replay = guard.get("replayed_arc1_rule_exec", {})
++    arc = outcomes["arc_e3"]
++    s3 = outcomes["s3_moat_utility"]
++    action = outcomes["action_cost_heuristic"]
++    partial = arc["partial_tr87_ft09"]["games"]
++    eval_update = {
++        "eval_exp_4355": EXP4355_ARTIFACT_PATH,
++        "exp4355_gap4_regression_guard_passed": bool(
++            guard.get("regression_guard_passed")
++        ),
++        "exp4355_arc1_rule_exec_vote_pass2": replay.get("vote_pass2"),
++        "exp4355_arc1_rule_exec_gated_pass2": replay.get("gated_pass2"),
++        "exp4355_arc1_headroom_recovered": replay.get("headroom_recovered"),
++        "exp4355_arc1_vote_wins_lost": replay.get("vote_wins_lost"),
++        "exp4355_v402_state": V402_STATE,
++        "exp4355_s3_artifact": EXP4348_PATH,
++        "exp4355_s3_controls_differentiated": s3.get("controls_differentiated"),
++        "exp4355_s3_guided_beats_control": s3.get("s3_guided_beats_control"),
++        "exp4355_s3_flagged_adversarial": s3.get("flagged_adversarial"),
++        "exp4355_arc_reproducible_total_levels": arc["deeper"].get(
++            "reproducible_total_levels"
++        ),
++        "exp4355_ka59_offline_reproduced": arc["ka59"].get("offline_reproduced"),
++        "exp4355_ka59_reproduced_levels": arc["ka59"].get("reproduced_levels"),
++        "exp4355_ka59_residual_mismatch_class": arc["ka59"].get(
++            "residual_mismatch_class"
++        ),
++        "exp4355_tn36_reproduced_level": arc["deeper"]["targets"].get("tn36", {}).get(
++            "new_reproduced_level"
++        ),
++        "exp4355_tr87_residual_mismatch_class": partial.get("tr87", {}).get(
++            "residual_mismatch_class"
++        ),
++        "exp4355_ft09_residual_mismatch_class": partial.get("ft09", {}).get(
++            "residual_mismatch_class"
++        ),
++        "exp4355_action_efficiency_improves": action.get("action_efficiency_improves"),
++        "exp4355_action_cost_baseline_actions": action.get("held_out_actions_baseline"),
++        "exp4355_action_cost_learned_actions": action.get("held_out_actions_learned"),
++        "exp4355_action_cost_verifier_is_oracle": action.get("verifier_is_oracle"),
++        "exp4355_filled_gaps": [GAP_E3_WORLD_MODEL_RULE_KA59_4328],
++        "exp4355_gaps_logged": [gap["gap_id"] for gap in gap_entries],
++    }
++    entry.setdefault("eval", {}).update(eval_update)
++
++
++def _ensure_v402_role(
++    registry: dict[str, Any],
++    outcomes: Mapping[str, Any],
++    gap_entries: list[dict[str, Any]],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        return
++    role = {
++        "role_id": V402_ROLE_ID,
++        "experiment": EXP4355_ARTIFACT_PATH,
++        "role": "registry_gaps_arc_hygiene_v402",
++        "status": "v402_outcomes_recorded_with_capstone_stamp_fix",
++        "v402_state": V402_STATE,
++        "s3_controls_differentiated": outcomes["s3_moat_utility"].get(
++            "controls_differentiated"
++        ),
++        "arc_reproducible_total_levels": outcomes["arc_e3"]["deeper"].get(
++            "reproducible_total_levels"
++        ),
++        "ka59_offline_reproduced": outcomes["arc_e3"]["ka59"].get(
++            "offline_reproduced"
++        ),
++        "action_efficiency_improves": outcomes["action_cost_heuristic"].get(
++            "action_efficiency_improves"
++        ),
++        "gap_ids_logged": [gap["gap_id"] for gap in gap_entries],
++        "filled_gap_ids": [GAP_E3_WORLD_MODEL_RULE_KA59_4328],
++        "eval_exp_4355": EXP4355_ARTIFACT_PATH,
++    }
++    old_roles = list(entry.get("registry_roles", []))
++    entry["registry_roles"] = [
++        old for old in old_roles if old.get("role_id") != V402_ROLE_ID
++    ] + [role]
++
++
++def _ensure_action_cost_verifier(registry: dict[str, Any], outcomes: Mapping[str, Any]) -> None:
++    action = outcomes["action_cost_heuristic"]
++    entry = base._find_verifier(registry, ACTION_COST_VERIFIER_ID)
++    if entry is None:
++        entry = {
++            "verifier_id": ACTION_COST_VERIFIER_ID,
++            "domain": "arc_agi3_interactive",
++            "version": 1,
++            "kind": "search_heuristic",
++            "code_commit": "HEAD",
++            "code_path": "python/carnot/experiment_4353_learned_action_cost_heuristic_efficiency.py",
++            "label_source": "offline_reproduced_solve_traces",
++            "eval": {},
++            "status": "candidate",
++            "notes": (
++                "Oracle-distinct learned action-cost heuristic: reduces held-out "
++                "lp85 L3 actions from 25 to 16 under reproduction gate."
++            ),
++        }
++        registry.setdefault("verifiers", []).append(entry)
++    entry.setdefault("eval", {}).update(
++        {
++            "metric": "held_out_actions_to_solve",
++            "eval_exp_4353": EXP4353_PATH,
++            "eval_exp_4355": EXP4355_ARTIFACT_PATH,
++            "action_efficiency_improves": action.get("action_efficiency_improves"),
++            "held_out_actions_baseline": action.get("held_out_actions_baseline"),
++            "held_out_actions_learned": action.get("held_out_actions_learned"),
++            "positive_control_passed": action.get("positive_control_passed"),
++            "reproduction_gated": action.get("reproduction_gated"),
++            "verifier_is_oracle": action.get("verifier_is_oracle"),
++        }
++    )
++
++
++def _find_game(arc_registry: dict[str, Any], game: str) -> dict[str, Any] | None:
++    for row in arc_registry.get("games", []):
++        if isinstance(row, dict) and row.get("game") == game:
++            return row
++    return None
++
++
++def _ensure_arc_registry(arc_registry: dict[str, Any], outcomes: Mapping[str, Any]) -> None:
++    deeper = outcomes["arc_e3"]["deeper"]
++    ka59 = outcomes["arc_e3"]["ka59"]
++    total = deeper.get("reproducible_total_levels")
++    if isinstance(total, int) and not isinstance(total, bool):
++        arc_registry["reproducible_total_levels"] = max(
++            int(arc_registry.get("reproducible_total_levels") or 0),
++            total,
++        )
++    arc_registry["reproducible_total_games"] = max(
++        int(arc_registry.get("reproducible_total_games") or 0),
++        14,
++    )
++    arc_registry.setdefault("games", [])
++    ka59_entry = _find_game(arc_registry, "ka59")
++    if ka59_entry is None:
++        ka59_entry = {"game": "ka59"}
++        arc_registry["games"].append(ka59_entry)
++    ka59_entry.update(
++        {
++            "reproducibility": "reproduced",
++            "levels_reproduced": max(int(ka59_entry.get("levels_reproduced") or 0), 1),
++            "solver": f"{EXP4350_PATH} + {ka59.get('world_model_path')}",
++            "world_model": ka59.get("world_model_path"),
++            "world_model_sha256": ka59.get("world_model_sha256"),
++        }
++    )
++    tn36 = deeper.get("targets", {}).get("tn36", {})
++    tn36_entry = _find_game(arc_registry, "tn36")
++    if tn36_entry is None:
++        tn36_entry = {"game": "tn36"}
++        arc_registry["games"].append(tn36_entry)
++    tn36_entry.update(
++        {
++            "reproducibility": "reproduced",
++            "levels_reproduced": max(
++                int(tn36_entry.get("levels_reproduced") or 0),
++                int(tn36.get("new_reproduced_level") or 0),
++            ),
++            "solver": "scripts/arc3_tn36_offline_solver.py",
++        }
++    )
++
++
++def registry_contains_v402(registry: dict[str, Any]) -> bool:
++    gap4 = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    action = base._find_verifier(registry, ACTION_COST_VERIFIER_ID)
++    return bool(
++        gap4
++        and gap4.get("eval", {}).get("eval_exp_4355") == EXP4355_ARTIFACT_PATH
++        and gap4.get("eval", {}).get("exp4355_v402_state") == V402_STATE
++        and any(role.get("role_id") == V402_ROLE_ID for role in gap4.get("registry_roles", []))
++        and action
++        and action.get("eval", {}).get("eval_exp_4355") == EXP4355_ARTIFACT_PATH
++    )
++
++
++def arc_registry_contains_v402(arc_registry: dict[str, Any]) -> bool:
++    ka59 = _find_game(arc_registry, "ka59") or {}
++    tn36 = _find_game(arc_registry, "tn36") or {}
++    return bool(
++        int(arc_registry.get("reproducible_total_levels") or 0) >= 23
++        and ka59.get("reproducibility") == "reproduced"
++        and int(ka59.get("levels_reproduced") or 0) >= 1
++        and tn36.get("reproducibility") == "reproduced"
++        and int(tn36.get("levels_reproduced") or 0) >= 7
++    )
++
++
++def gaps_contain_v402(gaps_text: str, gap_entries: list[dict[str, Any]]) -> bool:
++    return (
++        "status: filled (exp4350_ka59_l1_world_model)" in gaps_text
++        and all(gap["gap_id"] in gaps_text for gap in gap_entries)
++    )
++
++
++def ensure_ledgers_record_v402(
++    registry: dict[str, Any],
++    gaps_text: str,
++    arc_registry: dict[str, Any],
++    regression_guard: Mapping[str, Any],
++    outcomes: Mapping[str, Any],
++    gap_entries: list[dict[str, Any]],
++) -> tuple[dict[str, Any], str, dict[str, Any], dict[str, Any]]:
++    """Return ledgers with .402 truth represented idempotently."""
++    updated_registry = deepcopy(registry)
++    updated_arc = deepcopy(arc_registry)
++    _ensure_gap4_eval(updated_registry, regression_guard, outcomes, gap_entries)
++    _ensure_v402_role(updated_registry, outcomes, gap_entries)
++    _ensure_action_cost_verifier(updated_registry, outcomes)
++    _ensure_arc_registry(updated_arc, outcomes)
++
++    updated_gaps = base._replace_marked_block(
++        gaps_text,
++        "exp4333-gap-e3-world-model-rule-ka59-4328",
++        _filled_ka59_4328_block(outcomes),
++    )
++    for gap in gap_entries:
++        updated_gaps = base._replace_marked_block(
++            updated_gaps,
++            f"exp4355-{gap['gap_id'].lower()}",
++            _gap_entry_block(gap),
++        )
++
++    registry_ok = registry_contains_v402(updated_registry)
++    arc_ok = arc_registry_contains_v402(updated_arc)
++    gaps_ok = gaps_contain_v402(updated_gaps, gap_entries)
++    return (
++        updated_registry,
++        updated_gaps,
++        updated_arc,
++        {
++            "verifier_registry_reconciled": registry_ok,
++            "arc_solve_registry_reconciled": arc_ok,
++            "verifier_gaps_reconciled": gaps_ok,
++            "registries_reconciled": registry_ok and arc_ok and gaps_ok,
++            "filled_gap_ids": [GAP_E3_WORLD_MODEL_RULE_KA59_4328],
++            "gaps_logged_ids": [gap["gap_id"] for gap in gap_entries],
++        },
++    )
++
++
++def _clean_flags_from_report(report: Mapping[str, Any]) -> list[dict[str, Any]]:
++    reports = report.get("reports")
++    if isinstance(reports, list) and reports:
++        first = reports[0]
++        if isinstance(first, Mapping):
++            return list(first.get("flags", []))
++    return []
++
++
++def verify_capstone_stamp_fix(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4355: run adversarial_verify.py on a stamped sample capstone."""
++    sample = capstone_v401_4346.build_artifact(
++        repo_root,
++        live_flag_runner=lambda _path: [],
++        summarize_runner=lambda _path, _root: 0,
++    )
++    with tempfile.TemporaryDirectory(prefix="carnot_exp4355_") as tmpdir:
++        sample_path = Path(tmpdir) / "sample_capstone_v401_stamped.json"
++        sample_path.write_text(
++            json.dumps(sample, indent=2, sort_keys=True) + "\n",
++            encoding="utf-8",
++        )
++        command = [
++            sys.executable,
++            str(repo_root / "scripts" / "adversarial_verify.py"),
++            "--json",
++            str(sample_path),
++        ]
++        completed = subprocess.run(  # noqa: S603
++            command,
++            cwd=repo_root,
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++        try:
++            parsed = json.loads(completed.stdout)
++        except json.JSONDecodeError:
++            parsed = {"reports": [], "parse_error": completed.stdout[-500:]}
++        flags = _clean_flags_from_report(parsed)
++        circular = [flag for flag in flags if flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM"]
++        return {
++            "capstone_stamp_fix_verified": (
++                sample.get("verifier_is_oracle") is False
++                and not circular
++                and completed.returncode == 0
++            ),
++            "sample_verifier_is_oracle": sample.get("verifier_is_oracle"),
++            "circular_moat_overclaim_fired": bool(circular),
++            "returncode": completed.returncode,
++            "command": command,
++            "flags": flags,
++            "stdout_tail": completed.stdout[-1000:],
++            "stderr_tail": completed.stderr[-1000:],
++        }
++
++
++def model_specs() -> dict[str, Any]:
++    return {
++        "method": "cached_v402_ledger_reconciliation_plus_capstone_stamp_audit",
++        "upstream_artifacts": [
++            EXP4348_PATH,
++            EXP4350_PATH,
++            EXP4351_PATH,
++            EXP4352_PATH,
++            EXP4353_PATH,
++        ],
++        "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_4344",
++        "capstone_stamp_source": "carnot.reporting.capstone_v401_4346",
++        "codex_calls": 0,
++        "live_model_inference": False,
++        "gguf_inference": False,
++        "gpu_inference": False,
++    }
++
++
++def build_artifact(
++    *,
++    preconditions_checked: dict[str, Any],
++    gap4_regression_guard: dict[str, Any],
++    capstone_stamp_fix: dict[str, Any],
++    v402_outcomes: dict[str, Any],
++    registry_reconciliation: dict[str, Any],
++    reproducibility_checksum: str,
++    duration_s: float,
++) -> dict[str, Any]:
++    guard_ok = bool(gap4_regression_guard.get("regression_guard_passed"))
++    stamp_ok = bool(capstone_stamp_fix.get("capstone_stamp_fix_verified"))
++    reconciled = bool(registry_reconciliation.get("registries_reconciled"))
++    complete = guard_ok and stamp_ok and reconciled
++    artifact = {
++        "experiment": "experiment_4355_registry_gaps_hygiene_capstone_stamp_fix",
++        "schema": "carnot.experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.v1",
++        "honest_verdict": (
++            "complete: registry_gaps_arc_reconciled_to_v402_truth_"
++            f"gap4_guard_passed_{guard_ok}_capstone_stamp_fix_verified_{stamp_ok}"
++            if complete
++            else "blocked_v402_hygiene_incomplete"
++        ),
++        "gap4_regression_guard_passed": guard_ok,
++        "capstone_stamp_fix_verified": stamp_ok,
++        "registries_reconciled": reconciled,
++        "preconditions_checked": preconditions_checked,
++        "reproducibility_checksum": reproducibility_checksum,
++        "v402_outcomes": v402_outcomes,
++        "registry_reconciliation": registry_reconciliation,
++        "gap4_regression_guard": gap4_regression_guard,
++        "capstone_stamp_fix": capstone_stamp_fix,
++        "random_seed": RANDOM_SEED,
++        "model_specs": model_specs(),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "arc_registry_path": ARC_REGISTRY_PATH,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _blocked_artifact(preflight: dict[str, Any], duration_s: float) -> dict[str, Any]:
++    blocked = str(preflight.get("blocked_file") or "registry")
++    artifact = {
++        "experiment": "experiment_4355_registry_gaps_hygiene_capstone_stamp_fix",
++        "schema": "carnot.experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.v1",
++        "honest_verdict": f"blocked_{blocked}_unreadable",
++        "gap4_regression_guard_passed": False,
++        "capstone_stamp_fix_verified": False,
++        "registries_reconciled": False,
++        "preconditions_checked": preflight,
++        "reproducibility_checksum": f"blocked:{blocked}_unreadable",
++        "v402_outcomes": {},
++        "registry_reconciliation": {},
++        "gap4_regression_guard": {},
++        "capstone_stamp_fix": {},
++        "random_seed": RANDOM_SEED,
++        "model_specs": model_specs(),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 4355 terminal artifact before writing."""
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in (
++        "gap4_regression_guard_passed",
++        "capstone_stamp_fix_verified",
++        "registries_reconciled",
++    ):
++        if type(artifact[field]) is not bool:
++            raise ValueError(f"{field} must be a BARE bool")
++    if not isinstance(artifact["preconditions_checked"], dict):
++        raise ValueError("preconditions_checked must be an object")
++    if (
++        not isinstance(artifact["reproducibility_checksum"], str)
++        or not artifact["reproducibility_checksum"]
++    ):
++        raise ValueError("reproducibility_checksum must be a non-empty string")
++    if not isinstance(artifact["v402_outcomes"], dict):
++        raise ValueError("v402_outcomes must be an object")
++    if not isinstance(artifact["registry_reconciliation"], dict):
++        raise ValueError("registry_reconciliation must be an object")
++    if not isinstance(artifact["gap4_regression_guard"], dict):
++        raise ValueError("gap4_regression_guard must be an object")
++    if not isinstance(artifact["capstone_stamp_fix"], dict):
++        raise ValueError("capstone_stamp_fix must be an object")
++    if isinstance(artifact["random_seed"], bool) or not isinstance(
++        artifact["random_seed"], int
++    ):
++        raise ValueError("random_seed must be a bare int")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required Exp 4355 principles")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs must cite REQ-VERIFY-4355 and SCENARIO-VERIFY-4355")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++
++
++def run_hygiene(
++    repo_root: Path = REPO_ROOT,
++    *,
++    gap4_guard_runner: Gap4GuardRunner | None = None,
++    capstone_stamp_runner: CapstoneStampRunner | None = None,
++) -> dict[str, Any]:
++    """Run Exp 4355 and write the terminal artifact plus reconciled ledgers."""
++    if gap4_guard_runner is None:
++        gap4_guard_runner = run_gap4_regression_guard
++    if capstone_stamp_runner is None:
++        capstone_stamp_runner = verify_capstone_stamp_fix
++    started = time.time()
++    preflight = check_preconditions(repo_root)
++    out_path = repo_root / EXP4355_ARTIFACT_PATH
++    if not preflight["ok"]:
++        artifact = _blocked_artifact(preflight, time.time() - started)
++        base._write_json(out_path, artifact)
++        return artifact
++
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++    arc_path = repo_root / ARC_REGISTRY_PATH
++    registry = base._load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    arc_registry = yaml.safe_load(arc_path.read_text(encoding="utf-8"))
++    if not isinstance(arc_registry, dict):  # pragma: no cover - preconditions gate this.
++        arc_registry = {}
++
++    guard = gap4_guard_runner(repo_root)
++    stamp = capstone_stamp_runner(repo_root)
++    outcomes = load_v402_outcomes(repo_root)
++    gap_entries = build_gap_entries(outcomes)
++    registry, gaps_text, arc_registry, summary = ensure_ledgers_record_v402(
++        registry,
++        gaps_text,
++        arc_registry,
++        guard,
++        outcomes,
++        gap_entries,
++    )
++
++    base._write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++    if not arc_registry_contains_v402(yaml.safe_load(arc_path.read_text(encoding="utf-8")) or {}):
++        arc_path.write_text(yaml.safe_dump(arc_registry, sort_keys=False), encoding="utf-8")
++
++    checksum = _json_hash(
++        {
++            "registry": registry,
++            "gaps_text_sha256": hashlib.sha256(gaps_text.encode("utf-8")).hexdigest(),
++            "arc_registry": arc_registry,
++        }
++    )
++    artifact = build_artifact(
++        preconditions_checked=preflight,
++        gap4_regression_guard=guard,
++        capstone_stamp_fix=stamp,
++        v402_outcomes=outcomes,
++        registry_reconciliation=summary,
++        reproducibility_checksum=checksum,
++        duration_s=time.time() - started,
++    )
++    base._write_json(out_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised by results entrypoint tests.
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4355_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3f322a7113..33b8fd6c24 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-17T22:22:09.297644Z",
+-  "duration_s": 0.020783185958862305,
++  "run_date": "2026-06-17T23:13:29.940002Z",
++  "duration_s": 0.025234460830688477,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "76df427d48a647969c646327ae3dc3d7e0ea7ecc7f78a9467d846c3787b616fb",
++  "reproducibility_checksum": "a55194d04fc3941e2da23102ea3987ed0ebb7e52bfe2be3341a3f0c688b3e8ad",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "2bf8887dcac8e1dde075e6911d03f5e96b685427"
++    "adversarial_verify_version": "91ab9fd0f9150344e7eae464dff6d8cc98540adc"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b05664ef38..15774349c2 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-17T22:22:09.324340Z",
+-  "duration_s": 0.02224254608154297,
++  "run_date": "2026-06-17T23:13:29.972608Z",
++  "duration_s": 0.026636600494384766,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "ece646f0f8dbcac85bbb172a15b36611f2b3b92256d8fc8bb2cc5488cd082609",
++  "reproducibility_checksum": "1a1523dfaa7f83e6ae1c2659199735d64bade390d184e1d5411cdf23ae512c6e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "2bf8887dcac8e1dde075e6911d03f5e96b685427"
++    "adversarial_verify_version": "91ab9fd0f9150344e7eae464dff6d8cc98540adc"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index aa43724e28..babf72795b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1119117736816406,
++  "efficiency_gains_ms": 2.115011215209961,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ad361d880c..18277aec4b 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.490602830424905e-05,
++  "duration_s": 3.2580981496721506e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json b/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+new file mode 100644
+index 0000000000..5370f68c02
+--- /dev/null
++++ b/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+@@ -0,0 +1,260 @@
++{
++  "arc_registry_path": "ops/arc_solve_registry.yaml",
++  "capstone_stamp_fix": {
++    "capstone_stamp_fix_verified": true,
++    "circular_moat_overclaim_fired": false,
++    "command": [
++      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
++      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
++      "--json",
++      "/tmp/carnot_exp4355_drsexwzg/sample_capstone_v401_stamped.json"
++    ],
++    "flags": [],
++    "returncode": 0,
++    "sample_verifier_is_oracle": false,
++    "stderr_tail": "",
++    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot_exp4355_drsexwzg/sample_capstone_v401_stamped.json\",\n      \"loaded\": true,\n      \"exp_id\": 4346,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v401_in_generation_replicated_leak_robust_gate_MET_oracle_distinct_lea\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
++  },
++  "capstone_stamp_fix_verified": true,
++  "duration_s": 0.79638,
++  "experiment": "experiment_4355_registry_gaps_hygiene_capstone_stamp_fix",
++  "field_principles": {
++    "capstone_stamp_fix_verified": "BARE bool: the capstone aggregation now propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py no longer fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone.",
++    "gap4_regression_guard_passed": "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.",
++    "honest_verdict": "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified.",
++    "preconditions_checked": "Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.",
++    "registries_reconciled": "BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .402 outcomes (never-prune)."
++  },
++  "gap4_regression_guard": {
++    "exp4333_guard": {
++      "offline_replay": {
++        "arc1_rule_exec": {
++          "gated_pass2": 0.5806,
++          "headroom_recovered": 4,
++          "n": 31,
++          "vote_pass2": 0.4516,
++          "vote_wins_lost": 0
++        },
++        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++        "expected": {
++          "arc1_rule_exec": {
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "n": 31,
++            "vote_pass2": 0.4516,
++            "vote_wins_lost": 0
++          }
++        },
++        "no_codex_calls": true,
++        "no_gguf_inference": true,
++        "regression_guard_passed": true,
++        "trm_training_touched": false
++      },
++      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
++      "recorded_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      },
++      "regression_guard_passed": true,
++      "replayed_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
++    "recorded_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "regression_guard_passed": true,
++    "replayed_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    }
++  },
++  "gap4_regression_guard_passed": true,
++  "gaps_path": "ops/verifier_gaps.md",
++  "honest_verdict": "complete: registry_gaps_arc_reconciled_to_v402_truth_gap4_guard_passed_True_capstone_stamp_fix_verified_True",
++  "inference_substrate": "cached_registry_reconciliation_and_capstone_stamp_audit",
++  "model_specs": {
++    "capstone_stamp_source": "carnot.reporting.capstone_v401_4346",
++    "codex_calls": 0,
++    "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_4344",
++    "gguf_inference": false,
++    "gpu_inference": false,
++    "live_model_inference": false,
++    "method": "cached_v402_ledger_reconciliation_plus_capstone_stamp_audit",
++    "upstream_artifacts": [
++      "results/experiment_4348_s3_stratified_verifier_guided_search.json",
++      "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++      "results/experiment_4351_e3_deeper_solved_games.json",
++      "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
++      "results/experiment_4353_learned_action_cost_heuristic_efficiency.json"
++    ]
++  },
++  "preconditions_checked": {
++    "blocked_file": null,
++    "files": {
++      "arc_solve_registry": {
++        "error": "",
++        "path": "ops/arc_solve_registry.yaml",
++        "readable": true
++      },
++      "verifier_gaps": {
++        "error": "",
++        "path": "ops/verifier_gaps.md",
++        "readable": true
++      },
++      "verifier_registry": {
++        "error": "",
++        "path": "ops/verifier_registry.yaml",
++        "readable": true
++      }
++    },
++    "ok": true
++  },
++  "random_seed": 4355,
++  "registries_reconciled": true,
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_reconciliation": {
++    "arc_solve_registry_reconciled": true,
++    "filled_gap_ids": [
++      "GAP-E3-WORLD-MODEL-RULE-KA59-4328"
++    ],
++    "gaps_logged_ids": [
++      "GAP-E3-WORLD-MODEL-RULE-KA59-4350",
++      "GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351",
++      "GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351",
++      "GAP-E3-WORLD-MODEL-RULE-TR87-4352",
++      "GAP-E3-WORLD-MODEL-RULE-FT09-4352"
++    ],
++    "registries_reconciled": true,
++    "verifier_gaps_reconciled": true,
++    "verifier_registry_reconciled": true
++  },
++  "reproducibility_checksum": "sha256:a8ad7c397e01fef784835d2e4df48873b93c87cd265f1361346625d3687c07c0",
++  "schema": "carnot.experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.v1",
++  "spec_refs": [
++    "REQ-VERIFY-4355",
++    "SCENARIO-VERIFY-4355"
++  ],
++  "v402_outcomes": {
++    "action_cost_heuristic": {
++      "acceptance_gate_passed": true,
++      "action_efficiency_improves": true,
++      "artifact_path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
++      "available": true,
++      "held_out_actions_baseline": 25,
++      "held_out_actions_learned": 16,
++      "honest_verdict": "success: learned_action_cost_reduces_actions_25_to_16",
++      "missing_verifier_gaps": [],
++      "positive_control_passed": true,
++      "reproducibility_checksum": "sha256:bb2239bae156eb0fae288a54a8d20855e79543ba07db250b0d47e61173c731fa",
++      "reproduction_gated": true,
++      "verifier_is_oracle": false
++    },
++    "arc_e3": {
++      "deeper": {
++        "artifact_path": "results/experiment_4351_e3_deeper_solved_games.json",
++        "available": true,
++        "honest_verdict": "success_e3_deeper_tn36_reproduced",
++        "new_levels_reproduced": 1,
++        "reproducibility_checksum": "72ad0cdfb5c23845b4272b9b98c30c4b0fa4a27b47980107fc76862aa45f45c9",
++        "reproducible_total_levels": 23,
++        "targets": {
++          "ar25": {
++            "game": "ar25",
++            "new_reproduced_level": 1,
++            "offline_reproduced": false,
++            "residual_win_mechanic_gap_class": "ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap",
++            "world_model_path": "results/arc_e3/ar25/world_model.py"
++          },
++          "sc25": {
++            "game": "sc25",
++            "new_reproduced_level": 1,
++            "offline_reproduced": false,
++            "residual_win_mechanic_gap_class": "sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap",
++            "world_model_path": "results/arc_e3/sc25/world_model.py"
++          },
++          "tn36": {
++            "game": "tn36",
++            "new_reproduced_level": 7,
++            "offline_reproduced": true,
++            "residual_win_mechanic_gap_class": "none",
++            "world_model_path": "scripts/arc3_tn36_offline_solver.py"
++          }
++        },
++        "verifier_is_oracle": true
++      },
++      "ka59": {
++        "artifact_path": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++        "available": true,
++        "game": "ka59",
++        "honest_verdict": "success_e3_ka59_L1_reproduced",
++        "offline_reproduced": true,
++        "reproduced_levels": 1,
++        "reproducibility_checksum": "3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06",
++        "residual_mismatch_class": "hidden_step_counter_hud_gap",
++        "verifier_best_accuracy": 0.6375,
++        "verifier_is_oracle": true,
++        "world_model_path": "results/arc_e3/ka59/world_model.py",
++        "world_model_sha256": "ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba"
++      },
++      "partial_tr87_ft09": {
++        "artifact_path": "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
++        "available": true,
++        "games": {
++          "ft09": {
++            "game": "ft09",
++            "offline_reproduced": false,
++            "reproduced_levels": 0,
++            "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
++            "verifier_accuracy": 0.05,
++            "world_model_path": "results/arc_e3/ft09/world_model.py"
++          },
++          "tr87": {
++            "game": "tr87",
++            "offline_reproduced": false,
++            "reproduced_levels": 0,
++            "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_3_4",
++            "verifier_accuracy": 0.0,
++            "world_model_path": "results/arc_e3/tr87/world_model.py"
++          }
++        },
++        "honest_verdict": "complete_e3_tr87_ft09_partial",
++        "new_levels_reproduced": 0,
++        "reproducibility_checksum": "88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28",
++        "verifier_is_oracle": true
++      }
++    },
++    "s3_moat_utility": {
++      "acceptance_gate": true,
++      "artifact_path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
++      "available": true,
++      "benchmark_n": 240,
++      "controls_differentiated": false,
++      "flagged_adversarial": true,
++      "honest_verdict": "controls_not_differentiable",
++      "reproducibility_checksum": "6f6e37ce8128fe9e77c5ad4623c1d6dfc07b4a0b9d323318eed8734d4d16c938",
++      "s3_gain_ci95": [
++        0.208333,
++        0.329167
++      ],
++      "s3_guided_beats_control": false,
++      "verifier_is_oracle": false
++    }
++  }
++}
+diff --git a/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py b/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+new file mode 100644
+index 0000000000..4a1d2c00eb
+--- /dev/null
++++ b/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+@@ -0,0 +1,22 @@
++"""Run Exp 4355 registry/gaps hygiene and capstone stamp fix.
++
++Spec refs: REQ-VERIFY-4355, SCENARIO-VERIFY-4355.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting import (  # noqa: E402,I001
++    verifier_registry_gaps_hygiene_capstone_stamp_fix_4355 as exp4355,
++)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    exp4355.main()
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6e3f118a57..bd86a9e728 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T22:21:59Z",
+-  "finished_at": "2026-06-17T22:21:59Z",
++  "started_at": "2026-06-17T23:13:20Z",
++  "finished_at": "2026-06-17T23:13:21Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2c35fd6ddd..23af4f7c1b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T22:21:59Z",
+-  "finished_at": "2026-06-17T22:21:59Z",
++  "started_at": "2026-06-17T23:13:21Z",
++  "finished_at": "2026-06-17T23:13:21Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f242602d02..45df7b4dc1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T22:22:00Z",
+-  "finished_at": "2026-06-17T22:22:00Z",
++  "started_at": "2026-06-17T23:13:21Z",
++  "finished_at": "2026-06-17T23:13:21Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py b/tests/python/test_experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+new file mode 100644
+index 0000000000..2591b57a30
+--- /dev/null
++++ b/tests/python/test_experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py
+@@ -0,0 +1,552 @@
++"""Tests for Exp 4355 registry/gaps hygiene and capstone stamp fix.
++
++Spec refs: REQ-VERIFY-4355, SCENARIO-VERIFY-4355.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++import subprocess
++import sys
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4355_registry_gaps_hygiene_capstone_stamp_fix as wrapper
++from carnot.reporting import capstone_v401_4346
++from carnot.reporting import (
++    verifier_registry_gaps_hygiene_capstone_stamp_fix_4355 as exp4355,
++)
++
++
++REPO_ROOT = Path(__file__).parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "verification" / "spec.md"
++RESULTS_WRAPPER_PATH = Path(
++    "results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py"
++)
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": exp4355.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "eval": {"metric": "pass_at_2"},
++                "registry_roles": [],
++            }
++        ]
++    }
++
++
++def _minimal_arc_registry() -> dict[str, Any]:
++    return {
++        "schema_version": 1,
++        "updated": "2026-06-17",
++        "games": [
++            {"game": "ka59", "reproducibility": "unsolved", "levels_reproduced": 0},
++            {"game": "tn36", "reproducibility": "reproduced", "levels_reproduced": 6},
++        ],
++        "reproducible_total_levels": 21,
++        "reproducible_total_games": 13,
++        "provisional_total_levels": 5,
++    }
++
++
++def _write_minimal_repo(tmp_path: Path) -> None:
++    (tmp_path / "ops").mkdir(parents=True, exist_ok=True)
++    (tmp_path / "results").mkdir(parents=True, exist_ok=True)
++    (tmp_path / "scripts").mkdir(parents=True, exist_ok=True)
++    (tmp_path / "scripts" / "adversarial_verify.py").write_text("# fixture\n", encoding="utf-8")
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "arc_solve_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_arc_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text(
++        "# Verifier Gaps\n\n"
++        "<!-- exp4333-gap-e3-world-model-rule-ka59-4328:start -->\n"
++        "### GAP-E3-WORLD-MODEL-RULE-KA59-4328: prior gap\n"
++        "- status: open\n"
++        "- evidence: old ka59 partial.\n"
++        "- failure mode: old ka59 model partial\n"
++        "- missing discriminator: old ka59 rules\n"
++        "- candidate design: old design\n"
++        "- priority: high\n"
++        "<!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->\n",
++        encoding="utf-8",
++    )
++    for rel_path, payload in _minimal_v402_payloads().items():
++        _write_json(tmp_path / rel_path, payload)
++
++
++def _minimal_v402_payloads() -> dict[str, dict[str, Any]]:
++    return {
++        exp4355.EXP4348_PATH: {
++            "honest_verdict": "controls_not_differentiable",
++            "acceptance_gate": True,
++            "s3_guided_beats_control": False,
++            "controls_differentiated": False,
++            "s3_gain_ci95": [0.208333, 0.329167],
++            "benchmark_n": 240,
++            "flagged_adversarial": True,
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "6f6e37ce8128fe9e77c5ad4623c1d6dfc07b4a0b9d323318eed8734d4d16c938",
++        },
++        exp4355.EXP4350_PATH: {
++            "honest_verdict": "success_e3_ka59_L1_reproduced",
++            "game": "ka59",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "residual_mismatch_class": "hidden_step_counter_hud_gap",
++            "verifier_best_accuracy": 0.6375,
++            "world_model_path": "results/arc_e3/ka59/world_model.py",
++            "world_model_sha256": "ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba",
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06",
++        },
++        exp4355.EXP4351_PATH: {
++            "honest_verdict": "success_e3_deeper_tn36_reproduced",
++            "new_levels_reproduced": 1,
++            "reproducible_total_levels": 23,
++            "verifier_is_oracle": True,
++            "per_target_scorecard": [
++                {
++                    "game": "sc25",
++                    "offline_reproduced": False,
++                    "new_reproduced_level": 1,
++                    "residual_win_mechanic_gap_class": "sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap",
++                    "world_model_path": "results/arc_e3/sc25/world_model.py",
++                },
++                {
++                    "game": "tn36",
++                    "offline_reproduced": True,
++                    "new_reproduced_level": 7,
++                    "residual_win_mechanic_gap_class": "none",
++                    "world_model_path": "scripts/arc3_tn36_offline_solver.py",
++                },
++                {
++                    "game": "ar25",
++                    "offline_reproduced": False,
++                    "new_reproduced_level": 1,
++                    "residual_win_mechanic_gap_class": "ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap",
++                    "world_model_path": "results/arc_e3/ar25/world_model.py",
++                },
++            ],
++            "reproducibility_checksum": "72ad0cdfb5c23845b4272b9b98c30c4b0fa4a27b47980107fc76862aa45f45c9",
++        },
++        exp4355.EXP4352_PATH: {
++            "honest_verdict": "complete_e3_tr87_ft09_partial",
++            "new_levels_reproduced": 0,
++            "verifier_is_oracle": True,
++            "per_game_scorecard": [
++                {
++                    "game": "tr87",
++                    "offline_reproduced": False,
++                    "reproduced_levels": 0,
++                    "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_3_4",
++                    "verifier_accuracy": 0.0,
++                    "world_model_path": "results/arc_e3/tr87/world_model.py",
++                },
++                {
++                    "game": "ft09",
++                    "offline_reproduced": False,
++                    "reproduced_levels": 0,
++                    "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
++                    "verifier_accuracy": 0.05,
++                    "world_model_path": "results/arc_e3/ft09/world_model.py",
++                },
++            ],
++            "reproducibility_checksum": "88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28",
++        },
++        exp4355.EXP4353_PATH: {
++            "honest_verdict": "success: learned_action_cost_reduces_actions_25_to_16",
++            "acceptance_gate_passed": True,
++            "action_efficiency_improves": True,
++            "held_out_actions_baseline": 25,
++            "held_out_actions_learned": 16,
++            "positive_control_passed": True,
++            "reproduction_gated": True,
++            "missing_verifier_gaps": [],
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:bb2239bae156eb0fae288a54a8d20855e79543ba07db250b0d47e61173c731fa",
++        },
++    }
++
++
++def _guard() -> dict[str, Any]:
++    return {
++        "regression_guard_passed": True,
++        "replayed_arc1_rule_exec": {
++            "n": 31,
++            "vote_pass2": 0.4516,
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "vote_wins_lost": 0,
++        },
++    }
++
++
++def _stamp_report() -> dict[str, Any]:
++    return {
++        "capstone_stamp_fix_verified": True,
++        "sample_verifier_is_oracle": False,
++        "circular_moat_overclaim_fired": False,
++        "returncode": 0,
++        "flags": [],
++    }
++
++
++def test_req_verify_4355_spec_declared() -> None:
++    """REQ-VERIFY-4355: OpenSpec declares the .402 hygiene/stamp contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-4355",
++        "SCENARIO-VERIFY-4355",
++        "python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py",
++        RESULTS_WRAPPER_PATH.as_posix(),
++        exp4355.EXP4355_ARTIFACT_PATH,
++        "blocked_<file>_unreadable",
++        "capstone aggregation code SHALL propagate",
++        "CIRCULAR_MOAT_OVERCLAIM",
++        "held_out_actions_baseline=25",
++        "held_out_actions_learned=16",
++    ):
++        assert marker in spec
++    for field in exp4355.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    for principle in exp4355.FIELD_PRINCIPLES.values():
++        assert principle in spec
++    assert wrapper.main is exp4355.main
++
++
++def test_scenario_verify_4355_ledgers_record_v402_truth(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4355: .402 outcomes are recorded without pruning history."""
++
++    _write_minimal_repo(tmp_path)
++    preflight = exp4355.check_preconditions(tmp_path)
++    assert preflight["ok"] is True
++
++    outcomes = exp4355.load_v402_outcomes(tmp_path)
++    gap_entries = exp4355.build_gap_entries(outcomes)
++    registry, gaps_text, arc_registry, summary = exp4355.ensure_ledgers_record_v402(
++        _minimal_registry(),
++        (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8"),
++        _minimal_arc_registry(),
++        _guard(),
++        outcomes,
++        gap_entries,
++    )
++
++    assert exp4355.registry_contains_v402(registry) is True
++    assert exp4355.arc_registry_contains_v402(arc_registry) is True
++    assert summary["registries_reconciled"] is True
++    assert summary["filled_gap_ids"] == [exp4355.GAP_E3_WORLD_MODEL_RULE_KA59_4328]
++    assert exp4355.ACTION_COST_VERIFIER_ID in [
++        row["verifier_id"] for row in registry["verifiers"]
++    ]
++    assert "status: filled (exp4350_ka59_l1_world_model)" in gaps_text
++    for gap_id in [
++        exp4355.GAP_E3_WORLD_MODEL_RULE_KA59_4350,
++        exp4355.GAP_E3_WORLD_MODEL_RULE_SC25_L2_4351,
++        exp4355.GAP_E3_WORLD_MODEL_RULE_AR25_L2_4351,
++        exp4355.GAP_E3_WORLD_MODEL_RULE_TR87_4352,
++        exp4355.GAP_E3_WORLD_MODEL_RULE_FT09_4352,
++    ]:
++        assert gap_id in gaps_text
++
++
++def test_req_verify_4355_run_hygiene_writes_required_artifact(tmp_path: Path) -> None:
++    """REQ-VERIFY-4355: terminal artifact exposes the required bare fields."""
++
++    _write_minimal_repo(tmp_path)
++    artifact = exp4355.run_hygiene(
++        tmp_path,
++        gap4_guard_runner=lambda _: _guard(),
++        capstone_stamp_runner=lambda _: _stamp_report(),
++    )
++
++    exp4355.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["gap4_regression_guard_passed"] is True
++    assert artifact["capstone_stamp_fix_verified"] is True
++    assert artifact["registries_reconciled"] is True
++    assert artifact["v402_outcomes"]["action_cost_heuristic"]["action_efficiency_improves"] is True
++    assert artifact["field_principles"] == exp4355.FIELD_PRINCIPLES
++
++    written = json.loads(
++        (tmp_path / exp4355.EXP4355_ARTIFACT_PATH).read_text(encoding="utf-8")
++    )
++    assert written["honest_verdict"] == artifact["honest_verdict"]
++    for field in exp4355.REQUIRED_ARTIFACT_FIELDS:
++        malformed = dict(artifact)
++        malformed.pop(field)
++        with pytest.raises(ValueError, match=field):
++            exp4355.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="gap4_regression_guard_passed"):
++        exp4355.validate_artifact({**artifact, "gap4_regression_guard_passed": "true"})
++    with pytest.raises(ValueError, match="capstone_stamp_fix_verified"):
++        exp4355.validate_artifact({**artifact, "capstone_stamp_fix_verified": 1})
++    with pytest.raises(ValueError, match="registries_reconciled"):
++        exp4355.validate_artifact({**artifact, "registries_reconciled": None})
++
++
++def test_req_verify_4355_blocks_unreadable_ledgers(tmp_path: Path) -> None:
++    """REQ-VERIFY-4355: unreadable registries fail closed before mutation."""
++
++    _write_minimal_repo(tmp_path)
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text("[not: registry]\n", encoding="utf-8")
++
++    artifact = exp4355.run_hygiene(
++        tmp_path,
++        gap4_guard_runner=lambda _: _guard(),
++        capstone_stamp_runner=lambda _: _stamp_report(),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_verifier_registry_unreadable"
++    assert artifact["gap4_regression_guard_passed"] is False
++    assert artifact["capstone_stamp_fix_verified"] is False
++    assert artifact["registries_reconciled"] is False
++
++
++def test_req_verify_4355_defensive_readers_and_validators(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-4355: malformed inputs are recorded rather than fabricated."""
++
++    assert exp4355._load_optional_json(tmp_path, "missing.json")[0] is None
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert "JSONDecodeError" in exp4355._load_optional_json(tmp_path, "bad.json")[1]
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert exp4355._load_optional_json(tmp_path, "list.json")[1] == (
++        "top-level JSON is not an object"
++    )
++
++    assert exp4355._bool(None, "x") is None
++    assert exp4355._int(None, "x") == 0
++    assert exp4355._float(None, "x") is None
++    assert exp4355._str(None, "x") == ""
++    assert exp4355._list(None, "x") == []
++    assert exp4355._int({"x": True}, "x") == 0
++    assert exp4355._float({"x": "1"}, "x") is None
++
++    assert exp4355._read_s3(None, "missing")["available"] is False
++    assert exp4355._read_ka59(None, "missing")["available"] is False
++    assert exp4355._read_deeper(None, "missing")["targets"] == {}
++    assert exp4355._read_partial_games(None, "missing")["games"] == {}
++    assert exp4355._read_action_cost(None, "missing")["available"] is False
++    deeper = exp4355._read_deeper(
++        {"per_target_scorecard": ["bad", {"game": ""}]},
++        "",
++    )
++    partial = exp4355._read_partial_games(
++        {"per_game_scorecard": ["bad", {"game": ""}]},
++        "",
++    )
++    assert deeper["targets"] == {}
++    assert partial["games"] == {}
++
++    missing_repo = tmp_path / "missing_repo"
++    preflight = exp4355.check_preconditions(missing_repo)
++    assert preflight["ok"] is False
++    assert preflight["blocked_file"] == "verifier_registry"
++    (tmp_path / "ops").mkdir(exist_ok=True)
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text("{}\n", encoding="utf-8")
++    (tmp_path / "ops" / "arc_solve_registry.yaml").write_text("{}\n", encoding="utf-8")
++    preflight = exp4355.check_preconditions(tmp_path)
++    assert preflight["blocked_file"] == "verifier_gaps"
++
++    monkeypatch.setattr(
++        exp4355.exp4344,
++        "run_gap4_regression_guard",
++        lambda root: {"regression_guard_passed": True, "root": str(root)},
++    )
++    assert exp4355.run_gap4_regression_guard(tmp_path)["regression_guard_passed"] is True
++
++    registry: dict[str, Any] = {"verifiers": []}
++    outcomes = exp4355.load_v402_outcomes(_repo_with_payloads(tmp_path))
++    gaps = exp4355.build_gap_entries(outcomes)
++    exp4355._ensure_gap4_eval(registry, _guard(), outcomes, gaps)
++    assert exp4355.registry_contains_v402(registry) is False
++    exp4355._ensure_v402_role({"verifiers": []}, outcomes, gaps)
++    arc: dict[str, Any] = {"games": []}
++    exp4355._ensure_arc_registry(arc, outcomes)
++    assert exp4355._find_game({}, "missing") is None
++    assert exp4355.arc_registry_contains_v402(arc) is True
++
++    assert exp4355._clean_flags_from_report({}) == []
++    assert exp4355._clean_flags_from_report({"reports": [{}]}) == []
++
++    completed = subprocess.CompletedProcess(
++        args=["python", "scripts/adversarial_verify.py"],
++        returncode=0,
++        stdout=json.dumps({"reports": [{"flags": []}]}),
++        stderr="",
++    )
++    monkeypatch.setattr(
++        exp4355.capstone_v401_4346,
++        "build_artifact",
++        lambda *args, **kwargs: {
++            "honest_verdict": "complete: gate_MET_fixture",
++            "diffusiongemma_gate_status": "MET_oracle_distinct_leak_robust_replicated",
++            "verifier_is_oracle": False,
++        },
++    )
++    monkeypatch.setattr(exp4355.subprocess, "run", lambda *args, **kwargs: completed)
++    stamp = exp4355.verify_capstone_stamp_fix(tmp_path)
++    assert stamp["capstone_stamp_fix_verified"] is True
++
++    bad_completed = subprocess.CompletedProcess(
++        args=["python", "scripts/adversarial_verify.py"],
++        returncode=1,
++        stdout="not json",
++        stderr="",
++    )
++    monkeypatch.setattr(exp4355.subprocess, "run", lambda *args, **kwargs: bad_completed)
++    bad_stamp = exp4355.verify_capstone_stamp_fix(tmp_path)
++    assert bad_stamp["capstone_stamp_fix_verified"] is False
++    assert bad_stamp["flags"] == []
++
++
++def _repo_with_payloads(tmp_path: Path) -> Path:
++    repo = tmp_path / "payload_repo"
++    _write_minimal_repo(repo)
++    return repo
++
++
++def test_req_verify_4355_capstone_propagates_oracle_distinct_stamp(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-4355: capstone stamps verifier_is_oracle=false for a clean moat."""
++
++    from scripts import adversarial_verify
++
++    support = tmp_path
++    (support / "scripts").mkdir(parents=True)
++    (support / "scripts" / "publication_gate.py").write_text("# fixture\n", encoding="utf-8")
++    (support / "ops").mkdir(parents=True)
++    (support / "ops" / "arc_solve_registry.yaml").write_text(
++        "schema_version: 1\nreproducible_total_levels: 17\n",
++        encoding="utf-8",
++    )
++    payloads = {
++        "4337_leak_robust_scorer": {
++            "honest_verdict": "complete: leak fixture",
++            "scorer_leak_audit_passed": True,
++            "masked_answer_recovery_auroc": 0.55,
++            "process_ranking_auroc": 0.7,
++            "verifier_is_oracle": False,
++        },
++        "4338_in_generation_moat": {
++            "honest_verdict": "complete: replication fixture",
++            "in_generation_moat_replicates": True,
++            "replication_ci95": [0.1, 0.3],
++            "controls_differentiated": True,
++            "scorer_leak_recheck_passed": True,
++            "benchmark_n": 240,
++            "carnot_minus_best_control_delta": 0.2,
++            "carnot_minus_self_reward_smc_delta": 0.15,
++            "verifier_is_oracle": False,
++        },
++        "4339_e3_ar25": {"game": "ar25", "offline_reproduced": True, "reproduced_levels": 1, "verifier_is_oracle": True},
++        "4340_e3_ka59": {"game": "ka59", "offline_reproduced": False, "reproduced_levels": 0, "verifier_is_oracle": True},
++        "4341_e3_sc25": {"game": "sc25", "offline_reproduced": True, "reproduced_levels": 1, "verifier_is_oracle": True},
++        "4342_self_learning": {"learned_encoder_transfer_helps": False, "verifier_is_oracle": False},
++        "4344_hygiene": {"regression_guard_passed": True, "registry_reconciled": True, "manifest_reconciled": True, "gaps_logged": 3},
++    }
++    for key, payload in payloads.items():
++        _write_json(support / capstone_v401_4346.DEFAULT_UPSTREAMS[key].path, payload)
++
++    artifact = capstone_v401_4346.build_artifact(
++        support,
++        started_s=1.0,
++        now_s=1.5,
++        live_flag_runner=lambda _: [],
++        summarize_runner=lambda _path, _root: 0,
++        publication_gate_runner=lambda _: {"paper_ready": True, "unmet_gates": []},
++    )
++
++    assert artifact["verifier_is_oracle"] is False
++    sample_path = tmp_path / "sample_capstone.json"
++    _write_json(sample_path, artifact)
++    report = adversarial_verify.verify_artifact(sample_path)
++    assert [
++        flag for flag in report["flags"] if flag["kind"] == "CIRCULAR_MOAT_OVERCLAIM"
++    ] == []
++
++
++def test_req_verify_4355_results_entrypoint_writes_artifact(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-4355: results entrypoint calls the package runner."""
++
++    _write_minimal_repo(tmp_path)
++    monkeypatch.setattr(sys, "argv", [str(RESULTS_WRAPPER_PATH)])
++    monkeypatch.setattr(exp4355, "REPO_ROOT", tmp_path)
++    monkeypatch.setattr(exp4355, "run_gap4_regression_guard", lambda _root: _guard())
++    monkeypatch.setattr(exp4355, "verify_capstone_stamp_fix", lambda _root: _stamp_report())
++    python_root = str(REPO_ROOT / "python")
++    monkeypatch.setattr(sys, "path", [entry for entry in sys.path if entry != python_root])
++
++    runpy.run_path(str(REPO_ROOT / RESULTS_WRAPPER_PATH), run_name="__main__")
++
++    payload = json.loads(
++        (tmp_path / exp4355.EXP4355_ARTIFACT_PATH).read_text(encoding="utf-8")
++    )
++    assert payload["gap4_regression_guard_passed"] is True
++    assert payload["capstone_stamp_fix_verified"] is True
++    assert payload["registries_reconciled"] is True
++
++
++def test_req_verify_4355_artifact_schema_rejects_non_object_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-4355: schema validation rejects malformed object fields."""
++
++    _write_minimal_repo(tmp_path)
++    artifact = exp4355.run_hygiene(
++        tmp_path,
++        gap4_guard_runner=lambda _: _guard(),
++        capstone_stamp_runner=lambda _: _stamp_report(),
++    )
++
++    for field in (
++        "preconditions_checked",
++        "v402_outcomes",
++        "registry_reconciliation",
++        "gap4_regression_guard",
++        "capstone_stamp_fix",
++    ):
++        malformed = dict(artifact)
++        malformed[field] = []
++        with pytest.raises(ValueError, match=field):
++            exp4355.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp4355.validate_artifact({**artifact, "honest_verdict": "not_terminal"})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp4355.validate_artifact({**artifact, "reproducibility_checksum": ""})
++    with pytest.raises(ValueError, match="random_seed"):
++        exp4355.validate_artifact({**artifact, "random_seed": True})
++    with pytest.raises(ValueError, match="field_principles"):
++        exp4355.validate_artifact({**artifact, "field_principles": {}})
++    with pytest.raises(ValueError, match="spec_refs"):
++        exp4355.validate_artifact({**artifact, "spec_refs": ["REQ-VERIFY-4355"]})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp4355.validate_artifact({**artifact, "inference_substrate": "live"})
+-- 
+2.55.0
+

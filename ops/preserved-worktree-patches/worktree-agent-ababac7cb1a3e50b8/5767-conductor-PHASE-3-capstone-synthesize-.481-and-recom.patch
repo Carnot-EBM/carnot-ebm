@@ -1,0 +1,2771 @@
+From ba61a310dddd60e016b536130b20c60e309d4d3e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 08:48:51 -0400
+Subject: [PATCH 05767/11362] [conductor] PHASE 3 capstone -- synthesize .481
+ and recommend .482
+
+Automated research step by research conductor.
+Task ID: exp5268-capstone-v481
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  84 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5268_capstone_v481.py   | 822 ++++++++++++++++++
+ research-complete.yaml                        |  54 ++
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |  25 +-
+ results/experiment_2093_retro.json            |   4 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  44 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ results/experiment_3946_r11l_first_solve.json |   2 +-
+ results/experiment_5268_capstone_v481.json    | 592 +++++++++++++
+ results/experiment_542_fover_expansion.json   |   6 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |   4 +-
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |   6 +-
+ .../test_experiment_5268_capstone_v481.py     | 362 ++++++++
+ 48 files changed, 2030 insertions(+), 96 deletions(-)
+ create mode 100644 python/carnot/experiment_5268_capstone_v481.py
+ create mode 100644 results/experiment_5268_capstone_v481.json
+ create mode 100644 tests/python/test_experiment_5268_capstone_v481.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 02e9c4095d..cbf642eb49 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -35148,6 +35148,90 @@ evidence, preserves any existing `solve_provenance`, and leaves
+ |---|---|---|
+ | REQ-REPORT-5267 | Implemented (`scripts/experiment_template.py`, `results/experiment_5267_artifact_normalizer_template_adoption_v481.json`) | Implemented (`tests/python/test_experiment_template.py`) |
+ 
++### REQ-REPORT-5268: Capstone .481 Synthesis And Next-Gap Recommendation
++
++The Exp 5268 workflow SHALL synthesize milestone `2026.07.481` from the
++available result artifacts `results/experiment_5257_*.json` through
++`results/experiment_5267_*.json`, the active `.481` roadmap, the `.481` vNEXT
++document, `research-complete.yaml`, `ops/status.md`, `ops/changelog.md`,
++`ops/conductor-log.md`, and `ops/exclusion_manifest.yaml`. It SHALL write
++`results/experiment_5268_capstone_v481.json`, SHALL NOT modify
++`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
++SHALL declare `inference_substrate.value="cached_fixture_replay_no_llm"`.
++
++The workflow SHALL classify upstream `.481` outcomes into clean positives,
++clean nulls, harmful results, blocked or skipped results, and retirements or
++exclusions. It SHALL skip any upstream artifact stamped
++`flagged_adversarial=true` from clean positive or clean-null evidence, while
++preserving the quarantined result in blocked/skipped context. It SHALL preserve
++the milestone truth that SOTA GGUF runtime was preflight-ready but not a quality
++claim, cross-model typed memory was a clean live null, memory-policy replay was
++ready on cached fixtures, solver-grounded and internal/logit-energy probes were
++flagged and cannot headline, verifier-dose replay was a useful cached positive,
++KAN certificate explanation/refinement was a bounded positive, hardware board
++reachability was blocked with no speedup claim, and producer-side artifact
++normalization was ready.
++
++The workflow MAY append a minimal `2026.07.481` entry to
++`research-complete.yaml` only if that milestone is missing. It SHALL NOT update
++`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
++conductor stop rule delegates those documents to the separate reconciliation
++step. It SHALL inspect whether `research-roadmap.yaml` or
++`scripts/research_conductor.py` are modified in the worktree and report those
++booleans honestly.
++
++The artifact SHALL include required principle-annotated fields
++`honest_verdict`, `inference_substrate`, `milestone_summary`,
++`clean_positives`, `clean_nulls`, `harmful_results`, `blocked_or_skipped`,
++`retirements_or_exclusions`, `next_top_gaps`, `conductor_modified`, and
++`roadmap_modified`, plus a bare `commands_run` list. It SHOULD also include
++source artifact hashes, skipped flagged artifact paths, research-complete update
++status, validation command outcomes, spec refs, duration, run date, random seed,
++and a reproducibility checksum.
++
++Required field principles:
++
++- `honest_verdict`: principle "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes."
++- `inference_substrate`: principle "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only."
++- `milestone_summary`: principle "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware."
++- `clean_positives`: principle "Only non-flagged upstreams with useful complete outcomes count as positives."
++- `clean_nulls`: principle "Only non-flagged complete no-improvement outcomes count as clean nulls."
++- `harmful_results`: principle "Harmful outcomes must remain visible and must not be silently converted to nulls."
++- `blocked_or_skipped`: principle "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics."
++- `retirements_or_exclusions`: principle "Records prior-failure discipline decisions and scopes that should not be rerun unchanged."
++- `next_top_gaps`: principle "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production."
++- `conductor_modified`: principle "Reports whether scripts/research_conductor.py changed; must not hide a violation."
++- `roadmap_modified`: principle "Reports whether research-roadmap.yaml changed; must not hide a violation."
++- `commands_run`: principle "Records validation and test commands with outcomes."
++
++#### SCENARIO-REPORT-5268: V481 Capstone Preserves Flagged, Null, Positive, And Blocked Outcomes
++
++**Given** the `.481` artifacts from Exp5257 through Exp5267 exist
++**When** the Exp5268 capstone workflow runs
++**Then** it writes `results/experiment_5268_capstone_v481.json`, declares
++`cached_fixture_replay_no_llm`, records non-flagged positives for runtime
++preflight, cached memory policy, verifier-dose replay, KAN refinement, and
++producer normalizer readiness, records the cross-model typed-memory live null
++as a clean null, quarantines Exp5262 and Exp5263 as adversarially flagged rather
++than clean evidence, records Exp5266 board reachability as blocked with
++`speedup_claimed=false`, and sets `conductor_modified.value=false` and
++`roadmap_modified.value=false` when the worktree shows no changes to those files.
++
++#### SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT: Missing Required Upstreams Fail Closed
++
++**Given** a required `.481` primary artifact is missing or malformed
++**When** the Exp5268 capstone workflow runs
++**Then** it still writes a terminal artifact whose `honest_verdict.value`
++starts with `blocked_`, records the missing or malformed input in
++`blocked_or_skipped`, keeps `inference_substrate.value="cached_fixture_replay_no_llm"`,
++and does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
++
++## Implementation Status (REQ-REPORT-5268)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5268 | Implemented (`python/carnot/experiment_5268_capstone_v481.py`, `results/experiment_5268_capstone_v481.json`) | Implemented (`tests/python/test_experiment_5268_capstone_v481.py`) |
++
+ ### REQ-REPORT-5257: Archive .480 And Emit .481 Activation-Ready Record
+ 
+ The Exp 5257 workflow SHALL archive the honest closeout for milestone
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index a4a7f6af9f..15c5f2bdfd 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -598,5 +598,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7000ff100f..05f734af0d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4240,
++  "experiments_checked": 4241,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5268_capstone_v481.py b/python/carnot/experiment_5268_capstone_v481.py
+new file mode 100644
+index 0000000000..c555177c6e
+--- /dev/null
++++ b/python/carnot/experiment_5268_capstone_v481.py
+@@ -0,0 +1,822 @@
++"""Exp 5268: V481 milestone capstone synthesis.
++
++Spec refs: REQ-REPORT-5268, SCENARIO-REPORT-5268,
++SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT.
++
++This module reads existing `.481` artifacts and turns them into one durable
++capstone record. It does not rerun research, call an LLM, submit anything
++externally, or edit the conductor. The point is to keep the closeout honest:
++flagged artifacts stay quarantined, nulls stay null, blocked hardware stays
++blocked, and useful cached positives are not inflated into broader claims.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5268_capstone_v481.json")
++EXPERIMENT = "experiment_5268_capstone_v481"
++EXPERIMENT_ID = "exp5268-capstone-v481"
++MILESTONE = "2026.07.481"
++MILESTONE_TITLE = "Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability"
++SCHEMA = "carnot.experiment_5268_capstone_v481.v1"
++RUN_DATE = "2026-07-05"
++RANDOM_SEED = 5268
++INFERENCE_SUBSTRATE = "cached_fixture_replay_no_llm"
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++SPEC_REFS = [
++    "REQ-REPORT-5268",
++    "SCENARIO-REPORT-5268",
++    "SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "honest_verdict": (
++        "Must start with complete: or blocked_ and summarize the milestone truth "
++        "without laundering flagged, blocked, null, or no-speedup outcomes."
++    ),
++    "inference_substrate": (
++        "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and "
++        "local records only."
++    ),
++    "milestone_summary": (
++        "Short durable .481 summary preserving positives, nulls, flagged probes, "
++        "and blocked hardware."
++    ),
++    "clean_positives": (
++        "Only non-flagged upstreams with useful complete outcomes count as positives."
++    ),
++    "clean_nulls": (
++        "Only non-flagged complete no-improvement outcomes count as clean nulls."
++    ),
++    "harmful_results": (
++        "Harmful outcomes must remain visible and must not be silently converted to nulls."
++    ),
++    "blocked_or_skipped": (
++        "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are "
++        "preserved without promoting their metrics."
++    ),
++    "retirements_or_exclusions": (
++        "Records prior-failure discipline decisions and scopes that should not be "
++        "rerun unchanged."
++    ),
++    "next_top_gaps": (
++        "Ranks the next three gaps across SOTA runtime, self-learning, internal "
++        "verification, KAN, hardware, and artifact production."
++    ),
++    "conductor_modified": (
++        "Reports whether scripts/research_conductor.py changed; must not hide a violation."
++    ),
++    "roadmap_modified": (
++        "Reports whether research-roadmap.yaml changed; must not hide a violation."
++    ),
++    "commands_run": "Records validation and test commands with outcomes.",
++}
++
++PRINCIPLE_WRAPPED_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "milestone_summary",
++    "clean_positives",
++    "clean_nulls",
++    "harmful_results",
++    "blocked_or_skipped",
++    "retirements_or_exclusions",
++    "next_top_gaps",
++    "conductor_modified",
++    "roadmap_modified",
++)
++
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "milestone_title",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "duration_s",
++    "random_seed",
++    "field_principles",
++    "source_artifacts_read",
++    "source_context",
++    "flagged_artifacts_skipped",
++    "research_complete_updated",
++    "honest_verdict",
++    "inference_substrate",
++    "milestone_summary",
++    "clean_positives",
++    "clean_nulls",
++    "harmful_results",
++    "blocked_or_skipped",
++    "retirements_or_exclusions",
++    "next_top_gaps",
++    "conductor_modified",
++    "roadmap_modified",
++    "commands_run",
++    "reproducibility_checksum",
++)
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One primary V481 upstream artifact required before capstone closeout."""
++
++    experiment_number: int
++    task_id: str
++    title: str
++    relative_path: Path
++
++
++@dataclass(frozen=True)
++class MilestoneTask:
++    """One milestone task for the research-complete record."""
++
++    task_id: str
++    title: str
++    deliverable: str
++
++
++PRIMARY_SOURCES: tuple[UpstreamSource, ...] = (
++    UpstreamSource(
++        5257,
++        "exp5257-archive-480-activate-481",
++        "PHASE 0 transition -- archive .480 truth and prepare .481 activation",
++        Path("results/experiment_5257_archive_480_activate_481.json"),
++    ),
++    UpstreamSource(
++        5258,
++        "exp5258-sota-refresh-v481",
++        "PHASE 0 SOTA refresh -- V481 deltas after planning references",
++        Path("results/experiment_5258_sota_refresh_v481.json"),
++    ),
++    UpstreamSource(
++        5259,
++        "exp5259-sota-gguf-gpu-offload-preflight-v481",
++        "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight",
++        Path("results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json"),
++    ),
++    UpstreamSource(
++        5260,
++        "exp5260-cross-model-typed-memory-retry-v481",
++        "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry",
++        Path("results/experiment_5260_cross_model_typed_memory_retry_v481.json"),
++    ),
++    UpstreamSource(
++        5261,
++        "exp5261-typed-memory-interference-audit-v481",
++        "PHASE 1 continuous self-learning -- typed-memory retention and interference audit",
++        Path("results/experiment_5261_typed_memory_interference_audit_v481.json"),
++    ),
++    UpstreamSource(
++        5262,
++        "exp5262-solver-grounded-constraint-extraction-v481",
++        "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot",
++        Path("results/experiment_5262_solver_grounded_constraint_extraction_v481.json"),
++    ),
++    UpstreamSource(
++        5263,
++        "exp5263-neuron-attention-energy-hallucination-probe-v481",
++        "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe",
++        Path("results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json"),
++    ),
++    UpstreamSource(
++        5264,
++        "exp5264-verifier-dose-scheduler-replay-v481",
++        "PHASE 2 replay -- verifier-dose scheduler without live-model dependency",
++        Path("results/experiment_5264_verifier_dose_scheduler_replay_v481.json"),
++    ),
++    UpstreamSource(
++        5265,
++        "exp5265-kan-certificate-explanation-refinement-v481",
++        "PHASE 3 KAN -- convex-envelope certificate explanation and refinement",
++        Path("results/experiment_5265_kan_certificate_explanation_refinement_v481.json"),
++    ),
++    UpstreamSource(
++        5266,
++        "exp5266-hardware-thermodynamic-schedule-boundary-v481",
++        "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity",
++        Path("results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json"),
++    ),
++    UpstreamSource(
++        5267,
++        "exp5267-artifact-normalizer-template-adoption-v481",
++        "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary",
++        Path("results/experiment_5267_artifact_normalizer_template_adoption_v481.json"),
++    ),
++)
++
++MILESTONE_TASKS: tuple[MilestoneTask, ...] = tuple(
++    MilestoneTask(src.task_id, src.title, str(src.relative_path)) for src in PRIMARY_SOURCES
++) + (
++    MilestoneTask(
++        EXPERIMENT_ID,
++        "PHASE 3 capstone -- synthesize .481 and recommend .482",
++        str(RESULT_RELATIVE_PATH),
++    ),
++)
++
++SOURCE_CONTEXT_PATHS = (
++    Path("CLAUDE.md"),
++    Path("CODEX.md"),
++    Path("research-program.md"),
++    Path("_bmad/prd.md"),
++    Path("_bmad/architecture.md"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("ops/conductor-log.md"),
++    Path("research-complete.yaml"),
++    Path("research-roadmap.yaml"),
++    Path("research-roadmap-next.yaml"),
++    Path("openspec/change-proposals/research-roadmap-vNEXT.md"),
++    Path("ops/exclusion_manifest.yaml"),
++)
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def wrap_field(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def _text(value: Any) -> str:
++    raw = value_of(value)
++    return raw if isinstance(raw, str) else ""
++
++
++def _bool(value: Any) -> bool:
++    return value_of(value) is True
++
++
++def _float(value: Any) -> float:
++    raw = value_of(value)
++    if raw is None or isinstance(raw, bool):
++        return 0.0
++    return float(raw)
++
++
++def _int(value: Any) -> int:
++    raw = value_of(value)
++    return raw if isinstance(raw, int) and not isinstance(raw, bool) else 0
++
++
++def file_sha256(path: Path) -> str | None:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        return {}, {"exists": True, "loadable": False, "error": f"malformed_json:{exc.msg}"}
++    if not isinstance(parsed, Mapping):
++        return {}, {"exists": True, "loadable": False, "error": "not_json_object"}
++    return dict(parsed), {"exists": True, "loadable": True, "error": None}
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _artifact_summary(experiment_number: int, payload: JsonMap) -> str:
++    if experiment_number == 5257:
++        return "transition complete; .481 active without roadmap overwrite"
++    if experiment_number == 5258:
++        return f"SOTA refresh appended {_int(payload.get('new_references_added'))} actionable findings"
++    if experiment_number == 5259:
++        return (
++            f"SOTA GGUF runtime preflight ready={_bool(payload.get('sota_runtime_ready'))}; "
++            "no model-quality claim"
++        )
++    if experiment_number == 5260:
++        return (
++            "cross-model typed memory useful="
++            f"{_bool(payload.get('cross_model_memory_useful'))}; "
++            f"delta_over_no_memory={_float(payload.get('delta_over_no_memory'))}; "
++            f"delta_over_shuffled_memory={_float(payload.get('delta_over_shuffled_memory'))}; "
++            f"unsafe_false_accepts={_int(payload.get('unsafe_false_accepts'))}; "
++            f"rollback_exercised={_bool(payload.get('rollback_exercised'))}"
++        )
++    if experiment_number == 5261:
++        return (
++            f"memory_policy_ready={_bool(payload.get('memory_policy_ready'))}; "
++            f"retention_rate={_float(payload.get('retention_rate'))}; "
++            f"interference_rate={_float(payload.get('interference_rate'))}; "
++            f"rollback_passed={_bool(payload.get('harmful_memory_rollback_passed'))}"
++        )
++    if experiment_number == 5262:
++        return (
++            "flagged solver-grounded extraction; "
++            f"ready={_bool(payload.get('solver_grounded_extractor_ready'))}; "
++            f"validity={_float(payload.get('constraint_validity_rate'))}; "
++            f"false_accepts={_int(payload.get('false_accepts'))}; not clean evidence"
++        )
++    if experiment_number == 5263:
++        return (
++            "flagged internal/logit-energy pilot; "
++            f"internal_signal_available={_bool(payload.get('internal_signal_available'))}; "
++            f"signal_delta={_float(payload.get('hidden_energy_probe_signal_delta'))}; "
++            f"external_text_scorer_used={_bool(payload.get('external_text_scorer_used'))}; "
++            "not clean evidence"
++        )
++    if experiment_number == 5264:
++        return (
++            f"scheduler_ready={_bool(payload.get('scheduler_ready'))}; "
++            f"full_verifier_calls_avoided_rate={_float(payload.get('full_verifier_calls_avoided_rate'))}; "
++            f"decision_quality_delta={_float(payload.get('decision_quality_delta'))}; "
++            f"false_accept_delta={_float(payload.get('false_accept_delta'))}"
++        )
++    if experiment_number == 5265:
++        return (
++            f"certificate_refinement_ready={_bool(payload.get('certificate_refinement_ready'))}; "
++            f"true_property_certified={_bool(payload.get('true_property_certified'))}; "
++            f"false_property_rejected={_bool(payload.get('false_property_rejected'))}"
++        )
++    if experiment_number == 5266:
++        return (
++            f"kv260={_text(payload.get('kv260_status'))}; "
++            f"polarfire={_text(payload.get('polarfire_status'))}; "
++            f"gatemate={_text(payload.get('gatemate_status'))}; "
++            f"speedup_claimed={str(_bool(payload.get('speedup_claimed'))).lower()}"
++        )
++    if experiment_number == 5267:
++        return (
++            f"producer_normalizer_ready={_bool(payload.get('producer_normalizer_ready'))}; "
++            f"gate_fields_preserved={_bool(payload.get('gate_fields_preserved'))}"
++        )
++    return _text(payload.get("honest_verdict")) or "no verdict"
++
++
++def _classify_loaded(experiment_number: int, payload: JsonMap) -> str:
++    verdict = _text(payload.get("honest_verdict")).lower()
++    if _bool(payload.get("flagged_adversarial")):
++        return "flagged_adversarial"
++    if verdict.startswith("blocked_") or "blocked" in verdict or "skipped" in verdict or "gated" in verdict:
++        return "blocked"
++    harmful_markers = (
++        " was harmful",
++        " harmful on",
++        " harmful result",
++        "harmful_on_",
++        "regression",
++    )
++    if any(marker in verdict for marker in harmful_markers):
++        return "harmful"
++    if "null" in verdict or "no useful" in verdict or "no improvement" in verdict:
++        return "clean_null"
++    if verdict.startswith("complete:") or verdict.startswith("success:"):
++        return "clean_positive"
++    return "blocked"
++
++
++def _row_for_source(source: UpstreamSource, root: Path) -> tuple[JsonDict, JsonDict | None]:
++    path = root / source.relative_path
++    payload, read_info = read_json_mapping(path)
++    base = {
++        "experiment_number": source.experiment_number,
++        "task_id": source.task_id,
++        "title": source.title,
++        "path": str(source.relative_path),
++        "sha256": file_sha256(path),
++        "exists": read_info["exists"],
++        "loadable": read_info["loadable"],
++    }
++    if not read_info["exists"]:
++        return {
++            **base,
++            "classification": "missing",
++            "verdict": "missing",
++            "summary": f"required upstream artifact missing: {source.relative_path}",
++        }, None
++    if not read_info["loadable"]:
++        return {
++            **base,
++            "classification": "malformed",
++            "verdict": read_info["error"],
++            "summary": f"required upstream artifact malformed: {read_info['error']}",
++        }, None
++
++    row = {
++        **base,
++        "classification": _classify_loaded(source.experiment_number, payload),
++        "verdict": _text(payload.get("honest_verdict")),
++        "inference_substrate": _text(payload.get("inference_substrate")),
++        "flagged_adversarial": _bool(payload.get("flagged_adversarial")),
++        "summary": _artifact_summary(source.experiment_number, payload),
++    }
++    return row, payload
++
++
++def _discover_auxiliary_artifacts(root: Path) -> list[JsonDict]:
++    primary_paths = {source.relative_path for source in PRIMARY_SOURCES}
++    auxiliary: list[JsonDict] = []
++    for experiment_number in range(5257, 5268):
++        for path in sorted((root / "results").glob(f"experiment_{experiment_number}_*.json")):
++            rel = path.relative_to(root)
++            if rel in primary_paths:
++                continue
++            payload, read_info = read_json_mapping(path)
++            auxiliary.append(
++                {
++                    "experiment_number": experiment_number,
++                    "path": str(rel),
++                    "sha256": file_sha256(path),
++                    "exists": read_info["exists"],
++                    "loadable": read_info["loadable"],
++                    "classification": "auxiliary" if read_info["loadable"] else "malformed_auxiliary",
++                    "verdict": _text(payload.get("honest_verdict")) if read_info["loadable"] else read_info["error"],
++                    "summary": "auxiliary artifact read; not a standalone milestone outcome",
++                }
++            )
++    return auxiliary
++
++
++def _source_context(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "path": str(relative),
++            "exists": (root / relative).exists(),
++            "sha256": file_sha256(root / relative),
++        }
++        for relative in SOURCE_CONTEXT_PATHS
++    ]
++
++
++def _retirements_or_exclusions(rows: Sequence[JsonMap]) -> list[JsonDict]:
++    flagged = [row for row in rows if row.get("classification") == "flagged_adversarial"]
++    return [
++        {
++            "scope": "Phase D external text scorer path",
++            "decision": "remains retired",
++            "basis": "Exp5263 records external_text_scorer_used=false and no .481 task reopened generated-text/logprob reranking.",
++        },
++        {
++            "scope": "Exp5262/Exp5263 internal-verification pilots",
++            "decision": "do not headline or rerun unchanged",
++            "basis": f"{len(flagged)} upstream verifier pilots were flagged_adversarial and require methodology/duration repair before reuse.",
++        },
++        {
++            "scope": "cross-model typed memory usefulness",
++            "decision": "carry forward only with changed headroom and rollback exercise",
++            "basis": "Exp5260 was a clean live null with zero delta over no-memory and shuffled-memory controls.",
++        },
++        {
++            "scope": "hardware board execution",
++            "decision": "blocked preconditions carry forward; no speedup claim",
++            "basis": "Exp5266 blocked KV260, PolarFire, and GateMate reachability/physical setup.",
++        },
++    ]
++
++
++def _next_top_gaps() -> list[JsonDict]:
++    return [
++        {
++            "priority_rank": 1,
++            "category": "internal_verification",
++            "recommendation": (
++                "Prioritize adversarial-clean internal verification: rerun solver-grounded "
++                "and logit/attention-energy pilots only with duration, model, seed, and "
++                "methodology receipts that clear artifact verification."
++            ),
++            "categories_considered": {
++                "internal_verification": "highest",
++                "artifact_production": "supporting requirement via Exp5267 normalizer",
++                "KAN_certificates": "continue bounded, not the immediate blocker",
++            },
++        },
++        {
++            "priority_rank": 2,
++            "category": "continuous_self_learning_and_sota_runtime",
++            "recommendation": (
++                "Use the now-ready SOTA GGUF runtime to build a non-degenerate live memory "
++                "transfer task with real headroom and rollback exercise; keep cached memory "
++                "policy and verifier-dose scheduler as safety rails."
++            ),
++            "categories_considered": {
++                "SOTA_runtime": "ready as preflight, but strengthen methodology receipts",
++                "continuous_self_learning": "high priority after Exp5260 null and Exp5261/5264 positives",
++            },
++        },
++        {
++            "priority_rank": 3,
++            "category": "hardware_reachability",
++            "recommendation": (
++                "Repair board reachability before further hardware claims: KV260/PolarFire "
++                "SSH and GateMate physical/JTAG state are hard blockers; keep no-speedup "
++                "language until real board execution changes."
++            ),
++            "categories_considered": {
++                "hardware": "blocked precondition",
++                "KAN_certificates": "bounded positive can progress on CPU while boards are repaired",
++                "artifact_production": "ready enough; maintain rather than lead",
++            },
++        },
++    ]
++
++
++def _milestone_summary(
++    *,
++    rows: Sequence[JsonMap],
++    clean_positives: Sequence[JsonMap],
++    clean_nulls: Sequence[JsonMap],
++    harmful_results: Sequence[JsonMap],
++    blocked_or_skipped: Sequence[JsonMap],
++    research_complete_updated: bool,
++) -> JsonDict:
++    flagged = [row for row in blocked_or_skipped if row.get("classification") == "flagged_adversarial"]
++    return {
++        "milestone": MILESTONE,
++        "primary_artifacts_expected": len(PRIMARY_SOURCES),
++        "primary_artifacts_read": sum(1 for row in rows if row.get("loadable")),
++        "clean_positive_count": len(clean_positives),
++        "clean_null_count": len(clean_nulls),
++        "harmful_count": len(harmful_results),
++        "blocked_or_skipped_count": len(blocked_or_skipped),
++        "flagged_artifacts_skipped_count": len(flagged),
++        "research_complete_updated": research_complete_updated,
++        "truth": (
++            "SOTA runtime preflight is ready without a quality claim; continuous "
++            "self-learning has a clean live cross-model null plus cached memory-policy "
++            "and scheduler positives; solver/internal verification pilots are flagged "
++            "and not clean evidence; KAN certificate refinement and producer artifact "
++            "normalization are bounded positives; hardware is blocked with no speedup claim."
++        ),
++    }
++
++
++def build_research_complete_entry() -> JsonDict:
++    tasks = [
++        {
++            "id": task.task_id,
++            "title": task.title,
++            "deliverable": task.deliverable,
++            "result": "OK (conductor)",
++        }
++        for task in MILESTONE_TASKS
++    ]
++    return {
++        "id": MILESTONE,
++        "title": MILESTONE_TITLE,
++        "doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "completed": RUN_DATE,
++        "finding": (
++            "SOTA runtime preflight ready; cross-model typed memory clean null; cached "
++            "memory policy, verifier-dose scheduler, KAN certificate refinement, and "
++            "producer artifact normalizer positive; flagged internal-verification pilots "
++            "quarantined; hardware blocked with no speedup claim."
++        ),
++        "tasks": tasks,
++    }
++
++
++def _research_complete_entry_text() -> str:
++    entry = build_research_complete_entry()
++    lines = [
++        f"- id: {entry['id']}",
++        f"  title: {entry['title']}",
++        f"  doc: {entry['doc']}",
++        f"  completed: '{entry['completed']}'",
++        f"  finding: {entry['finding']}",
++        "  tasks:",
++    ]
++    for task in entry["tasks"]:
++        lines.extend(
++            [
++                f"  - id: {task['id']}",
++                f"    title: {task['title']}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {task['result']}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def append_research_complete_if_missing(root: Path = REPO_ROOT) -> bool:
++    path = root / "research-complete.yaml"
++    text = path.read_text(encoding="utf-8") if path.exists() else "milestones:\n"
++    if f"id: {MILESTONE}" in text:
++        return False
++    separator = "" if text.endswith("\n") else "\n"
++    path.write_text(text + separator + _research_complete_entry_text(), encoding="utf-8")
++    return True
++
++
++def git_file_modified(root: Path, relative_path: str) -> bool:
++    try:
++        completed = subprocess.run(
++            ["git", "status", "--short", "--", relative_path],
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++            timeout=10,
++        )
++    except (OSError, subprocess.SubprocessError):
++        return False
++    return bool(completed.stdout.strip())
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = RUN_DATE.replace("-", ""),
++    duration_s: float,
++    commands_run: Sequence[JsonMap],
++    conductor_modified: bool,
++    roadmap_modified: bool,
++    research_complete_updated: bool,
++) -> JsonDict:
++    rows: list[JsonDict] = []
++    for source in PRIMARY_SOURCES:
++        row, _payload = _row_for_source(source, root)
++        rows.append(row)
++    auxiliary = _discover_auxiliary_artifacts(root)
++
++    clean_positives = [row for row in rows if row["classification"] == "clean_positive"]
++    clean_nulls = [row for row in rows if row["classification"] == "clean_null"]
++    harmful_results = [row for row in rows if row["classification"] == "harmful"]
++    blocked_or_skipped = [
++        row
++        for row in rows
++        if row["classification"]
++        in {"missing", "malformed", "flagged_adversarial", "blocked", "gated_skipped"}
++    ]
++    missing_required = [
++        row for row in blocked_or_skipped if row["classification"] in {"missing", "malformed"}
++    ]
++
++    if missing_required:
++        verdict = (
++            "blocked_missing_required_v481_artifacts: "
++            + ", ".join(str(row["experiment_number"]) for row in missing_required)
++        )
++    else:
++        verdict = (
++            "complete: .481 synthesized with "
++            f"{len(clean_positives)} clean positives, {len(clean_nulls)} clean null, "
++            f"{len([r for r in blocked_or_skipped if r['classification'] == 'flagged_adversarial'])} "
++            "flagged verifier artifacts quarantined, hardware blocked, and no speedup claim."
++        )
++
++    flagged_artifacts = [
++        {
++            "experiment_number": row["experiment_number"],
++            "path": row["path"],
++            "summary": row["summary"],
++        }
++        for row in blocked_or_skipped
++        if row["classification"] == "flagged_adversarial"
++    ]
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "milestone_title": MILESTONE_TITLE,
++        "run_date": run_date,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifacts_read": {
++            "primary_count": len(rows),
++            "primary_loadable_count": sum(1 for row in rows if row["loadable"]),
++            "auxiliary_count": len(auxiliary),
++            "primary": rows,
++            "auxiliary": auxiliary,
++        },
++        "source_context": _source_context(root),
++        "flagged_artifacts_skipped": flagged_artifacts,
++        "research_complete_updated": {
++            "value": research_complete_updated,
++            "principle": (
++                "True only if this capstone appended the missing 2026.07.481 entry "
++                "to research-complete.yaml."
++            ),
++        },
++        "honest_verdict": wrap_field("honest_verdict", verdict),
++        "inference_substrate": wrap_field("inference_substrate", INFERENCE_SUBSTRATE),
++        "milestone_summary": wrap_field(
++            "milestone_summary",
++            _milestone_summary(
++                rows=rows,
++                clean_positives=clean_positives,
++                clean_nulls=clean_nulls,
++                harmful_results=harmful_results,
++                blocked_or_skipped=blocked_or_skipped,
++                research_complete_updated=research_complete_updated,
++            ),
++        ),
++        "clean_positives": wrap_field("clean_positives", clean_positives),
++        "clean_nulls": wrap_field("clean_nulls", clean_nulls),
++        "harmful_results": wrap_field("harmful_results", harmful_results),
++        "blocked_or_skipped": wrap_field("blocked_or_skipped", blocked_or_skipped),
++        "retirements_or_exclusions": wrap_field(
++            "retirements_or_exclusions", _retirements_or_exclusions(rows)
++        ),
++        "next_top_gaps": wrap_field("next_top_gaps", _next_top_gaps()),
++        "conductor_modified": wrap_field("conductor_modified", conductor_modified),
++        "roadmap_modified": wrap_field("roadmap_modified", roadmap_modified),
++        "commands_run": list(commands_run),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(artifact: JsonMap) -> None:
++    missing_fields = [field for field in REQUIRED_SCHEMA_FIELDS if field not in artifact]
++    assert not missing_fields, f"missing required fields: {missing_fields}"
++
++    verdict = _text(artifact["honest_verdict"])
++    assert verdict.startswith(TERMINAL_PREFIXES), f"bad honest_verdict prefix: {verdict}"
++    assert _text(artifact["inference_substrate"]) == INFERENCE_SUBSTRATE, "bad inference_substrate"
++    assert isinstance(artifact["commands_run"], list), "commands_run must be a list"
++    assert isinstance(value_of(artifact["conductor_modified"]), bool), "conductor_modified bool"
++    assert isinstance(value_of(artifact["roadmap_modified"]), bool), "roadmap_modified bool"
++
++    clean_rows = list(value_of(artifact["clean_positives"])) + list(value_of(artifact["clean_nulls"]))
++    flagged_clean = [row for row in clean_rows if row.get("flagged_adversarial")]
++    assert not flagged_clean, "flagged artifacts cannot be clean evidence"
++
++    blocked_rows = list(value_of(artifact["blocked_or_skipped"]))
++    missing_rows = [
++        row for row in blocked_rows if row.get("classification") in {"missing", "malformed"}
++    ]
++    if missing_rows:
++        assert verdict.startswith("blocked_"), "missing or malformed inputs must block"
++
++    hardware_rows = [row for row in blocked_rows if row.get("experiment_number") == 5266]
++    if hardware_rows:
++        assert "speedup_claimed=false" in hardware_rows[0]["summary"], "hardware speedup overclaim"
++
++
++def load_commands(path: Path | None) -> list[JsonDict]:
++    if path is None or not path.exists():
++        return []
++    parsed = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(parsed, list):
++        raise ValueError("commands JSON must be a list")
++    return [dict(item) for item in parsed if isinstance(item, Mapping)]
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    parser.add_argument("--commands-json", type=Path, default=None)
++    parser.add_argument("--update-research-complete", action="store_true")
++    args = parser.parse_args(argv)
++
++    started = time.monotonic()
++    research_complete_updated = (
++        append_research_complete_if_missing(REPO_ROOT) if args.update_research_complete else False
++    )
++    commands = load_commands(args.commands_json)
++    artifact = build_artifact(
++        root=REPO_ROOT,
++        run_date=RUN_DATE.replace("-", ""),
++        duration_s=round(time.monotonic() - started, 6),
++        commands_run=commands,
++        conductor_modified=git_file_modified(REPO_ROOT, "scripts/research_conductor.py"),
++        roadmap_modified=git_file_modified(REPO_ROOT, "research-roadmap.yaml"),
++        research_complete_updated=research_complete_updated,
++    )
++    validate_artifact(artifact)
++    write_json(args.output, artifact)
++    print(args.output)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through module CLI.
++    raise SystemExit(main())
+diff --git a/research-complete.yaml b/research-complete.yaml
+index a1a125bb43..5938be1bf5 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -74807,3 +74807,57 @@ milestones:
+     title: PHASE Z capstone -- reconcile .480 evidence, gates, memory, ARC, KAN, hardware, and next plan
+     deliverable: results/experiment_5256_capstone_v480.json
+     result: OK (conductor)
++- id: 2026.07.481
++  title: Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-07-05'
++  finding: SOTA runtime preflight ready; cross-model typed memory clean null; cached memory policy, verifier-dose scheduler, KAN certificate refinement, and producer artifact normalizer positive; flagged internal-verification pilots quarantined; hardware blocked with no speedup claim.
++  tasks:
++  - id: exp5257-archive-480-activate-481
++    title: PHASE 0 transition -- archive .480 truth and prepare .481 activation
++    deliverable: results/experiment_5257_archive_480_activate_481.json
++    result: OK (conductor)
++  - id: exp5258-sota-refresh-v481
++    title: PHASE 0 SOTA refresh -- V481 deltas after planning references
++    deliverable: results/experiment_5258_sota_refresh_v481.json
++    result: OK (conductor)
++  - id: exp5259-sota-gguf-gpu-offload-preflight-v481
++    title: PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight
++    deliverable: results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
++    result: OK (conductor)
++  - id: exp5260-cross-model-typed-memory-retry-v481
++    title: PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry
++    deliverable: results/experiment_5260_cross_model_typed_memory_retry_v481.json
++    result: OK (conductor)
++  - id: exp5261-typed-memory-interference-audit-v481
++    title: PHASE 1 continuous self-learning -- typed-memory retention and interference audit
++    deliverable: results/experiment_5261_typed_memory_interference_audit_v481.json
++    result: OK (conductor)
++  - id: exp5262-solver-grounded-constraint-extraction-v481
++    title: PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot
++    deliverable: results/experiment_5262_solver_grounded_constraint_extraction_v481.json
++    result: OK (conductor)
++  - id: exp5263-neuron-attention-energy-hallucination-probe-v481
++    title: PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe
++    deliverable: results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
++    result: OK (conductor)
++  - id: exp5264-verifier-dose-scheduler-replay-v481
++    title: PHASE 2 replay -- verifier-dose scheduler without live-model dependency
++    deliverable: results/experiment_5264_verifier_dose_scheduler_replay_v481.json
++    result: OK (conductor)
++  - id: exp5265-kan-certificate-explanation-refinement-v481
++    title: PHASE 3 KAN -- convex-envelope certificate explanation and refinement
++    deliverable: results/experiment_5265_kan_certificate_explanation_refinement_v481.json
++    result: OK (conductor)
++  - id: exp5266-hardware-thermodynamic-schedule-boundary-v481
++    title: PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity
++    deliverable: results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
++    result: OK (conductor)
++  - id: exp5267-artifact-normalizer-template-adoption-v481
++    title: PHASE 3 evidence production -- artifact normalizer adoption at producer boundary
++    deliverable: results/experiment_5267_artifact_normalizer_template_adoption_v481.json
++    result: OK (conductor)
++  - id: exp5268-capstone-v481
++    title: PHASE 3 capstone -- synthesize .481 and recommend .482
++    deliverable: results/experiment_5268_capstone_v481.json
++    result: OK (conductor)
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index 5772a1cfae..bb0a21bee2 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-07-05T07:35:23Z"
++  "saved_at": "2026-07-05T12:19:43Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 8fef3f3c1f..0fd95508a2 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:19:51.467077+00:00",
+-  "finished_at": "2026-07-05T07:19:51.507133+00:00",
+-  "duration_s": 0.04,
++  "started_at": "2026-07-05T12:04:15.076544+00:00",
++  "finished_at": "2026-07-05T12:04:15.122750+00:00",
++  "duration_s": 0.046,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 734ea1caaa..d8bb6b9b70 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-05T07:19:51Z",
++  "run_date": "2026-07-05T12:04:15Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 413be2ddc5..a905cc8955 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:19:53Z",
+-  "finished_at": "2026-07-05T07:19:53Z",
++  "started_at": "2026-07-05T12:04:17Z",
++  "finished_at": "2026-07-05T12:04:17Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 38b440ca33..024ec272e0 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-05T07:19:54Z",
++  "run_date": "2026-07-05T12:04:17Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index dc53aeb451..6e5b820efa 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-05T07:19:54Z",
++  "run_date": "2026-07-05T12:04:17Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index bedd035601..6ed38ce2fa 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-05T10:58:07.895160Z",
+-  "duration_s": 0.07919049263000488,
++  "run_date": "2026-07-05T12:02:18.074595Z",
++  "duration_s": 0.07832193374633789,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "58a367b4c9ddeaecb1f03f4eac61c4ddce289308be8680ed080e67b332a27ec8",
++  "reproducibility_checksum": "c40e5477a39e26585e5a30cddf6852435663b24b7f4434964f919a3777a303c3",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a3558ca3184ef580215534b0fa4d2ba541845efa"
++    "adversarial_verify_version": "55fe0030c37179f93c3534bfb5742039688bad93"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 3e31976d78..3db186cbb4 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-05T10:59:28.216685Z",
+-  "duration_s": 12.560614347457886,
++  "run_date": "2026-07-05T12:03:38.646414Z",
++  "duration_s": 12.587860345840454,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 2661c8cce4..87ab60724e 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-05T07:19:31.220400+00:00",
+-  "duration_s": 0.0013442039489746094,
++  "run_date": "2026-07-05T12:03:57.771947+00:00",
++  "duration_s": 0.0011692047119140625,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b9f58884a6..76f467b98e 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-05T10:58:08.004977Z",
+-  "duration_s": 0.09929561614990234,
++  "run_date": "2026-07-05T12:02:18.193599Z",
++  "duration_s": 0.10909700393676758,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4888eefe563cc4c1c947b7c069a4b8f2dc98993cbf04a1b50a8c2711de2d82bd",
++  "reproducibility_checksum": "5bd45469162783d9b9d9526a83507e560179a3e3e4cd1781394229573797134d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a3558ca3184ef580215534b0fa4d2ba541845efa"
++    "adversarial_verify_version": "55fe0030c37179f93c3534bfb5742039688bad93"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 47e218c4e8..36d9855c5e 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.69s, user: 2.51s, system: 0.20s, MEM: 115.08 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.43s, user: 2.47s, system: 0.20s, MEM: 115.15 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 76% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index d06a2ac6ef..da0fb70685 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.089874267578125,
++    "latency_ms": 10.077476501464844,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 897f0cba19..5a5321dd94 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.132892608642578,
++  "efficiency_gains_ms": 2.162456512451172,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 6c5a868e82..808eb5118f 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-05T07:19:50.531086Z",
++  "run_date": "2026-07-05T12:04:15.805715Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 25dfb783e8..240bf49834 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00014686607755720615,
+-  "latency_domino_seconds": 0.0002892219927161932,
++  "latency_legacy_seconds": 0.0001439000479876995,
++  "latency_domino_seconds": 0.00028949417173862457,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 55df9dfce7..ececb46c55 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:20:27Z",
+-  "finished_at": "2026-07-05T07:20:27Z",
++  "started_at": "2026-07-05T12:04:55Z",
++  "finished_at": "2026-07-05T12:04:55Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 30e5d52ac5..fa13a29d33 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:21:19Z",
+-  "finished_at": "2026-07-05T07:21:19Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-05T12:05:48Z",
++  "finished_at": "2026-07-05T12:05:49Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,12 +23,28 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.0457763671875,
++  "latency_ms": 0.05173683166503906,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+   "pass_rate_delta": 0.15000000000000002,
+   "success": true,
++  "producer_normalizer_receipts": {
++    "safe_repairs": [],
++    "unsafe_rejections": [
++      {
++        "kind": "duration_too_short",
++        "field": "duration_s",
++        "detail": "duration_s=0.001 below 60.0s live-model floor"
++      },
++      {
++        "kind": "missing_methodology_receipt",
++        "field": "methodology",
++        "detail": "missing model_specs/target_model"
++      }
++    ],
++    "ready_for_gated_consumers": false
++  },
+   "schema": [
+     "crane_pass_rate",
+     "duration_s",
+@@ -41,6 +57,7 @@
+     "pass_rate_delta",
+     "phase_timings_s",
+     "pipeline_invocations",
++    "producer_normalizer_receipts",
+     "random_seed",
+     "reproducibility_checksum",
+     "rigid_pass_rate",
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index 849bf591f0..63539c76b4 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -4,8 +4,8 @@
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T08:13:26.114377+00:00",
+-  "finished_at": "2026-07-05T08:13:26.114397+00:00",
++  "started_at": "2026-07-05T12:44:29.296410+00:00",
++  "finished_at": "2026-07-05T12:44:29.296416+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 21666a371c..50ffe9c357 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.001389312744140625,
+-  "avg_eqm_time": 0.12826135635375976,
++  "avg_pem_time": 0.0011592769622802734,
++  "avg_eqm_time": 0.11662581443786621,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 3f9522c22e..e58ca927f7 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 376.1804778575897,
++  "duration_s": 379.8807635307312,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index 8c05fb44d0..348a5c8c1c 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.030582,
++  "duration_s": 0.004937,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index e69208fa27..ba9d4fdd4c 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.005518,
++  "duration_s": 0.002357,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 3bda8cb4fc..0d5ae8bef9 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.061784982681274414,
++  "duration_s": 0.06183505058288574,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 261ba8914f..886a0604f7 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-07-05T07:29:06Z",
++  "run_date": "2026-07-05T12:13:35Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 4e3056e4b9..5e36997805 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.0000951290130615,
++  "duration_s": 5.000093936920166,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index d8fabcda5f..b8a1efe226 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000095129013062,
++  "duration_s": 10.000094175338745,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 69964a1068..9930992174 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6113243103027344,
++  "duration_s": 0.5768837928771973,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 81168268b5..6c5d1e85e5 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.07265408989042044,
++  "duration_s": 0.1331518110819161,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index c7098b910b..3b2c5fef4c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,15 +1,15 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_specific": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -23,10 +23,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -35,8 +35,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,20 +45,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,11 +67,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
+       },
+       "MBPP": {
+         "production": 0.5,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4ac3cf6020..cbeac75394 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.499296821653843e-05,
++  "duration_s": 5.166814662516117e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index c65f1ceda4..1bef27a44a 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.39
++  "duration_s": 0.41
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index 49de2484c2..e3c1423d0a 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 3.248443603515625,
++  "duration_s": 2.393770456314087,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "1db2c2d27b374b1bed769e58d4374f69c3cc21275a5d9c7ede38e872ea93ed93"
++  "reproducibility_checksum": "06b3507c9bba5796c26e99383cf50c2811fb27dd5599d15a4b48704ecd1b9c22"
+ }
+diff --git a/results/experiment_3946_r11l_first_solve.json b/results/experiment_3946_r11l_first_solve.json
+index be6e6e37ff..62549c13d5 100644
+--- a/results/experiment_3946_r11l_first_solve.json
++++ b/results/experiment_3946_r11l_first_solve.json
+@@ -1,7 +1,7 @@
+ {
+   "ACCURACY_levels_solved": 1,
+   "budget": 60,
+-  "duration_s": 0.5,
++  "duration_s": 0.4,
+   "experiment": "experiment_3946_r11l_first_solve",
+   "first_solve_at_action": 4,
+   "game": "r11l-495a7899",
+diff --git a/results/experiment_5268_capstone_v481.json b/results/experiment_5268_capstone_v481.json
+new file mode 100644
+index 0000000000..f29c5934c1
+--- /dev/null
++++ b/results/experiment_5268_capstone_v481.json
+@@ -0,0 +1,592 @@
++{
++  "blocked_or_skipped": {
++    "principle": "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics.",
++    "value": [
++      {
++        "classification": "flagged_adversarial",
++        "exists": true,
++        "experiment_number": 5262,
++        "flagged_adversarial": true,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
++        "sha256": "sha256:0b758e34dbd62ab8dac17d1a8e5aad8eb07c1a5a841078e894a2d8f211c18246",
++        "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence",
++        "task_id": "exp5262-solver-grounded-constraint-extraction-v481",
++        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot",
++        "verdict": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"
++      },
++      {
++        "classification": "flagged_adversarial",
++        "exists": true,
++        "experiment_number": 5263,
++        "flagged_adversarial": true,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
++        "sha256": "sha256:ef1e4d9ed79c0652b96a191aef35c1bac222e3442c26c91295eb40ded74c2d4c",
++        "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence",
++        "task_id": "exp5263-neuron-attention-energy-hallucination-probe-v481",
++        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe",
++        "verdict": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
++      },
++      {
++        "classification": "blocked",
++        "exists": true,
++        "experiment_number": 5266,
++        "flagged_adversarial": false,
++        "inference_substrate": "hardware_probe_no_speedup_claim",
++        "loadable": true,
++        "path": "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json",
++        "sha256": "sha256:9bdc6f3465064edfd441f38ee43f629a7e65c939ac09daad45e0adaab983b5b1",
++        "summary": "kv260=blocked_kv260_ssh_unreachable; polarfire=blocked_polarfire_ssh_unreachable; gatemate=blocked_physical_jtag; speedup_claimed=false",
++        "task_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481",
++        "title": "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity",
++        "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim"
++      }
++    ]
++  },
++  "clean_nulls": {
++    "principle": "Only non-flagged complete no-improvement outcomes count as clean nulls.",
++    "value": [
++      {
++        "classification": "clean_null",
++        "exists": true,
++        "experiment_number": 5260,
++        "flagged_adversarial": false,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
++        "sha256": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
++        "summary": "cross-model typed memory useful=False; delta_over_no_memory=0.0; delta_over_shuffled_memory=0.0; unsafe_false_accepts=0; rollback_exercised=False",
++        "task_id": "exp5260-cross-model-typed-memory-retry-v481",
++        "title": "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry",
++        "verdict": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"
++      }
++    ]
++  },
++  "clean_positives": {
++    "principle": "Only non-flagged upstreams with useful complete outcomes count as positives.",
++    "value": [
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5257,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5257_archive_480_activate_481.json",
++        "sha256": "sha256:603717214057e5b194aec129795ba9cee473d1b88c3f8b6ac5b224a19fad551a",
++        "summary": "transition complete; .481 active without roadmap overwrite",
++        "task_id": "exp5257-archive-480-activate-481",
++        "title": "PHASE 0 transition -- archive .480 truth and prepare .481 activation",
++        "verdict": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used."
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5258,
++        "flagged_adversarial": false,
++        "inference_substrate": "literature_ingestion_network_sources",
++        "loadable": true,
++        "path": "results/experiment_5258_sota_refresh_v481.json",
++        "sha256": "sha256:faee92918b24daeff8d76d695a0c75bd90930c4217f61140f2cfa9f92880e25f",
++        "summary": "SOTA refresh appended 7 actionable findings",
++        "task_id": "exp5258-sota-refresh-v481",
++        "title": "PHASE 0 SOTA refresh -- V481 deltas after planning references",
++        "verdict": "complete: 7 new actionable findings appended; executable .481 plan unchanged."
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5259,
++        "flagged_adversarial": false,
++        "inference_substrate": "llama_cpp_runtime_preflight_no_quality_claim",
++        "loadable": true,
++        "path": "results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
++        "sha256": "sha256:5105872f79fc03b2e15b6f46133fab0e6b37be79fe06b17cd870ae78c559960d",
++        "summary": "SOTA GGUF runtime preflight ready=True; no model-quality claim",
++        "task_id": "exp5259-sota-gguf-gpu-offload-preflight-v481",
++        "title": "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight",
++        "verdict": "complete: sota_runtime_ready=true ready through flagship_moe"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5261,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5261_typed_memory_interference_audit_v481.json",
++        "sha256": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
++        "summary": "memory_policy_ready=True; retention_rate=1.0; interference_rate=0.0; rollback_passed=True",
++        "task_id": "exp5261-typed-memory-interference-audit-v481",
++        "title": "PHASE 1 continuous self-learning -- typed-memory retention and interference audit",
++        "verdict": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5264,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5264_verifier_dose_scheduler_replay_v481.json",
++        "sha256": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
++        "summary": "scheduler_ready=True; full_verifier_calls_avoided_rate=0.857143; decision_quality_delta=0.0; false_accept_delta=0.0",
++        "task_id": "exp5264-verifier-dose-scheduler-replay-v481",
++        "title": "PHASE 2 replay -- verifier-dose scheduler without live-model dependency",
++        "verdict": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5265,
++        "flagged_adversarial": false,
++        "inference_substrate": "offline_deterministic_certificate_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
++        "sha256": "sha256:d8fa1293b2f366cc31affaf04de9d3bb6f4c861616c4959ffa1bd5ed94d2a911",
++        "summary": "certificate_refinement_ready=True; true_property_certified=True; false_property_rejected=True",
++        "task_id": "exp5265-kan-certificate-explanation-refinement-v481",
++        "title": "PHASE 3 KAN -- convex-envelope certificate explanation and refinement",
++        "verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5267,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
++        "sha256": "sha256:ac3b48230745af7d7d9d9e371c2d7e18fe84f54ed44f32cfe2291c1a426ba5f0",
++        "summary": "producer_normalizer_ready=True; gate_fields_preserved=True",
++        "task_id": "exp5267-artifact-normalizer-template-adoption-v481",
++        "title": "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary",
++        "verdict": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence."
++      }
++    ]
++  },
++  "commands_run": [
++    {
++      "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5268_capstone_v481.py -q",
++      "outcome": "PASS: 6 passed in 0.88s"
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/python/carnot/experiment_5268_capstone_v481.py' -m pytest -o addopts='' tests/python/test_experiment_5268_capstone_v481.py -q && .venv/bin/coverage report --rcfile=/dev/null --include='*/python/carnot/experiment_5268_capstone_v481.py' --fail-under=100 -m",
++      "outcome": "PASS: 6 tests passed; 100% coverage on python/carnot/experiment_5268_capstone_v481.py (230 statements, 0 missed)"
++    },
++    {
++      "command": ".venv/bin/ruff check python/carnot/experiment_5268_capstone_v481.py tests/python/test_experiment_5268_capstone_v481.py",
++      "outcome": "PASS: All checks passed"
++    },
++    {
++      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++      "outcome": "PASS: Exclusion-manifest lint clean"
++    },
++    {
++      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++      "outcome": "PASS: no schema errors, no prior_failures violations"
++    },
++    {
++      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
++      "outcome": "PASS: all_checks_pass; 12 tasks audited; 3 gate upstream checks; 0 failures"
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5268_capstone_v481.py",
++      "outcome": "PASS: All tests reference specification requirements"
++    },
++    {
++      "command": "sed -n '1,220p' ops/e2e-test-plan.md",
++      "outcome": "READ: no E2E item applies to this report-only cached_fixture_replay_no_llm capstone; no model, sampler, binding, or hardware pipeline was changed"
++    },
++    {
++      "command": "git status --short -- research-roadmap.yaml scripts/research_conductor.py",
++      "outcome": "PASS: no output; neither protected file is modified"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "FAIL: single mandated full-suite run exited code 3 after 43:54; 421 failed, 33284 passed, 100 skipped, 1 xpassed, 224 warnings, 10 errors; xdist internal error after worker crashes; observed Z3/JAX segmentation faults in pre-existing tests including z3_math_verifier, jepa_energy, pipeline_errors, and kaem_distribution_benchmark paths. Not rerun after the final focused classifier fix per the stop-when-done rule; focused tests and 100% new-module coverage were rerun after that fix."
++    }
++  ],
++  "conductor_modified": {
++    "principle": "Reports whether scripts/research_conductor.py changed; must not hide a violation.",
++    "value": false
++  },
++  "duration_s": 0.014372,
++  "experiment": "experiment_5268_capstone_v481",
++  "experiment_id": "exp5268-capstone-v481",
++  "field_principles": {
++    "blocked_or_skipped": "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics.",
++    "clean_nulls": "Only non-flagged complete no-improvement outcomes count as clean nulls.",
++    "clean_positives": "Only non-flagged upstreams with useful complete outcomes count as positives.",
++    "commands_run": "Records validation and test commands with outcomes.",
++    "conductor_modified": "Reports whether scripts/research_conductor.py changed; must not hide a violation.",
++    "harmful_results": "Harmful outcomes must remain visible and must not be silently converted to nulls.",
++    "honest_verdict": "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes.",
++    "inference_substrate": "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only.",
++    "milestone_summary": "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware.",
++    "next_top_gaps": "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production.",
++    "retirements_or_exclusions": "Records prior-failure discipline decisions and scopes that should not be rerun unchanged.",
++    "roadmap_modified": "Reports whether research-roadmap.yaml changed; must not hide a violation."
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_number": 5262,
++      "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
++      "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence"
++    },
++    {
++      "experiment_number": 5263,
++      "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
++      "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence"
++    }
++  ],
++  "harmful_results": {
++    "principle": "Harmful outcomes must remain visible and must not be silently converted to nulls.",
++    "value": []
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes.",
++    "value": "complete: .481 synthesized with 7 clean positives, 1 clean null, 2 flagged verifier artifacts quarantined, hardware blocked, and no speedup claim."
++  },
++  "inference_substrate": {
++    "principle": "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only.",
++    "value": "cached_fixture_replay_no_llm"
++  },
++  "milestone": "2026.07.481",
++  "milestone_summary": {
++    "principle": "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware.",
++    "value": {
++      "blocked_or_skipped_count": 3,
++      "clean_null_count": 1,
++      "clean_positive_count": 7,
++      "flagged_artifacts_skipped_count": 2,
++      "harmful_count": 0,
++      "milestone": "2026.07.481",
++      "primary_artifacts_expected": 11,
++      "primary_artifacts_read": 11,
++      "research_complete_updated": true,
++      "truth": "SOTA runtime preflight is ready without a quality claim; continuous self-learning has a clean live cross-model null plus cached memory-policy and scheduler positives; solver/internal verification pilots are flagged and not clean evidence; KAN certificate refinement and producer artifact normalization are bounded positives; hardware is blocked with no speedup claim."
++    }
++  },
++  "milestone_title": "Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability",
++  "next_top_gaps": {
++    "principle": "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production.",
++    "value": [
++      {
++        "categories_considered": {
++          "KAN_certificates": "continue bounded, not the immediate blocker",
++          "artifact_production": "supporting requirement via Exp5267 normalizer",
++          "internal_verification": "highest"
++        },
++        "category": "internal_verification",
++        "priority_rank": 1,
++        "recommendation": "Prioritize adversarial-clean internal verification: rerun solver-grounded and logit/attention-energy pilots only with duration, model, seed, and methodology receipts that clear artifact verification."
++      },
++      {
++        "categories_considered": {
++          "SOTA_runtime": "ready as preflight, but strengthen methodology receipts",
++          "continuous_self_learning": "high priority after Exp5260 null and Exp5261/5264 positives"
++        },
++        "category": "continuous_self_learning_and_sota_runtime",
++        "priority_rank": 2,
++        "recommendation": "Use the now-ready SOTA GGUF runtime to build a non-degenerate live memory transfer task with real headroom and rollback exercise; keep cached memory policy and verifier-dose scheduler as safety rails."
++      },
++      {
++        "categories_considered": {
++          "KAN_certificates": "bounded positive can progress on CPU while boards are repaired",
++          "artifact_production": "ready enough; maintain rather than lead",
++          "hardware": "blocked precondition"
++        },
++        "category": "hardware_reachability",
++        "priority_rank": 3,
++        "recommendation": "Repair board reachability before further hardware claims: KV260/PolarFire SSH and GateMate physical/JTAG state are hard blockers; keep no-speedup language until real board execution changes."
++      }
++    ]
++  },
++  "random_seed": 5268,
++  "reproducibility_checksum": "sha256:c1eab22e785b5ea61aa41fa2da12c77f33bb2630fb9788d913a3ac1f9372d107",
++  "research_complete_updated": {
++    "principle": "True only if this capstone appended the missing 2026.07.481 entry to research-complete.yaml.",
++    "value": true
++  },
++  "result_path": "results/experiment_5268_capstone_v481.json",
++  "retirements_or_exclusions": {
++    "principle": "Records prior-failure discipline decisions and scopes that should not be rerun unchanged.",
++    "value": [
++      {
++        "basis": "Exp5263 records external_text_scorer_used=false and no .481 task reopened generated-text/logprob reranking.",
++        "decision": "remains retired",
++        "scope": "Phase D external text scorer path"
++      },
++      {
++        "basis": "2 upstream verifier pilots were flagged_adversarial and require methodology/duration repair before reuse.",
++        "decision": "do not headline or rerun unchanged",
++        "scope": "Exp5262/Exp5263 internal-verification pilots"
++      },
++      {
++        "basis": "Exp5260 was a clean live null with zero delta over no-memory and shuffled-memory controls.",
++        "decision": "carry forward only with changed headroom and rollback exercise",
++        "scope": "cross-model typed memory usefulness"
++      },
++      {
++        "basis": "Exp5266 blocked KV260, PolarFire, and GateMate reachability/physical setup.",
++        "decision": "blocked preconditions carry forward; no speedup claim",
++        "scope": "hardware board execution"
++      }
++    ]
++  },
++  "roadmap_modified": {
++    "principle": "Reports whether research-roadmap.yaml changed; must not hide a violation.",
++    "value": false
++  },
++  "run_date": "20260705",
++  "schema": "carnot.experiment_5268_capstone_v481.v1",
++  "source_artifacts_read": {
++    "auxiliary": [
++      {
++        "classification": "auxiliary",
++        "exists": true,
++        "experiment_number": 5265,
++        "loadable": true,
++        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481_explanation.json",
++        "sha256": "sha256:10cf26f855acd694f18b6ebbae97b001732efa5d6959e209d0ec2af94ee84580",
++        "summary": "auxiliary artifact read; not a standalone milestone outcome",
++        "verdict": ""
++      }
++    ],
++    "auxiliary_count": 1,
++    "primary": [
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5257,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5257_archive_480_activate_481.json",
++        "sha256": "sha256:603717214057e5b194aec129795ba9cee473d1b88c3f8b6ac5b224a19fad551a",
++        "summary": "transition complete; .481 active without roadmap overwrite",
++        "task_id": "exp5257-archive-480-activate-481",
++        "title": "PHASE 0 transition -- archive .480 truth and prepare .481 activation",
++        "verdict": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used."
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5258,
++        "flagged_adversarial": false,
++        "inference_substrate": "literature_ingestion_network_sources",
++        "loadable": true,
++        "path": "results/experiment_5258_sota_refresh_v481.json",
++        "sha256": "sha256:faee92918b24daeff8d76d695a0c75bd90930c4217f61140f2cfa9f92880e25f",
++        "summary": "SOTA refresh appended 7 actionable findings",
++        "task_id": "exp5258-sota-refresh-v481",
++        "title": "PHASE 0 SOTA refresh -- V481 deltas after planning references",
++        "verdict": "complete: 7 new actionable findings appended; executable .481 plan unchanged."
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5259,
++        "flagged_adversarial": false,
++        "inference_substrate": "llama_cpp_runtime_preflight_no_quality_claim",
++        "loadable": true,
++        "path": "results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
++        "sha256": "sha256:5105872f79fc03b2e15b6f46133fab0e6b37be79fe06b17cd870ae78c559960d",
++        "summary": "SOTA GGUF runtime preflight ready=True; no model-quality claim",
++        "task_id": "exp5259-sota-gguf-gpu-offload-preflight-v481",
++        "title": "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight",
++        "verdict": "complete: sota_runtime_ready=true ready through flagship_moe"
++      },
++      {
++        "classification": "clean_null",
++        "exists": true,
++        "experiment_number": 5260,
++        "flagged_adversarial": false,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
++        "sha256": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
++        "summary": "cross-model typed memory useful=False; delta_over_no_memory=0.0; delta_over_shuffled_memory=0.0; unsafe_false_accepts=0; rollback_exercised=False",
++        "task_id": "exp5260-cross-model-typed-memory-retry-v481",
++        "title": "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry",
++        "verdict": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5261,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5261_typed_memory_interference_audit_v481.json",
++        "sha256": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
++        "summary": "memory_policy_ready=True; retention_rate=1.0; interference_rate=0.0; rollback_passed=True",
++        "task_id": "exp5261-typed-memory-interference-audit-v481",
++        "title": "PHASE 1 continuous self-learning -- typed-memory retention and interference audit",
++        "verdict": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed"
++      },
++      {
++        "classification": "flagged_adversarial",
++        "exists": true,
++        "experiment_number": 5262,
++        "flagged_adversarial": true,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
++        "sha256": "sha256:0b758e34dbd62ab8dac17d1a8e5aad8eb07c1a5a841078e894a2d8f211c18246",
++        "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence",
++        "task_id": "exp5262-solver-grounded-constraint-extraction-v481",
++        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot",
++        "verdict": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"
++      },
++      {
++        "classification": "flagged_adversarial",
++        "exists": true,
++        "experiment_number": 5263,
++        "flagged_adversarial": true,
++        "inference_substrate": "live_llm_inference_local_gguf_sota",
++        "loadable": true,
++        "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
++        "sha256": "sha256:ef1e4d9ed79c0652b96a191aef35c1bac222e3442c26c91295eb40ded74c2d4c",
++        "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence",
++        "task_id": "exp5263-neuron-attention-energy-hallucination-probe-v481",
++        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe",
++        "verdict": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5264,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5264_verifier_dose_scheduler_replay_v481.json",
++        "sha256": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
++        "summary": "scheduler_ready=True; full_verifier_calls_avoided_rate=0.857143; decision_quality_delta=0.0; false_accept_delta=0.0",
++        "task_id": "exp5264-verifier-dose-scheduler-replay-v481",
++        "title": "PHASE 2 replay -- verifier-dose scheduler without live-model dependency",
++        "verdict": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5265,
++        "flagged_adversarial": false,
++        "inference_substrate": "offline_deterministic_certificate_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
++        "sha256": "sha256:d8fa1293b2f366cc31affaf04de9d3bb6f4c861616c4959ffa1bd5ed94d2a911",
++        "summary": "certificate_refinement_ready=True; true_property_certified=True; false_property_rejected=True",
++        "task_id": "exp5265-kan-certificate-explanation-refinement-v481",
++        "title": "PHASE 3 KAN -- convex-envelope certificate explanation and refinement",
++        "verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
++      },
++      {
++        "classification": "blocked",
++        "exists": true,
++        "experiment_number": 5266,
++        "flagged_adversarial": false,
++        "inference_substrate": "hardware_probe_no_speedup_claim",
++        "loadable": true,
++        "path": "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json",
++        "sha256": "sha256:9bdc6f3465064edfd441f38ee43f629a7e65c939ac09daad45e0adaab983b5b1",
++        "summary": "kv260=blocked_kv260_ssh_unreachable; polarfire=blocked_polarfire_ssh_unreachable; gatemate=blocked_physical_jtag; speedup_claimed=false",
++        "task_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481",
++        "title": "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity",
++        "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim"
++      },
++      {
++        "classification": "clean_positive",
++        "exists": true,
++        "experiment_number": 5267,
++        "flagged_adversarial": false,
++        "inference_substrate": "cached_fixture_replay_no_llm",
++        "loadable": true,
++        "path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
++        "sha256": "sha256:ac3b48230745af7d7d9d9e371c2d7e18fe84f54ed44f32cfe2291c1a426ba5f0",
++        "summary": "producer_normalizer_ready=True; gate_fields_preserved=True",
++        "task_id": "exp5267-artifact-normalizer-template-adoption-v481",
++        "title": "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary",
++        "verdict": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence."
++      }
++    ],
++    "primary_count": 11,
++    "primary_loadable_count": 11
++  },
++  "source_context": [
++    {
++      "exists": true,
++      "path": "CLAUDE.md",
++      "sha256": "sha256:6362755ccc4538eafed20baa616b127b5b5569f7465f33bcfadf331c15aeef3b"
++    },
++    {
++      "exists": true,
++      "path": "CODEX.md",
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "path": "research-program.md",
++      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
++    },
++    {
++      "exists": true,
++      "path": "_bmad/prd.md",
++      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
++    },
++    {
++      "exists": true,
++      "path": "_bmad/architecture.md",
++      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
++    },
++    {
++      "exists": true,
++      "path": "ops/status.md",
++      "sha256": "sha256:db406a53e7ae0a6a186975eba4d4adb1a6e0eeb9cb949148262ebdd1455caa53"
++    },
++    {
++      "exists": true,
++      "path": "ops/changelog.md",
++      "sha256": "sha256:d68673967a39ff2e2a911ff729df4fa2fc425d752c99e4783a73de976ff9d0a8"
++    },
++    {
++      "exists": true,
++      "path": "ops/conductor-log.md",
++      "sha256": "sha256:6ad724fe0bbfcd796ee7955e5974ad9e7dc25df7013bb894fdda38530f0f17b8"
++    },
++    {
++      "exists": true,
++      "path": "research-complete.yaml",
++      "sha256": "sha256:45ba9d59091b85ba642739356872c63c881e14c6a2697f58288dc27f88d42ea3"
++    },
++    {
++      "exists": true,
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:8d417c9fd992bb4159594144e408fdd041ed984bb6ef550390a8f055b2b899ec"
++    },
++    {
++      "exists": false,
++      "path": "research-roadmap-next.yaml",
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:af8d013e435979b8951638ee586657f0b4cd53f4fe0ec6678fbc8f4e187f9678"
++    },
++    {
++      "exists": true,
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5268",
++    "SCENARIO-REPORT-5268",
++    "SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT"
++  ]
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index ccb6611bd9..455c7273d0 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -2,9 +2,9 @@
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:59:56Z",
+-  "finished_at": "2026-07-05T07:59:56Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-05T12:27:20Z",
++  "finished_at": "2026-07-05T12:27:20Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 69b3ef79bd..4300a1c4db 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:57:53Z",
+-  "finished_at": "2026-07-05T10:57:53Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-05T12:41:17Z",
++  "finished_at": "2026-07-05T12:41:17Z",
++  "duration_s": 0.007,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f46a920787..cda05d2c15 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:57:53Z",
+-  "finished_at": "2026-07-05T10:57:53Z",
++  "started_at": "2026-07-05T12:41:17Z",
++  "finished_at": "2026-07-05T12:41:17Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c0d7033137..9ba34b3f96 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T10:57:53Z",
+-  "finished_at": "2026-07-05T10:57:53Z",
++  "started_at": "2026-07-05T12:41:18Z",
++  "finished_at": "2026-07-05T12:41:18Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 36230cd69f..7f818f6b1f 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -2,8 +2,8 @@
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:53:26Z",
+-  "finished_at": "2026-07-05T07:53:26Z",
++  "started_at": "2026-07-05T12:34:42Z",
++  "finished_at": "2026-07-05T12:34:42Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index 2ebc9f3cff..65d82d106a 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:46:06Z",
+-  "finished_at": "2026-07-05T07:46:08Z",
+-  "duration_s": 1.3,
++  "started_at": "2026-07-05T12:30:40Z",
++  "finished_at": "2026-07-05T12:30:41Z",
++  "duration_s": 1.552,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index bed7f4b7cc..36c6686788 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -2,9 +2,9 @@
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:37:14Z",
+-  "finished_at": "2026-07-05T07:37:15Z",
+-  "duration_s": 0.237,
++  "started_at": "2026-07-05T12:21:36Z",
++  "finished_at": "2026-07-05T12:21:36Z",
++  "duration_s": 0.202,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index 2e673477fa..d878eafa8f 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -2,9 +2,9 @@
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+   "run_date": "20260705",
+-  "started_at": "2026-07-05T07:37:27Z",
+-  "finished_at": "2026-07-05T07:40:01Z",
+-  "duration_s": 153.873,
++  "started_at": "2026-07-05T12:21:48Z",
++  "finished_at": "2026-07-05T12:24:08Z",
++  "duration_s": 140.044,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5268_capstone_v481.py b/tests/python/test_experiment_5268_capstone_v481.py
+new file mode 100644
+index 0000000000..bea7a98209
+--- /dev/null
++++ b/tests/python/test_experiment_5268_capstone_v481.py
+@@ -0,0 +1,362 @@
++"""Tests for Exp 5268 V481 capstone synthesis.
++
++Spec refs: REQ-REPORT-5268, SCENARIO-REPORT-5268,
++SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5268_capstone_v481 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _base(verdict: str, substrate: str = mod.INFERENCE_SUBSTRATE) -> dict[str, Any]:
++    return {
++        "duration_s": 1.0,
++        "honest_verdict": _wrap(verdict),
++        "inference_substrate": _wrap(substrate),
++        "reproducibility_checksum": "sha256:fixture",
++    }
++
++
++def _payloads() -> dict[int, dict[str, Any]]:
++    return {
++        5257: _base("complete: .480 archived and .481 activation-ready"),
++        5258: {
++            **_base("complete: 7 new actionable findings appended"),
++            "new_references_added": _wrap(7),
++        },
++        5259: {
++            **_base(
++                "complete: sota_runtime_ready=true ready through flagship_moe",
++                "llama_cpp_runtime_preflight_no_quality_claim",
++            ),
++            "sota_runtime_ready": True,
++            "no_quality_claim": _wrap(True),
++        },
++        5260: {
++            **_base("complete: cross-model typed memory null; delta_over_no_memory=0.000000"),
++            "cross_model_memory_useful": False,
++            "delta_over_no_memory": _wrap(0.0),
++            "delta_over_shuffled_memory": _wrap(0.0),
++            "unsafe_false_accepts": _wrap(0),
++            "rollback_exercised": _wrap(False),
++        },
++        5261: {
++            **_base(
++                "complete: memory policy ready for cached fixture replay; harmful_rollback_passed=true"
++            ),
++            "memory_policy_ready": True,
++            "retention_rate": _wrap(1.0),
++            "interference_rate": _wrap(0.0),
++            "harmful_memory_rollback_passed": _wrap(True),
++        },
++        5262: {
++            **_base(
++                "complete: solver-grounded extraction produced no useful oracle-distinct signal",
++                "live_llm_inference_local_gguf_sota",
++            ),
++            "flagged_adversarial": True,
++            "solver_grounded_extractor_ready": False,
++            "constraint_validity_rate": _wrap(0.25),
++            "false_accepts": _wrap(0),
++        },
++        5263: {
++            **_base(
++                "complete: null logit-energy unsupported-minus-supported delta=0.004811",
++                "live_llm_inference_local_gguf_sota",
++            ),
++            "flagged_adversarial": True,
++            "internal_signal_available": True,
++            "hidden_energy_probe_signal_delta": 0.004811,
++            "external_text_scorer_used": _wrap(False),
++        },
++        5264: {
++            **_base("complete: useful scheduler replay preserved always-full decision quality"),
++            "scheduler_ready": True,
++            "full_verifier_calls_avoided_rate": _wrap(0.857143),
++            "decision_quality_delta": _wrap(0.0),
++            "false_accept_delta": _wrap(0.0),
++        },
++        5265: {
++            **_base(
++                "complete: refinement added certificate value",
++                "offline_deterministic_certificate_no_llm",
++            ),
++            "certificate_refinement_ready": True,
++            "true_property_certified": _wrap(True),
++            "false_property_rejected": _wrap(True),
++            "slack_before_after": _wrap({"envelope_gap_bound_reduction": 0.05859375}),
++        },
++        5266: {
++            **_base(
++                "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim",
++                "hardware_probe_no_speedup_claim",
++            ),
++            "kv260_status": _wrap("blocked_kv260_ssh_unreachable"),
++            "polarfire_status": _wrap("blocked_polarfire_ssh_unreachable"),
++            "gatemate_status": _wrap("blocked_physical_jtag"),
++            "speedup_claimed": False,
++        },
++        5267: {
++            **_base("complete: producer-side normalizer adoption is ready"),
++            "producer_normalizer_ready": True,
++            "gate_fields_preserved": _wrap(True),
++            "safe_repairs_supported": _wrap(["top_level_principle_wrapper_unwrap"]),
++            "unsafe_repairs_rejected": _wrap(["missing_methodology_receipt"]),
++        },
++    }
++
++
++def _make_repo(root: Path, *, omit: set[int] | None = None) -> None:
++    omit = omit or set()
++    by_number = _payloads()
++    for source in mod.PRIMARY_SOURCES:
++        if source.experiment_number not in omit:
++            _write_json(root / source.relative_path, by_number[source.experiment_number])
++    _write_json(
++        root / "results/experiment_5265_kan_certificate_explanation_refinement_v481_explanation.json",
++        {
++            "schema": "carnot.experiment_5265.kan_certificate_explanation_refinement.v481.explanation",
++            "experiment_id": "exp5265-kan-certificate-explanation-refinement-v481",
++            "methodology_note": "auxiliary explanation artifact",
++        },
++    )
++    (root / "research-roadmap.yaml").write_text('milestone: "2026.07.481"\n', encoding="utf-8")
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts/research_conductor.py").write_text("# fixture\n", encoding="utf-8")
++    for context in mod.SOURCE_CONTEXT_PATHS:
++        path = root / context
++        path.parent.mkdir(parents=True, exist_ok=True)
++        if not path.exists():
++            path.write_text(f"context for {context}\n", encoding="utf-8")
++
++
++def _commands() -> list[dict[str, str]]:
++    return [{"command": ".venv/bin/pytest tests/python/test_experiment_5268_capstone_v481.py -q", "outcome": "PASS"}]
++
++
++def _ids(rows: list[dict[str, Any]]) -> set[int]:
++    return {int(row["experiment_number"]) for row in rows if "experiment_number" in row}
++
++
++def test_req_report_5268_spec_declares_capstone_contract() -> None:
++    """REQ-REPORT-5268: OpenSpec anchors the V481 capstone fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5268") : spec.index("REQ-REPORT-5257")]
++
++    for marker in (
++        "REQ-REPORT-5268",
++        "SCENARIO-REPORT-5268",
++        "SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT",
++        str(mod.RESULT_RELATIVE_PATH),
++        "cached_fixture_replay_no_llm",
++        "flagged_adversarial=true",
++        "conductor_modified.value=false",
++        "roadmap_modified.value=false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5268_classifies_v481_fixture_outcomes(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5268: clean, null, flagged, and blocked outcomes stay separate."""
++
++    _make_repo(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260705",
++        duration_s=1.0,
++        commands_run=_commands(),
++        conductor_modified=False,
++        roadmap_modified=False,
++        research_complete_updated=False,
++    )
++
++    mod.validate_artifact(artifact)
++    assert mod.value_of(artifact["honest_verdict"]).startswith("complete:")
++    assert mod.value_of(artifact["inference_substrate"]) == mod.INFERENCE_SUBSTRATE
++    assert _ids(mod.value_of(artifact["clean_positives"])) == {5257, 5258, 5259, 5261, 5264, 5265, 5267}
++    assert _ids(mod.value_of(artifact["clean_nulls"])) == {5260}
++    assert mod.value_of(artifact["harmful_results"]) == []
++
++    blocked = mod.value_of(artifact["blocked_or_skipped"])
++    assert _ids(blocked) == {5262, 5263, 5266}
++    assert all(row.get("classification") != "clean_null" for row in blocked)
++    assert {row["experiment_number"] for row in blocked if row["classification"] == "flagged_adversarial"} == {5262, 5263}
++    assert any("speedup_claimed=false" in row["summary"] for row in blocked)
++
++    retirements = mod.value_of(artifact["retirements_or_exclusions"])
++    assert any("Phase D external text scorer" in row["scope"] for row in retirements)
++    assert any("Exp5262/Exp5263" in row["scope"] for row in retirements)
++
++    gaps = mod.value_of(artifact["next_top_gaps"])
++    assert [gap["priority_rank"] for gap in gaps] == [1, 2, 3]
++    assert {gap["category"] for gap in gaps} == {
++        "internal_verification",
++        "continuous_self_learning_and_sota_runtime",
++        "hardware_reachability",
++    }
++    assert mod.value_of(artifact["conductor_modified"]) is False
++    assert mod.value_of(artifact["roadmap_modified"]) is False
++    assert artifact["source_artifacts_read"]["auxiliary_count"] == 1
++
++
++def test_scenario_report_5268_missing_required_artifact_blocks_without_mutation(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT: missing upstreams fail closed."""
++
++    _make_repo(tmp_path, omit={5264})
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260705",
++        duration_s=1.0,
++        commands_run=_commands(),
++        conductor_modified=False,
++        roadmap_modified=False,
++        research_complete_updated=False,
++    )
++
++    mod.validate_artifact(artifact)
++    assert mod.value_of(artifact["honest_verdict"]).startswith("blocked_missing_required")
++    blocked = mod.value_of(artifact["blocked_or_skipped"])
++    assert any(row["experiment_number"] == 5264 and row["classification"] == "missing" for row in blocked)
++    assert mod.value_of(artifact["conductor_modified"]) is False
++    assert mod.value_of(artifact["roadmap_modified"]) is False
++
++
++def test_req_report_5268_research_complete_entry_builder_is_minimal() -> None:
++    """REQ-REPORT-5268: research-complete updates are minimal and milestone-scoped."""
++
++    entry = mod.build_research_complete_entry()
++
++    assert entry["id"] == mod.MILESTONE
++    assert entry["completed"] == "2026-07-05"
++    assert len(entry["tasks"]) == len(mod.MILESTONE_TASKS)
++    assert entry["tasks"][-1]["id"] == mod.EXPERIMENT_ID
++    assert "flagged internal-verification pilots quarantined" in entry["finding"]
++
++
++def test_req_report_5268_defensive_helpers_and_malformed_inputs(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-5268: helper paths fail closed instead of inventing evidence."""
++
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{", encoding="utf-8")
++    payload, info = mod.read_json_mapping(malformed)
++    assert payload == {}
++    assert info["loadable"] is False
++    assert str(info["error"]).startswith("malformed_json")
++
++    scalar = tmp_path / "scalar.json"
++    scalar.write_text("[]", encoding="utf-8")
++    payload, info = mod.read_json_mapping(scalar)
++    assert payload == {}
++    assert info["error"] == "not_json_object"
++
++    out = tmp_path / "nested" / "out.json"
++    mod.write_json(out, {"ok": True})
++    assert json.loads(out.read_text(encoding="utf-8")) == {"ok": True}
++
++    assert mod._float(None) == 0.0
++    assert mod._float(True) == 0.0
++    assert mod._artifact_summary(9999, {}) == "no verdict"
++    assert mod._classify_loaded(1, {"honest_verdict": "complete: harmful regression"}) == "harmful"
++    assert (
++        mod._classify_loaded(
++            1,
++            {"honest_verdict": "complete: memory ready; harmful_rollback_passed=true"},
++        )
++        == "clean_positive"
++    )
++    assert mod._classify_loaded(1, {"honest_verdict": "ambiguous"}) == "blocked"
++
++    _make_repo(tmp_path)
++    bad_source = mod.PRIMARY_SOURCES[0]
++    (tmp_path / bad_source.relative_path).write_text("{", encoding="utf-8")
++    row, loaded = mod._row_for_source(bad_source, tmp_path)
++    assert loaded is None
++    assert row["classification"] == "malformed"
++
++    assert mod.load_commands(None) == []
++    assert mod.load_commands(tmp_path / "missing.json") == []
++    commands_json = tmp_path / "commands.json"
++    commands_json.write_text(json.dumps([{"command": "x"}, "skip"]), encoding="utf-8")
++    assert mod.load_commands(commands_json) == [{"command": "x"}]
++    commands_json.write_text("{}", encoding="utf-8")
++    with pytest.raises(ValueError, match="commands JSON"):
++        mod.load_commands(commands_json)
++
++    assert mod.append_research_complete_if_missing(tmp_path) is True
++    assert mod.append_research_complete_if_missing(tmp_path) is False
++    assert f"id: {mod.MILESTONE}" in (tmp_path / "research-complete.yaml").read_text(
++        encoding="utf-8"
++    )
++
++    class _Completed:
++        stdout = " M scripts/research_conductor.py\n"
++
++    monkeypatch.setattr(mod.subprocess, "run", lambda *args, **kwargs: _Completed())
++    assert mod.git_file_modified(tmp_path, "scripts/research_conductor.py") is True
++
++    def _raise_oserror(*args: Any, **kwargs: Any) -> None:
++        raise OSError("git unavailable")
++
++    monkeypatch.setattr(mod.subprocess, "run", _raise_oserror)
++    assert mod.git_file_modified(tmp_path, "scripts/research_conductor.py") is False
++
++
++def test_req_report_5268_main_writes_artifact_with_command_receipts(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-5268: the CLI writes the reproducible capstone artifact."""
++
++    _make_repo(tmp_path)
++    monkeypatch.setattr(mod, "REPO_ROOT", tmp_path)
++    monkeypatch.setattr(mod, "git_file_modified", lambda root, relative: False)
++    commands_path = tmp_path / "commands.json"
++    commands_path.write_text(json.dumps(_commands()), encoding="utf-8")
++    output = tmp_path / mod.RESULT_RELATIVE_PATH
++
++    assert (
++        mod.main(
++            [
++                "--output",
++                str(output),
++                "--commands-json",
++                str(commands_path),
++                "--update-research-complete",
++            ]
++        )
++        == 0
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["commands_run"] == _commands()
++    assert artifact["research_complete_updated"]["value"] is True
+-- 
+2.55.0
+

@@ -1,0 +1,223 @@
+From 51b248a493b7e26024915c23bad4d94d34f816c0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 21:18:52 -0400
+Subject: [PATCH 08073/11362] [outer-loop] wa30's L9 reproduction gate PASSES
+ -- 670 actions, reached_level 9, 0.8s
+
+Ran the gate that 16 probe rounds never could. reproduced=True, reached_level=9,
+deterministic across three replays in separate processes.
+
+The gate discriminates, which is what makes the pass mean anything: truncating to
+604/415/170 actions gives reproduced=False at reached_level 8/6/3 against
+claimed_level=9, and each prefix reproduces EXACTLY its documented level
+(604->L8, 477->L7, 415->L6, 170->L3, 94->L2).
+
+CORRECTS MY OWN FILING FROM EARLIER TODAY. I wrote that wa30's 9 levels were
+"backed by prose" and "cannot be re-verified without redoing the reverse
+engineering", and filed it as possible record rot. Wrong on the facts. The action
+sequences were complete on disk the whole time and the L1-L8 prefix is described
+in its own artifact as "5x gate-verified, replayed identically a 10th time this
+session".
+
+What was actually true is narrower: every L4-L9 round self-reports
+reproduction_verified=False for the same stated reason -- the gate replays the
+whole prefix from reset, so by L9 verifying cost as much as solving, and each
+interactive round hit its LIVE step budget first ("810 of 1200 steps used ... the
+gate replay costs 604 more"). Offline that budget does not exist and the replay
+is sub-second. The verification was never hard; it just never ran outside a
+session, so 6 of the 183 headline levels sat unverified ~3 weeks.
+
+The generalisable part: an interactive session can produce a result it
+structurally cannot afford to verify, then honestly record verified=False and
+move on -- and nothing downstream distinguishes "unverified because it failed"
+from "unverified because the session ran out of budget". They look identical.
+
+Registry row now carries the reproduce + action_model fields it lacked (they were
+absent, not null). solve_provenance declared honestly as outer_loop_re: wa30 was
+solved by an agent probe campaign, not the live agent, so this verifies a prior
+solve and confers no live-agent capability claim.
+
+Still open, separately: wa30 has no GameAdapter, so it stays outside offline
+induction corpora. reproduce() takes an explicit apply callable, so none was
+needed here.
+---
+ ops/arc_solve_registry.yaml                   | 19 +++++
+ ops/known-issues.md                           | 39 +++++++++
+ ...p_arc_wa30_reproduction_gate_20260731.json | 84 +++++++++++++++++++
+ 3 files changed, 142 insertions(+)
+ create mode 100644 results/outer_loop_arc_wa30_reproduction_gate_20260731.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 0057078f0e..ebb5d0aab4 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -1152,6 +1152,25 @@ games:
+   reproducibility: reproduced
+   levels_reproduced: 9
+   full_game_clear: true
++  reproduce: >-
++    VERIFIED 2026-07-31. arc_solver_kit.reproduce(wa30, the 670 plain {"action": N} labels in
++    results/outer_loop_fable5_wa30_probe_l9.json:action_sequence, _default_json_apply,
++    claimed_level=9) -> reproduced=True, reached_level=9, in 0.8s offline, deterministic across
++    3 replays. Artifact: results/outer_loop_arc_wa30_reproduction_gate_20260731.json. This field
++    and action_model were previously ABSENT while the row claimed levels_reproduced=9, and every
++    L4-L9 probe self-reported reproduction_verified=False -- not because the solve was lost but
++    because the gate replays the whole prefix from reset, so by L9 verifying cost as much as
++    solving and each interactive round exhausted its LIVE step budget first. Offline that budget
++    does not apply. The gate discriminates: prefixes of 604/477/415/170/94 actions reproduce
++    exactly L8/L7/L6/L3/L2. No GameAdapter exists for wa30 and none is required -- reproduce()
++    takes an explicit apply callable.
++  action_model: >-
++    ACTION1-5 keyboard only across all 9 levels. The banked 670-action route contains ZERO
++    ACTION6 clicks, so any_oob_action6_clicks=False and it carries none of the live
++    out-of-bounds risk that broke lf52's original L9 route. Solved by a 16-round OUTER-LOOP
++    agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5 v9-v16 broke
++    through), NOT by an adapter and NOT by the live agent -- solve_provenance outer_loop_re,
++    so it is never headline-eligible as live-agent capability.
+   final_game_state: 'GameState.WIN'
+   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
+     five blocks into five of six bay target slots (player hand-carry PLUS a passive
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 89d8cff9e8..f3a7fc3d8a 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -45,6 +45,45 @@ levels that do not meet the discipline's own bar.
+ **Not blocking** the QAT head-to-head: wa30 is excluded from that corpus for a reason that
+ predates and is independent of either arm.
+ 
++#### RESOLVED same day (2026-07-31) — the gate PASSES; my framing above was wrong
++
++Ran it. `arc_solver_kit.reproduce(wa30, <670 actions>, _default_json_apply, claimed_level=9)`
++returns **`reproduced=True, reached_level=9`, in 0.8 seconds**, deterministic across three
++replays in separate processes. Artifact:
++`results/outer_loop_arc_wa30_reproduction_gate_20260731.json`. The registry row now carries
++the `reproduce` and `action_model` fields it was missing.
++
++**The gate discriminates — this is not a rubber stamp.** Truncated to 604/415/170 actions it
++returns `reproduced=False` with `reached_level` 8/6/3 against `claimed_level=9`; and each
++prefix reproduces EXACTLY its own documented level (604->L8, 477->L7, 415->L6, 170->L3,
++94->L2). A pass that could not fail would have been worthless.
++
++**Correcting the entry above.** It said the 9 levels were "backed by prose", "cannot be
++re-verified today without redoing the reverse engineering", and framed this as possible
++record-integrity rot. That was wrong on the facts. The action sequences were complete on
++disk the whole time; the L1-L8 prefix is described in its own artifact as "5x gate-verified,
++replayed identically a 10th time this session". Nothing was lost and no RE needed redoing.
++
++**What was actually true** is narrower and more interesting: every L4-L9 probe round records
++`reproduction_verified: False` for the SAME stated reason -- budget. The gate replays the
++whole prefix from a fresh reset, so by L9 verifying cost as much as solving
++("Budget discipline: 810 of 1200 steps used across three L9 episodes ... the gate replay
++costs 604 more"). That is a LIVE/session step budget. Offline it does not apply, and the
++replay takes under a second. The verification was never hard -- it just never ran outside a
++session, so 6 of the 183 headline levels sat unverified for ~3 weeks.
++
++**Generalisable lesson worth more than this one game:** an interactive agent session can
++produce a result it structurally cannot afford to verify, and will then honestly record
++`verified: False` and move on. Nothing downstream distinguishes "unverified because it
++failed" from "unverified because the session ran out of budget". Both look identical in the
++registry. Anywhere else that pattern exists, the cheap fix is the same -- re-run the gate
++outside the session.
++
++**Still true and NOT resolved by this:** wa30 has no `GameAdapter` (24 of 25 public games do),
++so it remains unreachable by `solve_adaptered` / `build_progress_window` and stays outside
++offline induction corpora. That is a separate, lower-stakes gap -- and `reproduce()` takes an
++explicit apply callable, so the verification above needed no adapter at all.
++
+ ### 2026-07-31 (security audit) — gVisor GPU passthrough is NOT usable on this host (measured)
+ 
+ Raised by the operator while reviewing the sandbox-routing fix: *"We don't want to
+diff --git a/results/outer_loop_arc_wa30_reproduction_gate_20260731.json b/results/outer_loop_arc_wa30_reproduction_gate_20260731.json
+new file mode 100644
+index 0000000000..fcf4a0d1e4
+--- /dev/null
++++ b/results/outer_loop_arc_wa30_reproduction_gate_20260731.json
+@@ -0,0 +1,84 @@
++{
++  "experiment": "outer_loop_arc_wa30_reproduction_gate_20260731",
++  "honest_verdict": "complete_wa30_l9_reproduction_gate_PASSES_670_actions_reached_level_9_full_game_clear_verified",
++  "question": "wa30's registry row claimed levels_reproduced=9 / full_game_clear=true with reproduce=None and action_model=None. Its L4-L9 probe artifacts all self-report reproduction_verified=False. Do the banked actions actually reproduce L9 offline?",
++  "answer": "YES. The 670-action sequence reproduces level 9 offline, deterministically, in 0.8s.",
++  "why_it_was_never_verified": "Not a lost solve and not a missing artifact -- a BUDGET artifact. Every L4-L9 probe round records the same reason, e.g. L9: 'Budget discipline: 810 of 1200 steps used across three L9 episodes ... the gate replay costs 604 more'. The gate replays the whole prefix from a fresh reset, so by L9 verifying cost as much as solving, and each interactive session ran out of its step budget first. That budget is a LIVE/session constraint; offline the same replay is 0.8 seconds. Nobody re-ran it outside a session, so 6 of the 183 headline levels sat unverified for ~3 weeks.",
++  "gate_result_full": {
++    "game": "wa30",
++    "reached_level": 9,
++    "claimed_level": 9,
++    "reproduced": true,
++    "mode": "offline_reproduction_gate_no_quota",
++    "checked_action6_clicks": 0,
++    "oob_action6_clicks": [],
++    "any_oob_action6_clicks": false
++  },
++  "gate_result_prefixes": {
++    "604_actions_claimed_L8": {
++      "game": "wa30",
++      "reached_level": 8,
++      "claimed_level": 8,
++      "reproduced": true,
++      "mode": "offline_reproduction_gate_no_quota",
++      "checked_action6_clicks": 0,
++      "oob_action6_clicks": [],
++      "any_oob_action6_clicks": false
++    },
++    "477_actions_claimed_L7": {
++      "game": "wa30",
++      "reached_level": 7,
++      "claimed_level": 7,
++      "reproduced": true,
++      "mode": "offline_reproduction_gate_no_quota",
++      "checked_action6_clicks": 0,
++      "oob_action6_clicks": [],
++      "any_oob_action6_clicks": false
++    },
++    "415_actions_claimed_L6": {
++      "game": "wa30",
++      "reached_level": 6,
++      "claimed_level": 6,
++      "reproduced": true,
++      "mode": "offline_reproduction_gate_no_quota",
++      "checked_action6_clicks": 0,
++      "oob_action6_clicks": [],
++      "any_oob_action6_clicks": false
++    },
++    "170_actions_claimed_L3": {
++      "game": "wa30",
++      "reached_level": 3,
++      "claimed_level": 3,
++      "reproduced": true,
++      "mode": "offline_reproduction_gate_no_quota",
++      "checked_action6_clicks": 0,
++      "oob_action6_clicks": [],
++      "any_oob_action6_clicks": false
++    },
++    "94_actions_claimed_L2": {
++      "game": "wa30",
++      "reached_level": 2,
++      "claimed_level": 2,
++      "reproduced": true,
++      "mode": "offline_reproduction_gate_no_quota",
++      "checked_action6_clicks": 0,
++      "oob_action6_clicks": [],
++      "any_oob_action6_clicks": false
++    }
++  },
++  "discriminates": "The gate is not rubber-stamping: truncating to 604/415/170 actions yields reached_level 8/6/3 and reproduced=False against claimed_level=9, and each prefix reproduces EXACTLY its own documented level. A pass that could not fail would be worthless.",
++  "source_artifact": "results/outer_loop_fable5_wa30_probe_l9.json",
++  "n_actions": 670,
++  "action_shapes": "all plain {'action': N} keyboard actions; no ACTION6 clicks, so no live out-of-bounds risk",
++  "any_oob_action6_clicks": false,
++  "determinism": "identical result across 3 independent replays in separate processes",
++  "duration_s": 1.61,
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "inference_substrate_note": "Pure offline env-stepping, no LLM and no GPU. Strictly this is a REPLAY of a banked sequence, not runtime self-discovery; the substrate value is chosen as the project's no-LLM offline-arcade category and the distinction is stated here rather than hidden by the label.",
++  "solve_provenance": "outer_loop_re",
++  "solve_provenance_note": "Declared honestly. wa30 was solved by a 16-round OUTER-LOOP agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5 v9-v16 broke through), not by the live agent and not by a GameAdapter. This artifact VERIFIES that prior solve; it does not claim a new one. Per the ARC Live-Path Reachability Discipline an outer_loop_re solve is never headline-eligible as live-agent capability, and this does not make it so -- it only establishes that the banked levels meet the reproduction gate.",
++  "random_seed": 30,
++  "reproducibility_checksum": "6dc437e7cb7c3e03d84bce150af473e5519446a38c1e5bd7ea489e70f004b485",
++  "verifier_is_oracle": true,
++  "verifier_is_oracle_note": "The offline env IS the oracle here; this is a reproduction check, not a verifier-value claim."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

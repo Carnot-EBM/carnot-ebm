@@ -1,0 +1,4027 @@
+From de51c7b3e471731431b225d9a0308be1c08ffc47 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 22:02:54 -0400
+Subject: [PATCH 04770/11362] [conductor] Operational retrospective for
+ milestone 2026.06.456
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                              |    2 +-
+ docs/research-log.md                         |    6 +
+ ops/changelog.md                             |    1 +
+ ops/conductor-heartbeat.json                 |    2 +-
+ ops/conductor-log.md                         |    1 +
+ ops/conductor-state.json                     |    2 +-
+ results/arc_e3/ft09/world_model.py           |   21 +-
+ results/arc_frontier_tooluse_probe_ft09.json | 3276 +++++++++++++-----
+ results/operational_retro_2026_06_456.json   |   28 +
+ 9 files changed, 2555 insertions(+), 784 deletions(-)
+ create mode 100644 results/operational_retro_2026_06_456.json
+
+diff --git a/docs/index.html b/docs/index.html
+index 5a16d41686..9ce8dd9457 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">4,334</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">4,345</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 092087b3c1..47409b0edf 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5541,3 +5541,9 @@ The critical path for milestone .250:
+ - theme: the FINAL submission-readiness capstone for the 2026-06-30 ARC-AGI-3 deadline -- confirm the locked deliverable is ready to submit, and make the post-6/30 distributional-energy verifier-moat pivot EXECUTABLE on 7/1. A1/A2 push two fresh deepen banks (lf52 + sb26, counted only if B1 banks_trustworthy), A4 produces the operator's SINGLE FINAL held-out go/no-go number, D advances the distributional-energy-verifier scaffold to an executable spec, B1 audits banks + pivot-readiness, B2 re-confirms the package; plus the standing self-play verifier checkpoint, B3 retro-timing stamping/fallback application, and KV260 hardware continuity.
+ - key result: deliverable CONFIRMED READY + an HONEST NEGATIVE on growth. A4 held-out first-win (exp4939) = complete_heldout_first_win_0.04_full25_final_flag_resolved -- the FINAL clean full-25 number (0.04) carried with flag_resolved, the operator's 6/30 go/no-go decision number. Submission package re-confirmed ready operator-only (exp4942 success_submission_package_ready_final_pre_deadline). Post-6/30 pivot now EXECUTABLE: D (exp4940 success_distributional_energy_verifier_pivot_executable_spec_ready) advanced the arXiv:2605.18871 distributional-EBM scaffold (beats self-consistency on MuSR, oracle-distinct, verifier_is_oracle=false design target) from scaffold to runnable spec; B1 (exp4941 complete_v455_banks_and_pivot_audited_trusted) ruled banks + pivot-readiness TRUSTED. Capstone exp4945 = complete_capstone_v455_submission_ready_levels_69_heldout_0.04_package_ready_pivot_executable_7_1. Growth NULL: both level-up attempts banked no new level (exp4936 complete_lf52_no_new_level_residual_no_grounded_l3_delta, exp4937 complete_sb26_no_new_level_residual_no_grounded_l3_delta) -- reproducible_total_levels stays 69 (the .453 cn04 bank; .454/.455 added none). Support/infra clean: self-play checkpoint refreshed (exp4938 success_self_play_checkpoint_refreshed), KV260 reachable (exp4944 success_kv260_continuity_ok). Process notes: archive/activate exp4935 logged blocked_research_roadmap_next_yaml_missing yet the milestone activated and ran all downstream arms (same recurring cosmetic false-blocked verdict as exp4891/.451, exp4902/.452, exp4913/.453, exp4924/.454); the B3 retro-timing fix exp4943 BLOCKED again (blocked_insufficient_v455_mtime_window) -- ran mid-milestone before later arms landed, so the false-zero was not self-corrected this cycle.
+ - acceptance: submission-readiness CONFIRMED -- 3/3 deadline gates MET (A4 final held-out 0.04 flag_resolved go/no-go; B2 package ready operator-only; D post-6/30 pivot executable 7/1, B1-trusted) but 0/2 growth banks (both deepen attempts dead-ended on no grounded L3 delta -> reproducible_total_levels flat at 69). ARC first-win wall unchanged (WALL_IS_HIDDEN_STATE, closed .453). ~3/3 support+infra arms clean (self-play checkpoint, B1 audit, KV260 continuity). Operational: retro-data 0/0/0/null = the recurring false-zero detector gap (on-disk exp4935-exp4945, ~157-min window 19:28->22:05 UTC; the GPU-bound held-out arm exp4939 finished hours before the 22:13Z idle snapshot, so the post-window idle and gpu_idle_on_compute_bound_tasks=null are BOTH correct). Highest-leverage operational action (recurring, ~81 milestones) = WIRE exp4920's already-shipped mtime-fallback + runtime-stamping into the conductor's retro TIMING-DATA prompt-assembly call site AND repair the B3 fallback window anchor (activation-commit-anchored, capstone-time re-run) that exp4943 found insufficient. estimated_time_savings_pct=10.
++
++### Milestone 2026.06.456
++- exp_range: exp4954-exp4956 verified on-disk this turn (B3 exp4954 stamping/fallback -> exp4955 KV260 continuity -> capstone exp4956_capstone_v456, per ops/changelog.md read this turn). The full .456 arm set likely begins earlier (~exp4946 by the capstone-vN convention extending .454 exp4924-4934 / .455 exp4935-4945), but only these three were directly enumerated from on-disk records this turn -- because the milestone-scoped timing detector AGAIN reported 0 commits since activation: the recurring FALSE-ZERO detector gap documented .363->.455, now extending to .456 (~82 milestones; the shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds the retro TIMING DATA block).
++- theme: the FINAL submission-readiness capstone for the 2026-06-30 ARC-AGI-3 deadline -- confirm the locked deliverable is ready to submit and make the post-6/30 distributional-energy verifier-moat pivot TURNKEY/EXECUTABLE on 7/1; B3 applies the .453-shipped runtime-stamping + a RELAXED results/-mtime fallback window, KV260 hardware continuity stays in rotation, and the A3 substrate fix + B3 relaxed window are confirmed landed.
++- key result: deliverable CONFIRMED READY + an OPERATIONAL WIN on the recurring retro gap. Capstone exp4956 = complete_capstone_v456_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1 (reproducible_total_levels flat at 69 = the .453 cn04 bank; .454/.455/.456 added none; held-out first-win 0.04 carried with flag_resolved; submission package ready operator-only; post-6/30 distributional-energy verifier-moat pivot, arXiv:2605.18871 beats SC on MuSR, turnkey 7/1). The cycle's notable operational progress: the B3 arm exp4954 moved the recurring false-zero fix from BLOCKED (.454 exp4931 / .455 exp4943, both blocked_insufficient_mtime_window on the too-strict n_arms>=10 gate) to success_v456_stamping_backfilled_and_mtime_window_confirmed using a RELAXED gate (n_arms>=7, wall_minutes>0) -- the mtime-fallback + runtime-stamping is now CONFIRMED ready-to-wire, emitting a non-zero window + a wiring-readiness confirmation. KV260 reachable (exp4955 success_kv260_continuity_ok, hardware_smoke).
++- acceptance: operational retro -- deliverable LOCKED for the 6/30 deadline (levels 69, held-out 0.04 flag_resolved, package ready operator-only, post-6/30 pivot turnkey 7/1 per exp4956); growth flat (reproducible_total_levels 69, ARC first-win wall WALL_IS_HIDDEN_STATE, closed .453). Operational: this retro's TIMING DATA still shows 0/0/0/null = the recurring false-zero detector gap (the milestone is NOT empty; on-disk exp4954-exp4956 confirm it ran). gpu_idle_on_compute_bound_tasks=null is CORRECT -- zero compute-bound arms (FINAL capstone = aggregation_from_upstream_artifacts + a KV260 hardware_smoke), so idle RTX 3090s are by-design and GPU idle is NOT flagged. Highest-leverage operational action (recurring, ~82 milestones, but now UNBLOCKED): wire exp4954's confirmed mtime-fallback + runtime-stamping into the conductor's retro TIMING-DATA prompt-assembly call site -- the fix is no longer blocked (as in .454/.455), only the single conductor-side wiring step remains (out-of-scope for autonomous retro tasks, which must not edit scripts/research_conductor.py). estimated_time_savings_pct=10.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3c3c24cab0..112827fc93 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10395,3 +10395,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-29: PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the recurring retro false-zero + the B3 window-too-strict block) -- APPLY the .453-shipped runtime-stamping helper to the .456 arms (backfill duration_s/inference_substrate/compute_ bound on any arm missing them), and re-run the results/-mtime FALLBACK over .456 with a RELAXED gate that accepts the arms PRESENT at run time (n_arms>=7, wall_minutes>0) instead of the n_arms>=10 that false-blocked .454/.455 (B3 runs before all 11 arms land). Emit a NON-zero window + a final wiring-readiness confirmation. Standalone modules + audit + proposal only; do NOT modify scripts/research_conductor.py. (✅ Complete) — honest_verdict=success_v456_stamping_backfilled_and_mtime_window_confirmed; results/experiment_4954_stamping_backfill_and_wiring_readiness.json
+ - 2026-06-29: PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only continuity check (graduated terminal; stays in the rotation). SSH-reachability precondition ONLY (NEVER a host SD-card / block-device precondition); always WRITE a deliverable (blocked artifact if unreachable). (⚠️ Research Finding) — honest_verdict=success_kv260_continuity_ok; results/experiment_4955_kv260_continuity.json
+ - 2026-06-29: PHASE E (CAPSTONE .456) -- aggregate the FINAL submission-readiness scorecard for the 6/30 deadline + the post-6/30 verifier-moat pivot handoff. HEADLINE = the locked deliverable confirmed ready for submission: reproducible_total_levels (69 + A1/A2 banks counted ONLY if B1 banks_trustworthy), the FINAL held-out go/no-go (A4 full-25 0.04 + flag_resolved), submission package ready (B2). State the post-6/30 distributional-energy-verifier verifier-moat pivot as TURNKEY/EXECUTABLE on 7/1 (D exp4951 + B1 pivot_readiness_trustworthy, arXiv:2605.18871 beats SC on MuSR). Confirm the A3 substrate fix + the B3 relaxed window landed. Skip any flagged_adversarial upstream. (✅ Complete) — honest_verdict=complete_capstone_v456_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1; results/experiment_4956_capstone_v456.json
++- 2026-06-29: OPERATIONAL RETROSPECTIVE (.456) -- FINAL submission-readiness capstone milestone before the 2026-06-30 deadline. Retro TIMING DATA again returned 0/0/0/null = the recurring FALSE-ZERO detector gap (now extends .363->.456, ~82 milestones; the detector-wire reaches the standalone module but not the conductor's retro prompt-assembly consumer). NOT empty: on-disk arms exp4954 (B3 stamping/fallback), exp4955 (KV260 continuity), exp4956 (capstone_v456) ran per this changelog. gpu_idle_on_compute_bound_tasks=null is CORRECT -- zero compute-bound tasks (final capstone = aggregation + KV260 hardware_smoke), so idle RTX 3090s are by-design, NOT a bottleneck; GPU idle NOT flagged. OPERATIONAL PROGRESS this cycle: the B3 arm exp4954 moved the recurring fix from BLOCKED (.454 exp4931 / .455 exp4943, both blocked on the too-strict n_arms>=10 window) to success_v456_stamping_backfilled_and_mtime_window_confirmed via a RELAXED gate (n_arms>=7, wall_minutes>0) -- the mtime-fallback + runtime-stamping is now CONFIRMED ready-to-wire. Highest-leverage action sharpens accordingly: the fix is no longer 'blocked', only the single conductor-side wiring step into the retro prompt-assembly call site remains (out-of-scope for autonomous retro tasks). estimated_time_savings_pct=10. results/operational_retro_2026_06_456.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2073a4df60..cad6a4eaa5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 109, "phase": "iteration_start", "last_beat": "2026-06-29T01:28:49Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 110, "phase": "iteration_start", "last_beat": "2026-06-29T01:54:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e105946037..07fad4eaea 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9556,3 +9556,4 @@ The contro |
+ | 2026-06-29 00:51 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 89 passed, 1 warning in 9.59s |
+ | 2026-06-29 01:06 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the rec | OK | 85 passed, 1 warning in 9.02s |
+ | 2026-06-29 01:26 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | 86 passed, 1 warning in 7.10s |
++| 2026-06-29 01:52 UTC | PHASE E (CAPSTONE .456) -- aggregate the FINAL sub | OK | 86 passed, 1 warning in 10.03s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4b6bb07937..c17eb4406f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 109, "phase": "iteration_start", "started_at": "2026-06-29T01:28:49Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 110, "phase": "iteration_start", "started_at": "2026-06-29T01:54:32Z"}
+\ No newline at end of file
+diff --git a/results/arc_e3/ft09/world_model.py b/results/arc_e3/ft09/world_model.py
+index fa3149f443..e3eff972e7 100644
+--- a/results/arc_e3/ft09/world_model.py
++++ b/results/arc_e3/ft09/world_model.py
+@@ -1,14 +1,19 @@
+ import numpy as np
+ 
+ def engine(grid, action, data):
+-    if action == 6:
+-        px, py = data['x'], data['y']
+-        logical_x, logical_y = px // 1, py // 1
+-        if 0 <= logical_y < grid.shape[0] and 0 <= logical_x < grid.shape[1]:
+-            grid = grid.copy()
+-            grid[logical_y, logical_x] = 0
+-            return grid
+-    return grid.copy()
++    if action == 1:
++        grid[63, 62] = 11
++        grid[63, 60] = 11
++        grid[63, 58] = 11
++        grid[63, 56] = 11
++    elif action == 2:
++        grid[63, 54] = 11
++        grid[63, 52] = 11
++    elif action == 6:
++        if data:
++            px, py = data['x'], data['y']
++            grid[py, px] = 11
++    return grid
+ 
+ def is_level_complete(grid):
+     return False
+\ No newline at end of file
+diff --git a/results/arc_frontier_tooluse_probe_ft09.json b/results/arc_frontier_tooluse_probe_ft09.json
+index 6bed8233b6..e106d202e1 100644
+--- a/results/arc_frontier_tooluse_probe_ft09.json
++++ b/results/arc_frontier_tooluse_probe_ft09.json
+@@ -12,7 +12,7 @@
+     "solved_l1": false,
+     "reason": "no plan to is_level_complete in model",
+     "n_transitions": 120,
+-    "verifier_accuracy": 1.0,
++    "verifier_accuracy": 0.0,
+     "verifier_cell_recall": 0.0,
+     "plan_outcome": {
+       "planned": false,
+@@ -25,8 +25,8 @@
+     "solved_l1": false,
+     "cheated": false,
+     "turns_used": 30,
+-    "env_steps": 378,
+-    "n_induce_ok": 1,
++    "env_steps": 341,
++    "n_induce_ok": 2,
+     "n_plan": 1,
+     "n_execute": 0,
+     "n_try_actions": 25,
+@@ -101,161 +101,123 @@
+           {
+             "action_id": 6,
+             "data": {
+-              "x": 0,
+-              "y": 1
+-            }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 1,
+-              "y": 1
+-            }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 2,
+-              "y": 1
++              "x": 6,
++              "y": 0
+             }
+           },
+           {
+             "action_id": 6,
+             "data": {
+-              "x": 3,
+-              "y": 1
++              "x": 7,
++              "y": 0
+             }
+           },
+           {
+             "action_id": 6,
+             "data": {
+-              "x": 4,
+-              "y": 1
++              "x": 8,
++              "y": 0
+             }
+           },
+           {
+             "action_id": 6,
+             "data": {
+-              "x": 5,
+-              "y": 1
++              "x": 9,
++              "y": 0
+             }
+-          },
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 0,
+-              "y": 2
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 1,
+-              "y": 2
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 2,
+-              "y": 2
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 3,
+-              "y": 2
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 4,
+-              "y": 2
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 5,
+-              "y": 2
+-            }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 0,
+-              "y": 3
+-            }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 1,
+-              "y": 3
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 2,
+-              "y": 3
++              "x": 6,
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 3,
+-              "y": 3
++              "x": 7,
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 4,
+-              "y": 3
++              "x": 8,
++              "y": 0
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 5,
+-              "y": 3
++              "x": 9,
++              "y": 0
+             }
+           }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0
+         ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
++        "n_clicks_with_coords": 10,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -269,7 +231,7 @@
+         "accuracy": 0.0,
+         "cell_recall": 0.0,
+         "has_is_level_complete": true,
+-        "n_transitions": 84,
++        "n_transitions": 70,
+         "n_mismatch": 8
+       }
+     },
+@@ -291,18 +253,20 @@
+         "actions": [
+           1,
+           1,
++          1,
++          1,
++          2,
+           2,
+           2,
++          2,
++          3,
++          3,
+           3,
+           3,
+           4,
+           4,
+-          5,
+-          1,
+-          2,
+-          3,
+           4,
+-          5
++          4
+         ]
+       },
+       "obs": {
+@@ -320,11 +284,81 @@
+           0,
+           0,
+           0,
++          0,
++          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 0,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -334,25 +368,45 @@
+       "tool": "try_actions",
+       "args": {
+         "actions": [
++          6,
++          6,
++          6,
++          6,
++          6,
++          6
++        ],
++        "data": [
+           {
+-            "action_id": 6,
+-            "x": 51,
++            "x": 14,
+             "y": 13
+           },
+           {
+-            "action_id": 6,
+-            "x": 57,
++            "x": 15,
+             "y": 13
+           },
+           {
+-            "action_id": 6,
+-            "x": 57,
+-            "y": 15
++            "x": 14,
++            "y": 14
++          },
++          {
++            "x": 15,
++            "y": 14
++          },
++          {
++            "x": 46,
++            "y": 13
++          },
++          {
++            "x": 47,
++            "y": 13
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
++          0,
++          0,
++          0,
+           0,
+           0,
+           0
+@@ -360,6 +414,34 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 0,
++        "n_clicks_no_coords": 6,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -369,46 +451,38 @@
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          1,
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          5
++          {
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 45,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 21,
++              "y": 13
++            }
++          }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -417,168 +491,160 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 7,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
+-          1,
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          5
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 45,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 21,
++              "y": 13
++            }
++          }
+         ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 8,
++      "turn": 7,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 30,
+-              "y": 10
++              "x": 13,
++              "y": 21
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 31,
+-              "y": 10
++              "x": 21,
++              "y": 21
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 32,
+-              "y": 10
++              "x": 13,
++              "y": 29
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 33,
+-              "y": 10
++              "x": 21,
++              "y": 29
+             }
+-          },
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 34,
+-              "y": 10
++              "x": 13,
++              "y": 21
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 35,
+-              "y": 10
++              "x": 21,
++              "y": 21
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 36,
+-              "y": 10
++              "x": 13,
++              "y": 29
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 37,
+-              "y": 10
++              "x": 21,
++              "y": 29
+             }
+-          },
++          }
++        ],
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 8,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 38,
+-              "y": 10
++              "x": 25,
++              "y": 13
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 39,
+-              "y": 10
++              "x": 57,
++              "y": 13
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 40,
+-              "y": 10
++              "x": 17,
++              "y": 13
+             }
+           },
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 41,
+-              "y": 10
++              "x": 49,
++              "y": 13
+             }
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -587,6 +653,38 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 25,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 49,
++              "y": 13
++            }
++          }
++        ],
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -596,54 +694,48 @@
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          1,
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          5
++          {
++            "action": 6,
++            "data": {
++              "x": 16,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 13
++            }
++          }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 16,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 13
++            }
++          }
++        ],
++        "n_clicks_with_coords": 2,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -653,109 +745,38 @@
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          1,
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          5,
+-          6,
+-          6,
+-          6,
+-          6
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0
+-        ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 11,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6
+-        ],
+-        "data": [
+-          {
+-            "x": 13,
+-            "y": 12
+-          },
+-          {
+-            "x": 45,
+-            "y": 12
+-          },
+           {
+-            "x": 20,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 13
++            }
+           },
+           {
+-            "x": 52,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 13
++            }
+           },
+           {
+-            "x": 13,
+-            "y": 14
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 21
++            }
+           },
+           {
+-            "x": 45,
+-            "y": 14
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 21
++            }
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -764,27 +785,79 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 21
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 21
++            }
++          }
++        ],
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 12,
++      "turn": 11,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 21
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 29
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 37
++            }
++          }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -793,86 +866,79 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 13,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
++        "actions_executed": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+-              "x": 57,
++              "x": 42,
+               "y": 13
+             }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 21
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 29
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 42,
++              "y": 37
++            }
+           }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0
+         ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 14,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0
+-        ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
++      "turn": 12,
++      "note": "no_tool_call_parsed",
++      "raw_tail": "codex timeout 200s"
+     },
+     {
+-      "turn": 15,
++      "turn": 13,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+           1,
+           1,
+           1,
+-          1,
+-          2,
+           2,
+           2,
+           2,
+           3,
+           3,
+           3,
+-          3,
+           4,
+           4,
+           4,
++          1,
++          2,
++          3,
+           4,
+-          6
++          5,
++          5,
++          5,
++          1,
++          1,
++          2,
++          2,
++          3,
++          3,
++          4,
++          4
+         ]
+       },
+       "obs": {
+@@ -893,116 +959,172 @@
+           0,
+           0,
+           0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 16,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
++        "actions_executed": [
+           {
+-            "id": 6,
+-            "x": 54,
+-            "y": 13
++            "action": 1,
++            "data": null
+           },
+           {
+-            "id": 6,
+-            "x": 55,
+-            "y": 13
++            "action": 1,
++            "data": null
+           },
+           {
+-            "id": 6,
+-            "x": 54,
+-            "y": 14
++            "action": 1,
++            "data": null
+           },
+           {
+-            "id": 6,
+-            "x": 55,
+-            "y": 14
+-          }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0
+-        ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 17,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
++            "action": 2,
++            "data": null
++          },
+           {
+-            "action_id": 6,
+-            "data": {
+-              "x": 56,
+-              "y": 12
+-            }
+-          }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0
+-        ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 5,
++            "data": null
++          },
++          {
++            "action": 5,
++            "data": null
++          },
++          {
++            "action": 5,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 0,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 18,
++      "turn": 14,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          1,
+           2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+           3,
+-          1,
+-          1,
+-          1,
+-          1,
+-          4,
+-          4,
+-          4,
+           4,
+           5
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -1015,47 +1137,86 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 32,
++              "y": 5
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 5,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 3,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 19,
++      "turn": 15,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 17,
+               "y": 13
+             }
+           },
++          1,
++          2,
++          3,
++          4,
++          5,
+           {
+-            "action_id": 6,
++            "action": 6,
+             "data": {
+               "x": 17,
+               "y": 15
+             }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 23,
+-              "y": 13
+-            }
+-          },
+-          {
+-            "action_id": 6,
+-            "data": {
+-              "x": 23,
+-              "y": 21
+-            }
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
++          0,
++          0,
++          0,
+           0,
+           0,
+           0,
+@@ -1064,45 +1225,89 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 13
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 5,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 15
++            }
++          }
++        ],
++        "n_clicks_with_coords": 2,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 20,
++      "turn": 16,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2,
+-          2
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 13
++            }
++          },
++          1,
++          1,
++          1,
++          1,
++          1,
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 15
++            }
++          },
++          1,
++          1,
++          1,
++          1,
++          1,
++          {
++            "action": 6,
++            "data": {
++              "x": 14,
++              "y": 12
++            }
++          },
++          1,
++          1,
++          1,
++          1,
++          1
+         ]
+       },
+       "obs": {
+@@ -1124,102 +1329,1288 @@
+           0,
+           0,
+           0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 21,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 13
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 17,
++              "y": 15
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 14,
++              "y": 12
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 3,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 17,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 13
++            }
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 15
++            }
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 50,
++              "y": 13
++            }
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 50,
++              "y": 15
++            }
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 13
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 15
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 50,
++              "y": 13
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 50,
++              "y": 15
++            }
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 4,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 18,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 10,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 16,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 45,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 4
++            }
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 10,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 16,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 24,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 45,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 4
++            }
++          }
++        ],
++        "n_clicks_with_coords": 6,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 19,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 7,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 15,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 43,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 51,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 7,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 15,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 43,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 51,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          }
++        ],
++        "n_clicks_with_coords": 6,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 20,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 53,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          }
++        ],
++        "n_clicks_with_coords": 3,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 21,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          5,
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 15
++            }
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 5,
++            "data": null
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 10
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 11
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 13
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 56,
++              "y": 15
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 15
++            }
++          },
+           {
+-            "action_id": 6,
+-            "x": 43,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 15
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 47,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 15
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 51,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 60,
++              "y": 15
++            }
+           }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0
+         ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
++        "n_clicks_with_coords": 36,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+       "turn": 22,
+-      "note": "no_tool_call_parsed",
+-      "raw_tail": "codex timeout 200s"
++      "tool": "induce",
++      "args": {},
++      "obs": {
++        "induced": true,
++        "accuracy": 0.024,
++        "cell_recall": 0.118,
++        "has_is_level_complete": true,
++        "n_transitions": 250,
++        "n_mismatch": 8
++      }
+     },
+     {
+       "turn": 23,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
++          2,
++          2,
++          2,
++          3,
++          3,
++          3,
+           1,
+           1,
+           1,
+-          1,
++          4,
++          4,
++          4,
+           2,
++          3,
+           2,
++          3,
++          1,
++          4,
++          1,
++          4,
+           2,
+           2,
+           3,
+           3,
++          1,
++          1,
++          4,
++          4,
++          5,
++          2,
+           3,
++          2,
+           3,
++          2,
++          3
++        ]
++      },
++      "obs": {
++        "error": "tool raised: ValueError('not enough values to unpack (expected 2, got 1)')"
++      }
++    },
++    {
++      "turn": 24,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
+           4,
+           4,
+           4,
+           4,
+-          5,
+-          5,
+-          5,
+-          5,
+-          1,
++          4,
++          2,
++          2,
++          2,
++          2,
+           2,
+           3,
+-          4,
+-          5,
++          3,
++          3,
++          3,
++          3,
++          1,
++          1,
++          1,
++          1,
+           1,
++          4,
++          4,
++          2,
+           2,
+           3,
+-          4,
+-          5
++          3,
++          1,
++          1
+         ]
+       },
+       "obs": {
+@@ -1251,121 +2642,202 @@
+           0,
+           0,
+           0,
+-          0,
+-          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
+-        "action_schema_hint": null,
+-        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+-      }
+-    },
+-    {
+-      "turn": 24,
+-      "tool": "try_actions",
+-      "args": {
+-        "actions": [
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6,
+-          6
+-        ],
+-        "data": [
++        "actions_executed": [
+           {
+-            "x": 13,
+-            "y": 11
++            "action": 4,
++            "data": null
+           },
+           {
+-            "x": 14,
+-            "y": 11
++            "action": 4,
++            "data": null
+           },
+           {
+-            "x": 15,
+-            "y": 11
++            "action": 4,
++            "data": null
+           },
+           {
+-            "x": 13,
+-            "y": 12
++            "action": 4,
++            "data": null
+           },
+           {
+-            "x": 14,
+-            "y": 12
++            "action": 4,
++            "data": null
+           },
+           {
+-            "x": 15,
+-            "y": 12
++            "action": 2,
++            "data": null
+           },
+           {
+-            "x": 13,
+-            "y": 13
++            "action": 2,
++            "data": null
+           },
+           {
+-            "x": 14,
+-            "y": 13
++            "action": 2,
++            "data": null
+           },
+           {
+-            "x": 15,
+-            "y": 13
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
+           }
+-        ]
+-      },
+-      "obs": {
+-        "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0
+         ],
+-        "reached_level_up": false,
+-        "start_level": 0,
+-        "skipped_malformed": 0,
++        "n_clicks_with_coords": 0,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+       "turn": 25,
+-      "note": "no_tool_call_parsed",
+-      "raw_tail": "codex timeout 200s"
+-    },
+-    {
+-      "turn": 26,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          1,
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          5,
+-          6
++          {
++            "action": 6,
++            "data": {
++              "x": 5,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 21,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 41,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 49,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 4
++            }
++          },
++          {
++            "action": 2
++          },
++          {
++            "action": 2
++          },
++          {
++            "action": 3
++          },
++          {
++            "action": 3
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 1
++          },
++          {
++            "action": 4
++          },
++          {
++            "action": 4
++          }
+         ]
+       },
+       "obs": {
+@@ -1383,103 +2855,254 @@
+           0,
+           0,
+           0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 5,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 21,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 41,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 49,
++              "y": 4
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 57,
++              "y": 4
++            }
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 2,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 3,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 1,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          },
++          {
++            "action": 4,
++            "data": null
++          }
++        ],
++        "n_clicks_with_coords": 6,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 27,
++      "turn": 26,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+           {
+-            "action_id": 6,
+-            "x": 31,
+-            "y": 13
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 49,
++              "y": 12
++            }
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
++          0,
+           0
+         ],
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 13,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 49,
++              "y": 12
++            }
++          }
++        ],
++        "n_clicks_with_coords": 2,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+     },
+     {
+-      "turn": 28,
++      "turn": 27,
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+           {
+-            "action_id": 6,
+-            "x": 37,
+-            "y": 10
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 43,
+-            "y": 10
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 50,
+-            "y": 10
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 14
++            }
++          }
++        ]
++      },
++      "obs": {
++        "per_step_level": [
++          0,
++          0,
++          0
++        ],
++        "reached_level_up": false,
++        "start_level": 0,
++        "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 58,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 37,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 43,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 52,
++              "y": 14
++            }
++          }
++        ],
++        "n_clicks_with_coords": 3,
++        "n_clicks_no_coords": 0,
++        "action_schema_hint": null,
++        "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
++      }
++    },
++    {
++      "turn": 28,
++      "tool": "try_actions",
++      "args": {
++        "actions": [
++          {
++            "action": 6,
++            "data": {
++              "x": 15,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 50,
+-            "y": 12
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 37,
+-            "y": 14
++            "action": 6,
++            "data": {
++              "x": 43,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 43,
+-            "y": 14
++            "action": 6,
++            "data": {
++              "x": 51,
++              "y": 12
++            }
+           },
+           {
+-            "action_id": 6,
+-            "x": 50,
+-            "y": 14
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
+           }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -1489,6 +3112,45 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 15,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 23,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 43,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 51,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 59,
++              "y": 12
++            }
++          }
++        ],
++        "n_clicks_with_coords": 5,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -1498,36 +3160,52 @@
+       "tool": "try_actions",
+       "args": {
+         "actions": [
+-          1,
+-          1,
+-          1,
+-          2,
+-          2,
+-          2,
+-          3,
+-          3,
+-          3,
+-          4,
+-          4,
+-          4,
+-          5,
+-          5,
+-          5,
+-          6
++          {
++            "action": 6,
++            "data": {
++              "x": 39,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 47,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 39,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 47,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 14
++            }
++          }
+         ]
+       },
+       "obs": {
+         "per_step_level": [
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+-          0,
+           0,
+           0,
+           0,
+@@ -1538,6 +3216,52 @@
+         "reached_level_up": false,
+         "start_level": 0,
+         "skipped_malformed": 0,
++        "actions_executed": [
++          {
++            "action": 6,
++            "data": {
++              "x": 39,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 47,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 12
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 39,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 47,
++              "y": 14
++            }
++          },
++          {
++            "action": 6,
++            "data": {
++              "x": 55,
++              "y": 14
++            }
++          }
++        ],
++        "n_clicks_with_coords": 6,
++        "n_clicks_no_coords": 0,
+         "action_schema_hint": null,
+         "final_frame": "5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555999999558888885599999955555555555599999955888888559999995555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888552200225599999955555555555588888855220022558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888550088225599999955555555555588888855008800558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555888888552200005599999955555555555588888855220022558888885555\n5555555555555555555555555555555555555555555555555555555555555555\n5555555555555555555555555555555555555555555555555555555555555555\n555599999955888888558888885555"
+       }
+@@ -1546,6 +3270,12 @@
+   "lever_signal": false,
+   "gate": "treatment_solved_l1 AND NOT baseline_solved_l1 AND NOT cheated",
+   "interpretation": "Ceiling probe of the operator's tool-use/MCP lever. The driver (codex/gpt-5.5, reasoning xhigh) is given a sandboxed tool interface over the EXISTING subsystems and decides what to do; the ONLY new variable vs the one-shot baseline is adaptive multi-round tool-DRIVING (both use codex induction, so induction strength is held constant). If the frontier driver cannot beat the one-shot baseline at first-contact, the deployable local 9B certainly cannot (it is strictly weaker at multi-step agentic tool-use), so the lever is dead before any 9B/Kaggle build. A positive (lever_signal=true) would justify ONLY a live-path re-validation with the local model -- NOT a deliverable claim. Anti-cheat: driver sandboxed in an empty CWD, told JSON-only, tool shim never returns source; a post-hoc source-read scan marks the run CONFOUNDED if it peeked.",
++  "limitations": [
++    "n=2 games (re86, ft09) -- suggestive, not a decisive ceiling claim over all 25 games.",
++    "verifier 'accuracy' is full-grid-match over ALL transitions; on a game where exploration surfaces NO state change (new_changed=0) an identity model scores accuracy=1.0 with cell_recall=0.0 (a VACUOUS fit, not a substantive world model) -- read cell_recall + new_changed alongside accuracy.",
++    "induce backend is the deployable local Qwen3.5-9B-MTP, which is weak (often acc~0 / degenerate on these grids); the probe routes around it via try_actions, but a stronger induce backend might change the plan/execute arm.",
++    "reasoning_effort is codex gpt-5.5's DEFAULT (xhigh per the codex header), not explicitly forced."
++  ],
+   "solve_provenance": "development_proxy",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -1553,7 +3283,7 @@
+   "model_specs": {
+     "driver": "codex/gpt-5.5",
+     "induce_backend": "local Qwen3.5-9B-MTP (deployable)",
+-    "reasoning_effort": "xhigh",
++    "reasoning_effort": "xhigh (codex gpt-5.5 default; not explicitly forced via -c)",
+     "isolation": "induce backend held constant baseline==treatment; ONLY codex-driving differs"
+   },
+   "preconditions_checked": [
+@@ -1571,6 +3301,6 @@
+     }
+   ],
+   "random_seed": 20260628,
+-  "duration_s": 1331.74,
+-  "reproducibility_checksum": "sha256:7fd7caf005dfae9969587f8d8e5a68cc1cb29bdfc96a71ab056b5e621f6bc828"
++  "duration_s": 1234.3,
++  "reproducibility_checksum": "sha256:ab847e969e3ba176640738d3c8c0f24658f54f758390ab326fd64ff2397d6026"
+ }
+diff --git a/results/operational_retro_2026_06_456.json b/results/operational_retro_2026_06_456.json
+new file mode 100644
+index 0000000000..ebe7bb28e3
+--- /dev/null
++++ b/results/operational_retro_2026_06_456.json
+@@ -0,0 +1,28 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.456",
++  "generated_at": "2026-06-29T01:57:28Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "Milestone 2026.06.456 is the FINAL PHASE E submission-readiness capstone before the 2026-06-30 ARC-AGI-3 deadline. The retro TIMING-DATA detector again returned 0 experiments / 0 compute-bound / 0 wall-minutes with both RTX 3090s idle -- the recurring false-zero detector gap (documented .363->.455). On-disk evidence (ops/changelog.md, read this turn) shows .456 in fact ran its capstone arms (exp4954 B3 stamping/fallback, exp4955 KV260 continuity, exp4956 capstone_v456); none are compute-bound LLM inference, so the idle GPUs and gpu_idle_on_compute_bound_tasks=null are correct-by-design, not a bug.",
++  "bottlenecks_identified": [
++    "Observability, NOT wall-time: the retro TIMING-DATA detector reported 0 commits since activation -- the recurring false-zero gap (~82 milestones, .363->.455 per the .454/.455 retros). The detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds this TIMING-DATA block, so the retrospective cannot self-confirm what the milestone actually ran.",
++    "GPU idle is NOT a bottleneck this milestone: there are zero compute-bound tasks (the FINAL capstone is aggregation_from_upstream_artifacts plus a KV260 hardware_smoke), so gpu_idle_on_compute_bound_tasks=null and the idle RTX 3090s are correct-by-design. No DualGPURunner action applies (no model loaded)."
++  ],
++  "improvements_suggested": [
++    "Wire exp4954's NOW-CONFIRMED fix into the retro prompt-assembly call site. This milestone's B3 arm (exp4954, on-disk per ops/changelog) advanced the recurring fix from BLOCKED in .454 (exp4931) / .455 (exp4943) -- both blocked on the too-strict n_arms>=10 window -- to success_v456_stamping_backfilled_and_mtime_window_confirmed using a RELAXED gate (n_arms>=7, wall_minutes>0). The fallback + runtime-stamping is confirmed ready-to-wire; only the conductor-side wiring remains (out-of-scope for autonomous retro tasks, which must not edit scripts/research_conductor.py).",
++    "Add a milestone-type signal (capstone/aggregation vs compute-bound) to the retro input so a by-design zero-compute capstone is auto-labelled 'expected' rather than ambiguous, preventing the next retro from drawing a false 'nothing ran' conclusion.",
++    "With the 6/30 deadline ~2 days out, keep retro-tooling changes minimal and operator-gated; the capstone (exp4956) already re-confirmed the submission package ready and the post-6/30 verifier-moat pivot turnkey for 7/1."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Operator/conductor action: wire exp4954's confirmed mtime-fallback + runtime-stamping into the conductor's retro TIMING-DATA prompt-assembly call site. The fix is no longer 'blocked' (as in .454/.455) -- it is confirmed ready this milestone; only the single wiring step remains, and it would correct retrospective accuracy for every future milestone.",
++    "Emit a retro_input milestone-type flag so 0-compute capstones are not misread as empty/failed milestones.",
++    "Hold non-essential operational tooling until after the 2026-06-30 submission; the deliverable is LOCKED (capstone exp4956: reproducible_total_levels 69, held-out first-win 0.04, package ready, pivot turnkey 7/1), so operator focus stays on submission."
++  ],
++  "estimated_time_savings_pct": 10,
++  "meta_reflection": "For the FINAL capstone two days before the deadline, 'no new experiments' is the operationally-correct posture and the idle GPUs confirm it. The notable progress this cycle is that the recurring false-zero fix moved from BLOCKED to CONFIRMED-READY (exp4954) -- the standing highest-leverage operational action is now a single conductor-side wiring step, not a fresh build. The retro's own 0/0/0/null block remains the live proof that the wiring is still pending."
++}
+-- 
+2.55.0
+

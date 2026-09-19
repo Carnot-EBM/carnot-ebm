@@ -1,0 +1,227 @@
+From 6ec35b8088aec5bd85a6b008a140d3c268d88321 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 22:13:56 -0400
+Subject: [PATCH 07726/11362] [outer-loop] ARC E3 search A/B = robust null:
+ perception-target routing does not convert to discovery (REQ-ARC-WMTE-5835)
+
+Fed a perception-derived target into Carnot's LLM-free value-head-routed explorer;
+A/B vs default, 8 games. 0 discovery both arms, robust across search mode. The
+value_head engages but player->target distance never decreases -- the search doesn't
+navigate to the target. Combined with the greedy-direct null (5834): perception fix
+is validated but neither architecture executes it into a solved level out of the box.
+Execution/navigation is a hard, separate problem. Bounds the perception-fix program
+honestly: wall moved from perception/goal to execution/navigation.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...c-winner-recipe-reproduction-2026-07-23.md |  19 +++
+ ops/verifier_gaps.md                          |  17 +++
+ ..._arc_e3_perception_target_ab_20260723.json | 139 ++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 results/outer_loop_arc_e3_perception_target_ab_20260723.json
+
+diff --git a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+index 7a722c96da..dcb2fa0026 100644
+--- a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
++++ b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+@@ -278,3 +278,22 @@ target.
+ 6. Re-authoring -> goal gate **0 -> 4/8**, zero HUD fixation; wired into the live agent
+ 7. Discovery A/B -> **0/8 both arms** -> perception necessary, not sufficient; **execution/dynamics is next**;
+    feed the perception fix into Carnot's verifier-routed search (not the greedy-direct winner recipe)
++
++## E3 search A/B (5835): routing the perception target into Carnot's search is also a null
++
++Executed the redirect the discovery null pointed to: fed a perception-derived target (nearest non-HUD object
++to the detected player, from a perceive_entities recon) into Carnot's LLM-free tier-1 explorer as a
++player->target Manhattan value_head, routed (value_weight=1, best_first, navigation_cost_tiebreak=False), A/B
++vs the default explorer, 8 games, scored by run_game.
++
++**Result: 0 discovery, both arms, all 8 -- robust across search mode** (depth_first_ride vw3 also 0). The
++value_head engages (instrumented ~41 calls/run, sane distances) but the player->target distance hovers at ~9
++and never decreases: the search does not navigate the player to the target.
++
++**What this bounds.** Combined with the greedy-direct null (5834): the perception fix is validated
++(goal-framing 0->4/8 offline, 0->7/8 oracle) but NEITHER greedy-direct NOR value-head-routed search converts
++it to a solved level out of the box. Execution/navigation is a genuinely hard, separate problem -- not cracked
++by routing toward a Manhattan target. Likely unaddressed: the recon target may not be the true exit
++(nearest-object heuristic); the search may not find the navigation path within budget even with a correct
++target; the perception arm only applied to 3/8 games. The honest end state: the perception-fix program moved
++the wall from perception/goal-induction to execution/navigation, and the execution wall stands.
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 1a76a8b75e..99f204e765 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2720,6 +2720,23 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   the goal verifier (REQ-ARC-WMTE-5830) confirms progress via the level counter.** This closes the
+   winner-matching investigation with a clear, measured redirect back to Carnot's search-based strength.
+ 
++- **E3 SEARCH A/B = ROBUST NULL 2026-07-23 (REQ-ARC-WMTE-5835,
++  `results/outer_loop_arc_e3_perception_target_ab_20260723.json`).** Executed the redirect: fed a
++  perception-derived target (nearest non-HUD object to the detected player, from a `perceive_entities` recon)
++  into Carnot's LLM-free tier-1 explorer as a player->target Manhattan value_head, routed (value_weight=1,
++  best_first, navigation_cost_tiebreak=False). A/B vs the default explorer, 8 games, scored by `run_game`.
++  Result: **0 discovery, both arms, all 8 -- robust across search mode (depth_first_ride vw3 also 0).** The
++  value_head engages (instrumented) but the player->target distance never decreases: the search does not
++  navigate the player to the target. So, combined with the greedy-direct null (5834): the perception fix is
++  validated (goal-framing 0->4/8) but NEITHER greedy-direct NOR value-head-routed search converts it to a
++  solved level out of the box. EXECUTION/NAVIGATION is a genuinely hard, separate problem. Likely unaddressed
++  factors (next investigation): (a) the recon target may not be the true exit (nearest-object heuristic);
++  (b) the state-space search may not find the navigation path within budget even with a correct target;
++  (c) the perception arm only applied to 3/8 games (player+target detected). This bounds the perception-fix
++  program honestly: it moved the wall from perception/goal-induction to execution/navigation, and the
++  execution wall is not cracked by routing toward a Manhattan target -- it needs a correct exit-target + a
++  search/movement model that provably reduces distance-to-goal.
++
+ ### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
+ - status: open
+ - evidence: induce prompt fixes state as "HxW integer grid" (`arc_executable_world_model.py:276-292`); the
+diff --git a/results/outer_loop_arc_e3_perception_target_ab_20260723.json b/results/outer_loop_arc_e3_perception_target_ab_20260723.json
+new file mode 100644
+index 0000000000..678d124859
+--- /dev/null
++++ b/results/outer_loop_arc_e3_perception_target_ab_20260723.json
+@@ -0,0 +1,139 @@
++{
++  "experiment": "outer_loop_arc_e3_perception_target_ab",
++  "experiment_id": "REQ-ARC-WMTE-5835",
++  "run_date": "2026-07-23",
++  "schema": "carnot.arc_e3_perception_target_ab.v1",
++  "title": "Does a perception-derived target routed into Carnot's value-head-A* explorer convert to discovery? A/B vs the default explorer, 8 games, no LLM.",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "verifier_is_oracle": false,
++  "solve_provenance": "development_proxy",
++  "random_seed": 5835,
++  "reproducibility_checksum": "sha256:5c16deca9c8786b8018f4cbe9927b9d4c25544f956e92f25ddda4a936dcaa938",
++  "action_budget": 250,
++  "methodology_note": "Both arms = CarnotAgentPolicy(force_explore=True), the LLM-free tier-1 explorer, scored by arc_leaderboard_eval.run_game. Perception arm sets value_head = player->target Manhattan distance (target = nearest non-HUD object to the detected player from a short perceive_entities recon), best_first + navigation_cost_tiebreak=False + value_weight=1 so the value head routes. All in logical grid space. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
++  "baseline_context": "The greedy-direct discovery A/B (REQ-ARC-WMTE-5834) was 0/8 both arms -- execution was the wall. This tests whether search-based routing toward the perception target breaks that.",
++  "totals": {
++    "baseline_levels": 0,
++    "perception_levels": 0
++  },
++  "per_game": [
++    {
++      "game": "bp35",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 238
++      },
++      "perception": {
++        "skipped": "no player+target detected in recon"
++      }
++    },
++    {
++      "game": "lf52",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 247
++      },
++      "perception": {
++        "skipped": "no player+target detected in recon"
++      }
++    },
++    {
++      "game": "sc25",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 245
++      },
++      "target": {
++        "player_color": 9,
++        "target_row": 20,
++        "target_col": 14,
++        "n_recon_transitions": 60
++      },
++      "perception": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 211
++      }
++    },
++    {
++      "game": "ls20",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 245
++      },
++      "target": {
++        "player_color": 9,
++        "target_row": 12,
++        "target_col": 36,
++        "n_recon_transitions": 60
++      },
++      "perception": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 220
++      }
++    },
++    {
++      "game": "tu93",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 245
++      },
++      "perception": {
++        "skipped": "no player+target detected in recon"
++      }
++    },
++    {
++      "game": "cn04",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 246
++      },
++      "target": {
++        "player_color": 8,
++        "target_row": 17,
++        "target_col": 18,
++        "n_recon_transitions": 60
++      },
++      "perception": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 223
++      }
++    },
++    {
++      "game": "r11l",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 244
++      },
++      "perception": {
++        "skipped": "no player+target detected in recon"
++      }
++    },
++    {
++      "game": "ft09",
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 249
++      },
++      "perception": {
++        "skipped": "no player+target detected in recon"
++      }
++    }
++  ],
++  "duration_s": 7.7,
++  "mode_robustness_check": "depth_first_ride (value_weight 3) also 0 discovery on sc25/ls20/cn04 -- the null is robust across search mode, not a best_first artifact.",
++  "diagnostic": "The value_head ENGAGES (instrumented: ~41 calls/run, sane distances) but the player->target distance HOVERS at ~9 and never decreases toward 0 -- the search does not navigate the player to the target. Likely causes (not fully isolated): (1) TARGET CORRECTNESS -- the recon picks the nearest non-HUD object to the player as the target, which may not be the true exit/goal; (2) the state-space search does not discover the specific navigation path within budget even with a correct target/heuristic (sc25's win may need a path/mechanic, not Manhattan-greedy movement); (3) the perception arm only ran on 3/8 games (sc25/ls20/cn04) -- the other 5 had no detected player+target in recon, so routing does not even apply.",
++  "headline": "ROBUST NULL: 0 discovery both arms, all 8 games, across BOTH search modes. Feeding a perception-derived target into Carnot's value-head-routed explorer does NOT convert the perception fix to discovery. Combined with the greedy-direct null (5834), this bounds the result: the perception fix is validated (goal-framing 0->4/8 offline) but NEITHER architecture (greedy-direct nor value-head-routed search) executes it into a solved level out of the box. Execution/navigation is a genuinely hard, separate problem, not cracked by 'route toward a Manhattan target'.",
++  "next_investigation": "Isolate WHY the search doesn't navigate: (a) verify the recon target IS the true exit (replace nearest-object with an exit-detector, or A/B target choices); (b) instrument whether the explorer's actions actually MOVE the player toward lower distance (is it the search, the target, or the player-movement model?); (c) improve mover/player+target recall so the perception arm covers all 8, not 3.",
++  "honest_verdict": "complete_robust_null_perception_target_routing_does_not_convert_to_discovery_execution_is_hard_and_separate"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

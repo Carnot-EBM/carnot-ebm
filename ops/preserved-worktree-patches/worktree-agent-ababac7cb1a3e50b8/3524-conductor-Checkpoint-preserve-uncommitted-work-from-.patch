@@ -1,0 +1,90 @@
+From bc47c048ed788d18f1b7247ab05c254ada670b3e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 02:14:21 -0400
+Subject: [PATCH 03524/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ops/supervisor-alerts.json                    |  1 +
+ ...nt_4605_live_integration_scored_agent.json | 27 +++++++++++++++++--
+ 5 files changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 400962d74b..b62d06371b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-23T05:45:22Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-06-23T06:14:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3492f21c5f..f2d85213f4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9088,3 +9088,4 @@ c |
+ | 2026-06-23 05:22 UTC | PHASE 0 (TRANSITION) -- archive .424 -> activate . | FAIL | No file changes produced |
+ | 2026-06-23 05:25 UTC | PHASE 0 (TRANSITION) -- archive .424 -> activate . | FAIL | No file changes produced |
+ | 2026-06-23 05:43 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-23 06:12 UTC | PHASE A2 (ARC NORTH STAR; HIGHEST MANDATORY; GAP-L | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cd61eef23c..267f51fee5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-23T05:45:22Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 9, "phase": "iteration_start", "started_at": "2026-06-23T06:14:19Z"}
+\ No newline at end of file
+diff --git a/ops/supervisor-alerts.json b/ops/supervisor-alerts.json
+index 3729b59d2c..344e61ac4a 100644
+--- a/ops/supervisor-alerts.json
++++ b/ops/supervisor-alerts.json
+@@ -19,3 +19,4 @@
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-16T08:05:03Z", "task_id": "exp4289-capstone-v396", "deliverable": "results/experiment_4289_capstone_v396.json", "exact_zero_deltas": [{"key": "diffusiongemma_guidance.carnot_minus_rfg_delta", "value": 0.0}, {"key": "diffusiongemma_guidance.carnot_minus_unguided_delta", "value": 0.0}, {"key": "diffusiongemma_guidance.execution_grounded_arm.execution_grounded_guidance_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4289-capstone-v396 reports parity-test outputs that are bit-identical or exactly zero across 3 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-22T10:21:12Z", "task_id": "exp4585-a6", "deliverable": "results/experiment_4585_integration_gate.json", "exact_zero_deltas": [{"key": "additivity_checked.generic_transfer.interaction_delta", "value": 0.0}, {"key": "additivity_checked.live_submittable.interaction_delta", "value": 0.0}, {"key": "upstream_lever_audit.A3.generic_transfer_delta", "value": 0.0}, {"key": "upstream_lever_audit.A4.firstwin_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4585-a6 reports parity-test outputs that are bit-identical or exactly zero across 4 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-22T16:39:19Z", "task_id": "exp4597-a6", "deliverable": "results/experiment_4597_integration_gate.json", "exact_zero_deltas": [{"key": "additivity_checked.generic_transfer.interaction_delta", "value": 0.0}, {"key": "additivity_checked.winner_generated.interaction_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4597-a6 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
++{"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-23T06:12:19Z", "task_id": "exp4605-a2", "deliverable": "results/experiment_4605_live_integration_scored_agent.json", "exact_zero_deltas": [{"key": "actions_delta", "value": 0.0}, {"key": "first_win_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4605-a2 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+diff --git a/results/experiment_4605_live_integration_scored_agent.json b/results/experiment_4605_live_integration_scored_agent.json
+index 38bcc14378..d092143d76 100644
+--- a/results/experiment_4605_live_integration_scored_agent.json
++++ b/results/experiment_4605_live_integration_scored_agent.json
+@@ -1462,5 +1462,28 @@
+   },
+   "submitted_to_leaderboard": false,
+   "value_weight_used": 0.0,
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "warn",
++      "detail": "first_win_rate_bare=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta==0, null_delta_methodology_note, and bare_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "first_win_rate_bare=0.04 and solve_rate_bare=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "actions_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "first_win_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

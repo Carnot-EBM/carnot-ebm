@@ -1,0 +1,43 @@
+From bff5d10d2859c13e937b150b8786fc31b2a36532 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 03:49:34 -0400
+Subject: [PATCH 04987/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e911880e67..427f7fb6e9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 185, "phase": "iteration_start", "last_beat": "2026-06-30T07:25:45Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 186, "phase": "iteration_start", "last_beat": "2026-06-30T07:49:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c07cb71458..0e7a743417 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9633,3 +9633,4 @@ The contro |
+ | 2026-06-30 06:54 UTC | Milestone 2026.06.462 activated | OK | 14 tasks queued |
+ | 2026-06-30 07:07 UTC | PHASE 0 (TRANSITION) -- archive .461 -> activate . | OK | 87 passed, 1 warning in 6.79s |
+ | 2026-06-30 07:23 UTC | PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) - | OK | 99 passed, 1 warning in 7.24s |
++| 2026-06-30 07:47 UTC | PHASE B2 (INFRA; RESERVED SLOT 2 of 2; ENABLING) - | OK | 99 passed, 1 warning in 7.62s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a37bdc0635..c81ae72493 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 185, "phase": "iteration_start", "started_at": "2026-06-30T07:25:45Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 186, "phase": "iteration_start", "started_at": "2026-06-30T07:49:32Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

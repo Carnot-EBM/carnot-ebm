@@ -1,0 +1,60 @@
+From aa201c6ef9d3c133ed7c085ac7033d416956ff37 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 23:42:40 -0400
+Subject: [PATCH 07602/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 874d76b5b9..da171da658 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,178</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,184</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5bc94b7d1e..cd6da94e4c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 287, "phase": "iteration_start", "last_beat": "2026-07-23T03:16:38Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 288, "phase": "iteration_start", "last_beat": "2026-07-23T03:39:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index eb42e862ea..2570141a0d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14160,3 +14160,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |
+ | 2026-07-23 02:52 UTC | Gated on Exp5827 structural lift: future-validated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5828_future_ |
+ | 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-23 03:37 UTC | Gated on Exp5828 durable memory: transfer-selectiv | OK | 88 passed, 1 warning in 33.81s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c56cfb1cb1..85b3f40eda 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 287, "phase": "iteration_start", "started_at": "2026-07-23T03:16:38Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 288, "phase": "iteration_start", "started_at": "2026-07-23T03:39:19Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

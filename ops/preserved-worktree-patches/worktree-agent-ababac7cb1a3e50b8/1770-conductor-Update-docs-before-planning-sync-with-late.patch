@@ -1,0 +1,110 @@
+From a2d99e05bf070fd5a5ecd2de6a4e1d0f5eac2b81 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 09:23:55 -0400
+Subject: [PATCH 01770/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                              | 2 +-
+ ops/conductor-heartbeat.json                 | 2 +-
+ ops/conductor-log.md                         | 1 +
+ ops/conductor-state.json                     | 2 +-
+ results/experiment_625_tier1_fr11_relay.json | 6 +++---
+ results/experiment_638_tier1_fr11_relay.json | 4 ++--
+ results/experiment_645_tier1_fr11_relay.json | 4 ++--
+ 7 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index ffa4614955..d9942b6192 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">3,504</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">3,516</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c8ec7bc17a..d332269d64 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-14T13:06:49Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-14T13:21:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 078a4cf5db..1f1bf657fb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8476,3 +8476,4 @@ c |
+ | 2026-06-14 12:39 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 107 passed, 1 warning in 6.66s |
+ | 2026-06-14 12:53 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-14 13:04 UTC | PHASE D3 — Hardware continuity (consolidated; Gate | OK | 87 passed, 1 warning in 5.47s |
++| 2026-06-14 13:19 UTC | PHASE D4 — Capstone .388 (UNGATED): headline quest | OK | 85 passed, 1 warning in 4.53s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f7352fc227..8fda43d3f1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-14T13:06:49Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-14T13:21:22Z"}
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 379d415360..4c9850a7b2 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T13:17:30Z",
+-  "finished_at": "2026-06-14T13:17:30Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-14T13:21:43Z",
++  "finished_at": "2026-06-14T13:21:43Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0db6a1d3c9..64ae21d6ac 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T13:17:30Z",
+-  "finished_at": "2026-06-14T13:17:30Z",
++  "started_at": "2026-06-14T13:21:43Z",
++  "finished_at": "2026-06-14T13:21:43Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e989e2d848..d623a886c6 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T13:17:30Z",
+-  "finished_at": "2026-06-14T13:17:30Z",
++  "started_at": "2026-06-14T13:21:43Z",
++  "finished_at": "2026-06-14T13:21:43Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+-- 
+2.55.0
+

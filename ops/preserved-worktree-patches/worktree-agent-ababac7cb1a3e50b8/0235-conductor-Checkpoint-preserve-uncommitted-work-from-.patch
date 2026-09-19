@@ -1,0 +1,44 @@
+From 02f6085e4681fe3d37adf46de6d4dbcb1ed18fc1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 18:30:05 -0400
+Subject: [PATCH 00235/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 92478da7f3..dc7aa9f334 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 253, "phase": "iteration_start", "last_beat": "2026-06-02T22:14:05Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 254, "phase": "iteration_start", "last_beat": "2026-06-02T22:30:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a8bddc37b7..0ed74a6a05 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7629,3 +7629,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 21:55 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+ | 2026-06-02 22:12 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | OK | 129 passed in 5.99s |
+ | 2026-06-02 22:14 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
++| 2026-06-02 22:28 UTC | FR-11 continuous self-learning v15 — Tier-1 ONLINE | OK | 87 passed in 5.08s |
++| 2026-06-02 22:30 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 71e3eef728..4704bb03d4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 253, "phase": "iteration_start", "started_at": "2026-06-02T22:14:05Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 254, "phase": "iteration_start", "started_at": "2026-06-02T22:30:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

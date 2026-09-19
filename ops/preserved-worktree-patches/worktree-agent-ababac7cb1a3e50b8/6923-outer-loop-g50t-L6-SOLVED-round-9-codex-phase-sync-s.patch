@@ -1,0 +1,143 @@
+From 7b460677dd0d64bd3dcabe47d1af631ee9591382 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 16:21:25 -0400
+Subject: [PATCH 06923/11362] [outer-loop] g50t: L6 SOLVED round 9 (codex,
+ phase-sync solved)
+
+Round-9 gpt-5.6-sol session solved the phase-synchronization problem
+round 8 left open. The player was arriving at each barrier exactly on
+its closed tick; the fix is a genuinely legal local oscillation
+(DOWN/UP or RIGHT/LEFT at the barrier position) that waits out the
+runner's cycle and crosses the instant it reopens. A third toggle's
+open state survives the level's third ACTION5 commit, leaving a
+direct route from spawn to the target after the holders are cleared.
+
+The source agent's own fresh-environment reproduction gate confirmed
+reached_level=6 independently. The outer loop independently
+re-verified regardless: 5x fresh env.reset() + replay via a new
+resolver priority branch, all 5 confirmed level=6,
+state=GameState.NOT_FINISHED.
+
+ops/arc_solve_registry.yaml: g50t levels_reproduced 5 -> 6.
+reproducible_total_levels 170 -> 171 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   | 31 +++++++++++++++++--
+ ...experiment_4460_submission_package_prep.py | 10 ++++++
+ ...op_codex55_g50t_probe_round9_20260712.json | 23 ++++++++++++++
+ 3 files changed, 62 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_codex55_g50t_probe_round9_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 3944d7e0e6..2a7fa203e1 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -4079,7 +4079,7 @@ games:
+     reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
+ - game: g50t
+   reproducibility: reproduced
+-  levels_reproduced: 5
++  levels_reproduced: 6
+   win_condition: 'L1-L2: see historical gotchas. L3 (2026-07-11, claude-fable-5):
+     a full clone-commit/rewind puzzle -- ACTION5 commits the current trajectory
+     (rewinding the player to spawn) and the committed ghost replays it one action
+@@ -4281,6 +4281,33 @@ games:
+     two-holder gate technique directly (no need to re-derive it) and
+     focus purely on timing the row-25 player traversal to the runner''s
+     open-window phase.'
++  - 'L6 SOLVED round 9 (2026-07-12, gpt-5.6-sol via codex,
++    results/outer_loop_codex55_g50t_probe_round9_20260712.json): solved
++    the phase-synchronization problem round 8 left open. Counting
++    successful active moves after both holder commits, the runner
++    toggles the x=19 row-25 barrier at n=8 (open), n=14 (closed), n=30
++    (open); the player reaches (19,31) exactly at n=14 when it CLOSES
++    -- the fix is a genuinely LEGAL local oscillation, (19,31)<->(19,37)
++    via DOWN/UP, cycled through n=30 and crossing at n=31 once it
++    reopens. The x=1 barrier similarly toggles at n=11/33/55; from
++    (7,25) the player uses a RIGHT/LEFT oscillation through n=55 and
++    crosses at n=56. Toggle changes happen AFTER the active player''s
++    movement check on the same successful tick, which is why the
++    crossing always lands one tick after the reopen. A third color-11
++    trigger at (13,49) moves a final barrier from (31,49) to (25,49);
++    critically, this toggle SURVIVES the third ACTION5 commit (which
++    clears both parked holders, closes the color-8 gates, and returns
++    the player to spawn) -- the final barrier stays latched open,
++    enabling a direct nine-move route from spawn to the target.
++    levels_completed advanced to 6 on action 288. The source agent ran
++    its own fresh-environment reproduction gate (a brand-new
++    arc.make(''g50t'') + one reset, per this game''s standing harness
++    gotcha) on all 288 actions and independently got the same result
++    (reproduction_verified: true), and the outer loop independently
++    re-verified regardless: 5x fresh env.reset() + replay via a new
++    resolver priority branch (using the resolver-registered
++    exp4433.apply_g50t_label function), all 5 confirmed level=6,
++    state=GameState.NOT_FINISHED.'
+   dead_ends:
+   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
+     status: filled
+@@ -5267,7 +5294,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 170
++reproducible_total_levels: 171
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index c9a0f01694..5c0838df89 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -493,7 +493,17 @@ def resolve_replay_plan(
+             "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
+             _apply_ka59_label,
+         )
++    if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 6:
++        from carnot import experiment_4433_example_conditioned_win_induction as exp4433
++
++        rel_path = "results/outer_loop_codex55_g50t_probe_round9_20260712.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++        return ReplayPlan(game, labels, rel_path, exp4433.apply_g50t_label)
+     if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 5:
++        # NOTE: unreachable for the live registry entry (which is >=6 as of the
++        # round-9 L6 win); retained as historical dead code documenting the
++        # round-7 (level-5) resolution.
+         from carnot import experiment_4433_example_conditioned_win_induction as exp4433
+ 
+         rel_path = "results/outer_loop_fable5_g50t_probe_round7_20260712.json"
+diff --git a/results/outer_loop_codex55_g50t_probe_round9_20260712.json b/results/outer_loop_codex55_g50t_probe_round9_20260712.json
+new file mode 100644
+index 0000000000..28655febc5
+--- /dev/null
++++ b/results/outer_loop_codex55_g50t_probe_round9_20260712.json
+@@ -0,0 +1,23 @@
++{
++  "game": "g50t",
++  "model": "GPT-5 Codex",
++  "starting_level": 5,
++  "max_level_reached": 6,
++  "total_env_steps_used": 576,
++  "reproduction_verified": true,
++  "action_sequence": ["4","4","4","4","5","2","2","2","2","2","2","2","4","4","4","4","4","3","3","5","2","2","2","2","3","3","3","3","1","1","3","3","5","1","1","1","3","3","3","3","3","3","3","2","2","4","4","4","1","1","4","4","4","4","2","2","2","2","4","5","3","3","3","3","3","3","1","1","4","4","4","4","4","4","4","2","2","2","2","2","2","2","3","3","3","3","3","5","1","1","4","4","4","4","4","4","4","2","2","2","2","2","2","2","3","3","3","3","3","3","3","1","1","1","4","4","1","1","2","2","4","2","5","2","2","4","4","1","1","4","4","2","2","2","5","3","3","3","2","2","2","2","2","4","4","4","3","3","3","1","1","1","1","1","1","2","2","4","4","4","2","2","2","5","2","4","4","4","1","1","4","4","4","2","2","2","4","4","4","5","2","4","4","4","1","1","4","4","4","2","2","2","2","2","4","3","2","3","3","3","3","3","1","1","3","3","1","3","3","5","3","3","1","5","3","4","3","4","3","4","3","3","2","3","3","3","3","1","2","1","2","1","2","1","2","1","2","1","2","1","2","1","2","1","1","3","3","4","3","4","3","4","3","4","3","4","3","4","3","4","3","4","3","4","3","4","3","4","3","3","2","2","2","2","2","4","4","1","5","3","3","2","3","3","2","2","4","4"],
++  "levels_won_this_session": [6],
++  "novel_mechanics_found": "Round 9 solved the phase synchronization left open by round 8. Counting successful active moves after both holder commits, the runner toggles the x=19 row-25 barrier at n=8 (open), n=14 (closed), and n=30 (open). The player reaches (19,31) at n=14, then uses the genuinely legal vertical oscillation (19,31)<->(19,37) through n=30 and crosses at n=31. The runner toggles the x=1 barrier at n=11 (open), n=33 (closed), and n=55 (open); from (7,25), the player uses the legal horizontal oscillation (7,25)<->(13,25) through n=55 and crosses at n=56. The third color-11 trigger at (13,49) moves the final barrier from (31,49) to (25,49). Its toggled-open state survives ACTION5: the third commit rewinds the player and runner, clears both parked holders, returns the player to spawn, and leaves the final barrier open for a direct nine-move route to the target.",
++  "narrative": "The mandated precondition resolved the replay plan with resolve_replay_plan({'game':'g50t','levels_reproduced':5}, Path('.')), constructed a brand-new arc.make('g50t') environment, called reset exactly once, and replayed all 204 labels from the round-7 artifact. The frame reached level 5, with advances at actions 17, 48, 118, 149, and 204. From that same verified frontier, round 9 replayed the solved holder programs directly: clone A LEFTx2, UP, LEFTx2, ACTION5 and clone B LEFTx2, UP, ACTION5. Six successful LEFT/RIGHT active moves advanced both ghosts onto their plates and carried the autonomous runner through both raised top gates. The player then followed the right-side corridor to (19,31), used legal DOWN/UP moves until the x=19 barrier reopened, crossed it, used legal RIGHT/LEFT moves at (7,25) until the x=1 barrier reopened, and crossed into the left region. The player descended the left edge, traversed to (13,55), moved UP onto the third toggle at (13,49), and committed. That third ACTION5 returned the player to (55,31) while preserving the final barrier's open state. LEFTx2, DOWN, LEFTx2, DOWNx2, RIGHTx2 then reached (43,49), advancing the frame from level 5 to level 6 at full action 288. A second brand-new arc.make('g50t') environment followed by exactly one reset replayed the full 288-label candidate and independently reached level 6, with the same level advances. Step accounting is 288 labels for discovery (including the required 204-label prefix) plus 288 labels for the fresh reproduction gate, totaling 576.",
++  "gotchas": [
++    "Every gate used a brand-new arc.make('g50t') environment followed by exactly one reset; no environment object was reset and reused.",
++    "Only successful player moves advance ghosts and the autonomous runner. Blocked actions consume budget but do not change runner phase.",
++    "The first row-25 barrier cannot be reached during its initial open window: the player arrives at (19,31) exactly when the runner closes it at n=14. DOWN/UP is the legal local timing loop.",
++    "The second barrier closes at n=33 just as the player reaches (7,25). RIGHT/LEFT is the legal local timing loop until it reopens at n=55.",
++    "Toggle changes happen after the active player's movement check on the same successful tick. Therefore the player crosses the first barrier at n=31 after it opens at n=30, and the second at n=56 after it opens at n=55.",
++    "Closing either color-8 top gate on the runner crushes it. The two parked holders must remain until the runner has passed both gates.",
++    "The third ACTION5 clears the two parked ghosts and closes the color-8 gates, but the color-11 final barrier remains latched open at (25,49), enabling the spawn-side route to the target.",
++    "The saved action sequence is a compact list of string labels and includes the independently verified 204-action prefix unchanged."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

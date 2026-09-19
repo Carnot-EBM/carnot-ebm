@@ -1,0 +1,43 @@
+From 3752311d297422936a23dce09333e3f39935259d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 08:16:41 -0400
+Subject: [PATCH 01428/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b46d55c95f..db23ce0d55 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 140, "phase": "iteration_start", "last_beat": "2026-06-12T11:26:38Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 141, "phase": "iteration_start", "last_beat": "2026-06-12T12:16:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6a7399ddf2..fe8b5cbf13 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8332,3 +8332,4 @@ c |
+ | 2026-06-12 11:24 UTC | OFF-ARC DEMO-FIT PRECISION TRANSFER (operator TOP  | OK | 91 passed in 4.43s |
+ | 2026-06-12 11:26 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+ | 2026-06-12 11:26 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
++| 2026-06-12 12:14 UTC | SOTA-INGESTION SLOT (reserved): ingest the certifi | OK | 99 passed in 3.64s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3e9ffdfe63..bfd84aabec 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 140, "phase": "iteration_start", "started_at": "2026-06-12T11:26:38Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 141, "phase": "iteration_start", "started_at": "2026-06-12T12:16:39Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

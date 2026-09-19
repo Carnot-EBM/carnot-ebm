@@ -1,0 +1,43 @@
+From 769f348f75864e510a9f13c843f375a926f333a6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 10:55:10 -0400
+Subject: [PATCH 06230/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c06c12017d..bf8320d798 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 306, "phase": "iteration_start", "last_beat": "2026-07-08T14:42:33Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 307, "phase": "iteration_start", "last_beat": "2026-07-08T14:55:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9bd00d4078..ea15c0bf61 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10555,3 +10555,4 @@ I’m going to append a small |
+ | 2026-07-08 14:08 UTC | Continuous self-learning evidence-reliance drift a | OK | 90 passed, 1 warning in 12.78s |
+ | 2026-07-08 14:21 UTC | Gated CSL promotion scale-up with reliance and ris | OK | 91 passed, 1 warning in 11.21s |
+ | 2026-07-08 14:40 UTC | ARC live CoEx landmark level-up attempt on unbanke | OK | 109 passed, 1 warning in 14.64s |
++| 2026-07-08 14:53 UTC | Hardware comparable CPU and board timing receipts | OK | 87 passed, 1 warning in 11.08s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 63442e2104..27375b68a0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 306, "phase": "iteration_start", "started_at": "2026-07-08T14:42:33Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 307, "phase": "iteration_start", "started_at": "2026-07-08T14:55:08Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

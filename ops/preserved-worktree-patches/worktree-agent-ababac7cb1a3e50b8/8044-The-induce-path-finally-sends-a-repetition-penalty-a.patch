@@ -1,0 +1,1236 @@
+From 7d7c71a4935d5acb69130665b028b68464805973 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 08:03:57 -0400
+Subject: [PATCH 08044/11362] The induce path finally sends a repetition
+ penalty -- and the rebuild meant to discharge it would have deleted the
+ record
+
+Phase 2 of the induce-reliability investigation: ship what Phase 1 measured.
+
+WHAT SHIPPED (LocalGGUFProposer, scoped to the code-only induce path, both
+env-reversible):
+
+  * repeat_penalty 1.1 + repeat_last_n 256 on the /completion payload.
+    CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0 restores the old payload byte-for-byte.
+  * A defect gate + ONE plain re-ask, via arc_engine_static_validation.
+    CARNOT_ARC_INDUCE_DEFECT_REASKS=0 disables it, so the two run independently --
+    the penalty carries 11 of the 13 paired wins and the re-ask 2.
+
+The re-ask names NOTHING about the defect. repair_prompt_block() exists and was
+measured against this neutral block at p = 1.000: the defect TEXT bought nothing,
+the second ASK is the whole effect. It stays unwired.
+
+CLAIMED: validity and cost. Usable engines 13/36 -> 22/36 (paired sign test
+p = 0.049), 47.2s vs 100.3s per attempt, token-cap hits 20/36 -> 2/36.
+NOT CLAIMED: that this fixes induction. Strict out-of-sample quality moved 2/6
+games -> 3/6 on one attempt, p = 1.000, on 5 discordant pairs whose best
+reachable p was 0.0625. On tu93 and sc25 no arm ever produced a correct engine.
+
+SAFETY INVARIANT: the gate can never turn an accept into a hard failure -- it
+spends at most one extra attempt, and only while one remains. My first draft got
+this wrong (the continue fell through to the failure return); the mutation check
+caught it, not review. It is one of 3 mutations killed by the 13 new tests.
+
+THE REBUILD WAS DESTRUCTIVE, AND THE ARTIFACTS HAD ALREADY SAID SO.
+Editing the module marks 7 artifacts stale; 4 carry rebuild commands. I ran all
+4. Every one dropped its accumulated freshness_acknowledgements (4/4/4/2 -> 0)
+and its original_timings_superseded_by_rebuild block -- which is itself the
+record of the LAST time this happened, and which instructs: "When the only drift
+is timing, acknowledge rather than rebuild." The rebuilds were discarded, the
+published artifacts restored, and all 7 discharged by acknowledgement. Every
+results/ diff is +9 -0: not one existing line touched.
+
+The rebuilds became the EVIDENCE instead -- differential execution at the
+artifact level, stronger than arguing from the diff. Deep-diffed leaf by leaf:
+6011 0/48,488 substantive, 6012 1 (a hash OVER the dependency set), 6013
+0/7,390, 6021 4 (aggregation_wall_s + 3 code_provenance). NO published
+measurement moved; 6021's head-to-head statistics are identical.
+
+ALSO FOUND: test_artifact_freshness_acknowledgement_2026_07_30.py was silently
+RED. It asserted evidence must "name where a reader can check it" as
+`"6011" in evidence or "changelog" in evidence` -- and 4 of the 6
+acknowledgements on each capture artifact already failed it at HEAD. Now asserts
+the property rather than two spellings of it; still rejects a confident
+paragraph with nothing behind it (mutation-checked), and it caught my own first
+draft. The 2 genuinely location-free 2026-07-30 entries are grandfathered BY
+DATE, not rewritten, with their count pinned at exactly 2.
+
+arc_engine_static_validation is now live-path reachable, so its orphan-lint
+allow-list entry is retired (verified by unwiring the import and confirming the
+lint flags it). The two tests pinning its orphan status inverted, as their own
+docstrings had planned for.
+
+The budget single-source patch stays unlanded: measured, it widens the blast
+radius 7 -> 12 and drags in a live capture that would overwrite published
+numbers.
+
+docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md
+---
+ ...-induce-repeat-penalty-wired-2026-07-31.md | 148 +++++++++
+ ops/pending-fixes/README.md                   |  25 ++
+ .../agentic/arc_executable_world_model.py     | 181 ++++++++++-
+ ...6011_world_model_change_gate_four_arm.json |   9 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   9 +
+ ...6013_hidden_state_change_gate_closure.json |   9 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   9 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   9 +
+ ...rc_generator_concurrency_fix_20260727.json |   9 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   9 +
+ scripts/arc_orphan_solver_lint.py             |  14 +-
+ ...uce_repeat_penalty_and_reask_2026_07_31.py | 289 ++++++++++++++++++
+ ...n_lint_detects_induce_gating_2026_07_31.py |  78 +++--
+ ...ct_freshness_acknowledgement_2026_07_30.py |  99 +++++-
+ 14 files changed, 865 insertions(+), 32 deletions(-)
+ create mode 100644 docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md
+ create mode 100644 tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py
+
+diff --git a/docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md b/docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md
+new file mode 100644
+index 0000000000..ac19a39a11
+--- /dev/null
++++ b/docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md
+@@ -0,0 +1,148 @@
++# The induce path now sends a repetition penalty and re-asks broken code — and the rebuild that was supposed to discharge it would have destroyed the record
++
++**2026-07-31 · Phase 2 (wire) of the induce-reliability investigation**
++
++Upstream: `docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md` (Phase 1: 36 paired
++attempts, 6 games, scored out-of-sample; CONFIRMED for validity and cost, NOT for quality).
++
++## What shipped
++
++Two changes to `LocalGGUFProposer` in `python/carnot/agentic/arc_executable_world_model.py`, both
++scoped to the code-only induce path (`codeonly_eligible`), both env-reversible:
++
++1. **`repeat_penalty 1.1` + `repeat_last_n 256`** on the `/completion` payload.
++   `CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0` restores the previous payload byte-for-byte, because
++   llama.cpp treats 1.0 as the identity.
++2. **A defect gate + one plain re-ask.** A candidate that parses and defines the required
++   functions is now dry-run and AST-checked through
++   `arc_engine_static_validation.validate_engine_code`; on a mechanical defect it is rejected and
++   re-asked once with a neutral block. `CARNOT_ARC_INDUCE_DEFECT_REASKS=0` disables it, so the two
++   changes can be run independently — which matters, because the penalty carries 11 of the 13
++   paired wins and the re-ask 2.
++
++The re-ask text names **nothing** about the defect. That is the measured choice:
++`repair_prompt_block()` exists and builds a defect-naming block, and head-to-head against the
++neutral block it came back p = 1.000 over 5 discordant pairs. The defect *text* bought nothing;
++the second *ask* is the whole effect. `repair_prompt_block` is deliberately left unwired.
++
++**The safety invariant.** The gate can never convert an accept into a hard failure. It spends at
++most one extra attempt, and only while an attempt remains (`attempt < tries - 1`); on the last try
++the defective candidate is accepted exactly as before. I got this wrong in the first draft — the
++`continue` fell out of the loop into the content-failure return — and the mutation check caught it,
++not review. Removing the `attempt < tries - 1` guard is one of the three mutations killed by
++`tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` (13 tests).
++
++`arc_engine_static_validation` is now reachable from both live entrypoints on the ordinary import
++closure, so its allow-list entry in `scripts/arc_orphan_solver_lint.py` was retired — verified by
++temporarily unwiring the import and confirming the lint flags the module. The two tests that
++pinned its orphan status inverted; their predecessors are described in their docstrings rather than
++deleted, and both were written with this succession explicitly planned for.
++
++## What is claimed
++
++Validity and cost, on Phase 1's numbers: mechanically-usable engines 13/36 → 22/36 (paired sign
++test p = 0.049, 17 discordant pairs), 47.2 s per attempt against 100.3 s, token-cap hits 20/36 →
++2/36, `missing_return` 13 → 2.
++
++## What is not claimed
++
++That this fixes induction. The strict out-of-sample quality funnel moved 2/6 games → 3/6 on a
++single attempt at p = 1.000, and that channel had only 5 discordant pairs — best reachable
++two-sided p 0.0625, so it could not have shown an effect either way at that n. On tu93 and sc25 no
++arm ever produced a correct engine, at any budget, in any of the 36 attempts. The bottleneck
++Phase 1 pointed at is target-selection in click mechanics, and nothing here touches that.
++
++## The rebuild would have destroyed the record — and the artifacts had already said so
++
++Editing the module marks **7** registered artifacts stale. Four carry a `rebuild_command`. I ran
++all four.
++
++**Every one of them dropped history.** The rebuild regenerates each artifact from scratch, and the
++generator does not re-emit post-hoc provenance, so it wiped:
++
++| artifact | `freshness_acknowledgements` | `original_timings_superseded_by_rebuild` |
++|---|---|---|
++| experiment_6011 | 4 → 0 | present → gone |
++| experiment_6012 | 4 → 0 | present → gone |
++| experiment_6013 | 4 → 0 | present → gone |
++| experiment_6021 | 2 → 0 | present → gone |
++
++The preservation block those rebuilds deleted is itself the record of the *previous* time this
++happened, and it carries the instruction:
++
++> the same commit that caused this added VERIFIED-INERT acknowledgements to the artifact-freshness
++> lint, which pin a new upstream hash plus a reason WITHOUT rerunning. **When the only drift is
++> timing, acknowledge rather than rebuild.**
++
++So the rebuilds were **discarded and the published artifacts restored** (`git status results/`
++clean before re-annotating), and all 7 were discharged by acknowledgement instead. The diffs are
++`+9 −0` on every file: not one existing line was touched.
++
++This is a case where the instruction I was given ("rebuild in dependency order") and the
++instruction the repository carries ("acknowledge rather than rebuild") disagreed, and the
++repository was right — it had already paid for the lesson.
++
++## The rebuilds were not wasted: they are the evidence
++
++Having run them, the before/after pair is **differential execution at the artifact level**, which
++is stronger evidence than an acknowledgement argued from reading the diff. Deep-diffed leaf by
++leaf:
++
++| artifact | leaves compared | substantive movement |
++|---|---|---|
++| experiment_6011 | 48,488 | **0** |
++| experiment_6012 | 20,324 | 1 — `reproducibility_checksum`, a hash *over* the dependency set |
++| experiment_6013 | 7,390 | **0** |
++| experiment_6021 | 1,313 | 4 — `aggregation_wall_s` + 3 `code_provenance` fields |
++
++**No published measurement moved.** 6021's head-to-head statistics (coverage 4/13 vs 12/13, meanB
++0.062677 vs 0.384328, p_cov 0.007812, p_meanB 0.000977, N=13) are identical; 6013 is bit-identical
++on every population count and decision arm.
++
++The remaining 3 artifacts have no `rebuild_command` — they record completed live runs (one of
++14.9 h) and cannot be recomputed from source. Their acknowledgements say so, and say explicitly
++what is **not** claimed: that re-running them would reproduce their numbers. It would not, and this
++change is one reason why. `outer_loop_arc_first_win_llm_on_eval_concurrency_20260727`'s own verdict
++is `complete_UNFALSIFIABLE_treatment_not_applied_llm_output_never_reached_policy` — the exact
++failure this wiring targets — so its re-run is a **new measurement**, not a refresh.
++
++## A silently red test, found on the way
++
++`tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py` asserted that acknowledgement
++evidence must "name where a reader can check it", implemented as
++`"6011" in evidence or "changelog" in evidence`. Those two literals were a fair proxy when written.
++They stopped being one as soon as an acknowledgement cited its evidence anywhere else: **4 of the 6
++acknowledgements on each of the three capture artifacts already failed it at HEAD.** The test was
++red and nothing surfaced it — it is not in any per-file hook's path.
++
++Fixed by asserting the *property* (evidence cites a `results/`/`tests/`/`scripts/`/`docs/` path, an
++experiment id, a commit sha, or the changelog) instead of two spellings of it. That is not a
++loosened bar — a confident paragraph with nothing behind it still fails, which is mutation-checked.
++It caught my own first draft, which cited `6011/6012/6013/6021` as bare numbers with no path.
++
++The two genuinely location-free acknowledgements are dated 2026-07-30 and carry real evidence (one
++is a 5,200-case differential execution) stated as prose. They are grandfathered **by date**, not
++rewritten — editing historical evidence to satisfy a rule invented afterwards is what never-prune
++forbids — and their count is pinned at exactly 2, so the exception cannot grow by back-dating.
++
++## The budget single-source fix stays unlanded — measured, not assumed
++
++`ops/pending-fixes/2026-07-31-induce-budget-single-source.patch` was to be landed here "if it does
++not widen the artifact blast radius". It does, and the probe is exact:
++
++* this change alone (`arc_executable_world_model.py`): **7 stale**
++* plus the patch (`+ arc_competition_agent.py`): **12 stale**
++
++The 5 it adds include `results/arc_per_level_reset_attribution_20260726.json`, whose rebuild is
++`arc_per_level_reset_attribution_capture.py --budget 400` — a **live capture** that would replace
++published numbers with fresh nondeterministic ones. Paying that to land a comment-and-constant
++change whose value is unchanged at 4096 is not proportionate. The patch remains prepared and
++applies cleanly.
++
++## What the next measurement is
++
++Phase 3 (the banked-levels grid) must not be run until
++`python/carnot/analysis/treatment_activation_preflight.py` says the wired change perturbs ≥ 6/12
++cells attributably. A refusal there is a success — it is the discipline three earlier nulls
++lacked. Nothing in this note is evidence that banked levels will move; Phase 1 says the tier now
++produces working code more often and says nothing about whether working code solves anything.
+diff --git a/ops/pending-fixes/README.md b/ops/pending-fixes/README.md
+index 141156062b..353001726d 100644
+--- a/ops/pending-fixes/README.md
++++ b/ops/pending-fixes/README.md
+@@ -51,6 +51,31 @@ moved"), or — if you accept that a comment-and-constant change cannot move a n
+ The acknowledgement path is sanctioned but deliberately expensive to abuse, and the lint's own
+ docstring says to prefer rebuilding where rebuilding is possible.
+ 
++**RE-EVALUATED 2026-07-31 (later the same day), and it STAYS unlanded.** The induce-reliability
++Phase 2 wiring edited `arc_executable_world_model.py` anyway, which raised the obvious question of
++whether this patch should ride along on an already-paid cost. It should not, and the blast radius
++was measured rather than argued — by touching each module and reading the lint:
++
++| edit | artifacts marked stale |
++|---|---|
++| `arc_executable_world_model.py` alone (the Phase 2 wiring) | **7** |
++| `+ arc_competition_agent.py` (this patch's second file) | **12** |
++
++The 5 it adds are `arc_gateway_card_ground_truth_20260727`, `arc_per_level_reset_attribution_20260726`,
++`outer_loop_arc_early_stop_grace_sweep_20260726`, `outer_loop_arc_gateway_rescore_20260726` and
++`outer_loop_arc_reset_charge_attribution_20260726` — including the live capture named above. So the
++patch does not ride along for free; it nearly doubles the discharge and drags in the one rebuild
++that would overwrite published live numbers. The value at stake is a comment-and-constant change
++whose value does not move (4096 either way). Still prepared, still applies cleanly.
++
++Also worth recording for whoever lands it: the Phase 2 work established that rebuilding these
++artifacts is **destructive** — the generator does not re-emit post-hoc provenance, so a rebuild
++drops the artifact's accumulated `freshness_acknowledgements` and its
++`original_timings_superseded_by_rebuild` block (verified by actually rebuilding four of them and
++measuring the drop). The "rebuild the 8 and diff each" route in the instructions below is therefore
++worse than it looks; prefer acknowledgement, per the guidance the artifacts themselves carry from
++commit `0da7f75ad`. See `docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md`.
++
+ **Context:** `ops/known-issues.md` 2026-07-31 ·
+ `docs/research-notes/arc-induce-completion-budget-2026-07-31.md` ·
+ `results/outer_loop_arc_induce_budget_phase1_20260731.json`
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index f43022ff9f..ff4849a3e5 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3265,6 +3265,95 @@ _INDUCE_DEFAULT_MAX_TOKENS = 4096
+ # guard must be conservative in the direction of declining the card.
+ _GENERATOR_CUDA_GUARD_MARGIN_MIB = 1500
+ 
++# ---------------------------------------------------------------------------------------------
++# INDUCE-PATH DECODE SAMPLER (wired 2026-07-31 -- REQ-ARC-FCP-5699-41)
++#
++# WHAT FAILED. The shipped induce path sends NO repetition penalty, so `llama-server` applies its
++# default of 1.0 (read from the running server's own `/props`) -- i.e. none. The dominant induce
++# failure is a decode-level repetition loop: the model reaches an impasse part-way through
++# `engine()`, emits the same comment line until `n_predict` is exhausted, and never writes a
++# `return`. ft09's live engine is 1112 of 1144 lines of duplicated comment. The defect census over
++# 36 paired attempts:  `missing_return` 13 -> 2 and `engine_returned_none` 12 -> 2 with the penalty
++# on, and the share of calls hitting the 4096-token cap falls 20/36 -> 2/36.
++#
++# WHAT IS CLAIMED, AND WHAT IS NOT. This ships on VALIDITY and COST, which is what was measured:
++# attempts producing a mechanically-usable engine 13/36 -> 22/36, attempt-matched sign test
++# p = 0.049 (17 discordant pairs), at 47.2 s per attempt against 100.3 s. It is NOT claimed to
++# improve engine QUALITY: the strict out-of-sample quality funnel moved 2/6 games -> 3/6 on a
++# single attempt, p = 1.000, and that channel had only 5 discordant pairs so its best reachable
++# two-sided p was 0.0625 -- it could not have shown an effect at that n either way. On 2 of 6 games
++# NO arm ever produced a correct engine. See
++# docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md.
++#
++# WHY DEFAULT ON, when `sampling_seed()` above argues at length that quietly changing how the
++# scored agent samples is "a behaviour change, and it is not this function's to make". The two are
++# consistent: that argument is against changing sampling as an unmeasured side effect of wanting a
++# measurement. This is the sanctioned opposite -- a behaviour change adopted BECAUSE a paired
++# measurement on the live prompt says it is better, under an explicit operator decision to ship it.
++# The env var exists so a future A/B can turn it back off without a code edit; 1.0 disables the
++# penalty exactly (llama.cpp treats 1.0 as identity), so `CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0`
++# restores the pre-2026-07-31 payload byte-for-byte.
++#
++# SCOPE. Applied ONLY on the code-only induce path (`codeonly_eligible`), which is where it was
++# measured. `refactor()` is a reasoning task on a different prompt shape and is deliberately
++# untouched -- penalising repetition in a debugging explanation is not the same intervention and
++# has no measurement behind it here.
++_INDUCE_REPEAT_PENALTY = 1.1
++# The window the penalty looks back over. 256 tokens is what was measured; it must be wide enough
++# to span the repeating unit (a duplicated comment line plus its neighbours) or the penalty cannot
++# see the loop it is meant to break.
++_INDUCE_REPEAT_LAST_N = 256
++# How many times a MECHANICALLY DEFECTIVE candidate may be rejected and re-asked. 1 is what was
++# measured (round 0 + one plain re-ask). This is a floor on quality, never a cap on attempts: when
++# the budget is spent the candidate is accepted anyway rather than failing the call -- see
++# `generate()`.
++_INDUCE_DEFECT_REASKS = 1
++# The re-ask text. It names NOTHING about what went wrong, and that is a measured choice rather
++# than laziness: `arc_engine_static_validation.repair_prompt_block()` builds a defect-naming block,
++# and a head-to-head of repair-text against this neutral block over 5 discordant pairs on disjoint
++# games came back p = 1.000. The defect TEXT bought nothing; the second ASK is the whole effect.
++# `repair_prompt_block` is therefore deliberately left unwired -- it is a better-looking prompt
++# with no evidence behind it.
++_INDUCE_PLAIN_REASK_BLOCK = """
++YOUR PREVIOUS ANSWER WAS RUN AGAINST THE OBSERVED TRANSITIONS AND WAS NOT SATISFACTORY.
++Please try again from the same evidence:
++
++  * re-read the observed transitions above before writing anything
++  * take the simplest rule that is consistent with all of them
++  * prefer a general rule over a table of the specific cases you were shown
++
++Write the function again. `engine(grid, action, data)` must return a numpy array of the SAME
++SHAPE as `grid` on EVERY path, and must not raise on any observed transition.
++"""
++
++
++def _induce_repeat_penalty() -> float:
++    """The induce-path repetition penalty, env-overridable. 1.0 disables it exactly.
++
++    A malformed value falls back to the measured default rather than raising: a typo'd env var
++    must not take down a live episode, and the default is the behaviour we have evidence for.
++    """
++    raw = os.environ.get("CARNOT_ARC_INDUCE_REPEAT_PENALTY")
++    if raw is None or raw.strip() == "":
++        return _INDUCE_REPEAT_PENALTY
++    try:
++        return float(raw)
++    except (TypeError, ValueError):
++        return _INDUCE_REPEAT_PENALTY
++
++
++def _induce_defect_reasks() -> int:
++    """How many defect-triggered re-asks `generate()` may spend. 0 disables the re-ask entirely,
++    leaving `repeat_penalty` as the only wired change (the two ship independently on purpose --
++    the penalty carries 11 of the 13 paired wins, the re-ask 2)."""
++    raw = os.environ.get("CARNOT_ARC_INDUCE_DEFECT_REASKS")
++    if raw is None or raw.strip() == "":
++        return _INDUCE_DEFECT_REASKS
++    try:
++        return max(0, int(raw))
++    except (TypeError, ValueError):
++        return _INDUCE_DEFECT_REASKS
++
+ 
+ def _generator_cuda_min_free_mb(
+     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
+@@ -4221,6 +4310,13 @@ class LocalGGUFProposer:
+     n_completion_ok: int = 0
+     n_server_failures: int = 0
+     n_content_failures: int = 0
++    # Times a candidate that PASSED parse/required/validate was rejected as mechanically
++    # defective and re-asked (2026-07-31). Counted separately from the three above because it is
++    # neither a liveness fact nor a content failure: the server answered and the answer looked
++    # well-formed. It is the count of accepts the old path would have made and this one did not,
++    # which is the only number that says whether the wired re-ask is doing anything at all in a
++    # live episode -- 0 here means the gate never fired, not that it fired and found nothing.
++    n_induce_defect_reasks: int = 0
+     server_failure_diagnostics: list = field(default_factory=list)
+     last_generated_tokens: int = -1
+     # DECLARED-VS-ACTUAL (2026-07-27 review finding 1). `n_ctx` above is what we INTEND to
+@@ -4371,6 +4467,7 @@ class LocalGGUFProposer:
+                 "responses": int(self.n_completion_ok),
+                 "errors": int(self.n_server_failures),
+                 "content_failures": int(self.n_content_failures),
++                "induce_defect_reasks": int(self.n_induce_defect_reasks),
+             },
+             "generator_healthy_after": bool(healthy),
+             "generator_server_failure_diagnostics": list(self.server_failure_diagnostics),
+@@ -4924,6 +5021,34 @@ class LocalGGUFProposer:
+             self.last_mtp_engaged = None
+             self.mtp_engaged_evidence = "mtp verification raised; treated as could-not-determine"
+ 
++    def _engine_defects(self, code: str, transitions: Optional[Sequence[Any]]) -> list[str]:
++        """The MECHANICAL defect kinds in an emitted engine, or [] -- never a quality judgement.
++
++        Returning [] means nothing detectable is broken. It does NOT mean the engine models the
++        game: the out-of-sample measurement behind this wiring found a game where every arm
++        produced clean-but-wrong engines on 19 of 19 held-out transitions. `usable` is not `good`,
++        and this gate only ever claims the former.
++
++        The import is LOCAL, not module-scope, and deliberately so: `arc_engine_static_validation`
++        must not become a hard import of the world-model module, because a failure to import it
++        would take the induce path down entirely in order to run an optional quality gate. Any
++        exception here is swallowed to [] -- i.e. "accept, as before". A defect DETECTOR that can
++        break the thing it is checking is worse than no detector.
++        """
++        try:
++            from . import arc_engine_static_validation as _sv
++
++            defects = _sv.validate_engine_code(
++                code,
++                transitions=list(transitions) if transitions else None,
++                stop_type=self.last_stop_type,
++                required=("engine",),
++                budget=self.max_tokens,
++            )
++            return sorted({d.kind for d in defects})
++        except Exception:
++            return []
++
+     def generate(
+         self,
+         prompt: str,
+@@ -4932,13 +5057,21 @@ class LocalGGUFProposer:
+         tries: int = 3,
+         *,
+         codeonly_eligible: bool = False,
++        engine_transitions: Optional[Sequence[Any]] = None,
+     ) -> tuple[bool, str]:
+         """Generic GPU-server completion: returns (True, code) where `code` contains every
+         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
+         runtime check `validate(code) -> bool`. Retries on the iGPU (fast). This is the
+         gap-filler entry point: the LLM writes a FOCUSED component (a goal_distance
+         heuristic, a state_key, a verifier invariant) — not a full solver. `validate` lets
+-        the caller reject runtime-buggy code (e.g. a heuristic that returns None)."""
++        the caller reject runtime-buggy code (e.g. a heuristic that returns None).
++
++        `engine_transitions` (induce path only) supplies the observed transitions the emitted
++        `engine()` is DRY-RUN against before it is accepted. Without them the defect check is
++        static-only (truncation, syntax, missing `return`), which is still the majority of what
++        the shipped path was accepting: 22 of 36 measured attempts returned a mechanically
++        defective candidate as success, `missing_return` being the single largest kind.
++        """
+         import ast
+         import json as _json
+         import os
+@@ -4969,14 +5102,27 @@ class LocalGGUFProposer:
+             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
+         elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
+             prompt = self.no_think_prefix + prompt
++        # DEFECT-REJECTION + PLAIN RE-ASK (2026-07-31). Armed only where it was measured: the
++        # code-only induce path emitting an `engine`. Gap-fillers (a goal_distance heuristic, a
++        # state_key) are a different artifact with a different contract and are left alone.
++        _defect_check_on = bool(codeonly_eligible) and "engine" in tuple(required)
++        _reasks_left = _induce_defect_reasks() if _defect_check_on else 0
++        _reask_suffix = ""
+         last = ""
+         for attempt in range(tries):
+             _payload = {
+-                "prompt": prompt,
++                "prompt": prompt + _reask_suffix,
+                 "n_predict": self.max_tokens,
+                 "temperature": 0.2 + 0.1 * attempt,
+                 "cache_prompt": True,
+             }
++            # See _INDUCE_REPEAT_PENALTY: breaks the decode-level repetition loop that is the
++            # dominant induce failure. Scoped to the induce path; 1.0 restores the old payload.
++            if codeonly_eligible:
++                _rp = _induce_repeat_penalty()
++                if _rp != 1.0:
++                    _payload["repeat_penalty"] = _rp
++                    _payload["repeat_last_n"] = _INDUCE_REPEAT_LAST_N
+             # OPT-IN determinism. Absent CARNOT_ARC_GENERATOR_SEED this adds nothing and the
+             # payload is byte-identical to before. See `sampling_seed` for why the default must
+             # stay off and why the seed varies with `attempt`.
+@@ -4991,7 +5137,7 @@ class LocalGGUFProposer:
+                     # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
+                     # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
+                     _response, text = self._chat_complete_request(
+-                        prompt,
++                        _payload["prompt"],
+                         max_tokens=self.max_tokens,
+                         temperature=_payload["temperature"],
+                         stop=_stop_seq,
+@@ -5037,6 +5183,30 @@ class LocalGGUFProposer:
+                 except Exception as ve:
+                     last = f"runtime check raised: {ve!r}"[:120]
+                     continue
++            # The candidate now parses and defines everything asked for -- which is exactly the
++            # bar the shipped path stopped at, and exactly the bar 22 of 36 measured attempts
++            # cleared while returning code that could not work: an `engine()` with no `return`
++            # on some path yields None, and `WorldModelVerifier.score` wraps that in
++            # `np.asarray(None)` rather than raising, so it degrades SILENTLY into a world model
++            # that predicts nothing.
++            #
++            # NEVER FAILS WHERE THE OLD PATH SUCCEEDED. A defect only ever converts an accept
++            # into one more ask, and only while `_reasks_left` allows; once the budget is spent
++            # the candidate is accepted exactly as before. So the worst case of this block is the
++            # old behaviour plus one wasted call, and a hard failure here can still only come
++            # from the pre-existing parse/required/validate checks above.
++            # `attempt < tries - 1` is what makes the "never fails where the old path succeeded"
++            # guarantee TRUE rather than merely intended: on the final attempt a `continue` would
++            # fall out of the loop into the content-failure return and convert an accept into a
++            # hard False. On the last try we take the defective candidate, exactly as before.
++            if _defect_check_on and _reasks_left > 0 and attempt < tries - 1:
++                _defects = self._engine_defects(code, engine_transitions)
++                if _defects:
++                    _reasks_left -= 1
++                    _reask_suffix = _INDUCE_PLAIN_REASK_BLOCK
++                    last = f"mechanically defective engine: {_defects}"
++                    self.n_induce_defect_reasks += 1
++                    continue
+             self.n_completion_ok += 1
+             return True, code
+         # CONTENT failure, not a liveness failure: the server answered every try, the
+@@ -5237,6 +5407,10 @@ class LocalGGUFProposer:
+             ("engine", "is_level_complete"),
+             tries=self.tries,
+             codeonly_eligible=True,
++            # The SAME transitions the prompt was built from. This is not a held-out set and is
++            # not scored as one: it is the dry run that catches an `engine()` which raises or
++            # returns None on evidence the model was literally shown.
++            engine_transitions=trans,
+         )
+         if ok:
+             return self._write_world_model(game, code)
+@@ -5251,6 +5425,7 @@ class LocalGGUFProposer:
+             ("engine",),
+             tries=self.tries,
+             codeonly_eligible=True,
++            engine_transitions=trans,
+         )
+         if not ok_e:
+             return False, f"split induce: engine failed: {str(eng)[:150]}"
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index dc5c410f81..70ccd796f9 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52580,6 +52580,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "DIFFERENTIAL EXECUTION AT THE ARTIFACT LEVEL, not a reading of the diff: this artifact was REBUILT under the changed module using its own recorded `rebuild_command` (canonical repo path, `CARNOT_ARC_E3_DIR` preserved), and the rebuild was deep-diffed leaf-by-leaf against the published version -- 48,488 leaves compared, 0 substantive fields moved. The 35 fields the raw diff flagged were ALL the dropped annotation block plus `measurement_wall_s`; with those excluded, zero measurements moved. The rebuild output is retained OUT of tree at `scratchpad/phase2/after/experiment_6011_world_model_change_gate_four_arm.json`. The rebuild was then DISCARDED and the published artifact restored, because regenerating it drops annotations the generator does not emit: it wiped this artifact's `original_timings_superseded_by_rebuild` block and all 4 prior `freshness_acknowledgements`. That is the exact trap the block itself warns about -- 'When the only drift is timing, acknowledge rather than rebuild' -- recorded when commit 0da7f75ad overwrote these same measured timings. So the rebuild was used as PROOF of inertness and not as the artifact of record, which is strictly stronger evidence than an acknowledgement argued from the source diff.",
++    "why_not_rebuilt": "Rebuilding regenerates the artifact from scratch and the generator does not re-emit post-hoc provenance, so a rebuild DROPS this artifact's accumulated `freshness_acknowledgements` and (where present) its `original_timings_superseded_by_rebuild` block -- verified, not assumed: the rebuilds were actually performed and the drop measured. Measured wall-clock is not reproducible, so overwriting it destroys the record of what the original run cost. This follows the guidance the artifacts themselves carry from commit 0da7f75ad: 'When the only drift is timing, acknowledge rather than rebuild.'"
+    }
+   ]
+  },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 68df9db489..e0a949002c 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -64,6 +64,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "DIFFERENTIAL EXECUTION AT THE ARTIFACT LEVEL, not a reading of the diff: this artifact was REBUILT under the changed module using its own recorded `rebuild_command` (canonical repo path, `CARNOT_ARC_E3_DIR` preserved), and the rebuild was deep-diffed leaf-by-leaf against the published version -- 20,324 leaves compared, 1 substantive fields moved. The single non-annotation field that moved was `reproducibility_checksum`, which is a content hash OVER the dependency set and therefore moves by construction when the module's text does; every gate, count and score is identical. The rebuild output is retained OUT of tree at `scratchpad/phase2/after/experiment_6012_hidden_state_trust_gate_hole.json`. The rebuild was then DISCARDED and the published artifact restored, because regenerating it drops annotations the generator does not emit: it wiped this artifact's `original_timings_superseded_by_rebuild` block and all 4 prior `freshness_acknowledgements`. That is the exact trap the block itself warns about -- 'When the only drift is timing, acknowledge rather than rebuild' -- recorded when commit 0da7f75ad overwrote these same measured timings. So the rebuild was used as PROOF of inertness and not as the artifact of record, which is strictly stronger evidence than an acknowledgement argued from the source diff.",
++    "why_not_rebuilt": "Rebuilding regenerates the artifact from scratch and the generator does not re-emit post-hoc provenance, so a rebuild DROPS this artifact's accumulated `freshness_acknowledgements` and (where present) its `original_timings_superseded_by_rebuild` block -- verified, not assumed: the rebuilds were actually performed and the drop measured. Measured wall-clock is not reproducible, so overwriting it destroys the record of what the original run cost. This follows the guidance the artifacts themselves carry from commit 0da7f75ad: 'When the only drift is timing, acknowledge rather than rebuild.'"
+    }
+   ]
+  },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 0b4259eff8..649fc9ab17 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8606,6 +8606,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "DIFFERENTIAL EXECUTION AT THE ARTIFACT LEVEL, not a reading of the diff: this artifact was REBUILT under the changed module using its own recorded `rebuild_command` (canonical repo path, `CARNOT_ARC_E3_DIR` preserved), and the rebuild was deep-diffed leaf-by-leaf against the published version -- 7,390 leaves compared, 0 substantive fields moved. Zero non-annotation fields moved at all -- every population count, decision arm and disagreement row is bit-identical. The rebuild output is retained OUT of tree at `scratchpad/phase2/after/experiment_6013_hidden_state_change_gate_closure.json`. The rebuild was then DISCARDED and the published artifact restored, because regenerating it drops annotations the generator does not emit: it wiped this artifact's `original_timings_superseded_by_rebuild` block and all 4 prior `freshness_acknowledgements`. That is the exact trap the block itself warns about -- 'When the only drift is timing, acknowledge rather than rebuild' -- recorded when commit 0da7f75ad overwrote these same measured timings. So the rebuild was used as PROOF of inertness and not as the artifact of record, which is strictly stronger evidence than an acknowledgement argued from the source diff.",
++    "why_not_rebuilt": "Rebuilding regenerates the artifact from scratch and the generator does not re-emit post-hoc provenance, so a rebuild DROPS this artifact's accumulated `freshness_acknowledgements` and (where present) its `original_timings_superseded_by_rebuild` block -- verified, not assumed: the rebuilds were actually performed and the drop measured. Measured wall-clock is not reproducible, so overwriting it destroys the record of what the original run cost. This follows the guidance the artifacts themselves carry from commit 0da7f75ad: 'When the only drift is timing, acknowledge rather than rebuild.'"
+    }
+   ]
+  },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 33272c88d6..d81235cf75 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1331,6 +1331,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "DIFFERENTIAL EXECUTION AT THE ARTIFACT LEVEL, not a reading of the diff: this artifact was REBUILT under the changed module using its own recorded `rebuild_command` (canonical repo path, `CARNOT_ARC_E3_DIR` preserved), and the rebuild was deep-diffed leaf-by-leaf against the published version -- 1,313 leaves compared, 4 substantive fields moved. The four non-annotation fields that moved were `aggregation_wall_s` and three `code_provenance` fields (the declared dependency's mtime, its sha256, and the diff-stat-vs-HEAD string that quite properly now describes this very change). Every head-to-head statistic -- coverage 4/13 vs 12/13, meanB 0.062677 vs 0.384328, p_cov 0.007812, p_meanB 0.000977, N=13 -- is unchanged. The rebuild output is retained OUT of tree at `scratchpad/phase2/after/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json`. The rebuild was then DISCARDED and the published artifact restored, because regenerating it drops annotations the generator does not emit: it wiped this artifact's `original_timings_superseded_by_rebuild` block and all 2 prior `freshness_acknowledgements`. That is the exact trap the block itself warns about -- 'When the only drift is timing, acknowledge rather than rebuild' -- recorded when commit 0da7f75ad overwrote these same measured timings. So the rebuild was used as PROOF of inertness and not as the artifact of record, which is strictly stronger evidence than an acknowledgement argued from the source diff.",
++    "why_not_rebuilt": "Rebuilding regenerates the artifact from scratch and the generator does not re-emit post-hoc provenance, so a rebuild DROPS this artifact's accumulated `freshness_acknowledgements` and (where present) its `original_timings_superseded_by_rebuild` block -- verified, not assumed: the rebuilds were actually performed and the drop measured. Measured wall-clock is not reproducible, so overwriting it destroys the record of what the original run cost. This follows the guidance the artifacts themselves carry from commit 0da7f75ad: 'When the only drift is timing, acknowledge rather than rebuild.'"
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index df19ce5039..66b6831d01 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3290,6 +3290,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "This artifact is a RECORD OF A COMPLETED LIVE RUN, not a derivation: it has no `rebuild_command` because its values were measured on a 53,487 s (14.9 h) live episode and cannot be recomputed from source at any commit. Nothing in it is a function of the module's current text, so the edit cannot silently move a published number here -- the failure mode the freshness lint exists to catch is structurally absent. Inertness of the edit ITSELF was additionally established by differential execution on the four sibling artifacts that DO carry rebuild commands -- `results/experiment_6011_world_model_change_gate_four_arm.json`, `results/experiment_6012_hidden_state_trust_gate_hole.json`, `results/experiment_6013_hidden_state_change_gate_closure.json` and `results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json`: each was rebuilt under this exact module text and deep-diffed against its published version, and across 77,515 compared leaves the only movement was wall-clock, `run_date`, and provenance hashes -- zero measurements. The behaviour is separately pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` (13 tests, 3 real mutations killed including the accept-on-last-try safety invariant). WHAT IS NOT CLAIMED: that re-running THIS capture today would reproduce its numbers. It would not, and the change is one reason why -- this capture's own verdict is `complete_UNFALSIFIABLE_treatment_not_applied_llm_output_never_reached_policy`, and the wiring acknowledged here targets precisely that failure (mechanically-usable engines 13/36 -> 22/36 in the measurement that justified it). A re-run is the natural follow-up and should be treated as a NEW measurement, not a refresh of this one. This acknowledgement asserts that the recorded values are unaltered, which is what the lint checks; it does not assert that the finding survives re-measurement.",
++    "why_not_rebuilt": "No `rebuild_command` exists: this artifact records a completed live run whose values were measured, not computed, and re-running it would produce a different (nondeterministic, and under this change deliberately different) measurement rather than a refresh."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 7cb461c8c1..dbd3783ef6 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -923,6 +923,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "This artifact is a RECORD OF A COMPLETED LIVE RUN, not a derivation: it has no `rebuild_command` because its values were measured on a 304.5 s live episode and cannot be recomputed from source at any commit. Nothing in it is a function of the module's current text, so the edit cannot silently move a published number here -- the failure mode the freshness lint exists to catch is structurally absent. Inertness of the edit ITSELF was additionally established by differential execution on the four sibling artifacts that DO carry rebuild commands -- `results/experiment_6011_world_model_change_gate_four_arm.json`, `results/experiment_6012_hidden_state_trust_gate_hole.json`, `results/experiment_6013_hidden_state_change_gate_closure.json` and `results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json`: each was rebuilt under this exact module text and deep-diffed against its published version, and across 77,515 compared leaves the only movement was wall-clock, `run_date`, and provenance hashes -- zero measurements. The behaviour is separately pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` (13 tests, 3 real mutations killed including the accept-on-last-try safety invariant). WHAT IS NOT CLAIMED: that re-running THIS capture today would reproduce its numbers. It would not, and the change is one reason why -- it records a live verification of the llama-server launch path, and the induce payload this change touches is issued through that path. The launch arithmetic it verifies (n_ctx 81920, slot admission) is untouched -- no budget, slot count or context value moved -- but its wall-clock witnesses would differ under a sampler that stops the model rambling. This acknowledgement asserts that the recorded values are unaltered, which is what the lint checks; it does not assert that the finding survives re-measurement.",
++    "why_not_rebuilt": "No `rebuild_command` exists: this artifact records a completed live run whose values were measured, not computed, and re-running it would produce a different (nondeterministic, and under this change deliberately different) measurement rather than a refresh."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index e67b5cc0a1..6fdaa74fb2 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -154,6 +154,15 @@
+     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+     "acknowledged_date": "2026-07-31",
+     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
++   },
++   {
++    "path": "python/carnot/agentic/arc_executable_world_model.py",
++    "sha256_was": "eecdf0fe00cb90e4d739802873ecb89a7e1d1634bf8e1e0f5ec3cdef4e178766",
++    "sha256_now": "a5a284706532f26fa9dd509bba88f93150afba978a8144af69d29e8155a5e15d",
++    "acknowledged_date": "2026-07-31",
++    "reason": "The induce path gains two things and neither is reachable from any code these artifacts execute. (1) `LocalGGUFProposer.generate()` adds `repeat_penalty`/`repeat_last_n` to the llama-server `/completion` payload, guarded by `if codeonly_eligible` -- so it is present ONLY on a live induce call and absent on every other call shape, refactor included. (2) A candidate that parses and defines the required functions is now dry-run/AST-checked via `arc_engine_static_validation.validate_engine_code`, and on a mechanical defect is re-asked once with a neutral block. Both are LIVE-GENERATION behaviours: they change what a running llama-server is asked for and whether its answer is accepted. Also added: a `n_induce_defect_reasks` counter and its `llm.induce_defect_reasks` witness key (a new key, never a changed one), and a new keyword-only `engine_transitions=None` argument whose default reproduces the old call exactly. The defect gate cannot turn a previously-successful call into a failure: it only ever spends one further attempt, and only while an attempt remains (`attempt < tries - 1`), which is pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py`.",
++    "evidence": "This artifact is a RECORD OF A COMPLETED LIVE RUN, not a derivation: it has no `rebuild_command` because its values were measured on a prior live live episode and cannot be recomputed from source at any commit. Nothing in it is a function of the module's current text, so the edit cannot silently move a published number here -- the failure mode the freshness lint exists to catch is structurally absent. Inertness of the edit ITSELF was additionally established by differential execution on the four sibling artifacts that DO carry rebuild commands -- `results/experiment_6011_world_model_change_gate_four_arm.json`, `results/experiment_6012_hidden_state_trust_gate_hole.json`, `results/experiment_6013_hidden_state_change_gate_closure.json` and `results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json`: each was rebuilt under this exact module text and deep-diffed against its published version, and across 77,515 compared leaves the only movement was wall-clock, `run_date`, and provenance hashes -- zero measurements. The behaviour is separately pinned by `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` (13 tests, 3 real mutations killed including the accept-on-last-try safety invariant). WHAT IS NOT CLAIMED: that re-running THIS capture today would reproduce its numbers. It would not, and the change is one reason why -- it is an envelope over induce-time wall clock, and the change measurably halves that (100.3 s -> 47.2 s per attempt, token-cap hits 20/36 -> 2/36). Its budget curve is therefore expected to shift on re-measurement; it is retained as the pre-change anchor. Note its substrate is `aggregation_from_upstream_artifacts`, so its numbers derive from upstream captures rather than from this module at read time. This acknowledgement asserts that the recorded values are unaltered, which is what the lint checks; it does not assert that the finding survives re-measurement.",
++    "why_not_rebuilt": "No `rebuild_command` exists: this artifact records a completed live run whose values were measured, not computed, and re-running it would produce a different (nondeterministic, and under this change deliberately different) measurement rather than a refresh."
+    }
+   ]
+  },
+diff --git a/scripts/arc_orphan_solver_lint.py b/scripts/arc_orphan_solver_lint.py
+index d1f85245bd..0a44463d7c 100644
+--- a/scripts/arc_orphan_solver_lint.py
++++ b/scripts/arc_orphan_solver_lint.py
+@@ -57,11 +57,15 @@ ALLOWLIST = {
+     # before this entry its orphan status was INVISIBLE -- the guard returned a clean bill on a
+     # module that is genuinely unreachable from both live entrypoints. Retire this entry when the
+     # module is wired into the pre-gate path.
+-    "arc_engine_static_validation": (
+-        "diagnostic-only, deliberately unwired pending a proven funnel gain; see "
+-        "REQ-ARC-WMTE-6052 and CORRECTION 2026-07-31 in "
+-        "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+-    ),
++    #
++    # RETIRED 2026-07-31, on the condition the entry itself names. The module is now imported by
++    # `LocalGGUFProposer._engine_defects`, which `generate()` calls on the code-only induce path,
++    # so it is reachable from BOTH live entrypoints on the ordinary closure and needs no
++    # exemption. The funnel gain that entry was waiting for was measured out-of-sample over 36
++    # paired attempts on 6 games: mechanically-usable engines 13/36 -> 22/36, p = 0.049. Note
++    # what that does and does not license -- the gain is on VALIDITY and COST, not on engine
++    # quality, whose comparison came back p = 1.000 and could not have reached significance at
++    # that n. Wiring a defect gate is justified by the former alone.
+ }
+ 
+ 
+diff --git a/tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py b/tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py
+new file mode 100644
+index 0000000000..52931c45c0
+--- /dev/null
++++ b/tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py
+@@ -0,0 +1,289 @@
++"""REQ-ARC-FCP-5699-41: the induce path sends a repetition penalty, and re-asks a defective engine.
++
++WHAT WAS MEASURED, AND WHAT WAS NOT. Over 36 attempt-matched pairs on 6 games, scored
++OUT-OF-SAMPLE against transitions the induce prompt never rendered
++(`docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md`):
++
++  * attempts producing a mechanically-usable engine   13/36 -> 22/36, sign test p = 0.049
++  * wall clock per attempt                            100.3 s -> 47.2 s (65.2 s charging re-asks)
++  * calls hitting the 4096-token cap                  20/36 -> 2/36
++  * `missing_return` defects                          13 -> 2
++
++  * attempts clearing a STRICT out-of-sample quality bar   6/36 -> 7/36, p = 1.000
++
++The last line is why these tests assert plumbing and control flow and NOTHING about engine
++quality. The quality channel produced 5 discordant pairs, whose best possible two-sided p is
++0.0625, so it could not have shown an effect at that n in either direction. A test here that
++implied the wiring makes engines better would be asserting something the measurement explicitly
++does not support -- on 2 of the 6 games no arm ever produced a correct engine at any budget.
++
++THE FAILURE THE DEFECT GATE CLOSES. `generate()` accepted any completion that parsed and defined
++the requested names. 22 of 36 measured attempts cleared exactly that bar while returning code that
++could not work -- most often an `engine()` with a path that returns None, which
++`WorldModelVerifier.score` wraps in `np.asarray(None)` rather than raising, degrading silently
++into a world model that predicts nothing.
++
++THE INVARIANT THAT MAKES THIS SAFE TO SHIP, pinned by
++`test_a_defective_candidate_on_the_last_try_is_still_accepted`: the gate NEVER converts an accept
++into a hard failure. It can only spend an extra ask, and only while budget remains.
++"""
++
++from __future__ import annotations
++
++import json
++from typing import Any
++
++import pytest
++
++from carnot.agentic.arc_executable_world_model import (
++    _INDUCE_REPEAT_LAST_N,
++    _INDUCE_REPEAT_PENALTY,
++    LocalGGUFProposer,
++)
++
++# An engine with a real `return` on every path. Passes the defect check.
++GOOD_ENGINE = """
++import numpy as np
++
++
++def engine(grid, action, data):
++    out = np.array(grid).copy()
++    return out
++
++
++def is_level_complete(grid, data):
++    return False
++"""
++
++# The measured failure shape: `engine()` falls off the end on some path and yields None. It PARSES
++# and it DEFINES both required names, so the pre-2026-07-31 path accepted it.
++DEFECTIVE_ENGINE = """
++import numpy as np
++
++
++def engine(grid, action, data):
++    out = np.array(grid).copy()
++    # the model rambled here and never wrote a return
++
++
++def is_level_complete(grid, data):
++    return False
++"""
++
++
++class _ScriptedServer:
++    """Replays a fixed list of completions and records every outbound payload.
++
++    Deliberately NOT a mock of `generate()` itself: the whole point is to exercise the real
++    accept/reject control flow, so the only thing faked is the HTTP boundary.
++    """
++
++    def __init__(self, completions: list[str]) -> None:
++        self.completions = list(completions)
++        self.payloads: list[dict[str, Any]] = []
++
++    def urlopen(self, req: Any, timeout: float | None = None) -> Any:  # noqa: ANN401
++        self.payloads.append(json.loads(req.data.decode()))
++        body = self.completions[min(len(self.payloads) - 1, len(self.completions) - 1)]
++
++        class _Resp:
++            def __enter__(_s) -> Any:  # noqa: ANN001, N805
++                return _s
++
++            def __exit__(_s, *a: Any) -> bool:  # noqa: ANN001, N805
++                return False
++
++            def read(_s) -> bytes:  # noqa: ANN001, N805
++                return json.dumps({"content": body}).encode()
++
++        return _Resp()
++
++
++@pytest.fixture(autouse=True)
++def _clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Start from the shipped configuration: no operator overrides in play."""
++    for var in (
++        "CARNOT_ARC_INDUCE_REPEAT_PENALTY",
++        "CARNOT_ARC_INDUCE_DEFECT_REASKS",
++        "CARNOT_ARC_GENERATOR_SEED",
++    ):
++        monkeypatch.delenv(var, raising=False)
++
++
++def _proposer(monkeypatch: pytest.MonkeyPatch, completions: list[str]) -> tuple:
++    import urllib.request
++
++    srv = _ScriptedServer(completions)
++    prop = LocalGGUFProposer(repo_substr="gemma-4-31B-it", port=65501)
++    monkeypatch.setattr(prop, "_ensure_server", lambda: True)
++    monkeypatch.setattr(urllib.request, "urlopen", srv.urlopen)
++    return prop, srv
++
++
++# ---- SCENARIO-ARC-FCP-5699-41-1: the penalty reaches the induce payload -----------------------
++def test_induce_payload_carries_the_repeat_penalty(monkeypatch: pytest.MonkeyPatch) -> None:
++    """MUTATION-VERIFIED: fails against the pre-fix payload, which sent no penalty at all and so
++    inherited llama-server's default of 1.0 (read from a running server's own /props)."""
++    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert ok
++    assert srv.payloads[0]["repeat_penalty"] == _INDUCE_REPEAT_PENALTY
++    assert srv.payloads[0]["repeat_last_n"] == _INDUCE_REPEAT_LAST_N
++
++
++def test_refactor_shaped_calls_are_left_alone(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Scope discipline. `refactor()` is a REASONING task on a different prompt shape with no
++    measurement behind it here; penalising repetition in a debugging explanation is a different
++    intervention, not this one applied more widely."""
++    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
++    prop.generate("p", ("engine", "is_level_complete"), codeonly_eligible=False)
++    assert "repeat_penalty" not in srv.payloads[0]
++    assert "repeat_last_n" not in srv.payloads[0]
++
++
++def test_penalty_of_one_restores_the_old_payload_exactly(monkeypatch: pytest.MonkeyPatch) -> None:
++    """The off switch must be a true identity, not merely a small value -- llama.cpp treats 1.0 as
++    no penalty, so an A/B that disables this must produce the byte-identical pre-fix payload."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_REPEAT_PENALTY", "1.0")
++    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
++    prop.generate("p", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert "repeat_penalty" not in srv.payloads[0]
++    assert "repeat_last_n" not in srv.payloads[0]
++
++
++def test_malformed_penalty_falls_back_rather_than_raising(monkeypatch: pytest.MonkeyPatch) -> None:
++    """A typo'd env var must not take down a live episode."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_REPEAT_PENALTY", "not-a-float")
++    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), codeonly_eligible=True)
++    assert ok
++    assert srv.payloads[0]["repeat_penalty"] == _INDUCE_REPEAT_PENALTY
++
++
++# ---- SCENARIO-ARC-FCP-5699-41-2: a defective engine is re-asked, not accepted -----------------
++def test_defective_engine_triggers_exactly_one_plain_reask(monkeypatch: pytest.MonkeyPatch) -> None:
++    """MUTATION-VERIFIED: the pre-fix path accepted the defective candidate on call 1 and never
++    made call 2. This is the 22-of-36 finding in miniature."""
++    prop, srv = _proposer(
++        monkeypatch,
++        [f"```python\n{DEFECTIVE_ENGINE}\n```", f"```python\n{GOOD_ENGINE}\n```"],
++    )
++    ok, code = prop.generate(
++        "PROMPT", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True
++    )
++    assert ok
++    assert "the model rambled here" not in code, "returned the defective candidate"
++    assert len(srv.payloads) == 2, "expected round 0 + one re-ask"
++    assert prop.n_induce_defect_reasks == 1
++
++
++def test_the_reask_names_nothing_about_the_defect(monkeypatch: pytest.MonkeyPatch) -> None:
++    """A measured choice, not an oversight. `arc_engine_static_validation.repair_prompt_block()`
++    builds a defect-NAMING block; head-to-head against this neutral block over 5 discordant pairs
++    on disjoint games it came back p = 1.000. The defect text bought nothing and is left unwired;
++    the second ASK is the entire effect. If a future change starts naming defects here, that is a
++    new claim and needs its own measurement."""
++    prop, srv = _proposer(
++        monkeypatch,
++        [f"```python\n{DEFECTIVE_ENGINE}\n```", f"```python\n{GOOD_ENGINE}\n```"],
++    )
++    prop.generate("PROMPT", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True)
++    assert len(srv.payloads) == 2, "no re-ask was made, so there is no re-ask text to inspect"
++    reask = srv.payloads[1]["prompt"]
++    assert "TRY AGAIN" in reask.upper() or "PREVIOUS ANSWER" in reask.upper()
++    for leaked in ("missing_return", "engine_returned_none", "syntax_error"):
++        assert leaked not in reask, f"re-ask leaked the defect kind {leaked!r}"
++
++
++def test_a_clean_engine_is_never_reasked(monkeypatch: pytest.MonkeyPatch) -> None:
++    """The gate must cost nothing on the happy path -- otherwise it is a latency tax on every
++    induction, and the measured win was partly a COST win."""
++    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True)
++    assert ok
++    assert len(srv.payloads) == 1
++    assert prop.n_induce_defect_reasks == 0
++
++
++def test_a_defective_candidate_on_the_last_try_is_still_accepted(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """THE SAFETY INVARIANT. With one try there is no room to re-ask, so the gate must accept the
++    defective candidate exactly as the old path did. If this ever fails, the wiring has converted
++    an accept into a hard failure and can strand a live episode with no world model at all --
++    strictly worse than the silently-useless engine it was meant to replace."""
++    prop, srv = _proposer(monkeypatch, [f"```python\n{DEFECTIVE_ENGINE}\n```"])
++    ok, code = prop.generate("p", ("engine", "is_level_complete"), tries=1, codeonly_eligible=True)
++    assert ok, "the defect gate must never fail a call the old path would have passed"
++    assert "the model rambled here" in code
++    assert len(srv.payloads) == 1
++
++
++def test_exhausting_the_reask_budget_accepts_rather_than_fails(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """Same invariant one level up: every try defective, budget spent, still an accept."""
++    prop, srv = _proposer(monkeypatch, [f"```python\n{DEFECTIVE_ENGINE}\n```"] * 3)
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True)
++    assert ok
++    assert prop.n_induce_defect_reasks == 1, "budget is 1 re-ask, not one per try"
++
++
++def test_reasks_can_be_disabled_independently_of_the_penalty(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """The two ship independently on purpose: the penalty carries 11 of the 13 paired wins and the
++    re-ask 2, so an operator must be able to run either alone."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_REASKS", "0")
++    prop, srv = _proposer(monkeypatch, [f"```python\n{DEFECTIVE_ENGINE}\n```"])
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True)
++    assert ok
++    assert len(srv.payloads) == 1
++    assert srv.payloads[0]["repeat_penalty"] == _INDUCE_REPEAT_PENALTY
++
++
++def test_goal_only_calls_do_not_run_the_engine_gate(monkeypatch: pytest.MonkeyPatch) -> None:
++    """`induce()`'s split fallback asks for `is_level_complete` alone. The defect checks are
++    written against the `engine(grid, action, data)` contract and mean nothing there."""
++    goal_only = "def is_level_complete(grid, data):\n    return False\n"
++    prop, srv = _proposer(monkeypatch, [f"```python\n{goal_only}\n```"])
++    ok, _ = prop.generate("p", ("is_level_complete",), tries=3, codeonly_eligible=True)
++    assert ok
++    assert len(srv.payloads) == 1
++    assert prop.n_induce_defect_reasks == 0
++
++
++# ---- SCENARIO-ARC-FCP-5699-41-3: the gate can never break the path it guards ------------------
++def test_a_raising_defect_checker_accepts_rather_than_propagating(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """A defect DETECTOR that can break the thing it is checking is worse than no detector. If the
++    validator raises for any reason -- an import failure in the sandbox, a malformed transition --
++    the induce path must degrade to its old accept-everything behaviour, not to an exception."""
++    from carnot.agentic import arc_engine_static_validation as sv
++
++    def _boom(*a: Any, **k: Any) -> Any:  # noqa: ANN401
++        raise RuntimeError("validator exploded")
++
++    monkeypatch.setattr(sv, "validate_engine_code", _boom)
++
++    # The real validator is now a landmine...
++    with pytest.raises(RuntimeError):
++        sv.validate_engine_code("x")
++
++    # ...and the induce path steps on it and keeps walking.
++    prop, srv = _proposer(monkeypatch, [f"```python\n{DEFECTIVE_ENGINE}\n```"])
++    assert prop._engine_defects(DEFECTIVE_ENGINE, None) == [], "must swallow to 'no defects'"
++    ok, _ = prop.generate("p", ("engine", "is_level_complete"), tries=2, codeonly_eligible=True)
++    assert ok, "a broken validator must not fail the induction it was only advising on"
++    assert len(srv.payloads) == 1, "nor spend a re-ask on a defect it could not actually measure"
++
++
++def test_the_defect_checker_really_does_detect_the_measured_defect() -> None:
++    """The positive control for the test above. Without it, `_engine_defects` returning [] on a
++    genuinely broken engine would look like a pass everywhere in this file -- a detector wired to
++    a swallow-all `except` and a detector that works are indistinguishable unless one test insists
++    the thing actually fires."""
++    prop = LocalGGUFProposer(repo_substr="gemma-4-31B-it", port=65502)
++    assert prop._engine_defects(GOOD_ENGINE, None) == []
++    assert "missing_return" in prop._engine_defects(DEFECTIVE_ENGINE, None)
+diff --git a/tests/python/test_arc_orphan_lint_detects_induce_gating_2026_07_31.py b/tests/python/test_arc_orphan_lint_detects_induce_gating_2026_07_31.py
+index 4fbd8d9e56..61ab3caae0 100644
+--- a/tests/python/test_arc_orphan_lint_detects_induce_gating_2026_07_31.py
++++ b/tests/python/test_arc_orphan_lint_detects_induce_gating_2026_07_31.py
+@@ -12,17 +12,26 @@ module that is genuinely unreachable from both live entrypoints -- a false-negat
+ guard that exists to prevent silent off-path work. The module IS deliberately unwired, which is a
+ legitimate state; what was wrong is that the decision was invisible rather than recorded.
+ 
+-The fix has two halves and BOTH are pinned here, because either alone is useless:
++The fix had two halves:
+ 
+   * `_is_solver_like` now also matches a module defining `validate_engine_code` or
+     `repair_prompt_block` -- the induce-path gating surface, which decides whether the live agent
+     gets a usable world model at all.
+-  * the module is in `ALLOWLIST` with its reason, so the lint stays green while the orphan status
+-    is now an auditable entry instead of a gap.
+-
+-The second test is the load-bearing one: it removes the allow-list entry in memory and asserts the
+-lint FLAGS the module. Without it, a future edit that quietly drops the detection rule would leave
+-this file green -- the whole point is that the module is detectable, not that the lint passes.
++  * the module went into `ALLOWLIST` with its reason, so the lint stayed green while the orphan
++    status became an auditable entry instead of a gap.
++
++SUPERSEDED LATER THE SAME DAY, and the detection rule is why the succession was safe. The module
++was WIRED into `LocalGGUFProposer.generate()`'s code-only induce path once the funnel gain it was
++waiting on had been measured out-of-sample (13/36 -> 22/36 mechanically-usable engines, p = 0.049;
++`docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md`). The allow-list entry was
++removed in that same change, exactly as its own comment instructed. Two tests below therefore
++INVERTED -- they now assert reachability and the ABSENCE of an exemption. Their predecessors are
++described in their docstrings rather than deleted, because the reason the entry existed is part of
++the record.
++
++The detection-rule tests did NOT change, and are the durable half: whether the module is exempted
++or reachable, the lint must be able to SEE it. A future edit that quietly drops the rule would
++otherwise leave this file green.
+ """
+ 
+ from __future__ import annotations
+@@ -54,34 +63,57 @@ def test_the_validation_module_is_recognised_as_something_the_lint_must_account_
+     assert "validate_engine_code" in reason
+ 
+ 
+-def test_it_is_genuinely_unreachable_so_the_allow_list_entry_is_not_decorative():
+-    """If the module were on the live path the allow-list entry would be stale and misleading.
++def test_it_is_now_genuinely_reachable_from_the_live_path():
++    """UPDATED 2026-07-31 (same day, later): the module got wired, so this test INVERTED.
++
++    Its predecessor asserted the opposite -- that the module was unreachable, so that the
++    allow-list entry recording its orphan status could not become decorative. That test carried
++    its own succession plan: "When the module is eventually wired, this test fails and the
++    allow-list entry should be removed in the same change." That is what happened. Wiring
++    `LocalGGUFProposer._engine_defects` -> `validate_engine_code` into `generate()`'s code-only
++    induce path put the module in the ordinary import closure of both live entrypoints, the
++    predecessor test failed as designed, and the allow-list entry was removed in that change.
+ 
+-    This asserts the FACT the entry claims -- deliberately unwired -- rather than trusting the
+-    comment. When the module is eventually wired, this test fails and the allow-list entry should
+-    be removed in the same change.
++    What justified the wiring was a measurement, not a tidiness preference: 36 attempt-matched
++    pairs across 6 games, mechanically-usable engines 13/36 -> 22/36 at p = 0.049, scored
++    out-of-sample. Note the narrowness -- that is a VALIDITY and COST result. Engine quality came
++    back p = 1.000 on 5 discordant pairs and is not claimed.
++
++    This test is now the one that keeps the wiring honest: if a future refactor drops the import,
++    the module silently becomes off-path work again and this fails.
+     """
+     mod = _lint_module()
+     closure = mod._closure(mod.ENTRYPOINTS) | {ep.stem for ep in mod.ENTRYPOINTS}
+-    assert "arc_engine_static_validation" not in closure
++    assert "arc_engine_static_validation" in closure, (
++        "the induce-path defect gate is no longer reachable from the live agent -- either the "
++        "import in LocalGGUFProposer._engine_defects was dropped, or the closure no longer "
++        "follows it. Off-path gating code produces no live capability (CLAUDE.md ARC Live-Path "
++        "Reachability Discipline)."
++    )
+ 
+ 
+-def test_the_allow_list_entry_is_what_keeps_the_lint_green():
+-    """Remove the entry and the lint must flag -- proving the pass is an explicit decision."""
+-    mod = _lint_module()
+-    assert "arc_engine_static_validation" in mod.ALLOWLIST
+-    reason = mod.ALLOWLIST["arc_engine_static_validation"]
+-    # The discipline demands a REASON, not a bare exemption.
+-    assert len(reason) > 40 and "unwired" in reason
++def test_the_lint_is_green_on_reachability_and_not_on_an_exemption():
++    """The green bill must be earned. An allow-list entry would now be a false record.
+ 
++    This is the load-bearing half. `main() == 0` alone cannot distinguish "reachable" from
++    "exempted", and those are opposite facts about whether the live agent can use this code. So
++    the assertion is on the ABSENCE of the exemption, with the reachability asserted above.
++    """
++    mod = _lint_module()
++    assert "arc_engine_static_validation" not in mod.ALLOWLIST, (
++        "the module is on the live path now; an allow-list entry claiming it is deliberately "
++        "unwired would be a stale record of a decision that has been reversed"
++    )
++    # With no exemption in play, nothing solver-like may be left unreachable.
+     closure = mod._closure(mod.ENTRYPOINTS) | {ep.stem for ep in mod.ENTRYPOINTS}
+-    without = {k: v for k, v in mod.ALLOWLIST.items() if k != "arc_engine_static_validation"}
+     flagged = [
+         p.stem
+         for p in sorted(mod.AGENTIC.glob("arc_*.py"))
+-        if mod._is_solver_like(p) is not None and p.stem not in closure and p.stem not in without
++        if mod._is_solver_like(p) is not None
++        and p.stem not in closure
++        and p.stem not in mod.ALLOWLIST
+     ]
+-    assert flagged == ["arc_engine_static_validation"]
++    assert flagged == []
+ 
+ 
+ def test_the_new_rule_does_not_widen_into_a_false_positive_sweep():
+diff --git a/tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py b/tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py
+index eeea756bbe..03de2528ac 100644
+--- a/tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py
++++ b/tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py
+@@ -20,9 +20,38 @@ import hashlib
+ import importlib.util
+ import json
+ import os
++import re
+ from pathlib import Path
+ 
+ REPO = Path(__file__).resolve().parents[2]
++
++# "Somewhere a reader could go and check this." Any ONE of: a repo path with a real extension, a
++# results/ or tests/ directory reference, an experiment id, or a git sha. Deliberately a
++# disjunction of FORMS rather than a list of names -- naming names is what made the predecessor
++# check rot, since every new acknowledgement cites a location that did not exist when the check
++# was written.
++_CHECKABLE_LOCATION = re.compile(
++    r"(results/[\w./-]+)"  # an artifact or a measurement directory
++    r"|(tests?/[\w./-]+\.py)"  # a regression test
++    r"|(scripts/[\w./-]+\.py)"  # a harness
++    r"|(docs/[\w./-]+\.md)"  # a research note
++    r"|(\bexp\s?\d{3,4}\b)|(\bexperiment_\d{3,4}\b)"  # an experiment id
++    r"|(\b[0-9a-f]{9,40}\b)"  # a commit sha
++    r"|(\bchangelog\b)",
++    re.IGNORECASE,
++)
++
++
++def _cites_a_checkable_location(evidence: str) -> bool:
++    """True when the evidence points somewhere, rather than only asserting a conclusion.
++
++    This is the property the acknowledgement contract actually needs: `_acknowledged_inert_drift`
++    already enforces that `evidence` is non-empty, so the only remaining way to launder an
++    unverified change is a confident paragraph with nothing behind it.
++    """
++    return _CHECKABLE_LOCATION.search(evidence or "") is not None
++
++
+ _spec = importlib.util.spec_from_file_location(
+     "_afl", os.path.join(REPO, "scripts", "artifact_freshness_lint.py")
+ )
+@@ -138,4 +167,72 @@ def test_the_three_real_acknowledgements_are_complete_and_current() -> None:
+             assert len(a["reason"]) > 80, rel
+             assert len(a["evidence"]) > 80, rel
+             # The evidence must name where a reader can check it, not just assert inertness.
+-            assert "6011" in a["evidence"] or "changelog" in a["evidence"], rel
++            #
++            # FIXED 2026-07-31: this asserted `"6011" in evidence or "changelog" in evidence`, two
++            # LITERALS that were a fair proxy for the property when written -- at the time both
++            # acknowledgements on these artifacts cited exp6011 or the changelog. They stopped
++            # being a fair proxy as soon as an acknowledgement cited its evidence somewhere else.
++            # By this commit 4 of the 6 acknowledgements on EACH of these three artifacts failed
++            # the literal check while satisfying the property perfectly well, citing e.g.
++            # `results/arc_plan_in_model_depth_20260731/inertness_differential.json` and a named
++            # regression test. So the test had been RED, and silently so -- it is not in the path
++            # any per-file hook runs, and nothing else asserts on these artifacts.
++            #
++            # The replacement asserts the PROPERTY the comment always described rather than two
++            # spellings of it. This is not a loosened bar: an acknowledgement that merely asserts
++            # inertness with no pointer still fails, which is mutation-checked in the companion
++            # test below.
++            # SCOPED TO ACKNOWLEDGEMENTS WRITTEN ON OR AFTER THE DAY THE RULE BECAME REAL. Two
++            # entries dated 2026-07-30 carry genuinely strong evidence -- one is a 5,200-case
++            # differential execution -- but state it as prose without naming a file, because
++            # nothing required them to. Rewriting their text to satisfy a rule invented afterwards
++            # would be editing the historical record to flatter a later standard, which is the
++            # never-prune rule's exact prohibition. They are grandfathered by DATE and their count
++            # is pinned below, so the exception cannot quietly grow.
++            if a.get("acknowledged_date", "") >= "2026-07-31":
++                assert _cites_a_checkable_location(a["evidence"]), (
++                    f"{rel}: evidence asserts inertness without naming anywhere a reader could go "
++                    f"and check it -- got: {a['evidence'][:200]!r}"
++                )
++
++        legacy = [
++            a
++            for a in acks
++            if a.get("acknowledged_date", "") < "2026-07-31"
++            and not _cites_a_checkable_location(a["evidence"])
++        ]
++        assert len(legacy) == 2, (
++            f"{rel}: expected exactly the 2 known pre-rule acknowledgements without a cited "
++            f"location, found {len(legacy)}. A NEW one means the date guard above was bypassed "
++            f"by back-dating; an old one disappearing means historical evidence was rewritten."
++        )
++
++
++def test_the_checkable_location_rule_still_rejects_a_confident_paragraph() -> None:
++    """MUTATION CHECK for the fix above: the relaxed form must not accept everything.
++
++    The predecessor check was two hardcoded literals, and replacing a literal with a pattern is
++    exactly the kind of edit that can quietly become `assert True`. So the replacement is pinned
++    from both sides: prose that only ASSERTS inertness fails, and each accepted form is shown to
++    be doing the accepting on its own.
++    """
++    # The failure mode the rule exists to catch: fluent, confident, unfalsifiable.
++    assert not _cites_a_checkable_location(
++        "This change is entirely cosmetic and has been carefully reviewed. It cannot possibly "
++        "affect any measurement recorded in this artifact, and no rebuild is warranted."
++    )
++    assert not _cites_a_checkable_location("")
++    assert not _cites_a_checkable_location("verified inert by inspection")
++
++    # Each accepted FORM, one at a time -- so a future edit that breaks one branch is visible
++    # rather than masked by the others.
++    for good in (
++        "deep-diffed against results/experiment_6013_hidden_state_change_gate_closure.json",
++        "pinned by tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py",
++        "reproduced with scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py",
++        "the reasoning is written up in docs/research-notes/arc-induce-wiring.md",
++        "differential execution against exp6011 showed no movement",
++        "acknowledged at commit 0da7f75ad after the rebuild overwrote the timings",
++        "see the changelog entry for the same day",
++    ):
++        assert _cites_a_checkable_location(good), good
+-- 
+2.55.0
+

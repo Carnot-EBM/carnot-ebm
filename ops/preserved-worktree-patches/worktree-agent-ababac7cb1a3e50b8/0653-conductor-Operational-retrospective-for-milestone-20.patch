@@ -1,0 +1,94 @@
+From 3018d9f092cdeccb5425baeb49295cbd4bf814df Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 11:33:23 -0400
+Subject: [PATCH 00653/11362] [conductor] Operational retrospective for
+ milestone 2026.06.357
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  4 ++++
+ ops/metrics.md                             |  8 +++++++
+ results/operational_retro_2026_06_357.json | 27 ++++++++++++++++++++++
+ 4 files changed, 45 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_357.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 09066fdc70..e8c7befad7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5025,3 +5025,9 @@ The critical path for milestone .250:
+ - theme: Operational Retrospective
+ - key result: honest negative: no experiment commits found since activation
+ - acceptance: 0/0 criteria met
++
++### Milestone 2026.06.357
++- exp_range: no data available this milestone
++- theme: Operational Retrospective
++- key result: Honest negative: no experiment commits found since activation of 2026.06.357.
++- acceptance: 0/0 criteria met
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 7b9c6728cf..f3afec4570 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8642,3 +8642,7 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-05: PolarFire SoC Discovery Kit hardware continuity (terminal-state attempt, re-issue of exp3855): precondition-gated SSH round-trip Carnot dispatch — run an Ising energy-eval workload on the board over SSH, verify the result hash matches a CPU-computed reference, record run_duration_s>=5 + soc_temp. Reaches polarfire_workload_validated terminal state on a hash match. (⚠️ Research Finding) — honest_verdict=success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown; results/experiment_3867_polarfire_soc_smoke_v4.json
+ - 2026-06-05: Capstone .356 — aggregate the VERIFIER-MOAT DURABILITY verdict (does the moat survive at scale with MEASURED independence?), the facts-domain graph-grounding prototype outcome, the FR-11 v23 self-learning result, the LDT-margin sharpening, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged. (✅ Complete) — honest_verdict=complete: capstone_v356_moat_inconclusive_independence_mixed_facts_excluded_paper_ready_true_frozen_headline_unchanged; results/experiment_3868_capstone_v356.json
+ - 2026-06-05: MOAT SCISSOR AT SCALE v4 (supersedes blocked exp3844/exp3859): against the EXISTING data/step_error_balanced_v2.json (500 gold-incorrect steps), of the step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble INDEPENDENTLY catch? Residual-catch + bootstrap CI95 + 2 positive controls. The DT-P2 o1-subsumption durability test. (✅ Complete) — honest_verdict=complete: moat_scissor_v4_INCONCLUSIVE_reasoner_self_verify_auroc_and_carnot_ensemble_auroc; results/experiment_3869_moat_scissor_v4_existing_corpus.json
++
++## 2026-06-05 (Milestone 2026.06.357 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_357.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 8c533a16f5..b6e8265e4e 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3200,3 +3200,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-06-04T19:55:26Z | 2026-06-04T20:10:31Z | Planned milestone 2026.06.351: literature sweep (unblocked recursive-refiner TRM checkpoint via arcprize/nano-trm), wrote research-roadmap-vNEXT.md + research-roadmap-next.yaml (12 tasks), appended .351 refs; exclusion-manifest lint clean (HARD=0) | ~95k |
++
++## Session: 2026-06-05 Milestone 2026.06.357 Operational Retrospective
++
++### Turn Log
++
++| Turn | Start | End | Description | Tokens (est) |
++|------|-------|-----|-------------|------|
++| 1 | 2026-06-05T15:31:37Z | 2026-06-05T15:32:08Z | Wrote operational retro for 2026.06.357 | ~3k |
+diff --git a/results/operational_retro_2026_06_357.json b/results/operational_retro_2026_06_357.json
+new file mode 100644
+index 0000000000..ebcbbf7a9d
+--- /dev/null
++++ b/results/operational_retro_2026_06_357.json
+@@ -0,0 +1,27 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.357",
++  "generated_at": "2026-06-05T15:31:37Z",
++  "retro_type": "operational_in_progress",
++  "summary": "No experiment commits were found for this milestone, resulting in 0 experiments completed and 0 compute-bound tasks. The GPUs remained entirely idle at 0% utilization throughout the observed period.",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "slowest_experiments": [],
++  "bottlenecks_identified": [
++    "No experiments were executed, so no computational bottlenecks could be identified.",
++    "GPUs were fully idle, indicating a lack of compute-bound tasks dispatched during this milestone."
++  ],
++  "improvements_suggested": [
++    "Investigate the pipeline trigger to ensure experiments are correctly dispatched for the milestone.",
++    "Ensure memory is freed on GPUs if no processes are actively running, as 4MB remains allocated with 0% utilization."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Audit milestone activation logic to understand why no experiment commits occurred.",
++    "Check runner or scheduler logs to debug the lack of task dispatch.",
++    "Clean up stale GPU memory allocations from prior milestones."
++  ],
++  "compute_bound_experiments_count": 0,
++  "gpu_idle_on_compute_bound_tasks": null,
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The complete lack of milestone-scoped data indicates an orchestration or scheduling failure rather than a performance bottleneck. Resolving the dispatch issue is the primary priority before performance tuning can resume."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

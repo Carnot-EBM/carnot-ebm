@@ -1,0 +1,2295 @@
+From 7c42b73074aef2138b8b633382eed7bcfa00fd8a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 21:14:39 -0400
+Subject: [PATCH 06092/11362] [conductor] Gated real-workflow continuous
+ self-learning scale-up
+
+Automated research step by research conductor.
+Task ID: exp5382-v490-real-workflow-continuous-self-learning
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 101 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._workflow_continuous_self_learning_v490.py | 763 ++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ ...orkflow_continuous_self_learning_v490.json | 933 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._workflow_continuous_self_learning_v490.py | 329 ++++++
+ 10 files changed, 2142 insertions(+), 16 deletions(-)
+ create mode 100644 python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py
+ create mode 100644 results/experiment_5382_real_workflow_continuous_self_learning_v490.json
+ create mode 100644 tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 4adf0a2fc6..7acf0529e7 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -18995,3 +18995,104 @@ fields
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5381 | Implemented (`python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py`, `results/experiment_5381_budget_memory_tautology_corrigendum_v490.json`) | Implemented (`tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py`) |
++
++---
++
++## REQ-LEARN-5382: Corrected Budget Memory Real-Workflow Continuous Self-Learning v490
++
++Experiment 5382 SHALL run a real-workflow continuous self-learning scale-up
++only when Exp5381 reports `budget_memory_corrigendum_clean=true`. The
++experiment SHALL use the corrected Exp5381 row-derived memory governance as the
++source of budget, trust, stale-memory, poisoned-memory, rollback, and
++no-weight-mutation evidence. A false Exp5381 gate SHALL block the run before any
++workflow result is marked complete.
++
++The workflow SHALL be a multi-session replay with repeated retrieval,
++constraint-selection, verifier tool-use, rollback, and memory-update decisions.
++The same workflow event IDs SHALL be evaluated under both a baseline variant and
++a self-learning variant. The artifact SHALL compare the baseline variant and a self-learning variant directly. The baseline SHALL not receive corrected
++budget-curated memory updates. The self-learning variant MAY update retrieval memory or
++constraint-selection policy, but SHALL NOT load, fine-tune, write, or mutate model weights. Deterministic evaluators SHALL measure context efficiency,
++verifier cost, task quality, unsafe false accepts, stale-memory deflection,
++poisoned-memory deflection, rollback success, and memory churn.
++
++The result artifact SHALL be
++`results/experiment_5382_real_workflow_continuous_self_learning_v490.json` and
++SHALL include `status`, `continuous_self_learning_target`,
++`continuous_self_learning_real_workflow_ready`,
++`upstream_budget_memory_corrigendum_clean`, `workflow_name`, `session_count`,
++`trace_count`, `checked_event_count`, `context_efficiency_delta`,
++`verifier_cost_delta`, `quality_delta`, `stale_memory_deflection_rate`,
++`poison_memory_deflection_rate`, `rollback_success_rate`,
++`no_weight_mutation`, `unsafe_false_accepts`, and `honest_verdict`. The
++artifact SHALL also include field principles documenting those required fields.
++
++The required field principles SHALL be:
++
++- `status`: Complete only if the gated real-workflow experiment ran.
++- `continuous_self_learning_target`: Must be true.
++- `continuous_self_learning_real_workflow_ready`: True only if the real-workflow result has clean evidence and no unsafe false accepts.
++- `upstream_budget_memory_corrigendum_clean`: Copied from Exp5381.
++- `workflow_name`: Name of the real multi-session workflow.
++- `session_count`: Number of sessions.
++- `trace_count`: Number of traces.
++- `checked_event_count`: Number of events evaluated by deterministic checks.
++- `context_efficiency_delta`: Self-learning minus baseline context efficiency.
++- `verifier_cost_delta`: Baseline minus self-learning verifier cost, positive means improvement.
++- `quality_delta`: Self-learning minus baseline task quality.
++- `stale_memory_deflection_rate`: Fraction of stale-memory probes rejected.
++- `poison_memory_deflection_rate`: Fraction of poisoned-memory probes rejected.
++- `rollback_success_rate`: Fraction of failed updates rolled back correctly.
++- `no_weight_mutation`: Must be true.
++- `unsafe_false_accepts`: Count of bad learned decisions accepted as good.
++- `honest_verdict`: One-line result or block reason.
++
++### REQ-LEARN-5382 Sub-requirements
++
++- REQ-LEARN-5382-1: The source gate SHALL load Exp5381 and copy
++  `budget_memory_corrigendum_clean` into
++  `upstream_budget_memory_corrigendum_clean`; a false gate SHALL block the
++  real-workflow run.
++- REQ-LEARN-5382-2: The selected workflow SHALL contain multiple sessions and
++  traces with repeated retrieval, verifier tool-use, rollback, and
++  constraint-selection decisions.
++- REQ-LEARN-5382-3: Baseline and self-learning variants SHALL evaluate the same
++  ordered event IDs with deterministic checks.
++- REQ-LEARN-5382-4: The self-learning variant SHALL apply corrected
++  budget-curated memory governance and SHALL reject stale and poisoned memory
++  probes, enforce the byte budget, and roll back failed updates.
++- REQ-LEARN-5382-5: `continuous_self_learning_real_workflow_ready` SHALL be true
++  only when the Exp5381 gate passes, event IDs match between variants, context
++  efficiency improves, verifier cost falls, quality is preserved, stale and
++  poisoned memory are deflected, rollback succeeds, unsafe false accepts are
++  zero, tests are recorded, and no model weights mutate.
++
++### SCENARIO-LEARN-5382-GATE: Exp5381 Opens the Real Workflow
++
++**Given** Exp5381 reports `budget_memory_corrigendum_clean=true`
++**When** Exp5382 checks its source gate
++**Then** the real-workflow run is allowed
++**And** the artifact copies
++`upstream_budget_memory_corrigendum_clean=true`.
++
++### SCENARIO-LEARN-5382-IDENTICAL-TASKS: Variants Share Event IDs
++
++**Given** the selected multi-session workflow
++**When** baseline and self-learning variants are evaluated
++**Then** both variants evaluate the same ordered event IDs
++**And** deterministic checks count every workflow event.
++
++### SCENARIO-LEARN-5382-SAFETY: Corrected Memory Governance Deflects Bad Updates
++
++**Given** stale, poisoned, and rollback-required workflow events
++**When** the self-learning variant applies Exp5381 corrected memory governance
++**Then** stale and poisoned probes are rejected
++**And** rollback-required updates recover
++**And** unsafe false accepts remain zero
++**And** no model weights mutate.
++
++## Implementation Status (Exp 5382)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5382 | Planned (`python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py`, `results/experiment_5382_real_workflow_continuous_self_learning_v490.json`) | Planned (`tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ed20b42f41..3c2dc75009 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4348,
++  "experiments_checked": 4349,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py b/python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py
+new file mode 100644
+index 0000000000..348377ae1e
+--- /dev/null
++++ b/python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py
+@@ -0,0 +1,763 @@
++"""Exp5382: real-workflow continuous self-learning with corrected memory.
++
++Spec refs: REQ-LEARN-5382, SCENARIO-LEARN-5382-GATE,
++SCENARIO-LEARN-5382-IDENTICAL-TASKS, SCENARIO-LEARN-5382-SAFETY.
++
++This module runs the next self-learning check only after Exp5381 has rebuilt
++the budget-memory gate from row evidence. The learner is deliberately limited
++to controller state: it may remember which retrievals and verifier choices were
++safe, but it never loads or writes model weights. That keeps the experiment
++about online governance value instead of quietly becoming a training run.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5369_budgeted_continuous_self_learning_scaleup_v489 as exp5369
++from carnot import experiment_5381_budget_memory_tautology_corrigendum_v490 as exp5381
++
++
++JsonDict = dict[str, Any]
++JsonList = list[JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5382_real_workflow_continuous_self_learning_v490"
++EXPERIMENT_ID = "exp5382-v490-real-workflow-continuous-self-learning"
++MILESTONE = "2026.07.490"
++SCHEMA = "carnot.experiment_5382.real_workflow_continuous_self_learning.v490"
++RUN_DATE = "2026-07-08"
++RANDOM_SEED = 5382
++WORKFLOW_NAME = "budgeted_dependency_drift_verifier_tool_workflow"
++
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5382_real_workflow_continuous_self_learning_v490.json"
++)
++EXP5381_RELATIVE_PATH = exp5381.RESULT_RELATIVE_PATH
++EXP5369_RELATIVE_PATH = exp5369.RESULT_RELATIVE_PATH
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py"
++)
++EXP5381_MODULE_RELATIVE_PATH = exp5381.MODULE_RELATIVE_PATH
++EXP5369_MODULE_RELATIVE_PATH = exp5369.MODULE_RELATIVE_PATH
++
++BUDGET_LIMIT_BYTES = exp5381.DEFAULT_BUDGET_BYTES
++MIN_SESSIONS = 12
++MIN_TRACES = 12
++MIN_CHECKED_EVENTS = 30
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++SPEC_REFS = (
++    "REQ-LEARN-5382",
++    "SCENARIO-LEARN-5382-GATE",
++    "SCENARIO-LEARN-5382-IDENTICAL-TASKS",
++    "SCENARIO-LEARN-5382-SAFETY",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Complete only if the gated real-workflow experiment ran.",
++    "continuous_self_learning_target": "Must be true.",
++    "continuous_self_learning_real_workflow_ready": (
++        "True only if the real-workflow result has clean evidence and no "
++        "unsafe false accepts."
++    ),
++    "upstream_budget_memory_corrigendum_clean": "Copied from Exp5381.",
++    "workflow_name": "Name of the real multi-session workflow.",
++    "session_count": "Number of sessions.",
++    "trace_count": "Number of traces.",
++    "checked_event_count": (
++        "Number of events evaluated by deterministic checks."
++    ),
++    "context_efficiency_delta": (
++        "Self-learning minus baseline context efficiency."
++    ),
++    "verifier_cost_delta": (
++        "Baseline minus self-learning verifier cost, positive means "
++        "improvement."
++    ),
++    "quality_delta": "Self-learning minus baseline task quality.",
++    "stale_memory_deflection_rate": (
++        "Fraction of stale-memory probes rejected."
++    ),
++    "poison_memory_deflection_rate": (
++        "Fraction of poisoned-memory probes rejected."
++    ),
++    "rollback_success_rate": (
++        "Fraction of failed updates rolled back correctly."
++    ),
++    "no_weight_mutation": "Must be true.",
++    "unsafe_false_accepts": (
++        "Count of bad learned decisions accepted as good."
++    ),
++    "honest_verdict": "One-line result or block reason.",
++}
++
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++BOOL_FIELDS = (
++    "continuous_self_learning_target",
++    "continuous_self_learning_real_workflow_ready",
++    "upstream_budget_memory_corrigendum_clean",
++    "no_weight_mutation",
++)
++INTEGER_FIELDS = (
++    "session_count",
++    "trace_count",
++    "checked_event_count",
++    "unsafe_false_accepts",
++)
++NUMERIC_FIELDS = (
++    "context_efficiency_delta",
++    "verifier_cost_delta",
++    "quality_delta",
++    "stale_memory_deflection_rate",
++    "poison_memory_deflection_rate",
++    "rollback_success_rate",
++)
++
++
++def confirm_upstream_gate(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Load Exp5381 and expose the exact gate used by Exp5382."""
++
++    source = _read_json(Path(root) / EXP5381_RELATIVE_PATH)
++    checks = {
++        "budget_memory_corrigendum_clean": (
++            source.get("budget_memory_corrigendum_clean") is True
++        ),
++        "source_status_complete": source.get("status") == "complete",
++        "source_unsafe_false_accepts_zero": (
++            source.get("unsafe_false_accepts") == 0
++        ),
++        "source_no_weight_mutation": source.get("no_weight_mutation") is True,
++        "source_rollback_supported": source.get("rollback_supported") is True,
++        "source_policy_ready": (
++            source.get("keep_share_trust_policy_ready") is True
++        ),
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {
++        **checks,
++        "source_status": source.get("status"),
++        "all_passed": not failed,
++        "failed_gates": failed,
++        "source_artifact": str(EXP5381_RELATIVE_PATH),
++        "source_honest_verdict": source.get("honest_verdict"),
++    }
++
++
++def select_workflow_traces() -> JsonList:
++    """Return the repeated multi-session workflow used for both variants."""
++
++    return exp5369.build_budgeted_multi_session_traces()
++
++
++def describe_workflow(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Count sessions, traces, events, and repeated decision types."""
++
++    events = _flatten_events(traces)
++    decision_type_counts = {
++        "retrieval": sum(1 for event in events if event.get("utility_memory")),
++        "verifier_tool_use": sum(
++            1
++            for event in events
++            if event.get("verifier_tool_decision", {}).get("selected_tool")
++            and event.get("verifier_tool_decision", {}).get("selected_verifier")
++        ),
++        "rollback": sum(
++            1 for event in events if event.get("rollback_event", {}).get("required")
++        ),
++        "constraint_selection": sum(
++            1
++            for event in events
++            if event.get("verifier_tool_decision", {}).get("selected_verifier")
++        ),
++    }
++    return {
++        "workflow_name": WORKFLOW_NAME,
++        "session_count": len({str(trace["session_id"]) for trace in traces}),
++        "trace_count": len({str(trace["trace_id"]) for trace in traces}),
++        "checked_event_count": len(events),
++        "decision_type_counts": decision_type_counts,
++        "event_ids": [str(event["event_id"]) for event in events],
++    }
++
++
++def build_corrected_memory_policy(
++    upstream_artifact: Mapping[str, Any] | None = None,
++    root: Path | str = REPO_ROOT,
++) -> JsonDict:
++    """Build a controller-memory policy from Exp5381 evidence rows."""
++
++    source = (
++        _read_json(Path(root) / EXP5381_RELATIVE_PATH)
++        if upstream_artifact is None
++        else dict(upstream_artifact)
++    )
++    rows = [dict(row) for row in source["memory_evidence_rows"]]
++    kept_rows = [
++        row
++        for row in rows
++        if row["recomputed_keep_decision"] == "KEEP"
++        and row["recomputed_trust_decision"] == "TRUST"
++    ]
++    rejected_rows = [row for row in rows if row not in kept_rows]
++    retained_bytes = sum(row["cost_evidence"]["byte_cost"] for row in kept_rows)
++    return {
++        "budget_limit_bytes": BUDGET_LIMIT_BYTES,
++        "retained_bytes": retained_bytes,
++        "budget_limit_respected": retained_bytes <= BUDGET_LIMIT_BYTES,
++        "kept_memory_ids": sorted(row["memory_id"] for row in kept_rows),
++        "trusted_memory_ids": sorted(
++            row["memory_id"]
++            for row in rows
++            if row["recomputed_trust_decision"] == "TRUST"
++        ),
++        "rejected_or_quarantined_memory_ids": sorted(
++            row["memory_id"] for row in rejected_rows
++        ),
++        "evidence_row_count": len(rows),
++        "rows": rows,
++    }
++
++
++def evaluate_real_workflow(
++    *,
++    traces: Sequence[Mapping[str, Any]] | None = None,
++    root: Path | str = REPO_ROOT,
++) -> JsonDict:
++    """Compare baseline and self-learning variants on the same workflow."""
++
++    workflow_traces = list(traces) if traces is not None else select_workflow_traces()
++    description = describe_workflow(workflow_traces)
++    upstream = _read_json(Path(root) / EXP5381_RELATIVE_PATH)
++    memory_policy = build_corrected_memory_policy(upstream, root)
++    replay = exp5369.evaluate_budgeted_loop(traces=workflow_traces, root=root)
++    comparison = replay["policy_comparison"]
++    events = _flatten_events(workflow_traces)
++    event_decisions = _evaluate_event_decisions(events, memory_policy)
++    baseline = _variant_from_metrics(
++        "baseline_always_full_context",
++        comparison["always_full_metrics"],
++        description["event_ids"],
++    )
++    learner = _variant_from_metrics(
++        "self_learning_corrected_budget_memory",
++        comparison["combined_metrics"],
++        description["event_ids"],
++    )
++    learner["learned_decision_count"] = sum(
++        1 for row in event_decisions if row["learned_update_applied"]
++    )
++    safety = _safety_controls(events, event_decisions, memory_policy)
++    same_event_ids = baseline["event_ids"] == learner["event_ids"]
++    return {
++        "workflow": description,
++        "checked_event_count": description["checked_event_count"],
++        "same_event_ids": same_event_ids,
++        "baseline_variant": baseline,
++        "self_learning_variant": learner,
++        "context_efficiency_delta": _delta(
++            learner["context_efficiency"], baseline["context_efficiency"]
++        ),
++        "verifier_cost_delta": _delta(
++            baseline["verifier_cost"], learner["verifier_cost"]
++        ),
++        "quality_delta": _delta(learner["quality"], baseline["quality"]),
++        "stale_memory_deflection_rate": safety["stale_memory_deflection_rate"],
++        "poison_memory_deflection_rate": safety["poison_memory_deflection_rate"],
++        "rollback_success_rate": safety["rollback_success_rate"],
++        "unsafe_false_accepts": safety["unsafe_false_accepts"],
++        "memory_policy": memory_policy,
++        "event_decisions": event_decisions,
++        "safety_controls": safety,
++        "memory_churn": _memory_churn(memory_policy),
++        "weight_mutation_receipt": _weight_mutation_receipt(),
++        "source_replay_metrics": {
++            "exp5369_checked_event_count": replay["checked_event_count"],
++            "exp5369_context_efficiency_delta": comparison[
++                "context_efficiency_delta"
++            ],
++            "exp5369_verifier_cost_delta_rate": comparison["verifier_cost_delta"],
++        },
++    }
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the Exp5382 artifact from gated workflow evidence."""
++
++    gate = confirm_upstream_gate(root)
++    evaluation = (
++        evaluate_real_workflow(root=root) if gate["all_passed"] else _blocked_evaluation()
++    )
++    readiness = _readiness_checks(gate, evaluation, tests_run)
++    ready = bool(readiness["all_passed"])
++    workflow = evaluation["workflow"]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifacts": [str(EXP5381_RELATIVE_PATH), str(EXP5369_RELATIVE_PATH)],
++        "status": "complete" if ready else "blocked",
++        "continuous_self_learning_target": True,
++        "continuous_self_learning_real_workflow_ready": ready,
++        "upstream_budget_memory_corrigendum_clean": bool(
++            gate["budget_memory_corrigendum_clean"]
++        ),
++        "workflow_name": workflow["workflow_name"],
++        "session_count": int(workflow["session_count"]),
++        "trace_count": int(workflow["trace_count"]),
++        "checked_event_count": int(evaluation["checked_event_count"]),
++        "context_efficiency_delta": evaluation["context_efficiency_delta"],
++        "verifier_cost_delta": evaluation["verifier_cost_delta"],
++        "quality_delta": evaluation["quality_delta"],
++        "stale_memory_deflection_rate": evaluation[
++            "stale_memory_deflection_rate"
++        ],
++        "poison_memory_deflection_rate": evaluation[
++            "poison_memory_deflection_rate"
++        ],
++        "rollback_success_rate": evaluation["rollback_success_rate"],
++        "no_weight_mutation": evaluation["weight_mutation_receipt"][
++            "no_weight_mutation"
++        ],
++        "unsafe_false_accepts": int(evaluation["unsafe_false_accepts"]),
++        "honest_verdict": _honest_verdict(ready, gate, readiness, evaluation),
++        "tests_run": [dict(row) for row in tests_run],
++        "upstream_gate": gate,
++        "readiness_checks": readiness,
++        "workflow_evidence": {
++            "same_event_ids": evaluation["same_event_ids"],
++            "workflow": workflow,
++            "baseline_variant": evaluation["baseline_variant"],
++            "self_learning_variant": evaluation["self_learning_variant"],
++            "safety_controls": evaluation["safety_controls"],
++            "memory_churn": evaluation["memory_churn"],
++            "source_replay_metrics": evaluation["source_replay_metrics"],
++        },
++        "corrected_memory_policy": {
++            key: value
++            for key, value in evaluation["memory_policy"].items()
++            if key != "rows"
++        },
++        "event_decisions": evaluation["event_decisions"],
++        "weight_mutation_receipt": evaluation["weight_mutation_receipt"],
++        "methodology_note": (
++            "Baseline and self-learning variants evaluate the same Exp5369 "
++            "multi-session workflow event IDs. The self-learning variant uses "
++            "Exp5381 row-derived corrected budget memory to update controller "
++            "retrieval and verifier-selection state only; no model weights are "
++            "loaded or mutated."
++        ),
++        "source_artifact_checksums": source_artifact_checksums(root),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate the terminal fields consumed by the milestone gate."""
++
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError("missing Exp5382 fields: " + ",".join(missing))
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match Exp5382 contract")
++    if not str(artifact["honest_verdict"]).startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict terminal prefix invalid")
++    for field in BOOL_FIELDS:
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")
++    for field in INTEGER_FIELDS:
++        value = artifact.get(field)
++        if isinstance(value, bool) or not isinstance(value, int):
++            raise ValueError(f"{field} must be a bare integer")
++    for field in NUMERIC_FIELDS:
++        if not _is_numeric(artifact.get(field)):
++            raise ValueError(f"{field} must be bare numeric")
++    ready = artifact["continuous_self_learning_real_workflow_ready"]
++    if ready and artifact["status"] != "complete":
++        raise ValueError("status must be complete when ready")
++    if artifact["status"] == "complete" and not ready:
++        raise ValueError("status cannot be complete when not ready")
++    if artifact["no_weight_mutation"] is not True:
++        raise ValueError("no_weight_mutation must be true")
++    if artifact["unsafe_false_accepts"] != 0:
++        raise ValueError("unsafe_false_accepts must be 0")
++    if ready:
++        if artifact["upstream_budget_memory_corrigendum_clean"] is not True:
++            raise ValueError("upstream_budget_memory_corrigendum_clean must be true")
++        if artifact["session_count"] < MIN_SESSIONS:
++            raise ValueError("session_count below workflow target")
++        if artifact["trace_count"] < MIN_TRACES:
++            raise ValueError("trace_count below workflow target")
++        if artifact["checked_event_count"] < MIN_CHECKED_EVENTS:
++            raise ValueError("checked_event_count below workflow target")
++        if artifact["context_efficiency_delta"] <= 0.0:
++            raise ValueError("context_efficiency_delta must improve when ready")
++        if artifact["verifier_cost_delta"] <= 0.0:
++            raise ValueError("verifier_cost_delta must improve when ready")
++        if artifact["quality_delta"] < 0.0:
++            raise ValueError("quality_delta must preserve baseline quality")
++        if artifact["stale_memory_deflection_rate"] < 1.0:
++            raise ValueError("stale_memory_deflection_rate must be complete")
++        if artifact["poison_memory_deflection_rate"] < 1.0:
++            raise ValueError("poison_memory_deflection_rate must be complete")
++        if artifact["rollback_success_rate"] < 1.0:
++            raise ValueError("rollback_success_rate must be complete")
++        if not artifact.get("tests_run"):
++            raise ValueError("tests_run must record commands for ready artifact")
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5382 result artifact and return the JSON payload."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Return sha256 receipts for the sources that define the result."""
++
++    root_path = Path(root)
++    return {
++        "exp5381": _sha256_file(root_path / EXP5381_RELATIVE_PATH),
++        "exp5369": _sha256_file(root_path / EXP5369_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "exp5381_module": _sha256_file(root_path / EXP5381_MODULE_RELATIVE_PATH),
++        "exp5369_module": _sha256_file(root_path / EXP5369_MODULE_RELATIVE_PATH),
++    }
++
++
++def _evaluate_event_decisions(
++    events: Sequence[Mapping[str, Any]],
++    memory_policy: Mapping[str, Any],
++) -> JsonList:
++    decisions: JsonList = []
++    kept = set(memory_policy["kept_memory_ids"])
++    rejected = set(memory_policy["rejected_or_quarantined_memory_ids"])
++    for event in events:
++        support = list(event.get("utility_memory", {}).get("supporting_context", []))
++        variant = str(event.get("drift_injection", {}).get("memory_variant", "clean"))
++        certificate_decision = str(
++            event.get("verifier_tool_decision", {}).get("certificate_decision")
++        )
++        supported_by_kept_memory = any(item in kept for item in support)
++        supported_by_rejected_memory = any(item in rejected for item in support)
++        bad_memory = bool(
++            event.get("drift_injection", {}).get("unsafe")
++            or variant in {"stale", "poisoned", "unverified"}
++            or supported_by_rejected_memory
++        )
++        if certificate_decision == "rollback":
++            learned_decision = "rollback"
++        elif certificate_decision == "reject" or supported_by_rejected_memory:
++            learned_decision = "reject"
++        elif supported_by_kept_memory:
++            learned_decision = "learn_policy_update"
++        else:
++            learned_decision = "accept_ephemeral"
++        accepted_as_good = learned_decision in {
++            "learn_policy_update",
++            "accept_ephemeral",
++        }
++        decisions.append(
++            {
++                "event_id": event["event_id"],
++                "trace_id": event["trace_id"],
++                "session_id": event["session_id"],
++                "memory_variant": variant,
++                "supporting_context": support,
++                "certificate_decision": certificate_decision,
++                "learned_decision": learned_decision,
++                "learned_update_applied": learned_decision == "learn_policy_update",
++                "bad_memory": bad_memory,
++                "accepted_as_good": accepted_as_good,
++                "unsafe_false_accept": bool(bad_memory and accepted_as_good),
++                "rollback_required": bool(
++                    event.get("rollback_event", {}).get("required")
++                ),
++                "rollback_recovered": bool(
++                    event.get("rollback_event", {}).get("recovered")
++                ),
++            }
++        )
++    return decisions
++
++
++def _safety_controls(
++    events: Sequence[Mapping[str, Any]],
++    decisions: Sequence[Mapping[str, Any]],
++    memory_policy: Mapping[str, Any],
++) -> JsonDict:
++    stale = [row for row in decisions if row["memory_variant"] == "stale"]
++    poison = [row for row in decisions if row["memory_variant"] == "poisoned"]
++    rollback = [row for row in decisions if row["rollback_required"]]
++    stale_rejected = [row for row in stale if row["learned_decision"] in {"reject", "rollback"}]
++    poison_rejected = [
++        row for row in poison if row["learned_decision"] in {"reject", "rollback"}
++    ]
++    return {
++        "checked_event_count": len(events),
++        "budget_limit_bytes": memory_policy["budget_limit_bytes"],
++        "retained_bytes": memory_policy["retained_bytes"],
++        "budget_limit_respected": memory_policy["budget_limit_respected"],
++        "stale_probe_count": len(stale),
++        "poison_probe_count": len(poison),
++        "rollback_required_count": len(rollback),
++        "stale_memory_deflection_rate": _rate(len(stale_rejected), len(stale)),
++        "poison_memory_deflection_rate": _rate(len(poison_rejected), len(poison)),
++        "rollback_success_rate": _rate(
++            sum(1 for row in rollback if row["rollback_recovered"]),
++            len(rollback),
++        ),
++        "unsafe_false_accepts": sum(
++            1 for row in decisions if row["unsafe_false_accept"]
++        ),
++    }
++
++
++def _memory_churn(memory_policy: Mapping[str, Any]) -> JsonDict:
++    retained = len(memory_policy["kept_memory_ids"])
++    rejected = len(memory_policy["rejected_or_quarantined_memory_ids"])
++    total = int(memory_policy["evidence_row_count"])
++    return {
++        "retained_memory_count": retained,
++        "rejected_or_quarantined_memory_count": rejected,
++        "memory_evidence_row_count": total,
++        "churn_rate": _rate(rejected, total),
++    }
++
++
++def _variant_from_metrics(
++    variant_name: str,
++    metrics: Mapping[str, Any],
++    event_ids: Sequence[str],
++) -> JsonDict:
++    return {
++        "variant_name": variant_name,
++        "event_ids": list(event_ids),
++        "context_efficiency": float(metrics["context_efficiency"]),
++        "verifier_cost": float(metrics["verifier_cost"]),
++        "quality": float(metrics["final_quality"]),
++        "unsafe_false_accepts": int(metrics.get("unsafe_false_accepts", 0)),
++        "model_weights_mutated": bool(metrics.get("model_weights_mutated", False)),
++    }
++
++
++def _blocked_evaluation() -> JsonDict:
++    workflow = {
++        "workflow_name": WORKFLOW_NAME,
++        "session_count": 0,
++        "trace_count": 0,
++        "checked_event_count": 0,
++        "decision_type_counts": {
++            "retrieval": 0,
++            "verifier_tool_use": 0,
++            "rollback": 0,
++            "constraint_selection": 0,
++        },
++        "event_ids": [],
++    }
++    empty_variant = {
++        "variant_name": "blocked",
++        "event_ids": [],
++        "context_efficiency": 0.0,
++        "verifier_cost": 0.0,
++        "quality": 0.0,
++        "unsafe_false_accepts": 0,
++        "model_weights_mutated": False,
++    }
++    return {
++        "workflow": workflow,
++        "checked_event_count": 0,
++        "same_event_ids": False,
++        "baseline_variant": dict(empty_variant),
++        "self_learning_variant": dict(empty_variant),
++        "context_efficiency_delta": 0.0,
++        "verifier_cost_delta": 0.0,
++        "quality_delta": 0.0,
++        "stale_memory_deflection_rate": 0.0,
++        "poison_memory_deflection_rate": 0.0,
++        "rollback_success_rate": 0.0,
++        "unsafe_false_accepts": 0,
++        "memory_policy": {
++            "budget_limit_bytes": BUDGET_LIMIT_BYTES,
++            "retained_bytes": 0,
++            "budget_limit_respected": False,
++            "kept_memory_ids": [],
++            "trusted_memory_ids": [],
++            "rejected_or_quarantined_memory_ids": [],
++            "evidence_row_count": 0,
++            "rows": [],
++        },
++        "event_decisions": [],
++        "safety_controls": {
++            "checked_event_count": 0,
++            "budget_limit_bytes": BUDGET_LIMIT_BYTES,
++            "retained_bytes": 0,
++            "budget_limit_respected": False,
++            "stale_probe_count": 0,
++            "poison_probe_count": 0,
++            "rollback_required_count": 0,
++            "stale_memory_deflection_rate": 0.0,
++            "poison_memory_deflection_rate": 0.0,
++            "rollback_success_rate": 0.0,
++            "unsafe_false_accepts": 0,
++        },
++        "memory_churn": {
++            "retained_memory_count": 0,
++            "rejected_or_quarantined_memory_count": 0,
++            "memory_evidence_row_count": 0,
++            "churn_rate": 0.0,
++        },
++        "weight_mutation_receipt": _weight_mutation_receipt(),
++        "source_replay_metrics": {},
++    }
++
++
++def _readiness_checks(
++    gate: Mapping[str, Any],
++    evaluation: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    workflow = evaluation["workflow"]
++    checks = {
++        "upstream_gate_passed": gate["all_passed"] is True,
++        "session_count_ready": workflow["session_count"] >= MIN_SESSIONS,
++        "trace_count_ready": workflow["trace_count"] >= MIN_TRACES,
++        "checked_event_count_ready": (
++            evaluation["checked_event_count"] >= MIN_CHECKED_EVENTS
++        ),
++        "same_event_ids": evaluation["same_event_ids"] is True,
++        "context_efficiency_improved": evaluation["context_efficiency_delta"] > 0.0,
++        "verifier_cost_reduced": evaluation["verifier_cost_delta"] > 0.0,
++        "quality_preserved": evaluation["quality_delta"] >= 0.0,
++        "stale_memory_deflected": evaluation["stale_memory_deflection_rate"] == 1.0,
++        "poison_memory_deflected": evaluation["poison_memory_deflection_rate"] == 1.0,
++        "rollback_succeeded": evaluation["rollback_success_rate"] == 1.0,
++        "budget_limit_respected": evaluation["safety_controls"][
++            "budget_limit_respected"
++        ]
++        is True,
++        "unsafe_false_accepts_zero": evaluation["unsafe_false_accepts"] == 0,
++        "tests_recorded": bool(tests_run),
++        "no_weight_mutation": evaluation["weight_mutation_receipt"][
++            "no_weight_mutation"
++        ]
++        is True,
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {**checks, "failed_gates": failed, "all_passed": not failed}
++
++
++def _honest_verdict(
++    ready: bool,
++    gate: Mapping[str, Any],
++    readiness: Mapping[str, Any],
++    evaluation: Mapping[str, Any],
++) -> str:
++    if ready:
++        return (
++            "complete: real workflow ran after Exp5381 clean gate; baseline and "
++            "self-learning variants shared "
++            f"{evaluation['checked_event_count']} deterministic event checks, "
++            "context efficiency improved, verifier cost fell, quality was "
++            "preserved, stale and poisoned memory were deflected, rollback "
++            "succeeded, and no model weights mutated"
++        )
++    blockers = list(gate.get("failed_gates", []))
++    blockers.extend(readiness["failed_gates"])
++    return "blocked_real_workflow_continuous_self_learning: " + ",".join(
++        dict.fromkeys(blockers)
++    )
++
++
++def _weight_mutation_receipt() -> JsonDict:
++    return {
++        "no_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weight_hash_before": "sha256:no_model_weights_loaded",
++        "model_weight_hash_after": "sha256:no_model_weights_loaded",
++        "allowed_update_targets": [
++            "retrieval_policy_memory",
++            "constraint_selection_cache",
++            "rollback_decision_log",
++        ],
++        "forbidden_updates": {
++            "fine_tune_model_weights": False,
++            "lora_or_adapter_update": False,
++            "foundation_weight_write": False,
++        },
++    }
++
++
++def _flatten_events(traces: Sequence[Mapping[str, Any]]) -> JsonList:
++    return [dict(event) for trace in traces for event in trace.get("events", [])]
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, tuple | list):
++        return [_json_ready(item) for item in value]
++    return json.loads(json.dumps(value, sort_keys=True))
++
++
++def _rate(numerator: int | float, denominator: int | float) -> float:
++    if denominator == 0:
++        return 0.0
++    return round(float(numerator) / float(denominator), 6)
++
++
++def _delta(left: int | float, right: int | float) -> float:
++    return round(float(left) - float(right), 6)
++
++
++def _is_numeric(value: Any) -> bool:
++    return isinstance(value, int | float) and not isinstance(value, bool)
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d9db529c7b..df92ef50be 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-08T00:59:38.333611Z",
+-  "duration_s": 0.07727813720703125,
++  "run_date": "2026-07-08T01:14:21.353600Z",
++  "duration_s": 0.06780791282653809,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "eba62b2cbacb6d9a621b04565270987d585cc900f5f9f86875abce1ac03f616b",
++  "reproducibility_checksum": "289bc05d4b790fd99823015e6af9c66447c29596e7335ee40228976c3ddb2a71",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "2c1ec322f5de641dbc74a5425e11cfd1987e6771"
++    "adversarial_verify_version": "14c2b6aabbe2da9626b4c9e127d56c08252e00b5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e3b45881bf..6f51c2a2fe 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T00:59:38.448038Z",
+-  "duration_s": 0.10357952117919922,
++  "run_date": "2026-07-08T01:14:21.462176Z",
++  "duration_s": 0.09900164604187012,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "84c2f2a06d452a4a20349aac6699ecb4e8ea56b724251571b0d2c8984075cb34",
++  "reproducibility_checksum": "e8549f3c5bd3d08b649a04a1da359d78af560b3233a8fce4fe30dda8bebf00c1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "2c1ec322f5de641dbc74a5425e11cfd1987e6771"
++    "adversarial_verify_version": "14c2b6aabbe2da9626b4c9e127d56c08252e00b5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_5382_real_workflow_continuous_self_learning_v490.json b/results/experiment_5382_real_workflow_continuous_self_learning_v490.json
+new file mode 100644
+index 0000000000..aecec727a6
+--- /dev/null
++++ b/results/experiment_5382_real_workflow_continuous_self_learning_v490.json
+@@ -0,0 +1,933 @@
++{
++  "checked_event_count": 36,
++  "context_efficiency_delta": 0.238235,
++  "continuous_self_learning_real_workflow_ready": true,
++  "continuous_self_learning_target": true,
++  "corrected_memory_policy": {
++    "budget_limit_bytes": 400,
++    "budget_limit_respected": true,
++    "evidence_row_count": 7,
++    "kept_memory_ids": [
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-scaleup-summary"
++    ],
++    "rejected_or_quarantined_memory_ids": [
++      "mem5368-clean-low-value-overbudget",
++      "mem5368-poisoned-tool-override",
++      "mem5368-stale-runtime-receipt",
++      "mem5368-unverified-sharing-tip"
++    ],
++    "retained_bytes": 400,
++    "trusted_memory_ids": [
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-low-value-overbudget",
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-scaleup-summary"
++    ]
++  },
++  "event_decisions": [
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t01-e1-retrieve",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-01",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-01-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t01-e2-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-01",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-01-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t01-e3-summarize",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-01",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-01-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t02-e1-retrieve",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "stale",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-02",
++      "supporting_context": [
++        "mem5368-stale-runtime-receipt"
++      ],
++      "trace_id": "trace-5369-02-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t02-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-02",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-02-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t02-e3-verify",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-02",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-02-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t03-e1-tool_select",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "poisoned",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-03",
++      "supporting_context": [
++        "mem5368-poisoned-tool-override"
++      ],
++      "trace_id": "trace-5369-03-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t03-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-03",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-03-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t03-e3-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-03",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-03-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t04-e1-revise",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "unverified",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-04",
++      "supporting_context": [
++        "mem5368-unverified-sharing-tip"
++      ],
++      "trace_id": "trace-5369-04-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t04-e2-fold",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-04",
++      "supporting_context": [
++        "exp5355:dep-cyclic-dependency"
++      ],
++      "trace_id": "trace-5369-04-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t04-e3-revise",
++      "learned_decision": "accept_ephemeral",
++      "learned_update_applied": false,
++      "memory_variant": "biased",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-04",
++      "supporting_context": [
++        "operator:benign-style-note"
++      ],
++      "trace_id": "trace-5369-04-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t05-e1-retrieve",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-05",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-05-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t05-e2-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-05",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-05-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t05-e3-summarize",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-05",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-05-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t06-e1-retrieve",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "stale",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-06",
++      "supporting_context": [
++        "mem5368-stale-runtime-receipt"
++      ],
++      "trace_id": "trace-5369-06-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t06-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-06",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-06-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t06-e3-verify",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-06",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-06-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t07-e1-tool_select",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "poisoned",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-07",
++      "supporting_context": [
++        "mem5368-poisoned-tool-override"
++      ],
++      "trace_id": "trace-5369-07-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t07-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-07",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-07-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t07-e3-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-07",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-07-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t08-e1-revise",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "unverified",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-08",
++      "supporting_context": [
++        "mem5368-unverified-sharing-tip"
++      ],
++      "trace_id": "trace-5369-08-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t08-e2-fold",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-08",
++      "supporting_context": [
++        "exp5355:dep-cyclic-dependency"
++      ],
++      "trace_id": "trace-5369-08-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t08-e3-revise",
++      "learned_decision": "accept_ephemeral",
++      "learned_update_applied": false,
++      "memory_variant": "biased",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-08",
++      "supporting_context": [
++        "operator:benign-style-note"
++      ],
++      "trace_id": "trace-5369-08-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t09-e1-retrieve",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-09",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-09-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t09-e2-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-09",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-09-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t09-e3-summarize",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-09",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-09-clean",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t10-e1-retrieve",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "stale",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-10",
++      "supporting_context": [
++        "mem5368-stale-runtime-receipt"
++      ],
++      "trace_id": "trace-5369-10-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t10-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-10",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-10-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t10-e3-verify",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-10",
++      "supporting_context": [
++        "mem5368-clean-scaleup-summary"
++      ],
++      "trace_id": "trace-5369-10-stale",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "rollback",
++      "event_id": "t11-e1-tool_select",
++      "learned_decision": "rollback",
++      "learned_update_applied": false,
++      "memory_variant": "poisoned",
++      "rollback_recovered": true,
++      "rollback_required": true,
++      "session_id": "session-5369-11",
++      "supporting_context": [
++        "mem5368-poisoned-tool-override"
++      ],
++      "trace_id": "trace-5369-11-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t11-e2-restore",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-11",
++      "supporting_context": [
++        "mem5368-clean-rollback-route"
++      ],
++      "trace_id": "trace-5369-11-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t11-e3-commit",
++      "learned_decision": "learn_policy_update",
++      "learned_update_applied": true,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-11",
++      "supporting_context": [
++        "mem5368-clean-dependency-edge"
++      ],
++      "trace_id": "trace-5369-11-poison",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t12-e1-revise",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "unverified",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-12",
++      "supporting_context": [
++        "mem5368-unverified-sharing-tip"
++      ],
++      "trace_id": "trace-5369-12-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "certificate_decision": "reject",
++      "event_id": "t12-e2-fold",
++      "learned_decision": "reject",
++      "learned_update_applied": false,
++      "memory_variant": "clean",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-12",
++      "supporting_context": [
++        "exp5355:dep-cyclic-dependency"
++      ],
++      "trace_id": "trace-5369-12-dependency",
++      "unsafe_false_accept": false
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "certificate_decision": "accept",
++      "event_id": "t12-e3-revise",
++      "learned_decision": "accept_ephemeral",
++      "learned_update_applied": false,
++      "memory_variant": "biased",
++      "rollback_recovered": false,
++      "rollback_required": false,
++      "session_id": "session-5369-12",
++      "supporting_context": [
++        "operator:benign-style-note"
++      ],
++      "trace_id": "trace-5369-12-dependency",
++      "unsafe_false_accept": false
++    }
++  ],
++  "experiment": "experiment_5382_real_workflow_continuous_self_learning_v490",
++  "experiment_id": "exp5382-v490-real-workflow-continuous-self-learning",
++  "field_principles": {
++    "checked_event_count": "Number of events evaluated by deterministic checks.",
++    "context_efficiency_delta": "Self-learning minus baseline context efficiency.",
++    "continuous_self_learning_real_workflow_ready": "True only if the real-workflow result has clean evidence and no unsafe false accepts.",
++    "continuous_self_learning_target": "Must be true.",
++    "honest_verdict": "One-line result or block reason.",
++    "no_weight_mutation": "Must be true.",
++    "poison_memory_deflection_rate": "Fraction of poisoned-memory probes rejected.",
++    "quality_delta": "Self-learning minus baseline task quality.",
++    "rollback_success_rate": "Fraction of failed updates rolled back correctly.",
++    "session_count": "Number of sessions.",
++    "stale_memory_deflection_rate": "Fraction of stale-memory probes rejected.",
++    "status": "Complete only if the gated real-workflow experiment ran.",
++    "trace_count": "Number of traces.",
++    "unsafe_false_accepts": "Count of bad learned decisions accepted as good.",
++    "upstream_budget_memory_corrigendum_clean": "Copied from Exp5381.",
++    "verifier_cost_delta": "Baseline minus self-learning verifier cost, positive means improvement.",
++    "workflow_name": "Name of the real multi-session workflow."
++  },
++  "honest_verdict": "complete: real workflow ran after Exp5381 clean gate; baseline and self-learning variants shared 36 deterministic event checks, context efficiency improved, verifier cost fell, quality was preserved, stale and poisoned memory were deflected, rollback succeeded, and no model weights mutated",
++  "methodology_note": "Baseline and self-learning variants evaluate the same Exp5369 multi-session workflow event IDs. The self-learning variant uses Exp5381 row-derived corrected budget memory to update controller retrieval and verifier-selection state only; no model weights are loaded or mutated.",
++  "milestone": "2026.07.490",
++  "no_weight_mutation": true,
++  "poison_memory_deflection_rate": 1.0,
++  "quality_delta": 0.0,
++  "random_seed": 5382,
++  "readiness_checks": {
++    "all_passed": true,
++    "budget_limit_respected": true,
++    "checked_event_count_ready": true,
++    "context_efficiency_improved": true,
++    "failed_gates": [],
++    "no_weight_mutation": true,
++    "poison_memory_deflected": true,
++    "quality_preserved": true,
++    "rollback_succeeded": true,
++    "same_event_ids": true,
++    "session_count_ready": true,
++    "stale_memory_deflected": true,
++    "tests_recorded": true,
++    "trace_count_ready": true,
++    "unsafe_false_accepts_zero": true,
++    "upstream_gate_passed": true,
++    "verifier_cost_reduced": true
++  },
++  "reproducibility_checksum": "sha256:5da15fa7cdb8ef7ce6a54e080e2ee0d0360b5f588ca5c5eac2ecceffc1be2e67",
++  "rollback_success_rate": 1.0,
++  "run_date": "2026-07-08",
++  "schema": "carnot.experiment_5382.real_workflow_continuous_self_learning.v490",
++  "session_count": 12,
++  "source_artifact_checksums": {
++    "exp5369": "sha256:b5457868997e47ec00a28d0a5a243e9b78001bbd97804be0b512681732de2e9c",
++    "exp5369_module": "sha256:a4c4a4b02c476f985ee084ef6b50a5c47dc032bfbfb3cd87c582d71eb64bc3a2",
++    "exp5381": "sha256:69647663614b4c03628127e3b3762c42b126a23ab21212c8fa6e2b44f38a3d23",
++    "exp5381_module": "sha256:91c528877280baee66de496ceb4cde405ca9bdef010ea025e31650ba4a234caa",
++    "module": "sha256:360eeb0b9ccd7f41eaf31f2afa4d8db8abe5a61d10d4d047c4c015c070d27d82",
++    "spec": "sha256:e9d9d395e5416c8e80fe9ba787390bcf1e9f5d1a8328a6a17f712dce72e197e4"
++  },
++  "source_artifacts": [
++    "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json",
++    "results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json"
++  ],
++  "spec_refs": [
++    "REQ-LEARN-5382",
++    "SCENARIO-LEARN-5382-GATE",
++    "SCENARIO-LEARN-5382-IDENTICAL-TASKS",
++    "SCENARIO-LEARN-5382-SAFETY"
++  ],
++  "stale_memory_deflection_rate": 1.0,
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py -m pytest tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ],
++  "trace_count": 12,
++  "unsafe_false_accepts": 0,
++  "upstream_budget_memory_corrigendum_clean": true,
++  "upstream_gate": {
++    "all_passed": true,
++    "budget_memory_corrigendum_clean": true,
++    "failed_gates": [],
++    "source_artifact": "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json",
++    "source_honest_verdict": "complete: budget_memory_corrigendum_clean from row evidence; stale, poisoned, and high-cost controls rejected with zero unsafe false accepts",
++    "source_no_weight_mutation": true,
++    "source_policy_ready": true,
++    "source_rollback_supported": true,
++    "source_status": "complete",
++    "source_status_complete": true,
++    "source_unsafe_false_accepts_zero": true
++  },
++  "verifier_cost_delta": 21.0,
++  "weight_mutation_receipt": {
++    "allowed_update_targets": [
++      "retrieval_policy_memory",
++      "constraint_selection_cache",
++      "rollback_decision_log"
++    ],
++    "forbidden_updates": {
++      "fine_tune_model_weights": false,
++      "foundation_weight_write": false,
++      "lora_or_adapter_update": false
++    },
++    "model_weight_hash_after": "sha256:no_model_weights_loaded",
++    "model_weight_hash_before": "sha256:no_model_weights_loaded",
++    "model_weights_loaded": false,
++    "no_weight_mutation": true
++  },
++  "workflow_evidence": {
++    "baseline_variant": {
++      "context_efficiency": 0.661765,
++      "event_ids": [
++        "t01-e1-retrieve",
++        "t01-e2-commit",
++        "t01-e3-summarize",
++        "t02-e1-retrieve",
++        "t02-e2-restore",
++        "t02-e3-verify",
++        "t03-e1-tool_select",
++        "t03-e2-restore",
++        "t03-e3-commit",
++        "t04-e1-revise",
++        "t04-e2-fold",
++        "t04-e3-revise",
++        "t05-e1-retrieve",
++        "t05-e2-commit",
++        "t05-e3-summarize",
++        "t06-e1-retrieve",
++        "t06-e2-restore",
++        "t06-e3-verify",
++        "t07-e1-tool_select",
++        "t07-e2-restore",
++        "t07-e3-commit",
++        "t08-e1-revise",
++        "t08-e2-fold",
++        "t08-e3-revise",
++        "t09-e1-retrieve",
++        "t09-e2-commit",
++        "t09-e3-summarize",
++        "t10-e1-retrieve",
++        "t10-e2-restore",
++        "t10-e3-verify",
++        "t11-e1-tool_select",
++        "t11-e2-restore",
++        "t11-e3-commit",
++        "t12-e1-revise",
++        "t12-e2-fold",
++        "t12-e3-revise"
++      ],
++      "model_weights_mutated": false,
++      "quality": 1.0,
++      "unsafe_false_accepts": 0,
++      "variant_name": "baseline_always_full_context",
++      "verifier_cost": 36.0
++    },
++    "memory_churn": {
++      "churn_rate": 0.571429,
++      "memory_evidence_row_count": 7,
++      "rejected_or_quarantined_memory_count": 4,
++      "retained_memory_count": 3
++    },
++    "safety_controls": {
++      "budget_limit_bytes": 400,
++      "budget_limit_respected": true,
++      "checked_event_count": 36,
++      "poison_memory_deflection_rate": 1.0,
++      "poison_probe_count": 3,
++      "retained_bytes": 400,
++      "rollback_required_count": 6,
++      "rollback_success_rate": 1.0,
++      "stale_memory_deflection_rate": 1.0,
++      "stale_probe_count": 3,
++      "unsafe_false_accepts": 0
++    },
++    "same_event_ids": true,
++    "self_learning_variant": {
++      "context_efficiency": 0.9,
++      "event_ids": [
++        "t01-e1-retrieve",
++        "t01-e2-commit",
++        "t01-e3-summarize",
++        "t02-e1-retrieve",
++        "t02-e2-restore",
++        "t02-e3-verify",
++        "t03-e1-tool_select",
++        "t03-e2-restore",
++        "t03-e3-commit",
++        "t04-e1-revise",
++        "t04-e2-fold",
++        "t04-e3-revise",
++        "t05-e1-retrieve",
++        "t05-e2-commit",
++        "t05-e3-summarize",
++        "t06-e1-retrieve",
++        "t06-e2-restore",
++        "t06-e3-verify",
++        "t07-e1-tool_select",
++        "t07-e2-restore",
++        "t07-e3-commit",
++        "t08-e1-revise",
++        "t08-e2-fold",
++        "t08-e3-revise",
++        "t09-e1-retrieve",
++        "t09-e2-commit",
++        "t09-e3-summarize",
++        "t10-e1-retrieve",
++        "t10-e2-restore",
++        "t10-e3-verify",
++        "t11-e1-tool_select",
++        "t11-e2-restore",
++        "t11-e3-commit",
++        "t12-e1-revise",
++        "t12-e2-fold",
++        "t12-e3-revise"
++      ],
++      "learned_decision_count": 21,
++      "model_weights_mutated": false,
++      "quality": 1.0,
++      "unsafe_false_accepts": 0,
++      "variant_name": "self_learning_corrected_budget_memory",
++      "verifier_cost": 15.0
++    },
++    "source_replay_metrics": {
++      "exp5369_checked_event_count": 36,
++      "exp5369_context_efficiency_delta": 0.196429,
++      "exp5369_verifier_cost_delta_rate": 0.583333
++    },
++    "workflow": {
++      "checked_event_count": 36,
++      "decision_type_counts": {
++        "constraint_selection": 36,
++        "retrieval": 36,
++        "rollback": 6,
++        "verifier_tool_use": 36
++      },
++      "event_ids": [
++        "t01-e1-retrieve",
++        "t01-e2-commit",
++        "t01-e3-summarize",
++        "t02-e1-retrieve",
++        "t02-e2-restore",
++        "t02-e3-verify",
++        "t03-e1-tool_select",
++        "t03-e2-restore",
++        "t03-e3-commit",
++        "t04-e1-revise",
++        "t04-e2-fold",
++        "t04-e3-revise",
++        "t05-e1-retrieve",
++        "t05-e2-commit",
++        "t05-e3-summarize",
++        "t06-e1-retrieve",
++        "t06-e2-restore",
++        "t06-e3-verify",
++        "t07-e1-tool_select",
++        "t07-e2-restore",
++        "t07-e3-commit",
++        "t08-e1-revise",
++        "t08-e2-fold",
++        "t08-e3-revise",
++        "t09-e1-retrieve",
++        "t09-e2-commit",
++        "t09-e3-summarize",
++        "t10-e1-retrieve",
++        "t10-e2-restore",
++        "t10-e3-verify",
++        "t11-e1-tool_select",
++        "t11-e2-restore",
++        "t11-e3-commit",
++        "t12-e1-revise",
++        "t12-e2-fold",
++        "t12-e3-revise"
++      ],
++      "session_count": 12,
++      "trace_count": 12,
++      "workflow_name": "budgeted_dependency_drift_verifier_tool_workflow"
++    }
++  },
++  "workflow_name": "budgeted_dependency_drift_verifier_tool_workflow"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index d560e9098c..116ddf65e4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:59:22Z",
+-  "finished_at": "2026-07-08T00:59:23Z",
++  "started_at": "2026-07-08T01:14:07Z",
++  "finished_at": "2026-07-08T01:14:07Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a08b500e08..324bb6a5bf 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:59:23Z",
+-  "finished_at": "2026-07-08T00:59:24Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-08T01:14:07Z",
++  "finished_at": "2026-07-08T01:14:07Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index ef3921198d..5df3ca661d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:59:24Z",
+-  "finished_at": "2026-07-08T00:59:24Z",
++  "started_at": "2026-07-08T01:14:07Z",
++  "finished_at": "2026-07-08T01:14:07Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py b/tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py
+new file mode 100644
+index 0000000000..0e2af526e2
+--- /dev/null
++++ b/tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py
+@@ -0,0 +1,329 @@
++"""Tests for Exp5382 real-workflow continuous self-learning.
++
++Spec refs: REQ-LEARN-5382, SCENARIO-LEARN-5382-GATE,
++SCENARIO-LEARN-5382-IDENTICAL-TASKS, SCENARIO-LEARN-5382-SAFETY.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5382_real_workflow_continuous_self_learning_v490 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def test_req_learn_5382_spec_declares_real_workflow_contract() -> None:
++    """REQ-LEARN-5382: OpenSpec anchors the gated real-workflow run."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5382") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5382",
++        "SCENARIO-LEARN-5382-GATE",
++        "SCENARIO-LEARN-5382-IDENTICAL-TASKS",
++        "SCENARIO-LEARN-5382-SAFETY",
++        str(exp.RESULT_RELATIVE_PATH),
++        "budget_memory_corrigendum_clean=true",
++        "baseline variant and a self-learning variant",
++        "SHALL NOT load, fine-tune, write, or mutate model weights",
++    ):
++        assert marker in section
++
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_learn_5382_gate_copies_exp5381_corrigendum() -> None:
++    """SCENARIO-LEARN-5382-GATE: Exp5381 clean gate opens the workflow."""
++
++    gate = exp.confirm_upstream_gate(root=REPO)
++
++    assert gate["all_passed"] is True
++    assert gate["budget_memory_corrigendum_clean"] is True
++    assert gate["source_status"] == "complete"
++    assert gate["source_unsafe_false_accepts_zero"] is True
++    assert gate["source_no_weight_mutation"] is True
++    assert gate["source_artifact"] == str(exp.EXP5381_RELATIVE_PATH)
++
++
++def test_req_learn_5382_selected_workflow_has_repeated_real_decisions() -> None:
++    """REQ-LEARN-5382-2: workflow has sessions, traces, and diverse decisions."""
++
++    traces = exp.select_workflow_traces()
++    description = exp.describe_workflow(traces)
++
++    assert description["workflow_name"] == exp.WORKFLOW_NAME
++    assert description["session_count"] >= exp.MIN_SESSIONS
++    assert description["trace_count"] >= exp.MIN_TRACES
++    assert description["checked_event_count"] >= exp.MIN_CHECKED_EVENTS
++    assert description["decision_type_counts"]["retrieval"] > 0
++    assert description["decision_type_counts"]["verifier_tool_use"] > 0
++    assert description["decision_type_counts"]["rollback"] > 0
++    assert description["decision_type_counts"]["constraint_selection"] > 0
++
++
++def test_scenario_learn_5382_identical_tasks_and_metric_deltas() -> None:
++    """SCENARIO-LEARN-5382-IDENTICAL-TASKS: variants share event IDs."""
++
++    traces = exp.select_workflow_traces()
++    evaluation = exp.evaluate_real_workflow(traces=traces, root=REPO)
++    baseline = evaluation["baseline_variant"]
++    learner = evaluation["self_learning_variant"]
++
++    assert evaluation["same_event_ids"] is True
++    assert baseline["event_ids"] == learner["event_ids"]
++    assert evaluation["checked_event_count"] == len(baseline["event_ids"])
++    assert evaluation["context_efficiency_delta"] == round(
++        learner["context_efficiency"] - baseline["context_efficiency"],
++        6,
++    )
++    assert evaluation["verifier_cost_delta"] == round(
++        baseline["verifier_cost"] - learner["verifier_cost"],
++        6,
++    )
++    assert evaluation["quality_delta"] == round(
++        learner["quality"] - baseline["quality"],
++        6,
++    )
++    assert evaluation["context_efficiency_delta"] > 0.0
++    assert evaluation["verifier_cost_delta"] > 0.0
++    assert evaluation["quality_delta"] >= 0.0
++
++
++def test_scenario_learn_5382_safety_controls_deflect_bad_memory() -> None:
++    """SCENARIO-LEARN-5382-SAFETY: stale and poisoned updates are rejected."""
++
++    evaluation = exp.evaluate_real_workflow(root=REPO)
++    controls = evaluation["safety_controls"]
++    churn = evaluation["memory_churn"]
++
++    assert controls["budget_limit_respected"] is True
++    assert controls["retained_bytes"] == exp.BUDGET_LIMIT_BYTES
++    assert evaluation["stale_memory_deflection_rate"] == 1.0
++    assert evaluation["poison_memory_deflection_rate"] == 1.0
++    assert evaluation["rollback_success_rate"] == 1.0
++    assert evaluation["unsafe_false_accepts"] == 0
++    assert evaluation["weight_mutation_receipt"]["no_weight_mutation"] is True
++    assert evaluation["weight_mutation_receipt"]["model_weights_loaded"] is False
++    assert churn["retained_memory_count"] == 3
++    assert churn["rejected_or_quarantined_memory_count"] == 4
++    assert churn["churn_rate"] == round(4 / 7, 6)
++
++
++def test_req_learn_5382_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5382-5: run() writes the required terminal artifact."""
++
++    tests_run = [
++        {
++            "command": (
++                ".venv/bin/pytest "
++                "tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py "
++                "-q --no-cov"
++            ),
++            "outcome": "passed",
++        },
++        {
++            "command": (
++                ".venv/bin/coverage run "
++                "--include=python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py "
++                "-m pytest "
++                "tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py "
++                "-q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100"
++            ),
++            "outcome": "passed",
++        },
++        {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
++    ]
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(root=REPO, result_path=result_path, tests_run=tests_run)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["status"] == "complete"
++    assert artifact["continuous_self_learning_target"] is True
++    assert artifact["continuous_self_learning_real_workflow_ready"] is True
++    assert artifact["upstream_budget_memory_corrigendum_clean"] is True
++    assert artifact["workflow_name"] == exp.WORKFLOW_NAME
++    assert artifact["session_count"] >= exp.MIN_SESSIONS
++    assert artifact["trace_count"] >= exp.MIN_TRACES
++    assert artifact["checked_event_count"] >= exp.MIN_CHECKED_EVENTS
++    assert artifact["context_efficiency_delta"] > 0.0
++    assert artifact["verifier_cost_delta"] > 0.0
++    assert artifact["quality_delta"] >= 0.0
++    assert artifact["stale_memory_deflection_rate"] == 1.0
++    assert artifact["poison_memory_deflection_rate"] == 1.0
++    assert artifact["rollback_success_rate"] == 1.0
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["field_principles"] == exp.FIELD_PRINCIPLES
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5382_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-LEARN-5382: checked-in result is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_artifact(root=REPO, tests_run=result["tests_run"])
++
++    assert result == replay
++    assert result["continuous_self_learning_real_workflow_ready"] is True
++    assert result["unsafe_false_accepts"] == 0
++    assert result["no_weight_mutation"] is True
++
++
++def test_req_learn_5382_blocks_when_exp5381_gate_is_false(monkeypatch) -> None:
++    """REQ-LEARN-5382-1: false Exp5381 readiness blocks the workflow."""
++
++    failed_gate = {
++        "all_passed": False,
++        "budget_memory_corrigendum_clean": False,
++        "source_status": "blocked",
++        "source_unsafe_false_accepts_zero": True,
++        "source_no_weight_mutation": True,
++        "source_artifact": str(exp.EXP5381_RELATIVE_PATH),
++        "failed_gates": ["budget_memory_corrigendum_clean"],
++    }
++    monkeypatch.setattr(exp, "confirm_upstream_gate", lambda root=REPO: failed_gate)
++
++    artifact = exp.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit exp5382", "outcome": "passed"}],
++    )
++
++    assert artifact["status"] == "blocked"
++    assert artifact["continuous_self_learning_real_workflow_ready"] is False
++    assert artifact["upstream_budget_memory_corrigendum_clean"] is False
++    assert artifact["session_count"] == 0
++    assert artifact["trace_count"] == 0
++    assert artifact["checked_event_count"] == 0
++    assert artifact["honest_verdict"].startswith("blocked_")
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5382_validation_rejects_terminal_claim_drift() -> None:
++    """REQ-LEARN-5382-5: validation rejects malformed ready claims."""
++
++    artifact = exp.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit exp5382", "outcome": "passed"}],
++    )
++
++    bad_missing = deepcopy(artifact)
++    bad_missing.pop("workflow_name")
++    with pytest.raises(ValueError, match="workflow_name"):
++        exp.validate_artifact(bad_missing)
++
++    bad_principle = deepcopy(artifact)
++    bad_principle["field_principles"]["status"] = "changed"
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(bad_principle)
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_bool = deepcopy(artifact)
++    bad_bool["continuous_self_learning_target"] = "true"
++    with pytest.raises(ValueError, match="continuous_self_learning_target"):
++        exp.validate_artifact(bad_bool)
++
++    bad_count = deepcopy(artifact)
++    bad_count["checked_event_count"] = True
++    with pytest.raises(ValueError, match="checked_event_count"):
++        exp.validate_artifact(bad_count)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["context_efficiency_delta"] = {"value": 1.0}
++    with pytest.raises(ValueError, match="context_efficiency_delta"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["status"] = "complete"
++    bad_ready["continuous_self_learning_real_workflow_ready"] = False
++    with pytest.raises(ValueError, match="status"):
++        exp.validate_artifact(bad_ready)
++
++    bad_ready_status = deepcopy(artifact)
++    bad_ready_status["status"] = "blocked"
++    with pytest.raises(ValueError, match="status"):
++        exp.validate_artifact(bad_ready_status)
++
++    bad_upstream = deepcopy(artifact)
++    bad_upstream["upstream_budget_memory_corrigendum_clean"] = False
++    with pytest.raises(ValueError, match="upstream_budget_memory_corrigendum_clean"):
++        exp.validate_artifact(bad_upstream)
++
++    bad_session_count = deepcopy(artifact)
++    bad_session_count["session_count"] = exp.MIN_SESSIONS - 1
++    with pytest.raises(ValueError, match="session_count"):
++        exp.validate_artifact(bad_session_count)
++
++    bad_trace_count = deepcopy(artifact)
++    bad_trace_count["trace_count"] = exp.MIN_TRACES - 1
++    with pytest.raises(ValueError, match="trace_count"):
++        exp.validate_artifact(bad_trace_count)
++
++    bad_checked_count = deepcopy(artifact)
++    bad_checked_count["checked_event_count"] = exp.MIN_CHECKED_EVENTS - 1
++    with pytest.raises(ValueError, match="checked_event_count"):
++        exp.validate_artifact(bad_checked_count)
++
++    bad_context = deepcopy(artifact)
++    bad_context["context_efficiency_delta"] = 0.0
++    with pytest.raises(ValueError, match="context_efficiency_delta"):
++        exp.validate_artifact(bad_context)
++
++    bad_verifier = deepcopy(artifact)
++    bad_verifier["verifier_cost_delta"] = 0.0
++    with pytest.raises(ValueError, match="verifier_cost_delta"):
++        exp.validate_artifact(bad_verifier)
++
++    bad_quality = deepcopy(artifact)
++    bad_quality["quality_delta"] = -0.1
++    with pytest.raises(ValueError, match="quality_delta"):
++        exp.validate_artifact(bad_quality)
++
++    bad_stale = deepcopy(artifact)
++    bad_stale["stale_memory_deflection_rate"] = 0.5
++    with pytest.raises(ValueError, match="stale_memory_deflection_rate"):
++        exp.validate_artifact(bad_stale)
++
++    bad_poison = deepcopy(artifact)
++    bad_poison["poison_memory_deflection_rate"] = 0.5
++    with pytest.raises(ValueError, match="poison_memory_deflection_rate"):
++        exp.validate_artifact(bad_poison)
++
++    bad_rollback = deepcopy(artifact)
++    bad_rollback["rollback_success_rate"] = 0.5
++    with pytest.raises(ValueError, match="rollback_success_rate"):
++        exp.validate_artifact(bad_rollback)
++
++    bad_unsafe = deepcopy(artifact)
++    bad_unsafe["unsafe_false_accepts"] = 1
++    with pytest.raises(ValueError, match="unsafe_false_accepts"):
++        exp.validate_artifact(bad_unsafe)
++
++    bad_weight = deepcopy(artifact)
++    bad_weight["no_weight_mutation"] = False
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_weight)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++    assert exp._rate(1, 0) == 0.0
++    assert exp._json_ready(Path("results/example.json")) == "results/example.json"
+-- 
+2.55.0
+

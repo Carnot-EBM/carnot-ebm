@@ -1,0 +1,53 @@
+From 0b2b5a8960b98f514cc1c3964014351abec88f09 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 16:46:59 -0400
+Subject: [PATCH 04014/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/supervisor-alerts.json   | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b6724c5b33..0ca75770d8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 197, "phase": "iteration_start", "last_beat": "2026-06-25T20:31:13Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 198, "phase": "iteration_start", "last_beat": "2026-06-25T20:46:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4f451532ca..96f66fc2ec 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9281,3 +9281,4 @@ The contro |
+ | 2026-06-25 19:09 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- VA | OK | 107 passed, 1 warning in 8.37s |
+ | 2026-06-25 20:10 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- VALID-TEST E | OK | 106 passed, 1 warning in 8.52s |
+ | 2026-06-25 20:29 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 92 passed, 1 warning in 6.92s |
++| 2026-06-25 20:44 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 9.30s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0195135160..3637c82c05 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 197, "phase": "iteration_start", "started_at": "2026-06-25T20:31:13Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 198, "phase": "iteration_start", "started_at": "2026-06-25T20:46:57Z"}
+\ No newline at end of file
+diff --git a/ops/supervisor-alerts.json b/ops/supervisor-alerts.json
+index 2709b67e7b..2489f94d1a 100644
+--- a/ops/supervisor-alerts.json
++++ b/ops/supervisor-alerts.json
+@@ -41,3 +41,4 @@
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-24T23:55:00Z", "task_id": "exp4703-a4", "deliverable": "results/experiment_4703_held_out_first_win_readiness.json", "exact_zero_deltas": [{"key": "first_win_delta_vs_baseline", "value": 0.0}, {"key": "held_out_proxy_summary.first_win_delta_vs_baseline", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4703-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-25T00:34:08Z", "task_id": "exp4705-a6", "deliverable": "results/experiment_4705_integration_gate.json", "exact_zero_deltas": [{"key": "a1_a2_config_audit.a2.coverage_delta", "value": 0.0}, {"key": "a1_a2_config_audit.a2.first_win_rate_delta", "value": 0.0}, {"key": "first_win_rate_delta_vs_pre_integration", "value": 0.0}, {"key": "metrics_delta_audit.first_win_rate_delta_vs_pre_integration", "value": 0.0}, {"key": "metrics_delta_audit.multi_level_deepen_rate_delta_vs_pre_integration", "value": 0.0}, {"key": "multi_level_deepen_rate_delta_vs_pre_integration", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4705-a6 reports parity-test outputs that are bit-identical or exactly zero across 6 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-25T15:53:40Z", "task_id": "exp4731-a6", "deliverable": "results/experiment_4731_integration_gate.json", "exact_zero_deltas": [{"key": "live_first_win_rate_delta_vs_pre_integration", "value": 0.0}, {"key": "metrics_delta_audit.live_first_win_rate_delta_vs_pre_integration", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4731-a6 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
++{"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-25T20:44:57Z", "task_id": "exp4740-a4", "deliverable": "results/experiment_4740_held_out_first_win_readiness.json", "exact_zero_deltas": [{"key": "first_win_delta_vs_baseline", "value": 0.0}, {"key": "held_out_proxy_summary.first_win_delta_vs_baseline", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4740-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+-- 
+2.55.0
+

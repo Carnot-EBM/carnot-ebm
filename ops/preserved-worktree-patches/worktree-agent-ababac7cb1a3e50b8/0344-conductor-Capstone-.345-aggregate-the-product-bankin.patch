@@ -1,0 +1,2154 @@
+From e242c61b553df30ecb9500a082f57acdd4c1ee6f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 15:14:31 -0400
+Subject: [PATCH 00344/11362] [conductor] Capstone .345 -- aggregate the
+ product-banking RECOVERY milestone: the .344 SKIP-cascade recovered (archive
+ + Thesis-A definitive reconcile restored), the publication gates mechanized
+ (G2 local reproducer + G3 narrowing lint), the verifier banked toward Phase-1
+ ship (pkg/CLI/MCP E2E + mirror checklist), a CERTIFIED abstention point
+ shipped, FR-11 v17 on the live verifier, the verifier product positioned vs
+ PRM SOTA, and KV260 terminal confirmed. paper_ready MUST stay TRUE; frozen
+ 0.9131 unchanged; both energy routes stay bounded.
+
+Automated research step by research conductor.
+Task ID: exp3775-capstone-v345
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  76 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../reporting/capstone_v345_recovery_3775.py  | 880 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3775_capstone_v345.json    | 306 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ scripts/experiment_3775_capstone_v345.py      |  16 +
+ .../test_experiment_3775_capstone_v345.py     | 535 +++++++++++
+ 22 files changed, 1843 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v345_recovery_3775.py
+ create mode 100644 results/experiment_3775_capstone_v345.json
+ create mode 100644 scripts/experiment_3775_capstone_v345.py
+ create mode 100644 tests/python/test_experiment_3775_capstone_v345.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 2039cd6b5e..73ec1fd303 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16651,3 +16651,79 @@ The artifact `results/experiment_3773_verifier_product_prm_positioning.json` sha
+ ### SCENARIO-REPORT-3773: Exp 3773 Synthesizes Honest Positioning
+ 
+ Given the FoVer result and PRM SOTA references, when Exp 3773 runs, then it outputs the required JSON artifact without running any new LLM evaluation, claiming to retest domain boundaries, or claiming peer reports are Carnot measurements.
++
++### REQ-REPORT-3775: Capstone V345 Recovery And Convergence Synthesis
++
++The Exp 3775 workflow SHALL aggregate Exp 3765 through Exp 3774 from checked-in
++JSON artifacts only, run the disciplined artifact summarizer for each upstream
++experiment, exclude any upstream artifact carrying `flagged_adversarial=true`
++from headline aggregation, record missing upstream artifacts as `not-landed`
++rather than as research negatives, and write
++`results/experiment_3775_capstone_v345.json`.
++
++The artifact SHALL be aggregation-only with no copied live-model markers. It
++SHALL state the `.345` outcome plainly as a recovery plus convergence milestone:
++the `.344` skip cascade was recovered; the definitive Thesis-A close was
++restored to the record as part-(a) PASS/discriminative and part-(b)
++BOUNDED-at-scale/not-generative; G2 and G3 publication gates were mechanized;
++package/CLI/MCP smoke plus distribution mirror/checklist evidence banked the
++verifier toward Phase-1 ship; the certified abstention point is `shipped` only
++when Exp 3767 reproduced the frozen headline in CI95 and Exp 3771 produced a
++usable operating point, otherwise it is `skipped`; FR-11 v17 preserved the
++memory contribution on the live verifier; the verifier product was positioned
++against PRM SOTA without re-deriving peer numbers; and KV260 terminal state was
++confirmed. It SHALL preserve `paper_ready=true`, G1-G4, frozen FoVer `0.9131`,
++and both energy-as-selector and energy-as-generator as
++honest-negative-bounded. It SHALL make no new existential claim and SHALL keep
++the next research decision as an operator-seeding surface.
++
++The terminal artifact SHALL include bare top-level values for `honest_verdict`,
++`inference_substrate`, `v344_skip_cascade_recovered`,
++`thesis_a_definitively_closed`, `both_energy_routes_bounded`,
++`gates_mechanized`, `verifier_banked_for_ship`,
++`certified_abstention_point_status`, `verifier_positioned_vs_prm_sota`,
++`paper_ready_preserved`, `frozen_headline_unchanged`,
++`next_thesis_remains_operator_surface`, `flagged_artifacts_excluded`,
++`not_landed_artifacts_recorded_honestly`, `cited_upstream_artifacts`,
++`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
++`field_principles` documenting why each required value exists. The
++`inference_substrate` value SHALL equal
++`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
++The terminal verdict SHALL use the prefix
++`complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_`.
++
++#### SCENARIO-REPORT-3775: Clean V345 Recovery Capstone Re-Banks Product
++
++**Given** clean Exp 3765 through Exp 3774 artifacts record skip-cascade
++recovery, Thesis-A closure, G2/G3 gate hardening, verifier ship surfaces,
++certified abstention, FR-11 v17, PRM positioning, and KV260 terminal
++confirmation
++**When** the Exp 3775 workflow runs
++**Then** it emits the required terminal artifact with `paper_ready_preserved=true`,
++frozen FoVer `0.9131` unchanged, both energy routes bounded,
++`flagged_artifacts_excluded=[]`, `not_landed_artifacts_recorded_honestly=[]`,
++all clean upstream artifacts cited, no copied live-model markers, no new
++existential claim, and no critical adversarial verifier flag.
++
++#### SCENARIO-REPORT-3775-MISSING: Missing Upstream Is Not A Research Negative
++
++**Given** any Exp 3765 through Exp 3774 artifact is absent
++**When** the Exp 3775 workflow runs
++**Then** the capstone records that artifact as `not-landed` in
++`not_landed_artifacts_recorded_honestly`, excludes it from headline aggregation,
++and does not label the un-run task as an honest-negative research finding.
++
++#### SCENARIO-REPORT-3775-FLAGGED: Flagged Upstream Artifacts Are Excluded
++
++**Given** any Exp 3765 through Exp 3774 source artifact carries
++`flagged_adversarial=true`
++**When** the Exp 3775 workflow runs
++**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
++excludes it from `cited_upstream_artifacts` and headline aggregation, and
++derives affected milestone booleans from the remaining clean upstream record.
++
++## Implementation Status (REQ-REPORT-3775)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3775 | Planned (`python/carnot/reporting/capstone_v345_recovery_3775.py`, `scripts/experiment_3775_capstone_v345.py`) | Planned (`tests/python/test_experiment_3775_capstone_v345.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 53ca1e5385..dc91002b3a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2879,
++  "experiments_checked": 2880,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v345_recovery_3775.py b/python/carnot/reporting/capstone_v345_recovery_3775.py
+new file mode 100644
+index 0000000000..a8f169ba3c
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v345_recovery_3775.py
+@@ -0,0 +1,880 @@
++"""Build the Exp 3775 v345 recovery capstone artifact.
++
++Spec refs: REQ-REPORT-3775, SCENARIO-REPORT-3775,
++SCENARIO-REPORT-3775-MISSING, SCENARIO-REPORT-3775-FLAGGED.
++
++This module is a capstone aggregator. It reads prior experiment artifacts,
++quotes their provenance by hash, and writes a narrow milestone summary. It
++does not rerun live models and it does not turn a missing upstream experiment
++into a negative research result.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct import guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import adversarial_verify  # noqa: E402
++
++
++OUTPUT_REL_PATH = Path("results/experiment_3775_capstone_v345.json")
++OPERATOR_SURFACE_REL_PATH = Path("results/experiment_3763_next_phase3_thesis_decision_menu.json")
++RANDOM_SEED = 3775
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, "
++    "runs no live model)."
++)
++UPSTREAM_IDS = tuple(range(3765, 3775))
++
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    3765: Path("results/experiment_3765_archive_v344_activate_v345.json"),
++    3766: Path("results/experiment_3766_thesis_a_definitive_reconcile.json"),
++    3767: Path("results/experiment_3767_g2_mechanical_reproducer.json"),
++    3768: Path("results/experiment_3768_g3_narrowing_lint.json"),
++    3769: Path("results/experiment_3769_package_cli_mcp_e2e_smoke.json"),
++    3770: Path("results/experiment_3770_distribution_mirror_publish_checklist.json"),
++    3771: Path("results/experiment_3771_certified_abstention_operating_point.json"),
++    3772: Path("results/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.json"),
++    3773: Path("results/experiment_3773_verifier_product_prm_positioning.json"),
++    3774: Path("results/experiment_3774_kv260_opportunistic_continuity_audit.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "v344_skip_cascade_recovered",
++    "thesis_a_definitively_closed",
++    "both_energy_routes_bounded",
++    "gates_mechanized",
++    "verifier_banked_for_ship",
++    "certified_abstention_point_status",
++    "verifier_positioned_vs_prm_sota",
++    "paper_ready_preserved",
++    "frozen_headline_unchanged",
++    "next_thesis_remains_operator_surface",
++    "flagged_artifacts_excluded",
++    "not_landed_artifacts_recorded_honestly",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": (
++        "A capstone reads upstream JSON, runs no live model, and must not add "
++        "live-inference provenance to an aggregation artifact."
++    ),
++    "v344_skip_cascade_recovered": (
++        "BARE bool -- records that the .344 un-landed agenda was re-executed "
++        "this milestone."
++    ),
++    "thesis_a_definitively_closed": (
++        "Records the milestone-defining fact restored to the record: "
++        "energy-as-generator is bounded, discriminative-not-generative (exp3766)."
++    ),
++    "both_energy_routes_bounded": (
++        "BARE bool -- both selection AND generation are bounded; the reason "
++        ".345 is product-banking not re-grind."
++    ),
++    "gates_mechanized": (
++        "Records G2 reproducer + G3 narrowing lint shipped -- the publication-gate "
++        "hardening deliverable."
++    ),
++    "verifier_banked_for_ship": (
++        "Records the Phase-1 software-ship evidence (E2E surfaces passed + mirror "
++        "checklist) -- the product deliverable."
++    ),
++    "certified_abstention_point_status": (
++        "The deployable abstention operating point outcome (shipped / gate-skipped "
++        "if headline did not reproduce)."
++    ),
++    "verifier_positioned_vs_prm_sota": (
++        "Records the honest PRM-positioning deliverable (exp3773)."
++    ),
++    "paper_ready_preserved": (
++        "G1-G4 stay met; the milestone must not regress the banked verifier product."
++    ),
++    "frozen_headline_unchanged": (
++        "Frozen FoVer 0.9131 stays frozen; .345 reproduces but never moves the headline."
++    ),
++    "next_thesis_remains_operator_surface": (
++        "Records that the next-Phase-3 decision remains an operator-seeding surface "
++        "(exp3763 menu) -- the loop does not self-commit."
++    ),
++    "flagged_artifacts_excluded": (
++        "Lists any flagged_adversarial artifact excluded from aggregation "
++        "(fabrication gate)."
++    ),
++    "not_landed_artifacts_recorded_honestly": (
++        "Lists any upstream task that did not land -- recorded as not-run, NOT as "
++        "a research negative."
++    ),
++    "cited_upstream_artifacts": "Provenance trail from the capstone numbers to the real artifacts.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++SUMMARY_FIELDS: Mapping[int, tuple[str, ...]] = {
++    3765: (
++        "honest_verdict",
++        "unlanded_v344_agenda_carried_to_v345",
++        "v345_focus_recorded",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.g1",
++        "paper_ready_evidence.g2",
++        "paper_ready_evidence.g3",
++        "paper_ready_evidence.g4",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "paper_ready_evidence.frozen_headline_auroc",
++    ),
++    3766: (
++        "honest_verdict",
++        "thesis_a_part_a_outcome",
++        "thesis_a_part_b_outcome",
++        "ebt_discriminative_not_generative",
++        "in_loop_chain_superseded",
++        "thesis_menu_updated",
++        "not_added_to_exclusion_manifest",
++    ),
++    3767: (
++        "honest_verdict",
++        "auroc_in_ci95",
++        "frozen_headline_unchanged",
++        "reproduced_auroc_mean",
++        "source_headline.headline_matches_frozen_0_9131",
++    ),
++    3768: (
++        "honest_verdict",
++        "lint_extended_and_wired",
++        "paper_v6_json_scan_extended",
++        "precommit_hook_wired",
++        "twelfth_retraction_added",
++        "violations_found",
++    ),
++    3769: (
++        "honest_verdict",
++        "package_importable",
++        "pipeline_e2e_passed",
++        "cli_passed",
++        "mcp_protocol_exchange_passed",
++        "surfaces_passed",
++        "is_wiring_smoke_not_accuracy_claim",
++    ),
++    3770: (
++        "honest_verdict",
++        "pypi_workflow_ready",
++        "hf_mirror_documented",
++        "ipfs_plan_documented",
++        "operator_publish_checklist",
++        "agent_published_nothing",
++    ),
++    3771: (
++        "honest_verdict",
++        "usable_operating_point_exists",
++        "selected_threshold",
++        "coverage_at_operating_point",
++        "risk_target",
++        "certified_risk_bound",
++    ),
++    3772: (
++        "honest_verdict",
++        "continuous_self_learning_task",
++        "memory_contribution_preserved",
++        "tracker_state_persisted",
++        "pivoted_off_dead_ebt_lineage",
++        "acceptance_gate.passed",
++    ),
++    3773: (
++        "honest_verdict",
++        "peer_numbers_are_as_reported_not_re_derived",
++        "no_generalization_retest_run",
++        "where_carnot_leads",
++        "where_carnot_does_not_lead",
++        "product_value_proposition",
++    ),
++    3774: (
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made",
++    ),
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    capstone_adversarial_verify_clean: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the v345 capstone from upstream JSON artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = {
++        experiment_id: resolve_upstream_path(root_path, experiment_id)
++        for experiment_id in UPSTREAM_IDS
++    }
++    upstreams = {
++        experiment_id: read_json_object(path) if path.exists() else None
++        for experiment_id, path in paths.items()
++    }
++    reports = (
++        {experiment_id: dict(report) for experiment_id, report in adversarial_reports.items()}
++        if adversarial_reports is not None
++        else verify_upstreams(paths)
++    )
++    flagged_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    }
++    clean_upstreams = {
++        experiment_id: payload
++        for experiment_id, payload in upstreams.items()
++        if payload is not None and experiment_id not in flagged_ids
++    }
++    summaries = compact_summary_records(
++        summary_records if summary_records is not None else run_summarize_artifacts(root_path, paths)
++    )
++    operator_surface = load_operator_surface(root_path)
++
++    exp3765 = clean_upstreams.get(3765, {})
++    exp3766 = clean_upstreams.get(3766, {})
++    exp3767 = clean_upstreams.get(3767, {})
++    exp3768 = clean_upstreams.get(3768, {})
++    exp3769 = clean_upstreams.get(3769, {})
++    exp3770 = clean_upstreams.get(3770, {})
++    exp3771 = clean_upstreams.get(3771, {})
++    exp3772 = clean_upstreams.get(3772, {})
++    exp3773 = clean_upstreams.get(3773, {})
++    exp3774 = clean_upstreams.get(3774, {})
++
++    skip_recovered = skip_cascade_recovered(exp3765)
++    thesis_closed = thesis_a_closed(exp3766)
++    both_bounded = both_energy_routes_bounded(exp3766)
++    g2_reproduced = g2_local_reproduced(exp3767)
++    gates_mech = g2_reproduced and g3_narrowing_lint_shipped(exp3768)
++    verifier_banked = package_cli_mcp_passed(exp3769) and distribution_ready(exp3770)
++    abstention_status = certified_abstention_status(exp3767, exp3771)
++    paper_ready = paper_ready_preserved(exp3765)
++    frozen = frozen_headline_unchanged(exp3765, exp3767)
++    fr11_v17 = fr11_v17_memory_preserved(exp3772)
++    prm_positioned = verifier_positioned_vs_prm(exp3773)
++    kv260_confirmed = kv260_terminal_confirmed(exp3774)
++    next_operator_surface = next_thesis_operator_surface(operator_surface)
++    duration_s = round(max(0.0001, (time.perf_counter() if now_s is None else float(now_s)) - start), 6)
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v345_recovery_3775.v1",
++        "experiment_id": "exp3775",
++        "honest_verdict": terminal_verdict(
++            skip_recovered=skip_recovered,
++            thesis_closed=thesis_closed,
++            both_energy_bounded=both_bounded,
++            gates_mechanized=gates_mech,
++            verifier_banked=verifier_banked,
++            abstention_status=abstention_status,
++            fr11_v17=fr11_v17,
++            prm_positioned=prm_positioned,
++            paper_ready=paper_ready,
++            frozen=frozen,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "v344_skip_cascade_recovered": skip_recovered,
++        "thesis_a_definitively_closed": thesis_closed,
++        "both_energy_routes_bounded": both_bounded,
++        "gates_mechanized": gates_mech,
++        "verifier_banked_for_ship": verifier_banked,
++        "certified_abstention_point_status": abstention_status,
++        "verifier_positioned_vs_prm_sota": prm_positioned,
++        "paper_ready_preserved": paper_ready,
++        "frozen_headline_unchanged": frozen,
++        "next_thesis_remains_operator_surface": next_operator_surface,
++        "milestone_outcome_plain": milestone_outcome(thesis_closed, both_bounded, verifier_banked),
++        "thesis_a_status_note": thesis_status_note(thesis_closed, both_bounded),
++        "energy_as_selector_status": "honest-negative-bounded",
++        "energy_as_generator_status": (
++            "honest-negative-bounded" if both_bounded else "not-landed: exp3766 missing or excluded"
++        ),
++        "no_new_existential_claim": True,
++        "publication_gate_state": publication_gate_state(exp3765),
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "g2_local_reproducer_auroc_in_ci95": g2_reproduced,
++        "g3_narrowing_lint_shipped": g3_narrowing_lint_shipped(exp3768),
++        "phase1_ship_surfaces_passed": package_cli_mcp_passed(exp3769),
++        "distribution_mirror_checklist_ready": distribution_ready(exp3770),
++        "agent_published_nothing": truthy(exp3770.get("agent_published_nothing")),
++        "fr11_v17_memory_contribution_preserved": fr11_v17,
++        "prm_positioning_peer_numbers_as_reported": truthy(
++            exp3773.get("peer_numbers_are_as_reported_not_re_derived")
++        ),
++        "kv260_terminal_confirmed": kv260_confirmed,
++        "headline_aggregation_experiment_ids": sorted(clean_upstreams),
++        "flagged_artifacts_excluded": flagged_artifacts(paths, flagged_ids),
++        "not_landed_artifacts_recorded_honestly": not_landed_artifacts(paths, upstreams),
++        "cited_upstream_artifacts": cited_upstream_artifacts(root_path, paths, clean_upstreams),
++        "supporting_operator_surface_artifact": supporting_operator_surface(
++            root_path, operator_surface
++        ),
++        "summarized_upstream_artifacts": summaries,
++        "upstream_adversarial_critical_flags": critical_adversarial_flags(reports),
++        "adversarial_verify_clean": capstone_adversarial_verify_clean,
++        "adversarial_verify_report": {"flags": []},
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write, adversarial-verify, and rewrite the Exp 3775 artifact."""
++
++    root_path = Path(root)
++    out_path = root_path / OUTPUT_REL_PATH
++    artifact = build_artifact(
++        root_path,
++        summary_records=summary_records,
++        adversarial_reports=adversarial_reports,
++        capstone_adversarial_verify_clean=True,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    report = adversarial_verify.verify_artifact(out_path)
++    artifact["adversarial_verify_report"] = report
++    artifact["adversarial_verify_clean"] = report_is_clean(report)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema and honesty errors for the Exp 3775 capstone."""
++
++    errors: list[str] = []
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        errors.append(f"missing required artifact fields: {', '.join(missing)}")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete: capstone_v345_"):
++        errors.append("honest_verdict must be a terminal Exp 3775 verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare the v345 aggregation-only substrate")
++    for field in (
++        "v344_skip_cascade_recovered",
++        "thesis_a_definitively_closed",
++        "both_energy_routes_bounded",
++        "gates_mechanized",
++        "verifier_banked_for_ship",
++        "verifier_positioned_vs_prm_sota",
++        "next_thesis_remains_operator_surface",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be a bare bool")
++    if artifact.get("certified_abstention_point_status") not in {"shipped", "skipped"}:
++        errors.append("certified_abstention_point_status must be shipped or skipped")
++    if artifact.get("paper_ready_preserved") is not True:
++        errors.append("paper_ready_preserved must be true")
++    if artifact.get("frozen_headline_unchanged") is not True:
++        errors.append("frozen_headline_unchanged must be true")
++    if not isinstance(artifact.get("flagged_artifacts_excluded"), list):
++        errors.append("flagged_artifacts_excluded must be a list")
++    if not isinstance(artifact.get("not_landed_artifacts_recorded_honestly"), list):
++        errors.append("not_landed_artifacts_recorded_honestly must be a list")
++    validate_citations(artifact.get("cited_upstream_artifacts"), errors)
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed must equal 3775")
++    duration_s = artifact.get("duration_s")
++    if (
++        not isinstance(duration_s, int | float)
++        or isinstance(duration_s, bool)
++        or float(duration_s) < 0.0001
++    ):
++        errors.append("duration_s must be numeric with the aggregation plausibility floor")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(REQUIRED_ARTIFACT_FIELDS) - set(principles):
++        errors.append("field_principles must cover all required artifact fields")
++    if has_live_model_markers(artifact):
++        errors.append("artifact must not copy live-model substrate markers")
++    if not report_is_clean(artifact.get("adversarial_verify_report", {"flags": []})):
++        errors.append("adversarial verifier must report no critical flag")
++    checksum = artifact.get("reproducibility_checksum")
++    if not is_sha256(checksum):
++        errors.append("reproducibility_checksum must be a sha256 hex string")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum does not match artifact content")
++    return errors
++
++
++def terminal_verdict(
++    *,
++    skip_recovered: bool,
++    thesis_closed: bool,
++    both_energy_bounded: bool,
++    gates_mechanized: bool,
++    verifier_banked: bool,
++    abstention_status: str,
++    fr11_v17: bool,
++    prm_positioned: bool,
++    paper_ready: bool,
++    frozen: bool,
++) -> str:
++    """Return the terminal verdict string using classified milestone states."""
++
++    return (
++        "complete: capstone_v345_"
++        f"{'skip_cascade_recovered' if skip_recovered else 'skip_cascade_not_recovered'}_"
++        f"{'thesis_a_closed' if thesis_closed else 'thesis_a_not_landed'}_"
++        f"{'both_energy_routes_bounded' if both_energy_bounded else 'both_energy_routes_not_fully_landed'}_"
++        f"{'gates_mechanized' if gates_mechanized else 'gates_not_mechanized'}_"
++        f"{'verifier_banked' if verifier_banked else 'verifier_not_banked'}_"
++        f"abstention_point_{abstention_status}_"
++        f"{'fr11_v17' if fr11_v17 else 'fr11_v17_not_preserved'}_"
++        f"{'prm_positioned' if prm_positioned else 'prm_not_positioned'}_"
++        f"paper_ready_{str(paper_ready).lower()}_"
++        f"{'frozen_headline_unchanged' if frozen else 'frozen_headline_changed'}"
++    )
++
++
++def resolve_upstream_path(root: Path, experiment_id: int) -> Path:
++    """Return the default path or the first same-ID artifact in results."""
++
++    default = root / DEFAULT_UPSTREAM_PATHS[experiment_id]
++    if default.exists():
++        return default
++    matches = sorted((root / "results").glob(f"experiment_{experiment_id}_*.json"))
++    return matches[0] if matches else default
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read an upstream JSON object; array artifacts are invalid provenance."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def run_summarize_artifacts(
++    root: Path,
++    paths: Mapping[int, Path],
++) -> list[JsonDict]:  # pragma: no cover - subprocess boundary
++    records: list[JsonDict] = []
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        arg = str(path) if path.exists() else str(experiment_id)
++        completed = subprocess.run(
++            [sys.executable, "scripts/summarize_artifact.py", arg],
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++        records.append(
++            {
++                "experiment_id": experiment_id,
++                "returncode": completed.returncode,
++                "stdout_sha256": hashlib.sha256(completed.stdout.encode("utf-8")).hexdigest(),
++                "stderr_sha256": hashlib.sha256(completed.stderr.encode("utf-8")).hexdigest(),
++            }
++        )
++    return records
++
++
++def verify_upstreams(paths: Mapping[int, Path]) -> dict[int, JsonDict]:  # pragma: no cover
++    return {
++        experiment_id: adversarial_verify.verify_artifact(path) if path.exists() else {"flags": []}
++        for experiment_id, path in paths.items()
++    }
++
++
++def compact_summary_records(records: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Keep deterministic proof that the artifact summarizer was run."""
++
++    return [
++        {
++            "experiment_id": record.get("experiment_id", record.get("exp")),
++            "returncode": record.get("returncode"),
++            "stdout_sha256": record.get("stdout_sha256"),
++            "stderr_sha256": record.get("stderr_sha256"),
++        }
++        for record in records
++    ]
++
++
++def skip_cascade_recovered(payload: Mapping[str, Any]) -> bool:
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    agenda = payload.get("unlanded_v344_agenda_carried_to_v345")
++    return bool(payload and "skip_cascade" in verdict and isinstance(agenda, list) and agenda)
++
++
++def thesis_a_closed(payload: Mapping[str, Any]) -> bool:
++    part_a = str(payload.get("thesis_a_part_a_outcome") or "").lower()
++    part_b = str(payload.get("thesis_a_part_b_outcome") or "").lower()
++    return bool(
++        payload
++        and "pass" in part_a
++        and "bounded" in part_b
++        and truthy(payload.get("ebt_discriminative_not_generative"))
++        and truthy(payload.get("in_loop_chain_superseded"))
++    )
++
++
++def both_energy_routes_bounded(payload: Mapping[str, Any]) -> bool:
++    return bool(payload and thesis_a_closed(payload))
++
++
++def g2_local_reproduced(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("auroc_in_ci95"))
++        and truthy(payload.get("frozen_headline_unchanged"))
++        and truthy(nested_get(payload, "source_headline.headline_matches_frozen_0_9131"))
++    )
++
++
++def g3_narrowing_lint_shipped(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("lint_extended_and_wired"))
++        and truthy(payload.get("paper_v6_json_scan_extended"))
++        and truthy(payload.get("precommit_hook_wired"))
++        and truthy(payload.get("twelfth_retraction_added"))
++    )
++
++
++def package_cli_mcp_passed(payload: Mapping[str, Any]) -> bool:
++    surfaces = payload.get("surfaces_passed")
++    expected = {"package_import", "pipeline", "mcp_protocol", "cli"}
++    return bool(
++        payload
++        and truthy(payload.get("package_importable"))
++        and truthy(payload.get("pipeline_e2e_passed"))
++        and truthy(payload.get("cli_passed"))
++        and truthy(payload.get("mcp_protocol_exchange_passed"))
++        and isinstance(surfaces, list)
++        and expected <= set(surfaces)
++        and truthy(payload.get("is_wiring_smoke_not_accuracy_claim"))
++    )
++
++
++def distribution_ready(payload: Mapping[str, Any]) -> bool:
++    checklist = payload.get("operator_publish_checklist")
++    return bool(
++        payload
++        and truthy(payload.get("pypi_workflow_ready"))
++        and truthy(payload.get("hf_mirror_documented"))
++        and truthy(payload.get("ipfs_plan_documented"))
++        and isinstance(checklist, list)
++        and checklist
++        and truthy(payload.get("agent_published_nothing"))
++    )
++
++
++def certified_abstention_status(exp3767: Mapping[str, Any], exp3771: Mapping[str, Any]) -> str:
++    if not g2_local_reproduced(exp3767):
++        return "skipped"
++    if exp3771 and truthy(exp3771.get("usable_operating_point_exists")):
++        return "shipped"
++    return "skipped"
++
++
++def paper_ready_preserved(payload: Mapping[str, Any]) -> bool:
++    evidence = payload.get("paper_ready_evidence")
++    return bool(
++        payload.get("paper_ready_preserved") is True
++        and isinstance(evidence, Mapping)
++        and evidence.get("paper_ready") is True
++        and all(evidence.get(name) is True for name in ("g1", "g2", "g3", "g4"))
++    )
++
++
++def frozen_headline_unchanged(exp3765: Mapping[str, Any], exp3767: Mapping[str, Any]) -> bool:
++    evidence = exp3765.get("paper_ready_evidence")
++    archive_frozen = (
++        isinstance(evidence, Mapping)
++        and evidence.get("frozen_headline_unchanged") is True
++        and numeric(evidence.get("frozen_headline_auroc")) == FROZEN_FOVER_AUROC
++    )
++    reproduced_frozen = g2_local_reproduced(exp3767)
++    return bool(archive_frozen or reproduced_frozen)
++
++
++def fr11_v17_memory_preserved(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("continuous_self_learning_task"))
++        and truthy(payload.get("memory_contribution_preserved"))
++        and truthy(payload.get("tracker_state_persisted"))
++        and truthy(payload.get("pivoted_off_dead_ebt_lineage"))
++        and truthy(nested_get(payload, "acceptance_gate.passed"))
++    )
++
++
++def verifier_positioned_vs_prm(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("peer_numbers_are_as_reported_not_re_derived"))
++        and truthy(payload.get("no_generalization_retest_run"))
++        and payload.get("where_carnot_leads")
++        and payload.get("where_carnot_does_not_lead")
++        and payload.get("product_value_proposition")
++    )
++
++
++def kv260_terminal_confirmed(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("terminal_state_holds"))
++        and truthy(payload.get("kv260_ssh_reachable"))
++        and truthy(payload.get("kv260_overlay_loadable"))
++        and payload.get("speedup_claim_made") is not True
++    )
++
++
++def load_operator_surface(root: Path) -> JsonDict | None:
++    path = root / OPERATOR_SURFACE_REL_PATH
++    return read_json_object(path) if path.exists() else None
++
++
++def next_thesis_operator_surface(payload: Mapping[str, Any] | None) -> bool:
++    if not isinstance(payload, Mapping):
++        return False
++    verdict = str(payload.get("honest_verdict") or "")
++    return bool(
++        truthy(payload.get("loop_will_not_self_seed"))
++        and truthy(payload.get("supersedes_340_menu"))
++        and "operator_seeding" in verdict
++    )
++
++
++def publication_gate_state(exp3765: Mapping[str, Any]) -> JsonDict:
++    evidence = exp3765.get("paper_ready_evidence")
++    if not isinstance(evidence, Mapping):
++        evidence = {}
++    return {
++        "paper_ready": evidence.get("paper_ready") is True,
++        "g1": evidence.get("g1") is True,
++        "g2": evidence.get("g2") is True,
++        "g3": evidence.get("g3") is True,
++        "g4": evidence.get("g4") is True,
++    }
++
++
++def milestone_outcome(thesis_closed: bool, both_bounded: bool, verifier_banked: bool) -> str:
++    if thesis_closed and both_bounded and verifier_banked:
++        return (
++            ".345 is a recovery + convergence milestone: it re-banks the one "
++            "positive verifier product result, restores the Thesis-A bounded "
++            "closure to the record, and hands the next research decision to the "
++            "operator. It makes no new existential claim."
++        )
++    return (
++        ".345 capstone ran as aggregation, but one or more upstream artifacts "
++        "needed for the clean milestone claim were missing or excluded; no absent "
++        "result is inferred."
++    )
++
++
++def thesis_status_note(thesis_closed: bool, both_bounded: bool) -> str:
++    if thesis_closed and both_bounded:
++        return "landed: exp3766 restored PASS/discriminative plus BOUNDED/not-generative."
++    return (
++        "not-landed: exp3766 is missing or excluded, so the capstone records the "
++        "upstream gap, not a research negative."
++    )
++
++
++def not_landed_artifacts(
++    paths: Mapping[int, Path],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++) -> list[JsonDict]:
++    return [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id]),
++            "status": "not-landed",
++            "reason": "artifact_missing",
++        }
++        for experiment_id in UPSTREAM_IDS
++        if upstreams.get(experiment_id) is None
++    ]
++
++
++def flagged_artifacts(paths: Mapping[int, Path], flagged_ids: set[int]) -> list[JsonDict]:
++    return [
++        {"experiment_id": experiment_id, "path": str(paths[experiment_id]), "reason": "flagged_adversarial=true"}
++        for experiment_id in sorted(flagged_ids)
++    ]
++
++
++def cited_upstream_artifacts(
++    root: Path,
++    paths: Mapping[int, Path],
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++) -> list[JsonDict]:
++    citations: list[JsonDict] = []
++    for experiment_id in sorted(clean_upstreams):
++        path = paths[experiment_id]
++        payload = clean_upstreams[experiment_id]
++        citations.append(
++            {
++                "experiment_id": experiment_id,
++                "path": str(path),
++                "fields_imported": [
++                    field for field in SUMMARY_FIELDS[experiment_id] if nested_get(payload, field) is not None
++                ],
++                "honest_verdict": payload.get("honest_verdict"),
++                "sha256": sha256_file(path if path.is_absolute() else root / path),
++            }
++        )
++    return citations
++
++
++def supporting_operator_surface(root: Path, payload: Mapping[str, Any] | None) -> JsonDict:
++    path = root / OPERATOR_SURFACE_REL_PATH
++    if not path.exists() or not isinstance(payload, Mapping):
++        return {
++            "experiment_id": 3763,
++            "path": str(path),
++            "status": "not-landed",
++            "reason": "supporting_operator_surface_missing",
++        }
++    return {
++        "experiment_id": 3763,
++        "path": str(path),
++        "fields_imported": ["honest_verdict", "loop_will_not_self_seed", "supersedes_340_menu"],
++        "honest_verdict": payload.get("honest_verdict"),
++        "sha256": sha256_file(path),
++    }
++
++
++def critical_adversarial_flags(reports: Mapping[int, Mapping[str, Any]]) -> list[JsonDict]:
++    critical: list[JsonDict] = []
++    for experiment_id, report in sorted(reports.items()):
++        for flag in report.get("flags") or []:
++            if isinstance(flag, Mapping) and str(flag.get("severity") or "").lower() == "critical":
++                critical.append(
++                    {
++                        "experiment_id": experiment_id,
++                        "kind": flag.get("kind"),
++                        "detail": flag.get("detail"),
++                    }
++                )
++    return critical
++
++
++def validate_citations(value: Any, errors: list[str]) -> None:
++    if not isinstance(value, list):
++        errors.append("cited_upstream_artifacts must be a list")
++        return
++    for item in value:
++        if not isinstance(item, Mapping):
++            errors.append("each citation must be an object")
++            continue
++        if not isinstance(item.get("fields_imported"), list):
++            errors.append("each citation must include fields_imported")
++        if not is_sha256(item.get("sha256")):
++            errors.append("each citation must include a sha256 hex string")
++
++
++def has_live_model_markers(payload: Mapping[str, Any]) -> bool:
++    blob = json.dumps(payload, sort_keys=True).lower()
++    return any(
++        marker in blob
++        for marker in ("live_llm_inference", "target_model", "model_specs", "live_model_invoked")
++    )
++
++
++def report_is_clean(report: Any) -> bool:
++    if not isinstance(report, Mapping):
++        return True
++    for flag in report.get("flags") or []:
++        if not isinstance(flag, Mapping):
++            continue
++        if str(flag.get("severity") or "").lower() == "critical":
++            return False
++    return True
++
++
++def nested_get(payload: Mapping[str, Any], path: str) -> Any:
++    current: Any = payload
++    for part in path.split("."):
++        if not isinstance(current, Mapping) or part not in current:
++            return None
++        current = current[part]
++    return current
++
++
++def truthy(value: Any) -> bool:
++    return value is True or (isinstance(value, str) and value.lower() in {"true", "pass", "passed", "shipped"})
++
++
++def numeric(value: Any) -> float | None:
++    if isinstance(value, bool) or not isinstance(value, int | float):
++        return None
++    return round(float(value), 4)
++
++
++def sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    filtered = dict(payload)
++    filtered["reproducibility_checksum"] = ""
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    out_path = run(REPO_ROOT)
++    print(f"Wrote {out_path}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index a233e98756..008df2c378 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T18:53:11.484517+00:00",
+-  "finished_at": "2026-06-03T18:53:11.508291+00:00",
+-  "duration_s": 0.024,
++  "started_at": "2026-06-03T19:14:10.248203+00:00",
++  "finished_at": "2026-06-03T19:14:10.270897+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 5f18648e51..bd44d7431a 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T18:53:11Z",
++  "run_date": "2026-06-03T19:14:10Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 2fd9aeb0f8..01d55ef069 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T18:53:12Z",
+-  "finished_at": "2026-06-03T18:53:12Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-03T19:14:11Z",
++  "finished_at": "2026-06-03T19:14:11Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 94e4e67bd4..08683fd17a 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T18:53:12Z",
++  "run_date": "2026-06-03T19:14:11Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index e2d7fd50a3..bd528f8257 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-03T18:53:12Z",
++  "run_date": "2026-06-03T19:14:11Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c671a151f2..d0af6deb9f 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-03T18:51:30.585131Z",
+-  "duration_s": 0.01027679443359375,
++  "run_date": "2026-06-03T19:12:31.307763Z",
++  "duration_s": 0.010550737380981445,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ad03a8489b79e558d8956cae0502055bb562d14efd6c7239566041806f0aa2ce",
++  "reproducibility_checksum": "31d279c9d90722b7a18f80d8dc0b31d31a3d0183b2ea23946f6b622d690e7a4d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "e86b0a72880c1d6f811a99ead6a341dd6fd2dc41"
++    "adversarial_verify_version": "be0d2d870e9d5c71804a53ac1e7285e68ac20346"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e1bae1c6d1..a987aac7aa 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-03T18:51:30.597609Z",
+-  "duration_s": 0.009091615676879883,
++  "run_date": "2026-06-03T19:12:31.320652Z",
++  "duration_s": 0.009294271469116211,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "5329e6f42e1a94206773a4f0cf786f70a69082567a330efb4d2e2146d357212b",
++  "reproducibility_checksum": "5d2e79afe232915b54a24b379c2614037d64d081fd60167f0172bd5deba7fe0d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "e86b0a72880c1d6f811a99ead6a341dd6fd2dc41"
++    "adversarial_verify_version": "be0d2d870e9d5c71804a53ac1e7285e68ac20346"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 2b4617a9a1..aa43724e28 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.112865447998047,
++  "efficiency_gains_ms": 2.1119117736816406,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index cb0c987b73..77ef2d217d 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.29186582565307617,
++  "duration_s": 0.2881042957305908,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index ee94e1b682..bae46de60b 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009222030639648438,
++  "duration_s": 0.0013632774353027344,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index c712b9e935..51f07542ed 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.5758003175724298e-05,
++  "duration_s": 3.3493000955786556e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index b45fb8c3f9..56e28bf13c 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.609996828250587e-07,
++  "duration_s": 5.010006134398282e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index e24f8edeb9..9c9d19d41f 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 7.62939453125e-05,
++  "duration_s": 5.984306335449219e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3775_capstone_v345.json b/results/experiment_3775_capstone_v345.json
+new file mode 100644
+index 0000000000..5e73918568
+--- /dev/null
++++ b/results/experiment_3775_capstone_v345.json
+@@ -0,0 +1,306 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3775_capstone_v345.json",
++    "exp_id": "exp3775",
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_route",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "agent_published_nothing": true,
++  "both_energy_routes_bounded": true,
++  "certified_abstention_point_status": "shipped",
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3765,
++      "fields_imported": [
++        "honest_verdict",
++        "unlanded_v344_agenda_carried_to_v345",
++        "v345_focus_recorded",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.g1",
++        "paper_ready_evidence.g2",
++        "paper_ready_evidence.g3",
++        "paper_ready_evidence.g4",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "paper_ready_evidence.frozen_headline_auroc"
++      ],
++      "honest_verdict": "complete: archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_paper_ready_true_frozen_headline_unchanged",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3765_archive_v344_activate_v345.json",
++      "sha256": "475d6763ffd7ab969441420b6ddf5ba2a7be33f1e7463ff31f2ca37ebe23d226"
++    },
++    {
++      "experiment_id": 3766,
++      "fields_imported": [
++        "honest_verdict",
++        "thesis_a_part_a_outcome",
++        "thesis_a_part_b_outcome",
++        "ebt_discriminative_not_generative",
++        "in_loop_chain_superseded",
++        "thesis_menu_updated",
++        "not_added_to_exclusion_manifest"
++      ],
++      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3766_thesis_a_definitive_reconcile.json",
++      "sha256": "dc1ba6c3031f434978d9c7aa81efd7ae7b55d346885b5bc70a00a32704c8687d"
++    },
++    {
++      "experiment_id": 3767,
++      "fields_imported": [
++        "honest_verdict",
++        "auroc_in_ci95",
++        "frozen_headline_unchanged",
++        "reproduced_auroc_mean",
++        "source_headline.headline_matches_frozen_0_9131"
++      ],
++      "honest_verdict": "complete: g2_local_reproducer_committed_auroc_0.913134_in_ci95_true_frozen_headline_confirmed_unchanged",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3767_g2_mechanical_reproducer.json",
++      "sha256": "1f66e7056479890815289a275cdf724c363746881ade279d0357fc2aa013b023"
++    },
++    {
++      "experiment_id": 3768,
++      "fields_imported": [
++        "honest_verdict",
++        "lint_extended_and_wired",
++        "paper_v6_json_scan_extended",
++        "precommit_hook_wired",
++        "twelfth_retraction_added",
++        "violations_found"
++      ],
++      "honest_verdict": "complete: g3_narrowing_lint_shipped_19_phrasings_12th_added_violations_0_precommit_wired",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3768_g3_narrowing_lint.json",
++      "sha256": "4ad8045cd7f4494f9e630fee46df247bb4c7bd3201824d8e252e455a367b8252"
++    },
++    {
++      "experiment_id": 3769,
++      "fields_imported": [
++        "honest_verdict",
++        "package_importable",
++        "pipeline_e2e_passed",
++        "cli_passed",
++        "mcp_protocol_exchange_passed",
++        "surfaces_passed",
++        "is_wiring_smoke_not_accuracy_claim"
++      ],
++      "honest_verdict": "complete: phase1_e2e_smoke_package_import_pipeline_mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3769_package_cli_mcp_e2e_smoke.json",
++      "sha256": "8f3f8bcce9ee0fe422f8f104f08710b4ff018152b26093f7757d467249645139"
++    },
++    {
++      "experiment_id": 3770,
++      "fields_imported": [
++        "honest_verdict",
++        "pypi_workflow_ready",
++        "hf_mirror_documented",
++        "ipfs_plan_documented",
++        "operator_publish_checklist",
++        "agent_published_nothing"
++      ],
++      "honest_verdict": "complete: distribution_mirror_readiness_audited_pypi_true_hf_true_ipfs_true_operator_checklist_emitted_agent_published_nothing",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3770_distribution_mirror_publish_checklist.json",
++      "sha256": "91655efb06f51ae6a7e1450d8389f5818061d3e8365e5e0bad4bafa79b8036a8"
++    },
++    {
++      "experiment_id": 3771,
++      "fields_imported": [
++        "honest_verdict",
++        "usable_operating_point_exists",
++        "selected_threshold",
++        "coverage_at_operating_point",
++        "risk_target",
++        "certified_risk_bound"
++      ],
++      "honest_verdict": "complete: certified_abstention_point_threshold_0.733216_coverage_0.998218_at_risk_0.05_certified_split_conformal_delta_0.05_n2619",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++      "sha256": "f81225b220dd5bac06c6e5a7e54b14811e3448c74a249abbc58cddb9931f9ff4"
++    },
++    {
++      "experiment_id": 3772,
++      "fields_imported": [
++        "honest_verdict",
++        "continuous_self_learning_task",
++        "memory_contribution_preserved",
++        "tracker_state_persisted",
++        "pivoted_off_dead_ebt_lineage",
++        "acceptance_gate.passed"
++      ],
++      "honest_verdict": "complete: fr11_v17_tier1_verifier_precision_tracker_pivoted_to_live_verifier_memory_contribution_preserved_state_persisted",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.json",
++      "sha256": "800bada0576c74e1fd0a0936255e440a570acfed851fa018a355028e43641533"
++    },
++    {
++      "experiment_id": 3773,
++      "fields_imported": [
++        "honest_verdict",
++        "peer_numbers_are_as_reported_not_re_derived",
++        "no_generalization_retest_run",
++        "where_carnot_leads",
++        "where_carnot_does_not_lead",
++        "product_value_proposition"
++      ],
++      "honest_verdict": "complete: verifier_product_positioned_vs_prm_sota_leads_cost_objectivity_certifiability_does_not_lead_f1_or_ood_no_generalization_retest",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3773_verifier_product_prm_positioning.json",
++      "sha256": "b7cea41f2169e2e6e226d99ff77da8f0504d9018f48a815882d0bd9eadd8ca4a"
++    },
++    {
++      "experiment_id": 3774,
++      "fields_imported": [
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made"
++      ],
++      "honest_verdict": "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3774_kv260_opportunistic_continuity_audit.json",
++      "sha256": "1cc52d2525f6639636438aad40bafdfebb85159c9b11a477150f14bd46ed5f4a"
++    }
++  ],
++  "distribution_mirror_checklist_ready": true,
++  "duration_s": 0.333493,
++  "energy_as_generator_status": "honest-negative-bounded",
++  "energy_as_selector_status": "honest-negative-bounded",
++  "experiment_id": "exp3775",
++  "field_principles": {
++    "both_energy_routes_bounded": "BARE bool -- both selection AND generation are bounded; the reason .345 is product-banking not re-grind.",
++    "certified_abstention_point_status": "The deployable abstention operating point outcome (shipped / gate-skipped if headline did not reproduce).",
++    "cited_upstream_artifacts": "Provenance trail from the capstone numbers to the real artifacts.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "flagged_artifacts_excluded": "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate).",
++    "frozen_headline_unchanged": "Frozen FoVer 0.9131 stays frozen; .345 reproduces but never moves the headline.",
++    "gates_mechanized": "Records G2 reproducer + G3 narrowing lint shipped -- the publication-gate hardening deliverable.",
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": "A capstone reads upstream JSON, runs no live model, and must not add live-inference provenance to an aggregation artifact.",
++    "next_thesis_remains_operator_surface": "Records that the next-Phase-3 decision remains an operator-seeding surface (exp3763 menu) -- the loop does not self-commit.",
++    "not_landed_artifacts_recorded_honestly": "Lists any upstream task that did not land -- recorded as not-run, NOT as a research negative.",
++    "paper_ready_preserved": "G1-G4 stay met; the milestone must not regress the banked verifier product.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "thesis_a_definitively_closed": "Records the milestone-defining fact restored to the record: energy-as-generator is bounded, discriminative-not-generative (exp3766).",
++    "v344_skip_cascade_recovered": "BARE bool -- records that the .344 un-landed agenda was re-executed this milestone.",
++    "verifier_banked_for_ship": "Records the Phase-1 software-ship evidence (E2E surfaces passed + mirror checklist) -- the product deliverable.",
++    "verifier_positioned_vs_prm_sota": "Records the honest PRM-positioning deliverable (exp3773)."
++  },
++  "flagged_artifacts_excluded": [],
++  "fr11_v17_memory_contribution_preserved": true,
++  "frozen_fover_auroc": 0.9131,
++  "frozen_headline_unchanged": true,
++  "g2_local_reproducer_auroc_in_ci95": true,
++  "g3_narrowing_lint_shipped": true,
++  "gates_mechanized": true,
++  "headline_aggregation_experiment_ids": [
++    3765,
++    3766,
++    3767,
++    3768,
++    3769,
++    3770,
++    3771,
++    3772,
++    3773,
++    3774
++  ],
++  "honest_verdict": "complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_shipped_fr11_v17_prm_positioned_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).",
++  "kv260_terminal_confirmed": true,
++  "milestone_outcome_plain": ".345 is a recovery + convergence milestone: it re-banks the one positive verifier product result, restores the Thesis-A bounded closure to the record, and hands the next research decision to the operator. It makes no new existential claim.",
++  "next_thesis_remains_operator_surface": true,
++  "no_new_existential_claim": true,
++  "not_landed_artifacts_recorded_honestly": [],
++  "paper_ready_preserved": true,
++  "phase1_ship_surfaces_passed": true,
++  "prm_positioning_peer_numbers_as_reported": true,
++  "publication_gate_state": {
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true,
++    "paper_ready": true
++  },
++  "random_seed": 3775,
++  "reproducibility_checksum": "d04ba91313cc0cd7c5203ea1b94fc351ed0001019b20f09afa04adff58a44e05",
++  "schema": "carnot.capstone_v345_recovery_3775.v1",
++  "summarized_upstream_artifacts": [
++    {
++      "experiment_id": 3765,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "fab09bf38540c1efa2fe1e1f0effdd4a1b0be8a39b9563028cbf4909b80f9e6d"
++    },
++    {
++      "experiment_id": 3766,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "e2c8606b070b74920638fbb8bd0e407830be755e7063c3db5ceb458f4f44b1ef"
++    },
++    {
++      "experiment_id": 3767,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "45fdd3f4ed24473ca07d4c73497e0310a283f71717b27220241b7a1e5d93492b"
++    },
++    {
++      "experiment_id": 3768,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "e0a41f320b00ebf78ded23777ff0a61263eec469f210e8bef59081334ce84665"
++    },
++    {
++      "experiment_id": 3769,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "a5fb95688a9e0e1b0befb7037fcb5df3bdf247cf256af759818609dd5503e3bd"
++    },
++    {
++      "experiment_id": 3770,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "b80ba132a4ac3803af303ae5d46fdbd6889b604ef488e6b5d3a3a7f869df0453"
++    },
++    {
++      "experiment_id": 3771,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "bec4898ab885c55ddb57bc406ba5cf57a5d06bbf35c4252fadf584fc7a275b62"
++    },
++    {
++      "experiment_id": 3772,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "f56fadb15bed9f6e137b1ee4072de49aae4edc7b89ad61faa80664a3599f75b6"
++    },
++    {
++      "experiment_id": 3773,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "a2e12a380a3fb8639aa47cbf0166be23f737495d80815c1dce8dd1660411bb55"
++    },
++    {
++      "experiment_id": 3774,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "e18b07ffc738b117284be75a2d9e9b023e57226884694584d6a91d36b35cf190"
++    }
++  ],
++  "supporting_operator_surface_artifact": {
++    "experiment_id": 3763,
++    "fields_imported": [
++      "honest_verdict",
++      "loop_will_not_self_seed",
++      "supersedes_340_menu"
++    ],
++    "honest_verdict": "complete: next_phase3_thesis_menu_ranked_top_edlm_residual_corrector_supersedes_340_menu_all_routes_sidestep_both_negatives_for_operator_seeding",
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3763_next_phase3_thesis_decision_menu.json",
++    "sha256": "07fe4989efe69858cb0df29f807efc790161608fe94552f2858aed344d89bfe1"
++  },
++  "thesis_a_definitively_closed": true,
++  "thesis_a_status_note": "landed: exp3766 restored PASS/discriminative plus BOUNDED/not-generative.",
++  "upstream_adversarial_critical_flags": [],
++  "v344_skip_cascade_recovered": true,
++  "verifier_banked_for_ship": true,
++  "verifier_positioned_vs_prm_sota": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1c2d55dd18..cbfa901c71 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T18:53:35Z",
+-  "finished_at": "2026-06-03T18:53:35Z",
++  "started_at": "2026-06-03T19:14:15Z",
++  "finished_at": "2026-06-03T19:14:15Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 725dd4b7e4..6fc409ca0f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T18:53:35Z",
+-  "finished_at": "2026-06-03T18:53:35Z",
++  "started_at": "2026-06-03T19:14:15Z",
++  "finished_at": "2026-06-03T19:14:15Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6f2b7fb26f..f41068a480 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T18:53:35Z",
+-  "finished_at": "2026-06-03T18:53:35Z",
++  "started_at": "2026-06-03T19:14:15Z",
++  "finished_at": "2026-06-03T19:14:15Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3775_capstone_v345.py b/scripts/experiment_3775_capstone_v345.py
+new file mode 100644
+index 0000000000..d7410fa75f
+--- /dev/null
++++ b/scripts/experiment_3775_capstone_v345.py
+@@ -0,0 +1,16 @@
++#!/usr/bin/env python3
++"""Run Exp 3775 capstone v345."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python"))
++
++from carnot.reporting.capstone_v345_recovery_3775 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3775_capstone_v345.py b/tests/python/test_experiment_3775_capstone_v345.py
+new file mode 100644
+index 0000000000..ada32320d8
+--- /dev/null
++++ b/tests/python/test_experiment_3775_capstone_v345.py
+@@ -0,0 +1,535 @@
++"""Tests for Exp 3775 capstone v345.
++
++Spec refs: REQ-REPORT-3775, SCENARIO-REPORT-3775,
++SCENARIO-REPORT-3775-MISSING, SCENARIO-REPORT-3775-FLAGGED.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import capstone_v345_recovery_3775 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _clean_reports() -> dict[int, dict[str, object]]:
++    return {experiment_id: {"flags": []} for experiment_id in mod.UPSTREAM_IDS}
++
++
++def _summary_records() -> list[dict[str, object]]:
++    return [
++        {
++            "experiment_id": experiment_id,
++            "returncode": 0,
++            "stdout_sha256": f"{experiment_id:064x}"[-64:],
++            "stderr_sha256": "0" * 64,
++        }
++        for experiment_id in mod.UPSTREAM_IDS
++    ]
++
++
++def _payloads(*, g2_auroc_in_ci95: bool = True) -> dict[int, dict[str, object]]:
++    return {
++        3765: {
++            "honest_verdict": (
++                "complete: archived_v344_zero_experiments_skip_cascade_recorded_"
++                "v345_recovery_active_paper_ready_true_frozen_headline_unchanged"
++            ),
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "unlanded_v344_agenda_carried_to_v345": ["exp3754", "exp3755"],
++            "paper_ready_preserved": True,
++            "paper_ready_evidence": {
++                "g1": True,
++                "g2": True,
++                "g3": True,
++                "g4": True,
++                "paper_ready": True,
++                "frozen_headline_unchanged": True,
++                "frozen_headline_auroc": 0.9131,
++            },
++            "random_seed": 3765,
++            "reproducibility_checksum": "5" * 64,
++            "duration_s": 0.1,
++        },
++        3766: {
++            "honest_verdict": (
++                "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_"
++                "part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired"
++            ),
++            "thesis_a_part_a_outcome": "PASS_discriminative: held-out margin learned",
++            "thesis_a_part_b_outcome": "BOUNDED_at_scale_not_generative: matched AR wins",
++            "ebt_discriminative_not_generative": True,
++            "in_loop_chain_superseded": True,
++            "thesis_menu_updated": True,
++            "not_added_to_exclusion_manifest": True,
++            "random_seed": 3766,
++            "reproducibility_checksum": "6" * 64,
++            "duration_s": 0.1,
++        },
++        3767: {
++            "honest_verdict": (
++                "complete: g2_local_reproducer_committed_auroc_0.913134_"
++                f"in_ci95_{str(g2_auroc_in_ci95).lower()}_frozen_headline_confirmed_unchanged"
++            ),
++            "auroc_in_ci95": g2_auroc_in_ci95,
++            "frozen_headline_unchanged": True,
++            "reproduced_auroc_mean": 0.913134,
++            "source_headline": {
++                "headline_matches_frozen_0_9131": True,
++                "condition_a_production_auroc_mean": 0.9131336,
++            },
++            "random_seed": 3767,
++            "reproducibility_checksum": "7" * 64,
++            "duration_s": 0.1,
++        },
++        3768: {
++            "honest_verdict": (
++                "complete: g3_narrowing_lint_shipped_19_phrasings_"
++                "12th_added_violations_0_precommit_wired"
++            ),
++            "lint_extended_and_wired": True,
++            "paper_v6_json_scan_extended": True,
++            "precommit_hook_wired": True,
++            "twelfth_retraction_added": True,
++            "violations_found": 0,
++            "random_seed": 3768,
++            "reproducibility_checksum": "8" * 64,
++            "duration_s": 0.1,
++        },
++        3769: {
++            "honest_verdict": (
++                "complete: phase1_e2e_smoke_package_import_pipeline_"
++                "mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim"
++            ),
++            "package_importable": True,
++            "pipeline_e2e_passed": True,
++            "cli_passed": True,
++            "mcp_protocol_exchange_passed": True,
++            "surfaces_passed": ["package_import", "pipeline", "mcp_protocol", "cli"],
++            "is_wiring_smoke_not_accuracy_claim": True,
++            "random_seed": 3769,
++            "reproducibility_checksum": "9" * 64,
++            "duration_s": 0.1,
++        },
++        3770: {
++            "honest_verdict": (
++                "complete: distribution_mirror_readiness_audited_pypi_true_hf_true_"
++                "ipfs_true_operator_checklist_emitted_agent_published_nothing"
++            ),
++            "pypi_workflow_ready": True,
++            "hf_mirror_documented": True,
++            "ipfs_plan_documented": True,
++            "operator_publish_checklist": [{"operator_only": "OPERATOR ACTION -- agent must not execute"}],
++            "agent_published_nothing": True,
++            "random_seed": 3770,
++            "reproducibility_checksum": "a" * 64,
++            "duration_s": 0.1,
++        },
++        3771: {
++            "honest_verdict": (
++                "complete: certified_abstention_point_threshold_0.733216_"
++                "coverage_0.998218_at_risk_0.05_certified_split_conformal_delta_0.05_n2619"
++            ),
++            "usable_operating_point_exists": True,
++            "selected_threshold": 0.733216,
++            "coverage_at_operating_point": 0.998218,
++            "certified_risk_bound": 0.037646,
++            "risk_target": 0.05,
++            "random_seed": 3771,
++            "reproducibility_checksum": "b" * 64,
++            "duration_s": 0.1,
++        },
++        3772: {
++            "honest_verdict": (
++                "complete: fr11_v17_tier1_verifier_precision_tracker_pivoted_to_"
++                "live_verifier_memory_contribution_preserved_state_persisted"
++            ),
++            "continuous_self_learning_task": True,
++            "memory_contribution_preserved": True,
++            "tracker_state_persisted": True,
++            "pivoted_off_dead_ebt_lineage": True,
++            "acceptance_gate": {"passed": True},
++            "random_seed": 3772,
++            "reproducibility_checksum": "c" * 64,
++            "duration_s": 0.1,
++        },
++        3773: {
++            "honest_verdict": (
++                "complete: verifier_product_positioned_vs_prm_sota_leads_cost_"
++                "objectivity_certifiability_does_not_lead_f1_or_ood_no_generalization_retest"
++            ),
++            "peer_numbers_are_as_reported_not_re_derived": True,
++            "no_generalization_retest_run": True,
++            "where_carnot_leads": "leads on cost, objectivity, and certifiability",
++            "where_carnot_does_not_lead": "does NOT lead on raw F1 or OOD generalization",
++            "product_value_proposition": "certified complement to generative PRMs",
++            "random_seed": 3773,
++            "reproducibility_checksum": "d" * 64,
++            "duration_s": 0.1,
++        },
++        3774: {
++            "honest_verdict": (
++                "complete: kv260_terminal_state_holds_ssh_reachable_"
++                "accelerator_loadable_opportunistic_audit"
++            ),
++            "terminal_state_holds": True,
++            "kv260_ssh_reachable": True,
++            "kv260_overlay_loadable": True,
++            "speedup_claim_made": False,
++            "random_seed": 3774,
++            "reproducibility_checksum": "e" * 64,
++            "duration_s": 0.1,
++        },
++    }
++
++
++def _operator_surface() -> dict[str, object]:
++    return {
++        "honest_verdict": (
++            "complete: next_phase3_thesis_menu_ranked_top_edlm_residual_corrector_"
++            "supersedes_340_menu_all_routes_sidestep_both_negatives_for_operator_seeding"
++        ),
++        "loop_will_not_self_seed": True,
++        "supersedes_340_menu": True,
++        "ranked_thesis_menu": [{"route": "EDLM"}],
++    }
++
++
++def _seed_clean_upstreams(
++    root: Path,
++    *,
++    g2_auroc_in_ci95: bool = True,
++    flagged: set[int] | None = None,
++    missing: set[int] | None = None,
++) -> None:
++    flagged = flagged or set()
++    missing = missing or set()
++    for experiment_id, payload in _payloads(g2_auroc_in_ci95=g2_auroc_in_ci95).items():
++        if experiment_id in missing:
++            continue
++        if experiment_id in flagged:
++            payload["flagged_adversarial"] = True
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++    _write_json(root / mod.OPERATOR_SURFACE_REL_PATH, _operator_surface())
++
++
++def test_req_report_3775_spec_anchor_exists() -> None:
++    """REQ-REPORT-3775: OpenSpec declares the v345 capstone contract."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3775" in spec
++    assert "SCENARIO-REPORT-3775" in spec
++    assert "SCENARIO-REPORT-3775-MISSING" in spec
++    assert "SCENARIO-REPORT-3775-FLAGGED" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_scenario_report_3775_clean_capstone_rebanks_product(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3775: clean upstreams produce recovery/convergence capstone."""
++    _seed_clean_upstreams(tmp_path)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        capstone_adversarial_verify_clean=True,
++        started_s=2.0,
++        now_s=2.5,
++    )
++
++    assert mod.validate_artifact(artifact) == []
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_"
++        "both_energy_routes_bounded_gates_mechanized_verifier_banked_"
++        "abstention_point_shipped_fr11_v17_prm_positioned_paper_ready_true_"
++        "frozen_headline_unchanged"
++    )
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["v344_skip_cascade_recovered"] is True
++    assert artifact["thesis_a_definitively_closed"] is True
++    assert artifact["both_energy_routes_bounded"] is True
++    assert artifact["gates_mechanized"] is True
++    assert artifact["verifier_banked_for_ship"] is True
++    assert artifact["certified_abstention_point_status"] == "shipped"
++    assert artifact["verifier_positioned_vs_prm_sota"] is True
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["frozen_headline_unchanged"] is True
++    assert artifact["next_thesis_remains_operator_surface"] is True
++    assert artifact["frozen_fover_auroc"] == pytest.approx(0.9131)
++    assert artifact["energy_as_selector_status"] == "honest-negative-bounded"
++    assert artifact["energy_as_generator_status"] == "honest-negative-bounded"
++    assert artifact["no_new_existential_claim"] is True
++    assert artifact["fr11_v17_memory_contribution_preserved"] is True
++    assert artifact["kv260_terminal_confirmed"] is True
++    assert artifact["flagged_artifacts_excluded"] == []
++    assert artifact["not_landed_artifacts_recorded_honestly"] == []
++    assert {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]} == set(
++        mod.UPSTREAM_IDS
++    )
++    assert artifact["supporting_operator_surface_artifact"]["experiment_id"] == 3763
++    assert {item["experiment_id"] for item in artifact["summarized_upstream_artifacts"]} == set(
++        mod.UPSTREAM_IDS
++    )
++    blob = json.dumps(artifact, sort_keys=True)
++    assert "live_llm_inference" not in blob
++    assert "model_specs" not in blob
++    assert "target_model" not in blob
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_scenario_report_3775_abstention_skips_without_g2_ci_pass(tmp_path: Path) -> None:
++    """REQ-REPORT-3775: abstention ships only if Exp 3767 reproduces the headline."""
++    _seed_clean_upstreams(tmp_path, g2_auroc_in_ci95=False)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        capstone_adversarial_verify_clean=True,
++        started_s=3.0,
++        now_s=3.25,
++    )
++
++    assert artifact["certified_abstention_point_status"] == "skipped"
++    assert artifact["gates_mechanized"] is False
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_"
++        "both_energy_routes_bounded_gates_not_mechanized_verifier_banked_"
++        "abstention_point_skipped_fr11_v17_prm_positioned_paper_ready_true_"
++        "frozen_headline_unchanged"
++    )
++
++
++def test_scenario_report_3775_flagged_upstream_is_excluded(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3775-FLAGGED: flagged artifacts are quarantined."""
++    _seed_clean_upstreams(tmp_path, flagged={3770})
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        capstone_adversarial_verify_clean=True,
++        started_s=4.0,
++        now_s=4.25,
++    )
++
++    assert artifact["verifier_banked_for_ship"] is False
++    assert artifact["flagged_artifacts_excluded"] == [
++        {
++            "experiment_id": 3770,
++            "path": str(tmp_path / mod.DEFAULT_UPSTREAM_PATHS[3770]),
++            "reason": "flagged_adversarial=true",
++        }
++    ]
++    assert 3770 not in {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++    assert 3770 not in artifact["headline_aggregation_experiment_ids"]
++
++
++def test_scenario_report_3775_missing_upstream_is_not_research_negative(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3775-MISSING: missing source is recorded as not-landed."""
++    _seed_clean_upstreams(tmp_path, missing={3766})
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        capstone_adversarial_verify_clean=True,
++        started_s=5.0,
++        now_s=5.25,
++    )
++
++    assert artifact["thesis_a_definitively_closed"] is False
++    assert artifact["both_energy_routes_bounded"] is False
++    assert artifact["not_landed_artifacts_recorded_honestly"] == [
++        {
++            "experiment_id": 3766,
++            "path": str(tmp_path / mod.DEFAULT_UPSTREAM_PATHS[3766]),
++            "status": "not-landed",
++            "reason": "artifact_missing",
++        }
++    ]
++    assert "not-landed" in artifact["thesis_a_status_note"]
++    assert "not a research negative" in artifact["thesis_a_status_note"]
++
++
++def test_validate_artifact_reports_schema_hygiene_and_checksum_errors() -> None:
++    """REQ-REPORT-3775: malformed capstones fail closed before reporting."""
++    errors = mod.validate_artifact({})
++
++    assert any(error.startswith("missing required artifact fields:") for error in errors)
++    assert "honest_verdict must be a terminal Exp 3775 verdict" in errors
++    assert "inference_substrate must declare the v345 aggregation-only substrate" in errors
++    assert "certified_abstention_point_status must be shipped or skipped" in errors
++    assert "paper_ready_preserved must be true" in errors
++    assert "frozen_headline_unchanged must be true" in errors
++    assert "cited_upstream_artifacts must be a list" in errors
++
++    valid = {
++        "honest_verdict": mod.terminal_verdict(
++            skip_recovered=True,
++            thesis_closed=True,
++            both_energy_bounded=True,
++            gates_mechanized=True,
++            verifier_banked=True,
++            abstention_status="shipped",
++            fr11_v17=True,
++            prm_positioned=True,
++            paper_ready=True,
++            frozen=True,
++        ),
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "v344_skip_cascade_recovered": True,
++        "thesis_a_definitively_closed": True,
++        "both_energy_routes_bounded": True,
++        "gates_mechanized": True,
++        "verifier_banked_for_ship": True,
++        "certified_abstention_point_status": "shipped",
++        "verifier_positioned_vs_prm_sota": True,
++        "paper_ready_preserved": True,
++        "frozen_headline_unchanged": True,
++        "next_thesis_remains_operator_surface": True,
++        "flagged_artifacts_excluded": [],
++        "not_landed_artifacts_recorded_honestly": [],
++        "cited_upstream_artifacts": [
++            {
++                "experiment_id": 3765,
++                "path": "results/experiment_3765.json",
++                "fields_imported": ["honest_verdict"],
++                "sha256": "1" * 64,
++            }
++        ],
++        "field_principles": dict(mod.FIELD_PRINCIPLES),
++        "random_seed": mod.RANDOM_SEED,
++        "duration_s": 0.1,
++        "adversarial_verify_report": {"flags": []},
++        "reproducibility_checksum": "",
++    }
++    valid["reproducibility_checksum"] = mod.payload_checksum(valid)
++    assert mod.validate_artifact(valid) == []
++
++    live_marker = dict(valid)
++    live_marker["copied_substrate"] = "live_llm_inference"
++    live_marker["reproducibility_checksum"] = mod.payload_checksum(live_marker)
++    assert "artifact must not copy live-model substrate markers" in mod.validate_artifact(
++        live_marker
++    )
++
++    bad_checksum = dict(valid)
++    bad_checksum["reproducibility_checksum"] = "2" * 64
++    assert "reproducibility_checksum does not match artifact content" in mod.validate_artifact(
++        bad_checksum
++    )
++
++    bad_citation = dict(valid)
++    bad_citation["cited_upstream_artifacts"] = [123, {"experiment_id": 3765}]
++    bad_citation["reproducibility_checksum"] = mod.payload_checksum(bad_citation)
++    citation_errors = mod.validate_artifact(bad_citation)
++    assert "each citation must be an object" in citation_errors
++    assert "each citation must include fields_imported" in citation_errors
++
++    critical_report = dict(valid)
++    critical_report["adversarial_verify_report"] = {
++        "flags": [{"severity": "critical", "kind": "TEST", "detail": "blocked"}]
++    }
++    critical_report["reproducibility_checksum"] = mod.payload_checksum(critical_report)
++    assert "adversarial verifier must report no critical flag" in mod.validate_artifact(
++        critical_report
++    )
++
++
++def test_run_writes_artifact_and_rejects_array_sources(tmp_path: Path) -> None:
++    """REQ-REPORT-3775: CLI path writes stable JSON and source JSON objects only."""
++    _seed_clean_upstreams(tmp_path)
++
++    out_path = mod.run(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        started_s=6.0,
++        now_s=6.25,
++    )
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert payload["adversarial_verify_clean"] is True
++    assert payload["adversarial_verify_report"]["flags"] == []
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++
++    array_path = tmp_path / "array.json"
++    array_path.write_text("[1, 2, 3]", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod.read_json_object(array_path)
++
++
++def test_fallback_and_error_branches_are_honest(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3775: fallback branches report missing or blocked state honestly."""
++    _seed_clean_upstreams(tmp_path)
++
++    bad_root = tmp_path / "bad_paper_ready"
++    _seed_clean_upstreams(bad_root)
++    bad_3765 = _payloads()[3765]
++    bad_3765["paper_ready_preserved"] = False
++    _write_json(bad_root / mod.DEFAULT_UPSTREAM_PATHS[3765], bad_3765)
++    with pytest.raises(ValueError, match="paper_ready_preserved must be true"):
++        mod.build_artifact(
++            bad_root,
++            summary_records=_summary_records(),
++            adversarial_reports=_clean_reports(),
++            started_s=1.0,
++            now_s=1.25,
++        )
++
++    alternate = tmp_path / "alternate" / "results" / "experiment_3765_alternate_name.json"
++    _write_json(alternate, {"honest_verdict": "complete: alternate"})
++    assert mod.resolve_upstream_path(tmp_path / "alternate", 3765) == alternate
++    assert mod.resolve_upstream_path(tmp_path / "missing", 3765) == (
++        tmp_path / "missing" / mod.DEFAULT_UPSTREAM_PATHS[3765]
++    )
++
++    assert mod.certified_abstention_status({"auroc_in_ci95": False}, {"usable_operating_point_exists": True}) == "skipped"
++    assert mod.certified_abstention_status(_payloads()[3767], {}) == "skipped"
++    assert mod.next_thesis_operator_surface(None) is False
++    assert mod.publication_gate_state({}) == {
++        "paper_ready": False,
++        "g1": False,
++        "g2": False,
++        "g3": False,
++        "g4": False,
++    }
++    assert mod.supporting_operator_surface(tmp_path / "no_operator_surface", None)["status"] == "not-landed"
++    assert mod.critical_adversarial_flags(
++        {3765: {"flags": [123, {"severity": "critical", "kind": "X", "detail": "bad"}]}}
++    ) == [{"experiment_id": 3765, "kind": "X", "detail": "bad"}]
++    assert mod.report_is_clean(None) is True
++    assert mod.report_is_clean({"flags": [123, {"severity": "critical"}]}) is False
++    assert mod.numeric(True) is None
++    assert mod.numeric("0.9131") is None
++
++    def _critical_report(path: Path) -> dict[str, object]:
++        assert path.name == mod.OUTPUT_REL_PATH.name
++        return {"flags": [{"severity": "critical", "kind": "TEST", "detail": "forced"}]}
++
++    monkeypatch.setattr(mod.adversarial_verify, "verify_artifact", _critical_report)
++    with pytest.raises(ValueError, match="adversarial verifier must report no critical flag"):
++        mod.run(
++            tmp_path,
++            summary_records=_summary_records(),
++            adversarial_reports=_clean_reports(),
++            started_s=7.0,
++            now_s=7.25,
++        )
+-- 
+2.55.0
+

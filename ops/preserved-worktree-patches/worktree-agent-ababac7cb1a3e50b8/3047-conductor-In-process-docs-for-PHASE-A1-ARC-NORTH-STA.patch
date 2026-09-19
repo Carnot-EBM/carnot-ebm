@@ -1,0 +1,25 @@
+From f5674d64e780bbd0f89096c6597b9e8962a56a84 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 07:56:14 -0400
+Subject: [PATCH 03047/11362] [conductor] In-process docs for PHASE A1 (ARC
+ NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- RE-MEASURE
+ value_weight: does the wired v3 head at weight>0 beat bare-BFS LIVE and
+ finish in budget?
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 01cd0b3f76..b2c06f8b8a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9445,3 +9445,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-20: PHASE D (SOTA-INGESTION; reserved) -- Ingest SOTA: imitation/behavior-cloning + expert-injection for sparse-reward interactive agents -> mapping (✅ Complete) — honest_verdict=complete: arc_imitation_sota_415_mapped_for_v416; results/experiment_4498_arc_imitation_sota_415.json
+ - 2026-06-20: PHASE E (CAPSTONE .415) -- Capstone v415: frame-change efficiency delta, trust-energy verdict, energy-augmentation LOO, deepen status (✅ Complete) — honest_verdict=complete: v415_a1_no_heldout_win_a2_oracle_distinct_a3_beats_0503_l2_not_banked_variant_transfer_0.28; results/experiment_4499_capstone_v415.json
+ - 2026-06-20: OPERATIONAL RETRO .415 -- efficiency retrospective (NOT research results). The authoritative milestone-scoped timing detector reported 0 experiment commits since activation (the recurring false-zero gap documented .363-.412, now extending to .415). On-disk ground truth read this turn shows .415 actually ran exp4490-exp4499 (10 tasks, ~2h23m window 04:37:53Z->07:00:42Z), ALL synthesis/aggregation with no GGUF/CUDA markers, so both RTX 3090s correctly idle and gpu_idle_on_compute_bound_tasks=null (0 compute-bound tasks). Bottleneck = observability, not execution speed; highest-leverage fix = mtime + ops/changelog-window detector fallback + write-time duration_s/compute_bound stamping + detector_gap_suspected flag. results/operational_retro_2026_06_415.json
++- 2026-06-20: PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- RE-MEASURE value_weight: does the wired v3 head at weight>0 beat bare-BFS LIVE and finish in budget? (✅ Complete) — honest_verdict=complete: value_weight_remeasure_null_keep_0_1_of_7; results/experiment_4500_value_weight_remeasure.json
+-- 
+2.55.0
+

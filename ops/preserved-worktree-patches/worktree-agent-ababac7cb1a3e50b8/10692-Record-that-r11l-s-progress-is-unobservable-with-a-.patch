@@ -1,0 +1,78 @@
+From 7bf79465d0338204b2996925832df366224d1d4e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 19:38:53 -0400
+Subject: [PATCH 10692/11362] Record that r11l's progress is unobservable, with
+ a decision point
+
+The cd82/r11l run has been on its first game for 8h56m against ls20's 7h19m and
+wa30's 6h31m, and r11l itself previously finished in 2121 actions.
+
+Liveness is not the question and was checked: ~674% CPU on the worker, ~20 t/s, and
+llama-server /slots reports slot 1 is_processing true on two samples 25s apart.
+
+The gap is that nothing exposes the action count mid-run. The per-game row carrying
+actions, levels and trajectory_supervisor is written only when a game ends, so
+"advancing slowly through a 2500-action budget" and "looping on induction that never
+returns an answer" are indistinguishable from outside. Same class as the supervisor
+being silent by construction, and it recurs on every long game until a mid-run
+progress signal exists.
+
+The loop hypothesis is not idle. The completed ls20/wa30 run returned reasoning_only
+24 of 24 completions with chars_final 0 on both games, which exp5798 already
+diagnosed as qwen_channel_failure_not_competence_failure. If that repeats here the
+induction tier is contributing nothing again and the run is re-measuring the non-LLM
+path at a cost of nine hours and counting.
+
+No intervention now, because the 2500-action budget bounds the game. A decision point
+is recorded instead so this does not drift: if the partial has not landed by
+2026-09-02 03:00Z, treat it as pathological rather than slow, kill the run, keep the
+partial, and read completions_consumed first.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 612cd30915..3edd9d9c0f 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -105,6 +105,34 @@ Not checked: whether exp6845's tool-gap audit is pinned the same way. It returne
+ shape (`tool_gap_audit_complete_score` 1, `tool_gap_effect_eligible_score` 0, gate failing on zero
+ obligations), so it is worth checking before anyone assumes a tool-loop run would unblock it.
+ 
++
++**IN FLIGHT 2026-09-01 23:35Z — r11l is 22% past the longest prior game and its progress is not
++observable.** The cd82/r11l run (pid 727618, eval child 727651) has been on its FIRST game for
++8h56m. Prior comparable runs: ls20 7h19m (2443 actions), wa30 6h31m (2478 actions). r11l itself
++previously completed in 2121 actions.
++
++Liveness is confirmed and is not the question: the worker holds ~674% CPU, tokens decode at
++~20 t/s, and llama-server `/slots` shows slot 1 `is_processing: true` on two samples 25s apart.
++
++**What cannot be seen, and this is the point.** Nothing exposes the ACTION count mid-run. The
++per-game row (with `actions`, `levels`, and now `trajectory_supervisor`) is written only when the
++game ends. So "advancing slowly through its 2500-action budget" and "looping on induction that
++never returns a usable answer" look identical from outside. This is the same class as the
++supervisor being silent by construction, recorded earlier today, and it will recur on every long
++game until a mid-run progress signal exists.
++
++**Why the loop hypothesis is not idle.** The completed ls20/wa30 run returned
++`reasoning_only: 24` of `chat_completions: 24` with `chars_final: 0` on BOTH games — every LLM
++call produced reasoning and no answer (`qwen_channel_failure_not_competence_failure`, exp5798). If
++that repeats here, the induction tier is again contributing nothing and the run is re-measuring
++the non-LLM path at a cost of 9+ hours.
++
++**Decision point, so this does not drift.** The 2500-action budget bounds the game, so no
++intervention now. If r11l has not banked its partial by 2026-09-02 03:00Z (roughly 12h on one
++game, about 64% past the longest prior game), treat it as pathological rather than slow: kill the
++run, keep whatever the partial holds, and read `completions_consumed` first to check whether the
++answer-channel failure recurred.
++
+ **Proposed, not built:** move the artifact write inside the per-game loop so each
+ game banks independently. Small and safe, but it cannot help a run already in
+ flight (the module is imported once at start), so it should be done between runs.
+-- 
+2.55.0
+

@@ -1,0 +1,521 @@
+From d5dad058c669b91dace548270a30b7991d73c1c4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 20:49:33 -0400
+Subject: [PATCH 08071/11362] [outer-loop] name the unregistered-game case
+ instead of raising AttributeError
+
+`adapters.get_adapter()` returns None for an unregistered game, and
+`_live_verifier_for_adapter` walked straight into `adapter.hand_verifier` on it.
+The resulting "AttributeError: 'NoneType' object has no attribute
+'hand_verifier'" reads like a broken solve rather than a missing registration --
+which is why sc25, tn36 and wa30 looked UNSOLVABLE offline when they were merely
+UNREGISTERED, and sat outside every A/B corpus built through
+build_progress_window until someone read the traceback closely.
+
+Raises NoAdapterForGame(LookupError) naming the game, listing what IS registered,
+and pointing at _BUILDERS. A distinct type so a caller sweeping many games can
+skip an unregistered one instead of aborting.
+
+Offline dev path only. The scored agent has ZERO adapter references, verified by
+import-closure analysis over its 43 carnot modules: 0 calls to get_adapter /
+solve_adaptered / adaptered_games, and arc_game_adapters is not in the closure at
+all. That is structural, not luck -- a hidden game can never have an adapter, so
+any dependency would fail every submission rather than intermittently.
+
+Also lands the adapter-depth work this came out of:
+
+  scripts/arc_adapter_depth_probe.py  MEASURES how deep each adapter really
+      solves, one (game, level) per subprocess with a hard timeout so a hang
+      degrades to a recorded TIMEOUT instead of wedging the sweep. It does NOT
+      parse the registry's prose `solver` field -- regexing "L1-L2" out of free
+      text is the pattern-narrower-than-its-concept failure being guarded
+      against. The measured number becomes the claim.
+  tests/python/test_arc_adapter_depth.py  guards that record without re-solving.
+
+The split is forced by measurement: a single solve_adaptered call exceeds 10
+minutes (tr87 L1 took 333s; tr87 L2 timed out at 600s), so a 24-game sweep is a
+milestone-close job, not a pytest. First real data: tr87 depth 1, r11l depth 2 --
+consistent with lf52's registry prose ("L1-L2: GameAdapter ... L3: <other
+mechanism>") and with adapters being a shallow-prefix tool by design.
+
+12 tests. test_wa30_is_the_only_unregistered_public_game pins the current state
+so adding or losing an adapter is a deliberate, visible edit.
+---
+ scripts/arc_adapter_depth_probe.py            | 150 ++++++++++++++++++
+ scripts/arc_loop_solve.py                     |  34 +++-
+ tests/python/test_arc_adapter_depth.py        | 123 ++++++++++++++
+ .../test_arc_loop_solve_no_adapter_guard.py   | 129 +++++++++++++++
+ 4 files changed, 435 insertions(+), 1 deletion(-)
+ create mode 100644 scripts/arc_adapter_depth_probe.py
+ create mode 100644 tests/python/test_arc_adapter_depth.py
+ create mode 100644 tests/python/test_arc_loop_solve_no_adapter_guard.py
+
+diff --git a/scripts/arc_adapter_depth_probe.py b/scripts/arc_adapter_depth_probe.py
+new file mode 100644
+index 0000000000..c9dea24419
+--- /dev/null
++++ b/scripts/arc_adapter_depth_probe.py
+@@ -0,0 +1,150 @@
++#!/usr/bin/env python3
++"""Measure how deep each ARC GameAdapter can actually solve, and pin it as a baseline.
++
++WHY THIS EXISTS (2026-07-31). `ops/arc_solve_registry.yaml` describes each game's solver in
++PROSE -- lf52's says "L1-L2: GameAdapter _lf52 ... L3: <a different mechanism>". Nothing
++checks that prose against the code. An adapter can silently regress -- a refactor, a changed
++action label, a renamed game attribute -- and the registry keeps asserting the old
++capability. That is the same shape as the wa30 gap (a claim with no runnable backing) and
++the same shape as the guards this project keeps finding narrower than their own docstrings.
++
++WHAT IT DELIBERATELY DOES NOT DO: parse the prose. Extracting "L1-L2" from free text with a
++regex is precisely the pattern-matching-narrower-than-the-concept failure being guarded
++against. Instead this MEASURES the real depth and records it. The number becomes the claim.
++
++WHY A SCRIPT AND NOT A TEST. Calibration on 2026-07-31 showed a single `solve_adaptered`
++call can exceed 10 MINUTES -- it is a verifier-routed best-first search, not a replay. A
++24-game sweep therefore belongs in an occasional/milestone-close run, not in pytest. The
++fast half is `tests/python/test_arc_adapter_depth.py`, which guards the RECORD this script
++writes without re-solving anything.
++
++EACH GAME RUNS IN ITS OWN SUBPROCESS with a hard timeout. A hanging solve must degrade to a
++recorded TIMEOUT for that one game, never wedge the sweep -- three prior measurements in
++this project died on exactly that.
++
++Usage:
++    python scripts/arc_adapter_depth_probe.py                    # all adapters, depth<=3
++    python scripts/arc_adapter_depth_probe.py --games tr87,r11l  # a subset
++    python scripts/arc_adapter_depth_probe.py --max-level 2 --timeout 600
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import os
++import subprocess
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO / "python"))
++
++BASELINE = REPO / "ops" / "arc_adapter_depth_baseline.json"
++
++# Run one (game, level) attempt in a child process. Printed as JSON on the last stdout line
++# so a noisy ARC SDK logger cannot corrupt the result.
++_CHILD = r"""
++import json, os, sys, time
++os.environ.setdefault("JAX_PLATFORMS", "cpu")
++os.environ.setdefault("CARNOT_ARC_E3_DIR", "/tmp/adapter_depth_probe/e3")
++os.makedirs(os.environ["CARNOT_ARC_E3_DIR"], exist_ok=True)
++sys.path.insert(0, {repo!r} + "/python")
++sys.path.insert(0, {repo!r} + "/scripts")
++import arc_loop_solve as loop
++game, target = {game!r}, {level!r}
++t0 = time.time()
++try:
++    res = loop.solve_adaptered(game, target)
++    out = {{"ok": True, "reached": int(res.get("reached_level") or 0), "s": round(time.time()-t0, 1)}}
++except Exception as exc:
++    out = {{"ok": False, "error": f"{{type(exc).__name__}}: {{str(exc)[:160]}}", "s": round(time.time()-t0, 1)}}
++print("PROBE_RESULT " + json.dumps(out))
++"""
++
++
++def attempt(game: str, level: int, timeout: int) -> dict:
++    """One bounded attempt. Returns {status, reached|error, s}."""
++    code = _CHILD.format(repo=str(REPO), game=game, level=level)
++    t0 = time.time()
++    try:
++        proc = subprocess.run(
++            [str(REPO / ".venv" / "bin" / "python"), "-c", code],
++            capture_output=True,
++            text=True,
++            timeout=timeout,
++        )
++    except subprocess.TimeoutExpired:
++        return {"status": "timeout", "s": timeout}
++    for line in reversed((proc.stdout or "").splitlines()):
++        if line.startswith("PROBE_RESULT "):
++            payload = json.loads(line[len("PROBE_RESULT ") :])
++            if payload.get("ok"):
++                return {"status": "ok", "reached": payload["reached"], "s": payload["s"]}
++            return {"status": "error", "error": payload.get("error"), "s": payload.get("s")}
++    return {
++        "status": "no_result",
++        "s": round(time.time() - t0, 1),
++        "stderr_tail": (proc.stderr or "")[-200:],
++    }
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument(
++        "--games", default="", help="comma-separated; default = every registered adapter"
++    )
++    ap.add_argument("--max-level", type=int, default=3)
++    ap.add_argument("--timeout", type=int, default=900, help="seconds PER (game, level) attempt")
++    ap.add_argument("--out", default=str(BASELINE))
++    args = ap.parse_args()
++
++    from carnot.agentic import arc_game_adapters as adapters
++
++    games = (
++        [g.strip() for g in args.games.split(",") if g.strip()]
++        if args.games
++        else sorted(adapters._BUILDERS)
++    )
++
++    results: dict[str, dict] = {}
++    for game in games:
++        # Deepest level actually reached. Probe upward and stop at the first level not
++        # reached: depth is monotone by construction (reaching L3 requires passing L2), so
++        # continuing past a failure would only burn the timeout again.
++        depth, detail = 0, []
++        for level in range(1, args.max_level + 1):
++            r = attempt(game, level, args.timeout)
++            detail.append({"level": level, **r})
++            print(f"  {game} L{level}: {r}", flush=True)
++            if r["status"] == "ok" and r.get("reached", 0) >= level:
++                depth = level
++                continue
++            break
++        results[game] = {"measured_depth": depth, "attempts": detail}
++
++    payload = {
++        "schema": "carnot.arc_adapter_depth_baseline.v1",
++        "what_this_is": (
++            "The deepest level each GameAdapter actually reached via solve_adaptered, MEASURED. "
++            "It supersedes the registry's prose `solver` field as the checkable claim. A drop "
++            "below a recorded depth is an adapter regression."
++        ),
++        "caveats": (
++            "measured_depth is a LOWER BOUND, not the adapter's ceiling: it is capped by "
++            "--max-level and by --timeout, and a 'timeout' status means unproven, NOT broken. "
++            "Do not read 0 as 'the adapter does not work' without reading its attempts."
++        ),
++        "max_level_probed": args.max_level,
++        "timeout_s_per_attempt": args.timeout,
++        "games": results,
++    }
++    Path(args.out).write_text(json.dumps(payload, indent=2) + "\n")
++    solid = sum(1 for v in results.values() if v["measured_depth"] >= 1)
++    print(f"\n  {solid}/{len(results)} adapters reached at least L1 -> {args.out}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/arc_loop_solve.py b/scripts/arc_loop_solve.py
+index 36f77e8142..b61e4a987c 100644
+--- a/scripts/arc_loop_solve.py
++++ b/scripts/arc_loop_solve.py
+@@ -43,8 +43,40 @@ def _ckpt_path(game: str) -> Path:
+     return CKPT_DIR / f"arc_verifier_{game}.json"
+ 
+ 
++class NoAdapterForGame(LookupError):
++    """Raised when an adaptered solve is asked for a game that has no GameAdapter.
++
++    A distinct type, not a bare LookupError, so a caller sweeping many games can tell
++    "this game is not registered" apart from a real failure inside a solve and skip it
++    rather than abort.
++    """
++
++
+ def _live_verifier_for_adapter(game: str, adapter):
+-    """Return the live warm-start verifier for an adaptered solve."""
++    """Return the live warm-start verifier for an adaptered solve.
++
++    `adapters.get_adapter()` returns None for a game that has not been registered, and
++    this function used to walk straight into `adapter.hand_verifier` on that None. The
++    resulting `AttributeError: 'NoneType' object has no attribute 'hand_verifier'` is
++    what sc25, tn36 and wa30 raised, and it reads like a broken solve rather than a
++    missing registration -- which is why those games looked unsolvable offline and sat
++    silently outside every A/B corpus built through `build_progress_window` until
++    2026-07-31.
++
++    Fail with a message that names the actual condition and the fix. This is offline
++    dev-path only: the scored agent (`arc_competition_agent.E3AgentPolicy`) has ZERO
++    adapter references -- verified by import-closure analysis -- because hidden games
++    can never have one, so nothing here can affect a submission.
++    """
++    if adapter is None:
++        from carnot.agentic import arc_game_adapters as _adapters
++
++        raise NoAdapterForGame(
++            f"no GameAdapter registered for {game!r}; an adaptered solve is impossible. "
++            f"Registered: {', '.join(_adapters.adaptered_games())}. "
++            "Add one to arc_game_adapters._BUILDERS (see _sc25/_tn36 for the shape -- both "
++            "wrap RE already captured in ops/arc_solve_registry.yaml rather than redoing it)."
++        )
+ 
+     spatial = load_live_spatial_value_head(root=REPO, game=game)
+     if spatial is not None:
+diff --git a/tests/python/test_arc_adapter_depth.py b/tests/python/test_arc_adapter_depth.py
+new file mode 100644
+index 0000000000..76430cde6c
+--- /dev/null
++++ b/tests/python/test_arc_adapter_depth.py
+@@ -0,0 +1,123 @@
++"""Guard the measured ARC adapter-depth baseline.
++
++Spec coverage: REQ-ARC-ADAPTER-DEPTH-001
++
++Origin: 2026-07-31. `ops/arc_solve_registry.yaml` describes each game's solver in PROSE --
++lf52's reads "L1-L2: GameAdapter _lf52 ... L3: <a different mechanism>". Nothing checked that
++prose against the code, so an adapter could silently regress while the registry kept
++asserting the old capability. `scripts/arc_adapter_depth_probe.py` replaces the prose claim
++with a MEASURED number; this file guards that record.
++
++WHY THIS TEST DOES NOT RE-SOLVE ANYTHING. A single `solve_adaptered` call was measured at
++over 10 minutes -- it is a verifier-routed best-first search. A 24-game sweep is a
++milestone-close job, not a pytest. So the expensive measurement lives in the script and this
++test guards its output: every registered adapter is covered, and no recorded depth is ever
++silently lowered.
++
++That split is the point. A test that tried to do the solving would be either too slow to run
++or quietly reduced to a subset -- and a coverage check that silently shrinks is the failure
++mode this whole line of work keeps turning up.
++"""
++
++import json
++
++import pytest
++
++from carnot.paths import repo_root
++
++BASELINE_PATH = repo_root() / "ops" / "arc_adapter_depth_baseline.json"
++
++
++def _baseline() -> dict:
++    if not BASELINE_PATH.exists():
++        pytest.skip(
++            "no adapter-depth baseline yet; generate with "
++            "`python scripts/arc_adapter_depth_probe.py`"
++        )
++    return json.loads(BASELINE_PATH.read_text())
++
++
++def _registered_adapters() -> set[str]:
++    from carnot.agentic import arc_game_adapters as adapters
++
++    return set(adapters._BUILDERS)
++
++
++class TestBaselineCoversEveryAdapter:
++    """REQ-ARC-ADAPTER-DEPTH-001: a new adapter cannot dodge the record by not being in it."""
++
++    def test_every_registered_adapter_is_in_the_baseline(self) -> None:
++        """The check that stops coverage silently shrinking.
++
++        Adding an adapter without re-probing would leave it unmeasured, and an unmeasured
++        adapter is exactly a prose claim again -- which is what this replaced.
++        """
++        recorded = set(_baseline()["games"])
++        missing = _registered_adapters() - recorded
++        assert not missing, (
++            f"adapters with no measured depth: {sorted(missing)}. Re-run "
++            f"`python scripts/arc_adapter_depth_probe.py --games {','.join(sorted(missing))}` "
++            "and commit the updated baseline."
++        )
++
++    def test_baseline_has_no_stale_games(self) -> None:
++        """A removed adapter must not linger as a depth claim nothing can satisfy."""
++        recorded = set(_baseline()["games"])
++        stale = recorded - _registered_adapters()
++        assert not stale, f"baseline records games with no adapter: {sorted(stale)}"
++
++
++class TestBaselineIsHonest:
++    """The record must not overstate what was actually measured."""
++
++    def test_declares_its_own_bounds(self) -> None:
++        """measured_depth is a LOWER BOUND and the artifact has to say so.
++
++        Without the caveat a reader treats 0 as "this adapter is broken" when it may mean
++        "the probe timed out at the cap" -- the difference between a bug and an unproven
++        claim, which is the distinction this whole exercise is about.
++        """
++        b = _baseline()
++        assert "max_level_probed" in b and "timeout_s_per_attempt" in b
++        assert "lower bound" in b.get("caveats", "").lower()
++
++    def test_every_depth_is_supported_by_a_recorded_attempt(self) -> None:
++        """A depth of N must have an attempt at N that actually reached N.
++
++        Guards against a hand-edited baseline: the number and its evidence travel together
++        or the claim is prose again.
++        """
++        for game, rec in _baseline()["games"].items():
++            depth = rec["measured_depth"]
++            if depth == 0:
++                continue
++            hit = [
++                a
++                for a in rec["attempts"]
++                if a.get("level") == depth
++                and a.get("status") == "ok"
++                and a.get("reached", 0) >= depth
++            ]
++            assert hit, f"{game}: claims depth {depth} with no successful attempt at that level"
++
++
++class TestNoSilentRegression:
++    """The reason the file is committed rather than regenerated: it is a ratchet."""
++
++    def test_depths_are_non_negative_ints(self) -> None:
++        for game, rec in _baseline()["games"].items():
++            d = rec["measured_depth"]
++            assert isinstance(d, int) and d >= 0, f"{game}: bad measured_depth {d!r}"
++
++    def test_regression_is_visible_in_the_diff(self) -> None:
++        """Lowering a depth must be a deliberate, reviewable edit.
++
++        This test cannot detect a regression on its own -- re-solving is what detects it, and
++        that is the probe's job. What it CAN do is ensure the baseline is committed and
++        structured so that a drop shows up as a git diff a reviewer sees, rather than being
++        recomputed silently on every run. Stated explicitly so nobody mistakes this file for
++        a live regression detector.
++        """
++        b = _baseline()
++        assert b.get("schema") == "carnot.arc_adapter_depth_baseline.v1"
++        assert b["games"], "empty baseline would make every other assertion vacuous"
+diff --git a/tests/python/test_arc_loop_solve_no_adapter_guard.py b/tests/python/test_arc_loop_solve_no_adapter_guard.py
+new file mode 100644
+index 0000000000..66197d6ee1
+--- /dev/null
++++ b/tests/python/test_arc_loop_solve_no_adapter_guard.py
+@@ -0,0 +1,129 @@
++"""The unregistered-game guard in `arc_loop_solve._live_verifier_for_adapter`.
++
++Spec coverage: REQ-ARC-ADAPTER-DEPTH-001
++
++Origin: 2026-07-31. `adapters.get_adapter()` returns None for a game that was never
++registered, and this function walked straight into `adapter.hand_verifier` on that None.
++The resulting `AttributeError: 'NoneType' object has no attribute 'hand_verifier'` reads
++like a broken solve rather than a missing registration -- so sc25, tn36 and wa30 looked
++UNSOLVABLE offline when they were merely UNREGISTERED, and sat outside every A/B corpus
++built through `build_progress_window` until someone read the traceback carefully.
++
++The distinction the guard buys is not cosmetic. "This game has no adapter" is actionable
++and cheap to fix; "AttributeError deep in a verifier loader" sends you looking for a bug in
++the solver. The first framing would have surfaced sc25/tn36 immediately.
++
++SCOPE, stated so nobody over-reads this: offline dev path only. The scored agent
++(`arc_competition_agent.E3AgentPolicy`) has ZERO adapter references -- confirmed by
++import-closure analysis over its 43 carnot modules -- because a hidden game can never have
++an adapter. Nothing here can affect a submission.
++"""
++
++import sys
++
++import pytest
++
++from carnot.paths import repo_root
++
++sys.path.insert(0, str(repo_root() / "scripts"))
++
++
++@pytest.fixture(scope="module")
++def loop():
++    return pytest.importorskip("arc_loop_solve")
++
++
++@pytest.fixture(scope="module")
++def adapters():
++    from carnot.agentic import arc_game_adapters
++
++    return arc_game_adapters
++
++
++class TestUnregisteredGameIsNamed:
++    """REQ: an unregistered game must say so, not raise AttributeError."""
++
++    def test_none_adapter_raises_no_adapter_for_game(self, loop) -> None:
++        with pytest.raises(loop.NoAdapterForGame):
++            loop._live_verifier_for_adapter("zz99", None)
++
++    def test_it_is_not_an_attributeerror(self, loop) -> None:
++        """The regression itself. AttributeError is what sent the last reader hunting."""
++        with pytest.raises(loop.NoAdapterForGame) as exc:
++            loop._live_verifier_for_adapter("zz99", None)
++        assert not isinstance(exc.value, AttributeError)
++
++    def test_message_names_the_game_and_the_fix(self, loop) -> None:
++        """A guard that fires without saying what to do just relocates the confusion."""
++        with pytest.raises(loop.NoAdapterForGame) as exc:
++            loop._live_verifier_for_adapter("zz99", None)
++        msg = str(exc.value)
++        assert "zz99" in msg
++        assert "_BUILDERS" in msg, "message should name where to register an adapter"
++
++    def test_message_lists_what_is_registered(self, loop, adapters) -> None:
++        """Listing the registered set turns 'is this a typo?' into a one-glance answer."""
++        with pytest.raises(loop.NoAdapterForGame) as exc:
++            loop._live_verifier_for_adapter("zz99", None)
++        msg = str(exc.value)
++        for game in list(adapters.adaptered_games())[:3]:
++            assert game in msg
++
++    def test_distinct_type_so_a_sweep_can_skip(self, loop) -> None:
++        """A caller sweeping every game must be able to tell 'not registered' from a real
++        solve failure and skip, rather than aborting the sweep."""
++        assert issubclass(loop.NoAdapterForGame, LookupError)
++        assert loop.NoAdapterForGame is not LookupError
++
++
++class TestRegisteredGamesUnaffected:
++    """The guard must not change behaviour for the 24 games that DO have adapters."""
++
++    def test_registered_game_still_resolves_a_verifier(self, loop, adapters) -> None:
++        ad = adapters.get_adapter("tr87")
++        assert ad is not None, "tr87 should be registered; fixture assumption broken"
++        verifier, source = loop._live_verifier_for_adapter("tr87", ad)
++        assert verifier is not None
++        assert isinstance(source, str) and source
++
++    def test_wa30_is_the_only_unregistered_public_game(self, adapters) -> None:
++        """Pins the current state so re-registering wa30 -- or losing an adapter -- is a
++        deliberate, visible edit rather than a silent drift.
++
++        wa30 is unregistered because its registry row has no runnable reproduction path at
++        all (`reproduce: None`, `action_model: None`), filed in ops/known-issues.md
++        2026-07-31. Every other public game's RE was already captured and its adapter
++        either existed or was transcribable from the registry.
++        """
++        public_25 = {
++            "ar25",
++            "bp35",
++            "cd82",
++            "cn04",
++            "dc22",
++            "ft09",
++            "g50t",
++            "ka59",
++            "lf52",
++            "lp85",
++            "ls20",
++            "m0r0",
++            "r11l",
++            "re86",
++            "s5i5",
++            "sb26",
++            "sc25",
++            "sk48",
++            "sp80",
++            "su15",
++            "tn36",
++            "tr87",
++            "tu93",
++            "vc33",
++            "wa30",
++        }
++        unregistered = public_25 - set(adapters.adaptered_games())
++        assert unregistered == {"wa30"}, (
++            f"expected only wa30 unregistered, got {sorted(unregistered)}. If an adapter was "
++            "added or removed, update this test deliberately."
++        )
+-- 
+2.55.0
+

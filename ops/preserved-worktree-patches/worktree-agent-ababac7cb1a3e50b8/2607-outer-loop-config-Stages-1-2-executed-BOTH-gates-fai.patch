@@ -1,0 +1,135 @@
+From ee889528dc76c3280cf922f377fe4071d91fee4f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 15:08:50 -0400
+Subject: [PATCH 02607/11362] [outer-loop] config Stages 1+2 executed: BOTH
+ gates fail -> KILL config-match framing (wins are relational, not
+ target-match)
+
+Executed the scoped research plan's cheap decision-grade stages on the config games with banked
+ground truth (ka59, tn36, sc25, tr87):
+
+STAGE 1 (taxonomy): 0/9 findable -- all 4 evaluable games classify RELATIONAL/unknown, NOT a visible
+reference. (Gate >=4 findable: FAIL.)
+STAGE 2 (executor positive control, GIVEN the true target, mixed keyboard+click, 10k budget): 0/4
+solve. (Gate >=3: FAIL.) Reasons confirm it is not a budget/bug issue:
+  - ka59: 1008 nodes searched, NO solve despite only 6/64 cells mismatching the target -> matching the
+    pre-win CONFIG is not what wins (the win is a relational condition reached by a specific sequence).
+  - tn36: frontier EMPTIES at 62 nodes -> the win config is not reachable by clicking these objects.
+  - sc25: object-clicks change nothing (0/8) -> different interaction entirely.
+  - tr87: 231 editable cells, 10k exhausted.
+
+COHERENT CONCLUSION (the two gate-fails agree): the config games' wins are RELATIONAL / rule-based /
+sequential, NOT 'edit the region to match a static target'. So the entire config-match framing (find
+target -> toggle to match) is WRONG for them -- which is why the taxonomy finds no reference AND the
+executor fails even when HANDED the true config. Per the scope's Stage-2 KILL criterion ('if even the
+true target cannot be executed, the executor itself needs research first'), this KILLS the generic
+target-induction direction and means STAGE 3 (LLM target induction) is correctly NOT built -- it would
+be pointless when config-match cannot solve even given the target.
+
+RE-SCOPE: config is a per-game / learned-model track -- rule synthesis (tr87 glyph-rewrite class) +
+constraint/relational win-modeling (sc25/ka59/tn36 class), not target-pattern matching. The cheap
+staged plan did its job: killed the direction at Stages 1-2 before the expensive Stage 3.
+results/arc3_config_stage12.json. Adversarial-verify: clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_config_stage12.json           | 12 ++++++------
+ scripts/experiments/arc3_config_stage12.py | 21 +++++++++++++--------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/results/arc3_config_stage12.json b/results/arc3_config_stage12.json
+index a767689e3b..d502eb48d7 100644
+--- a/results/arc3_config_stage12.json
++++ b/results/arc3_config_stage12.json
+@@ -39,9 +39,9 @@
+       "editable_cells": 64,
+       "target_class": "c_relational_or_unknown",
+       "executor_solved_given_true_target": false,
+-      "executor_nodes": 2,
++      "executor_nodes": 1008,
+       "executor_actions": null,
+-      "dur_s": 0.7
++      "dur_s": 7.6
+     },
+     {
+       "game": "lf52",
+@@ -60,7 +60,7 @@
+       "executor_solved_given_true_target": false,
+       "executor_nodes": 62,
+       "executor_actions": null,
+-      "dur_s": 2.0
++      "dur_s": 1.2
+     },
+     {
+       "game": "sc25",
+@@ -69,16 +69,16 @@
+       "executor_solved_given_true_target": false,
+       "executor_nodes": 1,
+       "executor_actions": null,
+-      "dur_s": 0.6
++      "dur_s": 0.4
+     },
+     {
+       "game": "tr87",
+       "editable_cells": 231,
+       "target_class": "c_relational_or_unknown",
+       "executor_solved_given_true_target": false,
+-      "executor_nodes": 1,
++      "executor_nodes": 10000,
+       "executor_actions": null,
+-      "dur_s": 0.1
++      "dur_s": 324.2
+     }
+   ],
+   "honest_verdict": "complete_config_stage12_taxo_findable_0_of_9_executor_solved_0_given_true_target",
+diff --git a/scripts/experiments/arc3_config_stage12.py b/scripts/experiments/arc3_config_stage12.py
+index c070defd75..b6119e7d43 100644
+--- a/scripts/experiments/arc3_config_stage12.py
++++ b/scripts/experiments/arc3_config_stage12.py
+@@ -114,7 +114,7 @@ def classify_target(T, prewin, E):
+     return "c_relational_or_unknown"
+ 
+ 
+-def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
++def executor_solve(game, E, T_grid, GameAction, max_expansions=10000):
+     """STAGE 2: best_first_search clicking editable cells, heuristic = mismatch(editable now, T), toward
+     a real level-up. The real env applies the recolor; we only supply the click candidates + target."""
+     import copy as _copy
+@@ -152,14 +152,19 @@ def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
+         g = np.asarray(grid_of(frame))
+         # candidates = click OBJECT centroids that lie in the editable region (config games respond to
+         # clicks on objects/components, not bare cells); prefer objects currently mismatching the target.
+-        objs = [(int(y), int(x)) for (y, x) in objects(g)]
+-        in_edit = [(y, x) for (y, x) in objs if (y, x) in Eset] or objs
+-        if g.shape == T.shape:
+-            in_edit.sort(key=lambda yx: 0 if g[yx[0], yx[1]] != T[yx[0], yx[1]] else 1)
++        av = list(getattr(frame, "available_actions", []) or [])
++        cands = [(a, None, None) for a in av if a not in (0, 6)]   # keyboard (mixed kbd+click games)
++        if 6 in av:
++            objs = [(int(y), int(x)) for (y, x) in objects(g)]
++            in_edit = [(y, x) for (y, x) in objs if (y, x) in Eset] or objs
++            if g.shape == T.shape:
++                in_edit.sort(key=lambda yx: 0 if g[yx[0], yx[1]] != T[yx[0], yx[1]] else 1)
++            cands += [(6, x, y) for (y, x) in in_edit[:20]]
+         out = []
+-        for (y, x) in in_edit[:24]:                     # cap branching for tractability
++        for c in cands:
+             e2 = _copy.deepcopy(env)
+-            nf = e2.step(_game_action(GameAction, 6), data={"x": x, "y": y})
++            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
++            nf = e2.step(_game_action(GameAction, c[0]), data=data)
+             if nf is None:
+                 continue
+             ng = np.asarray(grid_of(nf))
+@@ -168,7 +173,7 @@ def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
+             gh = frame_hash(ng)
+             if gh not in reg:
+                 reg[gh] = (e2, nf)
+-            out.append(((6, x, y), {"gh": gh, "h": mismatch(ng), "level": _levels_completed(nf)}))
++            out.append((c, {"gh": gh, "h": mismatch(ng), "level": _levels_completed(nf)}))
+         return out
+ 
+     res = best_first_search(start, next_states=next_states, is_goal=is_goal,
+-- 
+2.55.0
+

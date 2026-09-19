@@ -1,0 +1,1341 @@
+From 3f92ed9b8943a37099be68a314bdb3e2d13e9803 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 13:38:57 -0400
+Subject: [PATCH 05560/11362] [conductor] PHASE INFRA-CRITICAL 2/2 -- MANDATORY
+ overdue priority (pending since .469, escalated across 5+ diagnosis events)
+ -- the retro-timing wiring landed but the false-zero recurred anyway; find
+ the deeper cause. Also fix the unrelated known-issues.md 187-copy duplication
+ bug.
+
+Automated research step by research conductor.
+Task ID: exp5195-retro-timing-real-fix-known-issues-dedup-v476
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           | 834 ++----------------
+ ...t_5195_research_conductor_import_fix.patch |  32 +
+ ...ming_real_fix_known_issues_dedup_v476.json |  89 ++
+ scripts/experiments/run_experiment_1911.py    |  22 +-
+ ...t_experiment_5195_retro_timing_real_fix.py | 226 +++++
+ 6 files changed, 434 insertions(+), 771 deletions(-)
+ create mode 100644 results/experiment_5195_research_conductor_import_fix.patch
+ create mode 100644 results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json
+ create mode 100644 tests/python/test_experiment_5195_retro_timing_real_fix.py
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index deb5375120..b19b1a3217 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 208,
+   "code_violations": 0,
+-  "experiments_checked": 4172,
++  "experiments_checked": 4173,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 13b1128e7f..d6002a57fe 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1337,6 +1337,50 @@ should be filed as a new entry rather than reopening this one.
+ 
+ deliverable: "results/experiment_<next>_retro_timing_fallback_wiring.json"
+ 
++### RESOLVED (root cause found + fix prepared) 2026-07-03 (exp5195): the .475 false-zero was a WIRING-SITE IMPORT BUG, not a missing wire
++
++**Status: root cause FOUND and FIXED (patch ready to apply). The module was never at fault.**
++
++The wiring above DID land (exp5164's `scripts/retro_timing_fallback.py` is imported and
++called in `scripts/research_conductor.py::_run_operational_retrospective`, ~line 2876 —
++`grep -n retro_timing_fallback scripts/research_conductor.py` now shows hits). Yet
++`results/operational_retro_2026_07_475.json` STILL reported `experiments_completed=0`,
++`total_wall_time_minutes=0`, `reconstructed_from_disk_mtime=false`,
++`timing_integrity_mismatch=true` — the exact false-zero the wiring was meant to kill. Per
++the falsifiable gate above ("a subsequent retro still reports a false zero ... is a distinct
++bug in the wiring itself"), this is filed as a new entry.
++
++**Actual root cause (journalctl-confirmed, not theorized):** the wiring used
++`from scripts.retro_timing_fallback import build_retro_timing_fallback`. The conductor is
++launched as `python scripts/research_conductor.py` (systemd `ExecStart`), so `sys.path[0]`
++is the `scripts/` directory, NOT the repo root — the same reason every OTHER sibling helper
++in that file is imported BARE (`from gpu_monitor import`, `from failure_ledger import`,
++`from in_process_doc_reconcile import`, `from adversarial_verify import`). Line 2876 was the
++only `from scripts.X import` in the whole file, so it raised
++`ModuleNotFoundError: No module named 'scripts.retro_timing_fallback'` on EVERY retro pass.
++`journalctl --user -u carnot-conductor` confirms it fired at 06:38:46, 07:48:05, and
++11:16:44 EDT on 2026-07-03 (the last matching the artifact's `generated_at` 15:16:44Z). The
++conductor's outer `except Exception` swallowed it (WARNING only), leaving `experiment_times`
++empty. The `experiments_completed`/`reconstructed_from_disk_mtime`/`timing_integrity_mismatch`
++fields are Python-prefilled + locked in the skeleton (research_conductor.py ~lines 3140/3151/
++3152), so this was NOT an LLM-transcription bug — the zeros are Python-computed from the empty
++list. Calling `build_retro_timing_fallback('2026.07.475', repo_root=<root>)` directly returns
++2 experiments / 147.9 wall-min with the repo root on `sys.path` — the module logic is correct.
++
++**Fix (prepared, not applied — the retro task must not edit research_conductor.py):**
++`results/experiment_5195_research_conductor_import_fix.patch` (verified with `git apply
++--check`) changes line 2876 to import the bare sibling first and fall back to the package
++form. The package form is deliberately retained so the existing wiring-assertion test stays
++green. Regression coverage: `tests/python/test_experiment_5195_retro_timing_real_fix.py`
++reproduces the exact `ModuleNotFoundError` under the conductor's `sys.path` and locks in the
++`.475`-shaped reconstruction. **Operator action:** apply the patch, then backfill corrected
++retros for `.469/.473/.474/.475`.
++
++Note (pre-existing, unrelated): `tests/python/test_retro_timing_fallback.py::
++test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero` currently fails on
++`.474 compute_bound_experiments_count == 3` (now reconstructs `2`) — a hardcoded-expectation
++drift in a test not touched here, independent of the import fix. Left as-is per task scope.
++
+ **Scope boundary (why this couldn't be closed by any of the retro passes that found it):**
+ operational-retrospective tasks are explicitly barred from editing `scripts/research_conductor.py`
+ (per that task's own prompt), so no retro pass — including the ones that diagnosed this — can
+@@ -6014,7 +6058,6 @@ together prevents conflicting fixes from drifting apart.
+ correctly-formatted tasks.
+ 
+ 
+-
+ ### NEW 2026-05-09 (12:50Z): NLA-Class Probing as 16th Verifier (.124+ MANDATORY)
+ 
+ **Origin.** 2026-05-09 ~12:50Z operator directive after reviewing
+@@ -6189,7 +6232,6 @@ as MANDATORY ensures the planner doesn't skip it for research breadth.
+   reduce null-space attack surface, doesn't eliminate it
+ 
+ 
+-
+ ### NEW 2026-05-09 (01:20Z): Gemini Verdict-Prefix Discipline Reinforcement (.122+ MANDATORY)
+ 
+ **Origin.** 2026-05-09 01:04-01:17Z incident: exp1582 Phase-1 Software
+@@ -6257,7 +6299,6 @@ switches back to codex (post-quota-reset), this reinforcement is still
+ useful but slightly redundant.
+ 
+ 
+-
+ ### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track — Decoupled from Paper + Hardware (.121+ MANDATORY)
+ 
+ **Operator directives 2026-05-08 ~21:30Z:**
+@@ -6915,7 +6956,6 @@ abstracts available via:
+                        overhead."
+ 
+ 
+-
+ - id: exp15YY-iclr26-ot-verification-framework-paper-v6
+   title: "ICLR-26 OT-Verification Framework Adoption for Paper-v6"
+   agent_type: codex
+@@ -9935,200 +9975,10 @@ Fast-Slow Variant CONFIRMED (exp1811 + exp1909 replication pair) — paper-v6 §
+ Regex-based tests parsing documentation for experiment counts (like the `test_docs.py` failure that caused the .193 SKIP cascade on exp1901-1908) should be robust to markdown formatting. The README's `**N,NNN**` bolding broke `\d+[+,]?\d*\+?\s*[Ee]xperiments?` before the ~01:30Z fix. Always strip markdown or use flexible matchers.
+ 
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+ ## RESEARCH-STUDYING CANDIDATES
+ - arXiv:2601.17223 (Score 400) - Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
+ 
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+ ### 2026-05-21 18:15 EDT: torch 2.12.0+cpu replaced GPU build in .venv
+ 
+ **Symptom:** Every `.268 dual-condition corpus task (exp2828 FoVer, exp2829 MBPP, exp2830 HumanEval, exp2831 TruthfulQA) emitted `blocked_cuda_unavailable` despite `nvidia-smi` showing 2 × RTX 3090s with driver 595.71.05.
+@@ -10148,13 +9998,6 @@ Result: `torch 2.11.0+cu128`, `cuda compiled: 12.8`, device count = 2.
+ **Affected milestones:** `.268 (all 4 corpus tasks failed precondition before this fix; honest blocked_cuda artifacts in `results/experiment_2828-2831_*.json`). Next conductor iteration should re-attempt and produce real measurements.
+ 
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+ ### 2026-05-21 23:50 EDT: HuggingFace `datasets` package missing from .venv
+ 
+ **Symptom:** `.269 corpus tasks exp2838 MBPP, exp2839 HumanEval, exp2840 TruthfulQA all emitted `blocked_<corpus>_dataset` despite the datasets being publicly accessible. Same surface symptom as the `.268 `blocked_cuda_unavailable` cascade — different root cause.
+@@ -10189,573 +10032,32 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+ 
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++### 2026-06-20 (MANDATORY-NEXT-MILESTONE .417, operator "start shaping .417"): ACTION EFFICIENCY is the bottleneck
+ 
++**Operator 2026-06-20.** Three independent measurements this session converge: the live agent's wall is
++ACTION EFFICIENCY (the scoring metric (human/agent)^2), not solve-rate or config tuning. The live
++explorer explores ~7760 actions to find ~21-action solutions; the value head / frame-change predictor /
++energy-ranking all came back NULL in .415/.416 (they did not reduce actions); config tuning is exhausted
++(value_weight kept 0; the 3 cascade fixes restored speed+solve-rate but left actions unchanged). .417's
++single question: **make the live explorer find solutions with FEWER actions.** Candidate program (full:
++`docs/research-notes/arc-417-shaping-action-efficiency.md`): (1) PRUNE candidates with the structural
++energy + a working predictor (not just rank -- A3's ranking was null); (2) make the frame-change predictor
++actually work (full human-replay corpus -- A2's null was a corpus shortfall); (3) imitation prior from the
++342 human replays; (4) best-first with the LAZY value head (.416 B2); (5) close the forward-edge nav loop.
++Metric: median actions-to-solve (gate baseline 7760) must drop materially without losing solve-rate.
++Finalize the .417 roadmap from this draft + the .416 capstone when .416 closes.
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++### CORRIGENDUM 2026-06-20: .416 A1 (exp4500 value_weight re-measure) TAUTOLOGY flag is a FALSE POSITIVE — conclusion stands
+ 
++`.416 A1` (the operator-requested value_weight re-measurement) was FLAGGED adversarial_verify CRITICAL
++TAUTOLOGY and quarantined. The flag is a FALSE POSITIVE: `eval_budget_median_wall_s=390.0` ==
++`wall_budget_s=390.0` are trivially equal because the value-weighted search SATURATES the 390s (~6.5
++min)/game budget cap on every game (median wall == the cap), not two coincidentally-equal distinct
++measurements. The HONEST VERDICT stands and is CORRECT: `value_weight_remeasure_null_keep_0` — NO
++value_weight>0 beats value_weight=0 within budget (1/7 solve-rate across {0,0.5,1,2,5}). This CONFIRMS
++the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is already 0 (correct, no
++action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
++quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
++value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+ 
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-### 2026-06-20 (MANDATORY-NEXT-MILESTONE .417, operator "start shaping .417"): ACTION EFFICIENCY is the bottleneck
+-
+-**Operator 2026-06-20.** Three independent measurements this session converge: the live agent's wall is
+-ACTION EFFICIENCY (the scoring metric (human/agent)^2), not solve-rate or config tuning. The live
+-explorer explores ~7760 actions to find ~21-action solutions; the value head / frame-change predictor /
+-energy-ranking all came back NULL in .415/.416 (they did not reduce actions); config tuning is exhausted
+-(value_weight kept 0; the 3 cascade fixes restored speed+solve-rate but left actions unchanged). .417's
+-single question: **make the live explorer find solutions with FEWER actions.** Candidate program (full:
+-`docs/research-notes/arc-417-shaping-action-efficiency.md`): (1) PRUNE candidates with the structural
+-energy + a working predictor (not just rank -- A3's ranking was null); (2) make the frame-change predictor
+-actually work (full human-replay corpus -- A2's null was a corpus shortfall); (3) imitation prior from the
+-342 human replays; (4) best-first with the LAZY value head (.416 B2); (5) close the forward-edge nav loop.
+-Metric: median actions-to-solve (gate baseline 7760) must drop materially without losing solve-rate.
+-Finalize the .417 roadmap from this draft + the .416 capstone when .416 closes.
+-
+-### CORRIGENDUM 2026-06-20: .416 A1 (exp4500 value_weight re-measure) TAUTOLOGY flag is a FALSE POSITIVE — conclusion stands
+-
+-`.416 A1` (the operator-requested value_weight re-measurement) was FLAGGED adversarial_verify CRITICAL
+-TAUTOLOGY and quarantined. The flag is a FALSE POSITIVE: `eval_budget_median_wall_s=390.0` ==
+-`wall_budget_s=390.0` are trivially equal because the value-weighted search SATURATES the 390s (~6.5
+-min)/game budget cap on every game (median wall == the cap), not two coincidentally-equal distinct
+-measurements. The HONEST VERDICT stands and is CORRECT: `value_weight_remeasure_null_keep_0` — NO
+-value_weight>0 beats value_weight=0 within budget (1/7 solve-rate across {0,0.5,1,2,5}). This CONFIRMS
+-the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is already 0 (correct, no
+-action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
+-quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
+-value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+-
+-
+-### NEW Phase 4 Canonical Metric MANDATORY
+-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/results/experiment_5195_research_conductor_import_fix.patch b/results/experiment_5195_research_conductor_import_fix.patch
+new file mode 100644
+index 0000000000..3525002cc7
+--- /dev/null
++++ b/results/experiment_5195_research_conductor_import_fix.patch
+@@ -0,0 +1,32 @@
++--- a/scripts/research_conductor.py
+++++ b/scripts/research_conductor.py
++@@ -2873,7 +2873,28 @@
++     retro_timing_reconstructed_from_disk_mtime = False
++     if not experiment_times:
++         try:
++-            from scripts.retro_timing_fallback import build_retro_timing_fallback
+++            # 2026-07-03 (exp5195 root-cause fix): the conductor is
+++            # launched as `python scripts/research_conductor.py`, so
+++            # sys.path[0] is the scripts/ directory, NOT the repo root —
+++            # the same reason every other sibling helper in this file is
+++            # imported bare (gpu_monitor, failure_ledger,
+++            # in_process_doc_reconcile, adversarial_verify). The original
+++            # `from scripts.retro_timing_fallback import ...` raised
+++            # ModuleNotFoundError at conductor runtime (repo root not on
+++            # sys.path); the outer `except Exception` swallowed it and
+++            # left experiment_times empty, reproducing the very false-zero
+++            # this fallback was built to eliminate (the .475 retro passes,
+++            # confirmed in journalctl). Import the bare sibling first
+++            # (works at conductor runtime); fall back to the package path
+++            # (works under pytest, where the repo root IS on sys.path).
+++            # The package form is deliberately retained so the existing
+++            # conductor-wiring assertion test stays green.
+++            try:
+++                from retro_timing_fallback import (  # type: ignore[import-not-found]
+++                    build_retro_timing_fallback,
+++                )
+++            except ModuleNotFoundError:
+++                from scripts.retro_timing_fallback import build_retro_timing_fallback
++ 
++             _fallback_timing = build_retro_timing_fallback(current, repo_root=PROJECT_ROOT)
++             if _fallback_timing.get("experiment_times"):
+diff --git a/results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json b/results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json
+new file mode 100644
+index 0000000000..ce74948720
+--- /dev/null
++++ b/results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json
+@@ -0,0 +1,89 @@
++{
++  "schema": "carnot.retro_timing_real_fix.v1",
++  "experiment": 5195,
++  "experiment_id": "exp5195-retro-timing-real-fix-known-issues-dedup-v476",
++  "title": "Root-cause + fix the .475 retro-timing false-zero (wiring-site import bug), dedup known-issues.md, guard run_experiment_1911.py",
++  "milestone": "2026.07.476",
++  "run_date": "2026-07-03T17:37:57Z",
++  "duration_s": 480,
++  "random_seed": 5195,
++  "reproducibility_checksum": "eb545ea99bca973ed23c136bc7d3fe46b43902afb71d1ee6546222d6d58749cb",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "git_head_at_run": "f2aca3307273ae71f1ae2335158183cdc9b0bb35",
++  "retro_timing_root_cause_found": "The .475 retro false-zero was NOT a missing wire and NOT an LLM-transcription bug. The wiring landed (scripts/research_conductor.py::_run_operational_retrospective imports + calls build_retro_timing_fallback at ~line 2876). The defect is the IMPORT STATEMENT it used: `from scripts.retro_timing_fallback import build_retro_timing_fallback`. The conductor is launched as `python scripts/research_conductor.py` (systemd ExecStart), so sys.path[0] is the scripts/ directory, NOT the repo root; `scripts` is therefore not importable as a package at conductor runtime and the import raised `ModuleNotFoundError: No module named 'scripts.retro_timing_fallback'` on every retro pass. Every other sibling helper in that file is imported BARE (gpu_monitor, failure_ledger, in_process_doc_reconcile, adversarial_verify) precisely because scripts/ (not the repo root) is on sys.path there; line 2876 was the ONLY `from scripts.X import` in the file. The conductor's outer `except Exception` swallowed the ModuleNotFoundError (WARNING only), leaving experiment_times empty. experiments_completed / reconstructed_from_disk_mtime / timing_integrity_mismatch are Python-prefilled + locked into the retro skeleton (research_conductor.py ~lines 3140/3151/3152), so the zeros were Python-computed from the empty list, not an LLM mistranscription. The module logic itself is correct: a direct call returns 2 experiments / 147.9 wall-min for .475 when the repo root is on sys.path.",
++  "build_retro_timing_fallback_direct_call_result": {
++    "raised": false,
++    "exception_if_any": "",
++    "returned_experiment_times_count": 2,
++    "note": "Direct call build_retro_timing_fallback('2026.07.475', repo_root=<repo>) with the repo root on sys.path: no raise, 2 experiments (exp5181, exp5182), total_wall_time_minutes=147.9, activation_bound resolved to commit 1dbcc55e1 (the earlier `[conductor] Activate milestone 2026.07.475`), exp5181/exp5182 both post-activation (not excluded). This proves the .475 false-zero was a runtime IMPORT failure inside the conductor, not a fallback-logic or _activation_bound failure."
++  },
++  "journalctl_exception_found": true,
++  "journalctl_evidence": "journalctl --user -u carnot-conductor: 'retro_timing_fallback reconstruction also failed for 2026.07.475' + 'ModuleNotFoundError: No module named scripts.retro_timing_fallback' at 2026-07-03 06:38:46, 07:48:05, and 11:16:44 EDT (the last = artifact generated_at 15:16:44Z).",
++  "fix_applied_to": "patch file for research_conductor.py (git apply --check verified, not applied)",
++  "fix_patch_path": "results/experiment_5195_research_conductor_import_fix.patch",
++  "fix_description": "Patch changes line 2876 to import the bare sibling first (`from retro_timing_fallback import ...`, matching the conductor's own gpu_monitor / failure_ledger convention, works at conductor runtime) and fall back to the package form on ModuleNotFoundError (works under pytest where the repo root is on sys.path). The package form is deliberately retained in the except branch so the existing `test_2026_07_03_conductor_imports_fallback_module_for_wiring` assertion stays green. Empirically verified: under a scripts/-only sys.path the OLD form raises the exact ModuleNotFoundError while the bare form imports and returns 2 experiments.",
++  "git_apply_check_verified": true,
++  "regression_test_reproduces_475_conditions": true,
++  "regression_test_passes_after_fix": true,
++  "regression_test_path": "tests/python/test_experiment_5195_retro_timing_real_fix.py",
++  "regression_test_detail": "3 new tests, all pass (3 passed in 3.45s): (1) test_exp5195_conductor_runtime_import_reproduces_475_false_zero_and_fix \u2014 subprocess with conductor-style sys.path (scripts/ present, repo root absent) asserts the OLD `from scripts.retro_timing_fallback import` raises ModuleNotFoundError (the exact .475 trigger) and the fixed bare import succeeds + is callable; (2) test_exp5195_build_fallback_reconstructs_475_shape_non_zero \u2014 hermetic 12-task/2-artifact fixture mirroring .475 (one artifact via an atypical commit path) reconstructs 2 experiments, non-zero wall time, 10 missing_deliverables, 0 excluded_pre_activation; (3) test_exp5195_module_importable_both_ways_when_paths_present \u2014 both import forms resolve to the same on-disk module under pytest. The existing 6-test suite: 5 pass; 1 (test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero) fails on a PRE-EXISTING, unrelated hardcoded-expectation drift (.474 compute_bound_experiments_count is now 2, asserted 3) \u2014 not touched, documented in known-issues.",
++  "existing_wiring_test_stays_green": true,
++  "known_issues_md_duplicate_count_before": 187,
++  "known_issues_md_duplicate_count_after": 1,
++  "known_issues_dedup_detail": "ops/known-issues.md had 187 identical '### NEW Phase 4 Canonical Metric MANDATORY' 2-line blocks (spammed by run_experiment_1911.py's unconditional append). Surgically removed 186, kept the first, preserved ALL interleaved unique content (the CONFIRMED section, regex-fragility notes, venv notes, RESEARCH-STUDYING CANDIDATES, the 2026-06-20 corrigendum). File 10761 -> 10019 lines; content-preserving per Documentation Update Rules.",
++  "run_experiment_1911_idempotency_guard_added": true,
++  "run_experiment_1911_guard_detail": "scripts/experiments/run_experiment_1911.py section 4 now reads ops/known-issues.md and only appends the '### NEW Phase 4 Canonical Metric MANDATORY' section when its header is not already present, so re-running the experiment is a no-op for that file (fixes the unconditional open(path,'a').write(...) that produced the 187 duplicates). py_compile OK.",
++  "research_conductor_py_untouched_confirmed": true,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": "exp5164",
++      "path": "results/experiment_5164_retro_timing_falsezero_fix_v473.json",
++      "fields_imported": "the standalone retro_timing_fallback module + its wiring contract"
++    },
++    {
++      "artifact": "results/operational_retro_2026_07_475.json",
++      "fields_imported": "the false-zero symptom (experiments_completed=0, reconstructed_from_disk_mtime=false, timing_integrity_mismatch=true)"
++    },
++    {
++      "source": "journalctl --user -u carnot-conductor (2026-07-03)",
++      "fields_imported": "the swallowed ModuleNotFoundError traceback (root-cause evidence)"
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "resource": "scripts/retro_timing_fallback.py present + importable",
++      "available": true
++    },
++    {
++      "resource": "results/operational_retro_2026_07_475.json present",
++      "available": true
++    },
++    {
++      "resource": "journalctl --user -u carnot-conductor readable",
++      "available": true
++    },
++    {
++      "resource": "git apply available for patch verification",
++      "available": true
++    }
++  ],
++  "field_provenance": {
++    "retro_timing_root_cause_found": {
++      "principle": "State precisely what was actually wrong; do not conflate 'the wiring exists' with 'the bug is fixed'.",
++      "satisfied_by": "journalctl-confirmed ModuleNotFoundError + direct-call proof the module logic is correct + skeleton-lock proof the zeros are Python-computed."
++    },
++    "fix_applied_to": {
++      "principle": "The retro task must not edit research_conductor.py; the fix ships as a git-apply-verified patch for the operator to apply.",
++      "satisfied_by": "results/experiment_5195_research_conductor_import_fix.patch verified with `git apply --check`; tracked file confirmed untouched via git status."
++    },
++    "known_issues_md_duplicate_count_after": {
++      "principle": "Must be 1, not 0 \u2014 content-preserving deduplication, not deletion of the section itself.",
++      "satisfied_by": "grep -c on disk returns 1; interleaved unique sections verified present."
++    }
++  },
++  "methodology_note": "Investigation-only aggregation artifact: no model inference. Root cause established from (a) a direct call to build_retro_timing_fallback, (b) reading the conductor's retro assembly + skeleton-lock code, (c) the git commit timeline of exp5181/exp5182/the retro passes, and (d) the definitive journalctl ModuleNotFoundError. The fix is prepared as a verified patch (not applied, per the do-not-edit-research_conductor.py constraint).",
++  "optimization_direction": "neither \u2014 diagnostic + fix-preparation + doc-cleanup artifact",
++  "acceptance_gate_passed": true,
++  "acceptance_gate_criteria": "Root cause of the .475 false-zero precisely identified (conductor import-path ModuleNotFoundError) and distinguished from the already-landed wiring; a git-apply-verified fix patch produced without touching research_conductor.py; a regression test reproducing the .475 conditions added and passing; ops/known-issues.md deduped 187->1 (content-preserving); run_experiment_1911.py idempotency guard added.",
++  "honest_verdict": "complete: retro_timing_475_false_zero_root_cause_found_and_fixed \u2014 the wiring was present but used `from scripts.retro_timing_fallback import` which raises ModuleNotFoundError under the conductor's scripts/-on-sys.path runtime (journalctl-confirmed); fix prepared as a git-apply-verified patch for research_conductor.py (NOT applied per task scope, so the operator must apply it to close the user-visible symptom); the retro_timing_fallback module itself was never at fault (direct call returns 2 experiments/147.9 min). Separately: known-issues.md deduped 187->1 and run_experiment_1911.py idempotency-guarded. NOT declaring victory on a partial diagnosis \u2014 the code fix is complete and verified, only its application is operator-gated by the do-not-edit-conductor constraint."
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/run_experiment_1911.py b/scripts/experiments/run_experiment_1911.py
+index a8bdea0c36..0a8deb27a1 100644
+--- a/scripts/experiments/run_experiment_1911.py
++++ b/scripts/experiments/run_experiment_1911.py
+@@ -61,11 +61,25 @@ def run():
+ 
+     # 4. Update ops/known-issues.md MANDATORY
+     known_issues_path = "ops/known-issues.md"
++    known_issues_header = "### NEW Phase 4 Canonical Metric MANDATORY"
+     conf_string = "<confirmed per exp1909>" if conf_status == "confirmed" else "<preliminary single-run evidence>"
+-    known_issues_text = f"\n\n### NEW Phase 4 Canonical Metric MANDATORY\nPhase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: {conf_string}).\n"
+-    
+-    with open(known_issues_path, "a") as f:
+-        f.write(known_issues_text)
++    known_issues_text = f"\n\n{known_issues_header}\nPhase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: {conf_string}).\n"
++
++    # Idempotency guard (2026-07-03, exp5195): this block previously appended
++    # the section UNCONDITIONALLY on every invocation. Because the conductor /
++    # outer loop re-ran this experiment many times, that produced 187 identical
++    # duplicate copies of the section in ops/known-issues.md (confirmed on
++    # disk). Only append when the section header is not already present, so a
++    # re-run is a no-op for this file. This mirrors the "never append
++    # duplicate spam" half of the Documentation Update Rules.
++    try:
++        with open(known_issues_path, encoding="utf-8") as f:
++            already_present = known_issues_header in f.read()
++    except OSError:
++        already_present = False
++    if not already_present:
++        with open(known_issues_path, "a") as f:
++            f.write(known_issues_text)
+         
+     with open("results/experiment_1911_phase4_canonical_decision.json", "w") as f:
+         json.dump(artifact, f, indent=2)
+diff --git a/tests/python/test_experiment_5195_retro_timing_real_fix.py b/tests/python/test_experiment_5195_retro_timing_real_fix.py
+new file mode 100644
+index 0000000000..1ecee106d4
+--- /dev/null
++++ b/tests/python/test_experiment_5195_retro_timing_real_fix.py
+@@ -0,0 +1,226 @@
++"""Regression tests for exp5195 — the .475 retro-timing false-zero ROOT CAUSE.
++
++Spec refs: REQ-REPORT-5164 (the standalone fallback contract this hardens),
++SCENARIO-REPORT-5164-FALSE-ZERO.
++
++WHAT WAS ACTUALLY WRONG (and what these tests lock in)
++------------------------------------------------------
++`.473`'s exp5164 built ``scripts/retro_timing_fallback.py`` and wired it into
++``scripts/research_conductor.py::_run_operational_retrospective`` so the retro
++would reconstruct milestone timing from disk when the legacy git-log predicate
++(``"Exp " in msg``) matched nothing. The wiring LANDED — the import and call
++are present in the conductor — yet every ``.475`` retro pass still emitted a
++false zero (``experiments_completed=0``, ``total_wall_time_minutes=0``,
++``reconstructed_from_disk_mtime=False``, ``timing_integrity_mismatch=true``).
++
++The module logic was never the problem. The bug is the IMPORT STATEMENT the
++wiring used::
++
++    from scripts.retro_timing_fallback import build_retro_timing_fallback
++
++The conductor is launched as ``python scripts/research_conductor.py`` (systemd
++``ExecStart=.../python scripts/research_conductor.py``). When CPython runs a
++script by path, ``sys.path[0]`` is the SCRIPT'S DIRECTORY — here ``scripts/`` —
++NOT the repo root. So at conductor runtime ``scripts`` is not importable as a
++package (there is no ``scripts/scripts/`` and the repo root is absent from
++``sys.path``), and the import raised
++``ModuleNotFoundError: No module named 'scripts.retro_timing_fallback'`` on
++EVERY retro pass (confirmed in ``journalctl --user -u carnot-conductor`` at
++06:38:46, 07:48:05, and 11:16:44 EDT on 2026-07-03 — the last matching the
++``operational_retro_2026_07_475.json`` ``generated_at`` of 15:16:44Z). The
++conductor's outer ``except Exception`` swallowed it (logging only a WARNING),
++leaving ``experiment_times`` empty → the false zero.
++
++Every OTHER sibling helper in the same conductor file is imported BARE
++(``from gpu_monitor import ...``, ``from failure_ledger import ...``,
++``from in_process_doc_reconcile import ...``, ``from adversarial_verify import
++...``) precisely because ``scripts/`` — not the repo root — is on ``sys.path``
++at conductor runtime. Line 2876 was the ONLY ``from scripts.X import`` in the
++whole file; that inconsistency was the defect.
++
++The prior wiring test (``test_2026_07_03_conductor_imports_fallback_module_for
++_wiring``) asserted the buggy string was PRESENT — it verified the wrong import
++path existed, never that it actually imports at the conductor's runtime. These
++tests close that gap by exercising the real failure mode.
++
++The fix (prepared as a ``git apply``-verified patch for the
++operator-owned ``research_conductor.py``) imports the bare sibling first and
++keeps the package form as a fallback for pytest, so it works in BOTH
++environments.
++"""
++
++from __future__ import annotations
++
++from datetime import datetime
++import importlib.util
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++from typing import Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SCRIPTS_DIR = REPO_ROOT / "scripts"
++MODULE_PATH = SCRIPTS_DIR / "retro_timing_fallback.py"
++
++
++def _load_module():
++    spec = importlib.util.spec_from_file_location("retro_timing_fallback", MODULE_PATH)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++class FakeGit:
++    """Deterministic git stand-in mirroring the .475 milestone shape.
++
++    Resolves the activation commit for the milestone under test and returns a
++    per-path commit timestamp for the two artifacts that actually landed.
++    """
++
++    def __init__(self, milestone: str, activation: str, path_times: dict[str, str]):
++        self.grep_marker = f"--grep=\\[conductor\\] Activate milestone {milestone}"
++        self.activation = activation
++        self.path_times = path_times
++
++    def __call__(self, args: Sequence[str], cwd: Path) -> str:
++        if self.grep_marker in args:
++            return f"1dbcc55e {self.activation}\n"
++        if "--format=%ai" in args and "--" in args:
++            return f"{self.path_times.get(args[-1], '')}\n"
++        return ""
++
++
++def test_exp5195_conductor_runtime_import_reproduces_475_false_zero_and_fix(
++    tmp_path: Path,
++) -> None:
++    """ROOT CAUSE: under the conductor's runtime sys.path (scripts/ on path,
++    repo root absent), the old ``from scripts.retro_timing_fallback import``
++    raises ModuleNotFoundError — the exact .475 false-zero trigger — while the
++    fixed bare ``from retro_timing_fallback import`` succeeds.
++
++    This reproduces the bug in a subprocess whose sys.path is set exactly like
++    ``python scripts/research_conductor.py`` sees it, so a future refactor that
++    reintroduces the package-only import is caught immediately.
++    """
++
++    code = "\n".join(
++        [
++            "import sys, os",
++            f"scripts_dir = {str(SCRIPTS_DIR)!r}",
++            "repo_root = os.path.dirname(scripts_dir)",
++            # Mimic conductor runtime: scripts/ present, repo root + cwd absent,
++            # stdlib + site-packages retained (retro_timing_fallback needs them).
++            "sys.path = [p for p in sys.path if p not in ('', repo_root, os.getcwd())]",
++            "if scripts_dir not in sys.path:",
++            "    sys.path.insert(0, scripts_dir)",
++            # 1. The .475 root cause: package-form import must fail here.
++            "try:",
++            "    from scripts.retro_timing_fallback import build_retro_timing_fallback",
++            "    print('OLD_IMPORT_UNEXPECTEDLY_WORKED')",
++            "    sys.exit(3)",
++            "except ModuleNotFoundError:",
++            "    pass",
++            # 2. The fix: bare sibling import must succeed and be callable.
++            "from retro_timing_fallback import build_retro_timing_fallback",
++            "assert callable(build_retro_timing_fallback)",
++            "print('FIX_IMPORT_OK')",
++        ]
++    )
++    result = subprocess.run(
++        [sys.executable, "-c", code],
++        cwd=tmp_path,
++        capture_output=True,
++        text=True,
++    )
++    assert result.returncode == 0, f"stdout={result.stdout!r} stderr={result.stderr!r}"
++    assert "FIX_IMPORT_OK" in result.stdout
++    assert "OLD_IMPORT_UNEXPECTEDLY_WORKED" not in result.stdout
++
++
++def test_exp5195_build_fallback_reconstructs_475_shape_non_zero(tmp_path: Path) -> None:
++    """DATA level: with a hermetic fixture mirroring .475's ACTUAL conditions
++    (12 tasks, only 2 producing artifacts — one committed via an atypical
++    commit path), the fallback reconstructs 2 experiments and non-zero wall
++    time. This proves the module was never the false-zero's cause, so the fix
++    must live at the conductor's import site (the patch), not in this module.
++    """
++
++    mod = _load_module()
++
++    # .475 shape: 12 tasks; only exp5181 (archive/activate) and exp5182
++    # (DiffusionGemma root-cause fix, produced by a direct outer-loop script
++    # invocation OUTSIDE the normal task-commit flow) actually landed.
++    tasks = []
++    for seq in range(12):
++        expid = 5181 + seq
++        tasks.append(
++            {
++                "id": f"exp{expid}",
++                "title": f"PHASE task {seq}",
++                "deliverable": f"results/experiment_{expid}_v475.json",
++            }
++        )
++
++    _write_json(
++        tmp_path / "results/experiment_5181_v475.json",
++        {"duration_s": 41.0, "inference_substrate": "aggregation_from_upstream_artifacts"},
++    )
++    _write_json(
++        tmp_path / "results/experiment_5182_v475.json",
++        {"duration_s": 35.0, "inference_substrate": "aggregation_from_upstream_artifacts"},
++    )
++    # The other 10 tasks 3-fail-SKIPPED (poison-test cascade) → no artifact.
++
++    fake_git = FakeGit(
++        milestone="2026.07.475",
++        activation="2026-07-03 03:58:55 -0400",
++        path_times={
++            # exp5181 committed in its own PHASE 0 transition commit:
++            "results/experiment_5181_v475.json": "2026-07-03 04:18:50 -0400",
++            # exp5182 committed via the ATYPICAL path (swept into the retro's
++            # own commit, not a dedicated [conductor] Exp commit):
++            "results/experiment_5182_v475.json": "2026-07-03 06:46:43 -0400",
++        },
++    )
++
++    summary = mod.build_retro_timing_fallback(
++        "2026.07.475", tasks=tasks, repo_root=tmp_path, git_runner=fake_git
++    )
++
++    # The load-bearing regression assertions: NOT a false zero.
++    assert summary["experiments_completed"] == 2
++    assert summary["total_wall_time_minutes"] > 0
++    assert len(summary["missing_deliverables"]) == 10
++    assert summary["excluded_pre_activation"] == []
++    assert summary["activation_bound"]["source"] == "activation_commit"
++
++
++def test_exp5195_module_importable_both_ways_when_paths_present() -> None:
++    """The fix's two-branch import must resolve under EITHER path layout: bare
++    (conductor runtime) and packaged (pytest, repo root on sys.path). Here the
++    pytest environment has the repo root on sys.path, so the packaged form —
++    the patch's fallback branch, and the exact string the existing wiring test
++    asserts — must resolve to the same module object on disk.
++    """
++
++    if str(REPO_ROOT) not in sys.path:
++        sys.path.insert(0, str(REPO_ROOT))
++    from scripts.retro_timing_fallback import build_retro_timing_fallback as packaged
++
++    bare = _load_module().build_retro_timing_fallback
++
++    assert callable(packaged)
++    assert packaged.__name__ == bare.__name__ == "build_retro_timing_fallback"
++    # Both resolve to the one on-disk module file.
++    assert os.path.samefile(
++        sys.modules["scripts.retro_timing_fallback"].__file__, MODULE_PATH
++    )
+-- 
+2.55.0
+

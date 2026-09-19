@@ -1,0 +1,43 @@
+From 741cea4d67c35f6bc299de64529c0a72dbcafb1d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 20:29:52 -0400
+Subject: [PATCH 10698/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a40425bfad..2a46272047 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 99, "phase": "iteration_start", "last_beat": "2026-09-02T00:03:50Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 100, "phase": "iteration_start", "last_beat": "2026-09-02T00:29:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7c7be7d33e..39076ddf66 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17040,3 +17040,4 @@ The l |
+ | 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on in_pro |
+ | 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 1: OPEN 7 days |
+ | 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 0: OPE |
++| 2026-09-02 00:27 UTC | V600 branch retirement and evidence contract | OK | 96 passed, 1 warning in 11.00s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e2d47cba8a..3f898e76ad 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 99, "phase": "iteration_start", "started_at": "2026-09-02T00:03:50Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 100, "phase": "iteration_start", "started_at": "2026-09-02T00:29:43Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

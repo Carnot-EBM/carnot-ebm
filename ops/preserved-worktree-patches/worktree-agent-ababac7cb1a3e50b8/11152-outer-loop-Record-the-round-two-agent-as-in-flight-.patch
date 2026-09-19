@@ -1,0 +1,57 @@
+From 26f49a53f5114b650b99d7bfa106895540a9f79e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 00:23:47 -0400
+Subject: [PATCH 11152/11362] [outer-loop] Record the round-two agent as
+ in-flight state
+
+A second subagent is running in an isolated worktree. Written down so an
+unexplained branch or worktree found later has an owner, and so round one's
+already-merged branch is not confused with it.
+
+Also records in memory that a green sharded test run is not evidence the suite
+collects: three test files were un-collectable for five days while every
+per-task conductor phase passed, because a shard that excludes a broken file
+cannot report it. The cheap check is --collect-only over the whole tree.
+
+That memory entry also carries the counting error I made while sizing the
+problem, since the method matters more than the number: counting test files
+whose carnot module is absent gave 1776 of 3902 and measured a path convention
+rather than breakage. The honest figure was the 3 pytest had already printed.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index c7d43069f5..2873a76a52 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -28,6 +28,23 @@ Eleven commits. Four operator decisions executed, six corrections to my own earl
+   parsing the flag ledger instead of pattern-matching it (SCENARIO-D).
+ - **Flag ledger:** two measured nulls recorded with evidence, three mis-stated states corrected.
+ 
++### IN FLIGHT right now (2026-09-05 04:40Z)
++
++A **second** subagent is running in an isolated worktree, branch
++`worktree-agent-a83acaaa5293c1b8f`. If you find an unexplained agent worktree or branch, this is
++it. Round one's branch (`worktree-agent-afd77ea2887b9da58`) is already MERGED; do not confuse
++them.
++
++Its brief starts from the merged state rather than repeating the baseline, and points at the
++redirect ledger first: `stagnations_unredirected_total` is 64 with `recommendation_available`
++and a `new_arm_specification` nobody has acted on. It was told plainly that the r11l level-2
++result is NOT evidence of a fix, that arm PROPOSAL cannot be model-generated on a 27B local
++generator, and that one level-up credits every pending redirect so absolute per-arm rates are
++unusable. It was told to PROPOSE any multi-hour GPU run, not start one.
++
++If it has not reported and you need the worktree gone, its commits live on that branch ref and
++survive worktree removal.
++
+ ### What is open, most actionable first
+ 
+ 1. **The three triaged audit findings** — all confirmed real, none fixed.
+-- 
+2.55.0
+

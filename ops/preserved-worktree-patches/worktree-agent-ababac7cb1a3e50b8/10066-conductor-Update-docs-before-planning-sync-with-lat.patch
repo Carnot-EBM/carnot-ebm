@@ -1,0 +1,73 @@
+From 58543645a2be066e76db899ae3659bc3ba442adf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 01:08:13 -0400
+Subject: [PATCH 10066/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 5 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index b3f6d8f7e7..736ea76242 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,819</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,831</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index b4491979d3..8dea81a2f1 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T04:19:19Z"
++ "last_scan_utc": "2026-08-27T05:05:22Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 93153b239b..ae4930a1b5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 61, "phase": "iteration_start", "last_beat": "2026-08-27T04:19:18Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 62, "phase": "iteration_start", "last_beat": "2026-08-27T05:05:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 788b51cc98..8b8cb88069 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16602,3 +16602,4 @@ code |
+ | 2026-08-27 01:51 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
+ | 2026-08-27 03:15 UTC | V580 evidence synthesis | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:    ) == "block |
+ | 2026-08-27 04:17 UTC | V580 evidence synthesis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6659_v580_ca |
++| 2026-08-27 05:03 UTC | V580 evidence synthesis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6659_v580_ca |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c4eb56d977..0886b7bd5e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 61, "phase": "iteration_start", "started_at": "2026-08-27T04:19:18Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 62, "phase": "iteration_start", "started_at": "2026-08-27T05:05:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

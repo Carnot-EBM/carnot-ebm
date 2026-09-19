@@ -1,0 +1,1885 @@
+From 5e37de6c95bed6fa7cfe797d00a92a1d9f63edc2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 19:52:23 -0400
+Subject: [PATCH 01847/11362] [conductor] PHASE D2 -- VERIFIER-REGISTRY + GAPS
+ HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval
+ reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806)
+ from cached candidates (zero codex/GGUF/GPU). RECORD the .390 state into
+ ops/verifier_gaps.md: the ORACLE-DISTINCT A3 verdict (exp4210
+ oracle_distinct_beats_vote + delta/CI + verifier_is_oracle=false), the
+ detector AUROCs (exp4208), the verifier-as-reward A-vs-B (exp4211
+ verifier_label_carries_signal + delta/CI), and the certified-ARC-corpus
+ distill-lift (exp4212). Open/update a GAP-ORACLE-DISTINCT ledger entry (the
+ open frontier: a learned verifier that beats vote where execution is not the
+ oracle). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest
+ source of truth (never-prune).
+
+Automated research step by research conductor.
+Task ID: exp4216-verifier-registry-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  74 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  40 +
+ ops/verifier_registry.yaml                    |  75 ++
+ ...ent_4216_verifier_registry_gaps_hygiene.py |  11 +
+ .../verifier_registry_gaps_hygiene_4216.py    | 758 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...t_4216_verifier_registry_gaps_hygiene.json | 226 ++++++
+ ...ent_4216_verifier_registry_gaps_hygiene.py |  19 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ent_4216_verifier_registry_gaps_hygiene.py | 435 ++++++++++
+ 16 files changed, 1655 insertions(+), 17 deletions(-)
+ create mode 100644 python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py
+ create mode 100644 python/carnot/reporting/verifier_registry_gaps_hygiene_4216.py
+ create mode 100644 results/experiment_4216_verifier_registry_gaps_hygiene.json
+ create mode 100644 results/experiment_4216_verifier_registry_gaps_hygiene.py
+ create mode 100644 tests/python/test_experiment_4216_verifier_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index ead830742f..57f138023c 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -14565,6 +14565,80 @@ registry with the Exp 4204 replay plus `.389` reward role, writes
+ `GAP-REWARD-CERTIFIED-CORPUS-4200`, and uses no inference substrate other than
+ cached GAP-4 replay and ledger reconciliation.
+ 
++### REQ-VERIFY-4216: Verifier Registry And Gaps Hygiene For .390 Oracle-Distinct Outcomes
++
++The repository SHALL provide Exp 4216 at
++`python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py` and
++`results/experiment_4216_verifier_registry_gaps_hygiene.py` to keep the
++verifier registry and gap ledger honest for the `.390` oracle-distinct read.
++The runner SHALL replay the canonical GAP-4 ARC-1 cached candidate set offline
++from `results/arc3_gap3_stage2_eval_pool.json.gz` and
++`results/arc3_gap4_induced_programs.json`, SHALL reproduce vote pass@2
++`0.4516` and gated pass@2 `0.5806` bit-exact, and SHALL NOT run Codex, GGUF
++inference, GPU inference, or TRM training.
++
++The runner SHALL read
++`results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json`,
++`results/experiment_4209_oracle_distinct_arc_verifier_build.json`,
++`results/experiment_4208_verifier_as_detector_auroc.json`,
++`results/experiment_4211_verifier_as_reward_finish_synchronous.json`, and
++`results/experiment_4212_certified_arc_corpus_distill_lift.json`. It SHALL
++record the Exp 4210 A3 oracle-distinct verdict as blocked when
++`honest_verdict=blocked_gate_check_failed`, with
++`oracle_distinct_beats_vote=false`, `oracle_distinct_delta=null`,
++`oracle_distinct_ci95=null`, and `verifier_is_oracle=false`; it SHALL record
++the paired Exp 4209 `oracle_distinct_auroc=0.0`,
++`oracle_distinct_auroc_ci95=[0.0, 0.0]`, and `selector_trained=false` as the
++reason the A3 gate did not open. It SHALL record Exp 4208 detector AUROCs per
++domain: sudoku `1.0`, code `1.0`, math `1.0`, and ARC `0.9016`, including
++the CI95 values and `verifier_is_oracle_by_domain`. It SHALL record Exp 4211
++verifier-as-reward A-vs-B status with
++`verifier_label_carries_signal=false`, `a_vs_b_delta=null`,
++`a_vs_b_ci95=null`, `youden_j=0.4137931034482759`,
++`positive_control_confirmed=false`, `accumulated_n.eval=0`, and
++`verifier_is_oracle=true`. It SHALL record Exp 4212 certified ARC corpus status
++with `certified_corpus_size=16`, `certification_precision.rate=0.9375`,
++`distill_lift_delta=0.0`, `distill_lift_ci95=[0.0, 0.0]`,
++`invisible_leash_diagnosis=absent`, and `verifier_is_oracle=true`.
++
++The registry SHALL annotate the `gap4_program_induction_stack` entry with an
++Exp 4216 replay marker and a `.390` oracle-distinct/reward/corpus hygiene role.
++The gaps ledger SHALL contain append-only/replaced-by-marker entries for
++`GAP-ORACLE-DISTINCT`, the detector AUROC status, the verifier-as-reward A-vs-B
++status, and the certified ARC corpus distill-lift note. `GAP-ORACLE-DISTINCT`
++SHALL remain open until a learned verifier beats vote where execution is not
++the oracle. GAP-MOAT status SHALL NOT be upgraded by Exp 4216 because the A3
++oracle-distinct gate is blocked.
++
++The terminal artifact SHALL write
++`results/experiment_4216_verifier_registry_gaps_hygiene.json` with
++`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
++bare bool `registry_updated`, `oracle_distinct_outcome`,
++`detector_aurocs`, `verifier_reward_outcome`, `certified_arc_corpus`, and
++`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
++`field_principles` SHALL include:
++`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth.`;
++`regression_guard_passed` = `BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
++`gaps_updated` = `Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the detector + verifier-as-reward + certified-corpus notes).`
++
++### SCENARIO-VERIFY-4216: Cached Replay Records .390 Oracle-Distinct Truth
++
++Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4208,
++Exp 4209, Exp 4210, Exp 4211, Exp 4212, `ops/verifier_registry.yaml`, and
++`ops/verifier_gaps.md` are readable, when Exp 4216 runs, then it writes the
++terminal artifact with `regression_guard_passed=true`, records vote `0.4516`
++to gated `0.5806`, records the oracle-distinct A3 verdict as blocked with
++`oracle_distinct_beats_vote=false`, `oracle_distinct_delta=null`,
++`oracle_distinct_ci95=null`, `verifier_is_oracle=false`, and
++`oracle_distinct_auroc=0.0`, records the detector AUROCs per domain, records
++the Exp 4211 verifier-as-reward A-vs-B status without fabricating a reward
++signal, records the Exp 4212 certified corpus as absent lift with corpus size
++16, annotates the registry with the Exp 4216 replay plus `.390` hygiene role,
++writes `gaps_updated` containing `GAP-ORACLE-DISTINCT`,
++`GAP-DETECTOR-AUROC-4208`, `GAP-REWARD`, and
++`GAP-REWARD-CERTIFIED-CORPUS-4212`, and uses no inference substrate other than
++cached GAP-4 replay and ledger reconciliation.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index fd7230620c..8668c79f84 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 175,
+   "code_violations": 0,
+-  "experiments_checked": 3235,
++  "experiments_checked": 3236,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 5bff1730d9..71cbabf106 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -859,3 +859,43 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: materialize the seeded checkpoint or run the bounded LoRA-distill follow-up before claiming the certified labels train a better local generator.
+ - priority: high
+ <!-- exp4204-certified-corpus:end -->
++
++<!-- exp4216-oracle-distinct:start -->
++### GAP-ORACLE-DISTINCT: Exp 4216 .390 oracle-distinct A3 frontier
++- status: open_a3_blocked_selector_not_trained
++- evidence: `results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json` with build `results/experiment_4209_oracle_distinct_arc_verifier_build.json`; oracle_distinct_beats_vote=false; oracle_distinct_delta=None; oracle_distinct_ci95=None; verifier_is_oracle=false; selector_trained=false; oracle_distinct_auroc=0.0; oracle_distinct_auroc_ci95=[0.0, 0.0]; honest_verdict=blocked_gate_check_failed. GAP-MOAT unchanged.
++- failure mode: A3 did not execute because the learned oracle-distinct ARC selector was not trained from labeled candidates; no vote-beating off-oracle verifier result is claimable.
++- missing discriminator: a learned verifier that beats vote where execution is not the oracle.
++- candidate design: materialize labeled per-candidate ARC rows, train the oracle-distinct selector out of fold, then rerun A3 only if selector_trained=true.
++- priority: high
++<!-- exp4216-oracle-distinct:end -->
++
++<!-- exp4216-detector-auroc:start -->
++### GAP-DETECTOR-AUROC-4208: Exp 4216 detector AUROC status note
++- status: detector_auroc_recorded_all_domains_ci_exclusive
++- evidence: `results/experiment_4208_verifier_as_detector_auroc.json`; sudoku=1.0; code=1.0; math=1.0; arc=0.9016; ci95_by_domain={'sudoku': [1.0, 1.0], 'code': [1.0, 1.0], 'math': [1.0, 1.0], 'arc': [0.7828, 0.9984]}; verifier_is_oracle_by_domain={'sudoku': True, 'code': True, 'math': True, 'arc': False}.
++- failure mode: detector AUROC says the verifier can separate good from bad candidates, but it does not by itself prove a selector beats vote.
++- missing discriminator: a selection policy that converts detector signal into a vote-beating ranker on a headroom-present pool.
++- candidate design: use the detector as a training or calibration source for the oracle-distinct selector, then measure selection lift with bootstrap CI.
++- priority: medium
++<!-- exp4216-detector-auroc:end -->
++
++<!-- exp4216-gap-reward:start -->
++### GAP-REWARD: Exp 4216 .390 verifier-as-reward A-vs-B axis
++- status: open_accumulating_reward_no_eval_yet
++- evidence: `results/experiment_4211_verifier_as_reward_finish_synchronous.json`; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; youden_j=0.4137931034482759; positive_control_confirmed=false; accumulated_n={'eval': 0, 'train_A': 0, 'train_B': 0, 'train_C': 0, 'train_D': 0}; verifier_is_oracle=true; honest_verdict=progress: accumulating_verifier_reward_training_no_eval_yet.
++- failure mode: the synchronous reward run has not produced held-out A-vs-B eval rows yet, so the verifier-label reward signal remains unproven.
++- missing discriminator: decision-grade evidence that verifier-certified labels beat same-generator random-label controls on held-out hidden tests.
++- candidate design: continue the accumulate/resume path until eval rows exist, then promote only if the A-vs-B CI excludes zero with a valid positive control.
++- priority: high
++<!-- exp4216-gap-reward:end -->
++
++<!-- exp4216-certified-corpus:start -->
++### GAP-REWARD-CERTIFIED-CORPUS-4212: Exp 4216 certified ARC corpus distill-lift note
++- status: certified_corpus_built_distill_lift_absent
++- evidence: `results/experiment_4212_certified_arc_corpus_distill_lift.json`; certified_corpus_size=16; certification_precision.rate=0.9375; distill_lift_delta=0.0; distill_lift_ci95=[0.0, 0.0]; invisible_leash_diagnosis=absent; seeded_generation_status=missing_seeded_checkpoint_conservative_flat; verifier_is_oracle=true; flagged_adversarial=true.
++- failure mode: the certified corpus is high precision, but the seeded-vs-cold read is flat and flagged, so no local distillation lift is established.
++- missing discriminator: measured seeded local generation or LoRA distillation lift from verifier-certified ARC programs.
++- candidate design: materialize a real seeded checkpoint or LoRA-distill follow-up before claiming certified labels improve a local generator.
++- priority: high
++<!-- exp4216-certified-corpus:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index fb49cf90fb..f8fabc2797 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -293,6 +293,20 @@ verifiers:
+     exp4204_youden_j: 0.4137931034482759
+     exp4204_certified_corpus_size: 16
+     exp4204_distill_lift_latent_vs_absent: uninformative
++    eval_exp_4216: results/experiment_4216_verifier_registry_gaps_hygiene.json
++    exp4216_regression_guard_passed: true
++    exp4216_arc1_rule_exec_vote_pass2: 0.4516
++    exp4216_arc1_rule_exec_gated_pass2: 0.5806
++    exp4216_arc1_headroom_recovered: 4
++    exp4216_arc1_vote_wins_lost: 0
++    exp4216_oracle_distinct_beats_vote: false
++    exp4216_oracle_distinct_auroc: 0.0
++    exp4216_oracle_distinct_selector_trained: false
++    exp4216_detector_arc_auroc: 0.9016
++    exp4216_verifier_label_carries_signal: false
++    exp4216_a_vs_b_delta: null
++    exp4216_certified_corpus_size: 16
++    exp4216_distill_lift_latent_vs_absent: absent
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -3849,3 +3863,64 @@ verifiers:
+     - 0.0
+     distill_lift_latent_vs_absent: uninformative
+     eval_exp_4204: results/experiment_4204_verifier_registry_gaps_hygiene.json
++  - role_id: oracle_distinct_reward_corpus_hygiene_4216
++    experiment: results/experiment_4216_verifier_registry_gaps_hygiene.json
++    role: registry_gap_ledger_hygiene_v390
++    status: oracle_distinct_detector_reward_certified_corpus_recorded
++    oracle_distinct_gap_id: GAP-ORACLE-DISTINCT
++    oracle_distinct_status: open_a3_blocked_selector_not_trained
++    oracle_distinct_artifact: results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json
++    oracle_distinct_build_artifact: results/experiment_4209_oracle_distinct_arc_verifier_build.json
++    oracle_distinct_beats_vote: false
++    oracle_distinct_delta: null
++    oracle_distinct_ci95: null
++    oracle_distinct_auroc: 0.0
++    oracle_distinct_auroc_ci95:
++    - 0.0
++    - 0.0
++    selector_trained: false
++    verifier_is_oracle: false
++    detector_gap_id: GAP-DETECTOR-AUROC-4208
++    detector_status: detector_auroc_recorded_all_domains_ci_exclusive
++    detector_auroc_by_domain:
++      sudoku: 1.0
++      code: 1.0
++      math: 1.0
++      arc: 0.9016
++    detector_ci95_by_domain:
++      sudoku:
++      - 1.0
++      - 1.0
++      code:
++      - 1.0
++      - 1.0
++      math:
++      - 1.0
++      - 1.0
++      arc:
++      - 0.7828
++      - 0.9984
++    verifier_reward_gap_id: GAP-REWARD
++    verifier_reward_status: open_accumulating_reward_no_eval_yet
++    verifier_reward_artifact: results/experiment_4211_verifier_as_reward_finish_synchronous.json
++    verifier_label_carries_signal: false
++    a_vs_b_delta: null
++    a_vs_b_ci95: null
++    youden_j: 0.4137931034482759
++    reward_verifier_is_oracle: true
++    certified_corpus_gap_id: GAP-REWARD-CERTIFIED-CORPUS-4212
++    certified_corpus_status: certified_corpus_built_distill_lift_absent
++    certified_corpus_artifact: results/experiment_4212_certified_arc_corpus_distill_lift.json
++    certified_corpus_size: 16
++    certification_precision:
++      certified: 16
++      correct: 15
++      rate: 0.9375
++    distill_lift_delta: 0.0
++    distill_lift_ci95:
++    - 0.0
++    - 0.0
++    distill_lift_latent_vs_absent: absent
++    corpus_verifier_is_oracle: true
++    gap_moat_update: unchanged_a3_blocked_no_oracle_distinct_win
++    eval_exp_4216: results/experiment_4216_verifier_registry_gaps_hygiene.json
+diff --git a/python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py b/python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..cd8713dced
+--- /dev/null
++++ b/python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,11 @@
++"""Run Exp 4216 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4216, SCENARIO-VERIFY-4216.
++"""
++
++from __future__ import annotations
++
++from carnot.reporting.verifier_registry_gaps_hygiene_4216 import main
++
++
++__all__ = ["main"]
+diff --git a/python/carnot/reporting/verifier_registry_gaps_hygiene_4216.py b/python/carnot/reporting/verifier_registry_gaps_hygiene_4216.py
+new file mode 100644
+index 0000000000..ff1ba30292
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_gaps_hygiene_4216.py
+@@ -0,0 +1,758 @@
++"""Exp 4216 registry/gaps hygiene for .390 oracle-distinct outcomes.
++
++Spec refs: REQ-VERIFY-4216, SCENARIO-VERIFY-4216.
++
++This runner is a ledger reconciler. It protects the canonical GAP-4 replay
++numbers from silent drift and records what the .390 artifacts actually say:
++the oracle-distinct A3 gate is blocked, the detector has real AUROC signal, the
++reward A-vs-B read has not evaluated yet, and the certified ARC corpus shows no
++distill lift. No model, GPU, Codex, GGUF, or TRM training path is touched.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as base
++from carnot.reporting import verifier_registry_gaps_hygiene_4153 as exp4153
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++INFERENCE_SUBSTRATE = "cached_gap4_replay_and_ledger_reconciliation"
++
++EXP4216_ARTIFACT_PATH = "results/experiment_4216_verifier_registry_gaps_hygiene.json"
++REGISTRY_PATH = base.REGISTRY_PATH
++GAPS_PATH = base.GAPS_PATH
++
++ARC1_POOL_PATH = exp4153.ARC1_POOL_PATH
++ARC1_PROGRAMS_PATH = exp4153.ARC1_PROGRAMS_PATH
++EXP4208_PATH = "results/experiment_4208_verifier_as_detector_auroc.json"
++EXP4209_PATH = "results/experiment_4209_oracle_distinct_arc_verifier_build.json"
++EXP4210_PATH = "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json"
++EXP4211_PATH = "results/experiment_4211_verifier_as_reward_finish_synchronous.json"
++EXP4212_PATH = "results/experiment_4212_certified_arc_corpus_distill_lift.json"
++
++GAP4_VERIFIER_ID = base.GAP4_VERIFIER_ID
++GAP_ORACLE_DISTINCT_GAP_ID = "GAP-ORACLE-DISTINCT"
++DETECTOR_GAP_ID = "GAP-DETECTOR-AUROC-4208"
++GAP_REWARD_GAP_ID = "GAP-REWARD"
++CERTIFIED_CORPUS_GAP_ID = "GAP-REWARD-CERTIFIED-CORPUS-4212"
++V390_ROLE_ID = "oracle_distinct_reward_corpus_hygiene_4216"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "gaps_updated",
++    "registry_updated",
++    "oracle_distinct_outcome",
++    "detector_aurocs",
++    "verifier_reward_outcome",
++    "certified_arc_corpus",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth.",
++    "regression_guard_passed": (
++        "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent "
++        "verifier regression."
++    ),
++    "gaps_updated": (
++        "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + "
++        "the detector + verifier-as-reward + certified-corpus notes)."
++    ),
++}
++
++
++def _numeric_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        return float(value)
++    return None
++
++
++def _round4(value: float | None) -> float | None:
++    if value is None:
++        return None
++    return round(float(value), 4)
++
++
++def _bool_text(value: Any) -> str:
++    return "true" if bool(value) else "false"
++
++
++def _check_json_resource(repo_root: Path, resource: str, rel_path: str) -> dict[str, Any]:
++    path = repo_root / rel_path
++    if not path.exists():
++        return {"resource": resource, "available": False, "detail": f"missing: {rel_path}"}
++    try:
++        loaded = base._load_json(path)
++    except Exception as exc:  # pragma: no cover - exact JSON exception type varies.
++        return {"resource": resource, "available": False, "detail": f"parse_error: {exc}"}
++    if not isinstance(loaded, dict):  # pragma: no cover - corrupted artifacts are defensive only.
++        return {"resource": resource, "available": False, "detail": "not_json_object"}
++    return {"resource": resource, "available": True, "detail": rel_path}
++
++
++def _first_numeric(payload: dict[str, Any], *keys: str) -> float | None:
++    for key in keys:
++        value = _numeric_or_none(payload.get(key))
++        if value is not None:
++            return value
++    return None
++
++
++def _first_ci95(payload: dict[str, Any], *keys: str) -> list[float] | None:
++    for key in keys:
++        value = payload.get(key)
++        if (
++            isinstance(value, list)
++            and len(value) == 2
++            and all(_numeric_or_none(item) is not None for item in value)
++        ):
++            return [float(value[0]), float(value[1])]
++    return None
++
++
++def check_preconditions(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4216: verify cached replay fixtures, upstream artifacts, and ledgers."""
++    base_preflight = exp4153.check_preconditions(repo_root)
++    checks = list(base_preflight["checks"]) + [
++        _check_json_resource(repo_root, "exp4208_detector_auroc", EXP4208_PATH),
++        _check_json_resource(repo_root, "exp4209_oracle_distinct_build", EXP4209_PATH),
++        _check_json_resource(repo_root, "exp4210_oracle_distinct_a3", EXP4210_PATH),
++        _check_json_resource(repo_root, "exp4211_verifier_reward_a_vs_b", EXP4211_PATH),
++        _check_json_resource(repo_root, "exp4212_certified_arc_corpus", EXP4212_PATH),
++    ]
++    blocked = next((check["resource"] for check in checks if not check["available"]), None)
++    return {"ok": blocked is None, "blocked_resource": blocked, "checks": checks}
++
++
++def replay_gap4_arc1(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """SCENARIO-VERIFY-4216: replay GAP-4 ARC-1 from cached artifacts only."""
++    return exp4153.replay_gap4_arc1(repo_root)
++
++
++def _oracle_distinct_status(outcome: dict[str, Any]) -> str:
++    if outcome.get("oracle_distinct_beats_vote") is True:
++        return "filled_oracle_distinct_beats_vote"
++    if outcome.get("selector_trained") is False:
++        return "open_a3_blocked_selector_not_trained"
++    return "open_a3_not_decision_grade"
++
++
++def classify_oracle_distinct_outcome(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4216: summarize Exp 4210 A3 with the paired Exp 4209 build gate."""
++    a3 = base._load_json(repo_root / EXP4210_PATH)
++    build = base._load_json(repo_root / EXP4209_PATH)
++    verifier_is_oracle = a3.get("verifier_is_oracle")
++    if not isinstance(verifier_is_oracle, bool):
++        verifier_is_oracle = build.get("verifier_is_oracle") is True
++
++    outcome = {
++        "gap_id": GAP_ORACLE_DISTINCT_GAP_ID,
++        "status": "",
++        "artifact_path": EXP4210_PATH,
++        "build_artifact_path": EXP4209_PATH,
++        "source_artifacts": [EXP4210_PATH, EXP4209_PATH],
++        "honest_verdict": str(a3.get("honest_verdict", "")),
++        "build_honest_verdict": str(build.get("honest_verdict", "")),
++        "oracle_distinct_beats_vote": a3.get("oracle_distinct_beats_vote") is True,
++        "oracle_distinct_delta": _first_numeric(
++            a3,
++            "oracle_distinct_delta",
++            "oracle_distinct_vs_vote_delta",
++            "a3_delta_vs_vote",
++        ),
++        "oracle_distinct_ci95": _first_ci95(
++            a3,
++            "oracle_distinct_ci95",
++            "oracle_distinct_delta_ci95",
++            "a3_delta_ci95",
++        ),
++        "verifier_is_oracle": bool(verifier_is_oracle),
++        "selector_trained": build.get("selector_trained") is True,
++        "oracle_distinct_auroc": _numeric_or_none(build.get("oracle_distinct_auroc")) or 0.0,
++        "oracle_distinct_auroc_ci95": _first_ci95(build, "oracle_distinct_auroc_ci95")
++        or [0.0, 0.0],
++        "learned_verifier_path": str(build.get("learned_verifier_path", "")),
++        "gate_check_summary": str(a3.get("gate_check_summary", "")),
++        "blocked_at_layer": str(a3.get("blocked_at_layer", "")),
++        "status_from_artifact": str(a3.get("status", "")),
++        "missing_discriminator": (
++            "learned_verifier_that_beats_vote_where_execution_is_not_the_oracle"
++        ),
++    }
++    outcome["status"] = _oracle_distinct_status(outcome)
++    return outcome
++
++
++def _detector_status(outcome: dict[str, Any]) -> str:
++    beats = outcome.get("detection_beats_random_ci95_exclusive_by_domain", {})
++    if isinstance(beats, dict) and beats and all(value is True for value in beats.values()):
++        return "detector_auroc_recorded_all_domains_ci_exclusive"
++    return "detector_auroc_recorded_with_open_domain_caveats"
++
++
++def classify_detector_aurocs(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4216: summarize Exp 4208 detector AUROCs without making selector claims."""
++    artifact = base._load_json(repo_root / EXP4208_PATH)
++    outcome = {
++        "gap_id": DETECTOR_GAP_ID,
++        "status": "",
++        "artifact_path": EXP4208_PATH,
++        "source_artifacts": [EXP4208_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "detection_auroc_by_domain": dict(artifact.get("detection_auroc_by_domain", {})),
++        "detection_auroc_ci95_by_domain": dict(artifact.get("detection_auroc_ci95_by_domain", {})),
++        "detection_beats_random_ci95_exclusive_by_domain": dict(
++            artifact.get("detection_beats_random_ci95_exclusive_by_domain", {})
++        ),
++        "n_by_domain": dict(artifact.get("n_by_domain", {})),
++        "verifier_is_oracle_by_domain": dict(artifact.get("verifier_is_oracle_by_domain", {})),
++        "selector_headroom_by_domain": dict(artifact.get("selector_headroom_by_domain", {})),
++        "missing_discriminator": (
++            "selection_policy_that_converts_detector_signal_into_vote_beating_ranker"
++        ),
++    }
++    outcome["status"] = _detector_status(outcome)
++    return outcome
++
++
++def _reward_status(outcome: dict[str, Any]) -> str:
++    if outcome.get("verifier_label_carries_signal") is True:
++        return "filled_verifier_label_carries_signal"
++    accumulated = outcome.get("accumulated_n", {})
++    if isinstance(accumulated, dict) and accumulated.get("eval") == 0:
++        return "open_accumulating_reward_no_eval_yet"
++    if _numeric_or_none(outcome.get("a_vs_b_delta")) == 0.0:
++        return "open_no_a_vs_b_signal"
++    return "open_a_vs_b_not_decision_grade"
++
++
++def classify_verifier_reward_outcome(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4216: summarize Exp 4211 A-vs-B without inventing held-out signal."""
++    artifact = base._load_json(repo_root / EXP4211_PATH)
++    outcome = {
++        "gap_id": GAP_REWARD_GAP_ID,
++        "status": "",
++        "artifact_path": EXP4211_PATH,
++        "source_artifacts": [EXP4211_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "verifier_label_carries_signal": artifact.get("verifier_label_carries_signal") is True,
++        "a_vs_b_delta": _first_numeric(artifact, "a_vs_b_delta", "arm_a_vs_b_delta"),
++        "a_vs_b_ci95": _first_ci95(artifact, "a_vs_b_ci95", "arm_a_vs_b_ci95"),
++        "positive_control_confirmed": artifact.get("positive_control_confirmed") is True,
++        "youden_j": _numeric_or_none(artifact.get("youden_j")),
++        "accumulated_n": dict(artifact.get("accumulated_n", {})),
++        "verifier_is_oracle": artifact.get("verifier_is_oracle") is True,
++        "pass_at_1": dict(artifact.get("pass_at_1", {})),
++        "truncation_guard": dict(artifact.get("truncation_guard", {})),
++        "missing_discriminator": (
++            "decision_grade_a_vs_b_training_signal_beyond_random_label_control"
++        ),
++    }
++    outcome["status"] = _reward_status(outcome)
++    return outcome
++
++
++def _certified_corpus_status(outcome: dict[str, Any]) -> str:
++    size = outcome.get("certified_corpus_size")
++    if not isinstance(size, int) or isinstance(size, bool) or size <= 0:
++        return "certified_corpus_empty"
++    diagnosis = str(outcome.get("distill_lift_latent_vs_absent", ""))
++    if diagnosis == "latent":
++        return "certified_corpus_built_distill_lift_latent"
++    if diagnosis == "absent":
++        return "certified_corpus_built_distill_lift_absent"
++    return "certified_corpus_built_distill_lift_uninformative"
++
++
++def classify_certified_arc_corpus(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4216: summarize Exp 4212 corpus size, precision, and lift read."""
++    artifact = base._load_json(repo_root / EXP4212_PATH)
++    outcome = {
++        "gap_id": CERTIFIED_CORPUS_GAP_ID,
++        "status": "",
++        "artifact_path": EXP4212_PATH,
++        "source_artifacts": [EXP4212_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "certified_corpus_size": artifact.get("certified_corpus_size"),
++        "certified_corpus_path": str(artifact.get("certified_corpus_path", "")),
++        "certification_precision": dict(artifact.get("certification_precision", {})),
++        "local_induction_cold": dict(artifact.get("local_induction_cold", {})),
++        "local_induction_with_certified_exemplars": dict(
++            artifact.get("local_induction_with_certified_exemplars", {})
++        ),
++        "distill_lift_delta": _numeric_or_none(artifact.get("distill_lift_delta")),
++        "distill_lift_ci95": _first_ci95(artifact, "distill_lift_ci95") or [],
++        "distill_lift_latent_vs_absent": str(artifact.get("invisible_leash_diagnosis", "")),
++        "seeded_generation_status": str(artifact.get("seeded_generation_status", "")),
++        "verifier_is_oracle": artifact.get("verifier_is_oracle") is True,
++        "flagged_adversarial": artifact.get("flagged_adversarial") is True,
++        "corrigendum_pending": list(artifact.get("corrigendum_pending", [])),
++        "reproducibility_checksum": str(artifact.get("reproducibility_checksum", "")),
++        "inference_substrate": str(artifact.get("inference_substrate", "")),
++        "missing_discriminator": (
++            "seeded_local_generation_or_lora_distillation_lift_from_certified_arc_corpus"
++        ),
++    }
++    outcome["status"] = _certified_corpus_status(outcome)
++    return outcome
++
++
++def ensure_ledgers_record_outcomes(
++    registry: dict[str, Any],
++    gaps_text: str,
++    offline_replay: dict[str, Any],
++    oracle_distinct_outcome: dict[str, Any],
++    detector_aurocs: dict[str, Any],
++    verifier_reward_outcome: dict[str, Any],
++    certified_arc_corpus: dict[str, Any],
++) -> tuple[dict[str, Any], str, dict[str, Any]]:
++    """Return registry and gap text with the .390 outcomes represented."""
++    updated_registry = deepcopy(registry)
++    _ensure_gap4_eval(
++        updated_registry,
++        offline_replay,
++        oracle_distinct_outcome,
++        detector_aurocs,
++        verifier_reward_outcome,
++        certified_arc_corpus,
++    )
++    _ensure_v390_role(
++        updated_registry,
++        oracle_distinct_outcome,
++        detector_aurocs,
++        verifier_reward_outcome,
++        certified_arc_corpus,
++    )
++
++    updated_gaps = base._replace_marked_block(
++        gaps_text,
++        "exp4216-oracle-distinct",
++        _oracle_distinct_gap_block(oracle_distinct_outcome),
++    )
++    updated_gaps = base._replace_marked_block(
++        updated_gaps,
++        "exp4216-detector-auroc",
++        _detector_auroc_gap_block(detector_aurocs),
++    )
++    updated_gaps = base._replace_marked_block(
++        updated_gaps,
++        "exp4216-gap-reward",
++        _verifier_reward_gap_block(verifier_reward_outcome),
++    )
++    updated_gaps = base._replace_marked_block(
++        updated_gaps,
++        "exp4216-certified-corpus",
++        _certified_corpus_gap_block(certified_arc_corpus),
++    )
++    gap_ids = (
++        GAP_ORACLE_DISTINCT_GAP_ID,
++        DETECTOR_GAP_ID,
++        GAP_REWARD_GAP_ID,
++        CERTIFIED_CORPUS_GAP_ID,
++    )
++    touched = [gap_id for gap_id in gap_ids if gap_id in updated_gaps]
++    return (
++        updated_registry,
++        updated_gaps,
++        {
++            "registry_updated": _registry_contains_outcomes(updated_registry),
++            "gaps_updated": touched,
++            "oracle_distinct_recorded": GAP_ORACLE_DISTINCT_GAP_ID in touched,
++            "detector_aurocs_recorded": DETECTOR_GAP_ID in touched,
++            "verifier_reward_recorded": GAP_REWARD_GAP_ID in touched,
++            "certified_corpus_recorded": CERTIFIED_CORPUS_GAP_ID in touched,
++        },
++    )
++
++
++def _ensure_gap4_eval(
++    registry: dict[str, Any],
++    offline_replay: dict[str, Any],
++    oracle_distinct_outcome: dict[str, Any],
++    detector_aurocs: dict[str, Any],
++    verifier_reward_outcome: dict[str, Any],
++    certified_arc_corpus: dict[str, Any],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:  # pragma: no cover - real/minimal registries include this entry.
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    arc1 = offline_replay.get("arc1_rule_exec", {})
++    entry.setdefault("eval", {}).update(
++        {
++            "eval_exp_4216": EXP4216_ARTIFACT_PATH,
++            "exp4216_regression_guard_passed": bool(offline_replay.get("regression_guard_passed")),
++            "exp4216_arc1_rule_exec_vote_pass2": arc1.get("vote_pass2"),
++            "exp4216_arc1_rule_exec_gated_pass2": arc1.get("gated_pass2"),
++            "exp4216_arc1_headroom_recovered": arc1.get("headroom_recovered"),
++            "exp4216_arc1_vote_wins_lost": arc1.get("vote_wins_lost"),
++            "exp4216_oracle_distinct_beats_vote": bool(
++                oracle_distinct_outcome.get("oracle_distinct_beats_vote")
++            ),
++            "exp4216_oracle_distinct_auroc": oracle_distinct_outcome.get("oracle_distinct_auroc"),
++            "exp4216_oracle_distinct_selector_trained": bool(
++                oracle_distinct_outcome.get("selector_trained")
++            ),
++            "exp4216_detector_arc_auroc": detector_aurocs.get("detection_auroc_by_domain", {}).get(
++                "arc"
++            ),
++            "exp4216_verifier_label_carries_signal": bool(
++                verifier_reward_outcome.get("verifier_label_carries_signal")
++            ),
++            "exp4216_a_vs_b_delta": verifier_reward_outcome.get("a_vs_b_delta"),
++            "exp4216_certified_corpus_size": certified_arc_corpus.get("certified_corpus_size"),
++            "exp4216_distill_lift_latent_vs_absent": certified_arc_corpus.get(
++                "distill_lift_latent_vs_absent"
++            ),
++        }
++    )
++
++
++def _ensure_v390_role(
++    registry: dict[str, Any],
++    oracle_distinct_outcome: dict[str, Any],
++    detector_aurocs: dict[str, Any],
++    verifier_reward_outcome: dict[str, Any],
++    certified_arc_corpus: dict[str, Any],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:  # pragma: no cover - guarded by _ensure_gap4_eval.
++        return
++    role = {
++        "role_id": V390_ROLE_ID,
++        "experiment": EXP4216_ARTIFACT_PATH,
++        "role": "registry_gap_ledger_hygiene_v390",
++        "status": "oracle_distinct_detector_reward_certified_corpus_recorded",
++        "oracle_distinct_gap_id": oracle_distinct_outcome.get("gap_id"),
++        "oracle_distinct_status": oracle_distinct_outcome.get("status"),
++        "oracle_distinct_artifact": EXP4210_PATH,
++        "oracle_distinct_build_artifact": EXP4209_PATH,
++        "oracle_distinct_beats_vote": bool(
++            oracle_distinct_outcome.get("oracle_distinct_beats_vote")
++        ),
++        "oracle_distinct_delta": oracle_distinct_outcome.get("oracle_distinct_delta"),
++        "oracle_distinct_ci95": oracle_distinct_outcome.get("oracle_distinct_ci95"),
++        "oracle_distinct_auroc": oracle_distinct_outcome.get("oracle_distinct_auroc"),
++        "oracle_distinct_auroc_ci95": oracle_distinct_outcome.get("oracle_distinct_auroc_ci95"),
++        "selector_trained": bool(oracle_distinct_outcome.get("selector_trained")),
++        "verifier_is_oracle": bool(oracle_distinct_outcome.get("verifier_is_oracle")),
++        "detector_gap_id": detector_aurocs.get("gap_id"),
++        "detector_status": detector_aurocs.get("status"),
++        "detector_auroc_by_domain": detector_aurocs.get("detection_auroc_by_domain", {}),
++        "detector_ci95_by_domain": detector_aurocs.get("detection_auroc_ci95_by_domain", {}),
++        "verifier_reward_gap_id": verifier_reward_outcome.get("gap_id"),
++        "verifier_reward_status": verifier_reward_outcome.get("status"),
++        "verifier_reward_artifact": EXP4211_PATH,
++        "verifier_label_carries_signal": bool(
++            verifier_reward_outcome.get("verifier_label_carries_signal")
++        ),
++        "a_vs_b_delta": verifier_reward_outcome.get("a_vs_b_delta"),
++        "a_vs_b_ci95": verifier_reward_outcome.get("a_vs_b_ci95"),
++        "youden_j": verifier_reward_outcome.get("youden_j"),
++        "reward_verifier_is_oracle": bool(verifier_reward_outcome.get("verifier_is_oracle")),
++        "certified_corpus_gap_id": certified_arc_corpus.get("gap_id"),
++        "certified_corpus_status": certified_arc_corpus.get("status"),
++        "certified_corpus_artifact": EXP4212_PATH,
++        "certified_corpus_size": certified_arc_corpus.get("certified_corpus_size"),
++        "certification_precision": certified_arc_corpus.get("certification_precision", {}),
++        "distill_lift_delta": certified_arc_corpus.get("distill_lift_delta"),
++        "distill_lift_ci95": certified_arc_corpus.get("distill_lift_ci95", []),
++        "distill_lift_latent_vs_absent": certified_arc_corpus.get("distill_lift_latent_vs_absent"),
++        "corpus_verifier_is_oracle": bool(certified_arc_corpus.get("verifier_is_oracle")),
++        "gap_moat_update": "unchanged_a3_blocked_no_oracle_distinct_win",
++        "eval_exp_4216": EXP4216_ARTIFACT_PATH,
++    }
++    old_roles = list(entry.get("registry_roles", []))
++    entry["registry_roles"] = [old for old in old_roles if old.get("role_id") != V390_ROLE_ID] + [
++        role
++    ]
++
++
++def _oracle_distinct_gap_block(outcome: dict[str, Any]) -> str:
++    return (
++        f"### {GAP_ORACLE_DISTINCT_GAP_ID}: Exp 4216 .390 oracle-distinct A3 frontier\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4210_PATH}` with build `{EXP4209_PATH}`; "
++        f"oracle_distinct_beats_vote={_bool_text(outcome.get('oracle_distinct_beats_vote'))}; "
++        f"oracle_distinct_delta={outcome.get('oracle_distinct_delta')}; "
++        f"oracle_distinct_ci95={outcome.get('oracle_distinct_ci95')}; "
++        f"verifier_is_oracle={_bool_text(outcome.get('verifier_is_oracle'))}; "
++        f"selector_trained={_bool_text(outcome.get('selector_trained'))}; "
++        f"oracle_distinct_auroc={outcome.get('oracle_distinct_auroc')}; "
++        f"oracle_distinct_auroc_ci95={outcome.get('oracle_distinct_auroc_ci95')}; "
++        f"honest_verdict={outcome.get('honest_verdict')}. GAP-MOAT unchanged.\n"
++        "- failure mode: A3 did not execute because the learned oracle-distinct ARC selector "
++        "was not trained from labeled candidates; no vote-beating off-oracle verifier result "
++        "is claimable.\n"
++        "- missing discriminator: a learned verifier that beats vote where execution is not "
++        "the oracle.\n"
++        "- candidate design: materialize labeled per-candidate ARC rows, train the "
++        "oracle-distinct selector out of fold, then rerun A3 only if selector_trained=true.\n"
++        "- priority: high\n"
++    )
++
++
++def _detector_auroc_gap_block(outcome: dict[str, Any]) -> str:
++    aurocs = outcome.get("detection_auroc_by_domain", {})
++    ci95 = outcome.get("detection_auroc_ci95_by_domain", {})
++    oracle = outcome.get("verifier_is_oracle_by_domain", {})
++    return (
++        f"### {DETECTOR_GAP_ID}: Exp 4216 detector AUROC status note\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4208_PATH}`; "
++        f"sudoku={aurocs.get('sudoku')}; code={aurocs.get('code')}; "
++        f"math={aurocs.get('math')}; arc={aurocs.get('arc')}; "
++        f"ci95_by_domain={ci95}; verifier_is_oracle_by_domain={oracle}.\n"
++        "- failure mode: detector AUROC says the verifier can separate good from bad "
++        "candidates, but it does not by itself prove a selector beats vote.\n"
++        "- missing discriminator: a selection policy that converts detector signal into a "
++        "vote-beating ranker on a headroom-present pool.\n"
++        "- candidate design: use the detector as a training or calibration source for the "
++        "oracle-distinct selector, then measure selection lift with bootstrap CI.\n"
++        "- priority: medium\n"
++    )
++
++
++def _verifier_reward_gap_block(outcome: dict[str, Any]) -> str:
++    return (
++        f"### {GAP_REWARD_GAP_ID}: Exp 4216 .390 verifier-as-reward A-vs-B axis\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4211_PATH}`; "
++        f"verifier_label_carries_signal="
++        f"{_bool_text(outcome.get('verifier_label_carries_signal'))}; "
++        f"a_vs_b_delta={outcome.get('a_vs_b_delta')}; "
++        f"a_vs_b_ci95={outcome.get('a_vs_b_ci95')}; "
++        f"youden_j={outcome.get('youden_j')}; "
++        f"positive_control_confirmed={_bool_text(outcome.get('positive_control_confirmed'))}; "
++        f"accumulated_n={outcome.get('accumulated_n')}; "
++        f"verifier_is_oracle={_bool_text(outcome.get('verifier_is_oracle'))}; "
++        f"honest_verdict={outcome.get('honest_verdict')}.\n"
++        "- failure mode: the synchronous reward run has not produced held-out A-vs-B eval "
++        "rows yet, so the verifier-label reward signal remains unproven.\n"
++        "- missing discriminator: decision-grade evidence that verifier-certified labels beat "
++        "same-generator random-label controls on held-out hidden tests.\n"
++        "- candidate design: continue the accumulate/resume path until eval rows exist, then "
++        "promote only if the A-vs-B CI excludes zero with a valid positive control.\n"
++        "- priority: high\n"
++    )
++
++
++def _certified_corpus_gap_block(outcome: dict[str, Any]) -> str:
++    precision = outcome.get("certification_precision", {})
++    return (
++        f"### {CERTIFIED_CORPUS_GAP_ID}: Exp 4216 certified ARC corpus distill-lift note\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4212_PATH}`; "
++        f"certified_corpus_size={outcome.get('certified_corpus_size')}; "
++        f"certification_precision.rate={precision.get('rate')}; "
++        f"distill_lift_delta={outcome.get('distill_lift_delta')}; "
++        f"distill_lift_ci95={outcome.get('distill_lift_ci95')}; "
++        f"invisible_leash_diagnosis={outcome.get('distill_lift_latent_vs_absent')}; "
++        f"seeded_generation_status={outcome.get('seeded_generation_status')}; "
++        f"verifier_is_oracle={_bool_text(outcome.get('verifier_is_oracle'))}; "
++        f"flagged_adversarial={_bool_text(outcome.get('flagged_adversarial'))}.\n"
++        "- failure mode: the certified corpus is high precision, but the seeded-vs-cold read "
++        "is flat and flagged, so no local distillation lift is established.\n"
++        "- missing discriminator: measured seeded local generation or LoRA distillation lift "
++        "from verifier-certified ARC programs.\n"
++        "- candidate design: materialize a real seeded checkpoint or LoRA-distill follow-up "
++        "before claiming certified labels improve a local generator.\n"
++        "- priority: high\n"
++    )
++
++
++def _registry_contains_outcomes(registry: dict[str, Any]) -> bool:
++    gap4 = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    return bool(
++        gap4
++        and gap4.get("eval", {}).get("eval_exp_4216") == EXP4216_ARTIFACT_PATH
++        and any(role.get("role_id") == V390_ROLE_ID for role in gap4.get("registry_roles", []))
++    )
++
++
++def build_artifact(
++    *,
++    offline_replay: dict[str, Any],
++    oracle_distinct_outcome: dict[str, Any],
++    detector_aurocs: dict[str, Any],
++    verifier_reward_outcome: dict[str, Any],
++    certified_arc_corpus: dict[str, Any],
++    registry_updated: bool,
++    gaps_updated: list[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4216 terminal JSON payload."""
++    guard_ok = bool(offline_replay.get("regression_guard_passed"))
++    needed = {
++        GAP_ORACLE_DISTINCT_GAP_ID,
++        DETECTOR_GAP_ID,
++        GAP_REWARD_GAP_ID,
++        CERTIFIED_CORPUS_GAP_ID,
++    }
++    gaps_complete = needed.issubset(set(gaps_updated))
++    prefix = "complete:" if guard_ok and gaps_complete and registry_updated else "blocked_"
++    separator = " " if prefix.endswith(":") else ""
++    artifact = {
++        "experiment": "experiment_4216_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4216_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": (
++            f"{prefix}{separator}registry_gaps_reconciled_to_v390_truth_"
++            f"regression_guard_passed_{guard_ok}_"
++            f"oracle_distinct_{oracle_distinct_outcome['status']}_"
++            f"reward_{verifier_reward_outcome['status']}_"
++            f"certified_corpus_{certified_arc_corpus['status']}"
++        ),
++        "regression_guard_passed": guard_ok,
++        "gaps_updated": list(gaps_updated),
++        "registry_updated": bool(registry_updated),
++        "oracle_distinct_outcome": oracle_distinct_outcome,
++        "detector_aurocs": detector_aurocs,
++        "verifier_reward_outcome": verifier_reward_outcome,
++        "certified_arc_corpus": certified_arc_corpus,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "offline_replay": offline_replay,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4208_PATH,
++            EXP4209_PATH,
++            EXP4210_PATH,
++            EXP4211_PATH,
++            EXP4212_PATH,
++        ],
++        "spec_refs": ["REQ-VERIFY-4216", "SCENARIO-VERIFY-4216"],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _blocked_artifact(preflight: dict[str, Any], duration_s: float) -> dict[str, Any]:
++    blocked = str(preflight.get("blocked_resource") or "unknown_resource")
++    artifact = {
++        "experiment": "experiment_4216_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4216_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": f"blocked_{blocked}",
++        "regression_guard_passed": False,
++        "gaps_updated": [],
++        "registry_updated": False,
++        "oracle_distinct_outcome": {
++            "status": "blocked_precondition",
++            "gap_id": GAP_ORACLE_DISTINCT_GAP_ID,
++            "oracle_distinct_beats_vote": False,
++            "verifier_is_oracle": False,
++        },
++        "detector_aurocs": {"status": "blocked_precondition", "gap_id": DETECTOR_GAP_ID},
++        "verifier_reward_outcome": {
++            "status": "blocked_precondition",
++            "gap_id": GAP_REWARD_GAP_ID,
++            "verifier_label_carries_signal": False,
++        },
++        "certified_arc_corpus": {
++            "status": "blocked_precondition",
++            "gap_id": CERTIFIED_CORPUS_GAP_ID,
++            "certified_corpus_size": 0,
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "preconditions": preflight,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4208_PATH,
++            EXP4209_PATH,
++            EXP4210_PATH,
++            EXP4211_PATH,
++            EXP4212_PATH,
++        ],
++        "spec_refs": ["REQ-VERIFY-4216", "SCENARIO-VERIFY-4216"],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Validate required Exp 4216 fields before writing the artifact."""
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_", "success:")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["regression_guard_passed"], bool):
++        raise ValueError("regression_guard_passed must be a BARE bool")
++    if not isinstance(artifact["registry_updated"], bool):
++        raise ValueError("registry_updated must be a bare bool")
++    if not isinstance(artifact["gaps_updated"], list):
++        raise ValueError("gaps_updated must be a list")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required Exp 4216 principles")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++
++
++def run_hygiene(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Run Exp 4216 and write the terminal artifact plus registry/gaps ledgers."""
++    started = time.time()
++    preflight = check_preconditions(repo_root)
++    out_path = repo_root / EXP4216_ARTIFACT_PATH
++    if not preflight["ok"]:
++        artifact = _blocked_artifact(preflight, time.time() - started)
++        base._write_json(out_path, artifact)
++        return artifact
++
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++    registry = base._load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    offline_replay = replay_gap4_arc1(repo_root)
++    oracle_distinct_outcome = classify_oracle_distinct_outcome(repo_root)
++    detector_aurocs = classify_detector_aurocs(repo_root)
++    verifier_reward_outcome = classify_verifier_reward_outcome(repo_root)
++    certified_arc_corpus = classify_certified_arc_corpus(repo_root)
++
++    registry, gaps_text, ledger_summary = ensure_ledgers_record_outcomes(
++        registry,
++        gaps_text,
++        offline_replay,
++        oracle_distinct_outcome,
++        detector_aurocs,
++        verifier_reward_outcome,
++        certified_arc_corpus,
++    )
++    base._write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++
++    artifact = build_artifact(
++        offline_replay=offline_replay,
++        oracle_distinct_outcome=oracle_distinct_outcome,
++        detector_aurocs=detector_aurocs,
++        verifier_reward_outcome=verifier_reward_outcome,
++        certified_arc_corpus=certified_arc_corpus,
++        registry_updated=bool(ledger_summary["registry_updated"]),
++        gaps_updated=list(ledger_summary["gaps_updated"]),
++        duration_s=time.time() - started,
++    )
++    base._write_json(out_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised through the experiment command.
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4216_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 0a34ac9e92..a03304e43b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-14T23:35:14.008508Z",
+-  "duration_s": 0.018207073211669922,
++  "run_date": "2026-06-14T23:51:43.485656Z",
++  "duration_s": 0.021976947784423828,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "532db67be2918cd75c936ede322ef9a8af809713a4df92568ff36f48f5ceef0b",
++  "reproducibility_checksum": "1f5475a4dcef822ff7e2ad297d0524b9bef5299c4dc17f0c793ca92fd97d5f4d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7f7cf4487cfc56512615813def07491cb2051cad"
++    "adversarial_verify_version": "9b9908732b609a78ee9fee1522461060e62f388a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5e5f15067f..28b087b065 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-14T23:35:14.032505Z",
+-  "duration_s": 0.019910573959350586,
++  "run_date": "2026-06-14T23:51:43.516359Z",
++  "duration_s": 0.02495431900024414,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "62e96892a834ddbb3a2533016ad8052af0fcce1b6db260337649c029b7d1d483",
++  "reproducibility_checksum": "0619ec7e52d9a79d8c21282fb2f89a2ae9abfde3451c1d195a14bbeaef283c32",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7f7cf4487cfc56512615813def07491cb2051cad"
++    "adversarial_verify_version": "9b9908732b609a78ee9fee1522461060e62f388a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a40c708eb2..37d5a6855a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1142959594726562,
++  "efficiency_gains_ms": 2.1195411682128906,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 17da7d7be0..fcef6f873c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6560010155662894e-05,
++  "duration_s": 3.098798333667219e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4216_verifier_registry_gaps_hygiene.json b/results/experiment_4216_verifier_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..9388a8b998
+--- /dev/null
++++ b/results/experiment_4216_verifier_registry_gaps_hygiene.json
+@@ -0,0 +1,226 @@
++{
++  "certified_arc_corpus": {
++    "artifact_path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
++    "certification_precision": {
++      "certified": 16,
++      "correct": 15,
++      "rate": 0.9375
++    },
++    "certified_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4212_certified_arc_corpus_distill_lift_corpus.jsonl",
++    "certified_corpus_size": 16,
++    "corrigendum_pending": [
++      {
++        "detail": "distill_lift_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++        "kind": "IMPLAUSIBLE_PERFECT",
++        "severity": "info"
++      },
++      {
++        "detail": "duration_s=1.905772 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++        "kind": "DURATION_TOO_SHORT",
++        "severity": "critical"
++      }
++    ],
++    "distill_lift_ci95": [
++      0.0,
++      0.0
++    ],
++    "distill_lift_delta": 0.0,
++    "distill_lift_latent_vs_absent": "absent",
++    "flagged_adversarial": true,
++    "gap_id": "GAP-REWARD-CERTIFIED-CORPUS-4212",
++    "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
++    "inference_substrate": "cached_codex_programs_plus_local_checkpoint_replay",
++    "local_induction_cold": {
++      "baseline_reference_rate": 0.2258,
++      "demo_perfect": 7,
++      "rate": 0.2258,
++      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4188_sovereign_local_generator_gap4_self_distill.json",
++      "total": 31
++    },
++    "local_induction_with_certified_exemplars": {
++      "condition": "certified_exemplars_in_context_checkpoint_replay",
++      "demo_perfect": 7,
++      "rate": 0.2258,
++      "seeded_exemplar_count": 16,
++      "total": 31
++    },
++    "missing_discriminator": "seeded_local_generation_or_lora_distillation_lift_from_certified_arc_corpus",
++    "reproducibility_checksum": "dccbe9632edc347a",
++    "seeded_generation_status": "missing_seeded_checkpoint_conservative_flat",
++    "source_artifacts": [
++      "results/experiment_4212_certified_arc_corpus_distill_lift.json"
++    ],
++    "status": "certified_corpus_built_distill_lift_absent",
++    "verifier_is_oracle": true
++  },
++  "cited_upstream_artifacts": [
++    "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "results/arc3_gap4_induced_programs.json",
++    "results/experiment_4208_verifier_as_detector_auroc.json",
++    "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
++    "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++    "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
++    "results/experiment_4212_certified_arc_corpus_distill_lift.json"
++  ],
++  "detector_aurocs": {
++    "artifact_path": "results/experiment_4208_verifier_as_detector_auroc.json",
++    "detection_auroc_by_domain": {
++      "arc": 0.9016,
++      "code": 1.0,
++      "math": 1.0,
++      "sudoku": 1.0
++    },
++    "detection_auroc_ci95_by_domain": {
++      "arc": [
++        0.7828,
++        0.9984
++      ],
++      "code": [
++        1.0,
++        1.0
++      ],
++      "math": [
++        1.0,
++        1.0
++      ],
++      "sudoku": [
++        1.0,
++        1.0
++      ]
++    },
++    "detection_beats_random_ci95_exclusive_by_domain": {
++      "arc": true,
++      "code": true,
++      "math": true,
++      "sudoku": true
++    },
++    "gap_id": "GAP-DETECTOR-AUROC-4208",
++    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
++    "missing_discriminator": "selection_policy_that_converts_detector_signal_into_vote_beating_ranker",
++    "n_by_domain": {
++      "arc": 8041,
++      "code": 100,
++      "math": 651,
++      "sudoku": 4224
++    },
++    "selector_headroom_by_domain": {
++      "arc": 0.129,
++      "code": 0.18,
++      "math": 0.0,
++      "sudoku": 0.0007
++    },
++    "source_artifacts": [
++      "results/experiment_4208_verifier_as_detector_auroc.json"
++    ],
++    "status": "detector_auroc_recorded_all_domains_ci_exclusive",
++    "verifier_is_oracle_by_domain": {
++      "arc": false,
++      "code": true,
++      "math": true,
++      "sudoku": true
++    }
++  },
++  "duration_s": 0.809,
++  "experiment": "experiment_4216_verifier_registry_gaps_hygiene",
++  "field_principles": {
++    "gaps_updated": "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the detector + verifier-as-reward + certified-corpus notes).",
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth.",
++    "regression_guard_passed": "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
++  },
++  "gaps_path": "ops/verifier_gaps.md",
++  "gaps_updated": [
++    "GAP-ORACLE-DISTINCT",
++    "GAP-DETECTOR-AUROC-4208",
++    "GAP-REWARD",
++    "GAP-REWARD-CERTIFIED-CORPUS-4212"
++  ],
++  "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
++  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
++  "offline_replay": {
++    "arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++    "expected": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "gap4_arc1_reproduced": true,
++    "no_codex_calls": true,
++    "no_gguf_inference": true,
++    "regression_guard_passed": true
++  },
++  "oracle_distinct_outcome": {
++    "artifact_path": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++    "blocked_at_layer": "conductor_pre_gate",
++    "build_artifact_path": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
++    "build_honest_verdict": "blocked_arc_pool_no_candidate_labels",
++    "gap_id": "GAP-ORACLE-DISTINCT",
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build.selector_trained (actual=False == expected=True)",
++    "honest_verdict": "blocked_gate_check_failed",
++    "learned_verifier_path": "",
++    "missing_discriminator": "learned_verifier_that_beats_vote_where_execution_is_not_the_oracle",
++    "oracle_distinct_auroc": 0.0,
++    "oracle_distinct_auroc_ci95": [
++      0.0,
++      0.0
++    ],
++    "oracle_distinct_beats_vote": false,
++    "oracle_distinct_ci95": null,
++    "oracle_distinct_delta": null,
++    "selector_trained": false,
++    "source_artifacts": [
++      "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++      "results/experiment_4209_oracle_distinct_arc_verifier_build.json"
++    ],
++    "status": "open_a3_blocked_selector_not_trained",
++    "status_from_artifact": "blocked",
++    "verifier_is_oracle": false
++  },
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_updated": true,
++  "regression_guard_passed": true,
++  "schema": "carnot.experiment_4216_verifier_registry_gaps_hygiene.v1",
++  "spec_refs": [
++    "REQ-VERIFY-4216",
++    "SCENARIO-VERIFY-4216"
++  ],
++  "verifier_reward_outcome": {
++    "a_vs_b_ci95": null,
++    "a_vs_b_delta": null,
++    "accumulated_n": {
++      "eval": 0,
++      "train_A": 0,
++      "train_B": 0,
++      "train_C": 0,
++      "train_D": 0
++    },
++    "artifact_path": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
++    "gap_id": "GAP-REWARD",
++    "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
++    "missing_discriminator": "decision_grade_a_vs_b_training_signal_beyond_random_label_control",
++    "pass_at_1": {},
++    "positive_control_confirmed": false,
++    "source_artifacts": [
++      "results/experiment_4211_verifier_as_reward_finish_synchronous.json"
++    ],
++    "status": "open_accumulating_reward_no_eval_yet",
++    "truncation_guard": {
++      "max_allowed_truncation_rate": 0.05,
++      "max_observed_truncation_rate": null
++    },
++    "verifier_is_oracle": true,
++    "verifier_label_carries_signal": false,
++    "youden_j": 0.4137931034482759
++  }
++}
+diff --git a/results/experiment_4216_verifier_registry_gaps_hygiene.py b/results/experiment_4216_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..a446274e94
+--- /dev/null
++++ b/results/experiment_4216_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,19 @@
++"""Run Exp 4216 verifier registry/gaps hygiene from the results entrypoint.
++
++Spec refs: REQ-VERIFY-4216, SCENARIO-VERIFY-4216.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting import verifier_registry_gaps_hygiene_4216 as exp4216  # noqa: E402
++
++if __name__ == "__main__":  # pragma: no cover
++    exp4216.main()
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1b1b2acb92..2ed8ae31b7 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T23:35:04Z",
+-  "finished_at": "2026-06-14T23:35:04Z",
++  "started_at": "2026-06-14T23:51:34Z",
++  "finished_at": "2026-06-14T23:51:34Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 3dd82fd1f3..442715e318 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T23:35:04Z",
+-  "finished_at": "2026-06-14T23:35:04Z",
++  "started_at": "2026-06-14T23:51:34Z",
++  "finished_at": "2026-06-14T23:51:34Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index efef05f8fa..0577d71566 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T23:35:04Z",
+-  "finished_at": "2026-06-14T23:35:05Z",
++  "started_at": "2026-06-14T23:51:34Z",
++  "finished_at": "2026-06-14T23:51:34Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4216_verifier_registry_gaps_hygiene.py b/tests/python/test_experiment_4216_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..87d8905810
+--- /dev/null
++++ b/tests/python/test_experiment_4216_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,435 @@
++"""Tests for Exp 4216 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4216, SCENARIO-VERIFY-4216.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++import shutil
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4216_verifier_registry_gaps_hygiene as exp4216_wrapper
++from carnot.reporting import verifier_registry_gaps_hygiene_4216 as exp4216
++
++
++REPO_ROOT = Path(__file__).parents[2]
++SPEC_PATH = Path("openspec/capabilities/verification/spec.md")
++RESULTS_WRAPPER_PATH = Path("results/experiment_4216_verifier_registry_gaps_hygiene.py")
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": exp4216.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "code_path": "python/carnot/agentic/gap4_program_induction_stack.py",
++                "eval": {"metric": "pass_at_1"},
++                "registry_roles": [],
++            }
++        ]
++    }
++
++
++def _write_minimal_repo(tmp_path: Path) -> None:
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text(
++        "# Verifier Gaps\n\nHistorical note remains.\n",
++        encoding="utf-8",
++    )
++    for name in (
++        "arc3_gap3_stage2_eval_pool.json.gz",
++        "arc3_gap4_induced_programs.json",
++        "experiment_4208_verifier_as_detector_auroc.json",
++        "experiment_4209_oracle_distinct_arc_verifier_build.json",
++        "experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++        "experiment_4211_verifier_as_reward_finish_synchronous.json",
++        "experiment_4212_certified_arc_corpus_distill_lift.json",
++    ):
++        shutil.copy2(REPO_ROOT / "results" / name, tmp_path / "results" / name)
++
++
++def test_req_4216_spec_declared() -> None:
++    """REQ-VERIFY-4216: OpenSpec declares the .390 hygiene artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-4216",
++        "SCENARIO-VERIFY-4216",
++        "python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py",
++        RESULTS_WRAPPER_PATH.as_posix(),
++        "experiment_4216_verifier_registry_gaps_hygiene.json",
++        "experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
++        "experiment_4209_oracle_distinct_arc_verifier_build.json",
++        "experiment_4208_verifier_as_detector_auroc.json",
++        "experiment_4211_verifier_as_reward_finish_synchronous.json",
++        "experiment_4212_certified_arc_corpus_distill_lift.json",
++        "oracle_distinct_auroc=0.0",
++        "sudoku `1.0`, code `1.0`, math `1.0`, and ARC `0.9016`",
++        "verifier_label_carries_signal=false",
++        "youden_j=0.4137931034482759",
++        "distill_lift_ci95=[0.0, 0.0]",
++        "GAP-MOAT status SHALL NOT be upgraded",
++        exp4216.GAP_ORACLE_DISTINCT_GAP_ID,
++        exp4216.DETECTOR_GAP_ID,
++        exp4216.GAP_REWARD_GAP_ID,
++        exp4216.CERTIFIED_CORPUS_GAP_ID,
++    ):
++        assert marker in spec
++    assert exp4216.FIELD_PRINCIPLES["honest_verdict"] in spec
++    assert exp4216.FIELD_PRINCIPLES["regression_guard_passed"] in spec
++    assert exp4216.FIELD_PRINCIPLES["gaps_updated"] in spec
++    assert exp4216_wrapper.main is exp4216.main
++
++
++def test_scenario_4216_preconditions_and_replay_are_bitexact() -> None:
++    """SCENARIO-VERIFY-4216: cached GAP-4 replay reproduces exactly."""
++
++    preflight = exp4216.check_preconditions(REPO_ROOT)
++    assert preflight["ok"] is True
++    assert preflight["blocked_resource"] is None
++    assert {check["resource"] for check in preflight["checks"]} == {
++        "gap4_arc1_candidate_fixtures",
++        "verifier_registry",
++        "verifier_gaps",
++        "exp4208_detector_auroc",
++        "exp4209_oracle_distinct_build",
++        "exp4210_oracle_distinct_a3",
++        "exp4211_verifier_reward_a_vs_b",
++        "exp4212_certified_arc_corpus",
++    }
++
++    replay = exp4216.replay_gap4_arc1(REPO_ROOT)
++    assert replay["regression_guard_passed"] is True
++    assert replay["arc1_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.4516),
++        "gated_pass2": pytest.approx(0.5806),
++        "headroom_recovered": 4,
++        "vote_wins_lost": 0,
++    }
++    assert replay["no_codex_calls"] is True
++    assert replay["no_gguf_inference"] is True
++
++
++def test_req_4216_classifies_oracle_detector_reward_and_corpus_truth() -> None:
++    """REQ-VERIFY-4216: .390 upstream outcomes are classified without spin."""
++
++    oracle = exp4216.classify_oracle_distinct_outcome(REPO_ROOT)
++    assert oracle["gap_id"] == exp4216.GAP_ORACLE_DISTINCT_GAP_ID
++    assert oracle["status"] == "open_a3_blocked_selector_not_trained"
++    assert oracle["oracle_distinct_beats_vote"] is False
++    assert oracle["oracle_distinct_delta"] is None
++    assert oracle["oracle_distinct_ci95"] is None
++    assert oracle["verifier_is_oracle"] is False
++    assert oracle["selector_trained"] is False
++    assert oracle["oracle_distinct_auroc"] == pytest.approx(0.0)
++    assert oracle["oracle_distinct_auroc_ci95"] == [0.0, 0.0]
++
++    detector = exp4216.classify_detector_aurocs(REPO_ROOT)
++    assert detector["gap_id"] == exp4216.DETECTOR_GAP_ID
++    assert detector["status"] == "detector_auroc_recorded_all_domains_ci_exclusive"
++    assert detector["detection_auroc_by_domain"] == {
++        "sudoku": pytest.approx(1.0),
++        "code": pytest.approx(1.0),
++        "math": pytest.approx(1.0),
++        "arc": pytest.approx(0.9016),
++    }
++    assert detector["verifier_is_oracle_by_domain"]["arc"] is False
++    assert detector["selector_headroom_by_domain"]["arc"] == pytest.approx(0.129)
++
++    reward = exp4216.classify_verifier_reward_outcome(REPO_ROOT)
++    assert reward["gap_id"] == exp4216.GAP_REWARD_GAP_ID
++    assert reward["status"] == "open_accumulating_reward_no_eval_yet"
++    assert reward["verifier_label_carries_signal"] is False
++    assert reward["a_vs_b_delta"] is None
++    assert reward["a_vs_b_ci95"] is None
++    assert reward["positive_control_confirmed"] is False
++    assert reward["youden_j"] == pytest.approx(0.4137931034482759)
++    assert reward["accumulated_n"]["eval"] == 0
++    assert reward["verifier_is_oracle"] is True
++
++    corpus = exp4216.classify_certified_arc_corpus(REPO_ROOT)
++    assert corpus["gap_id"] == exp4216.CERTIFIED_CORPUS_GAP_ID
++    assert corpus["status"] == "certified_corpus_built_distill_lift_absent"
++    assert corpus["certified_corpus_size"] == 16
++    assert corpus["certification_precision"]["rate"] == pytest.approx(0.9375)
++    assert corpus["distill_lift_delta"] == pytest.approx(0.0)
++    assert corpus["distill_lift_ci95"] == [0.0, 0.0]
++    assert corpus["distill_lift_latent_vs_absent"] == "absent"
++    assert corpus["verifier_is_oracle"] is True
++
++
++def test_scenario_4216_ensure_ledgers_record_outcomes_and_registry_role() -> None:
++    """SCENARIO-VERIFY-4216: registry and gaps carry the .390 truth."""
++
++    replay = exp4216.replay_gap4_arc1(REPO_ROOT)
++    oracle = exp4216.classify_oracle_distinct_outcome(REPO_ROOT)
++    detector = exp4216.classify_detector_aurocs(REPO_ROOT)
++    reward = exp4216.classify_verifier_reward_outcome(REPO_ROOT)
++    corpus = exp4216.classify_certified_arc_corpus(REPO_ROOT)
++
++    registry, gaps, summary = exp4216.ensure_ledgers_record_outcomes(
++        _minimal_registry(),
++        "# Verifier Gaps\n\nHistorical note remains.\n",
++        replay,
++        oracle,
++        detector,
++        reward,
++        corpus,
++    )
++
++    assert summary == {
++        "registry_updated": True,
++        "gaps_updated": [
++            exp4216.GAP_ORACLE_DISTINCT_GAP_ID,
++            exp4216.DETECTOR_GAP_ID,
++            exp4216.GAP_REWARD_GAP_ID,
++            exp4216.CERTIFIED_CORPUS_GAP_ID,
++        ],
++        "oracle_distinct_recorded": True,
++        "detector_aurocs_recorded": True,
++        "verifier_reward_recorded": True,
++        "certified_corpus_recorded": True,
++    }
++    gap4 = registry["verifiers"][0]
++    assert gap4["eval"]["eval_exp_4216"] == exp4216.EXP4216_ARTIFACT_PATH
++    assert gap4["eval"]["exp4216_regression_guard_passed"] is True
++    assert gap4["eval"]["exp4216_arc1_rule_exec_vote_pass2"] == pytest.approx(0.4516)
++    assert gap4["eval"]["exp4216_arc1_rule_exec_gated_pass2"] == pytest.approx(0.5806)
++    assert gap4["eval"]["exp4216_oracle_distinct_beats_vote"] is False
++    assert gap4["eval"]["exp4216_oracle_distinct_auroc"] == pytest.approx(0.0)
++    role = next(role for role in gap4["registry_roles"] if role["role_id"] == exp4216.V390_ROLE_ID)
++    assert role["oracle_distinct_status"] == "open_a3_blocked_selector_not_trained"
++    assert role["detector_auroc_by_domain"]["arc"] == pytest.approx(0.9016)
++    assert role["verifier_label_carries_signal"] is False
++    assert role["a_vs_b_delta"] is None
++    assert role["distill_lift_latent_vs_absent"] == "absent"
++    assert exp4216._registry_contains_outcomes(registry) is True
++    assert exp4216._registry_contains_outcomes({}) is False
++
++    assert "Historical note remains." in gaps
++    assert exp4216.GAP_ORACLE_DISTINCT_GAP_ID in gaps
++    assert "oracle_distinct_beats_vote=false" in gaps
++    assert "oracle_distinct_auroc=0.0" in gaps
++    assert "verifier_is_oracle=false" in gaps
++    assert "GAP-MOAT unchanged" in gaps
++    assert exp4216.DETECTOR_GAP_ID in gaps
++    assert "arc=0.9016" in gaps
++    assert exp4216.GAP_REWARD_GAP_ID in gaps
++    assert "verifier_label_carries_signal=false" in gaps
++    assert "a_vs_b_delta=None" in gaps
++    assert exp4216.CERTIFIED_CORPUS_GAP_ID in gaps
++    assert "distill_lift_ci95=[0.0, 0.0]" in gaps
++    assert "invisible_leash_diagnosis=absent" in gaps
++
++
++def test_req_4216_build_artifact_validates_required_fields() -> None:
++    """REQ-VERIFY-4216: terminal artifact exposes required schema fields."""
++
++    replay = exp4216.replay_gap4_arc1(REPO_ROOT)
++    oracle = exp4216.classify_oracle_distinct_outcome(REPO_ROOT)
++    detector = exp4216.classify_detector_aurocs(REPO_ROOT)
++    reward = exp4216.classify_verifier_reward_outcome(REPO_ROOT)
++    corpus = exp4216.classify_certified_arc_corpus(REPO_ROOT)
++    artifact = exp4216.build_artifact(
++        offline_replay=replay,
++        oracle_distinct_outcome=oracle,
++        detector_aurocs=detector,
++        verifier_reward_outcome=reward,
++        certified_arc_corpus=corpus,
++        registry_updated=True,
++        gaps_updated=[
++            exp4216.GAP_ORACLE_DISTINCT_GAP_ID,
++            exp4216.DETECTOR_GAP_ID,
++            exp4216.GAP_REWARD_GAP_ID,
++            exp4216.CERTIFIED_CORPUS_GAP_ID,
++        ],
++        duration_s=0.012,
++    )
++
++    exp4216.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["gaps_updated"] == [
++        exp4216.GAP_ORACLE_DISTINCT_GAP_ID,
++        exp4216.DETECTOR_GAP_ID,
++        exp4216.GAP_REWARD_GAP_ID,
++        exp4216.CERTIFIED_CORPUS_GAP_ID,
++    ]
++    assert artifact["field_principles"] == exp4216.FIELD_PRINCIPLES
++    assert artifact["oracle_distinct_outcome"]["verifier_is_oracle"] is False
++    assert artifact["detector_aurocs"]["detection_auroc_by_domain"]["arc"] == pytest.approx(0.9016)
++    assert artifact["verifier_reward_outcome"]["verifier_is_oracle"] is True
++    assert artifact["certified_arc_corpus"]["verifier_is_oracle"] is True
++    assert artifact["cited_upstream_artifacts"] == [
++        exp4216.ARC1_POOL_PATH,
++        exp4216.ARC1_PROGRAMS_PATH,
++        exp4216.EXP4208_PATH,
++        exp4216.EXP4209_PATH,
++        exp4216.EXP4210_PATH,
++        exp4216.EXP4211_PATH,
++        exp4216.EXP4212_PATH,
++    ]
++
++    for field in exp4216.REQUIRED_ARTIFACT_FIELDS:
++        malformed = dict(artifact)
++        malformed.pop(field)
++        with pytest.raises(ValueError, match=field):
++            exp4216.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp4216.validate_artifact({**artifact, "honest_verdict": "not terminal"})
++    with pytest.raises(ValueError, match="BARE bool"):
++        exp4216.validate_artifact({**artifact, "regression_guard_passed": "yes"})
++    with pytest.raises(ValueError, match="bare bool"):
++        exp4216.validate_artifact({**artifact, "registry_updated": "yes"})
++    with pytest.raises(ValueError, match="gaps_updated"):
++        exp4216.validate_artifact({**artifact, "gaps_updated": "GAP"})
++    with pytest.raises(ValueError, match="field_principles"):
++        exp4216.validate_artifact({**artifact, "field_principles": {}})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp4216.validate_artifact({**artifact, "inference_substrate": "live"})
++
++
++def test_req_4216_helper_edges_are_explicit(tmp_path: Path) -> None:
++    """REQ-VERIFY-4216: schema helpers fail closed without hidden inference."""
++
++    assert exp4216._numeric_or_none(True) is None
++    assert exp4216._numeric_or_none("bad") is None
++    assert exp4216._first_numeric({"bad": "x", "ok": 2}, "bad", "ok") == pytest.approx(2.0)
++    assert exp4216._first_ci95({"bad": [0.0], "ok": [0, 1]}, "bad", "ok") == [0.0, 1.0]
++    assert exp4216._round4(None) is None
++    assert exp4216._round4(1.23456) == pytest.approx(1.2346)
++    assert exp4216._bool_text(True) == "true"
++    assert exp4216._check_json_resource(tmp_path, "missing", "missing.json") == {
++        "resource": "missing",
++        "available": False,
++        "detail": "missing: missing.json",
++    }
++    assert exp4216._oracle_distinct_status({"oracle_distinct_beats_vote": True}) == (
++        "filled_oracle_distinct_beats_vote"
++    )
++    assert exp4216._oracle_distinct_status({"selector_trained": False}) == (
++        "open_a3_blocked_selector_not_trained"
++    )
++    assert exp4216._oracle_distinct_status({"selector_trained": True}) == (
++        "open_a3_not_decision_grade"
++    )
++    assert exp4216._detector_status({}) == "detector_auroc_recorded_with_open_domain_caveats"
++    assert exp4216._reward_status({"verifier_label_carries_signal": True}) == (
++        "filled_verifier_label_carries_signal"
++    )
++    assert exp4216._reward_status({"accumulated_n": {"eval": 0}}) == (
++        "open_accumulating_reward_no_eval_yet"
++    )
++    assert exp4216._reward_status({"a_vs_b_delta": 0.0}) == "open_no_a_vs_b_signal"
++    assert exp4216._reward_status({"a_vs_b_delta": None}) == "open_a_vs_b_not_decision_grade"
++    assert exp4216._certified_corpus_status({"certified_corpus_size": 0}) == (
++        "certified_corpus_empty"
++    )
++    assert (
++        exp4216._certified_corpus_status(
++            {"certified_corpus_size": 1, "distill_lift_latent_vs_absent": "latent"}
++        )
++        == "certified_corpus_built_distill_lift_latent"
++    )
++    assert (
++        exp4216._certified_corpus_status(
++            {"certified_corpus_size": 1, "distill_lift_latent_vs_absent": "uninformative"}
++        )
++        == "certified_corpus_built_distill_lift_uninformative"
++    )
++
++    _write_minimal_repo(tmp_path)
++    (tmp_path / exp4216.EXP4210_PATH).write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: oracle_distinct_beats_vote",
++                "oracle_distinct_beats_vote": True,
++                "oracle_distinct_delta": 0.2,
++                "oracle_distinct_ci95": [0.1, 0.3],
++                "verifier_is_oracle": False,
++            }
++        ),
++        encoding="utf-8",
++    )
++    oracle = exp4216.classify_oracle_distinct_outcome(tmp_path)
++    assert oracle["status"] == "filled_oracle_distinct_beats_vote"
++    assert oracle["oracle_distinct_delta"] == pytest.approx(0.2)
++
++
++def test_scenario_4216_run_hygiene_writes_artifact_and_ledgers(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4216: run writes the deliverable JSON and ledger entries."""
++
++    _write_minimal_repo(tmp_path)
++    artifact = exp4216.run_hygiene(tmp_path)
++    exp4216.validate_artifact(artifact)
++
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["gaps_updated"] == [
++        exp4216.GAP_ORACLE_DISTINCT_GAP_ID,
++        exp4216.DETECTOR_GAP_ID,
++        exp4216.GAP_REWARD_GAP_ID,
++        exp4216.CERTIFIED_CORPUS_GAP_ID,
++    ]
++    assert artifact["registry_updated"] is True
++    written = json.loads((tmp_path / exp4216.EXP4216_ARTIFACT_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    registry = yaml.safe_load(
++        (tmp_path / "ops" / "verifier_registry.yaml").read_text(encoding="utf-8")
++    )
++    assert exp4216._registry_contains_outcomes(registry) is True
++    gaps = (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8")
++    assert exp4216.GAP_ORACLE_DISTINCT_GAP_ID in gaps
++    assert exp4216.DETECTOR_GAP_ID in gaps
++    assert exp4216.GAP_REWARD_GAP_ID in gaps
++    assert exp4216.CERTIFIED_CORPUS_GAP_ID in gaps
++
++
++def test_req_4216_blocked_precondition_stops_without_fabricating(tmp_path: Path) -> None:
++    """REQ-VERIFY-4216: failed preconditions write blocked_<resource> and no ledger win."""
++
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text("# Verifier Gaps\n", encoding="utf-8")
++
++    artifact = exp4216.run_hygiene(tmp_path)
++    exp4216.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_gap4_arc1_candidate_fixtures"
++    assert artifact["regression_guard_passed"] is False
++    assert artifact["registry_updated"] is False
++    assert artifact["gaps_updated"] == []
++    assert exp4216.GAP_ORACLE_DISTINCT_GAP_ID not in (
++        tmp_path / "ops" / "verifier_gaps.md"
++    ).read_text(encoding="utf-8")
++
++
++def test_scenario_4216_results_entrypoint_runs_with_monkeypatched_main(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-VERIFY-4216: required results entrypoint delegates to Exp 4216."""
++
++    called: list[bool] = []
++    monkeypatch.setattr(exp4216, "main", lambda: called.append(True))
++
++    runpy.run_path(RESULTS_WRAPPER_PATH.as_posix(), run_name="__main__")
++
++    assert called == [True]
+-- 
+2.55.0
+

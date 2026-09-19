@@ -1,0 +1,150 @@
+From 194050b8546a503000e8c61903dfe721992b4ca7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 03:59:30 -0400
+Subject: [PATCH 10733/11362] [conductor] Pre-gate block: Sealed independent
+ semantic compatibility audit
+
+gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp6869-calibration-only-paired-semantic-rule.semantic_contrast_rule_ready_score (actual=0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...calibration_only_paired_semantic_rule.json | 23 ++++++-
+ ...870_sealed_independent_semantic_audit.json | 64 +++++++++++++++++++
+ 5 files changed, 88 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_6870_sealed_independent_semantic_audit.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e3649eee46..366c052dbd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 111, "phase": "iteration_start", "last_beat": "2026-09-02T07:13:12Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 112, "phase": "iteration_start", "last_beat": "2026-09-02T07:59:29Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 048649a48d..49382ece11 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17053,3 +17053,4 @@ The l |
+ | 2026-09-02 06:52 UTC | Three-family semantic contrast scoring stream v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6868_three_f |
+ | 2026-09-02 07:11 UTC | Three-family semantic contrast scoring stream v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-09-02 07:55 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 727762 (port 8919) reparented to init, no live process references its  |
++| 2026-09-02 07:57 UTC | Calibration-only paired semantic rule | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5999875128..7e553290bd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 111, "phase": "iteration_start", "started_at": "2026-09-02T07:13:12Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 112, "phase": "iteration_start", "started_at": "2026-09-02T07:59:29Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6869_calibration_only_paired_semantic_rule.json b/results/experiment_6869_calibration_only_paired_semantic_rule.json
+index ebdf7c99eb..a3490b40bc 100644
+--- a/results/experiment_6869_calibration_only_paired_semantic_rule.json
++++ b/results/experiment_6869_calibration_only_paired_semantic_rule.json
+@@ -19000,5 +19000,24 @@
+   ],
+   "status": "complete",
+   "verdict_class": "null",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-02T07:57:29Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.525044 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_6870_sealed_independent_semantic_audit.json b/results/experiment_6870_sealed_independent_semantic_audit.json
+new file mode 100644
+index 0000000000..cf83770196
+--- /dev/null
++++ b/results/experiment_6870_sealed_independent_semantic_audit.json
+@@ -0,0 +1,64 @@
++{
++  "experiment": 6870,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-09-02",
++  "started_at": "2026-09-02T07:59:30.299677+00:00",
++  "finished_at": "2026-09-02T07:59:30.299677+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Sealed independent semantic compatibility audit",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0 == expected=1",
++  "failed_upstream": "exp6869-calibration-only-paired-semantic-rule",
++  "failed_field": "semantic_contrast_rule_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1,
++  "failed_expected_type": "int",
++  "failed_observed": 0,
++  "failed_observed_type": "int",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6869_calibration_only_paired_semantic_rule.json",
++  "failed_evidence_sha256": "sha256:437d48af5259e7b8d3732850a5605c0e6a2cbbba9fe4d7210e6fd5149d18076e",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0 == expected=1",
++    "failed_upstream": "exp6869-calibration-only-paired-semantic-rule",
++    "failed_field": "semantic_contrast_rule_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1,
++    "failed_expected_type": "int",
++    "failed_observed": 0,
++    "failed_observed_type": "int",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6869_calibration_only_paired_semantic_rule.json",
++    "failed_evidence_sha256": "sha256:437d48af5259e7b8d3732850a5605c0e6a2cbbba9fe4d7210e6fd5149d18076e"
++  },
++  "gate_check_summary": "gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp6869-calibration-only-paired-semantic-rule.semantic_contrast_rule_ready_score (actual=0 == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6868-three-family-semantic-scoring-stream-v2",
++      "artifact_field": "semantic_contrast_stream_v2_complete_score",
++      "op": "==",
++      "expected": 1,
++      "expected_type": "int",
++      "actual": 1,
++      "actual_type": "int",
++      "passed": true,
++      "reason": "actual=1 == expected=1",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6868_three_family_semantic_scoring_stream_v2.json",
++      "artifact_sha256": "sha256:f870c42bebf52f4beb1ff9c2a4b96f51a8f707880d80458f63da27a75576a006"
++    },
++    {
++      "upstream": "exp6869-calibration-only-paired-semantic-rule",
++      "artifact_field": "semantic_contrast_rule_ready_score",
++      "op": "==",
++      "expected": 1,
++      "expected_type": "int",
++      "actual": 0,
++      "actual_type": "int",
++      "passed": false,
++      "reason": "actual=0 == expected=1",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6869_calibration_only_paired_semantic_rule.json",
++      "artifact_sha256": "sha256:437d48af5259e7b8d3732850a5605c0e6a2cbbba9fe4d7210e6fd5149d18076e"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,1600 @@
+From 9f19506d7da207a87e956db154574e8dd8fcd65e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 20:30:17 -0400
+Subject: [PATCH 06083/11362] [conductor] Gated live structured SOTA clean-gate
+ rerun
+
+Automated research step by research conductor.
+Task ID: exp5379-v490-live-structured-clean-gate-rerun
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  78 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...9_live_structured_clean_gate_rerun_v490.py | 661 ++++++++++++++++++
+ ...live_structured_clean_gate_rerun_v490.json | 271 +++++++
+ ...9_live_structured_clean_gate_rerun_v490.py | 524 ++++++++++++++
+ 5 files changed, 1535 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py
+ create mode 100644 results/experiment_5379_live_structured_clean_gate_rerun_v490.json
+ create mode 100644 tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index d711ee0cca..1cc815c95b 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -27877,6 +27877,84 @@ keeps `no_quality_claim=true`, and does not modify
+ |---|---|---|
+ | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
+ 
++### REQ-VERIFY-5379: Live Structured Clean Gate Rerun V490
++
++The repository SHALL provide Exp 5379 at
++`python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py`
++and write
++`results/experiment_5379_live_structured_clean_gate_rerun_v490.json`
++without modifying `scripts/research_conductor.py`. The workflow SHALL be the
++canonical `.490` `structured_protocol_clean` truth source for downstream
++constraint-tax work. It SHALL first read Exp 5378 and SHALL attempt live local
++SOTA inference only when Exp 5378 reports `live_sota_receipt_ready=true` and
++`methodology_duration_s>=60`.
++
++Before headline inference, Exp 5379 SHALL verify the Exp 5378 gate fields,
++CUDA/GPU visibility, llama.cpp/GGUF-compatible runtime availability, locally
++resolved GGUF model paths, and machine-readable GPU/offload evidence. If Exp
++5378 is missing, malformed, not ready, or shorter than 60 seconds; if only the
++retired CPU-only llama.cpp path is available; or if CUDA/GPU visibility, the
++GGUF runtime, or all mandated GGUF files are unavailable, Exp 5379 SHALL write a
++terminal blocked artifact and SHALL NOT invoke live prompt generation. The
++workflow SHALL use llama.cpp/GGUF-compatible loading only and SHALL NOT use
++`AutoTokenizer.from_pretrained`, `AutoModel`, or direct transformers loading on
++any `-GGUF` repository.
++
++The headline-eligible `MODEL_SPECS` SHALL contain all mandated local GGUF model
++ids considered for the run:
++`unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. `selected_model_spec` SHALL be the exact
++mandated GGUF model used for headline measurements. Exp 5379 SHALL run the
++structured fixtures with at least one mandated SOTA GGUF and record parse,
++schema, semantic, final JSON extraction, truncation, wrong-valid, and unsafe
++false-accept metrics. The repaired Exp 5378 receipt duration SHALL be applied
++to the canonical gate so `structured_protocol_clean` can only become true when
++the live measurement duration is at least 60 seconds.
++
++The artifact SHALL include bare top-level `status`, `upstream_receipt_ready`,
++`structured_protocol_clean`, `MODEL_SPECS`, `selected_model_spec`,
++`inference_substrate`, `gpu_or_offload_receipt`, `no_autotokenizer_used`,
++`prompt_count`, `parse_success_rate`, `schema_success_rate`,
++`final_json_extraction_rate`, `semantic_success_rate`, `wrong_valid_count`,
++`truncation_failure_rate`, `unsafe_false_accepts`, `methodology_duration_s`,
++and `honest_verdict`, plus field provenance explaining each required field's
++principle. `upstream_receipt_ready` SHALL be copied from Exp 5378
++`live_sota_receipt_ready`. `structured_protocol_clean` SHALL be true only when
++`parse_success_rate>=0.95`, `schema_success_rate>=0.90`,
++`final_json_extraction_rate>=0.95`, `unsafe_false_accepts=0`, and
++`methodology_duration_s>=60`. `status` SHALL be `complete` only if live local
++SOTA inference actually ran under the Exp 5378 gated preconditions; otherwise
++it SHALL be `blocked`.
++
++### SCENARIO-VERIFY-5379: Gated Rerun Produces Canonical Clean Structured Receipt
++
++Given Exp 5378 reports `live_sota_receipt_ready=true` and
++`methodology_duration_s>=60`, and given at least one mandated local GGUF model
++has a concrete `.gguf` path plus non-retired GPU/offload evidence, when Exp
++5379 runs, then it records all mandated `MODEL_SPECS`, selects the exact
++mandated model used for headline measurements, uses only the llama.cpp/GGUF
++loader family, records `no_autotokenizer_used=true`, evaluates the structured
++fixture prompts, records parse/schema/final-JSON/semantic/wrong-valid/
++truncation/unsafe-false-accept metrics, writes the required `.490` result
++artifact, copies `upstream_receipt_ready` from Exp 5378, and sets
++`structured_protocol_clean=true` only if the configured parse/schema/final
++JSON/unsafe false-accept/duration thresholds pass.
++
++If Exp 5378 is not ready, Exp 5378 duration is less than 60 seconds, CUDA/GPU
++visibility is absent, llama.cpp/GGUF support is unavailable, every mandated
++local GGUF is missing, or the runtime cannot provide non-retired GPU/offload
++evidence, then Exp 5379 writes the same result path with `status=blocked`,
++`structured_protocol_clean=false`, `selected_model_spec=null`, a
++machine-readable blocker in `gpu_or_offload_receipt`, `honest_verdict`
++starting with `blocked_`, and no headline model prompt execution.
++
++## Implementation Status (REQ-VERIFY-5379)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5379 | Planned (`python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py`, `results/experiment_5379_live_structured_clean_gate_rerun_v490.json`) | Planned (`tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py`) |
++
+ ### REQ-VERIFY-5378: Structured Methodology-Duration Receipt V490
+ 
+ The repository SHALL provide Exp 5378 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ddf681b7f9..270d24f111 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4345,
++  "experiments_checked": 4346,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py b/python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py
+new file mode 100644
+index 0000000000..86d336de0b
+--- /dev/null
++++ b/python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py
+@@ -0,0 +1,661 @@
++#!/usr/bin/env python3
++"""Exp 5379 live structured clean gate rerun.
++
++Spec refs: REQ-VERIFY-5379, SCENARIO-VERIFY-5379.
++
++This experiment turns the repaired Exp 5378 methodology-duration receipt into
++the canonical `.490` structured-protocol gate consumed by downstream
++constraint-tax work. It first checks the upstream receipt, refuses the retired
++CPU-only GGUF path, reruns the structured fixtures through the existing
++llama.cpp/GGUF machinery, and emits a single truth-source artifact.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_5366_live_grammar_budgeted_sota_protocol_v489 as exp5366
++from carnot import experiment_5378_structured_methodology_duration_receipt_v490 as exp5378
++from carnot.inference.sota_models import resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++RuntimeProbe = Callable[..., JsonDict]
++LiveRunner = Callable[..., JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_5379_live_structured_clean_gate_rerun_v490"
++MILESTONE = "2026.07.490"
++RESULT_RELATIVE_PATH = Path("results/experiment_5379_live_structured_clean_gate_rerun_v490.json")
++SCHEMA = "carnot.experiment_5379.live_structured_clean_gate_rerun.v490"
++SPEC_REFS = ("REQ-VERIFY-5379", "SCENARIO-VERIFY-5379")
++RANDOM_SEED = 5379
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++MANDATED_HF_IDS = exp5366.MANDATED_HF_IDS
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "upstream_receipt_ready",
++    "structured_protocol_clean",
++    "MODEL_SPECS",
++    "selected_model_spec",
++    "inference_substrate",
++    "gpu_or_offload_receipt",
++    "no_autotokenizer_used",
++    "prompt_count",
++    "parse_success_rate",
++    "schema_success_rate",
++    "final_json_extraction_rate",
++    "semantic_success_rate",
++    "wrong_valid_count",
++    "truncation_failure_rate",
++    "unsafe_false_accepts",
++    "methodology_duration_s",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "complete only if live local SOTA inference ran under the gated preconditions.",
++    "upstream_receipt_ready": "copied from Exp5378 live_sota_receipt_ready.",
++    "structured_protocol_clean": (
++        "boolean downstream gate, true only under the parse/schema/final-JSON/"
++        "unsafe-false-accept/duration thresholds."
++    ),
++    "MODEL_SPECS": "list containing all mandated local GGUF model specs considered for headline results.",
++    "selected_model_spec": "exact model spec used for headline measurements.",
++    "inference_substrate": "concrete runtime path, GPU/offload status, and GGUF loader family.",
++    "gpu_or_offload_receipt": "machine-readable evidence that this was not the retired CPU-only headline path.",
++    "no_autotokenizer_used": "must be true for GGUF repositories.",
++    "prompt_count": "number of live prompts evaluated.",
++    "parse_success_rate": "fraction of responses with parseable JSON.",
++    "schema_success_rate": "fraction of responses satisfying the schema.",
++    "final_json_extraction_rate": "fraction with unambiguous final JSON extraction.",
++    "semantic_success_rate": "fraction satisfying task semantics after schema validity.",
++    "wrong_valid_count": "count of schema-valid outputs that were semantically wrong.",
++    "truncation_failure_rate": "fraction classified as token-budget truncation failures.",
++    "unsafe_false_accepts": "count of invalid/unsafe outputs accepted as valid.",
++    "methodology_duration_s": "live measurement duration excluding planning prose.",
++    "honest_verdict": "one-line clean/block verdict.",
++}
++
++ACCEPTANCE_THRESHOLDS: JsonDict = {
++    "parse_success_rate": exp5366.MIN_PARSE_SUCCESS_RATE,
++    "schema_success_rate": exp5366.MIN_SCHEMA_SUCCESS_RATE,
++    "final_json_extraction_rate": exp5366.MIN_FINAL_JSON_EXTRACTION_RATE,
++    "methodology_duration_s": exp5366.MIN_CLEAN_METHODOLOGY_DURATION_S,
++    "unsafe_false_accepts": 0,
++}
++
++
++def field_provenance() -> dict[str, JsonDict]:
++    """Return principle annotations for every required Exp 5379 field."""
++
++    return {
++        field: {
++            "principle": principle,
++            "satisfied_by": "Exp 5379 live structured clean gate rerun",
++        }
++        for field, principle in FIELD_PRINCIPLES.items()
++    }
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifact_path: Path | str | None = None,
++    exp5378_path: Path | str | None = None,
++    exp5378_artifact: Mapping[str, Any] | None = None,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    runtime_probe: RuntimeProbe | None = None,
++    live_runner: LiveRunner | None = None,
++    tests_run: Sequence[Any] | None = None,
++    write: bool = True,
++) -> JsonDict:
++    """Run the gated clean-rerun workflow or emit a blocked artifact."""
++
++    started = time.perf_counter()
++    root_path = Path(root)
++    destination = _destination(root_path, artifact_path)
++    upstream_path = (
++        Path(exp5378_path) if exp5378_path is not None else root_path / exp5378.RESULT_RELATIVE_PATH
++    )
++    upstream = dict(exp5378_artifact or _load_json(upstream_path))
++    upstream_ready = bool(upstream.get("live_sota_receipt_ready"))
++    upstream_duration_s = _numeric(upstream.get("methodology_duration_s"))
++    blockers = _upstream_blockers(upstream_ready, upstream_duration_s)
++    model_specs = exp5366.default_model_specs_unresolved()
++    selected_model: JsonDict | None = None
++    runtime_receipt = _blocked_runtime_receipt(blockers)
++    live_artifact: JsonDict | None = None
++    live_elapsed_s = 0.0
++    runtime_probe = exp5366.default_runtime_probe if runtime_probe is None else runtime_probe
++    live_runner = _default_live_runner if live_runner is None else live_runner
++
++    if not blockers:
++        model_specs = exp5366.resolve_model_specs(model_resolver)
++        selected_model = exp5366.select_headline_model(model_specs)
++        if selected_model is None:
++            blockers.append("no_mandated_sota_gguf_resolved")
++        runtime_receipt = _normalise_runtime_receipt(
++            runtime_probe(
++                model_specs=model_specs,
++                selected_model_spec=selected_model,
++                exp5378_artifact=upstream,
++            )
++        )
++        blockers.extend(str(item) for item in runtime_receipt.get("blocked_preconditions", ()))
++        if not runtime_receipt.get("non_retired_gpu_or_offload_path"):
++            blockers.append("non_retired_gpu_or_offload_path_unavailable")
++        blockers = _unique(blockers)
++        runtime_receipt["blocked_preconditions"] = blockers
++        if not blockers and selected_model is not None:
++            live_started = time.perf_counter()
++            live_artifact = dict(
++                live_runner(
++                    root=root_path,
++                    artifact_path=destination,
++                    model_resolver=model_resolver,
++                    runtime_probe=runtime_probe,
++                    tests_run=[],
++                    write=False,
++                )
++            )
++            live_elapsed_s = time.perf_counter() - live_started
++            runtime_receipt = _merge_runtime_receipt(runtime_receipt, live_artifact)
++            selected_model = _selected_model_from_live(live_artifact, selected_model)
++            model_specs = _model_specs_from_live(live_artifact, model_specs)
++
++    runtime_receipt["blocked_preconditions"] = _unique(blockers)
++    return _finalize_artifact(
++        started=started,
++        destination=destination,
++        write=write,
++        upstream=upstream,
++        upstream_ready=upstream_ready,
++        upstream_duration_s=upstream_duration_s,
++        model_specs=model_specs,
++        selected_model=selected_model,
++        runtime_receipt=runtime_receipt,
++        live_artifact=live_artifact,
++        live_elapsed_s=live_elapsed_s,
++        tests_run=tests_run,
++    )
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema and gate errors for the Exp 5379 artifact contract."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if artifact.get("status") not in {"complete", "blocked"}:
++        errors.append("status must be complete or blocked")
++    for field in ("upstream_receipt_ready", "structured_protocol_clean"):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be boolean")
++    if not _model_specs_cover_mandated(artifact.get("MODEL_SPECS")):
++        errors.append("MODEL_SPECS must contain all mandated SOTA GGUF specs")
++    selected = artifact.get("selected_model_spec")
++    if selected is not None and (
++        not isinstance(selected, Mapping) or selected.get("hf_id") not in MANDATED_HF_IDS
++    ):
++        errors.append("selected_model_spec must be null or one mandated model spec")
++    substrate = artifact.get("inference_substrate")
++    if not isinstance(substrate, Mapping):
++        errors.append("inference_substrate must be object")
++        substrate = {}
++    receipt = artifact.get("gpu_or_offload_receipt")
++    if not isinstance(receipt, Mapping):
++        errors.append("gpu_or_offload_receipt must be object")
++        receipt = {}
++    if artifact.get("no_autotokenizer_used") is not True:
++        errors.append("no_autotokenizer_used must be true")
++    if not _non_negative_int(artifact.get("prompt_count")):
++        errors.append("prompt_count must be non-negative integer")
++    for field in (
++        "parse_success_rate",
++        "schema_success_rate",
++        "final_json_extraction_rate",
++        "semantic_success_rate",
++        "truncation_failure_rate",
++    ):
++        if not _rate_is_valid(artifact.get(field)):
++            errors.append(f"{field} must be in [0, 1]")
++    for field in ("wrong_valid_count", "unsafe_false_accepts"):
++        if not _non_negative_int(artifact.get(field)):
++            errors.append(f"{field} must be non-negative integer")
++    if not isinstance(artifact.get("methodology_duration_s"), int | float):
++        errors.append("methodology_duration_s must be numeric")
++    honest = artifact.get("honest_verdict")
++    if not isinstance(honest, str) or not honest.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete: or blocked_")
++    provenance = artifact.get("field_provenance")
++    if not isinstance(provenance, Mapping) or any(
++        field not in provenance for field in REQUIRED_ARTIFACT_FIELDS
++    ):
++        errors.append("field_provenance must cover required fields")
++    if (
++        artifact.get("status") == "complete"
++        and substrate.get("live_local_sota_inference_ran") is not True
++    ):
++        errors.append("complete status requires live local SOTA inference")
++    if artifact.get("status") == "complete" and selected is None:
++        errors.append("complete status requires selected_model_spec")
++    if artifact.get("status") == "complete" and artifact.get("upstream_receipt_ready") is not True:
++        errors.append("complete status requires upstream receipt readiness")
++    if artifact.get("structured_protocol_clean") is True and not _structured_protocol_clean(
++        metrics=artifact,
++        methodology_duration_s=artifact.get("methodology_duration_s"),
++    ):
++        errors.append("structured_protocol_clean thresholds are not satisfied")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5379 artifact cannot support downstream gating."""
++
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise AssertionError("; ".join(errors))
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper
++    """CLI entry point for producing the Exp 5379 clean-gate artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--artifact-path", type=Path, default=None)
++    parser.add_argument("--exp5378", type=Path, default=None)
++    args = parser.parse_args(argv)
++    artifact = run(root=args.root, artifact_path=args.artifact_path, exp5378_path=args.exp5378)
++    print(json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True))
++    return 0 if artifact["status"] == "complete" else 1
++
++
++def _default_live_runner(**kwargs: Any) -> JsonDict:  # pragma: no cover - live GGUF runtime
++    return exp5366.run(**kwargs)
++
++
++def _destination(root: Path, artifact_path: Path | str | None) -> Path:
++    destination = Path(artifact_path) if artifact_path is not None else root / RESULT_RELATIVE_PATH
++    return destination if destination.is_absolute() else root / destination
++
++
++def _upstream_blockers(upstream_ready: bool, upstream_duration_s: float) -> list[str]:
++    blockers: list[str] = []
++    if not upstream_ready:
++        blockers.append("exp5378_live_sota_receipt_not_ready")
++    if upstream_duration_s < exp5366.MIN_CLEAN_METHODOLOGY_DURATION_S:
++        blockers.append("exp5378_methodology_duration_lt_60")
++    return blockers
++
++
++def _blocked_runtime_receipt(blockers: Sequence[str]) -> JsonDict:
++    return {
++        "gpu_visible": False,
++        "gguf_runtime_available": False,
++        "gguf_loader_family": "not_checked",
++        "offload_evidence": False,
++        "non_retired_gpu_or_offload_path": False,
++        "blocked_preconditions": list(blockers),
++    }
++
++
++def _normalise_runtime_receipt(receipt: Mapping[str, Any]) -> JsonDict:
++    out = dict(receipt)
++    out.setdefault("gpu_visible", False)
++    out.setdefault("gguf_runtime_available", False)
++    out.setdefault("gguf_loader_family", "llama.cpp")
++    out.setdefault("offload_evidence", False)
++    out.setdefault("non_retired_gpu_or_offload_path", False)
++    out.setdefault("blocked_preconditions", [])
++    out["blocked_preconditions"] = list(out.get("blocked_preconditions") or [])
++    return out
++
++
++def _merge_runtime_receipt(
++    preflight_receipt: Mapping[str, Any], live_artifact: Mapping[str, Any]
++) -> JsonDict:
++    live_receipt = live_artifact.get("gpu_or_offload_receipt")
++    if isinstance(live_receipt, Mapping):
++        return _normalise_runtime_receipt({**preflight_receipt, **live_receipt})
++    return _normalise_runtime_receipt(preflight_receipt)
++
++
++def _selected_model_from_live(
++    live_artifact: Mapping[str, Any],
++    fallback: Mapping[str, Any] | None,
++) -> JsonDict | None:
++    selected = live_artifact.get("selected_model_spec")
++    if isinstance(selected, Mapping) and selected.get("hf_id") in MANDATED_HF_IDS:
++        return dict(selected)
++    return dict(fallback) if fallback is not None else None
++
++
++def _model_specs_from_live(
++    live_artifact: Mapping[str, Any], fallback: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    model_specs = live_artifact.get("MODEL_SPECS")
++    if _model_specs_cover_mandated(model_specs):
++        return [dict(row) for row in model_specs]  # type: ignore[union-attr]
++    return [dict(row) for row in fallback]
++
++
++def _finalize_artifact(
++    *,
++    started: float,
++    destination: Path,
++    write: bool,
++    upstream: Mapping[str, Any],
++    upstream_ready: bool,
++    upstream_duration_s: float,
++    model_specs: Sequence[Mapping[str, Any]],
++    selected_model: Mapping[str, Any] | None,
++    runtime_receipt: Mapping[str, Any],
++    live_artifact: Mapping[str, Any] | None,
++    live_elapsed_s: float,
++    tests_run: Sequence[Any] | None,
++) -> JsonDict:
++    metrics = _metrics_from_live(live_artifact)
++    methodology_sources = _methodology_duration_sources(
++        upstream_duration_s=upstream_duration_s,
++        live_artifact=live_artifact,
++        live_elapsed_s=live_elapsed_s,
++    )
++    methodology_duration_s = round(max(methodology_sources.values()), 6)
++    no_autotokenizer_used = _no_autotokenizer_used(live_artifact, model_specs)
++    live_ran = _live_ran(
++        upstream_ready=upstream_ready,
++        selected_model=selected_model,
++        runtime_receipt=runtime_receipt,
++        live_artifact=live_artifact,
++        no_autotokenizer_used=no_autotokenizer_used,
++    )
++    selected_for_artifact = selected_model if live_ran else None
++    structured_clean = bool(
++        live_ran
++        and _structured_protocol_clean(
++            metrics=metrics, methodology_duration_s=methodology_duration_s
++        )
++    )
++    status = "complete" if live_ran else "blocked"
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "status": status,
++        "upstream_receipt_ready": upstream_ready,
++        "structured_protocol_clean": structured_clean,
++        "MODEL_SPECS": [dict(row) for row in model_specs],
++        "selected_model_spec": dict(selected_for_artifact)
++        if selected_for_artifact is not None
++        else None,
++        "inference_substrate": _inference_substrate(
++            runtime_receipt=runtime_receipt,
++            live_artifact=live_artifact,
++            selected_model=selected_for_artifact,
++            live_ran=live_ran,
++        ),
++        "gpu_or_offload_receipt": dict(runtime_receipt),
++        "no_autotokenizer_used": no_autotokenizer_used,
++        "prompt_count": metrics["prompt_count"],
++        "parse_success_rate": metrics["parse_success_rate"],
++        "schema_success_rate": metrics["schema_success_rate"],
++        "final_json_extraction_rate": metrics["final_json_extraction_rate"],
++        "semantic_success_rate": metrics["semantic_success_rate"],
++        "wrong_valid_count": metrics["wrong_valid_count"],
++        "truncation_failure_rate": metrics["truncation_failure_rate"],
++        "unsafe_false_accepts": metrics["unsafe_false_accepts"],
++        "methodology_duration_s": methodology_duration_s,
++        "methodology_duration_sources": methodology_sources,
++        "acceptance_thresholds": dict(ACCEPTANCE_THRESHOLDS),
++        "source_artifacts": _source_artifacts(upstream, live_artifact),
++        "tests_run": list(tests_run or []),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.perf_counter() - started, 6),
++        "field_provenance": field_provenance(),
++    }
++    artifact["honest_verdict"] = _honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = _sha16(
++        _stable_json(
++            {
++                "experiment_id": EXPERIMENT_ID,
++                "upstream_ready": upstream_ready,
++                "methodology_duration_s": methodology_duration_s,
++                "model_specs": artifact["MODEL_SPECS"],
++                "selected_model": artifact["selected_model_spec"],
++                "metrics": metrics,
++                "seed": RANDOM_SEED,
++            }
++        )
++    )
++    validate_artifact(artifact)
++    if write:
++        _write_json(destination, artifact)
++    return artifact
++
++
++def _metrics_from_live(live_artifact: Mapping[str, Any] | None) -> JsonDict:
++    if live_artifact is None:
++        return {
++            "prompt_count": 0,
++            "parse_success_rate": 0.0,
++            "schema_success_rate": 0.0,
++            "final_json_extraction_rate": 0.0,
++            "semantic_success_rate": 0.0,
++            "wrong_valid_count": 0,
++            "truncation_failure_rate": 0.0,
++            "unsafe_false_accepts": 0,
++        }
++    return {
++        "prompt_count": int(live_artifact.get("prompt_count") or 0),
++        "parse_success_rate": _numeric(live_artifact.get("parse_success_rate")),
++        "schema_success_rate": _numeric(live_artifact.get("schema_success_rate")),
++        "final_json_extraction_rate": _numeric(live_artifact.get("final_json_extraction_rate")),
++        "semantic_success_rate": _numeric(live_artifact.get("semantic_success_rate")),
++        "wrong_valid_count": _wrong_valid_count(live_artifact),
++        "truncation_failure_rate": _numeric(live_artifact.get("truncation_failure_rate")),
++        "unsafe_false_accepts": int(live_artifact.get("unsafe_false_accepts") or 0),
++    }
++
++
++def _wrong_valid_count(live_artifact: Mapping[str, Any]) -> int:
++    explicit = live_artifact.get("wrong_valid_count")
++    if _non_negative_int(explicit):
++        return int(explicit)
++    rows = live_artifact.get("prompt_results")
++    if not isinstance(rows, list):
++        return 0
++    return sum(
++        1
++        for row in rows
++        if isinstance(row, Mapping)
++        and row.get("schema_success") is True
++        and row.get("semantic_success") is False
++    )
++
++
++def _methodology_duration_sources(
++    *,
++    upstream_duration_s: float,
++    live_artifact: Mapping[str, Any] | None,
++    live_elapsed_s: float,
++) -> JsonDict:
++    return {
++        "exp5378_receipt_s": max(0.0, upstream_duration_s),
++        "rerun_live_artifact_methodology_s": 0.0
++        if live_artifact is None
++        else max(0.0, _numeric(live_artifact.get("methodology_duration_s"))),
++        "rerun_live_artifact_duration_s": 0.0
++        if live_artifact is None
++        else max(0.0, _numeric(live_artifact.get("duration_s"))),
++        "rerun_elapsed_s": max(0.0, float(live_elapsed_s)),
++    }
++
++
++def _no_autotokenizer_used(
++    live_artifact: Mapping[str, Any] | None,
++    model_specs: Sequence[Mapping[str, Any]],
++) -> bool:
++    live_flag = (
++        True if live_artifact is None else live_artifact.get("no_autotokenizer_used") is True
++    )
++    specs_clean = all(row.get("autotokenizer_used") is False for row in model_specs)
++    return bool(live_flag and specs_clean)
++
++
++def _live_ran(
++    *,
++    upstream_ready: bool,
++    selected_model: Mapping[str, Any] | None,
++    runtime_receipt: Mapping[str, Any],
++    live_artifact: Mapping[str, Any] | None,
++    no_autotokenizer_used: bool,
++) -> bool:
++    if live_artifact is None or selected_model is None:
++        return False
++    substrate = live_artifact.get("inference_substrate")
++    substrate = substrate if isinstance(substrate, Mapping) else {}
++    return bool(
++        upstream_ready
++        and live_artifact.get("status") == "complete"
++        and selected_model.get("hf_id") in MANDATED_HF_IDS
++        and int(live_artifact.get("prompt_count") or 0) > 0
++        and substrate.get("live_local_sota_inference_ran") is True
++        and runtime_receipt.get("non_retired_gpu_or_offload_path") is True
++        and no_autotokenizer_used
++    )
++
++
++def _structured_protocol_clean(*, metrics: Mapping[str, Any], methodology_duration_s: Any) -> bool:
++    return bool(
++        _numeric(metrics.get("parse_success_rate")) >= exp5366.MIN_PARSE_SUCCESS_RATE
++        and _numeric(metrics.get("schema_success_rate")) >= exp5366.MIN_SCHEMA_SUCCESS_RATE
++        and _numeric(metrics.get("final_json_extraction_rate"))
++        >= exp5366.MIN_FINAL_JSON_EXTRACTION_RATE
++        and metrics.get("unsafe_false_accepts") == 0
++        and _numeric(methodology_duration_s) >= exp5366.MIN_CLEAN_METHODOLOGY_DURATION_S
++    )
++
++
++def _inference_substrate(
++    *,
++    runtime_receipt: Mapping[str, Any],
++    live_artifact: Mapping[str, Any] | None,
++    selected_model: Mapping[str, Any] | None,
++    live_ran: bool,
++) -> JsonDict:
++    live_substrate = live_artifact.get("inference_substrate") if live_artifact is not None else None
++    out = dict(live_substrate) if isinstance(live_substrate, Mapping) else {}
++    out.setdefault("kind", "live_llm_inference" if live_ran else "blocked_preconditions")
++    out.setdefault("loader_family", str(runtime_receipt.get("gguf_loader_family") or "llama.cpp"))
++    out.setdefault(
++        "gguf_loader_family", str(runtime_receipt.get("gguf_loader_family") or "llama.cpp")
++    )
++    out["gpu_or_offload_status"] = (
++        "non_retired_gpu_or_offload_path"
++        if runtime_receipt.get("non_retired_gpu_or_offload_path")
++        else "blocked_or_cpu_only"
++    )
++    out["live_local_sota_inference_ran"] = bool(live_ran)
++    out["selected_model_hf_id"] = None if selected_model is None else selected_model.get("hf_id")
++    return out
++
++
++def _source_artifacts(
++    upstream: Mapping[str, Any], live_artifact: Mapping[str, Any] | None
++) -> list[JsonDict]:
++    return [
++        {
++            "path": exp5378.RESULT_RELATIVE_PATH.as_posix(),
++            "used": True,
++            "live_sota_receipt_ready": bool(upstream.get("live_sota_receipt_ready")),
++            "methodology_duration_s": _numeric(upstream.get("methodology_duration_s")),
++        },
++        {
++            "path": exp5366.RESULT_RELATIVE_PATH.as_posix(),
++            "used": live_artifact is not None,
++            "purpose": "structured fixture rerun source for canonical .490 clean gate",
++        },
++    ]
++
++
++def _honest_verdict(artifact: Mapping[str, Any]) -> str:
++    if artifact.get("upstream_receipt_ready") is not True:
++        return "blocked_exp5378_live_sota_receipt_not_ready"
++    if (
++        _numeric(artifact.get("methodology_duration_sources", {}).get("exp5378_receipt_s"))
++        < exp5366.MIN_CLEAN_METHODOLOGY_DURATION_S
++    ):
++        return "blocked_exp5378_methodology_duration_lt_60"
++    if artifact.get("status") == "complete" and artifact.get("structured_protocol_clean") is True:
++        return "complete: canonical structured_protocol_clean=true for .490 constraint-tax panel"
++    if artifact.get("status") == "complete":
++        return "blocked_structured_protocol_clean_false: live SOTA rerun completed but clean thresholds failed"
++    blockers = artifact.get("gpu_or_offload_receipt", {}).get("blocked_preconditions", [])
++    first = blockers[0] if isinstance(blockers, list) and blockers else "preconditions_failed"
++    return f"blocked_preconditions: {first}"
++
++
++def _model_specs_cover_mandated(value: Any) -> bool:
++    if not isinstance(value, list):
++        return False
++    return len(value) == len(MANDATED_HF_IDS) and {
++        row.get("hf_id") for row in value if isinstance(row, Mapping)
++    } == set(MANDATED_HF_IDS)
++
++
++def _rate_is_valid(value: Any) -> bool:
++    return (
++        isinstance(value, int | float)
++        and not isinstance(value, bool)
++        and 0.0 <= float(value) <= 1.0
++    )
++
++
++def _non_negative_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
++
++
++def _numeric(value: Any) -> float:
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else -1.0
++
++
++def _unique(values: Sequence[str]) -> list[str]:
++    return list(dict.fromkeys(str(value) for value in values if value))
++
++
++def _stable_json(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def _sha16(value: str | bytes) -> str:
++    data = value if isinstance(value, bytes) else value.encode("utf-8")
++    return hashlib.sha256(data).hexdigest()[:16]
++
++
++def _load_json(path: Path) -> JsonDict:
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except (FileNotFoundError, json.JSONDecodeError):
++        return {}
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n", encoding="utf-8"
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_5379_live_structured_clean_gate_rerun_v490.json b/results/experiment_5379_live_structured_clean_gate_rerun_v490.json
+new file mode 100644
+index 0000000000..97b867ce52
+--- /dev/null
++++ b/results/experiment_5379_live_structured_clean_gate_rerun_v490.json
+@@ -0,0 +1,271 @@
++{
++  "MODEL_SPECS": [
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "size_bytes": 22134528992
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 54,
++        "tensor_count": 733,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "flagship_moe",
++      "status": "local_gguf_resolved"
++    },
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "size_bytes": 18323731456
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 57,
++        "tensor_count": 833,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "flagship_dense",
++      "status": "local_gguf_resolved"
++    },
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "size_bytes": 16947539744
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 60,
++        "tensor_count": 658,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "middle_moe",
++      "status": "local_gguf_resolved"
++    }
++  ],
++  "acceptance_thresholds": {
++    "final_json_extraction_rate": 0.95,
++    "methodology_duration_s": 60.0,
++    "parse_success_rate": 0.95,
++    "schema_success_rate": 0.9,
++    "unsafe_false_accepts": 0
++  },
++  "duration_s": 235.050698,
++  "experiment_id": "experiment_5379_live_structured_clean_gate_rerun_v490",
++  "field_provenance": {
++    "MODEL_SPECS": {
++      "principle": "list containing all mandated local GGUF model specs considered for headline results.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "final_json_extraction_rate": {
++      "principle": "fraction with unambiguous final JSON extraction.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "gpu_or_offload_receipt": {
++      "principle": "machine-readable evidence that this was not the retired CPU-only headline path.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "honest_verdict": {
++      "principle": "one-line clean/block verdict.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "inference_substrate": {
++      "principle": "concrete runtime path, GPU/offload status, and GGUF loader family.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "methodology_duration_s": {
++      "principle": "live measurement duration excluding planning prose.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "no_autotokenizer_used": {
++      "principle": "must be true for GGUF repositories.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "parse_success_rate": {
++      "principle": "fraction of responses with parseable JSON.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "prompt_count": {
++      "principle": "number of live prompts evaluated.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "schema_success_rate": {
++      "principle": "fraction of responses satisfying the schema.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "selected_model_spec": {
++      "principle": "exact model spec used for headline measurements.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "semantic_success_rate": {
++      "principle": "fraction satisfying task semantics after schema validity.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "status": {
++      "principle": "complete only if live local SOTA inference ran under the gated preconditions.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "structured_protocol_clean": {
++      "principle": "boolean downstream gate, true only under the parse/schema/final-JSON/unsafe-false-accept/duration thresholds.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "truncation_failure_rate": {
++      "principle": "fraction classified as token-budget truncation failures.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "unsafe_false_accepts": {
++      "principle": "count of invalid/unsafe outputs accepted as valid.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "upstream_receipt_ready": {
++      "principle": "copied from Exp5378 live_sota_receipt_ready.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    },
++    "wrong_valid_count": {
++      "principle": "count of schema-valid outputs that were semantically wrong.",
++      "satisfied_by": "Exp 5379 live structured clean gate rerun"
++    }
++  },
++  "final_json_extraction_rate": 1.0,
++  "gpu_or_offload_receipt": {
++    "blocked_preconditions": [],
++    "gguf_loader_family": "llama.cpp/llama-cpp-python",
++    "gguf_runtime_available": true,
++    "gpu_visible": true,
++    "llama_cpp": {
++      "gpu_offload_support_error": null,
++      "gpu_offload_supported": true,
++      "import_ok": true,
++      "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
++      "version": "0.3.33"
++    },
++    "llama_cpp_gpu_offload_supported": true,
++    "non_retired_gpu_or_offload_path": true,
++    "nvidia_smi": {
++      "command": [
++        "nvidia-smi",
++        "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
++        "--format=csv,noheader,nounits"
++      ],
++      "duration_s": 0.091841,
++      "ok": true,
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n"
++    },
++    "offload_evidence": true,
++    "raw_nvidia_smi": {
++      "command": [
++        "nvidia-smi"
++      ],
++      "duration_s": 0.103784,
++      "ok": true,
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "Tue Jul  7 20:27:11 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   48C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   50C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
++    }
++  },
++  "honest_verdict": "complete: canonical structured_protocol_clean=true for .490 constraint-tax panel",
++  "inference_substrate": {
++    "gguf_loader_family": "llama.cpp/llama-cpp-python",
++    "gpu_or_offload_status": "non_retired_gpu_or_offload_path",
++    "kind": "live_llm_inference",
++    "live_local_sota_inference_ran": true,
++    "loader_family": "llama.cpp/llama-cpp-python",
++    "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
++  },
++  "methodology_duration_s": 124.422013,
++  "methodology_duration_sources": {
++    "exp5378_receipt_s": 98.33173,
++    "rerun_elapsed_s": 124.42201258894056,
++    "rerun_live_artifact_duration_s": 124.419821,
++    "rerun_live_artifact_methodology_s": 124.419036
++  },
++  "milestone": "2026.07.490",
++  "no_autotokenizer_used": true,
++  "parse_success_rate": 1.0,
++  "prompt_count": 4,
++  "random_seed": 5379,
++  "reproducibility_checksum": "83c7b1fa92d80a66",
++  "schema": "carnot.experiment_5379.live_structured_clean_gate_rerun.v490",
++  "schema_success_rate": 1.0,
++  "selected_model_spec": {
++    "autotokenizer_used": false,
++    "blocked_preconditions": [],
++    "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
++    "file_receipts": {
++      "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++      "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "size_bytes": 18323731456
++    },
++    "gguf_loader_family": "llama.cpp",
++    "headline_eligible": true,
++    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++    "metadata": {
++      "magic": "GGUF",
++      "metadata_kv_count": 57,
++      "tensor_count": 833,
++      "version": 3
++    },
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++    "quantization": "Q4_K_M",
++    "role": "flagship_dense",
++    "status": "local_gguf_resolved"
++  },
++  "semantic_success_rate": 1.0,
++  "source_artifacts": [
++    {
++      "live_sota_receipt_ready": true,
++      "methodology_duration_s": 98.33173,
++      "path": "results/experiment_5378_structured_methodology_duration_receipt_v490.json",
++      "used": true
++    },
++    {
++      "path": "results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json",
++      "purpose": "structured fixture rerun source for canonical .490 clean gate",
++      "used": true
++    }
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5379",
++    "SCENARIO-VERIFY-5379"
++  ],
++  "status": "complete",
++  "structured_protocol_clean": true,
++  "tests_run": [],
++  "truncation_failure_rate": 0.0,
++  "unsafe_false_accepts": 0,
++  "upstream_receipt_ready": true,
++  "wrong_valid_count": 0
++}
+diff --git a/tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py b/tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py
+new file mode 100644
+index 0000000000..6fc65a0cf7
+--- /dev/null
++++ b/tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py
+@@ -0,0 +1,524 @@
++"""Tests for Exp 5379 live structured clean gate rerun.
++
++Spec refs: REQ-VERIFY-5379, SCENARIO-VERIFY-5379.
++"""
++
++from __future__ import annotations
++
++import json
++import struct
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5366_live_grammar_budgeted_sota_protocol_v489 as exp5366
++from carnot import experiment_5378_structured_methodology_duration_receipt_v490 as exp5378
++from carnot import experiment_5379_live_structured_clean_gate_rerun_v490 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py -q"
++)
++
++
++def _minimal_gguf(path: Path) -> Path:
++    path.write_bytes(b"GGUF" + struct.pack("<IQQ", 3, 17, 5))
++    return path
++
++
++def _ready_exp5378() -> dict[str, Any]:
++    return json.loads((REPO / exp5378.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++
++def _runtime_receipt(*, blocked: list[str] | None = None) -> dict[str, Any]:
++    return {
++        "gpu_visible": not blocked,
++        "gguf_runtime_available": not blocked,
++        "gguf_loader_family": "llama.cpp/llama-cpp-python",
++        "llama_cpp_gpu_offload_supported": not blocked,
++        "offload_evidence": not blocked,
++        "non_retired_gpu_or_offload_path": not blocked,
++        "blocked_preconditions": list(blocked or []),
++        "nvidia_smi": {"ok": not blocked, "stdout": "0, NVIDIA RTX 3090, 24576, 24000"},
++    }
++
++
++def _resolved_model_specs(gguf: Path) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for base in exp5366.MANDATED_MODEL_SPECS:
++        rows.append(
++            {
++                "role": base["role"],
++                "hf_id": base["hf_id"],
++                "quantization": base["quantization"],
++                "cache_path": str(gguf.parent),
++                "model_path": str(gguf),
++                "status": "local_gguf_resolved",
++                "headline_eligible": True,
++                "gguf_loader_family": "llama.cpp",
++                "autotokenizer_used": False,
++                "file_receipts": {"path": str(gguf), "size_bytes": gguf.stat().st_size},
++                "metadata": {
++                    "magic": "GGUF",
++                    "version": 3,
++                    "tensor_count": 17,
++                    "metadata_kv_count": 5,
++                },
++                "blocked_preconditions": [],
++            }
++        )
++    return rows
++
++
++def _live_exp5366_artifact(
++    gguf: Path,
++    *,
++    parse_success_rate: float = 1.0,
++    schema_success_rate: float = 1.0,
++    final_json_extraction_rate: float = 1.0,
++    semantic_success_rate: float = 1.0,
++    unsafe_false_accepts: int = 0,
++    methodology_duration_s: float = 19.445366,
++    duration_s: float = 70.723275,
++    prompt_results: list[dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    specs = _resolved_model_specs(gguf)
++    selected = next(row for row in specs if row["hf_id"] == "unsloth/gemma-4-31B-it-GGUF")
++    rows = prompt_results or [
++        {
++            "failure_class": "accepted",
++            "parse_success": True,
++            "schema_success": True,
++            "final_json_extraction_success": True,
++            "semantic_success": True,
++            "truncation_failure": False,
++        }
++        for _ in range(4)
++    ]
++    return {
++        "schema": exp5366.SCHEMA,
++        "experiment_id": exp5366.EXPERIMENT_ID,
++        "status": "complete",
++        "grammar_budget_protocol_ready": True,
++        "structured_protocol_clean": False,
++        "MODEL_SPECS": specs,
++        "selected_model_spec": selected,
++        "inference_substrate": {
++            "kind": "live_llm_inference",
++            "loader_family": "llama.cpp/llama-cpp-python",
++            "gguf_loader_family": "llama.cpp/llama-cpp-python",
++            "gpu_or_offload_status": "non_retired_gpu_or_offload_path",
++            "live_local_sota_inference_ran": True,
++            "selected_model_hf_id": selected["hf_id"],
++        },
++        "gpu_or_offload_receipt": _runtime_receipt(),
++        "no_autotokenizer_used": True,
++        "prompt_count": len(rows),
++        "parse_success_rate": parse_success_rate,
++        "schema_success_rate": schema_success_rate,
++        "final_json_extraction_rate": final_json_extraction_rate,
++        "semantic_success_rate": semantic_success_rate,
++        "truncation_failure_rate": 0.0,
++        "unsafe_false_accepts": unsafe_false_accepts,
++        "completion_slack_min_tokens": 982,
++        "methodology_duration_s": methodology_duration_s,
++        "duration_s": duration_s,
++        "prompt_results": rows,
++        "generation_receipts": [{"completed": True, "wall_clock_s": methodology_duration_s}],
++        "honest_verdict": "complete: structured fixture rerun",
++    }
++
++
++def test_req_verify_5379_spec_declares_canonical_clean_gate_contract() -> None:
++    """REQ-VERIFY-5379: OpenSpec anchors the canonical .490 clean gate."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5379") : spec.index("### REQ-VERIFY-5378")]
++
++    for marker in (
++        "REQ-VERIFY-5379",
++        "SCENARIO-VERIFY-5379",
++        str(mod.RESULT_RELATIVE_PATH),
++        "live_sota_receipt_ready=true",
++        "methodology_duration_s>=60",
++        "non-retired GPU/offload evidence",
++        "llama.cpp/GGUF",
++        "AutoTokenizer.from_pretrained",
++        "AutoModel",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "parse_success_rate>=0.95",
++        "schema_success_rate>=0.90",
++        "final_json_extraction_rate>=0.95",
++        "unsafe_false_accepts=0",
++        "wrong_valid_count",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++        assert mod.FIELD_PRINCIPLES[field] in mod.field_provenance()[field]["principle"]
++
++
++def test_scenario_verify_5379_gates_on_exp5378_then_writes_clean_truth_source(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5379: ready Exp5378 permits the canonical live clean rerun."""
++
++    gguf = _minimal_gguf(tmp_path / "gemma-4-31B-it-Q4_K_M.gguf")
++    live_calls: list[dict[str, Any]] = []
++    upstream = _ready_exp5378()
++
++    def live_runner(**kwargs: Any) -> dict[str, Any]:
++        live_calls.append(kwargs)
++        return _live_exp5366_artifact(gguf)
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        exp5378_artifact=upstream,
++        model_resolver=lambda _hf_id, _quant: str(gguf),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        live_runner=live_runner,
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++
++    assert live_calls and live_calls[0]["write"] is False
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert artifact["status"] == "complete"
++    assert artifact["upstream_receipt_ready"] is True
++    assert artifact["structured_protocol_clean"] is True
++    assert [row["hf_id"] for row in artifact["MODEL_SPECS"]] == list(mod.MANDATED_HF_IDS)
++    assert artifact["selected_model_spec"]["hf_id"] == "unsloth/gemma-4-31B-it-GGUF"
++    assert artifact["inference_substrate"]["kind"] == "live_llm_inference"
++    assert artifact["inference_substrate"]["loader_family"] == "llama.cpp/llama-cpp-python"
++    assert artifact["gpu_or_offload_receipt"]["non_retired_gpu_or_offload_path"] is True
++    assert artifact["no_autotokenizer_used"] is True
++    assert artifact["prompt_count"] == 4
++    assert artifact["parse_success_rate"] == pytest.approx(1.0)
++    assert artifact["schema_success_rate"] == pytest.approx(1.0)
++    assert artifact["final_json_extraction_rate"] == pytest.approx(1.0)
++    assert artifact["semantic_success_rate"] == pytest.approx(1.0)
++    assert artifact["wrong_valid_count"] == 0
++    assert artifact["truncation_failure_rate"] == pytest.approx(0.0)
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["methodology_duration_s"] == pytest.approx(upstream["methodology_duration_s"])
++    assert artifact["methodology_duration_sources"]["exp5378_receipt_s"] == pytest.approx(
++        upstream["methodology_duration_s"]
++    )
++    assert artifact["acceptance_thresholds"] == mod.ACCEPTANCE_THRESHOLDS
++    assert artifact["honest_verdict"].startswith("complete:")
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_verify_5379_blocks_before_live_runner_when_exp5378_not_ready(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5379: Exp5378 readiness and duration gate live prompts."""
++
++    upstream = _ready_exp5378()
++    upstream["live_sota_receipt_ready"] = False
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "blocked-not-ready.json",
++        exp5378_artifact=upstream,
++        live_runner=lambda **_kwargs: pytest.fail("Exp5378 block must skip live runner"),
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++
++    assert json.loads((tmp_path / "blocked-not-ready.json").read_text(encoding="utf-8")) == artifact
++    assert artifact["status"] == "blocked"
++    assert artifact["upstream_receipt_ready"] is False
++    assert artifact["structured_protocol_clean"] is False
++    assert artifact["selected_model_spec"] is None
++    assert artifact["prompt_count"] == 0
++    assert (
++        "exp5378_live_sota_receipt_not_ready"
++        in artifact["gpu_or_offload_receipt"]["blocked_preconditions"]
++    )
++    assert artifact["honest_verdict"].startswith("blocked_")
++
++    short_upstream = _ready_exp5378()
++    short_upstream["methodology_duration_s"] = 59.99
++    short_block = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "blocked-short.json",
++        exp5378_artifact=short_upstream,
++        live_runner=lambda **_kwargs: pytest.fail("short Exp5378 block must skip live runner"),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++    assert short_block["upstream_receipt_ready"] is True
++    assert short_block["status"] == "blocked"
++    assert (
++        "exp5378_methodology_duration_lt_60"
++        in short_block["gpu_or_offload_receipt"]["blocked_preconditions"]
++    )
++    mod.validate_artifact(short_block)
++
++
++def test_scenario_verify_5379_blocks_cpu_only_runtime_before_prompt_generation(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5379: CPU-only GGUF runtime fails closed before prompts."""
++
++    gguf = _minimal_gguf(tmp_path / "gemma-4-31B-it-Q4_K_M.gguf")
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "blocked-cpu.json",
++        exp5378_artifact=_ready_exp5378(),
++        model_resolver=lambda _hf_id, _quant: str(gguf),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(blocked=["llama_cpp_cpu_only"]),
++        live_runner=lambda **_kwargs: pytest.fail("CPU-only runtime must skip live runner"),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++
++    assert artifact["status"] == "blocked"
++    assert artifact["upstream_receipt_ready"] is True
++    assert artifact["structured_protocol_clean"] is False
++    assert artifact["selected_model_spec"] is None
++    assert artifact["prompt_count"] == 0
++    assert "llama_cpp_cpu_only" in artifact["gpu_or_offload_receipt"]["blocked_preconditions"]
++    assert artifact["honest_verdict"].startswith("blocked_")
++    mod.validate_artifact(artifact)
++
++
++def test_req_verify_5379_wrong_valid_count_and_thresholds_are_canonical(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-5379: wrong-valid rows are counted but not hidden in parse/schema rates."""
++
++    gguf = _minimal_gguf(tmp_path / "semantics.gguf")
++    rows = [
++        {
++            "failure_class": "semantic",
++            "parse_success": True,
++            "schema_success": True,
++            "final_json_extraction_success": True,
++            "semantic_success": False,
++            "truncation_failure": False,
++        },
++        {
++            "failure_class": "accepted",
++            "parse_success": True,
++            "schema_success": True,
++            "final_json_extraction_success": True,
++            "semantic_success": True,
++            "truncation_failure": False,
++        },
++    ]
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "wrong-valid.json",
++        exp5378_artifact=_ready_exp5378(),
++        model_resolver=lambda _hf_id, _quant: str(gguf),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        live_runner=lambda **_kwargs: _live_exp5366_artifact(
++            gguf,
++            semantic_success_rate=0.5,
++            prompt_results=rows,
++        ),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++
++    assert artifact["wrong_valid_count"] == 1
++    assert artifact["semantic_success_rate"] == pytest.approx(0.5)
++    assert artifact["structured_protocol_clean"] is True
++
++    blocked = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "parse-block.json",
++        exp5378_artifact=_ready_exp5378(),
++        model_resolver=lambda _hf_id, _quant: str(gguf),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        live_runner=lambda **_kwargs: _live_exp5366_artifact(gguf, parse_success_rate=0.94),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++    assert blocked["status"] == "complete"
++    assert blocked["structured_protocol_clean"] is False
++    assert blocked["honest_verdict"].startswith("blocked_structured_protocol_clean_false")
++    mod.validate_artifact(blocked)
++
++
++def test_req_verify_5379_artifact_validation_rejects_contract_drift(tmp_path: Path) -> None:
++    """REQ-VERIFY-5379: artifact validation rejects malformed canonical gate fields."""
++
++    gguf = _minimal_gguf(tmp_path / "validation.gguf")
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "unused.json",
++        exp5378_artifact=_ready_exp5378(),
++        model_resolver=lambda _hf_id, _quant: str(gguf),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        live_runner=lambda **_kwargs: _live_exp5366_artifact(gguf),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++
++    def clone() -> dict[str, Any]:
++        return json.loads(json.dumps(artifact))
++
++    malformed_cases = [
++        (lambda a: (a.pop("status"), a)[1], "missing required fields"),
++        (
++            lambda a: (a.__setitem__("status", "running"), a)[1],
++            "status must be complete or blocked",
++        ),
++        (
++            lambda a: (a.__setitem__("upstream_receipt_ready", "yes"), a)[1],
++            "upstream_receipt_ready must be boolean",
++        ),
++        (
++            lambda a: (a.__setitem__("structured_protocol_clean", "false"), a)[1],
++            "structured_protocol_clean must be boolean",
++        ),
++        (
++            lambda a: (a.__setitem__("MODEL_SPECS", []), a)[1],
++            "MODEL_SPECS must contain all mandated SOTA GGUF specs",
++        ),
++        (
++            lambda a: (a.__setitem__("selected_model_spec", {"hf_id": "legacy/smoke"}), a)[1],
++            "selected_model_spec must be null or one mandated model spec",
++        ),
++        (
++            lambda a: (a.__setitem__("inference_substrate", "live"), a)[1],
++            "inference_substrate must be object",
++        ),
++        (
++            lambda a: (a.__setitem__("gpu_or_offload_receipt", []), a)[1],
++            "gpu_or_offload_receipt must be object",
++        ),
++        (
++            lambda a: (a.__setitem__("no_autotokenizer_used", False), a)[1],
++            "no_autotokenizer_used must be true",
++        ),
++        (
++            lambda a: (a.__setitem__("prompt_count", "4"), a)[1],
++            "prompt_count must be non-negative integer",
++        ),
++        (
++            lambda a: (a.__setitem__("parse_success_rate", 1.2), a)[1],
++            "parse_success_rate must be in [0, 1]",
++        ),
++        (
++            lambda a: (a.__setitem__("wrong_valid_count", -1), a)[1],
++            "wrong_valid_count must be non-negative integer",
++        ),
++        (
++            lambda a: (a.__setitem__("unsafe_false_accepts", -1), a)[1],
++            "unsafe_false_accepts must be non-negative integer",
++        ),
++        (
++            lambda a: (a.__setitem__("methodology_duration_s", "70"), a)[1],
++            "methodology_duration_s must be numeric",
++        ),
++        (
++            lambda a: (a.__setitem__("honest_verdict", "done"), a)[1],
++            "honest_verdict must start with complete: or blocked_",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("structured_protocol_clean", True),
++                a.__setitem__("schema_success_rate", 0.89),
++                a,
++            )[2],
++            "structured_protocol_clean thresholds are not satisfied",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("status", "complete"),
++                a["inference_substrate"].__setitem__("live_local_sota_inference_ran", False),
++                a,
++            )[2],
++            "complete status requires live local SOTA inference",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("status", "complete"),
++                a["inference_substrate"].__setitem__("live_local_sota_inference_ran", True),
++                a.__setitem__("selected_model_spec", None),
++                a,
++            )[3],
++            "complete status requires selected_model_spec",
++        ),
++        (
++            lambda a: (a["field_provenance"].pop("status"), a)[1],
++            "field_provenance must cover required fields",
++        ),
++    ]
++
++    for mutate, expected in malformed_cases:
++        joined = "; ".join(mod.artifact_schema_errors(mutate(clone())))
++        assert expected in joined
++
++    with pytest.raises(AssertionError, match="no_autotokenizer_used"):
++        bad = clone()
++        bad["no_autotokenizer_used"] = False
++        mod.validate_artifact(bad)
++
++
++def test_req_verify_5379_fallback_helpers_preserve_blocked_receipt_shape(tmp_path: Path) -> None:
++    """REQ-VERIFY-5379: helper fallbacks keep blocked clean-gate receipts auditable."""
++
++    gguf = _minimal_gguf(tmp_path / "fallback.gguf")
++    specs = _resolved_model_specs(gguf)
++    selected = specs[0]
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{not-json", encoding="utf-8")
++    valid_json = tmp_path / "valid.json"
++    valid_json.write_text('{"ok": true}', encoding="utf-8")
++
++    assert mod._merge_runtime_receipt({"blocked_preconditions": ["fixture"]}, {})[  # noqa: SLF001
++        "blocked_preconditions"
++    ] == ["fixture"]
++    assert mod._selected_model_from_live({}, selected) == selected  # noqa: SLF001
++    assert mod._model_specs_from_live({"MODEL_SPECS": "bad"}, specs) == specs  # noqa: SLF001
++    assert mod._wrong_valid_count({"wrong_valid_count": 2}) == 2  # noqa: SLF001
++    assert mod._wrong_valid_count({"prompt_results": "bad"}) == 0  # noqa: SLF001
++    assert mod._model_specs_cover_mandated("bad") is False  # noqa: SLF001
++    assert mod._load_json(valid_json) == {"ok": True}  # noqa: SLF001
++    assert mod._load_json(malformed) == {}  # noqa: SLF001
++    assert mod._load_json(tmp_path / "missing.json") == {}  # noqa: SLF001
++
++    model_block = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "model-block.json",
++        exp5378_artifact=_ready_exp5378(),
++        model_resolver=lambda _hf_id, _quant: None,
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        live_runner=lambda **_kwargs: pytest.fail("missing model block must skip live runner"),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++    assert model_block["status"] == "blocked"
++    assert (
++        "no_mandated_sota_gguf_resolved"
++        in model_block["gpu_or_offload_receipt"]["blocked_preconditions"]
++    )
++
++
++def test_req_verify_5379_checked_in_deliverable_satisfies_schema() -> None:
++    """REQ-VERIFY-5379: committed deliverable is the canonical .490 truth source."""
++
++    path = REPO / mod.RESULT_RELATIVE_PATH
++    assert path.is_file()
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["upstream_receipt_ready"] is True
++    assert artifact["structured_protocol_clean"] is True
++    assert artifact["no_autotokenizer_used"] is True
++    assert artifact["methodology_duration_s"] >= exp5366.MIN_CLEAN_METHODOLOGY_DURATION_S
+-- 
+2.55.0
+

@@ -1,0 +1,964 @@
+From 99fdf2797e0bb580c3027c2e40cd647e9180036a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 16:10:14 -0400
+Subject: [PATCH 09725/11362] [conductor] Plan next milestone: 2026.08.568
+
+Planning agent proposed 4 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 |   3 +
+ ops/.activation_replan_state.json             |   6 +-
+ ops/.run_sentinel_state.json                  |   2 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ .../roadmap-2026.08.568-refusal1.yaml         | 395 ++++++++++++++++++
+ .../agentic/arc_executable_world_model.py     |  20 +-
+ research-complete.yaml                        |  58 +++
+ research-roadmap-next.yaml                    |   6 +
+ scripts/arc_scored_path_lever_harness.py      |  45 ++
+ .../python/test_arc_engine_attempt_archive.py | 249 +++++++++++
+ 12 files changed, 785 insertions(+), 6 deletions(-)
+ create mode 100644 ops/roadmap-quarantine/roadmap-2026.08.568-refusal1.yaml
+ create mode 100644 tests/python/test_arc_engine_attempt_archive.py
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 1c9be40969..84b785af19 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -334,6 +334,9 @@ with identical spelling in its upstream task's required artifact fields.
+   It performs a new independent replay and no new generation.
+ - Exp6563 and Exp6565 cite the null Exp6551 production audit. They use direct
+   workload receipts and conjunctive promotion gates.
++- Exp6564 cites the positive Exp6545 router comparison. It does not repeat
++  router learning. It measures the later production ABI through scalar and
++  batched Rust/PyO3 paths against Python and NFR01.
+ - Exp6566 and Exp6568 cite blocked Exp6553. Actual sequential execution replaces
+   its impossible capacity threshold.
+ - Exp6568 also cites retired Exp5709 and Exp5773. A clean executable stream and
+diff --git a/ops/.activation_replan_state.json b/ops/.activation_replan_state.json
+index 9e26dfeeb6..35df6d27d6 100644
+--- a/ops/.activation_replan_state.json
++++ b/ops/.activation_replan_state.json
+@@ -1 +1,5 @@
+-{}
+\ No newline at end of file
++{
++  "milestone": "2026.08.568",
++  "replans": 1,
++  "parked": false
++}
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index ce01e42416..958d8f3975 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -5,5 +5,5 @@
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T19:41:49Z"
++ "last_scan_utc": "2026-08-23T20:04:04Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e12c41a9ed..27e9b757fe 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 13, "phase": "iteration_start", "last_beat": "2026-08-23T18:50:15Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-08-23T20:04:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 266642d6dd..e07c00b830 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16352,3 +16352,6 @@ code |
+ | 2026-08-23 18:07 UTC | ARC live trajectory-supervisor redirect-ledger gen | OK | 87 passed, 1 warning in 8.76s |
+ | 2026-08-23 18:26 UTC | GateMate changed-physical-state continuity with on | OK | 88 passed, 1 warning in 13.31s |
+ | 2026-08-23 18:48 UTC | Independent V567 capstone, adoption boundary, and  | OK | 86 passed, 1 warning in 14.62s |
++| 2026-08-23 20:02 UTC | Plan milestone 2026.08.568 | OK | 4 tasks proposed |
++| 2026-08-23 20:04 UTC | Activation REFUSED: milestone 2026.08.568 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-23 20:04 UTC | Activation replan 1/2: 2026.08.568 | OK | refused roadmap quarantined to roadmap-2026.08.568-refusal1.yaml; replanning wit |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 60bd8423bb..4006820b0c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 13, "phase": "iteration_start", "started_at": "2026-08-23T18:50:15Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 14, "phase": "iteration_start", "started_at": "2026-08-23T20:04:04Z"}
+\ No newline at end of file
+diff --git a/ops/roadmap-quarantine/roadmap-2026.08.568-refusal1.yaml b/ops/roadmap-quarantine/roadmap-2026.08.568-refusal1.yaml
+new file mode 100644
+index 0000000000..33cf422c69
+--- /dev/null
++++ b/ops/roadmap-quarantine/roadmap-2026.08.568-refusal1.yaml
+@@ -0,0 +1,395 @@
++milestone: "2026.08.568"
++milestone_title: "Audited Promotion and Adaptive Continuous Learning"
++milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
++tasks:
++  - id: exp6561-v568-evidence-gate-contract
++    milestone: "2026.08.568"
++    deliverable: results/experiment_6561_v568_evidence_gate_contract.json
++    title: "V568 evidence eligibility, exclusion, model, and gate contract"
++    priority: critical
++    track: infrastructure-governance
++    requires_gpu: false
++    per_unit_rows: true
++    max_turns: 100
++    estimated_wall_time_min: 90
++    model: opus
++    prompt: |
++      CONTEXT
++      V567 completed Exp6548 through Exp6560. It produced reusable production, memory, saturation, and ARC assets. It also produced blocked CSL, saturation-audit, and GateMate records. V568 needs one additive evidence contract before it extends any lane. Work at {project_root}. The planning date is {date}.
++
++      EXISTING CODE TO READ FIRST
++      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json through {project_root}/results/experiment_6560_v567_independent_capstone.json
++      - {project_root}/research-complete.yaml, {project_root}/research-references.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/conductor-log.md
++      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/conductor_gates.py, and {project_root}/scripts/roadmap_schema.py
++      - {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, relevant capability specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
++
++      TASK
++      Build the additive V568 evidence and gate contract. Import V567 artifacts only by immutable path and hash. Freeze every V568 gate field, prior-failure entry, model requirement, and hardware boundary.
++
++      CONCRETE STEPS
++      0. PRECONDITIONS: record git status, CPU, RAM, disk, Python, Rust, PyO3, Z3, artifact paths and hashes, protected-file hashes, architecture freshness, and network status. This task performs no LLM load and no hardware command.
++      1. Add or confirm REQ-* and SCENARIO anchors for immutable evidence import, closed verdict classes, exact gate spelling, prior-failure completeness, model policy, hardware boundaries, and atomic terminal output. Write focused tests first.
++      2. Run live adversarial verification and row-consistency checks on Exp6548 through Exp6560. Record one eligibility row per artifact, including verifier version, exit status, stamped flags, live flags, and reason.
++      3. Mark Exp6557 as a conductor pre-gate block, not as a scientific audit. Mark Exp6553 and Exp6554 as blocked infrastructure evidence, not null science. Preserve the Exp6559 zero-command receipt.
++      4. Freeze all V568 task IDs, deliverables, readiness fields, gates, required artifact fields, sample floors, MODEL_SPECS, sequential-load rule, ARC no-solve rule, and zero-command hardware rule.
++      5. Confirm that each gate names a task in this roadmap and an identically spelled required field. Confirm that every scope-matched failed or retired task has all four prior-failure fields and that no `requires` chain uses a retired ID.
++      6. Attack missing artifacts, hash aliases, aggregate-only claims, stamped-versus-live verifier disagreement, missing gate fields, legacy-model substitution, impossible VRAM thresholds, retired-scope reuse, and protected-file mutation.
++      7. Set v568_evidence_contract_ready_score=1.0 only when the artifact, gate, prior-failure, model, hardware, and protected-file contracts all close. Set production_v567_evidence_ready_score=1.0 only when Exp6549 through Exp6551 remain eligible for a workload canary.
++      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, exclusion-manifest lint, roadmap schema validation, row lint, adversarial verification, applicable E2E checks, and git status.
++
++      Required deliverable: {project_root}/results/experiment_6561_v568_evidence_gate_contract.json.
++      REQUIRED ARTIFACT FIELDS:
++        status:
++          principle: "A terminal state prevents a bootstrap record from posing as a completed evidence contract."
++        honest_verdict:
++          principle: "The verdict must state the eligible evidence boundary and use a terminal prefix."
++        verdict_class:
++          principle: "A closed class carries blocked, partial, null, and disqualified status into downstream aggregation."
++        v567_artifact_eligibility_rows:
++          principle: "One row per V567 artifact makes every import decision recheckable."
++        v568_gate_contract_rows:
++          principle: "Every downstream gate needs an in-roadmap task and an identically spelled upstream field."
++        prior_failure_contract_rows:
++          principle: "Each scope-matched failure needs experiment ID, verdict, changed method, and retirement signal."
++        model_and_sequential_runtime_contract:
++          principle: "The three mandated GGUF identities and actual-load rule must be frozen before outcomes exist."
++        hardware_claim_boundary:
++          principle: "The contract prevents unchanged GateMate commands and unauthenticated TSU claims."
++        v568_evidence_contract_ready_score:
++          principle: "One binary field gates tasks that need the complete V568 contract."
++        production_v567_evidence_ready_score:
++          principle: "The production canary needs a separate clean Exp6549-Exp6551 evidence gate."
++        per_unit_rows:
++          principle: "Artifact-level rows prevent one failed input from hiding inside an aggregate."
++        aggregate_row_recomputation:
++          principle: "Readiness fields must derive from emitted eligibility and contract rows."
++        gate_check_summary:
++          principle: "A blocked verdict must name the failed check and observed value."
++        preconditions_checked:
++          principle: "Resource and input receipts distinguish missing prerequisites from evidence failure."
++        protected_files_unchanged:
++          principle: "The task must not mutate research-roadmap.yaml or scripts/research_conductor.py."
++        inference_substrate:
++          principle: "The artifact must declare immutable evidence aggregation with no new LLM inference."
++        verifier_is_oracle:
++          principle: "Artifact validation is audit authority and not oracle-distinct science."
++        field_provenance:
++          principle: "Every headline field must identify source rows, hashes, and reducers."
++        duration_s:
++          principle: "Monotonic wall time exposes skipped verifier and contract checks."
++        tests_run:
++          principle: "Named commands and exit codes make contract validation reproducible."
++        reproducibility_checksum:
++          principle: "A final content hash detects mutation of the terminal record."
++      Set inference_substrate=immutable_v567_artifact_gate_and_scope_audit_no_llm and verifier_is_oracle=true. A clean contract uses verdict_class=null, a usable subset uses partial, a missing input uses blocked, and false provenance uses disqualified.
++
++      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6561_v568_evidence_gate_contract --date {date}
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp6562-constraint-saturation-independent-audit-v2
++    milestone: "2026.08.568"
++    deliverable: results/experiment_6562_constraint_saturation_independent_audit_v2.json
++    title: "Independent V567 constraint-saturation audit from checked-in rows"
++    priority: critical
++    track: infrastructure-audit
++    requires_gpu: false
++    per_unit_rows: true
++    max_turns: 50
++    estimated_wall_time_min: 120
++    agent_type: codex
++    model: gpt-5.5
++    prior_failures:
++      - experiment_id: exp6556-sota-constraint-saturation-intervention-ab
++        verdict: "complete_sota_constraint_saturation_intervention_positive: phase curve, bounded exact fallback benefit beyond longer flat, zero harmful intervention, charged cost, and receipts close"
++        addressed_by: "Exp6556 made the live comparative claim. This task performs no new generation and independently checks raw response provenance, model and GPU receipts, fixture proofs, exact clause and joint replay, pairing, harm, and charged cost from immutable rows."
++        retire_if_same_verdict: true
++      - experiment_id: exp6557-constraint-saturation-independent-audit
++        verdict: "blocked_gate_check_failed"
++        addressed_by: "Exp6557 never ran because the conductor rejected its missing prior-failure contract. This task includes complete prior-failure entries, has no structured gate, and audits the checked-in Exp6555 and Exp6556 evidence directly."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT
++      Exp6556 reports a positive constraint-saturation intervention. Exp6557 did not audit it because the conductor blocked the task before execution. The V567 capstone names this independent replay as the safe next experiment. This task must run before any new model inference. Work at {project_root}. The planning date is {date}.
++
++      EXISTING CODE TO READ FIRST
++      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V568 roadmap document
++      - {project_root}/results/experiment_6555_proof_preserving_constraint_saturation_fixture.json and {project_root}/results/fixtures/v567_constraint_saturation.jsonl
++      - {project_root}/results/experiment_6556_sota_constraint_saturation_intervention_ab.json and {project_root}/results/checkpoints/experiment_6556_sota_constraint_saturation_intervention_ab.json
++      - {project_root}/python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py and {project_root}/python/carnot/experiment_6556_sota_constraint_saturation_intervention_ab.py
++      - exact fixture, clause, joint, response, model, GPU, token, cost, and reducer code plus their tests
++      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, relevant specs, exclusions, traceability, and E2E plan
++
++      TASK
++      Independently audit the V567 saturation claim from checked-in evidence. Perform no new LLM generation. Rule separately on fixture validity, live model provenance, exact results, phase curves, paired interventions, harm, and cost.
++
++      CONCRETE STEPS
++      0. PRECONDITIONS: record input existence, paths and hashes, raw-response and checkpoint paths, model-file hashes without loading weights, checker hashes, Python and Z3 versions, CPU, RAM, disk, audit seed, and protected-file hashes.
++      1. Add or confirm REQ-* and SCENARIO anchors for independent fixture proof, live-receipt validation, clause replay, joint replay, paired recomputation, harm, charged cost, missing inputs, and atomic output. Write tests first.
++      2. Replay every equivalent and hardened fixture row against the source exact solver. Confirm constraint count, clause identity, interaction, surface, lineage, and intended proof relation.
++      3. Validate each model file hash, process command, PID, start and end time, GPU sample, token count, response hash, exit status, and raw response. A loader smoke flag or self-reported process ID is not enough. Reject synthetic response text, constant fake GPU samples, stale outputs, and impossible timing.
++      4. Replay every clause and joint result. Confirm that every decomposition preserves every clause and that every released result passed the exact joint checker.
++      5. Recompute per-model and pooled phase curves, matched flat-versus-long-flat effects, decomposition and fallback effects, recoveries, regressions, harmful interventions, tokens, solver calls, retries, wall time, timeouts, and censoring from rows only.
++      6. Attack missing and duplicate rows, unequal cells, hidden retries, zero-headroom wins, aggregate tampering, post-held thresholds, model identity shortcuts, invalid releases, and circular exact authority.
++      7. Set constraint_saturation_independent_audit_ready_score=1.0 only when fixture, live provenance, row closure, exact replay, pairing, harm, cost, and verdict recomputation all pass. Set constraint_saturation_policy_audited_score=1.0 only when the independent audit confirms the bounded policy claim.
++      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, adversarial verification, exact-replay E2E checks, and git status.
++
++      Required deliverable: {project_root}/results/experiment_6562_constraint_saturation_independent_audit_v2.json.
++      REQUIRED ARTIFACT FIELDS:
++        status:
++          principle: "An always-run audit needs a terminal state for clean, missing, invalid, and non-recomputable evidence."
++        honest_verdict:
++          principle: "The verdict must state fixture, live provenance, exact replay, harm, cost, and policy dispositions with a terminal prefix."
++        verdict_class:
++          principle: "A closed class prevents an audit record from becoming unbounded positive science."
++        input_existence_and_hash_receipts:
++          principle: "The audit must identify the exact artifacts, checkpoints, raw responses, and checkers it used."
++        independent_fixture_proof_rows:
++          principle: "The model comparison is ineligible if the proof-preserving variants do not replay."
++        independent_live_provenance_rows:
++          principle: "Commands, PIDs, GPU samples, tokens, and response hashes must prove actual flagship inference."
++        independent_clause_and_joint_replay_rows:
++          principle: "Every credited success and release needs a separate executable replay."
++        independent_phase_curve_rows:
++          principle: "Constraint-load collapse must be recomputed by model, count, type, interaction, and surface."
++        independent_paired_intervention_rows:
++          principle: "Every claimed benefit needs matched rows against flat and longer-flat controls."
++        harmful_intervention_and_release_audit:
++          principle: "No aggregate gain can hide regressions or one invalid release."
++        charged_cost_audit:
++          principle: "Tokens, retries, solver calls, and time must recompute from raw receipts."
++        constraint_saturation_independent_audit_ready_score:
++          principle: "One binary field states whether the V567 saturation evidence is independently usable."
++        constraint_saturation_policy_audited_score:
++          principle: "A separate field distinguishes clean null evidence from a confirmed promotable policy."
++        per_unit_rows:
++          principle: "Every audit conclusion needs unit-level recomputation rows."
++        aggregate_row_recomputation:
++          principle: "The audit verdict must derive only from independent rows."
++        gate_check_summary:
++          principle: "A blocked audit must name every missing or failed check and observed value."
++        preconditions_checked:
++          principle: "Input and replay receipts distinguish blocked audit work from null science."
++        protected_files_unchanged:
++          principle: "The audit must not repair upstream evidence or mutate protected orchestration files."
++        inference_substrate:
++          principle: "The audit replays stored evidence and performs no new GGUF generation."
++        verifier_is_oracle:
++          principle: "Independent executable replay is audit authority, so a clean audit uses a non-positive class."
++        field_provenance:
++          principle: "Each disposition must point to immutable rows, receipts, and reducers."
++        random_seed:
++          principle: "A fixed audit order makes attacks and samples repeatable."
++        duration_s:
++          principle: "Monotonic time exposes an audit that skipped receipt or replay work."
++        tests_run:
++          principle: "Named tests and E2E commands show independent checks executed."
++        reproducibility_checksum:
++          principle: "A final hash protects the independent determination trail."
++      Set inference_substrate=independent_checked_in_sota_receipt_and_exact_constraint_replay_no_new_llm and verifier_is_oracle=true. Use verdict_class=null for a clean audit, partial for incomplete but usable evidence, blocked for missing inputs, or disqualified for false provenance, invalid variants, missing clauses, or non-recomputable claims.
++
++      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6562_constraint_saturation_independent_audit_v2 --date {date}
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp6563-production-safety-net-workload-canary
++    milestone: "2026.08.568"
++    deliverable: results/experiment_6563_production_safety_net_workload_canary.json
++    title: "Production Safety-Net canary on measured verification workloads"
++    priority: critical
++    track: production-integration
++    requires_gpu: false
++    per_unit_rows: true
++    max_turns: 50
++    estimated_wall_time_min: 150
++    agent_type: codex
++    model: gpt-5.5
++    prior_failures:
++      - experiment_id: exp6551-production-safety-net-independent-audit
++        verdict: "complete_production_safety_net_independent_audit_null: null disposition; independent rows prove disabled identity, enabled exact equality, Python/Rust parity, fallback, immutability, and rollback"
++        addressed_by: "Exp6551 established structural safety but used experiment-local costs and reached a null scientific disposition. This task uses current production-shaped workloads and direct wall-time, checker-call, serialization, persistence, fallback, and rollback receipts."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6561-v568-evidence-gate-contract
++        artifact_field: production_v567_evidence_ready_score
++        op: "=="
++        value: 1.0
++        principle: "The real workload canary may use the adapter only after the clean production evidence gate passes."
++    prompt: |
++      CONTEXT
++      V567 proved that the default-off Safety-Net adapter preserves exact behavior and rollback. It did not prove a benefit on current production-shaped workloads. V568 must replace synthetic adapter cost units with measured work before it considers a default flip. Work at {project_root}. The planning date is {date}.
++
++      EXISTING CODE TO READ FIRST
++      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V568 roadmap document
++      - {project_root}/results/experiment_6561_v568_evidence_gate_contract.json
++      - {project_root}/results/experiment_6549_production_safety_net_adapter.json, {project_root}/results/experiment_6550_rust_pyo3_safety_net_parity.json, and {project_root}/results/experiment_6551_production_safety_net_independent_audit.json
++      - {project_root}/python/carnot/pipeline/production_safety_net_adapter.py, {project_root}/python/carnot/pipeline/safety_net_abi.py, and {project_root}/python/carnot/pipeline/verify_repair.py
++      - current pipeline regression fixtures, workload manifests, exact verifier code, relevant tests, specs, traceability, exclusions, status, changelog, and E2E plan
++
++      TASK
++      Run a native, disabled-adapter, enabled-adapter, forced-abstain, forced-fallback, and rollback canary on production-shaped verification workloads. Measure actual work and exact outputs.
++
++      CONCRETE STEPS
++      0. PRECONDITIONS: evaluate the structured gate and record expected and observed values, upstream path and hash, fixture hashes, Python and Z3 versions, CPU, RAM, disk, process isolation, timer resolution, and protected-file hashes.
++      1. Add or confirm REQ-* and SCENARIO anchors for real-workload identity, measured cost, candidate preservation, abstention, fallback, persistence, restart, rollback, and atomic output. Write tests first.
++      2. Freeze a family-blind production workload matrix before execution. Include normal, empty, malformed, unsupported, fallback-heavy, exception, restart, and rollback strata. Use current checked-in fixtures only.
++      3. Compare native, disabled, enabled, forced-abstain, forced-fallback, and rollback conditions with identical requests, candidate order, warm-up, seeds, process placement, and exact checks.
++      4. Record request bytes, route, abstention, candidate set and order, exact result, checker calls, serialization bytes, persistence bytes, process time, monotonic wall time, fallback reason, and rollback state for every unit.
++      5. Exclude synthetic adapter cost units from the headline. Report them only as a diagnostic. Use direct receipts for work and latency claims.
++      6. Attack outcome leakage, model or family identity, source IDs, entity names, row order, exception writes, candidate deletion, hidden retries, unreachable fallback, timer bias, cache imbalance, and rollback drift.
++      7. Set production_workload_canary_ready_score=1.0 only when disabled identity, exact equality, candidate preservation, fallback, restart, and rollback all pass with complete rows. Set production_workload_promotion_candidate_score=1.0 only when enabled routing improves preregistered measured work or latency without a safety, tail-latency, or invalid-release regression.
++      8. Write one terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, pipeline E2E checks, and git status.
++
++      Required deliverable: {project_root}/results/experiment_6563_production_safety_net_workload_canary.json.
++      REQUIRED ARTIFACT FIELDS:
++        status:
++          principle: "A terminal state distinguishes a measured workload canary from setup-only adapter work."
++        honest_verdict:
++          principle: "The verdict must state identity, exact equality, measured benefit, fallback, and rollback with a terminal prefix."
++        verdict_class:
++          principle: "A closed class prevents incomplete or unsafe workload evidence from becoming positive."
++        upstream_gate_receipt:
++          principle: "The canary must identify the eligible V567 production evidence that authorized execution."
++        frozen_workload_and_timing_contract:
++          principle: "Workloads, warm-up, pairing, timers, and thresholds must be fixed before outcomes exist."
++        per_unit_rows:
++          principle: "Every workload, seed, and adapter condition needs request, decision, exact, and cost metrics."
++        disabled_identity_rows:
++          principle: "Native-versus-disabled bytes expose any supposedly inert behavior change."
++        enabled_route_and_fallback_rows:
++          principle: "Every route, abstention, exception, and fallback must remain visible."
++        exact_output_and_candidate_receipt:
++          principle: "Promotion requires exact accepted outputs and complete candidate preservation."
++        measured_work_and_latency_rows:
++          principle: "Direct checker, serialization, persistence, process, and wall-time receipts replace synthetic units."
++        restart_and_rollback_receipts:
++          principle: "A production route needs exact recovery after process and configuration changes."
++        shortcut_attack_matrix:
++          principle: "Identity, leakage, retry, timing, and fallback attacks test the actual production boundary."
++        production_workload_canary_ready_score:
++          principle: "One binary field states whether the canary is complete and safe."
++        production_workload_promotion_candidate_score:
++          principle: "A separate score gates default promotion on measured benefit and safety."
++        aggregate_row_recomputation:
++          principle: "Every headline must derive from emitted workload rows."
++        gate_check_summary:
++          principle: "A blocked run must name the failed upstream, workload, timer, or runtime check and value."
++        preconditions_checked:
++          principle: "Resource and fixture receipts separate blocked execution from null production value."
++        protected_files_unchanged:
++          principle: "The canary must preserve active orchestration files."
++        inference_substrate:
++          principle: "The artifact must declare production pipeline and exact verification with no LLM inference."
++        verifier_is_oracle:
++          principle: "The learned route is not authority; the native exact verifier remains separate."
++        field_provenance:
++          principle: "Each benefit and safety field must point to raw workload rows and reducers."
++        random_seed:
++          principle: "Fixed order and tie seeds make the paired canary repeatable."
++        duration_s:
++          principle: "Monotonic wall time exposes omitted workload or rollback work."
++        tests_run:
++          principle: "Named unit and E2E receipts prove the production path executed."
++        reproducibility_checksum:
++          principle: "A final hash detects mutation after the verdict."
++      Set inference_substrate=production_verify_repair_workload_canary_exact_verifier_no_llm and verifier_is_oracle=false. Use verdict_class=positive only for a measured enabled-path benefit with exact identity and safety; use null for no benefit, partial for narrow support, blocked for failed prerequisites, or disqualified for leakage or changed accepted outputs.
++
++      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6563_production_safety_net_workload_canary --date {date}
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp6564-rust-pyo3-safety-net-nfr01
++    milestone: "2026.08.568"
++    deliverable: results/experiment_6564_rust_pyo3_safety_net_nfr01.json
++    title: "Rust/PyO3 Safety-Net batched hot-path NFR01 benchmark"
++    priority: critical
++    track: cross-language-core
++    requires_gpu: false
++    per_unit_rows: true
++    max_turns: 50
++    estimated_wall_time_min: 150
++    agent_type: codex
++    model: gpt-5.5
++    gated_on:
++      - upstream: exp6563-production-safety-net-workload-canary
++        artifact_field: production_workload_canary_ready_score
++        op: "=="
++        value: 1.0
++        principle: "NFR01 must benchmark the exact workload contract that already passed the production canary."
++    prompt: |
++      CONTEXT
++      Exp6550 proved Python and Rust/PyO3 decision parity. The PRD also requires the Rust hot path to reach at least ten-times Python throughput. V568 needs a direct scalar and batched benchmark on the workload contract frozen by Exp6563. Work at {project_root}. The planning date is {date}.
++
++      EXISTING CODE TO READ FIRST
++      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V568 roadmap document
++      - {project_root}/results/experiment_6563_production_safety_net_workload_canary.json
++      - {project_root}/results/experiment_6550_rust_pyo3_safety_net_parity.json and {project_root}/python/carnot/pipeline/safety_net_abi.py
++      - {project_root}/crates/carnot-python/src/safety_net.rs, {project_root}/crates/carnot-python/src/lib.rs, Cargo manifests, PyO3 build files, and parity tests
++      - current benchmark utilities, relevant specs, traceability, exclusions, status, changelog, and E2E plan
++
++      TASK
++      Implement the smallest batched Rust/PyO3 Safety-Net decision API if needed. Benchmark pure Python scalar, PyO3 scalar, and PyO3 batch paths with identical request bytes and exact decision parity.
++
++      CONCRETE STEPS
++      0. PRECONDITIONS: evaluate the structured gate and record its receipt, CPU model and governor, core placement, RAM, Rust and cargo versions, compiler flags, extension hash, Python version, timer resolution, thermal state, and protected-file hashes.
++      1. Add or confirm REQ-* and SCENARIO anchors for versioned batch ABI, scalar parity, batch parity, errors, warm-up, allocation accounting, NFR01, tail latency, and rollback. Write Rust and Python tests first.
++      2. Add only the batch boundary required to amortize PyO3 and JSON overhead. Preserve the V567 scalar ABI and error semantics. Do not move Z3, LLM inference, or natural-language extraction into Rust.
++      3. Freeze identical request bytes for Python scalar, PyO3 scalar, and PyO3 batch. Cover supported, abstain, fallback, exception, malformed, and unsupported conditions.
++      4. Run release builds with fixed core placement, warm-up, repeated blocks, multiple batch sizes, and randomized condition order. Record operations, bytes, allocations, process time, wall time, p50, p95, p99, and errors per unit.
++      5. Confirm byte-identical decisions, ordering, error class, fallback reason, and exact downstream result for every request. Charge batch construction, serialization, copies, and Python conversion.
++      6. Attack compiler or debug mismatch, hidden preprocessing, unequal request counts, discarded errors, warm-cache bias, timer granularity, one-outlier medians, uncharged batch assembly, and aggregate-only speedups.
++      7. Set rust_pyo3_nfr01_ready_score=1.0 only when steady-state median batched throughput is at least 10.0 times pure Python scalar on the preregistered workload, every decision is exact, p99 is within the frozen bound, and no work is omitted. A parity-only result is null, not positive.
++      8. Write one terminal artifact atomically. Run cargo tests, focused Python tests, lint, spec coverage, row lint, gate audit, adversarial verification, PyO3 import and pipeline E2E checks, and git status.
++
++      Required deliverable: {project_root}/results/experiment_6564_rust_pyo3_safety_net_nfr01.json.
++      REQUIRED ARTIFACT FIELDS:
++        status:
++          principle: "A terminal state distinguishes a completed release benchmark from a build-only artifact."
++        honest_verdict:
++          principle: "The verdict must state parity, throughput, tail latency, and NFR01 with a terminal prefix."
++        verdict_class:
++          principle: "A closed class prevents parity-only or biased timing evidence from becoming positive."
++        upstream_gate_receipt:
++          principle: "The benchmark must identify the exact production workload contract it measures."
++        abi_schema_and_build_receipts:
++          principle: "Version, compiler, extension, and release hashes make the measured Rust path identifiable."
++        frozen_benchmark_contract:
++          principle: "Requests, batch sizes, warm-up, repetitions, affinity, and thresholds must precede timing."
++        per_unit_rows:
++          principle: "Every implementation, block, batch size, and condition needs parity and timing metrics."
++        scalar_and_batch_parity_rows:
++          principle: "Speed is ineligible unless request, decision, error, order, and fallback bytes match."
++        throughput_and_latency_rows:
++          principle: "Operations, p50, p95, p99, and wall time expose throughput-tail tradeoffs."
++        allocation_and_copy_rows:
++          principle: "Batch assembly, serialization, allocation, and conversion work must be charged."
++        exact_downstream_equality_receipt:
++          principle: "The accelerated decision path may not change exact verification results."
++        benchmark_attack_matrix:
++          principle: "Build, cache, timer, count, preprocessing, and aggregation attacks test the speed claim."
++        rust_pyo3_nfr01_ready_score:
++          principle: "One binary field gates default promotion on the PRD ten-times threshold."
++        aggregate_row_recomputation:
++          principle: "NFR01 and tail-latency headlines must recompute from unit rows."
++        gate_check_summary:
++          principle: "A blocked run must name the failed workload, build, import, or timing check and value."
++        preconditions_checked:
++          principle: "Host and toolchain receipts separate unavailable performance work from null speedup."
++        protected_files_unchanged:
++          principle: "The benchmark must preserve active orchestration files."
++        inference_substrate:
++          principle: "The artifact must declare CPU Python and Rust/PyO3 decision execution with no LLM."
++        verifier_is_oracle:
++          principle: "The cross-language implementation is not authority; exact downstream checks remain separate."
++        field_provenance:
++          principle: "Each parity and speed field must point to raw rows, build hashes, and reducers."
++        random_seed:
++          principle: "Fixed randomized block order makes the benchmark repeatable."
++        duration_s:
++          principle: "Monotonic duration exposes skipped warm-up or repeated blocks."
++        tests_run:
++          principle: "Named Rust, Python, and E2E receipts prove all paths executed."
++        reproducibility_checksum:
++          principle: "A final hash detects mutation of the terminal benchmark."
++      Set inference_substrate=cpu_python_scalar_vs_rust_pyo3_scalar_and_batch_exact_decisions and verifier_is_oracle=false. Use verdict_class=positive only when NFR01 and parity pass; use null for honest sub-threshold speed, partial for narrow support, blocked for failed prerequisites, or disqualified for unequal work or false timing.
++
++      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6564_rust_pyo3_safety_net_nfr01 --date {date}
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 2baac0f3dc..3bb5ab78f5 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3660,7 +3660,7 @@ class CodexProposer:
+     ) -> tuple[bool, str]:
+         _guard_engine_write(E3_DIR / game)
+         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+-        return _codex(
++        ok, tail = _codex(
+             induce_prompt(
+                 game,
+                 trans,
+@@ -3672,9 +3672,17 @@ class CodexProposer:
+             ),
+             self.timeout,
+         )
++        if ok:
++            # REQ-ARC-WMTE-6690: codex wrote the file out-of-band; archive it post-hoc.
++            self.last_attempt_archive = _archive_codex_engine(game)
++        return ok, tail
+ 
+     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
+-        return _codex(refactor_prompt(game, vr), self.timeout)
++        ok, tail = _codex(refactor_prompt(game, vr), self.timeout)
++        if ok:
++            # REQ-ARC-WMTE-6690: same post-hoc archive as induce.
++            self.last_attempt_archive = _archive_codex_engine(game)
++        return ok, tail
+ 
+ 
+ # ==============================================================================================
+@@ -7979,6 +7987,10 @@ class LocalGGUFProposer:
+         )
+         if ok:
+             (E3_DIR / game / "world_model.py").write_text(code)
++            # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
++            self.last_attempt_archive = _archive_engine_attempt(
++                game, code, writer="gen_to_file", model=str(self.repo_substr)
++            )
+             return True, "local gguf (GPU server) wrote world_model.py"
+         return False, code
+ 
+@@ -7991,6 +8003,10 @@ class LocalGGUFProposer:
+         _guard_engine_write(E3_DIR / game)
+         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+         (E3_DIR / game / "world_model.py").write_text(code)
++        # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
++        self.last_attempt_archive = _archive_engine_attempt(
++            game, code, writer="write_world_model", model=str(self.repo_substr), note=note
++        )
+         msg = "local gguf (GPU server) wrote world_model.py"
+         return True, (f"{msg} ({note})" if note else msg)
+ 
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 0e13b40d10..d41259c4df 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -83286,3 +83286,61 @@ milestones:
+     title: Independent external router and SOTA cost-guard audit
+     deliverable: results/experiment_6547_external_transfer_independent_audit.json
+     result: OK
++- id: 2026.08.567
++  title: Production Safety Net, Reversible Learning, and Constraint Saturation
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-23'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6548-v567-evidence-eligibility-contract
++    title: V567 evidence eligibility, architecture freshness, and gate contract
++    deliverable: results/experiment_6548_v567_evidence_eligibility_contract.json
++    result: OK
++  - id: exp6549-production-safety-net-adapter
++    title: Default-off production Safety-Net adapter with exact fallback
++    deliverable: results/experiment_6549_production_safety_net_adapter.json
++    result: OK
++  - id: exp6550-rust-pyo3-safety-net-parity
++    title: Rust/PyO3 Safety-Net request and decision parity
++    deliverable: results/experiment_6550_rust_pyo3_safety_net_parity.json
++    result: OK
++  - id: exp6551-production-safety-net-independent-audit
++    title: Independent production Safety-Net and cross-language audit
++    deliverable: results/experiment_6551_production_safety_net_independent_audit.json
++    result: OK
++  - id: exp6552-hysteretic-reversible-conflict-memory
++    title: Hysteretic active, dormant, and retired conflict memory
++    deliverable: results/experiment_6552_hysteretic_reversible_conflict_memory.json
++    result: OK
++  - id: exp6553-prospective-sota-continuous-self-learning
++    title: Prospective SOTA chronological continuous self-learning comparison
++    deliverable: results/experiment_6553_prospective_sota_continuous_self_learning.json
++    result: OK
++  - id: exp6554-continuous-self-learning-independent-audit
++    title: Independent prospective continuous self-learning audit
++    deliverable: results/experiment_6554_continuous_self_learning_independent_audit.json
++    result: OK
++  - id: exp6555-proof-preserving-constraint-saturation-fixture
++    title: Proof-preserving constraint-saturation SOTA ingestion and fixture
++    deliverable: results/experiment_6555_proof_preserving_constraint_saturation_fixture.json
++    result: OK
++  - id: exp6556-sota-constraint-saturation-intervention-ab
++    title: SOTA constraint-saturation and bounded-intervention comparison
++    deliverable: results/experiment_6556_sota_constraint_saturation_intervention_ab.json
++    result: OK
++  - id: exp6557-constraint-saturation-independent-audit
++    title: Independent constraint-saturation phase-curve and policy audit
++    deliverable: results/experiment_6557_constraint_saturation_independent_audit.json
++    result: OK_DELIVERABLE_ONLY
++  - id: exp6558-arc-live-redirect-ledger-reachability
++    title: ARC live trajectory-supervisor redirect-ledger generalization reachability
++    deliverable: results/experiment_6558_arc_live_redirect_ledger_reachability.json
++    result: OK
++  - id: exp6559-gatemate-changed-state-continuity
++    title: GateMate changed-physical-state continuity with one-action stop
++    deliverable: results/experiment_6559_gatemate_changed_state_continuity.json
++    result: OK
++  - id: exp6560-v567-independent-capstone
++    title: Independent V567 capstone, adoption boundary, and V568 handoff
++    deliverable: results/experiment_6560_v567_independent_capstone.json
++    result: OK
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 33cf422c69..e1b49884b4 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -308,6 +308,11 @@ tasks:
+     estimated_wall_time_min: 150
+     agent_type: codex
+     model: gpt-5.5
++    prior_failures:
++      - experiment_id: exp6545-external-safety-net-router
++        verdict: "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback"
++        addressed_by: "Exp6545 learned and compared an experiment-local Python router. This task does not repeat router learning or that scientific comparison; it measures the later production Safety-Net ABI through scalar and batched Rust/PyO3 paths against Python and the PRD NFR01 threshold."
++        retire_if_same_verdict: true
+     gated_on:
+       - upstream: exp6563-production-safety-net-workload-canary
+         artifact_field: production_workload_canary_ready_score
+@@ -393,3 +398,4 @@ tasks:
+ 
+       Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6564_rust_pyo3_safety_net_nfr01 --date {date}
+       Do NOT push. Do NOT modify scripts/research_conductor.py.
++
+diff --git a/scripts/arc_scored_path_lever_harness.py b/scripts/arc_scored_path_lever_harness.py
+index 365e85b73b..eaa163d062 100644
+--- a/scripts/arc_scored_path_lever_harness.py
++++ b/scripts/arc_scored_path_lever_harness.py
+@@ -551,6 +551,44 @@ def supervisor_row_field(policy) -> dict:
+     return d
+ 
+ 
++def _attempt_manifest_path(game: str) -> Path:
++    """REQ-ARC-WMTE-6690: the per-game attempt-archive manifest, wherever the store lives NOW.
++
++    Resolves `e3.E3_DIR` at call time so a redirected store (CARNOT_ARC_E3_DIR, monkeypatch)
++    is honoured exactly like every other store access."""
++    from carnot.agentic import arc_executable_world_model as e3
++
++    return Path(e3.E3_DIR) / game / "attempts" / "manifest.jsonl"
++
++
++def _attempt_archive_delta(man_path: Path, lines_before: int) -> dict:
++    """REQ-ARC-WMTE-6690 (SCENARIO-6690-6): what THIS cell archived, as a row field.
++
++    The manifest is append-only, so the lines past `lines_before` are exactly the attempts
++    archived during the cell. This is the provenance `induction_engine_sources` never carried
++    for LLM-tier attempts: a (game, seed) row now names the models it produced by hash.
++    Never raises -- instrumentation must not take the row down."""
++    try:
++        lines = man_path.read_text(encoding="utf-8").splitlines()
++    except OSError:
++        lines = []
++    new = lines[lines_before:]
++    shas: list[str] = []
++    for ln in new:
++        try:
++            shas.append(str(json.loads(ln).get("sha256_16")))
++        except Exception:
++            shas.append("unparseable")
++    return {"before": int(lines_before), "added": len(new), "sha256_16": shas[:12]}
++
++
++def _manifest_line_count(man_path: Path) -> int:
++    try:
++        return len(man_path.read_text(encoding="utf-8").splitlines())
++    except OSError:
++        return 0
++
++
+ def _action_key(move: dict) -> str:
+     kind = move.get("kind")
+     data = move.get("data") or {}
+@@ -671,6 +709,11 @@ def run_cell(
+     row["early_stop_grace_requested"] = early_stop_grace
+     row["early_stop_grace_applied"] = bool(row["early_stop_grace"] == early_stop_grace)
+ 
++    # REQ-ARC-WMTE-6690: snapshot the attempt-archive manifest so the row can carry exactly
++    # what this cell archived (the delta), not whatever earlier cells left behind.
++    _man_path = _attempt_manifest_path(game)
++    _man_before = _manifest_line_count(_man_path)
++
+     t1 = time.time()
+     try:
+         r = lb.run_game(game, policy, budget=budget, variant=0, reflect=None)
+@@ -796,6 +839,8 @@ def run_cell(
+     row["induction_model_specs"] = dict(
+         collections.Counter(str(a.get("model_specs")) for a in atts)
+     )
++    # REQ-ARC-WMTE-6690 (SCENARIO-6690-6): the attempts this cell archived, by content hash.
++    row["induction_archive"] = _attempt_archive_delta(_man_path, _man_before)
+ 
+     # ---- observe-channel witness: do graph nodes carry previous_frame? ---------------------
+     nodes = list(ex.graph.values())
+diff --git a/tests/python/test_arc_engine_attempt_archive.py b/tests/python/test_arc_engine_attempt_archive.py
+new file mode 100644
+index 0000000000..b364612d30
+--- /dev/null
++++ b/tests/python/test_arc_engine_attempt_archive.py
+@@ -0,0 +1,249 @@
++"""REQ-ARC-WMTE-6690: per-attempt retention of induced world models.
++
++THE DEFECT UNDER TEST. The live store `E3_DIR/<game>/world_model.py` is keyed by game
++only, so every re-induction overwrites the previous model. Measured on the 2026-08-22
++25-game baseline run: 40 induction attempts -> 25 surviving files, 15 induced models
++destroyed by last-write-wins. These tests pin the fix: every producer write is archived
++under `attempts/`, and NOTHING about the canonical write, return values, or read path
++changes.
++
++Every assertion here was proven by deletion (mutation): removing the archive call, the
++dedup check, the kill-switch check, the fail-open try, or the harness wiring each turns
++at least one test RED. Evidence in the commit message.
++
++Spec: REQ-ARC-WMTE-6690, SCENARIO-ARC-WMTE-6690-1..6
++(openspec/capabilities/arc-world-model-trust-energy/spec.md).
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib.util
++import inspect
++import json
++from pathlib import Path
++from types import ModuleType
++
++import pytest
++
++from carnot.agentic import arc_executable_world_model as awm
++from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++_ENGINE_A = "import numpy as np\ndef engine(grid, action, data):\n    return np.asarray(grid)\n\ndef is_level_complete(grid):\n    return False\n"
++_ENGINE_B = _ENGINE_A.replace("return False", "return True")
++_ENGINE_C = _ENGINE_A.replace("np.asarray(grid)", "np.asarray(grid) * 1")
++
++_HARNESS = Path(__file__).resolve().parents[2] / "scripts" / "arc_scored_path_lever_harness.py"
++
++
++def _sha16(code: str) -> str:
++    return hashlib.sha256(code.encode("utf-8", "replace")).hexdigest()[:16]
++
++
++def _proposer_with_stub(code: str) -> LocalGGUFProposer:
++    """A proposer whose generate() returns `code` without any server or GPU."""
++    prop = LocalGGUFProposer()
++    prop.generate = lambda *a, **k: (True, code)  # type: ignore[method-assign]
++    return prop
++
++
++@pytest.fixture()
++def store(tmp_path, monkeypatch):
++    """Redirect the engine store to tmp_path -- the documented test pattern; the
++    _guard_engine_write test-guard refuses the tracked store otherwise."""
++    monkeypatch.setattr(awm, "E3_DIR", tmp_path)
++    monkeypatch.delenv("CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE", raising=False)
++    return tmp_path
++
++
++def _manifest_lines(store: Path, game: str) -> list[dict]:
++    p = store / game / "attempts" / "manifest.jsonl"
++    if not p.exists():
++        return []
++    return [json.loads(ln) for ln in p.read_text().splitlines()]
++
++
++# SCENARIO-ARC-WMTE-6690-1: canonical write unchanged, attempt archived.
++def test_gen_to_file_archives_and_leaves_canonical_write_unchanged(store):
++    prop = _proposer_with_stub(_ENGINE_A)
++    ok, msg = prop._gen_to_file("gme", "prompt")
++    assert ok is True
++    # The canonical contract, byte for byte and message for message.
++    assert (store / "gme" / "world_model.py").read_text() == _ENGINE_A
++    assert msg == "local gguf (GPU server) wrote world_model.py"
++    # The retained attempt: one archived copy whose content and hash match the canonical file.
++    archived = list((store / "gme" / "attempts").glob("wm_*.py"))
++    assert len(archived) == 1
++    assert archived[0].read_text() == _ENGINE_A
++    assert archived[0].name.endswith(f"__{_sha16(_ENGINE_A)}.py")
++    lines = _manifest_lines(store, "gme")
++    assert len(lines) == 1
++    assert lines[0]["writer"] == "gen_to_file"
++    assert lines[0]["sha256_16"] == _sha16(_ENGINE_A)
++    assert lines[0]["deduplicated"] is False
++    assert prop.last_attempt_archive["archived"] is True
++
++
++# SCENARIO-ARC-WMTE-6690-1 for the second producer seam.
++def test_write_world_model_archives_with_note(store):
++    prop = LocalGGUFProposer()
++    ok, msg = prop._write_world_model("gme", _ENGINE_A, note="split induce: x")
++    assert ok is True and "split induce: x" in msg
++    assert (store / "gme" / "world_model.py").read_text() == _ENGINE_A
++    lines = _manifest_lines(store, "gme")
++    assert len(lines) == 1
++    assert lines[0]["writer"] == "write_world_model"
++    assert lines[0]["note"] == "split induce: x"
++
++
++# NO-BEHAVIOUR-CHANGE PROOF: archive ON vs OFF give identical (ok, msg, canonical bytes).
++def test_archive_on_off_equivalence(tmp_path, monkeypatch):
++    results = {}
++    for setting, sub in ((None, "on"), ("0", "off")):
++        root = tmp_path / sub
++        monkeypatch.setattr(awm, "E3_DIR", root)
++        if setting is None:
++            monkeypatch.delenv("CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE", raising=False)
++        else:
++            monkeypatch.setenv("CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE", setting)
++        prop = _proposer_with_stub(_ENGINE_A)
++        ok, msg = prop._gen_to_file("gme", "prompt")
++        results[sub] = (ok, msg, (root / "gme" / "world_model.py").read_text())
++    assert results["on"] == results["off"]
++
++
++# SCENARIO-ARC-WMTE-6690-3: kill switch -- no attempts dir at all, canonical unchanged.
++def test_kill_switch_writes_no_archive(store, monkeypatch):
++    monkeypatch.setenv("CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE", "0")
++    prop = _proposer_with_stub(_ENGINE_A)
++    ok, _ = prop._gen_to_file("gme", "prompt")
++    assert ok is True
++    assert (store / "gme" / "world_model.py").read_text() == _ENGINE_A
++    assert not (store / "gme" / "attempts").exists()
++    assert prop.last_attempt_archive == {
++        "enabled": False,
++        "archived": False,
++        "deduplicated": False,
++    }
++
++
++# SCENARIO-ARC-WMTE-6690-2: dedup by content hash -- an attempt LOG, not a blob store.
++def test_same_content_twice_archives_one_file_two_manifest_lines(store):
++    prop = LocalGGUFProposer()
++    prop._write_world_model("gme", _ENGINE_A)
++    prop._write_world_model("gme", _ENGINE_A)
++    archived = list((store / "gme" / "attempts").glob("wm_*.py"))
++    assert len(archived) == 1
++    lines = _manifest_lines(store, "gme")
++    assert len(lines) == 2
++    assert lines[0]["deduplicated"] is False and lines[0]["file"]
++    assert lines[1]["deduplicated"] is True and lines[1]["file"] is None
++
++
++# SCENARIO-ARC-WMTE-6690-5: the defect's shape, reduced to zero loss.
++def test_three_attempts_all_retained_canonical_holds_last(store):
++    prop = LocalGGUFProposer()
++    for code in (_ENGINE_A, _ENGINE_B, _ENGINE_C):
++        prop._write_world_model("gme", code)
++    # Canonical: last-write-wins, exactly as shipped.
++    assert (store / "gme" / "world_model.py").read_text() == _ENGINE_C
++    # Retention: all three attempts survive, none destroyed.
++    archived = {p.read_text() for p in (store / "gme" / "attempts").glob("wm_*.py")}
++    assert archived == {_ENGINE_A, _ENGINE_B, _ENGINE_C}
++    assert len(_manifest_lines(store, "gme")) == 3
++
++
++# SCENARIO-ARC-WMTE-6690-4: archive failure cannot fail the induction (fail-open past
++# the guard, direction stated in the helper's docstring).
++def test_archive_failure_does_not_fail_the_write(store):
++    (store / "gme").mkdir(parents=True)
++    # A FILE occupying the attempts name makes mkdir raise inside the archive helper.
++    (store / "gme" / "attempts").write_text("not a directory")
++    prop = LocalGGUFProposer()
++    ok, msg = prop._write_world_model("gme", _ENGINE_A)
++    assert ok is True and msg == "local gguf (GPU server) wrote world_model.py"
++    assert (store / "gme" / "world_model.py").read_text() == _ENGINE_A
++    info = prop.last_attempt_archive
++    assert info["archived"] is False and "error" in info
++
++
++# The test-guard half stays FAIL-CLOSED: a test reaching the TRACKED store must blow up
++# loudly before any write, exactly like the canonical write path (2026-07-30 guard).
++# The "tracked store" here is a STAND-IN under tmp_path, patched into BOTH globals the
++# guard compares. Aiming this test at the real results/arc_e3 would mean a broken guard
++# WRITES THERE -- which happened during this REQ's own mutation run (guard deleted ->
++# untracked results/arc_e3/gme/attempts/ appeared and had to be cleaned by hand).
++def test_archive_refuses_tracked_evidence_store_from_tests(tmp_path, monkeypatch):
++    fake_tracked = tmp_path / "tracked_store"
++    monkeypatch.setattr(awm, "E3_DIR", fake_tracked)
++    monkeypatch.setattr(awm, "_TRACKED_E3_EVIDENCE_DIR", fake_tracked)
++    monkeypatch.delenv("CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE", raising=False)
++    monkeypatch.delenv("CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE", raising=False)
++    with pytest.raises(RuntimeError, match="read-only evidence"):
++        awm._archive_engine_attempt("gme", _ENGINE_A, writer="test")
++    assert not (fake_tracked / "gme" / "attempts").exists()
++
++
++# The codex path (dev-only) archives post-hoc: codex writes the file out-of-band.
++def test_archive_codex_engine_reads_back_and_archives(store):
++    (store / "gme").mkdir(parents=True)
++    (store / "gme" / "world_model.py").write_text(_ENGINE_A)
++    info = awm._archive_codex_engine("gme")
++    assert info["archived"] is True
++    lines = _manifest_lines(store, "gme")
++    assert len(lines) == 1 and lines[0]["writer"] == "codex"
++
++
++def test_archive_codex_engine_missing_file_is_soft(store):
++    info = awm._archive_codex_engine("gme")
++    assert info["archived"] is False and info["error"] == "no_file_after_codex"
++
++
++# CodexProposer wiring: both methods archive on ok. Source-level pin, proven by deletion.
++def test_codex_proposer_methods_call_posthoc_archive():
++    for meth in (awm.CodexProposer.induce, awm.CodexProposer.refactor):
++        assert "_archive_codex_engine" in inspect.getsource(meth)
++
++
++# ---------------------------------------------------------------------------------------
++# SCENARIO-ARC-WMTE-6690-6: harness row provenance.
++# ---------------------------------------------------------------------------------------
++
++
++def _harness() -> ModuleType:
++    spec = importlib.util.spec_from_file_location("lever_harness_under_test", _HARNESS)
++    mod = importlib.util.module_from_spec(spec)
++    assert spec.loader is not None
++    spec.loader.exec_module(mod)
++    return mod
++
++
++def test_attempt_archive_delta_reports_only_this_cells_lines(tmp_path):
++    hs = _harness()
++    man = tmp_path / "manifest.jsonl"
++    man.write_text(
++        json.dumps({"sha256_16": "old1"}) + "\n" + json.dumps({"sha256_16": "old2"}) + "\n"
++    )
++    before = hs._manifest_line_count(man)
++    with man.open("a") as fh:
++        for sha in ("new1", "new2", "new3"):
++            fh.write(json.dumps({"sha256_16": sha}) + "\n")
++    delta = hs._attempt_archive_delta(man, before)
++    assert delta == {"before": 2, "added": 3, "sha256_16": ["new1", "new2", "new3"]}
++
++
++def test_attempt_archive_delta_missing_manifest_is_zero(tmp_path):
++    hs = _harness()
++    man = tmp_path / "absent" / "manifest.jsonl"
++    assert hs._manifest_line_count(man) == 0
++    assert hs._attempt_archive_delta(man, 0) == {"before": 0, "added": 0, "sha256_16": []}
++
++
++def test_run_cell_wires_induction_archive_row_field():
++    """run_cell snapshots the manifest before the game and records the delta on the row.
++    Source pin, proven by deletion: removing either wiring line turns this RED."""
++    hs = _harness()
++    src = inspect.getsource(hs.run_cell)
++    assert 'row["induction_archive"]' in src
++    assert "_attempt_archive_delta(_man_path, _man_before)" in src
++    assert "_manifest_line_count(_man_path)" in src
+-- 
+2.55.0
+

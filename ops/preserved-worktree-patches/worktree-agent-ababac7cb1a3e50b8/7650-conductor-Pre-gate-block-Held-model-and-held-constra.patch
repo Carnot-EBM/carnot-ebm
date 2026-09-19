@@ -1,0 +1,61 @@
+From 035fd061c97ec0d59a48b870b9fdc6e5d73593d3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 12:06:32 -0400
+Subject: [PATCH 07650/11362] [conductor] Pre-gate block: Held-model and
+ held-constraint comparative energy with matched controls
+
+1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.paired_embedding_integrity_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5854_portable_comparative_energy_controls.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 17fe4a435c..2097263c8c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 307, "phase": "iteration_start", "last_beat": "2026-07-23T16:04:10Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 308, "phase": "iteration_start", "last_beat": "2026-07-23T16:06:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ce7341f6ae..dffdf91640 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14180,3 +14180,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 14:40 UTC | Exact replay substrate contract and false-compute- | OK | cache hit: 81 passed, 1 warning in 12.47s |
+ | 2026-07-23 15:31 UTC | Current-SOTA causal-pair embedding extraction acro | OK | 87 passed, 1 warning in 15.09s |
+ | 2026-07-23 16:02 UTC | Claim-flip, evaluator-swap, and identity-shortcut  | OK | 87 passed, 1 warning in 11.98s |
++| 2026-07-23 16:04 UTC | Held-model and held-constraint comparative energy  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5853-paired-embedding-integrity-audit.p |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f8e127ac6d..0012f3c6b6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 307, "phase": "iteration_start", "started_at": "2026-07-23T16:04:10Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 308, "phase": "iteration_start", "started_at": "2026-07-23T16:06:32Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5854_portable_comparative_energy_controls.json b/results/experiment_5854_portable_comparative_energy_controls.json
+index 4a0291ecdb..bd9e08a543 100644
+--- a/results/experiment_5854_portable_comparative_energy_controls.json
++++ b/results/experiment_5854_portable_comparative_energy_controls.json
+@@ -2,8 +2,8 @@
+   "experiment": 5854,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-23",
+-  "started_at": "2026-07-23T16:04:10.521065+00:00",
+-  "finished_at": "2026-07-23T16:04:10.521065+00:00",
++  "started_at": "2026-07-23T16:06:32.747204+00:00",
++  "finished_at": "2026-07-23T16:06:32.747204+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Held-model and held-constraint comparative energy with matched controls",
+-- 
+2.55.0
+

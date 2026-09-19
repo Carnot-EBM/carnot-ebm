@@ -1,0 +1,60 @@
+From a1821c1b7347bae74c1704af86836a10512038b7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 17:02:10 -0400
+Subject: [PATCH 09196/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 52c5b08b12..fb707da61c 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,650</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,662</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dbede50465..8aae1d7cd0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-08-14T20:29:31Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-08-14T20:58:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d6246c9c4f..b24a0d0456 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15836,3 +15836,4 @@ code |
+ | 2026-08-14 19:05 UTC | Independent V553 CSL row-recomputation and safety  | OK | 88 passed, 1 warning in 12.65s |
+ | 2026-08-14 20:27 UTC | ARC generic state-key reachability invariant and f | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: act: ["forced  |
+ | 2026-08-14 20:29 UTC | ARC generic state-key reachability invariant and f | OK | Deliverable already exists in repo |
++| 2026-08-14 20:56 UTC | V553 adversarial capstone, claim decision, and doc | OK | 146 passed, 1 warning in 50.32s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f07c63e60c..69f9c7ceba 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 14, "phase": "iteration_start", "started_at": "2026-08-14T20:29:31Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 15, "phase": "iteration_start", "started_at": "2026-08-14T20:58:40Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

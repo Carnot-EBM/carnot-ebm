@@ -1,0 +1,113 @@
+From 38c916c5bdb54fa497500f24d441ef089448f100 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 03:24:17 -0400
+Subject: [PATCH 04785/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ results/experiment_1970_domino_fast_constraints.json          | 4 ++--
+ results/experiment_3408_kona_global_opt.json                  | 2 +-
+ .../experiment_3420_kv260_terminal_latency_transcript_v1.json | 4 ++--
+ results/experiment_3420_kv260_terminal_transcript.log         | 2 +-
+ results/experiment_3843.json                                  | 4 ++--
+ 8 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d6baca9e09..8ae0dce095 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 116, "phase": "iteration_start", "last_beat": "2026-06-29T07:08:11Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 117, "phase": "iteration_start", "last_beat": "2026-06-29T07:24:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 36276ffce3..c4c7185cdf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9564,3 +9564,4 @@ The contro |
+ | 2026-06-29 06:50 UTC | PHASE 0 (TRANSITION) -- archive .456 -> activate . | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: leep 2 && ps - |
+ | 2026-06-29 06:52 UTC | PHASE 0 (TRANSITION) -- archive .456 -> activate . | OK | Deliverable already exists in repo |
+ | 2026-06-29 07:06 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK ATTE | OK | 90 passed, 1 warning in 13.62s |
++| 2026-06-29 07:22 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 94 passed, 1 warning in 13.70s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 916b50bddd..0e89569095 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 116, "phase": "iteration_start", "started_at": "2026-06-29T07:08:11Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 117, "phase": "iteration_start", "started_at": "2026-06-29T07:24:14Z"}
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 4f68dd497c..3731da99d1 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00034204102121293545,
+-  "latency_domino_seconds": 0.0008720459882169962,
++  "latency_legacy_seconds": 0.0005504218861460686,
++  "latency_domino_seconds": 0.0015755828935652971,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index fded87806c..24cd0db559 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 31.996643543243408, "autoregressive_time_to_solution": 479.9496531486511, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 41.949541330337524, "autoregressive_time_to_solution": 629.2431199550629, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index d6c7d4dd9a..4bd74d33d1 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 0.00016936799511313438,
++  "duration_s": 0.00016837497241795063,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-29T05:44:04Z",
++  "generated_at": "2026-06-29T07:22:32Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 177aeabc15..c2ada68555 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-29T05:44:04Z
++experiment_3420 started_at=2026-06-29T07:22:32Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index dcdb610c22..6c9e316f27 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.38764166831970215,
++  "duration_s": 0.6443901062011719,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "a1a1a8ce6e9be5249a65e2f127e2679c1dc2e09ee01f343bc7a944c767a9310b"
++  "reproducibility_checksum": "47c2821a805d4f21216f85b23b52561a8295a64a584564f6161cd7121f92d7be"
+ }
+-- 
+2.55.0
+

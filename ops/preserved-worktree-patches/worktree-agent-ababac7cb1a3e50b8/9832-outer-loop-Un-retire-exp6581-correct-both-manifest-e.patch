@@ -1,0 +1,111 @@
+From aaf899eca4e51c3340efada7f76a792582199e8d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 13:59:58 -0400
+Subject: [PATCH 09832/11362] [outer-loop] Un-retire exp6581; correct both
+ manifest entries
+
+Corrects commit 613d227da1, which retired two tasks on evidence that only
+supported retiring one, and named a cause that does not exist.
+
+EXP6581 IS UN-RETIRED. retire_if_same_verdict requires the same verdict on a
+REPEAT run. The conductor journal shows 0 launches for the Qwen3.6 task and
+2 for the Gemma-4-31B task. Exp6581 ran once and never repeated, so it never
+met the condition. Removed from scripts/conductor_exclusion_manifest.json
+and verified free through ExclusionManifest.is_excluded(): 6581 False, 6582
+True, control False.
+
+The "10 poison-and-rerun events" figure in the prior commit was wrong. It
+came from a grep matching poisoned.*658[12]|one-family flagship, which also
+counts commit lines and in-process-doc lines. The real rerun count is two,
+both Exp6582. I put that number in a commit message as justification for
+retiring a scope.
+
+NO PRECONDITION FAILED. Both artifacts record
+gate_check_summary.all_structured_gates_passed=true with first_failure=null,
+aggregate_row_recomputation.authentic_terminal_row_count=0, and
+preconditions_checked absent. Every structured gate passed. The run produced
+zero authentic terminal rows and honestly declined to make a quality claim.
+The prior reason text read the verdict STRING,
+blocked_precondition_failed_without_quality_claim, and asserted a failing
+quality precondition from the words in it without opening the artifact. Two
+model families reaching the same verdict was real; the mechanism I inferred
+from it was not.
+
+That changes the open question. Not "why does the quality precondition
+fail", but "why does a 15-40 minute live run produce zero authentic terminal
+rows". The diagnosis agent has been redirected.
+
+The wrong reason text is KEPT VERBATIM in both files, with the correction
+appended beside it, per never-prune. A reader needs to see what was believed
+and when it changed. The YAML entry gains correction_2026_08_24 and
+un_retired_experiment_ids; experiment_ids now names only Exp6582.
+
+Exp6582 stays retired on its own evidence: two runs, same verdict, 1109s
+then 2411s of live GPU, in a poison-and-rerun loop with no exit.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/exclusion_manifest.yaml               | 22 +++++++++++++++++++++-
+ scripts/conductor_exclusion_manifest.json |  7 +------
+ 2 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/ops/exclusion_manifest.yaml b/ops/exclusion_manifest.yaml
+index 5fcdc8b229..72698116de 100644
+--- a/ops/exclusion_manifest.yaml
++++ b/ops/exclusion_manifest.yaml
+@@ -1069,9 +1069,29 @@ retired_extras:
+     precondition. It does not retire flagship model use in general. Reopen once
+     someone diagnoses why the quality precondition fails after a successful load,
+     and states what changed.
++  correction_2026_08_24: >-
++    APPENDED CORRECTION, not a rewrite. The reason text above is wrong on two
++    points and is kept verbatim so the error is visible.
++    FIRST, Exp6581 is UN-RETIRED. It ran once and never repeated. The conductor
++    journal shows 0 launches for the Qwen3.6 task and 2 for the Gemma-4-31B task.
++    retire_if_same_verdict requires the SAME verdict on a REPEAT run, which only
++    Exp6582 satisfies. The claim of "10 poison-and-rerun events across these two
++    tasks" came from a grep that also counted commit and in-process-doc lines. The
++    real rerun count is two, both Exp6582. Exp6581 was removed from
++    scripts/conductor_exclusion_manifest.json on 2026-08-24 and is free to run.
++    SECOND, no precondition failed. Both artifacts record
++    gate_check_summary.all_structured_gates_passed=true with first_failure=null,
++    aggregate_row_recomputation.authentic_terminal_row_count=0, and
++    preconditions_checked absent. Every structured gate PASSED. The run produced
++    zero authentic terminal rows and honestly declined to claim quality. The
++    original reason read the verdict STRING, not the artifact, and named a failing
++    quality precondition that does not exist.
++    The open question is therefore not "why does the precondition fail" but "why
++    does a 15-40 minute live run produce zero authentic terminal rows".
+   experiment_ids:
+-  - exp6581-qwen36-flagship-source-shard
+   - exp6582-gemma4-31b-flagship-source-shard
++  un_retired_experiment_ids:
++  - exp6581-qwen36-flagship-source-shard
+   retired_milestone: 2026.08.572
+   retired_by_artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
+   operator_reopen_required: true
+diff --git a/scripts/conductor_exclusion_manifest.json b/scripts/conductor_exclusion_manifest.json
+index 63ee6d2b64..648e3408c7 100644
+--- a/scripts/conductor_exclusion_manifest.json
++++ b/scripts/conductor_exclusion_manifest.json
+@@ -168,15 +168,10 @@
+       "completed_milestone": "2026.05.164",
+       "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
+     },
+-    {
+-      "experiment_id": 6581,
+-      "completed_milestone": "2026.08.572",
+-      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim after a live 927s flagship load. Exp6582 reached the identical verdict on a different model family, so the quality precondition is the cause, not either model. The poison guard re-ran these tasks 10 times in four hours at up to 40 min GPU per cycle. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
+-    },
+     {
+       "experiment_id": 6582,
+       "completed_milestone": "2026.08.572",
+-      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim on two runs (1109s then 2411s live GPU), same verdict as Exp6581 on a different model family. Retires only the one-family flagship source-shard scope at the current precondition, not flagship model use in general. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
++      "reason": "retire_if_same_verdict: two runs (1109s then 2411s live GPU) both ended blocked_precondition_failed_without_quality_claim. CORRECTION 2026-08-24: the artifact shows gate_check_summary.all_structured_gates_passed=true and first_failure=null, with aggregate_row_recomputation.authentic_terminal_row_count=0 and preconditions_checked absent. No precondition failed. The run produced zero authentic terminal rows and honestly declined to make a quality claim. Retires only this task's repeated same-verdict scope. Exp6581 is NOT retired: it ran once and never repeated. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572 and its appended CORRECTION."
+     }
+   ]
+ }
+-- 
+2.55.0
+

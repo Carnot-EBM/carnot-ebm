@@ -1,0 +1,2059 @@
+From 5cab2eaeaf313d8b6cc3480413c7800bbe030196 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 00:42:33 -0400
+Subject: [PATCH 05171/11362] [conductor] PHASE R2 ARC live-path self-discovery
+ -- registry-precheck first, no duplicate solves, improve live discovery
+ rather than solving by outer-loop reverse engineering.
+
+Automated research step by research conductor.
+Task ID: exp5067-arc-live-path
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  69 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...iment_5067_arc_live_path_self_discovery.py | 878 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_5067_arc_live_path_self_discovery.json | 384 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...iment_5067_arc_live_path_self_discovery.py | 532 +++++++++++
+ 12 files changed, 1881 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_5067_arc_live_path_self_discovery.py
+ create mode 100644 results/experiment_5067_arc_live_path_self_discovery.json
+ create mode 100644 tests/python/test_experiment_5067_arc_live_path_self_discovery.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 80e5679e92..1ca15f74d2 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -14142,3 +14142,72 @@ Then all required schema fields are present, duplicate-depth attempts do not
+ increment the reproducible total, and the reproducibility checksum matches the
+ content hash of the selected target, live-agent attempts, provenance, and banked
+ level summary.
++
++### REQ-ARC-WMTE-5067: ARC Live-Path Self-Discovery No-Duplicate Artifact
++
++Experiment 5067 SHALL repeat the bounded live-path self-discovery discipline
++from Experiment 5054 while treating earlier live-path no-bank artifacts as
++precheck evidence. Before spending the live-agent budget, it SHALL read
++`ops/arc_solve_registry.yaml`, consult prior
++`results/*_arc_live_path_self_discovery.json` artifacts, skip already
++reproduced target depths, skip recorded dry next-level dead ends, and skip a
++target level whose same live-path mechanism already attempted and failed to
++bank. It SHALL then either rotate to an unsolved next-level target or write a
++terminal blocked/no-bank artifact. The live mechanism SHALL be reachable from
++the scored agent path and SHALL NOT read hidden game source, run offline
++ground-truth BFS, or create a hand-built per-game adapter for the target.
++
++Experiment 5067 SHALL write
++`results/experiment_5067_arc_live_path_self_discovery.json` with required
++top-level fields `honest_verdict`, `registry_precheck_passed`, `target_game`,
++`target_level`, `prior_reproduced_level`, `new_levels_banked`,
++`duplicate_solve_avoided`, `solve_claim`, `solve_provenance`,
++`provenance_evidence`, `reproducible_total_levels_before`,
++`reproducible_total_levels_after`, `model_specs`, and
++`legacy_models_smoke_only`. Any banked solve SHALL require
++`solve_provenance=live_agent_self_discovery`, live-agent runtime evidence, and
++offline reproduction strictly beyond the registry depth. A no-bank artifact
++SHALL still declare `solve_provenance=live_agent_self_discovery` and record the
++attempted path in `provenance_evidence` without crediting a solve.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; success_<game>_levelup_banked only for a strict live-agent reproduced level, complete_<game>_no_new_level_residual_* for honest no-bank, blocked_* for failed preconditions."
++- `registry_precheck_passed`: principle "bare bool confirming the registry/prior-artifact duplicate guard ran before target selection."
++- `target_game`: principle "selected unsolved next-level target after registry, prior-artifact, duplicate, and dead-end precheck."
++- `target_level`: principle "the next level attempted for the selected target game."
++- `prior_reproduced_level`: principle "the registry depth before this live-path attempt."
++- `new_levels_banked`: principle "bare int; increments only for strict reproduction-gated progress beyond registry depth."
++- `duplicate_solve_avoided`: principle "bare bool; true when duplicate, prior no-bank, or same-depth outcomes are not credited."
++- `solve_claim`: principle "bare claim object; claimed=true only when the live-agent trace reproduces beyond registry depth."
++- `solve_provenance`: principle "live_agent_self_discovery for live-path attempts; never outer_loop_re for a headline bank."
++- `provenance_evidence`: principle "auditable runtime path showing no hidden source reading, no offline ground-truth BFS, no hand-built adapter, and whether an LLM was invoked."
++- `reproducible_total_levels_before`: principle "registry reproducible_total_levels before the attempt."
++- `reproducible_total_levels_after`: principle "before + new_levels_banked; unchanged for no-bank and blocked artifacts."
++- `model_specs`: principle "records the mandated flagship_moe, flagship_dense, and middle_moe GGUF specs; if no LLM is invoked, records that fact explicitly."
++- `legacy_models_smoke_only`: principle "bare bool; legacy small models are smoke-only and cannot provide live reasoning credit."
++- `reproducibility_checksum`: principle "content hash of target selection, provenance, live attempts, model specs, and bank summary."
++
++#### SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK
++
++Given the current target is duplicate, dry, or already attempted by the same
++live-path mechanism
++When Experiment 5067 selects a target
++Then it consults the registry and prior live-path artifacts before any live
++agent attempt and rotates to the first eligible next-level target.
++
++#### SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE
++
++Given Experiment 5067 validates an artifact
++When a solve is claimed without `solve_provenance=live_agent_self_discovery`,
++runtime trace evidence, or strict offline reproduction beyond registry depth
++Then validation fails closed and no new level is banked.
++
++#### SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT
++
++Given Experiment 5067 completes or blocks
++When it writes `results/experiment_5067_arc_live_path_self_discovery.json`
++Then every required field is present, no-bank artifacts keep the reproducible
++total unchanged, mandated GGUF model specs are recorded, legacy models are
++smoke-only, and the reproducibility checksum matches the target, provenance,
++attempt, model, and bank-summary payload.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f2e4af1e41..93de7a893d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4072,
++  "experiments_checked": 4073,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5067_arc_live_path_self_discovery.py b/python/carnot/experiment_5067_arc_live_path_self_discovery.py
+new file mode 100644
+index 0000000000..f4c1ead2dd
+--- /dev/null
++++ b/python/carnot/experiment_5067_arc_live_path_self_discovery.py
+@@ -0,0 +1,878 @@
++"""Experiment 5067: ARC live-path self-discovery artifact.
++
++Spec refs: REQ-ARC-WMTE-5067,
++SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK,
++SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE,
++SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import sys
++import time
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++import yaml
++
++
++REPO = Path(__file__).resolve().parents[2]
++if str(REPO / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO / "python"))
++
++from carnot import experiment_5054_arc_live_path_self_discovery as exp5054
++
++
++EXPERIMENT = "experiment_5067_arc_live_path_self_discovery"
++EXPERIMENT_ID = 5067
++SCHEMA = "carnot.arc_live_path_self_discovery_5067.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5067_arc_live_path_self_discovery.json"
++REGISTRY_RELATIVE_PATH = exp5054.REGISTRY_RELATIVE_PATH
++SPEC_RELATIVE_PATH = exp5054.SPEC_RELATIVE_PATH
++RANDOM_SEED = 5067
++SOLVE_PROVENANCE = "live_agent_self_discovery"
++INFERENCE_SUBSTRATE = exp5054.INFERENCE_SUBSTRATE
++CURRENT_TARGET = ("lp85", 6)
++DEFAULT_CANDIDATE_GAMES = (
++    "lp85",
++    "tu93",
++    "s5i5",
++    "bp35",
++    "re86",
++    "sb26",
++    "lf52",
++    "g50t",
++    "cn04",
++    "sc25",
++)
++HIDDEN_STATE_TARGETS = ("ka59", "wa30", "ar25")
++DEFAULT_BUDGET = 36
++PRIOR_LIVE_PATH_ARTIFACTS = ("results/experiment_5054_arc_live_path_self_discovery.json",)
++MODEL_SPECS: dict[str, Any] = {
++    "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++    "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "live_reasoning_invoked": False,
++    "reasoning_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++}
++LEGACY_MODELS_SMOKE_ONLY = True
++SPEC_REFS = [
++    "REQ-ARC-WMTE-5067",
++    "SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK",
++    "SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE",
++    "SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success_<game>_levelup_banked only for a strict "
++            "live-agent reproduced level, complete_<game>_no_new_level_residual_* "
++            "for honest no-bank, blocked_* for failed preconditions."
++        )
++    },
++    "registry_precheck_passed": {
++        "principle": (
++            "bare bool confirming the registry/prior-artifact duplicate guard ran before "
++            "target selection."
++        )
++    },
++    "target_game": {
++        "principle": (
++            "selected unsolved next-level target after registry, prior-artifact, duplicate, "
++            "and dead-end precheck."
++        )
++    },
++    "target_level": {"principle": "the next level attempted for the selected target game."},
++    "prior_reproduced_level": {"principle": "the registry depth before this live-path attempt."},
++    "new_levels_banked": {
++        "principle": (
++            "bare int; increments only for strict reproduction-gated progress beyond registry depth."
++        )
++    },
++    "duplicate_solve_avoided": {
++        "principle": (
++            "bare bool; true when duplicate, prior no-bank, or same-depth outcomes are not credited."
++        )
++    },
++    "solve_claim": {
++        "principle": (
++            "bare claim object; claimed=true only when the live-agent trace reproduces beyond "
++            "registry depth."
++        )
++    },
++    "solve_provenance": {
++        "principle": (
++            "live_agent_self_discovery for live-path attempts; never outer_loop_re for a headline bank."
++        )
++    },
++    "provenance_evidence": {
++        "principle": (
++            "auditable runtime path showing no hidden source reading, no offline ground-truth BFS, "
++            "no hand-built adapter, and whether an LLM was invoked."
++        )
++    },
++    "reproducible_total_levels_before": {
++        "principle": "registry reproducible_total_levels before the attempt."
++    },
++    "reproducible_total_levels_after": {
++        "principle": "before + new_levels_banked; unchanged for no-bank and blocked artifacts."
++    },
++    "model_specs": {
++        "principle": (
++            "records the mandated flagship_moe, flagship_dense, and middle_moe GGUF specs; if no "
++            "LLM is invoked, records that fact explicitly."
++        )
++    },
++    "legacy_models_smoke_only": {
++        "principle": (
++            "bare bool; legacy small models are smoke-only and cannot provide live reasoning credit."
++        )
++    },
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of target selection, provenance, live attempts, model specs, and bank summary."
++        )
++    },
++}
++
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "live_agent_attempts",
++    "offline_reproduced",
++    "inference_substrate",
++    "preconditions_checked",
++    "candidate_selection",
++    "random_seed",
++    "duration_s",
++)
++
++
++def _load_registry_text(root: Path) -> str:
++    return (root / REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8")
++
++
++def _load_registry(registry_text: str) -> dict[str, Any]:
++    loaded = yaml.safe_load(registry_text)
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _game_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(row.get("game")): row
++        for row in registry.get("games", []) or []
++        if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _registry_total(registry: Mapping[str, Any]) -> int:
++    return int(registry.get("reproducible_total_levels") or 0)
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):  # pragma: no cover - malformed optional evidence
++        return default
++
++
++def _prior_live_path_attempts(
++    root: Path,
++    artifact_relpaths: Sequence[str] = PRIOR_LIVE_PATH_ARTIFACTS,
++) -> dict[tuple[str, int], dict[str, Any]]:
++    attempts: dict[tuple[str, int], dict[str, Any]] = {}
++    for relpath in artifact_relpaths:
++        path = root / relpath
++        if not path.exists():  # pragma: no cover - optional historical evidence
++            continue
++        try:
++            artifact = json.loads(path.read_text(encoding="utf-8"))
++        except (OSError, json.JSONDecodeError):  # pragma: no cover - optional historical evidence
++            continue
++        if not isinstance(artifact, Mapping):
++            continue
++        game = str(artifact.get("target_game") or "")
++        target_level = _as_int(artifact.get("target_level"))
++        if not game or target_level <= 0:
++            continue
++        live_attempts = artifact.get("live_agent_attempts")
++        max_reached = 0
++        if isinstance(live_attempts, list):
++            max_reached = max(
++                (
++                    _as_int(item.get("max_level_reached"))
++                    for item in live_attempts
++                    if isinstance(item, Mapping)
++                ),
++                default=0,
++            )
++        new_banked = _as_int(artifact.get("new_levels_banked"))
++        if new_banked > 0 and max_reached < target_level:
++            continue
++        attempts[(game, target_level)] = {
++            "artifact": relpath,
++            "honest_verdict": artifact.get("honest_verdict"),
++            "max_level_reached": max_reached,
++            "new_levels_banked": new_banked,
++            "status": (
++                "prior_live_path_reached_target"
++                if max_reached >= target_level
++                else "prior_live_path_no_bank"
++            ),
++        }
++    return attempts
++
++
++def _candidate_audit_row(
++    game: str,
++    row: Mapping[str, Any] | None,
++    *,
++    status: str,
++    reason: str,
++    target_level: int = 0,
++    prior_attempt: Mapping[str, Any] | None = None,
++) -> dict[str, Any]:
++    audit = exp5054._candidate_audit_row(
++        game,
++        row,
++        status=status,
++        reason=reason,
++        target_level=target_level,
++    )
++    if prior_attempt is not None:
++        audit["prior_live_path_attempt"] = dict(prior_attempt)
++    return audit
++
++
++def select_target(
++    registry: Mapping[str, Any],
++    *,
++    root: Path = REPO,
++    current_target: tuple[str, int] = CURRENT_TARGET,
++    candidate_games: Sequence[str] = DEFAULT_CANDIDATE_GAMES,
++    hidden_state_targets: Sequence[str] = HIDDEN_STATE_TARGETS,
++    prior_artifact_relpaths: Sequence[str] = PRIOR_LIVE_PATH_ARTIFACTS,
++) -> dict[str, Any]:
++    rows = _game_rows(registry)
++    current_game, current_level = str(current_target[0]), int(current_target[1])
++    hidden = {str(game) for game in hidden_state_targets}
++    prior_attempts = _prior_live_path_attempts(Path(root), prior_artifact_relpaths)
++    audit: list[dict[str, Any]] = []
++    selected: dict[str, Any] | None = None
++    duplicate_current: dict[str, Any] | None = None
++
++    for raw_game in candidate_games:
++        game = str(raw_game)
++        row = rows.get(game)
++        if row is None:
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    None,
++                    status="skip_missing_registry_row",
++                    reason="missing_registry_row",
++                )
++            )
++            continue
++        prior = _as_int(row.get("levels_reproduced"))
++        target_level = prior + 1
++        if game in hidden:
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status="skip_hidden_state_target",
++                    reason="hidden_state_bound_target",
++                    target_level=target_level,
++                )
++            )
++            continue
++        if game == current_game and current_level <= prior:
++            duplicate_current = {
++                "game": game,
++                "prior_reproduced_level": prior,
++                "target_level": current_level,
++            }
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status="skip_duplicate_current_target",
++                    reason="current_target_already_reproduced",
++                    target_level=current_level,
++                )
++            )
++            continue
++        if exp5054._has_next_level_dry_dead_end(row, game, target_level):
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status="skip_recorded_dry_next_level",
++                    reason=f"recorded_l{target_level}_dry_dead_end",
++                    target_level=target_level,
++                )
++            )
++            continue
++        prior_attempt = prior_attempts.get((game, target_level))
++        if prior_attempt is not None:
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status=str(prior_attempt["status"]).replace(
++                        "prior_live_path", "skip_prior_live_path"
++                    ),
++                    reason=str(prior_attempt["status"]),
++                    target_level=target_level,
++                    prior_attempt=prior_attempt,
++                )
++            )
++            continue
++        if selected is None:
++            selected = {
++                "game": game,
++                "prior_reproduced_level": prior,
++                "target_level": target_level,
++                "status": "selected",
++                "reason": "unsolved_next_level_live_path_target",
++            }
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status="candidate_selected",
++                    reason="unsolved_next_level_live_path_target",
++                    target_level=target_level,
++                )
++            )
++        else:
++            audit.append(
++                _candidate_audit_row(
++                    game,
++                    row,
++                    status="alternate_not_selected",
++                    reason="higher_priority_candidate_selected",
++                    target_level=target_level,
++                )
++            )
++
++    base = {
++        "candidate_audit": audit,
++        "candidate_order": [str(game) for game in candidate_games],
++        "current_target": {"game": current_game, "target_level": current_level},
++        "hidden_state_targets_avoided": sorted(hidden),
++        "prior_live_path_artifacts_consulted": [str(path) for path in prior_artifact_relpaths],
++        "duplicate_solve_avoided": True,
++    }
++    if selected is not None:
++        return {**selected, "registry_precheck_passed": True, **base}
++    if duplicate_current is not None:
++        return {
++            **duplicate_current,
++            "status": "blocked_duplicate_target",
++            "reason": "current_target_already_reproduced_and_no_rotation_available",
++            "registry_precheck_passed": False,
++            **base,
++        }
++    return {
++        "game": "none",
++        "prior_reproduced_level": 0,
++        "target_level": 0,
++        "status": "blocked_no_unsolved_target",
++        "reason": "no_unsolved_live_path_target_available",
++        "registry_precheck_passed": False,
++        **base,
++    }
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = {
++        "schema": artifact.get("schema"),
++        "experiment": artifact.get("experiment"),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "registry_precheck_passed": artifact.get("registry_precheck_passed"),
++        "target_game": artifact.get("target_game"),
++        "target_level": artifact.get("target_level"),
++        "prior_reproduced_level": artifact.get("prior_reproduced_level"),
++        "new_levels_banked": artifact.get("new_levels_banked"),
++        "duplicate_solve_avoided": artifact.get("duplicate_solve_avoided"),
++        "solve_claim": artifact.get("solve_claim"),
++        "solve_provenance": artifact.get("solve_provenance"),
++        "provenance_evidence": artifact.get("provenance_evidence"),
++        "reproducible_total_levels_before": artifact.get("reproducible_total_levels_before"),
++        "reproducible_total_levels_after": artifact.get("reproducible_total_levels_after"),
++        "model_specs": artifact.get("model_specs"),
++        "legacy_models_smoke_only": artifact.get("legacy_models_smoke_only"),
++        "live_agent_attempts": artifact.get("live_agent_attempts"),
++        "candidate_selection": artifact.get("candidate_selection"),
++        "random_seed": artifact.get("random_seed"),
++    }
++    return hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _attempt_gate(live_attempt: Mapping[str, Any] | None) -> Mapping[str, Any]:
++    gate = (live_attempt or {}).get("reproduction_gate")
++    return gate if isinstance(gate, Mapping) else {}
++
++
++def _bank_summary(
++    *,
++    prior_level: int,
++    live_attempt: Mapping[str, Any],
++) -> tuple[bool, int, str]:
++    return exp5054._bank_summary(prior_level=prior_level, live_attempt=live_attempt)
++
++
++def _provenance_evidence(
++    *,
++    success: bool,
++    live_attempt: Mapping[str, Any] | None,
++) -> dict[str, Any]:
++    attempt = dict(live_attempt or {})
++    return {
++        "attempted_path": "E3AgentPolicy/bounded_live_policy"
++        if attempt
++        else "not_run_precondition_block",
++        "runtime_self_discovery": bool(attempt.get("runtime_self_discovery")),
++        "policy": attempt.get("policy"),
++        "self_discovery_lever": attempt.get("self_discovery_lever"),
++        "solution_labels_from_live_run": bool(attempt.get("solution_labels")) and success,
++        "offline_source_reading_used": bool(attempt.get("offline_source_reading_used")),
++        "offline_ground_truth_bfs_used": bool(
++            attempt.get("offline_ground_truth_bfs_used") or attempt.get("per_game_bfs_used")
++        ),
++        "hand_built_adapter_used": bool(attempt.get("hand_built_adapter_used")),
++        "llm_reasoning_invoked": bool(attempt.get("llm_reasoning_invoked")),
++        "model_specs_obeyed": dict(attempt.get("model_specs") or MODEL_SPECS) == MODEL_SPECS,
++        "legacy_models_smoke_only": attempt.get(
++            "legacy_models_smoke_only", LEGACY_MODELS_SMOKE_ONLY
++        )
++        is True,
++    }
++
++
++def _solve_claim(
++    *,
++    success: bool,
++    residual: str,
++    live_attempt: Mapping[str, Any] | None,
++) -> dict[str, Any]:
++    return {
++        "claimed": bool(success),
++        "provenance": SOLVE_PROVENANCE,
++        "attempted_path": "live_agent_self_discovery",
++        "residual": None if success else residual,
++        "reproduction_gate": dict(_attempt_gate(live_attempt)),
++    }
++
++
++def build_artifact(
++    *,
++    selection: Mapping[str, Any],
++    registry_total: int,
++    live_attempt: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    game = str(selection.get("game") or "none")
++    prior_level = _as_int(selection.get("prior_reproduced_level"))
++    target_level = _as_int(selection.get("target_level"), prior_level + 1)
++    artifact_attempt = dict(live_attempt)
++    go_diagnostics = artifact_attempt.pop("go_explore_archive", None)
++    if isinstance(go_diagnostics, Mapping):
++        actions_injected = _as_int(go_diagnostics.get("actions_injected"))
++        prefixes_injected = _as_int(go_diagnostics.get("prefixes_injected"))
++        artifact_attempt["live_path_diagnostics"] = {
++            "policy_observations": _as_int(go_diagnostics.get("observations")),
++            "policy_stored_cells": _as_int(go_diagnostics.get("stored_cells")),
++            "injection_exercised": actions_injected > 0 or prefixes_injected > 0,
++        }
++        if artifact_attempt["live_path_diagnostics"]["injection_exercised"] is False:
++            artifact_attempt["self_discovery_lever"] = "bounded_e3_policy_no_archive_injection"
++    success, banked, residual = _bank_summary(
++        prior_level=prior_level,
++        live_attempt=artifact_attempt,
++    )
++    artifact: dict[str, Any] = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "honest_verdict": (
++            f"success_{game}_levelup_banked"
++            if success
++            else f"complete_{game}_no_new_level_residual_{residual}"
++        ),
++        "registry_precheck_passed": bool(selection.get("registry_precheck_passed")),
++        "target_game": game,
++        "target_level": target_level,
++        "prior_reproduced_level": prior_level,
++        "new_levels_banked": int(banked),
++        "duplicate_solve_avoided": not success,
++        "solve_claim": _solve_claim(
++            success=success,
++            residual=residual,
++            live_attempt=artifact_attempt,
++        ),
++        "solve_provenance": SOLVE_PROVENANCE,
++        "provenance_evidence": _provenance_evidence(
++            success=success,
++            live_attempt=artifact_attempt,
++        ),
++        "reproducible_total_levels_before": int(registry_total),
++        "reproducible_total_levels_after": int(registry_total) + int(banked),
++        "model_specs": dict(MODEL_SPECS),
++        "legacy_models_smoke_only": LEGACY_MODELS_SMOKE_ONLY,
++        "live_agent_attempts": [artifact_attempt],
++        "offline_reproduced": bool(success),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "candidate_selection": dict(selection),
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def blocked_artifact(
++    *,
++    reason: str,
++    selection: Mapping[str, Any],
++    registry_total: int,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    game = str(selection.get("game") or "none")
++    prior_level = _as_int(selection.get("prior_reproduced_level"))
++    artifact: dict[str, Any] = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "honest_verdict": f"blocked_{reason}",
++        "registry_precheck_passed": False,
++        "target_game": game,
++        "target_level": _as_int(selection.get("target_level")),
++        "prior_reproduced_level": prior_level,
++        "new_levels_banked": 0,
++        "duplicate_solve_avoided": True,
++        "solve_claim": _solve_claim(success=False, residual=reason, live_attempt=None),
++        "solve_provenance": SOLVE_PROVENANCE,
++        "provenance_evidence": _provenance_evidence(success=False, live_attempt=None),
++        "reproducible_total_levels_before": int(registry_total),
++        "reproducible_total_levels_after": int(registry_total),
++        "model_specs": dict(MODEL_SPECS),
++        "legacy_models_smoke_only": LEGACY_MODELS_SMOKE_ONLY,
++        "live_agent_attempts": [],
++        "offline_reproduced": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "candidate_selection": dict(selection),
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _is_int(value: Any) -> bool:
++    return type(value) is int
++
++
++def _is_bool(value: Any) -> bool:
++    return type(value) is bool
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field: {field}")
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if artifact.get("experiment") != EXPERIMENT:
++        errors.append("experiment mismatch")
++    if artifact.get("experiment_id") != EXPERIMENT_ID:
++        errors.append("experiment_id mismatch")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    if artifact.get("result_path") != RESULT_RELATIVE_PATH:
++        errors.append("result_path mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("solve_provenance") != SOLVE_PROVENANCE:
++        errors.append("solve_provenance must be live_agent_self_discovery")
++    for field in (
++        "registry_precheck_passed",
++        "duplicate_solve_avoided",
++        "offline_reproduced",
++        "legacy_models_smoke_only",
++    ):
++        if not _is_bool(artifact.get(field)):
++            errors.append(f"{field} must be bare bool")
++    for field in (
++        "target_level",
++        "prior_reproduced_level",
++        "new_levels_banked",
++        "reproducible_total_levels_before",
++        "reproducible_total_levels_after",
++    ):
++        if not _is_int(artifact.get(field)):
++            errors.append(f"{field} must be bare int")
++    if not isinstance(artifact.get("solve_claim"), Mapping):
++        errors.append("solve_claim must be a mapping")
++    if not isinstance(artifact.get("provenance_evidence"), Mapping):
++        errors.append("provenance_evidence must be a mapping")
++    if artifact.get("model_specs") != MODEL_SPECS:
++        errors.append("model_specs mismatch")
++    if artifact.get("legacy_models_smoke_only") is not True:
++        errors.append("legacy_models_smoke_only must be true")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    if not isinstance(artifact.get("candidate_selection"), Mapping):
++        errors.append("candidate_selection must be a mapping")
++    if not isinstance(artifact.get("live_agent_attempts"), list):
++        errors.append("live_agent_attempts must be a list")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not (
++        verdict.startswith("success_")
++        or verdict.startswith("complete_")
++        or verdict.startswith("blocked_")
++    ):
++        errors.append("honest_verdict must use a terminal prefix")
++    before = artifact.get("reproducible_total_levels_before")
++    after = artifact.get("reproducible_total_levels_after")
++    banked = artifact.get("new_levels_banked")
++    if _is_int(before) and _is_int(after) and _is_int(banked) and after != before + banked:
++        errors.append("reproducible_total_levels_after must equal before + new_levels_banked")
++
++    claim = artifact.get("solve_claim")
++    evidence = artifact.get("provenance_evidence")
++    claimed = claim.get("claimed") if isinstance(claim, Mapping) else None
++    if claimed is not None and not _is_bool(claimed):
++        errors.append("solve_claim.claimed must be bare bool")
++    forbidden = False
++    if isinstance(evidence, Mapping):
++        forbidden = bool(
++            evidence.get("offline_source_reading_used")
++            or evidence.get("offline_ground_truth_bfs_used")
++            or evidence.get("hand_built_adapter_used")
++        )
++    if verdict.startswith("success_"):
++        if artifact.get("solve_provenance") != SOLVE_PROVENANCE:
++            errors.append("success requires live_agent_self_discovery provenance")
++        if artifact.get("offline_reproduced") is not True:
++            errors.append("success requires offline_reproduced true")
++        if _is_int(banked) and banked < 1:
++            errors.append("success requires new_levels_banked >= 1")
++        if claimed is not True:
++            errors.append("success requires solve_claim.claimed true")
++        if (
++            not isinstance(evidence, Mapping)
++            or evidence.get("solution_labels_from_live_run") is not True
++        ):
++            errors.append("success requires live-agent solution label evidence")
++        if forbidden:
++            errors.append("success cannot use hidden source, offline BFS, or hand adapter")
++    elif artifact.get("offline_reproduced") is True:
++        errors.append("non-success cannot set offline_reproduced true")
++    if _is_int(banked) and banked == 0 and artifact.get("duplicate_solve_avoided") is not True:
++        errors.append("no-bank artifacts must set duplicate_solve_avoided true")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not re.fullmatch(r"[0-9a-f]{64}", checksum):
++        errors.append("reproducibility_checksum must be 64 hex chars")
++    elif checksum != reproducibility_checksum(artifact):
++        errors.append("checksum mismatch")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def offline_arcade_available() -> bool:  # pragma: no cover - environment probe
++    return exp5054.offline_arcade_available()
++
++
++def run_live_agent_attempt(
++    *,
++    root: Path,
++    selection: Mapping[str, Any],
++    budget: int = DEFAULT_BUDGET,
++) -> dict[str, Any]:  # pragma: no cover - ARC runtime boundary
++    attempt = dict(exp5054.run_live_agent_attempt(root=root, selection=selection, budget=budget))
++    attempt["model_specs"] = dict(MODEL_SPECS)
++    attempt["legacy_models_smoke_only"] = LEGACY_MODELS_SMOKE_ONLY
++    attempt["offline_ground_truth_bfs_used"] = bool(attempt.get("per_game_bfs_used"))
++    return attempt
++
++
++def _write_artifact(root: Path, artifact: Mapping[str, Any]) -> None:
++    result_path = root / RESULT_RELATIVE_PATH
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    result_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _blocked_and_write(
++    *,
++    root: Path,
++    reason: str,
++    selection: Mapping[str, Any],
++    registry_total: int,
++    preconditions: Mapping[str, Any],
++    started: float,
++) -> dict[str, Any]:
++    artifact = blocked_artifact(
++        reason=reason,
++        selection=selection,
++        registry_total=registry_total,
++        preconditions_checked=preconditions,
++        duration_s=time.monotonic() - started,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def run_experiment(
++    *,
++    root: Path = REPO,
++    current_target: tuple[str, int] = CURRENT_TARGET,
++    candidate_games: Sequence[str] = DEFAULT_CANDIDATE_GAMES,
++    budget: int = DEFAULT_BUDGET,
++) -> dict[str, Any]:
++    started = time.monotonic()
++    root = Path(root)
++    spec_path = root / SPEC_RELATIVE_PATH
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    empty_selection = {
++        "game": "none",
++        "prior_reproduced_level": 0,
++        "target_level": 0,
++        "registry_precheck_passed": False,
++        "candidate_audit": [],
++    }
++    preconditions: dict[str, Any] = {
++        "AGENTS.md": (root / "AGENTS.md").exists(),
++        "CODEX.md": (root / "CODEX.md").exists(),
++        "arc_world_model_trust_energy_spec_has_req_5067": (
++            "REQ-ARC-WMTE-5067" in spec_path.read_text(encoding="utf-8")
++            if spec_path.exists()
++            else False
++        ),
++        "registry_present": registry_path.exists(),
++        "registry_loadable": False,
++        "prior_live_path_artifacts_consulted": list(PRIOR_LIVE_PATH_ARTIFACTS),
++        "offline_arcade_available": False,
++        "llm_reasoning_invoked": False,
++        "offline_source_reading_used": False,
++        "offline_ground_truth_bfs_used": False,
++        "per_game_bfs_used": False,
++        "hand_built_adapter_used": False,
++    }
++    if not preconditions["arc_world_model_trust_energy_spec_has_req_5067"]:
++        return _blocked_and_write(
++            root=root,
++            reason="spec_missing",
++            selection=empty_selection,
++            registry_total=0,
++            preconditions=preconditions,
++            started=started,
++        )
++    try:
++        registry_text = _load_registry_text(root)
++        registry = _load_registry(registry_text)
++        preconditions["registry_loadable"] = bool(registry)
++    except (OSError, yaml.YAMLError):
++        return _blocked_and_write(
++            root=root,
++            reason="arc_solve_registry_unreadable",
++            selection=empty_selection,
++            registry_total=0,
++            preconditions=preconditions,
++            started=started,
++        )
++    if not preconditions["registry_loadable"]:
++        return _blocked_and_write(
++            root=root,
++            reason="arc_solve_registry_unreadable",
++            selection=empty_selection,
++            registry_total=0,
++            preconditions=preconditions,
++            started=started,
++        )
++
++    registry_total = _registry_total(registry)
++    selection = select_target(
++        registry,
++        root=root,
++        current_target=current_target,
++        candidate_games=candidate_games,
++    )
++    if str(selection.get("status") or "").startswith("blocked_"):
++        reason = str(selection.get("status")).removeprefix("blocked_")
++        return _blocked_and_write(
++            root=root,
++            reason=reason,
++            selection=selection,
++            registry_total=registry_total,
++            preconditions=preconditions,
++            started=started,
++        )
++    preconditions["offline_arcade_available"] = offline_arcade_available()
++    if not preconditions["offline_arcade_available"]:
++        return _blocked_and_write(
++            root=root,
++            reason="offline_arcade_missing",
++            selection=selection,
++            registry_total=registry_total,
++            preconditions=preconditions,
++            started=started,
++        )
++    live_attempt = run_live_agent_attempt(root=root, selection=selection, budget=budget)
++    artifact = build_artifact(
++        selection=selection,
++        registry_total=registry_total,
++        live_attempt=live_attempt,
++        preconditions_checked=preconditions,
++        duration_s=time.monotonic() - started,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 675cc9057c..c1931297ff 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-01T04:15:24.478456Z",
+-  "duration_s": 0.09682488441467285,
++  "run_date": "2026-07-01T04:41:19.936879Z",
++  "duration_s": 0.11774611473083496,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "89dfe8d98dad85e2202e334b6786e87883304dc2525788be531867a2eca34e15",
++  "reproducibility_checksum": "8be2e1daff153b431d3eb889500fe6244e37d13753cf31509171d057797b279c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "9a6607a8fe62ff8363f5b46d02f5c303f70f9785"
++    "adversarial_verify_version": "ae6b89104dc5c15722cf0ba734312c32796db7bd"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 1cd5b97e7f..b1f0449487 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-01T04:15:24.745328Z",
+-  "duration_s": 0.24661707878112793,
++  "run_date": "2026-07-01T04:41:20.118923Z",
++  "duration_s": 0.16285014152526855,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "63619e45157d5080c390aaee2c5455d398493eef8e82631369cfcbea96bcc1b3",
++  "reproducibility_checksum": "3422179c7897bf2661e0367c7d589a9ac649370dfc8be8092991544f3367579b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "9a6607a8fe62ff8363f5b46d02f5c303f70f9785"
++    "adversarial_verify_version": "ae6b89104dc5c15722cf0ba734312c32796db7bd"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 8cf1233229..b2531c88c2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.145051956176758,
++  "efficiency_gains_ms": 2.164602279663086,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 33ceec455c..37ac7b4a91 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.139798693358898e-05,
++  "duration_s": 4.151812754571438e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5067_arc_live_path_self_discovery.json b/results/experiment_5067_arc_live_path_self_discovery.json
+new file mode 100644
+index 0000000000..804b27c748
+--- /dev/null
++++ b/results/experiment_5067_arc_live_path_self_discovery.json
+@@ -0,0 +1,384 @@
++{
++  "candidate_selection": {
++    "candidate_audit": [
++      {
++        "dead_ends_consulted": [
++          "Exp5026 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta.",
++          "Exp5040 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta."
++        ],
++        "game": "lp85",
++        "prior_reproduced_level": 5,
++        "reason": "recorded_l6_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 6
++      },
++      {
++        "dead_ends_consulted": [],
++        "game": "tu93",
++        "prior_live_path_attempt": {
++          "artifact": "results/experiment_5054_arc_live_path_self_discovery.json",
++          "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++          "max_level_reached": 0,
++          "new_levels_banked": 0,
++          "status": "prior_live_path_no_bank"
++        },
++        "prior_reproduced_level": 5,
++        "reason": "prior_live_path_no_bank",
++        "status": "skip_prior_live_path_no_bank",
++        "target_level": 6
++      },
++      {
++        "dead_ends_consulted": [
++          "Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.",
++          "Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.",
++          "Exp4959 s5i5 no-bank no_grounded_l3_delta: complete_s5i5_no_new_level_residual_no_grounded_l3_delta."
++        ],
++        "game": "s5i5",
++        "prior_reproduced_level": 2,
++        "reason": "recorded_l3_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "registry_prechecked:GAP-4480-BP35-GOAL-DIRECTED-NAVIGATION",
++          "prior no-grounded-next-level-adapter dead-end retired by grounded L2 tail",
++          "Exp4970 bp35 no-bank no_grounded_l3_delta: complete_bp35_no_new_level_residual_no_grounded_l3_delta."
++        ],
++        "game": "bp35",
++        "prior_reproduced_level": 2,
++        "reason": "recorded_l3_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "no_grounded_next_level_adapter",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "chain_carried_marker_L2_geometry_stalled_at_x39_y30",
++          "clone_replay_L2_route_reached_distance_12_no_bank",
++          "prefix_rooted_graph_search_stalled_at_L1",
++          "reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1"
++        ],
++        "game": "re86",
++        "prior_reproduced_level": 2,
++        "reason": "unsolved_next_level_live_path_target",
++        "status": "candidate_selected",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "no_grounded_next_level_adapter_for_platformer_delta",
++          "sprite_overlay_L2_delta_not_adaptered_this_run",
++          "marker_coverage_L2_delta_not_adaptered_this_run",
++          "target_offset_L2_delta_not_adaptered_this_run",
++          "prefix_rooted_graph_search_stalled_at_L1",
++          "prefix_rooted_graph_search_still_pending_or_stalled",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "prefix-rooted graph search reached only L1 after 20000 expansions",
++          "prefix-rooted graph search timed out without a bank",
++          "Exp4937 sb26 no-bank no_grounded_l3_delta: complete_sb26_no_new_level_residual_no_grounded_l3_delta."
++        ],
++        "game": "sb26",
++        "prior_reproduced_level": 2,
++        "reason": "recorded_l3_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "no_grounded_next_level_adapter_for_platformer_delta",
++          "sprite_overlay_L2_delta_not_adaptered_this_run",
++          "marker_coverage_L2_delta_not_adaptered_this_run",
++          "target_offset_L2_delta_not_adaptered_this_run",
++          "prefix_rooted_graph_search_stalled_at_L1",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "recently_deepened_or_operator_skip_list",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "no_grounded_L3_delta",
++          "adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta",
++          "Exp4936 lf52 no-bank no_grounded_l3_delta: complete_lf52_no_new_level_residual_no_grounded_l3_delta."
++        ],
++        "game": "lf52",
++        "prior_reproduced_level": 2,
++        "reason": "recorded_l3_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++          "filled",
++          "g50t",
++          "needs_per_game_RE",
++          "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
++          "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
++          "ls20",
++          "results/experiment_4285 solve_trace.actions.",
++          "first-solve L1; ACTION + kind sequence replays offline.",
++          "standing_arc_loop_routing_only",
++          "experiment_4443_bank_g50t_example_conditioned_win",
++          "results/experiment_4443_bank_g50t_example_conditioned_win.json",
++          "Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected inference_substrate.",
++          "Exp4884 retired the prior g50t adapter-free L2 bounded-search dead end by registering _g50t.",
++          "Exp4981 g50t no-bank no_grounded_l3_delta: complete_g50t_no_new_level_residual_no_grounded_l3_delta."
++        ],
++        "game": "g50t",
++        "prior_reproduced_level": 2,
++        "reason": "recorded_l3_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 3
++      },
++      {
++        "dead_ends_consulted": [
++          "Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not derive the L2 marker-pair delta.",
++          "Exp5012 cn04 no-bank no_grounded_l4_delta: complete_cn04_no_new_level_residual_no_grounded_l4_delta."
++        ],
++        "game": "cn04",
++        "prior_reproduced_level": 3,
++        "reason": "recorded_l4_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 4
++      },
++      {
++        "dead_ends_consulted": [
++          "Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink spell as the L1 win-mechanic precursor.",
++          "E3 executable patch model cracked L1 by verifying the cast-pattern-clear transition before planning the exit route.",
++          "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++          "filled",
++          "experiment_4469_generic_cast_grid_fsm_operator",
++          "results/experiment_4469_generic_cast_grid_fsm_operator.json",
++          "sc25 L1 re-solved through generic cast_grid_phase_fsm_world_model",
++          "Exp4991 sc25 no-bank no_grounded_l6_delta: complete_sc25_no_new_level_residual_no_grounded_l6_delta."
++        ],
++        "game": "sc25",
++        "prior_reproduced_level": 5,
++        "reason": "recorded_l6_dry_dead_end",
++        "status": "skip_recorded_dry_next_level",
++        "target_level": 6
++      }
++    ],
++    "candidate_order": [
++      "lp85",
++      "tu93",
++      "s5i5",
++      "bp35",
++      "re86",
++      "sb26",
++      "lf52",
++      "g50t",
++      "cn04",
++      "sc25"
++    ],
++    "current_target": {
++      "game": "lp85",
++      "target_level": 6
++    },
++    "duplicate_solve_avoided": true,
++    "game": "re86",
++    "hidden_state_targets_avoided": [
++      "ar25",
++      "ka59",
++      "wa30"
++    ],
++    "prior_live_path_artifacts_consulted": [
++      "results/experiment_5054_arc_live_path_self_discovery.json"
++    ],
++    "prior_reproduced_level": 2,
++    "reason": "unsolved_next_level_live_path_target",
++    "registry_precheck_passed": true,
++    "status": "selected",
++    "target_level": 3
++  },
++  "duplicate_solve_avoided": true,
++  "duration_s": 1.9214331139810383,
++  "experiment": "experiment_5067_arc_live_path_self_discovery",
++  "experiment_id": 5067,
++  "field_principles": {
++    "duplicate_solve_avoided": {
++      "principle": "bare bool; true when duplicate, prior no-bank, or same-depth outcomes are not credited."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success_<game>_levelup_banked only for a strict live-agent reproduced level, complete_<game>_no_new_level_residual_* for honest no-bank, blocked_* for failed preconditions."
++    },
++    "legacy_models_smoke_only": {
++      "principle": "bare bool; legacy small models are smoke-only and cannot provide live reasoning credit."
++    },
++    "model_specs": {
++      "principle": "records the mandated flagship_moe, flagship_dense, and middle_moe GGUF specs; if no LLM is invoked, records that fact explicitly."
++    },
++    "new_levels_banked": {
++      "principle": "bare int; increments only for strict reproduction-gated progress beyond registry depth."
++    },
++    "prior_reproduced_level": {
++      "principle": "the registry depth before this live-path attempt."
++    },
++    "provenance_evidence": {
++      "principle": "auditable runtime path showing no hidden source reading, no offline ground-truth BFS, no hand-built adapter, and whether an LLM was invoked."
++    },
++    "registry_precheck_passed": {
++      "principle": "bare bool confirming the registry/prior-artifact duplicate guard ran before target selection."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of target selection, provenance, live attempts, model specs, and bank summary."
++    },
++    "reproducible_total_levels_after": {
++      "principle": "before + new_levels_banked; unchanged for no-bank and blocked artifacts."
++    },
++    "reproducible_total_levels_before": {
++      "principle": "registry reproducible_total_levels before the attempt."
++    },
++    "solve_claim": {
++      "principle": "bare claim object; claimed=true only when the live-agent trace reproduces beyond registry depth."
++    },
++    "solve_provenance": {
++      "principle": "live_agent_self_discovery for live-path attempts; never outer_loop_re for a headline bank."
++    },
++    "target_game": {
++      "principle": "selected unsolved next-level target after registry, prior-artifact, duplicate, and dead-end precheck."
++    },
++    "target_level": {
++      "principle": "the next level attempted for the selected target game."
++    }
++  },
++  "honest_verdict": "complete_re86_no_new_level_residual_duplicate_depth",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "legacy_models_smoke_only": true,
++  "live_agent_attempts": [
++    {
++      "actions_taken": 35,
++      "attempt_id": "re86_live_go_explore_archive_budget_36",
++      "budget": 36,
++      "exceeded_registry_depth": false,
++      "hand_built_adapter_used": false,
++      "legacy_models_smoke_only": true,
++      "live_path_diagnostics": {
++        "injection_exercised": false,
++        "policy_observations": 35,
++        "policy_stored_cells": 1
++      },
++      "llm_reasoning_invoked": false,
++      "max_level_reached": 0,
++      "model_specs": {
++        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "live_reasoning_invoked": false,
++        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "reasoning_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++      },
++      "offline_ground_truth_bfs_used": false,
++      "offline_source_reading_used": false,
++      "per_game_bfs_used": false,
++      "policy": "E3AgentPolicy",
++      "prior_reproduced_level": 2,
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "re86",
++        "mode": "offline_reproduction_gate_no_new_level_claim",
++        "reached_level": 0,
++        "reproduced": false
++      },
++      "root": "/home/ianblenke/github.com/ianblenke/carnot",
++      "runtime_self_discovery": true,
++      "self_discovery_lever": "bounded_e3_policy_no_archive_injection",
++      "solution_labels": [],
++      "target_game": "re86",
++      "target_level": 3
++    }
++  ],
++  "model_specs": {
++    "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++    "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "live_reasoning_invoked": false,
++    "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "reasoning_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++  },
++  "new_levels_banked": 0,
++  "offline_reproduced": false,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "arc_world_model_trust_energy_spec_has_req_5067": true,
++    "hand_built_adapter_used": false,
++    "llm_reasoning_invoked": false,
++    "offline_arcade_available": true,
++    "offline_ground_truth_bfs_used": false,
++    "offline_source_reading_used": false,
++    "per_game_bfs_used": false,
++    "prior_live_path_artifacts_consulted": [
++      "results/experiment_5054_arc_live_path_self_discovery.json"
++    ],
++    "registry_loadable": true,
++    "registry_present": true
++  },
++  "prior_reproduced_level": 2,
++  "provenance_evidence": {
++    "attempted_path": "E3AgentPolicy/bounded_live_policy",
++    "hand_built_adapter_used": false,
++    "legacy_models_smoke_only": true,
++    "llm_reasoning_invoked": false,
++    "model_specs_obeyed": true,
++    "offline_ground_truth_bfs_used": false,
++    "offline_source_reading_used": false,
++    "policy": "E3AgentPolicy",
++    "runtime_self_discovery": true,
++    "self_discovery_lever": "bounded_e3_policy_no_archive_injection",
++    "solution_labels_from_live_run": false
++  },
++  "random_seed": 5067,
++  "registry_precheck_passed": true,
++  "reproducibility_checksum": "8b36be21bbea97c29b294e3ca95509cab139a3abde7316ff0b60e05c83d6ddec",
++  "reproducible_total_levels_after": 69,
++  "reproducible_total_levels_before": 69,
++  "result_path": "results/experiment_5067_arc_live_path_self_discovery.json",
++  "schema": "carnot.arc_live_path_self_discovery_5067.v1",
++  "solve_claim": {
++    "attempted_path": "live_agent_self_discovery",
++    "claimed": false,
++    "provenance": "live_agent_self_discovery",
++    "reproduction_gate": {
++      "claimed_level": 0,
++      "game": "re86",
++      "mode": "offline_reproduction_gate_no_new_level_claim",
++      "reached_level": 0,
++      "reproduced": false
++    },
++    "residual": "duplicate_depth"
++  },
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-ARC-WMTE-5067",
++    "SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK",
++    "SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE",
++    "SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT"
++  ],
++  "target_game": "re86",
++  "target_level": 3
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8b90e24089..790a8be75e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:15:08Z",
+-  "finished_at": "2026-07-01T04:15:08Z",
++  "started_at": "2026-07-01T04:41:01Z",
++  "finished_at": "2026-07-01T04:41:01Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 59601d93b2..d7252d0bf3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:15:08Z",
+-  "finished_at": "2026-07-01T04:15:08Z",
++  "started_at": "2026-07-01T04:41:01Z",
++  "finished_at": "2026-07-01T04:41:01Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c6d3d99719..fcdb58d26c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T04:15:08Z",
+-  "finished_at": "2026-07-01T04:15:08Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-01T04:41:01Z",
++  "finished_at": "2026-07-01T04:41:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5067_arc_live_path_self_discovery.py b/tests/python/test_experiment_5067_arc_live_path_self_discovery.py
+new file mode 100644
+index 0000000000..22c21cf19e
+--- /dev/null
++++ b/tests/python/test_experiment_5067_arc_live_path_self_discovery.py
+@@ -0,0 +1,532 @@
++"""Tests for Exp 5067 ARC live-path self-discovery.
++
++Spec refs: REQ-ARC-WMTE-5067,
++SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK,
++SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE,
++SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_5067_arc_live_path_self_discovery as exp5067
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _registry_text(*, re86: bool = True) -> str:
++    re86_row = (
++        """- game: re86
++  reproducibility: reproduced
++  levels_reproduced: 2
++  mechanic_class: pattern_match_sprite_resize
++  dead_ends: []
++"""
++        if re86
++        else ""
++    )
++    return f"""schema_version: 1
++updated: '2026-06-30'
++games:
++- game: lp85
++  reproducibility: reproduced
++  levels_reproduced: 5
++  dead_ends:
++  - 'Exp5040 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta.'
++- game: tu93
++  reproducibility: reproduced
++  levels_reproduced: 5
++  dead_ends: []
++- game: wa30
++  reproducibility: reproduced
++  levels_reproduced: 1
++  dead_ends: []
++{re86_row}reproducible_total_levels: 69
++"""
++
++
++def _prior_5054_no_bank() -> dict[str, object]:
++    return {
++        "experiment": "experiment_5054_arc_live_path_self_discovery",
++        "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++        "target_game": "tu93",
++        "target_level": 6,
++        "prior_reproduced_level": 5,
++        "new_levels_banked": 0,
++        "solve_provenance": "live_agent_self_discovery",
++        "live_agent_attempts": [
++            {
++                "attempt_id": "tu93_live_go_explore_archive_budget_36",
++                "target_game": "tu93",
++                "target_level": 6,
++                "max_level_reached": 0,
++                "self_discovery_lever": "go_explore_archive",
++                "runtime_self_discovery": True,
++            }
++        ],
++    }
++
++
++def _preconditions() -> dict[str, object]:
++    return {
++        "AGENTS.md": True,
++        "CODEX.md": True,
++        "arc_world_model_trust_energy_spec_has_req_5067": True,
++        "registry_present": True,
++        "registry_loadable": True,
++        "prior_live_path_artifacts_consulted": [exp5067.PRIOR_LIVE_PATH_ARTIFACTS[0]],
++        "offline_arcade_available": True,
++        "llm_reasoning_invoked": False,
++        "offline_source_reading_used": False,
++        "offline_ground_truth_bfs_used": False,
++        "per_game_bfs_used": False,
++        "hand_built_adapter_used": False,
++    }
++
++
++def _attempt(*, max_level: int = 2, reproduced: bool = False) -> dict[str, object]:
++    return {
++        "attempt_id": "re86_live_go_explore_archive_budget_12",
++        "target_game": "re86",
++        "prior_reproduced_level": 2,
++        "target_level": 3,
++        "budget": 12,
++        "actions_taken": 4,
++        "max_level_reached": max_level,
++        "exceeded_registry_depth": max_level > 2,
++        "runtime_self_discovery": True,
++        "policy": "E3AgentPolicy",
++        "self_discovery_lever": "go_explore_archive",
++        "solution_labels": ['{"action":1,"data":null}'] if max_level > 2 else [],
++        "reproduction_gate": {
++            "game": "re86",
++            "reproduced": reproduced,
++            "reached_level": max_level if reproduced else 0,
++            "claimed_level": max_level if max_level > 2 else 0,
++        },
++        "offline_source_reading_used": False,
++        "offline_ground_truth_bfs_used": False,
++        "per_game_bfs_used": False,
++        "hand_built_adapter_used": False,
++        "llm_reasoning_invoked": False,
++        "model_specs": dict(exp5067.MODEL_SPECS),
++        "legacy_models_smoke_only": True,
++        "go_explore_archive": {"enabled": True, "stored_cells": 2},
++    }
++
++
++def test_req_arc_wmte_5067_spec_declares_artifact_contract() -> None:
++    """REQ-ARC-WMTE-5067: OpenSpec anchors the Exp5067 artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in exp5067.SPEC_REFS + [exp5067.RESULT_RELATIVE_PATH]:
++        assert marker in spec
++    for field, principle in exp5067.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_5067_registry_prior_precheck_rotates(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK: duplicate and prior no-bank skip."""
++
++    _write_prior_artifact(tmp_path)
++    selection = exp5067.select_target(
++        yaml.safe_load(_registry_text()),
++        root=tmp_path,
++        current_target=("lp85", 6),
++        candidate_games=("lp85", "tu93", "wa30", "re86"),
++        hidden_state_targets=("wa30",),
++    )
++    audit = {row["game"]: row for row in selection["candidate_audit"]}
++
++    assert selection["status"] == "selected"
++    assert selection["game"] == "re86"
++    assert selection["prior_reproduced_level"] == 2
++    assert selection["target_level"] == 3
++    assert selection["registry_precheck_passed"] is True
++    assert selection["duplicate_solve_avoided"] is True
++    assert audit["lp85"]["status"] == "skip_recorded_dry_next_level"
++    assert audit["tu93"]["status"] == "skip_prior_live_path_no_bank"
++    assert audit["wa30"]["status"] == "skip_hidden_state_target"
++    assert audit["re86"]["status"] == "candidate_selected"
++
++    registry = yaml.safe_load(_registry_text())
++    registry["games"].append(
++        {
++            "game": "lf52",
++            "reproducibility": "reproduced",
++            "levels_reproduced": 2,
++            "dead_ends": [],
++        }
++    )
++    alternate = exp5067.select_target(
++        registry,
++        root=tmp_path,
++        candidate_games=("re86", "lf52"),
++    )
++    assert {row["game"]: row for row in alternate["candidate_audit"]}["lf52"]["status"] == (
++        "alternate_not_selected"
++    )
++
++    duplicate = exp5067.select_target(
++        yaml.safe_load(_registry_text(re86=False)),
++        root=tmp_path,
++        current_target=("tu93", 5),
++        candidate_games=("tu93",),
++    )
++    assert duplicate["status"] == "blocked_duplicate_target"
++
++
++def test_scenario_arc_wmte_5067_prior_artifact_edges(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK: malformed priors are ignored."""
++
++    relpaths = (
++        "results/list.json",
++        "results/missing_target.json",
++        "results/banked_without_reach.json",
++        "results/reached_target.json",
++    )
++    (tmp_path / "results").mkdir()
++    (tmp_path / relpaths[0]).write_text("[]\n", encoding="utf-8")
++    (tmp_path / relpaths[1]).write_text(
++        json.dumps({"target_game": "", "target_level": 0}) + "\n",
++        encoding="utf-8",
++    )
++    (tmp_path / relpaths[2]).write_text(
++        json.dumps(
++            {
++                "target_game": "tu93",
++                "target_level": 6,
++                "new_levels_banked": 1,
++                "live_agent_attempts": [{"max_level_reached": 5}],
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    (tmp_path / relpaths[3]).write_text(
++        json.dumps(
++            {
++                "target_game": "re86",
++                "target_level": 3,
++                "new_levels_banked": 0,
++                "live_agent_attempts": [{"max_level_reached": 3}],
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++    attempts = exp5067._prior_live_path_attempts(  # noqa: SLF001 - white-box spec edge
++        tmp_path,
++        relpaths,
++    )
++
++    assert ("tu93", 6) not in attempts
++    assert attempts[("re86", 3)]["status"] == "prior_live_path_reached_target"
++
++
++def test_scenario_arc_wmte_5067_stable_no_bank_artifact(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT: no-bank keeps totals and evidence honest."""
++
++    _write_prior_artifact(tmp_path)
++    selection = exp5067.select_target(
++        yaml.safe_load(_registry_text()),
++        root=tmp_path,
++        candidate_games=("lp85", "tu93", "re86"),
++    )
++    artifact = exp5067.build_artifact(
++        selection=selection,
++        registry_total=69,
++        live_attempt=_attempt(max_level=2),
++        preconditions_checked=_preconditions(),
++        duration_s=0.25,
++    )
++
++    assert artifact["honest_verdict"] == "complete_re86_no_new_level_residual_duplicate_depth"
++    assert artifact["registry_precheck_passed"] is True
++    assert artifact["target_game"] == "re86"
++    assert artifact["target_level"] == 3
++    assert artifact["prior_reproduced_level"] == 2
++    assert artifact["new_levels_banked"] == 0
++    assert artifact["duplicate_solve_avoided"] is True
++    assert artifact["solve_claim"]["claimed"] is False
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["provenance_evidence"]["attempted_path"] == "E3AgentPolicy/bounded_live_policy"
++    assert artifact["provenance_evidence"]["offline_source_reading_used"] is False
++    assert artifact["provenance_evidence"]["offline_ground_truth_bfs_used"] is False
++    assert artifact["provenance_evidence"]["hand_built_adapter_used"] is False
++    assert artifact["live_agent_attempts"][0]["self_discovery_lever"] == (
++        "bounded_e3_policy_no_archive_injection"
++    )
++    assert artifact["reproducible_total_levels_before"] == 69
++    assert artifact["reproducible_total_levels_after"] == 69
++    assert artifact["model_specs"] == exp5067.MODEL_SPECS
++    assert artifact["legacy_models_smoke_only"] is True
++    exp5067.validate_artifact(artifact)
++
++
++def test_scenario_arc_wmte_5067_provenance_gate_requires_live_reproduction(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE: only strict live reproduction banks."""
++
++    selection = {
++        "game": "re86",
++        "prior_reproduced_level": 2,
++        "target_level": 3,
++        "registry_precheck_passed": True,
++        "candidate_audit": [],
++    }
++    success = exp5067.build_artifact(
++        selection=selection,
++        registry_total=69,
++        live_attempt=_attempt(max_level=3, reproduced=True),
++        preconditions_checked=_preconditions(),
++        duration_s=0.4,
++    )
++
++    assert success["honest_verdict"] == "success_re86_levelup_banked"
++    assert success["offline_reproduced"] is True
++    assert success["new_levels_banked"] == 1
++    assert success["duplicate_solve_avoided"] is False
++    assert success["solve_claim"]["claimed"] is True
++    assert success["provenance_evidence"]["solution_labels_from_live_run"] is True
++    exp5067.validate_artifact(success)
++
++    wrong_provenance = dict(success, solve_provenance="development_proxy")
++    wrong_provenance["reproducibility_checksum"] = exp5067.reproducibility_checksum(
++        wrong_provenance
++    )
++    assert "success requires live_agent_self_discovery provenance" in (
++        exp5067.artifact_schema_errors(wrong_provenance)
++    )
++
++    forbidden = dict(success)
++    forbidden["provenance_evidence"] = dict(forbidden["provenance_evidence"])
++    forbidden["provenance_evidence"]["offline_ground_truth_bfs_used"] = True
++    forbidden["reproducibility_checksum"] = exp5067.reproducibility_checksum(forbidden)
++    assert "success cannot use hidden source, offline BFS, or hand adapter" in (
++        exp5067.artifact_schema_errors(forbidden)
++    )
++
++
++def test_scenario_arc_wmte_5067_validation_edges() -> None:
++    """SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE: malformed artifacts fail closed."""
++
++    artifact = exp5067.blocked_artifact(
++        reason="duplicate_target",
++        selection={
++            "game": "lp85",
++            "prior_reproduced_level": 5,
++            "target_level": 5,
++            "registry_precheck_passed": False,
++            "candidate_audit": [],
++        },
++        registry_total=69,
++        preconditions_checked=_preconditions(),
++        duration_s=0.1,
++    )
++    exp5067.validate_artifact(artifact)
++
++    missing = dict(artifact)
++    missing.pop("provenance_evidence")
++    assert "missing required field: provenance_evidence" in exp5067.artifact_schema_errors(missing)
++
++    malformed = dict(artifact)
++    malformed.update(
++        schema="bad",
++        experiment="bad",
++        experiment_id=0,
++        spec_refs=[],
++        result_path="bad",
++        field_principles={},
++        registry_precheck_passed="false",
++        target_level="5",
++        prior_reproduced_level="5",
++        new_levels_banked="0",
++        duplicate_solve_avoided="true",
++        reproducible_total_levels_before="69",
++        reproducible_total_levels_after="69",
++        solve_claim=[],
++        solve_provenance="outer_loop_re",
++        provenance_evidence=[],
++        model_specs={},
++        legacy_models_smoke_only=False,
++        offline_reproduced="false",
++        inference_substrate="bad",
++        preconditions_checked=[],
++        candidate_selection=[],
++        live_agent_attempts={},
++        random_seed=0,
++        honest_verdict="pending",
++        reproducibility_checksum="bad",
++    )
++    errors = exp5067.artifact_schema_errors(malformed)
++    for expected in (
++        "schema mismatch",
++        "experiment mismatch",
++        "experiment_id mismatch",
++        "spec_refs mismatch",
++        "result_path mismatch",
++        "field_principles mismatch",
++        "registry_precheck_passed must be bare bool",
++        "target_level must be bare int",
++        "prior_reproduced_level must be bare int",
++        "new_levels_banked must be bare int",
++        "duplicate_solve_avoided must be bare bool",
++        "reproducible_total_levels_before must be bare int",
++        "reproducible_total_levels_after must be bare int",
++        "solve_claim must be a mapping",
++        "provenance_evidence must be a mapping",
++        "model_specs mismatch",
++        "legacy_models_smoke_only must be true",
++        "offline_reproduced must be bare bool",
++        "inference_substrate mismatch",
++        "preconditions_checked must be a mapping",
++        "candidate_selection must be a mapping",
++        "live_agent_attempts must be a list",
++        "random_seed mismatch",
++        "honest_verdict must use a terminal prefix",
++        "reproducibility_checksum must be 64 hex chars",
++    ):
++        assert expected in errors
++
++    after_mismatch = dict(artifact, reproducible_total_levels_after=70)
++    after_mismatch["reproducibility_checksum"] = exp5067.reproducibility_checksum(after_mismatch)
++    assert "reproducible_total_levels_after must equal before + new_levels_banked" in (
++        exp5067.artifact_schema_errors(after_mismatch)
++    )
++
++    non_success_reproduced = dict(artifact, offline_reproduced=True)
++    non_success_reproduced["reproducibility_checksum"] = exp5067.reproducibility_checksum(
++        non_success_reproduced
++    )
++    assert "non-success cannot set offline_reproduced true" in (
++        exp5067.artifact_schema_errors(non_success_reproduced)
++    )
++
++    non_bool_claim = dict(artifact, solve_claim={"claimed": "yes"})
++    non_bool_claim["reproducibility_checksum"] = exp5067.reproducibility_checksum(non_bool_claim)
++    assert "solve_claim.claimed must be bare bool" in exp5067.artifact_schema_errors(non_bool_claim)
++
++    weak_success = dict(
++        artifact,
++        honest_verdict="success_lp85_levelup_banked",
++        offline_reproduced=False,
++        new_levels_banked=0,
++        duplicate_solve_avoided=False,
++        solve_claim={"claimed": False},
++        provenance_evidence={"solution_labels_from_live_run": False},
++    )
++    weak_success["reproducibility_checksum"] = exp5067.reproducibility_checksum(weak_success)
++    weak_errors = exp5067.artifact_schema_errors(weak_success)
++    assert "success requires offline_reproduced true" in weak_errors
++    assert "success requires new_levels_banked >= 1" in weak_errors
++    assert "success requires solve_claim.claimed true" in weak_errors
++    assert "success requires live-agent solution label evidence" in weak_errors
++    assert "no-bank artifacts must set duplicate_solve_avoided true" in weak_errors
++
++    with pytest.raises(ValueError, match="missing required field: provenance_evidence"):
++        exp5067.validate_artifact(missing)
++
++
++def test_scenario_arc_wmte_5067_run_experiment_writes_stable_artifact(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT: runner writes the terminal JSON."""
++
++    _write_ready_tree(tmp_path)
++    _write_prior_artifact(tmp_path)
++    monkeypatch.setattr(exp5067, "offline_arcade_available", lambda: True)
++    monkeypatch.setattr(exp5067, "run_live_agent_attempt", lambda *_args, **_kwargs: _attempt())
++
++    artifact = exp5067.run_experiment(
++        root=tmp_path,
++        current_target=("lp85", 6),
++        candidate_games=("lp85", "tu93", "re86"),
++        budget=12,
++    )
++    written = json.loads((tmp_path / exp5067.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert artifact["honest_verdict"] == "complete_re86_no_new_level_residual_duplicate_depth"
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert written["provenance_evidence"]["runtime_self_discovery"] is True
++    exp5067.validate_artifact(written)
++
++
++def test_scenario_arc_wmte_5067_run_experiment_blocks_preconditions(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT: blocked resources stay terminal."""
++
++    _write_ready_tree(tmp_path, spec="missing\n")
++    assert exp5067.run_experiment(root=tmp_path)["honest_verdict"] == "blocked_spec_missing"
++
++    registry_missing = tmp_path / "registry_missing"
++    _write_ready_tree(registry_missing, registry=None)
++    assert (
++        exp5067.run_experiment(root=registry_missing)["honest_verdict"]
++        == "blocked_arc_solve_registry_unreadable"
++    )
++
++    registry_empty = tmp_path / "registry_empty"
++    _write_ready_tree(registry_empty, registry="{}\n")
++    assert (
++        exp5067.run_experiment(root=registry_empty)["honest_verdict"]
++        == "blocked_arc_solve_registry_unreadable"
++    )
++
++    no_target = tmp_path / "no_target"
++    _write_ready_tree(no_target, registry=_registry_text(re86=False))
++    _write_prior_artifact(no_target)
++    assert (
++        exp5067.run_experiment(
++            root=no_target,
++            current_target=("lp85", 6),
++            candidate_games=("lp85", "tu93", "wa30"),
++        )["honest_verdict"]
++        == "blocked_no_unsolved_target"
++    )
++
++    _write_ready_tree(tmp_path)
++    _write_prior_artifact(tmp_path)
++    monkeypatch.setattr(exp5067, "offline_arcade_available", lambda: False)
++    assert exp5067.run_experiment(root=tmp_path)["honest_verdict"] == (
++        "blocked_offline_arcade_missing"
++    )
++
++
++def _write_ready_tree(
++    root_path: Path,
++    *,
++    spec: str = "REQ-ARC-WMTE-5067\n",
++    registry: str | None = _registry_text(),
++) -> None:
++    root_path.mkdir(exist_ok=True)
++    (root_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (root_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    (root_path / "openspec" / "capabilities" / "arc-world-model-trust-energy").mkdir(
++        parents=True,
++        exist_ok=True,
++    )
++    (
++        root_path / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++    ).write_text(spec, encoding="utf-8")
++    (root_path / "ops").mkdir(exist_ok=True)
++    if registry is not None:
++        (root_path / "ops" / "arc_solve_registry.yaml").write_text(registry, encoding="utf-8")
++
++
++def _write_prior_artifact(root_path: Path) -> None:
++    path = root_path / exp5067.PRIOR_LIVE_PATH_ARTIFACTS[0]
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(_prior_5054_no_bank(), indent=2) + "\n", encoding="utf-8")
+-- 
+2.55.0
+

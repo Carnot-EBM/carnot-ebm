@@ -1,0 +1,58 @@
+From 5571c0dbe50a27083b27941357c71ff49984ff30 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 18:45:12 -0400
+Subject: [PATCH 04523/11362] [outer-loop] Fix TAUTOLOGY false-positive that
+ quarantined the A4 deadline lane (baseline vs prior_best)
+
+.450 A4 (exp4886) ran GENUINELY LIVE deliverable-first (the scope-down fix worked -- no
+wall-clock death, rate 0.0625) but adversarial_verify CRITICAL-flagged it TAUTOLOGY:
+first_win_baseline=0.04 == prior_best_heldout_first_win_rate=0.04. These are two CARRIED
+REFERENCE fields that are DEFINITIONALLY equal until first-win beats baseline -- a false
+positive that would quarantine the deadline-lane readiness result EVERY milestone until
+first-win improves.
+
+Root cause: the existing baseline-identity carve-out (_is_reference_field, suffix-anchored
+_baseline/_reference/_ref) recognized first_win_baseline but NOT the prior_best_* side, so
+the pair stayed CRITICAL instead of downgrading to WARN. Minimal fix: extend
+_is_reference_field to also recognize prior_best_* / prior_submitted_* (prefix-anchored) as
+carried references. The existing carve-out then downgrades the pair CRITICAL->WARN, matching
+the SCENARIO-BIDT-1 contract (surface, don't hide).
+
+exp4886 now: WARN (not CRITICAL), exit 0. 275 adversarial_verify tests pass (incl BIDT-1).
+Forward-looking: does NOT unflag the already-stamped exp4886 artifact; prevents recurrence on
+.451+ A4. (The existing flagged artifact stays per the no-unflag discipline.)
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/adversarial_verify.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index b8175bccb6..552aa9743e 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -430,13 +430,20 @@ _DELTA_SUFFIXES = ("_delta", "_diff", "_change")
+ 
+ def _is_reference_field(k: str) -> bool:
+     """True if the field names a KNOWN PRIOR baseline/reference. Suffix-anchored
+-    to avoid substring collisions with measured outcomes."""
++    to avoid substring collisions with measured outcomes.
++
++    The prior-best of a metric is also a carried reference (it EQUALS the baseline until the
++    metric improves), so a `prior_best_*` / `prior_submitted_*` field is a reference too --
++    prefix-anchored. Origin: exp4886 (.450 A4) where `first_win_baseline` (=0.04) vs
++    `prior_best_heldout_first_win_rate` (=0.04) was CRITICAL-flagged because only the `_baseline`
++    side was recognized; both are references, so the pair is the expected no-improvement state."""
+     kl = k.lower()
+     return (
+         kl in ("baseline", "reference", "ref")
+         or kl.endswith(("_baseline", "_reference", "_ref"))
+         or "_baseline_" in kl
+         or "_reference_" in kl
++        or kl.startswith(("prior_best", "prior_submitted"))
+     )
+ 
+ 
+-- 
+2.55.0
+

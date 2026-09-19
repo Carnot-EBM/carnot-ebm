@@ -1,0 +1,23 @@
+From 50ded22161889350804b53ca3bac8da12076ad4c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 11 Aug 2026 11:37:27 -0400
+Subject: [PATCH 08855/11362] [conductor] In-process docs for Independent
+ versioned-learning and protected-validation safety audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8aaacbe74a..5428550ccb 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16668,3 +16668,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-11: Independent integrity audit for every model-local energy cell (❌ Failed) — honest_verdict=flagged: failed_model_fold_cell,flagged_integrity_shortcut,missing_declared_input,nonready_declared_input,prior_flagged_embedding_shortcut; results/experiment_6316_model_local_probe_integrity_audit.json
+ - 2026-08-11: Continuous self-learning with versioned factor-local state updates (✅ Complete) — honest_verdict=complete_positive: versioned factor-local learning passed boundary release and rollback gates; results/experiment_6318_versioned_factor_local_online_initializer.json
+ - 2026-08-11: Dense feedback-directed update search gated on Exp6318 readiness=1 (✅ Complete) — honest_verdict=complete_positive: feedback-directed search improved protected yield at matched cost; results/experiment_6319_feedback_directed_online_update_search.json
++- 2026-08-11: Independent versioned-learning and protected-validation safety audit (⚠️ Blocked) — honest_verdict=complete_positive: safety audit passed fail-closed V544 replay checks while utility promotion stayed blocked; results/experiment_6320_online_self_evolution_safety_audit.json
+-- 
+2.55.0
+

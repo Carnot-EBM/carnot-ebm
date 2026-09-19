@@ -1,0 +1,736 @@
+From 0a6329fb45e5576cfd322c75a19b5c94f4447f60 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 22:38:32 -0400
+Subject: [PATCH 10205/11362] Repair 37 malformed inference_substrate
+ declarations (class a of the ARC lint debt)
+
+MEASURED FIRST, per the 2026-08-29 known-issues entry. Re-derived with the
+lint's own selector before any write: 573 ARC candidates, 444 failing, 194
+INVALID_INFERENCE_SUBSTRATE. Of the 194, THIRTY-EIGHT are the malformed
+class: a LEGAL substrate name followed by a trailing human note (space,
+';', or '(' separator). The known-issues entry estimated ~23; the
+re-derived count is 38 (32 verifier_ensemble_against_cached_candidates,
+5 aggregation_from_upstream_artifacts, 1 live_llm_inference).
+
+THE CONVENTION CONFLICT IS THE ROOT CAUSE, and it is a finding on its own:
+scripts/determination_preservation_lint.py documents
+'<canonical value><separator><human note>' as the project's convention
+(233+ live declarations) and its Rule-4 matcher deliberately strips the
+note; scripts/arc_artifact_lint.py exact-matches and INVALIDs the same
+form. Two guards encode contradictory conventions. This commit repairs
+the artifacts to the form BOTH guards accept: the bare canonical value,
+with the trailing note moved verbatim to
+inference_substrate_original_invalid_value plus a dated
+inference_substrate_correction_note (the exp3946 corrigendum pattern).
+
+Append-only: no field deleted, no measurement touched, substrate MEANING
+unchanged in every file (the canonical head token is identical before and
+after; Rule 4 note-stripping already read these as the same value).
+
+37 of the 38 are repaired here. The 38th,
+experiment_4752_held_out_first_win_readiness.json, is deliberately NOT
+repaired: its declaration reads 'live_llm_inference -- ... 60s floor
+unless a lever-cache hit aggregates an existing proxy artifact', and its
+duration_s is 11.3s -- below the 60s live floor, consistent with the
+lever-cache branch having actually run. Which substrate truly ran needs a
+judgement about the run, not a formatting repair, so it is reported
+rather than guessed.
+
+Residual, disclosed: experiment_4751_levelup_selfplay.json now passes the
+substrate check but still fails DURATION_MISSING -- duration_s is
+genuinely absent and is NOT fabricated here. That is a separate,
+pre-existing defect now visible instead of masked by the INVALID error.
+
+Verified: all 37 parse, all declare an exactly-legal substrate, 35/37 are
+fully lint-clean (exp4751 above; all others CLEAN),
+determination-preservation-lint OK on the staged set.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ results/experiment_4511_frame_change_prune_predictor.json   | 4 +++-
+ results/experiment_4512_imitation_action_prior.json         | 4 +++-
+ results/experiment_4513_adaptive_per_step_budget.json       | 6 ++++--
+ results/experiment_4514_lazy_best_first_value_weight.json   | 4 +++-
+ results/experiment_4516_integration_8game_gate.json         | 6 ++++--
+ results/experiment_4518_metric_harness_canonical.json       | 4 +++-
+ results/experiment_4523_forward_walk_navigation.json        | 6 ++++--
+ results/experiment_4524_stop_after_levelup.json             | 4 +++-
+ results/experiment_4526_integration_8game_gate.json         | 6 ++++--
+ results/experiment_4527_nav_metric_harness.json             | 4 +++-
+ results/experiment_4528_infra_carryforward.json             | 4 +++-
+ results/experiment_4536_integration_8game_gate.json         | 6 ++++--
+ results/experiment_4547_frame_change_predictor.json         | 4 +++-
+ results/experiment_4548_integration_8game_gate.json         | 6 ++++--
+ results/experiment_4560_integration_8game_gate.json         | 6 ++++--
+ ...xperiment_4568_clickability_action_effect_predictor.json | 4 +++-
+ results/experiment_4572_integration_gate.json               | 4 +++-
+ results/experiment_4573_primitive_persist_transfer.json     | 4 +++-
+ .../experiment_4610_world_model_trust_pass_rate_metric.json | 6 ++++--
+ .../experiment_4616_offline_live_bridge_disambiguation.json | 4 +++-
+ .../experiment_4617_graduate_spatial_value_head_live.json   | 6 ++++--
+ ...periment_4629_graduate_action_effect_predictor_live.json | 4 +++-
+ results/experiment_4632_primitive_persist_transfer.json     | 4 +++-
+ .../experiment_4641_action_effect_expansion_prior_live.json | 4 +++-
+ .../experiment_4646_live_multi_level_solve_rate_metric.json | 4 +++-
+ results/experiment_4652_value_routing_cost_fix_live.json    | 4 +++-
+ .../experiment_4653_energy_fitness_qd_generation_live.json  | 4 +++-
+ ...riment_4665_dagger_distribution_shift_value_routing.json | 4 +++-
+ results/experiment_4691_held_out_first_win_readiness.json   | 6 ++++--
+ results/experiment_4703_held_out_first_win_readiness.json   | 4 +++-
+ results/experiment_4706_perception_quality_cigate.json      | 4 +++-
+ results/experiment_4716_held_out_first_win_readiness.json   | 6 ++++--
+ results/experiment_4725_silent_bug_audit.json               | 4 +++-
+ results/experiment_4729_held_out_first_win_readiness.json   | 4 +++-
+ results/experiment_4740_held_out_first_win_readiness.json   | 4 +++-
+ results/experiment_4751_levelup_selfplay.json               | 4 +++-
+ results/experiment_4755_silent_bug_audit.json               | 4 +++-
+ 37 files changed, 122 insertions(+), 48 deletions(-)
+
+diff --git a/results/experiment_4511_frame_change_prune_predictor.json b/results/experiment_4511_frame_change_prune_predictor.json
+index 41d3f1f9a8..1bffdf3857 100644
+--- a/results/experiment_4511_frame_change_prune_predictor.json
++++ b/results/experiment_4511_frame_change_prune_predictor.json
+@@ -31,7 +31,9 @@
+   "heldout_noop_recall": 0.05263157894736842,
+   "heldout_transition_count": 68,
+   "honest_verdict": "complete: frame_change_prune_solve_rate_guard_failed",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade search + small-predictor scoring, NO GGUF/LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade search + small-predictor scoring, NO GGUF/LLM load (1s floor).",
+   "local_gate_metrics": {
+     "baseline": {
+       "games": [
+diff --git a/results/experiment_4512_imitation_action_prior.json b/results/experiment_4512_imitation_action_prior.json
+index 3ac4fc892e..88c992bb9d 100644
+--- a/results/experiment_4512_imitation_action_prior.json
++++ b/results/experiment_4512_imitation_action_prior.json
+@@ -18,7 +18,9 @@
+     "solve_rate_with_prior": "principle \"the prior must not drop solve-rate.\""
+   },
+   "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
+   "local_gate_metrics": {
+     "baseline": {
+       "games": [
+diff --git a/results/experiment_4513_adaptive_per_step_budget.json b/results/experiment_4513_adaptive_per_step_budget.json
+index bcb361741d..ce7c39e871 100644
+--- a/results/experiment_4513_adaptive_per_step_budget.json
++++ b/results/experiment_4513_adaptive_per_step_budget.json
+@@ -23,7 +23,7 @@
+     "solve_rate_with_adaptive": "principle \"the gate must not drop solve-rate.\""
+   },
+   "honest_verdict": "success: adaptive_budget_median_actions_2984_below_7760",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "local_gate_metrics": {
+     "baseline": {
+       "games": [
+@@ -45589,5 +45589,7 @@
+     "honest_verdict_corrected": "complete: adaptive_budget_inert_commit_count_0_no_action_change_false_win_retracted",
+     "genuine_insight": "actions_to_first_levelup (lp85=20, near the offline-BFS optimum of 21) is FAR below total run length (7792): the explorer reaches first levelup early but over-explores to ~7760. The honest baseline actions-to-first-levelup median is ~2984 (identical for both conditions). Implication: the gate should measure actions-to-first-levelup (the scoring metric), the baseline must be re-measured on that same metric, and the real lever is STOP/measure-AT-first-levelup + the A6 nav tax -- not candidate pruning.",
+     "capstone_directive": "PHASE E (.417 capstone) MUST NOT aggregate the 2984-below-7760 number as a win."
+-  }
++  },
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4514_lazy_best_first_value_weight.json b/results/experiment_4514_lazy_best_first_value_weight.json
+index 9797bc854d..ff1039c4e5 100644
+--- a/results/experiment_4514_lazy_best_first_value_weight.json
++++ b/results/experiment_4514_lazy_best_first_value_weight.json
+@@ -278,7 +278,9 @@
+     "ls20"
+   ],
+   "honest_verdict": "complete: lazy_value_weight_null_keep_0",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor).",
+   "lazy_eval_speedup_confirmed": {
+     "cache_by_frame_hash": true,
+     "confirmed": true,
+diff --git a/results/experiment_4516_integration_8game_gate.json b/results/experiment_4516_integration_8game_gate.json
+index 8e41c86b64..1f06d1e977 100644
+--- a/results/experiment_4516_integration_8game_gate.json
++++ b/results/experiment_4516_integration_8game_gate.json
+@@ -34,7 +34,7 @@
+   ],
+   "heldout_solve_rate": 0.5,
+   "honest_verdict": "complete: no_lever_beats_7760_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "integrated_measurement": {
+     "actions_by_game": {
+       "lp85": 7792,
+@@ -543,5 +543,7 @@
+       "severity": "critical",
+       "detail": "heldout_solve_rate=0.5 and solve_rate_integrated=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4518_metric_harness_canonical.json b/results/experiment_4518_metric_harness_canonical.json
+index 67f0b8e052..bcfc7a73d9 100644
+--- a/results/experiment_4518_metric_harness_canonical.json
++++ b/results/experiment_4518_metric_harness_canonical.json
+@@ -667,7 +667,9 @@
+     "selected_default_budget": 8000
+   },
+   "honest_verdict": "shipped: metric_harness_canonical_ci_guarded",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
+   "leaderboard_submission": false,
+   "positive_control": {
+     "dashboard_row": {
+diff --git a/results/experiment_4523_forward_walk_navigation.json b/results/experiment_4523_forward_walk_navigation.json
+index 7ae7c9a1ac..d5ea994bdb 100644
+--- a/results/experiment_4523_forward_walk_navigation.json
++++ b/results/experiment_4523_forward_walk_navigation.json
+@@ -2536,7 +2536,7 @@
+     "ls20"
+   ],
+   "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "leaderboard_submission": false,
+   "local_gate_budget": 8000,
+   "median_actions_on_core_best": 7761.5,
+@@ -2620,5 +2620,7 @@
+       "severity": "warn",
+       "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4524_stop_after_levelup.json b/results/experiment_4524_stop_after_levelup.json
+index 4c2da19b75..44fc58b8ef 100644
+--- a/results/experiment_4524_stop_after_levelup.json
++++ b/results/experiment_4524_stop_after_levelup.json
+@@ -244,7 +244,9 @@
+     "ls20"
+   ],
+   "honest_verdict": "success: stop_after_levelup_core_actions_2825_below_control",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
+   "leaderboard_submission": false,
+   "levels_per_game_preserved": {
+     "before_after": {
+diff --git a/results/experiment_4526_integration_8game_gate.json b/results/experiment_4526_integration_8game_gate.json
+index 4527cb4667..ed1a04b817 100644
+--- a/results/experiment_4526_integration_8game_gate.json
++++ b/results/experiment_4526_integration_8game_gate.json
+@@ -221,7 +221,7 @@
+   },
+   "heldout_solve_rate": 0.0,
+   "honest_verdict": "complete: no_lever_raises_core_efficiency_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "levers_integrated": [],
+   "local_gate_budget": 8000,
+   "nav_diagnostics": {
+@@ -432,5 +432,7 @@
+       "severity": "warn",
+       "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4527_nav_metric_harness.json b/results/experiment_4527_nav_metric_harness.json
+index 8bc6d6f6b1..eefffdb85f 100644
+--- a/results/experiment_4527_nav_metric_harness.json
++++ b/results/experiment_4527_nav_metric_harness.json
+@@ -374,7 +374,9 @@
+     "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074"
+   },
+   "honest_verdict": "shipped: nav_metric_first_class_ci_guarded",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
+   "leaderboard_submission": false,
+   "nav_metric_added": {
+     "nav_fields": [
+diff --git a/results/experiment_4528_infra_carryforward.json b/results/experiment_4528_infra_carryforward.json
+index d6cbcfee8f..8f149e4b3a 100644
+--- a/results/experiment_4528_infra_carryforward.json
++++ b/results/experiment_4528_infra_carryforward.json
+@@ -164,7 +164,9 @@
+     "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\""
+   },
+   "honest_verdict": "complete: infra_audit_already_done",
+-  "inference_substrate": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
+   "leaderboard_submission": false,
+   "preconditions_checked": {
+     "agents_md_read": true,
+diff --git a/results/experiment_4536_integration_8game_gate.json b/results/experiment_4536_integration_8game_gate.json
+index 77d1048313..1c5c30517e 100644
+--- a/results/experiment_4536_integration_8game_gate.json
++++ b/results/experiment_4536_integration_8game_gate.json
+@@ -385,7 +385,7 @@
+   },
+   "heldout_solve_rate": 0.0,
+   "honest_verdict": "complete: no_lever_raises_core_efficiency_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "levers_integrated": [],
+   "local_gate_budget": 8000,
+   "operator_submission_performed": false,
+@@ -536,5 +536,7 @@
+       "severity": "critical",
+       "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate.",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4547_frame_change_predictor.json b/results/experiment_4547_frame_change_predictor.json
+index 24828aeab3..5c73189d58 100644
+--- a/results/experiment_4547_frame_change_predictor.json
++++ b/results/experiment_4547_frame_change_predictor.json
+@@ -37,7 +37,9 @@
+     "trivial_delta_auroc": 0.5
+   },
+   "honest_verdict": "complete: frame_change_cnn_no_action_reduction_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- CNN trains on cached transitions + scores offline candidates, no headline LLM load.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- CNN trains on cached transitions + scores offline candidates, no headline LLM load.",
+   "median_actions_to_first_levelup_blind": 1.0,
+   "median_actions_to_first_levelup_cnn": 1.0,
+   "positive_control": {
+diff --git a/results/experiment_4548_integration_8game_gate.json b/results/experiment_4548_integration_8game_gate.json
+index b44af77c85..7844f458e9 100644
+--- a/results/experiment_4548_integration_8game_gate.json
++++ b/results/experiment_4548_integration_8game_gate.json
+@@ -385,7 +385,7 @@
+   },
+   "heldout_solve_rate": 0.0,
+   "honest_verdict": "complete: no_lever_raises_core_efficiency_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "levers_integrated": [],
+   "local_gate_budget": 8000,
+   "operator_submission_performed": false,
+@@ -512,5 +512,7 @@
+       "severity": "critical",
+       "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4560_integration_8game_gate.json b/results/experiment_4560_integration_8game_gate.json
+index 94af54826d..dbdfe74607 100644
+--- a/results/experiment_4560_integration_8game_gate.json
++++ b/results/experiment_4560_integration_8game_gate.json
+@@ -1249,7 +1249,7 @@
+   "generic_transfer_rate_integrated": 0.04,
+   "heldout_solve_rate": 0.04,
+   "honest_verdict": "complete: no_lever_raises_a_metric_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "levers_integrated": [],
+   "local_gate_budget": 8000,
+   "operator_submission_performed": false,
+@@ -1412,5 +1412,7 @@
+       "severity": "warn",
+       "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4568_clickability_action_effect_predictor.json b/results/experiment_4568_clickability_action_effect_predictor.json
+index 0c37bccff8..fb539dbf5e 100644
+--- a/results/experiment_4568_clickability_action_effect_predictor.json
++++ b/results/experiment_4568_clickability_action_effect_predictor.json
+@@ -82,7 +82,9 @@
+   },
+   "generic_transfer_rate_with_predictor": 0.04,
+   "honest_verdict": "complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); fast CPU forward pass declared.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); fast CPU forward pass declared.",
+   "median_actions_to_first_levelup_baseline": 1.0,
+   "median_actions_to_first_levelup_with_predictor": 1.0,
+   "missing_verifier_gaps": [
+diff --git a/results/experiment_4572_integration_gate.json b/results/experiment_4572_integration_gate.json
+index 847341b24a..fcf8a08594 100644
+--- a/results/experiment_4572_integration_gate.json
++++ b/results/experiment_4572_integration_gate.json
+@@ -1297,7 +1297,9 @@
+   "generic_transfer_rate_integrated": 0.04,
+   "heldout_solve_rate": 0.04,
+   "honest_verdict": "complete: no_lever_raises_a_metric_honest_null",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated run invokes the LLM proposer, declare live_llm_inference + add the Qwen3.5-9B-MTP model precondition); a CNN predictor forward pass is NOT live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated run invokes the LLM proposer, declare live_llm_inference + add the Qwen3.5-9B-MTP model precondition); a CNN predictor forward pass is NOT live_llm_inference.",
+   "integrated_action_measurement": {
+     "actions_to_first_levelup_by_game": {
+       "lp85": 20,
+diff --git a/results/experiment_4573_primitive_persist_transfer.json b/results/experiment_4573_primitive_persist_transfer.json
+index 7b0da34790..c338a018a4 100644
+--- a/results/experiment_4573_primitive_persist_transfer.json
++++ b/results/experiment_4573_primitive_persist_transfer.json
+@@ -14,7 +14,9 @@
+     "transfer_value_per_game": "the per-game value-add (predictor actions-reduced / expansion winner-generated) -- the cross-game evidence the primitive generalizes."
+   },
+   "honest_verdict": "success: primitive_persisted_transfer_m0r0_value_added",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer over cached action-effect rows; a CNN predictor forward pass is NOT live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline transfer over cached action-effect rows; a CNN predictor forward pass is NOT live_llm_inference.",
+   "new_levels_banked": 0,
+   "offline_reproduced": false,
+   "preconditions_checked": {
+diff --git a/results/experiment_4610_world_model_trust_pass_rate_metric.json b/results/experiment_4610_world_model_trust_pass_rate_metric.json
+index d8562a2164..509c968df5 100644
+--- a/results/experiment_4610_world_model_trust_pass_rate_metric.json
++++ b/results/experiment_4610_world_model_trust_pass_rate_metric.json
+@@ -70,7 +70,7 @@
+     }
+   },
+   "honest_verdict": "success: world_model_trust_pass_rate_metric_helper_shipped_tests_green",
+-  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor).",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
+   "inference_substrate_detail": "aggregation_only_no_model_load",
+   "passed_games": [
+     "ar25",
+@@ -134,5 +134,7 @@
+       "detail": "World-model trust pass is degenerate or circular: verifier_is_oracle=None, not False; no positive correctly-predicted grid-changing transition evidence. A trust pass must declare verifier_is_oracle=false and show >=1 correctly predicted grid-changing transition so identity/no-op models cannot clear the gate."
+     }
+   ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4616_offline_live_bridge_disambiguation.json b/results/experiment_4616_offline_live_bridge_disambiguation.json
+index 73c593580e..1b2bc515ad 100644
+--- a/results/experiment_4616_offline_live_bridge_disambiguation.json
++++ b/results/experiment_4616_offline_live_bridge_disambiguation.json
+@@ -140,7 +140,9 @@
+   },
+   "honest_verdict": "success: bridge_cause_isolated_compute_fix_identified",
+   "indicated_fix": "decision-point-only eval/cached features for live frontier nodes",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor)",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor)",
+   "offline_win_confirmed": true,
+   "per_game_variance": {
+     "max_loo_auroc": 1.0,
+diff --git a/results/experiment_4617_graduate_spatial_value_head_live.json b/results/experiment_4617_graduate_spatial_value_head_live.json
+index 363ff5552c..f1ba665bdb 100644
+--- a/results/experiment_4617_graduate_spatial_value_head_live.json
++++ b/results/experiment_4617_graduate_spatial_value_head_live.json
+@@ -1372,7 +1372,7 @@
+     "variant_solved_count": 1
+   },
+   "honest_verdict": "complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "linear_measurement": {
+     "actions_to_first_levelup": [
+       20
+@@ -2130,5 +2130,7 @@
+       "severity": "info",
+       "detail": "first_win_delta=0.0 (exactly zero). Confirm this is not a stub default."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference.",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4629_graduate_action_effect_predictor_live.json b/results/experiment_4629_graduate_action_effect_predictor_live.json
+index fc46a96e37..20f766441a 100644
+--- a/results/experiment_4629_graduate_action_effect_predictor_live.json
++++ b/results/experiment_4629_graduate_action_effect_predictor_live.json
+@@ -35,7 +35,9 @@
+   },
+   "first_win_rate_delta": 0.1836363636,
+   "honest_verdict": "success: action_effect_predictor_graduated_live_efficiency_up_1",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the CNN is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the CNN is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
+   "live_measurement": {
+     "action_reduction": true,
+     "actions_delta": 1.0,
+diff --git a/results/experiment_4632_primitive_persist_transfer.json b/results/experiment_4632_primitive_persist_transfer.json
+index c886806a59..46592c79c1 100644
+--- a/results/experiment_4632_primitive_persist_transfer.json
++++ b/results/experiment_4632_primitive_persist_transfer.json
+@@ -16,7 +16,9 @@
+     "verifier_is_oracle": "MUST be false -- the persisted primitive directs exploration or prunes actions, oracle-distinct from the win-check."
+   },
+   "honest_verdict": "success: primitive_persisted_transfer_sp80_value_added",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
+   "new_levels_banked": 0,
+   "offline_reproduced": false,
+   "preconditions_checked": {
+diff --git a/results/experiment_4641_action_effect_expansion_prior_live.json b/results/experiment_4641_action_effect_expansion_prior_live.json
+index a59c7bc10e..ec66e8dd00 100644
+--- a/results/experiment_4641_action_effect_expansion_prior_live.json
++++ b/results/experiment_4641_action_effect_expansion_prior_live.json
+@@ -461,7 +461,9 @@
+   },
+   "first_win_rate_delta": 0.0,
+   "honest_verdict": "complete: action_effect_expansion_prior_no_deeper_solve_honest_null_gap_sharpened",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the predictor is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the predictor is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
+   "live_measurement": {
+     "expansion_prior": {
+       "attempt_count": 25,
+diff --git a/results/experiment_4646_live_multi_level_solve_rate_metric.json b/results/experiment_4646_live_multi_level_solve_rate_metric.json
+index ad6359b944..08de1fc544 100644
+--- a/results/experiment_4646_live_multi_level_solve_rate_metric.json
++++ b/results/experiment_4646_live_multi_level_solve_rate_metric.json
+@@ -522,8 +522,10 @@
+     }
+   },
+   "honest_verdict": "success: live_multi_level_solve_rate_metric_helper_shipped_tests_green",
+-  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor).",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+   "inference_substrate_detail": "aggregation_only_no_model_load",
++  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor).",
+   "live_attempt_count": 50,
+   "live_multi_level_solve_rate": 0.0,
+   "multi_level_attempt_count": 0,
+diff --git a/results/experiment_4652_value_routing_cost_fix_live.json b/results/experiment_4652_value_routing_cost_fix_live.json
+index 9d1b7165f7..e73b64218a 100644
+--- a/results/experiment_4652_value_routing_cost_fix_live.json
++++ b/results/experiment_4652_value_routing_cost_fix_live.json
+@@ -1126,7 +1126,9 @@
+   },
+   "first_win_rate_delta": 0.0,
+   "honest_verdict": "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration.",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the value head is a small CPU computation, no live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the value head is a small CPU computation, no live_llm_inference.",
+   "live_baseline_value_weight_zero": {
+     "first_win_rate": 0.04,
+     "measurement": {
+diff --git a/results/experiment_4653_energy_fitness_qd_generation_live.json b/results/experiment_4653_energy_fitness_qd_generation_live.json
+index 3feb7d8918..5fe31406de 100644
+--- a/results/experiment_4653_energy_fitness_qd_generation_live.json
++++ b/results/experiment_4653_energy_fitness_qd_generation_live.json
+@@ -83,7 +83,9 @@
+   },
+   "first_win_rate_delta": 0.0,
+   "honest_verdict": "complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the QD scorer (goal-energy + action-effect CNN forward-pass) is CPU, declared so a fast pass is not DURATION_TOO_SHORT false-flagged; no live_llm_inference",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the QD scorer (goal-energy + action-effect CNN forward-pass) is CPU, declared so a fast pass is not DURATION_TOO_SHORT false-flagged; no live_llm_inference",
+   "live_measurement": {
+     "energy_fitness_qd": {
+       "attempt_count": 4,
+diff --git a/results/experiment_4665_dagger_distribution_shift_value_routing.json b/results/experiment_4665_dagger_distribution_shift_value_routing.json
+index a34eee1e4d..94b225ae79 100644
+--- a/results/experiment_4665_dagger_distribution_shift_value_routing.json
++++ b/results/experiment_4665_dagger_distribution_shift_value_routing.json
+@@ -2180,7 +2180,9 @@
+   },
+   "first_win_rate_delta": 0.0,
+   "honest_verdict": "complete: dagger_distribution_corrected_no_live_lift_residual_logged.",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade DAgger data collection + value-head re-train + live-search measurement over cached variants (1s floor); the value head is CPU, no live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade DAgger data collection + value-head re-train + live-search measurement over cached variants (1s floor); the value head is CPU, no live_llm_inference.",
+   "live_baseline_winning_path_trained": {
+     "first_win_rate": 0.04,
+     "measurement": {
+diff --git a/results/experiment_4691_held_out_first_win_readiness.json b/results/experiment_4691_held_out_first_win_readiness.json
+index 22cd92dedf..9fd66b6f7b 100644
+--- a/results/experiment_4691_held_out_first_win_readiness.json
++++ b/results/experiment_4691_held_out_first_win_readiness.json
+@@ -61,7 +61,7 @@
+     "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+   },
+   "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "leaderboard_relevant_change_note": "no leaderboard-relevant change this milestone: held-out first-win did not improve with bootstrap-CI lower bound above zero.",
+   "multi_level_deepen_rate_integrated": 0.0,
+   "operator_only": true,
+@@ -118,5 +118,7 @@
+       "severity": "critical",
+       "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+-  ]
++  ],
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4703_held_out_first_win_readiness.json b/results/experiment_4703_held_out_first_win_readiness.json
+index c05a87148b..aad12bb13d 100644
+--- a/results/experiment_4703_held_out_first_win_readiness.json
++++ b/results/experiment_4703_held_out_first_win_readiness.json
+@@ -67,7 +67,9 @@
+     "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+   },
+   "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
+   "leaderboard_relevant_change_note": "held-out first-win held flat with validated null-delta markers; no leaderboard-relevant change.",
+   "multi_level_deepen_rate_integrated": 0.0,
+   "no_regression_vs_baseline": true,
+diff --git a/results/experiment_4706_perception_quality_cigate.json b/results/experiment_4706_perception_quality_cigate.json
+index 6878e9877b..a6000f7938 100644
+--- a/results/experiment_4706_perception_quality_cigate.json
++++ b/results/experiment_4706_perception_quality_cigate.json
+@@ -35,7 +35,9 @@
+     }
+   },
+   "honest_verdict": "success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference.",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference.",
+   "loo_discrimination_gate_added": {
+     "errors": [],
+     "loo_delta_vs_order1": 0.17137,
+diff --git a/results/experiment_4716_held_out_first_win_readiness.json b/results/experiment_4716_held_out_first_win_readiness.json
+index 664c71834f..ed178d54d6 100644
+--- a/results/experiment_4716_held_out_first_win_readiness.json
++++ b/results/experiment_4716_held_out_first_win_readiness.json
+@@ -60,7 +60,7 @@
+   },
+   "held_out_variant_attempts": 100,
+   "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "min_held_out_variant_attempts": 100,
+   "multi_level_deepen_rate_integrated": 0.0,
+   "null_delta_methodology_note": "Held-out first-win is flat vs baseline (first_win_rate_integrated == first_win_baseline, delta=0.0): no lever moved the leaderboard-relevant metric in this readiness run. The equality is an honest no-leaderboard-change null; positive_control_passed passed and gates whether the flat null is excused.",
+@@ -154,5 +154,7 @@
+       "detail": "held_out_variant_attempts=100.0 and min_held_out_variant_attempts=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+   ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4725_silent_bug_audit.json b/results/experiment_4725_silent_bug_audit.json
+index a58a2659a7..09adb78bc0 100644
+--- a/results/experiment_4725_silent_bug_audit.json
++++ b/results/experiment_4725_silent_bug_audit.json
+@@ -86,7 +86,9 @@
+   },
+   "go_explore_fix_confirmed": true,
+   "honest_verdict": "complete: silent_bug_audit_12_nulls_5_must_reopen",
+-  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream nulls + module code, no model load (100us floor).",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts -- reads upstream nulls + module code, no model load (100us floor).",
+   "nulls_audited": 12,
+   "per_null_verdicts": [
+     {
+diff --git a/results/experiment_4729_held_out_first_win_readiness.json b/results/experiment_4729_held_out_first_win_readiness.json
+index 0e58d61273..c1b63986a1 100644
+--- a/results/experiment_4729_held_out_first_win_readiness.json
++++ b/results/experiment_4729_held_out_first_win_readiness.json
+@@ -165,7 +165,9 @@
+   "held_out_variant_attempt_floor": "B>=100",
+   "held_out_variant_attempts": 80,
+   "honest_verdict": "complete: held_out_first_win_soft_budget_stop_partial_20_of_25_games_80_attempts_resume_to_finish",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
+   "multi_level_deepen_rate_integrated": 0.0,
+   "null_delta_methodology_note": "",
+   "operator_only": true,
+diff --git a/results/experiment_4740_held_out_first_win_readiness.json b/results/experiment_4740_held_out_first_win_readiness.json
+index 896d4ae019..7236f79d11 100644
+--- a/results/experiment_4740_held_out_first_win_readiness.json
++++ b/results/experiment_4740_held_out_first_win_readiness.json
+@@ -66,7 +66,9 @@
+   "held_out_variant_attempt_floor": "B>=100",
+   "held_out_variant_attempts": 100,
+   "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
+   "multi_level_deepen_rate_integrated": 0.0,
+   "null_delta_methodology_note": "Held-out first-win is flat vs baseline (first_win_rate_integrated == first_win_baseline, delta=0.0): no lever moved the leaderboard-relevant metric in this readiness run. The equality is an honest no-leaderboard-change null; positive_control_passed passed and gates whether the flat null is excused.",
+   "operator_only": true,
+diff --git a/results/experiment_4751_levelup_selfplay.json b/results/experiment_4751_levelup_selfplay.json
+index 406103ffa9..7bf37ef94d 100644
+--- a/results/experiment_4751_levelup_selfplay.json
++++ b/results/experiment_4751_levelup_selfplay.json
+@@ -22,7 +22,9 @@
+     "verifier_is_oracle": "false -- a learned/energy verifier routes/prunes; if the verifier IS the executable oracle the win is execution_grounded, not a moat."
+   },
+   "honest_verdict": "success: sk48_L2_offline_reproduced",
+-  "inference_substrate": "verifier_ensemble_against_cached_candidates for this adaptered offline self-play bank; Qwen3.5-MTP GGUF was prechecked but not invoked",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates for this adaptered offline self-play bank; Qwen3.5-MTP GGUF was prechecked but not invoked",
+   "model_specs": [
+     {
+       "invoked": false,
+diff --git a/results/experiment_4755_silent_bug_audit.json b/results/experiment_4755_silent_bug_audit.json
+index 2eae5da291..4dbdc05dc4 100644
+--- a/results/experiment_4755_silent_bug_audit.json
++++ b/results/experiment_4755_silent_bug_audit.json
+@@ -49,7 +49,9 @@
+     }
+   },
+   "honest_verdict": "complete_generation_lever_silent_bug_audit_11_levers_5_must_reopen",
+-  "inference_substrate": "aggregation_from_upstream_artifacts; 100us floor.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
++  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts; 100us floor.",
+   "levers_audited": [
+     "experiment_4640_goal_energy_generation_live",
+     "experiment_4641_action_effect_expansion_prior_live",
+-- 
+2.55.0
+

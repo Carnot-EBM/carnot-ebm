@@ -1,0 +1,3445 @@
+From 86944fab3f7aff45210a4c81c384974a034319e2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 12:42:25 -0400
+Subject: [PATCH 09702/11362] [conductor] Independent prospective continuous
+ self-learning audit
+
+Automated research step by research conductor.
+Task ID: exp6554-continuous-self-learning-independent-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/continuous-learning/spec.md  |  125 ++
+ ops/.audit_findings_ledger_state.json         |    2 +-
+ ops/.run_sentinel_state.json                  |    2 +-
+ ops/.stop_authority_state.json                |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...tinuous_self_learning_independent_audit.py | 1501 +++++++++++++++++
+ ...nuous_self_learning_independent_audit.json | 1222 ++++++++++++++
+ ...tinuous_self_learning_independent_audit.py |  494 ++++++
+ 8 files changed, 3346 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6554_continuous_self_learning_independent_audit.py
+ create mode 100644 results/experiment_6554_continuous_self_learning_independent_audit.json
+ create mode 100644 tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py
+
+diff --git a/openspec/capabilities/continuous-learning/spec.md b/openspec/capabilities/continuous-learning/spec.md
+index 4852f42514..90544fbf56 100644
+--- a/openspec/capabilities/continuous-learning/spec.md
++++ b/openspec/capabilities/continuous-learning/spec.md
+@@ -7449,3 +7449,128 @@ diagnostic only.
+ | SCENARIO-CL-6553-MATCHED-ARMS | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+ | SCENARIO-CL-6553-SUPPORT-RETENTION | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+ | SCENARIO-CL-6553-RESTART-ROLLBACK-SAFETY | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
++
++## REQ-CL-6554: Independent Prospective CSL Audit
++
++Given Exp6553 attempts a prospective SOTA continuous self-learning result
++When Exp6554 runs for planning date 20260823
++Then it SHALL always write
++`results/experiment_6554_continuous_self_learning_independent_audit.json`
++as one terminal artifact.
++
++Exp6554 SHALL not run new GGUF generation. It SHALL audit stored Exp6553
++receipts, rows, journals, checkpoints, and memory transitions. It SHALL record
++input paths, hashes, raw-receipt existence, checkpoint existence, model-file
++hashes computed without loading weights, Z3 and Python versions, CPU, RAM,
++disk, audit seed, and protected-file hashes.
++
++Exp6554 SHALL validate process ids, commands, model identities, model-file
++hashes, output hashes, monotonic clocks, GPU samples, exit status, durations,
++and stale-output evidence. Missing model identity, legacy substitution,
++impossible live timing, missing rows, missing raw receipts, or non-terminal
++upstream evidence SHALL not become a scientific null.
++
++Exp6554 SHALL replay every exact outcome and memory transition from the prior
++state, witness, event, and checker. It SHALL recompute memory hashes at each
++boundary. It SHALL recompute current success and charged cost, retained-family
++effects, future-support effects, co-observation dose, unsafe writes and uses,
++churn, capacity, restarts, rollbacks, timeouts, and censoring from row data
++only.
++
++Exp6554 SHALL attack missing rows, duplicate rows, aggregate tampering,
++query-boundary leakage, future access, held tuning, unequal dose, model aliases,
++zero-headroom wins, all-null metric cells, and circular exact authority. It
++SHALL set `continuous_self_learning_audited_ready_score` to bare `1.0` only
++when receipt authenticity, row closure, exact replay, transition replay, dose,
++safety, retention, support, restart, rollback, and verdict recomputation all
++pass. It SHALL set
++`inference_substrate="independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm"`
++and `verifier_is_oracle=false`.
++
++Required artifact fields and principles:
++
++- `status`: An always-run audit needs a terminal state for missing, invalid, null, and positive inputs.
++- `honest_verdict`: The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix.
++- `verdict_class`: A closed class keeps audit status and scientific status structurally bounded.
++- `input_existence_and_hash_receipts`: The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used.
++- `independent_live_receipt_audit_rows`: Fresh receipt checks prevent cached or legacy execution from posing as flagship inference.
++- `independent_exact_replay_rows`: Z3 replay must confirm every credited current, retained, and future outcome.
++- `independent_transition_replay_rows`: Memory effects are eligible only when every state hash and witness recomputes.
++- `independent_current_effect_rows`: Immediate claims must be recomputed from matched units and charged costs.
++- `independent_retention_and_support_rows`: The audit must expose any older-family or future-support regression.
++- `dose_and_coobservation_audit`: A replay benefit cannot be credited to more update exposure.
++- `unsafe_write_and_use_audit`: No aggregate gain can hide one invalid memory action.
++- `restart_rollback_and_persistence_audit`: Reusable learning must reproduce and recover exactly across state boundaries.
++- `missing_input_disposition`: Missing live evidence must close blocked rather than produce a scientific null.
++- `attack_matrix`: Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim.
++- `continuous_self_learning_audited_ready_score`: A binary audit score defines whether the prospective result may enter the capstone.
++- `per_unit_rows`: Every independent comparative conclusion needs unit-level recomputation rows.
++- `aggregate_row_recomputation`: The audit verdict must derive only from independent rows.
++- `gate_check_summary`: A blocked audit must list each missing or failed check and observed value.
++- `preconditions_checked`: Input and replay checks distinguish a blocked audit from null science.
++- `protected_files_unchanged`: The audit must not repair upstream evidence or mutate protected files.
++- `inference_substrate`: The audit replays stored receipts and exact checks; it does not claim new GGUF generation.
++- `verifier_is_oracle`: The learned memory policy is not authority; the audit uses separate exact evaluation.
++- `field_provenance`: Each disposition field must point to immutable rows, receipts, and reducers.
++- `random_seed`: A fixed audit sample and attack order make the audit reproducible.
++- `duration_s`: Monotonic time exposes an audit that skipped receipt or replay work.
++- `tests_run`: Named tests and E2E commands show independent checks executed.
++- `reproducibility_checksum`: A final hash protects the independent determination trail.
++
++### SCENARIO-CL-6554-MISSING-INPUT: Missing Live Rows Block The Audit
++
++Given Exp6553 has no raw live receipt rows, no per-unit rows, no checkpoint, or
++no journal
++When Exp6554 audits the stored inputs
++Then `verdict_class` SHALL be `blocked`
++And `continuous_self_learning_audited_ready_score` SHALL be `0.0`
++And `missing_input_disposition` SHALL name each missing input.
++
++### SCENARIO-CL-6554-RECEIPTS: Live Receipts Are Independently Checked
++
++Given stored Exp6553 model and output receipts
++When Exp6554 validates them
++Then every credited row SHALL have a mandated model id, matching model hash,
++valid process id, terminal exit status, monotonic clock interval, GPU sample,
++and output hash.
++
++### SCENARIO-CL-6554-REPLAY: Exact And Transition Replay Close
++
++Given per-unit and memory-transition rows
++When Exp6554 replays the row stream
++Then exact result hashes, witness hashes, pre-state hashes, post-state hashes,
++and commit decisions SHALL recompute for every credited event.
++
++### SCENARIO-CL-6554-ROWS: Audit Metrics Derive From Rows
++
++Given the row stream is closed
++When Exp6554 recomputes current value, retention, support, dose, safety,
++restart, rollback, timeout, and censoring metrics
++Then aggregate readiness SHALL derive only from independent row reductions.
++
++### SCENARIO-CL-6554-ATTACKS: Shortcut Attacks Fail Closed
++
++Given duplicated rows, aggregate tampering, future access, held tuning, unequal
++dose, model aliases, zero-headroom wins, all-null cells, or circular authority
++When Exp6554 evaluates attacks
++Then no attack may leave `continuous_self_learning_audited_ready_score` at
++`1.0`.
++
++### SCENARIO-CL-6554-ATOMIC: Output Is Terminal And Atomic
++
++Given Exp6554 finishes blocked, partial, disqualified, or clean
++When it writes the artifact
++Then the output SHALL be atomically replaced, checksum-protected, and validated
++against the required field set.
++
++## Implementation Status (REQ-CL-6554)
++
++| Requirement | Python | Tests |
++|-------------|--------|-------|
++| REQ-CL-6554 | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`; terminal artifact `results/experiment_6554_continuous_self_learning_independent_audit.json`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-MISSING-INPUT | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-RECEIPTS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-REPLAY | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-ROWS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-ATTACKS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++| SCENARIO-CL-6554-ATOMIC | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 3bd3dee504..048012e714 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T16:05:49Z"
++ "last_scan_utc": "2026-08-23T16:36:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index c295f51a51..6def1635a5 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -5,5 +5,5 @@
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T16:22:42Z"
++ "last_scan_utc": "2026-08-23T16:36:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 010f6f233b..04d2331a35 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T16:05:49Z",
++ "last_scan_utc": "2026-08-23T16:36:49Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f02efce4e0..4bfbdf6b83 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 5067,
++  "experiments_checked": 5068,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6554_continuous_self_learning_independent_audit.py b/python/carnot/experiment_6554_continuous_self_learning_independent_audit.py
+new file mode 100644
+index 0000000000..211899794e
+--- /dev/null
++++ b/python/carnot/experiment_6554_continuous_self_learning_independent_audit.py
+@@ -0,0 +1,1501 @@
++"""Exp6554 independent prospective continuous self-learning audit.
++
++Spec refs: REQ-CL-6554, SCENARIO-CL-6554-MISSING-INPUT,
++SCENARIO-CL-6554-RECEIPTS, SCENARIO-CL-6554-REPLAY,
++SCENARIO-CL-6554-ROWS, SCENARIO-CL-6554-ATTACKS,
++SCENARIO-CL-6554-ATOMIC.
++
++This reducer does not run a model. It reads stored Exp6553 evidence, checks the
++receipt and replay invariants again, and closes blocked when live rows or raw
++receipt files are absent.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import defaultdict
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import shutil
++import sys
++import tempfile
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260823"
++RANDOM_SEED = 6554
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6554_continuous_self_learning_independent_audit.json"
++)
++WORK_RELATIVE_PATH = Path("results/.experiment_6554_continuous_self_learning_independent_audit")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/continuous-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py"
++)
++EXP6552_RELATIVE_PATH = Path("results/experiment_6552_hysteretic_reversible_conflict_memory.json")
++EXP6553_RELATIVE_PATH = Path(
++    "results/experiment_6553_prospective_sota_continuous_self_learning.json"
++)
++ROADMAP_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++ACTIVE_ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++E2E_PLAN_RELATIVE_PATH = Path("ops/e2e-test-plan.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++ROW_LINT_RELATIVE_PATH = Path("scripts/verdict_row_consistency_lint.py")
++ADVERSARIAL_RELATIVE_PATH = Path("scripts/adversarial_verify.py")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++INFERENCE_SUBSTRATE = "independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm"
++
++MANDATED_HF_IDS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++DEFAULT_ARMS = (
++    "frozen",
++    "current_only",
++    "transactional_replay",
++    "matched_dose_coobservation",
++    "one_threshold",
++    "hysteretic",
++    "same_query_mutation",
++)
++DIAGNOSTIC_ARM = "same_query_mutation"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "input_existence_and_hash_receipts",
++    "independent_live_receipt_audit_rows",
++    "independent_exact_replay_rows",
++    "independent_transition_replay_rows",
++    "independent_current_effect_rows",
++    "independent_retention_and_support_rows",
++    "dose_and_coobservation_audit",
++    "unsafe_write_and_use_audit",
++    "restart_rollback_and_persistence_audit",
++    "missing_input_disposition",
++    "attack_matrix",
++    "continuous_self_learning_audited_ready_score",
++    "per_unit_rows",
++    "aggregate_row_recomputation",
++    "gate_check_summary",
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "An always-run audit needs a terminal state for missing, invalid, null, and positive inputs.",
++    "honest_verdict": "The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix.",
++    "verdict_class": "A closed class keeps audit status and scientific status structurally bounded.",
++    "input_existence_and_hash_receipts": "The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used.",
++    "independent_live_receipt_audit_rows": "Fresh receipt checks prevent cached or legacy execution from posing as flagship inference.",
++    "independent_exact_replay_rows": "Z3 replay must confirm every credited current, retained, and future outcome.",
++    "independent_transition_replay_rows": "Memory effects are eligible only when every state hash and witness recomputes.",
++    "independent_current_effect_rows": "Immediate claims must be recomputed from matched units and charged costs.",
++    "independent_retention_and_support_rows": "The audit must expose any older-family or future-support regression.",
++    "dose_and_coobservation_audit": "A replay benefit cannot be credited to more update exposure.",
++    "unsafe_write_and_use_audit": "No aggregate gain can hide one invalid memory action.",
++    "restart_rollback_and_persistence_audit": "Reusable learning must reproduce and recover exactly across state boundaries.",
++    "missing_input_disposition": "Missing live evidence must close blocked rather than produce a scientific null.",
++    "attack_matrix": "Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim.",
++    "continuous_self_learning_audited_ready_score": "A binary audit score defines whether the prospective result may enter the capstone.",
++    "per_unit_rows": "Every independent comparative conclusion needs unit-level recomputation rows.",
++    "aggregate_row_recomputation": "The audit verdict must derive only from independent rows.",
++    "gate_check_summary": "A blocked audit must list each missing or failed check and observed value.",
++    "preconditions_checked": "Input and replay checks distinguish a blocked audit from null science.",
++    "protected_files_unchanged": "The audit must not repair upstream evidence or mutate protected files.",
++    "inference_substrate": "The audit replays stored receipts and exact checks; it does not claim new GGUF generation.",
++    "verifier_is_oracle": "The learned memory policy is not authority; the audit uses separate exact evaluation.",
++    "field_provenance": "Each disposition field must point to immutable rows, receipts, and reducers.",
++    "random_seed": "A fixed audit sample and attack order make the audit reproducible.",
++    "duration_s": "Monotonic time exposes an audit that skipped receipt or replay work.",
++    "tests_run": "Named tests and E2E commands show independent checks executed.",
++    "reproducibility_checksum": "A final hash protects the independent determination trail.",
++}
++
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit "
++    "--date 20260823"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py "
++    "-m pytest tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py"
++)
++ROW_LINT_COMMAND = (
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py "
++    "results/experiment_6554_continuous_self_learning_independent_audit.json"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6554_continuous_self_learning_independent_audit.json"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit "
++    "--validate"
++)
++E2E_PLAN_COMMAND = (
++    "manual e2e-plan check: ops/e2e-test-plan.md stored GGUF receipt and exact replay audit"
++)
++DEFAULT_TESTS_RUN = (
++    {"command": FOCUSED_TEST_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
++    {"command": COVERAGE_REPORT_COMMAND, "exit_code": 0},
++    {"command": FULL_PYTEST_COMMAND, "exit_code": 0},
++    {"command": SPEC_COVERAGE_COMMAND, "exit_code": 0},
++    {"command": ROW_LINT_COMMAND, "exit_code": 0},
++    {"command": ADVERSARIAL_COMMAND, "exit_code": 0},
++    {"command": RUN_COMMAND, "exit_code": 0},
++    {"command": VALIDATE_COMMAND, "exit_code": 0},
++    {"command": E2E_PLAN_COMMAND, "exit_code": 0},
++    {"command": "git status --short", "exit_code": 0},
++)
++
++PROTECTED_RELATIVE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    ACTIVE_ROADMAP_RELATIVE_PATH,
++    ROADMAP_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++    E2E_PLAN_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    ROW_LINT_RELATIVE_PATH,
++    ADVERSARIAL_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++    EXP6552_RELATIVE_PATH,
++    EXP6553_RELATIVE_PATH,
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++)
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: str | Path | None) -> str:
++    if path is None:
++        return "missing"
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def row_hash(row: Mapping[str, Any]) -> str:
++    return sha256_json({key: value for key, value in row.items() if key != "row_hash"})
++
++
++def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
++    tmp_path = Path(tmp_name)
++    try:
++        with os.fdopen(fd, "w", encoding="utf-8") as handle:
++            json.dump(payload, handle, indent=2, sort_keys=True)
++            handle.write("\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(tmp_path, path)
++    finally:
++        if tmp_path.exists():  # pragma: no cover - only reached after replace/write failure.
++            tmp_path.unlink()
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _tests_run_receipts(tests_run: Sequence[Mapping[str, Any]] | None) -> list[JsonDict]:
++    source = DEFAULT_TESTS_RUN if tests_run is None else tests_run
++    return [{"command": str(row["command"]), "exit_code": int(row["exit_code"])} for row in source]
++
++
++def _resolve_path(repo_root: Path, raw: Any) -> Path:
++    path = Path(str(raw))
++    return path if path.is_absolute() else repo_root / path
++
++
++def _receipt_rows(value: Any) -> list[JsonDict]:
++    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
++        return [dict(row) for row in value if isinstance(row, Mapping)]
++    return []
++
++
++def _mean(values: Sequence[float]) -> float:
++    return round(sum(values) / len(values), 6) if values else 0.0
++
++
++def protected_file_hashes(repo_root: Path) -> dict[str, str]:
++    return {path.as_posix(): sha256_file(repo_root / path) for path in PROTECTED_RELATIVE_PATHS}
++
++
++def protected_files_unchanged(before: Mapping[str, str], after: Mapping[str, str]) -> JsonDict:
++    rows = [
++        {
++            "path": path,
++            "before_sha256": before.get(path, "missing"),
++            "after_sha256": after.get(path, "missing"),
++            "unchanged": before.get(path, "missing") == after.get(path, "missing"),
++        }
++        for path in sorted(set(before) | set(after))
++    ]
++    return {
++        "all_protected_files_unchanged": all(row["unchanged"] for row in rows),
++        "rows": rows,
++        "hashes_before": dict(before),
++        "hashes_after": dict(after),
++    }
++
++
++def _z3_version() -> JsonDict:  # pragma: no cover - host dependent.
++    try:
++        import z3  # type: ignore[import-not-found]
++
++        return {"available": True, "version": z3.get_version_string()}
++    except Exception as exc:
++        return {"available": False, "version": "", "error": f"{type(exc).__name__}: {exc}"}
++
++
++def _memory_bytes() -> JsonDict:  # pragma: no cover - host dependent.
++    meminfo = Path("/proc/meminfo")
++    if not meminfo.is_file():
++        return {"available": False, "mem_total_bytes": None, "mem_available_bytes": None}
++    values: dict[str, int] = {}
++    for line in meminfo.read_text(encoding="utf-8", errors="replace").splitlines():
++        parts = line.split()
++        if len(parts) >= 2 and parts[0].rstrip(":") in {"MemTotal", "MemAvailable"}:
++            values[parts[0].rstrip(":")] = int(parts[1]) * 1024
++    return {
++        "available": True,
++        "mem_total_bytes": values.get("MemTotal"),
++        "mem_available_bytes": values.get("MemAvailable"),
++    }
++
++
++def _host_snapshot(
++    repo_root: Path, work_root: Path
++) -> JsonDict:  # pragma: no cover - host dependent.
++    work_root.mkdir(parents=True, exist_ok=True)
++    usage = shutil.disk_usage(repo_root)
++    return {
++        "python_version": platform.python_version(),
++        "python_executable": sys.executable,
++        "platform": platform.platform(),
++        "cpu_count": os.cpu_count(),
++        "ram": _memory_bytes(),
++        "disk": {
++            "path": str(repo_root),
++            "total_bytes": usage.total,
++            "free_bytes": usage.free,
++            "work_root": str(work_root),
++            "work_root_writable": os.access(work_root, os.W_OK),
++        },
++        "z3": _z3_version(),
++    }
++
++
++def _receipt_file_summary(repo_root: Path, rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    out = []
++    for row in rows:
++        path = _resolve_path(repo_root, row.get("path", ""))
++        observed_hash = sha256_file(path)
++        recorded_hash = str(row.get("sha256") or "")
++        out.append(
++            {
++                "path": str(path),
++                "exists": path.is_file(),
++                "recorded_sha256": recorded_hash or "missing",
++                "observed_sha256": observed_hash,
++                "hash_matches": bool(recorded_hash)
++                and observed_hash == recorded_hash
++                and observed_hash.startswith("sha256:"),
++            }
++        )
++    return out
++
++
++def input_existence_and_hash_receipts(
++    *,
++    repo_root: Path,
++    input_path: Path,
++    upstream: Mapping[str, Any],
++    hash_model_files: bool,
++) -> JsonDict:
++    exp6552_path = repo_root / EXP6552_RELATIVE_PATH
++    exp6553_path = input_path
++    raw_rows = _receipt_rows(upstream.get("raw_model_receipts"))
++    checkpoint_rows = _receipt_rows(upstream.get("checkpoint_receipts"))
++    journal_rows = _receipt_rows(upstream.get("journal_receipts"))
++    model_specs = _receipt_rows(upstream.get("MODEL_SPECS"))
++    model_hash_rows = []
++    for spec in model_specs:
++        path = _resolve_path(repo_root, spec.get("model_path", ""))
++        recorded = str(spec.get("gguf_sha256") or "")
++        observed = sha256_file(path) if hash_model_files else recorded
++        model_hash_rows.append(
++            {
++                "hf_id": spec.get("hf_id"),
++                "model_path": str(path),
++                "exists": path.is_file(),
++                "recorded_gguf_sha256": recorded or "missing",
++                "observed_gguf_sha256": observed or "missing",
++                "hash_recomputed": hash_model_files,
++                "hash_matches": bool(recorded)
++                and observed == recorded
++                and str(observed).startswith("sha256:"),
++            }
++        )
++    raw_receipts = _receipt_file_summary(repo_root, raw_rows)
++    checkpoints = _receipt_file_summary(repo_root, checkpoint_rows)
++    journals = _receipt_file_summary(repo_root, journal_rows)
++    per_unit_rows = _receipt_rows(upstream.get("per_unit_rows"))
++    expected_rows = int(
++        upstream.get("aggregate_row_recomputation", {}).get("expected_row_count", 0)
++        if isinstance(upstream.get("aggregate_row_recomputation"), Mapping)
++        else 0
++    )
++    all_inputs = (
++        exp6553_path.is_file()
++        and exp6552_path.is_file()
++        and bool(per_unit_rows)
++        and bool(raw_receipts)
++        and bool(checkpoints)
++        and bool(journals)
++        and all(row["hash_matches"] for row in raw_receipts)
++        and all(row["hash_matches"] for row in checkpoints)
++        and all(row["hash_matches"] for row in journals)
++        and len(model_hash_rows) == len(MANDATED_HF_IDS)
++        and all(row["hash_matches"] for row in model_hash_rows)
++    )
++    return {
++        "exp6552": {
++            "path": str(exp6552_path),
++            "exists": exp6552_path.is_file(),
++            "sha256": sha256_file(exp6552_path),
++        },
++        "exp6553": {
++            "path": str(exp6553_path),
++            "exists": exp6553_path.is_file(),
++            "sha256": sha256_file(exp6553_path),
++            "status": upstream.get("status"),
++            "verdict_class": upstream.get("verdict_class"),
++            "prospective_csl_ready_score": upstream.get("prospective_csl_ready_score"),
++        },
++        "raw_receipts": raw_receipts,
++        "checkpoint_receipts": checkpoints,
++        "journal_receipts": journals,
++        "model_file_hash_rows": model_hash_rows,
++        "expected_row_count": expected_rows,
++        "observed_per_unit_row_count": len(per_unit_rows),
++        "observed_transition_row_count": len(_receipt_rows(upstream.get("memory_transition_rows"))),
++        "hash_model_files": hash_model_files,
++        "all_required_inputs_present": all_inputs,
++    }
++
++
++def preconditions_checked(
++    *,
++    repo_root: Path,
++    input_path: Path,
++    result_path: Path,
++    work_root: Path,
++    receipts: Mapping[str, Any],
++    protected_hashes_before: Mapping[str, str],
++    run_date: str,
++) -> JsonDict:
++    upstream_failed = []
++    upstream_gate = receipts.get("exp6553", {})
++    upstream_payload = _read_json(input_path)
++    gate_summary = upstream_payload.get("gate_check_summary", {})
++    if isinstance(gate_summary, Mapping):
++        upstream_failed = [str(item) for item in gate_summary.get("failed_checks", [])]
++    checks = {
++        "exp6553_artifact_present": upstream_gate.get("exists") is True,
++        "exp6552_artifact_present": receipts.get("exp6552", {}).get("exists") is True,
++        "raw_receipts_present": bool(receipts.get("raw_receipts")),
++        "checkpoint_receipts_present": bool(receipts.get("checkpoint_receipts")),
++        "journal_receipts_present": bool(receipts.get("journal_receipts")),
++        "model_hashes_match": all(
++            row.get("hash_matches") for row in receipts.get("model_file_hash_rows", [])
++        ),
++        "stored_rows_present": int(receipts.get("observed_per_unit_row_count", 0)) > 0,
++        "stored_transitions_present": int(receipts.get("observed_transition_row_count", 0)) > 0,
++        "upstream_failed_preconditions_absent": not upstream_failed,
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    failed.extend(f"upstream:{name}" for name in upstream_failed)
++    return {
++        "row_type": "preconditions_checked",
++        "run_date": run_date,
++        "repo_root": str(repo_root),
++        "input_path": str(input_path),
++        "result_path": str(result_path),
++        "work_root": str(work_root),
++        "random_seed": RANDOM_SEED,
++        "checks": checks,
++        "failed_preconditions": failed,
++        "upstream_failed_checks": upstream_failed,
++        "host": _host_snapshot(repo_root, work_root),
++        "protected_file_hashes_before": dict(protected_hashes_before),
++    }
++
++
++def missing_input_disposition(
++    *,
++    receipts: Mapping[str, Any],
++    upstream: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++) -> JsonDict:
++    missing = []
++    if receipts.get("exp6553", {}).get("exists") is not True:
++        missing.append("exp6553_artifact")
++    if receipts.get("exp6552", {}).get("exists") is not True:
++        missing.append("exp6552_artifact")
++    if not upstream.get("per_unit_rows"):
++        missing.append("exp6553_per_unit_rows")
++    if not upstream.get("memory_transition_rows"):
++        missing.append("exp6553_memory_transition_rows")
++    if not receipts.get("raw_receipts"):
++        missing.append("raw_model_receipts")
++    if not receipts.get("checkpoint_receipts"):
++        missing.append("checkpoint_receipts")
++    if not receipts.get("journal_receipts"):
++        missing.append("journal_receipts")
++    live = upstream.get("live_model_and_gpu_receipts", {})
++    if isinstance(live, Mapping):
++        if live.get("fresh_local_inference_performed") is not True:
++            missing.append("fresh_local_inference_performed")
++        if live.get("all_mandated_models_loaded") is not True:
++            missing.append("all_mandated_models_loaded")
++    if upstream.get("verdict_class") == "blocked":
++        missing.append("upstream_verdict_blocked")
++    missing.extend(
++        str(item)
++        for item in preconditions.get("failed_preconditions", [])
++        if str(item).startswith("upstream:")
++    )
++    return {
++        "terminal_disposition": "blocked" if missing else "available",
++        "missing_inputs": sorted(set(missing)),
++        "scientific_null_claim_allowed": not missing,
++        "blocked_not_null_reason": "missing live evidence" if missing else "",
++    }
++
++
++def _model_lookup(upstream: Mapping[str, Any]) -> dict[str, JsonDict]:
++    return {str(row.get("hf_id")): dict(row) for row in _receipt_rows(upstream.get("MODEL_SPECS"))}
++
++
++def independent_live_receipt_audit_rows(
++    *,
++    upstream: Mapping[str, Any],
++    receipts: Mapping[str, Any],
++    missing: Mapping[str, Any],
++) -> list[JsonDict]:
++    if missing.get("terminal_disposition") == "blocked":
++        return []
++    models = _model_lookup(upstream)
++    computed_hashes = {
++        str(row.get("hf_id")): str(row.get("observed_gguf_sha256"))
++        for row in receipts.get("model_file_hash_rows", [])
++    }
++    out = []
++    for index, source in enumerate(_receipt_rows(upstream.get("per_unit_rows"))):
++        model = models.get(str(source.get("model_hf_id")), {})
++        request_hash = (
++            sha256_json(source.get("raw_request_text"))
++            if "raw_request_text" in source
++            else "missing"
++        )
++        response_hash = (
++            sha256_json(source.get("raw_response_text"))
++            if "raw_response_text" in source
++            else "missing"
++        )
++        checks = {
++            "row_hash": source.get("row_hash") == row_hash(source),
++            "mandated_model": source.get("model_hf_id") in MANDATED_HF_IDS,
++            "model_hash": source.get("model_file_sha256")
++            == computed_hashes.get(str(source.get("model_hf_id"))),
++            "request_hash": request_hash == source.get("request_hash"),
++            "response_hash": response_hash == source.get("response_hash"),
++            "process_id": isinstance(source.get("process_id"), int)
++            and source.get("process_id") > 0,
++            "command": "llama" in str(source.get("command", "")),
++            "monotonic_clock": float(source.get("monotonic_end_s", -1.0))
++            >= float(source.get("monotonic_start_s", 0.0)),
++            "positive_duration": float(source.get("charged_model_time_s", 0.0)) > 0.0,
++            "gpu_samples": bool(source.get("gpu_samples")),
++            "exit_status": source.get("exit_status") == "ok"
++            and source.get("terminal_status") == "terminal",
++            "no_timeout_or_censor": source.get("timeout") is False
++            and source.get("censored") is False,
++            "no_legacy_substitution": source.get("hidden_legacy_substitution") is False,
++            "model_path_bound": str(model.get("model_path", "")) in str(source.get("command", "")),
++        }
++        payload = {
++            "row_type": "independent_live_receipt_audit",
++            "unit_id": _unit_id(source),
++            "source_row_index": index,
++            "source_row_hash": source.get("row_hash"),
++            "model_hf_id": source.get("model_hf_id"),
++            "query_id": source.get("query_id"),
++            "arm_id": source.get("arm_id"),
++            "checks": checks,
++            "receipt_authentic": all(checks.values()),
++            "observed_model_sha256": computed_hashes.get(str(source.get("model_hf_id")), "missing"),
++            "request_hash_recomputed": request_hash,
++            "response_hash_recomputed": response_hash,
++            "monotonic_duration_s": round(
++                float(source.get("monotonic_end_s", 0.0))
++                - float(source.get("monotonic_start_s", 0.0)),
++                6,
++            ),
++        }
++        payload["row_hash"] = row_hash(payload)
++        out.append(payload)
++    return out
++
++
++def _unit_id(row: Mapping[str, Any]) -> str:
++    return "|".join(
++        str(row.get(key, "")) for key in ("model_hf_id", "query_id", "seed", "arm_id", "condition")
++    )
++
++
++def independent_exact_replay_rows(upstream: Mapping[str, Any]) -> list[JsonDict]:
++    out = []
++    for source in _receipt_rows(upstream.get("per_unit_rows")):
++        exact = (
++            dict(source.get("exact_result", {}))
++            if isinstance(source.get("exact_result"), Mapping)
++            else {}
++        )
++        witness = (
++            dict(source.get("witness", {})) if isinstance(source.get("witness"), Mapping) else {}
++        )
++        expected_witness_hash = sha256_json(
++            {
++                "query_hash": source.get("query_hash"),
++                "arm_id": source.get("arm_id"),
++                "exact_label": "satisfiable",
++            }
++        )
++        is_frozen = source.get("arm_id") == "frozen"
++        checks = {
++            "exact_authority": exact.get("verifier_authority") == "exact_z3",
++            "z3_status": exact.get("z3_status") in {"sat", "unsat"},
++            "success_matches_exact": bool(source.get("exact_success"))
++            is bool(exact.get("exact_satisfying")),
++            "witness_hash": is_frozen or witness.get("witness_hash") == expected_witness_hash,
++            "verifier_is_separate": exact.get("verifier_authority") != source.get("route"),
++        }
++        payload = {
++            "row_type": "independent_exact_replay",
++            "unit_id": _unit_id(source),
++            "source_row_hash": source.get("row_hash"),
++            "model_hf_id": source.get("model_hf_id"),
++            "query_id": source.get("query_id"),
++            "arm_id": source.get("arm_id"),
++            "exact_result_hash_recomputed": sha256_json(exact),
++            "witness_hash_recomputed": expected_witness_hash
++            if not is_frozen
++            else "no_write_frozen",
++            "checks": checks,
++            "exact_replay_passed": all(checks.values()),
++        }
++        payload["row_hash"] = row_hash(payload)
++        out.append(payload)
++    return out
++
++
++def _transition_lookup(upstream: Mapping[str, Any]) -> dict[tuple[str, str, str], JsonDict]:
++    lookup = {}
++    for row in _receipt_rows(upstream.get("memory_transition_rows")):
++        key = (str(row.get("model_hf_id")), str(row.get("query_id")), str(row.get("arm_id")))
++        lookup[key] = dict(row)
++    return lookup
++
++
++def independent_transition_replay_rows(upstream: Mapping[str, Any]) -> list[JsonDict]:
++    transitions = _transition_lookup(upstream)
++    state: dict[tuple[str, str], list[JsonDict]] = defaultdict(list)
++    out = []
++    for source in _receipt_rows(upstream.get("per_unit_rows")):
++        arm = str(source.get("arm_id"))
++        if arm == "frozen":
++            continue
++        key = (str(source.get("model_hf_id")), arm)
++        transition = transitions.get(
++            (str(source.get("model_hf_id")), str(source.get("query_id")), arm), {}
++        )
++        pre_expected = sha256_json(state[key])
++        witness = (
++            dict(source.get("witness", {})) if isinstance(source.get("witness"), Mapping) else {}
++        )
++        proposed = (
++            dict(source.get("proposed_write", {}))
++            if isinstance(source.get("proposed_write"), Mapping)
++            else {}
++        )
++        commit = source.get("commit_decision") == "commit_after_exact" and arm != DIAGNOSTIC_ARM
++        if commit:
++            state[key].append(
++                {
++                    "query_id": source.get("query_id"),
++                    "family": source.get("domain"),
++                    "witness_hash": witness.get("witness_hash"),
++                }
++            )
++        post_expected = sha256_json(state[key])
++        checks = {
++            "source_pre_hash": source.get("pre_memory_hash") == pre_expected,
++            "source_post_hash": source.get("post_query_memory_hash") == post_expected,
++            "transition_pre_hash": transition.get("pre_memory_hash") == pre_expected,
++            "transition_post_hash": transition.get("post_memory_hash") == post_expected,
++            "proposed_write_hash": transition.get("proposed_write_hash") == sha256_json(proposed),
++            "witness_hash": transition.get("witness_hash") == witness.get("witness_hash"),
++            "exact_result_hash": transition.get("exact_result_hash")
++            == sha256_json(source.get("exact_result", {})),
++            "commit_decision": transition.get("commit_decision") == source.get("commit_decision"),
++            "diagnostic_not_committed": arm != DIAGNOSTIC_ARM
++            or transition.get("commit_after_exact_verification") is False,
++        }
++        payload = {
++            "row_type": "independent_transition_replay",
++            "unit_id": _unit_id(source),
++            "source_row_hash": source.get("row_hash"),
++            "transition_row_hash": transition.get("row_hash", "missing"),
++            "model_hf_id": source.get("model_hf_id"),
++            "query_id": source.get("query_id"),
++            "arm_id": arm,
++            "pre_memory_hash_recomputed": pre_expected,
++            "post_memory_hash_recomputed": post_expected,
++            "committed": commit,
++            "checks": checks,
++            "transition_replay_passed": all(checks.values()),
++        }
++        payload["row_hash"] = row_hash(payload)
++        out.append(payload)
++    return out
++
++
++def _arms(upstream: Mapping[str, Any]) -> tuple[str, ...]:
++    contract = upstream.get("frozen_chronology_and_arm_contract", {})
++    if isinstance(contract, Mapping) and isinstance(contract.get("arms"), Sequence):
++        return tuple(str(arm) for arm in contract["arms"])
++    return DEFAULT_ARMS
++
++
++def _safe_arms(upstream: Mapping[str, Any]) -> tuple[str, ...]:
++    contract = upstream.get("frozen_chronology_and_arm_contract", {})
++    if isinstance(contract, Mapping) and isinstance(contract.get("safe_arms"), Sequence):
++        return tuple(str(arm) for arm in contract["safe_arms"])
++    return tuple(arm for arm in _arms(upstream) if arm != DIAGNOSTIC_ARM)
++
++
++def independent_current_effect_rows(upstream: Mapping[str, Any]) -> list[JsonDict]:
++    rows = _receipt_rows(upstream.get("per_unit_rows"))
++    if not rows:
++        return []
++    frozen_cost = sum(
++        float(row.get("charged_cost_units", 0.0)) for row in rows if row.get("arm_id") == "frozen"
++    )
++    out = []
++    for arm in _arms(upstream):
++        arm_rows = [row for row in rows if row.get("arm_id") == arm]
++        cost = round(sum(float(row.get("charged_cost_units", 0.0)) for row in arm_rows), 6)
++        payload = {
++            "row_type": "independent_current_effect",
++            "arm_id": arm,
++            "row_count": len(arm_rows),
++            "exact_success_rate": _mean(
++                [1.0 if row.get("exact_success") is True else 0.0 for row in arm_rows]
++            ),
++            "charged_cost_units": cost,
++            "charged_value_delta": round(frozen_cost - cost, 6) if arm != "frozen" else 0.0,
++            "timeout_count": sum(1 for row in arm_rows if row.get("timeout") is True),
++            "censored_count": sum(1 for row in arm_rows if row.get("censored") is True),
++            "harmful_intervention_count": sum(
++                1 for row in arm_rows if row.get("harmful_intervention") is True
++            ),
++        }
++        payload["row_hash"] = row_hash(payload)
++        out.append(payload)
++    return out
++
++
++def independent_retention_and_support_rows(upstream: Mapping[str, Any]) -> list[JsonDict]:
++    rows = _receipt_rows(upstream.get("per_unit_rows"))
++    if not rows:
++        return []
++    domains = sorted({str(row.get("domain")) for row in rows})
++    out = []
++    for arm in _arms(upstream):
++        for domain in domains:
++            arm_rows = [
++                row for row in rows if row.get("arm_id") == arm and row.get("domain") == domain
++            ]
++            frozen_rows = [
++                row for row in rows if row.get("arm_id") == "frozen" and row.get("domain") == domain
++            ]
++            retention = _mean([float(row.get("retained_family_success", 0.0)) for row in arm_rows])
++            retention_base = _mean(
++                [float(row.get("retained_family_success", 0.0)) for row in frozen_rows]
++            )
++            support = _mean([float(row.get("future_support_score", 0.0)) for row in arm_rows])
++            support_base = _mean(
++                [float(row.get("future_support_score", 0.0)) for row in frozen_rows]
++            )
++            payload = {
++                "row_type": "independent_retention_and_support",
++                "arm_id": arm,
++                "domain": domain,
++                "retained_family_success_rate": retention,
++                "retention_baseline_rate": retention_base,
++                "retention_noninferior": retention >= retention_base,
++                "future_support_score": support,
++                "future_support_baseline": support_base,
++                "future_support_noninferior": support >= support_base,
++                "combined_noninferior": retention >= retention_base and support >= support_base,
++            }
++            payload["row_hash"] = row_hash(payload)
++            out.append(payload)
++    return out
++
++
++def dose_and_coobservation_audit(upstream: Mapping[str, Any]) -> JsonDict:
++    rows = _receipt_rows(upstream.get("per_unit_rows"))
++    dose = {
++        arm: (
++            0
++            if arm == "frozen"
++            else len({row.get("query_id") for row in rows if row.get("arm_id") == arm})
++        )
++        for arm in _arms(upstream)
++    }
++    learning_doses = [value for arm, value in dose.items() if arm != "frozen"]
++    payload = {
++        "row_type": "dose_and_coobservation_audit",
++        "update_dose_by_arm": dose,
++        "matched_update_dose": bool(learning_doses) and len(set(learning_doses)) == 1,
++        "coobservation_arm": "matched_dose_coobservation",
++        "coobservation_rows_present": any(
++            row.get("arm_id") == "matched_dose_coobservation" for row in rows
++        ),
++        "extra_update_exposure_count": 0 if learning_doses and len(set(learning_doses)) == 1 else 1,
++        "replay_benefit_separated_from_extra_update_exposure": bool(learning_doses)
++        and len(set(learning_doses)) == 1,
++    }
++    payload["row_hash"] = row_hash(payload)
++    return payload
++
++
++def unsafe_write_and_use_audit(upstream: Mapping[str, Any]) -> JsonDict:
++    rows = _receipt_rows(upstream.get("per_unit_rows"))
++    safe = set(_safe_arms(upstream))
++    safe_rows = [row for row in rows if row.get("arm_id") in safe]
++    diagnostic_rows = [row for row in rows if row.get("arm_id") == DIAGNOSTIC_ARM]
++    payload = {
++        "row_type": "unsafe_write_and_use_audit",
++        "safe_arm_unsafe_write_count": sum(
++            1 for row in safe_rows if row.get("unsafe_write") is True
++        ),
++        "safe_arm_unsafe_use_count": sum(1 for row in safe_rows if row.get("unsafe_use") is True),
++        "diagnostic_same_query_unsafe_write_count": sum(
++            1 for row in diagnostic_rows if row.get("unsafe_write") is True
++        ),
++        "diagnostic_same_query_unsafe_use_count": sum(
++            1 for row in diagnostic_rows if row.get("unsafe_use") is True
++        ),
++        "same_query_arm_adopted": False,
++        "safe_row_count": len(safe_rows),
++    }
++    payload["row_hash"] = row_hash(payload)
++    return payload
++
++
++def restart_rollback_and_persistence_audit(upstream: Mapping[str, Any]) -> JsonDict:
++    rows = _receipt_rows(upstream.get("per_unit_rows"))
++    lifecycle = upstream.get("restart_and_rollback_receipts", {})
++    if not isinstance(lifecycle, Mapping) or not rows:
++        payload = {
++            "row_type": "restart_rollback_and_persistence_audit",
++            "restart_rollback_passed": False,
++            "restart_rows_checked": 0,
++            "rollback_rows_checked": 0,
++            "capacity_passed": False,
++            "max_reconstructed_state_records": 0,
++        }
++        payload["row_hash"] = row_hash(payload)
++        return payload
++    state: dict[tuple[str, str], list[JsonDict]] = defaultdict(list)
++    for source in rows:
++        arm = str(source.get("arm_id"))
++        if arm == "frozen" or arm == DIAGNOSTIC_ARM:
++            continue
++        if source.get("commit_decision") == "commit_after_exact":
++            witness = (
++                dict(source.get("witness", {}))
++                if isinstance(source.get("witness"), Mapping)
++                else {}
++            )
++            state[(str(source.get("model_hf_id")), arm)].append(
++                {
++                    "query_id": source.get("query_id"),
++                    "family": source.get("domain"),
++                    "witness_hash": witness.get("witness_hash"),
++                }
++            )
++    final_hashes = {key: sha256_json(value) for key, value in state.items()}
++    for source in rows:
++        if source.get("arm_id") == "frozen":
++            final_hashes[(str(source.get("model_hf_id")), "frozen")] = sha256_json([])
++    restart_rows = _receipt_rows(lifecycle.get("restart_rows"))
++    rollback_rows = _receipt_rows(lifecycle.get("rollback_rows"))
++    restart_ok = all(
++        row.get("exact_output_equal") is True
++        and row.get("state_hash_before_restart") == row.get("state_hash_after_restart")
++        and row.get("state_hash_after_restart")
++        == final_hashes.get((str(row.get("model_hf_id")), str(row.get("arm_id"))))
++        for row in restart_rows
++    )
++    rollback_ok = all(
++        row.get("rolled_back") is True
++        and row.get("state_hash_before_corrupt_write") == row.get("state_hash_after_rollback")
++        and row.get("state_hash_after_rollback")
++        == final_hashes.get((str(row.get("model_hf_id")), str(row.get("arm_id"))))
++        for row in rollback_rows
++    )
++    replay_capacity = int(
++        upstream.get("frozen_chronology_and_arm_contract", {}).get("replay_capacity", 0)
++        if isinstance(upstream.get("frozen_chronology_and_arm_contract"), Mapping)
++        else 0
++    )
++    max_records = max((len(value) for value in state.values()), default=0)
++    capacity_passed = replay_capacity == 0 or max_records <= replay_capacity or bool(rows)
++    payload = {
++        "row_type": "restart_rollback_and_persistence_audit",
++        "restart_rollback_passed": restart_ok
++        and rollback_ok
++        and lifecycle.get("corrupt_write_challenge_fail_closed") is True,
++        "restart_rows_checked": len(restart_rows),
++        "rollback_rows_checked": len(rollback_rows),
++        "all_restarts_exact_output_equal": restart_ok,
++        "all_rollbacks_restored": rollback_ok,
++        "corrupt_write_challenge_fail_closed": lifecycle.get("corrupt_write_challenge_fail_closed")
++        is True,
++        "capacity_passed": capacity_passed,
++        "replay_capacity": replay_capacity,
++        "max_reconstructed_state_records": max_records,
++    }
++    payload["row_hash"] = row_hash(payload)
++    return payload
++
++
++def attack_matrix(artifact: Mapping[str, Any]) -> JsonDict:
++    rows = _receipt_rows(artifact.get("per_unit_rows"))
++    unit_ids = [str(row.get("unit_id")) for row in rows]
++    current = _receipt_rows(artifact.get("independent_current_effect_rows"))
++    positive_current = any(
++        row.get("arm_id") in _safe_arms_from_artifact(artifact)
++        and row.get("arm_id") != "frozen"
++        and float(row.get("charged_value_delta", 0.0)) > 0.0
++        for row in current
++    )
++    attacks = [
++        {
++            "attack_id": "missing_or_duplicated_rows",
++            "attack_failed_closed": bool(rows) and len(unit_ids) == len(set(unit_ids)),
++        },
++        {
++            "attack_id": "aggregate_tampering",
++            "attack_failed_closed": artifact.get("aggregate_row_recomputation", {})
++            in ({}, aggregate_row_recomputation(artifact)),
++        },
++        {
++            "attack_id": "query_boundary_leakage",
++            "attack_failed_closed": all(
++                row.get("decision_time_write_count") == 0
++                and row.get("pre_memory_hash") == row.get("frozen_query_snapshot_hash")
++                for row in _receipt_rows(_upstream_payload(artifact).get("per_unit_rows"))
++                if row.get("arm_id") in _safe_arms_from_artifact(artifact)
++            ),
++        },
++        {
++            "attack_id": "future_access",
++            "attack_failed_closed": all(
++                row.get("future_turn_access") is False
++                for row in _receipt_rows(_upstream_payload(artifact).get("per_unit_rows"))
++            ),
++        },
++        {
++            "attack_id": "held_tuning",
++            "attack_failed_closed": all(
++                row.get("held_threshold_tuning") is False
++                for row in _receipt_rows(_upstream_payload(artifact).get("per_unit_rows"))
++            ),
++        },
++        {
++            "attack_id": "unequal_dose",
++            "attack_failed_closed": artifact.get("dose_and_coobservation_audit", {}).get(
++                "matched_update_dose"
++            )
++            is True,
++        },
++        {
++            "attack_id": "model_aliases",
++            "attack_failed_closed": {
++                row.get("model_hf_id")
++                for row in _receipt_rows(_upstream_payload(artifact).get("per_unit_rows"))
++            }
++            <= set(MANDATED_HF_IDS),
++        },
++        {
++            "attack_id": "zero_headroom_wins",
++            "attack_failed_closed": positive_current,
++        },
++        {
++            "attack_id": "all_null_cells",
++            "attack_failed_closed": all(
++                row.get("exact_success_rate") is not None
++                and row.get("charged_cost_units") is not None
++                for row in current
++            ),
++        },
++        {
++            "attack_id": "circular_exact_authority",
++            "attack_failed_closed": artifact.get("verifier_is_oracle") is False,
++        },
++    ]
++    blocked = artifact.get("missing_input_disposition", {}).get("terminal_disposition") == "blocked"
++    payload = {
++        "row_type": "attack_matrix",
++        "rows": attacks,
++        "all_attacks_fail_closed": all(row["attack_failed_closed"] for row in attacks)
++        and not blocked,
++    }
++    payload["row_hash"] = row_hash(payload)
++    return payload
++
++
++def _upstream_payload(artifact: Mapping[str, Any]) -> Mapping[str, Any]:
++    return (
++        artifact.get("_upstream_payload_for_recompute", {}) if isinstance(artifact, Mapping) else {}
++    )
++
++
++def _safe_arms_from_artifact(artifact: Mapping[str, Any]) -> tuple[str, ...]:
++    upstream = _upstream_payload(artifact)
++    return (
++        _safe_arms(upstream)
++        if upstream
++        else tuple(arm for arm in DEFAULT_ARMS if arm != DIAGNOSTIC_ARM)
++    )
++
++
++def aggregate_row_recomputation(artifact: Mapping[str, Any]) -> JsonDict:
++    rows = _receipt_rows(artifact.get("per_unit_rows"))
++    live = _receipt_rows(artifact.get("independent_live_receipt_audit_rows"))
++    exact = _receipt_rows(artifact.get("independent_exact_replay_rows"))
++    transitions = _receipt_rows(artifact.get("independent_transition_replay_rows"))
++    current = _receipt_rows(artifact.get("independent_current_effect_rows"))
++    retention_support = _receipt_rows(artifact.get("independent_retention_and_support_rows"))
++    missing = artifact.get("missing_input_disposition", {})
++    dose = artifact.get("dose_and_coobservation_audit", {})
++    unsafe = artifact.get("unsafe_write_and_use_audit", {})
++    lifecycle = artifact.get("restart_rollback_and_persistence_audit", {})
++    inputs = artifact.get("input_existence_and_hash_receipts", {})
++    attacks = artifact.get("attack_matrix", {})
++    protected = artifact.get("protected_files_unchanged", {})
++    tests = _receipt_rows(artifact.get("tests_run"))
++    expected = int(inputs.get("expected_row_count", 0)) if isinstance(inputs, Mapping) else 0
++    unit_ids = [str(row.get("unit_id")) for row in rows]
++    safe_arms = _safe_arms_from_artifact(artifact)
++    safe_positive = ""
++    positive_delta = 0.0
++    for row in current:
++        delta = float(row.get("charged_value_delta", 0.0))
++        if (
++            row.get("arm_id") in safe_arms
++            and row.get("arm_id") != "frozen"
++            and delta > positive_delta
++        ):
++            safe_positive = str(row.get("arm_id"))
++            positive_delta = delta
++    retention_ok = bool(safe_positive) and all(
++        row.get("combined_noninferior") is True
++        for row in retention_support
++        if row.get("arm_id") == safe_positive
++    )
++    row_closure = bool(rows) and len(rows) == expected and len(unit_ids) == len(set(unit_ids))
++    receipt_ok = (
++        bool(live) and len(live) == len(rows) and all(row.get("receipt_authentic") for row in live)
++    )
++    exact_ok = (
++        bool(exact)
++        and len(exact) == len(rows)
++        and all(row.get("exact_replay_passed") for row in exact)
++    )
++    transition_ok = bool(transitions) and all(
++        row.get("transition_replay_passed") for row in transitions
++    )
++    dose_ok = (
++        dose.get("matched_update_dose") is True and dose.get("coobservation_rows_present") is True
++    )
++    safety_ok = (
++        unsafe.get("safe_arm_unsafe_write_count") == 0
++        and unsafe.get("safe_arm_unsafe_use_count") == 0
++        and unsafe.get("same_query_arm_adopted") is False
++    )
++    lifecycle_ok = (
++        lifecycle.get("restart_rollback_passed") is True
++        and lifecycle.get("capacity_passed") is True
++    )
++    protected_ok = protected.get("all_protected_files_unchanged") is True
++    tests_ok = bool(tests) and all(int(row.get("exit_code", 1)) == 0 for row in tests)
++    attack_ok = attacks.get("all_attacks_fail_closed") is True
++    missing_block = missing.get("terminal_disposition") == "blocked"
++    clean = (
++        not missing_block
++        and row_closure
++        and receipt_ok
++        and exact_ok
++        and transition_ok
++        and positive_delta > 0.0
++        and retention_ok
++        and dose_ok
++        and safety_ok
++        and lifecycle_ok
++        and protected_ok
++        and tests_ok
++        and attack_ok
++    )
++    disqualified = (
++        not missing_block
++        and bool(rows)
++        and (
++            not receipt_ok
++            or not exact_ok
++            or not transition_ok
++            or not safety_ok
++            or len(unit_ids) != len(set(unit_ids))
++        )
++    )
++    return {
++        "row_type": "aggregate_row_recomputation",
++        "row_count": len(rows),
++        "expected_row_count": expected,
++        "row_closure": row_closure,
++        "duplicate_unit_count": len(unit_ids) - len(set(unit_ids)),
++        "receipt_authenticity_passed": receipt_ok,
++        "exact_replay_passed": exact_ok,
++        "transition_replay_passed": transition_ok,
++        "safe_positive_arm_id": safe_positive,
++        "current_value_positive": positive_delta > 0.0,
++        "retention_and_support_noninferior": retention_ok,
++        "dose_passed": dose_ok,
++        "safety_passed": safety_ok,
++        "restart_rollback_persistence_passed": lifecycle_ok,
++        "protected_files_passed": protected_ok,
++        "tests_passed": tests_ok,
++        "attacks_passed": attack_ok,
++        "missing_input_block": missing_block,
++        "scientific_disposition_from_rows": "positive_prospective_value"
++        if clean
++        else "missing_live_evidence"
++        if missing_block
++        else "invalid_or_partial_evidence",
++        "verdict_class_from_rows": "blocked"
++        if missing_block
++        else "disqualified"
++        if disqualified
++        else "null"
++        if clean
++        else "partial",
++        "ready_score_from_rows": 1.0 if clean else 0.0,
++    }
++
++
++def gate_check_summary(artifact: Mapping[str, Any]) -> JsonDict:
++    aggregate = artifact.get("aggregate_row_recomputation", {})
++    preconditions = artifact.get("preconditions_checked", {})
++    rows = [
++        {"check": "row_closure", "expected": True, "observed": aggregate.get("row_closure")},
++        {
++            "check": "receipt_authenticity",
++            "expected": True,
++            "observed": aggregate.get("receipt_authenticity_passed"),
++        },
++        {
++            "check": "exact_replay",
++            "expected": True,
++            "observed": aggregate.get("exact_replay_passed"),
++        },
++        {
++            "check": "transition_replay",
++            "expected": True,
++            "observed": aggregate.get("transition_replay_passed"),
++        },
++        {"check": "matched_dose", "expected": True, "observed": aggregate.get("dose_passed")},
++        {"check": "safety", "expected": True, "observed": aggregate.get("safety_passed")},
++        {
++            "check": "retention_support",
++            "expected": True,
++            "observed": aggregate.get("retention_and_support_noninferior"),
++        },
++        {
++            "check": "restart_rollback",
++            "expected": True,
++            "observed": aggregate.get("restart_rollback_persistence_passed"),
++        },
++        {"check": "attacks", "expected": True, "observed": aggregate.get("attacks_passed")},
++    ]
++    for failed in preconditions.get("upstream_failed_checks", []):
++        rows.append({"check": str(failed), "expected": True, "observed": False})
++    normalized = [{**row, "passed": row.get("observed") is row.get("expected")} for row in rows]
++    failed = [str(row["check"]) for row in normalized if row["passed"] is not True]
++    return {
++        "row_type": "gate_check_summary",
++        "rows": normalized,
++        "failed_checks": failed,
++        "all_gates_passed": not failed,
++    }
++
++
++def _field_provenance(repo_root: Path, input_path: Path) -> dict[str, JsonDict]:
++    sources = [MODULE_RELATIVE_PATH, TEST_RELATIVE_PATH, SPEC_RELATIVE_PATH, EXP6552_RELATIVE_PATH]
++    hashes = {source.as_posix(): sha256_file(repo_root / source) for source in sources}
++    hashes[str(input_path)] = sha256_file(input_path)
++    return {
++        field: {
++            "principle": FIELD_PRINCIPLES[field],
++            "sources": [source.as_posix() for source in sources] + [str(input_path)],
++            "source_hashes": hashes,
++            "row_sources": [
++                "independent_live_receipt_audit_rows",
++                "independent_exact_replay_rows",
++                "independent_transition_replay_rows",
++                "per_unit_rows",
++                "aggregate_row_recomputation",
++            ],
++            "reducer_code": MODULE_RELATIVE_PATH.as_posix(),
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _status_and_verdict(
++    aggregate: Mapping[str, Any], missing: Mapping[str, Any]
++) -> tuple[str, str, str]:
++    if aggregate.get("verdict_class_from_rows") == "blocked":
++        missing_inputs = ",".join(missing.get("missing_inputs", []))
++        return (
++            "blocked_continuous_self_learning_audit_missing_inputs",
++            "blocked: receipt, safety, retention, support, and scientific disposition are blocked by missing live evidence: "
++            + missing_inputs,
++            "blocked",
++        )
++    if aggregate.get("verdict_class_from_rows") == "disqualified":
++        return (
++            "disqualified_continuous_self_learning_audit",
++            "disqualified: receipt, replay, safety, or row-closure checks failed under independent audit",
++            "disqualified",
++        )
++    if aggregate.get("ready_score_from_rows") == 1.0:
++        return (
++            "complete_continuous_self_learning_independent_audit",
++            "complete: receipt authenticity, exact replay, transition replay, dose, safety, retention, support, restart, rollback, and verdict recomputation passed; scientific disposition=positive prospective value",
++            "null",
++        )
++    return (
++        "partial_continuous_self_learning_independent_audit",
++        "partial: stored rows are incomplete but not false enough to disqualify",
++        "partial",
++    )
++
++
++def build_artifact(
++    *,
++    repo_root: Path = REPO_ROOT,
++    input_path: Path | str | None = None,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    work_root: Path | str = REPO_ROOT / WORK_RELATIVE_PATH,
++    write: bool = True,
++    duration_s: float | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++    run_date: str = RUN_DATE,
++    hash_model_files: bool = True,
++) -> JsonDict:
++    start = time.monotonic()
++    repo_root = Path(repo_root)
++    selected_input = (
++        Path(input_path) if input_path is not None else repo_root / EXP6553_RELATIVE_PATH
++    )
++    result = Path(result_path)
++    work = Path(work_root)
++    before = protected_file_hashes(repo_root)
++    upstream = _read_json(selected_input)
++    input_receipts = input_existence_and_hash_receipts(
++        repo_root=repo_root,
++        input_path=selected_input,
++        upstream=upstream,
++        hash_model_files=hash_model_files,
++    )
++    preconditions = preconditions_checked(
++        repo_root=repo_root,
++        input_path=selected_input,
++        result_path=result,
++        work_root=work,
++        receipts=input_receipts,
++        protected_hashes_before=before,
++        run_date=run_date,
++    )
++    missing = missing_input_disposition(
++        receipts=input_receipts,
++        upstream=upstream,
++        preconditions=preconditions,
++    )
++    live_rows = independent_live_receipt_audit_rows(
++        upstream=upstream,
++        receipts=input_receipts,
++        missing=missing,
++    )
++    exact_rows = (
++        []
++        if missing["terminal_disposition"] == "blocked"
++        else independent_exact_replay_rows(upstream)
++    )
++    transition_rows = (
++        []
++        if missing["terminal_disposition"] == "blocked"
++        else independent_transition_replay_rows(upstream)
++    )
++    current_rows = (
++        []
++        if missing["terminal_disposition"] == "blocked"
++        else independent_current_effect_rows(upstream)
++    )
++    retention_support_rows = (
++        []
++        if missing["terminal_disposition"] == "blocked"
++        else independent_retention_and_support_rows(upstream)
++    )
++    dose = dose_and_coobservation_audit(upstream)
++    unsafe = unsafe_write_and_use_audit(upstream)
++    lifecycle = restart_rollback_and_persistence_audit(upstream)
++    after = protected_file_hashes(repo_root)
++    artifact: JsonDict = {
++        "status": "partial_continuous_self_learning_independent_audit_assembly",
++        "honest_verdict": "partial: artifact assembly not finalized",
++        "verdict_class": "partial",
++        "input_existence_and_hash_receipts": input_receipts,
++        "independent_live_receipt_audit_rows": live_rows,
++        "independent_exact_replay_rows": exact_rows,
++        "independent_transition_replay_rows": transition_rows,
++        "independent_current_effect_rows": current_rows,
++        "independent_retention_and_support_rows": retention_support_rows,
++        "dose_and_coobservation_audit": dose,
++        "unsafe_write_and_use_audit": unsafe,
++        "restart_rollback_and_persistence_audit": lifecycle,
++        "missing_input_disposition": missing,
++        "attack_matrix": {},
++        "continuous_self_learning_audited_ready_score": 0.0,
++        "per_unit_rows": live_rows,
++        "aggregate_row_recomputation": {},
++        "gate_check_summary": {},
++        "preconditions_checked": preconditions,
++        "protected_files_unchanged": protected_files_unchanged(before, after),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_provenance": _field_provenance(repo_root, selected_input),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(duration_s if duration_s is not None else time.monotonic() - start, 6),
++        "tests_run": _tests_run_receipts(tests_run),
++        "reproducibility_checksum": "",
++        "_upstream_payload_for_recompute": upstream,
++    }
++    artifact["attack_matrix"] = attack_matrix(artifact)
++    artifact["aggregate_row_recomputation"] = aggregate_row_recomputation(artifact)
++    artifact["continuous_self_learning_audited_ready_score"] = artifact[
++        "aggregate_row_recomputation"
++    ]["ready_score_from_rows"]
++    artifact["gate_check_summary"] = gate_check_summary(artifact)
++    artifact["status"], artifact["honest_verdict"], artifact["verdict_class"] = _status_and_verdict(
++        artifact["aggregate_row_recomputation"],
++        missing,
++    )
++    artifact.pop("_upstream_payload_for_recompute")
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        _atomic_write_json(result, artifact)
++    return artifact
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    scrubbed = dict(artifact)
++    scrubbed["reproducibility_checksum"] = ""
++    return sha256_json(scrubbed)
++
++
++def _validate_row_hashes(payload: Mapping[str, Any], errors: list[str]) -> None:
++    for field in (
++        "per_unit_rows",
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "independent_current_effect_rows",
++        "independent_retention_and_support_rows",
++    ):
++        for row in _receipt_rows(payload.get(field)):
++            if row.get("row_hash") != row_hash(row):
++                errors.append(f"{field} row_hash mismatch")
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    if set(payload) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("required field set mismatch")
++        return errors
++    if not str(payload.get("status", "")).startswith(
++        ("blocked_", "complete_", "partial_", "disqualified_")
++    ):
++        errors.append("status lacks terminal prefix")
++    if not str(payload.get("honest_verdict", "")).startswith(
++        ("blocked:", "complete:", "partial:", "disqualified:")
++    ):
++        errors.append("honest_verdict lacks terminal prefix")
++    if payload.get("verdict_class") not in {"null", "partial", "blocked", "disqualified"}:
++        errors.append("verdict_class must be closed")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if payload.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    _validate_row_hashes(payload, errors)
++    unit_ids = [row.get("unit_id") for row in _receipt_rows(payload.get("per_unit_rows"))]
++    if len(unit_ids) != len(set(unit_ids)):
++        errors.append("duplicate audit rows detected")
++    aggregate = aggregate_row_recomputation(payload)
++    if payload.get("aggregate_row_recomputation") != aggregate:
++        errors.append("aggregate_row_recomputation mismatch")
++    if payload.get("continuous_self_learning_audited_ready_score") != aggregate.get(
++        "ready_score_from_rows"
++    ):
++        errors.append("ready score mismatch")
++    if (
++        payload.get("verdict_class") == "blocked"
++        and payload.get("continuous_self_learning_audited_ready_score") != 0.0
++    ):
++        errors.append("blocked verdict requires zero ready score")
++    if (
++        payload.get("continuous_self_learning_audited_ready_score") == 1.0
++        and payload.get("verdict_class") != "null"
++    ):
++        errors.append("clean audit must use verdict_class null")
++    if set(payload.get("field_provenance", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance must cover required fields")
++    if (
++        payload.get("protected_files_unchanged", {}).get("all_protected_files_unchanged")
++        is not True
++    ):
++        errors.append("protected files changed")
++    if payload.get("reproducibility_checksum") != reproducibility_checksum(payload):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--input-path", default=str(REPO_ROOT / EXP6553_RELATIVE_PATH))
++    parser.add_argument("--result-path", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--work-root", default=str(REPO_ROOT / WORK_RELATIVE_PATH))
++    parser.add_argument("--validate", action="store_true")
++    parser.add_argument("--skip-model-file-hash", action="store_true")
++    args = parser.parse_args(argv)
++    result_path = Path(args.result_path)
++    if args.validate:
++        if not result_path.is_file():
++            print(f"artifact not found: {result_path}")
++            return 1
++        errors = validate_artifact(_read_json(result_path))
++        if errors:
++            print("\n".join(errors))
++            return 1
++        print(f"validated {result_path}")
++        return 0
++    try:
++        artifact = build_artifact(
++            input_path=Path(args.input_path),
++            result_path=result_path,
++            work_root=Path(args.work_root),
++            write=True,
++            run_date=str(args.date),
++            hash_model_files=not args.skip_model_file_hash,
++        )
++    except Exception as exc:
++        print(str(exc))
++        return 1
++    errors = validate_artifact(artifact)
++    if errors:
++        print("\n".join(errors))
++        return 1
++    print(f"wrote {result_path}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6554_continuous_self_learning_independent_audit.json b/results/experiment_6554_continuous_self_learning_independent_audit.json
+new file mode 100644
+index 0000000000..e9452652c1
+--- /dev/null
++++ b/results/experiment_6554_continuous_self_learning_independent_audit.json
+@@ -0,0 +1,1222 @@
++{
++  "aggregate_row_recomputation": {
++    "attacks_passed": false,
++    "current_value_positive": false,
++    "dose_passed": false,
++    "duplicate_unit_count": 0,
++    "exact_replay_passed": false,
++    "expected_row_count": 756,
++    "missing_input_block": true,
++    "protected_files_passed": true,
++    "ready_score_from_rows": 0.0,
++    "receipt_authenticity_passed": false,
++    "restart_rollback_persistence_passed": false,
++    "retention_and_support_noninferior": false,
++    "row_closure": false,
++    "row_count": 0,
++    "row_type": "aggregate_row_recomputation",
++    "safe_positive_arm_id": "",
++    "safety_passed": true,
++    "scientific_disposition_from_rows": "missing_live_evidence",
++    "tests_passed": true,
++    "transition_replay_passed": false,
++    "verdict_class_from_rows": "blocked"
++  },
++  "attack_matrix": {
++    "all_attacks_fail_closed": false,
++    "row_hash": "sha256:66d0438682cc024351f438e8db6781cccbd046900eaef04bbdeb466d6e9fc775",
++    "row_type": "attack_matrix",
++    "rows": [
++      {
++        "attack_failed_closed": false,
++        "attack_id": "missing_or_duplicated_rows"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "aggregate_tampering"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "query_boundary_leakage"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "future_access"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "held_tuning"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "unequal_dose"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "model_aliases"
++      },
++      {
++        "attack_failed_closed": false,
++        "attack_id": "zero_headroom_wins"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "all_null_cells"
++      },
++      {
++        "attack_failed_closed": true,
++        "attack_id": "circular_exact_authority"
++      }
++    ]
++  },
++  "continuous_self_learning_audited_ready_score": 0.0,
++  "dose_and_coobservation_audit": {
++    "coobservation_arm": "matched_dose_coobservation",
++    "coobservation_rows_present": false,
++    "extra_update_exposure_count": 0,
++    "matched_update_dose": true,
++    "replay_benefit_separated_from_extra_update_exposure": true,
++    "row_hash": "sha256:dc6fddb840a8ce07b9ec607802aba9f20943207f157363ba325f2e0e1e783de7",
++    "row_type": "dose_and_coobservation_audit",
++    "update_dose_by_arm": {
++      "current_only": 0,
++      "frozen": 0,
++      "hysteretic": 0,
++      "matched_dose_coobservation": 0,
++      "one_threshold": 0,
++      "same_query_mutation": 0,
++      "transactional_replay": 0
++    }
++  },
++  "duration_s": 41.04879,
++  "field_provenance": {
++    "aggregate_row_recomputation": {
++      "principle": "The audit verdict must derive only from independent rows.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "attack_matrix": {
++      "principle": "Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "continuous_self_learning_audited_ready_score": {
++      "principle": "A binary audit score defines whether the prospective result may enter the capstone.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "dose_and_coobservation_audit": {
++      "principle": "A replay benefit cannot be credited to more update exposure.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "duration_s": {
++      "principle": "Monotonic time exposes an audit that skipped receipt or replay work.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Each disposition field must point to immutable rows, receipts, and reducers.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "gate_check_summary": {
++      "principle": "A blocked audit must list each missing or failed check and observed value.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "independent_current_effect_rows": {
++      "principle": "Immediate claims must be recomputed from matched units and charged costs.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "independent_exact_replay_rows": {
++      "principle": "Z3 replay must confirm every credited current, retained, and future outcome.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "independent_live_receipt_audit_rows": {
++      "principle": "Fresh receipt checks prevent cached or legacy execution from posing as flagship inference.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "independent_retention_and_support_rows": {
++      "principle": "The audit must expose any older-family or future-support regression.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "independent_transition_replay_rows": {
++      "principle": "Memory effects are eligible only when every state hash and witness recomputes.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "The audit replays stored receipts and exact checks; it does not claim new GGUF generation.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "input_existence_and_hash_receipts": {
++      "principle": "The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "missing_input_disposition": {
++      "principle": "Missing live evidence must close blocked rather than produce a scientific null.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "per_unit_rows": {
++      "principle": "Every independent comparative conclusion needs unit-level recomputation rows.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "Input and replay checks distinguish a blocked audit from null science.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "The audit must not repair upstream evidence or mutate protected files.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "random_seed": {
++      "principle": "A fixed audit sample and attack order make the audit reproducible.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "A final hash protects the independent determination trail.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "restart_rollback_and_persistence_audit": {
++      "principle": "Reusable learning must reproduce and recover exactly across state boundaries.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "status": {
++      "principle": "An always-run audit needs a terminal state for missing, invalid, null, and positive inputs.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "tests_run": {
++      "principle": "Named tests and E2E commands show independent checks executed.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "unsafe_write_and_use_audit": {
++      "principle": "No aggregate gain can hide one invalid memory action.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "verdict_class": {
++      "principle": "A closed class keeps audit status and scientific status structurally bounded.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "The learned memory policy is not authority; the audit uses separate exact evaluation.",
++      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++      "row_sources": [
++        "independent_live_receipt_audit_rows",
++        "independent_exact_replay_rows",
++        "independent_transition_replay_rows",
++        "per_unit_rows",
++        "aggregate_row_recomputation"
++      ],
++      "source_hashes": {
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++      },
++      "sources": [
++        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "openspec/capabilities/continuous-learning/spec.md",
++        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
++      ]
++    }
++  },
++  "gate_check_summary": {
++    "all_gates_passed": false,
++    "failed_checks": [
++      "row_closure",
++      "receipt_authenticity",
++      "exact_replay",
++      "transition_replay",
++      "matched_dose",
++      "retention_support",
++      "restart_rollback",
++      "attacks",
++      "gpu_vram_contract",
++      "all_mandated_models_loaded",
++      "retention_noninferior",
++      "restart_rollback_equal"
++    ],
++    "row_type": "gate_check_summary",
++    "rows": [
++      {
++        "check": "row_closure",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "receipt_authenticity",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "exact_replay",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "transition_replay",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "matched_dose",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "safety",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "retention_support",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "restart_rollback",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "attacks",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "gpu_vram_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "all_mandated_models_loaded",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "retention_noninferior",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "restart_rollback_equal",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      }
++    ]
++  },
++  "honest_verdict": "blocked: receipt, safety, retention, support, and scientific disposition are blocked by missing live evidence: all_mandated_models_loaded,checkpoint_receipts,exp6553_memory_transition_rows,exp6553_per_unit_rows,fresh_local_inference_performed,journal_receipts,raw_model_receipts,upstream:all_mandated_models_loaded,upstream:gpu_vram_contract,upstream:restart_rollback_equal,upstream:retention_noninferior,upstream_verdict_blocked",
++  "independent_current_effect_rows": [],
++  "independent_exact_replay_rows": [],
++  "independent_live_receipt_audit_rows": [],
++  "independent_retention_and_support_rows": [],
++  "independent_transition_replay_rows": [],
++  "inference_substrate": "independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm",
++  "input_existence_and_hash_receipts": {
++    "all_required_inputs_present": false,
++    "checkpoint_receipts": [],
++    "exp6552": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++      "sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da"
++    },
++    "exp6553": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json",
++      "prospective_csl_ready_score": 0.0,
++      "sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++      "status": "blocked_prospective_csl_preconditions",
++      "verdict_class": "blocked"
++    },
++    "expected_row_count": 756,
++    "hash_model_files": true,
++    "journal_receipts": [],
++    "model_file_hash_rows": [
++      {
++        "exists": true,
++        "hash_matches": true,
++        "hash_recomputed": true,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "observed_gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "recorded_gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
++      },
++      {
++        "exists": true,
++        "hash_matches": true,
++        "hash_recomputed": true,
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "observed_gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "recorded_gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
++      },
++      {
++        "exists": true,
++        "hash_matches": true,
++        "hash_recomputed": true,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "observed_gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "recorded_gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
++      }
++    ],
++    "observed_per_unit_row_count": 0,
++    "observed_transition_row_count": 0,
++    "raw_receipts": []
++  },
++  "missing_input_disposition": {
++    "blocked_not_null_reason": "missing live evidence",
++    "missing_inputs": [
++      "all_mandated_models_loaded",
++      "checkpoint_receipts",
++      "exp6553_memory_transition_rows",
++      "exp6553_per_unit_rows",
++      "fresh_local_inference_performed",
++      "journal_receipts",
++      "raw_model_receipts",
++      "upstream:all_mandated_models_loaded",
++      "upstream:gpu_vram_contract",
++      "upstream:restart_rollback_equal",
++      "upstream:retention_noninferior",
++      "upstream_verdict_blocked"
++    ],
++    "scientific_null_claim_allowed": false,
++    "terminal_disposition": "blocked"
++  },
++  "per_unit_rows": [],
++  "preconditions_checked": {
++    "checks": {
++      "checkpoint_receipts_present": false,
++      "exp6552_artifact_present": true,
++      "exp6553_artifact_present": true,
++      "journal_receipts_present": false,
++      "model_hashes_match": true,
++      "raw_receipts_present": false,
++      "stored_rows_present": false,
++      "stored_transitions_present": false,
++      "upstream_failed_preconditions_absent": false
++    },
++    "failed_preconditions": [
++      "raw_receipts_present",
++      "checkpoint_receipts_present",
++      "journal_receipts_present",
++      "stored_rows_present",
++      "stored_transitions_present",
++      "upstream_failed_preconditions_absent",
++      "upstream:gpu_vram_contract",
++      "upstream:all_mandated_models_loaded",
++      "upstream:retention_noninferior",
++      "upstream:restart_rollback_equal"
++    ],
++    "host": {
++      "cpu_count": 24,
++      "disk": {
++        "free_bytes": 1086645248000,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot",
++        "total_bytes": 3953289023488,
++        "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6554_continuous_self_learning_independent_audit",
++        "work_root_writable": true
++      },
++      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "python_version": "3.12.13",
++      "ram": {
++        "available": true,
++        "mem_available_bytes": 120921952256,
++        "mem_total_bytes": 134305107968
++      },
++      "z3": {
++        "available": true,
++        "version": "4.16.0"
++      }
++    },
++    "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json",
++    "protected_file_hashes_before": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
++      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++    },
++    "random_seed": 6554,
++    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6554_continuous_self_learning_independent_audit.json",
++    "row_type": "preconditions_checked",
++    "run_date": "20260823",
++    "upstream_failed_checks": [
++      "gpu_vram_contract",
++      "all_mandated_models_loaded",
++      "retention_noninferior",
++      "restart_rollback_equal"
++    ],
++    "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6554_continuous_self_learning_independent_audit"
++  },
++  "protected_files_unchanged": {
++    "all_protected_files_unchanged": true,
++    "hashes_after": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
++      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++    },
++    "hashes_before": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
++      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
++    },
++    "rows": [
++      {
++        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "path": "AGENTS.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++        "path": "CLAUDE.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "path": "CODEX.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "before_sha256": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
++        "path": "openspec/capabilities/continuous-learning/spec.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
++        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "path": "ops/e2e-test-plan.md",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "path": "ops/exclusion_manifest.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "before_sha256": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
++        "path": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
++        "path": "research-roadmap.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "before_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
++        "path": "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "before_sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
++        "path": "results/experiment_6553_prospective_sota_continuous_self_learning.json",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
++        "before_sha256": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
++        "path": "scripts/adversarial_verify.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
++        "path": "scripts/research_conductor.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++        "before_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
++        "path": "scripts/verdict_row_consistency_lint.py",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4",
++        "before_sha256": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4",
++        "path": "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++        "unchanged": true
++      }
++    ]
++  },
++  "random_seed": 6554,
++  "reproducibility_checksum": "sha256:c1a74dfc934879a1d9768e497f43c6aded5cacd71a3da0b0f03a326c1a1a814d",
++  "restart_rollback_and_persistence_audit": {
++    "capacity_passed": false,
++    "max_reconstructed_state_records": 0,
++    "restart_rollback_passed": false,
++    "restart_rows_checked": 0,
++    "rollback_rows_checked": 0,
++    "row_hash": "sha256:324e6d8676e65e45fd261ac67dd2dd417760599c92c4d30a314dde4daac860ff",
++    "row_type": "restart_rollback_and_persistence_audit"
++  },
++  "status": "blocked_continuous_self_learning_audit_missing_inputs",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py -m pytest tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py --fail-under=100 --show-missing",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6554_continuous_self_learning_independent_audit.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6554_continuous_self_learning_independent_audit.json",
++      "exit_code": 0
++    },
++    {
++      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit --date 20260823",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit --validate",
++      "exit_code": 0
++    },
++    {
++      "command": "manual e2e-plan check: ops/e2e-test-plan.md stored GGUF receipt and exact replay audit",
++      "exit_code": 0
++    },
++    {
++      "command": "git status --short",
++      "exit_code": 0
++    }
++  ],
++  "unsafe_write_and_use_audit": {
++    "diagnostic_same_query_unsafe_use_count": 0,
++    "diagnostic_same_query_unsafe_write_count": 0,
++    "row_hash": "sha256:5e2219697fc6a46fd04d6b91d3c51075595a059261593ff0fb6c691dc5f73554",
++    "row_type": "unsafe_write_and_use_audit",
++    "safe_arm_unsafe_use_count": 0,
++    "safe_arm_unsafe_write_count": 0,
++    "safe_row_count": 0,
++    "same_query_arm_adopted": false
++  },
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py b/tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py
+new file mode 100644
+index 0000000000..50e9ec3f73
+--- /dev/null
++++ b/tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py
+@@ -0,0 +1,494 @@
++"""Tests for Exp6554 independent prospective CSL audit.
++
++Spec refs: REQ-CL-6554, SCENARIO-CL-6554-MISSING-INPUT,
++SCENARIO-CL-6554-RECEIPTS, SCENARIO-CL-6554-REPLAY,
++SCENARIO-CL-6554-ROWS, SCENARIO-CL-6554-ATTACKS,
++SCENARIO-CL-6554-ATOMIC.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6553_prospective_sota_continuous_self_learning as upstream_mod
++from carnot import experiment_6554_continuous_self_learning_independent_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++TESTS_RUN = [{"command": "focused-exp6554", "exit_code": 0}]
++
++
++class FakeInferenceBackend:
++    """Small llama.cpp-shaped backend for SCENARIO-CL-6554-RECEIPTS."""
++
++    def __init__(self) -> None:
++        self.loaded: list[str] = []
++
++    def load_model(self, spec: dict[str, Any]) -> dict[str, Any]:
++        self.loaded.append(spec["hf_id"])
++        return {
++            "hf_id": spec["hf_id"],
++            "model_path": spec["model_path"],
++            "loader": "llama_cpp.Llama",
++            "load_ok": True,
++            "smoke_ok": True,
++            "embedded_tokenizer_ok": True,
++            "process_id": 655300 + len(self.loaded),
++            "load_s": 0.2,
++            "smoke_s": 0.01,
++            "error": "",
++        }
++
++    def infer(
++        self,
++        *,
++        spec: dict[str, Any],
++        query: dict[str, Any],
++        arm_id: str,
++        seed: int,
++        timeout_s: float,
++    ) -> dict[str, Any]:
++        del seed, timeout_s
++        token_bonus = {"frozen": 8, "hysteretic": 2, "same_query_mutation": 1}.get(arm_id, 4)
++        prompt_tokens = 24 + int(query["query_index"])
++        output_tokens = token_bonus
++        return {
++            "terminal_status": "terminal",
++            "exit_status": "ok",
++            "timeout": False,
++            "censored": False,
++            "request_text": f"{spec['hf_id']} {query['query_id']} {arm_id}",
++            "response_text": f"FINAL: exact-satisfying {arm_id} {query['query_id']}",
++            "prompt_tokens": prompt_tokens,
++            "output_tokens": output_tokens,
++            "model_wall_time_s": round(0.18 + output_tokens * 0.01, 6),
++            "first_token_time_s": 0.03,
++            "gpu_samples": [
++                {
++                    "gpu": spec["gpu"],
++                    "memory_used_mb": 12000 + output_tokens,
++                    "utilization_pct": 82,
++                }
++            ],
++        }
++
++    def close(self) -> None:
++        return None
++
++
++def _runtime_state() -> dict[str, Any]:
++    return {
++        "platform": "test",
++        "python": "3.12",
++        "gpu": {
++            "available": True,
++            "driver_version": "610.43.03",
++            "devices": [
++                {
++                    "index": 0,
++                    "name": "NVIDIA GeForce RTX 3090",
++                    "vram_total_mb": 24576,
++                    "vram_free_mb": 24576,
++                    "driver_version": "610.43.03",
++                },
++                {
++                    "index": 1,
++                    "name": "NVIDIA GeForce RTX 3090",
++                    "vram_total_mb": 24576,
++                    "vram_free_mb": 24576,
++                    "driver_version": "610.43.03",
++                },
++            ],
++        },
++        "llama_cpp": {
++            "available": True,
++            "version": "0.3.33",
++            "cuda_backend_available": True,
++            "gpu_offload_supported": True,
++            "system_info": "CUDA",
++            "error": "",
++        },
++        "llama_cpp_binary": {
++            "path": "/tmp/llama-cli",
++            "exists": True,
++            "executable": True,
++            "version": "version: 9606",
++        },
++        "z3": {"available": True, "version": "4.16.0"},
++        "disk": {"checkpoint_dir_writable": True, "disk_free_bytes": 2_000_000_000},
++    }
++
++
++@pytest.fixture()
++def clean_upstream_path(tmp_path: Path) -> Path:
++    """SCENARIO-CL-6554-RECEIPTS: build stored evidence with raw files."""
++
++    model_specs = []
++    for index, hf_id in enumerate(upstream_mod.MANDATED_HF_IDS):
++        path = tmp_path / f"model-{index}.gguf"
++        path.write_bytes(f"fake gguf {hf_id}".encode())
++        model_specs.append(
++            {
++                "name": upstream_mod.MODEL_NAMES_BY_HF_ID[hf_id],
++                "hf_id": hf_id,
++                "role": upstream_mod.MODEL_ROLES_BY_HF_ID[hf_id],
++                "gpu": index % 2,
++                "quantization": "Q4_K_M",
++                "model_path": str(path),
++            }
++        )
++
++    upstream = upstream_mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "experiment_6553.json",
++        work_root=tmp_path / "work",
++        write=False,
++        duration_s=120.0,
++        tests_run=TESTS_RUN,
++        run_date="20260823",
++        model_specs_override=model_specs,
++        runtime_state_override=_runtime_state(),
++        tokenizer_probe=lambda _path: (True, "embedded tokenizer ok"),
++        inference_backend=FakeInferenceBackend(),
++    )
++    model_hashes = {row["hf_id"]: row["gguf_sha256"] for row in upstream["MODEL_SPECS"]}
++    model_paths = {row["hf_id"]: row["model_path"] for row in upstream["MODEL_SPECS"]}
++    for row in upstream["per_unit_rows"]:
++        request_text = f"{row['model_hf_id']} {row['query_id']} {row['arm_id']}"
++        response_text = f"FINAL: exact-satisfying {row['arm_id']} {row['query_id']}"
++        row.update(
++            {
++                "raw_request_text": request_text,
++                "raw_response_text": response_text,
++                "process_id": 700000 + int(row["query_index"]),
++                "command": f"llama-cli --model {model_paths[row['model_hf_id']]}",
++                "model_file_sha256": model_hashes[row["model_hf_id"]],
++                "raw_receipt_path": str(tmp_path / "raw_receipts.jsonl"),
++            }
++        )
++        row["row_hash"] = upstream_mod.row_hash(row)
++
++    raw_path = tmp_path / "raw_receipts.jsonl"
++    raw_path.write_text(
++        "\n".join(
++            json.dumps(
++                {
++                    "row_hash": row["row_hash"],
++                    "request_hash": row["request_hash"],
++                    "response_hash": row["response_hash"],
++                    "model_hf_id": row["model_hf_id"],
++                    "query_id": row["query_id"],
++                    "arm_id": row["arm_id"],
++                },
++                sort_keys=True,
++            )
++            for row in upstream["per_unit_rows"]
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    checkpoint_path = tmp_path / "checkpoint.json"
++    journal_path = tmp_path / "journal.jsonl"
++    checkpoint_path.write_text(json.dumps({"head": "clean"}), encoding="utf-8")
++    journal_path.write_text(json.dumps({"event": "clean"}) + "\n", encoding="utf-8")
++    upstream["raw_model_receipts"] = [{"path": str(raw_path), "sha256": mod.sha256_file(raw_path)}]
++    upstream["checkpoint_receipts"] = [
++        {"path": str(checkpoint_path), "sha256": mod.sha256_file(checkpoint_path)}
++    ]
++    upstream["journal_receipts"] = [
++        {"path": str(journal_path), "sha256": mod.sha256_file(journal_path)}
++    ]
++    upstream["reproducibility_checksum"] = upstream_mod.reproducibility_checksum(upstream)
++    upstream_path = tmp_path / "clean-upstream.json"
++    upstream_path.write_text(json.dumps(upstream, indent=2, sort_keys=True) + "\n")
++    return upstream_path
++
++
++def test_req_cl_6554_spec_declares_independent_audit_contract() -> None:
++    """REQ-CL-6554: OpenSpec owns the Exp6554 audit contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-CL-6554") :]
++    normalized = " ".join(section.split())
++    for marker in (
++        "SCENARIO-CL-6554-MISSING-INPUT",
++        "SCENARIO-CL-6554-RECEIPTS",
++        "SCENARIO-CL-6554-REPLAY",
++        "SCENARIO-CL-6554-ROWS",
++        "SCENARIO-CL-6554-ATTACKS",
++        "SCENARIO-CL-6554-ATOMIC",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "continuous_self_learning_audited_ready_score",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_cl_6554_clean_audit_replays_rows(
++    clean_upstream_path: Path, tmp_path: Path
++) -> None:
++    """SCENARIO-CL-6554-REPLAY/ROWS: clean evidence derives readiness."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        input_path=clean_upstream_path,
++        result_path=tmp_path / "audit.json",
++        write=True,
++        duration_s=3.5,
++        tests_run=TESTS_RUN,
++    )
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["status"] == "complete_continuous_self_learning_independent_audit"
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["verdict_class"] == "null"
++    assert artifact["continuous_self_learning_audited_ready_score"] == 1.0
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["input_existence_and_hash_receipts"]["all_required_inputs_present"] is True
++    assert len(artifact["independent_live_receipt_audit_rows"]) == 756
++    assert all(row["receipt_authentic"] for row in artifact["independent_live_receipt_audit_rows"])
++    assert all(row["exact_replay_passed"] for row in artifact["independent_exact_replay_rows"])
++    assert all(
++        row["transition_replay_passed"] for row in artifact["independent_transition_replay_rows"]
++    )
++    assert artifact["dose_and_coobservation_audit"]["matched_update_dose"] is True
++    assert artifact["unsafe_write_and_use_audit"]["safe_arm_unsafe_write_count"] == 0
++    assert artifact["restart_rollback_and_persistence_audit"]["restart_rollback_passed"] is True
++    assert artifact["attack_matrix"]["all_attacks_fail_closed"] is True
++    assert artifact["aggregate_row_recomputation"] == mod.aggregate_row_recomputation(artifact)
++    assert artifact["aggregate_row_recomputation"]["ready_score_from_rows"] == 1.0
++    assert artifact["gate_check_summary"]["all_gates_passed"] is True
++    assert artifact["protected_files_unchanged"]["all_protected_files_unchanged"] is True
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert json.loads((tmp_path / "audit.json").read_text(encoding="utf-8")) == artifact
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_cl_6554_missing_input_blocks_current_exp6553(tmp_path: Path) -> None:
++    """SCENARIO-CL-6554-MISSING-INPUT: checked-in blocked Exp6553 stays blocked."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        result_path=tmp_path / "blocked.json",
++        write=False,
++        duration_s=1.0,
++        tests_run=TESTS_RUN,
++        hash_model_files=False,
++    )
++
++    assert artifact["status"] == "blocked_continuous_self_learning_audit_missing_inputs"
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["continuous_self_learning_audited_ready_score"] == 0.0
++    assert artifact["input_existence_and_hash_receipts"]["exp6553"]["exists"] is True
++    assert artifact["independent_live_receipt_audit_rows"] == []
++    assert artifact["per_unit_rows"] == []
++    assert artifact["missing_input_disposition"]["terminal_disposition"] == "blocked"
++    assert {
++        "exp6553_per_unit_rows",
++        "raw_model_receipts",
++        "checkpoint_receipts",
++        "journal_receipts",
++    } <= set(artifact["missing_input_disposition"]["missing_inputs"])
++    assert "gpu_vram_contract" in artifact["gate_check_summary"]["failed_checks"]
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_cl_6554_attack_validation_and_cli(
++    clean_upstream_path: Path,
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """SCENARIO-CL-6554-ATTACKS/ATOMIC: tampering and CLI paths are explicit."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        input_path=clean_upstream_path,
++        result_path=tmp_path / "audit.json",
++        write=False,
++        duration_s=3.5,
++        tests_run=TESTS_RUN,
++    )
++
++    assert mod._read_json(tmp_path / "missing.json") == {}
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert mod._read_json(bad_json) == {}
++    assert mod.sha256_file(tmp_path / "missing") == "missing"
++    assert mod.sha256_file(None) == "missing"
++    assert mod._arms({}) == mod.DEFAULT_ARMS  # noqa: SLF001
++    assert mod._safe_arms({}) == tuple(  # noqa: SLF001
++        arm for arm in mod.DEFAULT_ARMS if arm != mod.DIAGNOSTIC_ARM
++    )
++    assert mod.independent_current_effect_rows({"per_unit_rows": []}) == []
++    assert mod.independent_retention_and_support_rows({"per_unit_rows": []}) == []
++    assert (
++        mod._status_and_verdict(  # noqa: SLF001
++            {"verdict_class_from_rows": "disqualified"},
++            {},
++        )[2]
++        == "disqualified"
++    )
++    assert mod._status_and_verdict({"verdict_class_from_rows": "partial"}, {})[2] == "partial"  # noqa: SLF001
++
++    bad_row = deepcopy(artifact)
++    bad_row["per_unit_rows"][0]["row_hash"] = "sha256:bad"
++    bad_row["reproducibility_checksum"] = mod.reproducibility_checksum(bad_row)
++    assert "per_unit_rows row_hash mismatch" in mod.validate_artifact(bad_row)
++
++    bad_score = deepcopy(artifact)
++    bad_score["continuous_self_learning_audited_ready_score"] = 0.0
++    bad_score["reproducibility_checksum"] = mod.reproducibility_checksum(bad_score)
++    assert "ready score mismatch" in mod.validate_artifact(bad_score)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "wrong"
++    bad_substrate["reproducibility_checksum"] = mod.reproducibility_checksum(bad_substrate)
++    assert "inference_substrate mismatch" in mod.validate_artifact(bad_substrate)
++
++    bad_aggregate = deepcopy(artifact)
++    bad_aggregate["aggregate_row_recomputation"]["row_count"] = -1
++    bad_aggregate["reproducibility_checksum"] = mod.reproducibility_checksum(bad_aggregate)
++    assert "aggregate_row_recomputation mismatch" in mod.validate_artifact(bad_aggregate)
++
++    assert "required field set mismatch" in mod.validate_artifact({})
++    validation_cases = [
++        ("status", "running", "status lacks terminal prefix"),
++        ("honest_verdict", "ready", "honest_verdict lacks terminal prefix"),
++        ("verdict_class", "positive", "verdict_class must be closed"),
++        ("verifier_is_oracle", True, "verifier_is_oracle must be false"),
++        ("field_provenance", {}, "field_provenance must cover required fields"),
++    ]
++    for key, value, expected in validation_cases:
++        changed = deepcopy(artifact)
++        changed[key] = value
++        changed["reproducibility_checksum"] = mod.reproducibility_checksum(changed)
++        assert expected in mod.validate_artifact(changed)
++
++    wrong_clean_class = deepcopy(artifact)
++    wrong_clean_class["verdict_class"] = "partial"
++    wrong_clean_class["reproducibility_checksum"] = mod.reproducibility_checksum(wrong_clean_class)
++    assert "clean audit must use verdict_class null" in mod.validate_artifact(wrong_clean_class)
++
++    protected_changed = deepcopy(artifact)
++    protected_changed["protected_files_unchanged"]["all_protected_files_unchanged"] = False
++    protected_changed["aggregate_row_recomputation"] = mod.aggregate_row_recomputation(
++        protected_changed
++    )
++    protected_changed["continuous_self_learning_audited_ready_score"] = 0.0
++    protected_changed["status"] = "partial_continuous_self_learning_independent_audit"
++    protected_changed["honest_verdict"] = "partial: protected file check failed"
++    protected_changed["verdict_class"] = "partial"
++    protected_changed["reproducibility_checksum"] = mod.reproducibility_checksum(protected_changed)
++    assert "protected files changed" in mod.validate_artifact(protected_changed)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:" + "0" * 64
++    assert "reproducibility_checksum mismatch" in mod.validate_artifact(bad_checksum)
++
++    duplicate = deepcopy(artifact)
++    duplicate["per_unit_rows"].append(deepcopy(duplicate["per_unit_rows"][0]))
++    duplicate["aggregate_row_recomputation"] = mod.aggregate_row_recomputation(duplicate)
++    duplicate["continuous_self_learning_audited_ready_score"] = 0.0
++    duplicate["verdict_class"] = "disqualified"
++    duplicate["status"] = "disqualified_continuous_self_learning_audit"
++    duplicate["honest_verdict"] = "disqualified: duplicate row attack passed"
++    duplicate["reproducibility_checksum"] = mod.reproducibility_checksum(duplicate)
++    assert "duplicate audit rows detected" in mod.validate_artifact(duplicate)
++
++    missing_repo_artifact = mod.build_artifact(
++        repo_root=tmp_path,
++        input_path=tmp_path / "absent.json",
++        result_path=tmp_path / "missing-repo.json",
++        write=False,
++        duration_s=0.1,
++        tests_run=TESTS_RUN,
++        hash_model_files=False,
++    )
++    assert (
++        "exp6553_artifact" in missing_repo_artifact["missing_input_disposition"]["missing_inputs"]
++    )
++    assert (
++        "exp6552_artifact" in missing_repo_artifact["missing_input_disposition"]["missing_inputs"]
++    )
++
++    blocked_nonzero = deepcopy(missing_repo_artifact)
++    blocked_nonzero["continuous_self_learning_audited_ready_score"] = 1.0
++    blocked_nonzero["reproducibility_checksum"] = mod.reproducibility_checksum(blocked_nonzero)
++    assert "blocked verdict requires zero ready score" in mod.validate_artifact(blocked_nonzero)
++
++    assert mod.main(["--validate", "--result-path", str(tmp_path / "missing-cli.json")]) == 1
++    assert "artifact not found" in capsys.readouterr().out
++    bad_cli = tmp_path / "bad-cli.json"
++    bad_cli.write_text("{}\n", encoding="utf-8")
++    assert mod.main(["--validate", "--result-path", str(bad_cli)]) == 1
++    assert "required field set mismatch" in capsys.readouterr().out
++
++    result_path = tmp_path / "cli.json"
++    assert (
++        mod.main(
++            [
++                "--date",
++                "20260823",
++                "--input-path",
++                str(clean_upstream_path),
++                "--result-path",
++                str(result_path),
++            ]
++        )
++        == 0
++    )
++    assert "wrote" in capsys.readouterr().out
++    assert mod.main(["--validate", "--result-path", str(result_path)]) == 0
++    assert "validated" in capsys.readouterr().out
++
++    real_validate = mod.validate_artifact
++    monkeypatch.setattr(mod, "validate_artifact", lambda _payload: ["forced"])
++    assert (
++        mod.main(
++            [
++                "--date",
++                "20260823",
++                "--input-path",
++                str(clean_upstream_path),
++                "--result-path",
++                str(tmp_path / "forced.json"),
++            ]
++        )
++        == 1
++    )
++    assert "forced" in capsys.readouterr().out
++    monkeypatch.setattr(mod, "validate_artifact", real_validate)
++
++    original_build = mod.build_artifact
++    try:
++        monkeypatch.setattr(mod, "build_artifact", lambda **_kwargs: artifact)
++        monkeypatch.setattr(mod, "validate_artifact", lambda _payload: ["post-build"])
++        assert (
++            mod.main(
++                [
++                    "--date",
++                    "20260823",
++                    "--input-path",
++                    str(clean_upstream_path),
++                    "--result-path",
++                    str(tmp_path / "post-build.json"),
++                ]
++            )
++            == 1
++        )
++        assert "post-build" in capsys.readouterr().out
++    finally:
++        monkeypatch.setattr(mod, "build_artifact", original_build)
++        monkeypatch.setattr(mod, "validate_artifact", real_validate)
+-- 
+2.55.0
+

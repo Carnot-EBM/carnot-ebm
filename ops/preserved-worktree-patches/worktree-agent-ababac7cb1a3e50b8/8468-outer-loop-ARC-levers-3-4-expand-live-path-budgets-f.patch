@@ -1,0 +1,417 @@
+From 488eb8cede6b7e13316133e079abcdc8b714f404 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 16:23:39 -0400
+Subject: [PATCH 08468/11362] [outer-loop] ARC levers #3+#4: expand live-path
+ budgets for Kaggle-class hardware; fix exp6091 truncation
+
+Operator directive 2026-08-07 (ops/known-issues.md): the scored eval GPU is far
+faster/bigger than local dev hardware, so budgets sized for local wall-clock
+under-use the eval envelope.
+
+Lever #3 (arc_competition_agent.py, scripts/kaggle/submission_kernel/main.py):
+- CarnotAgent.MAX_ACTIONS 400 -> 2000. Evidence:
+  results/outer_loop_scored_path_budget_sweep_20260726.json (25 games x 3
+  seeds, LLM-off) -- median wins climb 4@400 -> 9@1000 -> 11@2000 -> 12@4000,
+  no saturation. 2000 captures 11 of the 12-win ceiling while staying near the
+  artifact's conservative worst-case-safe-host-RAM neighborhood (real host RAM
+  on the actual Kaggle machine is still unmeasured).
+- SUBMITTED_TARGET_LEVELS 3 -> 8 (the next binding give-up cap once actions
+  are no longer the constraint).
+- SUBMITTED_EARLY_STOP_GRACE None -> 400 (pure wall/memory savings; the
+  post-solve tail scores 0 either way).
+- Kernel env: CARNOT_ARC_INDUCE_MAX_TOKENS 4096->8192,
+  CARNOT_ARC_INDUCE_TIMEOUT 600->1200, scored-run-only via setdefault (local
+  LocalGGUFProposer default of 4096/600 is untouched, still pinned by
+  test_arc_submitted_agent_parity.py). The kernel's own VRAM-fit check warns
+  (does not abort) if the attached card can't hold the raised n_ctx.
+
+Lever #4 (scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py):
+- BUDGET default 4096 -> 16384, the value the successful 2026-08-06 24-cell
+  run used (commit 787594eb68 traced the original truncation). One line
+  covers all three A/B arms identically (single shared LocalGGUFProposer),
+  preserving the arms-differ-in-exactly-one-thing invariant. Launched a
+  background resume run to complete the 2 missing cells (cd82 trial 1, sk48
+  trial 1) at the now-permanent budget.
+
+Verification: all three source files py_compile clean. Targeted test sweep (7
+files, 89 tests via --no-cov) has exactly 1 failure
+(test_experiment_4754_submitted_agent_config.py::test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks),
+confirmed PRE-EXISTING via git-stash isolation (fails identically with these
+changes fully stashed out) -- unrelated to this change.
+
+Artifact-freshness gate: this file is a registered dependency of 11 analyser
+artifacts (arc_gateway_card_ground_truth, arc_per_level_reset_attribution,
+experiment_6011/6012/6013, outer_loop_arc_{reset_charge_attribution,
+gateway_rescore, first_win_llm_on_eval_concurrency, early_stop_grace_sweep,
+generator_concurrency_fix, llm_on_wallclock_envelope}). Each was individually
+checked against its own generating script for genuine relevance (not a
+blanket wave-through): most reference none of the three changed symbols or
+explicitly hold them out of scope; two artifacts (early_stop_grace_sweep,
+llm_on_wallclock_envelope) record a "not yet flipped / MAX_ACTIONS still 400"
+status note that this exact commit is the authorized event superseding --
+their underlying swept-value measurements (gathered via explicit parameter
+injection, not the live default) are unaffected. Acknowledgements added per
+scripts/artifact_freshness_lint.py's documented schema (path/sha256_was/
+sha256_now/reason/evidence, pinned to the exact new hash so the next edit
+re-trips the lint). One second-order cascade
+(outer_loop_arc_gateway_accurate_rescore_20260726.json, which cites two of
+the above artifacts BY HASH) acknowledged the same way -- metadata-only
+change, no cited number moved. artifact-freshness-lint: OK.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../carnot/agentic/arc_competition_agent.py   | 26 +++++++++++++++----
+ ...rc_gateway_card_ground_truth_20260727.json |  8 ++++++
+ ..._per_level_reset_attribution_20260726.json |  8 ++++++
+ ...6011_world_model_change_gate_four_arm.json |  8 ++++++
+ ...ent_6012_hidden_state_trust_gate_hole.json |  8 ++++++
+ ...6013_hidden_state_change_gate_closure.json |  8 ++++++
+ ...p_arc_early_stop_grace_sweep_20260726.json |  9 +++++++
+ ..._win_llm_on_eval_concurrency_20260727.json |  8 ++++++
+ ...arc_gateway_accurate_rescore_20260726.json | 16 ++++++++++++
+ ...ter_loop_arc_gateway_rescore_20260726.json |  8 ++++++
+ ...rc_generator_concurrency_fix_20260727.json | 16 ++++++++++++
+ ...rc_llm_on_wallclock_envelope_20260726.json |  9 +++++++
+ ...arc_reset_charge_attribution_20260726.json |  8 ++++++
+ ...p_arc_refine_engine_visible_ab_20260803.py |  4 ++-
+ scripts/kaggle/submission_kernel/main.py      | 16 ++++++++++++
+ 15 files changed, 154 insertions(+), 6 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index b4fff43fcd..8a9290e269 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -138,10 +138,17 @@ SUBMITTED_VALUE_HEAD_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delt
+ DAGGER_VALUE_HEAD_RELATIVE_PATH = "models/arc_dagger_value_routing_v3.json"
+ # Exp 4605 wires the live scored path to attempt deeper levels. The verifier stays a tie-breaker
+ # (`value_weight=0`) so depth remains primary; deeper target levels only keep the loop alive after L1.
+-SUBMITTED_TARGET_LEVELS = 3
++# Raised 3 -> 8 (2026-08-07, operator directive, paired with the MAX_ACTIONS raise above): with more
++# actions available, the +3-levels declare-done cap becomes the next binding give-up limit before the
++# action budget is spent. The scorecard only charges completed levels (a post-solve tail scores 0
++# regardless), so raising this costs wall-clock, not score risk.
++SUBMITTED_TARGET_LEVELS = 8
+ # Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
+ # (cuts the fruitless post-solve tail, WITHOUT capping the configured scored target). None = disabled.
+-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
++# Enabled 2026-08-07 alongside the MAX_ACTIONS/TARGET_LEVELS raise: pure wall/memory savings with no
++# score cost (the post-solve tail is worth 0 either way), so there is no reason to leave it off once
++# the action budget is large enough for a stalled tail to matter.
++SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 400
+ SUBMITTED_SEARCH_MODE = "depth_first_ride"
+ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+ SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
+@@ -7351,9 +7358,18 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
+         # needs room to probe + solve several levels. 80 would truncate even our best
+         # known game. The real bound is the eval's wall-clock budget (<=12h across all
+         # games), not this per-game loop guard; Playback overrides it to 1e6 for the
+-        # same reason, so it is an intended override point. 400 comfortably covers our
+-        # multi-level replays + explore while staying well inside the time budget.
+-        MAX_ACTIONS = 400
++        # same reason, so it is an intended override point.
++        #
++        # Raised 400 -> 2000 (2026-08-07, operator directive: the Kaggle eval GPU is far
++        # faster than local dev hardware, so budgets sized for local wall-clock under-use
++        # the eval envelope). Evidence: results/outer_loop_scored_path_budget_sweep_20260726.json,
++        # 25 games x 3 seeds, LLM-off -- median wins climb 4@400 -> 9@1000 -> 11@2000 -> 12@4000
++        # with no saturation; 2000 captures nearly all of the measured gain (11 of the 12-win
++        # ceiling) while staying inside the artifact's conservative worst-case-safe-host-RAM
++        # ceiling's neighborhood (that ceiling was ~1000 under an UNCONFIRMED 16 GiB host-RAM
++        # assumption -- real host RAM is unmeasured on the actual Kaggle machine, so this is not
++        # pushed to the full 4000 the wall-clock bound alone would allow).
++        MAX_ACTIONS = 2000
+ 
+         def __init__(self, *args, **kwargs) -> None:
+             super().__init__(*args, **kwargs)
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 934f02d3a7..eeac7fdea7 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2702,6 +2702,14 @@
+     "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+     "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+     "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++    "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "acknowledged_on": "2026-08-07",
++    "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own generating script (scripts/arc_gateway_card_ground_truth.py) explicitly holds MAX_ACTIONS out of scope: line 51 describes the run as \"arcade, LLM disabled, nothing submitted, MAX_ACTIONS untouched\" and line 623 records \"MAX_ACTIONS\": \"untouched\" as a published invariant. Grep for SUBMITTED_TARGET_LEVELS / SUBMITTED_EARLY_STOP_GRACE in that script: 0 occurrences.",
++    "evidence": "grep -n MAX_ACTIONS scripts/arc_gateway_card_ground_truth.py (lines 51, 623); grep -n 'SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/arc_gateway_card_ground_truth.py (0 hits)."
+    }
+   ]
+  },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index d55cc05171..8d98c96bd5 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1307,6 +1307,14 @@
+     "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+     "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+     "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++    "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "acknowledged_on": "2026-08-07",
++    "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/arc_per_level_reset_attribution_capture.py) references none of MAX_ACTIONS, SUBMITTED_TARGET_LEVELS, or SUBMITTED_EARLY_STOP_GRACE.",
++    "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/arc_per_level_reset_attribution_capture.py: 0 hits."
+    }
+   ]
+  },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index a3027ea3a6..c8086729f9 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52684,6 +52684,14 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py) references none of the three changed symbols.",
++        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index d395df4aee..845c7389f8 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -168,6 +168,14 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py) references none of the three changed symbols.",
++        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index ef954052fc..cfb41f2ed3 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8710,6 +8710,14 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py) references none of the three changed symbols.",
++        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 53e77df60c..2bb5c86e4a 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5376,6 +5376,15 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "This artifact's quantitative sweep data (wins/actions/score per explicit early_stop_grace and budget value) is unaffected: scripts/arc_scored_path_early_stop_sweep.py:151 passes early_stop_grace=grace directly to the constructed explorer as a PARAMETER, never reading the live SUBMITTED_EARLY_STOP_GRACE class default for the measurement itself. What IS superseded: this artifact's own narrative finding \"SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)\" (scripts/analyze_arc_early_stop_sweep.py:294) and its stability-guard assertion that the flag stayed None across the run (arc_scored_path_early_stop_sweep.py:209) correctly describe 2026-07-26; this exact commit (2026-08-07, ops/known-issues.md lever #3) is the authorized flip that finding was informing, not a silent contradiction of it. Its \"shipped MAX_ACTIONS=400\" framing is likewise a dated fact, now superseded by the same commit's MAX_ACTIONS 400->2000 raise.",
++        "evidence": "grep -n SUBMITTED_EARLY_STOP_GRACE scripts/analyze_arc_early_stop_sweep.py (lines 286,289,290,294,500,582) and scripts/arc_scored_path_early_stop_sweep.py (lines 4,51,134,151,183,209,215); the sweep's own row output records early_stop_grace as a swept input field, not a live-constant read.",
++        "note": "APPENDED, not replacing; the artifact's July-26 findings are preserved unedited and remain historically accurate for that date. This acknowledgement documents that this specific later, dated commit is the authorized event superseding its 'not yet flipped' status note, per the never-prune discipline."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 435b583a36..cbfaa5f5f5 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3468,6 +3468,14 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. results/first_win_llm_on_20260727/analyse.py:433 references SUBMITTED_TARGET_LEVELS only inside a static prose 'definition' string documenting the methodology (\"target_levels=SUBMITTED_TARGET_LEVELS\" as literal text, not a live interpolation) -- the actual run already happened in July under whatever the constant was then (3); this commit does not rewrite that recorded run. python/carnot/experiment_4605_live_integration_scored_agent.py:506-508 does read the live constant, but that module-level function executed at BUILD TIME, not now; no code in this artifact's dependency chain re-reads it after the fact. MAX_ACTIONS / SUBMITTED_EARLY_STOP_GRACE: not referenced by this artifact's own scripts.",
++        "evidence": "grep -n SUBMITTED_TARGET_LEVELS results/first_win_llm_on_20260727/analyse.py (line 433, inside a string literal); grep -n SUBMITTED_TARGET_LEVELS python/carnot/experiment_4605_live_integration_scored_agent.py (lines 506,508,766)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index 07a44e686f..a563387ac0 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3236,6 +3236,22 @@
+     "reason": "Third-order cascade from the 2026-08-06 arc_competition_agent.py acknowledgement pass (a single noqa:F401 unused import, verified inert). This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements entry was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
+     "evidence": "Measured, not asserted: each upstream artifact's key set and values, with the `provenance` key popped from both the pre- and post-edit copies, compare equal -- the only difference is inside `provenance.freshness_acknowledgements`, which this analyser does not read (it consumes measurement rows only).",
+     "why_not_rebuilt": "A rebuild_command is registered, but a rebuild attempt this session (2026-08-06) confirmed the standing finding from the 2026-08-03 entry above: it reproduces every measured number byte-identically AND silently drops all 10 pre-existing freshness_acknowledgements entries plus the original_timings_superseded_by_rebuild / rebuild_diff_2026_07_30 corrigendum blocks, because the rebuild script does not carry forward provenance history. Acknowledging in place avoids that never-prune loss."
++   },
++   {
++    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++    "sha256_was": "bcff3bd7c5d657e8aaf32d779e22255daffd3bff2425f26f066f50030f5e16dd",
++    "sha256_now": "f1bb314d95ab12ac17077645e8c73028fbea26a19539a97917d1fe3bca28274f",
++    "acknowledged_on": "2026-08-07",
++    "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the 2026-08-07 arc_competition_agent.py MAX_ACTIONS/TARGET_LEVELS/EARLY_STOP_GRACE change is inert to it). No measured or reported value in the file changed.",
++    "evidence": "git diff results/outer_loop_arc_gateway_rescore_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
++   },
++   {
++    "path": "results/arc_per_level_reset_attribution_20260726.json",
++    "sha256_was": "bb34456a1d9b8caefa77c07b6750d85d1b4f8b99edaba2bd2afe9fbc936d1275",
++    "sha256_now": "ec462f25fc3d48abe41be39b89a9fc15646100b6b6145128ed5f14671884e299",
++    "acknowledged_on": "2026-08-07",
++    "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the same 2026-08-07 arc_competition_agent.py change is inert to it). No measured or reported value in the file changed.",
++    "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index fb564ed618..77c75258e7 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1110,6 +1110,14 @@
+     "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+     "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+     "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++    "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++    "acknowledged_on": "2026-08-07",
++    "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own analysis script self-declares the invariant at line 676: \"no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports\".",
++    "evidence": "grep -n 'no SUBMITTED_\\* flag and no MAX_ACTIONS' scripts/analyze_arc_gateway_rescore.py: 1 hit, line 676."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 945a2461d5..25d0109f7c 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1109,6 +1109,22 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "results/generator_concurrency_fix_20260727/build_fix_artifact.py:733-734 records \"MAX_ACTIONS\": \"UNCHANGED (400)\" and \"SUBMITTED_EARLY_STOP_GRACE\": \"UNCHANGED (None)\" as dated provenance metadata describing the state as of 2026-07-30 -- correct for that date, now superseded by this authorized 2026-08-07 change (ops/known-issues.md lever #3). This artifact's substantive finding (the generator-concurrency VRAM-fit fix, n_ctx 81920, control 6/6 fail vs fix 0/6) does not depend on either constant's value and is unaffected.",
++        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_EARLY_STOP_GRACE' results/generator_concurrency_fix_20260727/build_fix_artifact.py (lines 733-734, both literal 'UNCHANGED' string values, not live reads)."
++      },
++      {
++        "path": "scripts/kaggle/submission_kernel/main.py",
++        "sha256_was": "eb386f191f48811fc61a70ab1ea8193fdd9b429cd0df46832d5e945077ce7007",
++        "sha256_now": "e71196a5b24c9db379eb5dc71a3d39354dab88b931672d4dc4f866b4b0d351d4",
++        "acknowledged_on": "2026-08-07",
++        "reason": "This commit's kernel edit (scripts/kaggle/submission_kernel/main.py) adds two env.setdefault() calls (CARNOT_ARC_INDUCE_MAX_TOKENS, CARNOT_ARC_INDUCE_TIMEOUT) inserted before the existing context-pool/VRAM-fit diagnostic block this artifact's fix targets. The generator-concurrency fix itself (n_ctx derivation, _generator_cuda_min_free_mb VRAM guard, MTP resolution) is untouched; the new env vars affect max_tokens/timeout only, not the concurrency/VRAM-fit logic this artifact measured.",
++        "evidence": "git diff scripts/kaggle/submission_kernel/main.py: single localized insertion before the '_default_induce_n_ctx' diagnostic block; no line in the generator-concurrency VRAM-fit block (_generator_cuda_min_free_mb, MTP resolution) was touched."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index d18f133e5c..f89bdf6687 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -343,6 +343,15 @@
+         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "This artifact's actual measurements (the wall-clock envelope math anchored at explicit budgets b400/b1000/b2000, scripts/analyze_arc_llm_on_wallclock_envelope.py) sweep MAX_ACTIONS as an explicit run_game parameter, not the live class default -- unaffected by this change. What IS superseded: this artifact's own decision-status framing, e.g. line 1590 \"none was made -- MAX_ACTIONS is still 400 in the tree\" and line 1454 \"MAX_ACTIONS stays 400\", both correct descriptions of 2026-07-26 that this exact 2026-08-07 commit (ops/known-issues.md lever #3) supersedes -- this artifact's own envelope analysis is the evidence basis this change cites (see the commit message / arc_competition_agent.py:7356's updated comment).",
++        "evidence": "grep -n MAX_ACTIONS scripts/analyze_arc_llm_on_wallclock_envelope.py (lines 2,1076,1326,1454,1518,1590) and scripts/arc_llm_on_wallclock_budget_probe.py (lines 18,32,69) -- all either sweep budget as an explicit parameter or state the pre-change decision status as of build time.",
++        "note": "APPENDED, not replacing; this artifact's envelope math at each swept budget point remains the evidentiary basis this commit's MAX_ACTIONS raise cites."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index fb4fc41a1c..c457b78bd9 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16891,6 +16891,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-OCD-VECTORIZE-1 rewrote object_centric_digest's connected-component labeling to use scipy.ndimage.label instead of a per-cell flood-fill. Verified field-for-field equivalent to the pre-rewrite algorithm across 30 randomized grids plus edge cases (tests/python/test_arc_object_centric_digest_vectorized.py, 45 tests, all passing) and adversarially reviewed. scripts/analyze_arc_reset_charge_attribution.py does not call object_centric_digest at all (grep confirms zero references), and no other function in arc_solver_kit.py was touched by this change, so nothing this analyser reads could have moved.",
+         "evidence": "`grep -n object_centric_digest scripts/analyze_arc_reset_charge_attribution.py` returns zero matches. `git show <commit>:python/carnot/agentic/arc_solver_kit.py` diffed against the prior version confirms the change is confined to object_centric_digest's body and docstring."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
++        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
++        "acknowledged_on": "2026-08-07",
++        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/analyze_arc_reset_charge_attribution.py) references none of the three changed symbols.",
++        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/analyze_arc_reset_charge_attribution.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py b/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
+index bb59cd6f05..e65f484eec 100644
+--- a/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
++++ b/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
+@@ -110,7 +110,9 @@ EVIDENCE_DIRS = ("results/arc_e3", "results/arc_logo_snapshot", "results/arc_e3_
+ # ---- run configuration -----------------------------------------------------------------------
+ GPU_INDEX = 1  # operator: the conductor owns GPU 0.
+ PORT = 8977  # NON-DEFAULT (LocalGGUFProposer's default is 8919; prior runs used 8968-8972).
+-BUDGET = int(os.environ.get("CARNOT_6091_BUDGET") or "4096")  # the SHIPPED LIVE default
++BUDGET = int(
++    os.environ.get("CARNOT_6091_BUDGET") or "16384"
++)  # measured non-truncating budget, commit 787594eb68
+ NCTX_LADDER = [32768, 24576, 20480]
+ REFACTOR_ROUNDS = int(os.environ.get("CARNOT_6091_ROUNDS") or "2")
+ TRIALS = [int(x) for x in (os.environ.get("CARNOT_6091_TRIALS") or "0,1").split(",")]
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index 025c34c109..87d85f4f6f 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -260,6 +260,22 @@ if server and gguf:
+                   "this run is NOT using.", flush=True)
+     except Exception as _e:
+         print(f"LLM TIER: could not cross-check declared MTP state ({_e!r})", flush=True)
++    # BUDGET EXPANSION FOR THE SCORED RUN ONLY (2026-08-07, operator directive). The local
++    # defaults -- max_tokens=4096 (LocalGGUFProposer, pinned by
++    # tests/python/test_arc_submitted_agent_parity.py, NOT touched here), induce timeout floor
++    # 600s -- were sized under the 16GB/P100-parity assumption
++    # (docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md), which is void: the
++    # scored card is now requested as a 96GB-class NvidiaRtxPro6000 (kernel-metadata.json). Raise
++    # both env-only, for this kernel's launch alone. `setdefault` so an operator override set some
++    # other way is not clobbered. The VRAM-fit check a few lines below prints a WARNING (does not
++    # abort) if the actual attached card can't hold the raised n_ctx -- machine_shape is a
++    # free-form string the SDK cannot validate locally, so that check is the real safety net here,
++    # not a guess at this point in the code. 1200s covers the slowest local induce observed
++    # (572s at n_ctx 32768 on a 3090, single-stream) with margin for the live path's 4 shared
++    # slots running slower per-request; a timeout firing silently degrades the agent to LLM-off
++    # rather than erroring, so under-shooting this is a silent-failure risk, not just slowness.
++    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
++    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "1200")
+     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
+     # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
+     # hardcoded strings; if the agent's own default had moved, the probe would have validated
+-- 
+2.55.0
+

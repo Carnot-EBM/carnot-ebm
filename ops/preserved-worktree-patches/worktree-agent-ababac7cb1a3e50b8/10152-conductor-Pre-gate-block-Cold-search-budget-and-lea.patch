@@ -1,0 +1,75 @@
+From e5161e03811585a6dd242571fd384713bcac90b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:42:57 -0400
+Subject: [PATCH 10152/11362] [conductor] Pre-gate block: Cold search, budget,
+ and leakage audit
+
+1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtracking_ab_ready (upstream artifact not found for task id 'exp6693-energy-backtracking-ab')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                           | 2 +-
+ ops/conductor-heartbeat.json                           | 2 +-
+ ops/conductor-log.md                                   | 2 ++
+ ops/conductor-state.json                               | 2 +-
+ results/experiment_6694_energy_backtracking_audit.json | 4 ++--
+ 5 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 9089b04932..f5c31214d9 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:40:53Z"
++ "last_scan_utc": "2026-08-28T06:42:56Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bdf89359e2..9a95eb6b81 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-08-28T06:40:53Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-08-28T06:42:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 235952a90f..28e3116ead 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16682,3 +16682,5 @@ code |
+ | 2026-08-28 06:38 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
+ | 2026-08-28 06:38 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
+ | 2026-08-28 06:40 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
++| 2026-08-28 06:40 UTC | Cold search, budget, and leakage audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtrackin |
++| 2026-08-28 06:42 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 77bee8974a..0d7e55c2ae 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 22, "phase": "iteration_start", "started_at": "2026-08-28T06:40:53Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 23, "phase": "iteration_start", "started_at": "2026-08-28T06:42:56Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6694_energy_backtracking_audit.json b/results/experiment_6694_energy_backtracking_audit.json
+index b956f842b2..cd654bd8b9 100644
+--- a/results/experiment_6694_energy_backtracking_audit.json
++++ b/results/experiment_6694_energy_backtracking_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 6694,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-28",
+-  "started_at": "2026-08-28T06:40:53.677977+00:00",
+-  "finished_at": "2026-08-28T06:40:53.677977+00:00",
++  "started_at": "2026-08-28T06:42:56.899808+00:00",
++  "finished_at": "2026-08-28T06:42:56.899808+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Cold search, budget, and leakage audit",
+-- 
+2.55.0
+

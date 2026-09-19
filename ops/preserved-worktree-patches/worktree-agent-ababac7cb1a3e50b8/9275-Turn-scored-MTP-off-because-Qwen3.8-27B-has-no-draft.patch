@@ -1,0 +1,159 @@
+From 0cd980f852f7724fe59e7afb837730da5677d0e1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 17 Aug 2026 00:26:49 -0400
+Subject: [PATCH 09275/11362] Turn scored MTP off, because Qwen3.8-27B has no
+ draft head
+
+Kernel v19 ran the new configuration on the scored card and reported the
+disagreement itself:
+
+  LLM TIER MTP DECLARED-VS-ACTUAL MISMATCH: SUBMITTED_AGENT_CONFIG declares
+  mtp=True but this kernel resolved mtp=False (head_present=False). The
+  readiness gates describe a configuration this run is NOT using.
+
+That is the exact failure ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT's own comment
+warns about, pointed the other way: it was written to stop an operator shipping
+the slower config by forgetting to flip a knob, and here it made every readiness
+gate describe a run that was not happening. Leaving it at "1" costs nothing at
+run time -- the kernel resolves head_present=False and proceeds -- so nothing
+would have gone red later.
+
+The parity test asserting mtp is True went red on this change, which is what its
+own comment says it is for: "If a future operator directive turns scored MTP off,
+this line is SUPPOSED to go red -- that is the notification." It fired. The
+literal moves with the fact, and spec_type follows to None, because an mtp=False
+config still naming a live draft-mtp spec_type is a config that cannot run.
+
+The cost is real and accepted: roughly 1.8x slower decode than gemma's
+speculative path, which is part of the 17x per-induction figure recorded with the
+pin move.
+
+Also from the same run, worth having in the record. The card is confirmed again
+(97,887 MiB). VRAM at the new pool measured 52,168 MiB against my predicted
+47,965 -- the estimate runs about 9% light, in the safe direction. submission
+.parquet was produced. The concurrency probe FAILED, but on inspection it asks
+for four simultaneous FULL-CAP 131,072-token generations, which need ~2,874s each
+against a 2,400s timeout; the median (1,344s) and worst observed (1,832s)
+generations both fit. Its suggested remedy is wrong -- it advises raising n_ctx
+to >= 4 x (prompt + max_tokens), which the 614,400 pool already satisfies.
+---
+ ops/arc-daily-prep-status.json                |  6 +++---
+ .../agentic/arc_executable_world_model.py     |  9 +++++++-
+ ...xperiment_6440_qwen38_generator_h2h_arm.py | 21 ++++++++++++++++++-
+ .../python/test_arc_submitted_agent_parity.py | 13 +++++++++---
+ 4 files changed, 41 insertions(+), 8 deletions(-)
+
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+index 23a4aca23e..849460fd66 100644
+--- a/ops/arc-daily-prep-status.json
++++ b/ops/arc-daily-prep-status.json
+@@ -1,8 +1,8 @@
+ {
+-  "kernel_version": "18",
++  "kernel_version": "19",
+   "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset.",
+   "parquet_ok": false,
+-  "prepped_at": "2026-08-16T13:37Z",
++  "prepped_at": "2026-08-17T03:44Z",
+   "prior_submission_scores": {
+     "2026-06-30": 0.08,
+     "2026-07-15": 0.12
+@@ -21,5 +21,5 @@
+       "submitted_at": "2026-07-16T19:37:35Z"
+     }
+   ],
+-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 18"
++  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 19"
+ }
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index e1d4f22945..e71ddbb154 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3705,7 +3705,14 @@ ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
+ # to flip a single shared constant before submitting silently ships the slower configuration, and
+ # nothing anywhere reports it -- the run just takes ~1.4x longer per induction. Naming both makes
+ # the divergence a fact the tests can pin instead of a step in a runbook.
+-ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
++# FLIPPED TO "0" 2026-08-17 with the move to Qwen3.8-27B, which has no MTP draft head published.
++# Kernel v19 caught the disagreement at runtime and named it exactly: "SUBMITTED_AGENT_CONFIG
++# declares mtp=True but this kernel resolved mtp=False ... the readiness gates describe a
++# configuration this run is NOT using". Leaving it at "1" costs nothing at run time (the kernel
++# resolves head_present=False and proceeds without speculative decoding) but it makes every
++# readiness gate report a config that is not the one running, which is the precise failure this
++# constant's own comment above warns about, pointed the other way.
++ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "0"
+ # The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
+ # substring are named here because the Kaggle kernel matches by name against an order-undefined
+ # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.
+diff --git a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+index 8daf5ca0ea..fd53a6e045 100644
+--- a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
++++ b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+@@ -384,7 +384,9 @@ def launch(arm: dict[str, Any], llama_server: Path) -> tuple[subprocess.Popen, d
+         "off",
+     ]
+     # -sm layer -ts 1,1 splits the model evenly. No MTP on either arm, so no draft override.
+-    if "-sm" not in args:
++    # Only when this arm actually has two cards: `-ts 1,1` against a single visible device tells
++    # llama.cpp to split across a device that is not there.
++    if "-sm" not in args and "," in str(GPU_INDEX):
+         args += ["-sm", "layer", "-ts", "1,1"]
+     # One slot, so `-c` is the context this run actually gets rather than a pool divided four ways.
+     if "--parallel" not in args:
+@@ -474,8 +476,25 @@ def main() -> int:
+     # rate at extra seed bases). Absent, behaviour is exactly the full-roster arm.
+     ap.add_argument("--games", help="comma-separated subset of ROSTER to run")
+     ap.add_argument("--seed-base", type=int, help="override SEED_BASE for this arm")
++    # SINGLE-CARD MODE (added 2026-08-17). The defaults above layer-split one model across both
++    # cards, which serialises decode and measured 14% slower than one card holding the whole model
++    # (41.05 vs 35.5 tok/s). Pinning an arm to ONE card lets the two arms run CONCURRENTLY, one per
++    # card, which is 2.31x the throughput of the split for this workload. n_ctx has to move with it
++    # because a single 24 GB card holds Qwen3.8 to 131072 but gemma-4-31B only to 65536; both are
++    # far above what either model's generations need, so neither arm is starved by the difference.
++    # Ports must differ between concurrent arms or the second silently measures the first's server.
++    ap.add_argument("--gpu", help="CUDA_VISIBLE_DEVICES for this arm, e.g. '0'. Default: both.")
++    ap.add_argument("--n-ctx", type=int, help="override N_CTX for this arm")
++    ap.add_argument("--port", type=int, help="override the arm's llama-server port")
+     args = ap.parse_args()
++    global GPU_INDEX, N_CTX
++    if args.gpu:
++        GPU_INDEX = args.gpu
++    if args.n_ctx:
++        N_CTX = args.n_ctx
+     arm = ARMS[args.arm]
++    if args.port:
++        arm["port"] = args.port
+     # Resolve once, here, so every downstream use (server launch, /props identity check, the
+     # recorded artifact) reads the SAME path. Resolving at each use site is how two of them end up
+     # pointing at different snapshots.
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index b4f6cc6297..f712c1427c 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -236,13 +236,20 @@ def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
+     # GPU hardware") plus the measured 1.398x decode win on the bundled binary. So it is written
+     # here as a literal. If a future operator directive turns scored MTP off, this line is SUPPOSED
+     # to go red -- that is the notification, and it is what the tautology suppressed.
+-    assert frozen["mtp"] is True
+-    assert frozen["spec_type"] == "draft-mtp"
++    # THE NOTIFICATION FIRED, 2026-08-17, exactly as the paragraph above intends. The generator
++    # moved to Qwen3.8-27B, for which no MTP draft head is published, so scored MTP is off and the
++    # literal moves with it. This is not a knob someone flipped for convenience: kernel v19 resolved
++    # mtp=False at run time and reported the config/run disagreement itself. The cost is real and
++    # accepted -- roughly 1.8x slower decode than gemma's speculative path. `spec_type` is DERIVED
++    # from the mtp flag, so it follows to None; asserting it separately keeps the pair honest,
++    # because a None mtp with a live "draft-mtp" spec_type would be a config that cannot run.
++    assert frozen["mtp"] is False
++    assert frozen["spec_type"] is None
+     # Separately, pin that the constant the config is DERIVED from still says the same thing. This
+     # is the "did somebody flip the knob" check; the two lines above are the "what does the
+     # submission actually launch with" check. Keeping them apart is what makes either one able to
+     # fail on its own.
+-    assert ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "1"
++    assert ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "0"
+     # The draft is a DIFFERENT FILE from the weights. Asserting only "mtp is True" is what would
+     # let `--model-draft` drift back onto the main GGUF -- accepted by llama.cpp, warned about,
+     # then served with speculation silently disabled and no other observable difference.
+-- 
+2.55.0
+

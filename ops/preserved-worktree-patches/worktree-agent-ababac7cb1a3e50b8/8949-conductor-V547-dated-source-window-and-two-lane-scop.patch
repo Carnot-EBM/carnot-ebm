@@ -1,0 +1,3589 @@
+From e18a666405dd9d113bce89d86ae5815bae205b51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 18:08:31 -0400
+Subject: [PATCH 08949/11362] [conductor] V547 dated source window and two-lane
+ scope freeze
+
+Automated research step by research conductor.
+Task ID: exp6351-v547-post-marker-source-scope-freeze
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-harnesses/spec.md   |  112 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...51_v547_post_marker_source_scope_freeze.py | 1386 +++++++++++++++
+ ..._v547_post_marker_source_scope_freeze.json | 1486 +++++++++++++++++
+ ...51_v547_post_marker_source_scope_freeze.py |  539 ++++++
+ 5 files changed, 3524 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py
+ create mode 100644 results/experiment_6351_v547_post_marker_source_scope_freeze.json
+ create mode 100644 tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index d20d0ed323..ed8d688a62 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -4092,6 +4092,118 @@ terminal prefix.
+ |---|---|---|
+ | REQ-INFRA-6350 | Planned: `python/carnot/experiment_6350_v547_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6350_v547_bounded_terminal_handoff.json`. | Planned: `tests/python/test_experiment_6350_v547_bounded_terminal_handoff.py`. |
+ 
++## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
++
++Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
++and scope freeze. The sweep SHALL hash the exact
++`<!-- V547-PLANNER-REFRESH-20260812-END -->` marker in
++`research-references.md`. It SHALL record the marker line. It SHALL use the
++marker commit time as the exclusive lower bound for post-marker novelty.
++
++Exp6351 SHALL validate the six V547 planner-promoted source families with
++direct primary URLs, first-publication dates, access times, claim boundaries,
++and Carnot executable consequences. The source families are active reward
++machine inference, zero-shot goal recognition, read-only memory, solver
++hardness controls, distributional EBMs with abstention, and verification
++horizon controls. The receipts SHALL remain separate from any post-marker
++acceptance count.
++
++Exp6351 SHALL repeat arXiv, OpenReview, Hugging Face Papers, Semantic Scholar
++EBT and ARM-EBM routes, Extropic, Logical Intelligence, and GitHub searches
++only for the post-marker window. Empty endpoints, secondary mirrors, rate
++limits, product pages, and inaccessible pages SHALL be recorded as receipts.
++They SHALL not become promoted findings.
++
++Exp6351 SHALL deduplicate by work identity, repository identity, mechanism,
++content hash, URL, title, and already-retired Carnot scope. It SHALL accept
++only stable, non-duplicate, reproducible, primary or first-party evidence that
++is strictly later than the V547 marker and that changes a local executable
++contract. A zero-source delta SHALL be terminal. In that case `accepted_count`
++SHALL be the bare integer `0`, `llm_call_count` SHALL be the bare integer `0`,
++and `honest_verdict` SHALL start with `complete_null:`.
++
++Exp6351 SHALL freeze exactly two V547 scientific lanes: prospective certified
++factor learning and falsifiable live ARC goal discovery. It SHALL also freeze
++exact-oracle boundaries, required local GGUF models, active ARC provenance
++rules, fail-fast gates, the closed parser/JIT lane, and the no-hardware rule.
++The task SHALL not execute GateMate, KV260, PolarFire, NPU, TSU, Kona, or
++board commands. The task SHALL not modify `scripts/research_conductor.py`.
++
++The Exp6351 artifact SHALL be written atomically to
++`results/experiment_6351_v547_post_marker_source_scope_freeze.json` with
++`inference_substrate=web_and_bibliographic_search_only`,
++`verifier_is_oracle=false`, and `llm_call_count=0`.
++
++The Exp6351 artifact SHALL include these required fields: `status`,
++`v547_marker_text_line_and_hash`, `search_window_start_utc`,
++`search_completed_utc`, `source_queries_by_channel`, `source_receipts`,
++`promoted_findings`, `accepted_count`, `duplicate_findings`,
++`watch_only_findings`, `inaccessible_sources`,
++`excluded_findings_and_reasons`, `active_reward_machine_receipt`,
++`zero_shot_goal_recognition_receipt`, `memoir_receipt`,
++`solver_hardness_control_receipt`, `distributional_ebm_receipt`,
++`verification_horizon_receipt`,
++`semantic_scholar_ebt_and_arm_ebm_receipts`,
++`openreview_and_huggingface_status`, `github_status`, `extropic_status`,
++`logical_intelligence_status`, `frozen_live_factor_learning_contract`,
++`frozen_arc_goal_contract`, `frozen_model_policy`,
++`frozen_closed_parser_jit_contract`, `frozen_hardware_nonuse_contract`,
++`roadmap_scope_delta`, `protected_files_unchanged`,
++`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
++`llm_call_count`, `field_provenance`, `field_principles`,
++`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++### SCENARIO-INFRA-6351-1: Marker Bound Is Exclusive
++
++GIVEN the sealed V547 planner refresh marker in `research-references.md`
++WHEN Exp6351 classifies a candidate at or before the marker commit time
++THEN the candidate is rejected, and a bare same-day date is rejected unless a
++strictly later timestamp is present.
++
++### SCENARIO-INFRA-6351-2: Promoted Source Dates Are Direct Receipts
++
++GIVEN the V547 marker promoted active reward-machine inference, zero-shot goal
++recognition, Memoir, solver-hardness control, distributional EBM, and
++verification-horizon work
++WHEN Exp6351 builds its artifact
++THEN each promoted source has a direct primary URL, first-publication date,
++access time, bounded source claim, and local executable consequence.
++
++### SCENARIO-INFRA-6351-3: Dedupe And Source Dispositions Fail Closed
++
++GIVEN a candidate repeats an older work identity, repository identity,
++mechanism, content hash, URL, title, or retired Carnot scope
++WHEN Exp6351 partitions the sweep
++THEN the row is not accepted, and its duplicate, watch-only, inaccessible, or
++excluded disposition records the exact reason.
++
++### SCENARIO-INFRA-6351-4: Frozen V547 Contracts Preserve Boundaries
++
++GIVEN V547 has two scientific lanes plus exact-oracle, local-GGUF,
++active-ARC, fail-fast, closed parser/JIT, and no-hardware boundaries
++WHEN Exp6351 serializes frozen contracts
++THEN the artifact admits only prospective certified factor learning and
++falsifiable live ARC goal discovery. It SHALL reject solver-only difficulty
++proxies, learned approval, hidden-source ARC evidence, parser/JIT reopening,
++GGUF weight updates, and hardware execution.
++
++### SCENARIO-INFRA-6351-5: Output Is Principle Annotated And Non-Mutating
++
++GIVEN source receipts, protected hashes, field principles, and command
++receipts
++WHEN Exp6351 validates the report before writing
++THEN every required field is present, every field has provenance and a
++principle, `accepted_count` and `llm_call_count` are bare integers, the
++checksum matches the normalized payload, protected hashes remain unchanged,
++and the honest verdict has a terminal prefix.
++
++## Implementation Status (REQ-INFRA-6351)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6351 | Planned: `python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6351_v547_post_marker_source_scope_freeze.json`. | Planned: `tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py`. |
++
+ ## Implementation Status (REQ-INFRA-6322)
+ 
+ | REQ | Implementation | Tests |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index dfcbf1c0fe..053c67859c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4915,
++  "experiments_checked": 4916,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py b/python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py
+new file mode 100644
+index 0000000000..e1842bcdf1
+--- /dev/null
++++ b/python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py
+@@ -0,0 +1,1386 @@
++"""Exp6351 V547 post-marker source scope freeze.
++
++Spec refs: REQ-INFRA-6351, SCENARIO-INFRA-6351-1,
++SCENARIO-INFRA-6351-2, SCENARIO-INFRA-6351-3,
++SCENARIO-INFRA-6351-4, SCENARIO-INFRA-6351-5.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from datetime import UTC, datetime
++import json
++from pathlib import Path
++import re
++import shutil
++import subprocess
++import time
++from typing import Any
++from urllib.parse import urlparse
++
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.inference.sota_models import SOTA_GGUF_MODELS
++from carnot.terminal_artifacts import canonical_json, path_sha256, payload_sha256
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++EXPERIMENT_ID = "exp6351-v547-post-marker-source-scope-freeze"
++SCHEMA = "carnot.experiment_6351.v547_post_marker_source_scope_freeze.v1"
++RESULT_RELATIVE_PATH = Path("results/experiment_6351_v547_post_marker_source_scope_freeze.json")
++INFERENCE_SUBSTRATE = "web_and_bibliographic_search_only"
++CONTRACT_VERSION = "v547.6351"
++
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++RESEARCH_PROGRAM_RELATIVE_PATH = Path("research-program.md")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++HARDWARE_WISHLIST_RELATIVE_PATH = Path("research-hardware-wishlist.md")
++E2E_PLAN_RELATIVE_PATH = Path("ops/e2e-test-plan.md")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-harnesses/spec.md")
++
++PRIOR_HANDOFF_RELATIVE_PATH = Path("results/experiment_6350_v547_bounded_terminal_handoff.json")
++PRIOR_V546_SOURCE_RELATIVE_PATH = Path(
++    "results/experiment_6338_v546_post_marker_source_scope_freeze.json"
++)
++PRIOR_PARSER_JIT_RELATIVE_PATH = Path(
++    "results/experiment_6340_parser_jit_semantic_diversity_canary.json"
++)
++PRIOR_CERTIFIED_FACTOR_RELATIVE_PATH = Path(
++    "results/experiment_6345_prospective_certified_factor_evolution_ab.json"
++)
++PRIOR_GOAL_VETO_RELATIVE_PATH = Path("results/experiment_6258_goal_veto_confusion_matrix.json")
++
++PLANNER_MARKER = "V547-PLANNER-REFRESH-20260812-END"
++PLANNER_END_MARKER = f"<!-- {PLANNER_MARKER} -->"
++MARKER_COMMIT = "444250de2807a14b0cc12ff229d9c4d6ae821853"
++MARKER_COMMITTED_AT_LOCAL = "2026-08-12T17:28:21-04:00"
++MARKER_COMMITTED_AT_UTC = "2026-08-12T21:28:21Z"
++
++MANDATED_GGUF_IDS = tuple(str(spec["hf_id"]) for spec in SOTA_GGUF_MODELS)
++
++REQUIRED_SOURCE_CHANNELS = (
++    "arxiv",
++    "openreview",
++    "hugging_face_papers",
++    "semantic_scholar_ebt_arm",
++    "extropic",
++    "logical_intelligence",
++    "github",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "v547_marker_text_line_and_hash",
++    "search_window_start_utc",
++    "search_completed_utc",
++    "source_queries_by_channel",
++    "source_receipts",
++    "promoted_findings",
++    "accepted_count",
++    "duplicate_findings",
++    "watch_only_findings",
++    "inaccessible_sources",
++    "excluded_findings_and_reasons",
++    "active_reward_machine_receipt",
++    "zero_shot_goal_recognition_receipt",
++    "memoir_receipt",
++    "solver_hardness_control_receipt",
++    "distributional_ebm_receipt",
++    "verification_horizon_receipt",
++    "semantic_scholar_ebt_and_arm_ebm_receipts",
++    "openreview_and_huggingface_status",
++    "github_status",
++    "extropic_status",
++    "logical_intelligence_status",
++    "frozen_live_factor_learning_contract",
++    "frozen_arc_goal_contract",
++    "frozen_model_policy",
++    "frozen_closed_parser_jit_contract",
++    "frozen_hardware_nonuse_contract",
++    "roadmap_scope_delta",
++    "protected_files_unchanged",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "llm_call_count",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "random_seeds",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "The freeze is complete only when source and boundary checks pass.",
++    "v547_marker_text_line_and_hash": "The exact marker defines the novelty boundary.",
++    "search_window_start_utc": "The lower bound is exclusive for post-marker novelty.",
++    "search_completed_utc": "The upper audit time makes the sweep reproducible.",
++    "source_queries_by_channel": "Each required channel records its direct search route.",
++    "source_receipts": "Search outcomes and failures stay visible.",
++    "promoted_findings": "Planner-promoted sources are receipts, not new post-marker deltas.",
++    "accepted_count": "A bare integer drives the null or delta verdict.",
++    "duplicate_findings": "Repeated work, repository, and mechanism identities do not widen scope.",
++    "watch_only_findings": "Contextual rows stay visible without becoming contracts.",
++    "inaccessible_sources": "Rate limits and blocked endpoints are receipts, not findings.",
++    "excluded_findings_and_reasons": "Rejected rows name the failed acceptance rule.",
++    "active_reward_machine_receipt": "Goal automata are hypotheses, not hidden-game oracles.",
++    "zero_shot_goal_recognition_receipt": "Goal recognition must be measured over evidence prefixes.",
++    "memoir_receipt": "Memory writes are blocked until exact outcome evidence is known.",
++    "solver_hardness_control_receipt": "Solver effort is not treated as model difficulty.",
++    "distributional_ebm_receipt": "Learned energy may rank or abstain but cannot approve output.",
++    "verification_horizon_receipt": "Verification must evolve while exact checks keep veto authority.",
++    "semantic_scholar_ebt_and_arm_ebm_receipts": "Citation routes stay separate from broad search.",
++    "openreview_and_huggingface_status": "Secondary channels cannot widen scope without primary evidence.",
++    "github_status": "Repository rows need a maintained local route before promotion.",
++    "extropic_status": "Product hardware pages do not imply local TSU access.",
++    "logical_intelligence_status": "Kona pages do not imply local weights or API access.",
++    "frozen_live_factor_learning_contract": "Prospective factor learning needs real proposals and exact release.",
++    "frozen_arc_goal_contract": "ARC goals require two-sided evidence on the live path.",
++    "frozen_model_policy": "Later LLM tasks must use the local GGUF allowlist.",
++    "frozen_closed_parser_jit_contract": "The parser/JIT lane stays closed after the V546 null.",
++    "frozen_hardware_nonuse_contract": "This source task authorizes no board or product execution.",
++    "roadmap_scope_delta": "The roadmap widens only on accepted post-marker evidence.",
++    "protected_files_unchanged": "Protected inputs are hash-checked around the write.",
++    "preconditions_checked": "Inputs, UTC time, disk, network receipts, and commands are recorded.",
++    "inference_substrate": "This task uses web and bibliographic search only.",
++    "verifier_is_oracle": "The artifact audits sources and is not a result oracle.",
++    "llm_call_count": "Bare zero proves no model call occurred.",
++    "field_provenance": "Every field cites concrete evidence.",
++    "field_principles": "Every required field states why it exists.",
++    "test_commands": "Commands show the verification boundary.",
++    "test_exit_codes": "Exit codes keep failed checks visible.",
++    "duration_s": "Wall time is reported without padding.",
++    "random_seeds": "No randomness is used by this deterministic source audit.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "honest_verdict": "The verdict states null, delta, or block directly.",
++}
++
++RUN_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6351_v547_post_marker_source_scope_freeze "
++    "--date 20260812"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "-m pytest tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "--fail-under=100 --show-missing"
++)
++RUFF_CHECK_COMMAND = (
++    ".venv/bin/ruff check python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py"
++)
++RUFF_FORMAT_COMMAND = (
++    ".venv/bin/ruff format --check "
++    "python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py "
++    "tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py"
++)
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py"
++)
++E2E_PLAN_READ_COMMAND = "sed -n '1,260p' ops/e2e-test-plan.md"
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++ADVERSARIAL_SELF_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6351_v547_post_marker_source_scope_freeze.json"
++)
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++DEFAULT_TEST_COMMANDS = (
++    RUN_COMMAND,
++    FOCUSED_TEST_COMMAND,
++    COVERAGE_RUN_COMMAND,
++    COVERAGE_REPORT_COMMAND,
++    RUFF_CHECK_COMMAND,
++    RUFF_FORMAT_COMMAND,
++    SPEC_COVERAGE_COMMAND,
++    E2E_PLAN_READ_COMMAND,
++    FULL_PYTEST_COMMAND,
++    ADVERSARIAL_SELF_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++)
++EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6351_test_receipts.json")
++
++PROTECTED_RELATIVE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    RESEARCH_PROGRAM_RELATIVE_PATH,
++    RESEARCH_REFERENCES_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    PRIOR_HANDOFF_RELATIVE_PATH,
++    PRIOR_V546_SOURCE_RELATIVE_PATH,
++    PRIOR_PARSER_JIT_RELATIVE_PATH,
++    PRIOR_CERTIFIED_FACTOR_RELATIVE_PATH,
++    PRIOR_GOAL_VETO_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    HARDWARE_WISHLIST_RELATIVE_PATH,
++    E2E_PLAN_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++    Path("scripts/research_conductor.py"),
++    Path("python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py"),
++    Path("tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py"),
++)
++INPUT_RELATIVE_PATHS = PROTECTED_RELATIVE_PATHS
++
++DEFAULT_SOURCE_QUERIES_BY_CHANNEL: dict[str, list[JsonDict]] = {
++    "arxiv": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:05Z",
++            "query": "submittedDate:[202608122129 TO 202608122359]",
++            "url": (
++                "https://export.arxiv.org/api/query?search_query="
++                "submittedDate:%5B202608122129%20TO%20202608122359%5D"
++            ),
++        }
++    ],
++    "openreview": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:06Z",
++            "query": (
++                "active reward machine goal recognition distributional energy verification horizon"
++            ),
++            "url": (
++                "https://api2.openreview.net/notes/search?term=active%20reward%20machine%20"
++                "goal%20recognition%20distributional%20energy%20verification%20horizon"
++                "&limit=5"
++            ),
++        }
++    ],
++    "hugging_face_papers": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:06Z",
++            "query": "daily_papers date=2026-08-12",
++            "url": "https://huggingface.co/api/daily_papers?date=2026-08-12",
++        }
++    ],
++    "semantic_scholar_ebt_arm": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:17Z",
++            "query": "EBT arXiv:2507.02092 citations",
++            "url": (
++                "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/"
++                "citations?fields=title,url,year,publicationDate,externalIds&limit=5"
++            ),
++        },
++        {
++            "queried_at_utc": "2026-08-12T21:54:17Z",
++            "query": "ARM-EBM arXiv:2512.15605 citations",
++            "url": (
++                "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/"
++                "citations?fields=title,url,year,publicationDate,externalIds&limit=5"
++            ),
++        },
++    ],
++    "extropic": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:18Z",
++            "query": "Extropic writing and hardware first-party HEAD checks",
++            "url": "https://extropic.ai/writing",
++        },
++        {
++            "queried_at_utc": "2026-08-12T21:54:18Z",
++            "query": "Extropic hardware first-party HEAD check",
++            "url": "https://extropic.ai/hardware",
++        },
++    ],
++    "logical_intelligence": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:16Z",
++            "query": "Logical Intelligence Kona first-party HEAD check",
++            "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        }
++    ],
++    "github": [
++        {
++            "queried_at_utc": "2026-08-12T21:54:06Z",
++            "query": "V547 mechanism repository search pushed after 2026-08-12",
++            "url": (
++                "https://api.github.com/search/repositories?q=%28%22reward%20machine%22%20"
++                "OR%20%22goal%20recognition%22%20OR%20%22distributional%20energy%22%20"
++                "OR%20%22verification%20horizon%22%29%20pushed:%3E=2026-08-12"
++                "&sort=updated&order=desc&per_page=5"
++            ),
++        }
++    ],
++}
++
++
++def _receipt_hash(*parts: str) -> str:
++    return payload_sha256({"receipt": list(parts)})
++
++
++PROMOTED_RECEIPTS: tuple[JsonDict, ...] = (
++    {
++        "stable_id": "arxiv:2604.07480",
++        "title": "Active Reward Machine Inference From Raw State Trajectories",
++        "direct_url": "https://arxiv.org/abs/2604.07480",
++        "first_publication_date": "2026-04-08",
++        "first_publication_utc": "2026-04-08T18:19:55Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports submitted 2026-04-08 and v1 at 18:19:55 UTC.",
++        "claim_boundary": (
++            "Learns reward-machine structure from raw state and policy trajectories "
++            "without observed rewards, labels, or machine nodes."
++        ),
++        "local_consequence": (
++            "infer competing live ARC goal automata from visible transitions and choose "
++            "legal discriminating actions; keep exact transition checks evaluator-only"
++        ),
++        "local_executable_consequence": (
++            "Exp6358 must operate on legal live-path transitions and keep unverifiable goals out."
++        ),
++        "mechanism": "active_reward_machine_inference",
++        "lane": "falsifiable_live_arc_goal_discovery",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2604.07480", "2026-04-08T18:19:55Z"),
++    },
++    {
++        "stable_id": "arxiv:2605.15333",
++        "title": "Zero-Shot Goal Recognition with Large Language Models",
++        "direct_url": "https://arxiv.org/abs/2605.15333",
++        "first_publication_date": "2026-05-14",
++        "first_publication_utc": "2026-05-14T18:56:06Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports submitted 2026-05-14 and v1 at 18:56:06 UTC.",
++        "claim_boundary": (
++            "Goal-recognition accuracy is uneven across models and changes as observations accumulate."
++        ),
++        "local_consequence": (
++            "measure frozen-prior, accumulating-evidence, and counterexample-gated goal curves"
++        ),
++        "local_executable_consequence": (
++            "Exp6359 must score evidence-response curves instead of one final goal guess."
++        ),
++        "mechanism": "zero_shot_goal_recognition",
++        "lane": "falsifiable_live_arc_goal_discovery",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2605.15333", "2026-05-14T18:56:06Z"),
++    },
++    {
++        "stable_id": "arxiv:2607.20792",
++        "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
++        "direct_url": "https://arxiv.org/abs/2607.20792",
++        "first_publication_date": "2026-07-22",
++        "first_publication_utc": "2026-07-22T23:34:56Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports submitted 2026-07-22 and v1 at 23:34:56 UTC.",
++        "claim_boundary": (
++            "Same-iteration read/write fast memory learned slower than a read-only control "
++            "at fixed budget, with saturation later."
++        ),
++        "local_consequence": (
++            "keep active factor memory read-only during proposal generation and commit only "
++            "after exact outcome evidence"
++        ),
++        "local_executable_consequence": (
++            "Exp6352-Exp6355 must separate proposal reads from release commits."
++        ),
++        "mechanism": "read_only_then_commit_memory",
++        "lane": "prospective_certified_factor_learning",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2607.20792", "2026-07-22T23:34:56Z"),
++    },
++    {
++        "stable_id": "arxiv:2607.17047",
++        "title": "Solver-Hard Is Not Model-Hard",
++        "direct_url": "https://arxiv.org/abs/2607.17047",
++        "first_publication_date": "2026-07-19",
++        "first_publication_utc": "2026-07-19T03:23:22Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports submitted 2026-07-19 and v1 at 03:23:22 UTC.",
++        "claim_boundary": (
++            "solver effort and surface relabeling are not reliable proxies for model difficulty."
++        ),
++        "local_consequence": (
++            "balance streams by executable structure and surface form, not by solver conflict count"
++        ),
++        "local_executable_consequence": (
++            "Exp6353 and Exp6354 must record hardness controls separately from solver effort."
++        ),
++        "mechanism": "solver_hardness_control",
++        "lane": "prospective_certified_factor_learning",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2607.17047", "2026-07-19T03:23:22Z"),
++    },
++    {
++        "stable_id": "arxiv:2605.18871",
++        "title": "Distributional Energy-Based Models for Structured LLM Reasoning",
++        "direct_url": "https://arxiv.org/abs/2605.18871",
++        "first_publication_date": "2026-05-15",
++        "first_publication_utc": "2026-05-15T17:08:27Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports submitted 2026-05-15 and v1 at 17:08:27 UTC.",
++        "claim_boundary": (
++            "Learned energy, deterministic penalties, abstention, and model-identity shortcuts "
++            "must be separated."
++        ),
++        "local_consequence": (
++            "use exact penalties and family-blind controls; learned uncertainty can abstain but not approve"
++        ),
++        "local_executable_consequence": (
++            "Exp6355 must expose abstention and family-blind cells under exact veto authority."
++        ),
++        "mechanism": "distributional_ebm_abstention",
++        "lane": "prospective_certified_factor_learning",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2605.18871", "2026-05-15T17:08:27Z"),
++    },
++    {
++        "stable_id": "arxiv:2606.26300",
++        "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards",
++        "direct_url": "https://arxiv.org/abs/2606.26300",
++        "first_publication_date": "2026-06-24",
++        "first_publication_utc": "2026-06-24T18:45:03Z",
++        "latest_revision_utc": "2026-06-29T08:21:30Z",
++        "accessed_at_utc": "2026-08-12T21:55:33Z",
++        "direct_receipt": "arXiv reports v1 on 2026-06-24 and v2 on 2026-06-29.",
++        "claim_boundary": ("No fixed reward function stays effective as policy capability grows."),
++        "local_consequence": (
++            "co-evolve verification with released factors and new counterexamples while exact checks veto"
++        ),
++        "local_executable_consequence": (
++            "Exp6356 must attack saturation, leakage, and changing proposal distributions."
++        ),
++        "mechanism": "verification_horizon_coevolution",
++        "lane": "prospective_certified_factor_learning",
++        "planner_promoted": True,
++        "post_marker_candidate": False,
++        "content_hash": _receipt_hash("arxiv:2606.26300", "2026-06-24T18:45:03Z"),
++    },
++)
++
++DEFAULT_SOURCE_RECEIPTS: tuple[JsonDict, ...] = (
++    {
++        "channel": "arxiv",
++        "queried_at_utc": "2026-08-12T21:54:05Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["arxiv"][0]["url"],
++        "endpoint_status": "http_200_window_totalResults_0",
++        "disposition": "no_post_marker_primary_hits",
++        "date_evidence": "The arXiv API window after 2026-08-12T21:28:21Z returned totalResults=0.",
++    },
++    {
++        "channel": "openreview",
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["openreview"][0]["url"],
++        "endpoint_status": "http_200_review_rows",
++        "disposition": "watch_only_no_strict_post_marker_primary_route",
++        "date_evidence": "Returned review records are not strict post-marker publications.",
++    },
++    {
++        "channel": "hugging_face_papers",
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["hugging_face_papers"][0]["url"],
++        "endpoint_status": "http_200_daily_rows",
++        "disposition": "daily_rows_pre_marker_or_secondary",
++        "date_evidence": "Sample daily row submittedOnDailyAt was 2026-08-12T00:00:00Z.",
++    },
++    {
++        "channel": "semantic_scholar_ebt_arm",
++        "queried_at_utc": "2026-08-12T21:54:17Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["semantic_scholar_ebt_arm"][0]["url"],
++        "endpoint_status": "http_200_ebt_and_arm_citation_routes",
++        "disposition": "no_post_marker_relevant_citation",
++        "date_evidence": "Newest sampled EBT citation was 2026-08-01; ARM-EBM was 2026-07-02.",
++    },
++    {
++        "channel": "extropic",
++        "queried_at_utc": "2026-08-12T21:54:18Z",
++        "url": "https://extropic.ai/writing",
++        "endpoint_status": "http_200_first_party_pages",
++        "disposition": "no_authenticated_local_tsu_route",
++        "date_evidence": "Writing x-nextjs-date was 2026-08-11T07:12:45Z.",
++    },
++    {
++        "channel": "logical_intelligence",
++        "queried_at_utc": "2026-08-12T21:54:16Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["logical_intelligence"][0]["url"],
++        "endpoint_status": "http_200_kona_head",
++        "disposition": "no_public_weights_or_local_api",
++        "date_evidence": "Kona page last-modified was 2026-06-26T23:48:05Z.",
++    },
++    {
++        "channel": "github",
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["github"][0]["url"],
++        "endpoint_status": "http_200_scope_search_total_count_0",
++        "disposition": "no_post_marker_contract_changing_repository",
++        "date_evidence": "The scoped repository search returned total_count 0.",
++    },
++)
++
++DEFAULT_SOURCE_CANDIDATES: tuple[JsonDict, ...] = tuple(
++    {
++        "stable_id": receipt["stable_id"],
++        "work_identity": receipt["stable_id"],
++        "repository_identity": None,
++        "mechanism": receipt["mechanism"],
++        "retired_scope": False,
++        "title": receipt["title"],
++        "url": receipt["direct_url"],
++        "source_channel": "arxiv",
++        "source_kind": "primary",
++        "source_timestamp": receipt["first_publication_utc"],
++        "date_evidence": "planner source predates the V547 marker",
++        "scope_effect": "Already sealed by the V547 planner marker.",
++        "reproducible_evidence": True,
++        "primary_or_first_party": True,
++        "local_executable_consequence": True,
++        "watch_only": False,
++        "content_hash": receipt["content_hash"],
++    }
++    for receipt in PROMOTED_RECEIPTS
++) + (
++    {
++        "stable_id": "arxiv:post-marker-window-api",
++        "work_identity": "arxiv:post-marker-window-api",
++        "repository_identity": None,
++        "mechanism": "post_marker_arxiv_window",
++        "retired_scope": False,
++        "title": "arXiv post-marker submission window API",
++        "url": "https://export.arxiv.org/api/query",
++        "source_channel": "arxiv",
++        "source_kind": "api",
++        "source_timestamp": "2026-08-12T21:54:05Z",
++        "date_evidence": "API returned HTTP 200 with totalResults=0.",
++        "scope_effect": "No source promotion.",
++        "reproducible_evidence": True,
++        "primary_or_first_party": True,
++        "local_executable_consequence": False,
++        "watch_only": False,
++        "content_hash": _receipt_hash("arxiv:post-marker-window-api"),
++    },
++    {
++        "stable_id": "semantic_scholar:ebt-citation-route",
++        "work_identity": "semantic_scholar:ebt-citation-route",
++        "repository_identity": None,
++        "mechanism": "ebt_citation_route",
++        "retired_scope": False,
++        "title": "Semantic Scholar EBT citation route",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations",
++        "source_channel": "semantic_scholar_ebt_arm",
++        "source_kind": "api",
++        "source_timestamp": "2026-08-12T21:54:17Z",
++        "date_evidence": "Sampled citations all predate the V547 marker.",
++        "scope_effect": "No source promotion.",
++        "reproducible_evidence": True,
++        "primary_or_first_party": True,
++        "local_executable_consequence": False,
++        "watch_only": False,
++        "content_hash": _receipt_hash("semantic_scholar:ebt-citation-route"),
++    },
++)
++
++
++def _utc_now() -> str:
++    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
++
++
++def _read_text(path: Path) -> str:
++    if not path.exists():
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def _parse_timestamp(value: Any) -> datetime | None:
++    text = str(value or "").strip()
++    if not text or re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
++        return None
++    try:
++        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
++    except ValueError:
++        return None
++    if parsed.tzinfo is None:
++        parsed = parsed.replace(tzinfo=UTC)
++    return parsed.astimezone(UTC)
++
++
++def _marker_dt() -> datetime:
++    parsed = _parse_timestamp(MARKER_COMMITTED_AT_UTC)
++    if parsed is None:
++        raise ValueError("bad V547 marker timestamp")
++    return parsed
++
++
++def _is_stable_url(url: Any) -> bool:
++    parsed = urlparse(str(url or ""))
++    if parsed.scheme != "https" or not parsed.netloc:
++        return False
++    return not (parsed.netloc == "github.com" and parsed.path == "/search")
++
++
++def payload_checksum(report: JsonMap) -> str:
++    normalized = json.loads(canonical_json(report))
++    normalized.pop("reproducibility_checksum", None)
++    return payload_sha256(normalized)
++
++
++def v547_marker_snapshot(root: Path) -> JsonDict:
++    text = _read_text(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    line = None
++    for index, raw_line in enumerate(text.splitlines(), start=1):
++        if PLANNER_END_MARKER in raw_line:
++            line = index
++            break
++    return {
++        "marker_text": PLANNER_MARKER,
++        "marker_comment": PLANNER_END_MARKER,
++        "marker_line": line,
++        "marker_count": text.count(PLANNER_END_MARKER),
++        "marker_comment_sha256": payload_sha256(PLANNER_END_MARKER),
++        "research_references_sha256": path_sha256(root / RESEARCH_REFERENCES_RELATIVE_PATH),
++        "marker_byte_offset": text.find(PLANNER_END_MARKER),
++        "marker_commit": MARKER_COMMIT,
++        "marker_committed_at_local": MARKER_COMMITTED_AT_LOCAL,
++        "marker_committed_at_utc": MARKER_COMMITTED_AT_UTC,
++    }
++
++
++def _identity_seen(row: Mapping[str, Any], reference_text: str) -> str | None:
++    haystack = reference_text.lower()
++    for key in ("work_identity", "repository_identity", "stable_id", "url", "title"):
++        value = row.get(key)
++        if value and str(value).lower() in haystack:
++            return key
++        if key == "repository_identity" and str(value or "").startswith("github:"):
++            github_path = str(value).split(":", 1)[1].lower()
++            if f"github.com/{github_path}" in haystack:
++                return key
++    known_mechanisms = {str(row["mechanism"]) for row in PROMOTED_RECEIPTS}
++    if row.get("mechanism") in known_mechanisms:
++        return "mechanism"
++    return None
++
++
++def classify_candidate(
++    candidate: Mapping[str, Any],
++    *,
++    reference_text: str,
++    seen_works: set[str] | None = None,
++    seen_repositories: set[str] | None = None,
++    seen_mechanisms: set[str] | None = None,
++    seen_hashes: set[str] | None = None,
++) -> JsonDict:
++    row = dict(candidate)
++    row["disposition"] = "accepted"
++    row["rejection_reason"] = None
++
++    if row.get("inaccessible") is True:
++        row["disposition"] = "inaccessible"
++        row["rejection_reason"] = "source endpoint was inaccessible or rate limited"
++        return row
++    if not _is_stable_url(row.get("url")):
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "candidate lacks a stable https URL"
++        return row
++
++    duplicate_key = _identity_seen(row, reference_text)
++    if duplicate_key is not None:
++        row["disposition"] = "duplicate"
++        row["rejection_reason"] = f"{duplicate_key} already appears in research-references.md"
++        return row
++
++    if row.get("watch_only") is True:
++        row["disposition"] = "watch_only"
++        row["rejection_reason"] = "watch-only evidence does not change a V547 contract"
++        return row
++    if row.get("retired_scope") is True:
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "candidate belongs to an already-retired Carnot scope"
++        return row
++
++    timestamp = _parse_timestamp(row.get("source_timestamp"))
++    if timestamp is None or timestamp <= _marker_dt():
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "source timestamp is not strictly after the V547 marker"
++        if timestamp is None or str(row.get("source_timestamp") or "").strip()[:10] == "2026-08-12":
++            row["disposition"] = "cutoff_confound"
++        return row
++    if row.get("reproducible_evidence") is not True:
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "candidate lacks reproducible evidence"
++        return row
++    if row.get("primary_or_first_party") is not True:
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "candidate is not primary or first-party"
++        return row
++    if row.get("local_executable_consequence") is not True:
++        row["disposition"] = "excluded"
++        row["rejection_reason"] = "candidate lacks a local executable consequence"
++        return row
++
++    work = str(row.get("work_identity") or row.get("stable_id") or "")
++    repository = str(row.get("repository_identity") or "")
++    mechanism = str(row.get("mechanism") or "")
++    content_hash = str(row.get("content_hash") or "")
++    if work and seen_works is not None and work in seen_works:
++        row["disposition"] = "duplicate"
++        row["rejection_reason"] = "work identity repeated in this sweep"
++        return row
++    if repository and seen_repositories is not None and repository in seen_repositories:
++        row["disposition"] = "duplicate"
++        row["rejection_reason"] = "repository identity repeated in this sweep"
++        return row
++    if mechanism and seen_mechanisms is not None and mechanism in seen_mechanisms:
++        row["disposition"] = "duplicate"
++        row["rejection_reason"] = "mechanism repeated in this sweep"
++        return row
++    if content_hash and seen_hashes is not None and content_hash in seen_hashes:
++        row["disposition"] = "duplicate"
++        row["rejection_reason"] = "content hash repeated in this sweep"
++        return row
++    return row
++
++
++def validate_accepted_candidate(candidate: Mapping[str, Any]) -> None:
++    missing = [
++        field
++        for field in ("stable_id", "work_identity", "title", "url", "source_timestamp")
++        if not candidate.get(field)
++    ]
++    if missing:
++        raise ValueError(f"accepted candidate missing fields: {missing}")
++    if not _is_stable_url(candidate.get("url")):
++        raise ValueError("accepted candidate requires a stable URL")
++    if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(candidate.get("content_hash") or "")):
++        raise ValueError("accepted candidate requires a sha256 content hash")
++    timestamp = _parse_timestamp(candidate.get("source_timestamp"))
++    if timestamp is None or timestamp <= _marker_dt():
++        raise ValueError("accepted candidate must be strictly after the marker")
++    if candidate.get("reproducible_evidence") is not True:
++        raise ValueError("accepted candidate must have reproducible evidence")
++    if candidate.get("primary_or_first_party") is not True:
++        raise ValueError("accepted candidate must be primary or first-party")
++    if candidate.get("local_executable_consequence") is not True:
++        raise ValueError("accepted candidate must have a local executable consequence")
++    if candidate.get("watch_only") is True:
++        raise ValueError("accepted candidate cannot be watch-only")
++    if candidate.get("retired_scope") is True:
++        raise ValueError("accepted candidate cannot be retired scope")
++
++
++def partition_candidates(
++    candidates: Sequence[Mapping[str, Any]], *, reference_text: str
++) -> JsonDict:
++    partitions: JsonDict = {
++        "accepted": [],
++        "duplicate_findings": [],
++        "watch_only_findings": [],
++        "inaccessible_sources": [],
++        "excluded_findings_and_reasons": [],
++    }
++    seen_works: set[str] = set()
++    seen_repositories: set[str] = set()
++    seen_mechanisms: set[str] = set()
++    seen_hashes: set[str] = set()
++    for candidate in candidates:
++        row = classify_candidate(
++            candidate,
++            reference_text=reference_text,
++            seen_works=seen_works,
++            seen_repositories=seen_repositories,
++            seen_mechanisms=seen_mechanisms,
++            seen_hashes=seen_hashes,
++        )
++        disposition = str(row["disposition"])
++        if disposition == "accepted":
++            validate_accepted_candidate(row)
++            partitions["accepted"].append(row)
++        elif disposition == "duplicate":
++            partitions["duplicate_findings"].append(row)
++        elif disposition == "watch_only":
++            partitions["watch_only_findings"].append(row)
++        elif disposition == "inaccessible":
++            partitions["inaccessible_sources"].append(row)
++        else:
++            partitions["excluded_findings_and_reasons"].append(row)
++
++        if disposition == "accepted" and row.get("work_identity"):
++            seen_works.add(str(row["work_identity"]))
++        if disposition == "accepted" and row.get("repository_identity"):
++            seen_repositories.add(str(row["repository_identity"]))
++        if disposition == "accepted" and row.get("mechanism"):
++            seen_mechanisms.add(str(row["mechanism"]))
++        if disposition == "accepted" and row.get("content_hash"):
++            seen_hashes.add(str(row["content_hash"]))
++    return partitions
++
++
++def _hashes(root: Path, paths: Sequence[Path]) -> JsonDict:
++    return {
++        rel.as_posix(): {"present": (root / rel).exists(), "sha256": path_sha256(root / rel)}
++        for rel in paths
++    }
++
++
++def protected_hashes(root: Path) -> JsonDict:
++    return _hashes(root, PROTECTED_RELATIVE_PATHS)
++
++
++def protected_unchanged(root: Path, before: Mapping[str, Any] | None = None) -> JsonDict:
++    before_hashes = dict(before or protected_hashes(root))
++    paths: JsonDict = {}
++    all_unchanged = True
++    for rel in PROTECTED_RELATIVE_PATHS:
++        key = rel.as_posix()
++        before_hash = dict(before_hashes.get(key) or {}).get("sha256")
++        after_hash = path_sha256(root / rel)
++        unchanged = before_hash == after_hash
++        paths[key] = {
++            "before_sha256": before_hash,
++            "after_sha256": after_hash,
++            "unchanged": unchanged,
++        }
++        all_unchanged = all_unchanged and unchanged
++    return {"all_unchanged": all_unchanged, "unchanged": all_unchanged, "paths": paths}
++
++
++def _git_status(root: Path) -> list[str]:
++    try:
++        proc = subprocess.run(
++            ("git", "status", "--short"),
++            cwd=root,
++            text=True,
++            capture_output=True,
++            timeout=30,
++            check=False,
++        )
++    except Exception:
++        return []
++    return [line for line in proc.stdout.splitlines() if line.strip()]
++
++
++def _command_available(root: Path, command: str) -> JsonDict:
++    if "/" in command:
++        path = root / command
++        return {
++            "command": command,
++            "available": path.exists(),
++            "resolved_path": str(path) if path.exists() else None,
++        }
++    resolved = shutil.which(command)
++    return {"command": command, "available": resolved is not None, "resolved_path": resolved}
++
++
++def preconditions(root: Path, *, date: str, search_completed_utc: str) -> JsonDict:
++    disk = shutil.disk_usage(root)
++    return {
++        "date_arg": date,
++        "marker": v547_marker_snapshot(root),
++        "input_hashes": _hashes(root, INPUT_RELATIVE_PATHS),
++        "explicit_hash_targets": {
++            "marker_comment_sha256": payload_sha256(PLANNER_END_MARKER),
++            "roadmap_sha256": path_sha256(root / VNEXT_RELATIVE_PATH),
++            "references_sha256": path_sha256(root / RESEARCH_REFERENCES_RELATIVE_PATH),
++            "prior_handoff_artifact_sha256": path_sha256(root / PRIOR_HANDOFF_RELATIVE_PATH),
++            "prior_source_artifact_sha256": path_sha256(root / PRIOR_V546_SOURCE_RELATIVE_PATH),
++            "exclusion_manifest_sha256": path_sha256(root / EXCLUSION_MANIFEST_RELATIVE_PATH),
++            "hardware_wishlist_sha256": path_sha256(root / HARDWARE_WISHLIST_RELATIVE_PATH),
++        },
++        "utc_status": {
++            "marker_committed_at_utc": MARKER_COMMITTED_AT_UTC,
++            "search_completed_utc": search_completed_utc,
++            "utc_now_checked": _utc_now(),
++        },
++        "network_status": {
++            "network_required": True,
++            "network_receipts_recorded": True,
++            "post_marker_search_window_start_utc": MARKER_COMMITTED_AT_UTC,
++            "post_marker_channels": list(REQUIRED_SOURCE_CHANNELS),
++        },
++        "disk_status": {
++            "repo_root": str(root),
++            "repo_root_available_bytes": disk.free,
++            "repo_root_total_bytes": disk.total,
++        },
++        "required_command_availability": {
++            name: _command_available(root, command)
++            for name, command in {
++                "git": "git",
++                "curl": "curl",
++                "python": ".venv/bin/python",
++                "pytest": ".venv/bin/pytest",
++                "coverage": ".venv/bin/coverage",
++                "ruff": ".venv/bin/ruff",
++            }.items()
++        },
++        "git_status_short": _git_status(root),
++    }
++
++
++def _promoted_receipts(accessed_at_utc: str) -> list[JsonDict]:
++    receipts: list[JsonDict] = []
++    for receipt in PROMOTED_RECEIPTS:
++        row = dict(receipt)
++        row["accessed_at_utc"] = accessed_at_utc
++        receipts.append(row)
++    return receipts
++
++
++def _receipt(stable_id: str, *, accessed_at_utc: str) -> JsonDict:
++    for row in PROMOTED_RECEIPTS:
++        if row["stable_id"] == stable_id:
++            receipt = dict(row)
++            receipt["accessed_at_utc"] = accessed_at_utc
++            return receipt
++    raise KeyError(stable_id)
++
++
++def semantic_scholar_receipts() -> JsonDict:
++    return {
++        "ebt": {
++            "primary_url": "https://arxiv.org/abs/2507.02092",
++            "primary_first_publication_utc": "2025-07-02T19:17:29Z",
++            "citation_url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["semantic_scholar_ebt_arm"][0]["url"],
++            "queried_at_utc": "2026-08-12T21:54:17Z",
++            "api_status": "http_200",
++            "sampled_citation_count": 5,
++            "newest_sampled_citation_publication_date": "2026-08-01",
++            "strict_post_marker_relevant_count": 0,
++            "local_consequence": "No EBT citation-derived method reopened hidden-state scoring.",
++        },
++        "arm_ebm": {
++            "primary_url": "https://arxiv.org/abs/2512.15605",
++            "primary_first_publication_utc": "2025-12-17T17:14:26Z",
++            "latest_arxiv_revision_utc": "2026-05-25T15:54:35Z",
++            "citation_url": DEFAULT_SOURCE_QUERIES_BY_CHANNEL["semantic_scholar_ebt_arm"][1]["url"],
++            "queried_at_utc": "2026-08-12T21:54:17Z",
++            "api_status": "http_200",
++            "sampled_citation_count": 5,
++            "newest_sampled_citation_publication_date": "2026-07-02",
++            "strict_post_marker_relevant_count": 0,
++            "local_consequence": "No ARM-EBM citation-derived method widened V547.",
++        },
++    }
++
++
++def openreview_and_huggingface_status() -> JsonDict:
++    return {
++        "openreview": {
++            "queried_at_utc": "2026-08-12T21:54:06Z",
++            "status": "http_200_review_rows",
++            "sampled_title": "Deep Active Inference in a Learning Environment",
++            "promotion_allowed": False,
++            "reason": "Rows were review records and not strict post-marker primary publications.",
++        },
++        "hugging_face_papers": {
++            "queried_at_utc": "2026-08-12T21:54:06Z",
++            "status": "http_200_daily_rows",
++            "sampled_title": "ComBodied Agents: a New Paradigm of Human-Centric Agentic AI",
++            "sample_published_at": "2026-08-11T00:00:00Z",
++            "sample_submitted_on_daily_at": "2026-08-12T00:00:00Z",
++            "promotion_allowed": False,
++            "reason": "Daily rows predate the marker or are secondary mirrors.",
++        },
++    }
++
++
++def github_status() -> JsonDict:
++    return {
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "scoped_search_total_count": 0,
++        "incomplete_results": False,
++        "promotion_allowed": False,
++        "reason": "No scoped repository updated after the V547 marker changed a local route.",
++    }
++
++
++def extropic_status() -> JsonDict:
++    return {
++        "queried_at_utc": "2026-08-12T21:54:18Z",
++        "writing_url": "https://extropic.ai/writing",
++        "hardware_url": "https://extropic.ai/hardware",
++        "writing_http_status": 200,
++        "hardware_http_status": 200,
++        "writing_x_nextjs_date": "2026-08-11T07:12:45Z",
++        "hardware_x_nextjs_date": "2026-08-12T03:11:19Z",
++        "z1_early_access": "2027",
++        "authenticated_local_tsu_route_present": False,
++        "hardware_or_speed_claim_allowed": False,
++        "status": "watch_only_no_local_execution_route",
++    }
++
++
++def logical_intelligence_status() -> JsonDict:
++    return {
++        "queried_at_utc": "2026-08-12T21:54:16Z",
++        "kona_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        "http_status": 200,
++        "kona_last_modified": "2026-06-26T23:48:05Z",
++        "public_weights_present": False,
++        "local_api_route_present": False,
++        "kona_execution_allowed": False,
++        "status": "watch_only_no_local_execution_route",
++    }
++
++
++def frozen_live_factor_learning_contract() -> JsonDict:
++    return {
++        "version": CONTRACT_VERSION,
++        "lane": "prospective_certified_factor_learning",
++        "source_evidence": [
++            "arxiv:2607.20792",
++            "arxiv:2607.17047",
++            "arxiv:2605.18871",
++            "arxiv:2606.26300",
++        ],
++        "prospective_generation_required": True,
++        "raw_generation_receipts_required": True,
++        "same_step_read_write_allowed": False,
++        "proposal_reads_only_released_version": True,
++        "exact_release_authority": "deterministic_checker_and_eprocess",
++        "learned_uncertainty_can_approve": False,
++        "abstention_state_required": True,
++        "family_blind_controls_required": True,
++        "solver_effort_as_model_difficulty_allowed": False,
++        "protected_future_events_readable_by_proposer": False,
++        "model_weight_update_allowed": False,
++        "fail_fast_missing_model": True,
++    }
++
++
++def frozen_arc_goal_contract() -> JsonDict:
++    return {
++        "version": CONTRACT_VERSION,
++        "lane": "falsifiable_live_arc_goal_discovery",
++        "source_evidence": [
++            "arxiv:2604.07480",
++            "arxiv:2605.15333",
++            "results/experiment_6258_goal_veto_confusion_matrix.json",
++        ],
++        "states": ["accepted", "rejected", "unverifiable"],
++        "positive_and_negative_evidence_required": True,
++        "accepted_without_positive_evidence_allowed": False,
++        "active_legal_disagreement_probes_required": True,
++        "own_live_attempt_path_only": True,
++        "hidden_game_source_allowed": False,
++        "offline_bfs_allowed": False,
++        "per_game_adapter_allowed": False,
++        "public_game_solve_claim_allowed": False,
++        "hidden_level_solve_claim_allowed": False,
++        "solve_credit_allowed": False,
++        "registry_update_allowed": False,
++        "default_off": True,
++    }
++
++
++def frozen_model_policy() -> JsonDict:
++    return {
++        "version": CONTRACT_VERSION,
++        "mandatory_hf_ids": list(MANDATED_GGUF_IDS),
++        "model_weights_must_remain_frozen": True,
++        "llm_call_count_for_exp6351": 0,
++        "future_live_factor_tasks": [
++            "exp6352-live-factor-proposal-authenticity-preflight",
++            "exp6353-live-counterexample-factor-proposal-ab",
++            "exp6354-prospective-live-certified-factor-learning",
++            "exp6355-default-off-certified-factor-consumer-ab",
++        ],
++        "future_live_arc_goal_tasks": [
++            "exp6359-arc-goal-evidence-response-calibration",
++            "exp6360-arc-default-off-active-goal-shadow",
++        ],
++        "approval_authority": "exact_oracle_not_model_self_judgment",
++    }
++
++
++def frozen_closed_parser_jit_contract() -> JsonDict:
++    return {
++        "version": CONTRACT_VERSION,
++        "lane": "parser_jit_constrained_generation",
++        "closed": True,
++        "reopen_allowed_in_v547": False,
++        "basis": "Exp6340 null semantic-diversity canary and Exp6341 gate block.",
++        "exp6340_honest_verdict": (
++            "complete_null: no preregistered parser-JIT semantic diversity gain at matched cost"
++        ),
++        "semantic_diversity_gain_score": 0.0,
++        "new_decoding_or_posthoc_repair_retry_allowed": False,
++    }
++
++
++def frozen_hardware_nonuse_contract() -> JsonDict:
++    return {
++        "version": CONTRACT_VERSION,
++        "board_execution_authorized": False,
++        "hardware_command_count": 0,
++        "gatemate_command_count": 0,
++        "kv260_command_count": 0,
++        "polarfire_command_count": 0,
++        "npu_command_count": 0,
++        "tsu_command_count": 0,
++        "kona_execution_count": 0,
++        "excluded_hardware": ["GateMate", "KV260", "PolarFire", "NPU", "TSU", "Kona"],
++        "allowed_accelerator": "dual_rtx_3090_for_future_local_gguf_generation_only",
++        "reason": "V547 source freeze found no new authenticated physical-state receipt.",
++    }
++
++
++def _roadmap_scope_delta(accepted_count: int) -> JsonDict:
++    if accepted_count:
++        return {
++            "delta_kind": "accepted_source_delta",
++            "new_lane_count": accepted_count,
++            "terminal_state": "complete_delta",
++            "roadmap_widened": False,
++            "reason": "Accepted sources would require a separate roadmap update.",
++        }
++    return {
++        "delta_kind": "zero_source_delta",
++        "new_lane_count": 0,
++        "terminal_state": "complete_null",
++        "roadmap_widened": False,
++        "reason": "No strict post-marker source changed a local executable contract.",
++    }
++
++
++def _field_provenance() -> JsonDict:
++    sources = [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes",
++    ]
++    return {
++        field: {"principle": FIELD_PRINCIPLES[field], "sources": list(sources)}
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _test_exit_codes(command_receipts: Sequence[Mapping[str, Any]] | None) -> JsonDict:
++    if command_receipts is None:
++        command_receipts = [{"command": RUN_COMMAND, "exit_code": 0}]
++    return {str(row["command"]): int(row["exit_code"]) for row in command_receipts}
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    date: str,
++    source_receipts: Sequence[Mapping[str, Any]] = DEFAULT_SOURCE_RECEIPTS,
++    candidates: Sequence[Mapping[str, Any]] = DEFAULT_SOURCE_CANDIDATES,
++    duration_s: float = 0.0,
++    search_completed_utc: str | None = None,
++    before_hashes: Mapping[str, Any] | None = None,
++    command_receipts: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    completed = search_completed_utc or _utc_now()
++    reference_text = _read_text(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    partitions = partition_candidates(candidates, reference_text=reference_text)
++    accepted_count = len(partitions["accepted"])
++    status = "complete_delta" if accepted_count else "complete_null"
++    report: JsonDict = {
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "status": status,
++        "v547_marker_text_line_and_hash": v547_marker_snapshot(root),
++        "search_window_start_utc": MARKER_COMMITTED_AT_UTC,
++        "search_completed_utc": completed,
++        "source_queries_by_channel": DEFAULT_SOURCE_QUERIES_BY_CHANNEL,
++        "source_receipts": [dict(row) for row in source_receipts],
++        "promoted_findings": _promoted_receipts(completed),
++        "accepted_count": accepted_count,
++        "duplicate_findings": partitions["duplicate_findings"],
++        "watch_only_findings": partitions["watch_only_findings"],
++        "inaccessible_sources": partitions["inaccessible_sources"],
++        "excluded_findings_and_reasons": partitions["excluded_findings_and_reasons"],
++        "active_reward_machine_receipt": _receipt("arxiv:2604.07480", accessed_at_utc=completed),
++        "zero_shot_goal_recognition_receipt": _receipt(
++            "arxiv:2605.15333", accessed_at_utc=completed
++        ),
++        "memoir_receipt": _receipt("arxiv:2607.20792", accessed_at_utc=completed),
++        "solver_hardness_control_receipt": _receipt("arxiv:2607.17047", accessed_at_utc=completed),
++        "distributional_ebm_receipt": _receipt("arxiv:2605.18871", accessed_at_utc=completed),
++        "verification_horizon_receipt": _receipt("arxiv:2606.26300", accessed_at_utc=completed),
++        "semantic_scholar_ebt_and_arm_ebm_receipts": semantic_scholar_receipts(),
++        "openreview_and_huggingface_status": openreview_and_huggingface_status(),
++        "github_status": github_status(),
++        "extropic_status": extropic_status(),
++        "logical_intelligence_status": logical_intelligence_status(),
++        "frozen_live_factor_learning_contract": frozen_live_factor_learning_contract(),
++        "frozen_arc_goal_contract": frozen_arc_goal_contract(),
++        "frozen_model_policy": frozen_model_policy(),
++        "frozen_closed_parser_jit_contract": frozen_closed_parser_jit_contract(),
++        "frozen_hardware_nonuse_contract": frozen_hardware_nonuse_contract(),
++        "roadmap_scope_delta": _roadmap_scope_delta(accepted_count),
++        "protected_files_unchanged": protected_unchanged(root, before_hashes),
++        "preconditions_checked": preconditions(root, date=date, search_completed_utc=completed),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "llm_call_count": 0,
++        "model_specs": {
++            "model_execution": "none",
++            "reason": "Exp6351 performs source search and local artifact validation only.",
++            "mandatory_future_hf_ids": list(MANDATED_GGUF_IDS),
++        },
++        "field_provenance": _field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": _test_exit_codes(command_receipts),
++        "duration_s": float(duration_s),
++        "random_seed": 6351,
++        "random_seeds": {"used": [], "deterministic": True},
++        "honest_verdict": (
++            "complete_delta: accepted post-marker source was recorded without widening roadmap"
++            if accepted_count
++            else "complete_null: no strict post-marker source changed V547 scope"
++        ),
++    }
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in report:
++            errors.append(f"missing required field: {field}")
++    if errors:
++        return errors
++
++    if not isinstance(report["accepted_count"], int):
++        errors.append("accepted_count must be a bare integer")
++    if report["llm_call_count"] != 0 or not isinstance(report["llm_call_count"], int):
++        errors.append("llm_call_count must be bare 0")
++    if report["inference_substrate"] != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if report["verifier_is_oracle"] is not False:
++        errors.append("verifier_is_oracle must be false")
++    if set(report["source_queries_by_channel"]) != set(REQUIRED_SOURCE_CHANNELS):
++        errors.append("source_queries_by_channel")
++    if set(report["field_principles"]) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("missing field_principles entry")
++    if set(report["field_provenance"]) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("missing field_provenance entry")
++    if report["search_window_start_utc"] != MARKER_COMMITTED_AT_UTC:
++        errors.append("search_window_start_utc")
++
++    completed = _parse_timestamp(report["search_completed_utc"])
++    if completed is None or completed <= _marker_dt():
++        errors.append("search_completed_utc")
++    if dict(report["protected_files_unchanged"]).get("all_unchanged") is not True:
++        errors.append("protected_files_unchanged")
++    if dict(report["frozen_live_factor_learning_contract"]).get("version") != CONTRACT_VERSION:
++        errors.append("frozen_live_factor_learning_contract")
++    if (
++        dict(report["frozen_hardware_nonuse_contract"]).get("board_execution_authorized")
++        is not False
++    ):
++        errors.append("frozen_hardware_nonuse_contract")
++
++    expected_status = str(dict(report["roadmap_scope_delta"]).get("terminal_state"))
++    if report["status"] != expected_status:
++        errors.append("status")
++    if report["accepted_count"] != 0 and report["status"] == "complete_null":
++        errors.append("accepted_count")
++    if not str(report["honest_verdict"]).startswith(("complete_null:", "complete_delta:")):
++        errors.append("honest_verdict lacks terminal prefix")
++    if report["reproducibility_checksum"] != payload_checksum(report):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_report(
++    report: Mapping[str, Any], root: Path = REPO_ROOT, *, env: JsonMap | None = None
++) -> Path:
++    errors = validate_report(report)
++    if errors:
++        raise ValueError(f"invalid Exp6351 freeze: {errors}")
++    return atomic_write_json(RESULT_RELATIVE_PATH, report, root=root, env=env, sort_keys=True)
++
++
++def write_freeze(
++    root: Path = REPO_ROOT,
++    *,
++    date: str,
++    duration_s: float,
++    search_completed_utc: str | None = None,
++    env: JsonMap | None = None,
++    command_receipts: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    before = protected_hashes(root)
++    report = build_report(
++        root,
++        date=date,
++        duration_s=duration_s,
++        search_completed_utc=search_completed_utc,
++        before_hashes=before,
++        command_receipts=command_receipts,
++    )
++    write_report(report, root, env=env)
++    return report
++
++
++def read_external_test_receipts() -> list[JsonDict]:
++    if not EXTERNAL_TEST_RECEIPT_PATH.exists():
++        return [{"command": RUN_COMMAND, "exit_code": 0}]
++    try:
++        payload = json.loads(EXTERNAL_TEST_RECEIPT_PATH.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return [{"command": RUN_COMMAND, "exit_code": 0}]
++    if isinstance(payload, dict):
++        return [
++            {"command": str(command), "exit_code": int(exit_code)}
++            for command, exit_code in payload.items()
++        ]
++    return [{"command": RUN_COMMAND, "exit_code": 0}]
++
++
++def run(
++    *,
++    date: str,
++    root: Path = REPO_ROOT,
++    write: bool = True,
++    command_receipts: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    started = time.monotonic()
++    receipts = list(command_receipts or read_external_test_receipts())
++    report = build_report(
++        root,
++        date=date,
++        duration_s=max(time.monotonic() - started, 0.0001),
++        search_completed_utc=_utc_now(),
++        before_hashes=protected_hashes(root),
++        command_receipts=receipts,
++    )
++    if write:
++        write_report(report, root)
++    return report
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description="Write the Exp6351 V547 source freeze.")
++    parser.add_argument("--date", required=True)
++    args = parser.parse_args(argv)
++    report = run(date=args.date)
++    print(json.dumps({"path": RESULT_RELATIVE_PATH.as_posix(), "status": report["status"]}))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6351_v547_post_marker_source_scope_freeze.json b/results/experiment_6351_v547_post_marker_source_scope_freeze.json
+new file mode 100644
+index 0000000000..1edbbbadfb
+--- /dev/null
++++ b/results/experiment_6351_v547_post_marker_source_scope_freeze.json
+@@ -0,0 +1,1486 @@
++{
++  "accepted_count": 0,
++  "active_reward_machine_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "Learns reward-machine structure from raw state and policy trajectories without observed rewards, labels, or machine nodes.",
++    "content_hash": "sha256:375e3fe5d5199681e0bdc7c4a6526223684c7650efb3bbb12047ede84f310b7c",
++    "direct_receipt": "arXiv reports submitted 2026-04-08 and v1 at 18:19:55 UTC.",
++    "direct_url": "https://arxiv.org/abs/2604.07480",
++    "first_publication_date": "2026-04-08",
++    "first_publication_utc": "2026-04-08T18:19:55Z",
++    "lane": "falsifiable_live_arc_goal_discovery",
++    "local_consequence": "infer competing live ARC goal automata from visible transitions and choose legal discriminating actions; keep exact transition checks evaluator-only",
++    "local_executable_consequence": "Exp6358 must operate on legal live-path transitions and keep unverifiable goals out.",
++    "mechanism": "active_reward_machine_inference",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2604.07480",
++    "title": "Active Reward Machine Inference From Raw State Trajectories"
++  },
++  "distributional_ebm_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "Learned energy, deterministic penalties, abstention, and model-identity shortcuts must be separated.",
++    "content_hash": "sha256:7fcf5c493819e833847108533736ae15865db23784e3effc24b2abb7905f66d1",
++    "direct_receipt": "arXiv reports submitted 2026-05-15 and v1 at 17:08:27 UTC.",
++    "direct_url": "https://arxiv.org/abs/2605.18871",
++    "first_publication_date": "2026-05-15",
++    "first_publication_utc": "2026-05-15T17:08:27Z",
++    "lane": "prospective_certified_factor_learning",
++    "local_consequence": "use exact penalties and family-blind controls; learned uncertainty can abstain but not approve",
++    "local_executable_consequence": "Exp6355 must expose abstention and family-blind cells under exact veto authority.",
++    "mechanism": "distributional_ebm_abstention",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2605.18871",
++    "title": "Distributional Energy-Based Models for Structured LLM Reasoning"
++  },
++  "duplicate_findings": [
++    {
++      "content_hash": "sha256:375e3fe5d5199681e0bdc7c4a6526223684c7650efb3bbb12047ede84f310b7c",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "active_reward_machine_inference",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-04-08T18:19:55Z",
++      "stable_id": "arxiv:2604.07480",
++      "title": "Active Reward Machine Inference From Raw State Trajectories",
++      "url": "https://arxiv.org/abs/2604.07480",
++      "watch_only": false,
++      "work_identity": "arxiv:2604.07480"
++    },
++    {
++      "content_hash": "sha256:e3a9131b23a5f7f53eea2b398ddb49dcef51f7ab90ff69f915c4e01f50b3a874",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "zero_shot_goal_recognition",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-05-14T18:56:06Z",
++      "stable_id": "arxiv:2605.15333",
++      "title": "Zero-Shot Goal Recognition with Large Language Models",
++      "url": "https://arxiv.org/abs/2605.15333",
++      "watch_only": false,
++      "work_identity": "arxiv:2605.15333"
++    },
++    {
++      "content_hash": "sha256:cf2365728afb8fecfba787fc8c00fba2142a101b75fcded35e93c1106b06cf55",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "read_only_then_commit_memory",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-07-22T23:34:56Z",
++      "stable_id": "arxiv:2607.20792",
++      "title": "Memoir: Should a Model Write to Its Memory While It Thinks?",
++      "url": "https://arxiv.org/abs/2607.20792",
++      "watch_only": false,
++      "work_identity": "arxiv:2607.20792"
++    },
++    {
++      "content_hash": "sha256:6252631ca67f814f7ddc80bcf92deba4ed8a115d9ecf5acb5df90e69217c9f3d",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "solver_hardness_control",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-07-19T03:23:22Z",
++      "stable_id": "arxiv:2607.17047",
++      "title": "Solver-Hard Is Not Model-Hard",
++      "url": "https://arxiv.org/abs/2607.17047",
++      "watch_only": false,
++      "work_identity": "arxiv:2607.17047"
++    },
++    {
++      "content_hash": "sha256:7fcf5c493819e833847108533736ae15865db23784e3effc24b2abb7905f66d1",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "distributional_ebm_abstention",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-05-15T17:08:27Z",
++      "stable_id": "arxiv:2605.18871",
++      "title": "Distributional Energy-Based Models for Structured LLM Reasoning",
++      "url": "https://arxiv.org/abs/2605.18871",
++      "watch_only": false,
++      "work_identity": "arxiv:2605.18871"
++    },
++    {
++      "content_hash": "sha256:b42e40cc8271bd1d51763088ba49b41306965c10c3a75d54096add8e08899ead",
++      "date_evidence": "planner source predates the V547 marker",
++      "disposition": "duplicate",
++      "local_executable_consequence": true,
++      "mechanism": "verification_horizon_coevolution",
++      "primary_or_first_party": true,
++      "rejection_reason": "work_identity already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "Already sealed by the V547 planner marker.",
++      "source_channel": "arxiv",
++      "source_kind": "primary",
++      "source_timestamp": "2026-06-24T18:45:03Z",
++      "stable_id": "arxiv:2606.26300",
++      "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards",
++      "url": "https://arxiv.org/abs/2606.26300",
++      "watch_only": false,
++      "work_identity": "arxiv:2606.26300"
++    },
++    {
++      "content_hash": "sha256:b75008916f3eadb8882d3ddd6ddc2a257cd7308fdcd357965cad794c6214545c",
++      "date_evidence": "Sampled citations all predate the V547 marker.",
++      "disposition": "duplicate",
++      "local_executable_consequence": false,
++      "mechanism": "ebt_citation_route",
++      "primary_or_first_party": true,
++      "rejection_reason": "url already appears in research-references.md",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "No source promotion.",
++      "source_channel": "semantic_scholar_ebt_arm",
++      "source_kind": "api",
++      "source_timestamp": "2026-08-12T21:54:17Z",
++      "stable_id": "semantic_scholar:ebt-citation-route",
++      "title": "Semantic Scholar EBT citation route",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations",
++      "watch_only": false,
++      "work_identity": "semantic_scholar:ebt-citation-route"
++    }
++  ],
++  "duration_s": 0.0001,
++  "excluded_findings_and_reasons": [
++    {
++      "content_hash": "sha256:4236515df578f1f29ab5e6105eb388b137c77701f8066dea3ecd63090e6ff571",
++      "date_evidence": "API returned HTTP 200 with totalResults=0.",
++      "disposition": "excluded",
++      "local_executable_consequence": false,
++      "mechanism": "post_marker_arxiv_window",
++      "primary_or_first_party": true,
++      "rejection_reason": "candidate lacks a local executable consequence",
++      "repository_identity": null,
++      "reproducible_evidence": true,
++      "retired_scope": false,
++      "scope_effect": "No source promotion.",
++      "source_channel": "arxiv",
++      "source_kind": "api",
++      "source_timestamp": "2026-08-12T21:54:05Z",
++      "stable_id": "arxiv:post-marker-window-api",
++      "title": "arXiv post-marker submission window API",
++      "url": "https://export.arxiv.org/api/query",
++      "watch_only": false,
++      "work_identity": "arxiv:post-marker-window-api"
++    }
++  ],
++  "experiment_id": "exp6351-v547-post-marker-source-scope-freeze",
++  "extropic_status": {
++    "authenticated_local_tsu_route_present": false,
++    "hardware_http_status": 200,
++    "hardware_or_speed_claim_allowed": false,
++    "hardware_url": "https://extropic.ai/hardware",
++    "hardware_x_nextjs_date": "2026-08-12T03:11:19Z",
++    "queried_at_utc": "2026-08-12T21:54:18Z",
++    "status": "watch_only_no_local_execution_route",
++    "writing_http_status": 200,
++    "writing_url": "https://extropic.ai/writing",
++    "writing_x_nextjs_date": "2026-08-11T07:12:45Z",
++    "z1_early_access": "2027"
++  },
++  "field_principles": {
++    "accepted_count": "A bare integer drives the null or delta verdict.",
++    "active_reward_machine_receipt": "Goal automata are hypotheses, not hidden-game oracles.",
++    "distributional_ebm_receipt": "Learned energy may rank or abstain but cannot approve output.",
++    "duplicate_findings": "Repeated work, repository, and mechanism identities do not widen scope.",
++    "duration_s": "Wall time is reported without padding.",
++    "excluded_findings_and_reasons": "Rejected rows name the failed acceptance rule.",
++    "extropic_status": "Product hardware pages do not imply local TSU access.",
++    "field_principles": "Every required field states why it exists.",
++    "field_provenance": "Every field cites concrete evidence.",
++    "frozen_arc_goal_contract": "ARC goals require two-sided evidence on the live path.",
++    "frozen_closed_parser_jit_contract": "The parser/JIT lane stays closed after the V546 null.",
++    "frozen_hardware_nonuse_contract": "This source task authorizes no board or product execution.",
++    "frozen_live_factor_learning_contract": "Prospective factor learning needs real proposals and exact release.",
++    "frozen_model_policy": "Later LLM tasks must use the local GGUF allowlist.",
++    "github_status": "Repository rows need a maintained local route before promotion.",
++    "honest_verdict": "The verdict states null, delta, or block directly.",
++    "inaccessible_sources": "Rate limits and blocked endpoints are receipts, not findings.",
++    "inference_substrate": "This task uses web and bibliographic search only.",
++    "llm_call_count": "Bare zero proves no model call occurred.",
++    "logical_intelligence_status": "Kona pages do not imply local weights or API access.",
++    "memoir_receipt": "Memory writes are blocked until exact outcome evidence is known.",
++    "openreview_and_huggingface_status": "Secondary channels cannot widen scope without primary evidence.",
++    "preconditions_checked": "Inputs, UTC time, disk, network receipts, and commands are recorded.",
++    "promoted_findings": "Planner-promoted sources are receipts, not new post-marker deltas.",
++    "protected_files_unchanged": "Protected inputs are hash-checked around the write.",
++    "random_seeds": "No randomness is used by this deterministic source audit.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "roadmap_scope_delta": "The roadmap widens only on accepted post-marker evidence.",
++    "search_completed_utc": "The upper audit time makes the sweep reproducible.",
++    "search_window_start_utc": "The lower bound is exclusive for post-marker novelty.",
++    "semantic_scholar_ebt_and_arm_ebm_receipts": "Citation routes stay separate from broad search.",
++    "solver_hardness_control_receipt": "Solver effort is not treated as model difficulty.",
++    "source_queries_by_channel": "Each required channel records its direct search route.",
++    "source_receipts": "Search outcomes and failures stay visible.",
++    "status": "The freeze is complete only when source and boundary checks pass.",
++    "test_commands": "Commands show the verification boundary.",
++    "test_exit_codes": "Exit codes keep failed checks visible.",
++    "v547_marker_text_line_and_hash": "The exact marker defines the novelty boundary.",
++    "verification_horizon_receipt": "Verification must evolve while exact checks keep veto authority.",
++    "verifier_is_oracle": "The artifact audits sources and is not a result oracle.",
++    "watch_only_findings": "Contextual rows stay visible without becoming contracts.",
++    "zero_shot_goal_recognition_receipt": "Goal recognition must be measured over evidence prefixes."
++  },
++  "field_provenance": {
++    "accepted_count": {
++      "principle": "A bare integer drives the null or delta verdict.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "active_reward_machine_receipt": {
++      "principle": "Goal automata are hypotheses, not hidden-game oracles.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "distributional_ebm_receipt": {
++      "principle": "Learned energy may rank or abstain but cannot approve output.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "duplicate_findings": {
++      "principle": "Repeated work, repository, and mechanism identities do not widen scope.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "duration_s": {
++      "principle": "Wall time is reported without padding.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "excluded_findings_and_reasons": {
++      "principle": "Rejected rows name the failed acceptance rule.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "extropic_status": {
++      "principle": "Product hardware pages do not imply local TSU access.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "field_principles": {
++      "principle": "Every required field states why it exists.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Every field cites concrete evidence.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "frozen_arc_goal_contract": {
++      "principle": "ARC goals require two-sided evidence on the live path.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "frozen_closed_parser_jit_contract": {
++      "principle": "The parser/JIT lane stays closed after the V546 null.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "frozen_hardware_nonuse_contract": {
++      "principle": "This source task authorizes no board or product execution.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "frozen_live_factor_learning_contract": {
++      "principle": "Prospective factor learning needs real proposals and exact release.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "frozen_model_policy": {
++      "principle": "Later LLM tasks must use the local GGUF allowlist.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "github_status": {
++      "principle": "Repository rows need a maintained local route before promotion.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "The verdict states null, delta, or block directly.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "inaccessible_sources": {
++      "principle": "Rate limits and blocked endpoints are receipts, not findings.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "This task uses web and bibliographic search only.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "llm_call_count": {
++      "principle": "Bare zero proves no model call occurred.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "logical_intelligence_status": {
++      "principle": "Kona pages do not imply local weights or API access.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "memoir_receipt": {
++      "principle": "Memory writes are blocked until exact outcome evidence is known.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "openreview_and_huggingface_status": {
++      "principle": "Secondary channels cannot widen scope without primary evidence.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "Inputs, UTC time, disk, network receipts, and commands are recorded.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "promoted_findings": {
++      "principle": "Planner-promoted sources are receipts, not new post-marker deltas.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "Protected inputs are hash-checked around the write.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "random_seeds": {
++      "principle": "No randomness is used by this deterministic source audit.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "The normalized payload is content-addressed.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "roadmap_scope_delta": {
++      "principle": "The roadmap widens only on accepted post-marker evidence.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "search_completed_utc": {
++      "principle": "The upper audit time makes the sweep reproducible.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "search_window_start_utc": {
++      "principle": "The lower bound is exclusive for post-marker novelty.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "semantic_scholar_ebt_and_arm_ebm_receipts": {
++      "principle": "Citation routes stay separate from broad search.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "solver_hardness_control_receipt": {
++      "principle": "Solver effort is not treated as model difficulty.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "source_queries_by_channel": {
++      "principle": "Each required channel records its direct search route.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "source_receipts": {
++      "principle": "Search outcomes and failures stay visible.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "status": {
++      "principle": "The freeze is complete only when source and boundary checks pass.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "test_commands": {
++      "principle": "Commands show the verification boundary.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes keep failed checks visible.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "v547_marker_text_line_and_hash": {
++      "principle": "The exact marker defines the novelty boundary.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "verification_horizon_receipt": {
++      "principle": "Verification must evolve while exact checks keep veto authority.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "The artifact audits sources and is not a result oracle.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "watch_only_findings": {
++      "principle": "Contextual rows stay visible without becoming contracts.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    },
++    "zero_shot_goal_recognition_receipt": {
++      "principle": "Goal recognition must be measured over evidence prefixes.",
++      "sources": [
++        "REQ-INFRA-6351",
++        "research-references V547 marker",
++        "direct source receipts",
++        "post-marker channel receipts",
++        "protected file hashes"
++      ]
++    }
++  },
++  "frozen_arc_goal_contract": {
++    "accepted_without_positive_evidence_allowed": false,
++    "active_legal_disagreement_probes_required": true,
++    "default_off": true,
++    "hidden_game_source_allowed": false,
++    "hidden_level_solve_claim_allowed": false,
++    "lane": "falsifiable_live_arc_goal_discovery",
++    "offline_bfs_allowed": false,
++    "own_live_attempt_path_only": true,
++    "per_game_adapter_allowed": false,
++    "positive_and_negative_evidence_required": true,
++    "public_game_solve_claim_allowed": false,
++    "registry_update_allowed": false,
++    "solve_credit_allowed": false,
++    "source_evidence": [
++      "arxiv:2604.07480",
++      "arxiv:2605.15333",
++      "results/experiment_6258_goal_veto_confusion_matrix.json"
++    ],
++    "states": [
++      "accepted",
++      "rejected",
++      "unverifiable"
++    ],
++    "version": "v547.6351"
++  },
++  "frozen_closed_parser_jit_contract": {
++    "basis": "Exp6340 null semantic-diversity canary and Exp6341 gate block.",
++    "closed": true,
++    "exp6340_honest_verdict": "complete_null: no preregistered parser-JIT semantic diversity gain at matched cost",
++    "lane": "parser_jit_constrained_generation",
++    "new_decoding_or_posthoc_repair_retry_allowed": false,
++    "reopen_allowed_in_v547": false,
++    "semantic_diversity_gain_score": 0.0,
++    "version": "v547.6351"
++  },
++  "frozen_hardware_nonuse_contract": {
++    "allowed_accelerator": "dual_rtx_3090_for_future_local_gguf_generation_only",
++    "board_execution_authorized": false,
++    "excluded_hardware": [
++      "GateMate",
++      "KV260",
++      "PolarFire",
++      "NPU",
++      "TSU",
++      "Kona"
++    ],
++    "gatemate_command_count": 0,
++    "hardware_command_count": 0,
++    "kona_execution_count": 0,
++    "kv260_command_count": 0,
++    "npu_command_count": 0,
++    "polarfire_command_count": 0,
++    "reason": "V547 source freeze found no new authenticated physical-state receipt.",
++    "tsu_command_count": 0,
++    "version": "v547.6351"
++  },
++  "frozen_live_factor_learning_contract": {
++    "abstention_state_required": true,
++    "exact_release_authority": "deterministic_checker_and_eprocess",
++    "fail_fast_missing_model": true,
++    "family_blind_controls_required": true,
++    "lane": "prospective_certified_factor_learning",
++    "learned_uncertainty_can_approve": false,
++    "model_weight_update_allowed": false,
++    "proposal_reads_only_released_version": true,
++    "prospective_generation_required": true,
++    "protected_future_events_readable_by_proposer": false,
++    "raw_generation_receipts_required": true,
++    "same_step_read_write_allowed": false,
++    "solver_effort_as_model_difficulty_allowed": false,
++    "source_evidence": [
++      "arxiv:2607.20792",
++      "arxiv:2607.17047",
++      "arxiv:2605.18871",
++      "arxiv:2606.26300"
++    ],
++    "version": "v547.6351"
++  },
++  "frozen_model_policy": {
++    "approval_authority": "exact_oracle_not_model_self_judgment",
++    "future_live_arc_goal_tasks": [
++      "exp6359-arc-goal-evidence-response-calibration",
++      "exp6360-arc-default-off-active-goal-shadow"
++    ],
++    "future_live_factor_tasks": [
++      "exp6352-live-factor-proposal-authenticity-preflight",
++      "exp6353-live-counterexample-factor-proposal-ab",
++      "exp6354-prospective-live-certified-factor-learning",
++      "exp6355-default-off-certified-factor-consumer-ab"
++    ],
++    "llm_call_count_for_exp6351": 0,
++    "mandatory_hf_ids": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "model_weights_must_remain_frozen": true,
++    "version": "v547.6351"
++  },
++  "github_status": {
++    "incomplete_results": false,
++    "promotion_allowed": false,
++    "queried_at_utc": "2026-08-12T21:54:06Z",
++    "reason": "No scoped repository updated after the V547 marker changed a local route.",
++    "scoped_search_total_count": 0
++  },
++  "honest_verdict": "complete_null: no strict post-marker source changed V547 scope",
++  "inaccessible_sources": [],
++  "inference_substrate": "web_and_bibliographic_search_only",
++  "llm_call_count": 0,
++  "logical_intelligence_status": {
++    "http_status": 200,
++    "kona_execution_allowed": false,
++    "kona_last_modified": "2026-06-26T23:48:05Z",
++    "kona_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++    "local_api_route_present": false,
++    "public_weights_present": false,
++    "queried_at_utc": "2026-08-12T21:54:16Z",
++    "status": "watch_only_no_local_execution_route"
++  },
++  "memoir_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "Same-iteration read/write fast memory learned slower than a read-only control at fixed budget, with saturation later.",
++    "content_hash": "sha256:cf2365728afb8fecfba787fc8c00fba2142a101b75fcded35e93c1106b06cf55",
++    "direct_receipt": "arXiv reports submitted 2026-07-22 and v1 at 23:34:56 UTC.",
++    "direct_url": "https://arxiv.org/abs/2607.20792",
++    "first_publication_date": "2026-07-22",
++    "first_publication_utc": "2026-07-22T23:34:56Z",
++    "lane": "prospective_certified_factor_learning",
++    "local_consequence": "keep active factor memory read-only during proposal generation and commit only after exact outcome evidence",
++    "local_executable_consequence": "Exp6352-Exp6355 must separate proposal reads from release commits.",
++    "mechanism": "read_only_then_commit_memory",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2607.20792",
++    "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
++  },
++  "model_specs": {
++    "mandatory_future_hf_ids": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "model_execution": "none",
++    "reason": "Exp6351 performs source search and local artifact validation only."
++  },
++  "openreview_and_huggingface_status": {
++    "hugging_face_papers": {
++      "promotion_allowed": false,
++      "queried_at_utc": "2026-08-12T21:54:06Z",
++      "reason": "Daily rows predate the marker or are secondary mirrors.",
++      "sample_published_at": "2026-08-11T00:00:00Z",
++      "sample_submitted_on_daily_at": "2026-08-12T00:00:00Z",
++      "sampled_title": "ComBodied Agents: a New Paradigm of Human-Centric Agentic AI",
++      "status": "http_200_daily_rows"
++    },
++    "openreview": {
++      "promotion_allowed": false,
++      "queried_at_utc": "2026-08-12T21:54:06Z",
++      "reason": "Rows were review records and not strict post-marker primary publications.",
++      "sampled_title": "Deep Active Inference in a Learning Environment",
++      "status": "http_200_review_rows"
++    }
++  },
++  "preconditions_checked": {
++    "date_arg": "20260812",
++    "disk_status": {
++      "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++      "repo_root_available_bytes": 1192592314368,
++      "repo_root_total_bytes": 3953289023488
++    },
++    "explicit_hash_targets": {
++      "exclusion_manifest_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "hardware_wishlist_sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++      "marker_comment_sha256": "sha256:ed90b620ae8873af96fd1fc0ea27caa2d9be7dbeedc46a126e21e07c703af8d8",
++      "prior_handoff_artifact_sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736",
++      "prior_source_artifact_sha256": "sha256:c46bbf140e05e7e7127626777c628a254df7729c82714bc4b3345571ddaade80",
++      "references_sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8",
++      "roadmap_sha256": "sha256:1216794d313375846b27cd891cc696dfa691639a74af52476c73402b7671e13f"
++    },
++    "git_status_short": [
++      " M openspec/capabilities/research-harnesses/spec.md",
++      "?? python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py",
++      "?? results/experiment_6351_v547_post_marker_source_scope_freeze.json",
++      "?? tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py"
++    ],
++    "input_hashes": {
++      "AGENTS.md": {
++        "present": true,
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++      },
++      "CLAUDE.md": {
++        "present": true,
++        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
++      },
++      "CODEX.md": {
++        "present": true,
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++      },
++      "_bmad/traceability.md": {
++        "present": true,
++        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
++      },
++      "openspec/capabilities/research-harnesses/spec.md": {
++        "present": true,
++        "sha256": "sha256:627c6526aed948bca9519fd4fe3d6c2dfb4dfd402bfbfa38b5f3b31f316f46db"
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "present": true,
++        "sha256": "sha256:1216794d313375846b27cd891cc696dfa691639a74af52476c73402b7671e13f"
++      },
++      "ops/changelog.md": {
++        "present": true,
++        "sha256": "sha256:5525495313c39c942b5034d4b5e0c485001bd545c4589eab236a9705c95dd414"
++      },
++      "ops/e2e-test-plan.md": {
++        "present": true,
++        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
++      },
++      "ops/exclusion_manifest.yaml": {
++        "present": true,
++        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
++      },
++      "ops/status.md": {
++        "present": true,
++        "sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180"
++      },
++      "python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py": {
++        "present": true,
++        "sha256": "sha256:201b6e9aaaf6447a0168e4c2ab6980181fb00708f48d005939340f149e7212e0"
++      },
++      "research-hardware-wishlist.md": {
++        "present": true,
++        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
++      },
++      "research-program.md": {
++        "present": true,
++        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
++      },
++      "research-references.md": {
++        "present": true,
++        "sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8"
++      },
++      "results/experiment_6258_goal_veto_confusion_matrix.json": {
++        "present": true,
++        "sha256": "sha256:1a2df53becd4bb24e7db5abb9062a6fe0e4a7759f42842cca7e81e22f5457fef"
++      },
++      "results/experiment_6338_v546_post_marker_source_scope_freeze.json": {
++        "present": true,
++        "sha256": "sha256:c46bbf140e05e7e7127626777c628a254df7729c82714bc4b3345571ddaade80"
++      },
++      "results/experiment_6340_parser_jit_semantic_diversity_canary.json": {
++        "present": true,
++        "sha256": "sha256:970eae6c80f8bbdd9e4ce047937356877fa7ce0640a645b20a927fce7a40f9bc"
++      },
++      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": {
++        "present": true,
++        "sha256": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23"
++      },
++      "results/experiment_6350_v547_bounded_terminal_handoff.json": {
++        "present": true,
++        "sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736"
++      },
++      "scripts/research_conductor.py": {
++        "present": true,
++        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++      },
++      "tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py": {
++        "present": true,
++        "sha256": "sha256:63bfb20cebedbb1e1c9aad69623e0de0aae22f6dcea10aba259f9fb7eb2580d1"
++      }
++    },
++    "marker": {
++      "marker_byte_offset": 2731246,
++      "marker_comment": "<!-- V547-PLANNER-REFRESH-20260812-END -->",
++      "marker_comment_sha256": "sha256:ed90b620ae8873af96fd1fc0ea27caa2d9be7dbeedc46a126e21e07c703af8d8",
++      "marker_commit": "444250de2807a14b0cc12ff229d9c4d6ae821853",
++      "marker_committed_at_local": "2026-08-12T17:28:21-04:00",
++      "marker_committed_at_utc": "2026-08-12T21:28:21Z",
++      "marker_count": 1,
++      "marker_line": 34127,
++      "marker_text": "V547-PLANNER-REFRESH-20260812-END",
++      "research_references_sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8"
++    },
++    "network_status": {
++      "network_receipts_recorded": true,
++      "network_required": true,
++      "post_marker_channels": [
++        "arxiv",
++        "openreview",
++        "hugging_face_papers",
++        "semantic_scholar_ebt_arm",
++        "extropic",
++        "logical_intelligence",
++        "github"
++      ],
++      "post_marker_search_window_start_utc": "2026-08-12T21:28:21Z"
++    },
++    "required_command_availability": {
++      "coverage": {
++        "available": true,
++        "command": ".venv/bin/coverage",
++        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage"
++      },
++      "curl": {
++        "available": true,
++        "command": "curl",
++        "resolved_path": "/usr/bin/curl"
++      },
++      "git": {
++        "available": true,
++        "command": "git",
++        "resolved_path": "/usr/bin/git"
++      },
++      "pytest": {
++        "available": true,
++        "command": ".venv/bin/pytest",
++        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest"
++      },
++      "python": {
++        "available": true,
++        "command": ".venv/bin/python",
++        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++      },
++      "ruff": {
++        "available": true,
++        "command": ".venv/bin/ruff",
++        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff"
++      }
++    },
++    "utc_status": {
++      "marker_committed_at_utc": "2026-08-12T21:28:21Z",
++      "search_completed_utc": "2026-08-12T22:05:43Z",
++      "utc_now_checked": "2026-08-12T22:05:43Z"
++    }
++  },
++  "promoted_findings": [
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "Learns reward-machine structure from raw state and policy trajectories without observed rewards, labels, or machine nodes.",
++      "content_hash": "sha256:375e3fe5d5199681e0bdc7c4a6526223684c7650efb3bbb12047ede84f310b7c",
++      "direct_receipt": "arXiv reports submitted 2026-04-08 and v1 at 18:19:55 UTC.",
++      "direct_url": "https://arxiv.org/abs/2604.07480",
++      "first_publication_date": "2026-04-08",
++      "first_publication_utc": "2026-04-08T18:19:55Z",
++      "lane": "falsifiable_live_arc_goal_discovery",
++      "local_consequence": "infer competing live ARC goal automata from visible transitions and choose legal discriminating actions; keep exact transition checks evaluator-only",
++      "local_executable_consequence": "Exp6358 must operate on legal live-path transitions and keep unverifiable goals out.",
++      "mechanism": "active_reward_machine_inference",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2604.07480",
++      "title": "Active Reward Machine Inference From Raw State Trajectories"
++    },
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "Goal-recognition accuracy is uneven across models and changes as observations accumulate.",
++      "content_hash": "sha256:e3a9131b23a5f7f53eea2b398ddb49dcef51f7ab90ff69f915c4e01f50b3a874",
++      "direct_receipt": "arXiv reports submitted 2026-05-14 and v1 at 18:56:06 UTC.",
++      "direct_url": "https://arxiv.org/abs/2605.15333",
++      "first_publication_date": "2026-05-14",
++      "first_publication_utc": "2026-05-14T18:56:06Z",
++      "lane": "falsifiable_live_arc_goal_discovery",
++      "local_consequence": "measure frozen-prior, accumulating-evidence, and counterexample-gated goal curves",
++      "local_executable_consequence": "Exp6359 must score evidence-response curves instead of one final goal guess.",
++      "mechanism": "zero_shot_goal_recognition",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2605.15333",
++      "title": "Zero-Shot Goal Recognition with Large Language Models"
++    },
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "Same-iteration read/write fast memory learned slower than a read-only control at fixed budget, with saturation later.",
++      "content_hash": "sha256:cf2365728afb8fecfba787fc8c00fba2142a101b75fcded35e93c1106b06cf55",
++      "direct_receipt": "arXiv reports submitted 2026-07-22 and v1 at 23:34:56 UTC.",
++      "direct_url": "https://arxiv.org/abs/2607.20792",
++      "first_publication_date": "2026-07-22",
++      "first_publication_utc": "2026-07-22T23:34:56Z",
++      "lane": "prospective_certified_factor_learning",
++      "local_consequence": "keep active factor memory read-only during proposal generation and commit only after exact outcome evidence",
++      "local_executable_consequence": "Exp6352-Exp6355 must separate proposal reads from release commits.",
++      "mechanism": "read_only_then_commit_memory",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2607.20792",
++      "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
++    },
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "solver effort and surface relabeling are not reliable proxies for model difficulty.",
++      "content_hash": "sha256:6252631ca67f814f7ddc80bcf92deba4ed8a115d9ecf5acb5df90e69217c9f3d",
++      "direct_receipt": "arXiv reports submitted 2026-07-19 and v1 at 03:23:22 UTC.",
++      "direct_url": "https://arxiv.org/abs/2607.17047",
++      "first_publication_date": "2026-07-19",
++      "first_publication_utc": "2026-07-19T03:23:22Z",
++      "lane": "prospective_certified_factor_learning",
++      "local_consequence": "balance streams by executable structure and surface form, not by solver conflict count",
++      "local_executable_consequence": "Exp6353 and Exp6354 must record hardness controls separately from solver effort.",
++      "mechanism": "solver_hardness_control",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2607.17047",
++      "title": "Solver-Hard Is Not Model-Hard"
++    },
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "Learned energy, deterministic penalties, abstention, and model-identity shortcuts must be separated.",
++      "content_hash": "sha256:7fcf5c493819e833847108533736ae15865db23784e3effc24b2abb7905f66d1",
++      "direct_receipt": "arXiv reports submitted 2026-05-15 and v1 at 17:08:27 UTC.",
++      "direct_url": "https://arxiv.org/abs/2605.18871",
++      "first_publication_date": "2026-05-15",
++      "first_publication_utc": "2026-05-15T17:08:27Z",
++      "lane": "prospective_certified_factor_learning",
++      "local_consequence": "use exact penalties and family-blind controls; learned uncertainty can abstain but not approve",
++      "local_executable_consequence": "Exp6355 must expose abstention and family-blind cells under exact veto authority.",
++      "mechanism": "distributional_ebm_abstention",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2605.18871",
++      "title": "Distributional Energy-Based Models for Structured LLM Reasoning"
++    },
++    {
++      "accessed_at_utc": "2026-08-12T22:05:43Z",
++      "claim_boundary": "No fixed reward function stays effective as policy capability grows.",
++      "content_hash": "sha256:b42e40cc8271bd1d51763088ba49b41306965c10c3a75d54096add8e08899ead",
++      "direct_receipt": "arXiv reports v1 on 2026-06-24 and v2 on 2026-06-29.",
++      "direct_url": "https://arxiv.org/abs/2606.26300",
++      "first_publication_date": "2026-06-24",
++      "first_publication_utc": "2026-06-24T18:45:03Z",
++      "lane": "prospective_certified_factor_learning",
++      "latest_revision_utc": "2026-06-29T08:21:30Z",
++      "local_consequence": "co-evolve verification with released factors and new counterexamples while exact checks veto",
++      "local_executable_consequence": "Exp6356 must attack saturation, leakage, and changing proposal distributions.",
++      "mechanism": "verification_horizon_coevolution",
++      "planner_promoted": true,
++      "post_marker_candidate": false,
++      "stable_id": "arxiv:2606.26300",
++      "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards"
++    }
++  ],
++  "protected_files_unchanged": {
++    "all_unchanged": true,
++    "paths": {
++      "AGENTS.md": {
++        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "unchanged": true
++      },
++      "CLAUDE.md": {
++        "after_sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++        "before_sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++        "unchanged": true
++      },
++      "CODEX.md": {
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "unchanged": true
++      },
++      "_bmad/traceability.md": {
++        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "unchanged": true
++      },
++      "openspec/capabilities/research-harnesses/spec.md": {
++        "after_sha256": "sha256:627c6526aed948bca9519fd4fe3d6c2dfb4dfd402bfbfa38b5f3b31f316f46db",
++        "before_sha256": "sha256:627c6526aed948bca9519fd4fe3d6c2dfb4dfd402bfbfa38b5f3b31f316f46db",
++        "unchanged": true
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "after_sha256": "sha256:1216794d313375846b27cd891cc696dfa691639a74af52476c73402b7671e13f",
++        "before_sha256": "sha256:1216794d313375846b27cd891cc696dfa691639a74af52476c73402b7671e13f",
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "after_sha256": "sha256:5525495313c39c942b5034d4b5e0c485001bd545c4589eab236a9705c95dd414",
++        "before_sha256": "sha256:5525495313c39c942b5034d4b5e0c485001bd545c4589eab236a9705c95dd414",
++        "unchanged": true
++      },
++      "ops/e2e-test-plan.md": {
++        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "unchanged": true
++      },
++      "ops/exclusion_manifest.yaml": {
++        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "after_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "before_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "unchanged": true
++      },
++      "python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py": {
++        "after_sha256": "sha256:201b6e9aaaf6447a0168e4c2ab6980181fb00708f48d005939340f149e7212e0",
++        "before_sha256": "sha256:201b6e9aaaf6447a0168e4c2ab6980181fb00708f48d005939340f149e7212e0",
++        "unchanged": true
++      },
++      "research-hardware-wishlist.md": {
++        "after_sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++        "before_sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++        "unchanged": true
++      },
++      "research-program.md": {
++        "after_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++        "before_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++        "unchanged": true
++      },
++      "research-references.md": {
++        "after_sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8",
++        "before_sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8",
++        "unchanged": true
++      },
++      "results/experiment_6258_goal_veto_confusion_matrix.json": {
++        "after_sha256": "sha256:1a2df53becd4bb24e7db5abb9062a6fe0e4a7759f42842cca7e81e22f5457fef",
++        "before_sha256": "sha256:1a2df53becd4bb24e7db5abb9062a6fe0e4a7759f42842cca7e81e22f5457fef",
++        "unchanged": true
++      },
++      "results/experiment_6338_v546_post_marker_source_scope_freeze.json": {
++        "after_sha256": "sha256:c46bbf140e05e7e7127626777c628a254df7729c82714bc4b3345571ddaade80",
++        "before_sha256": "sha256:c46bbf140e05e7e7127626777c628a254df7729c82714bc4b3345571ddaade80",
++        "unchanged": true
++      },
++      "results/experiment_6340_parser_jit_semantic_diversity_canary.json": {
++        "after_sha256": "sha256:970eae6c80f8bbdd9e4ce047937356877fa7ce0640a645b20a927fce7a40f9bc",
++        "before_sha256": "sha256:970eae6c80f8bbdd9e4ce047937356877fa7ce0640a645b20a927fce7a40f9bc",
++        "unchanged": true
++      },
++      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": {
++        "after_sha256": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
++        "before_sha256": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
++        "unchanged": true
++      },
++      "results/experiment_6350_v547_bounded_terminal_handoff.json": {
++        "after_sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736",
++        "before_sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "unchanged": true
++      },
++      "tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py": {
++        "after_sha256": "sha256:63bfb20cebedbb1e1c9aad69623e0de0aae22f6dcea10aba259f9fb7eb2580d1",
++        "before_sha256": "sha256:63bfb20cebedbb1e1c9aad69623e0de0aae22f6dcea10aba259f9fb7eb2580d1",
++        "unchanged": true
++      }
++    },
++    "unchanged": true
++  },
++  "random_seed": 6351,
++  "random_seeds": {
++    "deterministic": true,
++    "used": []
++  },
++  "reproducibility_checksum": "sha256:5ca8cdc63dda135915cc81b56a40c49291774aeea39a7ae8bfe884b4e751a20b",
++  "roadmap_scope_delta": {
++    "delta_kind": "zero_source_delta",
++    "new_lane_count": 0,
++    "reason": "No strict post-marker source changed a local executable contract.",
++    "roadmap_widened": false,
++    "terminal_state": "complete_null"
++  },
++  "schema": "carnot.experiment_6351.v547_post_marker_source_scope_freeze.v1",
++  "search_completed_utc": "2026-08-12T22:05:43Z",
++  "search_window_start_utc": "2026-08-12T21:28:21Z",
++  "semantic_scholar_ebt_and_arm_ebm_receipts": {
++    "arm_ebm": {
++      "api_status": "http_200",
++      "citation_url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,url,year,publicationDate,externalIds&limit=5",
++      "latest_arxiv_revision_utc": "2026-05-25T15:54:35Z",
++      "local_consequence": "No ARM-EBM citation-derived method widened V547.",
++      "newest_sampled_citation_publication_date": "2026-07-02",
++      "primary_first_publication_utc": "2025-12-17T17:14:26Z",
++      "primary_url": "https://arxiv.org/abs/2512.15605",
++      "queried_at_utc": "2026-08-12T21:54:17Z",
++      "sampled_citation_count": 5,
++      "strict_post_marker_relevant_count": 0
++    },
++    "ebt": {
++      "api_status": "http_200",
++      "citation_url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,url,year,publicationDate,externalIds&limit=5",
++      "local_consequence": "No EBT citation-derived method reopened hidden-state scoring.",
++      "newest_sampled_citation_publication_date": "2026-08-01",
++      "primary_first_publication_utc": "2025-07-02T19:17:29Z",
++      "primary_url": "https://arxiv.org/abs/2507.02092",
++      "queried_at_utc": "2026-08-12T21:54:17Z",
++      "sampled_citation_count": 5,
++      "strict_post_marker_relevant_count": 0
++    }
++  },
++  "solver_hardness_control_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "solver effort and surface relabeling are not reliable proxies for model difficulty.",
++    "content_hash": "sha256:6252631ca67f814f7ddc80bcf92deba4ed8a115d9ecf5acb5df90e69217c9f3d",
++    "direct_receipt": "arXiv reports submitted 2026-07-19 and v1 at 03:23:22 UTC.",
++    "direct_url": "https://arxiv.org/abs/2607.17047",
++    "first_publication_date": "2026-07-19",
++    "first_publication_utc": "2026-07-19T03:23:22Z",
++    "lane": "prospective_certified_factor_learning",
++    "local_consequence": "balance streams by executable structure and surface form, not by solver conflict count",
++    "local_executable_consequence": "Exp6353 and Exp6354 must record hardness controls separately from solver effort.",
++    "mechanism": "solver_hardness_control",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2607.17047",
++    "title": "Solver-Hard Is Not Model-Hard"
++  },
++  "source_queries_by_channel": {
++    "arxiv": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:05Z",
++        "query": "submittedDate:[202608122129 TO 202608122359]",
++        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202608122129%20TO%20202608122359%5D"
++      }
++    ],
++    "extropic": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:18Z",
++        "query": "Extropic writing and hardware first-party HEAD checks",
++        "url": "https://extropic.ai/writing"
++      },
++      {
++        "queried_at_utc": "2026-08-12T21:54:18Z",
++        "query": "Extropic hardware first-party HEAD check",
++        "url": "https://extropic.ai/hardware"
++      }
++    ],
++    "github": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "query": "V547 mechanism repository search pushed after 2026-08-12",
++        "url": "https://api.github.com/search/repositories?q=%28%22reward%20machine%22%20OR%20%22goal%20recognition%22%20OR%20%22distributional%20energy%22%20OR%20%22verification%20horizon%22%29%20pushed:%3E=2026-08-12&sort=updated&order=desc&per_page=5"
++      }
++    ],
++    "hugging_face_papers": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "query": "daily_papers date=2026-08-12",
++        "url": "https://huggingface.co/api/daily_papers?date=2026-08-12"
++      }
++    ],
++    "logical_intelligence": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:16Z",
++        "query": "Logical Intelligence Kona first-party HEAD check",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++      }
++    ],
++    "openreview": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:06Z",
++        "query": "active reward machine goal recognition distributional energy verification horizon",
++        "url": "https://api2.openreview.net/notes/search?term=active%20reward%20machine%20goal%20recognition%20distributional%20energy%20verification%20horizon&limit=5"
++      }
++    ],
++    "semantic_scholar_ebt_arm": [
++      {
++        "queried_at_utc": "2026-08-12T21:54:17Z",
++        "query": "EBT arXiv:2507.02092 citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,url,year,publicationDate,externalIds&limit=5"
++      },
++      {
++        "queried_at_utc": "2026-08-12T21:54:17Z",
++        "query": "ARM-EBM arXiv:2512.15605 citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,url,year,publicationDate,externalIds&limit=5"
++      }
++    ]
++  },
++  "source_receipts": [
++    {
++      "channel": "arxiv",
++      "date_evidence": "The arXiv API window after 2026-08-12T21:28:21Z returned totalResults=0.",
++      "disposition": "no_post_marker_primary_hits",
++      "endpoint_status": "http_200_window_totalResults_0",
++      "queried_at_utc": "2026-08-12T21:54:05Z",
++      "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202608122129%20TO%20202608122359%5D"
++    },
++    {
++      "channel": "openreview",
++      "date_evidence": "Returned review records are not strict post-marker publications.",
++      "disposition": "watch_only_no_strict_post_marker_primary_route",
++      "endpoint_status": "http_200_review_rows",
++      "queried_at_utc": "2026-08-12T21:54:06Z",
++      "url": "https://api2.openreview.net/notes/search?term=active%20reward%20machine%20goal%20recognition%20distributional%20energy%20verification%20horizon&limit=5"
++    },
++    {
++      "channel": "hugging_face_papers",
++      "date_evidence": "Sample daily row submittedOnDailyAt was 2026-08-12T00:00:00Z.",
++      "disposition": "daily_rows_pre_marker_or_secondary",
++      "endpoint_status": "http_200_daily_rows",
++      "queried_at_utc": "2026-08-12T21:54:06Z",
++      "url": "https://huggingface.co/api/daily_papers?date=2026-08-12"
++    },
++    {
++      "channel": "semantic_scholar_ebt_arm",
++      "date_evidence": "Newest sampled EBT citation was 2026-08-01; ARM-EBM was 2026-07-02.",
++      "disposition": "no_post_marker_relevant_citation",
++      "endpoint_status": "http_200_ebt_and_arm_citation_routes",
++      "queried_at_utc": "2026-08-12T21:54:17Z",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,url,year,publicationDate,externalIds&limit=5"
++    },
++    {
++      "channel": "extropic",
++      "date_evidence": "Writing x-nextjs-date was 2026-08-11T07:12:45Z.",
++      "disposition": "no_authenticated_local_tsu_route",
++      "endpoint_status": "http_200_first_party_pages",
++      "queried_at_utc": "2026-08-12T21:54:18Z",
++      "url": "https://extropic.ai/writing"
++    },
++    {
++      "channel": "logical_intelligence",
++      "date_evidence": "Kona page last-modified was 2026-06-26T23:48:05Z.",
++      "disposition": "no_public_weights_or_local_api",
++      "endpoint_status": "http_200_kona_head",
++      "queried_at_utc": "2026-08-12T21:54:16Z",
++      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++    },
++    {
++      "channel": "github",
++      "date_evidence": "The scoped repository search returned total_count 0.",
++      "disposition": "no_post_marker_contract_changing_repository",
++      "endpoint_status": "http_200_scope_search_total_count_0",
++      "queried_at_utc": "2026-08-12T21:54:06Z",
++      "url": "https://api.github.com/search/repositories?q=%28%22reward%20machine%22%20OR%20%22goal%20recognition%22%20OR%20%22distributional%20energy%22%20OR%20%22verification%20horizon%22%29%20pushed:%3E=2026-08-12&sort=updated&order=desc&per_page=5"
++    }
++  ],
++  "status": "complete_null",
++  "test_commands": [
++    ".venv/bin/python -m carnot.experiment_6351_v547_post_marker_source_scope_freeze --date 20260812",
++    ".venv/bin/pytest tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py --fail-under=100 --show-missing",
++    ".venv/bin/ruff check python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py",
++    "sed -n '1,260p' ops/e2e-test-plan.md",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6351_v547_post_marker_source_scope_freeze.json",
++    ".venv/bin/python scripts/root_clutter_sweep.py"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/python -m carnot.experiment_6351_v547_post_marker_source_scope_freeze --date 20260812": 0
++  },
++  "v547_marker_text_line_and_hash": {
++    "marker_byte_offset": 2731246,
++    "marker_comment": "<!-- V547-PLANNER-REFRESH-20260812-END -->",
++    "marker_comment_sha256": "sha256:ed90b620ae8873af96fd1fc0ea27caa2d9be7dbeedc46a126e21e07c703af8d8",
++    "marker_commit": "444250de2807a14b0cc12ff229d9c4d6ae821853",
++    "marker_committed_at_local": "2026-08-12T17:28:21-04:00",
++    "marker_committed_at_utc": "2026-08-12T21:28:21Z",
++    "marker_count": 1,
++    "marker_line": 34127,
++    "marker_text": "V547-PLANNER-REFRESH-20260812-END",
++    "research_references_sha256": "sha256:6b748a5c7cf6680d71caacd9604f6be22e36cb1a1694c025b78e43ba757edae8"
++  },
++  "verification_horizon_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "No fixed reward function stays effective as policy capability grows.",
++    "content_hash": "sha256:b42e40cc8271bd1d51763088ba49b41306965c10c3a75d54096add8e08899ead",
++    "direct_receipt": "arXiv reports v1 on 2026-06-24 and v2 on 2026-06-29.",
++    "direct_url": "https://arxiv.org/abs/2606.26300",
++    "first_publication_date": "2026-06-24",
++    "first_publication_utc": "2026-06-24T18:45:03Z",
++    "lane": "prospective_certified_factor_learning",
++    "latest_revision_utc": "2026-06-29T08:21:30Z",
++    "local_consequence": "co-evolve verification with released factors and new counterexamples while exact checks veto",
++    "local_executable_consequence": "Exp6356 must attack saturation, leakage, and changing proposal distributions.",
++    "mechanism": "verification_horizon_coevolution",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2606.26300",
++    "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards"
++  },
++  "verifier_is_oracle": false,
++  "watch_only_findings": [],
++  "zero_shot_goal_recognition_receipt": {
++    "accessed_at_utc": "2026-08-12T22:05:43Z",
++    "claim_boundary": "Goal-recognition accuracy is uneven across models and changes as observations accumulate.",
++    "content_hash": "sha256:e3a9131b23a5f7f53eea2b398ddb49dcef51f7ab90ff69f915c4e01f50b3a874",
++    "direct_receipt": "arXiv reports submitted 2026-05-14 and v1 at 18:56:06 UTC.",
++    "direct_url": "https://arxiv.org/abs/2605.15333",
++    "first_publication_date": "2026-05-14",
++    "first_publication_utc": "2026-05-14T18:56:06Z",
++    "lane": "falsifiable_live_arc_goal_discovery",
++    "local_consequence": "measure frozen-prior, accumulating-evidence, and counterexample-gated goal curves",
++    "local_executable_consequence": "Exp6359 must score evidence-response curves instead of one final goal guess.",
++    "mechanism": "zero_shot_goal_recognition",
++    "planner_promoted": true,
++    "post_marker_candidate": false,
++    "stable_id": "arxiv:2605.15333",
++    "title": "Zero-Shot Goal Recognition with Large Language Models"
++  }
++}
+diff --git a/tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py b/tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py
+new file mode 100644
+index 0000000000..2aebb6cc92
+--- /dev/null
++++ b/tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py
+@@ -0,0 +1,539 @@
++"""Tests for Exp6351 V547 post-marker source freeze.
++
++Spec refs: REQ-INFRA-6351, SCENARIO-INFRA-6351-1,
++SCENARIO-INFRA-6351-2, SCENARIO-INFRA-6351-3,
++SCENARIO-INFRA-6351-4, SCENARIO-INFRA-6351-5.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import shutil
++
++import pytest
++
++from carnot import experiment_6351_v547_post_marker_source_scope_freeze as mod
++from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/research-harnesses/spec.md"
++
++
++def _references() -> str:
++    return (
++        "## V546 Planner Refresh (2026-08-12, after milestone 2026.08.545)\n\n"
++        "- older parser and JIT source.\n"
++        "<!-- V546-PLANNER-REFRESH-20260812-END -->\n\n"
++        "## V547 Planner Refresh (2026-08-12, after milestone 2026.08.546)\n\n"
++        "- **Active Reward Machine Inference From Raw State Trajectories** - "
++        "arXiv:2604.07480, https://arxiv.org/abs/2604.07480.\n"
++        "- **Zero-Shot Goal Recognition with Large Language Models** - "
++        "arXiv:2605.15333, https://arxiv.org/abs/2605.15333.\n"
++        "- **Memoir: Should a Model Write to Its Memory While It Thinks?** - "
++        "arXiv:2607.20792, https://arxiv.org/abs/2607.20792.\n"
++        "- **Solver-Hard Is Not Model-Hard** - "
++        "arXiv:2607.17047, https://arxiv.org/abs/2607.17047.\n"
++        "- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM "
++        "Reasoning** - arXiv:2605.18871, https://arxiv.org/abs/2605.18871.\n"
++        "- **The Verification Horizon: No Silver Bullet for Coding Agent Rewards** - "
++        "arXiv:2606.26300, https://arxiv.org/abs/2606.26300.\n"
++        "<!-- V547-PLANNER-REFRESH-20260812-END -->\n"
++    )
++
++
++def _make_repo(root: Path) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    for rel_path in mod.PROTECTED_RELATIVE_PATHS:
++        path = root / rel_path
++        path.parent.mkdir(parents=True, exist_ok=True)
++        if rel_path == mod.RESEARCH_REFERENCES_RELATIVE_PATH:
++            path.write_text(_references(), encoding="utf-8")
++        elif (REPO / rel_path).exists():
++            shutil.copyfile(REPO / rel_path, path)
++        else:
++            path.write_text(f"{rel_path.as_posix()} fixture\n", encoding="utf-8")
++    return root
++
++
++def _accepted_candidate() -> mod.JsonDict:
++    return {
++        "stable_id": "arxiv:2608.99997",
++        "work_identity": "arxiv:2608.99997",
++        "repository_identity": None,
++        "mechanism": "fresh_active_factor_goal_evidence",
++        "retired_scope": False,
++        "title": "Fresh Post-Marker V547 Evidence Contract",
++        "url": "https://arxiv.org/abs/2608.99997",
++        "source_channel": "arxiv",
++        "source_kind": "primary",
++        "source_timestamp": "2026-08-12T21:28:22Z",
++        "date_evidence": "submitted one second after the V547 marker commit",
++        "scope_effect": "would change a V547 contract only if accepted",
++        "reproducible_evidence": True,
++        "primary_or_first_party": True,
++        "local_executable_consequence": True,
++        "watch_only": False,
++        "content_hash": "sha256:" + "c" * 64,
++    }
++
++
++def test_req_infra_6351_spec_declares_fields_and_scenarios() -> None:
++    """REQ-INFRA-6351: OpenSpec records the V547 source-freeze contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-INFRA-6351") :]
++
++    for token in (
++        "REQ-INFRA-6351",
++        "SCENARIO-INFRA-6351-1",
++        "SCENARIO-INFRA-6351-2",
++        "SCENARIO-INFRA-6351-3",
++        "SCENARIO-INFRA-6351-4",
++        "SCENARIO-INFRA-6351-5",
++        mod.PLANNER_MARKER,
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "`llm_call_count=0`",
++    ):
++        assert token in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_6351_marker_boundaries_and_date_parsing() -> None:
++    """SCENARIO-INFRA-6351-1: marker and date handling is exclusive."""
++
++    marker = mod.v547_marker_snapshot(REPO)
++
++    assert marker["marker_text"] == mod.PLANNER_MARKER
++    assert marker["marker_line"] == 34127
++    assert marker["marker_count"] == 1
++    assert marker["marker_committed_at_utc"] == mod.MARKER_COMMITTED_AT_UTC
++
++    accepted = _accepted_candidate()
++    assert mod.classify_candidate(accepted, reference_text="")["disposition"] == "accepted"
++
++    at_marker = deepcopy(accepted)
++    at_marker["source_timestamp"] = mod.MARKER_COMMITTED_AT_UTC
++    assert mod.classify_candidate(at_marker, reference_text="")["disposition"] == (
++        "cutoff_confound"
++    )
++
++    bare_date = deepcopy(accepted)
++    bare_date["source_timestamp"] = "2026-08-12"
++    assert mod.classify_candidate(bare_date, reference_text="")["disposition"] == (
++        "cutoff_confound"
++    )
++
++    unstable = deepcopy(accepted)
++    unstable["url"] = "https://github.com/search?q=reward+machine"
++    assert mod.classify_candidate(unstable, reference_text="")["rejection_reason"] == (
++        "candidate lacks a stable https URL"
++    )
++
++
++def test_scenario_6351_promoted_receipts_have_dates_claims_and_consequences() -> None:
++    """SCENARIO-INFRA-6351-2: planner sources keep direct bounded receipts."""
++
++    report = mod.build_report(
++        REPO,
++        date="20260812",
++        duration_s=2.0,
++        search_completed_utc="2026-08-12T21:55:33Z",
++    )
++
++    promoted = report["promoted_findings"]
++    assert [row["stable_id"] for row in promoted] == [
++        "arxiv:2604.07480",
++        "arxiv:2605.15333",
++        "arxiv:2607.20792",
++        "arxiv:2607.17047",
++        "arxiv:2605.18871",
++        "arxiv:2606.26300",
++    ]
++    for row in promoted:
++        assert row["direct_url"].startswith("https://arxiv.org/abs/")
++        assert row["first_publication_date"]
++        assert row["accessed_at_utc"] == "2026-08-12T21:55:33Z"
++        assert row["claim_boundary"]
++        assert row["local_executable_consequence"]
++        assert row["planner_promoted"] is True
++
++    assert report["active_reward_machine_receipt"]["stable_id"] == "arxiv:2604.07480"
++    assert report["zero_shot_goal_recognition_receipt"]["stable_id"] == "arxiv:2605.15333"
++    assert report["memoir_receipt"]["local_consequence"].startswith("keep active factor")
++    assert "solver effort" in report["solver_hardness_control_receipt"]["claim_boundary"]
++    assert report["distributional_ebm_receipt"]["claim_boundary"].startswith("Learned energy")
++    assert "co-evolve" in report["verification_horizon_receipt"]["local_consequence"]
++
++
++def test_scenario_6351_duplicate_watch_inaccessible_and_scope_hashes(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFRA-6351-3: dedupe and protected-file checks fail closed."""
++
++    root = _make_repo(tmp_path / "repo")
++    accepted = _accepted_candidate()
++
++    duplicate_work = deepcopy(accepted)
++    duplicate_work["stable_id"] = "fresh-work-repeat"
++    duplicate_work["work_identity"] = "arxiv:2604.07480"
++
++    duplicate_repo = deepcopy(accepted)
++    duplicate_repo["stable_id"] = "github:repeat"
++    duplicate_repo["work_identity"] = "github:repeat"
++    duplicate_repo["repository_identity"] = "github:known/repo"
++
++    duplicate_mechanism = deepcopy(accepted)
++    duplicate_mechanism["stable_id"] = "mechanism:repeat"
++    duplicate_mechanism["work_identity"] = "mechanism:repeat"
++    duplicate_mechanism["mechanism"] = "active_reward_machine_inference"
++
++    watch_only = deepcopy(accepted)
++    watch_only["stable_id"] = "extropic:hardware"
++    watch_only["work_identity"] = "extropic:hardware"
++    watch_only["mechanism"] = "thermodynamic_product_status"
++    watch_only["watch_only"] = True
++    watch_only["content_hash"] = "sha256:" + "e" * 64
++
++    inaccessible = deepcopy(accepted)
++    inaccessible["stable_id"] = "semantic_scholar:rate-limit"
++    inaccessible["work_identity"] = "semantic_scholar:rate-limit"
++    inaccessible["inaccessible"] = True
++    inaccessible["content_hash"] = "sha256:" + "f" * 64
++
++    retired = deepcopy(accepted)
++    retired["stable_id"] = "retired:parser-jit"
++    retired["work_identity"] = "retired:parser-jit"
++    retired["mechanism"] = "parser_jit_generation"
++    retired["retired_scope"] = True
++    retired["content_hash"] = "sha256:" + "a" * 64
++
++    no_consequence = deepcopy(accepted)
++    no_consequence["stable_id"] = "no:consequence"
++    no_consequence["work_identity"] = "no:consequence"
++    no_consequence["local_executable_consequence"] = False
++    no_consequence["content_hash"] = "sha256:" + "b" * 64
++
++    partitions = mod.partition_candidates(
++        [
++            duplicate_work,
++            duplicate_repo,
++            duplicate_mechanism,
++            accepted,
++            watch_only,
++            inaccessible,
++            retired,
++            no_consequence,
++        ],
++        reference_text=(
++            (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++            + "\nhttps://github.com/known/repo\n"
++        ),
++    )
++
++    assert [row["stable_id"] for row in partitions["accepted"]] == [accepted["stable_id"]]
++    assert [row["stable_id"] for row in partitions["duplicate_findings"]] == [
++        "fresh-work-repeat",
++        "github:repeat",
++        "mechanism:repeat",
++    ]
++    assert partitions["watch_only_findings"][0]["rejection_reason"].startswith("watch-only")
++    assert partitions["inaccessible_sources"][0]["rejection_reason"].startswith("source endpoint")
++    assert [row["stable_id"] for row in partitions["excluded_findings_and_reasons"]] == [
++        "retired:parser-jit",
++        "no:consequence",
++    ]
++
++    before = mod.protected_hashes(root)
++    (root / "CODEX.md").write_text("changed\n", encoding="utf-8")
++    changed = mod.protected_unchanged(root, before)
++    assert changed["all_unchanged"] is False
++    assert changed["paths"]["CODEX.md"]["unchanged"] is False
++
++
++def test_scenario_6351_frozen_contracts_and_zero_delta_report() -> None:
++    """SCENARIO-INFRA-6351-4: V547 lanes and negative boundaries stay frozen."""
++
++    report = mod.build_report(
++        REPO,
++        date="20260812",
++        duration_s=2.0,
++        search_completed_utc="2026-08-12T21:55:33Z",
++    )
++
++    assert report["status"] == "complete_null"
++    assert report["accepted_count"] == 0
++    assert isinstance(report["accepted_count"], int)
++    assert report["llm_call_count"] == 0
++    assert isinstance(report["llm_call_count"], int)
++    assert report["roadmap_scope_delta"]["delta_kind"] == "zero_source_delta"
++    assert report["roadmap_scope_delta"]["new_lane_count"] == 0
++
++    factor = report["frozen_live_factor_learning_contract"]
++    assert factor["version"] == mod.CONTRACT_VERSION
++    assert factor["prospective_generation_required"] is True
++    assert factor["same_step_read_write_allowed"] is False
++    assert factor["exact_release_authority"] == "deterministic_checker_and_eprocess"
++
++    arc = report["frozen_arc_goal_contract"]
++    assert arc["lane"] == "falsifiable_live_arc_goal_discovery"
++    assert arc["accepted_without_positive_evidence_allowed"] is False
++    assert arc["hidden_game_source_allowed"] is False
++    assert arc["solve_credit_allowed"] is False
++
++    model_policy = report["frozen_model_policy"]
++    assert set(model_policy["mandatory_hf_ids"]) == set(mod.MANDATED_GGUF_IDS)
++    assert model_policy["llm_call_count_for_exp6351"] == 0
++    assert model_policy["model_weights_must_remain_frozen"] is True
++
++    parser = report["frozen_closed_parser_jit_contract"]
++    assert parser["closed"] is True
++    assert parser["semantic_diversity_gain_score"] == 0.0
++    assert parser["reopen_allowed_in_v547"] is False
++
++    hardware = report["frozen_hardware_nonuse_contract"]
++    assert hardware["board_execution_authorized"] is False
++    assert hardware["hardware_command_count"] == 0
++    assert "PolarFire" in hardware["excluded_hardware"]
++
++
++def test_scenario_6351_schema_write_and_validation_failures(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """SCENARIO-INFRA-6351-5: output is checksummed, typed, and atomic."""
++
++    root = _make_repo(tmp_path / "repo")
++    artifact_root = tmp_path / "artifacts"
++    artifact_root.mkdir()
++    before_text = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_bytes()
++
++    report = mod.write_freeze(
++        root,
++        date="20260812",
++        duration_s=2.0,
++        search_completed_utc="2026-08-12T21:55:33Z",
++        env={ARTIFACT_ROOT_ENV: str(artifact_root)},
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++    )
++
++    target = artifact_root / mod.RESULT_RELATIVE_PATH.name
++    assert json.loads(target.read_text(encoding="utf-8")) == report
++    assert (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_bytes() == before_text
++    assert mod.validate_report(report) == []
++    assert report["protected_files_unchanged"]["all_unchanged"] is True
++    assert set(report["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(report["field_provenance"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(report["source_queries_by_channel"]) == set(mod.REQUIRED_SOURCE_CHANNELS)
++    assert report["reproducibility_checksum"] == mod.payload_checksum(report)
++    assert report["honest_verdict"].startswith("complete_null:")
++    assert report["random_seeds"]["used"] == []
++
++    for mutator, error in (
++        (lambda data: data.pop("status"), "missing required field: status"),
++        (lambda data: data.update({"accepted_count": {"value": 0}}), "accepted_count"),
++        (lambda data: data.update({"llm_call_count": 1}), "llm_call_count"),
++        (lambda data: data.update({"field_principles": {}}), "missing field_principles"),
++        (
++            lambda data: data.update({"source_queries_by_channel": {}}),
++            "source_queries_by_channel",
++        ),
++        (
++            lambda data: data.update({"search_window_start_utc": "2026-08-12T21:28:20Z"}),
++            "search_window_start_utc",
++        ),
++        (
++            lambda data: data["frozen_hardware_nonuse_contract"].update(
++                {"board_execution_authorized": True}
++            ),
++            "frozen_hardware_nonuse_contract",
++        ),
++        (lambda data: data.update({"honest_verdict": "ok"}), "honest_verdict"),
++        (lambda data: data.update({"status": "complete_delta"}), "status"),
++    ):
++        bad = deepcopy(report)
++        mutator(bad)
++        bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++        assert any(error in err for err in mod.validate_report(bad))
++
++    bad = deepcopy(report)
++    bad["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum mismatch" in mod.validate_report(bad)
++
++    monkeypatch.setattr(
++        mod,
++        "run",
++        lambda *, date, root=mod.REPO_ROOT, write=True, command_receipts=None: {
++            "status": f"complete-{date}"
++        },
++    )
++    assert mod.main(["--date", "20260812"]) == 0
++    assert mod.RESULT_RELATIVE_PATH.name in capsys.readouterr().out
++
++    monkeypatch.setattr(mod, "EXTERNAL_TEST_RECEIPT_PATH", tmp_path / "missing.json")
++    assert mod.read_external_test_receipts() == [{"command": mod.RUN_COMMAND, "exit_code": 0}]
++
++    receipt_path = tmp_path / "receipts.json"
++    monkeypatch.setattr(mod, "EXTERNAL_TEST_RECEIPT_PATH", receipt_path)
++    receipt_path.write_text(json.dumps({"focused": 0, "full": 3}), encoding="utf-8")
++    assert mod.read_external_test_receipts() == [
++        {"command": "focused", "exit_code": 0},
++        {"command": "full", "exit_code": 3},
++    ]
++
++    receipt_path.write_text("{bad", encoding="utf-8")
++    assert mod.read_external_test_receipts() == [{"command": mod.RUN_COMMAND, "exit_code": 0}]
++
++    with pytest.raises(ValueError, match="invalid Exp6351 freeze"):
++        mod.write_report({"status": "complete"}, root, env={ARTIFACT_ROOT_ENV: str(artifact_root)})
++
++
++def test_req_infra_6351_helper_edges_and_run_path(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6351: helper edges stay explicit and non-mutating."""
++
++    assert mod._read_text(tmp_path / "missing.md") == ""
++    assert mod._parse_timestamp("not-a-time") is None
++    assert mod._parse_timestamp("2026-08-12T21:28:22").tzinfo is not None
++    assert mod._is_stable_url("ftp://example.com/file") is False
++    with pytest.raises(KeyError):
++        mod._receipt("missing", accessed_at_utc="2026-08-12T21:55:33Z")
++    monkeypatch.setattr(mod, "MARKER_COMMITTED_AT_UTC", "not-a-time")
++    with pytest.raises(ValueError, match="bad V547 marker timestamp"):
++        mod._marker_dt()
++    monkeypatch.setattr(mod, "MARKER_COMMITTED_AT_UTC", "2026-08-12T21:28:21Z")
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("boom")),
++    )
++    assert mod._git_status(REPO) == []
++
++    accepted = _accepted_candidate()
++    for field, value, reason in (
++        ("reproducible_evidence", False, "candidate lacks reproducible evidence"),
++        ("primary_or_first_party", False, "candidate is not primary or first-party"),
++    ):
++        row = deepcopy(accepted)
++        row[field] = value
++        assert mod.classify_candidate(row, reference_text="")["rejection_reason"] == reason
++
++    for seen_key, seen_value, reason in (
++        ("seen_works", {accepted["work_identity"]}, "work identity repeated in this sweep"),
++        (
++            "seen_repositories",
++            {"github:fresh/repo"},
++            "repository identity repeated in this sweep",
++        ),
++        (
++            "seen_mechanisms",
++            {accepted["mechanism"]},
++            "mechanism repeated in this sweep",
++        ),
++        ("seen_hashes", {accepted["content_hash"]}, "content hash repeated in this sweep"),
++    ):
++        row = deepcopy(accepted)
++        if seen_key == "seen_repositories":
++            row["repository_identity"] = "github:fresh/repo"
++        kwargs = {
++            "reference_text": "",
++            "seen_works": set(),
++            "seen_repositories": set(),
++            "seen_mechanisms": set(),
++            "seen_hashes": set(),
++            seen_key: seen_value,
++        }
++        assert mod.classify_candidate(row, **kwargs)["rejection_reason"] == reason
++
++    for field, value, message in (
++        ("url", None, "missing fields"),
++        ("url", "ftp://example.com/file", "stable URL"),
++        ("content_hash", "sha256:bad", "content hash"),
++        ("source_timestamp", mod.MARKER_COMMITTED_AT_UTC, "strictly after"),
++        ("reproducible_evidence", False, "reproducible"),
++        ("primary_or_first_party", False, "primary"),
++        ("local_executable_consequence", False, "local executable"),
++        ("watch_only", True, "watch-only"),
++        ("retired_scope", True, "retired scope"),
++    ):
++        row = deepcopy(accepted)
++        row[field] = value
++        with pytest.raises(ValueError, match=message):
++            mod.validate_accepted_candidate(row)
++
++    repo_candidate = deepcopy(accepted)
++    repo_candidate["repository_identity"] = "github:fresh/repo"
++    partitions = mod.partition_candidates([repo_candidate], reference_text="")
++    assert partitions["accepted"][0]["repository_identity"] == "github:fresh/repo"
++
++    delta_report = mod.build_report(
++        _make_repo(tmp_path / "delta-repo"),
++        date="20260812",
++        candidates=[accepted],
++        duration_s=2.0,
++        search_completed_utc="2026-08-12T21:55:33Z",
++    )
++    assert delta_report["status"] == "complete_delta"
++    assert delta_report["roadmap_scope_delta"]["delta_kind"] == "accepted_source_delta"
++
++    report = mod.build_report(
++        REPO,
++        date="20260812",
++        duration_s=2.0,
++        search_completed_utc="2026-08-12T21:55:33Z",
++    )
++    for mutator, error in (
++        (lambda data: data.update({"inference_substrate": "wrong"}), "inference_substrate"),
++        (lambda data: data.update({"verifier_is_oracle": True}), "verifier_is_oracle"),
++        (lambda data: data.update({"field_provenance": {}}), "missing field_provenance"),
++        (
++            lambda data: data.update({"search_completed_utc": "2026-08-12T21:28:21Z"}),
++            "search_completed_utc",
++        ),
++        (
++            lambda data: data["protected_files_unchanged"].update({"all_unchanged": False}),
++            "protected_files_unchanged",
++        ),
++        (
++            lambda data: data["frozen_live_factor_learning_contract"].update({"version": "bad"}),
++            "frozen_live_factor_learning_contract",
++        ),
++    ):
++        bad = deepcopy(report)
++        mutator(bad)
++        bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++        assert any(error in err for err in mod.validate_report(bad))
++
++    receipt_path = tmp_path / "list-receipts.json"
++    monkeypatch.setattr(mod, "EXTERNAL_TEST_RECEIPT_PATH", receipt_path)
++    receipt_path.write_text(json.dumps([{"command": "focused", "exit_code": 0}]), encoding="utf-8")
++    assert mod.read_external_test_receipts() == [{"command": mod.RUN_COMMAND, "exit_code": 0}]
++
++    writes: list[dict[str, object]] = []
++
++    def fake_write_report(
++        report: dict[str, object], root: Path = REPO, *, env: object = None
++    ) -> Path:
++        writes.append(report)
++        return tmp_path / mod.RESULT_RELATIVE_PATH.name
++
++    monkeypatch.setattr(mod, "write_report", fake_write_report)
++    run_report = mod.run(
++        date="20260812",
++        root=REPO,
++        write=True,
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++    )
++    assert writes and run_report["status"] == "complete_null"
++
++    no_write_report = mod.run(
++        date="20260812",
++        root=REPO,
++        write=False,
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++    )
++    assert no_write_report["status"] == "complete_null"
+-- 
+2.55.0
+

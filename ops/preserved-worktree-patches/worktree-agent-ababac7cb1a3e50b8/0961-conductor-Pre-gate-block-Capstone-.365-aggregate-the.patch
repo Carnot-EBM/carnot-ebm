@@ -1,0 +1,72 @@
+From 33aa64385d313f7110998d3bdf329eed65f5fcd5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 02:31:47 -0400
+Subject: [PATCH 00961/11362] =?UTF-8?q?[conductor]=20Pre-gate=20block:=20C?=
+ =?UTF-8?q?apstone=20.365:=20aggregate=20the=20ARC=20first-solve=20push=20?=
+ =?UTF-8?q?=E2=80=94=20did=20r11l=20SOLVE=20(exp3946=20ACCURACY=5Flevels?=
+ =?UTF-8?q?=5Fsolved=20>=200,=20real-env-confirmed)=3F=20how=20many=20of?=
+ =?UTF-8?q?=20the=206=20non-spatial=20games=20reached=20a=20trustworthy=20?=
+ =?UTF-8?q?world-model=20(exp3947)=3F=20did=20goal-predicate=20induction?=
+ =?UTF-8?q?=20(exp3948)=20and=20latent-register=20augmentation=20(exp3949)?=
+ =?UTF-8?q?=20advance=20plan-ability=3F=20Honest=20verdict=20on=20first-so?=
+ =?UTF-8?q?lve=20progress.=20SKIP=20any=20flagged=5Fadversarial=20artifact?=
+ =?UTF-8?q?;=20cite=20upstream=20sha256.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+1 of 1 gate(s) failed; first failure: exp3946-r11l-first-solve.honest_verdict (unknown op 'exists')
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json               | 2 +-
+ ops/conductor-log.md                       | 1 +
+ ops/conductor-state.json                   | 2 +-
+ results/experiment_3951_capstone_v365.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 09d6559939..6379b7b491 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-06-09T06:29:44Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-06-09T06:31:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7524d99d0a..15af3836fc 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8067,3 +8067,4 @@ c |
+ | 2026-06-09 06:23 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.88s |
+ | 2026-06-09 06:25 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.32s |
+ | 2026-06-09 06:27 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.06s |
++| 2026-06-09 06:29 UTC | Capstone .365: aggregate the ARC first-solve push  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3946-r11l-first-solve.honest_verdict (u |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c7e18f1f2c..fceebbd9f0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 18, "phase": "iteration_start", "started_at": "2026-06-09T06:29:44Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 19, "phase": "iteration_start", "started_at": "2026-06-09T06:31:47Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3951_capstone_v365.json b/results/experiment_3951_capstone_v365.json
+index b2adb5fb26..9db0cd4ead 100644
+--- a/results/experiment_3951_capstone_v365.json
++++ b/results/experiment_3951_capstone_v365.json
+@@ -2,8 +2,8 @@
+   "experiment": 3951,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-09",
+-  "started_at": "2026-06-09T06:29:44.612264+00:00",
+-  "finished_at": "2026-06-09T06:29:44.612264+00:00",
++  "started_at": "2026-06-09T06:31:47.493384+00:00",
++  "finished_at": "2026-06-09T06:31:47.493384+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Capstone .365: aggregate the ARC first-solve push \u2014 did r11l SOLVE (exp3946 ACCURACY_levels_solved > 0, real-env-confirmed)? how many of the 6 non-spatial games reached a trustworthy world-model (exp3947)? did goal-predicate induction (exp3948) and latent-register augmentation (exp3949) advance plan-ability? Honest verdict on first-solve progress. SKIP any flagged_adversarial artifact; cite upstream sha256.",
+-- 
+2.55.0
+

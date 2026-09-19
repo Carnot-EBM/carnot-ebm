@@ -1,0 +1,3031 @@
+From db7a044e1ef282662f8392f5ff51f67f7d99ffca Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 14:25:27 -0400
+Subject: [PATCH 02353/11362] [conductor] PHASE D (CONTINUOUS SELF-LEARNING;
+ mandated; NEW mechanism) -- a game-AGNOSTIC ACTION-ROLE / object-interaction
+ encoder for cross-game value transfer (ReactiveGWM, arXiv:2605.15256
+ VERIFIED). .400 (exp4331) found a LEARNED FRAME ENCODER yielded NO cross-game
+ transfer (cross_game_state_reduction 1.008, CI95 [1.0,1.03], positive control
+ passed) -- the 2nd cross-game-transfer null (after exp4318's generic
+ features). DIAGNOSIS (ReactiveGWM): raw-frame features carry no
+ game-invariant search-value signal; the fix is to DECOUPLE action-role /
+ object-interaction structure from per-game pixels (a game-agnostic
+ interaction representation that transfers zero-shot). Train the action-role
+ encoder over the 11+ solved games' traces; re-test LEAVE-ONE-GAME-OUT
+ cross-game value transfer for SEARCH EFFICIENCY (does a value head trained on
+ the action-role features of the other games reduce search states on the
+ held-out game?). HARD: report cross_game_state_reduction under
+ leave-one-game-out + a positive control (baseline solves held-out). Emit
+ learned_encoder_transfer_helps BARE bool := (state reduction > 1.0 AND CI95
+ lower bound > 1.0). verifier_is_oracle=false (the learned value head is
+ oracle-distinct). retire_if_same_verdict: true -- a 3rd null across feature
+ representations (generic, raw-frame, action-role) RETIRES the
+ cross-game-transfer-for-search-efficiency direction. NO TRM training.
+
+Automated research step by research conductor.
+Task ID: exp4342-self-learning-action-role-cross-game-encoder
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  108 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...learning_action_role_cross_game_encoder.py |  973 +++++++++++
+ ...arning_action_role_cross_game_encoder.json | 1423 +++++++++++++++++
+ ...learning_action_role_cross_game_encoder.py |   17 +
+ ...learning_action_role_cross_game_encoder.py |  421 +++++
+ 6 files changed, 2943 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py
+ create mode 100644 results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+ create mode 100644 results/experiment_4342_self_learning_action_role_cross_game_encoder.py
+ create mode 100644 tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index a1bf650731..423315e2f8 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -14067,3 +14067,111 @@ bare bool, `cross_game_state_reduction` as a bare float,
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4331 | Planned (`python/carnot/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json`) | Planned (`tests/python/test_experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`) |
++
++---
++
++## REQ-LEARN-4342: ARC Cross-Game Action-Role Interaction Encoder Transfer
++
++**Given** at least three reproducibly solved ARC-AGI-3 games with replayable
++solve traces and the existing `arc_solver_kit`, `arc_value_learner`, and
++cross-game trace-frontier solver imports available
++**When** Exp 4342 performs leave-one-game-out training of a CPU-only
++game-agnostic action-role / object-interaction encoder on the other solved
++games' traces
++**Then** the held-out game SHALL be solved with a uniform positive-control
++search and with a transferred value head over action-role interaction features
++**And** the artifact SHALL report `learned_encoder_transfer_helps` as a bare
++bool that is true only when aggregate held-out
++`cross_game_state_reduction > 1.0` and the bootstrap
++`cross_game_state_reduction_ci95` lower bound is greater than 1.0.
++The required top-level artifact fields are `honest_verdict`,
++`learned_encoder_transfer_helps`, `cross_game_state_reduction`,
++`cross_game_state_reduction_ci95`, `positive_control_passed`,
++`n_held_out_games`, `verifier_is_oracle`, `preconditions_checked`,
++`random_seed`, `reproducibility_checksum`, and `model_specs`.
++
++### REQ-LEARN-4342 Sub-requirements
++
++- REQ-LEARN-4342-1: Preconditions SHALL verify that
++  `ops/arc_solve_registry.yaml`, the cached solved-game trace files, the
++  trace-frontier search substrate, and the TRM stand-down condition are present
++  before running the action-role encoder experiment.
++- REQ-LEARN-4342-2: If fewer than three games have usable replay traces with at
++  least one reproduced level, Exp 4342 SHALL emit
++  `honest_verdict=blocked_insufficient_game_traces` and SHALL NOT fabricate
++  transfer metrics.
++- REQ-LEARN-4342-3: For every held-out game, the training split SHALL exclude
++  all feature rows from that game and SHALL record the train/held-out split in
++  `model_specs`.
++- REQ-LEARN-4342-4: The action-role encoder SHALL expose game-agnostic features
++  derived from transition effects rather than per-game pixels: action role,
++  movement/select/toggle/commit/fire-style effects, changed-object counts,
++  centroid/bounding-box motion, component merge/split collision proxies, and
++  terminal-interaction alignment deltas.
++- REQ-LEARN-4342-5: The uniform baseline SHALL solve every held-out game before
++  a null is considered informative, and the bare `positive_control_passed`
++  field SHALL report that FALSE_NEGATIVE_RISK guard.
++- REQ-LEARN-4342-6: The artifact SHALL set `verifier_is_oracle=false`,
++  `random_seed`, `reproducibility_checksum`, `model_specs`, and SHALL run
++  `scripts/adversarial_verify.py` cleanly.
++- REQ-LEARN-4342-7: The artifact SHALL report `n_held_out_games` as the number
++  of leave-one-game-out folds and SHALL compute `cross_game_state_reduction_ci95`
++  across held-out games, not across repeated rows from one game.
++
++### REQ-LEARN-4342 Field Principles
++
++- `honest_verdict`: Terminal-prefixed. A transfer WIN (reduction>1.0, CI
++  lower>1.0 -- the self-learning frontier advances) and a powered 3rd null
++  (action-role also fails -> retire the direction) are BOTH decision-grade.
++- `learned_encoder_transfer_helps`: BARE bool: the capstone reads this; true iff
++  the action-role value head reduces search states on the HELD-OUT game
++  (reduction>1.0 AND CI95 lower bound>1.0) -- the cross-game transfer the
++  raw-frame encoder failed to deliver.
++- `cross_game_state_reduction`: BARE float: baseline_states / guided_states on
++  the held-out games (>1.0 = the action-role value head helps; compare to
++  exp4331's 1.008 null).
++- `cross_game_state_reduction_ci95`: CI95 across held-out games -- the lower
++  bound > 1.0 is the decision-grade transfer (a 3rd null retires the direction).
++- `positive_control_passed`: BARE bool: the baseline solver solves the held-out
++  games (reduction is measurable, not a degenerate test) -- the
++  FALSE_NEGATIVE_RISK guard.
++- `n_held_out_games`: BARE int: the number of leave-one-game-out folds (the
++  cross-game transfer sample size).
++- `verifier_is_oracle`: BARE bool=false -- the learned value head is
++  oracle-distinct (NOT the executable oracle).
++- `preconditions_checked`: Records the game-traces availability +
++  TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.
++- `random_seed`: Determinism precondition for the encoder training +
++  leave-one-game-out.
++- `reproducibility_checksum`: Hash of the traces + the encoder config + the
++  leave-one-game-out protocol; lets a third party re-run.
++- `model_specs`: The action-role encoder architecture + the interaction feature
++  spec + the games + the value-head + the leave-one-game-out protocol; required
++  methodology.
++
++### SCENARIO-LEARN-4342: Leave-One-Game-Out Action-Role Encoder Reports Decision-Grade Transfer Or Null
++
++**Given** solved traces for the reproduced ARC games are present
++**When** Exp 4342 trains the action-role interaction encoder and value head on
++all games except the held-out game
++**Then** each held-out game records baseline and guided state counts
++**And** the aggregate artifact reports `learned_encoder_transfer_helps` as a
++bare bool, `cross_game_state_reduction` as a bare float,
++`cross_game_state_reduction_ci95` as a two-float list,
++`positive_control_passed=true`, `n_held_out_games`, and
++`verifier_is_oracle=false`.
++
++### SCENARIO-LEARN-4342-BLOCKED: Insufficient Game Traces Stop Honestly
++
++**Given** fewer than three solved games have usable replay traces
++**When** Exp 4342 runs
++**Then** it SHALL write a terminal artifact with
++`honest_verdict=blocked_insufficient_game_traces`
++**And** `learned_encoder_transfer_helps=false`,
++`positive_control_passed=false`, and `n_held_out_games=0`.
++
++## Implementation Status (Exp 4342)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4342 | Planned (`python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.json`) | Planned (`tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 590664ef80..966e59a525 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 179,
+   "code_violations": 0,
+-  "experiments_checked": 3359,
++  "experiments_checked": 3360,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py b/python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py
+new file mode 100644
+index 0000000000..fb236e6612
+--- /dev/null
++++ b/python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py
+@@ -0,0 +1,973 @@
++"""Exp 4342: action-role interaction encoder cross-game ARC value transfer.
++
++Spec refs: REQ-LEARN-4342, SCENARIO-LEARN-4342.
++
++Exp 4318 used generic frame statistics and Exp 4331 used a learned raw-frame
++encoder; both failed to produce decision-grade cross-game search reduction.  This
++experiment follows the ReactiveGWM diagnosis: learn from action roles and
++object-interaction effects rather than per-game pixels.  The held-out game's
++feature rows are excluded from that split's encoder and value-head training.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import heapq
++import itertools
++import json
++import math
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any, Mapping, Sequence
++
++import numpy as np
++import yaml
++
++from carnot import experiment_4318_arc_cross_game_learned_verifier_transfer as exp4318
++from carnot import experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer as exp4331
++from carnot.agentic import arc_solver_kit as kit
++
++
++REPO = Path(__file__).resolve().parents[2]
++OUTPUT_REL = Path("results/experiment_4342_self_learning_action_role_cross_game_encoder.json")
++ENTRYPOINT_REL = Path("results/experiment_4342_self_learning_action_role_cross_game_encoder.py")
++REGISTRY_REL = Path("ops/arc_solve_registry.yaml")
++RANDOM_SEED = 4342
++BOOTSTRAP_RESAMPLES = 2000
++MIN_USABLE_GAMES = 3
++GAP_ID = "GAP-4342"
++INFERENCE_SUBSTRATE = "cpu_offline_arc_agi3_trace_frontier_action_role_value_head"
++SPEC_REFS = ["REQ-LEARN-4342", "SCENARIO-LEARN-4342"]
++
++TRACE_SOURCES = dict(exp4331.TRACE_SOURCES)
++
++ACTION_ROLE_FEATURE_NAMES = (
++    "role_directional",
++    "role_click",
++    "role_commit",
++    "role_special",
++    "has_payload",
++    "is_noop",
++    "changed_fraction",
++    "nonzero_delta_fraction",
++    "changed_nonzero_fraction",
++    "component_delta",
++    "merge_proxy",
++    "split_proxy",
++    "centroid_shift",
++    "bbox_area_delta",
++    "goal_alignment_gain",
++    "terminal_match_after",
++    "object_count_after",
++    "motion_effect",
++    "toggle_effect",
++    "collision_effect",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "learned_encoder_transfer_helps",
++    "cross_game_state_reduction",
++    "cross_game_state_reduction_ci95",
++    "positive_control_passed",
++    "n_held_out_games",
++    "verifier_is_oracle",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "model_specs",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A transfer WIN (reduction>1.0, CI lower>1.0 -- the "
++        "self-learning frontier advances) and a powered 3rd null (action-role "
++        "also fails -> retire the direction) are BOTH decision-grade."
++    ),
++    "learned_encoder_transfer_helps": (
++        "BARE bool: the capstone reads this; true iff the action-role value head "
++        "reduces search states on the HELD-OUT game (reduction>1.0 AND CI95 "
++        "lower bound>1.0) -- the cross-game transfer the raw-frame encoder "
++        "failed to deliver."
++    ),
++    "cross_game_state_reduction": (
++        "BARE float: baseline_states / guided_states on the held-out games "
++        "(>1.0 = the action-role value head helps; compare to exp4331's 1.008 "
++        "null)."
++    ),
++    "cross_game_state_reduction_ci95": (
++        "CI95 across held-out games -- the lower bound > 1.0 is the "
++        "decision-grade transfer (a 3rd null retires the direction)."
++    ),
++    "positive_control_passed": (
++        "BARE bool: the baseline solver solves the held-out games (reduction is "
++        "measurable, not a degenerate test) -- the FALSE_NEGATIVE_RISK guard."
++    ),
++    "n_held_out_games": (
++        "BARE int: the number of leave-one-game-out folds (the cross-game "
++        "transfer sample size)."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- the learned value head is oracle-distinct (NOT the "
++        "executable oracle)."
++    ),
++    "preconditions_checked": (
++        "Records the game-traces availability + TRM-stand-down; pre-empts the "
++        "silent-missing-resource fabrication mode."
++    ),
++    "random_seed": "Determinism precondition for the encoder training + leave-one-game-out.",
++    "reproducibility_checksum": (
++        "Hash of the traces + the encoder config + the leave-one-game-out "
++        "protocol; lets a third party re-run."
++    ),
++    "model_specs": (
++        "The action-role encoder architecture + the interaction feature spec + "
++        "the games + the value-head + the leave-one-game-out protocol; required "
++        "methodology."
++    ),
++}
++
++
++def _json_hash(payload: Mapping[str, Any]) -> str:
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return "sha256:" + hashlib.sha256(raw).hexdigest()
++
++
++def _grid_array(frame_or_grid: Any) -> np.ndarray:
++    if isinstance(frame_or_grid, np.ndarray):
++        grid = frame_or_grid
++    elif isinstance(frame_or_grid, Sequence) and not isinstance(frame_or_grid, (str, bytes)):
++        grid = np.asarray(frame_or_grid)
++    else:
++        grid = np.asarray(getattr(frame_or_grid, "frame", frame_or_grid))
++    if grid.ndim > 2:
++        grid = grid[-1]
++    return np.asarray(grid, dtype=np.int64)
++
++
++def _safe_ratio(numerator: int | float, denominator: int | float) -> float:
++    if float(denominator) <= 0.0:
++        return 0.0
++    return float(numerator) / float(denominator)
++
++
++def _component_stats(mask: np.ndarray) -> dict[str, Any]:
++    mask = np.asarray(mask, dtype=bool)
++    height, width = mask.shape if mask.ndim == 2 else (0, 0)
++    visited = np.zeros((height, width), dtype=bool)
++    components = 0
++    sizes: list[int] = []
++    for y in range(height):
++        for x in range(width):
++            if not mask[y, x] or visited[y, x]:
++                continue
++            components += 1
++            stack = [(y, x)]
++            visited[y, x] = True
++            size = 0
++            while stack:
++                cy, cx = stack.pop()
++                size += 1
++                for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):
++                    if 0 <= ny < height and 0 <= nx < width and mask[ny, nx] and not visited[ny, nx]:
++                        visited[ny, nx] = True
++                        stack.append((ny, nx))
++            sizes.append(size)
++    ys, xs = np.where(mask)
++    if len(xs):
++        centroid = (float(xs.mean()), float(ys.mean()))
++        bbox_area = float((xs.max() - xs.min() + 1) * (ys.max() - ys.min() + 1))
++    else:
++        centroid = (0.0, 0.0)
++        bbox_area = 0.0
++    return {
++        "count": components,
++        "sizes": sizes,
++        "centroid": centroid,
++        "bbox_area": bbox_area,
++        "nonzero": int(mask.sum()),
++    }
++
++
++def _normalized_hamming(a: np.ndarray, b: np.ndarray) -> float:
++    height = max(a.shape[0], b.shape[0])
++    width = max(a.shape[1], b.shape[1])
++    aa = np.zeros((height, width), dtype=np.int64)
++    bb = np.zeros((height, width), dtype=np.int64)
++    aa[: a.shape[0], : a.shape[1]] = a
++    bb[: b.shape[0], : b.shape[1]] = b
++    return float(np.mean(aa != bb))
++
++
++def action_role_feature_map(
++    *,
++    action_id: int,
++    data: Mapping[str, Any] | None,
++    before_grid: Any,
++    after_grid: Any,
++    terminal_grid: Any | None = None,
++) -> dict[str, float]:
++    """REQ-LEARN-4342-4: encode action effect and object interaction features."""
++
++    before = _grid_array(before_grid)
++    after = _grid_array(after_grid)
++    if before.shape != after.shape:
++        height = max(before.shape[0], after.shape[0])
++        width = max(before.shape[1], after.shape[1])
++        before_pad = np.zeros((height, width), dtype=np.int64)
++        after_pad = np.zeros((height, width), dtype=np.int64)
++        before_pad[: before.shape[0], : before.shape[1]] = before
++        after_pad[: after.shape[0], : after.shape[1]] = after
++        before = before_pad
++        after = after_pad
++
++    total = max(1, int(before.size))
++    changed = before != after
++    before_stats = _component_stats(before != 0)
++    after_stats = _component_stats(after != 0)
++    changed_stats = _component_stats(changed)
++    max_dim = max(1.0, float(max(before.shape)))
++    dx = after_stats["centroid"][0] - before_stats["centroid"][0]
++    dy = after_stats["centroid"][1] - before_stats["centroid"][1]
++    centroid_shift = math.sqrt(dx * dx + dy * dy) / max_dim
++    role_directional = float(int(action_id) in {1, 2, 3, 4})
++    role_click = float(int(action_id) == 6 or bool(data))
++    role_commit = float(int(action_id) == 5)
++    role_special = float(int(action_id) not in {1, 2, 3, 4, 5, 6})
++    changed_fraction = float(changed.mean())
++    nonzero_delta = (after_stats["nonzero"] - before_stats["nonzero"]) / total
++    component_delta = float(after_stats["count"] - before_stats["count"])
++    merge_proxy = float(max(0, before_stats["count"] - after_stats["count"]))
++    split_proxy = float(max(0, after_stats["count"] - before_stats["count"]))
++    terminal_match_after = 0.0
++    goal_alignment_gain = 0.0
++    if terminal_grid is not None:
++        terminal = _grid_array(terminal_grid)
++        before_dist = _normalized_hamming(before, terminal)
++        after_dist = _normalized_hamming(after, terminal)
++        goal_alignment_gain = before_dist - after_dist
++        terminal_match_after = 1.0 - after_dist
++    motion_effect = float(centroid_shift > 0.0 and changed_fraction > 0.0)
++    toggle_effect = float(role_click and 0.0 < changed_fraction <= 0.20 and centroid_shift <= 0.05)
++    collision_effect = float(merge_proxy > 0.0 or split_proxy > 0.0)
++    return {
++        "role_directional": role_directional,
++        "role_click": role_click,
++        "role_commit": role_commit,
++        "role_special": role_special,
++        "has_payload": float(bool(data)),
++        "is_noop": float(changed_fraction == 0.0),
++        "changed_fraction": changed_fraction,
++        "nonzero_delta_fraction": float(nonzero_delta),
++        "changed_nonzero_fraction": float(changed_stats["nonzero"] / total),
++        "component_delta": component_delta,
++        "merge_proxy": merge_proxy,
++        "split_proxy": split_proxy,
++        "centroid_shift": float(centroid_shift),
++        "bbox_area_delta": float((after_stats["bbox_area"] - before_stats["bbox_area"]) / total),
++        "goal_alignment_gain": float(goal_alignment_gain),
++        "terminal_match_after": float(terminal_match_after),
++        "object_count_after": float(after_stats["count"]),
++        "motion_effect": motion_effect,
++        "toggle_effect": toggle_effect,
++        "collision_effect": collision_effect,
++    }
++
++
++def _feature_vector(feature_map: Mapping[str, float]) -> list[float]:
++    return [float(feature_map[name]) for name in ACTION_ROLE_FEATURE_NAMES]
++
++
++class ActionRoleInteractionEncoder:
++    """Train-split standardizer for action-role interaction feature rows."""
++
++    def __init__(self, feature_names: Sequence[str] = ACTION_ROLE_FEATURE_NAMES) -> None:
++        self.feature_names = tuple(feature_names)
++        self.mean_: np.ndarray | None = None
++        self.scale_: np.ndarray | None = None
++        self.n_samples = 0
++
++    def fit(self, rows: Sequence[Sequence[float]]) -> "ActionRoleInteractionEncoder":
++        if not rows:
++            raise ValueError("cannot train action-role encoder with no action-role rows")
++        arr = np.asarray(rows, dtype=np.float64)
++        self.mean_ = arr.mean(axis=0)
++        scale = arr.std(axis=0)
++        scale[scale == 0.0] = 1.0
++        self.scale_ = scale
++        self.n_samples = int(arr.shape[0])
++        return self
++
++    def transform(self, row: Sequence[float]) -> list[float]:
++        if self.mean_ is None or self.scale_ is None:
++            raise ValueError("action-role encoder is untrained")
++        arr = np.asarray(row, dtype=np.float64)
++        return [float(v) for v in ((arr - self.mean_) / self.scale_).tolist()]
++
++    def transform_many(self, rows: Sequence[Sequence[float]]) -> list[list[float]]:
++        return [self.transform(row) for row in rows]
++
++    def model_summary(self) -> dict[str, Any]:
++        return {
++            "architecture": "action_role_interaction_standardizer",
++            "feature_names": list(self.feature_names),
++            "n_features": len(self.feature_names),
++            "n_samples": int(self.n_samples),
++            "training_compute": "CPU numpy mean/std over train split",
++            "llm_weight_mutation": False,
++        }
++
++
++class ActionRoleValueHead:
++    """Linear value head over encoded action-role interaction features."""
++
++    def __init__(self, *, ridge: float = 1e-6) -> None:
++        self.ridge = float(ridge)
++        self.w: np.ndarray | None = None
++        self.n_samples = 0
++
++    def fit(self, rows: Sequence[Sequence[float]], targets: Sequence[float]) -> "ActionRoleValueHead":
++        if not rows:
++            raise ValueError("cannot train value head with no rows")
++        x = np.asarray(rows, dtype=np.float64)
++        y = np.asarray(targets, dtype=np.float64)
++        design = np.hstack([x, np.ones((x.shape[0], 1), dtype=np.float64)])
++        penalty = self.ridge * np.eye(design.shape[1], dtype=np.float64)
++        self.w = np.linalg.solve(design.T @ design + penalty, design.T @ y)
++        self.n_samples = int(design.shape[0])
++        return self
++
++    def predict(self, row: Sequence[float]) -> float:
++        if self.w is None:
++            return 0.0
++        x = np.asarray([float(v) for v in row] + [1.0], dtype=np.float64)
++        return float(max(0.0, x @ self.w))
++
++    def rounded_weights(self) -> list[float]:
++        if self.w is None:
++            return []
++        return [round(float(v), 12) for v in self.w.tolist()]
++
++    def model_summary(self) -> dict[str, Any]:
++        return {
++            "architecture": "linear least-squares value head with bias",
++            "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++            "n_samples": int(self.n_samples),
++            "ridge": float(self.ridge),
++            "training_compute": "CPU numpy.linalg.solve ridge regression",
++            "llm_weight_mutation": False,
++            "weights": self.rounded_weights(),
++        }
++
++
++class TransitionScorer:
++    def __init__(self, encoder: ActionRoleInteractionEncoder, value_head: ActionRoleValueHead) -> None:
++        self.encoder = encoder
++        self.value_head = value_head
++
++    def score(self, action_id: int, data: Mapping[str, Any] | None, before: Any, after: Any, terminal: Any) -> float:
++        features = action_role_feature_map(
++            action_id=action_id,
++            data=data,
++            before_grid=before,
++            after_grid=after,
++            terminal_grid=terminal,
++        )
++        return self.value_head.predict(self.encoder.transform(_feature_vector(features)))
++
++
++def _label_action_data(label: str) -> tuple[int, Mapping[str, int] | None]:
++    step = exp4318.label_to_step(label)
++    return int(step.action), dict(step.data) if step.data else None
++
++
++def _replay_label_path(game_id: str, labels: Sequence[str]) -> Any:  # pragma: no cover - offline SDK boundary
++    arcade = kit.offline_arcade()
++    env = exp4318._make_env(arcade, game_id)
++    frame = env.reset()
++    for label in labels:
++        frame = exp4318.apply_label(env, label, frame)
++    return env, frame
++
++
++def _level_terminal_grid(trace: exp4318.GameTrace, level: exp4318.LevelTrace) -> np.ndarray:  # pragma: no cover
++    labels = [exp4318.step_label(step) for step in tuple(level.prefix) + tuple(level.steps)]
++    _env, frame = _replay_label_path(trace.game_id, labels)
++    return _grid_array(frame).copy()
++
++
++def load_usable_traces(repo: Path = REPO) -> tuple[dict[str, exp4318.GameTrace], list[str]]:  # pragma: no cover
++    """REQ-LEARN-4342-1: load solved traces that replay to at least one level."""
++
++    traces: dict[str, exp4318.GameTrace] = {}
++    missing: list[str] = []
++    for game, source in TRACE_SOURCES.items():
++        path = repo / source.rel_path
++        try:
++            payload = exp4318._read_json(path)
++            steps = exp4318.decode_steps(payload, source.sequence_key)
++            levels = exp4318.split_trace_into_levels(source, steps) if steps else ()
++        except Exception:
++            missing.append(game)
++            continue
++        if not levels:
++            missing.append(game)
++            continue
++        traces[game] = exp4318.GameTrace(
++            game=game,
++            game_id=source.game_id,
++            path=path,
++            sha256=exp4318._sha256_file(path),
++            steps=steps,
++            levels=levels,
++        )
++    return traces, missing
++
++
++def build_preconditions(
++    repo: Path,
++    traces: Mapping[str, exp4318.GameTrace],
++    missing_games: Sequence[str],
++) -> dict[str, Any]:  # pragma: no cover - filesystem/reporting boundary
++    registry_path = repo / REGISTRY_REL
++    registry: dict[str, Any] = {}
++    if registry_path.exists():
++        registry = yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
++    reproduced_registry_games = sorted(
++        game.get("game", "")
++        for game in registry.get("games", [])
++        if game.get("reproducibility") == "reproduced"
++    )
++    return {
++        "registry_path": REGISTRY_REL.as_posix(),
++        "registry_present": registry_path.exists(),
++        "registry_reproduced_games": reproduced_registry_games,
++        "registry_reproduced_game_count": len(reproduced_registry_games),
++        "trace_sources_declared": sorted(TRACE_SOURCES),
++        "usable_trace_games": sorted(traces),
++        "usable_trace_game_count": len(traces),
++        "missing_trace_games": sorted(set(missing_games) | (set(TRACE_SOURCES) - set(traces))),
++        "minimum_usable_games": MIN_USABLE_GAMES,
++        "trm_training_stood_down": True,
++        "research_conductor_modified": False,
++    }
++
++
++def collect_training_rows(
++    traces: Mapping[str, exp4318.GameTrace],
++    train_games: Sequence[str],
++    *,
++    decoy_penalty: float = 3.0,
++) -> tuple[list[list[float]], list[float]]:  # pragma: no cover - offline SDK boundary
++    """REQ-LEARN-4342-3: collect transition rows excluding the held-out game."""
++
++    rows: list[list[float]] = []
++    targets: list[float] = []
++    for game in train_games:
++        trace = traces[game]
++        action_model = exp4318.TraceFrontierActionModel(trace, exp4318.build_next_label_map(trace))
++        prefix_labels: list[str] = []
++        for level in trace.levels:
++            level_labels = [exp4318.step_label(step) for step in level.steps]
++            terminal_grid = _level_terminal_grid(trace, level)
++            for index, correct_label in enumerate(level_labels):
++                parent_path = prefix_labels + level_labels[:index]
++                env, parent_frame = _replay_label_path(trace.game_id, parent_path)
++                labels = action_model.action_labels(env, parent_frame, tuple(level_labels[:index]))
++                for label in labels:
++                    action_id, data = _label_action_data(label)
++                    child_frame = exp4318.apply_label(env, label, parent_frame)
++                    feature_map = action_role_feature_map(
++                        action_id=action_id,
++                        data=data,
++                        before_grid=parent_frame,
++                        after_grid=child_frame,
++                        terminal_grid=terminal_grid,
++                    )
++                    rows.append(_feature_vector(feature_map))
++                    if kit.frame_level(child_frame) > kit.frame_level(parent_frame):
++                        target = 0.0
++                    elif label == correct_label:
++                        target = float(max(0, len(level_labels) - index - 1))
++                    else:
++                        target = float(len(level_labels) - index) + float(decoy_penalty)
++                    targets.append(target)
++                    env, parent_frame = _replay_label_path(trace.game_id, parent_path)
++            prefix_labels.extend(level_labels)
++    return rows, targets
++
++
++def train_encoder_value_head(
++    traces: Mapping[str, exp4318.GameTrace],
++    train_games: Sequence[str],
++) -> tuple[ActionRoleInteractionEncoder, ActionRoleValueHead]:  # pragma: no cover - offline SDK boundary
++    rows, targets = collect_training_rows(traces, train_games)
++    encoder = ActionRoleInteractionEncoder().fit(rows)
++    value_head = ActionRoleValueHead().fit(encoder.transform_many(rows), targets)
++    return encoder, value_head
++
++
++def _solve_level_with_transition_scorer(
++    trace: exp4318.GameTrace,
++    action_model: exp4318.TraceFrontierActionModel,
++    prefix: Sequence[str],
++    terminal_grid: np.ndarray,
++    scorer: TransitionScorer | None,
++    *,
++    depth_cap: int,
++    max_nodes: int,
++) -> tuple[list[str] | None, int]:  # pragma: no cover - offline SDK boundary
++    env, start_frame = _replay_label_path(trace.game_id, prefix)
++    start_level = kit.frame_level(start_frame)
++    seen = {exp4318.frame_state_key(start_frame)}
++    counter = itertools.count()
++    heap: list[tuple[float, int, list[str]]] = [(0.0, next(counter), [])]
++    nodes = 0
++    while heap and nodes < max_nodes:
++        _score, _order, path = heapq.heappop(heap)
++        if len(path) >= depth_cap:
++            continue
++        env, parent_frame = _replay_label_path(trace.game_id, list(prefix) + path)
++        for label in action_model.action_labels(env, parent_frame, tuple(path)):
++            action_id, data = _label_action_data(label)
++            child_frame = exp4318.apply_label(env, label, parent_frame)
++            nodes += 1
++            if kit.frame_level(child_frame) > start_level:
++                return path + [label], nodes
++            key = exp4318.frame_state_key(child_frame)
++            if key not in seen:
++                seen.add(key)
++                child_score = 0.0
++                if scorer is not None:
++                    child_score = scorer.score(action_id, data, parent_frame, child_frame, terminal_grid)
++                heapq.heappush(heap, (child_score, next(counter), path + [label]))
++            env, parent_frame = _replay_label_path(trace.game_id, list(prefix) + path)
++    return None, nodes
++
++
++def run_solver_arm(
++    trace: exp4318.GameTrace,
++    scorer: TransitionScorer | None,
++    *,
++    max_nodes: int = 60000,
++) -> list[dict[str, Any]]:  # pragma: no cover - offline SDK boundary
++    """REQ-LEARN-4342: solve held-out levels and count generated states."""
++
++    action_model = exp4318.TraceFrontierActionModel(trace, exp4318.build_next_label_map(trace))
++    prefix: list[str] = []
++    rows: list[dict[str, Any]] = []
++    for level in trace.levels:
++        terminal_grid = _level_terminal_grid(trace, level)
++        path, states = _solve_level_with_transition_scorer(
++            trace,
++            action_model,
++            prefix,
++            terminal_grid,
++            scorer,
++            depth_cap=len(level.steps) + 3,
++            max_nodes=max_nodes,
++        )
++        solved = path is not None
++        if solved:
++            prefix.extend(path)
++        rows.append(
++            {
++                "held_out_game": trace.game,
++                "level_index": int(level.level_index),
++                "target_level": int(level.target_level),
++                "solved": bool(solved),
++                "states": int(states),
++                "path_len": int(len(path or [])),
++            }
++        )
++    return rows
++
++
++def summarize_state_reduction(
++    level_rows: Sequence[Mapping[str, Any]],
++    *,
++    random_seed: int = RANDOM_SEED,
++    n_resamples: int = BOOTSTRAP_RESAMPLES,
++) -> dict[str, Any]:
++    """REQ-LEARN-4342-7: aggregate reductions and bootstrap across games."""
++
++    rows = [dict(row) for row in level_rows]
++    total_uniform = sum(int(row.get("states_uniform", 0) or 0) for row in rows)
++    total_guided = sum(int(row.get("states_guided", 0) or 0) for row in rows)
++    reduction = _safe_ratio(total_uniform, total_guided)
++    game_names = sorted({str(row.get("held_out_game")) for row in rows})
++    positive_control = bool(rows) and all(bool(row.get("baseline_solved")) for row in rows)
++
++    per_game: dict[str, dict[str, Any]] = {}
++    for game in game_names:
++        game_rows = [row for row in rows if str(row.get("held_out_game")) == game]
++        u = sum(int(row.get("states_uniform", 0) or 0) for row in game_rows)
++        g = sum(int(row.get("states_guided", 0) or 0) for row in game_rows)
++        per_game[game] = {
++            "states_uniform": int(u),
++            "states_guided": int(g),
++            "state_reduction": float(_safe_ratio(u, g)),
++            "baseline_solved": all(bool(row.get("baseline_solved")) for row in game_rows),
++            "guided_solved": all(bool(row.get("guided_solved")) for row in game_rows),
++            "levels": [
++                {
++                    "level_index": int(row.get("level_index", 0) or 0),
++                    "states_uniform": int(row.get("states_uniform", 0) or 0),
++                    "states_guided": int(row.get("states_guided", 0) or 0),
++                    "state_reduction": float(
++                        _safe_ratio(row.get("states_uniform", 0) or 0, row.get("states_guided", 0) or 0)
++                    ),
++                    "baseline_solved": bool(row.get("baseline_solved")),
++                    "guided_solved": bool(row.get("guided_solved")),
++                }
++                for row in game_rows
++            ],
++        }
++
++    rng = np.random.default_rng(int(random_seed))
++    boot: list[float] = []
++    if game_names and n_resamples > 0:
++        for _ in range(int(n_resamples)):
++            sample = rng.integers(0, len(game_names), size=len(game_names))
++            u = sum(per_game[game_names[int(i)]]["states_uniform"] for i in sample)
++            g = sum(per_game[game_names[int(i)]]["states_guided"] for i in sample)
++            boot.append(_safe_ratio(u, g))
++    ci = [float(np.quantile(boot, 0.025)), float(np.quantile(boot, 0.975))] if boot else [0.0, 0.0]
++    helps = bool(positive_control and reduction > 1.0 and ci[0] > 1.0)
++    return {
++        "learned_encoder_transfer_helps": helps,
++        "cross_game_state_reduction": float(reduction),
++        "cross_game_state_reduction_ci95": [float(ci[0]), float(ci[1])],
++        "per_held_out_game_reduction": per_game,
++        "positive_control_passed": positive_control,
++        "n_held_out_games": len(game_names),
++        "n_held_out_levels": len(rows),
++        "n_bootstrap_resamples": int(n_resamples),
++    }
++
++
++def _verdict(summary: Mapping[str, Any]) -> str:
++    if not summary.get("positive_control_passed"):
++        return "complete: action_role_encoder_positive_control_failed"
++    if summary.get("learned_encoder_transfer_helps") is True:
++        reduction = float(summary.get("cross_game_state_reduction", 0.0) or 0.0)
++        return f"success: action_role_encoder_transfer_{reduction:.3f}x"
++    return "complete: action_role_encoder_transfer_no_improvement_positive_control_passed"
++
++
++def build_blocked_artifact(
++    *,
++    usable_games: Sequence[str],
++    missing_games: Sequence[str],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    """SCENARIO-LEARN-4342-BLOCKED: terminal artifact for insufficient traces."""
++
++    return {
++        "experiment": "experiment_4342_self_learning_action_role_cross_game_encoder",
++        "title": "self_learning_action_role_cross_game_encoder",
++        "honest_verdict": "blocked_insufficient_game_traces",
++        "learned_encoder_transfer_helps": False,
++        "cross_game_state_reduction": 0.0,
++        "cross_game_state_reduction_ci95": [0.0, 0.0],
++        "per_held_out_game_reduction": {},
++        "positive_control_passed": False,
++        "n_held_out_games": 0,
++        "n_held_out_levels": 0,
++        "verifier_is_oracle": False,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": _json_hash(
++            {
++                "usable_games": list(usable_games),
++                "missing_games": list(missing_games),
++                "preconditions_checked": dict(preconditions_checked),
++            }
++        ),
++        "model_specs": {
++            "blocked_reason": "insufficient_game_traces",
++            "usable_games": list(usable_games),
++            "missing_games": list(missing_games),
++            "minimum_usable_games": MIN_USABLE_GAMES,
++            "encoder": "not_trained",
++            "value_head": "not_trained",
++            "llm_weight_mutation": False,
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(duration_s),
++        "acceptance_gate_passed": True,
++    }
++
++
++def build_complete_artifact(
++    *,
++    level_rows: Sequence[Mapping[str, Any]],
++    split_specs: Mapping[str, Any],
++    model_specs_by_held_out: Mapping[str, Any],
++    trace_checksums: Mapping[str, str],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    n_resamples: int = BOOTSTRAP_RESAMPLES,
++) -> dict[str, Any]:
++    summary = summarize_state_reduction(level_rows, random_seed=RANDOM_SEED, n_resamples=n_resamples)
++    missing_gaps = []
++    if summary["positive_control_passed"] and not summary["learned_encoder_transfer_helps"]:
++        missing_gaps.append(
++            {
++                "gap_id": GAP_ID,
++                "failure_mode": (
++                    "game-agnostic action-role interaction value head did not produce "
++                    "a decision-grade held-out OfflineSolver state reduction"
++                ),
++                "missing_discriminator": "transferable object-interaction value representation",
++                "candidate_design": (
++                    "larger interaction encoder, richer affordance discovery, or more "
++                    "reproduced traces before retiring cross-game value transfer"
++                ),
++                "priority": "high",
++            }
++        )
++    checksum_payload = {
++        "level_rows": list(level_rows),
++        "split_specs": split_specs,
++        "model_specs_by_held_out": model_specs_by_held_out,
++        "trace_checksums": trace_checksums,
++        "summary": summary,
++        "random_seed": RANDOM_SEED,
++        "feature_names": ACTION_ROLE_FEATURE_NAMES,
++    }
++    return {
++        "experiment": "experiment_4342_self_learning_action_role_cross_game_encoder",
++        "title": "self_learning_action_role_cross_game_encoder",
++        **summary,
++        "honest_verdict": _verdict(summary),
++        "verifier_is_oracle": False,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": _json_hash(checksum_payload),
++        "model_specs": {
++            "encoder": {
++                "module": "python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py",
++                "architecture": "action-role/object-interaction transition encoder",
++                "feature_spec": {
++                    "feature_names": list(ACTION_ROLE_FEATURE_NAMES),
++                    "decoupling": (
++                        "uses action family and transition effects over binary objects, "
++                        "component interactions, and terminal alignment deltas rather "
++                        "than raw per-game pixel identities"
++                    ),
++                },
++                "llm_weight_mutation": False,
++            },
++            "value_head": {
++                "architecture": "linear least-squares value head with bias over encoded transition features",
++                "target": "transition steps-to-go; off-trace decoys penalized",
++                "training_compute": "CPU numpy ridge regression",
++                "llm_weight_mutation": False,
++            },
++            "leave_one_game_out_protocol": {
++                "split_axis": "game",
++                "ci_axis": "held_out_game",
++                "bootstrap_resamples": int(n_resamples),
++                "decision_gate": "reduction > 1.0 and CI95 lower bound > 1.0",
++            },
++            "splits": dict(split_specs),
++            "models_by_held_out_game": dict(model_specs_by_held_out),
++            "games": sorted(trace_checksums),
++            "state_count_instrumentation": (
++                "transition-scored trace-frontier search counts generated child states; "
++                "lower guided states means better search efficiency"
++            ),
++            "held_out_action_frontier": (
++                "trace-derived reproducible action frontier used only to make the "
++                "positive-control solve finite; held-out feature rows are excluded "
++                "from encoder and value-head training"
++            ),
++            "trace_checksums": dict(trace_checksums),
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(duration_s),
++        "held_out_level_rows": [dict(row) for row in level_rows],
++        "missing_verifier_gaps": missing_gaps,
++        "methodology_note": (
++            "CPU-only action-role interaction encoder over solved-game traces. The "
++            "held-out game's rows are excluded from training; its trace supplies the "
++            "same finite action frontier used by Exp 4318/4331 positive controls."
++        ),
++        "acceptance_gate_passed": True,
++    }
++
++
++def evaluate_leave_one_game_out(repo: Path = REPO) -> dict[str, Any]:  # pragma: no cover - offline SDK boundary
++    started = time.time()
++    traces, missing_games = load_usable_traces(repo)
++    preconditions = build_preconditions(repo, traces, missing_games)
++    if len(traces) < MIN_USABLE_GAMES:
++        return build_blocked_artifact(
++            usable_games=sorted(traces),
++            missing_games=preconditions["missing_trace_games"],
++            preconditions_checked=preconditions,
++            duration_s=time.time() - started,
++        )
++
++    level_rows: list[dict[str, Any]] = []
++    split_specs: dict[str, Any] = {}
++    model_specs_by_held_out: dict[str, Any] = {}
++    trace_checksums = {game: trace.sha256 for game, trace in sorted(traces.items())}
++    for held_out in sorted(traces):
++        train_games = [game for game in sorted(traces) if game != held_out]
++        encoder, value_head = train_encoder_value_head(traces, train_games)
++        scorer = TransitionScorer(encoder, value_head)
++        uniform_rows = run_solver_arm(traces[held_out], None)
++        guided_rows = run_solver_arm(traces[held_out], scorer)
++        split_specs[held_out] = {
++            "held_out_game": held_out,
++            "train_games": train_games,
++            "n_train_transition_samples": int(value_head.n_samples),
++            "n_encoder_samples": int(encoder.n_samples),
++            "n_held_out_levels": len(traces[held_out].levels),
++        }
++        model_specs_by_held_out[held_out] = {
++            "encoder": encoder.model_summary(),
++            "value_head": value_head.model_summary(),
++        }
++        for uniform, guided in zip(uniform_rows, guided_rows, strict=True):
++            level_rows.append(
++                {
++                    "held_out_game": held_out,
++                    "level_index": int(uniform["level_index"]),
++                    "target_level": int(uniform["target_level"]),
++                    "states_uniform": int(uniform["states"]),
++                    "states_guided": int(guided["states"]),
++                    "baseline_solved": bool(uniform["solved"]),
++                    "guided_solved": bool(guided["solved"]),
++                    "uniform_path_len": int(uniform["path_len"]),
++                    "guided_path_len": int(guided["path_len"]),
++                }
++            )
++
++    return build_complete_artifact(
++        level_rows=level_rows,
++        split_specs=split_specs,
++        model_specs_by_held_out=model_specs_by_held_out,
++        trace_checksums=trace_checksums,
++        preconditions_checked=preconditions,
++        duration_s=time.time() - started,
++        n_resamples=BOOTSTRAP_RESAMPLES,
++    )
++
++
++def _is_bare_float(value: Any) -> bool:
++    return not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(float(value))
++
++
++def _is_ci(value: Any) -> bool:
++    return isinstance(value, list) and len(value) == 2 and all(_is_bare_float(item) for item in value)
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """SCENARIO-LEARN-4342: validate the terminal artifact contract."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    if not isinstance(artifact.get("honest_verdict"), str):
++        errors.append("honest_verdict must be a string")
++    if type(artifact.get("learned_encoder_transfer_helps")) is not bool:
++        errors.append("learned_encoder_transfer_helps must be a bare bool")
++    if type(artifact.get("positive_control_passed")) is not bool:
++        errors.append("positive_control_passed must be a bare bool")
++    if not _is_bare_float(artifact.get("cross_game_state_reduction")):
++        errors.append("cross_game_state_reduction must be a bare float")
++    if not _is_ci(artifact.get("cross_game_state_reduction_ci95")):
++        errors.append("cross_game_state_reduction_ci95 must be a two-float list")
++    if type(artifact.get("n_held_out_games")) is not int:
++        errors.append("n_held_out_games must be a bare int")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be the bare bool false")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be an object")
++    if type(artifact.get("random_seed")) is not int:
++        errors.append("random_seed must be a bare int")
++    if not isinstance(artifact.get("reproducibility_checksum"), str):
++        errors.append("reproducibility_checksum must be a string")
++    if not isinstance(artifact.get("model_specs"), Mapping):
++        errors.append("model_specs must be an object")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles must be an object")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if principles.get(field) != FIELD_PRINCIPLES[field]:
++                errors.append(f"field_principles mismatch for {field}")
++    if artifact.get("learned_encoder_transfer_helps") is True:
++        ci = artifact.get("cross_game_state_reduction_ci95")
++        if not _is_ci(ci) or float(ci[0]) <= 1.0:
++            errors.append("learned_encoder_transfer_helps requires CI95 lower bound > 1.0")
++        if not _is_bare_float(artifact.get("cross_game_state_reduction")) or float(
++            artifact["cross_game_state_reduction"]
++        ) <= 1.0:
++            errors.append("learned_encoder_transfer_helps requires reduction > 1.0")
++        if artifact.get("positive_control_passed") is not True:
++            errors.append("learned_encoder_transfer_helps requires positive_control_passed=true")
++    return errors
++
++
++def _write_artifact(repo: Path, artifact: Mapping[str, Any]) -> None:
++    output = repo / OUTPUT_REL
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run_adversarial_verify(repo: Path, _artifact: Mapping[str, Any]) -> dict[str, Any]:  # pragma: no cover
++    """REQ-LEARN-4342-6: run the repository adversarial artifact verifier."""
++
++    output = repo / OUTPUT_REL
++    cmd = [sys.executable, str(repo / "scripts" / "adversarial_verify.py"), str(output), "--json"]
++    completed = subprocess.run(cmd, check=False, capture_output=True, text=True)
++    try:
++        report = json.loads(completed.stdout or "{}")
++    except json.JSONDecodeError:
++        report = {"stdout": completed.stdout, "stderr": completed.stderr}
++    flagged_count = int(report.get("flagged_count", 0) or 0)
++    status = "clean" if completed.returncode == 0 and flagged_count == 0 else "flagged"
++    return {
++        "status": status,
++        "returncode": int(completed.returncode),
++        "flagged_count": flagged_count,
++        "reports": report.get("reports", []),
++    }
++
++
++def run(*, repo: Path = REPO, write: bool = True) -> dict[str, Any]:
++    artifact = evaluate_leave_one_game_out(repo)
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        _write_artifact(repo, artifact)
++        artifact = dict(artifact)
++        artifact["adversarial_verify"] = run_adversarial_verify(repo, artifact)
++        _write_artifact(repo, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - CLI wrapper
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args()
++    artifact = run(write=not args.no_write)
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_4342_self_learning_action_role_cross_game_encoder.json b/results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+new file mode 100644
+index 0000000000..88ad0e3554
+--- /dev/null
++++ b/results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+@@ -0,0 +1,1423 @@
++{
++  "acceptance_gate_passed": true,
++  "adversarial_verify": {
++    "flagged_count": 0,
++    "reports": [
++      {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4342_self_learning_action_role_cross_game_encoder.json",
++        "exp_id": "experiment_4342_self_learning_action_role_cross_game_encoder",
++        "flag_count": 0,
++        "flags": [],
++        "honest_verdict": "complete: action_role_encoder_transfer_no_improvement_positive_control_passed",
++        "loaded": true,
++        "max_severity": -1,
++        "title": "self_learning_action_role_cross_game_encoder"
++      }
++    ],
++    "returncode": 0,
++    "status": "clean"
++  },
++  "cross_game_state_reduction": 1.00635593220339,
++  "cross_game_state_reduction_ci95": [
++    1.0,
++    1.0168354897287482
++  ],
++  "duration_s": 114.37481594085693,
++  "experiment": "experiment_4342_self_learning_action_role_cross_game_encoder",
++  "field_principles": {
++    "cross_game_state_reduction": "BARE float: baseline_states / guided_states on the held-out games (>1.0 = the action-role value head helps; compare to exp4331's 1.008 null).",
++    "cross_game_state_reduction_ci95": "CI95 across held-out games -- the lower bound > 1.0 is the decision-grade transfer (a 3rd null retires the direction).",
++    "honest_verdict": "Terminal-prefixed. A transfer WIN (reduction>1.0, CI lower>1.0 -- the self-learning frontier advances) and a powered 3rd null (action-role also fails -> retire the direction) are BOTH decision-grade.",
++    "learned_encoder_transfer_helps": "BARE bool: the capstone reads this; true iff the action-role value head reduces search states on the HELD-OUT game (reduction>1.0 AND CI95 lower bound>1.0) -- the cross-game transfer the raw-frame encoder failed to deliver.",
++    "model_specs": "The action-role encoder architecture + the interaction feature spec + the games + the value-head + the leave-one-game-out protocol; required methodology.",
++    "n_held_out_games": "BARE int: the number of leave-one-game-out folds (the cross-game transfer sample size).",
++    "positive_control_passed": "BARE bool: the baseline solver solves the held-out games (reduction is measurable, not a degenerate test) -- the FALSE_NEGATIVE_RISK guard.",
++    "preconditions_checked": "Records the game-traces availability + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
++    "random_seed": "Determinism precondition for the encoder training + leave-one-game-out.",
++    "reproducibility_checksum": "Hash of the traces + the encoder config + the leave-one-game-out protocol; lets a third party re-run.",
++    "verifier_is_oracle": "BARE bool=false -- the learned value head is oracle-distinct (NOT the executable oracle)."
++  },
++  "held_out_level_rows": [
++    {
++      "baseline_solved": true,
++      "guided_path_len": 5,
++      "guided_solved": true,
++      "held_out_game": "cd82",
++      "level_index": 1,
++      "states_guided": 16,
++      "states_uniform": 17,
++      "target_level": 1,
++      "uniform_path_len": 5
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 13,
++      "guided_solved": true,
++      "held_out_game": "cn04",
++      "level_index": 1,
++      "states_guided": 41,
++      "states_uniform": 41,
++      "target_level": 1,
++      "uniform_path_len": 13
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 5,
++      "guided_solved": true,
++      "held_out_game": "lp85",
++      "level_index": 1,
++      "states_guided": 15,
++      "states_uniform": 15,
++      "target_level": 1,
++      "uniform_path_len": 5
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 8,
++      "guided_solved": true,
++      "held_out_game": "lp85",
++      "level_index": 2,
++      "states_guided": 24,
++      "states_uniform": 24,
++      "target_level": 2,
++      "uniform_path_len": 8
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 16,
++      "guided_solved": true,
++      "held_out_game": "lp85",
++      "level_index": 3,
++      "states_guided": 49,
++      "states_uniform": 49,
++      "target_level": 3,
++      "uniform_path_len": 16
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 13,
++      "guided_solved": true,
++      "held_out_game": "ls20",
++      "level_index": 1,
++      "states_guided": 41,
++      "states_uniform": 41,
++      "target_level": 1,
++      "uniform_path_len": 13
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 15,
++      "guided_solved": true,
++      "held_out_game": "m0r0",
++      "level_index": 1,
++      "states_guided": 47,
++      "states_uniform": 47,
++      "target_level": 1,
++      "uniform_path_len": 15
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 3,
++      "guided_solved": true,
++      "held_out_game": "r11l",
++      "level_index": 1,
++      "states_guided": 10,
++      "states_uniform": 11,
++      "target_level": 1,
++      "uniform_path_len": 3
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 14,
++      "guided_solved": true,
++      "held_out_game": "sk48",
++      "level_index": 1,
++      "states_guided": 43,
++      "states_uniform": 43,
++      "target_level": 1,
++      "uniform_path_len": 14
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 4,
++      "guided_solved": true,
++      "held_out_game": "sp80",
++      "level_index": 1,
++      "states_guided": 9,
++      "states_uniform": 9,
++      "target_level": 1,
++      "uniform_path_len": 4
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 7,
++      "guided_solved": true,
++      "held_out_game": "su15",
++      "level_index": 1,
++      "states_guided": 22,
++      "states_uniform": 22,
++      "target_level": 1,
++      "uniform_path_len": 7
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 18,
++      "guided_solved": true,
++      "held_out_game": "tu93",
++      "level_index": 1,
++      "states_guided": 54,
++      "states_uniform": 55,
++      "target_level": 1,
++      "uniform_path_len": 18
++    },
++    {
++      "baseline_solved": true,
++      "guided_path_len": 33,
++      "guided_solved": true,
++      "held_out_game": "wa30",
++      "level_index": 1,
++      "states_guided": 101,
++      "states_uniform": 101,
++      "target_level": 1,
++      "uniform_path_len": 33
++    }
++  ],
++  "honest_verdict": "complete: action_role_encoder_transfer_no_improvement_positive_control_passed",
++  "inference_substrate": "cpu_offline_arc_agi3_trace_frontier_action_role_value_head",
++  "learned_encoder_transfer_helps": false,
++  "methodology_note": "CPU-only action-role interaction encoder over solved-game traces. The held-out game's rows are excluded from training; its trace supplies the same finite action frontier used by Exp 4318/4331 positive controls.",
++  "missing_verifier_gaps": [
++    {
++      "candidate_design": "larger interaction encoder, richer affordance discovery, or more reproduced traces before retiring cross-game value transfer",
++      "failure_mode": "game-agnostic action-role interaction value head did not produce a decision-grade held-out OfflineSolver state reduction",
++      "gap_id": "GAP-4342",
++      "missing_discriminator": "transferable object-interaction value representation",
++      "priority": "high"
++    }
++  ],
++  "model_specs": {
++    "encoder": {
++      "architecture": "action-role/object-interaction transition encoder",
++      "feature_spec": {
++        "decoupling": "uses action family and transition effects over binary objects, component interactions, and terminal alignment deltas rather than raw per-game pixel identities",
++        "feature_names": [
++          "role_directional",
++          "role_click",
++          "role_commit",
++          "role_special",
++          "has_payload",
++          "is_noop",
++          "changed_fraction",
++          "nonzero_delta_fraction",
++          "changed_nonzero_fraction",
++          "component_delta",
++          "merge_proxy",
++          "split_proxy",
++          "centroid_shift",
++          "bbox_area_delta",
++          "goal_alignment_gain",
++          "terminal_match_after",
++          "object_count_after",
++          "motion_effect",
++          "toggle_effect",
++          "collision_effect"
++        ]
++      },
++      "llm_weight_mutation": false,
++      "module": "python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py"
++    },
++    "games": [
++      "cd82",
++      "cn04",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "sk48",
++      "sp80",
++      "su15",
++      "tu93",
++      "wa30"
++    ],
++    "held_out_action_frontier": "trace-derived reproducible action frontier used only to make the positive-control solve finite; held-out feature rows are excluded from encoder and value-head training",
++    "leave_one_game_out_protocol": {
++      "bootstrap_resamples": 2000,
++      "ci_axis": "held_out_game",
++      "decision_gate": "reduction > 1.0 and CI95 lower bound > 1.0",
++      "split_axis": "game"
++    },
++    "models_by_held_out_game": {
++      "cd82": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 443,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 443,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.253251514501,
++            -1.036061365469,
++            -0.715732256705,
++            0.0,
++            -1.036061383103,
++            1.373591611225,
++            -0.585956624571,
++            -0.414695406031,
++            -0.585956620544,
++            -0.010641003145,
++            0.468889437651,
++            0.453771828465,
++            -0.568183827562,
++            0.047385099278,
++            -0.012265154847,
++            1.514139360952,
++            -0.917747043654,
++            0.807946027369,
++            0.791738881162,
++            0.655411378701,
++            10.909706521649
++          ]
++        }
++      },
++      "cn04": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 419,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 419,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            0.776789611671,
++            -0.606893029858,
++            -0.534979654317,
++            0.0,
++            -0.606893008036,
++            0.693705769558,
++            -1.838819996365,
++            -0.000354059738,
++            -1.838819920009,
++            0.139312794119,
++            0.21255936727,
++            0.410286113491,
++            -1.416563249303,
++            -0.016427914106,
++            2.509849890197,
++            0.361711468219,
++            -0.372713728317,
++            1.960344742428,
++            0.152463449281,
++            0.44201667894,
++            10.894988040823
++          ]
++        }
++      },
++      "lp85": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 371,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 371,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            0.865453576077,
++            -0.291381524109,
++            -1.110198737215,
++            0.0,
++            -0.291381505546,
++            0.708717238689,
++            -2.045541631124,
++            -0.5482812658,
++            -2.045541379628,
++            -0.003559219936,
++            0.526092355032,
++            0.521030168095,
++            -0.193699875427,
++            0.510135623039,
++            2.74180700057,
++            1.47724567206,
++            -0.683683091473,
++            1.865807788307,
++            -1.488014139583,
++            0.744493234569,
++            11.312668433119
++          ]
++        }
++      },
++      "ls20": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 419,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 419,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.124834607854,
++            -0.791835649491,
++            -0.984399315262,
++            0.0,
++            -0.791835618818,
++            0.709893516725,
++            -2.359371339516,
++            -0.400413191946,
++            -2.359371484061,
++            -0.014080610055,
++            0.541903440556,
++            0.521895055584,
++            -0.931555588469,
++            0.091114781291,
++            3.763648413292,
++            0.652140186271,
++            -0.746116999011,
++            1.205069686684,
++            0.266907640379,
++            0.755870316069,
++            10.894988040823
++          ]
++        }
++      },
++      "m0r0": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 413,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 413,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.589716255902,
++            -1.333624176379,
++            -0.808712345552,
++            0.0,
++            -1.333624226886,
++            2.127594384787,
++            -2.11389462537,
++            -0.375570018296,
++            -2.113894599077,
++            0.007302570889,
++            0.549103010701,
++            0.559481576196,
++            -1.286815556489,
++            0.022553347937,
++            3.740175188208,
++            0.270803124406,
++            -0.630267128025,
++            1.656572656847,
++            1.824861082985,
++            0.787746740287,
++            10.818401910851
++          ]
++        }
++      },
++      "r11l": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 449,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 449,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            0.982747197514,
++            -0.682575834106,
++            -0.889028723652,
++            0.0,
++            -0.682575812548,
++            0.923078194611,
++            -2.226600559228,
++            -0.365627524783,
++            -2.226600533175,
++            -0.040916195371,
++            0.519445624042,
++            0.461324446248,
++            -0.840667414518,
++            0.092780971063,
++            3.440660160359,
++            0.515984543201,
++            -0.483658001575,
++            1.65237998074,
++            0.457327161381,
++            0.696649214651,
++            10.846325142881
++          ]
++        }
++      },
++      "sk48": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 416,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 416,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.058175082908,
++            -0.754087595107,
++            -0.899519964731,
++            0.0,
++            -0.754087573593,
++            1.067691322832,
++            -1.507499548875,
++            -0.321094201585,
++            -1.507499633187,
++            -0.080242171988,
++            0.565856732216,
++            0.451826135694,
++            -1.244922616408,
++            -0.001932646861,
++            2.198274108847,
++            0.571905867022,
++            0.282858208505,
++            1.632143740087,
++            0.395170142293,
++            0.723128602567,
++            10.86057689697
++          ]
++        }
++      },
++      "sp80": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 450,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 450,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            0.910082388704,
++            -0.791053039876,
++            -0.459257999706,
++            0.0,
++            -0.791053004607,
++            0.929020844402,
++            -2.126025981311,
++            -0.402978759256,
++            -2.126025885233,
++            -0.010849065583,
++            0.41281636392,
++            0.397403762289,
++            -0.925204952435,
++            0.036501964455,
++            3.270179194008,
++            0.539215480882,
++            -0.675703226923,
++            1.687269102907,
++            0.360126134272,
++            0.575500559463,
++            10.833333309259
++          ]
++        }
++      },
++      "su15": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 437,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 437,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.03083844777,
++            -0.707637972852,
++            -0.929820285057,
++            0.0,
++            -0.707637961249,
++            1.195120942115,
++            -2.419926599534,
++            -0.373381841621,
++            -2.41992651963,
++            -0.044131909723,
++            0.51830138971,
++            0.455600815913,
++            -0.897937448579,
++            -0.248049938728,
++            3.787518416575,
++            0.762063962049,
++            -0.724801629636,
++            2.084346469849,
++            1.221172310227,
++            0.691856679091,
++            10.947368396001
++          ]
++        }
++      },
++      "tu93": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 404,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 404,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            1.158423958893,
++            -0.594737147697,
++            -1.594725600372,
++            0.0,
++            -0.594737177322,
++            0.596402835146,
++            -3.069837660332,
++            1.382790208369,
++            -3.069837646296,
++            0.351828517403,
++            0.447512094512,
++            0.947551473742,
++            -1.845043721885,
++            -0.173368574565,
++            4.755235221748,
++            0.232616513089,
++            -0.997106600884,
++            2.381576486142,
++            -0.097272262262,
++            0.991429002088,
++            10.64356433009
++          ]
++        }
++      },
++      "wa30": {
++        "encoder": {
++          "architecture": "action_role_interaction_standardizer",
++          "feature_names": [
++            "role_directional",
++            "role_click",
++            "role_commit",
++            "role_special",
++            "has_payload",
++            "is_noop",
++            "changed_fraction",
++            "nonzero_delta_fraction",
++            "changed_nonzero_fraction",
++            "component_delta",
++            "merge_proxy",
++            "split_proxy",
++            "centroid_shift",
++            "bbox_area_delta",
++            "goal_alignment_gain",
++            "terminal_match_after",
++            "object_count_after",
++            "motion_effect",
++            "toggle_effect",
++            "collision_effect"
++          ],
++          "llm_weight_mutation": false,
++          "n_features": 20,
++          "n_samples": 359,
++          "training_compute": "CPU numpy mean/std over train split"
++        },
++        "value_head": {
++          "architecture": "linear least-squares value head with bias",
++          "llm_weight_mutation": false,
++          "n_samples": 359,
++          "ridge": 1e-06,
++          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
++          "training_compute": "CPU numpy.linalg.solve ridge regression",
++          "weights": [
++            0.143011150233,
++            -0.052101173911,
++            -0.339535360152,
++            0.0,
++            -0.052101171582,
++            -0.279704948154,
++            -2.802019973078,
++            -0.063487437021,
++            -2.802019754951,
++            -0.438026667037,
++            0.909658119881,
++            0.289336622537,
++            -1.95397939946,
++            0.141444093454,
++            4.390537732447,
++            -1.636008284918,
++            0.112622997896,
++            0.890011013184,
++            -0.636410034734,
++            0.84901284813,
++            8.509749279917
++          ]
++        }
++      }
++    },
++    "splits": {
++      "cd82": {
++        "held_out_game": "cd82",
++        "n_encoder_samples": 443,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 443,
++        "train_games": [
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "cn04": {
++        "held_out_game": "cn04",
++        "n_encoder_samples": 419,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 419,
++        "train_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "lp85": {
++        "held_out_game": "lp85",
++        "n_encoder_samples": 371,
++        "n_held_out_levels": 3,
++        "n_train_transition_samples": 371,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "ls20": {
++        "held_out_game": "ls20",
++        "n_encoder_samples": 419,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 419,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "m0r0": {
++        "held_out_game": "m0r0",
++        "n_encoder_samples": 413,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 413,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "r11l": {
++        "held_out_game": "r11l",
++        "n_encoder_samples": 449,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 449,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "sk48": {
++        "held_out_game": "sk48",
++        "n_encoder_samples": 416,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 416,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sp80",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "sp80": {
++        "held_out_game": "sp80",
++        "n_encoder_samples": 450,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 450,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "su15",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "su15": {
++        "held_out_game": "su15",
++        "n_encoder_samples": 437,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 437,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "tu93",
++          "wa30"
++        ]
++      },
++      "tu93": {
++        "held_out_game": "tu93",
++        "n_encoder_samples": 404,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 404,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "wa30"
++        ]
++      },
++      "wa30": {
++        "held_out_game": "wa30",
++        "n_encoder_samples": 359,
++        "n_held_out_levels": 1,
++        "n_train_transition_samples": 359,
++        "train_games": [
++          "cd82",
++          "cn04",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "r11l",
++          "sk48",
++          "sp80",
++          "su15",
++          "tu93"
++        ]
++      }
++    },
++    "state_count_instrumentation": "transition-scored trace-frontier search counts generated child states; lower guided states means better search efficiency",
++    "trace_checksums": {
++      "cd82": "sha256:630a02ea2225ff75c970cb2855f7ccecc25bbfe60400faa1b39439ed733b02d3",
++      "cn04": "sha256:cb9e98a6311317db38890d0d1dcca685924e2f65fd175603e8b2aefc627459f5",
++      "lp85": "sha256:7f17f90d3c0cc57da14b84e88d85e897dd35ee264d628d941d051058a29ed68c",
++      "ls20": "sha256:c6908c6c3cc3f3d187a8bb6e34d999b42c4120fd11c2fe8671acafaf838be9b0",
++      "m0r0": "sha256:748b25a8043f91a05c3659b9469e0c20052a4752ca4602935968c0d77d835074",
++      "r11l": "sha256:0bfc38948e3510a114421a0d9066276c501791406cbbf087283e6ffd4c6a67f3",
++      "sk48": "sha256:1ec397b29b355885ab6efbc511410e319d409e602661ab02c101103f809282f7",
++      "sp80": "sha256:28f1d55293f6f4e430d40740725b59bfbd76a66d2c5f9878b1b2f4385709ae8e",
++      "su15": "sha256:58c03992821f0463801ba59b3c78eee180e12a41c9fe7109622db639565378fc",
++      "tu93": "sha256:9edc5b28d8765c514d14ee32bc45440af04db2859632fa10853f70c8485ce53d",
++      "wa30": "sha256:506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
++    },
++    "value_head": {
++      "architecture": "linear least-squares value head with bias over encoded transition features",
++      "llm_weight_mutation": false,
++      "target": "transition steps-to-go; off-trace decoys penalized",
++      "training_compute": "CPU numpy ridge regression"
++    }
++  },
++  "n_bootstrap_resamples": 2000,
++  "n_held_out_games": 11,
++  "n_held_out_levels": 13,
++  "per_held_out_game_reduction": {
++    "cd82": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0625,
++          "states_guided": 16,
++          "states_uniform": 17
++        }
++      ],
++      "state_reduction": 1.0625,
++      "states_guided": 16,
++      "states_uniform": 17
++    },
++    "cn04": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 41,
++          "states_uniform": 41
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 41,
++      "states_uniform": 41
++    },
++    "lp85": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 15,
++          "states_uniform": 15
++        },
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 2,
++          "state_reduction": 1.0,
++          "states_guided": 24,
++          "states_uniform": 24
++        },
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 3,
++          "state_reduction": 1.0,
++          "states_guided": 49,
++          "states_uniform": 49
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 88,
++      "states_uniform": 88
++    },
++    "ls20": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 41,
++          "states_uniform": 41
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 41,
++      "states_uniform": 41
++    },
++    "m0r0": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 47,
++          "states_uniform": 47
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 47,
++      "states_uniform": 47
++    },
++    "r11l": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.1,
++          "states_guided": 10,
++          "states_uniform": 11
++        }
++      ],
++      "state_reduction": 1.1,
++      "states_guided": 10,
++      "states_uniform": 11
++    },
++    "sk48": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 43,
++          "states_uniform": 43
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 43,
++      "states_uniform": 43
++    },
++    "sp80": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 9,
++          "states_uniform": 9
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 9,
++      "states_uniform": 9
++    },
++    "su15": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 22,
++          "states_uniform": 22
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 22,
++      "states_uniform": 22
++    },
++    "tu93": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0185185185185186,
++          "states_guided": 54,
++          "states_uniform": 55
++        }
++      ],
++      "state_reduction": 1.0185185185185186,
++      "states_guided": 54,
++      "states_uniform": 55
++    },
++    "wa30": {
++      "baseline_solved": true,
++      "guided_solved": true,
++      "levels": [
++        {
++          "baseline_solved": true,
++          "guided_solved": true,
++          "level_index": 1,
++          "state_reduction": 1.0,
++          "states_guided": 101,
++          "states_uniform": 101
++        }
++      ],
++      "state_reduction": 1.0,
++      "states_guided": 101,
++      "states_uniform": 101
++    }
++  },
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "minimum_usable_games": 3,
++    "missing_trace_games": [],
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_present": true,
++    "registry_reproduced_game_count": 14,
++    "registry_reproduced_games": [
++      "ar25",
++      "cd82",
++      "cn04",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tu93",
++      "wa30"
++    ],
++    "research_conductor_modified": false,
++    "trace_sources_declared": [
++      "cd82",
++      "cn04",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "sk48",
++      "sp80",
++      "su15",
++      "tu93",
++      "wa30"
++    ],
++    "trm_training_stood_down": true,
++    "usable_trace_game_count": 11,
++    "usable_trace_games": [
++      "cd82",
++      "cn04",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "sk48",
++      "sp80",
++      "su15",
++      "tu93",
++      "wa30"
++    ]
++  },
++  "random_seed": 4342,
++  "reproducibility_checksum": "sha256:e559ce0bc8605d8da1289dee2310a2c61d1520442fb7b127196d354e10392a72",
++  "spec_refs": [
++    "REQ-LEARN-4342",
++    "SCENARIO-LEARN-4342"
++  ],
++  "title": "self_learning_action_role_cross_game_encoder",
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4342_self_learning_action_role_cross_game_encoder.py b/results/experiment_4342_self_learning_action_role_cross_game_encoder.py
+new file mode 100644
+index 0000000000..b355bc9a9b
+--- /dev/null
++++ b/results/experiment_4342_self_learning_action_role_cross_game_encoder.py
+@@ -0,0 +1,17 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 4342 action-role ARC cross-game encoder transfer."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.experiment_4342_self_learning_action_role_cross_game_encoder import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py b/tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py
+new file mode 100644
+index 0000000000..882f021249
+--- /dev/null
++++ b/tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py
+@@ -0,0 +1,421 @@
++"""Tests for Exp 4342 action-role cross-game ARC transfer.
++
++Spec refs: REQ-LEARN-4342, SCENARIO-LEARN-4342.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot import experiment_4342_self_learning_action_role_cross_game_encoder as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++WRAPPER_PATH = REPO / "results" / "experiment_4342_self_learning_action_role_cross_game_encoder.py"
++
++
++def test_req_learn_4342_spec_declares_action_role_contract() -> None:
++    """REQ-LEARN-4342: OpenSpec declares the action-role artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    normalized_spec = " ".join(spec.split())
++
++    for marker in (
++        "REQ-LEARN-4342",
++        "SCENARIO-LEARN-4342",
++        "SCENARIO-LEARN-4342-BLOCKED",
++        "experiment_4342_self_learning_action_role_cross_game_encoder.json",
++        "python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py",
++        "learned_encoder_transfer_helps",
++        "blocked_insufficient_game_traces",
++        "action-role interaction features",
++        "positive_control_passed",
++        "n_held_out_games",
++    ):
++        assert marker in spec
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    for principle in exp.FIELD_PRINCIPLES.values():
++        assert " ".join(principle.split()) in normalized_spec
++
++
++def test_req_learn_4342_transition_features_are_game_agnostic_roles() -> None:
++    """REQ-LEARN-4342-4: features encode role/effect, not game-specific pixels."""
++
++    before = np.zeros((4, 4), dtype=np.int16)
++    before[1, 1] = 7
++    after = np.zeros((4, 4), dtype=np.int16)
++    after[1, 2] = 7
++    terminal = np.zeros((4, 4), dtype=np.int16)
++    terminal[1, 2] = 7
++
++    features = exp.action_role_feature_map(
++        action_id=4,
++        data=None,
++        before_grid=before,
++        after_grid=after,
++        terminal_grid=terminal,
++    )
++
++    assert features["role_directional"] == pytest.approx(1.0)
++    assert features["role_click"] == pytest.approx(0.0)
++    assert features["changed_fraction"] > 0.0
++    assert features["centroid_shift"] > 0.0
++    assert features["goal_alignment_gain"] > 0.0
++    assert set(exp.ACTION_ROLE_FEATURE_NAMES) == set(features)
++
++    click_noop = exp.action_role_feature_map(
++        action_id=6,
++        data={"x": 1, "y": 1},
++        before_grid=before,
++        after_grid=before,
++        terminal_grid=terminal,
++    )
++    assert click_noop["role_click"] == pytest.approx(1.0)
++    assert click_noop["is_noop"] == pytest.approx(1.0)
++    assert click_noop["changed_fraction"] == pytest.approx(0.0)
++
++    class FrameObject:
++        frame = np.array([[[0, 1, 0], [0, 1, 0]]], dtype=np.int16)
++
++    padded = exp.action_role_feature_map(
++        action_id=5,
++        data=None,
++        before_grid=[[0, 1]],
++        after_grid=FrameObject(),
++        terminal_grid=None,
++    )
++    assert padded["role_commit"] == pytest.approx(1.0)
++    assert padded["changed_fraction"] > 0.0
++
++
++def test_req_learn_4342_encoder_trains_deterministic_embedding() -> None:
++    """REQ-LEARN-4342-4: the action-role encoder fits and transforms rows."""
++
++    rows = [
++        [0.0, 1.0, 0.0, 0.25],
++        [1.0, 0.0, 0.0, 0.50],
++        [0.5, 0.5, 1.0, 0.75],
++    ]
++    encoder = exp.ActionRoleInteractionEncoder(feature_names=("a", "b", "c", "d")).fit(rows)
++
++    encoded = encoder.transform(rows[0])
++
++    assert len(encoded) == 4
++    assert all(np.isfinite(encoded))
++    assert encoder.n_samples == 3
++    assert encoder.model_summary()["architecture"] == "action_role_interaction_standardizer"
++    assert encoder.model_summary()["feature_names"] == ["a", "b", "c", "d"]
++    assert encoder.transform_many(rows[:2]) == [encoder.transform(rows[0]), encoder.transform(rows[1])]
++
++    with pytest.raises(ValueError, match="no action-role rows"):
++        exp.ActionRoleInteractionEncoder().fit([])
++    with pytest.raises(ValueError, match="untrained"):
++        exp.ActionRoleInteractionEncoder().transform(rows[0])
++
++
++def test_req_learn_4342_value_head_and_transition_scorer_are_deterministic() -> None:
++    """REQ-LEARN-4342-4: encoded transition rows feed a learned value head."""
++
++    before = np.zeros((3, 3), dtype=np.int16)
++    before[1, 1] = 1
++    after = np.zeros((3, 3), dtype=np.int16)
++    after[1, 2] = 1
++    terminal = after.copy()
++    feature = exp.action_role_feature_map(
++        action_id=4,
++        data=None,
++        before_grid=before,
++        after_grid=after,
++        terminal_grid=terminal,
++    )
++    row = [feature[name] for name in exp.ACTION_ROLE_FEATURE_NAMES]
++    worse = list(row)
++    worse[exp.ACTION_ROLE_FEATURE_NAMES.index("goal_alignment_gain")] = -1.0
++    encoder = exp.ActionRoleInteractionEncoder().fit([row, worse])
++    encoded = encoder.transform_many([row, worse])
++    head = exp.ActionRoleValueHead().fit(encoded, [0.0, 5.0])
++    scorer = exp.TransitionScorer(encoder, head)
++
++    assert head.n_samples == 2
++    assert head.rounded_weights()
++    assert head.model_summary()["architecture"] == "linear least-squares value head with bias"
++    assert head.predict(encoded[0]) < head.predict(encoded[1])
++    assert scorer.score(4, None, before, after, terminal) == pytest.approx(head.predict(encoded[0]))
++    assert exp._feature_vector(feature) == row
++
++    untrained = exp.ActionRoleValueHead()
++    assert untrained.predict(row) == 0.0
++    assert untrained.rounded_weights() == []
++    with pytest.raises(ValueError, match="no rows"):
++        exp.ActionRoleValueHead().fit([], [])
++
++    label = json.dumps({"action": 6, "data": {"x": 2, "y": 3}}, sort_keys=True)
++    action_id, data = exp._label_action_data(label)
++    assert action_id == 6
++    assert data == {"x": 2, "y": 3}
++
++
++def test_scenario_learn_4342_blocked_artifact_is_terminal_and_bare() -> None:
++    """SCENARIO-LEARN-4342-BLOCKED: insufficient traces fail closed."""
++
++    artifact = exp.build_blocked_artifact(
++        usable_games=["r11l", "ls20"],
++        missing_games=["wa30", "lp85"],
++        preconditions_checked={
++            "usable_trace_game_count": 2,
++            "trm_training_stood_down": True,
++        },
++        duration_s=0.25,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_insufficient_game_traces"
++    assert artifact["learned_encoder_transfer_helps"] is False
++    assert artifact["positive_control_passed"] is False
++    assert artifact["n_held_out_games"] == 0
++    assert artifact["cross_game_state_reduction"] == 0.0
++    assert artifact["cross_game_state_reduction_ci95"] == [0.0, 0.0]
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["model_specs"]["blocked_reason"] == "insufficient_game_traces"
++    assert exp.artifact_schema_errors(artifact) == []
++
++
++def test_req_learn_4342_summary_bootstraps_across_held_out_games() -> None:
++    """REQ-LEARN-4342-7: CI and gate are across held-out games."""
++
++    rows = [
++        {
++            "held_out_game": "r11l",
++            "level_index": 1,
++            "states_uniform": 30,
++            "states_guided": 10,
++            "baseline_solved": True,
++            "guided_solved": True,
++        },
++        {
++            "held_out_game": "r11l",
++            "level_index": 2,
++            "states_uniform": 30,
++            "states_guided": 10,
++            "baseline_solved": True,
++            "guided_solved": True,
++        },
++        {
++            "held_out_game": "ls20",
++            "level_index": 1,
++            "states_uniform": 20,
++            "states_guided": 10,
++            "baseline_solved": True,
++            "guided_solved": True,
++        },
++        {
++            "held_out_game": "lp85",
++            "level_index": 1,
++            "states_uniform": 40,
++            "states_guided": 20,
++            "baseline_solved": True,
++            "guided_solved": True,
++        },
++    ]
++
++    summary = exp.summarize_state_reduction(rows, random_seed=7, n_resamples=2000)
++
++    assert summary["positive_control_passed"] is True
++    assert summary["n_held_out_games"] == 3
++    assert summary["cross_game_state_reduction"] == pytest.approx(2.4)
++    assert summary["cross_game_state_reduction_ci95"][0] > 1.0
++    assert summary["learned_encoder_transfer_helps"] is True
++    assert summary["per_held_out_game_reduction"]["r11l"]["state_reduction"] == pytest.approx(3.0)
++
++    empty = exp.summarize_state_reduction([], random_seed=7, n_resamples=0)
++    assert empty["positive_control_passed"] is False
++    assert empty["n_held_out_games"] == 0
++
++
++def test_req_learn_4342_complete_artifact_and_schema_gate() -> None:
++    """REQ-LEARN-4342-6: complete artifacts keep gate fields bare."""
++
++    artifact = exp.build_complete_artifact(
++        level_rows=[
++            {
++                "held_out_game": "r11l",
++                "level_index": 1,
++                "states_uniform": 10,
++                "states_guided": 10,
++                "baseline_solved": True,
++                "guided_solved": True,
++            }
++        ],
++        split_specs={"r11l": {"train_games": ["ls20"], "held_out_game": "r11l"}},
++        model_specs_by_held_out={"r11l": {"value_head": {"weights": [0.0, 0.0]}}},
++        trace_checksums={"r11l": "sha256:a", "ls20": "sha256:b"},
++        preconditions_checked={"usable_trace_game_count": 2, "trm_training_stood_down": True},
++        duration_s=0.5,
++        n_resamples=10,
++    )
++
++    assert artifact["learned_encoder_transfer_helps"] is False
++    assert artifact["honest_verdict"] == (
++        "complete: action_role_encoder_transfer_no_improvement_positive_control_passed"
++    )
++    assert artifact["positive_control_passed"] is True
++    assert artifact["missing_verifier_gaps"][0]["gap_id"] == exp.GAP_ID
++    assert exp.artifact_schema_errors(artifact) == []
++
++    success = exp.build_complete_artifact(
++        level_rows=[
++            {
++                "held_out_game": "r11l",
++                "level_index": 1,
++                "states_uniform": 30,
++                "states_guided": 10,
++                "baseline_solved": True,
++                "guided_solved": True,
++            },
++            {
++                "held_out_game": "ls20",
++                "level_index": 1,
++                "states_uniform": 20,
++                "states_guided": 10,
++                "baseline_solved": True,
++                "guided_solved": True,
++            },
++            {
++                "held_out_game": "lp85",
++                "level_index": 1,
++                "states_uniform": 40,
++                "states_guided": 20,
++                "baseline_solved": True,
++                "guided_solved": True,
++            },
++        ],
++        split_specs={"r11l": {"train_games": ["ls20"], "held_out_game": "r11l"}},
++        model_specs_by_held_out={"r11l": {"value_head": {"weights": [0.0, 0.0]}}},
++        trace_checksums={"r11l": "sha256:a", "ls20": "sha256:b", "lp85": "sha256:c"},
++        preconditions_checked={"usable_trace_game_count": 3, "trm_training_stood_down": True},
++        duration_s=0.5,
++        n_resamples=2000,
++    )
++    assert success["honest_verdict"].startswith("success:")
++    assert success["learned_encoder_transfer_helps"] is True
++    assert success["missing_verifier_gaps"] == []
++
++    control_failed = exp.build_complete_artifact(
++        level_rows=[
++            {
++                "held_out_game": "r11l",
++                "level_index": 1,
++                "states_uniform": 30,
++                "states_guided": 10,
++                "baseline_solved": False,
++                "guided_solved": True,
++            }
++        ],
++        split_specs={"r11l": {"train_games": ["ls20"], "held_out_game": "r11l"}},
++        model_specs_by_held_out={"r11l": {"value_head": {"weights": [0.0, 0.0]}}},
++        trace_checksums={"r11l": "sha256:a", "ls20": "sha256:b"},
++        preconditions_checked={"usable_trace_game_count": 2, "trm_training_stood_down": True},
++        duration_s=0.5,
++        n_resamples=10,
++    )
++    assert control_failed["honest_verdict"] == "complete: action_role_encoder_positive_control_failed"
++
++    bad = dict(artifact)
++    bad["learned_encoder_transfer_helps"] = 1
++    bad["positive_control_passed"] = "true"
++    bad["cross_game_state_reduction"] = "1.0"
++    bad["cross_game_state_reduction_ci95"] = {"lo": 1.0, "hi": 1.0}
++    bad["n_held_out_games"] = True
++    bad["verifier_is_oracle"] = True
++    bad["preconditions_checked"] = []
++    bad["random_seed"] = "4342"
++
++    errors = exp.artifact_schema_errors(bad)
++
++    for field in (
++        "learned_encoder_transfer_helps",
++        "positive_control_passed",
++        "cross_game_state_reduction",
++        "cross_game_state_reduction_ci95",
++        "n_held_out_games",
++        "verifier_is_oracle",
++        "preconditions_checked",
++        "random_seed",
++    ):
++        assert any(field in error for error in errors)
++
++    malformed = {
++        "honest_verdict": None,
++        "learned_encoder_transfer_helps": True,
++        "positive_control_passed": False,
++        "cross_game_state_reduction": 1.0,
++        "cross_game_state_reduction_ci95": [0.5, 1.5],
++        "n_held_out_games": 3,
++        "verifier_is_oracle": False,
++        "preconditions_checked": {},
++        "random_seed": 4342,
++        "reproducibility_checksum": 0,
++        "model_specs": [],
++        "field_principles": {"honest_verdict": "wrong"},
++    }
++    malformed_errors = exp.artifact_schema_errors(malformed)
++    missing_errors = exp.artifact_schema_errors({})
++
++    assert any("missing required field" in error for error in missing_errors)
++    assert any("honest_verdict must be a string" in error for error in malformed_errors)
++    assert any("reproducibility_checksum must be a string" in error for error in malformed_errors)
++    assert any("model_specs must be an object" in error for error in malformed_errors)
++    assert any("field_principles mismatch" in error for error in malformed_errors)
++    assert any("requires CI95 lower bound > 1.0" in error for error in malformed_errors)
++    assert any("requires reduction > 1.0" in error for error in malformed_errors)
++    assert any("requires positive_control_passed=true" in error for error in malformed_errors)
++
++
++def test_req_learn_4342_runner_writes_artifact(monkeypatch, tmp_path: Path) -> None:
++    """REQ-LEARN-4342-6: runner writes the artifact and verifier report."""
++
++    fake_artifact = exp.build_complete_artifact(
++        level_rows=[
++            {
++                "held_out_game": "r11l",
++                "level_index": 1,
++                "states_uniform": 10,
++                "states_guided": 10,
++                "baseline_solved": True,
++                "guided_solved": True,
++            }
++        ],
++        split_specs={"r11l": {"train_games": ["ls20"], "held_out_game": "r11l"}},
++        model_specs_by_held_out={"r11l": {"value_head": {"weights": [0.0, 0.0]}}},
++        trace_checksums={"r11l": "sha256:a", "ls20": "sha256:b"},
++        preconditions_checked={"usable_trace_game_count": 2, "trm_training_stood_down": True},
++        duration_s=0.5,
++        n_resamples=10,
++    )
++    monkeypatch.setattr(exp, "evaluate_leave_one_game_out", lambda _repo: fake_artifact)
++    monkeypatch.setattr(exp, "run_adversarial_verify", lambda _repo, _artifact: {"status": "clean"})
++
++    artifact = exp.run(repo=tmp_path, write=True)
++
++    written = tmp_path / exp.OUTPUT_REL
++    assert written.exists()
++    assert json.loads(written.read_text(encoding="utf-8")) == artifact
++    assert artifact["adversarial_verify"] == {"status": "clean"}
++
++    monkeypatch.setattr(exp, "evaluate_leave_one_game_out", lambda _repo: {"honest_verdict": None})
++    with pytest.raises(ValueError, match="missing required field"):
++        exp.run(repo=tmp_path, write=False)
++
++
++def test_results_wrapper_imports_main() -> None:
++    """SCENARIO-LEARN-4342: results wrapper exposes the stable CLI entrypoint."""
++
++    namespace = runpy.run_path(str(WRAPPER_PATH), run_name="exp4342_wrapper_test")
++
++    assert namespace["main"] is exp.main
+-- 
+2.55.0
+

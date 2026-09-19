@@ -1,0 +1,951 @@
+From 2ec7a29b68a8aa77fa5cbca7fa404820d83eab23 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 04:42:06 -0400
+Subject: [PATCH 05431/11362] [conductor] PHASE A2 DiffusionGemma gate
+ re-examination -- does the MuSR D1 null actually settle the ARC question?
+
+Automated research step by research conductor.
+Task ID: exp5152-diffusiongemma-gate-reexamination-v472
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  82 +++++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   3 +
+ .../diffusiongemma_gate_reexamination_5152.py | 346 ++++++++++++++++++
+ ...iffusiongemma_gate_reexamination_v472.json | 203 ++++++++++
+ ..._diffusiongemma_gate_reexamination_v472.py | 242 ++++++++++++
+ 6 files changed, 877 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py
+ create mode 100644 results/experiment_5152_diffusiongemma_gate_reexamination_v472.json
+ create mode 100644 tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index b9ab15d170..731713d01e 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -24070,3 +24070,85 @@ before claiming that the ARC Set-Encoder win survived hardening.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5151 | Implemented (`python/carnot/reporting/arc_oracle_distinct_hardening_5151.py`, `results/experiment_5151_arc_oracle_distinct_hardening_v472.json`) | Implemented (`tests/python/test_experiment_5151_arc_oracle_distinct_hardening_v472.py`) |
++
++### REQ-VERIFY-5152: DiffusionGemma Gate Reexamination V472
++
++The repository SHALL provide Exp 5152 at
++`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py` to
++reexamine whether the DiffusionGemma gate is justified by domain-relevant
++evidence and write
++`results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`.
++
++The runner SHALL load
++`results/experiment_phase_d_musr_trained_verifier.json`,
++`results/experiment_4245_arc_set_encoder_beats_vote.json`, and, if present,
++`results/experiment_5151_arc_oracle_distinct_hardening_v472.json`. It SHALL
++also inspect cached DiffusionGemma evidence under `results/` and
++`python/carnot/` so the artifact distinguishes ready/cached artifacts from
++historical discussion.
++
++The artifact SHALL state precisely that D1 tested a MuSR reasoning-text
++embedding-verifier-vs-self-consistency claim, while Exp 4245 tested an ARC-1
++candidate-pool Set-Encoder-vs-vote reranking claim. It SHALL set
++`d1_claim_vs_exp4245_claim_same_hypothesis.value=true` only in the narrow sense
++that both are oracle-distinct verifier-adds-value hypotheses, and SHALL also
++state that the corpora, inputs, baselines, and deployment claims are different
++enough that a MuSR null cannot by itself close the ARC DiffusionGemma gate.
++
++If Exp 5151 is available and reports a hardened ARC win whose `honest_verdict`
++starts with `success_`, the runner SHALL recommend `ungate_now`. If Exp 5151 is
++available but reports an incomplete, blocked, or nulled hardening result, the
++runner SHALL recommend `keep_gated`: the original MuSR-based gate rationale is
++corrected as domain-conflated, but DiffusionGemma scaling still lacks a fully
++hardened ARC-domain result. If Exp 5151 is absent, the runner SHALL recommend
++`keep_gated` with an explicit caveat that Exp 4245 remains
++single-seed/as-yet-unhardened evidence. The schema MAY accept
++`ungate_pending_exp5151` only as a non-scaling conditional state when an
++operator intentionally wants to record that the old MuSR rationale is invalid
++but Exp 5151 is still pending.
++
++The terminal artifact SHALL include principle-annotated top-level fields
++`d1_claim_vs_exp4245_claim_same_hypothesis`, `recommendation`,
++`honest_verdict`, `domain_conflation_found`, `d1_claim`,
++`exp4245_claim`, `exp5151_status`, `diffusiongemma_artifacts`,
++`known_issues_corrigendum`, `field_principles`, `spec_refs`, and
++`reproducibility_checksum`. `honest_verdict` SHALL begin with
++`complete:`, `complete_`, `success:`, or `success_`. The required field
++principles SHALL include:
++`d1_claim_vs_exp4245_claim_same_hypothesis` = `The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.`;
++`recommendation` = `A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone.`;
++`honest_verdict` = `Must start with complete:/complete_/success:/success_.`
++
++The repository SHALL update the 2026-06-30 DiffusionGemma known-issues entry by
++adding a dated correction rather than deleting history. The corrigendum SHALL
++state whether domain conflation was found and SHALL align with the Exp 5152
++recommendation.
++
++### SCENARIO-VERIFY-5152: MuSR Null Does Not Close ARC Gate
++
++Given the D1 MuSR artifact, Exp 4245 ARC artifact, and an Exp 5151 artifact
++whose hardening is not fully successful, when Exp 5152 runs, then it writes the
++required artifact, reports that the two results share the broad
++oracle-distinct-verifier-adds-value hypothesis but test different domains and
++claims, sets `domain_conflation_found=true`, recommends
++`keep_gated`, and records an append-only known-issues correction.
++
++### SCENARIO-VERIFY-5152-SUCCESS: Hardened ARC Win Ungates Now
++
++Given the D1 MuSR artifact, Exp 4245 ARC artifact, and an Exp 5151 artifact
++whose `honest_verdict` starts with `success_`, when Exp 5152 runs, then it
++recommends `ungate_now` because the ARC-domain evidence, not the MuSR null,
++becomes the decision-grade gate input.
++
++### SCENARIO-VERIFY-5152-MISSING-5151: Missing Hardening Keeps Pending State
++
++Given the D1 MuSR artifact and Exp 4245 ARC artifact exist but Exp 5151 is
++absent, when Exp 5152 runs, then it still flags the MuSR-vs-ARC rationale as a
++domain-conflation correction, recommends `keep_gated`, and marks Exp 4245 as
++available but not fully hardened.
++
++## Implementation Status (REQ-VERIFY-5152)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5152 | Implemented (`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py`, `results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`) | Implemented (`tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3444fb09c2..26543d010d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 206,
+   "code_violations": 0,
+-  "experiments_checked": 4141,
++  "experiments_checked": 4142,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index d7e25798e8..ba202eac3b 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -22,6 +22,9 @@
+ > the only remaining moat-on-reasoning probe; **pending operator decision** (asked 2026-06-30) on whether to
+ > run it vs. accept the bounded-null. EBRM (D3) is a 3rd construction but lower-priority than uPRM.
+ 
++> **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence.
++
++
+ **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
+ (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
+ (`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`) and its score is bounded ~0.08 by
+diff --git a/python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py b/python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py
+new file mode 100644
+index 0000000000..cdddb4f7ec
+--- /dev/null
++++ b/python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py
+@@ -0,0 +1,346 @@
++"""Exp 5152 DiffusionGemma gate reexamination.
++
++This module does not run DiffusionGemma. It audits the reasoning behind the
++gate because the operational risk is a premise mix-up: a MuSR text-reasoning
++null can be relevant to the broad oracle-distinct verifier thesis, but it is
++not the same evidence as an ARC candidate-reranking result. The artifact keeps
++that distinction explicit so a later scaling decision depends on
++domain-relevant evidence instead of a convenient but mismatched null.
++
++Spec refs: REQ-VERIFY-5152, SCENARIO-VERIFY-5152,
++SCENARIO-VERIFY-5152-SUCCESS, SCENARIO-VERIFY-5152-MISSING-5151.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++D1_REL = Path("results/experiment_phase_d_musr_trained_verifier.json")
++EXP4245_REL = Path("results/experiment_4245_arc_set_encoder_beats_vote.json")
++EXP5151_REL = Path("results/experiment_5151_arc_oracle_distinct_hardening_v472.json")
++OUTPUT_REL = Path("results/experiment_5152_diffusiongemma_gate_reexamination_v472.json")
++KNOWN_ISSUES_REL = Path("ops/known-issues.md")
++CORRIGENDUM_MARKER = "CORRIGENDUM 2026-07-02 (exp5152)"
++SCHEMA = "carnot.diffusiongemma_gate_reexamination_5152.v1"
++SPEC_REFS = [
++    "REQ-VERIFY-5152",
++    "SCENARIO-VERIFY-5152",
++    "SCENARIO-VERIFY-5152-SUCCESS",
++    "SCENARIO-VERIFY-5152-MISSING-5151",
++]
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++ALLOWED_RECOMMENDATIONS = {"keep_gated", "ungate_pending_exp5151", "ungate_now"}
++
++FIELD_PRINCIPLES = {
++    "d1_claim_vs_exp4245_claim_same_hypothesis": (
++        "The precise question this task exists to answer -- conflating two different "
++        "domains under one gate is exactly the error class this project has been burned by before."
++    ),
++    "recommendation": (
++        "A clear, actionable recommendation, not just an analysis -- this feeds directly "
++        "into whether DiffusionGemma scaling gets queued next milestone."
++    ),
++    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
++}
++
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "honest_verdict",
++    "d1_claim_vs_exp4245_claim_same_hypothesis",
++    "recommendation",
++    "domain_conflation_found",
++    "d1_claim",
++    "exp4245_claim",
++    "exp5151_status",
++    "diffusiongemma_artifacts",
++    "known_issues_corrigendum",
++    "field_principles",
++    "spec_refs",
++    "reproducibility_checksum",
++)
++
++
++def _terminal_prefixed(value: str) -> bool:
++    return any(value.startswith(prefix) for prefix in TERMINAL_PREFIXES)
++
++
++def _read_json_object(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def _optional_json(root: Path, rel_path: Path) -> dict[str, Any] | None:
++    path = root / rel_path
++    return _read_json_object(path) if path.exists() else None
++
++
++def _claim_float(payload: dict[str, Any], key: str) -> float | None:
++    value = payload.get(key)
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else None
++
++
++def _d1_claim(d1: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "path": str(D1_REL),
++        "claim_tested": "MuSR reasoning-text embedding-verifier-vs-SC",
++        "domain": "MuSR reasoning questions over generated text traces",
++        "verifier": "all-MiniLM embeddings plus LogisticRegression over question+reasoning",
++        "baseline": "matched self-consistency over the same candidate set",
++        "n_questions": d1.get("n_questions"),
++        "trained_verifier_accuracy": _claim_float(d1, "trained_verifier_accuracy"),
++        "sc_accuracy_matched": _claim_float(d1, "sc_accuracy_matched"),
++        "delta_vs_sc": _claim_float(d1, "delta_vs_sc"),
++        "delta_ci95": d1.get("delta_ci95"),
++        "moat_realized": d1.get("moat_realized") is True,
++        "verifier_is_oracle": d1.get("verifier_is_oracle") is True,
++        "honest_verdict": str(d1.get("honest_verdict", "")),
++    }
++
++
++def _exp4245_claim(exp4245: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "path": str(EXP4245_REL),
++        "claim_tested": "ARC-1 Set-Encoder-vs-vote candidate reranking",
++        "domain": "ARC candidate pools generated before the reranker chooses a top candidate",
++        "verifier": "DeepSets-style Set-Encoder using candidate and cross-candidate features",
++        "baseline": "vote@1/self-consistency-style candidate majority",
++        "held_out_task_n": exp4245.get("held_out_task_n"),
++        "oracle_distinct_beats_vote": exp4245.get("oracle_distinct_beats_vote") is True,
++        "set_encoder_minus_vote_delta": _claim_float(exp4245, "set_encoder_minus_vote_delta"),
++        "set_encoder_minus_vote_ci95": exp4245.get("set_encoder_minus_vote_ci95"),
++        "oracle_at_k": _claim_float(exp4245, "oracle_at_k"),
++        "verifier_is_oracle": exp4245.get("verifier_is_oracle") is True,
++        "honest_verdict": str(exp4245.get("honest_verdict", "")),
++    }
++
++
++def _exp5151_status(exp5151: dict[str, Any] | None) -> dict[str, Any]:
++    if exp5151 is None:
++        return {
++            "available": False,
++            "path": str(EXP5151_REL),
++            "reason": "exp5151_absent",
++            "supports_ungating": False,
++            "hardened_arc_domain_win": False,
++            "honest_verdict": None,
++            "headline_outcome": None,
++        }
++    verdict = str(exp5151.get("honest_verdict", ""))
++    success = verdict.startswith("success_") or verdict.startswith("success:")
++    return {
++        "available": True,
++        "path": str(EXP5151_REL),
++        "reason": "hardened_arc_win" if success else "not_fully_hardened_or_null",
++        "supports_ungating": bool(success),
++        "hardened_arc_domain_win": bool(success),
++        "honest_verdict": verdict,
++        "headline_outcome": exp5151.get("headline_outcome"),
++        "acceptance_gate": exp5151.get("acceptance_gate"),
++        "multiseed_delta_ci95": exp5151.get("multiseed_delta_ci95"),
++        "leak_audit_passed": exp5151.get("leak_audit_passed"),
++        "cross_game_blocked_reason": exp5151.get("cross_game_blocked_reason"),
++        "cross_game_replication_delta": exp5151.get("cross_game_replication_delta"),
++        "verifier_is_oracle": exp5151.get("verifier_is_oracle"),
++    }
++
++
++def _recommendation_from_5151(status: dict[str, Any]) -> tuple[str, str]:
++    if status["supports_ungating"] is True:
++        return (
++            "ungate_now",
++            "Exp 5151 reports a hardened ARC-domain win; the MuSR null remains a different-domain "
++            "result and does not override ARC-domain hardening succeeded evidence.",
++        )
++    if status["available"] is True:
++        return (
++            "keep_gated",
++            "Exp 5151 is present but not fully hardened, so DiffusionGemma stays gated "
++            "for missing decision-grade ARC-domain evidence rather than the MuSR D1 null.",
++        )
++    return (
++        "keep_gated",
++        "Exp 5151 is absent and Exp 4245 is still single-seed/as-yet-unhardened, so "
++        "DiffusionGemma stays gated for missing decision-grade ARC-domain evidence.",
++    )
++
++
++def _scan_diffusiongemma_artifacts(root: Path) -> dict[str, Any]:
++    result_root = root / "results"
++    python_root = root / "python" / "carnot"
++    json_results = []
++    for path in sorted(result_root.glob("*diffusiongemma*.json")):
++        if path == root / OUTPUT_REL:
++            continue
++        payload = _read_json_object(path)
++        json_results.append(
++            {
++                "path": str(path.relative_to(root)),
++                "experiment": payload.get("experiment"),
++                "status": payload.get("status"),
++                "honest_verdict": payload.get("honest_verdict"),
++            }
++        )
++    runtime_files = [
++        str(path.relative_to(root))
++        for suffix in ("*.log", "*.pid")
++        for path in sorted(result_root.glob(f"*diffusiongemma*{suffix[1:]}"))
++    ]
++    python_modules = [
++        str(path.relative_to(root)) for path in sorted(python_root.glob("*diffusiongemma*.py"))
++    ]
++    return {
++        "search_roots": ["results", "python/carnot"],
++        "json_results": json_results,
++        "json_result_count": len(json_results),
++        "runtime_logs_or_pids": runtime_files,
++        "python_modules": python_modules,
++        "python_module_count": len(python_modules),
++        "cached_ready_summary": (
++            "DiffusionGemma artifacts are observed as cached JSON/runtime/module records; "
++            "Exp 5152 does not execute or scale DiffusionGemma."
++        ),
++    }
++
++
++def _corrigendum_text(recommendation: str, status: dict[str, Any]) -> str:
++    if recommendation == "ungate_now":
++        action = (
++            "Recommendation: UNGATE NOW, because the ARC-domain hardening succeeded; the MuSR "
++            "D1 null remains relevant only to MuSR reasoning-text verifier selection."
++        )
++    elif status["available"] is True:
++        action = (
++            "Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; "
++            "the gate is still closed for missing decision-grade ARC-domain evidence."
++        )
++    else:
++        action = (
++            "Recommendation: KEEP GATED, because Exp 5151 is absent and Exp 4245 remains "
++            "single-seed/as-yet-unhardened ARC evidence."
++        )
++    return (
++        f"> **{CORRIGENDUM_MARKER}:** The prior 'DiffusionGemma stays gated' action is "
++        "reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if "
++        "used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR "
++        "reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC "
++        "candidate-pool Set-Encoder-vs-vote reranking. "
++        f"{action}"
++    )
++
++
++def _write_known_issues_corrigendum(root: Path, text: str) -> dict[str, str]:
++    path = root / KNOWN_ISSUES_REL
++    path.parent.mkdir(parents=True, exist_ok=True)
++    original = path.read_text(encoding="utf-8") if path.exists() else "# Carnot -- Known Issues\n"
++    if CORRIGENDUM_MARKER not in original:
++        anchor = "\n\n**Origin:**"
++        index = original.find(anchor)
++        split_at = index if index >= 0 else len(original.rstrip())
++        updated = original[:split_at].rstrip() + "\n\n" + text + "\n" + original[split_at:]
++        path.write_text(updated, encoding="utf-8")
++    return {"path": str(KNOWN_ISSUES_REL), "marker": CORRIGENDUM_MARKER, "text": text}
++
++
++def _checksum(payload: dict[str, Any]) -> str:
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _build_artifact(root: Path) -> dict[str, Any]:
++    d1 = _read_json_object(root / D1_REL)
++    exp4245 = _read_json_object(root / EXP4245_REL)
++    status_5151 = _exp5151_status(_optional_json(root, EXP5151_REL))
++    recommendation, reason = _recommendation_from_5151(status_5151)
++    honest_verdict = (
++        "success_diffusiongemma_gate_reexamined_arc_hardened_win_ungate_now"
++        if recommendation == "ungate_now"
++        else "complete_diffusiongemma_gate_reexamined_keep_gated_corrected_arc_evidence"
++    )
++    corrigendum_text = _corrigendum_text(recommendation, status_5151)
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": "experiment_5152_diffusiongemma_gate_reexamination_v472",
++        "honest_verdict": honest_verdict,
++        "d1_claim_vs_exp4245_claim_same_hypothesis": {
++            "value": True,
++            "principle": FIELD_PRINCIPLES["d1_claim_vs_exp4245_claim_same_hypothesis"],
++            "same_underlying_hypothesis": (
++                "Both ask whether an oracle-distinct learned verifier can add selection value "
++                "over a non-oracle baseline."
++            ),
++            "not_same_claim": (
++                "D1 is MuSR text reasoning over question+reasoning embeddings vs SC; Exp 4245 "
++                "is ARC candidate-pool grid reranking vs vote. The broad thesis overlaps, but "
++                "the domain-specific gate evidence is not interchangeable."
++            ),
++        },
++        "recommendation": {
++            "value": recommendation,
++            "principle": FIELD_PRINCIPLES["recommendation"],
++            "reason": reason,
++        },
++        "domain_conflation_found": True,
++        "d1_claim": _d1_claim(d1),
++        "exp4245_claim": _exp4245_claim(exp4245),
++        "exp5151_status": status_5151,
++        "diffusiongemma_artifacts": _scan_diffusiongemma_artifacts(root),
++        "known_issues_corrigendum": {
++            "path": str(KNOWN_ISSUES_REL),
++            "marker": CORRIGENDUM_MARKER,
++            "text": corrigendum_text,
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not _terminal_prefixed(verdict):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    if artifact["domain_conflation_found"] is not True:
++        raise ValueError("domain_conflation_found must be bare bool true")
++    for field in ("d1_claim_vs_exp4245_claim_same_hypothesis", "recommendation"):
++        item = artifact[field]
++        if not isinstance(item, dict) or item.get("principle") != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} must carry the required principle")
++    if artifact["recommendation"].get("value") not in ALLOWED_RECOMMENDATIONS:
++        raise ValueError("recommendation value is not allowed")
++    checksum = artifact["reproducibility_checksum"]
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:") or len(checksum) != 71:
++        raise ValueError("reproducibility_checksum must be sha256-prefixed")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles drifted")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs drifted")
++
++
++def run(repo_root: Path | str = Path(".")) -> dict[str, Any]:
++    root = Path(repo_root)
++    artifact = _build_artifact(root)
++    validate_artifact(artifact)
++    _write_known_issues_corrigendum(root, artifact["known_issues_corrigendum"]["text"])
++    output_path = root / OUTPUT_REL
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    run(Path.cwd())
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_5152_diffusiongemma_gate_reexamination_v472.json b/results/experiment_5152_diffusiongemma_gate_reexamination_v472.json
+new file mode 100644
+index 0000000000..8d41a32de7
+--- /dev/null
++++ b/results/experiment_5152_diffusiongemma_gate_reexamination_v472.json
+@@ -0,0 +1,203 @@
++{
++  "d1_claim": {
++    "baseline": "matched self-consistency over the same candidate set",
++    "claim_tested": "MuSR reasoning-text embedding-verifier-vs-SC",
++    "delta_ci95": [
++      -0.06,
++      0.085
++    ],
++    "delta_vs_sc": 0.015,
++    "domain": "MuSR reasoning questions over generated text traces",
++    "honest_verdict": "complete_phase_d_trained_verifier_does_not_beat_sc_v0.570_sc0.555_delta+0.015_ci-0.06_0.085_moat_bounded_null",
++    "moat_realized": false,
++    "n_questions": 200,
++    "path": "results/experiment_phase_d_musr_trained_verifier.json",
++    "sc_accuracy_matched": 0.555,
++    "trained_verifier_accuracy": 0.57,
++    "verifier": "all-MiniLM embeddings plus LogisticRegression over question+reasoning",
++    "verifier_is_oracle": false
++  },
++  "d1_claim_vs_exp4245_claim_same_hypothesis": {
++    "not_same_claim": "D1 is MuSR text reasoning over question+reasoning embeddings vs SC; Exp 4245 is ARC candidate-pool grid reranking vs vote. The broad thesis overlaps, but the domain-specific gate evidence is not interchangeable.",
++    "principle": "The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.",
++    "same_underlying_hypothesis": "Both ask whether an oracle-distinct learned verifier can add selection value over a non-oracle baseline.",
++    "value": true
++  },
++  "diffusiongemma_artifacts": {
++    "cached_ready_summary": "DiffusionGemma artifacts are observed as cached JSON/runtime/module records; Exp 5152 does not execute or scale DiffusionGemma.",
++    "json_result_count": 14,
++    "json_results": [
++      {
++        "experiment": "arc3_layerb_diffusiongemma_test",
++        "honest_verdict": "complete_diffusiongemma_layerb_grounded_0",
++        "path": "results/arc3_layerb_diffusiongemma_test.json",
++        "status": null
++      },
++      {
++        "experiment": "diffusiongemma_energy_prior_extract",
++        "honest_verdict": "complete: energy_prior_score_extracted_from_frozen_diffusiongemma",
++        "path": "results/diffusiongemma_energy_prior_extracted.json",
++        "status": null
++      },
++      {
++        "experiment": "diffusiongemma_energy_prior_gguf",
++        "honest_verdict": "blocked_gguf_load_failed",
++        "path": "results/diffusiongemma_energy_prior_gguf.json",
++        "status": null
++      },
++      {
++        "experiment": "diffusiongemma_energy_prior_probe",
++        "honest_verdict": "complete: model_loaded_score_extraction_needs_diffusion_api",
++        "path": "results/diffusiongemma_energy_prior_probe.json",
++        "status": null
++      },
++      {
++        "experiment": "diffusiongemma_energy_prior_transformers",
++        "honest_verdict": "blocked_diffusiongemma_load_failed",
++        "path": "results/diffusiongemma_energy_prior_transformers.json",
++        "status": null
++      },
++      {
++        "experiment": "diffusiongemma_energy_prior_vllm",
++        "honest_verdict": "blocked_vllm_load_failed",
++        "path": "results/diffusiongemma_energy_prior_vllm.json",
++        "status": null
++      },
++      {
++        "experiment": null,
++        "honest_verdict": "blocked_diffusiongemma_not_cached",
++        "path": "results/experiment_4189_diffusiongemma_verifier_guided_decoding.json",
++        "status": null
++      },
++      {
++        "experiment": null,
++        "honest_verdict": "blocked_diffusiongemma_gguf_loader_failed",
++        "path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
++        "status": null
++      },
++      {
++        "experiment": null,
++        "honest_verdict": "complete: diffusiongemma_loader_fix_preflight_go",
++        "path": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
++        "status": null
++      },
++      {
++        "experiment": 4281,
++        "honest_verdict": "complete_diffusiongemma_learned_verifier_cannot_score_partial_states",
++        "path": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
++        "status": null
++      },
++      {
++        "experiment": 4293,
++        "honest_verdict": "complete: diffusiongemma_guidance_moat_won",
++        "path": "results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json",
++        "status": null
++      },
++      {
++        "experiment": 4304,
++        "honest_verdict": "complete: diffusiongemma_guidance_bounded_null_vs_engaged_control",
++        "path": "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
++        "status": null
++      },
++      {
++        "experiment": 4315,
++        "honest_verdict": "complete: diffusiongemma_step_stitching_moat_won",
++        "path": "results/experiment_4315_diffusiongemma_reward_guided_stitching.json",
++        "status": null
++      },
++      {
++        "experiment": 4374,
++        "honest_verdict": "retired_in_generation_conversion_unmeasurable",
++        "path": "results/experiment_4374_diffusiongemma_scorer_repair_or_retire.json",
++        "status": null
++      }
++    ],
++    "python_module_count": 7,
++    "python_modules": [
++      "python/carnot/experiment_4260_diffusiongemma_energy_guided_preflight.py",
++      "python/carnot/experiment_4274_diffusiongemma_loader_fix_preflight.py",
++      "python/carnot/experiment_4281_diffusiongemma_energy_guided_full_run.py",
++      "python/carnot/experiment_4293_diffusiongemma_energy_guided_run_partial_state.py",
++      "python/carnot/experiment_4304_diffusiongemma_in_generation_engaged_controls.py",
++      "python/carnot/experiment_4315_diffusiongemma_reward_guided_stitching.py",
++      "python/carnot/experiment_4374_diffusiongemma_scorer_repair_or_retire.py"
++    ],
++    "runtime_logs_or_pids": [
++      "results/diffusiongemma_energy_prior_gguf.log",
++      "results/diffusiongemma_energy_prior_probe.log",
++      "results/diffusiongemma_energy_prior_transformers.log",
++      "results/diffusiongemma_energy_prior_vllm.log",
++      "results/diffusiongemma_gguf_download.log",
++      "results/diffusiongemma_energy_prior_gguf.pid",
++      "results/diffusiongemma_energy_prior_probe.pid",
++      "results/diffusiongemma_energy_prior_transformers.pid",
++      "results/diffusiongemma_energy_prior_vllm.pid",
++      "results/diffusiongemma_gguf_download.pid"
++    ],
++    "search_roots": [
++      "results",
++      "python/carnot"
++    ]
++  },
++  "domain_conflation_found": true,
++  "exp4245_claim": {
++    "baseline": "vote@1/self-consistency-style candidate majority",
++    "claim_tested": "ARC-1 Set-Encoder-vs-vote candidate reranking",
++    "domain": "ARC candidate pools generated before the reranker chooses a top candidate",
++    "held_out_task_n": 52,
++    "honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote",
++    "oracle_at_k": 0.8269230769,
++    "oracle_distinct_beats_vote": true,
++    "path": "results/experiment_4245_arc_set_encoder_beats_vote.json",
++    "set_encoder_minus_vote_ci95": [
++      0.3076923077,
++      0.5961538462
++    ],
++    "set_encoder_minus_vote_delta": 0.4423076923,
++    "verifier": "DeepSets-style Set-Encoder using candidate and cross-candidate features",
++    "verifier_is_oracle": false
++  },
++  "exp5151_status": {
++    "acceptance_gate": true,
++    "available": true,
++    "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
++    "cross_game_replication_delta": null,
++    "hardened_arc_domain_win": false,
++    "headline_outcome": "arc_set_encoder_win_not_hardened",
++    "honest_verdict": "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive hardening; unresolved_axes=cross_game",
++    "leak_audit_passed": true,
++    "multiseed_delta_ci95": [
++      0.4265639953,
++      0.4888206201
++    ],
++    "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json",
++    "reason": "not_fully_hardened_or_null",
++    "supports_ungating": false,
++    "verifier_is_oracle": false
++  },
++  "experiment": "experiment_5152_diffusiongemma_gate_reexamination_v472",
++  "field_principles": {
++    "d1_claim_vs_exp4245_claim_same_hypothesis": "The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
++    "recommendation": "A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone."
++  },
++  "honest_verdict": "complete_diffusiongemma_gate_reexamined_keep_gated_corrected_arc_evidence",
++  "known_issues_corrigendum": {
++    "marker": "CORRIGENDUM 2026-07-02 (exp5152)",
++    "path": "ops/known-issues.md",
++    "text": "> **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence."
++  },
++  "recommendation": {
++    "principle": "A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone.",
++    "reason": "Exp 5151 is present but not fully hardened, so DiffusionGemma stays gated for missing decision-grade ARC-domain evidence rather than the MuSR D1 null.",
++    "value": "keep_gated"
++  },
++  "reproducibility_checksum": "sha256:fd7027667ffc06447c8296869088b1da66ff43bc7321907393bbf0169f1ee397",
++  "schema": "carnot.diffusiongemma_gate_reexamination_5152.v1",
++  "spec_refs": [
++    "REQ-VERIFY-5152",
++    "SCENARIO-VERIFY-5152",
++    "SCENARIO-VERIFY-5152-SUCCESS",
++    "SCENARIO-VERIFY-5152-MISSING-5151"
++  ]
++}
+diff --git a/tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py b/tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py
+new file mode 100644
+index 0000000000..b997f36c66
+--- /dev/null
++++ b/tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py
+@@ -0,0 +1,242 @@
++"""Tests for Exp 5152 DiffusionGemma gate reexamination.
++
++Spec refs: REQ-VERIFY-5152, SCENARIO-VERIFY-5152,
++SCENARIO-VERIFY-5152-SUCCESS, SCENARIO-VERIFY-5152-MISSING-5151.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import diffusiongemma_gate_reexamination_5152 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_known_issues(root: Path) -> None:
++    path = root / mod.KNOWN_ISSUES_REL
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "# Carnot -- Known Issues\n\n"
++        "### 2026-06-30: EXECUTE the off-ARC distributional-energy verifier moat\n\n"
++        "> **UPDATE 2026-06-30 (outer-loop): D1 is ANSWERED -- bounded null.** "
++        "The trained verifier does NOT beat SC. **Planner: do NOT re-propose D1 "
++        "(the trained-embedding-verifier-vs-SC question is decided). "
++        "DiffusionGemma stays gated.**\n\n"
++        "**Origin:** fixture entry.\n",
++        encoding="utf-8",
++    )
++
++
++def _write_inputs(root: Path, *, exp5151: dict[str, Any] | None) -> None:
++    _write_json(
++        root / mod.D1_REL,
++        {
++            "experiment": "phase_d_musr_trained_verifier",
++            "n_questions": 200,
++            "trained_verifier_accuracy": 0.57,
++            "sc_accuracy_matched": 0.555,
++            "delta_vs_sc": 0.015,
++            "delta_ci95": [-0.06, 0.085],
++            "moat_realized": False,
++            "verifier_is_oracle": False,
++            "oracle_distinctness_note": "all-MiniLM embeddings plus LogisticRegression",
++            "inference_substrate": "verifier_ensemble_against_cached_candidates",
++            "honest_verdict": "complete_phase_d_trained_verifier_does_not_beat_sc",
++        },
++    )
++    _write_json(
++        root / mod.EXP4245_REL,
++        {
++            "experiment": "experiment_4245_arc_set_encoder_beats_vote",
++            "held_out_task_n": 52,
++            "oracle_distinct_beats_vote": True,
++            "set_encoder_minus_vote_delta": 0.4423076923,
++            "set_encoder_minus_vote_ci95": [0.3076923077, 0.5961538462],
++            "pass_rates": {"vote_at_1": 0.25, "set_encoder_at_1": 0.6923076923},
++            "oracle_at_k": 0.8269230769,
++            "verifier_is_oracle": False,
++            "honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote",
++        },
++    )
++    if exp5151 is not None:
++        _write_json(root / mod.EXP5151_REL, exp5151)
++    _write_json(
++        root / "results" / "diffusiongemma_energy_prior_extracted.json",
++        {
++            "experiment": "diffusiongemma_energy_prior_extracted",
++            "status": "cached",
++            "honest_verdict": "complete: energy_prior_extracted",
++        },
++    )
++    module_path = root / "python" / "carnot" / "experiment_4260_diffusiongemma_energy_guided_preflight.py"
++    module_path.parent.mkdir(parents=True, exist_ok=True)
++    module_path.write_text('"""fixture DiffusionGemma preflight module."""\n', encoding="utf-8")
++    _write_known_issues(root)
++
++
++def _not_hardened_5151() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_5151_arc_oracle_distinct_hardening_v472",
++        "acceptance_gate": True,
++        "headline_outcome": "arc_set_encoder_win_not_hardened",
++        "honest_verdict": (
++            "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive "
++            "hardening; unresolved_axes=cross_game"
++        ),
++        "leak_audit_passed": True,
++        "multiseed_delta_ci95": [0.4265639953, 0.4888206201],
++        "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
++        "cross_game_replication_delta": None,
++        "verifier_is_oracle": False,
++    }
++
++
++def _success_5151() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_5151_arc_oracle_distinct_hardening_v472",
++        "acceptance_gate": True,
++        "headline_outcome": "arc_set_encoder_win_hardened",
++        "honest_verdict": "success_arc_set_encoder_win_survives_hardening",
++        "leak_audit_passed": True,
++        "multiseed_delta_ci95": [0.42, 0.49],
++        "cross_game_blocked_reason": None,
++        "cross_game_replication_delta": 0.31,
++        "cross_game_replication_ci95": [0.11, 0.50],
++        "verifier_is_oracle": False,
++    }
++
++
++def test_req_5152_spec_declares_gate_reexamination_contract() -> None:
++    """REQ-VERIFY-5152: OpenSpec declares the reexamination artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-5152",
++        "SCENARIO-VERIFY-5152",
++        "SCENARIO-VERIFY-5152-SUCCESS",
++        "SCENARIO-VERIFY-5152-MISSING-5151",
++        "python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py",
++        "results/experiment_5152_diffusiongemma_gate_reexamination_v472.json",
++        "d1_claim_vs_exp4245_claim_same_hypothesis",
++        "recommendation",
++        "keep_gated",
++        "ungate_now",
++        "known_issues_corrigendum",
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++
++def test_scenario_5152_musr_null_does_not_close_arc_gate(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5152: incomplete ARC hardening keeps gate for corrected reason."""
++
++    _write_inputs(tmp_path, exp5151=_not_hardened_5151())
++
++    artifact = mod.run(tmp_path)
++    second = mod.run(tmp_path)
++
++    mod.validate_artifact(artifact)
++    assert artifact == second
++    assert artifact["recommendation"]["value"] == "keep_gated"
++    assert artifact["domain_conflation_found"] is True
++    assert artifact["d1_claim_vs_exp4245_claim_same_hypothesis"]["value"] is True
++    assert "MuSR reasoning-text" in artifact["d1_claim"]["claim_tested"]
++    assert "ARC-1" in artifact["exp4245_claim"]["claim_tested"]
++    assert artifact["exp5151_status"]["available"] is True
++    assert artifact["exp5151_status"]["supports_ungating"] is False
++    assert "not fully hardened" in artifact["recommendation"]["reason"]
++    assert artifact["diffusiongemma_artifacts"]["json_result_count"] == 1
++    known_issues = (tmp_path / mod.KNOWN_ISSUES_REL).read_text(encoding="utf-8")
++    assert known_issues.count(mod.CORRIGENDUM_MARKER) == 1
++    assert "DiffusionGemma stays gated" in known_issues
++    assert "MuSR D1 null conflated domains" in known_issues
++    assert (tmp_path / mod.OUTPUT_REL).exists()
++
++
++def test_scenario_5152_successful_hardened_arc_win_ungates_now(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5152-SUCCESS: hardened ARC-domain win beats the MuSR null."""
++
++    _write_inputs(tmp_path, exp5151=_success_5151())
++
++    artifact = mod.run(tmp_path)
++
++    mod.validate_artifact(artifact)
++    assert artifact["recommendation"]["value"] == "ungate_now"
++    assert artifact["exp5151_status"]["supports_ungating"] is True
++    assert artifact["honest_verdict"].startswith("success_")
++    assert "ARC-domain hardening succeeded" in artifact["recommendation"]["reason"]
++
++
++def test_scenario_5152_missing_5151_keeps_gated_with_unhardened_caveat(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5152-MISSING-5151: Exp 4245 alone is not decision-grade."""
++
++    _write_inputs(tmp_path, exp5151=None)
++
++    artifact = mod.run(tmp_path)
++
++    mod.validate_artifact(artifact)
++    assert artifact["recommendation"]["value"] == "keep_gated"
++    assert artifact["exp5151_status"]["available"] is False
++    assert artifact["exp5151_status"]["reason"] == "exp5151_absent"
++    assert "single-seed" in artifact["recommendation"]["reason"]
++
++
++def test_req_5152_validation_and_loader_edges(tmp_path: Path) -> None:
++    """REQ-VERIFY-5152: schema validation rejects non-actionable artifacts."""
++
++    with pytest.raises(FileNotFoundError):
++        mod._read_json_object(tmp_path / "missing.json")
++    bad = tmp_path / "bad.json"
++    bad.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="JSON object"):
++        mod._read_json_object(bad)
++
++    _write_inputs(tmp_path, exp5151=_not_hardened_5151())
++    artifact = mod.run(tmp_path)
++    invalid_cases = [
++        ({key: value for key, value in artifact.items() if key != "recommendation"}, "missing"),
++        ({**artifact, "honest_verdict": "pending"}, "terminal-prefixed"),
++        (
++            {
++                **artifact,
++                "recommendation": {
++                    "value": "maybe",
++                    "principle": mod.FIELD_PRINCIPLES["recommendation"],
++                },
++            },
++            "recommendation value",
++        ),
++        (
++            {**artifact, "d1_claim_vs_exp4245_claim_same_hypothesis": {"value": True}},
++            "principle",
++        ),
++        ({**artifact, "domain_conflation_found": {"value": True}}, "bare bool"),
++        ({**artifact, "reproducibility_checksum": "nope"}, "checksum"),
++        ({**artifact, "field_principles": {}}, "field_principles"),
++        ({**artifact, "spec_refs": ["REQ-VERIFY-5152"]}, "spec_refs"),
++    ]
++    for payload, message in invalid_cases:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
++
++    assert mod._terminal_prefixed("complete: ok") is True
++    assert mod._terminal_prefixed("success_ok") is True
++    assert mod._terminal_prefixed("pending") is False
++    assert mod._recommendation_from_5151({"available": True, "supports_ungating": False}) == (
++        "keep_gated",
++        "Exp 5151 is present but not fully hardened, so DiffusionGemma stays gated "
++        "for missing decision-grade ARC-domain evidence rather than the MuSR D1 null.",
++    )
+-- 
+2.55.0
+

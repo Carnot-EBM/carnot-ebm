@@ -1,0 +1,43 @@
+From f355454d05faee281e51830ed2b9af1385e0b08c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 08:24:47 -0400
+Subject: [PATCH 07504/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f0c380c6c6..96e49be994 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 230, "phase": "iteration_start", "last_beat": "2026-07-22T11:38:48Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 231, "phase": "iteration_start", "last_beat": "2026-07-22T12:24:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 402cbac366..12672f2f2f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14097,3 +14097,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 11:18 UTC | Causal future-family holdout of versioned rule sta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5787-validation-gated-constraint-skill-ab |
+ | 2026-07-22 11:18 UTC | Gated on Exp5788 transfer: wire a disabled typed-c | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5788-constraint-skill-transfer-audit.tr |
+ | 2026-07-22 11:36 UTC | Pivotal-dynamics accreditation contract for immuta | OK | 87 passed, 1 warning in 11.18s |
++| 2026-07-22 12:22 UTC | Gated on Exp5790 admission readiness: run a matche | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5791_arc_sot |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bae675df97..71cbed24c5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 230, "phase": "iteration_start", "started_at": "2026-07-22T11:38:48Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 231, "phase": "iteration_start", "started_at": "2026-07-22T12:24:42Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

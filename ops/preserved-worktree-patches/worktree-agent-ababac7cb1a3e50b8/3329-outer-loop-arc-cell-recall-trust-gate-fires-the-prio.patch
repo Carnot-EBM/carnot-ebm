@@ -1,0 +1,376 @@
+From a35f6a69d31dcd96b5155025cd21a066b609e0f1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 19:06:06 -0400
+Subject: [PATCH 03329/11362] [outer-loop] arc: cell-recall trust gate fires
+ the prior+TTT path 4/5 on unseen games (was 0/5)
+
+The exact-full-grid-match trust gate killed the TTT path on every unseen game (LOO 0/5) -- a
+64x64 CNN is ~55% changed-cell-accurate but ~0% exact-grid. Added a granularity-matched
+trust_cell_recall metric (changed-cell recall) + trust_metric param on
+gated_engine_from_transitions (default stays 'exact' -> live agent + existing tests unchanged).
+Re-running the LOO probe: cell-recall gate fires WARM 4/5 vs SCRATCH 2/5 -- the warm-start prior
+adds +2 firings (tn36 0.14->0.87, lp85 0.32->0.59 cross 0.5 only with the prior) and strengthens
+ka59/sc25. cd82 (134 trans, too small) stays below. The dynamics genuinely transferred; the old
+gate just couldn't see it. Firing is necessary-not-sufficient: whether a plan BFS'd through a
+~0.6-0.9 cell-recall model actually SOLVES (+ goal-induction) is the next offline gate signal,
+not settled here -- so trust_metric stays 'exact' in the live agent until solve-validated.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ python/carnot/agentic/arc_live_ttt.py |  48 +++++++++--
+ results/arc_ttt_loo_gate_probe.json   | 110 ++++++++++++++++----------
+ scripts/arc_ttt_loo_gate_probe.py     |  70 +++++++++-------
+ 3 files changed, 156 insertions(+), 72 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_live_ttt.py b/python/carnot/agentic/arc_live_ttt.py
+index 71633e34cc..953e04128d 100644
+--- a/python/carnot/agentic/arc_live_ttt.py
++++ b/python/carnot/agentic/arc_live_ttt.py
+@@ -310,12 +310,47 @@ class LiveTTTWorldModel:
+         """Held-out transition accuracy of the LEARNED engine -- the input to the existing
+         ``WorldModelVerifier`` 0.5 trust gate. ``held_out`` is a list of ``Transition``. The model
+         EARNS trust only by predicting transitions it was not fit to (the same bar the LLM engine failed
+-        at 0.0). Returns accuracy in [0, 1]."""
++        at 0.0). Returns EXACT-FULL-GRID-match accuracy in [0, 1].
++
++        CAVEAT (2026-06-21, the LOO gate probe): exact-full-grid match is ~0 for a 64x64 CNN dynamics
++        model that is ~55% changed-cell-accurate -- getting EVERY one of hundreds of changed cells right
++        across a full grid essentially never happens. So this metric gates the TTT path OUT on unseen games
++        (warm 0/5 on the LOO probe) even though the dynamics genuinely transferred. Use
++        ``trust_cell_recall`` as the granularity-matched alternative; see ``gated_engine_from_transitions``
++        ``trust_metric``."""
+         from carnot.agentic.arc_executable_world_model import WorldModelVerifier
+         if not held_out:
+             return 0.0
+         return float(WorldModelVerifier(held_out).score(self.engine).accuracy)
+ 
++    def trust_cell_recall(self, held_out: list) -> float:
++        """Mean CHANGED-CELL recall of the learned engine on held-out transitions -- the GRADED trust
++        metric matched to the CNN dynamics model's granularity. ``trust`` (exact-full-grid match) reads ~0
++        for a model that is genuinely 55%-cell-accurate, so it gates the path out; cell-recall reflects the
++        real prediction quality the prior actually improved (0.314 -> 0.5485 cross-game). Recall is computed
++        ONLY on the changed cells (next != input -- the hard part the dynamics must model); noop transitions
++        are correct by construction via the KEEP head and excluded. Returns mean recall in [0, 1].
++
++        Honest limitation: a model passing cell-recall 0.5 still mispredicts ~half the changed cells, so a
++        plan BFS'd through it can diverge from reality -- the live agent's execute-and-halt-on-divergence
++        loop (``plan_and_execute``) is the safety net, and whether plan-through-an-imperfect-model actually
++        SOLVES is a separate, unproven question from whether the gate fires."""
++        chg = [t for t in held_out
++               if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))]
++        if not chg:
++            return 0.0
++        recalls = []
++        for t in chg:
++            s = np.asarray(t.grid)
++            s2 = np.asarray(t.next_grid)
++            pred = np.asarray(self.engine(s, t.action, t.data))
++            if pred.shape != s2.shape:
++                recalls.append(0.0)
++                continue
++            m = s != s2
++            recalls.append(float((pred[m] == s2[m]).mean()))
++        return float(np.mean(recalls)) if recalls else 0.0
++
+     # --- diagnostics --------------------------------------------------------------------------------
+     def ttt_diagnostics(self) -> dict:
+         return {
+@@ -344,7 +379,7 @@ def _load_prior(prior_path: str) -> Any:
+ def gated_engine_from_transitions(game: str, transitions: list, *,
+                                   prior_path: str = "models/arc_dynamics_prior.pt",
+                                   trust_threshold: float = 0.5, holdout_frac: float = 0.25,
+-                                  dynamics_backend: str = "cnn"):
++                                  dynamics_backend: str = "cnn", trust_metric: str = "exact"):
+     """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
+     cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
+     trust. Returns ``(engine, is_level_complete, diag)``.
+@@ -367,9 +402,12 @@ def gated_engine_from_transitions(game: str, transitions: list, *,
+     for t in train:
+         ttt.observe_transition(t)
+     ttt.fit_now()
+-    acc = ttt.trust(held)
+-    diag.update(heldout_accuracy=round(acc, 4), trust_threshold=trust_threshold)
+-    if acc < trust_threshold:
++    acc = ttt.trust(held)                         # exact-full-grid match (the original, strict bar)
++    cell = ttt.trust_cell_recall(held)            # changed-cell recall (granularity-matched)
++    gate_value = cell if trust_metric == "cell_recall" else acc
++    diag.update(heldout_accuracy=round(acc, 4), heldout_cell_recall=round(cell, 4),
++                trust_threshold=trust_threshold, trust_metric=trust_metric)
++    if gate_value < trust_threshold:
+         diag["gate"] = "FAIL"
+         return None, None, diag
+     for t in held:  # gate passed -> refit on ALL transitions for the final engine
+diff --git a/results/arc_ttt_loo_gate_probe.json b/results/arc_ttt_loo_gate_probe.json
+index c259a0bb64..1ce5d7c76e 100644
+--- a/results/arc_ttt_loo_gate_probe.json
++++ b/results/arc_ttt_loo_gate_probe.json
+@@ -1,93 +1,123 @@
+ {
+-  "experiment": "arc_ttt_loo_gate_probe",
+-  "honest_verdict": "complete_ttt_loo_gate_warm_0_scratch_0_of_5",
++  "experiment": "arc_ttt_loo_gate_probe_v2_cellrecall",
++  "honest_verdict": "complete_ttt_loo_gate_exact_warm_0_cellrecall_warm_4_scratch_2_of_5",
+   "trust_threshold": 0.5,
+-  "metric": "WorldModelVerifier exact-grid-match accuracy on within-game held-out split",
+-  "warm_gate_fires": 0,
+-  "scratch_gate_fires": 0,
++  "exact_gate_fires_warm": 0,
++  "cell_recall_gate_fires_warm": 4,
++  "cell_recall_gate_fires_scratch": 2,
+   "per_game": [
+     {
+       "game": "cd82",
+       "n_tr": 134,
+-      "warm": {
++      "exact_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.3299
+       },
+-      "scratch": {
++      "cell_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.3299
++      },
++      "cell_scratch": {
++        "gate": "FAIL",
++        "fired": false,
++        "exact": 0.0,
++        "cell_recall": 0.2481
+       }
+     },
+     {
+       "game": "ka59",
+       "n_tr": 931,
+-      "warm": {
++      "exact_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.9119
+       },
+-      "scratch": {
+-        "gate": "FAIL",
+-        "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++      "cell_warm": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.9119
++      },
++      "cell_scratch": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.861
+       }
+     },
+     {
+       "game": "sc25",
+       "n_tr": 215,
+-      "warm": {
++      "exact_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.7975
+       },
+-      "scratch": {
+-        "gate": "FAIL",
+-        "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++      "cell_warm": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.7975
++      },
++      "cell_scratch": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.5713
+       }
+     },
+     {
+       "game": "tn36",
+       "n_tr": 249,
+-      "warm": {
++      "exact_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.8714
+       },
+-      "scratch": {
++      "cell_warm": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.8714
++      },
++      "cell_scratch": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.1394
+       }
+     },
+     {
+       "game": "lp85",
+       "n_tr": 418,
+-      "warm": {
++      "exact_warm": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.5898
++      },
++      "cell_warm": {
++        "gate": "PASS",
++        "fired": true,
++        "exact": 0.0,
++        "cell_recall": 0.5856
+       },
+-      "scratch": {
++      "cell_scratch": {
+         "gate": "FAIL",
+         "fired": false,
+-        "skip": null,
+-        "heldout_acc": 0.0
++        "exact": 0.0,
++        "cell_recall": 0.3225
+       }
+     }
+   ],
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+-  "interpretation": "Gate must FIRE for the prior+TTT path to activate on a hidden game; if warm fires ~0/5 the path stays dormant on unseen games and the prior cannot move the 0.08 hidden score."
++  "interpretation": "If cell-recall-warm fires materially more than exact-warm AND more than cell-recall-scratch, the prior+TTT path can be ACTIVATED on unseen games by re-metricing the gate. Firing is necessary-not-sufficient: whether a plan BFS'd through a ~0.6-cell-recall model actually SOLVES (+ goal-induction) is the next gate signal, not settled here."
+ }
+\ No newline at end of file
+diff --git a/scripts/arc_ttt_loo_gate_probe.py b/scripts/arc_ttt_loo_gate_probe.py
+index 9ec968ecc4..412061417e 100644
+--- a/scripts/arc_ttt_loo_gate_probe.py
++++ b/scripts/arc_ttt_loo_gate_probe.py
+@@ -1,12 +1,11 @@
+ """Gate-readiness probe: does the prior-warmstarted TTT trust gate FIRE on games the prior never saw?
+ 
+ The decisive gate signal (2026-06-21). The live agent only USES the per-game TTT world-model when its
+-held-out WorldModelVerifier accuracy (% of held-out transitions reproduced EXACTLY) clears trust_threshold
+-(0.5). So the question "does the warm-start prior move our hidden-game score" reduces to: on the 5 LOO games
+-the prior NEVER trained on, does warm-starting from the prior let the per-game fit clear the 0.5 gate (so the
+-TTT path activates on an unseen game) -- vs scratch (no prior)?
+-
+-Gate-only (no planning BFS -- that is secondary and expensive); GPU; flush per game. Offline, zero-quota.
++held-out trust metric clears trust_threshold (0.5). v1 of this probe found the EXACT-full-grid-match gate
++fires 0/5 on the LOO held-out games (a 64x64 CNN is ~55% changed-cell-accurate but ~0% exact-grid). v2 adds
++the CELL-RECALL trust metric (changed-cell recall, matched to the model's granularity) and compares: does
++re-metricing the gate make the prior+TTT path fire on unseen games? Reports raw values for both metrics so
++any threshold choice is auditable. Offline, zero-quota.
+ """
+ from __future__ import annotations
+ import sys
+@@ -22,41 +21,58 @@ from carnot.agentic.arc_live_ttt import gated_engine_from_transitions
+ 
+ LOO = ["cd82", "ka59", "sc25", "tn36", "lp85"]  # the 5 games the prior NEVER trained on (true transfer surface)
+ NOPRIOR = "models/__nonexistent_prior__.pt"     # forces scratch (no warm-start)
++THRESH = 0.5
+ 
+ 
+-def probe(game, tr, prior_path):
+-    eng, _isdone, diag = gated_engine_from_transitions(game, tr, prior_path=prior_path, trust_threshold=0.5)
+-    return {"gate": diag.get("gate"), "fired": eng is not None, "skip": diag.get("skip"),
+-            "heldout_acc": (round(diag["heldout_accuracy"], 4) if diag.get("heldout_accuracy") is not None else None)}
++def probe(game, tr, prior_path, metric):
++    eng, _isdone, diag = gated_engine_from_transitions(
++        game, tr, prior_path=prior_path, trust_threshold=THRESH, trust_metric=metric)
++    return {"gate": diag.get("gate"), "fired": eng is not None,
++            "exact": diag.get("heldout_accuracy"), "cell_recall": diag.get("heldout_cell_recall")}
+ 
+ 
+ def main() -> int:
+     corpus = TransitionCorpus()
+     rows = []
+-    warm_fire = scratch_fire = 0
+-    print("=== TTT trust-gate (0.5 exact-match) on the 5 LOO held-out games: WARM(prior) vs SCRATCH ===", flush=True)
+-    print(f"{'game':6} {'n_tr':>5} | {'WARM':>6} {'acc':>7} | {'SCRATCH':>7} {'acc':>7}", flush=True)
++    fires = {"exact_warm": 0, "exact_scratch": 0, "cell_warm": 0, "cell_scratch": 0}
++    print(f"=== TTT trust-gate on 5 LOO held-out games (threshold {THRESH}); EXACT vs CELL-RECALL ===", flush=True)
++    print(f"{'game':6} {'n_tr':>5} | {'exact':>6} | {'cellrec_warm':>12} {'fires':>5} | "
++          f"{'cellrec_scr':>11} {'fires':>5}", flush=True)
+     for g in LOO:
+         tr = corpus.load(g)
+-        w = probe(g, tr, "models/arc_dynamics_prior.pt")
+-        s = probe(g, tr, NOPRIOR)
+-        warm_fire += int(w["fired"]); scratch_fire += int(s["fired"])
+-        rows.append({"game": g, "n_tr": len(tr), "warm": w, "scratch": s})
+-        print(f"{g:6} {len(tr):>5} | {str(w['fired']):>6} {str(w['heldout_acc']):>7} | "
+-              f"{str(s['fired']):>7} {str(s['heldout_acc']):>7}", flush=True)
+-    print(f"\nGATE-FIRES on unseen games: WARM {warm_fire}/5  vs  SCRATCH {scratch_fire}/5", flush=True)
++        ew = probe(g, tr, "models/arc_dynamics_prior.pt", "exact")
++        cw = probe(g, tr, "models/arc_dynamics_prior.pt", "cell_recall")
++        cs = probe(g, tr, NOPRIOR, "cell_recall")
++        fires["exact_warm"] += int(ew["fired"])
++        fires["cell_warm"] += int(cw["fired"])
++        fires["cell_scratch"] += int(cs["fired"])
++        rows.append({"game": g, "n_tr": len(tr), "exact_warm": ew, "cell_warm": cw, "cell_scratch": cs})
++        print(f"{g:6} {len(tr):>5} | {str(ew['exact']):>6} | "
++              f"{str(cw['cell_recall']):>12} {str(cw['fired']):>5} | "
++              f"{str(cs['cell_recall']):>11} {str(cs['fired']):>5}", flush=True)
++    print(f"\nGATE-FIRES (threshold {THRESH}):", flush=True)
++    print(f"  EXACT gate, warm:        {fires['exact_warm']}/5   (the current live-agent gate)", flush=True)
++    print(f"  CELL-RECALL gate, warm:  {fires['cell_warm']}/5   <- does re-metricing make the path fire?", flush=True)
++    print(f"  CELL-RECALL gate, scratch:{fires['cell_scratch']}/5  (no prior -- isolates the prior's lift)", flush=True)
+     out = {
+-        "experiment": "arc_ttt_loo_gate_probe",
+-        "honest_verdict": f"complete_ttt_loo_gate_warm_{warm_fire}_scratch_{scratch_fire}_of_5",
+-        "trust_threshold": 0.5, "metric": "WorldModelVerifier exact-grid-match accuracy on within-game held-out split",
+-        "warm_gate_fires": warm_fire, "scratch_gate_fires": scratch_fire, "per_game": rows,
++        "experiment": "arc_ttt_loo_gate_probe_v2_cellrecall",
++        "honest_verdict": (f"complete_ttt_loo_gate_exact_warm_{fires['exact_warm']}_"
++                           f"cellrecall_warm_{fires['cell_warm']}_scratch_{fires['cell_scratch']}_of_5"),
++        "trust_threshold": THRESH,
++        "exact_gate_fires_warm": fires["exact_warm"],
++        "cell_recall_gate_fires_warm": fires["cell_warm"],
++        "cell_recall_gate_fires_scratch": fires["cell_scratch"],
++        "per_game": rows,
+         "inference_substrate": "verifier_ensemble_against_cached_candidates",
+         "verifier_is_oracle": False,
+-        "interpretation": ("Gate must FIRE for the prior+TTT path to activate on a hidden game; if warm fires ~0/5 "
+-                           "the path stays dormant on unseen games and the prior cannot move the 0.08 hidden score."),
++        "interpretation": ("If cell-recall-warm fires materially more than exact-warm AND more than "
++                           "cell-recall-scratch, the prior+TTT path can be ACTIVATED on unseen games by "
++                           "re-metricing the gate. Firing is necessary-not-sufficient: whether a plan BFS'd "
++                           "through a ~0.6-cell-recall model actually SOLVES (+ goal-induction) is the next "
++                           "gate signal, not settled here."),
+     }
+     (REPO / "results" / "arc_ttt_loo_gate_probe.json").write_text(json.dumps(out, indent=2, default=str))
+-    print(f"-> {out['honest_verdict']} (results/arc_ttt_loo_gate_probe.json)", flush=True)
++    print(f"-> {out['honest_verdict']}", flush=True)
+     return 0
+ 
+ 
+-- 
+2.55.0
+

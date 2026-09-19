@@ -1,0 +1,95 @@
+From d9af4cc1a0ed72030deac93d0e956336dbfd80ef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 09:31:37 -0400
+Subject: [PATCH 02322/11362] [conductor] Operational retrospective for
+ milestone 2026.06.400
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/anomaly-escalations.md                 | 10 ++++++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_06_400.json | 30 ++++++++++++++++++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_400.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 01a0219d33..9ca7f687a4 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5289,3 +5289,9 @@ The critical path for milestone .250:
+ - theme: the G4 verifier SCORECARD -- did the three moat questions close: (1) CROSS-DOMAIN selection moat (held-out-domain CI95-excl-0 + label-ablation) with the IR3DE+CASCAL rebuild, (2) the IN-GENERATION moat (reward-guided step-stitching beats an engaged control AND self-reward SMC), (3) the efficiency CASCADE ROUTER dominating near-judge accuracy at a fraction of cost -- plus ARC +1, cross-game self-learning, and off-ARC execution transfer.
+ - key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle at the snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). On-disk ground truth (capstone exp4323, clean/unflagged, 0 flagged excluded, paper_ready=True G1-G4 all PASS unmet_gates=[]) makes .399 a 1-of-3-moats-MET milestone whose headline POSITIVE is the IN-GENERATION moat FLIPPING from the .396 partial-state block + the .398 engaged-control null: exp4315 diffusiongemma reward-guided STEP-STITCHING won the moat (in_generation_moat_holds=true; carnot_minus_best_engaged_control_delta +0.225 AND carnot_minus_self_reward_smc_delta +0.35; guidance_moat_ci95 [0.075,0.375] excl 0; controls_differentiated=true; verifier_is_oracle=false -- genuinely oracle-distinct, the deep open claim) -- the stitching formulation succeeds where partial-state guidance could not score masked denoising states. The other two moat questions came back honest-NEGATIVE but informative: the CROSS-DOMAIN selection moat COLLAPSED under power (exp4314 cross_domain_moat_holds=false; held-out-domain delta +0.2308 but CI95 [-0.1154,0.5385] INCLUDES 0 on held_out_task_n=26 into fover; label_ablation_robust=true so it is not label-leakage -- powered_collapse_cross_domain_domain_bound, corroborating the verifier-domain-bound finding), and the efficiency CASCADE ROUTER did NOT dominate (exp4316 efficiency_cascade_dominates=false) -- but for a thesis-affirming reason: always-energy ALREADY dominates (accuracy_always_energy 0.60 > accuracy_cascade 0.55 >> accuracy_always_judge 0.25 at cost_ratio_cascade 0.302, escalation_rate 0.30), i.e. the cheap learned energy verifier beats the LLM-judge on BOTH accuracy and cost, leaving the cascade no headroom to add. ARC ACCURACY advanced +1 to 23 total levels (exp4317 new game cd82-fb555c5d -> L1, offline_reproduced=true, gate met). SELF-LEARNING came back a clean honest-negative (exp4318 cross_game_transfer_helps=false, positive control passed, cross_game_state_reduction=1.0, n_held_out_levels=6 -- a real null, not a degenerate test). OFF-ARC execution transfer landed an execution-grounded win (exp4319 off_arc_demofit_beats_vote=true, delta +0.02, CI95 [0.005,0.04] excl 0, accumulated_n=200, verifier_is_oracle=TRUE -- HONESTLY labeled the cheap/decentralized execution layer, NOT the oracle-distinct moat). Reserved infra landed clean -- SOTA ingestion mapped for .400 (exp4320), registry/gaps hygiene (exp4321 regression_guard_passed=True, 3 gaps logged, robust aggregator), hardware continuity (exp4322: PolarFire hash-verified CPU dispatch OK, KV260 terminal/xmutil-listapps-blocked rc=1, GateMate blocked/unreachable). So the zero timing is a detector artifact (detector_gap_suspected=true); the recurring operational failure is observability, not execution.
+ - acceptance: UNGATED capstone (no gated_on); retro-data 0/0 (false-zero detector gap). Of the 3 headline moat questions, 1/3 MET -- IN-GENERATION moat HELD via reward-guided step-stitching (exp4315, verifier_is_oracle=false, the flip-positive), CROSS-DOMAIN moat COLLAPSED powered/domain-bound (exp4314, CI incl 0, label-ablation robust), EFFICIENCY cascade OPEN because always-energy already dominates judge 0.60-vs-0.25 at 0.30x cost (exp4316); ARC +1 to 23 levels (exp4317, offline_reproduced), self-learning HONEST-NEGATIVE positive-control-passed (exp4318), off-ARC EXECUTION-GROUNDED win not-a-moat (exp4319, verifier_is_oracle=true); paper_ready=True (G1-G4 PASS, unmet_gates=[]); infra clean (SOTA exp4320, hygiene exp4321 regression guard True + 3 gaps, hardware PolarFire-OK/KV260-terminal/GateMate-blocked exp4322); capstone exp4323 clean/unflagged, 0 flagged-skipped.
++
++### Milestone 2026.06.400
++- exp_range: exp4325-exp4335 (per the ops/changelog.md entry read this turn -- capstone results/experiment_4335_capstone_v400.json + experiments exp4325-exp4331 named there; the authoritative milestone-scoped timing detector again falsely reported 0 commits since activation -- the recurring false-zero gap documented across .363-.399, now extending to .400)
++- theme: PHASE E4 verifier scorecard + the DiffusionGemma GATE DECISION -- did the in-generation oracle-distinct moat REPLICATE on a 2nd corpus + scale to an adaptive loop, did E3 land a deep-tail ARC solve, did the shallow-tail sweep advance, did the learned-encoder cross-game transfer help.
++- key result: Honest negative on the retro's OWN authoritative timing data (0 experiment commits attributed since activation; both RTX 3090s idle at the 13:26Z snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). On-disk ground truth (capstone exp4335, honest_verdict=complete, read this turn) records the headline as STILL-PENDING: the in-generation moat is corpus-specific and did NOT replicate on the 2nd corpus (second_corpus_scorer_leaky), so the DiffusionGemma gate stays PENDING; ARC at 13 levels with E3 deep-tail reproduced 0; self-learning open; hygiene passed. So the zero retro-timing is a detector artifact (detector_gap_suspected=true); the recurring operational failure is observability, not execution.
++- acceptance: UNGATED capstone (no gated_on); retro-data 0/0 (false-zero detector gap). DiffusionGemma gate STILL-PENDING (in-generation moat did not replicate on a 2nd corpus, scorer-leaky); ARC 13 levels, E3 reproduced 0; self-learning open; hygiene passed (per capstone exp4335 verdict read this turn). Highest-leverage operational action = repair the milestone-scoped timing detector (mtime + changelog-window fallback) + write-time duration_s stamping so retros stop false-zeroing.
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index f99decf72e..5a537c5ddc 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -471,3 +471,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/arc_e3_agent_cd82.json
++
++## arc_gap_fill_su15.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/arc_gap_fill_su15.json
++
++## arc_gap_fill_r11l.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/arc_gap_fill_r11l.json
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b47e3aa909..f2d6f34480 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9248,3 +9248,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-17: PHASE E2 (hygiene; per Missing-Verifier Gap Logging + registry hygiene) -- reconcile the verifier registry + gaps to .400 truth, run the GAP-4 execution regression guard, and LOG missing-verifier gaps. Record the .400 outcomes: the in-generation moat replication (exp4325 in_generation_moat_replicates + controls_differentiated), the adaptive scale-up (exp4326 adaptive_guidance_beats_control + domain_used), the E3 deep-tail solves (exp4327/4328/4329 offline_reproduced + verifier_accuracy_per_round + any missing-world-model-rule gaps), the shallow-tail sweep (exp4330 reproducible_total_levels + tn36_schema_finding), the learned-encoder cross-game transfer (exp4331 learned_encoder_transfer_helps). Update ops/verifier_registry.yaml + ops/verifier_gaps.md (e.g. close/sharpen the 'game-invariant ARC value representation' gap per exp4331; log any missing-world-model-rule gaps from E3; the ARC-grid-generation-scorer gap if exp4326's adaptive arm stayed open). Run the GAP-4 execution regression guard (no regression vs .399). Use the robust aggregate-available helper (read available artifacts, report gaps -- do NOT hard-block all-False if one is missing). Emit regression_guard_passed BARE bool. (⚠️ Research Finding) — honest_verdict=complete: registry_gaps_manifest_reconciled_to_v400_truth_regression_guard_passed_True_gaps_logged_7_robust_aggregator_used; results/experiment_4333_verifier_registry_gaps_hygiene.json
+ - 2026-06-17: PHASE E3 (hardware continuity; opportunistic per north-star §3) -- KV260 terminal/opportunistic (SSH-only reachability + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect (`openFPGALoader -c dirtyJtag --detect`). KV260 is terminal (north-star §3) so the per-board mandate relaxes to opportunistic; this task keeps the boards visible without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks the milestone (honest blocked_<board> per board is fine). (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_4334_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only; results/experiment_4334_hardware_continuity.json
+ - 2026-06-17: PHASE E4 (capstone .400, UNGATED) -- the verifier scorecard + the DiffusionGemma GATE DECISION, using the robust aggregate-available-report-gaps helper (NO hard-block-all-False). Headline questions: (1) did the in-generation oracle-distinct moat REPLICATE on a 2nd corpus (exp4325 in_generation_moat_replicates, CI95-excl-0) AND scale to an adaptive loop (exp4326 adaptive_guidance_beats_control)? -> does the DiffusionGemma gate (diffusiongemma-energy-guided-diffusion-spec.md THE GATE: oracle-distinct learned-verifier win + matched control + CI95-excl-0, REPLICATED) now flip MET? (2) did E3 land a deep-tail ARC solve (exp4327/4328/4329 offline_reproduced) -> reproducible_total_levels? (3) did the shallow-tail sweep advance (exp4330)? (4) did the learned-encoder cross-game transfer help (exp4331)? Aggregate (skipping flagged, reporting missing as per-axis gaps; HONORING verifier_is_oracle -- the E3/sweep solves are execution-grounded, verifier_is_oracle=true, ARC progress NOT a moat; the in-generation/self-learning results are oracle-distinct, verifier_is_oracle=false). Cite each upstream sha256. Emit in_generation_moat_replicates_headline + diffusiongemma_gate_status + arc_reproducible_total_levels + verifier_thesis_state (one honest string). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on. (✅ Complete) — honest_verdict=complete: v400_in_generation_corpus_specific_gate_STILL_PENDING_second_corpus_scorer_leaky_arc_levels_13_e3_reproduced_0_self_learning_open_hygiene_passed; results/experiment_4335_capstone_v400.json
++- 2026-06-17: [conductor] Operational retrospective for milestone 2026.06.400 (results/operational_retro_2026_06_400.json, schema carnot.operational_retro.v64). The authoritative milestone-scoped timing detector again false-zeroed (0 experiment commits since activation), so the locked timing fields are 0/empty (0 experiments, 0 compute-bound, 0 wall-time min) and gpu_idle_on_compute_bound_tasks=null (both RTX 3090s correctly idle at the 13:26Z snapshot — 0 compute-bound tasks, so the idle GPU is correct behaviour, not a bug). Per the ops/changelog.md window read this turn, .400 DID run (capstone results/experiment_4335_capstone_v400.json + exp4325-exp4331), confirming the recurring .363-.399 false-zero now extends to .400. The operational bottleneck is OBSERVABILITY (the timing-detector gap + missing per-experiment wall-time telemetry), NOT execution; top action = repair the milestone-scoped timing detector (mtime + changelog-window fallback) + write-time duration_s/compute_bound stamping, and defer the retro when timing data is genuinely empty. No GPU/DualGPURunner change warranted (no compute-bound or parallel multi-model task in the retro's authoritative data; DualGPURunner applies only to 2+ parallel models). estimated_time_savings_pct=5.
+diff --git a/results/operational_retro_2026_06_400.json b/results/operational_retro_2026_06_400.json
+new file mode 100644
+index 0000000000..8b6a3ab84b
+--- /dev/null
++++ b/results/operational_retro_2026_06_400.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.400",
++  "generated_at": "2026-06-17T13:26:39Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "Milestone 2026.06.400: the authoritative milestone-scoped timing detector reports 0 experiment commits since activation, so all locked timing fields are 0 (0 experiments, 0 compute-bound, 0 wall-time minutes) and slowest_experiments is empty. With no compute-bound (GGUF/CUDA) task present, both RTX 3090s sitting idle at 0% utilization is correct behaviour, not a bottleneck (gpu_idle_on_compute_bound_tasks=null). There is no execution timing to analyze from the data blocks this turn.",
++  "bottlenecks_identified": [
++    "OBSERVABILITY, not execution: the milestone-scoped timing detector found 0 experiment commits since activation of 2026.06.400, leaving the retrospective with zero timing data. The prior milestone's changelog entry documents this same detector false-zeroing across a recurring window while experiments had in fact run on disk, so a 0 here is a telemetry/detector gap rather than evidence the milestone did no work.",
++    "No wall-time efficiency bottleneck is identifiable from the data blocks: with experiments_completed=0 and compute_bound_experiments_count=0, there is no slow experiment to attribute time to.",
++    "GPU idle was explicitly considered and NOT flagged: 0% utilization on both RTX 3090s is correct given no compute-bound task was present (gpu_idle_on_compute_bound_tasks=null). Flagging it would violate the GPU-idle interpretation rule."
++  ],
++  "improvements_suggested": [
++    "Repair the milestone-scoped timing detector that the retro depends on: add an mtime + changelog-window fallback so per-experiment wall-times are recovered even when the commit-since-activation scan returns empty, ending the recurring false-zero that has now produced several empty operational retros.",
++    "Stamp duration_s (and a compute_bound flag) onto each experiment artifact at write time, so timing telemetry is intrinsic to the result JSON and does not depend on commit-window heuristics.",
++    "Gate or defer the operational-retro trigger on at least one recovered timing record for the milestone; when timing data is genuinely empty, emit a short 'no-data, detector-gap suspected' retro rather than a full synthesis.",
++    "When compute-bound tasks resume with 2+ models loaded in parallel, route them through DualGPURunner (carnot.pipeline.dual_gpu_harness) so both currently-idle 3090s are engaged (e.g. Qwen on GPU 0, Gemma on GPU 1); do not enforce this on single-model inference."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Fix the milestone-scoped timing detector (mtime + changelog-window fallback) so retros stop false-zeroing — this is the single change that restores every future operational retro's ability to find real bottlenecks.",
++    "Add write-time duration_s + compute_bound stamping to the experiment artifact schema, making timing observability intrinsic rather than reconstructed.",
++    "Defer/short-circuit the retro when timing data is empty so turn budget is not spent synthesizing analysis over no data."
++  ],
++  "estimated_time_savings_pct": 5,
++  "meta_reflection": "This milestone produced no timing data the retro could read, so execution efficiency cannot be assessed on its own terms. The recurring meta-lesson is that the bottleneck has moved from compute to observability: the operational retro is only as good as the milestone-scoped timing detector feeding it, and that detector's documented false-zero gap is now the highest-leverage thing to fix before the next milestone."
++}
+-- 
+2.55.0
+

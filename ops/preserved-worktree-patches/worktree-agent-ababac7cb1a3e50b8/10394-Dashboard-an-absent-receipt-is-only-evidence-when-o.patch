@@ -1,0 +1,138 @@
+From 1b75729dfd216a0388c9fa473a0703a50ca48d07 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 10:56:04 -0400
+Subject: [PATCH 10394/11362] Dashboard: an absent receipt is only evidence
+ when one was armed
+
+The dashboard reported the adapter-free eval as "gone, NO receipt (SIGKILL, OOM,
+or kernel event)". It had exited CLEANLY after writing its result:
+
+    cd82  live=L2 (+2) actions=2459 eff=0.0267  [19543s]
+    LEADERBOARD SCORE: 2 levels, efficiency-sum 0.027; 0 open gaps
+    wrote results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json
+
+The receipt (REQ-INFRA-6830) was never installed on that job, so its absence
+carried no information at all -- and the line asserted a conclusion whose
+precondition did not hold. That is the same defect class as a guard that is green
+because it never looked.
+
+Now three distinct states: alive (with the worker's own progress), gone with a
+receipt ARMED but ABSENT (the real SIGKILL/OOM signal), and gone with no receipt
+armed -- which prints UNKNOWN and points the reader at the run's own log.
+
+Also: the generalization line was reading the flat arc_leaderboard_eval.json
+while the eval writes a PER-RUN file under arc_leaderboard_eval_runs/. It showed
+a 48-day-old policy=explorer number with a fresh policy=e3 result sitting unread
+beside it. It now prefers the freshest per-run file and reads:
+
+    generaliz.  2 level(s) across 1 game(s) by live self-discovery [policy=e3, 0d old]
+
+That is the first adapter-free measurement this project has: the live agent
+reached 2 levels on cd82 unaided, in 2459 actions, efficiency 0.027 against the
+human baseline -- roughly 37x more actions than a human needed. Two of the three
+probe games produced no line.
+
+Housekeeping in the same pass: reaped an orphaned llama-server (pid 3452459)
+still holding 18,416 MiB on GPU 1 at 0% utilisation after its parent exited. Both
+cards are now fully free at 24,120 MiB.
+
+22 tests; 2/2 mutations RED (unarmed treated as SIGKILL, per-run directory
+ignored). Restores byte-identical.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/outer_loop_dashboard.py           | 24 +++++++++++++++++--
+ tests/python/test_outer_loop_dashboard.py | 28 ++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/outer_loop_dashboard.py b/scripts/outer_loop_dashboard.py
+index e07f72d5fe..56339c1fca 100755
+--- a/scripts/outer_loop_dashboard.py
++++ b/scripts/outer_loop_dashboard.py
+@@ -216,7 +216,18 @@ def generalization_levels() -> dict:
+     # Reading only arc_loop_solve_*.json would leave this line stuck at "not measured" forever
+     # even after that run lands, because they are different files.
+     total, games = 0, 0
+-    lb = REPO / "results" / "arc_leaderboard_eval.json"
++    # The eval writes a PER-RUN file under arc_leaderboard_eval_runs/ and only sometimes updates
++    # the flat arc_leaderboard_eval.json. Reading only the flat file showed a 48-day-old
++    # `policy=explorer` number while a fresh `policy=e3` result sat unread beside it.
++    candidates = sorted(
++        (REPO / "results" / "arc_leaderboard_eval_runs").glob("*.json"),
++        key=lambda q: q.stat().st_mtime,
++        reverse=True,
++    )
++    flat = REPO / "results" / "arc_leaderboard_eval.json"
++    if flat.exists():
++        candidates.append(flat)
++    lb = candidates[0] if candidates else flat
+     if lb.exists():
+         try:
+             d = json.loads(lb.read_text())
+@@ -351,9 +362,18 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
+                 )
+             except (OSError, json.JSONDecodeError):
+                 L.append(f"job         {name}: gone; receipt unreadable at {receipt}")
++        elif receipt is None:
++            # NO RECEIPT WAS ARMED, which proves nothing about how the job ended. The first
++            # version printed the SIGKILL/OOM inference here unconditionally and reported a job
++            # that had exited CLEANLY, after writing its result, as a violent death. An absent
++            # receipt is evidence only when a receipt was installed; otherwise it is silence.
++            L.append(
++                f"job         {name}: gone; no receipt was armed, so the exit is UNKNOWN "
++                f"-- check the run's own log before inferring anything"
++            )
+         else:
+             L.append(
+-                f"job         {name}: gone, NO receipt "
++                f"job         {name}: gone, receipt ARMED but ABSENT at {receipt} "
+                 f"(SIGKILL, OOM, or kernel event -- REQ-INFRA-6830)"
+             )
+ 
+diff --git a/tests/python/test_outer_loop_dashboard.py b/tests/python/test_outer_loop_dashboard.py
+index ec6b9b7b5e..b160a003a8 100644
+--- a/tests/python/test_outer_loop_dashboard.py
++++ b/tests/python/test_outer_loop_dashboard.py
+@@ -68,7 +68,7 @@ def test_a_dead_job_with_no_receipt_says_so_explicitly(tmp_path) -> None:
+     rather than shown as a blank.
+     """
+     out = _module().render([("ab", 999_999_999, tmp_path / "absent.json")])
+-    assert "NO receipt" in out
++    assert "ARMED but ABSENT" in out
+     assert "REQ-INFRA-6830" in out
+ 
+ 
+@@ -299,3 +299,29 @@ def test_the_walk_prefers_the_busiest_descendant_not_the_first(monkeypatch) -> N
+     monkeypatch.setattr(m.Path, "read_text", fake_read, raising=False)
+     # 500 is the launcher (a holder, and its own descendant); 600 is its busy worker.
+     assert m.gpu_worker_for(500) == 600
++
++
++def test_an_unarmed_job_reports_unknown_not_a_violent_death() -> None:
++    """The 2026-08-30 miscall: a job that exited CLEANLY, after writing its result, was
++    reported as SIGKILL/OOM because no receipt existed. An absent receipt is evidence only
++    when a receipt was ARMED; otherwise it is silence."""
++    out = _module().render([("job", 999_999_999, None)])
++    assert "no receipt was armed" in out
++    assert "UNKNOWN" in out
++    assert "SIGKILL" not in out
++
++
++def test_the_freshest_per_run_eval_beats_the_stale_flat_file(tmp_path, monkeypatch) -> None:
++    """A 48-day-old `policy=explorer` number was shown while a fresh `policy=e3` result sat
++    unread in arc_leaderboard_eval_runs/."""
++    m = _module()
++    monkeypatch.setattr(m, "REPO", tmp_path)
++    (tmp_path / "results" / "arc_leaderboard_eval_runs").mkdir(parents=True)
++    (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
++        json.dumps({"policy": "explorer", "live_levels": 5, "per_game": {"a": 1}})
++    )
++    (tmp_path / "results" / "arc_leaderboard_eval_runs" / "fresh.json").write_text(
++        json.dumps({"policy": "e3", "live_levels": 2, "per_game": [{"game": "cd82"}]})
++    )
++    gen = m.generalization_levels()
++    assert (gen["policy"], gen["levels"]) == ("e3", 2)
+-- 
+2.55.0
+

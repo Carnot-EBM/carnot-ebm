@@ -1,0 +1,23 @@
+From 8b88d4b7221bc9597361eec1efd364915aa01ba9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 07:50:14 -0400
+Subject: [PATCH 07410/11362] [conductor] In-process docs for Build a lossless
+ bare-scalar bridge for the ready Exp5746 proposal benchmark
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0c217eb531..6907124e17 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11628,3 +11628,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-20: Operational retrospective for milestone 2026.07.513 (Complete) -- 11 experiments occupied 223.3 minutes, including 4 compute-bound tasks. The 81.7-minute synthesis-only reconciliation was the longest recorded path; the only compute-bound entry in the bounded top-five list was the 21.23-minute dual-receipt benchmark, whose slow phase is not isolated. The locked compute-task GPU-idle indicator is false, and no concurrent multi-model task or DualGPURunner miss is established. Next-milestone tooling priorities are incremental reconciliation, phase-level timing receipts, and task-correlated GPU and runner telemetry; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_513.json
+ - 2026-07-20: Transition terminal .513 evidence, preserve blocked-versus-null verdicts, and allocate .514 (⚠️ Blocked) — honest_verdict=blocked: exp5755 transition preconditions failed: next_range_collision_count=3; results/experiment_5755_transition_v514.json
+ - 2026-07-20: Ingest post-V514 source deltas with bounded bibliographic receipts (✅ Complete) — honest_verdict=complete: no new non-duplicate actionable V514 source deltas; references left unchanged; results/experiment_5756_v514_source_delta_ingestion.json
++- 2026-07-21: Build a lossless bare-scalar bridge for the ready Exp5746 proposal benchmark (✅ Complete) — honest_verdict=complete: exact proposal benchmark scalars bridged for downstream gates; results/experiment_5757_proposal_benchmark_scalar_bridge.json
+-- 
+2.55.0
+

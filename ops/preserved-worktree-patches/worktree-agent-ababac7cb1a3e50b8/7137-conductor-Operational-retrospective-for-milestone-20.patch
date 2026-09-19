@@ -1,0 +1,103 @@
+From ce695a3cebe5b283699fb3fe6ffb35279b2e08c1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 18:42:19 -0400
+Subject: [PATCH 07137/11362] [conductor] Operational retrospective for
+ milestone 2026.07.509
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_509.json | 57 ++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_509.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 213ea60e9e..9e17ece605 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5925,3 +5925,9 @@ The critical path for milestone .250:
+ - theme: bounded operational attribution for a synthesis-heavy slowest-path set
+ - key result: honest operational result -- the slowest-five list contains one compute-bound entry, and the task-conditioned GPU-idle indicator is false; runtime causes and any concurrent multi-model runner miss are not established
+ - acceptance: no data available this milestone
++
++### Milestone 2026.07.509
++- exp_range: exp5638-exp5639 (only IDs present in authoritative timing data; the complete milestone range is not available)
++- theme: operational execution led by transition mapping and cross-area evidence reconciliation
++- key result: honest operational result -- the visible compute-bound slow paths are identified, but task-conditioned GPU idle, causal phase timing, and a concurrent multi-model runner miss are not established
++- acceptance: 4/4 operational questions answered
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d41436a11a..270bcbc9ae 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11544,3 +11544,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-14: Exact temperature-by-penalty parallel-tempering audit on constrained Ising targets (✅ Complete) — honest_verdict=complete: exact two-axis beta-lambda label-exchange invariant audit ready for downstream quality trials; results/experiment_5644_two_axis_parallel_tempering_exact_audit.json
+ - 2026-07-14: Gated on Exp5644 joint invariants: two-axis tempering hard constrained-instance quality (⚠️ Blocked) — honest_verdict=blocked: two-axis constraint-penalty exchange did not clear every preregistered quality promotion gate; results/experiment_5645_two_axis_tempering_hard_constraint_quality.json
+ - 2026-07-14: Reconcile .509 FR-11, ARC, sampler, specification, and operations evidence (✅ Complete) — honest_verdict=complete: v509 reconciled; fr11_promoted=True; fr11_shadow_opt_in=True; arc_mechanism_promoted=False; arc_registry_delta=0; two_axis_exact=True; two_axis_quality_promoted=False; rust_parity_promoted=False; timing_claimed=false; hardware_speedup_claimed=false; results/experiment_5647_v509_capstone_reconciliation.json
++- 2026-07-14: Operational retrospective for milestone 2026.07.509 (Complete) -- 12 experiments used 216.9 minutes, including 4 compute-bound tasks. The visible compute-bound slow paths were the 63.18-minute transition and retirement-map task and the 24.4-minute ARC transition-hypothesis prototype; their phase-level causes are not available. The locked task-conditioned GPU-idle indicator is false, and no task with at least 2 parallel models is identified, so neither idle compute nor a DualGPURunner miss is claimed. Recommended tooling: a schema-validated transition-map scaffold, phase-level timing with task-scoped GPU telemetry, and explicit model-concurrency and runner-selection receipts; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_509.json
+diff --git a/results/operational_retro_2026_07_509.json b/results/operational_retro_2026_07_509.json
+new file mode 100644
+index 0000000000..5fa49ce60b
+--- /dev/null
++++ b/results/operational_retro_2026_07_509.json
+@@ -0,0 +1,57 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.509",
++  "generated_at": "2026-07-14T22:37:14Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 216.9,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 4,
++  "slowest_experiments": [
++    {
++      "experiment": "Transition .508 terminal evidence into the .509 dependency and retirement map",
++      "duration_minutes": 63.18,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Reconcile .509 FR-11, ARC, sampler, specification, and operations evidence",
++      "duration_minutes": 36.88,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5638 contract and zero unsafe total: independent anytime-valid FR-11",
++      "duration_minutes": 35.57,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5639 independent promotion: fail-closed FR-11 shadow integration",
++      "duration_minutes": 24.82,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Counterexample-patched executable ARC transition-hypothesis prototype",
++      "duration_minutes": 24.4,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Milestone 2026.07.509 completed 12 experiments in 216.9 minutes, including 4 compute-bound tasks. The slowest recorded task was compute-bound at 63.18 minutes, while the locked task-conditioned indicator reports no GPU-idle condition on compute-bound work.",
++  "bottlenecks_identified": [
++    "The 63.18-minute transition and retirement-map task and the 24.4-minute ARC transition-hypothesis prototype were the longest visible compute-bound paths; the supplied data does not provide phase-level causes for either duration.",
++    "The 36.88-minute reconciliation, 35.57-minute independent audit, and 24.82-minute shadow integration were long synthesis-only paths; their lack of GPU use is expected, so GPU scheduling is not identified as their bottleneck.",
++    "Disk-mtime reconstruction supplies experiment-level elapsed time without task-correlated GPU or loaded-model concurrency records, preventing causal and runner-selection attribution."
++  ],
++  "improvements_suggested": [
++    "Generate a schema-validated dependency and retirement-map scaffold from prior terminal evidence before the transition task begins.",
++    "Emit phase-level timing receipts and task-scoped GPU telemetry for every compute-bound experiment.",
++    "Record loaded-model concurrency and selected runner in each compute-bound receipt, selecting DualGPURunner only when at least 2 models are loaded in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Prebuild and validate the dependency and retirement-map scaffold for the next transition.",
++    "Add phase-level timing and task-correlated GPU utilization to compute-bound receipts.",
++    "Add explicit model-concurrency and runner-selection fields, with conditional DualGPURunner dispatch for parallel multi-model work."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence ranks elapsed paths but does not explain why they were slow or correlate the GPU snapshot with task windows. A nonzero time-savings estimate is not defensible until phase and concurrency telemetry provide a measured counterfactual."
++}
+-- 
+2.55.0
+

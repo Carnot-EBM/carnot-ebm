@@ -1,0 +1,330 @@
+From 2e2be6c62b8827d18800ca6b72333bacc0787a43 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 00:55:15 -0400
+Subject: [PATCH 09496/11362] Pin guard stands down under an explicit
+ CARNOT_ARC_GGUF_PATH override (REQ-ARC-WMTE-6621 amendment)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Design input from the induce-failure-fix agent: model_path wins over
+the frozen repo pin at load time, and since 512eba... 512eca0e6b the
+recorded label derives from the weights actually loaded — so an
+env-overridden run may already measure the LIVE generator, and
+refusing it would force --allow-retired-pin onto exactly the runs the
+guard is not guarding against (their acceptance run and the supervisor
+A/B both rely on the override). Non-empty override -> stderr note, no
+refusal; whitespace-only is not an override; env unset (the DEFAULT
+silently resolving retired weights — the origin failure) still refuses.
+
+Also hardens the harness-wired test (deletes CARNOT_ARC_GGUF_PATH
+first: with the override set the guard correctly stands down and
+main() would proceed to real model work). Mutation: override branch
+removed -> RED; restored 6/6 GREEN.
+
+The two 20260726 artifacts were re-refreshed per the freshness lint
+(the 4-line call-site edit re-drifts the recorded harness hash).
+Verified inert: zero substantive fields moved; the wholesale-rewrite
+note drop recurred and all rebuild_note_* keys were restored from
+HEAD, recorded in rebuild_note_20260822_pin_guard_env_override.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 25 +++++++++++++++++
+ ops/analyzer_artifact_index.json              |  4 +--
+ .../carnot/agentic/arc_generator_pin_guard.py | 20 +++++++++++++
+ ...p_arc_early_stop_grace_sweep_20260726.json | 28 +++++++++++++------
+ ..._loop_arc_max_actions_answer_20260726.json | 21 ++++++++++----
+ scripts/arc_scored_path_lever_harness.py      |  4 +++
+ tests/python/test_arc_generator_pin_guard.py  | 28 ++++++++++++++++++-
+ 7 files changed, 114 insertions(+), 16 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 0930fc6da9..80827c3f22 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -26611,3 +26611,28 @@ incident.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6621 | Implemented (`python/carnot/agentic/arc_generator_pin_guard.py`; `scripts/arc_scored_path_lever_harness.py`: `FROZEN_GENERATOR_PIN` + guard call in `main()` + `--allow-retired-pin`) | Implemented (`tests/python/test_arc_generator_pin_guard.py`; mutations: guard equality inverted -> RED, harness guard call removed -> RED) |
++
++### AMENDMENT 2026-08-22 (append-only): explicit model_path override supersedes the pin
++
++Design input from the induce-failure-fix agent, same day. When
++`CARNOT_ARC_GGUF_PATH` is set, `LocalGGUFProposer.model_path` WINS over
++the frozen `repo_substr` at load time, and since commit `512eca0e6b`
++the recorded model label derives from the weights actually loaded — so
++the frozen pin is cosmetic in that configuration, and the acceptance
++runs that rely on the override are already measuring the LIVE
++generator. A guard that refused those runs would force
++`--allow-retired-pin` onto exactly the runs it is not guarding against.
++
++`check_frozen_pin` therefore accepts `model_path_override`; a non-empty
++value stands the guard down with a stderr note naming the override and
++why. An empty or whitespace value is not an override. The harness
++passes `os.environ.get("CARNOT_ARC_GGUF_PATH")`. The guarded failure
++mode is unchanged: the DEFAULT resolution (env unset) silently picking
++retired weights still refuses.
++
++#### SCENARIO-ARC-WMTE-6621-ENV-OVERRIDE
++
++- GIVEN a frozen pin different from the live pin AND a non-empty
++  `model_path_override`
++- THEN the guard returns with a stderr note and does not refuse; a
++  whitespace-only override still refuses.
+diff --git a/ops/analyzer_artifact_index.json b/ops/analyzer_artifact_index.json
+index 5873df2232..c09ead96cd 100644
+--- a/ops/analyzer_artifact_index.json
++++ b/ops/analyzer_artifact_index.json
+@@ -29,7 +29,7 @@
+  },
+  "results/outer_loop_arc_early_stop_grace_sweep_20260726.json": {
+   "analyzer": "scripts/analyze_arc_early_stop_sweep.py",
+-  "built_at_utc": "2026-08-22T04:46:14Z"
++  "built_at_utc": "2026-08-22T04:54:58Z"
+  },
+  "results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json": {
+   "analyzer": "results/first_win_llm_on_20260727/build_artifact.py",
+@@ -53,7 +53,7 @@
+  },
+  "results/outer_loop_arc_max_actions_answer_20260726.json": {
+   "analyzer": "scripts/analyze_arc_max_actions_answer.py",
+-  "built_at_utc": "2026-08-22T04:46:02Z"
++  "built_at_utc": "2026-08-22T04:54:54Z"
+  },
+  "results/outer_loop_arc_reset_charge_attribution_20260726.json": {
+   "analyzer": "scripts/analyze_arc_reset_charge_attribution.py",
+diff --git a/python/carnot/agentic/arc_generator_pin_guard.py b/python/carnot/agentic/arc_generator_pin_guard.py
+index fd273ae8e5..b2d8203d3b 100644
+--- a/python/carnot/agentic/arc_generator_pin_guard.py
++++ b/python/carnot/agentic/arc_generator_pin_guard.py
+@@ -35,6 +35,7 @@ def check_frozen_pin(
+     allow_retired: bool = False,
+     harness_name: str = "this harness",
+     live_pin: str | None = None,
++    model_path_override: str | None = None,
+ ) -> str:
+     """Refuse to run when `frozen_pin` differs from the live generator pin.
+ 
+@@ -43,7 +44,26 @@ def check_frozen_pin(
+     --allow-retired-pin flag) converts the refusal into a loud stderr
+     warning — for deliberate archaeology against the retired model,
+     where the results are knowingly not live-path evidence.
++
++    `model_path_override`: pass the harness's explicit weights-path
++    override (CARNOT_ARC_GGUF_PATH) when set. An explicit model_path
++    WINS over the frozen repo pin at load time, and since commit
++    512eca0e6b the recorded model label derives from the weights
++    actually loaded — so the frozen pin is cosmetic in that
++    configuration, and refusing would force --allow-retired-pin onto
++    runs that already measure the LIVE generator. The guard's failure
++    mode is the DEFAULT resolution silently picking retired weights;
++    an explicit path is not that failure.
+     """
++    if model_path_override and str(model_path_override).strip():
++        print(
++            f"[pin-guard] {harness_name}: explicit model_path override "
++            f"{str(model_path_override).strip()!r} supersedes the frozen repo "
++            f"pin {frozen_pin!r}; the recorded label derives from the loaded "
++            "weights. Pin guard not applicable to this run.",
++            file=sys.stderr,
++        )
++        return live_pin if live_pin is not None else frozen_pin
+     if live_pin is None:
+         from carnot.agentic.arc_executable_world_model import (
+             ARC_LIVE_GENERATOR_REPO_SUBSTR,
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index fa1c81b511..31b0120efa 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -2,7 +2,7 @@
+   "experiment": "arc_early_stop_grace_sweep",
+   "experiment_id": "outer_loop_early_stop_grace_sweep_20260726",
+   "title": "SUBMITTED_EARLY_STOP_GRACE parameter sweep on the scored path: a WALL-CLOCK lever, not a score lever",
+-  "run_date": "2026-08-22T04:46:13Z",
++  "run_date": "2026-08-22T04:54:58Z",
+   "milestone": "outer-loop 2026-07-26",
+   "random_seed": 20260724,
+   "random_seeds_used": [
+@@ -10,7 +10,7 @@
+     20260725,
+     20260726
+   ],
+-  "duration_s": 4.002,
++  "duration_s": 4.153,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+   "measurement_wall_s": {
+     "total_s": 9126.0,
+@@ -5229,7 +5229,7 @@
+   "acceptance_gates_all_passed": false,
+   "honest_verdict": "complete_early_stop_grace_sweep_measured_wall_clock_lever_not_score_lever_shipped_budget_b400_safe_firing_grace_350_saves_only_0.072pct_actions_on_1_of_75_cells_score_delta_0.0_safety_pass_falsifiable_False_wall_saving_noise_dominated_True_not_worth_shipping_at_b400",
+   "provenance": {
+-    "git_head": "f75a2a13bf65eac1e88f9fb93f7774da3a09a22a",
++    "git_head": "96406c1b00f6f1dbb128e3a696919ed7c46f2113",
+     "code": [
+       {
+         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/analyze_arc_early_stop_sweep.py",
+@@ -5245,9 +5245,9 @@
+       },
+       {
+         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_scored_path_lever_harness.py",
+-        "sha256": "d9067cb50ab5cbc730a36803f48efac550fd422924c96e4112d85a39b580b8b0",
+-        "bytes": 63668,
+-        "mtime_utc": "2026-08-22T04:45:14Z"
++        "sha256": "7b6110101a23b0da90c4984294d5304be7ce064524c6009b84e8ba3dea931fa1",
++        "bytes": 63961,
++        "mtime_utc": "2026-08-22T04:52:57Z"
+       },
+       {
+         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py",
+@@ -5532,9 +5532,9 @@
+       }
+     ]
+   },
+-  "reproducibility_checksum": "fbe044bc94107fc8db196ee56066e0d341bccf047c5f3dfd7abe6de9647275d0",
++  "reproducibility_checksum": "e65f46cec6cd5dfc6be7a61f7be9e2b7ac9c8744b2e189f21beb0bed2f509a12",
+   "reproducibility_checksum_note": "sha256 over the WHOLE artifact except run_date and duration_s (wall-clock noise). Every analysed condition, gate, witness and row-source list is inside the hash.",
+-  "git_head": "f75a2a13bf65eac1e88f9fb93f7774da3a09a22a",
++  "git_head": "96406c1b00f6f1dbb128e3a696919ed7c46f2113",
+   "rebuild_note_20260731_split_enable": {
+     "keys_restored_after_wholesale_rewrite": [],
+     "substantive_value_names": [
+@@ -5579,5 +5579,17 @@
+       "rebuild_note_20260821_induce_budget_pin"
+     ],
+     "restored_from": "git HEAD f75a2a13bf"
++  },
++  "rebuild_note_20260822_pin_guard_env_override": {
++    "why_rebuilt": "artifact_freshness_lint flagged this STALE after the pin guard gained CARNOT_ARC_GGUF_PATH override handling (REQ-ARC-WMTE-6621 amendment, 4 lines in the harness's guard call site).",
++    "diff_vs_committed": "substantive fields moved: NONE \u2014 only timestamps/provenance/checksum expected to change.",
++    "keys_restored_after_wholesale_rewrite": [
++      "rebuild_note_20260731_split_enable",
++      "rebuild_note_20260820_traceback_visibility",
++      "rebuild_note_20260821_trajectory_supervisor",
++      "rebuild_note_20260821_induce_budget_pin",
++      "rebuild_note_20260822_pin_guard"
++    ],
++    "restored_from": "git HEAD 96406c1b00"
+   }
+ }
+diff --git a/results/outer_loop_arc_max_actions_answer_20260726.json b/results/outer_loop_arc_max_actions_answer_20260726.json
+index 177645061e..78c9f8b71c 100644
+--- a/results/outer_loop_arc_max_actions_answer_20260726.json
++++ b/results/outer_loop_arc_max_actions_answer_20260726.json
+@@ -3,7 +3,7 @@
+   "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
+   "run_date": "2026-07-26",
+   "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
+-  "build_timestamp_utc": "2026-08-22T04:46:01Z",
++  "build_timestamp_utc": "2026-08-22T04:54:53Z",
+   "schema": "carnot.arc_max_actions_answer.v1",
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+   "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
+@@ -62,7 +62,7 @@
+     }
+   ],
+   "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
+-  "duration_s": 0.946,
++  "duration_s": 1.038,
+   "random_seed": 20260724,
+   "verifier_is_oracle": false,
+   "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
+@@ -7595,7 +7595,7 @@
+     "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
+   },
+   "provenance": {
+-    "git_head": "f75a2a13bf65eac1e88f9fb93f7774da3a09a22a",
++    "git_head": "96406c1b00f6f1dbb128e3a696919ed7c46f2113",
+     "code": [
+       {
+         "path": "scripts/analyze_arc_max_actions_answer.py",
+@@ -7614,8 +7614,8 @@
+       },
+       {
+         "path": "scripts/arc_scored_path_lever_harness.py",
+-        "sha256": "d9067cb50ab5cbc730a36803f48efac550fd422924c96e4112d85a39b580b8b0",
+-        "bytes": 63668
++        "sha256": "7b6110101a23b0da90c4984294d5304be7ce064524c6009b84e8ba3dea931fa1",
++        "bytes": 63961
+       },
+       {
+         "path": "scripts/arc_leaderboard_eval.py",
+@@ -7738,5 +7738,16 @@
+       "rebuild_note_20260821_induce_budget_pin"
+     ],
+     "restored_from": "git HEAD f75a2a13bf"
++  },
++  "rebuild_note_20260822_pin_guard_env_override": {
++    "why_rebuilt": "artifact_freshness_lint flagged this STALE after the pin guard gained CARNOT_ARC_GGUF_PATH override handling (REQ-ARC-WMTE-6621 amendment, 4 lines in the harness's guard call site).",
++    "diff_vs_committed": "substantive fields moved: NONE \u2014 only timestamps/provenance/checksum expected to change.",
++    "keys_restored_after_wholesale_rewrite": [
++      "rebuild_note_20260731_split_enable",
++      "rebuild_note_20260820_traceback_visibility",
++      "rebuild_note_20260821_induce_budget_pin",
++      "rebuild_note_20260822_pin_guard"
++    ],
++    "restored_from": "git HEAD 96406c1b00"
+   }
+ }
+diff --git a/scripts/arc_scored_path_lever_harness.py b/scripts/arc_scored_path_lever_harness.py
+index d5378844e0..1a9034f697 100644
+--- a/scripts/arc_scored_path_lever_harness.py
++++ b/scripts/arc_scored_path_lever_harness.py
+@@ -1054,6 +1054,10 @@ def main(argv) -> int:
+         FROZEN_GENERATOR_PIN,
+         allow_retired=a.allow_retired_pin,
+         harness_name="arc_scored_path_lever_harness (FROZEN pre-2026-07-28)",
++        # CARNOT_ARC_GGUF_PATH wins over the repo pin at load time (see
++        # build_proposer), so an env-overridden run is not the retired-pin
++        # failure — the label derives from the loaded weights (512eca0e6b).
++        model_path_override=os.environ.get("CARNOT_ARC_GGUF_PATH"),
+     )
+     if a.games_all:
+         a.games = ",".join(GAMES_25)
+diff --git a/tests/python/test_arc_generator_pin_guard.py b/tests/python/test_arc_generator_pin_guard.py
+index 3bc7a8f00f..7686b64d47 100644
+--- a/tests/python/test_arc_generator_pin_guard.py
++++ b/tests/python/test_arc_generator_pin_guard.py
+@@ -66,11 +66,37 @@ def test_default_live_pin_is_the_canonical_constant() -> None:
+     assert check_frozen_pin(ARC_LIVE_GENERATOR_REPO_SUBSTR) == ARC_LIVE_GENERATOR_REPO_SUBSTR
+ 
+ 
+-def test_real_harness_refuses_before_any_model_work(tmp_path: Path) -> None:
++def test_explicit_model_path_override_supersedes_the_pin(capsys) -> None:
++    # SCENARIO-ARC-WMTE-6621-ENV-OVERRIDE: an explicit weights path wins
++    # over the repo pin at load time, and the recorded label derives from
++    # the loaded weights (512eca0e6b) — so the guard must not refuse, or
++    # it would force --allow-retired-pin onto runs that already measure
++    # the LIVE generator (the induce-failure-fix acceptance-run shape).
++    check_frozen_pin(
++        "Qwen3.5-9B-MTP",
++        live_pin="Qwen3.8-27B",
++        harness_name="t",
++        model_path_override="/models/Qwen3.8-27B-q4.gguf",
++    )
++    err = capsys.readouterr().err
++    assert "override" in err and "not applicable" in err
++    # An empty/whitespace override is NOT an override — still refuses.
++    import pytest as _pytest
++
++    with _pytest.raises(RetiredPinError):
++        check_frozen_pin(
++            "Qwen3.5-9B-MTP", live_pin="Qwen3.8-27B", harness_name="t", model_path_override="  "
++        )
++
++
++def test_real_harness_refuses_before_any_model_work(tmp_path: Path, monkeypatch) -> None:
+     # SCENARIO-ARC-WMTE-6621-HARNESS-WIRED: the actual frozen harness,
+     # invoked exactly as a runner would, must exit at the guard. This is
+     # the origin incident replayed with the guard in place: had this
+     # refusal existed on 2026-08-20, no discarded run.
++    # The env override must be ABSENT here: with it set, the guard
++    # correctly stands down and main() would proceed to real model work.
++    monkeypatch.delenv("CARNOT_ARC_GGUF_PATH", raising=False)
+     import arc_scored_path_lever_harness as harness
+ 
+     assert harness.FROZEN_GENERATOR_PIN == "Qwen3.5-9B-MTP"
+-- 
+2.55.0
+

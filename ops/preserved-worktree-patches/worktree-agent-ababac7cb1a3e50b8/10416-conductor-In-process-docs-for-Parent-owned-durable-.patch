@@ -1,0 +1,23 @@
+From 363311b225fe514c7f9a5b5853165661ba9c0282 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 13:33:34 -0400
+Subject: [PATCH 10416/11362] [conductor] In-process docs for Parent-owned
+ durable row checkpoint and resume contract
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 60465aef9f..dc08891b3b 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18299,3 +18299,4 @@ activity gate, explicit concurrency metadata, conditional runner selection,
+ and monotonic phase timing. Estimated time savings is 0% because the sources
+ do not measure the effect of these changes.
+ - 2026-08-30: Fail-closed roadmap agent-model dispatch contract (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_contract; results/experiment_6784_agent_model_dispatch_contract.json
++- 2026-08-30: Parent-owned durable row checkpoint and resume contract (✅ Complete) — honest_verdict=complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed; results/experiment_6785_durable_row_checkpoint_contract.json
+-- 
+2.55.0
+

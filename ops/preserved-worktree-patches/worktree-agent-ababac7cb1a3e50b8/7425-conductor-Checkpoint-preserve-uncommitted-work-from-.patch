@@ -1,0 +1,43 @@
+From 942b69f8ab045c81501752c0a80d8a320e7109e4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 09:29:03 -0400
+Subject: [PATCH 07425/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6abc40eace..eed20f4891 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2707542, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-21T12:58:29Z"}
+\ No newline at end of file
++{"pid": 2707542, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-07-21T13:28:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1f48b89960..6ff1df0e08 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13856,3 +13856,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-21 12:52 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
+ | 2026-07-21 12:54 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
+ | 2026-07-21 12:56 UTC | Gated on Exp5759 utility>0: allocate exact conflic | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5759-sota-exact-proposal-utility-panel. |
++| 2026-07-21 13:26 UTC | Build an exact MPMMine-shaped benchmark for typed  | OK | 88 passed, 1 warning in 67.31s (0:01:07) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9fcba64acc..b4e959b5f6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2707542, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-21T12:58:29Z"}
+\ No newline at end of file
++{"pid": 2707542, "iteration": 8, "phase": "iteration_start", "started_at": "2026-07-21T13:28:58Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

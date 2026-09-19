@@ -1,0 +1,1405 @@
+From d828f17a45183b3da9e25e2aca77dcfac39a0e9f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 20:35:13 -0400
+Subject: [PATCH 08669/11362] REQ-ARC-WMTE-6248: prepare Pinductor-style REx
+ refinement A/B (operator-authorized)
+
+Operator directive 2026-08-09 ("Let's plan out and prepare Pinductor to be
+run") is the explicit operator decision the standing refinement-axis hold
+required; the hold is lifted for this one prepared experiment.
+
+Prepared, not yet launched:
+- Plan note with the full Failed-Experiment-Rerun prior-failures block
+  (exp5766 instrument defect now forced ON in both arms; exp6091 reaper
+  block mitigated by checkpoint/retry/isolation; exp5764's single-shot
+  negative answers a different question than search structure).
+- python/carnot/agentic/arc_rex_refinement.py: UCB1 parent selection
+  (finite fresh-node bonus), QBC committee vote entropy ordering the
+  bounded refactor-prompt mismatches, one code path for both arms so the
+  LLM budget is equal by construction. Mechanisms reimplemented from
+  arXiv:2605.13740; reference clone is inspiration-tier only.
+- 18 CPU-only tests, all passing (UCB1 math, entropy edges, QBC ordering,
+  budget parity, arm behavioral difference, final selection).
+- experiment_6248_pinductor_rex_ab.py: 6 games x 2 arms x 4 LLM calls,
+  per-cell checkpointed, refuses to start without an isolated
+  CARNOT_ARC_E3_DIR (the exp6247 clobber lesson). Pre-registered gate:
+  REx beats linear on HELD change_fidelity in >=4/6 games with pooled
+  delta > 0; fail retires the variant.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...-live-agent-improvement-plan-2026-08-08.md |  12 +
+ ...inductor-rex-refinement-plan-2026-08-09.md | 178 ++++++++
+ .../arc-world-model-trust-energy/spec.md      |  75 ++++
+ ops/known-issues.md                           |  23 +
+ python/carnot/agentic/arc_rex_refinement.py   | 310 ++++++++++++++
+ .../experiment_6248_pinductor_rex_ab.py       | 396 ++++++++++++++++++
+ tests/python/test_arc_rex_refinement.py       | 313 ++++++++++++++
+ 7 files changed, 1307 insertions(+)
+ create mode 100644 docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
+ create mode 100644 python/carnot/agentic/arc_rex_refinement.py
+ create mode 100644 scripts/experiments/experiment_6248_pinductor_rex_ab.py
+ create mode 100644 tests/python/test_arc_rex_refinement.py
+
+diff --git a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+index 94a795d29d..38fd440e77 100644
+--- a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
++++ b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+@@ -503,6 +503,18 @@ recommended to run BEFORE committing to (1) per the triangulation's own ordering
+ same-session build; both are strategic-scale decisions worth explicit operator input rather than
+ autonomous selection.
+ 
++**FOLLOW-UP (2026-08-09, operator-directed): option 2 ran, surfaced Pinductor, and the operator
++authorized preparing it.** The SOTA scan (`research-studying.md` 2026-08-09 entry) surfaced
++Pinductor (arXiv:2605.13740) — population-based, UCB1-tree, disagreement-guided refinement of
++LLM-induced executable world models — and flagged that it lands on the refinement axis held under
++the standing "operator decision required" note. The operator gave that decision: "Let's plan out
++and prepare Pinductor to be run." Prepared as REQ-ARC-WMTE-6248: plan note
++(`docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md`, with the full prior-failures
++block), module (`python/carnot/agentic/arc_rex_refinement.py`), CPU-only tests (18 passing), and
++the A/B driver (`scripts/experiments/experiment_6248_pinductor_rex_ab.py`) — staged, not yet
++launched. Gate pre-registered: REx beats linear on HELD change_fidelity in >= 4 of 6 games with
++pooled delta > 0, retire-on-fail.
++
+ ### Standing infrastructure item (parallel, not gating)
+ 
+ **The unidentified llama-server reaper.** Blocks the conductor's exp6217 today, will recur on any
+diff --git a/docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md b/docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
+new file mode 100644
+index 0000000000..0b65543fe7
+--- /dev/null
++++ b/docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
+@@ -0,0 +1,178 @@
++# Pinductor-style REx refinement for ARC world-model induction — plan (2026-08-09)
++
++**Status:** PLAN + PREPARATION. Operator directive 2026-08-09: "Let's plan out and prepare
++Pinductor to be run." That directive is the explicit operator decision the standing hold in
++`ops/known-issues.md` required ("Do NOT propose a follow-up on the refinement /
++single-shot-GGUF-induction axis ... it is banked, not queued" — banked for "whoever later has a
++healthy host and an operator decision to spend a slot on it"). The hold is now lifted for this
++one prepared experiment. It is not lifted in general.
++
++**Reads as required input:** CLAUDE.md "Failed-Experiment Rerun Discipline", "ARC Live-Path
++Reachability Discipline", "Adversarial Artifact Verification", `feedback_audit_untrusted_code`
++(memory), `docs/research-notes/arc-lever-triangulation-2026-07-23.md`.
++
++## 1. What Pinductor is, in our terms
++
++Paper: "Learning POMDP World Models from Observations with Language-Model Priors"
++(arXiv:2605.13740). Code: `github.com/atomresearch/pinductor` (MIT), cloned read-only to
++`~/arc-sota-refs/pinductor` for reference. **Inspiration tier only** per
++`feedback_audit_untrusted_code`: we reimplement the mechanisms; no code is copied and none of
++theirs is executed.
++
++Pinductor induces an executable world model by having an LLM propose candidate programs, then
++running a refinement loop ("REx", their Algorithm 1) with four mechanisms:
++
++| Pinductor mechanism | What it does | Our current equivalent |
++|---|---|---|
++| M candidates + UCB1 parent selection over a refinement TREE | Each round, pick WHICH prior candidate to refine next by UCB1 (quality + exploration bonus); keeps a population, not one lineage | NONE — `execute_bounded_llm_reinduction` refines only the latest candidate, linearly |
++| Continuous kernel pseudo-likelihood scoring (their Eq. 7/8) | Rank candidates on a SOFT score so refinement has a gradient below the pass/fail bar | EXISTS — `VerifyResult.change_fidelity` is exactly this (symmetric union fidelity, continuous). But our refinement loop does not USE it to steer; the production gate is binary |
++| QBC committee vote entropy (their Eq. 9) | Where candidate models DISAGREE is where evidence is most informative; surface those transitions to the LLM | NONE — our refactor prompt shows the FIRST 5 mismatches in corpus order |
++| Near-best softmax final selection (their Eq. 11/12) | Avoid greedily overfitting a noisy score | Not adopted (see §3, deviation D2) |
++
++Their particle filter / belief machinery exists because MiniGrid is partially observed. ARC-AGI-3
++frames are fully observed, so that entire half of the paper is dropped. What remains is a
++search-structure claim: **population + UCB1 tree + disagreement-selected counterexamples beats a
++single greedy refinement lineage at the same LLM-call budget.** That claim is what we test.
++
++## 2. Prior failures (Failed-Experiment Rerun Discipline block)
++
++This axis has three prior results. Each is named with its root cause and what is different now.
++
++1. **exp5766 — CEGIS refinement null.** Root cause: INSTRUMENT DEFECT, not a refuted idea. The
++   refactor prompt never contained the engine source (0 of 454 substantive lines reached the
++   prompt on 13 of 13 games), so "refactor while keeping what works" was unachievable by
++   construction. The fix (`CARNOT_ARC_REFACTOR_SHOW_ENGINE`) is banked, tested, default-OFF, and
++   has never yet been part of a completed measurement.
++   *Different now:* this experiment runs with the fixed instrument ON, in both arms.
++2. **exp6091 — engine-visible rerun.** Root cause: INFRASTRUCTURE (the llama-server reaper killed
++   every server; 0 valid cells). The line was closed on the independent measured negative: 0 of
++   296 clean engine-units reach held-out `change_accuracy >= 0.5`.
++   *Different now:* (a) that negative is about SINGLE-SHOT induction quality against a BINARY
++   exact-match bar; this experiment measures whether structured refinement CLIMBS the continuous
++   `change_fidelity` score, which is a different question the 0/296 result does not answer;
++   (b) the reaper risk is mitigated by per-cell checkpointing, per-cell retry, and the option to
++   run under conductor isolation (two correlational instances this session show clean runs with
++   the conductor stopped — see `ops/known-issues.md` 2026-08-09 entries).
++3. **exp5764 / exp5722 — 31B single-shot held-out induction 0.378; 0 live levels.** Root cause:
++   single-shot induction quality is genuinely low.
++   *Different now:* nothing about single-shot changes — this experiment is precisely about
++   whether SEARCH STRUCTURE on top of the same generator moves the same held-out metric. If it
++   does not, that is a real negative about the refinement-structure hypothesis, not a rerun of
++   the single-shot measurement.
++
++**Retirement condition (pre-registered):** if the REx arm fails its gate (§4), the
++Pinductor-style refinement variant joins the retired refinement axis. No further refinement
++variant is proposed without a NEW mechanism class and a fresh operator decision
++(`retire_if_same_verdict: true` semantics).
++
++## 3. Design
++
++**One code path, two configurations** (budget parity by construction), in a new module
++`python/carnot/agentic/arc_rex_refinement.py` (REQ-ARC-WMTE-6248):
++
++- **Arm `linear` (baseline):** 1 induce + (B-1) refinements, each refining the LATEST candidate,
++  mismatches shown in natural corpus order. This is the current production shape
++  (`execute_bounded_llm_reinduction`'s structure) expressed in the same harness.
++- **Arm `rex` (treatment):** 1 induce + (B-1) refinements where each round (a) picks the parent
++  candidate by UCB1 over ALL candidates so far (quality = VALID-slice `change_fidelity`,
++  exploration bonus with the `(visits+1)` denominator — adopting the reference implementation's
++  own fix note, since a fresh-node `+inf` shortcut degenerates the search), (b) reorders the
++  parent's mismatch list by QBC committee vote entropy (Shannon entropy over the distinct
++  next-grid predictions of ALL current candidates on that transition) so the 5 mismatches the
++  prompt can carry are the 5 most-disagreed-on, and (c) writes the parent's source into the
++  isolated engine store before calling `refactor`, so the engine-visible prompt shows the actual
++  parent being refined.
++- **Final selection, both arms:** argmax VALID `change_fidelity` (ties: earliest candidate).
++
++**Data split per game:** collect N=60 transitions (`e3.collect_transitions`, no LLM) →
++TRAIN 40 (available to the induce/refactor prompts) / VALID 10 (selection scoring + QBC; never
++shown to the LLM) / HELD 10 (final A/B metric only; never used during the run). The three-way
++split exists so selection cannot overfit the reported metric.
++
++**Scoring:** `WorldModelVerifier(..., hud_mask=<game's own mask>, hud_mask_enabled=True)`, the
++same forced-HUD-mask convention as REQ-ARC-WMTE-6233/6246.
++
++**Roster (6 games):** ft09, tr87, cn04, ar25 (from exp6246's roster, minus m0r0 which timed out
++there) + ka59, re86 (the Mode-A hard games; collection verified working in exp6244/6247).
++
++**Budget:** B=4 LLM calls per arm per game (1 induce + 3 refinements) = 48 calls total.
++Estimated wall: roughly 3-7 hours at observed 31B decode rates; per-cell checkpointing makes
++interruption cheap.
++
++**Generator:** the frozen live generator (gemma-4-31B-it-qat, GPU 1, q8_0 KV, port 8940,
++`no_think_prefix=""`, timeout 1500 s) — identical configuration to exp6246/6247 so results are
++comparable.
++
++**Isolation:** `CARNOT_ARC_E3_DIR` MUST point at a private scratch directory (the script refuses
++to start otherwise — the exp6246 guard, reinforced by exp6247's own engine-store-clobber
++incident). `CARNOT_ARC_REFACTOR_SHOW_ENGINE=1` forced in both arms.
++
++**Declared deviations from the paper (so nobody later mistakes this for a faithful replication):**
++- D1: no particle filter / belief machinery (ARC is fully observed).
++- D2: final selection is deterministic argmax, not near-best softmax — an n=6 paired A/B cannot
++  afford selection stochasticity; noted as untested.
++- D3: their per-round candidate count M collapses to 1 proposal per round (the tree provides the
++  population across rounds); a wider M multiplies LLM cost 5x and is a follow-up knob, not part
++  of this gate.
++- D4: quality signal is our `change_fidelity`, not their distance-kernel likelihood — same role
++  (continuous, soft), different formula, already validated on this corpus.
++
++## 4. Pre-registered gate
++
++Primary: **REx final beats linear final on HELD `change_fidelity` in >= 4 of 6 games AND the
++pooled mean paired delta is > 0.** Fewer than 4, or a non-positive pooled delta, is a negative:
++the refinement-structure hypothesis is retired per §2.
++
++Secondary (reported, not gated): does ANY candidate in either arm reach HELD
++`change_fidelity >= 0.5` (the live trust-gate threshold)? This is the number that would matter
++for the scored path; the primary gate can pass without it (structure helps but not enough), and
++that distinction is reported honestly.
++
++A gate PASS does not wire anything into the live path by itself. It authorizes the follow-up
++decision (wire REx into `execute_bounded_llm_reinduction` behind a default-OFF flag, then a
++live-path A/B per the Live-Path Reachability Discipline). A pass on n=6 games is
++promising-but-preliminary, same standard as every other lever this month.
++
++## 5. Deliverables prepared in this session
++
++1. `python/carnot/agentic/arc_rex_refinement.py` — the REx loop (UCB1, QBC entropy, candidate
++   tree, one code path for both arms). Pure logic separated from LLM calls for testability.
++2. `tests/python/test_arc_rex_refinement.py` — CPU-only unit tests (UCB1 math, entropy edges,
++   QBC reordering, budget accounting, arm behavioral difference, final selection) with a fake
++   proposer; no GPU, no network.
++3. `scripts/experiments/experiment_6248_pinductor_rex_ab.py` — the A/B driver (checkpointed,
++   isolated store, liveness-witnessed), ready to launch.
++4. REQ-ARC-WMTE-6248 in `openspec/capabilities/arc-world-model-trust-energy/spec.md`.
++5. This note.
++
++**Launch command (staged, not yet run):**
++
++```bash
++mkdir -p /home/ianblenke/github.com/ianblenke/carnot/results/arc_e3_exp6248_scratch
++cd /home/ianblenke/github.com/ianblenke/carnot
++setsid nohup timeout 28800 env \
++  CARNOT_ARC_E3_DIR=$PWD/results/arc_e3_exp6248_scratch \
++  CARNOT_ARC_GENERATOR_CUDA_GPU=1 \
++  CARNOT_ARC_REFACTOR_SHOW_ENGINE=1 \
++  .venv/bin/python scripts/experiments/experiment_6248_pinductor_rex_ab.py \
++  > /tmp/exp6248_run.log 2>&1 < /dev/null &
++```
++
++Recommended launch condition: while heavy conductor GPU work is idle, or with the conductor
++deliberately stopped (operator call), given the two correlational reaper instances recorded
++2026-08-09. The script checkpoints per cell either way.
++
++## 6. Cross-references
++
++- arXiv:2605.13740 (Pinductor) · `~/arc-sota-refs/pinductor` (reference clone, MIT, inspiration
++  tier)
++- `ops/known-issues.md`: the standing refinement-axis hold (now lifted for this one experiment by
++  the 2026-08-09 operator directive), exp6091/exp5766 history, the 2026-08-09 reaper entries
++- `docs/research-notes/arc-lever-triangulation-2026-07-23.md` — the binding-constraint diagnosis
++  this experiment attacks (induction-grade sequence routing)
++- `research-studying.md` 2026-08-09 SOTA scan — the ingestion that surfaced Pinductor
++- REQ-ARC-WMTE-6246 (`experiment_6246_induce_prompt_enrichment_heldout_ab.py`) — the harness
++  pattern this reuses (collect/split/induce/score, isolated store, forced HUD mask)
++- arXiv:2606.11521 — the counterexample-guided-refinement idea already partially adopted
++  (2026-07-06 fix); Pinductor's QBC selection is the principled upgrade to "which
++  counterexamples"
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index d1e3aec143..bf88efde44 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -24487,3 +24487,78 @@ terminal `honest_verdict` prefix.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6232 | Pending. | Pending. |
++
++### REQ-ARC-WMTE-6248: Pinductor-Style REx Refinement A/B (Population Search vs Linear Lineage, Operator-Authorized Reopening of the Refinement Axis)
++
++**Origin:** 2026-08-09 operator directive: "Let's plan out and prepare Pinductor to be run."
++That directive is the explicit operator decision the standing hold in `ops/known-issues.md`
++("Do NOT propose a follow-up on the refinement / single-shot-GGUF-induction axis ... banked, not
++queued") reserved this axis for. The hold is lifted for this ONE prepared experiment only. Full
++plan, prior-failure block, and paper mapping: `docs/research-notes/
++pinductor-rex-refinement-plan-2026-08-09.md`. Source technique: arXiv:2605.13740 (Pinductor),
++reference clone at `~/arc-sota-refs/pinductor` (MIT, inspiration tier per
++`feedback_audit_untrusted_code` -- mechanisms reimplemented, no code copied or executed).
++
++`carnot.agentic.arc_rex_refinement` SHALL implement a budget-parity refinement harness with ONE
++code path and two configurations:
++
++- **linear** (baseline): 1 induce + (B-1) refinements, each refining the LATEST candidate, with
++  mismatches shown in natural corpus order -- the current production refinement shape.
++- **rex** (treatment): 1 induce + (B-1) refinements where each round picks the parent candidate
++  by UCB1 over all candidates so far (quality = VALID-slice `change_fidelity`; exploration bonus
++  uses a `(visits+1)` denominator so a fresh node gets the largest bonus WITHOUT an infinite
++  shortcut that would bypass the quality term), reorders the parent's mismatch list by QBC
++  committee vote entropy (Shannon entropy over distinct next-grid predictions of all current
++  candidates on that transition) so the bounded refactor prompt carries the most-disagreed-on
++  counterexamples, and writes the parent's source into the ISOLATED engine store before
++  `refactor` so the engine-visible prompt (`CARNOT_ARC_REFACTOR_SHOW_ENGINE=1`, forced ON in
++  both arms) shows the actual parent being refined.
++
++Both arms SHALL select their final candidate by argmax VALID `change_fidelity` (deterministic;
++a declared deviation from the paper's near-best softmax). Candidate scoring SHALL use
++`WorldModelVerifier` with the game's own HUD mask explicitly enabled (the REQ-ARC-WMTE-6233/6246
++convention). Data per game SHALL be a three-way split (TRAIN shown to the LLM / VALID for
++selection and QBC, never shown / HELD for the final A/B metric only, never used during the run).
++
++`scripts/experiments/experiment_6248_pinductor_rex_ab.py` SHALL run the paired A/B on 6 games
++(ft09, tr87, cn04, ar25, ka59, re86) at B=4 LLM calls per arm-cell against the frozen live
++generator (gemma-4-31B-it-qat), per-cell checkpointed, and SHALL refuse to start unless
++`CARNOT_ARC_E3_DIR` points at a private scratch directory (the exp6246 guard; reinforced by
++exp6247's own shared-store clobber incident).
++
++**Pre-registered gate:** REx beats linear on HELD `change_fidelity` in >= 4 of 6 games AND the
++pooled mean paired delta is > 0. A failed gate retires the Pinductor-style refinement variant
++(`retire_if_same_verdict` semantics -- no further refinement variant without a NEW mechanism
++class and a fresh operator decision). A passed gate authorizes only the follow-up decision
++(default-OFF live-path wiring + live A/B), not a default flip. Secondary reported-not-gated
++marker: whether ANY candidate reaches HELD `change_fidelity >= 0.5` (the live trust threshold).
++
++#### SCENARIO-ARC-WMTE-6248-BUDGET-PARITY-BY-CONSTRUCTION
++
++Given both arms run through the same `run_rex` code path with the same per-cell LLM-call budget
++B, differing only in parent-selection policy and mismatch ordering, no budget difference can
++confound the comparison, and the artifact records the per-arm call counts as equal.
++
++#### SCENARIO-ARC-WMTE-6248-UCB1-CONSULTS-QUALITY
++
++Given three candidates with distinct VALID change-fidelity scores and equal visit counts, UCB1
++selection picks the highest-scoring one; given equal scores and unequal visits, it picks the
++least-visited one. A fresh node receives the largest exploration bonus but never an infinite
++score that would bypass the quality term.
++
++#### SCENARIO-ARC-WMTE-6248-QBC-ORDERS-BY-DISAGREEMENT
++
++Given a committee of candidate engines that all agree on transition X and split three ways on
++transition Y, the QBC reordering places Y's mismatch before X's, so the bounded (first-5)
++refactor prompt carries Y.
++
++#### SCENARIO-ARC-WMTE-6248-ISOLATED-STORE-REFUSAL
++
++Given `CARNOT_ARC_E3_DIR` unset, the experiment script exits before any collection, induction,
++or store write -- the shared `results/arc_e3` store is never touched.
++
++## Implementation Status (REQ-ARC-WMTE-6248)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6248 | `python/carnot/agentic/arc_rex_refinement.py` (UCB1 + QBC + candidate tree, one code path for both arms); `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (prepared, launch staged in the plan note -- NOT yet run). | `tests/python/test_arc_rex_refinement.py` (CPU-only: UCB1 math, entropy edges, QBC reordering, budget accounting, arm behavioral difference, final selection, fake-proposer control flow). |
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 7a7a3650df..8cfedd99ed 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -16454,3 +16454,26 @@ no LLM/reaper exposure.
+ 
+ Cross-references: REQ-ARC-WMTE-6244 (Mode A diagnosis), REQ-ARC-WMTE-6245 (nav-gate negative),
+ REQ-ARC-FCP-5699-14 through -20 (the original zero-gradient investigation on tu93).
++
++## 2026-08-09 refinement-axis hold LIFTED for one experiment (operator decision): Pinductor-style REx A/B prepared as REQ-ARC-WMTE-6248
++
++The standing hold ("Do NOT propose a follow-up on the refinement / single-shot-GGUF-induction
++axis ... banked, not queued" -- see the exp6091 closure entry above) reserved this axis for "an
++operator decision to spend a slot on it." That decision arrived 2026-08-09: the SOTA scan entry
++in `research-studying.md` surfaced Pinductor (arXiv:2605.13740) and flagged it as exactly this
++axis; the operator responded "Let's plan out and prepare Pinductor to be run."
++
++Prepared (NOT yet launched):
++- Plan + prior-failures block: `docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md`
++- Module: `python/carnot/agentic/arc_rex_refinement.py` (UCB1 parent selection with a finite
++  fresh-node bonus, QBC committee vote entropy ordering the refactor prompt's bounded mismatch
++  list, one code path for both arms so the LLM-call budget is equal by construction)
++- Tests: `tests/python/test_arc_rex_refinement.py` (18 CPU-only tests, all passing)
++- Driver: `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (6 games x 2 arms x 4 LLM
++  calls, per-cell checkpointed, refuses to start without an isolated CARNOT_ARC_E3_DIR, forces
++  the banked exp5766 instrument fix ON in both arms)
++
++Scope of the lift: THIS experiment only. A failed gate retires the Pinductor-style variant
++(retire_if_same_verdict); it does not reopen the axis generally. Launch command is staged in the
++plan note; recommended launch window is with heavy conductor GPU work idle (or the conductor
++deliberately stopped, operator's call) per the two correlational reaper instances recorded above.
+diff --git a/python/carnot/agentic/arc_rex_refinement.py b/python/carnot/agentic/arc_rex_refinement.py
+new file mode 100644
+index 0000000000..453423052f
+--- /dev/null
++++ b/python/carnot/agentic/arc_rex_refinement.py
+@@ -0,0 +1,310 @@
++"""REQ-ARC-WMTE-6248: Pinductor-style REx refinement over induced ARC world models.
++
++WHAT THIS IS. A refinement harness that keeps a POPULATION of candidate engines and
++searches over them, instead of refining one lineage greedily. The mechanisms come from
++Pinductor (arXiv:2605.13740, "Learning POMDP World Models from Observations with
++Language-Model Priors"): UCB1 parent selection over the candidate tree, and
++query-by-committee (QBC) vote entropy to pick WHICH failing transitions the refactor
++prompt shows. Reimplemented from the paper's description -- no reference code copied
++(inspiration tier per the project's untrusted-code discipline).
++
++WHY ONE CODE PATH FOR BOTH ARMS. The A/B this serves (experiment 6248) compares the
++current production shape (linear: always refine the latest candidate, mismatches in
++corpus order) against the REx shape (UCB1 parent + QBC-ordered mismatches). Running
++both through `run_rex` with different flags makes the LLM-call budget equal by
++construction, so budget cannot confound the comparison.
++
++WHAT IS DELIBERATELY NOT HERE. No particle filter or belief machinery (ARC frames are
++fully observed); no near-best softmax final selection (deterministic argmax keeps a
++small paired A/B interpretable); one proposal per round (the tree provides the
++population across rounds). See the plan note for the full deviation list:
++docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import math
++import tempfile
++from collections import Counter
++from dataclasses import dataclass, field
++from pathlib import Path
++from typing import Any, Callable, Optional, Sequence
++
++import numpy as np
++
++__all__ = [
++    "RexNode",
++    "ucb1_pick",
++    "committee_entropy",
++    "qbc_order_mismatches",
++    "load_engine_from_source",
++    "run_rex",
++]
++
++
++@dataclass
++class RexNode:
++    """One candidate engine in the refinement tree."""
++
++    idx: int
++    source: str
++    # VALID-slice score used for selection (NOT the held-out metric the A/B reports).
++    valid_fidelity: float
++    # Full mismatch list from the VALID scoring pass, in corpus order. The refactor
++    # prompt bounds to the first 5, so ORDER is what QBC controls.
++    mismatches: list[dict] = field(default_factory=list)
++    parent: Optional[int] = None
++    # Times this node was picked as a refinement parent (UCB1 visit count).
++    n_visit: int = 0
++    # Kept for the artifact: exact-match stats alongside the graded score.
++    valid_accuracy: float = 0.0
++    valid_n: int = 0
++    valid_n_correct: int = 0
++
++
++def ucb1_pick(nodes: Sequence[RexNode], *, c: float = 1.0) -> int:
++    """Pick the index of the node with the largest UCB1 score.
++
++    score(n) = quality(n) + c * sqrt(ln(N_total + 1) / (n_visit + 1))
++
++    The `(n_visit + 1)` denominator is deliberate: a fresh node gets the LARGEST
++    exploration bonus but never an infinite one. Pinductor's own release notes record
++    that an `n_visit == 0 -> +inf` shortcut degenerated their search (every round
++    picked the newest node and the quality term was never consulted).
++    """
++    if not nodes:
++        raise ValueError("ucb1_pick needs at least one node")
++    total = sum(n.n_visit for n in nodes) + 1
++    best_idx, best_score = nodes[0].idx, -math.inf
++    for n in nodes:
++        score = float(n.valid_fidelity) + c * math.sqrt(math.log(total + 1) / (n.n_visit + 1))
++        if score > best_score:
++            best_idx, best_score = n.idx, score
++    return best_idx
++
++
++def committee_entropy(prediction_hashes: Sequence[Optional[int]]) -> float:
++    """Shannon entropy of the committee's prediction distribution for one transition.
++
++    Each committee member contributes a hash of its predicted next grid (None = the
++    member crashed on this transition; crashes are excluded rather than counted as a
++    distinct "prediction", because two members crashing with different tracebacks are
++    not disagreeing about dynamics). 0.0 = all agree; log(k) = all k members differ.
++    """
++    hashes = [h for h in prediction_hashes if h is not None]
++    if not hashes:
++        return 0.0
++    counts = Counter(hashes)
++    n = len(hashes)
++    return -sum((c / n) * math.log(c / n) for c in counts.values())
++
++
++def qbc_order_mismatches(
++    mismatches: Sequence[dict],
++    entropy_by_transition_index: dict[int, float],
++) -> list[dict]:
++    """Return mismatches sorted by committee disagreement, highest first.
++
++    Each mismatch dict carries `i`, the VALID-slice transition index (the
++    `WorldModelVerifier.score` contract). A mismatch whose index has no recorded
++    entropy sorts as 0.0 (no measured disagreement). The sort is stable, so within an
++    entropy tie the original corpus order is preserved.
++    """
++    return sorted(
++        mismatches,
++        key=lambda m: -float(entropy_by_transition_index.get(m.get("i", -1), 0.0)),
++    )
++
++
++def load_engine_from_source(source: str, tag: str = "candidate"):
++    """Import an engine from source text without touching any engine store.
++
++    Writes the text to a throwaway temp file and imports it, mirroring what
++    `arc_executable_world_model._load_engine_from` does for the on-disk store. Used to
++    run the QBC committee: every candidate must predict, but only the current parent
++    lives in the store file.
++    """
++    with tempfile.NamedTemporaryFile(
++        "w", suffix=".py", prefix=f"arc_rex_{tag}_", delete=False
++    ) as f:
++        f.write(source)
++        path = Path(f.name)
++    try:
++        spec = importlib.util.spec_from_file_location(f"arc_rex_{tag}_{path.stem}", path)
++        mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
++        spec.loader.exec_module(mod)  # type: ignore[union-attr]
++        return getattr(mod, "engine")
++    finally:
++        path.unlink(missing_ok=True)
++
++
++def _grid_hash(grid: np.ndarray) -> int:
++    return hash(np.asarray(grid).tobytes())
++
++
++def _committee_entropies(sources: Sequence[str], transitions: Sequence[Any]) -> dict[int, float]:
++    """Per-transition QBC entropy over every candidate proposed so far.
++
++    A candidate whose source fails to import contributes nothing anywhere (it cannot
++    predict); a candidate that imports but crashes on one transition is excluded from
++    that transition only, per `committee_entropy`'s crash rule.
++    """
++    engines = []
++    for k, src in enumerate(sources):
++        try:
++            engines.append(load_engine_from_source(src, tag=f"c{k}"))
++        except Exception:
++            continue
++    out: dict[int, float] = {}
++    for i, t in enumerate(transitions):
++        hashes: list[Optional[int]] = []
++        for eng in engines:
++            try:
++                pred = eng(np.asarray(t.grid).copy(), t.action, t.data)
++                hashes.append(_grid_hash(np.asarray(pred)))
++            except Exception:
++                hashes.append(None)
++        out[i] = committee_entropy(hashes)
++    return out
++
++
++def run_rex(
++    game: str,
++    proposer: Any,
++    *,
++    train: Sequence[Any],
++    valid: Sequence[Any],
++    cell: int,
++    budget: int,
++    score_candidate: Callable[[str], dict],
++    read_store_source: Callable[[], Optional[str]],
++    write_store_source: Callable[[str], None],
++    make_verify_result: Callable[[RexNode, list[dict]], Any],
++    use_ucb1: bool,
++    use_qbc: bool,
++    ucb1_c: float = 1.0,
++) -> dict:
++    """Run one refinement cell: 1 induce + (budget-1) refinements. Returns a summary.
++
++    The LLM-facing side stays behind three injected callables so the loop itself is
++    unit-testable without a GPU:
++      - `score_candidate(source)` -> dict with `valid_fidelity`, `mismatches`,
++        `valid_accuracy`, `valid_n`, `valid_n_correct` (the VALID-slice verifier pass).
++      - `read_store_source()` / `write_store_source(text)` -> the ISOLATED engine
++        store file the proposer reads and writes (never the shared results/arc_e3).
++      - `make_verify_result(node, ordered_mismatches)` -> the VerifyResult-shaped
++        object `proposer.refactor` expects, carrying the (possibly QBC-reordered)
++        mismatches.
++
++    `use_ucb1=False, use_qbc=False` is the `linear` baseline arm; both True is the
++    `rex` treatment arm. Same code path, same budget -- parity by construction.
++    """
++    nodes: list[RexNode] = []
++    llm_calls = 0
++    events: list[dict] = []
++
++    ok, detail = proposer.induce(game, list(train), cell)
++    llm_calls += 1
++    events.append({"round": 0, "kind": "induce", "ok": bool(ok), "detail": str(detail)[:200]})
++    if ok:
++        src = read_store_source()
++        if src:
++            s = score_candidate(src)
++            nodes.append(
++                RexNode(
++                    idx=0,
++                    source=src,
++                    valid_fidelity=float(s.get("valid_fidelity", 0.0)),
++                    mismatches=list(s.get("mismatches", [])),
++                    parent=None,
++                    valid_accuracy=float(s.get("valid_accuracy", 0.0)),
++                    valid_n=int(s.get("valid_n", 0)),
++                    valid_n_correct=int(s.get("valid_n_correct", 0)),
++                )
++            )
++    if not nodes:
++        return {
++            "game": game,
++            "nodes": [],
++            "llm_calls": llm_calls,
++            "events": events,
++            "final_idx": None,
++            "final_source": None,
++            "final_valid_fidelity": None,
++        }
++
++    for rnd in range(1, budget):
++        parent_idx = ucb1_pick(nodes, c=ucb1_c) if use_ucb1 else nodes[-1].idx
++        parent = nodes[parent_idx]
++        parent.n_visit += 1
++
++        ordered = list(parent.mismatches)
++        if use_qbc and ordered:
++            entropies = _committee_entropies([n.source for n in nodes], valid)
++            ordered = qbc_order_mismatches(ordered, entropies)
++
++        # The refactor prompt reads the CURRENT store file as "the engine being
++        # refined" -- write the chosen parent there first so prompt and lineage agree.
++        write_store_source(parent.source)
++        vr = make_verify_result(parent, ordered)
++        try:
++            ok, detail = proposer.refactor(game, vr)
++        except Exception as exc:  # noqa: BLE001
++            ok, detail = False, repr(exc)[:200]
++        llm_calls += 1
++        events.append(
++            {
++                "round": rnd,
++                "kind": "refactor",
++                "parent": parent_idx,
++                "ok": bool(ok),
++                "detail": str(detail)[:200],
++            }
++        )
++        if not ok:
++            continue
++        src = read_store_source()
++        if not src or src == parent.source:
++            events.append({"round": rnd, "kind": "no_new_source", "parent": parent_idx})
++            continue
++        s = score_candidate(src)
++        nodes.append(
++            RexNode(
++                idx=len(nodes),
++                source=src,
++                valid_fidelity=float(s.get("valid_fidelity", 0.0)),
++                mismatches=list(s.get("mismatches", [])),
++                parent=parent_idx,
++                valid_accuracy=float(s.get("valid_accuracy", 0.0)),
++                valid_n=int(s.get("valid_n", 0)),
++                valid_n_correct=int(s.get("valid_n_correct", 0)),
++            )
++        )
++
++    # Deterministic final pick: best VALID fidelity, earliest on ties (declared
++    # deviation D2 from the paper's near-best softmax).
++    final = max(nodes, key=lambda n: (n.valid_fidelity, -n.idx))
++    return {
++        "game": game,
++        "nodes": [
++            {
++                "idx": n.idx,
++                "parent": n.parent,
++                "valid_fidelity": round(n.valid_fidelity, 4),
++                "valid_accuracy": round(n.valid_accuracy, 4),
++                "n_visit": n.n_visit,
++                "n_mismatches": len(n.mismatches),
++            }
++            for n in nodes
++        ],
++        # Full sources, index-aligned with `nodes`. For callers that need to score
++        # EVERY candidate on a held slice (the any-candidate trust marker) -- not
++        # meant to be written into an artifact verbatim.
++        "node_sources": [n.source for n in nodes],
++        "llm_calls": llm_calls,
++        "events": events,
++        "final_idx": final.idx,
++        "final_source": final.source,
++        "final_valid_fidelity": round(final.valid_fidelity, 4),
++    }
+diff --git a/scripts/experiments/experiment_6248_pinductor_rex_ab.py b/scripts/experiments/experiment_6248_pinductor_rex_ab.py
+new file mode 100644
+index 0000000000..f77e8a3960
+--- /dev/null
++++ b/scripts/experiments/experiment_6248_pinductor_rex_ab.py
+@@ -0,0 +1,396 @@
++#!/usr/bin/env python3
++"""REQ-ARC-WMTE-6248: Pinductor-style REx refinement A/B (population search vs linear lineage).
++
++WHAT THIS MEASURES. At the SAME per-cell LLM-call budget (1 induce + 3 refinements), does
++Pinductor-style search structure (UCB1 parent selection over the candidate tree + QBC
++committee-disagreement-ordered counterexamples) produce a better final engine than the current
++production shape (refine the latest candidate, mismatches in corpus order)? Metric: HELD-slice
++`change_fidelity` of each arm's final pick, per game, paired. Full plan + prior-failure block:
++docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
++
++OPERATOR AUTHORIZATION. The refinement axis carries a standing hold in ops/known-issues.md
++("banked, not queued" -- reopening requires an operator decision). The 2026-08-09 operator
++directive "Let's plan out and prepare Pinductor to be run" is that decision, for this one
++experiment.
++
++PRE-REGISTERED GATE. REx beats linear on HELD change_fidelity in >= 4 of 6 games AND pooled mean
++paired delta > 0. Fail -> the Pinductor-style refinement variant is retired
++(retire_if_same_verdict). Pass -> authorizes ONLY a default-OFF live-path wiring follow-up, not a
++default flip. Secondary (reported, not gated): any candidate reaching HELD change_fidelity >= 0.5
++(the live trust threshold).
++
++ISOLATION. CARNOT_ARC_E3_DIR must point at a private scratch dir BEFORE launch (read once at
++import time by arc_executable_world_model). This guard exists because exp6247 wrote into the
++shared results/arc_e3 store and clobbered the conductor's accumulated engines (caught only
++because the conductor happened to be stopped). CARNOT_ARC_REFACTOR_SHOW_ENGINE=1 is forced in
++BOTH arms: exp5766's null came from the engine source never reaching the refactor prompt, and
++this is the banked fix's first completed measurement.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++if not os.environ.get("CARNOT_ARC_E3_DIR"):
++    raise SystemExit(
++        "set CARNOT_ARC_E3_DIR to a private scratch directory BEFORE launching this script -- "
++        "it must never write to the shared results/arc_e3 store (exp6247 incident)."
++    )
++# Both arms run with the engine-visible refactor prompt: the banked exp5766 instrument fix.
++os.environ["CARNOT_ARC_REFACTOR_SHOW_ENGINE"] = "1"
++
++from carnot.agentic import arc_executable_world_model as e3  # noqa: E402
++from carnot.agentic import arc_rex_refinement as rex  # noqa: E402
++
++OUT = REPO / "results" / "experiment_6248_pinductor_rex_ab.json"
++CHECKPOINT = Path(
++    os.environ.get("CARNOT_EXP6248_CHECKPOINT", "/tmp/carnot_exp6248_checkpoint.json")
++)
++ROSTER = ("ft09", "tr87", "cn04", "ar25", "ka59", "re86")
++N_COLLECT = 60
++N_VALID = 10
++N_HELD = 10
++BUDGET = 4  # LLM calls per arm-cell: 1 induce + 3 refinements
++SEED = 6248
++GGUF_REPO_SUBSTR = "gemma-4-31B-it-qat"
++SERVER_PORT = 8940
++SHARED_MAX_TOKENS = 16384
++INDUCE_TIMEOUT_S = 1500
++GATE_MIN_GAMES_IMPROVED = 4
++TRUST_THRESHOLD = 0.5
++
++
++def _load_checkpoint() -> dict:
++    if CHECKPOINT.exists():
++        return json.loads(CHECKPOINT.read_text())
++    return {}
++
++
++def _save_checkpoint(done: dict) -> None:
++    CHECKPOINT.write_text(json.dumps(done, indent=2, default=str))
++
++
++def _frame_hud_mask(game: str):
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import _compute_hud_mask_from_frame
++
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    frame = env.reset()
++    return _compute_hud_mask_from_frame(frame)
++
++
++def _logical_hud_mask(game: str, cell: int):
++    frame_mask = _frame_hud_mask(game)
++    if frame_mask is None:
++        return None
++    return e3.logical_hud_mask(frame_mask, cell)
++
++
++def _store_file(game: str) -> Path:
++    return Path(os.environ["CARNOT_ARC_E3_DIR"]) / game / "world_model.py"
++
++
++def _scorer(valid, hud_mask):
++    """VALID-slice scorer for selection/QBC. Never sees the HELD slice."""
++
++    def score_candidate(source: str) -> dict:
++        try:
++            engine = rex.load_engine_from_source(source, tag="score")
++        except Exception as exc:  # noqa: BLE001
++            return {
++                "valid_fidelity": 0.0,
++                "mismatches": [],
++                "valid_accuracy": 0.0,
++                "valid_n": 0,
++                "valid_n_correct": 0,
++                "load_error": repr(exc)[:160],
++            }
++        # hud_mask_enabled explicit per the REQ-ARC-WMTE-6233/6246 forced-mask convention.
++        vr = e3.WorldModelVerifier(valid, hud_mask=hud_mask, hud_mask_enabled=True).score(
++            engine, max_mismatch=len(valid)
++        )
++        return {
++            "valid_fidelity": float(vr.change_fidelity),
++            "mismatches": list(vr.mismatches),
++            "valid_accuracy": float(vr.accuracy),
++            "valid_n": int(vr.n),
++            "valid_n_correct": int(vr.n_correct),
++        }
++
++    return score_candidate
++
++
++def _make_verify_result(node: rex.RexNode, ordered_mismatches: list[dict]):
++    """Build the VerifyResult `proposer.refactor` renders into the prompt.
++
++    Only the fields `refactor_prompt` reads matter: n, n_correct, accuracy, mismatches.
++    The mismatch ORDER is the QBC lever -- the prompt bounds to the first 5.
++    """
++    return e3.VerifyResult(
++        n=node.valid_n,
++        n_correct=node.valid_n_correct,
++        accuracy=node.valid_accuracy,
++        mismatches=list(ordered_mismatches),
++    )
++
++
++def _score_held(source: str, held, hud_mask) -> dict:
++    try:
++        engine = rex.load_engine_from_source(source, tag="held")
++    except Exception as exc:  # noqa: BLE001
++        return {"held_change_fidelity": 0.0, "held_load_error": repr(exc)[:160]}
++    vr = e3.WorldModelVerifier(held, hud_mask=hud_mask, hud_mask_enabled=True).score(engine)
++    return {
++        "held_change_fidelity": round(float(vr.change_fidelity), 4),
++        "held_accuracy": round(float(vr.accuracy), 4),
++        "held_cell_recall": round(float(vr.cell_recall), 4),
++        "held_n_changing": int(vr.n_changing),
++        "hud_mask_status": vr.hud_mask_status,
++    }
++
++
++def _run_cell(prop, game: str, arm: str, train, valid, held, hud_mask, cell: int) -> dict:
++    store = _store_file(game)
++
++    def read_store():
++        return store.read_text() if store.exists() else None
++
++    def write_store(text: str) -> None:
++        store.parent.mkdir(parents=True, exist_ok=True)
++        store.write_text(text)
++
++    t0 = time.time()
++    summary = rex.run_rex(
++        game,
++        prop,
++        train=train,
++        valid=valid,
++        cell=cell,
++        budget=BUDGET,
++        score_candidate=_scorer(valid, hud_mask),
++        read_store_source=read_store,
++        write_store_source=write_store,
++        make_verify_result=_make_verify_result,
++        use_ucb1=(arm == "rex"),
++        use_qbc=(arm == "rex"),
++    )
++    row: dict = {
++        "game": game,
++        "arm": arm,
++        "llm_calls": summary["llm_calls"],
++        "nodes": summary["nodes"],
++        "events": summary["events"],
++        "final_idx": summary["final_idx"],
++        "final_valid_fidelity": summary["final_valid_fidelity"],
++        "wall_s": round(time.time() - t0, 1),
++        "generator_healthy_after": bool(prop._healthy()),
++    }
++    # Any-candidate trust-threshold marker: score EVERY node on HELD (cheap, CPU-only)
++    # so a mid-tree candidate crossing 0.5 is visible even when the final pick differs.
++    if summary["final_source"]:
++        row.update(_score_held(summary["final_source"], held, hud_mask))
++        per_node_held = []
++        for src in summary["node_sources"]:
++            per_node_held.append(_score_held(src, held, hud_mask).get("held_change_fidelity", 0.0))
++        row["held_per_node"] = per_node_held
++        row["held_best_any_candidate"] = max(per_node_held) if per_node_held else None
++    else:
++        row["held_best_any_candidate"] = None
++    return row
++
++
++def build_artifact() -> dict:
++    t0 = time.time()
++    os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = os.environ.get(
++        "CARNOT_ARC_GENERATOR_CUDA_GPU", "1"
++    )
++    os.environ["CARNOT_ARC_GENERATOR_REQUIRE_CUDA"] = "1"
++
++    from carnot.agentic.arc_executable_world_model import (
++        GeneratorCudaRequiredError,
++        LocalGGUFProposer,
++    )
++
++    prop = LocalGGUFProposer(
++        repo_substr=GGUF_REPO_SUBSTR,
++        port=SERVER_PORT,
++        mtp=False,
++        kv_quant="q8_0",
++        max_tokens=SHARED_MAX_TOKENS,
++        no_think_prefix="",
++        timeout=INDUCE_TIMEOUT_S,
++    )
++    try:
++        server_up = prop._ensure_server()
++    except GeneratorCudaRequiredError as exc:
++        return {"honest_verdict": f"complete_blocked_cuda_unavailable_{exc!r}"[:200]}
++    if not server_up:
++        return {"honest_verdict": "complete_blocked_cuda_server_failed_to_start"}
++
++    done = _load_checkpoint()
++    rows = list(done.get("rows", []))
++    done_keys = {(r["game"], r["arm"]) for r in rows if r.get("final_idx") is not None}
++    rows = [r for r in rows if (r["game"], r["arm"]) in done_keys]
++
++    for game in ROSTER:
++        try:
++            trans, cell = e3.collect_transitions(game, n=N_COLLECT, seed=SEED)
++        except Exception as exc:  # noqa: BLE001
++            rows.append({"game": game, "arm": "collect_error", "error": repr(exc)[:200]})
++            done["rows"] = rows
++            _save_checkpoint(done)
++            continue
++        train = trans[: -(N_VALID + N_HELD)]
++        valid = trans[-(N_VALID + N_HELD) : -N_HELD]
++        held = trans[-N_HELD:]
++        hud_mask = _logical_hud_mask(game, cell)
++        for arm in ("linear", "rex"):
++            if (game, arm) in done_keys:
++                continue
++            prop._ensure_server()
++            try:
++                row = _run_cell(prop, game, arm, train, valid, held, hud_mask, cell)
++            except Exception as exc:  # noqa: BLE001
++                row = {"game": game, "arm": arm, "error": repr(exc)[:200]}
++            rows.append(row)
++            done["rows"] = rows
++            _save_checkpoint(done)
++            print(
++                f"[exp6248] {game} {arm}: final_idx={row.get('final_idx')} "
++                f"valid={row.get('final_valid_fidelity')} held={row.get('held_change_fidelity')} "
++                f"calls={row.get('llm_calls')}",
++                flush=True,
++            )
++
++    per_game: dict = {}
++    for r in rows:
++        if r.get("arm") in ("linear", "rex"):
++            per_game.setdefault(r["game"], {})[r["arm"]] = r
++
++    deltas = []
++    n_improve = 0
++    n_comparable = 0
++    any_trust = False
++    for game, arms in per_game.items():
++        lin, rx = arms.get("linear"), arms.get("rex")
++        if not lin or not rx:
++            continue
++        lf, rf = lin.get("held_change_fidelity"), rx.get("held_change_fidelity")
++        if lf is None or rf is None:
++            continue
++        n_comparable += 1
++        delta = rf - lf
++        deltas.append({"game": game, "linear": lf, "rex": rf, "delta": round(delta, 4)})
++        if delta > 0:
++            n_improve += 1
++        # The trust marker considers EVERY candidate either arm produced, not only
++        # the finals -- `held_best_any_candidate` carries the per-cell max.
++        for cell_row in (lin, rx):
++            best = cell_row.get("held_best_any_candidate")
++            if best is not None and best >= TRUST_THRESHOLD:
++                any_trust = True
++
++    pooled = round(sum(d["delta"] for d in deltas) / len(deltas), 4) if deltas else None
++    gate_met = (
++        n_comparable >= len(ROSTER) - 1
++        and n_improve >= GATE_MIN_GAMES_IMPROVED
++        and pooled is not None
++        and pooled > 0
++    )
++
++    art = {
++        "experiment": "experiment_6248_pinductor_rex_ab",
++        "title": "Pinductor-style REx refinement A/B: UCB1+QBC population search vs linear lineage",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "roster": list(ROSTER),
++        "budget_llm_calls_per_arm_cell": BUDGET,
++        "n_collect": N_COLLECT,
++        "n_valid": N_VALID,
++        "n_held": N_HELD,
++        "per_game_results": rows,
++        "paired_deltas": deltas,
++        "n_games_comparable": n_comparable,
++        "n_games_rex_improved": n_improve,
++        "pooled_mean_delta": pooled,
++        "gate_min_games_improved": GATE_MIN_GAMES_IMPROVED,
++        "gate_met": bool(gate_met),
++        "any_candidate_reached_trust_threshold": bool(any_trust),
++        "trust_threshold": TRUST_THRESHOLD,
++        "engine_visible_refactor_prompt": True,
++        "operator_authorization": (
++            "2026-08-09 operator directive 'Let's plan out and prepare Pinductor to be run' -- "
++            "the explicit operator decision the standing refinement-axis hold required."
++        ),
++        "prior_failures": [
++            {
++                "experiment_id": "exp5766",
++                "verdict": "cegis_refinement_null",
++                "addressed_by": "instrument defect (engine source never in prompt) fixed and forced ON in both arms here",
++            },
++            {
++                "experiment_id": "exp6091",
++                "verdict": "blocked_reaper_zero_valid_cells",
++                "addressed_by": "per-cell checkpoint + retry; conductor-isolation launch option per 2026-08-09 reaper findings",
++            },
++            {
++                "experiment_id": "exp5764",
++                "verdict": "single_shot_heldout_0.378",
++                "addressed_by": "this measures SEARCH STRUCTURE on top of the same generator, a question single-shot quality does not answer",
++            },
++        ],
++        "retire_if_same_verdict": True,
++        "solve_provenance": "development_proxy",
++        "arc_solve_claim": False,
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_principle": (
++            "held-out change_fidelity is an oracle-distinct graded dynamics score, not the "
++            "executable win-condition oracle."
++        ),
++        "inference_substrate": "live_llm_inference",
++        "model_specs": {
++            "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
++            "quant": "UD-Q4_K_XL",
++            "kv_cache_quant": "q8_0",
++            "port": SERVER_PORT,
++        },
++        "random_seed": SEED,
++    }
++    if gate_met:
++        art["honest_verdict"] = (
++            f"complete_rex_gate_met_{n_improve}_of_{n_comparable}_games_pooled_delta_{pooled}"
++        )
++    elif n_comparable == 0:
++        art["honest_verdict"] = "complete_blocked_zero_comparable_cells_not_a_lever_result"
++    else:
++        art["honest_verdict"] = (
++            f"complete_rex_gate_not_met_{n_improve}_of_{n_comparable}_games_pooled_delta_{pooled}_variant_retired"
++        )
++    art["duration_s"] = round(time.time() - t0, 3)
++    payload = {k: v for k, v in art.items() if k != "duration_s"}
++    art["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode()
++    ).hexdigest()
++    return art
++
++
++def main() -> int:
++    art = build_artifact()
++    OUT.write_text(json.dumps(art, indent=2, default=str) + "\n", encoding="utf-8")
++    print("verdict:", art.get("honest_verdict"))
++    print("wrote", OUT)
++    if art.get("honest_verdict"):
++        CHECKPOINT.unlink(missing_ok=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_arc_rex_refinement.py b/tests/python/test_arc_rex_refinement.py
+new file mode 100644
+index 0000000000..6475912d98
+--- /dev/null
++++ b/tests/python/test_arc_rex_refinement.py
+@@ -0,0 +1,313 @@
++"""Tests for REQ-ARC-WMTE-6248 (Pinductor-style REx refinement).
++
++CPU-only: no GPU, no network, no engine store. The LLM side is a fake proposer; the
++scoring side is an injected callable. Covers SCENARIO-ARC-WMTE-6248-UCB1-CONSULTS-QUALITY,
++SCENARIO-ARC-WMTE-6248-QBC-ORDERS-BY-DISAGREEMENT, and
++SCENARIO-ARC-WMTE-6248-BUDGET-PARITY-BY-CONSTRUCTION.
++"""
++
++from __future__ import annotations
++
++import math
++from dataclasses import dataclass
++from typing import Any, Optional
++
++import numpy as np
++
++from carnot.agentic.arc_rex_refinement import (
++    RexNode,
++    committee_entropy,
++    load_engine_from_source,
++    qbc_order_mismatches,
++    run_rex,
++    ucb1_pick,
++)
++
++
++def _node(idx: int, fid: float, visits: int = 0, parent: int | None = None) -> RexNode:
++    return RexNode(idx=idx, source=f"src{idx}", valid_fidelity=fid, parent=parent, n_visit=visits)
++
++
++# ---------------------------------------------------------------------------
++# SCENARIO-ARC-WMTE-6248-UCB1-CONSULTS-QUALITY
++# ---------------------------------------------------------------------------
++
++
++def test_ucb1_equal_visits_picks_highest_quality() -> None:
++    nodes = [_node(0, 0.2), _node(1, 0.7), _node(2, 0.4)]
++    assert ucb1_pick(nodes) == 1
++
++
++def test_ucb1_equal_quality_picks_least_visited() -> None:
++    nodes = [_node(0, 0.5, visits=5), _node(1, 0.5, visits=0), _node(2, 0.5, visits=2)]
++    assert ucb1_pick(nodes) == 1
++
++
++def test_ucb1_fresh_node_bonus_is_finite() -> None:
++    # A fresh node must not win on an infinite bonus: with c small enough the
++    # quality term must dominate over the fresh node's exploration bonus.
++    nodes = [_node(0, 0.9, visits=3), _node(1, 0.0, visits=0)]
++    assert ucb1_pick(nodes, c=0.01) == 0
++
++
++def test_ucb1_empty_raises() -> None:
++    try:
++        ucb1_pick([])
++    except ValueError:
++        return
++    raise AssertionError("expected ValueError on empty node list")
++
++
++# ---------------------------------------------------------------------------
++# committee_entropy edges
++# ---------------------------------------------------------------------------
++
++
++def test_entropy_zero_when_all_agree() -> None:
++    assert committee_entropy([1, 1, 1]) == 0.0
++
++
++def test_entropy_log_k_when_all_differ() -> None:
++    assert abs(committee_entropy([1, 2, 3]) - math.log(3)) < 1e-12
++
++
++def test_entropy_excludes_crashes() -> None:
++    # Two crashed members (None) must not read as two extra distinct predictions.
++    assert committee_entropy([7, 7, None, None]) == 0.0
++
++
++def test_entropy_all_crashed_is_zero() -> None:
++    assert committee_entropy([None, None]) == 0.0
++
++
++# ---------------------------------------------------------------------------
++# SCENARIO-ARC-WMTE-6248-QBC-ORDERS-BY-DISAGREEMENT
++# ---------------------------------------------------------------------------
++
++
++def test_qbc_orders_by_disagreement_highest_first() -> None:
++    mismatches = [{"i": 0, "tag": "agreed"}, {"i": 1, "tag": "split"}]
++    entropies = {0: 0.0, 1: math.log(3)}
++    out = qbc_order_mismatches(mismatches, entropies)
++    assert [m["tag"] for m in out] == ["split", "agreed"]
++
++
++def test_qbc_missing_index_sorts_last_and_stably() -> None:
++    mismatches = [{"i": 5}, {"i": 9}, {"i": 2}]
++    entropies = {2: 1.0}  # 5 and 9 unmeasured -> 0.0, keep original relative order
++    out = qbc_order_mismatches(mismatches, entropies)
++    assert [m["i"] for m in out] == [2, 5, 9]
++
++
++# ---------------------------------------------------------------------------
++# load_engine_from_source
++# ---------------------------------------------------------------------------
++
++
++def test_load_engine_from_source_executes() -> None:
++    src = "import numpy as np\n\ndef engine(grid, action, data):\n    return grid + 1\n"
++    eng = load_engine_from_source(src, tag="t")
++    out = eng(np.zeros((2, 2), dtype=int), 1, None)
++    assert (np.asarray(out) == 1).all()
++
++
++def test_load_engine_from_source_bad_source_raises() -> None:
++    try:
++        load_engine_from_source("this is not python", tag="bad")
++    except Exception:
++        return
++    raise AssertionError("expected import failure to raise")
++
++
++# ---------------------------------------------------------------------------
++# run_rex control flow with a fake proposer (no GPU)
++# ---------------------------------------------------------------------------
++
++
++@dataclass
++class _Transition:
++    grid: np.ndarray
++    action: int
++    data: dict | None
++    next_grid: np.ndarray
++    level_before: int = 0
++    level_after: int = 0
++
++
++def _tiny_transitions(n: int = 3) -> list[_Transition]:
++    rng = np.random.default_rng(6248)
++    out = []
++    for _ in range(n):
++        g = rng.integers(0, 3, size=(2, 2))
++        out.append(_Transition(grid=g, action=1, data=None, next_grid=g + 1))
++    return out
++
++
++class _FakeStore:
++    """In-memory stand-in for the isolated engine-store file."""
++
++    def __init__(self) -> None:
++        self.text: str | None = None
++
++    def read(self) -> str | None:
++        return self.text
++
++    def write(self, text: str) -> None:
++        self.text = text
++
++
++class _FakeProposer:
++    """Writes a deterministic sequence of engine sources into the store."""
++
++    def __init__(self, store: _FakeStore, sources: list[str]) -> None:
++        self.store = store
++        self.sources = list(sources)
++        self.calls: list[tuple[str, Any]] = []
++
++    def _emit(self) -> tuple[bool, str]:
++        if not self.sources:
++            return False, "exhausted"
++        self.store.write(self.sources.pop(0))
++        return True, "ok"
++
++    def induce(self, game: str, trans: list, cell: int) -> tuple[bool, str]:
++        self.calls.append(("induce", None))
++        return self._emit()
++
++    def refactor(self, game: str, vr: Any) -> tuple[bool, str]:
++        self.calls.append(("refactor", vr))
++        return self._emit()
++
++
++def _scores_from_table(table: dict[str, float]):
++    def score_candidate(source: str) -> dict:
++        return {
++            "valid_fidelity": table.get(source, 0.0),
++            "mismatches": [{"i": 0}, {"i": 1}],
++            "valid_accuracy": 0.0,
++            "valid_n": 2,
++            "valid_n_correct": 0,
++        }
++
++    return score_candidate
++
++
++def _mk_vr(node: RexNode, ordered: list[dict]) -> dict:
++    # The experiment passes a real VerifyResult; the loop only forwards it, so a dict
++    # is enough here.
++    return {"mismatches": ordered, "parent_idx": node.idx}
++
++
++def _run(
++    sources: list[str], table: dict[str, float], *, use_ucb1: bool, use_qbc: bool, budget: int = 3
++):
++    store = _FakeStore()
++    prop = _FakeProposer(store, sources)
++    result = run_rex(
++        "testgame",
++        prop,
++        train=_tiny_transitions(2),
++        valid=_tiny_transitions(2),
++        cell=1,
++        budget=budget,
++        score_candidate=_scores_from_table(table),
++        read_store_source=store.read,
++        write_store_source=store.write,
++        make_verify_result=_mk_vr,
++        use_ucb1=use_ucb1,
++        use_qbc=use_qbc,
++    )
++    return result, prop
++
++
++# SCENARIO-ARC-WMTE-6248-BUDGET-PARITY-BY-CONSTRUCTION
++
++
++def test_both_arms_spend_identical_llm_call_budget() -> None:
++    sources = ["s0", "s1", "s2"]
++    table = {"s0": 0.1, "s1": 0.2, "s2": 0.3}
++    linear, prop_a = _run(list(sources), table, use_ucb1=False, use_qbc=False)
++    rex, prop_b = _run(list(sources), table, use_ucb1=True, use_qbc=True)
++    assert linear["llm_calls"] == rex["llm_calls"] == 3
++    assert len(prop_a.calls) == len(prop_b.calls) == 3
++
++
++def test_linear_arm_always_refines_latest() -> None:
++    sources = ["s0", "s1", "s2"]
++    # s0 scores HIGHEST -- a UCB1 arm would go back to it; linear must not.
++    table = {"s0": 0.9, "s1": 0.1, "s2": 0.1}
++    result, _ = _run(sources, table, use_ucb1=False, use_qbc=False)
++    parents = [n["parent"] for n in result["nodes"]]
++    assert parents == [None, 0, 1]
++
++
++def test_ucb1_arm_returns_to_best_parent() -> None:
++    sources = ["s0", "s1", "s2"]
++    # s0 best, s1 poor: with modest c the third proposal's parent is s0 again, not s1.
++    table = {"s0": 0.9, "s1": 0.05, "s2": 0.5}
++    result, _ = _run(sources, table, use_ucb1=True, use_qbc=False)
++    parents = [n["parent"] for n in result["nodes"]]
++    assert parents[0] is None
++    assert parents[1] == 0
++    assert parents[2] == 0  # returned to the strong root instead of chaining onto s1
++
++
++def test_final_pick_is_argmax_valid_fidelity() -> None:
++    sources = ["s0", "s1", "s2"]
++    table = {"s0": 0.2, "s1": 0.8, "s2": 0.3}
++    result, _ = _run(sources, table, use_ucb1=False, use_qbc=False)
++    assert result["final_idx"] == 1
++    assert result["final_source"] == "s1"
++    assert abs(result["final_valid_fidelity"] - 0.8) < 1e-9
++
++
++def test_failed_induce_returns_empty_summary_after_one_call() -> None:
++    store = _FakeStore()
++    prop = _FakeProposer(store, [])  # exhausted immediately -> induce fails
++    result = run_rex(
++        "testgame",
++        prop,
++        train=_tiny_transitions(1),
++        valid=_tiny_transitions(1),
++        cell=1,
++        budget=4,
++        score_candidate=_scores_from_table({}),
++        read_store_source=store.read,
++        write_store_source=store.write,
++        make_verify_result=_mk_vr,
++        use_ucb1=True,
++        use_qbc=True,
++    )
++    assert result["final_idx"] is None
++    assert result["llm_calls"] == 1  # no refinement calls after a failed induce
++
++
++def test_unchanged_source_is_not_added_as_new_node() -> None:
++    # The proposer "succeeds" but re-emits the identical source: the loop must not
++    # grow the population with a duplicate of its own parent.
++    store = _FakeStore()
++
++    class _EchoProposer(_FakeProposer):
++        def refactor(self, game: str, vr: Any) -> tuple[bool, str]:
++            self.calls.append(("refactor", vr))
++            return True, "ok"  # writes nothing: store keeps the parent's source
++
++    prop = _EchoProposer(store, ["s0"])
++    result = run_rex(
++        "testgame",
++        prop,
++        train=_tiny_transitions(1),
++        valid=_tiny_transitions(1),
++        cell=1,
++        budget=3,
++        score_candidate=_scores_from_table({"s0": 0.4}),
++        read_store_source=store.read,
++        write_store_source=store.write,
++        make_verify_result=_mk_vr,
++        use_ucb1=False,
++        use_qbc=False,
++    )
++    assert len(result["nodes"]) == 1
++    assert result["llm_calls"] == 3
++    kinds = [e["kind"] for e in result["events"]]
++    assert kinds.count("no_new_source") == 2
+-- 
+2.55.0
+

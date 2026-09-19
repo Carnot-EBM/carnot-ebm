@@ -1,0 +1,101 @@
+From 105ce73c33b25c30f0f9dc89d3c3c874f80ea1c8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 12:48:42 -0400
+Subject: [PATCH 02828/11362] [outer-loop] Log RecursiveMAS (arXiv:2604.25917)
+ as corroboration; park the decomposition idea
+
+Per operator: log as corroboration (not a primary ingestion -- weaker fit). RecursiveMAS is a
+multi-agent LLM latent-recursion training technique for text reasoning; it corroborates (3rd datapoint
+after FinAcumen + our verifier-moat) that a Critic/verifier in the loop + iterative refinement-on-
+mismatch improves accuracy = our propose->verify->refactor. Does NOT transfer to the live agent
+(latent collaboration bypasses text decoding, incompatible with our execution-grounded verifier;
+multi-LLM infeasible on one offline 16GB P100 in the 8h budget). FLAGGED + PARKED: the
+Planner->Critic->Solver decomposition idea for the HIERARCHICAL-PLANNING track (vc33/L4 wall; LeCun's
+named open problem) -- a dev-side corpus-building direction, not an ARC-sprint task. No experiment
+staged. Real verified arXiv ID.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../recursivemas-corroboration-2026-06-19.md  | 44 +++++++++++++++++++
+ research-studying.md                          | 14 ++++++
+ 2 files changed, 58 insertions(+)
+ create mode 100644 docs/research-notes/recursivemas-corroboration-2026-06-19.md
+
+diff --git a/docs/research-notes/recursivemas-corroboration-2026-06-19.md b/docs/research-notes/recursivemas-corroboration-2026-06-19.md
+new file mode 100644
+index 0000000000..4c08f0c4df
+--- /dev/null
++++ b/docs/research-notes/recursivemas-corroboration-2026-06-19.md
+@@ -0,0 +1,44 @@
++# SOTA ingestion (corroboration): RecursiveMAS (arXiv:2604.25917), 2026-06-19
++
++**Source (VERIFIED):** "Recursive Multi-Agent Systems: Scaling Agent Collaboration through Latent-space
++Recursion," Yang, Zou, Pan et al. (UIUC / Stanford / NVIDIA / MIT), arXiv:2604.25917,
++https://recursivemas.github.io/. Operator-handed; logged as CORROBORATION (weaker fit than the
++FinAcumen / VibeThinker ingestions — it is a multi-agent LLM *training + latent-recursion* technique
++for text reasoning, not a drop-in for our execution-grounded offline ARC agent).
++
++## What it is
++
++Multiple LLM agents (Planner→Critic→Solver / Mixture / Distillation / Deliberation) collaborate in
++LATENT space across recursive rounds, decoding text only on the final round, via a tiny trained
++`RecursiveLink` module (~13M params, 0.31%; frozen base LLMs). Results: +8.3% avg accuracy, +18.1%
++AIME-2025, 2.4× speedup, −75.6% tokens at recursion r=3.
++
++## What it CORROBORATES (we already embody this — 3rd independent datapoint)
++
++- **An explicit Critic/verifier in the loop improves accuracy.** Their Sequential pattern has the
++  Critic GROUND intermediate work before the Solver finalizes = our propose→verify→refactor with the
++  Carnot verifier. Adds to FinAcumen (selective gate) + our verifier-moat thesis.
++- **Iterative refinement recovers errors** (their case study: round-1 off-by-one → rounds 2–3 recover)
++  = our E3 induce→verify→**refactor**-on-mismatch loop. Test-time depth helps.
++
++## FLAGGED (parked for the HIERARCHICAL-PLANNING track, NOT the live agent)
++
++The **Planner→Critic→Solver DECOMPOSITION** pattern (a Planner decomposes a hard task into subgoals
++before the Solver acts) speaks to the hierarchical-planning wall we keep hitting (the vc33/L4 ceiling;
++[[reference_lecun_world_models]] names hierarchical planning as THE open problem). **DEV-SIDE idea
++(corpus-building, frontier model + time — NOT the offline 16GB live agent):** use the frontier model
++as a PLANNER to decompose a deep-tail game into subgoals, have the verifier ground each subgoal-solve,
++and bank the decomposition as a richer corpus entry the live transfer-router can reuse. Parked until
++we attack hierarchical planning; not a current ARC-sprint task.
++
++## Why it does NOT transfer to the LIVE agent (honest caveats)
++
++- **Latent collaboration bypasses text decoding — incompatible with our EXECUTION-grounded verifier**,
++  which must run the actual `world_model.py` code every round to ground it. The moat IS the
++  text/code grounding; we cannot collaborate purely in latent space.
++- Needs trained `RecursiveLink` modules (we don't train the generator); multi-LLM-agent collaboration
++  is infeasible on one offline 16GB P100 within the 8h/10-steps live budget.
++
++**No experiment staged** (weaker fit; corroboration + one parked dev-side idea). Cross-refs:
++`docs/research-notes/finacumen-experience-memory-ingestion-2026-06-19.md`,
++[[reference_lecun_world_models]] (hierarchical-planning open problem), [[project_arc_agi3_north_star]].
+diff --git a/research-studying.md b/research-studying.md
+index 4e9d60c509..5459ddf9fd 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,20 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-19 RecursiveMAS (arXiv:2604.25917) — INGESTED as CORROBORATION; decomposition parked
++
++**Status:** INGESTED → `docs/research-notes/recursivemas-corroboration-2026-06-19.md`. Operator-handed;
++logged as corroboration (weaker fit — multi-agent LLM latent-recursion training technique, not a
++drop-in for our execution-grounded offline ARC agent). **Corroborates** (3rd datapoint): an explicit
++Critic/verifier in the loop + iterative refinement-on-mismatch improves accuracy = our
++propose→verify→refactor. **Does NOT transfer to the live agent:** latent collaboration bypasses text
++decoding, incompatible with our EXECUTION-grounded verifier (must run the code each round); multi-LLM
++infeasible on one offline 16GB P100 in the 8h budget. **flagged (PARKED, not an ARC-sprint task):** the
++Planner→Critic→Solver DECOMPOSITION idea → for the HIERARCHICAL-PLANNING track (the vc33/L4 wall;
++LeCun names hierarchical planning THE open problem) — DEV-side: frontier-model Planner decomposes a
++deep-tail game into subgoals, verifier grounds each, bank the decomposition as a richer corpus entry.
++No experiment staged.
++
+ ## 2026-06-19 VibeThinker-3B proposer candidate (HF WeiboAI/VibeThinker-3B) — INGESTED, flagged for .412
+ 
+ **Status:** INGESTED → `docs/research-notes/vibethinker-3b-proposer-candidate-2026-06-19.md`.
+-- 
+2.55.0
+

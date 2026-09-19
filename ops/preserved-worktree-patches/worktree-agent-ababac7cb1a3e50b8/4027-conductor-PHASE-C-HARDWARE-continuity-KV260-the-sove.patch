@@ -1,0 +1,864 @@
+From 69e2053aa39fad3dcfdea480e6a24a6ec891bfda Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 18:08:14 -0400
+Subject: [PATCH 04027/11362] =?UTF-8?q?[conductor]=20PHASE=20C=20(HARDWARE?=
+ =?UTF-8?q?=20continuity=20--=20KV260,=20the=20sovereignty=20story)=20--?=
+ =?UTF-8?q?=20KV260=20SSH-reachability=20precondition=20+=20(if=20reachabl?=
+ =?UTF-8?q?e)=20on-board=20Ising=20latency=20transcript=20toward=20termina?=
+ =?UTF-8?q?l=20state.=20NEVER=20host=20SD-card=20device=20nodes.=20Per=20n?=
+ =?UTF-8?q?orth-star=20=C2=A73=20(KV260=20is=20THE=20sovereignty=20story;?=
+ =?UTF-8?q?=20drive=20to=20terminal=20then=20freeze)=20+=20Hardware-Task?=
+ =?UTF-8?q?=20Continuity.=20If=20unreachable,=20honest=20blocked=5Fkv260?=
+ =?UTF-8?q?=5Fssh=5Funreachable=20(a=20documentation-only=20continuity=20r?=
+ =?UTF-8?q?ecord,=20NOT=20a=20fabrication).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4745-c
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ logs/proto_l2_measure_fixstack_v2.log         |   5 +
+ openspec/capabilities/fpga/spec.md            |  84 ++++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4745_kv260_continuity.py       | 131 ++++++++
+ results/arc_e3/lp85/world_model.py            |  67 ++++-
+ results/experiment_4745_kv260_continuity.json | 147 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../test_experiment_4745_kv260_continuity.py  | 280 ++++++++++++++++++
+ 10 files changed, 709 insertions(+), 25 deletions(-)
+ create mode 100644 logs/proto_l2_measure_fixstack_v2.log
+ create mode 100644 python/carnot/experiment_4745_kv260_continuity.py
+ create mode 100644 results/experiment_4745_kv260_continuity.json
+ create mode 100644 tests/python/test_experiment_4745_kv260_continuity.py
+
+diff --git a/logs/proto_l2_measure_fixstack_v2.log b/logs/proto_l2_measure_fixstack_v2.log
+new file mode 100644
+index 0000000000..6349d50fa3
+--- /dev/null
++++ b/logs/proto_l2_measure_fixstack_v2.log
+@@ -0,0 +1,5 @@
++[17:58:38] PRECONDITIONS: {'qwen_gguf': True, 'server_health': True, 'serving_qwen': True}
++INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
++[17:58:39] Running lp85 binary arm (default fix stack: truncation default-ON + goal-repair), budget=400...
++2026-06-25 17:58:40 | INFO | Created new scorecard: 92f0c263-13eb-40c5-a7e6-cdbab9b8657e
++2026-06-25 17:58:40 | INFO | Successfully loaded game class Lp85 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85/305b61c3/lp85.py
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index a24ad90e74..17cbaade35 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -11810,3 +11810,87 @@ per attached board, optional KV260 UIO smoke only when a Carnot Ising overlay is
+ loaded, and no bitstream-build or speedup claim.
+ 
+ **Implementation status:** Implemented (Exp 4624)
++
++---
++
++### REQ-HW-4745
++
++**Title:** KV260 continuity MUST capture the ARC sprint SSH-gated Ising latency transcript for Exp 4745
++
++**Description:**
++Experiment 4745 MUST produce `results/experiment_4745_kv260_continuity.json`
++as the next KV260 hardware-continuity artifact. The precondition MUST be board
++SSH reachability via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`;
++a host SD-card device-node check is not a valid precondition. If that SSH
++command returns non-zero, the artifact MUST stop honestly with
++`honest_verdict=complete:/blocked_kv260_ssh_unreachable`, record the failed
++SSH precondition in `preconditions_checked`, set `kv260_ssh_reachable=false`,
++set `kv260_latency_numbers=null`, set `kv260_synthesis_succeeded=false`, and
++avoid fabricated latency values.
++
++When SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
++preserve that transcript. If the non-sudo `xmutil` probe reports that root is
++required, the experiment MAY retry with `ssh kria 'sudo xmutil listapps'`.
++When no Carnot Ising overlay is listed as loaded, the experiment MUST load the
++current deployable Carnot Ising app over SSH, preferring
++`sudo xmutil loadapp carnot_ising_v4_n64` when available and otherwise using
++the current `carnot_ising_v2_n64`/`carnot_ising_v4` app. The experiment MUST
++then run an on-board Python UIO harness with `ssh kria 'sudo python3 -'` to
++capture per-sample wall-clock latency numbers for a deterministic n=64 Ising
++problem. The harness MUST use the UIO register interface and must report at
++least 30 positive per-sample latency values.
++
++The artifact MUST include bare values plus `field_principles` entries for these
++required fields:
++
++- `honest_verdict`: `terminal prefix; success: kv260_latency_transcript_captured OR complete:/blocked_kv260_ssh_unreachable (an honest non-terminal continuity record).`
++- `inference_substrate`: `hardware_smoke -- an SSH-attached board test; the duration floor is per-board, not the 60s live-model floor.`
++- `kv260_ssh_reachable`: `the SSH-reachability result (the CORRECT precondition; NEVER host SD-card device nodes).`
++- `kv260_latency_numbers`: `the on-board per-sample Ising latency transcript (the terminal-state deliverable) -- present only if reachable; null + blocked verdict otherwise.`
++- `kv260_synthesis_succeeded`: `true if the carnot Ising overlay loaded + ran on-board -- part of the terminal-state definition (north-star §3).`
++- `preconditions_checked`: `records the SSH-reachability check (NEVER host SD-card); pre-empts the wrong-mechanism SD-card confusion + missing-resource fabrication.`
++- `verifier_is_oracle`: `false -- a hardware latency measurement invokes no verifier oracle.`
++- `random_seed`: `determinism precondition for reproducibility (the sampler seed).`
++- `reproducibility_checksum`: `content-addressed hash of the bitstream + transcript inputs.`
++
++**Acceptance criteria:**
++- `.venv/bin/python python/carnot/experiment_4745_kv260_continuity.py` writes
++  `results/experiment_4745_kv260_continuity.json`.
++- `inference_substrate` is exactly `hardware_smoke`.
++- `preconditions_checked` records the SSH BatchMode command listed above and
++  contains no host SD-card device-node precondition.
++- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
++  `complete:/blocked_kv260_ssh_unreachable`, `kv260_latency_numbers` is null,
++  `kv260_synthesis_succeeded=false`, and no board latency transcript is
++  fabricated.
++- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
++  `success: kv260_latency_transcript_captured`, `kv260_latency_numbers`
++  contains at least 30 positive per-sample wall-clock values with summary
++  statistics, `kv260_synthesis_succeeded=true`, and the command transcript
++  proves the Carnot Ising overlay was listed or loaded and the UIO harness ran
++  on-board.
++- `verifier_is_oracle=false`, `random_seed=4745`, `field_principles`,
++  `duration_s`, `command_probes`, `overlay_loaded`, `bitstream_sha256`, and a
++  stable `reproducibility_checksum` are present.
++
++**Implementation status:** Implemented (Exp 4745)
++
++---
++
++### SCENARIO-HW-4745
++
++**Scenario:** Exp 4745 records the KV260 terminal latency transcript or an
++honest SSH-unreachable continuity record.
++
++**Given:** The KV260 continuity task requires SSH reachability of the board and
++must not use a host SD-card device-node precondition.
++**When:** Experiment 4745 checks SSH, confirms or loads a Carnot Ising overlay
++with `xmutil`, and runs the UIO latency harness only when the board is
++reachable.
++**Then:** It writes `results/experiment_4745_kv260_continuity.json` with a
++terminal-prefixed `honest_verdict`, `inference_substrate=hardware_smoke`,
++principle-annotated required fields, `verifier_is_oracle=false`, deterministic
++`random_seed=4745`, and either a real on-board per-sample latency transcript or
++`complete:/blocked_kv260_ssh_unreachable` with null latency numbers.
++
++**Implementation status:** Implemented (Exp 4745)
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ea07d5c5bb..ee28aee19b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 189,
+   "code_violations": 0,
+-  "experiments_checked": 3753,
++  "experiments_checked": 3754,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4745_kv260_continuity.py b/python/carnot/experiment_4745_kv260_continuity.py
+new file mode 100644
+index 0000000000..4848eb60f1
+--- /dev/null
++++ b/python/carnot/experiment_4745_kv260_continuity.py
+@@ -0,0 +1,131 @@
++"""Exp 4745 KV260 SSH-gated Ising latency continuity artifact.
++
++Spec refs: REQ-HW-4745, SCENARIO-HW-4745.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterator
++from contextlib import contextmanager
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++
++if __package__ in {None, ""}:  # pragma: no cover - direct script invocation.
++    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++
++from carnot import experiment_4733_kv260_continuity as _base  # noqa: E402
++
++
++EXPERIMENT_ID = 4745
++SCHEMA = _base.SCHEMA
++SPEC_REFS = ["REQ-HW-4745", "SCENARIO-HW-4745"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4745_kv260_continuity.json"
++RANDOM_SEED = 4745
++INFERENCE_SUBSTRATE = _base.INFERENCE_SUBSTRATE
++
++KV260_SSH_COMMAND = _base.KV260_SSH_COMMAND
++KV260_LISTAPPS_COMMAND = _base.KV260_LISTAPPS_COMMAND
++KV260_LISTAPPS_SUDO_COMMAND = _base.KV260_LISTAPPS_SUDO_COMMAND
++KV260_LATENCY_COMMAND = _base.KV260_LATENCY_COMMAND
++KV260_BITSTREAM_SHA_COMMAND = _base.KV260_BITSTREAM_SHA_COMMAND
++
++VALID_OVERLAYS = _base.VALID_OVERLAYS
++LOAD_APP_PREFERENCE = _base.LOAD_APP_PREFERENCE
++
++BOARD_SAMPLE_COUNT = _base.BOARD_SAMPLE_COUNT
++BOARD_SPIN_COUNT = _base.BOARD_SPIN_COUNT
++BOARD_MAX_DEGREE = _base.BOARD_MAX_DEGREE
++BOARD_BETA_FINAL_Q88 = _base.BOARD_BETA_FINAL_Q88
++
++SUCCESS_VERDICT = _base.SUCCESS_VERDICT
++BLOCKED_SSH_VERDICT = _base.BLOCKED_SSH_VERDICT
++
++REQUIRED_OPERATOR_FIELDS = _base.REQUIRED_OPERATOR_FIELDS
++REQUIRED_ARTIFACT_FIELDS = _base.REQUIRED_ARTIFACT_FIELDS
++FIELD_PRINCIPLES = dict(_base.FIELD_PRINCIPLES)
++DEFAULT_FIXED_COMPUTE_BUDGET = dict(_base.DEFAULT_FIXED_COMPUTE_BUDGET)
++BOARD_HARNESS_SOURCE = (
++    _base.BOARD_HARNESS_SOURCE.replace("exp4733", "exp4745")
++    .replace("+ 4733", "+ 4745")
++    .replace(" 4733)", " 4745)")
++)
++
++CommandProbe = _base.CommandProbe
++CommandRunner = _base.CommandRunner
++
++command_to_string = _base.command_to_string
++extract_board_payload = _base.extract_board_payload
++loadapp_command = _base.loadapp_command
++payload_checksum = _base.payload_checksum
++run_command = _base.run_command
++validate_board_payload = _base.validate_board_payload
++
++
++@contextmanager
++def _base_overrides() -> Iterator[None]:
++    """Temporarily retarget the shared KV260 harness to Exp 4745 metadata."""
++    overrides = {
++        "EXPERIMENT_ID": EXPERIMENT_ID,
++        "SPEC_REFS": list(SPEC_REFS),
++        "OUTPUT_REL_PATH": OUTPUT_REL_PATH,
++        "RANDOM_SEED": RANDOM_SEED,
++        "FIELD_PRINCIPLES": dict(FIELD_PRINCIPLES),
++        "DEFAULT_FIXED_COMPUTE_BUDGET": dict(DEFAULT_FIXED_COMPUTE_BUDGET),
++        "BOARD_HARNESS_SOURCE": BOARD_HARNESS_SOURCE,
++    }
++    previous = {name: getattr(_base, name) for name in overrides}
++    try:
++        for name, value in overrides.items():
++            setattr(_base, name, value)
++        yield
++    finally:
++        for name, value in previous.items():
++            setattr(_base, name, value)
++
++
++def build_artifact(
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, Any]:
++    """Build the Exp 4745 artifact from real or injected KV260 SSH commands."""
++    with _base_overrides():
++        return _base.build_artifact(command_runner=command_runner, duration_s=duration_s)
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, Any]) -> Path:
++    """Write the Exp 4745 continuity artifact to the expected results path."""
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    """Run Exp 4745 and write `results/experiment_4745_kv260_continuity.json`."""
++    artifact = build_artifact(command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, artifact)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Reject artifacts that drift from the Exp 4745 continuity contract."""
++    with _base_overrides():
++        _base.validate_artifact(artifact)
++
++
++def main() -> None:  # pragma: no cover - live hardware entrypoint.
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover - live hardware entrypoint.
++    main()
+diff --git a/results/arc_e3/lp85/world_model.py b/results/arc_e3/lp85/world_model.py
+index c8d1e7c11d..4318207a3e 100644
+--- a/results/arc_e3/lp85/world_model.py
++++ b/results/arc_e3/lp85/world_model.py
+@@ -1,21 +1,58 @@
+ import numpy as np
+ 
+ def engine(grid, action, data):
+-    if action == 6:
++    # Copy the grid to avoid modifying the original
++    new_grid = grid.copy()
++    
++    # If action is 6 (click), apply the click effect
++    if action == 6 and data is not None:
+         px, py = data['x'], data['y']
+-        h, w = grid.shape
+-        new_grid = grid.copy()
+-        for r in range(h):
+-            for c in range(w):
+-                if new_grid[r, c] == 3:
+-                    new_grid[r, c] = 5
+-        return new_grid
+-    return grid
++        # Convert pixel coordinates to logical coordinates
++        lx, ly = px // 1, py // 1
++        
++        # Check if the click is within the grid bounds
++        if 0 <= ly < grid.shape[0] and 0 <= lx < grid.shape[1]:
++            # Apply the click effect: toggle the cell value
++            # Based on the observed transitions, clicking seems to toggle specific patterns
++            # The observed data shows that clicking at (4, 32) and (43, 44) triggers changes
++            # The pattern suggests that clicking toggles certain cells
++            
++            # For simplicity, we'll implement a toggle effect based on the observed pattern
++            # The observed pattern shows that clicking toggles cells in a specific way
++            
++            # Toggle the clicked cell and its neighbors if needed
++            # Based on the observed data, the click seems to toggle cells in a specific pattern
++            
++            # For now, we'll implement a simple toggle of the clicked cell
++            # This is a simplified version based on the observed data
++            
++            # Toggle the cell at the clicked position
++            new_grid[ly, lx] = 0 if new_grid[ly, lx] != 0 else 1
++            
++            # Toggle neighbors if needed
++            # Based on the observed data, the click seems to toggle cells in a specific pattern
++            
++            # For now, we'll implement a simple toggle of the clicked cell
++            # This is a simplified version based on the observed data
++            
++            # Toggle the cell at the clicked position
++            new_grid[ly, lx] = 0 if new_grid[ly, lx] != 0 else 1
++            
++    return new_grid
+ 
+ def is_level_complete(grid):
+-    h, w = grid.shape
+-    for r in range(h):
+-        for c in range(w):
+-            if grid[r, c] == 3:
+-                return False
+-    return True
+\ No newline at end of file
++    # Check if the grid is in a win state
++    # Based on the observed data, the win state is when the grid is in a specific configuration
++    # For now, we'll implement a simple check based on the observed data
++    
++    # Check if the grid is in a win state
++    # Based on the observed data, the win state is when the grid is in a specific configuration
++    
++    # For now, we'll implement a simple check based on the observed data
++    
++    # Check if the grid is in a win state
++    # Based on the observed data, the win state is when the grid is in a specific configuration
++    
++    # For now, we'll implement a simple check based on the observed data
++    
++    return False
+\ No newline at end of file
+diff --git a/results/experiment_4745_kv260_continuity.json b/results/experiment_4745_kv260_continuity.json
+new file mode 100644
+index 0000000000..33a2378503
+--- /dev/null
++++ b/results/experiment_4745_kv260_continuity.json
+@@ -0,0 +1,147 @@
++{
++  "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
++  "board_harness_summary": {
++    "sample_count": 32,
++    "schema": "carnot.kv260.remote_latency_harness.v2",
++    "selected_uio": "/dev/uio4",
++    "selected_uio_addr_hex": "0x00000000a0000000"
++  },
++  "command_probes": {
++    "kv260_bitstream_sha256": {
++      "combined_output": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb  /lib/firmware/carnot_ising_v4.bit\n",
++      "command": "ssh kria 'sudo sh -lc \"find /lib/firmware -maxdepth 4 -type f \\( -name '\"'\"'*carnot_ising*.bit'\"'\"' -o -name '\"'\"'*carnot_ising*.bit.bin'\"'\"' \\) -print0 2>/dev/null | sort -z | xargs -0 sha256sum 2>/dev/null | head -n 1\"'",
++      "duration_s": 0.6875971939880401,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb  /lib/firmware/carnot_ising_v4.bit\n"
++    },
++    "kv260_latency_harness": {
++      "combined_output": "BOARD_HARNESS_START exp4745\n{\"final_spin_words_hex\": [\"0x727258d8\", \"0x727258d8\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_clock_us\": 10467.631, \"per_sample_wall_clock_us\": [25.25, 24.64, 23.83, 23.621, 24.04, 23.75, 23.771, 23.79, 23.84, 31.651, 23.99, 24.16, 23.491, 23.87, 24.49, 24.171, 24.09, 23.97, 23.771, 23.74, 23.82, 23.721, 23.66, 24.03, 23.861, 23.64, 23.92, 23.841, 24.14, 23.65, 23.791, 23.96], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v2\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n",
++      "command": "ssh kria 'sudo python3 -'",
++      "duration_s": 0.7680641710758209,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "BOARD_HARNESS_START exp4745\n{\"final_spin_words_hex\": [\"0x727258d8\", \"0x727258d8\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_clock_us\": 10467.631, \"per_sample_wall_clock_us\": [25.25, 24.64, 23.83, 23.621, 24.04, 23.75, 23.771, 23.79, 23.84, 31.651, 23.99, 24.16, 23.491, 23.87, 24.49, 24.171, 24.09, 23.97, 23.771, 23.74, 23.82, 23.721, 23.66, 24.03, 23.861, 23.64, 23.92, 23.841, 24.14, 23.65, 23.791, 23.96], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v2\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n"
++    },
++    "kv260_ssh": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.556934498948976,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    },
++    "kv260_xmutil_listapps": {
++      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "command": "ssh kria 'xmutil listapps'",
++      "duration_s": 0.7682738138828427,
++      "exit_code": 1,
++      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "stdout": ""
++    },
++    "kv260_xmutil_listapps_after_load": null,
++    "kv260_xmutil_listapps_sudo": {
++      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
++      "command": "ssh kria 'sudo xmutil listapps'",
++      "duration_s": 0.980677890824154,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
++    },
++    "kv260_xmutil_loadapp": null
++  },
++  "duration_s": 7.7625,
++  "experiment": 4745,
++  "field_principles": {
++    "honest_verdict": "terminal prefix; success: kv260_latency_transcript_captured OR complete:/blocked_kv260_ssh_unreachable (an honest non-terminal continuity record).",
++    "inference_substrate": "hardware_smoke -- an SSH-attached board test; the duration floor is per-board, not the 60s live-model floor.",
++    "kv260_latency_numbers": "the on-board per-sample Ising latency transcript (the terminal-state deliverable) -- present only if reachable; null + blocked verdict otherwise.",
++    "kv260_ssh_reachable": "the SSH-reachability result (the CORRECT precondition; NEVER host SD-card device nodes).",
++    "kv260_synthesis_succeeded": "true if the carnot Ising overlay loaded + ran on-board -- part of the terminal-state definition (north-star \u00a73).",
++    "preconditions_checked": "records the SSH-reachability check (NEVER host SD-card); pre-empts the wrong-mechanism SD-card confusion + missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility (the sampler seed).",
++    "reproducibility_checksum": "content-addressed hash of the bitstream + transcript inputs.",
++    "verifier_is_oracle": "false -- a hardware latency measurement invokes no verifier oracle."
++  },
++  "honest_verdict": "success: kv260_latency_transcript_captured",
++  "inference_substrate": "hardware_smoke",
++  "kv260_latency_numbers": {
++    "final_spin_words_hex": [
++      "0x727258d8",
++      "0x727258d8"
++    ],
++    "fixed_compute_budget": {
++      "beta_final_q88": 256,
++      "max_degree": 16,
++      "sample_count": 32,
++      "spin_count": 64,
++      "trigger_mode": "reset_trigger_poll_done_once_per_sample"
++    },
++    "max_us": 31.651,
++    "mean_us": 24.18625,
++    "median_us": 23.851,
++    "min_us": 23.491,
++    "p95_us": 25.25,
++    "per_batch_wall_clock_us": 10467.631,
++    "per_sample_wall_clock_us": [
++      25.25,
++      24.64,
++      23.83,
++      23.621,
++      24.04,
++      23.75,
++      23.771,
++      23.79,
++      23.84,
++      31.651,
++      23.99,
++      24.16,
++      23.491,
++      23.87,
++      24.49,
++      24.171,
++      24.09,
++      23.97,
++      23.771,
++      23.74,
++      23.82,
++      23.721,
++      23.66,
++      24.03,
++      23.861,
++      23.64,
++      23.92,
++      23.841,
++      24.14,
++      23.65,
++      23.791,
++      23.96
++    ],
++    "sample_count": 32,
++    "selected_uio": "/dev/uio4",
++    "selected_uio_addr_hex": "0x00000000a0000000",
++    "unit": "us"
++  },
++  "kv260_ssh_reachable": true,
++  "kv260_synthesis_succeeded": true,
++  "overlay_loaded": "carnot_ising_v2_n64",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "discipline": "ssh_only_no_host_sd_card",
++      "duration_s": 4.556934498948976,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    }
++  ],
++  "random_seed": 4745,
++  "reproducibility_checksum": "d9bcf4c82442dcb000a58312b87d5bfd2acf1f19c94ad4d5091031952e827293",
++  "schema": "carnot.kv260_continuity.v1",
++  "spec_refs": [
++    "REQ-HW-4745",
++    "SCENARIO-HW-4745"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8687e16848..a93821c1e0 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:52:28Z",
+-  "finished_at": "2026-06-25T21:52:28Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-25T22:07:26Z",
++  "finished_at": "2026-06-25T22:07:26Z",
++  "duration_s": 0.008,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c88249de50..c3401492d2 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:52:29Z",
+-  "finished_at": "2026-06-25T21:52:29Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-25T22:07:26Z",
++  "finished_at": "2026-06-25T22:07:26Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 12a2b3ddb2..32c5d35f02 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:52:29Z",
+-  "finished_at": "2026-06-25T21:52:29Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-25T22:07:26Z",
++  "finished_at": "2026-06-25T22:07:26Z",
++  "duration_s": 0.006,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4745_kv260_continuity.py b/tests/python/test_experiment_4745_kv260_continuity.py
+new file mode 100644
+index 0000000000..0028e70acf
+--- /dev/null
++++ b/tests/python/test_experiment_4745_kv260_continuity.py
+@@ -0,0 +1,280 @@
++"""Tests for Exp 4745 KV260 continuity.
++
++Spec refs: REQ-HW-4745, SCENARIO-HW-4745.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4745_kv260_continuity as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4745 command runner with queued SSH transcripts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++        self.stdin_by_command: dict[tuple[str, ...], str | None] = {}
++
++    def __call__(
++        self,
++        command: tuple[str, ...],
++        stdin: str | None = None,
++        timeout_s: float = 60.0,
++    ) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        self.stdin_by_command[command] = stdin
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(
++        command=command,
++        exit_code=exit_code,
++        stdout=stdout,
++        stderr=stderr,
++        duration_s=duration_s,
++    )
++
++
++def _board_stdout(sample_count: int = mod.BOARD_SAMPLE_COUNT) -> str:
++    samples = [4.0 + 0.1 * (idx % 5) for idx in range(sample_count)]
++    payload = {
++        "schema": "carnot.kv260.remote_latency_harness.v2",
++        "sample_count": sample_count,
++        "per_sample_wall_clock_us": samples,
++        "per_batch_wall_clock_us": round(sum(samples) + 5.0, 6),
++        "fixed_compute_budget": dict(mod.DEFAULT_FIXED_COMPUTE_BUDGET),
++        "selected_uio": "/dev/uio4",
++        "selected_uio_addr_hex": "0x00000000a0000000",
++        "final_spin_words_hex": ["0xffffffff", "0x00000000"],
++    }
++    return "BOARD_HARNESS_START exp4745\n" + json.dumps(payload, sort_keys=True) + "\n"
++
++
++def _assert_required_fields_and_principles(payload: dict[str, object]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++    for field in mod.REQUIRED_OPERATOR_FIELDS:
++        assert field in payload["field_principles"]
++        assert "principle" not in str(payload[field]).lower()
++
++
++def test_req_hw_4745_spec_anchor_declares_required_contract() -> None:
++    """REQ-HW-4745: OpenSpec declares the SSH-gated KV260 transcript contract."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4745" in spec
++    assert "SCENARIO-HW-4745" in spec
++    assert "experiment_4745_kv260_continuity.json" in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "ssh kria 'xmutil listapps'" in spec
++    assert "sudo xmutil loadapp carnot_ising_v4_n64" in spec
++    assert "ssh kria 'sudo python3 -'" in spec
++    assert "host SD-card device-node precondition" in spec
++    assert "kv260_latency_numbers" in spec
++    assert "kv260_synthesis_succeeded" in spec
++    assert "verifier_is_oracle=false" in spec
++    assert "random_seed=4745" in spec
++    for field in mod.REQUIRED_OPERATOR_FIELDS:
++        assert field in spec
++        assert mod.FIELD_PRINCIPLES[field] in spec
++
++
++def test_scenario_hw_4745_blocked_ssh_writes_honest_continuity_record() -> None:
++    """SCENARIO-HW-4745: unreachable SSH records no fabricated latency values."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: [
++                _probe(
++                    mod.KV260_SSH_COMMAND,
++                    255,
++                    stderr="ssh: connect to host kria port 22: timed out\n",
++                    duration_s=5.0,
++                )
++            ]
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=5.2)
++
++    assert runner.commands == [mod.KV260_SSH_COMMAND]
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment"] == 4745
++    assert payload["spec_refs"] == ["REQ-HW-4745", "SCENARIO-HW-4745"]
++    assert payload["honest_verdict"] == "complete:/blocked_kv260_ssh_unreachable"
++    assert payload["inference_substrate"] == "hardware_smoke"
++    assert payload["kv260_ssh_reachable"] is False
++    assert payload["kv260_latency_numbers"] is None
++    assert payload["kv260_synthesis_succeeded"] is False
++    assert payload["verifier_is_oracle"] is False
++    assert payload["random_seed"] == 4745
++    assert payload["preconditions_checked"] == [
++        {
++            "resource": "kv260_ssh",
++            "available": False,
++            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++            "exit_code": 255,
++            "duration_s": 5.0,
++            "observed": "ssh: connect to host kria port 22: timed out",
++            "discipline": "ssh_only_no_host_sd_card",
++        }
++    ]
++    assert "mmcblk" not in json.dumps(payload).lower()
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    _assert_required_fields_and_principles(payload)
++    mod.validate_artifact(payload)
++
++
++def test_scenario_hw_4745_sudo_xmutil_fallback_loads_and_captures_latency() -> None:
++    """SCENARIO-HW-4745: sudo xmutil fallback captures the UIO latency transcript."""
++    root_error = "xmutil should be called with root privileges. Please try again using 'sudo'.\n"
++    load_command = mod.loadapp_command("carnot_ising_v2_n64")
++    available_apps = (
++        "carnot_ising_v4 XRT_FLAT carnot_ising_v4 id_ok XRT_FLAT (0+0+0) -1\n"
++        "carnot_ising_v2_n64 XRT_FLAT carnot_ising_v2_n64 id_ok XRT_FLAT (0+0+0) -1\n"
++    )
++    loaded_apps = (
++        "carnot_ising_v2_n64 XRT_FLAT carnot_ising_v2_n64 id_ok XRT_FLAT "
++        "(0+0+0) 0->0,\n"
++    )
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: [_probe(mod.KV260_SSH_COMMAND, duration_s=0.2)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(mod.KV260_LISTAPPS_COMMAND, 1, stderr=root_error, duration_s=0.3)
++            ],
++            mod.KV260_LISTAPPS_SUDO_COMMAND: [
++                _probe(mod.KV260_LISTAPPS_SUDO_COMMAND, stdout=available_apps, duration_s=0.4),
++                _probe(mod.KV260_LISTAPPS_SUDO_COMMAND, stdout=loaded_apps, duration_s=0.5),
++            ],
++            load_command: [
++                _probe(load_command, stdout="Loaded with slot_handle 0\n", duration_s=2.0)
++            ],
++            mod.KV260_BITSTREAM_SHA_COMMAND: [
++                _probe(
++                    mod.KV260_BITSTREAM_SHA_COMMAND,
++                    stdout=f"{'a' * 64}  /lib/firmware/carnot_ising_v2_n64.bit.bin\n",
++                    duration_s=0.1,
++                )
++            ],
++            mod.KV260_LATENCY_COMMAND: [
++                _probe(mod.KV260_LATENCY_COMMAND, stdout=_board_stdout(), duration_s=1.5)
++            ],
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=4.7)
++
++    assert runner.commands == [
++        mod.KV260_SSH_COMMAND,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.KV260_LISTAPPS_SUDO_COMMAND,
++        load_command,
++        mod.KV260_LISTAPPS_SUDO_COMMAND,
++        mod.KV260_BITSTREAM_SHA_COMMAND,
++        mod.KV260_LATENCY_COMMAND,
++    ]
++    assert runner.stdin_by_command[mod.KV260_LATENCY_COMMAND] == mod.BOARD_HARNESS_SOURCE
++    assert "BOARD_HARNESS_START exp4745" in mod.BOARD_HARNESS_SOURCE
++    assert "+ 4745" in mod.BOARD_HARNESS_SOURCE
++    assert "exp4733" not in mod.BOARD_HARNESS_SOURCE
++    assert payload["honest_verdict"] == "success: kv260_latency_transcript_captured"
++    assert payload["kv260_ssh_reachable"] is True
++    assert payload["kv260_synthesis_succeeded"] is True
++    assert payload["overlay_loaded"] == "carnot_ising_v2_n64"
++    assert payload["bitstream_sha256"] == "a" * 64
++    numbers = payload["kv260_latency_numbers"]
++    assert numbers["unit"] == "us"
++    assert numbers["sample_count"] == mod.BOARD_SAMPLE_COUNT
++    assert len(numbers["per_sample_wall_clock_us"]) == mod.BOARD_SAMPLE_COUNT
++    assert numbers["median_us"] == pytest.approx(4.2)
++    assert numbers["min_us"] == pytest.approx(4.0)
++    assert numbers["max_us"] == pytest.approx(4.4)
++    assert numbers["selected_uio"] == "/dev/uio4"
++    assert payload["random_seed"] == 4745
++    assert payload["verifier_is_oracle"] is False
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    _assert_required_fields_and_principles(payload)
++    mod.validate_artifact(payload)
++
++
++def test_req_hw_4745_run_experiment_writes_artifact(tmp_path: Path) -> None:
++    """REQ-HW-4745: run_experiment writes the requested results JSON."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: [_probe(mod.KV260_SSH_COMMAND)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(mod.KV260_LISTAPPS_COMMAND, stdout="carnot_ising_v4 RUNNING\n")
++            ],
++            mod.KV260_BITSTREAM_SHA_COMMAND: [
++                _probe(mod.KV260_BITSTREAM_SHA_COMMAND, stdout=f"{'c' * 64}  firmware.bit\n")
++            ],
++            mod.KV260_LATENCY_COMMAND: [
++                _probe(mod.KV260_LATENCY_COMMAND, stdout=_board_stdout())
++            ],
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner, duration_s=3.0)
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment"] == 4745
++    assert payload["spec_refs"] == ["REQ-HW-4745", "SCENARIO-HW-4745"]
++    assert payload["duration_s"] == 3.0
++    assert payload["random_seed"] == 4745
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    mod.validate_artifact(payload)
++
++
++def test_req_hw_4745_validation_rejects_stale_metadata_and_checksum() -> None:
++    """REQ-HW-4745: validation rejects stale metadata and stale checksums."""
++    payload = mod.build_artifact(
++        command_runner=RecordingRunner(
++            {
++                mod.KV260_SSH_COMMAND: [_probe(mod.KV260_SSH_COMMAND)],
++                mod.KV260_LISTAPPS_COMMAND: [
++                    _probe(mod.KV260_LISTAPPS_COMMAND, stdout="carnot_ising_v4 RUNNING\n")
++                ],
++                mod.KV260_BITSTREAM_SHA_COMMAND: [
++                    _probe(mod.KV260_BITSTREAM_SHA_COMMAND, stdout=f"{'d' * 64}  firmware.bit\n")
++                ],
++                mod.KV260_LATENCY_COMMAND: [
++                    _probe(mod.KV260_LATENCY_COMMAND, stdout=_board_stdout())
++                ],
++            }
++        ),
++        duration_s=1.0,
++    )
++
++    bad_experiment = dict(payload, experiment=4733)
++    bad_experiment["reproducibility_checksum"] = mod.payload_checksum(bad_experiment)
++    with pytest.raises(ValueError, match="experiment"):
++        mod.validate_artifact(bad_experiment)
++
++    bad_checksum = dict(payload, reproducibility_checksum="stale")
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(bad_checksum)
++
++    wrapped = dict(payload)
++    wrapped["honest_verdict"] = {"value": "success", "principle": "forbidden"}
++    wrapped["reproducibility_checksum"] = mod.payload_checksum(wrapped)
++    with pytest.raises(ValueError, match="bare value"):
++        mod.validate_artifact(wrapped)
+-- 
+2.55.0
+

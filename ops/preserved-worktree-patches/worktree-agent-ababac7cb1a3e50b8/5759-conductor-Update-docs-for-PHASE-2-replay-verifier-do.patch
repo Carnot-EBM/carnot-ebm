@@ -1,0 +1,74 @@
+From fb92125cf8906ce8a9e58e471963aa08dde82bd8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 06:06:04 -0400
+Subject: [PATCH 05759/11362] [conductor] Update docs for PHASE 2 replay --
+ verifier-dose scheduler without live-model dependency
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 2 ++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 6 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 0f6d5ea1f5..c674fee286 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1963,3 +1963,5 @@ legacy tests.
+ | SCENARIO-VERIFY-5262 | Local GGUF Constraint IR Is Checked By Solver | Implemented-Partial | Artifact completed the local SOTA GGUF constraint-extraction pilot and solver checks, but it found no useful oracle-distinct signal: constraint_validity_rate.value=0.25 below baseline.validity_rate=0.5, false_accepts.value=0 versus baseline.false_accepts=2, and counterexamples_found=3; status remains ⚠️ Partial / Not Viable / Research Finding. |
+ | REQ-VERIFY-5263 | Neuron/Attention/Logit Energy Hallucination Probe V481 | Implemented-Partial | `python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`; `tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`; honest_verdict={"principle":"Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable.","value":"complete: null logit-energy unsupported-minus-supported delta=0.004811"}; status=<missing>; internal_signal_available=true; auroc=0.7777777777777778; hidden_energy_probe_signal_delta=0.004811297384257784; false_accepts_at_threshold.value=0; precision_at_threshold=0.6; no retro_* flags; no TP/signed_improvement/violation_rate fields; no Complete status, useful-probe claim, or retro closure is claimed. |
+ | SCENARIO-VERIFY-5263 | Runtime Signal Receipts Gate Hallucination-Energy Pilot | Implemented-Partial | Artifact followed the signal-available path with `inference_substrate.value=live_llm_inference_local_gguf_sota`, `internal_signal_available=true`, and `external_text_scorer_used.value=false`; it reports auroc=0.7777777777777778, hidden_energy_probe_signal_delta=0.004811297384257784, false_accepts_at_threshold.value=0, and a null terminal verdict, so status remains ⚠️ Partial / Not Viable / Research Finding. |
++| REQ-VERIFY-5264 | Cached-fixture verifier-dose scheduler replay V481 | Implemented | `python/carnot/pipeline/verifier_dose_scheduler_replay.py`; `tests/python/test_experiment_5264_verifier_dose_scheduler_replay_v481.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5264_verifier_dose_scheduler_replay_v481.json`; honest_verdict={"principle":"Terminal Exp 5264 verdict; starts with complete: or blocked_ and states whether cached scheduler replay is useful, null, harmful, or underpowered.","value":"complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"}; status=<missing>; scheduler_ready=true; inference_substrate.value=cached_fixture_replay_no_llm; full_verifier_calls_avoided_rate.value=0.857143; decision_quality_delta.value=0.0; false_accept_delta.value=0.0; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields. |
++| SCENARIO-VERIFY-5264 | Cached scheduler preserves full-verifier safety | Implemented | Artifact records scheduler quality_rate=1.0 equal to always_full quality_rate=1.0, false_accept_delta.value=0.0, scheduler false_accepts=0, scheduler full_verifier_calls=1 versus always_full=7, full_verifier_calls_avoided_rate.value=0.857143, and inference_substrate.value=cached_fixture_replay_no_llm; this is a cached replay result, not a live-model verifier-dose claim. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3c15121c1d..8489790755 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10912,3 +10912,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-05: PHASE 1 continuous self-learning -- typed-memory retention and interference audit (✅ Complete) — honest_verdict=complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed; status=<missing>; memory_policy_ready=true; retention_rate=1.0; interference_rate=0.0; harmful_memory_rollback_passed=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5261_typed_memory_interference_audit_v481.json
+ - 2026-07-05: PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal Exp 5262 verdict; starts with complete: or blocked_ and states whether solver-grounded extraction produced useful oracle-distinct signal.","value":"complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"}; status=<missing>; constraint_validity_rate.value=0.25 vs baseline.validity_rate=0.5; false_accepts.value=0 vs baseline.false_accepts=2; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5262_solver_grounded_constraint_extraction_v481.json
+ - 2026-07-05: PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable.","value":"complete: null logit-energy unsupported-minus-supported delta=0.004811"}; status=<missing>; internal_signal_available=true; auroc=0.7777777777777778; hidden_energy_probe_signal_delta=0.004811297384257784; false_accepts_at_threshold.value=0; no retro_* flags recorded; no TP/signed_improvement/violation_rate fields recorded; results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
++- 2026-07-05: PHASE 2 replay -- verifier-dose scheduler without live-model dependency (✅ Complete) — honest_verdict={"principle":"Terminal Exp 5264 verdict; starts with complete: or blocked_ and states whether cached scheduler replay is useful, null, harmful, or underpowered.","value":"complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"}; status=<missing>; scheduler_ready=true; inference_substrate.value=cached_fixture_replay_no_llm; full_verifier_calls_avoided_rate.value=0.857143; decision_quality_delta.value=0.0; false_accept_delta.value=0.0; scheduler false_accepts=0; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5264_verifier_dose_scheduler_replay_v481.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2f4bfa9c85..fbd1c85b94 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 96, "phase": "iteration_start", "last_beat": "2026-07-05T09:48:23Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 97, "phase": "iteration_start", "last_beat": "2026-07-05T10:03:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 850dd5f220..8dfb094d49 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10332,3 +10332,4 @@ web search: |
+ | 2026-07-05 08:55 UTC | PHASE 1 continuous self-learning -- typed-memory r | OK | 87 passed, 1 warning in 8.65s |
+ | 2026-07-05 09:15 UTC | PHASE 2 gated on exp5259 sota_runtime_ready -- sol | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-05 09:46 UTC | PHASE 2 gated on exp5259 sota_runtime_ready -- neu | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-05 10:01 UTC | PHASE 2 replay -- verifier-dose scheduler without  | OK | 88 passed, 1 warning in 10.32s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 90c8909c4e..26e891ab60 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 96, "phase": "iteration_start", "started_at": "2026-07-05T09:48:23Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 97, "phase": "iteration_start", "started_at": "2026-07-05T10:03:17Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index 444e6c547c..c4231d4b7e 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5843,3 +5843,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-05 | Exp 5261: PHASE 1 continuous self-learning -- typed-memory retention and interference audit | ✅ Complete | honest_verdict=complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed; status=<missing>; memory_policy_ready=true; retention_rate=1.0; interference_rate=0.0; harmful_memory_rollback_passed=true; evicted_n=2 with conflicting=1 and stale=1; tests_run=[]; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5261, REQ-LEARN-5261-1, REQ-LEARN-5261-2, REQ-LEARN-5261-3, REQ-LEARN-5261-4, REQ-LEARN-5261-5, REQ-LEARN-5261-6, SCENARIO-LEARN-5261; status label mapped to ✅ Complete because honest_verdict starts with `complete:`, memory_policy_ready=true, retention_rate=1.0, interference_rate=0.0, harmful_memory_rollback_passed=true, and the verdict explicitly keeps live cross-model memory unclaimed | results/experiment_5261_typed_memory_interference_audit_v481.json |
+ | 2026-07-05 | Exp 5262: PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Terminal Exp 5262 verdict; starts with complete: or blocked_ and states whether solver-grounded extraction produced useful oracle-distinct signal.","value":"complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"}; status=<missing>; solver_grounded_extractor_ready=false; constraint_validity_rate.value=0.25 vs baseline.validity_rate=0.5; false_accepts.value=0 vs baseline.false_accepts=2; counterexamples_found=3; no_broad_solver_feedback_claim=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5262, SCENARIO-VERIFY-5262; status label mapped to ⚠️ Partial / Not Viable / Research Finding because the verdict records no useful oracle-distinct signal and validity fell below baseline rather than showing a measured extraction improvement | results/experiment_5262_solver_grounded_constraint_extraction_v481.json |
+ | 2026-07-05 | Exp 5263: PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable.","value":"complete: null logit-energy unsupported-minus-supported delta=0.004811"}; status=<missing>; internal_signal_available=true; external_text_scorer_used.value=false; auroc=0.7777777777777778; hidden_energy_probe_signal_delta=0.004811297384257784; false_accepts_at_threshold.value=0; precision_at_threshold=0.6; deterministic_baselines always_supported.false_accepts=3 lexical_claim_terms.false_accepts=0; no retro_* flags recorded; no TP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5263, SCENARIO-VERIFY-5263; status label mapped to ⚠️ Partial / Not Viable / Research Finding because honest_verdict.value records a null logit-energy signal rather than a measured hallucination-probe improvement | results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json |
++| 2026-07-05 | Exp 5264: PHASE 2 replay -- verifier-dose scheduler without live-model dependency | ✅ Complete | honest_verdict={"principle":"Terminal Exp 5264 verdict; starts with complete: or blocked_ and states whether cached scheduler replay is useful, null, harmful, or underpowered.","value":"complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"}; status=<missing>; scheduler_ready=true; inference_substrate.value=cached_fixture_replay_no_llm; full_verifier_calls_avoided_rate.value=0.857143; decision_quality_delta.value=0.0; false_accept_delta.value=0.0; scheduler quality_rate=1.0 vs always_full quality_rate=1.0; scheduler false_accepts=0; scheduler full_verifier_calls=1 vs always_full=7; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5264, SCENARIO-VERIFY-5264; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:` and the artifact reports preserved always-full quality/safety while avoiding 0.857143 full verifier calls on cached/no-LLM replay | results/experiment_5264_verifier_dose_scheduler_replay_v481.json |
+-- 
+2.55.0
+

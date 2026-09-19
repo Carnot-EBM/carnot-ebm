@@ -1,0 +1,75 @@
+From 234cc7d6237686d777ceda1b95622a330d57b5cb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 17:13:39 -0400
+Subject: [PATCH 05104/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...iment_5049_second_corpus_confirmation.json | 22 +++++++++++++++++--
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 03e9e545cc..7603e19486 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-06-30T20:56:15Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-06-30T21:13:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 649190610f..a4702cc00e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9676,3 +9676,4 @@ The contro |
+ | 2026-06-30 20:50 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
+ | 2026-06-30 20:52 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
+ | 2026-06-30 20:54 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
++| 2026-06-30 21:11 UTC | PHASE D4 second-corpus confirmation -- gated on Ex | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a90f63d16f..1fb9d18d78 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 21, "phase": "iteration_start", "started_at": "2026-06-30T20:56:15Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 22, "phase": "iteration_start", "started_at": "2026-06-30T21:13:37Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5049_second_corpus_confirmation.json b/results/experiment_5049_second_corpus_confirmation.json
+index 4c93c3a085..8f375a6db8 100644
+--- a/results/experiment_5049_second_corpus_confirmation.json
++++ b/results/experiment_5049_second_corpus_confirmation.json
+@@ -762,5 +762,23 @@
+     }
+   ],
+   "verifier_accuracy_second": 0.37,
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "delta_vs_tuned_sc_second=0.37 and verifier_accuracy_second=0.37 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=51.799264 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

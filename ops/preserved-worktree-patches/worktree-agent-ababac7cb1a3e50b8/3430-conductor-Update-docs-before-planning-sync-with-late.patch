@@ -1,0 +1,753 @@
+From 88a099e0c9a8a23f4c36f17c5fa59073cabc4969 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 08:36:14 -0400
+Subject: [PATCH 03430/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 317 +++++++++---------
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      |  87 ++---
+ research-references.md                        |  69 ++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |  11 +-
+ ...discrete_search_adjudication_v3_retry.json |  11 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |  11 +-
+ 14 files changed, 340 insertions(+), 209 deletions(-)
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index a584cb83cc..4c8d274356 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,177 +1,190 @@
+-# Research Roadmap — Milestone 2026.06.423
++# Research Roadmap — Milestone 2026.06.424
+ 
+-**CLOSE THE LIVE-SUBMISSION GAP (33 → 53): bank replayable trajectories + refresh the validated package + env-adaptive re-solve for version-drift — the highest-confidence score lever — flanked by the feature-ROUTER for seen→hidden transfer (the operator's 2026-06-21 frontier)**
++**GENERATION COMPLETENESS — finally attack the candidate-GENERATION wall directly: WIRE the toolkit approaches into the held-out generation harness so the selected approach actually RUNS and GENERATES the winner (`winner_generated` 1/25 → up), the un-tried fix after re-ranking / routing / verifier-expansion all nulled; keep the 53-level package operator-resubmit-ready (beat 33) and bank +1 more level**
+ 
+ - **Planned by:** outer-loop (Claude Opus 4.8 planner), 2026-06-22.
+-- **Milestone doc for:** `research-roadmap-next.yaml` (2026.06.423).
++- **Milestone doc for:** `research-roadmap-next.yaml` (2026.06.424).
+ - **Sprint:** ARC-AGI-3 submission sprint through **2026-06-30** (CLAUDE.md
+   "ARC-AGI-3 Submission Sprint Forcing Function" — majority ARC; ≥1 level-up
+   bank; 2 reserved infra; 1 per-board hardware; 1 SOTA-ingestion; all
+-  experiments `codex`/`gpt-5.5`; planner+retro stay Claude Opus).
++  experiments `codex`/`gpt-5.5`; planner+retro stay Claude Opus). **8 days to deadline.**
+ 
+ ---
+ 
+-## 1. What the previous milestone (.422) proved
++## 1. What the previous milestone (.423) proved
+ 
+-`.422` ("ACTION EFFICIENCY — ship the leaderboard's #1 lever") was, like `.418`–`.421`,
+-**a near-total honest null on the held-out headlines, with one real capability bank.**
++`.423` ("CLOSE THE LIVE-SUBMISSION GAP, flanked by the feature-ROUTER") landed
++**one decisive win, one capability bank, and a FOURTH confirmation of the generation wall.**
+ 
+ | Phase | Result | Verdict |
+ |---|---|---|
+-| A1 clickability/action-effect CNN predictor as a RANKER (exp4568) | `actions_delta=0.0` — NO efficiency gain (2nd null after `.416) | `complete: clickability_predictor_no_efficiency_gain_honest_null` |
+-| A2 verifier-guided frontier EXPANSION (exp4569) | `transfer_delta=-0.04` (WORSE) **with a BROKEN positive control** (`positive_control_passed=None`, false-negative-risk OPEN) | not a clean null — a broken test |
+-| A3 level-up bank (exp4570) | **cn04 L2 banked → `reproducible_total_levels` 52→53** | ✅ the one real win |
+-| A4 ka59 hidden-field state probe (exp4571) | no bank; disambiguation control passed | `complete: ..._gap_sharpened_no_bank` |
+-| A5 integration (exp4572) | `no_lever_raises_a_metric` (heldout_solve_rate 0.04, unchanged) | honest null |
+-| A6 PersistentAEM persist + transfer (exp4573) | `actions_reduced=1.0` on dc22/m0r0/ka59 **but only over a cached pool, no new bank** | `success: ..._value_added` (ordering-only) |
+-| B1/B2/C/D | action-efficiency co-headline metric wired; learned-CNN DURATION guard; hardware audit; action-effect SOTA ingested | shipped |
+-
+-**The triply-confirmed diagnosis (`.421 A6 → `.422 A1 → `.422 A6):** the bottleneck
+-is **candidate GENERATION, not ranking.** A re-ranker / predictor-ordering of a fixed
+-pool adds 0 value on first-contact because **the winning candidate is never generated.**
+-Ranking works only when the winner is already in the pool (A6 cached-pool ordering).
+-
+-**Two decisive signals the planner must not re-derive (operator + outer-loop, 2026-06-21):**
+-
+-1. **`reproducible_total_levels` is partly a "mirage" for the leaderboard** (GAP-LIVE-INTEGRATION,
+-   operator 2026-06-19 #1, the *highest* score-mover): we have **53 reproducible levels but the
+-   2026-06-21 live scorecard submitted only 33.** The submitted agent ships bare BFS; the stronger
+-   stack is not wired; the gap is mechanical — a STALE package (sc25 L5, tu93 L5, lp85 L5, and
+-   cn04/cd82/sp80/su15/m0r0 L2 banked since the submission are NOT in it), **9 graph-explore /
+-   config-rule solves with NO banked replayable trajectory** (dc22/ft09/g50t/s5i5/sb26/vc33/re86/
+-   bp35/lf52), and **sc25 live version-drift** (`env_match=false`, hash 635fd71a). Closing it is
+-   "integration, not modeling."
+-2. **value-head best-first EXPANSION (the `.422 A2 approach) REGRESSED this weekend**
+-   (goal-bias best_first 0.0152; `value_weight>0` 2/11 vs the SHIPPED diversity floor's 4/11).
+-   Do **not** re-run verifier-guided expansion as a headline. The operator's freshest direction
+-   (2026-06-21) is the **feature-ROUTER** (mechanic-from-early-play → approach) + **diversity-floor
+-   transfer** + **self-play every milestone**.
+-
+-## 2. The `.423 strategy — two thrusts, both genuine sprint progress
+-
+-**Thrust 1 (HEADLINE, highest-confidence score lift): close the 33→53 live-submission gap.**
+-This is the literal sprint output (a bigger submittable package) and the operator's standing
+-"beat 33 levels" gate. The work is concrete and achievable: (a) refresh the validated package to
+-current banked depth, (b) bank a replayable action trajectory for every offline-reproduced level
+-that lacks one (extract the winning sequence the `reproduce()` gate already replays), (c) make the
+-submit replay **env-adaptive** (discover-from-env re-solve, not flat-replay) for version-drift games
+-like sc25. Submission stays operator-only; the task PREPARES + offline-validates and emits
+-`ready_for_operator_submit`.
+-
+-**Thrust 2 (FRONTIER, the operator's 2026-06-21 direction): the feature-ROUTER for seen→hidden
+-transfer.** Classify a game's mechanic from EARLY-PLAY features → route to the matching general
+-approach already built into the toolkit (diversity-on-stall, systematic BFS, goal-distance A*,
+-LLM-reasoner). This is the general seen→hidden transfer per-game recipes cannot do, learned from the
+-self-play loop's pos/neg traces — the literature instantiation is SkillRouter (arXiv:2603.22455) /
+-SkillGraph (arXiv:2605.12039). Measured on the variant proxy, reporting ACTION cost (per the
+-weekend best-first-regression heads-up), with a working positive control.
+-
+-These are flanked by the mandated slots: the level-up GUARANTEE via the self-play loop (grows
+-`reproducible_total_levels`), diversity-floor transfer validation, self-learning persist+reuse,
+-integration into the submitted agent, 2 reserved infra, 1 hardware-continuity, 1 SOTA-ingestion,
+-capstone.
+-
+-## 3. The three biggest gaps between current state and the PRD/north-star vision
+-
+-1. **The submitted score lags the banked capability (33 vs 53).** The north star is ARC-AGI-3
+-   solve-rate; we have already-earned public-game levels not in the submission because of stale
+-   packaging, missing replay trajectories, and live env-drift. (→ A1, A6, B1.)
+-2. **Zero proven seen→hidden generalization.** `generic_transfer` has sat at 0.04 for five
+-   milestones; every learned-signal lever (verifier-router, re-induction, clickability-ranker,
+-   value-head expansion) nulled because it cannot GENERATE the unseen winner. The untried lever is
+-   the feature-ROUTER (route to a general *generator/exploration* approach by mechanic class) + the
+-   SHIPPED diversity floor's exploration broadening. (→ A3, A4.)
+-3. **The live discovery loop is still partly frozen-replay.** The "Live Hidden-Game Discovery Agent"
+-   framing (CLAUDE.md, MANDATORY) says the deliverable is the runtime discovery PROCESS, not a frozen
+-   trajectory. sc25's live miss (`env_match=false`) is exactly the frozen-replay failure mode; an
+-   env-adaptive re-solve is both the score fix AND a step toward the genuine deliverable. (→ A1, A5.)
+-
+-## 4. Architecture (what changes this milestone)
++| **A1 close live-submission gap (exp4580)** | `live_submittable_level_count` 33 → **53** (`count_delta=20`); banked replayable trajectories for all 24 reproduced games; env-adaptive re-solve recovered sc25; `ready_for_operator_submit=True` | ✅ **the headline win** |
++| **A2 level-up self-play (exp4581)** | **ar25 L1→L2 banked → `reproducible_total_levels` 53 → 54**; learned verifier checkpointed | ✅ the capability bank |
++| A3 feature-ROUTER for seen→hidden transfer (exp4582) | `generic_transfer` flat at **0.04** (== baseline == random-route control → TAUTOLOGY-flagged, false-negative-risk open) | honest null (4th confirmation) |
++| A4 diversity-floor transfer (exp4583) | no transfer (first-win not up on held-out variants) | honest null |
++| A5 persist primitive (exp4584) | `env_adaptive_resolve_operator` persisted; drift-recovery transfer on s5i5/ft09/sb26, no new bank | ordering/recovery-only |
++| A6 integration (exp4585) | `integrated_live_submittable_54_above_33` (A1+A2 wired) | ✅ integrated |
++| B1/B2/C/D/E | live-submittable co-headline metric; offline-arc METHODOLOGY guard; hardware audit; skill-routing SOTA ingested; capstone | shipped |
++
++**The decisive diagnostic the planner must build on (exp4582 `winner_generated`):**
++across 25 held-out variants the winning candidate was **GENERATED for only 1** (24 not
++generated). The residual is **mechanical**, not modeling:
++
++| mechanic class | routed approach | wired into variant harness? | unsolved |
++|---|---|---|---|
++| avatar_navigation | `goal_distance_astar` | **NO (`variant_wired=False`)** | 12 |
++| click_connect | `goal_distance_astar` | **NO (`variant_wired=False`)** | 3 |
++| keyboard_graph | `systematic_bfs` | yes | 7 |
++
++**15 of the 24 misses are because the right approach is NOT WIRED into the variant
++generation harness.** The `.423 feature-ROUTER correctly *classified* the mechanic and
++*selected* the approach — but selecting an approach that never runs generates nothing.
++This is "integration, not modeling" applied to GENERATION, and it is the un-tried lever.
++
++## 2. Settled facts — do NOT re-derive or re-build (rerun-discipline)
++
++1. **`cross_game_features_v3` ALREADY transfers — LOO-AUROC 0.674** (exp4545 `.418;
++   in-sample 0.871). GAP-ARCH-FEATURES (the structural-feature verifier-transfer item)
++   is **closed above the 0.6 bar.** Do NOT re-propose "build v3 to beat chance." The OPEN
++   question is using that transferring energy to **guide GENERATION**, not to re-rank.
++2. **Verifier-guided best-first EXPANSION REGRESSED** (.422 A2 exp4569, `transfer_delta=-0.04`;
++   weekend `value_weight>0` 2/11 vs diversity 4/11; reset-replay navigation tax). Do NOT
++   re-run a learned-value EXPANSION priority as a headline (honor the operator heads-up).
++3. **Re-ranking / routing a FIXED pool adds 0** (.421 A6 `ordering_gain=0`, .423 A3): the
++   winner is never in the pool. Generation, not ranking, is the binding constraint — now
++   confirmed FOUR times. **`.424 stops re-ranking and fixes generation.**
++
++## 3. The `.424 strategy — three thrusts, all genuine sprint progress
++
++**Thrust 1 (HEADLINE — A1): GENERATION COMPLETENESS.** Wire each mechanic-class approach
++into the held-out variant generation harness (`measure_generic_transfer_over_variants`'s
++`variant_runner`) so the SELECTED approach actually RUNS and GENERATES candidates:
++`arc_goal_distance.goal_distance_solve` for avatar_navigation + click_connect (the 15
++`variant_wired=False` misses), `graph_explore_solve_v2`+diversity for graph classes, the
++LLM reasoner for the residual tail. Headline metric: `winner_generated_rate` (1/25 baseline)
+++ `generic_transfer` (0.04 baseline, CI must exclude it) + median actions-to-first-levelup.
++`verifier_is_oracle: false`. This is high-confidence (mechanical wiring grounded in exp4582's
++exact residual) and not a re-run of any failed approach (those re-RANKED or EXPANDED a fixed
++pool; this WIRES generators in).
++
++**Thrust 2 (DEEP MOAT — A3): generation guidance via an objective goal-distance / structural
++energy** for the wired-but-still-failing classes (keyboard_graph BFS, 7 unsolved) and the
++no-avatar config/click tail. The operator's 2026-06-20 energy-augmented-ARC spine: objective
++energy over game-agnostic STRUCTURE that biases the explorer's action proposals toward the
++goal (a GENERATION prior), NOT a learned-value best-first EXPANSION priority (which regressed).
++`verifier_is_oracle: false`; measure `winner_generated_rate` + action cost; honest null if it
++does not help.
++
++**Thrust 3 (CAPABILITY + SCORE): bank more, keep the package fresh.** A2 runs the standing
++self-play loop EVERY milestone (operator 2026-06-21) to bank +1 NEW reproducible level on a
++rotated game (`reproducible_total_levels` 54 → 55+) and train+checkpoint the learned verifier;
++A4 folds the new bank into the refreshed 53→54+ package and keeps it `ready_for_operator_submit`
++so the operator can resubmit and beat 33. Submission stays operator-only.
++
++## 4. Architecture (where each task plugs in)
+ 
+ ```
+-                          ┌──────────────────────────────────────────────┐
+-   LIVE ARC-AGI-3 env ───▶│  SUBMITTED AGENT  (E3AgentPolicy)             │
+-   (25 public + hidden)   │  arc_competition_agent.py                     │
+-                          │   • StepwiseExplorer + diversity floor (shipped)│
+-   A1: env-adaptive ─────▶│   • A1: env-adaptive re-solve (not flat-replay)│──▶ live-submittable
+-       re-solve +         │   • A3: feature-ROUTER → approach selection    │     level count
+-       trajectory bank    │   • A6: winners wired into SUBMITTED_AGENT_CONFIG│   (B1 honest metric,
+-                          └───────────────┬──────────────────────────────┘     33 → target >33)
+-                                          │
+-        ┌─────────────────────────────────┼─────────────────────────────────┐
+-        ▼                                 ▼                                   ▼
+-  arc_solve_registry.yaml          arc_solver_kit.py                  arc_solve_learning.py
+-   (per-game mechanics +            (reusable primitives +             (recommend_approach +
+-    reproduce() gate;               reproduce gate; A5 persists        A3 EXTENDS with the
+-    A2 grows 53→54+)                the winning primitive)             early-play mechanic router)
+-        ▲                                 ▲                                   ▲
+-        │      A2 self-play loop (arc_loop_solve --auto): solve → reproduce → │
+-        └──────  train+checkpoint learned verifier on pos/neg traces  ───────┘
+-                          (the self-improvement engine, every milestone)
++   ARC-AGI-3 live env (25 public + hidden) ── offline arcade (deterministic sim, zero quota)
++                                  │
++        ┌─────────────────────────┼──────────────────────────────────────────┐
++        │  GENERATION (the wall)   │   VERIFICATION (transfers: v3 LOO 0.674)  │
++        │                          │                                          │
++   feature classifier ──► APPROACH DISPATCH ──► candidate pool ──► verifier-routed search
++   (recommend_approach)   (A1: WIRE goal_distance_astar /        (rank within pool;
++                           graph_explore+diversity / LLM into     re-ranking already
++                           variant_runner — the un-tried fix)     proven 0-value)
++                                  │                                          ▲
++                          (A3) goal-distance / structural ENERGY prior ──────┘
++                               biases proposals toward the goal (generation, not expansion)
++                                  │
++        reproduction gate (arc_solver_kit.reproduce) ──► only reproduced levels count
++                                  │
++   A2 self-play loop ──► bank +1 level (54→55+) + train learned verifier checkpoint
++   A4 refresh package (53→54+, operator-resubmit-ready, beat 33) ── A6 wire winners into SUBMITTED_AGENT_CONFIG
+ ```
+ 
+-The verifier stays oracle-DISTINCT where it claims value (`verifier_is_oracle: false`); A1/A3/A4
+-are exploration/generation/routing levers measured by action cost + first-win + live-submittable
+-count, NOT circular execution wins.
+-
+-## 5. Phases & tasks (12 tasks: exp4579–exp4590)
+-
+-| id | phase | track | what | gate |
+-|---|---|---|---|---|
+-| exp4579 | 0 | transition | archive .422 → activate .423; record .422 close-state | YAML parses + pre-test green |
+-| exp4580 | A1 | arc-north-star (HEADLINE) | live-submission gap: refresh package + bank missing trajectories + env-adaptive re-solve | offline-repro-gated live-submittable count **>33** |
+-| exp4581 | A2 | arc-north-star (LEVEL-UP GUARANTEE) | self-play loop `arc_loop_solve --auto`: bank +1 on a not-recently-deepened game + train verifier | `reproducible_total_levels` 53→54+ |
+-| exp4582 | A3 | arc-north-star (FRONTIER) | feature-ROUTER: mechanic-from-early-play → approach (SkillRouter-style) | `generic_transfer`>0.04 w/ CI + action cost + control |
+-| exp4583 | A4 | arc-north-star | diversity-floor held-out transfer validation (+ bank any new win) | first-win count up vs diversity-off + control |
+-| exp4584 | A5 | arc-north-star (SELF-LEARNING) | persist the winning primitive (env-adaptive re-solve / router) + cross-game transfer | primitive persisted + transfer characterized |
+-| exp4585 | A6 | arc-north-star (INTEGRATION) | wire winners into SUBMITTED_AGENT_CONFIG; re-measure; parity green | a real metric rises, parity green |
+-| exp4586 | B1 | infra (reserved) | LIVE-SUBMITTABLE level count as a capstone co-headline metric (vs the mirage) | metric wired + asserting tests |
+-| exp4587 | B2 | infra (reserved) | METHODOLOGY_MISSING / offline-arc-substrate reader guard | not-flagged-on-offline + still-flagged-on-fake-LLM |
+-| exp4588 | C | hardware | per-board continuity (KV260 SSH / GateMate USB / PolarFire SSH) | per-board reachability recorded |
+-| exp4589 | D | sota-ingestion (reserved) | skill-routing / skill-library + env-adaptive replay SOTA → A1/A3 mapping | ≥3 methods w/ real arXiv IDs + flag for .424 |
+-| exp4590 | E | capstone | scorecard: did A1 raise live-submittable >33? A3 raise transfer? A2 grow levels? | all co-headline metrics reported |
++Co-headline metrics (capstone E, formalized by B1): `reproducible_total_levels` (capability,
++54) · live-submittable count (honest leaderboard score, 53; baseline 33) · `generic_transfer`
++(seen→hidden, 0.04) · action efficiency · **`winner_generated_rate` (the generation-vs-ranking
++gap, NEW in B1).**
++
++## 5. Phases & tasks (12 tasks)
++
++- **Phase 0 — transition (exp4591):** archive `.423 → activate `.424; record the true `.423
++  close-state (A1 closed gap to 53; A2 ar25 L2 → 54; A3 router null `winner_generated=1/25`;
++  generation-not-ranking quadruply-confirmed).
++- **Phase A — ARC north star (the majority):**
++  - **A1 (HEADLINE, exp4592):** GENERATION COMPLETENESS — wire the toolkit into the variant
++    `variant_runner`; measure `winner_generated_rate` + `generic_transfer` + actions.
++  - **A2 (LEVEL-UP GUARANTEE + self-play, exp4593):** standing loop, bank +1 level (54→55+),
++    rotate target (prefer sk48 L1→L2 graph family; skip ka59 / cd82-L3 / sp80-L3 / su15-L3
++    dead-ends), train+checkpoint the learned verifier.
++  - **A3 (DEEP MOAT, exp4594):** goal-distance / structural-progress ENERGY as a GENERATION
++    prior for the wired-but-failing classes; NOT a learned-value EXPANSION priority.
++  - **A4 (SCORE — keep package fresh, exp4595):** fold A2's new bank into the refreshed
++    package, keep `ready_for_operator_submit` (beat 33), extend env-adaptive recovery.
++  - **A5 (SELF-LEARNING persist + transfer, exp4596):** persist `.424's winning primitive
++    (A1 dispatcher OR A3 goal-energy prior) into `arc_solver_kit` + registry; measure transfer.
++  - **A6 (INTEGRATION + headline metric, exp4597):** wire winners into `SUBMITTED_AGENT_CONFIG`
++    + the refreshed package; re-measure `winner_generated_rate` + `generic_transfer` +
++    live-submittable count; keep `test_arc_submitted_agent_parity.py` green.
++- **Phase B — reserved infra:**
++  - **B1 (exp4598):** formalize `winner_generated_rate` (generation-vs-ranking gap) as a
++    capstone co-headline metric. Asserting tests.
++  - **B2 (exp4599):** TAUTOLOGY null-delta false-flag guard in `adversarial_verify.py` — an
++    artifact declaring an explicit null-delta (== 0) WITH a `null_delta_methodology_note` +
++    a passing positive control is downgraded from CRITICAL TAUTOLOGY to annotated-WARN (so
++    the capstone reads honest nulls instead of excluding them); keep TAUTOLOGY CRITICAL for
++    genuinely-distinct-metric bit-identity. Asserting tests.
++- **Phase C — hardware continuity (exp4600):** per-board reachability audit (KV260 SSH,
++  GateMate USB, PolarFire SSH).
++- **Phase D — SOTA-ingestion (exp4601):** ingest candidate-GENERATION / world-model-induction
++  / exploration SOTA (Code World Models 2510.04542; Adaptive World Models in Novel Games
++  2507.12821; One Life to Learn 2510.12088; predictive-WM exploration 2502.13200; ScreenExplorer
++  2505.19095; ARC-AGI-3 report 2603.24621) mapped onto A1/A3; flag the strongest for `.425.
++- **Phase E — capstone (exp4602):** the scorecard — did A1 wiring raise `winner_generated_rate`
++  + `generic_transfer` above 0.04 / lower actions? Did A3 goal-energy help the wired-but-failing
++  classes? Did A2 grow `reproducible_total_levels` (54→55+)? Report all co-headline metrics +
++  `winner_generated_rate` (B1). `verifier_is_oracle:false` on every value claim.
+ 
+ ## 6. Dependency graph
+ 
+ ```
+-exp4579 (phase0)
+-   └─▶ exp4580 (A1 submission gap) ─┐
+-   └─▶ exp4581 (A2 self-play bank)  ├─▶ exp4584 (A5 persist winner)
+-   └─▶ exp4582 (A3 feature-router)  ├─▶ exp4585 (A6 integration) ─▶ exp4590 (E capstone)
+-   └─▶ exp4583 (A4 diversity xfer) ─┘                                    ▲
+-   └─▶ exp4586 (B1 submittable metric) ───────────────────────────────┤
+-   └─▶ exp4587 (B2 substrate guard) ───────────────────────────────────┤
+-   └─▶ exp4588 (C hardware) ────────────────────────────────────────────┤
+-   └─▶ exp4589 (D SOTA ingestion) ──────────────────────────────────────┘
++exp4591 (P0 transition)
++   ├─► exp4592 (A1 generation completeness — HEADLINE)
++   ├─► exp4593 (A2 level-up + self-play — independent, guarantees a bank)
++   ├─► exp4594 (A3 goal-energy generation prior — independent of A1)
++   ├─► exp4598 (B1 winner_generated_rate metric — independent infra)
++   ├─► exp4599 (B2 TAUTOLOGY null-delta guard — independent infra)
++   ├─► exp4600 (C hardware — independent)
++   └─► exp4601 (D SOTA-ingestion — independent)
++exp4592/4593/4594 ──► exp4595 (A4 refresh package; folds A2 bank)
++exp4592/4593/4594/4595 ──► exp4596 (A5 persist the winning primitive + transfer)
++exp4592..4596 ──► exp4597 (A6 integration: wire winners into SUBMITTED_AGENT_CONFIG)
++ALL ──► exp4602 (E capstone scorecard)
+ ```
+ 
+-A5/A6/E read A1–A4 artifacts; B1 feeds E's co-headline reporting. All ARC tasks are
+-INDEPENDENT of each other's success (the level-up guarantee A2 holds even if the headlines null).
+-
+ ## 7. Hardware requirements
+ 
+-- **A1–A6, B1, B2, D, E:** CPU / iGPU only — offline ARC arcade (`environment_files`, zero
+-  quota), cached corpora, learned-verifier checkpoints. No 3090s, no live LLM at submit-time
+-  (Mode-1 replay / env-adaptive re-solve). If A6's integrated run invokes the LLM proposer it
+-  declares `live_llm_inference` + the Qwen3.5-9B-MTP precondition (the frozen sprint generator,
+-  iGPU, NEVER the 3090s — [[project_arc_live_generator]]).
+-- **C (hardware continuity):** KV260 via SSH ONLY (never host SD-card), GateMate USB detect,
+-  PolarFire SSH — per-board reachability audit, no new bitstream build.
+-- **Live submission:** OPERATOR-ONLY (external publication). The sprint tasks PREPARE + offline-
+-  validate and emit `ready_for_operator_submit`; they never close a scorecard.
+-
+-## 8. Disciplines honored
+-
+-- **ARC-AGI-3 Submission Sprint Forcing Function** (majority ARC, monotonic `reproducible_total_levels`,
+-  codex experiments, Opus planner/retro) · **ARC Level-Up Attempt Guarantee** (A2 dedicated bank;
+-  A4 possible second) · **ARC-AGI-3 Incremental-Progress Scoping** (+1..+n on ONE game, never "full
+-  solve") · **ARC Solve Reproducibility + Solver-Reuse Discipline** (every solve `offline_reproduced`-
+-  gated; A5 persists into `arc_solver_kit`/registry) · **Live Hidden-Game Discovery Agent framing**
+-  (A1 moves from frozen-replay toward env-adaptive discovery) · **Circularity/Oracle-Distinctness**
+-  (`verifier_is_oracle: false` on all value claims) · **Failed-Experiment Rerun Discipline**
+-  (A3/A4 carry `prior_failures` with all four sub-fields; legit continuations carry `operator_override`)
+-  · **Pre-Launch Preconditions** (every compute-bound task has a PRECONDITIONS step) · **Principle-
+-  Annotated Artifact Fields** · **Verdict Terminal-Prefix** · **Adversarial Artifact Verification +
+-  FALSE_NEGATIVE_RISK guards** (working positive controls after the `.422 A2 broken-control trap) ·
+-  **Reserved infra (2) + hardware (1) + SOTA-ingestion (1)** · **SOTA-Ingestion Cycle** (reliable
+-  channel, no `/deep-research` in-loop).
++- **A1–A6, B1–B2:** offline arcade (deterministic sim) + the learned verifier (CPU forward
++  pass) — `verifier_ensemble_against_cached_candidates`, zero LLM/GPU, zero quota. If A3's
++  generation prior optionally invokes the LLM proposer, it MUST use **Qwen3.5-9B-MTP on the
++  iGPU** (the frozen live-submission generator, [[project_arc_live_generator]]), NEVER the 3090s.
++- **C:** SSH/USB board reachability only (KV260 `ssh kria`, GateMate `openFPGALoader --detect`,
++  PolarFire `ssh polarfire`). No bitstream build this milestone unless a board is mid-bringup.
++- **D:** network for the reliable arXiv / Semantic-Scholar sweep (no `/deep-research`).
++
++## 8. Honest accounting / discipline
++
++- `verifier_is_oracle: false` on every value claim (A1/A3/A4/A5/A6) — these are generation +
++  packaging levers, oracle-distinct from the executable win-check (no circular moat claim).
++- Every newly-solved variant/level must **offline-reproduce** (`arc_solver_kit.reproduce`) to
++  count — only reproduced levels touch `reproducible_total_levels` or the live-submittable count.
++- Every transfer/efficiency null carries an explicit delta + `null_delta_methodology_note` + a
++  WORKING positive control (the `.423 A3 broken-control / false-negative-risk-open trap must NOT
++  recur — B2 makes the honest-null carve-out mechanical so the capstone reads it).
++- Submission is **operator-only** (External Publication); `.424 PREPARES + offline-validates the
++  resubmit package and emits `ready_for_operator_submit`. It never submits.
++- The capstone (E) skips `flagged_adversarial` artifacts EXCEPT the annotated null-delta
++  carve-out; honors the `.423 B2 offline-arc-METHODOLOGY guard, the `.422 B2 learned-CNN DURATION
++  guard, and the positive-control-failed guard.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7afa65c2cb..c86eb05b0f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-06-22T11:41:56Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-06-22T12:32:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e214a049d5..e26651ee64 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9065,3 +9065,4 @@ c |
+ | 2026-06-22 11:02 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.52s |
+ | 2026-06-22 11:16 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 103 passed, 1 warning in 5.92s |
+ | 2026-06-22 11:39 UTC | PHASE E (CAPSTONE .423) -- the scorecard: did clos | OK | 87 passed, 1 warning in 7.83s |
++| 2026-06-22 12:30 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a9acc4f71d..d90f68d854 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 25, "phase": "iteration_start", "started_at": "2026-06-22T11:41:56Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 26, "phase": "iteration_start", "started_at": "2026-06-22T12:32:27Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 9afab259d9..e1b90e4f77 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,66 +4,69 @@
+ # docs_audit_report — 2026-06-22
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero nails the one-line value prop and shows a clean `pip install carnot-ebm`, so the first five seconds land — but the moment I scroll I hit a wall of unexplained benchmark acronyms (SVAMP, FoVer, CRANE, VeriCoT, CCTU, HalluGuard, PRM-BiasBench), several suspiciously perfect scores, a blog row where four of seven posts are the project confessing it caught *itself* faking results, and a license that says MIT-0 at the top and Apache 2.0 at the bottom. A skeptical stranger leans toward closing the tab, or at least toward not trusting the evidence.
++The hero one-liner and the `47 + 28` example are genuinely clear, so the first three seconds land well — but then the stats bar shows "382 Completed milestones" and a broken-looking card that says my headline number was "Repinned from v2 0.9857," which plants doubt before I've scrolled once. If I keep going I hit a 12-card wall of acronym soup (FoVer, SVAMP, PREM, CCTU, HalluGuard v3) with several suspiciously perfect numbers (TP 1.0, 60/60) and a footer that says Apache 2.0 while the hero badge says MIT-0. A careful stranger closes the tab unsure what the license even is.
+ 
+ ## TOP 3 PROBLEMS
+-1. **License contradicts itself** — hero badge + `<meta>` say "MIT-0", footer says "Apache 2.0 License". A stranger checking the single most basic fact about an open-source project finds two answers.
+-2. **The blog row sabotages the Evidence section above it** — "Caught Cheating: 95 Microseconds on a 30B Model", "Two Retractions and a Rescue", "Regex in an NTK Costume", "Why We Report Two AUROCs Now" — 4 of 7 posts advertise the project fabricating/retracting its own results, one scroll below "Every number below is backed by a checked-in experiment artifact."
+-3. **Hero headline numbers are vanity + jargon** — "3,932 Experiment runs / 382 Completed milestones / 30,658 Automated tests / 0.9131 AUROC (FoVer math step-errors, 5-seed)". Three are internal process-metrics that tell a stranger nothing about whether the tool works; the fourth is wrapped in jargon. The page never delivers one clean "it works, here's the proof" number.
++1. **License contradicts itself** — hero badge + `<meta>` say "MIT-0"; footer says "Apache 2.0 License." This is the one fact an OSS adopter checks first, and the page disagrees with itself.
++2. **The "Recent progress" card is wedged into the stats bar and undermines its own headline** — "Repinned from v2 0.9857 after pre-submission adversarial audit" shows three different AUROCs (0.9131 / 0.8947 / 0.9857) in one paragraph and reads like an internal corrigendum, in the first screenful.
++3. **The Results section is a 12-card jargon wall with too-perfect numbers** — "TP rate 0.5 → 1.0", "catches 60/60", "0.90 AUC vs 0.125 baseline" (below-random), plus progress bars whose widths encode nothing. A stranger either skims none of it or distrusts the perfect rows.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- Honest verdict: **per-card word counts are NOT the problem.** Largest bento body (~85 words) is under the 120 cap; the hero "Recent progress" r-card (~55 words) and blog cards (~40–50) are under the 60 cap. Do not "fix" by trimming words — the problem is jargon and structure.
+-- Evidence `results-grid` — **12 cards** — under the 20-card cap, but every card is acronym-dense, so a stranger skims *none* of them. Effective bloat from density, not count.
+-- Overall page length — **8 content sections + ~32 cards total** (2 problem / 4 how / 7 features / 12 evidence / 7 blog) — long scroll; "Features" and "Evidence" substantially restate the same claims (CCTU 4%→12%, typed +4.9 appear in both).
++- Results grid — **12 cards**, each introducing its own acronym — under the 20-card cap, but far too dense to skim in 30s; every card demands a glossary lookup.
++- Page overall — hero + problem + how (4 cards) + features (7 cards) + results (12 cards) + preprint + quickstart + writing (7 cards) — no single section breaks a hard word cap, but the cumulative length means a stranger never reaches the good material (quickstart, reproducibility note).
++- Nav bar — **12 text links** (Get Started, Tutorial, Concepts, API, Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap) plus 2 buttons; heavy for a landing page.
++- No card exceeds the per-card word caps (hero card ≈47 words, bento cards ≤~75, footer ≈10). Bloat here is by *count and density*, not per-card length.
+ 
+ ### Internal jargon
+-- Evidence grid — `SVAMP`, `FoVer baseline`, `CRANE`, `VeriCoT`, `CCTU`, `HalluGuard v3`, `PRM-BiasBench-style`, `KV260 FPGA`, `EstimationVerifier`, `k=5 ensemble`, `+18pp`, `TP rate`, `AUC`, `0.0pp delta`, `(publication gate)` — none defined. A stranger cannot decode a single result tag.
+-- "Test-Time Compute (TTC) & PREM" feature card — "scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance … intrinsic motivation for continuous self-learning" — 100% opaque; reads like a roadmap note, not a shipped capability.
+-- Hero "Recent progress" card — "5-seed dual-condition; architecture-only 0.8947 … **Repinned from v2 0.9857**" — `Repinned`, `v2`, `dual-condition`, `architecture-only` are methodology/version jargon.
+-- Preprint section — "**paper-v6**", "pending **operator-initiated** upload" — `v6` (where are v1–v5?) and `operator` are internal terms.
++- Stats bar — "**382 Completed milestones**", "**3,946 Experiment runs**" — internal dev-process metrics paraded as headline stats; mean nothing to a stranger (and 3,946 experiments to reach 0.91 can read as a negative).
++- "Recent progress" card — "**Repinned from v2 0.9857**", "**5-seed dual-condition**", "**architecture-only 0.8947**" — version/methodology jargon; "FoVer" never explained.
++- Features → "**Test-Time Compute (TTC) & PREM**" card — "scales Test-Time Compute (TTC) based on **Process-Reward Energy Model (PREM) variance** … **intrinsic motivation for continuous self-learning**" — the most jargon-dense, least concrete card on the page.
++- Results tags — "**EstimationVerifier SVAMP**", "**FoVer baseline**", "**VeriCoT … GSM8K … CoT … TP rate**", "**PRM-BiasBench-style … k=5 ensemble**", "**HalluGuard v3 … 0.0pp accuracy delta**", "**CRANE vs rigid grammar**", "**CCTU**" (never expanded), "**KV260 FPGA**", "**(publication gate)**" — a stranger knows none of these dataset/method/internal names.
++- Preprint — "**non-operator environment**", "**operator-initiated upload**" — "operator" is internal project vocabulary for the maintainer.
++- Blog cards — "**Deep Think** Rounds", "**NTK** Costume", raw "**arXiv:2601.18753**" in body.
+ 
+ ### Per-milestone narrative
+-- Mostly clean — no `.NNN archived X, Y, Z` copy-paste narrative survives, which is good. Residual leaks: "**382 Completed milestones**" promotes the internal milestone cadence to a headline stat, and version fragments (`paper-v6`, `HalluGuard v3`, `v2 0.9857`, `k=5`) are commit-log residue.
++- Stats bar — "382 Completed milestones" is milestone-counting status, not a product claim.
++- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" is a corrigendum/retrospective note, not landing-page copy.
++- Features → "Research operations" card — "a planner generates experiment proposals, an inner agent runs each experiment, and an adversarial-verify pass…" describes how the project develops *itself*; it is misfiled under "What you can check / Seven capabilities."
+ 
+ ### Inconsistencies
+-- **License:** "MIT-0" (hero badge, meta description) vs "Apache 2.0 License" (footer).
+-- **AUROC soup:** headline `0.9131` (FoVer math) sits beside `0.91 AUROC` (prompt-injection — a *different* metric, looks identical), plus `0.8947`, `0.9857`, `0.90 AUC`, and a `0.125 FoVer baseline`. "FoVer" is simultaneously the benchmark Carnot *scores 0.9131 on* and a "baseline" *scoring 0.125* — a stranger cannot tell what THE number is.
+-- **Code improvement magnitude:** hero/Code card headline "+3.0 points on pass-rate" vs buried "66% → 84% (+18pp)" and "70% → 85% (+15pp)" on near-identical HumanEval tasks. Is the win 3 points or 18?
+-- **Experiment count:** hero "3,932 Experiment runs" vs blog "639 experiments self-verified" — different scopes, unexplained, reads as contradictory.
+-- **Progress-bar widths are meaningless:** "+3.0 pts"→14.6% bar but "+4.9 pts"→66.7% bar; "0.0pp accuracy delta"→a 95.6%-full GREEN bar (reads as 95.6% success for a literal zero delta); "4%→12%"→a near-empty 12% bar that visually reads as failure. The meter encodes at least four different things.
++- **License:** hero badge "MIT-0 · Open Source" and `<meta description>` "MIT-0" vs footer "© 2026 Ian Blenke · Carnot Project · Apache 2.0 License."
++- **"FoVer" means two opposite things:** headline AUROC "0.9131 … on FoVer" (hero) vs "0.90 AUC (**vs 0.125 FoVer baseline**)" (SVAMP results card). Same name, 0.9131 in one place and 0.125 in another — confusing and looks cherry-picked.
++- **Three AUROCs in one card:** 0.9131 / 0.8947 / 0.9857.
++- **`47 + 28` example drifts:** intro and second card say "= 76"; first problem card says "47 + 28 = **7**". Reads as a typo to a careful reader.
++- **Two ~0.91 AUROCs, different tasks:** hero "0.9131 AUROC (FoVer math)" vs Safety card "0.91 AUROC (prompt-injection)" — easily conflated as one number.
++- **Progress bars encode nothing consistent:** "+3.0 points" → 14.6% width but "+4.9 points" → 66.7% width; other bars show the absolute result (84/85/90/91%), others a flat 100% for non-percentage outcomes. Widths are not comparable.
++- Likely **layout glitch:** an `<div class="r-card">` is nested *inside* `.stats-bar` (a flex row of big numbers), and a stray `</div>` appears to orphan the "TTC & PREM" card outside `.bento-grid`. Both render awkwardly.
+ 
+ ### Missing essentials
+-- **License** — present but self-contradictory (see above), so effectively missing a trustworthy answer.
+-- **Who maintains it** — only "© 2026 Ian Blenke" in the footer; no org, affiliation, or contact. Combined with the prominent "autonomous research loop … running the verifier stack on its own development," a stranger may read this as an AI-run solo project and discount it.
+-- **Why trust the numbers** — actively undermined: the Evidence preamble promises checked-in artifacts, but the blog row tells the stranger the artifact pipeline has produced fabricated results the team had to catch.
++- **License (present but self-contradictory)** — worse than missing; pick one.
++- **Maintainer/trust anchor is thin** — only "Ian Blenke" in the footer copyright; no team, affiliation, or contact for a stranger weighing adoption.
++- **"Why trust the numbers"** is asserted ("checked-in experiment artifact", "live GPU") but undercut by the perfect/odd numbers below it.
+ 
+ ### Fabrication signals
+-- "k=5 ensemble catches **60/60** attacks" — perfect score, tiny sample.
+-- "GSM8K extraction TP rate: 0.5 → **1.0**" — perfect, no n/sample anchor.
+-- Dogfooding card: "**Zero false positives**" — perfect, on a self-reported internal run.
+-- "**99.3%** of wrong code flagged" — near-perfect (has a 164-problem anchor, so weakest of the signals).
+-- "0.90 AUC vs **0.125 FoVer baseline**" — a baseline AUC of 0.125 is *worse than chance* (0.5); citing a sub-random baseline inflates the apparent win and looks mislabeled.
+-- Four-decimal AUROCs (`0.9131`, `0.8947`, `0.9857`) reported from only "5-seed" runs — over-precise for the stated sample.
+-
+-### Structural / markup (bonus — a technical stranger opens devtools)
+-- Hero: the "Recent progress" prose `r-card` is nested *inside* the flex `stats-bar` (aria-label "Project headline numbers"), and there is an **orphan extra `</div>`** (line ~316). A prose card wedged into the numbers row will render awkwardly.
+-- Features: the bento-grid appears to **close before its last card** — "Test-Time Compute (TTC) & PREM" sits after the grid's closing `</div>` (lines ~494–495), so it likely renders full-width and out of the grid rhythm. Same copy-paste nesting sloppiness as the hero.
++- "VeriCoT … GSM8K extraction **TP rate: 0.5 → 1.0**" — perfect 1.0, and 0.5 is exactly coin-flip.
++- "k=5 ensemble **catches 60/60 attacks**" — 100% on a 60-item sample, no CI.
++- "EstimationVerifier SVAMP … **0.90 AUC (vs 0.125 FoVer baseline)**" — 0.125 AUC is *below random* (0.5); a sub-random baseline reads as a strawman.
++- "Two-GPU parallel retrain — **2.0× speedup, identical losses**" — suspiciously exact pairing.
++- Code card — "**99.3% of wrong code flagged**" on 164 problems, yet repair only "+3 points"; the 99.3% is very high relative to the modest end-to-end gain.
++- Blog (Dogfooding card) — "**Zero false positives**."
+ 
+ ## WHAT'S WORKING
+-- The hero hook is genuinely good: "Catch the reasoning errors your LLM states with total confidence" + the `47 + 28 = 76` worked example is concrete and instantly legible to a non-specialist.
+-- Install path is front-and-center and friction-free (`pip install carnot-ebm`), and the 3-line Python snippet shows real, runnable usage — exactly what a conference stranger wants.
++- The hero headline ("Catch the reasoning errors your LLM states with total confidence") and the concrete `47 + 28` walkthrough are jargon-free and instantly understandable — the strongest part of the page.
++- "Extract → Check → Repair" plus the five-line `pip install carnot-ebm` quickstart give a developer exactly the mental model and the on-ramp they want.
++- The provenance/honesty framing ("labeled by provenance", "synthetic pilots only when the card says so", independent reproduction within the CI) is a real credibility asset — when it isn't buried under acronyms.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. **Fix the license contradiction immediately** — pick one (MIT-0 or Apache 2.0) and make the badge, `<meta>`, and footer agree. This is the cheapest, highest-trust-impact edit.
+-2. **Replace the hero stat bar.** Drop "Experiment runs / Completed milestones / Automated tests." Lead with 2–3 outcome numbers a stranger can value, each with a one-word plain-English label (e.g. "catches 99% of wrong code on HumanEval"). Keep one AUROC, defined in plain words.
+-3. **De-jargon the Evidence grid** or cut it to ~5 cards. Every retained card needs a plain-English tag (expand or drop SVAMP/FoVer/CRANE/VeriCoT/CCTU/HalluGuard/PRM-BiasBench/`pp`/`TP rate`/`AUC`/`k=5`).
+-4. **Fix or remove the progress meters.** A bar must encode one consistent quantity; the "0.0pp delta → 95.6% green bar" is actively misleading. Consider plain before→after text instead of decorative bars.
+-5. **Reconsider the blog row's placement/selection.** The transparency is admirable but leading a landing page with four "we caught ourselves cheating/retracting" headlines, directly under "trust our numbers," reads as self-sabotage to a 30-second stranger. Move the blog lower, or curate to 2–3 posts that aren't all about internal fabrication.
+-6. **Soften the perfect scores.** Add sample sizes / CIs to 60/60, TP 1.0, "Zero false positives," and either explain or drop the sub-chance "0.125 FoVer baseline."
+-7. **Reframe "Seven capabilities."** "Research operations," "APIs & portable memory," and "TTC & PREM" are not things a user "checks" — separate verification capabilities from project-infra so the section header stops over-claiming.
+-8. **Fix the two markup nesting bugs** (hero orphan `</div>`, TTC card outside the bento-grid) so the layout doesn't betray sloppiness to a technical visitor.
+-9. **Add a maintainer/affiliation line** (and contact) so the project doesn't read as an anonymous autonomous loop.
++1. **Resolve the license contradiction now** — decide MIT-0 vs Apache 2.0 and make the hero badge, `<meta>`, footer, and repo agree.
++2. **Pull the "Recent progress" card out of the stats bar** (fix the `.r-card`-inside-`.stats-bar` nesting); drop "Repinned from v2 0.9857" and the triple-AUROC; keep one headline number with a single plain-English credibility line.
++3. **Replace the internal dev metrics** ("382 Completed milestones", "3,946 Experiment runs") with stranger-meaningful stats, or relabel them.
++4. **Cut Results from 12 cards to ~5–6 strongest**, rewrite each tag in plain English (expand or remove FoVer/SVAMP/CCTU/PRM-BiasBench/CRANE/HalluGuard v3), and either fix the progress-bar widths to a single consistent scale or remove the bars. Add sample sizes/CIs to — or caveat — the 1.0 / 60/60 / 0.125 rows.
++5. **Rewrite or delete the "TTC & PREM" card** in plain language; "intrinsic motivation for continuous self-learning" says nothing to a stranger.
++6. **Move "Research operations" out of "What you can check"** — it describes how the project builds itself, not a user capability; that drops the count below "seven," so reframe the section title too.
++7. **Fix the small consistency bugs:** the `47 + 28 = 7` vs `= 76` mismatch, and the FoVer-0.9131-vs-0.125 confusion.
++8. **Replace "operator"/"non-operator environment"** in the preprint blurb with "the maintainer"/"an independent machine."
+ 
+-*Advisory only — no edits made to `docs/index.html`; the operator owns this page.*
+\ No newline at end of file
++(Advisory only — no edits made to `docs/index.html`, per Public Documentation Discipline.)
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 1ad62fee5a..89b9b4e3a0 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -1,3 +1,72 @@
++## 2026-06-22 — .424 planning sweep — GENERATION COMPLETENESS: the .423 feature-ROUTER NULLED (winner generated for only 1/25 held-out variants; 15/24 misses because the routed approach `goal_distance_astar` is `variant_wired=False` — a mechanical wiring gap, not modeling); the un-tried fix is to WIRE the toolkit into the held-out generation harness so the selected approach actually RUNS
++
++Added by the .424 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-22). The .423 scorecard
++(capstone exp4590, `success: live_submittable_above_33_feature_router_false_negative_risk_open`) had ONE
++clean win and confirmed the wall a FOURTH time:
++
++- **WIN — A1 closed the live-submission gap (exp4580):** `live_submittable_level_count` 33 → **53**
++  (`count_delta=20`), banked replayable trajectories for all 24 reproduced games, env-adaptive re-solve
++  recovered sc25 (version-drift), `ready_for_operator_submit=True`. The refreshed package
++  (`results/experiment_4580_submission_package_live_gap_close.json`) is ready for the operator to resubmit
++  and beat the standing 33-level gate. **A2 banked ar25 L2 → `reproducible_total_levels` 53 → 54.**
++- **NULL (4th confirmation of generation-not-ranking) — A3 feature-ROUTER (exp4582):** `generic_transfer`
++  flat at **0.04** (== baseline == random-route control → TAUTOLOGY-flagged, false-negative-risk open).
++  The decisive diagnostic: `winner_generated` = **1 of 25** held-out variants (24 NOT generated), and the
++  residual is mechanical — `avatar_navigation:goal_distance_astar:variant_wired=False unsolved=12`,
++  `click_connect:goal_distance_astar:variant_wired=False unsolved=3`, `keyboard_graph:systematic_bfs:
++  variant_wired=True unsolved=7`. **15/24 misses are because the right approach is NOT WIRED into the
++  variant generation harness** — selecting it (the router's job) generates nothing if it never runs.
++- **A4 diversity-floor transfer (exp4583):** no transfer (honest null). The shipped 4/11-public-set
++  diversity floor does not lift first-win on unseen variants.
++
++**Settled, do NOT re-derive or re-build (planner read this before drafting .424):**
++1. **`cross_game_features_v3` ALREADY transfers — LOO-AUROC 0.674** (exp4545 `.418,
++   `success: cross_game_discrimination_loo_auroc_0.674_above_chance`, in-sample 0.871). The structural-
++   feature verifier transfer (GAP-ARCH-FEATURES) is **closed above the 0.6 bar**. Do NOT re-propose
++   "build v3 to beat chance" — it is done. The OPEN question is using that transferring energy to GUIDE
++   GENERATION, not to re-rank.
++2. **Verifier-guided best-first EXPANSION REGRESSED** (.422 A2 exp4569 `transfer_delta=-0.04`; weekend
++   `value_weight>0` 2/11 vs diversity 4/11; reset-replay navigation tax). Do NOT re-run a learned-value
++   EXPANSION priority as a headline.
++3. **Re-ranking / routing a fixed pool adds 0** (.421 A6, .423 A3): the winner is never in the pool.
++
++**The .424 pivot — finally attack GENERATION directly (the un-tried lever):**
++- **WIRE the toolkit into the held-out generation harness** (`measure_generic_transfer_over_variants`'s
++  `variant_runner`): dispatch each held-out variant to its mechanic-class approach
++  (`arc_goal_distance.goal_distance_solve` for avatar/click-connect, `graph_explore_solve_v2`+diversity
++  for graph, the LLM reasoner for the tail) so the selected approach RUNS and GENERATES candidates.
++  Metric: `winner_generated_rate` (1/25 baseline) + `generic_transfer` (0.04) + actions-to-first-levelup.
++- **Generation guidance via an objective goal-distance / structural-progress ENERGY** (the operator's
++  2026-06-20 energy-augmented-ARC spine) for the wired-but-still-failing classes — a GENERATION prior
++  biasing action proposals toward the goal, NOT a learned-value EXPANSION priority (which regressed).
++
++**New / verified references this sweep (WebSearch 2026-06-22) — candidate GENERATION / world-model
++induction / exploration for novel interactive games (the .424 headline track):**
++- **arXiv:2510.04542** — "Code World Models for General Game Playing" (CWM): an agent INDUCES an explicit
++  Python transition/world model for an unseen game and PLANS in it — the strongest match to the ARC-AGI-3
++  generation-on-first-contact problem and to Carnot's E3 executable-world-model slot. Generation prior.
++- **arXiv:2507.12821** — "Assessing Adaptive World Models in Machines with Novel Games" (ICLR 2025): an
++  eval framework for rapid world-model induction on novel games — directly the ARC-AGI-3 first-contact
++  generalization task; corroborates the "induce perception+dynamics+goal at runtime" north-star framing.
++- **arXiv:2510.12088** — "One Life to Learn: Inferring Symbolic World Models for Stochastic Environments
++  from Unguided Exploration": symbolic (not latent) world-model induction from exploration alone — maps
++  onto Carnot's symbolic per-game adapters + the offline self-play loop.
++- **arXiv:2502.13200** — "Learning To Explore With Predictive World Model Via Self-Supervised Learning":
++  self-supervised predictive model drives exploration under sparse reward — the 0.08-wall root cause
++  (exploration-to-first-win) is exactly this; relevant to the click-effect generation prior.
++- **arXiv:2505.19095** — "ScreenExplorer: Training a VLM for Diverse Exploration in Open GUI World":
++  diversity-driven exploration of a GUI action space — corroborates the shipped diversity floor and the
++  generation-broadening direction.
++- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence" (official report;
++  carried + re-verified): the scored metric is action efficiency on FIRST CONTACT over UNSEEN games;
++  frontier models < 1% of human efficiency. The benchmark this whole track serves.
++
++Sources (WebSearch 2026-06-22): arxiv.org/abs/{2510.04542, 2507.12821, 2510.12088, 2502.13200, 2505.19095,
++2603.24621}; kaggle.com/competitions/arc-prize-2026-arc-agi-3; arcprize.org/blog/arc-agi-3-launch. The D
++task (SOTA-ingestion) re-verifies these via the reliable channel + extends the mapping onto A1/A3.
++
++---
++
+ ## 2026-06-21 — .422 planning sweep — ACTION EFFICIENCY: the .421 verifier-router NULLED (re-ranking a fixed pool adds 0 when the winner is never IN the pool); pivot to the leaderboard's #1 lever (a CNN clickability/action-effect predictor) re-aimed at actions-to-first-levelup + verifier-guided candidate EXPANSION
+ 
+ Added by the .422 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The .421 scorecard
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..69d52690ec 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index f2d19df8c5..2ed0d1d5dc 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,14 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.3
++  "duration_s": 0.3,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.3 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json b/results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
+index 25c790592c..0b2aa55d94 100644
+--- a/results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
++++ b/results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
+@@ -28,5 +28,14 @@
+   },
+   "random_seed": 30603,
+   "reproducibility_checksum": "76d524be5b56bcb959e9e56c1b25ac6f188bb4c44bdbebb1b4e44d312b049891",
+-  "duration_s": 0.0
++  "duration_s": 0.0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8972c6f201..2d3bd548e9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:42:20Z",
+-  "finished_at": "2026-06-22T11:42:20Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-22T12:32:52Z",
++  "finished_at": "2026-06-22T12:32:52Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ab0e7a1306..652a3ef143 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:42:20Z",
+-  "finished_at": "2026-06-22T11:42:20Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-22T12:32:52Z",
++  "finished_at": "2026-06-22T12:32:52Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f5126aa2d3..43af538eec 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:42:20Z",
+-  "finished_at": "2026-06-22T11:42:21Z",
++  "started_at": "2026-06-22T12:32:52Z",
++  "finished_at": "2026-06-22T12:32:53Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index b00d104429..64e6bbe860 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -100,5 +100,14 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": []
++  "invariant_violations": [],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

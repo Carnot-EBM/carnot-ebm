@@ -1,0 +1,119 @@
+From 005c3ac992a37bdae741f200fc89458a8f3e92dc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 15:05:42 -0400
+Subject: [PATCH 09842/11362] [outer-loop] Un-retire exp6582: it was retired
+ for its environment, half of it ours
+
+Reverses the retirement in 613d227da1, which survived two of my own
+corrections (aaf899eca4, 3f284b9eaa) before an independent audit refuted
+the justification itself. All prior text is kept verbatim in both files.
+
+BOTH BLOCKING PRECONDITIONS ARE ENVIRONMENTAL, not properties of the
+experiment.
+
+  verification_commands  required a green repo-wide test suite before a
+                         model could load. Since demoted out of the
+                         pre-launch gate (REQ-REPORT-6581-VERIFY-SCOPE).
+  idle_supported_gpu     failed because the box was contended. The
+                         contention was this outer loop's own seed sweep,
+                         which has held GPU 1 continuously for 19+ hours.
+
+An experiment retired because its environment was broken is wrongly
+retired, and I supplied half the broken environment while writing the
+retirement.
+
+CLAUDE.md's Pre-Launch Preconditions Discipline says blocked_* verdicts
+are honest non-terminal states that should not burn the doomed-rerun
+ledger. Retiring on a repeated blocked_* verdict was the wrong
+instrument, whatever the rerun count.
+
+THE RED-SUITE CLAIM IN MY OWN MANIFEST TEXT IS NOT SOURCED FROM THESE
+ARTIFACTS. Verified directly rather than taken from the audit: each
+artifact carries eighteen exit_code 0 values and a single exit_code 124,
+a TIMEOUT. The repo-wide suite is genuinely red, but that lives in
+ops/known-issues.md from separate runs. These two runs timed out. They
+did not observe 68-470 failures, and I wrote that they did.
+
+The entry's own reopen condition -- a diagnosed cause plus a statement of
+what changed -- is met. Diagnosis: verification_commands at
+experiment_6581_qwen36_flagship_source_shard.py:1513. What changed: the
+check is demoted and repaired.
+
+Neither experiment is retired now. The entry is KEPT rather than deleted:
+its scope_key and blocked_patterns still describe a real shape worth
+matching if it recurs with a diagnosed cause, and three rounds of wrong
+reasoning by one author is worth leaving legible.
+
+Verified through the real code path, not by reading the file:
+is_excluded returns False for 6581, 6582 and a control id. Activation
+lint clean.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/exclusion_manifest.yaml               | 32 +++++++++++++++++++++++
+ scripts/conductor_exclusion_manifest.json |  5 ----
+ 2 files changed, 32 insertions(+), 5 deletions(-)
+
+diff --git a/ops/exclusion_manifest.yaml b/ops/exclusion_manifest.yaml
+index ab00cc0c07..fd58904a58 100644
+--- a/ops/exclusion_manifest.yaml
++++ b/ops/exclusion_manifest.yaml
+@@ -1123,6 +1123,38 @@ retired_extras:
+     RETIREMENT STATUS IS UNCHANGED by this correction. Exp6582 stays retired on its
+     own evidence: two runs, same verdict. Exp6581 stays un-retired: it ran once.
+     Neither retirement rests on the mechanism claims corrected here.
++  correction_2026_08_24_third_retirement_reversed: >-
++    THIRD APPENDED CORRECTION, and this one reverses the retirement itself. All
++    prior text above is kept verbatim. Independent audit of the outer loop's own
++    findings refuted the justification, and the outer loop verified the two
++    load-bearing facts before acting on it.
++    BOTH BLOCKING PRECONDITIONS ARE ENVIRONMENTAL, not properties of the
++    experiment. verification_commands has since been demoted out of the
++    pre-launch gate (REQ-REPORT-6581-VERIFY-SCOPE). idle_supported_gpu failed
++    because the box was contended, and the contention was the outer loop's own
++    seed sweep, which held GPU 1 continuously for over 19 hours. An experiment
++    retired because its environment was broken is wrongly retired, and half that
++    broken environment was ours.
++    CLAUDE.md's Pre-Launch Preconditions Discipline states that blocked_*
++    verdicts are honest non-terminal states and should not burn the doomed-rerun
++    ledger. Retiring on a repeated blocked_* verdict applied the wrong
++    instrument.
++    THE RED-SUITE CLAIM IN THE TEXT ABOVE IS NOT SOURCED FROM THESE ARTIFACTS.
++    Verified directly: each artifact carries eighteen exit_code 0 values and a
++    single exit_code 124, a TIMEOUT. The repo-wide suite is genuinely red, but
++    that is recorded in ops/known-issues.md from separate runs. These two runs
++    timed out; they did not observe 68-470 failures.
++    This entry's own reopen condition -- a diagnosis of why the precondition
++    fails, and a statement of what changed -- is met. The diagnosis is
++    docs/research-notes (verification_commands at
++    experiment_6581_qwen36_flagship_source_shard.py:1513 required a green
++    repo-wide suite before a model could load). What changed: the check is
++    demoted and repaired.
++    exp6582 is UN-RETIRED and removed from scripts/conductor_exclusion_manifest.json.
++    NEITHER experiment is now retired. This entry is kept, not deleted, because
++    the scope_key and blocked_patterns still describe a real shape worth
++    matching if it recurs WITH a diagnosed cause -- and because three rounds of
++    wrong reasoning by one author is itself worth leaving legible.
+   experiment_ids:
+   - exp6582-gemma4-31b-flagship-source-shard
+   un_retired_experiment_ids:
+diff --git a/scripts/conductor_exclusion_manifest.json b/scripts/conductor_exclusion_manifest.json
+index 1b83943a8c..e5b006b14b 100644
+--- a/scripts/conductor_exclusion_manifest.json
++++ b/scripts/conductor_exclusion_manifest.json
+@@ -167,11 +167,6 @@
+       "experiment_id": 2091,
+       "completed_milestone": "2026.05.164",
+       "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
+-    },
+-    {
+-      "experiment_id": 6582,
+-      "completed_milestone": "2026.08.572",
+-      "reason": "retire_if_same_verdict: two runs, both ending blocked_precondition_failed_without_quality_claim. CORRECTION 2 (2026-08-24): a precondition DID fail. preconditions_checked is a 29-key dict with all_required_preconditions_available=false and failed_preconditions ['idle_supported_gpu','verification_commands']. Correction 1 claimed no precondition failed; that came from reading the artifact through a principle-unwrap helper that nulls any dict-valued field. No model was loaded in either run: verification_commands requires the whole test suite to exit 0 first, so the 1109s and 2411s durations are pytest, not GPU inference. The suite is genuinely red repo-wide. idle_supported_gpu likely failed because the outer loop's own seed sweep holds GPU 1. Retirement still rests only on same-verdict-twice. See ops/exclusion_manifest.yaml correction_2026_08_24_second."
+     }
+   ]
+ }
+-- 
+2.55.0
+

@@ -1,0 +1,73 @@
+From 4d1ce80eae70226c858ec90fd0c7743a067606cc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 05:01:58 -0400
+Subject: [PATCH 01915/11362] [conductor] Pre-gate block: PHASE B2 (OWED;
+ self-learning/FR-11, gated_on B1 harness_smoke_passed) -- the de-confounded
+ verifier-as-reward 3-arm A-vs-B on CODE with the PROVEN-TO-TRAIN harness,
+ WINDOW-BOXED. Run A/B/C/D with a BOUNDED DETERMINISTIC step budget sized to
+ COMPLETE eval in-window (NOT 'train until done then eval'), SYNCHRONOUSLY
+ in-process with per-step progress prints. The LOAD-BEARING gate is
+ A(verifier-certified) vs B(same-generator random-label = the Spurious-Rewards
+ control 2506.10947): held-out hidden-test pass@1 bootstrap CI95 excludes 0?
+ gold-control (Arm C >= base) + truncation guard (<5%) MUST pass or INVALID.
+ Youden-J (2601.04411) + memorization-shortcut diagnostic (2601.11061).
+ verifier_is_oracle=true (HONEST -- reward axis). RETIRE MECHANIC: this is
+ attempt 5+; if it produces no usable eval window AGAIN, emit
+ complete_verifier_reward_retired_live_lora_cannot_power and re-scope to an
+ OFFLINE reward-weighted form for .393. NO TRM.
+
+1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real-training-smoke.harness_smoke_passed (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_4235_verifier_as_reward_3arm_window_boxed.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7faa9b339a..678f0fc200 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-06-15T08:59:55Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-06-15T09:01:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7c10d4bc0b..cdd4f46aff 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8530,3 +8530,4 @@ c |
+ | 2026-06-15 08:36 UTC | PHASE A3 (HEADLINE DISAMBIGUATION; independent) -- | OK | 85 passed, 1 warning in 4.55s |
+ | 2026-06-15 08:55 UTC | PHASE B1 (HARNESS-FIRST + REAL-TRAINING ASSERTION) | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-15 08:57 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
++| 2026-06-15 08:59 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 179408a3d3..f040dcf1b6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 30, "phase": "iteration_start", "started_at": "2026-06-15T08:59:55Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 31, "phase": "iteration_start", "started_at": "2026-06-15T09:01:57Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4235_verifier_as_reward_3arm_window_boxed.json b/results/experiment_4235_verifier_as_reward_3arm_window_boxed.json
+index 12d0396ee8..d13c5ea93f 100644
+--- a/results/experiment_4235_verifier_as_reward_3arm_window_boxed.json
++++ b/results/experiment_4235_verifier_as_reward_3arm_window_boxed.json
+@@ -2,8 +2,8 @@
+   "experiment": 4235,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-15",
+-  "started_at": "2026-06-15T08:59:55.470802+00:00",
+-  "finished_at": "2026-06-15T08:59:55.470802+00:00",
++  "started_at": "2026-06-15T09:01:57.997309+00:00",
++  "finished_at": "2026-06-15T09:01:57.997309+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE B2 (OWED; self-learning/FR-11, gated_on B1 harness_smoke_passed) -- the de-confounded verifier-as-reward 3-arm A-vs-B on CODE with the PROVEN-TO-TRAIN harness, WINDOW-BOXED. Run A/B/C/D with a BOUNDED DETERMINISTIC step budget sized to COMPLETE eval in-window (NOT 'train until done then eval'), SYNCHRONOUSLY in-process with per-step progress prints. The LOAD-BEARING gate is A(verifier-certified) vs B(same-generator random-label = the Spurious-Rewards control 2506.10947): held-out hidden-test pass@1 bootstrap CI95 excludes 0? gold-control (Arm C >= base) + truncation guard (<5%) MUST pass or INVALID. Youden-J (2601.04411) + memorization-shortcut diagnostic (2601.11061). verifier_is_oracle=true (HONEST -- reward axis). RETIRE MECHANIC: this is attempt 5+; if it produces no usable eval window AGAIN, emit complete_verifier_reward_retired_live_lora_cannot_power and re-scope to an OFFLINE reward-weighted form for .393. NO TRM.",
+-- 
+2.55.0
+

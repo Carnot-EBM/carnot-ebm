@@ -1,0 +1,74 @@
+From 2f78aeaa347de384eb6b4395d22d3602ce801d9e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 01:07:12 -0400
+Subject: [PATCH 09982/11362] [conductor] Pre-gate block: Readiness-aware GPU
+ lease and task phase receipts
+
+1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_contract_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                          | 2 +-
+ ops/conductor-heartbeat.json                          | 2 +-
+ ops/conductor-log.md                                  | 1 +
+ ops/conductor-state.json                              | 2 +-
+ results/experiment_6617_gpu_lease_phase_receipts.json | 4 ++--
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index bf66c93a98..78facad54a 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T05:05:09Z"
++ "last_scan_utc": "2026-08-26T05:07:12Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 46c5ed7763..73ed24d90c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-26T05:05:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-26T05:07:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5f7b65ecc6..8e47d155f6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16510,3 +16510,4 @@ code |
+ | 2026-08-26 04:41 UTC | Milestone 2026.08.577 activated | OK | 3 tasks queued |
+ | 2026-08-26 05:01 UTC | V577 phase-receipt and retirement contract | OK | 93 passed, 1 warning in 8.78s |
+ | 2026-08-26 05:03 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
++| 2026-08-26 05:05 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0625b03198..b2e34b4dba 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-26T05:05:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-26T05:07:11Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6617_gpu_lease_phase_receipts.json b/results/experiment_6617_gpu_lease_phase_receipts.json
+index 0c35558498..557073030e 100644
+--- a/results/experiment_6617_gpu_lease_phase_receipts.json
++++ b/results/experiment_6617_gpu_lease_phase_receipts.json
+@@ -2,8 +2,8 @@
+   "experiment": 6617,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-26",
+-  "started_at": "2026-08-26T05:05:09.182086+00:00",
+-  "finished_at": "2026-08-26T05:05:09.182086+00:00",
++  "started_at": "2026-08-26T05:07:12.354177+00:00",
++  "finished_at": "2026-08-26T05:07:12.354177+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Readiness-aware GPU lease and task phase receipts",
+-- 
+2.55.0
+

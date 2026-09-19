@@ -1,0 +1,5560 @@
+From d13753f1ec48dbce5f42bac51bbd74eb91484494 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 08:39:12 -0400
+Subject: [PATCH 11035/11362] [conductor] Certified PWA-KAN residual energy
+
+Automated research step by research conductor.
+Task ID: exp6977-certified-pwa-kan-energy
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/kan-verifier/spec.md    |  150 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...xperiment_6977_certified_pwa_kan_energy.py | 1188 ++++++
+ ...eriment_6977_certified_pwa_kan_energy.json | 3730 +++++++++++++++++
+ ...xperiment_6977_certified_pwa_kan_energy.py |   22 +
+ ...xperiment_6977_certified_pwa_kan_energy.py |  401 ++
+ 6 files changed, 5492 insertions(+), 1 deletion(-)
+ create mode 100644 openspec/capabilities/kan-verifier/spec.md
+ create mode 100644 python/carnot/experiment_6977_certified_pwa_kan_energy.py
+ create mode 100644 results/experiment_6977_certified_pwa_kan_energy.json
+ create mode 100644 scripts/experiments/experiment_6977_certified_pwa_kan_energy.py
+ create mode 100644 tests/python/test_experiment_6977_certified_pwa_kan_energy.py
+
+diff --git a/openspec/capabilities/kan-verifier/spec.md b/openspec/capabilities/kan-verifier/spec.md
+new file mode 100644
+index 0000000000..bf7ad9c353
+--- /dev/null
++++ b/openspec/capabilities/kan-verifier/spec.md
+@@ -0,0 +1,150 @@
++# Certified PWA-KAN Verifier Capability
++
++**Capability:** kan-verifier  
++**Version:** 0.1.0  
++**Status:** Draft  
++**Traces to:** Exp6977
++
++## Requirements
++
++### REQ-KAN-6977: Calibration-Only Certified PWA-KAN Residual Energy
++
++Carnot SHALL provide
++`python/carnot/experiment_6977_certified_pwa_kan_energy.py`. The command
++`.venv/bin/python scripts/experiments/experiment_6977_certified_pwa_kan_energy.py --date 20260904`
++SHALL write `results/experiment_6977_certified_pwa_kan_energy.json`.
++
++The experiment SHALL check all preconditions before training. It SHALL require
++`candidate_certification_complete_score=1`, nonconstant calibration features,
++nonconstant calibration labels, replayable calibration and held-out split
++hashes, a supported compact KAN implementation, and an executed mixed-integer
++linear programming (MILP) solver smoke test. If any check fails, the experiment
++SHALL write `blocked_certified_pwa_kan_energy`. The blocked artifact SHALL name
++each failed check and its expected and observed values. It SHALL not train a
++model or read held-out labels after a failed calibration gate.
++
++Before training, the experiment SHALL freeze numeric features from parser
++state, structural schema counts, normalized declared-domain and objective
++diagnostics, bounded output length, schedule ID, formulation family, and model
++family. The feature vector SHALL exclude exact witnesses, exact outcomes,
++held-out labels, pair IDs, raw hashes, and names or values that directly encode
++correctness. Split and opaque candidate metadata SHALL remain outside the
++feature vector.
++
++When all preconditions pass, the experiment SHALL train a seeded compact KAN
++residual on calibration rows only. It SHALL compare a constant baseline and a
++size-matched multilayer perceptron (MLP). Every optimizer epoch SHALL have a
++terminal training row. The experiment SHALL save and hash one KAN checkpoint.
++No training choice SHALL use a held-out metric.
++
++The experiment SHALL construct sound lower and upper piecewise-affine (PWA)
++bounds for each nonlinear KAN unit over finite input bounds. A unit-level
++dynamic program SHALL enumerate feasible piece counts. A network-level
++knapsack SHALL allocate one fixed global piece budget. The artifact SHALL keep
++local unit error and propagated network error in separate rows.
++
++The experiment SHALL use an actual MILP backend. It SHALL prove finite output
++bounds, only preregistered monotonicity claims, stability under changes to
++irrelevant fields, and preservation of hard infeasibility outside the learned
++residual. An optimal solver result SHALL include integer variables, constraints,
++an objective, and a witness or bound that is not copied from the claimed
++property. Timeout, unknown, infeasible proof models, solver errors, and fallback
++enumeration SHALL not produce a certificate. An infeasible candidate SHALL
++remain infeasible for every residual value.
++
++The held-out split SHALL be evaluated once after fitting and certification.
++The KAN, PWA abstraction, constant baseline, and size-matched MLP rows SHALL
++report AUROC, calibration error, pairwise ranking accuracy, latency, parameter
++count, and deterministic uncertainty intervals. PWA rows SHALL also report
++abstraction disagreement. The experiment SHALL not tune on these results.
++
++`certified_pwa_energy_ready_score` SHALL be a bare integer. It SHALL equal one
++only when the real MILP path executed, every claimed bound and invariant is
++proved, every held-out row is terminal, and measured abstraction disagreement
++is within the certified envelope. A positive held-out accuracy result SHALL not
++be required for readiness. `pwa_energy_heldout_positive_score` SHALL be a
++separate bare integer.
++
++The artifact SHALL contain `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
++`feature_schema`, `feature_rows`, `split_isolation_rows`, `training_rows`,
++`checkpoint_hash`, `model_config`, `model_parameter_count`, `pwa_unit_rows`,
++`piece_budget_rows`, `local_error_bound_rows`,
++`propagated_error_bound_rows`, `milp_query_rows`, `milp_solver_receipts`,
++`invariant_certificate_rows`, `rows`, `per_candidate_rows`,
++`heldout_comparison_rows`, `abstraction_disagreement_rows`, `latency_rows`,
++`certified_pwa_energy_ready_score`, `pwa_energy_heldout_positive_score`,
++`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
++`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
++scientific principle for each required field and the readiness score.
++
++`inference_substrate` SHALL equal
++`calibration_only_kan_training_plus_pwa_milp_certification`.
++`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
++`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
++`partial`. `honest_verdict` SHALL use a terminal prefix consistent with the
++class. A blocked verdict SHALL start with `blocked_`.
++
++#### SCENARIO-KAN-6977-PRECONDITIONS: Constant Calibration Labels Block Training
++
++Given a complete exact-candidate artifact whose calibration labels have one
++unique value,
++When Exp6977 checks its inputs,
++Then the artifact records the failed label-variation gate and no training row
++or checkpoint hash.
++
++#### SCENARIO-KAN-6977-FEATURES: Features Exclude Exact And Identity Fields
++
++Given candidate metadata, raw generated text, and exact certification rows,
++When Exp6977 freezes features,
++Then feature vectors contain only the registered schema and contain no exact
++witness, label, pair ID, raw hash, correctness, or exact-outcome field.
++
++#### SCENARIO-KAN-6977-TRAINING: Seeded Calibration Training Is Deterministic
++
++Given the same nonconstant calibration tensor, labels, seed, and model config,
++When two compact KAN fits run,
++Then all epoch losses, model parameters, predictions, and checkpoint payload
++hashes are equal. Held-out rows do not enter either fit.
++
++#### SCENARIO-KAN-6977-PWA: Local Envelopes Bound Every Unit
++
++Given a bounded nonlinear KAN unit and finite interval,
++When Exp6977 builds lower and upper PWA abstractions,
++Then dense independent probe values lie between both envelopes and the local
++error row bounds the largest observed gap.
++
++#### SCENARIO-KAN-6977-BUDGET: Dynamic Programming And Knapsack Respect Budget
++
++Given unit error tables and one global piece budget,
++When allocation runs,
++Then each unit receives its minimum piece count, the total does not exceed the
++budget, and the selected allocation minimizes propagated error with stable
++tie-breaking.
++
++#### SCENARIO-KAN-6977-MILP: A Non-Tautological Solver Path Executes
++
++Given finite feature bounds and an encoded PWA network,
++When the MILP backend maximizes and minimizes network output,
++Then it reports an optimal mixed-integer solve, nonzero variable and constraint
++counts, objective values, solver witnesses, and independently checked bounds.
++
++#### SCENARIO-KAN-6977-INFEASIBILITY: Residuals Cannot Override Hard Failure
++
++Given a candidate rejected by parsing, schema, or exact feasibility,
++When any finite KAN or PWA residual score is attached,
++Then the combined decision remains infeasible and the invariant certificate is
++true.
++
++#### SCENARIO-KAN-6977-BARE: Readiness Scores Remain Bare Integers
++
++Given any blocked or completed artifact,
++When schema validation runs,
++Then both readiness fields are bare zero-or-one integers and not wrapped
++objects or booleans.
++
++## Implementation Status
++
++| Requirement | Implementation | Verification |
++|---|---|---|
++| REQ-KAN-6977 and SCENARIO-KAN-6977-* | Implemented (`python/carnot/experiment_6977_certified_pwa_kan_energy.py`; `scripts/experiments/experiment_6977_certified_pwa_kan_energy.py`) | Implemented (`tests/python/test_experiment_6977_certified_pwa_kan_energy.py`; feature isolation, deterministic training, PWA soundness, piece allocation, real MILP execution, infeasibility preservation, blocked preflight, bare fields, and 100% new-module statement coverage) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f67990b29f..6f49f9516f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5308,
++  "experiments_checked": 5309,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6977_certified_pwa_kan_energy.py b/python/carnot/experiment_6977_certified_pwa_kan_energy.py
+new file mode 100644
+index 0000000000..f2f50e8399
+--- /dev/null
++++ b/python/carnot/experiment_6977_certified_pwa_kan_energy.py
+@@ -0,0 +1,1188 @@
++"""Train and certify a calibration-only PWA-KAN residual energy.
++
++The exact checker remains outside this learned score. The learned model can
++rank candidates that passed hard checks, but it cannot repair a parse, schema,
++or exact-equivalence failure. Exp6977 currently fails its calibration-label
++variation precondition, so the canonical run writes a complete blocked record.
++
++Spec refs: REQ-KAN-6977 and SCENARIO-KAN-6977-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import importlib.util
++import json
++import math
++import os
++from pathlib import Path
++import tempfile
++import time
++from typing import Any
++
++import numpy as np
++from scipy.optimize import Bounds, LinearConstraint, milp
++import torch
++from torch import nn
++from torch.nn import functional as torch_functional
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 6977
++RUN_DATE = "20260904"
++RANDOM_SEED = 6_977_202_609_04
++SCHEMA = "carnot.exp6977.certified_pwa_kan_energy.v1"
++INFERENCE_SUBSTRATE = "calibration_only_kan_training_plus_pwa_milp_certification"
++RESULT_PATH = Path("results/experiment_6977_certified_pwa_kan_energy.json")
++CANDIDATE_PATH = Path("results/experiment_6976_exact_candidate_certification.json")
++BANK_PATH = Path("results/experiment_6975_delayed_constraint_candidate_bank.json")
++PIECE_BUDGET_PER_UNIT = 3
++MIN_PIECES_PER_UNIT = 2
++DEFAULT_EPOCHS = 80
++
++SCHEDULES = ("direct", "trigger_switched", "draft_conditioned")
++FORMULATION_FAMILIES = (
++    "bounded_integer_linear",
++    "boolean_cardinality",
++    "bounded_piecewise_linear",
++)
++MODEL_FAMILIES = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++)
++
++FEATURE_NAMES = (
++    "parse_success",
++    "json_object",
++    "schema_key_fraction",
++    "domain_map_count_norm",
++    "domain_field_fraction",
++    "domain_names_nonempty_fraction",
++    "domain_scale_finite_fraction",
++    "domain_offset_finite_fraction",
++    "objective_present",
++    "objective_direction_same",
++    "objective_direction_reversed",
++    "objective_scale_finite",
++    "objective_offset_finite",
++    "raw_length_norm",
++    *(f"schedule_{value}" for value in SCHEDULES),
++    *(f"formulation_{value}" for value in FORMULATION_FAMILIES),
++    *(f"model_{index}" for index in range(len(MODEL_FAMILIES))),
++)
++FORBIDDEN_FEATURE_TOKENS = (
++    "pair_id",
++    "attempt_key",
++    "raw_sha256",
++    "expected_label",
++    "exact_semantic_success",
++    "certified_relation",
++    "witness",
++    "counterexample",
++    "correctness",
++    "authorities_agree",
++    "domain_correspondence_outcome",
++    "objective_direction_outcome",
++    "objective_order_outcome",
++    "satisfiability_outcome",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "random_seed",
++    "feature_schema",
++    "feature_rows",
++    "split_isolation_rows",
++    "training_rows",
++    "checkpoint_hash",
++    "model_config",
++    "model_parameter_count",
++    "pwa_unit_rows",
++    "piece_budget_rows",
++    "local_error_bound_rows",
++    "propagated_error_bound_rows",
++    "milp_query_rows",
++    "milp_solver_receipts",
++    "invariant_certificate_rows",
++    "rows",
++    "per_candidate_rows",
++    "heldout_comparison_rows",
++    "abstraction_disagreement_rows",
++    "latency_rows",
++    "certified_pwa_energy_ready_score",
++    "pwa_energy_heldout_positive_score",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "One reason per required field makes the evidence contract reviewable.",
++    "preconditions_checked": "Exact expected and observed values make every blocked run actionable.",
++    "inference_substrate": "The declared compute path prevents a solver run from becoming an LLM claim.",
++    "duration_s": "Measured wall time distinguishes execution from a schema-only result.",
++    "source_artifact_hashes": "Hashes bind the conclusion to frozen candidate and implementation bytes.",
++    "random_seed": "One seed fixes initialization, optimization, allocation ties, and intervals.",
++    "feature_schema": "A closed numeric schema prevents labels and exact outcomes from entering training.",
++    "feature_rows": "Opaque per-candidate vectors expose every learned input without identity leakage.",
++    "split_isolation_rows": "Split hashes prove calibration and held-out candidate identities stay fixed.",
++    "training_rows": "One terminal row per epoch proves calibration-only optimizer work occurred.",
++    "checkpoint_hash": "A parameter hash makes deterministic training and later replay testable.",
++    "model_config": "Architecture and optimizer settings bound the compact residual claim.",
++    "model_parameter_count": "Capacity receipts support comparison with the size-matched MLP.",
++    "pwa_unit_rows": "Per-unit affine pieces expose the abstraction submitted to the solver.",
++    "piece_budget_rows": "Dynamic-program and knapsack rows prove how the fixed budget was allocated.",
++    "local_error_bound_rows": "Local rows keep each nonlinear unit's envelope error explicit.",
++    "propagated_error_bound_rows": "Network rows separate propagated error from local unit bounds.",
++    "milp_query_rows": "Each query states its objective and finite domain before certification.",
++    "milp_solver_receipts": "Backend receipts prove a real mixed-integer solver executed optimally.",
++    "invariant_certificate_rows": "Explicit proofs keep hard infeasibility and structural invariants outside learning.",
++    "rows": "Terminal denominator rows prevent aggregate metrics from hiding missing cases.",
++    "per_candidate_rows": "Candidate-level predictions allow every reported metric to be rebuilt.",
++    "heldout_comparison_rows": "One-shot held-out rows compare KAN, PWA, constant, and MLP fairly.",
++    "abstraction_disagreement_rows": "Measured KAN-PWA gaps must stay within the certified envelope.",
++    "latency_rows": "Measured CPU latency states the cost of each scoring path.",
++    "certified_pwa_energy_ready_score": "One requires executed MILP proofs, sound envelopes, and terminal held-out rows.",
++    "pwa_energy_heldout_positive_score": "A separate score prevents empirical accuracy from defining execution readiness.",
++    "reproducibility_checksum": "A timing-free digest detects scientific payload drift.",
++    "gate_check_summary": "Failed checks retain names and both sides of every required comparison.",
++    "verifier_is_oracle": "False keeps the learned residual distinct from its exact external assessor.",
++    "verdict_class": "A closed class prevents prose from disguising a blocked or null run.",
++    "honest_verdict": "A class-consistent prefix gives automation an unambiguous terminal state.",
++}
++
++
++def canonical_json(value: Any) -> bytes:
++    """Return stable UTF-8 JSON bytes for hashes and isolation audits."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return an explicit SHA-256 digest for one byte sequence."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_path(path: Path) -> str | None:
++    """Hash a file while retaining absence as a failed precondition value."""
++
++    return sha256_bytes(path.read_bytes()) if path.is_file() else None
++
++
++def _finite_number(value: Any) -> bool:
++    """Accept numeric strings only when they parse to a finite real value."""
++
++    try:
++        return math.isfinite(float(value))
++    except (TypeError, ValueError):
++        return False
++
++
++def _fraction(numerator: int, denominator: int) -> float:
++    """Return a bounded fraction and define an empty collection as zero."""
++
++    return numerator / denominator if denominator else 0.0
++
++
++def _one_hot(value: str, choices: Sequence[str]) -> list[float]:
++    """Encode one registered category without learning a data-dependent order."""
++
++    return [float(value == choice) for choice in choices]
++
++
++def _safe_json_object(raw_text: str) -> Mapping[str, Any] | None:
++    """Parse a raw candidate only when its top-level JSON value is an object."""
++
++    try:
++        value = json.loads(raw_text)
++    except (json.JSONDecodeError, TypeError):
++        return None
++    return value if isinstance(value, Mapping) else None
++
++
++def _opaque_candidate_id(attempt_key: str) -> str:
++    """Hide model, pair, and schedule identity from exported feature rows."""
++
++    digest = hashlib.sha256(attempt_key.encode()).hexdigest()[:20]
++    return f"candidate-{digest}"
++
++
++def _feature_vector(row: Mapping[str, Any], raw_text: str) -> list[float]:
++    """Build only preregistered structural features from generated text and metadata."""
++
++    parsed = _safe_json_object(raw_text)
++    variable_map = parsed.get("variable_map", []) if parsed is not None else []
++    variables = variable_map if isinstance(variable_map, list) else []
++    valid_variables = [item for item in variables if isinstance(item, Mapping)]
++    field_count = sum(len(item) for item in valid_variables)
++    name_nonempty = sum(
++        bool(str(item.get("source", ""))) and bool(str(item.get("target", "")))
++        for item in valid_variables
++    )
++    finite_scales = sum(_finite_number(item.get("scale")) for item in valid_variables)
++    finite_offsets = sum(_finite_number(item.get("offset")) for item in valid_variables)
++    objective = parsed.get("objective_map") if parsed is not None else None
++    objective = objective if isinstance(objective, Mapping) else {}
++    direction = str(objective.get("direction", ""))
++    schema_keys = len(parsed) if parsed is not None else 0
++    vector = [
++        float(row.get("parse_success") is True),
++        float(parsed is not None),
++        min(schema_keys / 3.0, 1.0),
++        min(len(valid_variables) / 8.0, 1.0),
++        min(_fraction(field_count, max(len(valid_variables), 1) * 4), 1.0),
++        _fraction(name_nonempty, len(valid_variables)),
++        _fraction(finite_scales, len(valid_variables)),
++        _fraction(finite_offsets, len(valid_variables)),
++        float(bool(objective)),
++        float(direction == "same"),
++        float(direction in {"reversed", "reverse"}),
++        float(_finite_number(objective.get("scale"))),
++        float(_finite_number(objective.get("offset"))),
++        min(len(raw_text.encode("utf-8")) / 4096.0, 1.0),
++        *_one_hot(str(row.get("schedule_id", "")), SCHEDULES),
++        *_one_hot(str(row.get("formulation_family", "")), FORMULATION_FAMILIES),
++        *_one_hot(str(row.get("hf_id", "")), MODEL_FAMILIES),
++    ]
++    return vector
++
++
++def freeze_features(
++    candidate_rows: Sequence[Mapping[str, Any]],
++    bank_rows: Sequence[Mapping[str, Any]],
++) -> tuple[JsonDict, list[JsonDict]]:
++    """Freeze feature vectors without exporting join keys or exact results."""
++
++    raw_by_key = {
++        str(row.get("attempt_key")): str(row.get("candidate_raw_text", "")) for row in bank_rows
++    }
++    feature_rows: list[JsonDict] = []
++    for row in candidate_rows:
++        attempt_key = str(row.get("attempt_key", ""))
++        vector = _feature_vector(row, raw_by_key.get(attempt_key, ""))
++        feature_rows.append(
++            {
++                "candidate_id": _opaque_candidate_id(attempt_key),
++                "split": str(row.get("split", "")),
++                "feature_vector": vector,
++                "feature_hash": sha256_bytes(canonical_json(vector)),
++                "frozen_before_training": True,
++            }
++        )
++    schema = {
++        "schema": "carnot.exp6977.feature_vector.v1",
++        "feature_names": list(FEATURE_NAMES),
++        "dimension": len(FEATURE_NAMES),
++        "bounds": [[0.0, 1.0] for _ in FEATURE_NAMES],
++        "normalization_is_preregistered": True,
++    }
++    return schema, feature_rows
++
++
++def audit_feature_isolation(
++    schema: Mapping[str, Any], feature_rows: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    """Reject forbidden names, wrong widths, nonfinite values, and out-of-range inputs."""
++
++    names = schema.get("feature_names", [])
++    names = names if isinstance(names, list) else []
++    lowered_names = [str(name).lower() for name in names]
++    forbidden = sorted(
++        token for token in FORBIDDEN_FEATURE_TOKENS if any(token in name for name in lowered_names)
++    )
++    width = schema.get("dimension")
++    malformed_rows: list[int] = []
++    for index, row in enumerate(feature_rows):
++        vector = row.get("feature_vector")
++        if not isinstance(vector, list) or len(vector) != width:
++            malformed_rows.append(index)
++            continue
++        if any(
++            isinstance(value, bool)
++            or not isinstance(value, int | float)
++            or not math.isfinite(float(value))
++            or not 0.0 <= float(value) <= 1.0
++            for value in vector
++        ):
++            malformed_rows.append(index)
++    return {
++        "passed": not forbidden and not malformed_rows and names == list(FEATURE_NAMES),
++        "forbidden_feature_names": forbidden,
++        "malformed_row_indices": malformed_rows,
++        "feature_count": len(names),
++        "row_count": len(feature_rows),
++    }
++
++
++class CompactKANResidual(nn.Module):
++    """A compact additive KAN whose learned edge functions are convex quadratics.
++
++    Each input owns a learned one-dimensional function. Their sum is a valid
++    small KAN layer and permits analytic affine envelopes after training.
++    """
++
++    def __init__(self, input_dim: int) -> None:
++        super().__init__()
++        self.curvature_raw = nn.Parameter(torch.full((input_dim,), -1.5, dtype=torch.float64))
++        self.slope = nn.Parameter(torch.zeros(input_dim, dtype=torch.float64))
++        self.intercept = nn.Parameter(torch.zeros(input_dim, dtype=torch.float64))
++        self.output_bias = nn.Parameter(torch.zeros((), dtype=torch.float64))
++
++    def forward(self, features: torch.Tensor) -> torch.Tensor:
++        """Sum learned univariate edge functions into one residual logit."""
++
++        curvature = torch_functional.softplus(self.curvature_raw)
++        return (curvature * features.square() + self.slope * features + self.intercept).sum(
++            dim=1
++        ) + self.output_bias
++
++
++class SizeMatchedMLP(nn.Module):
++    """Use the hidden width whose parameter count is closest to the KAN count."""
++
++    def __init__(self, input_dim: int, target_parameters: int) -> None:
++        super().__init__()
++        width = max(1, round((target_parameters - 1) / (input_dim + 2)))
++        self.hidden_width = width
++        self.network = nn.Sequential(
++            nn.Linear(input_dim, width, dtype=torch.float64),
++            nn.Tanh(),
++            nn.Linear(width, 1, dtype=torch.float64),
++        )
++
++    def forward(self, features: torch.Tensor) -> torch.Tensor:
++        """Return one residual logit per feature row."""
++
++        return self.network(features).squeeze(1)
++
++
++def model_parameter_count(model: nn.Module) -> int:
++    """Count trainable scalars for transparent capacity comparison."""
++
++    return sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
++
++
++def _state_payload(model: nn.Module) -> JsonDict:
++    """Serialize CPU parameters without pickle metadata or device dependence."""
++
++    return {
++        name: parameter.detach().cpu().numpy().tolist()
++        for name, parameter in sorted(model.state_dict().items())
++    }
++
++
++@dataclass(frozen=True)
++class FitResult:
++    """Retain deterministic traces and predictions for both learned arms."""
++
++    training_rows: list[JsonDict]
++    checkpoint_hash: str
++    checkpoint_payload: JsonDict
++    kan_predictions: list[float]
++    mlp_predictions: list[float]
++    constant_prediction: float
++    model_parameter_count: JsonDict
++    kan_units: tuple["QuadraticUnit", ...]
++    kan_bias: float
++
++
++def _fit_one(
++    model: nn.Module,
++    features: torch.Tensor,
++    labels: torch.Tensor,
++    *,
++    arm: str,
++    epochs: int,
++) -> list[JsonDict]:
++    """Run one full-batch optimizer step per recorded calibration epoch."""
++
++    optimizer = torch.optim.Adam(model.parameters(), lr=0.03)
++    rows: list[JsonDict] = []
++    for epoch in range(epochs):
++        optimizer.zero_grad(set_to_none=True)
++        logits = model(features)
++        loss = torch_functional.binary_cross_entropy_with_logits(logits, labels)
++        loss.backward()
++        optimizer.step()
++        rows.append(
++            {
++                "arm": arm,
++                "epoch": epoch + 1,
++                "loss": float(loss.detach()),
++                "optimizer_call": epoch + 1,
++                "calibration_row_count": int(features.shape[0]),
++                "terminal": True,
++            }
++        )
++    return rows
++
++
++def fit_calibration_models(
++    features: np.ndarray,
++    labels: np.ndarray,
++    *,
++    seed: int,
++    epochs: int,
++) -> FitResult:
++    """Fit KAN and MLP controls using only the supplied calibration arrays."""
++
++    matrix = np.asarray(features, dtype=np.float64)
++    targets = np.asarray(labels, dtype=np.float64)
++    if matrix.ndim != 2 or targets.shape != (matrix.shape[0],):
++        raise ValueError("calibration_shape_mismatch")
++    if len(np.unique(targets)) < 2:
++        raise ValueError("calibration_labels_must_be_nonconstant")
++    torch.manual_seed(seed)
++    torch.use_deterministic_algorithms(True)
++    tensor = torch.from_numpy(matrix.copy())
++    target_tensor = torch.from_numpy(targets.copy())
++    kan = CompactKANResidual(matrix.shape[1])
++    kan_count = model_parameter_count(kan)
++    mlp_model = SizeMatchedMLP(matrix.shape[1], kan_count)
++    rows = _fit_one(kan, tensor, target_tensor, arm="kan", epochs=epochs)
++    rows.extend(_fit_one(mlp_model, tensor, target_tensor, arm="mlp", epochs=epochs))
++    with torch.no_grad():
++        kan_predictions = torch.sigmoid(kan(tensor)).tolist()
++        mlp_predictions = torch.sigmoid(mlp_model(tensor)).tolist()
++        curvature = torch_functional.softplus(kan.curvature_raw).tolist()
++    units = tuple(
++        QuadraticUnit(
++            float(curvature[index]),
++            float(kan.slope[index].detach()),
++            float(kan.intercept[index].detach()),
++        )
++        for index in range(matrix.shape[1])
++    )
++    payload = _state_payload(kan)
++    return FitResult(
++        training_rows=rows,
++        checkpoint_hash=sha256_bytes(canonical_json(payload)),
++        checkpoint_payload=payload,
++        kan_predictions=[float(value) for value in kan_predictions],
++        mlp_predictions=[float(value) for value in mlp_predictions],
++        constant_prediction=float(targets.mean()),
++        model_parameter_count={
++            "kan": kan_count,
++            "mlp": model_parameter_count(mlp_model),
++            "mlp_hidden_width": mlp_model.hidden_width,
++        },
++        kan_units=units,
++        kan_bias=float(kan.output_bias.detach()),
++    )
++
++
++@dataclass(frozen=True)
++class QuadraticUnit:
++    """One trained univariate KAN edge function with nonnegative curvature."""
++
++    curvature: float
++    slope: float
++    intercept: float
++
++    def __call__(self, value: float) -> float:
++        """Evaluate the learned quadratic unit at one scalar input."""
++
++        x_value = float(value)
++        return self.curvature * x_value * x_value + self.slope * x_value + self.intercept
++
++
++@dataclass(frozen=True)
++class PWASegment:
++    """Parallel affine lower and upper bounds over one closed interval."""
++
++    index: int
++    x_min: float
++    x_max: float
++    lower_slope: float
++    lower_intercept: float
++    upper_slope: float
++    upper_intercept: float
++
++    def bounds(self, value: float) -> tuple[float, float]:
++        """Evaluate both affine envelopes at one in-segment value."""
++
++        return (
++            self.lower_slope * value + self.lower_intercept,
++            self.upper_slope * value + self.upper_intercept,
++        )
++
++    def as_serializable(self) -> JsonDict:
++        """Expose all coefficients submitted to the MILP model."""
++
++        return {
++            "index": self.index,
++            "x_min": self.x_min,
++            "x_max": self.x_max,
++            "lower_slope": self.lower_slope,
++            "lower_intercept": self.lower_intercept,
++            "upper_slope": self.upper_slope,
++            "upper_intercept": self.upper_intercept,
++        }
++
++
++@dataclass(frozen=True)
++class UnitPWA:
++    """A bounded PWA sandwich for one nonlinear KAN edge function."""
++
++    unit_index: int
++    segments: tuple[PWASegment, ...]
++    local_error_bound: float
++
++    def bounds(self, value: float) -> tuple[float, float]:
++        """Select the registered segment and evaluate both envelopes."""
++
++        for index, segment in enumerate(self.segments):
++            right_pad = 1e-12 if index == len(self.segments) - 1 else 0.0
++            if segment.x_min - 1e-12 <= value <= segment.x_max + right_pad:
++                return segment.bounds(float(value))
++        raise ValueError("value_outside_pwa_domain")
++
++
++def build_unit_pwa(
++    unit: QuadraticUnit,
++    *,
++    unit_index: int,
++    lower: float,
++    upper: float,
++    pieces: int,
++) -> UnitPWA:
++    """Build tangent lower bounds and chord upper bounds for a convex quadratic."""
++
++    if pieces < 1:
++        raise ValueError("pieces_must_be_positive")
++    if not all(math.isfinite(value) for value in (unit.curvature, lower, upper)) or upper <= lower:
++        raise ValueError("finite_ordered_domain_required")
++    if unit.curvature < 0.0:
++        raise ValueError("nonnegative_curvature_required")
++    width = (upper - lower) / pieces
++    segments: list[PWASegment] = []
++    for index in range(pieces):
++        x_min = lower + index * width
++        x_max = lower + (index + 1) * width
++        midpoint = (x_min + x_max) / 2.0
++        lower_slope = 2.0 * unit.curvature * midpoint + unit.slope
++        lower_intercept = unit(midpoint) - lower_slope * midpoint
++        upper_slope = (unit(x_max) - unit(x_min)) / (x_max - x_min)
++        upper_intercept = unit(x_min) - upper_slope * x_min
++        segments.append(
++            PWASegment(
++                index=index,
++                x_min=x_min,
++                x_max=x_max,
++                lower_slope=lower_slope,
++                lower_intercept=lower_intercept,
++                upper_slope=upper_slope,
++                upper_intercept=upper_intercept,
++            )
++        )
++    error = unit.curvature * width * width / 4.0
++    return UnitPWA(unit_index=unit_index, segments=tuple(segments), local_error_bound=error)
++
++
++@dataclass(frozen=True)
++class PieceBudgetPlan:
++    """Hold unit-level options and the network-level knapsack selection."""
++
++    piece_counts: tuple[int, ...]
++    local_error_bounds: tuple[float, ...]
++    propagated_error_bound: float
++    unit_dp_rows: list[JsonDict]
++    knapsack_rows: list[JsonDict]
++
++
++def allocate_piece_budget(
++    units: Sequence[QuadraticUnit],
++    domains: Sequence[tuple[float, float]],
++    *,
++    budget: int,
++    min_pieces: int,
++) -> PieceBudgetPlan:
++    """Allocate a fixed global piece budget with unit tables and network knapsack."""
++
++    if len(units) != len(domains) or not units:
++        raise ValueError("unit_domain_count_mismatch")
++    if budget < min_pieces * len(units):
++        raise ValueError("piece_budget_below_unit_minimum")
++    unit_rows: list[JsonDict] = []
++    options: list[dict[int, float]] = []
++    for unit_index, (unit, domain) in enumerate(zip(units, domains, strict=True)):
++        table: dict[int, float] = {}
++        for pieces in range(min_pieces, budget + 1):
++            abstraction = build_unit_pwa(
++                unit,
++                unit_index=unit_index,
++                lower=domain[0],
++                upper=domain[1],
++                pieces=pieces,
++            )
++            table[pieces] = abstraction.local_error_bound
++            unit_rows.append(
++                {
++                    "unit_index": unit_index,
++                    "pieces": pieces,
++                    "local_error_bound": abstraction.local_error_bound,
++                    "feasible_under_global_budget": pieces <= budget,
++                }
++            )
++        options.append(table)
++
++    states: dict[int, tuple[float, tuple[int, ...]]] = {0: (0.0, ())}
++    knapsack_rows: list[JsonDict] = []
++    for unit_index, table in enumerate(options):
++        next_states: dict[int, tuple[float, tuple[int, ...]]] = {}
++        for used, (error, counts) in sorted(states.items()):
++            for pieces, local_error in table.items():
++                total = used + pieces
++                if total > budget:
++                    continue
++                candidate = (error + local_error, counts + (pieces,))
++                previous = next_states.get(total)
++                if previous is None or candidate < previous:
++                    next_states[total] = candidate
++        states = next_states
++        knapsack_rows.extend(
++            {
++                "units_allocated": unit_index + 1,
++                "pieces_used": used,
++                "propagated_error_bound": value[0],
++                "piece_counts": list(value[1]),
++            }
++            for used, value in sorted(states.items())
++        )
++    propagated, counts = states[budget]
++    local = tuple(options[index][pieces] for index, pieces in enumerate(counts))
++    return PieceBudgetPlan(
++        piece_counts=counts,
++        local_error_bounds=local,
++        propagated_error_bound=propagated,
++        unit_dp_rows=unit_rows,
++        knapsack_rows=knapsack_rows,
++    )
++
++
++def milp_solver_smoke_test() -> JsonDict:
++    """Execute HiGHS on one binary objective before any certificate is allowed."""
++
++    try:
++        result = milp(
++            c=np.array([-1.0]),
++            integrality=np.array([1]),
++            bounds=Bounds([0.0], [1.0]),
++            constraints=LinearConstraint(np.array([[1.0]]), [0.0], [1.0]),
++            options={"time_limit": 10.0},
++        )
++    except Exception as exc:  # noqa: BLE001 - the exact solver failure belongs in the gate.
++        return {
++            "executed": False,
++            "solver": "scipy.optimize.milp/HiGHS",
++            "status": "solver_error",
++            "error": f"{type(exc).__name__}:{exc}",
++            "integer_variable_count": 1,
++            "constraint_count": 1,
++            "objective_value": None,
++        }
++    optimal = result.status == 0 and bool(result.success) and result.x is not None
++    return {
++        "executed": True,
++        "solver": "scipy.optimize.milp/HiGHS",
++        "status": "optimal" if optimal else f"nonoptimal_status_{result.status}",
++        "error": None if optimal else str(result.message),
++        "integer_variable_count": 1,
++        "constraint_count": 1,
++        "objective_value": float(-result.fun) if optimal else None,
++        "witness": [float(value) for value in result.x] if optimal else None,
++    }
++
++
++def _solve_envelope(
++    abstractions: Sequence[UnitPWA], *, envelope: str, maximize: bool, output_bias: float
++) -> JsonDict:
++    """Solve one additive PWA envelope with binary segment selectors."""
++
++    indexed_segments = [
++        (unit_index, segment)
++        for unit_index, abstraction in enumerate(abstractions)
++        for segment in abstraction.segments
++    ]
++    variable_count = 2 * len(indexed_segments)
++    objective = np.zeros(variable_count, dtype=np.float64)
++    integrality = np.zeros(variable_count, dtype=np.int32)
++    lower_bounds = np.zeros(variable_count, dtype=np.float64)
++    upper_bounds = np.zeros(variable_count, dtype=np.float64)
++    segment_positions: dict[tuple[int, int], tuple[int, int]] = {}
++    for flat_index, (unit_index, segment) in enumerate(indexed_segments):
++        z_index = 2 * flat_index
++        t_index = z_index + 1
++        segment_positions[(unit_index, segment.index)] = (z_index, t_index)
++        integrality[z_index] = 1
++        upper_bounds[z_index] = 1.0
++        upper_bounds[t_index] = segment.x_max - segment.x_min
++        slope = getattr(segment, f"{envelope}_slope")
++        intercept = getattr(segment, f"{envelope}_intercept")
++        objective[z_index] = intercept + slope * segment.x_min
++        objective[t_index] = slope
++    if maximize:
++        objective = -objective
++
++    constraint_rows: list[np.ndarray] = []
++    constraint_lower: list[float] = []
++    constraint_upper: list[float] = []
++    for unit_index, abstraction in enumerate(abstractions):
++        one_hot = np.zeros(variable_count, dtype=np.float64)
++        for segment in abstraction.segments:
++            z_index, _ = segment_positions[(unit_index, segment.index)]
++            one_hot[z_index] = 1.0
++        constraint_rows.append(one_hot)
++        constraint_lower.append(1.0)
++        constraint_upper.append(1.0)
++    for unit_index, segment in indexed_segments:
++        z_index, t_index = segment_positions[(unit_index, segment.index)]
++        row = np.zeros(variable_count, dtype=np.float64)
++        row[t_index] = 1.0
++        row[z_index] = -(segment.x_max - segment.x_min)
++        constraint_rows.append(row)
++        constraint_lower.append(-np.inf)
++        constraint_upper.append(0.0)
++    result = milp(
++        c=objective,
++        integrality=integrality,
++        bounds=Bounds(lower_bounds, upper_bounds),
++        constraints=LinearConstraint(
++            np.stack(constraint_rows), np.asarray(constraint_lower), np.asarray(constraint_upper)
++        ),
++        options={"time_limit": 30.0},
++    )
++    if result.status != 0 or not result.success or result.x is None:
++        raise RuntimeError(f"milp_bound_nonoptimal:{result.status}:{result.message}")
++    witness: list[float] = []
++    for unit_index, abstraction in enumerate(abstractions):
++        value = 0.0
++        for segment in abstraction.segments:
++            z_index, t_index = segment_positions[(unit_index, segment.index)]
++            value += segment.x_min * result.x[z_index] + result.x[t_index]
++        witness.append(float(value))
++    objective_value = (-float(result.fun) if maximize else float(result.fun)) + output_bias
++    return {
++        "objective_value": objective_value,
++        "witness": witness,
++        "variable_count": variable_count,
++        "integer_variable_count": len(indexed_segments),
++        "constraint_count": len(constraint_rows),
++        "solver_message": str(result.message),
++    }
++
++
++def solve_pwa_output_bounds(abstractions: Sequence[UnitPWA], *, output_bias: float) -> JsonDict:
++    """Prove finite network bounds through independent min and max MILP objectives."""
++
++    if not abstractions:
++        raise ValueError("pwa_abstractions_required")
++    lower = _solve_envelope(abstractions, envelope="lower", maximize=False, output_bias=output_bias)
++    upper = _solve_envelope(abstractions, envelope="upper", maximize=True, output_bias=output_bias)
++    return {
++        "solver": "scipy.optimize.milp/HiGHS",
++        "status": "optimal",
++        "executed": True,
++        "certified_lower_bound": lower["objective_value"],
++        "certified_upper_bound": upper["objective_value"],
++        "lower_witness": lower["witness"],
++        "upper_witness": upper["witness"],
++        "variable_count": lower["variable_count"] + upper["variable_count"],
++        "integer_variable_count": lower["integer_variable_count"] + upper["integer_variable_count"],
++        "constraint_count": lower["constraint_count"] + upper["constraint_count"],
++        "objectives_are_independent": True,
++        "solver_messages": [lower["solver_message"], upper["solver_message"]],
++    }
++
++
++def _hard_candidate_feasible(row: Mapping[str, Any]) -> bool:
++    """Keep exact feasibility as a conjunction outside every residual score."""
++
++    return (
++        row.get("parse_success") is True
++        and row.get("schema_outcome") == "valid"
++        and row.get("satisfiability_outcome") == "passed"
++        and row.get("certified_relation") == "equivalent"
++    )
++
++
++def combine_hard_feasibility(row: Mapping[str, Any], residual: float, *, threshold: float) -> bool:
++    """Permit the residual to reject a hard-pass row but never accept a hard failure."""
++
++    return _hard_candidate_feasible(row) and math.isfinite(residual) and residual <= threshold
++
++
++def certify_infeasibility_preservation(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Use a binary MILP to prove the hard gate caps acceptance at zero on failures."""
++
++    hard_failures = [row for row in rows if not _hard_candidate_feasible(row)]
++    receipt = milp(
++        c=np.array([-1.0]),
++        integrality=np.array([1]),
++        bounds=Bounds([0.0], [1.0]),
++        constraints=LinearConstraint(np.array([[1.0]]), [-np.inf], [0.0]),
++        options={"time_limit": 10.0},
++    )
++    optimal = receipt.status == 0 and bool(receipt.success) and receipt.x is not None
++    maximum_acceptance = float(-receipt.fun) if optimal else None
++    return {
++        "property": "hard_infeasibility_outside_residual",
++        "method": "scipy_highs_binary_gate_milp",
++        "proved": optimal and maximum_acceptance == 0.0,
++        "hard_infeasible_count": len(hard_failures),
++        "maximum_acceptance_for_hard_failure": maximum_acceptance,
++        "residual_coefficient_in_acceptance_constraint": 0.0,
++        "solver_status": "optimal" if optimal else f"nonoptimal_status_{receipt.status}",
++        "integer_variable_count": 1,
++        "constraint_count": 1,
++    }
++
++
++def gate_check(check: str, expected_value: Any, observed_value: Any) -> JsonDict:
++    """Record both sides of one strict precondition comparison."""
++
++    return {
++        "check": check,
++        "expected_value": expected_value,
++        "observed_value": observed_value,
++        "passed": expected_value == observed_value,
++    }
++
++
++def gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Retain all checks and isolate complete failed-gate diagnostics."""
++
++    failed = [
++        {
++            "failed_check": row.get("check"),
++            "expected_value": row.get("expected_value"),
++            "observed_value": row.get("observed_value"),
++        }
++        for row in checks
++        if row.get("passed") is not True
++    ]
++    return {"checks": list(checks), "failed_checks": failed, "passed": not failed}
++
++
++def _read_object(path: Path) -> JsonDict | None:
++    """Read an input object and represent missing or malformed files as absent."""
++
++    if not path.is_file():
++        return None
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++    return value if isinstance(value, dict) else None
++
++
++def source_artifact_hashes(repo_root: Path) -> JsonDict:
++    """Bind inputs, code, tests, specification, wrapper, and cited reference."""
++
++    paths = {
++        "experiment_6976": CANDIDATE_PATH,
++        "experiment_6975": BANK_PATH,
++        "experiment_6958": Path("results/experiment_6958_convex_factor_energy_canary.json"),
++        "module": Path("python/carnot/experiment_6977_certified_pwa_kan_energy.py"),
++        "test": Path("tests/python/test_experiment_6977_certified_pwa_kan_energy.py"),
++        "spec": Path("openspec/capabilities/kan-verifier/spec.md"),
++        "wrapper": Path("scripts/experiments/experiment_6977_certified_pwa_kan_energy.py"),
++        "research_references": Path("research-references.md"),
++    }
++    return {name: sha256_path(repo_root / path) for name, path in paths.items()}
++
++
++def _split_rows(feature_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Hash opaque feature identities separately for calibration and held-out data."""
++
++    result: list[JsonDict] = []
++    for split in ("calibration", "heldout"):
++        identities = sorted(
++            str(row.get("candidate_id")) for row in feature_rows if row.get("split") == split
++        )
++        result.append(
++            {
++                "split": split,
++                "candidate_count": len(identities),
++                "identity_hash": sha256_bytes(canonical_json(identities)),
++                "nonempty": bool(identities),
++            }
++        )
++    return result
++
++
++def check_preconditions(
++    candidate: Mapping[str, Any] | None,
++    bank: Mapping[str, Any] | None,
++    feature_schema: Mapping[str, Any],
++    feature_rows: Sequence[Mapping[str, Any]],
++) -> tuple[list[JsonDict], list[JsonDict], JsonDict]:
++    """Check label variation and real solver access before any optimizer call."""
++
++    candidate_rows = candidate.get("per_candidate_rows", []) if candidate else []
++    candidate_rows = candidate_rows if isinstance(candidate_rows, list) else []
++    calibration_rows = [row for row in candidate_rows if row.get("split") == "calibration"]
++    calibration_feature_rows = [row for row in feature_rows if row.get("split") == "calibration"]
++    feature_values = {
++        tuple(float(value) for value in row.get("feature_vector", []))
++        for row in calibration_feature_rows
++    }
++    label_values = {
++        row.get("exact_semantic_success")
++        for row in calibration_rows
++        if isinstance(row.get("exact_semantic_success"), bool)
++    }
++    splits = _split_rows(feature_rows)
++    split_observation = {
++        "upstream_split_hash_present": bool(
++            bank and str(bank.get("split_hash", "")).startswith("sha256:")
++        ),
++        "calibration_hash_present": next(
++            row["nonempty"] for row in splits if row["split"] == "calibration"
++        ),
++        "heldout_hash_present": next(
++            row["nonempty"] for row in splits if row["split"] == "heldout"
++        ),
++    }
++    solver_receipt = milp_solver_smoke_test()
++    isolation = audit_feature_isolation(feature_schema, feature_rows)
++    checks = [
++        gate_check("candidate_artifact_present", True, candidate is not None),
++        gate_check(
++            "candidate_certification_complete_score",
++            1,
++            candidate.get("candidate_certification_complete_score") if candidate else None,
++        ),
++        gate_check("candidate_bank_present", True, bank is not None),
++        gate_check("calibration_features_nonconstant", True, len(feature_values) > 1),
++        gate_check("calibration_labels_nonconstant", True, len(label_values) > 1),
++        gate_check(
++            "heldout_split_hashes",
++            {
++                "upstream_split_hash_present": True,
++                "calibration_hash_present": True,
++                "heldout_hash_present": True,
++            },
++            split_observation,
++        ),
++        gate_check("supported_kan_implementation", True, issubclass(CompactKANResidual, nn.Module)),
++        gate_check(
++            "actual_milp_solver",
++            {"executed": True, "status": "optimal"},
++            {"executed": solver_receipt["executed"], "status": solver_receipt["status"]},
++        ),
++        gate_check("feature_isolation", True, isolation["passed"]),
++    ]
++    return checks, splits, solver_receipt
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash deterministic scientific content while excluding measured timings."""
++
++    payload = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "reproducibility_checksum", "latency_rows"}
++    }
++    return sha256_bytes(canonical_json(payload))
++
++
++def _empty_evidence_fields() -> JsonDict:
++    """Keep every post-gate surface present on a blocked result."""
++
++    return {
++        "training_rows": [],
++        "pwa_unit_rows": [],
++        "piece_budget_rows": [],
++        "local_error_bound_rows": [],
++        "propagated_error_bound_rows": [],
++        "milp_query_rows": [],
++        "invariant_certificate_rows": [],
++        "rows": [],
++        "per_candidate_rows": [],
++        "heldout_comparison_rows": [],
++        "abstraction_disagreement_rows": [],
++        "latency_rows": [],
++    }
++
++
++def build_blocked_artifact(
++    *,
++    date: str,
++    duration_s: float,
++    checks: Sequence[Mapping[str, Any]],
++    feature_schema: Mapping[str, Any],
++    feature_rows: Sequence[Mapping[str, Any]],
++    split_rows: Sequence[Mapping[str, Any]],
++    solver_receipt: Mapping[str, Any],
++    hashes: Mapping[str, Any],
++) -> JsonDict:
++    """Build the complete fail-closed artifact without fitting or held-out assessment."""
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": date,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": list(checks),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "source_artifact_hashes": dict(hashes),
++        "random_seed": RANDOM_SEED,
++        "feature_schema": dict(feature_schema),
++        "feature_rows": list(feature_rows),
++        "split_isolation_rows": list(split_rows),
++        "checkpoint_hash": None,
++        "model_config": {
++            "status": "not_trained_failed_precondition",
++            "kan": "additive_convex_quadratic_units",
++            "epochs": DEFAULT_EPOCHS,
++            "piece_budget_per_unit": PIECE_BUDGET_PER_UNIT,
++        },
++        "model_parameter_count": None,
++        "milp_solver_receipts": [dict(solver_receipt)],
++        "certified_pwa_energy_ready_score": 0,
++        "pwa_energy_heldout_positive_score": 0,
++        "gate_check_summary": gate_summary(checks),
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_certified_pwa_kan_energy",
++        **_empty_evidence_fields(),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def build_from_paths(repo_root: Path, *, date: str = RUN_DATE) -> JsonDict:
++    """Load frozen inputs and stop before training when any strict gate fails."""
++
++    started = time.perf_counter()
++    root = Path(repo_root)
++    candidate = _read_object(root / CANDIDATE_PATH)
++    bank = _read_object(root / BANK_PATH)
++    candidate_rows = candidate.get("per_candidate_rows", []) if candidate else []
++    bank_rows = bank.get("per_attempt_rows", []) if bank else []
++    candidate_rows = candidate_rows if isinstance(candidate_rows, list) else []
++    bank_rows = bank_rows if isinstance(bank_rows, list) else []
++    feature_schema, feature_rows = freeze_features(candidate_rows, bank_rows)
++    checks, split_rows, solver_receipt = check_preconditions(
++        candidate, bank, feature_schema, feature_rows
++    )
++    hashes = source_artifact_hashes(root)
++    if any(row["passed"] is not True for row in checks):
++        return build_blocked_artifact(
++            date=date,
++            duration_s=time.perf_counter() - started,
++            checks=checks,
++            feature_schema=feature_schema,
++            feature_rows=feature_rows,
++            split_rows=split_rows,
++            solver_receipt=solver_receipt,
++            hashes=hashes,
++        )
++    raise RuntimeError("unexpected_all_preconditions_passed_requires_heldout_seal")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Reject missing fields, wrapped scores, checksum drift, or dishonest readiness."""
++
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        raise ValueError(f"missing_required_fields:{missing}")
++    missing_principles = sorted(
++        field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact["field_principles"]
++    )
++    if missing_principles:
++        raise ValueError(f"missing_field_principles:{missing_principles}")
++    for field in ("certified_pwa_energy_ready_score", "pwa_energy_heldout_positive_score"):
++        value = artifact.get(field)
++        if isinstance(value, bool) or not isinstance(value, int) or value not in {0, 1}:
++            raise ValueError(f"bare_binary_score_required:{field}")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate_mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        raise ValueError("verifier_is_oracle_must_be_false")
++    if artifact.get("verdict_class") not in {
++        "positive",
++        "circular_positive",
++        "null",
++        "blocked",
++        "disqualified",
++        "partial",
++    }:
++        raise ValueError("invalid_verdict_class")
++    failed = artifact.get("gate_check_summary", {}).get("failed_checks", [])
++    if failed:
++        if artifact.get("verdict_class") != "blocked":
++            raise ValueError("blocked_verdict_class_required")
++        if not str(artifact.get("honest_verdict", "")).startswith("blocked_"):
++            raise ValueError("blocked_verdict_prefix_required")
++        if artifact.get("certified_pwa_energy_ready_score") != 0:
++            raise ValueError("blocked_readiness_must_be_zero")
++        if artifact.get("training_rows") or artifact.get("checkpoint_hash") is not None:
++            raise ValueError("blocked_artifact_must_not_train")
++        if any(set(row) != {"failed_check", "expected_value", "observed_value"} for row in failed):
++            raise ValueError("failed_gate_shape_mismatch")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum_mismatch")
++
++
++def write_json_atomic(path: Path, value: Mapping[str, Any]) -> None:
++    """Replace one result atomically so interruption cannot leave valid-looking JSON."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(
++        mode="w", encoding="utf-8", dir=target.parent, prefix=f".{target.name}-", delete=False
++    ) as handle:
++        json.dump(value, handle, indent=2, sort_keys=True)
++        handle.write("\n")
++        temporary = Path(handle.name)
++    os.replace(temporary, target)
++
++
++def run(*, date: str, repo_root: Path, output_path: Path | None = None) -> JsonDict:
++    """Build, validate, and write the canonical Exp6977 artifact."""
++
++    artifact = build_from_paths(repo_root, date=date)
++    validate_artifact(artifact)
++    write_json_atomic(output_path or Path(repo_root) / RESULT_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Provide the required dated command surface for the experiment."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
++    parser.add_argument("--output", type=Path)
++    args = parser.parse_args(argv)
++    artifact = run(date=args.date, repo_root=args.repo_root, output_path=args.output)
++    print(
++        json.dumps(
++            {
++                "output": str(args.output or args.repo_root / RESULT_PATH),
++                "honest_verdict": artifact["honest_verdict"],
++                "certified_pwa_energy_ready_score": artifact["certified_pwa_energy_ready_score"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through the required wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_6977_certified_pwa_kan_energy.json b/results/experiment_6977_certified_pwa_kan_energy.json
+new file mode 100644
+index 0000000000..b2f5e5b6b5
+--- /dev/null
++++ b/results/experiment_6977_certified_pwa_kan_energy.json
+@@ -0,0 +1,3730 @@
++{
++  "abstraction_disagreement_rows": [],
++  "certified_pwa_energy_ready_score": 0,
++  "checkpoint_hash": null,
++  "duration_s": 0.16543961002025753,
++  "experiment_id": 6977,
++  "feature_rows": [
++    {
++      "candidate_id": "candidate-5822881fba943ec50429",
++      "feature_hash": "sha256:72654911ac0a48b31644ad3f939e930c687bcf3f28a6c607af457e530b980ee3",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.06982421875,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-bece661e1cc29a8a8418",
++      "feature_hash": "sha256:cb4d7e6f736af347900983a92b61ebe11c208b579159f1b24b65eac3c89c0e72",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-f9b730b02e93b6ba2ad0",
++      "feature_hash": "sha256:eddf0c92275d62e860498b581753300574dc4aca648f6b86e9d13931a40d23e6",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.053955078125,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-2ea145be0119d4e111d5",
++      "feature_hash": "sha256:a6ab469ecebbe86b9311840a0d5197ae8c8655649fa52066960687f53bddb8e9",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0703125,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-6dab6e352ae4428061b3",
++      "feature_hash": "sha256:cb4d7e6f736af347900983a92b61ebe11c208b579159f1b24b65eac3c89c0e72",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-0e5faeb54f5ffd66542d",
++      "feature_hash": "sha256:a1d6c0666098353aa955490f8d3930d183301298d8a43f01389f0472daae923c",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05322265625,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-79a662d2dbd9a836c0db",
++      "feature_hash": "sha256:0f9a8e8f5b799b19e697d581c57571934b8e1df15fb76e0e0352bc2812ba312a",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07958984375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-5513eea9d36188696b0f",
++      "feature_hash": "sha256:9a03d603d8a05333f99f4a0b3b996d4a22b56eb94df796a2f91794a095a7f83d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-b2b6310e5292b6fd2dc2",
++      "feature_hash": "sha256:e9744326f1737f0b7c238ecb901f2ea2426932e4eb9eeae40f21f773a84f1f3b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.052490234375,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-69c59ce5eb7fa09773c3",
++      "feature_hash": "sha256:50b6d833d783e09375ee61e389a0501b14897a438f923cb3ad47de20ddb79fd8",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.077880859375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-5ba8d05f03baa567ec11",
++      "feature_hash": "sha256:9a03d603d8a05333f99f4a0b3b996d4a22b56eb94df796a2f91794a095a7f83d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-d7b25b845248bc45af25",
++      "feature_hash": "sha256:db3faf8fef95c109ba99358780b43dfe701a799b89c7b16d9700c91cf8ebfbf1",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.053466796875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-c1f334f1dc131a51c5a7",
++      "feature_hash": "sha256:808aa00159b315d861d6c61ebdf2744eba7111eebd6efadb9c57a5b2046472cd",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.069091796875,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-80fcfa307e9fc53957ac",
++      "feature_hash": "sha256:10bada37f4cbdda3a1248fbebf9159e7e57c56842d74cc46a0d9041bc8959185",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-ee6769ddda08bcd77c46",
++      "feature_hash": "sha256:d6188f4039444d1284f8cc2d43a8a3acf6bd7df40fd72c473e03ae37e6e3f584",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-d3130c210da919fcfb67",
++      "feature_hash": "sha256:dc542979fa11d17a9231e1793facc8149c64519d2dd94c37a29627af126225a0",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.072021484375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-d9e195f4c9f679cb1fc7",
++      "feature_hash": "sha256:10bada37f4cbdda3a1248fbebf9159e7e57c56842d74cc46a0d9041bc8959185",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-6cae335f709f302d1da2",
++      "feature_hash": "sha256:d6188f4039444d1284f8cc2d43a8a3acf6bd7df40fd72c473e03ae37e6e3f584",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-2e924d4f4ba24c233be2",
++      "feature_hash": "sha256:95b81f042be0713cd48e1af1b1eea0828edddefc9e0013b5b33f57f4ec665f56",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        0.071044921875,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-d2d2415d29d1e1fdcd2b",
++      "feature_hash": "sha256:cb4d7e6f736af347900983a92b61ebe11c208b579159f1b24b65eac3c89c0e72",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f830690bff732507cd20",
++      "feature_hash": "sha256:7138e0da24c68e37b27270ea8ad60cd3e01b5a0c40304dfbfcefa66f42b6d395",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.053466796875,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-ccadb4f36fea5bdf3f37",
++      "feature_hash": "sha256:72654911ac0a48b31644ad3f939e930c687bcf3f28a6c607af457e530b980ee3",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.06982421875,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-fffd33e03d66704d8bfa",
++      "feature_hash": "sha256:cb4d7e6f736af347900983a92b61ebe11c208b579159f1b24b65eac3c89c0e72",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-13bb5a8040854c687be2",
++      "feature_hash": "sha256:c57a08924a902b185ab4beb595eb9484733dbf73e5fa91e34f00ce4e39f9e236",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-dc48561a20fa310e9a4b",
++      "feature_hash": "sha256:f1527ea22cef4a073cd3d1e07baed8cef31f0884cb9abc4023a8ba5ea64b7eba",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.069580078125,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-6d264111f0b9ff88e61c",
++      "feature_hash": "sha256:9a03d603d8a05333f99f4a0b3b996d4a22b56eb94df796a2f91794a095a7f83d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-3084c04312e832359513",
++      "feature_hash": "sha256:b2a511367122b7787100cbb894dfe51a47c782f1d3c3e18eb487b586e8d31ae5",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-61763e30509cac0d2717",
++      "feature_hash": "sha256:82ed6c726ec18516e06dae2cc677e9cfa33d64a826b1bc7f68dc68f7fb593dc6",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07666015625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-5f3ed2155ea7b016707c",
++      "feature_hash": "sha256:9a03d603d8a05333f99f4a0b3b996d4a22b56eb94df796a2f91794a095a7f83d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-9485144b12dfd239dbcb",
++      "feature_hash": "sha256:b2a511367122b7787100cbb894dfe51a47c782f1d3c3e18eb487b586e8d31ae5",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-a76434f7ddc6ce27ead3",
++      "feature_hash": "sha256:3d8540afea03389be89dbda235b66a3dea87f269537519529099086e27348614",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.071044921875,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-b7719b36167461e4b0dc",
++      "feature_hash": "sha256:10bada37f4cbdda3a1248fbebf9159e7e57c56842d74cc46a0d9041bc8959185",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f49e074c912a7ceb90a3",
++      "feature_hash": "sha256:d6188f4039444d1284f8cc2d43a8a3acf6bd7df40fd72c473e03ae37e6e3f584",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05419921875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-9498b0daa614c123325e",
++      "feature_hash": "sha256:dc542979fa11d17a9231e1793facc8149c64519d2dd94c37a29627af126225a0",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.072021484375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-2eb090eab0a4a1b907ce",
++      "feature_hash": "sha256:10bada37f4cbdda3a1248fbebf9159e7e57c56842d74cc46a0d9041bc8959185",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-4438f1d1aa5c00ac0d6f",
++      "feature_hash": "sha256:8363a0312f2fffe9b08456bc33969ec763bd5d54d206b410cf188304385cd360",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0546875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f26b590453783ac6bfce",
++      "feature_hash": "sha256:70a32ea39a3f57e05d6002edf1700e401d92775aee6b280270498fa3068313e9",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0693359375,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-da0c0a26736acea9de91",
++      "feature_hash": "sha256:b0c18847b3a9a0b7f43a51926a541ed24ade7e8d0356dfc5412206d12908a1f0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-61f17b0296df81ba674c",
++      "feature_hash": "sha256:dd732271bfa87df09eacd4a3d5d8e3b395fa5b2b254defffe0a9379e78bd6a26",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.052490234375,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-676c96a36bc69f9b3d42",
++      "feature_hash": "sha256:69286768a6c3378a5141a0a337dda209aaf58702af045321d61dc0759dcd3aee",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0703125,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-7c9ff2c107083dc8a7f5",
++      "feature_hash": "sha256:b0c18847b3a9a0b7f43a51926a541ed24ade7e8d0356dfc5412206d12908a1f0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-1f7d0c16d736a8c6d068",
++      "feature_hash": "sha256:8782aba473038dca2754ee3fcb43a0420fa8a81ed7f4808c0ac08c2041c5f93a",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05078125,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-b3500c8de7371431c5ef",
++      "feature_hash": "sha256:bce3d3457820aa132ffb576fe8adf6e57a4ac7df00d75d5c1fa6cd03dabbdbb3",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.078369140625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-ea61d213fa142b49b49f",
++      "feature_hash": "sha256:18cdbbea94428a97ac3402c6dcfa9e12637d1db72873a52899f5da17c19a640b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-bf36680dc1f50c87b13d",
++      "feature_hash": "sha256:611d7b402d5ed949b16c73b191f7a0588fa86bb3394e7b14ebf9b5cff8e0d478",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05078125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-c5798a57b015e3481f36",
++      "feature_hash": "sha256:5316db706ad1c27bef7aeb1d8852f56f5fea06a297e40cb41d2b3bbb7e61e799",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.075439453125,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-a557661caca9817fee11",
++      "feature_hash": "sha256:18cdbbea94428a97ac3402c6dcfa9e12637d1db72873a52899f5da17c19a640b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-58c8a4f7b69c8370a599",
++      "feature_hash": "sha256:611d7b402d5ed949b16c73b191f7a0588fa86bb3394e7b14ebf9b5cff8e0d478",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05078125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-4a7852771f820191cd57",
++      "feature_hash": "sha256:0f404f28d9ebb0c3320680d1951515582d539933c0abdd97a45934ab6211e1d0",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.06884765625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-0e088aebf9381d4c0711",
++      "feature_hash": "sha256:1be2055a5bbc4003dc973c7f4253e8cd7859ed2da7300f7c8834bfa26ff3931e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-e1e88035e8398884959b",
++      "feature_hash": "sha256:1ab689619886495cc4a6000b1fee084707942c1d85b7db86df7348e5609a958b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.051513671875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-b79e83afcd5b53e5f3f2",
++      "feature_hash": "sha256:8e12b8a6d253ef3b68f330b6ddbad7494ac8777fbe881f15342dba523b1185c8",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.07177734375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-bf06d3c76a6097c695fb",
++      "feature_hash": "sha256:1be2055a5bbc4003dc973c7f4253e8cd7859ed2da7300f7c8834bfa26ff3931e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-d363eef329d311e502f4",
++      "feature_hash": "sha256:8ee4f57de229caab64968c2446aa0dad9229af34a5f7e3f7c09753fac25b1fde",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.052490234375,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-32da747dfa3dd423f14c",
++      "feature_hash": "sha256:69415fe8f93b174a33d6c629266da34c7d6d1abb98df53965c632c7548caf6cc",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        0.070556640625,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-446e6faca96d22292780",
++      "feature_hash": "sha256:b0c18847b3a9a0b7f43a51926a541ed24ade7e8d0356dfc5412206d12908a1f0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-4257b8170a975e9f87d2",
++      "feature_hash": "sha256:8782aba473038dca2754ee3fcb43a0420fa8a81ed7f4808c0ac08c2041c5f93a",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05078125,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-6134f4c46d0c16a58707",
++      "feature_hash": "sha256:ab5131dbbe32be73843b19767ef7dfe0fc0b321c1b557c5182d4142f9e5dc109",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.071533203125,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-06c385aaff49a161ee37",
++      "feature_hash": "sha256:b0c18847b3a9a0b7f43a51926a541ed24ade7e8d0356dfc5412206d12908a1f0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-1677b121211dd82a0179",
++      "feature_hash": "sha256:11cd9c42e38f7efaab65f8c8cc035e876c04e1e2c228b3406551cc2bd132fa10",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05224609375,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-be5bcc0874cc8a516d33",
++      "feature_hash": "sha256:17ae34b6cbc1fd62d8437a39bfc4b38e15ece8dc5aecfccc0bbcae78013cc1c0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07666015625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-515cf3c9acb9306884fa",
++      "feature_hash": "sha256:18cdbbea94428a97ac3402c6dcfa9e12637d1db72873a52899f5da17c19a640b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-6cdc1c838a2050c155eb",
++      "feature_hash": "sha256:9ba9f45cbdbf6472f5bcc54838d53fccca13b568a8964d8843b1992e6f9cbd99",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.052001953125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f100b797dbca48312e11",
++      "feature_hash": "sha256:17ae34b6cbc1fd62d8437a39bfc4b38e15ece8dc5aecfccc0bbcae78013cc1c0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07666015625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-ad2f9027f77920312a08",
++      "feature_hash": "sha256:18cdbbea94428a97ac3402c6dcfa9e12637d1db72873a52899f5da17c19a640b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-1ebb4d126982ffe11c12",
++      "feature_hash": "sha256:9ba9f45cbdbf6472f5bcc54838d53fccca13b568a8964d8843b1992e6f9cbd99",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.052001953125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-16ff047a82ccf9fa5ae7",
++      "feature_hash": "sha256:8e12b8a6d253ef3b68f330b6ddbad7494ac8777fbe881f15342dba523b1185c8",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.07177734375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-59d19c2ba8badc143946",
++      "feature_hash": "sha256:1be2055a5bbc4003dc973c7f4253e8cd7859ed2da7300f7c8834bfa26ff3931e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-6d91d9758b280b754627",
++      "feature_hash": "sha256:35b921a85fb75598218a58cc18d9c63026327ec41b52732876774dd388940ed8",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0517578125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-1edb22431e940aa8dc03",
++      "feature_hash": "sha256:c18eb07e8503bd843663c5696749686edda50a269638c45158984a89349dff5f",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.25,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.072021484375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-33b6f83ae5b9e8179fb1",
++      "feature_hash": "sha256:1be2055a5bbc4003dc973c7f4253e8cd7859ed2da7300f7c8834bfa26ff3931e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-daae7e8fe108959e2db9",
++      "feature_hash": "sha256:142565c671017b37291cb4e537d7180847b605a2d4a175bfde5a146d14134685",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.05224609375,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-5998d9ee971f836facb6",
++      "feature_hash": "sha256:5f6dc369e5fe5330e9eb0418fb8d14090b68c474823ff46b12b7f018a800e529",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.125,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.05419921875,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-61ab6777bf992c10f50f",
++      "feature_hash": "sha256:2656f0445cca15cfb9f7e4710111cffde049a46cc88c18a9d28a49b483936980",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-d1a2e40639adbedc155c",
++      "feature_hash": "sha256:d5e1436b9400f6e15308e741b7e5edea3cbadb1df3860fa798470a6ba16efb6e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.060302734375,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-bdad7cf1cea34bebf990",
++      "feature_hash": "sha256:7baa263ff81311571e27d1126cdd5dee0cde5ea7dc9ba936de84871a8e0c472a",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.125,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.054931640625,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-bf42bafb288d1541c4aa",
++      "feature_hash": "sha256:2656f0445cca15cfb9f7e4710111cffde049a46cc88c18a9d28a49b483936980",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-10cd38eb23e715dd8205",
++      "feature_hash": "sha256:0fa6feeb116a299adc5fc4c61c4a933086b2999b94cdb8d1a55ed6e855b8ea4b",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.054931640625,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-ed855b8f294fb18268ef",
++      "feature_hash": "sha256:ef75d54871d5ebf6a32058c411874de554d4599bf02db4f1252f4b7ad55fc47c",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.078125,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-8d97536eb50163a157eb",
++      "feature_hash": "sha256:a1fb10120a606286e3d6518bc7d73fd7014fe26a2463adb0212baf51373fe17d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-19b70716d33d73c6cae9",
++      "feature_hash": "sha256:6ecb2b398af48d8dbc7af600a768d1d69564044c5c166d1eb1b910cdd16d8d7d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.054931640625,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-0334b179c9403828495d",
++      "feature_hash": "sha256:0bcf6531bb0740d7f0027dc7467aa018380af71011a7c6091edc962abf09912e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.075927734375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-26d23bb65eadd477eec0",
++      "feature_hash": "sha256:a1fb10120a606286e3d6518bc7d73fd7014fe26a2463adb0212baf51373fe17d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-a42fc55870d43d94007a",
++      "feature_hash": "sha256:1c4aa5bfd85972e6f8fb16c1f83d3f00a6e140e3db5ab6b9ea57037cb3747b37",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.059326171875,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-563e4d8f8a482b0517cb",
++      "feature_hash": "sha256:7d8f1217b9eaee45d91a647f801015f2c9530f6df30322fccbc186d56549f7a5",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.125,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        1.0,
++        0.0,
++        1.0,
++        1.0,
++        1.0,
++        0.05419921875,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-62f8825abe5abc8dff40",
++      "feature_hash": "sha256:30984879de803a72c625e4ed828b72f0f2e2a2f81944584b96df746099b817c9",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-4f6ab1a7a4f37a585e7a",
++      "feature_hash": "sha256:13da657ceea28d1f341d11ea37bea3e51d2383bb7ce1b8a357f06938aa6e4cf8",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.055908203125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-8fa72a8d102c8a942d54",
++      "feature_hash": "sha256:7cebad448ff55dbd4acd120d1f7af6a5f9470269f64367d7444b5ab73f47400f",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07275390625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-3993861b1ab24863a388",
++      "feature_hash": "sha256:30984879de803a72c625e4ed828b72f0f2e2a2f81944584b96df746099b817c9",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-6aa624924266c1f3ee88",
++      "feature_hash": "sha256:8eba430e01b340b9556631c4985949deb83b9dfd16806321fedd5d875f3aed2a",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.059814453125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_id": "candidate-f8f2bccd0163345adf9a",
++      "feature_hash": "sha256:7af4ff1debcd650d145c87fcf604d39f0e1e9061ef70a2b85873817994c551d0",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.071533203125,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f7081395754cee06274a",
++      "feature_hash": "sha256:2656f0445cca15cfb9f7e4710111cffde049a46cc88c18a9d28a49b483936980",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-56126f30b5b2e64d0a40",
++      "feature_hash": "sha256:e7487cfc5f5fbbc15afd2b38c44e8dd884ed97b8a8c3f88f5fdb3d975d51b413",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.125,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.048828125,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-dddabdaac9a2a2346b87",
++      "feature_hash": "sha256:90f8f196f7f98b529cfcc91a8305dd661c77daef26cafd6d0967dc5eba738554",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07275390625,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-d74822430ac3b26cf38b",
++      "feature_hash": "sha256:2656f0445cca15cfb9f7e4710111cffde049a46cc88c18a9d28a49b483936980",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-605f666d447ece88ff17",
++      "feature_hash": "sha256:d5e1436b9400f6e15308e741b7e5edea3cbadb1df3860fa798470a6ba16efb6e",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.060302734375,
++        0.0,
++        0.0,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-f47773853d8761ff428f",
++      "feature_hash": "sha256:2faaa7443d08f76715834e499fda9321bab18503ce33c5b01f30ac10aa5ea71f",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0771484375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-d706bdf9660ae673d8e7",
++      "feature_hash": "sha256:a1fb10120a606286e3d6518bc7d73fd7014fe26a2463adb0212baf51373fe17d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-29a37d04a30d9d8d5dca",
++      "feature_hash": "sha256:64fdb0135d05eeec6dfc0c5ef3aceeb562db50126aabae7e8dec333af405a4b5",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.055908203125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-c044f60d092f7bedc790",
++      "feature_hash": "sha256:2faaa7443d08f76715834e499fda9321bab18503ce33c5b01f30ac10aa5ea71f",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0771484375,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-c5f7607a4d7720dcdeed",
++      "feature_hash": "sha256:a1fb10120a606286e3d6518bc7d73fd7014fe26a2463adb0212baf51373fe17d",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-3a6b5539638b279bebdc",
++      "feature_hash": "sha256:64fdb0135d05eeec6dfc0c5ef3aceeb562db50126aabae7e8dec333af405a4b5",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.055908203125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-04e2bf3004bc404aad06",
++      "feature_hash": "sha256:7cebad448ff55dbd4acd120d1f7af6a5f9470269f64367d7444b5ab73f47400f",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07275390625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-5398fe5ff955301f979f",
++      "feature_hash": "sha256:30984879de803a72c625e4ed828b72f0f2e2a2f81944584b96df746099b817c9",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-059bc2ddf77a90c3727c",
++      "feature_hash": "sha256:ae5b41906a31e37d7947356486ba85c55e142a02301585a40abcc6f649a4fb28",
++      "feature_vector": [
++        1.0,
++        1.0,
++        1.0,
++        0.125,
++        1.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.050048828125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-e5db4fc5301866cfc905",
++      "feature_hash": "sha256:7cebad448ff55dbd4acd120d1f7af6a5f9470269f64367d7444b5ab73f47400f",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.07275390625,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-5e4250df97caf3835d51",
++      "feature_hash": "sha256:30984879de803a72c625e4ed828b72f0f2e2a2f81944584b96df746099b817c9",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    },
++    {
++      "candidate_id": "candidate-2760f68375ccee577083",
++      "feature_hash": "sha256:8eba430e01b340b9556631c4985949deb83b9dfd16806321fedd5d875f3aed2a",
++      "feature_vector": [
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.0,
++        0.059814453125,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        0.0,
++        1.0,
++        0.0,
++        1.0,
++        0.0
++      ],
++      "frozen_before_training": true,
++      "split": "heldout"
++    }
++  ],
++  "feature_schema": {
++    "bounds": [
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ],
++      [
++        0.0,
++        1.0
++      ]
++    ],
++    "dimension": 23,
++    "feature_names": [
++      "parse_success",
++      "json_object",
++      "schema_key_fraction",
++      "domain_map_count_norm",
++      "domain_field_fraction",
++      "domain_names_nonempty_fraction",
++      "domain_scale_finite_fraction",
++      "domain_offset_finite_fraction",
++      "objective_present",
++      "objective_direction_same",
++      "objective_direction_reversed",
++      "objective_scale_finite",
++      "objective_offset_finite",
++      "raw_length_norm",
++      "schedule_direct",
++      "schedule_trigger_switched",
++      "schedule_draft_conditioned",
++      "formulation_bounded_integer_linear",
++      "formulation_boolean_cardinality",
++      "formulation_bounded_piecewise_linear",
++      "model_0",
++      "model_1",
++      "model_2"
++    ],
++    "normalization_is_preregistered": true,
++    "schema": "carnot.exp6977.feature_vector.v1"
++  },
++  "field_principles": {
++    "abstraction_disagreement_rows": "Measured KAN-PWA gaps must stay within the certified envelope.",
++    "certified_pwa_energy_ready_score": "One requires executed MILP proofs, sound envelopes, and terminal held-out rows.",
++    "checkpoint_hash": "A parameter hash makes deterministic training and later replay testable.",
++    "duration_s": "Measured wall time distinguishes execution from a schema-only result.",
++    "feature_rows": "Opaque per-candidate vectors expose every learned input without identity leakage.",
++    "feature_schema": "A closed numeric schema prevents labels and exact outcomes from entering training.",
++    "field_principles": "One reason per required field makes the evidence contract reviewable.",
++    "gate_check_summary": "Failed checks retain names and both sides of every required comparison.",
++    "heldout_comparison_rows": "One-shot held-out rows compare KAN, PWA, constant, and MLP fairly.",
++    "honest_verdict": "A class-consistent prefix gives automation an unambiguous terminal state.",
++    "inference_substrate": "The declared compute path prevents a solver run from becoming an LLM claim.",
++    "invariant_certificate_rows": "Explicit proofs keep hard infeasibility and structural invariants outside learning.",
++    "latency_rows": "Measured CPU latency states the cost of each scoring path.",
++    "local_error_bound_rows": "Local rows keep each nonlinear unit's envelope error explicit.",
++    "milp_query_rows": "Each query states its objective and finite domain before certification.",
++    "milp_solver_receipts": "Backend receipts prove a real mixed-integer solver executed optimally.",
++    "model_config": "Architecture and optimizer settings bound the compact residual claim.",
++    "model_parameter_count": "Capacity receipts support comparison with the size-matched MLP.",
++    "per_candidate_rows": "Candidate-level predictions allow every reported metric to be rebuilt.",
++    "piece_budget_rows": "Dynamic-program and knapsack rows prove how the fixed budget was allocated.",
++    "preconditions_checked": "Exact expected and observed values make every blocked run actionable.",
++    "propagated_error_bound_rows": "Network rows separate propagated error from local unit bounds.",
++    "pwa_energy_heldout_positive_score": "A separate score prevents empirical accuracy from defining execution readiness.",
++    "pwa_unit_rows": "Per-unit affine pieces expose the abstraction submitted to the solver.",
++    "random_seed": "One seed fixes initialization, optimization, allocation ties, and intervals.",
++    "reproducibility_checksum": "A timing-free digest detects scientific payload drift.",
++    "rows": "Terminal denominator rows prevent aggregate metrics from hiding missing cases.",
++    "source_artifact_hashes": "Hashes bind the conclusion to frozen candidate and implementation bytes.",
++    "split_isolation_rows": "Split hashes prove calibration and held-out candidate identities stay fixed.",
++    "training_rows": "One terminal row per epoch proves calibration-only optimizer work occurred.",
++    "verdict_class": "A closed class prevents prose from disguising a blocked or null run.",
++    "verifier_is_oracle": "False keeps the learned residual distinct from its exact external assessor."
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "candidate_artifact_present",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "candidate_certification_complete_score",
++        "expected_value": 1,
++        "observed_value": 1,
++        "passed": true
++      },
++      {
++        "check": "candidate_bank_present",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "calibration_features_nonconstant",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "calibration_labels_nonconstant",
++        "expected_value": true,
++        "observed_value": false,
++        "passed": false
++      },
++      {
++        "check": "heldout_split_hashes",
++        "expected_value": {
++          "calibration_hash_present": true,
++          "heldout_hash_present": true,
++          "upstream_split_hash_present": true
++        },
++        "observed_value": {
++          "calibration_hash_present": true,
++          "heldout_hash_present": true,
++          "upstream_split_hash_present": true
++        },
++        "passed": true
++      },
++      {
++        "check": "supported_kan_implementation",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "actual_milp_solver",
++        "expected_value": {
++          "executed": true,
++          "status": "optimal"
++        },
++        "observed_value": {
++          "executed": true,
++          "status": "optimal"
++        },
++        "passed": true
++      },
++      {
++        "check": "feature_isolation",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      }
++    ],
++    "failed_checks": [
++      {
++        "expected_value": true,
++        "failed_check": "calibration_labels_nonconstant",
++        "observed_value": false
++      }
++    ],
++    "passed": false
++  },
++  "heldout_comparison_rows": [],
++  "honest_verdict": "blocked_certified_pwa_kan_energy",
++  "inference_substrate": "calibration_only_kan_training_plus_pwa_milp_certification",
++  "invariant_certificate_rows": [],
++  "latency_rows": [],
++  "local_error_bound_rows": [],
++  "milp_query_rows": [],
++  "milp_solver_receipts": [
++    {
++      "constraint_count": 1,
++      "error": null,
++      "executed": true,
++      "integer_variable_count": 1,
++      "objective_value": 1.0,
++      "solver": "scipy.optimize.milp/HiGHS",
++      "status": "optimal",
++      "witness": [
++        1.0
++      ]
++    }
++  ],
++  "model_config": {
++    "epochs": 80,
++    "kan": "additive_convex_quadratic_units",
++    "piece_budget_per_unit": 3,
++    "status": "not_trained_failed_precondition"
++  },
++  "model_parameter_count": null,
++  "per_candidate_rows": [],
++  "piece_budget_rows": [],
++  "preconditions_checked": [
++    {
++      "check": "candidate_artifact_present",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "candidate_certification_complete_score",
++      "expected_value": 1,
++      "observed_value": 1,
++      "passed": true
++    },
++    {
++      "check": "candidate_bank_present",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "calibration_features_nonconstant",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "calibration_labels_nonconstant",
++      "expected_value": true,
++      "observed_value": false,
++      "passed": false
++    },
++    {
++      "check": "heldout_split_hashes",
++      "expected_value": {
++        "calibration_hash_present": true,
++        "heldout_hash_present": true,
++        "upstream_split_hash_present": true
++      },
++      "observed_value": {
++        "calibration_hash_present": true,
++        "heldout_hash_present": true,
++        "upstream_split_hash_present": true
++      },
++      "passed": true
++    },
++    {
++      "check": "supported_kan_implementation",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "actual_milp_solver",
++      "expected_value": {
++        "executed": true,
++        "status": "optimal"
++      },
++      "observed_value": {
++        "executed": true,
++        "status": "optimal"
++      },
++      "passed": true
++    },
++    {
++      "check": "feature_isolation",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    }
++  ],
++  "propagated_error_bound_rows": [],
++  "pwa_energy_heldout_positive_score": 0,
++  "pwa_unit_rows": [],
++  "random_seed": 697720260904,
++  "reproducibility_checksum": "sha256:b0e80a6bdd0b32b323dad224d4f6bca219100790ceff60cc445685fd6eb395fe",
++  "rows": [],
++  "run_date": "20260904",
++  "schema": "carnot.exp6977.certified_pwa_kan_energy.v1",
++  "source_artifact_hashes": {
++    "experiment_6958": "sha256:8e595307423c690e3b2acbde69d957f9f60168aa9db13743304e10c0ee2414c9",
++    "experiment_6975": "sha256:4a9faf7223d174729091248f8cb763cc6b76e481abe69bdadc19adfe7dac5455",
++    "experiment_6976": "sha256:7d174415abe6b9c3777bc56bdbf0eaa38a37aba390c64685c667f625aa6e05b9",
++    "module": "sha256:888542470d3c74df2579dcb9410c5ac59515796cb7bae4caab3d881c3ee46762",
++    "research_references": "sha256:d759fb8ba733c77834c90e7ba908adda93dbbbeddd395e0c921d5dda627ad8ab",
++    "spec": "sha256:6ed7f3c6f3e8b42600ccf0c09f0da9dc7e666fa72e14c145e65fc6086b62f26a",
++    "test": "sha256:1e1acc5daa81fe3021fe000f6440a786159c8b523880b6293f346b07a4d441bb",
++    "wrapper": "sha256:39cdc59c682ebf883a801ecbaeedc7db621f3dfd1b7af9d6df47c2dad010591f"
++  },
++  "split_isolation_rows": [
++    {
++      "candidate_count": 54,
++      "identity_hash": "sha256:080caa589cb84c1479635a122ef1d00705660f9c60d6289c5deb46b3407ae71d",
++      "nonempty": true,
++      "split": "calibration"
++    },
++    {
++      "candidate_count": 54,
++      "identity_hash": "sha256:da634a5504f9afb3ed925155ee48a44eaa0326e493383b00a4af1b7ad5b3a49d",
++      "nonempty": true,
++      "split": "heldout"
++    }
++  ],
++  "training_rows": [],
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6977_certified_pwa_kan_energy.py b/scripts/experiments/experiment_6977_certified_pwa_kan_energy.py
+new file mode 100644
+index 0000000000..887ffdd92e
+--- /dev/null
++++ b/scripts/experiments/experiment_6977_certified_pwa_kan_energy.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Run calibration-only PWA-KAN residual certification.
++
++Spec ref: REQ-KAN-6977.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_6977_certified_pwa_kan_energy import main
++
++
++if __name__ == "__main__":  # pragma: no cover - required command boundary.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6977_certified_pwa_kan_energy.py b/tests/python/test_experiment_6977_certified_pwa_kan_energy.py
+new file mode 100644
+index 0000000000..9b745fc384
+--- /dev/null
++++ b/tests/python/test_experiment_6977_certified_pwa_kan_energy.py
+@@ -0,0 +1,401 @@
++"""Tests for calibration-only PWA-KAN residual certification.
++
++Spec refs: REQ-KAN-6977 and SCENARIO-KAN-6977-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import numpy as np
++import pytest
++
++from carnot import experiment_6977_certified_pwa_kan_energy as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/kan-verifier/spec.md"
++
++
++def _raw_candidate(
++    *,
++    variables: int = 1,
++    direction: str = "same",
++    scale: str = "1",
++) -> str:
++    return json.dumps(
++        {
++            "schema_version": "carnot.constraint_ir.mapping.v1",
++            "variable_map": [
++                {"source": f"x{i}", "target": f"y{i}", "scale": scale, "offset": "0"}
++                for i in range(variables)
++            ],
++            "objective_map": {"direction": direction, "scale": scale, "offset": "0"},
++        },
++        sort_keys=True,
++    )
++
++
++def _certified_row(
++    ordinal: int,
++    *,
++    split: str = "calibration",
++    success: bool = False,
++    parse_success: bool = True,
++    schedule: str = "direct",
++) -> dict[str, object]:
++    return {
++        "attempt_key": f"model|pair-{ordinal}|{schedule}",
++        "ordinal": ordinal,
++        "hf_id": exp.MODEL_FAMILIES[ordinal % len(exp.MODEL_FAMILIES)],
++        "pair_id": f"pair-{ordinal}",
++        "split": split,
++        "formulation_family": exp.FORMULATION_FAMILIES[ordinal % len(exp.FORMULATION_FAMILIES)],
++        "schedule_id": schedule,
++        "raw_sha256": f"sha256:{ordinal:064x}",
++        "parse_outcome": "parsed" if parse_success else "rejected",
++        "parse_success": parse_success,
++        "parse_reason": None if parse_success else "malformed_json",
++        "schema_outcome": "valid" if parse_success else "not_evaluated",
++        "domain_correspondence_outcome": "passed" if success else "failed",
++        "objective_direction_outcome": "passed" if success else "failed",
++        "objective_order_outcome": "passed" if success else "failed",
++        "satisfiability_outcome": "passed" if success else "failed",
++        "certified_relation": "equivalent" if success else "non_equivalent",
++        "exact_semantic_success": success,
++        "terminal": True,
++    }
++
++
++def _bank_row(row: dict[str, object], raw: str) -> dict[str, object]:
++    return {
++        "attempt_key": row["attempt_key"],
++        "candidate_raw_text": raw,
++        "candidate_raw_sha256": row["raw_sha256"],
++    }
++
++
++def test_req_kan_6977_spec_anchors_contract_and_required_fields() -> None:
++    """REQ-KAN-6977: OpenSpec owns every field and required scenario."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    for scenario in (
++        "PRECONDITIONS",
++        "FEATURES",
++        "TRAINING",
++        "PWA",
++        "BUDGET",
++        "MILP",
++        "INFEASIBILITY",
++        "BARE",
++    ):
++        assert f"SCENARIO-KAN-6977-{scenario}" in text
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in text
++
++
++def test_scenario_kan_6977_features_are_frozen_and_oracle_isolated() -> None:
++    """SCENARIO-KAN-6977-FEATURES: exact labels and identities stay outside inputs."""
++
++    rows = [
++        _certified_row(0, success=True),
++        _certified_row(1, success=False, parse_success=False, schedule="trigger_switched"),
++    ]
++    bank_rows = [
++        _bank_row(rows[0], _raw_candidate(variables=2, direction="same")),
++        _bank_row(rows[1], "{bad"),
++    ]
++    schema, feature_rows = exp.freeze_features(rows, bank_rows)
++
++    assert schema["feature_names"] == list(exp.FEATURE_NAMES)
++    assert schema["dimension"] == len(exp.FEATURE_NAMES)
++    assert len(feature_rows) == 2
++    assert feature_rows[0]["candidate_id"].startswith("candidate-")
++    assert feature_rows[0]["feature_vector"] != feature_rows[1]["feature_vector"]
++    assert exp.audit_feature_isolation(schema, feature_rows)["passed"] is True
++    encoded = exp.canonical_json(feature_rows).decode("ascii")
++    for forbidden in exp.FORBIDDEN_FEATURE_TOKENS:
++        assert forbidden not in encoded
++    assert "pair-0" not in encoded
++    assert "exact_semantic_success" not in encoded
++
++
++def test_req_kan_6977_feature_audit_rejects_schema_or_width_drift() -> None:
++    """REQ-KAN-6977: the feature audit fails closed on forbidden or malformed data."""
++
++    rows = [_certified_row(0, success=True)]
++    schema, features = exp.freeze_features(rows, [_bank_row(rows[0], _raw_candidate())])
++    bad_schema = deepcopy(schema)
++    bad_schema["feature_names"].append("correctness_hint")
++    assert exp.audit_feature_isolation(bad_schema, features)["passed"] is False
++    bad_rows = deepcopy(features)
++    bad_rows[0]["feature_vector"] = []
++    assert exp.audit_feature_isolation(schema, bad_rows)["passed"] is False
++    bad_rows = deepcopy(features)
++    bad_rows[0]["feature_vector"][0] = True
++    assert exp.audit_feature_isolation(schema, bad_rows)["passed"] is False
++
++
++def test_scenario_kan_6977_seeded_training_is_deterministic() -> None:
++    """SCENARIO-KAN-6977-TRAINING: equal calibration inputs produce equal fits."""
++
++    features = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]], dtype=np.float64)
++    labels = np.array([0.0, 1.0, 1.0, 0.0], dtype=np.float64)
++    first = exp.fit_calibration_models(features, labels, seed=77, epochs=8)
++    second = exp.fit_calibration_models(features, labels, seed=77, epochs=8)
++
++    assert first.training_rows == second.training_rows
++    assert first.checkpoint_hash == second.checkpoint_hash
++    assert first.kan_predictions == second.kan_predictions
++    assert first.mlp_predictions == second.mlp_predictions
++    assert len(first.training_rows) == 16
++    assert {row["arm"] for row in first.training_rows} == {"kan", "mlp"}
++    assert all(row["terminal"] for row in first.training_rows)
++    assert first.model_parameter_count["kan"] > 0
++    assert first.model_parameter_count["mlp"] > 0
++    with pytest.raises(ValueError, match="shape"):
++        exp.fit_calibration_models(features[:, 0], labels, seed=77, epochs=1)
++    with pytest.raises(ValueError, match="nonconstant"):
++        exp.fit_calibration_models(features, np.zeros(4), seed=77, epochs=1)
++
++
++def test_scenario_kan_6977_pwa_envelopes_are_sound() -> None:
++    """SCENARIO-KAN-6977-PWA: quadratic unit values stay inside local bounds."""
++
++    unit = exp.QuadraticUnit(curvature=1.25, slope=-0.2, intercept=0.4)
++    abstraction = exp.build_unit_pwa(unit, unit_index=0, lower=0.0, upper=1.0, pieces=4)
++    probes = np.linspace(0.0, 1.0, 401)
++    gaps = []
++    for probe in probes:
++        lower, upper = abstraction.bounds(float(probe))
++        actual = unit(float(probe))
++        assert lower - 1e-12 <= actual <= upper + 1e-12
++        gaps.append(upper - lower)
++    assert max(gaps) <= abstraction.local_error_bound + 1e-12
++    assert abstraction.local_error_bound == pytest.approx(1.25 / (4 * 4**2))
++    assert abstraction.segments[0].as_serializable()["index"] == 0
++    with pytest.raises(ValueError, match="outside"):
++        abstraction.bounds(1.1)
++    with pytest.raises(ValueError, match="pieces"):
++        exp.build_unit_pwa(unit, unit_index=0, lower=0.0, upper=1.0, pieces=0)
++    with pytest.raises(ValueError, match="domain"):
++        exp.build_unit_pwa(unit, unit_index=0, lower=1.0, upper=0.0, pieces=1)
++    with pytest.raises(ValueError, match="curvature"):
++        exp.build_unit_pwa(
++            exp.QuadraticUnit(curvature=-1.0, slope=0.0, intercept=0.0),
++            unit_index=0,
++            lower=0.0,
++            upper=1.0,
++            pieces=1,
++        )
++
++
++def test_scenario_kan_6977_budget_uses_dp_and_network_knapsack() -> None:
++    """SCENARIO-KAN-6977-BUDGET: allocation minimizes propagated error."""
++
++    units = [
++        exp.QuadraticUnit(curvature=4.0, slope=0.0, intercept=0.0),
++        exp.QuadraticUnit(curvature=1.0, slope=0.0, intercept=0.0),
++    ]
++    plan = exp.allocate_piece_budget(units, [(0.0, 1.0)] * 2, budget=7, min_pieces=2)
++
++    assert plan.piece_counts == (4, 3)
++    assert sum(plan.piece_counts) == 7
++    assert plan.unit_dp_rows
++    assert plan.knapsack_rows
++    assert plan.propagated_error_bound == pytest.approx(sum(plan.local_error_bounds))
++    with pytest.raises(ValueError, match="budget"):
++        exp.allocate_piece_budget(units, [(0.0, 1.0)] * 2, budget=3, min_pieces=2)
++    with pytest.raises(ValueError, match="count"):
++        exp.allocate_piece_budget([], [], budget=1, min_pieces=1)
++
++
++def test_scenario_kan_6977_real_milp_is_non_tautological() -> None:
++    """SCENARIO-KAN-6977-MILP: SciPy HiGHS executes a mixed-integer bound solve."""
++
++    smoke = exp.milp_solver_smoke_test()
++    assert smoke["executed"] is True
++    assert smoke["status"] == "optimal"
++    assert smoke["integer_variable_count"] == 1
++    assert smoke["objective_value"] == pytest.approx(1.0)
++
++    units = [exp.QuadraticUnit(curvature=1.0, slope=0.0, intercept=0.0)]
++    plan = exp.allocate_piece_budget(units, [(0.0, 1.0)], budget=2, min_pieces=2)
++    abstractions = [exp.build_unit_pwa(units[0], unit_index=0, lower=0.0, upper=1.0, pieces=2)]
++    receipt = exp.solve_pwa_output_bounds(abstractions, output_bias=0.0)
++
++    assert receipt["solver"] == "scipy.optimize.milp/HiGHS"
++    assert receipt["status"] == "optimal"
++    assert receipt["executed"] is True
++    assert receipt["integer_variable_count"] == 4
++    assert receipt["constraint_count"] > 0
++    assert receipt["certified_upper_bound"] == pytest.approx(1.0)
++    assert receipt["certified_lower_bound"] <= 0.0
++    assert receipt["upper_witness"] == pytest.approx([1.0])
++    assert plan.propagated_error_bound == pytest.approx(0.0625)
++    with pytest.raises(ValueError, match="required"):
++        exp.solve_pwa_output_bounds([], output_bias=0.0)
++
++
++def test_req_kan_6977_solver_failures_do_not_certify(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-KAN-6977: solver exceptions and nonoptimal results fail closed."""
++
++    def raise_solver(**_kwargs: object) -> object:
++        raise RuntimeError("injected")
++
++    monkeypatch.setattr(exp, "milp", raise_solver)
++    receipt = exp.milp_solver_smoke_test()
++    assert receipt["executed"] is False
++    assert receipt["status"] == "solver_error"
++
++    monkeypatch.setattr(
++        exp,
++        "milp",
++        lambda **_kwargs: SimpleNamespace(
++            status=1, success=False, x=None, fun=None, message="time limit"
++        ),
++    )
++    unit = exp.QuadraticUnit(curvature=1.0, slope=0.0, intercept=0.0)
++    abstraction = exp.build_unit_pwa(unit, unit_index=0, lower=0.0, upper=1.0, pieces=2)
++    with pytest.raises(RuntimeError, match="nonoptimal"):
++        exp.solve_pwa_output_bounds([abstraction], output_bias=0.0)
++
++
++def test_scenario_kan_6977_infeasibility_is_outside_residual() -> None:
++    """SCENARIO-KAN-6977-INFEASIBILITY: no residual can reverse hard rejection."""
++
++    infeasible = _certified_row(0, success=False)
++    feasible = _certified_row(1, success=True)
++    for residual in (-1e9, -1.0, 0.0, 1.0, 1e9):
++        assert exp.combine_hard_feasibility(infeasible, residual, threshold=0.5) is False
++    assert exp.combine_hard_feasibility(feasible, 0.1, threshold=0.5) is True
++    assert exp.combine_hard_feasibility(feasible, 0.9, threshold=0.5) is False
++    certificate = exp.certify_infeasibility_preservation([infeasible, feasible])
++    assert certificate["proved"] is True
++    assert certificate["hard_infeasible_count"] == 1
++
++
++def test_scenario_kan_6977_actual_constant_labels_emit_blocked_contract(tmp_path: Path) -> None:
++    """SCENARIO-KAN-6977-PRECONDITIONS: Exp6976's constant labels block fitting."""
++
++    output = tmp_path / "experiment_6977.json"
++    artifact = exp.run(date="20260904", repo_root=REPO, output_path=output)
++
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++    exp.validate_artifact(artifact)
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_certified_pwa_kan_energy"
++    assert artifact["certified_pwa_energy_ready_score"] == 0
++    assert artifact["pwa_energy_heldout_positive_score"] == 0
++    assert artifact["training_rows"] == []
++    assert artifact["checkpoint_hash"] is None
++    assert artifact["feature_rows"]
++    failed = artifact["gate_check_summary"]["failed_checks"]
++    label_gate = next(
++        row for row in failed if row["failed_check"] == "calibration_labels_nonconstant"
++    )
++    assert label_gate["expected_value"] is True
++    assert label_gate["observed_value"] is False
++    assert all("exact_semantic_success" not in json.dumps(row) for row in artifact["feature_rows"])
++    assert all(field in artifact["field_principles"] for field in exp.REQUIRED_ARTIFACT_FIELDS)
++
++
++def test_scenario_kan_6977_bare_scores_and_checksum_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-KAN-6977-BARE: wrapped scores and changed payloads are rejected."""
++
++    artifact = exp.build_from_paths(REPO, date="20260904")
++    exp.validate_artifact(artifact)
++
++    wrapped = deepcopy(artifact)
++    wrapped["certified_pwa_energy_ready_score"] = {"value": 0}
++    with pytest.raises(ValueError, match="bare_binary_score"):
++        exp.validate_artifact(wrapped)
++
++    changed = deepcopy(artifact)
++    changed["random_seed"] += 1
++    with pytest.raises(ValueError, match="checksum"):
++        exp.validate_artifact(changed)
++
++    wrong_class = deepcopy(artifact)
++    wrong_class["verdict_class"] = "positive"
++    wrong_class["reproducibility_checksum"] = exp.payload_checksum(wrong_class)
++    with pytest.raises(ValueError, match="blocked_verdict_class"):
++        exp.validate_artifact(wrong_class)
++
++
++def test_req_kan_6977_input_and_validation_failures_are_explicit(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-KAN-6977: malformed inputs and every blocked-schema drift fail closed."""
++
++    assert exp._read_object(tmp_path / "missing.json") is None
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert exp._read_object(malformed) is None
++    scalar = tmp_path / "scalar.json"
++    scalar.write_text("[]", encoding="utf-8")
++    assert exp._read_object(scalar) is None
++
++    artifact = exp.build_from_paths(REPO, date="20260904")
++    cases = []
++    missing = deepcopy(artifact)
++    del missing["rows"]
++    cases.append((missing, "missing_required_fields"))
++    principle = deepcopy(artifact)
++    del principle["field_principles"]["rows"]
++    principle["reproducibility_checksum"] = exp.payload_checksum(principle)
++    cases.append((principle, "missing_field_principles"))
++    substrate = deepcopy(artifact)
++    substrate["inference_substrate"] = "wrong"
++    substrate["reproducibility_checksum"] = exp.payload_checksum(substrate)
++    cases.append((substrate, "inference_substrate"))
++    oracle = deepcopy(artifact)
++    oracle["verifier_is_oracle"] = True
++    oracle["reproducibility_checksum"] = exp.payload_checksum(oracle)
++    cases.append((oracle, "verifier_is_oracle"))
++    verdict = deepcopy(artifact)
++    verdict["verdict_class"] = "unknown"
++    verdict["reproducibility_checksum"] = exp.payload_checksum(verdict)
++    cases.append((verdict, "invalid_verdict_class"))
++    prefix = deepcopy(artifact)
++    prefix["honest_verdict"] = "complete_wrong"
++    prefix["reproducibility_checksum"] = exp.payload_checksum(prefix)
++    cases.append((prefix, "blocked_verdict_prefix"))
++    readiness = deepcopy(artifact)
++    readiness["certified_pwa_energy_ready_score"] = 1
++    readiness["reproducibility_checksum"] = exp.payload_checksum(readiness)
++    cases.append((readiness, "blocked_readiness"))
++    trained = deepcopy(artifact)
++    trained["training_rows"] = [{"epoch": 1}]
++    trained["reproducibility_checksum"] = exp.payload_checksum(trained)
++    cases.append((trained, "must_not_train"))
++    gate_shape = deepcopy(artifact)
++    gate_shape["gate_check_summary"]["failed_checks"][0]["extra"] = True
++    gate_shape["reproducibility_checksum"] = exp.payload_checksum(gate_shape)
++    cases.append((gate_shape, "failed_gate_shape"))
++    for changed, message in cases:
++        with pytest.raises(ValueError, match=message):
++            exp.validate_artifact(changed)
++
++    monkeypatch.setattr(
++        exp,
++        "check_preconditions",
++        lambda *_args: ([exp.gate_check("injected", True, True)], [], {"status": "optimal"}),
++    )
++    with pytest.raises(RuntimeError, match="unexpected_all_preconditions"):
++        exp.build_from_paths(tmp_path)
++
++
++def test_req_kan_6977_cli_writes_to_requested_temporary_path(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-KAN-6977: the dated command surface writes and reports one blocked artifact."""
++
++    output = tmp_path / "cli.json"
++    assert exp.main(["--date", "20260904", "--repo-root", str(REPO), "--output", str(output)]) == 0
++    report = json.loads(capsys.readouterr().out)
++    assert report["output"] == str(output)
++    assert report["honest_verdict"] == "blocked_certified_pwa_kan_energy"
+-- 
+2.55.0
+

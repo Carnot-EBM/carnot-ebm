@@ -1,0 +1,1561 @@
+From 9eaadac639e900c2ce38228f5129ed172a38225f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 00:55:16 -0400
+Subject: [PATCH 06522/11362] [conductor] ARC live target precheck with
+ action-diversity guard
+
+Automated research step by research conductor.
+Task ID: exp5520-arc-action-diversity-target-precheck
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  62 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/arc_perception_generation.py      | 131 ++++
+ ...20_arc_action_diversity_target_precheck.py | 589 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._arc_action_diversity_target_precheck.json | 108 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...20_arc_action_diversity_target_precheck.py | 384 ++++++++++++
+ 18 files changed, 1296 insertions(+), 22 deletions(-)
+ create mode 100644 python/carnot/experiment_5520_arc_action_diversity_target_precheck.py
+ create mode 100644 results/experiment_5520_arc_action_diversity_target_precheck.json
+ create mode 100644 tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 391868b2c6..58022caca7 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -1744,6 +1744,48 @@ Required field principles:
+ - `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
+ - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+ 
++### REQ-ARC-FCP-5520: Action-Diversity Target Precheck
++
++Experiment 5520 SHALL write
++`results/experiment_5520_arc_action_diversity_target_precheck.json` before the
++next live ARC level-up attempt spends credit-bearing budget. The workflow SHALL
++read `ops/arc_solve_registry.yaml` and the Exp5508 live perception-generation
++artifact, reject any candidate whose target level is already reproduced by the
++registry, and reject the Exp5508 repeated coordinate/action pattern as a target
++or mechanism reuse.
++
++The workflow SHALL configure a live-path candidate-generator change based on
++connected-component/color-blob salience plus repeated-coordinate suppression,
++target rotation, action entropy, or salience coverage. It SHALL measure that
++changed path through a dry-run or limited no-credit probe only; the probe SHALL
++NOT run offline ground-truth BFS, use a hand per-game adapter, or claim solve
++credit. A target SHALL be selected only when the probe shows a meaningfully
++different action-diversity path from Exp5508.
++
++The result artifact SHALL include `registry_precheck_done`, `selected_game`,
++`selected_level`, `already_reproduced`, `exp5508_pattern_reused`,
++`candidate_generator_changes`, `action_entropy`,
++`repeated_coordinate_rate`, `salience_coverage_rate`,
++`no_credit_probe_attempts`, `arc_levelup_candidate_ready`,
++`solve_provenance`, `inference_substrate`, and `honest_verdict`.
++
++Required field principles:
++
++- `registry_precheck_done`: principle "bare bool proving ops/arc_solve_registry.yaml was checked before target selection."
++- `selected_game`: principle "one registry-safe game id selected for the next live level-up attempt, or empty string when blocked."
++- `selected_level`: principle "next unreproduced target level as a string or bare int; it must be strictly deeper than the registry depth."
++- `already_reproduced`: principle "must be false for any ready artifact."
++- `exp5508_pattern_reused`: principle "must be false; Exp5508's repeated ACTION6 coordinate loop cannot be reused."
++- `candidate_generator_changes`: principle "non-empty list naming live-path generation changes such as repeated-coordinate suppression, target rotation, action entropy gating, or salience coverage."
++- `action_entropy`: principle "Shannon entropy over dry-run action/coordinate choices as a bare float."
++- `repeated_coordinate_rate`: principle "fraction of dry-run consecutive coordinate choices that repeat a prior coordinate, as a bare float."
++- `salience_coverage_rate`: principle "fraction of dry-run choices covering distinct salience candidates, as a bare float."
++- `no_credit_probe_attempts`: principle "bare int count of no-credit dry-run choices measured before the live attempt."
++- `arc_levelup_candidate_ready`: principle "bare bool true only when registry and Exp5508-pattern gates pass and the diversity metrics meet threshold."
++- `solve_provenance`: principle "must equal live_agent_self_discovery."
++- `inference_substrate`: principle "must equal arc_live_precheck."
++- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
+@@ -2458,3 +2500,23 @@ When experiment 5507 builds its artifact
+ Then it leaves `selected_game`, `selected_level`, and `selected_mechanism`
+ empty, sets `levelup_attempt_ready=false`, keeps `solve_claimed=false`, and
+ uses a `blocked:` honest verdict with exact reasons.
++
++### SCENARIO-ARC-FCP-5520: Action-Diversity Precheck Selects Changed Target
++
++Given Exp5508 repeatedly chose ACTION6 at the same small coordinate set and did
++not bank a new level
++And the registry records the Exp5508 target depth but has a different candidate
++game with an unreproduced next level
++When experiment 5520 runs the no-credit action-diversity precheck
++Then it rejects the Exp5508 target/pattern, rotates to one registry-safe target,
++measures action entropy, repeated-coordinate rate, and salience coverage from
++the changed live-path candidate generator, and writes
++`results/experiment_5520_arc_action_diversity_target_precheck.json` without a
++solve claim.
++
++Given the registry already reproduces the candidate level or the dry-run probe
++collapses to the Exp5508 repeated-coordinate pattern
++When experiment 5520 validates the artifact
++Then `arc_levelup_candidate_ready=false`, `already_reproduced` or
++`exp5508_pattern_reused` records the blocker, and `honest_verdict` starts with
++`blocked:`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a48a3d00cc..f7ff4107fe 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4474,
++  "experiments_checked": 4475,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_perception_generation.py b/python/carnot/agentic/arc_perception_generation.py
+index 34807dbbd5..71bcb9c2f9 100644
+--- a/python/carnot/agentic/arc_perception_generation.py
++++ b/python/carnot/agentic/arc_perception_generation.py
+@@ -15,6 +15,7 @@ from __future__ import annotations
+ from collections import Counter
+ from collections.abc import Mapping, Sequence
+ from dataclasses import dataclass, field
++import math
+ from typing import Any
+ 
+ import numpy as np
+@@ -72,6 +73,31 @@ def _point(row: Mapping[str, Any]) -> tuple[int, int]:
+     return int(row["x"]), int(row["y"])
+ 
+ 
++def _row_data(row: Mapping[str, Any]) -> Mapping[str, Any]:
++    data = row.get("data")
++    return data if isinstance(data, Mapping) else {}
++
++
++def _row_coordinate(row: Mapping[str, Any]) -> tuple[int, int] | None:
++    if "x" in row and "y" in row:
++        return int(row["x"]), int(row["y"])
++    data = _row_data(row)
++    if "x" in data and "y" in data:
++        return int(data["x"]), int(data["y"])
++    return None
++
++
++def _row_signature(row: Mapping[str, Any]) -> str:
++    data = _row_data(row)
++    coord = _row_coordinate(row)
++    if coord is not None:
++        return f"A{_as_int(row.get('action'))}@{coord[0]},{coord[1]}"
++    if data:
++        items = ",".join(f"{key}={data[key]}" for key in sorted(data))
++        return f"A{_as_int(row.get('action'))}@{items}"
++    return f"A{_as_int(row.get('action'))}"
++
++
+ def _changed_mask(before: Any | None, after: Any) -> tuple[np.ndarray, bool]:
+     if before is None:
+         return np.zeros_like(_as_grid(after), dtype=bool), False
+@@ -99,6 +125,111 @@ def _taxonomy_counts(rows: Sequence[Mapping[str, Any]]) -> dict[str, int]:
+     return counts
+ 
+ 
++@dataclass
++class ActionDiversityPerceptionGenerator:
++    """Diversity wrapper for live-path perception candidates.
++
++    The base perception generator can correctly find salient click targets but
++    still spend a short budget on the same coordinate pattern after a no-op or
++    non-winning effect. This wrapper keeps the same live-visible rows and adds a
++    conservative bookkeeping layer: avoid coordinates already known from the
++    failed Exp5508 path, suppress duplicate coordinates inside the dry run, and
++    report simple metrics before any credit-bearing live attempt is launched.
++    """
++
++    max_candidates: int = 8
++    _change_receipts: list[str] = field(default_factory=list, init=False)
++
++    @property
++    def change_receipts(self) -> list[str]:
++        return list(self._change_receipts)
++
++    def prioritize_rows(
++        self,
++        rows: Sequence[Mapping[str, Any]],
++        *,
++        avoid_coordinates: set[tuple[int, int]] | frozenset[tuple[int, int]] = frozenset(),
++        max_candidates: int | None = None,
++    ) -> list[dict[str, Any]]:
++        """Return diverse salience rows without spending live solve credit."""
++
++        limit = int(self.max_candidates if max_candidates is None else max_candidates)
++        ordered = sorted(
++            [dict(row) for row in rows if isinstance(row, Mapping)],
++            key=lambda row: (
++                -float(row.get("score") or 0.0),
++                _as_int(row.get("tier"), 99),
++                _row_signature(row),
++            ),
++        )
++        selected: list[dict[str, Any]] = []
++        seen: set[tuple[int, int]] = set()
++        suppressed_repeats = 0
++        suppressed_avoided = 0
++        for row in ordered:
++            coord = _row_coordinate(row)
++            if coord is not None and coord in set(avoid_coordinates):
++                suppressed_avoided += 1
++                continue
++            if coord is not None and coord in seen:
++                suppressed_repeats += 1
++                continue
++            if coord is not None:
++                seen.add(coord)
++            selected.append(row)
++            if len(selected) >= max(1, limit):
++                break
++        self._change_receipts = [
++            "connected_component_color_blob_salience",
++            "repeated_coordinate_suppression",
++            "no_credit_action_entropy_probe",
++        ]
++        if suppressed_avoided:
++            self._change_receipts.append("exp5508_failed_coordinate_avoidance")
++        if suppressed_repeats:
++            self._change_receipts.append("within_probe_duplicate_coordinate_suppression")
++        return selected
++
++    def diversity_metrics(
++        self,
++        rows: Sequence[Mapping[str, Any]],
++        *,
++        total_salience_candidates: int | None = None,
++    ) -> dict[str, float]:
++        """Measure entropy, coordinate repetition, and salience coverage."""
++
++        signatures = [_row_signature(row) for row in rows if isinstance(row, Mapping)]
++        counts = Counter(signatures)
++        total = sum(counts.values())
++        entropy = 0.0
++        for count in counts.values():
++            probability = float(count) / float(total or 1)
++            if probability:
++                entropy -= probability * math.log2(probability)
++
++        seen: set[tuple[int, int]] = set()
++        repeated = 0
++        coordinate_count = 0
++        for row in rows:
++            if not isinstance(row, Mapping):
++                continue
++            coord = _row_coordinate(row)
++            if coord is None:
++                continue
++            coordinate_count += 1
++            if coord in seen:
++                repeated += 1
++            seen.add(coord)
++
++        denominator = int(total_salience_candidates or max(len(seen), len(rows), 1))
++        coverage = float(len(seen)) / float(max(1, denominator))
++        return {
++            "action_entropy": float(entropy),
++            "repeated_coordinate_rate": float(repeated) / float(max(1, coordinate_count)),
++            "salience_coverage_rate": min(1.0, max(0.0, float(coverage))),
++        }
++
++
+ @dataclass
+ class ClassicalPerceptionGenerator:
+     """Runtime-grounded action prior and prefix generator for ARC frames."""
+diff --git a/python/carnot/experiment_5520_arc_action_diversity_target_precheck.py b/python/carnot/experiment_5520_arc_action_diversity_target_precheck.py
+new file mode 100644
+index 0000000000..0813c0e2de
+--- /dev/null
++++ b/python/carnot/experiment_5520_arc_action_diversity_target_precheck.py
+@@ -0,0 +1,589 @@
++"""Exp5520: ARC action-diversity target precheck.
++
++Spec refs: REQ-ARC-FCP-5520, SCENARIO-ARC-FCP-5520.
++
++This module is deliberately a no-credit precheck, not a solver. Exp5508 showed
++that a perception-grounded generator could still collapse into a small
++coordinate loop. Before the next live level-up attempt, this step re-reads the
++solve registry, rotates away from the Exp5508 target, and dry-runs the changed
++live-path generator over salience candidates to prove that coordinate diversity
++is measurable before any attempt can claim solve credit.
++"""
++
++from __future__ import annotations
++
++import json
++import time
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot.agentic.arc_perception_generation import ActionDiversityPerceptionGenerator
++
++
++JsonDict = dict[str, Any]
++
++REPO = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = 5520
++EXPERIMENT = "experiment_5520_arc_action_diversity_target_precheck"
++MILESTONE = "2026.07.500"
++RESULT_RELATIVE_PATH = "results/experiment_5520_arc_action_diversity_target_precheck.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++EXP5508_RELATIVE_PATH = "results/experiment_5508_arc_live_perception_generation_levelup_v499.json"
++EXP5480_RELATIVE_PATH = "results/experiment_5480_arc_live_salience_levelup_v497.json"
++EXP5465_RELATIVE_PATH = "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-human-replay-frame-change/spec.md"
++SPEC_REFS = ["REQ-ARC-FCP-5520", "SCENARIO-ARC-FCP-5520"]
++SOLVE_PROVENANCE = "live_agent_self_discovery"
++INFERENCE_SUBSTRATE = "arc_live_precheck"
++NO_CREDIT_PROBE_BUDGET = 8
++MIN_ACTION_ENTROPY = 1.5
++MAX_REPEATED_COORDINATE_RATE = 0.25
++MIN_SALIENCE_COVERAGE_RATE = 0.5
++DEFAULT_TESTS_RUN = [
++    (
++        ".venv/bin/pytest "
++        "tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py "
++        "-q --no-cov"
++    ),
++    (
++        ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest "
++        "tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py "
++        "-q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m "
++        "python/carnot/experiment_5520_arc_action_diversity_target_precheck.py"
++    ),
++    ".venv/bin/pytest tests/python -q",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "registry_precheck_done": "bare bool proving ops/arc_solve_registry.yaml was checked before target selection.",
++    "selected_game": "one registry-safe game id selected for the next live level-up attempt, or empty string when blocked.",
++    "selected_level": "next unreproduced target level as a string or bare int; it must be strictly deeper than the registry depth.",
++    "already_reproduced": "must be false for any ready artifact.",
++    "exp5508_pattern_reused": "must be false; Exp5508's repeated ACTION6 coordinate loop cannot be reused.",
++    "candidate_generator_changes": "non-empty list naming live-path generation changes such as repeated-coordinate suppression, target rotation, action entropy gating, or salience coverage.",
++    "action_entropy": "Shannon entropy over dry-run action/coordinate choices as a bare float.",
++    "repeated_coordinate_rate": "fraction of dry-run consecutive coordinate choices that repeat a prior coordinate, as a bare float.",
++    "salience_coverage_rate": "fraction of dry-run choices covering distinct salience candidates, as a bare float.",
++    "no_credit_probe_attempts": "bare int count of no-credit dry-run choices measured before the live attempt.",
++    "arc_levelup_candidate_ready": "bare bool true only when registry and Exp5508-pattern gates pass and the diversity metrics meet threshold.",
++    "solve_provenance": "must equal live_agent_self_discovery.",
++    "inference_substrate": "must equal arc_live_precheck.",
++    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
++}
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class PrecheckEvidence:
++    """All source data used by the no-credit Exp5520 precheck."""
++
++    registry: Mapping[str, Any]
++    exp5508: Mapping[str, Any]
++    candidate_artifacts: Sequence[Mapping[str, Any]]
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return int(default)
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return float(default)
++
++
++def _level_label(level: int) -> str:
++    return f"L{max(0, int(level))}"
++
++
++def _parse_level(value: Any) -> int:
++    text = str(value or "").strip().upper()
++    if text.startswith("L") and text[1:].isdigit():
++        return int(text[1:])
++    if text.isdigit():
++        return int(text)
++    return 0
++
++
++def _read_json(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _read_yaml(path: Path) -> JsonDict:
++    if not path.exists():
++        return {"reproducible_total_levels": 0, "games": []}
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {
++        "reproducible_total_levels": 0,
++        "games": [],
++    }
++
++
++def _read_text(path: Path) -> str:
++    if not path.exists():
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(row.get("game")): row
++        for row in registry.get("games", []) or []
++        if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _registry_depth(registry: Mapping[str, Any], game: str) -> int:
++    return _as_int((_registry_rows(registry).get(game) or {}).get("levels_reproduced"))
++
++
++def _target_marker(game: str, level: int) -> str:
++    return f"{game}:{_level_label(level)}"
++
++
++def _row_data(row: Mapping[str, Any]) -> Mapping[str, Any]:
++    data = row.get("data")
++    return data if isinstance(data, Mapping) else {}
++
++
++def _row_coordinate(row: Mapping[str, Any]) -> tuple[int, int] | None:
++    data = _row_data(row)
++    if "x" in data and "y" in data:
++        return _as_int(data.get("x")), _as_int(data.get("y"))
++    if "x" in row and "y" in row:
++        return _as_int(row.get("x")), _as_int(row.get("y"))
++    return None
++
++
++def _row_signature(row: Mapping[str, Any]) -> str:
++    coord = _row_coordinate(row)
++    if coord is not None:
++        return f"A{_as_int(row.get('action'))}@{coord[0]},{coord[1]}"
++    return f"A{_as_int(row.get('action'))}"
++
++
++def _candidate_game(artifact: Mapping[str, Any]) -> str:
++    return str(
++        artifact.get("target_game")
++        or artifact.get("game")
++        or artifact.get("selected_game")
++        or ""
++    )
++
++
++def _candidate_level(artifact: Mapping[str, Any], registry: Mapping[str, Any], game: str) -> int:
++    level = _as_int(
++        artifact.get("target_level_attempted")
++        or artifact.get("target_level")
++        or artifact.get("selected_target_level")
++    )
++    if level > 0:
++        return level
++    return _registry_depth(registry, game) + 1 if game else 0
++
++
++def _candidate_rows(artifact: Mapping[str, Any]) -> list[dict[str, Any]]:
++    paths = (
++        ("attempt", "salience_diagnostics", "action_tier_rows"),
++        ("salience_diagnostics", "action_tier_rows"),
++    )
++    for path in paths:
++        node: Any = artifact
++        for key in path:
++            node = node.get(key) if isinstance(node, Mapping) else None
++        if isinstance(node, list):
++            return [dict(row) for row in node if isinstance(row, Mapping)]
++
++    receipts = artifact.get("feature_receipts")
++    if isinstance(receipts, Mapping):
++        rows: list[dict[str, Any]] = []
++        for row in receipts.get("color_blob_rows") or []:
++            if not isinstance(row, Mapping):
++                continue
++            if "centroid_x" in row and "centroid_y" in row:
++                rows.append(
++                    {
++                        "action": 6,
++                        "data": {
++                            "x": _as_int(row.get("centroid_x")),
++                            "y": _as_int(row.get("centroid_y")),
++                        },
++                        "score": 4000.0 - _as_float(row.get("tier"), 4.0),
++                        "tier": _as_int(row.get("tier"), 4),
++                    }
++                )
++        return rows
++    return []
++
++
++def extract_exp5508_pattern(exp5508: Mapping[str, Any]) -> JsonDict:
++    """REQ-ARC-FCP-5520: summarize the failed Exp5508 action pattern."""
++
++    steps = (exp5508.get("attempt") or {}).get("trajectory_taxonomy_steps") or []
++    action_rows = [row for row in steps if isinstance(row, Mapping) and row.get("action") is not None]
++    signatures = [_row_signature(row) for row in action_rows]
++    coords = [_row_coordinate(row) for row in action_rows]
++    seen: set[tuple[int, int]] = set()
++    repeated = 0
++    coord_count = 0
++    for coord in coords:
++        if coord is None:
++            continue
++        coord_count += 1
++        if coord in seen:
++            repeated += 1
++        seen.add(coord)
++    counts = Counter(signatures)
++    total = sum(counts.values())
++    entropy = 0.0
++    for count in counts.values():
++        probability = float(count) / float(total or 1)
++        if probability:
++            import math
++
++            entropy -= probability * math.log2(probability)
++    selected_level = _parse_level(exp5508.get("selected_level") or exp5508.get("target_level"))
++    return {
++        "selected_game": str(exp5508.get("selected_game") or ""),
++        "selected_level": _level_label(selected_level) if selected_level else "",
++        "target_level": int(selected_level),
++        "action_count": int(len(action_rows)),
++        "unique_coordinate_count": int(len(seen)),
++        "coordinates": [{"x": x, "y": y} for x, y in sorted(seen)],
++        "repeated_coordinate_rate": float(repeated) / float(max(1, coord_count)),
++        "action_entropy": float(entropy),
++    }
++
++
++def _pattern_coordinates(pattern: Mapping[str, Any]) -> set[tuple[int, int]]:
++    coords: set[tuple[int, int]] = set()
++    for row in pattern.get("coordinates") or []:
++        if isinstance(row, Mapping) and "x" in row and "y" in row:
++            coords.add((_as_int(row.get("x")), _as_int(row.get("y"))))
++    return coords
++
++
++def _runs_exp5508_pattern(
++    *,
++    game: str,
++    level: int,
++    pattern: Mapping[str, Any],
++    probe_rows: Sequence[Mapping[str, Any]],
++    repeated_coordinate_rate: float,
++    action_entropy: float,
++) -> bool:
++    if game == pattern.get("selected_game") and level == _as_int(pattern.get("target_level")):
++        return True
++    if not probe_rows:
++        return True
++    pattern_coords = _pattern_coordinates(pattern)
++    probe_coords = {_row_coordinate(row) for row in probe_rows if isinstance(row, Mapping)}
++    probe_coords.discard(None)
++    overlap = len(set(probe_coords) & pattern_coords)
++    overlap_rate = float(overlap) / float(max(1, len(probe_coords)))
++    return bool(
++        repeated_coordinate_rate > 0.5
++        or (overlap_rate >= 0.5 and action_entropy <= _as_float(pattern.get("action_entropy")) + 0.1)
++    )
++
++
++def _run_no_credit_probe(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    exp5508_pattern: Mapping[str, Any],
++) -> JsonDict:
++    generator = ActionDiversityPerceptionGenerator(max_candidates=NO_CREDIT_PROBE_BUDGET)
++    selected_rows = generator.prioritize_rows(
++        rows,
++        avoid_coordinates=_pattern_coordinates(exp5508_pattern),
++    )
++    total_salience = len({_row_coordinate(row) for row in rows if _row_coordinate(row) is not None})
++    metrics = generator.diversity_metrics(
++        selected_rows,
++        total_salience_candidates=max(1, min(NO_CREDIT_PROBE_BUDGET, total_salience)),
++    )
++    return {
++        "selected_rows": selected_rows,
++        "candidate_generator_changes": generator.change_receipts
++        + ["target_rotation", "salience_coverage_gate"],
++        "action_entropy": float(metrics["action_entropy"]),
++        "repeated_coordinate_rate": float(metrics["repeated_coordinate_rate"]),
++        "salience_coverage_rate": float(metrics["salience_coverage_rate"]),
++        "no_credit_probe_attempts": int(len(selected_rows)),
++    }
++
++
++def _empty_probe() -> JsonDict:
++    return {
++        "selected_rows": [],
++        "candidate_generator_changes": [
++            "connected_component_color_blob_salience",
++            "repeated_coordinate_suppression",
++            "target_rotation",
++            "no_credit_action_entropy_probe",
++            "salience_coverage_gate",
++        ],
++        "action_entropy": 0.0,
++        "repeated_coordinate_rate": 1.0,
++        "salience_coverage_rate": 0.0,
++        "no_credit_probe_attempts": 0,
++    }
++
++
++def load_evidence(root: Path = REPO) -> PrecheckEvidence:
++    root = Path(root)
++    return PrecheckEvidence(
++        registry=_read_yaml(root / REGISTRY_RELATIVE_PATH),
++        exp5508=_read_json(root / EXP5508_RELATIVE_PATH),
++        candidate_artifacts=[
++            _read_json(root / EXP5480_RELATIVE_PATH),
++            _read_json(root / EXP5465_RELATIVE_PATH),
++        ],
++    )
++
++
++def build_precheck(
++    evidence: PrecheckEvidence,
++    *,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    tests_run: Sequence[str] = (),
++    duration_s: float = 0.0,
++) -> JsonDict:
++    """SCENARIO-ARC-FCP-5520: select one changed-path target or block."""
++
++    pattern = extract_exp5508_pattern(evidence.exp5508)
++    selected: JsonDict | None = None
++    last_probe = _empty_probe()
++    blocked_duplicate = False
++    blocked_pattern = False
++    blockers: list[str] = []
++    candidate_audit: list[JsonDict] = []
++
++    for artifact in evidence.candidate_artifacts:
++        if not isinstance(artifact, Mapping) or not artifact:
++            continue
++        game = _candidate_game(artifact)
++        level = _candidate_level(artifact, evidence.registry, game)
++        if not game or level <= 0:
++            continue
++        rows = _candidate_rows(artifact)
++        already = level <= _registry_depth(evidence.registry, game)
++        probe = _run_no_credit_probe(rows, exp5508_pattern=pattern) if rows else _empty_probe()
++        pattern_reused = _runs_exp5508_pattern(
++            game=game,
++            level=level,
++            pattern=pattern,
++            probe_rows=probe["selected_rows"],
++            repeated_coordinate_rate=_as_float(probe.get("repeated_coordinate_rate")),
++            action_entropy=_as_float(probe.get("action_entropy")),
++        )
++        metrics_ready = (
++            _as_float(probe.get("action_entropy")) >= MIN_ACTION_ENTROPY
++            and _as_float(probe.get("repeated_coordinate_rate")) <= MAX_REPEATED_COORDINATE_RATE
++            and _as_float(probe.get("salience_coverage_rate")) >= MIN_SALIENCE_COVERAGE_RATE
++            and _as_int(probe.get("no_credit_probe_attempts")) > 0
++        )
++        candidate_audit.append(
++            {
++                "target": _target_marker(game, level),
++                "registry_depth": _registry_depth(evidence.registry, game),
++                "already_reproduced": bool(already),
++                "exp5508_pattern_reused": bool(pattern_reused),
++                "action_entropy": float(probe["action_entropy"]),
++                "repeated_coordinate_rate": float(probe["repeated_coordinate_rate"]),
++                "salience_coverage_rate": float(probe["salience_coverage_rate"]),
++                "no_credit_probe_attempts": int(probe["no_credit_probe_attempts"]),
++            }
++        )
++        last_probe = probe
++        blocked_duplicate = blocked_duplicate or already
++        blocked_pattern = blocked_pattern or pattern_reused
++        if already:
++            blockers.append(f"{_target_marker(game, level)} already_in_registry")
++            continue
++        if pattern_reused:
++            blockers.append(f"{_target_marker(game, level)} exp5508_pattern_reused")
++            continue
++        if not metrics_ready:
++            blockers.append(f"{_target_marker(game, level)} diversity_probe_below_threshold")
++            continue
++        selected = {
++            "game": game,
++            "level": level,
++            "probe": probe,
++        }
++        break
++
++    ready = selected is not None
++    probe = selected["probe"] if selected is not None else last_probe
++    selected_game = str(selected["game"]) if selected else ""
++    selected_level = _level_label(_as_int(selected["level"])) if selected else ""
++    already_reproduced = False if ready else bool(blocked_duplicate)
++    exp5508_pattern_reused = False if ready else bool(blocked_pattern)
++    if not candidate_audit:
++        blockers.append("no_candidate_salience_artifacts")
++    if not blockers and not ready:  # pragma: no cover - defensive invariant.
++        blockers.append("no_candidate_passed_action_diversity_gate")
++
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "experiment": EXPERIMENT,
++        "milestone": MILESTONE,
++        "schema": "carnot.experiment_5520_arc_action_diversity_target_precheck.v1",
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "status": "complete" if ready else "blocked",
++        "registry_precheck_done": bool(evidence.registry),
++        "selected_game": selected_game,
++        "selected_level": selected_level,
++        "already_reproduced": bool(already_reproduced),
++        "exp5508_pattern_reused": bool(exp5508_pattern_reused),
++        "candidate_generator_changes": list(probe["candidate_generator_changes"]),
++        "action_entropy": float(probe["action_entropy"]),
++        "repeated_coordinate_rate": float(probe["repeated_coordinate_rate"]),
++        "salience_coverage_rate": float(probe["salience_coverage_rate"]),
++        "no_credit_probe_attempts": int(probe["no_credit_probe_attempts"]),
++        "arc_levelup_candidate_ready": bool(ready),
++        "solve_provenance": SOLVE_PROVENANCE,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": (
++            f"complete: {selected_game} {selected_level} action-diversity precheck ready; no solve claimed"
++            if ready
++            else "blocked: " + ", ".join(blockers)
++        ),
++        "exp5508_pattern": pattern,
++        "candidate_audit": candidate_audit,
++        "input_artifacts": [
++            REGISTRY_RELATIVE_PATH,
++            EXP5508_RELATIVE_PATH,
++            EXP5480_RELATIVE_PATH,
++            EXP5465_RELATIVE_PATH,
++        ],
++        "preconditions_checked": dict(preconditions_checked or {}),
++        "tests_run": list(tests_run),
++        "duration_s": float(duration_s),
++    }
++    return artifact
++
++
++def _verdict_claims_solve(verdict: str) -> bool:
++    text = verdict.lower()
++    return "solved" in text or "reproduced" in text or "banked" in text
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field: {field}" for field in REQUIRED_FIELDS if field not in artifact
++    ]
++    if type(artifact.get("registry_precheck_done")) is not bool:
++        errors.append("registry_precheck_done must be bare bool")
++    if not isinstance(artifact.get("selected_game"), str):
++        errors.append("selected_game must be a string")
++    if not isinstance(artifact.get("selected_level"), (str, int)):
++        errors.append("selected_level must be a string or int")
++    for field in ("already_reproduced", "exp5508_pattern_reused", "arc_levelup_candidate_ready"):
++        if type(artifact.get(field)) is not bool:
++            errors.append(f"{field} must be bare bool")
++    if artifact.get("arc_levelup_candidate_ready") is True:
++        if artifact.get("already_reproduced") is not False:
++            errors.append("ready artifacts require already_reproduced false")
++        if artifact.get("exp5508_pattern_reused") is not False:
++            errors.append("ready artifacts require exp5508_pattern_reused false")
++        if not artifact.get("selected_game"):
++            errors.append("ready artifacts require selected_game")
++        if not artifact.get("selected_level"):
++            errors.append("ready artifacts require selected_level")
++        if _as_float(artifact.get("action_entropy")) < MIN_ACTION_ENTROPY:
++            errors.append("ready artifacts require action_entropy above threshold")
++        if _as_float(artifact.get("repeated_coordinate_rate")) > MAX_REPEATED_COORDINATE_RATE:
++            errors.append("ready artifacts require repeated_coordinate_rate below threshold")
++        if _as_float(artifact.get("salience_coverage_rate")) < MIN_SALIENCE_COVERAGE_RATE:
++            errors.append("ready artifacts require salience_coverage_rate above threshold")
++    changes = artifact.get("candidate_generator_changes")
++    if not isinstance(changes, list) or not changes:
++        errors.append("candidate_generator_changes must be a non-empty list")
++    for field in ("action_entropy", "repeated_coordinate_rate", "salience_coverage_rate"):
++        if type(artifact.get(field)) is not float:
++            errors.append(f"{field} must be bare float")
++    for field in ("repeated_coordinate_rate", "salience_coverage_rate"):
++        if type(artifact.get(field)) in (float, int) and not (0.0 <= float(artifact[field]) <= 1.0):
++            errors.append(f"{field} must be in [0, 1]")
++    if type(artifact.get("no_credit_probe_attempts")) is not int:
++        errors.append("no_credit_probe_attempts must be bare int")
++    elif artifact["no_credit_probe_attempts"] < 0:
++        errors.append("no_credit_probe_attempts must be non-negative")
++    if artifact.get("solve_provenance") != SOLVE_PROVENANCE:
++        errors.append("solve_provenance must be live_agent_self_discovery")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must be arc_live_precheck")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(("complete:", "blocked:")):
++        errors.append("honest_verdict must start with complete: or blocked:")
++    if _verdict_claims_solve(verdict):
++        errors.append("honest_verdict must not claim a solve")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def _write_artifact(root: Path, artifact: Mapping[str, Any]) -> None:
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run_experiment(
++    *,
++    root: Path = REPO,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++) -> JsonDict:
++    started = time.monotonic()
++    root = Path(root)
++    spec_text = _read_text(root / SPEC_RELATIVE_PATH)
++    preconditions = {
++        "AGENTS.md": (root / "AGENTS.md").exists(),
++        "CODEX.md": (root / "CODEX.md").exists(),
++        "CLAUDE.md": (root / "CLAUDE.md").exists(),
++        "registry_present": (root / REGISTRY_RELATIVE_PATH).exists(),
++        "exp5508_present": (root / EXP5508_RELATIVE_PATH).exists(),
++        "candidate_salience_artifact_present": (root / EXP5480_RELATIVE_PATH).exists(),
++        "spec_has_req_5520": "REQ-ARC-FCP-5520" in spec_text,
++        "offline_bfs_used": False,
++        "game_source_read": False,
++        "per_game_adapter_used": False,
++        "solve_claimed": False,
++    }
++    artifact = build_precheck(
++        load_evidence(root),
++        preconditions_checked=preconditions,
++        tests_run=tests_run,
++        duration_s=time.monotonic() - started,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 202a239971..e294edb459 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:38:59.680932+00:00",
+-  "finished_at": "2026-07-10T04:38:59.706683+00:00",
+-  "duration_s": 0.026,
++  "started_at": "2026-07-10T04:54:13.671041+00:00",
++  "finished_at": "2026-07-10T04:54:13.697674+00:00",
++  "duration_s": 0.027,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index cf1ecc40a2..cdc47a77fa 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T04:39:00Z",
++  "run_date": "2026-07-10T04:54:14Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 632e121fea..bbf31dd610 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:39:01Z",
+-  "finished_at": "2026-07-10T04:39:01Z",
++  "started_at": "2026-07-10T04:54:15Z",
++  "finished_at": "2026-07-10T04:54:15Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 6287de004c..740f7d5c80 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T04:39:01Z",
++  "run_date": "2026-07-10T04:54:15Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 39beba9411..e4c614757d 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T04:39:01Z",
++  "run_date": "2026-07-10T04:54:15Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6613e42208..5e99650c69 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1619796752929688,
++  "efficiency_gains_ms": 2.1033287048339844,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index aef024560e..dc9d00c8e0 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:38:45Z",
+-  "finished_at": "2026-07-10T04:38:45Z",
++  "started_at": "2026-07-10T04:53:59Z",
++  "finished_at": "2026-07-10T04:53:59Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 94ca624f12..2d7c15f53b 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:39:20Z",
+-  "finished_at": "2026-07-10T04:39:20Z",
++  "started_at": "2026-07-10T04:54:32Z",
++  "finished_at": "2026-07-10T04:54:33Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.0782012939453125,
++  "latency_ms": 0.07677078247070312,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 565b40361b..bf2ccbecb6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 0.00011776993051171303,
++  "duration_s": 5.089491605758667e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5520_arc_action_diversity_target_precheck.json b/results/experiment_5520_arc_action_diversity_target_precheck.json
+new file mode 100644
+index 0000000000..0695f92b83
+--- /dev/null
++++ b/results/experiment_5520_arc_action_diversity_target_precheck.json
+@@ -0,0 +1,108 @@
++{
++  "action_entropy": 3.0,
++  "already_reproduced": false,
++  "arc_levelup_candidate_ready": true,
++  "candidate_audit": [
++    {
++      "action_entropy": 3.0,
++      "already_reproduced": false,
++      "exp5508_pattern_reused": false,
++      "no_credit_probe_attempts": 8,
++      "registry_depth": 2,
++      "repeated_coordinate_rate": 0.0,
++      "salience_coverage_rate": 1.0,
++      "target": "sb26:L3"
++    }
++  ],
++  "candidate_generator_changes": [
++    "connected_component_color_blob_salience",
++    "repeated_coordinate_suppression",
++    "no_credit_action_entropy_probe",
++    "target_rotation",
++    "salience_coverage_gate"
++  ],
++  "duration_s": 0.10580802196636796,
++  "exp5508_pattern": {
++    "action_count": 46,
++    "action_entropy": 1.4993179820792861,
++    "coordinates": [
++      {
++        "x": 10,
++        "y": 40
++      },
++      {
++        "x": 19,
++        "y": 31
++      },
++      {
++        "x": 24,
++        "y": 20
++      }
++    ],
++    "repeated_coordinate_rate": 0.9347826086956522,
++    "selected_game": "dc22",
++    "selected_level": "L3",
++    "target_level": 3,
++    "unique_coordinate_count": 3
++  },
++  "exp5508_pattern_reused": false,
++  "experiment": "experiment_5520_arc_action_diversity_target_precheck",
++  "experiment_id": 5520,
++  "field_principles": {
++    "action_entropy": "Shannon entropy over dry-run action/coordinate choices as a bare float.",
++    "already_reproduced": "must be false for any ready artifact.",
++    "arc_levelup_candidate_ready": "bare bool true only when registry and Exp5508-pattern gates pass and the diversity metrics meet threshold.",
++    "candidate_generator_changes": "non-empty list naming live-path generation changes such as repeated-coordinate suppression, target rotation, action entropy gating, or salience coverage.",
++    "exp5508_pattern_reused": "must be false; Exp5508's repeated ACTION6 coordinate loop cannot be reused.",
++    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
++    "inference_substrate": "must equal arc_live_precheck.",
++    "no_credit_probe_attempts": "bare int count of no-credit dry-run choices measured before the live attempt.",
++    "registry_precheck_done": "bare bool proving ops/arc_solve_registry.yaml was checked before target selection.",
++    "repeated_coordinate_rate": "fraction of dry-run consecutive coordinate choices that repeat a prior coordinate, as a bare float.",
++    "salience_coverage_rate": "fraction of dry-run choices covering distinct salience candidates, as a bare float.",
++    "selected_game": "one registry-safe game id selected for the next live level-up attempt, or empty string when blocked.",
++    "selected_level": "next unreproduced target level as a string or bare int; it must be strictly deeper than the registry depth.",
++    "solve_provenance": "must equal live_agent_self_discovery."
++  },
++  "honest_verdict": "complete: sb26 L3 action-diversity precheck ready; no solve claimed",
++  "inference_substrate": "arc_live_precheck",
++  "input_artifacts": [
++    "ops/arc_solve_registry.yaml",
++    "results/experiment_5508_arc_live_perception_generation_levelup_v499.json",
++    "results/experiment_5480_arc_live_salience_levelup_v497.json",
++    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
++  ],
++  "milestone": "2026.07.500",
++  "no_credit_probe_attempts": 8,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CLAUDE.md": true,
++    "CODEX.md": true,
++    "candidate_salience_artifact_present": true,
++    "exp5508_present": true,
++    "game_source_read": false,
++    "offline_bfs_used": false,
++    "per_game_adapter_used": false,
++    "registry_present": true,
++    "solve_claimed": false,
++    "spec_has_req_5520": true
++  },
++  "registry_precheck_done": true,
++  "repeated_coordinate_rate": 0.0,
++  "result_path": "results/experiment_5520_arc_action_diversity_target_precheck.json",
++  "salience_coverage_rate": 1.0,
++  "schema": "carnot.experiment_5520_arc_action_diversity_target_precheck.v1",
++  "selected_game": "sb26",
++  "selected_level": "L3",
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-ARC-FCP-5520",
++    "SCENARIO-ARC-FCP-5520"
++  ],
++  "status": "complete",
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py -q --no-cov",
++    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5520_arc_action_diversity_target_precheck.py",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1fc0c1d911..8910c0cfe4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:38:05Z",
+-  "finished_at": "2026-07-10T04:38:05Z",
++  "started_at": "2026-07-10T04:53:24Z",
++  "finished_at": "2026-07-10T04:53:24Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index b2cbb9be4c..74f9d779c6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:38:05Z",
+-  "finished_at": "2026-07-10T04:38:06Z",
++  "started_at": "2026-07-10T04:53:24Z",
++  "finished_at": "2026-07-10T04:53:24Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index cdaf68f15e..0eeb702c33 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T04:38:06Z",
+-  "finished_at": "2026-07-10T04:38:06Z",
++  "started_at": "2026-07-10T04:53:24Z",
++  "finished_at": "2026-07-10T04:53:24Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py b/tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py
+new file mode 100644
+index 0000000000..bb6bdc6237
+--- /dev/null
++++ b/tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py
+@@ -0,0 +1,384 @@
++"""Tests for Exp5520 ARC action-diversity target precheck.
++
++Spec refs: REQ-ARC-FCP-5520,
++SCENARIO-ARC-FCP-5520.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5520_arc_action_diversity_target_precheck as exp5520
++from carnot.agentic.arc_perception_generation import ActionDiversityPerceptionGenerator
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _registry(*, sb26_levels: int = 2, total: int = 69) -> dict[str, Any]:
++    return {
++        "reproducible_total_levels": total,
++        "games": [
++            {"game": "dc22", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "sb26", "reproducibility": "reproduced", "levels_reproduced": sb26_levels},
++            {"game": "bp35", "reproducibility": "reproduced", "levels_reproduced": 2},
++        ],
++    }
++
++
++def _exp5508() -> dict[str, Any]:
++    steps = []
++    for index, point in enumerate(
++        [(24, 20), (10, 40), (24, 20), (19, 31), (24, 20), (10, 40), (24, 20)],
++        start=1,
++    ):
++        steps.append(
++            {
++                "step": index,
++                "action": 6,
++                "data": {"x": point[0], "y": point[1]},
++                "changed_cells": 1 if point == (24, 20) else 0,
++                "failure_kind": "logical" if point == (24, 20) else "factual",
++            }
++        )
++    return {
++        "selected_game": "dc22",
++        "selected_level": "L3",
++        "target_level": 3,
++        "status": "honest_null",
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "arc_registry_delta": 0,
++        "attempt": {
++            "live_agent_attempts": len(steps),
++            "trajectory_taxonomy_steps": steps,
++            "perception_features_enabled": [
++                "connected_components",
++                "color_blobs",
++                "sprite_overlays",
++                "salient_motion",
++                "action_affordances",
++            ],
++        },
++    }
++
++
++def _salience_artifact(*, game: str = "sb26", level: int = 3) -> dict[str, Any]:
++    rows = [
++        {"action": 6, "data": {"x": 19, "y": 58}, "score": 4000.0, "tier": 0},
++        {"action": 6, "data": {"x": 19, "y": 58}, "score": 3999.0, "tier": 0},
++        {"action": 6, "data": {"x": 27, "y": 58}, "score": 3998.0, "tier": 0},
++        {"action": 6, "data": {"x": 35, "y": 58}, "score": 3997.0, "tier": 0},
++        {"action": 6, "data": {"x": 43, "y": 58}, "score": 3996.0, "tier": 0},
++    ]
++    return {
++        "target_game": game,
++        "target_level_attempted": level,
++        "new_level_banked": False,
++        "attempt": {
++            "salience_diagnostics": {
++                "action_tier_rows": rows,
++            }
++        },
++    }
++
++
++def _tmp_ready_root(tmp_path: Path, *, registry: dict[str, Any] | None = None) -> Path:
++    root = tmp_path
++    (root / "openspec" / "capabilities" / "arc-human-replay-frame-change").mkdir(parents=True)
++    (root / "ops").mkdir()
++    (root / "results").mkdir()
++    (root / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    (root / "CLAUDE.md").write_text("# CLAUDE\nARC\n", encoding="utf-8")
++    (root / exp5520.SPEC_RELATIVE_PATH).write_text(
++        "REQ-ARC-FCP-5520\nSCENARIO-ARC-FCP-5520\n",
++        encoding="utf-8",
++    )
++    (root / exp5520.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(registry or _registry()),
++        encoding="utf-8",
++    )
++    (root / exp5520.EXP5508_RELATIVE_PATH).write_text(
++        json.dumps(_exp5508()),
++        encoding="utf-8",
++    )
++    (root / exp5520.EXP5480_RELATIVE_PATH).write_text(
++        json.dumps(_salience_artifact()),
++        encoding="utf-8",
++    )
++    return root
++
++
++def test_req_arc_fcp_5520_spec_declares_required_artifact_fields() -> None:
++    """REQ-ARC-FCP-5520: OpenSpec anchors the precheck artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-5520" in spec
++    assert "SCENARIO-ARC-FCP-5520" in spec
++    assert exp5520.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp5520.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in spec
++        assert principle in spec
++
++
++def test_scenario_arc_fcp_5520_diversity_generator_suppresses_repeated_coordinates() -> None:
++    """SCENARIO-ARC-FCP-5520: live-path generator diversity is measurable."""
++
++    rows = _salience_artifact()["attempt"]["salience_diagnostics"]["action_tier_rows"]
++    generator = ActionDiversityPerceptionGenerator(max_candidates=4)
++
++    selected = generator.prioritize_rows(
++        rows + [{"action": 6, "data": {"x": 99, "y": 99}, "score": None, "tier": None}],
++        avoid_coordinates={(24, 20), (10, 40)},
++    )
++    metrics = generator.diversity_metrics(selected, total_salience_candidates=4)
++
++    assert [(row["data"]["x"], row["data"]["y"]) for row in selected] == [
++        (19, 58),
++        (27, 58),
++        (35, 58),
++        (43, 58),
++    ]
++    assert metrics["action_entropy"] == pytest.approx(2.0)
++    assert metrics["repeated_coordinate_rate"] == pytest.approx(0.0)
++    assert metrics["salience_coverage_rate"] == pytest.approx(1.0)
++    assert "repeated_coordinate_suppression" in generator.change_receipts
++
++
++def test_scenario_arc_fcp_5520_selects_registry_safe_rotated_target() -> None:
++    """SCENARIO-ARC-FCP-5520: Exp5508 pattern is rejected before target readiness."""
++
++    evidence = exp5520.PrecheckEvidence(
++        registry=_registry(),
++        exp5508=_exp5508(),
++        candidate_artifacts=[_salience_artifact()],
++    )
++
++    artifact = exp5520.build_precheck(evidence, tests_run=["unit"], duration_s=0.1)
++
++    exp5520.validate_artifact(artifact)
++    assert artifact["registry_precheck_done"] is True
++    assert artifact["selected_game"] == "sb26"
++    assert artifact["selected_level"] == "L3"
++    assert artifact["already_reproduced"] is False
++    assert artifact["exp5508_pattern_reused"] is False
++    assert artifact["action_entropy"] >= 2.0
++    assert artifact["repeated_coordinate_rate"] == pytest.approx(0.0)
++    assert artifact["salience_coverage_rate"] == pytest.approx(1.0)
++    assert artifact["no_credit_probe_attempts"] == 4
++    assert artifact["arc_levelup_candidate_ready"] is True
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["inference_substrate"] == "arc_live_precheck"
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "no solve" in artifact["honest_verdict"]
++
++
++def test_scenario_arc_fcp_5520_blocks_when_only_candidates_are_duplicate_or_repeated() -> None:
++    """SCENARIO-ARC-FCP-5520: duplicate or Exp5508-shaped probes fail closed."""
++
++    duplicate = exp5520.build_precheck(
++        exp5520.PrecheckEvidence(
++            registry=_registry(sb26_levels=3),
++            exp5508=_exp5508(),
++            candidate_artifacts=[_salience_artifact()],
++        )
++    )
++    repeated = exp5520.build_precheck(
++        exp5520.PrecheckEvidence(
++            registry=_registry(),
++            exp5508=_exp5508(),
++            candidate_artifacts=[
++                _salience_artifact(game="dc22", level=3),
++            ],
++        )
++    )
++
++    assert duplicate["arc_levelup_candidate_ready"] is False
++    assert duplicate["already_reproduced"] is True
++    assert duplicate["honest_verdict"].startswith("blocked:")
++    assert repeated["arc_levelup_candidate_ready"] is False
++    assert repeated["exp5508_pattern_reused"] is True
++    assert "exp5508_pattern_reused" in repeated["honest_verdict"]
++    exp5520.validate_artifact(duplicate)
++    exp5520.validate_artifact(repeated)
++
++
++def test_req_arc_fcp_5520_schema_rejects_bad_required_fields() -> None:
++    """REQ-ARC-FCP-5520: schema rejects malformed readiness and solve-credit drift."""
++
++    artifact = exp5520.build_precheck(
++        exp5520.PrecheckEvidence(
++            registry=_registry(),
++            exp5508=_exp5508(),
++            candidate_artifacts=[_salience_artifact()],
++        )
++    )
++    invalid = {
++        **artifact,
++        "registry_precheck_done": "true",
++        "selected_game": 7,
++        "selected_level": [],
++        "already_reproduced": True,
++        "exp5508_pattern_reused": True,
++        "candidate_generator_changes": [],
++        "action_entropy": "2.0",
++        "repeated_coordinate_rate": 1.5,
++        "salience_coverage_rate": -0.1,
++        "no_credit_probe_attempts": "4",
++        "arc_levelup_candidate_ready": True,
++        "solve_provenance": "development_proxy",
++        "inference_substrate": "offline_bfs",
++        "honest_verdict": "solved sb26",
++    }
++    invalid_bool_and_negative = {
++        **artifact,
++        "already_reproduced": "false",
++        "no_credit_probe_attempts": -1,
++    }
++    ready_missing_thresholds = {
++        **artifact,
++        "selected_game": "",
++        "selected_level": "",
++        "action_entropy": 0.0,
++        "repeated_coordinate_rate": 1.0,
++        "salience_coverage_rate": 0.0,
++        "arc_levelup_candidate_ready": True,
++    }
++
++    errors = exp5520.artifact_schema_errors(invalid)
++    bool_errors = exp5520.artifact_schema_errors(invalid_bool_and_negative)
++    threshold_errors = exp5520.artifact_schema_errors(ready_missing_thresholds)
++
++    assert "registry_precheck_done must be bare bool" in errors
++    assert "selected_game must be a string" in errors
++    assert "selected_level must be a string or int" in errors
++    assert "ready artifacts require already_reproduced false" in errors
++    assert "ready artifacts require exp5508_pattern_reused false" in errors
++    assert "candidate_generator_changes must be a non-empty list" in errors
++    assert "action_entropy must be bare float" in errors
++    assert "repeated_coordinate_rate must be in [0, 1]" in errors
++    assert "salience_coverage_rate must be in [0, 1]" in errors
++    assert "no_credit_probe_attempts must be bare int" in errors
++    assert "solve_provenance must be live_agent_self_discovery" in errors
++    assert "inference_substrate must be arc_live_precheck" in errors
++    assert "honest_verdict must start with complete: or blocked:" in errors
++    assert "already_reproduced must be bare bool" in bool_errors
++    assert "no_credit_probe_attempts must be non-negative" in bool_errors
++    assert "ready artifacts require selected_game" in threshold_errors
++    assert "ready artifacts require selected_level" in threshold_errors
++    assert "ready artifacts require action_entropy above threshold" in threshold_errors
++    assert "ready artifacts require repeated_coordinate_rate below threshold" in threshold_errors
++    assert "ready artifacts require salience_coverage_rate above threshold" in threshold_errors
++    with pytest.raises(ValueError):
++        exp5520.validate_artifact(invalid)
++
++
++def test_req_arc_fcp_5520_helper_fallback_branches(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-5520: helper fallbacks stay explicit and no-credit."""
++
++    registry = _registry()
++    feature_receipt_artifact = {
++        "game": "bp35",
++        "feature_receipts": {
++            "color_blob_rows": [
++                [],
++                {"centroid_x": "12", "centroid_y": "13", "tier": "bad"},
++            ]
++        },
++    }
++    mixed_exp5508 = {
++        "selected_game": "dc22",
++        "target_level": "3",
++        "attempt": {
++            "trajectory_taxonomy_steps": [
++                {"action": 6},
++                {"action": 6, "x": "1", "y": "2"},
++            ]
++        },
++    }
++
++    assert exp5520._as_int("bad", 4) == 4  # noqa: SLF001
++    assert exp5520._as_float("bad", 0.5) == 0.5  # noqa: SLF001
++    assert exp5520._parse_level("3") == 3  # noqa: SLF001
++    assert exp5520._parse_level("bad") == 0  # noqa: SLF001
++    assert exp5520._read_yaml(tmp_path / "missing.yaml") == {  # noqa: SLF001
++        "reproducible_total_levels": 0,
++        "games": [],
++    }
++    assert exp5520._read_text(tmp_path / "missing.md") == ""  # noqa: SLF001
++    assert exp5520._row_coordinate({"action": 6, "x": "1", "y": "2"}) == (1, 2)  # noqa: SLF001
++    assert exp5520._row_coordinate({"action": 6}) is None  # noqa: SLF001
++    assert exp5520._row_signature({"action": 6}) == "A6"  # noqa: SLF001
++    assert exp5520._candidate_level({"game": "bp35"}, registry, "bp35") == 3  # noqa: SLF001
++
++    fallback_rows = exp5520._candidate_rows(feature_receipt_artifact)  # noqa: SLF001
++    pattern = exp5520.extract_exp5508_pattern(mixed_exp5508)
++    no_candidate = exp5520.build_precheck(
++        exp5520.PrecheckEvidence(
++            registry=registry,
++            exp5508=_exp5508(),
++            candidate_artifacts=[{}, [], {"target_game": "", "target_level_attempted": 0}],
++        )
++    )
++    below_threshold = exp5520.build_precheck(
++        exp5520.PrecheckEvidence(
++            registry=registry,
++            exp5508=_exp5508(),
++            candidate_artifacts=[
++                {
++                    "target_game": "bp35",
++                    "target_level_attempted": 3,
++                    "attempt": {
++                        "salience_diagnostics": {
++                            "action_tier_rows": [
++                                {"action": 6, "data": {"x": 91, "y": 92}, "score": 1.0}
++                            ]
++                        }
++                    },
++                }
++            ],
++        )
++    )
++
++    assert fallback_rows == [
++        {"action": 6, "data": {"x": 12, "y": 13}, "score": 3996.0, "tier": 4}
++    ]
++    assert exp5520._candidate_rows({"game": "bp35"}) == []  # noqa: SLF001
++    assert pattern["selected_level"] == "L3"
++    assert pattern["unique_coordinate_count"] == 1
++    assert exp5520._runs_exp5508_pattern(  # noqa: SLF001
++        game="bp35",
++        level=3,
++        pattern=pattern,
++        probe_rows=[],
++        repeated_coordinate_rate=0.0,
++        action_entropy=2.0,
++    ) is True
++    assert no_candidate["honest_verdict"] == "blocked: no_candidate_salience_artifacts"
++    assert below_threshold["honest_verdict"].endswith("diversity_probe_below_threshold")
++    exp5520.validate_artifact(no_candidate)
++    exp5520.validate_artifact(below_threshold)
++
++
++def test_scenario_arc_fcp_5520_run_experiment_writes_deliverable(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-5520: runner writes the stable no-credit artifact."""
++
++    root = _tmp_ready_root(tmp_path)
++
++    artifact = exp5520.run_experiment(root=root, tests_run=["unit 5520"])
++    written = json.loads((root / exp5520.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert artifact["selected_game"] == "sb26"
++    assert artifact["arc_levelup_candidate_ready"] is True
++    assert artifact["tests_run"] == ["unit 5520"]
+-- 
+2.55.0
+

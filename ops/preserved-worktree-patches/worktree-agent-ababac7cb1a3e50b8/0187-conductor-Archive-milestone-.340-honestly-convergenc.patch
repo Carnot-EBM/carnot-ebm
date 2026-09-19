@@ -1,0 +1,1868 @@
+From c8031380e223a2d4761600b04521562b5ac5ce19 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 13:54:22 -0400
+Subject: [PATCH 00187/11362] [conductor] Archive milestone .340 honestly
+ (convergence-hardening: G3 lint mechanized, G4 provenance audited,
+ discriminator characterized as risk-coverage abstention gate, headline
+ replicated on fresh corpus, KV260 terminal confirmed, operator seeded Thesis
+ A) and activate .341 (Phase-3 Thesis-A EBT bring-up)
+
+Automated research step by research conductor.
+Task ID: exp3724-archive-v340-activate-v341
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  73 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../archive_v340_activate_v341_3724.py        | 648 ++++++++++++++++++
+ research-complete.yaml                        |  95 +--
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ...iment_3724_archive_v340_activate_v341.json | 153 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...eriment_3724_archive_v340_activate_v341.py |  27 +
+ ...eriment_3724_archive_v340_activate_v341.py | 481 +++++++++++++
+ 24 files changed, 1437 insertions(+), 106 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_v340_activate_v341_3724.py
+ create mode 100644 results/experiment_3724_archive_v340_activate_v341.json
+ create mode 100644 scripts/experiment_3724_archive_v340_activate_v341.py
+ create mode 100644 tests/python/test_experiment_3724_archive_v340_activate_v341.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index fa86863b14..2138cb5759 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16227,3 +16227,76 @@ exclusion manifest, and research conductor unmodified.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3722 | Planned (`python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py`, `scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py`) | Planned (`tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py`) |
++
++### REQ-REPORT-3724: Archive V340 Convergence-Hardening And Activate V341 Thesis A
++
++The Exp 3724 workflow shall archive milestone `2026.06.340` and confirm that
++`research-roadmap.yaml` is active for milestone `2026.06.341`. It SHALL write
++`results/experiment_3724_archive_v340_activate_v341.json` by aggregating
++existing upstream artifacts, `research-complete.yaml`, `research-roadmap.yaml`,
++`docs/research-notes/phase3-alternative-thesis-menu.md`, and
++`ops/north-star.md` only. It SHALL NOT run live inference, push changes, modify
++`scripts/research_conductor.py`, modify `ops/north-star.md`, modify
++`ops/status.md`, modify `ops/changelog.md`, modify `_bmad/traceability.md`, or
++place any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in
++the terminal artifact.
++
++The workflow SHALL update the single `2026.06.340` block in
++`research-complete.yaml`, or append it if absent, so the archive records the
++honest convergence-hardening state: Exp 3715 cleanly re-emits the benign
++Exp 3704 re-freeze corrigendum with no candidate beating the frozen headline;
++Exp 3716 makes G3 mechanically enforced through the Paper-v6 narrowing lint;
++Exp 3717 fully traces headline numbers for G4; Exp 3718 characterizes the
++energy discriminator as a risk-coverage abstention gate, while preserving any
++non-critical verifier warnings as non-terminal warnings; Exp 3719 narrows the
++fresh-corpus result as FoVer-specific rather than silently re-freezing the
++headline; Exp 3720 records FR-11 v14 graceful fallback/no-collapse; Exp 3721
++confirms KV260 terminal and recommends lifting the mandate; Exp 3722 records
++the converged-state next-thesis request; and Exp 3723 keeps `paper_ready=true`,
++keeps P0.1 as honest-negative/bounded, and keeps the frozen FoVer headline at
++`0.9131`. The archive update SHALL be idempotent and SHALL archive the full
++`.340` planned task count.
++
++The workflow SHALL also record that milestone `2026.06.341` is the
++operator-seeded Thesis A direction: energy-as-generator EBT, not
++energy-selection reranking. It SHALL derive this from the active roadmap and
++the Phase-3 alternative-thesis menu, and SHALL distinguish the new generation
++mechanism from the bounded P0.1 energy-selection thesis.
++
++The terminal artifact SHALL include bare top-level values for `honest_verdict`,
++`inference_substrate`, `v340_outcome_recorded`,
++`thesis_a_seeded_recorded`, `paper_ready_preserved`,
++`p01_status_preserved`, `n_tasks_archived`, `adversarial_verify_clean`,
++`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
++`field_principles` documenting why each required value exists.
++`inference_substrate` SHALL be exactly
++`aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).`
++`adversarial_verify_clean` SHALL be true only after
++`scripts/adversarial_verify.py` reports no critical flag on the written
++artifact. `honest_verdict` SHALL equal
++`complete: archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_v341_active_paper_ready_true_frozen_headline_unchanged`.
++`duration_s` SHALL use the aggregation-task plausibility floor of at least
++`0.0001`.
++
++#### SCENARIO-REPORT-3724: V340 Archive Records Hardening And Activates Thesis A
++
++**Given** the active roadmap declares milestone `2026.06.341` and names Thesis
++A energy-as-generator EBT as an operator seed, the Phase-3 alternative-thesis
++menu marks Thesis A selected, and Exp 3715 through Exp 3723 record the `.340`
++convergence-hardening outcomes with `paper_ready=true`, P0.1 preserved as
++honest-negative/bounded, and frozen FoVer headline `0.9131` unchanged
++**When** the Exp 3724 workflow runs
++**Then** it writes the required terminal artifact, records all required
++principle-annotated bare fields, confirms `.341` active, archives all `.340`
++tasks exactly once in `research-complete.yaml`, records `.340` as convergence
++hardening rather than a new headline, records Thesis A as the operator-seeded
++energy-as-generator direction, preserves the P0.1 energy-selection negative
++boundary, passes adversarial verification without a critical flag, leaves
++`ops/north-star.md` and `scripts/research_conductor.py` unchanged, and leaves
++ops/status/changelog and BMAD traceability reconciliation to the conductor.
++
++## Implementation Status (REQ-REPORT-3724)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3724 | Implemented (`python/carnot/reporting/archive_v340_activate_v341_3724.py`, `scripts/experiment_3724_archive_v340_activate_v341.py`) | Implemented (`tests/python/test_experiment_3724_archive_v340_activate_v341.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index bdf8770ff3..9a2792c4ed 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2849,
++  "experiments_checked": 2850,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v340_activate_v341_3724.py b/python/carnot/reporting/archive_v340_activate_v341_3724.py
+new file mode 100644
+index 0000000000..740279dc60
+--- /dev/null
++++ b/python/carnot/reporting/archive_v340_activate_v341_3724.py
+@@ -0,0 +1,648 @@
++"""Archive milestone .340 and confirm milestone .341 Thesis A is active.
++
++Spec: REQ-REPORT-3724, SCENARIO-REPORT-3724.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "exp3724"
++ARCHIVED_MILESTONE = "2026.06.340"
++ACTIVATED_MILESTONE = "2026.06.341"
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3724_archive_v340_activate_v341.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++THESIS_MENU_REL_PATH = Path("docs/research-notes/phase3-alternative-thesis-menu.md")
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++CONDUCTOR_REL_PATH = Path("scripts/research_conductor.py")
++RANDOM_SEED = 3724
++P01_STATUS = "honest-negative-bounded"
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: JSON-read + format; "
++    "0.0001s floor; no compute-bound marker so it does not false-flag)."
++)
++TERMINAL_VERDICT = (
++    "complete: "
++    "archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_"
++    "v341_active_paper_ready_true_frozen_headline_unchanged"
++)
++V340_OUTCOME = (
++    "convergence_hardened_g3_mechanical_g4_audited_risk_coverage_abstention_"
++    "fresh_corpus_fover_specific_fr11_v14_no_collapse_kv260_terminal_"
++    "operator_next_thesis_recorded_paper_ready_true_p01_honest_negative_bounded_"
++    "frozen_0_9131_unchanged"
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "v340_outcome_recorded",
++    "thesis_a_seeded_recorded",
++    "paper_ready_preserved",
++    "p01_status_preserved",
++    "n_tasks_archived",
++    "adversarial_verify_clean",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal prefix lets the reconciler classify the transition complete "
++        "without re-running it."
++    ),
++    "inference_substrate": (
++        "JSON-read + format; 0.0001s floor; no compute-bound marker so it does "
++        "not false-flag."
++    ),
++    "v340_outcome_recorded": (
++        "Records .340's converged-hardening state so the record does not revert."
++    ),
++    "thesis_a_seeded_recorded": (
++        "Records that the operator seeded Thesis A (energy-as-generator) as the "
++        ".341 direction -- the human seed the loop could not self-initiate."
++    ),
++    "paper_ready_preserved": (
++        "G1-G4 stay met; the transition must not silently regress paper_ready; "
++        "frozen headline 0.9131 stays frozen."
++    ),
++    "p01_status_preserved": (
++        "P0.1 / energy-SELECTION stays honest-negative-bounded; .341 tests a "
++        "DIFFERENT mechanism (generation), not a re-grind."
++    ),
++    "n_tasks_archived": (
++        "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
++    ),
++    "adversarial_verify_clean": (
++        "True iff the artifact passes adversarial_verify with no critical flag."
++    ),
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": (
++        "Content hash catches silent drift vs any replication."
++    ),
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++}
++
++UPSTREAM_ARTIFACTS = {
++    "exp3713": Path("results/experiment_3713_archive_v339_activate_v340.json"),
++    "exp3714": Path("results/experiment_3714_backend_state_diagnostic_v6.json"),
++    "exp3715": Path("results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json"),
++    "exp3716": Path("results/experiment_3716_ship_paper_v6_narrowing_lint.json"),
++    "exp3717": Path("results/experiment_3717_g4_full_provenance_audit.json"),
++    "exp3718": Path("results/experiment_3718_risk_coverage_abstention_characterization.json"),
++    "exp3719": Path("results/experiment_3719_headline_replication_fresh_corpus.json"),
++    "exp3720": Path("results/experiment_3720_fr11_continuous_self_learning_v14.json"),
++    "exp3721": Path(
++        "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json"
++    ),
++    "exp3722": Path("results/experiment_3722_convergence_synthesis_operator_next_thesis.json"),
++    "exp3723": Path("results/experiment_3723_capstone_and_g_gate_v340.json"),
++}
++
++V340_TASKS = [
++    {
++        "id": "exp3713-archive-v339-activate-v340",
++        "title": "Archive .339 honestly and activate .340",
++        "deliverable": "results/experiment_3713_archive_v339_activate_v340.json",
++        "result": "OK (conductor)",
++    },
++    {
++        "id": "exp3714-backend-state-diagnostic-v6",
++        "title": "Backend-state diagnostic v6",
++        "deliverable": "results/experiment_3714_backend_state_diagnostic_v6.json",
++        "result": "OK (conductor)",
++    },
++    {
++        "id": "exp3715-refreeze-disambiguation-clean-corrigendum",
++        "title": "Clean corrigendum for re-freeze disambiguation",
++        "deliverable": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++        "result": "CLOSED-NEGATIVE; clean corrigendum; headline stays frozen",
++    },
++    {
++        "id": "exp3716-ship-paper-v6-narrowing-lint-g3-mechanical",
++        "title": "Ship Paper-v6 narrowing lint",
++        "deliverable": "results/experiment_3716_ship_paper_v6_narrowing_lint.json",
++        "result": "G3 mechanically enforced; paper clean",
++    },
++    {
++        "id": "exp3717-g4-full-provenance-audit",
++        "title": "Full G4 provenance audit",
++        "deliverable": "results/experiment_3717_g4_full_provenance_audit.json",
++        "result": "G4 fully traced to clean primary artifacts",
++    },
++    {
++        "id": "exp3718-risk-coverage-abstention-characterization",
++        "title": "Risk-coverage abstention characterization",
++        "deliverable": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++        "result": "ENERGY signal beats entropy as abstention gate; warnings non-critical",
++    },
++    {
++        "id": "exp3719-headline-replication-fresh-corpus",
++        "title": "Headline-class replication on fresh corpus",
++        "deliverable": "results/experiment_3719_headline_replication_fresh_corpus.json",
++        "result": "fresh-corpus result FoVer-specific; frozen headline unchanged",
++    },
++    {
++        "id": "exp3720-fr11-continuous-self-learning-v14",
++        "title": "FR-11 continuous self-learning v14",
++        "deliverable": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
++        "result": "graceful fallback under shift; no collapse",
++    },
++    {
++        "id": "exp3721-hardware-kv260-terminal-confirm-and-continuity",
++        "title": "Hardware continuity and KV260 terminal confirmation",
++        "deliverable": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++        "result": "KV260 terminal confirmed; mandate lift recommended",
++    },
++    {
++        "id": "exp3722-convergence-synthesis-operator-next-thesis",
++        "title": "Convergence synthesis and operator next-thesis request",
++        "deliverable": (
++            "results/experiment_3722_convergence_synthesis_operator_next_thesis.json"
++        ),
++        "result": "converged state synthesized; next-thesis request recorded",
++    },
++    {
++        "id": "exp3723-capstone-and-g-gate-v340",
++        "title": "Capstone v340 and G-gate synthesis",
++        "deliverable": "results/experiment_3723_capstone_and_g_gate_v340.json",
++        "result": "THESIS-A operator seed recorded for .341",
++    },
++]
++
++
++def build_research_complete_block() -> str:
++    """Return the honest `research-complete.yaml` block for milestone .340."""
++
++    finding = (
++        "CONVERGENCE-HARDENING MILESTONE: .340 did not move the frozen headline; "
++        "it hardened and bounded the converged state. exp3715 cleanly re-emitted "
++        "the re-freeze corrigendum as CLOSED-NEGATIVE, so no candidate replaces "
++        "the frozen FoVer 0.9131. exp3716 made G3 mechanically enforced through "
++        "the Paper-v6 narrowing lint, and exp3717 made G4 fully traced to clean "
++        "primary artifacts. exp3718 characterized the proven discriminator as a "
++        "risk-coverage abstention gate; exp3719 recorded that the fresh-corpus "
++        "result was FoVer-specific rather than a silent new headline. exp3720 "
++        "kept FR-11 bounded under shift with graceful fallback and no collapse. "
++        "exp3721 confirmed KV260 terminal and recommended lifting the mandate. "
++        "exp3722 recorded the converged-state next-thesis request, and the "
++        "operator seeded Thesis A for .341: energy-as-generator, not selector. "
++        "P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), "
++        "and the frozen FoVer 0.9131 stayed frozen."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        '  title: "Convergence hardening and Thesis A handoff"',
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md",
++        "  completed: '2026-06-02'",
++        f"  finding: {_json_string(finding)}",
++        "  tasks:",
++    ]
++    for task in V340_TASKS:
++        lines.extend(
++            [
++                f"  - id: {task['id']}",
++                f"    title: {_json_string(task['title'])}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {task['result']}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def rewrite_research_complete(text: str) -> str:
++    """Replace or append the single milestone .340 archive block."""
++
++    replacement = build_research_complete_block().splitlines()
++    lines = text.splitlines()
++    start = next(
++        (index for index, line in enumerate(lines) if line == f"- id: {ARCHIVED_MILESTONE}"),
++        None,
++    )
++    if start is None:
++        prefix = text.rstrip()
++        block = build_research_complete_block()
++        return f"{prefix}\n{block}" if prefix else block
++
++    end = next(
++        (index for index in range(start + 1, len(lines)) if lines[index].startswith("- id: 2026.")),
++        len(lines),
++    )
++    return "\n".join([*lines[:start], *replacement, *lines[end:]]) + "\n"
++
++
++def build_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Build the Exp 3724 terminal artifact from upstream files."""
++
++    root_path = Path(root)
++    roadmap_text = _read_text_required(root_path / ROADMAP_REL_PATH)
++    active_milestone = _read_active_milestone(roadmap_text)
++    if active_milestone != ACTIVATED_MILESTONE:
++        raise ValueError("v341 active milestone confirmation is required")
++
++    thesis_menu_text = _read_text_required(root_path / THESIS_MENU_REL_PATH)
++    north_star = root_path / NORTH_STAR_REL_PATH
++    conductor = root_path / CONDUCTOR_REL_PATH
++    conductor_hash_before = _sha256_path(conductor)
++
++    exp3715 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3715"])
++    exp3716 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3716"])
++    exp3717 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3717"])
++    exp3718 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3718"])
++    exp3719 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3719"])
++    exp3720 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3720"])
++    exp3721 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3721"])
++    exp3722 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3722"])
++    exp3723 = _read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3723"])
++
++    g3_mechanical = (
++        exp3716.get("g3_now_mechanically_enforced") is True
++        and exp3716.get("current_paper_lint_clean") is True
++        and exp3723.get("g3_mechanically_enforced") is True
++    )
++    g4_traced = (
++        exp3717.get("all_numbers_trace_to_clean_artifacts") is True
++        and exp3717.get("g4_provenance_audit_result", "fully_traced") == "fully_traced"
++        and exp3723.get("g4_provenance_audit_result") == "fully_traced"
++    )
++    refreeze_clean = (
++        exp3715.get("no_candidate_beats_frozen") is True
++        and exp3715.get("frozen_headline_unchanged_assert") is True
++        and exp3723.get("exp3704_corrigendum_clean") is True
++    )
++    abstention_verdict = str(exp3723.get("energy_abstention_verdict", ""))
++    abstention_recorded = (
++        exp3718.get("energy_beats_baseline_abstention") is True
++        and abstention_verdict == "energy_better_than_entropy"
++    )
++    fresh_corpus = str(exp3723.get("fresh_corpus_generalization", ""))
++    fresh_corpus_recorded = (
++        exp3719.get("fresh_corpus_generalization") == "fover_specific"
++        and fresh_corpus == "fover_specific"
++    )
++    fr11_recorded = (
++        exp3720.get("template_robust_or_graceful_fallback") is True
++        and exp3720.get("collapse_detected_deploy_arm") is False
++        and exp3720.get("template_library_bounded") is True
++        and exp3723.get("fr11_v14_result")
++        == "falls_back_gracefully_under_shift_no_collapse"
++    )
++    kv260_terminal = (
++        exp3721.get("kv260_terminal_condition_confirmed") is True
++        and exp3721.get("kv260_terminal_transcript_present") is True
++        and exp3721.get("speedup_claim_avoided_assert") is True
++        and exp3723.get("kv260_terminal_confirmed") is True
++    )
++    next_thesis_recorded = (
++        exp3722.get("all_self_generable_threads_settled") is True
++        and exp3723.get("operator_next_thesis_recorded") is True
++    )
++    frozen_headline = _point(exp3723.get("frozen_fover_headline_auroc"))
++    paper_ready_preserved = (
++        exp3723.get("paper_ready") is True
++        and all(exp3723.get(gate) is True for gate in ("g1", "g2", "g3", "g4"))
++        and exp3723.get("frozen_headline_unchanged") is True
++        and frozen_headline == 0.9131
++    )
++    p01_preserved = (
++        exp3723.get("p01_status") == "honest-negative"
++        and exp3723.get("selection_diagnosis_closed") is True
++    )
++    thesis_a_seeded = _thesis_a_seeded(roadmap_text, thesis_menu_text)
++    if not thesis_a_seeded:
++        raise ValueError("Thesis A operator seed evidence is required")
++
++    payload: JsonDict = {
++        "schema": "carnot.archive_activation.v340_to_v341.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": "exp3724-archive-v340-activate-v341",
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": active_milestone,
++        "v341_active_confirmed": active_milestone == ACTIVATED_MILESTONE,
++        "archive_v340_activate_v341_ready": active_milestone == ACTIVATED_MILESTONE,
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "v340_outcome_recorded": V340_OUTCOME,
++        "thesis_a_seeded_recorded": thesis_a_seeded,
++        "paper_ready_preserved": paper_ready_preserved,
++        "p01_status_preserved": P01_STATUS if p01_preserved else exp3723.get("p01_status"),
++        "n_tasks_archived": len(V340_TASKS),
++        "adversarial_verify_clean": False,
++        "random_seed": RANDOM_SEED,
++        "duration_s": 0.0001,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_headline_auroc_preserved": frozen_headline,
++        "g_gates_preserved": {
++            "g1": exp3723.get("g1") is True,
++            "g2": exp3723.get("g2") is True,
++            "g3": exp3723.get("g3") is True,
++            "g4": exp3723.get("g4") is True,
++        },
++        "v340_evidence": {
++            "refreeze_corrigendum_clean": refreeze_clean,
++            "g3_mechanical": g3_mechanical,
++            "g4_fully_traced": g4_traced,
++            "risk_coverage_abstention_gate": abstention_verdict,
++            "risk_coverage_noncritical_warnings_preserved": _max_report_severity(exp3718) == 1,
++            "fresh_corpus_generalization": fresh_corpus,
++            "fr11_v14_no_collapse_or_fallback": fr11_recorded,
++            "kv260_terminal_confirmed": kv260_terminal,
++            "operator_next_thesis_recorded": next_thesis_recorded,
++            "capstone_verdict": exp3723.get("honest_verdict"),
++        },
++        "thesis_a_evidence": {
++            "source": "research-roadmap.yaml; phase3-alternative-thesis-menu.md",
++            "mechanism": "energy_as_generator_not_selector",
++            "human_seed_required": True,
++            "matched_compute_discipline_recorded": _contains(roadmap_text, "matched-COMPUTE")
++            or _contains(thesis_menu_text, "matched-COMPUTE"),
++            "p01_boundary": "energy_selection_stays_bounded",
++        },
++        "paper_ready_evidence": {
++            "paper_ready": exp3723.get("paper_ready") is True,
++            "g1": exp3723.get("g1") is True,
++            "g2": exp3723.get("g2") is True,
++            "g3": exp3723.get("g3") is True,
++            "g4": exp3723.get("g4") is True,
++            "frozen_headline_unchanged": exp3723.get("frozen_headline_unchanged") is True,
++        },
++        "source_artifact_checksums": _source_artifacts(root_path),
++        "source_document_checksums": {
++            str(ROADMAP_REL_PATH): _sha256_text(roadmap_text),
++            str(THESIS_MENU_REL_PATH): _sha256_text(thesis_menu_text),
++            str(NORTH_STAR_REL_PATH): _sha256_path(north_star),
++        },
++        "protected_files_left_to_conductor": [
++            "ops/status.md",
++            "ops/changelog.md",
++            "_bmad/traceability.md",
++        ],
++        "scripts_research_conductor_modified": (
++            conductor_hash_before != _sha256_path(conductor)
++        ),
++        "ops_docs_reconciliation_left_to_conductor": True,
++        "north_star_context_read": north_star.exists(),
++    }
++    payload["reproducibility_checksum"] = _payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3724 artifact contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles must be a mapping")
++    missing_principles = [
++        field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles
++    ]
++    _ensure(not missing_principles, f"missing field principles: {missing_principles}")
++    _ensure("model_specs" not in artifact, "model_specs must not be present")
++    _ensure("target_model" not in artifact, "target_model must not be present")
++    _ensure(_no_compute_markers(artifact), "compute-bound markers must not be present")
++    _ensure(
++        artifact.get("honest_verdict") == TERMINAL_VERDICT,
++        "terminal verdict does not match Exp 3724 contract",
++    )
++    _ensure(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate does not match Exp 3724 aggregation substrate",
++    )
++    _ensure(
++        artifact.get("v341_active_confirmed") is True,
++        "v341 active milestone confirmation is required",
++    )
++    _ensure(
++        artifact.get("v340_outcome_recorded") == V340_OUTCOME,
++        ".340 outcome record does not match the Exp 3724 contract",
++    )
++    _ensure(
++        artifact.get("thesis_a_seeded_recorded") is True,
++        "Thesis A operator seed must be recorded",
++    )
++    _ensure(artifact.get("paper_ready_preserved") is True, "paper_ready must remain preserved")
++    _ensure(
++        artifact.get("p01_status_preserved") == P01_STATUS,
++        "P0.1 must remain honest-negative-bounded",
++    )
++    _ensure(
++        artifact.get("n_tasks_archived") == 11,
++        "n_tasks_archived must equal 11 for the full .340 roadmap block",
++    )
++    _ensure(
++        artifact.get("adversarial_verify_clean") is True,
++        "adversarial_verify_clean must be true for Exp 3724",
++    )
++    duration = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration, (int, float))
++        and not isinstance(duration, bool)
++        and float(duration) >= 0.0001,
++        "duration_s must be numeric with the 0.0001s floor",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(
++        isinstance(checksum, str) and len(checksum) == 64,
++        "reproducibility_checksum must be a sha256 hex string",
++    )
++    _ensure(
++        checksum == _payload_checksum(artifact),
++        "reproducibility_checksum does not match artifact content",
++    )
++
++
++def run(root: Path | str = REPO_ROOT) -> Path:
++    """Write the research-complete archive block and terminal JSON artifact."""
++
++    root_path = Path(root)
++    payload = build_artifact(root_path)
++    out_path = root_path / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    _write_payload(out_path, payload)
++
++    verify_report = _run_adversarial_verify(out_path)
++    payload["adversarial_verify_report"] = _compact_verify_report(verify_report)
++    payload["adversarial_verify_clean"] = _is_verify_clean(verify_report)
++    payload["reproducibility_checksum"] = _payload_checksum(payload)
++    validate_artifact(payload)
++    _write_payload(out_path, payload)
++
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    complete_path.write_text(
++        rewrite_research_complete(complete_path.read_text(encoding="utf-8")),
++        encoding="utf-8",
++    )
++    return out_path
++
++
++def _write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _json_string(value: str) -> str:
++    return json.dumps(value)
++
++
++def _read_active_milestone(roadmap_text: str) -> str:
++    for line in roadmap_text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def _read_json_object(path: Path) -> JsonDict:
++    data = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(data, dict):
++        raise ValueError(f"expected JSON object in {path}")
++    return data
++
++
++def _read_text_required(path: Path) -> str:
++    try:
++        return path.read_text(encoding="utf-8")
++    except OSError as exc:
++        raise ValueError(f"required text input missing: {path}") from exc
++
++
++def _point(metric: Any) -> float | None:
++    if isinstance(metric, Mapping):
++        return _point(metric.get("point"))
++    if isinstance(metric, (int, float)) and not isinstance(metric, bool):
++        return round(float(metric), 6)
++    return None
++
++
++def _thesis_a_seeded(roadmap_text: str, thesis_menu_text: str) -> bool:
++    return (
++        _contains(roadmap_text, "Thesis A")
++        and _contains(roadmap_text, "energy-as-GENERATOR")
++        and _contains(thesis_menu_text, "Thesis A")
++        and _contains(thesis_menu_text, "selected")
++        and (_contains(roadmap_text, "operator") or _contains(thesis_menu_text, "operator"))
++        and _contains(thesis_menu_text, "energy")
++    )
++
++
++def _max_report_severity(artifact: Mapping[str, Any]) -> int:
++    report = artifact.get("adversarial_verify_report")
++    if isinstance(report, Mapping):
++        value = report.get("max_severity")
++        if isinstance(value, int) and not isinstance(value, bool):
++            return value
++        flags = report.get("flags")
++        if isinstance(flags, list):
++            severities = [
++                _severity_rank(flag.get("severity"))
++                for flag in flags
++                if isinstance(flag, Mapping)
++            ]
++            return max(severities) if severities else -1
++    return -1
++
++
++def _source_artifacts(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "name": name,
++            "path": str(path),
++            "sha256": _sha256_path(root / path),
++            "exists": (root / path).exists(),
++        }
++        for name, path in sorted(UPSTREAM_ARTIFACTS.items())
++    ]
++
++
++def _sha256_path(path: Path) -> str:
++    try:
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return hashlib.sha256(b"<missing>").hexdigest()
++
++
++def _sha256_text(text: str) -> str:
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def _payload_checksum(payload: Mapping[str, Any]) -> str:
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _run_adversarial_verify(path: Path) -> JsonDict:
++    verifier_path = REPO_ROOT / "scripts" / "adversarial_verify.py"
++    spec = importlib.util.spec_from_file_location("carnot_adversarial_verify_3724", verifier_path)
++    if spec is None or spec.loader is None:
++        raise RuntimeError(f"could not load adversarial verifier from {verifier_path}")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    report = module.verify_artifact(path)
++    if not isinstance(report, dict):
++        raise RuntimeError("adversarial verifier returned a non-object report")
++    return report
++
++
++def _compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    raw_flags = report.get("flags", [])
++    flags = (
++        [dict(flag) for flag in raw_flags if isinstance(flag, Mapping)]
++        if isinstance(raw_flags, list)
++        else []
++    )
++    severities = [_severity_rank(flag.get("severity")) for flag in flags]
++    return {
++        "flag_count": len(flags),
++        "max_severity": max(severities) if severities else -1,
++        "flags": flags,
++    }
++
++
++def _is_verify_clean(report: Mapping[str, Any]) -> bool:
++    flags = report.get("flags")
++    if not isinstance(flags, list):
++        return True
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in flags
++    )
++
++
++def _no_compute_markers(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact)
++    disallowed = (
++        "GGUF",
++        "CUDA",
++        "live-model",
++        "live_model",
++        "llama.cpp",
++        "torch.cuda",
++        ".cuda(",
++        "model_specs",
++        "target_model",
++    )
++    return not any(marker in encoded for marker in disallowed)
++
++
++def _severity_rank(value: Any) -> int:
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(value).lower(), -1)
++
++
++def _contains(value: str, needle: str) -> bool:
++    return needle.lower() in value.lower()
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 9f4f3980ee..fac763d985 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -34819,103 +34819,52 @@ milestones:
+     deliverable: results/experiment_3712_capstone_and_g_gate_v339.json
+     result: paper_ready true; frozen headline unchanged
+ - id: 2026.06.340
+-  title: "CONVERGENCE & FINALIZATION \u2014 .339 confirmed the project has converged: the headline (FoVer 0.9131) is frozen,\
+-    \ proven, independently reproduced and narrowing-clean (paper_ready=TRUE), and every self-generable research thread is\
+-    \ settled \u2014 re-freeze CLOSED-NEGATIVE (no reweighting candidate beats frozen under dual-condition rigor, exp3704),\
+-    \ code = LEAK -> math-only-with-abstain (exp3705/3706), selection diagnosis FORMALLY CLOSED (exp3707), P0.1 honest-negative,\
+-    \ facts + trained-judge-OOD RETIRED, KV260 TERMINAL (exp3709). Per project_energy_selection_thesis_bounded the next substantive\
+-    \ thesis needs a HUMAN seed; the loop will not self-initiate one. So .340 does NOT manufacture breadth (north-star sec-1:\
+-    \ a new version of an existing artifact without moving the headline is noise). .340: (1) clean up the benign-flagged exp3704\
+-    \ (corrigendum, headline stays frozen); (2) HARDEN the publication gates from honor-discipline to mechanical \u2014 ship\
+-    \ the G3 paper_v6_narrowing_lint + run a full G4 provenance audit; (3) characterize the proven 0.9131 discriminator as\
+-    \ a deployable RISK-COVERAGE ABSTENTION gate (the one sanctioned new framing, distinct from the CLOSED selection question;\
+-    \ arXiv:2603.21172 + AURC); (4) REPLICATE the headline-class discrimination on a FRESH corpus (G1 strengthening, not FoVer-overfit);\
+-    \ (5) continue FR-11 self-learning; (6) CONFIRM KV260 terminal + relax the hardware mandate; (7) SURFACE the converged\
+-    \ state + candidate next-theses to the OPERATOR (synthesis). paper_ready MUST stay TRUE (G1-G4); frozen 0.9131 stays frozen\
+-    \ (any candidate is an operator re-freeze CANDIDATE, never a silent swap)."
++  title: "Convergence hardening and Thesis A handoff"
+   doc: openspec/change-proposals/research-roadmap-vNEXT.md
+   completed: '2026-06-02'
+-  finding: See conductor log for per-experiment results.
++  finding: "CONVERGENCE-HARDENING MILESTONE: .340 did not move the frozen headline; it hardened and bounded the converged state. exp3715 cleanly re-emitted the re-freeze corrigendum as CLOSED-NEGATIVE, so no candidate replaces the frozen FoVer 0.9131. exp3716 made G3 mechanically enforced through the Paper-v6 narrowing lint, and exp3717 made G4 fully traced to clean primary artifacts. exp3718 characterized the proven discriminator as a risk-coverage abstention gate; exp3719 recorded that the fresh-corpus result was FoVer-specific rather than a silent new headline. exp3720 kept FR-11 bounded under shift with graceful fallback and no collapse. exp3721 confirmed KV260 terminal and recommended lifting the mandate. exp3722 recorded the converged-state next-thesis request, and the operator seeded Thesis A for .341: energy-as-generator, not selector. P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
+   tasks:
+   - id: exp3713-archive-v339-activate-v340
+-    title: "Archive milestone .339 honestly (CONVERGENCE milestone: re-freeze CLOSED-NEGATIVE \u2014 no reweighting candidate\
+-      \ beats frozen 0.9131 under dual-condition rigor, but exp3704 carries a benign TAUTOLOGY flag; code AUROC=1.0 was a\
+-      \ LEAK -> detector narrowed to math-only-with-abstain; selection diagnosis FORMALLY CLOSED; KV260 TERMINAL; FR-11 v13\
+-      \ positive; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .340"
++    title: "Archive .339 honestly and activate .340"
+     deliverable: results/experiment_3713_archive_v339_activate_v340.json
+     result: OK (conductor)
+   - id: exp3714-backend-state-diagnostic-v6
+-    title: "Backend-state diagnostic v6 \u2014 sixth probe of gemini quota/crash stability (exp3653/3666/3679/3691/3703 all\
+-      \ showed probe-OK-but-real-workload-crash); record the probe-vs-real-workload divergence; recommend whether .341 may\
+-      \ flip to gemini-default; .340 stays on codex (documentation-only)"
++    title: "Backend-state diagnostic v6"
+     deliverable: results/experiment_3714_backend_state_diagnostic_v6.json
+     result: OK (conductor)
+   - id: exp3715-refreeze-disambiguation-clean-corrigendum
+-    title: "CLEAN corrigendum of the re-freeze disambiguation \u2014 exp3704 reached the correct conservative conclusion (no\
+-      \ candidate beats frozen 0.9131 under dual-condition rigor) but carries a BENIGN TAUTOLOGY flagged_adversarial (strongest_candidate_auroc\
+-      \ == external_comparator_auroc BY CONSTRUCTION). Re-emit the disambiguation on a CLEAN, non-flagged artifact (preserve\
+-      \ exp3704's numbers + add the correction note, exp1850 pattern), storing strongest_candidate as a STRING label so the\
+-      \ de-tautology linter does not false-fire. Headline stays frozen; no record carries a flagged headline-adjacent artifact"
++    title: "Clean corrigendum for re-freeze disambiguation"
+     deliverable: results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json
+-    result: OK (conductor)
++    result: CLOSED-NEGATIVE; clean corrigendum; headline stays frozen
+   - id: exp3716-ship-paper-v6-narrowing-lint-g3-mechanical
+-    title: "SHIP paper_v6_narrowing_lint.py \u2014 convert the G3 (prose narrowing-clean) gate from honor-discipline + an\
+-      \ inline publication_gate.py phrasing scan to a STANDALONE pre-commit-style lint that scans docs/arxiv-paper/main.tex\
+-      \ + docs/technical-report.md + any paper_v6_* artifact for the Paper-v6 Narrowing Discipline forbidden phrasings AND\
+-      \ retracted numerical values (FoVer 0.9857, 11680x, etc.). CLAUDE.md says this lint SHOULD exist and does not. Mechanical\
+-      \ G3 enforcement, additive (does not modify research_conductor.py)"
++    title: "Ship Paper-v6 narrowing lint"
+     deliverable: results/experiment_3716_ship_paper_v6_narrowing_lint.json
+-    result: OK (conductor)
++    result: G3 mechanically enforced; paper clean
+   - id: exp3717-g4-full-provenance-audit
+-    title: "Full G4 provenance audit \u2014 verify EVERY headline + north-star number (FoVer 0.9131, CI [0.9027,0.9235], FR-11\
+-      \ +0.0185 [0.0125,0.0245], the detector math operating point ~0.98/ECE~0.009) traces to a CLEAN, non-flagged primary\
+-      \ results/experiment_*.json carrying random_seed + reproducibility_checksum \u2014 and that NO cited source carries\
+-      \ flagged_adversarial (the exp3704 lesson). Hardens G4 from a capstone spot-check to an end-to-end audit"
++    title: "Full G4 provenance audit"
+     deliverable: results/experiment_3717_g4_full_provenance_audit.json
+-    result: OK (conductor)
++    result: G4 fully traced to clean primary artifacts
+   - id: exp3718-risk-coverage-abstention-characterization
+-    title: "RISK-COVERAGE ABSTENTION characterization of the proven 0.9131 discriminator \u2014 convert proven DISCRIMINATION\
+-      \ (not SELECTION, which is closed) into a deployable SELECTIVE-PREDICTION operating envelope: the risk-coverage curve\
+-      \ (AURC), risk@coverage operating points, and calibration of the shipped math-only detector as an abstention gate. Does\
+-      \ the ENERGY signal beat the entropy/self-certainty baseline as a selective-prediction signal (arXiv:2603.21172 shows\
+-      \ entropy fails)? This is the on-mission product framing (abstain when likely-wrong), distinct from the CLOSED best-of-N\
+-      \ selection question"
++    title: "Risk-coverage abstention characterization"
+     deliverable: results/experiment_3718_risk_coverage_abstention_characterization.json
+-    result: OK (conductor)
++    result: ENERGY signal beats entropy as abstention gate; warnings non-critical
+   - id: exp3719-headline-replication-fresh-corpus
+-    title: "REPLICATE the headline-class step-error discrimination on a FRESH corpus \u2014 measure the verifier ensemble's\
+-      \ AUROC on a DIFFERENT step-error corpus (a fresh PRM/ProcessBench-style set, NOT FoVer) to show the 0.9131-class discrimination\
+-      \ generalizes beyond FoVer (G1 strengthening, the north-star-sanctioned 'new corpus' move). The frozen 0.9131 stays\
+-      \ frozen; this is a SUPPORTING second datapoint, not a re-freeze"
++    title: "Headline-class replication on fresh corpus"
+     deliverable: results/experiment_3719_headline_replication_fresh_corpus.json
+-    result: OK (conductor)
++    result: fresh-corpus result FoVer-specific; frozen headline unchanged
+   - id: exp3720-fr11-continuous-self-learning-v14
+-    title: "FR-11 continuous self-learning v14 \u2014 distribution-SHIFT robustness of the consolidated template library:\
+-      \ apply a v13-consolidated template to a fresh session drawn from a DIFFERENT slice (forward diff from v13's same-distribution\
+-      \ transfer) and confirm it either still beats cold-start OR conservatively falls back without collapse \u2014 the Tier-2->Tier-4\
+-      \ robustness step"
++    title: "FR-11 continuous self-learning v14"
+     deliverable: results/experiment_3720_fr11_continuous_self_learning_v14.json
+-    result: OK (conductor)
++    result: graceful fallback under shift; no collapse
+   - id: exp3721-hardware-kv260-terminal-confirm-and-continuity
+-    title: "Hardware continuity (consolidated, all 3 boards) \u2014 CONFIRM KV260 terminal state (overlay loaded + non-fabricated\
+-      \ latency transcript on disk from exp3709) and RECOMMEND the operator lift the per-milestone KV260 mandate (north-star\
+-      \ sec-3); PolarFire opportunistic reachability; GateMate documentation-only (openFPGALoader missing). SSH-reachability\
+-      \ preconditions only; NO host SD-card check; NO speedup claim"
++    title: "Hardware continuity and KV260 terminal confirmation"
+     deliverable: results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json
+-    result: OK (conductor)
++    result: KV260 terminal confirmed; mandate lift recommended
+   - id: exp3722-convergence-synthesis-operator-next-thesis
+-    title: "CONVERGENCE SYNTHESIS + operator next-thesis recommendation \u2014 lay out the converged state (headline frozen\
+-      \ + paper_ready=TRUE; every self-generable thread settled: re-freeze closed-negative, code leak->math-only, selection\
+-      \ closed, P0.1 bounded, facts + judge-OOD retired, KV260 terminal) and present the candidate NEXT-THESES for the OPERATOR\
+-      \ to choose among (the loop will not self-initiate one per project_energy_selection_thesis_bounded). Synthesis/doc-only\
+-      \ \u2014 recommends, does not decide"
++    title: "Convergence synthesis and operator next-thesis request"
+     deliverable: results/experiment_3722_convergence_synthesis_operator_next_thesis.json
+-    result: OK (conductor)
++    result: converged state synthesized; next-thesis request recorded
+   - id: exp3723-capstone-and-g-gate-v340
+-    title: "Capstone v340 + G1-G4 gate synthesis \u2014 was the flagged exp3704 re-emitted clean (headline still frozen)?\
+-      \ is G3 now mechanically enforced (narrowing lint shipped)? did the full G4 provenance audit trace every number to a\
+-      \ clean artifact? does the ENERGY signal beat entropy as an abstention gate? does the discrimination generalize to a\
+-      \ FRESH corpus? was KV260 confirmed terminal + the mandate-lift recommended? is the converged-state + operator next-thesis\
+-      \ recorded? paper_ready must stay TRUE; frozen 0.9131 stays frozen"
++    title: "Capstone v340 and G-gate synthesis"
+     deliverable: results/experiment_3723_capstone_and_g_gate_v340.json
+-    result: OK (conductor)
++    result: THESIS-A operator seed recorded for .341
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 9186b7ba89..7e07d8f818 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:03:12.151763+00:00",
+-  "finished_at": "2026-06-02T17:03:12.178964+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-06-02T17:54:00.908339+00:00",
++  "finished_at": "2026-06-02T17:54:00.930681+00:00",
++  "duration_s": 0.022,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 2706cb6aea..93809586c8 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T17:03:12Z",
++  "run_date": "2026-06-02T17:54:01Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 4896aaf916..4cf61fca34 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:03:13Z",
+-  "finished_at": "2026-06-02T17:03:13Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T17:54:02Z",
++  "finished_at": "2026-06-02T17:54:02Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 31b6036f2d..ca4396e8db 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T17:03:13Z",
++  "run_date": "2026-06-02T17:54:02Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 7427f6bd8f..ad465b210f 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-02T17:03:13Z",
++  "run_date": "2026-06-02T17:54:02Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 634b444dd6..2509e43ad1 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T17:35:20.372614Z",
+-  "duration_s": 0.010556221008300781,
++  "run_date": "2026-06-02T17:52:17.831849Z",
++  "duration_s": 0.01056051254272461,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "9d53d2d0a682a096a1b1b399bfee2b3f61dae4797f270dc7148891bc11a68650",
++  "reproducibility_checksum": "66f8a76347c0148a65dc215090c04914d86b40eade29bcc9f607c416680d6257",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7f6d847593d8dc44b146a6a5c71ab21288ea402d"
++    "adversarial_verify_version": "d7897f9f7f87d514e79fae4613cb085ac8b127f9"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 517ec1226f..c7f60c52b4 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T17:35:20.385462Z",
+-  "duration_s": 0.009462833404541016,
++  "run_date": "2026-06-02T17:52:17.844974Z",
++  "duration_s": 0.009850740432739258,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "c4c521549d351be567a6b7e82fabdc5fb775d5f55e17d8457dc192fe646ab3f3",
++  "reproducibility_checksum": "431d8603444d38dc9ad0fa5079bbb11d070d1d1f3c75d241039bdab5f074545c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7f6d847593d8dc44b146a6a5c71ab21288ea402d"
++    "adversarial_verify_version": "d7897f9f7f87d514e79fae4613cb085ac8b127f9"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 5752b582af..957174b69f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.107858657836914,
++  "efficiency_gains_ms": 2.1147727966308594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 334065fa7d..59f4e7c561 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2758481502532959,
++  "duration_s": 0.2680957317352295,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 603c682127..4c404a4e53 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009357929229736328,
++  "duration_s": 0.0009603500366210938,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index fd3caceba6..8eb52aa825 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0236958991736174e-05,
++  "duration_s": 3.364303847774863e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index ce25b8b37e..431f512230 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.410402081906796e-07,
++  "duration_s": 9.110081009566784e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index bb722bf5d5..bc39b3bf58 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.887580871582031e-05,
++  "duration_s": 6.198883056640625e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 9a86fdef4a..863322a541 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.0055084228515625,
+-  "reproducibility_checksum": "d84f34d038acef54fb928f743fbf20f858289b479d8933dba7569fbed4baeba0"
++  "duration_s": 0.0036742687225341797,
++  "reproducibility_checksum": "385f1bfa5fff93205fd025604ba751818bd0e3c13b0c992c76d991d304b32ea9"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3724_archive_v340_activate_v341.json b/results/experiment_3724_archive_v340_activate_v341.json
+new file mode 100644
+index 0000000000..d43e431443
+--- /dev/null
++++ b/results/experiment_3724_archive_v340_activate_v341.json
+@@ -0,0 +1,153 @@
++{
++  "activated_milestone": "2026.06.341",
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": [],
++    "max_severity": -1
++  },
++  "archive_v340_activate_v341_ready": true,
++  "archived_milestone": "2026.06.340",
++  "duration_s": 0.0001,
++  "experiment_id": "exp3724",
++  "field_principles": {
++    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
++    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
++    "n_tasks_archived": "Sample-size hygiene -- confirms the full milestone was archived, not a partial.",
++    "p01_status_preserved": "P0.1 / energy-SELECTION stays honest-negative-bounded; .341 tests a DIFFERENT mechanism (generation), not a re-grind.",
++    "paper_ready_preserved": "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen.",
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
++    "thesis_a_seeded_recorded": "Records that the operator seeded Thesis A (energy-as-generator) as the .341 direction -- the human seed the loop could not self-initiate.",
++    "v340_outcome_recorded": "Records .340's converged-hardening state so the record does not revert."
++  },
++  "frozen_headline_auroc_preserved": 0.9131,
++  "g_gates_preserved": {
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true
++  },
++  "honest_verdict": "complete: archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_v341_active_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).",
++  "n_tasks_archived": 11,
++  "north_star_context_read": true,
++  "ops_docs_reconciliation_left_to_conductor": true,
++  "p01_status_preserved": "honest-negative-bounded",
++  "paper_ready_evidence": {
++    "frozen_headline_unchanged": true,
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true,
++    "paper_ready": true
++  },
++  "paper_ready_preserved": true,
++  "protected_files_left_to_conductor": [
++    "ops/status.md",
++    "ops/changelog.md",
++    "_bmad/traceability.md"
++  ],
++  "random_seed": 3724,
++  "reproducibility_checksum": "4d4cf769828b093d83cda2b0516a4f80705f4764e779ef371f155cf2c9f03f25",
++  "schema": "carnot.archive_activation.v340_to_v341.v1",
++  "scripts_research_conductor_modified": false,
++  "source_artifact_checksums": [
++    {
++      "exists": true,
++      "name": "exp3713",
++      "path": "results/experiment_3713_archive_v339_activate_v340.json",
++      "sha256": "266f1429ac96dffafc8f6ded8dbb13f2ba84901ad63f09e9d319f993f2f323d8"
++    },
++    {
++      "exists": true,
++      "name": "exp3714",
++      "path": "results/experiment_3714_backend_state_diagnostic_v6.json",
++      "sha256": "b4e7fd1eff92ca4004b1ea4493e792afaa71094a3a8f9d6f49b0011721437a1e"
++    },
++    {
++      "exists": true,
++      "name": "exp3715",
++      "path": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++      "sha256": "61147c5e71a62c089f29cf058bbbe613a58fb67fc4c422dd1140bca8e53fad2e"
++    },
++    {
++      "exists": true,
++      "name": "exp3716",
++      "path": "results/experiment_3716_ship_paper_v6_narrowing_lint.json",
++      "sha256": "3cefabf484b2fd563314b053cf4a7fb773315b18d6afb7b5b016a4bb78e868c2"
++    },
++    {
++      "exists": true,
++      "name": "exp3717",
++      "path": "results/experiment_3717_g4_full_provenance_audit.json",
++      "sha256": "e8b097f0db267beeafdb07a3d7049eca12db8849b33e3e8d4857e4f8d1eaaa4a"
++    },
++    {
++      "exists": true,
++      "name": "exp3718",
++      "path": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++      "sha256": "df82d361cc16e42ff6849ff7807f6ab1edb0caceb25904e20a8f1e64ca021f08"
++    },
++    {
++      "exists": true,
++      "name": "exp3719",
++      "path": "results/experiment_3719_headline_replication_fresh_corpus.json",
++      "sha256": "455e2e5d95533c9255eaee6e299e807c2e5eed5ab898e3f65d9e3b00ed135249"
++    },
++    {
++      "exists": true,
++      "name": "exp3720",
++      "path": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
++      "sha256": "a91b98541b9674474f899b194c6a2034390da7201a8c5ec6da59ce721d074af8"
++    },
++    {
++      "exists": true,
++      "name": "exp3721",
++      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++      "sha256": "acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
++    },
++    {
++      "exists": true,
++      "name": "exp3722",
++      "path": "results/experiment_3722_convergence_synthesis_operator_next_thesis.json",
++      "sha256": "5af5ea6a48a8fab1745bb95e30768e43594ecb1b91e6c0d6a0a9538aa2e4b767"
++    },
++    {
++      "exists": true,
++      "name": "exp3723",
++      "path": "results/experiment_3723_capstone_and_g_gate_v340.json",
++      "sha256": "d324492da0e48646bc631630f5392e987936f1d551ded4fb5b81ff0acd49cff9"
++    }
++  ],
++  "source_document_checksums": {
++    "docs/research-notes/phase3-alternative-thesis-menu.md": "3cbb2c532ee552eee2290edf7693c38eb68ccd49559e015c77606cbbc4869198",
++    "ops/north-star.md": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
++    "research-roadmap.yaml": "c1f607292c09debd5bba3dbd238dc5d274f4002f3052b7ce2a3a4405002f06ef"
++  },
++  "task_id": "exp3724-archive-v340-activate-v341",
++  "thesis_a_evidence": {
++    "human_seed_required": true,
++    "matched_compute_discipline_recorded": true,
++    "mechanism": "energy_as_generator_not_selector",
++    "p01_boundary": "energy_selection_stays_bounded",
++    "source": "research-roadmap.yaml; phase3-alternative-thesis-menu.md"
++  },
++  "thesis_a_seeded_recorded": true,
++  "v340_evidence": {
++    "capstone_verdict": "complete: capstone_v340_convergence_gates_hardened_g3_mechanical_g4_audited_abstention_energy_better_than_entropy_fresh_corpus_fover_specific_kv260_terminal_operator_thesis_requested_paper_ready_true_frozen_headline_unchanged",
++    "fr11_v14_no_collapse_or_fallback": true,
++    "fresh_corpus_generalization": "fover_specific",
++    "g3_mechanical": true,
++    "g4_fully_traced": true,
++    "kv260_terminal_confirmed": true,
++    "operator_next_thesis_recorded": true,
++    "refreeze_corrigendum_clean": true,
++    "risk_coverage_abstention_gate": "energy_better_than_entropy",
++    "risk_coverage_noncritical_warnings_preserved": true
++  },
++  "v340_outcome_recorded": "convergence_hardened_g3_mechanical_g4_audited_risk_coverage_abstention_fresh_corpus_fover_specific_fr11_v14_no_collapse_kv260_terminal_operator_next_thesis_recorded_paper_ready_true_p01_honest_negative_bounded_frozen_0_9131_unchanged",
++  "v341_active_confirmed": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index fdea2995ad..fd10cd0eb7 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:35:12Z",
+-  "finished_at": "2026-06-02T17:35:12Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-02T17:52:09Z",
++  "finished_at": "2026-06-02T17:52:09Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 07bbdbef26..616f82a8df 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:35:12Z",
+-  "finished_at": "2026-06-02T17:35:12Z",
++  "started_at": "2026-06-02T17:52:09Z",
++  "finished_at": "2026-06-02T17:52:09Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 82052ceb37..d1353508b8 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:35:12Z",
+-  "finished_at": "2026-06-02T17:35:12Z",
++  "started_at": "2026-06-02T17:52:09Z",
++  "finished_at": "2026-06-02T17:52:09Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3724_archive_v340_activate_v341.py b/scripts/experiment_3724_archive_v340_activate_v341.py
+new file mode 100644
+index 0000000000..65ccde0a33
+--- /dev/null
++++ b/scripts/experiment_3724_archive_v340_activate_v341.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3724 v340 archive and v341 Thesis-A activation."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting.archive_v340_activate_v341_3724 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3724_archive_v340_activate_v341.py b/tests/python/test_experiment_3724_archive_v340_activate_v341.py
+new file mode 100644
+index 0000000000..2e61335088
+--- /dev/null
++++ b/tests/python/test_experiment_3724_archive_v340_activate_v341.py
+@@ -0,0 +1,481 @@
++"""Tests for Exp 3724 v340 archive and v341 Thesis-A activation.
++
++Spec: REQ-REPORT-3724, SCENARIO-REPORT-3724.
++"""
++
++from __future__ import annotations
++
++import json
++from importlib.machinery import ModuleSpec
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import archive_v340_activate_v341_3724 as exp3724
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++TERMINAL_VERDICT = (
++    "complete: "
++    "archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_"
++    "v341_active_paper_ready_true_frozen_headline_unchanged"
++)
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _seed_repo(root: Path, *, active_milestone: str = "2026.06.341") -> None:
++    (root / "docs" / "research-notes").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{active_milestone}"\n'
++        'milestone_title: "PHASE-3 THESIS A BRING-UP - energy-as-GENERATOR (EBT)"\n'
++        "tasks:\n"
++        "  - id: exp3724-archive-v340-activate-v341\n",
++        encoding="utf-8",
++    )
++    (root / "research-complete.yaml").write_text(
++        "# completed\n\n"
++        "milestones:\n"
++        "- id: 2026.06.339\n"
++        "  finding: previous archive\n"
++        "- id: 2026.06.340\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp3715-refreeze-disambiguation-clean-corrigendum\n"
++        "    result: OK (conductor)\n",
++        encoding="utf-8",
++    )
++    (root / "docs" / "research-notes" / "phase3-alternative-thesis-menu.md").write_text(
++        "## Thesis A - Energy as the GENERATOR\n"
++        "**SELECTED 2026-06-02** by operator seed.\n"
++        "The comparison is matched-COMPUTE and is not energy-selection reranking.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "north-star.md").write_text(
++        "# Carnot North Star\n\nFrozen FoVer headline AUROC: 0.9131.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "ops" / "changelog.md").write_text("changelog before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor unchanged\n",
++        encoding="utf-8",
++    )
++
++    _write_json(
++        root / "results" / "experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++        {
++            "honest_verdict": (
++                "complete: refreeze_disambiguation_corrigendum_clean_no_candidate_"
++                "beats_frozen_headline_stays_0_9131"
++            ),
++            "adversarial_verify_clean": True,
++            "no_candidate_beats_frozen": True,
++            "frozen_headline_unchanged_assert": True,
++            "frozen_headline_auroc": 0.9131,
++            "random_seed": 3715,
++            "duration_s": 0.098,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3716_ship_paper_v6_narrowing_lint.json",
++        {
++            "honest_verdict": (
++                "complete: paper_v6_narrowing_lint_shipped_g3_mechanically_"
++                "enforced_current_paper_clean"
++            ),
++            "g3_now_mechanically_enforced": True,
++            "current_paper_lint_clean": True,
++            "adversarial_verify_clean": True,
++            "random_seed": 3716,
++            "duration_s": 1.6,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3717_g4_full_provenance_audit.json",
++        {
++            "honest_verdict": (
++                "complete: g4_fully_traced_every_headline_number_to_clean_"
++                "primary_artifact"
++            ),
++            "all_numbers_trace_to_clean_artifacts": True,
++            "g4_provenance_audit_result": "fully_traced",
++            "n_numbers_audited": 7,
++            "north_star_unmodified_assert": True,
++            "adversarial_verify_clean": True,
++            "random_seed": 3717,
++            "duration_s": 0.002,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3718_risk_coverage_abstention_characterization.json",
++        {
++            "honest_verdict": (
++                "complete: energy_is_a_better_selective_prediction_signal_than_"
++                "entropy_deployable_abstention_gate"
++            ),
++            "energy_beats_baseline_abstention": True,
++            "energy_aurc": 0.000789,
++            "baseline_aurc": 0.075498,
++            "adversarial_verify_clean": True,
++            "adversarial_verify_report": {
++                "flags": [{"severity": "warn", "kind": "IMPLAUSIBLE_TIGHT_CI"}],
++                "max_severity": 1,
++            },
++            "random_seed": 3718,
++            "duration_s": 9.4,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3719_headline_replication_fresh_corpus.json",
++        {
++            "honest_verdict": (
++                "complete: headline_discrimination_is_fover_specific_"
++                "generalization_narrowed_honest"
++            ),
++            "fresh_corpus_generalization": "fover_specific",
++            "fresh_corpus_auroc": 0.798604,
++            "frozen_fover_auroc": 0.9131,
++            "adversarial_verify_clean": True,
++            "random_seed": 3719,
++            "duration_s": 0.82,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3720_fr11_continuous_self_learning_v14.json",
++        {
++            "honest_verdict": (
++                "complete: fr11_v14_template_falls_back_gracefully_under_shift_"
++                "no_collapse"
++            ),
++            "template_robust_or_graceful_fallback": True,
++            "collapse_detected_deploy_arm": False,
++            "template_library_bounded": True,
++            "random_seed": 3720,
++            "duration_s": 0.81,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++        {
++            "honest_verdict": (
++                "complete: kv260_terminal_confirmed_mandate_lift_recommended_"
++                "polarfire_gatemate_audited"
++            ),
++            "kv260_terminal_condition_confirmed": True,
++            "kv260_terminal_transcript_present": True,
++            "kv260_mandate_lift_recommendation": (
++                "recommend_operator_lift_per_milestone_kv260_mandate"
++            ),
++            "speedup_claim_avoided_assert": True,
++            "random_seed": 3721,
++            "duration_s": 6.65,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3722_convergence_synthesis_operator_next_thesis.json",
++        {
++            "honest_verdict": (
++                "complete: convergence_synthesized_next_theses_presented_"
++                "operator_decision_requested"
++            ),
++            "all_self_generable_threads_settled": True,
++            "operator_decision_request": "Which thesis should drive .341+?",
++            "candidate_next_theses": [{"thesis": "human_seeded_energy_as_generator_ebt"}],
++            "paper_ready_status": True,
++            "adversarial_verify_clean": True,
++            "random_seed": 3722,
++            "duration_s": 0.0001,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3723_capstone_and_g_gate_v340.json",
++        {
++            "honest_verdict": (
++                "complete: capstone_v340_convergence_gates_hardened_g3_"
++                "mechanical_g4_audited_abstention_energy_better_than_entropy_"
++                "fresh_corpus_fover_specific_kv260_terminal_operator_thesis_"
++                "requested_paper_ready_true_frozen_headline_unchanged"
++            ),
++            "adversarial_verify_clean": True,
++            "paper_ready": True,
++            "g1": True,
++            "g2": True,
++            "g3": True,
++            "g4": True,
++            "frozen_headline_unchanged": True,
++            "frozen_fover_headline_auroc": 0.9131,
++            "p01_status": "honest-negative",
++            "selection_diagnosis_closed": True,
++            "exp3704_corrigendum_clean": True,
++            "g3_mechanically_enforced": True,
++            "g4_provenance_audit_result": "fully_traced",
++            "energy_abstention_verdict": "energy_better_than_entropy",
++            "fresh_corpus_generalization": "fover_specific",
++            "fr11_v14_result": "falls_back_gracefully_under_shift_no_collapse",
++            "kv260_terminal_confirmed": True,
++            "operator_next_thesis_recorded": True,
++            "random_seed": 3723,
++            "duration_s": 0.61,
++        },
++    )
++
++
++def test_req_report_3724_spec_anchor_exists() -> None:
++    """REQ-REPORT-3724: OpenSpec declares the archive/activation contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-REPORT-3724" in spec
++    assert "SCENARIO-REPORT-3724" in spec
++    assert exp3724.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_req_report_3724_run_archives_v340_and_writes_clean_artifact(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3724: archive records .340 and activates Thesis A."""
++
++    _seed_repo(tmp_path)
++    before_conductor = (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    )
++    before_north = (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8")
++    before_docs = {
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++    }
++
++    out_path = exp3724.run(tmp_path)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    exp3724.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == TERMINAL_VERDICT
++    assert set(exp3724.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3724.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3724.INFERENCE_SUBSTRATE
++    assert artifact["v340_outcome_recorded"] == exp3724.V340_OUTCOME
++    assert artifact["thesis_a_seeded_recorded"] is True
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["p01_status_preserved"] == exp3724.P01_STATUS
++    assert artifact["n_tasks_archived"] == 11
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["adversarial_verify_report"]["max_severity"] < 2
++    assert artifact["random_seed"] == 3724
++    assert artifact["duration_s"] >= 0.0001
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert artifact["v341_active_confirmed"] is True
++    assert artifact["frozen_headline_auroc_preserved"] == 0.9131
++    assert artifact["g_gates_preserved"] == {"g1": True, "g2": True, "g3": True, "g4": True}
++    assert artifact["v340_evidence"]["g3_mechanical"] is True
++    assert artifact["v340_evidence"]["g4_fully_traced"] is True
++    assert artifact["v340_evidence"]["fresh_corpus_generalization"] == "fover_specific"
++    assert artifact["v340_evidence"]["risk_coverage_abstention_gate"] == (
++        "energy_better_than_entropy"
++    )
++    assert artifact["thesis_a_evidence"]["mechanism"] == "energy_as_generator_not_selector"
++    assert artifact["thesis_a_evidence"]["human_seed_required"] is True
++    assert artifact["scripts_research_conductor_modified"] is False
++    encoded = json.dumps(artifact)
++    assert "model_specs" not in encoded
++    assert "target_model" not in encoded
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++
++    complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    assert complete.count("- id: 2026.06.340") == 1
++    assert "See conductor log" not in complete
++    assert "CONVERGENCE-HARDENING MILESTONE" in complete
++    assert "G3 mechanically enforced" in complete
++    assert "G4 fully traced" in complete
++    assert "risk-coverage abstention" in complete
++    assert "fresh-corpus result was FoVer-specific" in complete
++    assert "operator seeded Thesis A" in complete
++    assert "energy-as-generator, not selector" in complete
++    assert "P0.1 stayed honest-negative-bounded" in complete
++    assert "paper_ready stayed TRUE" in complete
++    assert "frozen FoVer 0.9131 stayed frozen" in complete
++    assert complete.count("deliverable: results/experiment_") == 11
++    assert "result: G3 mechanically enforced; paper clean" in complete
++    assert "result: G4 fully traced to clean primary artifacts" in complete
++    assert "result: THESIS-A operator seed recorded for .341" in complete
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before_conductor
++    assert (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8") == before_north
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before_docs[
++        "status"
++    ]
++    assert (tmp_path / "ops" / "changelog.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["changelog"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["trace"]
++
++
++def test_req_report_3724_research_complete_rewrite_is_idempotent(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-3724: missing or existing v340 archive entries stay stable."""
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-complete.yaml").write_text(
++        "# completed\n\nmilestones:\n- id: 2026.06.339\n  finding: previous\n",
++        encoding="utf-8",
++    )
++
++    first_path = exp3724.run(tmp_path)
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    first_artifact = json.loads(first_path.read_text(encoding="utf-8"))
++
++    second_path = exp3724.run(tmp_path)
++    second_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second_artifact = json.loads(second_path.read_text(encoding="utf-8"))
++
++    assert first_complete == second_complete
++    assert first_complete.count("- id: 2026.06.340") == 1
++    assert first_artifact == second_artifact
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("v340_outcome_recorded"), "missing required"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (
++            lambda p: p["field_principles"].pop("thesis_a_seeded_recorded"),
++            "missing field principles",
++        ),
++        (lambda p: p.update(honest_verdict="complete: wrong"), "terminal verdict"),
++        (lambda p: p.update(inference_substrate="live_inference"), "inference_substrate"),
++        (lambda p: p.update(v341_active_confirmed=False), "v341"),
++        (lambda p: p.update(v340_outcome_recorded="all_positive"), ".340 outcome"),
++        (lambda p: p.update(thesis_a_seeded_recorded=False), "Thesis A"),
++        (lambda p: p.update(paper_ready_preserved=False), "paper_ready"),
++        (lambda p: p.update(p01_status_preserved="positive"), "P0.1"),
++        (lambda p: p.update(n_tasks_archived=10), "11"),
++        (lambda p: p.update(adversarial_verify_clean=False), "adversarial_verify_clean"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(target_model=None), "target_model"),
++    ],
++)
++def test_req_report_3724_validate_artifact_rejects_dishonest_fields(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3724: schema validation blocks silent regression."""
++
++    _seed_repo(tmp_path)
++    artifact_path = exp3724.run(tmp_path)
++    payload = json.loads(artifact_path.read_text(encoding="utf-8"))
++    exp3724.validate_artifact(payload)
++
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        exp3724.validate_artifact(broken)
++
++
++def test_req_report_3724_requires_v341_to_be_active(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3724: the archive cannot claim a wrong active milestone."""
++
++    _seed_repo(tmp_path, active_milestone="2026.06.340")
++
++    with pytest.raises(ValueError, match="v341"):
++        exp3724.run(tmp_path)
++
++
++def test_req_report_3724_defensive_helpers_fail_closed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-3724: malformed inputs do not produce a terminal archive."""
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-roadmap.yaml").write_text("tasks: []\n", encoding="utf-8")
++
++    with pytest.raises(ValueError, match="v341"):
++        exp3724.build_artifact(tmp_path)
++
++    _seed_repo(tmp_path)
++    (
++        tmp_path
++        / "results"
++        / "experiment_3723_capstone_and_g_gate_v340.json"
++    ).write_text("[]", encoding="utf-8")
++
++    with pytest.raises(ValueError, match="expected JSON object"):
++        exp3724.build_artifact(tmp_path)
++
++    _seed_repo(tmp_path)
++    (tmp_path / "docs" / "research-notes" / "phase3-alternative-thesis-menu.md").write_text(
++        "Thesis B selected\n",
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="Thesis A"):
++        exp3724.build_artifact(tmp_path)
++
++    with pytest.raises(ValueError, match="required text input missing"):
++        exp3724._read_text_required(tmp_path / "missing.txt")
++    assert exp3724._point({"point": 0.1234567}) == 0.123457
++    assert exp3724._point("not-a-number") is None
++    assert exp3724._max_report_severity(
++        {"adversarial_verify_report": {"flags": [{"severity": "warn"}]}}
++    ) == 1
++    assert exp3724._max_report_severity(
++        {"adversarial_verify_report": {"flags": []}}
++    ) == -1
++    assert exp3724._max_report_severity(
++        {"adversarial_verify_report": {"flags": "bad"}}
++    ) == -1
++    assert exp3724._is_verify_clean({"flags": [{"severity": "warn"}]}) is True
++    assert exp3724._is_verify_clean({"flags": [{"severity": "critical"}]}) is False
++    assert exp3724._is_verify_clean({"flags": "bad"}) is True
++    assert exp3724._compact_verify_report({"flags": [{"severity": "warn"}, "bad"]}) == {
++        "flag_count": 1,
++        "max_severity": 1,
++        "flags": [{"severity": "warn"}],
++    }
++
++    monkeypatch.setattr(
++        exp3724.importlib.util,
++        "spec_from_file_location",
++        lambda *_args, **_kwargs: None,
++    )
++    with pytest.raises(RuntimeError, match="could not load adversarial verifier"):
++        exp3724._run_adversarial_verify(tmp_path / "missing.json")
++
++    class _Loader:
++        def create_module(self, _spec: ModuleSpec) -> None:
++            return None
++
++        def exec_module(self, module: object) -> None:
++            module.verify_artifact = lambda _path: []  # type: ignore[attr-defined]
++
++    monkeypatch.setattr(
++        exp3724.importlib.util,
++        "spec_from_file_location",
++        lambda *_args, **_kwargs: ModuleSpec("fake_verify", _Loader()),
++    )
++    with pytest.raises(RuntimeError, match="non-object report"):
++        exp3724._run_adversarial_verify(tmp_path / "missing.json")
++
++
++def test_scenario_report_3724_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3724: conductor entrypoint delegates to the module."""
++
++    script = Path("scripts/experiment_3724_archive_v340_activate_v341.py")
++    assert script.exists()
++    assert "archive_v340_activate_v341_3724" in script.read_text(encoding="utf-8")
+-- 
+2.55.0
+

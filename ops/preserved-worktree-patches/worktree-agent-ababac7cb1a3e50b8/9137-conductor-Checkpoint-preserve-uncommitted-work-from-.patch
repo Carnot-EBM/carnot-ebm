@@ -1,0 +1,65 @@
+From d1726438ddd29b3ed50eee88e09a4fb0bf02908a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 04:54:02 -0400
+Subject: [PATCH 09137/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...417_authentic_write_time_factor_admission_ab.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3e15b9a8f7..f5c8ce8f04 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-08-14T08:35:14Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-08-14T08:53:59Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5749d695b1..c33ab620e1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15813,3 +15813,4 @@ code |
+ | 2026-08-14 07:51 UTC | Gated on Exp6413 authentic receipts: fresh three-f | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-14 08:13 UTC | Exact Boolean WCSP constraint-composite-graph kern | OK | 88 passed, 1 warning in 10.36s |
+ | 2026-08-14 08:33 UTC | Gated on Exp6414/6415 readiness: abstention-trigge | OK | 88 passed, 1 warning in 9.67s |
++| 2026-08-14 08:51 UTC | Gated on clean V551 boundary and selective refinem | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e45d18dba5..8f0ff9081e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 22, "phase": "iteration_start", "started_at": "2026-08-14T08:35:14Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 23, "phase": "iteration_start", "started_at": "2026-08-14T08:53:59Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6417_authentic_write_time_factor_admission_ab.json b/results/experiment_6417_authentic_write_time_factor_admission_ab.json
+index a3ae1413cf..5fe065f7a9 100644
+--- a/results/experiment_6417_authentic_write_time_factor_admission_ab.json
++++ b/results/experiment_6417_authentic_write_time_factor_admission_ab.json
+@@ -13411,5 +13411,13 @@
+       "retention_checker"
+     ],
+     "value": true
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=2.7e-07 but artifact declares deterministic-verifier substrate. Even loading checked-in JSON takes microseconds; a value below 0.0001s suggests the duration was not measured at all."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

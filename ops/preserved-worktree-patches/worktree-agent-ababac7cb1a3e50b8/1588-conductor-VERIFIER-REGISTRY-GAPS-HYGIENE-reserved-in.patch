@@ -1,0 +1,1841 @@
+From 22e1dc06b23a2727667ef17f6d38fb0d633de714 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 06:36:02 -0400
+Subject: [PATCH 01588/11362] [conductor] VERIFIER-REGISTRY + GAPS HYGIENE
+ (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval
+ reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (vote
+ 0.4516 -> gated 0.5806; zero codex/GGUF). RECORD the .383 outcomes: the
+ Sudoku-baseline val trajectory (toward 0.87 across 4 passes), and -- THE
+ headline -- the decisive verifier graft result (headroom_present +
+ ensemble_rerank_lift + rft_vs_ablation_delta + verifier_value_added, or
+ honest deferral). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the
+ honest source of truth.
+
+Automated research step by research conductor.
+Task ID: exp4142-verifier-registry-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  71 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  20 +
+ ops/verifier_registry.yaml                    |  77 ++
+ ...ent_4142_verifier_registry_gaps_hygiene.py |  19 +
+ .../verifier_registry_gaps_hygiene_4142.py    | 681 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...t_4142_verifier_registry_gaps_hygiene.json | 243 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._exp4142_verifier_registry_gaps_hygiene.py | 447 ++++++++++++
+ 18 files changed, 1579 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py
+ create mode 100644 python/carnot/reporting/verifier_registry_gaps_hygiene_4142.py
+ create mode 100644 results/experiment_4142_verifier_registry_gaps_hygiene.json
+ create mode 100644 tests/python/test_exp4142_verifier_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a13d012a7b..343695f358 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -13383,6 +13383,77 @@ vote `0.4516` to gated `0.5806`, records
+ with the Exp 4131 replay and Exp 4128 training-time TRM role status, and uses
+ no inference substrate other than cached GAP-4 replay and ledger reconciliation.
+ 
++### REQ-VERIFY-4142: Verifier Registry And Gaps Hygiene For .383 Outcomes
++
++The repository SHALL provide Exp 4142 at
++`python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py` to replay the
++canonical GAP-4 ARC-1 regression guard from cached candidates and saved
++induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
++`ops/verifier_gaps.md` with the `.383` Sudoku baseline and decisive graft truth.
++Before running the replay, the runner SHALL verify that
++`results/arc3_gap3_stage2_eval_pool.json.gz`,
++`results/arc3_gap4_induced_programs.json`, `ops/verifier_registry.yaml`, and
++`ops/verifier_gaps.md` exist and parse. If any precondition fails, the runner
++SHALL write a terminal artifact with `honest_verdict=blocked_<resource>` and
++SHALL NOT fabricate replay, registry, or gaps updates.
++
++The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
++`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
++including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
++Codex calls, GGUF loading, live TRM inference, or induced-code execution.
++`regression_guard_passed` SHALL be a bare bool and SHALL be true only when
++those canonical GAP-4 numbers match exactly.
++
++The gaps ledger SHALL record the Exp 4138 Sudoku baseline trajectory toward the
++published approximately `0.87` target. It SHALL preserve the measured `.383`
++state honestly: `baseline_status=config-blocked`, measured validation
++trajectory anchored at `0.2782`, subsequent pass metrics missing or
++config-blocked, `matches_published_087=false`, and `near_faithful_080=false`.
++The decisive Exp 4139 graft entry SHALL record `headroom_present=false`,
++`graft_deferred=true`, `verifier_value_added=false`, and the oracle-vs-
++transferable distinction: `executable_oracle_upper_bound` is an oracle upper
++bound on unique-solution Sudoku, while `ensemble_rerank_lift_vs_vote` and
++`rft_vs_ablation_delta` are the transferable/non-tautological value-added
++signals.
++
++The registry SHALL annotate the `gap4_program_induction_stack` entry with an
++Exp 4142 replay marker and a training-time TRM role derived from Exp 4139. The
++role SHALL record the executable-Sudoku-verifier-as-reward status, baseline
++trajectory, `headroom_present`, `executable_oracle_upper_bound`,
++`ensemble_rerank_lift_vs_vote`, `rft_vs_ablation_delta`, `verifier_value_added`,
++and the DiffusionGemma gate state. The DiffusionGemma scale-up SHALL remain
++kept-gated unless Exp 4139's `verifier_value_added` is true on the transferable
++ensemble rerank or RFT label contrast, not merely on the executable oracle upper
++bound.
++
++The terminal artifact SHALL write
++`results/experiment_4142_verifier_registry_gaps_hygiene.json` with
++`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
++bare bool `registry_updated`, `sudoku_baseline`, `sudoku_decisive_graft`,
++`diffusiongemma_gate_state`, and
++`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
++`field_principles` SHALL include:
++`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .383 truth.`;
++`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
++`gaps_updated` = `Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.`;
++`diffusiongemma_gate_state` = `Records whether the .383 graft's verifier_value_added (on the transferable ensemble + RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the forward-planning signal.`
++
++### SCENARIO-VERIFY-4142: Cached Replay Records .383 Graft Truth And DiffusionGemma Gate
++
++Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4138,
++Exp 4139, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md` are readable,
++when Exp 4142 runs, then it writes the terminal artifact with
++`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
++records the `.383` Sudoku baseline as config-blocked at the `0.2782` anchor
++with later pass metrics missing or config-blocked, records the decisive graft
++outcome with `headroom_present=false`, `graft_deferred=true`,
++`executable_oracle_upper_bound` kept separate from
++`ensemble_rerank_lift_vs_vote` and `rft_vs_ablation_delta`, records
++`verifier_value_added=false`, keeps `diffusiongemma_gate_state=kept_gated`,
++annotates the registry with the Exp 4142 replay and Exp 4139 training-time TRM
++role status, and uses no inference substrate other than cached GAP-4 replay and
++ledger reconciliation.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 96ee0ac358..320237beab 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 170,
+   "code_violations": 0,
+-  "experiments_checked": 3164,
++  "experiments_checked": 3165,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index d18738e369..d5e2ada423 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -699,3 +699,23 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: rerun the graft only after baseline reproduction or after verifier-guided candidate expansion creates a candidate pool with measurable oracle headroom.
+ - priority: high
+ <!-- exp4131-sudoku-verifier-graft:end -->
++
++<!-- exp4142-sudoku-baseline-reproduction:start -->
++### GAP-SUDOKU-BASELINE-REPRODUCTION-4138: Exp 4142 .383 Sudoku baseline trajectory status
++- status: open_baseline_config_blocked_val_0.2782
++- evidence: `results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json`; baseline_status=config-blocked; val_trajectory_383=[0.2782, None, None, None, None]; measured_val_trajectory=[0.2782]; final_val=0.2782; matches_published_087=false; near_faithful_080=false; published_target=0.87; estimated_passes_to_converge=None.
++- failure mode: the .383 continuation did not produce new validation progress because the baseline lineage was config-blocked before pass4, so the Sudoku candidate source remains far below the published 0.87 target.
++- missing discriminator: faithful Sudoku baseline candidate source before DiffusionGemma scale-up or verifier-as-reward claims.
++- candidate design: fix the Timer/config-blocked resume path or run a clean contiguous baseline before rerunning the graft.
++- priority: high
++<!-- exp4142-sudoku-baseline-reproduction:end -->
++
++<!-- exp4142-sudoku-decisive-graft:start -->
++### GAP-SUDOKU-EXECUTABLE-VERIFIER-4139: Exp 4142 .383 Sudoku decisive executable-verifier graft status
++- status: open_graft_deferred_no_transferable_value_added
++- evidence: `results/experiment_4139_decisive_verifier_graft_sudoku.json` with baseline `results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json`; baseline_final_val=0.2782; headroom_present=false; graft_deferred=true; executable_verifier_is_oracle=true; executable_oracle_upper_bound_delta=0.0; ensemble_rerank_lift_vs_vote_delta=0.0; ensemble_rerank_lift_vs_vote_status=uninterpretable_no_headroom; rft_vs_ablation_delta=0.0; rft_vs_ablation_delta_status=deferred_baseline_below_0.80; verifier_value_added=false; diffusiongemma_gate_state=kept_gated.
++- failure mode: executable Sudoku validity is an oracle upper bound on unique-solution Sudoku, not a transferable verifier reward. The non-oracle ensemble rerank added no measured lift, and the RFT label contrast was deferred because the baseline was below the near-faithful gate.
++- missing discriminator: transferable training-time value from non-oracle Sudoku verifier labels beyond vote labels.
++- candidate design: keep DiffusionGemma gated until the transferable ensemble rerank or RFT A-vs-B label contrast shows value with selectable headroom.
++- priority: high
++<!-- exp4142-sudoku-decisive-graft:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index a03f27aca7..82b97a7d2d 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -242,6 +242,12 @@ verifiers:
+     exp4131_arc1_rule_exec_gated_pass2: 0.5806
+     exp4131_arc1_headroom_recovered: 4
+     exp4131_arc1_vote_wins_lost: 0
++    eval_exp_4142: results/experiment_4142_verifier_registry_gaps_hygiene.json
++    exp4142_regression_guard_passed: true
++    exp4142_arc1_rule_exec_vote_pass2: 0.4516
++    exp4142_arc1_rule_exec_gated_pass2: 0.5806
++    exp4142_arc1_headroom_recovered: 4
++    exp4142_arc1_vote_wins_lost: 0
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -3382,6 +3388,77 @@ verifiers:
+     rerank_lift_vs_vote: null
+     rft_vs_ablation_delta: null
+     eval_exp_4131: results/experiment_4131_verifier_registry_gaps_hygiene.json
++  - role_id: sudoku_executable_verifier_training_time_4139
++    experiment: results/experiment_4139_decisive_verifier_graft_sudoku.json
++    role: candidate_trm_training_time_reward_signal_executable_domain
++    status: graft_deferred_no_headroom
++    outcome: open_graft_deferred_no_transferable_value_added
++    honest_verdict: 'complete: uninformative_no_headroom_false_negative_risk'
++    baseline_artifact: results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json
++    baseline_status: config-blocked
++    baseline_final_val_exact_accuracy: 0.278172343969
++    baseline_val_trajectory_383_rounded:
++    - 0.2782
++    - null
++    - null
++    - null
++    - null
++    matches_published_087: false
++    near_faithful_080: false
++    headroom_present: false
++    graft_deferred: true
++    verifier_value_added: false
++    executable_sudoku_verifier_as_reward_status: deferred_oracle_upper_bound_only_no_transferable_value_added
++    executable_oracle_upper_bound:
++      ci95:
++      - 0.0
++      - 0.0
++      delta: 0.0
++      executable_oracle_pass_at_1: 0.140625
++      executable_verifier_is_oracle: true
++      interpretation: oracle_upper_bound_not_verifier_value
++      metric: pass@1_exact_accuracy
++      tautological_equals_oracle_gap: true
++      vote_pass_at_1: 0.140625
++    ensemble_rerank_lift_vs_vote:
++      ci95:
++      - 0.0
++      - 0.0
++      delta: 0.0
++      ensemble_pass_at_1: 0.140625
++      meaningful: false
++      metric: pass@1_exact_accuracy
++      score_components:
++      - continuous_sudoku_energy
++      - digit_text_statistics
++      status: uninterpretable_no_headroom
++      uses_exact_validity_check: false
++      vote_pass_at_1: 0.140625
++    rft_vs_ablation_delta:
++      a_exact_accuracy: 0.0
++      b_exact_accuracy: 0.0
++      ci95:
++      - 0.0
++      - 0.0
++      current_val_exact_accuracy: 0.278172343969
++      delta: 0.0
++      estimated_passes_to_converge_for_384:
++        basis: exp4138_missing_or_config_blocked_estimate
++        current_val_exact_accuracy: 0.278172343969
++        destination: '.384'
++        estimated_additional_passes: null
++        target_val_exact_accuracy: 0.87
++      metric: heldout_exact_accuracy
++      n_matched: 0
++      status: deferred_baseline_below_0.80
++    diffusiongemma_gate_state:
++      state: kept_gated
++      reason: no_transferable_verifier_value_added
++      verifier_value_added: false
++      headroom_present: false
++      uses_executable_oracle_upper_bound: false
++      basis: ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle
++    eval_exp_4142: results/experiment_4142_verifier_registry_gaps_hygiene.json
+   certification_precision_operating_point:
+     experiment: results/experiment_4087_certification_precision_rescue.json
+     status: precision_rescue_succeeded
+diff --git a/python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py b/python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..38a0a957f5
+--- /dev/null
++++ b/python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,19 @@
++"""Run Exp 4142 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4142, SCENARIO-VERIFY-4142.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.verifier_registry_gaps_hygiene_4142 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/python/carnot/reporting/verifier_registry_gaps_hygiene_4142.py b/python/carnot/reporting/verifier_registry_gaps_hygiene_4142.py
+new file mode 100644
+index 0000000000..857697bf70
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_gaps_hygiene_4142.py
+@@ -0,0 +1,681 @@
++"""Exp 4142 registry/gaps hygiene for .383 verifier-relevant outcomes.
++
++Spec refs: REQ-VERIFY-4142, SCENARIO-VERIFY-4142.
++
++This reconciler is intentionally offline. It first proves the cached GAP-4
++ARC-1 regression guard still reproduces the canonical vote-to-gated lift, then
++records the Sudoku outcome without laundering an oracle upper bound into a
++transferable verifier-as-reward win. That distinction matters because an
++executable Sudoku validity check is an oracle on unique-solution puzzles; it
++can show headroom, but the DiffusionGemma scale-up gate needs value from the
++transferable ensemble rerank or the RFT label contrast.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++import time
++from copy import deepcopy
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as base
++from carnot.reporting import verifier_registry_gaps_hygiene_4131 as exp4131
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++INFERENCE_SUBSTRATE = "cached_gap4_replay_and_ledger_reconciliation"
++
++EXP4142_ARTIFACT_PATH = "results/experiment_4142_verifier_registry_gaps_hygiene.json"
++REGISTRY_PATH = base.REGISTRY_PATH
++GAPS_PATH = base.GAPS_PATH
++
++ARC1_POOL_PATH = "results/arc3_gap3_stage2_eval_pool.json.gz"
++ARC1_PROGRAMS_PATH = "results/arc3_gap4_induced_programs.json"
++EXP4138_PATH = "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json"
++EXP4139_PATH = "results/experiment_4139_decisive_verifier_graft_sudoku.json"
++
++GAP4_VERIFIER_ID = base.GAP4_VERIFIER_ID
++SUDOKU_BASELINE_GAP_ID = "GAP-SUDOKU-BASELINE-REPRODUCTION-4138"
++SUDOKU_GRAFT_GAP_ID = "GAP-SUDOKU-EXECUTABLE-VERIFIER-4139"
++SUDOKU_TRAINING_ROLE_ID = "sudoku_executable_verifier_training_time_4139"
++PUBLISHED_SUDOKU_TARGET = 0.87
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "gaps_updated",
++    "registry_updated",
++    "sudoku_baseline",
++    "sudoku_decisive_graft",
++    "diffusiongemma_gate_state",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .383 truth.",
++    "regression_guard_passed": (
++        "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent "
++        "verifier regression."
++    ),
++    "gaps_updated": (
++        "Lists the verifier_gaps entries touched so the gap backlog stays the honest complement "
++        "of the registry."
++    ),
++    "diffusiongemma_gate_state": (
++        "Records whether the .383 graft's verifier_value_added (on the transferable ensemble + "
++        "RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the "
++        "forward-planning signal."
++    ),
++}
++
++
++def _numeric_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        return float(value)
++    return None
++
++
++def _round4(value: float | None) -> float | None:
++    if value is None:
++        return None
++    return round(float(value), 4)
++
++
++def _load_gzip_json(path: Path) -> dict[str, Any]:
++    with gzip.open(path, "rt", encoding="utf-8") as handle:
++        loaded = json.load(handle)
++    if not isinstance(loaded, dict):
++        raise ValueError("expected JSON object")
++    return loaded
++
++
++def _check_resource(
++    repo_root: Path,
++    resource: str,
++    rel_paths: list[str],
++    loader: Any,
++) -> dict[str, Any]:
++    paths = [repo_root / rel_path for rel_path in rel_paths]
++    missing = [str(path) for path in paths if not path.exists()]
++    if missing:
++        return {"resource": resource, "available": False, "detail": f"missing: {missing}"}
++    try:
++        for path in paths:
++            loader(path)
++    except Exception as exc:  # pragma: no cover - exact parse exceptions vary by parser.
++        return {"resource": resource, "available": False, "detail": f"parse_error: {exc}"}
++    return {"resource": resource, "available": True, "detail": ", ".join(rel_paths)}
++
++
++def _load_registry_for_check(path: Path) -> dict[str, Any]:
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if not isinstance(loaded, dict):
++        raise ValueError("registry is not a mapping")
++    if "verifiers" not in loaded:
++        raise ValueError("registry missing verifiers")
++    return loaded
++
++
++def _load_gaps_for_check(path: Path) -> str:
++    text = path.read_text(encoding="utf-8")
++    if not text.strip():
++        raise ValueError("gaps markdown is empty")
++    return text
++
++
++def check_preconditions(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4142: verify cached fixtures and ledgers before replay."""
++    checks = [
++        _check_resource(
++            repo_root,
++            "gap4_arc1_candidate_fixtures",
++            [ARC1_POOL_PATH, ARC1_PROGRAMS_PATH],
++            lambda path: _load_gzip_json(path)
++            if path.suffix == ".gz"
++            else base._load_json(path),
++        ),
++        _check_resource(repo_root, "verifier_registry", [REGISTRY_PATH], _load_registry_for_check),
++        _check_resource(repo_root, "verifier_gaps", [GAPS_PATH], _load_gaps_for_check),
++    ]
++    blocked = next((check["resource"] for check in checks if not check["available"]), None)
++    return {"ok": blocked is None, "blocked_resource": blocked, "checks": checks}
++
++
++def replay_gap4_arc1(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """SCENARIO-VERIFY-4142: replay GAP-4 ARC-1 from cached artifacts only."""
++    return exp4131.replay_gap4_arc1(repo_root)
++
++
++def _trajectory_rows(artifact: dict[str, Any]) -> list[dict[str, Any]]:
++    rows = artifact.get("val_trajectory_383", [])
++    if not isinstance(rows, list):
++        return []
++    cleaned: list[dict[str, Any]] = []
++    for index, row in enumerate(rows):
++        if not isinstance(row, dict):
++            continue
++        val = _numeric_or_none(row.get("val_exact_accuracy"))
++        cleaned.append(
++            {
++                "pass_index": row.get("pass_index", index),
++                "label": str(row.get("label", "")),
++                "experiment": str(row.get("experiment", "")),
++                "status": str(row.get("status", "")),
++                "val_exact_accuracy": val,
++                "val_exact_accuracy_rounded": _round4(val),
++                "delta_vs_previous": _numeric_or_none(row.get("delta_vs_previous")),
++            }
++        )
++    return cleaned
++
++
++def classify_sudoku_baseline(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4142: summarize the Exp 4138 baseline trajectory honestly."""
++    artifact = base._load_json(repo_root / EXP4138_PATH)
++    rows = _trajectory_rows(artifact)
++    measured = [
++        row["val_exact_accuracy"]
++        for row in rows
++        if row["val_exact_accuracy"] is not None
++    ]
++    final_val = _numeric_or_none(artifact.get("val_exact_accuracy"))
++    if final_val is None:
++        final_val = _numeric_or_none(
++            artifact.get("baseline", {}).get("val_exact_accuracy")
++            if isinstance(artifact.get("baseline"), dict)
++            else None
++        )
++    if final_val is None and measured:
++        final_val = measured[-1]
++
++    baseline_status = str(artifact.get("baseline_status", "unknown"))
++    matches_published = artifact.get("matches_published_087") is True
++    near_faithful = artifact.get("near_faithful_080") is True
++    final_text = f"{final_val:.4f}" if final_val is not None else "unknown"
++    if matches_published:
++        status = f"reproduced_val_{final_text}"
++    elif baseline_status == "config-blocked":
++        status = f"open_baseline_config_blocked_val_{final_text}"
++    else:
++        status = f"open_baseline_not_reproduced_val_{final_text}"
++
++    return {
++        "gap_id": SUDOKU_BASELINE_GAP_ID,
++        "status": status,
++        "artifact_path": EXP4138_PATH,
++        "source_artifacts": [EXP4138_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "published_target_val_exact_accuracy": PUBLISHED_SUDOKU_TARGET,
++        "matches_published_087": matches_published,
++        "near_faithful_080": near_faithful,
++        "baseline_status": baseline_status,
++        "config_blocked": baseline_status == "config-blocked",
++        "final_val_exact_accuracy": final_val,
++        "final_val_exact_accuracy_rounded": _round4(final_val),
++        "val_trajectory_383": rows,
++        "val_trajectory_383_rounded": [
++            row["val_exact_accuracy_rounded"] for row in rows
++        ],
++        "measured_val_trajectory": measured,
++        "measured_val_trajectory_rounded": [_round4(value) for value in measured],
++        "estimated_passes_to_converge": artifact.get("estimated_passes_to_converge"),
++        "stable_checkpoint_path": str(artifact.get("stable_checkpoint_path", "")),
++        "suspected_cause": str(artifact.get("suspected_cause", "")),
++        "corrected_config_recommendation": str(
++            artifact.get("corrected_config_recommendation", "")
++        ),
++        "flagged_adversarial": artifact.get("flagged_adversarial") is True,
++        "missing_discriminator": (
++            "faithful_sudoku_baseline_candidate_source_before_diffusiongemma_scaleup"
++        ),
++    }
++
++
++def classify_sudoku_decisive_graft(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4142: summarize Exp 4139 without counting the oracle as value."""
++    artifact = base._load_json(repo_root / EXP4139_PATH)
++    graft_deferred = artifact.get("graft_deferred") is True
++    verifier_value_added = artifact.get("verifier_value_added") is True
++    headroom_present = artifact.get("headroom_present") is True
++    if verifier_value_added:
++        status = "filled_transferable_verifier_value_added"
++    elif graft_deferred:
++        status = "open_graft_deferred_no_transferable_value_added"
++    elif not headroom_present:
++        status = "open_uninformative_no_headroom_no_transferable_value_added"
++    else:
++        status = "open_honest_null_no_transferable_value_added"
++
++    return {
++        "gap_id": SUDOKU_GRAFT_GAP_ID,
++        "status": status,
++        "artifact_path": EXP4139_PATH,
++        "baseline_artifact_path": _rel_or_str(
++            repo_root,
++            str(artifact.get("baseline_artifact_path", EXP4138_PATH)),
++        ),
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "flagged_adversarial": artifact.get("flagged_adversarial") is True,
++        "headroom_present": headroom_present,
++        "false_negative_risk": artifact.get("false_negative_risk") is True,
++        "graft_deferred": graft_deferred,
++        "verifier_value_added": verifier_value_added,
++        "verifier_value_added_basis": list(artifact.get("verifier_value_added_basis", [])),
++        "baseline_val_exact_accuracy": _numeric_or_none(
++            artifact.get("baseline_val_exact_accuracy")
++        ),
++        "baseline_matches_published_087": artifact.get("baseline_matches_published_087")
++        is True,
++        "baseline_near_faithful_080": artifact.get("baseline_near_faithful_080") is True,
++        "oracle_pass_at_k": _numeric_or_none(artifact.get("oracle_pass_at_k")),
++        "vote_pass_at_1": _numeric_or_none(artifact.get("vote_pass_at_1")),
++        "oracle_vs_vote_gap": _numeric_or_none(artifact.get("oracle_vs_vote_gap")),
++        "executable_verifier_is_oracle": artifact.get("executable_verifier_is_oracle")
++        is True,
++        "executable_oracle_upper_bound": dict(
++            artifact.get("executable_oracle_upper_bound", {})
++        ),
++        "ensemble_rerank_lift_vs_vote": dict(
++            artifact.get("ensemble_rerank_lift_vs_vote", {})
++        ),
++        "rft_vs_ablation_delta": dict(artifact.get("rft_vs_ablation_delta", {})),
++        "estimated_passes_to_converge_for_384": artifact.get(
++            "estimated_passes_to_converge_for_384"
++        ),
++        "preconditions_checked": list(artifact.get("preconditions_checked", [])),
++        "candidate_source": str(artifact.get("candidate_source", "")),
++        "n_candidate_pools": artifact.get("n_candidate_pools"),
++        "missing_discriminator": (
++            "transferable_training_time_value_from_non_oracle_sudoku_verifier_labels"
++        ),
++    }
++
++
++def _rel_or_str(repo_root: Path, value: str) -> str:
++    path = Path(value)
++    try:
++        return str(path.relative_to(repo_root)) if path.is_absolute() else value
++    except ValueError:
++        return value
++
++
++def classify_diffusiongemma_gate(sudoku_graft: dict[str, Any]) -> dict[str, Any]:
++    """Return the DiffusionGemma scale-up gate from transferable value only."""
++    value_added = bool(sudoku_graft.get("verifier_value_added"))
++    headroom_present = bool(sudoku_graft.get("headroom_present"))
++    if value_added:
++        return {
++            "state": "unlocked",
++            "reason": "transferable_verifier_value_added",
++            "verifier_value_added": True,
++            "headroom_present": headroom_present,
++            "uses_executable_oracle_upper_bound": False,
++            "basis": "ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle",
++        }
++    return {
++        "state": "kept_gated",
++        "reason": "no_transferable_verifier_value_added",
++        "verifier_value_added": False,
++        "headroom_present": headroom_present,
++        "uses_executable_oracle_upper_bound": False,
++        "basis": "ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle",
++    }
++
++
++def ensure_ledgers_record_outcomes(
++    registry: dict[str, Any],
++    gaps_text: str,
++    offline_replay: dict[str, Any],
++    sudoku_baseline: dict[str, Any],
++    sudoku_graft: dict[str, Any],
++    diffusiongemma_gate_state: dict[str, Any],
++) -> tuple[dict[str, Any], str, dict[str, Any]]:
++    """Return registry and gaps text with the .383 outcomes represented."""
++    updated_registry = deepcopy(registry)
++    _ensure_gap4_eval(updated_registry, offline_replay)
++    _ensure_sudoku_training_role(
++        updated_registry,
++        sudoku_baseline,
++        sudoku_graft,
++        diffusiongemma_gate_state,
++    )
++
++    updated_gaps = base._replace_marked_block(
++        gaps_text,
++        "exp4142-sudoku-baseline-reproduction",
++        _sudoku_baseline_gap_block(sudoku_baseline),
++    )
++    updated_gaps = base._replace_marked_block(
++        updated_gaps,
++        "exp4142-sudoku-decisive-graft",
++        _sudoku_graft_gap_block(sudoku_baseline, sudoku_graft, diffusiongemma_gate_state),
++    )
++    touched = [
++        gap_id
++        for gap_id in (SUDOKU_BASELINE_GAP_ID, SUDOKU_GRAFT_GAP_ID)
++        if gap_id in updated_gaps
++    ]
++    return (
++        updated_registry,
++        updated_gaps,
++        {
++            "registry_updated": _registry_contains_outcomes(updated_registry),
++            "gaps_updated": touched,
++            "sudoku_baseline_recorded": SUDOKU_BASELINE_GAP_ID in touched,
++            "sudoku_graft_recorded": SUDOKU_GRAFT_GAP_ID in touched,
++        },
++    )
++
++
++def _ensure_gap4_eval(registry: dict[str, Any], offline_replay: dict[str, Any]) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    arc1 = offline_replay.get("arc1_rule_exec", {})
++    entry.setdefault("eval", {}).update(
++        {
++            "eval_exp_4142": EXP4142_ARTIFACT_PATH,
++            "exp4142_regression_guard_passed": bool(
++                offline_replay.get("regression_guard_passed")
++            ),
++            "exp4142_arc1_rule_exec_vote_pass2": arc1.get("vote_pass2"),
++            "exp4142_arc1_rule_exec_gated_pass2": arc1.get("gated_pass2"),
++            "exp4142_arc1_headroom_recovered": arc1.get("headroom_recovered"),
++            "exp4142_arc1_vote_wins_lost": arc1.get("vote_wins_lost"),
++        }
++    )
++
++
++def _ensure_sudoku_training_role(
++    registry: dict[str, Any],
++    sudoku_baseline: dict[str, Any],
++    sudoku_graft: dict[str, Any],
++    diffusiongemma_gate_state: dict[str, Any],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        return
++    old_roles = list(entry.get("training_time_roles", []))
++    if bool(sudoku_graft.get("verifier_value_added")):
++        status = "value_added_diffusiongemma_unlocked"
++    elif bool(sudoku_graft.get("graft_deferred")):
++        status = "graft_deferred_no_headroom"
++    else:
++        status = "honest_null_no_transferable_value_added"
++
++    role = {
++        "role_id": SUDOKU_TRAINING_ROLE_ID,
++        "experiment": EXP4139_PATH,
++        "role": "candidate_trm_training_time_reward_signal_executable_domain",
++        "status": status,
++        "outcome": sudoku_graft.get("status"),
++        "honest_verdict": sudoku_graft.get("honest_verdict", ""),
++        "baseline_artifact": sudoku_baseline.get("artifact_path"),
++        "baseline_status": sudoku_baseline.get("baseline_status"),
++        "baseline_final_val_exact_accuracy": sudoku_baseline.get("final_val_exact_accuracy"),
++        "baseline_val_trajectory_383_rounded": sudoku_baseline.get(
++            "val_trajectory_383_rounded"
++        ),
++        "matches_published_087": bool(sudoku_baseline.get("matches_published_087")),
++        "near_faithful_080": bool(sudoku_baseline.get("near_faithful_080")),
++        "headroom_present": bool(sudoku_graft.get("headroom_present")),
++        "graft_deferred": bool(sudoku_graft.get("graft_deferred")),
++        "verifier_value_added": bool(sudoku_graft.get("verifier_value_added")),
++        "executable_sudoku_verifier_as_reward_status": (
++            "deferred_oracle_upper_bound_only_no_transferable_value_added"
++            if not bool(sudoku_graft.get("verifier_value_added"))
++            else "transferable_value_added"
++        ),
++        "executable_oracle_upper_bound": sudoku_graft.get(
++            "executable_oracle_upper_bound", {}
++        ),
++        "ensemble_rerank_lift_vs_vote": sudoku_graft.get(
++            "ensemble_rerank_lift_vs_vote", {}
++        ),
++        "rft_vs_ablation_delta": sudoku_graft.get("rft_vs_ablation_delta", {}),
++        "diffusiongemma_gate_state": diffusiongemma_gate_state,
++        "eval_exp_4142": EXP4142_ARTIFACT_PATH,
++    }
++    entry["training_time_roles"] = [
++        old for old in old_roles if old.get("role_id") != SUDOKU_TRAINING_ROLE_ID
++    ] + [role]
++
++
++def _sudoku_baseline_gap_block(outcome: dict[str, Any]) -> str:
++    return (
++        f"### {SUDOKU_BASELINE_GAP_ID}: Exp 4142 .383 Sudoku baseline trajectory status\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4138_PATH}`; "
++        f"baseline_status={outcome.get('baseline_status')}; "
++        f"val_trajectory_383={outcome.get('val_trajectory_383_rounded')}; "
++        f"measured_val_trajectory={outcome.get('measured_val_trajectory_rounded')}; "
++        f"final_val={outcome.get('final_val_exact_accuracy_rounded')}; "
++        f"matches_published_087={str(bool(outcome.get('matches_published_087'))).lower()}; "
++        f"near_faithful_080={str(bool(outcome.get('near_faithful_080'))).lower()}; "
++        f"published_target={outcome.get('published_target_val_exact_accuracy')}; "
++        f"estimated_passes_to_converge={outcome.get('estimated_passes_to_converge')}.\n"
++        "- failure mode: the .383 continuation did not produce new validation progress "
++        "because the baseline lineage was config-blocked before pass4, so the "
++        "Sudoku candidate source remains far below the published 0.87 target.\n"
++        "- missing discriminator: faithful Sudoku baseline candidate source before "
++        "DiffusionGemma scale-up or verifier-as-reward claims.\n"
++        "- candidate design: fix the Timer/config-blocked resume path or run a clean "
++        "contiguous baseline before rerunning the graft.\n"
++        "- priority: high\n"
++    )
++
++
++def _sudoku_graft_gap_block(
++    sudoku_baseline: dict[str, Any],
++    sudoku_graft: dict[str, Any],
++    diffusiongemma_gate_state: dict[str, Any],
++) -> str:
++    oracle = sudoku_graft.get("executable_oracle_upper_bound", {})
++    ensemble = sudoku_graft.get("ensemble_rerank_lift_vs_vote", {})
++    rft = sudoku_graft.get("rft_vs_ablation_delta", {})
++    return (
++        f"### {SUDOKU_GRAFT_GAP_ID}: Exp 4142 .383 Sudoku decisive executable-verifier graft status\n"
++        f"- status: {sudoku_graft['status']}\n"
++        f"- evidence: `{EXP4139_PATH}` with baseline `{EXP4138_PATH}`; "
++        f"baseline_final_val={sudoku_baseline.get('final_val_exact_accuracy_rounded')}; "
++        f"headroom_present={str(bool(sudoku_graft.get('headroom_present'))).lower()}; "
++        f"graft_deferred={str(bool(sudoku_graft.get('graft_deferred'))).lower()}; "
++        f"executable_verifier_is_oracle="
++        f"{str(bool(sudoku_graft.get('executable_verifier_is_oracle'))).lower()}; "
++        f"executable_oracle_upper_bound_delta={oracle.get('delta')}; "
++        f"ensemble_rerank_lift_vs_vote_delta={ensemble.get('delta')}; "
++        f"ensemble_rerank_lift_vs_vote_status={ensemble.get('status')}; "
++        f"rft_vs_ablation_delta={rft.get('delta')}; "
++        f"rft_vs_ablation_delta_status={rft.get('status')}; "
++        f"verifier_value_added={str(bool(sudoku_graft.get('verifier_value_added'))).lower()}; "
++        f"diffusiongemma_gate_state={diffusiongemma_gate_state.get('state')}.\n"
++        "- failure mode: executable Sudoku validity is an oracle upper bound on "
++        "unique-solution Sudoku, not a transferable verifier reward. The non-oracle "
++        "ensemble rerank added no measured lift, and the RFT label contrast was "
++        "deferred because the baseline was below the near-faithful gate.\n"
++        "- missing discriminator: transferable training-time value from non-oracle "
++        "Sudoku verifier labels beyond vote labels.\n"
++        "- candidate design: keep DiffusionGemma gated until the transferable ensemble "
++        "rerank or RFT A-vs-B label contrast shows value with selectable headroom.\n"
++        "- priority: high\n"
++    )
++
++
++def _registry_contains_outcomes(registry: dict[str, Any]) -> bool:
++    gap4 = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    return bool(
++        gap4
++        and gap4.get("eval", {}).get("eval_exp_4142") == EXP4142_ARTIFACT_PATH
++        and any(
++            role.get("role_id") == SUDOKU_TRAINING_ROLE_ID
++            for role in gap4.get("training_time_roles", [])
++        )
++    )
++
++
++def build_artifact(
++    *,
++    offline_replay: dict[str, Any],
++    sudoku_baseline: dict[str, Any],
++    sudoku_decisive_graft: dict[str, Any],
++    diffusiongemma_gate_state: dict[str, Any],
++    registry_updated: bool,
++    gaps_updated: list[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4142 terminal JSON payload."""
++    guard_ok = bool(offline_replay.get("regression_guard_passed"))
++    baseline_recorded = SUDOKU_BASELINE_GAP_ID in gaps_updated
++    graft_recorded = SUDOKU_GRAFT_GAP_ID in gaps_updated
++    prefix = "complete:" if guard_ok and baseline_recorded and graft_recorded else "blocked_"
++    separator = " " if prefix.endswith(":") else ""
++    artifact = {
++        "experiment": "experiment_4142_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4142_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": (
++            f"{prefix}{separator}registry_gaps_reconciled_to_v383_truth_"
++            f"regression_guard_passed_{guard_ok}_"
++            f"baseline_{sudoku_baseline['status']}_"
++            f"graft_{sudoku_decisive_graft['status']}_"
++            f"diffusiongemma_{diffusiongemma_gate_state.get('state')}"
++        ),
++        "regression_guard_passed": guard_ok,
++        "gaps_updated": list(gaps_updated),
++        "registry_updated": bool(registry_updated),
++        "sudoku_baseline": sudoku_baseline,
++        "sudoku_decisive_graft": sudoku_decisive_graft,
++        "diffusiongemma_gate_state": diffusiongemma_gate_state,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "offline_replay": offline_replay,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4138_PATH,
++            EXP4139_PATH,
++        ],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _blocked_artifact(
++    preflight: dict[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    blocked = str(preflight.get("blocked_resource") or "unknown_resource")
++    artifact = {
++        "experiment": "experiment_4142_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4142_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": f"blocked_{blocked}",
++        "regression_guard_passed": False,
++        "gaps_updated": [],
++        "registry_updated": False,
++        "sudoku_baseline": {"status": "blocked_precondition", "gap_id": SUDOKU_BASELINE_GAP_ID},
++        "sudoku_decisive_graft": {"status": "blocked_precondition", "gap_id": SUDOKU_GRAFT_GAP_ID},
++        "diffusiongemma_gate_state": {
++            "state": "blocked",
++            "reason": blocked,
++            "verifier_value_added": False,
++            "headroom_present": False,
++            "uses_executable_oracle_upper_bound": False,
++            "basis": "precondition_failed_before_replay",
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "preconditions": preflight,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4138_PATH,
++            EXP4139_PATH,
++        ],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Validate required Exp 4142 fields before writing the artifact."""
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_", "success:")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["regression_guard_passed"], bool):
++        raise ValueError("regression_guard_passed must be a bare bool")
++    if not isinstance(artifact["registry_updated"], bool):
++        raise ValueError("registry_updated must be a bare bool")
++    if not isinstance(artifact["gaps_updated"], list):
++        raise ValueError("gaps_updated must be a list")
++    gate = artifact["diffusiongemma_gate_state"]
++    if not isinstance(gate, dict) or not gate.get("state"):
++        raise ValueError("diffusiongemma_gate_state must include a state")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required Exp 4142 principles")
++
++
++def run_hygiene(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Run Exp 4142 and write the terminal artifact plus registry/gaps ledgers."""
++    started = time.time()
++    preflight = check_preconditions(repo_root)
++    out_path = repo_root / EXP4142_ARTIFACT_PATH
++    if not preflight["ok"]:
++        artifact = _blocked_artifact(preflight, time.time() - started)
++        base._write_json(out_path, artifact)
++        return artifact
++
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++    registry = base._load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    offline_replay = replay_gap4_arc1(repo_root)
++    sudoku_baseline = classify_sudoku_baseline(repo_root)
++    sudoku_graft = classify_sudoku_decisive_graft(repo_root)
++    diffusiongemma_gate_state = classify_diffusiongemma_gate(sudoku_graft)
++
++    registry, gaps_text, ledger_summary = ensure_ledgers_record_outcomes(
++        registry,
++        gaps_text,
++        offline_replay,
++        sudoku_baseline,
++        sudoku_graft,
++        diffusiongemma_gate_state,
++    )
++    base._write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++
++    artifact = build_artifact(
++        offline_replay=offline_replay,
++        sudoku_baseline=sudoku_baseline,
++        sudoku_decisive_graft=sudoku_graft,
++        diffusiongemma_gate_state=diffusiongemma_gate_state,
++        registry_updated=bool(ledger_summary["registry_updated"]),
++        gaps_updated=list(ledger_summary["gaps_updated"]),
++        duration_s=time.time() - started,
++    )
++    base._write_json(out_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised through the experiment command.
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4142_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5a6bcdebe9..d799e93dc7 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T09:50:31.754495Z",
+-  "duration_s": 0.020636558532714844,
++  "run_date": "2026-06-13T10:34:13.074220Z",
++  "duration_s": 0.021262407302856445,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "6fb51fb8567ef0f856cf2b665b90b263841bfa63555e6727938bf84fb767223b",
++  "reproducibility_checksum": "898e4fa9e0a559c1c2e43d60daf2daeb0947751744e839a0861989a008670a6a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "6fcc97a7c2129961017988a0ebf34f63c005994a"
++    "adversarial_verify_version": "60f633e7b400d04aea850ca8312fccf996dd8ab0"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3818e3de33..93c13b6181 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T09:50:31.786033Z",
+-  "duration_s": 0.02594470977783203,
++  "run_date": "2026-06-13T10:34:13.104020Z",
++  "duration_s": 0.025561094284057617,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "181c624e144aa77f2b8bfbc464a02f8344c13b4d1968b3f32ba0c76d062c5c17",
++  "reproducibility_checksum": "97d7277fe505bc97cdc5bbbb9a9c4a367f9680b102a4c625eb310c7f88c80c53",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "6fcc97a7c2129961017988a0ebf34f63c005994a"
++    "adversarial_verify_version": "60f633e7b400d04aea850ca8312fccf996dd8ab0"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 3006b573da..6a49312efe 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.114534378051758,
++  "efficiency_gains_ms": 2.180814743041992,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index dce0d07345..5d75411dcc 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.000942230224609375,
++  "duration_s": 0.0012798309326171875,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a1a68243f3..d144d24e06 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.11780022457242e-05,
++  "duration_s": 3.163899964420125e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 038c583a56..0dd29e237c 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 8.019997039809823e-07,
++  "duration_s": 5.709953256882727e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index d59d5685bb..3bd8a4c41b 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 8.273124694824219e-05,
++  "duration_s": 0.00014209747314453125,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_4142_verifier_registry_gaps_hygiene.json b/results/experiment_4142_verifier_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..6e5bb0f03a
+--- /dev/null
++++ b/results/experiment_4142_verifier_registry_gaps_hygiene.json
+@@ -0,0 +1,243 @@
++{
++  "cited_upstream_artifacts": [
++    "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "results/arc3_gap4_induced_programs.json",
++    "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++    "results/experiment_4139_decisive_verifier_graft_sudoku.json"
++  ],
++  "diffusiongemma_gate_state": {
++    "basis": "ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle",
++    "headroom_present": false,
++    "reason": "no_transferable_verifier_value_added",
++    "state": "kept_gated",
++    "uses_executable_oracle_upper_bound": false,
++    "verifier_value_added": false
++  },
++  "duration_s": 0.539,
++  "experiment": "experiment_4142_verifier_registry_gaps_hygiene",
++  "field_principles": {
++    "diffusiongemma_gate_state": "Records whether the .383 graft's verifier_value_added (on the transferable ensemble + RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the forward-planning signal.",
++    "gaps_updated": "Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.",
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .383 truth.",
++    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
++  },
++  "gaps_path": "ops/verifier_gaps.md",
++  "gaps_updated": [
++    "GAP-SUDOKU-BASELINE-REPRODUCTION-4138",
++    "GAP-SUDOKU-EXECUTABLE-VERIFIER-4139"
++  ],
++  "honest_verdict": "complete: registry_gaps_reconciled_to_v383_truth_regression_guard_passed_True_baseline_open_baseline_config_blocked_val_0.2782_graft_open_graft_deferred_no_transferable_value_added_diffusiongemma_kept_gated",
++  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
++  "offline_replay": {
++    "arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++    "expected": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "gap4_arc1_reproduced": true,
++    "no_codex_calls": true,
++    "no_gguf_inference": true,
++    "regression_guard_passed": true
++  },
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_updated": true,
++  "regression_guard_passed": true,
++  "schema": "carnot.experiment_4142_verifier_registry_gaps_hygiene.v1",
++  "sudoku_baseline": {
++    "artifact_path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++    "baseline_status": "config-blocked",
++    "config_blocked": true,
++    "corrected_config_recommendation": "for the .384 baseline: rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
++    "estimated_passes_to_converge": null,
++    "final_val_exact_accuracy": 0.278172343969,
++    "final_val_exact_accuracy_rounded": 0.2782,
++    "flagged_adversarial": true,
++    "gap_id": "GAP-SUDOKU-BASELINE-REPRODUCTION-4138",
++    "honest_verdict": "complete: baseline config-blocked before pass4 -> pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
++    "matches_published_087": false,
++    "measured_val_trajectory": [
++      0.278172343969
++    ],
++    "measured_val_trajectory_rounded": [
++      0.2782
++    ],
++    "missing_discriminator": "faithful_sudoku_baseline_candidate_source_before_diffusiongemma_scaleup",
++    "near_faithful_080": false,
++    "published_target_val_exact_accuracy": 0.87,
++    "source_artifacts": [
++      "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json"
++    ],
++    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++    "status": "open_baseline_config_blocked_val_0.2782",
++    "suspected_cause": "pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
++    "val_trajectory_383": [
++      {
++        "delta_vs_previous": null,
++        "experiment": "experiment_4127_sudoku_extreme_accumulate_fixed",
++        "label": ".382_anchor",
++        "pass_index": 0,
++        "status": "measured",
++        "val_exact_accuracy": 0.278172343969,
++        "val_exact_accuracy_rounded": 0.2782
++      },
++      {
++        "delta_vs_previous": null,
++        "experiment": "experiment_4135_sudoku_accumulate_pass1_fixed_lr",
++        "label": ".383_pass1",
++        "pass_index": 1,
++        "status": "missing",
++        "val_exact_accuracy": null,
++        "val_exact_accuracy_rounded": null
++      },
++      {
++        "delta_vs_previous": null,
++        "experiment": "experiment_4136_sudoku_accumulate_pass2_fixed_lr",
++        "label": ".383_pass2",
++        "pass_index": 2,
++        "status": "config-blocked",
++        "val_exact_accuracy": null,
++        "val_exact_accuracy_rounded": null
++      },
++      {
++        "delta_vs_previous": null,
++        "experiment": "experiment_4137_sudoku_accumulate_pass3_fixed_lr",
++        "label": ".383_pass3",
++        "pass_index": 3,
++        "status": "config-blocked",
++        "val_exact_accuracy": null,
++        "val_exact_accuracy_rounded": null
++      },
++      {
++        "delta_vs_previous": null,
++        "experiment": "experiment_4138_sudoku_accumulate_pass4_convergence_check",
++        "label": ".383_pass4",
++        "pass_index": 4,
++        "status": "config-blocked",
++        "val_exact_accuracy": null,
++        "val_exact_accuracy_rounded": null
++      }
++    ],
++    "val_trajectory_383_rounded": [
++      0.2782,
++      null,
++      null,
++      null,
++      null
++    ]
++  },
++  "sudoku_decisive_graft": {
++    "artifact_path": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
++    "baseline_artifact_path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++    "baseline_matches_published_087": false,
++    "baseline_near_faithful_080": false,
++    "baseline_val_exact_accuracy": 0.278172343969,
++    "candidate_source": "trm_checkpoint_final_logits_k_sampling",
++    "ensemble_rerank_lift_vs_vote": {
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "delta": 0.0,
++      "ensemble_pass_at_1": 0.140625,
++      "meaningful": false,
++      "metric": "pass@1_exact_accuracy",
++      "score_components": [
++        "continuous_sudoku_energy",
++        "digit_text_statistics"
++      ],
++      "status": "uninterpretable_no_headroom",
++      "uses_exact_validity_check": false,
++      "vote_pass_at_1": 0.140625
++    },
++    "estimated_passes_to_converge_for_384": {
++      "basis": "exp4138_missing_or_config_blocked_estimate",
++      "current_val_exact_accuracy": 0.278172343969,
++      "destination": ".384",
++      "estimated_additional_passes": null,
++      "target_val_exact_accuracy": 0.87
++    },
++    "executable_oracle_upper_bound": {
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "delta": 0.0,
++      "executable_oracle_pass_at_1": 0.140625,
++      "executable_verifier_is_oracle": true,
++      "interpretation": "oracle_upper_bound_not_verifier_value",
++      "metric": "pass@1_exact_accuracy",
++      "tautological_equals_oracle_gap": true,
++      "vote_pass_at_1": 0.140625
++    },
++    "executable_verifier_is_oracle": true,
++    "false_negative_risk": true,
++    "flagged_adversarial": true,
++    "gap_id": "GAP-SUDOKU-EXECUTABLE-VERIFIER-4139",
++    "graft_deferred": true,
++    "headroom_present": false,
++    "honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
++    "missing_discriminator": "transferable_training_time_value_from_non_oracle_sudoku_verifier_labels",
++    "n_candidate_pools": 64,
++    "oracle_pass_at_k": 0.140625,
++    "oracle_vs_vote_gap": 0.0,
++    "preconditions_checked": [
++      {
++        "available": true,
++        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++        "resource": "exp4138_artifact"
++      },
++      {
++        "available": true,
++        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++        "resource": "stable_checkpoint_path"
++      },
++      {
++        "available": true,
++        "detail": "torch.load ok",
++        "resource": "baseline_checkpoint"
++      },
++      {
++        "available": true,
++        "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
++        "resource": "cuda_available"
++      }
++    ],
++    "rft_vs_ablation_delta": {
++      "a_exact_accuracy": 0.0,
++      "b_exact_accuracy": 0.0,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "current_val_exact_accuracy": 0.278172343969,
++      "delta": 0.0,
++      "estimated_passes_to_converge_for_384": {
++        "basis": "exp4138_missing_or_config_blocked_estimate",
++        "current_val_exact_accuracy": 0.278172343969,
++        "destination": ".384",
++        "estimated_additional_passes": null,
++        "target_val_exact_accuracy": 0.87
++      },
++      "metric": "heldout_exact_accuracy",
++      "n_matched": 0,
++      "status": "deferred_baseline_below_0.80"
++    },
++    "status": "open_graft_deferred_no_transferable_value_added",
++    "verifier_value_added": false,
++    "verifier_value_added_basis": [],
++    "vote_pass_at_1": 0.140625
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c4919ed5c5..5bf3e3d9b3 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T09:50:22Z",
+-  "finished_at": "2026-06-13T09:50:22Z",
++  "started_at": "2026-06-13T10:34:03Z",
++  "finished_at": "2026-06-13T10:34:03Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 241e9e85e7..ef3c52c4af 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T09:50:22Z",
+-  "finished_at": "2026-06-13T09:50:22Z",
++  "started_at": "2026-06-13T10:34:04Z",
++  "finished_at": "2026-06-13T10:34:04Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f33ff2a633..9c2e5864bd 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T09:50:22Z",
+-  "finished_at": "2026-06-13T09:50:22Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-13T10:34:04Z",
++  "finished_at": "2026-06-13T10:34:04Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_exp4142_verifier_registry_gaps_hygiene.py b/tests/python/test_exp4142_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..630eee402c
+--- /dev/null
++++ b/tests/python/test_exp4142_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,447 @@
++"""Tests for Exp 4142 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4142, SCENARIO-VERIFY-4142.
++"""
++
++from __future__ import annotations
++
++import json
++import gzip
++import shutil
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot.reporting import verifier_registry_gaps_hygiene_4142 as exp4142
++
++
++REPO_ROOT = Path(__file__).parents[2]
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": "gap4_program_induction_stack",
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "code_path": "python/carnot/agentic/gap4_program_induction_stack.py",
++                "eval": {"metric": "pass_at_1"},
++                "status": "candidate",
++                "training_time_roles": [
++                    {
++                        "role_id": "sudoku_executable_verifier_training_time_4128",
++                        "experiment": "results/experiment_4128_carnot_verifier_graft_sudoku.json",
++                        "role": "candidate_trm_training_time_reward_signal_executable_domain",
++                        "status": "graft_deferred_baseline_not_reproduced",
++                    }
++                ],
++            }
++        ]
++    }
++
++
++def _write_minimal_repo(tmp_path: Path) -> None:
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text("# Verifier Gaps\n", encoding="utf-8")
++    for name in (
++        "arc3_gap3_stage2_eval_pool.json.gz",
++        "arc3_gap4_induced_programs.json",
++        "experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++        "experiment_4139_decisive_verifier_graft_sudoku.json",
++    ):
++        shutil.copy2(REPO_ROOT / "results" / name, tmp_path / "results" / name)
++
++
++def test_req_4142_spec_declared() -> None:
++    # REQ-VERIFY-4142: OpenSpec declares the runner, inputs, fields, and principles.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4142",
++        "SCENARIO-VERIFY-4142",
++        "python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py",
++        "experiment_4142_verifier_registry_gaps_hygiene.json",
++        "0.4516",
++        "0.5806",
++        "baseline_status=config-blocked",
++        "headroom_present=false",
++        "executable_oracle_upper_bound",
++        "ensemble_rerank_lift_vs_vote",
++        "rft_vs_ablation_delta",
++        "DiffusionGemma",
++        "diffusiongemma_gate_state=kept_gated",
++    ):
++        assert marker in spec
++    assert exp4142.FIELD_PRINCIPLES["honest_verdict"] in spec
++    assert exp4142.FIELD_PRINCIPLES["regression_guard_passed"] in spec
++    assert exp4142.FIELD_PRINCIPLES["gaps_updated"] in spec
++    assert exp4142.FIELD_PRINCIPLES["diffusiongemma_gate_state"] in spec
++
++
++def test_scenario_4142_preconditions_and_replay_are_bitexact() -> None:
++    # SCENARIO-VERIFY-4142: resources parse before cached ARC-1 replay runs.
++    preflight = exp4142.check_preconditions(REPO_ROOT)
++    assert preflight["ok"] is True
++    assert preflight["blocked_resource"] is None
++    assert {check["resource"] for check in preflight["checks"]} == {
++        "gap4_arc1_candidate_fixtures",
++        "verifier_registry",
++        "verifier_gaps",
++    }
++
++    replay = exp4142.replay_gap4_arc1(REPO_ROOT)
++    assert replay["regression_guard_passed"] is True
++    assert replay["arc1_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.4516),
++        "gated_pass2": pytest.approx(0.5806),
++        "headroom_recovered": 4,
++        "vote_wins_lost": 0,
++    }
++    assert replay["no_codex_calls"] is True
++    assert replay["no_gguf_inference"] is True
++
++
++def test_req_4142_classifies_baseline_graft_and_diffusiongemma_gate() -> None:
++    # REQ-VERIFY-4142: .383 distinguishes executable oracle from transferable value.
++    baseline = exp4142.classify_sudoku_baseline(REPO_ROOT)
++    assert baseline["gap_id"] == exp4142.SUDOKU_BASELINE_GAP_ID
++    assert baseline["status"] == "open_baseline_config_blocked_val_0.2782"
++    assert baseline["baseline_status"] == "config-blocked"
++    assert baseline["matches_published_087"] is False
++    assert baseline["near_faithful_080"] is False
++    assert baseline["published_target_val_exact_accuracy"] == pytest.approx(0.87)
++    assert baseline["final_val_exact_accuracy"] == pytest.approx(0.278172343969)
++    assert baseline["val_trajectory_383_rounded"] == [0.2782, None, None, None, None]
++    assert baseline["measured_val_trajectory_rounded"] == [0.2782]
++    assert baseline["config_blocked"] is True
++
++    graft = exp4142.classify_sudoku_decisive_graft(REPO_ROOT)
++    assert graft["gap_id"] == exp4142.SUDOKU_GRAFT_GAP_ID
++    assert graft["status"] == "open_graft_deferred_no_transferable_value_added"
++    assert graft["headroom_present"] is False
++    assert graft["oracle_vs_vote_gap"] == pytest.approx(0.0)
++    assert graft["executable_verifier_is_oracle"] is True
++    assert graft["executable_oracle_upper_bound"]["interpretation"] == "oracle_upper_bound_not_verifier_value"
++    assert graft["ensemble_rerank_lift_vs_vote"]["status"] == "uninterpretable_no_headroom"
++    assert graft["rft_vs_ablation_delta"]["status"] == "deferred_baseline_below_0.80"
++    assert graft["graft_deferred"] is True
++    assert graft["verifier_value_added"] is False
++
++    gate = exp4142.classify_diffusiongemma_gate(graft)
++    assert gate == {
++        "state": "kept_gated",
++        "reason": "no_transferable_verifier_value_added",
++        "verifier_value_added": False,
++        "headroom_present": False,
++        "uses_executable_oracle_upper_bound": False,
++        "basis": "ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle",
++    }
++
++
++def test_scenario_4142_ensure_ledgers_record_baseline_graft_role_and_gate() -> None:
++    # SCENARIO-VERIFY-4142: registry and gaps carry the .383 baseline and graft truth.
++    replay = exp4142.replay_gap4_arc1(REPO_ROOT)
++    baseline = exp4142.classify_sudoku_baseline(REPO_ROOT)
++    graft = exp4142.classify_sudoku_decisive_graft(REPO_ROOT)
++    gate = exp4142.classify_diffusiongemma_gate(graft)
++
++    registry, gaps, summary = exp4142.ensure_ledgers_record_outcomes(
++        _minimal_registry(),
++        "# Verifier Gaps\n",
++        replay,
++        baseline,
++        graft,
++        gate,
++    )
++
++    assert summary == {
++        "registry_updated": True,
++        "gaps_updated": [
++            exp4142.SUDOKU_BASELINE_GAP_ID,
++            exp4142.SUDOKU_GRAFT_GAP_ID,
++        ],
++        "sudoku_baseline_recorded": True,
++        "sudoku_graft_recorded": True,
++    }
++    gap4 = registry["verifiers"][0]
++    assert gap4["eval"]["eval_exp_4142"] == exp4142.EXP4142_ARTIFACT_PATH
++    assert gap4["eval"]["exp4142_regression_guard_passed"] is True
++    role = next(
++        role
++        for role in gap4["training_time_roles"]
++        if role["role_id"] == exp4142.SUDOKU_TRAINING_ROLE_ID
++    )
++    assert role["status"] == "graft_deferred_no_headroom"
++    assert role["executable_sudoku_verifier_as_reward_status"] == (
++        "deferred_oracle_upper_bound_only_no_transferable_value_added"
++    )
++    assert role["baseline_val_trajectory_383_rounded"] == [0.2782, None, None, None, None]
++    assert role["headroom_present"] is False
++    assert role["verifier_value_added"] is False
++    assert role["diffusiongemma_gate_state"]["state"] == "kept_gated"
++    assert exp4142._registry_contains_outcomes(registry) is True
++    assert exp4142._registry_contains_outcomes({}) is False
++
++    assert exp4142.SUDOKU_BASELINE_GAP_ID in gaps
++    assert "baseline_status=config-blocked" in gaps
++    assert "val_trajectory_383=[0.2782, None, None, None, None]" in gaps
++    assert "matches_published_087=false" in gaps
++    assert exp4142.SUDOKU_GRAFT_GAP_ID in gaps
++    assert "headroom_present=false" in gaps
++    assert "executable_oracle_upper_bound_delta=0.0" in gaps
++    assert "ensemble_rerank_lift_vs_vote_delta=0.0" in gaps
++    assert "rft_vs_ablation_delta_status=deferred_baseline_below_0.80" in gaps
++    assert "verifier_value_added=false" in gaps
++    assert "diffusiongemma_gate_state=kept_gated" in gaps
++
++
++def test_req_4142_build_artifact_validates_required_fields() -> None:
++    # REQ-VERIFY-4142: terminal artifact exposes required schema fields and principles.
++    replay = exp4142.replay_gap4_arc1(REPO_ROOT)
++    baseline = exp4142.classify_sudoku_baseline(REPO_ROOT)
++    graft = exp4142.classify_sudoku_decisive_graft(REPO_ROOT)
++    gate = exp4142.classify_diffusiongemma_gate(graft)
++    artifact = exp4142.build_artifact(
++        offline_replay=replay,
++        sudoku_baseline=baseline,
++        sudoku_decisive_graft=graft,
++        diffusiongemma_gate_state=gate,
++        registry_updated=True,
++        gaps_updated=[
++            exp4142.SUDOKU_BASELINE_GAP_ID,
++            exp4142.SUDOKU_GRAFT_GAP_ID,
++        ],
++        duration_s=0.012,
++    )
++
++    exp4142.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["gaps_updated"] == [
++        exp4142.SUDOKU_BASELINE_GAP_ID,
++        exp4142.SUDOKU_GRAFT_GAP_ID,
++    ]
++    assert artifact["field_principles"] == exp4142.FIELD_PRINCIPLES
++    assert artifact["sudoku_baseline"]["val_trajectory_383_rounded"] == [
++        0.2782,
++        None,
++        None,
++        None,
++        None,
++    ]
++    assert artifact["sudoku_decisive_graft"]["headroom_present"] is False
++    assert artifact["sudoku_decisive_graft"]["verifier_value_added"] is False
++    assert artifact["diffusiongemma_gate_state"]["state"] == "kept_gated"
++
++    for field in exp4142.REQUIRED_ARTIFACT_FIELDS:
++        malformed = dict(artifact)
++        malformed.pop(field)
++        with pytest.raises(ValueError, match=field):
++            exp4142.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp4142.validate_artifact({**artifact, "honest_verdict": "not terminal"})
++    with pytest.raises(ValueError, match="bare bool"):
++        exp4142.validate_artifact({**artifact, "regression_guard_passed": "yes"})
++    with pytest.raises(ValueError, match="bare bool"):
++        exp4142.validate_artifact({**artifact, "registry_updated": "yes"})
++    with pytest.raises(ValueError, match="list"):
++        exp4142.validate_artifact({**artifact, "gaps_updated": "GAP"})
++    with pytest.raises(ValueError, match="state"):
++        exp4142.validate_artifact({**artifact, "diffusiongemma_gate_state": {}})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp4142.validate_artifact({**artifact, "inference_substrate": "live"})
++    with pytest.raises(ValueError, match="field_principles"):
++        exp4142.validate_artifact({**artifact, "field_principles": {}})
++
++
++def test_scenario_4142_run_hygiene_writes_artifact_and_ledgers(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4142: run writes the deliverable JSON and stable ledger entries.
++    _write_minimal_repo(tmp_path)
++    artifact = exp4142.run_hygiene(tmp_path)
++    exp4142.validate_artifact(artifact)
++
++    out_path = tmp_path / exp4142.EXP4142_ARTIFACT_PATH
++    assert out_path.exists()
++    written = json.loads(out_path.read_text(encoding="utf-8"))
++    assert written["regression_guard_passed"] is True
++    assert written["sudoku_baseline"]["status"] == "open_baseline_config_blocked_val_0.2782"
++    assert written["sudoku_decisive_graft"]["headroom_present"] is False
++    assert written["sudoku_decisive_graft"]["verifier_value_added"] is False
++    assert written["diffusiongemma_gate_state"]["state"] == "kept_gated"
++
++    registry = yaml.safe_load((tmp_path / "ops" / "verifier_registry.yaml").read_text())
++    role_ids = [role["role_id"] for role in registry["verifiers"][0]["training_time_roles"]]
++    assert exp4142.SUDOKU_TRAINING_ROLE_ID in role_ids
++    gaps = (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8")
++    assert "Exp 4142 .383 Sudoku baseline trajectory status" in gaps
++    assert "Exp 4142 .383 Sudoku decisive executable-verifier graft status" in gaps
++
++
++def test_req_4142_blocked_precondition_stops_without_fabricating(tmp_path: Path) -> None:
++    # REQ-VERIFY-4142: failed preconditions write blocked_<resource> and no ledger win.
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text("# Verifier Gaps\n", encoding="utf-8")
++
++    preflight = exp4142.check_preconditions(tmp_path)
++    assert preflight["ok"] is False
++    assert preflight["blocked_resource"] == "gap4_arc1_candidate_fixtures"
++
++    artifact = exp4142.run_hygiene(tmp_path)
++    exp4142.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_gap4_arc1_candidate_fixtures"
++    assert artifact["regression_guard_passed"] is False
++    assert artifact["registry_updated"] is False
++    assert artifact["gaps_updated"] == []
++    assert artifact["diffusiongemma_gate_state"]["state"] == "blocked"
++    assert "Exp 4142" not in (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8")
++
++
++def test_req_4142_defensive_branches_cover_malformed_and_alternate_inputs(tmp_path: Path) -> None:
++    # REQ-VERIFY-4142: malformed optional inputs do not fabricate a DiffusionGemma unlock.
++    assert exp4142._numeric_or_none("0.1") is None
++    malformed_gzip = tmp_path / "not_object.json.gz"
++    with gzip.open(malformed_gzip, "wt", encoding="utf-8") as handle:
++        json.dump([], handle)
++    with pytest.raises(ValueError, match="expected JSON object"):
++        exp4142._load_gzip_json(malformed_gzip)
++
++    not_mapping = tmp_path / "registry_list.yaml"
++    not_mapping.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="not a mapping"):
++        exp4142._load_registry_for_check(not_mapping)
++    missing_verifiers = tmp_path / "registry_missing_verifiers.yaml"
++    missing_verifiers.write_text("x: 1\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="missing verifiers"):
++        exp4142._load_registry_for_check(missing_verifiers)
++    empty_gaps = tmp_path / "empty_gaps.md"
++    empty_gaps.write_text("\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="empty"):
++        exp4142._load_gaps_for_check(empty_gaps)
++
++    assert exp4142._trajectory_rows({"val_trajectory_383": "bad"}) == []
++    assert exp4142._trajectory_rows(
++        {"val_trajectory_383": ["bad", {"label": "x", "val_exact_accuracy": 0.1}]}
++    )[0]["val_exact_accuracy_rounded"] == 0.1
++
++    results = tmp_path / "results"
++    results.mkdir(exist_ok=True)
++    baseline_path = results / Path(exp4142.EXP4138_PATH).name
++    baseline_path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "success: reproduced-probe",
++                "matches_published_087": True,
++                "near_faithful_080": True,
++                "val_exact_accuracy": 0.88,
++                "val_trajectory_383": [{"val_exact_accuracy": 0.88}],
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert exp4142.classify_sudoku_baseline(tmp_path)["status"] == "reproduced_val_0.8800"
++    baseline_path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: open-probe",
++                "matches_published_087": False,
++                "baseline_status": "running",
++                "baseline": {"val_exact_accuracy": 0.5},
++                "val_trajectory_383": [],
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert (
++        exp4142.classify_sudoku_baseline(tmp_path)["status"]
++        == "open_baseline_not_reproduced_val_0.5000"
++    )
++
++    graft_path = results / Path(exp4142.EXP4139_PATH).name
++    graft_path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "success: value-added-probe",
++                "verifier_value_added": True,
++                "headroom_present": True,
++            }
++        ),
++        encoding="utf-8",
++    )
++    value_graft = exp4142.classify_sudoku_decisive_graft(tmp_path)
++    assert value_graft["status"] == "filled_transferable_verifier_value_added"
++    assert exp4142.classify_diffusiongemma_gate(value_graft)["state"] == "unlocked"
++
++    graft_path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: no-headroom-probe",
++                "graft_deferred": False,
++                "verifier_value_added": False,
++                "headroom_present": False,
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert (
++        exp4142.classify_sudoku_decisive_graft(tmp_path)["status"]
++        == "open_uninformative_no_headroom_no_transferable_value_added"
++    )
++    graft_path.write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: null-probe",
++                "graft_deferred": False,
++                "verifier_value_added": False,
++                "headroom_present": True,
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert (
++        exp4142.classify_sudoku_decisive_graft(tmp_path)["status"]
++        == "open_honest_null_no_transferable_value_added"
++    )
++
++    repaired_registry: dict[str, Any] = {}
++    exp4142._ensure_gap4_eval(
++        repaired_registry,
++        {"regression_guard_passed": True, "arc1_rule_exec": {"vote_pass2": 0.4516}},
++    )
++    assert repaired_registry["verifiers"][0]["verifier_id"] == exp4142.GAP4_VERIFIER_ID
++    exp4142._ensure_sudoku_training_role({}, {}, {}, {})
++
++    value_registry = _minimal_registry()
++    exp4142._ensure_sudoku_training_role(
++        value_registry,
++        {"val_trajectory_383_rounded": [0.9]},
++        {"verifier_value_added": True},
++        {"state": "unlocked"},
++    )
++    assert value_registry["verifiers"][0]["training_time_roles"][-1]["status"] == (
++        "value_added_diffusiongemma_unlocked"
++    )
++
++    null_registry = _minimal_registry()
++    exp4142._ensure_sudoku_training_role(
++        null_registry,
++        {"val_trajectory_383_rounded": [0.5]},
++        {"verifier_value_added": False, "graft_deferred": False},
++        {"state": "kept_gated"},
++    )
++    assert null_registry["verifiers"][0]["training_time_roles"][-1]["status"] == (
++        "honest_null_no_transferable_value_added"
++    )
+-- 
+2.55.0
+

@@ -1,0 +1,47 @@
+From a407ffcdbe1f095a6d6e24b21e09bfa23dd0073f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 22:05:50 -0400
+Subject: [PATCH 04064/11362] [conductor] In-process docs for PHASE A6 (ARC
+ NORTH STAR; SUBMITTED_AGENT_CONFIG integration) -- confirm the scored
+ E3AgentPolicy / Kaggle submission config integrates the .437 levers
+ coherently (structured engine + fixed detector env-gates set to the validated
+ state), the agent entrypoint runs offline, and the frozen Qwen3.5-9B-MTP
+ generator is intact. submission_package_ready is operator-only.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md | 11 +++++++++++
+ ops/changelog.md           |  1 +
+ 2 files changed, 12 insertions(+)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index f0269aee04..d0f3138b84 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -626,3 +626,14 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4752_held_out_first_win_readiness.json
++
++## experiment_4753_persist_transfer.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_4753_persist_transfer.json
++
++## experiment_4754_submitted_agent_config.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4754_submitted_agent_config.json
+diff --git a/ops/changelog.md b/ops/changelog.md
+index be6b50b4e0..04763dd97c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10114,3 +10114,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-26: PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the standing self-play loop (scripts/arc_loop_solve.py) to BANK +1 NEW reproducible level on a CLEAN game NOT deepened in recent milestones (PREFER a first-contact L1->L2 of an UNSOLVED public game from re86/s5i5/g50t/lf52/bp35/sb26, alternatives a +1 deeper level on a shallow-solved game) AND train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced a NEW level -> reproducible_total_levels grows by >=1. verifier_is_oracle:false. live_agent_self_discovery. (⚠️ Research Finding) — honest_verdict=success: sk48_L2_offline_reproduced; results/experiment_4751_levelup_selfplay.json
+ - 2026-06-26: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness lane) -- re-measure the held-out first-win rate + CI + multi-level deepen rate over the held-out public-game proxy, ROBUST to the codex 4800s cap by reusing the exp4729 checkpoint/resume soft-budget (EXP4729_SOFT_BUDGET_S=4200, ~600s under the cap). Report the leaderboard-readiness delta vs the prior milestone; submission stays operator-only. (⚠️ Research Finding) — honest_verdict=complete: held_out_first_win_flat_no_leaderboard_change; results/experiment_4752_held_out_first_win_readiness.json
+ - 2026-06-26: PHASE A5 (ARC NORTH STAR; persist + cross-game transfer) -- persist the .437 A1/A2 levers (structured engine adapter + fixed structural-alignment detector) into the live solver path and characterize their cross-game transfer value (action-efficiency delta / first-effect delta) on >=2 transfer games. No new level claim; characterization only. verifier_is_oracle:false. (⚠️ Blocked) — honest_verdict=blocked_arcade_import; results/experiment_4753_persist_transfer.json
++- 2026-06-26: PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG integration) -- confirm the scored E3AgentPolicy / Kaggle submission config integrates the .437 levers coherently (structured engine + fixed detector env-gates set to the validated state), the agent entrypoint runs offline, and the frozen Qwen3.5-9B-MTP generator is intact. submission_package_ready is operator-only. (✅ Complete) — honest_verdict=complete_437_levers_unvalidated_config_unchanged_entrypoint_green; results/experiment_4754_submitted_agent_config.json
+-- 
+2.55.0
+

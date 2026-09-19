@@ -1,0 +1,43 @@
+From 46e31cf81a96ade0158afce0335eb6c3faf32a3e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 11:39:37 -0400
+Subject: [PATCH 03974/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9168cea2e7..97d3484ffe 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 185, "phase": "iteration_start", "last_beat": "2026-06-25T15:24:24Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 186, "phase": "iteration_start", "last_beat": "2026-06-25T15:39:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index de81cc23c7..5140da835e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9269,3 +9269,4 @@ codex
+ The  |
+ | 2026-06-25 15:22 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: dex
+ The contro |
++| 2026-06-25 15:37 UTC | PHASE A5 (ARC NORTH STAR; persist + cross-game tra | OK | 109 passed, 1 warning in 8.67s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d14604913c..61fd8b7e53 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 185, "phase": "iteration_start", "started_at": "2026-06-25T15:24:24Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 186, "phase": "iteration_start", "started_at": "2026-06-25T15:39:35Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

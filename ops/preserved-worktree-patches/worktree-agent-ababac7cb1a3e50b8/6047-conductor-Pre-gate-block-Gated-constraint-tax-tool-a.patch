@@ -1,0 +1,61 @@
+From 0478bdc4bc95fa269e32cb9042067255c5ee736d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 14:14:23 -0400
+Subject: [PATCH 06047/11362] [conductor] Pre-gate block: Gated constraint-tax
+ tool/action reachability panel v2
+
+1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-protocol.structured_protocol_clean (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...eriment_5367_v489_constraint_tax_tool_action_panel_v2.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8682c4b914..1fdc76e9b8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 238, "phase": "iteration_start", "last_beat": "2026-07-07T18:12:20Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 239, "phase": "iteration_start", "last_beat": "2026-07-07T18:14:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c9bd748675..a535a2845e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10485,3 +10485,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
+ | 2026-07-07 17:48 UTC | Grammar-budgeted structured-output protocol prefli | OK | 87 passed, 1 warning in 8.21s |
+ | 2026-07-07 18:08 UTC | Gated live grammar-budgeted SOTA structured protoc | OK | 87 passed, 1 warning in 14.81s |
+ | 2026-07-07 18:10 UTC | Gated constraint-tax tool/action reachability pane | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-pr |
++| 2026-07-07 18:12 UTC | Gated constraint-tax tool/action reachability pane | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-pr |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cf9081c977..f490f0998a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 238, "phase": "iteration_start", "started_at": "2026-07-07T18:12:20Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 239, "phase": "iteration_start", "started_at": "2026-07-07T18:14:23Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5367_v489_constraint_tax_tool_action_panel_v2.json b/results/experiment_5367_v489_constraint_tax_tool_action_panel_v2.json
+index 5e4f07e362..637072f6ce 100644
+--- a/results/experiment_5367_v489_constraint_tax_tool_action_panel_v2.json
++++ b/results/experiment_5367_v489_constraint_tax_tool_action_panel_v2.json
+@@ -2,8 +2,8 @@
+   "experiment": 5367,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-07",
+-  "started_at": "2026-07-07T18:12:20.944891+00:00",
+-  "finished_at": "2026-07-07T18:12:20.944891+00:00",
++  "started_at": "2026-07-07T18:14:23.062361+00:00",
++  "finished_at": "2026-07-07T18:14:23.062361+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated constraint-tax tool/action reachability panel v2",
+-- 
+2.55.0
+

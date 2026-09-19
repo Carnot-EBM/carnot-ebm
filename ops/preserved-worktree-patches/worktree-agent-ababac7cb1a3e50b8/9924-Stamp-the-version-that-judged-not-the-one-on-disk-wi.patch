@@ -1,0 +1,634 @@
+From d72b4fc8e926d3a41be65d6331cbda79ddfcfafe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 12:27:51 -0400
+Subject: [PATCH 09924/11362] Stamp the version that judged, not the one on
+ disk; widen coverage
+
+Adversarial review of dc8316b43d found the mechanism certified a stale
+verdict as current -- the origin incident inverted. Four confirmed defects,
+all fixed here.
+
+1. WRONG VERSION STAMPED. make_provenance fingerprinted the gate source ON
+   DISK, but the verdict comes from the LOADED module.
+   _module_with_current_source() falls back to the cached module when a
+   reload fails, so a half-landed edit paired an OLD verdict with a NEW
+   version and reported it `current` -- worse than the legacy state, which
+   at least reads `unversioned`. verify_artifact now returns the judging
+   module's own LOADED_GATE_VERSION, computed at import, and both stampers
+   use it.
+
+2. COVERAGE MISSED THE DOMINANT CHECK. NONTERMINAL_DECLARED_ARTIFACT is 995
+   of the corpus's 1,126 critical flags and is decided entirely by tables in
+   carnot/terminal_artifacts.py. Commit 4a1557fd85 added "disqualified" to
+   TERMINAL_CLASSES and flipped that verdict for real artifacts without
+   touching adversarial_verify.py. The version now spans both files.
+
+3. gate_version_algo was written and never read. A version from another
+   algorithm now reads `unversioned` instead of being compared as if it
+   were comparable.
+
+4. backfill_stamps and conductor_gates read the determination with a bare
+   .get, so a principle-wrapped {"value": false} read as truthy. Latent
+   today (0 artifacts wrap it); fixed.
+
+MEASURED LIMITS, now stated in the spec and the note rather than implied
+away:
+- `stale` saturates. Over 128 tracked gate revisions the AST normalization
+  suppressed 1 version bump (0.8%), and the gate changed ~9x/day in the
+  week to 2026-08-25. A fresh stamp reads `stale` within hours. `stale`
+  means "the gate moved", not "this verdict would change". The durable
+  value is the recorded version and timestamp.
+- Coverage is source files, not data. ops/arc_solve_registry.yaml feeds a
+  critical flag and is not fingerprinted.
+
+NOTE CORRECTIONS, all re-derived independently:
+- Direction B is NOT mostly fabrication. 773 of the 864 NONTERMINAL-only
+  artifacts classify `unknown` -- old results with status success whose
+  verdicts predate the Verdict Terminal-Prefix Discipline. Only ~91 are
+  genuinely non-terminal. A default backfill would trade 200 stale false
+  positives for ~773 fresh ones. The earlier framing is retracted in place.
+- The printed commands reach fewer artifacts than quoted: the tool globs
+  results/experiment_*.json, so --backfill is 1,054 and
+  --high-precision-only is 4, not 1,090 and 21. Direction A is unaffected;
+  all 565 stamped and all 200 clearing are inside the glob.
+- "164 draw no flag at all" narrowed to "no critical and no warning flag".
+
+An existing REQ-VERIFY-6593 test asserted the report dict exactly; it now
+matches the delegation marker and asserts the version is carried. Intent
+unchanged, assertion no longer over-specified.
+
+Tests: 26, all passing. Mutation-proved 13/13 RED-on-delete,
+GREEN-on-restore, in a git worktree with resolution verified by import.
+Nothing under results/ was written.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../stale-fabrication-stamps-2026-08-25.md    | 98 ++++++++++++++++---
+ openspec/capabilities/verification/spec.md    | 36 ++++++-
+ scripts/adversarial_verify.py                 | 19 +++-
+ scripts/conductor_gates.py                    | 18 +++-
+ scripts/research_conductor.py                 |  3 +-
+ scripts/stamp_provenance.py                   | 75 +++++++++++---
+ ...onductor_adversarial_verify_reload_6593.py |  6 +-
+ .../test_stamp_provenance_stale_gate_6601.py  | 86 ++++++++++++++++
+ 8 files changed, 303 insertions(+), 38 deletions(-)
+
+diff --git a/docs/research-notes/stale-fabrication-stamps-2026-08-25.md b/docs/research-notes/stale-fabrication-stamps-2026-08-25.md
+index ce3900d35c..90ba8403fa 100644
+--- a/docs/research-notes/stale-fabrication-stamps-2026-08-25.md
++++ b/docs/research-notes/stale-fabrication-stamps-2026-08-25.md
+@@ -35,7 +35,7 @@ itself applies, so it is comparable to what a real run would do.
+ 
+ The prior estimate of ~200 is confirmed exactly.
+ 
+-Of the 200: 164 draw no flag at all, 36 still draw warnings. Their ORIGINAL flags were
++Of the 200: 164 draw no critical and no warning flag, 36 still draw warnings. Their ORIGINAL flags were
+ `DURATION_TOO_SHORT` (135), `METHODOLOGY_MISSING` (101), `TAUTOLOGY` (88),
+ `IMPLAUSIBLE_PERFECT` (23). By declared verdict, 136 are terminal successes
+ (`complete_*` 124, `success_*` 12) and 51 are `blocked_*`. So roughly **136 honest results
+@@ -63,7 +63,12 @@ This is the larger number and the more serious one.
+ | unstamped artifacts | 6,359 |
+ | current gate returns a CRITICAL flag | **1,126** |
+ | backfill-eligible after the live-claim guard | 1,090 |
+-| of which `--high-precision-only` would stamp | **21** |
++| of which `--high-precision-only` would stamp | 21 |
++
++**Scope caveat on those last two rows.** They are measured over `results/*.json`. The tool
++globs `results/experiment_*.json` (`adversarial_verify.py:6937`), which is 5,790 of the 6,924
++artifacts. What the commands below actually reach is **1,054** and **4**, not 1,090 and 21.
++Direction A is unaffected — all 565 stamped and all 200 clearing are inside the tool's glob.
+ 
+ Decomposition of the 1,126:
+ 
+@@ -81,8 +86,27 @@ Decomposition of the 1,126:
+ This is the generalisation of the incident. The origin commit noted that "any fabrication
+ check added in those 14h was equally inert." The measurement shows the same hole across the
+ whole history, not just a 14-hour window: **a check added at time T has never judged any
+-artifact stamped before T.** A stale stamp that should clear merely quarantines honest work.
+-A check that never ran means fabrication was never looked for.
++artifact stamped before T.**
++
++**Correction (adversarial review, same day): this direction is NOT mostly fabrication.**
++Classifying the 864 `NONTERMINAL`-only artifacts through `carnot.terminal_artifacts`:
++
++| classification | count |
++|---|---|
++| `unknown` | 773 (89%) |
++| `partial` | 61 |
++| `running` | 28 |
++| `running_bootstrap` | 2 |
++
++The 773 are old artifacts with `status: success` whose verdict strings predate the Verdict
++Terminal-Prefix Discipline — `tier2_deployed`, `preflight_complete`,
++`schema_validation_complete`. `normalize_marker` returns `unknown`, which is not in
++`TERMINAL_CLASSES`, so the flag fires. Only ~91 of 864 are genuinely non-terminal.
++
++So an unqualified default backfill would quarantine ~773 honest historical artifacts for a
++**naming convention** — the exact mirror of the 200 this note wants to un-quarantine. The
++earlier framing here ("a check that never ran means fabrication was never looked for") was
++wrong for 89% of the population and is retracted.
+ 
+ ## Correction of the brief
+ 
+@@ -126,6 +150,40 @@ lifts a quarantine.
+ 
+ Current corpus state under the new check: **565 unversioned, 0 current, 0 stale.**
+ 
++### What this mechanism does NOT give you (measured, after adversarial review)
++
++1. **`stale` saturates, so it is weak evidence.** Over the gate's 128 tracked revisions the
++   AST normalization suppressed only **1** version bump (0.8%). `adversarial_verify.py`
++   changed ~9 times a day in the week to 2026-08-25, so a fresh stamp is expected to read
++   `stale` within hours. `stale` means "the gate moved", NOT "this verdict would change".
++   The durable value is the RECORDED VERSION AND TIMESTAMP, which turn an unknown into a
++   dated fact and make a targeted re-judge possible. The `unversioned` -> `current`
++   transition is the real win; the `current` -> `stale` transition is nearly free-running.
++2. **Coverage is source files, not data.** The version now spans
++   `adversarial_verify.py` AND `carnot/terminal_artifacts.py` — the latter because commit
++   `4a1557fd85` added `"disqualified"` to `TERMINAL_CLASSES` and flipped
++   `NONTERMINAL_DECLARED_ARTIFACT`, the corpus's single largest critical flag, without
++   touching the gate file at all. A one-file fingerprint would have missed it. Still
++   uncovered: `ops/arc_solve_registry.yaml`, which the gate reads to raise a critical flag
++   and which has hundreds of commits.
++3. **The corpus-level scan is not wired to anything.** `stamp_provenance.py --json` must be
++   run by hand. Per the QA-Layer discipline a check nothing calls is the bug class, so this
++   is a real gap; the natural close is a milestone-close report of the `stale` +
++   `unversioned` counts. Not built here.
++
++### Defects found by adversarial review and fixed before commit
++
++- The stamp fingerprinted the gate source **on disk**, while the verdict came from the
++  **loaded module**. When `_module_with_current_source()` falls back after a failed reload,
++  that pairs an old verdict with a new version and reports `current` — the origin incident,
++  inverted and now certified. Fixed: `verify_artifact` returns the judging module's own
++  `LOADED_GATE_VERSION` and the stampers use it.
++- `gate_version_algo` was written and never read. Fixed: a version from another algorithm
++  reads `unversioned`.
++- `backfill_stamps` and `conductor_gates` read `flagged_adversarial` with a bare `.get`, so a
++  principle-wrapped `{"value": false}` read as truthy. Latent (0 artifacts wrap it today),
++  fixed anyway.
++
+ ## Proposal (operator decision — NOT executed)
+ 
+ Two decisions on two disjoint sets. They should not be taken together.
+@@ -161,27 +219,37 @@ precedent for the append-only STYLE, not for this action.
+ 
+ ### Decision B — the 1,126 unstamped-critical artifacts
+ 
+-**Recommendation: do not run the default backfill. Run the high-precision form, and refer
+-`NONTERMINAL_DECLARED_ARTIFACT` to the operator separately.**
++**Recommendation: do NOT run the default backfill. Do not treat `--high-precision-only` as a
++meaningful action either. Refer `NONTERMINAL_DECLARED_ARTIFACT` to the operator as a policy
++question.**
+ 
+ The exact commands, dry-run first in both cases:
+ 
+ ```bash
+-# Conservative: 21 artifacts, DURATION_TOO_SHORT only, the guard's own trusted subset.
++# Conservative subset: reaches 4 artifacts, DURATION_TOO_SHORT only.
+ .venv/bin/python scripts/adversarial_verify.py --backfill --high-precision-only
+ .venv/bin/python scripts/adversarial_verify.py --backfill --high-precision-only --apply
+ 
+-# Default: 1,090 artifacts. NOT recommended without adjudicating the 995 below.
++# Default: 1,054 artifacts. NOT recommended -- see the classification table above.
+ .venv/bin/python scripts/adversarial_verify.py --backfill
+ ```
+ 
+-`HIGH_PRECISION_KINDS` exists precisely because retroactive stamping over-flags, and its own
+-comment says TAUTOLOGY is excluded for that reason. 21 artifacts is a reviewable blast radius.
+-1,090 is not.
++Why not the default: ~773 of the artifacts it would stamp are honest historical results whose
++verdict strings predate a naming convention. Stamping them trades 200 stale false positives
++for roughly 773 fresh ones, and every one of them would then block downstream work through
++`conductor_gates.py`. `HIGH_PRECISION_KINDS` exists precisely because retroactive stamping
++over-flags; its own comment says TAUTOLOGY is excluded for that reason.
++
++Why `--high-precision-only` is not the answer either: it reaches **4** artifacts. That is a
++rounding error, not a policy. It was quoted as 21 in an earlier draft of this note, measured
++over `results/*.json`; the tool's glob excludes the other 17. Running it is harmless and
++close to pointless.
+ 
+ The 995 `NONTERMINAL_DECLARED_ARTIFACT` artifacts are a policy question, not a mechanical one:
+-should a check added 2026-08-09 quarantine 16 days of prior history? It is the same shape as
+-the 102-artifact duration-floor gap that commit `82d8219adf` deliberately left open for the
++should a check added 2026-08-09 quarantine 16 days of prior history, when 89% of what it
++catches is an old verdict-naming style rather than a non-terminal run? The cheaper fix is
++probably to narrow the check for historical artifacts, not to stamp them. It is the same shape
++as the 102-artifact duration-floor gap that commit `82d8219adf` deliberately left open for the
+ operator. Recording it here rather than acting on it.
+ 
+ ### Prevention (the part that outlasts both decisions)
+@@ -194,7 +262,9 @@ rather than needing a session like this one to discover. Not built here.
+ ## Cross-references
+ 
+ - `scripts/stamp_provenance.py` — the mechanism
+-- `tests/python/test_stamp_provenance_stale_gate_6601.py` — 19 tests, 8 mutation proofs
++- `tests/python/test_stamp_provenance_stale_gate_6601.py` — 26 tests, 13 mutation proofs
++  (each RED on delete, GREEN on restore, in a git worktree with module resolution verified
++  by import)
+ - `openspec/capabilities/verification/spec.md` — REQ-VERIFY-6601 + 6 SCENARIOs
+ - commit `82d8219adf` — the reload fix; the origin incident
+ - `scripts/determination_preservation_lint.py` — the clearing convention Decision A must use
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 4c8abc78cb..0bf5b58fba 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -38239,11 +38239,37 @@ Every write of `flagged_adversarial: true` by a GATE SHALL record a provenance b
+ and `stamper`. The two gate writers are `adversarial_verify.backfill_stamps` and the
+ conductor's completion gate.
+ 
+-`gate_version` SHALL be a SEMANTIC fingerprint of `scripts/adversarial_verify.py`: the
+-source parsed, docstrings stripped, the AST re-unparsed, then SHA-256. A raw content hash
+-would change on every comment edit, so every artifact would read stale forever and the
+-signal would be worthless. A comment-only or docstring-only edit SHALL NOT change the
+-version. A change to executable logic SHALL change it.
++`gate_version` SHALL be a SEMANTIC fingerprint: each covered source parsed, docstrings
++stripped, the AST re-unparsed, then SHA-256, combined across sources. A comment-only or
++docstring-only edit SHALL NOT change the version. A change to executable logic in a COVERED
++SOURCE SHALL change it.
++
++Coverage SHALL span every source that decides a verdict, not only the gate entrypoint.
++`carnot/terminal_artifacts.py` SHALL be covered: it holds `TERMINAL_CLASSES` and the prefix
++tables that decide `NONTERMINAL_DECLARED_ARTIFACT`, which is 995 of the corpus's 1,126
++critical flags. Commit `4a1557fd85` added `"disqualified"` to those tables and flipped that
++verdict for real artifacts without touching `adversarial_verify.py`.
++
++The version SHALL be the one belonging to the module that PRODUCED the verdict, never the
++source read from disk at stamp time. `_module_with_current_source()` falls back to the cached
++module when a reload fails, so a disk read would pair an old verdict with a new version and
++report it `current` — the origin incident inverted. `verify_artifact` SHALL therefore report
++the judging module's own `LOADED_GATE_VERSION`, and a stamper SHALL use that.
++
++A provenance block whose `gate_version_algo` differs from the reader's SHALL classify as
++`unversioned`, because versions from different algorithms are not comparable.
++
++#### Measured limits (2026-08-25) — the SHALL above is bounded, not absolute
++
++`stale` saturates and is weak evidence. Over 128 tracked revisions of the gate, the AST
++normalization suppressed 1 version bump (0.8%), and the gate changed ~9 times a day in the
++week to 2026-08-25. A fresh stamp is expected to read `stale` within hours. `stale` means
++"the gate moved", NOT "this verdict would change". The durable value is the recorded version
++and timestamp; the `unversioned` -> `current` transition is the real gain.
++
++Coverage is source files only. A verdict can still change with the version frozen when it
++depends on DATA — notably `ops/arc_solve_registry.yaml`, which the gate reads to raise a
++critical flag. Widening to data files is possible and is deliberately not done here.
+ 
+ Staleness SHALL be decidable without running the gate, in constant time per artifact, so
+ the whole corpus can be classified without re-judging 6,900 artifacts. A reader SHALL
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index e26fb5be8b..52cb77b525 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -118,6 +118,11 @@ except ImportError:  # pragma: no cover - exercised by direct-script and worktre
+     sys.path.insert(0, str(Path(__file__).resolve().parent))
+     import stamp_provenance
+ 
++# Computed at IMPORT time, so it identifies the source this module actually loaded.
++# Reading the disk at stamp time would fingerprint a newer file that a failed reload
++# never loaded, certifying a stale verdict as current (REQ-VERIFY-6601).
++LOADED_GATE_VERSION = stamp_provenance.current_gate_version()
++
+ # Floating-point agreement threshold for tautology detection. Two
+ # distinct metrics agreeing to 5 significant figures is suspicious;
+ # legitimate cases (two implementations of the same function with the
+@@ -6766,7 +6771,12 @@ def _module_with_current_source() -> Any:
+ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
+     """Run the current on-disk verifier, including through a cached caller alias."""
+     module = _module_with_current_source()
+-    return module._verify_artifact_impl(path, declared=declared)
++    report = module._verify_artifact_impl(path, declared=declared)
++    # Carry the judging module's OWN version, so a stamper can never pair this
++    # verdict with a version that did not produce it (REQ-VERIFY-6601).
++    if isinstance(report, dict):
++        report.setdefault("gate_version", module.LOADED_GATE_VERSION)
++    return report
+ 
+ 
+ def sweep_milestone_range(results_dir: Path, low: int, high: int) -> list[dict[str, Any]]:
+@@ -6840,7 +6850,9 @@ def backfill_stamps(
+             d = json.loads(p.read_text())
+         except Exception:
+             continue
+-        if not isinstance(d, dict) or d.get("flagged_adversarial"):
++        # Read through a principle wrapper: a bare `.get` sees `{"value": false, ...}`
++        # as truthy and would silently skip an artifact that needs stamping.
++        if not isinstance(d, dict) or stamp_provenance.is_stamped(d):
+             continue
+         try:
+             rep = verify_artifact(p)
+@@ -6863,7 +6875,8 @@ def backfill_stamps(
+             # Record WHICH gate made this call. Without it a determination cannot be
+             # told apart from one made under rules that have since changed (REQ-VERIFY-6601).
+             d[stamp_provenance.PROVENANCE_FIELD] = stamp_provenance.make_provenance(
+-                "adversarial_verify.backfill_stamps"
++                "adversarial_verify.backfill_stamps",
++                gate_version=rep.get("gate_version"),
+             )
+             d.setdefault("corrigendum_pending", []).extend(crit)
+             d["corrigendum_note"] = (
+diff --git a/scripts/conductor_gates.py b/scripts/conductor_gates.py
+index 8b7c33d4c2..101f58db0f 100644
+--- a/scripts/conductor_gates.py
++++ b/scripts/conductor_gates.py
+@@ -266,6 +266,20 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
+     return False, f"unknown op {op!r}"
+ 
+ 
++def _is_quarantined(data: dict) -> bool:
++    """True when the fabrication gate's determination is set.
++
++    Fails CLOSED: if the provenance reader is unavailable, fall back to the bare
++    read, so a broken import can never let a quarantined artifact through.
++    """
++    try:
++        import stamp_provenance
++
++        return stamp_provenance.is_stamped(data)
++    except Exception:
++        return bool(data.get("flagged_adversarial"))
++
++
+ def _stamp_staleness_note(data: dict) -> str:
+     """Say so when the quarantine being relied on was made by an older gate.
+ 
+@@ -317,7 +331,9 @@ def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
+     # its preconditions and stopped. adversarial_verify.py caught that and stamped it. Four gates
+     # then read the same artifact and reported `actual=None`, never mentioning the stamp sitting
+     # beside the field they were reading. The answer was already on disk and nothing surfaced it.
+-    if data.get("flagged_adversarial"):
++    # Read through a principle wrapper. A bare `.get` reads `{"value": false, ...}`
++    # as truthy and would report a quarantine that was explicitly cleared.
++    if _is_quarantined(data):
+         pend = data.get("corrigendum_pending") or []
+         kinds = sorted({p.get("kind", "?") for p in pend if isinstance(p, dict)})
+         status = data.get("status")
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 5c6f5c1a5c..76471c19e7 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -7134,7 +7134,8 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
+                                     import stamp_provenance as _sp
+ 
+                                     art[_sp.PROVENANCE_FIELD] = _sp.make_provenance(
+-                                        "research_conductor.completion_gate"
++                                        "research_conductor.completion_gate",
++                                        gate_version=report.get("gate_version"),
+                                     )
+                                 except Exception as _sp_exc:
+                                     logger.warning(
+diff --git a/scripts/stamp_provenance.py b/scripts/stamp_provenance.py
+index 3ffb8f52a2..eacc656685 100644
+--- a/scripts/stamp_provenance.py
++++ b/scripts/stamp_provenance.py
+@@ -41,6 +41,21 @@ code without changing behaviour still bumps the version, so some artifacts read
+ that did not need it is cheap; trusting one that silently went stale is what
+ this module exists to stop.
+ 
++MEASURED LIMITS -- read these before trusting a `stale` verdict
++---------------------------------------------------------------
++1. `stale` saturates. Over this gate's 128 tracked revisions the AST normalization
++   suppressed only 1 version bump; `adversarial_verify.py` changed ~9 times a day in
++   the week to 2026-08-25. So a fresh stamp is expected to read `stale` within hours.
++   `stale` therefore means "the gate moved", NOT "this verdict would change". The
++   durable value here is the RECORDED VERSION and timestamp, which turn an unknown
++   into a dated fact and make a targeted re-judge possible. Do not read `stale` as
++   evidence a determination is wrong.
++2. Coverage is source files only, and only those in `GATE_SOURCE_PATHS`. A verdict
++   can still change with the version frozen if it depends on DATA -- notably
++   `ops/arc_solve_registry.yaml`, which `adversarial_verify._arc_registry_level`
++   reads to raise a critical flag, and which has hundreds of commits. Widening to
++   data files is possible and is not done here.
++
+ WHAT THIS MODULE DOES NOT DO
+ ----------------------------
+ It never re-judges an artifact and never writes ``results/``. It answers one
+@@ -65,13 +80,24 @@ import ast
+ import hashlib
+ import json
+ import sys
+-from datetime import datetime, timezone
++from datetime import UTC, datetime
+ from pathlib import Path
+ from typing import Any
+ 
+ # Derived from __file__, never an absolute literal: a fresh clone must fingerprint
+ # ITS OWN gate, not the operator's checkout (CLAUDE.md rule 4 on write targets).
+-GATE_SOURCE_PATH = Path(__file__).resolve().parent / "adversarial_verify.py"
++_SCRIPTS = Path(__file__).resolve().parent
++GATE_SOURCE_PATH = _SCRIPTS / "adversarial_verify.py"
++
++# The gate's verdict is not decided by one file. `NONTERMINAL_DECLARED_ARTIFACT` --
++# the single largest source of critical flags in the corpus -- is decided entirely by
++# the tables in `carnot/terminal_artifacts.py`. Commit 4a1557fd85 added "disqualified"
++# to TERMINAL_CLASSES and flipped that verdict for real artifacts without touching
++# adversarial_verify.py at all. Fingerprinting one file would have missed it.
++GATE_SOURCE_PATHS: tuple[Path, ...] = (
++    GATE_SOURCE_PATH,
++    _SCRIPTS.parent / "python" / "carnot" / "terminal_artifacts.py",
++)
+ 
+ DETERMINATION_FIELD = "flagged_adversarial"
+ PROVENANCE_FIELD = "flagged_adversarial_provenance"
+@@ -119,9 +145,7 @@ def semantic_fingerprint(source: str) -> str:
+ _VERSION_CACHE: dict[tuple[str, int, int], str] = {}
+ 
+ 
+-def current_gate_version(gate_path: Path | None = None) -> str:
+-    """Semantic fingerprint of the gate source now ON DISK."""
+-    path = Path(gate_path) if gate_path is not None else GATE_SOURCE_PATH
++def _file_fingerprint(path: Path) -> str:
+     stat = path.stat()
+     key = (str(path), stat.st_mtime_ns, stat.st_size)
+     cached = _VERSION_CACHE.get(key)
+@@ -131,16 +155,34 @@ def current_gate_version(gate_path: Path | None = None) -> str:
+     return cached
+ 
+ 
+-def make_provenance(stamper: str, *, gate_path: Path | None = None) -> dict[str, Any]:
++def current_gate_version(gate_path: Path | None = None) -> str:
++    """Semantic fingerprint of the gate sources now ON DISK.
++
++    Callers that stamp a verdict should NOT use this. Use the version of the module
++    that actually produced the verdict -- see `LOADED_GATE_VERSION` in
++    `adversarial_verify`. Reading the disk here would fingerprint a source that a
++    failed reload never loaded.
++    """
++    paths = (Path(gate_path),) if gate_path is not None else GATE_SOURCE_PATHS
++    combined = "\n".join(f"{p.name}:{_file_fingerprint(p)}" for p in paths)
++    return hashlib.sha256(combined.encode("utf-8")).hexdigest()
++
++
++def make_provenance(
++    stamper: str,
++    *,
++    gate_path: Path | None = None,
++    gate_version: str | None = None,
++) -> dict[str, Any]:
+     """Build the provenance block to write beside a fresh determination.
+ 
+-    `stamper` names the code path that made the call, so a later reader can tell
+-    a completion-gate stamp from a retroactive backfill.
++    Pass `gate_version` from the module that produced the verdict. Falling back to
++    the on-disk version can certify a stale verdict as current when a reload failed.
+     """
+     return {
+-        "gate_version": current_gate_version(gate_path),
++        "gate_version": gate_version or current_gate_version(gate_path),
+         "gate_version_algo": FINGERPRINT_ALGO,
+-        "stamped_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
++        "stamped_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+         "stamper": stamper,
+     }
+ 
+@@ -156,15 +198,18 @@ def _unwrap(value: Any) -> Any:
+     return value
+ 
+ 
++def is_stamped(artifact: dict[str, Any]) -> bool:
++    """True when the determination is set, read through a principle wrapper."""
++    return bool(_unwrap(artifact.get(DETERMINATION_FIELD)))
++
++
+ def stamp_status(artifact: dict[str, Any], *, gate_path: Path | None = None) -> str:
+     """Classify an artifact's determination against the gate now on disk.
+ 
+     Returns one of `unstamped` / `current` / `stale` / `unversioned`. Runs no
+     gate check, so this is O(1) per artifact over the whole corpus.
+     """
+-    if not isinstance(artifact, dict):
+-        return STATUS_UNSTAMPED
+-    if not _unwrap(artifact.get(DETERMINATION_FIELD)):
++    if not isinstance(artifact, dict) or not is_stamped(artifact):
+         return STATUS_UNSTAMPED
+     provenance = _unwrap(artifact.get(PROVENANCE_FIELD))
+     if not isinstance(provenance, dict):
+@@ -172,6 +217,10 @@ def stamp_status(artifact: dict[str, Any], *, gate_path: Path | None = None) ->
+     recorded = _unwrap(provenance.get("gate_version"))
+     if not isinstance(recorded, str) or not recorded:
+         return STATUS_UNVERSIONED
++    # A version computed by a different algorithm is not comparable to ours. Treat it
++    # as unversioned rather than silently reading it as stale or current.
++    if _unwrap(provenance.get("gate_version_algo")) != FINGERPRINT_ALGO:
++        return STATUS_UNVERSIONED
+     return STATUS_CURRENT if recorded == current_gate_version(gate_path) else STATUS_STALE
+ 
+ 
+diff --git a/tests/python/test_conductor_adversarial_verify_reload_6593.py b/tests/python/test_conductor_adversarial_verify_reload_6593.py
+index 2aea6fcc13..8b9784b29c 100644
+--- a/tests/python/test_conductor_adversarial_verify_reload_6593.py
++++ b/tests/python/test_conductor_adversarial_verify_reload_6593.py
+@@ -85,7 +85,11 @@ def test_req_verify_6593_cached_verifier_alias_refreshes_before_stamping(
+         )
+         importlib.invalidate_caches()
+ 
+-        assert stale_alias(tmp_path / "unused.json") == {"implementation": "fresh-on-disk"}
++        report = stale_alias(tmp_path / "unused.json")
++        # The delegation is what this scenario pins. `gate_version` is added by
++        # verify_artifact per REQ-VERIFY-6601, so match the marker, not the whole dict.
++        assert report["implementation"] == "fresh-on-disk"
++        assert report["gate_version"], "the verdict must carry the version that produced it"
+     finally:
+         sys.modules.pop(module_name, None)
+ 
+diff --git a/tests/python/test_stamp_provenance_stale_gate_6601.py b/tests/python/test_stamp_provenance_stale_gate_6601.py
+index 6df27c2451..31625eb0b3 100644
+--- a/tests/python/test_stamp_provenance_stale_gate_6601.py
++++ b/tests/python/test_stamp_provenance_stale_gate_6601.py
+@@ -252,6 +252,92 @@ def test_backfill_cannot_revise_an_existing_determination(tmp_path: Path, monkey
+     assert json.loads(artifact_path.read_text())["flagged_adversarial"] is True
+ 
+ 
++def test_the_version_covers_the_dependency_that_supplies_the_dominant_check() -> None:
++    """NONTERMINAL_DECLARED_ARTIFACT is 995 of 1,126 critical flags and its tables live
++    in carnot/terminal_artifacts.py. Commit 4a1557fd85 changed them without touching
++    adversarial_verify.py, so a one-file fingerprint would have missed the flip."""
++    names = [p.name for p in stamp_provenance.GATE_SOURCE_PATHS]
++    assert "adversarial_verify.py" in names
++    assert "terminal_artifacts.py" in names
++    for path in stamp_provenance.GATE_SOURCE_PATHS:
++        assert path.exists(), f"fingerprinted source is missing: {path}"
++
++
++def test_a_change_to_the_dependency_moves_the_version(tmp_path: Path, monkeypatch) -> None:
++    dep = tmp_path / "terminal_artifacts.py"
++    dep.write_text("TERMINAL_CLASSES = frozenset({'complete'})\n")
++    gate = _write_gate(tmp_path, _GATE_SRC)
++    monkeypatch.setattr(stamp_provenance, "GATE_SOURCE_PATHS", (gate, dep))
++
++    before = stamp_provenance.current_gate_version()
++    dep.write_text("TERMINAL_CLASSES = frozenset({'complete', 'disqualified'})\n")
++    assert stamp_provenance.current_gate_version() != before
++
++
++def test_the_stamped_version_comes_from_the_module_that_judged() -> None:
++    """A failed reload leaves OLD code judging while the DISK holds new source.
++    Stamping the disk version would certify that stale verdict as current."""
++    import adversarial_verify
++
++    assert adversarial_verify.LOADED_GATE_VERSION == stamp_provenance.current_gate_version()
++
++    explicit = stamp_provenance.make_provenance("t", gate_version="deadbeef")
++    assert explicit["gate_version"] == "deadbeef", "an explicit version must win over the disk"
++
++
++def test_verify_artifact_reports_the_version_it_used(tmp_path: Path) -> None:
++    import adversarial_verify
++
++    artifact = tmp_path / "experiment_9997_probe.json"
++    artifact.write_text(json.dumps({"experiment": 9997, "duration_s": 1.0}))
++    report = adversarial_verify.verify_artifact(artifact)
++    assert report["gate_version"] == adversarial_verify.LOADED_GATE_VERSION
++
++
++def test_a_version_from_another_algorithm_is_not_comparable(tmp_path: Path) -> None:
++    """Otherwise a future hashing change silently reads as stale-or-current."""
++    gate = _write_gate(tmp_path, _GATE_SRC)
++    artifact = _stamped(gate)
++    artifact[stamp_provenance.PROVENANCE_FIELD]["gate_version_algo"] = "some_other_scheme_v9"
++    assert stamp_provenance.stamp_status(artifact, gate_path=gate) == "unversioned"
++
++
++def test_backfill_does_not_skip_a_principle_wrapped_cleared_determination(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """A bare `.get` reads `{"value": false, ...}` as truthy and skips the artifact."""
++    import adversarial_verify
++
++    artifact = tmp_path / "experiment_9996_wrapped.json"
++    artifact.write_text(
++        json.dumps(
++            {
++                "experiment": 9996,
++                "flagged_adversarial": {"principle": "the verdict", "value": False},
++                "duration_s": 0.5,
++            }
++        )
++    )
++    monkeypatch.setattr(
++        adversarial_verify,
++        "verify_artifact",
++        lambda p, **kw: {
++            "flags": [{"kind": "GATE_PASSED_WITHOUT_DATA", "severity": "critical"}],
++            "gate_version": adversarial_verify.LOADED_GATE_VERSION,
++        },
++    )
++    records = adversarial_verify.backfill_stamps([artifact], apply=False)
++    assert records, "a wrapped, cleared determination was skipped as if it were stamped"
++
++
++def test_the_downstream_gate_does_not_quarantine_on_a_wrapped_false(tmp_path: Path) -> None:
++    import conductor_gates
++
++    cleared = {"flagged_adversarial": {"principle": "the verdict", "value": False}}
++    reason = conductor_gates._diagnose_missing_field(cleared, "score", "BASE")
++    assert "UPSTREAM IS QUARANTINED" not in reason
++
++
+ def test_scan_groups_the_corpus_without_running_the_gate(tmp_path: Path) -> None:
+     gate = _write_gate(tmp_path, _GATE_SRC)
+     (tmp_path / "a.json").write_text(json.dumps({"flagged_adversarial": True}))
+-- 
+2.55.0
+

@@ -1,0 +1,74 @@
+From cbd3fbe52b28ef7d84cf9ba7659e8908f3cf5c84 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 04:01:17 -0400
+Subject: [PATCH 10076/11362] [conductor] Pre-gate block: Three-family
+ trigger-switched structured-tail A/B
+
+1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_tail_fixture_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                              | 2 +-
+ ops/conductor-heartbeat.json                              | 2 +-
+ ops/conductor-log.md                                      | 1 +
+ ops/conductor-state.json                                  | 2 +-
+ results/experiment_6662_triggered_structured_tail_ab.json | 4 ++--
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 5705858739..2a46ff9fcf 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T07:59:13Z"
++ "last_scan_utc": "2026-08-27T08:01:17Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 021fc97dad..d5efe597b1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 69, "phase": "iteration_start", "last_beat": "2026-08-27T07:59:13Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 70, "phase": "iteration_start", "last_beat": "2026-08-27T08:01:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 10859c583c..f553641a9a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16611,3 +16611,4 @@ code |
+ | 2026-08-27 07:55 UTC | Trigger-switched structured-tail fixture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   row = mod._d |
+ | 2026-08-27 07:57 UTC | Trigger-switched structured-tail fixture | OK | Deliverable already exists in repo |
+ | 2026-08-27 07:57 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
++| 2026-08-27 07:59 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 17d8532470..77b8efe61c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 69, "phase": "iteration_start", "started_at": "2026-08-27T07:59:13Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 70, "phase": "iteration_start", "started_at": "2026-08-27T08:01:16Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6662_triggered_structured_tail_ab.json b/results/experiment_6662_triggered_structured_tail_ab.json
+index b19635610b..23a13132bb 100644
+--- a/results/experiment_6662_triggered_structured_tail_ab.json
++++ b/results/experiment_6662_triggered_structured_tail_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6662,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-27",
+-  "started_at": "2026-08-27T07:59:14.106858+00:00",
+-  "finished_at": "2026-08-27T07:59:14.106858+00:00",
++  "started_at": "2026-08-27T08:01:17.307075+00:00",
++  "finished_at": "2026-08-27T08:01:17.307075+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Three-family trigger-switched structured-tail A/B",
+-- 
+2.55.0
+

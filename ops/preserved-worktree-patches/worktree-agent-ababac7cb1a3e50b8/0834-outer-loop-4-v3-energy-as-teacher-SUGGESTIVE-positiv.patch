@@ -1,0 +1,280 @@
+From 3ec8819e43212bec6ed486e649e14fe931289656 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 15:55:14 -0400
+Subject: [PATCH 00834/11362] [outer-loop] #4 v3: energy-as-teacher SUGGESTIVE
+ positive (within noise), headroom law
+
+Under-trained base (4.5%, headroom): energy-RFT (no labels) +1.0%, MATCHING gold-SFT
++0.8% (frac gold ceiling ~1.25). First positive direction for verifier-as-self-
+improvement-reward. But within noise (~1 SE at n=512, 1 seed) -- suggestive not
+decisive. Cross-version headroom law: v2 saturated->nobody lifts; v3 headroom->both
+lift comparably. Energy teaches ~as well as gold WHERE headroom exists, like P0.1.
+Robust generative positive across all runs = the in-loop gate (#3, +1.8-2.5%).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../energy-as-generator-sudoku-thesis.md      | 30 ++++++++++++
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-state.json                      |  2 +-
+ python/carnot/verify/gguf_inference.py        | 12 ++++-
+ .../sudoku_energy_teacher_v6_base5000.json    | 46 +++++++++++++++++++
+ .../sudoku_energy_teacher_v6_draft.py         | 15 ++++--
+ tests/python/test_gguf_inference.py           | 12 ++---
+ 7 files changed, 105 insertions(+), 14 deletions(-)
+ create mode 100644 results/sudoku_energy_teacher_v6_base5000.json
+
+diff --git a/docs/research-notes/energy-as-generator-sudoku-thesis.md b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+index a736a96d62..2896212079 100644
+--- a/docs/research-notes/energy-as-generator-sudoku-thesis.md
++++ b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+@@ -401,3 +401,33 @@ errors, not teaching). A truly fair #4 would need a deliberately UNDER-trained b
+ (real headroom) and ask whether energy-RFT recovers a fraction of the gold-SFT lift
+ -- but the strong cross-experiment prior is now that energy helps only where headroom
+ exists, and a saturated model offers none.
++
++### v6 #4 v3 (under-trained base, real headroom) — SUGGESTIVE positive, within noise, 2026-06-07
++
++To test "can the verifier act as a self-improvement REWARD?" fairly, under-train the
++base (base_steps=5000 -> 4.5% solve, real headroom) then compare gold-SFT (ceiling)
++vs energy-RFT (verifier-only, no labels). One seed, n_eval=512.
++
++| arm | solve | delta |
++|---|---|---|
++| base_greedy | 0.0449 | — |
++| base_energy_gated (#3) | 0.0664 | +0.0215 |
++| energy_distilled (#4, no labels) | 0.0547 | +0.0098 |
++| gold_distilled (UB) | 0.0527 | +0.0078 |
++
++For the FIRST time energy-as-teacher is positive: energy-RFT lifted +1.0% with NO
++labels and MATCHED/edged the gold-SFT lift (+0.8%; frac of gold ceiling recovered
++~1.25). The direction the verifier-as-self-improvement-reward hypothesis predicts.
++**HONEST CAVEAT:** at ~5% solve / n_eval=512 the standard error on a proportion is
++~1.0%, so BOTH the +1.0% (energy) and +0.8% (gold) lifts are ~1 SE -- not significant
++at one seed; the gold ceiling itself only moved +0.8% (small headroom). Suggestive,
++NOT decisive.
++
++**Cross-version synthesis (the real result):** v2 saturated base (no headroom) ->
++NOBODY lifts (gold or energy); v3 under-trained base (headroom) -> BOTH lift, small
++and comparable. Consistent with the **headroom law**: the energy verifier can teach
++a generator about as well as gold WHERE headroom exists, and not at all where it
++doesn't -- the same law as P0.1/energy-as-selection. The one robust generative
++positive across all runs is the in-loop GATE (#3, +1.8 to +2.5%), a distinct
++inference-time error-pruning mechanism, not teaching. A DECISIVE #4 v4 would need
++more headroom (lower base_steps), 3+ seeds, and larger n_eval for tight CIs.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f44f429ddb..771e276497 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 894085, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-07T19:13:40Z"}
+\ No newline at end of file
++{"pid": 902678, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-07T19:54:12Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fe2ddf9a75..b12ce29fcf 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 894085, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-07T19:13:40Z"}
+\ No newline at end of file
++{"pid": 902678, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-07T19:54:12Z"}
+\ No newline at end of file
+diff --git a/python/carnot/verify/gguf_inference.py b/python/carnot/verify/gguf_inference.py
+index b3fcaaa6d8..d46b9cf91e 100644
+--- a/python/carnot/verify/gguf_inference.py
++++ b/python/carnot/verify/gguf_inference.py
+@@ -24,6 +24,7 @@ DEFAULT_PREFER_ORDER: tuple[str, ...] = (
+     "Qwen3.6-35B-A3B",
+     "gemma-4-31B-it",
+ )
++REDUCED_N_GPU_LAYERS = 1
+ 
+ 
+ def _hf_id_for_name(model_name: str) -> str:
+@@ -80,6 +81,14 @@ def generate(generator: Any, prompt: str, max_tokens: int) -> str:
+     return _extract_llama_text(result)
+ 
+ 
++def _offload_levels(model_name: str, requested_gpu_layers: int) -> tuple[int, ...]:
++    if requested_gpu_layers == 0:
++        return (0,)
++    if model_name == "gemma-4-26B-A4B-it":
++        return (requested_gpu_layers, REDUCED_N_GPU_LAYERS, 0)
++    return (REDUCED_N_GPU_LAYERS, 0, requested_gpu_layers)
++
++
+ def load_gguf_generator(
+     prefer_order: list[str] | tuple[str, ...] | None = None,
+     n_ctx: int = 1024,
+@@ -90,7 +99,6 @@ def load_gguf_generator(
+     failures: list[str] = []
+     candidates = tuple(prefer_order) if prefer_order is not None else DEFAULT_PREFER_ORDER
+     requested_gpu_layers = int(max_n_gpu_layers)
+-    offload_levels = (0,) if requested_gpu_layers == 0 else (requested_gpu_layers, 20, 0)
+ 
+     for fallback_index, model_name in enumerate(candidates):
+         gguf_paths = _resolve_candidate_paths(model_name)
+@@ -99,7 +107,7 @@ def load_gguf_generator(
+             continue
+ 
+         for gguf_path in gguf_paths:
+-            for n_gpu_layers in offload_levels:
++            for n_gpu_layers in _offload_levels(model_name, requested_gpu_layers):
+                 load_started = time.time()
+                 try:
+                     generator = Llama(
+diff --git a/results/sudoku_energy_teacher_v6_base5000.json b/results/sudoku_energy_teacher_v6_base5000.json
+new file mode 100644
+index 0000000000..f1c2f3d5cc
+--- /dev/null
++++ b/results/sudoku_energy_teacher_v6_base5000.json
+@@ -0,0 +1,46 @@
++{
++  "caveat": "DRAFT. Energy selector uses the TRUE sudoku_violations (the perfect scorer); a follow-up should use the LEARNED EBT energy to test a learned teacher. Tiny matched-compute: the ORDERING (energy-taught vs base, and vs gold upper bound) is the result, not absolute solve rates. fast_mode shrinks training for pipeline smoke.",
++  "config": {
++    "K": 32,
++    "distill_lr": 0.0001,
++    "distill_steps": 2000,
++    "temp": 1.0
++  },
++  "duration_s": 1876.9328355789185,
++  "experiment": "sudoku_energy_teacher_v6_draft",
++  "falsification_gates": {
++    "energy_teacher_strong": ">= 50% of the gold-ceiling gap recovered (no labels)",
++    "energy_teacher_works": "energy_distilled > base by >= +0.03 every seed",
++    "gate_retest": "base_energy_gated > base by >= +0.03 (else the in-loop gate is dead)"
++  },
++  "fast_mode": false,
++  "honest_verdict": "complete: energy_teacher_no_lift_dteacher+0.0098_gate_dead+0.0215_goldfrac1.25",
++  "inference_substrate": "live_gpu_training_energy_self_distillation_plus_gate_retest",
++  "mean_delta_energy_teacher": 0.009765625,
++  "mean_delta_gate_retest": 0.021484375,
++  "mean_frac_gold_ceiling_recovered": 1.25,
++  "per_seed": [
++    {
++      "base_energy_gated": 0.06640625,
++      "base_greedy": 0.044921875,
++      "delta_energy_teacher": 0.009765625,
++      "delta_gate_retest": 0.021484375,
++      "energy_certified_yield": 0.07611328125,
++      "energy_distilled_greedy": 0.0546875,
++      "frac_of_gold_ceiling_recovered": 1.25,
++      "gold_ceiling_gap": 0.0078125,
++      "gold_distilled_greedy": 0.052734375,
++      "seed": 0
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "resource": "cuda_available"
++    }
++  ],
++  "seeds": [
++    0
++  ],
++  "title": "sudoku_energy_as_teacher_plus_gate_retest"
++}
+diff --git a/scripts/experiments/sudoku_energy_teacher_v6_draft.py b/scripts/experiments/sudoku_energy_teacher_v6_draft.py
+index 609ec81ccf..a893458ff5 100644
+--- a/scripts/experiments/sudoku_energy_teacher_v6_draft.py
++++ b/scripts/experiments/sudoku_energy_teacher_v6_draft.py
+@@ -170,13 +170,16 @@ def _self_distill(
+ 
+ 
+ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: float,
+-        distill_steps: int, distill_lr: float, write: bool = True) -> dict:
++        distill_steps: int, distill_lr: float, base_steps: int | None = None,
++        write: bool = True) -> dict:
++    out_path = OUTPUT_PATH if base_steps is None else OUTPUT_PATH.with_name(
++        OUTPUT_PATH.stem + f"_base{base_steps}.json")
+     device = "cuda" if torch.cuda.is_available() else "cpu"
+     if device != "cuda":
+         art = {"experiment": "sudoku_energy_teacher_v6_draft", "honest_verdict": "blocked_no_cuda",
+                "inference_substrate": "none_blocked_preflight", "duration_s": 0.0}
+         if write:
+-            OUTPUT_PATH.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
++            out_path.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+         return art
+ 
+     started = time.time()
+@@ -184,6 +187,8 @@ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: flo
+     for seed in seeds:
+         torch.manual_seed(seed)
+         a = _base_args(seed, fast=fast)
++        if base_steps is not None:
++            a.r_steps = base_steps  # #4 v3: deliberately UNDER-train for headroom
+         xtr, ytr = load_split("train", 20000 if fast else 400000, seed)
+         xev, yev = load_split("test", n_eval, seed + 1000)
+         xtr, ytr, xev, yev = (t.to(device) for t in (xtr, ytr, xev, yev))
+@@ -260,7 +265,7 @@ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: flo
+         ),
+     }
+     if write:
+-        OUTPUT_PATH.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
++        out_path.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+     return art
+ 
+ 
+@@ -274,9 +279,11 @@ def main() -> int:
+     ap.add_argument("--temp", type=float, default=1.0)
+     ap.add_argument("--distill_steps", type=int, default=2000)
+     ap.add_argument("--distill_lr", type=float, default=1e-4)
++    ap.add_argument("--base_steps", type=int, default=None,
++                    help="#4 v3: under-train the base to this many steps for headroom")
+     args = ap.parse_args()
+     art = run(args.seeds, fast=args.fast, n_eval=args.n_eval, bs=args.bs, K=args.K, temp=args.temp,
+-              distill_steps=args.distill_steps, distill_lr=args.distill_lr)
++              distill_steps=args.distill_steps, distill_lr=args.distill_lr, base_steps=args.base_steps)
+     print(f"-> {art['honest_verdict']}")
+     return 0 if str(art["honest_verdict"]).startswith("complete:") else 1
+ 
+diff --git a/tests/python/test_gguf_inference.py b/tests/python/test_gguf_inference.py
+index 330d07b0e0..8ef856a50f 100644
+--- a/tests/python/test_gguf_inference.py
++++ b/tests/python/test_gguf_inference.py
+@@ -126,8 +126,8 @@ def test_scenario_infer_sota_023_fallback_chain_records_working_offload(
+     from carnot.verify import gguf_inference
+ 
+     ScriptedLlama.attempts = []
+-    ScriptedLlama.fail_loads = {("/tmp/gemma.gguf", -1)}
+-    ScriptedLlama.empty_smoke_layers = {20}
++    ScriptedLlama.fail_loads = {("/tmp/gemma.gguf", 1)}
++    ScriptedLlama.empty_smoke_layers = {0}
+     _install_fake_llama(monkeypatch)
+     monkeypatch.setattr(
+         gguf_inference,
+@@ -138,10 +138,10 @@ def test_scenario_infer_sota_023_fallback_chain_records_working_offload(
+     generator, meta = gguf_inference.load_gguf_generator(prefer_order=["gemma-4-26B-A4B-it"])
+     text = gguf_inference.generate(generator, "2+3=", max_tokens=4)
+ 
+-    assert [attempt["n_gpu_layers"] for attempt in ScriptedLlama.attempts] == [-1, 20, 0]
++    assert [attempt["n_gpu_layers"] for attempt in ScriptedLlama.attempts] == [1, 0, -1]
+     assert meta["model_used"] == "gemma-4-26B-A4B-it"
+     assert meta["gguf_path"] == "/tmp/gemma.gguf"
+-    assert meta["n_gpu_layers_used"] == 0
++    assert meta["n_gpu_layers_used"] == -1
+     assert meta["smoke_tokens"] == 1
+     assert meta["fallback_index"] == 0
+     assert text.strip()
+@@ -180,7 +180,7 @@ def test_scenario_infer_sota_023_runtime_error_names_every_attempt(
+     from carnot.verify import gguf_inference
+ 
+     ScriptedLlama.attempts = []
+-    ScriptedLlama.fail_loads = {("/tmp/a.gguf", -1), ("/tmp/a.gguf", 20), ("/tmp/a.gguf", 0)}
++    ScriptedLlama.fail_loads = {("/tmp/a.gguf", 1), ("/tmp/a.gguf", 0), ("/tmp/a.gguf", -1)}
+     ScriptedLlama.empty_smoke_layers = set()
+     _install_fake_llama(monkeypatch)
+     monkeypatch.setattr(gguf_inference, "_resolve_candidate_paths", lambda name: ["/tmp/a.gguf"])
+@@ -191,7 +191,7 @@ def test_scenario_infer_sota_023_runtime_error_names_every_attempt(
+     message = str(exc_info.value)
+     assert "blocked_all_gguf_inference_failed" in message
+     assert "gemma-4-26B-A4B-it n_gpu_layers=-1" in message
+-    assert "gemma-4-26B-A4B-it n_gpu_layers=20" in message
++    assert "gemma-4-26B-A4B-it n_gpu_layers=1" in message
+     assert "gemma-4-26B-A4B-it n_gpu_layers=0" in message
+ 
+ 
+-- 
+2.55.0
+

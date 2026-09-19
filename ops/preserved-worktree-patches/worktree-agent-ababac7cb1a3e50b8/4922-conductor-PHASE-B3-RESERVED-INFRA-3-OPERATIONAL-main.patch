@@ -1,0 +1,1680 @@
+From 83c2f64cc6f645db9895fb14ef5c73fed41e00b5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 20:02:51 -0400
+Subject: [PATCH 04922/11362] [conductor] PHASE B3 (RESERVED INFRA 3;
+ OPERATIONAL -- maintain the .456 relaxed-window fix) -- APPLY the
+ .453-shipped runtime-stamping helper to the .460 arms (backfill
+ duration_s/inference_substrate/compute_bound on any arm missing them), and
+ re-run the results/-mtime FALLBACK over .460 with the RELAXED gate that .456
+ landed (accept the arms PRESENT at run time: n_arms>=7, wall_minutes>0) so it
+ emits a NON-zero window. Emit a final wiring-readiness confirmation.
+ Standalone modules + audit + proposal only; do NOT modify
+ scripts/research_conductor.py.
+
+Automated research step by research conductor.
+Task ID: exp4998-b3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  72 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._stamping_backfill_and_wiring_readiness.py | 620 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4990_archive_459_activate_460.json |   1 +
+ results/experiment_4991_levelup_attempt.json  |   3 +-
+ results/experiment_4992_levelup_attempt.json  |   3 +-
+ ...nt_4993_self_play_verifier_checkpoint.json |   1 +
+ ...istributional_energy_verifier_turnkey.json |   1 +
+ .../experiment_4996_bank_and_pivot_audit.json |   1 +
+ ...riment_4997_submission_package_harden.json |   1 +
+ ...tamping_backfill_and_wiring_readiness.json | 328 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   8 +-
+ results/experiment_638_tier1_fr11_relay.json  |   8 +-
+ results/experiment_645_tier1_fr11_relay.json  |   8 +-
+ ..._stamping_backfill_and_wiring_readiness.py | 336 ++++++++++
+ 19 files changed, 1388 insertions(+), 25 deletions(-)
+ create mode 100644 python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py
+ create mode 100644 results/experiment_4998_stamping_backfill_and_wiring_readiness.json
+ create mode 100644 tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 5d147621b2..16f80cb75d 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -1405,6 +1405,78 @@ the success gate passed.
+ |---|---|---|
+ | REQ-REPORT-4987 | Implemented (`python/carnot/experiment_4987_stamping_backfill_and_wiring_readiness.py`) | Implemented (`tests/python/test_experiment_4987_stamping_backfill_and_wiring_readiness.py`) |
+ 
++### REQ-REPORT-4998: V460 Runtime Stamping Backfill And Relaxed Mtime Window Readiness
++
++The Exp 4998 workflow SHALL apply the Exp 4920 runtime-stamping helper to the
++`.460` arm artifacts present under `results/experiment_4990_*.json`,
++`results/experiment_499{1..9}_*.json`, and
++`results/experiment_5000_*.json`, excluding its own deliverable, without
++editing `scripts/research_conductor.py`. For every scanned arm missing
++`duration_s`, `inference_substrate`, or `compute_bound`, it SHALL rewrite the
++artifact with all three runtime stamps, preserve the artifact mtime, and list
++the newly stamped arms under `stamping_backfilled_arms`; when no arm is missing
++runtime stamps it SHALL emit `stamping_backfilled_arms="none missing"` so the
++audit is explicit and idempotent.
++
++The workflow SHALL reconstruct the `.460` results-mtime window from the scanned
++arm artifact mtimes using the Exp 4920 mtime fallback core and the .460 activation artifact as the discovery anchor. The window gate SHALL maintain the
++Exp 4954 relaxed rule: a success result SHALL accept the arms present at run
++time when `n_arms>=7`, `wall_minutes>0`, and `compute_bound_count>=1`. The
++workflow SHALL record `window_gate_relaxed=true` and SHALL NOT require
++`n_arms>=10`. If the Exp 4920 helper modules, the Exp 4920 shipping artifact,
++the wiring proposal, the `.460` activation artifact, or enough `.460` arm
++evidence needed to satisfy the relaxed gate is missing, the workflow SHALL write
++a blocked deliverable rather than fabricating counts.
++
++The workflow SHALL reconfirm that
++`docs/retro_timing_mtime_fallback_wiring_proposal_4920.md` still names the
++retro prompt-assembly call site for the operator wire. It SHALL write
++`results/experiment_4998_stamping_backfill_and_wiring_readiness.json` with
++principle-annotated fields:
++
++- `honest_verdict`: terminal prefix; success_v460_stamping_backfilled_and_mtime_window_confirmed (the relaxed gate still does not false-block).
++- `mtime_fallback_window`: the .460 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block.
++- `window_gate_relaxed`: true -- the gate accepts the arms present at run time (n_arms>=7) instead of n_arms>=10, maintaining the .456 fix.
++- `stamping_backfilled_arms`: the list of .460 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap.
++- `wiring_proposal_reconfirmed`: true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire.
++- `research_conductor_modified`: false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited.
++- `inference_substrate`: aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor).
++- `preconditions_checked`: records module + arm-artifact presence; a missing input emits blocked_.
++
++#### SCENARIO-REPORT-4998: Backfill Stamps Missing V460 Runtime Fields
++
++**Given** `.460` arm artifacts include missing `duration_s`,
++`inference_substrate`, or `compute_bound` fields
++**When** Exp 4998 applies the runtime-stamping helper
++**Then** each missing arm is rewritten with all three runtime fields, the
++rewritten arm's original mtime is preserved, and the deliverable lists the
++newly stamped arm paths under `stamping_backfilled_arms`.
++
++#### SCENARIO-REPORT-4998-MTIME-WINDOW: Present V460 Arms Pass The Relaxed Gate
++
++**Given** the `.460` activation artifact and at least six additional `.460`
++arm artifacts are present on disk with at least one compute-bound live arm
++**When** Exp 4998 reconstructs the window from their result mtimes
++**Then** it writes a success deliverable with `window_gate_relaxed=true`,
++`n_arms>=7`, `wall_minutes>0`, `compute_bound_count>=1`,
++`research_conductor_modified=false`, and no `n_arms>=10` requirement.
++
++#### SCENARIO-REPORT-4998-BLOCKED-PRECONDITION: Missing Inputs Block The Claim
++
++**Given** the Exp 4920 modules, the Exp 4920 shipping artifact, wiring
++proposal, `.460` activation artifact, or enough `.460` arm evidence to satisfy
++the relaxed non-zero window gate is absent
++**When** Exp 4998 runs
++**Then** it writes a deliverable whose `honest_verdict` starts with `blocked_`,
++records the failed precondition in `preconditions_checked`, and does not claim
++the success gate passed.
++
++## Implementation Status (REQ-REPORT-4998)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4998 | Implemented (`python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py`) | Implemented (`tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py`) |
++
+ ### REQ-REPORT-001: Result Provenance Audit
+ 
+ The repository shall provide a cleanup workflow that scans
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 42381c481c..bcb2c3962d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 203,
+   "code_violations": 0,
+-  "experiments_checked": 4004,
++  "experiments_checked": 4005,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py b/python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py
+new file mode 100644
+index 0000000000..2371c714e3
+--- /dev/null
++++ b/python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py
+@@ -0,0 +1,620 @@
++"""Experiment 4998: backfill .460 runtime stamps and confirm relaxed mtime readiness.
++
++Spec refs: REQ-REPORT-4998, SCENARIO-REPORT-4998,
++SCENARIO-REPORT-4998-MTIME-WINDOW,
++SCENARIO-REPORT-4998-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import sys
++import time
++from typing import Any
++
++
++_REPO_ROOT = Path(__file__).resolve().parents[2]
++_PYTHON_ROOT = _REPO_ROOT / "python"
++if str(_PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard.
++    sys.path.insert(0, str(_PYTHON_ROOT))  # pragma: no cover - direct script guard.
++
++from carnot.reporting import retro_timing_mtime_fallback as timing
++from carnot.reporting import runtime_stamping
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = _REPO_ROOT
++EXPERIMENT = "experiment_4998_stamping_backfill_and_wiring_readiness"
++EXPERIMENT_ID = 4998
++SCHEMA = "carnot.exp4998.stamping_backfill_and_wiring_readiness.v1"
++RANDOM_SEED = 20260629
++MILESTONE = "2026.06.460"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++OUTPUT_REL_PATH = Path("results/experiment_4998_stamping_backfill_and_wiring_readiness.json")
++EXP4920_RESULT_REL_PATH = Path("results/experiment_4920_retro_timing_and_stamping_fix.json")
++MTIME_FALLBACK_MODULE_REL_PATH = Path("python/carnot/reporting/retro_timing_mtime_fallback.py")
++STAMPING_HELPER_REL_PATH = Path("python/carnot/reporting/runtime_stamping.py")
++WIRING_PROPOSAL_REL_PATH = Path("docs/retro_timing_mtime_fallback_wiring_proposal_4920.md")
++RESEARCH_CONDUCTOR_REL_PATH = Path("scripts/research_conductor.py")
++V460_ARM_GLOBS = (
++    "experiment_4990_*.json",
++    "experiment_499[1-9]_*.json",
++    "experiment_5000_*.json",
++)
++EXPECTED_MIN_ARMS = 7
++EXPECTED_MIN_COMPUTE_BOUND = 1
++SPEC_REFS = [
++    "REQ-REPORT-4998",
++    "SCENARIO-REPORT-4998",
++    "SCENARIO-REPORT-4998-MTIME-WINDOW",
++    "SCENARIO-REPORT-4998-BLOCKED-PRECONDITION",
++]
++TERMINAL_PREFIXES = ("success_", "blocked_")
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success_v460_stamping_backfilled_and_mtime_window_confirmed "
++            "(the relaxed gate still does not false-block)."
++        )
++    },
++    "mtime_fallback_window": {
++        "principle": (
++            "the .460 {n_arms, window_start, window_end, wall_minutes, "
++            "compute_bound_count} from results/ mtimes -- NON-zero from the arms present "
++            "(n_arms>=7), the verifiable fix for the false-zero + the false-block."
++        )
++    },
++    "window_gate_relaxed": {
++        "principle": (
++            "true -- the gate accepts the arms present at run time (n_arms>=7) instead of "
++            "n_arms>=10, maintaining the .456 fix."
++        )
++    },
++    "stamping_backfilled_arms": {
++        "principle": (
++            "the list of .460 arms newly stamped with duration_s/inference_substrate/"
++            "compute_bound (or 'none missing') -- closes the duration_s=None gap."
++        )
++    },
++    "wiring_proposal_reconfirmed": {
++        "principle": (
++            "true -- the conductor retro-prompt-assembly call site doc is present/current "
++            "for the operator wire."
++        )
++    },
++    "research_conductor_modified": {
++        "principle": (
++            "false -- Public Documentation Discipline: the conductor is operator-wired, "
++            "not autonomously edited."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor)."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records module + arm-artifact presence; a missing input emits blocked_."
++        )
++    },
++}
++
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "milestone",
++    "mtime_fallback_module_path",
++    "stamping_helper_path",
++    "wiring_proposal_path",
++    "research_conductor_path",
++    "research_conductor_before_sha256",
++    "research_conductor_after_sha256",
++    "stamping_audit_before",
++    "stamping_audit_after",
++    "duration_s",
++    "compute_bound",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++_EXPERIMENT_RE = re.compile(r"experiment_(\d+)")
++_COMPUTE_BOUND_MARKERS = ("cuda", "gpu0", "gpu1", "3090", "a100", "h100", "hip")
++_COMPUTE_BOUND_KEY_MARKERS = (
++    "backend",
++    "device",
++    "accelerator",
++    "server",
++    "server_kind",
++    "llama_server",
++)
++
++
++def _experiment_id(path: Path | str) -> int | None:
++    match = _EXPERIMENT_RE.search(Path(path).name)
++    return int(match.group(1)) if match else None
++
++
++def _relative_result_path(path: Path) -> str:
++    parts = path.parts
++    if "results" in parts:
++        index = parts.index("results")
++        return str(Path(*parts[index:]))
++    return str(path)
++
++
++def _read_json_object(path: Path) -> tuple[JsonDict, str]:
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError) as exc:
++        return {}, f"json_error:{exc.__class__.__name__}"
++    if not isinstance(value, dict):
++        return {}, "json_error:non_object"
++    return value, ""
++
++
++def _walk_key_values(value: Any) -> Iterable[tuple[str, Any]]:
++    if isinstance(value, Mapping):
++        for key, child in value.items():
++            yield str(key), child
++            yield from _walk_key_values(child)
++    elif isinstance(value, list):
++        for child in value:
++            yield from _walk_key_values(child)
++
++
++def compute_bound_for_backfill(artifact: Mapping[str, Any]) -> bool:
++    """Infer the write-time compute-bound stamp for a legacy .460 artifact."""
++
++    explicit = artifact.get("compute_bound")
++    if isinstance(explicit, bool):
++        return explicit
++    if timing.compute_bound_from_artifact(artifact):
++        return True
++    for key, value in _walk_key_values(artifact):
++        key_lower = key.casefold()
++        value_lower = str(value).casefold()
++        if any(marker in key_lower for marker in _COMPUTE_BOUND_MARKERS) and value is True:
++            return True
++        if any(marker in key_lower for marker in _COMPUTE_BOUND_KEY_MARKERS) and any(
++            marker in value_lower for marker in _COMPUTE_BOUND_MARKERS
++        ):
++            return True
++    return artifact.get("inference_substrate") == "live_llm_inference"
++
++
++def _duration_missing(value: Any) -> bool:
++    return value is None or isinstance(value, bool) or not isinstance(value, (int, float))
++
++
++def _substrate_missing(value: Any) -> bool:
++    return not isinstance(value, str) or not value.strip()
++
++
++def _compute_bound_missing(value: Any) -> bool:
++    return not isinstance(value, bool)
++
++
++def _missing_runtime_fields(artifact: Mapping[str, Any]) -> list[str]:
++    checks = {
++        "duration_s": _duration_missing(artifact.get("duration_s")),
++        "inference_substrate": _substrate_missing(artifact.get("inference_substrate")),
++        "compute_bound": _compute_bound_missing(artifact.get("compute_bound")),
++    }
++    return [field for field, missing in checks.items() if missing]
++
++
++def _duration_for_stamp(artifact: Mapping[str, Any]) -> float:
++    value = artifact.get("duration_s")
++    if _duration_missing(value):
++        return runtime_stamping.MIN_DURATION_S
++    return round(max(runtime_stamping.MIN_DURATION_S, float(value)), 6)
++
++
++def _substrate_for_stamp(artifact: Mapping[str, Any]) -> str:
++    value = artifact.get("inference_substrate")
++    return str(value).strip() if isinstance(value, str) and value.strip() else INFERENCE_SUBSTRATE
++
++
++def _is_v460_activation_path(path: Path | str) -> bool:
++    path_obj = Path(path)
++    return _experiment_id(path_obj) == 4990 and "activate_460" in path_obj.name
++
++
++def discover_v460_arm_paths(root: Path | str) -> list[Path]:
++    """Return concrete .460 arm artifact paths present so far, excluding Exp 4998."""
++
++    results_dir = Path(root) / "results"
++    paths: dict[Path, None] = {}
++    for pattern in V460_ARM_GLOBS:
++        for path in results_dir.glob(pattern):
++            exp_id = _experiment_id(path)
++            if exp_id is None or exp_id == EXPERIMENT_ID or not (4990 <= exp_id <= 5000):
++                continue
++            paths[path] = None
++    return sorted(paths, key=lambda path: (_experiment_id(path) or 10**9, path.name))
++
++
++def _arm_records(paths: Iterable[Path]) -> list[JsonDict]:
++    return [
++        {
++            "path": _relative_result_path(path),
++            "experiment_id": _experiment_id(path),
++            "present": path.exists(),
++        }
++        for path in paths
++    ]
++
++
++def _wiring_proposal_current(path: Path) -> bool:
++    if not path.exists():
++        return False
++    text = path.read_text(encoding="utf-8")
++    return "retro prompt-assembly" in text and "mtime_fallback_window" in text
++
++
++def check_preconditions(root: Path | str, arm_paths: Iterable[Path] | None = None) -> JsonDict:
++    """Record module, proposal, activation, and concrete .460 arm presence."""
++
++    root_path = Path(root)
++    paths = list(discover_v460_arm_paths(root_path) if arm_paths is None else arm_paths)
++    module_records = [
++        {"path": str(rel_path), "present": (root_path / rel_path).exists()}
++        for rel_path in (MTIME_FALLBACK_MODULE_REL_PATH, STAMPING_HELPER_REL_PATH)
++    ]
++    arm_errors = []
++    for path in paths:
++        _, error = _read_json_object(path)
++        if error:
++            arm_errors.append({"path": _relative_result_path(path), "error": error})
++    missing_modules = [record["path"] for record in module_records if not record["present"]]
++    exp4920_present = (root_path / EXP4920_RESULT_REL_PATH).exists()
++    proposal_path = root_path / WIRING_PROPOSAL_REL_PATH
++    proposal_present = proposal_path.exists()
++    proposal_current = _wiring_proposal_current(proposal_path)
++    activation_paths = [path for path in paths if _is_v460_activation_path(path)]
++    activation_present = bool(activation_paths)
++    return {
++        "module_artifacts": module_records,
++        "missing_modules": missing_modules,
++        "exp4920_shipping_artifact": str(EXP4920_RESULT_REL_PATH),
++        "exp4920_shipping_artifact_present": exp4920_present,
++        "wiring_proposal_path": str(WIRING_PROPOSAL_REL_PATH),
++        "wiring_proposal_present": proposal_present,
++        "wiring_proposal_current": proposal_current,
++        "activation_artifact_path": (
++            _relative_result_path(activation_paths[0])
++            if activation_paths
++            else "results/experiment_4990_archive_459_activate_460.json"
++        ),
++        "activation_artifact_present": activation_present,
++        "arm_glob_patterns": list(V460_ARM_GLOBS),
++        "arm_artifacts": _arm_records(paths),
++        "arm_count": len(paths),
++        "arm_artifact_errors": arm_errors,
++        "ok": (
++            not missing_modules
++            and exp4920_present
++            and proposal_present
++            and proposal_current
++            and bool(paths)
++            and activation_present
++            and not arm_errors
++        ),
++    }
++
++
++def _blocked_precondition_verdict(preconditions: Mapping[str, Any]) -> str:
++    if preconditions.get("missing_modules"):
++        return "blocked_missing_453_reporting_module"
++    if preconditions.get("exp4920_shipping_artifact_present") is not True:
++        return "blocked_missing_exp4920_shipping_artifact"
++    if (
++        preconditions.get("wiring_proposal_present") is not True
++        or preconditions.get("wiring_proposal_current") is not True
++    ):
++        return "blocked_missing_wiring_proposal"
++    if not preconditions.get("arm_artifacts"):
++        return "blocked_missing_v460_arm_artifacts"
++    if preconditions.get("activation_artifact_present") is not True:
++        return "blocked_missing_v460_activation_artifact"
++    if preconditions.get("arm_artifact_errors"):
++        return "blocked_unreadable_v460_arm_artifact"
++    return ""
++
++
++def _empty_audit() -> JsonDict:
++    return {
++        "scanned_count": 0,
++        "missing_by_field": {
++            "duration_s": [],
++            "inference_substrate": [],
++            "compute_bound": [],
++        },
++        "missing_any": [],
++    }
++
++
++def _write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def backfill_runtime_stamps(paths: Iterable[Path]) -> list[JsonDict] | str:
++    """Backfill missing runtime fields with the Exp 4920 stamping helper."""
++
++    backfilled: list[JsonDict] = []
++    for path in sorted(paths, key=lambda item: (_experiment_id(item) or 10**9, item.name)):
++        artifact, error = _read_json_object(path)
++        if error:
++            continue
++        missing_fields = _missing_runtime_fields(artifact)
++        if not missing_fields:
++            continue
++        stat = path.stat()
++        duration_s = _duration_for_stamp(artifact)
++        stamped = runtime_stamping.stamp_runtime_metadata(
++            artifact,
++            started_s=0.0,
++            finished_s=duration_s,
++            inference_substrate=_substrate_for_stamp(artifact),
++            compute_bound=compute_bound_for_backfill(artifact),
++        )
++        _write_payload(path, stamped)
++        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
++        backfilled.append(
++            {
++                "path": _relative_result_path(path),
++                "experiment_id": _experiment_id(path),
++                "missing_fields": missing_fields,
++                "duration_s": stamped["duration_s"],
++                "inference_substrate": stamped["inference_substrate"],
++                "compute_bound": stamped["compute_bound"],
++                "mtime_preserved_ns": stat.st_mtime_ns,
++            }
++        )
++    return backfilled if backfilled else "none missing"
++
++
++def mtime_window_for_paths(paths: Iterable[Path], milestone: str = MILESTONE) -> JsonDict:
++    """Reconstruct the milestone window from explicit .460 result-artifact mtimes."""
++
++    records = []
++    for path in paths:
++        artifact, error = _read_json_object(path)
++        if error:
++            continue
++        records.append(
++            timing.ArtifactMtimeRecord(
++                path=_relative_result_path(path),
++                mtime_ns=path.stat().st_mtime_ns,
++                compute_bound=compute_bound_for_backfill(artifact),
++            )
++        )
++    return timing.reconstruct_mtime_window(milestone, records)
++
++
++def _window_gate(window: Mapping[str, Any]) -> JsonDict:
++    n_arms = int(window.get("n_arms") or 0)
++    wall_minutes = float(window.get("wall_minutes") or 0.0)
++    compute_bound_count = int(window.get("compute_bound_count") or 0)
++    return {
++        "relaxed": True,
++        "min_arms": EXPECTED_MIN_ARMS,
++        "old_min_arms_not_required": 10,
++        "min_compute_bound_count": EXPECTED_MIN_COMPUTE_BOUND,
++        "n_arms": n_arms,
++        "wall_minutes": wall_minutes,
++        "compute_bound_count": compute_bound_count,
++        "passed": (
++            n_arms >= EXPECTED_MIN_ARMS
++            and wall_minutes > 0.0
++            and compute_bound_count >= EXPECTED_MIN_COMPUTE_BOUND
++        ),
++    }
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Return a positive aggregation duration with the 0.0001s floor."""
++
++    started = time.perf_counter() if started_s is None else float(started_s)
++    finished = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(runtime_stamping.MIN_DURATION_S, finished - started), 6)
++
++
++def file_sha256(path: Path) -> str:
++    """Return a file SHA-256 digest, or an empty string when absent."""
++
++    if not path.exists():
++        return ""
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a deterministic checksum over the Exp 4998 deliverable."""
++
++    filtered = {
++        key: value for key, value in payload.items() if key != "reproducibility_checksum"
++    }
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode(
++        "utf-8"
++    )
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    *,
++    honest_verdict: str,
++    preconditions_checked: Mapping[str, Any],
++    mtime_fallback_window: Mapping[str, Any],
++    stamping_backfilled_arms: list[JsonDict] | str,
++    stamping_audit_before: Mapping[str, Any],
++    stamping_audit_after: Mapping[str, Any],
++    research_conductor_before_sha256: str,
++    research_conductor_after_sha256: str,
++    duration_s: float,
++) -> JsonDict:
++    """Build the Exp 4998 deliverable artifact."""
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(OUTPUT_REL_PATH),
++        "milestone": MILESTONE,
++        "honest_verdict": honest_verdict,
++        "mtime_fallback_window": dict(mtime_fallback_window),
++        "window_gate_relaxed": True,
++        "stamping_backfilled_arms": stamping_backfilled_arms,
++        "stamping_audit_before": dict(stamping_audit_before),
++        "stamping_audit_after": dict(stamping_audit_after),
++        "mtime_fallback_module_path": str(MTIME_FALLBACK_MODULE_REL_PATH),
++        "stamping_helper_path": str(STAMPING_HELPER_REL_PATH),
++        "wiring_proposal_path": str(WIRING_PROPOSAL_REL_PATH),
++        "wiring_proposal_reconfirmed": (
++            preconditions_checked.get("wiring_proposal_current") is True
++        ),
++        "research_conductor_path": str(RESEARCH_CONDUCTOR_REL_PATH),
++        "research_conductor_before_sha256": research_conductor_before_sha256,
++        "research_conductor_after_sha256": research_conductor_after_sha256,
++        "research_conductor_modified": (
++            research_conductor_before_sha256 != research_conductor_after_sha256
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(runtime_stamping.MIN_DURATION_S, float(duration_s)), 6),
++        "compute_bound": False,
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Run Exp 4998 and write the deliverable JSON."""
++
++    root_path = Path(root)
++    started = time.perf_counter() if started_s is None else float(started_s)
++    arm_paths = discover_v460_arm_paths(root_path)
++    preconditions = check_preconditions(root_path, arm_paths)
++    conductor_path = root_path / RESEARCH_CONDUCTOR_REL_PATH
++    conductor_before = file_sha256(conductor_path)
++    blocker = _blocked_precondition_verdict(preconditions)
++    if blocker:
++        window = (
++            mtime_window_for_paths(arm_paths)
++            if blocker == "blocked_unreadable_v460_arm_artifact"
++            else mtime_window_for_paths([])
++        )
++        preconditions = {**preconditions, "window_gate": _window_gate(window)}
++        artifact = build_artifact(
++            honest_verdict=blocker,
++            preconditions_checked=preconditions,
++            mtime_fallback_window=window,
++            stamping_backfilled_arms="none missing",
++            stamping_audit_before=_empty_audit(),
++            stamping_audit_after=_empty_audit(),
++            research_conductor_before_sha256=conductor_before,
++            research_conductor_after_sha256=file_sha256(conductor_path),
++            duration_s=duration_from(started, now_s),
++        )
++        _write_payload(root_path / OUTPUT_REL_PATH, artifact)
++        return artifact
++
++    audit_before = runtime_stamping.audit_runtime_stamps(arm_paths)
++    backfilled = backfill_runtime_stamps(arm_paths)
++    audit_after = runtime_stamping.audit_runtime_stamps(arm_paths)
++    window = mtime_window_for_paths(arm_paths)
++    gate = _window_gate(window)
++    preconditions = {**preconditions, "window_gate": gate}
++    honest_verdict = (
++        "success_v460_stamping_backfilled_and_mtime_window_confirmed"
++        if gate["passed"]
++        else "blocked_insufficient_v460_mtime_window"
++    )
++    conductor_after = file_sha256(conductor_path)
++    artifact = build_artifact(
++        honest_verdict=honest_verdict,
++        preconditions_checked=preconditions,
++        mtime_fallback_window=window,
++        stamping_backfilled_arms=backfilled,
++        stamping_audit_before=audit_before,
++        stamping_audit_after=audit_after,
++        research_conductor_before_sha256=conductor_before,
++        research_conductor_after_sha256=conductor_after,
++        duration_s=duration_from(started, now_s),
++    )
++    _write_payload(root_path / OUTPUT_REL_PATH, artifact)
++    return artifact
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _is_sha256(value: Any) -> bool:
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
++    """Return schema-contract errors for the Exp 4998 deliverable."""
++
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(f"missing_field:{field}")
++    verdict = payload.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    principles = _mapping(payload.get("field_principles"))
++    for field, principle in FIELD_PRINCIPLES.items():
++        if _mapping(principles.get(field)).get("principle") != principle["principle"]:
++            errors.append(f"missing_principle:{field}")
++    if payload.get("window_gate_relaxed") is not True:
++        errors.append("invalid_window_gate_relaxed")
++    if payload.get("research_conductor_modified") is not False:
++        errors.append("invalid_research_conductor_modified")
++    if isinstance(verdict, str) and verdict.startswith("success_"):
++        if payload.get("wiring_proposal_reconfirmed") is not True:
++            errors.append("invalid_wiring_proposal_reconfirmed")
++        gate = _window_gate(_mapping(payload.get("mtime_fallback_window")))
++        if gate["passed"] is not True:
++            errors.append("invalid_success_mtime_fallback_window")
++    checksum = payload.get("reproducibility_checksum")
++    if not _is_sha256(checksum) or checksum != payload_checksum(payload):
++        errors.append("invalid_reproducibility_checksum")
++    return errors
++
++
++def main(root: Path | str = REPO_ROOT) -> int:
++    """Run the workflow and print the deliverable path."""
++
++    artifact = run(root=Path(root))
++    errors = validate_artifact(artifact)
++    print(Path(root) / OUTPUT_REL_PATH)
++    if errors:
++        print("validation_errors=" + ",".join(errors))
++        return 2
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - direct CLI entrypoint.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 452fab7c9c..8b94899f42 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-29T23:33:52.485158Z",
+-  "duration_s": 0.06521177291870117,
++  "run_date": "2026-06-30T00:02:10.058063Z",
++  "duration_s": 0.06438946723937988,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "79901c7d470f0569394ff388448a423eb4361efd43c47a36e0103c0c1442984c",
++  "reproducibility_checksum": "58792def2926784dd5911e6344b96a8a21583a7bdf960b756a78f440161e7c03",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ba172e8036e7ea5ccd4e45f2c70dd5b94606a716"
++    "adversarial_verify_version": "5595f324bc37fc698702a0796106ed24d38d2a75"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index dba2c0d54f..ccd80006eb 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-29T23:33:52.582845Z",
+-  "duration_s": 0.08889555931091309,
++  "run_date": "2026-06-30T00:02:10.171037Z",
++  "duration_s": 0.10260963439941406,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "85a0ffc42c6c0593b99f8364282763369bb9ac222794b5eb93ea40f55786c193",
++  "reproducibility_checksum": "7c6b4e3b3a52c653a36595c314b68c8437a5dc845fcbab6cdf69eb8c0759a86d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ba172e8036e7ea5ccd4e45f2c70dd5b94606a716"
++    "adversarial_verify_version": "5595f324bc37fc698702a0796106ed24d38d2a75"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 43fef5a7f7..6612f84550 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.14385986328125,
++  "efficiency_gains_ms": 2.165079116821289,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 079383b45c..55ce84c9f5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.4832082241773605e-05,
++  "duration_s": 4.060589708387852e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4990_archive_459_activate_460.json b/results/experiment_4990_archive_459_activate_460.json
+index 873a76735a..9bce07cfe9 100644
+--- a/results/experiment_4990_archive_459_activate_460.json
++++ b/results/experiment_4990_archive_459_activate_460.json
+@@ -155,6 +155,7 @@
+       "trusted": true
+     }
+   },
++  "compute_bound": false,
+   "deliverable_locked_agent_plus_fover_paper": true,
+   "duration_s": 8.430121,
+   "experiment": "experiment_4990_archive_459_activate_460",
+diff --git a/results/experiment_4991_levelup_attempt.json b/results/experiment_4991_levelup_attempt.json
+index 392c3a60b0..4998bdaa43 100644
+--- a/results/experiment_4991_levelup_attempt.json
++++ b/results/experiment_4991_levelup_attempt.json
+@@ -2641,6 +2641,7 @@
+     "status": "selected_no_grounded_delta",
+     "target_level": 6
+   },
++  "compute_bound": true,
+   "dead_ends_consulted": [
+     "Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink spell as the L1 win-mechanic precursor.",
+     "E3 executable patch model cracked L1 by verifying the cast-pattern-clear transition before planning the exit route.",
+@@ -2658,7 +2659,7 @@
+     "reason": "no_grounded_l6_delta",
+     "target_level": 6
+   },
+-  "duration_s": 1.206301482859999,
++  "duration_s": 1.206301,
+   "experiment": "experiment_4991_levelup_attempt",
+   "experiment_id": 4991,
+   "field_principles": {
+diff --git a/results/experiment_4992_levelup_attempt.json b/results/experiment_4992_levelup_attempt.json
+index bbbda87280..f8f44444dd 100644
+--- a/results/experiment_4992_levelup_attempt.json
++++ b/results/experiment_4992_levelup_attempt.json
+@@ -2596,6 +2596,7 @@
+     "status": "selected_no_grounded_delta",
+     "target_level": 3
+   },
++  "compute_bound": true,
+   "dead_ends_consulted": [
+     "sk48: registry_prechecked prior L1 before target L2",
+     "sk48: L2 tail is banked only through the standing GameAdapter/live-path loop",
+@@ -2612,7 +2613,7 @@
+     "reason": "no_grounded_l3_delta",
+     "target_level": 3
+   },
+-  "duration_s": 2.0928396959789097,
++  "duration_s": 2.09284,
+   "experiment": "experiment_4992_levelup_attempt",
+   "experiment_id": 4992,
+   "field_principles": {
+diff --git a/results/experiment_4993_self_play_verifier_checkpoint.json b/results/experiment_4993_self_play_verifier_checkpoint.json
+index 47f434e88a..e2e40426f6 100644
+--- a/results/experiment_4993_self_play_verifier_checkpoint.json
++++ b/results/experiment_4993_self_play_verifier_checkpoint.json
+@@ -3,6 +3,7 @@
+   "checkpoint_mtime_before_ns": "1782663126462511581",
+   "checkpoint_mtime_delta_ns": 109120856589521,
+   "checkpoint_path": "models/arc_verifier_lf52.json",
++  "compute_bound": false,
+   "duration_s": 11.512,
+   "experiment": "experiment_4993_self_play_verifier_checkpoint",
+   "field_principles": {
+diff --git a/results/experiment_4995_distributional_energy_verifier_turnkey.json b/results/experiment_4995_distributional_energy_verifier_turnkey.json
+index 0d462d2324..d7e66e0325 100644
+--- a/results/experiment_4995_distributional_energy_verifier_turnkey.json
++++ b/results/experiment_4995_distributional_energy_verifier_turnkey.json
+@@ -107,6 +107,7 @@
+       "url": "https://arxiv.org/abs/2605.18871"
+     }
+   },
++  "compute_bound": false,
+   "dry_run_three_columns": {
+     "columns": [
+       "self_consistency",
+diff --git a/results/experiment_4996_bank_and_pivot_audit.json b/results/experiment_4996_bank_and_pivot_audit.json
+index 20447b28ef..1c5452931e 100644
+--- a/results/experiment_4996_bank_and_pivot_audit.json
++++ b/results/experiment_4996_bank_and_pivot_audit.json
+@@ -52,6 +52,7 @@
+     "reproduction_genuine": true,
+     "self_discovery_provenance": true
+   },
++  "compute_bound": false,
+   "duration_s": 1.034459,
+   "experiment": "experiment_4996_bank_and_pivot_audit",
+   "experiment_id": 4996,
+diff --git a/results/experiment_4997_submission_package_harden.json b/results/experiment_4997_submission_package_harden.json
+index 774fa38659..6441abcd46 100644
+--- a/results/experiment_4997_submission_package_harden.json
++++ b/results/experiment_4997_submission_package_harden.json
+@@ -32,6 +32,7 @@
+     "spec_type": "draft-mtp"
+   },
+   "blocked_resource": "",
++  "compute_bound": true,
+   "duration_s": 1.081768,
+   "experiment": "experiment_4997_submission_package_harden",
+   "field_principles": {
+diff --git a/results/experiment_4998_stamping_backfill_and_wiring_readiness.json b/results/experiment_4998_stamping_backfill_and_wiring_readiness.json
+new file mode 100644
+index 0000000000..6df073d694
+--- /dev/null
++++ b/results/experiment_4998_stamping_backfill_and_wiring_readiness.json
+@@ -0,0 +1,328 @@
++{
++  "compute_bound": false,
++  "duration_s": 0.029793,
++  "experiment": "experiment_4998_stamping_backfill_and_wiring_readiness",
++  "experiment_id": 4998,
++  "field_principles": {
++    "honest_verdict": {
++      "principle": "terminal prefix; success_v460_stamping_backfilled_and_mtime_window_confirmed (the relaxed gate still does not false-block)."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor)."
++    },
++    "mtime_fallback_window": {
++      "principle": "the .460 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block."
++    },
++    "preconditions_checked": {
++      "principle": "records module + arm-artifact presence; a missing input emits blocked_."
++    },
++    "research_conductor_modified": {
++      "principle": "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
++    },
++    "stamping_backfilled_arms": {
++      "principle": "the list of .460 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap."
++    },
++    "window_gate_relaxed": {
++      "principle": "true -- the gate accepts the arms present at run time (n_arms>=7) instead of n_arms>=10, maintaining the .456 fix."
++    },
++    "wiring_proposal_reconfirmed": {
++      "principle": "true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire."
++    }
++  },
++  "honest_verdict": "success_v460_stamping_backfilled_and_mtime_window_confirmed",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.06.460",
++  "mtime_fallback_module_path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
++  "mtime_fallback_window": {
++    "artifact_paths": [
++      "results/experiment_4990_archive_459_activate_460.json",
++      "results/experiment_4991_levelup_attempt.json",
++      "results/experiment_4992_levelup_attempt.json",
++      "results/experiment_4993_self_play_verifier_checkpoint.json",
++      "results/experiment_4994_heldout_first_win_readiness.json",
++      "results/experiment_4995_distributional_energy_verifier_turnkey.json",
++      "results/experiment_4996_bank_and_pivot_audit.json",
++      "results/experiment_4997_submission_package_harden.json"
++    ],
++    "compute_bound_count": 4,
++    "milestone": "2026.06.460",
++    "n_arms": 8,
++    "wall_minutes": 130.19,
++    "window_end": "2026-06-29T23:47:57Z",
++    "window_start": "2026-06-29T21:37:45Z"
++  },
++  "preconditions_checked": {
++    "activation_artifact_path": "results/experiment_4990_archive_459_activate_460.json",
++    "activation_artifact_present": true,
++    "arm_artifact_errors": [],
++    "arm_artifacts": [
++      {
++        "experiment_id": 4990,
++        "path": "results/experiment_4990_archive_459_activate_460.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4991,
++        "path": "results/experiment_4991_levelup_attempt.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4992,
++        "path": "results/experiment_4992_levelup_attempt.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4993,
++        "path": "results/experiment_4993_self_play_verifier_checkpoint.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4994,
++        "path": "results/experiment_4994_heldout_first_win_readiness.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4995,
++        "path": "results/experiment_4995_distributional_energy_verifier_turnkey.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4996,
++        "path": "results/experiment_4996_bank_and_pivot_audit.json",
++        "present": true
++      },
++      {
++        "experiment_id": 4997,
++        "path": "results/experiment_4997_submission_package_harden.json",
++        "present": true
++      }
++    ],
++    "arm_count": 8,
++    "arm_glob_patterns": [
++      "experiment_4990_*.json",
++      "experiment_499[1-9]_*.json",
++      "experiment_5000_*.json"
++    ],
++    "exp4920_shipping_artifact": "results/experiment_4920_retro_timing_and_stamping_fix.json",
++    "exp4920_shipping_artifact_present": true,
++    "missing_modules": [],
++    "module_artifacts": [
++      {
++        "path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
++        "present": true
++      },
++      {
++        "path": "python/carnot/reporting/runtime_stamping.py",
++        "present": true
++      }
++    ],
++    "ok": true,
++    "window_gate": {
++      "compute_bound_count": 4,
++      "min_arms": 7,
++      "min_compute_bound_count": 1,
++      "n_arms": 8,
++      "old_min_arms_not_required": 10,
++      "passed": true,
++      "relaxed": true,
++      "wall_minutes": 130.19
++    },
++    "wiring_proposal_current": true,
++    "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
++    "wiring_proposal_present": true
++  },
++  "random_seed": 20260629,
++  "reproducibility_checksum": "4e23b3a569b82303baa77d93bd7bf1e3143472b975929ef4906d5009b7340d26",
++  "research_conductor_after_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
++  "research_conductor_before_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
++  "research_conductor_modified": false,
++  "research_conductor_path": "scripts/research_conductor.py",
++  "result_path": "results/experiment_4998_stamping_backfill_and_wiring_readiness.json",
++  "schema": "carnot.exp4998.stamping_backfill_and_wiring_readiness.v1",
++  "spec_refs": [
++    "REQ-REPORT-4998",
++    "SCENARIO-REPORT-4998",
++    "SCENARIO-REPORT-4998-MTIME-WINDOW",
++    "SCENARIO-REPORT-4998-BLOCKED-PRECONDITION"
++  ],
++  "stamping_audit_after": {
++    "missing_any": [],
++    "missing_by_field": {
++      "compute_bound": [],
++      "duration_s": [],
++      "inference_substrate": []
++    },
++    "scanned_count": 8
++  },
++  "stamping_audit_before": {
++    "missing_any": [
++      {
++        "experiment_id": 4990,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4990_archive_459_activate_460.json"
++      },
++      {
++        "experiment_id": 4991,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4991_levelup_attempt.json"
++      },
++      {
++        "experiment_id": 4992,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4992_levelup_attempt.json"
++      },
++      {
++        "experiment_id": 4993,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4993_self_play_verifier_checkpoint.json"
++      },
++      {
++        "experiment_id": 4995,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4995_distributional_energy_verifier_turnkey.json"
++      },
++      {
++        "experiment_id": 4996,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4996_bank_and_pivot_audit.json"
++      },
++      {
++        "experiment_id": 4997,
++        "missing_fields": [
++          "compute_bound"
++        ],
++        "path": "results/experiment_4997_submission_package_harden.json"
++      }
++    ],
++    "missing_by_field": {
++      "compute_bound": [
++        {
++          "experiment_id": 4990,
++          "path": "results/experiment_4990_archive_459_activate_460.json"
++        },
++        {
++          "experiment_id": 4991,
++          "path": "results/experiment_4991_levelup_attempt.json"
++        },
++        {
++          "experiment_id": 4992,
++          "path": "results/experiment_4992_levelup_attempt.json"
++        },
++        {
++          "experiment_id": 4993,
++          "path": "results/experiment_4993_self_play_verifier_checkpoint.json"
++        },
++        {
++          "experiment_id": 4995,
++          "path": "results/experiment_4995_distributional_energy_verifier_turnkey.json"
++        },
++        {
++          "experiment_id": 4996,
++          "path": "results/experiment_4996_bank_and_pivot_audit.json"
++        },
++        {
++          "experiment_id": 4997,
++          "path": "results/experiment_4997_submission_package_harden.json"
++        }
++      ],
++      "duration_s": [],
++      "inference_substrate": []
++    },
++    "scanned_count": 8
++  },
++  "stamping_backfilled_arms": [
++    {
++      "compute_bound": false,
++      "duration_s": 8.430121,
++      "experiment_id": 4990,
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782769065607138309,
++      "path": "results/experiment_4990_archive_459_activate_460.json"
++    },
++    {
++      "compute_bound": true,
++      "duration_s": 1.206301,
++      "experiment_id": 4991,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782770214993779273,
++      "path": "results/experiment_4991_levelup_attempt.json"
++    },
++    {
++      "compute_bound": true,
++      "duration_s": 2.09284,
++      "experiment_id": 4992,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782771572036624011,
++      "path": "results/experiment_4992_levelup_attempt.json"
++    },
++    {
++      "compute_bound": false,
++      "duration_s": 11.512,
++      "experiment_id": 4993,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782772383066920808,
++      "path": "results/experiment_4993_self_play_verifier_checkpoint.json"
++    },
++    {
++      "compute_bound": false,
++      "duration_s": 0.0001,
++      "experiment_id": 4995,
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782775006937067533,
++      "path": "results/experiment_4995_distributional_energy_verifier_turnkey.json"
++    },
++    {
++      "compute_bound": false,
++      "duration_s": 1.034459,
++      "experiment_id": 4996,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782775934099475048,
++      "path": "results/experiment_4996_bank_and_pivot_audit.json"
++    },
++    {
++      "compute_bound": true,
++      "duration_s": 1.081768,
++      "experiment_id": 4997,
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "missing_fields": [
++        "compute_bound"
++      ],
++      "mtime_preserved_ns": 1782776877076040082,
++      "path": "results/experiment_4997_submission_package_harden.json"
++    }
++  ],
++  "stamping_helper_path": "python/carnot/reporting/runtime_stamping.py",
++  "window_gate_relaxed": true,
++  "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
++  "wiring_proposal_reconfirmed": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 115fc4f291..97798b04c5 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260629",
+-  "started_at": "2026-06-29T23:33:34Z",
+-  "finished_at": "2026-06-29T23:33:34Z",
+-  "duration_s": 0.005,
++  "run_date": "20260630",
++  "started_at": "2026-06-30T00:01:53Z",
++  "finished_at": "2026-06-30T00:01:53Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a313191ca2..5eb3278bf9 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260629",
+-  "started_at": "2026-06-29T23:33:34Z",
+-  "finished_at": "2026-06-29T23:33:34Z",
+-  "duration_s": 0.004,
++  "run_date": "20260630",
++  "started_at": "2026-06-30T00:01:53Z",
++  "finished_at": "2026-06-30T00:01:53Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e75a5d20df..0c3aef7273 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260629",
+-  "started_at": "2026-06-29T23:33:34Z",
+-  "finished_at": "2026-06-29T23:33:34Z",
+-  "duration_s": 0.003,
++  "run_date": "20260630",
++  "started_at": "2026-06-30T00:01:53Z",
++  "finished_at": "2026-06-30T00:01:53Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py b/tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py
+new file mode 100644
+index 0000000000..9836407709
+--- /dev/null
++++ b/tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py
+@@ -0,0 +1,336 @@
++"""Tests for REQ-REPORT-4998 / SCENARIO-REPORT-4998."""
++
++from __future__ import annotations
++
++from datetime import UTC, datetime
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4998_stamping_backfill_and_wiring_readiness as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_text(path: Path, text: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _mtime_ns(hour: int, minute: int) -> int:
++    return int(datetime(2026, 6, 29, hour, minute, tzinfo=UTC).timestamp() * 1e9)
++
++
++def _set_mtime(path: Path, mtime_ns: int) -> None:
++    os.utime(path, ns=(mtime_ns, mtime_ns))
++
++
++def _seed_required_files(root: Path) -> None:
++    _write_text(root / "scripts" / "research_conductor.py", "# conductor\n")
++    _write_text(root / mod.MTIME_FALLBACK_MODULE_REL_PATH, "# mtime fallback shipped\n")
++    _write_text(root / mod.STAMPING_HELPER_REL_PATH, "# runtime stamping shipped\n")
++    _write_text(
++        root / mod.WIRING_PROPOSAL_REL_PATH,
++        "call `carnot.reporting.retro_timing_mtime_fallback.mtime_fallback_window` "
++        "in the retro prompt-assembly TIMING DATA path for the operator wire\n",
++    )
++    _write_json(
++        root / mod.EXP4920_RESULT_REL_PATH,
++        {
++            "honest_verdict": "success_retro_timing_mtime_fallback_and_stamping_shipped",
++            "mtime_fallback_module_path": str(mod.MTIME_FALLBACK_MODULE_REL_PATH),
++            "stamping_helper_path": str(mod.STAMPING_HELPER_REL_PATH),
++            "wiring_proposal_path": str(mod.WIRING_PROPOSAL_REL_PATH),
++            "research_conductor_modified": False,
++        },
++    )
++
++
++def _arm_payload(
++    exp_id: int,
++    *,
++    duration_s: float | None = 1.0,
++    substrate: str | None = "aggregation_from_upstream_artifacts",
++    compute_bound: bool | None = None,
++    backend: str | None = None,
++) -> JsonDict:
++    payload: JsonDict = {
++        "experiment": f"experiment_{exp_id}_demo",
++        "experiment_id": exp_id,
++        "honest_verdict": f"complete_exp{exp_id}",
++        "random_seed": exp_id,
++    }
++    if duration_s is not None:
++        payload["duration_s"] = duration_s
++    if substrate is not None:
++        payload["inference_substrate"] = substrate
++    if compute_bound is not None:
++        payload["compute_bound"] = compute_bound
++    if backend is not None:
++        payload["model_specs"] = {"backend": backend}
++    return payload
++
++
++def _make_v460_arms(root: Path, exp_ids: tuple[int, ...]) -> dict[int, Path]:
++    names = {
++        4990: "archive_459_activate_460",
++        4991: "levelup_attempt",
++        4992: "levelup_attempt",
++        4993: "self_play_verifier_checkpoint",
++        4994: "heldout_first_win_readiness",
++        4995: "distributional_energy_verifier_turnkey",
++        4996: "bank_and_pivot_audit",
++        4997: "submission_package_harden",
++        4999: "kv260_continuity",
++        5000: "capstone_v460",
++    }
++    paths: dict[int, Path] = {}
++    for offset, exp_id in enumerate(exp_ids):
++        path = root / "results" / f"experiment_{exp_id}_{names[exp_id]}.json"
++        if exp_id == 4993:
++            payload = _arm_payload(exp_id, duration_s=None, substrate="live_llm_inference")
++        elif exp_id == 4994:
++            payload = _arm_payload(
++                exp_id,
++                duration_s=673.6,
++                substrate="live_llm_inference",
++                compute_bound=True,
++                backend="gpu0_cuda",
++            )
++        elif exp_id == 4997:
++            payload = _arm_payload(exp_id, duration_s=1.065796, substrate=None)
++        elif exp_id in {4991, 4992, 4996}:
++            payload = _arm_payload(
++                exp_id,
++                duration_s=1.0,
++                substrate="verifier_ensemble_against_cached_candidates",
++            )
++        else:
++            payload = _arm_payload(exp_id)
++        _write_json(path, payload)
++        _set_mtime(path, _mtime_ns(16 + (offset // 4), (offset * 7) % 60))
++        paths[exp_id] = path
++    return paths
++
++
++def test_req_report_4998_spec_declares_relaxed_v460_contract() -> None:
++    """REQ-REPORT-4998: OpenSpec declares the relaxed .460 readiness contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in mod.SPEC_REFS:
++        assert ref in spec
++    for marker in (
++        str(mod.OUTPUT_REL_PATH),
++        "duration_s",
++        "compute_bound_count>=1",
++        "window_gate_relaxed=true",
++        "n_arms>=7",
++        "n_arms>=10",
++        "research_conductor_modified",
++        "wiring_proposal_reconfirmed",
++        ".460 activation artifact as the discovery anchor",
++        "results/experiment_4990_*.json",
++        "results/experiment_499{1..9}_*.json",
++        "results/experiment_5000_*.json",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_report_4998_success_accepts_present_arms_and_preserves_mtime(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-4998: eight present arms pass the relaxed mtime gate."""
++
++    _seed_required_files(tmp_path)
++    arms = _make_v460_arms(
++        tmp_path,
++        (4990, 4991, 4992, 4993, 4994, 4995, 4996, 4997),
++    )
++    _write_json(tmp_path / mod.OUTPUT_REL_PATH, {"experiment_id": mod.EXPERIMENT_ID})
++    original_mtime = arms[4993].stat().st_mtime_ns
++
++    artifact = mod.run(root=tmp_path, started_s=10.0, now_s=10.5)
++
++    assert artifact["honest_verdict"] == (
++        "success_v460_stamping_backfilled_and_mtime_window_confirmed"
++    )
++    assert artifact["window_gate_relaxed"] is True
++    assert artifact["mtime_fallback_window"]["n_arms"] == 8
++    assert artifact["mtime_fallback_window"]["wall_minutes"] > 0
++    assert artifact["mtime_fallback_window"]["compute_bound_count"] >= 1
++    assert artifact["preconditions_checked"]["window_gate"]["min_arms"] == 7
++    assert artifact["preconditions_checked"]["window_gate"]["passed"] is True
++    assert artifact["wiring_proposal_reconfirmed"] is True
++    assert artifact["research_conductor_modified"] is False
++    assert artifact["duration_s"] == 0.5
++    assert artifact["compute_bound"] is False
++    assert mod.validate_artifact(artifact) == []
++    assert json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8")) == artifact
++
++    stamped_4993 = json.loads(arms[4993].read_text(encoding="utf-8"))
++    assert stamped_4993["duration_s"] == mod.runtime_stamping.MIN_DURATION_S
++    assert stamped_4993["compute_bound"] is True
++    assert arms[4993].stat().st_mtime_ns == original_mtime
++    assert not any(
++        path.endswith("experiment_4998_stamping_backfill_and_wiring_readiness.json")
++        for path in artifact["mtime_fallback_window"]["artifact_paths"]
++    )
++    assert any(
++        row["path"].endswith("experiment_4997_submission_package_harden.json")
++        for row in artifact["stamping_backfilled_arms"]
++    )
++
++    second = mod.run(root=tmp_path, started_s=20.0, now_s=20.25)
++    assert second["stamping_backfilled_arms"] == "none missing"
++    assert second["honest_verdict"] == artifact["honest_verdict"]
++    assert mod.validate_artifact(second) == []
++
++
++def test_scenario_report_4998_blocks_below_relaxed_window_gate(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4998-BLOCKED-PRECONDITION: too few arms still blocks."""
++
++    _seed_required_files(tmp_path)
++    _make_v460_arms(tmp_path, (4990, 4991, 4992, 4993, 4994, 4995))
++
++    artifact = mod.run(root=tmp_path, started_s=1.0, now_s=1.0)
++
++    assert artifact["honest_verdict"] == "blocked_insufficient_v460_mtime_window"
++    assert artifact["window_gate_relaxed"] is True
++    assert artifact["mtime_fallback_window"]["n_arms"] == 6
++    assert artifact["mtime_fallback_window"]["wall_minutes"] > 0
++    assert artifact["preconditions_checked"]["window_gate"]["min_arms"] == 7
++    assert artifact["preconditions_checked"]["window_gate"]["passed"] is False
++    assert artifact["research_conductor_modified"] is False
++    assert isinstance(artifact["stamping_backfilled_arms"], list)
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_report_4998_preconditions_and_validation(tmp_path: Path) -> None:
++    """REQ-REPORT-4998: classifiers, blocked inputs, and validation fail closed."""
++
++    assert mod.compute_bound_for_backfill({"compute_bound": True}) is True
++    assert mod.compute_bound_for_backfill({"compute_bound": False}) is False
++    assert mod.compute_bound_for_backfill({"model_specs": {"backend": "cuda"}}) is True
++    assert mod.compute_bound_for_backfill({"generator_backend": "igpu_hip"}) is True
++    assert mod.compute_bound_for_backfill({"cuda_128_server": True}) is True
++    assert mod.compute_bound_for_backfill({"runtime": [{"backend": "cpu"}]}) is False
++    assert mod.compute_bound_for_backfill({"inference_substrate": "live_llm_inference"}) is True
++    assert mod.compute_bound_for_backfill({"inference_substrate": "offline"}) is False
++    assert mod._relative_result_path(Path("/tmp/plain.json")) == "/tmp/plain.json"
++    discovery_root = tmp_path / "discovery"
++    _write_json(discovery_root / "results" / "not_an_experiment.json", {"ok": True})
++    _write_json(discovery_root / "results" / "experiment_5001_out_of_range.json", {"ok": True})
++    _write_json(discovery_root / mod.OUTPUT_REL_PATH, {"experiment_id": mod.EXPERIMENT_ID})
++    original_globs = mod.V460_ARM_GLOBS
++    try:
++        mod.V460_ARM_GLOBS = ("*.json",)
++        assert mod.discover_v460_arm_paths(discovery_root) == []
++    finally:
++        mod.V460_ARM_GLOBS = original_globs
++
++    _seed_required_files(tmp_path)
++    arms = _make_v460_arms(
++        tmp_path,
++        (4990, 4991, 4992, 4993, 4994, 4995, 4996, 4997),
++    )
++    arms[4997].write_text("[1, 2]", encoding="utf-8")
++    with_bad_json = mod.run(root=tmp_path, started_s=1.0, now_s=1.25)
++    assert with_bad_json["honest_verdict"] == "blocked_unreadable_v460_arm_artifact"
++    assert "json_error" in with_bad_json["preconditions_checked"]["arm_artifact_errors"][0]["error"]
++    bad_json = tmp_path / "results" / "experiment_4997_bad.json"
++    bad_json.write_text("{bad", encoding="utf-8")
++    assert mod._read_json_object(bad_json)[1].startswith("json_error")
++    assert mod.backfill_runtime_stamps([bad_json]) == "none missing"
++
++    assert mod._blocked_precondition_verdict(
++        {"missing_modules": [], "exp4920_shipping_artifact_present": False}
++    ) == "blocked_missing_exp4920_shipping_artifact"
++    assert mod._blocked_precondition_verdict(
++        {
++            "missing_modules": [],
++            "exp4920_shipping_artifact_present": True,
++            "wiring_proposal_present": False,
++            "wiring_proposal_current": False,
++        }
++    ) == "blocked_missing_wiring_proposal"
++    assert mod._blocked_precondition_verdict(
++        {
++            "missing_modules": [],
++            "exp4920_shipping_artifact_present": True,
++            "wiring_proposal_present": True,
++            "wiring_proposal_current": True,
++            "arm_artifacts": [],
++        }
++    ) == "blocked_missing_v460_arm_artifacts"
++    assert mod._blocked_precondition_verdict(
++        {
++            "missing_modules": [],
++            "exp4920_shipping_artifact_present": True,
++            "wiring_proposal_present": True,
++            "wiring_proposal_current": True,
++            "arm_artifacts": [{"path": "results/experiment_4991_levelup_attempt.json"}],
++            "activation_artifact_present": False,
++        }
++    ) == "blocked_missing_v460_activation_artifact"
++
++    missing_root = tmp_path / "missing"
++    artifact = mod.run(root=missing_root, started_s=3.0, now_s=3.0)
++    assert artifact["honest_verdict"] == "blocked_missing_453_reporting_module"
++    assert artifact["mtime_fallback_window"]["n_arms"] == 0
++    assert mod.validate_artifact(artifact) == []
++    assert mod.main(root=missing_root) == 0
++
++    success_root = tmp_path / "success"
++    _seed_required_files(success_root)
++    _make_v460_arms(
++        success_root,
++        (4990, 4991, 4992, 4993, 4994, 4995, 4996, 4997),
++    )
++    success = mod.run(root=success_root, started_s=5.0, now_s=5.5)
++    assert mod.file_sha256(success_root / "missing.txt") == ""
++    assert "missing_field:honest_verdict" in mod.validate_artifact(
++        {key: value for key, value in success.items() if key != "honest_verdict"}
++    )
++    assert "honest_verdict_missing_terminal_prefix" in mod.validate_artifact(
++        {**success, "honest_verdict": "done"}
++    )
++    assert "invalid_inference_substrate" in mod.validate_artifact(
++        {**success, "inference_substrate": "live_llm_inference"}
++    )
++    assert "missing_principle:honest_verdict" in mod.validate_artifact(
++        {**success, "field_principles": {}}
++    )
++    assert "invalid_research_conductor_modified" in mod.validate_artifact(
++        {**success, "research_conductor_modified": True}
++    )
++    assert "invalid_window_gate_relaxed" in mod.validate_artifact(
++        {**success, "window_gate_relaxed": False}
++    )
++    assert "invalid_wiring_proposal_reconfirmed" in mod.validate_artifact(
++        {**success, "wiring_proposal_reconfirmed": False}
++    )
++    assert "invalid_success_mtime_fallback_window" in mod.validate_artifact(
++        {**success, "mtime_fallback_window": {"n_arms": 0}}
++    )
++    assert "invalid_reproducibility_checksum" in mod.validate_artifact(
++        {**success, "reproducibility_checksum": ""}
++    )
++    original_validate = mod.validate_artifact
++    try:
++        mod.validate_artifact = lambda _artifact: ["forced"]
++        assert mod.main(root=success_root) == 2
++    finally:
++        mod.validate_artifact = original_validate
+-- 
+2.55.0
+

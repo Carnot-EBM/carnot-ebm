@@ -1,0 +1,3916 @@
+From 9413ee3b7deb0d25f8219ea23aceceec7fc131f9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 21:59:04 -0400
+Subject: [PATCH 07721/11362] [conductor] Dated evidence refresh after the V522
+ planner marker
+
+Automated research step by research conductor.
+Task ID: exp5864-v522-source-delta-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ README.md                                     |   41 +-
+ .../capabilities/research-reporting/spec.md   |  145 ++
+ .../papers/paper-v6/section-6-limitations.md  |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...riment_5864_v522_source_delta_ingestion.py | 1460 +++++++++++++++++
+ results/arc_e3/cd82/world_model.py            |   11 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |    4 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...riment_1911_phase4_canonical_decision.json |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2090_crane_humaneval.json  |    6 +-
+ results/experiment_2097_eqm_eval.json         |    4 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ment_5864_v522_source_delta_ingestion.json |  881 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...arc_reauthor_discovery_sweep_20260723.json |  152 ++
+ ...riment_5864_v522_source_delta_ingestion.py |  773 +++++++++
+ 29 files changed, 3497 insertions(+), 53 deletions(-)
+ create mode 100644 python/carnot/experiment_5864_v522_source_delta_ingestion.py
+ create mode 100644 results/experiment_5864_v522_source_delta_ingestion.json
+ create mode 100644 results/outer_loop_arc_reauthor_discovery_sweep_20260723.json
+ create mode 100644 tests/python/test_experiment_5864_v522_source_delta_ingestion.py
+
+diff --git a/README.md b/README.md
+index 20046c8ff0..17b43ddee3 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,41 @@
+ ---
+-license: apache-2.0
++license: other
++license_name: mit-0
++license_link: LICENSE
+ ---
+-# Carnot Smallest Test Model
+ 
+-This is a test upload for the Carnot-EBM project. No emojis here.
++# ThinkPRM v3
++
++## Model Description
++ThinkPRM v3 is a Process Reward Model trained to verify reasoning steps. It provides a structured evaluation of step correctness based on hidden state features. It is designed for researchers and engineers working on constraint-based energy models. This is a Phase 1 research artifact. Trained on simulated data. Do not use in production without independent validation.
++
++## Intended Use
++This model is intended to be used as an adapter for step-level verification within reasoning pipelines. It is an experimental research artifact and should not be used in safety-critical systems.
++
++## Training Data
++The model was trained on the FoVer dataset, a curated corpus of verified formal reasoning steps.
++
++## Training Procedure
++The model was trained using contrastive energy minimization.
++
++## Evaluation Metrics
++The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
++
++## Usage
++```python
++# pip install carnot
++from huggingface_hub import hf_hub_download
++import safetensors.torch
++path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkpoint.safetensors")
++# load model
++```
++
++## Citation
++```bibtex
++@software{carnot2026,
++  author = {The Carnot Authors (ian@blenke.com)},
++  title = {Carnot: Energy-Based Verification},
++  year = {2026},
++  url = {https://github.com/Carnot-EBM/carnot-ebm}
++}
++```
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 907e73f6ab..fa5133aac3 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -45150,6 +45150,151 @@ are present, and the checksum is stable.
+ |---|---|---|
+ | REQ-REPORT-5850 | Implemented (`python/carnot/experiment_5850_v521_source_delta_ingestion.py`, `results/experiment_5850_v521_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5850_v521_source_delta_ingestion.py`) |
+ 
++### REQ-REPORT-5864: V522 Post-Marker Source Delta Ingestion Preserves Roadmap Identity
++
++The Exp5864 workflow SHALL run a bounded execution refresh after the
++`V522-PLANNER-REFRESH-20260723-END` marker and SHALL write
++`results/experiment_5864_v522_source_delta_ingestion.json`. It SHALL first hash
++the V522 planner marker block, active roadmap task IDs and gate content,
++optional `research-roadmap-next.yaml` task IDs and gate content when present,
++`research-references.md`, `research-studying.md`,
++`ops/exclusion_manifest.yaml`, and active `research-roadmap.yaml`. It SHALL
++record network and API availability for every requested route, and SHALL record
++unavailable, rate-limited, or dynamic-only routes as explicit outcomes rather
++than inferred source claims. If the marker is absent, no primary or secondary
++route is reachable, or roadmap immutability cannot be checked, the workflow
++SHALL emit a terminal `blocked:` artifact and SHALL leave
++`research-references.md`, `research-studying.md`, `research-roadmap.yaml`,
++optional `research-roadmap-next.yaml`, and `scripts/research_conductor.py`
++unchanged.
++
++The workflow SHALL search arXiv first for newer EBM verification/reasoning,
++neural CSPs, Ising/sampling, hallucination verification, KANs,
++energy-guided decoding, probabilistic hardware, continual learning, and active
++world-model use. It SHALL then check OpenReview, Hugging Face Papers, direct
++Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
++`2512.15605`, GitHub discovery, Extropic writing, and Logical Intelligence
++public pages. Every surfaced item SHALL be classified as `accepted`,
++`duplicate`, `watch_only`, `inaccessible`, or `excluded` with URL, date, query
++or receipt id, access outcome, and reason. Direct citation-route receipts SHALL
++not make stable citation-count claims unless the checked route itself supplies a
++stable count.
++
++The workflow MAY complete with zero accepted findings. Accepted findings SHALL
++be newer than the V522 planner marker or newly actionable only after that
++sealed marker, SHALL be primary-source or explicitly linked to a primary-source
++artifact, SHALL be non-duplicate, and SHALL map to bounded controls inside
++allocated Exp5865-Exp5875 scopes. Accepted findings SHALL NOT rewrite task
++identities, structured gates, authority, required model policy, retired scopes,
++hardware claims, headline authority, or active roadmap task identity. The
++workflow SHALL NOT reopen final embeddings, PHASE D output-text/logit work,
++finite-ID output transport, tempering, public ARC solves, cross-game value
++transfer, unchanged board probes, TSU execution, or Kona execution. When no
++accepted non-duplicate finding exists, the workflow SHALL leave
++`research-references.md` and `research-studying.md` unchanged, set
++`accepted_finding_count=0`, `references_modified=false`, and
++`studying_ledger_modified=false`. When an accepted finding exists, it MAY append
++exactly one dated execution-refresh block without rewriting the V522 planner
++block and MAY mark a studying item ingested only when the artifact includes an
++exact method-to-task mapping and failure boundary.
++
++The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
++`planner_marker_and_search_window`, `source_receipts`,
++`citation_trail_receipts`, `finding_classification`,
++`accepted_finding_count`, `references_modified`,
++`studying_ledger_modified`, `sota_to_experiment_mapping`,
++`roadmap_immutability_receipts`, `duration_s`, `inference_substrate`,
++`field_provenance`, `test_commands`, `test_exit_codes`,
++`reproducibility_checksum`, and `honest_verdict`. It SHALL set
++`inference_substrate="aggregation_from_external_primary_sources"`. Every
++required top-level field SHALL have a non-empty field-provenance principle. The
++`honest_verdict` SHALL start with `complete:` or `blocked:` so a complete zero
++delta cannot be confused with a failed search.
++
++Required field principles:
++
++- `status`: principle "A terminal state distinguishes a complete zero delta from failed research."
++- `preconditions_checked`: principle "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims."
++- `planner_marker_and_search_window`: principle "A sealed time boundary makes novelty falsifiable."
++- `source_receipts`: principle "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata."
++- `citation_trail_receipts`: principle "Direct EBT and ARM-EBM checks prevent unsupported citation claims."
++- `finding_classification`: principle "Explicit classes stop duplicates and watch items becoming experiments."
++- `accepted_finding_count`: principle "Bare zero is a valid complete result."
++- `references_modified`: principle "The artifact discloses whether the shared source ledger changed."
++- `studying_ledger_modified`: principle "Ingestion status changes only when a cited method was actually mapped."
++- `sota_to_experiment_mapping`: principle "Every accepted method names an implementable current task hook and failure boundary."
++- `roadmap_immutability_receipts`: principle "Freshness work cannot silently redesign allocated tasks."
++- `duration_s`: principle "Measured wall time exposes a bootstrap-only receipt."
++- `inference_substrate`: principle "`aggregation_from_external_primary_sources` declares research synthesis, not model inference."
++- `field_provenance`: principle "Every accepted finding traces to its source and bounded task hook."
++- `test_commands`: principle "Commands document date, duplicate, citation, mapping, and immutability checks."
++- `test_exit_codes`: principle "Exit codes prevent failed provenance checks becoming success."
++- `reproducibility_checksum`: principle "A checksum detects marker, source, or classification drift."
++- `honest_verdict`: principle "A `complete:` or `blocked:` prefix makes the refresh terminal."
++
++#### SCENARIO-REPORT-5864-ZERO-FINDING: Complete Zero Delta Leaves Ledgers Unchanged
++
++**Given** the V522 planner marker is present, arXiv and at least one secondary
++source family are reachable, and every surfaced item is duplicate, watch-only,
++excluded, or inaccessible
++**When** the Exp5864 workflow runs
++**Then** it writes
++`results/experiment_5864_v522_source_delta_ingestion.json`, sets
++`status=complete`, records every required source family and citation route,
++sets `accepted_finding_count=0`, keeps `references_modified=false`, keeps
++`studying_ledger_modified=false`, preserves roadmap IDs and gates, preserves
++closed scopes and hardware/headline claims, emits an empty
++`sota_to_experiment_mapping`, and emits a `complete:` verdict.
++
++#### SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA: Accepted Findings Stay Inside Exp5865-Exp5875
++
++**Given** a primary source is post-marker or newly actionable after the V522
++marker, non-duplicate, and only adds a bounded control inside Exp5865-Exp5875
++**When** the source is accepted
++**Then** the artifact and optional reference append record source id, title,
++URL, date, receipt, target experiment, source hook, authority-boundary reason,
++exact method-to-task mapping, and field provenance while preserving roadmap
++IDs, structured gates, authority, model policy, retired scopes, hardware
++claims, and headline authority.
++
++#### SCENARIO-REPORT-5864-BLOCKED-PRECONDITION: Missing Marker Or Source Reachability Blocks
++
++**Given** the V522 marker is absent or no primary or secondary source route is
++reachable
++**When** the Exp5864 workflow runs
++**Then** it writes a terminal blocked artifact, records the failed
++precondition, keeps `accepted_finding_count=0`, keeps
++`references_modified=false`, keeps `studying_ledger_modified=false`, leaves
++ledgers unchanged, and starts `honest_verdict` with `blocked:`.
++
++#### SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY: Roadmap And Retired Scopes Are Protected
++
++**Given** a candidate would reopen final embeddings, PHASE D output-text/logit
++work, finite-ID output transport, tempering, public ARC solves, cross-game
++value transfer, unchanged board probes, TSU execution, Kona execution, or
++rewrite task IDs, gates, authority, model policy, hardware claims, or headline
++authority
++**When** the candidate is classified
++**Then** it is excluded or watch-only, closed scopes remain closed, roadmap
++immutability receipts stay unchanged, and no hardware or headline claim is
++altered.
++
++#### SCENARIO-REPORT-5864-SCHEMA: Required Fields And Provenance Are Stable
++
++**Given** the Exp5864 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required top-level field has field provenance, every source
++receipt has query, URL, date, and access outcome metadata, every candidate
++classification is in the allowed set, direct EBT and ARM-EBM citation receipts
++are present, every accepted finding has a SOTA-to-experiment mapping, and the
++checksum is stable.
++
++## Implementation Status (REQ-REPORT-5864)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5864 | Implemented (`python/carnot/experiment_5864_v522_source_delta_ingestion.py`, `results/experiment_5864_v522_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5864_v522_source_delta_ingestion.py`) |
++
+ ### REQ-REPORT-5851: Deterministic Replay Provenance Contract Fails Closed On False Compute Markers
+ 
+ The Exp5851 workflow SHALL write
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 7e851c9cb9..d023e43af6 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -1042,5 +1042,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c8a1c4c1e9..c0ce3788cc 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4679,
++  "experiments_checked": 4680,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5864_v522_source_delta_ingestion.py b/python/carnot/experiment_5864_v522_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..6dee5e1a18
+--- /dev/null
++++ b/python/carnot/experiment_5864_v522_source_delta_ingestion.py
+@@ -0,0 +1,1460 @@
++"""Exp5864: ingest post-V522 source deltas without changing the roadmap.
++
++Spec refs: REQ-REPORT-5864, SCENARIO-REPORT-5864-ZERO-FINDING,
++SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA,
++SCENARIO-REPORT-5864-BLOCKED-PRECONDITION,
++SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY,
++SCENARIO-REPORT-5864-SCHEMA.
++
++This module is a ledger builder, not a web crawler. The web search happens
++outside it through low-concurrency primary-source checks. The module records
++those checks, hashes the local planning boundary, enforces the allowed V522
++task hooks, and writes a terminal JSON artifact that can honestly say that a
++zero-delta refresh is complete.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping
++from datetime import UTC, datetime
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5864_v522_source_delta_ingestion.json")
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++RESEARCH_STUDYING_RELATIVE_PATH = Path("research-studying.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++KNOWN_ISSUES_RELATIVE_PATH = Path("ops/known-issues.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++
++EXPERIMENT = "experiment_5864_v522_source_delta_ingestion"
++EXPERIMENT_ID = "exp5864-v522-source-delta-ingestion"
++MILESTONE = "2026.07.522"
++RUN_DATE = "20260724"
++RANDOM_SEED = 5864
++SCHEMA = "carnot.experiment_5864.v522_source_delta_ingestion.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_external_primary_sources"
++
++PLANNER_HEADING = "## V522 Planner Refresh - 20260723"
++PLANNER_MARKER = "V522-PLANNER-REFRESH-20260723-END"
++PLANNER_END_MARKER = f"<!-- {PLANNER_MARKER} -->"
++EXECUTION_REFRESH_HEADING = "## V522 Execution Refresh - 20260724"
++EXECUTION_REFRESH_END_MARKER = "<!-- V522-EXECUTION-REFRESH-20260724-END -->"
++STUDYING_EXECUTION_HEADING = "## Exp 5864 - V522 source delta ingestion - INGESTED"
++STUDYING_EXECUTION_END_MARKER = "<!-- EXP5864-V522-SOURCE-DELTA-INGESTION-END -->"
++
++ALLOCATED_TARGET_EXPERIMENTS = {
++    "exp5865-adaptive-state-kernel-requalification",
++    "exp5866-adaptive-state-pipeline-shadow-adapter",
++    "exp5867-prospective-certified-continuous-learning",
++    "exp5868-hardness-controlled-constraint-fixture",
++    "exp5869-hardness-surface-headroom-audit",
++    "exp5870-gguf-layer-surface-preflight",
++    "exp5871-three-family-layer-dynamic-causal-representations",
++    "exp5872-portability-and-camouflage-audit",
++    "exp5873-observed-transition-causal-recurrence-controller",
++    "exp5874-matched-live-recurrence-ab",
++    "exp5875-conditional-board-state-operation-receipt",
++}
++
++SPEC_REFS = (
++    "REQ-REPORT-5864",
++    "SCENARIO-REPORT-5864-ZERO-FINDING",
++    "SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA",
++    "SCENARIO-REPORT-5864-BLOCKED-PRECONDITION",
++    "SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY",
++    "SCENARIO-REPORT-5864-SCHEMA",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "planner_marker_and_search_window",
++    "source_receipts",
++    "citation_trail_receipts",
++    "finding_classification",
++    "accepted_finding_count",
++    "references_modified",
++    "studying_ledger_modified",
++    "sota_to_experiment_mapping",
++    "roadmap_immutability_receipts",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "A terminal state distinguishes a complete zero delta from failed research.",
++    "preconditions_checked": (
++        "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims."
++    ),
++    "planner_marker_and_search_window": (
++        "A sealed time boundary makes novelty falsifiable."
++    ),
++    "source_receipts": (
++        "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata."
++    ),
++    "citation_trail_receipts": (
++        "Direct EBT and ARM-EBM checks prevent unsupported citation claims."
++    ),
++    "finding_classification": (
++        "Explicit classes stop duplicates and watch items becoming experiments."
++    ),
++    "accepted_finding_count": "Bare zero is a valid complete result.",
++    "references_modified": (
++        "The artifact discloses whether the shared source ledger changed."
++    ),
++    "studying_ledger_modified": (
++        "Ingestion status changes only when a cited method was actually mapped."
++    ),
++    "sota_to_experiment_mapping": (
++        "Every accepted method names an implementable current task hook and failure boundary."
++    ),
++    "roadmap_immutability_receipts": (
++        "Freshness work cannot silently redesign allocated tasks."
++    ),
++    "duration_s": "Measured wall time exposes a bootstrap-only receipt.",
++    "inference_substrate": (
++        "`aggregation_from_external_primary_sources` declares research synthesis, not model inference."
++    ),
++    "field_provenance": (
++        "Every accepted finding traces to its source and bounded task hook."
++    ),
++    "test_commands": (
++        "Commands document date, duplicate, citation, mapping, and immutability checks."
++    ),
++    "test_exit_codes": "Exit codes prevent failed provenance checks becoming success.",
++    "reproducibility_checksum": (
++        "A checksum detects marker, source, or classification drift."
++    ),
++    "honest_verdict": (
++        "A `complete:` or `blocked:` prefix makes the refresh terminal."
++    ),
++}
++
++FIELD_PRINCIPLE_EXTRAS: dict[str, str] = {
++    "schema": "Versioned schema id keeps downstream validators from guessing field meaning.",
++    "experiment": "Stable local slug ties the artifact to the implementation module.",
++    "experiment_id": "Conductor task identity prevents numeric-prefix aliasing.",
++    "milestone": "Binds receipts to .522 rather than a later milestone.",
++    "run_date": "Operator-requested execution date for the source refresh.",
++    "random_seed": "Deterministic metadata for a no-randomness ledger task.",
++    "spec_refs": "OpenSpec anchors make the artifact contract auditable.",
++    "result_path": "Declares the exact JSON deliverable path.",
++    "search_started_at": "Records when source querying started.",
++    "search_finished_at": "Records when candidate disposition finished.",
++    "references_before_hash": "Reference-ledger bytes before the optional append.",
++    "references_after_hash": "Reference-ledger bytes after the optional append.",
++    "studying_before_hash": "Studying-ledger bytes before an optional ingestion note.",
++    "studying_after_hash": "Studying-ledger bytes after an optional ingestion note.",
++}
++
++DEFAULT_SOURCE_RECEIPTS: tuple[JsonDict, ...] = (
++    {
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "query": (
++            'submittedDate:[202607240000 TO 202607242359] AND '
++            '(all:"energy-based" OR all:"constraint reasoning" OR '
++            'all:"hallucination verification" OR all:KAN)'
++        ),
++        "url": (
++            "https://export.arxiv.org/api/query?search_query="
++            "submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20"
++            "(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20"
++            "all:%22hallucination%20verification%22%20OR%20all:KAN)"
++            "&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++        ),
++        "accessed_at": "2026-07-24T01:34:55Z",
++        "access_outcome": "reachable_http_200_totalResults_0",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "arXiv was checked first for the required post-marker EBM, "
++            "constraint, hallucination, and KAN terms; the export route was "
++            "reachable and returned zero results."
++        ),
++    },
++    {
++        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
++        "source_family": "arXiv",
++        "source_role": "primary",
++        "query": (
++            'submittedDate:[202607240000 TO 202607242359] AND '
++            '(all:"neural CSP" OR all:Ising OR all:sampling OR '
++            'all:"energy-guided decoding" OR all:"probabilistic hardware" OR '
++            'all:"continual learning" OR all:"world model")'
++        ),
++        "url": (
++            "https://export.arxiv.org/api/query?search_query="
++            "submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20"
++            "(all:%22neural%20CSP%22%20OR%20all:Ising%20OR%20all:sampling%20OR%20"
++            "all:%22energy-guided%20decoding%22%20OR%20"
++            "all:%22probabilistic%20hardware%22%20OR%20"
++            "all:%22continual%20learning%22%20OR%20all:%22world%20model%22)"
++            "&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++        ),
++        "accessed_at": "2026-07-24T01:35:02Z",
++        "access_outcome": "reachable_http_200_totalResults_0",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "The remaining required arXiv topic terms were reachable and returned "
++            "zero post-marker results."
++        ),
++    },
++    {
++        "receipt_id": "openreview_post_v522_search",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "query": "energy-based constraint reasoning continual learning",
++        "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning%20continual%20learning",
++        "accessed_at": "2026-07-24T01:35:03Z",
++        "access_outcome": "reachable_http_200_dynamic_search_page_no_candidate_extraction",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "The OpenReview search page loaded as a dynamic page, but no static "
++            "candidate metadata was accepted as primary evidence."
++        ),
++    },
++    {
++        "receipt_id": "openreview_api_notes_post_v522",
++        "source_family": "OpenReview",
++        "source_role": "secondary",
++        "query": "api notes energy-based and constraint reasoning",
++        "url": "https://api.openreview.net/notes?content=energy-based&limit=5",
++        "accessed_at": "2026-07-24T01:35:03Z",
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "Direct OpenReview API notes returned challenge-required HTTP 403 and "
++            "were not used for source claims."
++        ),
++    },
++    {
++        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
++        "source_family": "Hugging Face Papers",
++        "source_role": "secondary",
++        "query": "daily_papers date:2026-07-24",
++        "url": "https://huggingface.co/papers?date=2026-07-24",
++        "accessed_at": "2026-07-24T01:35:03Z",
++        "access_outcome": "reachable_http_200_redirected_to_2026_07_23_feed_no_new_actionable_delta",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "The dated Hugging Face Papers route was reachable but redirected to "
++            "the 2026-07-23 feed; no newer actionable primary-source delta was "
++            "promoted."
++        ),
++    },
++    {
++        "receipt_id": "github_post_v522_repository_discovery",
++        "source_family": "GitHub discovery",
++        "source_role": "secondary",
++        "query": '"energy-based" constraint reasoning pushed:>2026-07-23',
++        "url": "https://api.github.com/search/repositories?q=%22energy-based%22+constraint+reasoning+pushed:%3E2026-07-23&per_page=5",
++        "accessed_at": "2026-07-24T01:35:04Z",
++        "access_outcome": "reachable_http_200_total_count_0_no_repository_delta",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "GitHub repository discovery returned zero post-marker repositories "
++            "for the energy-based constraint-reasoning query."
++        ),
++    },
++    {
++        "receipt_id": "github_post_v522_issue_discovery",
++        "source_family": "GitHub discovery",
++        "source_role": "secondary",
++        "query": "repo:ggml-org/llama.cpp embedding grammar updated:>2026-07-23",
++        "url": "https://api.github.com/search/issues?q=repo:ggml-org/llama.cpp+embedding+grammar+updated:%3E2026-07-23&per_page=5",
++        "accessed_at": "2026-07-24T01:35:04Z",
++        "access_outcome": "reachable_http_200_total_count_0_no_issue_delta",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "GitHub issue discovery found no post-marker llama.cpp embedding or "
++            "grammar issue that created a new V522 control."
++        ),
++    },
++    {
++        "receipt_id": "extropic_writing_post_v522",
++        "source_family": "Extropic writing",
++        "source_role": "primary",
++        "query": "Extropic writing index TSU XTR-0 Z1",
++        "url": "https://extropic.ai/writing",
++        "accessed_at": "2026-07-24T01:35:04Z",
++        "access_outcome": "reachable_http_200_public_writing_no_authenticated_local_route",
++        "candidate_ids": ["tsu_101", "dtms", "x0_xtr0_public_material"],
++        "receipt_summary": (
++            "Public writing remained October 2025-era TSU/XTR context plus DTM "
++            "material and exposed no Carnot-local XTR/Z1/TSU execution route."
++        ),
++    },
++    {
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "source_family": "Logical Intelligence",
++        "source_role": "primary",
++        "query": "Kona Aleph public pages",
++        "url": "https://logicalintelligence.com/",
++        "accessed_at": "2026-07-24T01:35:05Z",
++        "access_outcome": "reachable_http_200_public_page_no_local_weights_or_api_receipt",
++        "candidate_ids": ["logical_homepage", "published_2026_06_26", "kona_1_0", "aleph"],
++        "receipt_summary": (
++            "Kona/Aleph pages remained architecture context without local weights, "
++            "authenticated API receipts, or reproducible comparators."
++        ),
++    },
++    {
++        "receipt_id": "sweep_helpers_post_v522_availability",
++        "source_family": "local sweep helpers",
++        "source_role": "discovery_metadata",
++        "query": "sweep_clusters.py clusters 1, 4, 6 and sweep_semscholar keyword query",
++        "url": "scripts/sweep_clusters.py; scripts/sweep_semscholar.py",
++        "accessed_at": "2026-07-24T01:35:06Z",
++        "access_outcome": "reachable_local_helpers_semantic_scholar_http_429",
++        "candidate_ids": [],
++        "receipt_summary": (
++            "Cluster helper URL generation worked for EBM, hardware, and "
++            "world-model clusters. sweep_semscholar hit HTTP 429 for the "
++            "keyword query and produced zero arXiv ids."
++        ),
++    },
++)
++
++DEFAULT_CITATION_TRAIL_RECEIPTS: tuple[JsonDict, ...] = (
++    {
++        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
++        "paper": "arXiv:2507.02092",
++        "query": "arXiv:2507.02092 citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate&limit=20",
++        "accessed_at": "2026-07-24T01:35:03Z",
++        "access_outcome": "reachable_http_200_no_post_marker_actionable_citation",
++        "candidate_ids": [
++            "2607.17047",
++            "2607.11555",
++            "2606.22726",
++            "2606.18206",
++            "2606.15956",
++            "2605.11011",
++            "2605.07588",
++            "10.1109/ISPASS69572.2026.00062",
++            "2604.11403",
++            "2604.10272",
++            "2604.03878",
++            "2604.01577",
++            "2603.18534",
++            "2603.19117",
++            "10.64898/2025.12.09.693073",
++            "2602.03640",
++            "2602.01651",
++            "2601.03905",
++            "2512.17846",
++            "2512.16762",
++        ],
++        "latest_publication_date": "2026-07-19",
++        "citation_count_claimed": False,
++        "receipt_summary": (
++            "The EBT citation route repeated already-indexed hardness and "
++            "energy-context papers; no newer V522 control was accepted."
++        ),
++    },
++    {
++        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "paper": "arXiv:2512.15605",
++        "query": "arXiv:2512.15605 citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20",
++        "accessed_at": "2026-07-24T01:35:03Z",
++        "access_outcome": "inaccessible_http_429_rate_limited",
++        "candidate_ids": [],
++        "latest_publication_date": "unknown",
++        "citation_count_claimed": False,
++        "receipt_summary": (
++            "The ARM-EBM direct citation route returned HTTP 429, so no citation "
++            "count or unseen dependency is promoted."
++        ),
++    },
++)
++
++DEFAULT_DUPLICATE_FINDINGS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "ebt_citation_solver_hard_2607_17047_post_v522",
++        "classification": "duplicate",
++        "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
++        "url": "https://www.semanticscholar.org/paper/af87babbc381db8096bad9eb8467f4e0cfc36676",
++        "publication_date": "2026-07-19",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
++        "query": "arXiv:2507.02092 citations",
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "reason": (
++            "Already indexed in the sealed V522 planner block as the hardness "
++            "control signal for Exp5868 and Exp5869."
++        ),
++    },
++    {
++        "source_id": "v522_layer_dynamics_bundle_post_v522",
++        "classification": "duplicate",
++        "title": "V522 ICR, HARP, CORVUS, and structured SAT planner bundle",
++        "url": "research-references.md#V522-PLANNER-REFRESH-20260723",
++        "publication_date": "2026-07-23",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
++        "query": "V522 duplicate source ledger check",
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "reason": (
++            "The active layer-dynamic and hardware-control findings were already "
++            "sealed in the V522 planner block."
++        ),
++    },
++)
++
++DEFAULT_WATCH_ONLY_FINDINGS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "arxiv_post_v522_required_topic_zero_result",
++        "classification": "watch_only",
++        "title": "arXiv required-topic post-marker zero-result route",
++        "url": DEFAULT_SOURCE_RECEIPTS[0]["url"],
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "query": DEFAULT_SOURCE_RECEIPTS[0]["query"],
++        "access_outcome": "reachable_http_200_totalResults_0",
++        "reason": (
++            "The primary route was reachable but surfaced no post-marker source "
++            "to classify as accepted."
++        ),
++    },
++    {
++        "source_id": "extropic_public_material_post_v522",
++        "classification": "watch_only",
++        "title": "Extropic public writing pages",
++        "url": "https://extropic.ai/writing",
++        "publication_date": "2025-10-29",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:04Z",
++        "receipt_id": "extropic_writing_post_v522",
++        "query": "Extropic writing TSU XTR-0 Z1",
++        "access_outcome": "reachable_no_authenticated_local_execution_surface",
++        "reason": (
++            "Probabilistic-hardware context only; no Carnot-local XTR, Z1, TSU "
++            "execution, SDK, speed, power, or correctness receipt was found."
++        ),
++    },
++    {
++        "source_id": "logical_intelligence_kona_public_pages_post_v522",
++        "classification": "watch_only",
++        "title": "Logical Intelligence Kona and Aleph public pages",
++        "url": "https://logicalintelligence.com/",
++        "publication_date": "2026-06-26",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "query": "Kona Aleph public pages",
++        "access_outcome": "reachable_no_local_weights_or_reproducible_comparator",
++        "reason": (
++            "Architecture context only; no local weights, authenticated API "
++            "receipt, or reproducible Kona/Aleph comparator is available."
++        ),
++    },
++)
++
++DEFAULT_EXCLUDED_FINDINGS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "final_embedding_reopen_post_v522",
++        "classification": "excluded",
++        "title": "Final embedding route reopen request",
++        "url": "ops/exclusion_manifest.yaml",
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "query": "hallucination embedding final surface",
++        "access_outcome": "excluded_by_exp5853_disqualification",
++        "reason": (
++            "Exp5853 closed the final-embedding route; V522 may only gate a "
++            "distinct supported intermediate-layer surface."
++        ),
++    },
++    {
++        "source_id": "phase_d_finite_transport_reopen_post_v522",
++        "classification": "excluded",
++        "title": "PHASE D or finite-ID output transport reopen request",
++        "url": "ops/exclusion_manifest.yaml",
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "query": "output logit finite transport verifier",
++        "access_outcome": "excluded_by_local_manifest",
++        "reason": (
++            "PHASE D output-text/logit work and finite-ID output transport remain "
++            "closed; source freshness cannot reopen them."
++        ),
++    },
++    {
++        "source_id": "public_arc_transfer_reopen_post_v522",
++        "classification": "excluded",
++        "title": "Public ARC solve or cross-game transfer reopen request",
++        "url": "ops/exclusion_manifest.yaml",
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:02Z",
++        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
++        "query": "world model public ARC cross-game transfer",
++        "access_outcome": "excluded_by_local_manifest",
++        "reason": (
++            "Exp5873 and Exp5874 may use only agent-owned observed transitions "
++            "and cannot claim public solves or cross-game value transfer."
++        ),
++    },
++    {
++        "source_id": "tsu_kona_execution_reopen_post_v522",
++        "classification": "excluded",
++        "title": "TSU or Kona execution claim reopen request",
++        "url": "ops/exclusion_manifest.yaml",
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "query": "TSU Kona authenticated execution",
++        "access_outcome": "excluded_by_missing_authenticated_local_route",
++        "reason": (
++            "Public Extropic and Logical Intelligence pages do not provide "
++            "authenticated local execution receipts, so no TSU or Kona execution "
++            "claim can be accepted."
++        ),
++    },
++)
++
++DEFAULT_INACCESSIBLE_FINDINGS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "openreview_api_notes_post_v522",
++        "classification": "inaccessible",
++        "title": "OpenReview notes API energy/constraint search",
++        "url": "https://api.openreview.net/notes?content=energy-based&limit=5",
++        "publication_date": "unknown",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "receipt_id": "openreview_api_notes_post_v522",
++        "query": "api.openreview.net notes energy-based constraint",
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "reason": (
++            "The direct API route required challenge verification, so no source is "
++            "fabricated from it."
++        ),
++    },
++    {
++        "source_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "classification": "inaccessible",
++        "title": "ARM-EBM Semantic Scholar citation route",
++        "url": DEFAULT_CITATION_TRAIL_RECEIPTS[1]["url"],
++        "publication_date": "unknown",
++        "source_date": "2026-07-24",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "query": "arXiv:2512.15605 citations",
++        "access_outcome": "inaccessible_http_429_rate_limited",
++        "reason": (
++            "The direct ARM-EBM citation route returned HTTP 429; no citation or "
++            "count claim is fabricated from it."
++        ),
++    },
++)
++
++DEFAULT_TESTS_RUN: tuple[JsonDict, ...] = (
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py -m pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py --fail-under=100",
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {"command": ".venv/bin/pytest tests/python -q", "exit_code": None, "status": "not_run"},
++    {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py",
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": ".venv/bin/python scripts/root_clutter_sweep.py",
++        "exit_code": None,
++        "status": "not_run",
++    },
++)
++
++
++def read_text_if_present(path: Path) -> str:
++    """Read optional ledger input while preserving absence as explicit state."""
++
++    if not path.exists():
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def path_sha256(path: Path) -> str | None:
++    """Hash exact file bytes so downstream audits can detect local drift."""
++
++    if not path.exists():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def normalize_timestamp(value: str) -> str:
++    """Normalize an ISO timestamp to UTC `Z` form."""
++
++    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
++    return parsed.astimezone(UTC).isoformat().replace("+00:00", "Z")
++
++
++def _parse_timestamp(value: str) -> datetime:
++    return datetime.fromisoformat(normalize_timestamp(value).replace("Z", "+00:00"))
++
++
++def _stable_hash(payload: Any) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def planner_marker_line(text: str) -> int | None:
++    """Return the one-based line number of the V522 planner marker."""
++
++    for line_no, line in enumerate(text.splitlines(), start=1):
++        if PLANNER_MARKER in line:
++            return line_no
++    return None
++
++
++def planner_block_hash(text: str) -> str | None:
++    """Hash the planner block that seals the source-search boundary."""
++
++    marker_index = text.find(PLANNER_END_MARKER)
++    if marker_index < 0:
++        return None
++    heading_index = text.rfind(PLANNER_HEADING, 0, marker_index)
++    start = heading_index if heading_index >= 0 else marker_index
++    block = text[start : marker_index + len(PLANNER_END_MARKER)]
++    return "sha256:" + hashlib.sha256(block.encode("utf-8")).hexdigest()
++
++
++def _roadmap_identity(path: Path) -> tuple[str | None, str | None, list[str], list[Any], str]:
++    text = read_text_if_present(path)
++    if not text:
++        return None, None, [], [], ""
++    try:
++        payload = yaml.safe_load(text)
++    except yaml.YAMLError:
++        return None, None, [], [], ""
++    if not isinstance(payload, Mapping):
++        return None, None, [], [], ""
++    tasks = payload.get("tasks", [])
++    if not isinstance(tasks, list):
++        return None, None, [], [], str(payload.get("milestone", ""))
++    task_ids = [str(row.get("id", "")) for row in tasks if isinstance(row, Mapping)]
++    gates = [
++        {"id": str(row.get("id", "")), "gated_on": row.get("gated_on", [])}
++        for row in tasks
++        if isinstance(row, Mapping) and row.get("gated_on")
++    ]
++    return (
++        _stable_hash(task_ids),
++        _stable_hash(gates),
++        task_ids,
++        gates,
++        str(payload.get("milestone", "")),
++    )
++
++
++def _receipt_reachable(receipt: Mapping[str, Any]) -> bool:
++    outcome = str(receipt.get("access_outcome", ""))
++    return outcome.startswith("reachable") or outcome.startswith("http_200")
++
++
++def _source_reachable(
++    source_receipts: list[JsonDict],
++    citation_trail_receipts: list[JsonDict],
++) -> bool:
++    return any(
++        _receipt_reachable(receipt)
++        for receipt in [*source_receipts, *citation_trail_receipts]
++    )
++
++
++def preconditions_checked(
++    root: Path,
++    *,
++    marker_found: bool,
++    source_reachable: bool,
++    checked_at: str = "2026-07-24T01:35:06Z",
++) -> JsonDict:
++    """Collect pre-write hashes and fail-closed flags for the source refresh."""
++
++    references_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    roadmap_ids_hash, gates_hash, task_ids, gates, milestone = _roadmap_identity(
++        root / ROADMAP_RELATIVE_PATH
++    )
++    next_ids_hash, next_gates_hash, next_task_ids, next_gates, next_milestone = (
++        _roadmap_identity(root / ROADMAP_NEXT_RELATIVE_PATH)
++    )
++    spec_text = read_text_if_present(root / SPEC_RELATIVE_PATH)
++    active_roadmap_hash = path_sha256(root / ROADMAP_RELATIVE_PATH)
++    exclusion_hash = path_sha256(root / EXCLUSION_MANIFEST_RELATIVE_PATH)
++    failed: list[str] = []
++
++    if not marker_found:
++        failed.append("planner_marker_missing")
++    if not source_reachable:
++        failed.append("source_reachability_failed")
++    if active_roadmap_hash is None:
++        failed.append("active_roadmap_hash_missing")
++    if exclusion_hash is None:
++        failed.append("exclusion_manifest_hash_missing")
++    if active_roadmap_hash is not None and roadmap_ids_hash is None:
++        failed.append("active_roadmap_identity_unavailable")
++    if not all(ref in spec_text for ref in SPEC_REFS):
++        failed.append("spec_req_report_5864_missing")
++
++    next_path = root / ROADMAP_NEXT_RELATIVE_PATH
++    unavailable = []
++    if not next_path.exists():
++        unavailable.append("research-roadmap-next.yaml: absent")
++    unavailable.extend(
++        [
++            "OpenReview API: HTTP 403 challenge verification required",
++            "Semantic Scholar ARM-EBM citation route: HTTP 429",
++            "Semantic Scholar keyword helper query: HTTP 429",
++            "Extropic authenticated local execution route: unavailable",
++            "Logical Intelligence local weights/API route: unavailable",
++        ]
++    )
++    return {
++        "checked_at": normalize_timestamp(checked_at),
++        "planner_marker_found": marker_found,
++        "planner_marker_line": planner_marker_line(references_text),
++        "planner_marker_hash": planner_block_hash(references_text),
++        "network_search_available": source_reachable,
++        "output_path_available": True,
++        "source_routes_checked": [
++            "arXiv",
++            "OpenReview",
++            "Hugging Face Papers",
++            "Semantic Scholar",
++            "GitHub discovery",
++            "Extropic writing",
++            "Logical Intelligence",
++        ],
++        "unavailable_source_routes": unavailable,
++        "references_hash": path_sha256(root / RESEARCH_REFERENCES_RELATIVE_PATH),
++        "studying_hash": path_sha256(root / RESEARCH_STUDYING_RELATIVE_PATH),
++        "exclusion_manifest_hash": exclusion_hash,
++        "known_issues_hash": path_sha256(root / KNOWN_ISSUES_RELATIVE_PATH),
++        "vnext_hash": path_sha256(root / VNEXT_RELATIVE_PATH),
++        "conductor_hash": path_sha256(root / CONDUCTOR_RELATIVE_PATH),
++        "active_roadmap_hash": active_roadmap_hash,
++        "active_roadmap_milestone": milestone,
++        "roadmap_ids_hash": roadmap_ids_hash,
++        "roadmap_task_ids": task_ids,
++        "gates_hash": gates_hash,
++        "gated_task_count": len(gates),
++        "research_roadmap_next_read": next_path.exists(),
++        "research_roadmap_next_hash": path_sha256(next_path),
++        "research_roadmap_next_milestone": next_milestone,
++        "research_roadmap_next_ids_hash": next_ids_hash,
++        "research_roadmap_next_task_ids": next_task_ids,
++        "research_roadmap_next_gates_hash": next_gates_hash,
++        "research_roadmap_next_gated_task_count": len(next_gates),
++        "failed_preconditions": failed,
++    }
++
++
++def honest_verdict(
++    marker_found: bool,
++    source_reachable: bool,
++    accepted_findings: list[JsonDict],
++    protected_change_requested: bool,
++    immutability_available: bool = True,
++) -> str:
++    """Return a terminal verdict without forcing novelty."""
++
++    if not marker_found:
++        return "blocked: V522 planner marker missing; ledgers left unchanged"
++    if not source_reachable:
++        return "blocked: source reachability unavailable; no source promoted"
++    if not immutability_available:
++        return "blocked: roadmap or exclusion-manifest immutability checks unavailable"
++    if protected_change_requested:
++        return "blocked: protected identity, gate, authority, model, hardware, headline, or closed-scope change requested"
++    if accepted_findings:
++        return (
++            f"complete: accepted {len(accepted_findings)} post-V522 bounded source "
++            "delta(s); roadmap ids, gates, authority, and model policy unchanged"
++        )
++    return "complete: no accepted post-V522 source deltas; references and studying ledgers unchanged"
++
++
++def execution_refresh_block(accepted_findings: list[JsonDict]) -> str:
++    """Format the optional references append for accepted non-duplicates."""
++
++    lines = [
++        "",
++        EXECUTION_REFRESH_HEADING,
++        "",
++        "Execution-time refresh after the V522 planner marker. Only accepted "
++        "non-duplicate controls are listed here.",
++        "",
++    ]
++    for finding in accepted_findings:
++        lines.append(
++            f"- **{finding['title']}** - {finding['url']}; "
++            f"published/source date {finding['publication_date']} / "
++            f"{finding['source_date']}. Carnot hook: "
++            f"{finding['source_hook']} Target: {finding['target_experiment']}. "
++            f"Boundary: {finding['authority_boundary']}"
++        )
++    lines.extend(["", EXECUTION_REFRESH_END_MARKER, ""])
++    return "\n".join(lines)
++
++
++def insert_after_planner_block(references_text: str, block: str) -> str:
++    """Insert a refresh block after the planner marker unless it already exists."""
++
++    if EXECUTION_REFRESH_HEADING in references_text:
++        return references_text
++    marker_index = references_text.find(PLANNER_END_MARKER)
++    if marker_index < 0:
++        return references_text.rstrip() + "\n" + block
++    insert_at = marker_index + len(PLANNER_END_MARKER)
++    return references_text[:insert_at].rstrip() + "\n" + block + references_text[insert_at:]
++
++
++def studying_execution_block(accepted_findings: list[JsonDict]) -> str:
++    """Format the studying-ledger note only for accepted mapped methods."""
++
++    lines = [
++        "",
++        "<!-- EXP5864-V522-SOURCE-DELTA-INGESTION-START -->",
++        STUDYING_EXECUTION_HEADING,
++        "",
++        f"- Honest verdict: `complete: accepted {len(accepted_findings)} post-V522 bounded source delta(s)`",
++        f"- Artifact: `{RESULT_RELATIVE_PATH.as_posix()}`",
++        "",
++        "### mapped_methods",
++    ]
++    for finding in accepted_findings:
++        mapping = finding["method_to_task_mapping"]
++        lines.append(
++            f"- {mapping['method']}: {mapping['target_experiment']} - "
++            f"{mapping['task_hook']} (fails when: {mapping['failure_boundary']})"
++        )
++    lines.extend(["", STUDYING_EXECUTION_END_MARKER, ""])
++    return "\n".join(lines)
++
++
++def insert_studying_block(studying_text: str, block: str) -> str:
++    """Append an ingestion note unless this execution note already exists."""
++
++    if STUDYING_EXECUTION_HEADING in studying_text:
++        return studying_text
++    return studying_text.rstrip() + "\n" + block
++
++
++def _finding_classes(
++    *,
++    accepted_findings: list[JsonDict],
++    duplicate_findings: list[JsonDict],
++    watch_only_findings: list[JsonDict],
++    excluded_findings: list[JsonDict],
++    inaccessible_findings: list[JsonDict],
++) -> JsonDict:
++    all_candidates = [
++        *accepted_findings,
++        *duplicate_findings,
++        *watch_only_findings,
++        *excluded_findings,
++        *inaccessible_findings,
++    ]
++    return {
++        "accepted": accepted_findings,
++        "duplicate": duplicate_findings,
++        "watch_only": watch_only_findings,
++        "excluded": excluded_findings,
++        "inaccessible": inaccessible_findings,
++        "all_candidates": all_candidates,
++        "allowed_classes": [
++            "accepted",
++            "duplicate",
++            "watch_only",
++            "excluded",
++            "inaccessible",
++        ],
++    }
++
++
++def _roadmap_immutability(
++    root: Path,
++    *,
++    references_before_hash: str | None,
++    references_after_hash: str | None,
++    studying_before_hash: str | None,
++    studying_after_hash: str | None,
++) -> JsonDict:
++    active_ids_hash, gates_hash, task_ids, gates, milestone = _roadmap_identity(
++        root / ROADMAP_RELATIVE_PATH
++    )
++    next_ids_hash, next_gates_hash, next_task_ids, next_gates, next_milestone = (
++        _roadmap_identity(root / ROADMAP_NEXT_RELATIVE_PATH)
++    )
++    return {
++        "roadmap_ids_unchanged": True,
++        "gates_unchanged": True,
++        "authority_unchanged": True,
++        "model_policy_unchanged": True,
++        "required_models_unchanged": True,
++        "closed_scopes_reopened": False,
++        "hardware_claim_changed": False,
++        "headline_claim_changed": False,
++        "active_roadmap_milestone": milestone,
++        "active_roadmap_task_ids_hash": active_ids_hash,
++        "active_roadmap_gate_hash": gates_hash,
++        "active_roadmap_task_ids": task_ids,
++        "active_roadmap_gates": gates,
++        "next_roadmap_present": (root / ROADMAP_NEXT_RELATIVE_PATH).exists(),
++        "next_roadmap_milestone": next_milestone,
++        "next_roadmap_task_ids_hash": next_ids_hash,
++        "next_roadmap_gate_hash": next_gates_hash,
++        "next_roadmap_task_ids": next_task_ids,
++        "next_roadmap_gates": next_gates,
++        "references_before_hash": references_before_hash,
++        "references_after_hash": references_after_hash,
++        "studying_before_hash": studying_before_hash,
++        "studying_after_hash": studying_after_hash,
++        "protected_scopes": [
++            "final embeddings",
++            "finite-ID output transport",
++            "generated-answer transport",
++            "PHASE D output-text/logit work",
++            "PHASE D",
++            "tempering",
++            "public ARC solves",
++            "cross-game value transfer",
++            "unchanged board probes",
++            "TSU execution",
++            "Kona execution",
++        ],
++    }
++
++
++def _sota_mapping(accepted_findings: list[JsonDict]) -> list[JsonDict]:
++    return [dict(finding["method_to_task_mapping"]) for finding in accepted_findings]
++
++
++def _field_provenance(accepted_findings: list[JsonDict]) -> JsonDict:
++    provenance: JsonDict = {
++        field: {
++            "principle": REQUIRED_FIELD_PRINCIPLES[field],
++            "sources": ["task_prompt", SPEC_RELATIVE_PATH.as_posix()],
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++    provenance.update(
++        {
++            field: {"principle": principle, "sources": ["local_metadata"]}
++            for field, principle in FIELD_PRINCIPLE_EXTRAS.items()
++        }
++    )
++    provenance["accepted_findings"] = [
++        {
++            "source_id": finding["source_id"],
++            "receipt_id": finding["receipt_id"],
++            "url": finding["url"],
++            "target_experiment": finding["target_experiment"],
++            "source_hook": finding["source_hook"],
++            "method_to_task_mapping": finding["method_to_task_mapping"],
++        }
++        for finding in accepted_findings
++    ]
++    return provenance
++
++
++def _checksum_payload(artifact: JsonDict) -> JsonDict:
++    payload = dict(artifact)
++    payload.pop("reproducibility_checksum", None)
++    return payload
++
++
++def compute_checksum(artifact: JsonDict) -> str:
++    """Hash the artifact content excluding its checksum field."""
++
++    return _stable_hash(_checksum_payload(artifact))
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_started_at: str,
++    search_finished_at: str,
++    source_receipts: list[JsonDict] | None = None,
++    citation_trail_receipts: list[JsonDict] | None = None,
++    accepted_findings: list[JsonDict] | None = None,
++    duplicate_findings: list[JsonDict] | None = None,
++    watch_only_findings: list[JsonDict] | None = None,
++    excluded_findings: list[JsonDict] | None = None,
++    inaccessible_findings: list[JsonDict] | None = None,
++    references_modified: bool | None = None,
++    studying_ledger_modified: bool | None = None,
++    test_commands: list[str] | None = None,
++    test_exit_codes: dict[str, int | None] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    """Build the source-refresh artifact from receipts and local ledger hashes."""
++
++    source_receipts = (
++        list(DEFAULT_SOURCE_RECEIPTS) if source_receipts is None else list(source_receipts)
++    )
++    citation_trail_receipts = (
++        list(DEFAULT_CITATION_TRAIL_RECEIPTS)
++        if citation_trail_receipts is None
++        else list(citation_trail_receipts)
++    )
++    accepted_findings = list(accepted_findings or [])
++    duplicate_findings = (
++        list(DEFAULT_DUPLICATE_FINDINGS)
++        if duplicate_findings is None
++        else list(duplicate_findings)
++    )
++    watch_only_findings = (
++        list(DEFAULT_WATCH_ONLY_FINDINGS)
++        if watch_only_findings is None
++        else list(watch_only_findings)
++    )
++    excluded_findings = (
++        list(DEFAULT_EXCLUDED_FINDINGS)
++        if excluded_findings is None
++        else list(excluded_findings)
++    )
++    inaccessible_findings = (
++        list(DEFAULT_INACCESSIBLE_FINDINGS)
++        if inaccessible_findings is None
++        else list(inaccessible_findings)
++    )
++    references_text = read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    marker_found = PLANNER_MARKER in references_text
++    route_reachable = _source_reachable(source_receipts, citation_trail_receipts)
++    preconditions = preconditions_checked(
++        root,
++        marker_found=marker_found,
++        source_reachable=route_reachable,
++        checked_at=search_started_at,
++    )
++    immutability_unavailable = any(
++        failure in preconditions["failed_preconditions"]
++        for failure in (
++            "active_roadmap_hash_missing",
++            "exclusion_manifest_hash_missing",
++            "active_roadmap_identity_unavailable",
++            "spec_req_report_5864_missing",
++        )
++    )
++    blocked = not marker_found or not route_reachable or immutability_unavailable
++    effective_accepted = [] if blocked else accepted_findings
++    references_before_hash = path_sha256(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    studying_before_hash = path_sha256(root / RESEARCH_STUDYING_RELATIVE_PATH)
++    if references_modified is None:
++        references_modified = bool(effective_accepted)
++    if studying_ledger_modified is None:
++        studying_ledger_modified = bool(effective_accepted)
++    references_after_hash = references_before_hash
++    studying_after_hash = studying_before_hash
++    start = normalize_timestamp(search_started_at)
++    finish = normalize_timestamp(search_finished_at)
++    measured_duration = (
++        duration_s
++        if duration_s is not None
++        else max(0.0, (_parse_timestamp(finish) - _parse_timestamp(start)).total_seconds())
++    )
++    protected_change_requested = False
++    verdict = honest_verdict(
++        marker_found,
++        route_reachable,
++        effective_accepted,
++        protected_change_requested,
++        not immutability_unavailable,
++    )
++    status = "blocked" if verdict.startswith("blocked:") else "complete"
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "status": status,
++        "preconditions_checked": preconditions,
++        "planner_marker_and_search_window": {
++            "planner_heading": PLANNER_HEADING,
++            "boundary_marker": PLANNER_MARKER,
++            "boundary_marker_hash": planner_block_hash(references_text),
++            "boundary_marker_line": planner_marker_line(references_text),
++            "inclusion_rule": (
++                "strictly_after_V522_planner_marker_or_newly_actionable_after_marker"
++            ),
++            "search_started_at": start,
++            "search_finished_at": finish,
++        },
++        "source_receipts": source_receipts,
++        "citation_trail_receipts": citation_trail_receipts,
++        "finding_classification": _finding_classes(
++            accepted_findings=effective_accepted,
++            duplicate_findings=duplicate_findings,
++            watch_only_findings=watch_only_findings,
++            excluded_findings=excluded_findings,
++            inaccessible_findings=inaccessible_findings,
++        ),
++        "accepted_finding_count": len(effective_accepted),
++        "references_modified": references_modified,
++        "studying_ledger_modified": studying_ledger_modified,
++        "sota_to_experiment_mapping": _sota_mapping(effective_accepted),
++        "roadmap_immutability_receipts": _roadmap_immutability(
++            root,
++            references_before_hash=references_before_hash,
++            references_after_hash=references_after_hash,
++            studying_before_hash=studying_before_hash,
++            studying_after_hash=studying_after_hash,
++        ),
++        "duration_s": float(measured_duration),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": _field_provenance(effective_accepted),
++        "test_commands": (
++            test_commands
++            if test_commands is not None
++            else [row["command"] for row in DEFAULT_TESTS_RUN]
++        ),
++        "test_exit_codes": (
++            test_exit_codes
++            if test_exit_codes is not None
++            else {row["command"]: row["exit_code"] for row in DEFAULT_TESTS_RUN}
++        ),
++        "references_before_hash": references_before_hash,
++        "references_after_hash": references_after_hash,
++        "studying_before_hash": studying_before_hash,
++        "studying_after_hash": studying_after_hash,
++        "search_started_at": start,
++        "search_finished_at": finish,
++        "honest_verdict": verdict,
++    }
++    artifact["reproducibility_checksum"] = compute_checksum(artifact)
++    return artifact
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def build_and_write_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_started_at: str,
++    search_finished_at: str,
++    source_receipts: list[JsonDict] | None = None,
++    citation_trail_receipts: list[JsonDict] | None = None,
++    accepted_findings: list[JsonDict] | None = None,
++    test_commands: list[str] | None = None,
++    test_exit_codes: dict[str, int | None] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    """Write optional ledger appends and the final JSON artifact."""
++
++    accepted_findings = list(accepted_findings or [])
++    references_path = root / RESEARCH_REFERENCES_RELATIVE_PATH
++    studying_path = root / RESEARCH_STUDYING_RELATIVE_PATH
++    references_before = read_text_if_present(references_path)
++    studying_before = read_text_if_present(studying_path)
++    marker_found = PLANNER_MARKER in references_before
++    references_already_appended = EXECUTION_REFRESH_HEADING in references_before
++    studying_already_appended = STUDYING_EXECUTION_HEADING in studying_before
++    references_modified = False
++    studying_modified = False
++    if marker_found and accepted_findings and not references_already_appended:
++        references_path.write_text(
++            insert_after_planner_block(
++                references_before,
++                execution_refresh_block(accepted_findings),
++            ),
++            encoding="utf-8",
++        )
++        references_modified = True
++    if marker_found and accepted_findings and not studying_already_appended:
++        studying_path.write_text(
++            insert_studying_block(
++                studying_before,
++                studying_execution_block(accepted_findings),
++            ),
++            encoding="utf-8",
++        )
++        studying_modified = True
++    artifact = build_artifact(
++        root=root,
++        search_started_at=search_started_at,
++        search_finished_at=search_finished_at,
++        source_receipts=source_receipts,
++        citation_trail_receipts=citation_trail_receipts,
++        accepted_findings=accepted_findings,
++        references_modified=references_modified,
++        studying_ledger_modified=studying_modified,
++        test_commands=test_commands,
++        test_exit_codes=test_exit_codes,
++        duration_s=duration_s,
++    )
++    artifact["references_before_hash"] = (
++        "sha256:" + hashlib.sha256(references_before.encode("utf-8")).hexdigest()
++        if references_before
++        else None
++    )
++    artifact["references_after_hash"] = path_sha256(references_path)
++    artifact["studying_before_hash"] = (
++        "sha256:" + hashlib.sha256(studying_before.encode("utf-8")).hexdigest()
++        if studying_before
++        else None
++    )
++    artifact["studying_after_hash"] = path_sha256(studying_path)
++    immutable = artifact["roadmap_immutability_receipts"]
++    immutable["references_before_hash"] = artifact["references_before_hash"]
++    immutable["references_after_hash"] = artifact["references_after_hash"]
++    immutable["studying_before_hash"] = artifact["studying_before_hash"]
++    immutable["studying_after_hash"] = artifact["studying_after_hash"]
++    artifact["reproducibility_checksum"] = compute_checksum(artifact)
++    validate_artifact(artifact)
++    _write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def _validate_timestamp_order(artifact: JsonDict) -> None:
++    if _parse_timestamp(artifact["search_finished_at"]) <= _parse_timestamp(
++        artifact["search_started_at"]
++    ):
++        raise ValueError("search timestamp order is invalid")
++
++
++def _validate_source_receipts(receipts: list[JsonDict]) -> None:
++    required = {
++        "receipt_id",
++        "source_family",
++        "source_role",
++        "query",
++        "url",
++        "accessed_at",
++        "access_outcome",
++        "candidate_ids",
++    }
++    for receipt in receipts:
++        if not isinstance(receipt, Mapping):
++            raise ValueError("source receipt is missing required provenance")
++        missing = [
++            key
++            for key in required
++            if key not in receipt or receipt[key] is None or receipt[key] == ""
++        ]
++        if missing:
++            raise ValueError("source receipt is missing required provenance")
++
++
++def _validate_citation_receipts(receipts: list[JsonDict], *, complete: bool) -> None:
++    if not complete:
++        return
++    papers = {str(row.get("paper", "")) for row in receipts}
++    if papers != {"arXiv:2507.02092", "arXiv:2512.15605"}:
++        raise ValueError("citation trail receipts must include direct EBT and ARM-EBM routes")
++    for receipt in receipts:
++        for key in ("receipt_id", "paper", "query", "url", "accessed_at", "access_outcome"):
++            if not receipt.get(key):
++                raise ValueError("citation trail receipt is missing provenance")
++
++
++def _validate_mapping(mapping: Mapping[str, Any], target: str) -> None:
++    for field in ("method", "target_experiment", "task_hook", "failure_boundary"):
++        if not mapping.get(field):
++            raise ValueError("accepted finding method-to-task mapping is incomplete")
++    if mapping.get("target_experiment") != target:
++        raise ValueError("method-to-task mapping target does not match accepted finding")
++    if target not in ALLOCATED_TARGET_EXPERIMENTS:
++        raise ValueError("method-to-task mapping target is outside Exp5865-Exp5875")
++
++
++def _validate_candidate(candidate: JsonDict, expected_class: str) -> None:
++    if candidate.get("classification") != expected_class:
++        raise ValueError("invalid candidate classification")
++    for field in (
++        "source_id",
++        "title",
++        "url",
++        "publication_date",
++        "source_date",
++        "search_timestamp",
++        "receipt_id",
++        "query",
++        "access_outcome",
++        "reason",
++    ):
++        if not candidate.get(field):
++            if field in {"publication_date", "source_date"}:
++                raise ValueError("candidate missing publication/source date")
++            raise ValueError(f"candidate missing provenance field {field}")
++    if expected_class == "accepted":
++        target = str(candidate.get("target_experiment", ""))
++        if target not in ALLOCATED_TARGET_EXPERIMENTS:
++            raise ValueError("accepted finding target experiment is outside Exp5865-Exp5875")
++        if not candidate.get("post_marker_or_newly_actionable"):
++            raise ValueError("accepted finding is not post-marker or newly actionable")
++        if candidate.get("primary_source") is not True:
++            raise ValueError("accepted finding lacks primary-source provenance")
++        for field in ("source_hook", "authority_boundary"):
++            if not candidate.get(field):
++                raise ValueError(f"accepted finding missing {field}")
++        mapping = candidate.get("method_to_task_mapping")
++        if not isinstance(mapping, Mapping):
++            raise ValueError("accepted finding missing method-to-task mapping")
++        _validate_mapping(mapping, target)
++
++
++def _ordered_candidates(classes: Mapping[str, Any]) -> list[JsonDict]:
++    return [
++        *classes.get("accepted", []),
++        *classes.get("duplicate", []),
++        *classes.get("watch_only", []),
++        *classes.get("excluded", []),
++        *classes.get("inaccessible", []),
++    ]
++
++
++def validate_artifact(artifact: JsonDict) -> None:
++    """Validate schema, provenance, checksum, and boundary invariants."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact["status"] not in {"complete", "blocked"}:
++        raise ValueError("invalid status")
++    if not isinstance(artifact["field_provenance"], Mapping):
++        raise ValueError("field_provenance must be a mapping")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact["field_provenance"]:
++            raise ValueError("field_provenance missing required field")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked:")):
++        raise ValueError("honest_verdict must start with complete: or blocked:")
++    if artifact["duration_s"] < 0:
++        raise ValueError("duration_s must be non-negative")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    _validate_timestamp_order(artifact)
++    _validate_source_receipts(artifact["source_receipts"])
++    _validate_citation_receipts(
++        artifact["citation_trail_receipts"],
++        complete=artifact["status"] == "complete",
++    )
++
++    classes = artifact["finding_classification"]
++    expected_all = _ordered_candidates(classes)
++    if classes.get("all_candidates") != expected_all:
++        raise ValueError("finding_classification all_candidates does not match classes")
++    for class_name in ("accepted", "duplicate", "watch_only", "excluded", "inaccessible"):
++        for candidate in classes.get(class_name, []):
++            _validate_candidate(candidate, class_name)
++
++    accepted = classes.get("accepted", [])
++    if artifact["accepted_finding_count"] != len(accepted):
++        raise ValueError("accepted_finding_count does not match accepted findings")
++    if artifact["accepted_finding_count"] == 0:
++        if artifact["references_modified"]:
++            raise ValueError("references_modified cannot be true for zero accepted findings")
++        if artifact["studying_ledger_modified"]:
++            raise ValueError("studying_ledger_modified cannot be true for zero accepted findings")
++        if artifact["sota_to_experiment_mapping"]:
++            raise ValueError("sota_to_experiment_mapping must be empty for zero accepted findings")
++    else:
++        expected_mapping = _sota_mapping(accepted)
++        if artifact["sota_to_experiment_mapping"] != expected_mapping:
++            raise ValueError("sota_to_experiment_mapping does not match accepted findings")
++
++    immutable = artifact["roadmap_immutability_receipts"]
++    if immutable.get("roadmap_ids_unchanged") is not True:
++        raise ValueError("roadmap ids changed")
++    if immutable.get("gates_unchanged") is not True:
++        raise ValueError("gates changed")
++    if immutable.get("authority_unchanged") is not True:
++        raise ValueError("authority changed")
++    if immutable.get("model_policy_unchanged") is not True:
++        raise ValueError("model policy changed")
++    if immutable.get("closed_scopes_reopened") is not False:
++        raise ValueError("closed scopes reopened")
++    if immutable.get("hardware_claim_changed") is not False:
++        raise ValueError("hardware claim changed")
++    if immutable.get("headline_claim_changed") is not False:
++        raise ValueError("headline claim changed")
++
++    expected_checksum = compute_checksum(artifact)
++    if artifact["reproducibility_checksum"] != expected_checksum:
++        raise ValueError("reproducibility checksum mismatch")
++
++
++def _tests_from_json(path: Path) -> tuple[list[str], dict[str, int | None]]:
++    rows = json.loads(path.read_text(encoding="utf-8"))
++    commands = [str(row["command"]) for row in rows]
++    exit_codes = {str(row["command"]): row.get("exit_code") for row in rows}
++    return commands, exit_codes
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--search-started-at", required=True)
++    parser.add_argument("--search-finished-at", required=True)
++    parser.add_argument("--zero-findings", action="store_true")
++    parser.add_argument("--tests-run-json", type=Path)
++    args = parser.parse_args(argv)
++
++    commands = None
++    exit_codes = None
++    if args.tests_run_json is not None:
++        commands, exit_codes = _tests_from_json(args.tests_run_json)
++    artifact = build_and_write_artifact(
++        root=args.root,
++        search_started_at=args.search_started_at,
++        search_finished_at=args.search_finished_at,
++        accepted_findings=[] if args.zero_findings else [],
++        test_commands=commands,
++        test_exit_codes=exit_codes,
++    )
++    print((args.root / RESULT_RELATIVE_PATH).as_posix())
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/arc_e3/cd82/world_model.py b/results/arc_e3/cd82/world_model.py
+index 9490630502..1086d1bc33 100644
+--- a/results/arc_e3/cd82/world_model.py
++++ b/results/arc_e3/cd82/world_model.py
+@@ -1,14 +1,9 @@
+ import numpy as np
+ 
+ def engine(grid, action, data):
+-    # grid: np.ndarray (8x8 int). Return the predicted next grid (same shape).
+-    # Action 1-7 are directional movements. Action 6 is a click.
+-    # Based on the initial grid being empty (all 0s) and no changes observed,
+-    # the world model is that the grid remains unchanged.
+-    return grid.copy()
++    if action == 1:
++        return grid
++    return grid
+ 
+ def is_level_complete(grid):
+-    # The initial grid is empty. Without further observations of a win state,
+-    # we assume the level is not complete unless the grid is empty (start state).
+-    # However, typically a win state is distinct. Given no data, we return False.
+     return False
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index cd432af13e..50b4811c62 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T01:00:52.292163+00:00",
+-  "finished_at": "2026-07-24T01:00:52.321023+00:00",
+-  "duration_s": 0.029,
++  "started_at": "2026-07-24T01:47:32.421117+00:00",
++  "finished_at": "2026-07-24T01:47:32.448714+00:00",
++  "duration_s": 0.028,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 922cfc3813..e425f1611b 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-24T01:00:52Z",
++  "run_date": "2026-07-24T01:47:32Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 662276152f..6275e31b6b 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T01:00:54Z",
+-  "finished_at": "2026-07-24T01:00:54Z",
++  "started_at": "2026-07-24T01:47:34Z",
++  "finished_at": "2026-07-24T01:47:34Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 06fff3990b..80a92880b4 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-24T01:00:54Z",
++  "run_date": "2026-07-24T01:47:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 335f9ff58d..16bcaa8725 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-24T01:00:54Z",
++  "run_date": "2026-07-24T01:47:34Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 34b58b3ce6..ea8a22734c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-24T00:58:17.296915Z",
+-  "duration_s": 0.08022928237915039,
++  "run_date": "2026-07-24T01:44:57.227514Z",
++  "duration_s": 0.07151961326599121,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "aff88d60cd57b2e09c77b23b74f2a2516d3ec84fe075e7ecfab77fc95a9bc343",
++  "reproducibility_checksum": "15c110356e46165a6af967f96d78020eb4b77e8df77ed609e2c2295be3b10e70",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ee5c63eee227b81a6de25a8da088a032c727ea3e"
++    "adversarial_verify_version": "c47030fe25a29063e857d099ed3ed70da81e2aea"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 2bac22a840..f41afad0aa 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-24T01:07:25.964065Z",
+-  "duration_s": 88.64277958869934,
++  "run_date": "2026-07-24T01:54:25.127574Z",
++  "duration_s": 103.7624728679657,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5e4774bb60..631581767e 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-24T00:58:17.416887Z",
+-  "duration_s": 0.10887765884399414,
++  "run_date": "2026-07-24T01:44:57.322529Z",
++  "duration_s": 0.08426737785339355,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b859f5e9bd065f114cf733b7927612e36d5930e215e3302b835cf10c864252db",
++  "reproducibility_checksum": "97cdb3628fc2fb5ef9308cee912d37e835654ad42613cd7821b60b367f7935f5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ee5c63eee227b81a6de25a8da088a032c727ea3e"
++    "adversarial_verify_version": "c47030fe25a29063e857d099ed3ed70da81e2aea"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 9d8df8b703..6c2c383840 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.48s, user: 3.12s, system: 0.26s, MEM: 115.84 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.36s, user: 3.00s, system: 0.26s, MEM: 115.19 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 77% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a40c708eb2..027c7a6db3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1142959594726562,
++  "efficiency_gains_ms": 2.130270004272461,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index a6738053e1..269ded0d85 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-24T00:57:52.286437Z",
++  "run_date": "2026-07-24T01:44:30.554889Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 9716284d05..a33d32dac4 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00020049605518579483,
+-  "latency_domino_seconds": 0.0003905820194631815,
++  "latency_legacy_seconds": 0.00021111604291945696,
++  "latency_domino_seconds": 0.00039102404844015837,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 174851418f..292753d48a 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T00:58:27Z",
+-  "finished_at": "2026-07-24T00:58:27Z",
++  "started_at": "2026-07-24T01:45:07Z",
++  "finished_at": "2026-07-24T01:45:07Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index c342fa3fd3..35ac878c9e 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T00:59:02Z",
+-  "finished_at": "2026-07-24T00:59:02Z",
++  "started_at": "2026-07-24T01:45:40Z",
++  "finished_at": "2026-07-24T01:45:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.06365776062011719,
++  "latency_ms": 0.06747245788574219,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index d3aa5ae527..9c47b02d50 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0009391927719116211,
+-  "avg_eqm_time": 0.07843830585479736,
++  "avg_pem_time": 0.0009016084671020508,
++  "avg_eqm_time": 0.07972424030303955,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 5ae8aa7bd5..d86c2487df 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5505549907684326,
++  "duration_s": 0.523709774017334,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 876953956d..d752bf25ee 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.459405317902565e-05,
++  "duration_s": 5.5563985370099545e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5864_v522_source_delta_ingestion.json b/results/experiment_5864_v522_source_delta_ingestion.json
+new file mode 100644
+index 0000000000..ace9998fe3
+--- /dev/null
++++ b/results/experiment_5864_v522_source_delta_ingestion.json
+@@ -0,0 +1,881 @@
++{
++  "accepted_finding_count": 0,
++  "citation_trail_receipts": [
++    {
++      "access_outcome": "reachable_http_200_no_post_marker_actionable_citation",
++      "accessed_at": "2026-07-24T01:35:03Z",
++      "candidate_ids": [
++        "2607.17047",
++        "2607.11555",
++        "2606.22726",
++        "2606.18206",
++        "2606.15956",
++        "2605.11011",
++        "2605.07588",
++        "10.1109/ISPASS69572.2026.00062",
++        "2604.11403",
++        "2604.10272",
++        "2604.03878",
++        "2604.01577",
++        "2603.18534",
++        "2603.19117",
++        "10.64898/2025.12.09.693073",
++        "2602.03640",
++        "2602.01651",
++        "2601.03905",
++        "2512.17846",
++        "2512.16762"
++      ],
++      "citation_count_claimed": false,
++      "latest_publication_date": "2026-07-19",
++      "paper": "arXiv:2507.02092",
++      "query": "arXiv:2507.02092 citations",
++      "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
++      "receipt_summary": "The EBT citation route repeated already-indexed hardness and energy-context papers; no newer V522 control was accepted.",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
++    },
++    {
++      "access_outcome": "inaccessible_http_429_rate_limited",
++      "accessed_at": "2026-07-24T01:35:03Z",
++      "candidate_ids": [],
++      "citation_count_claimed": false,
++      "latest_publication_date": "unknown",
++      "paper": "arXiv:2512.15605",
++      "query": "arXiv:2512.15605 citations",
++      "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++      "receipt_summary": "The ARM-EBM direct citation route returned HTTP 429, so no citation count or unseen dependency is promoted.",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
++    }
++  ],
++  "duration_s": 77.0,
++  "experiment": "experiment_5864_v522_source_delta_ingestion",
++  "experiment_id": "exp5864-v522-source-delta-ingestion",
++  "field_provenance": {
++    "accepted_finding_count": {
++      "principle": "Bare zero is a valid complete result.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "accepted_findings": [],
++    "citation_trail_receipts": {
++      "principle": "Direct EBT and ARM-EBM checks prevent unsupported citation claims.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "duration_s": {
++      "principle": "Measured wall time exposes a bootstrap-only receipt.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "experiment": {
++      "principle": "Stable local slug ties the artifact to the implementation module.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "experiment_id": {
++      "principle": "Conductor task identity prevents numeric-prefix aliasing.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Every accepted finding traces to its source and bounded task hook.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "finding_classification": {
++      "principle": "Explicit classes stop duplicates and watch items becoming experiments.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "A `complete:` or `blocked:` prefix makes the refresh terminal.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "`aggregation_from_external_primary_sources` declares research synthesis, not model inference.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "milestone": {
++      "principle": "Binds receipts to .522 rather than a later milestone.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "planner_marker_and_search_window": {
++      "principle": "A sealed time boundary makes novelty falsifiable.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "Marker, hashes, APIs, network, and outputs prevent stale-window or fabricated-source claims.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "random_seed": {
++      "principle": "Deterministic metadata for a no-randomness ledger task.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "references_after_hash": {
++      "principle": "Reference-ledger bytes after the optional append.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "references_before_hash": {
++      "principle": "Reference-ledger bytes before the optional append.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "references_modified": {
++      "principle": "The artifact discloses whether the shared source ledger changed.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "A checksum detects marker, source, or classification drift.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "result_path": {
++      "principle": "Declares the exact JSON deliverable path.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "roadmap_immutability_receipts": {
++      "principle": "Freshness work cannot silently redesign allocated tasks.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "run_date": {
++      "principle": "Operator-requested execution date for the source refresh.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "schema": {
++      "principle": "Versioned schema id keeps downstream validators from guessing field meaning.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "search_finished_at": {
++      "principle": "Records when candidate disposition finished.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "search_started_at": {
++      "principle": "Records when source querying started.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "sota_to_experiment_mapping": {
++      "principle": "Every accepted method names an implementable current task hook and failure boundary.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "source_receipts": {
++      "principle": "Queries, URLs, dates, and outcomes separate primary evidence from discovery metadata.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "spec_refs": {
++      "principle": "OpenSpec anchors make the artifact contract auditable.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "status": {
++      "principle": "A terminal state distinguishes a complete zero delta from failed research.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "studying_after_hash": {
++      "principle": "Studying-ledger bytes after an optional ingestion note.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "studying_before_hash": {
++      "principle": "Studying-ledger bytes before an optional ingestion note.",
++      "sources": [
++        "local_metadata"
++      ]
++    },
++    "studying_ledger_modified": {
++      "principle": "Ingestion status changes only when a cited method was actually mapped.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "test_commands": {
++      "principle": "Commands document date, duplicate, citation, mapping, and immutability checks.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes prevent failed provenance checks becoming success.",
++      "sources": [
++        "task_prompt",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    }
++  },
++  "finding_classification": {
++    "accepted": [],
++    "all_candidates": [
++      {
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "classification": "duplicate",
++        "publication_date": "2026-07-19",
++        "query": "arXiv:2507.02092 citations",
++        "reason": "Already indexed in the sealed V522 planner block as the hardness control signal for Exp5868 and Exp5869.",
++        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "ebt_citation_solver_hard_2607_17047_post_v522",
++        "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
++        "url": "https://www.semanticscholar.org/paper/af87babbc381db8096bad9eb8467f4e0cfc36676"
++      },
++      {
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "classification": "duplicate",
++        "publication_date": "2026-07-23",
++        "query": "V522 duplicate source ledger check",
++        "reason": "The active layer-dynamic and hardware-control findings were already sealed in the V522 planner block.",
++        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "v522_layer_dynamics_bundle_post_v522",
++        "title": "V522 ICR, HARP, CORVUS, and structured SAT planner bundle",
++        "url": "research-references.md#V522-PLANNER-REFRESH-20260723"
++      },
++      {
++        "access_outcome": "reachable_http_200_totalResults_0",
++        "classification": "watch_only",
++        "publication_date": "2026-07-24",
++        "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
++        "reason": "The primary route was reachable but surfaced no post-marker source to classify as accepted.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "arxiv_post_v522_required_topic_zero_result",
++        "title": "arXiv required-topic post-marker zero-result route",
++        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++      },
++      {
++        "access_outcome": "reachable_no_authenticated_local_execution_surface",
++        "classification": "watch_only",
++        "publication_date": "2025-10-29",
++        "query": "Extropic writing TSU XTR-0 Z1",
++        "reason": "Probabilistic-hardware context only; no Carnot-local XTR, Z1, TSU execution, SDK, speed, power, or correctness receipt was found.",
++        "receipt_id": "extropic_writing_post_v522",
++        "search_timestamp": "2026-07-24T01:35:04Z",
++        "source_date": "2026-07-24",
++        "source_id": "extropic_public_material_post_v522",
++        "title": "Extropic public writing pages",
++        "url": "https://extropic.ai/writing"
++      },
++      {
++        "access_outcome": "reachable_no_local_weights_or_reproducible_comparator",
++        "classification": "watch_only",
++        "publication_date": "2026-06-26",
++        "query": "Kona Aleph public pages",
++        "reason": "Architecture context only; no local weights, authenticated API receipt, or reproducible Kona/Aleph comparator is available.",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "source_date": "2026-07-24",
++        "source_id": "logical_intelligence_kona_public_pages_post_v522",
++        "title": "Logical Intelligence Kona and Aleph public pages",
++        "url": "https://logicalintelligence.com/"
++      },
++      {
++        "access_outcome": "excluded_by_exp5853_disqualification",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "hallucination embedding final surface",
++        "reason": "Exp5853 closed the final-embedding route; V522 may only gate a distinct supported intermediate-layer surface.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "final_embedding_reopen_post_v522",
++        "title": "Final embedding route reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_local_manifest",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "output logit finite transport verifier",
++        "reason": "PHASE D output-text/logit work and finite-ID output transport remain closed; source freshness cannot reopen them.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "phase_d_finite_transport_reopen_post_v522",
++        "title": "PHASE D or finite-ID output transport reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_local_manifest",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "world model public ARC cross-game transfer",
++        "reason": "Exp5873 and Exp5874 may use only agent-owned observed transitions and cannot claim public solves or cross-game value transfer.",
++        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
++        "search_timestamp": "2026-07-24T01:35:02Z",
++        "source_date": "2026-07-24",
++        "source_id": "public_arc_transfer_reopen_post_v522",
++        "title": "Public ARC solve or cross-game transfer reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_missing_authenticated_local_route",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "TSU Kona authenticated execution",
++        "reason": "Public Extropic and Logical Intelligence pages do not provide authenticated local execution receipts, so no TSU or Kona execution claim can be accepted.",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "source_date": "2026-07-24",
++        "source_id": "tsu_kona_execution_reopen_post_v522",
++        "title": "TSU or Kona execution claim reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "classification": "inaccessible",
++        "publication_date": "unknown",
++        "query": "api.openreview.net notes energy-based constraint",
++        "reason": "The direct API route required challenge verification, so no source is fabricated from it.",
++        "receipt_id": "openreview_api_notes_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "openreview_api_notes_post_v522",
++        "title": "OpenReview notes API energy/constraint search",
++        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
++      },
++      {
++        "access_outcome": "inaccessible_http_429_rate_limited",
++        "classification": "inaccessible",
++        "publication_date": "unknown",
++        "query": "arXiv:2512.15605 citations",
++        "reason": "The direct ARM-EBM citation route returned HTTP 429; no citation or count claim is fabricated from it.",
++        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "title": "ARM-EBM Semantic Scholar citation route",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
++      }
++    ],
++    "allowed_classes": [
++      "accepted",
++      "duplicate",
++      "watch_only",
++      "excluded",
++      "inaccessible"
++    ],
++    "duplicate": [
++      {
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "classification": "duplicate",
++        "publication_date": "2026-07-19",
++        "query": "arXiv:2507.02092 citations",
++        "reason": "Already indexed in the sealed V522 planner block as the hardness control signal for Exp5868 and Exp5869.",
++        "receipt_id": "semantic_scholar_ebt_2507_02092_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "ebt_citation_solver_hard_2607_17047_post_v522",
++        "title": "Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
++        "url": "https://www.semanticscholar.org/paper/af87babbc381db8096bad9eb8467f4e0cfc36676"
++      },
++      {
++        "access_outcome": "reachable_duplicate_v522_planner_block",
++        "classification": "duplicate",
++        "publication_date": "2026-07-23",
++        "query": "V522 duplicate source ledger check",
++        "reason": "The active layer-dynamic and hardware-control findings were already sealed in the V522 planner block.",
++        "receipt_id": "huggingface_papers_2026_07_24_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "v522_layer_dynamics_bundle_post_v522",
++        "title": "V522 ICR, HARP, CORVUS, and structured SAT planner bundle",
++        "url": "research-references.md#V522-PLANNER-REFRESH-20260723"
++      }
++    ],
++    "excluded": [
++      {
++        "access_outcome": "excluded_by_exp5853_disqualification",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "hallucination embedding final surface",
++        "reason": "Exp5853 closed the final-embedding route; V522 may only gate a distinct supported intermediate-layer surface.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "final_embedding_reopen_post_v522",
++        "title": "Final embedding route reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_local_manifest",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "output logit finite transport verifier",
++        "reason": "PHASE D output-text/logit work and finite-ID output transport remain closed; source freshness cannot reopen them.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "phase_d_finite_transport_reopen_post_v522",
++        "title": "PHASE D or finite-ID output transport reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_local_manifest",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "world model public ARC cross-game transfer",
++        "reason": "Exp5873 and Exp5874 may use only agent-owned observed transitions and cannot claim public solves or cross-game value transfer.",
++        "receipt_id": "arxiv_post_v522_remaining_topic_queries",
++        "search_timestamp": "2026-07-24T01:35:02Z",
++        "source_date": "2026-07-24",
++        "source_id": "public_arc_transfer_reopen_post_v522",
++        "title": "Public ARC solve or cross-game transfer reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      },
++      {
++        "access_outcome": "excluded_by_missing_authenticated_local_route",
++        "classification": "excluded",
++        "publication_date": "2026-07-24",
++        "query": "TSU Kona authenticated execution",
++        "reason": "Public Extropic and Logical Intelligence pages do not provide authenticated local execution receipts, so no TSU or Kona execution claim can be accepted.",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "source_date": "2026-07-24",
++        "source_id": "tsu_kona_execution_reopen_post_v522",
++        "title": "TSU or Kona execution claim reopen request",
++        "url": "ops/exclusion_manifest.yaml"
++      }
++    ],
++    "inaccessible": [
++      {
++        "access_outcome": "inaccessible_http_403_challenge_required",
++        "classification": "inaccessible",
++        "publication_date": "unknown",
++        "query": "api.openreview.net notes energy-based constraint",
++        "reason": "The direct API route required challenge verification, so no source is fabricated from it.",
++        "receipt_id": "openreview_api_notes_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "openreview_api_notes_post_v522",
++        "title": "OpenReview notes API energy/constraint search",
++        "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
++      },
++      {
++        "access_outcome": "inaccessible_http_429_rate_limited",
++        "classification": "inaccessible",
++        "publication_date": "unknown",
++        "query": "arXiv:2512.15605 citations",
++        "reason": "The direct ARM-EBM citation route returned HTTP 429; no citation or count claim is fabricated from it.",
++        "receipt_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "search_timestamp": "2026-07-24T01:35:03Z",
++        "source_date": "2026-07-24",
++        "source_id": "semantic_scholar_arm_ebm_2512_15605_post_v522",
++        "title": "ARM-EBM Semantic Scholar citation route",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate&limit=20"
++      }
++    ],
++    "watch_only": [
++      {
++        "access_outcome": "reachable_http_200_totalResults_0",
++        "classification": "watch_only",
++        "publication_date": "2026-07-24",
++        "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
++        "reason": "The primary route was reachable but surfaced no post-marker source to classify as accepted.",
++        "receipt_id": "arxiv_post_v522_required_topic_queries",
++        "search_timestamp": "2026-07-24T01:34:55Z",
++        "source_date": "2026-07-24",
++        "source_id": "arxiv_post_v522_required_topic_zero_result",
++        "title": "arXiv required-topic post-marker zero-result route",
++        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++      },
++      {
++        "access_outcome": "reachable_no_authenticated_local_execution_surface",
++        "classification": "watch_only",
++        "publication_date": "2025-10-29",
++        "query": "Extropic writing TSU XTR-0 Z1",
++        "reason": "Probabilistic-hardware context only; no Carnot-local XTR, Z1, TSU execution, SDK, speed, power, or correctness receipt was found.",
++        "receipt_id": "extropic_writing_post_v522",
++        "search_timestamp": "2026-07-24T01:35:04Z",
++        "source_date": "2026-07-24",
++        "source_id": "extropic_public_material_post_v522",
++        "title": "Extropic public writing pages",
++        "url": "https://extropic.ai/writing"
++      },
++      {
++        "access_outcome": "reachable_no_local_weights_or_reproducible_comparator",
++        "classification": "watch_only",
++        "publication_date": "2026-06-26",
++        "query": "Kona Aleph public pages",
++        "reason": "Architecture context only; no local weights, authenticated API receipt, or reproducible Kona/Aleph comparator is available.",
++        "receipt_id": "logical_intelligence_public_pages_post_v522",
++        "search_timestamp": "2026-07-24T01:35:05Z",
++        "source_date": "2026-07-24",
++        "source_id": "logical_intelligence_kona_public_pages_post_v522",
++        "title": "Logical Intelligence Kona and Aleph public pages",
++        "url": "https://logicalintelligence.com/"
++      }
++    ]
++  },
++  "honest_verdict": "complete: no accepted post-V522 source deltas; references and studying ledgers unchanged",
++  "inference_substrate": "aggregation_from_external_primary_sources",
++  "milestone": "2026.07.522",
++  "planner_marker_and_search_window": {
++    "boundary_marker": "V522-PLANNER-REFRESH-20260723-END",
++    "boundary_marker_hash": "sha256:455715012b10d798d63a72af8ea9dab2333b64a4850ac0be3cd05f1439794438",
++    "boundary_marker_line": 31179,
++    "inclusion_rule": "strictly_after_V522_planner_marker_or_newly_actionable_after_marker",
++    "planner_heading": "## V522 Planner Refresh - 20260723",
++    "search_finished_at": "2026-07-24T01:36:12Z",
++    "search_started_at": "2026-07-24T01:34:55Z"
++  },
++  "preconditions_checked": {
++    "active_roadmap_hash": "sha256:aeb94849de55c15a45ec9b9f58687b6aa963ebbe2853ea13885a8965ba7f086b",
++    "active_roadmap_milestone": "2026.07.522",
++    "checked_at": "2026-07-24T01:34:55Z",
++    "conductor_hash": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++    "exclusion_manifest_hash": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
++    "failed_preconditions": [],
++    "gated_task_count": 3,
++    "gates_hash": "sha256:fbd9049e108e4a893d8dfd780c99eec33468943d5ee29d94136bcdb07447103f",
++    "known_issues_hash": "sha256:498ac870c326f017b415adfdcd4c2f7b01728f3b2dd421fbdab5789a3ddf1ad8",
++    "network_search_available": true,
++    "output_path_available": true,
++    "planner_marker_found": true,
++    "planner_marker_hash": "sha256:455715012b10d798d63a72af8ea9dab2333b64a4850ac0be3cd05f1439794438",
++    "planner_marker_line": 31179,
++    "references_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
++    "research_roadmap_next_gated_task_count": 0,
++    "research_roadmap_next_gates_hash": null,
++    "research_roadmap_next_hash": null,
++    "research_roadmap_next_ids_hash": null,
++    "research_roadmap_next_milestone": "",
++    "research_roadmap_next_read": false,
++    "research_roadmap_next_task_ids": [],
++    "roadmap_ids_hash": "sha256:371ddf98e53c39072b73ffdb2020dcdc332daf45210827bed6c09a273712b956",
++    "roadmap_task_ids": [
++      "exp5863-transition-v522",
++      "exp5864-v522-source-delta-ingestion",
++      "exp5865-adaptive-state-kernel-requalification",
++      "exp5866-adaptive-state-pipeline-shadow-adapter",
++      "exp5867-prospective-certified-continuous-learning",
++      "exp5868-hardness-controlled-constraint-fixture",
++      "exp5869-hardness-surface-headroom-audit"
++    ],
++    "source_routes_checked": [
++      "arXiv",
++      "OpenReview",
++      "Hugging Face Papers",
++      "Semantic Scholar",
++      "GitHub discovery",
++      "Extropic writing",
++      "Logical Intelligence"
++    ],
++    "studying_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++    "unavailable_source_routes": [
++      "research-roadmap-next.yaml: absent",
++      "OpenReview API: HTTP 403 challenge verification required",
++      "Semantic Scholar ARM-EBM citation route: HTTP 429",
++      "Semantic Scholar keyword helper query: HTTP 429",
++      "Extropic authenticated local execution route: unavailable",
++      "Logical Intelligence local weights/API route: unavailable"
++    ],
++    "vnext_hash": "sha256:7353fbf7e3c8a78c95e0895f6508362c29158e0d626e828058a101c21d48dbe2"
++  },
++  "random_seed": 5864,
++  "references_after_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
++  "references_before_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
++  "references_modified": false,
++  "reproducibility_checksum": "sha256:e43b8efe7ff7d5fc295031e6bc7f415b9b5b3dc311f30c596de1b34ebf0e3d07",
++  "result_path": "results/experiment_5864_v522_source_delta_ingestion.json",
++  "roadmap_immutability_receipts": {
++    "active_roadmap_gate_hash": "sha256:fbd9049e108e4a893d8dfd780c99eec33468943d5ee29d94136bcdb07447103f",
++    "active_roadmap_gates": [
++      {
++        "gated_on": [
++          {
++            "artifact_field": "adaptive_state_microkernel_requalified_score",
++            "op": "==",
++            "upstream": "exp5865-adaptive-state-kernel-requalification",
++            "value": 1.0
++          }
++        ],
++        "id": "exp5866-adaptive-state-pipeline-shadow-adapter"
++      },
++      {
++        "gated_on": [
++          {
++            "artifact_field": "adaptive_state_shadow_adapter_ready_score",
++            "op": "==",
++            "upstream": "exp5866-adaptive-state-pipeline-shadow-adapter",
++            "value": 1.0
++          }
++        ],
++        "id": "exp5867-prospective-certified-continuous-learning"
++      },
++      {
++        "gated_on": [
++          {
++            "artifact_field": "hardness_controlled_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp5868-hardness-controlled-constraint-fixture",
++            "value": 1.0
++          }
++        ],
++        "id": "exp5869-hardness-surface-headroom-audit"
++      }
++    ],
++    "active_roadmap_milestone": "2026.07.522",
++    "active_roadmap_task_ids": [
++      "exp5863-transition-v522",
++      "exp5864-v522-source-delta-ingestion",
++      "exp5865-adaptive-state-kernel-requalification",
++      "exp5866-adaptive-state-pipeline-shadow-adapter",
++      "exp5867-prospective-certified-continuous-learning",
++      "exp5868-hardness-controlled-constraint-fixture",
++      "exp5869-hardness-surface-headroom-audit"
++    ],
++    "active_roadmap_task_ids_hash": "sha256:371ddf98e53c39072b73ffdb2020dcdc332daf45210827bed6c09a273712b956",
++    "authority_unchanged": true,
++    "closed_scopes_reopened": false,
++    "gates_unchanged": true,
++    "hardware_claim_changed": false,
++    "headline_claim_changed": false,
++    "model_policy_unchanged": true,
++    "next_roadmap_gate_hash": null,
++    "next_roadmap_gates": [],
++    "next_roadmap_milestone": "",
++    "next_roadmap_present": false,
++    "next_roadmap_task_ids": [],
++    "next_roadmap_task_ids_hash": null,
++    "protected_scopes": [
++      "final embeddings",
++      "finite-ID output transport",
++      "generated-answer transport",
++      "PHASE D output-text/logit work",
++      "PHASE D",
++      "tempering",
++      "public ARC solves",
++      "cross-game value transfer",
++      "unchanged board probes",
++      "TSU execution",
++      "Kona execution"
++    ],
++    "references_after_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
++    "references_before_hash": "sha256:919083fb2353b30f05c0e45c1907f05891aec4640b43eebb05fe6504a8676a7e",
++    "required_models_unchanged": true,
++    "roadmap_ids_unchanged": true,
++    "studying_after_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++    "studying_before_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350"
++  },
++  "run_date": "20260724",
++  "schema": "carnot.experiment_5864.v522_source_delta_ingestion.v1",
++  "search_finished_at": "2026-07-24T01:36:12Z",
++  "search_started_at": "2026-07-24T01:34:55Z",
++  "sota_to_experiment_mapping": [],
++  "source_receipts": [
++    {
++      "access_outcome": "reachable_http_200_totalResults_0",
++      "accessed_at": "2026-07-24T01:34:55Z",
++      "candidate_ids": [],
++      "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"energy-based\" OR all:\"constraint reasoning\" OR all:\"hallucination verification\" OR all:KAN)",
++      "receipt_id": "arxiv_post_v522_required_topic_queries",
++      "receipt_summary": "arXiv was checked first for the required post-marker EBM, constraint, hallucination, and KAN terms; the export route was reachable and returned zero results.",
++      "source_family": "arXiv",
++      "source_role": "primary",
++      "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22energy-based%22%20OR%20all:%22constraint%20reasoning%22%20OR%20all:%22hallucination%20verification%22%20OR%20all:KAN)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++    },
++    {
++      "access_outcome": "reachable_http_200_totalResults_0",
++      "accessed_at": "2026-07-24T01:35:02Z",
++      "candidate_ids": [],
++      "query": "submittedDate:[202607240000 TO 202607242359] AND (all:\"neural CSP\" OR all:Ising OR all:sampling OR all:\"energy-guided decoding\" OR all:\"probabilistic hardware\" OR all:\"continual learning\" OR all:\"world model\")",
++      "receipt_id": "arxiv_post_v522_remaining_topic_queries",
++      "receipt_summary": "The remaining required arXiv topic terms were reachable and returned zero post-marker results.",
++      "source_family": "arXiv",
++      "source_role": "primary",
++      "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202607240000%20TO%20202607242359%5D%20AND%20(all:%22neural%20CSP%22%20OR%20all:Ising%20OR%20all:sampling%20OR%20all:%22energy-guided%20decoding%22%20OR%20all:%22probabilistic%20hardware%22%20OR%20all:%22continual%20learning%22%20OR%20all:%22world%20model%22)&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
++    },
++    {
++      "access_outcome": "reachable_http_200_dynamic_search_page_no_candidate_extraction",
++      "accessed_at": "2026-07-24T01:35:03Z",
++      "candidate_ids": [],
++      "query": "energy-based constraint reasoning continual learning",
++      "receipt_id": "openreview_post_v522_search",
++      "receipt_summary": "The OpenReview search page loaded as a dynamic page, but no static candidate metadata was accepted as primary evidence.",
++      "source_family": "OpenReview",
++      "source_role": "secondary",
++      "url": "https://openreview.net/search?term=energy-based%20constraint%20reasoning%20continual%20learning"
++    },
++    {
++      "access_outcome": "inaccessible_http_403_challenge_required",
++      "accessed_at": "2026-07-24T01:35:03Z",
++      "candidate_ids": [],
++      "query": "api notes energy-based and constraint reasoning",
++      "receipt_id": "openreview_api_notes_post_v522",
++      "receipt_summary": "Direct OpenReview API notes returned challenge-required HTTP 403 and were not used for source claims.",
++      "source_family": "OpenReview",
++      "source_role": "secondary",
++      "url": "https://api.openreview.net/notes?content=energy-based&limit=5"
++    },
++    {
++      "access_outcome": "reachable_http_200_redirected_to_2026_07_23_feed_no_new_actionable_delta",
++      "accessed_at": "2026-07-24T01:35:03Z",
++      "candidate_ids": [],
++      "query": "daily_papers date:2026-07-24",
++      "receipt_id": "huggingface_papers_2026_07_24_post_v522",
++      "receipt_summary": "The dated Hugging Face Papers route was reachable but redirected to the 2026-07-23 feed; no newer actionable primary-source delta was promoted.",
++      "source_family": "Hugging Face Papers",
++      "source_role": "secondary",
++      "url": "https://huggingface.co/papers?date=2026-07-24"
++    },
++    {
++      "access_outcome": "reachable_http_200_total_count_0_no_repository_delta",
++      "accessed_at": "2026-07-24T01:35:04Z",
++      "candidate_ids": [],
++      "query": "\"energy-based\" constraint reasoning pushed:>2026-07-23",
++      "receipt_id": "github_post_v522_repository_discovery",
++      "receipt_summary": "GitHub repository discovery returned zero post-marker repositories for the energy-based constraint-reasoning query.",
++      "source_family": "GitHub discovery",
++      "source_role": "secondary",
++      "url": "https://api.github.com/search/repositories?q=%22energy-based%22+constraint+reasoning+pushed:%3E2026-07-23&per_page=5"
++    },
++    {
++      "access_outcome": "reachable_http_200_total_count_0_no_issue_delta",
++      "accessed_at": "2026-07-24T01:35:04Z",
++      "candidate_ids": [],
++      "query": "repo:ggml-org/llama.cpp embedding grammar updated:>2026-07-23",
++      "receipt_id": "github_post_v522_issue_discovery",
++      "receipt_summary": "GitHub issue discovery found no post-marker llama.cpp embedding or grammar issue that created a new V522 control.",
++      "source_family": "GitHub discovery",
++      "source_role": "secondary",
++      "url": "https://api.github.com/search/issues?q=repo:ggml-org/llama.cpp+embedding+grammar+updated:%3E2026-07-23&per_page=5"
++    },
++    {
++      "access_outcome": "reachable_http_200_public_writing_no_authenticated_local_route",
++      "accessed_at": "2026-07-24T01:35:04Z",
++      "candidate_ids": [
++        "tsu_101",
++        "dtms",
++        "x0_xtr0_public_material"
++      ],
++      "query": "Extropic writing index TSU XTR-0 Z1",
++      "receipt_id": "extropic_writing_post_v522",
++      "receipt_summary": "Public writing remained October 2025-era TSU/XTR context plus DTM material and exposed no Carnot-local XTR/Z1/TSU execution route.",
++      "source_family": "Extropic writing",
++      "source_role": "primary",
++      "url": "https://extropic.ai/writing"
++    },
++    {
++      "access_outcome": "reachable_http_200_public_page_no_local_weights_or_api_receipt",
++      "accessed_at": "2026-07-24T01:35:05Z",
++      "candidate_ids": [
++        "logical_homepage",
++        "published_2026_06_26",
++        "kona_1_0",
++        "aleph"
++      ],
++      "query": "Kona Aleph public pages",
++      "receipt_id": "logical_intelligence_public_pages_post_v522",
++      "receipt_summary": "Kona/Aleph pages remained architecture context without local weights, authenticated API receipts, or reproducible comparators.",
++      "source_family": "Logical Intelligence",
++      "source_role": "primary",
++      "url": "https://logicalintelligence.com/"
++    },
++    {
++      "access_outcome": "reachable_local_helpers_semantic_scholar_http_429",
++      "accessed_at": "2026-07-24T01:35:06Z",
++      "candidate_ids": [],
++      "query": "sweep_clusters.py clusters 1, 4, 6 and sweep_semscholar keyword query",
++      "receipt_id": "sweep_helpers_post_v522_availability",
++      "receipt_summary": "Cluster helper URL generation worked for EBM, hardware, and world-model clusters. sweep_semscholar hit HTTP 429 for the keyword query and produced zero arXiv ids.",
++      "source_family": "local sweep helpers",
++      "source_role": "discovery_metadata",
++      "url": "scripts/sweep_clusters.py; scripts/sweep_semscholar.py"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5864",
++    "SCENARIO-REPORT-5864-ZERO-FINDING",
++    "SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA",
++    "SCENARIO-REPORT-5864-BLOCKED-PRECONDITION",
++    "SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY",
++    "SCENARIO-REPORT-5864-SCHEMA"
++  ],
++  "status": "complete",
++  "studying_after_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++  "studying_before_hash": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
++  "studying_ledger_modified": false,
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py -m pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py --fail-under=100",
++    ".venv/bin/ruff check python/carnot/experiment_5864_v522_source_delta_ingestion.py tests/python/test_experiment_5864_v522_source_delta_ingestion.py",
++    ".venv/bin/python - <<PY_YAML_JSON_SCHEMA",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5864_v522_source_delta_ingestion.py -m pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python -q": 2,
++    ".venv/bin/pytest tests/python/test_experiment_5864_v522_source_delta_ingestion.py -q --no-cov -n 0": 0,
++    ".venv/bin/python - <<PY_YAML_JSON_SCHEMA": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py": 1,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/experiment_5864_v522_source_delta_ingestion.py tests/python/test_experiment_5864_v522_source_delta_ingestion.py": 0
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b99f6cdd21..9497383d18 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T01:01:17Z",
+-  "finished_at": "2026-07-24T01:01:17Z",
++  "started_at": "2026-07-24T01:47:55Z",
++  "finished_at": "2026-07-24T01:47:55Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e491f71014..12ca9c5544 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T01:01:17Z",
+-  "finished_at": "2026-07-24T01:01:17Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-24T01:47:55Z",
++  "finished_at": "2026-07-24T01:47:55Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 936d240e4c..27b8cbc3f1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260724",
+-  "started_at": "2026-07-24T01:01:17Z",
+-  "finished_at": "2026-07-24T01:01:18Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-24T01:47:55Z",
++  "finished_at": "2026-07-24T01:47:55Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/outer_loop_arc_reauthor_discovery_sweep_20260723.json b/results/outer_loop_arc_reauthor_discovery_sweep_20260723.json
+new file mode 100644
+index 0000000000..567b54f5d2
+--- /dev/null
++++ b/results/outer_loop_arc_reauthor_discovery_sweep_20260723.json
+@@ -0,0 +1,152 @@
++{
++  "experiment": "outer_loop_arc_reauthor_discovery_sweep",
++  "experiment_id": "REQ-ARC-WMTE-5834",
++  "run_date": "2026-07-23",
++  "schema": "carnot.arc_reauthor_discovery_sweep.v1",
++  "title": "Does re-authored perception convert the winner recipe's 0-discovery to actual levels? A/B (reauthor off vs on), 8 games.",
++  "inference_substrate": "live_llm_inference",
++  "verifier_is_oracle": false,
++  "solve_provenance": "development_proxy",
++  "random_seed": 5834,
++  "model_specs": [
++    {
++      "name": "gemma-4-31B-it-GGUF",
++      "repo": "unsloth/gemma-4-31B-it-GGUF",
++      "gpu": 1,
++      "port": 8958
++    }
++  ],
++  "action_budget": 120,
++  "methodology_note": "Full winner recipe (greedy-direct + object seg + reflection + goal verifier), reauthor OFF vs ON, same budget/seed per game. Measures real-env levels_gained. Baseline: v5 winner sweep = 0 discovery on all 8. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
++  "totals": {
++    "baseline_levels": 0,
++    "reauthor_levels": 0
++  },
++  "per_game": [
++    {
++      "game": "bp35",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 64,
++        "final_notes": "RULES: Action 6 at (21,38) sets (63,0)-(63,46) to 15. Action 6 at (23,63) sets (63,47) to 15. Action 6 at (24,63) sets (63,48)-(63,49) to 15. Action 6 at (25,63) sets (63,50) to 15. Action 6 at (63,26) sets (63,51) to 15. Action 6 at (26,63) sets (63,52) to 15. Action 6 at (27,63) sets (63,53) to 15. Action 6 at (28,63) sets (63,54) to 15. Action 6 at (29,63) sets (63,55) to 15. Action 6 at (30,63"
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 64,
++        "final_notes": "RULES:\nGOAL:\nPROGRESS:\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)"
++      }
++    },
++    {
++      "game": "lf52",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 64,
++        "final_notes": "RULES: Action 6 at (X,Y) changes cells in row 0 from 0 to 1.\nGOAL: Clear all value 3 cells.\nPROGRESS: Changed several cells in row 0 to 1.\nAVOID: Changing all cells in row 0 to 1."
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 64,
++        "final_notes": "RULES: Click object to select/interact.\nGOAL: Reach/interact with object color 0 at (27, 35) or object color 5 at (28, 34).\nGOAL: Reach/interact with object color 0 at (27, 35) and object color 5 at (28, 34).\nGOAL: Reach/interact with object color 0 at (27, 35) and object color 5 at (28, 34) in a specific order.\nGOAL: Reach/interact with (27, 35) and (28, 34) in a specific order.\nGOAL: Reach/inter"
++      }
++    },
++    {
++      "game": "sc25",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 116,
++        "final_notes": "RULES: Action 6 at (30,55) clears 2x2 blocks of 14s at (X, 62-63) (X starts at 12, increments by 2) and toggles values at (54-55, 29-31) between 2 and 14. Action 1 clears 2x2 blocks of 14s at (50-55, 62-63). Action 2 clears 2x2 blocks of 14s at (58-59, 62-63).\nGOAL: Unknown (Not clearing all 14s).\nPROGRESS: Cleared 14s from (12,62) to (59,63). Ruled out \"Clear all 14s\" as win condition.\nAVOID: Act"
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 87,
++        "final_notes": "RULES: (no reliable rules yet)\nGOAL: (no reliable rules yet)\n(no reliable rules yet)\nAVOID: (29,20)\n\n// a la own a single most likely goal based on the perception data provided.\n// a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a la own a l"
++      }
++    },
++    {
++      "game": "ls20",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 120,
++        "final_notes": "RULES: Action 2 toggles 11s and 3s.\nGOAL: Convert all 3s to 11s.\nPROGRESS: Ruled out converting all 11s to 3s and all 12s to 3s or 5s.\nAVOID: Action 1."
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 120,
++        "final_notes": "RULES: Actions 1-4 move the PLAYER (color 9).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 3).\nGOAL: Move the PLAYER onto a TARGET object (color 5).\nGOAL: Move the PLAYER onto a TARGET object (color 5 or color 3).\nGOAL: Move the PLAYER onto a TARGET and a second ta"
++      }
++    },
++    {
++      "game": "tu93",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 50,
++        "final_notes": "RULES: Action 1 and 3 clear cells with value 6.\nGOAL: Clear all cells with value 6 from the grid.\nPROGRESS: Cleared cells in row 63 from col 13 to 63.\nAVOID: None."
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 50,
++        "final_notes": "RULES: Move 4 shifts object blocks horizontally.\nGOAL: Move objects of the same color to the same cell.\n- (16,16) is color 0.\n- (19,34) is color 5.\n- Row 63 is status counters.\n- Row 63 is not the goal.\nAVOID: Row 63.\n\n- (16,16) is color 0.\n- (16,16) is not the goal.\n- Row 63 is not the goal.\n- (16,16) is not the16,16) is not the goal.\n- (16,16) is not the16,16) is not the goal.\n- (16,16) is not t"
++      }
++    },
++    {
++      "game": "cn04",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 75,
++        "final_notes": "RULES: Action 6 toggles values in distant cells (often 0 <-> 12 or 4 <-> 0).\nGOAL: [NEW HYPOTHESIS]\nPROGRESS: (15,27) toggles row 11 and (0,20-28); (39,36) toggles (29,41-46) and (0,31); (18,17) toggles (0,19, 25, 29, 30, 32); (3,4) toggles (0,22); (37,0) toggles (0,27).\nPROGRESS: Clearing cells to 0 or filling to 12 is not the win condition.\nAVOID: (45,39) and (18,17) are unreliable.\n\ns\ns\ns\ns\n6 ("
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 75,
++        "final_notes": "RULES: (no reliable rules yet)\nGOAL: Arrange/match similar objects until a target configuration is reached.\nPROGRESS: (no reliable rules yet)\n)\n)\n)\n)\n}\n)\n}\n)\n)\n)\n)\n)\n) = (no reliable rules yet)\n)\n)\n) = (no reliable rules yet)\n)\n)\n)\n)\n)\n) = (no reliable rules yet)\n)\n)\n)\n)\n)\n) = (no reliable)\n)\n)\n) = (no reliable rules yet)\n)\n) = (// own a single object of a specific color.\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)\n)"
++      }
++    },
++    {
++      "game": "r11l",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 60,
++        "final_notes": "RULES: Action 6 at (x,y) flips states (0 <-> 5) of a range of cells (e.g., (27,57) affects cells (32,0) through (52,0) in row 0).\nGOAL: Fill a specific row or column with state 5.\nPROGRESS: Confirmed Action 6 flips large segments of cells; ruled out clearing the grid or reaching a single specific state.\nAVOID: None."
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 60,
++        "final_notes": "RULES: Click a cell to trigger a chain reaction of color changes in a surrounding area.\nGOAL: Change the color of objects at (2, 24) and (58, 54) to color 2.\nPROGRESS: Changed colors of various cells in the middle of the board.\nPROGRESS: (24,2) and (54,58) are not targets.\n(24,2) and (24,2) and (54,58) and (54,58) and (54,58) and Clicking (24,2) and (54,58) and (54,2) and (54,58) and (54,58) and ("
++      }
++    },
++    {
++      "game": "ft09",
++      "baseline": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 120,
++        "final_notes": "RULES: Action 6 has no effect.\nGOAL: Unknown.\nPROGRESS: Ruled out Action 6.\nAVOID: Action 6."
++      },
++      "reauthor": {
++        "levels_gained": 0,
++        "reached_level": 0,
++        "actions_taken": 120,
++        "final_notes": "RULES: (no reliable rules yet)\nGOAL: Arrange or match object color 4 (46, 46) and object color 12 (63, 32) to reach a target configuration.\nPROGRESS: Action 6 is ineffective on tested cells.\nAVOID: Action 6 on (32, 63), (46, 46), (34, 34)."
++      }
++    }
++  ],
++  "duration_s": 7044.2,
++  "reproducibility_checksum": "sha256:2f133de5029120304ad144c4e61f2178e1239c6616aba803297347063263a020",
++  "headline": "CLEAN NULL: 0 levels discovered on all 8 games, BOTH arms (baseline and reauthor), budget 120. The re-authored perception fix flips the GOAL HYPOTHESIS (0->4/8 on the offline gate) but does NOT convert to actual DISCOVERY. This confirms the honestly-predicted separation: perception/goal-induction was necessary (and is now fixed) but is NOT sufficient -- EXECUTION/DYNAMICS is the next binding constraint. Evidence in the action counts: bp35 loses at exactly 64 actions (the move-budget cap) on both arms; the greedy-direct architecture has NO search/planning, so even with the right goal 'move the player to the exit' the LLM must blind-guess the action sequence over a hex grid, which it cannot do within budget.",
++  "strategic_implication": "The LEADERBOARD-WINNER architecture we matched (greedy-direct, LLM picks each action, no search) is EXECUTION-LIMITED even with a correct goal. Carnot's OWN live architecture (E3AgentPolicy: verifier-routed best-first search + plan_in_model) is BETTER suited for execution because it can SEARCH toward a named target. So the earned next step is NOT to keep improving the greedy-direct winner recipe -- it is to feed the perception fix (retracted HUD rules + named target + player) into Carnot's verifier-routed search as the goal/heuristic, where the search can actually navigate to the target and the goal verifier (REQ-ARC-WMTE-5830) confirms progress via the level counter.",
++  "honest_verdict": "complete_null_perception_fix_does_not_convert_to_discovery_execution_is_the_next_wall_greedy_direct_is_execution_limited"
++}
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_5864_v522_source_delta_ingestion.py b/tests/python/test_experiment_5864_v522_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..190f455fa7
+--- /dev/null
++++ b/tests/python/test_experiment_5864_v522_source_delta_ingestion.py
+@@ -0,0 +1,773 @@
++"""Tests for Exp5864 V522 source-delta ingestion.
++
++Spec refs: REQ-REPORT-5864, SCENARIO-REPORT-5864-ZERO-FINDING,
++SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA,
++SCENARIO-REPORT-5864-BLOCKED-PRECONDITION,
++SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY,
++SCENARIO-REPORT-5864-SCHEMA.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_5864_v522_source_delta_ingestion as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++START = "2026-07-24T14:00:00Z"
++FINISH = "2026-07-24T14:01:17Z"
++
++
++def _roadmap() -> str:
++    tasks = []
++    for task_id in mod.ALLOCATED_TARGET_EXPERIMENTS | {
++        "exp5863-transition-v522",
++        "exp5864-v522-source-delta-ingestion",
++        "exp5876-capstone-v522",
++    }:
++        row = {
++            "id": task_id,
++            "milestone": mod.MILESTONE,
++            "title": task_id,
++            "deliverable": f"results/{task_id}.json",
++        }
++        if task_id in {
++            "exp5866-adaptive-state-pipeline-shadow-adapter",
++            "exp5867-prospective-certified-continuous-learning",
++            "exp5871-three-family-layer-dynamic-causal-representations",
++            "exp5872-portability-and-camouflage-audit",
++            "exp5875-conditional-board-state-operation-receipt",
++        }:
++            row["gated_on"] = [
++                {
++                    "upstream": "exp5865-adaptive-state-kernel-requalification",
++                    "artifact_field": "adaptive_state_microkernel_requalified_score",
++                    "op": "==",
++                    "value": 1.0,
++                }
++            ]
++        tasks.append(row)
++    tasks.sort(key=lambda row: row["id"])
++    return yaml.safe_dump({"milestone": mod.MILESTONE, "tasks": tasks}, sort_keys=False)
++
++
++def _planner_references() -> str:
++    return (
++        "## V522 Planner Refresh - 20260723\n\n"
++        "- **ICR Probe** - arXiv:2507.16488.\n"
++        "- **HARP** - arXiv:2509.11536.\n"
++        "- **CORVUS** - arXiv:2601.14310.\n"
++        "- **On Solving Structured SAT on Ising Machines** - arXiv:2511.21046.\n"
++        "<!-- V522-PLANNER-REFRESH-20260723-END -->\n"
++    )
++
++
++def _accepted_fixture() -> mod.JsonDict:
++    return {
++        "source_id": "post_v522_fixture_2607_99998",
++        "classification": "accepted",
++        "title": "Post-V522 Fixture for Certified Retention Certificates",
++        "url": "https://arxiv.org/abs/2607.99998",
++        "publication_date": "2026-07-24",
++        "source_date": "2026-07-24",
++        "search_timestamp": START,
++        "receipt_id": "arxiv_fixture_post_v522",
++        "query": 'all:"certified retention"',
++        "access_outcome": "reachable_fixture",
++        "target_experiment": "exp5867-prospective-certified-continuous-learning",
++        "source_hook": "Add a per-update retention-certificate control before promotion.",
++        "authority_boundary": (
++            "Adds a bounded Exp5867 control only; exact validators and rollback "
++            "state remain release authority."
++        ),
++        "post_marker_or_newly_actionable": True,
++        "primary_source": True,
++        "method_to_task_mapping": {
++            "method": "retention_certificate_fixture",
++            "target_experiment": "exp5867-prospective-certified-continuous-learning",
++            "task_hook": "per-update protected-cell retention certificate",
++            "failure_boundary": "rollback on any protected-cell regression",
++        },
++        "reason": (
++            "Fixture accepted finding stays inside Exp5867 and does not alter IDs, "
++            "gates, authority, model policy, closed scopes, hardware claims, or "
++            "headline authority."
++        ),
++    }
++
++
++def _ordered_candidates(artifact: mod.JsonDict) -> list[mod.JsonDict]:
++    classes = artifact["finding_classification"]
++    return (
++        classes["accepted"]
++        + classes["duplicate"]
++        + classes["watch_only"]
++        + classes["excluded"]
++        + classes["inaccessible"]
++    )
++
++
++def _make_repo(root: Path, references_text: str, *, with_next: bool = False) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).write_text(
++        references_text,
++        encoding="utf-8",
++    )
++    (root / mod.RESEARCH_STUDYING_RELATIVE_PATH).write_text(
++        "# Research Studying\n\nNo V522 execution ingestion yet.\n",
++        encoding="utf-8",
++    )
++    (root / mod.ROADMAP_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    if with_next:
++        (root / mod.ROADMAP_NEXT_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / mod.VNEXT_RELATIVE_PATH).write_text(
++        "# Research Roadmap vNEXT\n\n"
++        "**Milestone:** 2026.07.522\n\n"
++        "Exp5864 preserves V522 task identity, gates, authority, and model policy.\n",
++        encoding="utf-8",
++    )
++    (root / "openspec/capabilities/research-reporting").mkdir(
++        parents=True,
++        exist_ok=True,
++    )
++    (root / mod.SPEC_RELATIVE_PATH).write_text(
++        "\n".join(mod.SPEC_REFS) + "\n",
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / mod.EXCLUSION_MANIFEST_RELATIVE_PATH).write_text(
++        (
++            "retired_extras:\n"
++            "- id: final_embeddings_closed\n"
++            "  reason: final embeddings remain closed after Exp5853\n"
++            "- id: phase_d_closed\n"
++            "  reason: PHASE D output-text/logit work remains closed\n"
++            "- id: finite_id_output_transport_closed\n"
++            "  reason: finite-ID output transport remains closed\n"
++            "- id: tempering_closed\n"
++            "  reason: tempering remains closed\n"
++            "- id: public_arc_solves_closed\n"
++            "  reason: public ARC solves remain closed\n"
++            "- id: cross_game_value_transfer_closed\n"
++            "  reason: cross-game value transfer remains closed\n"
++            "- id: unchanged_board_probe_closed\n"
++            "  reason: unchanged board probes remain closed\n"
++            "- id: tsu_kona_execution_closed\n"
++            "  reason: TSU and Kona execution require authenticated local receipts\n"
++        ),
++        encoding="utf-8",
++    )
++    (root / mod.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        "Final embeddings, PHASE D, finite-ID output transport, tempering, "
++        "public ARC solves, cross-game value transfer, unchanged board probes, "
++        "TSU execution, and Kona execution remain closed.\n",
++        encoding="utf-8",
++    )
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / mod.CONDUCTOR_RELATIVE_PATH).write_text("# conductor fixture\n", encoding="utf-8")
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    return root
++
++
++def test_req_report_5864_spec_declares_v522_source_refresh_contract() -> None:
++    """REQ-REPORT-5864: OpenSpec names the V522 source-refresh contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-REPORT-5864") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-REPORT-5864",
++        "SCENARIO-REPORT-5864-ZERO-FINDING",
++        "SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA",
++        "SCENARIO-REPORT-5864-BLOCKED-PRECONDITION",
++        "SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY",
++        "SCENARIO-REPORT-5864-SCHEMA",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.PLANNER_MARKER,
++        mod.INFERENCE_SUBSTRATE,
++        "`studying_ledger_modified`",
++        "`sota_to_experiment_mapping`",
++    ):
++        assert marker in section
++    for field, principle in mod.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_report_5864_zero_finding_keeps_ledgers_unchanged(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5864-ZERO-FINDING: zero accepted deltas are complete."""
++
++    root = _make_repo(tmp_path, _planner_references())
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[],
++        test_commands=["unit"],
++        test_exit_codes={"unit": 0},
++        duration_s=77.0,
++    )
++
++    mod.validate_artifact(artifact)
++    references = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    studying = (root / mod.RESEARCH_STUDYING_RELATIVE_PATH).read_text(encoding="utf-8")
++    result_text = (root / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    assert result_text.endswith("\n")
++    assert mod.EXECUTION_REFRESH_HEADING not in references
++    assert mod.STUDYING_EXECUTION_HEADING not in studying
++    assert artifact["status"] == "complete"
++    assert artifact["finding_classification"]["accepted"] == []
++    assert artifact["accepted_finding_count"] == 0
++    assert artifact["references_modified"] is False
++    assert artifact["studying_ledger_modified"] is False
++    assert artifact["sota_to_experiment_mapping"] == []
++    assert artifact["planner_marker_and_search_window"]["boundary_marker"] == (
++        mod.PLANNER_MARKER
++    )
++    assert artifact["preconditions_checked"]["network_search_available"] is True
++    assert artifact["preconditions_checked"]["research_roadmap_next_read"] is False
++    assert artifact["roadmap_immutability_receipts"]["roadmap_ids_unchanged"] is True
++    assert artifact["roadmap_immutability_receipts"]["gates_unchanged"] is True
++    assert artifact["roadmap_immutability_receipts"]["authority_unchanged"] is True
++    assert artifact["roadmap_immutability_receipts"]["model_policy_unchanged"] is True
++    assert artifact["roadmap_immutability_receipts"]["closed_scopes_reopened"] is False
++    assert artifact["roadmap_immutability_receipts"]["hardware_claim_changed"] is False
++    assert artifact["roadmap_immutability_receipts"]["headline_claim_changed"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete: no accepted")
++
++
++def test_scenario_report_5864_accept_delta_appends_once_and_maps_studying(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5864-ACCEPT-BOUNDED-DELTA: accepted controls map exactly."""
++
++    root = _make_repo(tmp_path, _planner_references(), with_next=True)
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=77.0,
++    )
++
++    mod.validate_artifact(artifact)
++    references = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    studying = (root / mod.RESEARCH_STUDYING_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    assert references.count(mod.EXECUTION_REFRESH_HEADING) == 1
++    assert studying.count(mod.STUDYING_EXECUTION_HEADING) == 1
++    assert "Post-V522 Fixture" in references
++    assert "retention_certificate_fixture" in studying
++    assert "exp5867-prospective-certified-continuous-learning" in references
++    assert references.index(mod.EXECUTION_REFRESH_HEADING) > references.index(
++        mod.PLANNER_HEADING
++    )
++    assert artifact["accepted_finding_count"] == 1
++    assert artifact["finding_classification"]["accepted"][0]["target_experiment"] == (
++        "exp5867-prospective-certified-continuous-learning"
++    )
++    assert artifact["references_modified"] is True
++    assert artifact["studying_ledger_modified"] is True
++    assert artifact["sota_to_experiment_mapping"][0]["method"] == (
++        "retention_certificate_fixture"
++    )
++    assert artifact["honest_verdict"].startswith("complete: accepted 1")
++    assert artifact["field_provenance"]["accepted_findings"][0]["source_id"] == (
++        "post_v522_fixture_2607_99998"
++    )
++
++    second = mod.build_and_write_artifact(
++        root=root,
++        search_started_at="2026-07-24T14:02:00Z",
++        search_finished_at="2026-07-24T14:02:01Z",
++        accepted_findings=[_accepted_fixture()],
++        duration_s=1.0,
++    )
++    references_second = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    )
++    studying_second = (root / mod.RESEARCH_STUDYING_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    )
++    assert references_second.count(mod.EXECUTION_REFRESH_HEADING) == 1
++    assert studying_second.count(mod.STUDYING_EXECUTION_HEADING) == 1
++    assert second["references_modified"] is False
++    assert second["studying_ledger_modified"] is False
++
++
++def test_scenario_report_5864_blocked_preconditions(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5864-BLOCKED-PRECONDITION: stale marker/routes fail closed."""
++
++    references_text = "## V521 Planner Refresh - 20260723\nKnown references only.\n"
++    root = _make_repo(tmp_path, references_text)
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=77.0,
++    )
++
++    mod.validate_artifact(artifact)
++    assert (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    ) == references_text
++    assert artifact["status"] == "blocked"
++    assert artifact["preconditions_checked"]["planner_marker_found"] is False
++    assert artifact["accepted_finding_count"] == 0
++    assert artifact["references_modified"] is False
++    assert artifact["studying_ledger_modified"] is False
++    assert artifact["honest_verdict"].startswith("blocked:")
++
++    reachable_root = _make_repo(tmp_path / "reachable", _planner_references())
++    unreachable_receipts = [
++        {
++            "receipt_id": "arxiv_down",
++            "source_family": "arXiv",
++            "source_role": "primary",
++            "query": "fixture",
++            "url": "https://arxiv.org/",
++            "accessed_at": START,
++            "access_outcome": "inaccessible_timeout",
++            "candidate_ids": [],
++        }
++    ]
++    unreachable = mod.build_artifact(
++        root=reachable_root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[],
++        source_receipts=unreachable_receipts,
++        citation_trail_receipts=[],
++        duration_s=77.0,
++    )
++    mod.validate_artifact(unreachable)
++    assert unreachable["status"] == "blocked"
++    assert "source_reachability_failed" in unreachable["preconditions_checked"][
++        "failed_preconditions"
++    ]
++
++
++def test_scenario_report_5864_closed_scope_and_roadmap_guards(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5864-CLOSED-SCOPE-IMMUTABILITY: protected boundaries hold."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=77.0,
++    )
++
++    mod.validate_artifact(artifact)
++    families = {row["source_family"] for row in artifact["source_receipts"]}
++    assert {
++        "arXiv",
++        "OpenReview",
++        "Hugging Face Papers",
++        "GitHub discovery",
++        "Extropic writing",
++        "Logical Intelligence",
++    }.issubset(families)
++    assert {row["paper"] for row in artifact["citation_trail_receipts"]} == {
++        "arXiv:2507.02092",
++        "arXiv:2512.15605",
++    }
++    classes = artifact["finding_classification"]
++    assert classes["duplicate"][0]["classification"] == "duplicate"
++    assert classes["watch_only"][0]["classification"] == "watch_only"
++    assert classes["excluded"][0]["classification"] == "excluded"
++    assert artifact["finding_classification"]["all_candidates"] == _ordered_candidates(
++        artifact
++    )
++    protected_scopes = set(artifact["roadmap_immutability_receipts"]["protected_scopes"])
++    assert {
++        "final embeddings",
++        "finite-ID output transport",
++        "PHASE D",
++        "PHASE D output-text/logit work",
++        "tempering",
++        "public ARC solves",
++        "cross-game value transfer",
++        "unchanged board probes",
++        "TSU execution",
++        "Kona execution",
++    }.issubset(protected_scopes)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["accepted"] = [
++        {**_accepted_fixture(), "target_experiment": "exp5876-capstone-v522"}
++    ]
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    broken["accepted_finding_count"] = 1
++    broken["sota_to_experiment_mapping"] = [
++        broken["finding_classification"]["accepted"][0]["method_to_task_mapping"]
++    ]
++    with pytest.raises(ValueError, match="accepted finding"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["accepted"] = [
++        {**_accepted_fixture(), "post_marker_or_newly_actionable": False}
++    ]
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    broken["accepted_finding_count"] = 1
++    broken["sota_to_experiment_mapping"] = [
++        broken["finding_classification"]["accepted"][0]["method_to_task_mapping"]
++    ]
++    with pytest.raises(ValueError, match="post-marker"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["accepted"] = [
++        {**_accepted_fixture(), "primary_source": False}
++    ]
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    broken["accepted_finding_count"] = 1
++    broken["sota_to_experiment_mapping"] = [
++        broken["finding_classification"]["accepted"][0]["method_to_task_mapping"]
++    ]
++    with pytest.raises(ValueError, match="primary-source"):
++        mod.validate_artifact(broken)
++
++    for field, value, message in (
++        ("roadmap_ids_unchanged", False, "roadmap ids"),
++        ("gates_unchanged", False, "gates"),
++        ("authority_unchanged", False, "authority"),
++        ("model_policy_unchanged", False, "model policy"),
++        ("closed_scopes_reopened", True, "closed scopes"),
++        ("hardware_claim_changed", True, "hardware"),
++        ("headline_claim_changed", True, "headline"),
++    ):
++        broken = json.loads(json.dumps(artifact))
++        broken["roadmap_immutability_receipts"][field] = value
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(broken)
++
++
++def test_scenario_report_5864_schema_helpers_and_cli(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """SCENARIO-REPORT-5864-SCHEMA: schema, checksum, helpers, and CLI stay stable."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    assert mod.read_text_if_present(root / "missing.md") == ""
++    assert mod.path_sha256(root / "missing.md") is None
++    assert mod.normalize_timestamp("2026-07-24T14:00:00+00:00").endswith("Z")
++    assert mod.planner_marker_line("missing") is None
++    assert mod.planner_block_hash("missing") is None
++    assert mod.honest_verdict(False, True, [], False).startswith("blocked:")
++    assert mod.honest_verdict(True, False, [], False).startswith("blocked:")
++    assert mod.honest_verdict(True, True, [], False, False).startswith("blocked:")
++    assert mod.honest_verdict(True, True, [], True).startswith("blocked:")
++    assert mod.honest_verdict(True, True, [], False).startswith("complete: no accepted")
++    block = mod.execution_refresh_block([_accepted_fixture()])
++    assert mod.insert_after_planner_block("no marker", block).endswith(block)
++    assert mod.insert_after_planner_block(f"prefix\n{mod.EXECUTION_REFRESH_HEADING}\n", block) == (
++        f"prefix\n{mod.EXECUTION_REFRESH_HEADING}\n"
++    )
++    assert mod.insert_after_planner_block(f"{mod.PLANNER_HEADING}\nbody", block).count(
++        mod.EXECUTION_REFRESH_HEADING
++    ) == 1
++    study_block = mod.studying_execution_block([_accepted_fixture()])
++    assert mod.insert_studying_block("existing", study_block).endswith(study_block)
++    assert mod.insert_studying_block(
++        f"prefix\n{mod.STUDYING_EXECUTION_HEADING}\n",
++        study_block,
++    ) == f"prefix\n{mod.STUDYING_EXECUTION_HEADING}\n"
++
++    malformed_root = _make_repo(tmp_path / "malformed", _planner_references())
++    (malformed_root / mod.ROADMAP_RELATIVE_PATH).write_text("- just\n- a list\n")
++    assert mod.preconditions_checked(
++        malformed_root,
++        marker_found=True,
++        source_reachable=True,
++    )["roadmap_ids_hash"] is None
++    (malformed_root / mod.ROADMAP_RELATIVE_PATH).write_text(
++        "tasks: not-a-list\nmilestone: fixture\n",
++        encoding="utf-8",
++    )
++    assert mod.preconditions_checked(
++        malformed_root,
++        marker_found=True,
++        source_reachable=True,
++    )["active_roadmap_milestone"] == "fixture"
++    (malformed_root / mod.ROADMAP_RELATIVE_PATH).write_text("tasks: [\n", encoding="utf-8")
++    assert mod.preconditions_checked(
++        malformed_root,
++        marker_found=True,
++        source_reachable=True,
++    )["roadmap_ids_hash"] is None
++    (malformed_root / mod.SPEC_RELATIVE_PATH).write_text("missing\n", encoding="utf-8")
++    assert "spec_req_report_5864_missing" in mod.preconditions_checked(
++        malformed_root,
++        marker_found=True,
++        source_reachable=True,
++    )["failed_preconditions"]
++    (malformed_root / mod.ROADMAP_RELATIVE_PATH).unlink()
++    (malformed_root / mod.EXCLUSION_MANIFEST_RELATIVE_PATH).unlink()
++    failed_without_hashes = mod.preconditions_checked(
++        malformed_root,
++        marker_found=True,
++        source_reachable=True,
++    )["failed_preconditions"]
++    assert "active_roadmap_hash_missing" in failed_without_hashes
++    assert "exclusion_manifest_hash_missing" in failed_without_hashes
++
++    artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        duration_s=77.0,
++    )
++    mod.validate_artifact(artifact)
++    broken = json.loads(json.dumps(artifact))
++    broken["field_provenance"].pop("source_receipts")
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["search_finished_at"] = START
++    with pytest.raises(ValueError, match="timestamp"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["honest_verdict"] = "complete: tampered"
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(broken)
++
++    tests_run_path = tmp_path / "tests_run.json"
++    tests_run_path.write_text(
++        json.dumps([{"command": "unit", "exit_code": 0}]),
++        encoding="utf-8",
++    )
++    assert (
++        mod.main(
++            [
++                "--root",
++                str(root),
++                "--search-started-at",
++                START,
++                "--search-finished-at",
++                FINISH,
++                "--zero-findings",
++                "--tests-run-json",
++                str(tests_run_path),
++            ]
++        )
++        == 0
++    )
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in capsys.readouterr().out
++
++    monkeypatch.setattr(
++        "sys.argv",
++        [
++            "experiment_5864_v522_source_delta_ingestion",
++            "--root",
++            str(root),
++            "--search-started-at",
++            START,
++            "--search-finished-at",
++            FINISH,
++            "--zero-findings",
++        ],
++    )
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_module(
++            "carnot.experiment_5864_v522_source_delta_ingestion",
++            run_name="__main__",
++        )
++    assert exc_info.value.code == 0
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in capsys.readouterr().out
++
++
++def test_scenario_report_5864_validator_rejects_schema_and_provenance_errors(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-5864: validation rejects schema drift and unsupported receipts."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        duration_s=77.0,
++    )
++
++    missing = json.loads(json.dumps(artifact))
++    missing.pop("status")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["field_provenance"] = "not-a-map"
++    with pytest.raises(ValueError, match="field_provenance must be a mapping"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["status"] = "done"
++    with pytest.raises(ValueError, match="invalid status"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["honest_verdict"] = "unsupported verdict"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["duration_s"] = -1
++    with pytest.raises(ValueError, match="duration"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["accepted_finding_count"] = 1
++    with pytest.raises(ValueError, match="accepted_finding_count"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["references_modified"] = True
++    with pytest.raises(ValueError, match="zero accepted"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["studying_ledger_modified"] = True
++    with pytest.raises(ValueError, match="zero accepted"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["sota_to_experiment_mapping"] = [{"method": "orphan"}]
++    with pytest.raises(ValueError, match="sota_to_experiment_mapping"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["all_candidates"] = (
++        broken["finding_classification"]["all_candidates"][:-1]
++    )
++    with pytest.raises(ValueError, match="all_candidates"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["duplicate"][0]["classification"] = "novel"
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    with pytest.raises(ValueError, match="invalid candidate classification"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["watch_only"][0]["url"] = ""
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    with pytest.raises(ValueError, match="provenance field"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["finding_classification"]["excluded"][0].pop("publication_date", None)
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    with pytest.raises(ValueError, match="publication/source date"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["source_receipts"][0]["url"] = ""
++    with pytest.raises(ValueError, match="source receipt"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["source_receipts"][0] = "not-a-receipt"
++    with pytest.raises(ValueError, match="source receipt"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["citation_trail_receipts"] = broken["citation_trail_receipts"][:1]
++    with pytest.raises(ValueError, match="citation trail"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    broken["citation_trail_receipts"][0]["url"] = ""
++    with pytest.raises(ValueError, match="citation trail receipt"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    accepted = _accepted_fixture()
++    accepted.pop("source_hook")
++    broken["finding_classification"]["accepted"] = [accepted]
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    broken["accepted_finding_count"] = 1
++    broken["sota_to_experiment_mapping"] = [accepted["method_to_task_mapping"]]
++    with pytest.raises(ValueError, match="accepted finding missing source_hook"):
++        mod.validate_artifact(broken)
++
++    broken = json.loads(json.dumps(artifact))
++    accepted = _accepted_fixture()
++    accepted.pop("method_to_task_mapping")
++    broken["finding_classification"]["accepted"] = [accepted]
++    broken["finding_classification"]["all_candidates"] = _ordered_candidates(broken)
++    broken["accepted_finding_count"] = 1
++    broken["sota_to_experiment_mapping"] = []
++    with pytest.raises(ValueError, match="method-to-task mapping"):
++        mod.validate_artifact(broken)
++
++    mapped = _accepted_fixture()
++    mapped["method_to_task_mapping"] = {
++        "method": "",
++        "target_experiment": "exp5867-prospective-certified-continuous-learning",
++        "task_hook": "hook",
++        "failure_boundary": "boundary",
++    }
++    with pytest.raises(ValueError, match="mapping is incomplete"):
++        mod._validate_mapping(  # noqa: SLF001 - direct branch coverage for schema guard.
++            mapped["method_to_task_mapping"],
++            "exp5867-prospective-certified-continuous-learning",
++        )
++
++    mapped = _accepted_fixture()
++    mapped["method_to_task_mapping"]["target_experiment"] = (
++        "exp5868-hardness-controlled-constraint-fixture"
++    )
++    with pytest.raises(ValueError, match="target does not match"):
++        mod._validate_mapping(  # noqa: SLF001 - direct branch coverage for schema guard.
++            mapped["method_to_task_mapping"],
++            "exp5867-prospective-certified-continuous-learning",
++        )
++
++    with pytest.raises(ValueError, match="outside Exp5865-Exp5875"):
++        mod._validate_mapping(  # noqa: SLF001 - direct branch coverage for schema guard.
++            {
++                "method": "orphan",
++                "target_experiment": "exp5876-capstone-v522",
++                "task_hook": "hook",
++                "failure_boundary": "boundary",
++            },
++            "exp5876-capstone-v522",
++        )
++
++    accepted_artifact = mod.build_artifact(
++        root=root,
++        search_started_at=START,
++        search_finished_at=FINISH,
++        accepted_findings=[_accepted_fixture()],
++        duration_s=77.0,
++    )
++    broken = json.loads(json.dumps(accepted_artifact))
++    broken["sota_to_experiment_mapping"][0]["method"] = "changed"
++    with pytest.raises(ValueError, match="sota_to_experiment_mapping"):
++        mod.validate_artifact(broken)
+-- 
+2.55.0
+

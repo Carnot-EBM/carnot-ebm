@@ -1,0 +1,50 @@
+From edf2c01d055f6d2bc4d9f333113947818d9fbc60 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 21:44:47 -0400
+Subject: [PATCH 11356/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 8 ++++++++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dbadc415eb..2dc1820de6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-09-06T01:42:00Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-09-06T01:44:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c267639627..6f60d0fc63 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17374,3 +17374,11 @@ code |
+ | 2026-09-06 01:34 UTC | Typed raw-to-canonical ARC model identity report b | OK | cache hit: 94 passed, 1 warning in 7.36s |
+ | 2026-09-06 01:37 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
+ | 2026-09-06 01:40 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
++| 2026-09-06 01:42 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
++| 2026-09-06 01:44 UTC | Typed-identity official-live belief shadow trace | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7041-identity-report-channel-cold-audit) |
++| 2026-09-06 01:44 UTC | Fresh-process official-live belief shadow trace au | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7042-typed-identity-belief-shadow-trace) |
++| 2026-09-06 01:44 UTC | Two-model uniform belief influence live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7042-typed-identity-belief-shadow-trace,  |
++| 2026-09-06 01:44 UTC | Independent uniform belief live-value cold audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7044-uniform-belief-two-model-live-ab) |
++| 2026-09-06 01:44 UTC | Frozen frontier-stratified exact-outcome curriculu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7045-uniform-belief-value-cold-audit) |
++| 2026-09-06 01:44 UTC | Exact-advantage selective belief continuous self-l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7046-frontier-stratified-exact-outcome-cu |
++| 2026-09-06 01:44 UTC | Two-model selective belief policy live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7047-selective-belief-exact-advantage-csl |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a53b3e9a54..829eb854b2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 28, "phase": "iteration_start", "started_at": "2026-09-06T01:42:00Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 29, "phase": "iteration_start", "started_at": "2026-09-06T01:44:39Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

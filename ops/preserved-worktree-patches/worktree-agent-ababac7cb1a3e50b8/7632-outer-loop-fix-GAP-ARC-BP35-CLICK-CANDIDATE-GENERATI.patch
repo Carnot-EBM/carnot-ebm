@@ -1,0 +1,539 @@
+From 2f07603077db94f2e56f8e2344ffae496c098c1a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 09:53:50 -0400
+Subject: [PATCH 07632/11362] [outer-loop] fix
+ GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS (opt-in, partial)
+
+Operator: "yes" to fixing bp35's characterized click-candidate
+generation gap from the candidate-coverage attribution replication.
+
+Root cause (found via direct tracing): object_centric_digest (the
+function rich_action_candidates actually uses by default -- an
+initial assumption that arc_color_blob_salience.connected_color_blobs
+was the live path was wrong, corrected mid-session) excludes the
+single most-common color wholesale as "background," unconditionally.
+bp35's color 5 (2109/4096px, one connected component) is that color,
+so none of its pixels ever segment into a clickable object.
+
+Fix: object_centric_digest gained emit_grid_fallback_for_background
+(opt-in, CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1, default off) -- tiles
+the excluded background mask on an 8px grid into small
+is_grid_fallback candidates, fails closed above a 64-tile cap.
+rich_action_candidates gives these a dedicated reserved budget,
+separate from the normal salience sort.
+
+Two real bugs found and fixed while measuring: (1) an initial version
+pooled fallback tiles into the same salience sort as real objects --
+since fallback tiles are by construction low-rarity, they always
+sorted to the bottom and got cut by max_click=48, measured 55
+generated / 0 surviving. Fixed by reserving a dedicated budget.
+(2) sorting that budget largest-first also failed -- the tile
+covering a real winning click was small (area=9) and sat behind ~50
+large empty tiles; flipped to smallest-first (mirrors
+REQ-ARC-FCP-5758's own established finding) and it worked.
+
+Measured on bp35's real reproduction-gated winning trajectory: 21/57
+generation misses -> 15/57 at the real default max_click=48 -- a
+genuine, disclosed PARTIAL fix (~29%), not complete. An uncapped
+max_click=200 diagnostic closed it completely (0/57), confirming the
+tiling mechanism itself is sound; the residual misses are a real
+candidate-budget-sharing tradeoff, not a defect. lf52/re86 (0 misses
+either way) measured byte-for-byte unaffected on and off.
+
+A real backward-compat break was found and fixed: several existing
+tests monkeypatch _components_detailed with the pre-fix 4-tuple
+return shape. New code unpacks defensively (len(c) > 4) rather than
+assuming 5-tuples. Caught by running the FULL surface-area regression
+suite, not just new tests -- 14 failures on first pass, all fixed;
+confirmed the remaining 8 are pre-existing via a clean-HEAD baseline.
+
+Deliberately still opt-in, not the new default -- a partial fix on
+one game's empirical tile pitch, unvalidated broadly. Wiring into the
+live default is a separate follow-up decision.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           |  51 +++++++
+ ops/verifier_gaps.md                          |  51 ++++++-
+ python/carnot/agentic/arc_graph_explore.py    |  91 ++++++++++--
+ python/carnot/agentic/arc_solver_kit.py       |  50 ++++++-
+ .../test_arc_grid_fallback_candidates.py      | 132 ++++++++++++++++++
+ 5 files changed, 362 insertions(+), 13 deletions(-)
+ create mode 100644 tests/python/test_arc_grid_fallback_candidates.py
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 9b7f2f36cc..cb4d0e3ca7 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -301,6 +301,57 @@ candidate set could ever have found it. Logged as `GAP-ARC-BP35-CLICK-CANDIDATE-
+ design); `REQ-ARC-FCP-5757` (the original run); `ops/verifier_gaps.md` `GAP-ARCH-NO-HIERARCHICAL-SEARCH`
+ (independent-replication addendum) and the new `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` entry.
+ 
++### 2026-07-23 (outer-loop, same-day follow-up, operator: "yes" to fixing bp35's click-candidate generation gap): opt-in fix shipped and measured — 21/57 generation misses closed to 15/57 on bp35's real winning trajectory
++
++**Root cause found via direct tracing.** `object_centric_digest` (`python/carnot/agentic/arc_solver_kit.py`
++— the function `rich_action_candidates` actually uses by default; an initial assumption that
++`arc_color_blob_salience.connected_color_blobs` was the live path was WRONG and corrected mid-session)
++excludes the single most-common color wholesale as "background," unconditionally. Measured directly: bp35's
++color 5 (2109/4096 px, one connected component) is that most-common color, so none of its pixels ever
++segment into a clickable object — exactly matching the 21 measured misses, all clicks on color-5 cells.
++
++**Fix (opt-in, `CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1`, default OFF, zero behavior change for any existing
++caller).** `object_centric_digest` gained `emit_grid_fallback_for_background`: tiles the excluded background
++mask on an 8px grid pitch into small `is_grid_fallback: True` components (fails CLOSED — omits entirely
++rather than truncating an arbitrary subset — above a 64-tile cap). `rich_action_candidates` gives these
++tiles their OWN reserved candidate budget, appended after the normal salience-ranked real objects.
++
++**Two real bugs found and fixed while measuring this (not assumed working):**
++1. An initial version pooled fallback tiles with real objects under the SAME salience sort (area ×
++   color-rarity) — since fallback tiles are by construction small pieces of the near-zero-rarity dominant
++   color, they always sorted to the bottom and were silently cut by the existing `max_click=48` cap.
++   Measured: 55 fallback tiles generated, 0 survived into the final candidate list. Fixed by reserving a
++   dedicated budget outside the normal salience sort.
++2. Sorting that reserved budget by LARGEST tile first also failed — the tile actually covering a real
++   winning click was small (area=9, an interior sliver against other objects) and sat behind ~50 large,
++   empty background tiles. Flipping to SMALLEST-first (mirroring `REQ-ARC-FCP-5758`'s own established
++   "small objects win" finding elsewhere in the same file) fixed it.
++
++**Measured result** (bp35's real, reproduction-gated winning trajectory,
++`results/arc_loop_solve_bp35.json`): **21/57 generation misses -> 15/57 at the real default
++`max_click=48` — a genuine, disclosed PARTIAL fix (~29%), not a complete one.** An uncapped-budget
++diagnostic (`max_click=200`, not the real live setting) closed the gap completely (0/57), confirming the
++tiling mechanism itself is sound; the residual misses at the real budget are a genuine candidate-budget-
++sharing tradeoff against real objects, not a defect. **lf52 and re86 (0 misses either way) measured
++byte-for-byte unaffected on and off** — the fix is targeted, not a blanket change.
++
++**A real backward-compatibility break was found and fixed during implementation:** several existing tests
++monkeypatch `_components_detailed` with the pre-fix 4-tuple return shape to test unrelated ranker/prior
++behavior. The new code unpacks defensively (`len(c) > 4`) rather than assuming 5-tuples unconditionally —
++found by running the FULL surface-area regression suite (not just the new tests) before considering this
++done; caught 14 failures on the first pass, all fixed, confirmed against a clean-HEAD baseline that the
++remaining 8 failures are pre-existing and unrelated.
++
++**Deliberately still opt-in, not the new default:** a 29% partial fix, an 8px tile pitch chosen from one
++game's empirical grid (not validated broadly), and no measurement yet of the cost/quality effect of up to
++64 extra low-salience candidates per frame on OTHER games. Per the Phase-Prototype-and-Validation
++discipline: prototype shipped + measured; wiring into the SUBMITTED live default is a separate, deliberate
++follow-up decision.
++
++**Spec:** `ops/verifier_gaps.md` `GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS` (status: FIXED, partial).
++**Tests:** `tests/python/test_arc_grid_fallback_candidates.py` (8 tests). Full regression: 300+ tests
++across the touched surface area pass clean.
++
+ ### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 1): held-out live-path probe on sc25 — honest negative, corroborates the dynamics-induction bottleneck
+ 
+ **What was measured:** `sc25` is one of only 3 fully-solved public games with NO registered
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 217cc0b014..ea89160391 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2604,8 +2604,7 @@ budget or LLM judgment quality: if the candidate generator itself never proposes
+ of search or reasoning built ON TOP of that candidate set could ever have found it.
+ 
+ ### GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS: bp35's winning clicks are never proposed by rich_action_candidates
+-- status: characterized, not yet fixed — a concrete, reproducible finding from the 2026-07-23 candidate-
+-  coverage attribution replication above.
++- status: FIXED (partial, disclosed) 2026-07-23, same day — root-caused, an opt-in fix shipped and measured.
+ - evidence: `results/outer_loop_arc_candidate_coverage_attribution_20260723_per_action.json` (bp35 rows,
+   bucket `a_generation_miss`) — 21/57 progress actions on bp35's reproduction-gated L1+L2 winning path, ALL
+   action-6 clicks, at coordinates (42,30)/(24,36)/(18,36)/(18,30)/(30,30)/(36,30)/(30,36) recurring across the
+@@ -2633,6 +2632,54 @@ of search or reasoning built ON TOP of that candidate set could ever have found
+   this session's entire prior investigation (5 independent mechanisms) could not crack for any other
+   diagnosed reason. Fixing this is the most direct, evidence-backed next lever for bp35 specifically.
+ 
++**ROOT CAUSE (found via direct tracing, not assumed):** `object_centric_digest`
++(`python/carnot/agentic/arc_solver_kit.py`, the function `rich_action_candidates`'s DEFAULT path actually
++uses — NOT `arc_color_blob_salience.connected_color_blobs`, an initial, incorrect assumption corrected
++mid-session) picks the SINGLE MOST-COMMON color in the frame and excludes it wholesale as "background"
++(`mask = arr != background`), unconditionally, regardless of whether it forms one blob or many. Measured
++directly on a real bp35 state: color 5 (2109/4096 px, one connected component) IS the most-common color, so
++none of its pixels ever become a segmented "object" and therefore never generate a click candidate — matching
++EXACTLY the 21 measured misses, all clicks on color-5 cells.
++- **Fix (opt-in, `CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1`, default OFF):** `object_centric_digest` gained
++  `emit_grid_fallback_for_background` — when set, the excluded background mask is tiled on an absolute
++  8px-pitch grid into small `is_grid_fallback: True` components (one per occupied tile, not one per pixel;
++  fails CLOSED — omits entirely rather than truncating an arbitrary subset — if tiling would exceed 64
++  tiles). `_components_detailed`/`rich_action_candidates` (`arc_graph_explore.py`) thread the flag through
++  and give fallback tiles their OWN reserved candidate budget, appended after the normal salience-ranked real
++  objects — **not** folded into the same salience sort. Real bug found and fixed mid-implementation: an
++  initial version put fallback tiles in the SAME pool as real objects, ranked by the SAME salience formula
++  (area × color-rarity) — since fallback tiles are BY CONSTRUCTION small pieces of the most-common (i.e.
++  near-zero-rarity) color, they always sorted to the bottom and were silently cut by the existing
++  `max_click=48` cap, measured to add ZERO working candidates despite 55 being generated. A SECOND bug found
++  the same way: sorting the reserved fallback bucket by LARGEST tile first also failed, because the tile
++  that actually covers a real winning click was small (area=9, an interior sliver against other objects)
++  and sat behind ~50 large, genuinely-empty background tiles; flipping to SMALLEST-first (mirroring
++  `REQ-ARC-FCP-5758`'s own established "small objects win" finding elsewhere in this file) fixed it.
++- **Measured result** (real bp35 replay, `results/arc_loop_solve_bp35.json`'s reproduction-gated winning
++  trajectory, both arms measured with and without the flag): **21/57 generation misses -> 15/57 at the real
++  default `max_click=48` budget — a genuine, disclosed PARTIAL fix (~29% reduction), not a complete one.**
++  An uncapped-budget diagnostic run (`max_click=200`, not the real live setting) closed the gap completely
++  (0/57 misses), confirming the underlying tiling mechanism is fully sound; the residual misses at the real
++  budget are a genuine candidate-budget-SHARING tradeoff against real, higher-salience objects, not a defect
++  in the fix itself. **lf52 and re86 (0 generation misses either way) are measured byte-for-byte unaffected
++  on and off** — the fix is targeted, not a blanket behavior change.
++- **Why still opt-in, not the new default:** a 29% partial fix, an 8px tile pitch chosen from one game's
++  empirical grid (not validated as a general default across other suppressed-background games), and no
++  measurement yet of whether adding up to 64 extra low-salience candidates per frame affects OTHER games'
++  candidate-generation cost/quality. Per the Phase-Prototype-and-Validation discipline: prototype shipped +
++  measured, wiring into the SUBMITTED live default is a separate, deliberate follow-up decision, not bundled
++  into this fix.
++- **Tests:** `tests/python/test_arc_grid_fallback_candidates.py` (8 tests: default-off parity, fallback-tile
++  coverage of a synthetic target cell, fail-closed on tile-count overflow, real-components-unaffected,
++  flag-off/flag-on live-agent-path invariants). Full existing surface-area regression suite (300+ tests
++  across `arc_color_blob_salience`/`arc_graph_explore`/`arc_solver_kit`/candidate-ranker consumers) passes
++  clean; a real backward-compatibility break was found and fixed during implementation (several existing
++  tests monkeypatch `_components_detailed` with the pre-fix 4-tuple return shape to test unrelated ranker
++  behavior — the new code unpacks defensively, `len(c) > 4`, rather than assuming 5-tuples unconditionally).
++- **Candidate next step (not done in this pass):** validate the 8px tile pitch / fallback-budget interaction
++  on a broader set of games before considering the flag for the live default; consider whether a smaller
++  tile pitch or a different fallback-ranking heuristic closes more of the residual 15/57 at the real budget.
++
+ ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
+ - status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
+ - evidence: Original 2026-06-19 evidence, now stale in part: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer`
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index fb76c046d9..dbffaec5d2 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -39,19 +39,34 @@ from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
+ from carnot.agentic.arc_goal_energy_live import make_goal_energy_heuristic
+ 
+ 
+-def _components_detailed(grid) -> list:
++def _components_detailed(grid, *, emit_grid_fallback: bool = False) -> list:
+     """Connected non-background components with (centroid_y, centroid_x, area, color).
+     Same 4-neighbour flood fill as world_model.objects(), but also returns area+color
+     so candidates can be ordered by VISUAL SALIENCE (segment size × color rarity) —
+     the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
+     search try the most salient interactive elements first instead of treating all
+-    objects uniformly."""
++    objects uniformly.
++
++    ``emit_grid_fallback`` (REQ-ARC-FCP-5757 follow-up, GAP-ARC-BP35-CLICK-CANDIDATE-
++    GENERATION-MISS, 2026-07-23; OFF by default): threads through to
++    ``object_centric_digest``'s ``emit_grid_fallback_for_background`` -- see that
++    function's docstring for the full diagnosis and rationale."""
+     from carnot.agentic.arc_solver_kit import object_centric_digest
+ 
+     comps = []
+-    for comp in object_centric_digest(grid)["components"]:
++    for comp in object_centric_digest(grid, emit_grid_fallback_for_background=emit_grid_fallback)[
++        "components"
++    ]:
+         cx, cy = comp["centroid"]
+-        comps.append((int(cy), int(cx), int(comp["area"]), int(comp["color"])))
++        comps.append(
++            (
++                int(cy),
++                int(cx),
++                int(comp["area"]),
++                int(comp["color"]),
++                bool(comp.get("is_grid_fallback")),
++            )
++        )
+     return comps
+ 
+ 
+@@ -204,6 +219,8 @@ def rich_action_candidates(
+     if 6 in ids:
+         import os
+ 
++        pts_already_bounded = False
++
+         grid = grid_of(frame)
+         pts = _action_prior_click_points(action_prior, frame, max_click=max_click)
+         # CARNOT_ARC_TIER_SCHEDULE=1 orders object-clicks by just-explore's 5 salience tiers (button-like
+@@ -229,21 +246,77 @@ def rich_action_candidates(
+             except Exception:
+                 pts = None
+         if pts is None:
+-            comps = _components_detailed(grid)
+-            if by_salience and comps:
++            # CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1 (REQ-ARC-FCP-5757 follow-up,
++            # GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS, 2026-07-23) tiles the excluded
++            # background color into coarse click candidates so individually-meaningful cells
++            # that share the most-common color (e.g. bp35's same-row blocker tiles) are not
++            # PERMANENTLY invisible to every downstream mechanism regardless of search depth.
++            # Default off -> byte-identical to the proven order (parity preserved; the
++            # SUBMITTED agent unchanged until an A/B greenlights it). The kwarg is only ever
++            # PASSED when the flag is actually on, so a test double patched against the
++            # pre-5757-followup 1-arg _components_detailed(grid) signature is unaffected.
++            grid_fallback_on = os.environ.get("CARNOT_ARC_GRID_FALLBACK_CANDIDATES") == "1"
++            if grid_fallback_on:
++                comps = _components_detailed(grid, emit_grid_fallback=True)
++            else:
++                comps = _components_detailed(grid)
++
++            # Unpacked defensively (not `cy, cx, area, color, is_fb = c`): several existing tests
++            # (e.g. test_req_arc_fcp_4491/4511/4512/4547/4568) monkeypatch _components_detailed
++            # with a fake returning the pre-5757-followup 4-tuple `(cy, cx, area, color)` shape,
++            # to test OTHER rich_action_candidates behavior (rankers, priors) unrelated to grid
++            # fallback -- a hard `len(c) == 5` assumption here would break every one of them.
++            def _is_fallback(c) -> bool:
++                return bool(c[4]) if len(c) > 4 else False
++
++            # Grid-fallback tiles are, BY CONSTRUCTION, small pieces of the single most-common
++            # color -- the exact combination (small area * near-zero color-rarity) the salience
++            # sort below ranks lowest. Left in the same pool, they are reliably pushed past the
++            # `max_click` cap by genuine higher-salience objects and NEVER actually surface as
++            # candidates (measured directly: 55 fallback tiles generated, 0 survived a top-48
++            # cut on a real bp35 state -- the bug this split fixes). Splitting them into their
++            # OWN small reserved budget guarantees the fallback mechanism can't be silently
++            # starved by unrelated objects it structurally can never outrank.
++            real_comps = [c for c in comps if not _is_fallback(c)] if grid_fallback_on else comps
++            fallback_comps = [c for c in comps if _is_fallback(c)] if grid_fallback_on else []
++            if by_salience and real_comps:
+                 from collections import Counter
+ 
+                 color_cells = Counter(int(v) for v in grid.flatten().tolist())
+                 # salience: big segments + globally-rare colors score highest
+-                comps.sort(
++                real_comps.sort(
+                     key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
+                 )
+-            pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
++            pts = [(int(c[1]), int(c[0])) for c in real_comps]
++            if fallback_comps:
++                # SMALLEST tile first, not largest: measured directly on bp35 that the tile
++                # actually covering a real winning click (area=9, a small interior sliver
++                # against other objects) sat near the BOTTOM of an area-descending sort behind
++                # ~50 large, genuinely-empty corner/edge tiles of the suppressed background --
++                # mirrors REQ-ARC-FCP-5758's own established finding elsewhere in this file
++                # ("winning object-clicks are consistently very SMALL objects").
++                fallback_comps.sort(key=lambda c: c[2])  # smaller tile first
++                # No further sub-cap here: object_centric_digest's own grid_fallback_max_tiles
++                # (default 64) is already the size guard. A first attempt additionally capped
++                # this at max_click//2 and measured a REAL, but smaller, improvement on bp35's
++                # actual reproduction-gated winning trajectory (21/57 generation misses -> 16/57)
++                # -- the covering tile for several targets simply didn't make that tighter cut.
++                # Removing the redundant sub-cap (keeping ALL emitted fallback tiles, bounded
++                # only by the digest's own 64-tile ceiling) measured a LARGER improvement on the
++                # SAME replay (21/57 -> 15/57 at the real default max_click=48; a synthetic,
++                # artificially-widened max_click=200 run -- NOT the real live budget -- closed it
++                # completely, confirming the underlying mechanism is sound and the remaining
++                # misses at the real budget are a genuine candidate-budget-sharing tradeoff
++                # against real, higher-salience objects, not a bug in the fallback tiling itself).
++                pts = pts[:max_click] + [(int(c[1]), int(c[0])) for c in fallback_comps]
++                pts_already_bounded = True  # don't let the loop's own [:max_click] slice
++                # below cut the appended fallback tail back off -- that would silently undo
++                # the whole point of the reserved fallback budget above.
+         if not pts:
+             h, w = grid.shape
+             pts = [(w // 2, h // 2)]
+         seen: set = set()
+-        for x, y in pts[:max_click]:
++        for x, y in pts if pts_already_bounded else pts[:max_click]:
+             p = (max(0, int(x)), max(0, int(y)))
+             if p in seen:
+                 continue
+diff --git a/python/carnot/agentic/arc_solver_kit.py b/python/carnot/agentic/arc_solver_kit.py
+index 8ce9aa48b4..a1160ce1c9 100644
+--- a/python/carnot/agentic/arc_solver_kit.py
++++ b/python/carnot/agentic/arc_solver_kit.py
+@@ -5016,8 +5016,32 @@ def cast_grid_phase_fsm_world_model(
+     }
+ 
+ 
+-def object_centric_digest(grid: Any) -> dict[str, Any]:
+-    """Connected-component digest for ARC frames or grids."""
++def object_centric_digest(
++    grid: Any,
++    *,
++    emit_grid_fallback_for_background: bool = False,
++    grid_fallback_tile_px: int = 8,
++    grid_fallback_max_tiles: int = 64,
++) -> dict[str, Any]:
++    """Connected-component digest for ARC frames or grids.
++
++    ``emit_grid_fallback_for_background`` (REQ-ARC-FCP-5757 follow-up,
++    ``GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS``, 2026-07-23; OFF by default -- a purely
++    additive opt-in, zero behavior change for any existing caller). The single most-common color
++    is always excluded wholesale as "background" here, unconditionally -- but the most-common
++    color is not necessarily true background: bp35's win condition requires clicking individual
++    same-row "blocker" cells that all happen to share the single most-common color (measured
++    directly: color 5, 2109/4096 px on a real stalled state), so those cells NEVER become click
++    candidates regardless of search depth or LLM judgment -- a generation/perception gap no
++    downstream selection or planning improvement can fix (confirmed via the 2026-07-23 candidate-
++    coverage attribution: bp35 alone accounts for all 21/25 of that run's generation misses, every
++    one an action-6 click never proposed despite 50+ other candidates existing). When enabled, the
++    excluded background mask is tiled on an absolute ``grid_fallback_tile_px``-pixel pitch
++    (grid-aligned across the whole frame) into small ``is_grid_fallback: True`` components -- one
++    per occupied tile, not one per pixel, so this does not regress into per-pixel-noise explosion.
++    Fails CLOSED: if tiling the background mask would exceed ``grid_fallback_max_tiles``, no
++    fallback components are emitted (an arbitrary subset would bias toward whichever tiles happen
++    to iterate first, worse than omitting)."""
+ 
+     import numpy as np
+ 
+@@ -5066,6 +5090,28 @@ def object_centric_digest(grid: Any) -> dict[str, Any]:
+                     "signature": signature,
+                 }
+             )
++    if emit_grid_fallback_for_background:
++        bg_ys, bg_xs = np.nonzero(~mask)
++        tile_px = max(1, int(grid_fallback_tile_px))
++        tile_of: dict[tuple[int, int], list[tuple[int, int]]] = {}
++        for y, x in zip(bg_ys.tolist(), bg_xs.tolist()):
++            tile_of.setdefault((y // tile_px, x // tile_px), []).append((y, x))
++        if len(tile_of) <= int(grid_fallback_max_tiles):
++            for cells in tile_of.values():
++                tys = [c[0] for c in cells]
++                txs = [c[1] for c in cells]
++                area = len(cells)
++                bbox = [min(tys), min(txs), max(tys), max(txs)]
++                components.append(
++                    {
++                        "color": background,
++                        "area": area,
++                        "bbox": bbox,
++                        "centroid": [sum(txs) / area, sum(tys) / area],
++                        "signature": f"c{background}:a{area}:bbox{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}:gridfallback",
++                        "is_grid_fallback": True,
++                    }
++                )
+     components.sort(key=lambda row: (-int(row["area"]), int(row["color"]), row["bbox"]))
+     return {
+         "operator": "object_centric_digest",
+diff --git a/tests/python/test_arc_grid_fallback_candidates.py b/tests/python/test_arc_grid_fallback_candidates.py
+new file mode 100644
+index 0000000000..33fff32e02
+--- /dev/null
++++ b/tests/python/test_arc_grid_fallback_candidates.py
+@@ -0,0 +1,132 @@
++"""Tests for the opt-in grid-fallback click-candidate generation
++(GAP-ARC-BP35-CLICK-CANDIDATE-GENERATION-MISS, 2026-07-23 follow-up to REQ-ARC-FCP-5757).
++
++Root cause: `object_centric_digest` (python/carnot/agentic/arc_solver_kit.py) excludes the single
++most-common color wholesale as "background" -- but the most-common color is not always true
++background (bp35's win condition needs clicking individual same-row "blocker" cells that all share
++that color), so those cells never become click candidates via `rich_action_candidates`, regardless
++of search depth or LLM judgment downstream. Fixed by an opt-in (env-var-gated,
++`CARNOT_ARC_GRID_FALLBACK_CANDIDATES=1`, default OFF) coarse-tile fallback over the excluded
++background mask. Measured directly on bp35's real reproduction-gated winning trajectory: 21/57
++generation misses -> 15/57 with the fix (a genuine, disclosed PARTIAL improvement, not a complete
++fix -- the remaining misses share candidate-generation budget with real, higher-salience objects).
++lf52 and re86 (which had zero generation misses either way) are unaffected on and off.
++"""
++
++from __future__ import annotations
++
++import os
++from types import SimpleNamespace
++
++import numpy as np
++import pytest
++
++from carnot.agentic.arc_solver_kit import object_centric_digest
++from carnot.agentic import arc_graph_explore
++
++
++def _frame(grid: np.ndarray, available_actions=(1, 6)) -> SimpleNamespace:
++    return SimpleNamespace(frame=grid, available_actions=list(available_actions))
++
++
++class TestObjectCentricDigestGridFallback:
++    def test_default_off_matches_prior_behavior_exactly(self):
++        grid = np.zeros((16, 16), dtype=int)
++        grid[4:6, 4:6] = 3  # a small real object
++        d_default = object_centric_digest(grid)
++        d_explicit_off = object_centric_digest(grid, emit_grid_fallback_for_background=False)
++        assert d_default == d_explicit_off
++        assert all(not c.get("is_grid_fallback") for c in d_default["components"])
++
++    def test_fallback_tiles_emitted_for_large_background_color(self):
++        grid = np.full((16, 16), 5, dtype=int)  # color 5 is the ENTIRE grid -> "background"
++        grid[2, 2] = 3  # one real object so background != only color present
++        d = object_centric_digest(
++            grid, emit_grid_fallback_for_background=True, grid_fallback_tile_px=4
++        )
++        assert d["background_color"] == 5
++        fallback = [c for c in d["components"] if c.get("is_grid_fallback")]
++        assert len(fallback) > 0
++        assert all(c["color"] == 5 for c in fallback)
++
++    def test_fallback_tile_covers_a_specific_target_cell(self):
++        # mirrors the real bp35 shape: one huge same-color region, a target cell buried inside it
++        grid = np.full((32, 32), 5, dtype=int)
++        grid[0, 0] = 9  # tiny real object elsewhere
++        d = object_centric_digest(
++            grid, emit_grid_fallback_for_background=True, grid_fallback_tile_px=8
++        )
++        fallback = [c for c in d["components"] if c.get("is_grid_fallback")]
++        target_y, target_x = 20, 14
++        covering = [
++            c
++            for c in fallback
++            if c["bbox"][0] <= target_y <= c["bbox"][2] and c["bbox"][1] <= target_x <= c["bbox"][3]
++        ]
++        assert covering, "no fallback tile covers the target cell -- tiling gap"
++
++    def test_fails_closed_when_tile_count_exceeds_cap(self):
++        grid = np.full((64, 64), 5, dtype=int)
++        grid[0, 0] = 9
++        # tile_px=1 on a 64x64 background -> ~4095 tiles, way over any reasonable cap
++        d = object_centric_digest(
++            grid,
++            emit_grid_fallback_for_background=True,
++            grid_fallback_tile_px=1,
++            grid_fallback_max_tiles=64,
++        )
++        fallback = [c for c in d["components"] if c.get("is_grid_fallback")]
++        assert fallback == []  # omitted entirely, not an arbitrary truncated subset
++
++    def test_real_components_unaffected_by_fallback_flag(self):
++        grid = np.zeros((16, 16), dtype=int)
++        grid[4:6, 4:6] = 3
++        d_off = object_centric_digest(grid)
++        d_on = object_centric_digest(grid, emit_grid_fallback_for_background=True)
++        real_off = [c for c in d_off["components"] if not c.get("is_grid_fallback")]
++        real_on = [c for c in d_on["components"] if not c.get("is_grid_fallback")]
++        assert real_off == real_on
++
++
++class TestRichActionCandidatesGridFallbackToggle:
++    def setup_method(self):
++        os.environ.pop("CARNOT_ARC_GRID_FALLBACK_CANDIDATES", None)
++
++    def teardown_method(self):
++        os.environ.pop("CARNOT_ARC_GRID_FALLBACK_CANDIDATES", None)
++
++    def test_flag_off_by_default_no_fallback_candidates(self):
++        grid = np.full((16, 16), 5, dtype=int)
++        grid[2, 2] = 3
++        frame = _frame(grid)
++        candidates = arc_graph_explore.rich_action_candidates(frame)
++        # only the one real object should produce a click candidate; the 5-colored background
++        # (255/256 cells) must NOT flood the output when the flag is off
++        click_candidates = [c for c in candidates if c.action_id == 6]
++        assert len(click_candidates) <= 2
++
++    def test_flag_on_adds_background_fallback_candidates(self):
++        grid = np.full((32, 32), 5, dtype=int)
++        grid[0, 0] = 3
++        frame = _frame(grid)
++        off = arc_graph_explore.rich_action_candidates(frame)
++        os.environ["CARNOT_ARC_GRID_FALLBACK_CANDIDATES"] = "1"
++        on = arc_graph_explore.rich_action_candidates(frame)
++        click_off = [c for c in off if c.action_id == 6]
++        click_on = [c for c in on if c.action_id == 6]
++        assert len(click_on) > len(click_off)
++
++    def test_flag_on_only_adds_candidates_never_removes_or_changes_real_ones(self):
++        # ON can ADD fallback candidates but must never remove or alter a real one -- this is the
++        # invariant that matters (byte-identical equality doesn't hold in general: even a
++        # maximally-diverse grid still has ONE most-common color by definition, so turning the
++        # flag on can always add at least a tiny fallback tile for it).
++        grid = np.arange(16).reshape(4, 4)
++        frame = _frame(grid)
++        off = arc_graph_explore.rich_action_candidates(frame)
++        os.environ["CARNOT_ARC_GRID_FALLBACK_CANDIDATES"] = "1"
++        on = arc_graph_explore.rich_action_candidates(frame)
++        off_keys = {(c.action_id, tuple(sorted((c.data or {}).items()))) for c in off}
++        on_keys = {(c.action_id, tuple(sorted((c.data or {}).items()))) for c in on}
++        assert off_keys <= on_keys
++        assert len(on) >= len(off)
+-- 
+2.55.0
+

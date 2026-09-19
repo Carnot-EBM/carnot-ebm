@@ -1,0 +1,2170 @@
+From 3feefeef750c1b788a2423bc775eb92b202af971 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 18:59:59 -0400
+Subject: [PATCH 04318/11362] [conductor] PHASE 0 (TRANSITION) -- archive .444
+ -> activate .445; assert YAML parses + pre-test gate green; RESOLVE any
+ poison pre-test. RECORD the .444 close-state (energy program CONCLUDED;
+ refocus on L1).
+
+Automated research step by research conductor.
+Task ID: exp4830-phase0
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_4830_archive_444_activate_445.py | 734 ++++++++++++++++++
+ research-roadmap-next.yaml                    | 401 ++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4830_archive_444_activate_445.json | 315 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_4830_archive_444_activate_445.py | 511 ++++++++++++
+ 13 files changed, 1983 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4830_archive_444_activate_445.py
+ create mode 100644 research-roadmap-next.yaml
+ create mode 100644 results/experiment_4830_archive_444_activate_445.json
+ create mode 100644 tests/python/test_experiment_4830_archive_444_activate_445.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 00e0416c58..4a4e5007c6 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -523,3 +523,7 @@
+ - SCENARIO-CAPSTONE-4829: The artifact `results/experiment_4829_capstone_v444.json` must emit principle-annotated top-level fields for `honest_verdict`, `s3_structural_energy_verdict`, `reproducible_total_levels`, `cited_upstream_artifacts`, and `inference_substrate`; it must also emit `levelup_bank`, `self_play_checkpoint`, `readiness`, `heldout_readiness`, `silent_bug_audit`, `submission_package_state`, `hardware_continuity`, `sota_handoff`, `upstream_oracle_declarations`, `flagged_artifacts_skipped`, `preconditions_checked`, `field_principles`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, and `capstone_ready`. The default `.444` read must produce a terminal-prefix `honest_verdict`, set `inference_substrate=aggregation_from_upstream_artifacts`, derive `s3_structural_energy_verdict.verdict=bounded_no_generation_lift` from Exp4821's clean live re-check, `winners_newly_entering_pool_delta=0.0`, CI95 `[0.0, 0.0]`, `lambda0_control.lambda=0.0`, `n_headroom_games=24`, `min_headroom_games=5`, `positive_control_passed=true`, `live_path_reachable=true`, `new_levels_not_in_bare_pool=[]`, and Exp4825 `s3_controls_verified=true`; record Exp4822 as a zero-delta level-up bank with oracle declaration honored as not-a-moat; record Exp4823 as a refreshed self-play checkpoint; record Exp4824 readiness as a flat held-out first-win null with WARN-only declared-null TAUTOLOGY; record Exp4827 as a blocked KV260 continuity check; carry registry `reproducible_total_levels=65`; and cite upstream sha256 values.
+ - SCENARIO-CAPSTONE-4829-BLOCKED-PRECONDITION: If `scripts/summarize_artifact.py` is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, the capstone spec lacks `REQ-CAPSTONE-4829`, or any required upstream artifact is missing, the workflow must still write `results/experiment_4829_capstone_v444.json` with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, empty metric imports, `inference_substrate=aggregation_from_upstream_artifacts`, and a valid reproducibility checksum.
+ - SCENARIO-CAPSTONE-4829-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; capstone_ready=true is success_/complete_.", `s3_structural_energy_verdict` = "the headline -- generation WIN (S4 authorized) / BOUNDED no-generation-lift / inconclusive-no-headroom; honors the matched-control + NEW-not-re-ranking checks.", `reproducible_total_levels` = "the monotonic ARC progress metric carried from the registry.", `cited_upstream_artifacts` = "list of {experiment_id, fields_imported, sha256} -- the audit trail.", and `inference_substrate` = "aggregation_from_upstream_artifacts (0.0001s floor)."
++- REQ-CAPSTONE-4830: The `.444` to `.445` transition recorder SHALL write `results/experiment_4830_archive_444_activate_445.json` without submitting to the leaderboard, without modifying `scripts/research_conductor.py`, and without fabricating missing resources. It SHALL verify that `AGENTS.md` and `CODEX.md` or `OPENCODE.md` were read, restore or preserve a parseable literal `research-roadmap-next.yaml` for milestone `2026.06.445`, verify `arc_solver_kit.offline_arcade()`, activate `.445` from `research-roadmap-next.yaml` when active `research-roadmap.yaml` is not already `.445`, assert the smart-subset pre-test gate is green on the complete path, read `ops/arc_solve_registry.yaml` as authoritative with `reproducible_total_levels=65`, cite `results/experiment_4829_capstone_v444.json`, `results/experiment_4821_structural_energy_s3_generation_lift.json`, `research-roadmap.yaml`, `research-roadmap-next.yaml`, and `ops/arc_solve_registry.yaml`, and record whether any single-failure poison pre-test was fixed or quarantined. The complete path SHALL record the true `.444` close-state: S3 Exp4821 is a genuine bounded null with `winners_newly_entering_pool_delta=0.0`, CI95 `[0.0, 0.0]`, matched `lambda0_control.lambda=0.0`, positive control passed, live path reachable, `n_headroom_games=24`, `min_headroom_games=5`, and Exp4825 controls verified as imported by Exp4829; therefore `energy_program_concluded=true`, the energy track adds no live ARC value, S4 is moot, and `.445` refocuses on the L1-FIRST-CONTACT generation wall where generic first-win remains `0.04` (`1/25`).
++- SCENARIO-CAPSTONE-4830: The transition artifact must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `energy_program_concluded`, and `reproducible_total_levels`; it must also emit `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `poison_test_resolved`, `preconditions_checked`, `transition`, `close_state_444`, `v445_refocus`, `cited_upstream_artifacts`, `field_principles`, `leaderboard_submission`, `duration_s`, `random_seed`, and `reproducibility_checksum`. The default `.445` transition read must produce a terminal-prefix `honest_verdict` beginning `complete_444_archived_445_activated_`, set `inference_substrate=aggregation_from_upstream_artifacts`, set `energy_program_concluded=true`, record `close_state_444.energy_close_state.s3_verdict=bounded_no_generation_lift`, carry registry `reproducible_total_levels=65`, set `v445_refocus.wall=L1-FIRST-CONTACT`, and keep `leaderboard_submission=false`.
++- SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION: If the literal `research-roadmap-next.yaml` cannot be restored or parsed as milestone `2026.06.445`, `arc_solver_kit.offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `65`, `results/experiment_4829_capstone_v444.json` is missing, `results/experiment_4821_structural_energy_s3_generation_lift.json` is missing, or the capstone spec lacks `REQ-CAPSTONE-4830`, the workflow must still write `results/experiment_4830_archive_444_activate_445.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, `energy_program_concluded=false`, and empty `close_state_444` and `v445_refocus`.
++- SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; clean transition is complete_444_archived_445_activated_<state>.", `inference_substrate` = "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).", `energy_program_concluded` = "the energy track is done (offline discriminator, no live value); the planner must NOT re-propose energy stages.", and `reproducible_total_levels` = "the authoritative ARC progress metric carried from the registry, not re-counted."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 707da79b64..47b5bb266d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 198,
+   "code_violations": 0,
+-  "experiments_checked": 3837,
++  "experiments_checked": 3838,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4830_archive_444_activate_445.py b/python/carnot/experiment_4830_archive_444_activate_445.py
+new file mode 100644
+index 0000000000..ac6c583759
+--- /dev/null
++++ b/python/carnot/experiment_4830_archive_444_activate_445.py
+@@ -0,0 +1,734 @@
++"""Experiment 4830: archive `.444`, activate `.445`, and close energy.
++
++Spec refs: REQ-CAPSTONE-4830, SCENARIO-CAPSTONE-4830,
++SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES.
++
++This transition is a record-only handoff. It reads the `.444` capstone, the S3
++generation-lift artifact, the roadmap files, and the ARC solve registry. The
++important record is that the staged energy program ended in a genuine bounded
++null: the offline discriminator added no live ARC value, so `.445` must refocus
++on the L1-first-contact generation wall.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_4820_archive_443_activate_444 import (  # noqa: E402
++    CommandResult,
++    _command_check,
++    _float,
++    _int,
++    _json_object,
++    _mapping,
++    _poison_test_id,
++    _read_text,
++    _registry_total_levels,
++    _yaml_info,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    run_smart_subset,
++)
++
++
++JsonDict = dict[str, Any]
++OfflineArcadeChecker = Callable[[], bool]
++SmartSubsetChecker = Callable[[Path], CommandResult]
++
++EXPERIMENT = "experiment_4830_archive_444_activate_445"
++EXPERIMENT_ID = 4830
++SCHEMA = "carnot.archive_activation.v444_to_v445_4830.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4830_archive_444_activate_445.json"
++OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
++RESEARCH_ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_SPEC_REL_PATH = Path("openspec/capabilities/capstone/spec.md")
++CAPSTONE_REL_PATH = Path("results/experiment_4829_capstone_v444.json")
++S3_REL_PATH = Path("results/experiment_4821_structural_energy_s3_generation_lift.json")
++
++ARCHIVED_MILESTONE = "2026.06.444"
++ACTIVATED_MILESTONE = "2026.06.445"
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 65
++RANDOM_SEED = 4830
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++S3_NULL_VERDICT = "bounded_no_generation_lift"
++S3_NULL_HONEST_VERDICT = "complete_structural_energy_s3_bounded_no_generation_lift"
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4830",
++    "SCENARIO-CAPSTONE-4830",
++    "SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; clean transition is complete_444_archived_445_activated_<state>."
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
++    },
++    "energy_program_concluded": {
++        "principle": (
++            "the energy track is done (offline discriminator, no live value); "
++            "the planner must NOT re-propose energy stages."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "honest_verdict",
++    "inference_substrate",
++    "energy_program_concluded",
++    "reproducible_total_levels",
++    "poison_test_resolved",
++    "preconditions_checked",
++    "transition",
++    "close_state_444",
++    "v445_refocus",
++    "cited_upstream_artifacts",
++    "field_principles",
++    "leaderboard_submission",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - integration smoke wrapper
++    import arc_solver_kit
++
++    arc_solver_kit.offline_arcade()
++    return True
++
++
++def _default_smart_subset_checker(root: Path) -> CommandResult:  # pragma: no cover - subprocess wrapper
++    return run_smart_subset(root)
++
++
++def _next_roadmap_ready(next_info: Mapping[str, Any]) -> bool:
++    return (
++        next_info.get("available") is True
++        and next_info.get("parses") is True
++        and next_info.get("milestone") == ACTIVATED_MILESTONE
++    )
++
++
++def _active_445_ready(active_info: Mapping[str, Any]) -> bool:
++    return active_info.get("parses") is True and active_info.get("milestone") == ACTIVATED_MILESTONE
++
++
++def _restore_next_from_active_if_needed(root: Path, *, active_info: Mapping[str, Any]) -> tuple[bool, str]:
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    if _next_roadmap_ready(next_info):
++        return False, ""
++    if not _active_445_ready(active_info):
++        return False, ""
++    try:
++        (root / RESEARCH_ROADMAP_NEXT_REL_PATH).write_text(
++            (root / RESEARCH_ROADMAP_REL_PATH).read_text(encoding="utf-8"),
++            encoding="utf-8",
++        )
++    except OSError as exc:
++        return False, str(exc)
++    return True, ""
++
++
++def _activate_next_roadmap(root: Path, *, next_info: Mapping[str, Any]) -> tuple[bool, str]:
++    if not _next_roadmap_ready(next_info):
++        return False, ""
++    try:
++        (root / RESEARCH_ROADMAP_REL_PATH).write_text(
++            (root / RESEARCH_ROADMAP_NEXT_REL_PATH).read_text(encoding="utf-8"),
++            encoding="utf-8",
++        )
++    except OSError as exc:
++        return False, str(exc)
++    return True, ""
++
++
++def _literal_next_precondition_command(root: Path) -> str:
++    next_path = root / RESEARCH_ROADMAP_NEXT_REL_PATH
++    return (
++        ".venv/bin/python -c \"import yaml; yaml.safe_load(open("
++        f"'{next_path}')); print('ok')\""
++    )
++
++
++def _preconditions(
++    root: Path,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker,
++    smart_subset_checker: SmartSubsetChecker,
++) -> JsonDict:
++    active_before = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    next_before = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    restored_next, restore_error = _restore_next_from_active_if_needed(root, active_info=active_before)
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++
++    try:
++        offline_ok = bool(offline_arcade_checker())
++        offline_error = ""
++    except Exception as exc:
++        offline_ok = False
++        offline_error = str(exc)
++
++    activation_attempted = False
++    activation_error = restore_error
++    if offline_ok and not _active_445_ready(active_before) and _next_roadmap_ready(next_info):
++        activation_attempted, activation_error = _activate_next_roadmap(root, next_info=next_info)
++
++    active_info = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    registry_levels = _registry_total_levels(root / REGISTRY_REL_PATH)
++    spec_text = _read_text(root / CAPSTONE_SPEC_REL_PATH) or ""
++    should_run_smart_subset = (
++        _next_roadmap_ready(next_info)
++        and offline_ok
++        and activation_error == ""
++        and _active_445_ready(active_info)
++    )
++    smart_subset = smart_subset_checker(root) if should_run_smart_subset else None
++
++    return {
++        "agents_md": {"path": "AGENTS.md", "available": (root / "AGENTS.md").exists()},
++        "codex_or_opencode_md": {
++            "path": "CODEX.md|OPENCODE.md",
++            "available": (root / "CODEX.md").exists() or (root / "OPENCODE.md").exists(),
++        },
++        "research_roadmap_next_yaml": {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "available": next_info["available"],
++            "parses": next_info["parses"],
++            "milestone": next_info["milestone"],
++            "before_available": next_before["available"],
++            "before_parses": next_before["parses"],
++            "before_milestone": next_before["milestone"],
++            "literal_precondition_command": _literal_next_precondition_command(root),
++            "literal_precondition_passed": next_info["available"] is True
++            and next_info["parses"] is True,
++            "milestone_matches_activation": _next_roadmap_ready(next_info),
++            "restored_from_active_roadmap": restored_next,
++            "restore_error": restore_error,
++            "activation_attempted": activation_attempted,
++            "activation_error": activation_error,
++        },
++        "active_research_roadmap_yaml": {
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "available": active_info["available"],
++            "parses": active_info["parses"],
++            "milestone": active_info["milestone"],
++            "milestone_before_activation": active_before["milestone"],
++        },
++        "offline_arcade": {
++            "available": offline_ok,
++            "command": (
++                ".venv/bin/python -c \"import arc_solver_kit; "
++                "arc_solver_kit.offline_arcade(); print('ok')\""
++            ),
++            "error": offline_error,
++        },
++        "smart_subset_pretest_gate": _command_check(smart_subset),
++        "registry": {
++            "path": str(REGISTRY_REL_PATH),
++            "available": registry_levels is not None,
++            "reproducible_total_levels": registry_levels,
++        },
++        "capstone_spec": {
++            "path": str(CAPSTONE_SPEC_REL_PATH),
++            "available": (root / CAPSTONE_SPEC_REL_PATH).exists(),
++            "has_req_4830": "REQ-CAPSTONE-4830" in spec_text,
++        },
++        "capstone_4829": {
++            "path": str(CAPSTONE_REL_PATH),
++            "available": (root / CAPSTONE_REL_PATH).exists(),
++        },
++        "s3_4821": {
++            "path": str(S3_REL_PATH),
++            "available": (root / S3_REL_PATH).exists(),
++        },
++    }
++
++
++def _first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    offline = _mapping(preconditions.get("offline_arcade"))
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    registry = _mapping(preconditions.get("registry"))
++    capstone_spec = _mapping(preconditions.get("capstone_spec"))
++
++    if next_info.get("restore_error") or next_info.get("activation_error"):
++        return "research_roadmap_activation_error"
++    if not _next_roadmap_ready(next_info):
++        return "research_roadmap_next_yaml"
++    if not _active_445_ready(active):
++        return "research_roadmap_445_unavailable"
++    if offline.get("available") is not True:
++        return "offline_arcade"
++    if smart.get("passed") is not True:
++        return "smart_subset_pretest_gate"
++    if _mapping(preconditions.get("agents_md")).get("available") is not True:
++        return "missing_agents_md"
++    if _mapping(preconditions.get("codex_or_opencode_md")).get("available") is not True:
++        return "missing_codex_or_opencode_md"
++    if capstone_spec.get("has_req_4830") is not True:
++        return "missing_capstone_spec_req_4830"
++    if registry.get("available") is not True:
++        return "arc_solve_registry"
++    if registry.get("reproducible_total_levels") != BASELINE_REPRODUCIBLE_TOTAL_LEVELS:
++        return "arc_solve_registry_total_levels_not_65"
++    for key, reason in (
++        ("capstone_4829", "missing_experiment_4829_capstone_v444"),
++        ("s3_4821", "missing_experiment_4821_structural_energy_s3_generation_lift"),
++    ):
++        if _mapping(preconditions.get(key)).get("available") is not True:
++            return reason
++    return None
++
++
++def _transition(preconditions: Mapping[str, Any], *, complete: bool) -> JsonDict:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    if not complete:
++        activation_state = "blocked_missing_or_failed_precondition"
++    elif next_info.get("activation_attempted") is True:
++        activation_state = "activated_from_research_roadmap_next"
++    else:
++        activation_state = "already_activated_by_conductor"
++    return {
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": bool(complete and _active_445_ready(active)),
++        "activation_state": activation_state,
++        "archive_state": "archive_noop_or_already_recorded",
++    }
++
++
++def _poison_test_resolution(preconditions: Mapping[str, Any]) -> JsonDict:
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    combined_output = f"{smart.get('stdout_tail', '')}\n{smart.get('stderr_tail', '')}"
++    current_passed = smart.get("passed")
++    if current_passed is True:
++        return {
++            "resolved": True,
++            "current_gate_passed": True,
++            "poison_tests": [],
++            "action": "no_poison_observed_current_gate_green",
++        }
++    poison_tests = []
++    if current_passed is False and "1 failed" in combined_output:
++        poison_tests.append(
++            {
++                "id": _poison_test_id(combined_output),
++                "reason": "single-failure smart-subset signature matches a stale transition expectation",
++                "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++            }
++        )
++    return {
++        "resolved": False,
++        "current_gate_passed": current_passed,
++        "poison_tests": poison_tests,
++        "action": "blocked_before_or_without_green_current_gate",
++    }
++
++
++def _cited_upstream(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "source": "active_research_roadmap_yaml",
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "fields_imported": ["milestone", "exp4830_prompt", "exp4831_l1_refocus"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_REL_PATH),
++        },
++        {
++            "source": "research_roadmap_next_yaml",
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "fields_imported": ["milestone", "literal_precondition"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_NEXT_REL_PATH),
++        },
++        {
++            "source": "experiment_4829_capstone_v444",
++            "path": str(CAPSTONE_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "capstone_ready",
++                "s3_structural_energy_verdict",
++                "readiness",
++                "heldout_readiness",
++                "silent_bug_audit",
++                "reproducible_total_levels",
++            ],
++            "sha256": file_sha256(root / CAPSTONE_REL_PATH),
++        },
++        {
++            "source": "experiment_4821_structural_energy_s3_generation_lift",
++            "path": str(S3_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "verifier_is_oracle",
++                "live_path_reachable",
++                "lambda0_control",
++                "n_headroom_games",
++                "min_headroom_games",
++                "positive_control_passed",
++                "winners_newly_entering_pool_delta",
++                "winners_newly_entering_pool_delta_ci95",
++            ],
++            "sha256": file_sha256(root / S3_REL_PATH),
++        },
++        {
++            "source": "arc_solve_registry",
++            "path": str(REGISTRY_REL_PATH),
++            "fields_imported": ["reproducible_total_levels"],
++            "sha256": file_sha256(root / REGISTRY_REL_PATH),
++        },
++    ]
++
++
++def _energy_close_state(capstone: Mapping[str, Any], s3: Mapping[str, Any]) -> JsonDict:
++    capstone_s3 = _mapping(capstone.get("s3_structural_energy_verdict"))
++    lambda0 = _mapping(capstone_s3.get("lambda0_control")) or _mapping(s3.get("lambda0_control"))
++    ci95 = capstone_s3.get("winners_newly_entering_pool_delta_ci95")
++    if not isinstance(ci95, list):
++        ci95 = s3.get("winners_newly_entering_pool_delta_ci95")
++    delta = _float(capstone_s3.get("winners_newly_entering_pool_delta"))
++    if delta is None:
++        delta = _float(s3.get("winners_newly_entering_pool_delta"))
++    n_headroom = _int(capstone_s3.get("n_headroom_games"), _int(s3.get("n_headroom_games"), 0))
++    min_headroom = _int(capstone_s3.get("min_headroom_games"), _int(s3.get("min_headroom_games"), 0))
++    controls_verified = (
++        capstone_s3.get("controls_verified_by_b1") is True
++        and capstone_s3.get("positive_control_passed") is True
++        and capstone_s3.get("live_path_reachable") is True
++    )
++    bounded_null = (
++        capstone_s3.get("verdict") == S3_NULL_VERDICT
++        and capstone_s3.get("bounded_no_generation_lift") is True
++        and capstone_s3.get("generation_win") is False
++        and capstone_s3.get("s4_authorized") is False
++        and s3.get("honest_verdict") == S3_NULL_HONEST_VERDICT
++        and s3.get("verifier_is_oracle") is False
++        and delta == 0.0
++        and ci95 == [0.0, 0.0]
++        and _float(lambda0.get("lambda")) == 0.0
++        and lambda0.get("matched_control") is True
++        and n_headroom == 24
++        and min_headroom == 5
++        and controls_verified
++    )
++    return {
++        "s3_verdict": capstone_s3.get("verdict"),
++        "s3_honest_verdict": s3.get("honest_verdict"),
++        "bounded_no_generation_lift": capstone_s3.get("bounded_no_generation_lift") is True,
++        "generation_win": capstone_s3.get("generation_win") is True,
++        "s4_authorized": capstone_s3.get("s4_authorized") is True,
++        "s4_moot": bounded_null,
++        "energy_program_concluded": bounded_null,
++        "adds_live_arc_value": not bounded_null,
++        "lambda0_control": dict(lambda0),
++        "winners_newly_entering_pool_delta": delta,
++        "winners_newly_entering_pool_delta_ci95": ci95 if isinstance(ci95, list) else [],
++        "n_headroom_games": n_headroom,
++        "min_headroom_games": min_headroom,
++        "positive_control_passed": capstone_s3.get("positive_control_passed") is True,
++        "live_path_reachable": capstone_s3.get("live_path_reachable") is True,
++        "controls_verified_by_b1": capstone_s3.get("controls_verified_by_b1") is True,
++        "new_levels_not_re_ranking": capstone_s3.get("new_levels_not_re_ranking") is True,
++        "direction_after_s3": capstone_s3.get("direction_after_s3"),
++        "planner_discipline": "do_not_repropose_energy_stages",
++    }
++
++
++def _close_state_444(
++    capstone: Mapping[str, Any],
++    s3: Mapping[str, Any],
++    registry_total_levels: int,
++) -> JsonDict:
++    return {
++        "capstone_honest_verdict": capstone.get("honest_verdict"),
++        "capstone_ready": capstone.get("capstone_ready") is True,
++        "capstone_reported_reproducible_total_levels": _int(
++            capstone.get("reproducible_total_levels"), registry_total_levels
++        ),
++        "reproducible_total_levels": registry_total_levels,
++        "energy_close_state": _energy_close_state(capstone, s3),
++        "readiness": _mapping(capstone.get("readiness")),
++        "heldout_readiness": _mapping(capstone.get("heldout_readiness")),
++        "silent_bug_audit": _mapping(capstone.get("silent_bug_audit")),
++    }
++
++
++def _v445_refocus() -> JsonDict:
++    return {
++        "wall": "L1-FIRST-CONTACT",
++        "generic_first_win_rate": 0.04,
++        "generic_first_win_fraction": "1/25",
++        "root_blocker": "winning_l1_prefix_never_proposed",
++        "headline_task_id": "exp4831-a1",
++        "headline_direction": "amortized_in_context_exploration_prior",
++        "energy_program_concluded": True,
++        "planner_must_not_repropose_energy_stages": True,
++        "null_next_frontier_if_l1_prior_fails": "perception_representation",
++    }
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Mapping[str, Any],
++    poison_test_resolved: Mapping[str, Any],
++    duration_s: float,
++    cited_upstream_artifacts: list[JsonDict],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"blocked_{reason}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "energy_program_concluded": False,
++        "reproducible_total_levels": None,
++        "poison_test_resolved": dict(poison_test_resolved),
++        "preconditions_checked": dict(preconditions_checked),
++        "transition": _transition(preconditions_checked, complete=False),
++        "close_state_444": {},
++        "v445_refocus": {},
++        "cited_upstream_artifacts": cited_upstream_artifacts,
++        "field_principles": FIELD_PRINCIPLES,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    duration_s = duration_from(started_s, now_s)
++    preconditions = _preconditions(
++        root_path,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    cited = _cited_upstream(root_path)
++    poison = _poison_test_resolution(preconditions)
++    blocker = _first_blocker(preconditions)
++    if blocker is not None:
++        artifact = _blocked_artifact(
++            reason=blocker,
++            preconditions_checked=preconditions,
++            poison_test_resolved=poison,
++            duration_s=duration_s,
++            cited_upstream_artifacts=cited,
++        )
++        validate_artifact(artifact)
++        return artifact
++
++    registry_total_levels = int(_mapping(preconditions["registry"])["reproducible_total_levels"])
++    capstone = _json_object(root_path / CAPSTONE_REL_PATH)
++    s3 = _json_object(root_path / S3_REL_PATH)
++    close_state = _close_state_444(capstone, s3, registry_total_levels)
++    transition = _transition(preconditions, complete=True)
++    activation_suffix = (
++        "from_next"
++        if transition["activation_state"] == "activated_from_research_roadmap_next"
++        else "already_active"
++    )
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": (
++            f"complete_444_archived_445_activated_{activation_suffix}_energy_program_concluded"
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "energy_program_concluded": True,
++        "reproducible_total_levels": registry_total_levels,
++        "poison_test_resolved": poison,
++        "preconditions_checked": preconditions,
++        "transition": transition,
++        "close_state_444": close_state,
++        "v445_refocus": _v445_refocus(),
++        "cited_upstream_artifacts": cited,
++        "field_principles": FIELD_PRINCIPLES,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _validate_checksum(artifact: Mapping[str, Any]) -> None:
++    checksum = artifact.get("reproducibility_checksum")
++    _require(
++        isinstance(checksum, str)
++        and checksum.startswith("sha256:")
++        and is_sha256(checksum.removeprefix("sha256:")),
++        "reproducibility_checksum must be sha256-prefixed",
++    )
++    expected = "sha256:" + payload_checksum(artifact)
++    _require(checksum == expected, "reproducibility_checksum does not match payload")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required artifact fields: {missing}")
++
++    verdict = artifact.get("honest_verdict")
++    _require(isinstance(verdict, str), "honest_verdict must be a string")
++    blocked = verdict.startswith("blocked_")
++    if not blocked:
++        _require(verdict.startswith(TERMINAL_PREFIXES), "honest_verdict must be terminal-prefixed")
++        _require(
++            verdict.startswith("complete_444_archived_445_activated_"),
++            "honest_verdict must record the .444/.445 terminal transition",
++        )
++
++    _require(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate must be aggregation_from_upstream_artifacts",
++    )
++    _require(artifact.get("leaderboard_submission") is False, "leaderboard_submission must remain false")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles drifted")
++
++    close = _mapping(artifact.get("close_state_444"))
++    refocus = _mapping(artifact.get("v445_refocus"))
++    poison = _mapping(artifact.get("poison_test_resolved"))
++    transition = _mapping(artifact.get("transition"))
++    if blocked:
++        _require(
++            close == {} and refocus == {} and artifact.get("energy_program_concluded") is False,
++            "blocked artifacts must not carry fabricated close-state",
++        )
++        _validate_checksum(artifact)
++        return None
++
++    _require(poison.get("resolved") is True, "poison pre-test resolution must be recorded")
++    _require(transition.get("active_milestone_confirmed") is True, "active .445 milestone must be confirmed")
++    _require(
++        artifact.get("reproducible_total_levels") == BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++        and close.get("reproducible_total_levels") == BASELINE_REPRODUCIBLE_TOTAL_LEVELS,
++        "registry total must be carried from arc_solve_registry",
++    )
++    _require(artifact.get("energy_program_concluded") is True, "energy program must be concluded")
++
++    energy = _mapping(close.get("energy_close_state"))
++    _require(
++        energy.get("s3_verdict") == S3_NULL_VERDICT
++        and energy.get("s3_honest_verdict") == S3_NULL_HONEST_VERDICT
++        and energy.get("energy_program_concluded") is True
++        and energy.get("s4_moot") is True
++        and energy.get("adds_live_arc_value") is False
++        and energy.get("bounded_no_generation_lift") is True
++        and energy.get("generation_win") is False
++        and energy.get("s4_authorized") is False
++        and energy.get("winners_newly_entering_pool_delta") == 0.0
++        and energy.get("winners_newly_entering_pool_delta_ci95") == [0.0, 0.0]
++        and _float(_mapping(energy.get("lambda0_control")).get("lambda")) == 0.0
++        and energy.get("n_headroom_games") == 24
++        and energy.get("min_headroom_games") == 5
++        and energy.get("positive_control_passed") is True
++        and energy.get("live_path_reachable") is True
++        and energy.get("controls_verified_by_b1") is True,
++        "S3 bounded null must conclude the energy program",
++    )
++    _require(
++        refocus.get("wall") == "L1-FIRST-CONTACT"
++        and refocus.get("generic_first_win_rate") == 0.04
++        and refocus.get("generic_first_win_fraction") == "1/25"
++        and refocus.get("planner_must_not_repropose_energy_stages") is True
++        and refocus.get("headline_task_id") == "exp4831-a1",
++        "L1 refocus must be recorded for .445",
++    )
++    _validate_checksum(artifact)
++    return None
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        started_s=started_s,
++        now_s=now_s,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    if write:
++        output_path = root_path / OUTPUT_REL_PATH
++        output_path.parent.mkdir(parents=True, exist_ok=True)
++        output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++if __name__ == "__main__":  # pragma: no cover - script entrypoint
++    result = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": result["honest_verdict"],
++                "result_path": result["result_path"],
++            },
++            sort_keys=True,
++        )
++    )
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..2d8c1db762
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,401 @@
++# Pre-staged .445 roadmap (Pre-Staged Roadmap Convention). REFOCUS from the concluded energy track to
++# the L1-first-contact wall (amortized in-context-exploration prior). Built by scripts/_build_roadmap_445.py.
++milestone: 2026.06.445
++planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-26). REFOCUS: energy program CONCLUDED (no live
++  value); forward focus returns to the L1-first-contact generation wall. Operator chose (a): run the amortized
++  in-context-exploration prior as the cheap, audit-prescribed fair-test that retires the exploration-prior
++  class (exp4701 was a SILENT BUG / dead archive, now frame-grid-fixed). Base rate acknowledged (~0/15
++  generation levers moved the wall; root cause = perception/representation, the .446 frontier via D).'
++milestone_title: 'REFOCUS: AMORTIZED IN-CONTEXT-EXPLORATION PRIOR vs the L1-first-contact wall (operator
++  chose ''a''). The energy program is concluded; attack the actual blocker -- the generic agent reaches
++  first-win on only 1/25 games because the winning L1 prefix is never proposed. Distill banked first-contact
++  winning trajectories into a cross-game exploration prior (Algorithm Distillation + AMAGO); the exp4701
++  silent-bug (dead archive) rerun, now the frame-grid fix landed. PASS (first-win > 0.04, archive alive,
++  prior exercised, holds off-distillation) -> a real generation lever; null -> the L1 wall survives +
++  the exploration-prior class is CLOSED -> .446 frontier is perception/representation (the root cause).
++  Plus the sprint-mandated level-up, self-play, readiness, infra/sota/capstone.'
++milestone_doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
++theme: 'The energy program concluded with a clean negative. Forward focus returns to the actual multi-level
++  live-solve blocker: L1-FIRST-CONTACT GENERATION (the winning prefix is never proposed; first-win 0.04).
++  The base rate is stark -- ~15 generation/exploration levers fairly tested, ~0 moved the wall, root cause
++  = perception/representation. The amortized in-context-exploration prior is the strongest UNTRIED lever
++  (its prior live build exp4701 was a SILENT BUG / dead archive, now frame-grid-fixed), so the operator
++  chose to run it as the cheap fair-test that RETIRES the exploration-prior class. Guards from the energy
++  program carry over (archive alive, prior materially changes proposals, lift holds off-distillation).
++  A genuine null retires the lever and points .446 at perception/representation.'
++sprint_forcing_function: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1
++  amortized-prior L1 attack + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt (Level-Up
++  Attempt Guarantee -- A2, rotated); self-play EVERY milestone (A3); 2 reserved infra (B1 silent-bug +
++  A1 archive-alive check, B2 submission harden); 1 hardware continuity (C KV260, SSH-only, always-write-blocked-artifact);
++  1 SOTA-ingestion (D perception/representation, the .446 frontier). The energy track is CONCLUDED --
++  the planner must NOT re-propose energy stages.
++tasks:
++- id: exp4830-phase0
++  title: PHASE 0 (TRANSITION) -- archive .444 -> activate .445; assert YAML parses + pre-test gate green;
++    RESOLVE any poison pre-test. RECORD the .444 close-state (energy program CONCLUDED; refocus on L1).
++  priority: critical
++  track: transition
++  max_turns: 40
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4830_archive_444_activate_445.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v444-activate-v445).'
++  prompt: "CONTEXT ({date}). Milestone 2026.06.444 completed. Mechanically transition to 2026.06.445,\
++    \ resolve any\npoison pre-test, RECORD the true .444 close-state. Routine (codex). Conductor may have\
++    \ already archived (no-op).\nYou MUST still WRITE the deliverable.\n\nKEY .444 CLOSE-STATE: the staged\
++    \ ENERGY program CONCLUDED -- S3 (exp4821) genuine bounded null (.444 B1\nverified). The energy adds\
++    \ NO live ARC value; S4 moot. The .445 refocus is the L1-FIRST-CONTACT generation\nwall (generic first-win\
++    \ 0.04=1/25). Record energy_program_concluded=true.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: `.venv/bin/python\
++    \ -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')\"\
++    ` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .444 -> activate .445 (no-op if\
++    \ already done). Record energy_program_concluded + the L1 refocus.\n  2. Run the pre-test gate; resolve\
++    \ any poison test. WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
++    \    principle: \"terminal prefix; clean transition is complete_444_archived_445_activated_<state>.\"\
++    \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (reads upstream JSON,\
++    \ no LLM; 0.0001s floor).\"\n  energy_program_concluded:\n    principle: \"the energy track is done\
++    \ (offline discriminator, no live value); the planner must NOT re-propose energy stages.\"\n  reproducible_total_levels:\n\
++    \    principle: \"the authoritative ARC progress metric carried from the registry, not re-counted.\"\
++    \n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4831-a1
++  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed REFOCUS) -- AMORTIZED IN-CONTEXT-EXPLORATION
++    PRIOR vs the L1-first-contact wall. Distill banked first-contact WINNING trajectories into a cross-game
++    in-context exploration prior (Algorithm Distillation 2210.14215 + AMAGO 2310.09971) that LEARNS TO
++    EXPLORE a fresh game, wired into the live E3 proposal path. Decisive: does it raise generic held-out
++    first-win ABOVE the 0.04 baseline? The exp4701 silent-bug (dead archive) rerun, now the frame-grid
++    fix landed. The cheap fair-test that retires the exploration-prior class.'
++  priority: critical
++  track: arc-l1-generation
++  max_turns: 200
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4831_amortized_incontext_exploration_prior_live.json
++  operator_override: '2026-06-26 operator chose (a): run the amortized in-context-exploration prior as
++    the cheap, audit-prescribed fair-test that retires the exploration-prior class. exp4701 (its prior
++    live build) was a SILENT BUG (dead archive), NOT a genuine null -- now reruns after the confirmed
++    frame-grid fix. Base rate acknowledged (~0/15 generation levers moved the wall; root cause is perception).'
++  prior_failures:
++  - experiment_id: exp4701-amortized-prior-go-explore-live
++    verdict: 'complete: amortized_prior_go_explore_no_coverage_gain (SILENT BUG -- dead Go-Explore archive,
++      NOT a genuine null)'
++    addressed_by: 'exp4701 reported coverage_delta=0.0 / first_win_rate_delta=0.0 BUT the silent-bug audit
++      found the cause: the Go-Explore archive was DEAD -- observations=0, stored_cells=0, prefixes_injected=0,
++      with_prior_total_steps=0 (the (1,64,64) _frame_grid no-op). The prior NEVER exercised. The _frame_grid
++      fix is CONFIRMED LANDED (go_explore_frame_grid_fix_confirmed=true); the audit''s P1 reopen is exactly
++      ''rerun_after_frame_grid_fix_with_positive_archive_cells''. This rerun REQUIRES positive archive
++      cells (observations>0, stored_cells>0, prefixes_injected>0) else blocked_dead_go_explore_archive.
++      retire_if_same_verdict: true -- if the prior is genuinely exercised (live archive, positive cells)
++      and still does NOT raise held-out first-win above 0.04, the amortized-prior generation lever is
++      genuinely nulled and RETIRED (closing the exploration-prior class).'
++    retire_if_same_verdict: true
++  - experiment_id: exp4688-controllable-novelty-proposal-policy
++    verdict: 'complete: controllable_novelty_no_new_level_winning_prefix_still_not_proposed (genuine null)'
++    addressed_by: 'exp4688 (NGU+RND controllable-novelty) genuinely nulled. The amortized prior is a DIFFERENT
++      mechanism: it LEARNS an exploration policy by distilling banked first-contact WINNING trajectories
++      (Algorithm Distillation), not an intrinsic-novelty drive. It must beat the exp4688 null AND a matched
++      no-prior ablation.'
++  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED REFOCUS (operator chose (a)). The energy program is CONCLUDED\
++    \ (no\nlive value). The actual multi-level live-solve blocker is the L1-FIRST-CONTACT generation wall:\
++    \ the generic\nE3AgentPolicy reaches first-win on only 1/25 public games (first_win_rate=0.04); the\
++    \ winning L1 prefix is\nNEVER proposed (project_arc_l1_first_contact_wall; project_arc_generation_not_selection).\
++    \ This attacks it with\nthe amortized IN-CONTEXT-EXPLORATION PRIOR -- the strongest untried generation\
++    \ lever (exp4697), whose prior\nbuild exp4701 was a SILENT BUG (dead archive), now rerun after the\
++    \ confirmed frame-grid fix. BASE-RATE NOTE:\n~15 generation levers have nulled; this is the cheap\
++    \ fair-test that RETIRES the exploration-prior class (a\ngenuine null here closes it; a lift moves\
++    \ the wall).\n\nTHE METHOD (Algorithm Distillation arXiv:2210.14215 + AMAGO arXiv:2310.09971 + arXiv:2601.19810):\
++    \ distill the\nbanked first-contact WINNING trajectories (the L1 wins from solved games) into a cross-game\
++    \ prior that, given\na fresh game's EARLY exploration in-context, biases action proposals toward first-win\
++    \ -- LEARNING TO EXPLORE a\nnovel game, NOT imitating any specific game. Wire it into the live E3\
++    \ proposal path (the _candidates /\nproposal hooks in arc_competition_agent.py).\n\nGUARD THE KNOWN\
++    \ FAILURE MODES (exp4697 fails_when): trajectories too sparse; public-game successes encode GAME\n\
++    IDs rather than reusable mechanics (the imitation trap); context omits decisive hidden state; the\
++    \ distilled\npolicy IMITATES the demonstrator rather than learning to explore. The gate distinguishes\
++    \ 'explore' from 'imitate'.\n\nEXISTING CODE TO READ FIRST:\n  - {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json\
++    \ (the silent-bug build to fix)\n  - {project_root}/ops/arc_null_silent_bug_audit.md (the dead-archive\
++    \ signature + the frame-grid fix confirmation)\n  - {project_root}/python/carnot/agentic/arc_go_explore.py\
++    \ (the archive -- frame-grid fix landed; must report positive cells)\n  - {project_root}/python/carnot/agentic/arc_competition_agent.py\
++    \ (E3AgentPolicy proposal hooks)\n  - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json\
++    \ (the nulled directed-exploration baseline)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other\
++    \ step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
++    ` exits 0. Else blocked_offline_arcade_missing, EXIT.\n     b. `.venv/bin/python -c \"from carnot.agentic.arc_go_explore\
++    \ import *\"` imports + frame-grid fix present. Else blocked_go_explore_missing, EXIT.\n  1. Distill\
++    \ the banked first-contact winning trajectories into the in-context exploration prior. Wire it into\n\
++    \     the live E3 proposal path (live-path-reachable; arc_orphan_solver_lint passes).\n  2. ARCHIVE-ALIVE\
++    \ CHECK (the exp4701 fix): run the archive + CONFIRM positive cells -- observations>0,\n     stored_cells>0,\
++    \ prefixes_injected>0. If any is 0 -> blocked_dead_go_explore_archive (exp4701 recurrence).\n  3.\
++    \ Measure held-out generic first-win WITH the prior vs a matched NO-PRIOR ablation (lambda=0). ALSO\
++    \ an\n     IMITATION control: the prior must help on games NOT in the distillation set.\n  4. WRITE\
++    \ the artifact with solve_provenance=live_agent_self_discovery.\n\nFALSIFIABLE GATE:\n  PASS iff (i)\
++    \ the archive is ALIVE (positive cells); AND (ii) the prior materially CHANGES proposals vs\n  no-prior\
++    \ (not a silent no-op -- the S2/S3 lesson); AND (iii) held-out generic first-win WITH prior MINUS\n\
++    \  no-prior > 0 with bootstrap CI95 EXCLUDING 0, ABOVE the 0.04 baseline; AND (iv) the lift holds\
++    \ on held-out\n  games NOT in the distillation set (exploration, not imitation). retire_if_same_verdict:\
++    \ true -- if the\n  archive is alive + the prior exercised but first-win does NOT rise above 0.04\
++    \ (CI includes 0), the\n  amortized-prior generation lever is genuinely nulled and RETIRED (the exploration-prior\
++    \ class is closed;\n  the L1-wall root cause is perception/representation, the .446 frontier).\n\n\
++    REQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
++    \ a lift is success_amortized_prior_raises_first_win_above_baseline, a genuine null is complete_amortized_prior_no_first_win_lift_l1_wall_survives,\
++    \ a dead archive is blocked_dead_go_explore_archive.\"\n  go_explore_archive_alive:\n    principle:\
++    \ \"observations>0 AND stored_cells>0 AND prefixes_injected>0 -- the exp4701 silent-bug guard; a 0\
++    \ means a non-test.\"\n  prior_changed_proposals:\n    principle: \"the prior must materially alter\
++    \ proposals vs no-prior (the S2/S3 no-op lesson) -- else the first-win delta is a silent no-op.\"\n\
++    \  first_win_rate_with_prior:\n    principle: \"held-out generic first-win WITH the prior -- must\
++    \ rise above the 0.04 baseline.\"\n  first_win_rate_no_prior_ablation:\n    principle: \"the matched\
++    \ lambda=0 control.\"\n  first_win_delta_ci95:\n    principle: \"must EXCLUDE 0 for a PASS -- a genuine\
++    \ lift, not noise.\"\n  imitation_control_heldout_games:\n    principle: \"the lift must hold on games\
++    \ NOT in the distillation set -- exploration, not memorization (the exp4697 imitation trap).\"\n \
++    \ live_path_reachable:\n    principle: \"the prior must be in the E3AgentPolicy proposal import closure\
++    \ (arc_orphan_solver_lint).\"\n  solve_provenance:\n    principle: \"live_agent_self_discovery --\
++    \ a first-win lift is the agent solving via its OWN (prior-biased) exploration.\"\n  inference_substrate:\n\
++    \    principle: \"live_llm_inference -- the live E3 agent runs; 60s floor.\"\n  preconditions_checked:\n\
++    \    principle: \"records arcade/go_explore checks so a missing-resource run emits blocked_, never\
++    \ a fabricated first-win.\"\n  random_seed:\n    principle: \"determinism for the distillation + the\
++    \ with/without runs + bootstrap.\"\n  reproducibility_checksum:\n    principle: \"content hash of\
++    \ (distilled traces, prior, games, seeds) so a replication catches drift.\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4832-a2
++  title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a
++    ROTATED unsolved target (bp35/sb26/lf52). offline_reproduced gated.
++  priority: critical
++  track: arc-north-star
++  max_turns: 160
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4832_levelup_attempt.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (Level-Up Attempt Guarantee; rotate bp35/sb26/lf52).'
++  prompt: "CONTEXT ({date}). Level-Up Attempt Guarantee: >=1 task whose gate BANKS a new reproducible\
++    \ level. ROTATE\nthe target (bp35/sb26/lf52 first-contact, else +1 deepen on the shallowest solved\
++    \ game).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade() exits 0; Qwen on\
++    \ the iGPU (NEVER 3090s) if induction is needed; missing env -> blocked_<game>_offline_env_missing.\n\
++    \  1. Read ops/arc_solve_registry.yaml; pick the rotated target; recommend_approach(game).\n  2. arc_loop_solve.py\
++    \ --game <target>; register a GameAdapter for the DELTA if needed.\n  3. Reproduction gate; update\
++    \ registry; record DEAD-ENDS.\n\nFALSIFIABLE GATE: >=1 NEW level offline-reproduced, solve_provenance=live_agent_self_discovery.\
++    \ retire_if_same_verdict: true -- rotate again if no bank.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
++    \  honest_verdict:\n    principle: \"terminal prefix; banked is success_, no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
++    \n  solve_provenance:\n    principle: \"live_agent_self_discovery; NOT outer_loop_re (CRITICAL).\"\
++    \n  offline_reproduced:\n    principle: \"only reproduced levels count.\"\n  reproduced_levels:\n\
++    \    principle: \"the new reproducible depth; the monotonic ARC metric.\"\n  inference_substrate:\n\
++    \    principle: \"live_llm_inference if induction runs (60s floor).\"\n  preconditions_checked:\n\
++    \    principle: \"records arcade/env/generator checks; a missing resource emits blocked_, never a\
++    \ fabricated solve.\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4833-a3
++  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- standing arc_loop_solve loop: verifier-routed
++    solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
++  priority: high
++  track: arc-north-star
++  max_turns: 140
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4833_self_play_verifier_checkpoint.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (self-play-every-milestone).'
++  prompt: "CONTEXT ({date}). Self-play EVERY milestone. Run arc_loop_solve.py on a banked game (warm-started)\
++    \ to\nadvance +1 level AND refresh the checkpoint.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade()\
++    \ exits 0; target has a banked level.\n  1. arc_loop_solve.py --game <banked-target> (or --auto):\
++    \ warm-start, verifier-routed search + reproduction gate, train + checkpoint.\n  2. Confirm the checkpoint\
++    \ mtime advanced.\n\nFALSIFIABLE GATE: checkpoint refreshed (mtime advances) AND reproduction gate\
++    \ passes on >=1 level. A failed run records the residual; does NOT fabricate.\n\nREQUIRED ARTIFACT\
++    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; refreshed +\
++    \ gate green is success_.\"\n  verifier_checkpoint_refreshed:\n    principle: \"the self-improvement\
++    \ signal.\"\n  inference_substrate:\n    principle: \"live_llm_inference (60s floor).\"\n  solve_provenance:\n\
++    \    principle: \"live_agent_self_discovery -- self-play is the agent improving on its own attempts.\"\
++    \n  preconditions_checked:\n    principle: \"records arcade/registry checks; a missing target emits\
++    \ blocked_, never a fabricated checkpoint.\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4834-a4
++  title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure held-out first-win
++    on the color-permuted variant harness (WITH the A1 prior if it passed), checkpoint/resume-capable.
++  priority: high
++  track: arc-north-star
++  max_turns: 120
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4834_heldout_first_win_readiness.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane).'
++  prompt: "CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605\
++    \ variant\nharness (WITH the A1 amortized prior if it passed). Checkpoint/resume so a capped run still\
++    \ emits a partial.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arcade + variant harness present; Qwen\
++    \ on the iGPU (NEVER 3090s). Scope under the codex cap (or checkpoint/resume).\n  1. Run with periodic\
++    \ checkpointing; on cap emit the partial.\n  2. Report rate + CI vs the 0.04 baseline.\n  3. SUBSTRATE\
++    \ HONESTY: if you RESUME from a cache and do NOT run live, declare inference_substrate=aggregation_from_upstream_artifacts.\
++    \ For a FLAT null (rate==0.04) add null_delta_methodology_note + positive_control_passed=true.\n\n\
++    FALSIFIABLE GATE: a non-fabricated rate with CI; a capped run still emits a partial.\n\nREQUIRED ARTIFACT\
++    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; a measured rate\
++    \ is complete_/success_.\"\n  heldout_first_win_rate:\n    principle: \"the deadline-relevant generalization\
++    \ signal -- held-out.\"\n  inference_substrate:\n    principle: \"live_llm_inference (60s floor) if\
++    \ live; aggregation_from_upstream_artifacts if a cache hit -- declare what ran.\"\n  null_delta_methodology_note:\n\
++    \    principle: \"for a flat null (rate==0.04), why the agreement is a genuine no-improvement, not\
++    \ a TAUTOLOGY bug.\"\n  checkpoint_emitted:\n    principle: \"a capped run must still emit a usable\
++    \ partial.\"\n  preconditions_checked:\n    principle: \"records generator/harness checks; a missing\
++    \ resource emits blocked_.\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4835-b1
++  title: 'PHASE B1 (INFRA slot 1) -- SILENT-BUG AUDIT + VERIFY the A1 amortized prior was GENUINELY exercised:
++    the Go-Explore archive is ALIVE (positive cells, NOT the exp4701 dead signal) AND the prior materially
++    changed proposals vs no-prior (not a silent no-op).'
++  priority: high
++  track: infra
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4835_silent_bug_audit.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 1; A1 archive-alive/prior-exercised
++    check).'
++  prompt: "CONTEXT ({date}). Reserved infra slot. Audit the milestone's ARC nulls for silent bugs. For\
++    \ A1 (exp4831):\n(1) VERIFY go_explore_archive_alive -- observations>0, stored_cells>0, prefixes_injected>0\
++    \ (the exp4701\ndead-archive recurrence guard); (2) confirm prior_changed_proposals=true (materially\
++    \ altered proposals vs\nno-prior -- not a silent no-op, the S2/S3 lesson); (3) confirm the imitation\
++    \ control (lift on held-out games\nNOT in the distillation set). If the archive is dead or the prior\
++    \ no-op'd, A1's first-win verdict is a NON-TEST.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .445\
++    \ result artifacts present.\n  1. Verify the A1 checks above; for each other ARC null, verify the\
++    \ lever was genuinely exercised.\n  2. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\
++    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
++    \ audit complete is complete_/success_.\"\n  a1_archive_alive_and_prior_exercised:\n    principle:\
++    \ \"the load-bearing check -- archive alive (positive cells) AND prior changed proposals, else A1\
++    \ is a non-test (exp4701 recurrence or no-op).\"\n  nulls_audited:\n    principle: \"count of nulls\
++    \ re-examined.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s\
++    \ floor).\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4836-b2
++  title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the Kaggle ARC-AGI-3
++    package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator checklist (include the
++    A1 prior if it passed).'
++  priority: high
++  track: infra
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4836_submission_package_harden.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 2; submission readiness,
++    operator-only submit).'
++  prompt: "CONTEXT ({date}). Reserved infra slot, deadline-relevant. Verify the ARC-AGI-3 Kaggle package\
++    \ builds and\nthe frozen live stack packages within ~16GB. If A1's prior PASSED, include it. Produce\
++    \ an OPERATOR checklist --\nNEVER submits.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the submission\
++    \ packaging scripts + arc_competition_agent present.\n  1. Dry-build; verify the agent config + model\
++    \ paths resolve; estimate VRAM vs 16GB.\n  2. WRITE the operator checklist; the task does not submit.\n\
++    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
++    \ package builds is success_/complete_.\"\n  submission_package_ready:\n    principle: \"True iff\
++    \ ready for the OPERATOR to submit; the task NEVER submits.\"\n  vram_estimate_gb:\n    principle:\
++    \ \"must fit ~16GB Kaggle with KV + headroom.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
++    \ (0.0001s floor).\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4837-c
++  title: PHASE C (HARDWARE -- KV260) -- SSH-reachability; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
++    on failure -- do NOT exit with no file changes). Board known offline 2026-06-26 (no route to 192.168.51.98).
++  priority: medium
++  track: hardware
++  max_turns: 60
++  inference_substrate: hardware_smoke
++  deliverable: results/experiment_4837_kv260_continuity.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260; always write
++    a deliverable; board offline noted).'
++  prompt: "CONTEXT ({date}). KV260 hardware-continuity. SSH ONLY -- host SD-card device nodes are PERMANENTLY\
++    \ retired.\n\nCRITICAL: the board is known OFFLINE (no route to 192.168.51.98; kria->kv260.local unresolved).\
++    \ exp4817 FAILED\n3x with \"No file changes\" because the agent exited on SSH failure WITHOUT writing\
++    \ the deliverable. You MUST\nALWAYS WRITE results/experiment_4837_kv260_continuity.json -- on SSH\
++    \ failure write it with honest_verdict\nblocked_kv260_ssh_unreachable. NEVER exit without writing\
++    \ (that 3-fail-skips). A blocked artifact is the\nEXPECTED, CORRECT outcome.\n\nCONCRETE STEPS:\n\
++    \  0. PRECONDITIONS: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If non-zero -> honest_verdict\
++    \ blocked_kv260_ssh_unreachable + kv260_ssh_reachable=false, GO TO STEP 2 (do NOT exit before writing).\n\
++    \  1. If reachable: report the overlay + board state; record the next step.\n  2. ALWAYS WRITE the\
++    \ deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
++    \ \"terminal prefix; reachable is success_/complete_; unreachable is blocked_kv260_ssh_unreachable\
++    \ -- artifact MUST be written either way (no 'No file changes' 3-fail-skip).\"\n  inference_substrate:\n\
++    \    principle: \"hardware_smoke (SSH-attached board test).\"\n  kv260_ssh_reachable:\n    principle:\
++    \ \"the SSH check -- false when offline; the artifact is still written.\"\n  preconditions_checked:\n\
++    \    principle: \"records the SSH check; a blocked artifact is correct when the board is offline.\"\
++    \n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4838-d
++  title: PHASE D (SOTA-INGESTION -- the .446 frontier = PERCEPTION/REPRESENTATION, the L1-wall ROOT CAUSE)
++    -- ingest object-centric / relational / structured perception + representation-learning for getting
++    a WINNER INTO the pool (vs the ~0/15-nulled exploration-strategy class). Real arXiv IDs only.
++  priority: medium
++  track: sota-ingestion
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4838_sota_ingestion_perception_representation.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; .446 frontier
++    = perception/representation root cause).'
++  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot. The .445 base-rate analysis (levers ledger)\
++    \ established that\n~15 generation/exploration levers have nulled on the L1-first-contact wall, and\
++    \ the ROOT CAUSE is\nPERCEPTION/REPRESENTATION -- the agent's frame-only order-1 features are at chance\
++    \ (LOO~chance), so the winning\nprefix structurally cannot ENTER the pool (project_arc_live_agent_learning_gaps).\
++    \ Exploration-strategy levers\nre-weight a pool that can't represent the winner. The .446 frontier\
++    \ must attack PERCEPTION/REPRESENTATION, NOT\nmore exploration. Ingest: object-centric / slot / relational\
++    \ perception, structured state representations,\nrepresentation learning that captures game-agnostic\
++    \ STRUCTURE (GAP-ARCH-FEATURES direction), and getting a\nwinner REPRESENTABLE/proposable on a novel\
++    \ game. Use the RELIABLE channel (sweep_clusters.py /\nsweep_semscholar.py + low-concurrency WebSearch/WebFetch).\
++    \ Do NOT invoke /deep-research. Do NOT re-ingest the\nnulled exploration-strategy class.\n\nCONCRETE\
++    \ STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md present.\n  1. Read the\
++    \ discovered corpus filtered to object-centric/relational perception + representation; focused fresh\
++    \ sweep (top 5-8 papers).\n  2. Synthesize a SOTA->perception/representation mapping note for the\
++    \ L1-wall root cause. Cite REAL arXiv IDs.\n  3. Flag the strongest method(s) for the .446 roadmap;\
++    \ mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
++    \    principle: \"terminal prefix; mapping emitted is success_sota_ingestion_perception_representation_mapped.\"\
++    \n  methods_mapped:\n    principle: \"the strongest 3-5 perception/representation methods mapped onto\
++    \ the L1-wall root cause, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n    principle: \"every\
++    \ method claim must cite a verifiable arXiv ID.\"\n  flagged_for_v446:\n    principle: \"the strongest\
++    \ method(s) flagged so the .446 planner reads the mapping (perception, not more exploration).\"\n\
++    \  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4839-e
++  title: 'PHASE E (CAPSTONE .445) -- aggregate the scorecard: the A1 amortized-prior verdict (first-win
++    lift -> L1 wall moves, genuine null -> wall survives + exploration-prior class closed, or dead-archive
++    non-test per B1), level-up bank, self-play, readiness.'
++  priority: high
++  track: capstone
++  max_turns: 120
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4839_capstone_v445.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default).'
++  prompt: "CONTEXT ({date}). Capstone for .445. The HEADLINE is the A1 amortized-prior verdict: does the\
++    \ prior raise\nheld-out generic first-win ABOVE the 0.04 baseline (the L1 wall MOVES), is it a GENUINE\
++    \ null (archive alive +\nprior exercised but no lift -> the L1 wall survives + the exploration-prior\
++    \ class is CLOSED -> .446 frontier =\nperception/representation), or a dead-archive/no-op NON-TEST\
++    \ (per B1)?\n\nIMPORTANT: read each upstream artifact via scripts/summarize_artifact.py. For A1, the\
++    \ verdict is ONLY\ntrustworthy if B1 confirmed go_explore_archive_alive + prior_changed_proposals\
++    \ (else exp4701 recurrence / a\nsilent no-op). A lift that holds only on distillation-set games is\
++    \ imitation, not exploration -- do not count it.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .445\
++    \ upstream artifacts present.\n  1. Read each via summarize_artifact; honor the A1 archive-alive +\
++    \ prior-exercised + imitation checks (per B1).\n  2. Aggregate: A1 verdict; level-up; self-play; readiness.\
++    \ Cite sha256/ids.\n  3. WRITE the capstone scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
++    \  honest_verdict:\n    principle: \"terminal prefix; capstone_ready=true is success_/complete_.\"\
++    \n  a1_amortized_prior_verdict:\n    principle: \"the headline -- first-win lift (wall moves) / genuine\
++    \ null (wall survives, class closed) / dead-archive non-test; honors the archive-alive + prior-exercised\
++    \ + imitation checks.\"\n  reproducible_total_levels:\n    principle: \"the monotonic ARC progress\
++    \ metric carried from the registry.\"\n  cited_upstream_artifacts:\n    principle: \"list of {{experiment_id,\
++    \ fields_imported, sha256}} -- the audit trail.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
++    \ (0.0001s floor).\"\n"
++  milestone: 2026.06.445
++  agent_type: codex
++  model: gpt-5.5
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5458cdc722..60d59a1996 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-26T22:11:34.188322Z",
+-  "duration_s": 0.07187485694885254,
++  "run_date": "2026-06-26T22:58:56.482325Z",
++  "duration_s": 0.07012701034545898,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "921004feeaea896dcbf741d832baa3a35cd24bfb44f3d66ea20532cabc85368f",
++  "reproducibility_checksum": "725634d400d21e7abe999fa551e59f8345de25ae7f65a8f0c89bb00723a3c2fb",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1950b147a2df87e61779d59150cc829af10a8493"
++    "adversarial_verify_version": "574cf4462bf97500fb02612c18bca297ee3efbfa"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index f0d4dae0ab..461431b897 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-26T22:11:34.300664Z",
+-  "duration_s": 0.10193276405334473,
++  "run_date": "2026-06-26T22:58:56.594451Z",
++  "duration_s": 0.10147380828857422,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4db4b80597592b579f487d29952307378828b2f02b1d4293188275a9e6676221",
++  "reproducibility_checksum": "2076c82195f7f9802e30fa18f801687db6781f04025e22dac4b05855e3a2ca24",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1950b147a2df87e61779d59150cc829af10a8493"
++    "adversarial_verify_version": "574cf4462bf97500fb02612c18bca297ee3efbfa"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6bce4c4c45..a46a8ff4f1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.119779586791992,
++  "efficiency_gains_ms": 2.1424293518066406,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a47efb00a0..b990ddf7e4 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.087799996137619e-05,
++  "duration_s": 3.28519381582737e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4830_archive_444_activate_445.json b/results/experiment_4830_archive_444_activate_445.json
+new file mode 100644
+index 0000000000..894f2e17bf
+--- /dev/null
++++ b/results/experiment_4830_archive_444_activate_445.json
+@@ -0,0 +1,315 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "milestone",
++        "exp4830_prompt",
++        "exp4831_l1_refocus"
++      ],
++      "path": "research-roadmap.yaml",
++      "sha256": "f9a27f56a44ad6188407fc372c23f271666d3210152308532732f40f4118872c",
++      "source": "active_research_roadmap_yaml"
++    },
++    {
++      "fields_imported": [
++        "milestone",
++        "literal_precondition"
++      ],
++      "path": "research-roadmap-next.yaml",
++      "sha256": "f9a27f56a44ad6188407fc372c23f271666d3210152308532732f40f4118872c",
++      "source": "research_roadmap_next_yaml"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "capstone_ready",
++        "s3_structural_energy_verdict",
++        "readiness",
++        "heldout_readiness",
++        "silent_bug_audit",
++        "reproducible_total_levels"
++      ],
++      "path": "results/experiment_4829_capstone_v444.json",
++      "sha256": "b93ed53a8bf4e742cf8e42dfb4e0cca3b3c97d33e209482003a8b0c1e60bf506",
++      "source": "experiment_4829_capstone_v444"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "verifier_is_oracle",
++        "live_path_reachable",
++        "lambda0_control",
++        "n_headroom_games",
++        "min_headroom_games",
++        "positive_control_passed",
++        "winners_newly_entering_pool_delta",
++        "winners_newly_entering_pool_delta_ci95"
++      ],
++      "path": "results/experiment_4821_structural_energy_s3_generation_lift.json",
++      "sha256": "9230675dee8a6c0192ac1fb2be11cd2403c216717ff736a3f7482906257ed814",
++      "source": "experiment_4821_structural_energy_s3_generation_lift"
++    },
++    {
++      "fields_imported": [
++        "reproducible_total_levels"
++      ],
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
++      "source": "arc_solve_registry"
++    }
++  ],
++  "close_state_444": {
++    "capstone_honest_verdict": "complete_s3_bounded_no_generation_lift_capstone_ready",
++    "capstone_ready": true,
++    "capstone_reported_reproducible_total_levels": 65,
++    "energy_close_state": {
++      "adds_live_arc_value": false,
++      "bounded_no_generation_lift": true,
++      "controls_verified_by_b1": true,
++      "direction_after_s3": "bounded_at_real_offline_discriminator_no_live_value",
++      "energy_program_concluded": true,
++      "generation_win": false,
++      "lambda0_control": {
++        "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
++        "lambda": 0.0,
++        "matched_control": true
++      },
++      "live_path_reachable": true,
++      "min_headroom_games": 5,
++      "n_headroom_games": 24,
++      "new_levels_not_re_ranking": true,
++      "planner_discipline": "do_not_repropose_energy_stages",
++      "positive_control_passed": true,
++      "s3_honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
++      "s3_verdict": "bounded_no_generation_lift",
++      "s4_authorized": false,
++      "s4_moot": true,
++      "winners_newly_entering_pool_delta": 0.0,
++      "winners_newly_entering_pool_delta_ci95": [
++        0.0,
++        0.0
++      ]
++    },
++    "heldout_readiness": {
++      "decision": "flat_null_no_readiness_gain",
++      "experiment_id": 4824,
++      "first_win_baseline": 0.04,
++      "heldout_first_win_delta_vs_baseline": 0.0,
++      "heldout_first_win_delta_vs_prior_best": 0.0,
++      "heldout_first_win_rate": 0.04,
++      "heldout_variant_attempts": 100,
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "null_delta_methodology_note_present": true,
++      "parity_test_green": true,
++      "positive_control_passed": true,
++      "prior_best_heldout_first_win_rate": 0.04,
++      "source": "HELDOUT"
++    },
++    "readiness": {
++      "heldout_decision": "flat_null_no_readiness_gain",
++      "ready_for_operator_submit": false,
++      "reason": "requires_s3_generation_win_clean_package_and_heldout_gain",
++      "s3_verdict": "bounded_no_generation_lift",
++      "s4_authorized": false,
++      "structural_energy_direction": "bounded_at_real_offline_discriminator_no_live_value",
++      "submission_package_decision": "package_ready_operator_only"
++    },
++    "reproducible_total_levels": 65,
++    "silent_bug_audit": {
++      "experiment_id": 4825,
++      "nulls_audited": 3,
++      "s3_control_check": {
++        "artifact_arc_orphan_solver_lint_passed": true,
++        "artifact_live_path_reachable": true,
++        "current_arc_orphan_solver_lint_passed": true,
++        "guidance_exercise_check": {
++          "candidate_pool_differs_from_baseline": true,
++          "candidate_states_scored": 24,
++          "differing_headroom_games": [
++            "ar25",
++            "bp35",
++            "cd82",
++            "cn04",
++            "dc22",
++            "g50t",
++            "ka59",
++            "lf52",
++            "ls20",
++            "m0r0",
++            "re86",
++            "sb26",
++            "sc25",
++            "sk48",
++            "sp80",
++            "tr87",
++            "tu93",
++            "wa30"
++          ],
++          "fingerprint_differences": [],
++          "goal_energy_score_variance": 0.0003908818794621362,
++          "guidance_exercised": true,
++          "real_candidate_state_evidence": true,
++          "source_present": true
++        },
++        "live_path_reachable": true,
++        "matched_lambda0_control": true,
++        "min_headroom_games": 5,
++        "n_headroom_games": 24,
++        "new_levels_not_in_bare_pool": true,
++        "positive_control_passed": true,
++        "s3_controls_verified": true,
++        "s3_guidance_exercised": true,
++        "same_games_seeds_budget": true,
++        "source_match_check": {
++          "baseline_headroom_games": 24,
++          "guided_headroom_games": 24,
++          "per_game_variant_counts_match": true,
++          "same_source_games_and_budget": true,
++          "single_random_seed_recorded": true,
++          "source_present": true,
++          "variant_signatures_match": true
++        }
++      },
++      "s3_controls_verified": true,
++      "s3_guidance_exercised": true,
++      "silent_bugs_found_count": 0,
++      "source": "BUG_AUDIT",
++      "trusted_nulls": [
++        "experiment_4821_structural_energy_s3_generation_lift",
++        "experiment_4822_levelup_attempt",
++        "experiment_4824_heldout_first_win_readiness"
++      ]
++    }
++  },
++  "duration_s": 0.0001,
++  "energy_program_concluded": true,
++  "experiment": "experiment_4830_archive_444_activate_445",
++  "experiment_id": 4830,
++  "field_principles": {
++    "energy_program_concluded": {
++      "principle": "the energy track is done (offline discriminator, no live value); the planner must NOT re-propose energy stages."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; clean transition is complete_444_archived_445_activated_<state>."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
++    },
++    "reproducible_total_levels": {
++      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
++    }
++  },
++  "honest_verdict": "complete_444_archived_445_activated_already_active_energy_program_concluded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_submission": false,
++  "poison_test_resolved": {
++    "action": "no_poison_observed_current_gate_green",
++    "current_gate_passed": true,
++    "poison_tests": [],
++    "resolved": true
++  },
++  "preconditions_checked": {
++    "active_research_roadmap_yaml": {
++      "available": true,
++      "milestone": "2026.06.445",
++      "milestone_before_activation": "2026.06.445",
++      "parses": true,
++      "path": "research-roadmap.yaml"
++    },
++    "agents_md": {
++      "available": true,
++      "path": "AGENTS.md"
++    },
++    "capstone_4829": {
++      "available": true,
++      "path": "results/experiment_4829_capstone_v444.json"
++    },
++    "capstone_spec": {
++      "available": true,
++      "has_req_4830": true,
++      "path": "openspec/capabilities/capstone/spec.md"
++    },
++    "codex_or_opencode_md": {
++      "available": true,
++      "path": "CODEX.md|OPENCODE.md"
++    },
++    "offline_arcade": {
++      "available": true,
++      "command": ".venv/bin/python -c \"import arc_solver_kit; arc_solver_kit.offline_arcade(); print('ok')\"",
++      "error": ""
++    },
++    "registry": {
++      "available": true,
++      "path": "ops/arc_solve_registry.yaml",
++      "reproducible_total_levels": 65
++    },
++    "research_roadmap_next_yaml": {
++      "activation_attempted": false,
++      "activation_error": "",
++      "available": true,
++      "before_available": false,
++      "before_milestone": null,
++      "before_parses": false,
++      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
++      "literal_precondition_passed": true,
++      "milestone": "2026.06.445",
++      "milestone_matches_activation": true,
++      "parses": true,
++      "path": "research-roadmap-next.yaml",
++      "restore_error": "",
++      "restored_from_active_roadmap": true
++    },
++    "s3_4821": {
++      "available": true,
++      "path": "results/experiment_4821_structural_energy_s3_generation_lift.json"
++    },
++    "smart_subset_pretest_gate": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4830_archive_444_activate_445.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "passed": true,
++      "stderr_tail": "",
++      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.69s\n"
++    }
++  },
++  "random_seed": 4830,
++  "reproducibility_checksum": "sha256:19b8db280b62d2afb47a8ff577557cb974deb7813c63ff7599acbb887c7a7136",
++  "reproducible_total_levels": 65,
++  "result_path": "results/experiment_4830_archive_444_activate_445.json",
++  "schema": "carnot.archive_activation.v444_to_v445_4830.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4830",
++    "SCENARIO-CAPSTONE-4830",
++    "SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES"
++  ],
++  "transition": {
++    "activated_milestone": "2026.06.445",
++    "activation_state": "already_activated_by_conductor",
++    "active_milestone_confirmed": true,
++    "archive_state": "archive_noop_or_already_recorded",
++    "archived_milestone": "2026.06.444"
++  },
++  "v445_refocus": {
++    "energy_program_concluded": true,
++    "generic_first_win_fraction": "1/25",
++    "generic_first_win_rate": 0.04,
++    "headline_direction": "amortized_in_context_exploration_prior",
++    "headline_task_id": "exp4831-a1",
++    "null_next_frontier_if_l1_prior_fails": "perception_representation",
++    "planner_must_not_repropose_energy_stages": true,
++    "root_blocker": "winning_l1_prefix_never_proposed",
++    "wall": "L1-FIRST-CONTACT"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 445e21a887..4c2c6a0e51 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T22:11:09Z",
+-  "finished_at": "2026-06-26T22:11:09Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-26T22:58:30Z",
++  "finished_at": "2026-06-26T22:58:30Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 69b256161d..352c3d32d3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T22:11:09Z",
+-  "finished_at": "2026-06-26T22:11:09Z",
++  "started_at": "2026-06-26T22:58:30Z",
++  "finished_at": "2026-06-26T22:58:30Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 59aa978aaa..3ffe2bc2eb 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T22:11:09Z",
+-  "finished_at": "2026-06-26T22:11:09Z",
++  "started_at": "2026-06-26T22:58:30Z",
++  "finished_at": "2026-06-26T22:58:30Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4830_archive_444_activate_445.py b/tests/python/test_experiment_4830_archive_444_activate_445.py
+new file mode 100644
+index 0000000000..a9fc2c5770
+--- /dev/null
++++ b/tests/python/test_experiment_4830_archive_444_activate_445.py
+@@ -0,0 +1,511 @@
++"""Tests for Exp 4830 `.444` archive / `.445` activation record.
++
++Spec refs: REQ-CAPSTONE-4830, SCENARIO-CAPSTONE-4830,
++SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4830_archive_444_activate_445 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _green_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=0,
++        stdout="132 passed in 7.0s",
++        stderr="",
++    )
++
++
++def _red_poison_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=1,
++        stdout="1 failed, 131 passed in 7.1s",
++        stderr="test_expected_energy_s4_followup still expects live energy value",
++    )
++
++
++def _s3_4821() -> JsonDict:
++    return {
++        "experiment": "experiment_4821_structural_energy_s3_generation_lift",
++        "experiment_id": 4821,
++        "honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
++        "verifier_is_oracle": False,
++        "live_path_reachable": True,
++        "lambda0_control": {
++            "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
++            "lambda": 0.0,
++            "matched_control": True,
++        },
++        "lambda_guidance": 1.0,
++        "n_headroom_games": 24,
++        "min_headroom_games": 5,
++        "positive_control_passed": True,
++        "new_levels_not_in_bare_pool": [],
++        "winners_newly_entering_pool_delta": 0.0,
++        "winners_newly_entering_pool_delta_ci95": [0.0, 0.0],
++        "retire_if_same_verdict": True,
++        "solve_provenance": "live_agent_self_discovery",
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++    }
++
++
++def _capstone_4829() -> JsonDict:
++    return {
++        "experiment": "experiment_4829_capstone_v444",
++        "experiment_id": 4829,
++        "capstone_ready": True,
++        "honest_verdict": "complete_s3_bounded_no_generation_lift_capstone_ready",
++        "reproducible_total_levels": 65,
++        "s3_structural_energy_verdict": {
++            "verdict": "bounded_no_generation_lift",
++            "bounded_no_generation_lift": True,
++            "generation_win": False,
++            "s4_authorized": False,
++            "direction_after_s3": "bounded_at_real_offline_discriminator_no_live_value",
++            "upstream_honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
++            "verifier_is_oracle": False,
++            "live_path_reachable": True,
++            "matched_lambda0_control": True,
++            "lambda0_control": {
++                "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
++                "lambda": 0.0,
++                "matched_control": True,
++            },
++            "controls_verified_by_b1": True,
++            "b1_control_snapshot": {
++                "controls_verified_by_b1": True,
++                "matched_lambda0_control_b1": True,
++                "new_levels_not_re_ranking_b1": True,
++                "reachable_winner_positive_control_b1": True,
++                "s3_guidance_exercised_b1": True,
++            },
++            "positive_control_passed": True,
++            "reachable_winner_positive_control": True,
++            "guidance_exercised": True,
++            "n_headroom_games": 24,
++            "min_headroom_games": 5,
++            "headroom_floor_met": True,
++            "new_levels_not_re_ranking": True,
++            "new_levels_not_in_bare_pool": [],
++            "winners_newly_entering_pool_delta": 0.0,
++            "winners_newly_entering_pool_delta_ci95": [0.0, 0.0],
++            "ci_includes_zero": True,
++            "ci_excludes_zero": False,
++            "reason": "no_generation_lift_ci_includes_zero",
++        },
++        "silent_bug_audit": {
++            "s3_controls_verified": True,
++            "s3_guidance_exercised": True,
++            "trusted_nulls": [
++                "experiment_4821_structural_energy_s3_generation_lift",
++                "experiment_4822_levelup_attempt",
++                "experiment_4824_heldout_first_win_readiness",
++            ],
++        },
++        "readiness": {
++            "s3_verdict": "bounded_no_generation_lift",
++            "s4_authorized": False,
++            "structural_energy_direction": "bounded_at_real_offline_discriminator_no_live_value",
++            "ready_for_operator_submit": False,
++        },
++        "heldout_readiness": {
++            "heldout_first_win_rate": 0.04,
++            "first_win_baseline": 0.04,
++            "heldout_first_win_delta_vs_baseline": 0.0,
++            "decision": "flat_null_no_readiness_gain",
++        },
++    }
++
++
++def _write_repo_fixture(
++    root: Path,
++    *,
++    active_milestone: str = "2026.06.445",
++    next_present: bool = False,
++    registry_total: int = 65,
++    capstone_present: bool = True,
++    s3_present: bool = True,
++) -> None:
++    root.mkdir(parents=True, exist_ok=True)
++    (root / "AGENTS.md").write_text("# test\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# test\n", encoding="utf-8")
++    roadmap_text = (
++        f"milestone: {active_milestone}\n"
++        "theme: energy program CONCLUDED; refocus L1-FIRST-CONTACT generation wall\n"
++        "tasks:\n"
++        "  - id: exp4830-phase0\n"
++        "    deliverable: results/experiment_4830_archive_444_activate_445.json\n"
++    )
++    (root / "research-roadmap.yaml").write_text(roadmap_text, encoding="utf-8")
++    if next_present:
++        (root / "research-roadmap-next.yaml").write_text(
++            roadmap_text.replace(active_milestone, "2026.06.445", 1),
++            encoding="utf-8",
++        )
++    registry = root / "ops" / "arc_solve_registry.yaml"
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        "schema_version: 1\n"
++        "updated: '2026-06-26'\n"
++        f"reproducible_total_levels: {registry_total}\n",
++        encoding="utf-8",
++    )
++    spec = root / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec.parent.mkdir(parents=True, exist_ok=True)
++    spec.write_text("REQ-CAPSTONE-4830\n", encoding="utf-8")
++    if capstone_present:
++        _write_json(root / "results" / "experiment_4829_capstone_v444.json", _capstone_4829())
++    if s3_present:
++        _write_json(root / "results" / "experiment_4821_structural_energy_s3_generation_lift.json", _s3_4821())
++
++
++def _artifact(root: Path) -> JsonDict:
++    _write_repo_fixture(root)
++    return mod.build_artifact(
++        root,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++
++def test_req_capstone_4830_spec_anchor_declares_transition_contract() -> None:
++    """REQ-CAPSTONE-4830: OpenSpec declares the transition contract first."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in mod.SPEC_REFS:
++        assert ref in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4830_restores_next_and_records_energy_concluded(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4830: active `.445` records S3 null and restores next YAML."""
++
++    _write_repo_fixture(tmp_path, next_present=False)
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=2.0,
++        now_s=2.3,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8")) == artifact
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) == set(artifact)
++    assert (tmp_path / "research-roadmap-next.yaml").exists()
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"][
++        "restored_from_active_roadmap"
++    ] is True
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"][
++        "literal_precondition_passed"
++    ] is True
++    assert artifact["honest_verdict"] == (
++        "complete_444_archived_445_activated_already_active_energy_program_concluded"
++    )
++    assert artifact["transition"] == {
++        "archived_milestone": "2026.06.444",
++        "activated_milestone": "2026.06.445",
++        "active_milestone_confirmed": True,
++        "activation_state": "already_activated_by_conductor",
++        "archive_state": "archive_noop_or_already_recorded",
++    }
++    assert artifact["energy_program_concluded"] is True
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["reproducible_total_levels"] == 65
++    assert artifact["poison_test_resolved"] == {
++        "resolved": True,
++        "current_gate_passed": True,
++        "poison_tests": [],
++        "action": "no_poison_observed_current_gate_green",
++    }
++
++    close = artifact["close_state_444"]
++    assert close["capstone_honest_verdict"] == "complete_s3_bounded_no_generation_lift_capstone_ready"
++    assert close["reproducible_total_levels"] == 65
++    energy = close["energy_close_state"]
++    assert energy["s3_verdict"] == "bounded_no_generation_lift"
++    assert energy["s3_honest_verdict"] == "complete_structural_energy_s3_bounded_no_generation_lift"
++    assert energy["energy_program_concluded"] is True
++    assert energy["s4_moot"] is True
++    assert energy["adds_live_arc_value"] is False
++    assert energy["winners_newly_entering_pool_delta"] == 0.0
++    assert energy["winners_newly_entering_pool_delta_ci95"] == [0.0, 0.0]
++    assert energy["lambda0_control"]["lambda"] == 0.0
++    assert energy["n_headroom_games"] == 24
++    assert energy["min_headroom_games"] == 5
++    assert energy["positive_control_passed"] is True
++    assert energy["live_path_reachable"] is True
++    assert energy["controls_verified_by_b1"] is True
++
++    refocus = artifact["v445_refocus"]
++    assert refocus["wall"] == "L1-FIRST-CONTACT"
++    assert refocus["generic_first_win_rate"] == 0.04
++    assert refocus["generic_first_win_fraction"] == "1/25"
++    assert refocus["planner_must_not_repropose_energy_stages"] is True
++    assert refocus["headline_task_id"] == "exp4831-a1"
++    assert artifact["leaderboard_submission"] is False
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4830_can_activate_literal_next_roadmap(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4830: present next roadmap activates onto active YAML."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.444", next_present=True)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=False,
++        started_s=3.0,
++        now_s=3.4,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8").startswith(
++        "milestone: 2026.06.445"
++    )
++    assert artifact["transition"]["activation_state"] == "activated_from_research_roadmap_next"
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["activation_attempted"] is True
++    assert artifact["honest_verdict"] == (
++        "complete_444_archived_445_activated_from_next_energy_program_concluded"
++    )
++
++
++def test_scenario_capstone_4830_blockers_and_poison_signature_are_explicit(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION: blocked paths do not fabricate."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.444", next_present=False)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=4.0,
++        now_s=4.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_research_roadmap_next_yaml"
++    assert artifact["transition"]["activation_state"] == "blocked_missing_or_failed_precondition"
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is None
++    assert artifact["energy_program_concluded"] is False
++    assert artifact["close_state_444"] == {}
++    assert artifact["v445_refocus"] == {}
++
++    checks = _artifact(tmp_path / "good")["preconditions_checked"]
++    assert mod._first_blocker(checks) is None
++
++    for key, expected in {
++        "agents_md": "missing_agents_md",
++        "codex_or_opencode_md": "missing_codex_or_opencode_md",
++        "capstone_spec": "missing_capstone_spec_req_4830",
++        "registry": "arc_solve_registry",
++        "capstone_4829": "missing_experiment_4829_capstone_v444",
++        "s3_4821": "missing_experiment_4821_structural_energy_s3_generation_lift",
++    }.items():
++        bad = copy.deepcopy(checks)
++        bad[key]["available"] = False
++        if key == "capstone_spec":
++            bad[key]["has_req_4830"] = False
++        assert mod._first_blocker(bad) == expected
++
++    offline_bad = copy.deepcopy(checks)
++    offline_bad["offline_arcade"]["available"] = False
++    assert mod._first_blocker(offline_bad) == "offline_arcade"
++
++    registry_bad = copy.deepcopy(checks)
++    registry_bad["registry"]["reproducible_total_levels"] = 64
++    assert mod._first_blocker(registry_bad) == "arc_solve_registry_total_levels_not_65"
++
++    activation_bad = copy.deepcopy(checks)
++    activation_bad["research_roadmap_next_yaml"]["activation_error"] = "permission denied"
++    assert mod._first_blocker(activation_bad) == "research_roadmap_activation_error"
++
++    active_bad = copy.deepcopy(checks)
++    active_bad["active_research_roadmap_yaml"]["milestone"] = "2026.06.444"
++    assert mod._first_blocker(active_bad) == "research_roadmap_445_unavailable"
++
++    bad_smart = mod.build_artifact(
++        tmp_path / "good",
++        started_s=5.0,
++        now_s=5.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_red_poison_smart_subset,
++    )
++    assert bad_smart["honest_verdict"] == "blocked_smart_subset_pretest_gate"
++    assert bad_smart["poison_test_resolved"]["poison_tests"] == [
++        {
++            "id": "test_expected_energy_s4_followup",
++            "reason": "single-failure smart-subset signature matches a stale transition expectation",
++            "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++        }
++    ]
++
++
++def test_scenario_capstone_4830_field_principle_validation_fails_closed(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES: schema drift fails loudly."""
++
++    valid = _artifact(tmp_path)
++
++    missing = copy.deepcopy(valid)
++    del missing["honest_verdict"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = copy.deepcopy(valid)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = copy.deepcopy(valid)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_principles = copy.deepcopy(valid)
++    bad_principles["field_principles"] = {}
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(bad_principles)
++
++    bad_poison = copy.deepcopy(valid)
++    bad_poison["poison_test_resolved"]["resolved"] = False
++    with pytest.raises(ValueError, match="poison"):
++        mod.validate_artifact(bad_poison)
++
++    blocked = mod._blocked_artifact(
++        reason="unit_test",
++        preconditions_checked=valid["preconditions_checked"],
++        poison_test_resolved=valid["poison_test_resolved"],
++        duration_s=0.1,
++        cited_upstream_artifacts=valid["cited_upstream_artifacts"],
++    )
++    blocked["close_state_444"] = {"fabricated": True}
++    blocked["reproducibility_checksum"] = "sha256:" + mod.payload_checksum(blocked)
++    with pytest.raises(ValueError, match="blocked artifacts"):
++        mod.validate_artifact(blocked)
++
++    wrong_total = copy.deepcopy(valid)
++    wrong_total["reproducible_total_levels"] = 64
++    with pytest.raises(ValueError, match="registry total"):
++        mod.validate_artifact(wrong_total)
++
++    wrong_energy = copy.deepcopy(valid)
++    wrong_energy["energy_program_concluded"] = False
++    with pytest.raises(ValueError, match="energy program"):
++        mod.validate_artifact(wrong_energy)
++
++    for field, value in {
++        "s3_verdict": "generation_win_s4_authorized",
++        "energy_program_concluded": False,
++        "s4_moot": False,
++        "adds_live_arc_value": True,
++        "winners_newly_entering_pool_delta": 0.1,
++        "winners_newly_entering_pool_delta_ci95": [0.1, 0.2],
++        "n_headroom_games": 4,
++        "min_headroom_games": 6,
++        "positive_control_passed": False,
++        "live_path_reachable": False,
++        "controls_verified_by_b1": False,
++    }.items():
++        wrong = copy.deepcopy(valid)
++        wrong["close_state_444"]["energy_close_state"][field] = value
++        with pytest.raises(ValueError, match="S3"):
++            mod.validate_artifact(wrong)
++
++    wrong_refocus = copy.deepcopy(valid)
++    wrong_refocus["v445_refocus"]["wall"] = "S4-energy"
++    with pytest.raises(ValueError, match="L1"):
++        mod.validate_artifact(wrong_refocus)
++
++    bad_checksum_prefix = copy.deepcopy(valid)
++    bad_checksum_prefix["reproducibility_checksum"] = "not-a-checksum"
++    with pytest.raises(ValueError, match="sha256-prefixed"):
++        mod.validate_artifact(bad_checksum_prefix)
++
++    bad_checksum = copy.deepcopy(valid)
++    bad_checksum["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad_checksum)
++
++    assert mod._activate_next_roadmap(tmp_path, next_info={"available": False}) == (False, "")
++
++    restore_error_root = tmp_path / "restore_error"
++    restore_error_root.mkdir()
++    (restore_error_root / "research-roadmap.yaml").mkdir()
++    restored, restore_error = mod._restore_next_from_active_if_needed(
++        restore_error_root,
++        active_info={"available": True, "parses": True, "milestone": "2026.06.445"},
++    )
++    assert restored is False
++    assert restore_error
++
++    activation_error_root = tmp_path / "activation_error"
++    activation_error_root.mkdir()
++    (activation_error_root / "research-roadmap.yaml").mkdir()
++    (activation_error_root / "research-roadmap-next.yaml").write_text(
++        "milestone: 2026.06.445\n",
++        encoding="utf-8",
++    )
++    activated, activation_error = mod._activate_next_roadmap(
++        activation_error_root,
++        next_info={"available": True, "parses": True, "milestone": "2026.06.445"},
++    )
++    assert activated is False
++    assert activation_error
++
++    fallback_capstone = _capstone_4829()
++    del fallback_capstone["s3_structural_energy_verdict"]["winners_newly_entering_pool_delta"]
++    del fallback_capstone["s3_structural_energy_verdict"]["winners_newly_entering_pool_delta_ci95"]
++    fallback_energy = mod._energy_close_state(fallback_capstone, _s3_4821())
++    assert fallback_energy["winners_newly_entering_pool_delta"] == 0.0
++    assert fallback_energy["winners_newly_entering_pool_delta_ci95"] == [0.0, 0.0]
++
++    def _offline_raises() -> bool:
++        raise RuntimeError("offline arcade unavailable")
++
++    offline_root = tmp_path / "offline"
++    _write_repo_fixture(offline_root)
++    offline_artifact = mod.build_artifact(
++        offline_root,
++        started_s=6.0,
++        now_s=6.1,
++        offline_arcade_checker=_offline_raises,
++        smart_subset_checker=_green_smart_subset,
++    )
++    assert offline_artifact["honest_verdict"] == "blocked_offline_arcade"
++    assert offline_artifact["preconditions_checked"]["offline_arcade"]["error"] == (
++        "offline arcade unavailable"
++    )
+-- 
+2.55.0
+

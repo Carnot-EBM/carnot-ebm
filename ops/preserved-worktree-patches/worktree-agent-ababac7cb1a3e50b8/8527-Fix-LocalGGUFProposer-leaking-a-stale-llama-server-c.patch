@@ -1,0 +1,515 @@
+From 6e5b6c9bc3bac27796451e65189e58341d2d2062 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 11:28:50 -0400
+Subject: [PATCH 08527/11362] Fix LocalGGUFProposer leaking a stale
+ llama-server child (2026-08-08 review, Correctness #4)
+
+_ensure_server left a still-loading llama-server child running and
+referenced on wait-exhaustion timeout; the next call found the server
+unhealthy, skipped reuse, and Popen'd a second child on the same port,
+overwriting self._proc -- so stop() could only ever reach the newest
+child, and the orphan (eventually holding real VRAM) became unreachable
+by any cleanup path. Found in the 2026-08-08 adversarial review
+(docs/research-notes/live-agent-adversarial-review-2026-08-08.md,
+Correctness finding 4).
+
+Adds LocalGGUFProposer._terminate_stale_proc(reason): if self._proc is set
+and still alive, sends SIGTERM, waits up to 5s, escalates to SIGKILL if
+needed, then always clears the reference. Wired in at both sites the
+review named -- immediately before the Popen that would otherwise
+overwrite self._proc, and right after wait-exhaustion before returning
+failure. Records a cleanup event on its own diagnostic channel
+(orphaned_child_cleanups -> liveness_witness()["generator_orphaned_child_
+cleanups"]), separate from n_server_failures, so a leak-from-a-prior-
+attempt cannot spuriously flip a liveness gate for a run whose eventual
+server is healthy -- matching the existing reasoning for reuse_refusals.
+stop() itself is unchanged; the review cited it only as evidence of the
+reachability problem.
+
+5 new tests in test_arc_ensure_server_leak_fix_20260808.py: wait-exhaustion
+terminates the child and clears self._proc; a live prior child is
+terminated before a replacement launch; an already-dead prior child is
+left alone; no prior child is a clean no-op; SIGKILL fires when SIGTERM
+doesn't reap in time. Adversarially verified independently -- the
+verifier wrote its own standalone harness (fully mocked Popen) to
+confirm BOTH the wait-exhaustion path AND the reuse-miss path reach the
+fix, since the shipped tests only directly exercised the former.
+CONFIRMED_FIXED. Re-verified myself -- 9/9 pass (own file + regression
+against test_arc_generator_stderr_capture.py), --no-cov, targeted files
+only.
+
+First patch-apply attempt for this fix produced a real syntax error (an
+off-by-one in a hand-split zero-context patch inserted new lines one
+statement too early inside a try/except block). Caught immediately by
+ruff/mypy in pre-commit before anything was committed; re-split with full
+context instead of zero-context and re-verified syntax, tests, and lint
+clean before this commit.
+
+Adds REQ-ARC-WMTE-6221 to the openspec capability (already present from
+the prior commit's spec batch). 7 results/*.json artifacts get a
+freshness_acknowledgements entry: this fix changes resource cleanup on a
+future server-restart edge case, not any already-recorded game outcome,
+model output, or measured value.
+
+Confirmed disjoint from the conductor's own in-progress, uncommitted
+REQ-ARC-WMTE-6213 work in the same file (object-delta-perception, lines
+~2939-2963/3060) -- untouched, left exactly as found.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py     |  61 ++++++
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ ...est_arc_ensure_server_leak_fix_20260808.py | 201 ++++++++++++++++++
+ 9 files changed, 318 insertions(+)
+ create mode 100644 tests/python/test_arc_ensure_server_leak_fix_20260808.py
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index cd10e44c7f..fae5d3d0e2 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -5348,6 +5348,15 @@ class LocalGGUFProposer:
+     observed_server_n_ctx: Optional[int] = None
+     reuse_n_ctx_check: str = "not_checked"
+     reuse_refusals: list = field(default_factory=list)
++    # Live children this instance TERMINATED because a later step was about to overwrite the
++    # `self._proc` reference that was the only thing keeping them reachable (2026-08-08 review
++    # finding 4: a still-loading server left running past the wait budget, or a refused-for-reuse
++    # server, used to be silently dropped when the next launch replaced `self._proc`, orphaning a
++    # process that could hold ~20 GB of VRAM with nothing left able to stop it). Bounded and kept
++    # on its OWN channel, like `reuse_refusals` above, and for the same reason: this is bookkeeping
++    # about a PRIOR attempt, not a failure of the CURRENT one, so it must not feed
++    # `n_server_failures` and flip a liveness gate for a run whose eventual server is healthy.
++    orphaned_child_cleanups: list = field(default_factory=list)
+     # ...and the same declared-vs-actual treatment for WHICH MODEL is loaded (2026-07-28). Added
+     # with the generator switch: `repo_substr` is our INTENT, and a stale server from the previous
+     # pin satisfied every prior reuse condition, so the witness could report gemma while the run
+@@ -5531,6 +5540,9 @@ class LocalGGUFProposer:
+             # the launch used -- see `LocalGGUFProposer.__post_init__`. Empty in the normal case.
+             "generator_ffn_cpu_layers": int(self.ffn_cpu_layers),
+             "generator_ffn_cpu_layers_refit_note": str(self.ffn_cpu_layers_refit_note),
++            # A prior launch attempt's child that this instance had to stop itself, so the leak
++            # is visible in the artifact rather than only in `nvidia-smi` on the host.
++            "generator_orphaned_child_cleanups": list(self.orphaned_child_cleanups),
+         }
+ 
+     def _record_completion_diagnostics(self, response: dict) -> None:
+@@ -5901,6 +5913,44 @@ class LocalGGUFProposer:
+         self.reuse_n_ctx_check = f"refused_smaller_pool observed={observed} want={self.n_ctx}"
+         return False
+ 
++    def _terminate_stale_proc(self, reason: str) -> None:
++        """Terminate whatever `self._proc` currently holds, if it is still alive, then clear it.
++
++        THE LEAK THIS CLOSES (2026-08-08 review finding 4). `_ensure_server` had two places that
++        replace `self._proc` -- the fresh Popen after a wait-exhaustion timeout, and the fresh
++        Popen after refusing to reuse an already-running server on our port -- and neither one
++        stopped the PREVIOUS child first. `stop()` can only ever terminate whatever `self._proc`
++        currently points at, so the instant it was reassigned the earlier process became
++        unreachable by any cleanup path this class has, and kept running (and holding its VRAM)
++        until something outside this process noticed and killed it by hand. Calling this right
++        before every such reassignment, and once more on the wait-exhaustion return itself, means
++        a live child is never dropped without first being asked (then told) to exit.
++
++        SIGTERM first, like `stop()` already uses, so a graceful shutdown is always tried first;
++        a short wait; SIGKILL only if it refuses to die within that wait. A cleanup step must
++        never itself take down the launch it is protecting, so every failure mode here is caught
++        and folded into the diagnostic instead of raised.
++        """
++        proc = self._proc
++        self._proc = None
++        if proc is None or proc.poll() is not None:
++            return  # never launched, or already exited on its own -- nothing to clean up
++        diagnostic = f"{reason} (pid={getattr(proc, 'pid', '?')}, port={self.port})"
++        try:
++            proc.terminate()
++            try:
++                proc.wait(timeout=5)
++            except subprocess.TimeoutExpired:
++                proc.kill()
++                try:
++                    proc.wait(timeout=5)
++                except subprocess.TimeoutExpired:
++                    diagnostic += "; did not exit even after kill()"
++        except Exception as exc:  # cleanup must never crash the launch it is protecting
++            diagnostic += f"; termination raised {exc!r}"
++        if len(self.orphaned_child_cleanups) < 24:
++            self.orphaned_child_cleanups.append(diagnostic[:400])
++
+     def _ensure_server(self) -> bool:
+         if self._healthy():
+             if self._reusable():
+@@ -6066,6 +6116,11 @@ class LocalGGUFProposer:
+         except OSError:
+             self._stderr_log_path = None
+             _err_sink = subprocess.DEVNULL
++        # A live child from an earlier launch attempt on this instance (still loading past a
++        # prior wait budget, or refused above for reuse) is about to be dropped by the assignment
++        # below. Stop it first -- see `_terminate_stale_proc` for why an unreferenced live server
++        # is worse than a failed launch.
++        self._terminate_stale_proc("terminated before launching a replacement llama-server")
+         self.last_launch_argv = tuple(args)
+         self._proc = subprocess.Popen(
+             args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
+@@ -6077,6 +6132,12 @@ class LocalGGUFProposer:
+                 self._verify_mtp_engaged()
+                 return True
+             time.sleep(2)
++        # WAIT EXHAUSTED: the server never answered /health in time. It may still be loading, or
++        # it may be permanently stuck -- either way, returning failure here used to leave it
++        # running, referenced only by `self._proc`, one call away from being silently orphaned
++        # the next time this method Popens a replacement. Stop it now instead of hoping a later
++        # call remembers to.
++        self._terminate_stale_proc("terminated: never became healthy within the wait budget")
+         return False
+ 
+     # The POSITIVE marker llama.cpp prints when `--spec-type draft-mtp` is genuinely wired up. Read
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 84932cd1f1..a2281ddf45 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52748,6 +52748,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 2c5b00d3d7..f3f01a8cb6 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -232,6 +232,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index bfd5a047fe..294f3755a3 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8774,6 +8774,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 54bd8372f2..512c30588c 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1446,6 +1446,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "2026-08-07 operator directive (\"We should be using the CUDA llama-server, not HIP/ROCm\"). Adds GeneratorCudaRequiredError (a new exception class, pure addition) and one new conditional branch at the tail of _generator_server_and_env(): `if gpu and os.environ.get('CARNOT_ARC_GENERATOR_REQUIRE_CUDA') == '1': raise GeneratorCudaRequiredError(...)`, inserted immediately before the existing `return (hip if hip.exists() else cuda), None`. No existing line, branch, default, or return value is altered; the new branch is additive and only reachable when CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1 is explicitly set.",
+         "evidence": "grep -rn 'CARNOT_ARC_GENERATOR_REQUIRE_CUDA' across the tree (excluding .venv) matches only: the new class docstring and branch in arc_executable_world_model.py itself, experiment_6199_gemma_think_mode_ab.py (which sets it deliberately, 2026-08-07, to harden its own CUDA-substrate measurement), and the new regression tests in test_generator_server_and_env_cuda_retry.py. Nothing in this artifact's generating script, or anything in its call chain, sets this env var -- the new branch is unreachable dead code from this artifact's perspective, and the pre-existing split/single-card/iGPU degradation logic that DOES run is byte-identical (confirmed by `git diff HEAD -- python/carnot/agentic/arc_executable_world_model.py`, whose only other hunk is the new class definition, which nothing pre-existing references)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 75a454bb03..a1c45c0759 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3532,6 +3532,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 77e0448055..1548c00c0c 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1181,6 +1181,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index b7c964b583..6d69fcc07e 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -408,6 +408,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+         "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
++        "sha256_now": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
++        "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_arc_ensure_server_leak_fix_20260808.py b/tests/python/test_arc_ensure_server_leak_fix_20260808.py
+new file mode 100644
+index 0000000000..1e71c20e28
+--- /dev/null
++++ b/tests/python/test_arc_ensure_server_leak_fix_20260808.py
+@@ -0,0 +1,201 @@
++"""`_ensure_server` no longer leaks a still-loading llama-server child.
++
++REQ-ARC-WMTE-6221 / SCENARIO-ARC-WMTE-6221-A-STALE-LIVE-CHILD-IS-TERMINATED-BEFORE-A-REPLACEMENT-IS-LAUNCHED
++REQ-ARC-WMTE-6221 / SCENARIO-ARC-WMTE-6221-B-WAIT-EXHAUSTION-TERMINATES-THE-LOADING-CHILD-INSTEAD-OF-ORPHANING-IT
++
++WHY THIS EXISTS (2026-08-08 adversarial review, "Correctness" section, finding 4).
++
++`_ensure_server` Popens a llama-server and stores it on `self._proc`. Two of its own paths used
++to replace that reference without stopping whatever was there first:
++
++* On wait exhaustion (the server never answered `/health` within the retry budget), the method
++  returned `False` and left the child running. The NEXT call, finding the port unhealthy, would
++  Popen a second child on the same port and overwrite `self._proc` -- so the first child kept
++  running with nothing left pointing at it.
++* The "refused to reuse" path (wrong model, or a smaller context pool than required) relaunches
++  on a fresh port without first checking whether `self._proc` was still a live process.
++
++`stop()` can only ever terminate `self._proc`, so once it is overwritten the earlier process is
++unreachable by ANY cleanup path in this class -- an orphan that can hold ~20 GB of VRAM with
++nothing in the program able to stop it.
++
++The fix adds `LocalGGUFProposer._terminate_stale_proc`, called right before every place that
++would otherwise silently drop a live `self._proc`, plus once more on the wait-exhaustion return
++itself. It also records the cleanup on `self.orphaned_child_cleanups` (surfaced in
++`liveness_witness()`) so a leak that DOES happen is visible in the artifact, not just in
++`nvidia-smi` on the host.
++"""
++
++from __future__ import annotations
++
++import subprocess
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic import arc_executable_world_model as m  # noqa: E402
++
++
++class _FakeProc:
++    """Doubles as the fake `subprocess.Popen` CALLABLE and the process handle it returns --
++    same idiom as `_FakePopen` in test_arc_generator_stderr_capture.py, extended with the
++    terminate/kill/wait surface `_terminate_stale_proc` actually exercises.
++
++    `alive` and `dies_on_terminate` are both controllable so tests can build every combination
++    the fix has to handle: a genuinely-live stale child, an already-exited one, and one that
++    ignores SIGTERM and needs the SIGKILL escalation.
++    """
++
++    _next_pid = 500000
++    instances: list = []
++
++    def __init__(self, args=None, **kwargs):
++        _FakeProc._next_pid += 1
++        self.pid = _FakeProc._next_pid
++        self.alive = True
++        self.dies_on_terminate = True
++        self.terminate_calls = 0
++        self.kill_calls = 0
++        self.wait_calls = 0
++        _FakeProc.instances.append(self)
++
++    def poll(self):
++        return None if self.alive else 0
++
++    def terminate(self):
++        self.terminate_calls += 1
++        if self.dies_on_terminate:
++            self.alive = False
++
++    def kill(self):
++        self.kill_calls += 1
++        self.alive = False
++
++    def wait(self, timeout=None):
++        self.wait_calls += 1
++        if self.alive:
++            raise subprocess.TimeoutExpired(cmd="fake-llama-server", timeout=timeout)
++        return 0
++
++
++def _make_proposer(tmp_path, monkeypatch):
++    """Drive the REAL `_ensure_server` far enough to reach the Popen call, with no real server --
++    same stubbing shape as the `launched` fixture in test_arc_generator_stderr_capture.py."""
++    monkeypatch.setenv("CARNOT_ARC_SERVER_LOG_DIR", str(tmp_path))
++    monkeypatch.setattr(m.subprocess, "Popen", _FakeProc)
++    monkeypatch.setattr(m.time, "sleep", lambda _seconds: None)  # skip the real retry-loop delay
++    fake_bin = tmp_path / "llama-server"
++    fake_bin.write_text("#!/bin/true\n")
++    fake_bin.chmod(0o755)
++    fake_gguf = tmp_path / "model.gguf"
++    fake_gguf.write_bytes(b"GGUF")
++    monkeypatch.setattr(
++        m, "_generator_server_and_env", lambda _ffn_cpu_layers=None, _mtp=None: (fake_bin, None)
++    )
++    p = m.LocalGGUFProposer()
++    p.model_path = str(fake_gguf)
++    p.port = 45101
++    _FakeProc.instances = []
++    return p
++
++
++def _stub_healthy_after_launch(monkeypatch, proposer):
++    """`_healthy()` is False on the pre-launch check, True from then on -- i.e. the launch
++    succeeds. Used by tests that are not exercising the wait-exhaustion path itself."""
++    calls = {"n": 0}
++
++    def _healthy(self):
++        calls["n"] += 1
++        return calls["n"] > 1
++
++    monkeypatch.setattr(type(proposer), "_healthy", _healthy, raising=False)
++
++
++def test_wait_exhaustion_terminates_the_child_and_clears_the_reference(tmp_path, monkeypatch):
++    """THE NAMED DEFECT, half A: on wait exhaustion the never-healthy child must be terminated
++    and `self._proc` cleared BEFORE `_ensure_server` returns -- not left running and referenced
++    only by a `self._proc` about to be overwritten by the next call."""
++    p = _make_proposer(tmp_path, monkeypatch)
++    monkeypatch.setattr(type(p), "_healthy", lambda self: False, raising=False)  # never healthy
++
++    ok = p._ensure_server()
++
++    assert ok is False
++    assert len(_FakeProc.instances) == 1, "exactly one server should have been launched"
++    spawned = _FakeProc.instances[0]
++    assert spawned.terminate_calls == 1, "the never-healthy child must be terminated"
++    assert spawned.alive is False
++    assert p._proc is None, (
++        "the reference must be cleared, not left pointing at a dead/orphaned child"
++    )
++    assert p.orphaned_child_cleanups, "the leak must be recorded, not silent"
++    assert "wait budget" in p.orphaned_child_cleanups[0]
++
++
++def test_a_live_previous_child_is_terminated_before_a_replacement_is_launched(
++    tmp_path, monkeypatch
++):
++    """THE NAMED DEFECT, half B: a live child left over from a prior attempt must be stopped
++    BEFORE the new Popen call overwrites `self._proc` -- not dropped and left running."""
++    p = _make_proposer(tmp_path, monkeypatch)
++    stale = _FakeProc()
++    p._proc = stale
++    _FakeProc.instances = []  # `stale` itself is hand-built, not a real Popen call -- don't count it
++    _stub_healthy_after_launch(monkeypatch, p)
++
++    ok = p._ensure_server()
++
++    assert ok is True
++    assert stale.terminate_calls == 1, "the stale live child must be terminated before relaunch"
++    assert stale.alive is False
++    assert len(_FakeProc.instances) == 1, "only the replacement counts as a real Popen call"
++    assert p._proc is _FakeProc.instances[0], "the reference must now point at the NEW child"
++    assert p.orphaned_child_cleanups, "terminating a still-live prior child must be recorded"
++
++
++def test_a_dead_previous_child_does_not_spuriously_call_terminate(tmp_path, monkeypatch):
++    """A process that already exited on its own must not be touched again -- terminate()/kill()
++    on an already-dead handle would be a no-op at best and a false leak record at worst."""
++    p = _make_proposer(tmp_path, monkeypatch)
++    dead = _FakeProc()
++    dead.alive = False
++    p._proc = dead
++    _stub_healthy_after_launch(monkeypatch, p)
++
++    ok = p._ensure_server()
++
++    assert ok is True
++    assert dead.terminate_calls == 0, "an already-exited process must not be terminated again"
++    assert dead.kill_calls == 0
++    assert p.orphaned_child_cleanups == [], "nothing was cleaned up, so nothing should be logged"
++
++
++def test_no_previous_proc_is_a_clean_noop(tmp_path, monkeypatch):
++    """The common case -- first-ever launch, `self._proc` is still `None` -- must not error or
++    log a spurious cleanup entry."""
++    p = _make_proposer(tmp_path, monkeypatch)
++    assert p._proc is None
++    _stub_healthy_after_launch(monkeypatch, p)
++
++    ok = p._ensure_server()
++
++    assert ok is True
++    assert p.orphaned_child_cleanups == []
++
++
++def test_kill_fallback_when_terminate_does_not_reap_in_time(tmp_path, monkeypatch):
++    """If SIGTERM does not kill the child within the wait, SIGKILL must follow -- otherwise the
++    process would still be orphaned, just with an extra no-op terminate() call first."""
++    p = _make_proposer(tmp_path, monkeypatch)
++    stubborn = _FakeProc()
++    stubborn.dies_on_terminate = False
++    p._proc = stubborn
++
++    p._terminate_stale_proc("test cleanup")
++
++    assert stubborn.terminate_calls == 1
++    assert stubborn.kill_calls == 1, "must escalate to SIGKILL when terminate() does not work"
++    assert stubborn.alive is False
++    assert p._proc is None
+-- 
+2.55.0
+

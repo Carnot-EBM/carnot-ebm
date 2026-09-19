@@ -1,0 +1,87 @@
+From 3b13c23a2247293c293e3a9ed884cc066548405d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 08:09:24 -0400
+Subject: [PATCH 09390/11362] Unwedge milestone .558: prior_failures for
+ exp6481
+
+Second conductor wedge in eight hours, same guard. exp6481 scope-matched two
+priors with no prior_failures block, so the exclusion-manifest linter refused
+activation and the conductor looped every two minutes.
+
+exp6437 genuinely never ran: its one gate required exp6436 to report
+v554_queue_ready_score == 1.0 and got 0.0, so it was refused at pre-gate.
+Nothing about the receipt contract was measured, and this task declares no
+dependency on that chain.
+
+exp6449 IS NOT A FAILURE. Its verdict reads "success: path receipt controls
+localized and critical attacks failed closed" -- a terminal success reporting
+that attacks failed CLOSED, the desired outcome. It is matched as a prior
+failure because map_status_label checks failure tokens before win tokens, so
+"failed" inside "failed closed" outranks the terminal prefix.
+
+I started to fix that precedence and reverted it. Making the terminal prefix win
+outright fails test_mixed_terminal_verdict_still_not_complete, which encodes a
+deliberate decision: a verdict like "complete_..._weak_fit_..._hardware_leg_
+blocked" must stay Blocked. Measured corpus impact of the change I nearly made:
+561 artifacts would have been relabelled, 324 Blocked -> Complete and 39
+Failed -> Complete, including "complete: kan shape manifest ready; synthesis and
+board claims blocked" -- where the old label is the correct one. That is a
+research-record reclassification, not a bug fix, and not mine to make alone.
+
+Worth recording that this shape has happened before. The 2026-07-01 note in
+in_process_doc_reconcile.py describes a clean exp5128 success being read as a
+prior failure and HARD-blocking exp5140 as a doomed rerun it wasn't. That fix
+rescued CLEAN wins by adding success/shipped/passed to the win tokens, and
+deliberately left mixed-token verdicts alone. exp6449 is the residual case: a
+success whose prose contains a negative word. The accepted remedy is this
+block, not new classification semantics.
+
+Verified additive: every field other than prior_failures is byte-identical, and
+the linter now reports clean.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ research-roadmap-next.yaml | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 2943457262..892ddb12fd 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -107,6 +107,32 @@ tasks:
+       Do NOT push. Do NOT modify scripts/research_conductor.py.
+ 
+   - id: exp6481-monotonic-phase-concurrency-receipt-contract
++    prior_failures:
++      - experiment_id: exp6437-generation-to-verdict-receipt-replay-contract
++        verdict: blocked_gate_check_failed
++        addressed_by: >-
++          The prior never executed. Its single gate required
++          exp6436-v554-terminal-handoff-and-queue-preflight to report
++          v554_queue_ready_score == 1.0 and the upstream reported 0.0, so the
++          conductor refused it at pre-gate. Nothing about the receipt contract
++          was measured. What is different: this task declares no gated_on
++          dependency on that chain, so the precondition that blocked the prior
++          cannot block it.
++        retire_if_same_verdict: true
++      - experiment_id: exp6449-generation-to-verdict-path-receipt-contract
++        verdict: "success: path receipt controls localized and critical attacks failed closed"
++        addressed_by: >-
++          NOT A FAILURE. This prior SUCCEEDED -- its verdict carries the
++          terminal `success:` prefix and reports that attacks failed CLOSED,
++          the desired outcome. It is matched as a prior failure because
++          map_status_label checks failure tokens before win tokens, so the word
++          "failed" inside "failed closed" outranks the prefix. That precedence
++          is deliberate (see the 2026-07-01 note in in_process_doc_reconcile.py:
++          mixed-token verdicts stay non-Complete on purpose), and the same
++          shape previously mis-blocked exp5140 against a clean exp5128 success.
++          This entry records the misclassification rather than proposing a
++          rerun; there is no prior failure here to address.
++        retire_if_same_verdict: false
+     milestone: "2026.08.558"
+     deliverable: results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json
+     title: "Monotonic task phase and concurrency receipt contract"
+-- 
+2.55.0
+

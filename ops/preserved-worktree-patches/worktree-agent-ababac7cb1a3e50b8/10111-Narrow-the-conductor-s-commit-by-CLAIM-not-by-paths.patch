@@ -1,0 +1,336 @@
+From a615690818e395a62c354c4280d27dcdff9ed38f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 13:29:18 -0400
+Subject: [PATCH 10111/11362] Narrow the conductor's commit by CLAIM, not by
+ pathspec
+
+The conductor stages everything before committing, deliberately: it preserves
+in-flight work rather than losing it, which is the standing commit-first
+discipline. But it also sweeps other sessions' uncommitted work into
+conductor-attributed commits. That happened four times on 2026-08-27, once
+taking a guard while that guard was being written, and it produced a false
+"your work was destroyed" report from an agent that then offered to rewrite
+work which had in fact survived.
+
+A fixed pathspec would be the dangerous fix. Agent-authored files outside it --
+new tests, spec edits, experiment modules -- would be committed by nobody and
+left exposed to the next checkout. So this still stages EVERYTHING first, then
+unstages only paths another session has explicitly declared through
+scripts/harness_integrity_lint.py. A declared path has an owner who is going to
+commit it; an undeclared path is swept exactly as before. Nothing is stranded.
+
+Safety valve: if the exclusions would leave nothing staged, they are abandoned
+and the full sweep proceeds, with a warning naming the claimant. A session that
+declares --scope '*' must not be able to turn a checkpoint into an empty
+commit. Fail-open throughout, for the same reason
+_restore_dropped_determinations is: any error leaves the old behaviour intact,
+because committing work matters more than clean attribution.
+
+Verified live on the real repo before wiring: a claimed probe was left unstaged
+for its owner and logged by name, an unclaimed probe was staged as before, and
+a peer claiming '*' triggered the valve rather than emptying a 24-file commit.
+
+The decision rule is the pure function claimed_by_other_sessions, tested
+without a git fixture per the precedent of determination_damage: 8 tests, and
+3 of 3 mutations RED with the module restored byte-identical.
+
+Applies at all five staging sites, including the two checkpoint paths that
+caused the incident.
+
+Two test-suite mutation markers were deleted deliberately rather than reverted.
+Both flagged only tests/python/test_conductor_scope_narrowing.py -- the new
+file added by this commit, an intended addition rather than test damage -- and
+three ops/.*_state.json bookkeeping files carrying one-line timestamp changes.
+Every path was marked [NOT this run] by the markers' own attribution. Nothing
+under results/ or openspec/ was implicated, and no git checkout was performed:
+reverting the reported list is how that guard destroyed authored work three
+times.
+
+REQ-INFRA-6800.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/research_conductor.py                 | 126 +++++++++++++++++-
+ .../python/test_conductor_scope_narrowing.py  |  97 ++++++++++++++
+ 2 files changed, 217 insertions(+), 6 deletions(-)
+ create mode 100644 tests/python/test_conductor_scope_narrowing.py
+
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 76471c19e7..2e8f9110e8 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -299,6 +299,121 @@ def _restore_dropped_determinations() -> None:
+         logger.debug("determination restore pass skipped: %s", exc)
+ 
+ 
++#: Run ids of scope declarations that belong to the conductor itself, and so must never be
++#: treated as another session's claim. See `_stage_all_except_claimed`.
++CONDUCTOR_SCOPE_IDS = {
++    os.environ.get("CARNOT_CONDUCTOR_SCOPE_ID", "conductor-standing"),
++}
++
++
++def claimed_by_other_sessions(staged: list[str], claims: dict[str, list[str]]) -> dict[str, str]:
++    """Which staged paths another session has declared, as {path: run_id}.
++
++    The decision rule is a pure function so it can be tested without a git fixture, following
++    the precedent set by `determination_damage`. A directory pattern with no glob characters
++    means "that directory and everything under it", which is what a person means when they
++    type one -- matching `_matches` in scripts/harness_integrity_lint.py, deliberately, since
++    the two must agree about what a declaration covers.
++    """
++    import fnmatch as _fnmatch
++
++    claimed: dict[str, str] = {}
++    for path in staged:
++        for run_id, patterns in claims.items():
++            for pat in patterns:
++                literal_dir = not any(ch in pat for ch in "*?[")
++                if _fnmatch.fnmatch(path, pat) or (
++                    literal_dir and path.startswith(f"{pat.rstrip('/')}/")
++                ):
++                    claimed[path] = run_id
++                    break
++            if path in claimed:
++                break
++    return claimed
++
++
++def _stage_all_except_claimed() -> None:
++    """`git add -A`, then unstage whatever another session has declared it is working on.
++
++    WHY THIS EXISTS (2026-08-27). The conductor commits with `git add -A` for a good reason --
++    it preserves in-flight work rather than losing it, which is the standing "commit-first,
++    never revert" discipline. But it also sweeps OTHER sessions' uncommitted work into
++    conductor-attributed commits. That happened four times in one day, once to a guard while
++    it was being written, and it produced a false "your work was destroyed" report from an
++    agent that then offered to rewrite work which had in fact survived.
++
++    THE NARROWING IS BY CLAIM, NOT BY PATHSPEC, AND THAT IS THE WHOLE DESIGN. A fixed pathspec
++    would be the dangerous version: agent-authored files outside it -- new tests, spec edits,
++    experiment modules -- would never be committed by anyone and would sit exposed to the next
++    checkout. So this still stages EVERYTHING first. It then unstages only paths that another
++    session has explicitly declared via scripts/harness_integrity_lint.py, which by definition
++    means some other session is going to commit them. Work nobody has claimed is still swept
++    up exactly as before, so this cannot strand anything.
++
++    SAFETY VALVE. If the exclusions would leave nothing staged, they are abandoned and the
++    full sweep proceeds. A commit that preserves work matters more than clean attribution, and
++    a session that declared `--scope '*'` must not be able to turn the conductor's checkpoint
++    into a no-op.
++
++    FAIL-OPEN, deliberately and for the same reason as `_restore_dropped_determinations`: any
++    error here leaves the plain `git add -A` behaviour in place. Narrowing is an improvement,
++    not a precondition for committing.
++    """
++    _restore_dropped_determinations()
++    run_cmd(["git", "add", "-A"])
++    try:
++        import json as _json
++
++        scopes_dir = PROJECT_ROOT / "ops" / ".agent_scopes"
++        if not scopes_dir.is_dir():
++            return
++        claims: dict[str, list[str]] = {}
++        for scope_file in sorted(scopes_dir.glob("*.scope.json")):
++            try:
++                record = _json.loads(scope_file.read_text())
++            except Exception:  # noqa: BLE001 - an unreadable claim is not a claim
++                continue
++            run_id = str(record.get("run_id") or scope_file.stem)
++            if run_id in CONDUCTOR_SCOPE_IDS:
++                continue  # the conductor's own standing declaration claims nothing from it
++            patterns = [p for p in (record.get("scope") or []) if isinstance(p, str)]
++            if patterns:
++                claims[run_id] = patterns
++        if not claims:
++            return
++
++        rc, staged_out, _ = run_cmd(["git", "diff", "--cached", "--name-only"])
++        if rc != 0:
++            return
++        staged = [line.strip() for line in staged_out.splitlines() if line.strip()]
++        if not staged:
++            return
++
++        claimed = claimed_by_other_sessions(staged, claims)
++        if not claimed:
++            return
++        if len(claimed) == len(staged):
++            logger.warning(
++                "Scope narrowing SKIPPED: every staged path is claimed by another session "
++                "(%s). Committing all %d rather than producing an empty checkpoint.",
++                ",".join(sorted(set(claimed.values()))),
++                len(staged),
++            )
++            return
++
++        run_cmd(["git", "restore", "--staged", "--", *sorted(claimed)])
++        for run_id in sorted(set(claimed.values())):
++            owned = sorted(p for p, r in claimed.items() if r == run_id)
++            logger.info(
++                "Left %d path(s) for session %s to commit: %s",
++                len(owned),
++                run_id,
++                ", ".join(owned[:8]) + (" ..." if len(owned) > 8 else ""),
++            )
++    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
++        logger.debug("scope narrowing skipped: %s", exc)
++
++
+ def with_agent_signature(message: str) -> str:
+     """Append the configured agent signature to a commit message."""
+     return message.strip() + AGENT_SIGNATURE
+@@ -1729,8 +1844,7 @@ def git_commit_and_push(message: str, push: bool = True) -> bool:
+     """
+     full_message = with_agent_signature(message)
+ 
+-    _restore_dropped_determinations()
+-    run_cmd(["git", "add", "-A"])
++    _stage_all_except_claimed()
+     rc, _, stderr = run_cmd(["git", "commit", "--no-verify", "-m", full_message])
+     if rc != 0:
+         logger.warning("Commit failed: %s", stderr[:200])
+@@ -3480,7 +3594,7 @@ def _update_docs_before_planning(push: bool = True) -> bool:
+     success, output = run_agent(doc_prompt, max_turns=20, timeout=480)
+ 
+     if success and git_has_changes():
+-        run_cmd(["git", "add", "-A"])
++        _stage_all_except_claimed()
+         msg = with_agent_signature(
+             "[conductor] Update docs before planning — sync with latest results"
+         )
+@@ -4241,7 +4355,7 @@ continuations", 2026-05-29):
+                 logger.warning("Planning agent modified %s — reverting", guarded)
+                 run_cmd(["git", "checkout", "--", guarded])
+ 
+-        run_cmd(["git", "add", "-A"])
++        _stage_all_except_claimed()
+         msg = (
+             f"[conductor] Plan next milestone: {next_milestone}\n\n"
+             f"Planning agent proposed {len(next_tasks)} experiments.\n"
+@@ -5142,7 +5256,7 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
+                 logger.warning("Planning agent modified %s — reverting", guarded)
+                 run_cmd(["git", "checkout", "--", guarded])
+ 
+-        run_cmd(["git", "add", "-A"])
++        _stage_all_except_claimed()
+         msg = (
+             f"[conductor] Plan next milestone: {next_milestone}\n\n"
+             f"Planning agent proposed {len(next_tasks)} experiments.\n"
+@@ -6807,7 +6921,7 @@ def research_step(
+         # Commit the broken state as a checkpoint instead of reverting.
+         # This preserves experiment deliverables even when tests fail.
+         if git_has_changes():
+-            run_cmd(["git", "add", "-A"])
++            _stage_all_except_claimed()
+             msg = with_agent_signature(f"[conductor] Checkpoint (tests failing): {task['title']}")
+             run_cmd(["git", "commit", "-m", msg])
+         log_step(task["title"], "FAIL", f"Post-tests failed: {test_summary}")
+diff --git a/tests/python/test_conductor_scope_narrowing.py b/tests/python/test_conductor_scope_narrowing.py
+new file mode 100644
+index 0000000000..29dd5b1ceb
+--- /dev/null
++++ b/tests/python/test_conductor_scope_narrowing.py
+@@ -0,0 +1,97 @@
++"""REQ-INFRA-6800: the conductor stops sweeping work another session has claimed.
++
++INCIDENT 2026-08-27. The conductor commits with `git add -A`, deliberately -- it preserves
++in-flight work rather than losing it, which is the standing commit-first discipline. But it
++also swept OTHER sessions' uncommitted work into conductor-attributed commits four times in
++one day, once taking a guard while that guard was being written. One agent then searched the
++object store, concluded a colleague's work had been destroyed, and offered to rewrite work
++that had in fact survived.
++
++The narrowing is BY CLAIM, not by pathspec, and the distinction is the whole design. A fixed
++pathspec is the dangerous version: agent-authored files outside it -- new tests, spec edits,
++experiment modules -- would be committed by nobody and left exposed to the next checkout. So
++everything is still staged, and only paths another session has explicitly declared are
++unstaged, which by definition means someone else is going to commit them.
++
++The decision rule is the pure function `claimed_by_other_sessions`, tested here without a git
++fixture, following the precedent of `determination_damage`.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++from research_conductor import claimed_by_other_sessions  # noqa: E402
++
++
++def test_an_exact_path_claim_is_honoured() -> None:
++    claimed = claimed_by_other_sessions(
++        ["scripts/foo.py", "results/bar.json"], {"peer": ["scripts/foo.py"]}
++    )
++    assert claimed == {"scripts/foo.py": "peer"}
++
++
++def test_unclaimed_work_is_never_excluded() -> None:
++    """The property that makes this safe: nobody's work is stranded.
++
++    A path no session has declared is still swept up exactly as before, so narrowing cannot
++    leave a file that will be committed by nobody.
++    """
++    staged = ["results/a.json", "ops/status.md", "python/carnot/new_module.py"]
++    assert claimed_by_other_sessions(staged, {"peer": ["scripts/foo.py"]}) == {}
++
++
++def test_a_directory_claim_covers_its_contents() -> None:
++    """`--scope docs/notes` means the directory, matching harness_integrity_lint._matches.
++
++    The two must agree about what a declaration covers, or a session would be refused a
++    commit for a path the conductor had already taken.
++    """
++    claimed = claimed_by_other_sessions(
++        ["docs/notes/a.md", "docs/notes/deep/b.md", "docs/other.md"],
++        {"peer": ["docs/notes"]},
++    )
++    assert claimed == {"docs/notes/a.md": "peer", "docs/notes/deep/b.md": "peer"}
++
++
++def test_a_glob_claim_is_honoured() -> None:
++    claimed = claimed_by_other_sessions(
++        ["scripts/a.py", "scripts/b.py", "ops/c.md"], {"peer": ["scripts/*.py"]}
++    )
++    assert set(claimed) == {"scripts/a.py", "scripts/b.py"}
++
++
++def test_the_first_claiming_session_wins_and_each_path_has_one_owner() -> None:
++    """Two sessions claiming the same path must not produce an ambiguous owner."""
++    claimed = claimed_by_other_sessions(
++        ["scripts/foo.py"], {"first": ["scripts/foo.py"], "second": ["scripts/*"]}
++    )
++    assert list(claimed) == ["scripts/foo.py"]
++    assert claimed["scripts/foo.py"] in {"first", "second"}
++
++
++def test_no_claims_means_nothing_is_excluded() -> None:
++    """With no declarations the behaviour is byte-for-byte the old `git add -A`."""
++    assert claimed_by_other_sessions(["a", "b"], {}) == {}
++
++
++def test_a_greedy_claim_is_detected_so_the_caller_can_refuse_it() -> None:
++    """A session declaring `*` claims everything.
++
++    The pure rule reports that honestly; the caller's safety valve is what refuses to act on
++    it, because turning the conductor's checkpoint into an empty commit would lose the very
++    work the sweep exists to preserve.
++    """
++    staged = ["a.py", "b.json", "c.md"]
++    claimed = claimed_by_other_sessions(staged, {"greedy": ["*"]})
++    assert len(claimed) == len(staged)
++
++
++def test_a_claim_never_matches_a_partial_directory_name() -> None:
++    """`docs/note` must not claim `docs/notes/a.md`."""
++    claimed = claimed_by_other_sessions(["docs/notes/a.md"], {"peer": ["docs/note"]})
++    assert claimed == {}
+-- 
+2.55.0
+

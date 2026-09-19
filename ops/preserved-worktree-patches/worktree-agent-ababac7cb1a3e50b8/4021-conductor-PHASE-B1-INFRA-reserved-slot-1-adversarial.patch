@@ -1,0 +1,1095 @@
+From 4a5a688ebfa60aebcc95eb069fe3d7de00acc650 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 17:33:16 -0400
+Subject: [PATCH 04021/11362] [conductor] PHASE B1 (INFRA reserved slot 1) --
+ adversarial_verify CARVE-OUT HARDENING that fixes the TWO .435 escapes. (1)
+ The .435 A1 (exp4726) proved arms_non_degenerate=True (66 train steps,
+ distinct distributions) yet was CRITICAL-flagged as a TAUTOLOGY on the honest
+ 0.04==0.04==0.04 no-lift equality and the capstone QUARANTINED it -- an
+ honest non-degenerate-zero-lift generation null must downgrade CRITICAL->WARN
+ when it carries arms_non_degenerate=True + the null_delta markers, NOT be
+ quarantined. (2) The .435 A2 (exp4727) declared an active-probe mechanism but
+ probe_actions_taken=0 / hypothesis_posterior_built=False -- the
+ LEVER_EXERCISE_EVIDENCE guard must FLAG this declared-but-unrun no-op (it
+ currently passes clean). Pin both with a new test using exp4726 + exp4727 as
+ exemplars. Do NOT weaken any existing check.
+
+Automated research step by research conductor.
+Task ID: exp4743-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  41 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...3_adversarial_verify_carveout_hardening.py | 400 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...adversarial_verify_carveout_hardening.json | 137 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ scripts/adversarial_verify.py                 |  86 ++++
+ ...t_adversarial_verify_carveout_hardening.py | 173 ++++++++
+ 13 files changed, 855 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4743_adversarial_verify_carveout_hardening.py
+ create mode 100644 results/experiment_4743_adversarial_verify_carveout_hardening.json
+ create mode 100644 tests/python/test_adversarial_verify_carveout_hardening.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index f1cb1b92bd..3a87e6123a 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -2007,6 +2007,47 @@ Go-Explore `(1,64,64)`, Exp 4710 CNN dict-candidate, and `.434` A4 all-arms
+ `0.04` signatures, and does not flag a flat null that explicitly reports
+ non-degenerate exercise evidence such as `arms_non_degenerate=true`.
+ 
++### REQ-ARC-WMTE-4743: Adversarial Verify Null-Delta Carveout Hardening
++
++The `scripts/adversarial_verify.py` reader SHALL harden the `.436` ARC
++generation/exploration valid-test lane without weakening existing fabrication
++checks. When an ARC generation/exploration artifact reports
++`arms_non_degenerate=true`, a non-empty `null_delta_methodology_note`, and
++`positive_control_passed=true`, equal first-win arms at the baseline SHALL
++downgrade `TAUTOLOGY` from CRITICAL to WARN rather than quarantining the
++artifact. Without those markers, the equal-arm signature SHALL remain CRITICAL.
++
++The same reader SHALL extend `LEVER_EXERCISE_EVIDENCE_DEGENERATE` to catch
++declared-but-unrun active-probe mechanisms. If an ARC exploration/probe
++artifact declares probe/posterior fields such as `probe_actions_taken`,
++`hypothesis_posterior_built`, `posterior_entropy_reduction`, active-probe, or
++hypothesis-posterior diagnostics but reports that the mechanism did not run
++(`probe_actions_taken==0`, `hypothesis_posterior_built=false`, or
++`posterior_entropy_reduction==0.0`), the artifact SHALL be flagged
++`LEVER_EXERCISE_EVIDENCE_DEGENERATE`. A flat null with positive exercise
++evidence (`probe_actions_taken>0` and `posterior_entropy_reduction>0`) SHALL
++NOT be flagged by this extension.
++
++Experiment 4743 SHALL write
++`results/experiment_4743_adversarial_verify_carveout_hardening.json` with
++principle-annotated top-level fields for `honest_verdict`,
++`inference_substrate`, `tautology_carveout_added`,
++`exercise_evidence_extension_added`, `a1_exemplar_downgraded_to_warn`,
++`a2_exemplar_flagged`, `positive_exercise_null_not_flagged`,
++`existing_suite_green`, `pinning_test_path`, `verifier_is_oracle`,
++`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
++
++#### SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING
++
++Given Exp 4726 reports non-degenerate online-action-learning arms with a
++validated null-delta note, Exp 4727 declares an active probe that never runs,
++and a synthetic flat active-probe null reports positive exercise evidence
++When `adversarial_verify.py` checks those artifacts
++Then Exp 4726's equal first-win arms produce WARN `TAUTOLOGY` flags and no
++critical `TAUTOLOGY`, Exp 4727 emits
++`LEVER_EXERCISE_EVIDENCE_DEGENERATE`, and the positive-exercise null does not
++emit `LEVER_EXERCISE_EVIDENCE_DEGENERATE`.
++
+ ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
+ 
+ Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index fe9a2cb6b8..a1395b2fb4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 189,
+   "code_violations": 0,
+-  "experiments_checked": 3751,
++  "experiments_checked": 3752,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4743_adversarial_verify_carveout_hardening.py b/python/carnot/experiment_4743_adversarial_verify_carveout_hardening.py
+new file mode 100644
+index 0000000000..06b5ea621a
+--- /dev/null
++++ b/python/carnot/experiment_4743_adversarial_verify_carveout_hardening.py
+@@ -0,0 +1,400 @@
++"""Experiment 4743: adversarial_verify ARC null carve-out hardening receipt.
++
++Spec refs: REQ-ARC-WMTE-4743, SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any, Mapping
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import adversarial_verify as av  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4743_adversarial_verify_carveout_hardening"
++SCHEMA = "carnot.exp4743.adversarial_verify_carveout_hardening.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4743_adversarial_verify_carveout_hardening.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++PINNING_TEST_PATH = "tests/python/test_adversarial_verify_carveout_hardening.py"
++EXP4726_PATH = "results/experiment_4726_online_action_learning_driver_valid_test.json"
++EXP4727_PATH = "results/experiment_4727_active_probe_disambiguation.json"
++RANDOM_SEED = 4743
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load "
++    "(100us floor)."
++)
++SUCCESS_VERDICT = "success: adversarial_verify_carveout_hardening_shipped_pinned."
++TERMINAL_PREFIXES = ("success:", "complete:", "passed:", "shipped:", "blocked_")
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: "
++            "adversarial_verify_carveout_hardening_shipped_pinned."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts -- guard dev + a pytest run, "
++            "no model load (100us floor)."
++        )
++    },
++    "tautology_carveout_added": {
++        "principle": (
++            "the non-degenerate-zero-lift carve-out -- mechanizes the fix so an "
++            "honest generation null (the .436 A1/A2 shape) is not quarantined "
++            "like .435 A1."
++        )
++    },
++    "exercise_evidence_extension_added": {
++        "principle": (
++            "the declared-but-unrun extension (probe_actions_taken==0 etc.) -- "
++            "catches the .435 A2-class no-op the existing guard missed."
++        )
++    },
++    "a1_exemplar_downgraded_to_warn": {
++        "principle": (
++            "exp4726 (non-degenerate + null markers) downgrades CRITICAL->WARN -- "
++            "the honest-null-not-quarantined fix works."
++        )
++    },
++    "a2_exemplar_flagged": {
++        "principle": (
++            "exp4727 (declared probe + 0 probe_actions) is flagged "
++            "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the declared-but-unrun catch works."
++        )
++    },
++    "positive_exercise_null_not_flagged": {
++        "principle": (
++            "a genuine null with positive exercise evidence is NOT flagged -- the "
++            "false-positive carve-out works (a real null must survive)."
++        )
++    },
++    "existing_suite_green": {
++        "principle": (
++            "the existing adversarial_verify tests stay green -- no existing check "
++            "weakened (the never-weaken-the-linter rule)."
++        )
++    },
++    "pinning_test_path": {
++        "principle": (
++            "tests/python/test_adversarial_verify_carveout_hardening.py -- the "
++            "standing pin."
++        )
++    },
++    "verifier_is_oracle": {"principle": "false -- a linter check invokes no oracle."},
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent drift."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (adversarial_verify importable, exemplars "
++            "present); pre-empts missing-resource fabrication."
++        )
++    },
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "reproducibility_checksum"}
++    }
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _run_command(root: Path, args: list[str], timeout_s: int = 180) -> JsonDict:
++    start = time.perf_counter()
++    completed = subprocess.run(
++        args,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        check=False,
++        timeout=timeout_s,
++    )
++    return {
++        "command": " ".join(args),
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "duration_s": max(0.0001, time.perf_counter() - start),
++        "stdout_tail": completed.stdout[-2000:],
++        "stderr_tail": completed.stderr[-2000:],
++    }
++
++
++def _artifact_flags(root: Path, relative_path: str) -> list[JsonDict]:
++    report = av.verify_artifact(root / relative_path)
++    return list(report.get("flags", []))
++
++
++def _lever_flags_from_payload(payload: JsonDict) -> list[JsonDict]:
++    flags: list[av.Flag] = []
++    av.check_lever_exercise_evidence(payload, flags)
++    return [
++        flag.to_dict()
++        for flag in flags
++        if flag.kind == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++
++
++def _positive_exercise_payload() -> JsonDict:
++    return {
++        "experiment": "arc_active_probe_positive_exercise_null",
++        "schema": "carnot.arc.active_probe.valid_null.v1",
++        "honest_verdict": "complete: active_probe_no_first_win_lift_honest_null",
++        "inference_substrate": "active-probe replay over cached ARC transitions",
++        "duration_s": 1.0,
++        "target_game": "bp35",
++        "probe_actions_taken": 3,
++        "hypothesis_posterior_built": True,
++        "posterior_entropy_reduction": 0.25,
++        "active_probe_result": {
++            "active_probe": True,
++            "probe_actions_taken": 3,
++            "hypothesis_posterior_built": True,
++            "posterior_entropy_reduction": 0.25,
++            "budget": 10,
++        },
++        "baseline_first_win": 0.04,
++        "active_probe_first_win": 0.04,
++        "active_probe_delta": 0.0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "sha256:" + "7" * 64,
++    }
++
++
++def _adversarial_verify_tests(root: Path) -> list[str]:
++    return sorted(str(path.relative_to(root)) for path in root.glob("tests/python/test_adversarial_verify_*.py"))
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    spec_text = (root_path / SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "adversarial_verify_importable": hasattr(av, "check_tautology")
++        and hasattr(av, "check_lever_exercise_evidence"),
++        "exp4726_present": (root_path / EXP4726_PATH).exists(),
++        "exp4727_present": (root_path / EXP4727_PATH).exists(),
++        "pinning_test_present": (root_path / PINNING_TEST_PATH).exists(),
++        "spec_has_req_4743": "REQ-ARC-WMTE-4743" in spec_text,
++        "network_required": False,
++    }
++    checks["ok"] = all(
++        checks[key]
++        for key in (
++            "agents_md_read",
++            "codex_or_opencode_md_read",
++            "adversarial_verify_importable",
++            "exp4726_present",
++            "exp4727_present",
++            "pinning_test_present",
++            "spec_has_req_4743",
++        )
++    )
++    return checks
++
++
++def build_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    start = time.perf_counter()
++    root_path = Path(root)
++    checks = check_preconditions(root_path)
++
++    exp4726_flags = _artifact_flags(root_path, EXP4726_PATH)
++    exp4726_tautology = [flag for flag in exp4726_flags if flag.get("kind") == "TAUTOLOGY"]
++    exp4726_critical_tautology = [
++        flag for flag in exp4726_tautology if flag.get("severity") == "critical"
++    ]
++    exp4726_critical = [flag for flag in exp4726_flags if flag.get("severity") == "critical"]
++    a1_exemplar = {
++        "passed": bool(exp4726_tautology)
++        and not exp4726_critical_tautology
++        and not exp4726_critical,
++        "artifact": EXP4726_PATH,
++        "tautology_flags": exp4726_tautology,
++        "critical_flags": exp4726_critical,
++        "not_quarantined": not exp4726_critical,
++    }
++
++    exp4727_flags = _artifact_flags(root_path, EXP4727_PATH)
++    exp4727_lever_flags = [
++        flag
++        for flag in exp4727_flags
++        if flag.get("kind") == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++    a2_exemplar = {
++        "passed": bool(exp4727_lever_flags)
++        and any("probe_actions_taken=0" in flag.get("detail", "") for flag in exp4727_lever_flags),
++        "artifact": EXP4727_PATH,
++        "lever_flags": exp4727_lever_flags,
++    }
++
++    positive_exercise_flags = _lever_flags_from_payload(_positive_exercise_payload())
++    positive_exercise = {
++        "passed": positive_exercise_flags == [],
++        "lever_flags": positive_exercise_flags,
++        "probe_actions_taken": 3,
++        "posterior_entropy_reduction": 0.25,
++    }
++
++    pinning_test = _run_command(
++        root_path,
++        [sys.executable, "-m", "pytest", PINNING_TEST_PATH, "-q", "--no-cov"],
++        timeout_s=120,
++    )
++    suite_paths = _adversarial_verify_tests(root_path)
++    existing_suite = _run_command(
++        root_path,
++        [sys.executable, "-m", "pytest", *suite_paths, "-q", "--no-cov"],
++        timeout_s=240,
++    )
++
++    tautology_carveout_added = {
++        "passed": a1_exemplar["passed"],
++        "markers": [
++            "arms_non_degenerate=true",
++            "null_delta_methodology_note",
++            "positive_control_passed=true",
++        ],
++        "critical_to_warn": True,
++    }
++    exercise_evidence_extension_added = {
++        "passed": a2_exemplar["passed"] and positive_exercise["passed"],
++        "kind": av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND,
++        "declared_but_unrun": "probe_actions_taken==0 / hypothesis_posterior_built==False / posterior_entropy_reduction==0.0",
++    }
++    success = (
++        checks.get("ok") is True
++        and tautology_carveout_added["passed"] is True
++        and exercise_evidence_extension_added["passed"] is True
++        and pinning_test["passed"] is True
++        and existing_suite["passed"] is True
++    )
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-ARC-WMTE-4743",
++            "SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": SUCCESS_VERDICT if success else "complete: carveout_hardening_partial",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "tautology_carveout_added": tautology_carveout_added,
++        "exercise_evidence_extension_added": exercise_evidence_extension_added,
++        "a1_exemplar_downgraded_to_warn": a1_exemplar,
++        "a2_exemplar_flagged": a2_exemplar,
++        "positive_exercise_null_not_flagged": positive_exercise,
++        "existing_suite_green": {
++            "passed": existing_suite["passed"],
++            "command": existing_suite["command"],
++            "returncode": existing_suite["returncode"],
++            "stdout_tail": existing_suite["stdout_tail"],
++            "stderr_tail": existing_suite["stderr_tail"],
++        },
++        "pinning_test_path": PINNING_TEST_PATH,
++        "pinning_test_green": pinning_test,
++        "verifier_is_oracle": False,
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": checks,
++        "duration_s": max(0.0001, time.perf_counter() - start),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact
++    ]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_terminal_prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("tautology_carveout_added", {}).get("passed") is not True:
++        errors.append("tautology_carveout_added")
++    if artifact.get("exercise_evidence_extension_added", {}).get("passed") is not True:
++        errors.append("exercise_evidence_extension_added")
++    if artifact.get("a1_exemplar_downgraded_to_warn", {}).get("passed") is not True:
++        errors.append("a1_exemplar_downgraded_to_warn")
++    if artifact.get("a2_exemplar_flagged", {}).get("passed") is not True:
++        errors.append("a2_exemplar_flagged")
++    if artifact.get("positive_exercise_null_not_flagged", {}).get("passed") is not True:
++        errors.append("positive_exercise_null_not_flagged")
++    if artifact.get("existing_suite_green", {}).get("passed") is not True:
++        errors.append("existing_suite_green")
++    if artifact.get("pinning_test_path") != PINNING_TEST_PATH:
++        errors.append("pinning_test_path")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed")
++    if artifact.get("preconditions_checked", {}).get("ok") is not True:
++        errors.append("preconditions_checked")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"field_principles.{field}")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def write_artifact(root: Path | str = REPO_ROOT, artifact: Mapping[str, Any] | None = None) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(root: Path | str = REPO_ROOT, *, write: bool = True) -> JsonDict:
++    artifact = build_artifact(root)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5dadb27265..309058fc16 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-25T21:12:57.351164Z",
+-  "duration_s": 0.046356916427612305,
++  "run_date": "2026-06-25T21:31:37.833533Z",
++  "duration_s": 0.05778336524963379,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "73d59d16e289f49e8cca423fb5fc7b70f9af3f5abde46f6ca9cb4a149bc78ec7",
++  "reproducibility_checksum": "0cb18400deed7057d5a33ad9bd41014e452ea37c4d3b61cc31c00b3260e9e632",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "12a2f7f3f9a8b87d89ff1acaeba53ec004df80f4"
++    "adversarial_verify_version": "ff7be6f7bab97e0edb7170682ef2dd0b2633a177"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 62ff86a101..08d40eadc2 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-25T21:12:57.443451Z",
+-  "duration_s": 0.08081388473510742,
++  "run_date": "2026-06-25T21:31:37.933939Z",
++  "duration_s": 0.09347319602966309,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "37b740186518b4894e88505e7fbb41f1b4c693914c5174aa1436b58fa9f8bc72",
++  "reproducibility_checksum": "7ae4597cb3b81feefdc5c05b98e3f4b0037da9183351b49069752fc1f7a06ff7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "12a2f7f3f9a8b87d89ff1acaeba53ec004df80f4"
++    "adversarial_verify_version": "ff7be6f7bab97e0edb7170682ef2dd0b2633a177"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6613e42208..792e93dbc7 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1619796752929688,
++  "efficiency_gains_ms": 2.1622180938720703,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b3166fc990..8b9e3bd47f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.414507955312729e-05,
++  "duration_s": 5.529401823878288e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4743_adversarial_verify_carveout_hardening.json b/results/experiment_4743_adversarial_verify_carveout_hardening.json
+new file mode 100644
+index 0000000000..ee8511ea4c
+--- /dev/null
++++ b/results/experiment_4743_adversarial_verify_carveout_hardening.json
+@@ -0,0 +1,137 @@
++{
++  "a1_exemplar_downgraded_to_warn": {
++    "artifact": "results/experiment_4726_online_action_learning_driver_valid_test.json",
++    "critical_flags": [],
++    "not_quarantined": true,
++    "passed": true,
++    "tautology_flags": [
++      {
++        "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via validated_non_degenerate_first_win_null==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
++        "kind": "TAUTOLOGY",
++        "severity": "warn"
++      },
++      {
++        "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via validated_non_degenerate_first_win_null==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
++        "kind": "TAUTOLOGY",
++        "severity": "warn"
++      },
++      {
++        "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via online_warm_vs_frozen_delta==0, null_delta_methodology_note, and bare_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
++        "kind": "TAUTOLOGY",
++        "severity": "warn"
++      }
++    ]
++  },
++  "a2_exemplar_flagged": {
++    "artifact": "results/experiment_4727_active_probe_disambiguation.json",
++    "lever_flags": [
++      {
++        "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: active_probe_result.active_probe_diagnostics.hypothesis_posterior_built=False; active_probe_result.active_probe_diagnostics.posterior_entropy_reduction=0.0; active_probe_result.active_probe_diagnostics.probe_actions_taken=0; active_probe_result.hypothesis_posterior_built=False; active_probe_result.posterior_entropy_reduction=0.0; active_probe_result.probe_actions_taken=0",
++        "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++        "severity": "warn"
++      }
++    ],
++    "passed": true
++  },
++  "duration_s": 26.661378778982908,
++  "exercise_evidence_extension_added": {
++    "declared_but_unrun": "probe_actions_taken==0 / hypothesis_posterior_built==False / posterior_entropy_reduction==0.0",
++    "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++    "passed": true
++  },
++  "existing_suite_green": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_arc_self_solve.py tests/python/test_adversarial_verify_baseline_identity_tautology.py tests/python/test_adversarial_verify_carveout_hardening.py tests/python/test_adversarial_verify_control_treatment_null.py tests/python/test_adversarial_verify_degenerate_controls.py tests/python/test_adversarial_verify_degenerate_separation.py tests/python/test_adversarial_verify_guards.py tests/python/test_adversarial_verify_hardening_4611.py tests/python/test_adversarial_verify_hardening_4623.py tests/python/test_adversarial_verify_hardening_4635.py tests/python/test_adversarial_verify_hardening_4647.py tests/python/test_adversarial_verify_hardening_4659.py tests/python/test_adversarial_verify_hardening_4671.py tests/python/test_adversarial_verify_hardening_4683.py tests/python/test_adversarial_verify_hardening_4695.py tests/python/test_adversarial_verify_hardening_4707.py tests/python/test_adversarial_verify_lever_exercise_evidence.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [174 items]\n\n........................................................................ [ 41%]\n........................................................................ [ 82%]\n..............................                                           [100%]\n============================= 174 passed in 20.58s =============================\n"
++  },
++  "experiment": "experiment_4743_adversarial_verify_carveout_hardening",
++  "field_principles": {
++    "a1_exemplar_downgraded_to_warn": {
++      "principle": "exp4726 (non-degenerate + null markers) downgrades CRITICAL->WARN -- the honest-null-not-quarantined fix works."
++    },
++    "a2_exemplar_flagged": {
++      "principle": "exp4727 (declared probe + 0 probe_actions) is flagged LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the declared-but-unrun catch works."
++    },
++    "exercise_evidence_extension_added": {
++      "principle": "the declared-but-unrun extension (probe_actions_taken==0 etc.) -- catches the .435 A2-class no-op the existing guard missed."
++    },
++    "existing_suite_green": {
++      "principle": "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: adversarial_verify_carveout_hardening_shipped_pinned."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
++    },
++    "pinning_test_path": {
++      "principle": "tests/python/test_adversarial_verify_carveout_hardening.py -- the standing pin."
++    },
++    "positive_exercise_null_not_flagged": {
++      "principle": "a genuine null with positive exercise evidence is NOT flagged -- the false-positive carve-out works (a real null must survive)."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift."
++    },
++    "tautology_carveout_added": {
++      "principle": "the non-degenerate-zero-lift carve-out -- mechanizes the fix so an honest generation null (the .436 A1/A2 shape) is not quarantined like .435 A1."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- a linter check invokes no oracle."
++    }
++  },
++  "honest_verdict": "success: adversarial_verify_carveout_hardening_shipped_pinned.",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor).",
++  "pinning_test_green": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_carveout_hardening.py -q --no-cov",
++    "duration_s": 4.616888043936342,
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 3.41s ===============================\n"
++  },
++  "pinning_test_path": "tests/python/test_adversarial_verify_carveout_hardening.py",
++  "positive_exercise_null_not_flagged": {
++    "lever_flags": [],
++    "passed": true,
++    "posterior_entropy_reduction": 0.25,
++    "probe_actions_taken": 3
++  },
++  "preconditions_checked": {
++    "adversarial_verify_importable": true,
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "exp4726_present": true,
++    "exp4727_present": true,
++    "network_required": false,
++    "ok": true,
++    "pinning_test_present": true,
++    "spec_has_req_4743": true
++  },
++  "random_seed": 4743,
++  "reproducibility_checksum": "sha256:55dba530c233160a2f81e524f7be32998ae4d704a0d2ee237eb863784a793d1d",
++  "result_path": "results/experiment_4743_adversarial_verify_carveout_hardening.json",
++  "schema": "carnot.exp4743.adversarial_verify_carveout_hardening.v1",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4743",
++    "SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING"
++  ],
++  "tautology_carveout_added": {
++    "critical_to_warn": true,
++    "markers": [
++      "arms_non_degenerate=true",
++      "null_delta_methodology_note",
++      "positive_control_passed=true"
++    ],
++    "passed": true
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0714957de6..baf00661b7 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:12:32Z",
+-  "finished_at": "2026-06-25T21:12:32Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-25T21:31:12Z",
++  "finished_at": "2026-06-25T21:31:12Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 5718a677b1..443a226f7f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:12:32Z",
+-  "finished_at": "2026-06-25T21:12:32Z",
++  "started_at": "2026-06-25T21:31:12Z",
++  "finished_at": "2026-06-25T21:31:12Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 492a40d81b..885d75623f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T21:12:32Z",
+-  "finished_at": "2026-06-25T21:12:32Z",
++  "started_at": "2026-06-25T21:31:12Z",
++  "finished_at": "2026-06-25T21:31:12Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 9d9e0c2f1b..695e035dda 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -1218,6 +1218,30 @@ def _declared_null_delta_descriptor(
+     return None
+ 
+ 
++def _declared_arc_nondegenerate_firstwin_null_descriptor(
++    d: dict[str, Any], left: str, right: str
++) -> dict[str, str] | None:
++    """Recognize validated ARC generation/exploration no-lift first-win nulls."""
++    if not _is_arc_generation_or_exploration_artifact(d):
++        return None
++    if not _real_field_has_true(d, "arms_non_degenerate"):
++        return None
++    note = d.get("null_delta_methodology_note")
++    if not isinstance(note, str) or not note.strip():
++        return None
++    if d.get("positive_control_passed") is not True:
++        return None
++    left_lower = left.lower()
++    right_lower = right.lower()
++    if "first_win" not in left_lower or "first_win" not in right_lower:
++        return None
++    return {
++        "delta_key": "validated_non_degenerate_first_win_null",
++        "methodology_key": "null_delta_methodology_note",
++        "control_key": "positive_control_passed",
++    }
++
++
+ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
+     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
+ 
+@@ -1248,6 +1272,10 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
+         if _is_small_shared_denominator_rate_pair(k1, k2, v1, v2, d):
+             continue
+         declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
++        if declared_null_delta is None:
++            declared_null_delta = _declared_arc_nondegenerate_firstwin_null_descriptor(
++                d, k1, k2
++            )
+         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
+         # honest_verdict declares a no-value null (verifier_router_no_value_added,
+         # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
+@@ -3207,6 +3235,11 @@ _LEVER_EXERCISE_CONTEXT_MARKERS = (
+     "online_driver_arms",
+     "online_warm_first_win",
+     "online_scratch_first_win",
++    "active_probe",
++    "active-probe",
++    "hypothesis_posterior",
++    "posterior_entropy_reduction",
++    "probe_actions_taken",
+ )
+ _LEVER_ZERO_DELTA_KEY_MARKERS = (
+     "coverage_delta",
+@@ -3237,6 +3270,14 @@ _LEVER_ONLINE_METRIC_MARKERS = (
+     "solve_rate",
+     "live_solve_rate",
+ )
++_LEVER_PROBE_DECLARATION_MARKERS = (
++    "active_probe",
++    "active-probe",
++    "hypothesis_posterior",
++    "probe_actions_taken",
++    "hypothesis_posterior_built",
++    "posterior_entropy_reduction",
++)
+ 
+ 
+ def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
+@@ -3484,9 +3525,53 @@ def _byte_identical_online_arm_reason(d: dict[str, Any]) -> str | None:
+     return f"byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs ({formatted})"
+ 
+ 
++def _has_positive_probe_exercise_evidence(d: dict[str, Any]) -> bool:
++    """True when a declared active-probe path emitted real exercise evidence."""
++    probe_actions_positive = any(
++        float(number) > 0.0
++        for value in _real_field_values(d, "probe_actions_taken")
++        for number in _numeric_leaf_values(value)
++    )
++    entropy_reduction_positive = any(
++        float(number) > 0.0
++        for value in _real_field_values(d, "posterior_entropy_reduction")
++        for number in _numeric_leaf_values(value)
++    )
++    return probe_actions_positive and entropy_reduction_positive
++
++
++def _declared_but_unrun_probe_reasons(d: dict[str, Any]) -> list[str]:
++    if _has_positive_probe_exercise_evidence(d):
++        return []
++
++    declared = False
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        path_text = _path_text(path)
++        path_lower = path_text.lower()
++        leaf = path[-1].lower()
++        if any(marker in path_lower for marker in _LEVER_PROBE_DECLARATION_MARKERS):
++            declared = True
++        if leaf == "probe_actions_taken" and _is_finite_number(value) and float(value) == 0.0:
++            reasons.append(f"{path_text}=0")
++        elif leaf == "hypothesis_posterior_built" and value is False:
++            reasons.append(f"{path_text}=False")
++        elif (
++            leaf == "posterior_entropy_reduction"
++            and _is_finite_number(value)
++            and float(value) == 0.0
++        ):
++            reasons.append(f"{path_text}=0.0")
++    if not declared:
++        return []
++    return reasons
++
++
+ def _has_nondegenerate_lever_evidence(d: dict[str, Any]) -> bool:
+     if _has_distinct_arm_evidence(d):
+         return True
++    if _has_positive_probe_exercise_evidence(d):
++        return True
+     for key in (
+         "actions_injected",
+         "archive_injections",
+@@ -3545,6 +3630,7 @@ def check_lever_exercise_evidence(d: dict[str, Any], flags: list[Flag]) -> None:
+     reasons.extend(_pool_degenerate_reasons(d))
+     reasons.extend(_grid_shape_degenerate_reasons(d))
+     reasons.extend(_scorer_diagnostics_error_reasons(d))
++    reasons.extend(_declared_but_unrun_probe_reasons(d))
+ 
+     arm_reason = _byte_identical_online_arm_reason(d)
+     if arm_reason is not None and not _has_distinct_arm_evidence(d):
+diff --git a/tests/python/test_adversarial_verify_carveout_hardening.py b/tests/python/test_adversarial_verify_carveout_hardening.py
+new file mode 100644
+index 0000000000..73d721eb48
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_carveout_hardening.py
+@@ -0,0 +1,173 @@
++"""Pin REQ-ARC-WMTE-4743 adversarial_verify ARC null hardening.
++
++Spec refs: REQ-ARC-WMTE-4743, SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import scripts.adversarial_verify as av
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++EXP4726_NONDEGENERATE_NULL = (
++    REPO / "results" / "experiment_4726_online_action_learning_driver_valid_test.json"
++)
++EXP4727_DECLARED_UNRUN_PROBE = (
++    REPO / "results" / "experiment_4727_active_probe_disambiguation.json"
++)
++
++
++def _load(path: Path) -> dict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _verify_flags(path: Path) -> list[dict[str, str]]:
++    report = av.verify_artifact(path)
++    assert report["loaded"] is True
++    return report["flags"]
++
++
++def _payload_lever_flags(payload: dict) -> list[dict[str, str]]:
++    flags: list[av.Flag] = []
++    av.check_lever_exercise_evidence(payload, flags)
++    return [
++        flag.to_dict()
++        for flag in flags
++        if flag.kind == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++
++
++def test_req_arc_wmte_4743_spec_declares_carveout_hardening() -> None:
++    """REQ-ARC-WMTE-4743: OpenSpec declares the null-delta and probe hardening."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-WMTE-4743" in spec
++    assert "SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING" in spec
++    assert "LEVER_EXERCISE_EVIDENCE_DEGENERATE" in spec
++    assert "experiment_4743_adversarial_verify_carveout_hardening.json" in spec
++
++
++def test_scenario_arc_wmte_4743_exp4726_nondegenerate_null_is_warn_not_critical() -> None:
++    """SCENARIO-ARC-WMTE-4743: Exp 4726 equal first-win arms are WARN, not CRITICAL."""
++
++    payload = _load(EXP4726_NONDEGENERATE_NULL)
++    assert payload["arms_non_degenerate"] is True
++    assert payload["positive_control_passed"] is True
++    assert payload["null_delta_methodology_note"].strip()
++
++    flags = _verify_flags(EXP4726_NONDEGENERATE_NULL)
++    tautology_flags = [flag for flag in flags if flag["kind"] == "TAUTOLOGY"]
++
++    assert tautology_flags
++    assert all(flag["severity"] == "warn" for flag in tautology_flags)
++    assert not any(
++        flag["kind"] == "TAUTOLOGY" and flag["severity"] == "critical" for flag in flags
++    )
++
++
++def test_scenario_arc_wmte_4743_exp4727_declared_unrun_probe_is_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4743: Exp 4727 declared active probe did not run and is flagged."""
++
++    payload = _load(EXP4727_DECLARED_UNRUN_PROBE)
++    assert payload["probe_actions_taken"] == 0
++    assert payload["hypothesis_posterior_built"] is False
++    assert payload["posterior_entropy_reduction"] == 0.0
++
++    flags = [
++        flag
++        for flag in _verify_flags(EXP4727_DECLARED_UNRUN_PROBE)
++        if flag["kind"] == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++
++    assert flags
++    assert any("probe_actions_taken=0" in flag["detail"] for flag in flags)
++    assert any("hypothesis_posterior_built=False" in flag["detail"] for flag in flags)
++
++
++def test_scenario_arc_wmte_4743_positive_exercise_null_not_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4743: positive probe exercise evidence survives a flat null."""
++
++    payload = {
++        "experiment": "arc_active_probe_positive_exercise_null",
++        "schema": "carnot.arc.active_probe.valid_null.v1",
++        "honest_verdict": "complete: active_probe_no_first_win_lift_honest_null",
++        "inference_substrate": "active-probe replay over cached ARC transitions",
++        "duration_s": 1.0,
++        "target_game": "bp35",
++        "probe_actions_taken": 3,
++        "hypothesis_posterior_built": True,
++        "posterior_entropy_reduction": 0.25,
++        "active_probe_result": {
++            "active_probe": True,
++            "probe_actions_taken": 3,
++            "hypothesis_posterior_built": True,
++            "posterior_entropy_reduction": 0.25,
++            "budget": 10,
++        },
++        "baseline_first_win": 0.04,
++        "active_probe_first_win": 0.04,
++        "active_probe_delta": 0.0,
++        "random_seed": 4743,
++        "reproducibility_checksum": "sha256:" + "7" * 64,
++    }
++
++    assert _payload_lever_flags(payload) == []
++
++
++def test_scenario_arc_wmte_4743_unvalidated_flat_result_still_critical() -> None:
++    """SCENARIO-ARC-WMTE-4743: equal ARC arms without all markers are not excused."""
++
++    base_payload = {
++        "experiment": "arc_online_action_learning_unvalidated_flat",
++        "schema": "carnot.arc.online_action_learning.v1",
++        "honest_verdict": "complete: online_action_learning_no_first_win_lift",
++        "inference_substrate": "online_action_learning replay",
++        "frozen_first_win": 0.04,
++        "online_scratch_first_win": 0.04,
++        "online_warm_first_win": 0.04,
++    }
++
++    cases = [
++        {
++            **base_payload,
++            "arms_non_degenerate": False,
++            "null_delta_methodology_note": "validated flat result",
++            "positive_control_passed": True,
++        },
++        {
++            **base_payload,
++            "arms_non_degenerate": True,
++            "null_delta_methodology_note": "",
++            "positive_control_passed": True,
++        },
++        {
++            **base_payload,
++            "arms_non_degenerate": True,
++            "null_delta_methodology_note": "unvalidated flat result",
++            "positive_control_passed": False,
++        },
++        {
++            "experiment": "non_arc_unvalidated_flat",
++            "schema": "generic.metric.v1",
++            "honest_verdict": "complete: generic_flat",
++            "inference_substrate": "generic replay",
++            "method_a_first_win": 0.04,
++            "method_b_first_win": 0.04,
++            "arms_non_degenerate": True,
++            "null_delta_methodology_note": "markers are not enough outside ARC",
++            "positive_control_passed": True,
++        },
++    ]
++
++    for payload in cases:
++        flags: list[av.Flag] = []
++        av.check_tautology(payload, flags)
++
++        assert any(
++            flag.kind == "TAUTOLOGY" and flag.severity == "critical" for flag in flags
++        )
+-- 
+2.55.0
+

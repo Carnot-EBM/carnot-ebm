@@ -1,0 +1,65 @@
+From d4b7010a0a51c5a1792ec46c7fd637e247647418 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 22:46:24 -0400
+Subject: [PATCH 04948/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ results/experiment_5004_uprm_replication.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 36a87f4a69..0f0bcee984 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 171, "phase": "iteration_start", "last_beat": "2026-06-30T02:23:54Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 172, "phase": "iteration_start", "last_beat": "2026-06-30T02:46:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 353bab0d72..f5c18976d0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9619,3 +9619,4 @@ The contro |
+ | 2026-06-30 01:44 UTC | PHASE 0 (TRANSITION) -- archive .460 -> activate . | OK | 88 passed, 1 warning in 7.61s |
+ | 2026-06-30 01:59 UTC | PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) - | OK | 88 passed, 1 warning in 6.60s |
+ | 2026-06-30 02:21 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-30 02:44 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9c0eee45ab..d2cdf7883f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 171, "phase": "iteration_start", "started_at": "2026-06-30T02:23:54Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 172, "phase": "iteration_start", "started_at": "2026-06-30T02:46:22Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5004_uprm_replication.json b/results/experiment_5004_uprm_replication.json
+index 0c3d7ecbd0..9888e8b9e6 100644
+--- a/results/experiment_5004_uprm_replication.json
++++ b/results/experiment_5004_uprm_replication.json
+@@ -106,5 +106,13 @@
+   "tuned_sc_accuracy": null,
+   "uprm_score_methodology_note": "arXiv:2605.10158 uPRM scores a candidate first-error position j for trajectory steps y_1..y_T as S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t, where p^+_t and p^-_t are the generator LLM next-token probabilities of '+' and '-' marker tokens after step t, renormalized over {+,-}. This runner uses the generator's own logprob/top-logprob telemetry, never gold, to score each candidate by the mean no-error log-likelihood S(T+1)/T as a direct oracle-distinct selector; gold is read only after selection for evaluation.",
+   "uprm_selection_accuracy": null,
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=1.559929 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,60 @@
+From b4743ffd4b475b3c4e935c7a8190c145be47791b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 11:27:45 -0400
+Subject: [PATCH 05299/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index f8817ecd21..3f96a7a45d 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">4,489</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">4,502</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 47b6743f4d..b49b83676b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 95, "phase": "iteration_start", "last_beat": "2026-07-01T15:05:52Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 96, "phase": "iteration_start", "last_beat": "2026-07-01T15:25:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index abf23ab0cf..1509a5f182 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9760,3 +9760,4 @@ web search: |
+ | 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-01 14:49 UTC | PHASE C1 continuous self-learning -- SEVerA-style  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-01 15:03 UTC | PHASE C2 hardware continuity -- KV260 safe transcr | OK | 88 passed, 1 warning in 7.08s |
++| 2026-07-01 15:23 UTC | PHASE Z capstone -- decide exact-verifier scale-up | OK | 85 passed, 1 warning in 10.59s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 044c724c73..7ae1a11581 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 95, "phase": "iteration_start", "started_at": "2026-07-01T15:05:52Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 96, "phase": "iteration_start", "started_at": "2026-07-01T15:25:18Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

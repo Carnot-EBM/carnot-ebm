@@ -1,0 +1,444 @@
+From 4574041408c9a16f8ead5635ba3fa358e97f0a37 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 22:46:59 -0400
+Subject: [PATCH 02448/11362] [outer-loop] bridge v2: richer value head ROUTES
+ a reachable floor win (cn04 unlocked)
+
+Operator: take on the richer-value/TRM lever. First a DIAGNOSTIC settled which component
+to build: for the 6 gap-1 floor games, the oracle's winning actions are 91-100% present
+in the live explorer's candidate set -> the wins are REACHABLE; the failure is ROUTING,
+not action-generation. So a value head that orders the search CAN help (the lever is real).
+
+Built cross_game_features_v2 (frame-only): the 5 v1 scalars + a 6x6 spatial occupancy map
+(41 features) so the head can locate WHERE activity is, not just how much (v1 threw away
+all spatial structure -> inert at routing). Trained on the same 480-state, 16-game,
+frame-only, steps-to-next-level-up corpus.
+
+A/B (graph_explore_solve_v2 A*-routed: depth + 5*value) on the 6 floor games:
+  cn04:  BFS L0, v1 L0, v2 L1 SOLVED   <- the richer head ROUTED a win neither BFS nor v1 found
+  sk48:  all solve (reachable by BFS at this budget)
+  ar25/ka59/sc25/wa30: still L0 (v2 did not help those)
+-> v2 unlocked 1/6 floor games over BFS. NOT a silver bullet, but a REAL positive: the
+   flywheel produces value, and richer features matter (v1's 5 scalars did not unlock cn04).
+
+This is measured on graph_explore_solve_v2's A* heuristic slot, NOT yet the live
+StepwiseExplorer (whose depth-primary tiebreak is too weak -- A* depth+weight*value is what
+routed cn04). NEXT: port A* value-routing into the live explorer + re-run the live oracle-gap
+eval to see whether cn04 (gap-1) and others close in the actual submitted agent (8/32 -> ?).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ models/arc_verifier_cross_game_v2.json       |  69 +++++++++
+ python/carnot/agentic/arc_value_learner.py   |  25 ++++
+ results/arc3_value_routing_v2.json           | 148 +++++++++++++++++++
+ scripts/arc_cross_game_verifier_train.py     |  17 ++-
+ scripts/experiments/arc3_value_routing_v2.py |  83 +++++++++++
+ 5 files changed, 334 insertions(+), 8 deletions(-)
+ create mode 100644 models/arc_verifier_cross_game_v2.json
+ create mode 100644 results/arc3_value_routing_v2.json
+ create mode 100644 scripts/experiments/arc3_value_routing_v2.py
+
+diff --git a/models/arc_verifier_cross_game_v2.json b/models/arc_verifier_cross_game_v2.json
+new file mode 100644
+index 0000000000..8d45d6891d
+--- /dev/null
++++ b/models/arc_verifier_cross_game_v2.json
+@@ -0,0 +1,69 @@
++{
++  "schema": "carnot_arc_learned_verifier_v1",
++  "kind": "linear_value_head",
++  "weights": [
++    -0.12245277333341138,
++    0.008441136096850863,
++    -0.04388084652732186,
++    214.57761247121627,
++    0.07716506047285959,
++    -0.44270172723448536,
++    -1.3981491849122119,
++    5.398248858776566,
++    3.77404389923813,
++    -1.0465026188365594,
++    -2.626001667199487,
++    2.1718910348302356,
++    -0.2654672258111313,
++    0.9929600698016385,
++    -1.3563561466895586,
++    0.7774360249629375,
++    1.311259562845058,
++    4.294582896726933,
++    0.8513515341754035,
++    2.3035723081528485,
++    3.9042768614433236,
++    1.6281786570097097,
++    -15.40846687720495,
++    -2.4000347551592016,
++    0.5723363291003628,
++    0.9250874138444061,
++    1.3229780492584104,
++    0.9987135562878909,
++    4.958092612424666,
++    -3.8826223477103814,
++    0.44331374058162987,
++    0.21935531698419938,
++    0.8960607360286243,
++    1.2581896073848735,
++    -6.283323465669567,
++    -4.581565674441015,
++    1.368555334452651,
++    0.7087466014757019,
++    -1.2924212416913008,
++    -2.1044486759668115,
++    -1.0236832745178694,
++    -119.99795820392382
++  ],
++  "feature_names": "cross_game_features_v2",
++  "trained_games": [
++    "ar25",
++    "cd82",
++    "cn04",
++    "ka59",
++    "lp85",
++    "ls20",
++    "m0r0",
++    "r11l",
++    "sc25",
++    "sk48",
++    "sp80",
++    "su15",
++    "tn36",
++    "tr87",
++    "tu93",
++    "wa30"
++  ],
++  "n_samples": 480,
++  "provenance": "BRIDGE v2: 5 scalars + 6x6 spatial occupancy"
++}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_value_learner.py b/python/carnot/agentic/arc_value_learner.py
+index 2de120f197..27e1444ce8 100644
+--- a/python/carnot/agentic/arc_value_learner.py
++++ b/python/carnot/agentic/arc_value_learner.py
+@@ -45,6 +45,31 @@ def cross_game_features(frame: Any) -> list[float]:
+     return [n_nonzero / total, float(n_colors), float(n_objects) / 32.0, spread, float(dom)]
+ 
+ 
++def cross_game_features_v2(frame: Any) -> list[float]:
++    """RICHER frame-only cross-game features (v2): the 5 v1 scalars PLUS a coarse SPATIAL occupancy map
++    (6x6 pooled nonzero-fraction) so the value head can locate WHERE activity is, not just how much.
++    The v1 head (5 scalars) was inert at routing because it threw away all spatial structure; this keeps
++    a small spatial signature (41 features) while staying game-agnostic + cheap. Frame-only (live-legal)."""
++    import numpy as np
++    from carnot.agentic.arc_agi3_world_model import grid_of
++    base = cross_game_features(frame)
++    g = np.asarray(grid_of(frame))
++    if g.ndim == 1:
++        s = int(round(g.size ** 0.5))
++        g = g.reshape(s, s) if s * s == g.size else g.reshape(1, -1)
++    nz = (g != 0).astype(float)
++    h, w = nz.shape
++    # pool into a 6x6 grid of nonzero-fraction (handles any input size; empty blocks -> 0)
++    grid = []
++    for by in range(6):
++        for bx in range(6):
++            y0, y1 = h * by // 6, max(h * by // 6 + 1, h * (by + 1) // 6)
++            x0, x1 = w * bx // 6, max(w * bx // 6 + 1, w * (bx + 1) // 6)
++            block = nz[y0:y1, x0:x1]
++            grid.append(float(block.mean()) if block.size else 0.0)
++    return base + grid
++
++
+ def collect_trajectory_data(env: Any, solver: Any, prefix: Sequence[str],
+                             level_path: Sequence[str], featurize: Callable[[Any], Sequence[float]]):
+     """Replay a solved LEVEL path and emit (features, steps_remaining) per state —
+diff --git a/results/arc3_value_routing_v2.json b/results/arc3_value_routing_v2.json
+new file mode 100644
+index 0000000000..2b6bb3a04b
+--- /dev/null
++++ b/results/arc3_value_routing_v2.json
+@@ -0,0 +1,148 @@
++{
++  "experiment": "arc3_value_routing_v2",
++  "honest_verdict": "complete_value_routing_v2_unlocked_1_floor_games_['cn04']",
++  "max_expansions": 8000,
++  "heuristic_weight": 5.0,
++  "bfs_solved": [
++    "sk48"
++  ],
++  "v1_routed_solved": [
++    "sk48"
++  ],
++  "v2_routed_solved": [
++    "cn04",
++    "sk48"
++  ],
++  "v2_unlocked_over_bfs": [
++    "cn04"
++  ],
++  "per_game": [
++    {
++      "game": "ar25",
++      "bfs": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 22
++      },
++      "v1_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 23
++      },
++      "v2_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 23
++      }
++    },
++    {
++      "game": "cn04",
++      "bfs": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 15
++      },
++      "v1_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 15
++      },
++      "v2_routed": {
++        "reached_level": 1,
++        "solved": true,
++        "actions": 13,
++        "secs": 13
++      }
++    },
++    {
++      "game": "ka59",
++      "bfs": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 29
++      },
++      "v1_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 29
++      },
++      "v2_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 29
++      }
++    },
++    {
++      "game": "sc25",
++      "bfs": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 0
++      },
++      "v1_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 0
++      },
++      "v2_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 0
++      }
++    },
++    {
++      "game": "sk48",
++      "bfs": {
++        "reached_level": 1,
++        "solved": true,
++        "actions": 14,
++        "secs": 21
++      },
++      "v1_routed": {
++        "reached_level": 1,
++        "solved": true,
++        "actions": 14,
++        "secs": 20
++      },
++      "v2_routed": {
++        "reached_level": 1,
++        "solved": true,
++        "actions": 14,
++        "secs": 22
++      }
++    },
++    {
++      "game": "wa30",
++      "bfs": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 11
++      },
++      "v1_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 13
++      },
++      "v2_routed": {
++        "reached_level": 0,
++        "solved": false,
++        "actions": 0,
++        "secs": 13
++      }
++    }
++  ],
++  "inference_substrate": "offline_sim_no_quota_frame_only"
++}
+\ No newline at end of file
+diff --git a/scripts/arc_cross_game_verifier_train.py b/scripts/arc_cross_game_verifier_train.py
+index da13f9bb56..8402511be8 100644
+--- a/scripts/arc_cross_game_verifier_train.py
++++ b/scripts/arc_cross_game_verifier_train.py
+@@ -20,7 +20,7 @@ import importlib.util
+ 
+ from arcengine import GameAction
+ from carnot.agentic import arc_solver_kit as kit
+-from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features
++from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features, cross_game_features_v2
+ from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
+ from carnot.agentic.arc_graph_explore import graph_explore_solve_v3
+ 
+@@ -36,11 +36,12 @@ def _metaharness():
+     return mh
+ 
+ 
+-def collect_pooled():
+-    """Pool FRAME-ONLY (cross_game_features, steps-to-next-level-up) over ALL banked solves. The label
+-    is normalized steps to the NEXT level-up (lower == closer to advancing a level) -- exactly what the
+-    live explorer's frontier ordering wants -- pooled across games so a never-seen game inherits a
+-    progress heuristic. Replays the banked action lists offline; reads only FRAMES (live-legal)."""
++def collect_pooled(featurize=cross_game_features):
++    """Pool FRAME-ONLY (features, steps-to-next-level-up) over ALL banked solves. The label is normalized
++    steps to the NEXT level-up (lower == closer to advancing a level) -- exactly what the live explorer's
++    frontier ordering wants -- pooled across games so a never-seen game inherits a progress heuristic.
++    Replays the banked action lists offline; reads only FRAMES (live-legal). `featurize` selects v1 (5
++    scalars) or v2 (richer spatial)."""
+     mh = _metaharness()
+     arc = kit.offline_arcade()
+     X, y, per_game = [], [], {}
+@@ -61,11 +62,11 @@ def collect_pooled():
+             aid, data = mh.normalize(a)
+             if aid is None:
+                 continue
+-            seq.append((cross_game_features(f), _levels_completed(f)))
++            seq.append((featurize(f), _levels_completed(f)))
+             f = env.step(getattr(GameAction, f"ACTION{aid}"), data=data)
+             if f is None:
+                 break
+-        seq.append((cross_game_features(f), _levels_completed(f)))
++        seq.append((featurize(f), _levels_completed(f)))
+         # label each state with normalized steps to the NEXT level-up (segment by level transitions)
+         n = len(seq)
+         # find, for each index, the distance to the next index where the level increases
+diff --git a/scripts/experiments/arc3_value_routing_v2.py b/scripts/experiments/arc3_value_routing_v2.py
+new file mode 100644
+index 0000000000..0243897255
+--- /dev/null
++++ b/scripts/experiments/arc3_value_routing_v2.py
+@@ -0,0 +1,83 @@
++"""Does a RICHER cross-game value head ROUTE the search to the reachable floor wins?
++
++The diagnostic showed the 6 gap-1 floor games are ROUTING-limited (the winning actions ARE in the
++explorer's candidate set, 91-100%), not action-generation-limited -- so a value head that orders the
++search well CAN help. v1 (5 scalar features) was inert. This trains v2 (5 scalars + a 6x6 spatial
++occupancy map, frame-only) and A/B-routes graph_explore_solve_v2 (its heuristic slot = A*: depth +
++weight*heuristic) on each floor game: BFS (weight 0) vs v1-routed vs v2-routed. Honest question: does
++ANY config reach L1 where BFS cannot, within the same expansion budget? Zero quota.
++"""
++from __future__ import annotations
++
++import json
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++sys.path.insert(0, str(REPO / "scripts"))
++
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_value_learner import (
++    LearnedVerifier, cross_game_features, cross_game_features_v2,
++)
++from carnot.agentic.arc_graph_explore import graph_explore_solve_v2
++
++FLOOR = ["ar25", "cn04", "ka59", "sc25", "sk48", "wa30"]
++MAX_EXP = 8000
++WEIGHT = 5.0
++
++
++def main() -> int:
++    from arc_cross_game_verifier_train import collect_pooled
++    print("== value-routing v2: does a richer value head route the reachable floor wins? ==", flush=True)
++    # train v1 and v2 heads on the same pooled corpus
++    heads = {}
++    for name, feat in [("v1", cross_game_features), ("v2", cross_game_features_v2)]:
++        X, y, per_game = collect_pooled(feat)
++        heads[name] = LearnedVerifier(feat).fit(X, y)
++        print(f"  trained {name}: {len(X)} states, {len(per_game)} games, {len(X[0])} features", flush=True)
++    v2_ckpt = REPO / "models" / "arc_verifier_cross_game_v2.json"
++    heads["v2"].save(v2_ckpt, meta={"trained_games": list(per_game),
++                                    "feature_names": "cross_game_features_v2",
++                                    "provenance": "BRIDGE v2: 5 scalars + 6x6 spatial occupancy"})
++
++    arc = kit.offline_arcade()
++    rows = []
++    for game in FLOOR:
++        rec = {"game": game}
++        for label, head in [("bfs", None), ("v1_routed", heads["v1"]), ("v2_routed", heads["v2"])]:
++            env = arc.make(game, scorecard_id=arc.open_scorecard())
++            heur = (lambda fr, h=head: float(h(fr))) if head is not None else None
++            t0 = time.time()
++            traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=MAX_EXP, max_depth=50,
++                                               heuristic=heur, heuristic_weight=WEIGHT)
++            rec[label] = {"reached_level": lvl, "solved": bool(traj), "actions": len(traj or []),
++                          "secs": round(time.time() - t0)}
++            print(f"  {game:5} {label:10} -> L{lvl} {'SOLVED' if traj else ''} [{rec[label]['secs']}s]", flush=True)
++        rows.append(rec)
++
++    bfs_solved = {r["game"] for r in rows if r["bfs"]["solved"]}
++    v2_solved = {r["game"] for r in rows if r["v2_routed"]["solved"]}
++    v1_solved = {r["game"] for r in rows if r["v1_routed"]["solved"]}
++    v2_unlocked = sorted(v2_solved - bfs_solved)
++    verdict = (f"complete_value_routing_v2_unlocked_{len(v2_unlocked)}_floor_games_{v2_unlocked}"
++               if v2_unlocked else
++               "complete_value_routing_v2_no_unlock_routing_lever_insufficient_with_cross_game_value")
++    out = {
++        "experiment": "arc3_value_routing_v2", "honest_verdict": verdict,
++        "max_expansions": MAX_EXP, "heuristic_weight": WEIGHT,
++        "bfs_solved": sorted(bfs_solved), "v1_routed_solved": sorted(v1_solved),
++        "v2_routed_solved": sorted(v2_solved), "v2_unlocked_over_bfs": v2_unlocked,
++        "per_game": rows, "inference_substrate": "offline_sim_no_quota_frame_only",
++    }
++    (REPO / "results" / "arc3_value_routing_v2.json").write_text(json.dumps(out, indent=2))
++    print(f"\n-> bfs={sorted(bfs_solved)} v1={sorted(v1_solved)} v2={sorted(v2_solved)} "
++          f"| v2 unlocked over bfs: {v2_unlocked}", flush=True)
++    print(f"   {verdict}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

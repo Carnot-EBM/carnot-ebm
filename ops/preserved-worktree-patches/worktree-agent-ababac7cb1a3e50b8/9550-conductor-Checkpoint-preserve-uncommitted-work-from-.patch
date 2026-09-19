@@ -1,0 +1,44 @@
+From d4acd0b9b24b0dc041df4545a4f328405a94aa02 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 17:58:04 -0400
+Subject: [PATCH 09550/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8e25d2dba2..db47891bcf 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-22T21:39:54Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-22T21:58:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9ad5f84534..63386a3056 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16282,3 +16282,5 @@ code |
+ | 2026-08-22 20:57 UTC | Milestone 2026.08.563 activated | OK | 3 tasks queued |
+ | 2026-08-22 21:15 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
+ | 2026-08-22 21:37 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
++| 2026-08-22 21:56 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
++| 2026-08-22 21:58 UTC | Sealed exact branch-counterfactual dataset v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6510-v563-independent-exact-root) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 63ad55dd44..58ce272476 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-22T21:39:54Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-22T21:58:00Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

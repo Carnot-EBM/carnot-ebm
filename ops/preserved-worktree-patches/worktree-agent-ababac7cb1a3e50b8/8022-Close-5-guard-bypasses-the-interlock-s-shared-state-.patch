@@ -1,0 +1,2637 @@
+From e5ac4244d455c24bf88720332eb542de54453f7d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 14:14:20 -0400
+Subject: [PATCH 08022/11362] Close 5 guard bypasses; the interlock's shared
+ state and a stale procedure
+
+Three concerns from the Layer-2 audit extension, plus the review findings on
+the fixes themselves. What is CLOSED and what remains OPEN is stated per item
+below -- this is not a completeness claim.
+
+CLOSED -- determination_preservation_lint.py (the guard protecting the record):
+ * DELETION and RENAME bypassed it entirely (--diff-filter=M). Deleting a
+   flagged artifact is a strictly worse never-prune violation than editing one
+   and was invisible. Now MDRT, matched on the OLD path so git pairs a
+   cross-directory move as a rename -- the documented legacy/fabricated
+   retirement path (bed0635b6) still passes.
+ * FAIL-OPEN on git error: an empty file list read as "nothing changed". Every
+   error path now refuses. One carve-out (a path genuinely absent at a rev)
+   is stderr-matched, including git's index-absent spelling, which does NOT
+   contain "does not exist in".
+ * A PRINCIPLE-WRAPPED determination lifted a quarantine silently: raw
+   `is True` never matches {"principle":..,"value":true}, which CLAUDE.md
+   permits for ANY field. This was QA-Layer origin bug #2 reproduced inside
+   the guard whose own docstring cites it. All 4 sites unwrapped.
+ * EMPTYING a protected field in place bypassed every rule (name-only checks;
+   rule 4 treats an unrankable value as "not a downgrade"). Calibrated over
+   400 commits / 1,804 artifact-pairs: deleted 130x, emptied 0x -- zero
+   false-positive cost.
+ * The _cleared_deliberately exemption was trivially satisfiable: any key
+   pairing "cleared" with "note" excused any determination, and cache_cleared
+   is a real key shape here. The note must now name the field it excuses.
+Also: the hook never ran on deletion-only commits (pre-commit's own file list
+excludes D) -- always_run landed earlier in abc6a823c; this commit supplies
+the other half, so HEAD is no longer wiring-without-fix.
+
+CLOSED -- test_suite_mutation_check.py concurrency:
+ Per-run baselines replace the single shared snapshot (chose immutable
+ per-run files over a lock; HEAD-comparison was rejected on evidence --
+ excluding already-dirty work IS the mechanism, and this tree carried 84
+ dirty files). Race 1, the severe one and not in the brief, is closed: a
+ passing run used to unlink the marker unconditionally, so a clean run
+ disarmed the interlock while another run's rewrite sat on disk. Markers now
+ retire on tree evidence, not ownership -- concurrent agent workflows share
+ a PPID, so ownership keys do not work here. --restore's backup is preserved.
+
+CLOSED -- a procedure the fix had invalidated:
+ --check now REFUSES without a baseline, but CLAUDE.md still told the operator
+ to run it bare (and its STOP paragraph still described the deleted shared
+ snapshot; known-issues still called it "the only backstop"). conftest's
+ runtime warning pointed there too, though its baseline is in-memory so
+ --check could only refuse. All four updated to --gate / a paired baseline,
+ verified end-to-end rather than asserted.
+
+OPEN -- deliberately not closed here:
+ * verifier_authenticity_lint.py is in scope and AUDITED, and the audit's
+   finding is confirmed and NOT fixed: a verifier claiming NTK+SAE with no
+   torch, fabricating data via `activations = np.random.randn`, capping with
+   min(x, 0.999) and padding duration_s scores ZERO violations -- it is both
+   exemplars CLAUDE.md names and it passes. Widening is a false-positive call
+   reserved to the operator; the audit never edits.
+ * pages_fever_dream_lint.py stays acknowledged out of scope, re-decided on
+   evidence (read + audited, SILENT_NON_FIRING, every miss is presentation
+   bloat, none gates a claim). Nothing re-examines it on a cadence; the
+   forcing function for that was deliberately NOT shipped while a bulk
+   migration is live in this tree.
+ * Marker cross-attribution is unfixed by design: a tree-wide diff cannot
+   tell whose write it was. Fail-closed (over-report, never miss).
+ * The 110 skipped tests remain unaudited against "Tests Must Run and Assert".
+
+Verification: 162 tests pass on the changed surface; mutation testing killed
+9/10 mutants (M10 reported unkillable and left honestly untested rather than
+covered by a test that only appears to); both hook entrypoints green; --all
+sweep of 15,331 artifacts flags nothing. One test expectation was deliberately
+REVERSED and documented in place (an unparseable new side was treated as never
+a violation, so `> file` scored clean); nothing was weakened to pass.
+
+Staged explicitly, not with -A: 4 cron-watcher files were dirty before this
+session and are left alone -- an -A sweep is how this workflow's own earlier
+change ended up in another's commit.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .gitignore                                    |   7 +
+ CLAUDE.md                                     |  84 ++-
+ ops/known-issues.md                           |   8 +-
+ scripts/determination_preservation_lint.py    | 558 +++++++++++++++--
+ scripts/qa_layer_authenticity_audit.py        |  17 +-
+ scripts/test_suite_mutation_check.py          | 480 ++++++++++++--
+ tests/python/conftest.py                      |   9 +-
+ .../test_determination_preservation_lint.py   | 592 +++++++++++++++++-
+ .../python/test_test_suite_mutation_check.py  | 348 +++++++++-
+ 9 files changed, 1952 insertions(+), 151 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 7e0fdf2a40..e9a2ee2c38 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -196,8 +196,15 @@ ops/.qa_layer_audit_rotation.json
+ #                                       wrong revert costs a `cp` instead of the work. `git
+ #                                       checkout --` is unrecoverable, and the detector cannot
+ #                                       tell a test's write from a human's concurrent edit.
++#   .test_suite_mutation_runs/          PER-RUN replacements for the two files above: one
++#                                       <run-id>.snapshot.json and one <uuid>.pending.json per
++#                                       run, so concurrent workflows in one working tree cannot
++#                                       overwrite each other's baseline or delete each other's
++#                                       interlock. The two single files remain listed because
++#                                       they are still READ (legacy trees); nothing writes them.
+ ops/.test_suite_mutation_snapshot.json
+ ops/.test_suite_mutation_pending.json
++ops/.test_suite_mutation_runs/
+ ops/.test_suite_mutation_backup/
+ 
+ # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
+diff --git a/CLAUDE.md b/CLAUDE.md
+index af4a8bc110..cc311145d3 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -810,7 +810,9 @@ QA-Layer discipline's deliberate zero:
+ - `scripts/test_suite_mutation_check.py` (pre-commit
+   `test-suite-mutation-gate`, plus `--check` for interactive use) — detects a
+   test run having rewritten tracked files, and doubles as the mutation-testing
+-  harness that proves a guard's patterns actually bite.
++  harness that proves a guard's patterns actually bite. `--check` needs a
++  baseline taken before the run (see "How to apply (operator)" step 1);
++  `--gate` does not.
+ - `python/carnot/testing/operator_curated_doc_guard.py` — the RUNTIME half:
+   wired through `tests/python/conftest.py`, it fires at the moment a test
+   writes an operator-curated doc and names the writer. This is the only layer
+@@ -840,30 +842,74 @@ at the next incident.
+ 
+ **How to apply (operator).**
+ 
+-1. Run `.venv/bin/python scripts/test_suite_mutation_check.py --check` after
+-   any local test run, before staging. It reports which tracked files a test
+-   touched.
++1. **Take a baseline BEFORE the test run, then check after it.** `--check`
++   compares against a baseline and has no way to invent one, so a bare
++   `--check` with no prior `--snapshot` REFUSES (exit 1) rather than guessing
++   — see the 2026-07-29 note below for why that replaced a silent fail-open.
++   Either wrap the run:
++
++   ```bash
++   .venv/bin/python scripts/test_suite_mutation_check.py --run -- \
++       pytest tests/python -x
++   ```
++
++   or take the baseline by hand and pair it with a matching check:
++
++   ```bash
++   export CARNOT_MUTATION_RUN_ID=my-session      # pins both halves together
++   .venv/bin/python scripts/test_suite_mutation_check.py --snapshot
++   pytest tests/python
++   .venv/bin/python scripts/test_suite_mutation_check.py --check
++   ```
++
++   Pin `$CARNOT_MUTATION_RUN_ID` (or pass `--run-id`) whenever another
++   workflow may be running: it is what keeps your baseline from being paired
++   with someone else's. Without it an id is derived from the parent shell,
++   which is usually right but is shared between agent workflows spawned from
++   the same parent.
++
++   `--gate` — the pre-commit hook — needs no baseline and is unaffected by any
++   of this. It refuses while a pending marker exists. Do not "fix" a `--gate`
++   refusal by taking a snapshot; investigate the marker.
+ 2. `git status`, then `git checkout --` anything you did not deliberately
+    change. Confirm with `git diff` before `git add`.
+ 
+-   **STOP — read this before executing step 2 literally. Under concurrent
+-   workflows, `--check` output is a SUPERSET of what your test run did, and
+-   `git checkout --` on the reported list is itself a data-loss event of exactly
+-   the class "Never Stash — Always Commit-First" exists to prevent.** The
+-   `already_dirty` baseline in `ops/.test_suite_mutation_snapshot.json` is
+-   SHARED MUTABLE STATE with a single timestamp; anything another workflow
+-   modified *after* that snapshot was taken is indistinguishable, to this tool,
+-   from something your tests rewrote. Observed 2026-07-29: a snapshot with 7
+-   baseline entries reported ~75 paths, the bulk of them a concurrent
++   **STOP — `--check` output is a SUPERSET of what your test run did, and
++   `git checkout --` on the reported list is itself a data-loss event of
++   exactly the class "Never Stash — Always Commit-First" exists to prevent.**
++   The tool diffs the working tree against a baseline; it cannot tell WHOSE
++   write it was, so anything a concurrent workflow changed inside your window
++   is attributed to your run. This is deliberate — the error direction is
++   fail-closed (over-report, never miss) — but it means the reported list is
++   evidence to read, never a command to execute. Confirmed still true
++   2026-07-29 after the concurrency fix below: three markers armed during one
++   agent's pytest window named files a *different* workflow had written.
++
++   So: revert only paths you can attribute to your own run, and never
++   blanket-`git checkout --` the reported list. When in doubt, commit-first
++   (the standing rule) and inspect the diff afterwards — a superfluous
++   `[outer-loop]` commit costs nothing; a `git checkout` over someone else's
++   work is unrecoverable.
++
++   ~~The `already_dirty` baseline in `ops/.test_suite_mutation_snapshot.json`
++   is SHARED MUTABLE STATE with a single timestamp; anything another workflow
++   modified *after* that snapshot was taken is indistinguishable, to this
++   tool, from something your tests rewrote.~~ **Resolved 2026-07-29** — the
++   single shared snapshot is gone, replaced by per-run baselines under
++   `ops/.test_suite_mutation_runs/`, so one workflow can no longer overwrite
++   another's baseline (observed before the fix: a 14:52Z snapshot replaced by
++   one stamped 11:43:01Z). Two consequences worth knowing: a bare `--check`
++   now refuses instead of silently answering from whatever baseline happened
++   to be on disk, and when several candidate baselines match, `--check`
++   refuses and lists them rather than picking one. The over-reporting in the
++   paragraph above is NOT resolved by this and never will be — it is inherent
++   to diffing a shared working tree.
++
++   The 2026-07-29 observation that motivated the fix is preserved: a snapshot
++   with 7 baseline entries reported ~75 paths, the bulk of them a concurrent
+    migration's uncommitted in-flight work, under the heading "To undo:
+    `git checkout -- <paths>`". Executing that as written would have destroyed
+    another agent's session.
+-
+-   So: **re-snapshot immediately before your own test run**, revert only paths
+-   you can attribute to it, and never blanket-`git checkout --` the reported
+-   list. When in doubt, commit-first (the standing rule) and inspect the diff
+-   afterwards — a superfluous `[outer-loop]` commit costs nothing; a
+-   `git checkout` over someone else's work is unrecoverable.
+ 3. When the Layer-2 audit reports a `## MISSED INPUT` line for one of these
+    guards, treat it as a widening task with the test already specified — see
+    the QA-Layer discipline's operator instructions.
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 35bd4acacf..696362bcc8 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -33,7 +33,13 @@ enumerated here** — do not read the commit as "all hardcoded paths are gone."
+   inherited by children, so `subprocess.run([...])` or any `shell=True` redirect can still destroy an
+   operator-curated doc. Verified empirically. ~184 test files spawn subprocesses and ~159 reference
+   `scripts/`, so this is a large unguarded surface. `scripts/test_suite_mutation_check.py --check`
+-  plus `git status` remain the only backstop for that class.
++  plus `git status` remain the only backstop for that class. **Updated 2026-07-29:** `--check` now
++  requires a baseline taken *before* the run (`--run -- <cmd>`, or `--snapshot` paired via
++  `$CARNOT_MUTATION_RUN_ID`); a bare `--check` REFUSES rather than answering from whatever shared
++  snapshot was last on disk. So this backstop is only armed if you take the baseline first —
++  budget for that, because the previous shared-snapshot version would silently answer from another
++  workflow's baseline, which is worse than refusing. The `--gate` pre-commit hook needs no baseline
++  and is unaffected.
+ * **Module-scope constants are not sandboxable.** `X = repo_root() / ...` at import time freezes
+   before any test can set `$CARNOT_REPO_ROOT`, so `monkeypatch.setenv` silently fails to redirect it.
+   Documented in `paths.py`; `python/carnot/reporting/grpo_vprm_v11_headline_gate.py:18` is a known
+diff --git a/scripts/determination_preservation_lint.py b/scripts/determination_preservation_lint.py
+index d5d670d0c5..860eef60a8 100644
+--- a/scripts/determination_preservation_lint.py
++++ b/scripts/determination_preservation_lint.py
+@@ -190,6 +190,74 @@ from pathlib import Path
+ 
+ REPO = Path(__file__).resolve().parents[1]
+ 
++
++class GuardError(RuntimeError):
++    """The guard could not complete its check, so it does not know whether the tree is clean.
++
++    A GUARD MUST FAIL CLOSED. Every path that raises this used to return an empty result or a
++    ``None`` instead, which made the lint print ``OK`` on a tree it had not actually examined --
++    the single failure mode a guard cannot have, and the one this whole file exists to prevent
++    in the artifacts it protects.
++
++    ``main`` catches this and REFUSES the commit with the underlying reason. If the environment
++    is genuinely broken, the correct outcome is a human looking at it, not a silent pass.
++    """
++
++
++# `git show <rev>:<path>` exits 128 both for "that path is not in that revision" (routine and
++# benign -- a newly added artifact has no old side) and for "your repository is broken". Only
++# the first is safe to swallow, so it is matched explicitly and EVERYTHING ELSE fails closed.
++# Both spellings below are real git messages; the second appears when the path exists in the
++# working tree but not in the given revision.
++_GIT_PATH_ABSENT = re.compile(
++    # `git show <rev>:<path>` -- path absent from that revision.
++    r"does not exist in"
++    # `git show :<path>` (the INDEX side) -- both real spellings, captured by running them
++    # rather than guessed. The second is why this list is explicit: "does not exist (neither
++    # on disk nor in the index)" does NOT contain the substring "does not exist in", so the
++    # first alternative alone would have failed closed on a routine absent-from-index path.
++    r"|does not exist \(neither on disk nor in the index\)"
++    r"|exists on disk, but not in"
++    r"|no such path"
++    r"|不存在",
++    re.I,
++)
++
++
++def _git(args: list[str]) -> str:
++    """Run a git command, or raise GuardError. Never returns partial/empty output on failure.
++
++    The pre-widening code did ``subprocess.run(...).stdout`` and ignored ``returncode``
++    entirely. Any git failure -- broken repo, missing binary, bad ref, index lock contention
++    with a concurrent workflow -- yielded an empty file list, which the loop below reads as
++    "nothing changed" and reports as OK.
++    """
++    try:
++        r = subprocess.run(["git", *args], capture_output=True, text=True, cwd=REPO)
++    except OSError as exc:  # git absent / not executable / cwd gone
++        raise GuardError(f"could not execute `git {' '.join(args)}`: {exc}") from exc
++    if r.returncode != 0:
++        raise GuardError(
++            f"`git {' '.join(args)}` failed with exit {r.returncode}: "
++            f"{r.stderr.strip() or '(no stderr)'}"
++        )
++    return r.stdout
++
++
++# Sentinels for the NEW side of a comparison. `None` used to mean all three of "deleted",
++# "unparseable" and "fine, nothing to do", and every one of them was skipped -- so deleting an
++# artifact outright, or overwriting it with corrupt bytes, was indistinguishable from no change.
++class _Missing:
++    """The artifact is not present on this side at all (deleted, or never existed)."""
++
++
++class _Unreadable:
++    """The artifact IS present but could not be read as a JSON object (corrupt / truncated)."""
++
++
++MISSING = _Missing()
++UNREADABLE = _Unreadable()
++
+ # The fields whose LOSS changes a gate rather than merely losing history.
+ # `flagged_adversarial` is the fabrication gate's own key. The corrigendum family is the
+ # documented reason a determination exists -- losing it strands the stamp without its evidence.
+@@ -331,6 +399,44 @@ def _is_substantive(value) -> bool:
+     return True
+ 
+ 
++_AV_MODULE = None
++
++
++def _adversarial_verify():
++    """Import ``adversarial_verify`` once, or raise GuardError.
++
++    THIS USED TO BE A FAIL-OPEN, and the comment excusing it ("a guard must never die on an
++    import") had the principle exactly backwards. What a guard must never do is claim a tree is
++    clean when it could not check. Swallowing the ImportError silently disabled the CANONICAL
++    ENUM half of rule 4 and fell through to the free-form token scan -- i.e. it silently
++    substituted a DIFFERENT, weaker matcher, which is precisely the "drifted copy of a matcher"
++    hazard ``_canonical_substrate_band``'s own docstring is written to prevent.
++
++    Failing closed here cannot deadlock a repair of ``adversarial_verify.py`` itself: the
++    pre-commit hook is scoped ``files: ^results/.*\\.json$``, so a commit that touches only
++    ``scripts/adversarial_verify.py`` never invokes this lint at all.
++
++    Cached in a module global so a sweep over 15k artifacts imports once, and so the repeated
++    ``sys.path.insert`` of the previous implementation (which appended a duplicate entry to
++    ``sys.path`` on EVERY call) is gone.
++    """
++    global _AV_MODULE
++    if _AV_MODULE is None:
++        scripts_dir = str(REPO / "scripts")
++        if scripts_dir not in sys.path:
++            sys.path.insert(0, scripts_dir)
++        try:
++            import adversarial_verify as _av
++        except Exception as exc:
++            raise GuardError(
++                f"could not import scripts/adversarial_verify.py ({exc!r}). Rule 4 ranks the "
++                f"enum-governed `inference_substrate` field from THAT module's alias tuples; "
++                f"without it this lint would silently fall back to a weaker prose scan."
++            ) from exc
++        _AV_MODULE = _av
++    return _AV_MODULE
++
++
+ def _marker_kind(key: str) -> str | None:
+     """The human name of the marker class `key` belongs to, or None if it is not a marker."""
+     for pattern, kind in MARKER_PATTERNS:
+@@ -348,11 +454,7 @@ def _canonical_substrate_band(raw: str) -> int | None:
+     only the leading canonical token. Re-implementing that here is exactly how the two would
+     drift, and a drifted copy of a matcher is how this rule got its worst bug (below).
+     """
+-    try:
+-        sys.path.insert(0, str(REPO / "scripts"))
+-        import adversarial_verify as _av
+-    except Exception:  # pragma: no cover - defensive: a guard must never die on an import
+-        return None
++    _av = _adversarial_verify()
+     for kind, aliases in (
+         ("aggregation", _av.AGGREGATION_SUBSTRATE_ALIASES),
+         ("no_llm", _av.NO_LLM_SUBSTRATE_ALIASES),
+@@ -495,8 +597,12 @@ def _has_change_note(new: dict, field: str) -> bool:
+     return False
+ 
+ 
+-def _tracked_json_under_results(ref: str | None, all_files: bool) -> list[str]:
+-    """Which results/*.json files to check: modified-vs-HEAD, vs a ref, or every tracked one.
++def _tracked_json_under_results(
++    ref: str | None, all_files: bool, staged: bool = False
++) -> list[tuple[str, str | None]]:
++    """Which artifacts to check, as ``(old_path, new_path)`` pairs.
++
++    ``new_path is None`` means the artifact was DELETED on the new side.
+ 
+     THE DEFAULT COMPARES AGAINST ``HEAD`` WITHOUT ``--cached``, DELIBERATELY. A first draft used
+     ``git diff --cached --name-only`` for the file list while reading the NEW side from the
+@@ -507,22 +613,100 @@ def _tracked_json_under_results(ref: str | None, all_files: bool) -> list[str]:
+     Comparing against ``HEAD`` is correct in both contexts: pre-commit stashes unstaged changes
+     before running hooks, so the working tree it sees IS the staged content; and a human running
+     this on a dirty tree gets every modification, staged or not.
++
++    ``--diff-filter=MDRT``, NOT ``=M`` (2026-07-29 fix). The pre-fix filter considered MODIFIED
++    files only, so the two strictly WORSE ways to lose a determination were invisible:
++
++      * DELETION. Removing ``results/experiment_3946_r11l_first_solve.json`` outright destroys
++        every field the lint protects at once, and scored clean. Worse, ``pre_commit``'s own
++        ``get_staged_files`` uses ``--diff-filter=ACMRTUXB`` -- "everything except for D" -- so
++        a deletion-only commit did not even match this hook's ``files:`` pattern. That second
++        layer is closed by ``always_run: true`` in ``.pre-commit-config.yaml``; this is the
++        first.
++      * RENAME. ``git mv``-ing an artifact and stripping its markers in the same commit showed
++        up under neither the old nor the new path.
++
++    ``T`` (type change) is included because a tracked artifact replaced by a symlink loses its
++    content just as thoroughly; it is compared like a modification and caught as UNREADABLE.
++
++    ``-M`` turns on rename detection. Note that an UNSTAGED rename is not detectable as one --
++    the destination is an untracked file that ``git diff HEAD`` cannot see -- so it presents as a
++    plain deletion and is refused as such. That is the conservative and correct reading: a move
++    the guard cannot follow is indistinguishable from a removal.
++
++    THE DIFF IS NOT CONFINED TO ``results/``, AND THAT IS THE WHOLE POINT OF RENAME DETECTION.
++    A first cut of this fix kept the original ``-- results`` pathspec. Calibrating it against
++    real history showed the cost immediately: commit ``bed0635b6`` ("[outer-loop] Retire
++    fabricated exp2823 TruthfulQA artifact to legacy/fabricated/") MOVED a flagged artifact --
++    ``flagged_adversarial: True`` plus its ``corrigendum_pending`` TAUTOLOGY record -- out of
++    ``results/`` and into ``legacy/fabricated/``, alongside a README and an
++    ``ops/exclusion_manifest.yaml`` entry. The record was preserved perfectly; that is the
++    project's own documented way to retire a fabricated artifact.
++
++    But a pathspec of ``-- results`` makes git report the source half of a cross-directory move
++    as a plain DELETION, because the destination is outside the paths being diffed. So the
++    pathspec version would have refused a careful, deliberate, fully-documented curation --
++    and a guard that refuses honest work gets disabled, which is the same outcome as no guard.
++
++    Diffing the whole tree and filtering on the OLD path instead lets git pair the move up as
++    ``R100``, the content compares equal, and the retirement passes. A move that DROPS a marker
++    on the way out is still refused, which is the behaviour that was actually wanted.
+     """
+     if all_files:
+-        cmd = ["git", "ls-files", "results/*.json"]
+-    elif ref:
+-        cmd = ["git", "diff", "--name-only", "--diff-filter=M", ref, "HEAD", "--", "results"]
+-    else:
+-        cmd = ["git", "diff", "--name-only", "--diff-filter=M", "HEAD", "--", "results"]
+-    out = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO).stdout
+-    return [p for p in out.splitlines() if p.endswith(".json")]
++        out = _git(["ls-files", "results/*.json"])
++        return [(p, p) for p in out.splitlines() if p.endswith(".json")]
++
++    # NOTE: no `-- results` pathspec. See the docstring -- confining the diff makes a move OUT
++    # of results/ (the project's documented `legacy/fabricated/` retirement path) look like a
++    # deletion. The OLD path is filtered below instead, which keeps the scope identical while
++    # letting git pair cross-directory moves up as renames.
++    args = ["diff", "--name-status", "-M", "--diff-filter=MDRT"]
++    if staged:
++        args.append("--cached")
++    args += [ref, "HEAD"] if ref else ["HEAD"]
++
++    pairs: list[tuple[str, str | None]] = []
++    for line in _git(args).splitlines():
++        if not line.strip():
++            continue
++        parts = line.split("\t")
++        status = parts[0]
++        if status.startswith("R") and len(parts) >= 3:
++            old_path, new_path = parts[1], parts[2]
++        elif len(parts) >= 2:
++            old_path = parts[1]
++            new_path = None if status.startswith("D") else parts[1]
++        else:  # pragma: no cover - git does not emit this shape
++            raise GuardError(f"could not parse `git diff --name-status` line: {line!r}")
++        # Scope is defined by where the artifact WAS, not where it ended up. An artifact only
++        # needs to have been JSON under results/ on the OLD side to be worth protecting --
++        # renaming `x.json` to `x.json.bak` is still a loss of the determination it carried.
++        if old_path.startswith("results/") and old_path.endswith(".json"):
++            pairs.append((old_path, new_path))
++    return pairs
+ 
+ 
+ def _load_at(rev: str, path: str) -> dict | None:
+-    """Read a JSON artifact as of `rev`. None when absent or unparseable (not a violation)."""
+-    r = subprocess.run(["git", "show", f"{rev}:{path}"], capture_output=True, text=True, cwd=REPO)
++    """Read a JSON artifact as of `rev`. None when genuinely absent there, or unparseable.
++
++    Used for the OLD side only, where "nothing readable was there" means there is nothing for
++    this commit to have destroyed. A git failure that is NOT a plain missing-path is a
++    GuardError: the pre-fix code treated every non-zero exit as "absent", so a broken repo or a
++    bad ref silently emptied the old side of every comparison and the lint reported OK.
++    """
++    try:
++        r = subprocess.run(
++            ["git", "show", f"{rev}:{path}"], capture_output=True, text=True, cwd=REPO
++        )
++    except OSError as exc:
++        raise GuardError(f"could not execute `git show {rev}:{path}`: {exc}") from exc
+     if r.returncode != 0:
+-        return None
++        if _GIT_PATH_ABSENT.search(r.stderr or ""):
++            return None  # routine: the artifact did not exist at that revision
++        raise GuardError(
++            f"`git show {rev}:{path}` failed with exit {r.returncode}: "
++            f"{r.stderr.strip() or '(no stderr)'}"
++        )
+     try:
+         d = json.loads(r.stdout)
+     except json.JSONDecodeError:
+@@ -530,55 +714,291 @@ def _load_at(rev: str, path: str) -> dict | None:
+     return d if isinstance(d, dict) else None
+ 
+ 
+-def _load_now(path: str, ref: str | None) -> dict | None:
+-    """Read the NEW side: the working tree (pre-commit) or `HEAD` (auditing a landed commit)."""
++def _load_index(path: str) -> dict | _Missing | _Unreadable:
++    """Read the STAGED content of `path` (``git show :path``) -- the bytes a commit would land.
++
++    Separate from ``_load_at`` because the new side needs MISSING vs UNREADABLE kept apart,
++    which ``_load_at`` deliberately collapses into ``None`` for the old side.
++    """
++    try:
++        r = subprocess.run(["git", "show", f":{path}"], capture_output=True, text=True, cwd=REPO)
++    except OSError as exc:
++        raise GuardError(f"could not execute `git show :{path}`: {exc}") from exc
++    if r.returncode != 0:
++        if _GIT_PATH_ABSENT.search(r.stderr or ""):
++            return MISSING
++        raise GuardError(
++            f"`git show :{path}` failed with exit {r.returncode}: "
++            f"{r.stderr.strip() or '(no stderr)'}"
++        )
++    try:
++        d = json.loads(r.stdout)
++    except json.JSONDecodeError:
++        return UNREADABLE
++    return d if isinstance(d, dict) else UNREADABLE
++
++
++def _load_now(
++    path: str | None, ref: str | None, staged: bool = False
++) -> dict | _Missing | _Unreadable:
++    """Read the NEW side: the working tree (pre-commit) or `HEAD` (auditing a landed commit).
++
++    Returns MISSING (gone) or UNREADABLE (present but not a JSON object) rather than collapsing
++    both into ``None``. The pre-fix code returned ``None`` for both and the caller skipped it,
++    so overwriting a flagged artifact with truncated or corrupt bytes destroyed its
++    determination and scored clean -- the same outcome as deleting it.
++    """
++    if path is None:
++        return MISSING
++    if staged:
++        return _load_index(path)
+     if ref:
+-        return _load_at("HEAD", path)
++        r = _load_at("HEAD", path)
++        return r if r is not None else MISSING
+     p = REPO / path
+     if not p.exists():
+-        return None
++        return MISSING
+     try:
+         d = json.loads(p.read_text())
+-    except (json.JSONDecodeError, OSError):
+-        return None
+-    return d if isinstance(d, dict) else None
++    except (json.JSONDecodeError, UnicodeDecodeError):
++        return UNREADABLE
++    except OSError as exc:
++        # The file is THERE (p.exists() passed) but cannot be read. That is an environment
++        # fault, not a clean tree, so it must not be swallowed.
++        raise GuardError(f"could not read {path}: {exc}") from exc
++    return d if isinstance(d, dict) else UNREADABLE
+ 
+ 
+ def _corrigendum_keys(d: dict) -> set[str]:
+-    return {k for k in d if CORRIGENDUM_PREFIX in str(k).lower()}
++    """Corrigendum keys that actually CARRY a record.
++
++    SUBSTANTIVE-ONLY, WHICH IS WHAT CLOSES THE EMPTIED-IN-PLACE BYPASS (2026-07-29, second
++    pass). This used to be every key whose name matched, so rule 2's ``old_keys - new_keys``
++    compared NAMES and never values -- and a key is still a key when its value is gone:
++
++        "corrigendum_pending": "TAUTOLOGY: ..."   ->   "corrigendum_pending": null
++
++    destroys the record exactly as thoroughly as deleting the key, and scored CLEAN. Confirmed
++    against this file as shipped, on the real ``experiment_1680_polarfire_smoke_v2.json``.
++
++    Filtering to substantive values makes an emptied key drop out of the NEW side's set while
++    remaining in the OLD side's, so the existing subtraction reports it with no further change.
++    Empty-to-empty stays silent because such a key was never in either set.
++    """
++    return {k for k, v in d.items() if CORRIGENDUM_PREFIX in str(k).lower() and _is_substantive(v)}
+ 
+ 
+ def _cleared_deliberately(new: dict) -> bool:
+-    """A determination may be cleared to False IF an explicit note accompanies it.
++    """A determination may be cleared to False IF an explicit written note accompanies it.
+ 
+     Absent/None is NOT a legitimate clearing -- it is indistinguishable from the accident this
+     lint exists to catch. Requiring a note makes the clearing auditable and forces whoever
+     clears it to state their reasoning where the next reader will find it.
++
++    THE EXEMPTION USED TO BE TRIVIALLY SATISFIABLE (2026-07-29 fix, flagged by the Layer-2 QA
++    audit). The test was ``any("cleared" in key.lower() and value for key in new)`` -- ANY key
++    whose name merely contains the substring "cleared", with ANY truthy value. Censusing the
++    corpus shows exactly what that admits: ``cache_cleared: true``, ``step1_vram_cleared: true``,
++    ``quota_gate_cleared: true``, ``game_fully_cleared: true`` (an ARC level clear!),
++    ``zombie_already_cleared: true``, ``drc_ioplanning_errors_cleared: [...]``. Every one of
++    those is real, live, in the tree today, and says nothing whatever about a fabrication
++    determination -- yet each would have lifted a quarantine. Not one of the 14 distinct
++    ``*cleared*`` key names in the corpus is a prose note, so tightening this cannot regress a
++    single existing artifact.
++
++    Two requirements now, both cheap to satisfy on purpose and near-impossible to trip by
++    accident:
++
++      1. THE NAME must be note-shaped -- either it contains "note" alongside "cleared", or it
++         is prefixed with the determination field it excuses (``flagged_adversarial_cleared*``).
++         This is the ``*_cleared_note`` convention the module docstring already documents.
++      2. THE VALUE must be a non-empty STRING. A bare ``True`` is not a rationale; the whole
++         point of the exemption is that a human wrote down what they re-verified.
++
++    STILL NOT ENOUGH -- THE NOTE MUST NAME THE FIELD IT EXCUSES (2026-07-29, second pass).
++    Requirement 1 above still accepted ANY key whose name paired "cleared" with "note",
++    regardless of what it was about. Constructed and confirmed against this file as shipped:
++
++        "flagged_adversarial": false,
++        "cache_cleared_note": "VRAM cache cleared between runs to avoid OOM"
++
++    scored CLEAN and lifted the quarantine. A GPU-housekeeping remark is not a retraction of a
++    fabrication determination, and ``cache_cleared`` is a REAL key in this corpus.
++
++    This is the same defect this file's own sibling ``_has_change_note`` had already diagnosed
++    and removed -- its docstring says a field-agnostic note "would silently excuse a substrate
++    downgrade ... the 'guard that does not fire' failure mode in miniature" -- so the two
++    functions disagreed with each other about a rule they both implement. They now agree: the
++    note's NAME must contain the determination field it excuses.
++
++    A corpus census is what makes this safe to tighten: of the 15,284 artifacts in the tree,
++    ZERO carry a key satisfying even the looser pre-fix name test, so no existing artifact
++    changes verdict. The documented convention (``flagged_adversarial_cleared_note``) satisfies
++    the tightened test unchanged.
++
++    The 12-character floor matches ``_has_change_note``'s, for the same reason: a one-word
++    string is not a statement of what was re-verified, and consistency between the two
++    exemptions is worth more than either threshold individually.
+     """
+-    if new.get(DETERMINATION_FIELD) is not True and DETERMINATION_FIELD in new:
+-        return any("cleared" in str(k).lower() and new.get(k) for k in new)
++    # Unwrapped: a principle-annotated stamp is not `is True`, so a raw check here would
++    # treat a still-flagged artifact as cleared. Same defect as rule 1's, same fix.
++    if _unwrap_principle(new.get(DETERMINATION_FIELD)) is True or DETERMINATION_FIELD not in new:
++        return False
++    for key, value in new.items():
++        kl = str(key).lower()
++        if "cleared" not in kl:
++            continue
++        # The note must be ABOUT this determination. "cleared" + "note" in the name is not
++        # enough on its own -- see the docstring's `cache_cleared_note` counterexample.
++        if DETERMINATION_FIELD not in kl:
++            continue
++        if "note" not in kl and not kl.startswith(DETERMINATION_FIELD):
++            continue
++        v = _unwrap_principle(value)
++        if isinstance(v, str) and len(v.strip()) >= 12:
++            return True
+     return False
+ 
+ 
++def _protected_content(d: dict) -> list[str]:
++    """The names of fields in `d` that this lint exists to preserve. Empty = nothing at stake.
++
++    Used to decide whether a DELETION or a CORRUPTION is this lint's business. Scoping the
++    refusal to artifacts that actually carry a determination, a corrigendum, a marker or a
++    substrate declaration keeps the guard inside its charter: it is the determination-
++    preservation lint, not a blanket ban on ever removing a file from ``results/``. An artifact
++    carrying none of these loses no GATE when it goes -- that is an ordinary never-prune matter
++    for human review, not a mechanical refusal this file can justify.
++    """
++    names: list[str] = []
++    for key, value in d.items():
++        k = str(key)
++        # The live fabrication stamp counts even though a bare `True` is not substantive prose.
++        # REDUNDANT, AND KEPT ONLY FOR EXPLICITNESS -- do not rely on it. Measured: the marker
++        # branch below appends `flagged_adversarial` for a bare True, a wrapped True AND a bare
++        # False (it matches `^flagged_adversarial`, and `_is_substantive` is True for all
++        # three), so this branch cannot change the output of this function in any case. Its
++        # comment used to justify itself with "a bare `True` is not substantive prose", which
++        # is simply false -- `_is_substantive(True)` returns True.
++        #
++        # It is unwrapped anyway so the file has no raw `is True` check left on a field the
++        # project permits to be principle-wrapped; a future edit that narrows the marker
++        # patterns must not silently turn this into a live hole. Mutation testing correctly
++        # reports this line as unkillable, which is the honest status: a defensive no-op.
++        if k == DETERMINATION_FIELD and _unwrap_principle(value) is True:
++            names.append(k)
++            continue
++        if not _is_substantive(value):
++            continue
++        if CORRIGENDUM_PREFIX in k.lower() or _marker_kind(k) or SUBSTRATE_FIELD.match(k):
++            names.append(k)
++    return sorted(set(names))
++
++
+ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
++    """Every violation this commit would land, from BOTH the working tree and the index.
++
++    WHY BOTH (2026-07-29, second pass). The default path compares ``HEAD`` against the WORKING
++    TREE, justified by pre-commit stashing unstaged changes so that the tree the hook sees is
++    the staged content. That justification was verified rather than assumed -- a real
++    ``git commit`` through a real installed pre-commit hook does stash, the guard does fire, and
++    the stripping commit is refused. But it makes the guard's correctness depend on an EXTERNAL
++    TOOL's behaviour, and only under one driver:
++
++        strip the fields, `git add` the stripped copy, restore the working tree, then run
++        `python3 scripts/determination_preservation_lint.py`
++
++    reports OK, because the working tree matches HEAD. That invocation is the one this file's
++    own USAGE section documents for auditing, and it is what any future CI job calling the
++    script directly would do.
++
++    The index is not a substitute for the working tree, so this takes the UNION rather than
++    switching: the index is what a commit lands (so it must be checked), while the working tree
++    is what an unstaged in-progress strip lives in (so it must stay checked, and that is what
++    the pre-widening ``--cached`` bug got wrong in the other direction). Under pre-commit the
++    two sides are identical and the union is a no-op with one extra git call.
++    """
++    if ref or all_files:
++        return _check_side(ref, all_files, staged=False)
++    tree = _check_side(None, False, staged=False)
++    seen = set(tree)
++    out = list(tree)
++    for v in _check_side(None, False, staged=True):
++        if v not in seen:
++            seen.add(v)
++            out.append(
++                "[STAGED CONTENT, which is what a commit would land -- it differs from the "
++                f"working tree] {v}"
++            )
++    return out
++
++
++def _check_side(ref: str | None, all_files: bool, staged: bool) -> list[str]:
+     base = ref if ref else "HEAD"
+     violations: list[str] = []
+-    for path in _tracked_json_under_results(ref, all_files):
++    for path, new_path in _tracked_json_under_results(ref, all_files, staged):
+         old = _load_at(base, path)
+         if old is None:
+             continue
+-        new = _load_now(path, ref)
+-        if new is None:
++        loaded = _load_now(new_path, ref, staged)
++
++        # 0. (2026-07-29 fix) The artifact is GONE, or is no longer readable. Both destroy
++        #    every protected field at once, which is strictly worse than editing one of them
++        #    out -- and both used to be indistinguishable from "no change" and scored clean.
++        if isinstance(loaded, (_Missing, _Unreadable)):
++            stakes = _protected_content(old)
++            if not stakes:
++                continue
++            if isinstance(loaded, _Missing):
++                what = (
++                    f"DELETED (was {path})"
++                    if new_path is None
++                    else f"MOVED to {new_path}, which does not exist"
++                )
++            else:
++                what = (
++                    f"present at {new_path} but NO LONGER READABLE as a JSON object "
++                    f"(truncated or corrupt -- possibly an experiment still mid-write; if so "
++                    f"wait for it, or `git checkout -- {new_path}`, rather than committing it)"
++                )
++            violations.append(
++                f"{path}: {what}. It carried {stakes}, and destroying the whole artifact "
++                f"destroys every one of them at once -- strictly worse than editing one field "
++                f"out, and until 2026-07-29 it was the one way to do it that scored clean. "
++                f"The evidence trail goes with the file (CLAUDE.md never-prune)."
++            )
+             continue
++        new = loaded
++
++        # A rename is not itself a violation -- but it must not smuggle a field drop through,
++        # so the rules below compare old-path@base against new-path@working-tree. `label` keeps
++        # the refusal message pointing at BOTH names so the reader can find either one.
++        label = path if new_path == path else f"{path} -> {new_path}"
+ 
+         # 1. The fabrication-gate stamp must not silently vanish.
+-        if old.get(DETERMINATION_FIELD) is True and new.get(DETERMINATION_FIELD) is not True:
++        #
++        # UNWRAPPED ON BOTH SIDES (2026-07-29, second pass). This was an `is True` identity
++        # check against the RAW value, so a principle-annotated stamp --
++        #     "flagged_adversarial": {"principle": "...", "value": true}
++        # -- is not `is True`, the OLD side was never recognised as flagged, and flipping it to
++        # a bare `false` WITHOUT any cleared-note scored a clean OK. Confirmed by construction.
++        #
++        # That is precisely origin bug #2 of CLAUDE.md's QA-Layer Authenticity Discipline
++        # (`adversarial_verify.py` reading a wrappable field as a bare string), reproduced in
++        # the guard whose own `_unwrap_principle` docstring cites that bug and says "This lint
++        # must not repeat it". It did. The wrapper convention is pervasive -- 1,699 wrapped
++        # top-level fields across 676 distinct names, including 44 artifacts that wrap
++        # `preconditions_checked`, itself a protected marker -- so this is a live shape even
++        # though no artifact wraps `flagged_adversarial` today.
++        old_det = _unwrap_principle(old.get(DETERMINATION_FIELD))
++        new_det = _unwrap_principle(new.get(DETERMINATION_FIELD))
++        if old_det is True and new_det is not True:
+             if _cleared_deliberately(new):
+                 pass  # explicit, auditable retraction -- allowed
+             else:
+                 violations.append(
+-                    f"{path}: {DETERMINATION_FIELD} True -> "
+-                    f"{new.get(DETERMINATION_FIELD)!r} with no *_cleared_note. This LIFTS a "
++                    f"{label}: {DETERMINATION_FIELD} True -> "
++                    f"{new_det!r} with no *_cleared_note. This LIFTS a "
+                     f"quarantine: the fabrication gate keys off this field, so dropping it "
+                     f"re-admits the artifact to headline aggregation."
+                 )
+@@ -586,12 +1006,27 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+         # 2. The corrigendum trail explains WHY a determination exists; losing it strands the
+         #    stamp without its evidence, and it is pure history that no re-run supersedes.
+         lost = _corrigendum_keys(old) - _corrigendum_keys(new)
+-        if lost:
++        # Split the message by HOW the record was lost. Both are refused identically, but the
++        # repair differs: a dropped key is put back, whereas an emptied one usually means a
++        # writer overwrote it with a variable that was unset -- and telling a reader to
++        # "restore" a key they can plainly still see in the file is how a correct refusal gets
++        # dismissed as a false positive.
++        gone = sorted(k for k in lost if k not in new)
++        emptied_corrigenda = sorted(k for k in lost if k in new)
++        if gone:
+             violations.append(
+-                f"{path}: lost corrigendum record(s) {sorted(lost)}. These document why the "
++                f"{label}: lost corrigendum record(s) {gone}. These document why the "
+                 f"artifact was flagged; a re-run's fresh numbers do not supersede a review's "
+                 f"recorded judgement (CLAUDE.md never-prune)."
+             )
++        if emptied_corrigenda:
++            violations.append(
++                f"{label}: EMPTIED corrigendum record(s) {emptied_corrigenda} -- the key is "
++                f"still present but its content is gone (null / empty), which destroys the "
++                f"record as completely as deleting it. These document why the artifact was "
++                f"flagged; a re-run's fresh numbers do not supersede a review's recorded "
++                f"judgement (CLAUDE.md never-prune)."
++            )
+ 
+         # 3. (2026-07-29 widening) ANY marker field -- a correction, a provenance declaration,
+         #    a disclosure, a review note. The origin of this rule is that
+@@ -599,18 +1034,35 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+         #    contain the string "corrigendum", so rule 2 above sailed straight past its
+         #    deletion. Reported separately from rule 2 so the two stay individually testable.
+         lost_markers: dict[str, list[str]] = {}
++        emptied_markers: dict[str, list[str]] = {}
+         # `already_reported` keeps one deletion from producing two refusal lines. Rule 1 owns
+         # `flagged_adversarial` when it was True (that message explains the quarantine-lifting
+         # consequence, which is the important part); rule 2 owns the corrigendum family. Rule 3
+         # still covers `flagged_adversarial: False` being dropped, which rule 1 ignores.
+         already_reported = set(lost)
+-        if old.get(DETERMINATION_FIELD) is True:
++        if old_det is True:
+             already_reported.add(DETERMINATION_FIELD)
+         for key, old_value in old.items():
+-            if key in new or key in already_reported:
++            if key in already_reported:
+                 continue
+             if not _is_substantive(old_value):
+                 continue
++            # PRESENT-BUT-EMPTIED IS A LOSS TOO (2026-07-29, second pass). This condition used
++            # to be a bare `key in new`, i.e. a pure NAME check, so setting the value to null /
++            # "" / [] kept the key and sailed through while destroying the record just as
++            # completely. Constructed against this file as shipped:
++            #     "solve_provenance": "live_agent_self_discovery"  ->  ""
++            #     "inference_substrate_correction_note": "<hand-written corrigendum>"  ->  ""
++            # scored CLEAN. Rule 4 could not catch it either: an emptied value is unrankable,
++            # and `_strength_rank` returns None for that, which it treats as "not a downgrade".
++            #
++            # Calibrated before shipping, not after: across the last 400 commits (1,804
++            # artifact-pairs) protected fields were DELETED 130 times and EMPTIED exactly 0
++            # times, so this refuses nothing the project has actually ever done while closing
++            # the cheaper of the two ways to do the same damage.
++            emptied = key in new
++            if emptied and _is_substantive(new[key]):
++                continue
+             # A DROPPED substrate declaration is the loophole rule 4 cannot see, because rule 4
+             # only compares a field that exists on BOTH sides. `inference_substrate*` is caught
+             # by the marker patterns, but a bare `inference_mode` -- the exact field the exp307
+@@ -623,13 +1075,21 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+                 "substrate declaration" if SUBSTRATE_FIELD.match(str(key)) else None
+             )
+             if kind:
+-                lost_markers.setdefault(kind, []).append(str(key))
++                (emptied_markers if emptied else lost_markers).setdefault(kind, []).append(str(key))
+         for kind, keys in sorted(lost_markers.items()):
+             violations.append(
+-                f"{path}: lost {kind}(s) {sorted(keys)}. A field whose NAME marks it as a "
++                f"{label}: lost {kind}(s) {sorted(keys)}. A field whose NAME marks it as a "
+                 f"review output is not superseded by a re-run's fresh measurements; if it no "
+                 f"longer applies, say so explicitly beside it (CLAUDE.md never-prune)."
+             )
++        for kind, keys in sorted(emptied_markers.items()):
++            violations.append(
++                f"{label}: EMPTIED {kind}(s) {sorted(keys)} -- the key is still there but its "
++                f"content is gone (null / empty). That destroys the record as completely as "
++                f"deleting it, so it is refused for the same reason: a review output is not "
++                f"superseded by a re-run's fresh measurements (CLAUDE.md never-prune). If it "
++                f"genuinely no longer applies, replace it with prose saying so."
++            )
+ 
+         # 4. (2026-07-29 widening) A substrate / mode declaration that survives but is
+         #    WEAKENED. `live_gpu -> cpu_training` (exp307) retroactively rewrites what hardware
+@@ -647,7 +1107,7 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+             ov = _unwrap_principle(old_value)
+             nv = _unwrap_principle(new[key])
+             violations.append(
+-                f"{path}: {key} WEAKENED {ov!r} ({_BAND_NAME[old_rank]}) -> {nv!r} "
++                f"{label}: {key} WEAKENED {ov!r} ({_BAND_NAME[old_rank]}) -> {nv!r} "
+                 f"({_BAND_NAME[new_rank]}) with no accompanying note. This rewrites the "
+                 f"declared provenance of a measurement that already landed; the substrate "
+                 f"declaration is what the fabrication gate's duration floors key off."
+@@ -662,7 +1122,21 @@ def main(argv: list[str] | None = None) -> int:
+     ap.add_argument("files", nargs="*", help="ignored; accepted so pre-commit may pass filenames")
+     a = ap.parse_args(argv)
+ 
+-    violations = check(ref=a.ref, all_files=a.all)
++    # FAIL CLOSED. If the check could not run to completion, the honest report is "I do not
++    # know", and for a guard "I do not know" must read as REFUSE. Every one of these paths used
++    # to degrade to an empty result and print OK.
++    try:
++        violations = check(ref=a.ref, all_files=a.all)
++    except GuardError as exc:
++        print("determination-preservation-lint: REFUSING THE COMMIT (the check could not run).")
++        print(f"  {exc}")
++        print(
++            "\n  This is NOT a clean tree -- it is a guard that was unable to look. Fix the\n"
++            "  environment and re-run. If a concurrent process holds the git index, wait for it\n"
++            "  to finish rather than bypassing the hook."
++        )
++        return 1
++
+     if not violations:
+         print("determination-preservation-lint: OK")
+         return 0
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index 399b11702c..77509cb08d 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -229,7 +229,22 @@ ACKNOWLEDGED_NON_QA_LAYER: dict[str, str] = {
+     "pages_fever_dream_lint.py": (
+         "presentation-quality lint for the landing page; failure costs professional "
+         "polish, not a determination. NOTE its sibling Layer-2 (pages_adversarial_audit) "
+-        "reviews the PAGE, not this linter -- so this is an acknowledged, recorded gap"
++        "reviews the PAGE, not this linter -- so this is an acknowledged, recorded gap. "
++        "RE-DECIDED 2026-07-29 ON EVIDENCE, not on this description: the file was read in "
++        "full and audited once via `--file --guard-prompt --model codex`, which returned "
++        "SILENT_NON_FIRING. Every defect it named was independently reproduced and every "
++        "one is UNDER-DETECTION OF PRESENTATION BLOAT -- `Exp. 1001`, `exp1001`, "
++        "`experiment 1001` all evade EXP_ID_RE, which only knows `Exp 1001`; "
++        "`inference_mode=calibrated` and `n_seeds=5` evade FLAG_SYNTAX_RE, which only "
++        "knows booleans; and a missing docs/index.html returns 0, so pre-commit sees "
++        "clean. Consequence of every one is jargon or bloat reaching the landing page. "
++        "None reads an artifact, admits a claim, or preserves a record, so it cannot let "
++        "a false research claim through -- which is the criterion GUARD_TARGETS is drawn "
++        "on. Kept OUT so audit attention stays on guards whose silence costs a "
++        "determination. THE STANDING GAP IS UNCHANGED AND DELIBERATE: nothing reviews "
++        "this linter on a cadence, so if it ever grows a rule that gates a CLAIM rather "
++        "than polish, this entry must be revisited -- there is currently no mechanism "
++        "that forces that revisit when the file changes"
+     ),
+     "overdue_priority_lint.py": (
+         "planning-cadence forcing function; failure delays work rather than admitting a false claim"
+diff --git a/scripts/test_suite_mutation_check.py b/scripts/test_suite_mutation_check.py
+index fadbd25ccb..afcc4db410 100644
+--- a/scripts/test_suite_mutation_check.py
++++ b/scripts/test_suite_mutation_check.py
+@@ -58,10 +58,12 @@ written. Since authorship is not recoverable in principle, the revert is made SU
+ every file is copied to ``ops/.test_suite_mutation_backup/<path>`` before it is reverted. If a
+ restore takes something it should not have, copy it back from there.
+ 
+-    # Or do it by hand, around anything at all:
++    # Or do it by hand, around anything at all. --snapshot prints the run id and the exact
++    # --check line to pair with it; pass --run-id (or export CARNOT_MUTATION_RUN_ID for the whole
++    # workflow) so a concurrent workflow's baseline can never be read instead of yours.
+     python3 scripts/test_suite_mutation_check.py --snapshot
+     <do the thing>
+-    python3 scripts/test_suite_mutation_check.py --check
++    python3 scripts/test_suite_mutation_check.py --check --run-id <id>
+ 
+     # Pre-commit interlock (see below); no arguments.
+     python3 scripts/test_suite_mutation_check.py --gate
+@@ -83,6 +85,74 @@ staged ``results/*.json`` and refuses the specific never-prune regressions regar
+ they got there. The two are complementary: this one is broad and shallow (any tracked file, no
+ opinion about content), that one is narrow and deep (one directory, strong opinions).
+ 
++CONCURRENCY: WHY THERE IS NO LONGER A SHARED MUTABLE CELL (2026-07-29, second review)
++------------------------------------------------------------------------------------
++The first version kept exactly two files -- ONE snapshot and ONE pending marker -- and both are
++written by every run. With two or three workflows live in the same working tree (the normal
++condition in this project) each is a shared mutable cell, and both races were reproduced
++directly rather than argued about:
++
++  RACE 1, the interlock disarms itself. ``arm_from_pytest`` and ``cmd_run`` both did an
++  unconditional ``PENDING.unlink()`` on a clean run. So workflow A detects a rewrite and arms the
++  marker; workflow B then finishes an unrelated CLEAN run and DELETES A's marker. Replayed in a
++  throwaway repo: after B, ``--gate`` printed OK and exited 0 while A's rewrite was still sitting
++  in the working tree as ``M results/artA.json``. The interlock is the only thing standing between
++  a green test run and a published rewrite, and a passing test run switched it off.
++
++  RACE 2, the baseline goes backwards and the check answers wrong. ``--snapshot`` overwrites the
++  single snapshot file. A takes a baseline on a clean tree; B then edits a file in-flight and takes
++  ITS baseline (now containing that file); A's run rewrites the same file; A's ``--check`` reads
++  B's baseline, sees the file listed as "already dirty", and reports "OK -- no tracked file was
++  modified". A FALSE NEGATIVE on exactly the damage the tool exists to find. This is the shape the
++  operator observed live: a 14:52Z snapshot replaced by one stamped 11:43:01Z.
++
++THE FIX -- and why it is not a lock, and not "compare against HEAD":
++
++  * NOT "compare ``--check`` against git HEAD instead of a stored baseline". That removes the
++    shared state but destroys the semantics, and the cost is measurable rather than theoretical:
++    at the time of writing this tree carries 84 dirty files from a concurrent workflow's migration,
++    every one of which HEAD-comparison would report as a test-run mutation. Excluding
++    already-dirty work IS the mechanism (see ``mutations()``); without a baseline the detector
++    cannot distinguish a test's rewrite from a human's in-flight edit and becomes unusable on any
++    real working tree.
++  * NOT an advisory lock. A lock cannot span the documented ``--snapshot`` / <do the thing> /
++    ``--check`` sequence -- that is two processes with arbitrary work in between -- and serialising
++    concurrent workflows to protect a diagnostic is a worse cure than the disease.
++  * INSTEAD: there is no shared mutable cell left. Every run writes its OWN file under
++    ``ops/.test_suite_mutation_runs/``, and no run ever overwrites or deletes another's.
++
++    - Snapshots are ``<run-id>.snapshot.json``. The run id comes from ``--run-id``, else
++      ``$CARNOT_MUTATION_RUN_ID``, else an auto id containing the parent PID and a timestamp, so
++      two ``--snapshot`` calls can never collide even when both workflows are children of the same
++      shell (they are, in this environment -- PPID alone does NOT discriminate here, which is why
++      the timestamp is in the id). ``--check`` resolves the id explicitly, or auto-matches this
++      session's snapshots: exactly one match is used, and ZERO or MORE THAN ONE is REFUSED with the
++      candidates listed. It never silently borrows another run's baseline -- that borrowing is
++      Race 2.
++    - Pending markers are ``<uuid>.pending.json``, one per arming event, never rewritten.
++      ``--gate`` refuses while ANY marker survives.
++    - Clearing is derived from the TREE, not from ownership: a marker is stale exactly when every
++      file it names is clean again, which is a checkable fact about the repo rather than a claim
++      about who owns what. A clean run therefore retires its own marker (the "one bad run must not
++      wedge commits forever" property) without being able to retire a marker whose damage is still
++      on disk -- which is Race 1, closed. A marker that cannot be parsed is NEVER pruned: unreadable
++      is not the same as resolved, so it keeps refusing.
++
++  The legacy single ``ops/.test_suite_mutation_pending.json`` is still honoured on read, so a tree
++  that armed it under the old code stays blocked rather than silently unblocking on upgrade.
++
++FAIL CLOSED ON GIT ERRORS (2026-07-29, same review)
++---------------------------------------------------
++``_git`` used to swallow a non-zero git exit and return ``""``. Every caller then saw an empty
++dirty-set, so ``mutations()`` returned nothing and the tool printed "OK -- no tracked file was
++modified by the run". A broken git made the detector report a clean tree. That is the same
++fail-open shape as the sibling lint's ``--diff-filter=M`` hole, and it is worse here because
++``--gate`` is a pre-commit hook: the one moment the answer matters is the moment it would lie.
++``_git`` now raises ``GitError`` and every command path turns that into a REFUSAL with the git
++stderr attached. ``tests/python/conftest.py`` catches exceptions around its two calls by its own
++deliberate design (a guard must not break the suite it guards), so raising does not change the
++pytest path's behaviour -- it only stops the CLI from answering when it cannot know.
++
+ Cross-references:
+ - commit ``b3e31d341``                                -> the hazard as first diagnosed
+ - ``scripts/determination_preservation_lint.py``      -> the content-level sibling guard
+@@ -94,28 +164,65 @@ from __future__ import annotations
+ 
+ import argparse
+ import json
++import os
+ import subprocess
+ import sys
++import uuid
+ from datetime import UTC, datetime
+ from pathlib import Path
+ 
+ REPO = Path(__file__).resolve().parents[1]
++# LEGACY single-file state. Nothing WRITES these any more -- see the CONCURRENCY section of the
++# module docstring -- but `SNAPSHOT` is still readable and `PENDING` is still honoured by the gate,
++# so a working tree that armed the interlock under the old code does not silently unblock when this
++# version lands. New state is per-run, under RUNS/.
+ SNAPSHOT = REPO / "ops" / ".test_suite_mutation_snapshot.json"
+ PENDING = REPO / "ops" / ".test_suite_mutation_pending.json"
++# One file per run. This is the whole concurrency fix: nothing in here is ever overwritten or
++# deleted by a DIFFERENT run, so two workflows sharing a working tree cannot corrupt each other's
++# baseline (Race 2) or switch off each other's interlock (Race 1).
++RUNS = REPO / "ops" / ".test_suite_mutation_runs"
+ # Where `restore()` parks a file's pre-revert content. `git checkout --` cannot be undone, and the
+ # detector cannot tell a test's write from a human's concurrent edit, so every revert is made
+ # recoverable rather than trusted to be correct. See `backup()`.
+ BACKUP = REPO / "ops" / ".test_suite_mutation_backup"
+ 
++#: Set this to pin one run id for a whole workflow, which makes `--check` unambiguous even when
++#: several workflows share the tree AND the parent shell. Recommended for agents.
++RUN_ID_ENV = "CARNOT_MUTATION_RUN_ID"
++
++
++class GitError(RuntimeError):
++    """git could not answer. The caller must REFUSE, never assume a clean tree.
++
++    Named rather than generic so callers can distinguish "git said the tree is clean" from "git
++    did not say anything" -- collapsing those two is precisely the fail-open this replaced.
++    """
+ 
+-def _git(*args: str) -> str:
+-    """Run git in the repo and return stdout. Errors surface as empty output, never a crash.
+ 
+-    A detector that raises on an unexpected git state is worse than one that reports nothing:
+-    it turns a diagnostic into an outage in whatever wrapped it.
++def _git(*args: str) -> str:
++    """Run git in the repo and return stdout. RAISES ``GitError`` if git fails.
++
++    THIS USED TO FAIL OPEN, and the comment justifying it had the principle backwards. The old
++    body was ``return r.stdout if r.returncode == 0 else ""``, reasoning that "a detector that
++    raises on an unexpected git state is worse than one that reports nothing". But this detector
++    does not report nothing on an empty result -- it reports a CLEAN TREE. An empty dirty-set
++    flows into `mutations()`, which returns [], which prints "OK -- no tracked file was modified
++    by the run" and exits 0. So a git failure of any kind (corrupt index, a concurrent `git gc`
++    holding a lock, the tool run outside a work tree) produced a confident all-clear over a tree
++    that might have just been rewritten.
++
++    That matters more here than in an ordinary diagnostic because `--gate` is a pre-commit hook.
++    The single moment its answer is load-bearing is the moment a wrong answer publishes the
++    rewrite. So it now raises, and each command path turns the failure into a refusal with git's
++    own stderr attached. The "must not break the suite" concern is real but belongs one layer up,
++    and is already handled there: `tests/python/conftest.py` wraps both of its calls into this
++    module in `try/except Exception` by deliberate design.
+     """
+     r = subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True)
+-    return r.stdout if r.returncode == 0 else ""
++    if r.returncode != 0:
++        raise GitError(f"git {' '.join(args)} failed (exit {r.returncode}): {r.stderr.strip()}")
++    return r.stdout
+ 
+ 
+ def dirty_tracked() -> dict[str, str]:
+@@ -149,12 +256,68 @@ def dirty_tracked() -> dict[str, str]:
+     return out
+ 
+ 
+-def snapshot() -> dict[str, str]:
++def _session_prefix() -> str:
++    """The part of an auto run id shared by every command in one shell session.
++
++    PPID, deliberately: the documented workflow is ``--snapshot`` / <do the thing> / ``--check``,
++    which is two processes, so the id has to survive across them -- the tool's own PID cannot.
++    The parent shell is what they have in common.
++
++    PPID ALONE IS NOT A UNIQUE WORKFLOW KEY IN THIS ENVIRONMENT, and that is not a detail. Several
++    agent workflows can be children of the same long-lived process, so two concurrent workflows can
++    genuinely share a PPID (measured: both of this tree's live workflows report PPID 126919). That
++    is why `_auto_run_id` appends a timestamp, and why `--check`'s auto-resolution REFUSES on more
++    than one match instead of picking. A colliding session degrades to "you must say which one",
++    never to "silently use the other workflow's baseline".
++    """
++    return f"ppid-{os.getppid()}"
++
++
++def _auto_run_id() -> str:
++    """A fresh id for one ``--snapshot``. Unique even against a colliding PPID."""
++    return f"{_session_prefix()}-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
++
++
++def resolve_run_id(explicit: str | None = None) -> str:
++    """Run id for WRITING: explicit flag, else the pinned env var, else a fresh auto id."""
++    return explicit or os.environ.get(RUN_ID_ENV) or _auto_run_id()
++
++
++def read_run_id(explicit: str | None = None) -> str | None:
++    """Run id for READING, or None to auto-match this session's snapshots.
++
++    Deliberately NOT `resolve_run_id`: that one invents a fresh auto id when nothing is pinned,
++    which is right for writing a new baseline and useless for finding an existing one (the new id
++    matches no file, so every unpinned `--check` would refuse). Caught by replaying Race 2 --
++    `--check` under a pinned ``$CARNOT_MUTATION_RUN_ID`` reported OK because it never looked at
++    the env var at all and fell through to the session glob.
++    """
++    return explicit or os.environ.get(RUN_ID_ENV) or None
++
++
++def _snapshot_path(run_id: str) -> Path:
++    return RUNS / f"{run_id}.snapshot.json"
++
++
++def snapshot(run_id: str | None = None) -> dict[str, str]:
++    """Record which tracked files are ALREADY dirty, under this run's own id.
++
++    Returns the baseline. The caller normally uses the RETURN VALUE and never re-reads the file --
++    `cmd_run` and the pytest hook both hold their baseline in memory for the life of the run, so
++    they were never exposed to Race 2. The file exists so that the two-process
++    ``--snapshot`` / ``--check`` workflow has somewhere to put it.
++    """
++    rid = resolve_run_id(run_id)
+     baseline = dirty_tracked()
+-    SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
+-    SNAPSHOT.write_text(
++    path = _snapshot_path(rid)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
+         json.dumps(
+-            {"taken_at": datetime.now(UTC).isoformat(), "already_dirty": baseline},
++            {
++                "run_id": rid,
++                "taken_at": datetime.now(UTC).isoformat(),
++                "already_dirty": baseline,
++            },
+             indent=1,
+             sort_keys=True,
+         )
+@@ -163,15 +326,59 @@ def snapshot() -> dict[str, str]:
+     return baseline
+ 
+ 
+-def _load_snapshot() -> dict[str, str] | None:
+-    if not SNAPSHOT.exists():
+-        return None
++def _read_baseline(path: Path) -> dict[str, str] | None:
+     try:
+-        return json.loads(SNAPSHOT.read_text()).get("already_dirty", {})
+-    except (json.JSONDecodeError, OSError):
++        return json.loads(path.read_text()).get("already_dirty", {})
++    except (json.JSONDecodeError, OSError, AttributeError):
+         return None
+ 
+ 
++def find_snapshots(run_id: str | None = None) -> list[Path]:
++    """Snapshot files this invocation may legitimately read, newest last.
++
++    With an explicit id (flag or env) that is exactly one file. Without one, only THIS SESSION's
++    snapshots are candidates -- never every snapshot in the directory, because picking an arbitrary
++    other workflow's baseline is Race 2 with extra steps.
++    """
++    if not RUNS.exists():
++        return []
++    if run_id:
++        p = _snapshot_path(run_id)
++        return [p] if p.exists() else []
++    pref = _session_prefix()
++    return sorted(RUNS.glob(f"{pref}-*.snapshot.json"))
++
++
++class AmbiguousSnapshot(RuntimeError):
++    """More than one snapshot could be meant, so none is used. Carries the candidates."""
++
++    def __init__(self, candidates: list[Path]) -> None:
++        self.candidates = candidates
++        super().__init__(f"{len(candidates)} candidate snapshots")
++
++
++def _load_snapshot(run_id: str | None = None) -> dict[str, str] | None:
++    """The baseline for this run, or None if there is not exactly one to be sure about.
++
++    Raises `AmbiguousSnapshot` when several could be meant. Answering with a guess is what made
++    Race 2 a false negative rather than merely noise, so ambiguity is surfaced, not resolved.
++    """
++    candidates = find_snapshots(run_id)
++    if len(candidates) > 1:
++        raise AmbiguousSnapshot(candidates)
++    if candidates:
++        return _read_baseline(candidates[0])
++    # THE LEGACY SHARED SNAPSHOT IS DELIBERATELY NOT READ. An earlier draft of this fix fell back
++    # to it "so an in-flight workflow that snapshotted under the old code can still complete",
++    # which quietly preserved the entire hole: that file is the shared mutable cell, so reading it
++    # is Race 2 -- a baseline written by some other workflow, at some other time, silently used as
++    # if it were yours, which is how a real rewrite gets reported as OK. (The one on disk when
++    # this was written listed 7 dirty files while the tree had 84.) The legacy PENDING marker IS
++    # still honoured, and the asymmetry is the point: honouring a stale marker can only make the
++    # gate refuse MORE, while honouring a stale baseline makes it refuse LESS.
++    return None
++
++
+ def mutations(baseline: dict[str, str]) -> list[str]:
+     """Tracked files that moved since the baseline.
+ 
+@@ -257,18 +464,26 @@ def _report(muts: list[str]) -> None:
+     )
+ 
+ 
+-def write_pending(muts: list[str], command: list[str]) -> None:
++def write_pending(muts: list[str], command: list[str]) -> Path:
+     """Arm the pre-commit interlock: record which tracked files a run rewrote.
+ 
+     Factored out of ``cmd_run`` so the pytest auto-arm hook (``arm_from_pytest``) writes the
+     SAME marker in the SAME shape. Two code paths writing two slightly different markers is how
+     a gate ends up passing on one of them.
++
++    ONE FILE PER ARMING EVENT, not one shared file. The old single-marker layout lost information
++    the moment two runs armed it -- the second run's `write_text` replaced the first run's file
++    list wholesale, so the first run's rewrite stopped being named by anything and became
++    unguarded as soon as the second one was resolved. A uuid name means no marker can be
++    clobbered; `prune_stale_markers` retires them individually on the evidence of the tree.
+     """
+-    PENDING.parent.mkdir(parents=True, exist_ok=True)
+-    PENDING.write_text(
++    path = RUNS / f"{uuid.uuid4().hex}.pending.json"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
+         json.dumps(
+             {
+                 "detected_at": datetime.now(UTC).isoformat(),
++                "run_id": resolve_run_id(),
+                 "command": command,
+                 "modified_tracked_files": muts,
+                 "why_this_blocks_commits": (
+@@ -282,6 +497,60 @@ def write_pending(muts: list[str], command: list[str]) -> None:
+         )
+         + "\n"
+     )
++    return path
++
++
++def marker_paths() -> list[Path]:
++    """Every pending marker that currently blocks a commit, legacy file included."""
++    found = sorted(RUNS.glob("*.pending.json")) if RUNS.exists() else []
++    if PENDING.exists():
++        found.append(PENDING)
++    return found
++
++
++def prune_stale_markers() -> list[Path]:
++    """Delete markers whose damage is demonstrably undone. Returns the ones still blocking.
++
++    WHY STALENESS IS DERIVED FROM THE TREE RATHER THAN FROM OWNERSHIP.
++
++    A marker has to be retired somehow or one bad run wedges every future commit. The old code
++    retired it the simplest possible way -- any clean run called ``PENDING.unlink()`` -- and that
++    is Race 1: workflow B's clean run switched off the interlock workflow A had just armed, with
++    A's rewrite still on disk. Replayed directly; ``--gate`` printed OK afterwards.
++
++    Ownership ("a run may only clear its own marker") was the obvious alternative and does not
++    work here, because there is no reliable per-workflow key: concurrent agent workflows in this
++    tree share a PPID, so an ownership key built from it would let B clear A's marker again, while
++    a per-process key would never let a re-run clear its OWN earlier marker and would wedge
++    commits instead.
++
++    So retirement is keyed to the thing that actually matters and that anyone can verify: a marker
++    is stale exactly when every file it named is clean again. That is a fact about the repository,
++    not a claim about who owns what, so any run -- or the gate itself -- can act on it safely. It
++    also makes the tool self-healing after a ``git checkout --`` restore, which the old design
++    only achieved as a side effect of the next clean run.
++
++    FAIL CLOSED. A marker that cannot be read, or that names no files at all, is NEVER pruned.
++    Unreadable is not the same as resolved, and a marker whose file list is missing tells us
++    nothing about whether the damage is still there -- in both cases the existence of the marker
++    remains the signal.
++    """
++    still_dirty = dirty_tracked()
++    blocking: list[Path] = []
++    for p in marker_paths():
++        try:
++            listed = json.loads(p.read_text()).get("modified_tracked_files", [])
++        except (json.JSONDecodeError, OSError, AttributeError):
++            blocking.append(p)  # unreadable => cannot prove it is resolved => keep refusing
++            continue
++        if not isinstance(listed, list) or not listed:
++            blocking.append(p)
++            continue
++        if any(f in still_dirty for f in listed):
++            blocking.append(p)
++            continue
++        p.unlink(missing_ok=True)
++    return blocking
+ 
+ 
+ def arm_from_pytest(baseline: dict[str, str], command: list[str]) -> list[str]:
+@@ -326,7 +595,10 @@ def arm_from_pytest(baseline: dict[str, str], command: list[str]) -> list[str]:
+     """
+     muts = mutations(baseline)
+     if not muts:
+-        PENDING.unlink(missing_ok=True)
++        # Retire markers the tree shows are resolved -- NOT every marker. An unconditional unlink
++        # here is Race 1: this run finishing clean says nothing about whether ANOTHER run's
++        # rewrite is still on disk. See `prune_stale_markers`.
++        prune_stale_markers()
+         return []
+     write_pending(muts, command)
+     return muts
+@@ -338,7 +610,7 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
+     proc = subprocess.run(argv, cwd=REPO)
+     muts = mutations(baseline)
+     if not muts:
+-        PENDING.unlink(missing_ok=True)
++        prune_stale_markers()
+         print("test-suite-mutation-check: OK -- no tracked file was modified by the run")
+         return proc.returncode
+     _report(muts)
+@@ -347,7 +619,7 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
+         print(f"\n  restored {len(recovered)}/{len(muts)} file(s) to their committed content")
+         left = [p for p in muts if p not in recovered]
+         if not left:
+-            PENDING.unlink(missing_ok=True)
++            prune_stale_markers()
+             return proc.returncode or 0
+         muts = left
+         print(f"  COULD NOT RESTORE: {left}")
+@@ -356,25 +628,45 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
+ 
+ 
+ def cmd_gate() -> int:
+-    if not PENDING.exists():
++    """The pre-commit interlock. Exit 1 refuses the commit.
++
++    Fails CLOSED in every direction: an unreadable marker refuses, and git being unable to answer
++    refuses rather than assuming the tree is clean.
++    """
++    try:
++        blocking = prune_stale_markers()
++    except GitError as exc:
++        print("test-suite-mutation-check: REFUSING THE COMMIT -- git could not be queried.")
++        print(f"  {exc}")
++        print(
++            "  This gate cannot confirm whether a test run rewrote tracked files, and a guard\n"
++            "  that cannot confirm must refuse: reporting OK here is how an unreadable tree gets\n"
++            "  a clean bill of health. Fix the git error and re-run."
++        )
++        return 1
++    if not blocking:
+         print("test-suite-mutation-check: OK")
+         return 0
+-    try:
+-        d = json.loads(PENDING.read_text())
+-    except (json.JSONDecodeError, OSError):
+-        d = {}
++
+     print("test-suite-mutation-check: REFUSING THE COMMIT.")
+     print(
+-        f"  A previous test run ({' '.join(d.get('command', ['?']))}) modified tracked files and\n"
+-        f"  they were not restored. Committing now would publish a silent rewrite of the\n"
+-        f"  research record.\n"
++        f"  {len(blocking)} test run(s) modified tracked files that were not restored.\n"
++        f"  Committing now would publish a silent rewrite of the research record.\n"
+     )
+-    for p in d.get("modified_tracked_files", []):
+-        print(f"    {p}")
++    for path in blocking:
++        try:
++            d = json.loads(path.read_text())
++        except (json.JSONDecodeError, OSError):
++            d = {}
++        cmd = " ".join(d.get("command", ["?"]))
++        print(f"  {path.relative_to(REPO)}  ({cmd})")
++        for p in d.get("modified_tracked_files", []):
++            print(f"    {p}")
++    names = "  ".join(str(p.relative_to(REPO)) for p in blocking)
+     print(
+-        f"\n  Fix:  git checkout -- <paths>   then   rm {PENDING.relative_to(REPO)}\n"
+-        f"  Or, if the rewrite is intended: explain it in the commit message and delete\n"
+-        f"  {PENDING.relative_to(REPO)} deliberately."
++        f"\n  Fix:  git checkout -- <paths>          (the marker then retires itself)\n"
++        f"  Or, if the rewrite is intended: explain it in the commit message and delete the\n"
++        f"  marker deliberately:  rm {names}"
+     )
+     return 1
+ 
+@@ -398,44 +690,108 @@ def main(argv: list[str] | None = None) -> int:
+     ap.add_argument(
+         "--run", action="store_true", help="snapshot, run the command after --, then check"
+     )
++    ap.add_argument(
++        "--run-id",
++        default=None,
++        help=(
++            "name this run's baseline explicitly, so --check cannot pick up another workflow's. "
++            f"Defaults to ${RUN_ID_ENV} if set, else an id derived from the parent shell."
++        ),
++    )
+     ap.add_argument("command", nargs=argparse.REMAINDER, help="the command to run (after --)")
+     a = ap.parse_args(argv)
+ 
+-    if a.gate:
+-        return cmd_gate()
+-
+-    if a.run:
+-        cmd = [c for c in a.command if c != "--"]
+-        if not cmd:
+-            ap.error("--run needs a command: --run -- pytest tests/python")
+-        return cmd_run(cmd, a.restore)
+-
+-    if a.snapshot:
+-        b = snapshot()
+-        print(f"test-suite-mutation-check: baseline taken ({len(b)} file(s) already dirty)")
+-        return 0
+-
+-    if a.check:
+-        baseline = _load_snapshot()
+-        if baseline is None:
+-            print("test-suite-mutation-check: no snapshot -- run --snapshot first")
+-            return 0
+-        muts = mutations(baseline)
+-        if not muts:
++    try:
++        if a.gate:
++            return cmd_gate()
++
++        if a.run:
++            cmd = [c for c in a.command if c != "--"]
++            if not cmd:
++                ap.error("--run needs a command: --run -- pytest tests/python")
++            return cmd_run(cmd, a.restore)
++
++        if a.snapshot:
++            rid = resolve_run_id(a.run_id)
++            b = snapshot(rid)
+             print(
+-                "test-suite-mutation-check: OK -- no tracked file was modified since the snapshot"
++                f"test-suite-mutation-check: baseline taken ({len(b)} file(s) already dirty)\n"
++                f"  run id: {rid}\n"
++                f"  check it with: python3 scripts/test_suite_mutation_check.py "
++                f"--check --run-id {rid}"
+             )
+             return 0
+-        _report(muts)
+-        if a.restore:
+-            recovered = restore(muts)
+-            print(f"\n  restored {len(recovered)}/{len(muts)} file(s)")
+-            return 0 if len(recovered) == len(muts) else 1
++
++        if a.check:
++            return cmd_check(a.run_id, a.restore)
++    except GitError as exc:
++        # Every command path refuses on an unanswerable git rather than reporting a clean tree.
++        print(f"test-suite-mutation-check: REFUSING -- git could not be queried.\n  {exc}")
+         return 1
+ 
+     ap.print_help()
+     return 0
+ 
+ 
++def cmd_check(run_id: str | None, do_restore: bool) -> int:
++    """Report tracked files modified since this run's baseline.
++
++    ``--check`` USED TO EXIT 0 WHEN THERE WAS NO SNAPSHOT, printing "no snapshot -- run --snapshot
++    first". The documented contract for this tool is "Exit 0 = the tracked tree is where you left
++    it", so answering 0 when no baseline was ever taken reports a clean tree on the strength of
++    having no idea -- the same fail-open as the old `_git`. It now refuses, which is also what
++    makes refusing on AMBIGUITY coherent: without a baseline of its own, the honest answer is "ask
++    me again with a run id", never "fine".
++
++    (The reversed test that pinned the old behaviour argued a hard failure "would block every
++    fresh clone". That reasoning applies to a pre-commit hook; `--check` is not one. `--gate` is
++    the hook, it keys off markers rather than snapshots, and it still passes on a fresh clone.)
++    """
++    try:
++        baseline = _load_snapshot(read_run_id(run_id))
++    except AmbiguousSnapshot as exc:
++        print("test-suite-mutation-check: REFUSING -- more than one baseline could be meant.")
++        print(
++            "  Several snapshots match this session, so any answer would be a guess, and guessing\n"
++            "  here is the concurrency bug this replaced: reading another run's baseline reports\n"
++            "  OK over a rewrite that run had already marked as in-flight. Pick one:\n"
++        )
++        for p in exc.candidates:
++            stamp = ""
++            try:
++                stamp = json.loads(p.read_text()).get("taken_at", "")
++            except (json.JSONDecodeError, OSError):
++                pass
++            print(f"    --run-id {p.name.removesuffix('.snapshot.json')}   (taken {stamp})")
++        return 1
++
++    if baseline is None:
++        print("test-suite-mutation-check: REFUSING -- no baseline for this run.")
++        print(
++            "  Nothing to compare against, so 'nothing changed' would be a guess rather than a\n"
++            "  measurement. Take one first:\n"
++            "    python3 scripts/test_suite_mutation_check.py --snapshot\n"
++            f"  or pin one for the whole workflow with ${RUN_ID_ENV}."
++        )
++        if SNAPSHOT.exists():
++            print(
++                f"\n  ({SNAPSHOT.relative_to(REPO)} exists but is NOT used: it is the old shared\n"
++                "   baseline, which any other workflow may have overwritten. Using it is the\n"
++                "   concurrency bug this replaced. Delete it once no old-code run needs it.)"
++            )
++        return 1
++
++    muts = mutations(baseline)
++    if not muts:
++        print("test-suite-mutation-check: OK -- no tracked file was modified since the snapshot")
++        return 0
++    _report(muts)
++    if do_restore:
++        recovered = restore(muts)
++        print(f"\n  restored {len(recovered)}/{len(muts)} file(s)")
++        return 0 if len(recovered) == len(muts) else 1
++    return 1
++
++
+ if __name__ == "__main__":
+     sys.exit(main())
+diff --git a/tests/python/conftest.py b/tests/python/conftest.py
+index 6030a3a15b..9597c5c8b5 100644
+--- a/tests/python/conftest.py
++++ b/tests/python/conftest.py
+@@ -334,9 +334,12 @@ def pytest_sessionfinish(session, exitstatus) -> None:
+             pytest.PytestWarning(
+                 f"This test run REWROTE {len(muts)} tracked file(s) that were clean before it: "
+                 f"{muts[:5]}{' ...' if len(muts) > 5 else ''}. These are the committed research "
+-                f"record, not test output. Commits are now blocked until this is resolved -- see "
+-                f"`python3 scripts/test_suite_mutation_check.py --check` and "
+-                f"`--restore`, or `git checkout -- <paths>`."
++                f"record, not test output. Commits are now blocked until this is resolved -- run "
++                f"`python3 scripts/test_suite_mutation_check.py --gate` to list every affected "
++                f"file, then `git checkout -- <paths>` (the marker retires itself once the tree "
++                f"shows the damage undone). Do NOT reach for `--check` here: it needs a baseline "
++                f"taken before the run under a matching --run-id, and this hook keeps its baseline "
++                f"in memory rather than on disk, so `--check` would refuse."
+             ),
+             stacklevel=2,
+         )
+diff --git a/tests/python/test_determination_preservation_lint.py b/tests/python/test_determination_preservation_lint.py
+index b8afe76890..02d35715e3 100644
+--- a/tests/python/test_determination_preservation_lint.py
++++ b/tests/python/test_determination_preservation_lint.py
+@@ -155,11 +155,77 @@ def test_an_unflagged_artifact_is_never_implicated(repo):
+     assert dpl.check() == []
+ 
+ 
+-def test_unparseable_or_absent_sides_do_not_crash_the_commit(repo):
+-    """A truncated artifact mid-write must not wedge every commit in the repo."""
++def test_a_corrupt_overwrite_of_an_UNPROTECTED_artifact_does_not_wedge_the_commit(repo):
++    """A truncated artifact mid-write must not wedge commits over artifacts with nothing at stake.
++
++    This is the surviving half of the original
++    ``test_unparseable_or_absent_sides_do_not_crash_the_commit``, whose concern was real: an
++    experiment writing its artifact while a commit runs leaves a momentarily-truncated file, and
++    a guard that refuses on ANY unreadable artifact would block unrelated work at random.
++
++    The blanket version of that assertion was DELIBERATELY NARROWED on 2026-07-29 -- see the
++    test directly below for the half that was wrong and why. The measured split is that 11,352
++    of 15,284 readable tracked artifacts (74.3%) carry no protected field at all, so this
++    exemption still covers the large majority of the corpus.
++    """
++    r, _ = repo
++    other = r / "results" / "experiment_2_clean.json"
++    other.write_text(json.dumps({"experiment": 2, "duration_s": 5.0}, indent=2) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "add clean")
++    other.write_text('{"experiment": 2, "dur')
++    assert dpl.check() == [], (
++        "a corrupt artifact that held no determination is not this lint's business"
++    )
++
++
++def test_a_corrupt_overwrite_of_a_PROTECTED_artifact_is_refused(repo):
++    """Destroying the whole artifact must not score cleaner than editing one field out of it.
++
++    THIS REVERSES A PRIOR ASSERTION, deliberately, and the reasoning is recorded here because
++    silently flipping a test's expectation is how a guard gets hollowed out. The pre-2026-07-29
++    test asserted flatly that "unparseable NEW side is not evidence of a dropped determination"
++    and passed the whole class. But ``_load_now`` returned ``None`` for BOTH "deleted" and
++    "unreadable", and ``check`` skipped ``None`` -- so overwriting a flagged artifact with
++    truncated bytes destroyed its determination, its corrigendum trail and its substrate
++    declaration all at once, and the lint printed OK.
++
++    That is the same never-prune harm as deletion, which the operator named explicitly as
++    "strictly worse than editing it". A guard whose cheapest bypass is `> file` is not a guard.
++
++    The transient-write concern that motivated the original assertion is preserved by scoping
++    the refusal to artifacts that actually CARRY protected content (the test above), and by
++    naming the remedy -- `git checkout -- <path>` -- in the refusal message itself.
++    """
+     _, art = repo
+     art.write_text('{"experiment": 1, "flagged')
+-    assert dpl.check() == [], "unparseable NEW side is not evidence of a dropped determination"
++    v = dpl.check()
++    assert len(v) == 1, v
++    assert "NO LONGER READABLE" in v[0]
++    # The message must tell the reader what was at stake and how to undo it, or the refusal is
++    # just an obstacle.
++    assert "flagged_adversarial" in v[0]
++    assert "git checkout --" in v[0]
++
++
++def test_an_absent_or_unreadable_OLD_side_is_never_a_violation(repo):
++    """Nothing readable at HEAD means this commit destroyed nothing. Must not fire, must not crash.
++
++    The other half of the original test's intent: a brand-new artifact has no old side, and an
++    artifact that was ALREADY corrupt at HEAD carried no recoverable record for this commit to
++    have dropped.
++    """
++    r, _ = repo
++    fresh = r / "results" / "experiment_3_new.json"
++    fresh.write_text(json.dumps({"experiment": 3, "flagged_adversarial": True}, indent=2) + "\n")
++    assert dpl.check() == [], "a newly added artifact has no old side to have lost anything from"
++
++    corrupt = r / "results" / "experiment_4_was_already_broken.json"
++    corrupt.write_text("{not json at all")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "commit an already-corrupt artifact")
++    corrupt.write_text("{still not json")
++    assert dpl.check() == [], "an artifact unreadable at HEAD had no record for this commit to drop"
+ 
+ 
+ def test_the_real_repo_is_currently_clean():
+@@ -897,3 +963,523 @@ def test_a_negated_weakness_word_does_not_drag_the_rank_down():
+     # `simulat` has to catch both `simulated` and `simulation`, `analys` both spellings.
+     assert dpl._token_scan_band("cpu_simulated_annealing") == 1
+     assert dpl._token_scan_band("offline_analysis_only") == 2
++
++
++# =========================================================================================
++# 2026-07-29 FAIL-CLOSED HARDENING -- the two holes the Layer-2 QA audit found in the
++# PRE-widening lint and which survived the widening unchanged, plus the exemption hole.
++#
++# All three were demonstrated live against REAL artifacts before being fixed (a disposable
++# git repo seeded from results/experiment_1680_polarfire_smoke_v2.json and
++# results/experiment_3946_r11l_first_solve.json): every scenario below scored a clean
++# `determination-preservation-lint: OK` under the pre-fix code.
++#
++# The unifying principle: A GUARD MUST FAIL CLOSED. Each of these was a path where the lint
++# could not see, or did not look, and reported OK anyway -- which is strictly worse than
++# having no lint, because it converts an open hole into a false sense of coverage.
++# =========================================================================================
++
++
++def test_deleting_a_flagged_artifact_is_refused(repo):
++    """`--diff-filter=M` considered MODIFIED files only, so `git rm` bypassed the guard entirely.
++
++    Deleting the artifact destroys the determination, the corrigendum trail and the substrate
++    declaration in one move. It is the cheapest possible bypass and it scored clean.
++    """
++    r, art = repo
++    _git(r, "rm", "-q", "results/experiment_1_thing.json")
++    v = dpl.check()
++    assert len(v) == 1, v
++    assert "DELETED" in v[0]
++    assert "flagged_adversarial" in v[0], "the message must name what was destroyed"
++
++
++def test_deleting_an_artifact_that_held_nothing_is_allowed(repo):
++    """The charter boundary, stated as a test.
++
++    This is the DETERMINATION-preservation lint, not a blanket ban on removing files from
++    ``results/``. Refusing every deletion would be over-broad -- and an over-broad guard gets
++    disabled, which is the same outcome as no guard.
++    """
++    r, _ = repo
++    other = r / "results" / "experiment_2_clean.json"
++    other.write_text(json.dumps({"experiment": 2, "duration_s": 5.0}, indent=2) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "add clean")
++    _git(r, "rm", "-q", "results/experiment_2_clean.json")
++    assert dpl.check() == []
++
++
++def test_an_unstaged_deletion_is_refused(repo):
++    """Same reasoning as `test_guard_fires_on_an_unstaged_strip`: staging is not the trigger.
++
++    `rm results/x.json` without `git rm` must be caught too -- the lint compares the working
++    tree against HEAD precisely so that staging state cannot hide a loss.
++    """
++    _, art = repo
++    art.unlink()
++    v = dpl.check()
++    assert len(v) == 1 and "DELETED" in v[0], v
++
++
++def test_a_rename_that_drops_a_marker_is_refused(repo):
++    """`git mv` + strip: invisible under BOTH the old path and the new one with `--diff-filter=M`.
++
++    A rename is not itself a violation (see the control below), but it must not be usable as a
++    laundering step for a field drop.
++    """
++    r, _ = repo
++    _git(r, "mv", "results/experiment_1_thing.json", "results/experiment_1_renamed.json")
++    moved = r / "results" / "experiment_1_renamed.json"
++    d = json.loads(moved.read_text())
++    d.pop("corrigendum_note")
++    moved.write_text(json.dumps(d, indent=2) + "\n")
++    v = dpl.check()
++    assert len(v) == 1, v
++    assert "corrigendum" in v[0]
++    # The refusal must name BOTH paths or the reader cannot find the file that now holds it.
++    assert "experiment_1_thing.json -> results/experiment_1_renamed.json" in v[0]
++
++
++def test_a_rename_that_preserves_everything_is_allowed(repo):
++    """Moving an artifact is legitimate work. The guard tracks content, not location."""
++    r, _ = repo
++    _git(r, "mv", "results/experiment_1_thing.json", "results/experiment_1_renamed.json")
++    assert dpl.check() == []
++
++
++def test_git_failure_refuses_rather_than_reporting_clean(repo, monkeypatch, tmp_path):
++    """The fail-open that mattered most: `subprocess.run(...).stdout` with `returncode` ignored.
++
++    Any git failure -- broken repo, missing binary, bad ref, index lock held by one of the
++    concurrent workflows this repo runs -- produced an empty file list, which reads as "nothing
++    changed" and printed OK. The tree could have lost every determination in it.
++    """
++    _, art = repo
++    _write(art, flagged_adversarial=dpl)  # a REAL violation is present...
++    # A directory that EXISTS but is not a git repository, so git actually runs and exits
++    # non-zero. Pointing REPO at a NONEXISTENT path instead would make subprocess raise
++    # OSError, which is the separate path covered by `test_missing_git_binary_refuses` -- it
++    # would leave the `returncode != 0` branch untested. Mutation testing caught exactly that:
++    # reverting the returncode check left the whole suite green.
++    not_a_repo = tmp_path / "plain_directory"
++    not_a_repo.mkdir()
++    monkeypatch.setattr(dpl, "REPO", not_a_repo)
++    with pytest.raises(dpl.GuardError):
++        dpl.check()  # ...and the guard must say "I could not look", not "OK"
++
++    # main() must translate that into a REFUSAL exit code, not an exception traceback that a
++    # hook wrapper might swallow.
++    assert dpl.main([]) == 1
++
++
++def test_missing_git_binary_refuses(repo, monkeypatch):
++    """OSError from subprocess is a separate path from a non-zero exit; both must fail closed."""
++
++    def _boom(*a, **k):
++        raise OSError("git: command not found")
++
++    monkeypatch.setattr(dpl.subprocess, "run", _boom)
++    with pytest.raises(dpl.GuardError):
++        dpl.check()
++
++
++def test_a_broken_adversarial_verify_import_refuses(repo, monkeypatch):
++    """The `except Exception: return None` at the enum lookup was a fail-open, not defence.
++
++    Swallowing it silently swapped rule 4's CANONICAL ENUM matcher for the weaker free-form
++    prose scan -- the exact "drifted copy of a matcher" hazard `_canonical_substrate_band`'s own
++    docstring is written to prevent. This cannot deadlock a repair of adversarial_verify.py
++    itself: the pre-commit hook is scoped to `^results/.*\\.json$`.
++    """
++    import builtins
++
++    real_import = builtins.__import__
++
++    def _fail_on_av(name, *a, **k):
++        if name == "adversarial_verify":
++            raise ImportError("simulated: adversarial_verify is broken")
++        return real_import(name, *a, **k)
++
++    # Exercise the REAL function body. An earlier version of this test monkeypatched
++    # `_adversarial_verify` itself, so the fail-closed code inside it was never executed --
++    # mutation testing caught that by reverting the fix and watching the suite stay green.
++    monkeypatch.setattr(dpl, "_AV_MODULE", None)
++    monkeypatch.delitem(sys.modules, "adversarial_verify", raising=False)
++    monkeypatch.setattr(builtins, "__import__", _fail_on_av)
++
++    with pytest.raises(dpl.GuardError):
++        dpl._adversarial_verify()
++    with pytest.raises(dpl.GuardError):
++        dpl._canonical_substrate_band("live_llm_inference")
++
++
++@pytest.mark.parametrize(
++    "key,value",
++    [
++        # Every one of these key names is REAL and live in results/**.json today. Under the
++        # pre-fix `any("cleared" in k and v)` test, each would have lifted a fabrication
++        # quarantine while saying nothing whatever about it.
++        ("cache_cleared", True),
++        ("step1_vram_cleared", True),
++        ("quota_gate_cleared", True),
++        ("game_fully_cleared", True),
++        ("zombie_already_cleared", True),
++        ("drc_ioplanning_errors_cleared", ["a", "b"]),
++        # A note-shaped NAME is still not enough if the value is not a written rationale.
++        ("flagged_adversarial_cleared_note", True),
++        ("flagged_adversarial_cleared_note", ""),
++    ],
++)
++def test_an_unrelated_cleared_key_cannot_lift_a_quarantine(repo, key, value):
++    """The clearing exemption required only a truthy key whose NAME contained "cleared"."""
++    _, art = repo
++    _write(art, flagged_adversarial=False, **{key: value})
++    v = dpl.check()
++    assert any("flagged_adversarial" in x and "cleared_note" in x for x in v), (
++        f"{key}={value!r} must not satisfy the deliberate-clearing exemption; got {v}"
++    )
++
++
++def test_a_real_written_cleared_note_still_clears(repo):
++    """The escape hatch must stay usable, or people route around the guard instead of using it."""
++    _, art = repo
++    _write(
++        art,
++        flagged_adversarial=False,
++        flagged_adversarial_cleared_note=(
++            "Cleared 2026-07-29: DURATION_TOO_SHORT was a false positive under the pre-2026-07-03"
++            " substrate taxonomy; adversarial_verify.py now reports 0 flagged on this artifact."
++        ),
++    )
++    assert dpl.check() == []
++
++
++def test_load_at_refuses_on_a_bad_ref_rather_than_reporting_it_absent():
++    """`_load_at` swallowed EVERY non-zero git exit as "the path is not in that revision".
++
++    That conflated the routine case (a newly added artifact genuinely has no old side) with
++    "your repository is broken" and "that ref does not exist". Under the old code a bad ref
++    emptied the OLD side of every comparison, so nothing could ever be detected as lost and
++    `--ref` audits of landed commits silently passed.
++    """
++    with pytest.raises(dpl.GuardError):
++        dpl._load_at("definitely-not-a-ref-a1b2c3", "results/experiment_1_thing.json")
++
++
++def test_a_genuinely_absent_path_at_a_ref_is_still_benign(repo):
++    """The other side of the same coin: the routine case must NOT be turned into a refusal."""
++    assert dpl._load_at("HEAD", "results/never_existed.json") is None
++
++
++def test_the_hook_is_always_run_because_pre_commit_hides_deletions():
++    """The SECOND half of the deletion hole, and it is not in this file's own source.
++
++    `pre_commit.git.get_staged_files` builds its file list with `--diff-filter=ACMRTUXB`
++    ("Everything except for D"), so a commit that only DELETES artifacts matches this hook's
++    `files:` pattern zero times and pre-commit reports "(no files to check) Skipped" -- the lint
++    is never invoked at all. Verified directly against a scratch repo: identical hook, identical
++    staged deletion, `Skipped` without `always_run` and `Passed` with it.
++
++    So fixing `--diff-filter=M` inside the lint was necessary but NOT sufficient; without this
++    flag the fixed code never gets to run on the very case it was fixed for.
++    """
++    import yaml
++
++    # PARSE THE YAML; DO NOT SUBSTRING-MATCH THE FILE. The first version of this test did
++    # `assert "always_run: true" in block` -- which passed even with the KEY deleted, because
++    # the phrase also occurs in the explanatory COMMENT directly above it. Mutation testing
++    # caught it: removing the real key left this test green. That is precisely the
++    # match-without-boundaries bug class CLAUDE.md's QA-Layer Authenticity Discipline exists
++    # for, reproduced here in the test written to prevent it.
++    cfg = yaml.safe_load((REPO / ".pre-commit-config.yaml").read_text())
++    hooks = [h for r in cfg["repos"] for h in r.get("hooks", [])]
++    hook = next(h for h in hooks if h["id"] == "determination-preservation-lint")
++    assert hook.get("always_run") is True, (
++        "without always_run, a deletion-only commit never invokes this hook at all"
++    )
++
++
++def test_a_curated_retirement_out_of_results_is_allowed(repo):
++    """MUST-NOT-FIRE: moving an artifact to `legacy/fabricated/` preserves the record.
++
++    FOUND BY CALIBRATING AGAINST REAL HISTORY, not by fixture-writing. Commit `bed0635b6`
++    ("[outer-loop] Retire fabricated exp2823 TruthfulQA artifact to legacy/fabricated/") moved a
++    `flagged_adversarial: True` artifact -- corrigendum TAUTOLOGY record and all -- out of
++    results/ into legacy/fabricated/, with a README and an ops/exclusion_manifest.yaml entry.
++    Nothing was lost; that IS the project's documented retirement path for a fabricated result.
++
++    The first cut of the deletion fix refused it, because a `-- results` pathspec makes git
++    report the source half of a cross-directory move as a plain deletion. Diffing the whole tree
++    and filtering on the OLD path lets git pair it as R100 instead.
++    """
++    r, _ = repo
++    (r / "legacy" / "fabricated").mkdir(parents=True)
++    _git(r, "mv", "results/experiment_1_thing.json", "legacy/fabricated/experiment_1_thing.json")
++    assert dpl.check() == [], "a documented retirement that preserves the record must pass"
++
++
++def test_a_move_out_of_results_that_drops_a_marker_is_still_refused(repo):
++    """The escape hatch above must not become a laundering route."""
++    r, _ = repo
++    (r / "legacy" / "fabricated").mkdir(parents=True)
++    dest = "legacy/fabricated/experiment_1_thing.json"
++    _git(r, "mv", "results/experiment_1_thing.json", dest)
++    d = json.loads((r / dest).read_text())
++    d.pop("corrigendum_note")
++    (r / dest).write_text(json.dumps(d, indent=2) + "\n")
++    v = dpl.check()
++    assert len(v) == 1 and "corrigendum" in v[0], v
++
++
++# =====================================================================================
++# 2026-07-29, SECOND PASS. Three bypasses constructed against the file as it stood AFTER
++# the widening + the delete/rename/fail-closed fixes -- i.e. against a version already
++# believed clean. Each was demonstrated to score OK on real artifacts before being fixed,
++# so each test below is a replay of a working bypass, not a hypothetical.
++# =====================================================================================
++
++
++def test_emptying_a_corrigendum_in_place_is_refused(repo):
++    """Rule 2 compared key NAMES, so nulling the value kept the key and lost the record.
++
++    `_corrigendum_keys` returned every name-matching key regardless of value, so
++    `old_keys - new_keys` was empty when the key survived with its content gone. Confirmed
++    against the real `experiment_1680_polarfire_smoke_v2.json`: setting `corrigendum_pending`
++    to null scored a clean OK while destroying the TAUTOLOGY record that documents why the
++    artifact is quarantined.
++    """
++    _, art = repo
++    _write(art, corrigendum_pending=None)
++    v = dpl.check()
++    assert len(v) == 1, v
++    assert "corrigendum" in v[0] and "corrigendum_pending" in v[0], v
++
++
++def test_emptying_a_marker_in_place_is_refused(repo):
++    """Rule 3's condition was a bare `key in new`, i.e. a pure name check.
++
++    An emptied value cannot be caught by rule 4 either: `_strength_rank` returns None for a
++    non-string, and None is deliberately read as "unrankable", never as a downgrade. So
++    emptying was the one edit that defeated every rule at once.
++    """
++    _, art = repo
++    _write(art, solve_provenance="live_agent_self_discovery")
++    _git(repo[0], "add", "-A")
++    _git(repo[0], "commit", "-q", "-m", "add provenance")
++    _write(art, solve_provenance="")
++    v = dpl.check()
++    assert len(v) == 1, v
++    assert "EMPTIED" in v[0] and "solve_provenance" in v[0], v
++
++
++def test_an_emptied_marker_is_reported_as_emptied_not_as_dropped(repo):
++    """The two are different repairs, so they must not share a message.
++
++    A dropped field is restored by putting it back; an emptied one usually means a writer
++    overwrote it with a variable that was unset. Telling them apart in the refusal text is
++    what makes the message actionable.
++    """
++    _, art = repo
++    _write(art, corrigendum_note="")
++    v = dpl.check()
++    assert len(v) == 1 and "EMPTIED" in v[0], v
++    _write(art, corrigendum_note=dpl)  # sentinel: delete the key outright
++    v2 = dpl.check()
++    assert len(v2) == 1 and "EMPTIED" not in v2[0] and "lost" in v2[0], v2
++
++
++def test_empty_to_empty_stays_silent(repo):
++    """A field that never carried a record loses nothing, so it must not become noise.
++
++    This is the boundary the substantive-only filter has to respect: the fix must catch
++    substantive -> empty without also catching empty -> absent.
++    """
++    _, art = repo
++    _write(art, corrigendum_note="")
++    _git(repo[0], "add", "-A")
++    _git(repo[0], "commit", "-q", "-m", "empty note")
++    _write(art, corrigendum_note=dpl)  # delete the already-empty key
++    assert dpl.check() == [], "an already-empty field carried no record to lose"
++
++
++def test_an_unrelated_cleared_note_does_not_lift_a_quarantine(repo):
++    """`_cleared_deliberately` accepted ANY key pairing "cleared" with "note".
++
++    Confirmed bypass: `cache_cleared_note` -- a GPU-housekeeping remark -- cleared a
++    fabrication determination. `cache_cleared` is a REAL key shape in this corpus.
++
++    This is the same defect the sibling `_has_change_note` had already diagnosed and removed
++    from itself, so before this fix the two functions disagreed about a rule they both
++    implement.
++    """
++    _, art = repo
++    _write(
++        art,
++        flagged_adversarial=False,
++        cache_cleared_note="VRAM cache cleared between runs to avoid OOM",
++    )
++    v = dpl.check()
++    assert any("flagged_adversarial" in x and "LIFTS a quarantine" in x for x in v), v
++
++
++def test_a_one_word_cleared_note_is_not_a_rationale(repo):
++    """The exemption exists so a human states what they re-verified; "ok" is not that.
++
++    The 12-character floor matches `_has_change_note`'s, deliberately -- consistency between
++    the two exemptions is worth more than either threshold on its own.
++    """
++    _, art = repo
++    _write(art, flagged_adversarial=False, flagged_adversarial_cleared_note="ok")
++    assert dpl.check() != [], "a token string must not clear a determination"
++
++
++def test_the_documented_cleared_note_convention_still_passes(repo):
++    """The tightening must not break the escape hatch the module docstring advertises."""
++    _, art = repo
++    _write(
++        art,
++        flagged_adversarial=False,
++        flagged_adversarial_cleared_note=(
++            "Cleared 2026-07-29: DURATION_TOO_SHORT was a false positive under the "
++            "pre-2026-07-03 substrate taxonomy; re-ran adversarial_verify.py, 0 flagged."
++        ),
++    )
++    assert dpl.check() == [], "the documented convention must keep working"
++
++
++def test_a_strip_staged_but_hidden_in_the_working_tree_is_refused(repo):
++    """The index is what a commit LANDS, and it was never examined.
++
++    The default comparison is HEAD vs WORKING TREE, justified by pre-commit stashing unstaged
++    changes. That justification was verified against a real installed hook and does hold --
++    but it makes correctness depend on an external tool, and only under one driver. Running
++    the script directly (the invocation this file's own USAGE section documents for auditing)
++    on a tree where the index and the working tree disagree reported OK over a staged strip.
++    """
++    r, art = repo
++    original = art.read_text()
++    _write(art, flagged_adversarial=dpl, corrigendum_pending=dpl, corrigendum_note=dpl)
++    _git(r, "add", "results/experiment_1_thing.json")  # stage the stripped copy
++    art.write_text(original)  # working tree restored: looks innocent
++    v = dpl.check()
++    assert v, "a staged strip must be refused even when the working tree looks clean"
++    assert any("STAGED CONTENT" in x for x in v), v
++
++
++def test_a_violation_present_on_both_sides_is_reported_once(repo):
++    """The union must dedupe, or every ordinary refusal would print twice."""
++    _, art = repo
++    _write(art, flagged_adversarial=dpl)
++    _git(repo[0], "add", "-A")  # same content in the index and the working tree
++    v = dpl.check()
++    assert len([x for x in v if "LIFTS a quarantine" in x]) == 1, v
++    assert not any("STAGED CONTENT" in x for x in v), v
++
++
++def test_an_absent_index_path_reads_as_MISSING_not_as_a_guard_error(repo):
++    """`git show :<path>` has its OWN absent-path spelling, and it is not the `<rev>:` one.
++
++    Captured by running it rather than guessed:
++
++        git show HEAD:nope.json  ->  fatal: path 'nope.json' does not exist in 'HEAD'
++        git show :nope.json      ->  fatal: path 'nope.json' does not exist
++                                            (neither on disk nor in the index)
++
++    The second does NOT contain the substring "does not exist in", so before the index side
++    existed the regex covered only the first spelling.
++
++    Both outcomes happen to be fail-CLOSED (an unmatched stderr raises GuardError, which
++    refuses), so this is about the ACCURACY of the refusal rather than its direction: a routine
++    absent path should read as "the artifact is gone", not as "the guard could not run". The
++    call is defensive today -- a `--cached` diff only ever names paths that are in the index --
++    so it is asserted directly here rather than through `check()`, which is the honest way to
++    test a branch that the normal call graph does not reach.
++    """
++    r, _ = repo
++    assert dpl._load_index("results/experiment_1_thing.json") is not dpl.MISSING
++    assert dpl._load_index("results/definitely_not_staged.json") is dpl.MISSING
++
++
++def test_a_principle_wrapped_stamp_cannot_be_flipped_to_false_silently(repo):
++    """Rule 1's `is True` was an IDENTITY check against the raw value.
++
++    CLAUDE.md's Principle-Annotated Artifact Fields discipline permits ANY field to be written
++    as ``{"principle": ..., "value": ...}``. A wrapped stamp is a dict, so `raw is True` is
++    False, the OLD side was never recognised as flagged, and flipping it to a bare `false` with
++    NO cleared-note scored a clean OK -- the quarantine lifted silently.
++
++    This is origin bug #2 of the QA-Layer Authenticity Discipline reproduced inside the guard
++    that cites it: `_unwrap_principle`'s own docstring names that bug and says "This lint must
++    not repeat it".
++
++    Not hypothetical shape-wise: the corpus carries 1,699 principle-wrapped top-level fields
++    across 676 distinct names, including 44 artifacts that wrap `preconditions_checked`, which
++    is itself one of this lint's protected markers.
++    """
++    _, art = repo
++    _write(art, flagged_adversarial={"principle": "the gate keys off this", "value": True})
++    _git(repo[0], "add", "-A")
++    _git(repo[0], "commit", "-q", "-m", "wrap the stamp")
++    _write(art, flagged_adversarial=False)
++    v = dpl.check()
++    assert any("LIFTS a quarantine" in x for x in v), v
++
++
++def test_a_principle_wrapped_stamp_still_honours_a_real_cleared_note(repo):
++    """Unwrapping must not break the documented escape hatch for wrapped stamps."""
++    _, art = repo
++    _write(art, flagged_adversarial={"principle": "the gate keys off this", "value": True})
++    _git(repo[0], "add", "-A")
++    _git(repo[0], "commit", "-q", "-m", "wrap the stamp")
++    _write(
++        art,
++        flagged_adversarial=False,
++        flagged_adversarial_cleared_note=(
++            "Cleared 2026-07-29: re-ran adversarial_verify.py against this artifact, 0 flagged."
++        ),
++    )
++    assert dpl.check() == [], "a wrapped stamp must still be clearable on purpose"
++
++
++def test_a_principle_wrapped_stamp_counts_as_something_at_stake_on_deletion(repo):
++    """`_protected_content` had the same raw `value is True` check.
++
++    It decides whether deleting an artifact is this lint's business at all, so a wrapped stamp
++    failing that test is how a flagged artifact gets deleted without objection.
++    """
++    r, art = repo
++    _write(art, flagged_adversarial={"principle": "p", "value": True})
++    for k in ("corrigendum_pending", "corrigendum_note"):
++        _write(art, **{k: dpl})  # strip the other protections so ONLY the stamp is at stake
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "wrapped stamp only")
++    assert dpl._protected_content(json.loads(art.read_text())) == ["flagged_adversarial"]
++    _git(r, "rm", "-q", "results/experiment_1_thing.json")
++    v = dpl.check()
++    assert v and "DELETED" in v[0], v
++
++
++def test_cleared_deliberately_never_reports_a_still_flagged_artifact_as_cleared(repo):
++    """A wrapped stamp that is STILL True must not read as "deliberately cleared".
++
++    Asserted directly rather than through `check()`, because rule 1 only consults this helper
++    once it has decided the new side is not True -- so with rule 1 unwrapping, the wrapped-True
++    case never reaches here today. That makes this a guard against a FUTURE caller, and the
++    honest way to test an unreachable branch is to call it.
++
++    Without the unwrap, `{"principle":..., "value": True} is True` is False, the early return
++    is skipped, and the presence of any cleared-note makes the function answer "yes, cleared"
++    about an artifact whose stamp is still set.
++    """
++    still_flagged = {
++        "flagged_adversarial": {"principle": "the gate keys off this", "value": True},
++        "flagged_adversarial_cleared_note": "a note left over from an earlier clearing attempt",
++    }
++    assert dpl._cleared_deliberately(still_flagged) is False
++
++    genuinely_cleared = {
++        "flagged_adversarial": False,
++        "flagged_adversarial_cleared_note": "Cleared 2026-07-29: re-verified, 0 flagged.",
++    }
++    assert dpl._cleared_deliberately(genuinely_cleared) is True
+diff --git a/tests/python/test_test_suite_mutation_check.py b/tests/python/test_test_suite_mutation_check.py
+index fe67f66c17..b5dc31604e 100644
+--- a/tests/python/test_test_suite_mutation_check.py
++++ b/tests/python/test_test_suite_mutation_check.py
+@@ -23,6 +23,7 @@ from __future__ import annotations
+ import json
+ import subprocess
+ import sys
++import uuid
+ from pathlib import Path
+ 
+ import pytest
+@@ -67,13 +68,31 @@ def repo(tmp_path, monkeypatch):
+     monkeypatch.setattr(tsm, "REPO", r)
+     monkeypatch.setattr(tsm, "SNAPSHOT", r / "ops" / ".test_suite_mutation_snapshot.json")
+     monkeypatch.setattr(tsm, "PENDING", r / "ops" / ".test_suite_mutation_pending.json")
++    # RUNS holds the per-run snapshots and pending markers that replaced the two single files.
++    # It MUST be redirected for the same reason as BACKUP, and forgetting it is not hypothetical:
++    # the first run of these tests against the per-run layout wrote 11 snapshot files into the
++    # REAL repo's ops/.test_suite_mutation_runs/ from four xdist workers, because the fixture
++    # had been written before the constant existed. A test suite that litters the tree it is
++    # checking is precisely the hazard this module exists to detect, so
++    # `test_no_module_state_path_escapes_the_throwaway_repo` now fails if a NEW state constant
++    # is ever added without being redirected here.
++    monkeypatch.setattr(tsm, "RUNS", r / "ops" / ".test_suite_mutation_runs")
+     # Without this the tests would write pre-revert backups into the REAL repo's
+     # ops/.test_suite_mutation_backup/ -- a test suite that litters the tree it is checking is
+     # exactly the hazard this module exists to detect.
+     monkeypatch.setattr(tsm, "BACKUP", r / "ops" / ".test_suite_mutation_backup")
++    # The run id is otherwise derived from the parent PID, which every xdist worker shares -- so
++    # without this, concurrent workers would collide on one snapshot name and the ambiguity
++    # refusal would fire inside unrelated tests.
++    monkeypatch.setenv(tsm.RUN_ID_ENV, f"test-{uuid.uuid4().hex[:12]}")
+     return r, art
+ 
+ 
++def _markers(tsm_mod=tsm) -> list[Path]:
++    """Every pending marker currently blocking a commit, wherever the layout puts them."""
++    return tsm_mod.marker_paths()
++
++
+ def test_a_rewrite_of_a_committed_artifact_is_detected_and_named(repo):
+     """THE ORIGIN INCIDENT, in miniature: the experiment script rewrites its own artifact.
+ 
+@@ -191,8 +210,9 @@ def test_the_wrapper_writes_a_pending_marker_when_it_does_not_restore(repo):
+         do_restore=False,
+     )
+     assert rc == 1, "a detected mutation must be a non-zero exit"
+-    assert tsm.PENDING.exists()
+-    marker = json.loads(tsm.PENDING.read_text())
++    markers = _markers()
++    assert len(markers) == 1, "the run must leave exactly one marker"
++    marker = json.loads(markers[0].read_text())
+     assert marker["modified_tracked_files"] == ["results/experiment_3946_r11l_first_solve.json"]
+ 
+ 
+@@ -221,13 +241,19 @@ def test_a_clean_run_clears_a_stale_marker(repo):
+ 
+ 
+ def test_the_gate_refuses_a_commit_while_the_marker_exists(repo):
+-    """The pre-commit interlock. Exit 1 is what actually stops the unattended agent."""
+-    tsm.PENDING.write_text(
+-        json.dumps(
+-            {"command": ["pytest", "tests/python"], "modified_tracked_files": ["results/x.json"]}
+-        )
+-        + "\n"
+-    )
++    """The pre-commit interlock. Exit 1 is what actually stops the unattended agent.
++
++    FIXTURE CORRECTED 2026-07-29 (not the assertion). This named ``results/x.json``, a path that
++    does not exist in the throwaway repo and is not dirty -- so it described a marker whose
++    damage is already resolved, while its docstring describes the opposite ("a test run rewrote
++    files and they were not restored"). Under the per-run layout a marker retires when every file
++    it names is clean again, so the old fixture was asserting that a RESOLVED marker keeps
++    refusing, which would wedge commits forever after a restore. The artifact is now genuinely
++    rewritten, which is the situation the test is about.
++    """
++    _, art = repo
++    art.write_text(json.dumps({"experiment": 3946, "duration_s": 0.01}) + "\n")
++    tsm.write_pending(["results/experiment_3946_r11l_first_solve.json"], ["pytest", "tests/python"])
+     assert tsm.cmd_gate() == 1
+ 
+ 
+@@ -242,10 +268,36 @@ def test_a_corrupt_marker_still_refuses_rather_than_crashing(repo):
+     assert tsm.cmd_gate() == 1
+ 
+ 
+-def test_check_without_a_snapshot_is_a_no_op_not_a_failure(repo):
+-    """A pre-commit hook that hard-failed on a missing snapshot would block every fresh clone."""
++def test_check_without_a_baseline_refuses_rather_than_reporting_a_clean_tree(repo):
++    """EXPECTATION DELIBERATELY REVERSED 2026-07-29 -- recorded, not silently flipped.
++
++    This test used to be ``test_check_without_a_snapshot_is_a_no_op_not_a_failure`` and asserted
++    ``main(["--check"]) == 0``, reasoning that "a pre-commit hook that hard-failed on a missing
++    snapshot would block every fresh clone".
++
++    The reasoning does not apply to this command. ``--check`` is NOT a pre-commit hook -- ``--gate``
++    is, and ``--gate`` keys off pending markers, not snapshots, so it still passes on a fresh clone
++    (pinned by ``test_the_gate_passes_when_there_is_nothing_pending``). What exit 0 actually meant
++    here was "the tracked tree is where you left it", which is this tool's documented contract for
++    that code, asserted on the strength of never having looked. That is the same fail-open shape as
++    the old ``_git`` swallowing errors, and it is the reason the ambiguous-baseline case can be
++    handled coherently: with no baseline of its own the honest answer is "ask me again with a run
++    id", never "fine".
++    """
+     assert not tsm.SNAPSHOT.exists()
+-    assert tsm.main(["--check"]) == 0
++    assert tsm.find_snapshots() == []
++    assert tsm.main(["--check"]) == 1
++
++
++def test_the_gate_still_passes_on_a_fresh_clone(repo):
++    """The fresh-clone concern the reversed test above was protecting, pinned where it belongs.
++
++    Making ``--check`` refuse without a baseline is only safe because the PRE-COMMIT command is a
++    different one, and it does not need a baseline at all.
++    """
++    assert tsm.find_snapshots() == []
++    assert not tsm.marker_paths()
++    assert tsm.cmd_gate() == 0
+ 
+ 
+ def test_the_detector_never_edits_anything_unless_asked(repo):
+@@ -266,6 +318,8 @@ def test_the_live_repo_has_no_unresolved_suite_mutation(repo, monkeypatch):
+     it away) so the assertion is about the live tree, not the throwaway one.
+     """
+     monkeypatch.setattr(tsm, "PENDING", REPO / "ops" / ".test_suite_mutation_pending.json")
++    monkeypatch.setattr(tsm, "RUNS", REPO / "ops" / ".test_suite_mutation_runs")
++    monkeypatch.setattr(tsm, "REPO", REPO)
+     assert tsm.cmd_gate() == 0, (
+         "a test run rewrote tracked files and they were not restored -- see the marker file"
+     )
+@@ -313,22 +367,37 @@ def test_arm_from_pytest_arms_the_gate_without_the_run_wrapper(repo):
+     muts = tsm.arm_from_pytest(baseline, ["pytest", "tests/python/test_experiment_3946.py"])
+ 
+     assert muts == ["results/experiment_3946_r11l_first_solve.json"]
+-    assert tsm.PENDING.exists(), "the marker is what the pre-commit gate keys off"
++    markers = _markers()
++    assert markers, "the marker is what the pre-commit gate keys off"
+     assert tsm.cmd_gate() == 1, "and the gate must now refuse"
+ 
+-    recorded = json.loads(tsm.PENDING.read_text())
++    recorded = json.loads(markers[0].read_text())
+     assert recorded["modified_tracked_files"] == muts
+     assert "pytest" in recorded["command"], "the marker names the run that caused it"
+ 
+ 
+-def test_arm_from_pytest_clears_a_stale_marker_on_a_clean_run(repo):
+-    """A clean run must DISARM, or one bad run would block commits forever."""
+-    r, _ = repo
+-    tsm.write_pending(["results/x.json"], ["pytest", "old"])
+-    assert tsm.cmd_gate() == 1
++def test_a_marker_retires_once_the_rewrite_it_names_is_undone(repo):
++    """A clean run must DISARM, or one bad run would block commits forever.
++
++    Was ``test_arm_from_pytest_clears_a_stale_marker_on_a_clean_run``. Same property, but the
++    mechanism it pins changed for a reason: disarming used to be an unconditional
++    ``PENDING.unlink()`` on any clean run, which let a CONCURRENT workflow's clean run switch off
++    an interlock this one had just armed (Race 1, replayed in the module docstring). Retirement is
++    now derived from the tree -- a marker retires exactly when every file it names is clean again
++    -- so this test drives a REAL rewrite and a REAL restore rather than a marker naming a path
++    that was never dirty.
++    """
++    _, art = repo
++    before = art.read_bytes()
++    baseline = tsm.dirty_tracked()
++    art.write_text(json.dumps({"experiment": 3946, "duration_s": 9.99}) + "\n")
+ 
++    assert tsm.arm_from_pytest(baseline, ["pytest", "old"]) != []
++    assert tsm.cmd_gate() == 1, "armed while the rewrite is on disk"
++
++    art.write_bytes(before)  # the operator restores it
+     assert tsm.arm_from_pytest(tsm.dirty_tracked(), ["pytest", "new"]) == []
+-    assert not tsm.PENDING.exists()
++    assert not tsm.marker_paths(), "the marker must retire once its damage is gone"
+     assert tsm.cmd_gate() == 0
+ 
+ 
+@@ -363,3 +432,242 @@ def test_a_file_already_dirty_before_the_run_is_not_blamed_on_it(repo):
+ 
+     assert tsm.arm_from_pytest(baseline, ["pytest"]) == []
+     assert not tsm.PENDING.exists()
++
++
++# =========================================================================================
++# CONCURRENCY (2026-07-29 review). Two or three workflows share this working tree routinely,
++# and the first version kept ONE snapshot and ONE pending marker, both rewritten by every run.
++# Each race below was reproduced against the committed code before it was fixed; these are the
++# regression tests for the reproductions.
++# =========================================================================================
++
++
++def test_a_concurrent_clean_run_cannot_disarm_another_runs_interlock(repo):
++    """RACE 1, the interlock switching itself off. The worst of the two by a distance.
++
++    Reproduced against the committed version in a throwaway repo: workflow A detects a rewrite
++    and arms the marker; workflow B then finishes an unrelated CLEAN run, whose unconditional
++    ``PENDING.unlink()`` deletes A's marker. ``--gate`` afterwards printed OK and exited 0 with
++    A's rewrite still sitting in the tree as ``M results/artA.json`` -- i.e. a passing test run
++    turned off the only thing standing between a green suite and a published rewrite.
++    """
++    _, art = repo
++    other = art.parent / "second_artifact.json"
++    other.write_text('{"experiment": 1}\n')
++    _git(art.parent.parent, "add", "-A")
++    _git(art.parent.parent, "commit", "-q", "-m", "second")
++
++    # Workflow A: a run that rewrites the record and does not restore it.
++    baseline_a = tsm.dirty_tracked()
++    art.write_text('{"experiment": 3946, "duration_s": 9.99}\n')
++    assert tsm.arm_from_pytest(baseline_a, ["pytest", "-k", "A"]) != []
++    assert tsm.cmd_gate() == 1
++
++    # Workflow B: an unrelated run that changes nothing. It must not clear A's marker.
++    assert tsm.arm_from_pytest(tsm.dirty_tracked(), ["pytest", "-k", "B"]) == []
++
++    assert tsm.cmd_gate() == 1, "B's clean run must NOT disarm the interlock A armed"
++    assert "duration_s" in art.read_text(), "and A's rewrite is still on disk, unpublished"
++
++
++def test_two_runs_arming_at_once_both_keep_their_own_marker(repo):
++    """One shared marker file loses information the moment two runs arm it.
++
++    The old layout wrote a single file, so the second run's file list REPLACED the first's; the
++    first run's rewrite then stopped being named by anything and became unguarded as soon as the
++    second was resolved. One file per arming event makes that structurally impossible.
++    """
++    r, art = repo
++    other = r / "results" / "other.json"
++    other.write_text('{"experiment": 2}\n')
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "other")
++
++    # EACH RUN TAKES ITS OWN BASELINE, which is what makes this a real test of the layout.
++    # An earlier draft reused one baseline for both, so the second run's mutation list happened to
++    # contain BOTH files -- and a single shared marker therefore still named both. Mutation
++    # testing caught it: reverting `write_pending` to the one-file layout left the suite green.
++    # With per-run baselines each marker names exactly one file, so a shared file loses one.
++    base_one = tsm.dirty_tracked()
++    art.write_text('{"experiment": 3946, "duration_s": 1.0}\n')
++    tsm.arm_from_pytest(base_one, ["pytest", "run-one"])
++
++    base_two = tsm.dirty_tracked()  # run two starts with run one's rewrite already in flight
++    other.write_text('{"experiment": 2, "changed": true}\n')
++    tsm.arm_from_pytest(base_two, ["pytest", "run-two"])
++
++    markers = tsm.marker_paths()
++    assert len(markers) == 2, "one marker per arming event; a shared file would show 1"
++    named = set()
++    for m in markers:
++        named |= set(json.loads(m.read_text())["modified_tracked_files"])
++    assert named == {"results/experiment_3946_r11l_first_solve.json", "results/other.json"}, (
++        "a single shared marker would have lost run one's file when run two overwrote it"
++    )
++    assert tsm.cmd_gate() == 1
++
++
++def test_one_workflows_baseline_cannot_be_overwritten_by_another(repo):
++    """RACE 2, the false negative: A reads B's baseline and reports a real rewrite as OK.
++
++    Reproduced against the committed version: A snapshots on a clean tree; B edits the same file
++    in flight and snapshots (overwriting the single shared file); A's run then rewrites that file;
++    A's ``--check`` reads B's baseline, finds the file listed as "already dirty", and prints
++    "OK -- no tracked file was modified". Per-run baselines make each workflow's snapshot
++    unreachable from the other.
++    """
++    _, art = repo
++    tsm.snapshot("wfA")
++    art.write_text('{"experiment": 3946, "in_flight": true}\n')  # B's concurrent edit
++    tsm.snapshot("wfB")
++    art.write_text('{"experiment": 3946, "duration_s": 9.99}\n')  # A's run rewrites it
++
++    assert tsm.mutations(tsm._load_snapshot("wfA")) == [
++        "results/experiment_3946_r11l_first_solve.json"
++    ], "A must still see the rewrite its own baseline predates"
++    assert tsm.mutations(tsm._load_snapshot("wfB")) == [], (
++        "and B must still not be blamed for work it had already started"
++    )
++
++
++def test_check_refuses_when_several_baselines_could_be_meant(repo, monkeypatch):
++    """Concurrent workflows in this project can share a PPID, so auto-matching can be ambiguous.
++
++    Answering anyway is Race 2 with extra steps -- picking an arbitrary other run's baseline is
++    exactly how a real rewrite gets reported as OK. So ambiguity is surfaced with the candidate
++    run ids, never resolved by guessing.
++    """
++    monkeypatch.delenv(tsm.RUN_ID_ENV, raising=False)
++    tsm.snapshot()
++    tsm.snapshot()
++    assert len(tsm.find_snapshots()) == 2
++
++    with pytest.raises(tsm.AmbiguousSnapshot):
++        tsm._load_snapshot()
++    assert tsm.main(["--check"]) == 1
++
++
++def test_check_honours_a_pinned_run_id_from_the_environment(repo, monkeypatch, capsys):
++    """Found by replaying Race 2: `--check` consulted the env var when WRITING but not READING.
++
++    `resolve_run_id` invents a fresh auto id when nothing is pinned, which is right for taking a
++    new baseline and wrong for finding an existing one -- so every ``--check`` under a pinned
++    ``$CARNOT_MUTATION_RUN_ID`` silently fell through to the session glob and reported OK.
++
++    THE ASSERTION HAS TO BE ABOUT THE OUTPUT, not just the exit code. An earlier draft asserted
++    only ``== 1``, which BOTH branches satisfy -- finding the baseline and reporting the rewrite
++    exits 1, and failing to find any baseline also exits 1 (it refuses). Mutation testing caught
++    that: reverting the read-side resolver left the suite green. So this pins WHICH refusal.
++    """
++    monkeypatch.setenv(tsm.RUN_ID_ENV, "pinned-workflow")
++    tsm.snapshot()
++    assert (tsm.RUNS / "pinned-workflow.snapshot.json").exists()
++
++    _, art = repo
++    art.write_text('{"experiment": 3946, "duration_s": 7.7}\n')
++    assert tsm.main(["--check"]) == 1
++    out = capsys.readouterr().out
++    assert "MODIFIED BY THE RUN" in out, (
++        f"must REPORT the rewrite, not refuse for lack of a baseline: {out}"
++    )
++    assert "results/experiment_3946_r11l_first_solve.json" in out
++    assert "no baseline for this run" not in out
++
++
++def test_a_git_failure_refuses_the_gate_instead_of_reporting_a_clean_tree(repo, monkeypatch):
++    """FAIL CLOSED. ``_git`` used to return "" on a non-zero exit, so a broken git produced an
++    empty dirty-set, which produced "OK -- no tracked file was modified", which is a confident
++    all-clear over a tree nobody managed to look at. ``--gate`` is a pre-commit hook: the one
++    moment its answer matters is the moment a wrong answer publishes the rewrite.
++    """
++
++    def boom(*_a, **_k):
++        raise tsm.GitError("git status failed (exit 128): not a git repository")
++
++    monkeypatch.setattr(tsm, "dirty_tracked", boom)
++    assert tsm.cmd_gate() == 1, "a gate that cannot see the tree must refuse, not pass"
++    assert tsm.main(["--check"]) == 1
++
++
++def test_git_returning_nonzero_raises_rather_than_looking_like_a_clean_tree(repo):
++    """The primitive itself, so the fail-open cannot be reintroduced one layer down."""
++    with pytest.raises(tsm.GitError):
++        tsm._git("cat-file", "-p", "definitely-not-an-object")
++
++
++def test_an_unreadable_marker_is_never_retired(repo):
++    """Unreadable is not the same as resolved.
++
++    Retirement is evidence-based -- every file the marker names is clean again -- so a marker
++    whose evidence cannot be read must keep refusing. Otherwise corrupting a marker would be a
++    way to clear the gate.
++    """
++    (tsm.RUNS).mkdir(parents=True, exist_ok=True)
++    bad = tsm.RUNS / "corrupt.pending.json"
++    bad.write_text("{not json")
++    empty = tsm.RUNS / "empty.pending.json"
++    empty.write_text(json.dumps({"modified_tracked_files": []}) + "\n")
++
++    assert set(tsm.prune_stale_markers()) == {bad, empty}
++    assert bad.exists() and empty.exists()
++    assert tsm.cmd_gate() == 1
++
++
++def test_a_legacy_single_marker_still_blocks_after_the_upgrade(repo):
++    """A tree that armed the OLD interlock must not silently unblock when this version lands."""
++    _, art = repo
++    art.write_text('{"experiment": 3946, "duration_s": 5.0}\n')
++    tsm.PENDING.parent.mkdir(parents=True, exist_ok=True)
++    tsm.PENDING.write_text(
++        json.dumps(
++            {
++                "command": ["pytest"],
++                "modified_tracked_files": ["results/experiment_3946_r11l_first_solve.json"],
++            }
++        )
++        + "\n"
++    )
++    assert tsm.cmd_gate() == 1
++
++
++def test_no_module_state_path_escapes_the_throwaway_repo(repo):
++    """The fixture must redirect EVERY state path, and this fails if a new one is added.
++
++    Not hypothetical: the first run of these tests against the per-run layout wrote 11 snapshot
++    files into the REAL repo, from four xdist workers, because ``RUNS`` was added to the module
++    without being added to the fixture. A test suite that writes into the tree it is guarding is
++    the exact hazard this module exists to detect, so the guard is now mechanical.
++    """
++    r, _ = repo
++    for name in ("SNAPSHOT", "PENDING", "RUNS", "BACKUP", "REPO"):
++        p = Path(getattr(tsm, name))
++        assert r in p.parents or p == r, (
++            f"tsm.{name} points at {p}, outside the throwaway repo {r} -- add it to the fixture"
++        )
++
++
++def test_the_legacy_shared_baseline_is_not_used_even_when_present(repo):
++    """The asymmetry that makes the legacy compatibility story safe.
++
++    A stale MARKER is still honoured, because honouring it can only make the gate refuse MORE.
++    A stale BASELINE is not, because honouring it makes the gate refuse LESS: it is the shared
++    mutable cell any other workflow may have overwritten, so reading it as if it were yours is
++    Race 2 -- which is how a genuine rewrite gets reported as OK. An earlier draft of this fix
++    kept the fallback "for in-flight compatibility" and thereby preserved the hole.
++    """
++    _, art = repo
++    tsm.SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
++    tsm.SNAPSHOT.write_text(
++        json.dumps(
++            {
++                "taken_at": "2026-07-29T14:54:02+00:00",
++                # someone else's baseline, claiming this artifact was ALREADY dirty
++                "already_dirty": {"results/experiment_3946_r11l_first_solve.json": " M"},
++            }
++        )
++        + "\n"
++    )
++    art.write_text('{"experiment": 3946, "duration_s": 9.99}\n')
++
++    assert tsm._load_snapshot() is None, "the shared baseline must not be adopted"
++    assert tsm.main(["--check"]) == 1, "and with no baseline of its own, --check refuses"
+-- 
+2.55.0
+

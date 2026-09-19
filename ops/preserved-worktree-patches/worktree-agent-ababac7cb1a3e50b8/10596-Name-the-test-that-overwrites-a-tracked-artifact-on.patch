@@ -1,0 +1,104 @@
+From b24c5e9c24a083439f04fb89436d66f7964657fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 03:38:29 -0400
+Subject: [PATCH 10596/11362] Name the test that overwrites a tracked artifact
+ on every full-suite run
+
+Caught live while a conductor child ran the full suite: git status showed
+results/experiment_1822_rtl_synth.log modified. The Test-Run Record Integrity
+Discipline predicted this class; this entry supplies the culprit.
+
+test_experiment_1822_rtl_synth.py::test_req_hw_056_synth_constraints shells out to
+`make synth-constraints`, whose recipe hardcodes the output path
+`> results/experiment_1822_rtl_synth.log`. The test cannot redirect it, so every
+full-suite run re-runs yosys over a tracked historical log.
+
+No damage this time, by luck rather than design: the logfile hash is identical
+(1855ef30ab), so the synthesis result is unchanged and only wall-clock timings and
+peak memory moved. A toolchain change would rewrite the substance just as silently.
+
+The entry carries the fix -- parameterise the recipe's output directory and have
+the test pass tmp_path -- plus a trap found while writing it. The test asserts on
+results/experiment_1822_rtl_synth.json, which this recipe never writes, so that
+assertion currently passes against a checked-in file the test did not produce.
+Pointing the test at tmp_path will expose it, and both need fixing together or the
+test goes red for a second unrelated reason.
+
+Not fixed here: the suite was running through that Makefile target at the time.
+Editing a recipe mid-run risks a confusing failure that would land in the
+conductor's own FAIL count. It belongs between runs, the same call made earlier
+tonight about the eval's per-game write.
+
+Two other observations from the window, both checked and benign. The GPU reaper
+logged SKIP protected server for the live llama-server, so that protection works.
+Two gitea push failures looked like a mirror outage until counted: exactly 2 in 2
+days, both inside one 21-second window, and all five outer-loop commits are present
+on the canonical remote.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 47 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 5d4d37cb8a..a5706dc28b 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,53 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### NEW 2026-09-01: a test re-runs yosys and overwrites a tracked artifact on every full-suite run
++
++Caught live at 07:35Z while a conductor codex child was running the full suite. `git status`
++showed `results/experiment_1822_rtl_synth.log` modified. This is the Test-Run Record Integrity
++Discipline's rule 2 ("a test must never write tracked state"), with a named culprit.
++
++**The chain, end to end.** `tests/python/test_experiment_1822_rtl_synth.py::
++test_req_hw_056_synth_constraints` runs `subprocess.run(["make", "synth-constraints"])`. The
++Makefile recipe at line 50 is:
++
++    synth-constraints:
++    	mkdir -p results
++    	yosys -p "synth_xilinx -top potts_machine_v2 -flatten" rtl/potts_machine_v2.v > results/experiment_1822_rtl_synth.log
++
++The output path is hardcoded into the recipe, so the test cannot redirect it. Every full-suite run
++re-runs synthesis and overwrites the historical log.
++
++**Damage this time: none, and that is luck rather than design.** The diff is 2 lines. The
++logfile hash is IDENTICAL (`1855ef30ab`), so the synthesis RESULT did not change; only wall-clock
++timings and peak memory moved (3.60s -> 3.12s, 114.05 MB -> 116.44 MB) — run-to-run noise. A
++future toolchain change would rewrite the substance the same silent way.
++
++**The fix, small and unstarted.** Parameterise the recipe's output directory and have the test
++pass a temporary one:
++
++    OUT ?= results
++    synth-constraints:
++    	mkdir -p $(OUT)
++    	yosys -p "..." rtl/potts_machine_v2.v > $(OUT)/experiment_1822_rtl_synth.log
++
++then `subprocess.run(["make", "synth-constraints", f"OUT={tmp_path}"])` and assert against
++`tmp_path`. The test's real assertion is on `results/experiment_1822_rtl_synth.json`, which the
++recipe does not write at all — so that assertion is passing on a checked-in file the test never
++produced, and pointing the test at `tmp_path` will expose it. Fix both together or the test turns
++red for a second, unrelated reason.
++
++NOT DONE HERE: the full suite was actively running through this Makefile target at the time.
++Editing a recipe mid-run risks a confusing failure and would land in the conductor's own FAIL
++count. Do it between runs.
++
++**Also observed in the same window, both benign after checking:**
++- `ExpandedGPUReaper: SKIP protected server pid=375086` — the reaper correctly protected the live
++  llama-server. The protection works.
++- Two `Push failed: ssh://gitea.noblehunt.org` lines. Base rate checked: exactly 2 in 2 days,
++  both inside one 21-second window. Transient retry, NOT a mirror outage. All five outer-loop
++  commits are present on the canonical remote.
++
+ ### NEW 2026-09-01: a one-word substrate string evades the duration floor, and 463 distinct strings are in use
+ 
+ Found while validating exp6836, whose live re-check warned
+-- 
+2.55.0
+

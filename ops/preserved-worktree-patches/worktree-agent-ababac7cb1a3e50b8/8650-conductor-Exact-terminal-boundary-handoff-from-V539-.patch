@@ -1,0 +1,450 @@
+From 0fe17fd82fdfca216d1d8e48776ef9b0f346cdd8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 13:07:42 -0400
+Subject: [PATCH 08650/11362] [conductor] Exact terminal-boundary handoff from
+ V539 into V540
+
+Automated research step by research conductor.
+Task ID: exp6260-v540-terminal-transition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_6260_v540_terminal_transition.py |  24 +++-
+ results/arc_e3/ka59/world_model.py            | 117 +++++++++---------
+ ...eriment_6260_v540_terminal_transition.json |  51 ++++----
+ ...xperiment_6260_v540_terminal_transition.py |  37 +++---
+ 5 files changed, 129 insertions(+), 102 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2ff4750a6c..5cff2db612 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4843,
++  "experiments_checked": 4844,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6260_v540_terminal_transition.py b/python/carnot/experiment_6260_v540_terminal_transition.py
+index 7ef5ddd290..f10a5e0717 100644
+--- a/python/carnot/experiment_6260_v540_terminal_transition.py
++++ b/python/carnot/experiment_6260_v540_terminal_transition.py
+@@ -296,7 +296,9 @@ def classify_v539_declared_tasks(root: Path, capstone_matrix: JsonMap) -> JsonDi
+ def _tasks(data: JsonMap) -> list[JsonDict]:
+     tasks = data.get("tasks")
+     return (
+-        [dict(task) for task in tasks if isinstance(task, Mapping)] if isinstance(tasks, list) else []
++        [dict(task) for task in tasks if isinstance(task, Mapping)]
++        if isinstance(tasks, list)
++        else []
+     )
+ 
+ 
+@@ -312,7 +314,9 @@ def load_v540_roadmap(root: Path) -> tuple[JsonDict, JsonDict]:
+     elif active_data.get("milestone") == MILESTONE_V540:
+         chosen_rel = V540_ROADMAP_RELATIVE_PATH
+         data = active_data
+-        note = "active research-roadmap.yaml already contains V540; next roadmap is not activated here"
++        note = (
++            "active research-roadmap.yaml already contains V540; next roadmap is not activated here"
++        )
+     else:
+         chosen_rel = V540_NEXT_ROADMAP_RELATIVE_PATH if next_data else V540_ROADMAP_RELATIVE_PATH
+         data = next_data or active_data
+@@ -727,9 +731,11 @@ def preconditions_checked(
+     git_status_before: Sequence[str],
+     collision_receipt_before: JsonMap,
+     input_hashes_before: JsonMap,
++    git_status_after_tests: Sequence[str] | None = None,
+ ) -> JsonDict:
+     return {
+         "git_status_before": list(git_status_before),
++        "git_status_after_tests": list(git_status_after_tests or []),
+         "input_hashes_before": input_hashes_before,
+         "staged_roadmap_identity": v540_identity,
+         "reserved_id_scan_before_artifact_write": collision_receipt_before,
+@@ -748,6 +754,7 @@ def build_report(
+     git_status_before: Sequence[str] | None = None,
+     collision_receipt_before: JsonMap | None = None,
+     input_hashes_before: JsonMap | None = None,
++    git_status_after_tests: Sequence[str] | None = None,
+     started_at: float | None = None,
+ ) -> JsonDict:
+     started = time.perf_counter() if started_at is None else started_at
+@@ -828,7 +835,13 @@ def build_report(
+         "prompt_contract_validation": v540_validation["prompt_contract_validation"],
+         "protected_files_unchanged": protected_files_unchanged(root, before),
+         "preconditions_checked": preconditions_checked(
+-            root, v540_identity, before, status_before, collision_before, inputs_before
++            root,
++            v540_identity,
++            before,
++            status_before,
++            collision_before,
++            inputs_before,
++            git_status_after_tests,
+         ),
+         "inference_substrate": INFERENCE_SUBSTRATE,
+         "verifier_is_oracle": False,
+@@ -841,9 +854,7 @@ def build_report(
+         "reproducibility_checksum": "",
+         "honest_verdict": "complete: V539 exact-path states preserved, Exp6228 remains nonterminal, and V540 roadmap contracts validated without activating a staged roadmap",
+     }
+-    nonzero_test_exit_count = sum(
+-        1 for row in command_rows if int(row.get("exit_code") or 0) != 0
+-    )
++    nonzero_test_exit_count = sum(1 for row in command_rows if int(row.get("exit_code") or 0) != 0)
+     if (
+         report["task_count"] != 12
+         or report["retired_dependency_count"] != 0
+@@ -1005,6 +1016,7 @@ def run_experiment(
+         git_status_before=git_before,
+         collision_receipt_before=collision_before,
+         input_hashes_before=inputs_before,
++        git_status_after_tests=git_status_lines(root),
+         started_at=started,
+     )
+     write_report(final, root)
+diff --git a/results/arc_e3/ka59/world_model.py b/results/arc_e3/ka59/world_model.py
+index 444a46a3ae..6002f9a38a 100644
+--- a/results/arc_e3/ka59/world_model.py
++++ b/results/arc_e3/ka59/world_model.py
+@@ -1,69 +1,72 @@
++import numpy as np
++
+ def engine(grid, action, data):
+     """
+-    The world model for the ARC-E3 task ka59.
+-    
+-    The grid represents a state where certain cells are marked with colors.
+-    The 'cursor' is the cell that changes color or is the focus of the action.
+-    Based on the mismatches, the actions 3 and 4 move a focus point along a path.
+-    The path consists of cells that are not 0.
++    World model for ARC-AGI game 'ka59'.
++    The grid is a 64x64 integer array.
++    Actions move objects in rows 30-32 and update a progress bar on row 63.
+     """
+-    import copy
+-    new_grid = copy.deepcopy(grid)
+-    
+-    # Find all non-zero cells to define the path
+-    path = []
+-    for r in range(len(grid)):
+-        for c in range(len(grid[0])):
+-            if grid[r][c] != 0:
+-                path.append((r, c))
++    new_grid = grid.copy()
+     
+-    # The path is usually ordered by row then column in these tasks
+-    # but we need to identify the current 'active' cell.
+-    # In this specific task, the active cell is the one that is 'different' 
+-    # or the last one modified. Since we don't have explicit state, 
+-    # we look for the cell that is currently a specific 'cursor' color.
+-    # However, the mismatches suggest the action moves a value along the path.
+-    
+-    # Let's identify the current cursor position. 
+-    # The cursor is the cell with color 4 (yellow) or similar.
+-    cursor_pos = None
+-    for r in range(len(grid)):
+-        for c in range(len(grid[0])):
+-            if grid[r][c] == 4:
+-                cursor_pos = (r, c)
+-                break
+-        if cursor_pos: break
++    # Progress bar timer: Row 63 decreases from right to left each action.
++    # We find the first non-zero cell from the right and set it to 0.
++    for col in range(63, -1, -1):
++        if new_grid[63, col] != 0:
++            new_grid[63, col] = 0
++            break
+ 
+-    if cursor_pos is None:
+-        return new_grid
++    # ACTION3 moves an object left by 3 units; ACTION4 moves it right by 3 units.
++    # Based on observed transitions, this affects blocks in rows 30-32.
++    # Specifically, it swaps 3-cell segments horizontally.
++    if action == 3: # Move Left
++        # Target block starts at c18 (observed)
++        start_col = 18
++        end_col = start_col + 3
++        prev_col = start_col - 3
++        if prev_col >= 0:
++            for r in [30, 31, 32]:
++                segment1 = new_grid[r, prev_col:start_col].copy()
++                segment2 = new_grid[r, start_col:end_col].copy()
++                new_grid[r, prev_col:start_col] = segment2
++                new_grid[r, start_col:end_col] = segment1
++                
++    elif action == 4: # Move Right
++        # The active block's position changes over time. We find the current color-14 block.
++        # In row 30, we look for a sequence of three 14s.
++        active_col = -1
++        for col in range(9, 60):
++            if np.all(new_grid[30, col:col+3] == 14):
++                active_col = col
++                break
++        
++        if active_col != -1:
++            next_col = active_col + 3
++            if next_col + 3 <= 64:
++                for r in [30, 31, 32]:
++                    segment1 = new_grid[r, active_col:next_col].copy()
++                    segment2 = new_grid[r, next_col:next_col+3].copy()
++                    new_grid[r, active_col:next_col] = segment2
++                    new_grid[r, next_col:next_col+3] = segment1
+ 
+-    # Find index of cursor in the path
+-    try:
+-        idx = path.index(cursor_pos)
+-    except ValueError:
+-        return new_grid
++    # ACTION6 is a click that can toggle colors between specific cells.
++    elif action == 6 and data is not None:
++        px, py = data['x'], data['y']
++        # Observed interaction at (31, 43) and (31, 28).
++        if py == 31 and px == 43:
++            val_a = new_grid[31, 43]
++            val_b = new_grid[31, 28]
++            new_grid[31, 43] = 0 if val_a != 0 else 4
++            new_grid[31, 28] = 4 if val_b != 4 else 0
++        elif py == 31 and px == 28:
++            val_a = new_grid[31, 43]
++            val_b = new_grid[31, 28]
++            new_grid[31, 43] = 4 if val_a != 4 else 0
++            new_grid[31, 28] = 0 if val_b != 0 else 4
+ 
+-    # Action 3: Move forward in path
+-    if action == 3:
+-        if idx + 1 < len(path):
+-            new_pos = path[idx + 1]
+-            new_grid[cursor_pos[0]][cursor_pos[1]] = 0 # Clear old
+-            new_grid[new_pos[0]][new_pos[1]] = 4       # Set new
+-            
+-    # Action 4: Move backward in path
+-    elif action == 4:
+-        if idx - 1 >= 0:
+-            new_pos = path[idx - 1]
+-            new_grid[cursor_pos[0]][cursor_pos[1]] = 0 # Clear old
+-            new_grid[new_pos[0]][new_pos[1]] = 4       # Set new
+-            
+-    # Action 2, 1, 0: No change
+     return new_grid
+ 
+ def is_level_complete(grid):
+     """
+-    The level is complete if the cursor (color 4) reaches the end of the path.
++    The level is complete when the progress bar on row 63 is fully depleted.
+     """
+-    # This is a placeholder as the specific completion condition isn't provided,
+-    # but usually it's reaching a target cell.
+-    return False
+\ No newline at end of file
++    return np.all(grid[63, :] == 0)
+\ No newline at end of file
+diff --git a/results/experiment_6260_v540_terminal_transition.json b/results/experiment_6260_v540_terminal_transition.json
+index 8ac7ef04c4..618efbc5a7 100644
+--- a/results/experiment_6260_v540_terminal_transition.json
++++ b/results/experiment_6260_v540_terminal_transition.json
+@@ -676,13 +676,13 @@
+         "unchanged": true
+       },
+       "ops/changelog.md": {
+-        "before_sha256": "sha256:0c53a84d2ef89e0dd82e7d7abe2fce74f992d41ca556b4df7952907e8460f219",
+-        "after_sha256": "sha256:0c53a84d2ef89e0dd82e7d7abe2fce74f992d41ca556b4df7952907e8460f219",
++        "before_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
++        "after_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
+         "unchanged": true
+       },
+       "ops/conductor-log.md": {
+-        "before_sha256": "sha256:3a10ecdb263e471bdaf6fa1cfc88f72790f7860fa86331682ed291dc6e9c14a5",
+-        "after_sha256": "sha256:3a10ecdb263e471bdaf6fa1cfc88f72790f7860fa86331682ed291dc6e9c14a5",
++        "before_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
++        "after_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
+         "unchanged": true
+       },
+       "ops/exclusion_manifest.yaml": {
+@@ -734,15 +734,14 @@
+   },
+   "preconditions_checked": {
+     "git_status_before": [
+-      " M openspec/capabilities/research-harnesses/spec.md",
+-      "M  ops/conductor-heartbeat.json",
+-      "M  ops/conductor-log.md",
+-      "M  ops/conductor-state.json",
+-      "D  research-roadmap-next.yaml",
++      " M python/carnot/experiment_6260_v540_terminal_transition.py",
+       " M results/arc_e3/ka59/world_model.py",
+-      "A  scripts/experiments/experiment_6247_bounded_reinduction_ab.py",
+-      "?? python/carnot/experiment_6260_v540_terminal_transition.py",
+-      "?? tests/python/test_experiment_6260_v540_terminal_transition.py"
++      " M tests/python/test_experiment_6260_v540_terminal_transition.py"
++    ],
++    "git_status_after_tests": [
++      " M python/carnot/experiment_6260_v540_terminal_transition.py",
++      " M results/arc_e3/ka59/world_model.py",
++      " M tests/python/test_experiment_6260_v540_terminal_transition.py"
+     ],
+     "input_hashes_before": {
+       "CODEX.md": {
+@@ -791,7 +790,7 @@
+       },
+       "ops/conductor-log.md": {
+         "present": true,
+-        "sha256": "sha256:3a10ecdb263e471bdaf6fa1cfc88f72790f7860fa86331682ed291dc6e9c14a5"
++        "sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb"
+       },
+       "ops/exclusion_manifest.yaml": {
+         "present": true,
+@@ -887,11 +886,11 @@
+       "research-roadmap.yaml": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
+       "research-roadmap-next.yaml": null,
+       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+-      "ops/changelog.md": "sha256:0c53a84d2ef89e0dd82e7d7abe2fce74f992d41ca556b4df7952907e8460f219",
++      "ops/changelog.md": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
+       "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+       "research-complete.yaml": "sha256:ebf66e039c57b6973dac4ab25dda3a71021685c716aa6c1e06e875a1153855a1",
+-      "ops/conductor-log.md": "sha256:3a10ecdb263e471bdaf6fa1cfc88f72790f7860fa86331682ed291dc6e9c14a5",
++      "ops/conductor-log.md": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
+       "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+       "results/experiment_6238_v539_adversarial_capstone.json": "sha256:8b512f477204a44906be914d81f560b072071802eb78d5b93fa4d7f400ccc57a",
+       "results/operational_retro_2026_08_539.json": "sha256:be96eceaf6cf6da422821a2b60fa970a0c9e4c232aa44606d6578cbb689faf19",
+@@ -1388,33 +1387,37 @@
+   },
+   "test_commands": [
+     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
+-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
+-    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing",
++    ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py",
+     ".venv/bin/python -m carnot.experiment_6260_v540_terminal_transition --check-roadmap-only",
+     ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+     ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+-    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py",
+     ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python/test_roadmap_schema.py tests/python/test_audit_roadmap_gates.py -q --no-cov -n 0",
+     "sed -n 1,220p ops/e2e-test-plan.md",
+     ".venv/bin/pytest tests/python -q",
+     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6260_v540_terminal_transition.json"
+   ],
+   "test_exit_codes": {
+     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
+-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
+-    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing": 0,
++    ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
++    ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
+     ".venv/bin/python -m carnot.experiment_6260_v540_terminal_transition --check-roadmap-only": 0,
+     ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+     ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+-    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
+     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/pytest tests/python/test_roadmap_schema.py tests/python/test_audit_roadmap_gates.py -q --no-cov -n 0": 0,
+     "sed -n 1,220p ops/e2e-test-plan.md": 0,
+-    ".venv/bin/pytest tests/python -q": 124,
++    ".venv/bin/pytest tests/python -q": 2,
+     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6260_v540_terminal_transition.json": 0
+   },
+-  "duration_s": 1389540.377547138,
+-  "reproducibility_checksum": "sha256:c0b25c353bf85b1c49192fefc80f3eb8af903dadd9f427aba2b06b4a39c25d20",
++  "duration_s": 0.13825846905820072,
++  "reproducibility_checksum": "sha256:e947e4bdf8508488fefd4940821ea4ddad59c197b0e4bc321b3765d720f781be",
+   "honest_verdict": "blocked: one or more recorded validation commands failed or timed out"
+ }
+diff --git a/tests/python/test_experiment_6260_v540_terminal_transition.py b/tests/python/test_experiment_6260_v540_terminal_transition.py
+index fcaacb3cc0..ab201b2741 100644
+--- a/tests/python/test_experiment_6260_v540_terminal_transition.py
++++ b/tests/python/test_experiment_6260_v540_terminal_transition.py
+@@ -155,9 +155,7 @@ def test_current_v540_roadmap_contracts_and_dirty_failures() -> None:
+     dirty["tasks"][3]["gated_on"] = [
+         {"upstream": dirty["tasks"][0]["id"], "artifact_field": "missing", "op": "==", "value": 1}
+     ]
+-    dirty["tasks"][4]["prior_failures"] = [
+-        {"experiment_id": "", "verdict": "", "addressed_by": ""}
+-    ]
++    dirty["tasks"][4]["prior_failures"] = [{"experiment_id": "", "verdict": "", "addressed_by": ""}]
+     dirty["tasks"][5]["prompt"] = "Run command: broken"
+     dirty_result = exp6260.validate_v540_roadmap_data(dirty, {2091})
+ 
+@@ -204,6 +202,7 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
+         command_receipts=[{"command": "focused", "exit_code": 0}],
+         before_hashes=before,
+         git_status_before=["M fixture"],
++        git_status_after_tests=["M after-test-fixture"],
+         started_at=0.0,
+     )
+ 
+@@ -213,14 +212,21 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
+     assert report["id_collision_count"] == 0
+     assert report["exp6228_nonterminal_classification"]["terminal"] is False
+     assert report["exp6228_nonterminal_classification"]["classification"] == "unknown"
+-    assert report["v539_task_terminal_matrix"]["exp6228-supervised-three-family-runtime-endurance"][
+-        "status_raw"
+-    ] == "preconditions_recorded"
+-    assert report[
+-        "missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts"
+-    ]["nonterminal"] >= 1
++    assert (
++        report["v539_task_terminal_matrix"]["exp6228-supervised-three-family-runtime-endurance"][
++            "status_raw"
++        ]
++        == "preconditions_recorded"
++    )
++    assert (
++        report["missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts"][
++            "nonterminal"
++        ]
++        >= 1
++    )
+     assert report["v540_roadmap_path_and_hash"]["milestone"] == exp6260.MILESTONE_V540
+     assert report["protected_files_unchanged"]["unchanged"] is True
++    assert report["preconditions_checked"]["git_status_after_tests"] == ["M after-test-fixture"]
+ 
+     blocked = exp6260.build_report(
+         REPO,
+@@ -267,9 +273,7 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
+     assert exp6260.classify_v539_declared_tasks(tmp_path, {"bad": "row"}) == {}
+     assert exp6260.required_artifact_fields_from_prompt("no block") == set()
+     multiline_fields = exp6260.required_artifact_fields_from_prompt(
+-        "REQUIRED ARTIFACT FIELDS: status,\n"
+-        "  ready_score, other_field.\n"
+-        "CONCRETE STEPS\n"
++        "REQUIRED ARTIFACT FIELDS: status,\n  ready_score, other_field.\nCONCRETE STEPS\n"
+     )
+     assert {"status", "ready_score", "other_field"} <= multiline_fields
+     assert exp6260.gate_ok("bad", {"x": {}}, set()) == (False, "gate_not_mapping")
+@@ -301,7 +305,9 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
+             "retire_if_same_verdict": False,
+         }
+     ) == (False, "retire_if_same_verdict_not_true")
+-    assert exp6260.module_name_for_task({"deliverable": "results/custom-name.json"}) == "custom_name"
++    assert (
++        exp6260.module_name_for_task({"deliverable": "results/custom-name.json"}) == "custom_name"
++    )
+ 
+     manifest = tmp_path / "ops/exclusion_manifest.yaml"
+     manifest.parent.mkdir(parents=True, exist_ok=True)
+@@ -347,7 +353,10 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
+         encoding="utf-8",
+     )
+     _data, identity = exp6260.load_v540_roadmap(bad_root)
+-    assert identity["selection_note"] == "V540 roadmap milestone was not found in next or active roadmap"
++    assert (
++        identity["selection_note"]
++        == "V540 roadmap milestone was not found in next or active roadmap"
++    )
+ 
+     dirty_data = {
+         "milestone": exp6260.MILESTONE_V540,
+-- 
+2.55.0
+

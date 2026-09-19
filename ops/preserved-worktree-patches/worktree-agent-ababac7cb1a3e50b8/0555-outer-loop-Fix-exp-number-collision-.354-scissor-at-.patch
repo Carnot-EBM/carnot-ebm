@@ -1,0 +1,46 @@
+From 95e3ea6a4e9f0874b469b977f9758c2deea0d69b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 23:50:31 -0400
+Subject: [PATCH 00555/11362] [outer-loop] Fix exp number collision: .354
+ scissor-at-scale 3837 -> 3844
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The .353 roadmap (planner-generated) already assigned exp3837 to
+'learned-contribution-characterization' (exp3834-3843 span), which is running now.
+My .354 staging had reused 3837 for the verifier-moat scissor-at-scale task — a
+number collision (duplicate run script / result-artifact id / capstone-aggregation
+ambiguity). Renumbered the .354 scissor task to exp3844 (next free id). exp3833
+(LDT-gap) untouched; the .353 exp3837 is unaffected.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ research-roadmap-next.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index bea73bb149..89599ddc47 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -172,7 +172,7 @@ tasks:
+       exp3821-class HRM/TRM latent-symbol-bridge probe (Huginn already settled that recursive
+       latents are non-decodable; re-reading HRM's would only re-confirm the DT-P3 negative).
+ 
+-  - id: exp3837-verifier-error-independence-scissor-at-scale
++  - id: exp3844-verifier-error-independence-scissor-at-scale
+     operator_override: >
+       2026-06-04 operator directive (moat-durability confirmation-at-scale): exp3827
+       reported the error-independence moat SURVIVES (residual_catch=0.9000,
+@@ -195,7 +195,7 @@ tasks:
+     requires_gpu: true      # the SOTA reasoner must self-verify N>=1000 steps via llama.cpp on the internal RTX 3090.
+     estimated_wall_time_min: 75
+     inference_substrate: live_llm_inference   # loads + runs Qwen3.6-35B-A3B-GGUF for self-verification over N>=1000 items; duration floor 60s.
+-    deliverable: results/experiment_3837_verifier_error_independence_scissor_at_scale.json
++    deliverable: results/experiment_3844_verifier_error_independence_scissor_at_scale.json
+     prompt: |
+       CONTEXT. The Deep-Think post-bounded round (memory deep-think-post-bounded-2026-06,
+       P2) reframed the verifier MOAT as error-INDEPENDENCE, not raw AUROC: Carnot's value
+-- 
+2.55.0
+

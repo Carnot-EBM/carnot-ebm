@@ -1,0 +1,100 @@
+From 0cb3115ba2509f114a131dc1a700a038797f9867 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 22:16:32 -0400
+Subject: [PATCH 10571/11362] Record what commit 255035dfdb actually contains,
+ and why hooks never saw it
+
+That commit carries a conductor checkpoint message but its content is the fourth
+QA-layer widening (REQ-VERIFY-6802, SCENARIO-VERIFY-6802-D): _has_compute_bound_marker
+now recognises an artifact that claims a training run in its own title or verdict while
+naming no model, framework, or runner. That gap let experiment_746 declare
+"dualgpu_retrain_validated" in 1.73 seconds and pass the fabrication gate.
+
+The claim is read ONLY from the artifact's own self-describing fields, never from the
+whole blob. A retrospective that lists a training experiment is not a training run, and
+a whole-blob scan made 13 retros and closeout artifacts compute-bound. An honest
+blocked_* verdict is excluded too: it reports that nothing ran, so flagging it would
+punish exactly the honesty the Pre-Launch Preconditions Discipline asks for.
+
+The token list holds one word. "dualgpu" and "gpu" were measured and rejected -- they
+name infrastructure work (harness patches, enforcement audits, zombie detection) as
+often as a real run.
+
+Blast radius measured before landing, and again against the committed module: 16
+artifacts newly critical across all 5,915, every one a retrain claiming completion in
+1.7 to 31 seconds; 0 flags lost. Those 16 are NOT stamped here. Stamping historical
+records is a separate backfill decision that writes to evidence.
+
+5 of 5 mutations RED, source restored byte-identical. The 7 failures and 4 errors in the
+adjacent suite reproduce identically on the pre-change file, so they are not from this;
+one "error" is a teardown memory watchdog on a test that passes.
+
+Why the misleading message: the conductor's checkpoint path stages every dirty file
+straight from git diff and never consults claimed_by_other_sessions, so a declared scope
+binds the normal commit path and nothing else. It also commits with verification
+disabled, so no hook ran on the change. Hooks were run by hand afterwards and pass,
+including spec coverage, ruff and mypy. Filed in known-issues with a proposal to run
+hooks after a checkpoint and REPORT rather than refuse -- refusing would restore the
+data loss that disabling verification was added to prevent.
+
+A mutation marker was deleted deliberately to land this. It was armed by a concurrent
+run of test_experiment_6833's suite, and its only path was this file -- my own authored
+edit, caught inside that run's window. The marker recorded attributed_to_run: [] with
+write_observation: "recorded", meaning the observation worked and that test wrote nothing.
+So the marker held no genuine signal. This is the documented over-report: the tool diffs a
+shared working tree and cannot tell whose write it was. Nothing was reverted.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index c08794f0a9..488ff22d0b 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,40 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### NEW 2026-09-01: the conductor's checkpoint commit ignores scope claims and skips every hook
++
++Observed live. An outer-loop session declared `scripts/adversarial_verify.py` at 01:38 UTC,
++edited it, and at 02:00 UTC the conductor committed that edit as
++`255035dfdb [conductor] Checkpoint: preserve uncommitted work from interrupted run`.
++
++Two separate facts, both worth knowing before trusting a declaration.
++
++**The claim was not overruled. It was never consulted.** `claimed_by_other_sessions` runs in
++`git_commit_and_push`. The checkpoint path at `scripts/research_conductor.py:6333` builds its
++file list straight from `git diff --name-only` plus `git ls-files --others` and stages each one
++with `git add --`. No claim check exists on that path. So a declared scope constrains the normal
++conductor commit and does nothing on the checkpoint commit.
++
++**That is defensible, and should stay.** The checkpoint exists to stop work being lost when a run
++is interrupted. Unstaging a claimed path there would leave that path uncommitted at the exact
++moment the tree is least safe, which is the failure the path was written to prevent. The cost is
++attribution, not data. The work above survived intact and byte-identical.
++
++**The real gap is the hooks.** The checkpoint commits with verification disabled, for a stated
++and sound reason: pre-commit stashes unstaged changes and has destroyed them when a hook failed
++and the patch would not re-apply. But the effect is that anything swept by a checkpoint lands
++with ruff, mypy, spec-coverage, the canonical-URL lint, the scope lint and the ARC lints never
++having run. `_restore_dropped_determinations()` is called explicitly first, so the
++highest-value guard is covered; the rest are not.
++
++Concrete proposal, NOT implemented, because it is conductor surgery and deserves its own
++measurement: after a checkpoint commit succeeds, run the hooks over exactly the files it staged
++and report failures as a follow-up task. Report, never refuse and never revert. Refusing would
++restore the data-loss that disabling verification was added to prevent.
++
++Working rule until then: after a checkpoint commit sweeps your work, run
++`pre-commit run --files <the files>` by hand. The edit above was checked this way and is clean.
++
+ ### NEW 2026-08-25: 52 deterministic-replay tests are RED, for two causes that are both built in — OPERATOR DECISION NEEDED
+ 
+ **The finding.** 52 tests assert `result == replay` against a checked-in
+-- 
+2.55.0
+

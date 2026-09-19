@@ -1,0 +1,118 @@
+From 3ed8fa4337206e218d4334947864cd2d5abd9499 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 02:21:18 -0400
+Subject: [PATCH 10856/11362] [conductor] Operational retrospective for
+ milestone 2026.09.605
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 12 +++++
+ results/operational_retro_2026_09_605.json | 60 ++++++++++++++++++++++
+ 3 files changed, 79 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_605.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index fbeeaed527..df5d55d6eb 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6556,3 +6556,10 @@ The critical path for milestone .250:
+ - theme: compute-only relation work exposed a dominant critical path and weak task-level observability
+ - key result: honest operational negative — accelerator engagement was present, but phase-level cause, whole-task GPU efficiency, and parallel multi-model runner applicability remain unverified
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.605
++
++- exp_range: no data available this milestone
++- theme: one compute task dominated fallback timing while task-level phase and accelerator traces remained unavailable
++- key result: honest operational negative — the longest compute task is known, but its cause, full-task GPU efficiency, and parallel-model runner eligibility remain unverified
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c71b815d7f..36fb04bfc3 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18618,3 +18618,15 @@ Takes effect at the conductor's next re-exec on fresh committed source.
+ - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
+ - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
+ - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
++
++## 2026-09-03 — Milestone 2026.09.605 operational retrospective
++
++The reconstructed window contains 10 experiments and spans 13.2 minutes. Three
++experiments were compute-bound. SOTA plain-text relation generation with exact
++prefix guidance set the critical path at 12.32 minutes, but the available clock
++does not explain why. The locked compute-task idle field is false. The GPU
++snapshot cannot establish utilization across each task. No data available this
++milestone establishes parallel loading of 2 or more models or a missed
++DualGPURunner dispatch. Add task-owned phase, GPU, model-count, and runner
++receipts. Use DualGPURunner only for confirmed parallel multi-model work. The
++savings estimate is 0% because no timed alternative is available.
+diff --git a/results/operational_retro_2026_09_605.json b/results/operational_retro_2026_09_605.json
+new file mode 100644
+index 0000000000..bd5e2917cf
+--- /dev/null
++++ b/results/operational_retro_2026_09_605.json
+@@ -0,0 +1,60 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.605",
++  "generated_at": "2026-09-03T06:15:40Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 13.2,
++  "experiments_completed": 10,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "SOTA plain-text relation generation with exact prefix guidance",
++      "duration_minutes": 12.32,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V605 document-YAML execution and evidence contract",
++      "duration_minutes": 0.4,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V605 independent evidence capstone and branch disposition",
++      "duration_minutes": 0.25,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Independent qualified relation event-bank merge",
++      "duration_minutes": 0.16,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Exact relation ASP and isomorphic qualification shard",
++      "duration_minutes": 0.07,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 10 experiments in 13.2 minutes, including 3 compute-bound experiments. SOTA plain-text relation generation with exact prefix guidance was the longest compute-bound experiment at 12.32 minutes, but the supplied timing does not explain why.",
++  "bottlenecks_identified": [
++    "SOTA plain-text relation generation with exact prefix guidance formed the critical path at 12.32 minutes, but the fallback timestamps do not isolate its slow stage.",
++    "Disk modification-time reconstruction lacks task phase boundaries, so it cannot explain the longest compute run.",
++    "The GPU report is a point-in-time snapshot, not a task-window trace, so it cannot establish utilization efficiency across compute-bound execution.",
++    "No launch record states loaded-model concurrency or runner selection, so DualGPURunner eligibility cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Emit per-experiment phase clocks for model load, inference, validation, and artifact writing.",
++    "Capture task-owned GPU utilization samples from each compute task's start through its finish.",
++    "Record loaded-model concurrency and runner choice in each compute launch receipt.",
++    "Select DualGPURunner only when a launch receipt confirms that 2 or more models load in parallel.",
++    "Replace disk modification-time reconstruction with a live milestone event log when the git-log path has no milestone commits."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add one task-owned receipt that joins phase timing, GPU samples, loaded-model concurrency, and runner choice.",
++    "Write live start and finish events so milestone timing does not depend on disk modification times.",
++    "Dispatch confirmed parallel multi-model work through DualGPURunner while leaving single-model work on one GPU."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The locked task-level field does not flag GPU idle on compute-bound work. The available snapshot and fallback clock still leave the cause of the critical path and any parallel-model runner opportunity unverified, so the savings estimate remains 0 without a timed alternative."
++}
+-- 
+2.55.0
+

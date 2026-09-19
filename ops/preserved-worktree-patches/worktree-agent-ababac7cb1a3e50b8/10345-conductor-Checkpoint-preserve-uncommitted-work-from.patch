@@ -1,0 +1,43 @@
+From c3425a89d0f4749528b6f9737c634cead44e7de0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 02:16:50 -0400
+Subject: [PATCH 10345/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d9e20ee074..6998541e0e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-30T05:50:38Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-30T06:16:44Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8b1bcde6cf..3c92b89180 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16812,3 +16812,4 @@ The l |
+ | 2026-08-30 05:18 UTC | Live object-table fetch-on-demand A/B v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: t."""
+      pla |
+ | 2026-08-30 05:48 UTC | Independent Thermalizer factor-to-trajectory audit | OK | 109 passed, 1 warning in 22.80s |
++| 2026-08-30 06:14 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ff4e2c76d4..5442cee19f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-30T05:50:38Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-30T06:16:44Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

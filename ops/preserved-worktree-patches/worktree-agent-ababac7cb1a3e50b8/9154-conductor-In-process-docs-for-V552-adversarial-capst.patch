@@ -1,0 +1,23 @@
+From 4852f36a3fd137a5361f706dd1dd9dbb930ba71e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 08:11:00 -0400
+Subject: [PATCH 09154/11362] [conductor] In-process docs for V552 adversarial
+ capstone, claim reconciliation, and next-question decision
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 895d330ae8..e6c627c47a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16748,3 +16748,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-14: Independent execution-grounded CSL authenticity and safety audit (✅ Complete) — honest_verdict=complete_null: V552 CSL chain audit completed; reported metrics do not recompute from rows or critical attacks remain open; results/experiment_6420_csl_authenticity_safety_audit.json
+ - 2026-08-14: Gated on Exp6413 receipts: default-off live ARC executed-policy influence A/B (✅ Complete) — honest_verdict=complete: opt_in_active_goal_changed_legal_executed_policy_no_solve_claim; results/experiment_6421_arc_opt_in_executed_policy_ab.json
+ - 2026-08-14: Independent held-family ARC executed-policy safety audit (✅ Complete) — honest_verdict=complete: held_family_policy_safety_audit_ready_no_solve_or_registry_claim; results/experiment_6422_arc_held_family_policy_safety_audit.json
++- 2026-08-14: V552 adversarial capstone, claim reconciliation, and next-question decision (⚠️ Blocked) — honest_verdict=complete: V552 reconciled with authentic receipt layer preserved, flagged factor public claims blocked, CSL public claim null, internal ARC policy influence preserved, and public ARC claim false; results/experiment_6423_v552_adversarial_capstone.json
+-- 
+2.55.0
+

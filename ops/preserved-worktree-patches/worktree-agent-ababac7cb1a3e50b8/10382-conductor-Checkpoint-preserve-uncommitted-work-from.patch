@@ -1,0 +1,59 @@
+From 7d14aada3685435043152a588b7dce00dd270100 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 08:40:06 -0400
+Subject: [PATCH 10382/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 3 +++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 4a6be71f04..0181e3727d 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1632,3 +1632,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_6773_csl_owned_lease_contract.json
++
++## experiment_6776_arc_shadow_supervisor_accrual.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6776_arc_shadow_supervisor_accrual.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 49a1acfc6d..ddc47eea97 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-30T12:37:52Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-08-30T12:39:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f4635609bf..5e41237982 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16828,3 +16828,6 @@ The l |
+ | 2026-08-30 11:55 UTC | Procedural versus trace memory prospective A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6773-csl-owned-lease-contract) |
+ | 2026-08-30 11:55 UTC | Independent continuous-learning durability audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6774-procedural-vs-trace-csl-ab-v2) |
+ | 2026-08-30 12:35 UTC | Window-120 shadow-supervisor evidence accrual | OK | 89 passed, 1 warning in 11.39s |
++| 2026-08-30 12:37 UTC | Live selfparse tool-gap transport receipt | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supe |
++| 2026-08-30 12:40 UTC | Selfparse actions-to-progress A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6777-arc-tool-gap-transport) |
++| 2026-08-30 12:40 UTC | Independent ARC tool and supervisor adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6778-arc-selfparse-actions-to-progress-ab |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 51d0a2c30a..038d2fb2fc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-30T12:37:52Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 19, "phase": "iteration_start", "started_at": "2026-08-30T12:39:57Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

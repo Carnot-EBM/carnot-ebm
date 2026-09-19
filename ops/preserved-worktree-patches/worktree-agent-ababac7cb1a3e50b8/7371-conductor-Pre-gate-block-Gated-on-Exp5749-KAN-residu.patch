@@ -1,0 +1,61 @@
+From ae0508b659156beb8aea99605a4f32a6b6871478 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 20 Jul 2026 04:41:09 -0400
+Subject: [PATCH 07371/11362] [conductor] Pre-gate block: Gated on Exp5749 KAN
+ residual>0: scale continuous learning to dependent tasks
+
+1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit.kan_mechanism_residual (actual=-0.084269 > expected=0.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...periment_5750_dependent_task_continuous_self_learning.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 893b7c515f..23ef179687 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-07-20T08:39:06Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-07-20T08:41:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cac76a9960..5d258fbd69 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13835,3 +13835,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-20 08:37 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |
+ | 2026-07-20 08:37 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
+ | 2026-07-20 08:39 UTC | Gated on Exp5747 utility>0: allocate exact feedbac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5747-sota-exact-proposal-utility-panel, e |
++| 2026-07-20 08:39 UTC | Gated on Exp5749 KAN residual>0: scale continuous  | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5749-csl-render-matched-mechanism-audit |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cb2fd49d02..b65dfc6095 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 18, "phase": "iteration_start", "started_at": "2026-07-20T08:39:06Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 19, "phase": "iteration_start", "started_at": "2026-07-20T08:41:08Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5750_dependent_task_continuous_self_learning.json b/results/experiment_5750_dependent_task_continuous_self_learning.json
+index 0d0b209950..367b761004 100644
+--- a/results/experiment_5750_dependent_task_continuous_self_learning.json
++++ b/results/experiment_5750_dependent_task_continuous_self_learning.json
+@@ -2,8 +2,8 @@
+   "experiment": 5750,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-20",
+-  "started_at": "2026-07-20T08:39:06.662935+00:00",
+-  "finished_at": "2026-07-20T08:39:06.662935+00:00",
++  "started_at": "2026-07-20T08:41:08.929853+00:00",
++  "finished_at": "2026-07-20T08:41:08.929853+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5749 KAN residual>0: scale continuous learning to dependent tasks",
+-- 
+2.55.0
+

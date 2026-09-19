@@ -1,0 +1,187 @@
+From dca7b10fc346f1203b4c230f75510105ede37571 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 16 Jul 2026 12:29:18 -0400
+Subject: [PATCH 07215/11362] [outer-loop] REQ-ARC-FCP-5699-34: max_tokens=8192
+ fixes round 2 structurally, only with the reminder too
+
+Direct operator follow-up to REQ-33: raise max_tokens to 8192 for the 27B model
+and re-run round 2. Targeted single-call replay of the real round-1
+counterexample rather than a full fresh episode.
+
+First attempt was a self-caught confound, not a finding: the replay script
+forgot to set CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1 (REQ-31's fix, read
+fresh at call-time). Without it, the model completed naturally within 8192
+tokens (proving budget alone was enough room) but invented its own function
+name instead of the required engine/is_level_complete -- proving the reminder,
+not budget, was what round 2 actually needed. Caught and corrected before
+drawing any conclusion.
+
+Corrected, clean, timed re-run (duration_s=195.95, genuine completion
+confirmed): with both fixes applied, round 2 succeeds structurally --
+proposer_ok=True, natural eos completion, both required functions present.
+But the induced code hardcodes literal row/col ranges lifted directly from the
+8 shown mismatch examples rather than deriving a general rule -- read as
+memorizing the shown failures, not inferring g50t's actual dynamics.
+heldout_accuracy was not independently re-measured (would need the real
+25-transition corpus); the overfitting read is an informed expectation from
+the code's structure, explicitly labelled as such, not presented as measured.
+
+Settles: raising max_tokens to 8192 fixes round 2's structural failure, but
+only together with the reminder -- neither alone was sufficient. Does not
+settle: whether this closes the accuracy gap -- the hardcoded structure makes
+that implausible but unmeasured.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     | 67 +++++++++++++++++++
+ ops/known-issues.md                           | 25 +++++++
+ ..._larger_model_g50t_round2_replay_8192.json | 21 ++++++
+ 3 files changed, 113 insertions(+)
+ create mode 100644 results/arc_larger_model_g50t_round2_replay_8192.json
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index c24b47c3df..061ab77bf4 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -7456,6 +7456,73 @@ truncation the 9B model does not hit at the same token budget, and no level-up o
+ accuracy ceiling on g50t is therefore evidenced as game-specific rather than resolved by model
+ scale, in contrast to `REQ-ARC-WMTE-5596`'s positive scale-up finding on two other games
+ 
++### REQ-ARC-FCP-5699-34: Raising max_tokens To 8192 For The Larger Model -- A Self-Caught Confound, Then A Clean Structural Fix
++
++Direct operator follow-up to REQ-ARC-FCP-5699-33: raise `max_tokens` to 8192 specifically for the
++27B model and re-run round 2 (the refactor call that hit `[HIT n_predict=4096 OUTPUT LIMIT before
++completing]`). Rather than a full fresh episode (which would also draw a new, different round-1
++counterexample), this replayed ONLY round 2 -- a targeted single `refactor()` call reusing the
++REAL round-1 counterexample already saved in `results/arc_larger_model_g50t_ab.json` (`real_n=25`,
++`real_n_correct=5`, `real_accuracy=0.2`, 8 capped mismatches), matching the
++REQ-ARC-FCP-5699-30 `read_raw_refactor_output.py` replay pattern.
++
++**First attempt: a self-caught confound, not a finding about token budget alone.** The first
++replay script raised `max_tokens` to 8192 but forgot to set
++`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` -- REQ-ARC-FCP-5699-31's fix, which is read fresh at
++call-time inside `refactor_prompt()` via `os.environ.get(...)`, not baked into any object state.
++Without it, the model reverted to inventing its own function (`def solve(grid, action,
++data=None)`) instead of the required `engine`/`is_level_complete` -- exactly the pathology the
++reminder exists to prevent. `last_stop_type='eos'` (natural completion, NOT truncated) proved 8192
++tokens was enough room, but `ok=False` (missing required functions) proved the reminder is what
++was actually load-bearing at round 2, not budget alone. This was caught and corrected before
++drawing any conclusion from it -- flagged here explicitly as a self-introduced test defect, not
++buried.
++
++**Corrected, clean, timed re-run (`results/arc_larger_model_g50t_round2_replay_8192.json`,
++`duration_s=195.95`, read only after confirmed genuine completion):** with BOTH fixes applied
++(`max_tokens=8192` AND `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1`), round 2 succeeds structurally:
++`proposer_ok=True`, `last_stop_type='eos'`, `last_prompt_truncated=False`, both required functions
++present.
++
++**But: the induced code is a hardcoded fit to the shown examples, not a general rule.** Manual
++read of the raw completion shows `engine()` hardcodes literal row/col ranges lifted directly from
++the 8 shown counterexample mismatches (e.g. `for r in range(8, 10): for c in range(14, 19): if
++grid[r, c] == 9: grid[r, c] = 5`) rather than deriving a spatial/color rule that would generalize
++to unseen cells. This is consistent with memorizing the shown failing examples rather than
++inferring g50t's actual dynamics. `heldout_accuracy` was NOT independently re-measured in this
++targeted replay (would require the real 25-transition corpus, not just the capped mismatch
++summary this replay reused) -- this overfitting read is an informed expectation based on the
++code's structure, not a re-measured result, and is labelled as such in the artifact rather than
++presented as a finding.
++
++**What this settles and doesn't.** Settles: raising `max_tokens` to 8192 for the 27B model DOES
++fix round 2's structural completion failure, but ONLY together with the structural reminder --
++neither fix alone was sufficient (this session tested both orderings). Does NOT settle: whether
++the now-completing round 2 candidate would actually raise `heldout_accuracy` above the 0.125
++ceiling REQ-ARC-FCP-5699-33's round 1 measured -- the code's hardcoded-coordinate structure makes
++a further increase implausible, but this is a read of the code, not a measurement.
++
++Required field principles:
++
++- `overfit_risk_note`: principle "distinguishes an informed expectation (a code read) from a
++  measured result (a scored heldout run); conflating the two would overclaim a finding this
++  replay did not actually measure."
++- `duration_s`: principle "a genuinely time-measured artifact, not a wall-clock estimate from
++  task-notification timing -- this was written specifically because the two exploratory replay
++  runs that preceded it were not separately artifact-backed."
++
++#### SCENARIO-ARC-FCP-5699-34-BUDGET-ALONE-INSUFFICIENT-REMINDER-ALSO-REQUIRED
++
++Given round 2's real counterexample from REQ-ARC-FCP-5699-33, replayed with `max_tokens` raised to
++8192
++When the structural reminder env var is OMITTED, the model completes naturally (not truncated) but
++invents its own function name instead of the required interface
++And when the SAME replay is re-run with the structural reminder correctly set
++Then round 2 completes both naturally AND structurally correctly -- proving raising the token
++budget and applying the structural reminder are BOTH independently necessary for this larger
++model, neither sufficient alone, and the resulting code's hardcoded example-coordinate structure
++means this structural fix should not be read as having also closed the accuracy gap
++
+ ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+ 
+ `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index f1c55047c2..fc6822d557 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -1051,6 +1051,31 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+    from round 1's 0.125; (b) accept g50t specifically as a capability boundary independent of
+    model scale and redirect to games where scale demonstrably helps; (c) step back from
+    per-game induction-accuracy chasing entirely.
++
++   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-34, direct operator follow-up --
++   option (a) above, picked up):** targeted single-call replay of round 2 (not a full fresh
++   episode) reusing the REAL round-1 counterexample already saved from REQ-33's run, with
++   `max_tokens` raised 4096->8192. **First attempt was a self-caught confound, not a finding**:
++   the replay script forgot to set `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` (REQ-31's fix,
++   read fresh at call-time, not baked into any persisted state) -- without it, the model
++   completed naturally within 8192 tokens (`last_stop_type='eos'`, proving budget alone WAS
++   enough room) but invented its own function (`def solve(...)`) instead of the required
++   `engine`/`is_level_complete` -- proving the reminder, not budget, was what round 2 actually
++   needed. Caught and corrected before drawing any conclusion. **Corrected, clean, timed re-run
++   (`results/arc_larger_model_g50t_round2_replay_8192.json`, `duration_s=195.95`, genuine
++   completion confirmed): with BOTH fixes applied, round 2 succeeds structurally** --
++   `proposer_ok=True`, natural `eos` completion, both required functions present. **But the
++   induced code hardcodes literal row/col ranges lifted directly from the 8 shown mismatch
++   examples** (e.g. `for r in range(8, 10): for c in range(14, 19): if grid[r, c] == 9:
++   grid[r, c] = 5`) rather than deriving a rule that would generalize to unseen cells -- read as
++   memorizing the shown failures, not inferring g50t's actual dynamics. `heldout_accuracy` was
++   NOT independently re-measured (would need the real 25-transition corpus, not just the capped
++   mismatch summary this replay reused) -- the overfitting read is an informed expectation from
++   the code's structure, explicitly labelled as such in the artifact, not presented as a
++   measured result. **Settles:** raising max_tokens to 8192 fixes round 2's structural failure,
++   but ONLY together with the reminder -- neither alone was sufficient (both orderings tested).
++   **Does NOT settle:** whether this now-completing candidate would raise heldout_accuracy above
++   the 0.125 ceiling -- the hardcoded-coordinate structure makes that implausible but unmeasured.
+ 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+diff --git a/results/arc_larger_model_g50t_round2_replay_8192.json b/results/arc_larger_model_g50t_round2_replay_8192.json
+new file mode 100644
+index 0000000000..6d7a25fc84
+--- /dev/null
++++ b/results/arc_larger_model_g50t_round2_replay_8192.json
+@@ -0,0 +1,21 @@
++{
++  "experiment": "arc_larger_model_g50t_round2_replay_max_tokens_8192",
++  "req": "REQ-ARC-FCP-5699-34",
++  "game": "g50t",
++  "methodology_note": "Targeted single-call replay of REQ-ARC-FCP-5699-33's round 2 (refactor()), reusing the SAME real round-1 counterexample saved in results/arc_larger_model_g50t_ab.json (real_n=25, real_n_correct=5, real_accuracy=0.2, 8 capped mismatches), with max_tokens raised 4096->8192 for the Qwen3.6-27B-MTP proposer. CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1 explicitly set (REQ-31's fix) -- an earlier attempt in this same session omitted this env var and the model reverted to inventing its own function name instead of the required engine/is_level_complete, a self-caught confound now corrected. This is NOT a full execute_bounded_llm_reinduction round -- no heldout_accuracy is computed here (would require the real 25-transition corpus, not just the capped mismatch summary); this measures ONLY whether the proposer call completes structurally valid code.",
++  "model_specs": [
++    "unsloth/Qwen3.6-27B-MTP-GGUF (Q4_K_M, mtp=False)"
++  ],
++  "inference_substrate": "live_llm_inference",
++  "random_seed": 5699,
++  "reproducibility_checksum": "7495d39a1ecef980",
++  "duration_s": 195.9462480545044,
++  "proposer_ok": true,
++  "last_stop_type": "eos",
++  "last_prompt_truncated": false,
++  "message": "",
++  "induced_code_present": true,
++  "induced_code_defines_required_functions": true,
++  "overfit_risk_note": "Manual read of the raw completion (both attempts) shows the induced engine() function hardcodes literal row/col ranges (e.g. range(8,10), range(14,19)) copied directly from the 8 shown counterexample mismatches, rather than deriving a general spatial/color rule. This is consistent with memorizing the shown examples rather than inferring g50t's actual dynamics, and would plausibly still score near the previously-measured 0.125 heldout_accuracy ceiling on the full 25-transition set -- NOT directly measured here, flagged as an informed expectation, not a result.",
++  "honest_verdict": "complete: raising max_tokens to 8192 (with the structural reminder correctly applied) fixes round 2's structural failure -- proposer_ok=True, natural eos completion, both required functions present -- but the induced code shows overfitting to the shown examples rather than general rule inference; heldout_accuracy was not independently re-measured in this targeted replay"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

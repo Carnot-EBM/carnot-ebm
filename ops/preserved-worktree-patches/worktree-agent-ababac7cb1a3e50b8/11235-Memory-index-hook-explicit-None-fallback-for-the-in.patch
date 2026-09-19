@@ -1,0 +1,57 @@
+From ed77b95d8a37f0c69f1f52b8b1e0236dfd8e2985 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:27:07 -0400
+Subject: [PATCH 11235/11362] Memory index hook: explicit None fallback for the
+ index-file lookup (not authored by this agent)
+
+These two edits landed in the working tree at 12:25:54Z, ten minutes after
+caa0ac6b32, from another agent in this session; the memory-index-capacity
+agent did not write them and does not know who did. Committed by that
+agent with attribution because an uncommitted diff on main is the unsafe
+state here (the conductor checkpoint sweeps in-flight files and runs no
+hooks), and because the change is behaviour-preserving: the values of
+index_locations() are index file names and are never the empty string
+(checked on the live directory), so `or` and `is None` select the same
+branch. The two added assertions on expected_index_file() are redundant
+with the reminder-text assertions that follow them and do no harm.
+69 tests pass; ruff clean.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/memory_index_drift.py                       | 4 +++-
+ tests/python/test_memory_index_capacity_20260905.py | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/memory_index_drift.py b/scripts/memory_index_drift.py
+index db3714dbfd..73495b2424 100755
+--- a/scripts/memory_index_drift.py
++++ b/scripts/memory_index_drift.py
+@@ -636,7 +636,9 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
+     if mem_dir is None:
+         return ""
+     name = path.name
+-    where = index_locations(mem_dir).get(name) or expected_index_file(name)
++    where = index_locations(mem_dir).get(name)
++    if where is None:
++        where = expected_index_file(name)
+     if is_index_file(name):
+         # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
+         problems = [
+diff --git a/tests/python/test_memory_index_capacity_20260905.py b/tests/python/test_memory_index_capacity_20260905.py
+index 931606fe1b..24e7e25e52 100644
+--- a/tests/python/test_memory_index_capacity_20260905.py
++++ b/tests/python/test_memory_index_capacity_20260905.py
+@@ -381,7 +381,9 @@ def test_the_reminder_for_a_demoted_file_names_its_tier2_file_not_memory_md(mem:
+ 
+ def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path) -> None:
+     (mem / "reference_new.md").write_text(_FILE.format(desc="new", body="The fact.\n"))
++    assert mid.expected_index_file("reference_new.md") == "_index_reference.md"
+     text = mid.hook_reminder(_grow(mem, "reference_new.md"), mem)
+     assert "`_index_reference.md` has no line for it" in text
++    assert mid.expected_index_file("feedback_a.md") == "MEMORY.md"
+     text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
+     assert "`MEMORY.md` line" in text and "`_index_" not in text
+-- 
+2.55.0
+

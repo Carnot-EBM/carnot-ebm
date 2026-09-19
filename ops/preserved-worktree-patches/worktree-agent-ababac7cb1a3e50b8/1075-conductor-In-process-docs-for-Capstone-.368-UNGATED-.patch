@@ -1,0 +1,44 @@
+From d6ba6ef8d5bdb0219f3bb2bdc9c69ac1ab3a29bd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 00:04:08 -0400
+Subject: [PATCH 01075/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Capstone=20.368=20(UNGATED=20=E2=80=94=20the=20.365=20op:e?=
+ =?UTF-8?q?xists=20+=20.366=20no-artifact=20lessons):=20the=20milestone's?=
+ =?UTF-8?q?=20headline=20question=20is=20DID=20THE=20VERIFIER=20EARN=20ITS?=
+ =?UTF-8?q?=20PLACE=20ON=20EITHER=20AXIS.=20Aggregate:=20the=20GAP-4=20ACC?=
+ =?UTF-8?q?URACY=20moat=20(exp3976=20gap4=5Fbeats=5Fvote=20+=20exp3977=20g?=
+ =?UTF-8?q?ap4=5Fpositive=5Fconfirmed=20=E2=80=94=20does=20executed-rule-c?=
+ =?UTF-8?q?onsistency=20select=20past=20vote=20toward=20the=2016pp=20headr?=
+ =?UTF-8?q?oom=20the=20retired=20lineage=20couldn't=20reach=3F);=20the=20E?=
+ =?UTF-8?q?FFICIENCY=20head-to-head=20(exp3978=20accuracy=5Fparity=20+=20c?=
+ =?UTF-8?q?ost=5Fratio=20=E2=80=94=20verifier=20at=20parity=20with=20the?=
+ =?UTF-8?q?=20LLM-judge=20for=2010-100x=20less=3F);=20world-model=20induct?=
+ =?UTF-8?q?ion=20generalization=20(exp3979=20n=5Ftrustworthy=20vs=20exp396?=
+ =?UTF-8?q?8's=200/6);=20incremental=20levels=20(exp3980=20new=5Flevels=5F?=
+ =?UTF-8?q?solved);=20the=204th=20game=20(exp3981=20game=5Fsolved);=20ArcM?=
+ =?UTF-8?q?emo=20solve-transfer=20(exp3982).=20Honest=20verdict=20on=20whe?=
+ =?UTF-8?q?ther=20.368=20advanced=20the=20north=20star=20on=20accuracy,=20?=
+ =?UTF-8?q?efficiency,=20or=20both.=20SKIP=20any=20flagged=5Fadversarial?=
+ =?UTF-8?q?=20artifact;=20cite=20upstream=20sha256.=20NO=20gated=5Fon=20?=
+ =?UTF-8?q?=E2=80=94=20aggregate=20whatever=20exists.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 2353cca618..f7a7033450 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8851,3 +8851,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - **Banked successor design (zero new codex):** tiered harness = chain+agreement hybrid (saved chained program + 2 archived fresh singles: measured 2/31 at 2/2 gold — doubles Part-B coverage free) → graded gate τ=0.005 → vote; on weak-vote venues the EV-optimal composite is promote-any-demo-perfect (~9.5× vote pass@1 at 0.52 precision). **Next codex purchase when bought: k=3 CHAIN arms on the ~13 chain-feasible tasks** (projects ~5/31 agreement-gold), pre-registered on clean tasks with ≥5/5 clean agreement-gold required — NOT k=5–7 singles. Ledger + corrigenda in `ops/verifier_gaps.md` and the ensemble artifact.
+ - 2026-06-10: Hardware continuity (consolidated): SSH/USB-reachability + terminal-state check for each attached board — KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board reachability + the next concrete forward step; no bitstream redesign. Per north-star §3, KV260 is the sovereignty story to drive to terminal then freeze; GateMate/PolarFire are opportunistic. Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260 precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum). (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded; results/experiment_3983_hardware_continuity.json
+ - 2026-06-10: INFRA FIX (reserved slot): repair the operational-retro milestone->commit detector that has reported false zero-counts for 4 consecutive milestones (.363/.365/.366/.367) while ops/changelog.md shows real committed experiment work in the same windows. Audit the activation-boundary SHA + the artifact-filename match in the timing harness; add a detector_gap_suspected self-check that stamps when the detector count is 0 AND results/experiment_*.json files exist in the milestone window; do NOT fabricate wall-time (estimated_time_savings stays 0 if no real timing exists). Deliver the fixed detector + a backfill over .363-.368. This is the .367-retro-flagged highest-leverage infra action. (✅ Complete) — honest_verdict=complete: retro_commit_detector_fixed_backfill_counts_restored; results/experiment_3984_retro_commit_detector_fix.json
++- 2026-06-10: Capstone .368 (UNGATED — the .365 op:exists + .366 no-artifact lessons): the milestone's headline question is DID THE VERIFIER EARN ITS PLACE ON EITHER AXIS. Aggregate: the GAP-4 ACCURACY moat (exp3976 gap4_beats_vote + exp3977 gap4_positive_confirmed — does executed-rule-consistency select past vote toward the 16pp headroom the retired lineage couldn't reach?); the EFFICIENCY head-to-head (exp3978 accuracy_parity + cost_ratio — verifier at parity with the LLM-judge for 10-100x less?); world-model induction generalization (exp3979 n_trustworthy vs exp3968's 0/6); incremental levels (exp3980 new_levels_solved); the 4th game (exp3981 game_solved); ArcMemo solve-transfer (exp3982). Honest verdict on whether .368 advanced the north star on accuracy, efficiency, or both. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on — aggregate whatever exists. (⚠️ Research Finding) — honest_verdict=success: capstone_v368_verifier_earned_efficiency_only_games3_new_levels0_missing1_flagged_skipped0; results/experiment_3985_capstone_v368.json
+-- 
+2.55.0
+

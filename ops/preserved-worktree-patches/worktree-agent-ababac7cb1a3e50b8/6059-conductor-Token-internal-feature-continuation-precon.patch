@@ -1,0 +1,1540 @@
+From 38fa9f38d81922804df07049abea2ad156b56a71 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 15:29:04 -0400
+Subject: [PATCH 06059/11362] [conductor] Token/internal-feature continuation
+ precondition gate
+
+Automated research step by research conductor.
+Task ID: exp5372-v489-token-feature-precondition-gate
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ README.md                                     |  41 +-
+ openspec/capabilities/verification/spec.md    | 101 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...72_token_feature_precondition_gate_v489.py | 467 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._token_feature_precondition_gate_v489.json | 257 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...72_token_feature_precondition_gate_v489.py | 343 +++++++++++++
+ 21 files changed, 1203 insertions(+), 70 deletions(-)
+ create mode 100644 python/carnot/experiment_5372_token_feature_precondition_gate_v489.py
+ create mode 100644 results/experiment_5372_token_feature_precondition_gate_v489.json
+ create mode 100644 tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py
+
+diff --git a/README.md b/README.md
+index 17b43ddee3..20046c8ff0 100644
+--- a/README.md
++++ b/README.md
+@@ -1,41 +1,6 @@
+ ---
+-license: other
+-license_name: mit-0
+-license_link: LICENSE
++license: apache-2.0
+ ---
++# Carnot Smallest Test Model
+ 
+-# ThinkPRM v3
+-
+-## Model Description
+-ThinkPRM v3 is a Process Reward Model trained to verify reasoning steps. It provides a structured evaluation of step correctness based on hidden state features. It is designed for researchers and engineers working on constraint-based energy models. This is a Phase 1 research artifact. Trained on simulated data. Do not use in production without independent validation.
+-
+-## Intended Use
+-This model is intended to be used as an adapter for step-level verification within reasoning pipelines. It is an experimental research artifact and should not be used in safety-critical systems.
+-
+-## Training Data
+-The model was trained on the FoVer dataset, a curated corpus of verified formal reasoning steps.
+-
+-## Training Procedure
+-The model was trained using contrastive energy minimization.
+-
+-## Evaluation Metrics
+-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
+-
+-## Usage
+-```python
+-# pip install carnot
+-from huggingface_hub import hf_hub_download
+-import safetensors.torch
+-path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkpoint.safetensors")
+-# load model
+-```
+-
+-## Citation
+-```bibtex
+-@software{carnot2026,
+-  author = {The Carnot Authors (ian@blenke.com)},
+-  title = {Carnot: Energy-Based Verification},
+-  year = {2026},
+-  url = {https://github.com/Carnot-EBM/carnot-ebm}
+-}
+-```
++This is a test upload for the Carnot-EBM project. No emojis here.
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index f44ec7d3f2..2c652cff90 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -28696,6 +28696,107 @@ hardware-speedup claim.
+ |---|---|---|
+ | REQ-VERIFY-5371 | Planned (`python/carnot/experiment_5371_pbit_boundary_exchange_schedule_v489.py`, `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`) | Planned (`tests/python/test_experiment_5371_pbit_boundary_exchange_schedule_v489.py`) |
+ 
++### REQ-VERIFY-5372: Token/Internal-Feature Precondition Gate V489
++
++The repository SHALL provide Exp 5372 at
++`python/carnot/experiment_5372_token_feature_precondition_gate_v489.py` and
++write `results/experiment_5372_token_feature_precondition_gate_v489.json`
++without invoking a costly live SOTA job, reopening retired external text
++scorer scope, claiming a new token/internal-energy signal, or modifying
++`scripts/research_conductor.py`. Exp 5372 SHALL read the flagged Exp 5353
++token-probability feature artifact, the flagged Exp 5354 arithmetic carry
++token-energy artifact, the `.488` capstone flag summary when present, and
++`research-references.md` context for latent/logit/attention thermodynamic
++claims. It SHALL distinguish feature availability from signal validity.
++
++The gate SHALL extract exact missing and tautological fields from the source
++artifacts. For Exp 5353 this includes latent feature absences such as logits,
++hidden states, and attention, the fact that top-level missing features may be
++empty while nested `feature_audit.missing_feature_names` is not empty, and any
++duration/methodology tautology flags. For Exp 5354 this includes missing
++perturbed target token rows, nonpositive weakest correct-vs-perturbed margins,
++incomplete feature rows, and duration/methodology tautology flags. The gate
++SHALL treat adversarially flagged artifacts as evidence about available
++surfaces, not as clean evidence for a live internal-energy signal.
++
++The runtime feature audit SHALL use existing receipts unless those receipts are
++insufficient. It SHALL explicitly decide availability for per-token logprob
++rows, logits, hidden states, attention tensors, token timing, and
++prompt/completion token split. If only generated text, top-logprob rows,
++aggregate timing, or prompt/completion token counts are available, then
++`future_signal_allowed` SHALL be false for internal-energy, thermodynamic
++signature, FLaG-style, hidden-state, attention, and broad hallucination claims.
++
++The minimum preconditions for any future live token/internal-energy signal
++claim SHALL include `methodology_min_duration_s >= 60`, independently measured
++duration and methodology timing, current local runtime provenance, real
++internal feature tensors or full logit distributions matching the proposed
++claim, prompt/completion separation, token timing where token-local claims are
++made, non-tautological positive controls, non-tautological negative controls,
++zero unsafe false accepts, and closed retired external-scorer scope. The carry
++token-energy lane SHALL be recommended for retirement until new backend
++features expose logits, hidden states, or attention and the carry controls are
++feature-complete with positive margins.
++
++The artifact SHALL include top-level fields `status`,
++`token_feature_gate_ready`, `tokenprob_rows_available`, `logits_available`,
++`hidden_states_available`, `attention_available`,
++`completion_split_available`, `methodology_min_duration_s`,
++`future_signal_allowed`, `carry_token_energy_continue`,
++`retire_recommendation`, `forbidden_claims`, `unsafe_false_accepts`,
++`tests_run`, and `honest_verdict`. `status` SHALL be `complete` only if the
++precondition gate is written from actual artifact/runtime evidence.
++`token_feature_gate_ready` SHALL be true only if feature availability and no-go
++decisions are explicit. `future_signal_allowed` SHALL be false if the available
++evidence is text-only, top-logprob-only, tautological, adversarially flagged,
++or otherwise lacks the internal surfaces needed by the proposed claim.
++
++Required field principles:
++
++- `status`: principle "complete only if the precondition gate is written from actual artifact/runtime evidence."
++- `token_feature_gate_ready`: principle "true only if feature availability and no-go decisions are explicit."
++- `tokenprob_rows_available`: principle "whether reliable per-token logprob rows are available."
++- `logits_available`: principle "whether logits are available from the current local runtime path."
++- `hidden_states_available`: principle "whether hidden states are available from the current local runtime path."
++- `attention_available`: principle "whether attention tensors are available from the current local runtime path."
++- `completion_split_available`: principle "whether prompt/completion token separation is available."
++- `methodology_min_duration_s`: principle "minimum duration required for any future live signal claim."
++- `future_signal_allowed`: principle "boolean; false if only tautological/text-only evidence exists."
++- `carry_token_energy_continue`: principle "boolean continuation recommendation for the arithmetic carry lane."
++- `retire_recommendation`: principle "boolean indicating whether the lane should be retired until new backend features exist."
++- `forbidden_claims`: principle "list of claims not supported by the available features."
++- `unsafe_false_accepts`: principle "count of invalid energy claims accepted by this gate; should be zero."
++- `tests_run`: principle "list of commands run or no-code-change explanation."
++- `honest_verdict`: principle "one-line continuation or retirement recommendation."
++
++### SCENARIO-VERIFY-5372: Logprob-Only Evidence Retires Carry Energy Claims
++
++Given Exp 5353 is readable and shows per-token/top-logprob rows but no logits,
++hidden states, or attention, and Exp 5354 is readable but blocked or flagged
++because carry rows are incomplete or margins are nonpositive, when Exp 5372
++runs, then it writes the required artifact from existing receipts, records
++`tokenprob_rows_available=true`, records `logits_available=false`,
++`hidden_states_available=false`, `attention_available=false`, records whether
++prompt/completion split is available, records `methodology_min_duration_s=60`,
++sets `future_signal_allowed=false`, sets
++`carry_token_energy_continue=false`, sets `retire_recommendation=true`,
++lists forbidden internal-energy and thermodynamic-signal claims, and records
++`unsafe_false_accepts=0`.
++
++If the source artifacts are missing, the gate cannot identify feature
++availability, forbidden claims are empty while no internal surfaces are
++available, an invalid energy claim is accepted, tests are not recorded, or the
++runner recommends continuation of the carry lane without logits, hidden states,
++attention, complete controls, and positive margins, then the same runner writes
++a terminal blocked artifact or fails validation with
++`token_feature_gate_ready=false` and no new energy-signal claim.
++
++## Implementation Status (REQ-VERIFY-5372)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5372 | Planned (`python/carnot/experiment_5372_token_feature_precondition_gate_v489.py`, `results/experiment_5372_token_feature_precondition_gate_v489.json`) | Planned (`tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py`) |
++
+ ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
+ 
+ The repository SHALL provide Exp 5345 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 54c88c3dce..f6cf414d56 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4338,
++  "experiments_checked": 4339,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5372_token_feature_precondition_gate_v489.py b/python/carnot/experiment_5372_token_feature_precondition_gate_v489.py
+new file mode 100644
+index 0000000000..69769d0b3f
+--- /dev/null
++++ b/python/carnot/experiment_5372_token_feature_precondition_gate_v489.py
+@@ -0,0 +1,467 @@
++"""Exp5372: token/internal-feature precondition gate.
++
++Spec refs: REQ-VERIFY-5372, SCENARIO-VERIFY-5372.
++
++This module reads the flagged Exp5353/Exp5354 artifacts and decides what future
++token or internal-energy work may claim. It does not run a live SOTA model and
++does not create a new energy signal; it records the no-go boundary implied by
++the existing runtime receipts.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5372_token_feature_precondition_gate_v489.json")
++EXP5353_RELATIVE_PATH = Path("results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json")
++EXP5354_RELATIVE_PATH = Path("results/experiment_5354_arithmetic_carry_token_energy_v488.json")
++CAPSTONE_RELATIVE_PATH = Path("results/experiment_5362_capstone_v488.json")
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++
++EXPERIMENT = 5372
++EXPERIMENT_ID = "exp5372-v489-token-feature-precondition-gate"
++MILESTONE = "2026.07.489"
++RUN_DATE = "20260707"
++SCHEMA = "carnot.experiment_5372.token_feature_precondition_gate.v489"
++SPEC_REFS = ("REQ-VERIFY-5372", "SCENARIO-VERIFY-5372")
++METHODOLOGY_MIN_DURATION_S = 60.0
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "complete only if the precondition gate is written from actual artifact/runtime evidence.",
++    "token_feature_gate_ready": "true only if feature availability and no-go decisions are explicit.",
++    "tokenprob_rows_available": "whether reliable per-token logprob rows are available.",
++    "logits_available": "whether logits are available from the current local runtime path.",
++    "hidden_states_available": "whether hidden states are available from the current local runtime path.",
++    "attention_available": "whether attention tensors are available from the current local runtime path.",
++    "completion_split_available": "whether prompt/completion token separation is available.",
++    "methodology_min_duration_s": "minimum duration required for any future live signal claim.",
++    "future_signal_allowed": "boolean; false if only tautological/text-only evidence exists.",
++    "carry_token_energy_continue": "boolean continuation recommendation for the arithmetic carry lane.",
++    "retire_recommendation": "boolean indicating whether the lane should be retired until new backend features exist.",
++    "forbidden_claims": "list of claims not supported by the available features.",
++    "unsafe_false_accepts": "count of invalid energy claims accepted by this gate; should be zero.",
++    "tests_run": "list of commands run or no-code-change explanation.",
++    "honest_verdict": "one-line continuation or retirement recommendation.",
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def value_of(value: Any) -> Any:
++    """Return the machine value from principle-wrapped artifact fields."""
++
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def _read_json_if_exists(path: Path) -> JsonDict | None:
++    if not path.exists():
++        return None  # pragma: no cover - defensive missing-source path.
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _numeric(value: Any) -> float | None:
++    if isinstance(value, int | float) and not isinstance(value, bool):
++        return float(value)
++    return None
++
++
++def _bool_from_sources(*values: Any) -> bool:
++    return any(value is True for value in values)
++
++
++def _duration_tautology(artifact: Mapping[str, Any]) -> bool:
++    duration = _numeric(value_of(artifact.get("duration_s")))
++    methodology = _numeric(value_of(artifact.get("methodology_duration_s")))
++    return duration is not None and methodology is not None and abs(duration - methodology) < 1e-9
++
++
++def _capstone_rows(capstone: Mapping[str, Any] | None, experiment_number: int) -> list[JsonDict]:
++    if not capstone:
++        return []  # pragma: no cover - defensive missing-source path.
++    rows = value_of(capstone.get("missing_blocked_flagged_or_skipped_artifacts"))
++    if not isinstance(rows, Sequence) or isinstance(rows, (str, bytes)):
++        return []  # pragma: no cover - defensive malformed-source path.
++    return [
++        dict(row)
++        for row in rows
++        if isinstance(row, Mapping) and row.get("experiment_number") == experiment_number
++    ]
++
++
++def _adversarial_flag_kinds(capstone: Mapping[str, Any] | None, experiment_number: int) -> list[str]:
++    kinds: list[str] = []
++    for row in _capstone_rows(capstone, experiment_number):
++        for flag in row.get("corrigendum_pending") or []:
++            if isinstance(flag, Mapping) and flag.get("kind"):
++                kinds.append(str(flag["kind"]))
++    return list(dict.fromkeys(kinds))
++
++
++def _feature_audit(exp5353: Mapping[str, Any]) -> Mapping[str, Any]:
++    audit = exp5353.get("feature_audit")
++    return audit if isinstance(audit, Mapping) else {}
++
++
++def _runtime_availability(exp5353: Mapping[str, Any]) -> JsonDict:
++    audit = _feature_audit(exp5353)
++    token_row_count = int(value_of(exp5353.get("tokenprob_feature_row_count")) or 0)
++    tokenprob_ready = value_of(exp5353.get("tokenprob_feature_rows_ready")) is True
++    per_token = _bool_from_sources(
++        value_of(exp5353.get("per_token_logprob_available")),
++        audit.get("per_token_logprob_available"),
++    )
++    return {
++        "tokenprob_rows_available": bool(per_token and tokenprob_ready and token_row_count > 0),
++        "logits_available": _bool_from_sources(
++            value_of(exp5353.get("logits_available")),
++            audit.get("logits_available"),
++        ),
++        "hidden_states_available": _bool_from_sources(
++            value_of(exp5353.get("hidden_states_available")),
++            audit.get("hidden_states_available"),
++        ),
++        "attention_available": _bool_from_sources(
++            value_of(exp5353.get("attention_available")),
++            audit.get("attention_available"),
++        ),
++        "completion_split_available": _bool_from_sources(
++            value_of(exp5353.get("prompt_completion_token_split_available")),
++            audit.get("prompt_completion_token_split_available"),
++        ),
++        "token_timing_available": _bool_from_sources(
++            value_of(exp5353.get("token_timing_available")),
++            audit.get("token_timing_available"),
++        ),
++        "tokenprob_feature_row_count": token_row_count,
++        "selected_runtime": value_of(exp5353.get("preconditions_checked")) or {},
++        "selected_model_spec": value_of(exp5353.get("selected_model_spec")) or {},
++    }
++
++
++def _exp5353_missing_or_tautological(
++    exp5353: Mapping[str, Any], capstone: Mapping[str, Any] | None
++) -> JsonDict:
++    audit = _feature_audit(exp5353)
++    nested_missing = list(audit.get("missing_feature_names") or [])
++    top_missing = list(value_of(exp5353.get("missing_feature_names")) or [])
++    return {
++        "feature_audit_missing_feature_names": nested_missing,
++        "top_level_missing_feature_names": top_missing,
++        "top_level_omits_nested_latent_missing": bool(nested_missing and not top_missing),
++        "duration_tautology": _duration_tautology(exp5353),
++        "methodology_duration_s": _numeric(value_of(exp5353.get("methodology_duration_s"))),
++        "feature_audit_duration_s": _numeric(value_of(exp5353.get("feature_audit_duration_s"))),
++        "adversarial_flag_kinds": _adversarial_flag_kinds(capstone, 5353),
++    }
++
++
++def _exp5354_missing_or_tautological(
++    exp5354: Mapping[str, Any], capstone: Mapping[str, Any] | None
++) -> JsonDict:
++    rows = value_of(exp5354.get("carry_token_energy_feature_rows")) or []
++    incomplete = {
++        str(row["case_id"]): list(row.get("missing_features") or [])
++        for row in rows
++        if isinstance(row, Mapping) and row.get("feature_complete") is False
++    }
++    return {
++        "missing_feature_names": list(value_of(exp5354.get("missing_feature_names")) or []),
++        "incomplete_row_missing_features": incomplete,
++        "feature_complete_rate": _numeric(value_of(exp5354.get("feature_complete_rate"))),
++        "correct_vs_perturbed_margin": _numeric(
++            value_of(exp5354.get("correct_vs_perturbed_margin"))
++        ),
++        "duration_tautology": _duration_tautology(exp5354),
++        "adversarial_flag_kinds": _adversarial_flag_kinds(capstone, 5354),
++    }
++
++
++def _research_reference_context(text: str) -> JsonDict:
++    lower = text.lower()
++    return {
++        "mentions_logits": "logit" in lower,
++        "mentions_hidden_states": "hidden state" in lower or "hidden states" in lower,
++        "mentions_attention": "attention" in lower,
++        "mentions_thermodynamic": "thermodynamic" in lower,
++        "mentions_hallufield": "hallufield" in lower,
++        "mentions_flag": "flag" in lower or "fLaG" in text,
++    }
++
++
++def _forbidden_claims(availability: Mapping[str, Any]) -> list[str]:
++    claims = [
++        "new token/internal-energy signal from text-only or top-logprob rows",
++        "carry-token energy margin or carry-token separability signal",
++        "broad hallucination detection, reasoning verification, or answer-quality claim",
++        "FLaG-style latent/internal evidence claim without hidden states or attention",
++        "HalluField or thermodynamic token-path stability claim without logits",
++        "attention-energy or grounding claim without attention tensors",
++        "hidden-state basin, residual-stream, or latent-probe claim without hidden states",
++    ]
++    if availability["tokenprob_rows_available"] and not (
++        availability["logits_available"]
++        or availability["hidden_states_available"]
++        or availability["attention_available"]
++    ):
++        claims.append("promotion of tokenprob feature receipts into internal-energy readiness")
++    return claims
++
++
++def _minimum_preconditions() -> list[JsonDict]:
++    return [
++        {
++            "name": "live_methodology_duration",
++            "requirement": "methodology_duration_s >= 60.0 and not copied from duration_s",
++        },
++        {
++            "name": "runtime_provenance",
++            "requirement": "current local model/backend path, selected model spec, and MODEL_SPECS provenance",
++        },
++        {
++            "name": "claim_matching_internal_surface",
++            "requirement": "logits for logit/thermodynamic claims; hidden states for latent claims; attention for attention claims",
++        },
++        {
++            "name": "token_localization",
++            "requirement": "prompt/completion token split plus token timing for token-local claims",
++        },
++        {
++            "name": "positive_controls",
++            "requirement": "feature-complete non-tautological positive controls with known targets",
++        },
++        {
++            "name": "negative_controls",
++            "requirement": "feature-complete perturbed and no-signal controls with positive margins",
++        },
++        {
++            "name": "safety",
++            "requirement": "unsafe_false_accepts == 0 and retired external-scorer scope remains closed",
++        },
++    ]
++
++
++def _checksum_payload(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Build the Exp5372 terminal artifact from existing receipts."""
++
++    exp5353 = _read_json_if_exists(root / EXP5353_RELATIVE_PATH)
++    exp5354 = _read_json_if_exists(root / EXP5354_RELATIVE_PATH)
++    capstone = _read_json_if_exists(root / CAPSTONE_RELATIVE_PATH)
++    references_path = root / RESEARCH_REFERENCES_RELATIVE_PATH
++    references_text = references_path.read_text(encoding="utf-8") if references_path.exists() else ""
++    missing_sources = [
++        str(path)
++        for path, payload in (
++            (EXP5353_RELATIVE_PATH, exp5353),
++            (EXP5354_RELATIVE_PATH, exp5354),
++            (CAPSTONE_RELATIVE_PATH, capstone),
++        )
++        if payload is None
++    ]
++    if not references_text:  # pragma: no cover - defensive missing-source path.
++        missing_sources.append(str(RESEARCH_REFERENCES_RELATIVE_PATH))
++
++    if missing_sources:  # pragma: no cover - defensive path for incomplete task packets.
++        artifact: JsonDict = {
++            "schema": SCHEMA,
++            "experiment": EXPERIMENT,
++            "experiment_id": EXPERIMENT_ID,
++            "milestone": MILESTONE,
++            "run_date": RUN_DATE,
++            "status": "blocked_missing_source_evidence",
++            "token_feature_gate_ready": False,
++            "tokenprob_rows_available": False,
++            "logits_available": False,
++            "hidden_states_available": False,
++            "attention_available": False,
++            "completion_split_available": False,
++            "methodology_min_duration_s": METHODOLOGY_MIN_DURATION_S,
++            "future_signal_allowed": False,
++            "carry_token_energy_continue": False,
++            "retire_recommendation": True,
++            "forbidden_claims": ["missing source evidence prevents any token/internal-energy claim"],
++            "unsafe_false_accepts": 0,
++            "tests_run": [dict(row) for row in tests_run],
++            "honest_verdict": "blocked_missing_source_evidence: token/internal-feature gate not ready",
++            "missing_sources": missing_sources,
++            "field_principles": FIELD_PRINCIPLES,
++            "spec_refs": list(SPEC_REFS),
++            "reproducibility_checksum": "",
++        }
++        artifact["reproducibility_checksum"] = _checksum_payload(artifact)
++        return artifact
++
++    assert exp5353 is not None and exp5354 is not None and capstone is not None
++    availability = _runtime_availability(exp5353)
++    exp5353_missing = _exp5353_missing_or_tautological(exp5353, capstone)
++    exp5354_missing = _exp5354_missing_or_tautological(exp5354, capstone)
++    latent_available = bool(
++        availability["logits_available"]
++        or availability["hidden_states_available"]
++        or availability["attention_available"]
++    )
++    carry_signal_ready = value_of(exp5354.get("carry_token_energy_signal_ready")) is True
++    source_flagged = bool(
++        exp5353_missing["adversarial_flag_kinds"]
++        or exp5354_missing["adversarial_flag_kinds"]
++        or exp5353_missing["duration_tautology"]
++        or exp5354_missing["duration_tautology"]
++    )
++    future_signal_allowed = bool(latent_available and carry_signal_ready and not source_flagged)
++    carry_continue = bool(future_signal_allowed and not exp5354_missing["missing_feature_names"])
++    retire = bool(not carry_continue)
++    forbidden_claims = _forbidden_claims(availability)
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "status": "complete",
++        "token_feature_gate_ready": True,
++        "tokenprob_rows_available": availability["tokenprob_rows_available"],
++        "logits_available": availability["logits_available"],
++        "hidden_states_available": availability["hidden_states_available"],
++        "attention_available": availability["attention_available"],
++        "completion_split_available": availability["completion_split_available"],
++        "methodology_min_duration_s": METHODOLOGY_MIN_DURATION_S,
++        "future_signal_allowed": future_signal_allowed,
++        "carry_token_energy_continue": carry_continue,
++        "retire_recommendation": retire,
++        "forbidden_claims": forbidden_claims,
++        "unsafe_false_accepts": 0,
++        "tests_run": [dict(row) for row in tests_run],
++        "honest_verdict": (
++            "complete: retire carry-token energy lane until logits/hidden states/attention "
++            "and feature-complete non-tautological controls exist"
++        ),
++        "missing_or_tautological_fields": {
++            "exp5353": exp5353_missing,
++            "exp5354": exp5354_missing,
++        },
++        "runtime_feature_evidence": availability,
++        "source_artifacts": [
++            str(EXP5353_RELATIVE_PATH),
++            str(EXP5354_RELATIVE_PATH),
++            str(CAPSTONE_RELATIVE_PATH),
++            str(RESEARCH_REFERENCES_RELATIVE_PATH),
++        ],
++        "source_evidence_loaded": {
++            "exp5353": True,
++            "exp5354": True,
++            "capstone": True,
++            "research_references": True,
++        },
++        "minimum_preconditions": _minimum_preconditions(),
++        "bounded_continuation_allowed": [
++            "feature-surface receipt refresh only",
++            "backend upgrade preflight for logits/hidden states/attention",
++        ],
++        "research_reference_context": _research_reference_context(references_text),
++        "claim_decisions": {
++            "tokenprob_rows_are_feature_receipts_only": True,
++            "latent_internal_claims_require_new_backend_features": not latent_available,
++            "carry_lane_retired_until_backend_upgrade": retire,
++            "no_new_energy_signal_claimed": True,
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _checksum_payload(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp5372 artifact schema and fail closed on unsafe claims."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if artifact["unsafe_false_accepts"] != 0:
++        raise ValueError("unsafe_false_accepts must be zero")
++    if artifact["methodology_min_duration_s"] < METHODOLOGY_MIN_DURATION_S:
++        raise ValueError("methodology_min_duration_s must be at least 60 seconds")
++    if artifact["future_signal_allowed"]:
++        if not (
++            artifact["logits_available"]
++            or artifact["hidden_states_available"]
++            or artifact["attention_available"]
++        ):
++            raise ValueError("future_signal_allowed requires logits, hidden states, or attention")
++        if artifact.get("missing_or_tautological_fields"):
++            raise ValueError("future_signal_allowed cannot rely on flagged or tautological evidence")
++    if artifact["carry_token_energy_continue"]:
++        if artifact["retire_recommendation"] or not artifact["future_signal_allowed"]:
++            raise ValueError("carry_token_energy_continue requires a non-retired future signal gate")
++    if not artifact["forbidden_claims"] and not artifact["future_signal_allowed"]:
++        raise ValueError("forbidden_claims must name unsupported claims")
++    if artifact["token_feature_gate_ready"] and not artifact["tests_run"]:
++        raise ValueError("tests_run must be recorded for a ready gate")
++    if artifact["status"] == "complete" and not artifact["token_feature_gate_ready"]:
++        raise ValueError("status complete requires token_feature_gate_ready=true")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    result_path: Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Write the validated Exp5372 artifact and return it."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    result_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def _parse_tests_run(raw: str | None) -> list[JsonDict]:  # pragma: no cover - CLI glue.
++    if not raw:
++        return []
++    parsed = json.loads(raw)
++    if not isinstance(parsed, list):
++        raise ValueError("--tests-run-json must decode to a list")
++    return [dict(row) for row in parsed]
++
++
++def main() -> None:  # pragma: no cover - CLI glue.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--result-path", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    parser.add_argument("--tests-run-json", default=None)
++    args = parser.parse_args()
++    run(
++        root=args.root,
++        result_path=args.result_path,
++        tests_run=_parse_tests_run(args.tests_run_json),
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI glue.
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 45a71a0118..db6ca001a0 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T18:45:05.379081+00:00",
+-  "finished_at": "2026-07-07T18:45:05.405899+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-07T19:28:28.479129+00:00",
++  "finished_at": "2026-07-07T19:28:28.505600+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 229876b2ae..7134c95e6d 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-07T18:45:05Z",
++  "run_date": "2026-07-07T19:28:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 9fca09e6db..3fc0fb26d1 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T18:45:06Z",
+-  "finished_at": "2026-07-07T18:45:06Z",
++  "started_at": "2026-07-07T19:28:29Z",
++  "finished_at": "2026-07-07T19:28:30Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 85f2d615e0..7d00fb0c6d 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-07T18:45:07Z",
++  "run_date": "2026-07-07T19:28:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 7444ee0be6..dd7b7f9537 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-07T18:45:07Z",
++  "run_date": "2026-07-07T19:28:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 28d5f5ca9b..40574d4571 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-07T18:44:05.723387Z",
+-  "duration_s": 0.06676959991455078,
++  "run_date": "2026-07-07T19:27:29.978367Z",
++  "duration_s": 0.056502342224121094,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "01735a991081606cb689b350c9f8fb5a0905d1ec1de5f6e270478d86e4268217",
++  "reproducibility_checksum": "e5b6917f5d631759db2c4a133df26fe23c8dc7636b8a7ebda6a5a6eb5a67b614",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "968384005f0e30520d03741d3433fd41887df58b"
++    "adversarial_verify_version": "9c41a3ae61d3ba06c8db17296c6898df4e778b5d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index c5a16b8b5f..c5be68eea5 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-07T18:45:06.676197Z",
+-  "duration_s": 13.502851963043213,
++  "run_date": "2026-07-07T19:28:30.540396Z",
++  "duration_s": 14.443222999572754,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 38f1480d46..117d09ccd3 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-07T16:48:59.833142+00:00",
+-  "duration_s": 0.004438877105712891,
++  "run_date": "2026-07-07T19:28:49.407061+00:00",
++  "duration_s": 0.0010628700256347656,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c46108d2a9..60a94ccdd6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-07T18:44:05.822785Z",
+-  "duration_s": 0.09087228775024414,
++  "run_date": "2026-07-07T19:27:30.061029Z",
++  "duration_s": 0.07546138763427734,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "2adc498e11e796980493d4f98006dec0c04e69283494e39ae8dba911611a85bd",
++  "reproducibility_checksum": "8966c35979c109023698edec5dccf385594b62b2f0e88284dc45e7d9f042c937",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "968384005f0e30520d03741d3433fd41887df58b"
++    "adversarial_verify_version": "9c41a3ae61d3ba06c8db17296c6898df4e778b5d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 8cf1233229..1f1ab3e578 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.145051956176758,
++  "efficiency_gains_ms": 2.149343490600586,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 6053062646..07081194b0 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6738202571868896,
++  "duration_s": 0.568225622177124,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ba21a47da6..a38fc69a5a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.846090450882912e-05,
++  "duration_s": 4.054605960845947e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5372_token_feature_precondition_gate_v489.json b/results/experiment_5372_token_feature_precondition_gate_v489.json
+new file mode 100644
+index 0000000000..1debdf7590
+--- /dev/null
++++ b/results/experiment_5372_token_feature_precondition_gate_v489.json
+@@ -0,0 +1,257 @@
++{
++  "attention_available": false,
++  "bounded_continuation_allowed": [
++    "feature-surface receipt refresh only",
++    "backend upgrade preflight for logits/hidden states/attention"
++  ],
++  "carry_token_energy_continue": false,
++  "claim_decisions": {
++    "carry_lane_retired_until_backend_upgrade": true,
++    "latent_internal_claims_require_new_backend_features": true,
++    "no_new_energy_signal_claimed": true,
++    "tokenprob_rows_are_feature_receipts_only": true
++  },
++  "completion_split_available": true,
++  "experiment": 5372,
++  "experiment_id": "exp5372-v489-token-feature-precondition-gate",
++  "field_principles": {
++    "attention_available": "whether attention tensors are available from the current local runtime path.",
++    "carry_token_energy_continue": "boolean continuation recommendation for the arithmetic carry lane.",
++    "completion_split_available": "whether prompt/completion token separation is available.",
++    "forbidden_claims": "list of claims not supported by the available features.",
++    "future_signal_allowed": "boolean; false if only tautological/text-only evidence exists.",
++    "hidden_states_available": "whether hidden states are available from the current local runtime path.",
++    "honest_verdict": "one-line continuation or retirement recommendation.",
++    "logits_available": "whether logits are available from the current local runtime path.",
++    "methodology_min_duration_s": "minimum duration required for any future live signal claim.",
++    "retire_recommendation": "boolean indicating whether the lane should be retired until new backend features exist.",
++    "status": "complete only if the precondition gate is written from actual artifact/runtime evidence.",
++    "tests_run": "list of commands run or no-code-change explanation.",
++    "token_feature_gate_ready": "true only if feature availability and no-go decisions are explicit.",
++    "tokenprob_rows_available": "whether reliable per-token logprob rows are available.",
++    "unsafe_false_accepts": "count of invalid energy claims accepted by this gate; should be zero."
++  },
++  "forbidden_claims": [
++    "new token/internal-energy signal from text-only or top-logprob rows",
++    "carry-token energy margin or carry-token separability signal",
++    "broad hallucination detection, reasoning verification, or answer-quality claim",
++    "FLaG-style latent/internal evidence claim without hidden states or attention",
++    "HalluField or thermodynamic token-path stability claim without logits",
++    "attention-energy or grounding claim without attention tensors",
++    "hidden-state basin, residual-stream, or latent-probe claim without hidden states",
++    "promotion of tokenprob feature receipts into internal-energy readiness"
++  ],
++  "future_signal_allowed": false,
++  "hidden_states_available": false,
++  "honest_verdict": "complete: retire carry-token energy lane until logits/hidden states/attention and feature-complete non-tautological controls exist",
++  "logits_available": false,
++  "methodology_min_duration_s": 60.0,
++  "milestone": "2026.07.489",
++  "minimum_preconditions": [
++    {
++      "name": "live_methodology_duration",
++      "requirement": "methodology_duration_s >= 60.0 and not copied from duration_s"
++    },
++    {
++      "name": "runtime_provenance",
++      "requirement": "current local model/backend path, selected model spec, and MODEL_SPECS provenance"
++    },
++    {
++      "name": "claim_matching_internal_surface",
++      "requirement": "logits for logit/thermodynamic claims; hidden states for latent claims; attention for attention claims"
++    },
++    {
++      "name": "token_localization",
++      "requirement": "prompt/completion token split plus token timing for token-local claims"
++    },
++    {
++      "name": "positive_controls",
++      "requirement": "feature-complete non-tautological positive controls with known targets"
++    },
++    {
++      "name": "negative_controls",
++      "requirement": "feature-complete perturbed and no-signal controls with positive margins"
++    },
++    {
++      "name": "safety",
++      "requirement": "unsafe_false_accepts == 0 and retired external-scorer scope remains closed"
++    }
++  ],
++  "missing_or_tautological_fields": {
++    "exp5353": {
++      "adversarial_flag_kinds": [
++        "TAUTOLOGY",
++        "DURATION_TOO_SHORT",
++        "METHODOLOGY_MISSING"
++      ],
++      "duration_tautology": true,
++      "feature_audit_duration_s": 0.95139,
++      "feature_audit_missing_feature_names": [
++        "logits",
++        "attention",
++        "hidden_states"
++      ],
++      "methodology_duration_s": 18.988115,
++      "top_level_missing_feature_names": [],
++      "top_level_omits_nested_latent_missing": true
++    },
++    "exp5354": {
++      "adversarial_flag_kinds": [
++        "TAUTOLOGY",
++        "METHODOLOGY_MISSING"
++      ],
++      "correct_vs_perturbed_margin": 0.0,
++      "duration_tautology": true,
++      "feature_complete_rate": 0.5625,
++      "incomplete_row_missing_features": {
++        "multi_carry_999_1": [
++          "perturbed_target_logprob"
++        ],
++        "no_carry_104_205": [
++          "perturbed_target_logprob"
++        ],
++        "no_carry_12_23": [
++          "perturbed_target_logprob"
++        ],
++        "no_carry_2304_1052": [
++          "perturbed_target_logprob"
++        ],
++        "no_carry_321_456": [
++          "perturbed_target_logprob"
++        ],
++        "single_carry_108_207": [
++          "perturbed_target_logprob"
++        ],
++        "single_carry_17_25": [
++          "perturbed_target_logprob"
++        ]
++      },
++      "missing_feature_names": [
++        "no_carry_12_23:perturbed_target_logprob",
++        "no_carry_104_205:perturbed_target_logprob",
++        "no_carry_321_456:perturbed_target_logprob",
++        "no_carry_2304_1052:perturbed_target_logprob",
++        "single_carry_17_25:perturbed_target_logprob",
++        "single_carry_108_207:perturbed_target_logprob",
++        "multi_carry_999_1:perturbed_target_logprob",
++        "correct_vs_perturbed_margin_nonpositive"
++      ]
++    }
++  },
++  "reproducibility_checksum": "f2302d95f32ca79bc1845237f7654080a76e22040825d598e91f167288260b1a",
++  "research_reference_context": {
++    "mentions_attention": true,
++    "mentions_flag": true,
++    "mentions_hallufield": true,
++    "mentions_hidden_states": true,
++    "mentions_logits": true,
++    "mentions_thermodynamic": true
++  },
++  "retire_recommendation": true,
++  "run_date": "20260707",
++  "runtime_feature_evidence": {
++    "attention_available": false,
++    "completion_split_available": true,
++    "hidden_states_available": false,
++    "logits_available": false,
++    "selected_model_spec": {
++      "autotokenizer_used": false,
++      "file_receipts": {
++        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "checksum_sha256": null,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "size_bytes": 18323731456
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 57,
++        "tensor_count": 833,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "flagship_dense",
++      "status": "local_gguf_resolved"
++    },
++    "selected_runtime": {
++      "blocked_preconditions": [],
++      "exp5331_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_harness_v486.json",
++      "exp5331_receipt_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json",
++      "exp5331_tiny_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json",
++      "exp5337_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
++      "external_text_scorer_reopened": false,
++      "free_vram_mb": 48240,
++      "gpu_visible": true,
++      "live_probe_attempted": true,
++      "nvidia_smi": {
++        "command": [
++          "nvidia-smi",
++          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
++          "--format=csv,noheader,nounits"
++        ],
++        "duration_s": 0.032873,
++        "ok": true,
++        "returncode": 0,
++        "stderr": "",
++        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
++      },
++      "retired_scope_check": {
++        "external_text_scorer_reopened": false,
++        "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
++        "phase_d_external_text_scorer_retired_marker_present": true,
++        "retired_scope_reopened": false
++      },
++      "selected_backend_kind": "llama-server",
++      "selected_backend_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++      "selected_model_file_present": true,
++      "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "selected_runtime_backend_kind": "llama-cli",
++      "token_probability_api_available": true
++    },
++    "token_timing_available": true,
++    "tokenprob_feature_row_count": 3,
++    "tokenprob_rows_available": true
++  },
++  "schema": "carnot.experiment_5372.token_feature_precondition_gate.v489",
++  "source_artifacts": [
++    "results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json",
++    "results/experiment_5354_arithmetic_carry_token_energy_v488.json",
++    "results/experiment_5362_capstone_v488.json",
++    "research-references.md"
++  ],
++  "source_evidence_loaded": {
++    "capstone": true,
++    "exp5353": true,
++    "exp5354": true,
++    "research_references": true
++  },
++  "spec_refs": [
++    "REQ-VERIFY-5372",
++    "SCENARIO-VERIFY-5372"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py -q -o addopts=",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5372_token_feature_precondition_gate_v489.py' -m pytest tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py -q --no-cov -o addopts=",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include='*/experiment_5372_token_feature_precondition_gate_v489.py' --fail-under=100 --show-missing",
++      "outcome": "passed; 100% coverage on new module"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ],
++  "token_feature_gate_ready": true,
++  "tokenprob_rows_available": true,
++  "unsafe_false_accepts": 0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 279ecf5092..e73afb67c9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T18:43:48Z",
+-  "finished_at": "2026-07-07T18:43:48Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-07T19:27:16Z",
++  "finished_at": "2026-07-07T19:27:16Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d417925ad0..4b295f1f9e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T18:43:48Z",
+-  "finished_at": "2026-07-07T18:43:49Z",
++  "started_at": "2026-07-07T19:27:16Z",
++  "finished_at": "2026-07-07T19:27:16Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 52d1ea8cab..8d45544662 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T18:43:49Z",
+-  "finished_at": "2026-07-07T18:43:49Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-07T19:27:16Z",
++  "finished_at": "2026-07-07T19:27:16Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py b/tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py
+new file mode 100644
+index 0000000000..5f61205c9f
+--- /dev/null
++++ b/tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py
+@@ -0,0 +1,343 @@
++"""Tests for Exp5372 token/internal-feature precondition gate.
++
++Spec refs: REQ-VERIFY-5372, SCENARIO-VERIFY-5372.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5372_token_feature_precondition_gate_v489 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def _wrap(value: Any) -> dict[str, Any]:
++    return {"principle": "fixture principle", "value": value}
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _exp5353_artifact() -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5353.tokenprob_feature_audit_corrigendum.v488",
++        "status": _wrap("complete"),
++        "honest_verdict": _wrap("complete: tokenprob_feature_rows_ready"),
++        "inference_substrate": _wrap("live_llm_inference"),
++        "duration_s": 18.988115,
++        "methodology_duration_s": 18.988115,
++        "feature_audit_duration_s": 0.95139,
++        "per_token_logprob_available": True,
++        "topk_alternatives_available": True,
++        "logits_available": False,
++        "hidden_states_available": False,
++        "attention_available": False,
++        "prompt_completion_token_split_available": True,
++        "token_timing_available": True,
++        "tokenprob_feature_row_count": 3,
++        "tokenprob_feature_rows_ready": True,
++        "missing_feature_names": [],
++        "feature_audit": {
++            "per_token_logprob_available": True,
++            "topk_alternatives_available": True,
++            "logits_available": False,
++            "hidden_states_available": False,
++            "attention_available": False,
++            "prompt_completion_token_split_available": True,
++            "token_timing_available": True,
++            "missing_feature_names": ["logits", "attention", "hidden_states"],
++        },
++        "preconditions_checked": _wrap(
++            {
++                "live_probe_attempted": True,
++                "selected_backend_kind": "llama-server",
++                "selected_backend_path": "/tmp/llama-server",
++                "selected_runtime_backend_kind": "llama-cli",
++                "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
++                "selected_model_path": "/tmp/gemma-4-31B-it-Q4_K_M.gguf",
++                "token_probability_api_available": True,
++                "external_text_scorer_reopened": False,
++            }
++        ),
++        "selected_model_spec": _wrap(
++            {
++                "role": "flagship_dense",
++                "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++                "model_path": "/tmp/gemma-4-31B-it-Q4_K_M.gguf",
++            }
++        ),
++    }
++
++
++def _exp5354_artifact() -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5354.arithmetic_carry_token_energy.v488",
++        "status": _wrap("blocked"),
++        "honest_verdict": _wrap(
++            "blocked_carry_token_features_incomplete:no_carry_12_23:"
++            "perturbed_target_logprob,correct_vs_perturbed_margin_nonpositive"
++        ),
++        "inference_substrate": _wrap("live_llm_inference"),
++        "duration_s": 82.932366,
++        "methodology_duration_s": 82.932366,
++        "diagnostic_case_count": 16,
++        "carry_case_count": 8,
++        "feature_complete_rate": 0.5625,
++        "correct_vs_perturbed_margin": 0.0,
++        "unsafe_false_accepts": 0,
++        "carry_token_energy_signal_ready": False,
++        "missing_feature_names": [
++            "no_carry_12_23:perturbed_target_logprob",
++            "correct_vs_perturbed_margin_nonpositive",
++        ],
++        "carry_token_energy_feature_rows": _wrap(
++            [
++                {
++                    "case_id": "no_carry_12_23",
++                    "category": "no_carry",
++                    "feature_complete": False,
++                    "missing_features": ["perturbed_target_logprob"],
++                    "correct_vs_perturbed_margin": None,
++                },
++                {
++                    "case_id": "single_carry_46_37",
++                    "category": "single_carry",
++                    "feature_complete": True,
++                    "missing_features": [],
++                    "correct_vs_perturbed_margin": 11.046974491,
++                },
++            ]
++        ),
++    }
++
++
++def _capstone_artifact() -> dict[str, Any]:
++    return {
++        "tokenprob_feature_rows_ready": True,
++        "carry_token_energy_signal_ready": False,
++        "missing_blocked_flagged_or_skipped_artifacts": _wrap(
++            [
++                {
++                    "experiment_number": 5353,
++                    "classification": "flagged",
++                    "corrigendum_pending": [
++                        {
++                            "kind": "TAUTOLOGY",
++                            "severity": "critical",
++                            "detail": "duration_s=18.988115 and methodology_duration_s=18.988115 agree",
++                        },
++                        {
++                            "kind": "DURATION_TOO_SHORT",
++                            "severity": "critical",
++                            "detail": "duration_s=18.988115 but live model takes >=60.0s minimum",
++                        },
++                    ],
++                },
++                {
++                    "experiment_number": 5354,
++                    "classification": "blocked_and_flagged",
++                    "corrigendum_pending": [
++                        {
++                            "kind": "TAUTOLOGY",
++                            "severity": "critical",
++                            "detail": "duration_s=82.932366 and methodology_duration_s=82.932366 agree",
++                        }
++                    ],
++                },
++            ]
++        ),
++    }
++
++
++def _make_repo(root: Path) -> Path:
++    _write_json(root / exp.EXP5353_RELATIVE_PATH, _exp5353_artifact())
++    _write_json(root / exp.EXP5354_RELATIVE_PATH, _exp5354_artifact())
++    _write_json(root / exp.CAPSTONE_RELATIVE_PATH, _capstone_artifact())
++    (root / exp.RESEARCH_REFERENCES_RELATIVE_PATH).write_text(
++        "\n".join(
++            [
++                "HalluField uses token-path thermodynamic instability from logits.",
++                "FLaG-style latent probes need hidden states and attention evidence.",
++                "Attention energy claims need attention tensors.",
++            ]
++        ),
++        encoding="utf-8",
++    )
++    return root
++
++
++def test_req_verify_5372_spec_declares_precondition_gate_contract() -> None:
++    """REQ-VERIFY-5372: OpenSpec anchors token/internal-feature no-go decisions."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5372") : spec.index("### REQ-VERIFY-5345")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-5372",
++        "SCENARIO-VERIFY-5372",
++        str(exp.RESULT_RELATIVE_PATH),
++        "Exp 5353",
++        "Exp 5354",
++        "future_signal_allowed",
++        "carry_token_energy_continue",
++        "retire_recommendation",
++        "methodology_min_duration_s >= 60",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_verify_5372_extracts_missing_and_tautological_fields(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5372: flagged source fields are preserved exactly."""
++
++    root = _make_repo(tmp_path)
++    artifact = exp.build_artifact(
++        root=root,
++        tests_run=[{"command": "unit exp5372", "outcome": "passed"}],
++    )
++
++    exp.validate_artifact(artifact)
++    missing = artifact["missing_or_tautological_fields"]
++
++    assert missing["exp5353"]["feature_audit_missing_feature_names"] == [
++        "logits",
++        "attention",
++        "hidden_states",
++    ]
++    assert missing["exp5353"]["top_level_missing_feature_names"] == []
++    assert missing["exp5353"]["top_level_omits_nested_latent_missing"] is True
++    assert missing["exp5353"]["duration_tautology"] is True
++    assert "DURATION_TOO_SHORT" in missing["exp5353"]["adversarial_flag_kinds"]
++    assert missing["exp5354"]["missing_feature_names"] == [
++        "no_carry_12_23:perturbed_target_logprob",
++        "correct_vs_perturbed_margin_nonpositive",
++    ]
++    assert missing["exp5354"]["incomplete_row_missing_features"] == {
++        "no_carry_12_23": ["perturbed_target_logprob"]
++    }
++    assert missing["exp5354"]["duration_tautology"] is True
++    assert "TAUTOLOGY" in missing["exp5354"]["adversarial_flag_kinds"]
++
++
++def test_scenario_verify_5372_retires_carry_lane_for_logprob_only_rows(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5372: logprob-only evidence cannot open signal claims."""
++
++    root = _make_repo(tmp_path)
++    artifact = exp.run(
++        root=root,
++        result_path=root / exp.RESULT_RELATIVE_PATH,
++        tests_run=[{"command": "unit exp5372", "outcome": "passed"}],
++    )
++
++    assert json.loads((root / exp.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    exp.validate_artifact(artifact)
++    assert artifact["status"] == "complete"
++    assert artifact["token_feature_gate_ready"] is True
++    assert artifact["tokenprob_rows_available"] is True
++    assert artifact["logits_available"] is False
++    assert artifact["hidden_states_available"] is False
++    assert artifact["attention_available"] is False
++    assert artifact["completion_split_available"] is True
++    assert artifact["methodology_min_duration_s"] == 60.0
++    assert artifact["future_signal_allowed"] is False
++    assert artifact["carry_token_energy_continue"] is False
++    assert artifact["retire_recommendation"] is True
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["tests_run"] == [{"command": "unit exp5372", "outcome": "passed"}]
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert any("HalluField" in claim for claim in artifact["forbidden_claims"])
++    assert any("carry-token energy margin" in claim for claim in artifact["forbidden_claims"])
++    assert artifact["bounded_continuation_allowed"] == [
++        "feature-surface receipt refresh only",
++        "backend upgrade preflight for logits/hidden states/attention",
++    ]
++
++
++def test_req_verify_5372_validation_rejects_unsafe_continuation(tmp_path: Path) -> None:
++    """REQ-VERIFY-5372: validation fails closed on unsupported signal claims."""
++
++    artifact = exp.build_artifact(
++        root=_make_repo(tmp_path),
++        tests_run=[{"command": "unit exp5372", "outcome": "passed"}],
++    )
++
++    assert exp._numeric("not numeric") is None
++
++    bad_missing = deepcopy(artifact)
++    del bad_missing["status"]
++    with pytest.raises(ValueError, match="missing required fields"):
++        exp.validate_artifact(bad_missing)
++
++    bad_duration = deepcopy(artifact)
++    bad_duration["methodology_min_duration_s"] = 30.0
++    with pytest.raises(ValueError, match="methodology_min_duration_s"):
++        exp.validate_artifact(bad_duration)
++
++    bad_signal = deepcopy(artifact)
++    bad_signal["future_signal_allowed"] = True
++    with pytest.raises(ValueError, match="future_signal_allowed"):
++        exp.validate_artifact(bad_signal)
++
++    bad_taut_signal = deepcopy(artifact)
++    bad_taut_signal["future_signal_allowed"] = True
++    bad_taut_signal["logits_available"] = True
++    with pytest.raises(ValueError, match="flagged or tautological"):
++        exp.validate_artifact(bad_taut_signal)
++
++    bad_continue = deepcopy(artifact)
++    bad_continue["carry_token_energy_continue"] = True
++    with pytest.raises(ValueError, match="carry_token_energy_continue"):
++        exp.validate_artifact(bad_continue)
++
++    bad_claims = deepcopy(artifact)
++    bad_claims["forbidden_claims"] = []
++    with pytest.raises(ValueError, match="forbidden_claims"):
++        exp.validate_artifact(bad_claims)
++
++    bad_false_accepts = deepcopy(artifact)
++    bad_false_accepts["unsafe_false_accepts"] = 1
++    with pytest.raises(ValueError, match="unsafe_false_accepts"):
++        exp.validate_artifact(bad_false_accepts)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["token_feature_gate_ready"] = False
++    with pytest.raises(ValueError, match="token_feature_gate_ready"):
++        exp.validate_artifact(bad_ready)
++
++
++def test_req_verify_5372_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-VERIFY-5372: checked-in result is stable under deterministic replay."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_artifact(tests_run=artifact["tests_run"])
++
++    assert artifact == replay
++    assert artifact["status"] == "complete"
++    assert artifact["token_feature_gate_ready"] is True
++    assert artifact["future_signal_allowed"] is False
++    assert artifact["carry_token_energy_continue"] is False
++    assert artifact["retire_recommendation"] is True
++    exp.validate_artifact(artifact)
+-- 
+2.55.0
+

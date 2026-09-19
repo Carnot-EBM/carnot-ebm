@@ -1,0 +1,1778 @@
+From 0f1cadc9b4212c127e3d000d5cc1645c57a148c0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 07:16:41 -0400
+Subject: [PATCH 03423/11362] [conductor] PHASE D (SOTA-INGESTION; reserved;
+ bleeding-edge track = feature/skill ROUTING + env-adaptive replay) -- ingest
+ SOTA on skill-routing / skill-library selection for agents (SkillRouter
+ arXiv:2603.22455, SkillGraph arXiv:2605.12039, SkillComposer
+ arXiv:2606.06079, Skill-Pro arXiv:2602.01869) + robust / env-adaptive replay
+ under env/version drift, mapped onto the .423 A1 (env-adaptive re-solve) + A3
+ (feature-router) headlines. Carry the action-effect citations
+ (arXiv:2603.24621). Emit a SOTA->experiment mapping note with real arXiv IDs
+ + flag the strongest method for .424.
+
+Automated research step by research conductor.
+Task ID: exp4589-d
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...ingestion-feature-router-423-2026-06-22.md | 235 ++++++
+ .../capabilities/research-reporting/spec.md   |  81 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ment_4589_sota_ingestion_feature_router.py | 774 ++++++++++++++++++
+ research-studying.md                          |  26 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...nt_4589_sota_ingestion_feature_router.json | 165 ++++
+ ...ment_4589_sota_ingestion_feature_router.py |   8 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ment_4589_sota_ingestion_feature_router.py | 261 ++++++
+ 15 files changed, 1567 insertions(+), 17 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md
+ create mode 100644 python/carnot/experiment_4589_sota_ingestion_feature_router.py
+ create mode 100644 results/experiment_4589_sota_ingestion_feature_router.json
+ create mode 100644 results/experiment_4589_sota_ingestion_feature_router.py
+ create mode 100644 tests/python/test_experiment_4589_sota_ingestion_feature_router.py
+
+diff --git a/docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md b/docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md
+new file mode 100644
+index 0000000000..14e85cfb2c
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md
+@@ -0,0 +1,235 @@
++# Feature-router and env-adaptive replay SOTA ingestion .423 - 2026-06-22
++
++```json
++{
++  "citations_verified": {
++    "2512.24156": {
++      "http_status": 200,
++      "title": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks",
++      "url": "https://arxiv.org/abs/2512.24156"
++    },
++    "2602.01869": {
++      "http_status": 200,
++      "title": "Skill-Pro: Learning Reusable Skills from Experience via Non-Parametric PPO for LLM Agents",
++      "url": "https://arxiv.org/abs/2602.01869"
++    },
++    "2602.08234": {
++      "http_status": 200,
++      "title": "SkillRL: Evolving Agents via Recursive Skill-Augmented Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2602.08234"
++    },
++    "2603.22455": {
++      "http_status": 200,
++      "title": "SkillRouter: Skill Routing for LLM Agents at Scale",
++      "url": "https://arxiv.org/abs/2603.22455"
++    },
++    "2603.24621": {
++      "http_status": 200,
++      "title": "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence",
++      "url": "https://arxiv.org/abs/2603.24621"
++    },
++    "2605.12039": {
++      "http_status": 200,
++      "title": "SkillGraph: Skill-Augmented Reinforcement Learning for Agents via Evolving Skill Graphs",
++      "url": "https://arxiv.org/abs/2605.12039"
++    },
++    "2606.06079": {
++      "http_status": 200,
++      "title": "SkillComposer: Learning to Evolve Agent Skills for Specification and Generalization",
++      "url": "https://arxiv.org/abs/2606.06079"
++    }
++  },
++  "field_principles": {
++    "citations_verified": "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact).",
++    "field_principles": "principle annotations for every top-level artifact field.",
++    "flagged_for_next_roadmap": "the strongest method flagged as a .424 candidate -- closes the discover->ingest->plan loop.",
++    "honest_verdict": "terminal prefix; complete: sota_ingestion_feature_router_mapped.",
++    "inference_substrate": "aggregation_from_upstream_artifacts -- literature synthesis, no model load (100us floor).",
++    "methods_mapped": "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants anti-rederivation check.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "research_note_path": "repo-relative markdown path for deterministic parsing."
++  },
++  "flagged_for_next_roadmap": "flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)",
++  "honest_verdict": "complete: sota_ingestion_feature_router_mapped",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methods_mapped": [
++    {
++      "fails_when": "skill bodies are hidden at routing time, the library is not execution validated, retrieval is evaluated only on seen public games, or routing is left as a final candidate reranker after the winning action is absent.",
++      "method": "SkillRouter full-text retrieve-and-rerank over the solver toolkit",
++      "source_ids": [
++        "2603.22455"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 currently classifies first-K early-play effects into a small mechanic class and routes to a fixed approach, but the artifact ended as a null because winner generation stayed mostly absent. SkillRouter takes over Exp 4582 by retrieving and reranking full skill bodies from the arc_solver_kit toolkit before planning, rather than exposing only short names or hand-coded class labels.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillRouter-style full-body routing over arc_solver_kit skills for the Exp 4582 seen-to-hidden feature router"
++    },
++    {
++      "fails_when": "the graph grows from raw trajectories without deduplication, failed traces are not distilled into negative routing constraints, or dependency edges are trusted without replay through the current ARC environment.",
++      "method": "SkillGraph plus SkillRL evolving skill-library structure",
++      "source_ids": [
++        "2605.12039",
++        "2602.08234"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 stores a flat mechanic-class to approach preference learned from positive and negative traces. SkillGraph and SkillRL take over that Exp 4582 policy by turning traces into a structured skill graph or SkillBank with dependency edges, failure lessons, and adaptive retrieval for general and task-specific heuristics.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillGraph/SkillRL library maintenance behind the Exp 4582 router, with replay-gated skill insertion"
++    },
++    {
++      "fails_when": "merged skills become too abstract to trigger reliably, task-specific skills are allowed to leak public-game identity, or reusable procedures lack an offline replay gate before entering the toolkit.",
++      "method": "SkillComposer and Skill-Pro skill merge into executable reusable procedures",
++      "source_ids": [
++        "2606.06079",
++        "2602.01869"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 exposes residual gaps by mechanic class, and Exp 4580 banks trajectory evidence when a procedure is replayable. SkillComposer and Skill-Pro take over this handoff by creating, improving, merging, and verifying reusable skills with activation/execution/termination conditions instead of repeatedly deriving per-game recipes.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillComposer/Skill-Pro merge pass over Exp 4582 mechanic gaps before persisting new solver primitives"
++    },
++    {
++      "fails_when": "the game requires hidden carry-state induction, graph keys ignore layout version drift, exploration budgets do not preserve action efficiency, or newly recovered paths are not rechecked through offline reproduction.",
++      "method": "Graph-Based Exploration as env-derived robust replay generator",
++      "source_ids": [
++        "2512.24156"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4580 succeeded by closing the package gap and recovering sc25 with an env-adaptive replay path instead of trusting stale flat coordinates. Graph-Based Exploration takes over Exp 4580's replay fragility by re-deriving state-action paths from current frames, visited-state graphs, and untested action priorities when frozen replay no longer matches.",
++      "target_track": "env_adaptive_replay",
++      "v424_candidate": "flagged_for_v424: graph-explore replay regeneration for Exp 4580 version-drift rows before falling back to stale coordinate banks"
++    },
++    {
++      "fails_when": "the next roadmap optimizes only the public-game package gap, ignores actions-to-first-levelup, treats official and community harness evidence as identical, or promotes env-adaptive replay without held-out layout drift.",
++      "method": "ARC-AGI-3 efficiency-and-drift evaluation contract",
++      "source_ids": [
++        "2603.24621"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4580's headline is not a new solve; it converts 53 reproduced public levels into 53 live-submittable levels by requiring environment-matched trajectories or an env-adaptive resolver. The ARC-AGI-3 report takes over the Exp 4580 acceptance contract: novel interactive environments require goal inference, dynamics modeling, planning, and action-efficient replay under changing layouts.",
++      "target_track": "env_adaptive_replay",
++      "v424_candidate": "flagged_for_v424: ARC-AGI-3 drift-aware live-submittable gate for every Exp 4580 replay primitive"
++    }
++  ],
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arxiv_api_reachable": true,
++    "arxiv_http_200_verified_ids": [
++      "2603.22455",
++      "2605.12039",
++      "2606.06079",
++      "2602.01869",
++      "2602.08234",
++      "2512.24156",
++      "2603.24621"
++    ],
++    "codex_md_read": true,
++    "deep_research_invoked": false,
++    "exp4580_artifact_read": true,
++    "exp4580_spec_read": true,
++    "exp4582_artifact_read": true,
++    "exp4582_spec_read": true,
++    "leaderboard_submission": false,
++    "live_llm_inference": false,
++    "live_solve_claim": false,
++    "ops_docs_modified": false,
++    "research_conductor_modified": false,
++    "research_references_filtered": true,
++    "research_studying_filtered": true,
++    "research_studying_updated": true,
++    "sweep_clusters_help_exit_0": true,
++    "sweep_clusters_urls": [
++      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
++      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++    ],
++    "sweep_clusters_used": true,
++    "sweep_semscholar_arxiv_ids": [],
++    "sweep_semscholar_queries": [
++      "SkillRouter Skill Routing LLM Agents at Scale",
++      "SkillGraph skill augmented RL evolving skill graphs",
++      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO",
++      "ARC-AGI-3 graph-based exploration environment drift replay skill routing"
++    ],
++    "sweep_semscholar_rate_limited_queries": [
++      "SkillRouter Skill Routing LLM Agents at Scale",
++      "SkillGraph skill augmented RL evolving skill graphs",
++      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO"
++    ],
++    "sweep_semscholar_used": true,
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/2603.22455",
++      "https://arxiv.org/abs/2605.12039",
++      "https://arxiv.org/abs/2606.06079",
++      "https://arxiv.org/abs/2602.01869",
++      "https://arxiv.org/abs/2602.08234",
++      "https://arxiv.org/abs/2512.24156",
++      "https://arxiv.org/abs/2603.24621"
++    ]
++  },
++  "random_seed": 4589,
++  "research_note_path": "docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md"
++}
++```
++
++Reliable channel only: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
++arXiv abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of seven
++top skill-routing / skill-library / env-adaptive replay sources. Preconditions
++passed before any claim was promoted: `.venv/bin/python scripts/sweep_clusters.py
++--help` exited zero and `curl -sf -o /dev/null
++https://export.arxiv.org/api/query?search_query=all:test` confirmed arXiv API
++reachability. `scripts/sweep_clusters.py 5 --max-results 8` and
++`scripts/sweep_clusters.py 6 --max-results 8` emitted the focused cluster URLs.
++`scripts/sweep_semscholar.py` ran four focused queries; three returned HTTP 429
++and no S2-only arXiv ID was promoted. No `/deep-research` call was made. No training,
++live LLM inference, leaderboard submission, or live solve was launched.
++No ops/status/traceability files or `scripts/research_conductor.py` were modified.
++
++Already-discovered corpus read through a skill-routing and env-adaptive replay
++filter: `research-studying.md`, `research-references.md`,
++`openspec/capabilities/capstone/spec.md` at `REQ-CAPSTONE-4580` and
++`REQ-CAPSTONE-4582`, `results/experiment_4580_live_submission_gap_close.json`,
++and `results/experiment_4582_feature_router_transfer.json`. Exp 4580 succeeded
++as a packaging/replay result: live-submittable levels rose from 33 to 53 and
++`sc25` was recovered by env-adaptive replay. Exp 4582 was an honest no-value
++feature-router null: router and baseline both measured 0.04 generic transfer,
++random-route control did not pass, false-negative risk stayed open, and residual
++generation gaps remain by mechanic class.
++
++Sources checked: arXiv:2603.22455, arXiv:2605.12039, arXiv:2606.06079, arXiv:2602.01869, arXiv:2602.08234, arXiv:2512.24156, arXiv:2603.24621.
++
++## Per-Method Mapping
++
++- **SkillRouter full-text retrieve-and-rerank** (arXiv:2603.22455): the strongest
++  A3 lesson is that Exp 4582 should route over full solver-skill bodies, not only
++  a small mechanic-class label. It fails if hidden skill bodies or stale metadata
++  become the routing substrate, or if routing happens after the winning action is
++  already absent from the candidate pool.
++- **SkillGraph plus SkillRL evolving skill-library structure** (arXiv:2605.12039,
++  arXiv:2602.08234): turn Exp 4582 positive and negative traces into a graph or
++  SkillBank with dependency edges, failure lessons, and adaptive retrieval. It
++  fails if graph edges are trusted without current-environment replay validation.
++- **SkillComposer and Skill-Pro executable skill reuse** (arXiv:2606.06079,
++  arXiv:2602.01869): create, improve, merge, and verify skills so recurring ARC
++  mechanics become reusable procedures with activation/execution/termination
++  conditions. It fails when merged skills are too abstract or public-game identity
++  leaks into the reusable primitive.
++- **Graph-Based Exploration as robust replay regeneration** (arXiv:2512.24156):
++  take Exp 4580's env-adaptive replay success and re-derive action paths from the
++  current frame/state graph when flat coordinates drift. It fails on hidden-state
++  or mechanic-limited games unless the graph key and action probes expose the
++  latent state.
++- **ARC-AGI-3 efficiency-and-drift evaluation contract** (arXiv:2603.24621): keep
++  Exp 4580 honest by treating live-submittable replay, environment match, and
++  actions-to-first-levelup as the score-facing contract. It fails if .424 optimizes
++  only the public-game package gap and ignores hidden-layout or action-efficiency
++  generalization.
++
++## .424 Candidate
++
++flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)
++
++The practical next experiment should keep Exp 4580's offline reproduction and
++env-match gates, keep Exp 4582's random-route and false-negative controls, and
++replace the flat route table with full-body skill retrieval plus graph-validated
++replay regeneration. SkillRouter supplies the selection mechanism, SkillGraph and
++SkillRL supply the evolving library structure, SkillComposer and Skill-Pro supply
++the skill create/merge/reuse operations, Graph-Based Exploration supplies the
++layout-drift replay fallback, and ARC-AGI-3 supplies the action-efficient
++evaluation contract.
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index c0bbcbf643..6158ca4095 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -28471,6 +28471,87 @@ ops/status/traceability edits, or `scripts/research_conductor.py` edit.
+ |---|---|---|
+ | REQ-REPORT-4577 | Implemented (`python/carnot/experiment_4577_sota_ingestion_action_effect.py`) | Implemented (`tests/python/test_experiment_4577_sota_ingestion_action_effect.py`) |
+ 
++### REQ-REPORT-4589: Ingest Skill-Routing And Env-Adaptive Replay SOTA Into The .424 Plan
++
++The Exp 4589 workflow SHALL write
++`docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md` with a
++machine-readable JSON artifact block followed by a concise SOTA-to-experiment
++mapping note. It SHALL read `AGENTS.md`, `CODEX.md`, `research-studying.md`,
++`research-references.md`, the current env-adaptive replay mechanism in
++`REQ-CAPSTONE-4580`, the current early-play feature-router mechanism in
++`REQ-CAPSTONE-4582`, `results/experiment_4580_live_submission_gap_close.json`,
++and `results/experiment_4582_feature_router_transfer.json`. It SHALL filter the
++already-discovered corpus to skill routing, skill-library selection and
++maintenance, skill composition, experience-to-skill reuse, graph exploration,
++ARC-AGI-3 env/version drift, and robust replay. It SHALL run the reliable
++channel only: `scripts/sweep_clusters.py 5 --max-results 8`,
++`scripts/sweep_clusters.py 6 --max-results 8`, `scripts/sweep_semscholar.py`
++on focused skill-routing and env-adaptive replay queries, arXiv abs-page
++HTTP-200 verification, and low-concurrency WebSearch/WebFetch over five to
++eight top sources. It SHALL verify `.venv/bin/python scripts/sweep_clusters.py
++--help` exits zero and `curl -sf -o /dev/null
++https://export.arxiv.org/api/query?search_query=all:test` exits zero before
++promoting citations. It SHALL NOT invoke `/deep-research`, SHALL NOT launch
++live LLM inference, SHALL NOT launch training, SHALL NOT submit to the
++leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
++`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
++modify `scripts/research_conductor.py`.
++
++The required runner SHALL be
++`results/experiment_4589_sota_ingestion_feature_router.py` delegating to
++`python/carnot/experiment_4589_sota_ingestion_feature_router.py`, and the
++workflow SHALL also write
++`results/experiment_4589_sota_ingestion_feature_router.json`.
++
++The artifact SHALL include the required top-level fields `honest_verdict`,
++`inference_substrate`, `methods_mapped`, `citations_verified`,
++`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
++`random_seed`, and `field_principles`. `honest_verdict` SHALL be
++terminal-prefixed and equal
++`complete: sota_ingestion_feature_router_mapped` on the complete path.
++`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
++`methods_mapped` SHALL contain three to five strongest methods with real
++arXiv-backed `source_ids`, a `target_track` distinguishing feature/skill routing
++over a toolkit from env-adaptive/robust replay, a
++`takes_over_current_a1_a3_mechanisms` field mapping onto Exp 4580 and/or Exp
++4582, and a `fails_when` caveat. `citations_verified` SHALL provide one
++verified arXiv URL and title for every source ID used by the method claims and
++SHALL include arXiv IDs from the set `2603.22455`, `2605.12039`, `2606.06079`,
++`2602.01869`, `2602.08234`, `2512.24156`, and `2603.24621`.
++`flagged_for_next_roadmap` SHALL flag the strongest `.424` candidate and
++`research-studying.md` SHALL mark the ingested methods with
++`flagged_for_v424`. `field_principles` SHALL include one-line principles for
++every top-level artifact field, including the required terminal-prefix
++`honest_verdict`, aggregation-only `inference_substrate`, verifiable-citation
++`methods_mapped` and `citations_verified`, roadmap-closing
++`flagged_for_next_roadmap`, and resource-recording `preconditions_checked`
++principles.
++
++#### SCENARIO-REPORT-4589: Skill Routing And Replay SOTA Maps To .424 Inputs
++
++**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
++`research-references.md`, `scripts/sweep_clusters.py`,
++`scripts/sweep_semscholar.py`, `REQ-CAPSTONE-4580`, `REQ-CAPSTONE-4582`, and
++the Exp 4580/4582 artifacts are readable
++**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
++succeed
++**And** arXiv abs-page checks verify the complete-path source IDs
++**When** the Exp 4589 SOTA-ingestion workflow runs
++**Then** it writes the required JSON artifact and markdown note, maps
++SkillRouter, SkillGraph, SkillComposer, Skill-Pro, and SkillRL onto the current
++Exp 4582 feature-router/null-generation-gap mechanism, maps Graph-Based
++Exploration and the ARC-AGI-3 report onto the current Exp 4580 env-adaptive
++replay/live-submittable mechanism, flags the strongest `.424` input, declares
++`aggregation_from_upstream_artifacts`, and records no `/deep-research`, live
++inference, training, leaderboard submission, solve claim,
++ops/status/traceability edits, or `scripts/research_conductor.py` edit.
++
++## Implementation Status (REQ-REPORT-4589)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4589 | Implemented (`python/carnot/experiment_4589_sota_ingestion_feature_router.py`) | Implemented (`tests/python/test_experiment_4589_sota_ingestion_feature_router.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 65fcb268e1..f764af7b15 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3606,
++  "experiments_checked": 3607,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4589_sota_ingestion_feature_router.py b/python/carnot/experiment_4589_sota_ingestion_feature_router.py
+new file mode 100644
+index 0000000000..0eba5f6547
+--- /dev/null
++++ b/python/carnot/experiment_4589_sota_ingestion_feature_router.py
+@@ -0,0 +1,774 @@
++"""Exp 4589 skill-routing and env-adaptive replay SOTA ingestion.
++
++Spec refs: REQ-REPORT-4589, SCENARIO-REPORT-4589.
++
++This module records a literature-synthesis artifact. It does not run the ARC
++agent, train a model, or submit to the leaderboard. The deterministic writer
++makes the markdown note, result JSON, and studying-queue update safe to rerun.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "inference_substrate",
++        "methods_mapped",
++        "citations_verified",
++        "flagged_for_next_roadmap",
++        "preconditions_checked",
++        "research_note_path",
++        "random_seed",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "method",
++        "source_ids",
++        "target_track",
++        "takes_over_current_a1_a3_mechanisms",
++        "fails_when",
++        "v424_candidate",
++    }
++)
++REQUIRED_CITATION_FIELDS = frozenset({"title", "url", "http_status"})
++REQUIRED_PRECONDITION_FIELDS = frozenset(
++    {
++        "agents_md_read",
++        "codex_md_read",
++        "sweep_clusters_help_exit_0",
++        "arxiv_api_reachable",
++        "research_studying_filtered",
++        "research_references_filtered",
++        "exp4580_spec_read",
++        "exp4582_spec_read",
++        "exp4580_artifact_read",
++        "exp4582_artifact_read",
++        "research_studying_updated",
++        "sweep_clusters_used",
++        "sweep_clusters_urls",
++        "sweep_semscholar_used",
++        "sweep_semscholar_queries",
++        "sweep_semscholar_arxiv_ids",
++        "sweep_semscholar_rate_limited_queries",
++        "arxiv_http_200_verified_ids",
++        "websearch_webfetch_top_sources",
++        "deep_research_invoked",
++        "live_llm_inference",
++        "training_launched",
++        "leaderboard_submission",
++        "live_solve_claim",
++        "ops_docs_modified",
++        "research_conductor_modified",
++    }
++)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++VALID_TARGET_TRACKS = frozenset({"feature_skill_routing", "env_adaptive_replay"})
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_feature_router_mapped"
++DEFAULT_RANDOM_SEED = 4589
++RESEARCH_NOTE_RELATIVE_PATH = (
++    "docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md"
++)
++STUDYING_SECTION_START = "<!-- EXP4589-FEATURE-ROUTER-SOTA-START -->"
++STUDYING_SECTION_END = "<!-- EXP4589-FEATURE-ROUTER-SOTA-END -->"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "terminal prefix; complete: sota_ingestion_feature_router_mapped.",
++    "inference_substrate": (
++        "aggregation_from_upstream_artifacts -- literature synthesis, no model load "
++        "(100us floor)."
++    ),
++    "methods_mapped": (
++        "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants "
++        "anti-rederivation check."
++    ),
++    "citations_verified": (
++        "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication "
++        "bar (same as any results artifact)."
++    ),
++    "flagged_for_next_roadmap": (
++        "the strongest method flagged as a .424 candidate -- closes the "
++        "discover->ingest->plan loop."
++    ),
++    "preconditions_checked": (
++        "records resources verified; pre-empts missing-resource fabrication."
++    ),
++    "research_note_path": "repo-relative markdown path for deterministic parsing.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "field_principles": "principle annotations for every top-level artifact field.",
++}
++
++CITATIONS_VERIFIED = {
++    "2603.22455": {
++        "title": "SkillRouter: Skill Routing for LLM Agents at Scale",
++        "url": "https://arxiv.org/abs/2603.22455",
++        "http_status": 200,
++    },
++    "2605.12039": {
++        "title": (
++            "SkillGraph: Skill-Augmented Reinforcement Learning for Agents via "
++            "Evolving Skill Graphs"
++        ),
++        "url": "https://arxiv.org/abs/2605.12039",
++        "http_status": 200,
++    },
++    "2606.06079": {
++        "title": "SkillComposer: Learning to Evolve Agent Skills for Specification and Generalization",
++        "url": "https://arxiv.org/abs/2606.06079",
++        "http_status": 200,
++    },
++    "2602.01869": {
++        "title": "Skill-Pro: Learning Reusable Skills from Experience via Non-Parametric PPO for LLM Agents",
++        "url": "https://arxiv.org/abs/2602.01869",
++        "http_status": 200,
++    },
++    "2602.08234": {
++        "title": "SkillRL: Evolving Agents via Recursive Skill-Augmented Reinforcement Learning",
++        "url": "https://arxiv.org/abs/2602.08234",
++        "http_status": 200,
++    },
++    "2512.24156": {
++        "title": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks",
++        "url": "https://arxiv.org/abs/2512.24156",
++        "http_status": 200,
++    },
++    "2603.24621": {
++        "title": "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence",
++        "url": "https://arxiv.org/abs/2603.24621",
++        "http_status": 200,
++    },
++}
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(f"arXiv:{source}" for source in CITATIONS_VERIFIED)
++
++SWEEP_CLUSTER_URLS = [
++    (
++        "http://export.arxiv.org/api/query?search_query="
++        '(abs:"affordance"+OR+abs:"action+effect"+OR+abs:"clickability"+OR+'
++        'abs:"frame+prediction"+OR+abs:"intrinsic+motivation"+OR+'
++        'abs:"directed+exploration"+OR+abs:"novelty+search")+AND+'
++        '(abs:"reinforcement+learning"+OR+abs:"agent"+OR+'
++        'abs:"exploration"+OR+abs:"interactive+environment"+OR+abs:"ARC")'
++        "&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++    ),
++    (
++        "http://export.arxiv.org/api/query?search_query="
++        '(abs:"neural+guided+search"+OR+abs:"learned+heuristic"+OR+'
++        'abs:"value+guided+search"+OR+abs:"program+induction"+OR+'
++        'abs:"world+model"+OR+abs:"goal+induction")+AND+'
++        '(abs:"planning"+OR+abs:"agent"+OR+abs:"reasoning"+OR+'
++        'abs:"reinforcement+learning")&start=0&max_results=8'
++        "&sortBy=submittedDate&sortOrder=descending"
++    ),
++]
++
++S2_QUERIES = [
++    "SkillRouter Skill Routing LLM Agents at Scale",
++    "SkillGraph skill augmented RL evolving skill graphs",
++    "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO",
++    "ARC-AGI-3 graph-based exploration environment drift replay skill routing",
++]
++
++WEBSEARCH_WEBFETCH_TOP_SOURCES = [
++    CITATIONS_VERIFIED["2603.22455"]["url"],
++    CITATIONS_VERIFIED["2605.12039"]["url"],
++    CITATIONS_VERIFIED["2606.06079"]["url"],
++    CITATIONS_VERIFIED["2602.01869"]["url"],
++    CITATIONS_VERIFIED["2602.08234"]["url"],
++    CITATIONS_VERIFIED["2512.24156"]["url"],
++    CITATIONS_VERIFIED["2603.24621"]["url"],
++]
++
++DEFAULT_PRECONDITIONS_CHECKED = {
++    "agents_md_read": True,
++    "codex_md_read": True,
++    "sweep_clusters_help_exit_0": True,
++    "arxiv_api_reachable": True,
++    "research_studying_filtered": True,
++    "research_references_filtered": True,
++    "exp4580_spec_read": True,
++    "exp4582_spec_read": True,
++    "exp4580_artifact_read": True,
++    "exp4582_artifact_read": True,
++    "research_studying_updated": True,
++    "sweep_clusters_used": True,
++    "sweep_clusters_urls": SWEEP_CLUSTER_URLS,
++    "sweep_semscholar_used": True,
++    "sweep_semscholar_queries": S2_QUERIES,
++    "sweep_semscholar_arxiv_ids": [],
++    "sweep_semscholar_rate_limited_queries": S2_QUERIES[:3],
++    "arxiv_http_200_verified_ids": list(CITATIONS_VERIFIED),
++    "websearch_webfetch_top_sources": WEBSEARCH_WEBFETCH_TOP_SOURCES,
++    "deep_research_invoked": False,
++    "live_llm_inference": False,
++    "training_launched": False,
++    "leaderboard_submission": False,
++    "live_solve_claim": False,
++    "ops_docs_modified": False,
++    "research_conductor_modified": False,
++}
++
++DEFAULT_METHODS_MAPPED = [
++    {
++        "method": "SkillRouter full-text retrieve-and-rerank over the solver toolkit",
++        "source_ids": ["2603.22455"],
++        "target_track": "feature_skill_routing",
++        "takes_over_current_a1_a3_mechanisms": (
++            "Exp 4582 currently classifies first-K early-play effects into a small "
++            "mechanic class and routes to a fixed approach, but the artifact ended "
++            "as a null because winner generation stayed mostly absent. SkillRouter "
++            "takes over Exp 4582 by retrieving and reranking full skill bodies from "
++            "the arc_solver_kit toolkit before planning, rather than exposing only "
++            "short names or hand-coded class labels."
++        ),
++        "fails_when": (
++            "skill bodies are hidden at routing time, the library is not execution "
++            "validated, retrieval is evaluated only on seen public games, or routing "
++            "is left as a final candidate reranker after the winning action is absent."
++        ),
++        "v424_candidate": (
++            "flagged_for_v424: SkillRouter-style full-body routing over arc_solver_kit "
++            "skills for the Exp 4582 seen-to-hidden feature router"
++        ),
++    },
++    {
++        "method": "SkillGraph plus SkillRL evolving skill-library structure",
++        "source_ids": ["2605.12039", "2602.08234"],
++        "target_track": "feature_skill_routing",
++        "takes_over_current_a1_a3_mechanisms": (
++            "Exp 4582 stores a flat mechanic-class to approach preference learned from "
++            "positive and negative traces. SkillGraph and SkillRL take over that "
++            "Exp 4582 policy by turning traces into a structured skill graph or "
++            "SkillBank with dependency edges, failure lessons, and adaptive retrieval "
++            "for general and task-specific heuristics."
++        ),
++        "fails_when": (
++            "the graph grows from raw trajectories without deduplication, failed traces "
++            "are not distilled into negative routing constraints, or dependency edges "
++            "are trusted without replay through the current ARC environment."
++        ),
++        "v424_candidate": (
++            "flagged_for_v424: SkillGraph/SkillRL library maintenance behind the Exp "
++            "4582 router, with replay-gated skill insertion"
++        ),
++    },
++    {
++        "method": "SkillComposer and Skill-Pro skill merge into executable reusable procedures",
++        "source_ids": ["2606.06079", "2602.01869"],
++        "target_track": "feature_skill_routing",
++        "takes_over_current_a1_a3_mechanisms": (
++            "Exp 4582 exposes residual gaps by mechanic class, and Exp 4580 banks "
++            "trajectory evidence when a procedure is replayable. SkillComposer and "
++            "Skill-Pro take over this handoff by creating, improving, merging, and "
++            "verifying reusable skills with activation/execution/termination conditions "
++            "instead of repeatedly deriving per-game recipes."
++        ),
++        "fails_when": (
++            "merged skills become too abstract to trigger reliably, task-specific "
++            "skills are allowed to leak public-game identity, or reusable procedures "
++            "lack an offline replay gate before entering the toolkit."
++        ),
++        "v424_candidate": (
++            "flagged_for_v424: SkillComposer/Skill-Pro merge pass over Exp 4582 "
++            "mechanic gaps before persisting new solver primitives"
++        ),
++    },
++    {
++        "method": "Graph-Based Exploration as env-derived robust replay generator",
++        "source_ids": ["2512.24156"],
++        "target_track": "env_adaptive_replay",
++        "takes_over_current_a1_a3_mechanisms": (
++            "Exp 4580 succeeded by closing the package gap and recovering sc25 with "
++            "an env-adaptive replay path instead of trusting stale flat coordinates. "
++            "Graph-Based Exploration takes over Exp 4580's replay fragility by "
++            "re-deriving state-action paths from current frames, visited-state graphs, "
++            "and untested action priorities when frozen replay no longer matches."
++        ),
++        "fails_when": (
++            "the game requires hidden carry-state induction, graph keys ignore layout "
++            "version drift, exploration budgets do not preserve action efficiency, or "
++            "newly recovered paths are not rechecked through offline reproduction."
++        ),
++        "v424_candidate": (
++            "flagged_for_v424: graph-explore replay regeneration for Exp 4580 "
++            "version-drift rows before falling back to stale coordinate banks"
++        ),
++    },
++    {
++        "method": "ARC-AGI-3 efficiency-and-drift evaluation contract",
++        "source_ids": ["2603.24621"],
++        "target_track": "env_adaptive_replay",
++        "takes_over_current_a1_a3_mechanisms": (
++            "Exp 4580's headline is not a new solve; it converts 53 reproduced public "
++            "levels into 53 live-submittable levels by requiring environment-matched "
++            "trajectories or an env-adaptive resolver. The ARC-AGI-3 report takes over "
++            "the Exp 4580 acceptance contract: novel interactive environments require "
++            "goal inference, dynamics modeling, planning, and action-efficient replay "
++            "under changing layouts."
++        ),
++        "fails_when": (
++            "the next roadmap optimizes only the public-game package gap, ignores "
++            "actions-to-first-levelup, treats official and community harness evidence "
++            "as identical, or promotes env-adaptive replay without held-out layout drift."
++        ),
++        "v424_candidate": (
++            "flagged_for_v424: ARC-AGI-3 drift-aware live-submittable gate for every "
++            "Exp 4580 replay primitive"
++        ),
++    },
++]
++
++FLAGGED_FOR_NEXT_ROADMAP = (
++    "flagged_for_v424: implement SkillRouter-style full-body routing over "
++    "arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and "
++    "graph-explore env-adaptive replay regeneration for drifted rows "
++    "(arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)"
++)
++
++
++def _fail(message: str) -> None:
++    raise ValueError(message)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        _fail(message)
++
++
++def _list_value(value: object) -> bool:
++    return isinstance(value, list)
++
++
++def _nonempty_list(value: object) -> bool:
++    return isinstance(value, list) and bool(value)
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[Mapping[str, object]] | None = None,
++    preconditions_checked: Mapping[str, object] | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build the deterministic artifact embedded in the markdown note."""
++
++    chosen_methods = DEFAULT_METHODS_MAPPED if methods_mapped is None else methods_mapped
++    chosen_preconditions = (
++        DEFAULT_PRECONDITIONS_CHECKED if preconditions_checked is None else preconditions_checked
++    )
++    return {
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "methods_mapped": [dict(method) for method in chosen_methods],
++        "citations_verified": {key: dict(value) for key, value in CITATIONS_VERIFIED.items()},
++        "flagged_for_next_roadmap": FLAGGED_FOR_NEXT_ROADMAP,
++        "preconditions_checked": dict(chosen_preconditions),
++        "research_note_path": RESEARCH_NOTE_RELATIVE_PATH,
++        "random_seed": random_seed,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def _validate_preconditions(row: object) -> None:
++    _require(
++        isinstance(row, Mapping) and set(row) == REQUIRED_PRECONDITION_FIELDS,
++        "preconditions_checked must have exactly the required fields",
++    )
++    expected_true = {
++        "agents_md_read": "AGENTS.md",
++        "codex_md_read": "CODEX.md",
++        "sweep_clusters_help_exit_0": "sweep_clusters.py --help",
++        "arxiv_api_reachable": "arXiv API",
++        "research_studying_filtered": "research-studying.md filtered pass",
++        "research_references_filtered": "research-references.md filtered pass",
++        "exp4580_spec_read": "REQ-CAPSTONE-4580 spec",
++        "exp4582_spec_read": "REQ-CAPSTONE-4582 spec",
++        "exp4580_artifact_read": "Exp 4580 env-adaptive replay artifact",
++        "exp4582_artifact_read": "Exp 4582 feature-router artifact",
++        "research_studying_updated": "research-studying.md update",
++        "sweep_clusters_used": "sweep_clusters.py",
++        "sweep_semscholar_used": "sweep_semscholar.py",
++    }
++    for key, label in expected_true.items():
++        _require(row.get(key) is True, f"preconditions_checked must record {label}")
++
++    expected_false = {
++        "deep_research_invoked": "deep-research",
++        "live_llm_inference": "live inference",
++        "training_launched": "training",
++        "leaderboard_submission": "leaderboard",
++        "live_solve_claim": "live solve",
++        "ops_docs_modified": "ops docs",
++        "research_conductor_modified": "scripts/research_conductor.py",
++    }
++    for key, label in expected_false.items():
++        _require(row.get(key) is False, f"preconditions_checked must record no {label}")
++
++    _require(
++        row.get("sweep_clusters_urls") == SWEEP_CLUSTER_URLS,
++        "preconditions_checked must record the focused cluster 5/6 URLs",
++    )
++    _require(
++        _nonempty_list(row.get("sweep_semscholar_queries")),
++        "preconditions_checked must record Semantic Scholar queries",
++    )
++    _require(
++        _list_value(row.get("sweep_semscholar_arxiv_ids")),
++        "preconditions_checked must record Semantic Scholar arXiv ids",
++    )
++    _require(
++        _nonempty_list(row.get("sweep_semscholar_rate_limited_queries")),
++        "preconditions_checked must record Semantic Scholar HTTP 429 queries",
++    )
++    _require(
++        _nonempty_list(row.get("arxiv_http_200_verified_ids"))
++        and set(CITATIONS_VERIFIED).issubset(set(row["arxiv_http_200_verified_ids"])),
++        "preconditions_checked must include all verified arXiv ids",
++    )
++    _require(
++        _nonempty_list(row.get("websearch_webfetch_top_sources"))
++        and set(WEBSEARCH_WEBFETCH_TOP_SOURCES).issubset(
++            set(row["websearch_webfetch_top_sources"])
++        ),
++        "preconditions_checked must include WebSearch/WebFetch source URLs",
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the artifact before writing or embedding it."""
++
++    fields = set(artifact)
++    missing = REQUIRED_ARTIFACT_FIELDS - fields
++    extra = fields - REQUIRED_ARTIFACT_FIELDS
++    _require(not missing, f"artifact missing required fields: {sorted(missing)}")
++    _require(not extra, f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    _require(
++        isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES),
++        "honest_verdict must use a terminal prefix",
++    )
++    _require(
++        verdict == DEFAULT_HONEST_VERDICT,
++        "honest_verdict must match REQ-REPORT-4589 complete path",
++    )
++    _require(
++        artifact["inference_substrate"] == INFERENCE_SUBSTRATE,
++        "inference_substrate must declare aggregation from upstream artifacts",
++    )
++    _require(
++        artifact["field_principles"] == FIELD_PRINCIPLES
++        and set(artifact["field_principles"]) == REQUIRED_ARTIFACT_FIELDS,
++        "field_principles must match REQ-REPORT-4589",
++    )
++    _require(
++        isinstance(artifact["random_seed"], int) and not isinstance(artifact["random_seed"], bool),
++        "random_seed must be an integer",
++    )
++    _require(
++        artifact["research_note_path"] == RESEARCH_NOTE_RELATIVE_PATH,
++        "research_note_path must be the repo-relative note path",
++    )
++
++    citations = artifact["citations_verified"]
++    _require(isinstance(citations, Mapping), "citations_verified must be a mapping")
++    _require(
++        citations == CITATIONS_VERIFIED,
++        "citations_verified must match verified arXiv metadata",
++    )
++    for citation in citations.values():
++        _require(
++            isinstance(citation, Mapping) and set(citation) == REQUIRED_CITATION_FIELDS,
++            "each citation must include title, url, and http_status",
++        )
++
++    methods = artifact["methods_mapped"]
++    _require(isinstance(methods, list), "methods_mapped must be a list")
++    _require(3 <= len(methods) <= 5, "methods_mapped must contain three to five methods")
++    used_method_sources: set[str] = set()
++    seen_tracks: set[str] = set()
++    for method in methods:
++        _require(
++            isinstance(method, Mapping) and set(method) == REQUIRED_METHOD_FIELDS,
++            "each methods_mapped entry must have exactly the required fields",
++        )
++        _require(
++            _nonempty_list(method.get("source_ids"))
++            and set(method["source_ids"]).issubset(set(CITATIONS_VERIFIED)),
++            "methods_mapped source_ids must use verified citations",
++        )
++        used_method_sources.update(str(source) for source in method["source_ids"])
++        track = method["target_track"]
++        _require(track in VALID_TARGET_TRACKS, "methods_mapped target_track must be valid")
++        seen_tracks.add(str(track))
++        for key in (
++            "method",
++            "takes_over_current_a1_a3_mechanisms",
++            "fails_when",
++            "v424_candidate",
++        ):
++            _require(
++                isinstance(method[key], str) and bool(method[key].strip()),
++                f"methods_mapped field {key!r} must be a non-empty string",
++            )
++        mapping = method["takes_over_current_a1_a3_mechanisms"]
++        _require(
++            "Exp 4580" in mapping or "Exp 4582" in mapping,
++            "methods_mapped must map onto Exp 4580 or Exp 4582",
++        )
++        _require(
++            method["v424_candidate"].startswith("flagged_for_v424:"),
++            "methods_mapped v424_candidate must flag a .424 input",
++        )
++    _require(
++        used_method_sources == set(CITATIONS_VERIFIED),
++        "methods_mapped must use every verified citation",
++    )
++    _require(
++        seen_tracks == set(VALID_TARGET_TRACKS),
++        "methods_mapped must cover feature routing and env-adaptive replay",
++    )
++
++    _require(
++        artifact["flagged_for_next_roadmap"] == FLAGGED_FOR_NEXT_ROADMAP
++        and str(artifact["flagged_for_next_roadmap"]).startswith("flagged_for_v424:"),
++        "flagged_for_next_roadmap must match the verified .424 candidate",
++    )
++    _validate_preconditions(artifact["preconditions_checked"])
++
++
++def _artifact_json(artifact: Mapping[str, Any]) -> str:
++    return json.dumps(artifact, indent=2, sort_keys=True)
++
++
++def render_research_note(artifact: Mapping[str, Any]) -> str:
++    """Render markdown with the artifact block first for automated parsing."""
++
++    validate_artifact(artifact)
++    source_line = ", ".join(f"arXiv:{source}" for source in CITATIONS_VERIFIED)
++    return f"""# Feature-router and env-adaptive replay SOTA ingestion .423 - 2026-06-22
++
++```json
++{_artifact_json(artifact)}
++```
++
++Reliable channel only: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
++arXiv abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of seven
++top skill-routing / skill-library / env-adaptive replay sources. Preconditions
++passed before any claim was promoted: `.venv/bin/python scripts/sweep_clusters.py
++--help` exited zero and `curl -sf -o /dev/null
++https://export.arxiv.org/api/query?search_query=all:test` confirmed arXiv API
++reachability. `scripts/sweep_clusters.py 5 --max-results 8` and
++`scripts/sweep_clusters.py 6 --max-results 8` emitted the focused cluster URLs.
++`scripts/sweep_semscholar.py` ran four focused queries; three returned HTTP 429
++and no S2-only arXiv ID was promoted. No `/deep-research` call was made. No training,
++live LLM inference, leaderboard submission, or live solve was launched.
++No ops/status/traceability files or `scripts/research_conductor.py` were modified.
++
++Already-discovered corpus read through a skill-routing and env-adaptive replay
++filter: `research-studying.md`, `research-references.md`,
++`openspec/capabilities/capstone/spec.md` at `REQ-CAPSTONE-4580` and
++`REQ-CAPSTONE-4582`, `results/experiment_4580_live_submission_gap_close.json`,
++and `results/experiment_4582_feature_router_transfer.json`. Exp 4580 succeeded
++as a packaging/replay result: live-submittable levels rose from 33 to 53 and
++`sc25` was recovered by env-adaptive replay. Exp 4582 was an honest no-value
++feature-router null: router and baseline both measured 0.04 generic transfer,
++random-route control did not pass, false-negative risk stayed open, and residual
++generation gaps remain by mechanic class.
++
++Sources checked: {source_line}.
++
++## Per-Method Mapping
++
++- **SkillRouter full-text retrieve-and-rerank** (arXiv:2603.22455): the strongest
++  A3 lesson is that Exp 4582 should route over full solver-skill bodies, not only
++  a small mechanic-class label. It fails if hidden skill bodies or stale metadata
++  become the routing substrate, or if routing happens after the winning action is
++  already absent from the candidate pool.
++- **SkillGraph plus SkillRL evolving skill-library structure** (arXiv:2605.12039,
++  arXiv:2602.08234): turn Exp 4582 positive and negative traces into a graph or
++  SkillBank with dependency edges, failure lessons, and adaptive retrieval. It
++  fails if graph edges are trusted without current-environment replay validation.
++- **SkillComposer and Skill-Pro executable skill reuse** (arXiv:2606.06079,
++  arXiv:2602.01869): create, improve, merge, and verify skills so recurring ARC
++  mechanics become reusable procedures with activation/execution/termination
++  conditions. It fails when merged skills are too abstract or public-game identity
++  leaks into the reusable primitive.
++- **Graph-Based Exploration as robust replay regeneration** (arXiv:2512.24156):
++  take Exp 4580's env-adaptive replay success and re-derive action paths from the
++  current frame/state graph when flat coordinates drift. It fails on hidden-state
++  or mechanic-limited games unless the graph key and action probes expose the
++  latent state.
++- **ARC-AGI-3 efficiency-and-drift evaluation contract** (arXiv:2603.24621): keep
++  Exp 4580 honest by treating live-submittable replay, environment match, and
++  actions-to-first-levelup as the score-facing contract. It fails if .424 optimizes
++  only the public-game package gap and ignores hidden-layout or action-efficiency
++  generalization.
++
++## .424 Candidate
++
++{FLAGGED_FOR_NEXT_ROADMAP}
++
++The practical next experiment should keep Exp 4580's offline reproduction and
++env-match gates, keep Exp 4582's random-route and false-negative controls, and
++replace the flat route table with full-body skill retrieval plus graph-validated
++replay regeneration. SkillRouter supplies the selection mechanism, SkillGraph and
++SkillRL supply the evolving library structure, SkillComposer and Skill-Pro supply
++the skill create/merge/reuse operations, Graph-Based Exploration supplies the
++layout-drift replay fallback, and ARC-AGI-3 supplies the action-efficient
++evaluation contract.
++"""
++
++
++def artifact_from_note(note: str) -> dict[str, object]:
++    """Extract the machine-readable JSON block from the markdown note."""
++
++    start_marker = "```json\n"
++    end_marker = "\n```"
++    start = note.find(start_marker)
++    _require(start != -1, "research note missing machine-readable JSON block")
++    start += len(start_marker)
++    end = note.find(end_marker, start)
++    _require(end != -1, "research note missing machine-readable JSON block terminator")
++    artifact = json.loads(note[start:end])
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_research_note(note: str) -> None:
++    """Check citations, required language, and the embedded artifact."""
++
++    missing_sources = sorted(
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in note
++    )
++    _require(
++        not missing_sources,
++        f"research note missing verified source citations: {missing_sources}",
++    )
++    required_phrases = [
++        "Reliable channel",
++        "sweep_clusters.py",
++        "sweep_semscholar.py",
++        "/deep-research",
++        "No training",
++        "skill-routing",
++        "env-adaptive replay",
++        "Exp 4580",
++        "Exp 4582",
++        "SkillRouter",
++        "SkillGraph",
++        "SkillComposer",
++        "Skill-Pro",
++        "SkillRL",
++        "Graph-Based Exploration",
++        "ARC-AGI-3",
++        "flagged_for_v424",
++        "aggregation_from_upstream_artifacts",
++        "scripts/research_conductor.py",
++    ]
++    for phrase in required_phrases:
++        _require(phrase in note, f"research note missing required phrase: {phrase}")
++    artifact_from_note(note)
++
++
++RESEARCH_NOTE = render_research_note(build_artifact())
++
++
++def render_research_studying_entry() -> str:
++    """Render the idempotent research-studying queue update."""
++
++    return f"""{STUDYING_SECTION_START}
++## 2026-06-22 Exp 4589 - .423 feature-router SOTA ingestion - INGESTED
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md`
++and `results/experiment_4589_sota_ingestion_feature_router.json`.
++
++**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
++reachability check succeeded; `scripts/sweep_clusters.py` clusters 5 and 6
++emitted focused URLs; `scripts/sweep_semscholar.py` returned HTTP 429 for three
++focused queries and no S2-only arXiv ID was promoted. Top sources were verified
++by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch of the seven
++arXiv sources. `/deep-research` was not invoked. No live solve, training run,
++live LLM inference, leaderboard submission, ops/status/traceability edit, or
++`scripts/research_conductor.py` edit occurred.
++
++**Methods marked ingested:** SkillRouter full-text skill routing
++(arXiv:2603.22455), SkillGraph evolving skill graphs (arXiv:2605.12039),
++SkillComposer skill create/merge/improve (arXiv:2606.06079), Skill-Pro reusable
++procedural skills (arXiv:2602.01869), SkillRL/SkillBank recursive skill
++distillation (arXiv:2602.08234), Graph-Based Exploration for ARC-AGI-3
++(arXiv:2512.24156), and the ARC-AGI-3 efficiency/drift contract
++(arXiv:2603.24621).
++
++{FLAGGED_FOR_NEXT_ROADMAP}
++{STUDYING_SECTION_END}"""
++
++
++def update_research_studying(path: Path) -> None:
++    """Insert or replace the Exp 4589 studying-queue section."""
++
++    entry = render_research_studying_entry()
++    existing = path.read_text(encoding="utf-8") if path.exists() else ""
++    start = existing.find(STUDYING_SECTION_START)
++    end = existing.find(STUDYING_SECTION_END)
++    if start != -1 and end != -1 and end >= start:
++        end += len(STUDYING_SECTION_END)
++        updated = existing[:start].rstrip() + "\n\n" + entry + "\n\n" + existing[end:].lstrip()
++    else:
++        updated = existing.rstrip() + "\n\n" + entry + "\n"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(updated, encoding="utf-8")
++
++
++def write_outputs(
++    *,
++    artifact_path: Path,
++    note_path: Path,
++    studying_path: Path,
++) -> dict[str, object]:
++    """Write the result JSON, markdown note, and research-studying queue entry."""
++
++    artifact = build_artifact()
++    validate_artifact(artifact)
++    validate_research_note(RESEARCH_NOTE)
++
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.write_text(_artifact_json(artifact) + "\n", encoding="utf-8")
++
++    note_path.parent.mkdir(parents=True, exist_ok=True)
++    note_path.write_text(RESEARCH_NOTE.rstrip() + "\n", encoding="utf-8")
++
++    update_research_studying(studying_path)
++    return artifact
++
++
++def main() -> int:
++    root = Path(os.environ.get("CARNOT_EXP4589_ROOT", "."))
++    artifact = write_outputs(
++        artifact_path=root / "results/experiment_4589_sota_ingestion_feature_router.json",
++        note_path=root / RESEARCH_NOTE_RELATIVE_PATH,
++        studying_path=root / "research-studying.md",
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-studying.md b/research-studying.md
+index fdb1e897fb..f70d1aff44 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -4250,3 +4250,29 @@ search (arXiv:2502.18407), ThinkPRM generative process verifier
+ 
+ flagged_for_v423: use a StochasticGoose-style learned action-effect model as the candidate-expansion prior, then allocate Exp 4569 best-first frontier budget with adaptive PRM guidance and scaling-flaw controls (arXiv:2603.24621 + arXiv:2602.01070 + arXiv:2502.00271)
+ <!-- EXP4577-ACTION-EFFECT-SOTA-END -->
++
++<!-- EXP4589-FEATURE-ROUTER-SOTA-START -->
++## 2026-06-22 Exp 4589 - .423 feature-router SOTA ingestion - INGESTED
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md`
++and `results/experiment_4589_sota_ingestion_feature_router.json`.
++
++**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
++reachability check succeeded; `scripts/sweep_clusters.py` clusters 5 and 6
++emitted focused URLs; `scripts/sweep_semscholar.py` returned HTTP 429 for three
++focused queries and no S2-only arXiv ID was promoted. Top sources were verified
++by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch of the seven
++arXiv sources. `/deep-research` was not invoked. No live solve, training run,
++live LLM inference, leaderboard submission, ops/status/traceability edit, or
++`scripts/research_conductor.py` edit occurred.
++
++**Methods marked ingested:** SkillRouter full-text skill routing
++(arXiv:2603.22455), SkillGraph evolving skill graphs (arXiv:2605.12039),
++SkillComposer skill create/merge/improve (arXiv:2606.06079), Skill-Pro reusable
++procedural skills (arXiv:2602.01869), SkillRL/SkillBank recursive skill
++distillation (arXiv:2602.08234), Graph-Based Exploration for ARC-AGI-3
++(arXiv:2512.24156), and the ARC-AGI-3 efficiency/drift contract
++(arXiv:2603.24621).
++
++flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)
++<!-- EXP4589-FEATURE-ROUTER-SOTA-END -->
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 6ca76cff95..163d669dca 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-22T11:00:15.366784Z",
+-  "duration_s": 0.022142887115478516,
++  "run_date": "2026-06-22T11:15:49.131417Z",
++  "duration_s": 0.0246121883392334,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c0535b3ebe513d112d458245014645ff492a215881975e8182ab40fa41d181ed",
++  "reproducibility_checksum": "d33cf946cf122f8bace75ed20c9d916ba0bc5a43a0bffabe6409cabc0d84927d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "24097be326c2aead44c96a4a504550a4b2a87174"
++    "adversarial_verify_version": "0b3d18b63adf1f9f5471e5ab41ffc980ec9206a4"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c0ff039f10..655e4099c3 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-22T11:00:15.398595Z",
+-  "duration_s": 0.02558135986328125,
++  "run_date": "2026-06-22T11:15:49.157881Z",
++  "duration_s": 0.0221710205078125,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "7219a274f64a0856c3d4becf8b02205829d9e55abf364bb2e6d3377e03f9b424",
++  "reproducibility_checksum": "441a811717fdc8a7426295390fe2ba8cf3b1f8716867fa04dc5d6862b056dddf",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "24097be326c2aead44c96a4a504550a4b2a87174"
++    "adversarial_verify_version": "0b3d18b63adf1f9f5471e5ab41ffc980ec9206a4"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bde5cddb29..c1b273231e 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1278858184814453,
++  "efficiency_gains_ms": 2.1500587463378906,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4865cf4790..214b85ec92 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9315007850527763e-05,
++  "duration_s": 3.715010825544596e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4589_sota_ingestion_feature_router.json b/results/experiment_4589_sota_ingestion_feature_router.json
+new file mode 100644
+index 0000000000..41f43055f7
+--- /dev/null
++++ b/results/experiment_4589_sota_ingestion_feature_router.json
+@@ -0,0 +1,165 @@
++{
++  "citations_verified": {
++    "2512.24156": {
++      "http_status": 200,
++      "title": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks",
++      "url": "https://arxiv.org/abs/2512.24156"
++    },
++    "2602.01869": {
++      "http_status": 200,
++      "title": "Skill-Pro: Learning Reusable Skills from Experience via Non-Parametric PPO for LLM Agents",
++      "url": "https://arxiv.org/abs/2602.01869"
++    },
++    "2602.08234": {
++      "http_status": 200,
++      "title": "SkillRL: Evolving Agents via Recursive Skill-Augmented Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2602.08234"
++    },
++    "2603.22455": {
++      "http_status": 200,
++      "title": "SkillRouter: Skill Routing for LLM Agents at Scale",
++      "url": "https://arxiv.org/abs/2603.22455"
++    },
++    "2603.24621": {
++      "http_status": 200,
++      "title": "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence",
++      "url": "https://arxiv.org/abs/2603.24621"
++    },
++    "2605.12039": {
++      "http_status": 200,
++      "title": "SkillGraph: Skill-Augmented Reinforcement Learning for Agents via Evolving Skill Graphs",
++      "url": "https://arxiv.org/abs/2605.12039"
++    },
++    "2606.06079": {
++      "http_status": 200,
++      "title": "SkillComposer: Learning to Evolve Agent Skills for Specification and Generalization",
++      "url": "https://arxiv.org/abs/2606.06079"
++    }
++  },
++  "field_principles": {
++    "citations_verified": "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact).",
++    "field_principles": "principle annotations for every top-level artifact field.",
++    "flagged_for_next_roadmap": "the strongest method flagged as a .424 candidate -- closes the discover->ingest->plan loop.",
++    "honest_verdict": "terminal prefix; complete: sota_ingestion_feature_router_mapped.",
++    "inference_substrate": "aggregation_from_upstream_artifacts -- literature synthesis, no model load (100us floor).",
++    "methods_mapped": "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants anti-rederivation check.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "research_note_path": "repo-relative markdown path for deterministic parsing."
++  },
++  "flagged_for_next_roadmap": "flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)",
++  "honest_verdict": "complete: sota_ingestion_feature_router_mapped",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methods_mapped": [
++    {
++      "fails_when": "skill bodies are hidden at routing time, the library is not execution validated, retrieval is evaluated only on seen public games, or routing is left as a final candidate reranker after the winning action is absent.",
++      "method": "SkillRouter full-text retrieve-and-rerank over the solver toolkit",
++      "source_ids": [
++        "2603.22455"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 currently classifies first-K early-play effects into a small mechanic class and routes to a fixed approach, but the artifact ended as a null because winner generation stayed mostly absent. SkillRouter takes over Exp 4582 by retrieving and reranking full skill bodies from the arc_solver_kit toolkit before planning, rather than exposing only short names or hand-coded class labels.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillRouter-style full-body routing over arc_solver_kit skills for the Exp 4582 seen-to-hidden feature router"
++    },
++    {
++      "fails_when": "the graph grows from raw trajectories without deduplication, failed traces are not distilled into negative routing constraints, or dependency edges are trusted without replay through the current ARC environment.",
++      "method": "SkillGraph plus SkillRL evolving skill-library structure",
++      "source_ids": [
++        "2605.12039",
++        "2602.08234"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 stores a flat mechanic-class to approach preference learned from positive and negative traces. SkillGraph and SkillRL take over that Exp 4582 policy by turning traces into a structured skill graph or SkillBank with dependency edges, failure lessons, and adaptive retrieval for general and task-specific heuristics.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillGraph/SkillRL library maintenance behind the Exp 4582 router, with replay-gated skill insertion"
++    },
++    {
++      "fails_when": "merged skills become too abstract to trigger reliably, task-specific skills are allowed to leak public-game identity, or reusable procedures lack an offline replay gate before entering the toolkit.",
++      "method": "SkillComposer and Skill-Pro skill merge into executable reusable procedures",
++      "source_ids": [
++        "2606.06079",
++        "2602.01869"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4582 exposes residual gaps by mechanic class, and Exp 4580 banks trajectory evidence when a procedure is replayable. SkillComposer and Skill-Pro take over this handoff by creating, improving, merging, and verifying reusable skills with activation/execution/termination conditions instead of repeatedly deriving per-game recipes.",
++      "target_track": "feature_skill_routing",
++      "v424_candidate": "flagged_for_v424: SkillComposer/Skill-Pro merge pass over Exp 4582 mechanic gaps before persisting new solver primitives"
++    },
++    {
++      "fails_when": "the game requires hidden carry-state induction, graph keys ignore layout version drift, exploration budgets do not preserve action efficiency, or newly recovered paths are not rechecked through offline reproduction.",
++      "method": "Graph-Based Exploration as env-derived robust replay generator",
++      "source_ids": [
++        "2512.24156"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4580 succeeded by closing the package gap and recovering sc25 with an env-adaptive replay path instead of trusting stale flat coordinates. Graph-Based Exploration takes over Exp 4580's replay fragility by re-deriving state-action paths from current frames, visited-state graphs, and untested action priorities when frozen replay no longer matches.",
++      "target_track": "env_adaptive_replay",
++      "v424_candidate": "flagged_for_v424: graph-explore replay regeneration for Exp 4580 version-drift rows before falling back to stale coordinate banks"
++    },
++    {
++      "fails_when": "the next roadmap optimizes only the public-game package gap, ignores actions-to-first-levelup, treats official and community harness evidence as identical, or promotes env-adaptive replay without held-out layout drift.",
++      "method": "ARC-AGI-3 efficiency-and-drift evaluation contract",
++      "source_ids": [
++        "2603.24621"
++      ],
++      "takes_over_current_a1_a3_mechanisms": "Exp 4580's headline is not a new solve; it converts 53 reproduced public levels into 53 live-submittable levels by requiring environment-matched trajectories or an env-adaptive resolver. The ARC-AGI-3 report takes over the Exp 4580 acceptance contract: novel interactive environments require goal inference, dynamics modeling, planning, and action-efficient replay under changing layouts.",
++      "target_track": "env_adaptive_replay",
++      "v424_candidate": "flagged_for_v424: ARC-AGI-3 drift-aware live-submittable gate for every Exp 4580 replay primitive"
++    }
++  ],
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arxiv_api_reachable": true,
++    "arxiv_http_200_verified_ids": [
++      "2603.22455",
++      "2605.12039",
++      "2606.06079",
++      "2602.01869",
++      "2602.08234",
++      "2512.24156",
++      "2603.24621"
++    ],
++    "codex_md_read": true,
++    "deep_research_invoked": false,
++    "exp4580_artifact_read": true,
++    "exp4580_spec_read": true,
++    "exp4582_artifact_read": true,
++    "exp4582_spec_read": true,
++    "leaderboard_submission": false,
++    "live_llm_inference": false,
++    "live_solve_claim": false,
++    "ops_docs_modified": false,
++    "research_conductor_modified": false,
++    "research_references_filtered": true,
++    "research_studying_filtered": true,
++    "research_studying_updated": true,
++    "sweep_clusters_help_exit_0": true,
++    "sweep_clusters_urls": [
++      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
++      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++    ],
++    "sweep_clusters_used": true,
++    "sweep_semscholar_arxiv_ids": [],
++    "sweep_semscholar_queries": [
++      "SkillRouter Skill Routing LLM Agents at Scale",
++      "SkillGraph skill augmented RL evolving skill graphs",
++      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO",
++      "ARC-AGI-3 graph-based exploration environment drift replay skill routing"
++    ],
++    "sweep_semscholar_rate_limited_queries": [
++      "SkillRouter Skill Routing LLM Agents at Scale",
++      "SkillGraph skill augmented RL evolving skill graphs",
++      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO"
++    ],
++    "sweep_semscholar_used": true,
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/2603.22455",
++      "https://arxiv.org/abs/2605.12039",
++      "https://arxiv.org/abs/2606.06079",
++      "https://arxiv.org/abs/2602.01869",
++      "https://arxiv.org/abs/2602.08234",
++      "https://arxiv.org/abs/2512.24156",
++      "https://arxiv.org/abs/2603.24621"
++    ]
++  },
++  "random_seed": 4589,
++  "research_note_path": "docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md"
++}
+diff --git a/results/experiment_4589_sota_ingestion_feature_router.py b/results/experiment_4589_sota_ingestion_feature_router.py
+new file mode 100644
+index 0000000000..7467a3f04e
+--- /dev/null
++++ b/results/experiment_4589_sota_ingestion_feature_router.py
+@@ -0,0 +1,8 @@
++"""Required runner for REQ-REPORT-4589."""
++
++from __future__ import annotations
++
++from carnot.experiment_4589_sota_ingestion_feature_router import main
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index bf08d459a4..63f9a73dd3 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:00:05Z",
+-  "finished_at": "2026-06-22T11:00:05Z",
++  "started_at": "2026-06-22T11:15:39Z",
++  "finished_at": "2026-06-22T11:15:39Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 39d0bdfeb7..536f775f1b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:00:05Z",
+-  "finished_at": "2026-06-22T11:00:05Z",
++  "started_at": "2026-06-22T11:15:39Z",
++  "finished_at": "2026-06-22T11:15:39Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e27ea7d785..85aa7b9f04 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T11:00:05Z",
+-  "finished_at": "2026-06-22T11:00:05Z",
++  "started_at": "2026-06-22T11:15:39Z",
++  "finished_at": "2026-06-22T11:15:39Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4589_sota_ingestion_feature_router.py b/tests/python/test_experiment_4589_sota_ingestion_feature_router.py
+new file mode 100644
+index 0000000000..37df7b3281
+--- /dev/null
++++ b/tests/python/test_experiment_4589_sota_ingestion_feature_router.py
+@@ -0,0 +1,261 @@
++"""Tests for REQ-REPORT-4589 / SCENARIO-REPORT-4589."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4589_sota_ingestion_feature_router as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++ARTIFACT_PATH = Path("results/experiment_4589_sota_ingestion_feature_router.json")
++WRAPPER_PATH = Path("results/experiment_4589_sota_ingestion_feature_router.py")
++NOTE_PATH = Path("docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md")
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact()
++
++
++def test_req_report_4589_spec_anchor_exists() -> None:
++    """REQ-REPORT-4589: OpenSpec declares feature-router SOTA ingestion."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4589" in spec
++    assert "SCENARIO-REPORT-4589" in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert WRAPPER_PATH.as_posix() in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert "complete: sota_ingestion_feature_router_mapped" in spec
++    assert "aggregation_from_upstream_artifacts" in spec
++    assert "REQ-CAPSTONE-4580" in spec
++    assert "REQ-CAPSTONE-4582" in spec
++    assert "https://export.arxiv.org/api/query?search_query=all:test" in spec
++    for source_id in mod.CITATIONS_VERIFIED:
++        assert source_id in spec
++    assert "scripts/research_conductor.py" in spec
++
++
++def test_build_artifact_has_required_schema_fields_for_req_report_4589() -> None:
++    """REQ-REPORT-4589: artifact exposes required fields and principles."""
++
++    artifact = _valid_artifact()
++
++    assert set(artifact) == mod.REQUIRED_ARTIFACT_FIELDS
++    assert set(artifact["field_principles"]) == mod.REQUIRED_ARTIFACT_FIELDS
++    assert artifact["honest_verdict"] == mod.DEFAULT_HONEST_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["methods_mapped"] == mod.DEFAULT_METHODS_MAPPED
++    assert artifact["citations_verified"] == mod.CITATIONS_VERIFIED
++    assert artifact["flagged_for_next_roadmap"] == mod.FLAGGED_FOR_NEXT_ROADMAP
++    assert artifact["research_note_path"] == NOTE_PATH.as_posix()
++    assert artifact["random_seed"] == mod.DEFAULT_RANDOM_SEED
++    assert len(artifact["methods_mapped"]) == 5
++    assert {method["target_track"] for method in artifact["methods_mapped"]} == {
++        "feature_skill_routing",
++        "env_adaptive_replay",
++    }
++    assert artifact["preconditions_checked"]["sweep_clusters_help_exit_0"] is True
++    assert artifact["preconditions_checked"]["arxiv_api_reachable"] is True
++    assert artifact["preconditions_checked"]["exp4580_artifact_read"] is True
++    assert artifact["preconditions_checked"]["exp4582_artifact_read"] is True
++    assert artifact["preconditions_checked"]["sweep_semscholar_rate_limited_queries"]
++    assert artifact["preconditions_checked"]["deep_research_invoked"] is False
++    assert artifact["preconditions_checked"]["live_llm_inference"] is False
++    assert artifact["preconditions_checked"]["research_conductor_modified"] is False
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "blocked_network"}, "terminal prefix"),
++        (_valid_artifact() | {"inference_substrate": "live_llm_inference"}, "aggregation"),
++        (_valid_artifact() | {"field_principles": {"honest_verdict": "loose"}}, "field_principles"),
++        (_valid_artifact() | {"random_seed": "4589"}, "random_seed"),
++        (
++            _valid_artifact()
++            | {
++                "citations_verified": {
++                    k: v for k, v in mod.CITATIONS_VERIFIED.items() if k != "2603.22455"
++                }
++            },
++            "citations_verified",
++        ),
++        (_valid_artifact() | {"methods_mapped": mod.DEFAULT_METHODS_MAPPED[:2]}, "three to five"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0]
++                    | {"takes_over_current_a1_a3_mechanisms": "generic router"},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "Exp 4580 or Exp 4582",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"source_ids": ["9999.99999"]},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "verified citations",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"target_track": "old_track"},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "target_track",
++        ),
++        (
++            _valid_artifact() | {"flagged_for_next_roadmap": "flagged_for_v423: old plan"},
++            "flagged_for_next_roadmap",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"sweep_clusters_help_exit_0": False}
++            },
++            "sweep_clusters.py --help",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"arxiv_api_reachable": False}
++            },
++            "arXiv API",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"deep_research_invoked": True}
++            },
++            "deep-research",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"ops_docs_modified": True}
++            },
++            "ops docs",
++        ),
++        (_valid_artifact() | {"preconditions_checked": []}, "preconditions_checked"),
++        (
++            _valid_artifact() | {"research_note_path": "docs/research-notes/wrong.md"},
++            "research_note_path",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_req_report_4589(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """REQ-REPORT-4589: invalid feature-router artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_and_extra_fields() -> None:
++    """REQ-REPORT-4589: top-level artifact fields are exact."""
++
++    missing = _valid_artifact()
++    missing.pop("citations_verified")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    extra = _valid_artifact() | {"offline_reproduced": False}
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra)
++
++
++def test_note_json_round_trips_and_preserves_mapping_for_scenario_4589() -> None:
++    """SCENARIO-REPORT-4589: markdown note contains the validated JSON artifact."""
++
++    artifact = mod.artifact_from_note(mod.RESEARCH_NOTE)
++
++    assert artifact == _valid_artifact()
++    mod.validate_research_note(mod.RESEARCH_NOTE)
++    assert "Exp 4580" in mod.RESEARCH_NOTE
++    assert "Exp 4582" in mod.RESEARCH_NOTE
++    assert "SkillRouter" in mod.RESEARCH_NOTE
++    assert "SkillGraph" in mod.RESEARCH_NOTE
++    assert "SkillComposer" in mod.RESEARCH_NOTE
++    assert "Skill-Pro" in mod.RESEARCH_NOTE
++    assert "SkillRL" in mod.RESEARCH_NOTE
++    assert "Graph-Based Exploration" in mod.RESEARCH_NOTE
++    assert "env-adaptive replay" in mod.RESEARCH_NOTE
++    assert "flagged_for_v424" in mod.RESEARCH_NOTE
++
++    with pytest.raises(ValueError, match="machine-readable JSON"):
++        mod.artifact_from_note(mod.RESEARCH_NOTE.replace("```json", "```text"))
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("arXiv:2603.22455", "SkillRouter"))
++    with pytest.raises(ValueError, match="required phrase"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("No training", "No run"))
++
++
++def test_write_outputs_emits_stable_files_for_req_report_4589(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4589: writer emits idempotent JSON, note, and queue update."""
++
++    artifact_path = tmp_path / ARTIFACT_PATH
++    note_path = tmp_path / NOTE_PATH
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("# Research Studying\n\nExisting queue.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        artifact_path=artifact_path,
++        note_path=note_path,
++        studying_path=studying_path,
++    )
++    second_artifact = mod.write_outputs(
++        artifact_path=artifact_path,
++        note_path=note_path,
++        studying_path=studying_path,
++    )
++
++    studying = studying_path.read_text(encoding="utf-8")
++    assert second_artifact == artifact
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_from_note(note_path.read_text(encoding="utf-8")) == artifact
++    assert studying.count(mod.STUDYING_SECTION_START) == 1
++    assert "INGESTED into `docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md`" in studying
++    assert "flagged_for_v424" in studying
++
++
++def test_main_and_wrapper_emit_terminal_verdict_for_req_report_4589(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4589: module and wrapper write default outputs."""
++
++    monkeypatch.setenv("CARNOT_EXP4589_ROOT", str(tmp_path))
++    (tmp_path / "research-studying.md").write_text("# Research Studying\n", encoding="utf-8")
++
++    with pytest.raises(SystemExit) as module_exit:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++    assert module_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
++    assert (tmp_path / NOTE_PATH).exists()
++
++    with pytest.raises(SystemExit) as wrapper_exit:
++        runpy.run_path(str(WRAPPER_PATH), run_name="__main__")
++    assert wrapper_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
+-- 
+2.55.0
+

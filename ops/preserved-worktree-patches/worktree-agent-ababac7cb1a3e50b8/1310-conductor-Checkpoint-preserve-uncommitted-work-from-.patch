@@ -1,0 +1,70 @@
+From 9471bb7da713e8e3cfd677a4aa1937aad91e28c0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 16:35:00 -0400
+Subject: [PATCH 01310/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...riment_4056_offarc_power_evalplus_build.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c5aa16506f..39c62e7a38 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 88, "phase": "iteration_start", "last_beat": "2026-06-11T19:30:50Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 89, "phase": "iteration_start", "last_beat": "2026-06-11T20:34:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4a94031b65..47b42cfdc6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8270,3 +8270,4 @@ c |
+ | 2026-06-11 18:28 UTC | Milestone 2026.06.375 activated | OK | 12 tasks queued |
+ | 2026-06-11 18:46 UTC | Archive .374 -> activate .375; KEEP the hardened g | OK | 138 passed in 3.71s |
+ | 2026-06-11 19:28 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 95 passed in 3.72s |
++| 2026-06-11 20:32 UTC | OFF-ARC TRANSFER POWER on an UN-SATURATED corpus - | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 39b7706d94..f06354bf52 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 88, "phase": "iteration_start", "started_at": "2026-06-11T19:30:50Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 89, "phase": "iteration_start", "started_at": "2026-06-11T20:34:58Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4056_offarc_power_evalplus_build.json b/results/experiment_4056_offarc_power_evalplus_build.json
+index 486e79715a..d8c4fd9021 100644
+--- a/results/experiment_4056_offarc_power_evalplus_build.json
++++ b/results/experiment_4056_offarc_power_evalplus_build.json
+@@ -57,5 +57,18 @@
+   "smoke_oracle_headroom_present": false,
+   "smoke_passed": false,
+   "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4056_offarc_power_evalplus_smoke_raw.json",
+-  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json"
+-}
++  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=8.12 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

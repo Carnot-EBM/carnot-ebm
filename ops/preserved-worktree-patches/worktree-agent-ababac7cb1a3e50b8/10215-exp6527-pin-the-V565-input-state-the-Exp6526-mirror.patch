@@ -1,0 +1,310 @@
+From 8255e0f70104a09945917f22ca0d548854fc9ca1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 23:18:20 -0400
+Subject: [PATCH 10215/11362] exp6527: pin the V565 input state; the Exp6526
+ mirror follows its source
+
+Team-lead routing items 2 and 3 from the verdict_class batch.
+
+test_experiment_6527 was pre-existing broken (6 failures at e187fc8a31,
+before this batch): its fixture rebuilt from the LIVE tree, so it broke
+when the roadmap rotated past V565 and again when exp6520's
+flagged_adversarial stamp was cleared on 2026-08-29 as a false
+positive. The fixture now mirrors the exact input state the run read -
+commit ab2a4b946a (V565 activation), verified 7/7 against the hashes in
+exp6527's own immutable_input_receipts - while the live Exp6520
+rechecks stay live, which is the corrigendum's own design (historical
+reads plus current-code recheck). Same stale-live-state repair class as
+3fddef1bf0's test_6526/test_6687 fixtures.
+
+The writer's recompute_exp6526 baked "verdict_class_from_rows":
+"partial" - a frozen mirror of the declaration Exp6526 corrected to
+null in a33755953d. Rather than swap one constant for another, the
+mirror now reads the value from the source artifact, so it is right
+against both the pinned historical input and the corrected live one.
+A synthetic-payload test pins the derivation (the pinned fixture alone
+could not: its V565-era input also says partial); mutation back to the
+constant goes RED, restore byte-identical.
+
+Suite: 8 passed (was 3 failed against live state, 6 at pre-change).
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...7_v565_evidence_eligibility_corrigendum.py | 52 +++++++++----
+ ...7_v565_evidence_eligibility_corrigendum.py | 73 ++++++++++++++++---
+ 2 files changed, 100 insertions(+), 25 deletions(-)
+
+diff --git a/python/carnot/experiment_6527_v565_evidence_eligibility_corrigendum.py b/python/carnot/experiment_6527_v565_evidence_eligibility_corrigendum.py
+index 5cffac6942..1bd3235c38 100644
+--- a/python/carnot/experiment_6527_v565_evidence_eligibility_corrigendum.py
++++ b/python/carnot/experiment_6527_v565_evidence_eligibility_corrigendum.py
+@@ -111,8 +111,7 @@ RUN_COMMAND = (
+     "--date 20260823"
+ )
+ VALIDATE_COMMAND = (
+-    ".venv/bin/python -m carnot.experiment_6527_v565_evidence_eligibility_corrigendum "
+-    "--validate"
++    ".venv/bin/python -m carnot.experiment_6527_v565_evidence_eligibility_corrigendum --validate"
+ )
+ DEFAULT_TEST_COMMANDS = (
+     FOCUSED_TEST_COMMAND,
+@@ -687,7 +686,9 @@ def _sum_by_arm(
+     return dict(totals)
+ 
+ 
+-def _best_arm(totals: Mapping[str, float], exclude: set[str] | None = None) -> tuple[str | None, int]:
++def _best_arm(
++    totals: Mapping[str, float], exclude: set[str] | None = None
++) -> tuple[str | None, int]:
+     exclude = exclude or set()
+     candidates = {arm: value for arm, value in totals.items() if arm not in exclude}
+     if not candidates:
+@@ -834,7 +835,9 @@ def recompute_exp6520(payload: Mapping[str, Any], structural_best_benefit: int)
+ 
+ def recompute_exp6521(payload: Mapping[str, Any]) -> JsonDict:
+     rows = [row for row in payload.get("per_unit_rows", []) if isinstance(row, Mapping)]
+-    unsafe_admission = sum(1 for row in rows if row.get("durable_write_performed") is True and not row.get("passed"))
++    unsafe_admission = sum(
++        1 for row in rows if row.get("durable_write_performed") is True and not row.get("passed")
++    )
+     unsafe_use = sum(1 for row in rows if row.get("unsafe_use_performed") is True)
+     return {
+         "row_type": "row_recomputation",
+@@ -854,7 +857,10 @@ def recompute_exp6521(payload: Mapping[str, Any]) -> JsonDict:
+             if isinstance(row, Mapping)
+         ),
+         "readiness_score_from_rows": 1.0
+-        if rows and all(row.get("passed") is True for row in rows) and unsafe_admission == 0 and unsafe_use == 0
++        if rows
++        and all(row.get("passed") is True for row in rows)
++        and unsafe_admission == 0
++        and unsafe_use == 0
+         else 0.0,
+         "verdict_class_from_rows": "circular_positive",
+         "gate_chain": ["6521_requires_6517_branch_pilot_audited_ready_score"],
+@@ -883,7 +889,9 @@ def recompute_exp6522(payload: Mapping[str, Any]) -> JsonDict:
+         if isinstance(row, Mapping) and row.get("unsafe_write_performed") is True
+     )
+     unsafe_uses = sum(
+-        1 for row in rows if row.get("unsafe_use_performed") is True or row.get("unsafe_use_count") not in (None, 0)
++        1
++        for row in rows
++        if row.get("unsafe_use_performed") is True or row.get("unsafe_use_count") not in (None, 0)
+     )
+     return {
+         "row_type": "row_recomputation",
+@@ -967,7 +975,10 @@ def recompute_exp6526(payload: Mapping[str, Any]) -> JsonDict:
+         and payload.get("continuous_self_learning_claim_eligible_score") == 1.0
+         and gate.get("all_capstone_checks_passed") is True
+         else 0.0,
+-        "verdict_class_from_rows": "partial",
++        # Read from the Exp6526 artifact instead of a baked constant. The old
++        # literal "partial" froze a declaration Exp6526 has since corrected to
++        # null (REQ-CONDUCTOR-VERDICT-3); a mirror must follow its source.
++        "verdict_class_from_rows": aggregate.get("verdict_class_from_rows"),
+         "gate_chain": ["6526_reads_v564_graph_by_path_and_hash"],
+     }
+ 
+@@ -1088,9 +1099,7 @@ def build_corrected_claim_rows(
+             "claim_id": "learned_router",
+             "source_task_ids": ["6520"],
+             "adopted_for_v565_root": True,
+-            "historical_claim_state": capstone_claims.get("learned_router", {}).get(
+-                "eligibility"
+-            ),
++            "historical_claim_state": capstone_claims.get("learned_router", {}).get("eligibility"),
+             "corrected_eligibility": "corrected_eligible"
+             if learned_current_clean
+             else "ineligible_current_recheck_failed",
+@@ -1255,7 +1264,10 @@ def build_attack_rows(
+             "monotonic validation duration meets the declared floor",
+         ),
+         "status_only_success": (
+-            all(recomputed[key]["readiness_score_from_rows"] == 1.0 for key in ("6519", "6520", "6522", "6523")),
++            all(
++                recomputed[key]["readiness_score_from_rows"] == 1.0
++                for key in ("6519", "6520", "6522", "6523")
++            ),
+             "rows_recomputed",
+             "status strings alone never set the root score",
+         ),
+@@ -1303,7 +1315,9 @@ def build_aggregate(
+     )
+     attack_rows = recomputed.get("attack_rows", [])
+     attack_rows = attack_rows if isinstance(attack_rows, list) else []
+-    retired_violations = sum(int(row.get("retired_dependency_violation_count", 0)) for row in retired_rows)
++    retired_violations = sum(
++        int(row.get("retired_dependency_violation_count", 0)) for row in retired_rows
++    )
+     root_ready = (
+         adopted_eligible
+         and live_recheck.get("current_recheck_clean") is True
+@@ -1317,7 +1331,9 @@ def build_aggregate(
+         "v565_evidence_root_ready_score_from_rows": 1.0 if root_ready else 0.0,
+         "verdict_class_from_rows": None if root_ready else "partial",
+         "adopted_claim_count": len(adopted),
+-        "eligible_claim_count": sum(1 for row in claim_rows if row.get("corrected_eligibility") == "eligible"),
++        "eligible_claim_count": sum(
++            1 for row in claim_rows if row.get("corrected_eligibility") == "eligible"
++        ),
+         "corrected_eligible_claim_count": sum(
+             1 for row in claim_rows if row.get("corrected_eligibility") == "corrected_eligible"
+         ),
+@@ -1523,7 +1539,9 @@ def build_artifact(
+     )
+     recomputed = build_row_recomputation(artifacts, attack_rows=attack_rows)
+     claim_rows = build_corrected_claim_rows(artifacts, recomputed, live, duration)
+-    per_unit_rows = flatten_per_unit_rows(task_rows, claim_rows, retired_rows, recomputed, live, protected)
++    per_unit_rows = flatten_per_unit_rows(
++        task_rows, claim_rows, retired_rows, recomputed, live, protected
++    )
+     aggregate = build_aggregate(
+         claim_rows,
+         retired_rows,
+@@ -1535,7 +1553,11 @@ def build_artifact(
+     )
+     gates = gate_check_summary(aggregate)
+     ready_score = aggregate["v565_evidence_root_ready_score_from_rows"]
+-    status = "complete_v565_evidence_root_eligible" if ready_score == 1.0 else "partial_v565_evidence_root"
++    status = (
++        "complete_v565_evidence_root_eligible"
++        if ready_score == 1.0
++        else "partial_v565_evidence_root"
++    )
+     verdict_class = None if ready_score == 1.0 else "partial"
+     honest = (
+         "complete_v565_evidence_root_eligible: corrected Exp6520 eligibility is separated "
+diff --git a/tests/python/test_experiment_6527_v565_evidence_eligibility_corrigendum.py b/tests/python/test_experiment_6527_v565_evidence_eligibility_corrigendum.py
+index 38f4276353..73311523a5 100644
+--- a/tests/python/test_experiment_6527_v565_evidence_eligibility_corrigendum.py
++++ b/tests/python/test_experiment_6527_v565_evidence_eligibility_corrigendum.py
+@@ -12,6 +12,7 @@ from __future__ import annotations
+ from copy import deepcopy
+ import json
+ from pathlib import Path
++import subprocess
+ from typing import Any
+ 
+ import pytest
+@@ -24,18 +25,57 @@ SPEC = REPO / mod.SPEC_RELATIVE_PATH
+ TESTS_RUN = [{"command": command, "exit_code": 0} for command in mod.DEFAULT_TEST_COMMANDS]
+ 
+ 
++# The exact input state Exp6527 ran against, pinned by commit. ab2a4b946a is
++# the V565 activation commit, and every adopted-artifact hash there matches
++# the hashes this experiment's own immutable_input_receipts recorded
++# (verified 2026-08-28, 7/7). Pinned because the live tree moves on: the
++# roadmap now carries a later milestone, and exp6520's flagged_adversarial
++# stamp was cleared on 2026-08-29 as a false positive - legitimate later
++# changes that made these tests fail for reasons unrelated to the code under
++# test (the stale-live-state class from the 2026-08-27 capstone incident).
++V565_INPUT_STATE_COMMIT = "ab2a4b946a"
++
++
+ @pytest.fixture(scope="module")
+ def artifact(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
+     """REQ-CAPSTONE-6527: build a temp artifact without touching history."""
+ 
++    mirror = tmp_path_factory.mktemp("exp6527-v565-inputs")
++    pinned = [
++        mod.ROADMAP_RELATIVE_PATH,
++        *[Path(spec["path"]) for spec in mod.ADOPTED_TASKS.values()],
++    ]
++    for rel in pinned:
++        blob = subprocess.run(
++            ["git", "show", f"{V565_INPUT_STATE_COMMIT}:{rel.as_posix()}"],
++            cwd=REPO,
++            capture_output=True,
++            check=True,
++        ).stdout
++        target = mirror / rel
++        target.parent.mkdir(parents=True, exist_ok=True)
++        target.write_bytes(blob)
++    pinned_set = {rel.as_posix() for rel in pinned}
++    for rel in mod.PROTECTED_RELATIVE_PATHS:
++        if rel.as_posix() in pinned_set:
++            continue
++        source = REPO / rel
++        if source.is_file():
++            target = mirror / rel
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes(source.read_bytes())
++    # The live rechecks stay live on purpose: the corrigendum's own design is
++    # historical reads plus a current-code recheck of Exp6520.
++    receipts = mod.default_command_receipts(REPO)
+     root = tmp_path_factory.mktemp("exp6527")
+     return mod.build_artifact(
+-        repo_root=REPO,
++        repo_root=mirror,
+         result_path=root / mod.RESULT_RELATIVE_PATH.name,
+         write=True,
+         duration_s=1.0,
+         tests_run=TESTS_RUN,
+         run_date="20260823",
++        command_receipts=receipts,
+     )
+ 
+ 
+@@ -176,6 +216,25 @@ def test_scenario_capstone_6527_live_recheck_and_corrected_claims(
+     assert claims["hardware_continuity"]["corrected_eligibility"] == "blocked_not_adopted"
+ 
+ 
++def test_scenario_capstone_6527_exp6526_mirror_follows_source() -> None:
++    """SCENARIO-CAPSTONE-6527-IMMUTABLE-ROWS: the Exp6526 mirror reads its source.
++
++    REQ-CONDUCTOR-VERDICT-3: Exp6526 corrected its declaration to null, and a
++    baked "partial" literal here would silently reassert the old value on
++    every rebuild. Synthetic payload on purpose: the pinned V565 fixture
++    still carries the pre-correction value, so only a direct unit call can
++    prove the mirror follows the source rather than a constant.
++    """
++
++    row = mod.recompute_exp6526(
++        {
++            "aggregate_row_recomputation": {"verdict_class_from_rows": "null"},
++            "gate_check_summary": {},
++        }
++    )
++    assert row["verdict_class_from_rows"] == "null"
++
++
+ def test_scenario_capstone_6527_retired_dependency_and_aggregate_rows(
+     artifact: dict[str, Any],
+ ) -> None:
+@@ -281,9 +340,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
+     bad_provenance = deepcopy(artifact)
+     bad_provenance["field_provenance"] = {}
+     bad_provenance["reproducibility_checksum"] = mod.reproducibility_checksum(bad_provenance)
+-    assert "field_provenance must cover required fields" in mod.validate_artifact(
+-        bad_provenance
+-    )
++    assert "field_provenance must cover required fields" in mod.validate_artifact(bad_provenance)
+ 
+     bad_substrate = deepcopy(artifact)
+     bad_substrate["inference_substrate"] = "live_llm_inference"
+@@ -306,9 +363,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
+     bad_duration = deepcopy(artifact)
+     bad_duration["monotonic_duration_receipt"]["credible_duration"] = False
+     bad_duration["reproducibility_checksum"] = mod.reproducibility_checksum(bad_duration)
+-    assert "ready score requires credible duration receipt" in mod.validate_artifact(
+-        bad_duration
+-    )
++    assert "ready score requires credible duration receipt" in mod.validate_artifact(bad_duration)
+ 
+     bad_retired = deepcopy(artifact)
+     bad_retired["aggregate_row_recomputation"]["retired_dependency_violation_count"] = 1
+@@ -320,9 +375,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
+     bad_protected = deepcopy(artifact)
+     bad_protected["protected_files_unchanged"]["all_protected_files_unchanged"] = False
+     bad_protected["reproducibility_checksum"] = mod.reproducibility_checksum(bad_protected)
+-    assert "ready score requires protected files unchanged" in mod.validate_artifact(
+-        bad_protected
+-    )
++    assert "ready score requires protected files unchanged" in mod.validate_artifact(bad_protected)
+ 
+     bad_gate = deepcopy(artifact)
+     bad_gate["gate_check_summary"]["all_root_checks_passed"] = False
+-- 
+2.55.0
+

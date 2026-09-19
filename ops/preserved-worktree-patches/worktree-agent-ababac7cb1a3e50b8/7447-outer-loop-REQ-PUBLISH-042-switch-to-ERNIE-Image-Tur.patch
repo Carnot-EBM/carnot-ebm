@@ -1,0 +1,595 @@
+From 8d23d395068636e5714e29d13b4776643f092f1f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 18:15:15 -0400
+Subject: [PATCH 07447/11362] [outer-loop] REQ-PUBLISH-042: switch to
+ ERNIE-Image-Turbo (8 steps), disable prompt enhancer
+
+Two same-day follow-up revisions to the local paperbanana diagram-generation
+backend, both grounded in real verification rather than assumption:
+
+1. Model swap: baidu/ERNIE-Image (50 steps, guidance_scale=4.0) ->
+   baidu/ERNIE-Image-Turbo (8 steps, guidance_scale=1.0), per user directive.
+   guidance_scale=1.0 is load-bearing, not cosmetic -- confirmed via the
+   Turbo model's own HuggingFace card that its DMD+RL distillation target
+   bakes in classifier-free guidance differently from the base model, so
+   reusing guidance_scale=4.0 would likely degrade output, not just run
+   slower. Also switched the loader from the generic
+   diffusers.DiffusionPipeline to the specific diffusers.ErnieImagePipeline
+   class the Turbo model card's own example uses (confirmed it exists in
+   this project's installed diffusers==0.39.0 first). Re-verified
+   external/paperbanana is still at latest git tag (v0.3.0 == origin/main).
+
+2. Prompt enhancer disabled: inspect.signature(ErnieImagePipeline.__call__)
+   against the real installed diffusers confirms use_pe defaults True.
+   Reading _enhance_prompt_with_pe in the installed diffusers source shows
+   what it does when enabled: a SEPARATE auxiliary LLM .generate() call
+   rewrites the caller's prompt before image synthesis. Left at its
+   default, this would silently override paperbanana's own
+   carefully-engineered prompt (its Planner/Stylist agents already do this
+   work) with a second, opaque LLM rewrite. Now explicitly
+   USE_PROMPT_ENHANCER = False, passed as use_pe=False on every call --
+   never left to the pipeline's own default.
+
+tests/python/test_ernie_image_server.py: 13 tests now (up from 11), all
+passing -- added explicit assertions for the Turbo inference settings and
+for use_pe=False, and strengthened _StubPipeline to require use_pe as an
+argument (a regression guard: dropping the use_pe= kwarg from the real call
+site now fails every mocked test immediately). use_pe=False and the Turbo
+kwargs were independently verified to bind against the REAL
+ErnieImagePipeline.__call__ signature via inspect.signature(...).bind_partial,
+not just the mocked stub. ruff/ruff-format/mypy clean; manual smoke test
+confirms the honest blocked_ernie_image_not_cached path still fires,
+correctly naming the Turbo repo id.
+
+Spec (REQ-PUBLISH-042/SCENARIO-PUBLISH-042), traceability, known-issues.md,
+status.md, and changelog.md all updated -- original adoption text preserved
+via same-day addenda, nothing silently edited, per Documentation Update
+Rules.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ _bmad/traceability.md                        |  4 +-
+ openspec/capabilities/publication/spec.md    | 73 ++++++++++++++----
+ ops/changelog.md                             | 20 +++++
+ ops/known-issues.md                          | 79 ++++++++++++++++++++
+ ops/status.md                                | 25 ++++++-
+ python/carnot/imagegen/__init__.py           |  6 +-
+ python/carnot/imagegen/ernie_image_server.py | 65 +++++++++++++---
+ scripts/generate_diagram.py                  |  5 +-
+ tests/python/test_ernie_image_server.py      | 39 +++++++++-
+ 9 files changed, 279 insertions(+), 37 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 5c4d3fb505..1f1220babd 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2355,5 +2355,5 @@ legacy tests.
+ | SCENARIO-VERIFY-5506 | Receipts Preserve Hardware Continuity Without Speedup Overclaim | Implemented | Focused tests cover Exp5505 selection plus Exp5491 fallback, blocked descriptor handling, safe command rejection for host storage/destructive probes, local CPU/CUDA smoke emitter branches, PolarFire smoke matching, KV260 SSH-only identity, GateMate detect-only identity, artifact validation, and 100% coverage for the Exp5506 module. |
+ | REQ-SAMPLE-5714 | One-Axis Corrected-cDLS Rust/Python Replica-Exchange Parity | Implemented | `crates/carnot-samplers/src/one_axis_tempering.rs`; `crates/carnot-python/src/one_axis_tempering.rs`; `python/carnot/experiment_5714_one_axis_tempering_rust_parity.py`; `tests/python/test_experiment_5714_one_axis_tempering_rust_parity.py`; `openspec/capabilities/samplers/spec.md`; `results/experiment_5714_one_axis_tempering_rust_parity.json`; artifact validates with `one_axis_rust_parity_ready_score=1.0`, `broken_control_rejected_score=1.0`, `two_axis_code_added=false`, `timing_claimed=false`, `hardware_speedup_claimed=false`, and `inference_substrate=rust_python_exact_one_axis_sampler_parity`. |
+ | SCENARIO-SAMPLE-5714 | One-Axis Rust Port Emits Exact Parity Evidence | Implemented | Focused Python tests cover deterministic Rust/Python energy, corrected proposal, swap, scheduler, checkpoint, restart, exact-target, malformed ABI, fallback, stale-provenance, and artifact fail-closed paths with 100% module coverage; Rust integration tests cover deterministic one-axis behavior and malformed inputs. |
+-| REQ-PUBLISH-042 | Local Diagram-Generation Backend (paperbanana + ERNIE-Image) | Implemented | Operator directive 2026-07-21: gemini/claude/codex API tokens no longer available, so diagram generation must run local-only. Vendored `external/paperbanana` (MIT, gitignored) at latest tag v0.3.0, unmodified; `python/carnot/imagegen/ernie_image_server.py` is a local FastAPI shim implementing paperbanana's `OpenAIImageGen` request/response contract (`POST /v1/images/generations`), backed by `baidu/ERNIE-Image` (Apache-2.0, Diffusers-native, 8B-param DiT) as a lazy singleton with an honest `RuntimeError` when the model is not yet cached (never silently downloads); `scripts/generate_diagram.py` is the new entrypoint, `CARNOT_IMAGE_BACKEND` defaults to `ernie-local`. Known gap documented (not hidden): the VLM planner/critic/stylist role still defaults to a paid provider; a visible warning is printed rather than silently proceeding. Model weights themselves not yet downloaded (Pre-Launch Preconditions Discipline — verified the blocked_ernie_image_not_cached path fires honestly). |
+-| SCENARIO-PUBLISH-042 | ernie-local Backend Serves paperbanana Without Paid API Keys | Implemented | 11 tests in `tests/python/test_ernie_image_server.py`, all mocked (no GPU/network/8B download): request/response contract (size-string parsing, b64_json round-trip via PIL, n=1 enforcement returning HTTP 400 for n=2), healthz cache-state reporting, and the honest-RuntimeError-on-uncached-model precondition path. Manually verified `scripts/generate_diagram.py --backend none` and `--backend ernie-local` (correctly emits `blocked_ernie_image_not_cached` since the model isn't downloaded yet) end-to-end. |
++| REQ-PUBLISH-042 | Local Diagram-Generation Backend (paperbanana + ERNIE-Image-Turbo) | Implemented | Operator directive 2026-07-21: gemini/claude/codex API tokens no longer available, so diagram generation must run local-only. Vendored `external/paperbanana` (MIT, gitignored) at latest tag v0.3.0, unmodified; `python/carnot/imagegen/ernie_image_server.py` is a local FastAPI shim implementing paperbanana's `OpenAIImageGen` request/response contract (`POST /v1/images/generations`), backed by `baidu/ERNIE-Image-Turbo` (Apache-2.0, Diffusers-native, 8B-param distilled DiT, loaded via `diffusers.ErnieImagePipeline`) as a lazy singleton with an honest `RuntimeError` when the model is not yet cached (never silently downloads); `scripts/generate_diagram.py` is the new entrypoint, `CARNOT_IMAGE_BACKEND` defaults to `ernie-local`. SAME-DAY REVISION 2026-07-21: switched from the base `baidu/ERNIE-Image` (50 steps, guidance_scale=4.0) to the Turbo variant (8 steps, guidance_scale=1.0) per a follow-up operator directive — confirmed via the Turbo model's own HuggingFace card that guidance_scale=1.0 is correct for the distilled checkpoint (reusing the base model's 4.0 would likely degrade output, not just change speed); neither variant's weights had been downloaded before this revision, so no prior real generation needed reconciling. Known gap documented (not hidden): the VLM planner/critic/stylist role still defaults to a paid provider; a visible warning is printed rather than silently proceeding. Model weights themselves not yet downloaded (Pre-Launch Preconditions Discipline — verified the blocked_ernie_image_not_cached path fires honestly, now naming baidu/ERNIE-Image-Turbo). SECOND SAME-DAY REVISION 2026-07-21: `use_pe` (the pipeline's own prompt-rewriting auxiliary LLM, confirmed via `inspect.signature(ErnieImagePipeline.__call__)` to default `True`) is now explicitly passed `False` — read `_enhance_prompt_with_pe` in the installed `diffusers` source directly to confirm it runs a separate LLM `.generate()` call to rewrite the prompt, which would silently override paperbanana's own engineered prompt if left at its default. |
++| SCENARIO-PUBLISH-042 | ernie-local Backend Serves paperbanana Without Paid API Keys | Implemented | 13 tests in `tests/python/test_ernie_image_server.py`, all mocked (no GPU/network/8B download): request/response contract (size-string parsing, b64_json round-trip via PIL, n=1 enforcement returning HTTP 400 for n=2), healthz cache-state reporting, the honest-RuntimeError-on-uncached-model precondition path, an explicit assertion that `guidance_scale=1.0`/`num_inference_steps=8` are passed to the pipeline (not the base model's `4.0`/`50`), and (added with the use_pe revision) an explicit assertion that `use_pe=False` reaches the pipeline call, verified to bind against the REAL `ErnieImagePipeline.__call__` signature via `inspect.signature(...).bind_partial(...)` (not just the mocked stub). Manually verified `scripts/generate_diagram.py --backend none` and `--backend ernie-local` (correctly emits `blocked_ernie_image_not_cached` naming the Turbo repo id) end-to-end. |
+diff --git a/openspec/capabilities/publication/spec.md b/openspec/capabilities/publication/spec.md
+index 055fb862cc..b7c84ecc7d 100644
+--- a/openspec/capabilities/publication/spec.md
++++ b/openspec/capabilities/publication/spec.md
+@@ -2392,7 +2392,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
+ | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
+ | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
+ | REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
+-| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`) |
++| REQ-PUBLISH-042 | Implemented | Local paperbanana + ERNIE-Image-Turbo diagram-generation backend (`python/carnot/imagegen/ernie_image_server.py`, `scripts/generate_diagram.py`); same-day 2026-07-21 revisions: base model -> Turbo variant (8 steps, guidance_scale=1.0), and `use_pe` (pipeline's own prompt-rewriting LLM) explicitly disabled |
+ 
+ ### REQ-PUBLISH-026: HuggingFace Publish Retry
+ The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
+@@ -2400,7 +2400,7 @@ The experiment 1750 huggingface retry runner MUST attempt to upload the smallest
+ ### REQ-PUBLISH-027: Position Paper Nexus
+ The experiment 1913 architecture paper workflow MUST draft the position paper nexus and update the architecture document. It MUST produce an artifact at `results/experiment_1913_arch_paper.json` with the schema `carnot.arch_paper.v1` and record the status and an honest verdict indicating readiness.
+ 
+-### REQ-PUBLISH-042: Local Diagram-Generation Backend (paperbanana + ERNIE-Image)
++### REQ-PUBLISH-042: Local Diagram-Generation Backend (paperbanana + ERNIE-Image-Turbo)
+ 
+ **Origin:** 2026-07-21 operator directive. Gemini/Claude/Codex API tokens
+ are no longer available for this project's use, so the diagram/figure
+@@ -2408,6 +2408,34 @@ generation path (previously parked 2026-05-01 as "adopt paperbanana",
+ see `ops/known-issues.md`) MUST run entirely on local, open-weight compute
+ instead of a paid closed-weight image-generation API.
+ 
++**Revision (same day, 2026-07-21):** the model was changed from the base
++`baidu/ERNIE-Image` (50 inference steps, guidance_scale=4.0) to
++`baidu/ERNIE-Image-Turbo` (8 inference steps, guidance_scale=1.0) per a
++follow-up operator directive. This is not a cosmetic rename: Turbo is a
++distilled checkpoint (DMD+RL) whose distillation target bakes in
++classifier-free guidance differently from the base model, so reusing the
++base model's guidance_scale=4.0 on Turbo would likely degrade output
++quality, not just run at the wrong speed. Confirmed via the model's own
++HuggingFace card (`https://huggingface.co/baidu/ERNIE-Image-Turbo`), not
++assumed by extrapolation from the base model. Neither variant's weights
++had been downloaded before this revision, so no prior real generation
++needs reconciling — this is a pre-launch correction of the spec/implementation
++pair, not a divergence between shipped behavior and its spec.
++
++**Second revision (same day, 2026-07-21):** the pipeline's prompt-enhancer
++feature (`use_pe`) MUST be explicitly disabled. `ErnieImagePipeline.__call__`
++defaults `use_pe=True` — confirmed by inspecting the installed
++`diffusers==0.39.0` source directly (`inspect.signature`), not assumed. When
++enabled it runs a SEPARATE auxiliary LLM `.generate()` call (its own
++tokenizer + chat template) to rewrite the caller's prompt before image
++synthesis (`_enhance_prompt_with_pe` in
++`diffusers/pipelines/ernie_image/pipeline_ernie_image.py`). Left at its
++default, this would silently override paperbanana's own carefully-engineered
++prompt (venue-specific styling, structured diagram description produced by
++its Planner/Stylist agents) with an opaque second LLM rewrite, undermining
++the whole point of paperbanana's prompt-engineering pipeline. Per operator
++directive.
++
+ The project MUST vendor `paperbanana` (MIT, `llmsresearch/paperbanana`)
+ under `external/paperbanana/` at its latest tagged release, gitignored per
+ the existing `external/ARC-GEN`-style convention (no embedded-repo
+@@ -2422,14 +2450,19 @@ the vendor SDK directly).
+ server that matches the exact request/response contract paperbanana's
+ `OpenAIImageGen` provider issues against `POST {base_url}/images/generations`
+ (`{model, prompt, n=1, size, quality?}` -> `{"data": [{"b64_json": ...}]}`),
+-backed by `baidu/ERNIE-Image` (Apache-2.0, Diffusers-native, 8B-parameter
+-DiT, runs on a single 24GB-class consumer GPU) loaded via
+-`diffusers.DiffusionPipeline.from_pretrained`. The pipeline MUST be a lazy,
+-process-wide singleton (never loaded at import time or per-request) and
+-MUST refuse to load with an honest `RuntimeError` naming the exact
+-`huggingface-cli download` command when the model is not yet in the local
+-HuggingFace cache -- it MUST NOT trigger a silent multi-gigabyte download
+-mid-request (Pre-Launch Preconditions Discipline).
++backed by `baidu/ERNIE-Image-Turbo` (Apache-2.0, Diffusers-native,
++8B-parameter distilled DiT, runs on a single 24GB-class consumer GPU) loaded
++via `diffusers.ErnieImagePipeline.from_pretrained` (the pipeline class
++documented on the model's own HuggingFace card -- not the generic
++`DiffusionPipeline` auto-resolver). Inference MUST use the Turbo-specific
++settings (`num_inference_steps=8`, `guidance_scale=1.0`, `use_pe=False`),
++never the base model's (`50`, `4.0`) or the pipeline's own `use_pe=True`
++default. The pipeline MUST be a lazy, process-wide singleton
++(never loaded at import time or per-request) and MUST refuse to load with an
++honest `RuntimeError` naming the exact `huggingface-cli download` command
++when the model is not yet in the local HuggingFace cache -- it MUST NOT
++trigger a silent multi-gigabyte download mid-request (Pre-Launch
++Preconditions Discipline).
+ 
+ `scripts/generate_diagram.py` MUST be the entrypoint used going forward for
+ diagram generation. It MUST read `CARNOT_IMAGE_BACKEND` (env var or
+@@ -2453,8 +2486,9 @@ set, rather than silently proceeding as if the whole pipeline were local.
+ 
+ ### SCENARIO-PUBLISH-042: ernie-local Backend Serves paperbanana Without Paid API Keys
+ 
+-**Given** `baidu/ERNIE-Image` is cached locally, `paperbanana` is installed
+-from `external/paperbanana`, and no `ernie_image_server` is currently running
++**Given** `baidu/ERNIE-Image-Turbo` is cached locally, `paperbanana` is
++installed from `external/paperbanana`, and no `ernie_image_server` is
++currently running
+ **When** `scripts/generate_diagram.py --backend ernie-local` is invoked
+ **Then** it launches `ernie_image_server`, waits for `/healthz`, sets
+ `IMAGE_PROVIDER=openai_imagen` / `OPENAI_BASE_URL` / `OPENAI_API_KEY` in the
+@@ -2462,10 +2496,10 @@ subprocess environment, and invokes `paperbanana generate` against the local
+ server -- with no `GOOGLE_API_KEY`, `OPENAI_API_KEY` (real), or
+ `ANTHROPIC_API_KEY` required for the image-generation step.
+ 
+-**Given** `baidu/ERNIE-Image` is NOT yet in the local HuggingFace cache
++**Given** `baidu/ERNIE-Image-Turbo` is NOT yet in the local HuggingFace cache
+ **When** `scripts/generate_diagram.py --backend ernie-local` is invoked
+ **Then** it exits non-zero with `blocked_ernie_image_not_cached` and the
+-exact `huggingface-cli download baidu/ERNIE-Image` command, without
++exact `huggingface-cli download baidu/ERNIE-Image-Turbo` command, without
+ attempting to download the model or fabricate a diagram.
+ 
+ **Given** a request to `POST /v1/images/generations` with `size="1024x1536"`
+@@ -2474,3 +2508,14 @@ and `n=1`
+ **Then** it returns `{"data": [{"b64_json": <base64 PNG>}]}` where the
+ decoded image is exactly 1024x1536, and a request with `n=2` is rejected
+ with HTTP 400 rather than silently generating only one image.
++
++**Given** any well-formed generation request
++**When** `ernie_image_server` calls the Diffusers pipeline
++**Then** it MUST pass `num_inference_steps=8` and `guidance_scale=1.0` (the
++Turbo-specific settings), never the base model's `50` / `4.0`.
++
++**Given** any well-formed generation request
++**When** `ernie_image_server` calls `ErnieImagePipeline.__call__`
++**Then** it MUST pass `use_pe=False` explicitly, never leaving the pipeline
++to its own `use_pe=True` default -- so paperbanana's own engineered prompt
++reaches the diffusion model unmodified, without a second, opaque LLM rewrite.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index dba031fd08..c3b1af7d60 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11650,3 +11650,23 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - Did NOT download the `baidu/ERNIE-Image` weights (multi-gigabyte; Pre-Launch Preconditions Discipline never auto-downloads a compute-bound resource). Verified `scripts/generate_diagram.py --backend ernie-local` correctly exits with `blocked_ernie_image_not_cached` in the current state, and `--backend none` no-ops cleanly.
+ - Documented known gap in `ops/known-issues.md` (2026-07-21 update to the 2026-05-01 parked entry, per Documentation Update Rules — nothing deleted): paperbanana's VLM (planner/critic/stylist) role still defaults to a paid provider; only the image-generation role is swapped. `scripts/generate_diagram.py` prints a visible warning rather than silently treating the whole pipeline as local. Follow-up candidate: wire `VLM_PROVIDER=ollama` (Ollama confirmed running on this box, zero models pulled) or `openai_local`.
+ - Spec-anchored per Development Workflow: `openspec/capabilities/publication/spec.md` REQ-PUBLISH-042 + SCENARIO-PUBLISH-042, `_bmad/traceability.md` rows added, ruff/ruff-format/mypy clean.
++- Follow-up (same day): adversarial review of the above (spawned per CLAUDE.md's mandatory review-before-completion rule) found and fixed 3 real issues, committed separately as `ce0f4b058`: (1) a first attempt at fixing the FastAPI closure bug via a bare `functools.lru_cache` actually reintroduced the exact same bug (verified: the 11 tests failed with that version) -- fixed properly by publishing the request model into `globals()` under a lock, with `lru_cache` layered on top only as a cheap-path optimization; (2) the `paperbanana`-installed precondition check used a bare `PATH` lookup, misfiring when this project's venv wasn't on `PATH` even though paperbanana was genuinely installed there -- fixed to check next to `sys.executable` first; (3) documented that the OpenAI Images API's `quality` field is silently unused (ERNIE-Image has no quality-tiering concept).
++
++## 2026-07-21 (Same-day revision: switch to ERNIE-Image-Turbo, 8 steps — operator-directed — outer-loop, Claude Sonnet 5)
++
++- Follow-up user instruction, same day as the REQ-PUBLISH-042 adoption above: use `baidu/ERNIE-Image-Turbo` (https://huggingface.co/baidu/ERNIE-Image-Turbo) instead of the base `baidu/ERNIE-Image`, with 8 inference steps.
++- Verified via the Turbo model's own HuggingFace card (not assumed by extrapolating from the base model): Turbo is a DMD+RL-distilled checkpoint recommending `num_inference_steps=8` AND `guidance_scale=1.0` (not the base model's `guidance_scale=4.0` -- a real, load-bearing difference, since distilled checkpoints typically bake classifier-free guidance into the distillation target; reusing the base model's guidance_scale would likely degrade output quality, not just change speed). Also switched the loader from the generic `diffusers.DiffusionPipeline` to the specific `diffusers.ErnieImagePipeline` class the Turbo model card's own example code uses; confirmed it exists in this project's installed `diffusers==0.39.0` before switching.
++- Re-verified `external/paperbanana` per the "update to latest git" half of the instruction: already at latest (`git fetch --tags` confirms `v0.3.0` still matches `origin/main`) -- no update needed, it was current from the original adoption earlier the same day.
++- Updated `python/carnot/imagegen/ernie_image_server.py` (`HF_REPO_ID`, `DEFAULT_GUIDANCE_SCALE`, `DEFAULT_INFERENCE_STEPS`, the pipeline import), `python/carnot/imagegen/__init__.py`, `scripts/generate_diagram.py` docstrings, and `tests/python/test_ernie_image_server.py` (now 12 tests -- added an explicit assertion that Turbo's settings, not the base model's, reach the pipeline call; strengthened the uncached-model RuntimeError test to assert the exact new repo id). All 12 tests pass; ruff/ruff-format/mypy clean.
++- `openspec/capabilities/publication/spec.md` REQ-PUBLISH-042 + SCENARIO-PUBLISH-042 revised in place with an explicit rationale note (nothing had shipped/been proven with the base model yet, so this is a pre-launch correction, not a divergence needing reconciliation); `_bmad/traceability.md` rows updated to match.
++- `ops/known-issues.md` and `ops/status.md` updated via same-day addenda (not silent edits) per Documentation Update Rules -- the original base-model adoption text is preserved, with a clearly-marked "SAME-DAY REVISION" / "SAME-DAY UPDATE" section pointing readers to the Turbo change.
++- Still NOT downloaded: `baidu/ERNIE-Image-Turbo` weights. Verified `scripts/generate_diagram.py --backend ernie-local` still fails honestly with `blocked_ernie_image_not_cached`, now correctly naming the Turbo repo id.
++
++## 2026-07-21 (Second same-day revision: disable ERNIE-Image-Turbo's prompt enhancer — operator-directed — outer-loop, Claude Sonnet 5)
++
++- Follow-up user instruction, same day: ensure the prompt enhancer is NOT enabled with `baidu/ERNIE-Image-Turbo`.
++- Investigated rather than assumed: `inspect.signature(ErnieImagePipeline.__call__)` against the real installed `diffusers==0.39.0` confirms `use_pe` defaults `True`. Read `_enhance_prompt_with_pe` directly in the installed `diffusers/pipelines/ernie_image/pipeline_ernie_image.py` source to understand what it actually does when enabled: runs a SEPARATE auxiliary LLM's `.generate()` call (its own tokenizer + chat template) to rewrite the prompt before image synthesis -- not a cosmetic flag.
++- Why this matters for this project specifically: paperbanana's own Planner/Stylist agents already produce a carefully-engineered, venue-styled, structured prompt. Leaving `use_pe` at its default would silently insert a second, opaque LLM rewrite on top of that, undermining paperbanana's own prompt engineering and adding uncontrolled non-determinism + extra latency.
++- Fix: `python/carnot/imagegen/ernie_image_server.py` now declares `USE_PROMPT_ENHANCER = False` and passes `use_pe=USE_PROMPT_ENHANCER` explicitly on every pipeline call -- never relying on the pipeline's own default.
++- `tests/python/test_ernie_image_server.py`: added `test_prompt_enhancer_is_disabled` (13th test, up from 12) and extended `_StubPipeline.__call__` to require `use_pe` (a regression guard: if a future edit ever drops the `use_pe=` kwarg from the real call site, every mocked test fails immediately with a TypeError rather than silently passing). Independently verified `use_pe=False` binds cleanly against the REAL `ErnieImagePipeline.__call__` signature via `inspect.signature(...).bind_partial(...)`, not just the mocked stub. All 13 tests pass; ruff/ruff-format/mypy clean; manual smoke test re-confirmed the honest `blocked_ernie_image_not_cached` path still fires.
++- `openspec/capabilities/publication/spec.md` REQ-PUBLISH-042 + SCENARIO-PUBLISH-042 revised in place with a second rationale note; `_bmad/traceability.md`, `ops/known-issues.md`, and `ops/status.md` updated via same-day addenda per Documentation Update Rules (original text preserved, nothing silently edited).
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 04f53dc987..0d670c664f 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -3473,6 +3473,85 @@ llama.cpp build actually support image input via `--mmproj`? which local
+ model to pull into Ollama?) and was out of scope for the explicit ask
+ ("our image generation model"). Follow-up candidate for a future task.
+ 
++#### 2026-07-21 SAME-DAY REVISION: switched to ERNIE-Image-Turbo (8 steps), not the base model
++
++Follow-up operator directive, same day: use `baidu/ERNIE-Image-Turbo`
++(https://huggingface.co/baidu/ERNIE-Image-Turbo) instead of the base
++`baidu/ERNIE-Image` used in the ADOPTED section above. This is preserved
++as a same-day revision addendum rather than an edit to the ADOPTED section,
++per the Documentation Update Rules (never silently rewrite what was
++recorded) -- but note neither variant's weights had actually been
++downloaded yet at the time of this revision, so nothing shipped/proven
++needs reconciling; this corrects the design before first real use, not
++after.
++
++**What changed:**
++
++- `HF_REPO_ID`: `baidu/ERNIE-Image` -> `baidu/ERNIE-Image-Turbo`.
++- Inference settings: `num_inference_steps` 50 -> 8, `guidance_scale` 4.0
++  -> 1.0. The guidance_scale change is load-bearing, not cosmetic: Turbo is
++  a DMD+RL-distilled checkpoint, and distilled/turbo diffusion checkpoints
++  typically bake classifier-free guidance into the distillation target.
++  Reusing the base model's guidance_scale=4.0 on Turbo would likely
++  oversaturate/degrade output quality, not just run at the wrong speed.
++  Confirmed via the Turbo model's own HuggingFace card (guidance_scale=1.0
++  explicitly recommended there), not assumed by extrapolating from the base
++  model's card.
++- Pipeline class: `diffusers.DiffusionPipeline` (generic auto-resolver) ->
++  `diffusers.ErnieImagePipeline` (the specific class documented in the
++  Turbo model card's own example code). Confirmed `ErnieImagePipeline`
++  exists in this project's installed `diffusers==0.39.0` before switching
++  to it, so this isn't a version bump that also needed doing.
++- Re-verified `external/paperbanana` is still at the latest tag (`v0.3.0`,
++  matches `origin/main` after `git fetch --tags`) -- no update was needed,
++  it was already current from the original adoption.
++
++**Files touched:** `python/carnot/imagegen/ernie_image_server.py`,
++`python/carnot/imagegen/__init__.py`, `scripts/generate_diagram.py`,
++`tests/python/test_ernie_image_server.py` (12 tests now, up from 11 --
++added an explicit assertion that Turbo's settings, not the base model's,
++reach the pipeline call), `openspec/capabilities/publication/spec.md`
++(REQ-PUBLISH-042 revised in place with a rationale note, since nothing had
++shipped yet), `_bmad/traceability.md`.
++
++**Still true, unchanged by this revision:** the model weights are NOT
++downloaded (now `huggingface-cli download baidu/ERNIE-Image-Turbo`); the
++VLM-role gap above is unchanged; `scripts/generate_diagram.py --backend
++ernie-local` still fails honestly with `blocked_ernie_image_not_cached`
++(re-verified against the new repo id).
++
++#### 2026-07-21 THIRD SAME-DAY REVISION: prompt enhancer (`use_pe`) explicitly disabled
++
++Follow-up user instruction: ensure ERNIE-Image-Turbo's built-in prompt
++enhancer is NOT enabled. Investigated rather than assumed:
++`inspect.signature(ErnieImagePipeline.__call__)` against the real installed
++`diffusers==0.39.0` confirms `use_pe` defaults `True`. Reading
++`_enhance_prompt_with_pe` directly in
++`diffusers/pipelines/ernie_image/pipeline_ernie_image.py` shows what it
++actually does when enabled: it runs a SEPARATE auxiliary LLM's
++`.generate()` call (its own tokenizer + chat template, sampled with
++temperature=0.6/top_p=0.95 by default) to rewrite the caller's prompt
++*before* image synthesis.
++
++**Why this matters here specifically:** paperbanana's own Planner/Stylist
++agents already produce a carefully-engineered, venue-styled, structured
++prompt before it ever reaches the image backend. Leaving `use_pe` at its
++default would insert a second, opaque LLM rewrite step on top of that
++engineered prompt, which could silently drift the final image away from
++what paperbanana's pipeline intended, and adds non-determinism + extra
++generation latency neither asked for nor wanted.
++
++**Fix:** `python/carnot/imagegen/ernie_image_server.py` now declares
++`USE_PROMPT_ENHANCER = False` and passes `use_pe=USE_PROMPT_ENHANCER`
++explicitly on every pipeline call — never relying on the pipeline's own
++default (matches this project's general discipline of never trusting an
++implicit default for compute-bound/generation-affecting behavior). Added
++`tests/python/test_ernie_image_server.py::test_prompt_enhancer_is_disabled`
++(13th test) and independently verified the `use_pe=False` keyword argument
++binds cleanly against the REAL `ErnieImagePipeline.__call__` signature
++(`inspect.signature(...).bind_partial(...)`), not just the mocked test
++stub.
++
+ ## PUBLICATION HOLD (.91+ planner — operator directive 2026-05-02 11:35Z, EXTENDED 2026-05-02 18:40Z)
+ 
+ **arXiv submission is ON HOLD until Phase 4 firm pivot answer + figure-integrity audit.**
+diff --git a/ops/status.md b/ops/status.md
+index c873f2a04a..ce419403d3 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,8 +1,27 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image diagram-generation backend)
+-
+-## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image (REQ-PUBLISH-042)
++**Last Updated:** 2026-07-21 (REQ-PUBLISH-042: local paperbanana + ERNIE-Image-Turbo diagram-generation backend, prompt enhancer disabled)
++
++## Session 2026-07-21 - Local Diagram-Generation Backend: paperbanana + ERNIE-Image-Turbo (REQ-PUBLISH-042)
++
++**SAME-DAY UPDATE:** the model was switched from the base `baidu/ERNIE-Image` (50 steps,
++guidance_scale=4.0) described in this session's original block below to
++`baidu/ERNIE-Image-Turbo` (8 steps, guidance_scale=1.0) per a follow-up operator directive.
++Everywhere below that says `baidu/ERNIE-Image` now means `baidu/ERNIE-Image-Turbo` in the live
++code — see `ops/known-issues.md` "2026-07-21 SAME-DAY REVISION" for the full rationale
++(guidance_scale=1.0 is load-bearing, not cosmetic: Turbo's distillation target bakes in CFG
++differently, so the base model's 4.0 would likely degrade output). Neither variant's weights had
++been downloaded before this revision, so nothing shipped/proven needed reconciling.
++
++**SECOND SAME-DAY UPDATE:** the pipeline's built-in prompt enhancer (`use_pe`, real installed
++`diffusers==0.39.0` default confirmed `True` via `inspect.signature`) is now explicitly disabled
++(`USE_PROMPT_ENHANCER = False`, passed as `use_pe=False` on every call). Read the pipeline's own
++`_enhance_prompt_with_pe` source to confirm what it does: a separate auxiliary LLM `.generate()`
++call rewrites the prompt before synthesis. Left enabled, it would have silently overridden
++paperbanana's own carefully-engineered prompt with a second, opaque LLM rewrite — see
++`ops/known-issues.md` "THIRD SAME-DAY REVISION" for detail. 13 tests now (up from 12), all
++passing; `use_pe=False` independently verified to bind against the real pipeline signature, not
++just the mocked test stub.
+ 
+ **What's working:** diagram generation no longer requires a paid API. Operator directive:
+ gemini/claude/codex tokens are no longer available for this project. Shipped a fully local
+diff --git a/python/carnot/imagegen/__init__.py b/python/carnot/imagegen/__init__.py
+index 429dee6078..f490fca07c 100644
+--- a/python/carnot/imagegen/__init__.py
++++ b/python/carnot/imagegen/__init__.py
+@@ -6,13 +6,15 @@
+     Claude, etc.). It contains a local HTTP shim that speaks just enough of
+     the OpenAI Images API surface for the vendored ``external/paperbanana``
+     tool to treat it as a drop-in image-gen provider, backed by a genuinely
+-    local, open-weight diffusion model (``baidu/ERNIE-Image``, Apache-2.0).
++    local, open-weight diffusion model (``baidu/ERNIE-Image-Turbo``,
++    Apache-2.0 -- the 8-step distilled checkpoint, not the 50-step base
++    model, per 2026-07-21 user directive).
+ 
+ **Detailed explanation for engineers:**
+     ``paperbanana`` (the diagram-generation tool this project vendors under
+     ``external/paperbanana``, see CLAUDE.md "Audit untrusted code") already
+     supports pointing its ``openai_imagen`` provider at an arbitrary
+-    ``OPENAI_BASE_URL``. ERNIE-Image itself has no such HTTP surface — it is
++    ``OPENAI_BASE_URL``. ERNIE-Image-Turbo itself has no such HTTP surface — it is
+     a plain Diffusers pipeline. ``ernie_image_server`` is the missing piece:
+     a small FastAPI process that loads the Diffusers pipeline once and
+     exposes ``POST /v1/images/generations`` in the exact shape paperbanana's
+diff --git a/python/carnot/imagegen/ernie_image_server.py b/python/carnot/imagegen/ernie_image_server.py
+index 8876d04eeb..32030f5e63 100644
+--- a/python/carnot/imagegen/ernie_image_server.py
++++ b/python/carnot/imagegen/ernie_image_server.py
+@@ -1,15 +1,35 @@
+-"""Local OpenAI-Images-API-compatible HTTP shim for baidu/ERNIE-Image.
++"""Local OpenAI-Images-API-compatible HTTP shim for baidu/ERNIE-Image-Turbo.
+ 
+ **Researcher summary:**
+     Before 2026-07-21, generating a diagram meant calling a paid API
+     (Gemini image-gen, GPT-Image, ...). Those tokens are no longer available.
+-    This module serves ``baidu/ERNIE-Image`` (an 8B-parameter Diffusion
+-    Transformer text-to-image model, Apache-2.0, runs on a single 24GB
+-    consumer GPU) behind the same HTTP contract the OpenAI Python SDK's
++    This module serves ``baidu/ERNIE-Image-Turbo`` (an 8B-parameter Diffusion
++    Transformer text-to-image model distilled via DMD+RL for 8-step
++    inference instead of the base model's 50, Apache-2.0, runs on a single
++    24GB consumer GPU) behind the same HTTP contract the OpenAI Python SDK's
+     ``client.images.generate(...)`` call expects, so the vendored
+     ``paperbanana`` tool can be pointed at it via ``OPENAI_BASE_URL`` with
+     zero changes to paperbanana's own source.
+ 
++    2026-07-21 update: switched from the base ``baidu/ERNIE-Image`` (50
++    steps, guidance_scale=4.0) to ``baidu/ERNIE-Image-Turbo`` (8 steps,
++    guidance_scale=1.0) per explicit user directive. The guidance_scale
++    change is NOT cosmetic -- distilled/turbo diffusion checkpoints
++    typically bake classifier-free guidance into the distillation target,
++    so reusing the base model's guidance_scale=4.0 on the Turbo checkpoint
++    would very likely oversaturate/degrade output, not just run slower.
++    Confirmed via the model's own HuggingFace card, not assumed.
++
++    2026-07-21 follow-up: the prompt enhancer (``use_pe``) is explicitly
++    disabled (:data:`USE_PROMPT_ENHANCER`). ``ErnieImagePipeline`` defaults
++    ``use_pe=True``, which -- confirmed by reading the installed
++    ``diffusers`` source, not assumed -- runs a SEPARATE auxiliary LLM
++    generation call to rewrite the caller's prompt before image synthesis.
++    Left at its default, that would silently rewrite paperbanana's own
++    carefully-engineered prompt (venue styling, structured diagram
++    description) through an opaque second LLM step. Disabled per explicit
++    user directive.
++
+ **Detailed explanation for engineers:**
+     paperbanana's ``OpenAIImageGen`` provider
+     (``external/paperbanana/paperbanana/providers/image_gen/openai_imagen.py``)
+@@ -49,11 +69,26 @@ from typing import Any, Optional
+ 
+ logger = logging.getLogger(__name__)
+ 
+-HF_REPO_ID = "baidu/ERNIE-Image"
++HF_REPO_ID = "baidu/ERNIE-Image-Turbo"
+ DEFAULT_HOST = "127.0.0.1"
+ DEFAULT_PORT = 8990
+-DEFAULT_GUIDANCE_SCALE = 4.0
+-DEFAULT_INFERENCE_STEPS = 50
++# Turbo-specific settings per https://huggingface.co/baidu/ERNIE-Image-Turbo --
++# NOT the base model's guidance_scale=4.0 / 50 steps (see module docstring).
++DEFAULT_GUIDANCE_SCALE = 1.0
++DEFAULT_INFERENCE_STEPS = 8
++# `ErnieImagePipeline.__call__` defaults `use_pe=True` (confirmed by inspecting
++# the installed diffusers==0.39.0 source directly, not assumed). When True it
++# runs a SEPARATE auxiliary LLM's .generate() call (its own tokenizer + chat
++# template, non-greedy sampling by default) to rewrite the caller's prompt
++# before generation -- see `_enhance_prompt_with_pe` in
++# diffusers/pipelines/ernie_image/pipeline_ernie_image.py. For this project
++# that is actively undesirable: paperbanana's own Visualizer/Stylist agents
++# already carefully engineer the prompt (venue-specific styling, structured
++# diagram description); letting ERNIE silently rewrite it again would
++# undermine that prompt engineering and inject non-deterministic LLM output
++# into what should be a controlled generate step. Explicitly disabled (never
++# left to the pipeline's own default) per 2026-07-21 user directive.
++USE_PROMPT_ENHANCER = False
+ NATIVE_SIZE = (1024, 1024)
+ 
+ # paperbanana's OpenAIImageGen only ever requests one of these three
+@@ -63,7 +98,7 @@ _KNOWN_SIZES = {"1024x1024", "1536x1024", "1024x1536"}
+ 
+ 
+ def ernie_image_cached() -> bool:
+-    """Precondition check: is ``baidu/ERNIE-Image`` already in the local HF cache?
++    """Precondition check: is ``baidu/ERNIE-Image-Turbo`` already in the local HF cache?
+ 
+     **Why this exists (Pre-Launch Preconditions Discipline):** an 8B-parameter
+     diffusion model is a multi-gigabyte download. This project's convention
+@@ -98,7 +133,7 @@ def parse_openai_size(size: str) -> tuple[int, int]:
+ 
+ 
+ class ErniePipelineSingleton:
+-    """Lazy, process-wide singleton around the Diffusers ERNIE-Image pipeline.
++    """Lazy, process-wide singleton around the Diffusers ERNIE-Image-Turbo pipeline.
+ 
+     **Detailed explanation for engineers:**
+         Loading an 8B-parameter DiT pipeline takes real wall-clock time and
+@@ -107,6 +142,13 @@ class ErniePipelineSingleton:
+         that single instance. Tests never exercise this class directly —
+         they monkeypatch ``get`` on the class object, since instantiating
+         the real pipeline requires a cached model and a GPU.
++
++        Uses ``diffusers.ErnieImagePipeline`` explicitly (not the generic
++        ``DiffusionPipeline`` auto-class-resolver) to match the exact usage
++        documented on https://huggingface.co/baidu/ERNIE-Image-Turbo.
++        Requires diffusers>=0.39 (confirmed available at 0.39.0 in this
++        project's `.venv` as of 2026-07-21; older diffusers versions may not
++        ship this pipeline class).
+     """
+ 
+     _pipeline: Any = None
+@@ -120,10 +162,10 @@ class ErniePipelineSingleton:
+                     f"Fetch it first: huggingface-cli download {HF_REPO_ID}"
+                 )
+             import torch
+-            from diffusers import DiffusionPipeline
++            from diffusers import ErnieImagePipeline
+ 
+             device = f"cuda:{gpu}" if gpu is not None else "cuda"
+-            pipe = DiffusionPipeline.from_pretrained(HF_REPO_ID, torch_dtype=torch.bfloat16)
++            pipe = ErnieImagePipeline.from_pretrained(HF_REPO_ID, torch_dtype=torch.bfloat16)
+             cls._pipeline = pipe.to(device)
+         return cls._pipeline
+ 
+@@ -207,6 +249,7 @@ def build_app(gpu: Optional[int] = None) -> Any:
+             height=height,
+             guidance_scale=DEFAULT_GUIDANCE_SCALE,
+             num_inference_steps=DEFAULT_INFERENCE_STEPS,
++            use_pe=USE_PROMPT_ENHANCER,
+         )
+         image = result.images[0]
+         duration_s = time.time() - t0
+diff --git a/scripts/generate_diagram.py b/scripts/generate_diagram.py
+index 01abbf2ec7..43ce7bfb08 100644
+--- a/scripts/generate_diagram.py
++++ b/scripts/generate_diagram.py
+@@ -5,8 +5,9 @@
+     This is the entrypoint for "generate a diagram" going forward. As of
+     2026-07-21, Gemini/Claude/Codex API tokens are no longer available for
+     this project, so the default image-generation backend is a local,
+-    open-weight model (``baidu/ERNIE-Image``, Apache-2.0) served from this
+-    machine's own GPU instead of a paid closed-weight API.
++    open-weight model (``baidu/ERNIE-Image-Turbo``, Apache-2.0, 8 inference
++    steps) served from this machine's own GPU instead of a paid closed-weight
++    API.
+ 
+ **Detailed explanation for engineers:**
+     Wires the vendored ``external/paperbanana`` CLI (see CLAUDE.md "Audit
+diff --git a/tests/python/test_ernie_image_server.py b/tests/python/test_ernie_image_server.py
+index b024157e3c..e9d16f5c4a 100644
+--- a/tests/python/test_ernie_image_server.py
++++ b/tests/python/test_ernie_image_server.py
+@@ -1,4 +1,4 @@
+-"""Tests for the local ERNIE-Image OpenAI-Images-API-compatible shim.
++"""Tests for the local ERNIE-Image-Turbo OpenAI-Images-API-compatible shim.
+ 
+ Spec coverage: REQ-PUBLISH-042, SCENARIO-PUBLISH-042
+ 
+@@ -35,7 +35,7 @@ class _StubPipeline:
+     def __init__(self) -> None:
+         self.calls: list[dict] = []
+ 
+-    def __call__(self, prompt, width, height, guidance_scale, num_inference_steps):
++    def __call__(self, prompt, width, height, guidance_scale, num_inference_steps, use_pe):
+         self.calls.append(
+             {
+                 "prompt": prompt,
+@@ -43,6 +43,7 @@ class _StubPipeline:
+                 "height": height,
+                 "guidance_scale": guidance_scale,
+                 "num_inference_steps": num_inference_steps,
++                "use_pe": use_pe,
+             }
+         )
+         return _StubResult(Image.new("RGB", (width, height), color=(10, 20, 30)))
+@@ -148,6 +149,38 @@ class TestGenerationsEndpoint:
+         assert stub.calls[0]["width"] == 1536
+         assert stub.calls[0]["height"] == 1024
+ 
++    def test_uses_turbo_inference_settings_not_base_model_settings(self, monkeypatch):
++        """REQ-PUBLISH-042 (2026-07-21 Turbo switch): guidance_scale=1.0 / steps=8,
++        NOT the base model's guidance_scale=4.0 / steps=50 -- a distilled/turbo
++        checkpoint reusing the base model's guidance_scale would likely degrade
++        output, not just run slower, so this is asserted explicitly."""
++        stub = _StubPipeline()
++        client = self._client(monkeypatch, stub)
++
++        client.post(
++            "/v1/images/generations",
++            json={"model": "ernie-image", "prompt": "x", "n": 1, "size": "1024x1024"},
++        )
++
++        assert stub.calls[0]["guidance_scale"] == 1.0
++        assert stub.calls[0]["num_inference_steps"] == 8
++
++    def test_prompt_enhancer_is_disabled(self, monkeypatch):
++        """REQ-PUBLISH-042 (2026-07-21 use_pe directive): ErnieImagePipeline defaults
++        use_pe=True, which runs a SEPARATE auxiliary LLM to rewrite the prompt before
++        generation. That would silently override paperbanana's own carefully-engineered
++        prompt, so this asserts use_pe=False is explicitly passed -- not left to the
++        pipeline's own default."""
++        stub = _StubPipeline()
++        client = self._client(monkeypatch, stub)
++
++        client.post(
++            "/v1/images/generations",
++            json={"model": "ernie-image", "prompt": "x", "n": 1, "size": "1024x1024"},
++        )
++
++        assert stub.calls[0]["use_pe"] is False
++
+     def test_n_greater_than_one_is_rejected(self, monkeypatch):
+         """paperbanana's OpenAIImageGen always sends n=1; a different n means an
+         unexpected caller, so refuse rather than silently return only one image."""
+@@ -190,7 +223,7 @@ class TestErniePipelineSingletonPrecondition:
+             raised = False
+         except RuntimeError as exc:
+             raised = True
+-            assert "baidu/ERNIE-Image" in str(exc)
++            assert "baidu/ERNIE-Image-Turbo" in str(exc)
+             assert "huggingface-cli download" in str(exc)
+ 
+         assert raised, "expected RuntimeError when the model is not cached"
+-- 
+2.55.0
+

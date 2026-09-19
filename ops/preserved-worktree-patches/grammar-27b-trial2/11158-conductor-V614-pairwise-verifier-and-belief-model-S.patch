@@ -1,0 +1,3297 @@
+From 449734d75458ccc336117e6092e479010fd53ffb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 01:21:50 -0400
+Subject: [PATCH 11158/11171] [conductor] V614 pairwise-verifier and
+ belief-model SOTA ingestion
+
+Automated research step by research conductor.
+Task ID: exp7011-v614-sota-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  111 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../experiment_7011_v614_sota_ingestion.py    | 1350 +++++++++++++++++
+ .../experiment_7011_v614_sota_ingestion.json  | 1241 +++++++++++++++
+ .../experiment_7011_v614_sota_ingestion.py    |   19 +
+ ...est_experiment_7011_v614_sota_ingestion.py |  505 ++++++
+ 6 files changed, 3227 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_7011_v614_sota_ingestion.py
+ create mode 100644 results/experiment_7011_v614_sota_ingestion.json
+ create mode 100644 scripts/experiments/experiment_7011_v614_sota_ingestion.py
+ create mode 100644 tests/python/test_experiment_7011_v614_sota_ingestion.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e84a4142fb..ca4ed82c77 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -63958,3 +63958,114 @@ these states. The `honest_verdict` terminal prefix SHALL agree with its class.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-7009 and SCENARIO-REPORT-7009-* | Planned (`python/carnot/experiment_7009_v614_source_contract_preflight.py`; `scripts/experiments/experiment_7009_v614_source_contract_preflight.py`) | Planned (`tests/python/test_experiment_7009_v614_source_contract_preflight.py`) |
++
++### REQ-REPORT-7011: V614 Primary-Source And Public-Code Ingestion Map
++
++Exp7011 SHALL write
++`results/experiment_7011_v614_sota_ingestion.json`. It SHALL use the V614
++planner marker as the exclusive lower bound for changes. It SHALL require
++network access, a readable V614 marker, readable target modules and specs, and
++a writable artifact path. A failed precondition SHALL write a schema-complete
++`blocked_v614_sota_ingestion` result. Its `gate_check_summary` SHALL name the
++failed check, expected value, and observed value.
++
++The experiment SHALL record terminal primary-source rows for BB-WM
++`2609.00455`, HIPPO `2606.29481`, BatchSum `Tf4lRAOGkj`, IntroConformal
++`2609.01375`, and Extropic Z1T. Each row SHALL include a canonical URL, a
++publication or update date, an access outcome, and a source-supported method
++extraction. It SHALL record terminal repository rows for linked public code.
++Each available repository SHALL have an immutable commit or release identity.
++An empty, absent, challenged, or rate-limited public artifact SHALL remain a
++terminal access row and SHALL not become evidence of implementation.
++
++Method rows SHALL classify each selected mechanism as `direct_adaptation`,
++`architectural_analogy`, `watch_only_dependency`, or
++`unsupported_hardware_claim`. Only accepted software mechanisms SHALL enter the
++implementation map. Every accepted method SHALL name existing or planned
++Carnot modules, current required inputs, a leakage boundary, a control arm, and
++a falsification test. Exact authorities, source identity, intervention
++metadata, future observations, and exact labels SHALL remain outside learner
++inputs. A GGUF output, ARC transition, or public JAX graph SHALL not imply a
++new model checkpoint, ARC solve, oracle-distinct verifier, Z1/TSU execution,
++latency, energy, or speedup claim.
++
++The experiment SHALL recheck the Semantic Scholar citation routes for EBT
++`2507.02092` and ARM-EBM `2512.15605`, plus current first-party Kona material.
++It SHALL preserve access outcomes without inventing citation counts or public
++assets. It SHALL append a dated post-marker note to `research-references.md`
++only when primary or first-party evidence proves a relevant artifact changed
++after the marker. Otherwise, it SHALL emit one `no_change` reference row and
++leave the reference file byte-identical.
++
++The artifact SHALL contain `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_query_rows`,
++`primary_source_rows`, `repository_rows`, `release_identity_rows`,
++`method_rows`, `method_to_module_rows`, `leakage_boundary_rows`,
++`control_rows`, `falsification_rows`, `unsupported_dependency_rows`,
++`non_claim_rows`, `secondary_check_rows`, `reference_append_rows`, `rows`,
++`command_receipt_rows`, `v614_sota_ingestion_complete_score`, `random_seed`,
++`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
++`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
++scientific principle for every required field.
++`inference_substrate` SHALL equal
++`deterministic_primary_source_ingestion_no_llm`.
++`verifier_is_oracle` SHALL be false. The score SHALL equal one only when every
++selected source has a terminal row and every accepted method has complete
++module, control, leakage, and falsification rows. `verdict_class` SHALL use the
++closed project enum. `honest_verdict` SHALL have a terminal prefix consistent
++with its class.
++
++#### SCENARIO-REPORT-7011-PREFLIGHT: A Missing Input Produces A Complete Blocked Artifact
++
++**Given** unavailable network access, a missing marker, an unreadable target, or an unwritable artifact path
++**When** Exp7011 checks preconditions
++**Then** it writes `blocked_v614_sota_ingestion` with exact diagnostics
++**And** it does not classify the external block as partial.
++
++#### SCENARIO-REPORT-7011-SOURCES: Every Selected Primary Artifact Terminates
++
++**Given** the five selected source families and their public-code links
++**When** Exp7011 records the execution-time source check
++**Then** every primary row has a URL, date, access outcome, and method extraction
++**And** each available code artifact has an immutable commit or release identity.
++
++#### SCENARIO-REPORT-7011-MAP: Accepted Mechanisms Have Bounded Carnot Targets
++
++**Given** current GGUF outputs, ARC transitions, and public Z1T software
++**When** Exp7011 accepts a mechanism for local adaptation
++**Then** it names modules, inputs, leakage boundaries, controls, and falsification tests
++**And** watch-only dependencies and unsupported hardware claims do not enter the implementation map.
++
++#### SCENARIO-REPORT-7011-NONCLAIMS: Source Claims Do Not Expand Into Carnot Claims
++
++**Given** paper results, repository code, self-signals, and hardware estimates
++**When** Exp7011 states local conclusions
++**Then** unsupported dependencies and prohibited claims remain explicit rows
++**And** exact authorities remain external to every learner input.
++
++#### SCENARIO-REPORT-7011-SECONDARY: Citation And Kona Checks Stay Advisory
++
++**Given** EBT, ARM-EBM, and Kona routes
++**When** an endpoint succeeds, rate-limits, challenges, or lacks a public asset
++**Then** the route keeps its terminal access outcome
++**And** the artifact does not infer a citation count or implementation release.
++
++#### SCENARIO-REPORT-7011-NOCHANGE: No Post-Marker Delta Preserves The Ledger
++
++**Given** no proved relevant primary-artifact change after the V614 marker
++**When** Exp7011 records reference disposition
++**Then** it emits one `no_change` row
++**And** `research-references.md` remains byte-identical.
++
++#### SCENARIO-REPORT-7011-ARTIFACT: Independent Validation Recomputes Completion
++
++**Given** a positive or blocked Exp7011 artifact
++**When** its validator recomputes coverage, mappings, principles, verdict, and checksum
++**Then** a consistent artifact passes
++**And** a forged score, missing identity, incomplete mapping, bad prefix, or bad checksum fails.
++
++## Implementation Status (REQ-REPORT-7011)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-7011 and SCENARIO-REPORT-7011-* | Implemented (`python/carnot/experiment_7011_v614_sota_ingestion.py`; `scripts/experiments/experiment_7011_v614_sota_ingestion.py`) | Covered (`tests/python/test_experiment_7011_v614_sota_ingestion.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d5a06bd40b..29afc602c6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5329,
++  "experiments_checked": 5330,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_7011_v614_sota_ingestion.py b/python/carnot/experiment_7011_v614_sota_ingestion.py
+new file mode 100644
+index 0000000000..4bdc202081
+--- /dev/null
++++ b/python/carnot/experiment_7011_v614_sota_ingestion.py
+@@ -0,0 +1,1350 @@
++"""Build the bounded V614 primary-source and public-code ingestion receipt.
++
++The source rows are a dated execution receipt, not learner input. Exact labels,
++source identities, and future ARC observations stay outside every proposed
++learned mechanism. This keeps a useful software analogy from becoming an
++unsupported benchmark, solve, or hardware claim.
++
++Spec refs: REQ-REPORT-7011 and SCENARIO-REPORT-7011-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++from datetime import datetime
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import time
++from typing import Any
++from urllib.error import HTTPError, URLError
++from urllib.request import Request, urlopen
++
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.paths import repo_root as find_repo_root
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 7011
++RUN_DATE = "20260905"
++RANDOM_SEED = 7_011_202_609_05
++INFERENCE_SUBSTRATE = "deterministic_primary_source_ingestion_no_llm"
++REFERENCE_MARKER = "## V614 Planner Refresh - 2026-09-04"
++PLANNER_MARKER = "2026-09-05T03:46:23Z"
++
++MODULE_PATH = Path("python/carnot/experiment_7011_v614_sota_ingestion.py")
++SCRIPT_PATH = Path("scripts/experiments/experiment_7011_v614_sota_ingestion.py")
++TEST_PATH = Path("tests/python/test_experiment_7011_v614_sota_ingestion.py")
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++REFERENCE_PATH = Path("research-references.md")
++RESULT_PATH = Path("results/experiment_7011_v614_sota_ingestion.json")
++REQUIRED_LOCAL_PATHS = (
++    REFERENCE_PATH,
++    Path("python/carnot/agentic/arc_pinductor.py"),
++    Path("python/carnot/agentic/arc_invariant_memory.py"),
++    Path("openspec/capabilities/constraint-verification/spec.md"),
++    Path("openspec/capabilities/arc-world-model-trust-energy/spec.md"),
++    SPEC_PATH,
++)
++
++SOURCE_IDS = ("bbwm", "hippo", "batchsum", "introconformal", "z1t")
++ACCEPTED_METHOD_IDS = (
++    "bbwm_queryable_belief",
++    "hippo_pair_anchored_response",
++    "batchsum_pair_centering",
++    "z1t_sparse_software_graph",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_query_rows",
++    "primary_source_rows",
++    "repository_rows",
++    "release_identity_rows",
++    "method_rows",
++    "method_to_module_rows",
++    "leakage_boundary_rows",
++    "control_rows",
++    "falsification_rows",
++    "unsupported_dependency_rows",
++    "non_claim_rows",
++    "secondary_check_rows",
++    "reference_append_rows",
++    "rows",
++    "command_receipt_rows",
++    "v614_sota_ingestion_complete_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "One scientific reason per field makes the evidence contract reviewable.",
++    "preconditions_checked": "Preflight evidence prevents a missing input from becoming a source conclusion.",
++    "inference_substrate": "The substrate states that deterministic source review used no LLM inference.",
++    "duration_s": "Measured time distinguishes an executed check from an undated static claim.",
++    "source_query_rows": "Query receipts preserve direct access failures separately from source findings.",
++    "primary_source_rows": "One terminal row per selected source prevents selective source reporting.",
++    "repository_rows": "Repository rows separate public code presence from paper availability.",
++    "release_identity_rows": "Immutable revisions make every available public-code observation replayable.",
++    "method_rows": "Method rows distinguish direct reuse, analogy, watch items, and unsupported claims.",
++    "method_to_module_rows": "Named targets constrain each accepted idea to the current Carnot stack.",
++    "leakage_boundary_rows": "Explicit exclusions keep exact authority outside learned inputs.",
++    "control_rows": "A control arm gives every accepted mechanism a fair local comparison.",
++    "falsification_rows": "A failure condition makes each local adaptation scientifically testable.",
++    "unsupported_dependency_rows": "Missing prerequisites stop public artifacts from implying local execution.",
++    "non_claim_rows": "Prohibited claims keep paper and hardware results from drifting into Carnot claims.",
++    "secondary_check_rows": "Advisory routes retain rate limits and missing assets without invented counts.",
++    "reference_append_rows": "An explicit disposition proves whether the append-only ledger should change.",
++    "rows": "A combined row ledger lets validators rebuild the bounded map from unit evidence.",
++    "command_receipt_rows": "Terminal command receipts expose every required verification outcome.",
++    "v614_sota_ingestion_complete_score": "One requires terminal sources and complete bounded maps for all accepted methods.",
++    "random_seed": "A fixed seed documents deterministic ordering even though no stochastic model ran.",
++    "reproducibility_checksum": "A stable payload hash detects later changes to scientific evidence.",
++    "gate_check_summary": "Exact expected and observed values make blocked preconditions actionable.",
++    "verifier_is_oracle": "False states that literature ingestion does not determine task correctness.",
++    "verdict_class": "A closed verdict class prevents a blocked or incomplete run from appearing positive.",
++    "honest_verdict": "A class-consistent terminal phrase gives automation an unambiguous outcome.",
++}
++
++VALIDATION_COMMAND_NAMES = (
++    "focused_tests",
++    "new_code_coverage_run",
++    "new_code_coverage_report",
++    "ruff_check",
++    "ruff_format",
++    "adversarial_verification",
++    "row_consistency_lint",
++    "openspec_coverage",
++    "root_clutter_check",
++    "full_python_tests",
++    "artifact_validation",
++)
++
++
++_SOURCE_QUERY_ROWS: tuple[JsonDict, ...] = (
++    {
++        "query_id": "bbwm_arxiv",
++        "source_id": "bbwm",
++        "source_kind": "primary_paper",
++        "url": "https://arxiv.org/abs/2609.00455",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "evidence_scope": "arXiv abstract and version history",
++        "terminal": True,
++    },
++    {
++        "query_id": "hippo_arxiv",
++        "source_id": "hippo",
++        "source_kind": "primary_paper",
++        "url": "https://arxiv.org/abs/2606.29481",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "evidence_scope": "arXiv abstract, version history, and author code link",
++        "terminal": True,
++    },
++    {
++        "query_id": "batchsum_openreview",
++        "source_id": "batchsum",
++        "source_kind": "primary_review_record",
++        "url": "https://openreview.net/forum?id=Tf4lRAOGkj",
++        "accessed_on": "2026-09-05",
++        "http_status": 403,
++        "access_outcome": "challenge_required",
++        "evidence_scope": "OpenReview route only; no content inferred from the challenge page",
++        "terminal": True,
++    },
++    {
++        "query_id": "batchsum_pmlr",
++        "source_id": "batchsum",
++        "source_kind": "primary_proceedings",
++        "url": "https://proceedings.mlr.press/v267/hong25d.html",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "evidence_scope": "PMLR paper record and abstract",
++        "terminal": True,
++    },
++    {
++        "query_id": "introconformal_arxiv",
++        "source_id": "introconformal",
++        "source_kind": "primary_paper",
++        "url": "https://arxiv.org/abs/2609.01375",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "evidence_scope": "arXiv abstract, version history, and author repository link",
++        "terminal": True,
++    },
++    {
++        "query_id": "z1t_first_party",
++        "source_id": "z1t",
++        "source_kind": "first_party_report",
++        "url": "https://extropic.ai/writing/z1t",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "evidence_scope": "dated report, software links, graph description, and estimate boundary",
++        "terminal": True,
++    },
++)
++
++_PRIMARY_SOURCE_ROWS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "bbwm",
++        "title": "Towards a Belief-Based World Model for LLM Agents",
++        "url": "https://arxiv.org/abs/2609.00455",
++        "source_identity": "arXiv:2609.00455v1",
++        "publication_or_update_date": "2026-08-31T22:48:38Z",
++        "access_outcome": "ok",
++        "method_extraction": "Expose a queryable belief about known and uncertain current state separately from action simulation.",
++        "post_marker_change_proven": False,
++        "terminal": True,
++    },
++    {
++        "source_id": "hippo",
++        "title": "To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored Pairwise Aggregation",
++        "url": "https://arxiv.org/abs/2606.29481",
++        "source_identity": "arXiv:2606.29481v1",
++        "publication_or_update_date": "2026-06-28T16:21:04Z",
++        "access_outcome": "ok",
++        "method_extraction": "Use hint-triggered traces as anchors for pairwise reward comparison instead of pointwise process scores.",
++        "post_marker_change_proven": False,
++        "terminal": True,
++    },
++    {
++        "source_id": "batchsum",
++        "title": "On the Robustness of Reward Models for Language Model Alignment",
++        "url": "https://proceedings.mlr.press/v267/hong25d.html",
++        "source_identity": "PMLR:267:hong25d; OpenReview:Tf4lRAOGkj",
++        "publication_or_update_date": "2025-07-13",
++        "access_outcome": "primary_proceedings_ok_openreview_challenged",
++        "method_extraction": "Penalize each batch reward sum away from zero to limit abnormal reward magnitude and hidden-state norm dispersion.",
++        "post_marker_change_proven": False,
++        "terminal": True,
++    },
++    {
++        "source_id": "introconformal",
++        "title": "IntroConformal: Conformal Factuality Guarantees for Large Vision-Language Models via Introspective Signals",
++        "url": "https://arxiv.org/abs/2609.01375",
++        "source_identity": "arXiv:2609.01375v1",
++        "publication_or_update_date": "2026-09-01T15:09:56Z",
++        "access_outcome": "ok",
++        "method_extraction": "Use layer-wise semantic stability or model self-verification probability as a conformal risk-control score.",
++        "post_marker_change_proven": False,
++        "terminal": True,
++    },
++    {
++        "source_id": "z1t",
++        "title": "Z1T: Sparse Transformer-Like Models for Probabilistic Hardware",
++        "url": "https://extropic.ai/writing/z1t",
++        "source_identity": "Extropic report 2026-09-04",
++        "publication_or_update_date": "2026-09-04",
++        "access_outcome": "ok",
++        "method_extraction": "Train fixed-connectivity sparse JAX models whose local tanh-linear operations match a degree-16 probabilistic graph.",
++        "post_marker_change_proven": False,
++        "terminal": True,
++    },
++)
++
++_REPOSITORY_ROWS: tuple[JsonDict, ...] = (
++    {
++        "repository_id": "bbwm_code",
++        "source_id": "bbwm",
++        "url": "https://github.com/skumar-ml/belief-world-models",
++        "publication_or_update_date": "2026-08-31T22:29:26Z",
++        "access_outcome": "ok",
++        "available": True,
++        "artifact_scope": "Python agent, environment, belief-world-model, and experiment code; paper trajectories absent",
++        "terminal": True,
++    },
++    {
++        "repository_id": "hippo_code",
++        "source_id": "hippo",
++        "url": "https://github.com/Infinite-set/HIPPO",
++        "publication_or_update_date": "2026-06-28T08:34:12Z",
++        "access_outcome": "readme_only_no_runnable_implementation",
++        "available": True,
++        "artifact_scope": "One README identifies the paper; no runnable method files are present",
++        "terminal": True,
++    },
++    {
++        "repository_id": "batchsum_code",
++        "source_id": "batchsum",
++        "url": "https://github.com/LinkedIn-XFACT/RM-Robustness",
++        "publication_or_update_date": "2025-05-27T06:04:18Z",
++        "access_outcome": "ok",
++        "available": True,
++        "artifact_scope": "Reward-model training and evaluation code with use_batch_sum configuration",
++        "terminal": True,
++    },
++    {
++        "repository_id": "introconformal_code",
++        "source_id": "introconformal",
++        "url": "https://github.com/Atabuzzaman/Introconformal",
++        "publication_or_update_date": "2026-08-31T07:56:11Z",
++        "access_outcome": "empty_repository_no_commit",
++        "available": False,
++        "artifact_scope": "The linked public Git repository exists but is empty",
++        "terminal": True,
++    },
++    {
++        "repository_id": "z1t_training_code",
++        "source_id": "z1t",
++        "url": "https://github.com/extropic-ai/sparse-transformers",
++        "publication_or_update_date": "2026-09-03T20:28:12Z",
++        "access_outcome": "ok",
++        "available": True,
++        "artifact_scope": "Apache-2.0 JAX sparse-transformer and Z1T research code",
++        "terminal": True,
++    },
++    {
++        "repository_id": "z1t_weights",
++        "source_id": "z1t",
++        "url": "https://huggingface.co/Extropic-AI/Z1T-0",
++        "publication_or_update_date": "2026-09-04T20:43:34Z",
++        "access_outcome": "ok",
++        "available": True,
++        "artifact_scope": "Public Equinox model revision with config and loader; not a GGUF release",
++        "terminal": True,
++    },
++)
++
++_RELEASE_IDENTITY_ROWS: tuple[JsonDict, ...] = (
++    {
++        "repository_id": "bbwm_code",
++        "source_id": "bbwm",
++        "identity_type": "git_commit",
++        "identity": "d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++        "identity_date": "2026-08-31T22:29:26Z",
++        "available": True,
++        "terminal": True,
++    },
++    {
++        "repository_id": "hippo_code",
++        "source_id": "hippo",
++        "identity_type": "git_commit",
++        "identity": "fcb20525f6888b2d2aa18cd635a83d8e0b4c996c",
++        "identity_date": "2026-06-28T08:34:12Z",
++        "available": True,
++        "terminal": True,
++    },
++    {
++        "repository_id": "batchsum_code",
++        "source_id": "batchsum",
++        "identity_type": "git_commit",
++        "identity": "3bafaabfb6e8c71234863103e9ba91d4e00c3498",
++        "identity_date": "2025-05-27T06:04:18Z",
++        "available": True,
++        "terminal": True,
++    },
++    {
++        "repository_id": "introconformal_code",
++        "source_id": "introconformal",
++        "identity_type": None,
++        "identity": None,
++        "identity_date": "2026-08-31T07:56:11Z",
++        "available": False,
++        "terminal": True,
++    },
++    {
++        "repository_id": "z1t_training_code",
++        "source_id": "z1t",
++        "identity_type": "git_commit",
++        "identity": "13051e90df9669be5b8f9f34fb097329fa82f674",
++        "identity_date": "2026-09-03T20:28:12Z",
++        "available": True,
++        "terminal": True,
++    },
++    {
++        "repository_id": "z1t_weights",
++        "source_id": "z1t",
++        "identity_type": "hf_revision",
++        "identity": "b5c244cee26b7f4e613b9ddbe83e83b2962ab2e1",
++        "identity_date": "2026-09-04T20:43:34Z",
++        "available": True,
++        "terminal": True,
++    },
++)
++
++_METHOD_ROWS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "bbwm_queryable_belief",
++        "source_id": "bbwm",
++        "classification": "architectural_analogy",
++        "accepted": True,
++        "mechanism": "Keep current-state belief queryable and separate from simulated action outcomes.",
++        "local_scope": "Game-blind typed facts derived only from chronological ARC observations and actions.",
++    },
++    {
++        "method_id": "hippo_pair_anchored_response",
++        "source_id": "hippo",
++        "classification": "direct_adaptation",
++        "accepted": True,
++        "mechanism": "Replace pointwise scoring with signed response differences inside matched intervention pairs.",
++        "local_scope": "Exact minimal constraint violation-repair pairs over existing GGUF outputs.",
++    },
++    {
++        "method_id": "batchsum_pair_centering",
++        "source_id": "batchsum",
++        "classification": "direct_adaptation",
++        "accepted": True,
++        "mechanism": "Center pair energies and penalize nonzero batch reward sums.",
++        "local_scope": "Calibration-only PWA-KAN energy with source-group splits and shortcut controls.",
++    },
++    {
++        "method_id": "introconformal_layerwise_crc",
++        "source_id": "introconformal",
++        "classification": "watch_only_dependency",
++        "accepted": False,
++        "mechanism": "Calibrate factuality risk from layer-wise semantic stability or self-verification probability.",
++        "local_scope": "Deferred until a stable layer-wise state contract and independent calibration authority exist.",
++    },
++    {
++        "method_id": "z1t_sparse_software_graph",
++        "source_id": "z1t",
++        "classification": "architectural_analogy",
++        "accepted": True,
++        "mechanism": "Represent sparse local operations and fixed graph degree in a typed, substrate-neutral graph receipt.",
++        "local_scope": "Static software and serialization study over public JAX files; no Z1 execution.",
++    },
++    {
++        "method_id": "z1t_hardware_efficiency",
++        "source_id": "z1t",
++        "classification": "unsupported_hardware_claim",
++        "accepted": False,
++        "mechanism": "Run sparse operations across Z1 chips and FPGA companion stages.",
++        "local_scope": "Rejected locally because no authenticated Z1 or TSU runner is available.",
++    },
++)
++
++_METHOD_TO_MODULE_ROWS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "bbwm_queryable_belief",
++        "target_modules": [
++            "python/carnot/agentic/arc_pinductor.py",
++            "python/carnot/agentic/arc_invariant_memory.py",
++            "python/carnot/agentic/arc_competition_agent.py",
++        ],
++        "required_inputs": [
++            "chronological observed ARC frames",
++            "chosen ARC actions",
++            "next observed frame admitted only after the frozen decision",
++            "fixed game-blind fact schema",
++        ],
++        "adaptation": "Use Pinductor belief update structure and invariant-memory lifecycle without exposing game_id as a learner feature.",
++    },
++    {
++        "method_id": "hippo_pair_anchored_response",
++        "target_modules": [
++            "python/carnot/experiment_6984_exact_contrast_fixture.py",
++            "python/carnot/experiment_6999_blinded_feature_cold_audit.py",
++        ],
++        "required_inputs": [
++            "matched exact minimal intervention pairs",
++            "current GGUF response features",
++            "signed within-pair response deltas",
++        ],
++        "adaptation": "Treat each exact intervention as an anchor and train only on within-pair response change.",
++    },
++    {
++        "method_id": "batchsum_pair_centering",
++        "target_modules": [
++            "python/carnot/models/pwa_kan.py",
++            "python/carnot/experiment_6977_certified_pwa_kan_energy.py",
++        ],
++        "required_inputs": [
++            "signed pair-response vectors",
++            "source-group split assignments",
++            "calibration-only energy targets",
++        ],
++        "adaptation": "Add pair centering and a batch sum-to-zero term to calibration-only PWA-KAN fitting.",
++    },
++    {
++        "method_id": "z1t_sparse_software_graph",
++        "target_modules": [
++            "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++            "python/carnot/models/sparse_ising.py",
++        ],
++        "required_inputs": [
++            "pinned public JAX graph and configuration",
++            "typed sparse operation metadata",
++            "fixed-degree adjacency description",
++        ],
++        "adaptation": "Serialize graph shape and supported operations as software evidence without selecting a hardware backend.",
++    },
++)
++
++_LEAKAGE_BOUNDARY_ROWS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "bbwm_queryable_belief",
++        "learner_allowed_inputs": [
++            "past frames",
++            "past actions",
++            "past observed outcomes",
++            "typed fact values",
++        ],
++        "learner_excluded_inputs": [
++            "game_id",
++            "game source",
++            "future frames",
++            "exact level answer",
++            "offline solver output",
++        ],
++        "exact_authority_external": True,
++    },
++    {
++        "method_id": "hippo_pair_anchored_response",
++        "learner_allowed_inputs": ["signed GGUF response-feature deltas inside one matched pair"],
++        "learner_excluded_inputs": [
++            "exact labels",
++            "mutation IDs",
++            "source IDs",
++            "hint text",
++            "provenance rows",
++        ],
++        "exact_authority_external": True,
++    },
++    {
++        "method_id": "batchsum_pair_centering",
++        "learner_allowed_inputs": [
++            "pair-centered response features",
++            "calibration targets after split freeze",
++        ],
++        "learner_excluded_inputs": [
++            "held labels",
++            "exact executor output",
++            "source identity",
++            "raw reward magnitude control labels",
++        ],
++        "exact_authority_external": True,
++    },
++    {
++        "method_id": "z1t_sparse_software_graph",
++        "learner_allowed_inputs": [
++            "public operation type",
++            "shape",
++            "degree",
++            "software configuration",
++        ],
++        "learner_excluded_inputs": [
++            "Extropic performance estimates",
++            "unobserved device telemetry",
++            "Carnot exact labels",
++        ],
++        "exact_authority_external": True,
++    },
++)
++
++_CONTROL_ROWS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "bbwm_queryable_belief",
++        "control_arm": "simulation-only, belief-only, and combined arms at matched action budgets",
++    },
++    {
++        "method_id": "hippo_pair_anchored_response",
++        "control_arm": "the frozen pointwise feature ranker plus pair-sign permutation",
++    },
++    {
++        "method_id": "batchsum_pair_centering",
++        "control_arm": "no regularizer, magnitude-only, and norm-only controls on source-group splits",
++    },
++    {
++        "method_id": "z1t_sparse_software_graph",
++        "control_arm": "the same typed graph serialized without Z1T-specific placement labels",
++    },
++)
++
++_FALSIFICATION_ROWS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "bbwm_queryable_belief",
++        "failure_condition": "Belief-only and combined arms fail to beat matched simulation-only control on sealed future transition utility.",
++    },
++    {
++        "method_id": "hippo_pair_anchored_response",
++        "failure_condition": "Pair response signs fail under pair permutation or do not generalize across held source groups.",
++    },
++    {
++        "method_id": "batchsum_pair_centering",
++        "failure_condition": "The zero-sum term does not improve held-source ranking beyond norm-only and magnitude-only controls.",
++    },
++    {
++        "method_id": "z1t_sparse_software_graph",
++        "failure_condition": "The pinned public graph cannot round-trip through the typed sparse receipt without unsupported operations.",
++    },
++)
++
++_UNSUPPORTED_DEPENDENCY_ROWS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "bbwm",
++        "dependency": "Full paper reproduction recommends a 40 GB vLLM GPU, Java 17, environment data, and gated-model access.",
++        "local_effect": "Reuse only the belief-versus-simulation interface over existing ARC transitions and GGUF outputs.",
++    },
++    {
++        "source_id": "hippo",
++        "dependency": "The pinned public HIPPO repository contains only a README and no runnable implementation.",
++        "local_effect": "Implement the pair unit from the primary method description and do not claim code reproduction.",
++    },
++    {
++        "source_id": "batchsum",
++        "dependency": "The reference training stack uses full reward-model training, Accelerate, FSDP, and external evaluation packages.",
++        "local_effect": "Adapt only the batch sum-to-zero penalty to the local calibration-only PWA-KAN.",
++    },
++    {
++        "source_id": "introconformal",
++        "dependency": "Layer-wise LVLM hidden states and an independent factuality calibration set are unavailable on the current GGUF output contract.",
++        "local_effect": "Keep IntroConformal watch-only and do not treat model self-judgment as exact authority.",
++    },
++    {
++        "source_id": "z1t",
++        "dependency": "The public model uses Equinox/JAX files, and Carnot has no authenticated Z1 or TSU device runner.",
++        "local_effect": "Study graph and training software only; do not infer GGUF compatibility or device performance.",
++    },
++)
++
++_NON_CLAIM_ROWS: tuple[JsonDict, ...] = (
++    {
++        "claim_id": "no_paper_reproduction_claim",
++        "prohibited_claim": "Carnot reproduced any selected paper benchmark.",
++        "reason": "This task verifies sources and maps mechanisms; it runs no paper training or evaluation.",
++    },
++    {
++        "claim_id": "no_arc_solve_claim",
++        "prohibited_claim": "A belief ledger solves an ARC game or level.",
++        "reason": "No belief-state policy experiment runs in this ingestion task.",
++    },
++    {
++        "claim_id": "no_oracle_distinct_claim",
++        "prohibited_claim": "Pair centering or self-verification is an oracle-distinct verifier.",
++        "reason": "Exact authorities remain external, and model self-signals do not establish correctness.",
++    },
++    {
++        "claim_id": "no_introconformal_guarantee_claim",
++        "prohibited_claim": "IntroConformal guarantees factuality for Carnot GGUF outputs.",
++        "reason": "The required LVLM state and calibration contracts were not implemented or tested.",
++    },
++    {
++        "claim_id": "no_z1_execution_claim",
++        "prohibited_claim": "Carnot executed Z1T on Z1 or any TSU hardware.",
++        "reason": "Only public software and model metadata were inspected.",
++    },
++    {
++        "claim_id": "no_z1_efficiency_claim",
++        "prohibited_claim": "Carnot verified Z1T energy, latency, or speedup.",
++        "reason": "The first-party report includes estimates and Carnot has no authenticated device receipt.",
++    },
++)
++
++_SECONDARY_CHECK_ROWS: tuple[JsonDict, ...] = (
++    {
++        "check_id": "ebt_citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "response_row_count": 35,
++        "newest_visible_publication_date": "2026-08-14",
++        "citation_count_claimed": False,
++        "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++        "terminal": True,
++    },
++    {
++        "check_id": "arm_ebm_citations",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "ok",
++        "response_row_count": 8,
++        "newest_visible_publication_date": "2026-07-02",
++        "citation_count_claimed": False,
++        "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++        "terminal": True,
++    },
++    {
++        "check_id": "kona",
++        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++        "accessed_on": "2026-09-05",
++        "http_status": 200,
++        "access_outcome": "product_page_ok_no_public_artifact_link_observed",
++        "public_implementation_claimed": False,
++        "finding": "The retrieved first-party page describes Kona 1.0 but did not expose public weights, a training recipe, or a reproducible local runner.",
++        "terminal": True,
++    },
++)
++
++
++def source_query_rows() -> list[JsonDict]:
++    """Return direct access receipts without allowing callers to mutate evidence."""
++
++    return [deepcopy(row) for row in _SOURCE_QUERY_ROWS]
++
++
++def primary_source_rows() -> list[JsonDict]:
++    """Return one terminal source-supported method row per selected family."""
++
++    return [deepcopy(row) for row in _PRIMARY_SOURCE_ROWS]
++
++
++def repository_rows() -> list[JsonDict]:
++    """Return public-code availability separately from paper availability."""
++
++    return [deepcopy(row) for row in _REPOSITORY_ROWS]
++
++
++def release_identity_rows() -> list[JsonDict]:
++    """Return immutable revisions, including an explicit empty-repository row."""
++
++    return [deepcopy(row) for row in _RELEASE_IDENTITY_ROWS]
++
++
++def method_rows() -> list[JsonDict]:
++    """Return bounded method classifications for all selected mechanisms."""
++
++    return [deepcopy(row) for row in _METHOD_ROWS]
++
++
++def method_to_module_rows() -> list[JsonDict]:
++    """Return only accepted software mechanisms and their local module targets."""
++
++    return [deepcopy(row) for row in _METHOD_TO_MODULE_ROWS]
++
++
++def leakage_boundary_rows() -> list[JsonDict]:
++    """Return learner-visible and authority-only input boundaries."""
++
++    return [deepcopy(row) for row in _LEAKAGE_BOUNDARY_ROWS]
++
++
++def control_rows() -> list[JsonDict]:
++    """Return one local comparison control for every accepted mechanism."""
++
++    return [deepcopy(row) for row in _CONTROL_ROWS]
++
++
++def falsification_rows() -> list[JsonDict]:
++    """Return one explicit local failure condition for every accepted mechanism."""
++
++    return [deepcopy(row) for row in _FALSIFICATION_ROWS]
++
++
++def unsupported_dependency_rows() -> list[JsonDict]:
++    """Return prerequisites that block direct reproduction or hardware claims."""
++
++    return [deepcopy(row) for row in _UNSUPPORTED_DEPENDENCY_ROWS]
++
++
++def non_claim_rows() -> list[JsonDict]:
++    """Return claims that this source-ingestion task cannot support."""
++
++    return [deepcopy(row) for row in _NON_CLAIM_ROWS]
++
++
++def secondary_check_rows() -> list[JsonDict]:
++    """Return advisory EBT, ARM-EBM, and Kona access receipts."""
++
++    return [deepcopy(row) for row in _SECONDARY_CHECK_ROWS]
++
++
++def reference_append_rows() -> list[JsonDict]:
++    """Keep the ledger unchanged because no relevant post-marker delta was proved."""
++
++    return [
++        {
++            "action": "no_change",
++            "marker": PLANNER_MARKER,
++            "appended": False,
++            "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
++            "terminal": True,
++        }
++    ]
++
++
++def _network_available() -> bool:
++    """Probe one primary host; an HTTP response still proves network reachability."""
++
++    request = Request("https://arxiv.org/abs/2609.00455", headers={"User-Agent": "Carnot/7011"})
++    try:
++        with urlopen(request, timeout=10) as response:  # noqa: S310 - fixed HTTPS precondition
++            return int(getattr(response, "status", 0)) > 0
++    except HTTPError:
++        return True
++    except (URLError, OSError):
++        return False
++
++
++def _writable(path: Path) -> bool:
++    """Probe the output directory without touching the requested artifact path."""
++
++    try:
++        path.parent.mkdir(parents=True, exist_ok=True)
++        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".exp7011-write-"):
++            pass
++        return True
++    except OSError:
++        return False
++
++
++def _readable_nonempty(path: Path) -> bool:
++    """Require an actual readable file so a directory cannot satisfy preflight."""
++
++    try:
++        return path.is_file() and bool(path.read_bytes())
++    except OSError:
++        return False
++
++
++def check_preconditions(
++    root: Path,
++    output_path: Path,
++    *,
++    network_available: bool | None = None,
++) -> list[JsonDict]:
++    """Check the network, V614 marker, target sources, and output boundary."""
++
++    network = _network_available() if network_available is None else bool(network_available)
++    rows: list[JsonDict] = [
++        {
++            "check": "network_access",
++            "expected_value": "available",
++            "observed_value": "available" if network else "unavailable",
++            "passed": network,
++            "terminal": True,
++        }
++    ]
++    reference = root / REFERENCE_PATH
++    try:
++        marker_present = reference.is_file() and REFERENCE_MARKER in reference.read_text(
++            encoding="utf-8"
++        )
++    except OSError:
++        marker_present = False
++    rows.append(
++        {
++            "check": "v614_reference_marker",
++            "expected_value": REFERENCE_MARKER,
++            "observed_value": "present" if marker_present else "missing",
++            "passed": marker_present,
++            "terminal": True,
++        }
++    )
++    for relative in REQUIRED_LOCAL_PATHS[1:]:
++        readable = _readable_nonempty(root / relative)
++        rows.append(
++            {
++                "check": f"readable_target:{relative.as_posix()}",
++                "expected_value": "readable_nonempty_file",
++                "observed_value": "readable_nonempty_file" if readable else "missing_or_unreadable",
++                "passed": readable,
++                "terminal": True,
++            }
++        )
++    writable = _writable(output_path)
++    rows.append(
++        {
++            "check": "writable_artifact_path",
++            "expected_value": "writable",
++            "observed_value": "writable" if writable else "unwritable",
++            "passed": writable,
++            "terminal": True,
++        }
++    )
++    return rows
++
++
++def _row_ledger(parts: Mapping[str, Sequence[Mapping[str, Any]]]) -> list[JsonDict]:
++    """Combine evidence rows while retaining the source collection name."""
++
++    return [{"row_kind": kind, **dict(row)} for kind, rows in parts.items() for row in rows]
++
++
++def _method_coverage(artifact: Mapping[str, Any]) -> bool:
++    """Require all accepted methods to have every bounded implementation row."""
++
++    methods = artifact.get("method_rows", [])
++    if not isinstance(methods, list):
++        return False
++    accepted = {
++        row.get("method_id")
++        for row in methods
++        if isinstance(row, Mapping) and row.get("accepted") is True
++    }
++    if accepted != set(ACCEPTED_METHOD_IDS):
++        return False
++    for field in (
++        "method_to_module_rows",
++        "leakage_boundary_rows",
++        "control_rows",
++        "falsification_rows",
++    ):
++        rows = artifact.get(field, [])
++        if not isinstance(rows, list):
++            return False
++        covered = {
++            row.get("method_id")
++            for row in rows
++            if isinstance(row, Mapping) and row.get("method_id")
++        }
++        if covered != accepted:
++            return False
++    return True
++
++
++def completion_score(artifact: Mapping[str, Any]) -> int:
++    """Recompute completion only from terminal unit rows and bounded mappings."""
++
++    primaries = artifact.get("primary_source_rows", [])
++    if not isinstance(primaries, list):
++        return 0
++    source_coverage = {
++        row.get("source_id")
++        for row in primaries
++        if isinstance(row, Mapping)
++        and row.get("terminal") is True
++        and row.get("url")
++        and row.get("publication_or_update_date")
++        and row.get("access_outcome")
++        and row.get("method_extraction")
++    }
++    repositories = artifact.get("repository_rows", [])
++    identities = artifact.get("release_identity_rows", [])
++    if not isinstance(repositories, list) or not isinstance(identities, list):
++        return 0
++    repository_ids = {
++        row.get("repository_id")
++        for row in repositories
++        if isinstance(row, Mapping) and row.get("terminal") is True
++    }
++    identity_ids = {
++        row.get("repository_id")
++        for row in identities
++        if isinstance(row, Mapping)
++        and row.get("terminal") is True
++        and (row.get("available") is False or bool(row.get("identity")))
++    }
++    complete = (
++        source_coverage == set(SOURCE_IDS)
++        and repository_ids == identity_ids
++        and repository_ids == {row["repository_id"] for row in _REPOSITORY_ROWS}
++        and _method_coverage(artifact)
++    )
++    return int(complete)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash scientific rows while excluding runtime and command noise."""
++
++    excluded = {"duration_s", "command_receipt_rows", "reproducibility_checksum"}
++    payload = {key: value for key, value in artifact.items() if key not in excluded}
++    encoded = json.dumps(
++        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
++    ).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _command_state(artifact: Mapping[str, Any]) -> str:
++    """Classify absent, passing, failed, and nonterminal validation receipts."""
++
++    rows = artifact.get("command_receipt_rows", [])
++    if rows == []:
++        return "not_recorded"
++    if not isinstance(rows, list):
++        return "blocked"
++    if [row.get("name") for row in rows if isinstance(row, Mapping)] != list(
++        VALIDATION_COMMAND_NAMES
++    ):
++        return "blocked"
++    if any(not isinstance(row, Mapping) or row.get("terminal") is not True for row in rows):
++        return "blocked"
++    if any(row.get("passed") is not True for row in rows):
++        return "disqualified"
++    return "pass"
++
++
++def _empty_artifact(duration_s: float) -> JsonDict:
++    """Create the complete blocked shape before preconditions are evaluated."""
++
++    artifact: JsonDict = {
++        field: []
++        for field in REQUIRED_ARTIFACT_FIELDS
++        if field
++        not in {
++            "field_principles",
++            "inference_substrate",
++            "duration_s",
++            "v614_sota_ingestion_complete_score",
++            "random_seed",
++            "reproducibility_checksum",
++            "gate_check_summary",
++            "verifier_is_oracle",
++            "verdict_class",
++            "honest_verdict",
++        }
++    }
++    artifact.update(
++        {
++            "field_principles": deepcopy(FIELD_PRINCIPLES),
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "duration_s": float(duration_s),
++            "v614_sota_ingestion_complete_score": 0,
++            "random_seed": RANDOM_SEED,
++            "reproducibility_checksum": "",
++            "gate_check_summary": {
++                "failed_check": "preconditions",
++                "expected_value": "all_pass",
++                "observed_value": "not_checked",
++                "passed": False,
++            },
++            "verifier_is_oracle": False,
++            "verdict_class": "blocked",
++            "honest_verdict": "blocked_v614_sota_ingestion",
++        }
++    )
++    return artifact
++
++
++def build_artifact(
++    root: Path,
++    run_date: str,
++    *,
++    output_path: Path,
++    network_available: bool | None = None,
++    command_rows: Sequence[Mapping[str, Any]] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    """Build one positive or blocked deterministic V614 ingestion artifact."""
++
++    started = time.monotonic()
++    artifact = _empty_artifact(0.0)
++    checks = check_preconditions(root, output_path, network_available=network_available)
++    artifact["preconditions_checked"] = checks
++    failed = next((row for row in checks if row.get("passed") is not True), None)
++    if failed is not None:
++        artifact["gate_check_summary"] = {
++            "failed_check": failed["check"],
++            "expected_value": failed["expected_value"],
++            "observed_value": failed["observed_value"],
++            "passed": False,
++        }
++    else:
++        parts = {
++            "source_query": source_query_rows(),
++            "primary_source": primary_source_rows(),
++            "repository": repository_rows(),
++            "release_identity": release_identity_rows(),
++            "method": method_rows(),
++            "method_to_module": method_to_module_rows(),
++            "leakage_boundary": leakage_boundary_rows(),
++            "control": control_rows(),
++            "falsification": falsification_rows(),
++            "unsupported_dependency": unsupported_dependency_rows(),
++            "non_claim": non_claim_rows(),
++            "secondary_check": secondary_check_rows(),
++            "reference_append": reference_append_rows(),
++        }
++        for kind, rows in parts.items():
++            artifact[f"{kind}_rows"] = rows
++        artifact["rows"] = _row_ledger(parts)
++        artifact["v614_sota_ingestion_complete_score"] = completion_score(artifact)
++        artifact["verdict_class"] = "positive"
++        artifact["honest_verdict"] = (
++            "complete_positive_v614_sota_ingestion_mapped_no_post_marker_change"
++        )
++        artifact["gate_check_summary"] = {
++            "failed_check": None,
++            "expected_value": 1,
++            "observed_value": artifact["v614_sota_ingestion_complete_score"],
++            "passed": artifact["v614_sota_ingestion_complete_score"] == 1,
++        }
++    artifact["command_receipt_rows"] = (
++        [dict(row) for row in command_rows] if command_rows is not None else []
++    )
++    if failed is None:
++        command_state = _command_state(artifact)
++        if command_state == "blocked":
++            artifact["verdict_class"] = "blocked"
++            artifact["honest_verdict"] = "blocked_v614_sota_ingestion"
++            artifact["gate_check_summary"] = {
++                "failed_check": "validation_commands",
++                "expected_value": list(VALIDATION_COMMAND_NAMES),
++                "observed_value": "nonterminal_or_missing",
++                "passed": False,
++            }
++        elif command_state == "disqualified":
++            artifact["verdict_class"] = "disqualified"
++            artifact["honest_verdict"] = "disqualified_v614_sota_ingestion_validation_failed"
++            artifact["gate_check_summary"] = {
++                "failed_check": "validation_commands",
++                "expected_value": "all_pass",
++                "observed_value": [
++                    row.get("name")
++                    for row in artifact["command_receipt_rows"]
++                    if row.get("passed") is not True
++                ],
++                "passed": False,
++            }
++    artifact["duration_s"] = (
++        float(duration_s) if duration_s is not None else round(time.monotonic() - started, 6)
++    )
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def _verdict_errors(artifact: Mapping[str, Any], score: int) -> list[str]:
++    """Require the class and phrase that follow from preconditions and score."""
++
++    checks = artifact.get("preconditions_checked", [])
++    blocked = not isinstance(checks, list) or any(
++        not isinstance(row, Mapping) or row.get("passed") is not True for row in checks
++    )
++    command_state = _command_state(artifact)
++    if blocked or command_state == "blocked":
++        expected_class = "blocked"
++    elif command_state == "disqualified" or score != 1:
++        expected_class = "disqualified"
++    else:
++        expected_class = "positive"
++    errors = []
++    if artifact.get("verdict_class") != expected_class:
++        errors.append("verdict_class_inconsistent")
++    verdict = str(artifact.get("honest_verdict", ""))
++    prefix = {
++        "blocked": "blocked_v614_sota_ingestion",
++        "positive": "complete_positive_",
++        "disqualified": "disqualified_v614_sota_ingestion",
++    }[expected_class]
++    if not verdict.startswith(prefix):
++        errors.append("honest_verdict_prefix_inconsistent")
++    return errors
++
++
++def validate_artifact(value: Mapping[str, Any] | Path) -> list[str]:
++    """Independently validate source coverage, bounded maps, verdict, and hash."""
++
++    if isinstance(value, Path):
++        if not value.is_file():
++            return ["artifact_missing"]
++        try:
++            loaded = json.loads(value.read_text(encoding="utf-8"))
++        except (OSError, json.JSONDecodeError):
++            return ["artifact_unreadable"]
++        if not isinstance(loaded, Mapping):
++            return ["artifact_not_object"]
++        artifact: Mapping[str, Any] = loaded
++    else:
++        artifact = value
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        return ["missing_required_fields:" + ",".join(missing)]
++
++    errors: list[str] = []
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(principles) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_principles_incomplete")
++    elif any(not isinstance(value, str) or not value.strip() for value in principles.values()):
++        errors.append("field_principles_empty")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++
++    score = completion_score(artifact)
++    if artifact.get("v614_sota_ingestion_complete_score") != score:
++        errors.append("completion_score_mismatch")
++    errors.extend(_verdict_errors(artifact, score))
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], path: Path) -> Path:
++    """Validate before an atomic write so partial scientific rows never land."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return atomic_write_json(path, artifact, allow_override=False, sort_keys=True)
++
++
++def _run_command(root: Path, name: str, argv: Sequence[str]) -> JsonDict:
++    """Run one bounded verifier and preserve failures as terminal receipts."""
++
++    started = time.monotonic()
++    try:
++        result = subprocess.run(
++            list(argv),
++            cwd=root,
++            text=True,
++            capture_output=True,
++            timeout=7200,
++            check=False,
++        )
++        terminal = True
++        exit_code = result.returncode
++        stdout = result.stdout[-4000:]
++        stderr = result.stderr[-4000:]
++        warning_only = False
++        if name == "adversarial_verification" and exit_code == 1:
++            try:
++                report = json.loads(result.stdout)
++            except json.JSONDecodeError:
++                report = {}
++            reports = report.get("reports", []) if isinstance(report, Mapping) else []
++            warning_only = bool(reports) and all(
++                row.get("max_severity", 2) < 2 for row in reports if isinstance(row, Mapping)
++            )
++        if exit_code == 0:
++            outcome = "pass"
++        elif warning_only:
++            outcome = "pass_with_warning"
++        else:
++            outcome = "contract_defect"
++    except subprocess.TimeoutExpired as exc:
++        terminal = True
++        exit_code = None
++        stdout = str(exc.stdout or "")[-4000:]
++        stderr = str(exc.stderr or "")[-4000:]
++        outcome = "tool_timeout"
++    except OSError as exc:
++        terminal = False
++        exit_code = None
++        stdout = ""
++        stderr = f"{type(exc).__name__}: {exc}"
++        outcome = "tool_failure"
++    return {
++        "name": name,
++        "command": " ".join(argv),
++        "exit_code": exit_code,
++        "stdout": stdout,
++        "stderr": stderr,
++        "duration_s": round(time.monotonic() - started, 6),
++        "outcome": outcome,
++        "terminal": terminal,
++        "passed": exit_code == 0 or outcome == "pass_with_warning",
++    }
++
++
++def run_validation_commands(root: Path, artifact_path: Path) -> list[JsonDict]:
++    """Run the focused, coverage, lint, artifact, and required full-suite checks."""
++
++    python = str(root / ".venv/bin/python")
++    pytest = str(root / ".venv/bin/pytest")
++    coverage = str(root / ".venv/bin/coverage")
++    ruff = str(root / ".venv/bin/ruff")
++    module = MODULE_PATH.as_posix()
++    test = TEST_PATH.as_posix()
++    script = SCRIPT_PATH.as_posix()
++    commands: tuple[tuple[str, list[str]], ...] = (
++        ("focused_tests", [pytest, test, "-q", "--no-cov", "-n", "0"]),
++        (
++            "new_code_coverage_run",
++            [
++                coverage,
++                "run",
++                "--rcfile=/dev/null",
++                f"--include={module}",
++                "-m",
++                "pytest",
++                test,
++                "-q",
++                "--no-cov",
++                "-n",
++                "0",
++            ],
++        ),
++        (
++            "new_code_coverage_report",
++            [
++                coverage,
++                "report",
++                "--rcfile=/dev/null",
++                f"--include={module}",
++                "--fail-under=100",
++            ],
++        ),
++        ("ruff_check", [ruff, "check", module, test, script]),
++        ("ruff_format", [ruff, "format", "--check", module, test, script]),
++        (
++            "adversarial_verification",
++            [python, "scripts/adversarial_verify.py", "--json", str(artifact_path)],
++        ),
++        (
++            "row_consistency_lint",
++            [python, "scripts/verdict_row_consistency_lint.py", str(artifact_path)],
++        ),
++        ("openspec_coverage", [python, "scripts/check_spec_coverage.py", test]),
++        ("root_clutter_check", [python, "scripts/root_clutter_sweep.py"]),
++        ("full_python_tests", [pytest, "tests/python", "-q"]),
++    )
++    return [_run_command(root, name, argv) for name, argv in commands]
++
++
++def _date_argument(value: str) -> bool:
++    """Accept only the exact compact calendar format used by experiment tasks."""
++
++    try:
++        return datetime.strptime(value, "%Y%m%d").strftime("%Y%m%d") == value
++    except ValueError:
++        return False
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Write a preliminary receipt, run checks, then write the final receipt."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--validate", type=Path)
++    args = parser.parse_args(argv)
++    if args.validate is not None:
++        return int(bool(validate_artifact(args.validate)))
++    if not _date_argument(args.date):
++        return 2
++
++    root = find_repo_root(start=__file__)
++    output = args.output or (root / RESULT_PATH)
++    started = time.monotonic()
++    preliminary = build_artifact(root, args.date, output_path=output)
++    write_artifact(preliminary, output)
++    external = run_validation_commands(root, output)
++    artifact_validation = {
++        "name": "artifact_validation",
++        "command": f"{root / '.venv/bin/python'} {SCRIPT_PATH} --validate {output}",
++        "exit_code": int(bool(validate_artifact(preliminary))),
++        "stdout": "artifact valid" if not validate_artifact(preliminary) else "artifact invalid",
++        "stderr": "",
++        "duration_s": 0.0,
++        "outcome": "pass" if not validate_artifact(preliminary) else "contract_defect",
++        "terminal": True,
++        "passed": not validate_artifact(preliminary),
++    }
++    final = build_artifact(
++        root,
++        args.date,
++        output_path=output,
++        network_available=all(
++            row.get("passed") is True
++            for row in preliminary["preconditions_checked"]
++            if row.get("check") == "network_access"
++        ),
++        command_rows=[*external, artifact_validation],
++        duration_s=round(time.monotonic() - started, 6),
++    )
++    write_artifact(final, output)
++    return int(bool(validate_artifact(final)) or final["verdict_class"] != "positive")
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_7011_v614_sota_ingestion.json b/results/experiment_7011_v614_sota_ingestion.json
+new file mode 100644
+index 0000000000..568fc0fc49
+--- /dev/null
++++ b/results/experiment_7011_v614_sota_ingestion.json
+@@ -0,0 +1,1241 @@
++{
++  "command_receipt_rows": [],
++  "control_rows": [
++    {
++      "control_arm": "simulation-only, belief-only, and combined arms at matched action budgets",
++      "method_id": "bbwm_queryable_belief"
++    },
++    {
++      "control_arm": "the frozen pointwise feature ranker plus pair-sign permutation",
++      "method_id": "hippo_pair_anchored_response"
++    },
++    {
++      "control_arm": "no regularizer, magnitude-only, and norm-only controls on source-group splits",
++      "method_id": "batchsum_pair_centering"
++    },
++    {
++      "control_arm": "the same typed graph serialized without Z1T-specific placement labels",
++      "method_id": "z1t_sparse_software_graph"
++    }
++  ],
++  "duration_s": 0.167534,
++  "falsification_rows": [
++    {
++      "failure_condition": "Belief-only and combined arms fail to beat matched simulation-only control on sealed future transition utility.",
++      "method_id": "bbwm_queryable_belief"
++    },
++    {
++      "failure_condition": "Pair response signs fail under pair permutation or do not generalize across held source groups.",
++      "method_id": "hippo_pair_anchored_response"
++    },
++    {
++      "failure_condition": "The zero-sum term does not improve held-source ranking beyond norm-only and magnitude-only controls.",
++      "method_id": "batchsum_pair_centering"
++    },
++    {
++      "failure_condition": "The pinned public graph cannot round-trip through the typed sparse receipt without unsupported operations.",
++      "method_id": "z1t_sparse_software_graph"
++    }
++  ],
++  "field_principles": {
++    "command_receipt_rows": "Terminal command receipts expose every required verification outcome.",
++    "control_rows": "A control arm gives every accepted mechanism a fair local comparison.",
++    "duration_s": "Measured time distinguishes an executed check from an undated static claim.",
++    "falsification_rows": "A failure condition makes each local adaptation scientifically testable.",
++    "field_principles": "One scientific reason per field makes the evidence contract reviewable.",
++    "gate_check_summary": "Exact expected and observed values make blocked preconditions actionable.",
++    "honest_verdict": "A class-consistent terminal phrase gives automation an unambiguous outcome.",
++    "inference_substrate": "The substrate states that deterministic source review used no LLM inference.",
++    "leakage_boundary_rows": "Explicit exclusions keep exact authority outside learned inputs.",
++    "method_rows": "Method rows distinguish direct reuse, analogy, watch items, and unsupported claims.",
++    "method_to_module_rows": "Named targets constrain each accepted idea to the current Carnot stack.",
++    "non_claim_rows": "Prohibited claims keep paper and hardware results from drifting into Carnot claims.",
++    "preconditions_checked": "Preflight evidence prevents a missing input from becoming a source conclusion.",
++    "primary_source_rows": "One terminal row per selected source prevents selective source reporting.",
++    "random_seed": "A fixed seed documents deterministic ordering even though no stochastic model ran.",
++    "reference_append_rows": "An explicit disposition proves whether the append-only ledger should change.",
++    "release_identity_rows": "Immutable revisions make every available public-code observation replayable.",
++    "repository_rows": "Repository rows separate public code presence from paper availability.",
++    "reproducibility_checksum": "A stable payload hash detects later changes to scientific evidence.",
++    "rows": "A combined row ledger lets validators rebuild the bounded map from unit evidence.",
++    "secondary_check_rows": "Advisory routes retain rate limits and missing assets without invented counts.",
++    "source_query_rows": "Query receipts preserve direct access failures separately from source findings.",
++    "unsupported_dependency_rows": "Missing prerequisites stop public artifacts from implying local execution.",
++    "v614_sota_ingestion_complete_score": "One requires terminal sources and complete bounded maps for all accepted methods.",
++    "verdict_class": "A closed verdict class prevents a blocked or incomplete run from appearing positive.",
++    "verifier_is_oracle": "False states that literature ingestion does not determine task correctness."
++  },
++  "gate_check_summary": {
++    "expected_value": 1,
++    "failed_check": null,
++    "observed_value": 1,
++    "passed": true
++  },
++  "honest_verdict": "complete_positive_v614_sota_ingestion_mapped_no_post_marker_change",
++  "inference_substrate": "deterministic_primary_source_ingestion_no_llm",
++  "leakage_boundary_rows": [
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "past frames",
++        "past actions",
++        "past observed outcomes",
++        "typed fact values"
++      ],
++      "learner_excluded_inputs": [
++        "game_id",
++        "game source",
++        "future frames",
++        "exact level answer",
++        "offline solver output"
++      ],
++      "method_id": "bbwm_queryable_belief"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "signed GGUF response-feature deltas inside one matched pair"
++      ],
++      "learner_excluded_inputs": [
++        "exact labels",
++        "mutation IDs",
++        "source IDs",
++        "hint text",
++        "provenance rows"
++      ],
++      "method_id": "hippo_pair_anchored_response"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "pair-centered response features",
++        "calibration targets after split freeze"
++      ],
++      "learner_excluded_inputs": [
++        "held labels",
++        "exact executor output",
++        "source identity",
++        "raw reward magnitude control labels"
++      ],
++      "method_id": "batchsum_pair_centering"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "public operation type",
++        "shape",
++        "degree",
++        "software configuration"
++      ],
++      "learner_excluded_inputs": [
++        "Extropic performance estimates",
++        "unobserved device telemetry",
++        "Carnot exact labels"
++      ],
++      "method_id": "z1t_sparse_software_graph"
++    }
++  ],
++  "method_rows": [
++    {
++      "accepted": true,
++      "classification": "architectural_analogy",
++      "local_scope": "Game-blind typed facts derived only from chronological ARC observations and actions.",
++      "mechanism": "Keep current-state belief queryable and separate from simulated action outcomes.",
++      "method_id": "bbwm_queryable_belief",
++      "source_id": "bbwm"
++    },
++    {
++      "accepted": true,
++      "classification": "direct_adaptation",
++      "local_scope": "Exact minimal constraint violation-repair pairs over existing GGUF outputs.",
++      "mechanism": "Replace pointwise scoring with signed response differences inside matched intervention pairs.",
++      "method_id": "hippo_pair_anchored_response",
++      "source_id": "hippo"
++    },
++    {
++      "accepted": true,
++      "classification": "direct_adaptation",
++      "local_scope": "Calibration-only PWA-KAN energy with source-group splits and shortcut controls.",
++      "mechanism": "Center pair energies and penalize nonzero batch reward sums.",
++      "method_id": "batchsum_pair_centering",
++      "source_id": "batchsum"
++    },
++    {
++      "accepted": false,
++      "classification": "watch_only_dependency",
++      "local_scope": "Deferred until a stable layer-wise state contract and independent calibration authority exist.",
++      "mechanism": "Calibrate factuality risk from layer-wise semantic stability or self-verification probability.",
++      "method_id": "introconformal_layerwise_crc",
++      "source_id": "introconformal"
++    },
++    {
++      "accepted": true,
++      "classification": "architectural_analogy",
++      "local_scope": "Static software and serialization study over public JAX files; no Z1 execution.",
++      "mechanism": "Represent sparse local operations and fixed graph degree in a typed, substrate-neutral graph receipt.",
++      "method_id": "z1t_sparse_software_graph",
++      "source_id": "z1t"
++    },
++    {
++      "accepted": false,
++      "classification": "unsupported_hardware_claim",
++      "local_scope": "Rejected locally because no authenticated Z1 or TSU runner is available.",
++      "mechanism": "Run sparse operations across Z1 chips and FPGA companion stages.",
++      "method_id": "z1t_hardware_efficiency",
++      "source_id": "z1t"
++    }
++  ],
++  "method_to_module_rows": [
++    {
++      "adaptation": "Use Pinductor belief update structure and invariant-memory lifecycle without exposing game_id as a learner feature.",
++      "method_id": "bbwm_queryable_belief",
++      "required_inputs": [
++        "chronological observed ARC frames",
++        "chosen ARC actions",
++        "next observed frame admitted only after the frozen decision",
++        "fixed game-blind fact schema"
++      ],
++      "target_modules": [
++        "python/carnot/agentic/arc_pinductor.py",
++        "python/carnot/agentic/arc_invariant_memory.py",
++        "python/carnot/agentic/arc_competition_agent.py"
++      ]
++    },
++    {
++      "adaptation": "Treat each exact intervention as an anchor and train only on within-pair response change.",
++      "method_id": "hippo_pair_anchored_response",
++      "required_inputs": [
++        "matched exact minimal intervention pairs",
++        "current GGUF response features",
++        "signed within-pair response deltas"
++      ],
++      "target_modules": [
++        "python/carnot/experiment_6984_exact_contrast_fixture.py",
++        "python/carnot/experiment_6999_blinded_feature_cold_audit.py"
++      ]
++    },
++    {
++      "adaptation": "Add pair centering and a batch sum-to-zero term to calibration-only PWA-KAN fitting.",
++      "method_id": "batchsum_pair_centering",
++      "required_inputs": [
++        "signed pair-response vectors",
++        "source-group split assignments",
++        "calibration-only energy targets"
++      ],
++      "target_modules": [
++        "python/carnot/models/pwa_kan.py",
++        "python/carnot/experiment_6977_certified_pwa_kan_energy.py"
++      ]
++    },
++    {
++      "adaptation": "Serialize graph shape and supported operations as software evidence without selecting a hardware backend.",
++      "method_id": "z1t_sparse_software_graph",
++      "required_inputs": [
++        "pinned public JAX graph and configuration",
++        "typed sparse operation metadata",
++        "fixed-degree adjacency description"
++      ],
++      "target_modules": [
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "python/carnot/models/sparse_ising.py"
++      ]
++    }
++  ],
++  "non_claim_rows": [
++    {
++      "claim_id": "no_paper_reproduction_claim",
++      "prohibited_claim": "Carnot reproduced any selected paper benchmark.",
++      "reason": "This task verifies sources and maps mechanisms; it runs no paper training or evaluation."
++    },
++    {
++      "claim_id": "no_arc_solve_claim",
++      "prohibited_claim": "A belief ledger solves an ARC game or level.",
++      "reason": "No belief-state policy experiment runs in this ingestion task."
++    },
++    {
++      "claim_id": "no_oracle_distinct_claim",
++      "prohibited_claim": "Pair centering or self-verification is an oracle-distinct verifier.",
++      "reason": "Exact authorities remain external, and model self-signals do not establish correctness."
++    },
++    {
++      "claim_id": "no_introconformal_guarantee_claim",
++      "prohibited_claim": "IntroConformal guarantees factuality for Carnot GGUF outputs.",
++      "reason": "The required LVLM state and calibration contracts were not implemented or tested."
++    },
++    {
++      "claim_id": "no_z1_execution_claim",
++      "prohibited_claim": "Carnot executed Z1T on Z1 or any TSU hardware.",
++      "reason": "Only public software and model metadata were inspected."
++    },
++    {
++      "claim_id": "no_z1_efficiency_claim",
++      "prohibited_claim": "Carnot verified Z1T energy, latency, or speedup.",
++      "reason": "The first-party report includes estimates and Carnot has no authenticated device receipt."
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "check": "network_access",
++      "expected_value": "available",
++      "observed_value": "available",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "v614_reference_marker",
++      "expected_value": "## V614 Planner Refresh - 2026-09-04",
++      "observed_value": "present",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_target:python/carnot/agentic/arc_pinductor.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_target:python/carnot/agentic/arc_invariant_memory.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_target:openspec/capabilities/constraint-verification/spec.md",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_target:openspec/capabilities/arc-world-model-trust-energy/spec.md",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_target:openspec/capabilities/research-reporting/spec.md",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "writable_artifact_path",
++      "expected_value": "writable",
++      "observed_value": "writable",
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "primary_source_rows": [
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Expose a queryable belief about known and uncertain current state separately from action simulation.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-08-31T22:48:38Z",
++      "source_id": "bbwm",
++      "source_identity": "arXiv:2609.00455v1",
++      "terminal": true,
++      "title": "Towards a Belief-Based World Model for LLM Agents",
++      "url": "https://arxiv.org/abs/2609.00455"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Use hint-triggered traces as anchors for pairwise reward comparison instead of pointwise process scores.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-06-28T16:21:04Z",
++      "source_id": "hippo",
++      "source_identity": "arXiv:2606.29481v1",
++      "terminal": true,
++      "title": "To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored Pairwise Aggregation",
++      "url": "https://arxiv.org/abs/2606.29481"
++    },
++    {
++      "access_outcome": "primary_proceedings_ok_openreview_challenged",
++      "method_extraction": "Penalize each batch reward sum away from zero to limit abnormal reward magnitude and hidden-state norm dispersion.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2025-07-13",
++      "source_id": "batchsum",
++      "source_identity": "PMLR:267:hong25d; OpenReview:Tf4lRAOGkj",
++      "terminal": true,
++      "title": "On the Robustness of Reward Models for Language Model Alignment",
++      "url": "https://proceedings.mlr.press/v267/hong25d.html"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Use layer-wise semantic stability or model self-verification probability as a conformal risk-control score.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-09-01T15:09:56Z",
++      "source_id": "introconformal",
++      "source_identity": "arXiv:2609.01375v1",
++      "terminal": true,
++      "title": "IntroConformal: Conformal Factuality Guarantees for Large Vision-Language Models via Introspective Signals",
++      "url": "https://arxiv.org/abs/2609.01375"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Train fixed-connectivity sparse JAX models whose local tanh-linear operations match a degree-16 probabilistic graph.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-09-04",
++      "source_id": "z1t",
++      "source_identity": "Extropic report 2026-09-04",
++      "terminal": true,
++      "title": "Z1T: Sparse Transformer-Like Models for Probabilistic Hardware",
++      "url": "https://extropic.ai/writing/z1t"
++    }
++  ],
++  "random_seed": 701120260905,
++  "reference_append_rows": [
++    {
++      "action": "no_change",
++      "appended": false,
++      "marker": "2026-09-05T03:46:23Z",
++      "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
++      "terminal": true
++    }
++  ],
++  "release_identity_rows": [
++    {
++      "available": true,
++      "identity": "d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++      "identity_date": "2026-08-31T22:29:26Z",
++      "identity_type": "git_commit",
++      "repository_id": "bbwm_code",
++      "source_id": "bbwm",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "fcb20525f6888b2d2aa18cd635a83d8e0b4c996c",
++      "identity_date": "2026-06-28T08:34:12Z",
++      "identity_type": "git_commit",
++      "repository_id": "hippo_code",
++      "source_id": "hippo",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "3bafaabfb6e8c71234863103e9ba91d4e00c3498",
++      "identity_date": "2025-05-27T06:04:18Z",
++      "identity_type": "git_commit",
++      "repository_id": "batchsum_code",
++      "source_id": "batchsum",
++      "terminal": true
++    },
++    {
++      "available": false,
++      "identity": null,
++      "identity_date": "2026-08-31T07:56:11Z",
++      "identity_type": null,
++      "repository_id": "introconformal_code",
++      "source_id": "introconformal",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "13051e90df9669be5b8f9f34fb097329fa82f674",
++      "identity_date": "2026-09-03T20:28:12Z",
++      "identity_type": "git_commit",
++      "repository_id": "z1t_training_code",
++      "source_id": "z1t",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "b5c244cee26b7f4e613b9ddbe83e83b2962ab2e1",
++      "identity_date": "2026-09-04T20:43:34Z",
++      "identity_type": "hf_revision",
++      "repository_id": "z1t_weights",
++      "source_id": "z1t",
++      "terminal": true
++    }
++  ],
++  "repository_rows": [
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Python agent, environment, belief-world-model, and experiment code; paper trajectories absent",
++      "available": true,
++      "publication_or_update_date": "2026-08-31T22:29:26Z",
++      "repository_id": "bbwm_code",
++      "source_id": "bbwm",
++      "terminal": true,
++      "url": "https://github.com/skumar-ml/belief-world-models"
++    },
++    {
++      "access_outcome": "readme_only_no_runnable_implementation",
++      "artifact_scope": "One README identifies the paper; no runnable method files are present",
++      "available": true,
++      "publication_or_update_date": "2026-06-28T08:34:12Z",
++      "repository_id": "hippo_code",
++      "source_id": "hippo",
++      "terminal": true,
++      "url": "https://github.com/Infinite-set/HIPPO"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Reward-model training and evaluation code with use_batch_sum configuration",
++      "available": true,
++      "publication_or_update_date": "2025-05-27T06:04:18Z",
++      "repository_id": "batchsum_code",
++      "source_id": "batchsum",
++      "terminal": true,
++      "url": "https://github.com/LinkedIn-XFACT/RM-Robustness"
++    },
++    {
++      "access_outcome": "empty_repository_no_commit",
++      "artifact_scope": "The linked public Git repository exists but is empty",
++      "available": false,
++      "publication_or_update_date": "2026-08-31T07:56:11Z",
++      "repository_id": "introconformal_code",
++      "source_id": "introconformal",
++      "terminal": true,
++      "url": "https://github.com/Atabuzzaman/Introconformal"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Apache-2.0 JAX sparse-transformer and Z1T research code",
++      "available": true,
++      "publication_or_update_date": "2026-09-03T20:28:12Z",
++      "repository_id": "z1t_training_code",
++      "source_id": "z1t",
++      "terminal": true,
++      "url": "https://github.com/extropic-ai/sparse-transformers"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Public Equinox model revision with config and loader; not a GGUF release",
++      "available": true,
++      "publication_or_update_date": "2026-09-04T20:43:34Z",
++      "repository_id": "z1t_weights",
++      "source_id": "z1t",
++      "terminal": true,
++      "url": "https://huggingface.co/Extropic-AI/Z1T-0"
++    }
++  ],
++  "reproducibility_checksum": "sha256:34d70ca6be44b8b60e06ebdc58c77fc2906313bff8187a07c3a20c1ab0f09bf0",
++  "rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract and version history",
++      "http_status": 200,
++      "query_id": "bbwm_arxiv",
++      "row_kind": "source_query",
++      "source_id": "bbwm",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2609.00455"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract, version history, and author code link",
++      "http_status": 200,
++      "query_id": "hippo_arxiv",
++      "row_kind": "source_query",
++      "source_id": "hippo",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2606.29481"
++    },
++    {
++      "access_outcome": "challenge_required",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "OpenReview route only; no content inferred from the challenge page",
++      "http_status": 403,
++      "query_id": "batchsum_openreview",
++      "row_kind": "source_query",
++      "source_id": "batchsum",
++      "source_kind": "primary_review_record",
++      "terminal": true,
++      "url": "https://openreview.net/forum?id=Tf4lRAOGkj"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "PMLR paper record and abstract",
++      "http_status": 200,
++      "query_id": "batchsum_pmlr",
++      "row_kind": "source_query",
++      "source_id": "batchsum",
++      "source_kind": "primary_proceedings",
++      "terminal": true,
++      "url": "https://proceedings.mlr.press/v267/hong25d.html"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract, version history, and author repository link",
++      "http_status": 200,
++      "query_id": "introconformal_arxiv",
++      "row_kind": "source_query",
++      "source_id": "introconformal",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2609.01375"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "dated report, software links, graph description, and estimate boundary",
++      "http_status": 200,
++      "query_id": "z1t_first_party",
++      "row_kind": "source_query",
++      "source_id": "z1t",
++      "source_kind": "first_party_report",
++      "terminal": true,
++      "url": "https://extropic.ai/writing/z1t"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Expose a queryable belief about known and uncertain current state separately from action simulation.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-08-31T22:48:38Z",
++      "row_kind": "primary_source",
++      "source_id": "bbwm",
++      "source_identity": "arXiv:2609.00455v1",
++      "terminal": true,
++      "title": "Towards a Belief-Based World Model for LLM Agents",
++      "url": "https://arxiv.org/abs/2609.00455"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Use hint-triggered traces as anchors for pairwise reward comparison instead of pointwise process scores.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-06-28T16:21:04Z",
++      "row_kind": "primary_source",
++      "source_id": "hippo",
++      "source_identity": "arXiv:2606.29481v1",
++      "terminal": true,
++      "title": "To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored Pairwise Aggregation",
++      "url": "https://arxiv.org/abs/2606.29481"
++    },
++    {
++      "access_outcome": "primary_proceedings_ok_openreview_challenged",
++      "method_extraction": "Penalize each batch reward sum away from zero to limit abnormal reward magnitude and hidden-state norm dispersion.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2025-07-13",
++      "row_kind": "primary_source",
++      "source_id": "batchsum",
++      "source_identity": "PMLR:267:hong25d; OpenReview:Tf4lRAOGkj",
++      "terminal": true,
++      "title": "On the Robustness of Reward Models for Language Model Alignment",
++      "url": "https://proceedings.mlr.press/v267/hong25d.html"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Use layer-wise semantic stability or model self-verification probability as a conformal risk-control score.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-09-01T15:09:56Z",
++      "row_kind": "primary_source",
++      "source_id": "introconformal",
++      "source_identity": "arXiv:2609.01375v1",
++      "terminal": true,
++      "title": "IntroConformal: Conformal Factuality Guarantees for Large Vision-Language Models via Introspective Signals",
++      "url": "https://arxiv.org/abs/2609.01375"
++    },
++    {
++      "access_outcome": "ok",
++      "method_extraction": "Train fixed-connectivity sparse JAX models whose local tanh-linear operations match a degree-16 probabilistic graph.",
++      "post_marker_change_proven": false,
++      "publication_or_update_date": "2026-09-04",
++      "row_kind": "primary_source",
++      "source_id": "z1t",
++      "source_identity": "Extropic report 2026-09-04",
++      "terminal": true,
++      "title": "Z1T: Sparse Transformer-Like Models for Probabilistic Hardware",
++      "url": "https://extropic.ai/writing/z1t"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Python agent, environment, belief-world-model, and experiment code; paper trajectories absent",
++      "available": true,
++      "publication_or_update_date": "2026-08-31T22:29:26Z",
++      "repository_id": "bbwm_code",
++      "row_kind": "repository",
++      "source_id": "bbwm",
++      "terminal": true,
++      "url": "https://github.com/skumar-ml/belief-world-models"
++    },
++    {
++      "access_outcome": "readme_only_no_runnable_implementation",
++      "artifact_scope": "One README identifies the paper; no runnable method files are present",
++      "available": true,
++      "publication_or_update_date": "2026-06-28T08:34:12Z",
++      "repository_id": "hippo_code",
++      "row_kind": "repository",
++      "source_id": "hippo",
++      "terminal": true,
++      "url": "https://github.com/Infinite-set/HIPPO"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Reward-model training and evaluation code with use_batch_sum configuration",
++      "available": true,
++      "publication_or_update_date": "2025-05-27T06:04:18Z",
++      "repository_id": "batchsum_code",
++      "row_kind": "repository",
++      "source_id": "batchsum",
++      "terminal": true,
++      "url": "https://github.com/LinkedIn-XFACT/RM-Robustness"
++    },
++    {
++      "access_outcome": "empty_repository_no_commit",
++      "artifact_scope": "The linked public Git repository exists but is empty",
++      "available": false,
++      "publication_or_update_date": "2026-08-31T07:56:11Z",
++      "repository_id": "introconformal_code",
++      "row_kind": "repository",
++      "source_id": "introconformal",
++      "terminal": true,
++      "url": "https://github.com/Atabuzzaman/Introconformal"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Apache-2.0 JAX sparse-transformer and Z1T research code",
++      "available": true,
++      "publication_or_update_date": "2026-09-03T20:28:12Z",
++      "repository_id": "z1t_training_code",
++      "row_kind": "repository",
++      "source_id": "z1t",
++      "terminal": true,
++      "url": "https://github.com/extropic-ai/sparse-transformers"
++    },
++    {
++      "access_outcome": "ok",
++      "artifact_scope": "Public Equinox model revision with config and loader; not a GGUF release",
++      "available": true,
++      "publication_or_update_date": "2026-09-04T20:43:34Z",
++      "repository_id": "z1t_weights",
++      "row_kind": "repository",
++      "source_id": "z1t",
++      "terminal": true,
++      "url": "https://huggingface.co/Extropic-AI/Z1T-0"
++    },
++    {
++      "available": true,
++      "identity": "d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++      "identity_date": "2026-08-31T22:29:26Z",
++      "identity_type": "git_commit",
++      "repository_id": "bbwm_code",
++      "row_kind": "release_identity",
++      "source_id": "bbwm",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "fcb20525f6888b2d2aa18cd635a83d8e0b4c996c",
++      "identity_date": "2026-06-28T08:34:12Z",
++      "identity_type": "git_commit",
++      "repository_id": "hippo_code",
++      "row_kind": "release_identity",
++      "source_id": "hippo",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "3bafaabfb6e8c71234863103e9ba91d4e00c3498",
++      "identity_date": "2025-05-27T06:04:18Z",
++      "identity_type": "git_commit",
++      "repository_id": "batchsum_code",
++      "row_kind": "release_identity",
++      "source_id": "batchsum",
++      "terminal": true
++    },
++    {
++      "available": false,
++      "identity": null,
++      "identity_date": "2026-08-31T07:56:11Z",
++      "identity_type": null,
++      "repository_id": "introconformal_code",
++      "row_kind": "release_identity",
++      "source_id": "introconformal",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "13051e90df9669be5b8f9f34fb097329fa82f674",
++      "identity_date": "2026-09-03T20:28:12Z",
++      "identity_type": "git_commit",
++      "repository_id": "z1t_training_code",
++      "row_kind": "release_identity",
++      "source_id": "z1t",
++      "terminal": true
++    },
++    {
++      "available": true,
++      "identity": "b5c244cee26b7f4e613b9ddbe83e83b2962ab2e1",
++      "identity_date": "2026-09-04T20:43:34Z",
++      "identity_type": "hf_revision",
++      "repository_id": "z1t_weights",
++      "row_kind": "release_identity",
++      "source_id": "z1t",
++      "terminal": true
++    },
++    {
++      "accepted": true,
++      "classification": "architectural_analogy",
++      "local_scope": "Game-blind typed facts derived only from chronological ARC observations and actions.",
++      "mechanism": "Keep current-state belief queryable and separate from simulated action outcomes.",
++      "method_id": "bbwm_queryable_belief",
++      "row_kind": "method",
++      "source_id": "bbwm"
++    },
++    {
++      "accepted": true,
++      "classification": "direct_adaptation",
++      "local_scope": "Exact minimal constraint violation-repair pairs over existing GGUF outputs.",
++      "mechanism": "Replace pointwise scoring with signed response differences inside matched intervention pairs.",
++      "method_id": "hippo_pair_anchored_response",
++      "row_kind": "method",
++      "source_id": "hippo"
++    },
++    {
++      "accepted": true,
++      "classification": "direct_adaptation",
++      "local_scope": "Calibration-only PWA-KAN energy with source-group splits and shortcut controls.",
++      "mechanism": "Center pair energies and penalize nonzero batch reward sums.",
++      "method_id": "batchsum_pair_centering",
++      "row_kind": "method",
++      "source_id": "batchsum"
++    },
++    {
++      "accepted": false,
++      "classification": "watch_only_dependency",
++      "local_scope": "Deferred until a stable layer-wise state contract and independent calibration authority exist.",
++      "mechanism": "Calibrate factuality risk from layer-wise semantic stability or self-verification probability.",
++      "method_id": "introconformal_layerwise_crc",
++      "row_kind": "method",
++      "source_id": "introconformal"
++    },
++    {
++      "accepted": true,
++      "classification": "architectural_analogy",
++      "local_scope": "Static software and serialization study over public JAX files; no Z1 execution.",
++      "mechanism": "Represent sparse local operations and fixed graph degree in a typed, substrate-neutral graph receipt.",
++      "method_id": "z1t_sparse_software_graph",
++      "row_kind": "method",
++      "source_id": "z1t"
++    },
++    {
++      "accepted": false,
++      "classification": "unsupported_hardware_claim",
++      "local_scope": "Rejected locally because no authenticated Z1 or TSU runner is available.",
++      "mechanism": "Run sparse operations across Z1 chips and FPGA companion stages.",
++      "method_id": "z1t_hardware_efficiency",
++      "row_kind": "method",
++      "source_id": "z1t"
++    },
++    {
++      "adaptation": "Use Pinductor belief update structure and invariant-memory lifecycle without exposing game_id as a learner feature.",
++      "method_id": "bbwm_queryable_belief",
++      "required_inputs": [
++        "chronological observed ARC frames",
++        "chosen ARC actions",
++        "next observed frame admitted only after the frozen decision",
++        "fixed game-blind fact schema"
++      ],
++      "row_kind": "method_to_module",
++      "target_modules": [
++        "python/carnot/agentic/arc_pinductor.py",
++        "python/carnot/agentic/arc_invariant_memory.py",
++        "python/carnot/agentic/arc_competition_agent.py"
++      ]
++    },
++    {
++      "adaptation": "Treat each exact intervention as an anchor and train only on within-pair response change.",
++      "method_id": "hippo_pair_anchored_response",
++      "required_inputs": [
++        "matched exact minimal intervention pairs",
++        "current GGUF response features",
++        "signed within-pair response deltas"
++      ],
++      "row_kind": "method_to_module",
++      "target_modules": [
++        "python/carnot/experiment_6984_exact_contrast_fixture.py",
++        "python/carnot/experiment_6999_blinded_feature_cold_audit.py"
++      ]
++    },
++    {
++      "adaptation": "Add pair centering and a batch sum-to-zero term to calibration-only PWA-KAN fitting.",
++      "method_id": "batchsum_pair_centering",
++      "required_inputs": [
++        "signed pair-response vectors",
++        "source-group split assignments",
++        "calibration-only energy targets"
++      ],
++      "row_kind": "method_to_module",
++      "target_modules": [
++        "python/carnot/models/pwa_kan.py",
++        "python/carnot/experiment_6977_certified_pwa_kan_energy.py"
++      ]
++    },
++    {
++      "adaptation": "Serialize graph shape and supported operations as software evidence without selecting a hardware backend.",
++      "method_id": "z1t_sparse_software_graph",
++      "required_inputs": [
++        "pinned public JAX graph and configuration",
++        "typed sparse operation metadata",
++        "fixed-degree adjacency description"
++      ],
++      "row_kind": "method_to_module",
++      "target_modules": [
++        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
++        "python/carnot/models/sparse_ising.py"
++      ]
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "past frames",
++        "past actions",
++        "past observed outcomes",
++        "typed fact values"
++      ],
++      "learner_excluded_inputs": [
++        "game_id",
++        "game source",
++        "future frames",
++        "exact level answer",
++        "offline solver output"
++      ],
++      "method_id": "bbwm_queryable_belief",
++      "row_kind": "leakage_boundary"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "signed GGUF response-feature deltas inside one matched pair"
++      ],
++      "learner_excluded_inputs": [
++        "exact labels",
++        "mutation IDs",
++        "source IDs",
++        "hint text",
++        "provenance rows"
++      ],
++      "method_id": "hippo_pair_anchored_response",
++      "row_kind": "leakage_boundary"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "pair-centered response features",
++        "calibration targets after split freeze"
++      ],
++      "learner_excluded_inputs": [
++        "held labels",
++        "exact executor output",
++        "source identity",
++        "raw reward magnitude control labels"
++      ],
++      "method_id": "batchsum_pair_centering",
++      "row_kind": "leakage_boundary"
++    },
++    {
++      "exact_authority_external": true,
++      "learner_allowed_inputs": [
++        "public operation type",
++        "shape",
++        "degree",
++        "software configuration"
++      ],
++      "learner_excluded_inputs": [
++        "Extropic performance estimates",
++        "unobserved device telemetry",
++        "Carnot exact labels"
++      ],
++      "method_id": "z1t_sparse_software_graph",
++      "row_kind": "leakage_boundary"
++    },
++    {
++      "control_arm": "simulation-only, belief-only, and combined arms at matched action budgets",
++      "method_id": "bbwm_queryable_belief",
++      "row_kind": "control"
++    },
++    {
++      "control_arm": "the frozen pointwise feature ranker plus pair-sign permutation",
++      "method_id": "hippo_pair_anchored_response",
++      "row_kind": "control"
++    },
++    {
++      "control_arm": "no regularizer, magnitude-only, and norm-only controls on source-group splits",
++      "method_id": "batchsum_pair_centering",
++      "row_kind": "control"
++    },
++    {
++      "control_arm": "the same typed graph serialized without Z1T-specific placement labels",
++      "method_id": "z1t_sparse_software_graph",
++      "row_kind": "control"
++    },
++    {
++      "failure_condition": "Belief-only and combined arms fail to beat matched simulation-only control on sealed future transition utility.",
++      "method_id": "bbwm_queryable_belief",
++      "row_kind": "falsification"
++    },
++    {
++      "failure_condition": "Pair response signs fail under pair permutation or do not generalize across held source groups.",
++      "method_id": "hippo_pair_anchored_response",
++      "row_kind": "falsification"
++    },
++    {
++      "failure_condition": "The zero-sum term does not improve held-source ranking beyond norm-only and magnitude-only controls.",
++      "method_id": "batchsum_pair_centering",
++      "row_kind": "falsification"
++    },
++    {
++      "failure_condition": "The pinned public graph cannot round-trip through the typed sparse receipt without unsupported operations.",
++      "method_id": "z1t_sparse_software_graph",
++      "row_kind": "falsification"
++    },
++    {
++      "dependency": "Full paper reproduction recommends a 40 GB vLLM GPU, Java 17, environment data, and gated-model access.",
++      "local_effect": "Reuse only the belief-versus-simulation interface over existing ARC transitions and GGUF outputs.",
++      "row_kind": "unsupported_dependency",
++      "source_id": "bbwm"
++    },
++    {
++      "dependency": "The pinned public HIPPO repository contains only a README and no runnable implementation.",
++      "local_effect": "Implement the pair unit from the primary method description and do not claim code reproduction.",
++      "row_kind": "unsupported_dependency",
++      "source_id": "hippo"
++    },
++    {
++      "dependency": "The reference training stack uses full reward-model training, Accelerate, FSDP, and external evaluation packages.",
++      "local_effect": "Adapt only the batch sum-to-zero penalty to the local calibration-only PWA-KAN.",
++      "row_kind": "unsupported_dependency",
++      "source_id": "batchsum"
++    },
++    {
++      "dependency": "Layer-wise LVLM hidden states and an independent factuality calibration set are unavailable on the current GGUF output contract.",
++      "local_effect": "Keep IntroConformal watch-only and do not treat model self-judgment as exact authority.",
++      "row_kind": "unsupported_dependency",
++      "source_id": "introconformal"
++    },
++    {
++      "dependency": "The public model uses Equinox/JAX files, and Carnot has no authenticated Z1 or TSU device runner.",
++      "local_effect": "Study graph and training software only; do not infer GGUF compatibility or device performance.",
++      "row_kind": "unsupported_dependency",
++      "source_id": "z1t"
++    },
++    {
++      "claim_id": "no_paper_reproduction_claim",
++      "prohibited_claim": "Carnot reproduced any selected paper benchmark.",
++      "reason": "This task verifies sources and maps mechanisms; it runs no paper training or evaluation.",
++      "row_kind": "non_claim"
++    },
++    {
++      "claim_id": "no_arc_solve_claim",
++      "prohibited_claim": "A belief ledger solves an ARC game or level.",
++      "reason": "No belief-state policy experiment runs in this ingestion task.",
++      "row_kind": "non_claim"
++    },
++    {
++      "claim_id": "no_oracle_distinct_claim",
++      "prohibited_claim": "Pair centering or self-verification is an oracle-distinct verifier.",
++      "reason": "Exact authorities remain external, and model self-signals do not establish correctness.",
++      "row_kind": "non_claim"
++    },
++    {
++      "claim_id": "no_introconformal_guarantee_claim",
++      "prohibited_claim": "IntroConformal guarantees factuality for Carnot GGUF outputs.",
++      "reason": "The required LVLM state and calibration contracts were not implemented or tested.",
++      "row_kind": "non_claim"
++    },
++    {
++      "claim_id": "no_z1_execution_claim",
++      "prohibited_claim": "Carnot executed Z1T on Z1 or any TSU hardware.",
++      "reason": "Only public software and model metadata were inspected.",
++      "row_kind": "non_claim"
++    },
++    {
++      "claim_id": "no_z1_efficiency_claim",
++      "prohibited_claim": "Carnot verified Z1T energy, latency, or speedup.",
++      "reason": "The first-party report includes estimates and Carnot has no authenticated device receipt.",
++      "row_kind": "non_claim"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "check_id": "ebt_citations",
++      "citation_count_claimed": false,
++      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++      "http_status": 200,
++      "newest_visible_publication_date": "2026-08-14",
++      "response_row_count": 35,
++      "row_kind": "secondary_check",
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "check_id": "arm_ebm_citations",
++      "citation_count_claimed": false,
++      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++      "http_status": 200,
++      "newest_visible_publication_date": "2026-07-02",
++      "response_row_count": 8,
++      "row_kind": "secondary_check",
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
++    },
++    {
++      "access_outcome": "product_page_ok_no_public_artifact_link_observed",
++      "accessed_on": "2026-09-05",
++      "check_id": "kona",
++      "finding": "The retrieved first-party page describes Kona 1.0 but did not expose public weights, a training recipe, or a reproducible local runner.",
++      "http_status": 200,
++      "public_implementation_claimed": false,
++      "row_kind": "secondary_check",
++      "terminal": true,
++      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++    },
++    {
++      "action": "no_change",
++      "appended": false,
++      "marker": "2026-09-05T03:46:23Z",
++      "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
++      "row_kind": "reference_append",
++      "terminal": true
++    }
++  ],
++  "secondary_check_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "check_id": "ebt_citations",
++      "citation_count_claimed": false,
++      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++      "http_status": 200,
++      "newest_visible_publication_date": "2026-08-14",
++      "response_row_count": 35,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "check_id": "arm_ebm_citations",
++      "citation_count_claimed": false,
++      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
++      "http_status": 200,
++      "newest_visible_publication_date": "2026-07-02",
++      "response_row_count": 8,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
++    },
++    {
++      "access_outcome": "product_page_ok_no_public_artifact_link_observed",
++      "accessed_on": "2026-09-05",
++      "check_id": "kona",
++      "finding": "The retrieved first-party page describes Kona 1.0 but did not expose public weights, a training recipe, or a reproducible local runner.",
++      "http_status": 200,
++      "public_implementation_claimed": false,
++      "terminal": true,
++      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++    }
++  ],
++  "source_query_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract and version history",
++      "http_status": 200,
++      "query_id": "bbwm_arxiv",
++      "source_id": "bbwm",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2609.00455"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract, version history, and author code link",
++      "http_status": 200,
++      "query_id": "hippo_arxiv",
++      "source_id": "hippo",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2606.29481"
++    },
++    {
++      "access_outcome": "challenge_required",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "OpenReview route only; no content inferred from the challenge page",
++      "http_status": 403,
++      "query_id": "batchsum_openreview",
++      "source_id": "batchsum",
++      "source_kind": "primary_review_record",
++      "terminal": true,
++      "url": "https://openreview.net/forum?id=Tf4lRAOGkj"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "PMLR paper record and abstract",
++      "http_status": 200,
++      "query_id": "batchsum_pmlr",
++      "source_id": "batchsum",
++      "source_kind": "primary_proceedings",
++      "terminal": true,
++      "url": "https://proceedings.mlr.press/v267/hong25d.html"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "arXiv abstract, version history, and author repository link",
++      "http_status": 200,
++      "query_id": "introconformal_arxiv",
++      "source_id": "introconformal",
++      "source_kind": "primary_paper",
++      "terminal": true,
++      "url": "https://arxiv.org/abs/2609.01375"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "evidence_scope": "dated report, software links, graph description, and estimate boundary",
++      "http_status": 200,
++      "query_id": "z1t_first_party",
++      "source_id": "z1t",
++      "source_kind": "first_party_report",
++      "terminal": true,
++      "url": "https://extropic.ai/writing/z1t"
++    }
++  ],
++  "unsupported_dependency_rows": [
++    {
++      "dependency": "Full paper reproduction recommends a 40 GB vLLM GPU, Java 17, environment data, and gated-model access.",
++      "local_effect": "Reuse only the belief-versus-simulation interface over existing ARC transitions and GGUF outputs.",
++      "source_id": "bbwm"
++    },
++    {
++      "dependency": "The pinned public HIPPO repository contains only a README and no runnable implementation.",
++      "local_effect": "Implement the pair unit from the primary method description and do not claim code reproduction.",
++      "source_id": "hippo"
++    },
++    {
++      "dependency": "The reference training stack uses full reward-model training, Accelerate, FSDP, and external evaluation packages.",
++      "local_effect": "Adapt only the batch sum-to-zero penalty to the local calibration-only PWA-KAN.",
++      "source_id": "batchsum"
++    },
++    {
++      "dependency": "Layer-wise LVLM hidden states and an independent factuality calibration set are unavailable on the current GGUF output contract.",
++      "local_effect": "Keep IntroConformal watch-only and do not treat model self-judgment as exact authority.",
++      "source_id": "introconformal"
++    },
++    {
++      "dependency": "The public model uses Equinox/JAX files, and Carnot has no authenticated Z1 or TSU device runner.",
++      "local_effect": "Study graph and training software only; do not infer GGUF compatibility or device performance.",
++      "source_id": "z1t"
++    }
++  ],
++  "v614_sota_ingestion_complete_score": 1,
++  "verdict_class": "positive",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_7011_v614_sota_ingestion.py b/scripts/experiments/experiment_7011_v614_sota_ingestion.py
+new file mode 100644
+index 0000000000..5e2d28130b
+--- /dev/null
++++ b/scripts/experiments/experiment_7011_v614_sota_ingestion.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run the deterministic V614 ingestion required by REQ-REPORT-7011."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[2]
++PYTHON = ROOT / "python"
++if str(PYTHON) not in sys.path:
++    sys.path.insert(0, str(PYTHON))
++
++from carnot.experiment_7011_v614_sota_ingestion import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_7011_v614_sota_ingestion.py b/tests/python/test_experiment_7011_v614_sota_ingestion.py
+new file mode 100644
+index 0000000000..8744fc7fe1
+--- /dev/null
++++ b/tests/python/test_experiment_7011_v614_sota_ingestion.py
+@@ -0,0 +1,505 @@
++"""Tests for REQ-REPORT-7011 and SCENARIO-REPORT-7011-* contracts."""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++import subprocess
++import sys
++from urllib.error import HTTPError, URLError
++
++from carnot import experiment_7011_v614_sota_ingestion as mod
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _passing_commands() -> list[dict[str, object]]:
++    """Build terminal receipts without running child commands in unit tests."""
++
++    return [
++        {
++            "name": name,
++            "command": name,
++            "exit_code": 0,
++            "outcome": "pass",
++            "terminal": True,
++            "passed": True,
++        }
++        for name in mod.VALIDATION_COMMAND_NAMES
++    ]
++
++
++def _artifact(tmp_path: Path) -> dict[str, object]:
++    """Build the complete deterministic receipt against the real read-only inputs."""
++
++    return mod.build_artifact(
++        ROOT,
++        "20260905",
++        output_path=tmp_path / "artifact.json",
++        network_available=True,
++        command_rows=_passing_commands(),
++        duration_s=1.0,
++    )
++
++
++def _refresh_checksum(artifact: dict[str, object]) -> dict[str, object]:
++    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
++    return artifact
++
++
++def _fake_root(tmp_path: Path, *, marker: bool = True) -> Path:
++    """Create the smallest isolated tree accepted by the preflight."""
++
++    root = tmp_path / "repo"
++    for relative in mod.REQUIRED_LOCAL_PATHS:
++        target = root / relative
++        target.parent.mkdir(parents=True, exist_ok=True)
++        text = "readable target\n"
++        if relative == mod.REFERENCE_PATH:
++            text = f"{mod.REFERENCE_MARKER}\n" if marker else "older marker\n"
++        target.write_text(text, encoding="utf-8")
++    return root
++
++
++def test_req_report_7011_spec_precedes_implementation() -> None:
++    """REQ-REPORT-7011 owns all source, map, boundary, and artifact scenarios."""
++
++    text = (ROOT / mod.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-7011") :]
++    for scenario in (
++        "PREFLIGHT",
++        "SOURCES",
++        "MAP",
++        "NONCLAIMS",
++        "SECONDARY",
++        "NOCHANGE",
++        "ARTIFACT",
++    ):
++        assert f"SCENARIO-REPORT-7011-{scenario}" in section
++    assert mod.INFERENCE_SUBSTRATE in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_7011_sources_and_release_identities_are_terminal() -> None:
++    """SCENARIO-REPORT-7011-SOURCES preserves direct access and immutable code IDs."""
++
++    queries = mod.source_query_rows()
++    primaries = mod.primary_source_rows()
++    repositories = mod.repository_rows()
++    identities = mod.release_identity_rows()
++
++    assert {row["source_id"] for row in primaries} == set(mod.SOURCE_IDS)
++    assert {row["source_id"] for row in repositories} == set(mod.SOURCE_IDS)
++    assert all(row["url"].startswith("https://") for row in queries + primaries + repositories)
++    assert all(row["publication_or_update_date"] for row in primaries)
++    assert all(row["access_outcome"] and row["terminal"] is True for row in queries)
++    assert all(row["access_outcome"] and row["terminal"] is True for row in primaries)
++    assert all(row["method_extraction"] for row in primaries)
++    assert all(row["terminal"] is True for row in repositories + identities)
++    assert all(
++        row["identity"] and row["identity_type"] in {"git_commit", "hf_revision"}
++        for row in identities
++        if row["available"]
++    )
++    assert (
++        next(row for row in repositories if row["source_id"] == "introconformal")["access_outcome"]
++        == "empty_repository_no_commit"
++    )
++    assert (
++        next(row for row in queries if row["query_id"] == "batchsum_openreview")["access_outcome"]
++        == "challenge_required"
++    )
++
++
++def test_scenario_report_7011_method_map_has_inputs_boundaries_controls_and_falsifiers() -> None:
++    """SCENARIO-REPORT-7011-MAP maps only accepted software mechanisms."""
++
++    methods = mod.method_rows()
++    mappings = mod.method_to_module_rows()
++    accepted = {row["method_id"] for row in methods if row["accepted"]}
++
++    assert accepted == set(mod.ACCEPTED_METHOD_IDS)
++    assert {row["classification"] for row in methods} == {
++        "direct_adaptation",
++        "architectural_analogy",
++        "watch_only_dependency",
++        "unsupported_hardware_claim",
++    }
++    assert {row["method_id"] for row in mappings} == accepted
++    assert {row["method_id"] for row in mod.leakage_boundary_rows()} == accepted
++    assert {row["method_id"] for row in mod.control_rows()} == accepted
++    assert {row["method_id"] for row in mod.falsification_rows()} == accepted
++    for row in mappings:
++        assert row["required_inputs"]
++        assert all((ROOT / path).is_file() for path in row["target_modules"])
++    for row in mod.leakage_boundary_rows():
++        assert row["learner_allowed_inputs"]
++        assert row["learner_excluded_inputs"]
++        assert row["exact_authority_external"] is True
++    assert all(row["control_arm"] for row in mod.control_rows())
++    assert all(row["failure_condition"] for row in mod.falsification_rows())
++
++
++def test_scenario_report_7011_dependencies_nonclaims_and_secondary_checks_are_explicit() -> None:
++    """SCENARIO-REPORT-7011-NONCLAIMS and SECONDARY stop source-to-local drift."""
++
++    dependencies = mod.unsupported_dependency_rows()
++    non_claims = mod.non_claim_rows()
++    secondary = mod.secondary_check_rows()
++
++    assert {row["source_id"] for row in dependencies} >= {
++        "bbwm",
++        "introconformal",
++        "z1t",
++    }
++    assert all(row["dependency"] and row["local_effect"] for row in dependencies)
++    assert {row["claim_id"] for row in non_claims} >= {
++        "no_arc_solve_claim",
++        "no_oracle_distinct_claim",
++        "no_z1_execution_claim",
++        "no_z1_efficiency_claim",
++    }
++    assert all(row["prohibited_claim"] and row["reason"] for row in non_claims)
++    assert {row["check_id"] for row in secondary} == {"ebt_citations", "arm_ebm_citations", "kona"}
++    assert all(row["terminal"] is True and row["access_outcome"] for row in secondary)
++    assert all(row["citation_count_claimed"] is False for row in secondary[:2])
++    assert (
++        next(row for row in secondary if row["check_id"] == "kona")["public_implementation_claimed"]
++        is False
++    )
++
++
++def test_scenario_report_7011_nochange_preserves_the_reference_ledger(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7011-NOCHANGE emits no_change without writing the ledger."""
++
++    before = (ROOT / mod.REFERENCE_PATH).read_bytes()
++    rows = mod.reference_append_rows()
++
++    assert rows == [
++        {
++            "action": "no_change",
++            "marker": mod.PLANNER_MARKER,
++            "appended": False,
++            "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
++            "terminal": True,
++        }
++    ]
++    artifact = _artifact(tmp_path)
++    assert artifact["reference_append_rows"] == rows
++    assert (ROOT / mod.REFERENCE_PATH).read_bytes() == before
++
++
++def test_scenario_report_7011_preflight_blocks_with_exact_diagnostics(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7011-PREFLIGHT uses a complete blocked artifact."""
++
++    root = _fake_root(tmp_path)
++    checks = mod.check_preconditions(
++        root,
++        tmp_path / "ok" / "artifact.json",
++        network_available=True,
++    )
++    assert all(row["passed"] for row in checks)
++
++    missing_marker = _fake_root(tmp_path / "missing", marker=False)
++    artifact = mod.build_artifact(
++        missing_marker,
++        "20260905",
++        output_path=tmp_path / "blocked.json",
++        network_available=True,
++        command_rows=_passing_commands(),
++        duration_s=0.1,
++    )
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["v614_sota_ingestion_complete_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_v614_sota_ingestion"
++    assert artifact["gate_check_summary"] == {
++        "failed_check": "v614_reference_marker",
++        "expected_value": mod.REFERENCE_MARKER,
++        "observed_value": "missing",
++        "passed": False,
++    }
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_7011_artifact_recomputes_score_and_rejects_forgery(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-7011-ARTIFACT validates coverage, score, class, and checksum."""
++
++    artifact = _artifact(tmp_path)
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["v614_sota_ingestion_complete_score"] == 1
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["verdict_class"] == "positive"
++    assert str(artifact["honest_verdict"]).startswith("complete_positive_")
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    mutations = {
++        "field_principles": {},
++        "primary_source_rows": artifact["primary_source_rows"][:-1],
++        "release_identity_rows": artifact["release_identity_rows"][:-1],
++        "method_to_module_rows": artifact["method_to_module_rows"][:-1],
++        "control_rows": artifact["control_rows"][:-1],
++        "v614_sota_ingestion_complete_score": 0,
++        "inference_substrate": "wrong",
++        "verifier_is_oracle": True,
++        "verdict_class": "partial",
++        "honest_verdict": "partial_unfinished",
++    }
++    for field, value in mutations.items():
++        changed = deepcopy(artifact)
++        changed[field] = value
++        assert mod.validate_artifact(_refresh_checksum(changed)), field
++
++    missing = deepcopy(artifact)
++    missing.pop("rows")
++    assert mod.validate_artifact(missing) == ["missing_required_fields:rows"]
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum_mismatch" in mod.validate_artifact(bad_checksum)
++
++
++def test_req_report_7011_writer_validator_and_cli(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-7011 writes one artifact and exposes a validation CLI."""
++
++    artifact = _artifact(tmp_path)
++    path = tmp_path / "nested" / "result.json"
++    assert mod.write_artifact(artifact, path) == path
++    assert json.loads(path.read_text(encoding="utf-8")) == artifact
++    assert mod.validate_artifact(path) == []
++    assert mod.validate_artifact(tmp_path / "missing.json") == ["artifact_missing"]
++
++    monkeypatch.setattr(mod, "build_artifact", lambda *_args, **_kwargs: deepcopy(artifact))
++    monkeypatch.setattr(mod, "run_validation_commands", lambda *_args: _passing_commands()[:-1])
++    monkeypatch.setattr(mod, "validate_artifact", lambda _artifact: [])
++    writes: list[Path] = []
++    monkeypatch.setattr(
++        mod, "write_artifact", lambda _artifact, target: writes.append(target) or target
++    )
++    assert mod.main(["--date", "20260905", "--output", str(path)]) == 0
++    assert writes == [path, path]
++    assert mod.main(["--date", "bad", "--output", str(path)]) == 2
++
++    monkeypatch.setattr(sys, "argv", [mod.MODULE_PATH.as_posix(), "--validate", str(path)])
++    with __import__("pytest").raises(SystemExit, match="0"):
++        runpy.run_path(ROOT / mod.MODULE_PATH, run_name="__main__")
++
++
++def test_req_report_7011_precondition_probe_error_paths(tmp_path: Path, monkeypatch) -> None:
++    """SCENARIO-REPORT-7011-PREFLIGHT distinguishes network and file failures."""
++
++    class Response:
++        status = 200
++
++        def __enter__(self) -> "Response":
++            return self
++
++        def __exit__(self, *_args: object) -> None:
++            return None
++
++    monkeypatch.setattr(mod, "urlopen", lambda *_args, **_kwargs: Response())
++    assert mod._network_available() is True
++    monkeypatch.setattr(
++        mod,
++        "urlopen",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(
++            HTTPError("https://arxiv.org", 403, "challenge", {}, None)
++        ),
++    )
++    assert mod._network_available() is True
++    monkeypatch.setattr(
++        mod,
++        "urlopen",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(URLError("offline")),
++    )
++    assert mod._network_available() is False
++
++    monkeypatch.setattr(
++        mod.tempfile,
++        "NamedTemporaryFile",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("read only")),
++    )
++    assert mod._writable(tmp_path / "artifact.json") is False
++
++    class BrokenFile:
++        def is_file(self) -> bool:
++            return True
++
++        def read_bytes(self) -> bytes:
++            raise OSError("unreadable")
++
++    assert mod._readable_nonempty(BrokenFile()) is False  # type: ignore[arg-type]
++
++    root = _fake_root(tmp_path / "marker-error")
++    original = Path.read_text
++
++    def fail_marker(path: Path, *args: object, **kwargs: object) -> str:
++        if path == root / mod.REFERENCE_PATH:
++            raise OSError("unreadable")
++        return original(path, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "read_text", fail_marker)
++    rows = mod.check_preconditions(
++        root,
++        tmp_path / "marker-error.json",
++        network_available=False,
++    )
++    assert next(row for row in rows if row["check"] == "v614_reference_marker")["passed"] is False
++
++
++def test_req_report_7011_validator_type_and_io_failures(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7011-ARTIFACT fails closed on malformed stored shapes."""
++
++    artifact = _artifact(tmp_path)
++    assert mod._command_state({"command_receipt_rows": []}) == "not_recorded"
++    assert mod._command_state({"command_receipt_rows": ()}) == "blocked"
++    assert mod._command_state({"command_receipt_rows": _passing_commands()[:-1]}) == "blocked"
++    cases = (
++        ("method_rows", ()),
++        ("method_rows", []),
++        ("method_to_module_rows", ()),
++        ("primary_source_rows", ()),
++        ("repository_rows", ()),
++    )
++    for field, value in cases:
++        changed = deepcopy(artifact)
++        changed[field] = value
++        assert mod.completion_score(changed) == 0
++
++    empty_principle = deepcopy(artifact)
++    empty_principle["field_principles"]["rows"] = ""
++    assert "field_principles_empty" in mod.validate_artifact(_refresh_checksum(empty_principle))
++
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{", encoding="utf-8")
++    assert mod.validate_artifact(malformed) == ["artifact_unreadable"]
++    not_object = tmp_path / "list.json"
++    not_object.write_text("[]\n", encoding="utf-8")
++    assert mod.validate_artifact(not_object) == ["artifact_not_object"]
++    with __import__("pytest").raises(ValueError, match="missing_required_fields"):
++        mod.write_artifact({}, tmp_path / "invalid.json")
++
++
++def test_req_report_7011_command_receipts_cover_success_defect_and_tool_failures(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """REQ-REPORT-7011 keeps every validation process outcome explicit."""
++
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: subprocess.CompletedProcess(["check"], 0, "ok", ""),
++    )
++    assert mod._run_command(ROOT, "ok", ["check"])["outcome"] == "pass"
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: subprocess.CompletedProcess(["check"], 1, "finding", "details"),
++    )
++    assert mod._run_command(ROOT, "defect", ["check"])["outcome"] == "contract_defect"
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: subprocess.CompletedProcess(
++            ["adversarial"], 1, '{"reports":[{"max_severity":1}]}', ""
++        ),
++    )
++    warning = mod._run_command(ROOT, "adversarial_verification", ["adversarial"])
++    assert warning["outcome"] == "pass_with_warning" and warning["passed"] is True
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: subprocess.CompletedProcess(
++            ["adversarial"], 1, '{"reports":[{"max_severity":2}]}', ""
++        ),
++    )
++    assert (
++        mod._run_command(ROOT, "adversarial_verification", ["adversarial"])["outcome"]
++        == "contract_defect"
++    )
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: subprocess.CompletedProcess(["adversarial"], 1, "not json", ""),
++    )
++    assert (
++        mod._run_command(ROOT, "adversarial_verification", ["adversarial"])["outcome"]
++        == "contract_defect"
++    )
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(
++            subprocess.TimeoutExpired(["check"], 1, output="partial", stderr="late")
++        ),
++    )
++    assert mod._run_command(ROOT, "timeout", ["check"])["outcome"] == "tool_timeout"
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("missing")),
++    )
++    assert mod._run_command(ROOT, "missing", ["check"])["terminal"] is False
++
++    names: list[str] = []
++    monkeypatch.setattr(
++        mod,
++        "_run_command",
++        lambda _root, name, argv: (
++            names.append(name)
++            or {
++                "name": name,
++                "command": " ".join(argv),
++                "exit_code": 0,
++                "outcome": "pass",
++                "terminal": True,
++                "passed": True,
++            }
++        ),
++    )
++    rows = mod.run_validation_commands(ROOT, tmp_path / "artifact.json")
++    assert names == list(mod.VALIDATION_COMMAND_NAMES[:-1])
++    assert len(rows) == len(mod.VALIDATION_COMMAND_NAMES) - 1
++
++
++def test_req_report_7011_validation_receipts_control_the_final_verdict(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-7011 does not report positive when a required command failed."""
++
++    failed = _passing_commands()
++    failed[0] = failed[0] | {"exit_code": 1, "outcome": "contract_defect", "passed": False}
++    disqualified = mod.build_artifact(
++        ROOT,
++        "20260905",
++        output_path=tmp_path / "disqualified.json",
++        network_available=True,
++        command_rows=failed,
++        duration_s=1.0,
++    )
++    assert disqualified["v614_sota_ingestion_complete_score"] == 1
++    assert disqualified["verdict_class"] == "disqualified"
++    assert disqualified["gate_check_summary"]["failed_check"] == "validation_commands"
++    assert mod.validate_artifact(disqualified) == []
++
++    nonterminal = _passing_commands()
++    nonterminal[-1] = nonterminal[-1] | {"terminal": False, "passed": False}
++    blocked = mod.build_artifact(
++        ROOT,
++        "20260905",
++        output_path=tmp_path / "blocked-tool.json",
++        network_available=True,
++        command_rows=nonterminal,
++        duration_s=1.0,
++    )
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked["gate_check_summary"]["observed_value"] == "nonterminal_or_missing"
++    assert mod.validate_artifact(blocked) == []
+-- 
+2.55.0
+

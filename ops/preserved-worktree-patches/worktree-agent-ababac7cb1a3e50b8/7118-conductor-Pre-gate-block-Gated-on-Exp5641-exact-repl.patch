@@ -1,0 +1,86 @@
+From d2be79f01d886590a6a2a84e128af7d39eb09b43 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 16:30:49 -0400
+Subject: [PATCH 07118/11362] [conductor] Pre-gate block: Gated on Exp5641
+ exact replay and zero unsafe patches: executable-model live-path A/B
+
+1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-model.executable_model_ready_score (actual=0.0 >= expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ent_5642_arc_executable_model_live_ab.json | 33 +++++++++++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5642_arc_executable_model_live_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 71b6322085..0376643040 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 175, "phase": "iteration_start", "last_beat": "2026-07-14T20:06:25Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 176, "phase": "iteration_start", "last_beat": "2026-07-14T20:30:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e699c23799..22d61ad61e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11757,3 +11757,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 19:04 UTC | Normalize the Exp5628 FR-11 scalar gate contract w | OK | 101 passed, 1 warning in 12.79s |
+ | 2026-07-14 19:39 UTC | Gated on Exp5638 contract and zero unsafe total: i | OK | 88 passed, 1 warning in 122.55s (0:02:02) |
+ | 2026-07-14 20:04 UTC | Gated on Exp5639 independent promotion: fail-close | OK | 157 passed, 1 warning in 24.23s |
++| 2026-07-14 20:28 UTC | Counterexample-patched executable ARC transition-h | OK | 88 passed, 1 warning in 20.43s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 674f8fb0f7..8f93be456c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 175, "phase": "iteration_start", "started_at": "2026-07-14T20:06:25Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 176, "phase": "iteration_start", "started_at": "2026-07-14T20:30:48Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5642_arc_executable_model_live_ab.json b/results/experiment_5642_arc_executable_model_live_ab.json
+new file mode 100644
+index 0000000000..d2be0aed20
+--- /dev/null
++++ b/results/experiment_5642_arc_executable_model_live_ab.json
+@@ -0,0 +1,33 @@
++{
++  "experiment": 5642,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-14",
++  "started_at": "2026-07-14T20:30:48.942417+00:00",
++  "finished_at": "2026-07-14T20:30:48.942417+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5641 exact replay and zero unsafe patches: executable-model live-path A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-model.executable_model_ready_score (actual=0.0 >= expected=1.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5641-arc-counterexample-executable-model",
++      "artifact_field": "executable_model_ready_score",
++      "op": ">=",
++      "expected": 1.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 >= expected=1.0"
++    },
++    {
++      "upstream": "exp5641-arc-counterexample-executable-model",
++      "artifact_field": "unsafe_patch_accept_count",
++      "op": "==",
++      "expected": 0,
++      "actual": 0,
++      "passed": true,
++      "reason": "actual=0 == expected=0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

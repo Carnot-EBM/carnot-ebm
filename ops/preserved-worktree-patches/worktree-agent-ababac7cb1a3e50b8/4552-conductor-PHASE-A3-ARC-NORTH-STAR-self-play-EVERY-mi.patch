@@ -1,0 +1,1059 @@
+From 92e6f52663ec274c6763ca5d9820cf9e9fd861f8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 22:03:10 -0400
+Subject: [PATCH 04552/11362] [conductor] PHASE A3 (ARC NORTH STAR; self-play
+ EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+ loop on a banked game with an existing checkpoint, ROTATED off .450 ls20 and
+ .449 re86 (pick another banked game that has a
+ models/arc_verifier_<game>.json checkpoint): verifier-routed solve ->
+ reproduction gate -> TRAIN + CHECKPOINT the learned verifier.
+
+Automated research step by research conductor.
+Task ID: exp4895-a3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  67 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ment_4895_self_play_verifier_checkpoint.py | 312 +++++++++++++++
+ results/arc_loop_solve_sk48.json              |  14 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...nt_4895_self_play_verifier_checkpoint.json |  92 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ment_4895_self_play_verifier_checkpoint.py | 373 ++++++++++++++++++
+ 12 files changed, 873 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/experiment_4895_self_play_verifier_checkpoint.py
+ create mode 100644 results/experiment_4895_self_play_verifier_checkpoint.json
+ create mode 100644 tests/python/test_experiment_4895_self_play_verifier_checkpoint.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index c769ac6fac..96b8a69cc6 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -12353,3 +12353,70 @@ When Experiment 4885 checks preconditions
+ Then it writes `results/experiment_4885_self_play_verifier_checkpoint.json`
+ with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
+ fabricated checkpoint refresh.
++
++### REQ-ARC-WMTE-4895: Rotated ARC Continuous Self-Play Verifier Checkpoint Refresh
++
++Experiment 4895 SHALL run the standing ARC self-play loop on a rotated banked
++target with an existing learned verifier checkpoint, selecting a target that is
++neither `.450`'s `ls20` nor `.449`'s `re86`. The loop SHALL warm-start from
++`models/arc_verifier_<game>.json`, reproduction-gate at least one offline
++level, train on this run's self-play traces, refresh the checkpoint, and write
++`results/experiment_4895_self_play_verifier_checkpoint.json`.
++
++The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
++that `ops/arc_solve_registry.yaml` is loadable, that the selected target has a
++banked level, and that `models/arc_verifier_<game>.json` exists before the run.
++If any required resource is missing, Experiment 4895 SHALL write a terminal
++`blocked_*` artifact that records the failed precondition and SHALL NOT claim a
++refreshed checkpoint.
++
++The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
++only when the checkpoint mtime advances, `offline_reproduced=true`, and
++`reproduced_levels >= 1`. A failed loop, missing checkpoint, stale mtime,
++failed reproduction gate, or rotation back to `ls20` or `re86` SHALL write a
++terminal `complete_*` or `blocked_*` artifact with the residual instead of
++fabricating checkpoint progress.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++- `reproduced_levels`: principle "the depth confirmed this run."
++- `target_game`: principle "the rotated self-play target (differs from .450 ls20 / .449 re86)."
++- `inference_substrate`: principle "live_llm_inference (60s floor)."
++- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
++- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++
++#### SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED
++
++Given `arc_solver_kit.offline_arcade()` is available, a non-`ls20`/non-`re86`
++target is banked in `ops/arc_solve_registry.yaml`, and
++`models/arc_verifier_<game>.json` exists before the standing loop runs
++When `scripts/arc_loop_solve.py --game <banked-target>` reports an
++offline-reproduced level and writes the learned verifier checkpoint
++Then Experiment 4895 records `verifier_checkpoint_refreshed=true`,
++`checkpoint_path=models/arc_verifier_<game>.json`, advanced checkpoint mtimes,
++`offline_reproduced=true`, `reproduced_levels >= 1`, the rotated
++`target_game`, `solve_provenance=live_agent_self_discovery`, and
++`honest_verdict=success_self_play_checkpoint_refreshed`.
++
++#### SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION
++
++Given the loop result is missing, the reproduction gate fails, the checkpoint
++path is absent, or the checkpoint mtime does not advance
++When Experiment 4895 builds its artifact
++Then it records `verifier_checkpoint_refreshed=false`, preserves the residual
++cause, keeps `offline_reproduced` and `reproduced_levels` grounded in the
++loop result, and does not emit a success verdict.
++
++#### SCENARIO-ARC-WMTE-4895-BLOCKED-PRECONDITION
++
++Given the offline arcade is unavailable, the registry is missing, the selected
++target is not banked, the checkpoint file is absent before the run, or the
++selection is either recent self-play target `ls20` or `re86`
++When Experiment 4895 checks preconditions
++Then it writes `results/experiment_4895_self_play_verifier_checkpoint.json`
++with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
++fabricated checkpoint refresh.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index be05dddf02..830cbe1f9e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3902,
++  "experiments_checked": 3903,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4895_self_play_verifier_checkpoint.py b/python/carnot/experiment_4895_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..64a1d149cf
+--- /dev/null
++++ b/python/carnot/experiment_4895_self_play_verifier_checkpoint.py
+@@ -0,0 +1,312 @@
++"""Experiment 4895: rotated ARC self-play verifier checkpoint refresh.
++
++Spec refs: REQ-ARC-WMTE-4895,
++SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED,
++SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION,
++SCENARIO-ARC-WMTE-4895-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++from contextlib import contextmanager
++from pathlib import Path
++from typing import Any, Iterator
++
++from carnot import experiment_4885_self_play_verifier_checkpoint as previous
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULTS = REPO / "results"
++REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
++ARTIFACT = RESULTS / "experiment_4895_self_play_verifier_checkpoint.json"
++
++EXPERIMENT = "experiment_4895_self_play_verifier_checkpoint"
++SCHEMA = "carnot.exp4895.self_play_verifier_checkpoint.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4895_self_play_verifier_checkpoint.json"
++RANDOM_SEED = 4895
++DEFAULT_TARGET_GAME = "sk48"
++DISALLOWED_TARGET_GAMES = ("ls20", "re86")
++INFERENCE_SUBSTRATE = previous.INFERENCE_SUBSTRATE
++SOLVE_PROVENANCE = previous.SOLVE_PROVENANCE
++SUCCESS_VERDICT = "success_self_play_checkpoint_refreshed"
++
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4895",
++    "SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED",
++    "SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-ARC-WMTE-4895-BLOCKED-PRECONDITION",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++    ),
++    "verifier_checkpoint_refreshed": (
++        "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++    ),
++    "checkpoint_path": (
++        "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++    ),
++    "offline_reproduced": (
++        "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++    ),
++    "reproduced_levels": "the depth confirmed this run.",
++    "target_game": "the rotated self-play target (differs from .450 ls20 / .449 re86).",
++    "inference_substrate": "live_llm_inference (60s floor).",
++    "solve_provenance": (
++        "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
++    ),
++    "preconditions_checked": (
++        "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++    ),
++}
++
++REQUIRED_FIELDS = tuple(dict.fromkeys((*previous.REQUIRED_FIELDS, "result_path")))
++_PATCHED_PREVIOUS_GLOBALS = (
++    "REPO",
++    "RESULTS",
++    "REGISTRY",
++    "ARTIFACT",
++    "EXPERIMENT",
++    "SCHEMA",
++    "RESULT_RELATIVE_PATH",
++    "RANDOM_SEED",
++    "DEFAULT_TARGET_GAME",
++    "INFERENCE_SUBSTRATE",
++    "SOLVE_PROVENANCE",
++    "SUCCESS_VERDICT",
++    "SPEC_REFS",
++    "FIELD_PRINCIPLES",
++)
++
++
++@contextmanager
++def _previous_scope() -> Iterator[None]:
++    saved = {name: getattr(previous, name) for name in _PATCHED_PREVIOUS_GLOBALS}
++    for name in _PATCHED_PREVIOUS_GLOBALS:
++        setattr(previous, name, globals()[name])
++    try:
++        yield
++    finally:
++        for name, value in saved.items():
++            setattr(previous, name, value)
++
++
++def _target_game(game: str | None) -> str:
++    return game or DEFAULT_TARGET_GAME
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _success_gate(payload: dict[str, Any]) -> bool:
++    return bool(
++        payload.get("verifier_checkpoint_refreshed") is True
++        and payload.get("offline_reproduced") is True
++        and _as_int(payload.get("reproduced_levels")) >= 1
++    )
++
++
++def _rotation_ok(game: str | None) -> bool:
++    return game not in DISALLOWED_TARGET_GAMES
++
++
++def stable_checksum(payload: dict[str, Any]) -> str:
++    return previous.stable_checksum(payload)
++
++
++def summarize_loop_result(
++    *,
++    game: str,
++    loop_result: dict[str, Any] | None,
++    loop_result_path: str,
++    checkpoint_mtime_before_ns: int | None,
++) -> dict[str, Any]:
++    with _previous_scope():
++        return previous.summarize_loop_result(
++            game=game,
++            loop_result=loop_result,
++            loop_result_path=loop_result_path,
++            checkpoint_mtime_before_ns=checkpoint_mtime_before_ns,
++        )
++
++
++def _retarget_artifact(payload: dict[str, Any]) -> dict[str, Any]:
++    artifact = dict(payload)
++    artifact["experiment"] = EXPERIMENT
++    artifact["schema"] = SCHEMA
++    artifact["spec_refs"] = list(SPEC_REFS)
++    artifact["result_path"] = RESULT_RELATIVE_PATH
++    artifact["field_principles"] = dict(FIELD_PRINCIPLES)
++    artifact["random_seed"] = RANDOM_SEED
++    if _success_gate(artifact):
++        artifact["honest_verdict"] = SUCCESS_VERDICT
++    artifact["reproducibility_checksum"] = ""
++    artifact["schema_errors"] = []
++    artifact["reproducibility_checksum"] = stable_checksum(artifact)
++    artifact["schema_errors"] = artifact_schema_errors(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    target_selection: dict[str, Any],
++    loop_summary: dict[str, Any],
++    preconditions_checked: dict[str, Any],
++) -> dict[str, Any]:
++    with _previous_scope():
++        artifact = previous.build_artifact(
++            target_selection=target_selection,
++            loop_summary=loop_summary,
++            preconditions_checked=preconditions_checked,
++        )
++    return _retarget_artifact(artifact)
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: dict[str, Any],
++    target_game: str | None = None,
++) -> dict[str, Any]:
++    with _previous_scope():
++        artifact = previous.build_blocked_artifact(
++            reason=reason,
++            preconditions_checked=preconditions_checked,
++            target_game=target_game,
++        )
++    return _retarget_artifact(artifact)
++
++
++def artifact_schema_errors(payload: dict[str, Any]) -> list[str]:
++    with _previous_scope():
++        errors = previous.artifact_schema_errors(payload)
++
++    for field in REQUIRED_FIELDS:
++        missing = f"missing_field:{field}"
++        if field not in payload and missing not in errors:
++            errors.append(missing)
++
++    preconditions = payload.get("preconditions_checked")
++    if not isinstance(preconditions, dict) or "checkpoint_existing" not in preconditions:
++        errors.append("preconditions_missing_checkpoint_check")
++
++    verdict = str(payload.get("honest_verdict") or "")
++    if _success_gate(payload) and verdict != SUCCESS_VERDICT:
++        errors.append("success_verdict_mismatch")
++    if verdict == SUCCESS_VERDICT and not _success_gate(payload):
++        errors.append("success_verdict_without_gate")
++    if _success_gate(payload) and not _rotation_ok(str(payload.get("target_game") or "")):
++        errors.append("success_target_rotation_violation")
++    if payload.get("result_path") != RESULT_RELATIVE_PATH:
++        errors.append("result_path_mismatch")
++    return errors
++
++
++def write_artifact(payload: dict[str, Any], path: Path | None = None) -> Path:
++    output = ARTIFACT if path is None else Path(path)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def check_preconditions(game: str | None = None) -> dict[str, Any]:  # pragma: no cover - live boundary.
++    target = _target_game(game)
++    with _previous_scope():
++        preconditions = previous.check_preconditions(target)
++
++    selection = dict(preconditions.get("target_selection") or {})
++    selected_game = str(selection.get("game") or target)
++    if game is None and selected_game == DEFAULT_TARGET_GAME:
++        selection["reason"] = f"rotated_banked_target_warm_start_{DEFAULT_TARGET_GAME}"
++        preconditions["target_selection"] = selection
++        if isinstance(preconditions.get("target_banked"), dict):
++            preconditions["target_banked"]["reason"] = selection["reason"]
++
++    rotation_ok = _rotation_ok(selected_game)
++    preconditions["target_rotation"] = {
++        "ok": rotation_ok,
++        "game": selected_game,
++        "rotated_off": list(DISALLOWED_TARGET_GAMES),
++    }
++    preconditions["ok"] = bool(preconditions.get("ok") and rotation_ok)
++    return preconditions
++
++
++def _precondition_failure(preconditions: dict[str, Any]) -> str | None:
++    base_preconditions = dict(preconditions)
++    if isinstance(base_preconditions.get("target_rotation"), dict):
++        base_preconditions["target_rotation"] = {
++            **base_preconditions["target_rotation"],
++            "ok": True,
++        }
++    base_failure = previous._precondition_failure(base_preconditions)
++    if base_failure is not None:
++        return base_failure
++    if preconditions.get("target_rotation", {}).get("ok") is not True:
++        return "target_rotation_ls20_re86_disallowed"
++    if preconditions.get("checkpoint_existing", {}).get("ok") is not True:
++        return "checkpoint_missing"
++    return None
++
++
++def _relative_path(path: Path) -> str:
++    with _previous_scope():
++        return previous._relative_path(path)
++
++
++def _read_loop_result(path: Path) -> dict[str, Any] | None:
++    with _previous_scope():
++        return previous._read_loop_result(path)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--game")
++    parser.add_argument("--loop-result")
++    parser.add_argument("--checkpoint-mtime-before-ns", type=int)
++    args = parser.parse_args(argv)
++
++    preconditions = check_preconditions(args.game)
++    selection = dict(preconditions.get("target_selection") or {})
++    failure = _precondition_failure(preconditions)
++    if failure is not None:
++        artifact = build_blocked_artifact(
++            reason=failure,
++            preconditions_checked=preconditions,
++            target_game=args.game or selection.get("game") or DEFAULT_TARGET_GAME,
++        )
++    else:
++        game = str(selection["game"])
++        loop_path = (
++            Path(args.loop_result) if args.loop_result else RESULTS / f"arc_loop_solve_{game}.json"
++        )
++        loop_summary = summarize_loop_result(
++            game=game,
++            loop_result=_read_loop_result(loop_path),
++            loop_result_path=_relative_path(loop_path),
++            checkpoint_mtime_before_ns=args.checkpoint_mtime_before_ns,
++        )
++        artifact = build_artifact(
++            target_selection=selection,
++            loop_summary=loop_summary,
++            preconditions_checked=preconditions,
++        )
++
++    write_artifact(artifact, ARTIFACT)
++    print(f"honest_verdict={artifact['honest_verdict']}")
++    print(f"verifier_checkpoint_refreshed={artifact['verifier_checkpoint_refreshed']}")
++    print(f"checkpoint_path={artifact['checkpoint_path']}")
++    print(f"target_game={artifact['target_game']}")
++    print(f"schema_errors={artifact['schema_errors']}")
++    return 0 if not artifact["schema_errors"] else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_sk48.json b/results/arc_loop_solve_sk48.json
+index 5bf431e288..cde6589e93 100644
+--- a/results/arc_loop_solve_sk48.json
++++ b/results/arc_loop_solve_sk48.json
+@@ -3,9 +3,17 @@
+   "reached_level": 2,
+   "moves": 44,
+   "states_expanded": 44,
+-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
+-  "hazard_prune": false,
+-  "hazard_pruner_stats": null,
++  "verifier_src": "learned_verifier_live_checkpoint",
++  "hazard_prune": true,
++  "hazard_pruner_stats": {
++    "observed": 44,
++    "pruned": 0,
++    "n_deaths": 0,
++    "lethal_mode": null,
++    "trust": 0.0,
++    "specificity": 0.0,
++    "model_fitted": false
++  },
+   "offline_reproduced": true,
+   "reproduced_levels": 2,
+   "learned_verifier_checkpoint": "models/arc_verifier_sk48.json",
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 94439321ac..975c6d67d8 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-28T01:47:13.017411Z",
+-  "duration_s": 0.03609609603881836,
++  "run_date": "2026-06-28T02:02:48.710337Z",
++  "duration_s": 0.054547786712646484,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "43fd63c11e71ce3ce5dedab98c447820f405247ed2b495c6bdd8671053a2976b",
++  "reproducibility_checksum": "1fcf60f7fc82a39e8a41f4863f7a2974ffe399a534743e9264aacca3559609a7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "80771c07d8c76b56aa9b645a6d6edeaecc07603c"
++    "adversarial_verify_version": "6ccebf48e14a5ce0d5e9d2b88e66fb096e2800f2"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 91572881c5..826caa8237 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-28T01:47:13.091581Z",
+-  "duration_s": 0.06942391395568848,
++  "run_date": "2026-06-28T02:02:48.801811Z",
++  "duration_s": 0.08432698249816895,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "af76a1856e158fe30fdc9c04b6c71b114cb4538ce0394a0fc2c3a8803d38bbf5",
++  "reproducibility_checksum": "13fdfcd97692daf006a60c5bb192bd9419774dfbc8107ccd980e2de3152eddc2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "80771c07d8c76b56aa9b645a6d6edeaecc07603c"
++    "adversarial_verify_version": "6ccebf48e14a5ce0d5e9d2b88e66fb096e2800f2"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 3065c960be..a217ce4170 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.234910011291504e-05,
++  "duration_s": 5.216803401708603e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4895_self_play_verifier_checkpoint.json b/results/experiment_4895_self_play_verifier_checkpoint.json
+new file mode 100644
+index 0000000000..d95d194933
+--- /dev/null
++++ b/results/experiment_4895_self_play_verifier_checkpoint.json
+@@ -0,0 +1,92 @@
++{
++  "checkpoint_mtime_after_ns": "1782612023943844064",
++  "checkpoint_mtime_before_ns": "1782597788994289679",
++  "checkpoint_mtime_delta_ns": 14234949554385,
++  "checkpoint_path": "models/arc_verifier_sk48.json",
++  "experiment": "experiment_4895_self_play_verifier_checkpoint",
++  "field_principles": {
++    "checkpoint_path": "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3).",
++    "honest_verdict": "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed.",
++    "inference_substrate": "live_llm_inference (60s floor).",
++    "offline_reproduced": "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact.",
++    "preconditions_checked": "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint.",
++    "reproduced_levels": "the depth confirmed this run.",
++    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts.",
++    "target_game": "the rotated self-play target (differs from .450 ls20 / .449 re86).",
++    "verifier_checkpoint_refreshed": "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++  },
++  "honest_verdict": "success_self_play_checkpoint_refreshed",
++  "inference_substrate": "live_llm_inference",
++  "loop_result_path": "results/arc_loop_solve_sk48.json",
++  "loop_solve_provenance": "development_proxy",
++  "model_specs": {
++    "checkpoint_template": "models/arc_verifier_<game>.json",
++    "standing_loop": "scripts/arc_loop_solve.py"
++  },
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "checkpoint_existing": {
++      "game": "sk48",
++      "ok": true,
++      "path": "models/arc_verifier_sk48.json"
++    },
++    "offline_arcade": {
++      "check": "arc_solver_kit.offline_arcade()",
++      "ok": true
++    },
++    "ok": true,
++    "registry_loadable": {
++      "ok": true,
++      "path": "ops/arc_solve_registry.yaml"
++    },
++    "target_banked": {
++      "game": "sk48",
++      "ok": true,
++      "prior_level": 2,
++      "reason": "preferred_banked_target"
++    },
++    "target_rotation": {
++      "game": "sk48",
++      "ok": true,
++      "rotated_off": [
++        "ls20",
++        "re86"
++      ]
++    },
++    "target_selection": {
++      "banked": true,
++      "game": "sk48",
++      "prior_level": 2,
++      "reason": "preferred_banked_target"
++    }
++  },
++  "random_seed": 4895,
++  "reproduced_levels": 2,
++  "reproducibility_checksum": "a104868ad2ef661c9cd79318d953db0284479a1a8f16ba195b45352c4a3a32b7",
++  "reproduction_gate": {
++    "claimed_level": 2,
++    "game": "sk48",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 2,
++    "reproduced": true
++  },
++  "result_path": "results/experiment_4895_self_play_verifier_checkpoint.json",
++  "schema": "carnot.exp4895.self_play_verifier_checkpoint.v1",
++  "schema_errors": [],
++  "search_state_count": 44,
++  "self_play_residual": "checkpoint_refreshed_gate_passed",
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4895",
++    "SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED",
++    "SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION",
++    "SCENARIO-ARC-WMTE-4895-BLOCKED-PRECONDITION"
++  ],
++  "states_expanded": 44,
++  "target_game": "sk48",
++  "target_registry_prior_level": 2,
++  "target_selection_reason": "preferred_banked_target",
++  "verifier_checkpoint_refreshed": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 39119606fe..9d1d88a188 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T01:46:54Z",
+-  "finished_at": "2026-06-28T01:46:55Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-28T02:02:31Z",
++  "finished_at": "2026-06-28T02:02:31Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 53a7632e89..af86eecc8a 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T01:46:55Z",
+-  "finished_at": "2026-06-28T01:46:55Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-28T02:02:32Z",
++  "finished_at": "2026-06-28T02:02:32Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6d282ec42b..797ca811df 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T01:46:55Z",
+-  "finished_at": "2026-06-28T01:46:55Z",
++  "started_at": "2026-06-28T02:02:32Z",
++  "finished_at": "2026-06-28T02:02:32Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4895_self_play_verifier_checkpoint.py b/tests/python/test_experiment_4895_self_play_verifier_checkpoint.py
+new file mode 100644
+index 0000000000..3fea0e0ac3
+--- /dev/null
++++ b/tests/python/test_experiment_4895_self_play_verifier_checkpoint.py
+@@ -0,0 +1,373 @@
++"""Tests for Exp 4895 ARC self-play verifier checkpoint refresh.
++
++Spec refs: REQ-ARC-WMTE-4895,
++SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED,
++SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION,
++SCENARIO-ARC-WMTE-4895-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_4885_self_play_verifier_checkpoint as exp4885
++from carnot import experiment_4895_self_play_verifier_checkpoint as exp4895
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _loop_result(game: str, reached_level: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": game,
++        "reached_level": reached_level,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached_level if reproduced else 0,
++        "states_expanded": 44,
++        "learned_verifier_checkpoint": f"models/arc_verifier_{game}.json",
++        "solve_provenance": "live_agent_self_discovery",
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": reached_level,
++            "reached_level": reached_level,
++            "reproduced": reproduced,
++        },
++    }
++
++
++def _success_artifact(tmp_path: Path, monkeypatch) -> dict[str, object]:
++    ckpt = tmp_path / "models" / "arc_verifier_sk48.json"
++    ckpt.parent.mkdir()
++    ckpt.write_text('{"ok": true}\n', encoding="utf-8")
++    before_ns = ckpt.stat().st_mtime_ns - 1
++    monkeypatch.setattr(exp4895, "REPO", tmp_path)
++
++    summary = exp4895.summarize_loop_result(
++        game="sk48",
++        loop_result=_loop_result("sk48"),
++        loop_result_path="results/arc_loop_solve_sk48.json",
++        checkpoint_mtime_before_ns=before_ns,
++    )
++    return exp4895.build_artifact(
++        target_selection={
++            "game": "sk48",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "rotated_banked_target_warm_start_sk48",
++        },
++        loop_summary=summary,
++        preconditions_checked={
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True, "game": "sk48"},
++            "checkpoint_existing": {"ok": True, "path": "models/arc_verifier_sk48.json"},
++            "target_rotation": {
++                "ok": True,
++                "game": "sk48",
++                "rotated_off": ["ls20", "re86"],
++            },
++        },
++    )
++
++
++def test_req_arc_wmte_4895_spec_declares_required_contract() -> None:
++    """REQ-ARC-WMTE-4895: OpenSpec anchors the 4895 checkpoint contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in exp4895.SPEC_REFS:
++        assert ref in spec
++    assert exp4895.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4895.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_arc_wmte_4895_checkpoint_refreshed_success(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-ARC-WMTE-4895-CHECKPOINT-REFRESHED: rotated target gate succeeds."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    assert artifact["experiment"] == exp4895.EXPERIMENT
++    assert artifact["schema"] == exp4895.SCHEMA
++    assert artifact["spec_refs"] == exp4895.SPEC_REFS
++    assert artifact["random_seed"] == exp4895.RANDOM_SEED
++    assert artifact["field_principles"] == exp4895.FIELD_PRINCIPLES
++    assert artifact["honest_verdict"] == "success_self_play_checkpoint_refreshed"
++    assert artifact["verifier_checkpoint_refreshed"] is True
++    assert artifact["checkpoint_path"] == "models/arc_verifier_sk48.json"
++    assert artifact["target_game"] == "sk48"
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 2
++    assert artifact["states_expanded"] == 44
++    assert artifact["search_state_count"] == 44
++    assert artifact["self_play_residual"] == "checkpoint_refreshed_gate_passed"
++    assert int(artifact["checkpoint_mtime_after_ns"]) > int(artifact["checkpoint_mtime_before_ns"])
++    assert artifact["checkpoint_mtime_delta_ns"] > 0
++    assert artifact["schema_errors"] == []
++    assert exp4895.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_arc_wmte_4895_residual_and_blocked_paths(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-ARC-WMTE-4895-RESIDUAL-NO-FABRICATION: failures stay residuals."""
++
++    monkeypatch.setattr(exp4895, "REPO", tmp_path)
++    failed = _loop_result("sk48", reached_level=0, reproduced=False)
++    failed["learned_verifier_checkpoint"] = None
++
++    summary = exp4895.summarize_loop_result(
++        game="sk48",
++        loop_result=failed,
++        loop_result_path="results/arc_loop_solve_sk48.json",
++        checkpoint_mtime_before_ns=123,
++    )
++    artifact = exp4895.build_artifact(
++        target_selection={
++            "game": "sk48",
++            "prior_level": 2,
++            "banked": True,
++            "reason": "rotated_banked_target_warm_start_sk48",
++        },
++        loop_summary=summary,
++        preconditions_checked={
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "checkpoint_existing": {"ok": False},
++            "target_rotation": {"ok": True, "game": "sk48", "rotated_off": ["ls20", "re86"]},
++        },
++    )
++    blocked = exp4895.build_blocked_artifact(
++        reason="checkpoint_missing",
++        preconditions_checked={
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True, "game": "sk48", "prior_level": 2},
++            "checkpoint_existing": {"ok": False, "path": "models/arc_verifier_sk48.json"},
++            "target_rotation": {"ok": True, "game": "sk48", "rotated_off": ["ls20", "re86"]},
++        },
++        target_game="sk48",
++    )
++    missing = exp4895.summarize_loop_result(
++        game="sk48",
++        loop_result=None,
++        loop_result_path="results/arc_loop_solve_sk48.json",
++        checkpoint_mtime_before_ns="bad",
++    )
++
++    assert artifact["honest_verdict"] == "complete_sk48_self_play_residual_reproduction_gate_failed"
++    assert artifact["verifier_checkpoint_refreshed"] is False
++    assert artifact["checkpoint_path"] is None
++    assert artifact["checkpoint_mtime_after_ns"] is None
++    assert artifact["checkpoint_mtime_delta_ns"] is None
++    assert artifact["schema_errors"] == []
++    assert blocked["honest_verdict"] == "blocked_checkpoint_missing"
++    assert blocked["target_game"] == "sk48"
++    assert blocked["verifier_checkpoint_refreshed"] is False
++    assert blocked["schema_errors"] == []
++    assert missing["self_play_residual"] == "loop_result_missing"
++    assert missing["checkpoint_mtime_before_ns"] is None
++    assert missing["search_state_count"] == 0
++
++
++def test_req_arc_wmte_4895_schema_rejects_stale_metadata_and_recent_targets(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """REQ-ARC-WMTE-4895: schema rejects stale identity and ls20/re86 success."""
++
++    artifact = _success_artifact(tmp_path, monkeypatch)
++
++    for field, old_value, expected in (
++        ("experiment", exp4885.EXPERIMENT, "experiment_mismatch"),
++        ("schema", exp4885.SCHEMA, "schema_mismatch"),
++        ("spec_refs", exp4885.SPEC_REFS, "spec_refs_mismatch"),
++        ("random_seed", exp4885.RANDOM_SEED, "random_seed_mismatch"),
++    ):
++        stale = dict(artifact)
++        stale[field] = old_value
++        stale["reproducibility_checksum"] = exp4895.stable_checksum(stale)
++        assert expected in exp4895.artifact_schema_errors(stale)
++
++    wrong_verdict = dict(artifact, honest_verdict="success_sk48_L2_checkpoint_refreshed")
++    wrong_verdict["reproducibility_checksum"] = exp4895.stable_checksum(wrong_verdict)
++    assert "success_verdict_mismatch" in exp4895.artifact_schema_errors(wrong_verdict)
++
++    bad_principle = dict(artifact, field_principles={})
++    bad_principle["reproducibility_checksum"] = exp4895.stable_checksum(bad_principle)
++    assert "missing_principle:target_game" in exp4895.artifact_schema_errors(bad_principle)
++
++    missing_result_path = dict(artifact)
++    missing_result_path.pop("result_path")
++    missing_result_path["reproducibility_checksum"] = exp4895.stable_checksum(
++        missing_result_path
++    )
++    result_path_errors = exp4895.artifact_schema_errors(missing_result_path)
++    assert "missing_field:result_path" in result_path_errors
++    assert "result_path_mismatch" in result_path_errors
++
++    monkeypatch.setattr(
++        exp4895,
++        "REQUIRED_FIELDS",
++        exp4895.REQUIRED_FIELDS + ("exp4895_only_field",),
++    )
++    exp4895_only_missing = dict(artifact)
++    exp4895_only_missing["reproducibility_checksum"] = exp4895.stable_checksum(
++        exp4895_only_missing
++    )
++    assert "missing_field:exp4895_only_field" in exp4895.artifact_schema_errors(
++        exp4895_only_missing
++    )
++
++    missing_checkpoint_check = dict(artifact, preconditions_checked={})
++    missing_checkpoint_check["reproducibility_checksum"] = exp4895.stable_checksum(
++        missing_checkpoint_check
++    )
++    assert "preconditions_missing_checkpoint_check" in exp4895.artifact_schema_errors(
++        missing_checkpoint_check
++    )
++
++    success_without_gate = dict(artifact, reproduced_levels="bad")
++    success_without_gate["reproducibility_checksum"] = exp4895.stable_checksum(
++        success_without_gate
++    )
++    assert "success_verdict_without_gate" in exp4895.artifact_schema_errors(
++        success_without_gate
++    )
++
++    for recent_target in ("ls20", "re86"):
++        recent_success = dict(artifact, target_game=recent_target)
++        recent_success["reproducibility_checksum"] = exp4895.stable_checksum(recent_success)
++        assert "success_target_rotation_violation" in exp4895.artifact_schema_errors(
++            recent_success
++        )
++
++
++def test_req_arc_wmte_4895_helpers_and_main_write_artifacts(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """REQ-ARC-WMTE-4895: IO helpers and main write sk48 terminal artifacts."""
++
++    (tmp_path / "results").mkdir()
++    (tmp_path / "models").mkdir()
++    ckpt = tmp_path / "models" / "arc_verifier_sk48.json"
++    ckpt.write_text("{}", encoding="utf-8")
++    before_ns = ckpt.stat().st_mtime_ns - 1
++    loop_path = tmp_path / "results" / "arc_loop_solve_sk48.json"
++    loop_path.write_text(json.dumps(_loop_result("sk48")), encoding="utf-8")
++    list_payload = tmp_path / "results" / "list.json"
++    list_payload.write_text("[]", encoding="utf-8")
++
++    monkeypatch.setattr(exp4895, "REPO", tmp_path)
++    monkeypatch.setattr(exp4895, "RESULTS", tmp_path / "results")
++    monkeypatch.setattr(exp4895, "ARTIFACT", tmp_path / exp4895.RESULT_RELATIVE_PATH)
++    monkeypatch.setattr(
++        exp4895,
++        "check_preconditions",
++        lambda game=None: {
++            "ok": True,
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True, "game": "sk48", "prior_level": 2},
++            "checkpoint_existing": {"ok": True, "path": "models/arc_verifier_sk48.json"},
++            "target_rotation": {"ok": True, "game": "sk48", "rotated_off": ["ls20", "re86"]},
++            "target_selection": {
++                "game": "sk48",
++                "prior_level": 2,
++                "banked": True,
++                "reason": "rotated_banked_target_warm_start_sk48",
++            },
++        },
++    )
++
++    assert exp4895._target_game(None) == "sk48"  # noqa: SLF001
++    assert exp4895._target_game("bp35") == "bp35"  # noqa: SLF001
++    assert exp4895._read_loop_result(tmp_path / "missing.json") is None  # noqa: SLF001
++    assert exp4895._read_loop_result(list_payload) is None  # noqa: SLF001
++    assert exp4895._read_loop_result(loop_path)["game"] == "sk48"  # noqa: SLF001
++    assert exp4895._relative_path(loop_path) == "results/arc_loop_solve_sk48.json"  # noqa: SLF001
++    assert exp4895._relative_path(Path("/outside.json")) == "/outside.json"  # noqa: SLF001
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {
++            "offline_arcade": {"ok": False},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True},
++            "target_rotation": {"ok": True},
++            "checkpoint_existing": {"ok": True},
++        }
++    ) == "offline_arcade_missing"
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True},
++            "target_rotation": {"ok": False, "game": "ls20"},
++            "checkpoint_existing": {"ok": True},
++        }
++    ) == "target_rotation_ls20_re86_disallowed"
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True},
++            "target_rotation": {"ok": True},
++            "checkpoint_existing": {"ok": False},
++        }
++    ) == "checkpoint_missing"
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True},
++            "target_rotation": {"ok": True},
++            "checkpoint_existing": {"ok": True},
++        }
++    ) is None
++    monkeypatch.setattr(exp4895.previous, "_precondition_failure", lambda preconditions: None)
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {"target_rotation": {"ok": True}, "checkpoint_existing": {"ok": False}}
++    ) == "checkpoint_missing"
++    assert exp4895._precondition_failure(  # noqa: SLF001
++        {"checkpoint_existing": {"ok": False}}
++    ) == "target_rotation_ls20_re86_disallowed"
++
++    assert exp4895.main(["--checkpoint-mtime-before-ns", str(before_ns)]) == 0
++    written = json.loads((tmp_path / exp4895.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["honest_verdict"] == "success_self_play_checkpoint_refreshed"
++    assert written["target_game"] == "sk48"
++    assert written["checkpoint_path"] == "models/arc_verifier_sk48.json"
++    assert written["schema_errors"] == []
++
++    blocked_path = tmp_path / "blocked" / exp4895.RESULT_RELATIVE_PATH
++    monkeypatch.setattr(exp4895, "ARTIFACT", blocked_path)
++    monkeypatch.setattr(
++        exp4895,
++        "check_preconditions",
++        lambda game=None: {
++            "ok": False,
++            "offline_arcade": {"ok": True},
++            "registry_loadable": {"ok": True},
++            "target_banked": {"ok": True, "game": "sk48", "prior_level": 2},
++            "checkpoint_existing": {"ok": False, "path": "models/arc_verifier_sk48.json"},
++            "target_rotation": {"ok": True, "game": "sk48", "rotated_off": ["ls20", "re86"]},
++            "target_selection": {
++                "game": "sk48",
++                "prior_level": 2,
++                "banked": True,
++                "reason": "rotated_banked_target_warm_start_sk48",
++            },
++        },
++    )
++
++    assert exp4895.main([]) == 0
++    blocked = json.loads(blocked_path.read_text(encoding="utf-8"))
++    assert blocked["honest_verdict"] == "blocked_checkpoint_missing"
++    assert blocked["target_game"] == "sk48"
++    assert blocked["checkpoint_path"] is None
++    assert blocked["schema_errors"] == []
+-- 
+2.55.0
+

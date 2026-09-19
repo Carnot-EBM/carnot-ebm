@@ -1,0 +1,231 @@
+From fc3b7a0dd1f5b1a5a32623e1dfc06ee8b800526a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 18:50:14 -0400
+Subject: [PATCH 08545/11362] test: fix 3 stale ARC tests found during Gap 3's
+ regression sweep
+
+All three are stale_test, not production regressions -- root-caused via an
+adversarially-verified investigation workflow (one agent per test, isolated
+worktrees, each diagnosis independently re-checked by a second agent that
+empirically applied the proposed fix before signing off).
+
+1. test_experiment_5727_arc_generalization_live_oracle_gap_v511.py::
+   test_req_arc_wmte_5727_e3_proposer_port_env_override -- same root cause as
+   the already-filed test_arc_submitted_agent_parity.py pair: the live
+   ARC_LIVE_GENERATOR_REPO_SUBSTR constant was repinned to the qat variant by
+   commit 6526b472a8 (2026-07-31, VRAM-driven, backed by a 20-game head-to-head
+   showing qat/Q4_K_M are statistically indistinguishable on quality). Fixed
+   the assertion and a second stale claim in the same comment (the "no MTP
+   heads" premise, already corrected elsewhere in the codebase). A repo-wide
+   sweep for the same assertion pattern found no further undiscovered stale
+   sites; the test_arc_submitted_agent_parity.py pair remains open (same fix
+   applies, not touched in this commit).
+
+2. test_experiment_4605_live_integration_scored_agent.py::
+   test_req_capstone_4605_submitted_policy_wires_safe_live_stack -- commit
+   ca8e078ccb (2026-07-25, Exp5904/5927) wrapped
+   load_cross_game_discriminative_router's return value inside an
+   OnlineClickTargetRouter, so a stub swapped in at the inner loader only ever
+   reaches .base of the wrapper, never the object the test compared against.
+   Fixed by monkeypatching load_online_click_target_router instead -- the
+   function _load_submitted_candidate_router actually calls today.
+
+3. test_experiment_4821_structural_energy_s3_generation_lift.py::
+   test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan -- two
+   deliberate interface changes to _induce_and_plan's plain-path calling
+   contract postdate this test's authoring commit: d9de98aedd (2026-07-27,
+   added hud_mask= + change_gate_decision(), reading VerifyResult fields the
+   hand-rolled fake lacked) and c48b6a853d (2026-07-15, added an unconditional
+   diagnostics= kwarg). The resulting exception was silently swallowed by
+   _induce_and_plan's own outer except, so plan_in_model was never reached and
+   the reported IndexError followed from an empty captured list. The
+   adversarial verify pass caught that the first proposed fix omitted three
+   VerifyResult fields read before change_gate_decision runs; the corrected,
+   empirically re-verified fix is what's committed here.
+
+All three fixes are test-only -- no production code changed. Verified: the 3
+target node ids pass, all 3 files' full suites (17 tests) pass, ruff/
+ruff-format/mypy clean on the edited regions (one pre-existing, unrelated mypy
+error at test_experiment_5727...py:413 confirmed outside this commit's diff).
+
+ops/known-issues.md's 2026-08-08 addendum (findings 4-6) is marked RESOLVED
+with the root causes and fix summary, per the addendum's own falsifiable gate.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           | 36 ++++++++++++++
+ ...ment_4605_live_integration_scored_agent.py |  7 ++-
+ ...21_structural_energy_s3_generation_lift.py | 48 +++++++++++++++++--
+ ...arc_generalization_live_oracle_gap_v511.py | 10 ++--
+ 4 files changed, 92 insertions(+), 9 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 9cae545b9c..6858b84527 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -142,6 +142,42 @@ identically without any of today's changes present:
+ **Falsifiable gate (addendum).** Same shape as above: ends when all 3 pass again, or each is
+ individually re-classified and fixed or corrected with a dated note.
+ 
++**RESOLVED 2026-08-08 (findings 4, 5, 6 — the addendum's own gate).** An adversarially-verified
++investigation workflow root-caused all three, all `stale_test` (no production regression):
++
++- **Finding 4** confirmed same root cause as finding 3 (the 2026-07-31 qat repin, commit
++  `6526b472a8`). Fixed: `tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py`
++  now asserts `repo_substr == "gemma-4-31B-it-qat"`; the stale "no MTP heads" comment was also
++  corrected to match the already-fixed language in `test_arc_submitted_agent_parity.py`. The
++  repo-wide sweep this addendum called for (scope item (c)) found no further undiscovered stale
++  sites beyond the finding-3 pair (2 more `== "gemma-4-31B-it"` hits exist but are self-contained
++  fixtures unaffected by the live constant, verified by direct read). **Finding 3's own pair in
++  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open** — not fixed
++  in this pass, same one-line-swap-plus-comment-correction applies.
++- **Finding 5**: real root cause identified — commit `ca8e078ccb` (2026-07-25, Exp5904/5927) wrapped
++  `load_cross_game_discriminative_router`'s return value inside an `OnlineClickTargetRouter`, so a
++  stub swapped in at the inner loader only ever reaches `.base` of the wrapper. `_load_submitted_
++  candidate_router` was confirmed, by direct read and by empirical monkeypatch, to no longer call
++  `load_cross_game_discriminative_router` on any live default path; the wrapper's presence is
++  deliberate and default-off-safe, not a regression. Fixed: the test now monkeypatches
++  `load_online_click_target_router` instead, with a comment explaining why.
++- **Finding 6**: root cause is two independent, deliberate interface changes to `_induce_and_plan`'s
++  plain-path calling contract that postdate the test's authoring commit — `d9de98aedd` (2026-07-27,
++  added `hud_mask=` + `change_gate_decision()`, reading fields the hand-rolled `_FakeVerifier` lacked)
++  and `c48b6a853d` (2026-07-15, REQ-ARC-FCP-5699-15, added an unconditional `diagnostics=` kwarg).
++  The resulting `TypeError`/`AttributeError` was silently swallowed by `_induce_and_plan`'s own outer
++  `except Exception`, so `plan_in_model` was never reached and `captured` stayed empty — hence the
++  reported `IndexError`. The adversarial verify pass caught that the first proposed fix was
++  incomplete (missing three more `VerifyResult` fields read directly before `change_gate_decision`
++  runs); the corrected, empirically-passing fix is now in place: the fake verifier carries
++  `hud_mask_status`/`hud_mask_cells`/`hud_mask_swallow`, `WorldModelVerifier` accepts `**kwargs`,
++  `change_gate_decision` is monkeypatched to its true default-off shape, and the final assertion
++  reads `"goal_energy" not in captured[-1]` instead of exact-`{}` equality.
++
++All three fixes are test-only; no production code changed. Verified: the 3 target node ids pass,
++the 3 files' full suites (17 tests) pass, ruff/ruff-format/mypy clean (one pre-existing, unrelated
++mypy error at `test_experiment_5727...py:413` confirmed outside this fix's edit region).
++
+ ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
+ 
+ The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
+diff --git a/tests/python/test_experiment_4605_live_integration_scored_agent.py b/tests/python/test_experiment_4605_live_integration_scored_agent.py
+index 1bef5dd343..8288e09059 100644
+--- a/tests/python/test_experiment_4605_live_integration_scored_agent.py
++++ b/tests/python/test_experiment_4605_live_integration_scored_agent.py
+@@ -101,9 +101,14 @@ def test_req_capstone_4605_submitted_policy_wires_safe_live_stack(monkeypatch) -
+             return 0.5
+ 
+     stub_router = CrossGameDiscriminativeCandidateRouter(StubVerifier())
++    # Patch load_online_click_target_router, not load_cross_game_discriminative_router directly:
++    # since commit ca8e078ccb (2026-07-25, Exp5904/5927) _load_submitted_candidate_router's
++    # default path wraps the discriminative router inside an OnlineClickTargetRouter, so a stub
++    # swapped in at load_cross_game_discriminative_router only ever reaches .base of that
++    # wrapper, never policy.explorer.candidate_router itself.
+     monkeypatch.setattr(
+         comp.arc_discriminative_router,
+-        "load_cross_game_discriminative_router",
++        "load_online_click_target_router",
+         lambda **_kwargs: stub_router,
+     )
+ 
+diff --git a/tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py b/tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py
+index 102f263e85..e42192f993 100644
+--- a/tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py
++++ b/tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py
+@@ -110,7 +110,19 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch)
+ 
+     class _FakeVerifier:
+         def score(self, _engine: Any) -> SimpleNamespace:
+-            return SimpleNamespace(accuracy=1.0, cell_recall=1.0)
++            # hud_mask_status/cells/swallow: added to the real VerifyResult dataclass by commit
++            # d9de98aedd (2026-07-27), which also added the hud_mask= kwarg on the WorldModelVerifier
++            # call below and the change_gate_decision() call these fields feed -- read directly at
++            # the call site before change_gate_decision runs, so omitting them here raises an
++            # AttributeError that gets silently swallowed by _induce_and_plan's outer except, and
++            # plan_in_model is never reached.
++            return SimpleNamespace(
++                accuracy=1.0,
++                cell_recall=1.0,
++                hud_mask_status="not_requested",
++                hud_mask_cells=0,
++                hud_mask_swallow={},
++            )
+ 
+     def engine(grid: np.ndarray, _action: int, _data: Any) -> np.ndarray:
+         return np.asarray(grid)
+@@ -119,11 +131,35 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch)
+         return not np.asarray(grid).any()
+ 
+     monkeypatch.setattr(e3, "load_engine", lambda _game: (engine, is_done))
+-    monkeypatch.setattr(e3, "WorldModelVerifier", lambda _transitions: _FakeVerifier())
++    # **_kwargs: the plain path now calls WorldModelVerifier(active_transitions, hud_mask=_hud_mask)
++    # (same commit as above); the old single-positional-arg fake raised a TypeError that was
++    # silently swallowed the same way.
++    monkeypatch.setattr(e3, "WorldModelVerifier", lambda _transitions, **_kwargs: _FakeVerifier())
++    # change_gate_decision() (added by the same commit) reads ~15 VerifyResult fields the bare fake
++    # above doesn't have. The change-gate feature itself is default-off in production
++    # (SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED = False), so this canned dict reflects its true
++    # default-off runtime shape rather than hand-faking the full VerifyResult surface.
++    monkeypatch.setattr(
++        e3,
++        "change_gate_decision",
++        lambda _vr, **_kwargs: {
++            "gate_enabled": False,
++            "passed": True,
++            "reason": "gate_disabled",
++            "change_fidelity": 1.0,
++            "correct_changed_cells": 1,
++            "spurious_changed_cells": 0,
++            "change_accuracy": 1.0,
++            "legacy_accuracy_would_pass_at_live_threshold": True,
++            "noop_ok_is_vacuous": False,
++        },
++    )
+ 
+     captured: list[dict[str, Any]] = []
+ 
+-    def plan_in_model(_engine: Any, _is_done: Any, _root_grid: np.ndarray, **kwargs: Any) -> list[dict[str, Any]]:
++    def plan_in_model(
++        _engine: Any, _is_done: Any, _root_grid: np.ndarray, **kwargs: Any
++    ) -> list[dict[str, Any]]:
+         captured.append(dict(kwargs))
+         return [{"action": 1, "data": None}]
+ 
+@@ -157,7 +193,11 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch)
+     bare.root_grid = np.ones((2, 2), dtype=np.int16)
+     bare._induce_and_plan()
+ 
+-    assert captured[-1] == {}
++    # Not exact-{} equality: commit c48b6a853d (2026-07-15, REQ-ARC-FCP-5699-15) made the plain
++    # path unconditionally pass a diagnostics= kwarg into plan_in_model, so captured[-1] now always
++    # carries a diagnostics dict regardless of goal_guidance_lambda. What this assertion actually
++    # cares about -- lambda=0 means no goal energy is supplied -- is still exactly captured below.
++    assert "goal_energy" not in captured[-1]
+ 
+ 
+ def test_scenario_arc_wmte_4821_builds_success_artifact_when_ci_excludes_zero() -> None:
+diff --git a/tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py b/tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py
+index 4eaee1b824..d9b90a693c 100644
+--- a/tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py
++++ b/tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py
+@@ -284,12 +284,14 @@ def test_req_arc_wmte_5727_e3_proposer_port_env_override(monkeypatch) -> None:
+     proposer = policy._proposer()
+ 
+     assert isinstance(proposer, LocalGGUFProposer)
+-    # Re-pinned 2026-07-28 (operator directive): the live generator is gemma-4-31B-it, and mtp is
+-    # OFF because that model declares no MTP heads -- leaving it on would emit
+-    # `--spec-type draft-mtp --model-draft <the same 18.3GB file>` and load the weights twice.
++    # Pin is gemma-4-31B-it-qat (repinned 2026-07-31, VRAM-only -- a 20-game head-to-head found
++    # QAT and Q4_K_M statistically indistinguishable on quality, sign test p=1.0; QAT saves ~1GB
++    # VRAM and matches the required QAT MTP drafter). mtp is OFF locally because the model DOES
++    # have MTP (a separate head file) but a 24GB card must offload ~14 FFN layers to fit it,
++    # costing more decode than MTP returns -- not because the model lacks MTP heads.
+     # This assertion reads the REAL `_proposer()`, so it is one of the sites that would catch a
+     # partial revert; see tests/python/test_arc_live_generator_pin.py for the full set.
+-    assert proposer.repo_substr == "gemma-4-31B-it"
++    assert proposer.repo_substr == "gemma-4-31B-it-qat"
+     assert proposer.port == 8922
+     assert proposer.mtp is False
+     assert proposer.kv_quant == "q8_0"
+-- 
+2.55.0
+

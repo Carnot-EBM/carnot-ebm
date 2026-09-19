@@ -1,0 +1,70 @@
+From 07fedb1e02d3744ca3caa3e7755deb91b3469052 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 10:20:08 -0400
+Subject: [PATCH 04825/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                    | 2 +-
+ ops/conductor-log.md                                            | 1 +
+ ops/conductor-state.json                                        | 2 +-
+ .../distributional_energy_verifier_musr_checkpoints/q0032.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0033.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0034.json  | 1 +
+ 6 files changed, 6 insertions(+), 2 deletions(-)
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0032.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0033.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0034.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9e3161ad5f..f52690bf87 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 132, "phase": "iteration_start", "last_beat": "2026-06-29T13:59:35Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 133, "phase": "iteration_start", "last_beat": "2026-06-29T14:20:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c59a885857..1b2c3dd770 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9580,3 +9580,4 @@ The contro |
+ | 2026-06-29 13:13 UTC | PHASE 0 (TRANSITION) -- archive .457 -> activate . | OK | 88 passed, 1 warning in 6.94s |
+ | 2026-06-29 13:39 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK ATTE | OK | 94 passed, 1 warning in 10.35s |
+ | 2026-06-29 13:57 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 91 passed, 1 warning in 12.47s |
++| 2026-06-29 14:18 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 87 passed, 1 warning in 11.54s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index eb2bc41e74..e2572993b8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 132, "phase": "iteration_start", "started_at": "2026-06-29T13:59:35Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 133, "phase": "iteration_start", "started_at": "2026-06-29T14:20:05Z"}
+\ No newline at end of file
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0032.json b/results/distributional_energy_verifier_musr_checkpoints/q0032.json
+new file mode 100644
+index 0000000000..ec2feb6526
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0032.json
+@@ -0,0 +1 @@
++{"q": 32, "gold": "Hugo", "n_choices": 2, "sc_answer": "Maria", "energy_answer": "Maria", "energy_pure_answer": "Maria", "judge_answer": "Maria", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Maria", "Maria", "Maria", "Maria", "Maria", "Maria", "Maria", "Maria"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0033.json b/results/distributional_energy_verifier_musr_checkpoints/q0033.json
+new file mode 100644
+index 0000000000..0e50ddbc30
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0033.json
+@@ -0,0 +1 @@
++{"q": 33, "gold": "Maria", "n_choices": 2, "sc_answer": "Maria", "energy_answer": "Hugo", "energy_pure_answer": "Hugo", "judge_answer": "Maria", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Maria", "Maria", "Maria", "Hugo", "Maria", "Hugo", "Hugo", "Hugo"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0034.json b/results/distributional_energy_verifier_musr_checkpoints/q0034.json
+new file mode 100644
+index 0000000000..60fce35667
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0034.json
+@@ -0,0 +1 @@
++{"q": 34, "gold": "Paige", "n_choices": 2, "sc_answer": "Alicia", "energy_answer": "Alicia", "energy_pure_answer": "Alicia", "judge_answer": "Alicia", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Alicia", "Alicia", "Alicia", "Alicia", "Alicia", "Alicia", "Paige", "Alicia"], "energy_abstained": false}
+-- 
+2.55.0
+

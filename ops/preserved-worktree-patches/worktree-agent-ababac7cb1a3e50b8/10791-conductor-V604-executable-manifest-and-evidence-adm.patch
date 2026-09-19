@@ -1,0 +1,4391 @@
+From 3f9712ce7a0e1472ef8535150d7cee44b3cfbf61 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 14:34:59 -0400
+Subject: [PATCH 10791/11362] [conductor] V604 executable manifest and evidence
+ admissibility contract
+
+Automated research step by research conductor.
+Task ID: exp6898-v604-evidence-admissibility-contract
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  132 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...98_v604_evidence_admissibility_contract.py | 1286 ++++++++++
+ ..._v604_evidence_admissibility_contract.json | 2214 +++++++++++++++++
+ ...98_v604_evidence_admissibility_contract.py |   23 +
+ ...98_v604_evidence_admissibility_contract.py |  665 +++++
+ 6 files changed, 4321 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6898_v604_evidence_admissibility_contract.py
+ create mode 100644 results/experiment_6898_v604_evidence_admissibility_contract.json
+ create mode 100644 scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py
+ create mode 100644 tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index eb1c287b3e..04ab269f6e 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -60767,3 +60767,135 @@ check passes.
+ **When** Exp6885 validates the terminal tail
+ **Then** the observed dependency remains explicit
+ **And** readiness is zero.
++
++### REQ-REPORT-6898: V604 Manifest And Evidence Admission SHALL Fail Closed
++
++Exp6898 SHALL compare the active V604 design and roadmap from their primary
++files. It SHALL require milestone `2026.09.604` and exactly 13 tasks. The task
++numbers SHALL be Exp6898 through Exp6910 in conductor order. Each task SHALL
++have a unique JSON deliverable under `results/`. Document and YAML rows SHALL
++preserve count, order, identifier, deliverable, and milestone differences.
++
++Every executable prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`,
++`TASK`, and `CONCRETE STEPS` sections. Its final two non-empty lines SHALL be
++its exact run command and `Do NOT push. Do NOT modify
++scripts/research_conductor.py.`
++
++Every `gated_on` row SHALL use an operator accepted by both the current roadmap
++schema and conductor gate evaluator. Its upstream SHALL exist earlier in the
++active roadmap. Its field SHALL appear in the upstream prompt's required
++artifact fields. Its value and full row SHALL match the design gate table.
++
++Every `prior_failures` row SHALL contain `experiment_id`, `verdict`,
++`addressed_by`, and `retire_if_same_verdict`. The declared verdict SHALL equal
++the primary artifact verdict. `addressed_by` SHALL be non-empty.
++`retire_if_same_verdict` SHALL be true.
++
++No document or YAML task SHALL gate on Exp6898. Exp6899, Exp6905, and Exp6906
++SHALL be present ungated science roots. Exp6910 SHALL be present and ungated.
++The V604 readiness score SHALL remain advisory and SHALL approve no scientific
++claim.
++
++The reducer SHALL rerun the current adversarial verifier on the required V603
++artifacts. A source with a current critical flag SHALL be inadmissible and
++quarantined. A claim that consumes an inadmissible source SHALL remain separate
++as transitive taint. Exp6887 SHALL remain inadmissible while its current
++critical flag exists. Exp6888 SHALL remain non-headline while it consumes
++Exp6887. Its lexical rule arm MAY remain described as locally qualified, but it
++SHALL NOT remove the source-level taint.
++
++The reducer SHALL emit one row per task-contract check and one row per
++artifact-admission check. It SHALL preserve hard failures, warnings, and
++transitive taint separately. `v604_manifest_contract_ready_score` SHALL equal
++one only when every document and YAML contract check passes.
++`v603_admissible_science_source_count` SHALL count only unflagged science
++sources with independent traceability.
++
++The reducer SHALL require a readable V604 design, the active roadmap, V603
++terminal artifacts, the exclusion manifest, and current schema, gate,
++prior-failure, gate-audit, and adversarial code. A failed precondition SHALL
++still produce a complete blocked artifact. Each failed check SHALL record its
++expected and observed values.
++
++The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
++`field_principles`, `preconditions_checked`, `inference_substrate`,
++`duration_s`, `source_artifact_hashes`, `rows`, `document_task_rows`,
++`yaml_task_rows`, `document_yaml_parity_rows`, `gate_contract_rows`,
++`prior_failure_contract_rows`, `prompt_ending_rows`, `branch_root_rows`,
++`ungated_tail_rows`, `adversarial_recheck_rows`, `artifact_admissibility_rows`,
++`dependency_taint_rows`, `quarantined_artifact_ids`, `task_count`,
++`experiment_range`, `random_seed`, `reproducibility_checksum`,
++`v604_manifest_contract_ready_score`, `v603_admissible_science_source_count`,
++`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. `field_principles` SHALL explain every required field and
++every advisory score.
++
++`inference_substrate` SHALL equal
++`deterministic_manifest_and_admissibility_audit_no_llm`.
++`verifier_is_oracle` SHALL be false. The verdict class SHALL use the closed
++project enum. The honest verdict SHALL start with `complete_`. A blocked
++artifact SHALL use
++`complete_blocked_v604_evidence_admissibility_contract`.
++
++#### SCENARIO-REPORT-6898-COUNT-ORDER: Count And Order Differences Fail Closed
++
++**Given** the design or active YAML has the wrong task count or conductor order
++**When** Exp6898 compares both primary files
++**Then** it preserves each document-only or YAML-only row
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-IDENTITY: IDs, Deliverables, And Milestones Match Exactly
++
++**Given** a task changes its identifier, deliverable, or milestone
++**When** Exp6898 compares the task contract
++**Then** it records the expected and observed values
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-PROMPT-END: Prompts End With Exact Commands
++
++**Given** a prompt lacks a required section or changes either final line
++**When** Exp6898 validates the executable prompt
++**Then** the prompt-ending row names the mismatch
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-GATE-FIELD: Gate Fields And Values Match Producers
++
++**Given** a gate changes its field, operator, or value
++**When** Exp6898 validates the design and producer contracts
++**Then** the gate row records the exact mismatch
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-MISSING-UPSTREAM: Missing Upstreams Fail Closed
++
++**Given** a gate names an absent or later upstream task
++**When** Exp6898 validates executable order
++**Then** the gate row preserves the missing producer
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-PRIOR-FAILURE: Prior-Failure Rows Stay Complete
++
++**Given** a prior-failure row omits or changes one required subfield
++**When** Exp6898 checks the primary prior artifact
++**Then** the row preserves every mismatch
++**And** readiness is zero.
++
++#### SCENARIO-REPORT-6898-FLAGGED-SOURCE: Critical Sources Are Quarantined
++
++**Given** the current adversarial verifier returns a critical flag for Exp6887
++**When** Exp6898 performs evidence admission
++**Then** Exp6887 is inadmissible and listed in `quarantined_artifact_ids`
++**And** it contributes zero to the admissible science source count.
++
++#### SCENARIO-REPORT-6898-DEPENDENCY-TAINT: Dependent Claims Stay Non-Headline
++
++**Given** Exp6888 consumes the quarantined Exp6887 artifact
++**When** Exp6898 follows declared source hashes
++**Then** it emits a separate transitive-taint row
++**And** Exp6888 remains non-headline even when its lexical rule arm qualifies.
++
++#### SCENARIO-REPORT-6898-UNGATED-TAIL: Independent Roots And Tail Stay Runnable
++
++**Given** Exp6899, Exp6905, Exp6906, or Exp6910 is absent or gated
++**When** Exp6898 validates branch isolation
++**Then** the observed dependency remains explicit
++**And** readiness is zero.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7e8226d278..13440b10be 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5260,
++  "experiments_checked": 5261,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6898_v604_evidence_admissibility_contract.py b/python/carnot/experiment_6898_v604_evidence_admissibility_contract.py
+new file mode 100644
+index 0000000000..24547af1f4
+--- /dev/null
++++ b/python/carnot/experiment_6898_v604_evidence_admissibility_contract.py
+@@ -0,0 +1,1286 @@
++"""Build the deterministic V604 manifest and evidence-admission receipt.
++
++The reducer keeps the roadmap contract separate from scientific admission.
++A clean manifest cannot approve science. A flagged source cannot enter a
++headline through a downstream reducer. See REQ-REPORT-6898.
++"""
++
++from __future__ import annotations
++
++import argparse
++import ast
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++import re
++import time
++from typing import Any, Callable, Mapping, Sequence
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++Verifier = Callable[[Path], Mapping[str, Any]]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT_PATH = Path("results/experiment_6898_v604_evidence_admissibility_contract.json")
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++ROADMAP_PATH = Path("research-roadmap.yaml")
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
++SCHEMA_PATH = Path("scripts/roadmap_schema.py")
++GATE_PATH = Path("scripts/conductor_gates.py")
++PRIOR_VALIDATOR_PATH = Path("scripts/validate_prior_failures.py")
++GATE_AUDIT_PATH = Path("scripts/audit_roadmap_gates.py")
++ADVERSARIAL_PATH = Path("scripts/adversarial_verify.py")
++V603_ARTIFACT_PATHS = {
++    6885: Path("results/experiment_6885_v603_executable_manifest_branch_contract.json"),
++    6887: Path("results/experiment_6887_three_family_relation_proposal_corpus.json"),
++    6888: Path("results/experiment_6888_independent_relation_qualification.json"),
++}
++V604_MILESTONE = "2026.09.604"
++EXPECTED_NUMBERS = tuple(range(6898, 6911))
++SCIENCE_SOURCE_IDS = frozenset({6887, 6888})
++INFERENCE_SUBSTRATE = "deterministic_manifest_and_admissibility_audit_no_llm"
++RANDOM_SEED = 6898
++PROMPT_SECTIONS = ("CONTEXT:", "EXISTING CODE TO READ FIRST:", "TASK:", "CONCRETE STEPS:")
++FINAL_SENTENCE = "Do NOT push. Do NOT modify scripts/research_conductor.py."
++BLOCKED_VERDICT = "complete_blocked_v604_evidence_admissibility_contract"
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++ROW_COLLECTION_FIELDS = (
++    "rows",
++    "document_task_rows",
++    "yaml_task_rows",
++    "document_yaml_parity_rows",
++    "gate_contract_rows",
++    "prior_failure_contract_rows",
++    "prompt_ending_rows",
++    "branch_root_rows",
++    "ungated_tail_rows",
++    "adversarial_recheck_rows",
++    "artifact_admissibility_rows",
++    "dependency_taint_rows",
++)
++REQUIRED_ARTIFACT_FIELDS = {
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    *ROW_COLLECTION_FIELDS,
++    "quarantined_artifact_ids",
++    "task_count",
++    "experiment_range",
++    "random_seed",
++    "reproducibility_checksum",
++    "v604_manifest_contract_ready_score",
++    "v603_admissible_science_source_count",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++}
++FIELD_PRINCIPLES = {
++    "schema": "A versioned shape lets later reducers reject incompatible receipts.",
++    "experiment_id": "The fixed identity binds this receipt to Exp6898.",
++    "run_date": "The date separates this audit from later roadmap states.",
++    "status": "A terminal status proves the audit completed its inventory.",
++    "field_principles": "A reason per field keeps later audits understandable.",
++    "preconditions_checked": "Exact source checks make missing evidence actionable.",
++    "inference_substrate": "The no-LLM declaration prevents this audit from posing as science.",
++    "duration_s": "Measured wall time shows that the deterministic reducer ran.",
++    "source_artifact_hashes": "Hashes bind conclusions to the exact primary bytes.",
++    "rows": "Combined task, contract, and admission rows prevent hidden omissions.",
++    "document_task_rows": "Document rows preserve the design as an independent source.",
++    "yaml_task_rows": "YAML rows preserve the executable queue seen by the conductor.",
++    "document_yaml_parity_rows": "One row per task exposes every identity and order mismatch.",
++    "gate_contract_rows": "Exact gate rows prevent dead or misspelled branch edges.",
++    "prior_failure_contract_rows": "Primary verdict checks stop unchanged failures returning silently.",
++    "prompt_ending_rows": "Exact endings prevent truncated or mutable run instructions.",
++    "branch_root_rows": "Root rows prove that the advisory audit cannot gate science.",
++    "ungated_tail_rows": "The tail row keeps terminal synthesis runnable after branch blocks.",
++    "adversarial_recheck_rows": "Fresh verifier output prevents stale flag decisions.",
++    "artifact_admissibility_rows": "One row per artifact makes every admission decision explicit.",
++    "dependency_taint_rows": "Separate taint rows stop a clean reducer from laundering a bad source.",
++    "quarantined_artifact_ids": "The exact quarantine set is machine-readable for later consumers.",
++    "task_count": "The fixed count detects partial roadmap activation before science dispatch.",
++    "experiment_range": "The inclusive range detects hidden gaps and reused task numbers.",
++    "random_seed": "The fixed seed states that this ordered audit has no hidden randomness.",
++    "reproducibility_checksum": "A content hash detects silent changes while ignoring elapsed time.",
++    "v604_manifest_contract_ready_score": "This advisory score covers document and YAML checks only.",
++    "v603_admissible_science_source_count": "This count includes only clean, traceable science sources.",
++    "gate_check_summary": "Expected and observed values make each blocked result actionable.",
++    "verifier_is_oracle": "False prevents this structural audit from approving a scientific claim.",
++    "verdict_class": "The closed class records the evidence boundary without free-form promotion.",
++    "honest_verdict": "The terminal prefix lets the conductor classify the completed audit safely.",
++}
++SOURCE_PATHS = {
++    "active_v604_roadmap": ROADMAP_PATH,
++    "v604_design": DESIGN_PATH,
++    "exclusion_manifest": EXCLUSION_PATH,
++    "roadmap_schema": SCHEMA_PATH,
++    "conductor_gates": GATE_PATH,
++    "prior_failure_validator": PRIOR_VALIDATOR_PATH,
++    "roadmap_gate_audit": GATE_AUDIT_PATH,
++    "adversarial_verifier": ADVERSARIAL_PATH,
++    "module": Path("python/carnot/experiment_6898_v604_evidence_admissibility_contract.py"),
++    "wrapper": Path("scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py"),
++    "focused_tests": Path(
++        "tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py"
++    ),
++    "spec": SPEC_PATH,
++    **{f"v603_exp{number}": path for number, path in V603_ARTIFACT_PATHS.items()},
++}
++
++
++def canonical_json(value: Any) -> bytes:
++    """Return stable UTF-8 bytes for a deterministic identity."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return a SHA-256 identity in the receipt's explicit format."""
++
++    return f"sha256:{hashlib.sha256(value).hexdigest()}"
++
++
++def sha256_path(path: Path) -> str | None:
++    """Hash one file and preserve absence as null evidence."""
++
++    return sha256_bytes(path.read_bytes()) if path.is_file() else None
++
++
++def experiment_number(value: Any) -> int | None:
++    """Read an experiment number without treating a Boolean as an integer."""
++
++    if isinstance(value, int) and not isinstance(value, bool):
++        return value
++    match = re.search(r"(?:exp|experiment_)?(\d+)", str(value or ""), re.IGNORECASE)
++    return int(match.group(1)) if match else None
++
++
++def _check(name: str, expected: Any, observed: Any, passed: bool) -> JsonDict:
++    """Create one check with exact expected and observed values."""
++
++    return {"check": name, "expected": expected, "observed": observed, "passed": bool(passed)}
++
++
++def gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Preserve all checks and expose the first failure for blocked artifacts."""
++
++    failures = [dict(row) for row in checks if row.get("passed") is not True]
++    first = failures[0] if failures else None
++    return {
++        "checks": [dict(row) for row in checks],
++        "passed": not failures,
++        "failed_check": first.get("check") if first else None,
++        "expected": first.get("expected") if first else "all checks pass",
++        "observed": first.get("observed") if first else "all checks pass",
++        "failed_checks": failures,
++    }
++
++
++def _task_id_from_deliverable(number: int, deliverable: str) -> str:
++    """Derive the executable task ID encoded by a standard result path."""
++
++    stem = Path(deliverable).stem
++    suffix = stem.removeprefix(f"experiment_{number}_").replace("_", "-")
++    return f"exp{number}-{suffix}"
++
++
++def _parse_condition(text: str) -> tuple[str, Any]:
++    """Parse the comparison form used by the design gate table."""
++
++    match = re.fullmatch(r"\s*(==|!=|>=|<=|>|<|exists|in)\s*(.*?)\s*", text)
++    if not match:
++        return text.strip(), None
++    raw = match.group(2)
++    return match.group(1), yaml.safe_load(raw) if raw else None
++
++
++def parse_design(text: str) -> JsonDict:
++    """Parse V604 task and gate rows independently from executable YAML."""
++
++    milestone_match = re.search(r"^\*\*Milestone:\*\*\s*`([^`]+)`", text, re.MULTILINE)
++    if not milestone_match:
++        raise ValueError("design milestone is required")
++    tasks: list[JsonDict] = []
++    sections = re.finditer(
++        r"^### Exp(?P<number>\d+): (?P<title>[^\n]+)\n(?P<body>.*?)(?=^### Exp\d+:|^## |\Z)",
++        text,
++        re.MULTILINE | re.DOTALL,
++    )
++    for match in sections:
++        number = int(match.group("number"))
++        if number not in EXPECTED_NUMBERS:
++            continue
++        found = re.search(r"\*\*Deliverable:\*\*\s*`([^`]+)`", match.group("body"))
++        if not found:
++            raise ValueError(f"Exp{number} design section is missing deliverable")
++        deliverable = found.group(1)
++        tasks.append(
++            {
++                "order": len(tasks) + 1,
++                "number": number,
++                "task_id": _task_id_from_deliverable(number, deliverable),
++                "title": match.group("title").strip(),
++                "milestone": milestone_match.group(1),
++                "deliverable": deliverable,
++                "gates": [],
++            }
++        )
++    by_number = {row["number"]: row for row in tasks}
++    pattern = re.compile(
++        r"^\|\s*Exp(?P<down>\d+)\s*\|\s*`exp(?P<up>\d+)\.(?P<field>[^`]+)`\s*"
++        r"\|\s*`(?P<condition>[^`]+)`\s*\|$",
++        re.MULTILINE,
++    )
++    for match in pattern.finditer(text):
++        downstream = int(match.group("down"))
++        upstream = int(match.group("up"))
++        if downstream not in by_number:
++            continue
++        op, value = _parse_condition(match.group("condition"))
++        upstream_id = by_number.get(upstream, {}).get("task_id", f"exp{upstream}-missing")
++        by_number[downstream]["gates"].append(
++            {
++                "upstream": upstream_id,
++                "artifact_field": match.group("field"),
++                "op": op,
++                "value": value,
++            }
++        )
++    return {"milestone": milestone_match.group(1), "tasks": tasks}
++
++
++def _required_fields(prompt: str) -> set[str]:
++    """Read field tokens only from the prompt's required-field paragraph."""
++
++    match = re.search(
++        r"REQUIRED ARTIFACT FIELDS:(.*?)(?:\n\s*\n|\n\s*Run command:|\Z)",
++        prompt,
++        re.IGNORECASE | re.DOTALL,
++    )
++    return set(re.findall(r"\b[a-z][a-z0-9_]+\b", match.group(1))) if match else set()
++
++
++def parse_roadmap(document: Any) -> JsonDict:
++    """Parse the active mapping while preserving exact gate and prior values."""
++
++    if not isinstance(document, Mapping):
++        raise ValueError("roadmap mapping is required")
++    values = document.get("tasks")
++    if not isinstance(values, list):
++        raise ValueError("roadmap tasks list is required")
++    rows: list[JsonDict] = []
++    for order, value in enumerate(values, 1):
++        if not isinstance(value, Mapping):
++            raise ValueError(f"malformed roadmap task at order {order}")
++        gates = value.get("gated_on", []) or []
++        priors = value.get("prior_failures", []) or []
++        if not isinstance(gates, list) or not isinstance(priors, list):
++            raise ValueError(f"malformed task lists at order {order}")
++        if any(not isinstance(gate, Mapping) for gate in gates):
++            raise ValueError(f"malformed gate at order {order}")
++        prompt = str(value.get("prompt") or "")
++        rows.append(
++            {
++                "order": order,
++                "number": experiment_number(value.get("id")),
++                "task_id": str(value.get("id") or ""),
++                "title": str(value.get("title") or ""),
++                "milestone": str(value.get("milestone") or ""),
++                "deliverable": str(value.get("deliverable") or ""),
++                "gates": [
++                    {
++                        "upstream": str(gate.get("upstream") or ""),
++                        "artifact_field": str(gate.get("artifact_field") or ""),
++                        "op": str(gate.get("op") or ""),
++                        "value": deepcopy(gate.get("value")),
++                    }
++                    for gate in gates
++                ],
++                "prior_failures": deepcopy(priors),
++                "prompt": prompt,
++                "required_fields": _required_fields(prompt),
++            }
++        )
++    return {"milestone": str(document.get("milestone") or ""), "tasks": rows}
++
++
++def schema_gate_operators(source: str) -> set[str]:
++    """Read allowed gate operators from the schema Literal declaration."""
++
++    tree = ast.parse(source)
++    for node in tree.body:
++        if isinstance(node, ast.Assign) and any(
++            isinstance(target, ast.Name) and target.id == "GateOp" for target in node.targets
++        ):
++            values = {
++                item.value
++                for item in ast.walk(node.value)
++                if isinstance(item, ast.Constant) and isinstance(item.value, str)
++            }
++            if values:
++                return values
++    raise ValueError("GateOp Literal declaration is missing")
++
++
++def conductor_gate_operators(source: str) -> set[str]:
++    """Read operator branches implemented by the current gate evaluator."""
++
++    tree = ast.parse(source)
++    function = next(
++        (
++            node
++            for node in tree.body
++            if isinstance(node, ast.FunctionDef) and node.name == "_eval_op"
++        ),
++        None,
++    )
++    if function is None:
++        raise ValueError("_eval_op is missing")
++    values: set[str] = set()
++    for node in ast.walk(function):
++        if not isinstance(node, ast.Compare) or not isinstance(node.left, ast.Name):
++            continue
++        if node.left.id != "op":
++            continue
++        for comparator in node.comparators:
++            values.update(
++                item.value
++                for item in ast.walk(comparator)
++                if isinstance(item, ast.Constant) and isinstance(item.value, str)
++            )
++    if not values:
++        raise ValueError("_eval_op has no operator branches")
++    return values
++
++
++def _shape(row: Mapping[str, Any] | None) -> JsonDict | None:
++    """Keep only task identity fields in public comparison rows."""
++
++    if row is None:
++        return None
++    return {
++        "order": row.get("order"),
++        "number": row.get("number"),
++        "task_id": row.get("task_id"),
++        "milestone": row.get("milestone"),
++        "deliverable": row.get("deliverable"),
++    }
++
++
++def _public_yaml_row(row: Mapping[str, Any]) -> JsonDict:
++    """Replace full prompt text with its content identity."""
++
++    return {
++        **_shape(row),
++        "title": row.get("title"),
++        "gates": deepcopy(row.get("gates", [])),
++        "prior_failure_count": len(row.get("prior_failures", [])),
++        "prompt_sha256": sha256_bytes(str(row.get("prompt") or "").encode()),
++    }
++
++
++def _task_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Emit one exact contract row for each required task position."""
++
++    rows: list[JsonDict] = []
++    for index, expected_number in enumerate(EXPECTED_NUMBERS):
++        document = document_tasks[index] if index < len(document_tasks) else None
++        executable = yaml_tasks[index] if index < len(yaml_tasks) else None
++        comparisons = {
++            "document_present": document is not None,
++            "yaml_present": executable is not None,
++            "document_order": bool(document and document.get("number") == expected_number),
++            "yaml_order": bool(executable and executable.get("number") == expected_number),
++            "task_id": bool(
++                document and executable and document.get("task_id") == executable.get("task_id")
++            ),
++            "deliverable": bool(
++                document
++                and executable
++                and document.get("deliverable") == executable.get("deliverable")
++            ),
++            "milestone": bool(
++                document and executable and document.get("milestone") == executable.get("milestone")
++            ),
++        }
++        rows.append(
++            {
++                "order": index + 1,
++                "expected_number": expected_number,
++                "document": _shape(document),
++                "yaml": _shape(executable),
++                "comparisons": comparisons,
++                "passed": all(comparisons.values()),
++            }
++        )
++    return rows
++
++
++def _prompt_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Check the required sections and exact final two non-empty lines."""
++
++    rows: list[JsonDict] = []
++    for index, number in enumerate(EXPECTED_NUMBERS):
++        document = document_tasks[index] if index < len(document_tasks) else None
++        executable = yaml_tasks[index] if index < len(yaml_tasks) else None
++        prompt = str(executable.get("prompt") or "") if executable else ""
++        lines = [line.strip() for line in prompt.splitlines() if line.strip()]
++        expected_command = None
++        if document:
++            stem = Path(str(document.get("deliverable") or "")).stem
++            expected_command = (
++                "Run command: cd {project_root} && .venv/bin/python "
++                f"scripts/experiments/{stem}.py --date {{date}}"
++            )
++        sections = {section: section in prompt for section in PROMPT_SECTIONS}
++        observed_command = lines[-2] if len(lines) >= 2 else None
++        observed_sentence = lines[-1] if lines else None
++        rows.append(
++            {
++                "order": index + 1,
++                "number": number,
++                "task_id": executable.get("task_id") if executable else None,
++                "required_sections": sections,
++                "expected_run_command": expected_command,
++                "observed_run_command": observed_command,
++                "expected_final_sentence": FINAL_SENTENCE,
++                "observed_final_sentence": observed_sentence,
++                "passed": bool(
++                    document
++                    and executable
++                    and all(sections.values())
++                    and observed_command == expected_command
++                    and observed_sentence == FINAL_SENTENCE
++                ),
++            }
++        )
++    return rows
++
++
++def _gate_rows(
++    document_tasks: Sequence[Mapping[str, Any]],
++    yaml_tasks: Sequence[Mapping[str, Any]],
++    valid_operators: set[str],
++) -> list[JsonDict]:
++    """Validate every gate against design, order, operator, and producer fields."""
++
++    document_by_number = {row.get("number"): row for row in document_tasks}
++    yaml_by_number = {row.get("number"): row for row in yaml_tasks}
++    yaml_by_id = {row.get("task_id"): row for row in yaml_tasks}
++    rows: list[JsonDict] = []
++    for number in EXPECTED_NUMBERS:
++        expected_gates = list(document_by_number.get(number, {}).get("gates", []))
++        observed_gates = list(yaml_by_number.get(number, {}).get("gates", []))
++        for index in range(max(len(expected_gates), len(observed_gates))):
++            expected = expected_gates[index] if index < len(expected_gates) else None
++            observed = observed_gates[index] if index < len(observed_gates) else None
++            upstream = yaml_by_id.get(observed.get("upstream")) if observed else None
++            field = str(observed.get("artifact_field") or "") if observed else ""
++            downstream = yaml_by_number.get(number)
++            checks = {
++                "matches_document": expected == observed,
++                "operator_valid": bool(observed and observed.get("op") in valid_operators),
++                "upstream_present": upstream is not None,
++                "upstream_earlier": bool(
++                    upstream
++                    and downstream
++                    and upstream.get("order", 0) < downstream.get("order", 0)
++                ),
++                "producer_field_declared": bool(
++                    upstream and field in upstream.get("required_fields", set())
++                ),
++                "advisory_manifest_not_consumed": experiment_number(
++                    observed.get("upstream") if observed else None
++                )
++                != 6898,
++            }
++            rows.append(
++                {
++                    "downstream_number": number,
++                    "gate_index": index,
++                    "expected": deepcopy(expected),
++                    "observed": deepcopy(observed),
++                    "checks": checks,
++                    "passed": all(checks.values()),
++                }
++            )
++    return rows
++
++
++def _prior_rows(
++    yaml_tasks: Sequence[Mapping[str, Any]], prior_artifacts: Mapping[str, Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Check all four prior-failure fields against exact primary artifacts."""
++
++    required = ("experiment_id", "verdict", "addressed_by", "retire_if_same_verdict")
++    rows: list[JsonDict] = []
++    for task in yaml_tasks:
++        for index, value in enumerate(task.get("prior_failures", [])):
++            prior = dict(value) if isinstance(value, Mapping) else {}
++            prior_id = prior.get("experiment_id")
++            primary = prior_artifacts.get(str(prior_id))
++            primary_verdict = primary.get("honest_verdict") if primary else None
++            failed = [field for field in required if field not in prior]
++            if not isinstance(prior_id, str) or experiment_number(prior_id) is None:
++                failed.append("experiment_id")
++            if primary_verdict != prior.get("verdict"):
++                failed.append("verdict")
++            if (
++                not isinstance(prior.get("addressed_by"), str)
++                or not prior.get("addressed_by", "").strip()
++            ):
++                failed.append("addressed_by")
++            if prior.get("retire_if_same_verdict") is not True:
++                failed.append("retire_if_same_verdict")
++            rows.append(
++                {
++                    "task_id": task.get("task_id"),
++                    "prior_index": index,
++                    "experiment_id": prior_id,
++                    "declared_verdict": prior.get("verdict"),
++                    "primary_verdict": primary_verdict,
++                    "addressed_by": prior.get("addressed_by"),
++                    "retire_if_same_verdict": prior.get("retire_if_same_verdict"),
++                    "failed_subfields": list(dict.fromkeys(failed)),
++                    "passed": not failed,
++                }
++            )
++    return rows
++
++
++def _branch_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Prove three science roots, no advisory fanout, and one ungated tail."""
++
++    document_by_number = {row.get("number"): row for row in document_tasks}
++    yaml_by_number = {row.get("number"): row for row in yaml_tasks}
++    document_consumers = [
++        task.get("task_id")
++        for task in document_tasks
++        if any(experiment_number(gate.get("upstream")) == 6898 for gate in task.get("gates", []))
++    ]
++    yaml_consumers = [
++        task.get("task_id")
++        for task in yaml_tasks
++        if any(experiment_number(gate.get("upstream")) == 6898 for gate in task.get("gates", []))
++    ]
++    roots = [
++        {
++            "kind": "advisory_manifest_fanout",
++            "number": 6898,
++            "document_consumers": document_consumers,
++            "yaml_consumers": yaml_consumers,
++            "passed": not document_consumers and not yaml_consumers,
++        }
++    ]
++    for number in (6899, 6905, 6906):
++        document = document_by_number.get(number)
++        executable = yaml_by_number.get(number)
++        roots.append(
++            {
++                "kind": "independent_science_root",
++                "number": number,
++                "document_present_ungated": bool(document and not document.get("gates")),
++                "yaml_present_ungated": bool(executable and not executable.get("gates")),
++                "observed_gates": deepcopy(executable.get("gates", [])) if executable else None,
++                "passed": bool(
++                    document
++                    and executable
++                    and not document.get("gates")
++                    and not executable.get("gates")
++                ),
++            }
++        )
++    document = document_by_number.get(6910)
++    executable = yaml_by_number.get(6910)
++    tails = [
++        {
++            "number": 6910,
++            "document_present_ungated": bool(document and not document.get("gates")),
++            "yaml_present_ungated": bool(executable and not executable.get("gates")),
++            "observed_gates": deepcopy(executable.get("gates", [])) if executable else None,
++            "passed": bool(
++                document
++                and executable
++                and not document.get("gates")
++                and not executable.get("gates")
++            ),
++        }
++    ]
++    return roots, tails
++
++
++def evaluate_manifest_contract(
++    design_text: str,
++    roadmap: Mapping[str, Any],
++    prior_artifacts: Mapping[str, Mapping[str, Any]],
++    schema_source: str,
++    gate_source: str,
++) -> JsonDict:
++    """Evaluate the complete V604 document and executable YAML contract."""
++
++    document = parse_design(design_text)
++    executable = parse_roadmap(roadmap)
++    document_tasks = document["tasks"]
++    yaml_tasks = executable["tasks"]
++    valid_operators = schema_gate_operators(schema_source) & conductor_gate_operators(gate_source)
++    task_rows = _task_rows(document_tasks, yaml_tasks)
++    prompt_rows = _prompt_rows(document_tasks, yaml_tasks)
++    gate_rows = _gate_rows(document_tasks, yaml_tasks, valid_operators)
++    prior_rows = _prior_rows(yaml_tasks, prior_artifacts)
++    root_rows, tail_rows = _branch_rows(document_tasks, yaml_tasks)
++    document_numbers = [row["number"] for row in document_tasks]
++    yaml_numbers = [row["number"] for row in yaml_tasks]
++    document_deliverables = [row["deliverable"] for row in document_tasks]
++    yaml_deliverables = [row["deliverable"] for row in yaml_tasks]
++    document_ok = (
++        document["milestone"] == V604_MILESTONE
++        and document_numbers == list(EXPECTED_NUMBERS)
++        and len(document_deliverables) == len(set(document_deliverables)) == 13
++        and all(
++            path.startswith("results/") and path.endswith(".json") for path in document_deliverables
++        )
++    )
++    yaml_ok = (
++        executable["milestone"] == V604_MILESTONE
++        and yaml_numbers == list(EXPECTED_NUMBERS)
++        and len({row["task_id"] for row in yaml_tasks}) == 13
++        and len(yaml_deliverables) == len(set(yaml_deliverables)) == 13
++        and all(
++            path.startswith("results/") and path.endswith(".json") for path in yaml_deliverables
++        )
++        and all(row["milestone"] == V604_MILESTONE for row in yaml_tasks)
++    )
++    checks = [
++        _check(
++            "document_primary_contract",
++            {"milestone": V604_MILESTONE, "task_count": 13, "numbers": list(EXPECTED_NUMBERS)},
++            {
++                "milestone": document["milestone"],
++                "task_count": len(document_tasks),
++                "numbers": document_numbers,
++            },
++            document_ok,
++        ),
++        _check(
++            "yaml_executable_contract",
++            {"milestone": V604_MILESTONE, "task_count": 13, "numbers": list(EXPECTED_NUMBERS)},
++            {
++                "milestone": executable["milestone"],
++                "task_count": len(yaml_tasks),
++                "numbers": yaml_numbers,
++            },
++            yaml_ok,
++        ),
++        _check(
++            "document_yaml_task_contract",
++            True,
++            all(row["passed"] for row in task_rows),
++            all(row["passed"] for row in task_rows),
++        ),
++        _check(
++            "prompt_contract",
++            True,
++            all(row["passed"] for row in prompt_rows),
++            all(row["passed"] for row in prompt_rows),
++        ),
++        _check(
++            "gate_contract",
++            True,
++            all(row["passed"] for row in gate_rows),
++            all(row["passed"] for row in gate_rows),
++        ),
++        _check(
++            "prior_failure_contract",
++            True,
++            all(row["passed"] for row in prior_rows),
++            all(row["passed"] for row in prior_rows),
++        ),
++        _check(
++            "branch_root_isolation",
++            True,
++            all(row["passed"] for row in root_rows),
++            all(row["passed"] for row in root_rows),
++        ),
++        _check(
++            "ungated_terminal_tail",
++            True,
++            all(row["passed"] for row in tail_rows),
++            all(row["passed"] for row in tail_rows),
++        ),
++    ]
++    hard_failures = [
++        {"hard_failure": row["check"], "expected": row["expected"], "observed": row["observed"]}
++        for row in checks
++        if not row["passed"]
++    ]
++    return {
++        "passed": not hard_failures,
++        "checks": checks,
++        "document_task_rows": deepcopy(document_tasks),
++        "yaml_task_rows": [_public_yaml_row(row) for row in yaml_tasks],
++        "document_yaml_parity_rows": task_rows,
++        "gate_contract_rows": gate_rows,
++        "prior_failure_contract_rows": prior_rows,
++        "prompt_ending_rows": prompt_rows,
++        "branch_root_rows": root_rows,
++        "ungated_tail_rows": tail_rows,
++        "hard_failures": hard_failures,
++    }
++
++
++def _dependency_ids(artifact: Mapping[str, Any]) -> set[int]:
++    """Read declared source experiment IDs from hash keys and source paths."""
++
++    dependencies: set[int] = set()
++    sources = artifact.get("source_artifact_hashes", {})
++    if not isinstance(sources, Mapping):
++        return dependencies
++    for key, value in sources.items():
++        number = experiment_number(key)
++        if number is not None:
++            dependencies.add(number)
++        if isinstance(value, Mapping):
++            path_number = experiment_number(value.get("path"))
++            if path_number is not None:
++                dependencies.add(path_number)
++    return dependencies
++
++
++def evaluate_evidence_admission(
++    artifacts: Mapping[int, Mapping[str, Any]], rechecks: Mapping[int, Mapping[str, Any]]
++) -> JsonDict:
++    """Quarantine current critical sources and every claim that consumes them."""
++
++    critical_ids: set[int] = set()
++    hard_failures: list[JsonDict] = []
++    warnings: list[JsonDict] = []
++    recheck_rows: list[JsonDict] = []
++    for number in V603_ARTIFACT_PATHS:
++        report = dict(rechecks.get(number, {}))
++        flags = [dict(flag) for flag in report.get("flags", []) if isinstance(flag, Mapping)]
++        critical = [flag for flag in flags if str(flag.get("severity", "")).lower() == "critical"]
++        if critical:
++            critical_ids.add(number)
++            hard_failures.extend({"experiment_id": number, **flag} for flag in critical)
++        warnings.extend(
++            {"experiment_id": number, **flag}
++            for flag in flags
++            if str(flag.get("severity", "")).lower() == "warn"
++        )
++        recheck_rows.append(
++            {
++                "experiment_id": number,
++                "loaded": report.get("loaded") is True,
++                "flag_count": report.get("flag_count", len(flags)),
++                "max_severity": report.get("max_severity"),
++                "flags": flags,
++                "gate_version": report.get("gate_version"),
++            }
++        )
++    quarantined = set(critical_ids)
++    taint_rows: list[JsonDict] = []
++    changed = True
++    while changed:
++        changed = False
++        for number, artifact in artifacts.items():
++            if number in quarantined:
++                continue
++            tainted_by = sorted(_dependency_ids(artifact) & quarantined)
++            if not tainted_by:
++                continue
++            quarantined.add(number)
++            changed = True
++            taint_rows.append(
++                {
++                    "claim_experiment_id": number,
++                    "source_experiment_id": tainted_by[0],
++                    "all_tainted_sources": tainted_by,
++                    "taint_kind": "transitive_source_quarantine",
++                    "headline_eligible": False,
++                }
++            )
++    admission_rows: list[JsonDict] = []
++    for number in V603_ARTIFACT_PATHS:
++        artifact = artifacts.get(number, {})
++        report = rechecks.get(number, {})
++        critical_kinds = sorted(
++            str(flag.get("kind"))
++            for flag in report.get("flags", [])
++            if isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        )
++        traceable = bool(artifact.get("source_artifact_hashes"))
++        failures: list[str] = []
++        if report.get("loaded") is not True:
++            failures.append("adversarial_recheck_not_loaded")
++        if critical_kinds:
++            failures.append("current_critical_flag")
++        if not traceable:
++            failures.append("independent_traceability_missing")
++        if number in quarantined and number not in critical_ids:
++            failures.append("transitive_dependency_taint")
++        qualified_arms = sorted(
++            str(row.get("arm"))
++            for row in artifact.get("eligible_arm_rows", [])
++            if isinstance(row, Mapping) and row.get("passed") is True
++        )
++        science_source = number in SCIENCE_SOURCE_IDS
++        admissible = not failures
++        admission_rows.append(
++            {
++                "experiment_id": number,
++                "science_source": science_source,
++                "terminal": bool(artifact.get("honest_verdict")),
++                "independently_traceable": traceable,
++                "critical_flag_kinds": critical_kinds,
++                "dependency_ids": sorted(_dependency_ids(artifact)),
++                "locally_qualified_arms": qualified_arms,
++                "admission_failures": failures,
++                "admissible": admissible,
++                "headline_eligible": bool(science_source and admissible),
++                "quarantined": number in quarantined,
++            }
++        )
++    count = sum(row["science_source"] and row["admissible"] for row in admission_rows)
++    return {
++        "adversarial_recheck_rows": recheck_rows,
++        "artifact_admissibility_rows": admission_rows,
++        "dependency_taint_rows": taint_rows,
++        "quarantined_artifact_ids": sorted(quarantined),
++        "v603_admissible_science_source_count": count,
++        "warnings": warnings,
++        "hard_failures": hard_failures,
++    }
++
++
++def read_yaml_mapping(path: Path) -> tuple[JsonDict | None, str | None]:
++    """Read one YAML mapping and return a stable failure label."""
++
++    if not path.is_file():
++        return None, "missing"
++    try:
++        value = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, UnicodeError, yaml.YAMLError) as exc:
++        return None, f"invalid_yaml:{type(exc).__name__}"
++    if not isinstance(value, Mapping):
++        return None, "yaml_mapping_required"
++    return dict(value), None
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict | None, str | None]:
++    """Read one JSON object and retain its exact failure class."""
++
++    if not path.is_file():
++        return None, "missing"
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
++        return None, f"invalid_json:{type(exc).__name__}"
++    if not isinstance(value, Mapping):
++        return None, "json_object_required"
++    return dict(value), None
++
++
++def _prior_artifact_path(root: Path, experiment_id: Any) -> Path | None:
++    """Map an exact prior task ID to its primary result path."""
++
++    match = re.fullmatch(r"exp(\d+)-(.+)", str(experiment_id or ""), re.IGNORECASE)
++    if not match:
++        return None
++    suffix = match.group(2).replace("-", "_")
++    return root / "results" / f"experiment_{match.group(1)}_{suffix}.json"
++
++
++def _load_prior_artifacts(
++    root: Path, tasks: Sequence[Mapping[str, Any]]
++) -> tuple[dict[str, JsonDict], list[JsonDict]]:
++    """Load the primary artifact declared by every prior-failure row."""
++
++    artifacts: dict[str, JsonDict] = {}
++    rows: list[JsonDict] = []
++    for task in tasks:
++        for prior in task.get("prior_failures", []):
++            prior_id = prior.get("experiment_id") if isinstance(prior, Mapping) else None
++            path = _prior_artifact_path(root, prior_id)
++            payload, error = read_json_mapping(path) if path else (None, "invalid_id")
++            if payload is not None:
++                artifacts[str(prior_id)] = payload
++            rows.append(
++                {
++                    "experiment_id": prior_id,
++                    "path": path.relative_to(root).as_posix() if path else None,
++                    "sha256": sha256_path(path) if path else None,
++                    "error": error,
++                }
++            )
++    return artifacts, rows
++
++
++def _empty_evaluation(error: str) -> JsonDict:
++    """Return complete empty collections when primary parsing cannot continue."""
++
++    return {
++        "passed": False,
++        "checks": [_check("contract_evaluation", "valid primary records", error, False)],
++        "document_task_rows": [],
++        "yaml_task_rows": [],
++        "document_yaml_parity_rows": [],
++        "gate_contract_rows": [],
++        "prior_failure_contract_rows": [],
++        "prompt_ending_rows": [],
++        "branch_root_rows": [],
++        "ungated_tail_rows": [],
++        "hard_failures": [{"hard_failure": "contract_evaluation", "observed": error}],
++    }
++
++
++def _empty_admission() -> JsonDict:
++    """Return empty evidence rows when required artifacts cannot be read."""
++
++    return {
++        "adversarial_recheck_rows": [],
++        "artifact_admissibility_rows": [],
++        "dependency_taint_rows": [],
++        "quarantined_artifact_ids": [],
++        "v603_admissible_science_source_count": 0,
++        "warnings": [],
++        "hard_failures": [],
++    }
++
++
++def _source_hashes(root: Path, prior_rows: Sequence[Mapping[str, Any]]) -> dict[str, JsonDict]:
++    """Bind all required, implementation, and prior sources to exact bytes."""
++
++    rows = {
++        name: {"path": path.as_posix(), "sha256": sha256_path(root / path)}
++        for name, path in SOURCE_PATHS.items()
++    }
++    for index, row in enumerate(prior_rows):
++        rows[f"prior_{index}_{row.get('experiment_id')}"] = {
++            "path": row.get("path"),
++            "sha256": row.get("sha256"),
++            "error": row.get("error"),
++        }
++    return rows
++
++
++def _checksum_value(value: Any) -> Any:
++    """Remove only elapsed time and the checksum from reproducible content."""
++
++    if isinstance(value, Mapping):
++        return {
++            key: _checksum_value(item)
++            for key, item in value.items()
++            if key not in {"duration_s", "reproducibility_checksum"}
++        }
++    if isinstance(value, list):
++        return [_checksum_value(item) for item in value]
++    return value
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash all deterministic content in the complete receipt."""
++
++    return sha256_bytes(canonical_json(_checksum_value(dict(artifact))))
++
++
++def _default_verifier(path: Path) -> Mapping[str, Any]:
++    """Run the current on-disk adversarial verifier on one artifact."""
++
++    from scripts.adversarial_verify import verify_artifact
++
++    return verify_artifact(path)
++
++
++def build_artifact(root: Path, run_date: str, verifier: Verifier | None = None) -> JsonDict:
++    """Build a complete positive or blocked V604 audit receipt."""
++
++    started = time.perf_counter()
++    source_errors: list[JsonDict] = []
++    roadmap, roadmap_error = read_yaml_mapping(root / ROADMAP_PATH)
++    exclusion, exclusion_error = read_yaml_mapping(root / EXCLUSION_PATH)
++    text_sources: dict[str, str] = {}
++    for name, path in (
++        ("v604_design", DESIGN_PATH),
++        ("roadmap_schema", SCHEMA_PATH),
++        ("conductor_gates", GATE_PATH),
++        ("prior_failure_validator", PRIOR_VALIDATOR_PATH),
++        ("roadmap_gate_audit", GATE_AUDIT_PATH),
++        ("adversarial_verifier", ADVERSARIAL_PATH),
++    ):
++        try:
++            text_sources[name] = (root / path).read_text(encoding="utf-8")
++            if not text_sources[name]:
++                source_errors.append({"source": name, "error": "empty"})
++        except (OSError, UnicodeError) as exc:
++            text_sources[name] = ""
++            source_errors.append({"source": name, "error": f"unreadable:{type(exc).__name__}"})
++    for name, error in (
++        ("active_v604_roadmap", roadmap_error),
++        ("exclusion_manifest", exclusion_error),
++    ):
++        if error:
++            source_errors.append({"source": name, "error": error})
++    artifacts: dict[int, JsonDict] = {}
++    for number, path in V603_ARTIFACT_PATHS.items():
++        payload, error = read_json_mapping(root / path)
++        terminal = bool(payload and payload.get("honest_verdict") and payload.get("status"))
++        if error or not terminal:
++            source_errors.append(
++                {"source": path.as_posix(), "error": error or "terminal_artifact_required"}
++            )
++        if payload is not None:
++            artifacts[number] = payload
++    raw_tasks = roadmap.get("tasks", []) if roadmap else []
++    prior_artifacts, prior_rows = _load_prior_artifacts(
++        root, [task for task in raw_tasks if isinstance(task, Mapping)]
++    )
++    source_errors.extend(
++        {"source": row.get("path") or row.get("experiment_id"), "error": row["error"]}
++        for row in prior_rows
++        if row.get("error")
++    )
++    try:
++        design = parse_design(text_sources["v604_design"])
++        if design["milestone"] != V604_MILESTONE or [
++            row["number"] for row in design["tasks"]
++        ] != list(EXPECTED_NUMBERS):
++            source_errors.append(
++                {
++                    "source": "v604_design",
++                    "error": "v604_design_contract_required",
++                    "observed_milestone": design["milestone"],
++                    "observed_numbers": [row["number"] for row in design["tasks"]],
++                }
++            )
++        evaluation = evaluate_manifest_contract(
++            text_sources["v604_design"],
++            roadmap or {},
++            prior_artifacts,
++            text_sources["roadmap_schema"],
++            text_sources["conductor_gates"],
++        )
++    except (ValueError, SyntaxError, yaml.YAMLError) as exc:
++        source_errors.append({"source": "contract_evaluation", "error": str(exc)})
++        evaluation = _empty_evaluation(str(exc))
++    admission = _empty_admission()
++    if len(artifacts) == len(V603_ARTIFACT_PATHS):
++        reports: dict[int, Mapping[str, Any]] = {}
++        checker = verifier or _default_verifier
++        for number, path in V603_ARTIFACT_PATHS.items():
++            try:
++                reports[number] = checker(root / path)
++            except Exception as exc:  # The artifact must record verifier failure, not disappear.
++                source_errors.append(
++                    {"source": path.as_posix(), "error": f"verifier_failed:{type(exc).__name__}"}
++                )
++                reports[number] = {"loaded": False, "flags": []}
++        admission = evaluate_evidence_admission(artifacts, reports)
++        for row in admission["adversarial_recheck_rows"]:
++            if row["loaded"] is not True:
++                source_errors.append(
++                    {
++                        "source": f"exp{row['experiment_id']}",
++                        "error": "adversarial_recheck_not_loaded",
++                    }
++                )
++    preconditions = gate_summary(
++        [_check("required_source_readability", [], source_errors, not source_errors)]
++    )
++    checks = [
++        _check(
++            "preconditions",
++            "all required sources readable",
++            source_errors or "all required sources readable",
++            preconditions["passed"],
++        ),
++        *evaluation["checks"],
++    ]
++    ready = all(row["passed"] for row in checks)
++    checks.append(_check("v604_manifest_contract_ready_score", 1, int(ready), ready))
++    summary = gate_summary(checks)
++    contract_failures = [
++        {"hard_failure": row["check"], "expected": row["expected"], "observed": row["observed"]}
++        for row in checks
++        if not row["passed"]
++    ]
++    rows = [
++        {"row_type": "task_contract", **deepcopy(row)}
++        for row in evaluation["document_yaml_parity_rows"]
++    ]
++    rows.extend({"row_type": "contract_check", **deepcopy(row)} for row in checks)
++    rows.extend(
++        {"row_type": "artifact_admission", **deepcopy(row)}
++        for row in admission["artifact_admissibility_rows"]
++    )
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_6898.v604_evidence_admissibility_contract.v1",
++        "experiment_id": 6898,
++        "run_date": f"{run_date[:4]}-{run_date[4:6]}-{run_date[6:8]}",
++        "status": "complete" if ready else "complete_blocked",
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": 0.0,
++        "source_artifact_hashes": _source_hashes(root, prior_rows),
++        "rows": rows,
++        "document_task_rows": evaluation["document_task_rows"],
++        "yaml_task_rows": evaluation["yaml_task_rows"],
++        "document_yaml_parity_rows": evaluation["document_yaml_parity_rows"],
++        "gate_contract_rows": evaluation["gate_contract_rows"],
++        "prior_failure_contract_rows": evaluation["prior_failure_contract_rows"],
++        "prompt_ending_rows": evaluation["prompt_ending_rows"],
++        "branch_root_rows": evaluation["branch_root_rows"],
++        "ungated_tail_rows": evaluation["ungated_tail_rows"],
++        "adversarial_recheck_rows": admission["adversarial_recheck_rows"],
++        "artifact_admissibility_rows": admission["artifact_admissibility_rows"],
++        "dependency_taint_rows": admission["dependency_taint_rows"],
++        "quarantined_artifact_ids": admission["quarantined_artifact_ids"],
++        "task_count": 13,
++        "experiment_range": [6898, 6910],
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "v604_manifest_contract_ready_score": int(ready),
++        "v603_admissible_science_source_count": admission["v603_admissible_science_source_count"],
++        "gate_check_summary": summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "positive" if ready else "blocked",
++        "honest_verdict": (
++            "complete_positive_v604_manifest_and_evidence_admissibility_contract"
++            if ready
++            else BLOCKED_VERDICT
++        ),
++        "warnings": admission["warnings"],
++        "hard_failures": [*contract_failures, *admission["hard_failures"]],
++        "transitive_taint": deepcopy(admission["dependency_taint_rows"]),
++    }
++    artifact["duration_s"] = round(time.perf_counter() - started, 6)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _ready_from_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Recompute readiness without trusting the advisory score itself."""
++
++    summary = artifact.get("gate_check_summary")
++    checks = summary.get("checks", []) if isinstance(summary, Mapping) else []
++    base = [
++        row
++        for row in checks
++        if isinstance(row, Mapping) and row.get("check") != "v604_manifest_contract_ready_score"
++    ]
++    return bool(base) and all(row.get("passed") is True for row in base)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Validate fields, principles, scores, terminal shape, and checksum."""
++
++    errors: list[str] = []
++    missing = sorted(REQUIRED_ARTIFACT_FIELDS - set(artifact))
++    if missing:
++        errors.append(f"missing_required_fields:{','.join(missing)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or not REQUIRED_ARTIFACT_FIELDS.issubset(principles):
++        errors.append("field_principles_missing")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++    if artifact.get("verdict_class") not in CLOSED_VERDICT_CLASSES:
++        errors.append("invalid_verdict_class")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete_"):
++        errors.append("honest_verdict_not_terminal")
++    ready = int(_ready_from_artifact(artifact))
++    if artifact.get("v604_manifest_contract_ready_score") != ready:
++        errors.append("readiness_recomputation_mismatch")
++    science_count = sum(
++        row.get("science_source") is True and row.get("admissible") is True
++        for row in artifact.get("artifact_admissibility_rows", [])
++        if isinstance(row, Mapping)
++    )
++    if artifact.get("v603_admissible_science_source_count") != science_count:
++        errors.append("science_source_count_mismatch")
++    if ready:
++        if artifact.get("status") != "complete" or artifact.get("verdict_class") != "positive":
++            errors.append("ready_terminal_shape_mismatch")
++    elif (
++        artifact.get("status") != "complete_blocked"
++        or artifact.get("verdict_class") != "blocked"
++        or artifact.get("honest_verdict") != BLOCKED_VERDICT
++    ):
++        errors.append("blocked_terminal_shape_mismatch")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write only the requested new receipt after complete serialization."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix(path.suffix + ".tmp")
++    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    temporary.replace(path)
++
++
++def _date_argument(value: str) -> str:
++    """Reject ambiguous execution dates before reading evidence."""
++
++    if not re.fullmatch(r"\d{8}", value):
++        raise argparse.ArgumentTypeError("date must use YYYYMMDD")
++    return value
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Write and validate the receipt at its append-only output path."""
++
++    parser = argparse.ArgumentParser(description=__doc__, exit_on_error=False)
++    parser.add_argument("--date", required=True, type=_date_argument)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / OUTPUT_PATH)
++    try:
++        args = parser.parse_args(argv)
++    except (argparse.ArgumentError, SystemExit):
++        return 2
++    artifact = build_artifact(REPO_ROOT, args.date)
++    errors = validate_artifact(artifact)
++    write_json_atomic(args.output, artifact)
++    if errors:
++        print(json.dumps({"validation_errors": errors}, sort_keys=True))
++        return 1
++    print(
++        json.dumps(
++            {
++                "output": str(args.output),
++                "ready": artifact["v604_manifest_contract_ready_score"],
++                "admissible_science_sources": artifact["v603_admissible_science_source_count"],
++                "verdict": artifact["honest_verdict"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - the repository wrapper owns this path
++    raise SystemExit(main())
+diff --git a/results/experiment_6898_v604_evidence_admissibility_contract.json b/results/experiment_6898_v604_evidence_admissibility_contract.json
+new file mode 100644
+index 0000000000..ef2b526f31
+--- /dev/null
++++ b/results/experiment_6898_v604_evidence_admissibility_contract.json
+@@ -0,0 +1,2214 @@
++{
++  "adversarial_recheck_rows": [
++    {
++      "experiment_id": 6885,
++      "flag_count": 0,
++      "flags": [],
++      "gate_version": null,
++      "loaded": false,
++      "max_severity": null
++    },
++    {
++      "experiment_id": 6887,
++      "flag_count": 0,
++      "flags": [],
++      "gate_version": null,
++      "loaded": false,
++      "max_severity": null
++    },
++    {
++      "experiment_id": 6888,
++      "flag_count": 0,
++      "flags": [],
++      "gate_version": null,
++      "loaded": false,
++      "max_severity": null
++    }
++  ],
++  "artifact_admissibility_rows": [
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        602,
++        603,
++        5786,
++        5909,
++        5923,
++        6874,
++        6875,
++        6885
++      ],
++      "experiment_id": 6885,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [],
++      "quarantined": false,
++      "science_source": false,
++      "terminal": true
++    },
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        6274,
++        6886
++      ],
++      "experiment_id": 6887,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [],
++      "quarantined": false,
++      "science_source": true,
++      "terminal": true
++    },
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        6274,
++        6886,
++        6887
++      ],
++      "experiment_id": 6888,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [
++        "rule:anchored_lexical_v1"
++      ],
++      "quarantined": false,
++      "science_source": true,
++      "terminal": true
++    }
++  ],
++  "branch_root_rows": [
++    {
++      "document_consumers": [],
++      "kind": "advisory_manifest_fanout",
++      "number": 6898,
++      "passed": true,
++      "yaml_consumers": []
++    },
++    {
++      "document_present_ungated": false,
++      "kind": "independent_science_root",
++      "number": 6899,
++      "observed_gates": [],
++      "passed": false,
++      "yaml_present_ungated": true
++    },
++    {
++      "document_present_ungated": false,
++      "kind": "independent_science_root",
++      "number": 6905,
++      "observed_gates": null,
++      "passed": false,
++      "yaml_present_ungated": false
++    },
++    {
++      "document_present_ungated": false,
++      "kind": "independent_science_root",
++      "number": 6906,
++      "observed_gates": null,
++      "passed": false,
++      "yaml_present_ungated": false
++    }
++  ],
++  "dependency_taint_rows": [],
++  "document_task_rows": [],
++  "document_yaml_parity_rows": [
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6898,
++      "order": 1,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6898_v604_evidence_admissibility_contract.json",
++        "milestone": "2026.09.604",
++        "number": 6898,
++        "order": 1,
++        "task_id": "exp6898-v604-evidence-admissibility-contract"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6899,
++      "order": 2,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6899_live_relation_acquisition_canary.json",
++        "milestone": "2026.09.604",
++        "number": 6899,
++        "order": 2,
++        "task_id": "exp6899-live-relation-acquisition-canary"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6900,
++      "order": 3,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6900_authentic_anchored_relation_corpus.json",
++        "milestone": "2026.09.604",
++        "number": 6900,
++        "order": 3,
++        "task_id": "exp6900-authentic-anchored-relation-corpus"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6901,
++      "order": 4,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6901_independent_model_relation_qualification.json",
++        "milestone": "2026.09.604",
++        "number": 6901,
++        "order": 4,
++        "task_id": "exp6901-independent-model-relation-qualification"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6902,
++      "order": 5,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json",
++        "milestone": "2026.09.604",
++        "number": 6902,
++        "order": 5,
++        "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6903,
++      "order": 6,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6903_bounded_relation_memory_self_learning.json",
++        "milestone": "2026.09.604",
++        "number": 6903,
++        "order": 6,
++        "task_id": "exp6903-bounded-relation-memory-self-learning"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6904,
++      "order": 7,
++      "passed": false,
++      "yaml": {
++        "deliverable": "results/experiment_6904_sealed_self_learning_support_audit.json",
++        "milestone": "2026.09.604",
++        "number": 6904,
++        "order": 7,
++        "task_id": "exp6904-sealed-self-learning-support-audit"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6905,
++      "order": 8,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6906,
++      "order": 9,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6907,
++      "order": 10,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6908,
++      "order": 11,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6909,
++      "order": 12,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6910,
++      "order": 13,
++      "passed": false,
++      "yaml": null
++    }
++  ],
++  "duration_s": 0.63381,
++  "experiment_id": 6898,
++  "experiment_range": [
++    6898,
++    6910
++  ],
++  "field_principles": {
++    "adversarial_recheck_rows": "Fresh verifier output prevents stale flag decisions.",
++    "artifact_admissibility_rows": "One row per artifact makes every admission decision explicit.",
++    "branch_root_rows": "Root rows prove that the advisory audit cannot gate science.",
++    "dependency_taint_rows": "Separate taint rows stop a clean reducer from laundering a bad source.",
++    "document_task_rows": "Document rows preserve the design as an independent source.",
++    "document_yaml_parity_rows": "One row per task exposes every identity and order mismatch.",
++    "duration_s": "Measured wall time shows that the deterministic reducer ran.",
++    "experiment_id": "The fixed identity binds this receipt to Exp6898.",
++    "experiment_range": "The inclusive range detects hidden gaps and reused task numbers.",
++    "field_principles": "A reason per field keeps later audits understandable.",
++    "gate_check_summary": "Expected and observed values make each blocked result actionable.",
++    "gate_contract_rows": "Exact gate rows prevent dead or misspelled branch edges.",
++    "honest_verdict": "The terminal prefix lets the conductor classify the completed audit safely.",
++    "inference_substrate": "The no-LLM declaration prevents this audit from posing as science.",
++    "preconditions_checked": "Exact source checks make missing evidence actionable.",
++    "prior_failure_contract_rows": "Primary verdict checks stop unchanged failures returning silently.",
++    "prompt_ending_rows": "Exact endings prevent truncated or mutable run instructions.",
++    "quarantined_artifact_ids": "The exact quarantine set is machine-readable for later consumers.",
++    "random_seed": "The fixed seed states that this ordered audit has no hidden randomness.",
++    "reproducibility_checksum": "A content hash detects silent changes while ignoring elapsed time.",
++    "rows": "Combined task, contract, and admission rows prevent hidden omissions.",
++    "run_date": "The date separates this audit from later roadmap states.",
++    "schema": "A versioned shape lets later reducers reject incompatible receipts.",
++    "source_artifact_hashes": "Hashes bind conclusions to the exact primary bytes.",
++    "status": "A terminal status proves the audit completed its inventory.",
++    "task_count": "The fixed count detects partial roadmap activation before science dispatch.",
++    "ungated_tail_rows": "The tail row keeps terminal synthesis runnable after branch blocks.",
++    "v603_admissible_science_source_count": "This count includes only clean, traceable science sources.",
++    "v604_manifest_contract_ready_score": "This advisory score covers document and YAML checks only.",
++    "verdict_class": "The closed class records the evidence boundary without free-form promotion.",
++    "verifier_is_oracle": "False prevents this structural audit from approving a scientific claim.",
++    "yaml_task_rows": "YAML rows preserve the executable queue seen by the conductor."
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "preconditions",
++        "expected": "all required sources readable",
++        "observed": [
++          {
++            "error": "v604_design_contract_required",
++            "observed_milestone": "2026.09.603",
++            "observed_numbers": [],
++            "source": "v604_design"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6888_independent_relation_qualification.json"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6885"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6887"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6888"
++          }
++        ],
++        "passed": false
++      },
++      {
++        "check": "document_primary_contract",
++        "expected": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904,
++            6905,
++            6906,
++            6907,
++            6908,
++            6909,
++            6910
++          ],
++          "task_count": 13
++        },
++        "observed": {
++          "milestone": "2026.09.603",
++          "numbers": [],
++          "task_count": 0
++        },
++        "passed": false
++      },
++      {
++        "check": "yaml_executable_contract",
++        "expected": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904,
++            6905,
++            6906,
++            6907,
++            6908,
++            6909,
++            6910
++          ],
++          "task_count": 13
++        },
++        "observed": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904
++          ],
++          "task_count": 7
++        },
++        "passed": false
++      },
++      {
++        "check": "document_yaml_task_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prompt_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "gate_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prior_failure_contract",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "branch_root_isolation",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "ungated_terminal_tail",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "v604_manifest_contract_ready_score",
++        "expected": 1,
++        "observed": 0,
++        "passed": false
++      }
++    ],
++    "expected": "all required sources readable",
++    "failed_check": "preconditions",
++    "failed_checks": [
++      {
++        "check": "preconditions",
++        "expected": "all required sources readable",
++        "observed": [
++          {
++            "error": "v604_design_contract_required",
++            "observed_milestone": "2026.09.603",
++            "observed_numbers": [],
++            "source": "v604_design"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6888_independent_relation_qualification.json"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6885"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6887"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6888"
++          }
++        ],
++        "passed": false
++      },
++      {
++        "check": "document_primary_contract",
++        "expected": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904,
++            6905,
++            6906,
++            6907,
++            6908,
++            6909,
++            6910
++          ],
++          "task_count": 13
++        },
++        "observed": {
++          "milestone": "2026.09.603",
++          "numbers": [],
++          "task_count": 0
++        },
++        "passed": false
++      },
++      {
++        "check": "yaml_executable_contract",
++        "expected": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904,
++            6905,
++            6906,
++            6907,
++            6908,
++            6909,
++            6910
++          ],
++          "task_count": 13
++        },
++        "observed": {
++          "milestone": "2026.09.604",
++          "numbers": [
++            6898,
++            6899,
++            6900,
++            6901,
++            6902,
++            6903,
++            6904
++          ],
++          "task_count": 7
++        },
++        "passed": false
++      },
++      {
++        "check": "document_yaml_task_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prompt_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "gate_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "branch_root_isolation",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "ungated_terminal_tail",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "v604_manifest_contract_ready_score",
++        "expected": 1,
++        "observed": 0,
++        "passed": false
++      }
++    ],
++    "observed": [
++      {
++        "error": "v604_design_contract_required",
++        "observed_milestone": "2026.09.603",
++        "observed_numbers": [],
++        "source": "v604_design"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6888_independent_relation_qualification.json"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6885"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6887"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6888"
++      }
++    ],
++    "passed": false
++  },
++  "gate_contract_rows": [
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6900,
++      "expected": null,
++      "gate_index": 0,
++      "observed": {
++        "artifact_field": "relation_canary_ready_score",
++        "op": "==",
++        "upstream": "exp6899-live-relation-acquisition-canary",
++        "value": 1
++      },
++      "passed": false
++    },
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6901,
++      "expected": null,
++      "gate_index": 0,
++      "observed": {
++        "artifact_field": "relation_corpus_complete_score",
++        "op": "==",
++        "upstream": "exp6900-authentic-anchored-relation-corpus",
++        "value": 1
++      },
++      "passed": false
++    },
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6902,
++      "expected": null,
++      "gate_index": 0,
++      "observed": {
++        "artifact_field": "model_relation_qualification_ready_score",
++        "op": "==",
++        "upstream": "exp6901-independent-model-relation-qualification",
++        "value": 1
++      },
++      "passed": false
++    },
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6902,
++      "expected": null,
++      "gate_index": 1,
++      "observed": {
++        "artifact_field": "qualified_model_relation_event_count",
++        "op": ">=",
++        "upstream": "exp6901-independent-model-relation-qualification",
++        "value": 90
++      },
++      "passed": false
++    },
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6903,
++      "expected": null,
++      "gate_index": 0,
++      "observed": {
++        "artifact_field": "prospective_relation_stream_ready_score",
++        "op": "==",
++        "upstream": "exp6902-paraphrase-disjoint-prospective-relation-stream",
++        "value": 1
++      },
++      "passed": false
++    },
++    {
++      "checks": {
++        "advisory_manifest_not_consumed": true,
++        "matches_document": false,
++        "operator_valid": true,
++        "producer_field_declared": true,
++        "upstream_earlier": true,
++        "upstream_present": true
++      },
++      "downstream_number": 6904,
++      "expected": null,
++      "gate_index": 0,
++      "observed": {
++        "artifact_field": "self_learning_run_complete_score",
++        "op": "==",
++        "upstream": "exp6903-bounded-relation-memory-self-learning",
++        "value": 1
++      },
++      "passed": false
++    }
++  ],
++  "hard_failures": [
++    {
++      "expected": "all required sources readable",
++      "hard_failure": "preconditions",
++      "observed": [
++        {
++          "error": "v604_design_contract_required",
++          "observed_milestone": "2026.09.603",
++          "observed_numbers": [],
++          "source": "v604_design"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6888_independent_relation_qualification.json"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6885"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6887"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6888"
++        }
++      ]
++    },
++    {
++      "expected": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904,
++          6905,
++          6906,
++          6907,
++          6908,
++          6909,
++          6910
++        ],
++        "task_count": 13
++      },
++      "hard_failure": "document_primary_contract",
++      "observed": {
++        "milestone": "2026.09.603",
++        "numbers": [],
++        "task_count": 0
++      }
++    },
++    {
++      "expected": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904,
++          6905,
++          6906,
++          6907,
++          6908,
++          6909,
++          6910
++        ],
++        "task_count": 13
++      },
++      "hard_failure": "yaml_executable_contract",
++      "observed": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904
++        ],
++        "task_count": 7
++      }
++    },
++    {
++      "expected": true,
++      "hard_failure": "document_yaml_task_contract",
++      "observed": false
++    },
++    {
++      "expected": true,
++      "hard_failure": "prompt_contract",
++      "observed": false
++    },
++    {
++      "expected": true,
++      "hard_failure": "gate_contract",
++      "observed": false
++    },
++    {
++      "expected": true,
++      "hard_failure": "branch_root_isolation",
++      "observed": false
++    },
++    {
++      "expected": true,
++      "hard_failure": "ungated_terminal_tail",
++      "observed": false
++    },
++    {
++      "expected": 1,
++      "hard_failure": "v604_manifest_contract_ready_score",
++      "observed": 0
++    }
++  ],
++  "honest_verdict": "complete_blocked_v604_evidence_admissibility_contract",
++  "inference_substrate": "deterministic_manifest_and_admissibility_audit_no_llm",
++  "preconditions_checked": {
++    "checks": [
++      {
++        "check": "required_source_readability",
++        "expected": [],
++        "observed": [
++          {
++            "error": "v604_design_contract_required",
++            "observed_milestone": "2026.09.603",
++            "observed_numbers": [],
++            "source": "v604_design"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6888_independent_relation_qualification.json"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6885"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6887"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6888"
++          }
++        ],
++        "passed": false
++      }
++    ],
++    "expected": [],
++    "failed_check": "required_source_readability",
++    "failed_checks": [
++      {
++        "check": "required_source_readability",
++        "expected": [],
++        "observed": [
++          {
++            "error": "v604_design_contract_required",
++            "observed_milestone": "2026.09.603",
++            "observed_numbers": [],
++            "source": "v604_design"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++          },
++          {
++            "error": "verifier_failed:ModuleNotFoundError",
++            "source": "results/experiment_6888_independent_relation_qualification.json"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6885"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6887"
++          },
++          {
++            "error": "adversarial_recheck_not_loaded",
++            "source": "exp6888"
++          }
++        ],
++        "passed": false
++      }
++    ],
++    "observed": [
++      {
++        "error": "v604_design_contract_required",
++        "observed_milestone": "2026.09.603",
++        "observed_numbers": [],
++        "source": "v604_design"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++      },
++      {
++        "error": "verifier_failed:ModuleNotFoundError",
++        "source": "results/experiment_6888_independent_relation_qualification.json"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6885"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6887"
++      },
++      {
++        "error": "adversarial_recheck_not_loaded",
++        "source": "exp6888"
++      }
++    ],
++    "passed": false
++  },
++  "prior_failure_contract_rows": [
++    {
++      "addressed_by": "V604 emits all 13 executable tasks before this audit runs, makes the check advisory, and adds transitive quarantine of flagged evidence.",
++      "declared_verdict": "complete_blocked_v603_executable_manifest_branch_contract",
++      "experiment_id": "exp6885-v603-executable-manifest-branch-contract",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_blocked_v603_executable_manifest_branch_contract",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6898-v604-evidence-admissibility-contract"
++    },
++    {
++      "addressed_by": "This attempt is a small authenticity canary that requires nonempty raw bytes, generated tokens, per-process CUDA receipts, parser attempts, clean teardown, and the live duration floor before completion.",
++      "declared_verdict": "complete_positive_three_family_relation_corpus",
++      "experiment_id": "exp6887-three-family-relation-proposal-corpus",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_positive_three_family_relation_corpus",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6899-live-relation-acquisition-canary"
++    },
++    {
++      "addressed_by": "This attempt uses the frozen anchored_relation_v1 surface protocol and fails before corpus scale unless every required model reaches at least 0.60 parse coverage.",
++      "declared_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
++      "experiment_id": "exp5786-sota-constraint-stream",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
++      "prior_index": 1,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6899-live-relation-acquisition-canary"
++    },
++    {
++      "addressed_by": "This attempt uses no schema-constrained decoding or repair reprompt and tests only authentic plain-text relation acquisition.",
++      "declared_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++      "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++      "prior_index": 2,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6899-live-relation-acquisition-canary"
++    },
++    {
++      "addressed_by": "Exp6900 can run only after Exp6899 proves authentic nonempty GGUF acquisition, preserves per-cell process receipts, and passes the live duration floor.",
++      "declared_verdict": "complete_positive_three_family_relation_corpus",
++      "experiment_id": "exp6887-three-family-relation-proposal-corpus",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_positive_three_family_relation_corpus",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6900-authentic-anchored-relation-corpus"
++    },
++    {
++      "addressed_by": "The corpus reuses a canary-qualified anchored relation parser instead of scaling a free-form response stream.",
++      "declared_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
++      "experiment_id": "exp5786-sota-constraint-stream",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
++      "prior_index": 1,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6900-authentic-anchored-relation-corpus"
++    },
++    {
++      "addressed_by": "This task scores source-grounded relation proposals from frozen raw outputs and separates proposal coverage from exact atom validity instead of testing answer synthesis prompts.",
++      "declared_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
++      "experiment_id": "exp5909-sota-constraint-synthesis-ab",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6901-independent-model-relation-qualification"
++    },
++    {
++      "addressed_by": "This task performs no generation or repair and admits a model arm only through fresh held spans and an independent exact solver.",
++      "declared_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++      "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++      "prior_index": 1,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6901-independent-model-relation-qualification"
++    },
++    {
++      "addressed_by": "This stream starts from independently qualified model-produced relations and exact deterministic transforms instead of the parse-failed Exp5708 stream.",
++      "declared_verdict": "blocked_gate_check_failed",
++      "experiment_id": "exp5709-fr11-prospective-shadow-stream",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "blocked_gate_check_failed",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream"
++    },
++    {
++      "addressed_by": "This attempt requires a clean model-qualified relation gate, source-group splits, and sealed future outcomes before any learning arm runs.",
++      "declared_verdict": "blocked_gate_check_failed",
++      "experiment_id": "exp5773-prospective-constraint-acquisition-ab",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "blocked_gate_check_failed",
++      "prior_index": 1,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream"
++    },
++    {
++      "addressed_by": "This attempt uses independently qualified typed relation events, structural keys, asymmetric error costs, and a bounded update that is compared directly with the same commissioned read-only memory.",
++      "declared_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
++      "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6903-bounded-relation-memory-self-learning"
++    },
++    {
++      "addressed_by": "This audit replays a new model-qualified typed-relation controller, checks asymmetric costs and future support, and uses a fresh exact sidecar rather than the prior risk-controller stream.",
++      "declared_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
++      "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6904-sealed-self-learning-support-audit"
++    }
++  ],
++  "prompt_ending_rows": [
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6898,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py --date {date}",
++      "order": 1,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6898-v604-evidence-admissibility-contract"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6899,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6899_live_relation_acquisition_canary.py --date {date}",
++      "order": 2,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6899-live-relation-acquisition-canary"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6900,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6900_authentic_anchored_relation_corpus.py --date {date}",
++      "order": 3,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6900-authentic-anchored-relation-corpus"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6901,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6901_independent_model_relation_qualification.py --date {date}",
++      "order": 4,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6901-independent-model-relation-qualification"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6902,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6902_paraphrase_disjoint_prospective_relation_stream.py --date {date}",
++      "order": 5,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6903,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6903_bounded_relation_memory_self_learning.py --date {date}",
++      "order": 6,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6903-bounded-relation-memory-self-learning"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6904,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6904_sealed_self_learning_support_audit.py --date {date}",
++      "order": 7,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6904-sealed-self-learning-support-audit"
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6905,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 8,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6906,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 9,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6907,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 10,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6908,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 11,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6909,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 12,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": null,
++      "number": 6910,
++      "observed_final_sentence": null,
++      "observed_run_command": null,
++      "order": 13,
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    }
++  ],
++  "quarantined_artifact_ids": [],
++  "random_seed": 6898,
++  "reproducibility_checksum": "sha256:9a7a77e9c30578a87d6e6bca7435b95c45ab1dd1a3b413726f98159d1715c5bf",
++  "rows": [
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6898,
++      "order": 1,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6898_v604_evidence_admissibility_contract.json",
++        "milestone": "2026.09.604",
++        "number": 6898,
++        "order": 1,
++        "task_id": "exp6898-v604-evidence-admissibility-contract"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6899,
++      "order": 2,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6899_live_relation_acquisition_canary.json",
++        "milestone": "2026.09.604",
++        "number": 6899,
++        "order": 2,
++        "task_id": "exp6899-live-relation-acquisition-canary"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6900,
++      "order": 3,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6900_authentic_anchored_relation_corpus.json",
++        "milestone": "2026.09.604",
++        "number": 6900,
++        "order": 3,
++        "task_id": "exp6900-authentic-anchored-relation-corpus"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6901,
++      "order": 4,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6901_independent_model_relation_qualification.json",
++        "milestone": "2026.09.604",
++        "number": 6901,
++        "order": 4,
++        "task_id": "exp6901-independent-model-relation-qualification"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6902,
++      "order": 5,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json",
++        "milestone": "2026.09.604",
++        "number": 6902,
++        "order": 5,
++        "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6903,
++      "order": 6,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6903_bounded_relation_memory_self_learning.json",
++        "milestone": "2026.09.604",
++        "number": 6903,
++        "order": 6,
++        "task_id": "exp6903-bounded-relation-memory-self-learning"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": true,
++        "yaml_present": true
++      },
++      "document": null,
++      "expected_number": 6904,
++      "order": 7,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": {
++        "deliverable": "results/experiment_6904_sealed_self_learning_support_audit.json",
++        "milestone": "2026.09.604",
++        "number": 6904,
++        "order": 7,
++        "task_id": "exp6904-sealed-self-learning-support-audit"
++      }
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6905,
++      "order": 8,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6906,
++      "order": 9,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6907,
++      "order": 10,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6908,
++      "order": 11,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6909,
++      "order": 12,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "comparisons": {
++        "deliverable": false,
++        "document_order": false,
++        "document_present": false,
++        "milestone": false,
++        "task_id": false,
++        "yaml_order": false,
++        "yaml_present": false
++      },
++      "document": null,
++      "expected_number": 6910,
++      "order": 13,
++      "passed": false,
++      "row_type": "task_contract",
++      "yaml": null
++    },
++    {
++      "check": "preconditions",
++      "expected": "all required sources readable",
++      "observed": [
++        {
++          "error": "v604_design_contract_required",
++          "observed_milestone": "2026.09.603",
++          "observed_numbers": [],
++          "source": "v604_design"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6885_v603_executable_manifest_branch_contract.json"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6887_three_family_relation_proposal_corpus.json"
++        },
++        {
++          "error": "verifier_failed:ModuleNotFoundError",
++          "source": "results/experiment_6888_independent_relation_qualification.json"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6885"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6887"
++        },
++        {
++          "error": "adversarial_recheck_not_loaded",
++          "source": "exp6888"
++        }
++      ],
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "document_primary_contract",
++      "expected": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904,
++          6905,
++          6906,
++          6907,
++          6908,
++          6909,
++          6910
++        ],
++        "task_count": 13
++      },
++      "observed": {
++        "milestone": "2026.09.603",
++        "numbers": [],
++        "task_count": 0
++      },
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "yaml_executable_contract",
++      "expected": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904,
++          6905,
++          6906,
++          6907,
++          6908,
++          6909,
++          6910
++        ],
++        "task_count": 13
++      },
++      "observed": {
++        "milestone": "2026.09.604",
++        "numbers": [
++          6898,
++          6899,
++          6900,
++          6901,
++          6902,
++          6903,
++          6904
++        ],
++        "task_count": 7
++      },
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "document_yaml_task_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "prompt_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "gate_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "prior_failure_contract",
++      "expected": true,
++      "observed": true,
++      "passed": true,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "branch_root_isolation",
++      "expected": true,
++      "observed": false,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "ungated_terminal_tail",
++      "expected": true,
++      "observed": false,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "check": "v604_manifest_contract_ready_score",
++      "expected": 1,
++      "observed": 0,
++      "passed": false,
++      "row_type": "contract_check"
++    },
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        602,
++        603,
++        5786,
++        5909,
++        5923,
++        6874,
++        6875,
++        6885
++      ],
++      "experiment_id": 6885,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [],
++      "quarantined": false,
++      "row_type": "artifact_admission",
++      "science_source": false,
++      "terminal": true
++    },
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        6274,
++        6886
++      ],
++      "experiment_id": 6887,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [],
++      "quarantined": false,
++      "row_type": "artifact_admission",
++      "science_source": true,
++      "terminal": true
++    },
++    {
++      "admissible": false,
++      "admission_failures": [
++        "adversarial_recheck_not_loaded"
++      ],
++      "critical_flag_kinds": [],
++      "dependency_ids": [
++        6274,
++        6886,
++        6887
++      ],
++      "experiment_id": 6888,
++      "headline_eligible": false,
++      "independently_traceable": true,
++      "locally_qualified_arms": [
++        "rule:anchored_lexical_v1"
++      ],
++      "quarantined": false,
++      "row_type": "artifact_admission",
++      "science_source": true,
++      "terminal": true
++    }
++  ],
++  "run_date": "2026-09-02",
++  "schema": "carnot.experiment_6898.v604_evidence_admissibility_contract.v1",
++  "source_artifact_hashes": {
++    "active_v604_roadmap": {
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:fa6e1cb5284e2c05cb38827b3eee1422a4dce901bfad21cd6ebec14901a19cdb"
++    },
++    "adversarial_verifier": {
++      "path": "scripts/adversarial_verify.py",
++      "sha256": "sha256:0637856470f3be5436cec914958244fc45b7851c71d0729c387fed151b6587aa"
++    },
++    "conductor_gates": {
++      "path": "scripts/conductor_gates.py",
++      "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca"
++    },
++    "exclusion_manifest": {
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
++    },
++    "focused_tests": {
++      "path": "tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py",
++      "sha256": "sha256:de73b31b5bcffaaa329b84a6d67c59d0d90d6ae517d6b15a2f76754037481a20"
++    },
++    "module": {
++      "path": "python/carnot/experiment_6898_v604_evidence_admissibility_contract.py",
++      "sha256": "sha256:c0675f20de7704519cc6f45939efa2e37beff31301daf3f20e782963d12c78c3"
++    },
++    "prior_0_exp6885-v603-executable-manifest-branch-contract": {
++      "error": null,
++      "path": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
++      "sha256": "sha256:9752f467303a02a103bdffe2c8581d38768f4042259f82d33ad43be40d2c0a20"
++    },
++    "prior_10_exp6873-prospective-sealed-self-learning-audit": {
++      "error": null,
++      "path": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
++      "sha256": "sha256:82f32319e2038553b8a5f7e7efeafa23aef2aa3198cf09a030d99bb04195f606"
++    },
++    "prior_11_exp6873-prospective-sealed-self-learning-audit": {
++      "error": null,
++      "path": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
++      "sha256": "sha256:82f32319e2038553b8a5f7e7efeafa23aef2aa3198cf09a030d99bb04195f606"
++    },
++    "prior_1_exp6887-three-family-relation-proposal-corpus": {
++      "error": null,
++      "path": "results/experiment_6887_three_family_relation_proposal_corpus.json",
++      "sha256": "sha256:99800fdbad94d0f1387a2a57ae3abb9169ece3ffeb3ac7b5485ddfd24123cef3"
++    },
++    "prior_2_exp5786-sota-constraint-stream": {
++      "error": null,
++      "path": "results/experiment_5786_sota_constraint_stream.json",
++      "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
++    },
++    "prior_3_exp5923-sota-schema-supported-constraintir-ab": {
++      "error": null,
++      "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
++      "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
++    },
++    "prior_4_exp6887-three-family-relation-proposal-corpus": {
++      "error": null,
++      "path": "results/experiment_6887_three_family_relation_proposal_corpus.json",
++      "sha256": "sha256:99800fdbad94d0f1387a2a57ae3abb9169ece3ffeb3ac7b5485ddfd24123cef3"
++    },
++    "prior_5_exp5786-sota-constraint-stream": {
++      "error": null,
++      "path": "results/experiment_5786_sota_constraint_stream.json",
++      "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
++    },
++    "prior_6_exp5909-sota-constraint-synthesis-ab": {
++      "error": null,
++      "path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
++      "sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3"
++    },
++    "prior_7_exp5923-sota-schema-supported-constraintir-ab": {
++      "error": null,
++      "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
++      "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
++    },
++    "prior_8_exp5709-fr11-prospective-shadow-stream": {
++      "error": null,
++      "path": "results/experiment_5709_fr11_prospective_shadow_stream.json",
++      "sha256": "sha256:20ad685583053ba7eb976f386e06edfe45dafa88520016d04f8f219203834e01"
++    },
++    "prior_9_exp5773-prospective-constraint-acquisition-ab": {
++      "error": null,
++      "path": "results/experiment_5773_prospective_constraint_acquisition_ab.json",
++      "sha256": "sha256:afb2491861166eef0d85ee0ac5e726f1a26647840a9a3af876004131119ae109"
++    },
++    "prior_failure_validator": {
++      "path": "scripts/validate_prior_failures.py",
++      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
++    },
++    "roadmap_gate_audit": {
++      "path": "scripts/audit_roadmap_gates.py",
++      "sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
++    },
++    "roadmap_schema": {
++      "path": "scripts/roadmap_schema.py",
++      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
++    },
++    "spec": {
++      "path": "openspec/capabilities/research-reporting/spec.md",
++      "sha256": "sha256:09ada2b0495767332f5f356786517e9449717decabced3c99cd9e45f5faeec54"
++    },
++    "v603_exp6885": {
++      "path": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
++      "sha256": "sha256:9752f467303a02a103bdffe2c8581d38768f4042259f82d33ad43be40d2c0a20"
++    },
++    "v603_exp6887": {
++      "path": "results/experiment_6887_three_family_relation_proposal_corpus.json",
++      "sha256": "sha256:99800fdbad94d0f1387a2a57ae3abb9169ece3ffeb3ac7b5485ddfd24123cef3"
++    },
++    "v603_exp6888": {
++      "path": "results/experiment_6888_independent_relation_qualification.json",
++      "sha256": "sha256:b74ec7cd5a3f7a7aad264b067a3e7f3bd32ec8415b9d3a34133116f6899c59ea"
++    },
++    "v604_design": {
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:6b76f9e39e2eb91f95d29d4ed64090518927f19b7fb3d1bd137a1694375e217a"
++    },
++    "wrapper": {
++      "path": "scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py",
++      "sha256": "sha256:2c127b0b0d63e6cfef4bbb123b7007ab6592957914f2c25dea2caaa4a4d91ed0"
++    }
++  },
++  "status": "complete_blocked",
++  "task_count": 13,
++  "transitive_taint": [],
++  "ungated_tail_rows": [
++    {
++      "document_present_ungated": false,
++      "number": 6910,
++      "observed_gates": null,
++      "passed": false,
++      "yaml_present_ungated": false
++    }
++  ],
++  "v603_admissible_science_source_count": 0,
++  "v604_manifest_contract_ready_score": 0,
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false,
++  "warnings": [],
++  "yaml_task_rows": [
++    {
++      "deliverable": "results/experiment_6898_v604_evidence_admissibility_contract.json",
++      "gates": [],
++      "milestone": "2026.09.604",
++      "number": 6898,
++      "order": 1,
++      "prior_failure_count": 1,
++      "prompt_sha256": "sha256:6a153e323a067c9fa1a9e361a6560d2dc67b5dbe87cddb38e6986569a002a8f4",
++      "task_id": "exp6898-v604-evidence-admissibility-contract",
++      "title": "V604 executable manifest and evidence admissibility contract"
++    },
++    {
++      "deliverable": "results/experiment_6899_live_relation_acquisition_canary.json",
++      "gates": [],
++      "milestone": "2026.09.604",
++      "number": 6899,
++      "order": 2,
++      "prior_failure_count": 3,
++      "prompt_sha256": "sha256:144c805a42639e27102933d7dd43b28e163885f08796b3fb0602ab23e7868acc",
++      "task_id": "exp6899-live-relation-acquisition-canary",
++      "title": "Three-family live relation acquisition authenticity canary"
++    },
++    {
++      "deliverable": "results/experiment_6900_authentic_anchored_relation_corpus.json",
++      "gates": [
++        {
++          "artifact_field": "relation_canary_ready_score",
++          "op": "==",
++          "upstream": "exp6899-live-relation-acquisition-canary",
++          "value": 1
++        }
++      ],
++      "milestone": "2026.09.604",
++      "number": 6900,
++      "order": 3,
++      "prior_failure_count": 2,
++      "prompt_sha256": "sha256:f99a55cbef5642b727406105a4cb421c26ab8fb67bdace9e75c30ca6b3627f0f",
++      "task_id": "exp6900-authentic-anchored-relation-corpus",
++      "title": "Authentic three-family anchored relation proposal corpus"
++    },
++    {
++      "deliverable": "results/experiment_6901_independent_model_relation_qualification.json",
++      "gates": [
++        {
++          "artifact_field": "relation_corpus_complete_score",
++          "op": "==",
++          "upstream": "exp6900-authentic-anchored-relation-corpus",
++          "value": 1
++        }
++      ],
++      "milestone": "2026.09.604",
++      "number": 6901,
++      "order": 4,
++      "prior_failure_count": 2,
++      "prompt_sha256": "sha256:4692b81986739de54b0ea9ad5ba6d755049dc2ac91b04b45cc9b463b809b800c",
++      "task_id": "exp6901-independent-model-relation-qualification",
++      "title": "Independent held qualification of model-produced relations"
++    },
++    {
++      "deliverable": "results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json",
++      "gates": [
++        {
++          "artifact_field": "model_relation_qualification_ready_score",
++          "op": "==",
++          "upstream": "exp6901-independent-model-relation-qualification",
++          "value": 1
++        },
++        {
++          "artifact_field": "qualified_model_relation_event_count",
++          "op": ">=",
++          "upstream": "exp6901-independent-model-relation-qualification",
++          "value": 90
++        }
++      ],
++      "milestone": "2026.09.604",
++      "number": 6902,
++      "order": 5,
++      "prior_failure_count": 2,
++      "prompt_sha256": "sha256:8896130818fd460a6cf4df907340718a6d715295930b51ee9bfa74c57cb86ae0",
++      "task_id": "exp6902-paraphrase-disjoint-prospective-relation-stream",
++      "title": "Paraphrase-disjoint prospective relation learning stream"
++    },
++    {
++      "deliverable": "results/experiment_6903_bounded_relation_memory_self_learning.json",
++      "gates": [
++        {
++          "artifact_field": "prospective_relation_stream_ready_score",
++          "op": "==",
++          "upstream": "exp6902-paraphrase-disjoint-prospective-relation-stream",
++          "value": 1
++        }
++      ],
++      "milestone": "2026.09.604",
++      "number": 6903,
++      "order": 6,
++      "prior_failure_count": 1,
++      "prompt_sha256": "sha256:feb8795ab2c61835a7c7613f38458a9ae8c68799e6c5770c28d0ae510e33486d",
++      "task_id": "exp6903-bounded-relation-memory-self-learning",
++      "title": "Prospective bounded relation-memory continuous self-learning A/B"
++    },
++    {
++      "deliverable": "results/experiment_6904_sealed_self_learning_support_audit.json",
++      "gates": [
++        {
++          "artifact_field": "self_learning_run_complete_score",
++          "op": "==",
++          "upstream": "exp6903-bounded-relation-memory-self-learning",
++          "value": 1
++        }
++      ],
++      "milestone": "2026.09.604",
++      "number": 6904,
++      "order": 7,
++      "prior_failure_count": 1,
++      "prompt_sha256": "sha256:4dfb719306d5390cd9f6a2dba396f2161f5770c7235ba00dba0f978f3ffd5d6c",
++      "task_id": "exp6904-sealed-self-learning-support-audit",
++      "title": "Sealed independent self-learning utility and support audit"
++    }
++  ]
++}
+diff --git a/scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py b/scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py
+new file mode 100644
+index 0000000000..0c5c1bc4cc
+--- /dev/null
++++ b/scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py
+@@ -0,0 +1,23 @@
++#!/usr/bin/env python3
++"""Run the append-only V604 manifest and evidence-admission audit.
++
++Spec ref: REQ-REPORT-6898.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for import_root in (REPO_ROOT, PYTHON_ROOT):
++    if str(import_root) not in sys.path:
++        sys.path.insert(0, str(import_root))
++
++from carnot.experiment_6898_v604_evidence_admissibility_contract import main
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the required command
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py b/tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py
+new file mode 100644
+index 0000000000..ad9c400daf
+--- /dev/null
++++ b/tests/python/test_experiment_6898_v604_evidence_admissibility_contract.py
+@@ -0,0 +1,665 @@
++"""Focused tests for the V604 manifest and evidence-admission receipt.
++
++Spec refs: REQ-REPORT-6898 and SCENARIO-REPORT-6898-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import subprocess
++import sys
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_6898_v604_evidence_admissibility_contract as mod
++
++
++ROOT = Path(__file__).resolve().parents[2]
++SCHEMA_TEXT = (ROOT / "scripts/roadmap_schema.py").read_text(encoding="utf-8")
++GATE_TEXT = (ROOT / "scripts/conductor_gates.py").read_text(encoding="utf-8")
++
++
++def _prompt(deliverable: str, produced_fields: set[str]) -> str:
++    stem = Path(deliverable).stem
++    fields = "; ".join(sorted(produced_fields | {"honest_verdict"}))
++    return (
++        "CONTEXT:\nA deterministic fixture.\n\n"
++        "EXISTING CODE TO READ FIRST:\n- CODEX.md\n\n"
++        "TASK:\nValidate the fixture.\n\n"
++        "CONCRETE STEPS:\n1. Validate it.\n\n"
++        f"REQUIRED ARTIFACT FIELDS: {fields}\n\n"
++        f"Run command: cd {{project_root}} && .venv/bin/python scripts/experiments/{stem}.py --date {{date}}\n"
++        f"{mod.FINAL_SENTENCE}\n"
++    )
++
++
++def _design(roadmap: dict[str, Any]) -> str:
++    sections = [
++        "# Carnot Research Roadmap V604 Fixture",
++        "",
++        f"**Milestone:** `{roadmap['milestone']}`",
++        "",
++    ]
++    for task in roadmap["tasks"]:
++        number = mod.experiment_number(task["id"])
++        sections.extend(
++            [
++                f"### Exp{number}: {task['title']}",
++                "",
++                f"**Deliverable:** `{task['deliverable']}`",
++                "",
++            ]
++        )
++    sections.extend(["## Dependency Graph", "", "| Downstream task | Upstream field | Condition |"])
++    sections.append("|---|---|---|")
++    for task in roadmap["tasks"]:
++        for gate in task.get("gated_on", []):
++            sections.append(
++                f"| Exp{mod.experiment_number(task['id'])} | "
++                f"`exp{mod.experiment_number(gate['upstream'])}.{gate['artifact_field']}` | "
++                f"`{gate['op']} {gate['value']}` |"
++            )
++    return "\n".join(sections) + "\n"
++
++
++def _valid_inputs() -> tuple[str, dict[str, Any], dict[str, dict[str, Any]]]:
++    gates_by_number = {
++        6900: [
++            {
++                "upstream": "exp6899-live-relation-acquisition-canary",
++                "artifact_field": "relation_canary_ready_score",
++                "op": "==",
++                "value": 1,
++            }
++        ],
++        6907: [
++            {
++                "upstream": "exp6906-arc-trace-root",
++                "artifact_field": "arc_trace_ready_score",
++                "op": ">=",
++                "value": 1,
++            }
++        ],
++    }
++    produced = {
++        "exp6899-live-relation-acquisition-canary": {"relation_canary_ready_score"},
++        "exp6906-arc-trace-root": {"arc_trace_ready_score"},
++    }
++    tasks: list[dict[str, Any]] = []
++    for number in mod.EXPECTED_NUMBERS:
++        slug = {
++            6898: "v604-evidence-admissibility-contract",
++            6899: "live-relation-acquisition-canary",
++            6905: "independent-science-root",
++            6906: "arc-trace-root",
++            6910: "independent-v604-capstone",
++        }.get(number, f"fixture-task-{number}")
++        task_id = f"exp{number}-{slug}"
++        deliverable = f"results/experiment_{number}_{slug.replace('-', '_')}.json"
++        task = {
++            "id": task_id,
++            "title": f"Fixture task {number}",
++            "milestone": mod.V604_MILESTONE,
++            "deliverable": deliverable,
++            "gated_on": deepcopy(gates_by_number.get(number, [])),
++            "prior_failures": [],
++        }
++        task["prompt"] = _prompt(deliverable, produced.get(task_id, set()))
++        tasks.append(task)
++    tasks[0]["prior_failures"] = [
++        {
++            "experiment_id": "exp6885-v603-executable-manifest-branch-contract",
++            "verdict": "complete_blocked_v603_executable_manifest_branch_contract",
++            "addressed_by": "The V604 fixture has the complete task graph.",
++            "retire_if_same_verdict": True,
++        }
++    ]
++    roadmap = {
++        "milestone": mod.V604_MILESTONE,
++        "milestone_title": "fixture",
++        "milestone_doc": mod.DESIGN_PATH.as_posix(),
++        "tasks": tasks,
++    }
++    priors = {
++        "exp6885-v603-executable-manifest-branch-contract": {
++            "honest_verdict": "complete_blocked_v603_executable_manifest_branch_contract"
++        }
++    }
++    return _design(roadmap), roadmap, priors
++
++
++def _evaluate(
++    design: str,
++    roadmap: dict[str, Any],
++    priors: dict[str, dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    return mod.evaluate_manifest_contract(
++        design,
++        roadmap,
++        priors or {},
++        SCHEMA_TEXT,
++        GATE_TEXT,
++    )
++
++
++def _artifact_inputs() -> tuple[dict[int, dict[str, Any]], dict[int, dict[str, Any]]]:
++    artifacts = {
++        6885: {
++            "experiment_id": 6885,
++            "status": "complete_blocked",
++            "honest_verdict": "complete_blocked_v603_executable_manifest_branch_contract",
++            "source_artifact_hashes": {"roadmap": {"sha256": "sha256:a"}},
++        },
++        6887: {
++            "experiment_id": 6887,
++            "status": "complete",
++            "honest_verdict": "complete_positive_three_family_relation_corpus",
++            "source_artifact_hashes": {"fixture": {"sha256": "sha256:b"}},
++        },
++        6888: {
++            "experiment_id": 6888,
++            "status": "complete",
++            "honest_verdict": "complete_circular_positive_independent_relation_qualification",
++            "source_artifact_hashes": {"exp6887": {"sha256": "sha256:c"}},
++            "eligible_arm_rows": [
++                {"arm": "rule:anchored_lexical_v1", "passed": True},
++                {"arm": "gguf:one", "passed": False},
++            ],
++        },
++    }
++    reports = {
++        6885: {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []},
++        6887: {
++            "loaded": True,
++            "flag_count": 1,
++            "max_severity": 2,
++            "flags": [{"kind": "DURATION_TOO_SHORT", "severity": "critical", "detail": "too fast"}],
++        },
++        6888: {
++            "loaded": True,
++            "flag_count": 1,
++            "max_severity": 1,
++            "flags": [{"kind": "SUBSTRATE_NO_LLM_BY_NAME", "severity": "warn"}],
++        },
++    }
++    return artifacts, reports
++
++
++def _write_complete_fixture_root(root: Path) -> dict[int, dict[str, Any]]:
++    """Write the smallest complete primary-source tree under a temporary root."""
++
++    design, roadmap, _priors = _valid_inputs()
++    artifacts, _reports = _artifact_inputs()
++    paths = {
++        mod.DESIGN_PATH: design,
++        mod.ROADMAP_PATH: yaml.safe_dump(roadmap, sort_keys=False),
++        mod.EXCLUSION_PATH: "{}\n",
++        mod.SCHEMA_PATH: SCHEMA_TEXT,
++        mod.GATE_PATH: GATE_TEXT,
++        mod.PRIOR_VALIDATOR_PATH: "# deterministic prior validator fixture\n",
++        mod.GATE_AUDIT_PATH: "# deterministic gate audit fixture\n",
++        mod.ADVERSARIAL_PATH: "# deterministic adversarial fixture\n",
++    }
++    for path, text in paths.items():
++        target = root / path
++        target.parent.mkdir(parents=True, exist_ok=True)
++        target.write_text(text, encoding="utf-8")
++    for number, path in mod.V603_ARTIFACT_PATHS.items():
++        target = root / path
++        target.parent.mkdir(parents=True, exist_ok=True)
++        target.write_text(json.dumps(artifacts[number]), encoding="utf-8")
++    return artifacts
++
++
++def test_req_report_6898_spec_owns_fields_and_scenarios() -> None:
++    """REQ-REPORT-6898 declares the full contract before implementation."""
++
++    text = (ROOT / mod.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-6898") :]
++    for scenario in (
++        "SCENARIO-REPORT-6898-COUNT-ORDER",
++        "SCENARIO-REPORT-6898-IDENTITY",
++        "SCENARIO-REPORT-6898-PROMPT-END",
++        "SCENARIO-REPORT-6898-GATE-FIELD",
++        "SCENARIO-REPORT-6898-MISSING-UPSTREAM",
++        "SCENARIO-REPORT-6898-PRIOR-FAILURE",
++        "SCENARIO-REPORT-6898-FLAGGED-SOURCE",
++        "SCENARIO-REPORT-6898-DEPENDENCY-TAINT",
++        "SCENARIO-REPORT-6898-UNGATED-TAIL",
++    ):
++        assert scenario in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section or field == "field_principles"
++
++
++def test_req_report_6898_valid_manifest_contract_passes() -> None:
++    """REQ-REPORT-6898 accepts the exact 13-task isolated graph."""
++
++    design, roadmap, priors = _valid_inputs()
++    result = _evaluate(design, roadmap, priors)
++
++    assert result["passed"] is True
++    assert len(result["document_yaml_parity_rows"]) == 13
++    assert all(row["passed"] for row in result["document_yaml_parity_rows"])
++    assert all(row["passed"] for row in result["gate_contract_rows"])
++    assert all(row["passed"] for row in result["prior_failure_contract_rows"])
++    assert all(row["passed"] for row in result["prompt_ending_rows"])
++    assert all(row["passed"] for row in result["branch_root_rows"])
++    assert result["ungated_tail_rows"][0]["passed"] is True
++
++
++@pytest.mark.parametrize("mismatch", ["count", "order", "id", "deliverable", "milestone"])
++def test_scenario_report_6898_task_contract_mismatches(mismatch: str) -> None:
++    """SCENARIO-REPORT-6898-COUNT-ORDER and -IDENTITY fail exact fields."""
++
++    design, roadmap, priors = _valid_inputs()
++    tasks = roadmap["tasks"]
++    if mismatch == "count":
++        tasks.pop()
++    elif mismatch == "order":
++        tasks[2], tasks[3] = tasks[3], tasks[2]
++    elif mismatch == "id":
++        tasks[3]["id"] = "exp6901-wrong-id"
++    elif mismatch == "deliverable":
++        tasks[3]["deliverable"] = "results/experiment_6901_wrong.json"
++    else:
++        tasks[3]["milestone"] = "2026.09.603"
++
++    result = _evaluate(design, roadmap, priors)
++
++    assert result["passed"] is False
++    assert any(not row["passed"] for row in result["document_yaml_parity_rows"])
++
++
++@pytest.mark.parametrize("mismatch", ["missing_section", "run_command", "final_sentence"])
++def test_scenario_report_6898_prompt_endings_are_exact(mismatch: str) -> None:
++    """SCENARIO-REPORT-6898-PROMPT-END rejects every prompt mismatch."""
++
++    design, roadmap, priors = _valid_inputs()
++    prompt = roadmap["tasks"][0]["prompt"]
++    if mismatch == "missing_section":
++        prompt = prompt.replace("TASK:\n", "WORK:\n")
++    elif mismatch == "run_command":
++        prompt = prompt.replace("experiment_6898_", "experiment_9999_", 1)
++    else:
++        prompt = prompt.replace("Do NOT push.", "Do not push.")
++    roadmap["tasks"][0]["prompt"] = prompt
++
++    result = _evaluate(design, roadmap, priors)
++
++    assert result["prompt_ending_rows"][0]["passed"] is False
++    assert result["passed"] is False
++
++
++@pytest.mark.parametrize("mismatch", ["field", "operator", "value", "missing", "later"])
++def test_scenario_report_6898_gate_contract_fails_closed(mismatch: str) -> None:
++    """SCENARIO-REPORT-6898-GATE-FIELD and -MISSING-UPSTREAM cover gate parts."""
++
++    design, roadmap, priors = _valid_inputs()
++    gate = roadmap["tasks"][2]["gated_on"][0]
++    if mismatch == "field":
++        gate["artifact_field"] = "relation_canary_ready_typo"
++    elif mismatch == "operator":
++        gate["op"] = "==>"
++    elif mismatch == "value":
++        gate["value"] = 0
++    elif mismatch == "missing":
++        gate["upstream"] = "exp6999-missing-upstream"
++    else:
++        gate["upstream"] = roadmap["tasks"][4]["id"]
++
++    result = _evaluate(design, roadmap, priors)
++    row = next(row for row in result["gate_contract_rows"] if row["downstream_number"] == 6900)
++
++    assert row["passed"] is False
++    assert result["passed"] is False
++
++
++@pytest.mark.parametrize(
++    ("field", "replacement"),
++    [
++        ("experiment_id", None),
++        ("verdict", None),
++        ("addressed_by", ""),
++        ("retire_if_same_verdict", False),
++    ],
++)
++def test_scenario_report_6898_prior_failure_fields(field: str, replacement: Any) -> None:
++    """SCENARIO-REPORT-6898-PRIOR-FAILURE requires all four exact fields."""
++
++    design, roadmap, priors = _valid_inputs()
++    prior = roadmap["tasks"][0]["prior_failures"][0]
++    if replacement is None:
++        prior.pop(field)
++    else:
++        prior[field] = replacement
++
++    result = _evaluate(design, roadmap, priors)
++
++    assert field in result["prior_failure_contract_rows"][0]["failed_subfields"]
++    assert result["passed"] is False
++
++
++def test_scenario_report_6898_prior_verdict_uses_primary_artifact() -> None:
++    """SCENARIO-REPORT-6898-PRIOR-FAILURE rejects changed verdict text."""
++
++    design, roadmap, priors = _valid_inputs()
++    roadmap["tasks"][0]["prior_failures"][0]["verdict"] = "wrong"
++
++    result = _evaluate(design, roadmap, priors)
++
++    assert result["prior_failure_contract_rows"][0]["failed_subfields"] == ["verdict"]
++
++
++@pytest.mark.parametrize("mismatch", ["advisory_consumer", "root_gated", "tail_gated"])
++def test_scenario_report_6898_roots_and_tail_are_ungated(mismatch: str) -> None:
++    """SCENARIO-REPORT-6898-UNGATED-TAIL preserves independent execution."""
++
++    design, roadmap, priors = _valid_inputs()
++    gate = {
++        "upstream": roadmap["tasks"][0]["id"],
++        "artifact_field": "v604_manifest_contract_ready_score",
++        "op": "==",
++        "value": 1,
++    }
++    if mismatch == "advisory_consumer":
++        roadmap["tasks"][2]["gated_on"] = [gate]
++    elif mismatch == "root_gated":
++        roadmap["tasks"][7]["gated_on"] = [gate]
++    else:
++        roadmap["tasks"][-1]["gated_on"] = [gate]
++
++    result = _evaluate(design, roadmap, priors)
++
++    assert result["passed"] is False
++    assert any(
++        not row["passed"] for row in result["branch_root_rows"] + result["ungated_tail_rows"]
++    )
++
++
++def test_scenario_report_6898_flagged_source_and_dependency_taint() -> None:
++    """SCENARIO-REPORT-6898-FLAGGED-SOURCE and -DEPENDENCY-TAINT quarantine claims."""
++
++    artifacts, reports = _artifact_inputs()
++    result = mod.evaluate_evidence_admission(artifacts, reports)
++
++    by_id = {row["experiment_id"]: row for row in result["artifact_admissibility_rows"]}
++    assert by_id[6885]["science_source"] is False
++    assert by_id[6887]["admissible"] is False
++    assert by_id[6887]["critical_flag_kinds"] == ["DURATION_TOO_SHORT"]
++    assert by_id[6888]["admissible"] is False
++    assert by_id[6888]["headline_eligible"] is False
++    assert by_id[6888]["locally_qualified_arms"] == ["rule:anchored_lexical_v1"]
++    assert result["quarantined_artifact_ids"] == [6887, 6888]
++    assert result["v603_admissible_science_source_count"] == 0
++    assert result["dependency_taint_rows"][0]["source_experiment_id"] == 6887
++    assert result["warnings"][0]["kind"] == "SUBSTRATE_NO_LLM_BY_NAME"
++    assert result["hard_failures"][0]["kind"] == "DURATION_TOO_SHORT"
++
++
++def test_req_report_6898_unflagged_traceable_sources_are_counted() -> None:
++    """REQ-REPORT-6898 counts only clean sources with independent hashes."""
++
++    artifacts, reports = _artifact_inputs()
++    reports[6887] = {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++    reports[6888] = {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++
++    result = mod.evaluate_evidence_admission(artifacts, reports)
++
++    assert result["quarantined_artifact_ids"] == []
++    assert result["dependency_taint_rows"] == []
++    assert result["v603_admissible_science_source_count"] == 2
++
++
++def test_req_report_6898_missing_recheck_fails_admission() -> None:
++    """REQ-REPORT-6898 does not admit evidence when the verifier did not load it."""
++
++    artifacts, reports = _artifact_inputs()
++    reports[6887] = {"loaded": False, "flag_count": 0, "max_severity": -1, "flags": []}
++
++    result = mod.evaluate_evidence_admission(artifacts, reports)
++
++    row = next(row for row in result["artifact_admissibility_rows"] if row["experiment_id"] == 6887)
++    assert row["admissible"] is False
++    assert row["admission_failures"] == ["adversarial_recheck_not_loaded"]
++
++
++def test_req_report_6898_missing_traceability_and_nonmapping_sources_fail() -> None:
++    """REQ-REPORT-6898 requires structured source hashes for science admission."""
++
++    artifacts, reports = _artifact_inputs()
++    artifacts[6887].pop("source_artifact_hashes")
++    artifacts[6888]["source_artifact_hashes"] = []
++    reports[6887] = {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++    reports[6888] = {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++
++    result = mod.evaluate_evidence_admission(artifacts, reports)
++
++    by_id = {row["experiment_id"]: row for row in result["artifact_admissibility_rows"]}
++    assert by_id[6887]["admission_failures"] == ["independent_traceability_missing"]
++    assert by_id[6888]["dependency_ids"] == []
++
++
++def test_req_report_6898_active_primary_files_emit_complete_block() -> None:
++    """REQ-REPORT-6898 preserves the current stale-design and short-roadmap failure."""
++
++    artifact = mod.build_artifact(ROOT, "20260902")
++
++    assert artifact["task_count"] == 13
++    assert artifact["experiment_range"] == [6898, 6910]
++    assert len(artifact["document_task_rows"]) == 0
++    assert len(artifact["yaml_task_rows"]) == 7
++    assert artifact["v604_manifest_contract_ready_score"] == 0
++    assert artifact["v603_admissible_science_source_count"] == 0
++    assert artifact["quarantined_artifact_ids"] == [6887, 6888]
++    assert artifact["status"] == "complete_blocked"
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert artifact["gate_check_summary"]["failed_check"] is not None
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_report_6898_missing_preconditions_still_emit_complete_block(tmp_path: Path) -> None:
++    """REQ-REPORT-6898 emits all collections and exact source failures."""
++
++    artifact = mod.build_artifact(tmp_path, "20260902", verifier=lambda _path: {})
++
++    assert artifact["preconditions_checked"]["passed"] is False
++    assert artifact["gate_check_summary"]["failed_check"] == "preconditions"
++    assert artifact["gate_check_summary"]["expected"] == "all required sources readable"
++    assert artifact["gate_check_summary"]["observed"]
++    for field in set(mod.ROW_COLLECTION_FIELDS) - {"rows"}:
++        assert artifact[field] == []
++    assert all(row["row_type"] == "contract_check" for row in artifact["rows"])
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_report_6898_validation_and_checksum_failures_are_explicit() -> None:
++    """REQ-REPORT-6898 validates fields, principles, enums, scores, and checksum."""
++
++    artifact = mod.build_artifact(ROOT, "20260902")
++    broken = deepcopy(artifact)
++    broken.pop("rows")
++    broken["field_principles"].pop("task_count")
++    broken["inference_substrate"] = "live_llm_inference"
++    broken["verifier_is_oracle"] = True
++    broken["verdict_class"] = "unknown"
++    broken["honest_verdict"] = "blocked"
++    broken["v604_manifest_contract_ready_score"] = 1
++    broken["v603_admissible_science_source_count"] = 99
++    broken["reproducibility_checksum"] = "sha256:bad"
++
++    errors = mod.validate_artifact(broken)
++
++    assert "missing_required_fields:rows" in errors
++    assert "field_principles_missing" in errors
++    assert "invalid_inference_substrate" in errors
++    assert "verifier_is_oracle_must_be_false" in errors
++    assert "invalid_verdict_class" in errors
++    assert "honest_verdict_not_terminal" in errors
++    assert "readiness_recomputation_mismatch" in errors
++    assert "science_source_count_mismatch" in errors
++    assert "reproducibility_checksum_mismatch" in errors
++
++
++def test_req_report_6898_ready_terminal_shape_is_recomputed(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-6898 rejects a ready score with a blocked terminal shape."""
++
++    artifact = mod.build_artifact(ROOT, "20260902")
++    for check in artifact["gate_check_summary"]["checks"]:
++        check["passed"] = True
++    artifact["v604_manifest_contract_ready_score"] = 1
++    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
++    monkeypatch.setattr(mod, "BLOCKED_VERDICT", artifact["honest_verdict"])
++
++    assert "ready_terminal_shape_mismatch" in mod.validate_artifact(artifact)
++
++
++def test_req_report_6898_parsers_and_loaders_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-6898 rejects malformed designs, roadmaps, YAML, and JSON."""
++
++    with pytest.raises(ValueError):
++        mod.parse_design("not a roadmap")
++    with pytest.raises(ValueError):
++        mod.parse_design(
++            "**Milestone:** `2026.09.604`\n\n### Exp6898: Missing deliverable\n\nBody\n"
++        )
++    with pytest.raises(ValueError):
++        mod.parse_roadmap([])
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({"tasks": ["bad"]})
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({})
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({"tasks": [{"gated_on": "bad"}]})
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({"tasks": [{"gated_on": ["bad"]}]})
++    assert mod.experiment_number(6898) == 6898
++    assert mod.experiment_number(True) is None
++    assert mod._parse_condition("contains 1") == ("contains 1", None)
++    assert mod._prior_artifact_path(tmp_path, "bad") is None
++    yaml_path = tmp_path / "bad.yaml"
++    yaml_path.write_text("[", encoding="utf-8")
++    assert mod.read_yaml_mapping(yaml_path)[1].startswith("invalid_yaml:")
++    yaml_path.write_text("- row\n", encoding="utf-8")
++    assert mod.read_yaml_mapping(yaml_path) == (None, "yaml_mapping_required")
++    json_path = tmp_path / "bad.json"
++    json_path.write_text("[", encoding="utf-8")
++    assert mod.read_json_mapping(json_path)[1] == "invalid_json:JSONDecodeError"
++    json_path.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(json_path) == (None, "json_object_required")
++    assert mod.read_yaml_mapping(tmp_path / "missing.yaml") == (None, "missing")
++    assert mod.read_json_mapping(tmp_path / "missing.json") == (None, "missing")
++
++
++def test_req_report_6898_operator_extractors_fail_closed() -> None:
++    """REQ-REPORT-6898 reads the current schema and gate evaluator."""
++
++    assert {"==", ">=", "exists"}.issubset(mod.schema_gate_operators(SCHEMA_TEXT))
++    assert {"==", ">=", "not_contains"}.issubset(mod.conductor_gate_operators(GATE_TEXT))
++    with pytest.raises(ValueError):
++        mod.schema_gate_operators("GateOp = str")
++    with pytest.raises(ValueError):
++        mod.conductor_gate_operators("def other(): pass")
++    with pytest.raises(ValueError):
++        mod.conductor_gate_operators("def _eval_op(op): return op == object()")
++
++
++def test_req_report_6898_verifier_failures_and_empty_code_are_preconditions(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-6898 records verifier exceptions, unloaded rows, and empty code."""
++
++    _write_complete_fixture_root(tmp_path)
++    (tmp_path / mod.PRIOR_VALIDATOR_PATH).write_text("", encoding="utf-8")
++
++    def verifier(path: Path) -> dict[str, Any]:
++        number = mod.experiment_number(path.name)
++        if number == 6885:
++            raise RuntimeError("fixture verifier failure")
++        if number == 6887:
++            return {"loaded": False, "flag_count": 0, "flags": []}
++        return {"loaded": True, "flag_count": 0, "max_severity": -1, "flags": []}
++
++    artifact = mod.build_artifact(tmp_path, "20260902", verifier=verifier)
++
++    observed = artifact["preconditions_checked"]["observed"]
++    assert {"source": "prior_failure_validator", "error": "empty"} in observed
++    assert any(row.get("error") == "verifier_failed:RuntimeError" for row in observed)
++    assert any(row.get("error") == "adversarial_recheck_not_loaded" for row in observed)
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_report_6898_checksum_ignores_runtime_fields() -> None:
++    """REQ-REPORT-6898 keeps content identity stable across elapsed time."""
++
++    first = {"duration_s": 1.0, "reproducibility_checksum": "", "value": 2}
++    second = {"duration_s": 9.0, "reproducibility_checksum": "bad", "value": 2}
++    assert mod.reproducibility_checksum(first) == mod.reproducibility_checksum(second)
++
++
++def test_req_report_6898_writer_and_cli_paths(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-6898 writes only the requested append-only receipt path."""
++
++    output = tmp_path / "receipt.json"
++    mod.write_json_atomic(output, {"z": 1, "a": 2})
++    assert json.loads(output.read_text(encoding="utf-8")) == {"a": 2, "z": 1}
++    assert mod.main(["--date", "bad", "--output", str(output)]) == 2
++    assert mod.main(["--date", "20260902", "--output", str(output)]) == 0
++    assert mod.validate_artifact(json.loads(output.read_text(encoding="utf-8"))) == []
++    monkeypatch.setattr(mod, "build_artifact", lambda *_args, **_kwargs: {"value": 1})
++    monkeypatch.setattr(mod, "validate_artifact", lambda _artifact: ["invalid"])
++    assert mod.main(["--date", "20260902", "--output", str(output)]) == 1
++
++
++def test_req_report_6898_script_cli_rechecks_with_repo_imports(tmp_path: Path) -> None:
++    """REQ-REPORT-6898 makes the exact script entry point run the real verifier."""
++
++    output = tmp_path / "receipt.json"
++    result = subprocess.run(
++        [
++            sys.executable,
++            "scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py",
++            "--date",
++            "20260902",
++            "--output",
++            str(output),
++        ],
++        cwd=ROOT,
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++
++    assert result.returncode == 0, result.stderr
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    assert artifact["quarantined_artifact_ids"] == [6887, 6888]
++    rechecks = {row["experiment_id"]: row for row in artifact["adversarial_recheck_rows"]}
++    assert rechecks[6887]["max_severity"] == 2
++    assert rechecks[6887]["flags"][0]["severity"] == "critical"
++    assert artifact["dependency_taint_rows"] == [
++        {
++            "claim_experiment_id": 6888,
++            "source_experiment_id": 6887,
++            "all_tainted_sources": [6887],
++            "taint_kind": "transitive_source_quarantine",
++            "headline_eligible": False,
++        }
++    ]
++
++
++def test_req_report_6898_yaml_round_trip_fixture_is_structural() -> None:
++    """REQ-REPORT-6898 uses the active roadmap's YAML value types."""
++
++    design, roadmap, priors = _valid_inputs()
++    loaded = yaml.safe_load(yaml.safe_dump(roadmap, sort_keys=False))
++    assert _evaluate(design, loaded, priors)["passed"] is True
+-- 
+2.55.0
+

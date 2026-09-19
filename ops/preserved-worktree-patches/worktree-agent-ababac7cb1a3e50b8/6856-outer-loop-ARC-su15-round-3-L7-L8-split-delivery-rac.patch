@@ -1,0 +1,194 @@
+From cdfcf469453c8eade5e20ad47ba69c32940a39ba Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 07:50:45 -0400
+Subject: [PATCH 06856/11362] [outer-loop] ARC su15 round-3: L7->L8,
+ split-delivery race cracks the merge wall
+
+Round-3 codex gpt-5.6-sol attempt on su15 solved L8: a split-delivery race
+-- merge the two b blocks into the first c, kite it up the extreme left
+edge while the two hunters fuse and the 8 processes into the second c,
+then route the second c along the top edge to the far-right 9 socket.
+Avoids round-2's simultaneous-control hazard (clicking near both c pieces
+re-merges them into an 8) by routing along opposite edges instead of
+through the center.
+
+Source agent's own reproduction_verified is correctly false (ran out of
+budget for the full 145-action reproduce() gate, though it did replay the
+winning continuation successfully in a separate fresh environment).
+Independently verified by the outer loop regardless: 5x fresh
+env.reset() + replay via a new resolver priority branch (dict-normalized
+labels), all 5 trials confirmed level=8, state=GameState.NOT_FINISHED.
+
+L9 explored but not won: ACTION7 is a true one-step undo, an unsatisfied
+d-shaped hunter-fusion requirement, and a final-level reset performs a
+FULL-GAME reset (not a current-level restart). Frontier stays at level 8.
+
+reproducible_total_levels 145 -> 146. arc_count_integrity_lint.py exit 0.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   | 29 ++++++++++++++-
+ ...experiment_4460_submission_package_prep.py | 24 ++++++++++++
+ results/outer_loop_codex_su15_probe.json      | 37 ++++++++++++++-----
+ 3 files changed, 78 insertions(+), 12 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 982838b98a..7444fd3f35 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -2173,7 +2173,7 @@ games:
+     reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
+ - game: su15
+   reproducibility: reproduced
+-  levels_reproduced: 7
++  levels_reproduced: 8
+   mechanic_class: drag_merge_fruit_target
+   win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27). L3 (2026-07-11, claude-fable-5): the same drag/merge physics generalizes, but delivery targets
+     are the big 9-colored round BLOBS on the field, not the top hollow boxes
+@@ -2246,6 +2246,31 @@ games:
+     them back into an 8) but not won this session -- a genuine
+     simultaneous-control wall (keeping both c fruits separated and safe
+     while preserving the fused e and avoiding the third hunter).'
++  - 'L8 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
++    campaign): cracks round 2''s simultaneous-control wall -- L8 is a
++    SPLIT-DELIVERY RACE: merge the two b blocks into the first c, kite it
++    up the extreme left edge while the two hunters fuse and the 8 is
++    processed into the second c, then send that second c along the top
++    edge to the far-right 9 socket. The round-2 hazard (clicking within
++    attraction range of both c pieces merges them back into an 8) is real
++    and must be avoided by routing them along opposite edges (left vs
++    top), not through the center. Solved live with a 13-action
++    continuation after the banked 132-action L1-L7 prefix, then
++    independently replayed the same continuation in a SEPARATE fresh
++    environment after its own full prefix -- both runs reached
++    levels_completed=8. The source agent''s own reproduction_verified is
++    correctly reported false (budget ran out before the full 145-action
++    reproduce() gate could be re-run), but the outer loop independently
++    verified: 5x fresh env.reset() + replay via a new resolver priority
++    branch (results/outer_loop_codex_su15_probe.json, dict-normalized
++    labels), all 5 confirmed level=8, state=GameState.NOT_FINISHED. L9
++    was explored but not won: ACTION7 is a true one-step undo, two 6
++    blocks merge into f, four hunters must apparently satisfy an
++    additional d-shaped hunter-fusion requirement that stayed unsatisfied
++    this session, and a final-level reset performs a FULL-GAME reset
++    (not a current-level restart, unlike earlier levels) -- the L9
++    environment entered GAME_OVER after repeated rewind experiments;
++    frontier stays at level 8.'
+   dead_ends:
+   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
+   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
+@@ -3788,7 +3813,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 145
++reproducible_total_levels: 146
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 2fbec0b04b..5864ad1705 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -843,10 +843,34 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 8:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_codex_su15_probe.json"
++        artifact = _load_json(root / rel_path)
++        raw_labels = artifact.get("action_sequence") or []
++        labels = [
++            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
++            for label in raw_labels
++        ]
++        if adapter is None:
++            raise RuntimeError("su15 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 7:
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
++        # NOTE: results/outer_loop_codex_su15_probe.json was overwritten by the
++        # round-3 (>=8) attempt at this same path; this branch is unreachable
++        # for the live registry entry (which is >=8) and is retained only as
++        # historical dead code documenting the round-2 (level-7) resolution.
+         rel_path = "results/outer_loop_codex_su15_probe.json"
+         artifact = _load_json(root / rel_path)
+         raw_labels = artifact.get("action_sequence") or []
+diff --git a/results/outer_loop_codex_su15_probe.json b/results/outer_loop_codex_su15_probe.json
+index 37ae8350e1..380f6752a2 100644
+--- a/results/outer_loop_codex_su15_probe.json
++++ b/results/outer_loop_codex_su15_probe.json
+@@ -1,10 +1,10 @@
+ {
+   "game": "su15",
+   "model": "gpt-5.6-sol",
+-  "starting_level": 3,
+-  "max_level_reached": 7,
+-  "total_env_steps_used": 445,
+-  "reproduction_verified": true,
++  "starting_level": 7,
++  "max_level_reached": 8,
++  "total_env_steps_used": 735,
++  "reproduction_verified": false,
+   "action_sequence": [
+     {"action": 6, "data": {"x": 10, "y": 53}},
+     {"action": 6, "data": {"x": 16, "y": 47}},
+@@ -137,11 +137,24 @@
+     {"action": 6, "data": {"x": 48, "y": 24}},
+     {"action": 6, "data": {"x": 44, "y": 22}},
+     {"action": 6, "data": {"x": 18, "y": 27}},
+-    {"action": 6, "data": {"x": 23, "y": 20}}
++    {"action": 6, "data": {"x": 23, "y": 20}},
++    {"action": 6, "data": {"x": 10, "y": 42}},
++    {"action": 6, "data": {"x": 3, "y": 42}},
++    {"action": 6, "data": {"x": 3, "y": 35}},
++    {"action": 6, "data": {"x": 3, "y": 28}},
++    {"action": 6, "data": {"x": 3, "y": 21}},
++    {"action": 6, "data": {"x": 18, "y": 22}},
++    {"action": 6, "data": {"x": 18, "y": 16}},
++    {"action": 6, "data": {"x": 24, "y": 11}},
++    {"action": 6, "data": {"x": 31, "y": 12}},
++    {"action": 6, "data": {"x": 38, "y": 12}},
++    {"action": 6, "data": {"x": 45, "y": 12}},
++    {"action": 6, "data": {"x": 52, "y": 14}},
++    {"action": 6, "data": {"x": 56, "y": 19}}
+   ],
+-  "levels_won_this_session": [4, 5, 6, 7],
+-  "novel_mechanics_found": "L4 hunter evasion is an axis-speed race: a highest-tier fruit can outrun a 7-colored hunter with repeated 8-pixel axial hops, allowing a decoy f to be parked at the far edge while the other half is built. L5 introduces two hunters; making them converge fuses them into an e-colored composite thief. The composite follows the active fruit and repeatedly degrades it, but L5 supplies exactly enough surplus mass to survive those losses. L6 introduces high tiers c and 8 plus a hunter-processing/socket interaction: an 8 can be downgraded to c and then to the required b through timed collision/withdrawal, with the level transition resolving one tick later. L7 is a synchronized race: four 6 fruits form one b in four actions while the hunter converts 8 to c to b; both b fruits can then be delivered before the next attack. L8 scouting found three hunters, two c goals, four blobs, and an e goal; two hunters fuse on tick 6, while careless clicks within radius of both c fruits merge them back into an 8.",
+-  "narrative": "Replayed and confirmed the 39-action banked prefix to Level 3, then solved Levels 4 through 7 by rendered-frame experimentation. Level 4 required kiting the hunter with a far-edge f decoy; Level 5 required hunter fusion plus exact mass accounting; Level 6 exposed a timed high-tier downgrade/socket mechanic; and Level 7 compressed construction and delivery into an eight-action race. A fresh reproduction gate replayed the full 132-action sequence and reached Level 7. I then investigated Level 8 but stopped at a genuine simultaneous-control wall: keeping both c fruits separated and safe while preserving the fused e and avoiding the third hunter remained unresolved.",
++  "levels_won_this_session": [8],
++  "novel_mechanics_found": "Level 8 is a split-delivery race: merge the two b blocks into the first c, kite it up the extreme left edge while two hunters fuse and the 8 is processed into the second c, then send that second c along the top edge to the far-right 9 socket. Clicking within attraction range of both c pieces merges them back into an 8. Level 9 revealed that ACTION7 is a true one-step undo, two 6 blocks merge into f, four hunters must apparently satisfy an additional d-shaped requirement, and final-level reset performs a full-game reset rather than restarting the current level.",
++  "narrative": "The 132-action verified prefix reached Level 7 twice. I solved Level 8 live with a 13-action continuation and replayed that continuation successfully in a separately created environment after its own full prefix, reaching levels_completed=8 both times. I did not have enough budget left to run the required reproduce() gate on all 145 actions, so reproduction_verified is intentionally false. On Level 9 I produced and socketed c and f, discovered the still-unsatisfied d-shaped hunter-fusion requirement and ACTION7 undo, then stopped when the final-level environment entered GAME_OVER after repeated rewind experiments.",
+   "gotchas": [
+     "The Level 4 hunter advances about four pixels per axis toward the active/highest fruit; long axis-aligned 8-pixel fruit hops create separation, while diagonal hops often do not.",
+     "A hunter collision may be rendered as partial occlusion for one frame; the fruit can survive if moved continuously, but an unmoved fruit is downgraded on the following action.",
+@@ -149,8 +162,12 @@
+     "In Level 5 the resource meter is nearly exact: the verified line reaches the final target with only the last few meter cells remaining; avoid extra failed clicks.",
+     "Level 6 collision resolution can be deferred: the verified tail reaches the win after a far failed click following the final c/hunter positioning.",
+     "Level 7 needs two hops for the right b, via (48,24) then (44,22); clicking (44,22) directly from its spawn is outside pull range and wastes the critical timing window.",
+-    "Level 8: after the two b fruits merge into one c and the 8 is downgraded into the other c, never click a point within pull radius of both c fruits or they merge back into an 8.",
+-    "env.reset() restarts the current level without replaying earlier levels; only a fresh environment should receive the full banked prefix."
++    "Level 8: after the two b fruits merge into one c and the 8 is processed into the other c, never click a point within pull radius of both c fruits or they merge back into an 8.",
++    "The Level 8 winning continuation is (10,42), (3,42), (3,35), (3,28), (3,21), (18,22), (18,16), (24,11), (31,12), (38,12), (45,12), (52,14), (56,19).",
++    "ACTION7 is one-step undo on Level 9; it restores the previous rendered state without advancing hunters.",
++    "env.reset() restarted the current level through Level 8, but calling it after entering the final Level 9 performed a full reset to Level 0.",
++    "Level 9 has three 9 sockets and visible c, f, and d-shaped requirements. Socketing c and f alone does not win; the four 7 hunters must apparently be fused/arranged to satisfy d as well.",
++    "Level 9 timing is unforgiving: a hunter degrades c to b to f, and a nearby hunter can destroy a socketed f within a few valid clicks."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+-- 
+2.55.0
+

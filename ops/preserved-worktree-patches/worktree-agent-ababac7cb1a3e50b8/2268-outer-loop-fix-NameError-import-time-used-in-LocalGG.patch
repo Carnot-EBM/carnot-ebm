@@ -1,0 +1,25 @@
+From 8b525cc052909eb5f595f085598635d0e697fa52 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 04:51:29 -0400
+Subject: [PATCH 02268/11362] [outer-loop] fix NameError: import time (used in
+ LocalGGUFProposer._ensure_server wait loop)
+
+---
+ python/carnot/agentic/arc_executable_world_model.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 7a7cba75c3..04fc900194 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -29,6 +29,7 @@ from __future__ import annotations
+ import json
+ import subprocess
+ import sys
++import time
+ from dataclasses import dataclass, field
+ from pathlib import Path
+ from typing import Any, Callable, Optional
+-- 
+2.55.0
+

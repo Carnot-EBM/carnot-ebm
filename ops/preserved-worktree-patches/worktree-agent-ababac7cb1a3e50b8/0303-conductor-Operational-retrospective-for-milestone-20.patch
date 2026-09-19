@@ -1,0 +1,78 @@
+From 6163b2c41e8168129f1612f8a081a0ded5a34602 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 10:28:32 -0400
+Subject: [PATCH 00303/11362] [conductor] Operational retrospective for
+ milestone 2026.06.344
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/research-log.md                       |  6 ++++++
+ ops/changelog.md                           |  5 +++++
+ results/operational_retro_2026_06_344.json | 25 ++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_344.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 3297409386..da86f9107a 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -4982,3 +4982,9 @@ The critical path for milestone .250:
+ - theme: Operational Retrospective
+ - key result: Honest negative — no experiment commits found since activation of 2026.06.343.
+ - acceptance: 0/0 criteria met
++
++### Milestone 2026.06.344
++- exp_range: no data available this milestone
++- theme: Operational Retrospective
++- key result: Honest negative — no experiment commits found since activation of 2026.06.344.
++- acceptance: 0/0 criteria met
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ceb9700a09..9fb3ae421b 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,10 @@
+ # Carnot — Changelog
+ 
++## 2026-06-03 (Milestone 2026.06.344 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_344.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were triggered.
++
++
+ ## 2026-06-03 (Milestone 2026.06.343 Operational Retrospective)
+ 
+ - [outer-loop] Wrote `results/operational_retro_2026_06_343.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: no data available this milestone.
+diff --git a/results/operational_retro_2026_06_344.json b/results/operational_retro_2026_06_344.json
+new file mode 100644
+index 0000000000..68c2e6c332
+--- /dev/null
++++ b/results/operational_retro_2026_06_344.json
+@@ -0,0 +1,25 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.344",
++  "generated_at": "2026-06-03T14:26:27Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "No experiment commits were found since the activation of milestone 2026.06.344. As a result, no compute-bound tasks were run, explaining the correctly idle GPU states.",
++  "bottlenecks_identified": [
++    "No experiments were run; process was completely idle."
++  ],
++  "improvements_suggested": [
++    "Investigate why no experiments were committed during this milestone."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Check experiment runner triggers.",
++    "Verify milestone activation logic.",
++    "Ensure tasks are queued."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "It is critical to verify if the lack of experiments is due to a no-op milestone or a failure in the task submission pipeline."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

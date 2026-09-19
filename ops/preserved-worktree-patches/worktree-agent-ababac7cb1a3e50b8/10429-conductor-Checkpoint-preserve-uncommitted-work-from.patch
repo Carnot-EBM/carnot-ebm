@@ -1,0 +1,43 @@
+From 33978ea2c9a8078f01c25da0ede5fd3df9ac6be9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 15:22:01 -0400
+Subject: [PATCH 10429/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0a43b9483e..2d9b5c1968 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 38, "phase": "iteration_start", "last_beat": "2026-08-30T18:57:56Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 39, "phase": "iteration_start", "last_beat": "2026-08-30T19:21:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0ac481ba4c..661ee3c463 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16852,3 +16852,4 @@ The l |
+ | 2026-08-30 17:55 UTC | Exact constraint-dependency graph and hard-negativ | OK | 91 passed, 1 warning in 18.15s |
+ | 2026-08-30 18:20 UTC | Group-aware soft fixed-point proposer | OK | 92 passed, 1 warning in 19.51s |
+ | 2026-08-30 18:55 UTC | Group-aware fixed point versus parameter-matched f | OK | 92 passed, 1 warning in 33.85s |
++| 2026-08-30 19:19 UTC | Cold fixed-point authority and shortcut audit | OK | 92 passed, 1 warning in 28.32s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fd8e341d84..00a3c89d93 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 38, "phase": "iteration_start", "started_at": "2026-08-30T18:57:56Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 39, "phase": "iteration_start", "started_at": "2026-08-30T19:21:55Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

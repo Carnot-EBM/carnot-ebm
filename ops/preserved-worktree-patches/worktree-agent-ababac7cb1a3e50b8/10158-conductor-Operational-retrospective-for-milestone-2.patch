@@ -1,0 +1,110 @@
+From ca7014c900c9b5d504d010549ff4924d81393b3f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 03:04:25 -0400
+Subject: [PATCH 10158/11362] [conductor] Operational retrospective for
+ milestone 2026.08.583
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_08_583.json | 53 ++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_583.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 25156725c0..cdcce3ec21 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6402,3 +6402,10 @@ The critical path for milestone .250:
+ - theme: synthesis scheduling dominated a mixed milestone reconstructed from file modification times
+ - key result: honest operational negative — synthesis-only work consumed nearly all elapsed time; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.583
++
++- exp_range: no data available this milestone
++- theme: mixed execution exposed gaps in sub-minute timing and task-scoped accelerator attribution
++- key result: honest operational negative — every listed task shares the zero-minute timing floor; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c2434e5c46..a0ac463787 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18074,3 +18074,14 @@ establishes a parallel multi-model task or a missed DualGPURunner dispatch. The
+ highest-leverage tooling change is dependency-aware synthesis concurrency plus
+ monotonic phase receipts. Perfect overlap of the two longest synthesis entries
+ would have a theoretical 44% savings ceiling, subject to dependency independence.
++
++## 2026-08-28 — Milestone 2026.08.583 operational retrospective
++
++The milestone completed 4 experiments in 0.0 minutes, including 1 compute-bound
++experiment. Prospective prequential online-energy A/B was the only compute-bound
++entry and took 0.0 minutes; no data available this milestone explains its cost.
++The locked compute-task GPU-idle classification is false. No data available this
++milestone establishes a task with 2 or more models in parallel or a missed
++DualGPURunner dispatch. The next tooling priority is sub-minute phase timing
++joined to task-scoped GPU, model-concurrency, and runner-selection receipts.
++Estimated time savings is 0% because no avoidable duration was measured.
+diff --git a/results/operational_retro_2026_08_583.json b/results/operational_retro_2026_08_583.json
+new file mode 100644
+index 0000000000..440e1ef540
+--- /dev/null
++++ b/results/operational_retro_2026_08_583.json
+@@ -0,0 +1,53 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.583",
++  "generated_at": "2026-08-28T06:59:18Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 1,
++  "slowest_experiments": [
++    {
++      "experiment": "Cold exact planning fixture audit",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Oracle-distinct structural plan energy",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Cold search, budget, and leakage audit",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Prospective prequential online-energy A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 4 experiments in 0.0 minutes, including 1 compute-bound experiment. The timing resolution does not distinguish the entries or explain their costs, and the locked compute-task GPU-idle classification is false.",
++  "bottlenecks_identified": [
++    "Minute-level reconstruction assigned every listed experiment 0.0 minutes, so the compute-bound entry cannot be ranked by elapsed time or diagnosed by phase.",
++    "The GPU snapshot is not task-scoped, so it cannot establish utilization during the compute-bound experiment.",
++    "No data available this milestone records model concurrency or runner selection, so DualGPURunner applicability cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Record monotonic sub-minute phase timings for every experiment.",
++    "Attach task-scoped GPU utilization samples to each compute-bound experiment receipt.",
++    "Record loaded-model concurrency and the selected runner in each compute-bound experiment receipt.",
++    "Keep synthesis-only GPU idleness out of accelerator bottleneck alerts."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add monotonic sub-minute phase timing to milestone receipts.",
++    "Join task-scoped GPU samples to compute-bound experiment receipts.",
++    "Receipt model concurrency and runner selection before compute launch."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The data supports an observability retrospective, not a causal runtime diagnosis. No execution speedup can be quantified from the 0.0-minute reconstructed wall time, so the savings estimate remains 0%."
++}
+-- 
+2.55.0
+

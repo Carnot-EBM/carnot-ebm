@@ -1,0 +1,27 @@
+From 2093f9a89eb4cbe703ad2596c5a8e31a5bb10a17 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 12:32:21 -0400
+Subject: [PATCH 10108/11362] [conductor] Checkpoint: preserve uncommitted work
+ (self-heal failed)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ scripts/harness_integrity_lint.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/harness_integrity_lint.py b/scripts/harness_integrity_lint.py
+index 935c9b75fe..02ef8c5f11 100644
+--- a/scripts/harness_integrity_lint.py
++++ b/scripts/harness_integrity_lint.py
+@@ -276,7 +276,7 @@ def check() -> int:
+         return 0
+ 
+     staged = _staged_paths()
+-    if False:
++    if staged is None:
+         print("harness-integrity: REFUSING -- could not read the index (git failed).")
+         print("  A guard that reports clean when git is broken is worse than no guard.")
+         return 1
+-- 
+2.55.0
+

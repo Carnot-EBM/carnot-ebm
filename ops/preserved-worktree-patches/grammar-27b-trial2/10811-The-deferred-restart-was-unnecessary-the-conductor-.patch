@@ -1,0 +1,64 @@
+From 0d5809e7cd08e2a0bd6c2b0a90812bb156e0fd92 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 18:36:58 -0400
+Subject: [PATCH 10811/11171] The deferred restart was unnecessary: the
+ conductor re-execs on fresh source
+
+The conductor re-execs itself when committed source changes
+(REQ-CONDUCTOR-FRESHEXEC-1, research_conductor.py:2402) and did so at 21:50Z,
+logged as e372551c2942 -> d615af6127c7. My both-files-required fix was committed at
+21:13Z, so it was in that source. Verified rather than assumed: the current file's
+sha256 prefix is d615af6127c7, matching the re-exec target exactly.
+
+So the .605 falsification test is valid as written and the deferred restart is moot.
+The re-exec is guarded too, skipping when HEAD does not compile or import, so a
+half-written edit cannot re-exec the conductor into broken code.
+
+The entry also records the trap this exposed. A re-exec replaces the process image
+while keeping the PID, so ps -o lstart still reports the original start time --
+15:06Z here, hours before the source actually running. I reasoned from that start
+time across three hourly checks and concluded "the fix is still unloaded" every
+time. Process start time cannot answer which source a long-lived process is running.
+Compare the file hash against the last re-exec line in ops/conductor-log.md, or grep
+the running file for the change.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 4c5e2d654c..e3352418da 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -179,6 +179,26 @@ and BEFORE .605 plans.
+ Recorded because the failure mode is silent and self-flattering: forget the restart, watch .605
+ skip the document, and conclude the regression was never mine.
+ 
++
++**PRECONDITION SATISFIED AUTOMATICALLY — no restart was needed (2026-09-02 22:40Z).** The
++conductor re-execs itself on fresh committed source (REQ-CONDUCTOR-FRESHEXEC-1,
++`scripts/research_conductor.py:2402`), and it did so at 21:50Z, logged as
++`Conductor re-exec: fresh committed source | e372551c2942 -> d615af6127c7`. The both-files-required
++fix was committed at 21:13Z, so it was in that source. Verified rather than assumed: the current
++file's sha256 prefix is `d615af6127c7`, matching the re-exec target hash exactly.
++
++So the .605 test is VALID as written, and the deferred restart above is moot. The re-exec is also
++guarded — it skips when HEAD does not compile or does not import, so a half-written edit cannot
++re-exec the conductor into broken code.
++
++**The trap this exposes, which cost me nothing only by luck.** A re-exec REPLACES the process image
++while KEEPING the PID, so `ps -o lstart=` still reports the ORIGINAL start time — 15:06Z here, hours
++before the source it is actually running. I spent three hourly checks reasoning from that start time
++about whether my fix was loaded, and concluded "still unloaded" each time. The start time cannot
++answer that question. To know which source a conductor is running, compare the file's hash against
++the last `Conductor re-exec` line in `ops/conductor-log.md`, or simply grep the running file for the
++change — never the process start time.
++
+ ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
+ 
+ `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
+-- 
+2.55.0
+

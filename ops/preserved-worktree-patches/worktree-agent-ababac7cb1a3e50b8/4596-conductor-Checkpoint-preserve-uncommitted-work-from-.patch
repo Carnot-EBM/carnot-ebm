@@ -1,0 +1,65 @@
+From 0db173f0eb84868c4e1459095836b10649066a31 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 03:57:44 -0400
+Subject: [PATCH 04596/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ .../experiment_4907_heldout_first_win_readiness.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 11bf7cdbc2..67d6af55d9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-06-28T06:49:39Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-06-28T07:57:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d7edff5904..f5115b69b8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9499,3 +9499,4 @@ The contro |
+ | 2026-06-28 06:16 UTC | PHASE A1b (ARC NORTH STAR; LAST REPRESENTATION SWI | OK | 88 passed, 1 warning in 66.45s (0:01:06) |
+ | 2026-06-28 06:34 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 90 passed, 1 warning in 8.71s |
+ | 2026-06-28 06:47 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 10.27s |
++| 2026-06-28 07:55 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1bde80be74..904797ff59 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 52, "phase": "iteration_start", "started_at": "2026-06-28T06:49:39Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 53, "phase": "iteration_start", "started_at": "2026-06-28T07:57:42Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4907_heldout_first_win_readiness.json b/results/experiment_4907_heldout_first_win_readiness.json
+index e65bd4fc18..0da329e21a 100644
+--- a/results/experiment_4907_heldout_first_win_readiness.json
++++ b/results/experiment_4907_heldout_first_win_readiness.json
+@@ -292,5 +292,13 @@
+   "source_4729_sha256": "sha256:1f0761765cae854824d88cd87d71668d06f5fba59236af332a6abe6425d643f3",
+   "source_driver": "python/carnot/experiment_4729_held_out_first_win_readiness.py",
+   "source_driver_command": ".venv/bin/python python/carnot/experiment_4729_held_out_first_win_readiness.py",
+-  "submitted_to_leaderboard": false
+-}
++  "submitted_to_leaderboard": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "driver_duration_s=3518.208351 and duration_s=3518.208351 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

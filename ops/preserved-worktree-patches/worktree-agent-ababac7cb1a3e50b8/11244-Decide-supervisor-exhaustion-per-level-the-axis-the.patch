@@ -1,0 +1,1244 @@
+From cff7630c6a835e8826c43ab8d9a2d95abe3df935 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 09:08:26 -0400
+Subject: [PATCH 11244/11362] Decide supervisor exhaustion per level, the axis
+ the arms reset on (REQ-ARC-WMTE-7033)
+
+Round three on the earlier agent's exhaustion cell (branch
+worktree-agent-a83acaaa5293c1b8f, merged in bd46ce7e65). An adversarial
+review found the cell was computed POOLED over the run; confirmed against
+source: TrajectorySupervisor.observe clears `_arms_used` on every level-up
+("Start the level fresh: arms become available again"), and
+`_first_eligible_arm` tests membership in that per-level set. "Every arm
+fired" pooled over a run is therefore not "every arm spent on the level
+that stagnated". All 5 cells the branch emitted on the live ledger were
+false by the axis the code actually uses.
+
+What the branch had right and is kept unchanged: `arms_enabled` on the
+receipt with the fired-arm union (REQ-7030), the legacy fallback to the
+three default-on arms and the `arms_enabled_source` label, the per-window
+state rows and their cap (REQ-7031), the heartbeat fields, the shadow
+control pool and `control_matched` (REQ-7032), and the research note.
+
+What changed:
+
+- `_new_arm_cells` now returns (cells, not_decidable). A cell is one
+  (receipt, level) where a REQ-7031 window row on that level shows every
+  enabled arm already in `arms_used` -- the row's `arms_used` IS the
+  per-level set as it stood, so the test is on the reset axis by
+  construction. Arms fired elsewhere in the run are never pooled.
+- A stagnating receipt with no window rows (every row in the live ledger)
+  is listed as not decidable with reason `no_window_rows_recorded`, never
+  counted; a receipt whose kept rows are unexhausted but dropped rows past
+  the cap is listed with `window_rows_dropped_past_cap`.
+- Each cell carries `level`, `arms_fired_on_level`, `exhausted_windows`,
+  `windows_on_level`, `first_exhausted_action_index`,
+  `level_resolved_by_levelup`, `actions_from_first_exhaustion_to_levelup`,
+  and states summarised over that level's rows only. The report prints
+  the not-decidable list so zero cells cannot be read as "no level ran dry".
+- exp6921's corrected ledger passes the window rows through (it pooled
+  redirects too, and its new-arm test needed the rows).
+- Spec: REQ-7033 with scenarios A-D; dated CORRECTION notes appended
+  under REQ-7030 (retracting SCENARIO-7030-C's first and third bullets)
+  and under SCENARIO-6720-6; nothing deleted.
+
+Measured (read-only, results/arc_leaderboard_eval_runs/; 5 applied + 1
+shadow receipt with a window, all window 120, seed 20260719): replaying
+the supervisor's window arithmetic from the recorded redirect indices and
+the level-up frame indices reproduces the recorded redirect boundaries
+exactly and the recorded `stagnations_unredirected` on all 6 rows. On that
+validated replay: level 0 is exhausted in every applied run (4/4/3/3/4
+windows, 18 total), each followed by the level-up at 771-888 that the
+shadow run reached with no lever pulled; deeper levels have 0 exhausted
+windows (force_exploration_diversity was never spent there; REQ-7040).
+The tool, reading receipts alone, emits 0 cells and 5 not-decidable rows
+on the live ledger; the ledger has no frame trace and this change does
+not ask the tool to re-derive what a receipt did not record.
+
+The input that fires the corrected cell is reachable: SCENARIO-7033-B
+drives the real TrajectorySupervisor through the r11l-1408494 timeline
+and gets exactly one cell (level 0, 4 windows, resolved 405 actions
+later) and none on level 2.
+
+Tests: 120 pass across the seven affected files (was 114). Mutation
+proofs follow in the next commit, which records them in the spec.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 108 +++++
+ .../agentic/arc_supervisor_refinement.py      | 177 +++++--
+ ...21_arc_dynamic_supervisor_banked_credit.py |  19 +
+ ...test_arc_supervisor_exhaustion_20260905.py | 432 ++++++++++++++----
+ .../python/test_arc_supervisor_refinement.py  |  64 ++-
+ ...21_arc_dynamic_supervisor_banked_credit.py |  19 +
+ 6 files changed, 700 insertions(+), 119 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index cd237d022c..c5f834689b 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -200,6 +200,14 @@ unioned with the arms it fired. Each cell SHALL name `arms_enabled` and `arms_en
+ - AND a row declaring four arms enabled that fired three is NOT a cell
+ - AND a row declaring three that fired three IS a cell with source `receipt`
+ 
++CORRECTION 2026-09-05 (append-only; see REQ-ARC-WMTE-7033 below). The second paragraph of this
++requirement and the first and third bullets of SCENARIO-7030-C are RETRACTED. They decided
++exhaustion from the arms fired anywhere in the run, but the supervisor clears its spent-arm set
++on every level-up, so "every enabled arm fired" pooled over a run is not "every enabled arm spent
++on the level that stagnated". Every one of the five cells that reading emitted was false. The
++enabled-set half of this requirement (`arms_enabled`, the legacy fallback, the source label) is
++unchanged and is still what REQ-7033 compares against; only the axis of the comparison moved.
++
+ Origin: 2026-09-05. `_new_arm_cells` compared against `set(ARM_ORDER)`. The tool rung was added
+ to `ARM_ORDER` on 2026-08-29, default OFF, so a default run could never satisfy the trigger.
+ Measured on the ledger as merged 2026-09-04: the trigger reported 1 cell (11 windows) and hid 4
+@@ -291,6 +299,100 @@ Implementation status (7030, 7031, 7032): implemented 2026-09-05
+ `tests/python/test_arc_eval_progress_heartbeat_20260904.py::test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry`).
+ Mutation proof: 12 of 12 mutations RED (M1 receipt drops the fired-arm union; M2 `enabled_arms` ignores the tool gate; M3 legacy fallback reads `ARM_ORDER`, the original bug; M4 the `_new_arm_cells` call site reverts to `set(ARM_ORDER)`; M5 the window row is never recorded; M6 the cap is removed; M7 the summary always reads `not_recorded`; M8 shadow rows are counted but never stored; M9 `control_matched` always False; M10 the control index ignores whether the level-up followed; M11 the heartbeat drops `stagnations_unredirected`; M12 the evidence row drops `arms_enabled`), each restored byte-identically (sha256 compare), scored only after the unmutated baseline passed and re-confirmed GREEN after the last restore.
+ 
++### REQ-ARC-WMTE-7033: Exhaustion SHALL be decided per level, on the axis the arms reset on
++
++`TrajectorySupervisor.observe` clears its spent-arm set (`_arms_used`) on every level-up. Its
++own comment says so: "Start the level fresh: arms become available again." So "every arm used"
++is a fact about ONE level, never about a run. `arc_supervisor_refinement._new_arm_cells` SHALL:
++
++1. Emit one cell per (receipt, level) where at least one `unredirected_windows` row on that
++   level (REQ-ARC-WMTE-7031) has `arms_used` that contains every arm in the receipt's enabled
++   set (REQ-ARC-WMTE-7030: `arms_enabled`, or the legacy default, unioned with the arms fired).
++   The row's `arms_used` IS the per-level set as it stood when the table failed to answer, so
++   this test is on the reset axis by construction.
++2. NEVER pool the arms fired across a run to decide exhaustion.
++3. List a receipt with `stagnations_unredirected > 0` and no window rows under
++   `exhaustion_not_decidable` with reason `no_window_rows_recorded`, never as a cell. List a
++   receipt whose kept rows show no exhaustion but which dropped rows past the cap with reason
++   `window_rows_dropped_past_cap`.
++4. Carry on each cell: `level`, `arms_fired_on_level`, `exhausted_windows`,
++   `windows_on_level`, `windows_dropped`, `first_exhausted_action_index`,
++   `level_resolved_by_levelup` (the level was later cleared with no new arm),
++   `actions_from_first_exhaustion_to_levelup` (None when it never resolved), and
++   `exhaustion_states` summarised over that level's exhausted rows only.
++5. Print the not-decidable list in the report, so zero cells is never read as "no level ran
++   dry". The evidence block SHALL carry `exhaustion_not_decidable` as a count.
++
++This amends REQ-ARC-WMTE-7030's second paragraph, retracts the first and third bullets of
++SCENARIO-ARC-WMTE-7030-C, and amends REQ-ARC-WMTE-6720 rule 4 / SCENARIO-ARC-WMTE-6720-6.
++
++#### SCENARIO-ARC-WMTE-7033-A: arms spent on different levels are not exhaustion
++- GIVEN one arm fired on each of levels 0, 1 and 2, each credited by its level-up, then two
++  windows on level 3 with no arm spent
++- THEN there is no cell and nothing is listed as not decidable
++
++#### SCENARIO-ARC-WMTE-7033-B: the recorded r11l timeline fires on level 0 only
++- GIVEN the real supervisor driven through the redirect and level-up timeline recorded in
++  `cd82-r11l-1408494.partial.json` (window 120; arms at 120/240/360; level-ups at 885 and
++  1010; two arms at 1130/1250 on level 2; 2310 observations)
++- THEN the receipt shows the recorded 13 windows (four on level 0 with all three arms spent,
++  one on level 1 with none, eight on level 2 with two)
++- AND exactly one cell: level 0, 4 exhausted windows, resolved by the level-up, 405 actions
++  from the first exhausted window to the level-up; level 2 is NOT a cell
++- AND a cell on a level no level-up cleared reads `level_resolved_by_levelup: false`
++
++#### SCENARIO-ARC-WMTE-7033-C: a stagnating legacy row is listed, not counted
++- GIVEN the three default arms fired, 14 unredirected windows, no window rows
++- THEN no cell; one not-decidable entry with reason `no_window_rows_recorded`; the report
++  prints it
++- AND a receipt whose kept rows are unexhausted but dropped 6 rows is listed with
++  `window_rows_dropped_past_cap`, while a kept exhausted row still decides
++
++#### SCENARIO-ARC-WMTE-7033-D: legacy rows alone do not move the status
++- GIVEN four stagnating legacy rows (the 2026-09-05 ledger shape, 53 windows)
++- THEN the status is `insufficient_evidence` and the specification is absent
++
++Origin: 2026-09-05 adversarial review of branch `worktree-agent-a83acaaa5293c1b8f`, confirmed
++against `arc_trajectory_supervisor.py` (`_arms_used.clear()` on level-up; `_first_eligible_arm`
++tests membership in that per-level set). The pooled trigger emitted 5 cells on the ledger; all 5
++were false by this definition.
++
++Measured on the same population, read-only (5 applied and 1 shadow receipt with a window in
++`results/arc_leaderboard_eval_runs/`, all window 120, seed 20260719), by replaying the
++supervisor's window arithmetic from the redirect action indices and the level-up frame indices
++in `level_reset_attribution.segments`; the replay is validated per row by two identities the
++receipt provides (the reconstructed redirect boundaries equal the recorded ones exactly, and the
++reconstructed unredirected count equals `stagnations_unredirected`), and all 6 rows validate:
++
++| receipt | level 0 exhausted windows | deeper levels exhausted | level 0 cleared at |
++|---|---|---|---|
++| cd82-r11l-1408494 row 0 (r11l) | 4 (480/600/720/840) | 0 | 885 |
++| cd82-r11l-727651 row 0 (r11l) | 4 | 0 | 885 |
++| cd82-r11l-727651 row 1 (cd82) | 3 (480/600/720) | 0 | 771 |
++| r11l-1594772 (r11l, tool rung on) | 3 (600/720/840) | 0 | 885 |
++| r11l-2491317 (r11l) | 4 | 0 | 888 |
++| r11l-3114878 (r11l, SHADOW) | 4 | 0 | 885 |
++
++So the honest per-level count on the recorded runs is 5 applied (receipt, level-0) cells with 18
++exhausted windows, every one followed by the level-up that the shadow run (no lever pulled) and
++the LLM-off smoke run (note section 6) reached at the same action; and 0 exhausted windows on
++any deeper level, because `force_exploration_diversity` was never spent there (REQ-ARC-WMTE-7040
++records why). The tool itself, reading receipts alone, emits 0 cells and 5 not-decidable rows
++on the live ledger: the reconstruction needs the frame trace, which the ledger does not keep,
++and this requirement does not ask the tool to re-derive what a receipt did not record. The next
++applied run with the REQ-7031 receipt will carry the rows and the tool will decide it directly.
++
++Implementation status: implemented 2026-09-05 (`python/carnot/agentic/arc_supervisor_refinement.py`:
++`exhausted_windows_by_level`, `_window_rows`, `_summarise_windows`, `_new_arm_cells` returning
++`(cells, not_decidable)`, `NOT_DECIDABLE_NO_WINDOW_ROWS`, `NOT_DECIDABLE_ROWS_DROPPED`, the
++`exhaustion_not_decidable` key and report lines; `python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py`
++passes `arms_enabled` / `unredirected_windows` / `unredirected_windows_dropped` into its corrected
++ledger; `tests/python/test_arc_supervisor_exhaustion_20260905.py` (7033-A..D plus the corrected
++7030-C / 7031-C tests), `tests/python/test_arc_supervisor_refinement.py`
++(`test_new_arm_specification_from_exhausted_receipt` amended,
++`test_no_new_arm_specification_from_a_pooled_legacy_receipt` added),
++`tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py` fixture amended).
++
+ ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
+ 
+ The repository SHALL expose a deterministic world-model trust-energy module for
+@@ -28040,6 +28142,12 @@ use, for the reason given in rule 4.
+ - THEN the output contains a written new-arm specification naming the cells
+   and counts, and contains no arm implementation.
+ 
++CORRECTION 2026-09-05 (append-only). Rule 4's `new_arm_specification` bullet and this
++scenario's GIVEN are amended by REQ-ARC-WMTE-7033: the arms must all be spent on ONE level (read
++from the receipt's per-level window rows, REQ-ARC-WMTE-7031), against the run's enabled set
++(REQ-ARC-WMTE-7030), not "every arm in ARM_ORDER appears in redirects" anywhere in the run. A
++receipt with no window rows is listed as not decidable and is never a cell.
++
+ #### SCENARIO-ARC-WMTE-6720-7 (anti-churn and clone pruning)
+ 
+ - GIVEN receipts with zero redirects
+diff --git a/python/carnot/agentic/arc_supervisor_refinement.py b/python/carnot/agentic/arc_supervisor_refinement.py
+index 86e500149c..be0cdedb92 100644
+--- a/python/carnot/agentic/arc_supervisor_refinement.py
++++ b/python/carnot/agentic/arc_supervisor_refinement.py
+@@ -240,18 +240,20 @@ def enabled_arms_for_entry(entry: dict[str, Any]) -> tuple[set[str], str]:
+     return set(LEGACY_DEFAULT_ARMS) | fired, "legacy_default"
+ 
+ 
+-def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
+-    """Count what the table saw across an entry's exhausted windows (REQ-ARC-WMTE-7031).
++def _window_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
++    """The per-window rows an entry kept (REQ-ARC-WMTE-7031); empty for a legacy row."""
+ 
+-    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
+-    window rows were kept" for "every flag read False"."""
++    return [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
++
++
++def _summarise_windows(windows: list[dict[str, Any]], dropped: int) -> dict[str, Any] | str:
++    """Per-flag counts over a list of window rows, or `not_recorded` when the list is empty."""
+ 
+-    windows = [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
+     if not windows:
+         return "not_recorded"
+     summary: dict[str, Any] = {
+         "windows_recorded": len(windows),
+-        "windows_dropped": int(entry.get("unredirected_windows_dropped") or 0),
++        "windows_dropped": int(dropped),
+         "levels": sorted({int(w["level"]) for w in windows if w.get("level") is not None}),
+         "arms_used_sets": sorted({",".join(w.get("arms_used") or []) for w in windows}),
+     }
+@@ -260,6 +262,39 @@ def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
+     return summary
+ 
+ 
++def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
++    """Count what the table saw across ALL of an entry's unredirected windows (REQ-ARC-WMTE-7031).
++
++    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
++    window rows were kept" for "every flag read False". This is the whole-entry view; a new-arm
++    cell summarises only the rows on its own level (REQ-ARC-WMTE-7033)."""
++
++    return _summarise_windows(
++        _window_rows(entry), int(entry.get("unredirected_windows_dropped") or 0)
++    )
++
++
++def exhausted_windows_by_level(entry: dict[str, Any]) -> dict[int, list[dict[str, Any]]]:
++    """Window rows at which every arm the run could fire was already spent ON THAT LEVEL.
++
++    REQ-ARC-WMTE-7033. The supervisor clears its spent-arm set on every level-up
++    (`TrajectorySupervisor.observe`), so "every arm used" is a fact about one level, never about
++    the run. A window row's `arms_used` is that per-level set as it stood when the table failed
++    to answer, so the test is `enabled <= row.arms_used`, row by row. Pooling the arms fired
++    across the whole run would call a run exhausted when no single level ever was (the
++    2026-09-05 defect: 5 cells, all false)."""
++
++    enabled, _ = enabled_arms_for_entry(entry)
++    by_level: dict[int, list[dict[str, Any]]] = {}
++    for row in _window_rows(entry):
++        used = row.get("arms_used")
++        if row.get("level") is None or not isinstance(used, list):
++            continue
++        if enabled <= {str(arm) for arm in used}:
++            by_level.setdefault(int(row["level"]), []).append(row)
++    return by_level
++
++
+ def extract_rows(doc: Any) -> list[dict[str, Any]]:
+     """Accept every shape a receipt producer has written.
+ 
+@@ -433,32 +468,90 @@ def wilson_bounds(helped: int, fired: int, z: float = WILSON_Z) -> tuple[float,
+     return ((center - margin) / denominator, (center + margin) / denominator)
+ 
+ 
+-def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+-    """Cells where every arm the run COULD fire fired and stagnation continued.
++NOT_DECIDABLE_NO_WINDOW_ROWS = "no_window_rows_recorded"
++NOT_DECIDABLE_ROWS_DROPPED = "window_rows_dropped_past_cap"
++
+ 
+-    REQ-ARC-WMTE-7030: the exhaustion set is the run's `arms_enabled`, not `ARM_ORDER`.
+-    REQ-ARC-WMTE-7031: each cell carries the state the table saw at its exhausted windows."""
++def _new_arm_cells(
++    entries: Iterable[dict[str, Any]],
++) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
++    """One cell per (receipt, level) where the table ran dry with every arm spent ON THAT LEVEL.
++
++    REQ-ARC-WMTE-7033: exhaustion is decided on the axis the arms reset on. A level is exhausted
++    when at least one of its window rows shows every enabled arm already used (REQ-7030 for the
++    enabled set, REQ-7031 for the rows). A receipt from before the rows existed carries only a
++    run-pooled count, so its levels cannot be read; it goes to the second list, `not_decidable`,
++    with the reason, instead of being guessed at from arms fired anywhere in the run."""
+ 
+     cells: list[dict[str, Any]] = []
++    not_decidable: list[dict[str, Any]] = []
+     for entry in entries:
+-        arms_fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
++        stagnations = int(entry.get("stagnations_unredirected") or 0)
++        dropped = int(entry.get("unredirected_windows_dropped") or 0)
++        windows = _window_rows(entry)
++        base = {
++            "game": entry.get("game"),
++            "seed": entry.get("seed"),
++            "window": entry.get("window"),
++            "source": entry.get("source"),
++            "levels": entry.get("levels"),
++            "stagnations_unredirected": stagnations,
++        }
++        if stagnations > 0 and not windows:
++            not_decidable.append({**base, "reason": NOT_DECIDABLE_NO_WINDOW_ROWS})
++            continue
+         enabled, enabled_source = enabled_arms_for_entry(entry)
+-        if entry.get("stagnations_unredirected", 0) > 0 and enabled <= arms_fired:
++        by_level = exhausted_windows_by_level(entry)
++        if not by_level:
++            if dropped > 0:
++                # Rows past the cap were not kept; a kept row would decide, a missing one cannot.
++                not_decidable.append(
++                    {**base, "reason": NOT_DECIDABLE_ROWS_DROPPED, "windows_dropped": dropped}
++                )
++            continue
++        redirects = [r for r in entry.get("redirects", []) if isinstance(r, dict)]
++        for level in sorted(by_level):
++            rows = by_level[level]
++            on_level = [r for r in redirects if r.get("level") == level]
++            # A level-up credits every redirect pending on that level, so "resolved" is the
++            # same answer for each of them; read it from any one.
++            resolved = any(r.get("resolved_by_levelup") is True for r in on_level)
++            levelup_at = next(
++                (
++                    int(r["action_index"]) + int(r["actions_to_levelup"])
++                    for r in on_level
++                    if r.get("resolved_by_levelup") is True
++                    and isinstance(r.get("action_index"), int)
++                    and isinstance(r.get("actions_to_levelup"), int)
++                ),
++                None,
++            )
++            first = min(
++                (int(w["action_index"]) for w in rows if isinstance(w.get("action_index"), int)),
++                default=None,
++            )
+             cells.append(
+                 {
+-                    "game": entry.get("game"),
+-                    "seed": entry.get("seed"),
+-                    "window": entry.get("window"),
+-                    "source": entry.get("source"),
+-                    "levels": entry.get("levels"),
+-                    "arms_fired": sorted(arms_fired),
++                    **base,
++                    "level": level,
+                     "arms_enabled": sorted(enabled),
+                     "arms_enabled_source": enabled_source,
+-                    "stagnations_unredirected": entry.get("stagnations_unredirected"),
+-                    "exhaustion_states": exhaustion_summary(entry),
++                    "arms_fired_on_level": sorted({str(r.get("arm")) for r in on_level}),
++                    "exhausted_windows": len(rows),
++                    "windows_on_level": sum(1 for w in windows if w.get("level") == level),
++                    "windows_dropped": dropped,
++                    "first_exhausted_action_index": first,
++                    # True when the level was later cleared with no new arm: the table ran
++                    # dry and the classical path got through anyway. Weaker evidence for a
++                    # new arm than a level that never resolved.
++                    "level_resolved_by_levelup": resolved,
++                    "actions_from_first_exhaustion_to_levelup": (
++                        levelup_at - first if levelup_at is not None and first is not None else None
++                    ),
++                    "exhaustion_states": _summarise_windows(rows, dropped),
+                 }
+             )
+-    return cells
++    return cells, not_decidable
+ 
+ 
+ def _control_index(controls: Iterable[dict[str, Any]]) -> set[tuple[Any, ...]]:
+@@ -610,7 +703,7 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 }
+             )
+ 
+-    cells = _new_arm_cells(entries)
++    cells, exhaustion_not_decidable = _new_arm_cells(entries)
+     new_arm_specification: dict[str, Any] | None = None
+     if cells:
+         new_arm_specification = {
+@@ -622,8 +715,9 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 "arm implementation."
+             ),
+             "trigger": (
+-                "every arm the run could fire (arms_enabled) fired and stagnation "
+-                "continued (stagnations_unredirected > 0) in the cells below"
++                "on ONE level, every arm the run could fire (arms_enabled) was already "
++                "spent when a stagnation window passed with no arm to fire; one cell per "
++                "(receipt, level) below (REQ-ARC-WMTE-7033)"
+             ),
+             "cells": cells,
+         }
+@@ -648,8 +742,9 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 "retire_candidate: fired >= floor and helped == 0",
+                 "raise_priority_candidate: arm and pooled others both at floor, "
+                 "arm lower bound > others upper bound",
+-                "new_arm_specification: a receipt fired every arm its run could fire "
+-                "(arms_enabled) and still recorded stagnations_unredirected > 0",
++                "new_arm_specification: on one level, a window row shows every arm the run "
++                "could fire (arms_enabled) already spent on that level; a receipt with no "
++                "window rows is listed as not decidable, never as a cell",
+             ],
+         },
+         "recommendation_only": True,
+@@ -665,10 +760,13 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+             "controls": len(controls),
+             "helped_total": sum(1 for r in redirects if r["resolved_by_levelup"]),
+             "helped_matched_by_control_total": sum(1 for r in redirects if r["control_matched"]),
++            # REQ-ARC-WMTE-7033: receipts that stagnated but carry no per-level window rows.
++            "exhaustion_not_decidable": len(exhaustion_not_decidable),
+         },
+         "per_arm": per_arm,
+         "recommendations": recommendations,
+         "new_arm_specification": new_arm_specification,
++        "exhaustion_not_decidable": exhaustion_not_decidable,
+     }
+ 
+ 
+@@ -722,14 +820,19 @@ def render_report(recommendation: dict[str, Any]) -> str:
+     spec = recommendation.get("new_arm_specification")
+     if spec:
+         lines.append(
+-            "  NEW ARM SPECIFICATION (for a human): every arm fired and "
+-            f"stagnation continued in {len(spec['cells'])} cell(s):"
++            "  NEW ARM SPECIFICATION (for a human): on one level every enabled arm was "
++            f"spent and stagnation continued, in {len(spec['cells'])} (receipt, level) cell(s):"
+         )
+         for cell in spec["cells"]:
++            # REQ-ARC-WMTE-7033: the cell names its level and whether that level was later
++            # cleared anyway, so the reader can weigh the cell before proposing an arm.
+             lines.append(
+                 f"    game={cell['game']} seed={cell['seed']} "
+-                f"window={cell['window']} "
+-                f"stagnations_unredirected={cell['stagnations_unredirected']} "
++                f"window={cell['window']} level={cell.get('level')} "
++                f"exhausted_windows={cell.get('exhausted_windows')} "
++                f"level_resolved_by_levelup={cell.get('level_resolved_by_levelup')} "
++                f"actions_from_first_exhaustion_to_levelup="
++                f"{cell.get('actions_from_first_exhaustion_to_levelup')} "
+                 f"arms_enabled={','.join(cell.get('arms_enabled') or [])} "
+                 f"({cell.get('arms_enabled_source', '?')})"
+             )
+@@ -748,6 +851,20 @@ def render_report(recommendation: dict[str, Any]) -> str:
+                 )
+             else:
+                 lines.append(f"      states: {states}")
++    undecided = recommendation.get("exhaustion_not_decidable") or []
++    if undecided:
++        # REQ-ARC-WMTE-7033: say out loud which stagnating receipts the reader cannot judge,
++        # so zero cells is never mistaken for "no level ever ran dry".
++        lines.append(
++            f"  EXHAUSTION NOT DECIDABLE for {len(undecided)} receipt(s) that stagnated but "
++            "carry no per-level window rows (written before REQ-ARC-WMTE-7031):"
++        )
++        for item in undecided:
++            lines.append(
++                f"    game={item['game']} seed={item['seed']} window={item['window']} "
++                f"stagnations_unredirected={item['stagnations_unredirected']} "
++                f"reason={item['reason']}"
++            )
+     lines.append(f"caveat: {recommendation['causal_caveat']}")
+     return "\n".join(lines)
+ 
+diff --git a/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py b/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
+index 8db9e54f7c..e604830fa4 100644
+--- a/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
++++ b/python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py
+@@ -29,6 +29,7 @@ from carnot.agentic.arc_solve_artifact_discipline import (
+ )
+ from carnot.agentic.arc_supervisor_refinement import (
+     LEDGER_SCHEMA,
++    MAX_UNREDIRECTED_WINDOWS,
+     MIN_FIRED_PER_ARM,
+     classify_receipt,
+     empty_ledger,
+@@ -714,6 +715,24 @@ def replay_banked_credit(applied: Sequence[Mapping[str, Any]]) -> JsonDict:
+             "levels": row.get("levels"),
+             "redirects": corrected_redirects,
+             "receipt_id": row_id,
++            # REQ-ARC-WMTE-7033: exhaustion is read per level from the receipt's own window
++            # rows. Without them the corrected ledger could only pool arms across the run,
++            # which is the defect the refinement tool no longer commits.
++            "arms_enabled": (
++                [str(arm) for arm in receipt["arms_enabled"]]
++                if isinstance(receipt.get("arms_enabled"), list)
++                else None
++            ),
++            "unredirected_windows": [
++                dict(item)
++                for item in (receipt.get("unredirected_windows") or [])
++                if isinstance(item, Mapping)
++            ][:MAX_UNREDIRECTED_WINDOWS],
++            "unredirected_windows_dropped": (
++                receipt.get("unredirected_windows_dropped")
++                if isinstance(receipt.get("unredirected_windows_dropped"), int)
++                else None
++            ),
+         }
+         per_game.append(
+             {
+diff --git a/tests/python/test_arc_supervisor_exhaustion_20260905.py b/tests/python/test_arc_supervisor_exhaustion_20260905.py
+index d1e5485edd..58b4e64529 100644
+--- a/tests/python/test_arc_supervisor_exhaustion_20260905.py
++++ b/tests/python/test_arc_supervisor_exhaustion_20260905.py
+@@ -1,7 +1,8 @@
+-"""Spec: REQ-ARC-WMTE-7030, REQ-ARC-WMTE-7031, REQ-ARC-WMTE-7032 and their scenarios.
++"""Spec: REQ-ARC-WMTE-7030, 7031, 7032, 7033 and their scenarios.
+ 
+ The trajectory supervisor says which arms its run could fire and what it saw at each window
+-it could not answer; the refinement tool reads both, and keeps shadow receipts as controls.
++it could not answer; the refinement tool reads both, keeps shadow receipts as controls, and
++decides exhaustion PER LEVEL (the axis the arms reset on), never pooled over the run.
+ 
+ MEASURED 2026-09-05 (population: the 14 receipts in ops/arc_supervisor_refinement_ledger.json
+ and the 14 artifacts in results/arc_leaderboard_eval_runs/):
+@@ -13,6 +14,10 @@ and the 14 artifacts in results/arc_leaderboard_eval_runs/):
+ - One shadow receipt (r11l, seed 20260719, window 120) leveled up at action 813 with nothing
+   applied, and its would-have rows at 120/240/360 carry the same 765/645/525 actions-to-level-up
+   that four applied runs booked as `helped`. A control now exists; the tool ignored it. REQ-7032.
++- The five cells the pooled trigger emitted were all false: `_arms_used` is cleared on every
++  level-up (arc_trajectory_supervisor.observe), so "every arm fired" pooled over the run is not
++  "every arm spent on the level that stagnated". Read per level from the receipts alone, none of
++  the 14 ledger rows is decidable (no window rows). REQ-7033.
+ """
+ 
+ from __future__ import annotations
+@@ -25,10 +30,14 @@ import pytest
+ from carnot.agentic.arc_supervisor_refinement import (
+     LEGACY_DEFAULT_ARMS,
+     MIN_FIRED_PER_ARM,
++    NOT_DECIDABLE_NO_WINDOW_ROWS,
++    NOT_DECIDABLE_ROWS_DROPPED,
++    STATUS_INSUFFICIENT,
+     STATUS_RECOMMENDATION,
+     empty_ledger,
+     enabled_arms_for_entry,
+     evaluate,
++    exhausted_windows_by_level,
+     exhaustion_summary,
+     ingest_files,
+     load_ledger,
+@@ -62,10 +71,12 @@ def _snap(**overrides) -> TrajectorySnapshot:
+     return TrajectorySnapshot(**base)
+ 
+ 
+-def _redirect(arm: str, resolved: bool, level: int = 0, a2l: int | None = None) -> dict:
++def _redirect(
++    arm: str, resolved: bool, level: int = 0, a2l: int | None = None, idx: int = 120
++) -> dict:
+     return {
+         "arm": arm,
+-        "action_index": 120,
++        "action_index": idx,
+         "level": level,
+         "diagnosis": "test",
+         "resolved_by_levelup": resolved,
+@@ -81,6 +92,7 @@ def _applied_row(
+     stag: int = 0,
+     arms_enabled: list[str] | None = None,
+     windows: list[dict] | None = None,
++    dropped: int = 0,
+     levels: int = 2,
+ ) -> dict:
+     receipt: dict = {
+@@ -97,7 +109,7 @@ def _applied_row(
+         receipt["arms_enabled"] = arms_enabled
+     if windows is not None:
+         receipt["unredirected_windows"] = windows
+-        receipt["unredirected_windows_dropped"] = 0
++        receipt["unredirected_windows_dropped"] = dropped
+     return {
+         "game": game,
+         "seed": seed,
+@@ -153,7 +165,8 @@ def _ingest(tmp_path: Path, rows: list[dict], name: str = "rows.json") -> tuple[
+     return ledger, counts
+ 
+ 
+-def _exhausted_windows(n: int, **state) -> list[dict]:
++def _windows(n: int, *, start: int = 1490, **state) -> list[dict]:
++    """`n` window rows, 120 actions apart, on level 2 with two arms spent unless overridden."""
+     base = {
+         "level": 2,
+         "arms_used": [ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION],
+@@ -166,7 +179,11 @@ def _exhausted_windows(n: int, **state) -> list[dict]:
+         "diversity_active": True,
+     }
+     base.update(state)
+-    return [{"action_index": 1490 + 120 * i, **base} for i in range(n)]
++    return [{"action_index": start + 120 * i, **base} for i in range(n)]
++
++
++def _entry(ledger: dict) -> dict:
++    return next(iter(ledger["entries"].values()))
+ 
+ 
+ # --- REQ-ARC-WMTE-7030: the receipt names the arms the run could fire ----------------------
+@@ -209,67 +226,88 @@ def test_scenario_7030_b_an_arm_that_fired_is_enabled_even_after_a_late_env_flip
+     assert sup.receipt()["arms_enabled"] == list(ARM_ORDER)
+ 
+ 
+-def test_scenario_7030_c_legacy_row_with_three_default_arms_is_an_exhausted_cell(
++def test_scenario_7030_c_a_declared_four_arm_run_that_spent_three_on_a_level_is_not_exhausted(
+     tmp_path: Path,
+ ) -> None:
+-    """SCENARIO-ARC-WMTE-7030-C: the 2026-09-05 shape. A row with no `arms_enabled` that
+-    fired the three default arms and still stagnated IS a new-arm cell; reading ARM_ORDER
+-    (which holds the default-off tool rung) hid four of five such cells."""
+-    row = _applied_row(
+-        redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
+-        stag=14,
+-    )
+-    ledger, _ = _ingest(tmp_path, [row])
+-    entry = next(iter(ledger["entries"].values()))
+-    assert entry["arms_enabled"] is None
+-    enabled, source = enabled_arms_for_entry(entry)
+-    assert enabled == set(LEGACY_DEFAULT_ARMS)
+-    assert source == "legacy_default"
+-    spec = evaluate(ledger, NOW)["new_arm_specification"]
+-    assert spec is not None
+-    assert len(spec["cells"]) == 1
+-    cell = spec["cells"][0]
+-    assert cell["arms_enabled_source"] == "legacy_default"
+-    assert cell["stagnations_unredirected"] == 14
+-    assert "arms_enabled" in spec["trigger"]
+-
+-
+-def test_scenario_7030_c_a_declared_four_arm_run_that_fired_three_is_not_exhausted(
+-    tmp_path: Path,
+-) -> None:
+-    """SCENARIO-ARC-WMTE-7030-C: a run that declares the tool rung enabled but never fired
+-    it still had a rung left, so it is not a cell. The declared set wins over the legacy default."""
++    """SCENARIO-ARC-WMTE-7030-C as corrected by REQ-7033: the enabled set is still the
++    receipt's `arms_enabled` (legacy rows fall back to the three default-on arms), but it is
++    compared against the arms spent ON THE LEVEL of each window row. A run that declares the
++    tool rung enabled and spent three arms on the level still had a rung left: not a cell. A
++    run that declares three and spent three on the level IS a cell, source `receipt`."""
++    spent_three = _windows(2, level=0, arms_used=list(LEGACY_DEFAULT_ARMS))
+     declared_four = _applied_row(
+         seed=1,
+         redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
+-        stag=5,
++        stag=2,
+         arms_enabled=list(ARM_ORDER),
++        windows=spent_three,
+     )
+     declared_three = _applied_row(
+         seed=2,
+         redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
+-        stag=5,
++        stag=2,
+         arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=spent_three,
+     )
+     ledger, _ = _ingest(tmp_path, [declared_four, declared_three])
+     spec = evaluate(ledger, NOW)["new_arm_specification"]
+     assert spec is not None
+-    assert [(c["seed"], c["arms_enabled_source"]) for c in spec["cells"]] == [(2, "receipt")]
++    assert [(c["seed"], c["arms_enabled_source"], c["level"]) for c in spec["cells"]] == [
++        (2, "receipt", 0)
++    ]
++    assert "REQ-ARC-WMTE-7033" in spec["trigger"]
+ 
+ 
+ def test_scenario_7030_c_a_fired_arm_is_unioned_into_a_declared_set(tmp_path: Path) -> None:
+     """A receipt that declares three arms but fired the tool rung anyway (a late env flip
+-    on an old receipt) counts the tool rung as enabled, so the fired set is exhausted only
+-    when every one of the four is present."""
+-    row = _applied_row(
+-        redirects=[_redirect(arm, False) for arm in ARM_ORDER],
+-        stag=3,
++    on an old receipt) counts the tool rung as enabled, so a level is exhausted only when
++    every one of the four was spent on it."""
++    redirects = [_redirect(arm, False) for arm in ARM_ORDER]
++    three_spent = _applied_row(
++        seed=1,
++        redirects=redirects,
++        stag=1,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(1, level=0, arms_used=list(LEGACY_DEFAULT_ARMS)),
++    )
++    four_spent = _applied_row(
++        seed=2,
++        redirects=redirects,
++        stag=1,
+         arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(1, level=0, arms_used=list(ARM_ORDER)),
++    )
++    ledger, _ = _ingest(tmp_path, [three_spent, four_spent])
++    for entry in ledger["entries"].values():
++        enabled, _ = enabled_arms_for_entry(entry)
++        assert enabled == set(ARM_ORDER)
++    spec = evaluate(ledger, NOW)["new_arm_specification"]
++    assert spec is not None
++    assert [c["seed"] for c in spec["cells"]] == [2]
++
++
++def test_scenario_7030_c_a_legacy_row_falls_back_to_the_three_default_arms(
++    tmp_path: Path,
++) -> None:
++    """A row with no `arms_enabled` whose window row spent the three default-on arms IS a
++    cell; reading ARM_ORDER (which holds the default-off tool rung) as the set would hide it.
++    The 2026-09-05 count: 4 of 5 pooled cells hidden by exactly that read."""
++    row = _applied_row(
++        redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
++        stag=1,
++        windows=_windows(1, level=0, arms_used=list(LEGACY_DEFAULT_ARMS)),
+     )
+     ledger, _ = _ingest(tmp_path, [row])
+-    enabled, _ = enabled_arms_for_entry(next(iter(ledger["entries"].values())))
+-    assert enabled == set(ARM_ORDER)
+-    assert evaluate(ledger, NOW)["new_arm_specification"] is not None
++    entry = _entry(ledger)
++    assert entry["arms_enabled"] is None
++    enabled, source = enabled_arms_for_entry(entry)
++    assert enabled == set(LEGACY_DEFAULT_ARMS)
++    assert source == "legacy_default"
++    spec = evaluate(ledger, NOW)["new_arm_specification"]
++    assert spec is not None
++    assert [(c["level"], c["arms_enabled_source"]) for c in spec["cells"]] == [
++        (0, "legacy_default")
++    ]
+ 
+ 
+ # --- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw ------------
+@@ -350,12 +388,17 @@ def test_scenario_7031_b_the_window_list_is_bounded_and_overflow_is_counted() ->
+     assert receipt["unredirected_windows_dropped"] == 5
+ 
+ 
+-def test_scenario_7031_c_the_cell_summarises_the_exhaustion_states(tmp_path: Path) -> None:
+-    """SCENARIO-ARC-WMTE-7031-C: the ledger keeps the rows and the new-arm cell counts them
+-    per flag; the report prints the counts."""
+-    windows = _exhausted_windows(9) + _exhausted_windows(
++def test_scenario_7031_c_the_cell_summarises_the_states_on_its_own_level(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7031-C as corrected by REQ-7033: the ledger keeps every row; the
++    cell counts only the rows on ITS level that spent every enabled arm. Nine level-2 rows
++    with two arms spent are recorded but are not exhaustion; two level-0 rows with all three
++    spent are the cell. The whole-entry summary still reads all eleven."""
++    windows = _windows(9) + _windows(
+         2,
+         level=0,
++        start=480,
+         arms_used=list(LEGACY_DEFAULT_ARMS),
+         attempt_cap_reached=False,
+         induction_attempts=1,
+@@ -367,43 +410,47 @@ def test_scenario_7031_c_the_cell_summarises_the_exhaustion_states(tmp_path: Pat
+         windows=windows,
+     )
+     ledger, _ = _ingest(tmp_path, [row])
+-    entry = next(iter(ledger["entries"].values()))
++    entry = _entry(ledger)
+     assert len(entry["unredirected_windows"]) == 11
+     assert entry["unredirected_windows_dropped"] == 0
++    assert exhaustion_summary(entry)["windows_recorded"] == 11
+     recommendation = evaluate(ledger, NOW)
+-    states = recommendation["new_arm_specification"]["cells"][0]["exhaustion_states"]
+-    assert states == {
+-        "windows_recorded": 11,
++    cells = recommendation["new_arm_specification"]["cells"]
++    assert [c["level"] for c in cells] == [0]
++    assert cells[0]["exhausted_windows"] == 2
++    assert cells[0]["windows_on_level"] == 2
++    assert cells[0]["exhaustion_states"] == {
++        "windows_recorded": 2,
+         "windows_dropped": 0,
+-        "levels": [0, 2],
+-        "arms_used_sets": sorted(
+-            {
+-                ",".join([ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION]),
+-                ",".join(LEGACY_DEFAULT_ARMS),
+-            }
+-        ),
++        "levels": [0],
++        "arms_used_sets": [",".join(LEGACY_DEFAULT_ARMS)],
+         "goal_bias_installed": 0,
+-        "induced": 11,
+-        "attempt_cap_reached": 9,
+-        "evidence_floor_met": 11,
+-        "diversity_active": 11,
++        "induced": 2,
++        "attempt_cap_reached": 0,
++        "evidence_floor_met": 2,
++        "diversity_active": 2,
+     }
+     report = render_report(recommendation)
+-    assert "states: windows=11 levels=[0, 2] attempt_cap_reached=9" in report
++    assert "level=0 exhausted_windows=2" in report
++    assert "states: windows=2 levels=[0] attempt_cap_reached=0" in report
+ 
+ 
+-def test_scenario_7031_c_a_legacy_row_reads_not_recorded(tmp_path: Path) -> None:
+-    """A row from before the field must not read as "every flag False"."""
++def test_scenario_7031_c_a_legacy_row_reads_not_recorded_and_is_not_a_cell(
++    tmp_path: Path,
++) -> None:
++    """A row from before the field must not read as "every flag False", and (REQ-7033) it
++    must not read as a cell either: its levels cannot be told apart."""
+     row = _applied_row(redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS], stag=14)
+     ledger, _ = _ingest(tmp_path, [row])
+-    entry = next(iter(ledger["entries"].values()))
++    entry = _entry(ledger)
+     assert entry["unredirected_windows"] == []
+     assert exhaustion_summary(entry) == "not_recorded"
++    assert exhausted_windows_by_level(entry) == {}
+     recommendation = evaluate(ledger, NOW)
+-    assert (
+-        recommendation["new_arm_specification"]["cells"][0]["exhaustion_states"] == "not_recorded"
+-    )
+-    assert "states: not_recorded" in render_report(recommendation)
++    assert recommendation["new_arm_specification"] is None
++    report = render_report(recommendation)
++    assert "NEW ARM SPECIFICATION" not in report
++    assert "reason=no_window_rows_recorded" in report
+ 
+ 
+ def test_scenario_7031_c_the_ledger_copy_is_bounded_too(tmp_path: Path) -> None:
+@@ -411,10 +458,10 @@ def test_scenario_7031_c_the_ledger_copy_is_bounded_too(tmp_path: Path) -> None:
+     row = _applied_row(
+         redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
+         stag=MAX_UNREDIRECTED_WINDOWS + 10,
+-        windows=_exhausted_windows(MAX_UNREDIRECTED_WINDOWS + 10),
++        windows=_windows(MAX_UNREDIRECTED_WINDOWS + 10),
+     )
+     ledger, _ = _ingest(tmp_path, [row])
+-    entry = next(iter(ledger["entries"].values()))
++    entry = _entry(ledger)
+     assert len(entry["unredirected_windows"]) == MAX_UNREDIRECTED_WINDOWS
+ 
+ 
+@@ -544,10 +591,235 @@ def test_scenario_7032_d_a_ledger_from_before_the_control_pool_loads(tmp_path: P
+     assert recommendation["evidence"]["controls"] == 0
+ 
+ 
+-def test_scenario_7032_status_is_recommendation_when_only_legacy_cells_exist(
++# --- REQ-ARC-WMTE-7033: exhaustion is decided on the axis the arms reset on ---------------
++
++
++def test_scenario_7033_a_arms_spent_on_different_levels_are_not_exhaustion(
+     tmp_path: Path,
+ ) -> None:
+-    """The widened trigger alone moves the ledger's status; the human sees every cell."""
++    """SCENARIO-ARC-WMTE-7033-A: the 2026-09-05 defect input. One arm fired on each of
++    levels 0, 1 and 2, each credited by that level's level-up, then two windows passed on
++    level 3 with NO arm spent. Pooled over the run every enabled arm fired and stagnation
++    continued; on no single level was the table ever out of arms. Not a cell, and (rows
++    exist) not undecidable either."""
++    row = _applied_row(
++        redirects=[
++            _redirect(ARM_DROP_GOAL_BIAS, True, level=0, a2l=200, idx=120),
++            _redirect(ARM_ALLOW_REINDUCTION, True, level=1, a2l=150, idx=440),
++            _redirect(ARM_FORCE_DIVERSITY, True, level=2, a2l=90, idx=710),
++        ],
++        stag=2,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(2, level=3, start=920, arms_used=[]),
++        levels=3,
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    recommendation = evaluate(ledger, NOW)
++    assert recommendation["new_arm_specification"] is None
++    assert recommendation["exhaustion_not_decidable"] == []
++    assert recommendation["evidence"]["exhaustion_not_decidable"] == 0
++
++
++def _replay_r11l_1408494(monkeypatch) -> TrajectorySupervisor:
++    """Drive the REAL supervisor through the redirect and level-up timeline recorded in
++    results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json (r11l, seed 20260719,
++    window 120, 2310 observations): drop_goal_bias at 120, force_exploration_diversity at 240,
++    allow_reinduction at 360, level-ups at 885 and 1010, drop_goal_bias at 1130 and
++    allow_reinduction at 1250 on level 2, 13 unredirected windows. The snapshot stream is
++    synthetic; the firing sequence, level-up calls and window count it produces are the
++    recorded ones, checked by the assertions in the caller."""
++    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
++    sup = TrajectorySupervisor(
++        window=120, reinduction_evidence_floor=200, reinduction_attempt_cap=3
++    )
++    level_ups = {885: 1, 1010: 2}
++
++    def snapshot(t: int) -> TrajectorySnapshot:
++        if t <= 120:
++            return _snap(level=0, goal_bias_installed=True)
++        if t <= 240:
++            return _snap(level=0)
++        if t <= 360:
++            return _snap(
++                level=0, induced=True, induction_attempts=1, new_transitions_since_induction=299
++            )
++        if t < 885:
++            return _snap(level=0, induced=True, induction_attempts=2, diversity_active=True)
++        if t < 1010:
++            return _snap(level=1, diversity_active=True)
++        if t <= 1130:
++            return _snap(level=2, goal_bias_installed=True, diversity_active=True)
++        if t <= 1250:
++            return _snap(
++                level=2,
++                induced=True,
++                induction_attempts=1,
++                new_transitions_since_induction=223,
++                diversity_active=True,
++            )
++        return _snap(level=2, induced=True, induction_attempts=3, diversity_active=True)
++
++    for t in range(1, 2311):
++        level = level_ups.get(t)
++        snap = snapshot(t) if level is None else _snap(level=level, diversity_active=True)
++        sup.observe(snap)
++    return sup
++
++
++def test_scenario_7033_b_the_recorded_r11l_timeline_is_exhausted_on_level_0_only(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-ARC-WMTE-7033-B: the input that fires the corrected cell is reachable, and
++    it is the recorded r11l run. Replayed through the real supervisor the receipt shows the
++    recorded 13 windows: four on level 0 after all three arms were spent (480/600/720/840),
++    one on level 1 with nothing spent, eight on level 2 with two arms spent. Exactly one cell:
++    level 0, resolved by the level-up at 885, 405 actions after the first exhausted window.
++    Level 2 -- the level that never resolved -- is NOT a cell: one rung was never spent there."""
++    sup = _replay_r11l_1408494(monkeypatch)
++    receipt = sup.receipt()
++    assert [(r["arm"], r["action_index"], r["level"]) for r in receipt["redirects"]] == [
++        (ARM_DROP_GOAL_BIAS, 120, 0),
++        (ARM_FORCE_DIVERSITY, 240, 0),
++        (ARM_ALLOW_REINDUCTION, 360, 0),
++        (ARM_DROP_GOAL_BIAS, 1130, 2),
++        (ARM_ALLOW_REINDUCTION, 1250, 2),
++    ]
++    assert [r["actions_to_levelup"] for r in receipt["redirects"]] == [765, 645, 525, None, None]
++    assert receipt["stagnations_unredirected"] == 13
++    rows = receipt["unredirected_windows"]
++    assert [(w["action_index"], w["level"]) for w in rows] == [
++        (480, 0),
++        (600, 0),
++        (720, 0),
++        (840, 0),
++        (1005, 1),
++        *[(1370 + 120 * i, 2) for i in range(8)],
++    ]
++    assert all(set(w["arms_used"]) == set(LEGACY_DEFAULT_ARMS) for w in rows[:4])
++    assert rows[4]["arms_used"] == []
++    assert all(
++        w["arms_used"] == sorted([ARM_ALLOW_REINDUCTION, ARM_DROP_GOAL_BIAS]) for w in rows[5:]
++    )
++
++    row = {
++        "game": "r11l",
++        "seed": 20260719,
++        "arm": "eval:e3:budget20000",
++        "levels": 2,
++        "actions": 2126,
++        "trajectory_supervisor": {**receipt, "mode": "applied"},
++    }
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = _entry(ledger)
++    assert set(exhausted_windows_by_level(entry)) == {0}
++    recommendation = evaluate(ledger, NOW)
++    cells = recommendation["new_arm_specification"]["cells"]
++    assert len(cells) == 1
++    cell = cells[0]
++    assert cell["level"] == 0
++    assert cell["exhausted_windows"] == 4
++    assert cell["windows_on_level"] == 4
++    assert cell["first_exhausted_action_index"] == 480
++    assert cell["arms_fired_on_level"] == sorted(LEGACY_DEFAULT_ARMS)
++    assert cell["arms_enabled"] == sorted(LEGACY_DEFAULT_ARMS)
++    assert cell["arms_enabled_source"] == "receipt"
++    assert cell["level_resolved_by_levelup"] is True
++    assert cell["actions_from_first_exhaustion_to_levelup"] == 405
++    assert cell["exhaustion_states"]["windows_recorded"] == 4
++    assert cell["exhaustion_states"]["levels"] == [0]
++    assert recommendation["exhaustion_not_decidable"] == []
++    report = render_report(recommendation)
++    assert "level=0 exhausted_windows=4 level_resolved_by_levelup=True" in report
++    assert "actions_from_first_exhaustion_to_levelup=405" in report
++
++
++def test_scenario_7033_b_a_level_that_never_resolves_reads_unresolved(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7033-B: a cell on a level no level-up ever cleared reads
++    `level_resolved_by_levelup: false` and no actions-to-level-up, and names its level."""
++    row = _applied_row(
++        redirects=[
++            _redirect(arm, False, level=2, idx=1130 + 120 * i)
++            for i, arm in enumerate(LEGACY_DEFAULT_ARMS)
++        ],
++        stag=3,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(3, level=2, start=1490, arms_used=list(LEGACY_DEFAULT_ARMS)),
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    cells = evaluate(ledger, NOW)["new_arm_specification"]["cells"]
++    assert [(c["level"], c["level_resolved_by_levelup"]) for c in cells] == [(2, False)]
++    assert cells[0]["actions_from_first_exhaustion_to_levelup"] is None
++    assert cells[0]["first_exhausted_action_index"] == 1490
++    assert cells[0]["exhausted_windows"] == 3
++
++
++def test_scenario_7033_c_a_stagnating_legacy_row_is_listed_as_not_decidable(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7033-C: the shape of every stagnating row in the 2026-09-05 ledger.
++    Three default arms fired, 14 unredirected windows, no window rows. Not a cell (the old
++    SCENARIO-7030-C said it was; retracted). Listed, with the reason, so zero cells cannot be
++    read as "no level ever ran dry"."""
++    row = _applied_row(
++        redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
++        stag=14,
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = _entry(ledger)
++    recommendation = evaluate(ledger, NOW)
++    assert recommendation["new_arm_specification"] is None
++    assert recommendation["exhaustion_not_decidable"] == [
++        {
++            "game": "r11l",
++            "seed": 20260719,
++            "window": 120,
++            "source": entry["source"],
++            "levels": 2,
++            "stagnations_unredirected": 14,
++            "reason": NOT_DECIDABLE_NO_WINDOW_ROWS,
++        }
++    ]
++    assert recommendation["evidence"]["exhaustion_not_decidable"] == 1
++    report = render_report(recommendation)
++    assert "EXHAUSTION NOT DECIDABLE for 1 receipt(s)" in report
++    assert "stagnations_unredirected=14 reason=no_window_rows_recorded" in report
++
++
++def test_scenario_7033_c_rows_dropped_past_the_cap_are_listed_when_no_kept_row_decides(
++    tmp_path: Path,
++) -> None:
++    """A receipt whose kept rows show no exhaustion but which dropped rows past the cap is
++    listed with `window_rows_dropped_past_cap`; a kept row that IS exhausted still decides."""
++    undecided = _applied_row(
++        seed=1,
++        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
++        stag=70,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(64, level=2, arms_used=[ARM_DROP_GOAL_BIAS]),
++        dropped=6,
++    )
++    decided = _applied_row(
++        seed=2,
++        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
++        stag=70,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=_windows(64, level=2, arms_used=list(LEGACY_DEFAULT_ARMS)),
++        dropped=6,
++    )
++    ledger, _ = _ingest(tmp_path, [undecided, decided])
++    recommendation = evaluate(ledger, NOW)
++    assert [
++        (u["seed"], u["reason"], u["windows_dropped"])
++        for u in recommendation["exhaustion_not_decidable"]
++    ] == [(1, NOT_DECIDABLE_ROWS_DROPPED, 6)]
++    cells = recommendation["new_arm_specification"]["cells"]
++    assert [(c["seed"], c["level"], c["windows_dropped"]) for c in cells] == [(2, 2, 6)]
++
++
++def test_scenario_7033_d_legacy_rows_alone_do_not_move_the_status(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7033-D: the 2026-09-05 ledger shape (four stagnating legacy rows,
++    three arms fired each, 53 windows) reads `insufficient_evidence`, not a recommendation.
++    The pooled trigger had moved the status on these same rows with five false cells."""
+     rows = [
+         _applied_row(
+             seed=s, redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS], stag=n
+@@ -556,6 +828,8 @@ def test_scenario_7032_status_is_recommendation_when_only_legacy_cells_exist(
+     ]
+     ledger, _ = _ingest(tmp_path, rows)
+     recommendation = evaluate(ledger, NOW)
+-    assert recommendation["status"] == STATUS_RECOMMENDATION
+-    assert len(recommendation["new_arm_specification"]["cells"]) == 4
++    assert recommendation["status"] == STATUS_INSUFFICIENT
++    assert recommendation["new_arm_specification"] is None
++    assert len(recommendation["exhaustion_not_decidable"]) == 4
+     assert recommendation["evidence"]["stagnations_unredirected_total"] == 53
++    assert STATUS_RECOMMENDATION not in render_report(recommendation)
+diff --git a/tests/python/test_arc_supervisor_refinement.py b/tests/python/test_arc_supervisor_refinement.py
+index c2d53745c2..fabd16a744 100644
+--- a/tests/python/test_arc_supervisor_refinement.py
++++ b/tests/python/test_arc_supervisor_refinement.py
+@@ -55,23 +55,44 @@ def _applied_row(
+     redirects: list[dict] | None = None,
+     stag: int = 0,
+     wall_s: float = 100.0,
++    windows: list[dict] | None = None,
+ ) -> dict:
++    receipt: dict = {
++        "enabled": True,
++        "mode": "applied",
++        "window": 120,
++        "actions_observed": 399,
++        "arms_used": [],
++        "arm_outcomes": {},
++        "stagnations_unredirected": stag,
++        "redirects": redirects or [],
++    }
++    if windows is not None:
++        # REQ-ARC-WMTE-7031 rows; REQ-ARC-WMTE-7033 reads exhaustion from them per level.
++        receipt["unredirected_windows"] = windows
++        receipt["unredirected_windows_dropped"] = 0
+     return {
+         "game": game,
+         "seed": seed,
+         "arm": "S_llmon",
+         "levels": 1,
+         "wall_s": wall_s,
+-        "trajectory_supervisor": {
+-            "enabled": True,
+-            "mode": "applied",
+-            "window": 120,
+-            "actions_observed": 399,
+-            "arms_used": [],
+-            "arm_outcomes": {},
+-            "stagnations_unredirected": stag,
+-            "redirects": redirects or [],
+-        },
++        "trajectory_supervisor": receipt,
++    }
++
++
++def _exhausted_window(level: int, arms_used: list[str], action_index: int = 400) -> dict:
++    return {
++        "action_index": action_index,
++        "level": level,
++        "arms_used": sorted(arms_used),
++        "goal_bias_installed": False,
++        "induced": True,
++        "induction_attempts": 3,
++        "attempt_cap_reached": True,
++        "new_transitions_since_induction": 250,
++        "evidence_floor_met": True,
++        "diversity_active": True,
+     }
+ 
+ 
+@@ -279,15 +300,23 @@ def test_wilson_bounds_shape() -> None:
+ 
+ 
+ def test_new_arm_specification_from_exhausted_receipt(tmp_path: Path) -> None:
++    # As amended by REQ-ARC-WMTE-7033 (2026-09-05): the cell needs a window row on ONE level
++    # whose `arms_used` holds every enabled arm. Every arm in ARM_ORDER fired here, so the
++    # enabled set is all four and the row must show all four spent on its level.
+     exhausted = _applied_row(
+         seed=7,
+         stag=2,
+         redirects=[_redirect(arm, False) for arm in ARM_ORDER],
++        windows=[
++            _exhausted_window(0, list(ARM_ORDER), 400),
++            _exhausted_window(0, list(ARM_ORDER), 520),
++        ],
+     )
+     not_exhausted = _applied_row(
+         seed=8,
+         stag=0,
+         redirects=[_redirect(arm, False) for arm in ARM_ORDER],
++        windows=[],
+     )
+     ledger, _ = _ingest(tmp_path, [exhausted, not_exhausted])
+     recommendation = evaluate(ledger, NOW)
+@@ -299,6 +328,8 @@ def test_new_arm_specification_from_exhausted_receipt(tmp_path: Path) -> None:
+     assert len(spec["cells"]) == 1
+     assert spec["cells"][0]["game"] == "tu93"
+     assert spec["cells"][0]["stagnations_unredirected"] == 2
++    assert spec["cells"][0]["level"] == 0
++    assert spec["cells"][0]["exhausted_windows"] == 2
+     report = render_report(recommendation)
+     assert "NEW ARM SPECIFICATION" in report
+ 
+@@ -313,6 +344,19 @@ def test_no_new_arm_specification_without_stagnation(tmp_path: Path) -> None:
+     assert evaluate(ledger, NOW)["new_arm_specification"] is None
+ 
+ 
++def test_no_new_arm_specification_from_a_pooled_legacy_receipt(tmp_path: Path) -> None:
++    # REQ-ARC-WMTE-7033: the pre-7031 receipt shape (every arm fired somewhere in the run,
++    # stagnation count > 0, no window rows) is NOT a cell. Its levels cannot be read, so
++    # it is listed as not decidable instead.
++    ledger, _ = _ingest(
++        tmp_path,
++        [_applied_row(seed=10, stag=2, redirects=[_redirect(arm, False) for arm in ARM_ORDER])],
++    )
++    recommendation = evaluate(ledger, NOW)
++    assert recommendation["new_arm_specification"] is None
++    assert [u["seed"] for u in recommendation["exhaustion_not_decidable"]] == [10]
++
++
+ # --- SCENARIO-ARC-WMTE-6720-7: anti-churn and clone pruning -----------------
+ 
+ 
+diff --git a/tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py b/tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py
+index 34280cc003..bede6302a6 100644
+--- a/tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py
++++ b/tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py
+@@ -553,11 +553,30 @@ def test_req_arc_wmte_6921_new_arm_receipt_stays_recommendation_only(tmp_path: P
+     ]
+     row = _receipt_row(levels=0, level_actions=[], redirects=redirects)
+     row["trajectory_supervisor"]["stagnations_unredirected"] = 1
++    # REQ-ARC-WMTE-7033: the cell is read per level from the receipt's window rows, which the
++    # corrected ledger must carry through. One row on level 0 with every arm already spent.
++    row["trajectory_supervisor"]["arms_enabled"] = list(ARM_ORDER)
++    row["trajectory_supervisor"]["unredirected_windows"] = [
++        {
++            "action_index": 60,
++            "level": 0,
++            "arms_used": sorted(ARM_ORDER),
++            "goal_bias_installed": False,
++            "induced": True,
++            "induction_attempts": 3,
++            "attempt_cap_reached": True,
++            "new_transitions_since_induction": 250,
++            "evidence_floor_met": True,
++            "diversity_active": True,
++        }
++    ]
++    row["trajectory_supervisor"]["unredirected_windows_dropped"] = 0
+     _write_json(tmp_path / "lever-runs" / "all-arms.json", {"rows": [row]})
+ 
+     artifact = _build(tmp_path, roots, expected)
+ 
+     assert artifact["refinement_recommendation_rows"][0]["kind"] == "new_arm_specification"
++    assert artifact["refinement_recommendation_rows"][0]["cells"][0]["level"] == 0
+     assert artifact["automatic_arm_mutation_count"] == 0
+ 
+ 
+-- 
+2.55.0
+

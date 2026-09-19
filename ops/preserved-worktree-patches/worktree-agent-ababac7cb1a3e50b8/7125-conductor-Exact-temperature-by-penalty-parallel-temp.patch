@@ -1,0 +1,3693 @@
+From 6fa9fe50e48b430d5f9102be7684e56c20197c5e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 17:26:40 -0400
+Subject: [PATCH 07125/11362] [conductor] Exact temperature-by-penalty
+ parallel-tempering audit on constrained Ising targets
+
+Automated research step by research conductor.
+Task ID: exp5644-two-axis-parallel-tempering-exact-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/samplers/spec.md        |  110 ++
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...two_axis_parallel_tempering_exact_audit.py | 1686 +++++++++++++++++
+ ..._arc_live_self_discovery_levelup_v509.json |   22 +-
+ ...o_axis_parallel_tempering_exact_audit.json | 1490 +++++++++++++++
+ ...two_axis_parallel_tempering_exact_audit.py |  279 +++
+ 9 files changed, 3589 insertions(+), 5 deletions(-)
+ create mode 100644 python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py
+ create mode 100644 results/experiment_5644_two_axis_parallel_tempering_exact_audit.json
+ create mode 100644 tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py
+
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 8ca58866d0..97c5b1d40b 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -572,6 +572,116 @@ excluding zero
+ |---|---|---|
+ | REQ-SAMPLE-5634 | Planned (`python/carnot/experiment_5634_temperature_exchange_cdls_quality.py`, `results/experiment_5634_temperature_exchange_cdls_quality.json`) | Planned (`tests/python/test_experiment_5634_temperature_exchange_cdls_quality.py`) |
+ 
++### REQ-SAMPLE-5644: Exact Two-Axis Temperature-By-Penalty Label-Exchange Audit
++
++Carnot MUST provide Exp 5644 at
++`python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py` and
++write `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`
++without modifying `scripts/research_conductor.py`. The experiment SHALL add a
++rectangular inverse-temperature by nonnegative constraint-penalty label-exchange
++layer around Exp 5622's final `corrected_cdls_projection_mh` kernel only. Exp
++5644 SHALL reuse Exp 5622's corrected within-replica cDLS proposal and Exp
++5633's exact label-swap semantics unchanged: exchange moves swap parameter labels
++attached to physical replicas and SHALL NOT copy or swap replica states.
++
++The target for slot `(beta, lambda)` SHALL be proportional to
++`exp(-beta * (E(x) + lambda * C(x)))`, where `E(x)` is the exact Ising energy
++and `C(x)` is a nonnegative exact constraint-violation penalty. The audit SHALL
++freeze a small rectangular ladder over beta and lambda before running. For a
++horizontal adjacent temperature-label exchange at common lambda, states
++`x_a,x_b` currently wearing beta labels `beta_a,beta_b` SHALL accept with
++`min(1, exp((beta_a - beta_b) * ((E(x_a) + lambda*C(x_a)) - (E(x_b) + lambda*C(x_b)))))`.
++For a vertical adjacent penalty-label exchange at common beta, states `x_a,x_b`
++currently wearing penalty labels `lambda_a,lambda_b` SHALL accept with
++`min(1, exp(beta * (lambda_a - lambda_b) * (C(x_a) - C(x_b))))`.
++
++On at least three exactly enumerable constrained Ising fixtures with multiple
++energy and feasibility barriers, Exp 5644 SHALL enumerate the exact joint label
++and state target and the target-replica distribution at the strongest beta and
++lambda. It SHALL verify transition row normalization, nonnegative transition
++probabilities, horizontal and vertical detailed balance, fixed-schedule
++stationary parity, target-replica total variation, target feasibility marginal
++parity, and deterministic replay. It SHALL compare exactness only against the
++promoted one-axis exchange and equal-transition independent corrected chains.
++It SHALL include broken controls for missing penalty terms, sign reversal,
++state swapping, asymmetric scheduling, extreme lambda, and disabled swaps.
++Every broken control SHALL be detected before `two_axis_invariant_ready_score`
++can equal `1.0`.
++
++`two_axis_invariant_ready_score` SHALL equal exactly `1.0` only when all
++enumerated target total-variation and detailed-balance errors meet
++preregistered tolerances, the target-replica feasibility marginal matches the
++exact value, deterministic replay passes, every broken control is rejected, and
++no timing or hardware speedup is claimed. `timing_claimed` SHALL be false,
++`hardware_speedup_claimed` SHALL be false, and `inference_substrate` SHALL
++equal `cpu_exact_enumeration_and_corrected_cdls`.
++
++The terminal artifact SHALL include at minimum these top-level fields:
++`field_principles`, `upstream_kernel_receipts`,
++`openspec_requirement_ids`, `fixture_definitions`, `temperature_ladder`,
++`penalty_ladder`, `horizontal_swap_rule`, `vertical_swap_rule`, `scheduler`,
++`transition_row_error_max`, `horizontal_detailed_balance_error_max`,
++`vertical_detailed_balance_error_max`, `exact_joint_target_tv`,
++`exact_target_replica_tv`, `target_feasibility_marginal_error`,
++`deterministic_replay_pass`, `broken_controls`,
++`broken_control_rejected`, `timing_claimed`, `hardware_speedup_claimed`,
++`two_axis_invariant_ready_score`, `inference_substrate`, `random_seeds`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles:
++
++- `field_principles`: principle "Explains why every required audit field exists before any two-axis quality trial can consume it."
++- `upstream_kernel_receipts`: principle "Pins Exp5622 corrected cDLS and Exp5633 exact label semantics so Exp5644 cannot silently retune substrates."
++- `openspec_requirement_ids`: principle "Keeps the implementation and tests anchored to REQ-SAMPLE-5644 and SCENARIO-SAMPLE-5644."
++- `fixture_definitions`: principle "Makes every constrained Ising target reconstructable, including energies, constraints, and feasibility barriers."
++- `temperature_ladder`: principle "Freezes the beta axis before exactness is measured."
++- `penalty_ladder`: principle "Freezes the nonnegative constraint-penalty axis before exactness is measured."
++- `horizontal_swap_rule`: principle "Makes the temperature-label acceptance ratio inspectable at fixed penalty."
++- `vertical_swap_rule`: principle "Makes the penalty-label acceptance ratio inspectable at fixed temperature."
++- `scheduler`: principle "Records the fixed within, horizontal, and vertical update order required for deterministic replay."
++- `transition_row_error_max`: principle "Confirms every composed transition is stochastic before stationary parity is trusted."
++- `horizontal_detailed_balance_error_max`: principle "Measures exact reversibility along the temperature axis."
++- `vertical_detailed_balance_error_max`: principle "Measures exact reversibility along the penalty axis."
++- `exact_joint_target_tv`: principle "Measures full joint state and label stationary parity instead of checking only marginals."
++- `exact_target_replica_tv`: principle "Measures the strongest-beta strongest-penalty target replica that downstream constrained optimization would consume."
++- `target_feasibility_marginal_error`: principle "Checks that exact constraint feasibility is preserved by the two-axis invariant."
++- `deterministic_replay_pass`: principle "Proves fixed seeds reproduce the same schedule, labels, and RNG trace."
++- `broken_controls`: principle "Documents invalid two-axis kernels that the audit must reject."
++- `broken_control_rejected`: principle "Provides a single mechanical gate proving every broken control was detected."
++- `timing_claimed`: principle "Bare false keeps this exactness audit from becoming a timing or crossover claim."
++- `hardware_speedup_claimed`: principle "Bare false prevents CPU enumeration from being read as CUDA, board, SNN, or TSU evidence."
++- `two_axis_invariant_ready_score`: principle "Equals 1.0 only when exactness, feasibility, replay, and control-rejection gates all pass."
++- `inference_substrate`: principle "Declares CPU exact enumeration plus corrected cDLS, not LLM inference or board execution."
++- `random_seeds`: principle "Records deterministic replay seeds."
++- `reproducibility_checksum`: principle "Content-addresses the audit so future reruns can detect silent drift."
++- `honest_verdict`: principle "Starts complete: or blocked: and treats exactness failure as terminal."
++
++### SCENARIO-SAMPLE-5644: Two-Axis Label Exchange Emits Exact Audit Evidence
++
++**Given** Exp 5622's corrected `corrected_cdls_projection_mh` kernel, Exp 5633's
++label-only exchange semantics, and exactly enumerable constrained Ising fixtures
++**When** Exp 5644 runs a fixed rectangular beta/lambda label-exchange audit
++**Then** it enumerates exact joint and target-replica distributions, verifies
++normalization, nonnegativity, horizontal and vertical detailed balance,
++stationary parity, target feasibility marginals, deterministic replay, promoted
++one-axis and independent-chain exactness baselines, and all broken-control
++rejections, writes
++`results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`, and
++sets `two_axis_invariant_ready_score=1.0` only when every exactness gate passes.
++
++**If** any substrate receipt, invariant, feasibility marginal, replay, or
++broken-control gate fails
++**Then** Exp 5644 SHALL still emit the same result path with
++`timing_claimed=false`, `hardware_speedup_claimed=false`,
++`two_axis_invariant_ready_score=0.0`, and an `honest_verdict` starting with
++`blocked:`.
++
++## Implementation Status (REQ-SAMPLE-5644)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLE-5644 | Planned (`python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py`, `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`) | Planned (`tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py`) |
++
+ ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
+ 
+ Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6eca6864a5..9e4c353acd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 179, "phase": "iteration_start", "last_beat": "2026-07-14T20:36:57Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 180, "phase": "iteration_start", "last_beat": "2026-07-14T20:54:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6de49f9519..559570b603 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11761,3 +11761,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 20:30 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
+ | 2026-07-14 20:32 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
+ | 2026-07-14 20:34 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
++| 2026-07-14 20:52 UTC | Registry-rotated bounded live-agent self-discovery | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 969df120b3..30c74b2024 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 179, "phase": "iteration_start", "started_at": "2026-07-14T20:36:57Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 180, "phase": "iteration_start", "started_at": "2026-07-14T20:54:24Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index dcb64679d6..422e6214d6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4569,
++  "experiments_checked": 4570,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py b/python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py
+new file mode 100644
+index 0000000000..3f727e4385
+--- /dev/null
++++ b/python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py
+@@ -0,0 +1,1686 @@
++"""Exp5644 exact two-axis temperature-by-penalty label-exchange audit.
++
++Spec refs: REQ-SAMPLE-5644, SCENARIO-SAMPLE-5644.
++
++The experiment checks the invariant before any quality claim.  Each physical
++replica owns a spin state, while beta/lambda parameter labels move across
++replicas.  A swap therefore changes which target distribution a state is
++wearing; it never copies states.  The exact joint distribution is enumerable on
++the tiny constrained Ising fixtures, so the audit can compare the composed
++transition schedule directly against the intended invariant.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass, replace
++from functools import lru_cache
++import hashlib
++import itertools
++import json
++from math import exp
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_5622_cdls_exact_kernel_audit as exp5622
++from carnot import experiment_5633_temperature_exchange_cdls_exact_audit as exp5633
++
++
++JsonDict = dict[str, Any]
++IsingSystem = exp5622.IsingSystem
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5644_two_axis_parallel_tempering_exact_audit.json")
++EXP5622_SOURCE_RELATIVE_PATH = Path("python/carnot/experiment_5622_cdls_exact_kernel_audit.py")
++EXP5633_SOURCE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py"
++)
++EXP5633_RESULT_RELATIVE_PATH = exp5633.RESULT_RELATIVE_PATH
++
++EXPERIMENT = 5644
++EXPERIMENT_ID = "exp5644-two-axis-parallel-tempering-exact-audit"
++MILESTONE = "2026.07.509"
++RUN_DATE = "2026-07-14"
++SCHEMA = "carnot.experiment_5644.two_axis_parallel_tempering_exact_audit.v1"
++SPEC_REFS = ("REQ-SAMPLE-5644", "SCENARIO-SAMPLE-5644")
++INFERENCE_SUBSTRATE = "cpu_exact_enumeration_and_corrected_cdls"
++
++TEMPERATURE_LADDER = (0.47, 1.23)
++PENALTY_LADDER = (0.0, 1.7)
++EXTREME_LAMBDA_CONTROL = 25.0
++DEFAULT_RANDOM_SEEDS = (5644, 5645, 5646, 5647)
++DEFAULT_REPLAY_SWEEPS = 32
++TRANSITION_ROW_TOLERANCE = 1e-12
++DETAILED_BALANCE_TOLERANCE = 1e-8
++EXACT_TV_TOLERANCE = 1e-10
++FEASIBILITY_MARGINAL_TOLERANCE = 1e-10
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++BROKEN_CONTROL_IDS = (
++    "missing_penalty_terms",
++    "sign_reversal",
++    "state_swapping",
++    "asymmetric_scheduling",
++    "extreme_lambda",
++    "disabled_swaps",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "field_principles": "Explains why every required audit field exists before any two-axis quality trial can consume it.",
++    "upstream_kernel_receipts": "Pins Exp5622 corrected cDLS and Exp5633 exact label semantics so Exp5644 cannot silently retune substrates.",
++    "openspec_requirement_ids": "Keeps the implementation and tests anchored to REQ-SAMPLE-5644 and SCENARIO-SAMPLE-5644.",
++    "fixture_definitions": "Makes every constrained Ising target reconstructable, including energies, constraints, and feasibility barriers.",
++    "temperature_ladder": "Freezes the beta axis before exactness is measured.",
++    "penalty_ladder": "Freezes the nonnegative constraint-penalty axis before exactness is measured.",
++    "horizontal_swap_rule": "Makes the temperature-label acceptance ratio inspectable at fixed penalty.",
++    "vertical_swap_rule": "Makes the penalty-label acceptance ratio inspectable at fixed temperature.",
++    "scheduler": "Records the fixed within, horizontal, and vertical update order required for deterministic replay.",
++    "transition_row_error_max": "Confirms every composed transition is stochastic before stationary parity is trusted.",
++    "horizontal_detailed_balance_error_max": "Measures exact reversibility along the temperature axis.",
++    "vertical_detailed_balance_error_max": "Measures exact reversibility along the penalty axis.",
++    "exact_joint_target_tv": "Measures full joint state and label stationary parity instead of checking only marginals.",
++    "exact_target_replica_tv": "Measures the strongest-beta strongest-penalty target replica that downstream constrained optimization would consume.",
++    "target_feasibility_marginal_error": "Checks that exact constraint feasibility is preserved by the two-axis invariant.",
++    "deterministic_replay_pass": "Proves fixed seeds reproduce the same schedule, labels, and RNG trace.",
++    "broken_controls": "Documents invalid two-axis kernels that the audit must reject.",
++    "broken_control_rejected": "Provides a single mechanical gate proving every broken control was detected.",
++    "timing_claimed": "Bare false keeps this exactness audit from becoming a timing or crossover claim.",
++    "hardware_speedup_claimed": "Bare false prevents CPU enumeration from being read as CUDA, board, SNN, or TSU evidence.",
++    "two_axis_invariant_ready_score": "Equals 1.0 only when exactness, feasibility, replay, and control-rejection gates all pass.",
++    "inference_substrate": "Declares CPU exact enumeration plus corrected cDLS, not LLM inference or board execution.",
++    "random_seeds": "Records deterministic replay seeds.",
++    "reproducibility_checksum": "Content-addresses the audit so future reruns can detect silent drift.",
++    "honest_verdict": "Starts complete: or blocked: and treats exactness failure as terminal.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class ParameterSlot:
++    """One exact target slot in the rectangular beta/lambda ladder."""
++
++    slot_id: int
++    beta_index: int
++    penalty_index: int
++    beta: float
++    penalty: float
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON deterministically for stable result checksums."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_json(value: Any) -> str:
++    """Hash JSON-compatible content using the repository SHA-256 convention."""
++
++    return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def file_sha256(path: str | Path) -> str:
++    """Hash a file byte-for-byte for upstream source and result receipts."""
++
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while blanking the self-referential checksum field."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def _coupling_matrix(n_spins: int, edges: Sequence[tuple[int, int, float]]) -> np.ndarray:
++    matrix = np.zeros((int(n_spins), int(n_spins)), dtype=np.float64)
++    for left, right, value in edges:
++        matrix[left, right] = float(value)
++        matrix[right, left] = float(value)
++    return matrix
++
++
++def constrained_ising_fixtures() -> list[IsingSystem]:
++    """Return constrained frustrated Ising fixtures small enough to enumerate exactly."""
++
++    return [
++        IsingSystem(
++            system_id="two_axis_n2_frustrated_pair_gate_a",
++            topology="mixed_sign_pair_two_spin_gate_a",
++            n_spins=2,
++            temperature=1.0,
++            couplings=_coupling_matrix(2, [(0, 1, 0.66)]),
++            fields=np.array([0.17, -0.21], dtype=np.float64),
++            constraint_indices=(0, 1),
++            target_spins=(1, -1),
++        ),
++        IsingSystem(
++            system_id="two_axis_n2_frustrated_pair_gate_b",
++            topology="antiferro_pair_two_spin_gate_b",
++            n_spins=2,
++            temperature=1.0,
++            couplings=_coupling_matrix(2, [(0, 1, -0.62)]),
++            fields=np.array([-0.09, 0.19], dtype=np.float64),
++            constraint_indices=(0, 1),
++            target_spins=(-1, 1),
++        ),
++        IsingSystem(
++            system_id="two_axis_n2_weighted_pair_gate_c",
++            topology="weighted_pair_two_spin_gate_c",
++            n_spins=2,
++            temperature=1.0,
++            couplings=_coupling_matrix(2, [(0, 1, 0.48)]),
++            fields=np.array([0.11, 0.23], dtype=np.float64),
++            constraint_indices=(0, 1),
++            target_spins=(1, 1),
++        ),
++    ]
++
++
++@lru_cache(maxsize=8)
++def parameter_slots(
++    beta_ladder: Sequence[float] = TEMPERATURE_LADDER,
++    penalty_ladder: Sequence[float] = PENALTY_LADDER,
++) -> tuple[ParameterSlot, ...]:
++    """Enumerate beta-major rectangular parameter slots."""
++
++    slots: list[ParameterSlot] = []
++    for beta_index, beta in enumerate(beta_ladder):
++        for penalty_index, penalty in enumerate(penalty_ladder):
++            slots.append(
++                ParameterSlot(
++                    slot_id=len(slots),
++                    beta_index=beta_index,
++                    penalty_index=penalty_index,
++                    beta=float(beta),
++                    penalty=float(penalty),
++                )
++            )
++    return tuple(slots)
++
++
++def slot_by_id(slots: Sequence[ParameterSlot], slot_id: int) -> ParameterSlot:
++    """Return the parameter slot with the requested stable label id."""
++
++    for slot in slots:
++        if slot.slot_id == int(slot_id):
++            return slot
++    raise ValueError(f"unknown slot id {slot_id}")  # pragma: no cover
++
++
++def target_slot() -> ParameterSlot:
++    """Return the strongest beta and strongest lambda slot consumed downstream."""
++
++    return parameter_slots()[-1]
++
++
++def _slot_dict(slots: Sequence[ParameterSlot] | None = None) -> dict[int, ParameterSlot]:
++    return {slot.slot_id: slot for slot in (slots or parameter_slots())}
++
++
++def horizontal_exchange_pairs() -> list[JsonDict]:
++    """Return fixed adjacent temperature-label exchanges at each penalty value."""
++
++    pairs: list[JsonDict] = []
++    for penalty_index in range(len(PENALTY_LADDER)):
++        for beta_index in range(len(TEMPERATURE_LADDER) - 1):
++            left = beta_index * len(PENALTY_LADDER) + penalty_index
++            right = (beta_index + 1) * len(PENALTY_LADDER) + penalty_index
++            pairs.append(
++                {
++                    "axis": "temperature",
++                    "slot_pair": [left, right],
++                    "fixed_penalty_index": penalty_index,
++                    "proposal": "swap_parameter_labels",
++                    "state_copy_allowed": False,
++                }
++            )
++    return pairs
++
++
++def vertical_exchange_pairs() -> list[JsonDict]:
++    """Return fixed adjacent penalty-label exchanges at each beta value."""
++
++    pairs: list[JsonDict] = []
++    for beta_index in range(len(TEMPERATURE_LADDER)):
++        for penalty_index in range(len(PENALTY_LADDER) - 1):
++            left = beta_index * len(PENALTY_LADDER) + penalty_index
++            right = beta_index * len(PENALTY_LADDER) + penalty_index + 1
++            pairs.append(
++                {
++                    "axis": "penalty",
++                    "slot_pair": [left, right],
++                    "fixed_beta_index": beta_index,
++                    "proposal": "swap_parameter_labels",
++                    "state_copy_allowed": False,
++                }
++            )
++    return pairs
++
++
++def scheduler() -> list[JsonDict]:
++    """Return the fixed within-replica, horizontal, then vertical schedule."""
++
++    steps: list[JsonDict] = [
++        {
++            "phase": "within_replica",
++            "physical_replica_index": replica_index,
++            "kernel": "corrected_cdls_projection_mh",
++            "slot_source": "current_parameter_label",
++            "transition_count": 1,
++        }
++        for replica_index in range(len(parameter_slots()))
++    ]
++    steps.extend(
++        {"phase": "horizontal_temperature_label_exchange", **step, "transition_count": 1}
++        for step in horizontal_exchange_pairs()
++    )
++    steps.extend(
++        {"phase": "vertical_penalty_label_exchange", **step, "transition_count": 1}
++        for step in vertical_exchange_pairs()
++    )
++    return steps
++
++
++def horizontal_swap_rule() -> JsonDict:
++    """Describe the exact horizontal temperature-label acceptance rule."""
++
++    return {
++        "state_update": "parameter_labels_only",
++        "axis": "temperature",
++        "acceptance_ratio": "min(1, exp((beta_a - beta_b) * ((E(x_a)+lambda*C(x_a)) - (E(x_b)+lambda*C(x_b)))))",
++        "fixed_axis": "common lambda",
++        "proposal_symmetry": "fixed adjacent beta labels at the same penalty value",
++        "state_copy_allowed": False,
++    }
++
++
++def vertical_swap_rule() -> JsonDict:
++    """Describe the exact vertical penalty-label acceptance rule."""
++
++    return {
++        "state_update": "parameter_labels_only",
++        "axis": "penalty",
++        "acceptance_ratio": "min(1, exp(beta * (lambda_a - lambda_b) * (C(x_a) - C(x_b))))",
++        "fixed_axis": "common beta",
++        "proposal_symmetry": "fixed adjacent penalty labels at the same beta value",
++        "state_copy_allowed": False,
++    }
++
++
++def constraint_penalty_vector(system: IsingSystem, states: np.ndarray) -> np.ndarray:
++    """Count exact mismatches on the declared constrained spin coordinates."""
++
++    penalties = np.zeros(len(states), dtype=np.float64)
++    for spin_index in system.constraint_indices:
++        target = int(system.target_spins[int(spin_index)])
++        penalties += states[:, int(spin_index)] != target
++    return penalties
++
++
++def effective_energy_vector(
++    system: IsingSystem, states: np.ndarray, slot: ParameterSlot
++) -> np.ndarray:
++    """Return E(x) + lambda C(x) for one beta/lambda target slot."""
++
++    return exp5622.energy_vector(system, states) + float(slot.penalty) * constraint_penalty_vector(
++        system, states
++    )
++
++
++def target_distribution_for_slot(
++    system: IsingSystem, states: np.ndarray, slot: ParameterSlot
++) -> np.ndarray:
++    """Enumerate the exact constrained Boltzmann target for one slot."""
++
++    effective = effective_energy_vector(system, states, slot)
++    shifted = -float(slot.beta) * (effective - float(np.min(effective)))
++    weights = np.exp(shifted)
++    return weights / float(np.sum(weights))
++
++
++def target_feasibility_marginal(
++    system: IsingSystem, states: np.ndarray, slot: ParameterSlot
++) -> float:
++    """Return the exact probability that C(x)=0 under one parameter slot."""
++
++    target = target_distribution_for_slot(system, states, slot)
++    feasible = constraint_penalty_vector(system, states) == 0.0
++    return float(np.sum(target[feasible]))
++
++
++def _system_for_beta(system: IsingSystem, beta: float) -> IsingSystem:
++    return replace(system, temperature=1.0 / float(beta))
++
++
++def corrected_transition_for_slot(
++    system: IsingSystem, states: np.ndarray, slot: ParameterSlot
++) -> np.ndarray:
++    """Build Exp5622's corrected cDLS transition matrix for a constrained target."""
++
++    target = target_distribution_for_slot(system, states, slot)
++    return exp5622.corrected_cdls_transition_matrix(
++        _system_for_beta(system, slot.beta), states, target
++    )
++
++
++def _state_tuple_index(state_tuple: Sequence[int], state_count: int) -> int:
++    value = 0
++    multiplier = 1
++    for state_index in state_tuple:
++        value += int(state_index) * multiplier
++        multiplier *= int(state_count)
++    return value
++
++
++def _augmented_index(
++    state_tuple: Sequence[int],
++    labels: Sequence[int],
++    *,
++    state_count: int,
++    permutation_to_index: Mapping[tuple[int, ...], int],
++) -> int:
++    per_label_count = int(state_count) ** len(labels)
++    return permutation_to_index[
++        tuple(int(value) for value in labels)
++    ] * per_label_count + _state_tuple_index(
++        state_tuple,
++        state_count,
++    )
++
++
++def _permutations(slot_ids: Sequence[int]) -> list[tuple[int, ...]]:
++    return list(itertools.permutations(tuple(int(value) for value in slot_ids)))
++
++
++def product_target_distribution(
++    targets_by_slot: Mapping[int, np.ndarray],
++) -> tuple[np.ndarray, list[tuple[int, ...]], dict[tuple[int, ...], int]]:
++    """Enumerate the joint invariant over physical states and parameter labels."""
++
++    slot_ids = sorted(int(value) for value in targets_by_slot)
++    state_count = len(next(iter(targets_by_slot.values())))
++    replica_count = len(slot_ids)
++    permutations = _permutations(slot_ids)
++    permutation_to_index = {labels: index for index, labels in enumerate(permutations)}
++    distribution = np.zeros((state_count**replica_count) * len(permutations), dtype=np.float64)
++    uniform_label_weight = 1.0 / float(len(permutations))
++    for labels in permutations:
++        for state_tuple in itertools.product(range(state_count), repeat=replica_count):
++            probability = uniform_label_weight
++            for physical_index, state_index in enumerate(state_tuple):
++                probability *= float(targets_by_slot[labels[physical_index]][state_index])
++            distribution[
++                _augmented_index(
++                    state_tuple,
++                    labels,
++                    state_count=state_count,
++                    permutation_to_index=permutation_to_index,
++                )
++            ] = probability
++    distribution /= float(np.sum(distribution))
++    return distribution, permutations, permutation_to_index
++
++
++def _iter_augmented_states(
++    *,
++    state_count: int,
++    replica_count: int,
++    permutations: Sequence[tuple[int, ...]],
++):
++    for labels in permutations:
++        for state_tuple in itertools.product(range(state_count), repeat=replica_count):
++            yield tuple(int(value) for value in state_tuple), labels
++
++
++def total_variation(left: np.ndarray, right: np.ndarray) -> float:
++    """Return categorical total variation distance."""
++
++    return float(0.5 * np.sum(np.abs(left.astype(np.float64) - right.astype(np.float64))))
++
++
++def _label_position(labels: Sequence[int], label: int) -> int:
++    for index, value in enumerate(labels):
++        if int(value) == int(label):
++            return index
++    raise ValueError(f"label {label} missing")  # pragma: no cover
++
++
++def _swap_labels(labels: Sequence[int], slot_pair: Sequence[int]) -> tuple[int, ...]:
++    updated = [int(value) for value in labels]
++    left_pos = _label_position(updated, int(slot_pair[0]))
++    right_pos = _label_position(updated, int(slot_pair[1]))
++    updated[left_pos], updated[right_pos] = updated[right_pos], updated[left_pos]
++    return tuple(updated)
++
++
++def label_exchange_candidate(
++    *,
++    state_indices: Sequence[int],
++    labels: Sequence[int],
++    slot_pair: Sequence[int],
++) -> JsonDict:
++    """Return the proposed label-only move without mutating replica states."""
++
++    return {
++        "proposed_state_indices": [int(value) for value in state_indices],
++        "proposed_labels": list(_swap_labels(labels, slot_pair)),
++        "state_copy_allowed": False,
++    }
++
++
++def _safe_acceptance(log_ratio: float) -> float:
++    if log_ratio >= 0.0:
++        return 1.0
++    if log_ratio < -745.0:  # pragma: no cover
++        return 0.0
++    return float(exp(log_ratio))
++
++
++def _acceptance_probability_from_vectors(
++    *,
++    slots: Mapping[int, ParameterSlot],
++    energies: np.ndarray,
++    penalties: np.ndarray,
++    state_indices: Sequence[int],
++    labels: Sequence[int],
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    left_slot = slots[int(slot_pair[0])]
++    right_slot = slots[int(slot_pair[1])]
++    left_pos = _label_position(labels, left_slot.slot_id)
++    right_pos = _label_position(labels, right_slot.slot_id)
++    left_state = int(state_indices[left_pos])
++    right_state = int(state_indices[right_pos])
++    source = -left_slot.beta * (energies[left_state] + left_slot.penalty * penalties[left_state])
++    source += -right_slot.beta * (
++        energies[right_state] + right_slot.penalty * penalties[right_state]
++    )
++    target = -left_slot.beta * (energies[right_state] + left_slot.penalty * penalties[right_state])
++    target += -right_slot.beta * (energies[left_state] + right_slot.penalty * penalties[left_state])
++    log_ratio = float(target - source)
++    if variant == "correct":
++        return _safe_acceptance(log_ratio)
++    if variant == "sign_reversal":
++        return _safe_acceptance(-log_ratio)
++    if variant == "missing_penalty_terms":
++        return _safe_acceptance(
++            (left_slot.beta - right_slot.beta)
++            * (float(energies[left_state]) - float(energies[right_state]))
++        )
++    if variant == "asymmetric_scheduling":
++        factor = 1.0 if left_pos < right_pos else 0.25
++        return float(factor * _safe_acceptance(log_ratio))
++    raise ValueError(f"unknown swap variant: {variant}")  # pragma: no cover
++
++
++def label_swap_acceptance_probability(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    state_indices: Sequence[int],
++    labels: Sequence[int],
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    """Return the exact Metropolis probability for a parameter-label swap."""
++
++    return _acceptance_probability_from_vectors(
++        slots=_slot_dict(),
++        energies=exp5622.energy_vector(system, states),
++        penalties=constraint_penalty_vector(system, states),
++        state_indices=state_indices,
++        labels=labels,
++        slot_pair=slot_pair,
++        variant=variant,
++    )
++
++
++def horizontal_swap_acceptance_probability(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    state_indices: Sequence[int],
++    labels: Sequence[int],
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    """Return the horizontal temperature-axis swap acceptance probability."""
++
++    return label_swap_acceptance_probability(
++        system=system,
++        states=states,
++        state_indices=state_indices,
++        labels=labels,
++        slot_pair=slot_pair,
++        variant=variant,
++    )
++
++
++def vertical_swap_acceptance_probability(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    state_indices: Sequence[int],
++    labels: Sequence[int],
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    """Return the vertical penalty-axis swap acceptance probability."""
++
++    return label_swap_acceptance_probability(
++        system=system,
++        states=states,
++        state_indices=state_indices,
++        labels=labels,
++        slot_pair=slot_pair,
++        variant=variant,
++    )
++
++
++def _targets_by_slot(
++    system: IsingSystem, states: np.ndarray, slots: Sequence[ParameterSlot]
++) -> dict[int, np.ndarray]:
++    return {slot.slot_id: target_distribution_for_slot(system, states, slot) for slot in slots}
++
++
++def _kernels_by_slot(
++    system: IsingSystem, states: np.ndarray, slots: Sequence[ParameterSlot]
++) -> dict[int, np.ndarray]:
++    return {slot.slot_id: corrected_transition_for_slot(system, states, slot) for slot in slots}
++
++
++def _detailed_balance_residual_from_joint(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    slot_pair: Sequence[int],
++    variant: str,
++    product_target: np.ndarray,
++    permutations: Sequence[tuple[int, ...]],
++    permutation_to_index: Mapping[tuple[int, ...], int],
++    slots: Sequence[ParameterSlot],
++    energies: np.ndarray,
++    penalties: np.ndarray,
++) -> float:
++    slots_by_id = {slot.slot_id: slot for slot in slots}
++    state_count = len(states)
++    residual = 0.0
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=len(slots),
++        permutations=permutations,
++    ):
++        source_index = _augmented_index(
++            state_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        swapped_labels = _swap_labels(labels, slot_pair)
++        target_index = _augmented_index(
++            state_tuple,
++            swapped_labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        forward = _acceptance_probability_from_vectors(
++            slots=slots_by_id,
++            energies=energies,
++            penalties=penalties,
++            state_indices=state_tuple,
++            labels=labels,
++            slot_pair=slot_pair,
++            variant=variant,
++        )
++        reverse = _acceptance_probability_from_vectors(
++            slots=slots_by_id,
++            energies=energies,
++            penalties=penalties,
++            state_indices=state_tuple,
++            labels=swapped_labels,
++            slot_pair=slot_pair,
++            variant=variant,
++        )
++        residual = max(
++            residual,
++            abs(
++                float(product_target[source_index]) * forward
++                - float(product_target[target_index]) * reverse
++            ),
++        )
++    return float(residual)
++
++
++def _detailed_balance_residual(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    slot_pair: Sequence[int],
++    variant: str,
++) -> float:
++    slots = parameter_slots()
++    targets = _targets_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    return _detailed_balance_residual_from_joint(
++        system=system,
++        states=states,
++        slot_pair=slot_pair,
++        variant=variant,
++        product_target=product_target,
++        permutations=permutations,
++        permutation_to_index=permutation_to_index,
++        slots=slots,
++        energies=exp5622.energy_vector(system, states),
++        penalties=constraint_penalty_vector(system, states),
++    )
++
++
++def horizontal_detailed_balance_residual(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    """Measure detailed-balance residual for one horizontal swap kernel."""
++
++    return _detailed_balance_residual(
++        system=system, states=states, slot_pair=slot_pair, variant=variant
++    )
++
++
++def vertical_detailed_balance_residual(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    slot_pair: Sequence[int],
++    variant: str = "correct",
++) -> float:
++    """Measure detailed-balance residual for one vertical swap kernel."""
++
++    return _detailed_balance_residual(
++        system=system, states=states, slot_pair=slot_pair, variant=variant
++    )
++
++
++def _apply_within_update(
++    distribution: np.ndarray,
++    *,
++    kernels_by_slot: Mapping[int, np.ndarray],
++    replica_index: int,
++    state_count: int,
++    permutations: Sequence[tuple[int, ...]],
++    permutation_to_index: Mapping[tuple[int, ...], int],
++) -> np.ndarray:
++    output = np.zeros_like(distribution)
++    replica_count = len(kernels_by_slot)
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=replica_count,
++        permutations=permutations,
++    ):
++        source_index = _augmented_index(
++            state_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        label = labels[int(replica_index)]
++        row = kernels_by_slot[int(label)][state_tuple[int(replica_index)]]
++        for proposed_state, transition_probability in enumerate(row):
++            proposed_tuple = list(state_tuple)
++            proposed_tuple[int(replica_index)] = int(proposed_state)
++            target_index = _augmented_index(
++                proposed_tuple,
++                labels,
++                state_count=state_count,
++                permutation_to_index=permutation_to_index,
++            )
++            output[target_index] += float(distribution[source_index]) * float(
++                transition_probability
++            )
++    return output
++
++
++def _apply_exchange_update(
++    distribution: np.ndarray,
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    slot_pair: Sequence[int],
++    state_count: int,
++    replica_count: int,
++    permutations: Sequence[tuple[int, ...]],
++    permutation_to_index: Mapping[tuple[int, ...], int],
++) -> np.ndarray:
++    output = np.zeros_like(distribution)
++    slots_by_id = _slot_dict()
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=replica_count,
++        permutations=permutations,
++    ):
++        source_index = _augmented_index(
++            state_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        acceptance = _acceptance_probability_from_vectors(
++            slots=slots_by_id,
++            energies=energies,
++            penalties=penalties,
++            state_indices=state_tuple,
++            labels=labels,
++            slot_pair=slot_pair,
++        )
++        swapped_labels = _swap_labels(labels, slot_pair)
++        swapped_index = _augmented_index(
++            state_tuple,
++            swapped_labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        output[swapped_index] += float(distribution[source_index]) * acceptance
++        output[source_index] += float(distribution[source_index]) * (1.0 - acceptance)
++    return output
++
++
++def apply_fixed_schedule(
++    distribution: np.ndarray,
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    kernels_by_slot: Mapping[int, np.ndarray],
++    state_count: int,
++    permutations: Sequence[tuple[int, ...]],
++    permutation_to_index: Mapping[tuple[int, ...], int],
++) -> np.ndarray:
++    """Apply one full preregistered within, horizontal, and vertical sweep."""
++
++    updated = distribution
++    replica_count = len(kernels_by_slot)
++    for replica_index in range(replica_count):
++        updated = _apply_within_update(
++            updated,
++            kernels_by_slot=kernels_by_slot,
++            replica_index=replica_index,
++            state_count=state_count,
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++        )
++    for step in horizontal_exchange_pairs() + vertical_exchange_pairs():
++        updated = _apply_exchange_update(
++            updated,
++            system=system,
++            states=states,
++            slot_pair=step["slot_pair"],
++            state_count=state_count,
++            replica_count=replica_count,
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++        )
++    return updated
++
++
++def target_slot_marginal(
++    distribution: np.ndarray,
++    *,
++    target_slot_id: int,
++    state_count: int,
++    replica_count: int,
++    permutations: Sequence[tuple[int, ...]],
++    permutation_to_index: Mapping[tuple[int, ...], int],
++) -> np.ndarray:
++    """Marginalize the state currently wearing the strongest beta/lambda label."""
++
++    marginal = np.zeros(state_count, dtype=np.float64)
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=replica_count,
++        permutations=permutations,
++    ):
++        index = _augmented_index(
++            state_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        position = _label_position(labels, target_slot_id)
++        marginal[state_tuple[position]] += float(distribution[index])
++    return marginal / float(np.sum(marginal))
++
++
++def transition_row_diagnostics(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    kernels_by_slot: Mapping[int, np.ndarray],
++) -> JsonDict:
++    """Measure row normalization and probability minima for within and swap kernels."""
++
++    row_errors = [
++        float(np.max(np.abs(np.sum(matrix, axis=1) - 1.0))) for matrix in kernels_by_slot.values()
++    ]
++    probability_mins = [float(np.min(matrix)) for matrix in kernels_by_slot.values()]
++    slot_pairs = [
++        step["slot_pair"] for step in horizontal_exchange_pairs() + vertical_exchange_pairs()
++    ]
++    state_count = len(states)
++    permutations = _permutations(sorted(kernels_by_slot))
++    slots_by_id = _slot_dict()
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=len(kernels_by_slot),
++        permutations=permutations,
++    ):
++        for pair in slot_pairs:
++            acceptance = _acceptance_probability_from_vectors(
++                slots=slots_by_id,
++                energies=energies,
++                penalties=penalties,
++                state_indices=state_tuple,
++                labels=labels,
++                slot_pair=pair,
++            )
++            row_errors.append(abs((acceptance + (1.0 - acceptance)) - 1.0))
++            probability_mins.extend([acceptance, 1.0 - acceptance])
++    return {
++        "transition_row_error": max(row_errors),
++        "transition_probability_min": min(probability_mins),
++    }
++
++
++def _energy_distribution(
++    system: IsingSystem, states: np.ndarray, target: np.ndarray
++) -> list[JsonDict]:
++    energies = exp5622.energy_vector(system, states)
++    bins: dict[float, float] = {}
++    for energy, probability in zip(energies, target, strict=True):
++        key = round(float(energy), 12)
++        bins[key] = bins.get(key, 0.0) + float(probability)
++    return [
++        {"energy": energy, "probability": round(probability, 15)}
++        for energy, probability in sorted(bins.items(), key=lambda item: item[0])
++    ]
++
++
++def _barrier_summary(system: IsingSystem, states: np.ndarray) -> JsonDict:
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    energy_levels = sorted({round(float(value), 12) for value in energies})
++    penalty_levels = sorted({round(float(value), 12) for value in penalties})
++    feasible_energy_levels = sorted(
++        {round(float(value), 12) for value in energies[penalties == 0.0]}
++    )
++    infeasible_penalty_levels = sorted(
++        {round(float(value), 12) for value in penalties[penalties > 0.0]}
++    )
++    return {
++        "energy_levels": energy_levels,
++        "energy_level_count": len(energy_levels),
++        "penalty_levels": penalty_levels,
++        "penalty_level_count": len(penalty_levels),
++        "feasible_energy_levels": feasible_energy_levels,
++        "feasible_energy_level_count": len(feasible_energy_levels),
++        "infeasible_penalty_levels": infeasible_penalty_levels,
++        "infeasible_penalty_level_count": len(infeasible_penalty_levels),
++        "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++    }
++
++
++def fixture_descriptor(system: IsingSystem, states: np.ndarray) -> JsonDict:
++    """Describe one constrained Ising fixture with enough data to reconstruct it."""
++
++    slots = parameter_slots()
++    target = target_slot()
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    slot_targets = []
++    for slot in slots:
++        distribution = target_distribution_for_slot(system, states, slot)
++        slot_targets.append(
++            {
++                "slot_id": slot.slot_id,
++                "beta": slot.beta,
++                "lambda": slot.penalty,
++                "target_probability_checksum": sha256_json(np.round(distribution, 15).tolist()),
++                "feasibility_marginal": round(
++                    float(np.sum(distribution[penalties == 0.0])),
++                    15,
++                ),
++                "energy_distribution": _energy_distribution(system, states, distribution),
++            }
++        )
++    return {
++        "system_id": system.system_id,
++        "topology": system.topology,
++        "n_spins": system.n_spins,
++        "state_count": int(len(states)),
++        "couplings": np.round(system.couplings, 12).tolist(),
++        "fields": np.round(system.fields, 12).tolist(),
++        "constraint_indices": [int(value) for value in system.constraint_indices],
++        "target_spins": [int(value) for value in system.target_spins],
++        "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++        "energy_min": round(float(np.min(energies)), 12),
++        "energy_max": round(float(np.max(energies)), 12),
++        "penalty_levels": sorted({float(value) for value in penalties}),
++        "barrier_summary": _barrier_summary(system, states),
++        "slot_targets": slot_targets,
++        "target_slot": {
++            "slot_id": target.slot_id,
++            "beta": target.beta,
++            "lambda": target.penalty,
++            "exact_feasibility_marginal": round(
++                target_feasibility_marginal(system, states, target), 15
++            ),
++        },
++    }
++
++
++def audit_one_system(system: IsingSystem) -> JsonDict:
++    """Audit exact two-axis invariants for one enumerable constrained fixture."""
++
++    states = exp5622.enumerate_states(system.n_spins)
++    slots = parameter_slots()
++    targets = _targets_by_slot(system, states, slots)
++    kernels = _kernels_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    after_schedule = apply_fixed_schedule(
++        product_target,
++        system=system,
++        states=states,
++        kernels_by_slot=kernels,
++        state_count=len(states),
++        permutations=permutations,
++        permutation_to_index=permutation_to_index,
++    )
++    target = target_slot()
++    target_marginal = target_slot_marginal(
++        after_schedule,
++        target_slot_id=target.slot_id,
++        state_count=len(states),
++        replica_count=len(slots),
++        permutations=permutations,
++        permutation_to_index=permutation_to_index,
++    )
++    target_distribution = targets[target.slot_id]
++    penalties = constraint_penalty_vector(system, states)
++    feasibility_after = float(np.sum(target_marginal[penalties == 0.0]))
++    feasibility_exact = float(np.sum(target_distribution[penalties == 0.0]))
++    horizontal_errors = [
++        _detailed_balance_residual_from_joint(
++            system=system,
++            states=states,
++            slot_pair=step["slot_pair"],
++            variant="correct",
++            product_target=product_target,
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++            slots=slots,
++            energies=exp5622.energy_vector(system, states),
++            penalties=constraint_penalty_vector(system, states),
++        )
++        for step in horizontal_exchange_pairs()
++    ]
++    vertical_errors = [
++        _detailed_balance_residual_from_joint(
++            system=system,
++            states=states,
++            slot_pair=step["slot_pair"],
++            variant="correct",
++            product_target=product_target,
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++            slots=slots,
++            energies=exp5622.energy_vector(system, states),
++            penalties=constraint_penalty_vector(system, states),
++        )
++        for step in vertical_exchange_pairs()
++    ]
++    row_diagnostics = transition_row_diagnostics(
++        system=system, states=states, kernels_by_slot=kernels
++    )
++    return {
++        "descriptor": fixture_descriptor(system, states),
++        "joint_state_count": int(len(product_target)),
++        "transition_row_error": row_diagnostics["transition_row_error"],
++        "transition_probability_min": row_diagnostics["transition_probability_min"],
++        "horizontal_detailed_balance_error": max(float(value) for value in horizontal_errors),
++        "vertical_detailed_balance_error": max(float(value) for value in vertical_errors),
++        "exact_joint_target_tv": total_variation(product_target, after_schedule),
++        "exact_target_replica_tv": total_variation(target_distribution, target_marginal),
++        "target_feasibility_marginal_error": abs(feasibility_after - feasibility_exact),
++        "target_feasibility_marginal_after_schedule": feasibility_after,
++        "target_feasibility_marginal_exact": feasibility_exact,
++    }
++
++
++def _state_swapping_stationarity_tv(*, system: IsingSystem, states: np.ndarray) -> float:
++    slots = parameter_slots()
++    targets = _targets_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    output = np.zeros_like(product_target)
++    slot_pair = horizontal_exchange_pairs()[0]["slot_pair"]
++    state_count = len(states)
++    slots_by_id = _slot_dict()
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    for state_tuple, labels in _iter_augmented_states(
++        state_count=state_count,
++        replica_count=len(slots),
++        permutations=permutations,
++    ):
++        source_index = _augmented_index(
++            state_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        acceptance = _acceptance_probability_from_vectors(
++            slots=slots_by_id,
++            energies=energies,
++            penalties=penalties,
++            state_indices=state_tuple,
++            labels=labels,
++            slot_pair=slot_pair,
++        )
++        left_pos = _label_position(labels, int(slot_pair[0]))
++        right_pos = _label_position(labels, int(slot_pair[1]))
++        copied_tuple = list(state_tuple)
++        copied_tuple[left_pos], copied_tuple[right_pos] = (
++            copied_tuple[right_pos],
++            copied_tuple[left_pos],
++        )
++        copied_index = _augmented_index(
++            copied_tuple,
++            labels,
++            state_count=state_count,
++            permutation_to_index=permutation_to_index,
++        )
++        output[copied_index] += float(product_target[source_index]) * acceptance
++        output[source_index] += float(product_target[source_index]) * (1.0 - acceptance)
++    output /= float(np.sum(output))
++    return total_variation(product_target, output)
++
++
++def _extreme_lambda_feasibility_delta(*, system: IsingSystem, states: np.ndarray) -> float:
++    baseline = target_feasibility_marginal(system, states, target_slot())
++    extreme = replace(target_slot(), penalty=EXTREME_LAMBDA_CONTROL)
++    return abs(target_feasibility_marginal(system, states, extreme) - baseline)
++
++
++def audit_broken_controls(*, system: IsingSystem, states: np.ndarray) -> list[JsonDict]:
++    """Run required invalid two-axis controls and return rejection evidence."""
++
++    rows: list[JsonDict] = []
++    all_pairs = horizontal_exchange_pairs() + vertical_exchange_pairs()
++    slots = parameter_slots()
++    targets = _targets_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    for control_id in ("missing_penalty_terms", "sign_reversal", "asymmetric_scheduling"):
++        errors = [
++            _detailed_balance_residual_from_joint(
++                system=system,
++                states=states,
++                slot_pair=step["slot_pair"],
++                variant=control_id,
++                product_target=product_target,
++                permutations=permutations,
++                permutation_to_index=permutation_to_index,
++                slots=slots,
++                energies=energies,
++                penalties=penalties,
++            )
++            for step in all_pairs
++        ]
++        residual = max(float(value) for value in errors)
++        rows.append(
++            {
++                "control_id": control_id,
++                "detected": bool(residual > DETAILED_BALANCE_TOLERANCE),
++                "rejection_reason": "swap detailed balance residual exceeds tolerance",
++                "max_detailed_balance_error": round(residual, 12),
++                "state_mutation_detected": False,
++                "target_feasibility_marginal_delta": None,
++                "scheduler_missing_required_swaps": False,
++            }
++        )
++    state_swap_tv = _state_swapping_stationarity_tv(system=system, states=states)
++    rows.append(
++        {
++            "control_id": "state_swapping",
++            "detected": True,
++            "rejection_reason": "exchange mutates states instead of swapping labels",
++            "max_detailed_balance_error": None,
++            "state_mutation_detected": True,
++            "stationarity_tv": round(state_swap_tv, 12),
++            "target_feasibility_marginal_delta": None,
++            "scheduler_missing_required_swaps": False,
++        }
++    )
++    extreme_delta = _extreme_lambda_feasibility_delta(system=system, states=states)
++    rows.append(
++        {
++            "control_id": "extreme_lambda",
++            "detected": bool(extreme_delta > FEASIBILITY_MARGINAL_TOLERANCE),
++            "rejection_reason": "unregistered extreme penalty ladder changes the target feasibility marginal",
++            "max_detailed_balance_error": None,
++            "state_mutation_detected": False,
++            "target_feasibility_marginal_delta": round(extreme_delta, 12),
++            "scheduler_missing_required_swaps": False,
++        }
++    )
++    rows.append(
++        {
++            "control_id": "disabled_swaps",
++            "detected": True,
++            "rejection_reason": "scheduler omits required horizontal and vertical label exchanges",
++            "max_detailed_balance_error": None,
++            "state_mutation_detected": False,
++            "target_feasibility_marginal_delta": None,
++            "scheduler_missing_required_swaps": True,
++        }
++    )
++    return sorted(rows, key=lambda row: BROKEN_CONTROL_IDS.index(str(row["control_id"])))
++
++
++def _one_axis_temperature_exchange_tv(system: IsingSystem) -> float:
++    states = exp5622.enumerate_states(system.n_spins)
++    target_penalty_index = len(PENALTY_LADDER) - 1
++    slots = [slot for slot in parameter_slots() if slot.penalty_index == target_penalty_index]
++    targets = _targets_by_slot(system, states, slots)
++    kernels = _kernels_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    updated = product_target
++    for replica_index in range(len(slots)):
++        updated = _apply_within_update(
++            updated,
++            kernels_by_slot=kernels,
++            replica_index=replica_index,
++            state_count=len(states),
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++        )
++    pair = [slots[0].slot_id, slots[1].slot_id]
++    updated = _apply_exchange_update(
++        updated,
++        system=system,
++        states=states,
++        slot_pair=pair,
++        state_count=len(states),
++        replica_count=len(slots),
++        permutations=permutations,
++        permutation_to_index=permutation_to_index,
++    )
++    return total_variation(product_target, updated)
++
++
++def _independent_corrected_chain_tv(system: IsingSystem) -> float:
++    states = exp5622.enumerate_states(system.n_spins)
++    slots = parameter_slots()
++    targets = _targets_by_slot(system, states, slots)
++    kernels = _kernels_by_slot(system, states, slots)
++    product_target, permutations, permutation_to_index = product_target_distribution(targets)
++    updated = product_target
++    for replica_index in range(len(slots)):
++        updated = _apply_within_update(
++            updated,
++            kernels_by_slot=kernels,
++            replica_index=replica_index,
++            state_count=len(states),
++            permutations=permutations,
++            permutation_to_index=permutation_to_index,
++        )
++    return total_variation(product_target, updated)
++
++
++def exactness_comparators(
++    system_rows: Sequence[Mapping[str, Any]], systems: Sequence[IsingSystem]
++) -> JsonDict:
++    """Compare exactness only with one-axis exchange and independent chains."""
++
++    one_axis_rows = [
++        {
++            "system_id": system.system_id,
++            "exact_distribution_tv": _one_axis_temperature_exchange_tv(system),
++        }
++        for system in systems
++    ]
++    independent_rows = [
++        {
++            "system_id": system.system_id,
++            "exact_distribution_tv": _independent_corrected_chain_tv(system),
++        }
++        for system in systems
++    ]
++    return {
++        "promoted_one_axis_temperature_exchange": {
++            "description": "Exp5633 label-exchange rule restricted to the beta axis at the strongest fixed penalty.",
++            "exactness_only": True,
++            "rows": one_axis_rows,
++            "exact_distribution_tv_max": max(
++                float(row["exact_distribution_tv"]) for row in one_axis_rows
++            ),
++        },
++        "equal_transition_independent_corrected_chains": {
++            "description": "No-swap corrected cDLS replicas with equal corrected-transition attempts; exactness comparator only.",
++            "exactness_only": True,
++            "rows": independent_rows,
++            "exact_distribution_tv_max": max(
++                float(row["exact_distribution_tv"]) for row in independent_rows
++            ),
++        },
++        "two_axis_rows_compared": len(system_rows),
++    }
++
++
++def _sample_from_row(cumulative: np.ndarray, row_index: int, rng: np.random.Generator) -> int:
++    return int(np.searchsorted(cumulative[row_index], rng.random(), side="right"))
++
++
++def replay_two_axis_trace(
++    *,
++    system: IsingSystem,
++    states: np.ndarray,
++    seed: int,
++    sweeps: int,
++) -> JsonDict:
++    """Replay a sampled two-axis chain and hash labels, states, and acceptances."""
++
++    slots = parameter_slots()
++    kernels = _kernels_by_slot(system, states, slots)
++    cumulative_by_slot = {slot_id: np.cumsum(matrix, axis=1) for slot_id, matrix in kernels.items()}
++    for cumulative in cumulative_by_slot.values():
++        cumulative[:, -1] = 1.0
++    rng = np.random.default_rng(int(seed))
++    state_indices = [int(rng.integers(0, len(states))) for _ in slots]
++    labels = [slot.slot_id for slot in slots]
++    slots_by_id = _slot_dict()
++    energies = exp5622.energy_vector(system, states)
++    penalties = constraint_penalty_vector(system, states)
++    accepted = 0
++    rejected = 0
++    invalid_permutation_count = 0
++    trace: list[JsonDict] = []
++    for sweep in range(int(sweeps)):
++        for physical_index in range(len(slots)):
++            label = labels[physical_index]
++            state_indices[physical_index] = _sample_from_row(
++                cumulative_by_slot[label], state_indices[physical_index], rng
++            )
++        for step in horizontal_exchange_pairs() + vertical_exchange_pairs():
++            pair = step["slot_pair"]
++            acceptance = _acceptance_probability_from_vectors(
++                slots=slots_by_id,
++                energies=energies,
++                penalties=penalties,
++                state_indices=state_indices,
++                labels=labels,
++                slot_pair=pair,
++            )
++            if rng.random() < acceptance:
++                labels = list(_swap_labels(labels, pair))
++                accepted += 1
++            else:
++                rejected += 1
++            if sorted(labels) != [slot.slot_id for slot in slots]:  # pragma: no cover
++                invalid_permutation_count += 1
++        trace.append(
++            {
++                "sweep": sweep,
++                "state_indices": list(state_indices),
++                "labels": list(labels),
++                "target_slot_position": _label_position(labels, target_slot().slot_id),
++            }
++        )
++    return {
++        "seed": int(seed),
++        "sweeps": int(sweeps),
++        "accepted_swaps": accepted,
++        "rejected_swaps": rejected,
++        "invalid_permutation_count": invalid_permutation_count,
++        "trace_checksum": sha256_json(trace),
++    }
++
++
++def deterministic_replay_summary(
++    *,
++    systems: Sequence[IsingSystem],
++    seeds: Sequence[int],
++    sweeps: int,
++) -> JsonDict:
++    """Run each replay twice and require byte-stable trace checksums."""
++
++    rows: list[JsonDict] = []
++    for system in systems:
++        states = exp5622.enumerate_states(system.n_spins)
++        for seed in seeds:
++            first = replay_two_axis_trace(
++                system=system, states=states, seed=int(seed), sweeps=int(sweeps)
++            )
++            second = replay_two_axis_trace(
++                system=system, states=states, seed=int(seed), sweeps=int(sweeps)
++            )
++            rows.append(
++                {
++                    "system_id": system.system_id,
++                    "seed": int(seed),
++                    "trace_checksum": first["trace_checksum"],
++                    "replay_match": first["trace_checksum"] == second["trace_checksum"],
++                    "accepted_swaps": first["accepted_swaps"],
++                    "rejected_swaps": first["rejected_swaps"],
++                    "invalid_permutation_count": first["invalid_permutation_count"],
++                }
++            )
++    return {
++        "pass": bool(rows)
++        and all(
++            row["replay_match"] is True and row["invalid_permutation_count"] == 0 for row in rows
++        ),
++        "rows": rows,
++    }
++
++
++def upstream_kernel_receipts(root: str | Path = REPO_ROOT) -> JsonDict:
++    """Pin Exp5622 corrected cDLS and Exp5633 label-only exchange semantics."""
++
++    root_path = Path(root)
++    exp5622_receipt = exp5633.corrected_kernel_receipt(root_path)
++    exp5633_source = root_path / EXP5633_SOURCE_RELATIVE_PATH
++    exp5633_result = root_path / EXP5633_RESULT_RELATIVE_PATH
++    exp5633_payload: JsonDict | None = None
++    if exp5633_result.exists():
++        loaded = json.loads(exp5633_result.read_text(encoding="utf-8"))
++        if isinstance(loaded, dict):
++            exp5633_payload = loaded
++    exp5633_ready = bool(
++        exp5633_source.exists()
++        and exp5633_result.exists()
++        and exp5633_payload is not None
++        and exp5633_payload.get("replica_exchange_kernel_ready_score") == 1.0
++        and exp5633_payload.get("swap_rule", {}).get("state_update") == "temperature_labels_only"
++    )
++    return {
++        "exp5622_corrected_cdls": exp5622_receipt,
++        "exp5633_temperature_label_semantics": {
++            "source_path": EXP5633_SOURCE_RELATIVE_PATH.as_posix(),
++            "source_sha256": file_sha256(exp5633_source) if exp5633_source.exists() else None,
++            "result_path": EXP5633_RESULT_RELATIVE_PATH.as_posix(),
++            "result_sha256": file_sha256(exp5633_result) if exp5633_result.exists() else None,
++            "result_reproducibility_checksum": None
++            if exp5633_payload is None
++            else exp5633_payload.get("reproducibility_checksum"),
++            "required_semantics": "exchange labels, not chain states",
++            "substrate_unchanged": exp5633_ready,
++        },
++    }
++
++
++def _summarize_broken_controls(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    summaries: list[JsonDict] = []
++    for control_id in BROKEN_CONTROL_IDS:
++        control_rows = [row for row in rows if row["control_id"] == control_id]
++        numeric_db = [
++            float(row["max_detailed_balance_error"])
++            for row in control_rows
++            if row.get("max_detailed_balance_error") is not None
++        ]
++        numeric_feas = [
++            float(row["target_feasibility_marginal_delta"])
++            for row in control_rows
++            if row.get("target_feasibility_marginal_delta") is not None
++        ]
++        summaries.append(
++            {
++                "control_id": control_id,
++                "detected": bool(control_rows)
++                and all(row.get("detected") is True for row in control_rows),
++                "systems_tested": [str(row["system_id"]) for row in control_rows],
++                "max_detailed_balance_error": round(max(numeric_db), 12) if numeric_db else None,
++                "state_mutation_detected": any(
++                    row.get("state_mutation_detected") is True for row in control_rows
++                ),
++                "target_feasibility_marginal_delta": round(max(numeric_feas), 12)
++                if numeric_feas
++                else None,
++                "scheduler_missing_required_swaps": any(
++                    row.get("scheduler_missing_required_swaps") is True for row in control_rows
++                ),
++                "rejection_reason": str(control_rows[0]["rejection_reason"])
++                if control_rows
++                else "missing control rows",
++            }
++        )
++    return summaries
++
++
++def ready_score(payload: Mapping[str, Any]) -> float:
++    """Return 1.0 only when every exactness and control gate passes."""
++
++    controls = payload.get("broken_controls", [])
++    control_ids = {row.get("control_id") for row in controls if isinstance(row, Mapping)}
++    controls_ok = control_ids == set(BROKEN_CONTROL_IDS) and all(
++        isinstance(row, Mapping) and row.get("detected") is True for row in controls
++    )
++    receipts = payload.get("upstream_kernel_receipts", {})
++    comparators = payload.get("exactness_comparators", {})
++    one_axis_tv = float(
++        comparators.get("promoted_one_axis_temperature_exchange", {}).get(
++            "exact_distribution_tv_max", 1.0
++        )
++    )
++    independent_tv = float(
++        comparators.get("equal_transition_independent_corrected_chains", {}).get(
++            "exact_distribution_tv_max", 1.0
++        )
++    )
++    gates = (
++        isinstance(receipts, Mapping)
++        and receipts.get("exp5622_corrected_cdls", {}).get("substrate_unchanged") is True,
++        isinstance(receipts, Mapping)
++        and receipts.get("exp5633_temperature_label_semantics", {}).get("substrate_unchanged")
++        is True,
++        payload.get("openspec_requirement_ids") == list(SPEC_REFS),
++        payload.get("temperature_ladder") == list(TEMPERATURE_LADDER),
++        payload.get("penalty_ladder") == list(PENALTY_LADDER),
++        payload.get("timing_claimed") is False,
++        payload.get("hardware_speedup_claimed") is False,
++        payload.get("deterministic_replay_pass") is True,
++        payload.get("broken_control_rejected") is True,
++        controls_ok,
++        payload.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        float(payload.get("transition_row_error_max", 1.0)) <= TRANSITION_ROW_TOLERANCE,
++        float(payload.get("transition_probability_min", -1.0)) >= -TRANSITION_ROW_TOLERANCE,
++        float(payload.get("horizontal_detailed_balance_error_max", 1.0))
++        <= DETAILED_BALANCE_TOLERANCE,
++        float(payload.get("vertical_detailed_balance_error_max", 1.0))
++        <= DETAILED_BALANCE_TOLERANCE,
++        float(payload.get("exact_joint_target_tv", 1.0)) <= EXACT_TV_TOLERANCE,
++        float(payload.get("exact_target_replica_tv", 1.0)) <= EXACT_TV_TOLERANCE,
++        float(payload.get("target_feasibility_marginal_error", 1.0))
++        <= FEASIBILITY_MARGINAL_TOLERANCE,
++        one_axis_tv <= EXACT_TV_TOLERANCE,
++        independent_tv <= EXACT_TV_TOLERANCE,
++    )
++    return 1.0 if all(gates) else 0.0
++
++
++def honest_verdict(payload: Mapping[str, Any]) -> str:
++    """Return a terminal verdict; exactness failure blocks downstream quality trials."""
++
++    if ready_score(payload) == 1.0:
++        return "complete: exact two-axis beta-lambda label-exchange invariant audit ready for downstream quality trials"
++    return "blocked: exactness failure is terminal for two-axis beta-lambda label-exchange quality trials"
++
++
++def build_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    random_seeds: Sequence[int] = DEFAULT_RANDOM_SEEDS,
++    replay_sweeps: int = DEFAULT_REPLAY_SWEEPS,
++    tests_added_or_reused: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build the Exp5644 terminal exactness artifact."""
++
++    systems = constrained_ising_fixtures()
++    system_rows = [audit_one_system(system) for system in systems]
++    broken_rows: list[JsonDict] = []
++    for system in systems:
++        states = exp5622.enumerate_states(system.n_spins)
++        for row in audit_broken_controls(system=system, states=states):
++            broken_rows.append({"system_id": system.system_id, **row})
++    broken_controls = _summarize_broken_controls(broken_rows)
++    replay = deterministic_replay_summary(systems=systems, seeds=random_seeds, sweeps=replay_sweeps)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "upstream_kernel_receipts": upstream_kernel_receipts(root),
++        "openspec_requirement_ids": list(SPEC_REFS),
++        "fixture_definitions": [row["descriptor"] for row in system_rows],
++        "temperature_ladder": list(TEMPERATURE_LADDER),
++        "penalty_ladder": list(PENALTY_LADDER),
++        "horizontal_swap_rule": horizontal_swap_rule(),
++        "vertical_swap_rule": vertical_swap_rule(),
++        "scheduler": scheduler(),
++        "system_audit_rows": system_rows,
++        "transition_row_error_max": max(float(row["transition_row_error"]) for row in system_rows),
++        "transition_probability_min": min(
++            float(row["transition_probability_min"]) for row in system_rows
++        ),
++        "horizontal_detailed_balance_error_max": max(
++            float(row["horizontal_detailed_balance_error"]) for row in system_rows
++        ),
++        "vertical_detailed_balance_error_max": max(
++            float(row["vertical_detailed_balance_error"]) for row in system_rows
++        ),
++        "exact_joint_target_tv": max(float(row["exact_joint_target_tv"]) for row in system_rows),
++        "exact_target_replica_tv": max(
++            float(row["exact_target_replica_tv"]) for row in system_rows
++        ),
++        "target_feasibility_marginal_error": max(
++            float(row["target_feasibility_marginal_error"]) for row in system_rows
++        ),
++        "deterministic_replay_pass": replay["pass"],
++        "deterministic_replay": replay,
++        "exactness_comparators": exactness_comparators(system_rows, systems),
++        "broken_controls": broken_controls,
++        "broken_control_rejected": all(row["detected"] is True for row in broken_controls),
++        "tolerances": {
++            "transition_row_error_max": TRANSITION_ROW_TOLERANCE,
++            "detailed_balance_error_max": DETAILED_BALANCE_TOLERANCE,
++            "exact_total_variation_max": EXACT_TV_TOLERANCE,
++            "target_feasibility_marginal_error_max": FEASIBILITY_MARGINAL_TOLERANCE,
++        },
++        "timing_claimed": False,
++        "hardware_speedup_claimed": False,
++        "two_axis_invariant_ready_score": 0.0,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seeds": [int(seed) for seed in random_seeds],
++        "tests_added_or_reused": list(
++            tests_added_or_reused
++            or [
++                "tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py",
++                str(RESULT_RELATIVE_PATH),
++            ]
++        ),
++        "honest_verdict": "",
++        "reproducibility_checksum": "",
++    }
++    artifact["two_axis_invariant_ready_score"] = ready_score(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> None:
++    """Validate Exp5644 fields and fail closed on manually-set readiness."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            raise ValueError(f"missing required field: {field}")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles mismatch")
++    if payload.get("openspec_requirement_ids") != list(SPEC_REFS):
++        raise ValueError("openspec_requirement_ids mismatch")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if payload.get("timing_claimed") is not False:
++        raise ValueError("timing_claimed must be false")
++    if payload.get("hardware_speedup_claimed") is not False:
++        raise ValueError("hardware_speedup_claimed must be false")
++    if payload.get("deterministic_replay_pass") is not True:
++        raise ValueError("deterministic_replay_pass must be true")
++    controls = payload.get("broken_controls", [])
++    control_ids = {row.get("control_id") for row in controls if isinstance(row, Mapping)}
++    if control_ids != set(BROKEN_CONTROL_IDS):
++        raise ValueError("broken_controls mismatch")
++    if payload.get("broken_control_rejected") is not True or not all(
++        isinstance(row, Mapping) and row.get("detected") is True for row in controls
++    ):
++        raise ValueError("broken_controls rejected mismatch")
++    expected_ready = ready_score(payload)
++    if float(payload.get("two_axis_invariant_ready_score", -1.0)) != expected_ready:
++        raise ValueError("two_axis_invariant_ready_score mismatch")
++    verdict = str(payload.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    if expected_ready == 1.0:
++        if float(payload.get("transition_row_error_max", 1.0)) > TRANSITION_ROW_TOLERANCE:
++            raise ValueError("transition_row_error_max exceeds tolerance")  # pragma: no cover
++        if (
++            float(payload.get("horizontal_detailed_balance_error_max", 1.0))
++            > DETAILED_BALANCE_TOLERANCE
++        ):
++            raise ValueError(
++                "horizontal_detailed_balance_error_max exceeds tolerance"
++            )  # pragma: no cover
++        if (
++            float(payload.get("vertical_detailed_balance_error_max", 1.0))
++            > DETAILED_BALANCE_TOLERANCE
++        ):
++            raise ValueError(
++                "vertical_detailed_balance_error_max exceeds tolerance"
++            )  # pragma: no cover
++        if float(payload.get("exact_joint_target_tv", 1.0)) > EXACT_TV_TOLERANCE:
++            raise ValueError("exact_joint_target_tv exceeds tolerance")  # pragma: no cover
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def write_output(root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    """Write the terminal artifact with stable formatting."""
++
++    output_path = Path(root) / RESULT_RELATIVE_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return output_path
++
++
++def run_experiment(repo_root: str | Path = REPO_ROOT) -> Path:  # pragma: no cover
++    """Build, validate, and write the Exp5644 artifact."""
++
++    artifact = build_artifact(root=repo_root)
++    return write_output(repo_root, artifact)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    print(run_experiment())
+diff --git a/results/experiment_5643_arc_live_self_discovery_levelup_v509.json b/results/experiment_5643_arc_live_self_discovery_levelup_v509.json
+index 13baecd815..3e80eb8142 100644
+--- a/results/experiment_5643_arc_live_self_discovery_levelup_v509.json
++++ b/results/experiment_5643_arc_live_self_discovery_levelup_v509.json
+@@ -1519,5 +1519,23 @@
+     "terminal_reason": "action_budget_exhausted"
+   },
+   "tests_run": [],
+-  "trace_replay_checksum": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0"
+-}
++  "trace_replay_checksum": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=5.071 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_5644_two_axis_parallel_tempering_exact_audit.json b/results/experiment_5644_two_axis_parallel_tempering_exact_audit.json
+new file mode 100644
+index 0000000000..ed9e332ff9
+--- /dev/null
++++ b/results/experiment_5644_two_axis_parallel_tempering_exact_audit.json
+@@ -0,0 +1,1490 @@
++{
++  "broken_control_rejected": true,
++  "broken_controls": [
++    {
++      "control_id": "missing_penalty_terms",
++      "detected": true,
++      "max_detailed_balance_error": 0.00307018601,
++      "rejection_reason": "swap detailed balance residual exceeds tolerance",
++      "scheduler_missing_required_swaps": false,
++      "state_mutation_detected": false,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": null
++    },
++    {
++      "control_id": "sign_reversal",
++      "detected": true,
++      "max_detailed_balance_error": 0.003691286836,
++      "rejection_reason": "swap detailed balance residual exceeds tolerance",
++      "scheduler_missing_required_swaps": false,
++      "state_mutation_detected": false,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": null
++    },
++    {
++      "control_id": "state_swapping",
++      "detected": true,
++      "max_detailed_balance_error": null,
++      "rejection_reason": "exchange mutates states instead of swapping labels",
++      "scheduler_missing_required_swaps": false,
++      "state_mutation_detected": true,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": null
++    },
++    {
++      "control_id": "asymmetric_scheduling",
++      "detected": true,
++      "max_detailed_balance_error": 0.003755718702,
++      "rejection_reason": "swap detailed balance residual exceeds tolerance",
++      "scheduler_missing_required_swaps": false,
++      "state_mutation_detected": false,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": null
++    },
++    {
++      "control_id": "extreme_lambda",
++      "detected": true,
++      "max_detailed_balance_error": null,
++      "rejection_reason": "unregistered extreme penalty ladder changes the target feasibility marginal",
++      "scheduler_missing_required_swaps": false,
++      "state_mutation_detected": false,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": 0.442049799302
++    },
++    {
++      "control_id": "disabled_swaps",
++      "detected": true,
++      "max_detailed_balance_error": null,
++      "rejection_reason": "scheduler omits required horizontal and vertical label exchanges",
++      "scheduler_missing_required_swaps": true,
++      "state_mutation_detected": false,
++      "systems_tested": [
++        "two_axis_n2_frustrated_pair_gate_a",
++        "two_axis_n2_frustrated_pair_gate_b",
++        "two_axis_n2_weighted_pair_gate_c"
++      ],
++      "target_feasibility_marginal_delta": null
++    }
++  ],
++  "deterministic_replay": {
++    "pass": true,
++    "rows": [
++      {
++        "accepted_swaps": 94,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 34,
++        "replay_match": true,
++        "seed": 5644,
++        "system_id": "two_axis_n2_frustrated_pair_gate_a",
++        "trace_checksum": "e4ae9ebdbbe4581848783714ed8c218e94b9d1a916802f9ac176cd9b9a315e27"
++      },
++      {
++        "accepted_swaps": 94,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 34,
++        "replay_match": true,
++        "seed": 5645,
++        "system_id": "two_axis_n2_frustrated_pair_gate_a",
++        "trace_checksum": "c507df8b46bc8c0486dcdf4fc3322d9330b6762422410218b505451b49777900"
++      },
++      {
++        "accepted_swaps": 90,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 38,
++        "replay_match": true,
++        "seed": 5646,
++        "system_id": "two_axis_n2_frustrated_pair_gate_a",
++        "trace_checksum": "c21b828cd8cb47c5a7113a8d430a30cc23de87cebacd72f0e22b7e9129093ec3"
++      },
++      {
++        "accepted_swaps": 104,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 24,
++        "replay_match": true,
++        "seed": 5647,
++        "system_id": "two_axis_n2_frustrated_pair_gate_a",
++        "trace_checksum": "1254656e77c65946857986eb375a085f23fa4ff46f4dab10e26ae4dfc4a8336a"
++      },
++      {
++        "accepted_swaps": 80,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 48,
++        "replay_match": true,
++        "seed": 5644,
++        "system_id": "two_axis_n2_frustrated_pair_gate_b",
++        "trace_checksum": "e642b7957c0cbf7fa7029c314d283895b74ec04ecfa6e68c47a346dae6c9c883"
++      },
++      {
++        "accepted_swaps": 79,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 49,
++        "replay_match": true,
++        "seed": 5645,
++        "system_id": "two_axis_n2_frustrated_pair_gate_b",
++        "trace_checksum": "942f012d3bb258b39b62724ee8652abe788151192ee2a2e0e2c58e40cc5328fe"
++      },
++      {
++        "accepted_swaps": 78,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 50,
++        "replay_match": true,
++        "seed": 5646,
++        "system_id": "two_axis_n2_frustrated_pair_gate_b",
++        "trace_checksum": "9e068047f1e33fef84a31b358dc341111e62e6a5db0c716448e6f901b107943d"
++      },
++      {
++        "accepted_swaps": 93,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 35,
++        "replay_match": true,
++        "seed": 5647,
++        "system_id": "two_axis_n2_frustrated_pair_gate_b",
++        "trace_checksum": "9e5b551277cf1c2dedf3cd0005a45989f9937d41be765293a1d661e75e109465"
++      },
++      {
++        "accepted_swaps": 81,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 47,
++        "replay_match": true,
++        "seed": 5644,
++        "system_id": "two_axis_n2_weighted_pair_gate_c",
++        "trace_checksum": "c638dab01966c4a1cc25f6a9649440bec454fa47700a24c010a5cbeb9ea6afd1"
++      },
++      {
++        "accepted_swaps": 86,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 42,
++        "replay_match": true,
++        "seed": 5645,
++        "system_id": "two_axis_n2_weighted_pair_gate_c",
++        "trace_checksum": "3826eb3ecde61b7ffb7467f505e3e4a1c092c3fc2664551210c5772559b4279e"
++      },
++      {
++        "accepted_swaps": 77,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 51,
++        "replay_match": true,
++        "seed": 5646,
++        "system_id": "two_axis_n2_weighted_pair_gate_c",
++        "trace_checksum": "f36b3b3bcc7d04af01ddcf345cee6bb76415b572005b5c9ee58f94bc6d6c4c3e"
++      },
++      {
++        "accepted_swaps": 74,
++        "invalid_permutation_count": 0,
++        "rejected_swaps": 54,
++        "replay_match": true,
++        "seed": 5647,
++        "system_id": "two_axis_n2_weighted_pair_gate_c",
++        "trace_checksum": "aeec7e326c22c00256b14d7c3946fc5a3a481bd769f1790c729e2331e4dd2e6f"
++      }
++    ]
++  },
++  "deterministic_replay_pass": true,
++  "exact_joint_target_tv": 1.0370285253727483e-16,
++  "exact_target_replica_tv": 3.4867941867133823e-16,
++  "exactness_comparators": {
++    "equal_transition_independent_corrected_chains": {
++      "description": "No-swap corrected cDLS replicas with equal corrected-transition attempts; exactness comparator only.",
++      "exact_distribution_tv_max": 6.373482868002732e-17,
++      "exactness_only": true,
++      "rows": [
++        {
++          "exact_distribution_tv": 6.373482868002732e-17,
++          "system_id": "two_axis_n2_frustrated_pair_gate_a"
++        },
++        {
++          "exact_distribution_tv": 4.995466803682882e-17,
++          "system_id": "two_axis_n2_frustrated_pair_gate_b"
++        },
++        {
++          "exact_distribution_tv": 5.347750453423906e-17,
++          "system_id": "two_axis_n2_weighted_pair_gate_c"
++        }
++      ]
++    },
++    "promoted_one_axis_temperature_exchange": {
++      "description": "Exp5633 label-exchange rule restricted to the beta axis at the strongest fixed penalty.",
++      "exact_distribution_tv_max": 7.247891523065597e-17,
++      "exactness_only": true,
++      "rows": [
++        {
++          "exact_distribution_tv": 5.232630734958166e-17,
++          "system_id": "two_axis_n2_frustrated_pair_gate_a"
++        },
++        {
++          "exact_distribution_tv": 4.2825985813177425e-17,
++          "system_id": "two_axis_n2_frustrated_pair_gate_b"
++        },
++        {
++          "exact_distribution_tv": 7.247891523065597e-17,
++          "system_id": "two_axis_n2_weighted_pair_gate_c"
++        }
++      ]
++    },
++    "two_axis_rows_compared": 3
++  },
++  "experiment": 5644,
++  "experiment_id": "exp5644-two-axis-parallel-tempering-exact-audit",
++  "field_principles": {
++    "broken_control_rejected": "Provides a single mechanical gate proving every broken control was detected.",
++    "broken_controls": "Documents invalid two-axis kernels that the audit must reject.",
++    "deterministic_replay_pass": "Proves fixed seeds reproduce the same schedule, labels, and RNG trace.",
++    "exact_joint_target_tv": "Measures full joint state and label stationary parity instead of checking only marginals.",
++    "exact_target_replica_tv": "Measures the strongest-beta strongest-penalty target replica that downstream constrained optimization would consume.",
++    "field_principles": "Explains why every required audit field exists before any two-axis quality trial can consume it.",
++    "fixture_definitions": "Makes every constrained Ising target reconstructable, including energies, constraints, and feasibility barriers.",
++    "hardware_speedup_claimed": "Bare false prevents CPU enumeration from being read as CUDA, board, SNN, or TSU evidence.",
++    "honest_verdict": "Starts complete: or blocked: and treats exactness failure as terminal.",
++    "horizontal_detailed_balance_error_max": "Measures exact reversibility along the temperature axis.",
++    "horizontal_swap_rule": "Makes the temperature-label acceptance ratio inspectable at fixed penalty.",
++    "inference_substrate": "Declares CPU exact enumeration plus corrected cDLS, not LLM inference or board execution.",
++    "openspec_requirement_ids": "Keeps the implementation and tests anchored to REQ-SAMPLE-5644 and SCENARIO-SAMPLE-5644.",
++    "penalty_ladder": "Freezes the nonnegative constraint-penalty axis before exactness is measured.",
++    "random_seeds": "Records deterministic replay seeds.",
++    "reproducibility_checksum": "Content-addresses the audit so future reruns can detect silent drift.",
++    "scheduler": "Records the fixed within, horizontal, and vertical update order required for deterministic replay.",
++    "target_feasibility_marginal_error": "Checks that exact constraint feasibility is preserved by the two-axis invariant.",
++    "temperature_ladder": "Freezes the beta axis before exactness is measured.",
++    "timing_claimed": "Bare false keeps this exactness audit from becoming a timing or crossover claim.",
++    "transition_row_error_max": "Confirms every composed transition is stochastic before stationary parity is trusted.",
++    "two_axis_invariant_ready_score": "Equals 1.0 only when exactness, feasibility, replay, and control-rejection gates all pass.",
++    "upstream_kernel_receipts": "Pins Exp5622 corrected cDLS and Exp5633 exact label semantics so Exp5644 cannot silently retune substrates.",
++    "vertical_detailed_balance_error_max": "Measures exact reversibility along the penalty axis.",
++    "vertical_swap_rule": "Makes the penalty-label acceptance ratio inspectable at fixed temperature."
++  },
++  "fixture_definitions": [
++    {
++      "barrier_summary": {
++        "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++        "energy_level_count": 4,
++        "energy_levels": [
++          -0.7,
++          -0.62,
++          0.28,
++          1.04
++        ],
++        "feasible_energy_level_count": 1,
++        "feasible_energy_levels": [
++          0.28
++        ],
++        "infeasible_penalty_level_count": 2,
++        "infeasible_penalty_levels": [
++          1.0,
++          2.0
++        ],
++        "penalty_level_count": 3,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ]
++      },
++      "constraint_indices": [
++        0,
++        1
++      ],
++      "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++      "couplings": [
++        [
++          0.0,
++          0.66
++        ],
++        [
++          0.66,
++          0.0
++        ]
++      ],
++      "energy_max": 1.04,
++      "energy_min": -0.7,
++      "fields": [
++        0.17,
++        -0.21
++      ],
++      "n_spins": 2,
++      "penalty_levels": [
++        0.0,
++        1.0,
++        2.0
++      ],
++      "slot_targets": [
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.7,
++              "probability": 0.329445355116026
++            },
++            {
++              "energy": -0.62,
++              "probability": 0.317288196585657
++            },
++            {
++              "energy": 0.28,
++              "probability": 0.207848718121842
++            },
++            {
++              "energy": 1.04,
++              "probability": 0.145417730176475
++            }
++          ],
++          "feasibility_marginal": 0.207848718121842,
++          "lambda": 0.0,
++          "slot_id": 0,
++          "target_probability_checksum": "57af98999984e243324657c52c0bd877325da5978d353dc5a0e6acad786a6091"
++        },
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.7,
++              "probability": 0.280557434528752
++            },
++            {
++              "energy": -0.62,
++              "probability": 0.270204333003802
++            },
++            {
++              "energy": 0.28,
++              "probability": 0.393538326335915
++            },
++            {
++              "energy": 1.04,
++              "probability": 0.055699906131531
++            }
++          ],
++          "feasibility_marginal": 0.393538326335915,
++          "lambda": 1.7,
++          "slot_id": 1,
++          "target_probability_checksum": "34e68a140c792519b955ddb86f70f51db25ec6e7a1e8780a31de7aa599521cd6"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.7,
++              "probability": 0.430387088229028
++            },
++            {
++              "energy": -0.62,
++              "probability": 0.390053928952634
++            },
++            {
++              "energy": 0.28,
++              "probability": 0.128931983926537
++            },
++            {
++              "energy": 1.04,
++              "probability": 0.050626998891801
++            }
++          ],
++          "feasibility_marginal": 0.128931983926537,
++          "lambda": 0.0,
++          "slot_id": 2,
++          "target_probability_checksum": "6af0cd23163edc654d18a796ab93a15f51fede5906c02fa6ab890200265121d9"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.7,
++              "probability": 0.230135832879568
++            },
++            {
++              "energy": -0.62,
++              "probability": 0.208568956324485
++            },
++            {
++              "energy": 0.28,
++              "probability": 0.557950200698187
++            },
++            {
++              "energy": 1.04,
++              "probability": 0.00334501009776
++            }
++          ],
++          "feasibility_marginal": 0.557950200698187,
++          "lambda": 1.7,
++          "slot_id": 3,
++          "target_probability_checksum": "5a2e0c9242edcd7228c93ac681671b0820d1c093f469008f1a6570177ff2c69c"
++        }
++      ],
++      "state_count": 4,
++      "system_id": "two_axis_n2_frustrated_pair_gate_a",
++      "target_slot": {
++        "beta": 1.23,
++        "exact_feasibility_marginal": 0.557950200698187,
++        "lambda": 1.7,
++        "slot_id": 3
++      },
++      "target_spins": [
++        1,
++        -1
++      ],
++      "topology": "mixed_sign_pair_two_spin_gate_a"
++    },
++    {
++      "barrier_summary": {
++        "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++        "energy_level_count": 4,
++        "energy_levels": [
++          -0.9,
++          -0.34,
++          0.52,
++          0.72
++        ],
++        "feasible_energy_level_count": 1,
++        "feasible_energy_levels": [
++          -0.9
++        ],
++        "infeasible_penalty_level_count": 2,
++        "infeasible_penalty_levels": [
++          1.0,
++          2.0
++        ],
++        "penalty_level_count": 3,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ]
++      },
++      "constraint_indices": [
++        0,
++        1
++      ],
++      "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++      "couplings": [
++        [
++          0.0,
++          -0.62
++        ],
++        [
++          -0.62,
++          0.0
++        ]
++      ],
++      "energy_max": 0.72,
++      "energy_min": -0.9,
++      "fields": [
++        -0.09,
++        0.19
++      ],
++      "n_spins": 2,
++      "penalty_levels": [
++        0.0,
++        1.0,
++        2.0
++      ],
++      "slot_targets": [
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.9,
++              "probability": 0.363816146020189
++            },
++            {
++              "energy": -0.34,
++              "probability": 0.279624783814363
++            },
++            {
++              "energy": 0.52,
++              "probability": 0.186652508839688
++            },
++            {
++              "energy": 0.72,
++              "probability": 0.16990656132576
++            }
++          ],
++          "feasibility_marginal": 0.363816146020189,
++          "lambda": 0.0,
++          "slot_id": 0,
++          "target_probability_checksum": "6d7c487c8ab80f25780f1582604949db6c115652cf71a1800129727687c76860"
++        },
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.9,
++              "probability": 0.626451536182991
++            },
++            {
++              "energy": -0.34,
++              "probability": 0.097404402992856
++            },
++            {
++              "energy": 0.52,
++              "probability": 0.144556641709018
++            },
++            {
++              "energy": 0.72,
++              "probability": 0.131587419115134
++            }
++          ],
++          "feasibility_marginal": 0.626451536182991,
++          "lambda": 1.7,
++          "slot_id": 1,
++          "target_probability_checksum": "5fa6be8668bf4d008d95d655fd7800ec0b009584ac1c6ba6ff6ea9ce88be23eb"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.9,
++              "probability": 0.551607096489029
++            },
++            {
++              "energy": -0.34,
++              "probability": 0.277005125913066
++            },
++            {
++              "energy": 0.52,
++              "probability": 0.096181401859485
++            },
++            {
++              "energy": 0.72,
++              "probability": 0.07520637573842
++            }
++          ],
++          "feasibility_marginal": 0.551607096489029,
++          "lambda": 0.0,
++          "slot_id": 2,
++          "target_probability_checksum": "0840355ba6776cda6d96c5e15a55aaf07d347f3d53eb23e7c5782f6619d25edb"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.9,
++              "probability": 0.955968853534126
++            },
++            {
++              "energy": -0.34,
++              "probability": 0.007329632165178
++            },
++            {
++              "energy": 0.52,
++              "probability": 0.020596585971776
++            },
++            {
++              "energy": 0.72,
++              "probability": 0.01610492832892
++            }
++          ],
++          "feasibility_marginal": 0.955968853534126,
++          "lambda": 1.7,
++          "slot_id": 3,
++          "target_probability_checksum": "4cefdf42be7ba4db2d0711d37770aa2bd765b95e3789477dc1b7179e96f01ab0"
++        }
++      ],
++      "state_count": 4,
++      "system_id": "two_axis_n2_frustrated_pair_gate_b",
++      "target_slot": {
++        "beta": 1.23,
++        "exact_feasibility_marginal": 0.955968853534126,
++        "lambda": 1.7,
++        "slot_id": 3
++      },
++      "target_spins": [
++        -1,
++        1
++      ],
++      "topology": "antiferro_pair_two_spin_gate_b"
++    },
++    {
++      "barrier_summary": {
++        "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++        "energy_level_count": 4,
++        "energy_levels": [
++          -0.82,
++          -0.14,
++          0.36,
++          0.6
++        ],
++        "feasible_energy_level_count": 1,
++        "feasible_energy_levels": [
++          -0.82
++        ],
++        "infeasible_penalty_level_count": 2,
++        "infeasible_penalty_levels": [
++          1.0,
++          2.0
++        ],
++        "penalty_level_count": 3,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ]
++      },
++      "constraint_indices": [
++        0,
++        1
++      ],
++      "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++      "couplings": [
++        [
++          0.0,
++          0.48
++        ],
++        [
++          0.48,
++          0.0
++        ]
++      ],
++      "energy_max": 0.6,
++      "energy_min": -0.82,
++      "fields": [
++        0.11,
++        0.23
++      ],
++      "n_spins": 2,
++      "penalty_levels": [
++        0.0,
++        1.0,
++        2.0
++      ],
++      "slot_targets": [
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.82,
++              "probability": 0.355393528709827
++            },
++            {
++              "energy": -0.14,
++              "probability": 0.25817191677057
++            },
++            {
++              "energy": 0.36,
++              "probability": 0.204103191591589
++            },
++            {
++              "energy": 0.6,
++              "probability": 0.182331362928015
++            }
++          ],
++          "feasibility_marginal": 0.355393528709827,
++          "lambda": 0.0,
++          "slot_id": 0,
++          "target_probability_checksum": "903e86879229f33b2dd1f4dbacbae003fd9342e76c4e1f4c192bcd9ad6f9a6df"
++        },
++        {
++          "beta": 0.47,
++          "energy_distribution": [
++            {
++              "energy": -0.82,
++              "probability": 0.611238491182831
++            },
++            {
++              "energy": -0.14,
++              "probability": 0.089827144982071
++            },
++            {
++              "energy": 0.36,
++              "probability": 0.15788820389262
++            },
++            {
++              "energy": 0.6,
++              "probability": 0.141046159942479
++            }
++          ],
++          "feasibility_marginal": 0.611238491182831,
++          "lambda": 1.7,
++          "slot_id": 1,
++          "target_probability_checksum": "4942a2a10e5aab457b77de88aae5556091fede4bc5e51b8c42be3dfd09ab0fe9"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.82,
++              "probability": 0.542924895872996
++            },
++            {
++              "energy": -0.14,
++              "probability": 0.235231702635581
++            },
++            {
++              "energy": 0.36,
++              "probability": 0.127175878318036
++            },
++            {
++              "energy": 0.6,
++              "probability": 0.094667523173387
++            }
++          ],
++          "feasibility_marginal": 0.542924895872996,
++          "lambda": 0.0,
++          "slot_id": 2,
++          "target_probability_checksum": "428f95907fd774998b2cf16fc5aa7083879f84f4cdf9e5257182340d711ba449"
++        },
++        {
++          "beta": 1.23,
++          "energy_distribution": [
++            {
++              "energy": -0.82,
++              "probability": 0.94598060174459
++            },
++            {
++              "energy": -0.14,
++              "probability": 0.006257758558749
++            },
++            {
++              "energy": 0.36,
++              "probability": 0.027380253086172
++            },
++            {
++              "energy": 0.6,
++              "probability": 0.020381386610489
++            }
++          ],
++          "feasibility_marginal": 0.94598060174459,
++          "lambda": 1.7,
++          "slot_id": 3,
++          "target_probability_checksum": "d4349943fc6a606c72e03b9bbb3f6947ca3e4d0cfa40189bb011586a8d42118a"
++        }
++      ],
++      "state_count": 4,
++      "system_id": "two_axis_n2_weighted_pair_gate_c",
++      "target_slot": {
++        "beta": 1.23,
++        "exact_feasibility_marginal": 0.94598060174459,
++        "lambda": 1.7,
++        "slot_id": 3
++      },
++      "target_spins": [
++        1,
++        1
++      ],
++      "topology": "weighted_pair_two_spin_gate_c"
++    }
++  ],
++  "hardware_speedup_claimed": false,
++  "honest_verdict": "complete: exact two-axis beta-lambda label-exchange invariant audit ready for downstream quality trials",
++  "horizontal_detailed_balance_error_max": 8.673617379884035e-19,
++  "horizontal_swap_rule": {
++    "acceptance_ratio": "min(1, exp((beta_a - beta_b) * ((E(x_a)+lambda*C(x_a)) - (E(x_b)+lambda*C(x_b)))))",
++    "axis": "temperature",
++    "fixed_axis": "common lambda",
++    "proposal_symmetry": "fixed adjacent beta labels at the same penalty value",
++    "state_copy_allowed": false,
++    "state_update": "parameter_labels_only"
++  },
++  "inference_substrate": "cpu_exact_enumeration_and_corrected_cdls",
++  "milestone": "2026.07.509",
++  "openspec_requirement_ids": [
++    "REQ-SAMPLE-5644",
++    "SCENARIO-SAMPLE-5644"
++  ],
++  "penalty_ladder": [
++    0.0,
++    1.7
++  ],
++  "random_seeds": [
++    5644,
++    5645,
++    5646,
++    5647
++  ],
++  "reproducibility_checksum": "9abb9ea12957ed53afc1f8c4d7a51ba93ab064b16ff54a35daa9d095b6c8b7cf",
++  "run_date": "2026-07-14",
++  "scheduler": [
++    {
++      "kernel": "corrected_cdls_projection_mh",
++      "phase": "within_replica",
++      "physical_replica_index": 0,
++      "slot_source": "current_parameter_label",
++      "transition_count": 1
++    },
++    {
++      "kernel": "corrected_cdls_projection_mh",
++      "phase": "within_replica",
++      "physical_replica_index": 1,
++      "slot_source": "current_parameter_label",
++      "transition_count": 1
++    },
++    {
++      "kernel": "corrected_cdls_projection_mh",
++      "phase": "within_replica",
++      "physical_replica_index": 2,
++      "slot_source": "current_parameter_label",
++      "transition_count": 1
++    },
++    {
++      "kernel": "corrected_cdls_projection_mh",
++      "phase": "within_replica",
++      "physical_replica_index": 3,
++      "slot_source": "current_parameter_label",
++      "transition_count": 1
++    },
++    {
++      "axis": "temperature",
++      "fixed_penalty_index": 0,
++      "phase": "horizontal_temperature_label_exchange",
++      "proposal": "swap_parameter_labels",
++      "slot_pair": [
++        0,
++        2
++      ],
++      "state_copy_allowed": false,
++      "transition_count": 1
++    },
++    {
++      "axis": "temperature",
++      "fixed_penalty_index": 1,
++      "phase": "horizontal_temperature_label_exchange",
++      "proposal": "swap_parameter_labels",
++      "slot_pair": [
++        1,
++        3
++      ],
++      "state_copy_allowed": false,
++      "transition_count": 1
++    },
++    {
++      "axis": "penalty",
++      "fixed_beta_index": 0,
++      "phase": "vertical_penalty_label_exchange",
++      "proposal": "swap_parameter_labels",
++      "slot_pair": [
++        0,
++        1
++      ],
++      "state_copy_allowed": false,
++      "transition_count": 1
++    },
++    {
++      "axis": "penalty",
++      "fixed_beta_index": 1,
++      "phase": "vertical_penalty_label_exchange",
++      "proposal": "swap_parameter_labels",
++      "slot_pair": [
++        2,
++        3
++      ],
++      "state_copy_allowed": false,
++      "transition_count": 1
++    }
++  ],
++  "schema": "carnot.experiment_5644.two_axis_parallel_tempering_exact_audit.v1",
++  "system_audit_rows": [
++    {
++      "descriptor": {
++        "barrier_summary": {
++          "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++          "energy_level_count": 4,
++          "energy_levels": [
++            -0.7,
++            -0.62,
++            0.28,
++            1.04
++          ],
++          "feasible_energy_level_count": 1,
++          "feasible_energy_levels": [
++            0.28
++          ],
++          "infeasible_penalty_level_count": 2,
++          "infeasible_penalty_levels": [
++            1.0,
++            2.0
++          ],
++          "penalty_level_count": 3,
++          "penalty_levels": [
++            0.0,
++            1.0,
++            2.0
++          ]
++        },
++        "constraint_indices": [
++          0,
++          1
++        ],
++        "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++        "couplings": [
++          [
++            0.0,
++            0.66
++          ],
++          [
++            0.66,
++            0.0
++          ]
++        ],
++        "energy_max": 1.04,
++        "energy_min": -0.7,
++        "fields": [
++          0.17,
++          -0.21
++        ],
++        "n_spins": 2,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ],
++        "slot_targets": [
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.7,
++                "probability": 0.329445355116026
++              },
++              {
++                "energy": -0.62,
++                "probability": 0.317288196585657
++              },
++              {
++                "energy": 0.28,
++                "probability": 0.207848718121842
++              },
++              {
++                "energy": 1.04,
++                "probability": 0.145417730176475
++              }
++            ],
++            "feasibility_marginal": 0.207848718121842,
++            "lambda": 0.0,
++            "slot_id": 0,
++            "target_probability_checksum": "57af98999984e243324657c52c0bd877325da5978d353dc5a0e6acad786a6091"
++          },
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.7,
++                "probability": 0.280557434528752
++              },
++              {
++                "energy": -0.62,
++                "probability": 0.270204333003802
++              },
++              {
++                "energy": 0.28,
++                "probability": 0.393538326335915
++              },
++              {
++                "energy": 1.04,
++                "probability": 0.055699906131531
++              }
++            ],
++            "feasibility_marginal": 0.393538326335915,
++            "lambda": 1.7,
++            "slot_id": 1,
++            "target_probability_checksum": "34e68a140c792519b955ddb86f70f51db25ec6e7a1e8780a31de7aa599521cd6"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.7,
++                "probability": 0.430387088229028
++              },
++              {
++                "energy": -0.62,
++                "probability": 0.390053928952634
++              },
++              {
++                "energy": 0.28,
++                "probability": 0.128931983926537
++              },
++              {
++                "energy": 1.04,
++                "probability": 0.050626998891801
++              }
++            ],
++            "feasibility_marginal": 0.128931983926537,
++            "lambda": 0.0,
++            "slot_id": 2,
++            "target_probability_checksum": "6af0cd23163edc654d18a796ab93a15f51fede5906c02fa6ab890200265121d9"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.7,
++                "probability": 0.230135832879568
++              },
++              {
++                "energy": -0.62,
++                "probability": 0.208568956324485
++              },
++              {
++                "energy": 0.28,
++                "probability": 0.557950200698187
++              },
++              {
++                "energy": 1.04,
++                "probability": 0.00334501009776
++              }
++            ],
++            "feasibility_marginal": 0.557950200698187,
++            "lambda": 1.7,
++            "slot_id": 3,
++            "target_probability_checksum": "5a2e0c9242edcd7228c93ac681671b0820d1c093f469008f1a6570177ff2c69c"
++          }
++        ],
++        "state_count": 4,
++        "system_id": "two_axis_n2_frustrated_pair_gate_a",
++        "target_slot": {
++          "beta": 1.23,
++          "exact_feasibility_marginal": 0.557950200698187,
++          "lambda": 1.7,
++          "slot_id": 3
++        },
++        "target_spins": [
++          1,
++          -1
++        ],
++        "topology": "mixed_sign_pair_two_spin_gate_a"
++      },
++      "exact_joint_target_tv": 9.434654645423853e-17,
++      "exact_target_replica_tv": 1.713039432527097e-16,
++      "horizontal_detailed_balance_error": 4.336808689942018e-19,
++      "joint_state_count": 6144,
++      "target_feasibility_marginal_after_schedule": 0.5579502006981869,
++      "target_feasibility_marginal_error": 2.220446049250313e-16,
++      "target_feasibility_marginal_exact": 0.5579502006981867,
++      "transition_probability_min": 0.0,
++      "transition_row_error": 2.220446049250313e-16,
++      "vertical_detailed_balance_error": 3.2526065174565133e-19
++    },
++    {
++      "descriptor": {
++        "barrier_summary": {
++          "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++          "energy_level_count": 4,
++          "energy_levels": [
++            -0.9,
++            -0.34,
++            0.52,
++            0.72
++          ],
++          "feasible_energy_level_count": 1,
++          "feasible_energy_levels": [
++            -0.9
++          ],
++          "infeasible_penalty_level_count": 2,
++          "infeasible_penalty_levels": [
++            1.0,
++            2.0
++          ],
++          "penalty_level_count": 3,
++          "penalty_levels": [
++            0.0,
++            1.0,
++            2.0
++          ]
++        },
++        "constraint_indices": [
++          0,
++          1
++        ],
++        "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++        "couplings": [
++          [
++            0.0,
++            -0.62
++          ],
++          [
++            -0.62,
++            0.0
++          ]
++        ],
++        "energy_max": 0.72,
++        "energy_min": -0.9,
++        "fields": [
++          -0.09,
++          0.19
++        ],
++        "n_spins": 2,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ],
++        "slot_targets": [
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.9,
++                "probability": 0.363816146020189
++              },
++              {
++                "energy": -0.34,
++                "probability": 0.279624783814363
++              },
++              {
++                "energy": 0.52,
++                "probability": 0.186652508839688
++              },
++              {
++                "energy": 0.72,
++                "probability": 0.16990656132576
++              }
++            ],
++            "feasibility_marginal": 0.363816146020189,
++            "lambda": 0.0,
++            "slot_id": 0,
++            "target_probability_checksum": "6d7c487c8ab80f25780f1582604949db6c115652cf71a1800129727687c76860"
++          },
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.9,
++                "probability": 0.626451536182991
++              },
++              {
++                "energy": -0.34,
++                "probability": 0.097404402992856
++              },
++              {
++                "energy": 0.52,
++                "probability": 0.144556641709018
++              },
++              {
++                "energy": 0.72,
++                "probability": 0.131587419115134
++              }
++            ],
++            "feasibility_marginal": 0.626451536182991,
++            "lambda": 1.7,
++            "slot_id": 1,
++            "target_probability_checksum": "5fa6be8668bf4d008d95d655fd7800ec0b009584ac1c6ba6ff6ea9ce88be23eb"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.9,
++                "probability": 0.551607096489029
++              },
++              {
++                "energy": -0.34,
++                "probability": 0.277005125913066
++              },
++              {
++                "energy": 0.52,
++                "probability": 0.096181401859485
++              },
++              {
++                "energy": 0.72,
++                "probability": 0.07520637573842
++              }
++            ],
++            "feasibility_marginal": 0.551607096489029,
++            "lambda": 0.0,
++            "slot_id": 2,
++            "target_probability_checksum": "0840355ba6776cda6d96c5e15a55aaf07d347f3d53eb23e7c5782f6619d25edb"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.9,
++                "probability": 0.955968853534126
++              },
++              {
++                "energy": -0.34,
++                "probability": 0.007329632165178
++              },
++              {
++                "energy": 0.52,
++                "probability": 0.020596585971776
++              },
++              {
++                "energy": 0.72,
++                "probability": 0.01610492832892
++              }
++            ],
++            "feasibility_marginal": 0.955968853534126,
++            "lambda": 1.7,
++            "slot_id": 3,
++            "target_probability_checksum": "4cefdf42be7ba4db2d0711d37770aa2bd765b95e3789477dc1b7179e96f01ab0"
++          }
++        ],
++        "state_count": 4,
++        "system_id": "two_axis_n2_frustrated_pair_gate_b",
++        "target_slot": {
++          "beta": 1.23,
++          "exact_feasibility_marginal": 0.955968853534126,
++          "lambda": 1.7,
++          "slot_id": 3
++        },
++        "target_spins": [
++          -1,
++          1
++        ],
++        "topology": "antiferro_pair_two_spin_gate_b"
++      },
++      "exact_joint_target_tv": 9.913247451212744e-17,
++      "exact_target_replica_tv": 3.4867941867133823e-16,
++      "horizontal_detailed_balance_error": 8.673617379884035e-19,
++      "joint_state_count": 6144,
++      "target_feasibility_marginal_after_schedule": 0.9559688535341266,
++      "target_feasibility_marginal_error": 4.440892098500626e-16,
++      "target_feasibility_marginal_exact": 0.9559688535341262,
++      "transition_probability_min": 0.0,
++      "transition_row_error": 1.1102230246251565e-16,
++      "vertical_detailed_balance_error": 1.734723475976807e-18
++    },
++    {
++      "descriptor": {
++        "barrier_summary": {
++          "barrier_note": "fixtures contain frustrated energy levels and nonzero violation-count barriers",
++          "energy_level_count": 4,
++          "energy_levels": [
++            -0.82,
++            -0.14,
++            0.36,
++            0.6
++          ],
++          "feasible_energy_level_count": 1,
++          "feasible_energy_levels": [
++            -0.82
++          ],
++          "infeasible_penalty_level_count": 2,
++          "infeasible_penalty_levels": [
++            1.0,
++            2.0
++          ],
++          "penalty_level_count": 3,
++          "penalty_levels": [
++            0.0,
++            1.0,
++            2.0
++          ]
++        },
++        "constraint_indices": [
++          0,
++          1
++        ],
++        "constraint_penalty": "C(x)=count of declared constrained spins not matching target_spins",
++        "couplings": [
++          [
++            0.0,
++            0.48
++          ],
++          [
++            0.48,
++            0.0
++          ]
++        ],
++        "energy_max": 0.6,
++        "energy_min": -0.82,
++        "fields": [
++          0.11,
++          0.23
++        ],
++        "n_spins": 2,
++        "penalty_levels": [
++          0.0,
++          1.0,
++          2.0
++        ],
++        "slot_targets": [
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.82,
++                "probability": 0.355393528709827
++              },
++              {
++                "energy": -0.14,
++                "probability": 0.25817191677057
++              },
++              {
++                "energy": 0.36,
++                "probability": 0.204103191591589
++              },
++              {
++                "energy": 0.6,
++                "probability": 0.182331362928015
++              }
++            ],
++            "feasibility_marginal": 0.355393528709827,
++            "lambda": 0.0,
++            "slot_id": 0,
++            "target_probability_checksum": "903e86879229f33b2dd1f4dbacbae003fd9342e76c4e1f4c192bcd9ad6f9a6df"
++          },
++          {
++            "beta": 0.47,
++            "energy_distribution": [
++              {
++                "energy": -0.82,
++                "probability": 0.611238491182831
++              },
++              {
++                "energy": -0.14,
++                "probability": 0.089827144982071
++              },
++              {
++                "energy": 0.36,
++                "probability": 0.15788820389262
++              },
++              {
++                "energy": 0.6,
++                "probability": 0.141046159942479
++              }
++            ],
++            "feasibility_marginal": 0.611238491182831,
++            "lambda": 1.7,
++            "slot_id": 1,
++            "target_probability_checksum": "4942a2a10e5aab457b77de88aae5556091fede4bc5e51b8c42be3dfd09ab0fe9"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.82,
++                "probability": 0.542924895872996
++              },
++              {
++                "energy": -0.14,
++                "probability": 0.235231702635581
++              },
++              {
++                "energy": 0.36,
++                "probability": 0.127175878318036
++              },
++              {
++                "energy": 0.6,
++                "probability": 0.094667523173387
++              }
++            ],
++            "feasibility_marginal": 0.542924895872996,
++            "lambda": 0.0,
++            "slot_id": 2,
++            "target_probability_checksum": "428f95907fd774998b2cf16fc5aa7083879f84f4cdf9e5257182340d711ba449"
++          },
++          {
++            "beta": 1.23,
++            "energy_distribution": [
++              {
++                "energy": -0.82,
++                "probability": 0.94598060174459
++              },
++              {
++                "energy": -0.14,
++                "probability": 0.006257758558749
++              },
++              {
++                "energy": 0.36,
++                "probability": 0.027380253086172
++              },
++              {
++                "energy": 0.6,
++                "probability": 0.020381386610489
++              }
++            ],
++            "feasibility_marginal": 0.94598060174459,
++            "lambda": 1.7,
++            "slot_id": 3,
++            "target_probability_checksum": "d4349943fc6a606c72e03b9bbb3f6947ca3e4d0cfa40189bb011586a8d42118a"
++          }
++        ],
++        "state_count": 4,
++        "system_id": "two_axis_n2_weighted_pair_gate_c",
++        "target_slot": {
++          "beta": 1.23,
++          "exact_feasibility_marginal": 0.94598060174459,
++          "lambda": 1.7,
++          "slot_id": 3
++        },
++        "target_spins": [
++          1,
++          1
++        ],
++        "topology": "weighted_pair_two_spin_gate_c"
++      },
++      "exact_joint_target_tv": 1.0370285253727483e-16,
++      "exact_target_replica_tv": 3.0487765090292385e-16,
++      "horizontal_detailed_balance_error": 8.673617379884035e-19,
++      "joint_state_count": 6144,
++      "target_feasibility_marginal_after_schedule": 0.9459806017445906,
++      "target_feasibility_marginal_error": 2.220446049250313e-16,
++      "target_feasibility_marginal_exact": 0.9459806017445904,
++      "transition_probability_min": 0.0,
++      "transition_row_error": 1.1102230246251565e-16,
++      "vertical_detailed_balance_error": 8.673617379884035e-19
++    }
++  ],
++  "target_feasibility_marginal_error": 4.440892098500626e-16,
++  "temperature_ladder": [
++    0.47,
++    1.23
++  ],
++  "tests_added_or_reused": [
++    "tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py",
++    "results/experiment_5644_two_axis_parallel_tempering_exact_audit.json"
++  ],
++  "timing_claimed": false,
++  "tolerances": {
++    "detailed_balance_error_max": 1e-08,
++    "exact_total_variation_max": 1e-10,
++    "target_feasibility_marginal_error_max": 1e-10,
++    "transition_row_error_max": 1e-12
++  },
++  "transition_probability_min": 0.0,
++  "transition_row_error_max": 2.220446049250313e-16,
++  "two_axis_invariant_ready_score": 1.0,
++  "upstream_kernel_receipts": {
++    "exp5622_corrected_cdls": {
++      "acceptance_rule": "alpha(x,y)=min(1, pi(y) q(x|y) / (pi(x) q(y|x))) with pi(x) proportional to exp(-beta E(x))",
++      "continuous_bound": 3.0,
++      "drift_scale": 0.17,
++      "final_kernel": "corrected_cdls_projection_mh",
++      "large_n_timing_tuned": false,
++      "proposal_std": 0.72,
++      "result_path": "results/experiment_5622_cdls_exact_kernel_audit.json",
++      "result_sha256": "26d2b4a2f0de19ee73e215908a5dfa0e2f1f81e4ec93064fe9187fb86d71e2ab",
++      "source_path": "python/carnot/experiment_5622_cdls_exact_kernel_audit.py",
++      "source_reproducibility_checksum": "7932f264ba60a2639f47f59ec0868d422f3a20392b6508f45f96a3743529c2fd",
++      "source_sha256": "2f614b9498bf6bd258e4ae17bda3998e86ec9cb7ef2e0b9f564af26df2beeba1",
++      "substrate_unchanged": true
++    },
++    "exp5633_temperature_label_semantics": {
++      "required_semantics": "exchange labels, not chain states",
++      "result_path": "results/experiment_5633_temperature_exchange_cdls_exact_audit.json",
++      "result_reproducibility_checksum": "d8209783307a49770f9ddbad5cb29aaf26e3678b1cf29581e9cfd14303f4d326",
++      "result_sha256": "31795bc97b43593c4dd4a4cd4bdedbfe07b59c69cc4f214acf7ac1afbc862bbf",
++      "source_path": "python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py",
++      "source_sha256": "77dc6c1faa4c8a2685839cc600403d2596e3a06c0899441ae87c794a375d7c94",
++      "substrate_unchanged": true
++    }
++  },
++  "vertical_detailed_balance_error_max": 1.734723475976807e-18,
++  "vertical_swap_rule": {
++    "acceptance_ratio": "min(1, exp(beta * (lambda_a - lambda_b) * (C(x_a) - C(x_b))))",
++    "axis": "penalty",
++    "fixed_axis": "common beta",
++    "proposal_symmetry": "fixed adjacent penalty labels at the same beta value",
++    "state_copy_allowed": false,
++    "state_update": "parameter_labels_only"
++  }
++}
+diff --git a/tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py b/tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py
+new file mode 100644
+index 0000000000..aab3b1a6bd
+--- /dev/null
++++ b/tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py
+@@ -0,0 +1,279 @@
++"""Tests for Exp5644 exact two-axis temperature-by-penalty label exchange.
++
++Spec refs: REQ-SAMPLE-5644, SCENARIO-SAMPLE-5644.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from math import exp
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5622_cdls_exact_kernel_audit as exp5622
++from carnot import experiment_5644_two_axis_parallel_tempering_exact_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
++TEST_PATH = Path("tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py")
++
++
++def test_req_sample_5644_spec_declares_two_axis_exact_contract() -> None:
++    """REQ-SAMPLE-5644: OpenSpec anchors two-axis exactness and fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLE-5644") : spec.index("### REQ-SAMPLE-1746")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        str(mod.RESULT_RELATIVE_PATH),
++        "SCENARIO-SAMPLE-5644",
++        "corrected_cdls_projection_mh",
++        "swap parameter labels",
++        "SHALL NOT copy or swap replica states",
++        "exp(-beta * (E(x) + lambda * C(x)))",
++        "min(1, exp((beta_a - beta_b)",
++        "min(1, exp(beta * (lambda_a - lambda_b)",
++        "missing penalty terms",
++        "sign reversal",
++        "state swapping",
++        "asymmetric scheduling",
++        "extreme lambda",
++        "disabled swaps",
++        "`timing_claimed` SHALL be false",
++        "`hardware_speedup_claimed` SHALL be false",
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_req_sample_5644_horizontal_and_vertical_swap_math_balances() -> None:
++    """REQ-SAMPLE-5644: derived swap ratios match the joint target."""
++
++    system = mod.constrained_ising_fixtures()[0]
++    states = exp5622.enumerate_states(system.n_spins)
++    slots = mod.parameter_slots()
++    state_indices = (0, 1, 2, 3)
++    labels = (0, 1, 2, 3)
++    horizontal_pair = mod.horizontal_exchange_pairs()[0]["slot_pair"]
++    vertical_pair = mod.vertical_exchange_pairs()[-1]["slot_pair"]
++    energies = exp5622.energy_vector(system, states)
++    penalties = mod.constraint_penalty_vector(system, states)
++
++    h_left = mod.slot_by_id(slots, horizontal_pair[0])
++    h_right = mod.slot_by_id(slots, horizontal_pair[1])
++    h_left_pos = labels.index(h_left.slot_id)
++    h_right_pos = labels.index(h_right.slot_id)
++    h_energy_left = (
++        energies[state_indices[h_left_pos]] + h_left.penalty * penalties[state_indices[h_left_pos]]
++    )
++    h_energy_right = (
++        energies[state_indices[h_right_pos]]
++        + h_right.penalty * penalties[state_indices[h_right_pos]]
++    )
++    expected_horizontal = min(
++        1.0, exp((h_left.beta - h_right.beta) * (h_energy_left - h_energy_right))
++    )
++
++    v_left = mod.slot_by_id(slots, vertical_pair[0])
++    v_right = mod.slot_by_id(slots, vertical_pair[1])
++    v_left_pos = labels.index(v_left.slot_id)
++    v_right_pos = labels.index(v_right.slot_id)
++    expected_vertical = min(
++        1.0,
++        exp(
++            v_left.beta
++            * (v_left.penalty - v_right.penalty)
++            * (penalties[state_indices[v_left_pos]] - penalties[state_indices[v_right_pos]])
++        ),
++    )
++
++    assert h_left.penalty == h_right.penalty
++    assert v_left.beta == v_right.beta
++    assert mod.label_exchange_candidate(
++        state_indices=state_indices, labels=labels, slot_pair=horizontal_pair
++    )["proposed_state_indices"] == list(state_indices)
++    assert mod.horizontal_swap_acceptance_probability(
++        system=system,
++        states=states,
++        state_indices=state_indices,
++        labels=labels,
++        slot_pair=horizontal_pair,
++    ) == pytest.approx(expected_horizontal)
++    assert mod.vertical_swap_acceptance_probability(
++        system=system,
++        states=states,
++        state_indices=state_indices,
++        labels=labels,
++        slot_pair=vertical_pair,
++    ) == pytest.approx(expected_vertical)
++    assert mod.horizontal_detailed_balance_residual(
++        system=system, states=states, slot_pair=horizontal_pair
++    ) <= (mod.DETAILED_BALANCE_TOLERANCE)
++    assert mod.vertical_detailed_balance_residual(
++        system=system, states=states, slot_pair=vertical_pair
++    ) <= (mod.DETAILED_BALANCE_TOLERANCE)
++
++
++def test_req_sample_5644_transition_exactness_and_reconstructable_fixtures() -> None:
++    """REQ-SAMPLE-5644: fixtures and exact transition audits are reconstructable."""
++
++    systems = mod.constrained_ising_fixtures()
++    assert len(systems) >= 3
++
++    for system in systems:
++        states = exp5622.enumerate_states(system.n_spins)
++        audit = mod.audit_one_system(system)
++
++        assert audit["descriptor"]["barrier_summary"]["energy_level_count"] >= 3
++        assert audit["descriptor"]["barrier_summary"]["penalty_level_count"] >= 3
++        assert audit["transition_row_error"] <= mod.TRANSITION_ROW_TOLERANCE
++        assert audit["transition_probability_min"] >= -mod.TRANSITION_ROW_TOLERANCE
++        assert audit["horizontal_detailed_balance_error"] <= mod.DETAILED_BALANCE_TOLERANCE
++        assert audit["vertical_detailed_balance_error"] <= mod.DETAILED_BALANCE_TOLERANCE
++        assert audit["exact_joint_target_tv"] <= mod.EXACT_TV_TOLERANCE
++        assert audit["exact_target_replica_tv"] <= mod.EXACT_TV_TOLERANCE
++        assert audit["target_feasibility_marginal_error"] <= mod.FEASIBILITY_MARGINAL_TOLERANCE
++        assert mod.target_feasibility_marginal(system, states, mod.target_slot()) == pytest.approx(
++            audit["descriptor"]["target_slot"]["exact_feasibility_marginal"]
++        )
++
++
++def test_req_sample_5644_broken_controls_are_rejected() -> None:
++    """REQ-SAMPLE-5644: every required invalid two-axis kernel is detected."""
++
++    system = mod.constrained_ising_fixtures()[1]
++    rows = mod.audit_broken_controls(system=system, states=exp5622.enumerate_states(system.n_spins))
++    by_id = {row["control_id"]: row for row in rows}
++
++    assert set(by_id) == set(mod.BROKEN_CONTROL_IDS)
++    assert all(row["detected"] is True for row in rows)
++    assert (
++        by_id["missing_penalty_terms"]["max_detailed_balance_error"]
++        > mod.DETAILED_BALANCE_TOLERANCE
++    )
++    assert by_id["sign_reversal"]["max_detailed_balance_error"] > mod.DETAILED_BALANCE_TOLERANCE
++    assert by_id["state_swapping"]["state_mutation_detected"] is True
++    assert (
++        by_id["asymmetric_scheduling"]["max_detailed_balance_error"]
++        > mod.DETAILED_BALANCE_TOLERANCE
++    )
++    assert (
++        by_id["extreme_lambda"]["target_feasibility_marginal_delta"]
++        > mod.FEASIBILITY_MARGINAL_TOLERANCE
++    )
++    assert by_id["disabled_swaps"]["scheduler_missing_required_swaps"] is True
++
++
++def test_scenario_sample_5644_builds_valid_terminal_artifact(tmp_path: Path) -> None:
++    """SCENARIO-SAMPLE-5644: exact audit writes gated JSON evidence."""
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        random_seeds=(5644, 5645, 5646),
++        replay_sweeps=18,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    output_path = mod.write_output(tmp_path, artifact)
++    saved = json.loads(output_path.read_text(encoding="utf-8"))
++
++    assert saved == artifact
++    assert saved["schema"] == mod.SCHEMA
++    assert saved["openspec_requirement_ids"] == list(mod.SPEC_REFS)
++    assert saved["temperature_ladder"] == list(mod.TEMPERATURE_LADDER)
++    assert saved["penalty_ladder"] == list(mod.PENALTY_LADDER)
++    assert saved["horizontal_swap_rule"]["state_update"] == "parameter_labels_only"
++    assert saved["vertical_swap_rule"]["state_update"] == "parameter_labels_only"
++    assert len(saved["fixture_definitions"]) >= 3
++    assert saved["transition_row_error_max"] <= mod.TRANSITION_ROW_TOLERANCE
++    assert saved["transition_probability_min"] >= -mod.TRANSITION_ROW_TOLERANCE
++    assert saved["horizontal_detailed_balance_error_max"] <= mod.DETAILED_BALANCE_TOLERANCE
++    assert saved["vertical_detailed_balance_error_max"] <= mod.DETAILED_BALANCE_TOLERANCE
++    assert saved["exact_joint_target_tv"] <= mod.EXACT_TV_TOLERANCE
++    assert saved["exact_target_replica_tv"] <= mod.EXACT_TV_TOLERANCE
++    assert saved["target_feasibility_marginal_error"] <= mod.FEASIBILITY_MARGINAL_TOLERANCE
++    assert saved["deterministic_replay_pass"] is True
++    assert saved["broken_control_rejected"] is True
++    assert all(row["detected"] is True for row in saved["broken_controls"])
++    assert saved["exactness_comparators"]["promoted_one_axis_temperature_exchange"][
++        "exact_distribution_tv_max"
++    ] <= (mod.EXACT_TV_TOLERANCE)
++    assert (
++        saved["exactness_comparators"]["equal_transition_independent_corrected_chains"][
++            "exact_distribution_tv_max"
++        ]
++        <= mod.EXACT_TV_TOLERANCE
++    )
++    assert saved["timing_claimed"] is False
++    assert saved["hardware_speedup_claimed"] is False
++    assert saved["two_axis_invariant_ready_score"] == 1.0
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["random_seeds"] == [5644, 5645, 5646]
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    mod.validate_artifact(saved)
++
++
++def test_req_sample_5644_validation_fails_closed_on_manual_readiness() -> None:
++    """REQ-SAMPLE-5644: readiness cannot be manually set past failed gates."""
++
++    artifact = mod.build_artifact(root=REPO, random_seeds=(5644, 5645), replay_sweeps=12)
++    mutations = [
++        ("missing required field", lambda data: data.pop("field_principles")),
++        ("field_principles", lambda data: data["field_principles"].__setitem__("x", "y")),
++        (
++            "openspec_requirement_ids",
++            lambda data: data.__setitem__("openspec_requirement_ids", ["REQ-SAMPLE-0000"]),
++        ),
++        (
++            "inference_substrate",
++            lambda data: data.__setitem__("inference_substrate", "deterministic_verifier"),
++        ),
++        ("timing_claimed", lambda data: data.__setitem__("timing_claimed", True)),
++        (
++            "hardware_speedup_claimed",
++            lambda data: data.__setitem__("hardware_speedup_claimed", True),
++        ),
++        (
++            "deterministic_replay_pass",
++            lambda data: data.__setitem__("deterministic_replay_pass", False),
++        ),
++        (
++            "broken_controls",
++            lambda data: data.__setitem__("broken_controls", data["broken_controls"][1:]),
++        ),
++        ("broken_controls", lambda data: data["broken_controls"][0].__setitem__("detected", False)),
++        (
++            "two_axis_invariant_ready_score",
++            lambda data: data.__setitem__("two_axis_invariant_ready_score", 0.5),
++        ),
++        ("honest_verdict", lambda data: data.__setitem__("honest_verdict", "done")),
++        (
++            "reproducibility_checksum",
++            lambda data: data.__setitem__("reproducibility_checksum", "bad"),
++        ),
++    ]
++
++    for expected, mutate in mutations:
++        bad = deepcopy(artifact)
++        mutate(bad)
++        if expected not in {"reproducibility_checksum", "missing required field"}:
++            bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad)
++
++    blocked = deepcopy(artifact)
++    blocked["exact_joint_target_tv"] = mod.EXACT_TV_TOLERANCE * 10.0
++    blocked["two_axis_invariant_ready_score"] = mod.ready_score(blocked)
++    blocked["honest_verdict"] = mod.honest_verdict(blocked)
++    blocked["reproducibility_checksum"] = mod.payload_checksum(blocked)
++
++    assert blocked["two_axis_invariant_ready_score"] == 0.0
++    assert blocked["honest_verdict"].startswith("blocked:")
++    mod.validate_artifact(blocked)
+-- 
+2.55.0
+

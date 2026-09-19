@@ -1,0 +1,75 @@
+From f894ba6ff222215d3e0921e2fd44238ae8f0c056 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 19:25:15 -0400
+Subject: [PATCH 09758/11362] [outer-loop] Experiment tier moves to gpt-5.6-sol
+
+Operator: "where do you find gpt-5.5? we should be using gpt-5.6-sol".
+
+It came from three places, and they had drifted apart:
+
+  1. 30-codex-fallback-20260610.conf sets AGENT_MODEL=gpt-5.5, and it
+     loads after 10-gemini-routing.conf, so it won.
+  2. DEFAULT_MODEL_BY_TYPE["codex"] here was "gpt-5.5".
+  3. The planner prompt literally instructed the planner to emit
+     `model: gpt-5.5` for formulaic-code tasks, so roadmaps kept
+     regenerating it even where the env was right.
+
+Planner, retro and audit were already on gpt-5.6-sol via their own
+AGENT_MODEL_* variables. Only the experiment tier lagged, which meant a
+single milestone called two different models depending on which tier
+ran. That is worse than either choice alone: an experiment result and
+the retrospective reading it were not produced by the same model, so a
+capability difference between tiers reads as a finding.
+
+Fixing 1 and 2 without 3 would have regressed at the next plan, since
+the prompt is what puts the string into the roadmap. Milestone 569
+already carries two tasks with `model: gpt-5.5` from that instruction.
+
+Env change lands via a new drop-in, 60-model-gpt56sol-20260823.conf,
+rather than an edit to 30-. That file documents the 2026-06-10 gemini
+stall that made codex the default; rewriting its Environment line would
+leave its comment describing a state that no longer exists. Later
+drop-ins win, so 60- overrides it and the history stays readable.
+
+Historical gpt-5.5 mentions elsewhere in this file are incident records
+and stay as written, per never-prune.
+
+Takes effect on the conductor's next restart; it is a long-lived --loop
+process and keeps its environment until then. Not forcing one now: a
+codex task is in flight and a restart would kill it.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/research_conductor.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index f414d2533e..d4c0f241f2 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -73,7 +73,11 @@ DEFAULT_MODEL_BY_TYPE = {
+     "claude": "claude-opus-4-8",
+     "gemini": "gemini-3.1-pro-preview",
+     "opencode": "opencode/big-pickle",
+-    "codex": "gpt-5.5",
++    # 2026-08-23 operator directive: "we should be using gpt-5.6-sol". Was
++    # gpt-5.5 since the 2026-06-10 Codex-Default v2 flip. Planner, retro and
++    # audit already ran gpt-5.6-sol via their own AGENT_MODEL_* env vars; only
++    # the experiment tier was left behind, so a milestone mixed both models.
++    "codex": "gpt-5.6-sol",
+ }
+ 
+ # Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
+@@ -5031,7 +5035,7 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
+         f"    work. Use this field to route specific task categories to their\n"
+         f"    strongest backend. Multi-agent routing per\n"
+         f"    openspec/change-proposals/multi-agent-routing.md.\n\n"
+-        f"    Set `agent_type: codex` + `model: gpt-5.5` for FORMULAIC CODE:\n"
++        f"    Set `agent_type: codex` + `model: gpt-5.6-sol` for FORMULAIC CODE:\n"
+         f"      - WOPR-games-gallery cartridges (Sudoku, Lights Out,\n"
+         f"        N-Queens, Connect Four, Hex, Slitherlink, Hashi, etc.)\n"
+         f"      - New verifier implementations (constraint encoding follows\n"
+-- 
+2.55.0
+

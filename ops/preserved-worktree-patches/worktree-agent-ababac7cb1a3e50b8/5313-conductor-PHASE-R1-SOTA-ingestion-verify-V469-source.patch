@@ -1,0 +1,1977 @@
+From 28d5066b0fd2737b3f1aa2613513063c0a5bfcdb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 13:16:51 -0400
+Subject: [PATCH 05313/11362] [conductor] PHASE R1 SOTA ingestion -- verify
+ V469 source set and map fresh papers to FoVer, KAN, HUBO, FR-11, runtime, and
+ hardware tasks
+
+Automated research step by research conductor.
+Task ID: exp5110-source-freshness-sota-ingestion-v469
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  97 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5110_sota_ingestion_v469.py    | 738 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_5110_sota_ingestion_v469.json  | 492 ++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../experiment_5110_sota_ingestion_v469.py    |  32 +
+ ...est_experiment_5110_sota_ingestion_v469.py | 407 ++++++++++
+ 13 files changed, 1786 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_5110_sota_ingestion_v469.py
+ create mode 100644 results/experiment_5110_sota_ingestion_v469.json
+ create mode 100644 scripts/experiment_5110_sota_ingestion_v469.py
+ create mode 100644 tests/python/test_experiment_5110_sota_ingestion_v469.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 611b2c976c..df771f0df9 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -94,6 +94,103 @@ modify `research-roadmap.yaml`.
+ |---|---|---|
+ | REQ-REPORT-5109 | Planned (`python/carnot/reporting/archive_468_activate_469_5109.py`, `scripts/experiment_5109_archive_468_activate_469.py`) | Planned (`tests/python/test_experiment_5109_archive_468_activate_469.py`) |
+ 
++### REQ-REPORT-5110: V469 Source Freshness And Task-Mapping Gate
++
++The Exp 5110 workflow SHALL inspect `research-references.md` between
++`V469-PLANNER-REFERENCES-START` and `V469-PLANNER-REFERENCES-END`, including
++the `V469 Fresh Sweep Addendum`, and SHALL inspect
++`openspec/change-proposals/research-roadmap-vNEXT.md` for milestone
++`2026.07.469` tasks `exp5111` through `exp5120`. It SHALL identify the run as
++`exp5110-source-freshness-sota-ingestion-v469`. It SHALL write
++`results/experiment_5110_sota_ingestion_v469.json` without modifying
++`research-roadmap.yaml` and without modifying `scripts/research_conductor.py`.
++
++The workflow SHALL verify that the V469 source set covers FoVer,
++FormalRewardBench, the self-verification cliff, KAN abstraction, p-bit
++two-dimensional parallel tempering, million p-bit residual telemetry, FALCON,
++Verus-SpecGym/Verus-SpecBench, EBT, ARM-EBM, Extropic TSU/XTR-0, and Logical
++Intelligence Kona/Aleph. Every checked source SHALL include at least one real
++URL and a source-access status. If a source URL is dead, stale, or only
++partially accessible, the artifact SHALL record the condition explicitly and
++the verdict SHALL be `blocked_*` or `partial_*` unless alternate live metadata
++justifies a non-blocking access note.
++
++Every actionable source SHALL map to one or more concrete downstream tasks in
++`exp5111` through `exp5120`. FoVer-style verifier and selector sources SHOULD
++map to the FoVer pool, selector, audit, graph-evidence transfer, and FR-11
++residual-memory tasks when applicable. KAN abstraction sources SHOULD map to
++`exp5114`. p-bit/2D-PT sampling sources SHOULD map to `exp5116`. residual
++telemetry hardware sources SHOULD map to `exp5120`. FALCON and
++Verus-SpecGym-style semantic-faithfulness sources SHOULD map only to local
++semantic/audit or harm-gated exact-solver tasks, not to a syntax-only
++constrained-generation headline.
++
++EBT, ARM-EBM, Extropic TSU/XTR-0, and Logical Intelligence Kona/Aleph SHALL be
++marked as architecture/background-only unless the current roadmap contains a
++truthful local task that can execute them. The artifact SHALL NOT imply an
++unplanned training-heavy reproduction, local TSU/Kona execution, hardware
++speedup, or board-execution claim.
++
++The artifact SHALL include principle-annotated top-level fields
++`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
++`duration_s`, `references_section_found`, `sources_checked`, `task_mapping`,
++`background_only_sources`, `active_roadmap_modified`, `flagged_adversarial`,
++and `tests_run`. It SHOULD also include field principles, coverage-by-topic,
++claim-boundary notes, and the concrete V469 reference-section bounds so the
++structured downstream gate can audit why `references_section_found` is true or
++false.
++
++Required field principles:
++
++- `experiment_id`: principle "traceability"
++- `milestone`: principle "milestone accountability"
++- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
++- `inference_substrate`: principle "substrate honesty"
++- `duration_s`: principle "timing accountability"
++- `references_section_found`: principle "downstream gate signal"
++- `sources_checked`: principle "provenance"
++- `task_mapping`: principle "actionability"
++- `background_only_sources`: principle "no false execution claims"
++- `active_roadmap_modified`: principle "operator instruction compliance"
++- `flagged_adversarial`: principle "adversarial-verification accountability"
++- `tests_run`: principle "verification evidence"
++- `field_principles`: principle "principle annotations for every top-level artifact field"
++- `coverage_by_required_topic`: principle "source coverage completeness"
++- `claim_boundary_findings`: principle "no unplanned training or hardware execution claims"
++- `references_section_bounds`: principle "auditable source-section extraction"
++- `training_or_hardware_execution_claims_detected`: principle "false execution claim detection"
++- `repo_inputs_read`: principle "repo inspection provenance"
++- `run_date`: principle "run labeling"
++
++#### SCENARIO-REPORT-5110: V469 Sources Are Fresh And Mapped
++
++**Given** `research-references.md` contains the V469 planner references section
++and fresh sweep addendum
++**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names milestone
++`2026.07.469` and tasks `exp5111` through `exp5120`
++**When** the Exp 5110 source-freshness workflow runs
++**Then** it writes the required JSON artifact, sets
++`references_section_found=true`, lists every source checked with URL evidence,
++maps every actionable source to one or more tasks in `exp5111` through
++`exp5120`, marks EBT/ARM-EBM/Kona/TSU as architecture pressure when no truthful
++local execution task exists, records no active-roadmap modification, and makes
++no training-heavy or hardware-execution claim.
++
++#### SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE: Dead Or Stale Sources Are Preserved
++
++**Given** one V469 source URL is dead, stale, or otherwise not verifiable
++**When** the Exp 5110 source-freshness workflow runs
++**Then** it writes a terminal `blocked_*` or `partial_*` artifact, preserves the
++problematic source in `sources_checked`, records the source-specific access
++condition, and does not silently drop the source from `task_mapping` or
++`background_only_sources`.
++
++## Implementation Status (REQ-REPORT-5110)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5110 | Implemented (`python/carnot/experiment_5110_sota_ingestion_v469.py`, `scripts/experiment_5110_sota_ingestion_v469.py`) | Implemented (`tests/python/test_experiment_5110_sota_ingestion_v469.py`) |
++
+ ### REQ-REPORT-5010: Verifier-Moat Literature Ingestion Maps New SOTA Onto Phase D
+ 
+ The Exp 5010 workflow SHALL run the reliable SOTA-ingestion channel for the
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b5c1eab996..d22053c4da 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4108,
++  "experiments_checked": 4109,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5110_sota_ingestion_v469.py b/python/carnot/experiment_5110_sota_ingestion_v469.py
+new file mode 100644
+index 0000000000..482a304462
+--- /dev/null
++++ b/python/carnot/experiment_5110_sota_ingestion_v469.py
+@@ -0,0 +1,738 @@
++"""Exp 5110 source-freshness artifact for the V469 SOTA ingestion gate.
++
++Spec refs: REQ-REPORT-5110, SCENARIO-REPORT-5110,
++SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE.
++
++This module is a literature-review and repository-inspection artifact. It does
++not train a model, run a local LLM, touch hardware, or edit the active roadmap.
++The goal is to make the V469 references auditable before downstream FoVer,
++KAN, sampler, FR-11, runtime, and hardware-continuity tasks consume them.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_5110_sota_ingestion_v469.json"
++REFERENCES_RELATIVE_PATH = "research-references.md"
++ROADMAP_RELATIVE_PATH = "openspec/change-proposals/research-roadmap-vNEXT.md"
++EXPERIMENT_ID = "exp5110-source-freshness-sota-ingestion-v469"
++MILESTONE = "2026.07.469"
++INFERENCE_SUBSTRATE = "literature_review_and_repo_inspection"
++COMPLETE_VERDICT = "complete_source_freshness_sota_ingestion_v469_references_mapped"
++PARTIAL_REFERENCES_VERDICT = "partial_v469_references_section_not_found"
++PARTIAL_SOURCE_VERDICT = "partial_v469_source_access_issue_preserved"
++REFERENCES_SECTION_START = "<!-- V469-PLANNER-REFERENCES-START -->"
++REFERENCES_SECTION_END = "<!-- V469-PLANNER-REFERENCES-END -->"
++FRESH_SWEEP_HEADING = "V469 Fresh Sweep Addendum"
++TERMINAL_PREFIXES = (
++    "blocked_",
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "partial_",
++)
++ALLOWED_TASK_IDS = frozenset(f"exp{task_id}" for task_id in range(5111, 5121))
++REQUIRED_TOPICS = frozenset(
++    {
++        "FoVer",
++        "FormalRewardBench",
++        "self-verification cliff",
++        "KAN abstraction",
++        "p-bit 2D-PT",
++        "million p-bit residual telemetry",
++        "FALCON",
++        "Verus-SpecGym",
++        "EBT",
++        "ARM-EBM",
++        "Extropic",
++        "Logical Intelligence",
++    }
++)
++REQUIRED_USER_ARTIFACT_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "milestone",
++        "honest_verdict",
++        "inference_substrate",
++        "duration_s",
++        "references_section_found",
++        "sources_checked",
++        "task_mapping",
++        "background_only_sources",
++        "active_roadmap_modified",
++        "flagged_adversarial",
++        "tests_run",
++    }
++)
++EXTRA_ARTIFACT_FIELDS = frozenset(
++    {
++        "field_principles",
++        "coverage_by_required_topic",
++        "claim_boundary_findings",
++        "references_section_bounds",
++        "training_or_hardware_execution_claims_detected",
++        "repo_inputs_read",
++        "run_date",
++    }
++)
++REQUIRED_ARTIFACT_FIELDS = REQUIRED_USER_ARTIFACT_FIELDS | EXTRA_ARTIFACT_FIELDS
++FIELD_PRINCIPLES = {
++    "experiment_id": "traceability",
++    "milestone": "milestone accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "duration_s": "timing accountability",
++    "references_section_found": "downstream gate signal",
++    "sources_checked": "provenance",
++    "task_mapping": "actionability",
++    "background_only_sources": "no false execution claims",
++    "active_roadmap_modified": "operator instruction compliance",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "tests_run": "verification evidence",
++    "field_principles": "principle annotations for every top-level artifact field",
++    "coverage_by_required_topic": "source coverage completeness",
++    "claim_boundary_findings": "no unplanned training or hardware execution claims",
++    "references_section_bounds": "auditable source-section extraction",
++    "training_or_hardware_execution_claims_detected": "false execution claim detection",
++    "repo_inputs_read": "repo inspection provenance",
++    "run_date": "run labeling",
++}
++DEFAULT_TESTS_RUN = [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python "
++    "scripts/experiment_5110_sota_ingestion_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_experiment_5110_sota_ingestion_v469.py -q",
++    ".venv/bin/pytest tests/python -q",
++]
++DEAD_OR_STALE_URL_STATUSES = frozenset({"dead", "stale"})
++
++SOURCE_CHECKS: list[dict[str, Any]] = [
++    {
++        "source_id": "fover",
++        "required_topic": "FoVer",
++        "title": "Efficient PRM Training Data Synthesis via Formal Verification",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2505.15960",
++                "status": "verified_live",
++                "evidence": "arXiv page live; v3 revised 2026-04-08; names FoVer.",
++            },
++            {
++                "url": "https://github.com/psunlpgroup/FoVer",
++                "status": "verified_live",
++                "evidence": "Public repository for the ACL 2026 Findings FoVer paper.",
++            },
++            {
++                "url": "https://huggingface.co/papers/2505.15960",
++                "status": "verified_live",
++                "evidence": "Hugging Face paper record is live.",
++            },
++        ],
++    },
++    {
++        "source_id": "formalrewardbench",
++        "required_topic": "FormalRewardBench",
++        "title": "FormalRewardBench: A Benchmark for Formal Theorem Proving Reward Models",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2605.10141",
++                "status": "verified_live",
++                "evidence": "arXiv page live; submitted 2026-05-11.",
++            }
++        ],
++    },
++    {
++        "source_id": "self_verification_cliff",
++        "required_topic": "self-verification cliff",
++        "title": "The Self-Verification Cliff",
++        "claim_boundary": "actionable",
++        "source_access_status": "partial_openreview_challenge_metadata_verified",
++        "access_note": (
++            "OpenReview forum and PDF URLs redirect to a browser challenge, but search "
++            "metadata and the ICML 2026 AI4Math listing confirm the record."
++        ),
++        "urls": [
++            {
++                "url": "https://openreview.net/forum?id=QJTSAvHFQn",
++                "status": "partial_openreview_challenge_metadata_verified",
++                "evidence": "Forum URL is real but guarded by OpenReview browser verification.",
++            },
++            {
++                "url": "https://openreview.net/pdf?id=QJTSAvHFQn",
++                "status": "partial_openreview_challenge_metadata_verified",
++                "evidence": "PDF URL is real but guarded by OpenReview browser verification.",
++            },
++        ],
++    },
++    {
++        "source_id": "kan_abstraction",
++        "required_topic": "KAN abstraction",
++        "title": "Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2602.06737",
++                "status": "verified_live",
++                "evidence": "arXiv page live; submitted 2026-02-06.",
++            }
++        ],
++    },
++    {
++        "source_id": "pbit_2d_parallel_tempering",
++        "required_topic": "p-bit 2D-PT",
++        "title": "Probabilistic Computers for MIMO Detection",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2601.09037",
++                "status": "verified_live",
++                "evidence": "arXiv page live; v2 revised 2026-05-31; describes 2D-PT.",
++            }
++        ],
++    },
++    {
++        "source_id": "million_pbit_residual_telemetry",
++        "required_topic": "million p-bit residual telemetry",
++        "title": "Programmable Probabilistic Computer with 1,000,000 p-bits",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2606.25313",
++                "status": "verified_live",
++                "evidence": "arXiv page live; submitted 2026-06-24.",
++            }
++        ],
++    },
++    {
++        "source_id": "falcon",
++        "required_topic": "FALCON",
++        "title": "Hard Constraints Meet Soft Generation",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2602.01090",
++                "status": "verified_live",
++                "evidence": "arXiv page live; names FALCON and semantic repair.",
++            }
++        ],
++    },
++    {
++        "source_id": "verus_specgym",
++        "required_topic": "Verus-SpecGym",
++        "title": "Verus-SpecGym: An Agentic Environment for Evaluating Specification Autoformalization",
++        "claim_boundary": "actionable",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://huggingface.co/papers/2605.26457",
++                "status": "verified_live",
++                "evidence": "Hugging Face paper page live with Verus-SpecBench and Verus-SpecGym summary.",
++            },
++            {
++                "url": "https://arxiv.org/abs/2605.26457",
++                "status": "verified_live",
++                "evidence": "arXiv page live; submitted 2026-05-26.",
++            },
++            {
++                "url": "https://github.com/formal-verif-is-cool/verus-spec-gym",
++                "status": "verified_live",
++                "evidence": "Public GitHub repository URL resolves.",
++            },
++        ],
++    },
++    {
++        "source_id": "ebt_primary",
++        "required_topic": "EBT",
++        "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2507.02092",
++                "status": "verified_live",
++                "evidence": "arXiv page live; submitted 2025-07-02.",
++            },
++            {
++                "url": "https://github.com/alexiglad/EBT",
++                "status": "verified_live",
++                "evidence": "Public EBT code repository resolves.",
++            },
++        ],
++    },
++    {
++        "source_id": "arm_ebm",
++        "required_topic": "ARM-EBM",
++        "title": "Autoregressive Language Models are Secretly Energy-Based Models",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2512.15605",
++                "status": "verified_live",
++                "evidence": "arXiv page live; v4 revised 2026-05-25.",
++            }
++        ],
++    },
++    {
++        "source_id": "nrgpt",
++        "required_topic": "EBT",
++        "title": "NRGPT: An Energy-based Alternative for GPT",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2512.16762",
++                "status": "verified_live",
++                "evidence": "arXiv page live; ICLR 2026 main conference note.",
++            }
++        ],
++    },
++    {
++        "source_id": "domain_grounded_agents",
++        "required_topic": "ARM-EBM",
++        "title": "Ontology-Constrained Neural Reasoning in Enterprise Agentic Systems",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://arxiv.org/abs/2604.00555",
++                "status": "verified_live",
++                "evidence": "arXiv page live; v5 revised 2026-06-04.",
++            }
++        ],
++    },
++    {
++        "source_id": "extropic_tsu",
++        "required_topic": "Extropic",
++        "title": "Extropic XTR-0 and Thermodynamic Sampling Unit updates",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live_with_minimal_pages",
++        "urls": [
++            {
++                "url": "https://extropic.ai/writing/inside-x0-and-xtr-0",
++                "status": "reachable_minimal_page",
++                "evidence": "Page URL resolves but exposes minimal static text to the fetcher.",
++            },
++            {
++                "url": "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
++                "status": "reachable_minimal_page",
++                "evidence": "Page URL resolves but exposes minimal static text to the fetcher.",
++            },
++            {
++                "url": "https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one",
++                "status": "verified_live",
++                "evidence": "Live article describes XTR-0, TSU, and thrml simulation context.",
++            },
++        ],
++    },
++    {
++        "source_id": "logical_kona_aleph",
++        "required_topic": "Logical Intelligence",
++        "title": "Logical Intelligence Kona and Aleph updates",
++        "claim_boundary": "background_only",
++        "source_access_status": "verified_live",
++        "urls": [
++            {
++                "url": "https://logicalintelligence.com/blog/aleph-leading-benchmarks",
++                "status": "verified_live",
++                "evidence": "Live 2026-05-14 Aleph benchmark article resolves.",
++            },
++            {
++                "url": "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo",
++                "status": "verified_live",
++                "evidence": "Live 2026-02-03 Kona Sudoku benchmark article resolves.",
++            },
++            {
++                "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++                "status": "verified_live",
++                "evidence": "Live Kona product architecture page resolves.",
++            },
++        ],
++    },
++]
++ACTIONABLE_SOURCE_IDS = frozenset(
++    source["source_id"] for source in SOURCE_CHECKS if source["claim_boundary"] == "actionable"
++)
++REQUIRED_BACKGROUND_SOURCE_IDS = frozenset(
++    {
++        "ebt_primary",
++        "arm_ebm",
++        "nrgpt",
++        "domain_grounded_agents",
++        "extropic_tsu",
++        "logical_kona_aleph",
++    }
++)
++
++DEFAULT_TASK_MAPPING: dict[str, list[dict[str, str]]] = {
++    "fover": [
++        {
++            "task_id": "exp5111",
++            "task_name": "FoVer in-domain pool",
++            "reason": "Build the n>=150 candidate pool with oracle-distinct labels.",
++        },
++        {
++            "task_id": "exp5112",
++            "task_name": "FoVer in-domain selector",
++            "reason": "Measure Best-of-K headroom and select against tuned self-consistency.",
++        },
++        {
++            "task_id": "exp5113",
++            "task_name": "FoVer selector adversarial audit",
++            "reason": "Audit leakage, shuffled labels, and CI handling before a moat claim.",
++        },
++        {
++            "task_id": "exp5115",
++            "task_name": "Graph evidence FoVer transfer",
++            "reason": "Transfer exact evidence energy to FoVer step/support traces.",
++        },
++        {
++            "task_id": "exp5118",
++            "task_name": "FR-11 FoVer residual memory",
++            "reason": "Use FoVer selector residuals as the auditable self-learning stream.",
++        },
++    ],
++    "formalrewardbench": [
++        {
++            "task_id": "exp5113",
++            "task_name": "FoVer selector adversarial audit",
++            "reason": "Add controlled error-family and label-ablation checks.",
++        },
++        {
++            "task_id": "exp5118",
++            "task_name": "FR-11 FoVer residual memory",
++            "reason": "Require non-forgetting checks before any memory/SOP promotion.",
++        },
++    ],
++    "self_verification_cliff": [
++        {
++            "task_id": "exp5111",
++            "task_name": "FoVer in-domain pool",
++            "reason": "Record oracle@K versus tuned self-consistency headroom.",
++        },
++        {
++            "task_id": "exp5112",
++            "task_name": "FoVer in-domain selector",
++            "reason": "Test whether the selector recovers sampling headroom.",
++        },
++        {
++            "task_id": "exp5113",
++            "task_name": "FoVer selector adversarial audit",
++            "reason": "Prevent self-selection headroom from being misread as verifier value.",
++        },
++    ],
++    "kan_abstraction": [
++        {
++            "task_id": "exp5114",
++            "task_name": "KAN abstraction refinement post wall",
++            "reason": "Replace repeated exact-MILP scale sweeps with abstraction budgeting.",
++        }
++    ],
++    "pbit_2d_parallel_tempering": [
++        {
++            "task_id": "exp5116",
++            "task_name": "HUBO 2D-PT sampling reference",
++            "reason": "Build a CPU exact-checked two-axis tempering reference before board claims.",
++        }
++    ],
++    "million_pbit_residual_telemetry": [
++        {
++            "task_id": "exp5120",
++            "task_name": "Hardware residual telemetry",
++            "reason": "Use residual-energy decay and partition telemetry as the honest hardware metric.",
++        }
++    ],
++    "falcon": [
++        {
++            "task_id": "exp5117",
++            "task_name": "TACO harm-gated scale",
++            "reason": "Use semantic repair and adaptive sampling lessons for harm-gated solver help.",
++        },
++        {
++            "task_id": "exp5113",
++            "task_name": "FoVer selector adversarial audit",
++            "reason": "Avoid a syntax-only constrained-generation headline.",
++        },
++    ],
++    "verus_specgym": [
++        {
++            "task_id": "exp5113",
++            "task_name": "FoVer selector adversarial audit",
++            "reason": "Borrow executable-spec and adversarial-edge-case faithfulness checks.",
++        },
++        {
++            "task_id": "exp5118",
++            "task_name": "FR-11 FoVer residual memory",
++            "reason": "Apply adversarial edge-case controls to memory promotion contracts.",
++        },
++    ],
++}
++
++
++def find_references_section(references_text: str) -> dict[str, Any]:
++    """Locate the V469 references section and the fresh-sweep addendum."""
++
++    start_index = references_text.find(REFERENCES_SECTION_START)
++    end_index = references_text.find(REFERENCES_SECTION_END)
++    if start_index == -1 or end_index == -1 or end_index <= start_index:
++        return {
++            "found": False,
++            "start_line": None,
++            "end_line": None,
++            "fresh_sweep_addendum_found": False,
++            "section_text": "",
++        }
++
++    section_end_index = end_index + len(REFERENCES_SECTION_END)
++    section_text = references_text[start_index:section_end_index]
++    return {
++        "found": True,
++        "start_line": references_text[:start_index].count("\n") + 1,
++        "end_line": references_text[:section_end_index].count("\n") + 1,
++        "fresh_sweep_addendum_found": FRESH_SWEEP_HEADING in section_text,
++        "section_text": section_text,
++    }
++
++
++def _source_url_has_dead_or_stale_status(source: Mapping[str, Any]) -> bool:
++    return any(url["status"] in DEAD_OR_STALE_URL_STATUSES for url in source["urls"])
++
++
++def _build_coverage_by_topic(sources: Sequence[Mapping[str, Any]]) -> dict[str, list[str]]:
++    coverage = {topic: [] for topic in sorted(REQUIRED_TOPICS)}
++    for source in sources:
++        coverage[source["required_topic"]].append(source["source_id"])
++    return coverage
++
++
++def _build_background_only_sources() -> list[dict[str, str]]:
++    return [
++        {
++            "source_id": "ebt_primary",
++            "reason": "Architecture pressure only; V469 has no local EBT pretraining reproduction.",
++        },
++        {
++            "source_id": "arm_ebm",
++            "reason": "Architecture pressure only; local work can cite ARM-to-EBM theory but not retrain it.",
++        },
++        {
++            "source_id": "nrgpt",
++            "reason": "Citation-lineage context only; no V469 NRGPT training task exists.",
++        },
++        {
++            "source_id": "domain_grounded_agents",
++            "reason": "Domain-grounding architecture context only; no local enterprise-agent reproduction.",
++        },
++        {
++            "source_id": "extropic_tsu",
++            "reason": "TSU/XTR-0 context only; no authenticated local Extropic hardware target exists.",
++        },
++        {
++            "source_id": "logical_kona_aleph",
++            "reason": "Kona/Aleph architecture pressure only; no local Kona execution target exists.",
++        },
++    ]
++
++
++def _roadmap_task_ids_present(roadmap_text: str) -> list[str]:
++    return [task_id for task_id in sorted(ALLOWED_TASK_IDS) if task_id in roadmap_text]
++
++
++def build_artifact(
++    *,
++    references_text: str,
++    roadmap_text: str,
++    duration_s: float,
++    run_date: str,
++    tests_run: Sequence[str],
++) -> dict[str, Any]:
++    """Build the deterministic Exp 5110 artifact from repo text inputs."""
++
++    references_section = find_references_section(references_text)
++    references_section_found = bool(
++        references_section["found"] and references_section["fresh_sweep_addendum_found"]
++    )
++    dead_or_stale_source_found = any(
++        _source_url_has_dead_or_stale_status(source) for source in SOURCE_CHECKS
++    )
++    if dead_or_stale_source_found:
++        honest_verdict = PARTIAL_SOURCE_VERDICT
++    elif references_section_found:
++        honest_verdict = COMPLETE_VERDICT
++    else:
++        honest_verdict = PARTIAL_REFERENCES_VERDICT
++
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "references_section_found": references_section_found,
++        "sources_checked": SOURCE_CHECKS,
++        "task_mapping": DEFAULT_TASK_MAPPING,
++        "background_only_sources": _build_background_only_sources(),
++        "active_roadmap_modified": False,
++        "flagged_adversarial": False,
++        "tests_run": list(tests_run),
++        "field_principles": FIELD_PRINCIPLES,
++        "coverage_by_required_topic": _build_coverage_by_topic(SOURCE_CHECKS),
++        "claim_boundary_findings": [
++            "EBT/ARM-EBM/Kona/TSU kept as architecture pressure",
++            "No training-heavy reproduction is scheduled by Exp 5110.",
++            "No local TSU, Kona, board execution, latency, or speedup claim is made.",
++        ],
++        "references_section_bounds": {
++            "start_line": references_section["start_line"],
++            "end_line": references_section["end_line"],
++            "fresh_sweep_addendum_found": references_section["fresh_sweep_addendum_found"],
++            "roadmap_task_ids_present": _roadmap_task_ids_present(roadmap_text),
++        },
++        "training_or_hardware_execution_claims_detected": False,
++        "repo_inputs_read": [
++            "AGENTS.md",
++            "CODEX.md",
++            "CLAUDE.md",
++            REFERENCES_RELATIVE_PATH,
++            ROADMAP_RELATIVE_PATH,
++            "openspec/capabilities/research-reporting/spec.md",
++            "openspec/capabilities/verifiable-reasoning/spec.md",
++            "openspec/capabilities/kan/spec.md",
++            "openspec/capabilities/samplers/spec.md",
++            "openspec/capabilities/self-learning/spec.md",
++            "openspec/capabilities/llm-ebm-inference/spec.md",
++            "openspec/capabilities/fpga/spec.md",
++        ],
++        "run_date": run_date,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _verdict_has_terminal_prefix(verdict: str) -> bool:
++    return verdict.startswith(TERMINAL_PREFIXES)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 5110 schema and claim boundaries."""
++
++    missing = REQUIRED_ARTIFACT_FIELDS - set(artifact)
++    if missing:
++        raise ValueError(f"required field missing: {sorted(missing)}")
++    if artifact["experiment_id"] != EXPERIMENT_ID:
++        raise ValueError("experiment_id mismatch")
++    if artifact["milestone"] != MILESTONE:
++        raise ValueError("milestone mismatch")
++    if not _verdict_has_terminal_prefix(str(artifact["honest_verdict"])):
++        raise ValueError("honest_verdict lacks a terminal prefix")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be literature_review_and_repo_inspection")
++    if artifact["honest_verdict"] == COMPLETE_VERDICT and not artifact["references_section_found"]:
++        raise ValueError("references_section_found is required for a complete verdict")
++    if artifact["active_roadmap_modified"] is not False:
++        raise ValueError("active_roadmap_modified must remain false")
++    if artifact["training_or_hardware_execution_claims_detected"] is not False:
++        raise ValueError("training or hardware execution claims are forbidden")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must cover the required artifact fields")
++    if not artifact["tests_run"]:
++        raise ValueError("tests_run must record verification evidence")
++
++    sources = artifact["sources_checked"]
++    source_ids = {source["source_id"] for source in sources}
++    topic_coverage = {source["required_topic"] for source in sources}
++    if topic_coverage != REQUIRED_TOPICS:
++        raise ValueError("source coverage does not match the required V469 topics")
++    for source in sources:
++        if not source["urls"]:
++            raise ValueError(f"source {source['source_id']} has no real URL")
++        if source["claim_boundary"] == "actionable" and source["source_id"] not in ACTIONABLE_SOURCE_IDS:
++            raise ValueError(f"source {source['source_id']} has an unknown actionable boundary")
++        for url in source["urls"]:
++            if not str(url["url"]).startswith("https://"):
++                raise ValueError(f"source {source['source_id']} URL is not HTTPS")
++            if url["status"] in DEAD_OR_STALE_URL_STATUSES and artifact["honest_verdict"] == COMPLETE_VERDICT:
++                raise ValueError("dead or stale source cannot have a complete verdict")
++
++    task_mapping = artifact["task_mapping"]
++    background_ids = {row["source_id"] for row in artifact["background_only_sources"]}
++    if not REQUIRED_BACKGROUND_SOURCE_IDS.issubset(background_ids):
++        raise ValueError("background-only architecture pressure sources are incomplete")
++    if background_ids.intersection(task_mapping):
++        raise ValueError("background-only sources must not be mapped as executable tasks")
++    if set(task_mapping) != ACTIONABLE_SOURCE_IDS:
++        raise ValueError("every actionable source must be mapped exactly once")
++    for source_id, task_rows in task_mapping.items():
++        if source_id not in source_ids:
++            raise ValueError(f"task_mapping references unknown source {source_id}")
++        if not task_rows:
++            raise ValueError(f"actionable source {source_id} has no task rows")
++        for row in task_rows:
++            if row["task_id"] not in ALLOWED_TASK_IDS:
++                raise ValueError("task IDs must stay in exp5111-exp5120")
++            if not row["reason"]:
++                raise ValueError(f"task row for {source_id} needs a reason")
++
++    if "EBT/ARM-EBM/Kona/TSU kept as architecture pressure" not in artifact["claim_boundary_findings"]:
++        raise ValueError("claim_boundary_findings must record EBT/ARM/Kona/TSU pressure")
++
++
++def write_artifact(
++    *,
++    root: Path,
++    duration_s: float,
++    run_date: str,
++    tests_run: Sequence[str],
++) -> dict[str, Any]:
++    """Read repo inputs and write the stable Exp 5110 JSON artifact."""
++
++    references_text = (root / REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    roadmap_text = (root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8")
++    artifact = build_artifact(
++        references_text=references_text,
++        roadmap_text=roadmap_text,
++        duration_s=duration_s,
++        run_date=run_date,
++        tests_run=tests_run,
++    )
++    artifact_path = root / RESULT_RELATIVE_PATH
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(
++    *,
++    root: Path = REPO_ROOT,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """Run Exp 5110 and return the artifact path."""
++
++    start = time.perf_counter()
++    run_tests = DEFAULT_TESTS_RUN if tests_run is None else tests_run
++    elapsed = time.perf_counter() - start if duration_s is None else duration_s
++    write_artifact(root=root, duration_s=elapsed, run_date=date, tests_run=run_tests)
++    return root / RESULT_RELATIVE_PATH
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3503c5313f..8bef4f1695 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-01T15:21:45.233494Z",
+-  "duration_s": 0.07077932357788086,
++  "run_date": "2026-07-01T17:15:26.181485Z",
++  "duration_s": 0.10694575309753418,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "e13818c0018f9b030ea6cf8f9897edd5c1dab03031753c324c9066d0e4eef818",
++  "reproducibility_checksum": "a1e3d8a940b1cf472b9c64b56d30c33177b5b0e0d54dbebbfad5ae6e3b977d40",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d0a545ce9ea092dc0de544da88c23d1689cccde8"
++    "adversarial_verify_version": "9e918a791d287174b67e803659c591041740cc8f"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e08d1670c7..c35e873dfd 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-01T15:21:45.332808Z",
+-  "duration_s": 0.0918126106262207,
++  "run_date": "2026-07-01T17:15:26.340917Z",
++  "duration_s": 0.14587974548339844,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "6c5ee56e5e57c6be5a3f66164266df4ad7703aa0f1f0e5012ab2bddf2332714a",
++  "reproducibility_checksum": "f28f66471a5428e0f0a83ceff2ec21bf0a64edb96c5c34d87a4fca39a25596f8",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d0a545ce9ea092dc0de544da88c23d1689cccde8"
++    "adversarial_verify_version": "9e918a791d287174b67e803659c591041740cc8f"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6fff86b887..38bdd7afc2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.125978469848633,
++  "efficiency_gains_ms": 2.1653175354003906,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 85eb7b6aaa..a769650bf5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.096701741218567e-05,
++  "duration_s": 4.296004772186279e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5110_sota_ingestion_v469.json b/results/experiment_5110_sota_ingestion_v469.json
+new file mode 100644
+index 0000000000..94ecfa14f4
+--- /dev/null
++++ b/results/experiment_5110_sota_ingestion_v469.json
+@@ -0,0 +1,492 @@
++{
++  "active_roadmap_modified": false,
++  "background_only_sources": [
++    {
++      "reason": "Architecture pressure only; V469 has no local EBT pretraining reproduction.",
++      "source_id": "ebt_primary"
++    },
++    {
++      "reason": "Architecture pressure only; local work can cite ARM-to-EBM theory but not retrain it.",
++      "source_id": "arm_ebm"
++    },
++    {
++      "reason": "Citation-lineage context only; no V469 NRGPT training task exists.",
++      "source_id": "nrgpt"
++    },
++    {
++      "reason": "Domain-grounding architecture context only; no local enterprise-agent reproduction.",
++      "source_id": "domain_grounded_agents"
++    },
++    {
++      "reason": "TSU/XTR-0 context only; no authenticated local Extropic hardware target exists.",
++      "source_id": "extropic_tsu"
++    },
++    {
++      "reason": "Kona/Aleph architecture pressure only; no local Kona execution target exists.",
++      "source_id": "logical_kona_aleph"
++    }
++  ],
++  "claim_boundary_findings": [
++    "EBT/ARM-EBM/Kona/TSU kept as architecture pressure",
++    "No training-heavy reproduction is scheduled by Exp 5110.",
++    "No local TSU, Kona, board execution, latency, or speedup claim is made."
++  ],
++  "coverage_by_required_topic": {
++    "ARM-EBM": [
++      "arm_ebm",
++      "domain_grounded_agents"
++    ],
++    "EBT": [
++      "ebt_primary",
++      "nrgpt"
++    ],
++    "Extropic": [
++      "extropic_tsu"
++    ],
++    "FALCON": [
++      "falcon"
++    ],
++    "FoVer": [
++      "fover"
++    ],
++    "FormalRewardBench": [
++      "formalrewardbench"
++    ],
++    "KAN abstraction": [
++      "kan_abstraction"
++    ],
++    "Logical Intelligence": [
++      "logical_kona_aleph"
++    ],
++    "Verus-SpecGym": [
++      "verus_specgym"
++    ],
++    "million p-bit residual telemetry": [
++      "million_pbit_residual_telemetry"
++    ],
++    "p-bit 2D-PT": [
++      "pbit_2d_parallel_tempering"
++    ],
++    "self-verification cliff": [
++      "self_verification_cliff"
++    ]
++  },
++  "duration_s": 2.400483936071396e-07,
++  "experiment_id": "exp5110-source-freshness-sota-ingestion-v469",
++  "field_principles": {
++    "active_roadmap_modified": "operator instruction compliance",
++    "background_only_sources": "no false execution claims",
++    "claim_boundary_findings": "no unplanned training or hardware execution claims",
++    "coverage_by_required_topic": "source coverage completeness",
++    "duration_s": "timing accountability",
++    "experiment_id": "traceability",
++    "field_principles": "principle annotations for every top-level artifact field",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "milestone": "milestone accountability",
++    "references_section_bounds": "auditable source-section extraction",
++    "references_section_found": "downstream gate signal",
++    "repo_inputs_read": "repo inspection provenance",
++    "run_date": "run labeling",
++    "sources_checked": "provenance",
++    "task_mapping": "actionability",
++    "tests_run": "verification evidence",
++    "training_or_hardware_execution_claims_detected": "false execution claim detection"
++  },
++  "flagged_adversarial": false,
++  "honest_verdict": "complete_source_freshness_sota_ingestion_v469_references_mapped",
++  "inference_substrate": "literature_review_and_repo_inspection",
++  "milestone": "2026.07.469",
++  "references_section_bounds": {
++    "end_line": 25806,
++    "fresh_sweep_addendum_found": true,
++    "roadmap_task_ids_present": [
++      "exp5111",
++      "exp5112",
++      "exp5113",
++      "exp5114",
++      "exp5115",
++      "exp5116",
++      "exp5117",
++      "exp5118",
++      "exp5119",
++      "exp5120"
++    ],
++    "start_line": 25691
++  },
++  "references_section_found": true,
++  "repo_inputs_read": [
++    "AGENTS.md",
++    "CODEX.md",
++    "CLAUDE.md",
++    "research-references.md",
++    "openspec/change-proposals/research-roadmap-vNEXT.md",
++    "openspec/capabilities/research-reporting/spec.md",
++    "openspec/capabilities/verifiable-reasoning/spec.md",
++    "openspec/capabilities/kan/spec.md",
++    "openspec/capabilities/samplers/spec.md",
++    "openspec/capabilities/self-learning/spec.md",
++    "openspec/capabilities/llm-ebm-inference/spec.md",
++    "openspec/capabilities/fpga/spec.md"
++  ],
++  "run_date": "20260701",
++  "sources_checked": [
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "FoVer",
++      "source_access_status": "verified_live",
++      "source_id": "fover",
++      "title": "Efficient PRM Training Data Synthesis via Formal Verification",
++      "urls": [
++        {
++          "evidence": "arXiv page live; v3 revised 2026-04-08; names FoVer.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2505.15960"
++        },
++        {
++          "evidence": "Public repository for the ACL 2026 Findings FoVer paper.",
++          "status": "verified_live",
++          "url": "https://github.com/psunlpgroup/FoVer"
++        },
++        {
++          "evidence": "Hugging Face paper record is live.",
++          "status": "verified_live",
++          "url": "https://huggingface.co/papers/2505.15960"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "FormalRewardBench",
++      "source_access_status": "verified_live",
++      "source_id": "formalrewardbench",
++      "title": "FormalRewardBench: A Benchmark for Formal Theorem Proving Reward Models",
++      "urls": [
++        {
++          "evidence": "arXiv page live; submitted 2026-05-11.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2605.10141"
++        }
++      ]
++    },
++    {
++      "access_note": "OpenReview forum and PDF URLs redirect to a browser challenge, but search metadata and the ICML 2026 AI4Math listing confirm the record.",
++      "claim_boundary": "actionable",
++      "required_topic": "self-verification cliff",
++      "source_access_status": "partial_openreview_challenge_metadata_verified",
++      "source_id": "self_verification_cliff",
++      "title": "The Self-Verification Cliff",
++      "urls": [
++        {
++          "evidence": "Forum URL is real but guarded by OpenReview browser verification.",
++          "status": "partial_openreview_challenge_metadata_verified",
++          "url": "https://openreview.net/forum?id=QJTSAvHFQn"
++        },
++        {
++          "evidence": "PDF URL is real but guarded by OpenReview browser verification.",
++          "status": "partial_openreview_challenge_metadata_verified",
++          "url": "https://openreview.net/pdf?id=QJTSAvHFQn"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "KAN abstraction",
++      "source_access_status": "verified_live",
++      "source_id": "kan_abstraction",
++      "title": "Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks",
++      "urls": [
++        {
++          "evidence": "arXiv page live; submitted 2026-02-06.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2602.06737"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "p-bit 2D-PT",
++      "source_access_status": "verified_live",
++      "source_id": "pbit_2d_parallel_tempering",
++      "title": "Probabilistic Computers for MIMO Detection",
++      "urls": [
++        {
++          "evidence": "arXiv page live; v2 revised 2026-05-31; describes 2D-PT.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2601.09037"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "million p-bit residual telemetry",
++      "source_access_status": "verified_live",
++      "source_id": "million_pbit_residual_telemetry",
++      "title": "Programmable Probabilistic Computer with 1,000,000 p-bits",
++      "urls": [
++        {
++          "evidence": "arXiv page live; submitted 2026-06-24.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2606.25313"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "FALCON",
++      "source_access_status": "verified_live",
++      "source_id": "falcon",
++      "title": "Hard Constraints Meet Soft Generation",
++      "urls": [
++        {
++          "evidence": "arXiv page live; names FALCON and semantic repair.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2602.01090"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "actionable",
++      "required_topic": "Verus-SpecGym",
++      "source_access_status": "verified_live",
++      "source_id": "verus_specgym",
++      "title": "Verus-SpecGym: An Agentic Environment for Evaluating Specification Autoformalization",
++      "urls": [
++        {
++          "evidence": "Hugging Face paper page live with Verus-SpecBench and Verus-SpecGym summary.",
++          "status": "verified_live",
++          "url": "https://huggingface.co/papers/2605.26457"
++        },
++        {
++          "evidence": "arXiv page live; submitted 2026-05-26.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2605.26457"
++        },
++        {
++          "evidence": "Public GitHub repository URL resolves.",
++          "status": "verified_live",
++          "url": "https://github.com/formal-verif-is-cool/verus-spec-gym"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "EBT",
++      "source_access_status": "verified_live",
++      "source_id": "ebt_primary",
++      "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
++      "urls": [
++        {
++          "evidence": "arXiv page live; submitted 2025-07-02.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2507.02092"
++        },
++        {
++          "evidence": "Public EBT code repository resolves.",
++          "status": "verified_live",
++          "url": "https://github.com/alexiglad/EBT"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "ARM-EBM",
++      "source_access_status": "verified_live",
++      "source_id": "arm_ebm",
++      "title": "Autoregressive Language Models are Secretly Energy-Based Models",
++      "urls": [
++        {
++          "evidence": "arXiv page live; v4 revised 2026-05-25.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2512.15605"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "EBT",
++      "source_access_status": "verified_live",
++      "source_id": "nrgpt",
++      "title": "NRGPT: An Energy-based Alternative for GPT",
++      "urls": [
++        {
++          "evidence": "arXiv page live; ICLR 2026 main conference note.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2512.16762"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "ARM-EBM",
++      "source_access_status": "verified_live",
++      "source_id": "domain_grounded_agents",
++      "title": "Ontology-Constrained Neural Reasoning in Enterprise Agentic Systems",
++      "urls": [
++        {
++          "evidence": "arXiv page live; v5 revised 2026-06-04.",
++          "status": "verified_live",
++          "url": "https://arxiv.org/abs/2604.00555"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "Extropic",
++      "source_access_status": "verified_live_with_minimal_pages",
++      "source_id": "extropic_tsu",
++      "title": "Extropic XTR-0 and Thermodynamic Sampling Unit updates",
++      "urls": [
++        {
++          "evidence": "Page URL resolves but exposes minimal static text to the fetcher.",
++          "status": "reachable_minimal_page",
++          "url": "https://extropic.ai/writing/inside-x0-and-xtr-0"
++        },
++        {
++          "evidence": "Page URL resolves but exposes minimal static text to the fetcher.",
++          "status": "reachable_minimal_page",
++          "url": "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware"
++        },
++        {
++          "evidence": "Live article describes XTR-0, TSU, and thrml simulation context.",
++          "status": "verified_live",
++          "url": "https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one"
++        }
++      ]
++    },
++    {
++      "claim_boundary": "background_only",
++      "required_topic": "Logical Intelligence",
++      "source_access_status": "verified_live",
++      "source_id": "logical_kona_aleph",
++      "title": "Logical Intelligence Kona and Aleph updates",
++      "urls": [
++        {
++          "evidence": "Live 2026-05-14 Aleph benchmark article resolves.",
++          "status": "verified_live",
++          "url": "https://logicalintelligence.com/blog/aleph-leading-benchmarks"
++        },
++        {
++          "evidence": "Live 2026-02-03 Kona Sudoku benchmark article resolves.",
++          "status": "verified_live",
++          "url": "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo"
++        },
++        {
++          "evidence": "Live Kona product architecture page resolves.",
++          "status": "verified_live",
++          "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++        }
++      ]
++    }
++  ],
++  "task_mapping": {
++    "falcon": [
++      {
++        "reason": "Use semantic repair and adaptive sampling lessons for harm-gated solver help.",
++        "task_id": "exp5117",
++        "task_name": "TACO harm-gated scale"
++      },
++      {
++        "reason": "Avoid a syntax-only constrained-generation headline.",
++        "task_id": "exp5113",
++        "task_name": "FoVer selector adversarial audit"
++      }
++    ],
++    "formalrewardbench": [
++      {
++        "reason": "Add controlled error-family and label-ablation checks.",
++        "task_id": "exp5113",
++        "task_name": "FoVer selector adversarial audit"
++      },
++      {
++        "reason": "Require non-forgetting checks before any memory/SOP promotion.",
++        "task_id": "exp5118",
++        "task_name": "FR-11 FoVer residual memory"
++      }
++    ],
++    "fover": [
++      {
++        "reason": "Build the n>=150 candidate pool with oracle-distinct labels.",
++        "task_id": "exp5111",
++        "task_name": "FoVer in-domain pool"
++      },
++      {
++        "reason": "Measure Best-of-K headroom and select against tuned self-consistency.",
++        "task_id": "exp5112",
++        "task_name": "FoVer in-domain selector"
++      },
++      {
++        "reason": "Audit leakage, shuffled labels, and CI handling before a moat claim.",
++        "task_id": "exp5113",
++        "task_name": "FoVer selector adversarial audit"
++      },
++      {
++        "reason": "Transfer exact evidence energy to FoVer step/support traces.",
++        "task_id": "exp5115",
++        "task_name": "Graph evidence FoVer transfer"
++      },
++      {
++        "reason": "Use FoVer selector residuals as the auditable self-learning stream.",
++        "task_id": "exp5118",
++        "task_name": "FR-11 FoVer residual memory"
++      }
++    ],
++    "kan_abstraction": [
++      {
++        "reason": "Replace repeated exact-MILP scale sweeps with abstraction budgeting.",
++        "task_id": "exp5114",
++        "task_name": "KAN abstraction refinement post wall"
++      }
++    ],
++    "million_pbit_residual_telemetry": [
++      {
++        "reason": "Use residual-energy decay and partition telemetry as the honest hardware metric.",
++        "task_id": "exp5120",
++        "task_name": "Hardware residual telemetry"
++      }
++    ],
++    "pbit_2d_parallel_tempering": [
++      {
++        "reason": "Build a CPU exact-checked two-axis tempering reference before board claims.",
++        "task_id": "exp5116",
++        "task_name": "HUBO 2D-PT sampling reference"
++      }
++    ],
++    "self_verification_cliff": [
++      {
++        "reason": "Record oracle@K versus tuned self-consistency headroom.",
++        "task_id": "exp5111",
++        "task_name": "FoVer in-domain pool"
++      },
++      {
++        "reason": "Test whether the selector recovers sampling headroom.",
++        "task_id": "exp5112",
++        "task_name": "FoVer in-domain selector"
++      },
++      {
++        "reason": "Prevent self-selection headroom from being misread as verifier value.",
++        "task_id": "exp5113",
++        "task_name": "FoVer selector adversarial audit"
++      }
++    ],
++    "verus_specgym": [
++      {
++        "reason": "Borrow executable-spec and adversarial-edge-case faithfulness checks.",
++        "task_id": "exp5113",
++        "task_name": "FoVer selector adversarial audit"
++      },
++      {
++        "reason": "Apply adversarial edge-case controls to memory promotion contracts.",
++        "task_id": "exp5118",
++        "task_name": "FR-11 FoVer residual memory"
++      }
++    ]
++  },
++  "tests_run": [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5110_sota_ingestion_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_experiment_5110_sota_ingestion_v469.py -q",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "training_or_hardware_execution_claims_detected": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 89f2bead7f..50d8966960 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T16:10:08Z",
+-  "finished_at": "2026-07-01T16:10:08Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-01T17:15:13Z",
++  "finished_at": "2026-07-01T17:15:13Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d0dd894040..86a1b4ba2c 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T16:10:08Z",
+-  "finished_at": "2026-07-01T16:10:08Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-01T17:15:13Z",
++  "finished_at": "2026-07-01T17:15:13Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f549e91ead..ee291aaebe 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T16:10:08Z",
+-  "finished_at": "2026-07-01T16:10:08Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-01T17:15:14Z",
++  "finished_at": "2026-07-01T17:15:14Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_5110_sota_ingestion_v469.py b/scripts/experiment_5110_sota_ingestion_v469.py
+new file mode 100644
+index 0000000000..6f66343dc0
+--- /dev/null
++++ b/scripts/experiment_5110_sota_ingestion_v469.py
+@@ -0,0 +1,32 @@
++#!/usr/bin/env python3
++"""CLI entrypoint for Exp 5110 V469 source-freshness SOTA ingestion."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++
++from carnot.experiment_5110_sota_ingestion_v469 import REPO_ROOT, main as run_main
++
++
++def main(
++    root: Path = REPO_ROOT,
++    *,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: list[str] | None = None,
++) -> Path:
++    """Run the tested Exp 5110 implementation and return the artifact path."""
++
++    return run_main(root=root, date=date, duration_s=duration_s, tests_run=tests_run)
++
++
++def _parse_args() -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260701", help="Run label date, formatted YYYYMMDD.")
++    return parser.parse_args()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    args = _parse_args()
++    main(date=args.date)
+diff --git a/tests/python/test_experiment_5110_sota_ingestion_v469.py b/tests/python/test_experiment_5110_sota_ingestion_v469.py
+new file mode 100644
+index 0000000000..5993f5e56c
+--- /dev/null
++++ b/tests/python/test_experiment_5110_sota_ingestion_v469.py
+@@ -0,0 +1,407 @@
++"""Tests for Exp 5110 V469 source-freshness SOTA ingestion.
++
++Spec refs: REQ-REPORT-5110, SCENARIO-REPORT-5110,
++SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5110_sota_ingestion_v469 as mod
++from scripts import experiment_5110_sota_ingestion_v469 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++REFERENCES_PATH = REPO / mod.REFERENCES_RELATIVE_PATH
++ROADMAP_PATH = REPO / mod.ROADMAP_RELATIVE_PATH
++
++
++def _spec_section() -> str:
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-REPORT-5110")
++    end = spec.index("### REQ-REPORT-5010", start)
++    return spec[start:end]
++
++
++def _artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        references_text=REFERENCES_PATH.read_text(encoding="utf-8"),
++        roadmap_text=ROADMAP_PATH.read_text(encoding="utf-8"),
++        duration_s=1.25,
++        run_date="20260701",
++        tests_run=["tests/python/test_experiment_5110_sota_ingestion_v469.py"],
++    )
++
++
++def test_req_report_5110_spec_declares_source_freshness_contract() -> None:
++    """REQ-REPORT-5110: OpenSpec declares the V469 source-freshness contract."""
++
++    section = _spec_section()
++
++    assert "REQ-REPORT-5110" in section
++    assert "SCENARIO-REPORT-5110" in section
++    assert "SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE" in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert mod.EXPERIMENT_ID in section
++    assert "FoVer" in section
++    assert "FormalRewardBench" in section
++    assert "Extropic TSU/XTR-0" in section
++    assert "Logical Intelligence Kona/Aleph" in section
++    assert "research-roadmap.yaml" in section
++    assert "scripts/research_conductor.py" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle == mod.FIELD_PRINCIPLES[field]
++        assert principle in section
++
++
++def test_req_report_5110_artifact_maps_fresh_sources_to_v469_tasks() -> None:
++    """REQ-REPORT-5110: artifact maps actionable V469 sources to exp5111-exp5120."""
++
++    artifact = _artifact()
++
++    mod.validate_artifact(artifact)
++    assert mod.REQUIRED_USER_ARTIFACT_FIELDS.issubset(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["honest_verdict"] == mod.COMPLETE_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["references_section_found"] is True
++    assert artifact["active_roadmap_modified"] is False
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["tests_run"] == ["tests/python/test_experiment_5110_sota_ingestion_v469.py"]
++
++    required_topics = {source["required_topic"] for source in artifact["sources_checked"]}
++    assert required_topics == mod.REQUIRED_TOPICS
++    assert len(artifact["sources_checked"]) >= len(mod.REQUIRED_TOPICS)
++    assert all(source["urls"] for source in artifact["sources_checked"])
++    assert all(url["url"].startswith("https://") for source in artifact["sources_checked"] for url in source["urls"])
++    assert all(url["status"] != "dead" for source in artifact["sources_checked"] for url in source["urls"])
++
++    self_verification = next(
++        source for source in artifact["sources_checked"] if source["source_id"] == "self_verification_cliff"
++    )
++    assert self_verification["source_access_status"] == "partial_openreview_challenge_metadata_verified"
++    assert "browser challenge" in self_verification["access_note"]
++
++    assert set(artifact["task_mapping"]) == mod.ACTIONABLE_SOURCE_IDS
++    for source_id, task_rows in artifact["task_mapping"].items():
++        assert source_id in mod.ACTIONABLE_SOURCE_IDS
++        assert task_rows
++        for row in task_rows:
++            assert row["task_id"] in mod.ALLOWED_TASK_IDS
++            assert row["task_id"] != "exp5121"
++            assert row["reason"]
++
++    background_ids = {row["source_id"] for row in artifact["background_only_sources"]}
++    assert mod.REQUIRED_BACKGROUND_SOURCE_IDS.issubset(background_ids)
++    assert not background_ids.intersection(artifact["task_mapping"])
++    assert artifact["training_or_hardware_execution_claims_detected"] is False
++    assert "EBT/ARM-EBM/Kona/TSU kept as architecture pressure" in artifact["claim_boundary_findings"]
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (
++            lambda artifact: artifact | {"references_section_found": False},
++            "references_section_found",
++        ),
++        (
++            lambda artifact: artifact | {"active_roadmap_modified": True},
++            "active_roadmap_modified",
++        ),
++        (
++            lambda artifact: artifact | {"training_or_hardware_execution_claims_detected": True},
++            "training or hardware",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "task_mapping": {
++                    key: value
++                    for key, value in artifact["task_mapping"].items()
++                    if key != "fover"
++                }
++            },
++            "actionable",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "task_mapping": artifact["task_mapping"]
++                | {"ebt_primary": [{"task_id": "exp5114", "reason": "bad training claim"}]}
++            },
++            "background-only",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "task_mapping": artifact["task_mapping"]
++                | {"fover": [{"task_id": "exp5121", "reason": "capstone is outside allowed range"}]}
++            },
++            "exp5111-exp5120",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source
++                    | {
++                        "urls": [
++                            url | {"status": "dead"}
++                            for url in source["urls"]
++                        ]
++                    }
++                    if source["source_id"] == "falcon"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "dead or stale",
++        ),
++        (
++            lambda artifact: {
++                key: value for key, value in artifact.items() if key != "sources_checked"
++            },
++            "required field",
++        ),
++    ],
++)
++def test_validator_rejects_stale_sources_and_false_claims_for_scenario_report_5110(
++    mutate: object,
++    message: str,
++) -> None:
++    """SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE: bad claims fail closed."""
++
++    artifact = _artifact()
++    bad_artifact = mutate(copy.deepcopy(artifact))
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_missing_references_section_writes_partial_artifact_for_scenario_report_5110() -> None:
++    """SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE: missing section is partial."""
++
++    artifact = mod.build_artifact(
++        references_text="# no v469 references here\n",
++        roadmap_text=ROADMAP_PATH.read_text(encoding="utf-8"),
++        duration_s=0.5,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert artifact["references_section_found"] is False
++    assert artifact["honest_verdict"] == mod.PARTIAL_REFERENCES_VERDICT
++    assert artifact["sources_checked"]
++    assert artifact["task_mapping"]
++    mod.validate_artifact(artifact)
++
++
++def test_dead_source_builds_partial_artifact_for_scenario_report_5110(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE: dead source is preserved."""
++
++    patched_sources = [
++        source
++        | {
++            "urls": [
++                url | {"status": "dead"}
++                for url in source["urls"]
++            ]
++        }
++        if source["source_id"] == "falcon"
++        else source
++        for source in mod.SOURCE_CHECKS
++    ]
++    monkeypatch.setattr(mod, "SOURCE_CHECKS", patched_sources)
++    artifact = mod.build_artifact(
++        references_text=REFERENCES_PATH.read_text(encoding="utf-8"),
++        roadmap_text=ROADMAP_PATH.read_text(encoding="utf-8"),
++        duration_s=0.5,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert artifact["honest_verdict"] == mod.PARTIAL_SOURCE_VERDICT
++    assert any(
++        url["status"] == "dead"
++        for source in artifact["sources_checked"]
++        for url in source["urls"]
++    )
++    mod.validate_artifact(artifact)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda artifact: artifact | {"experiment_id": "bad"}, "experiment_id"),
++        (lambda artifact: artifact | {"milestone": "2026.07.468"}, "milestone"),
++        (lambda artifact: artifact | {"honest_verdict": "finished"}, "honest_verdict"),
++        (lambda artifact: artifact | {"inference_substrate": "live_llm_inference"}, "inference_substrate"),
++        (lambda artifact: artifact | {"field_principles": {}}, "field_principles"),
++        (lambda artifact: artifact | {"tests_run": []}, "tests_run"),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source | {"required_topic": "missing-topic"}
++                    if source["source_id"] == "fover"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "source coverage",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source | {"urls": []}
++                    if source["source_id"] == "fover"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "no real URL",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source | {"source_id": "rogue_actionable"}
++                    if source["source_id"] == "fover"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "unknown actionable",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source
++                    | {
++                        "urls": [
++                            url | {"url": "http://example.invalid"}
++                            for url in source["urls"]
++                        ]
++                    }
++                    if source["source_id"] == "fover"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "not HTTPS",
++        ),
++        (
++            lambda artifact: artifact | {"background_only_sources": []},
++            "background-only architecture",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "sources_checked": [
++                    source | {"source_id": "fover_missing", "claim_boundary": "background_only"}
++                    if source["source_id"] == "fover"
++                    else source
++                    for source in artifact["sources_checked"]
++                ]
++            },
++            "unknown source",
++        ),
++        (
++            lambda artifact: artifact
++            | {"task_mapping": artifact["task_mapping"] | {"fover": []}},
++            "no task rows",
++        ),
++        (
++            lambda artifact: artifact
++            | {
++                "task_mapping": artifact["task_mapping"]
++                | {"fover": [{"task_id": "exp5111", "task_name": "bad", "reason": ""}]}
++            },
++            "needs a reason",
++        ),
++        (
++            lambda artifact: artifact | {"claim_boundary_findings": []},
++            "claim_boundary_findings",
++        ),
++    ],
++)
++def test_validator_covers_schema_error_branches_for_req_report_5110(
++    mutate: object,
++    message: str,
++) -> None:
++    """REQ-REPORT-5110: validator rejects each malformed schema branch."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(mutate(copy.deepcopy(_artifact())))
++
++
++def test_write_artifact_is_stable_for_req_report_5110(tmp_path: Path) -> None:
++    """REQ-REPORT-5110: writer emits a stable source-freshness artifact."""
++
++    (tmp_path / mod.REFERENCES_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.ROADMAP_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.REFERENCES_RELATIVE_PATH).write_text(
++        REFERENCES_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++    (tmp_path / mod.ROADMAP_RELATIVE_PATH).write_text(
++        ROADMAP_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++    (tmp_path / "research-roadmap.yaml").write_text("milestone: 2026.07.468\n", encoding="utf-8")
++
++    first = mod.write_artifact(
++        root=tmp_path,
++        duration_s=0.75,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++    second = mod.write_artifact(
++        root=tmp_path,
++        duration_s=0.75,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert second == first
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == first
++    assert first["active_roadmap_modified"] is False
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == "milestone: 2026.07.468\n"
++
++
++def test_script_main_delegates_to_tested_module_for_req_report_5110(tmp_path: Path) -> None:
++    """REQ-REPORT-5110: CLI wrapper writes the same validated artifact."""
++
++    (tmp_path / mod.REFERENCES_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.ROADMAP_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.REFERENCES_RELATIVE_PATH).write_text(
++        REFERENCES_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++    (tmp_path / mod.ROADMAP_RELATIVE_PATH).write_text(
++        ROADMAP_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++
++    artifact_path = script_mod.main(
++        root=tmp_path,
++        date="20260701",
++        duration_s=0.25,
++        tests_run=["script wrapper"],
++    )
++
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    assert artifact["tests_run"] == ["script wrapper"]
++    assert artifact["run_date"] == "20260701"
++    mod.validate_artifact(artifact)
+-- 
+2.55.0
+

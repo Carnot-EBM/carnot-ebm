@@ -1,0 +1,103 @@
+From 2ecc0c0c51e040e658383b3d0a96fdb5d606cf49 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 01:14:52 -0400
+Subject: [PATCH 11157/11171] [outer-loop] Correction: my provenance work was
+ redundant; the headline is now dark
+
+The dashboard's generalization line stopped reporting 5 levels across 9 games
+and now reports 9 provenance rejections. Checked the cause before blaming my
+own change: the conductor shipped an ARC evaluation provenance contract in
+.614.
+
+Correction 7. Last hour I implemented REQ-ARC-WMTE-7021 and 7022 and reported
+them delivered. The conductor built the same idea hours later and its version
+is a superset mine does not feed. Mine stamps solve_provenance at the document
+level; its validator checks the per-game ROW and also demands a nested
+arc_eval_provenance record that agrees. My run_envelope records n_ctx, GPUs,
+model path and hostname; its record demands gpu_uuid, gpu_model, cuda_device,
+model repository, filename and hash, n_ctx, server binary and two command
+hashes, endpoint, port and a lease triple.
+
+Not deleted here. The conductor is editing that file this milestone and HEAD is
+one of its checkpoints, so removing my lines now is a collision risk rather
+than a tidy-up.
+
+The measurement is intact and only the reporting is dark: generalization_levels
+still returns levels 5, games 9, with headline_eligible False. It cannot
+self-heal, because the gate is all-or-nothing and 0 of 27 existing rows carry
+the record, which did not exist when they were written. Recovery means
+re-running every tracked game.
+
+Two operator decisions filed: whether an unverifiable row should suppress the
+headline or qualify it, and whether to drop my redundant stamps or keep the
+envelope for the fields the conductor's record omits.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 75444e230d..c62ec70377 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -89,6 +89,55 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
+ would manufacture a record, which is worse than the gap it hides.
+ 
+ 
++## 2026-09-05 05:25Z — CORRECTION 7: my provenance work was redundant, and the headline is now dark
++
++**The dashboard's generalization line went from "5 level(s) across 9 game(s)" to
++"measured rows excluded from headline: 9 provenance rejection(s)".** Cause found before blaming
++my own change, and it is not mine: the conductor shipped
++`971f63ff70 [conductor] ARC evaluation hardware and context provenance contract` in milestone
++.614.
++
++**CORRECTION 7, mine to own.** Last hour I implemented REQ-ARC-WMTE-7021 and 7022 —
++`solve_provenance` and a `run_envelope` on eval runs — and reported them as delivered. The
++conductor built the same idea independently, within hours, and **its version is a superset that
++mine does not feed**:
++
++- Mine stamps `solve_provenance` at the DOCUMENT level. The conductor's validator,
++  `validate_arc_evaluation_row`, checks it **per per-game ROW**, and additionally requires a
++  nested `arc_eval_provenance` record that agrees with it. My document stamp satisfies neither
++  clause.
++- My `run_envelope` records n_ctx, requested and held GPUs, model path and hostname. The
++  conductor's record requires `gpu_uuid`, `gpu_model`, `cuda_device`, `model_repository`,
++  `model_filename`, `model_hash`, `n_ctx`, `server_binary`, `server_binary_hash`,
++  `server_command_hash`, `endpoint`, `port`, and a lease id, hash and issue time. A strict
++  superset.
++
++The conductor's `scripts/arc_leaderboard_eval.py` already stamps the row (line ~1225) and builds
++the record (line ~1303). My document-level stamp at line ~1394 sits beside it doing nothing. Two
++implementations of one contract, hours apart, and the redundant one is mine. **Not deleted here:**
++the conductor is actively editing that file this milestone and HEAD is one of its checkpoints, so
++removing my lines now is a collision risk rather than a tidy-up. Flagged for the operator.
++
++**The measurement is intact; only the reporting is dark.** Read directly from
++`generalization_levels()`: `measured: True, levels: 5, games: 9`, and
++`headline_eligible: False` with 9 rejections. The five levels are still measured. The dashboard
++declines to show them.
++
++**It cannot self-heal.** `headline_eligible = all(provenance_decisions.values())` is
++all-or-nothing, and **0 of 27 existing per-game rows carry `arc_eval_provenance`** — the field
++did not exist when they were written. So the line stays dark until every tracked game is re-run
++under the new contract. On the measured cost of a single deep run, that is many GPU-hours.
++
++**OPERATOR DECISION 9.** Whether an unverifiable row should suppress the headline or qualify it.
++Suppressing is defensible and strict. The alternative is to report "5 levels, 9 rows unverified",
++which keeps a measured result visible while naming exactly what is unproven. As written, a
++correct measurement reads as no measurement, and that is the shape a reader misreads as a
++regression — it read that way to me first.
++
++**OPERATOR DECISION 10.** Whether to remove my redundant REQ-7021/7022 stamps, or to keep the
++`run_envelope` for the fields the conductor's record omits (hostname, `CUDA_VISIBLE_DEVICES`, and
++the requested-versus-held distinction, which the conductor's `cuda_device` alone does not carry).
++
+ ## 2026-09-05 05:05Z — the new-arm trigger could never fire on a default run
+ 
+ Round two of the live-agent work finished. Commit `23daf64bf2` on
+-- 
+2.55.0
+

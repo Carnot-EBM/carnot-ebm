@@ -1,0 +1,90 @@
+From f30ec596ca2a8f2c4d8e295f0bae7dd1591add25 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 19:15:15 -0400
+Subject: [PATCH 11110/11171] [outer-loop] Correct the observability claim: the
+ eval is watchable per attempt
+
+An hour ago this file said the within-game blind spot was untouched. Half
+wrong. results/arc_e3/<game>/attempts/evidence/ gains a sealed directory per
+completed induction attempt, and .evidence-staging/ holds the one in flight,
+so a long single-game run reports progress every 30 to 60 minutes with no new
+tooling. The r11l run has emitted two engines already, verifiable 90 minutes
+before its artifact will exist.
+
+Found by accident: a conductor checkpoint commit swept the files, which is the
+only reason anyone looked. The signal was there the whole time while the check
+watched the run artifact and the log.
+
+Still true and now stated precisely: a directory appears only when an attempt
+SEALS, so a hung attempt shows nothing and the blind spot inside one attempt
+is untouched.
+
+Checked against the engine-store regression memory: all 15 historical wm_*.py
+engines survive, including the four scored today. Two storage shapes now
+coexist and a count of one looks like deletion of the other.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 1af6dbcfbc..d4ae4eb75d 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -46,6 +46,51 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
+ verifier already recognizes by pattern. Whether to make that a planner-prompt change
+ is the operator's call.
+ 
++### 23:20Z — the running eval IS observable, and it has already emitted two engines
++
++**CORRECTION 4.** At 22:30Z this file said the within-game blind spot was untouched and was the
++real remaining observability work. That is half wrong, and the half that is wrong was found by
++accident: a conductor checkpoint commit swept files from the running eval, which is how anyone
++noticed they existed.
++
++`results/arc_e3/<game>/attempts/` gains a sealed directory per COMPLETED induction attempt under
++`evidence/`, named `arc-<UTC start>_<micros>-<hash>`, holding `engine.py`, `envelope.json`,
++`environment_receipt.json`, `transitions.jsonl`, `prompt.raw` and the policy sources. An attempt
++still running sits in `.evidence-staging/` under the same name; sealing is a move between the
++two.
++
++The r11l run (PID 3114878, started 21:23Z) as of 23:13Z:
++
++| attempt | started | sealed | engine.py |
++|---|---|---|---|
++| 1 | 21:24Z | 22:30Z, about 66 min | 4,270 B |
++| 2 | 22:30Z | 23:03Z, about 33 min | 8,374 B |
++| 3 | 23:03Z | in `.evidence-staging/` | — |
++
++**Two engines are already emitted.** The run is doing what it was authorized to do, and that was
++verifiable 90 minutes before its artifact will exist. No new instrumentation was needed; the
++signal was in the evidence tree while everyone watched the run artifact and the log.
++
++Limits, so this is not over-read. A directory appears only when an attempt SEALS, so a HUNG
++attempt still shows nothing, and the blind spot inside a single attempt is real and untouched.
++The 30-to-60-minute cadence is one run on one game, not a general rate.
++
++**Checked because a memory warns about it: nothing was destroyed.** All 15 historical
++`attempts/wm_<UTC>__<hash>.py` engines are present, including the four post-fix ones scored in
++the 22:05Z table (`wm_20260904T020536`, `T062427`, `T071247`, `T074908`). Two storage shapes now
++coexist: the flat `wm_*.py` files, and the evidence directories that arrived today with the
++producer evidence contract (exp6993, exp6994). **Count both shapes.** Counting one looks exactly
++like the other was deleted, which is the engine-store regression this project has already had
++once.
++
++**Also verified, no action needed.** The conductor's HEAD checkpoint commit (`808a9bead7`) swept
++no operator-curated document, and all five outer-loop commits from this session remain reachable
++from HEAD. Milestone .613 shows the refusal machinery working end to end rather than a fault:
++22:41 planned with 4 tasks, 22:44 activation REFUSED on 2 exclusion-manifest HARD violations and
++the roadmap quarantined, 23:01 replanned with 13 tasks, 23:05 activated. Twenty-four minutes,
++unattended, and the refusal also corrected an undersized milestone. BLOCK runs 1 to 6 per day
++historically, so today's single BLOCK is ordinary.
++
+ ### 22:30Z — the eval spans BOTH GPUs, and no eval artifact records its own hardware
+ 
+ **CORRECTION 3, promised at 21:26Z and now recorded.** The r11l eval (PID 3114878) was reported
+-- 
+2.55.0
+

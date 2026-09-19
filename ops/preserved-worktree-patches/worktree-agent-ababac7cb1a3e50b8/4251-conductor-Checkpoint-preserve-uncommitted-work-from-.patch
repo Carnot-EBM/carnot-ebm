@@ -1,0 +1,43 @@
+From b8fee336a7e32fececeaccaf843045e04f471e0c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 13:33:47 -0400
+Subject: [PATCH 04251/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 29c51c5783..e86a468996 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 283, "phase": "iteration_start", "last_beat": "2026-06-26T17:03:25Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 284, "phase": "iteration_start", "last_beat": "2026-06-26T17:33:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e6d12a424e..1313081655 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9367,3 +9367,4 @@ The contro |
+ | 2026-06-26 16:43 UTC | PHASE D (SOTA-INGESTION -- the .443 frontier = ene | OK | 104 passed, 1 warning in 6.92s |
+ | 2026-06-26 16:59 UTC | PHASE E (CAPSTONE .442) -- aggregate the .442 scor | OK | 88 passed, 1 warning in 7.50s |
+ | 2026-06-26 17:01 UTC | Milestone 2026.06.443 activated | OK | 10 tasks queued |
++| 2026-06-26 17:31 UTC | PHASE 0 (TRANSITION) -- archive .442 -> activate . | OK | 87 passed, 1 warning in 8.83s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 278fad7313..474883a43e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 283, "phase": "iteration_start", "started_at": "2026-06-26T17:03:25Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 284, "phase": "iteration_start", "started_at": "2026-06-26T17:33:46Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

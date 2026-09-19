@@ -1,0 +1,128 @@
+From 10f47e5688caa39b55b531dbf0ee8dda949b3654 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 05:57:26 -0400
+Subject: [PATCH 00975/11362] [outer-loop] conductor_gates: implement op:exists
+ / not_exists (was schema-valid but runtime-unknown -> blocked .365 capstone)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The .365 ARC capstone (exp3951) blocked_gate_check_failed with "unknown op 'exists'":
+roadmap_schema's GateOp enum allows "exists" but _eval_op in scripts/conductor_gates.py
+never implemented it (it fell through to `return False, "unknown op"`). So any roadmap
+gating on field-existence hard-blocked. (The .366 Opus planner already worked around it
+by ungating its capstone + citing the bug — but the proper fix is runtime support.)
+
+Fix: _eval_op now handles:
+- exists: pass when the field is present with a non-null value (evaluate_gates fetches
+  via data.get, so missing-key and explicit-null both arrive as None = "not produced yet",
+  which exists correctly rejects). Honors the schema-required `value`: true/None -> pass
+  when present; false -> inline not-exists (pass when absent).
+- not_exists: pass when the field is absent/null.
+
+3 new tests (present->pass, missing->fail, value:false->not-exists). Full
+test_conductor_gates suite green. No conductor restart needed (.366 uses no exists gate);
+takes effect for future roadmaps on next restart.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/conductor_gates.py           | 19 ++++++++++
+ tests/python/test_conductor_gates.py | 52 ++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+
+diff --git a/scripts/conductor_gates.py b/scripts/conductor_gates.py
+index 04d07525c4..d0968bafd7 100644
+--- a/scripts/conductor_gates.py
++++ b/scripts/conductor_gates.py
+@@ -198,6 +198,25 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
+         if actual is None:
+             return True, f"actual is None, vacuously does not contain {expected!r}"
+         return expected not in actual, f"actual={actual!r} does not contain expected={expected!r}"
++    if op == "exists":
++        # The field is considered to EXIST when it is present with a real (non-null)
++        # value. `evaluate_gates` fetches via data.get(field), so a missing key and an
++        # explicit null both arrive as actual=None — both mean "the upstream hasn't
++        # produced this field yet", which is exactly what `exists` should reject.
++        # The required `value` (schema mandates one) is honored: value true/None ->
++        # pass when present; value false -> pass when absent (an inline not_exists).
++        present = actual is not None
++        want = _coerce_gate_value(expected)
++        if isinstance(want, bool):
++            return present == want, (
++                f"field is {'present' if present else 'absent'} "
++                f"(actual={actual!r}); expected exists={want}"
++            )
++        return present, f"field is {'present' if present else 'absent'} (actual={actual!r})"
++    if op == "not_exists":
++        return actual is None, (
++            f"field is {'absent' if actual is None else 'present'} (actual={actual!r})"
++        )
+     return False, f"unknown op {op!r}"
+ 
+ 
+diff --git a/tests/python/test_conductor_gates.py b/tests/python/test_conductor_gates.py
+index 8471b7c302..fbcab3c004 100644
+--- a/tests/python/test_conductor_gates.py
++++ b/tests/python/test_conductor_gates.py
+@@ -153,6 +153,58 @@ def test_contains_operator(tmp_path):
+     assert result.passed is True
+ 
+ 
++def test_exists_operator_passes_when_field_present(tmp_path):
++    """`exists` (a schema-valid op that the runtime previously rejected as 'unknown op',
++    blocking the .365 ARC capstone exp3951) passes when the upstream produced the field."""
++    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"honest_verdict": "complete: r11l_solved"})
++    task = {
++        "id": "exp3951-capstone",
++        "title": "Capstone gated on the r11l solve having landed",
++        "gated_on": [
++            {
++                "upstream": "exp3946-r11l-first-solve",
++                "artifact_field": "honest_verdict",
++                "op": "exists",
++                "value": True,
++            },
++        ],
++    }
++    result = evaluate_gates(task, results_dir=tmp_path)
++    assert result.passed is True
++
++
++def test_exists_operator_fails_when_field_missing(tmp_path):
++    """`exists` rejects when the upstream artifact is missing the gated field (or it is null)."""
++    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"some_other_field": 1})
++    task = {
++        "id": "exp3951-capstone",
++        "title": "Capstone gated on a field the upstream did not produce",
++        "gated_on": [
++            {
++                "upstream": "exp3946-r11l-first-solve",
++                "artifact_field": "honest_verdict",
++                "op": "exists",
++                "value": True,
++            },
++        ],
++    }
++    result = evaluate_gates(task, results_dir=tmp_path)
++    assert result.passed is False
++    assert "absent" in result.gates_evaluated[0].reason
++
++
++def test_exists_value_false_means_should_not_exist(tmp_path):
++    """`exists` with value False is an inline not-exists: passes only when the field is absent."""
++    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"honest_verdict": "complete: x"})
++    task = {
++        "id": "exp-demo",
++        "title": "demo",
++        "gated_on": [{"upstream": "exp3946-r11l-first-solve", "artifact_field": "honest_verdict",
++                      "op": "exists", "value": False}],
++    }
++    assert evaluate_gates(task, results_dir=tmp_path).passed is False
++
++
+ def test_numeric_op_with_none_actual_fails(tmp_path):
+     """Comparing None numerically must fail rather than raise TypeError."""
+     _seed_artifact(tmp_path, 819, "field_fix", {"discrimination_rate": None})
+-- 
+2.55.0
+

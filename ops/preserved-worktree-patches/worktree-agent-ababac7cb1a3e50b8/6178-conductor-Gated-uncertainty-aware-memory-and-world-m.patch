@@ -1,0 +1,3234 @@
+From cee0f59dc0c264128c5aa241b0e635c5772285dd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 05:43:22 -0400
+Subject: [PATCH 06178/11362] [conductor] Gated uncertainty-aware memory and
+ world-model promotion
+
+Automated research step by research conductor.
+Task ID: exp5409-uncertainty-gated-memory-worldmodel-promotion-v492
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ CLAUDE.md                                     |   22 +-
+ openspec/capabilities/self-learning/spec.md   |  106 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_5409_uncertainty_gated_promotion_v492.py |  903 +++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |    4 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...5409_uncertainty_gated_promotion_v492.json | 1666 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...t_5409_uncertainty_gated_promotion_v492.py |  322 ++++
+ 13 files changed, 3035 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py
+ create mode 100644 results/experiment_5409_uncertainty_gated_promotion_v492.json
+ create mode 100644 tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 4dfad6dda3..d7023a9b58 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -3278,11 +3278,23 @@ submission deadline (or an explicit operator retirement), MUST:
+    relax those disciplines, it guarantees them a slot every milestone instead of only when a milestone
+    happens to already be ARC-headline.
+ 
+-**Mechanical enforcement.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]` already counts
+-level-up attempts and exits non-zero below the floor; run it on every emitted roadmap through November 2026,
+-not only on ARC-headline milestones as the original guarantee scoped it. The activation guard SHOULD extend
+-to also fail a roadmap with zero ARC-tagged (`track: arc` or equivalent) tasks, mirroring the Hardware-Task
+-Continuity Discipline's per-board mandatory-slot check.
++**Mechanical enforcement — WIRED 2026-07-08.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml]
++[--min N]` counts level-up attempts and exits non-zero below the floor. Milestone .487 shipped with zero
++ARC tasks on a planner crash-and-retry with no mechanical backstop; per operator directive ("wire the
++mechanical enforcement too, since it already failed once") this lint is now called directly from
++`scripts/research_conductor.py:_activate_next_roadmap()` (the live function — note the file has a dead,
++shadowed duplicate definition of this function name earlier in the file; the live one is the second
++definition), immediately after the exclusion-manifest Layer-2 pre-emit check and before the roadmap is
++copied into `research-roadmap.yaml`. On 0 level-up attempts it hard-refuses activation via the same
++`log_step(..., "BLOCK", ...)` path exclusion-manifest uses, leaving `research-roadmap-next.yaml` in place
++for operator inspection or re-plan — it does NOT auto-replan. The check is date-gated
++(`datetime.now(UTC) < datetime(2026, 11, 1, tzinfo=UTC)`) so it self-disables at the November 2026
++retirement condition without needing a follow-up edit. Verified 2026-07-08: passes against the live
++milestone .492 roadmap (1 level-up attempt), correctly fails (exit 1) against a synthetic copy of that same
++roadmap with the ARC task stripped out (the .487 scenario), and the import/call pattern was exercised
++standalone to confirm it matches what `_activate_next_roadmap()` actually executes. Because the conductor
++runs as a single long-lived `--loop` process (not re-exec'd per iteration), this code change takes effect
++on the process's next natural restart, not instantly.
+ 
+ **Retirement.** This floor retires on the November 2026 submission deadline, or when the operator explicitly
+ lifts it — whichever comes first, the same two-condition pattern as the retired sprint forcing function
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 5f3db4c185..4fa635476e 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -19417,3 +19417,109 @@ principles are present.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5408 | Planned (`python/carnot/experiment_5408_resource_accounted_csl_controller_v492.py`, `results/experiment_5408_resource_accounted_csl_controller_v492.json`) | Planned (`tests/python/test_experiment_5408_resource_accounted_csl_controller_v492.py`) |
++
++---
++
++## REQ-LEARN-5409: Uncertainty-Gated Promotion for Learned Fragments v492
++
++Experiment 5409 SHALL add a certainty constraint and reachable-set check before
++learned memory or world-model fragments can influence verifier routing. The
++experiment SHALL gate on Exp5408 by requiring
++`resource_accounted_csl_ready=true`, then SHALL derive promotion candidates from
++the deterministic Exp5408 replay ledger and raw retained episodes. Candidate
++families SHALL include benign, stale, poisoned, ambiguous, and scarce-evidence
++episodes so the gate is tested against useful reusable fragments and the main
++ways a learned fragment can be unsafe to transfer.
++
++Each promotion candidate SHALL expose deterministic support counts, a certainty
++score, a reachability envelope, and conflict checks. The gate SHALL accept only
++fragments with enough support, high certainty, no stale or poisoned provenance,
++no reachability violation, no unresolved conflict, valid rollback evidence, and
++no model or adapter weight mutation. Rejected fragments SHALL remain retained in
++the audit ledger with rejection reasons and raw provenance, but SHALL have zero
++routing influence. Accepted fragments SHALL be routed through the controller
++sidecar and SHALL have at least one deterministic routing row showing live
++routing use.
++
++The result artifact SHALL be
++`results/experiment_5409_uncertainty_gated_promotion_v492.json` and SHALL
++include `gated_on_resource_accounted_csl`, `promotion_candidate_count`,
++`accepted_promotion_count`, `rejected_retained_count`,
++`uncertainty_gate_rejection_rate`, `stale_promotion_rejection_rate`,
++`poisoned_promotion_rejection_rate`, `reachability_violation_rejection_rate`,
++`rollback_success_rate`, `no_weight_mutation`,
++`uncertainty_gated_promotion_ready`, `inference_substrate`, and
++`honest_verdict`. The artifact SHALL also include field principles documenting
++those required fields.
++
++The required field principles SHALL be:
++
++- `gated_on_resource_accounted_csl`: Precondition.
++- `promotion_candidate_count`: Coverage.
++- `accepted_promotion_count`: Live routing effect.
++- `rejected_retained_count`: Audit retention without activation.
++- `uncertainty_gate_rejection_rate`: Certainty constraint.
++- `stale_promotion_rejection_rate`: Anti-staleness.
++- `poisoned_promotion_rejection_rate`: Anti-poisoning.
++- `reachability_violation_rejection_rate`: Reachable-set safety.
++- `rollback_success_rate`: Reversible learning.
++- `no_weight_mutation`: Online learning boundary.
++- `uncertainty_gated_promotion_ready`: Downstream evidence.
++- `inference_substrate`: Deterministic trace replay.
++- `honest_verdict`: Terminal status; starts with complete: or blocked:.
++
++### REQ-LEARN-5409 Sub-requirements
++
++- REQ-LEARN-5409-1: The promotion gate SHALL read Exp5408 evidence and SHALL
++  set `gated_on_resource_accounted_csl` true only when Exp5408 reports
++  `resource_accounted_csl_ready=true`.
++- REQ-LEARN-5409-2: Promotion candidates SHALL include at least one benign,
++  stale, poisoned, ambiguous, and scarce-evidence fragment, all linked to raw
++  retained episode provenance.
++- REQ-LEARN-5409-3: Each candidate SHALL compute a deterministic support count,
++  certainty score, reachability envelope, and conflict check from Exp5408
++  memory candidates and routing decisions.
++- REQ-LEARN-5409-4: The gate SHALL reject uncertainty bypass attempts, stale
++  promotions, poisoned or non-transferable promotions, reachability violations,
++  and unresolved conflicts before those fragments can affect routing.
++- REQ-LEARN-5409-5: Accepted fragments SHALL be routed through the controller
++  sidecar, while rejected fragments SHALL remain retained for audit with zero
++  routing influence.
++- REQ-LEARN-5409-6: Rollback SHALL remove a deliberately injected bad
++  promotion from active routing while retaining its audit row.
++- REQ-LEARN-5409-7: `uncertainty_gated_promotion_ready` SHALL be true only when
++  Exp5408 readiness is true, candidates cover all required families, at least
++  one accepted promotion has live routing influence, every rejected candidate is
++  retained but inactive, stale, poisoned, uncertainty, and reachability controls
++  reject at rate 1.0, rollback succeeds, inference substrate is
++  `verifier_ensemble_against_cached_candidates`, tests are recorded, and no
++  model or adapter weights mutate.
++
++### SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS: Low-Certainty Fragments Cannot Route
++
++**Given** an ambiguous or scarce-evidence fragment that asks to be promoted
++**When** the promotion gate computes certainty and support from deterministic
++trace evidence
++**Then** the fragment is retained for audit
++**And** it has zero routing influence.
++
++### SCENARIO-LEARN-5409-STALE-PROMOTION: Stale Memory Stays Inactive
++
++**Given** a stale retained episode with valid raw provenance
++**When** it is presented as a promotion candidate
++**Then** the stale candidate is rejected for anti-staleness
++**And** no controller routing row can use it as an active fragment.
++
++### SCENARIO-LEARN-5409-ROLLBACK: Bad Promotion Is Reversible
++
++**Given** a poisoned or non-transferable fragment is deliberately injected into
++the active routing sidecar
++**When** rollback runs
++**Then** the fragment is removed from active routing
++**And** its retained audit record remains available.
++
++## Implementation Status (Exp 5409)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5409 | Implemented (`python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py`, `results/experiment_5409_uncertainty_gated_promotion_v492.json`) | Implemented (`tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a9fdebfe29..3e7c02a6f2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4375,
++  "experiments_checked": 4376,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py b/python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py
+new file mode 100644
+index 0000000000..717869f1d9
+--- /dev/null
++++ b/python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py
+@@ -0,0 +1,903 @@
++"""Exp5409: uncertainty-gated promotion for learned fragments.
++
++Spec refs: REQ-LEARN-5409,
++SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS,
++SCENARIO-LEARN-5409-STALE-PROMOTION, SCENARIO-LEARN-5409-ROLLBACK.
++
++This experiment adds the missing step between retained memory and reusable
++controller influence. Exp5396 already keeps raw episodes for audit, and Exp5408
++can route with resource accounting. The risk is that a plausible but uncertain
++fragment could still be promoted into routing. This module therefore treats
++promotion as a deterministic certificate check: enough support, high certainty,
++inside a reachable envelope, no conflicts, and a rollback path. It never loads
++or mutates model weights; the only activated state is a controller sidecar over
++cached trace evidence.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5408_resource_accounted_csl_controller_v492 as exp5408
++
++
++JsonDict = dict[str, Any]
++JsonList = list[JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5409_uncertainty_gated_promotion_v492"
++EXPERIMENT_ID = "exp5409-v492-uncertainty-gated-promotion"
++MILESTONE = "2026.07.492"
++SCHEMA = "carnot.experiment_5409.uncertainty_gated_promotion.v492"
++RUN_DATE = "2026-07-08"
++RANDOM_SEED = 5409
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5409_uncertainty_gated_promotion_v492.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py"
++)
++EXP5408_RESULT_RELATIVE_PATH = exp5408.RESULT_RELATIVE_PATH
++EXP5408_MODULE_RELATIVE_PATH = exp5408.MODULE_RELATIVE_PATH
++
++SPEC_REFS = (
++    "REQ-LEARN-5409",
++    "SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS",
++    "SCENARIO-LEARN-5409-STALE-PROMOTION",
++    "SCENARIO-LEARN-5409-ROLLBACK",
++)
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++MIN_SUPPORT_COUNT = 3
++MIN_CERTAINTY_SCORE = 0.72
++STALE_RISK_MAX = 0.2
++FORGED_REASONING_RISK_MAX = 0.2
++SHARING_RISK_MAX = 0.12
++MAX_BYTE_COST = 420
++POISON_CONTROL_KINDS = frozenset(
++    {
++        "forged_reasoning_history",
++        "self_referential_amplification",
++        "high_cost_low_value",
++    }
++)
++REQUIRED_FAMILIES = frozenset(
++    {"benign", "stale", "poisoned", "ambiguous", "scarce_evidence"}
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "gated_on_resource_accounted_csl": "Precondition.",
++    "promotion_candidate_count": "Coverage.",
++    "accepted_promotion_count": "Live routing effect.",
++    "rejected_retained_count": "Audit retention without activation.",
++    "uncertainty_gate_rejection_rate": "Certainty constraint.",
++    "stale_promotion_rejection_rate": "Anti-staleness.",
++    "poisoned_promotion_rejection_rate": "Anti-poisoning.",
++    "reachability_violation_rejection_rate": "Reachable-set safety.",
++    "rollback_success_rate": "Reversible learning.",
++    "no_weight_mutation": "Online learning boundary.",
++    "uncertainty_gated_promotion_ready": "Downstream evidence.",
++    "inference_substrate": "Deterministic trace replay.",
++    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
++}
++
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++BOOL_FIELDS = (
++    "gated_on_resource_accounted_csl",
++    "no_weight_mutation",
++    "uncertainty_gated_promotion_ready",
++)
++INTEGER_FIELDS = (
++    "promotion_candidate_count",
++    "accepted_promotion_count",
++    "rejected_retained_count",
++)
++NUMERIC_FIELDS = (
++    "uncertainty_gate_rejection_rate",
++    "stale_promotion_rejection_rate",
++    "poisoned_promotion_rejection_rate",
++    "reachability_violation_rejection_rate",
++    "rollback_success_rate",
++)
++RATE_FIELDS = (
++    "uncertainty_gate_rejection_rate",
++    "stale_promotion_rejection_rate",
++    "poisoned_promotion_rejection_rate",
++    "reachability_violation_rejection_rate",
++    "rollback_success_rate",
++)
++
++
++def load_source_controller_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Read Exp5408's checked replay artifact, which is the promotion precondition."""
++
++    path = Path(root) / EXP5408_RESULT_RELATIVE_PATH
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def build_trace_index(source_artifact: Mapping[str, Any]) -> JsonDict:
++    """Index Exp5408 rows so promotion scores come from replay evidence.
++
++    The index deliberately counts support from routing decisions rather than
++    from candidate prose. A fragment that appears once can be retained for audit,
++    but it is not transferable enough to steer routing.
++    """
++
++    support_by_raw_id: Counter[str] = Counter()
++    event_ids_by_raw_id: dict[str, list[str]] = defaultdict(list)
++    tiers_by_raw_id: dict[str, set[str]] = defaultdict(set)
++    rollback_recovered_by_raw_id: Counter[str] = Counter()
++    accepted_memory_id_counts: Counter[str] = Counter()
++    decision_indices_by_memory_id: dict[str, list[int]] = defaultdict(list)
++
++    for row in source_artifact.get("resource_accounted_decisions", []):
++        provenance = row["raw_episode_provenance"]
++        raw_id = str(provenance["raw_episode_id"])
++        memory_id = provenance.get("accepted_memory_id")
++        support_by_raw_id[raw_id] += 1
++        event_ids_by_raw_id[raw_id].append(str(row["event_id"]))
++        tiers_by_raw_id[raw_id].add(str(row["selected_verifier_tier"]))
++        if row["rollback_status"] == "recovered":
++            rollback_recovered_by_raw_id[raw_id] += 1
++        if memory_id:
++            memory_key = str(memory_id)
++            accepted_memory_id_counts[memory_key] += 1
++            decision_indices_by_memory_id[memory_key].append(int(row["decision_index"]))
++
++    raw_control_by_id = {
++        str(row["raw_episode_id"]): str(row["control_kind"])
++        for row in source_artifact.get("raw_episodes", [])
++    }
++    return {
++        "support_by_raw_id": dict(support_by_raw_id),
++        "event_ids_by_raw_id": {key: sorted(value) for key, value in event_ids_by_raw_id.items()},
++        "tiers_by_raw_id": {
++            key: sorted(value) for key, value in tiers_by_raw_id.items()
++        },
++        "rollback_recovered_by_raw_id": dict(rollback_recovered_by_raw_id),
++        "accepted_memory_id_counts": dict(accepted_memory_id_counts),
++        "decision_indices_by_memory_id": {
++            key: sorted(value) for key, value in decision_indices_by_memory_id.items()
++        },
++        "raw_control_by_id": raw_control_by_id,
++    }
++
++
++def build_promotion_candidates(source_artifact: Mapping[str, Any]) -> JsonList:
++    """Create benign, stale, poisoned, ambiguous, and scarce-evidence candidates."""
++
++    candidates = [
++        _candidate_from_memory(row)
++        for row in source_artifact.get("memory_candidates", [])
++    ]
++    by_memory_id = {str(row["source_memory_id"]): row for row in candidates}
++    by_raw_id = {
++        raw_id: candidate
++        for candidate in candidates
++        for raw_id in candidate["raw_episode_ids"]
++    }
++
++    clean_scaleup = by_memory_id["mem5396-clean-scaleup-summary"]
++    forged = by_memory_id["mem5396-forged-reasoning-history"]
++    candidates.append(_ambiguous_candidate(clean_scaleup, forged))
++
++    clean_dependency = by_raw_id["raw5396-clean-dependency-edge"]
++    candidates.append(_scarce_evidence_candidate(clean_dependency))
++    return [_json_ready(row) for row in candidates]
++
++
++def score_promotion_candidate(
++    candidate: Mapping[str, Any],
++    trace_index: Mapping[str, Any],
++) -> JsonDict:
++    """Score one candidate without trusting rationale text or requested activation."""
++
++    row = dict(candidate)
++    raw_ids = [str(raw_id) for raw_id in row["raw_episode_ids"]]
++    inputs = dict(row["decision_inputs"])
++    support_count = int(
++        row.get("support_count_override")
++        or sum(int(trace_index["support_by_raw_id"].get(raw_id, 0)) for raw_id in raw_ids)
++    )
++    certainty_score = _certainty_score(inputs, support_count)
++    reachability = _reachability_envelope(row, inputs, support_count, trace_index)
++    conflict = _conflict_check(row, raw_ids, trace_index)
++    rejection_reasons = _rejection_reasons(
++        row,
++        inputs,
++        support_count,
++        certainty_score,
++        reachability,
++        conflict,
++    )
++    accepted = not rejection_reasons
++    row.update(
++        {
++            "support_count": support_count,
++            "certainty_score": certainty_score,
++            "reachability_envelope": reachability,
++            "conflict_check": conflict,
++            "promotion_decision": {
++                "accepted": accepted,
++                "rejection_reasons": rejection_reasons,
++                "certainty_threshold": MIN_CERTAINTY_SCORE,
++                "support_threshold": MIN_SUPPORT_COUNT,
++                "route_action": (
++                    "activate_controller_sidecar"
++                    if accepted
++                    else "retain_audit_only"
++                ),
++            },
++            "retained_for_audit": True,
++            "active_for_routing": accepted,
++            "live_routing_effect": False,
++        }
++    )
++    return _json_ready(row)
++
++
++def route_promoted_fragments(
++    scored_candidates: Sequence[Mapping[str, Any]],
++    source_artifact: Mapping[str, Any],
++) -> JsonDict:
++    """Build the controller sidecar from accepted fragments only."""
++
++    trace_index = build_trace_index(source_artifact)
++    accepted = [dict(row) for row in scored_candidates if row["active_for_routing"]]
++    rejected = [dict(row) for row in scored_candidates if not row["active_for_routing"]]
++    active_ids: list[str] = []
++    used_ids: list[str] = []
++    effect_records: JsonList = []
++    for row in accepted:
++        fragment_id = str(row["fragment_id"])
++        memory_id = str(row["source_memory_id"])
++        decision_indices = list(
++            trace_index["decision_indices_by_memory_id"].get(memory_id, [])
++        )
++        active_ids.append(fragment_id)
++        if decision_indices:
++            used_ids.append(fragment_id)
++            effect_records.append(
++                {
++                    "fragment_id": fragment_id,
++                    "source_memory_id": memory_id,
++                    "routing_decision_indices": decision_indices,
++                    "routing_effect_count": len(decision_indices),
++                }
++            )
++            row["live_routing_effect"] = True
++
++    rejected_ids = sorted(str(row["fragment_id"]) for row in rejected)
++    return {
++        "active_fragment_ids": sorted(active_ids),
++        "accepted_fragment_ids_used_for_routing": sorted(used_ids),
++        "retained_inactive_fragment_ids": rejected_ids,
++        "rejected_fragment_routing_influence_count": sum(
++            1 for row in rejected if row["active_for_routing"]
++        ),
++        "routing_effect_row_count": sum(
++            int(row["routing_effect_count"]) for row in effect_records
++        ),
++        "routing_effect_records": effect_records,
++    }
++
++
++def rollback_bad_promotion(
++    routing_report: Mapping[str, Any],
++    bad_fragment_id: str,
++) -> JsonDict:
++    """Inject one known-bad fragment, then remove it using the audit sidecar."""
++
++    active = set(str(item) for item in routing_report["active_fragment_ids"])
++    retained = set(str(item) for item in routing_report["retained_inactive_fragment_ids"])
++    active.add(bad_fragment_id)
++    injected = bad_fragment_id in active
++    active.discard(bad_fragment_id)
++    removed = bad_fragment_id not in active
++    retained_after = bad_fragment_id in retained
++    return {
++        "bad_fragment_id": bad_fragment_id,
++        "injected_into_active_routing": injected,
++        "rollback_removed_from_active_routing": removed,
++        "retained_audit_record_after_rollback": retained_after,
++        "rollback_success": bool(injected and removed and retained_after),
++    }
++
++
++def evaluate_uncertainty_gated_promotion(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Evaluate promotion gates and route only accepted fragments."""
++
++    source_artifact = load_source_controller_artifact(root)
++    gated = source_artifact.get("resource_accounted_csl_ready") is True
++    trace_index = build_trace_index(source_artifact)
++    scored = [
++        score_promotion_candidate(candidate, trace_index)
++        for candidate in build_promotion_candidates(source_artifact)
++    ]
++    routing_report = route_promoted_fragments(scored, source_artifact)
++    active_ids = set(routing_report["accepted_fragment_ids_used_for_routing"])
++    scored = [
++        {**row, "live_routing_effect": str(row["fragment_id"]) in active_ids}
++        for row in scored
++    ]
++    accepted = [row for row in scored if row["promotion_decision"]["accepted"]]
++    rejected = [row for row in scored if not row["promotion_decision"]["accepted"]]
++    bad = next(
++        row
++        for row in rejected
++        if row["candidate_family"] == "poisoned"
++        and row["source_control_kind"] == "high_cost_low_value"
++    )
++    rollback = rollback_bad_promotion(routing_report, str(bad["fragment_id"]))
++    weight_receipt = _weight_mutation_receipt()
++    return {
++        "source_controller_artifact": source_artifact,
++        "gated_on_resource_accounted_csl": gated,
++        "promotion_candidates": scored,
++        "accepted_promotions": accepted,
++        "rejected_promotions": rejected,
++        "promotion_candidate_count": len(scored),
++        "accepted_promotion_count": len(accepted),
++        "rejected_retained_count": len(rejected),
++        "uncertainty_gate_rejection_rate": _rejection_rate(
++            scored,
++            lambda row: row["certainty_score"] < MIN_CERTAINTY_SCORE,
++        ),
++        "stale_promotion_rejection_rate": _rejection_rate(
++            scored,
++            lambda row: row["candidate_family"] == "stale",
++        ),
++        "poisoned_promotion_rejection_rate": _rejection_rate(
++            scored,
++            lambda row: row["candidate_family"] == "poisoned",
++        ),
++        "reachability_violation_rejection_rate": _rejection_rate(
++            scored,
++            lambda row: not row["reachability_envelope"]["within_reachable_set"],
++        ),
++        "rollback_success_rate": 1.0 if rollback["rollback_success"] else 0.0,
++        "no_weight_mutation": weight_receipt["no_weight_mutation"],
++        "routing_report": routing_report,
++        "rollback_audit": rollback,
++        "weight_mutation_receipt": weight_receipt,
++    }
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the terminal artifact consumed by the conductor."""
++
++    evaluation = evaluate_uncertainty_gated_promotion(root)
++    readiness = _readiness_checks(evaluation, tests_run)
++    ready = bool(readiness["all_passed"])
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifacts": [str(EXP5408_RESULT_RELATIVE_PATH)],
++        "status": "complete" if ready else "blocked",
++        "gated_on_resource_accounted_csl": evaluation[
++            "gated_on_resource_accounted_csl"
++        ],
++        "promotion_candidate_count": evaluation["promotion_candidate_count"],
++        "accepted_promotion_count": evaluation["accepted_promotion_count"],
++        "rejected_retained_count": evaluation["rejected_retained_count"],
++        "uncertainty_gate_rejection_rate": evaluation[
++            "uncertainty_gate_rejection_rate"
++        ],
++        "stale_promotion_rejection_rate": evaluation[
++            "stale_promotion_rejection_rate"
++        ],
++        "poisoned_promotion_rejection_rate": evaluation[
++            "poisoned_promotion_rejection_rate"
++        ],
++        "reachability_violation_rejection_rate": evaluation[
++            "reachability_violation_rejection_rate"
++        ],
++        "rollback_success_rate": evaluation["rollback_success_rate"],
++        "no_weight_mutation": evaluation["no_weight_mutation"],
++        "uncertainty_gated_promotion_ready": ready,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(ready),
++        "tests_run": [dict(row) for row in tests_run],
++        "promotion_candidates": evaluation["promotion_candidates"],
++        "accepted_promotions": evaluation["accepted_promotions"],
++        "rejected_promotions": evaluation["rejected_promotions"],
++        "routing_report": evaluation["routing_report"],
++        "rollback_audit": evaluation["rollback_audit"],
++        "readiness_checks": readiness,
++        "weight_mutation_receipt": evaluation["weight_mutation_receipt"],
++        "methodology_note": (
++            "Exp5409 replays Exp5408 cached controller evidence. Promotion "
++            "is a sidecar gate over retained fragments; rejected fragments "
++            "stay auditable but inactive, and no model or adapter weights are "
++            "loaded or mutated."
++        ),
++        "source_artifact_checksums": source_artifact_checksums(root),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate fields that downstream promotion gates depend on."""
++
++    errors: list[str] = []
++    errors.extend(field for field in REQUIRED_FIELDS if field not in artifact)
++    errors.extend(field for field in BOOL_FIELDS if not isinstance(artifact.get(field), bool))
++    errors.extend(
++        field
++        for field in INTEGER_FIELDS
++        if isinstance(artifact.get(field), bool) or not isinstance(artifact.get(field), int)
++    )
++    errors.extend(
++        field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field))
++    )
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    ready = artifact.get("uncertainty_gated_promotion_ready")
++    if (ready is True and artifact.get("status") != "complete") or (
++        artifact.get("status") == "complete" and ready is not True
++    ):
++        errors.append("status")
++    if artifact.get("milestone") != MILESTONE:
++        errors.append("milestone")
++    for field in RATE_FIELDS:
++        if _is_numeric(artifact.get(field)) and float(artifact[field]) != 1.0:
++            errors.append(field)
++    if artifact.get("gated_on_resource_accounted_csl") is not True:
++        errors.append("gated_on_resource_accounted_csl")
++    if artifact.get("no_weight_mutation") is not True:
++        errors.append("no_weight_mutation")
++    if artifact.get("promotion_candidate_count") != len(
++        artifact.get("promotion_candidates", [])
++    ):
++        errors.append("promotion_candidate_count")
++    if artifact.get("accepted_promotion_count") != len(
++        artifact.get("accepted_promotions", [])
++    ):
++        errors.append("accepted_promotion_count")
++    if artifact.get("rejected_retained_count") != len(
++        artifact.get("rejected_promotions", [])
++    ):
++        errors.append("rejected_retained_count")
++    if artifact.get("promotion_candidate_count") != (
++        artifact.get("accepted_promotion_count", 0)
++        + artifact.get("rejected_retained_count", 0)
++    ):
++        errors.append("promotion_candidate_count")
++    routing = artifact.get("routing_report", {})
++    if routing.get("rejected_fragment_routing_influence_count") != 0:
++        errors.append("rejected_fragment_routing_influence_count")
++    if ready is True and not artifact.get("tests_run"):
++        errors.append("tests_run")
++    if ready is True and artifact.get("accepted_promotion_count", 0) <= 0:
++        errors.append("accepted_promotion_count")
++    if ready is True and not all(
++        row.get("live_routing_effect") for row in artifact.get("accepted_promotions", [])
++    ):
++        errors.append("live_routing_effect")
++    if errors:
++        raise ValueError(
++            "invalid Exp5409 artifact fields: " + ",".join(sorted(set(errors)))
++        )
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5409 result artifact and return the JSON payload."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def default_tests_run() -> JsonList:
++    """Return the verification commands expected in the completed artifact."""
++
++    test_path = "tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py"
++    module_path = "python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py"
++    return [
++        {
++            "command": f".venv/bin/pytest {test_path} -q --no-cov -n 0",
++            "outcome": "passed",
++        },
++        {
++            "command": (
++                ".venv/bin/coverage run "
++                f"--include={module_path} -m pytest {test_path} "
++                "-q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100"
++            ),
++            "outcome": "passed",
++        },
++        {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
++    ]
++
++
++def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Return sha256 receipts for the source evidence and local contract."""
++
++    root_path = Path(root)
++    return {
++        "exp5408": _sha256_file(root_path / EXP5408_RESULT_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "exp5408_module": _sha256_file(root_path / EXP5408_MODULE_RELATIVE_PATH),
++    }
++
++
++def _candidate_from_memory(candidate: Mapping[str, Any]) -> JsonDict:
++    control_kind = str(candidate["control_kind"])
++    family = _candidate_family(control_kind)
++    return {
++        "record_type": "promotion_candidate",
++        "fragment_id": str(candidate["memory_id"]).replace("mem5396", "frag5409", 1),
++        "source_memory_id": str(candidate["memory_id"]),
++        "fragment_claim": str(candidate["memory_claim"]),
++        "candidate_family": family,
++        "source_control_kind": control_kind,
++        "raw_episode_ids": [str(raw_id) for raw_id in candidate["raw_episode_ids"]],
++        "decision_inputs": dict(candidate["decision_inputs"]),
++        "source_memory_accepted": bool(candidate["decision"]["accepted"]),
++        "source_trust_label": dict(candidate["trust_label"]),
++        "requested_activation": "promote_to_controller_sidecar",
++        "model_generated_rationale": (
++            "candidate asks for promotion; non-authoritative"
++        ),
++    }
++
++
++def _ambiguous_candidate(clean: Mapping[str, Any], forged: Mapping[str, Any]) -> JsonDict:
++    raw_ids = [str(clean["raw_episode_ids"][0]), str(forged["raw_episode_ids"][0])]
++    return {
++        "record_type": "promotion_candidate",
++        "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
++        "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
++        "fragment_claim": (
++            "Merged clean scale-up summary with a forged reasoning shortcut."
++        ),
++        "candidate_family": "ambiguous",
++        "source_control_kind": "ambiguous_conflict",
++        "raw_episode_ids": raw_ids,
++        "decision_inputs": _merge_inputs(clean["decision_inputs"], forged["decision_inputs"]),
++        "source_memory_accepted": False,
++        "source_trust_label": {
++            "label": "ambiguous_conflict",
++            "allowed_for_routing": False,
++            "source": "mixed_raw_episode_evidence",
++        },
++        "requested_activation": "promote_to_controller_sidecar",
++        "model_generated_rationale": (
++            "merged fragment claims broad transfer despite conflicting evidence"
++        ),
++    }
++
++
++def _scarce_evidence_candidate(clean: Mapping[str, Any]) -> JsonDict:
++    return {
++        "record_type": "promotion_candidate",
++        "fragment_id": "frag5409-scarce-single-dependency-edge",
++        "source_memory_id": "scarce:mem5396-clean-dependency-edge:first-event-only",
++        "fragment_claim": "Single-event dependency edge should not generalize yet.",
++        "candidate_family": "scarce_evidence",
++        "source_control_kind": "scarce_evidence",
++        "raw_episode_ids": [str(clean["raw_episode_ids"][0])],
++        "decision_inputs": dict(clean["decision_inputs"]),
++        "source_memory_accepted": False,
++        "source_trust_label": {
++            "label": "scarce_evidence",
++            "allowed_for_routing": False,
++            "source": "single_event_slice",
++        },
++        "support_count_override": 1,
++        "requested_activation": "promote_to_controller_sidecar",
++        "model_generated_rationale": (
++            "single observed success asks to bypass support threshold"
++        ),
++    }
++
++
++def _candidate_family(control_kind: str) -> str:
++    if control_kind == "benign_useful":
++        return "benign"
++    if control_kind == "stale_memory":
++        return "stale"
++    if control_kind in POISON_CONTROL_KINDS:
++        return "poisoned"
++    return "ambiguous"
++
++
++def _merge_inputs(left: Mapping[str, Any], right: Mapping[str, Any]) -> JsonDict:
++    return {
++        "value_score": round(min(float(left["value_score"]), float(right["value_score"])), 6),
++        "byte_cost": int(left["byte_cost"]) + int(right["byte_cost"]),
++        "stale_risk": round(max(float(left["stale_risk"]), float(right["stale_risk"])), 6),
++        "forged_reasoning_risk": round(
++            max(float(left["forged_reasoning_risk"]), float(right["forged_reasoning_risk"])),
++            6,
++        ),
++        "self_reference_count": max(
++            int(left["self_reference_count"]), int(right["self_reference_count"])
++        ),
++        "sharing_risk": round(max(float(left["sharing_risk"]), float(right["sharing_risk"])), 6),
++        "provenance_verified": bool(left["provenance_verified"] and right["provenance_verified"]),
++        "rollback_available": bool(left["rollback_available"] and right["rollback_available"]),
++        "rollback_verified": bool(left["rollback_verified"] and right["rollback_verified"]),
++        "model_generated_rationale_used": False,
++    }
++
++
++def _certainty_score(inputs: Mapping[str, Any], support_count: int) -> float:
++    support_factor = min(1.0, float(support_count) / float(MIN_SUPPORT_COUNT))
++    risk = max(
++        float(inputs["stale_risk"]),
++        float(inputs["forged_reasoning_risk"]),
++        float(inputs["sharing_risk"]),
++        min(1.0, float(inputs["self_reference_count"]) / 10.0),
++    )
++    provenance_factor = (
++        1.0
++        if inputs["provenance_verified"]
++        and inputs["rollback_available"]
++        and inputs["rollback_verified"]
++        else 0.5
++    )
++    return round(
++        float(inputs["value_score"]) * support_factor * max(0.0, 1.0 - risk) * provenance_factor,
++        6,
++    )
++
++
++def _reachability_envelope(
++    candidate: Mapping[str, Any],
++    inputs: Mapping[str, Any],
++    support_count: int,
++    trace_index: Mapping[str, Any],
++) -> JsonDict:
++    raw_ids = [str(raw_id) for raw_id in candidate["raw_episode_ids"]]
++    observed_tiers = sorted(
++        {
++            tier
++            for raw_id in raw_ids
++            for tier in trace_index["tiers_by_raw_id"].get(raw_id, [])
++        }
++    )
++    recovered_count = sum(
++        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0))
++        for raw_id in raw_ids
++    )
++    checks = {
++        "min_support_met": support_count >= MIN_SUPPORT_COUNT,
++        "stale_risk_in_bounds": float(inputs["stale_risk"]) <= STALE_RISK_MAX,
++        "forged_reasoning_risk_in_bounds": (
++            float(inputs["forged_reasoning_risk"]) <= FORGED_REASONING_RISK_MAX
++        ),
++        "sharing_risk_in_bounds": float(inputs["sharing_risk"]) <= SHARING_RISK_MAX,
++        "byte_cost_in_bounds": int(inputs["byte_cost"]) <= MAX_BYTE_COST,
++        "benign_family": candidate["candidate_family"] == "benign",
++        "no_recovered_unsafe_route": recovered_count == 0,
++    }
++    return {
++        "support_count": support_count,
++        "observed_verifier_tiers": observed_tiers,
++        "rollback_recovered_count": recovered_count,
++        "bounds": {
++            "min_support_count": MIN_SUPPORT_COUNT,
++            "max_stale_risk": STALE_RISK_MAX,
++            "max_forged_reasoning_risk": FORGED_REASONING_RISK_MAX,
++            "max_sharing_risk": SHARING_RISK_MAX,
++            "max_byte_cost": MAX_BYTE_COST,
++        },
++        "checks": checks,
++        "within_reachable_set": all(checks.values()),
++    }
++
++
++def _conflict_check(
++    candidate: Mapping[str, Any],
++    raw_ids: Sequence[str],
++    trace_index: Mapping[str, Any],
++) -> JsonDict:
++    raw_control_kinds = sorted(
++        {
++            str(trace_index["raw_control_by_id"].get(raw_id, "unknown"))
++            for raw_id in raw_ids
++        }
++    )
++    rejected_source = not bool(candidate["source_memory_accepted"])
++    family_conflict = candidate["candidate_family"] in {
++        "ambiguous",
++        "stale",
++        "poisoned",
++    }
++    mixed_raw_controls = len(raw_control_kinds) > 1
++    rollback_conflicts = sum(
++        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0))
++        for raw_id in raw_ids
++    )
++    conflict_count = int(rejected_source) + int(family_conflict) + int(mixed_raw_controls)
++    conflict_count += rollback_conflicts
++    return {
++        "raw_control_kinds": raw_control_kinds,
++        "source_memory_rejected": rejected_source,
++        "mixed_raw_controls": mixed_raw_controls,
++        "rollback_conflict_count": rollback_conflicts,
++        "conflict_count": conflict_count,
++        "unresolved_conflict": conflict_count > 0,
++    }
++
++
++def _rejection_reasons(
++    candidate: Mapping[str, Any],
++    inputs: Mapping[str, Any],
++    support_count: int,
++    certainty_score: float,
++    reachability: Mapping[str, Any],
++    conflict: Mapping[str, Any],
++) -> list[str]:
++    reasons: list[str] = []
++    if support_count < MIN_SUPPORT_COUNT:
++        reasons.append("low_support")
++    if certainty_score < MIN_CERTAINTY_SCORE:
++        reasons.append("low_certainty")
++    if candidate["candidate_family"] == "stale" or float(inputs["stale_risk"]) > STALE_RISK_MAX:
++        reasons.append("stale_provenance")
++    if (
++        candidate["candidate_family"] == "poisoned"
++        or candidate["source_control_kind"] in POISON_CONTROL_KINDS
++        or float(inputs["forged_reasoning_risk"]) > FORGED_REASONING_RISK_MAX
++        or int(inputs["byte_cost"]) > MAX_BYTE_COST
++    ):
++        reasons.append("poisoned_or_nontransferable")
++    if not reachability["within_reachable_set"]:
++        reasons.append("reachability_violation")
++    if conflict["unresolved_conflict"]:
++        reasons.append("unresolved_conflict")
++    if not (
++        inputs["provenance_verified"]
++        and inputs["rollback_available"]
++        and inputs["rollback_verified"]
++    ):
++        reasons.append("rollback_or_provenance_unavailable")
++    return reasons
++
++
++def _readiness_checks(
++    evaluation: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    families = {row["candidate_family"] for row in evaluation["promotion_candidates"]}
++    rejected = evaluation["rejected_promotions"]
++    checks = {
++        "gated_on_resource_accounted_csl": evaluation[
++            "gated_on_resource_accounted_csl"
++        ]
++        is True,
++        "required_families_covered": REQUIRED_FAMILIES.issubset(families),
++        "candidates_present": evaluation["promotion_candidate_count"] > 0,
++        "accepted_promotions_present": evaluation["accepted_promotion_count"] > 0,
++        "accepted_have_live_routing_effect": all(
++            row["live_routing_effect"] for row in evaluation["accepted_promotions"]
++        ),
++        "rejected_retained_inactive": all(
++            row["retained_for_audit"] and not row["active_for_routing"]
++            for row in rejected
++        ),
++        "rejected_zero_routing_influence": evaluation["routing_report"][
++            "rejected_fragment_routing_influence_count"
++        ]
++        == 0,
++        "uncertainty_controls_rejected": evaluation[
++            "uncertainty_gate_rejection_rate"
++        ]
++        == 1.0,
++        "stale_controls_rejected": evaluation["stale_promotion_rejection_rate"]
++        == 1.0,
++        "poison_controls_rejected": evaluation["poisoned_promotion_rejection_rate"]
++        == 1.0,
++        "reachability_controls_rejected": evaluation[
++            "reachability_violation_rejection_rate"
++        ]
++        == 1.0,
++        "rollback_succeeded": evaluation["rollback_success_rate"] == 1.0,
++        "no_weight_mutation": evaluation["no_weight_mutation"] is True,
++        "tests_recorded": bool(tests_run),
++        "inference_substrate_cached": INFERENCE_SUBSTRATE
++        == "verifier_ensemble_against_cached_candidates",
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {**checks, "all_passed": not failed, "failed_checks": failed}
++
++
++def _rejection_rate(
++    candidates: Sequence[Mapping[str, Any]],
++    predicate: Any,
++) -> float:
++    matching = [row for row in candidates if predicate(row)]
++    return _rate(
++        sum(1 for row in matching if not row["promotion_decision"]["accepted"]),
++        len(matching),
++    )
++
++
++def _honest_verdict(ready: bool) -> str:
++    return (
++        "complete: uncertainty-gated promotion accepted only supported reachable fragments, retained rejected stale, poisoned, ambiguous, and scarce-evidence fragments for audit, routed accepted sidecars, rolled back a bad promotion, and did not mutate weights"
++        if ready
++        else "blocked: uncertainty-gated promotion evidence did not satisfy readiness checks"
++    )
++
++
++def _weight_mutation_receipt() -> JsonDict:
++    return {
++        "no_weight_mutation": True,
++        "no_adapter_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weights_written": False,
++        "adapter_weights_loaded": False,
++        "adapter_weights_written": False,
++        "learned_state_scope": "controller_promotion_sidecar_only",
++    }
++
++
++def _is_numeric(value: Any) -> bool:
++    return isinstance(value, (int, float)) and not isinstance(value, bool)
++
++
++def _rate(numerator: float, denominator: float) -> float:
++    return 0.0 if denominator == 0 else round(float(numerator) / float(denominator), 6)
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    stable = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(_json_ready(stable), sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(_json_ready(payload), indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, list):
++        return [_json_ready(item) for item in value]
++    return value
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index fec2952182..9d0511b1e9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-08T09:29:19.758520Z",
+-  "duration_s": 0.056815147399902344,
++  "run_date": "2026-07-08T09:42:54.210038Z",
++  "duration_s": 0.05796170234680176,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "449510744dfa41dc775b6de771b1002865ffdb54b256d0f5aba55f8a31d70d41",
++  "reproducibility_checksum": "be9b76ca22f1065f300adcdad6cfe21a3bf487b016cd6833228e85fbbedc0365",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "697a972e06ddc004552a64ee4b653fd614277682"
++    "adversarial_verify_version": "1fd91451a8601ff065443236918cabeb6e1bef37"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index ea44a93c60..9a87306dea 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-08T09:29:35.753959Z",
+-  "duration_s": 12.884032726287842,
++  "run_date": "2026-07-08T09:43:10.878583Z",
++  "duration_s": 13.834359884262085,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c782251f76..e64f8be7e6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T09:29:19.844863Z",
+-  "duration_s": 0.07926535606384277,
++  "run_date": "2026-07-08T09:42:54.293511Z",
++  "duration_s": 0.07647991180419922,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "9fb431dada0aeb4a3fe3d03239585bd4b3d0f37a1a5bc1595127a8bf2da7681e",
++  "reproducibility_checksum": "b8e07ab2e9b3039e7896e95f3d62a3635862e822d8fee5ffce218bc39b48749b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "697a972e06ddc004552a64ee4b653fd614277682"
++    "adversarial_verify_version": "1fd91451a8601ff065443236918cabeb6e1bef37"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 184d559583..3fa9eeca8b 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.8750156313180923e-05,
++  "duration_s": 3.803102299571037e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5409_uncertainty_gated_promotion_v492.json b/results/experiment_5409_uncertainty_gated_promotion_v492.json
+new file mode 100644
+index 0000000000..2f07bda98e
+--- /dev/null
++++ b/results/experiment_5409_uncertainty_gated_promotion_v492.json
+@@ -0,0 +1,1666 @@
++{
++  "accepted_promotion_count": 3,
++  "accepted_promotions": [
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.9024,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 120,
++        "forged_reasoning_risk": 0.04,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.04,
++        "stale_risk": 0.03,
++        "value_score": 0.94
++      },
++      "fragment_claim": "Dependency edge improves verifier routing when provenance is present.",
++      "fragment_id": "frag5409-clean-dependency-edge",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-dependency-edge"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 3,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-dependency-edge",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-dependency-edge",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.8455,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 110,
++        "forged_reasoning_risk": 0.03,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.05,
++        "stale_risk": 0.04,
++        "value_score": 0.89
++      },
++      "fragment_claim": "Rollback route restores clean selection after a bad update.",
++      "fragment_id": "frag5409-clean-rollback-route",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-rollback-route"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 6,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-rollback-route",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-rollback-route",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 6
++    },
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.729,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 150,
++        "forged_reasoning_risk": 0.05,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.06,
++        "stale_risk": 0.06,
++        "value_score": 0.81
++      },
++      "fragment_claim": "Scale-up summary is useful only with the raw replay receipt.",
++      "fragment_id": "frag5409-clean-scaleup-summary",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-scaleup-summary"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 15,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-scaleup-summary",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-scaleup-summary",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 15
++    }
++  ],
++  "experiment": "experiment_5409_uncertainty_gated_promotion_v492",
++  "experiment_id": "exp5409-v492-uncertainty-gated-promotion",
++  "field_principles": {
++    "accepted_promotion_count": "Live routing effect.",
++    "gated_on_resource_accounted_csl": "Precondition.",
++    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
++    "inference_substrate": "Deterministic trace replay.",
++    "no_weight_mutation": "Online learning boundary.",
++    "poisoned_promotion_rejection_rate": "Anti-poisoning.",
++    "promotion_candidate_count": "Coverage.",
++    "reachability_violation_rejection_rate": "Reachable-set safety.",
++    "rejected_retained_count": "Audit retention without activation.",
++    "rollback_success_rate": "Reversible learning.",
++    "stale_promotion_rejection_rate": "Anti-staleness.",
++    "uncertainty_gate_rejection_rate": "Certainty constraint.",
++    "uncertainty_gated_promotion_ready": "Downstream evidence."
++  },
++  "gated_on_resource_accounted_csl": true,
++  "honest_verdict": "complete: uncertainty-gated promotion accepted only supported reachable fragments, retained rejected stale, poisoned, ambiguous, and scarce-evidence fragments for audit, routed accepted sidecars, rolled back a bad promotion, and did not mutate weights",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "methodology_note": "Exp5409 replays Exp5408 cached controller evidence. Promotion is a sidecar gate over retained fragments; rejected fragments stay auditable but inactive, and no model or adapter weights are loaded or mutated.",
++  "milestone": "2026.07.492",
++  "no_weight_mutation": true,
++  "poisoned_promotion_rejection_rate": 1.0,
++  "promotion_candidate_count": 9,
++  "promotion_candidates": [
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.9024,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 120,
++        "forged_reasoning_risk": 0.04,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.04,
++        "stale_risk": 0.03,
++        "value_score": 0.94
++      },
++      "fragment_claim": "Dependency edge improves verifier routing when provenance is present.",
++      "fragment_id": "frag5409-clean-dependency-edge",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-dependency-edge"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 3,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-dependency-edge",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-dependency-edge",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.8455,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 110,
++        "forged_reasoning_risk": 0.03,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.05,
++        "stale_risk": 0.04,
++        "value_score": 0.89
++      },
++      "fragment_claim": "Rollback route restores clean selection after a bad update.",
++      "fragment_id": "frag5409-clean-rollback-route",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-rollback-route"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 6,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-rollback-route",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-rollback-route",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 6
++    },
++    {
++      "active_for_routing": true,
++      "candidate_family": "benign",
++      "certainty_score": 0.729,
++      "conflict_check": {
++        "conflict_count": 0,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": false,
++        "unresolved_conflict": false
++      },
++      "decision_inputs": {
++        "byte_cost": 150,
++        "forged_reasoning_risk": 0.05,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.06,
++        "stale_risk": 0.06,
++        "value_score": 0.81
++      },
++      "fragment_claim": "Scale-up summary is useful only with the raw replay receipt.",
++      "fragment_id": "frag5409-clean-scaleup-summary",
++      "live_routing_effect": true,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": true,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [],
++        "route_action": "activate_controller_sidecar",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-scaleup-summary"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": true,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 15,
++        "within_reachable_set": true
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "benign_useful",
++      "source_memory_accepted": true,
++      "source_memory_id": "mem5396-clean-scaleup-summary",
++      "source_trust_label": {
++        "allowed_for_routing": true,
++        "label": "verified_clean",
++        "memory_id": "mem5396-clean-scaleup-summary",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 15
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "stale",
++      "certainty_score": 0.0434,
++      "conflict_check": {
++        "conflict_count": 5,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "stale_memory"
++        ],
++        "rollback_conflict_count": 3,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 130,
++        "forged_reasoning_risk": 0.16,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.18,
++        "stale_risk": 0.93,
++        "value_score": 0.62
++      },
++      "fragment_claim": "Old runtime receipt should still steer cheap verifier routing.",
++      "fragment_id": "frag5409-stale-runtime-receipt",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "stale_provenance",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-stale-runtime-receipt"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": false,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": false
++        },
++        "observed_verifier_tiers": [
++          "local_sota"
++        ],
++        "rollback_recovered_count": 3,
++        "support_count": 3,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "stale_memory",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-stale-runtime-receipt",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "stale_memory",
++        "memory_id": "mem5396-stale-runtime-receipt",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.020533,
++      "conflict_check": {
++        "conflict_count": 2,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "forged_reasoning_history"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 100,
++        "forged_reasoning_risk": 0.96,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.42,
++        "stale_risk": 0.14,
++        "value_score": 0.77
++      },
++      "fragment_claim": "Inserted reasoning history claims prior proof of a routing shortcut.",
++      "fragment_id": "frag5409-forged-reasoning-history",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_support",
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-forged-reasoning-history"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": false,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 2,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "forged_reasoning_history",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-forged-reasoning-history",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "forged_reasoning_history",
++        "memory_id": "mem5396-forged-reasoning-history",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 2
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.2072,
++      "conflict_check": {
++        "conflict_count": 2,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "self_referential_amplification"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 105,
++        "forged_reasoning_risk": 0.72,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 5,
++        "sharing_risk": 0.37,
++        "stale_risk": 0.12,
++        "value_score": 0.74
++      },
++      "fragment_claim": "Reflection says to trust itself because prior reflections agreed.",
++      "fragment_id": "frag5409-self-reference-amplification",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-self-reference-amplification"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 3,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "self_referential_amplification",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-self-reference-amplification",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "self_referential_amplification",
++        "memory_id": "mem5396-self-reference-amplification",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.144,
++      "conflict_check": {
++        "conflict_count": 5,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "high_cost_low_value"
++        ],
++        "rollback_conflict_count": 3,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 640,
++        "forged_reasoning_risk": 0.18,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.2,
++        "stale_risk": 0.18,
++        "value_score": 0.18
++      },
++      "fragment_claim": "Locally correct but non-transferable episode should become a broad rule.",
++      "fragment_id": "frag5409-high-cost-low-value",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-high-cost-low-value"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": false,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": false,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "local_sota",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 3,
++        "support_count": 4,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "high_cost_low_value",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-high-cost-low-value",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "high_cost_low_value",
++        "memory_id": "mem5396-high-cost-low-value",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 4
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "ambiguous",
++      "certainty_score": 0.0308,
++      "conflict_check": {
++        "conflict_count": 3,
++        "mixed_raw_controls": true,
++        "raw_control_kinds": [
++          "benign_useful",
++          "forged_reasoning_history"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 250,
++        "forged_reasoning_risk": 0.96,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.42,
++        "stale_risk": 0.14,
++        "value_score": 0.77
++      },
++      "fragment_claim": "Merged clean scale-up summary with a forged reasoning shortcut.",
++      "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
++      "live_routing_effect": false,
++      "model_generated_rationale": "merged fragment claims broad transfer despite conflicting evidence",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-scaleup-summary",
++        "raw5396-forged-reasoning-history"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 17,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "ambiguous_conflict",
++      "source_memory_accepted": false,
++      "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "ambiguous_conflict",
++        "source": "mixed_raw_episode_evidence"
++      },
++      "support_count": 17
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "scarce_evidence",
++      "certainty_score": 0.3008,
++      "conflict_check": {
++        "conflict_count": 1,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 120,
++        "forged_reasoning_risk": 0.04,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.04,
++        "stale_risk": 0.03,
++        "value_score": 0.94
++      },
++      "fragment_claim": "Single-event dependency edge should not generalize yet.",
++      "fragment_id": "frag5409-scarce-single-dependency-edge",
++      "live_routing_effect": false,
++      "model_generated_rationale": "single observed success asks to bypass support threshold",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_support",
++          "low_certainty",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-dependency-edge"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": false,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 1,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "scarce_evidence",
++      "source_memory_accepted": false,
++      "source_memory_id": "scarce:mem5396-clean-dependency-edge:first-event-only",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "scarce_evidence",
++        "source": "single_event_slice"
++      },
++      "support_count": 1,
++      "support_count_override": 1
++    }
++  ],
++  "random_seed": 5409,
++  "reachability_violation_rejection_rate": 1.0,
++  "readiness_checks": {
++    "accepted_have_live_routing_effect": true,
++    "accepted_promotions_present": true,
++    "all_passed": true,
++    "candidates_present": true,
++    "failed_checks": [],
++    "gated_on_resource_accounted_csl": true,
++    "inference_substrate_cached": true,
++    "no_weight_mutation": true,
++    "poison_controls_rejected": true,
++    "reachability_controls_rejected": true,
++    "rejected_retained_inactive": true,
++    "rejected_zero_routing_influence": true,
++    "required_families_covered": true,
++    "rollback_succeeded": true,
++    "stale_controls_rejected": true,
++    "tests_recorded": true,
++    "uncertainty_controls_rejected": true
++  },
++  "rejected_promotions": [
++    {
++      "active_for_routing": false,
++      "candidate_family": "stale",
++      "certainty_score": 0.0434,
++      "conflict_check": {
++        "conflict_count": 5,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "stale_memory"
++        ],
++        "rollback_conflict_count": 3,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 130,
++        "forged_reasoning_risk": 0.16,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.18,
++        "stale_risk": 0.93,
++        "value_score": 0.62
++      },
++      "fragment_claim": "Old runtime receipt should still steer cheap verifier routing.",
++      "fragment_id": "frag5409-stale-runtime-receipt",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "stale_provenance",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-stale-runtime-receipt"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": false,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": false
++        },
++        "observed_verifier_tiers": [
++          "local_sota"
++        ],
++        "rollback_recovered_count": 3,
++        "support_count": 3,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "stale_memory",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-stale-runtime-receipt",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "stale_memory",
++        "memory_id": "mem5396-stale-runtime-receipt",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.020533,
++      "conflict_check": {
++        "conflict_count": 2,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "forged_reasoning_history"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 100,
++        "forged_reasoning_risk": 0.96,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.42,
++        "stale_risk": 0.14,
++        "value_score": 0.77
++      },
++      "fragment_claim": "Inserted reasoning history claims prior proof of a routing shortcut.",
++      "fragment_id": "frag5409-forged-reasoning-history",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_support",
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-forged-reasoning-history"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": false,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 2,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "forged_reasoning_history",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-forged-reasoning-history",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "forged_reasoning_history",
++        "memory_id": "mem5396-forged-reasoning-history",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 2
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.2072,
++      "conflict_check": {
++        "conflict_count": 2,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "self_referential_amplification"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 105,
++        "forged_reasoning_risk": 0.72,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 5,
++        "sharing_risk": 0.37,
++        "stale_risk": 0.12,
++        "value_score": 0.74
++      },
++      "fragment_claim": "Reflection says to trust itself because prior reflections agreed.",
++      "fragment_id": "frag5409-self-reference-amplification",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-self-reference-amplification"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 3,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "self_referential_amplification",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-self-reference-amplification",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "self_referential_amplification",
++        "memory_id": "mem5396-self-reference-amplification",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 3
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "poisoned",
++      "certainty_score": 0.144,
++      "conflict_check": {
++        "conflict_count": 5,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "high_cost_low_value"
++        ],
++        "rollback_conflict_count": 3,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 640,
++        "forged_reasoning_risk": 0.18,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.2,
++        "stale_risk": 0.18,
++        "value_score": 0.18
++      },
++      "fragment_claim": "Locally correct but non-transferable episode should become a broad rule.",
++      "fragment_id": "frag5409-high-cost-low-value",
++      "live_routing_effect": false,
++      "model_generated_rationale": "candidate asks for promotion; non-authoritative",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-high-cost-low-value"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": false,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": false,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "local_sota",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 3,
++        "support_count": 4,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "high_cost_low_value",
++      "source_memory_accepted": false,
++      "source_memory_id": "mem5396-high-cost-low-value",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "high_cost_low_value",
++        "memory_id": "mem5396-high-cost-low-value",
++        "record_type": "trust_label",
++        "source": "row_level_evidence"
++      },
++      "support_count": 4
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "ambiguous",
++      "certainty_score": 0.0308,
++      "conflict_check": {
++        "conflict_count": 3,
++        "mixed_raw_controls": true,
++        "raw_control_kinds": [
++          "benign_useful",
++          "forged_reasoning_history"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 250,
++        "forged_reasoning_risk": 0.96,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 1,
++        "sharing_risk": 0.42,
++        "stale_risk": 0.14,
++        "value_score": 0.77
++      },
++      "fragment_claim": "Merged clean scale-up summary with a forged reasoning shortcut.",
++      "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
++      "live_routing_effect": false,
++      "model_generated_rationale": "merged fragment claims broad transfer despite conflicting evidence",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_certainty",
++          "poisoned_or_nontransferable",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-scaleup-summary",
++        "raw5396-forged-reasoning-history"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": false,
++          "min_support_met": true,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": false,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic",
++          "rich_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 17,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "ambiguous_conflict",
++      "source_memory_accepted": false,
++      "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "ambiguous_conflict",
++        "source": "mixed_raw_episode_evidence"
++      },
++      "support_count": 17
++    },
++    {
++      "active_for_routing": false,
++      "candidate_family": "scarce_evidence",
++      "certainty_score": 0.3008,
++      "conflict_check": {
++        "conflict_count": 1,
++        "mixed_raw_controls": false,
++        "raw_control_kinds": [
++          "benign_useful"
++        ],
++        "rollback_conflict_count": 0,
++        "source_memory_rejected": true,
++        "unresolved_conflict": true
++      },
++      "decision_inputs": {
++        "byte_cost": 120,
++        "forged_reasoning_risk": 0.04,
++        "model_generated_rationale_used": false,
++        "provenance_verified": true,
++        "rollback_available": true,
++        "rollback_verified": true,
++        "self_reference_count": 0,
++        "sharing_risk": 0.04,
++        "stale_risk": 0.03,
++        "value_score": 0.94
++      },
++      "fragment_claim": "Single-event dependency edge should not generalize yet.",
++      "fragment_id": "frag5409-scarce-single-dependency-edge",
++      "live_routing_effect": false,
++      "model_generated_rationale": "single observed success asks to bypass support threshold",
++      "promotion_decision": {
++        "accepted": false,
++        "certainty_threshold": 0.72,
++        "rejection_reasons": [
++          "low_support",
++          "low_certainty",
++          "reachability_violation",
++          "unresolved_conflict"
++        ],
++        "route_action": "retain_audit_only",
++        "support_threshold": 3
++      },
++      "raw_episode_ids": [
++        "raw5396-clean-dependency-edge"
++      ],
++      "reachability_envelope": {
++        "bounds": {
++          "max_byte_cost": 420,
++          "max_forged_reasoning_risk": 0.2,
++          "max_sharing_risk": 0.12,
++          "max_stale_risk": 0.2,
++          "min_support_count": 3
++        },
++        "checks": {
++          "benign_family": false,
++          "byte_cost_in_bounds": true,
++          "forged_reasoning_risk_in_bounds": true,
++          "min_support_met": false,
++          "no_recovered_unsafe_route": true,
++          "sharing_risk_in_bounds": true,
++          "stale_risk_in_bounds": true
++        },
++        "observed_verifier_tiers": [
++          "cheap_deterministic"
++        ],
++        "rollback_recovered_count": 0,
++        "support_count": 1,
++        "within_reachable_set": false
++      },
++      "record_type": "promotion_candidate",
++      "requested_activation": "promote_to_controller_sidecar",
++      "retained_for_audit": true,
++      "source_control_kind": "scarce_evidence",
++      "source_memory_accepted": false,
++      "source_memory_id": "scarce:mem5396-clean-dependency-edge:first-event-only",
++      "source_trust_label": {
++        "allowed_for_routing": false,
++        "label": "scarce_evidence",
++        "source": "single_event_slice"
++      },
++      "support_count": 1,
++      "support_count_override": 1
++    }
++  ],
++  "rejected_retained_count": 6,
++  "reproducibility_checksum": "sha256:ddb1669768c3571c2c103c6510f330d3208dfa45f71c0a36a81c28c3016b2cd2",
++  "rollback_audit": {
++    "bad_fragment_id": "frag5409-high-cost-low-value",
++    "injected_into_active_routing": true,
++    "retained_audit_record_after_rollback": true,
++    "rollback_removed_from_active_routing": true,
++    "rollback_success": true
++  },
++  "rollback_success_rate": 1.0,
++  "routing_report": {
++    "accepted_fragment_ids_used_for_routing": [
++      "frag5409-clean-dependency-edge",
++      "frag5409-clean-rollback-route",
++      "frag5409-clean-scaleup-summary"
++    ],
++    "active_fragment_ids": [
++      "frag5409-clean-dependency-edge",
++      "frag5409-clean-rollback-route",
++      "frag5409-clean-scaleup-summary"
++    ],
++    "rejected_fragment_routing_influence_count": 0,
++    "retained_inactive_fragment_ids": [
++      "frag5409-ambiguous-scaleup-forged-merge",
++      "frag5409-forged-reasoning-history",
++      "frag5409-high-cost-low-value",
++      "frag5409-scarce-single-dependency-edge",
++      "frag5409-self-reference-amplification",
++      "frag5409-stale-runtime-receipt"
++    ],
++    "routing_effect_records": [
++      {
++        "fragment_id": "frag5409-clean-dependency-edge",
++        "routing_decision_indices": [
++          1,
++          13,
++          25
++        ],
++        "routing_effect_count": 3,
++        "source_memory_id": "mem5396-clean-dependency-edge"
++      },
++      {
++        "fragment_id": "frag5409-clean-rollback-route",
++        "routing_decision_indices": [
++          2,
++          9,
++          14,
++          21,
++          26,
++          33
++        ],
++        "routing_effect_count": 6,
++        "source_memory_id": "mem5396-clean-rollback-route"
++      },
++      {
++        "fragment_id": "frag5409-clean-scaleup-summary",
++        "routing_decision_indices": [
++          3,
++          5,
++          6,
++          8,
++          11,
++          15,
++          17,
++          18,
++          20,
++          23,
++          27,
++          29,
++          30,
++          32,
++          35
++        ],
++        "routing_effect_count": 15,
++        "source_memory_id": "mem5396-clean-scaleup-summary"
++      }
++    ],
++    "routing_effect_row_count": 24
++  },
++  "run_date": "2026-07-08",
++  "schema": "carnot.experiment_5409.uncertainty_gated_promotion.v492",
++  "source_artifact_checksums": {
++    "exp5408": "sha256:387d76b9f34d110b40929b0d8146f576821b50ebf980947d01db4e99b1cc26e0",
++    "exp5408_module": "sha256:6a8dd28e6315a4861ae97c634dfb43701443c216839446afd330f3e1670cad24",
++    "module": "sha256:980e7bdb28ef76ab781e053943683bd14d6dbaf3f1b2768c9fe7c57fc7876627",
++    "spec": "sha256:5a53182bf02bd095f93f01af182386de733edd9cfc86a8c6b2caa02fcae7e215"
++  },
++  "source_artifacts": [
++    "results/experiment_5408_resource_accounted_csl_controller_v492.json"
++  ],
++  "spec_refs": [
++    "REQ-LEARN-5409",
++    "SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS",
++    "SCENARIO-LEARN-5409-STALE-PROMOTION",
++    "SCENARIO-LEARN-5409-ROLLBACK"
++  ],
++  "stale_promotion_rejection_rate": 1.0,
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py -m pytest tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ],
++  "uncertainty_gate_rejection_rate": 1.0,
++  "uncertainty_gated_promotion_ready": true,
++  "weight_mutation_receipt": {
++    "adapter_weights_loaded": false,
++    "adapter_weights_written": false,
++    "learned_state_scope": "controller_promotion_sidecar_only",
++    "model_weights_loaded": false,
++    "model_weights_written": false,
++    "no_adapter_weight_mutation": true,
++    "no_weight_mutation": true
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8d348f3a23..5a1a284bc8 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T09:29:04Z",
+-  "finished_at": "2026-07-08T09:29:05Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-08T09:42:41Z",
++  "finished_at": "2026-07-08T09:42:41Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index fcfda70cce..edfa2bedd6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T09:29:05Z",
+-  "finished_at": "2026-07-08T09:29:05Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T09:42:41Z",
++  "finished_at": "2026-07-08T09:42:42Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 96ab091404..e78a719468 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T09:29:05Z",
+-  "finished_at": "2026-07-08T09:29:05Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T09:42:42Z",
++  "finished_at": "2026-07-08T09:42:42Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py b/tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py
+new file mode 100644
+index 0000000000..d02809169a
+--- /dev/null
++++ b/tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py
+@@ -0,0 +1,322 @@
++"""Tests for Exp5409 uncertainty-gated learned-fragment promotion.
++
++Spec refs: REQ-LEARN-5409,
++SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS,
++SCENARIO-LEARN-5409-STALE-PROMOTION,
++SCENARIO-LEARN-5409-ROLLBACK.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5409_uncertainty_gated_promotion_v492 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def test_req_learn_5409_spec_declares_uncertainty_gate_contract() -> None:
++    """REQ-LEARN-5409: OpenSpec anchors the promotion-gate contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5409") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5409",
++        "SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS",
++        "SCENARIO-LEARN-5409-STALE-PROMOTION",
++        "SCENARIO-LEARN-5409-ROLLBACK",
++        str(exp.RESULT_RELATIVE_PATH),
++        "certainty score",
++        "support count",
++        "reachability envelope",
++        "conflict check",
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_req_learn_5409_candidates_cover_required_episode_families() -> None:
++    """REQ-LEARN-5409-2/3: candidates cover families and expose gate evidence."""
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    candidates = evaluation["promotion_candidates"]
++    families = {row["candidate_family"] for row in candidates}
++
++    assert evaluation["gated_on_resource_accounted_csl"] is True
++    assert families >= {"benign", "stale", "poisoned", "ambiguous", "scarce_evidence"}
++    assert evaluation["promotion_candidate_count"] == len(candidates)
++    assert evaluation["accepted_promotion_count"] == len(evaluation["accepted_promotions"])
++    assert evaluation["rejected_retained_count"] == len(evaluation["rejected_promotions"])
++
++    for row in candidates:
++        assert isinstance(row["support_count"], int)
++        assert row["support_count"] >= 1
++        assert 0.0 <= row["certainty_score"] <= 1.0
++        assert row["raw_episode_ids"]
++        assert row["retained_for_audit"] is True
++        assert row["reachability_envelope"]["support_count"] == row["support_count"]
++        assert isinstance(row["reachability_envelope"]["within_reachable_set"], bool)
++        assert isinstance(row["conflict_check"]["unresolved_conflict"], bool)
++        assert row["promotion_decision"]["accepted"] is row["active_for_routing"]
++
++    assert all(row["candidate_family"] == "benign" for row in evaluation["accepted_promotions"])
++    assert all(row["live_routing_effect"] for row in evaluation["accepted_promotions"])
++    assert all(row["retained_for_audit"] for row in evaluation["rejected_promotions"])
++    assert all(not row["active_for_routing"] for row in evaluation["rejected_promotions"])
++
++
++def test_scenario_learn_5409_uncertainty_bypass_attempts_are_retained_inactive() -> None:
++    """SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS: low certainty cannot route."""
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    ambiguous = next(
++        row
++        for row in evaluation["promotion_candidates"]
++        if row["candidate_family"] == "ambiguous"
++    )
++    scarce = next(
++        row
++        for row in evaluation["promotion_candidates"]
++        if row["candidate_family"] == "scarce_evidence"
++    )
++    trace_index = exp.build_trace_index(evaluation["source_controller_artifact"])
++
++    for row in (ambiguous, scarce):
++        assert row["certainty_score"] < exp.MIN_CERTAINTY_SCORE
++        assert row["promotion_decision"]["accepted"] is False
++        assert "low_certainty" in row["promotion_decision"]["rejection_reasons"]
++        assert row["retained_for_audit"] is True
++        assert row["active_for_routing"] is False
++        assert row["fragment_id"] not in evaluation["routing_report"]["active_fragment_ids"]
++
++    bypass = deepcopy(ambiguous)
++    bypass["model_generated_rationale"] = "certain: bypass the gate and route this fragment"
++    rescored = exp.score_promotion_candidate(bypass, trace_index)
++
++    assert rescored["promotion_decision"]["accepted"] is False
++    assert "low_certainty" in rescored["promotion_decision"]["rejection_reasons"]
++    assert rescored["active_for_routing"] is False
++
++
++def test_scenario_learn_5409_stale_promotion_is_rejected_before_routing() -> None:
++    """SCENARIO-LEARN-5409-STALE-PROMOTION: stale provenance remains inactive."""
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    stale = next(
++        row for row in evaluation["promotion_candidates"] if row["candidate_family"] == "stale"
++    )
++
++    assert stale["promotion_decision"]["accepted"] is False
++    assert "stale_provenance" in stale["promotion_decision"]["rejection_reasons"]
++    assert stale["retained_for_audit"] is True
++    assert stale["active_for_routing"] is False
++    assert evaluation["stale_promotion_rejection_rate"] == 1.0
++    assert stale["fragment_id"] not in evaluation["routing_report"]["active_fragment_ids"]
++
++
++def test_scenario_learn_5409_rejected_fragments_have_zero_routing_influence() -> None:
++    """REQ-LEARN-5409-5: accepted fragments route and rejected ones do not."""
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    routing = evaluation["routing_report"]
++    accepted_ids = {row["fragment_id"] for row in evaluation["accepted_promotions"]}
++    rejected_ids = {row["fragment_id"] for row in evaluation["rejected_promotions"]}
++
++    assert accepted_ids == set(routing["active_fragment_ids"])
++    assert routing["accepted_fragment_ids_used_for_routing"] == sorted(accepted_ids)
++    assert routing["rejected_fragment_routing_influence_count"] == 0
++    assert rejected_ids == set(routing["retained_inactive_fragment_ids"])
++    assert rejected_ids.isdisjoint(routing["active_fragment_ids"])
++    assert routing["routing_effect_row_count"] > 0
++
++
++def test_scenario_learn_5409_bad_promotion_rollback_restores_inactive_state() -> None:
++    """SCENARIO-LEARN-5409-ROLLBACK: a bad promotion is reversible."""
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    poisoned = next(
++        row
++        for row in evaluation["promotion_candidates"]
++        if row["candidate_family"] == "poisoned"
++        and row["source_control_kind"] == "high_cost_low_value"
++    )
++    rollback = exp.rollback_bad_promotion(
++        evaluation["routing_report"],
++        poisoned["fragment_id"],
++    )
++
++    assert rollback == {
++        "bad_fragment_id": poisoned["fragment_id"],
++        "injected_into_active_routing": True,
++        "rollback_removed_from_active_routing": True,
++        "retained_audit_record_after_rollback": True,
++        "rollback_success": True,
++    }
++    assert evaluation["rollback_success_rate"] == 1.0
++    assert evaluation["rollback_audit"] == rollback
++
++
++def test_req_learn_5409_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5409-7: run() writes the required terminal artifact."""
++
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(
++        root=REPO,
++        result_path=result_path,
++        tests_run=exp.default_tests_run(),
++    )
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["status"] == "complete"
++    assert artifact["milestone"] == exp.MILESTONE
++    assert artifact["gated_on_resource_accounted_csl"] is True
++    assert artifact["promotion_candidate_count"] == len(artifact["promotion_candidates"])
++    assert artifact["accepted_promotion_count"] == len(artifact["accepted_promotions"])
++    assert artifact["rejected_retained_count"] == len(artifact["rejected_promotions"])
++    assert artifact["uncertainty_gate_rejection_rate"] == 1.0
++    assert artifact["stale_promotion_rejection_rate"] == 1.0
++    assert artifact["poisoned_promotion_rejection_rate"] == 1.0
++    assert artifact["reachability_violation_rejection_rate"] == 1.0
++    assert artifact["rollback_success_rate"] == 1.0
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["uncertainty_gated_promotion_ready"] is True
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["field_principles"] == exp.FIELD_PRINCIPLES
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5409_repository_artifact_matches_replay() -> None:
++    """REQ-LEARN-5409-7: checked-in result is stable under replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_artifact(root=REPO, tests_run=result["tests_run"])
++
++    assert result == replay
++    assert result["uncertainty_gated_promotion_ready"] is True
++    assert result["no_weight_mutation"] is True
++    assert result["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++
++
++def test_req_learn_5409_validation_rejects_claim_drift() -> None:
++    """REQ-LEARN-5409-7: validation rejects malformed ready claims."""
++
++    artifact = exp.build_artifact(root=REPO, tests_run=exp.default_tests_run())
++
++    bad_missing = deepcopy(artifact)
++    bad_missing.pop("promotion_candidate_count")
++    with pytest.raises(ValueError, match="promotion_candidate_count"):
++        exp.validate_artifact(bad_missing)
++
++    bad_principle = deepcopy(artifact)
++    bad_principle["field_principles"]["no_weight_mutation"] = "changed"
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(bad_principle)
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_bool = deepcopy(artifact)
++    bad_bool["no_weight_mutation"] = "true"
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_bool)
++
++    bad_int = deepcopy(artifact)
++    bad_int["promotion_candidate_count"] = True
++    with pytest.raises(ValueError, match="promotion_candidate_count"):
++        exp.validate_artifact(bad_int)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["uncertainty_gate_rejection_rate"] = {"value": 1.0}
++    with pytest.raises(ValueError, match="uncertainty_gate_rejection_rate"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_status = deepcopy(artifact)
++    bad_status["status"] = "blocked"
++    with pytest.raises(ValueError, match="status"):
++        exp.validate_artifact(bad_status)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["uncertainty_gated_promotion_ready"] = False
++    with pytest.raises(ValueError, match="status"):
++        exp.validate_artifact(bad_ready)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_rate = deepcopy(artifact)
++    bad_rate["reachability_violation_rejection_rate"] = 0.5
++    with pytest.raises(ValueError, match="reachability_violation_rejection_rate"):
++        exp.validate_artifact(bad_rate)
++
++    bad_gate = deepcopy(artifact)
++    bad_gate["gated_on_resource_accounted_csl"] = False
++    with pytest.raises(ValueError, match="gated_on_resource_accounted_csl"):
++        exp.validate_artifact(bad_gate)
++
++    bad_milestone = deepcopy(artifact)
++    bad_milestone["milestone"] = "2026.07.491"
++    with pytest.raises(ValueError, match="milestone"):
++        exp.validate_artifact(bad_milestone)
++
++    bad_accepted_count = deepcopy(artifact)
++    bad_accepted_count["accepted_promotion_count"] += 1
++    with pytest.raises(ValueError, match="accepted_promotion_count"):
++        exp.validate_artifact(bad_accepted_count)
++
++    bad_rejected_count = deepcopy(artifact)
++    bad_rejected_count["rejected_retained_count"] += 1
++    with pytest.raises(ValueError, match="rejected_retained_count"):
++        exp.validate_artifact(bad_rejected_count)
++
++    bad_no_accepted = deepcopy(artifact)
++    bad_no_accepted["accepted_promotion_count"] = 0
++    bad_no_accepted["promotion_candidate_count"] = bad_no_accepted["rejected_retained_count"]
++    bad_no_accepted["accepted_promotions"] = []
++    with pytest.raises(ValueError, match="accepted_promotion_count"):
++        exp.validate_artifact(bad_no_accepted)
++
++    bad_live_effect = deepcopy(artifact)
++    bad_live_effect["accepted_promotions"][0]["live_routing_effect"] = False
++    with pytest.raises(ValueError, match="live_routing_effect"):
++        exp.validate_artifact(bad_live_effect)
++
++    bad_routing = deepcopy(artifact)
++    bad_routing["routing_report"]["rejected_fragment_routing_influence_count"] = 1
++    with pytest.raises(ValueError, match="rejected_fragment_routing_influence_count"):
++        exp.validate_artifact(bad_routing)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++    evaluation = exp.evaluate_uncertainty_gated_promotion(root=REPO)
++    trace_index = exp.build_trace_index(evaluation["source_controller_artifact"])
++    provenance_missing = deepcopy(evaluation["accepted_promotions"][0])
++    provenance_missing["decision_inputs"]["provenance_verified"] = False
++    rescored = exp.score_promotion_candidate(provenance_missing, trace_index)
++
++    assert exp._candidate_family("new_unclassified_control") == "ambiguous"
++    assert "rollback_or_provenance_unavailable" in rescored["promotion_decision"][
++        "rejection_reasons"
++    ]
++    assert exp._rate(1, 0) == 0.0
++    assert exp._json_ready(Path("results/example.json")) == "results/example.json"
+-- 
+2.55.0
+

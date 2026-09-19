@@ -1,0 +1,23 @@
+From 47d570a18c7299db4fbf599375630f6ff9085711 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 04:18:12 -0400
+Subject: [PATCH 07884/11362] [conductor] In-process docs for Gated on Exp5909
+ residual headroom: exact-diagnostic constraint repair
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index fd9b322d6b..50614a5a6c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11876,3 +11876,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-25: Canonical producer-consumer replay contract for typed ConstraintIR (✅ Complete) — honest_verdict=complete_ready: ConstraintIR replay contract is shared, row-bound, and tamper-rejecting; results/experiment_5907_constraint_ir_replay_contract.json
+ - 2026-07-25: Gated on Exp5907 replay: VeriSynth-style decomposition and retrieval fixture (✅ Complete) — honest_verdict=ready: deterministic ConstraintIR decomposition and retrieval plans replay exactly; results/experiment_5908_verisynth_constraint_fixture.json
+ - 2026-07-25: Gated on Exp5908 fixture: three-family direct, decomposed, and retrieval synthesis (✅ Complete) — honest_verdict=complete_null: structured prompt arms did not improve exact synthesis; results/experiment_5909_sota_constraint_synthesis_ab.json
++- 2026-07-25: Gated on Exp5909 residual headroom: exact-diagnostic constraint repair (✅ Complete) — honest_verdict=complete_null: exact diagnostics did not beat matched repair controls; results/experiment_5910_verification_guided_constraint_repair.json
+-- 
+2.55.0
+

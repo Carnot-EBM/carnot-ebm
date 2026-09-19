@@ -1,0 +1,105 @@
+From 6e0b2ab93b185217576924d9f2c55c0434a34de3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 22:42:00 -0400
+Subject: [PATCH 04072/11362] [outer-loop] adversarial_verify: tolerate any
+ separator in inference_substrate (fixes recurring DURATION_TOO_SHORT
+ false-positive)
+
+Watchdog found .437 B2 (exp4756) FLAGGED DURATION_TOO_SHORT despite correctly
+declaring inference_substrate='aggregation_from_upstream_artifacts; 100us floor.'
+-- the matcher only tolerated a space or '--' separator after the canonical value,
+so the ';'-separated human note broke recognition, the aggregation duration floor
+was not applied, and a legit 2.9s submission-package aggregation (which references
+the Qwen GGUF + CUDA llama-server) tripped the 60s compute-bound floor.
+
+Fix: _inference_substrate_matches now tolerates ANY separator punctuation
+(space, --, ;, ,, :, .) after the canonical token, while a boundary-char check
+keeps a longer different enum (<canonical>_v2) from matching. Subsumes the old
+'--'/space handling. This recurring false-positive also threatened the pre-staged
+.438 B2/D/E aggregation tasks (same GGUF/CUDA markers); now fixed for all.
+
+10 new regression tests (the exp4756 ';' case + separator matrix + _v2 boundary
+safety + the aggregation-floor selection). 44/44 guards pass. Left the .437
+flagged artifacts in place (working as intended; not unflagged retroactively).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/adversarial_verify.py                 | 14 ++++++-
+ .../python/test_adversarial_verify_guards.py  | 38 +++++++++++++++++++
+ 2 files changed, 51 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 695e035dda..161724cdc3 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -1564,8 +1564,20 @@ def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
+     raw = _inference_substrate_text(d)
+     if raw == canonical:
+         return True
++    # Tolerate a human principle/floor note appended after the canonical value
++    # with ANY separator (space, `--`, `;`, `,`, `:`, `.`): the leading token is
++    # what selects the duration floor. exp4756 (.437 B2) correctly declared
++    # "aggregation_from_upstream_artifacts; 100us floor." but was
++    # DURATION_TOO_SHORT false-positive-flagged because the `;` separator was not
++    # recognized (only space / `--` were). The boundary-char check keeps a longer
++    # different enum (e.g. `<canonical>_v2`) from matching, since `_`/alnum are
++    # not separators.
+     prefix = raw.split("--", 1)[0].strip()
+-    return prefix == canonical or raw.startswith(f"{canonical} ")
++    if prefix == canonical:
++        return True
++    if raw.startswith(canonical):
++        return raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}
++    return False
+ 
+ 
+ def _is_live_llm_inference(d: dict[str, Any]) -> bool:
+diff --git a/tests/python/test_adversarial_verify_guards.py b/tests/python/test_adversarial_verify_guards.py
+index fce27723d7..6cb8f116db 100644
+--- a/tests/python/test_adversarial_verify_guards.py
++++ b/tests/python/test_adversarial_verify_guards.py
+@@ -595,3 +595,41 @@ def test_ceiling_saturation_silent_with_real_headroom():
+         flags,
+     )
+     assert "CEILING_SATURATION" not in _kinds(flags)
++
++
++# --------------------------------------------------------------------------- #
++# Separator-tolerant inference_substrate matching (2026-06-26 outer-loop fix)  #
++# Origin: .437 B2 exp4756 declared "aggregation_from_upstream_artifacts; 100us  #
++# floor." -- the `;` separator (a human note appended to the canonical value)  #
++# was not recognized, so the aggregation duration floor was NOT applied and a   #
++# legit 2.9s submission-package aggregation got DURATION_TOO_SHORT-flagged. The #
++# matcher must tolerate ANY separator after the canonical token, while NOT      #
++# matching a longer different enum (`<canonical>_v2`).                          #
++# --------------------------------------------------------------------------- #
++@pytest.mark.parametrize(
++    "raw,expected",
++    [
++        ("aggregation_from_upstream_artifacts", True),  # bare
++        ("aggregation_from_upstream_artifacts; 100us floor.", True),  # the exp4756 `;` case
++        ("aggregation_from_upstream_artifacts -- reads upstream JSON", True),  # legacy `--`
++        ("aggregation_from_upstream_artifacts (0.0001s floor)", True),  # space separator
++        ("aggregation_from_upstream_artifacts, cites exp4761", True),  # comma
++        ("aggregation_from_upstream_artifacts: floor 100us", True),  # colon
++        ("aggregation_from_upstream_artifacts_v2", False),  # DIFFERENT enum -- must NOT match
++        ("live_llm_inference", False),  # different substrate
++    ],
++)
++def test_inference_substrate_matches_tolerates_any_separator(raw, expected):
++    d = {"inference_substrate": raw}
++    assert av._inference_substrate_matches(d, av.AGGREGATION_SUBSTRATE) is expected
++
++
++def test_aggregation_with_semicolon_note_uses_aggregation_floor():
++    """The exp4756 regression: `;`-separated note must still select the aggregation
++    floor (not the 60s compute-bound floor), so a fast aggregation is not flagged."""
++    d = {"inference_substrate": "aggregation_from_upstream_artifacts; 100us floor."}
++    assert av._is_aggregation_only(d) is True
++    floor = av.duration_floor_for_artifact(d)
++    assert floor is not None
++    assert floor["reason"] == "aggregation"
++    assert floor["min_duration_s"] <= 0.001
+-- 
+2.55.0
+

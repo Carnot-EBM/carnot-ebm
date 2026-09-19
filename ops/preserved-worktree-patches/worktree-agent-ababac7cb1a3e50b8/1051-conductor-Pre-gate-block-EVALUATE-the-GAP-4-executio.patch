@@ -1,0 +1,82 @@
+From 2cd73fcbe31fa38cd159a7b27859bc2f8fc7ed4e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 20:18:35 -0400
+Subject: [PATCH 01051/11362] =?UTF-8?q?[conductor]=20Pre-gate=20block:=20E?=
+ =?UTF-8?q?VALUATE=20the=20GAP-4=20execution-verifier=20on=20the=20TRM-rer?=
+ =?UTF-8?q?ank=20headroom=20pool=20(the=20moat-scissor=20ACCURACY=20proof;?=
+ =?UTF-8?q?=20gated=20on=20exp3975=20positive=20control):=20rank=20the=208?=
+ =?UTF-8?q?041=20real=20TRM=20candidates=20across=20the=2031-task=20headro?=
+ =?UTF-8?q?om=20pool=20by=20executed-rule-consistency=20(exp3975's=20synth?=
+ =?UTF-8?q?esizer=20->=20program=20->=20execute=20on=20test=5Finput=20->?=
+ =?UTF-8?q?=20score=20candidate=20agreement),=20as=20a=20PRIMARY=20selecto?=
+ =?UTF-8?q?r=20AND=20as=20a=20vote-primary-hybrid=20gated=20by=20executed-?=
+ =?UTF-8?q?consistency.=20Does=20it=20beat=20frequency-vote=20(pass@2=200.?=
+ =?UTF-8?q?4516)=20toward=20the=20oracle=20ceiling=20(0.6129)=20on=20the?=
+ =?UTF-8?q?=20COVERED=20tasks=20=E2=80=94=20reaching=20headroom=20the=20re?=
+ =?UTF-8?q?tired=20trained-content-energy=20lineage=20(0.16,=20at=20random?=
+ =?UTF-8?q?)=20could=20NOT=3F=20Report=20program-synthesis=20coverage=20ho?=
+ =?UTF-8?q?nestly;=20bootstrap=2095%=20CI;=20Poisson-binomial=20random-nul?=
+ =?UTF-8?q?l=20check.=20retire=5Fif=5Fsame=5Fverdict:=20if=20executed-cons?=
+ =?UTF-8?q?istency=20ALSO=20lands=20statistically=20at=20random=20WITH=20a?=
+ =?UTF-8?q?dequate=20coverage,=20the=20executed-consistency=20TRM=20select?=
+ =?UTF-8?q?or=20is=20retired=20and=20GAP-4=20closes=20with=20the=20honest?=
+ =?UTF-8?q?=20bound.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.positive_control_passed (actual=False == expected=True)
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                      | 2 +-
+ ops/conductor-log.md                              | 1 +
+ ops/conductor-state.json                          | 2 +-
+ results/experiment_3976_gap4_trm_rerank_eval.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 34e7fd82cc..b4a80a8065 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1842940, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-06-10T00:16:32Z"}
+\ No newline at end of file
++{"pid": 1842940, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-10T00:18:34Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 50ea7fdc0e..660e0427db 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8121,3 +8121,4 @@ c |
+ | 2026-06-10 00:03 UTC | BUILD the GAP-4 executed-rule-consistency verifier | FAIL | No file changes produced |
+ | 2026-06-10 00:12 UTC | BUILD the GAP-4 executed-rule-consistency verifier | OK | 91 passed in 3.20s |
+ | 2026-06-10 00:14 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
++| 2026-06-10 00:16 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d6da031c80..07ed6cec65 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1842940, "iteration": 7, "phase": "iteration_start", "started_at": "2026-06-10T00:16:32Z"}
+\ No newline at end of file
++{"pid": 1842940, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-10T00:18:34Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3976_gap4_trm_rerank_eval.json b/results/experiment_3976_gap4_trm_rerank_eval.json
+index 9cbaf792b9..7210aa3648 100644
+--- a/results/experiment_3976_gap4_trm_rerank_eval.json
++++ b/results/experiment_3976_gap4_trm_rerank_eval.json
+@@ -2,8 +2,8 @@
+   "experiment": 3976,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-10",
+-  "started_at": "2026-06-10T00:16:32.442697+00:00",
+-  "finished_at": "2026-06-10T00:16:32.442697+00:00",
++  "started_at": "2026-06-10T00:18:34.855352+00:00",
++  "finished_at": "2026-06-10T00:18:34.855352+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "EVALUATE the GAP-4 execution-verifier on the TRM-rerank headroom pool (the moat-scissor ACCURACY proof; gated on exp3975 positive control): rank the 8041 real TRM candidates across the 31-task headroom pool by executed-rule-consistency (exp3975's synthesizer -> program -> execute on test_input -> score candidate agreement), as a PRIMARY selector AND as a vote-primary-hybrid gated by executed-consistency. Does it beat frequency-vote (pass@2 0.4516) toward the oracle ceiling (0.6129) on the COVERED tasks \u2014 reaching headroom the retired trained-content-energy lineage (0.16, at random) could NOT? Report program-synthesis coverage honestly; bootstrap 95% CI; Poisson-binomial random-null check. retire_if_same_verdict: if executed-consistency ALSO lands statistically at random WITH adequate coverage, the executed-consistency TRM selector is retired and GAP-4 closes with the honest bound.",
+-- 
+2.55.0
+

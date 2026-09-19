@@ -1,0 +1,109 @@
+From cda5d119f42be146570bff36c8911f4c04f958d2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 12:57:23 -0400
+Subject: [PATCH 10785/11362] [conductor] Operational retrospective for
+ milestone 2026.09.603
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 12 +++++
+ results/operational_retro_2026_09_603.json | 51 ++++++++++++++++++++++
+ 3 files changed, 70 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_603.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index ac1fdd8b8f..287cbf73d7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6542,3 +6542,10 @@ The critical path for milestone .250:
+ - theme: artifact-time reconstruction hid the internal shape of a single compute launch
+ - key result: honest negative — fallback timing identifies the compute critical path but cannot explain it or determine accelerator and parallel-runner efficiency
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.603
++
++- exp_range: no data available this milestone
++- theme: anchored relation execution exposed missing task-level timing and accelerator attribution
++- key result: honest operational negative — the critical path is known, but its cause, GPU efficiency, and multi-model runner eligibility are not established
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 9b8addcbe3..7ee54b883f 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18535,3 +18535,15 @@ evidence has no measured counterfactual.
+ - 2026-09-02: Enoki asset admission and exact relation fixture (⚠️ Research Finding) — honest_verdict=complete_enoki_exact_relation_fixture_ready_no_accuracy_claim; results/experiment_6886_enoki_exact_relation_fixture.json
+ - 2026-09-02: Three family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_three_family_relation_corpus; results/experiment_6887_three_family_relation_proposal_corpus.json
+ - 2026-09-02: Independent held anchored relation qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_independent_relation_qualification; results/experiment_6888_independent_relation_qualification.json
++
++## 2026-09-02 — Milestone 2026.09.603 operational retrospective
++
++The milestone completed 4 experiments in 0.8 minutes. Three of these were
++compute-bound. Three family anchored relation proposal corpus set the critical
++path, but the timing record does not explain why. The compute-task idle field
++was false. The GPU report was a single snapshot, so it cannot prove task-level
++utilization efficiency. No record identifies parallel loading of two or more
++models or a missed DualGPURunner dispatch. Add task-scoped stage and GPU
++telemetry. Also record model count and runner choice. Schedule eligible
++concurrent compute work across both GPUs. The savings estimate is 0% because no
++timed control is available.
+diff --git a/results/operational_retro_2026_09_603.json b/results/operational_retro_2026_09_603.json
+new file mode 100644
+index 0000000000..ab2a7efcd0
+--- /dev/null
++++ b/results/operational_retro_2026_09_603.json
+@@ -0,0 +1,51 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.603",
++  "generated_at": "2026-09-02T16:52:36Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.8,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Three family anchored relation proposal corpus",
++      "duration_minutes": 0.72,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Enoki asset admission and exact relation fixture",
++      "duration_minutes": 0.04,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Independent held anchored relation qualification",
++      "duration_minutes": 0.01,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V603 executable manifest and branch isolation contract",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 4 experiments in 0.8 minutes, and 3 were compute-bound. Three family anchored relation proposal corpus was the longest entry, but the timing record does not explain why.",
++  "bottlenecks_identified": [
++    "Three family anchored relation proposal corpus set the critical path. The timing record has no stage data that explains its duration.",
++    "Task-level GPU efficiency cannot be diagnosed from a single GPU snapshot that is not linked to an experiment window."
++  ],
++  "improvements_suggested": [
++    "Record stage timing and start-to-finish GPU samples for each compute-bound experiment.",
++    "Record model count and runner choice for every compute launch, so DualGPURunner eligibility is auditable.",
++    "Add workload-aware scheduling that uses both GPUs when two or more models or independent compute jobs can run concurrently."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add task-scoped stage timing and GPU telemetry.",
++    "Record model count, runner eligibility, and runner choice for each compute launch.",
++    "Schedule eligible concurrent model work across both GPUs."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The compute ranking is Three family anchored relation proposal corpus, Enoki asset admission and exact relation fixture, then Independent held anchored relation qualification. The timing record gives no cause for these durations, and the uncorrelated GPU snapshot cannot establish task-level GPU efficiency. The compute-task idle field is false; no data establishes a task with two or more parallel models or a missed DualGPURunner dispatch."
++}
+-- 
+2.55.0
+

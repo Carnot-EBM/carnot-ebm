@@ -1,0 +1,628 @@
+From 03fbb9dd77306f27a9fd504d774ea803035c7c0d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 15:45:06 -0400
+Subject: [PATCH 07544/11362] [outer-loop] REQ-ARC-WMTE-5820: close
+ offline/live ACTION6 bounds gap in reproduce()
+
+ARC-AGI-3 Generalization-Testing Floor task class 2 (reusable-primitive
+hardening). The offline arcade never validated ACTION6 click coordinates
+against the live API's own declared [0,63] bound (arcengine's ComplexAction
+already has it as Field(ge=0,le=63) -- only wired into the live HTTP
+handler). This is the exact root cause behind lf52's original L9 route
+reproducing cleanly offline while 400-ing live, fixed reactively on
+2026-07-17 but never fixed at the source. arc_solver_kit.reproduce() now
+flags this class of gap for any future solve, additively (does not change
+reproduced/reached_level semantics).
+
+Real, non-mocked verification: 10 new unit tests against the actual lf52
+offline env, plus a full corpus audit (scripts/arc_action6_bounds_audit.py)
+replaying all 25 currently-banked live-submission trajectories through the
+hardened gate -- 2468 ACTION6 clicks checked, 0 out-of-bounds, 0 replay
+errors (after discovering and fixing that several adapters expect their own
+internal label dialect rather than the standard JSON encoding).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  58 ++++
+ ops/arc_solve_registry.yaml                   |  21 ++
+ ops/known-issues.md                           |  39 +++
+ ...er_loop_action6_bounds_audit_20260722.json | 296 ++++++++++++++++++
+ scripts/arc_action6_bounds_audit.py           |  60 +++-
+ ...arc_solver_kit_reproduce_action6_bounds.py |   8 +-
+ 6 files changed, 471 insertions(+), 11 deletions(-)
+ create mode 100644 results/outer_loop_action6_bounds_audit_20260722.json
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 36a38e1b37..5af4edf766 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -16618,3 +16618,61 @@ degeneracy, and leak metrics are reported over fresh matched cells only; the imp
+ excluded from family inference; `panel_ready_score=1.0` only if all three real SOTA families,
+ complete hashes, zero leaks, sufficient sample size, and at least two admissible independent
+ hypotheses pass; and no field supports solve or registry credit.
++
++### REQ-ARC-WMTE-5820: Offline Reproduction Gate Flags Live-Unsubmittable ACTION6 Clicks
++
++**Origin:** 2026-07-22, outer-loop work under CLAUDE.md's "ARC-AGI-3 Generalization-Testing
++Floor" (task class 2: reusable-primitive hardening based on a genuine gap surfaced by a real
++measurement). The 2026-07-17 live re-validation (`results/outer_loop_live_revalidation_20260717.json`,
++`project_arc_final_sprint_state` memory) found that lf52's original L9 route reproduced cleanly
++OFFLINE (`arc_solver_kit.reproduce()` reported `reproduced: true`) while being un-submittable
++LIVE (HTTP 400 at action 849, 22 ACTION6 clicks with x up to 132, valid range 0-63). Root cause:
++the OFFLINE arcade (`arc_agi`'s `LocalEnvironmentWrapper.step()`) never validates ACTION6
++coordinates, even though the installed `arcengine` dependency already declares the live API's
++own bound (`ComplexAction.x`/`.y`: `Field(ge=0, le=63)`) -- that validation is wired only into
++the live HTTP handler (`RestAPI.cmd()` -> `action.validate_data()`), never into the local/offline
++path. lf52's specific route was fixed reactively (an alternate in-bounds action sequence, commit
++`5ca2a999b`), but the underlying gap in `reproduce()` -- THE canonical offline reproduction gate
++every future solve is supposed to pass through per "ARC Solve Reproducibility Discipline" -- was
++never closed, leaving any future solve for any game free to silently bank another
++OOB-click-dependent "win" undetected until live-submission time.
++
++`arc_solver_kit.reproduce()` SHALL additionally track, for every label in `solution` that
++decodes (via the standard `_json_action_label` JSON-string encoding) to an ACTION6 click, whether
++that click's `(x, y)` would be rejected by the live API's own declared bound. It SHALL reuse
++`arcengine.enums.GameAction.ACTION6.validate_data()` (the exact validation the live server runs)
++rather than hardcoding the `[0,63]` bound a second time, so the check stays in sync automatically
++if the live API's bound ever changes. The check SHALL be additive: it SHALL NOT change
++`reproduced`/`reached_level` semantics (offline reproduction and live-submittability are distinct
++claims -- a route can satisfy one and not the other, as lf52's original route did). Labels this
++cannot parse (an adapter-specific dialect other than the standard JSON encoding) SHALL be silently
++skipped, not silently assumed clean -- coverage SHALL be reported via `checked_action6_clicks`
++rather than claimed complete.
++
++`reproduce()`'s return dict SHALL gain three fields: `checked_action6_clicks` (int, how many
++labels were successfully parsed as an ACTION6 click and checked), `oob_action6_clicks` (list of
++`{index, x, y}` for every checked click that fails the live bound), and
++`any_oob_action6_clicks` (bool, `len(oob_action6_clicks) > 0`).
++
++### SCENARIO-ARC-WMTE-5820-REPRODUCE-FLAGS-OOB-ACTION6-CLICK
++
++**Given** a `solution` containing one ACTION6 label with `x` or `y` outside `[0, 63]`
++**When** `arc_solver_kit.reproduce()` replays it against the offline arcade
++**Then** the returned dict has `any_oob_action6_clicks=True`, `oob_action6_clicks` naming the
++exact index/x/y of the offending click, and `reproduced`/`reached_level` computed exactly as
++before this requirement (the OOB flag does not gate or alter offline-reproduction semantics).
++
++### SCENARIO-ARC-WMTE-5820-CORPUS-AUDIT-ALL-25-CLEAN
++
++**Given** all 25 currently-banked live-submission trajectories
++(`results/arc3_live_banked_trajectories/<game>.json`)
++**When** each is replayed through the hardened `reproduce()` (verified 2026-07-22 via
++`scripts/arc_action6_bounds_audit.py`, real non-mocked replay, no adapter-specific label
++dialects -- a generic raw-action apply used uniformly across all 25 games after per-adapter
++`apply()` methods were found to expect their own internal search-label dialect rather than the
++standard JSON encoding)
++**Then** all 25 games replay with zero errors, 2468 total ACTION6 clicks checked, and zero
++out-of-bounds clicks found (`results/outer_loop_action6_bounds_audit_20260722.json`) -- a real
++measurement, not an assumption, and a synthetic deliberately-out-of-bounds regression check
++(`synthetic_regression_check.synthetic_oob_detected=true`) confirms the detector itself is
++working before this "all clean" result is trusted.
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 4c2a51d4b9..196a59172b 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -715,6 +715,27 @@ general_gotchas:
+   - sc25
+   note: Exp 4438 records consolidated generic primitive active_data_collection from
+     Exp 4436.
++- id: offline_arcade_permits_out_of_bounds_action6_clicks
++  derived_from_games:
++  - lf52
++  note: 'The OFFLINE arcade (arc_agi LocalEnvironmentWrapper.step()) never validates
++    ACTION6 (x,y) against the live API''s own [0,63]x[0,63] bound (arcengine''s
++    ComplexAction already declares Field(ge=0,le=63) -- that check is wired only
++    into the live HTTP handler, never the local path). A route can therefore
++    reproduce cleanly offline while 400-ing live -- exactly what happened to lf52''s
++    original L9 route (22 OOB clicks, x up to 132), found only at live-submission
++    time and fixed reactively 2026-07-17 (commit 5ca2a999b). 2026-07-22 fix:
++    arc_solver_kit.reproduce() (the canonical offline reproduction gate) now
++    reuses arcengine''s own bound to flag any ACTION6 click a solve route
++    depends on that would be rejected live (oob_action6_clicks /
++    any_oob_action6_clicks / checked_action6_clicks fields), additively --
++    reproduced/reached_level semantics are unchanged. All 25 currently-banked
++    trajectories re-audited clean (0/2468 clicks OOB) via
++    scripts/arc_action6_bounds_audit.py -- see
++    results/outer_loop_action6_bounds_audit_20260722.json and
++    openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-5820.
++    Future solves for ANY game are now caught by this check before being
++    promoted into a submission package, not just discovered live.'
+ games:
+ - game: r11l
+   reproducibility: reproduced
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 6e9f08f4a4..1fad7e34e3 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,45 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### 2026-07-22 (outer-loop, ARC-AGI-3 Generalization-Testing Floor task class 2): offline/live ACTION6 bounds gap closed in `arc_solver_kit.reproduce()`
++
++**What was found:** the OFFLINE arcade (`arc_agi`'s `LocalEnvironmentWrapper.step()`) never
++validates ACTION6 click coordinates, even though the installed `arcengine` dependency already
++declares the live API's own `[0,63]x[0,63]` bound (`ComplexAction.x`/`.y`:
++`Field(ge=0, le=63)`) — that validation is wired only into the live HTTP handler
++(`RestAPI.cmd()`), never into the local/offline replay path. This is the exact root cause behind
++lf52's original L9 route reproducing cleanly offline while 400-ing live at action 849 (22
++out-of-bounds clicks, x up to 132) — found only at live-submission time and fixed reactively on
++2026-07-17 (an alternate in-bounds route, commit `5ca2a999b`), but the underlying gap in
++`arc_solver_kit.reproduce()` — THE canonical offline reproduction gate every future solve is
++supposed to pass through — was never closed. Nothing prevented a future solve for any of the
++other 24 games from silently banking another OOB-click-dependent "win."
++
++**Fix shipped (reusable-primitive hardening, not a per-game patch):**
++`python/carnot/agentic/arc_solver_kit.py`'s `reproduce()` now additionally flags any ACTION6
++click a solve route depends on that the live API would reject, reusing
++`arcengine.enums.GameAction.ACTION6.validate_data()` (the exact same validation the live server
++runs) rather than hardcoding the bound a second time. Additive only —
++`reproduced`/`reached_level` semantics are unchanged; new fields `checked_action6_clicks`,
++`oob_action6_clicks`, `any_oob_action6_clicks`. Verified via a synthetic regression check (a
++deliberately out-of-bounds click IS detected) before trusting anything downstream.
++
++**Real corpus audit, not an assumption:** `scripts/arc_action6_bounds_audit.py` real-replayed all
++25 currently-banked live-submission trajectories
++(`results/arc3_live_banked_trajectories/<game>.json`) through the hardened `reproduce()`. Found
++along the way that several games' own `GameAdapter.apply()` implementations parse their own
++internal search-label dialect rather than the standard JSON encoding this script produces
++(raised real `int()`/`KeyError` errors for ar25/ka59/cd82/lp85 on the first run) — fixed by
++using a uniform generic raw-replay `apply` for all 25 games instead of each game's adapter.
++Result: **all 25 games replay cleanly, 2468 total ACTION6 clicks checked, 0 out-of-bounds
++found.** Artifact: `results/outer_loop_action6_bounds_audit_20260722.json`. 10 new unit tests
++(`tests/python/test_arc_solver_kit_reproduce_action6_bounds.py`, real non-mocked coverage
++against the actual lf52 offline env, all passing).
++
++**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-5820.
++**Registry:** `ops/arc_solve_registry.yaml` `general_gotchas` entry
++`offline_arcade_permits_out_of_bounds_action6_clicks`.
++
+ ### 2026-07-19 (outer-loop, INFORMATIONAL — conductor stale-import gotcha: a fixed lint doesn't take effect until process restart)
+ 
+ **Symptom:** the conductor was stuck refusing to activate milestone 2026.07.511 for ~90 hours
+diff --git a/results/outer_loop_action6_bounds_audit_20260722.json b/results/outer_loop_action6_bounds_audit_20260722.json
+new file mode 100644
+index 0000000000..79a0ace7b2
+--- /dev/null
++++ b/results/outer_loop_action6_bounds_audit_20260722.json
+@@ -0,0 +1,296 @@
++{
++  "acceptance_gates": [
++    {
++      "condition": "synthetic_oob_detected == true",
++      "passed": true,
++      "principle": "A regression check that would silently pass 'all clean' because the detector itself is broken is worse than no check at all -- this gate must fail loudly before the corpus audit below is trusted."
++    }
++  ],
++  "corpus_audit": {
++    "any_corpus_oob_clicks_found": false,
++    "games_audited": 25,
++    "games_with_no_registered_game_adapter": [
++      "sc25",
++      "tn36",
++      "wa30"
++    ],
++    "per_game": [
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 253,
++        "checked_action6_clicks": 0,
++        "game": "ar25",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 410,
++        "checked_action6_clicks": 196,
++        "game": "bp35",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 84,
++        "checked_action6_clicks": 0,
++        "game": "cd82",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 279,
++        "checked_action6_clicks": 43,
++        "game": "cn04",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 544,
++        "checked_action6_clicks": 0,
++        "game": "dc22",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 83,
++        "checked_action6_clicks": 83,
++        "game": "ft09",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 331,
++        "checked_action6_clicks": 0,
++        "game": "g50t",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 451,
++        "checked_action6_clicks": 28,
++        "game": "ka59",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 1033,
++        "checked_action6_clicks": 553,
++        "game": "lf52",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 105,
++        "checked_action6_clicks": 105,
++        "game": "lp85",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": true
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 672,
++        "checked_action6_clicks": 0,
++        "game": "ls20",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 401,
++        "checked_action6_clicks": 67,
++        "game": "m0r0",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 305,
++        "checked_action6_clicks": 304,
++        "game": "r11l",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 689,
++        "checked_action6_clicks": 0,
++        "game": "re86",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 382,
++        "checked_action6_clicks": 382,
++        "game": "s5i5",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 136,
++        "checked_action6_clicks": 126,
++        "game": "sb26",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 206,
++        "checked_action6_clicks": 82,
++        "game": "sc25",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 378,
++        "checked_action6_clicks": 15,
++        "game": "sk48",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 315,
++        "checked_action6_clicks": 33,
++        "game": "sp80",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 164,
++        "checked_action6_clicks": 160,
++        "game": "su15",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 102,
++        "checked_action6_clicks": 102,
++        "game": "tn36",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 127,
++        "checked_action6_clicks": 0,
++        "game": "tr87",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 191,
++        "checked_action6_clicks": 0,
++        "game": "tu93",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 189,
++        "checked_action6_clicks": 189,
++        "game": "vc33",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      },
++      {
++        "any_oob_action6_clicks": false,
++        "banked_action_count": 670,
++        "checked_action6_clicks": 0,
++        "game": "wa30",
++        "oob_action6_clicks": [],
++        "replay_error": null,
++        "used_implicit_action6_fallback": false
++      }
++    ],
++    "replay_errors": [],
++    "total_action6_clicks_checked": 2468,
++    "total_oob_action6_clicks_found": 0
++  },
++  "duration_note": "Real, non-mocked offline replay of all 25 banked trajectories (sum 8500 actions) through the actual environment_files game simulators via arc_solver_kit.reproduce().",
++  "duration_s": 9.874,
++  "experiment": "outer_loop_action6_bounds_audit_20260722",
++  "field_provenance": {
++    "oob_action6_clicks": {
++      "principle": "Records exactly which banked actions would 400 live, so a future fix (like lf52's 2026-07-17 in-bounds route) has a precise target instead of a vague 'something in this route fails live'."
++    }
++  },
++  "honest_verdict": "complete_hardening_shipped_and_all_25_banked_trajectories_clean",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "narrative": "The OFFLINE arcade (arc_agi LocalEnvironmentWrapper.step()) never validates ACTION6 click coordinates, even though the installed arcengine dependency already declares the live API's own bound (ComplexAction.x/y: Field(ge=0, le=63)) -- that validation is wired into the live HTTP handler only, never into the local/offline path. arc_solver_kit.reproduce() (THE canonical offline reproduction gate) now reuses arcengine's own bound to flag any ACTION6 click a solve route depends on that would be rejected live, additively (oob_action6_clicks / any_oob_action6_clicks / checked_action6_clicks fields) without changing existing reproduced/reached_level semantics. Verified working via a synthetic regression check (a deliberately out-of-bounds click IS detected) before trusting the corpus audit below.",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "note": "python/carnot/agentic/arc_solver_kit.py _action6_click_from_label / _action6_out_of_live_bounds / reproduce() edited before this run.",
++      "resource": "arc_solver_kit_reproduce_action6_bounds_hardening_shipped"
++    },
++    {
++      "available": true,
++      "note": "25 game trajectory files found in /home/ianblenke/github.com/ianblenke/carnot/results/arc3_live_banked_trajectories.",
++      "resource": "banked_trajectories_directory_present"
++    }
++  ],
++  "random_seed": null,
++  "random_seed_note": "Deterministic replay of pre-existing banked action sequences against the deterministic offline simulator; no RNG invoked by this driver.",
++  "reproducibility_checksum": "a03888ffa5a8ea197f2a4d438f0dceeebcddd6c85abaf329c43cc07a305b89f8",
++  "run_date": "2026-07-22",
++  "schema": "carnot.arc_action6_bounds_audit.v1",
++  "solve_provenance_note": "N/A -- this is not a solve artifact. No new level is claimed for any game; this audits and hardens the reproduction-gate infrastructure itself (arc_solver_kit.reproduce()).",
++  "synthetic_regression_check": {
++    "raw_result": {
++      "any_oob_action6_clicks": true,
++      "checked_action6_clicks": 1,
++      "claimed_level": null,
++      "game": "lf52",
++      "mode": "offline_reproduction_gate_no_quota",
++      "oob_action6_clicks": [
++        {
++          "index": 1,
++          "x": 999,
++          "y": 5
++        }
++      ],
++      "reached_level": 0,
++      "reproduced": true
++    },
++    "synthetic_oob_detected": true
++  }
++}
+\ No newline at end of file
+diff --git a/scripts/arc_action6_bounds_audit.py b/scripts/arc_action6_bounds_audit.py
+index 3ae6bb66e7..ddc3cd59d3 100644
+--- a/scripts/arc_action6_bounds_audit.py
++++ b/scripts/arc_action6_bounds_audit.py
+@@ -39,7 +39,9 @@ import os
+ import sys
+ import time
+ 
+-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python"))
++sys.path.insert(
++    0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python")
++)
+ 
+ from carnot.agentic import arc_solver_kit as kit  # noqa: E402
+ from carnot.agentic.arc_agi3_live_adapter import _game_action  # noqa: E402
+@@ -51,7 +53,8 @@ OUTPUT_PATH = os.path.join(REPO_ROOT, "results", "outer_loop_action6_bounds_audi
+ 
+ 
+ def _generic_apply(env, label, frame):
+-    """Raw-replay apply for games with no registered GameAdapter (sc25, tn36, wa30).
++    """Raw-replay apply used for ALL 25 games (see `_apply_for`'s docstring for why per-game
++    GameAdapter.apply is deliberately NOT used here).
+ 
+     Mirrors the pattern every real adapter's own `apply` already uses internally (e.g.
+     arc_game_adapters.py's `_lf52`/`_re86`): decode the JSON label, dispatch the action id +
+@@ -65,8 +68,43 @@ def _generic_apply(env, label, frame):
+ 
+ 
+ def _apply_for(game: str):
+-    adapter = get_adapter(game)
+-    return adapter.apply if adapter is not None else _generic_apply
++    """Always use the generic raw-replay apply, never a game's own GameAdapter.apply.
++
++    Discovered by running this audit for real (not assumed up front): several adapters'
++    apply() implementations parse their OWN internal search-label dialect (e.g. a bare
++    action-id string, or a differently-templated click label) rather than the standard
++    `_json_action_label` JSON-string format this script constructs from the raw banked
++    `{"action":int,"data":{"x":..,"y":..}}` entries -- using get_adapter(game).apply here
++    raised real errors for ar25/ka59 (int() on a raw JSON string) and cd82/lp85 (KeyError
++    'x', a different label shape). _generic_apply directly interprets exactly the format
++    this script produces, uniformly, for every game -- it doesn't need any per-game
++    adapter's own idiosyncratic label parsing, which exists to interpret THAT adapter's own
++    internally-generated search labels, not externally-supplied raw action replay.
++    """
++    del game
++    return _generic_apply
++
++
++def _labels_from_bank(raw_solution: list[dict]) -> tuple[list[str], bool]:
++    """Convert a banked trajectory's structured entries into _json_action_label strings.
++
++    Most games' banks are {"action": int, "data": {"x":.., "y":..}}. lp85's bank is
++    ACTION6-only and omits the "action" key entirely (every entry is bare {"x":.., "y":..}) --
++    confirmed by direct inspection, not assumed; handled explicitly here rather than papering
++    over a KeyError, and the fallback is reported back via the returned bool so it shows up in
++    the artifact rather than being silently applied.
++    """
++    used_implicit_action6_fallback = False
++    labels = []
++    for entry in raw_solution:
++        if "action" in entry:
++            labels.append(_json_action_label(entry["action"], entry.get("data")))
++        elif {"x", "y"} <= entry.keys():
++            used_implicit_action6_fallback = True
++            labels.append(_json_action_label(6, {"x": entry["x"], "y": entry["y"]}))
++        else:
++            raise ValueError(f"unrecognized banked trajectory entry shape: {entry!r}")
++    return labels, used_implicit_action6_fallback
+ 
+ 
+ def _run_synthetic_regression_check() -> dict:
+@@ -114,7 +152,7 @@ def main() -> None:
+         with open(os.path.join(BANKED_DIR, game + ".json")) as f:
+             bank = json.load(f)
+         raw_solution = bank["solution"]
+-        labels = [_json_action_label(a["action"], a.get("data")) for a in raw_solution]
++        labels, used_implicit_action6_fallback = _labels_from_bank(raw_solution)
+ 
+         adapter = get_adapter(game)
+         if adapter is None:
+@@ -126,6 +164,7 @@ def main() -> None:
+             entry = {
+                 "game": game,
+                 "banked_action_count": bank.get("action_count", len(raw_solution)),
++                "used_implicit_action6_fallback": used_implicit_action6_fallback,
+                 "checked_action6_clicks": result["checked_action6_clicks"],
+                 "any_oob_action6_clicks": result["any_oob_action6_clicks"],
+                 "oob_action6_clicks": result["oob_action6_clicks"],
+@@ -137,6 +176,7 @@ def main() -> None:
+             entry = {
+                 "game": game,
+                 "banked_action_count": bank.get("action_count", len(raw_solution)),
++                "used_implicit_action6_fallback": used_implicit_action6_fallback,
+                 "checked_action6_clicks": None,
+                 "any_oob_action6_clicks": None,
+                 "oob_action6_clicks": None,
+@@ -146,7 +186,9 @@ def main() -> None:
+ 
+     duration_s = round(time.monotonic() - t0, 3)
+     replay_errors = [e for e in per_game if e["replay_error"] is not None]
+-    any_corpus_oob = any(e["any_oob_action6_clicks"] for e in per_game if e["any_oob_action6_clicks"] is not None)
++    any_corpus_oob = any(
++        e["any_oob_action6_clicks"] for e in per_game if e["any_oob_action6_clicks"] is not None
++    )
+ 
+     checksum_input = json.dumps(
+         [{"game": e["game"], "oob": e["oob_action6_clicks"]} for e in per_game], sort_keys=True
+@@ -242,8 +284,10 @@ def main() -> None:
+ 
+     print(f"Wrote {OUTPUT_PATH}")
+     print(f"verdict: {verdict}")
+-    print(f"games_audited={len(banked_games)} total_action6_clicks_checked={total_checked_clicks} "
+-          f"total_oob_action6_clicks_found={total_oob_clicks} replay_errors={len(replay_errors)}")
++    print(
++        f"games_audited={len(banked_games)} total_action6_clicks_checked={total_checked_clicks} "
++        f"total_oob_action6_clicks_found={total_oob_clicks} replay_errors={len(replay_errors)}"
++    )
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/tests/python/test_arc_solver_kit_reproduce_action6_bounds.py b/tests/python/test_arc_solver_kit_reproduce_action6_bounds.py
+index f298887a36..1fdcbfb76b 100644
+--- a/tests/python/test_arc_solver_kit_reproduce_action6_bounds.py
++++ b/tests/python/test_arc_solver_kit_reproduce_action6_bounds.py
+@@ -11,9 +11,11 @@ suite covers the reusable-primitive hardening added to reproduce() so any FUTURE
+ solve is flagged for this gap immediately, rather than only being discovered at
+ live-submission time.
+ 
+-Spec: CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" (task class 2: reusable-primitive
+-hardening based on a genuine gap surfaced by a real measurement -- the 2026-07-17 live
+-re-validation that surfaced lf52's original OOB route).
++Spec: REQ-ARC-WMTE-5820, SCENARIO-ARC-WMTE-5820-REPRODUCE-FLAGS-OOB-ACTION6-CLICK,
++SCENARIO-ARC-WMTE-5820-CORPUS-AUDIT-ALL-25-CLEAN (openspec/capabilities/
++arc-world-model-trust-energy/spec.md). Also CLAUDE.md "ARC-AGI-3 Generalization-Testing
++Floor" (task class 2: reusable-primitive hardening based on a genuine gap surfaced by a real
++measurement -- the 2026-07-17 live re-validation that surfaced lf52's original OOB route).
+ """
+ 
+ from __future__ import annotations
+-- 
+2.55.0
+

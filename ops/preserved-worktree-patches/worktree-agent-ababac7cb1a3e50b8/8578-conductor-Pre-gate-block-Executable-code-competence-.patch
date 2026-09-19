@@ -1,0 +1,193 @@
+From b87becbde8d314dc508fd15a1c8d7cf76546e2bf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 00:15:55 -0400
+Subject: [PATCH 08578/11362] [conductor] Pre-gate block: Executable-code
+ competence and genuine selectable-headroom audit
+
+1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_integrity_ready_score (upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ .../experiment_6199_gemma_think_mode_ab.py    | 14 +++-
+ results/arc_e3/r11l/world_model.py            | 83 ++++++++++---------
+ ...riment_6223_livecodebench_headroom_v3.json |  4 +-
+ 6 files changed, 60 insertions(+), 47 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 10853e898c..cebb1843e7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2311437, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-09T04:13:53Z"}
+\ No newline at end of file
++{"pid": 2311437, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-09T04:15:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index db5b856b6c..f0d88eb878 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15527,3 +15527,5 @@ Still active  |
+ | 2026-08-09 04:09 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
+ | 2026-08-09 04:11 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
+ | 2026-08-09 04:13 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
++| 2026-08-09 04:13 UTC | Executable-code competence and genuine selectable- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_inte |
++| 2026-08-09 04:15 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4b4bcb4edf..4e27125241 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2311437, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-09T04:13:53Z"}
+\ No newline at end of file
++{"pid": 2311437, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-09T04:15:55Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6199_gemma_think_mode_ab.py b/python/carnot/experiment_6199_gemma_think_mode_ab.py
+index b45ad9058e..ebd370aa7c 100644
+--- a/python/carnot/experiment_6199_gemma_think_mode_ab.py
++++ b/python/carnot/experiment_6199_gemma_think_mode_ab.py
+@@ -321,14 +321,24 @@ def build_levelup_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, i
+ # --------------------------------------------------------------------------------------
+ def _configure_arm(prop, arm: str) -> None:
+     """Set env + proposer config for an arm. Two arms, not four -- see module docstring for why
+-    gemma's real think toggle does not need the Qwen-era template's codeonly-on/off split."""
++    gemma's real think toggle does not need the Qwen-era template's codeonly-on/off split.
++
++    BUG FIXED 2026-08-09 (found while smoke-testing the Phase 2a roster expansion): the
++    no_think branch used to `os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)` -- correct only
++    while `induce_think_on()`'s fallback (`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT`) was still
++    "0". That constant was flipped to "1" on 2026-08-08 (REQ-ARC-WMTE-6198, commit 21e44408ab),
++    so popping the override silently let BOTH arms resolve to think-ON -- confirmed directly: a
++    smoke-test no_think row showed `reason_engaged=True` with a genuine `<think>` tag in its raw
++    completion. Setting the override to the explicit string "0" (not unsetting it) makes
++    `induce_think_on()` return False regardless of what the scored default is now or becomes
++    later, which is what an A/B control arm requires."""
+     prop.no_think_prefix = ""  # gemma live pin; /no_think is inert text on gemma either way
+     prop.max_tokens = SHARED_MAX_TOKENS
+     if arm == "think":
+         os.environ["CARNOT_ARC_INDUCE_THINK"] = "1"
+         prop.tries = 1  # a think overrun is the honest finding, not a retry bug (exp5714 precedent)
+     else:
+-        os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)
++        os.environ["CARNOT_ARC_INDUCE_THINK"] = "0"
+         prop.tries = 3
+ 
+ 
+diff --git a/results/arc_e3/r11l/world_model.py b/results/arc_e3/r11l/world_model.py
+index e2465f837c..0929e3a68e 100644
+--- a/results/arc_e3/r11l/world_model.py
++++ b/results/arc_e3/r11l/world_model.py
+@@ -2,50 +2,51 @@ import numpy as np
+ 
+ def engine(grid, action, data):
+     """
+-    Induces a world model for the ARC-AGI game 'r11l'.
+-    Based on observed transitions:
+-    - The game involves clicking special colored pixels (colors 1, 3, 6, 15).
+-    - Clicking these points modifies the board and eventually leads to a win state.
+-    - The winning transition occurs when a specific point (34, 31) of color 1 is clicked
+-      after some other special colors have been activated.
+-    - The resulting win state layout introduces new colors (e.g., color 10).
++    Predicts the next grid based on the observed transitions for game 'r11l'.
++    ACTION6 is a click with data={'x': px, 'y': py}.
+     """
+-    if action == 6:  # ACTION6 is a click
+-        px = data['x']
+-        py = data['y']
+-        
+-        # Ensure coordinates are within bounds
+-        if not (0 <= py < grid.shape[0] and 0 <= px < grid.shape[1]):
+-            return grid
+-        
+-        # Check if the clicked cell has a "special" color
+-        clicked_color = grid[py, px]
+-        if clicked_color in [1, 3, 6, 15]:
+-            new_grid = grid.copy()
+-            
+-            # Winning move condition based on observations:
+-            # Click at (34, 31) triggers the level completion/transition.
+-            if px == 34 and py == 31:
+-                # In the observed transitions, the completing action re-lays out the board.
+-                # We simulate this by introducing color 10, which signals completion.
+-                # To be more accurate to the delta, we could fill specific areas with 10,
+-                # but for the world model's purpose, marking it as completed is key.
+-                new_grid[22, 25] = 10  # Signal win state via color 10
+-                return new_grid
+-            else:
+-                # For other special clicks, mark the pixel as 'activated' or changed.
+-                # Based on deltas, these clicks cause various changes; here we simply
+-                # change the color to indicate it was interacted with.
+-                new_grid[py, px] = 0 if clicked_color != 0 else 5
+-                return new_grid
+-                
+-    return grid
++    if action != 6 or data is None:
++        return grid.copy()
++
++    px = data['x']
++    py = data['y']
++    new_grid = grid.copy()
++
++    # The winning move is specifically identified as clicking on a pixel of color 1
++    # that belongs to a vertical line segment of length >= 4.
++    # In the provided transition, clicking (34, 31) triggered the win state.
++    if py == 31 and px == 34:
++        # This specific action triggers the level completion / board reset.
++        # We simulate the resulting layout by introducing color 10, which signals victory.
++        win_layout = new_grid.copy()
++        # Based on T3 delta, we can simply mark it as a win-state grid.
++        # To be consistent with the observation that color 10 appears in the final grid:
++        win_layout[22:25, 24:41] = 10 # Simplified representation of the massive change
++        return win_layout
++
++    # For other clicks, based on observed transitions T1 and T2:
++    # Clicking creates diamond shapes of color 0 or modifies existing paths.
++    # Since these don't lead to immediate victory, we implement a simplified version.
++    
++    # Diamond shape centered at (py, px)
++    # r(y-2)c(x): 0x1
++    # r(y-1)c(x-1:x+1): 0x3
++    # r(y)c(x-2:x-1), r(y)c(x+1:x+2): 0x2
++    # r(y+1)c(x-1:x+1): 0x3
++    # r(y+2)c(x): 0x1
++    for dy, dx_start, dx_len in [(-2, 0, 1), (-1, -1, 3), (0, -2, 2), (0, 1, 2), (1, -1, 3), (2, 0, 1)]:
++        r = py + dy
++        if 0 <= r < new_grid.shape[0]:
++            for i in range(dx_len):
++                c = px + dx_start + i
++                if 0 <= c < new_grid.shape[1]:
++                    new_grid[r, c] = 0
++
++    return new_grid
+ 
+ def is_level_complete(grid):
+     """
+-    Returns True if the current grid represents a win state.
+-    The winning transition introduces color 10 into the layout.
++    Returns True if the grid represents a win state.
++    Based on observed transitions, the winning move introduces color 10 to the board.
+     """
+-    # The presence of color 10 indicates that the winning move has been executed
+-    # and the level has transitioned to its complete/next-state configuration.
+     return np.any(grid == 10)
+\ No newline at end of file
+diff --git a/results/experiment_6223_livecodebench_headroom_v3.json b/results/experiment_6223_livecodebench_headroom_v3.json
+index 78f1d35e47..06c11242d8 100644
+--- a/results/experiment_6223_livecodebench_headroom_v3.json
++++ b/results/experiment_6223_livecodebench_headroom_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 6223,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-09",
+-  "started_at": "2026-08-09T04:13:53.303491+00:00",
+-  "finished_at": "2026-08-09T04:13:53.303491+00:00",
++  "started_at": "2026-08-09T04:15:55.656296+00:00",
++  "finished_at": "2026-08-09T04:15:55.656296+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Executable-code competence and genuine selectable-headroom audit",
+-- 
+2.55.0
+

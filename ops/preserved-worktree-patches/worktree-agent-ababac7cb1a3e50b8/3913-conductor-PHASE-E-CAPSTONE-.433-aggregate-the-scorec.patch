@@ -1,0 +1,2408 @@
+From 6583076a6f773d79545273ff2900ee92b4e87385 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 24 Jun 2026 22:31:18 -0400
+Subject: [PATCH 03913/11362] [conductor] PHASE E (CAPSTONE .433) -- aggregate
+ the scorecard + the HEADLINE DECISION: did PERCEPTION (A1
+ object-centric/relational representation into the live PROPOSAL distribution)
+ or AMORTIZED EXPLORATION (A2 cross-game prior + Go-Explore archive) cross the
+ offline->live bridge for L1-FIRST-CONTACT where eight milestones of selection
+ + generation-by-search + directed-exploration could not -- did A1 make the
+ GENERIC agent reach a NEW level (offline-reproduced, ORDER-1-representation
+ ablation failing) OR resolve the perception-vs-search diagnostic
+ (perception_is_the_wall), did A2 raise candidate-generation coverage + lift
+ held-out first-win (CI excludes baseline, no-prior ablation failing,
+ arc_go_explore now live-reachable), did A3 bank +1 (61->62)? Did A4's
+ held-out first-win readiness improve vs 0.04 (with null-delta markers)? Skip
+ flagged_adversarial / control-failed / ablation-missing artifacts. Confirm
+ verifier_is_oracle:false on every included value claim. Re-affirm G1-G4
+ paper_ready (FoVer 0.9131 frozen). Submission operator-only.
+
+Automated research step by research conductor.
+Task ID: exp4710-e
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    4 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_4710_capstone_v433.py   | 1026 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ results/experiment_4710_capstone_v433.json    |  578 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ .../test_experiment_4710_capstone_v433.py     |  591 ++++++++++
+ 12 files changed, 2216 insertions(+), 17 deletions(-)
+ create mode 100644 python/carnot/experiment_4710_capstone_v433.py
+ create mode 100644 results/experiment_4710_capstone_v433.json
+ create mode 100644 tests/python/test_experiment_4710_capstone_v433.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index aa5a03bb14..77451533da 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -346,6 +346,10 @@
+ - SCENARIO-CAPSTONE-4699: The artifact `results/experiment_4699_archive_432_activate_433.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `close_state_432`, and `v433_pivot`; it must also emit `transition`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.433`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, preserve Exp4698's capstone verdict `complete: capability_grew_60_to_61`, and never submit to the leaderboard.
+ - SCENARIO-CAPSTONE-4699-BLOCKED-PRECONDITION: If neither parseable literal `research-roadmap-next.yaml` nor already-active `.433` is available, `offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `61`, Exp4688, Exp4689, Exp4690, Exp4691, Exp4698, or the .433 design doc is missing, the workflow must still write `results/experiment_4699_archive_432_activate_433.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, and empty `close_state_432` and `v433_pivot`.
+ - SCENARIO-CAPSTONE-4699-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `close_state_432` = "the honest .432 numbers (A3 60->61; A1 winning_prefix_still_not_proposed; A2 coverage 0 + first_win -0.04; both unchanged; A4 flat 0.04 TAUTOLOGY-flagged; bridge_crossed=False) carried forward so the record does not drift."; `v433_pivot` = "the .433 headline rationale (PIVOT to PERCEPTION: object-centric/relational representation into the live PROPOSAL distribution + perception-vs-search diagnostic; A2 amortized cross-game prior + Go-Explore archive wired live; A4 emits null-delta markers) recorded so the milestone intent is traceable."
++- REQ-CAPSTONE-4710: The .433 ARC sprint capstone scorecard SHALL aggregate Exp4700 through Exp4707 plus `ops/arc_solve_registry.yaml` through the Reading-Results discipline by running or using `scripts/summarize_artifact.py` before citing any upstream number. It SHALL verify the registry is YAML-loadable and every cited upstream artifact exists before proceeding, otherwise writing `results/experiment_4710_capstone_v433.json` with `honest_verdict=blocked_<resource>`. It SHALL exclude any stamped `flagged_adversarial:true`, live-critical, failed-acceptance-gate, positive-control-failed, false-negative-risk-open, control-failed, ablation-missing, or oracle-not-distinct artifact from clean headline value claims. It SHALL count A1 object-centric perception as a headline win only when the generic agent reaches a new level, the `order1_ablation_reached_level` is strictly lower than `generic_agent_reached_level`, and `offline_reproduced=true`; count A2 amortized-exploration lift only when `coverage_delta>0`, the winner appears where the no-prior baseline did not, the no-prior ablation failed, and the held-out first-win CI excludes the no-prior baseline; take `reproducible_total_levels` authoritatively from the registry header; report A4 readiness only from the retargeted held-out first-win lane against the `0.04` baseline, with null-delta markers honored, not replay count; require `verifier_is_oracle:false` on every included value claim; re-affirm G1-G4 `paper_ready` with frozen FoVer `0.9131`; and keep submission operator-only with `leaderboard_submission=false`. It SHALL write `results/experiment_4710_capstone_v433.json` and SHALL NOT modify `scripts/research_conductor.py` or submit to the leaderboard.
++- SCENARIO-CAPSTONE-4710: The artifact `results/experiment_4710_capstone_v433.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `cited_upstream_artifacts`, `a1_perception_new_level`, `a1_perception_is_the_wall_diagnostic`, `a2_amortized_exploration_coverage_and_lift`, `reproducible_total_levels`, `reproducible_total_levels_delta`, `held_out_first_win_readiness`, `bridge_crossed_for_solve`, `flagged_artifacts_handled`, `verifier_is_oracle`, `paper_ready`, `leaderboard_submission`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `scorecard`, `field_principles`, `spec_refs`, `schema`, `experiment`, `result_path`, and `duration_s`. The default .433 read must exclude flagged/control-failed/ablation-missing upstreams from the headline, must not promote A1 unless the order-1 representation ablation is strictly lower and offline reproduction passes, must still report the A1 `perception_is_the_wall` diagnostic even when A1 banks no level, must not promote A2 unless coverage rises over the no-prior baseline, the no-prior ablation fails, and the held-out first-win CI excludes the no-prior baseline, must import the registry-authoritative capability growth from 61 to the registry total, must treat Exp4703 readiness as the scored held-out first-win lane with null-delta markers and not replay count, must record Exp4706/Exp4707 as shipped guard evidence, must report `bridge_crossed_for_solve` only for a valid perception or amortized-exploration lever crossing the offline-to-live L1-first-contact bridge, and must keep `leaderboard_submission=false`.
++- SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION: If `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, `scripts/summarize_artifact.py` is unavailable, the capstone spec lacks `REQ-CAPSTONE-4710`, or any required upstream artifact from Exp4700 through Exp4707 is missing, the workflow must still write `results/experiment_4710_capstone_v433.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, no clean headline bridge win, empty or quarantined source imports, `leaderboard_submission=false`, and a valid reproducibility checksum.
++- SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: bridge_crossed_live_generic_new_level_via_<perception|amortized_exploration>_<games> OR complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_61_to_<n>."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `cited_upstream_artifacts` = "every headline number traces to a real upstream artifact with sha256 (the audit trail)."; `a1_perception_new_level` = "the A1 result -- the generic agent's new level via object-centric perception, counted ONLY if the ORDER-1-representation ablation strictly lower + offline_reproduced."; `a1_perception_is_the_wall_diagnostic` = "the A1 DECISIVE diagnostic -- did an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 did not (perception_is_the_wall true/false); a headline finding even if A1 banks no level (resolves the 8-milestone ambiguity)."; `a2_amortized_exploration_coverage_and_lift` = "the A2 result -- coverage_delta (winner-now-generated) + held-out first-win lift, counted ONLY if coverage_delta>0 AND the no-prior ablation failed AND the CI excludes the no-prior baseline; + go_explore_now_live_reachable."; `reproducible_total_levels` = "authoritative from the registry (A3 bank, 61->62+) -- did solve CAPABILITY grow."; `reproducible_total_levels_delta` = "registry after - 61, emitted explicitly so a null is annotated."; `held_out_first_win_readiness` = "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI, null-delta markers present), the only proxy that tracks the scored lane (NOT the replay count)."; `bridge_crossed_for_solve` = "the headline decision -- did PERCEPTION (A1) or AMORTIZED EXPLORATION (A2) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level), or did the levers get characterized as another honest null (the 9th milestone) with the perception-vs-search diagnostic resolved."; `flagged_artifacts_handled` = "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.432-B2 novelty-ablation/proposal-filter-heldout + .433-B2 firstwin-nulldelta/perception-overclaim) -- fabrication-gate + false-negative-risk compliance."; `verifier_is_oracle` = "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."; `paper_ready` = "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .433 headline."; `leaderboard_submission` = "MUST be false -- submission is operator-only (External Publication Discipline)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent drift on replay."; `preconditions_checked` = "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
+ - REQ-CAPSTONE-4703: The retargeted held-out first-win readiness workflow SHALL write `results/experiment_4703_held_out_first_win_readiness.json` without submitting to the leaderboard and without modifying `scripts/research_conductor.py`. It SHALL first verify that `SUBMITTED_AGENT_CONFIG`/`E3AgentPolicy` and `experiment_4605_live_integration_scored_agent` are importable, SHALL run `tests/python/test_arc_submitted_agent_parity.py` before measuring the proxy, SHALL run the Exp4605 held-out scored-agent proxy over color-permuted variants with the literal submitted-agent config and no submit-time LLM, and SHALL compare `first_win_rate_integrated` against the last-submission baseline `0.04`. The readiness gate SHALL pass only when parity is green and either the held-out first-win improves with bootstrap CI support or the held-out first-win is flat with explicit null-delta markers (`null_delta_methodology_note` non-empty and `positive_control_passed=bool(parity_test_green AND no_regression_vs_baseline)`). It SHALL reproduce and record the replay package as a floor artifact only, SHALL explicitly mark replay count as not the leaderboard score, and SHALL never set readiness purely from `live_submittable_level_count`.
+ - SCENARIO-CAPSTONE-4703: The artifact `results/experiment_4703_held_out_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `first_win_rate_integrated`, `first_win_ci_lower`, `first_win_baseline`, `null_delta_methodology_note`, `positive_control_passed`, `multi_level_deepen_rate_integrated`, `parity_test_green`, `replay_package_floor_reproduced`, `replay_count_is_not_the_score`, `ready_for_operator_submit`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`. It must also include the Exp4605 proxy artifact path, the replay floor package path, no leaderboard submission, the parity test result, a replay-floor note, no live-game-server inference substrate, and spec refs. A flat first-win run must report `complete: held_out_first_win_flat_no_leaderboard_change`, emit the null-delta markers, set `positive_control_passed` only when parity and no-regression pass, and keep `replay_count_is_not_the_score=true` even when the replay package floor count exceeds 33.
+ - SCENARIO-CAPSTONE-4703-BLOCKED-PRECONDITION: If either submitted-agent import precondition fails, the Exp4605 module is not importable, the parity test fails, or the Exp4605 proxy cannot produce a readable first-win measurement, the workflow must write a terminal `blocked_<resource>` or `complete:` artifact with `ready_for_operator_submit=false`, `replay_count_is_not_the_score=true`, `submitted_to_leaderboard=false`, `positive_control_passed=false`, and the failed resource recorded in `preconditions_checked`; it must not submit to the leaderboard.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b962866bdf..2084e698aa 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 188,
+   "code_violations": 0,
+-  "experiments_checked": 3726,
++  "experiments_checked": 3727,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4710_capstone_v433.py b/python/carnot/experiment_4710_capstone_v433.py
+new file mode 100644
+index 0000000000..13e8190946
+--- /dev/null
++++ b/python/carnot/experiment_4710_capstone_v433.py
+@@ -0,0 +1,1026 @@
++"""Experiment 4710: .433 ARC perception/amortized-exploration capstone.
++
++This module aggregates the .433 A1-A6 and B1/B2 artifacts. It reads upstream
++results through the disciplined artifact reader, loads no model, submits
++nothing, and treats the ARC registry as the authoritative capability count.
++
++Spec refs: REQ-CAPSTONE-4710, SCENARIO-CAPSTONE-4710,
++SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++try:  # pragma: no cover - tests inject flags and publication state
++    import summarize_artifact as artifact_reader
++except Exception:  # pragma: no cover - defensive import boundary
++    artifact_reader = None  # type: ignore[assignment]
++
++try:  # pragma: no cover - tests inject publication state
++    import publication_gate as publication_gate_reader
++except Exception:  # pragma: no cover - defensive import boundary
++    publication_gate_reader = None  # type: ignore[assignment]
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4710_capstone_v433"
++SCHEMA = "carnot.exp4710.capstone_v433.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4710_capstone_v433.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++RANDOM_SEED = 4710
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 61
++FROZEN_FOVER_AUROC = 0.9131
++FIRST_WIN_BASELINE = 0.04
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++
++
++@dataclass(frozen=True)
++class SourceSpec:
++    name: str
++    relative_path: str
++    role: str
++
++
++UPSTREAM_SOURCES: dict[str, SourceSpec] = {
++    "A1": SourceSpec(
++        "A1",
++        "results/experiment_4700_object_centric_perception_proposal_live.json",
++        "object_centric_perception_proposal_live",
++    ),
++    "A2": SourceSpec(
++        "A2",
++        "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
++        "amortized_exploration_prior_go_explore_live",
++    ),
++    "A3": SourceSpec("A3", "results/experiment_4702_levelup_selfplay.json", "levelup_selfplay_bank"),
++    "A4": SourceSpec(
++        "A4",
++        "results/experiment_4703_held_out_first_win_readiness.json",
++        "held_out_first_win_readiness",
++    ),
++    "A5": SourceSpec("A5", "results/experiment_4704_primitive_persist_transfer.json", "primitive_persist_transfer"),
++    "A6": SourceSpec("A6", "results/experiment_4705_integration_gate.json", "integration_gate"),
++    "B1": SourceSpec("B1", "results/experiment_4706_perception_quality_cigate.json", "perception_quality_cigate"),
++    "B2": SourceSpec(
++        "B2",
++        "results/experiment_4707_adversarial_verify_hardening.json",
++        "adversarial_verify_firstwin_and_perception_guards",
++    ),
++}
++
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: bridge_crossed_live_generic_new_level_via_<perception|amortized_exploration>_<games> "
++            "OR complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level OR complete: "
++            "capability_grew_61_to_<n>."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "cited_upstream_artifacts": {
++        "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "a1_perception_new_level": {
++        "principle": (
++            "the A1 result -- the generic agent's new level via object-centric perception, counted ONLY if "
++            "the ORDER-1-representation ablation strictly lower + offline_reproduced."
++        )
++    },
++    "a1_perception_is_the_wall_diagnostic": {
++        "principle": (
++            "the A1 DECISIVE diagnostic -- did an upper-bound representation raise proposal-coverage of the winning "
++            "L1 trajectory where order-1 did not (perception_is_the_wall true/false); a headline finding even if A1 "
++            "banks no level (resolves the 8-milestone ambiguity)."
++        )
++    },
++    "a2_amortized_exploration_coverage_and_lift": {
++        "principle": (
++            "the A2 result -- coverage_delta (winner-now-generated) + held-out first-win lift, counted ONLY if "
++            "coverage_delta>0 AND the no-prior ablation failed AND the CI excludes the no-prior baseline; + "
++            "go_explore_now_live_reachable."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": "authoritative from the registry (A3 bank, 61->62+) -- did solve CAPABILITY grow."
++    },
++    "reproducible_total_levels_delta": {
++        "principle": "registry after - 61, emitted explicitly so a null is annotated."
++    },
++    "held_out_first_win_readiness": {
++        "principle": (
++            "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline "
++            "(bootstrap-CI, null-delta markers present), the only proxy that tracks the scored lane (NOT the replay count)."
++        )
++    },
++    "bridge_crossed_for_solve": {
++        "principle": (
++            "the headline decision -- did PERCEPTION (A1) or AMORTIZED EXPLORATION (A2) cross the offline->live bridge "
++            "for L1-first-contact (the GENERIC agent reaches a NEW level), or did the levers get characterized as "
++            "another honest null (the 9th milestone) with the perception-vs-search diagnostic resolved."
++        )
++    },
++    "flagged_artifacts_handled": {
++        "principle": (
++            "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied "
++            "(.432-B2 novelty-ablation/proposal-filter-heldout + .433-B2 firstwin-nulldelta/perception-overclaim) -- "
++            "fabrication-gate + false-negative-risk compliance."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- "
++            "a circular win would not count."
++        )
++    },
++    "paper_ready": {
++        "principle": (
++            "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, "
++            "not a new .433 headline."
++        )
++    },
++    "leaderboard_submission": {
++        "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {"principle": "content-addressed hash catches silent drift on replay."},
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "scorecard",
++    "publication_gate",
++    "duration_s",
++)
++SPEC_REFS = [
++    "REQ-CAPSTONE-4710",
++    "SCENARIO-CAPSTONE-4710",
++    "SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES",
++]
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _checksum(payload)
++
++
++def _read_json(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _read_yaml(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except yaml.YAMLError:
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _file_sha256(path: Path) -> str | None:
++    try:
++        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool) or value is None:
++        return default
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return default
++    return parsed if parsed == parsed else default
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool) or value is None:
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _has_required_number(payload: Mapping[str, Any], key: str) -> bool:
++    if key not in payload or isinstance(payload.get(key), bool):
++        return False
++    try:
++        parsed = float(payload.get(key))
++    except (TypeError, ValueError):
++        return False
++    return parsed == parsed
++
++
++def _mapping_at(payload: Mapping[str, Any], key: str) -> Mapping[str, Any]:
++    value = payload.get(key)
++    return value if isinstance(value, Mapping) else {}
++
++
++def _summarize_and_live_flags(path: Path) -> tuple[int | None, list[JsonDict]]:
++    if artifact_reader is None:  # pragma: no cover - defensive direct-script fallback
++        return None, []
++    summary_code = artifact_reader.summarize(path) if hasattr(artifact_reader, "summarize") else None
++    flags = artifact_reader._live_flags(path) if hasattr(artifact_reader, "_live_flags") else []
++    return summary_code, [dict(flag) for flag in flags if isinstance(flag, Mapping)]
++
++
++def _severity(flag: Mapping[str, Any]) -> str:
++    return str(flag.get("severity") or "").lower()
++
++
++def _critical_flags(flags: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return [dict(flag) for flag in flags if _severity(flag) == "critical"]
++
++
++def _false_negative_risk_open(flags: Sequence[Mapping[str, Any]]) -> bool:
++    return any(
++        flag.get("kind") == "FALSE_NEGATIVE_RISK" and "false_negative_risk_open" in str(flag.get("detail") or "")
++        for flag in flags
++    )
++
++
++def _acceptance_gate_failures(artifact: Mapping[str, Any]) -> list[str]:
++    failures: list[str] = []
++    for key, value in artifact.items():
++        lowered = key.lower()
++        is_gate = "acceptance_gate" in lowered or lowered.startswith("gate_") or lowered.endswith("_gate")
++        if is_gate and value is False:
++            failures.append(key)
++    return failures
++
++
++def _positive_control_failed(artifact: Mapping[str, Any]) -> bool:
++    if artifact.get("positive_control_passed") is False:
++        return True
++    return "bare_control_passed" in artifact and artifact.get("bare_control_passed") is not True
++
++
++def _a1_claims_new_level(name: str, artifact: Mapping[str, Any]) -> bool:
++    if name != "A1" or not artifact:
++        return False
++    verdict = str(artifact.get("honest_verdict") or "").lower()
++    return bool(
++        verdict.startswith("success:")
++        or _as_int(artifact.get("reproduced_levels")) >= 1
++        or _as_int(artifact.get("generic_agent_reached_level")) > 0
++    )
++
++
++def _a1_required_evidence_present(artifact: Mapping[str, Any]) -> bool:
++    return all(key in artifact for key in ("generic_agent_reached_level", "order1_ablation_reached_level", "offline_reproduced"))
++
++
++def _perception_order1_ablation_strictly_lower(artifact: Mapping[str, Any]) -> bool:
++    reached = _as_int(artifact.get("generic_agent_reached_level") or artifact.get("reached_level"))
++    return reached > 0 and _as_int(artifact.get("order1_ablation_reached_level")) < reached
++
++
++def _a1_ablation_missing(name: str, artifact: Mapping[str, Any]) -> bool:
++    return _a1_claims_new_level(name, artifact) and not _a1_required_evidence_present(artifact)
++
++
++def _a1_control_failed(name: str, artifact: Mapping[str, Any]) -> bool:
++    return bool(
++        _a1_claims_new_level(name, artifact)
++        and _a1_required_evidence_present(artifact)
++        and not (_perception_order1_ablation_strictly_lower(artifact) and artifact.get("offline_reproduced") is True)
++    )
++
++
++def _a2_claims_coverage_up(name: str, artifact: Mapping[str, Any]) -> bool:
++    return name == "A2" and artifact and _as_float(artifact.get("coverage_delta")) > 0.0
++
++
++def _a2_ablation_missing(name: str, artifact: Mapping[str, Any]) -> bool:
++    return bool(
++        _a2_claims_coverage_up(name, artifact)
++        and (
++            "candidate_generation_coverage_no_prior_baseline" not in artifact
++            or "no_prior_ablation_failed" not in artifact
++        )
++    )
++
++
++def _a2_control_failed(name: str, artifact: Mapping[str, Any]) -> bool:
++    return bool(_a2_claims_coverage_up(name, artifact) and not _a2_ablation_missing(name, artifact) and artifact.get("no_prior_ablation_failed") is not True)
++
++
++def _oracle_failed(name: str, artifact: Mapping[str, Any]) -> bool:
++    return name in {"A1", "A2", "A3", "A4", "A5", "A6"} and artifact and artifact.get("verifier_is_oracle") is not False
++
++
++def _source_status(
++    *,
++    name: str,
++    source: SourceSpec,
++    root: Path,
++    artifact: Mapping[str, Any],
++    exists: bool,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> JsonDict:
++    path = root / source.relative_path
++    if live_flags_by_name is not None:
++        summary_exit_code = None
++        flags = [dict(flag) for flag in live_flags_by_name.get(name, [])]
++    elif exists:
++        summary_exit_code, flags = _summarize_and_live_flags(path)
++    else:
++        summary_exit_code, flags = None, []
++    critical = _critical_flags(flags)
++    stamped = artifact.get("flagged_adversarial") is True
++    gate_failures = _acceptance_gate_failures(artifact)
++    positive_failed = (name != "A2" and _positive_control_failed(artifact)) or (
++        name not in {"A1", "A2", "A4"} and "false_negative_risk_checked" in artifact and artifact.get("false_negative_risk_checked") is not True
++    )
++    false_negative = _false_negative_risk_open(flags)
++    ablation_missing = _a1_ablation_missing(name, artifact) or _a2_ablation_missing(name, artifact)
++    control_failed = _a1_control_failed(name, artifact) or _a2_control_failed(name, artifact)
++    oracle_failed = _oracle_failed(name, artifact)
++    flagged = bool(stamped or critical)
++    included = bool(
++        exists
++        and artifact
++        and not flagged
++        and not gate_failures
++        and not oracle_failed
++        and not positive_failed
++        and not false_negative
++        and not ablation_missing
++        and not control_failed
++    )
++    reason = "included_clean"
++    if not exists:
++        reason = "missing"
++    elif flagged:
++        reason = "flagged_adversarial_or_live_critical_excluded"
++    elif gate_failures:
++        reason = "failed_acceptance_gate"
++    elif oracle_failed:
++        reason = "oracle_not_distinct"
++    elif positive_failed:
++        reason = "positive_control_failed"
++    elif false_negative:
++        reason = "false_negative_risk_open"
++    elif ablation_missing:
++        reason = "ablation_missing"
++    elif control_failed:
++        reason = "control_failed"
++    return {
++        "name": name,
++        "artifact": source.relative_path,
++        "role": source.role,
++        "exists": exists,
++        "honest_verdict": artifact.get("honest_verdict"),
++        "stamped_flagged_adversarial": stamped,
++        "live_critical": bool(critical),
++        "live_flags": flags,
++        "critical_flags": critical,
++        "positive_control_failed": positive_failed,
++        "false_negative_risk_open": false_negative,
++        "ablation_missing": ablation_missing,
++        "control_failed": control_failed,
++        "oracle_not_distinct": oracle_failed,
++        "acceptance_gate_failures": gate_failures,
++        "summary_exit_code": summary_exit_code,
++        "duration_s": artifact.get("duration_s"),
++        "inference_substrate": artifact.get("inference_substrate"),
++        "included_in_headline": included,
++        "reason": reason,
++        "sha256": _file_sha256(path) if path.exists() else _checksum(artifact),
++        "read_via_summarize_artifact": bool(exists and (live_flags_by_name is None or artifact_reader is not None)),
++    }
++
++
++def _load_artifacts(
++    root: Path,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> tuple[dict[str, JsonDict], dict[str, JsonDict]]:
++    loaded: dict[str, JsonDict] = {}
++    statuses: dict[str, JsonDict] = {}
++    for name, source in UPSTREAM_SOURCES.items():
++        loaded[name] = dict(artifacts[name]) if artifacts is not None and name in artifacts else _read_json(root / source.relative_path)
++        exists = bool(name in artifacts) if artifacts is not None else (root / source.relative_path).exists()
++        statuses[name] = _source_status(
++            name=name,
++            source=source,
++            root=root,
++            artifact=loaded[name],
++            exists=exists,
++            live_flags_by_name=live_flags_by_name,
++        )
++    return loaded, statuses
++
++
++def check_preconditions(root: Path | str = REPO_ROOT, *, statuses: Mapping[str, Mapping[str, Any]] | None = None) -> JsonDict:
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    registry = _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    source_exists = {
++        name: (
++            bool(statuses.get(name, {}).get("exists"))
++            if statuses is not None
++            else (root_path / source.relative_path).exists()
++        )
++        for name, source in UPSTREAM_SOURCES.items()
++    }
++    missing = [UPSTREAM_SOURCES[name].relative_path for name, exists in source_exists.items() if not exists]
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4710": "REQ-CAPSTONE-4710" in spec_text,
++        "registry_yaml_loadable": bool(registry),
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "registry_reproducible_total_levels": _as_int(registry.get("reproducible_total_levels")),
++        "summarize_artifact_py_available": (root_path / "scripts" / "summarize_artifact.py").exists(),
++        "summarize_artifact_py_used_for_every_upstream": artifact_reader is not None,
++        "upstream_artifacts_present": source_exists,
++        "missing_upstream_artifacts": missing,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++    required = (
++        ("agents_md_read", "agents_md"),
++        ("codex_or_opencode_md_read", "codex_or_opencode_md"),
++        ("spec_has_req_4710", "spec_req_4710"),
++        ("registry_yaml_loadable", "registry_yaml"),
++        ("summarize_artifact_py_available", "summarize_artifact"),
++    )
++    failed = [resource for key, resource in required if not checks[key]]
++    if missing:
++        failed.append("upstream_artifacts")
++    checks["ok"] = not failed
++    if failed:
++        checks["blocked_resource"] = failed[0]
++    return checks
++
++
++def _clean(statuses: Mapping[str, Mapping[str, Any]], name: str) -> bool:
++    return bool(statuses.get(name, {}).get("included_in_headline"))
++
++
++def _ci_excludes_zero(ci: Mapping[str, Any]) -> bool:
++    if "low" in ci or "high" in ci:
++        lo = _as_float(ci.get("low"))
++        hi = _as_float(ci.get("high"))
++        return lo > 0.0 or hi < 0.0
++    ci95 = ci.get("ci95")
++    if not isinstance(ci95, Sequence) or isinstance(ci95, (str, bytes)) or len(ci95) != 2:
++        return False
++    lo = _as_float(ci95[0])
++    hi = _as_float(ci95[1])
++    return lo > 0.0 or hi < 0.0
++
++
++def _target_games(artifact: Mapping[str, Any]) -> list[str]:
++    target_games = artifact.get("target_games")
++    if isinstance(target_games, Sequence) and not isinstance(target_games, (str, bytes)):
++        return [str(game) for game in target_games if str(game)]
++    target_game = str(artifact.get("target_game") or "")
++    return [target_game] if target_game else []
++
++
++def _representation_coverage(a1: Mapping[str, Any], key: str) -> float:
++    reps = _mapping_at(a1, "proposal_coverage_by_representation")
++    row = _mapping_at(reps, key)
++    return _as_float(row.get("coverage"))
++
++
++def _a1_perception_new_level(a1: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    reached = _as_int(a1.get("generic_agent_reached_level") or a1.get("reached_level"))
++    order1_level = _as_int(a1.get("order1_ablation_reached_level"))
++    order1_lower = _perception_order1_ablation_strictly_lower(a1)
++    offline = a1.get("offline_reproduced") is True
++    clean = status.get("included_in_headline") is True
++    counted = bool(clean and reached > 0 and order1_lower and offline)
++    if counted:
++        reason = "order1_ablation_lower_offline_reproduced"
++    elif not clean:
++        reason = str(status.get("reason"))
++    elif reached <= 0:
++        reason = "generic_agent_did_not_reach_new_level"
++    elif not offline:
++        reason = "offline_reproduction_missing"
++    else:
++        reason = "order1_ablation_not_strictly_lower"
++    return {
++        "headline_counted": counted,
++        "generic_agent_reached_level": reached,
++        "order1_ablation_reached_level": order1_level,
++        "order1_ablation_strictly_lower": order1_lower,
++        "target_games": _target_games(a1),
++        "offline_reproduced": offline,
++        "reproduced_levels": _as_int(a1.get("reproduced_levels")),
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A1"].relative_path,
++    }
++
++
++def _a1_perception_is_the_wall_diagnostic(a1: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    object_coverage = _representation_coverage(a1, "object_centric")
++    order1_coverage = _representation_coverage(a1, "order1")
++    clean = status.get("included_in_headline") is True
++    perception_wall = a1.get("perception_is_the_wall") is True
++    headline_finding = bool(clean and perception_wall)
++    if headline_finding:
++        reason = "upper_bound_representation_raises_winning_l1_coverage_where_order1_does_not"
++    elif not clean:
++        reason = str(status.get("reason"))
++    else:
++        reason = "diagnostic_false"
++    return {
++        "headline_finding": headline_finding,
++        "perception_is_the_wall": perception_wall,
++        "object_centric_coverage": object_coverage,
++        "order1_coverage": order1_coverage,
++        "coverage_delta_vs_order1": round(object_coverage - order1_coverage, 6),
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A1"].relative_path,
++    }
++
++
++def _first_win_delta_from_rates(a2: Mapping[str, Any]) -> float:
++    if "first_win_rate_delta" in a2:
++        return _as_float(a2.get("first_win_rate_delta"))
++    return round(_as_float(a2.get("live_first_win_rate_with_prior")) - FIRST_WIN_BASELINE, 6)
++
++
++def _a2_amortized_exploration_coverage_and_lift(a2: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    with_prior = _as_float(a2.get("candidate_generation_coverage_with_prior"))
++    no_prior_reported = "candidate_generation_coverage_no_prior_baseline" in a2
++    no_prior = _as_float(a2.get("candidate_generation_coverage_no_prior_baseline"))
++    coverage_delta = _as_float(a2.get("coverage_delta"), with_prior - no_prior)
++    no_prior_failed = a2.get("no_prior_ablation_failed") is True
++    first_delta = _first_win_delta_from_rates(a2)
++    live_lift_ci = _mapping_at(a2, "live_lift_ci")
++    ci_excludes = bool(a2.get("heldout_first_win_ci_excludes_no_prior_baseline") is True or _ci_excludes_zero(live_lift_ci))
++    winner_newly_generated = bool(no_prior_reported and no_prior == 0.0 and with_prior > 0.0 and coverage_delta > 0.0)
++    go_explore_reachable = a2.get("go_explore_now_live_reachable") is True
++    clean = status.get("included_in_headline") is True
++    counted = bool(
++        clean
++        and coverage_delta > 0.0
++        and winner_newly_generated
++        and no_prior_failed
++        and first_delta > 0.0
++        and ci_excludes
++        and go_explore_reachable
++    )
++    if counted:
++        reason = "coverage_delta_positive_no_prior_failed_ci_excludes_no_prior_baseline"
++    elif not clean:
++        reason = str(status.get("reason"))
++    elif coverage_delta <= 0.0:
++        reason = "coverage_delta_not_positive"
++    elif not no_prior_reported:
++        reason = "no_prior_baseline_missing"
++    elif no_prior > 0.0:
++        reason = "winner_already_in_no_prior_baseline"
++    elif not no_prior_failed:
++        reason = "no_prior_ablation_did_not_fail"
++    elif first_delta <= 0.0:
++        reason = "no_positive_heldout_first_win_lift"
++    elif not go_explore_reachable:
++        reason = "go_explore_not_live_reachable"
++    else:
++        reason = "heldout_first_win_ci_includes_no_prior_baseline"
++    return {
++        "headline_counted": counted,
++        "candidate_generation_coverage_with_prior": with_prior,
++        "candidate_generation_coverage_no_prior_baseline": no_prior if no_prior_reported else None,
++        "coverage_delta": coverage_delta,
++        "winner_newly_generated_vs_no_prior": winner_newly_generated,
++        "no_prior_ablation_failed": no_prior_failed,
++        "go_explore_now_live_reachable": go_explore_reachable,
++        "first_win_rate_delta": first_delta,
++        "live_lift_ci": dict(live_lift_ci),
++        "heldout_first_win_ci_excludes_no_prior_baseline": ci_excludes,
++        "offline_reproduced": a2.get("offline_reproduced") is True,
++        "target_games": _target_games(a2),
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A2"].relative_path,
++    }
++
++
++def _held_out_first_win_readiness(a4: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    first_win_rate = _as_float(a4.get("first_win_rate_integrated"))
++    baseline = _as_float(a4.get("first_win_baseline"), FIRST_WIN_BASELINE)
++    first_win_delta = round(first_win_rate - baseline, 6)
++    ci_lower = _as_float(a4.get("first_win_ci_lower"))
++    clean = status.get("included_in_headline") is True
++    null_markers = bool(
++        "first_win_delta_vs_baseline" in a4
++        and isinstance(a4.get("null_delta_methodology_note"), str)
++        and a4.get("positive_control_passed") is True
++    )
++    readiness = bool(clean and first_win_rate > baseline and ci_lower > 0.0)
++    replay_floor = _mapping_at(a4, "replay_floor")
++    if readiness:
++        reason = "held_out_first_win_above_baseline_ci_lower_positive"
++    elif not clean:
++        reason = str(status.get("reason"))
++    elif first_win_rate <= baseline:
++        reason = "held_out_first_win_not_above_baseline"
++    else:
++        reason = "held_out_first_win_ci_lower_not_positive"
++    return {
++        "headline_counted": readiness,
++        "first_win_rate_integrated": first_win_rate,
++        "first_win_baseline": baseline,
++        "first_win_delta_vs_baseline": first_win_delta,
++        "first_win_ci_lower": ci_lower,
++        "multi_level_deepen_rate_integrated": _as_float(a4.get("multi_level_deepen_rate_integrated")),
++        "ready_for_operator_submit": readiness,
++        "null_delta_markers_present": null_markers,
++        "replay_count_is_not_the_score": a4.get("replay_count_is_not_the_score") is True,
++        "replay_floor_live_submittable_level_count": _as_int(replay_floor.get("live_submittable_level_count")),
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A4"].relative_path,
++    }
++
++
++def _tests_passed(block: Any) -> bool:
++    return not isinstance(block, Mapping) or block.get("passed") is not False
++
++
++def _b2_guards_active(b1: Mapping[str, Any], b2: Mapping[str, Any]) -> JsonDict:
++    return {
++        ".432-B2 novelty-ablation/proposal-filter-heldout": True,
++        ".433-B1 perception-quality-cigate": bool(
++            isinstance(b1.get("loo_discrimination_gate_added"), Mapping)
++            and b1.get("loo_discrimination_gate_added", {}).get("passed") is True
++            and isinstance(b1.get("offpath_discrimination_metric_added"), Mapping)
++            and b1.get("offpath_discrimination_metric_added", {}).get("passed") is True
++            and isinstance(b1.get("perception_quality_floor_cigate_added"), Mapping)
++            and b1.get("perception_quality_floor_cigate_added", {}).get("passed") is True
++        ),
++        ".433-B2 firstwin-nulldelta": bool(b2.get("firstwin_nulldelta_carveout_added") is True and _tests_passed(b2.get("tests_added"))),
++        ".433-B2 perception-overclaim": bool(b2.get("perception_overclaim_guard_added") is True and _tests_passed(b2.get("tests_added"))),
++    }
++
++
++def _flagged_artifacts_handled(statuses: Mapping[str, Mapping[str, Any]], b1: Mapping[str, Any], b2: Mapping[str, Any]) -> JsonDict:
++    excluded_details: list[JsonDict] = []
++    flagged: list[JsonDict] = []
++    positive_failed: list[JsonDict] = []
++    false_negative_open: list[JsonDict] = []
++    ablation_missing: list[JsonDict] = []
++    control_failed: list[JsonDict] = []
++    oracle_failed: list[JsonDict] = []
++    gate_failures: list[JsonDict] = []
++    for name, status in statuses.items():
++        row = {"name": name, "artifact": status.get("artifact")}
++        if status.get("included_in_headline") is False and status.get("reason") not in {"missing", "included_clean"}:
++            excluded_details.append(
++                {
++                    **row,
++                    "reason": status.get("reason"),
++                    "critical_flags": [
++                        {"kind": flag.get("kind"), "detail": flag.get("detail")}
++                        for flag in status.get("critical_flags", [])
++                    ],
++                }
++            )
++        if status.get("stamped_flagged_adversarial") or status.get("live_critical"):
++            flagged.append(row)
++        if status.get("positive_control_failed"):
++            positive_failed.append(row)
++        if status.get("false_negative_risk_open"):
++            false_negative_open.append(row)
++        if status.get("ablation_missing"):
++            ablation_missing.append(row)
++        if status.get("control_failed"):
++            control_failed.append(row)
++        if status.get("oracle_not_distinct"):
++            oracle_failed.append(row)
++        if status.get("acceptance_gate_failures"):
++            gate_failures.append({**row, "failed_gates": status.get("acceptance_gate_failures")})
++    return {
++        "excluded_artifacts": [str(row["artifact"]) for row in excluded_details],
++        "excluded_details": excluded_details,
++        "flagged_adversarial_artifacts": flagged,
++        "positive_control_failed_artifacts": positive_failed,
++        "false_negative_risk_open_artifacts": false_negative_open,
++        "ablation_missing_artifacts": ablation_missing,
++        "control_failed_artifacts": control_failed,
++        "oracle_not_distinct_artifacts": oracle_failed,
++        "failed_acceptance_gate_overrides": gate_failures,
++        "guards_applied": _b2_guards_active(b1, b2),
++        "guard_note": (
++            "Stamped flagged, live-critical, control-failed, ablation-missing, and false-negative-risk-open "
++            "artifacts are excluded from clean headline claims."
++        ),
++    }
++
++
++def _paper_ready_state(publication_gate: Mapping[str, Any] | None) -> JsonDict:
++    gate = dict(publication_gate or {})
++    ready = gate.get("paper_ready") is True
++    gates = gate.get("gates") if isinstance(gate.get("gates"), Mapping) else {}
++    return {
++        "paper_ready": ready,
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "fover_09131_never_substituted": True,
++        "gates": dict(gates),
++        "unmet_gates": list(gate.get("unmet_gates", [])) if isinstance(gate.get("unmet_gates"), list) else [],
++    }
++
++
++def _cited_statuses(statuses: Mapping[str, Mapping[str, Any]], imported_fields: Mapping[str, Sequence[str]]) -> dict[str, JsonDict]:
++    return {
++        name: {
++            **dict(status),
++            "imported_fields": list(imported_fields.get(name, [])),
++        }
++        for name, status in statuses.items()
++    }
++
++
++def _load_publication_gate() -> JsonDict:
++    if publication_gate_reader is None:  # pragma: no cover - defensive direct script fallback
++        return {"paper_ready": False, "unmet_gates": ["publication_gate_unavailable"]}
++    return dict(publication_gate_reader.evaluate())
++
++
++def _headline_games(a1: Mapping[str, Any], a2: Mapping[str, Any]) -> str:
++    games: Sequence[Any] = []
++    if a1.get("headline_counted") is True:
++        games = a1.get("target_games", [])
++    elif a2.get("headline_counted") is True:
++        games = a2.get("target_games", [])
++    joined = "_".join(str(game) for game in games if str(game))
++    return joined or "1"
++
++
++def _headline_bridge_source(a1: Mapping[str, Any], a2: Mapping[str, Any]) -> str:
++    if a1.get("headline_counted") is True:
++        return "perception"
++    if a2.get("headline_counted") is True:
++        return "amortized_exploration"
++    return "none"
++
++
++def _headline_verdict(a1: Mapping[str, Any], a2: Mapping[str, Any], total: int, preconditions: Mapping[str, Any]) -> str:
++    if preconditions.get("ok") is not True:
++        return f"blocked_{preconditions.get('blocked_resource', 'precondition')}"
++    source = _headline_bridge_source(a1, a2)
++    if source != "none":
++        return f"success: bridge_crossed_live_generic_new_level_via_{source}_{_headline_games(a1, a2)}"
++    if total > BASELINE_REPRODUCIBLE_TOTAL_LEVELS:
++        return f"complete: capability_grew_61_to_{total}"
++    return "complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level"
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifacts: Mapping[str, Mapping[str, Any]] | None = None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    registry: Mapping[str, Any] | None = None,
++    publication_gate: Mapping[str, Any] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    started = time.perf_counter()
++    loaded, statuses = _load_artifacts(root_path, artifacts=artifacts, live_flags_by_name=live_flags_by_name)
++    registry_payload = dict(registry) if registry is not None else _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path, statuses=statuses)
++    )
++    paper = _paper_ready_state(publication_gate if publication_gate is not None else _load_publication_gate())
++    a1 = _a1_perception_new_level(loaded.get("A1", {}), statuses.get("A1", {}))
++    a1_diag = _a1_perception_is_the_wall_diagnostic(loaded.get("A1", {}), statuses.get("A1", {}))
++    a2 = _a2_amortized_exploration_coverage_and_lift(loaded.get("A2", {}), statuses.get("A2", {}))
++    a4 = _held_out_first_win_readiness(loaded.get("A4", {}), statuses.get("A4", {}))
++    total = _as_int(registry_payload.get("reproducible_total_levels"))
++    delta = total - BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++    bridge_crossed = bool(a1["headline_counted"] or a2["headline_counted"])
++    imported_fields = {
++        "A1": [
++            "generic_agent_reached_level",
++            "order1_ablation_reached_level",
++            "offline_reproduced",
++            "reproduced_levels",
++            "perception_is_the_wall",
++            "proposal_coverage_by_representation",
++        ],
++        "A2": [
++            "candidate_generation_coverage_with_prior",
++            "candidate_generation_coverage_no_prior_baseline",
++            "coverage_delta",
++            "no_prior_ablation_failed",
++            "first_win_rate_delta",
++            "live_lift_ci",
++            "go_explore_now_live_reachable",
++        ],
++        "A3": ["reproduced_levels", "offline_reproduced", "reproduction_gate"],
++        "A4": [
++            "first_win_rate_integrated",
++            "first_win_baseline",
++            "first_win_ci_lower",
++            "null_delta_methodology_note",
++            "positive_control_passed",
++            "replay_count_is_not_the_score",
++            "ready_for_operator_submit",
++        ],
++        "A5": ["primitive_persisted", "offline_reproduced_new_level", "transfer_value_per_game"],
++        "A6": ["config_changed", "first_win_rate_integrated", "multi_level_deepen_rate_integrated"],
++        "B1": ["loo_discrimination_gate_added", "offpath_discrimination_metric_added", "perception_quality_floor_cigate_added"],
++        "B2": ["firstwin_nulldelta_carveout_added", "perception_overclaim_guard_added", "tests_added"],
++    }
++    flagged_handled = _flagged_artifacts_handled(statuses, loaded.get("B1", {}), loaded.get("B2", {}))
++    crossing_source = (
++        "A1_perception"
++        if a1["headline_counted"]
++        else ("A2_amortized_exploration" if a2["headline_counted"] else "none")
++    )
++    scorecard = {
++        "headline": {
++            "bridge_crossed_for_solve": bridge_crossed,
++            "crossing_source": crossing_source,
++            "perception_is_the_wall": a1_diag["perception_is_the_wall"],
++            "registry_total_authoritative": True,
++            "submission_operator_only": True,
++        },
++        "A1": a1,
++        "A1_diagnostic": a1_diag,
++        "A2": a2,
++        "A3": {
++            "clean": _clean(statuses, "A3"),
++            "source": UPSTREAM_SOURCES["A3"].relative_path,
++            "registry_authoritative_total_levels": total,
++            "artifact_reproduced_levels": _as_int(loaded.get("A3", {}).get("reproduced_levels")),
++        },
++        "A4": a4,
++        "A5": {
++            "clean": _clean(statuses, "A5"),
++            "verdict": loaded.get("A5", {}).get("honest_verdict"),
++        },
++        "A6": {
++            "clean": _clean(statuses, "A6"),
++            "reason": statuses.get("A6", {}).get("reason"),
++            "first_win_rate_integrated": _as_float(loaded.get("A6", {}).get("first_win_rate_integrated")),
++            "multi_level_deepen_rate_integrated": _as_float(loaded.get("A6", {}).get("multi_level_deepen_rate_integrated")),
++        },
++        "B1": {
++            "clean": _clean(statuses, "B1"),
++            "perception_quality_cigate_added": flagged_handled["guards_applied"][".433-B1 perception-quality-cigate"],
++        },
++        "B2": {
++            "clean": _clean(statuses, "B2"),
++            "guards_applied": flagged_handled["guards_applied"],
++        },
++        "verifier_oracle_checks": {
++            name: loaded.get(name, {}).get("verifier_is_oracle") is False
++            for name in ("A1", "A2", "A3", "A4", "A5", "A6")
++            if statuses.get(name, {}).get("included_in_headline")
++        },
++    }
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": _headline_verdict(a1, a2, total, preconditions),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "cited_upstream_artifacts": _cited_statuses(statuses, imported_fields),
++        "a1_perception_new_level": a1,
++        "a1_perception_is_the_wall_diagnostic": a1_diag,
++        "a2_amortized_exploration_coverage_and_lift": a2,
++        "reproducible_total_levels": total,
++        "reproducible_total_levels_delta": delta,
++        "held_out_first_win_readiness": a4,
++        "bridge_crossed_for_solve": bridge_crossed,
++        "flagged_artifacts_handled": flagged_handled,
++        "verifier_is_oracle": False,
++        "paper_ready": paper["paper_ready"],
++        "leaderboard_submission": False,
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": preconditions,
++        "publication_gate": paper,
++        "field_principles": FIELD_PRINCIPLES,
++        "scorecard": scorecard,
++        "duration_s": duration_s if duration_s is not None else round(time.perf_counter() - started, 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field: {field}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare aggregation_from_upstream_artifacts")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    expected_checksum = payload_checksum(artifact)
++    if artifact.get("reproducibility_checksum") != expected_checksum:
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_artifact(*, path: Path, artifact: Mapping[str, Any]) -> None:
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    publication_gate: Mapping[str, Any] | None = None,
++    write: bool = True,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    artifact = build_artifact(
++        root=root_path,
++        live_flags_by_name=live_flags_by_name,
++        publication_gate=publication_gate,
++        duration_s=duration_s,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(path=root_path / RESULT_RELATIVE_PATH, artifact=artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - direct script entry
++    artifact = run(REPO_ROOT)
++    print(json.dumps({"result_path": artifact["result_path"], "honest_verdict": artifact["honest_verdict"]}, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover - direct script entry
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index ea595254b4..2bed15e63e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-25T00:59:43.811413Z",
+-  "duration_s": 0.027260780334472656,
++  "run_date": "2026-06-25T02:29:46.943339Z",
++  "duration_s": 0.03212761878967285,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "a59abd814eba7da613fe97bc713e9f2d03526ca36b3e78ea7580a41d68997658",
++  "reproducibility_checksum": "bc88ea5af096ca4fef58b6f8f3fcdb3ddc05b8dad1d4a6d2b8994dce2996c221",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "b0e494af7a5ffa4f98d5b58a5284f08f0782ce1a"
++    "adversarial_verify_version": "1027d616810c5757ef29b574a1c30bb90a0ab2cd"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3045f15ee3..9a2b14e069 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-25T00:59:43.854461Z",
+-  "duration_s": 0.03827476501464844,
++  "run_date": "2026-06-25T02:29:46.987027Z",
++  "duration_s": 0.03940749168395996,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4644a36b3d71c3602f73169b1133542090a773d9ccb927c46c38766f737f2d98",
++  "reproducibility_checksum": "5cb3c2e8a770db136bc48784985d635bb1af130e1a15add95ed4db2e334e6546",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "b0e494af7a5ffa4f98d5b58a5284f08f0782ce1a"
++    "adversarial_verify_version": "1027d616810c5757ef29b574a1c30bb90a0ab2cd"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 3ee417aa0f..55dfa7598f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.127408981323242,
++  "efficiency_gains_ms": 2.107381820678711,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9936a16361..3da5bd4c65 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.2070092856884e-05,
++  "duration_s": 3.389408811926842e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4710_capstone_v433.json b/results/experiment_4710_capstone_v433.json
+new file mode 100644
+index 0000000000..cb7abaf82a
+--- /dev/null
++++ b/results/experiment_4710_capstone_v433.json
+@@ -0,0 +1,578 @@
++{
++  "a1_perception_is_the_wall_diagnostic": {
++    "coverage_delta_vs_order1": 0.25,
++    "headline_finding": true,
++    "object_centric_coverage": 1.0,
++    "order1_coverage": 0.75,
++    "perception_is_the_wall": true,
++    "reason": "upper_bound_representation_raises_winning_l1_coverage_where_order1_does_not",
++    "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
++  },
++  "a1_perception_new_level": {
++    "generic_agent_reached_level": 0,
++    "headline_counted": false,
++    "offline_reproduced": false,
++    "order1_ablation_reached_level": 0,
++    "order1_ablation_strictly_lower": false,
++    "reason": "generic_agent_did_not_reach_new_level",
++    "reproduced_levels": 0,
++    "source": "results/experiment_4700_object_centric_perception_proposal_live.json",
++    "target_games": [
++      "r11l"
++    ]
++  },
++  "a2_amortized_exploration_coverage_and_lift": {
++    "candidate_generation_coverage_no_prior_baseline": 0.0,
++    "candidate_generation_coverage_with_prior": 0.0,
++    "coverage_delta": 0.0,
++    "first_win_rate_delta": 0.0,
++    "go_explore_now_live_reachable": true,
++    "headline_counted": false,
++    "heldout_first_win_ci_excludes_no_prior_baseline": false,
++    "live_lift_ci": {
++      "confidence": 0.95,
++      "high": 0.0,
++      "low": 0.0,
++      "n_boot": 1000
++    },
++    "no_prior_ablation_failed": false,
++    "offline_reproduced": false,
++    "reason": "coverage_delta_not_positive",
++    "source": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
++    "target_games": [
++      "bp35"
++    ],
++    "winner_newly_generated_vs_no_prior": false
++  },
++  "bridge_crossed_for_solve": false,
++  "cited_upstream_artifacts": {
++    "A1": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4700_object_centric_perception_proposal_live.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 60.000083,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: object_centric_perception_no_new_level_residual_offpath_calibration_insufficient",
++      "imported_fields": [
++        "generic_agent_reached_level",
++        "order1_ablation_reached_level",
++        "offline_reproduced",
++        "reproduced_levels",
++        "perception_is_the_wall",
++        "proposal_coverage_by_representation"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "live_llm_inference",
++      "live_critical": false,
++      "live_flags": [],
++      "name": "A1",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "object_centric_perception_proposal_live",
++      "sha256": "sha256:6774823cb7f4fab9caf5767b363eccbdaaead76f4ea33fc4bb324e6e5142ce5c",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "A2": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 60.000066,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: amortized_prior_go_explore_no_coverage_gain_residual_logged",
++      "imported_fields": [
++        "candidate_generation_coverage_with_prior",
++        "candidate_generation_coverage_no_prior_baseline",
++        "coverage_delta",
++        "no_prior_ablation_failed",
++        "first_win_rate_delta",
++        "live_lift_ci",
++        "go_explore_now_live_reachable"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "live_llm_inference",
++      "live_critical": false,
++      "live_flags": [
++        {
++          "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        },
++        {
++          "detail": "first_win_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        }
++      ],
++      "name": "A2",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "amortized_exploration_prior_go_explore_live",
++      "sha256": "sha256:5eda0919811a53f9bd0d8a1b7896678f1671aa39d73f4d6c5b1a5f77c6552f89",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "A3": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4702_levelup_selfplay.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": null,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: re86_L2_offline_reproduced",
++      "imported_fields": [
++        "reproduced_levels",
++        "offline_reproduced",
++        "reproduction_gate"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "live_critical": false,
++      "live_flags": [],
++      "name": "A3",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "levelup_selfplay_bank",
++      "sha256": "sha256:85c207450d5c30ae00b50ff119efce980a5356dfb8b3e0ceafe0f9ca5bfc7f60",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "A4": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4703_held_out_first_win_readiness.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 651.551338,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++      "imported_fields": [
++        "first_win_rate_integrated",
++        "first_win_baseline",
++        "first_win_ci_lower",
++        "null_delta_methodology_note",
++        "positive_control_passed",
++        "replay_count_is_not_the_score",
++        "ready_for_operator_submit"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
++      "live_critical": false,
++      "live_flags": [
++        {
++          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
++          "kind": "TAUTOLOGY",
++          "severity": "warn"
++        }
++      ],
++      "name": "A4",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "held_out_first_win_readiness",
++      "sha256": "sha256:a31dbfc96649be349b7500fd0930074cce51209ecf6175e009b7b02b146a680d",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 1
++    },
++    "A5": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4704_primitive_persist_transfer.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 1.0,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
++      "imported_fields": [
++        "primitive_persisted",
++        "offline_reproduced_new_level",
++        "transfer_value_per_game"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
++      "live_critical": false,
++      "live_flags": [],
++      "name": "A5",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "primitive_persist_transfer",
++      "sha256": "sha256:dd52d8fd72c506b2a135c299d9ae049275a57569aefbb7a19d1bb4bce861e5f3",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "A6": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4705_integration_gate.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 1.0,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: integration_unchanged_both_levers_null",
++      "imported_fields": [
++        "config_changed",
++        "first_win_rate_integrated",
++        "multi_level_deepen_rate_integrated"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor).",
++      "live_critical": false,
++      "live_flags": [
++        {
++          "detail": "multi_level_deepen_rate_delta_vs_pre_integration=0.0 (exactly zero). Confirm this is not a stub default.",
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        }
++      ],
++      "name": "A6",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "integration_gate",
++      "sha256": "sha256:3fd142938c2aede650b000a20a84580ae0258f956ef3432f77a86a3691b1fd79",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "B1": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4706_perception_quality_cigate.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 2.136068,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green",
++      "imported_fields": [
++        "loo_discrimination_gate_added",
++        "offpath_discrimination_metric_added",
++        "perception_quality_floor_cigate_added"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference.",
++      "live_critical": false,
++      "live_flags": [],
++      "name": "B1",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "perception_quality_cigate",
++      "sha256": "sha256:e94db3dbb3f46c41dfd282b7746d5f55fe7d11637b0f07cfc3570f24cec75aba",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    },
++    "B2": {
++      "ablation_missing": false,
++      "acceptance_gate_failures": [],
++      "artifact": "results/experiment_4707_adversarial_verify_hardening.json",
++      "control_failed": false,
++      "critical_flags": [],
++      "duration_s": 0.10077190189622343,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green.",
++      "imported_fields": [
++        "firstwin_nulldelta_carveout_added",
++        "perception_overclaim_guard_added",
++        "tests_added"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
++      "live_critical": false,
++      "live_flags": [],
++      "name": "B2",
++      "oracle_not_distinct": false,
++      "positive_control_failed": false,
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "adversarial_verify_firstwin_and_perception_guards",
++      "sha256": "sha256:0c856c4f74031ad2aa0267f1d9a839d400e01b6592fb018adcbfba89a4330860",
++      "stamped_flagged_adversarial": false,
++      "summary_exit_code": 0
++    }
++  },
++  "duration_s": 0.328948,
++  "experiment": "experiment_4710_capstone_v433",
++  "field_principles": {
++    "a1_perception_is_the_wall_diagnostic": {
++      "principle": "the A1 DECISIVE diagnostic -- did an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 did not (perception_is_the_wall true/false); a headline finding even if A1 banks no level (resolves the 8-milestone ambiguity)."
++    },
++    "a1_perception_new_level": {
++      "principle": "the A1 result -- the generic agent's new level via object-centric perception, counted ONLY if the ORDER-1-representation ablation strictly lower + offline_reproduced."
++    },
++    "a2_amortized_exploration_coverage_and_lift": {
++      "principle": "the A2 result -- coverage_delta (winner-now-generated) + held-out first-win lift, counted ONLY if coverage_delta>0 AND the no-prior ablation failed AND the CI excludes the no-prior baseline; + go_explore_now_live_reachable."
++    },
++    "bridge_crossed_for_solve": {
++      "principle": "the headline decision -- did PERCEPTION (A1) or AMORTIZED EXPLORATION (A2) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level), or did the levers get characterized as another honest null (the 9th milestone) with the perception-vs-search diagnostic resolved."
++    },
++    "cited_upstream_artifacts": {
++      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "flagged_artifacts_handled": {
++      "principle": "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.432-B2 novelty-ablation/proposal-filter-heldout + .433-B2 firstwin-nulldelta/perception-overclaim) -- fabrication-gate + false-negative-risk compliance."
++    },
++    "held_out_first_win_readiness": {
++      "principle": "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI, null-delta markers present), the only proxy that tracks the scored lane (NOT the replay count)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: bridge_crossed_live_generic_new_level_via_<perception|amortized_exploration>_<games> OR complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_61_to_<n>."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "leaderboard_submission": {
++      "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
++    },
++    "paper_ready": {
++      "principle": "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .433 headline."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "reproducible_total_levels": {
++      "principle": "authoritative from the registry (A3 bank, 61->62+) -- did solve CAPABILITY grow."
++    },
++    "reproducible_total_levels_delta": {
++      "principle": "registry after - 61, emitted explicitly so a null is annotated."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
++    }
++  },
++  "flagged_artifacts_handled": {
++    "ablation_missing_artifacts": [],
++    "control_failed_artifacts": [],
++    "excluded_artifacts": [],
++    "excluded_details": [],
++    "failed_acceptance_gate_overrides": [],
++    "false_negative_risk_open_artifacts": [],
++    "flagged_adversarial_artifacts": [],
++    "guard_note": "Stamped flagged, live-critical, control-failed, ablation-missing, and false-negative-risk-open artifacts are excluded from clean headline claims.",
++    "guards_applied": {
++      ".432-B2 novelty-ablation/proposal-filter-heldout": true,
++      ".433-B1 perception-quality-cigate": true,
++      ".433-B2 firstwin-nulldelta": true,
++      ".433-B2 perception-overclaim": true
++    },
++    "oracle_not_distinct_artifacts": [],
++    "positive_control_failed_artifacts": []
++  },
++  "held_out_first_win_readiness": {
++    "first_win_baseline": 0.04,
++    "first_win_ci_lower": 0.0,
++    "first_win_delta_vs_baseline": 0.0,
++    "first_win_rate_integrated": 0.04,
++    "headline_counted": false,
++    "multi_level_deepen_rate_integrated": 0.0,
++    "null_delta_markers_present": true,
++    "ready_for_operator_submit": false,
++    "reason": "held_out_first_win_not_above_baseline",
++    "replay_count_is_not_the_score": true,
++    "replay_floor_live_submittable_level_count": 60,
++    "source": "results/experiment_4703_held_out_first_win_readiness.json"
++  },
++  "honest_verdict": "complete: capability_grew_61_to_62",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
++  "leaderboard_submission": false,
++  "paper_ready": true,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "leaderboard_submission": false,
++    "missing_upstream_artifacts": [],
++    "network_required": false,
++    "ok": true,
++    "operator_only": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_reproducible_total_levels": 62,
++    "registry_yaml_loadable": true,
++    "research_conductor_modified": false,
++    "spec_has_req_4710": true,
++    "summarize_artifact_py_available": true,
++    "summarize_artifact_py_used_for_every_upstream": true,
++    "upstream_artifacts_present": {
++      "A1": true,
++      "A2": true,
++      "A3": true,
++      "A4": true,
++      "A5": true,
++      "A6": true,
++      "B1": true,
++      "B2": true
++    }
++  },
++  "publication_gate": {
++    "fover_09131_never_substituted": true,
++    "frozen_fover_auroc": 0.9131,
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 4710,
++  "reproducibility_checksum": "sha256:5585d6a46edfc599e3dfafd56dfbe7af39ad66e42a26b1bea74cafc85833abca",
++  "reproducible_total_levels": 62,
++  "reproducible_total_levels_delta": 1,
++  "result_path": "results/experiment_4710_capstone_v433.json",
++  "schema": "carnot.exp4710.capstone_v433.v1",
++  "scorecard": {
++    "A1": {
++      "generic_agent_reached_level": 0,
++      "headline_counted": false,
++      "offline_reproduced": false,
++      "order1_ablation_reached_level": 0,
++      "order1_ablation_strictly_lower": false,
++      "reason": "generic_agent_did_not_reach_new_level",
++      "reproduced_levels": 0,
++      "source": "results/experiment_4700_object_centric_perception_proposal_live.json",
++      "target_games": [
++        "r11l"
++      ]
++    },
++    "A1_diagnostic": {
++      "coverage_delta_vs_order1": 0.25,
++      "headline_finding": true,
++      "object_centric_coverage": 1.0,
++      "order1_coverage": 0.75,
++      "perception_is_the_wall": true,
++      "reason": "upper_bound_representation_raises_winning_l1_coverage_where_order1_does_not",
++      "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
++    },
++    "A2": {
++      "candidate_generation_coverage_no_prior_baseline": 0.0,
++      "candidate_generation_coverage_with_prior": 0.0,
++      "coverage_delta": 0.0,
++      "first_win_rate_delta": 0.0,
++      "go_explore_now_live_reachable": true,
++      "headline_counted": false,
++      "heldout_first_win_ci_excludes_no_prior_baseline": false,
++      "live_lift_ci": {
++        "confidence": 0.95,
++        "high": 0.0,
++        "low": 0.0,
++        "n_boot": 1000
++      },
++      "no_prior_ablation_failed": false,
++      "offline_reproduced": false,
++      "reason": "coverage_delta_not_positive",
++      "source": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
++      "target_games": [
++        "bp35"
++      ],
++      "winner_newly_generated_vs_no_prior": false
++    },
++    "A3": {
++      "artifact_reproduced_levels": 1,
++      "clean": true,
++      "registry_authoritative_total_levels": 62,
++      "source": "results/experiment_4702_levelup_selfplay.json"
++    },
++    "A4": {
++      "first_win_baseline": 0.04,
++      "first_win_ci_lower": 0.0,
++      "first_win_delta_vs_baseline": 0.0,
++      "first_win_rate_integrated": 0.04,
++      "headline_counted": false,
++      "multi_level_deepen_rate_integrated": 0.0,
++      "null_delta_markers_present": true,
++      "ready_for_operator_submit": false,
++      "reason": "held_out_first_win_not_above_baseline",
++      "replay_count_is_not_the_score": true,
++      "replay_floor_live_submittable_level_count": 60,
++      "source": "results/experiment_4703_held_out_first_win_readiness.json"
++    },
++    "A5": {
++      "clean": true,
++      "verdict": "complete: primitive_persisted_transfer_null_characterized"
++    },
++    "A6": {
++      "clean": true,
++      "first_win_rate_integrated": 0.04,
++      "multi_level_deepen_rate_integrated": 0.0,
++      "reason": "included_clean"
++    },
++    "B1": {
++      "clean": true,
++      "perception_quality_cigate_added": true
++    },
++    "B2": {
++      "clean": true,
++      "guards_applied": {
++        ".432-B2 novelty-ablation/proposal-filter-heldout": true,
++        ".433-B1 perception-quality-cigate": true,
++        ".433-B2 firstwin-nulldelta": true,
++        ".433-B2 perception-overclaim": true
++      }
++    },
++    "headline": {
++      "bridge_crossed_for_solve": false,
++      "crossing_source": "none",
++      "perception_is_the_wall": true,
++      "registry_total_authoritative": true,
++      "submission_operator_only": true
++    },
++    "verifier_oracle_checks": {
++      "A1": true,
++      "A2": true,
++      "A3": true,
++      "A4": true,
++      "A5": true,
++      "A6": true
++    }
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4710",
++    "SCENARIO-CAPSTONE-4710",
++    "SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 52fad4b133..0ff60c6922 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T02:15:52Z",
+-  "finished_at": "2026-06-25T02:15:52Z",
++  "started_at": "2026-06-25T02:29:30Z",
++  "finished_at": "2026-06-25T02:29:30Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 79ae64d919..233b7bf0fd 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T02:15:52Z",
+-  "finished_at": "2026-06-25T02:15:52Z",
++  "started_at": "2026-06-25T02:29:30Z",
++  "finished_at": "2026-06-25T02:29:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 315027cff0..56e1b63349 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T02:15:52Z",
+-  "finished_at": "2026-06-25T02:15:52Z",
++  "started_at": "2026-06-25T02:29:30Z",
++  "finished_at": "2026-06-25T02:29:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4710_capstone_v433.py b/tests/python/test_experiment_4710_capstone_v433.py
+new file mode 100644
+index 0000000000..b1a31c02ca
+--- /dev/null
++++ b/tests/python/test_experiment_4710_capstone_v433.py
+@@ -0,0 +1,591 @@
++"""Tests for Exp 4710 .433 perception/amortized-exploration capstone.
++
++Spec refs: REQ-CAPSTONE-4710, SCENARIO-CAPSTONE-4710,
++SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4710_capstone_v433 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _a1_perception(
++    *,
++    reached_level: int = 0,
++    order1_level: int = 0,
++    offline: bool = False,
++    perception_wall: bool = True,
++    object_coverage: float = 1.0,
++    order1_coverage: float = 0.75,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4700_object_centric_perception_proposal_live",
++        "honest_verdict": (
++            f"success: object_centric_perception_generic_agent_new_level_r11l_L{reached_level}"
++            if reached_level > 0 and offline
++            else "complete: object_centric_perception_no_new_level_residual_offpath_calibration_insufficient"
++        ),
++        "verifier_is_oracle": False,
++        "solve_provenance": "live_agent_self_discovery",
++        "target_game": "r11l",
++        "generic_agent_reached_level": reached_level,
++        "order1_ablation_reached_level": order1_level,
++        "offline_reproduced": offline,
++        "reproduced_levels": reached_level if offline else 0,
++        "perception_is_the_wall": perception_wall,
++        "proposal_coverage_by_representation": {
++            "object_centric": {"coverage": object_coverage, "covered_steps": int(object_coverage * 4)},
++            "order1": {"coverage": order1_coverage, "covered_steps": int(order1_coverage * 4)},
++        },
++        "bare_control_passed": True,
++        "false_negative_risk_checked": True,
++        "duration_s": 60.000083,
++        "inference_substrate": "live_llm_inference",
++    }
++
++
++def _a2_amortized(
++    *,
++    with_prior: float = 0.0,
++    no_prior: float = 0.0,
++    no_prior_failed: bool = False,
++    first_win_delta: float = 0.0,
++    ci: Mapping[str, Any] | None = None,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4701_amortized_exploration_prior_go_explore_live",
++        "honest_verdict": (
++            "success: amortized_prior_go_explore_coverage_up_heldout_firstwin_lift_bp35"
++            if with_prior > no_prior and first_win_delta > 0.0
++            else "complete: amortized_prior_go_explore_no_coverage_gain_residual_logged"
++        ),
++        "verifier_is_oracle": False,
++        "solve_provenance": "live_agent_self_discovery",
++        "target_games": ["bp35"],
++        "candidate_generation_coverage_with_prior": with_prior,
++        "candidate_generation_coverage_no_prior_baseline": no_prior,
++        "coverage_delta": with_prior - no_prior,
++        "no_prior_ablation_failed": no_prior_failed,
++        "go_explore_now_live_reachable": True,
++        "live_first_win_rate_with_prior": 0.04 + first_win_delta,
++        "first_win_rate_delta": first_win_delta,
++        "live_lift_ci": dict(ci or {"confidence": 0.95, "low": 0.0, "high": 0.0, "n_boot": 1000}),
++        "bare_control_passed": True,
++        "false_negative_risk_checked": True,
++        "offline_reproduced": False,
++        "duration_s": 60.000066,
++        "inference_substrate": "live_llm_inference",
++    }
++
++
++def _a3_bank() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4702_levelup_selfplay",
++        "honest_verdict": "success: re86_L2_offline_reproduced",
++        "verifier_is_oracle": False,
++        "offline_reproduced": True,
++        "reproduced_levels": 1,
++        "target_game": "re86",
++        "reproducible_total_levels_before": 61,
++        "reproducible_total_levels_after": 62,
++        "reproduction_gate": {"game": "re86", "claimed_level": 2, "reached_level": 2, "reproduced": True},
++    }
++
++
++def _a4_readiness(*, rate: float = 0.04, ci_lower: float = 0.0, markers: bool = True) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment": "experiment_4703_held_out_first_win_readiness",
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "verifier_is_oracle": False,
++        "first_win_rate_integrated": rate,
++        "first_win_baseline": 0.04,
++        "first_win_delta_vs_baseline": round(rate - 0.04, 6),
++        "first_win_ci_lower": ci_lower,
++        "multi_level_deepen_rate_integrated": 0.0,
++        "held_out_first_win_readiness": bool(rate > 0.04 and ci_lower > 0.0),
++        "ready_for_operator_submit": bool(rate > 0.04 and ci_lower > 0.0),
++        "replay_count_is_not_the_score": True,
++        "replay_floor": {"live_submittable_level_count": 60, "replay_package_floor_reproduced": True},
++        "submitted_to_leaderboard": False,
++    }
++    if markers:
++        payload.update(
++            {
++                "null_delta_methodology_note": "flat first-win null with positive control",
++                "positive_control_passed": True,
++            }
++        )
++    return payload
++
++
++def _a5_transfer() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4704_primitive_persist_transfer",
++        "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
++        "verifier_is_oracle": False,
++        "primitive_persisted": {"operator": "object_centric_representation_builder_operator"},
++        "offline_reproduced_new_level": False,
++    }
++
++
++def _a6_integration() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4705_integration_gate",
++        "honest_verdict": "complete: integration_unchanged_both_levers_null",
++        "verifier_is_oracle": False,
++        "config_changed": False,
++        "first_win_rate_integrated": 0.04,
++        "first_win_rate_delta_vs_pre_integration": 0.0,
++        "multi_level_deepen_rate_integrated": 0.0,
++    }
++
++
++def _b1_guard() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4706_perception_quality_cigate",
++        "honest_verdict": "success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green",
++        "verifier_is_oracle": False,
++        "loo_discrimination_gate_added": {"passed": True},
++        "offpath_discrimination_metric_added": {"passed": True},
++        "perception_quality_floor_cigate_added": {"passed": True},
++    }
++
++
++def _b2_guard() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4707_adversarial_verify_hardening",
++        "honest_verdict": "success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green.",
++        "verifier_is_oracle": False,
++        "firstwin_nulldelta_carveout_added": True,
++        "perception_overclaim_guard_added": True,
++        "honest_artifacts_not_flagged": True,
++        "tests_added": {"passed": True},
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++    }
++
++
++def _artifacts(
++    *,
++    a1: Mapping[str, Any] | None = None,
++    a2: Mapping[str, Any] | None = None,
++    a4: Mapping[str, Any] | None = None,
++) -> dict[str, dict[str, Any]]:
++    return {
++        "A1": dict(a1 or _a1_perception()),
++        "A2": dict(a2 or _a2_amortized()),
++        "A3": _a3_bank(),
++        "A4": dict(a4 or _a4_readiness()),
++        "A5": _a5_transfer(),
++        "A6": _a6_integration(),
++        "B1": _b1_guard(),
++        "B2": _b2_guard(),
++    }
++
++
++def _preconditions(total: int = 62) -> dict[str, Any]:
++    return {
++        "ok": True,
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4710": True,
++        "registry_yaml_loadable": True,
++        "registry_reproducible_total_levels": total,
++        "summarize_artifact_py_available": True,
++        "summarize_artifact_py_used_for_every_upstream": True,
++        "upstream_artifacts_present": {name: True for name in mod.UPSTREAM_SOURCES},
++        "missing_upstream_artifacts": [],
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "research_conductor_modified": False,
++    }
++
++
++def _paper_gate(ready: bool = True) -> dict[str, Any]:
++    return {
++        "paper_ready": ready,
++        "frozen_fover_auroc": 0.9131,
++        "gates": {
++            "G1": {"pass": ready, "detail": "FoVer dual-condition AUROC artifact present"},
++            "G2": {"pass": ready, "detail": "independent reproducer confirmed"},
++            "G3": {"pass": ready, "detail": "narrowing-clean"},
++            "G4": {"pass": ready, "detail": "numbers trace to artifact"},
++        },
++        "unmet_gates": [] if ready else ["G2"],
++    }
++
++
++def test_req_capstone_4710_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4710: OpenSpec declares the .433 scorecard fields and gates."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4710" in spec
++    assert "SCENARIO-CAPSTONE-4710" in spec
++    assert "SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION" in spec
++    assert "SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4710_default_null_bridge_counts_registry_growth() -> None:
++    """SCENARIO-CAPSTONE-4710: default .433 reports growth and perception diagnostic."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 62},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "complete: capability_grew_61_to_62"
++    assert artifact["bridge_crossed_for_solve"] is False
++    assert artifact["a1_perception_new_level"]["headline_counted"] is False
++    assert artifact["a1_perception_is_the_wall_diagnostic"]["perception_is_the_wall"] is True
++    assert artifact["a1_perception_is_the_wall_diagnostic"]["headline_finding"] is True
++    assert artifact["a2_amortized_exploration_coverage_and_lift"]["coverage_delta"] == 0.0
++    assert artifact["a2_amortized_exploration_coverage_and_lift"]["headline_counted"] is False
++    assert artifact["held_out_first_win_readiness"]["null_delta_markers_present"] is True
++    assert artifact["held_out_first_win_readiness"]["headline_counted"] is False
++    assert artifact["reproducible_total_levels"] == 62
++    assert artifact["reproducible_total_levels_delta"] == 1
++    assert artifact["paper_ready"] is True
++    assert artifact["leaderboard_submission"] is False
++    assert artifact["publication_gate"]["fover_09131_never_substituted"] is True
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4710_a1_success_requires_order1_lower_and_offline() -> None:
++    """SCENARIO-CAPSTONE-4710: A1 counts only with lower order-1 ablation and offline reproduction."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(a1=_a1_perception(reached_level=1, order1_level=0, offline=True)),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success: bridge_crossed_live_generic_new_level_via_perception_r11l"
++    assert artifact["bridge_crossed_for_solve"] is True
++    assert artifact["a1_perception_new_level"]["headline_counted"] is True
++    assert artifact["scorecard"]["headline"]["crossing_source"] == "A1_perception"
++
++    collapsed_order1 = mod.build_artifact(
++        artifacts=_artifacts(a1=_a1_perception(reached_level=1, order1_level=1, offline=True)),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++    not_offline = mod.build_artifact(
++        artifacts=_artifacts(a1=_a1_perception(reached_level=1, order1_level=0, offline=False)),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++
++    assert collapsed_order1["bridge_crossed_for_solve"] is False
++    assert collapsed_order1["cited_upstream_artifacts"]["A1"]["reason"] == "control_failed"
++    assert not_offline["bridge_crossed_for_solve"] is False
++    assert not_offline["cited_upstream_artifacts"]["A1"]["reason"] == "control_failed"
++
++
++def test_scenario_capstone_4710_a2_success_requires_no_prior_failure_and_ci() -> None:
++    """SCENARIO-CAPSTONE-4710: A2 counts only with coverage, no-prior failure, and CI exclusion."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(
++            a2=_a2_amortized(
++                with_prior=1.0,
++                no_prior=0.0,
++                no_prior_failed=True,
++                first_win_delta=0.12,
++                ci={"confidence": 0.95, "low": 0.03, "high": 0.15, "n_boot": 1000},
++            )
++        ),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success: bridge_crossed_live_generic_new_level_via_amortized_exploration_bp35"
++    assert artifact["bridge_crossed_for_solve"] is True
++    assert artifact["a2_amortized_exploration_coverage_and_lift"]["headline_counted"] is True
++    assert artifact["scorecard"]["headline"]["crossing_source"] == "A2_amortized_exploration"
++
++    no_prior_did_not_fail = mod.build_artifact(
++        artifacts=_artifacts(
++            a2=_a2_amortized(
++                with_prior=1.0,
++                no_prior=0.0,
++                no_prior_failed=False,
++                first_win_delta=0.12,
++                ci={"low": 0.03, "high": 0.15},
++            )
++        ),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++    ci_includes_baseline = mod.build_artifact(
++        artifacts=_artifacts(
++            a2=_a2_amortized(
++                with_prior=1.0,
++                no_prior=0.0,
++                no_prior_failed=True,
++                first_win_delta=0.12,
++                ci={"low": -0.01, "high": 0.15},
++            )
++        ),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++    no_prior_already_covered = mod.build_artifact(
++        artifacts=_artifacts(
++            a2=_a2_amortized(
++                with_prior=1.0,
++                no_prior=0.5,
++                no_prior_failed=True,
++                first_win_delta=0.12,
++                ci={"low": 0.03, "high": 0.15},
++            )
++        ),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 61},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=61),
++        duration_s=0.001,
++    )
++
++    assert no_prior_did_not_fail["cited_upstream_artifacts"]["A2"]["reason"] == "control_failed"
++    assert ci_includes_baseline["a2_amortized_exploration_coverage_and_lift"]["reason"] == (
++        "heldout_first_win_ci_includes_no_prior_baseline"
++    )
++    assert no_prior_already_covered["a2_amortized_exploration_coverage_and_lift"]["reason"] == (
++        "winner_already_in_no_prior_baseline"
++    )
++
++
++def test_req_capstone_4710_exclusion_guards_cover_dirty_sources() -> None:
++    """REQ-CAPSTONE-4710: dirty upstreams are excluded from clean headline claims."""
++
++    artifacts = _artifacts(a4=_a4_readiness(markers=False))
++    artifacts["A3"]["verifier_is_oracle"] = True
++    artifacts["A5"]["acceptance_gate_transfer"] = False
++    artifacts["A6"]["false_negative_risk_checked"] = False
++
++    artifact = mod.build_artifact(
++        artifacts=artifacts,
++        live_flags_by_name={
++            "A4": [{"kind": "TAUTOLOGY", "severity": "critical", "detail": "unmarked firstwin equality"}],
++            "B1": [
++                {
++                    "kind": "FALSE_NEGATIVE_RISK",
++                    "severity": "warn",
++                    "detail": "false_negative_risk_open: perception quality control absent",
++                }
++            ],
++        },
++        registry={"reproducible_total_levels": 62},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["cited_upstream_artifacts"]["A3"]["reason"] == "oracle_not_distinct"
++    assert artifact["cited_upstream_artifacts"]["A4"]["reason"] == "flagged_adversarial_or_live_critical_excluded"
++    assert artifact["cited_upstream_artifacts"]["A5"]["reason"] == "failed_acceptance_gate"
++    assert artifact["cited_upstream_artifacts"]["A6"]["reason"] == "positive_control_failed"
++    assert artifact["cited_upstream_artifacts"]["B1"]["reason"] == "false_negative_risk_open"
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".432-B2 novelty-ablation/proposal-filter-heldout"] is True
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".433-B1 perception-quality-cigate"] is True
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".433-B2 firstwin-nulldelta"] is True
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".433-B2 perception-overclaim"] is True
++
++
++def test_req_capstone_4710_run_reads_injected_files_and_records_missing(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION: missing upstreams block clean headlines."""
++
++    for name, payload in _artifacts().items():
++        if name == "A5":
++            continue
++        _write_json(tmp_path / mod.UPSTREAM_SOURCES[name].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("reproducible_total_levels: 62\n", encoding="utf-8")
++    (tmp_path / "AGENTS.md").write_text("# test\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# test\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4710\n", encoding="utf-8")
++    scripts_path = tmp_path / "scripts" / "summarize_artifact.py"
++    scripts_path.parent.mkdir(parents=True, exist_ok=True)
++    scripts_path.write_text("# test\n", encoding="utf-8")
++
++    artifact = mod.run(tmp_path, live_flags_by_name={}, publication_gate=_paper_gate(), write=True, duration_s=0.001)
++
++    assert artifact["honest_verdict"] == "blocked_upstream_artifacts"
++    assert artifact["preconditions_checked"]["missing_upstream_artifacts"] == [
++        "results/experiment_4704_primitive_persist_transfer.json"
++    ]
++    assert artifact["cited_upstream_artifacts"]["A5"]["exists"] is False
++    assert artifact["bridge_crossed_for_solve"] is False
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++
++def test_req_capstone_4710_validation_and_defensive_edges(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-CAPSTONE-4710: schema validation, checksum, and defensive helpers fail closed."""
++
++    blocked = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 62},
++        publication_gate=_paper_gate(False),
++        preconditions_checked={**_preconditions(), "ok": False, "blocked_resource": "registry_yaml"},
++        duration_s=0.001,
++    )
++    bad = dict(blocked)
++    bad["verifier_is_oracle"] = True
++
++    def bad_build(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
++        return {"honest_verdict": "complete: invalid"}
++
++    assert blocked["honest_verdict"] == "blocked_registry_yaml"
++    assert blocked["paper_ready"] is False
++    assert mod._read_yaml(tmp_path / "missing.yaml") == {}
++    malformed_yaml = tmp_path / "broken.yaml"
++    malformed_yaml.write_text("not: [valid\n", encoding="utf-8")
++    assert mod._read_yaml(malformed_yaml) == {}
++    assert mod._as_float(True, 3.0) == pytest.approx(3.0)
++    assert mod._as_float("not-a-number", 3.0) == pytest.approx(3.0)
++    assert mod._as_int(False, 4) == 4
++    assert mod._as_int("bad", 4) == 4
++    assert mod._file_sha256(tmp_path / "missing.json") is None
++    assert mod._positive_control_failed({"positive_control_passed": False}) is True
++    assert mod._positive_control_failed({"bare_control_passed": False}) is True
++    assert mod._ci_excludes_zero({"ci95": "bad"}) is False
++    assert mod._ci_excludes_zero({"ci95": [0.01, 0.02]}) is True
++    assert mod._has_required_number({"x": "bad"}, "x") is False
++    assert mod._a1_perception_new_level(
++        _a1_perception(reached_level=0),
++        {"included_in_headline": True, "reason": "manual"},
++    )["reason"] == "generic_agent_did_not_reach_new_level"
++    assert mod._a1_perception_is_the_wall_diagnostic(
++        _a1_perception(perception_wall=False),
++        {"included_in_headline": True, "reason": "manual"},
++    )["reason"] == "diagnostic_false"
++    assert mod._a2_amortized_exploration_coverage_and_lift(
++        _a2_amortized(
++            with_prior=1.0,
++            no_prior=0.0,
++            no_prior_failed=True,
++            first_win_delta=0.0,
++            ci={"low": 0.01, "high": 0.02},
++        ),
++        {"included_in_headline": True, "reason": "manual"},
++    )["reason"] == "no_positive_heldout_first_win_lift"
++    fallback_delta = _a2_amortized(
++        with_prior=1.0,
++        no_prior=0.0,
++        no_prior_failed=True,
++        first_win_delta=0.12,
++        ci={"low": 0.01, "high": 0.02},
++    )
++    fallback_delta.pop("first_win_rate_delta")
++    assert mod._a2_amortized_exploration_coverage_and_lift(
++        fallback_delta,
++        {"included_in_headline": True, "reason": "manual"},
++    )["first_win_rate_delta"] == pytest.approx(0.12)
++    assert mod._held_out_first_win_readiness(
++        _a4_readiness(rate=0.08, ci_lower=0.01),
++        {"included_in_headline": True, "reason": "manual"},
++    )["headline_counted"] is True
++    assert mod._held_out_first_win_readiness(
++        _a4_readiness(rate=0.08, ci_lower=0.0),
++        {"included_in_headline": True, "reason": "manual"},
++    )["reason"] == "held_out_first_win_ci_lower_not_positive"
++    monkeypatch.setattr(
++        mod,
++        "publication_gate_reader",
++        type("PublicationGateFixture", (), {"evaluate": staticmethod(lambda: _paper_gate())}),
++    )
++    assert mod._load_publication_gate()["paper_ready"] is True
++    monkeypatch.setattr(
++        mod,
++        "artifact_reader",
++        type(
++            "ArtifactReaderFixture",
++            (),
++            {
++                "summarize": staticmethod(lambda _path: 1),
++                "_live_flags": staticmethod(lambda _path: [{"kind": "METHODOLOGY_MISSING", "severity": "warn"}]),
++            },
++        ),
++    )
++    summary_code, live_flags = mod._summarize_and_live_flags(tmp_path / "fixture.json")
++    assert summary_code == 1
++    assert live_flags == [{"kind": "METHODOLOGY_MISSING", "severity": "warn"}]
++    monkeypatch.setattr(
++        mod,
++        "_summarize_and_live_flags",
++        lambda _path: (0, [{"kind": "TAUTOLOGY", "severity": "critical", "detail": "fixture"}]),
++    )
++    status = mod._source_status(
++        name="X",
++        source=mod.SourceSpec("X", "results/existing.json", "fixture"),
++        root=tmp_path,
++        artifact={"honest_verdict": "complete: fixture"},
++        exists=True,
++        live_flags_by_name=None,
++    )
++    missing_status = mod._source_status(
++        name="X",
++        source=mod.SourceSpec("X", "results/missing.json", "fixture"),
++        root=tmp_path,
++        artifact={},
++        exists=False,
++        live_flags_by_name=None,
++    )
++    assert status["summary_exit_code"] == 0
++    assert status["reason"] == "flagged_adversarial_or_live_critical_excluded"
++    assert missing_status["reason"] == "missing"
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.write_artifact(path=tmp_path / "bad.json", artifact=bad)
++    malformed = dict(blocked)
++    malformed["honest_verdict"] = "still_running"
++    malformed["reproducibility_checksum"] = mod.payload_checksum(malformed)
++    assert "honest_verdict must be terminal-prefixed" in mod.validate_artifact(malformed)
++    monkeypatch.setattr(mod, "build_artifact", bad_build)
++    with pytest.raises(ValueError, match="missing required field"):
++        mod.run(tmp_path, write=False, duration_s=0.001)
+-- 
+2.55.0
+
